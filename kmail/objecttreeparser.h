@@ -197,6 +197,7 @@ namespace KMail {
 			bool showWarning,
                         bool& passphraseError,
                         bool& wrongKeyUsage,
+                        bool& actuallyEncrypted,
 			QString& aErrorText );
 
     bool processMailmanMessage( partNode * node );

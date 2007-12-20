@@ -621,6 +621,7 @@ bool ObjectTreeParser::okDecryptMIME( partNode& data,
                                       bool showWarning,
                                       bool& passphraseError,
                                       bool& wrongKeyUsage,
+                                      bool& actuallyEncrypted,
                                       QString& aErrorText )
 {
   passphraseError = false;
@@ -696,6 +697,7 @@ bool ObjectTreeParser::okDecryptMIME( partNode& data,
                                                        &errTxt );
     kdDebug(5006) << "ObjectTreeParser::decryptMIME: returned from CRYPTPLUG"
                   << endl;
+    actuallyEncrypted = (errId & GPG_ERR_NO_DATA) == 0;
     if ( bDecryptionOk && errId == CRYPTPLUG_ERR_WRONG_KEY_USAGE ){
       errId = 0;
       wrongKeyUsage = true;
@@ -1161,6 +1163,7 @@ namespace KMail {
     sigMeta.extended_info_count = 0;
     bool passphraseError;
     bool wrongKeyUsage;
+    bool actuallyEncrypted = true;
 
     bool bOkDecrypt = okDecryptMIME( *data,
                                      decryptedData,
@@ -1169,6 +1172,7 @@ namespace KMail {
                                      true,
                                      passphraseError,
                                      wrongKeyUsage,
+                                     actuallyEncrypted,
                                      messagePart.errorText );
 
     // paint the frame
@@ -1316,6 +1320,7 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( partNode * node, Pr
         sigMeta.extended_info_count = 0;
         bool passphraseError;
         bool wrongKeyUsage;
+        bool actuallyEncrypted = true;
 
         bool bOkDecrypt = okDecryptMIME( *node,
                                          decryptedData,
@@ -1324,6 +1329,7 @@ bool ObjectTreeParser::processApplicationOctetStreamSubtype( partNode * node, Pr
                                          true,
                                          passphraseError,
                                          wrongKeyUsage,
+                                         actuallyEncrypted,
                                          messagePart.errorText );
 
         // paint the frame
@@ -1481,6 +1487,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( partNode * node, Proc
       sigMeta.extended_info_count = 0;
       bool passphraseError;
       bool wrongKeyUsage;
+      bool actuallyEncrypted = true;
 
       if ( okDecryptMIME( *node,
                           decryptedData,
@@ -1489,6 +1496,7 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( partNode * node, Proc
                           false,
                           passphraseError,
                           wrongKeyUsage,
+                          actuallyEncrypted,
                           messagePart.errorText ) ) {
         kdDebug(5006) << "pkcs7 mime  -  encryption found  -  enveloped (encrypted) data !" << endl;
         isEncrypted = true;
@@ -1507,8 +1515,11 @@ bool ObjectTreeParser::processApplicationPkcs7MimeSubtype( partNode * node, Proc
         if ( mReader )
           htmlWriter()->queue( writeSigstatFooter( messagePart ) );
       } else {
-
-        if ( passphraseError || smimeType.isEmpty() ) {
+          // decryption failed, which could be because the part was encrypted but
+          // decryption failed, or because we didn't know if it was encrypted, tried,
+          // and failed. If the message was not actually encrypted, we continue
+          // assuming it's signed
+        if ( passphraseError || ( smimeType.isEmpty() && actuallyEncrypted ) ) {
           isEncrypted = true;
           signTestNode = 0;
         }
