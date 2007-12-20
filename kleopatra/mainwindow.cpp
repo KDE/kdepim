@@ -36,7 +36,6 @@
 #include "tabwidget.h"
 
 #include "certificatewizardimpl.h"
-#include "searchbarstatehandler.h"
 #include "models/keylistmodel.h"
 #include "models/keylistsortfilterproxymodel.h"
 #include "controllers/keylistcontroller.h"
@@ -260,18 +259,24 @@ void MainWindow::Private::addView( const KConfigGroup & group ) {
     if ( QAbstractItemView * const view = ui.tabWidget.addView( model, group ) )
         controller.addView( view );
 }
-    
+
+static void xconnect( const QObject * o1, const char * signal, const QObject * o2, const char * slot ) {
+    QObject::connect( o1, signal, o2, slot );
+    QObject::connect( o2, signal, o1, slot );
+}
+
 void MainWindow::Private::setupActions() {
 
     KActionCollection * const coll = q->actionCollection();
 
     QWidgetAction * const searchBarAction = new QWidgetAction( q );
     SearchBar * const searchBar = new SearchBar( q );
-    new SearchBarStateHandler( &ui.tabWidget, searchBar, searchBar );
-    connect( searchBar, SIGNAL(textChanged(QString)),
-             &ui.tabWidget, SLOT(setStringFilter(QString)) );
-    connect( searchBar, SIGNAL(keyFilterChanged(boost::shared_ptr<Kleo::KeyFilter>)),
-             &ui.tabWidget, SLOT(setKeyFilter(boost::shared_ptr<Kleo::KeyFilter>)) );
+
+    xconnect( searchBar, SIGNAL(stringFilterChanged(QString)),
+              &ui.tabWidget, SLOT(setStringFilter(QString)) );
+    xconnect( searchBar, SIGNAL(keyFilterChanged(boost::shared_ptr<Kleo::KeyFilter>)),
+              &ui.tabWidget, SLOT(setKeyFilter(boost::shared_ptr<Kleo::KeyFilter>)) );
+
     searchBarAction->setDefaultWidget( searchBar );
     coll->addAction( "key_search_bar", searchBarAction );
 

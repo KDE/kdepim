@@ -125,7 +125,6 @@ endif(ONLY_KLEO)
 set( _kleopatra_mainwindow_SRCS
      mainwindow.cpp 
      searchbar.cpp
-     searchbarstatehandler.cpp
      tabwidget.cpp
      trayiconlistener.cpp )
 

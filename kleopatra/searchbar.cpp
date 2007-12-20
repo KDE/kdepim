@@ -47,15 +47,6 @@
 using namespace Kleo;
 using namespace boost;
 
-class SearchBar::State {
-public:
-    State() {}
-    State( const QString & string, const QString & id )
-        : searchString( string ), keyFilterID( id ) {}
-    QString searchString;
-    QString keyFilterID;
-};
-
 class SearchBar::Private {
     friend class ::SearchBar;
     SearchBar * const q;
@@ -110,7 +101,7 @@ SearchBar::Private::Private( SearchBar * qq )
     KDAB_SET_OBJECT_NAME( combo );
 
     connect( lineEdit, SIGNAL(textChanged(QString)),
-             q, SIGNAL(textChanged(QString)) );
+             q, SIGNAL(stringFilterChanged(QString)) );
     connect( combo, SIGNAL(currentIndexChanged(int)),
              q, SLOT(slotKeyFilterChanged(int)) );
 }
@@ -123,24 +114,10 @@ SearchBar::SearchBar( QWidget * parent, Qt::WFlags f )
     
 }
 
-shared_ptr<SearchBar::State> SearchBar::state() const {
-    return shared_ptr<State>( new State( d->lineEdit->text(), d->currentKeyFilterID() ) );
-}
-
-void SearchBar::resetState() {
-    setState( shared_ptr<State>( new State ) );
-}
-
-void SearchBar::setState( const shared_ptr<State> & state ) {
-    assert( state );
-    setText( state->searchString );
-    setKeyFilter( KeyFilterManager::instance()->keyFilterByID( state->keyFilterID ) );
-}
-
 SearchBar::~SearchBar() {}
 
-void SearchBar::setText( const QString& text ) {
-    d->lineEdit->setText( text );
+void SearchBar::setStringFilter( const QString & filter ) {
+    d->lineEdit->setText( filter );
 }
  
 void SearchBar::setKeyFilter( const shared_ptr<KeyFilter> & kf ) {

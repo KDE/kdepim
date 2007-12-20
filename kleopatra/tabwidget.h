@@ -73,6 +73,9 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void currentViewChanged( QAbstractItemView * view );
+    void stringFilterChanged( const QString & filter );
+    void keyFilterChanged( const boost::shared_ptr<Kleo::KeyFilter> & filter );
+
     void enableCloseCurrentTabAction( bool enable );
 
 protected:
@@ -82,7 +85,11 @@ private:
     class Private;
     kdtools::pimpl_ptr<Private> d;
 
-    Q_PRIVATE_SLOT( d, void currentIndexChanged( int ) );
+    Q_PRIVATE_SLOT( d, void currentIndexChanged( int ) )
+    Q_PRIVATE_SLOT( d, void slotPageTitleChanged( const QString & ) )
+    Q_PRIVATE_SLOT( d, void slotPageKeyFilterChanged( const boost::shared_ptr<Kleo::KeyFilter> & ) )
+    Q_PRIVATE_SLOT( d, void slotPageStringFilterChanged( const QString & ) )
+    Q_PRIVATE_SLOT( d, void slotPageCanBeClosedChanged( bool ) )
 };
 
 

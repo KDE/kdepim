@@ -201,6 +201,10 @@ public:
 
 private:
     void currentIndexChanged( int index );
+    void slotPageTitleChanged( const QString & title );
+    void slotPageKeyFilterChanged( const shared_ptr<KeyFilter> & filter );
+    void slotPageStringFilterChanged( const QString & filter );
+    void slotPageCanBeClosedChanged( bool on );
 
     Page * currentPage() const {
         assert( !tabWidget.currentWidget() || qobject_cast<Page*>( tabWidget.currentWidget() ) );
@@ -209,6 +213,17 @@ private:
     Page * page( unsigned int idx ) const {
         assert( !tabWidget.widget( idx ) || qobject_cast<Page*>( tabWidget.widget( idx ) ) );
         return static_cast<Page*>( tabWidget.widget( idx ) );
+    }
+
+    Page * senderPage() const {
+        QObject * const sender = q->sender();
+        assert( !sender || qobject_cast<Page*>( sender ) );
+        return static_cast<Page*>( sender );
+    }
+
+    bool isSenderCurrentPage() const {
+        Page * const sp = senderPage();
+        return sp && sp == currentPage();
     }
 
     QAbstractItemView * addView( Page * page );
@@ -232,10 +247,34 @@ void TabWidget::Private::currentIndexChanged( int index ) {
     if ( const Page * const page = this->page( index ) ) {
         emit q->currentViewChanged( page->view() );
         emit q->enableCloseCurrentTabAction( page->canBeClosed() );
+        emit q->keyFilterChanged( page->keyFilter() );
+        emit q->stringFilterChanged( page->stringFilter() );
     } else {
         emit q->currentViewChanged( 0 );
         emit q->enableCloseCurrentTabAction( false );
+        emit q->keyFilterChanged( shared_ptr<KeyFilter>() );
+        emit q->stringFilterChanged( QString() );
     }
+}
+
+void TabWidget::Private::slotPageTitleChanged( const QString & ) {
+    if ( Page * const page = senderPage() )
+        tabWidget.setTabText( tabWidget.indexOf( page ), page->title() );
+}
+
+void TabWidget::Private::slotPageKeyFilterChanged( const shared_ptr<KeyFilter> & kf ) {
+    if ( isSenderCurrentPage() )
+        emit q->keyFilterChanged( kf );
+}
+
+void TabWidget::Private::slotPageStringFilterChanged( const QString & filter ) {
+    if ( isSenderCurrentPage() )
+        emit q->stringFilterChanged( filter );
+}
+
+void TabWidget::Private::slotPageCanBeClosedChanged( bool on ) {
+    if ( isSenderCurrentPage() )
+        emit q->enableCloseCurrentTabAction( on );
 }
 
 TabWidget::TabWidget( QWidget * p, Qt::WindowFlags f )
@@ -299,6 +338,16 @@ QAbstractItemView * TabWidget::addView( AbstractKeyListModel * model, const KCon
 QAbstractItemView * TabWidget::Private::addView( Page * page ) {
     if ( !page )
         return 0;
+
+    connect( page, SIGNAL(titleChanged(QString)),
+             q, SLOT(slotPageTitleChanged(QString)) );
+    connect( page, SIGNAL(keyFilterChanged(boost::shared_ptr<Kleo::KeyFilter>)),
+             q, SLOT(slotPageKeyFilterChanged(boost::shared_ptr<Kleo::KeyFilter>)) );
+    connect( page, SIGNAL(stringFilterChanged(QString)),
+             q, SLOT(slotPageStringFilterChanged(QString)) );
+    connect( page, SIGNAL(canBeClosedChanged(bool)),
+             q, SLOT(slotPageCanBeClosedChanged(bool)) );
+
     QAbstractItemView * const previous = q->currentView(); 
     tabWidget.addTab( page, page->title() );
     // work around a bug in QTabWidget (tested with 4.3.2) not emitting currentChanged() when the first widget is inserted

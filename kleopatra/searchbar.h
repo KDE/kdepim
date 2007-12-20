@@ -49,20 +49,15 @@ public:
     explicit SearchBar( QWidget * parent=0, Qt::WindowFlags f=0 );
     ~SearchBar();
 
-    QString text() const;
-
-
-    class State;
-    boost::shared_ptr<State> state() const;
-    void setState( const boost::shared_ptr<State> & state );
-    void resetState();                                                          
+    QString stringFilter() const;
+    const boost::shared_ptr<Kleo::KeyFilter> & keyFilter() const;
                                                          
 public Q_SLOTS:
-    void setText( const QString & text );
+    void setStringFilter( const QString & text );
     void setKeyFilter( const boost::shared_ptr<Kleo::KeyFilter> & filter );
 
 Q_SIGNALS:
-    void textChanged( const QString & text );
+    void stringFilterChanged( const QString & text );
     void keyFilterChanged( const boost::shared_ptr<Kleo::KeyFilter> & filter );
 
 private:
