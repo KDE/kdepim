@@ -287,7 +287,7 @@ void MainWindow::Private::setupActions() {
 
     action = coll->addAction( "file_export_certificates" );
     action->setText( i18n( "Export Certificates..." ) );
-    action->setIcon( KIcon("export") );
+    action->setIcon( KIcon("document-export") );
     connect( action, SIGNAL(triggered()), q, SLOT(exportCertificates()) );
     action->setShortcuts( KShortcut( i18n("Ctrl+E") ) );
 
