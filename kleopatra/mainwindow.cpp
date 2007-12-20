@@ -296,7 +296,7 @@ void MainWindow::Private::setupActions() {
         { "file_export_certificates", i18n("Export Certificates..."), QString(),
           "document-export", q, SLOT(exportCertificates()), i18n("Ctrl+E"), false },
         { "file_import_certificates", i18n("Import Certificates..."), QString(),
-          /*"document-import"*/0, q, SLOT(importCertificates()), i18n("Ctrl+I"), false },
+          "document-import", q, SLOT(importCertificates()), i18n("Ctrl+I"), false },
         // View menu
         { "view_redisplay", i18n( "Redisplay" ), QString(),
           "view-refresh", q, SLOT(refreshCertificates()), i18n("F5"), false },
