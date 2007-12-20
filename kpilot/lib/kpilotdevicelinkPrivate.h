@@ -221,10 +221,15 @@ public:
 
 	virtual void run();
 
-	void setDone(bool b)
+	void stop()
 	{
 		FUNCTIONSETUP;
-		fDone = b;
+		/*
+		 * Set this so we don't start into device connection and then have
+		 * our thread stopped immediately thereafter.
+		 */
+		fDone = true;
+		exit(0);
 	}
 
 protected:

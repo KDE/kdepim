@@ -76,18 +76,6 @@
 DeviceMap *DeviceMap::mThis = 0L;
 
 
-static inline void startOpenTimer(DeviceCommThread *dev, QTimer *&t)
-{
-	if ( !t)
-	{
-		t = new QTimer(dev);
-		QObject::connect(t, SIGNAL(timeout()), dev, SLOT(openDevice()));
-	}
-	// just a single-shot timer.  we'll know when to start it again...
-   t->setSingleShot(true);
-	t->start(1000);
-}
-
 DeviceCommThread::DeviceCommThread(KPilotDeviceLink *d) :
 	QThread(),
 	fDone(true),
@@ -101,6 +89,34 @@ DeviceCommThread::DeviceCommThread(KPilotDeviceLink *d) :
 	fAcceptedCount(0)
 {
 	FUNCTIONSETUP;
+
+	/*
+	 * Because our polling is asynchronous, we can't use a normal loop.
+	 * We'll fall back into trying to open the device again as a
+	 * result of either a failure in opening/binding, or a timeout from our
+	 * USB workaround timer.
+	 */
+	fOpenTimer = new QTimer(this);
+	connect(fOpenTimer, SIGNAL(timeout()), this, SLOT(openDevice()));
+	fOpenTimer->setSingleShot(true);
+	fOpenTimer->setInterval(2000);
+
+	/**
+	 * We _always_ want to set a maximum amount of time that we will wait
+	 * for the sync process to start.  In the case where our user
+	 * has told us that he has a funky USB device, set the workaround timeout
+	 * for shorter than normal.
+	 */
+	int timeout=20000;
+	if (link()->fWorkaroundUSB)
+	{
+		timeout=5000;
+	}
+
+	fWorkaroundUSBTimer = new QTimer(this);
+	connect(fWorkaroundUSBTimer, SIGNAL(timeout()), this, SLOT(workaroundUSB()));
+	fWorkaroundUSBTimer->setSingleShot(true);
+	fWorkaroundUSBTimer->setInterval(timeout);
 }
 
 
@@ -108,6 +124,8 @@ DeviceCommThread::~DeviceCommThread()
 {
 	FUNCTIONSETUPL(2);
 	close();
+
+	KPILOT_DELETE(fOpenTimer);
 	KPILOT_DELETE(fWorkaroundUSBTimer);
 }
 
@@ -115,10 +133,23 @@ void DeviceCommThread::close()
 {
 	FUNCTIONSETUPL(2);
 
-	KPILOT_DELETE(fWorkaroundUSBTimer);
-	KPILOT_DELETE(fOpenTimer);
-	KPILOT_DELETE(fSocketNotifier);
+	/*
+	 * Note: We don't want to delete these.  Just stop them.  Things seem to
+	 * break when we're creating/deleting them from a QThread, so we create
+	 * them from our ctor and stop them everywhere until we destruct.
+	 */
+	if (fOpenTimer)
+		fOpenTimer->stop();
+
+	if (fWorkaroundUSBTimer)
+		fWorkaroundUSBTimer->stop();
+
 	fSocketNotifierActive=false;
+	/*
+	 * This one we do delete because we require the socket itself to create
+	 * this and we don't have that until we're past the pi_bind phase.
+	 */
+	KPILOT_DELETE(fSocketNotifier);
 
 	if (fTempSocket != -1)
 	{
@@ -151,15 +182,13 @@ void DeviceCommThread::reset()
 	if (link()->fMessages->shouldPrint(Messages::OpenFailMessage))
 	{
 		QApplication::postEvent(link(), new DeviceCommEvent(EventLogMessage,
-				i18n("Could not open device: %1 (will retry)")
-				.arg(link()->pilotPath() )));
+				i18n("Could not open device: %1 (will retry)", link()->pilotPath() )));
 	}
 
 	link()->fMessages->reset();
 	close();
 
-	// Timer already deleted by close() call.
-	startOpenTimer(this,fOpenTimer);
+	fOpenTimer->start();
 
 	link()->fLinkStatus = WaitingForDevice;
 }
@@ -190,8 +219,7 @@ void DeviceCommThread::openDevice()
 	if (link()->fMessages->shouldPrint(Messages::OpenMessage))
 	{
 		QApplication::postEvent(link(), new DeviceCommEvent(EventLogMessage,
-				i18n("Trying to open device %1...")
-				.arg(link()->fPilotPath)));
+				i18n("Trying to open device %1...", link()->fPilotPath)));
 	}
 
 	// if we're not supposed to be done, try to open the main pilot
@@ -221,7 +249,8 @@ void DeviceCommThread::openDevice()
 	// if we couldn't connect, try to connect again...
 	if (!fDone && !deviceOpened)
 	{
-		startOpenTimer(this, fOpenTimer);
+		DEBUGKPILOT << ": Will try again.";
+		fOpenTimer->start();
 	}
 }
 
@@ -265,7 +294,7 @@ bool DeviceCommThread::open(const QString &device)
 	{
 		e = errno;
 		msg = i18n("Cannot create socket for communicating "
-				"with the Pilot (%1)").arg(errorMessage(e));
+				"with the Pilot (%1)", errorMessage(e));
 		DEBUGKPILOT << msg;
 		DEBUGKPILOT << "(" << strerror(e) << ")";
 
@@ -288,11 +317,10 @@ bool DeviceCommThread::open(const QString &device)
 	if (ret < 0)
 	{
 		DEBUGKPILOT 
-			<< ": pi_bind error: ["
-			<< strerror(errno) << "]";
+			<< ": pi_bind error: [" << strerror(errno) << "]";
 
 		e = errno;
-		msg = i18n("Cannot open Pilot port \"%1\". ").arg(link()->fRealPilotPath);
+		msg = i18n("Cannot open Pilot port: [%1].", link()->fRealPilotPath);
 
 		DEBUGKPILOT << msg;
 		DEBUGKPILOT << "(" << strerror(e) << ")";
@@ -316,22 +344,7 @@ bool DeviceCommThread::open(const QString &device)
 			this, SLOT(acceptDevice()));
 	fSocketNotifierActive=true;
 
-	/**
-	 * We _always_ want to set a maximum amount of time that we will wait
-	 * for the sync process to start.  In the case where our user
-	 * has told us that he has a funky USB device, set the workaround timeout
-	 * for shorter than normal.
-	 */
-	int timeout=20000;
-	if (link()->fWorkaroundUSB)
-	{
-		timeout=5000;
-	}
-
-	fWorkaroundUSBTimer = new QTimer(this);
-	connect(fWorkaroundUSBTimer, SIGNAL(timeout()), this, SLOT(workaroundUSB()));
-	fWorkaroundUSBTimer->setSingleShot(true);
-	fWorkaroundUSBTimer->start(timeout);
+	fWorkaroundUSBTimer->start();
 
 	return true;
 }
@@ -394,8 +407,7 @@ void DeviceCommThread::acceptDevice()
 		// Presumably, strerror() returns things in
 		// local8Bit and not latin1.
 		QApplication::postEvent(link(), new DeviceCommEvent(EventLogError,
-				i18n("Cannot listen on Pilot socket (%1)").
-				arg(QString::fromLocal8Bit(s))));
+				i18n("Cannot listen on Pilot socket (%1)", QString::fromLocal8Bit(s))));
 		reset();
 		return;
 	}
@@ -414,8 +426,8 @@ void DeviceCommThread::acceptDevice()
 
 		WARNINGKPILOT << "pi_accept returned: [" << s << "]";
 
-		QApplication::postEvent(link(), new DeviceCommEvent(EventLogError, i18n("Cannot accept Pilot (%1)")
-				.arg(QString::fromLocal8Bit(s))));
+		QApplication::postEvent(link(), new DeviceCommEvent(EventLogError, 
+			i18n("Cannot accept Pilot (%1)", QString::fromLocal8Bit(s))));
 
 		link()->fLinkStatus = PilotLinkError;
 		reset();
@@ -429,8 +441,8 @@ void DeviceCommThread::acceptDevice()
 		link()->fLinkStatus = PilotLinkError;
 		WARNINGKPILOT << "Already connected or unable to connect!";
 
-		QApplication::postEvent(link(), new DeviceCommEvent(EventLogError, i18n("Cannot accept Pilot (%1)")
-				.arg(i18n("already connected"))));
+		QApplication::postEvent(link(), new DeviceCommEvent(EventLogError, 
+			i18n("Cannot accept Pilot (%1)", i18n("already connected"))));
 
 		reset();
 		return;
@@ -444,7 +456,7 @@ void DeviceCommThread::acceptDevice()
 	if (dlp_ReadSysInfo(fPilotSocket, &sys_info) < 0)
 	{
 		QApplication::postEvent(link(), new DeviceCommEvent(EventLogError,
-				i18n("Unable to read system information from Pilot")));
+			i18n("Unable to read system information from Pilot")));
 
 		link()->fLinkStatus=PilotLinkError;
 		reset();
@@ -465,7 +477,6 @@ void DeviceCommThread::acceptDevice()
 
 	// If we've made it this far, make sure our USB workaround timer doesn't fire!
 	fWorkaroundUSBTimer->stop();
-	KPILOT_DELETE(fWorkaroundUSBTimer);
 
 	QApplication::postEvent(link(), new DeviceCommEvent(EventLogProgress, QString::null, 60));
 
@@ -481,7 +492,8 @@ void DeviceCommThread::acceptDevice()
 	DEBUGKPILOT
 		<< ": Read user name: [" << n << "]";
 
-	QApplication::postEvent(link(), new DeviceCommEvent(EventLogProgress, i18n("Checking last PC..."), 90));
+	QApplication::postEvent(link(), new DeviceCommEvent(EventLogProgress, 
+		i18n("Checking last PC..."), 90));
 
 	/* Tell user (via Pilot) that we are starting things up */
 	if ((ret=dlp_OpenConduit(fPilotSocket)) < 0)
@@ -490,8 +502,8 @@ void DeviceCommThread::acceptDevice()
 			<< ": dlp_OpenConduit returned: [" << ret << "]";
 
 		QApplication::postEvent(link(), new DeviceCommEvent(EventLogError,
-				i18n("Could not read user information from the Pilot. "
-						"Perhaps you have a password set on the device?")));
+			i18n("Could not read user information from the Pilot. "
+					"Perhaps you have a password set on the device?")));
 
 	}
 	link()->fLinkStatus = AcceptedDevice;
@@ -514,20 +526,22 @@ void DeviceCommThread::workaroundUSB()
 void DeviceCommThread::run()
 {
 	FUNCTIONSETUP;
+
 	fDone = false;
 
-	startOpenTimer(this, fOpenTimer);
+	fOpenTimer->start();
 
-	int sleepBetweenPoll = 2;
-	// keep the thread alive until we're supposed to be done
-	while (!fDone)
-	{
-		QThread::sleep(sleepBetweenPoll);
-	}
+	/*
+	 * Start our thread's event loop.  This is necessary to allow our
+	 * QTimers to function correctly.  Our thread is now stopped by calling
+	 * stop().
+	 */
+	exec();
 
-	close();
-	// now sleep one last bit to make sure the pthread inside
-	// pilot-link (potentially, if it's libusb) is done before we exit
+	/*
+	 * now sleep one last bit to make sure the pthread inside
+	 * pilot-link (potentially, if it's libusb) is done before we exit
+	 */
 	QThread::sleep(1);
 
 	DEBUGKPILOT << ": comm thread now done...";
@@ -609,7 +623,7 @@ void KPilotDeviceLink::stopCommThread()
 	FUNCTIONSETUP;
 	if (fDeviceCommThread)
 	{
-		fDeviceCommThread->setDone(true);
+		fDeviceCommThread->stop();
 
 		// try to wait for our thread to finish, but don't
 		// block the main thread forever
