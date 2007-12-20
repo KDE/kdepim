@@ -153,3 +153,4 @@ install ( FILES
 	ui/directoryserviceswidget.h
 	DESTINATION ${INCLUDE_INSTALL_DIR}/kleo/ui)
 
+install ( FILES libkleopatrarc.desktop DESTINATION ${CONFIG_INSTALL_DIR} RENAME libkleopatrarc )
