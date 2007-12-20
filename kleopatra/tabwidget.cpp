@@ -47,6 +47,7 @@
 #include <QSortFilterProxyModel>
 #include <QTreeView>
 #include <QToolButton>
+#include <QAction>
 
 #include <map>
 #include <cassert>
@@ -57,6 +58,7 @@ using namespace boost;
 namespace {
 class Page : public QWidget {
     Q_OBJECT
+    Page( const Page & other );
 public:
     Page( QAbstractItemModel * sourceModel, const QString & title, const QString & id, const QString & text, QWidget * parent=0 );
     Page( QAbstractItemModel * sourceModel, const KConfigGroup & group, QWidget * parent=0 );
@@ -77,6 +79,8 @@ public:
 
     bool canBeClosed() const { return m_canBeClosed; }
     void setCanBeClosed( bool on );
+
+    Page * clone() const { return new Page( *this ); }
 
 Q_SIGNALS:
     void titleChanged( const QString & title );
@@ -103,6 +107,18 @@ private:
     bool m_canBeClosed;
 };
 } // anon namespace
+
+Page::Page( const Page & other )
+    : QWidget( 0 ),
+      m_proxy(),
+      m_view( new QTreeView( this ) ),
+      m_stringFilter( other.m_stringFilter ),
+      m_keyFilter( other.m_keyFilter ),
+      m_title( other.m_title ),
+      m_canBeClosed( other.m_canBeClosed )
+{
+    init( other.m_proxy.sourceModel() );
+}
 
 Page::Page( QAbstractItemModel * model, const QString & title, const QString & id, const QString & text, QWidget * parent )
     : QWidget( parent ),
@@ -246,7 +262,7 @@ TabWidget::Private::Private( TabWidget * qq )
 void TabWidget::Private::currentIndexChanged( int index ) {
     if ( const Page * const page = this->page( index ) ) {
         emit q->currentViewChanged( page->view() );
-        emit q->enableCloseCurrentTabAction( page->canBeClosed() );
+        emit q->enableCloseCurrentTabAction( page->canBeClosed() && tabWidget.count() > 1 );
         emit q->keyFilterChanged( page->keyFilter() );
         emit q->stringFilterChanged( page->stringFilter() );
     } else {
@@ -274,7 +290,7 @@ void TabWidget::Private::slotPageStringFilterChanged( const QString & filter ) {
 
 void TabWidget::Private::slotPageCanBeClosedChanged( bool on ) {
     if ( isSenderCurrentPage() )
-        emit q->enableCloseCurrentTabAction( on );
+        emit q->enableCloseCurrentTabAction( on && tabWidget.count() > 1 );
 }
 
 TabWidget::TabWidget( QWidget * p, Qt::WindowFlags f )
@@ -287,10 +303,25 @@ TabWidget::~TabWidget() {}
 
 void TabWidget::setOpenNewTabAction( QAction * action ) {
     d->setCornerAction( action, Qt::TopLeftCorner );
+    if ( !action )
+        return;
+    connect( action, SIGNAL(triggered()), this, SLOT(newTab()) );
+}
+
+void TabWidget::setDuplicateCurrentTabAction( QAction * action ) {
+    if ( !action )
+        return;
+    connect( action, SIGNAL(triggered()), this, SLOT(duplicateCurrentTab()) );
 }
 
 void TabWidget::setCloseCurrentTabAction( QAction * action ) {
     d->setCornerAction( action, Qt::TopRightCorner );
+    if ( !action )
+        return;
+    connect( action, SIGNAL(triggered()), this, SLOT(closeCurrentTab()) );
+    connect( this, SIGNAL(enableCloseCurrentTabAction(bool)), action, SLOT(setEnabled(bool)) );
+    const Page * const page = d->currentPage();
+    action->setEnabled( count() > 1 && page && page->canBeClosed() );
 }
 
 void TabWidget::Private::setCornerAction( QAction * action, Qt::Corner corner ) {
@@ -320,6 +351,27 @@ QAbstractItemView * TabWidget::currentView() const {
 
 unsigned int TabWidget::count() const {
     return d->tabWidget.count();
+}
+
+void TabWidget::newTab() {
+    //addView( QString(), QString() );
+}
+
+void TabWidget::closeCurrentTab() {
+    const int current = d->tabWidget.currentIndex();
+    if ( current < 0 || count() <= 1 )
+        return;
+    d->tabWidget.removeTab( current );
+}
+
+void TabWidget::duplicateCurrentTab() {
+    const Page * const page = d->currentPage();
+    if ( !page )
+        return;
+    Page * const clone = page->clone();
+    assert( clone );
+    clone->setCanBeClosed( true );
+    d->addView( clone );
 }
 
 void TabWidget::resizeEvent( QResizeEvent * e ) {

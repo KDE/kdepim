@@ -55,6 +55,7 @@ public:
     ~TabWidget();
 
     void setOpenNewTabAction( QAction * action );
+    void setDuplicateCurrentTabAction( QAction * action );
     void setCloseCurrentTabAction( QAction * action );
     //void setHierarchicalViewAction( QAction * action );
 
@@ -66,6 +67,11 @@ public:
     QAbstractItemView * currentView() const;
 
     unsigned int count() const;
+
+public Q_SLOTS:
+    void newTab();
+    void closeCurrentTab();
+    void duplicateCurrentTab();
 
 public Q_SLOTS:
     void setKeyFilter( const boost::shared_ptr<Kleo::KeyFilter> & filter );
