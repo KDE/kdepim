@@ -1,4 +1,29 @@
-Current Release is Proko2 2.1.11
+Current Release is Proko2 2.1.12
+
+Changes since Proko2 2.1.11 (released 18.10.2007)
+
+Bugfixes
+========
+
+That's apparently the correct way to check the error code.
+
+* Kolab/issue2184 Don't crash when trying to save a composer 
+  backup copy of a message that is already being sent.
+
+* Kolab issue 2172 Skip quoted text when looking for the address
+  separator.
+
+* Kolab/issue2182 Ensure smime opaque encrypted emails lacking the
+  smime-type parameter in the header are treated correctely wrt
+  error handling and decryption is attempted, when in doubt.
+
+* Kolab/issue2183 In the case of smime opaque signed and encrypted
+  messages missing the smime-type parameter in the header the cases
+  where decryption fails because of an error are discerned from
+  those cases where decryption is attempted but fails because the
+  message is not in fact encrypted. This ensures such messages being
+  properly treated as signed, still.
+
 
 Changes since Proko2 2.1.10 (released 03.09.2007)
 
