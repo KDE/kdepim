@@ -36,10 +36,10 @@
 #include <kleo/keyfiltermanager.h>
 
 #include <KLocale>
+#include <KLineEdit>
 
 #include <QLabel>
 #include <QComboBox>
-#include <QLineEdit>
 #include <QHBoxLayout>
 
 #include <cassert>
@@ -76,7 +76,7 @@ private:
     }
 
 private:
-    QLineEdit * lineEdit;
+    KLineEdit * lineEdit;
     QComboBox * combo;
 };
 
@@ -84,13 +84,13 @@ SearchBar::Private::Private( SearchBar * qq )
   : q( qq )
 {
     QHBoxLayout * layout = new QHBoxLayout( q );
-    QLabel * label = new QLabel;
-    label->setText( i18n( "&Find:" ) );
+    QLabel * label = new QLabel( i18n("&Find:"), q );
     layout->addWidget( label );
-    lineEdit = new QLineEdit;
+    lineEdit = new KLineEdit( q );
+    lineEdit->setClearButtonShown( true );
     label->setBuddy( lineEdit );
     layout->addWidget( lineEdit, /*stretch=*/1 );
-    combo = new QComboBox;
+    combo = new QComboBox( q );
     layout->addWidget( combo );
 
     combo->setModel( KeyFilterManager::instance()->model() );
