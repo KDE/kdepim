@@ -123,6 +123,7 @@ if (ONLY_KLEO)
 endif(ONLY_KLEO)
 
 set( _kleopatra_mainwindow_SRCS
+     action_data.cpp
      mainwindow.cpp 
      searchbar.cpp
      tabwidget.cpp
