@@ -32,6 +32,8 @@
 
 #include "mainwindow.h"
 
+#include "action_data.h"
+
 #include "searchbar.h"
 #include "tabwidget.h"
 
@@ -286,73 +288,37 @@ void MainWindow::Private::setupActions() {
     searchBarAction->setDefaultWidget( searchBar );
     coll->addAction( "key_search_bar", searchBarAction );
 
-    const struct action_data {
-        const char * const name;
-        QString text;
-        QString toolTip;
-        const char * icon;
-        const QObject * receiver;
-        const char * slot;
-        QString shortcut;
-        bool toggle;
-    } action_data[] = {
+    const action_data action_data[] = {
         // File menu
         { "file_new_certificate", i18n("New Certificate..."), QString(),
-          "document-new", q, SLOT(newCertificate()), i18n("Ctrl+N"), false },
+          "document-new", q, SLOT(newCertificate()), i18n("Ctrl+N"), false, true },
         { "file_export_certificates", i18n("Export Certificates..."), QString(),
-          "document-export", q, SLOT(exportCertificates()), i18n("Ctrl+E"), false },
+          "document-export", q, SLOT(exportCertificates()), i18n("Ctrl+E"), false, true }, // ### should be disabled until selected
         { "file_import_certificates", i18n("Import Certificates..."), QString(),
-          "document-import", q, SLOT(importCertificates()), i18n("Ctrl+I"), false },
+          "document-import", q, SLOT(importCertificates()), i18n("Ctrl+I"), false, true }, // ### should be disabled until selected
         // View menu
         { "view_redisplay", i18n( "Redisplay" ), QString(),
-          "view-refresh", q, SLOT(refreshCertificates()), i18n("F5"), false },
+          "view-refresh", q, SLOT(refreshCertificates()), i18n("F5"), false, true },
         { "view_stop_operations", i18n( "Stop Operation" ), QString(),
-          "process-stop", &controller, SLOT(cancelCommands()), i18n("Escape"), false },
+          "process-stop", &controller, SLOT(cancelCommands()), i18n("Escape"), false, false },
         { "view_certificate_details", i18n( "Certificate Details..." ), QString(),
-          0, q, SLOT(certificateDetails()), QString(), false },
+          0, q, SLOT(certificateDetails()), QString(), false, true }, // ### should be disabled until selected
         // Certificate menu
         { "certificates_validate", i18n("Validate" ), QString()/*i18n("Validate selected certificates")*/,
-          "view-refresh", q, SLOT(validateCertificates()), i18n("SHIFT+F5"), false },
+          "view-refresh", q, SLOT(validateCertificates()), i18n("SHIFT+F5"), false, true },
         // CRLs menu
         // Tools menu
         // Settings menu
         // Window menu
-        { "window_new_tab", i18n("New Tab"), i18n("Open a new tab"),
-          "tab-new", 0, 0, i18n("CTRL+SHIFT+N"), false },
-        { "window_duplicate_tab", i18n("Duplicate Current Tab"), i18n("Duplicate the current tab"),
-          "tab-duplicate", 0, 0, i18n("CTRL+SHIFT+D"), false },
-        { "window_close_tab", i18n("Close Current Tab"), i18n("Close the current tab"),
-          "tab-close", 0, 0, i18n("CTRL+SHIFT+W"), false }, // ### CTRL-W when available
+        // (come from ui.tabWidget)
     };
 
-    for ( unsigned int i = 0 ; i < sizeof action_data / sizeof *action_data ; ++i ) {
-        const struct action_data & ad = action_data[i];
-        QAction * const a = coll->addAction( ad.name );
-        a->setText( ad.text );
-        if ( !ad.toolTip.isEmpty() )
-            a->setToolTip( ad.toolTip );
-        if ( ad.icon )
-            a->setIcon( KIcon( ad.icon ) );
-        if ( ad.toggle )
-            a->setCheckable( true );
-        if ( ad.receiver && ad.slot )
-            if ( ad.toggle )
-                connect( a, SIGNAL(toggled(bool)), ad.receiver, ad.slot );
-            else
-                connect( a, SIGNAL(triggered()), ad.receiver, ad.slot );
-        if ( !ad.shortcut.isEmpty() )
-            a->setShortcuts( KShortcut( ad.shortcut ) );
-    }
+    make_actions_from_data( action_data, sizeof action_data / sizeof *action_data, coll );
 
-    if ( QAction * action = coll->action( "view_stop_operations" ) ) {
+    if ( QAction * action = coll->action( "view_stop_operations" ) )
         connect( &controller, SIGNAL(commandsExecuting(bool)), action, SLOT(setEnabled(bool)) );
-        action->setEnabled( false );
-    }
 
-    ui.tabWidget.setOpenNewTabAction( coll->action( "window_new_tab" ) );
-    ui.tabWidget.setDuplicateCurrentTabAction( coll->action( "window_duplicate_tab" ) );
-    ui.tabWidget.setCloseCurrentTabAction( coll->action( "window_close_tab" ) );
-
+    ui.tabWidget.createActions( coll );
 }
 
 static QStringList extractViewGroups( const KSharedConfig::Ptr & config ) {

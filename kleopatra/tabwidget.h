@@ -47,6 +47,7 @@ namespace Kleo {
 }
 
 class KConfigGroup;
+class KActionCollection;
 
 class TabWidget : public QWidget {
     Q_OBJECT
@@ -55,11 +56,6 @@ public:
     ~TabWidget();
 
     void setModel( Kleo::AbstractKeyListModel * model );
-
-    void setOpenNewTabAction( QAction * action );
-    void setDuplicateCurrentTabAction( QAction * action );
-    void setCloseCurrentTabAction( QAction * action );
-    //void setHierarchicalViewAction( QAction * action );
 
     QAbstractItemView * addView( const QString & title=QString(), const QString & keyFilterID=QString(), const QString & searchString=QString() );
     QAbstractItemView * addView( const KConfigGroup & group );
@@ -70,12 +66,7 @@ public:
 
     unsigned int count() const;
 
-    bool canRenameTab( unsigned int idx ) const;
-
-public Q_SLOTS:
-    void newTab();
-    void closeCurrentTab();
-    void duplicateCurrentTab();
+    void createActions( KActionCollection * collection );
 
 public Q_SLOTS:
     void setKeyFilter( const boost::shared_ptr<Kleo::KeyFilter> & filter );
@@ -86,7 +77,6 @@ Q_SIGNALS:
     void stringFilterChanged( const QString & filter );
     void keyFilterChanged( const boost::shared_ptr<Kleo::KeyFilter> & filter );
 
-    void enableCloseCurrentTabAction( bool enable );
     void enableChangeStringFilter( bool enable );
     void enableChangeKeyFilter( bool enable );
 
@@ -97,10 +87,18 @@ private:
     class Private;
     kdtools::pimpl_ptr<Private> d;
 
+    Q_PRIVATE_SLOT( d, void slotContextMenu( QWidget *, const QPoint & ) )
+    Q_PRIVATE_SLOT( d, void slotContextMenu( const QPoint & ) )
     Q_PRIVATE_SLOT( d, void currentIndexChanged( int ) )
     Q_PRIVATE_SLOT( d, void slotPageTitleChanged( const QString & ) )
     Q_PRIVATE_SLOT( d, void slotPageKeyFilterChanged( const boost::shared_ptr<Kleo::KeyFilter> & ) )
     Q_PRIVATE_SLOT( d, void slotPageStringFilterChanged( const QString & ) )
+    Q_PRIVATE_SLOT( d, void slotRenameCurrentTab() )
+    Q_PRIVATE_SLOT( d, void slotNewTab() )
+    Q_PRIVATE_SLOT( d, void slotDuplicateCurrentTab() )
+    Q_PRIVATE_SLOT( d, void slotCloseCurrentTab() )
+    Q_PRIVATE_SLOT( d, void slotMoveCurrentTabLeft() )
+    Q_PRIVATE_SLOT( d, void slotMoveCurrentTabRight() )
 };
 
 
