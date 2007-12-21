@@ -11,7 +11,7 @@
     </entry>
     <entry key="Port" type="UInt" >
       <label>Port</label>
-      <default>8201</default>
+      <default>7191</default>
     </entry>
     <entry key="User" type="String" >
       <label>User name</label>
