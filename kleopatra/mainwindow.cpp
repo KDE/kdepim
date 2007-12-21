@@ -278,6 +278,10 @@ void MainWindow::Private::setupActions() {
               &ui.tabWidget, SLOT(setStringFilter(QString)) );
     xconnect( searchBar, SIGNAL(keyFilterChanged(boost::shared_ptr<Kleo::KeyFilter>)),
               &ui.tabWidget, SLOT(setKeyFilter(boost::shared_ptr<Kleo::KeyFilter>)) );
+    connect( &ui.tabWidget, SIGNAL(enableChangeStringFilter(bool)),
+             searchBar, SLOT(setChangeStringFilterEnabled(bool)) );
+    connect( &ui.tabWidget, SIGNAL(enableChangeKeyFilter(bool)),
+             searchBar, SLOT(setChangeKeyFilterEnabled(bool)) );
 
     searchBarAction->setDefaultWidget( searchBar );
     coll->addAction( "key_search_bar", searchBarAction );

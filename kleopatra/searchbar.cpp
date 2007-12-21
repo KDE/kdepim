@@ -116,16 +116,28 @@ SearchBar::SearchBar( QWidget * parent, Qt::WFlags f )
 
 SearchBar::~SearchBar() {}
 
+// slot
 void SearchBar::setStringFilter( const QString & filter ) {
     d->lineEdit->setText( filter );
 }
- 
+
+// slot
 void SearchBar::setKeyFilter( const shared_ptr<KeyFilter> & kf ) {
     const QModelIndex idx = KeyFilterManager::instance()->toModelIndex( kf );
     if ( idx.isValid() )
         d->combo->setCurrentIndex( idx.row() );
     else
         d->combo->setCurrentIndex( 0 );
+}
+
+// slot
+void SearchBar::setChangeStringFilterEnabled( bool on ) {
+    d->lineEdit->setEnabled( on );
+}
+
+// slot
+void SearchBar::setChangeKeyFilterEnabled( bool on ) {
+    d->combo->setEnabled( on );
 }
 
 #include "moc_searchbar.cpp"

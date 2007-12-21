@@ -79,17 +79,22 @@ public:
     void setTitle( const QString & title );
 
     bool canBeClosed() const { return m_canBeClosed; }
-    void setCanBeClosed( bool on );
+    bool canBeRenamed() const { return m_canBeRenamed; }
+    bool canChangeStringFilter() const { return m_canChangeStringFilter; }
+    bool canChangeKeyFilter() const { return m_canChangeKeyFilter; }
 
     void saveTo( KConfigGroup & group ) const;
 
     Page * clone() const { return new Page( *this ); }
 
+    void liftAllRestrictions() {
+        m_canBeClosed = m_canBeRenamed = m_canChangeStringFilter = m_canChangeKeyFilter = true;
+    }
+
 Q_SIGNALS:
     void titleChanged( const QString & title );
     void stringFilterChanged( const QString & filter );
     void keyFilterChanged( const boost::shared_ptr<Kleo::KeyFilter> & filter );
-    void canBeClosedChanged( bool closable );
 
 protected:
     void resizeEvent( QResizeEvent * e ) {
@@ -108,7 +113,10 @@ private:
     QString m_stringFilter;
     shared_ptr<KeyFilter> m_keyFilter;
     QString m_title;
-    bool m_canBeClosed;
+    bool m_canBeClosed : 1;
+    bool m_canBeRenamed : 1;
+    bool m_canChangeStringFilter : 1;
+    bool m_canChangeKeyFilter : 1;
 };
 } // anon namespace
 
@@ -120,7 +128,10 @@ Page::Page( const Page & other )
       m_stringFilter( other.m_stringFilter ),
       m_keyFilter( other.m_keyFilter ),
       m_title( other.m_title ),
-      m_canBeClosed( other.m_canBeClosed )
+      m_canBeClosed( other.m_canBeClosed ),
+      m_canBeRenamed( other.m_canBeRenamed ),
+      m_canChangeStringFilter( other.m_canChangeStringFilter ),
+      m_canChangeKeyFilter( other.m_canChangeKeyFilter )
 {
     init();
 }
@@ -133,20 +144,30 @@ Page::Page( const QString & title, const QString & id, const QString & text, QWi
       m_stringFilter( text ),
       m_keyFilter( KeyFilterManager::instance()->keyFilterByID( id ) ),
       m_title( title ),
-      m_canBeClosed( true )
+      m_canBeClosed( true ),
+      m_canBeRenamed( true ),
+      m_canChangeStringFilter( true ),
+      m_canChangeKeyFilter( true )
 {
     init();
 }
+
+static const char TITLE_ENTRY[] = "title";
+static const char STRING_FILTER_ENTRY[] = "string-filter";
+static const char KEY_FILTER_ENTRY[] = "key-filter";
 
 Page::Page( const KConfigGroup & group, QWidget * parent )
     : QWidget( parent ),
       m_proxy(),
       m_view( new QTreeView( this ) ),
       m_model( 0 ),
-      m_stringFilter( group.readEntry( "string-filter" ) ),
-      m_keyFilter( KeyFilterManager::instance()->keyFilterByID( group.readEntry( "key-filter" ) ) ),
-      m_title( group.readEntry( "title" ) ),
-      m_canBeClosed( !group.isImmutable() )
+      m_stringFilter( group.readEntry( STRING_FILTER_ENTRY ) ),
+      m_keyFilter( KeyFilterManager::instance()->keyFilterByID( group.readEntry( KEY_FILTER_ENTRY ) ) ),
+      m_title( group.readEntry( TITLE_ENTRY ) ),
+      m_canBeClosed( !group.isImmutable() ),
+      m_canBeRenamed( !group.isEntryImmutable( TITLE_ENTRY ) ),
+      m_canChangeStringFilter( !group.isEntryImmutable( STRING_FILTER_ENTRY ) ),
+      m_canChangeKeyFilter( !group.isEntryImmutable( KEY_FILTER_ENTRY ) )
 {
     init();
 }
@@ -166,9 +187,9 @@ Page::~Page() {}
 
 void Page::saveTo( KConfigGroup & group ) const {
 
-    group.writeEntry( "title", m_title );
-    group.writeEntry( "string-filter", m_stringFilter );
-    group.writeEntry( "key-filter", m_keyFilter ? m_keyFilter->id() : QString() );
+    group.writeEntry( TITLE_ENTRY, m_title );
+    group.writeEntry( STRING_FILTER_ENTRY, m_stringFilter );
+    group.writeEntry( KEY_FILTER_ENTRY, m_keyFilter ? m_keyFilter->id() : QString() );
 
 }
 
@@ -182,6 +203,9 @@ void Page::setModel( AbstractKeyListModel * model ) {
 void Page::setStringFilter( const QString & filter ) {
     if ( filter == m_stringFilter )
         return;
+    assert( m_canChangeStringFilter );
+    if ( !m_canChangeStringFilter )
+        return;
     m_stringFilter = filter;
     m_proxy.setFilterFixedString( filter ); 
     emit stringFilterChanged( filter );
@@ -189,6 +213,9 @@ void Page::setStringFilter( const QString & filter ) {
 
 void Page::setKeyFilter( const shared_ptr<KeyFilter> & filter ) {
     if ( filter == m_keyFilter || filter && m_keyFilter && filter->id() == m_keyFilter->id() )
+        return;
+    assert( m_canChangeKeyFilter );
+    if ( !m_canChangeKeyFilter )
         return;
     const QString oldTitle = title();
     m_keyFilter = filter;
@@ -202,18 +229,14 @@ void Page::setKeyFilter( const shared_ptr<KeyFilter> & filter ) {
 void Page::setTitle( const QString & t ) {
     if ( t == m_title )
         return;
+    assert( m_canBeRenamed );
+    if ( !m_canBeRenamed )
+        return;
     const QString oldTitle = title();
     m_title = t;
     const QString newTitle = title();
     if ( oldTitle != newTitle )
         emit titleChanged( newTitle );
-}
-
-void Page::setCanBeClosed( bool on ) {
-    if ( on == m_canBeClosed )
-        return;
-    m_canBeClosed = on;
-    emit canBeClosedChanged( on );
 }
 
 //
@@ -234,7 +257,6 @@ private:
     void slotPageTitleChanged( const QString & title );
     void slotPageKeyFilterChanged( const shared_ptr<KeyFilter> & filter );
     void slotPageStringFilterChanged( const QString & filter );
-    void slotPageCanBeClosedChanged( bool on );
 
     Page * currentPage() const {
         assert( !tabWidget.currentWidget() || qobject_cast<Page*>( tabWidget.currentWidget() ) );
@@ -282,11 +304,15 @@ void TabWidget::Private::currentIndexChanged( int index ) {
     if ( const Page * const page = this->page( index ) ) {
         emit q->currentViewChanged( page->view() );
         emit q->enableCloseCurrentTabAction( page->canBeClosed() && tabWidget.count() > 1 );
+        emit q->enableChangeStringFilter( page->canChangeStringFilter() );
+        emit q->enableChangeKeyFilter( page->canChangeKeyFilter() );
         emit q->keyFilterChanged( page->keyFilter() );
         emit q->stringFilterChanged( page->stringFilter() );
     } else {
         emit q->currentViewChanged( 0 );
         emit q->enableCloseCurrentTabAction( false );
+        emit q->enableChangeStringFilter( false );
+        emit q->enableChangeKeyFilter( false );
         emit q->keyFilterChanged( shared_ptr<KeyFilter>() );
         emit q->stringFilterChanged( QString() );
     }
@@ -305,11 +331,6 @@ void TabWidget::Private::slotPageKeyFilterChanged( const shared_ptr<KeyFilter> &
 void TabWidget::Private::slotPageStringFilterChanged( const QString & filter ) {
     if ( isSenderCurrentPage() )
         emit q->stringFilterChanged( filter );
-}
-
-void TabWidget::Private::slotPageCanBeClosedChanged( bool on ) {
-    if ( isSenderCurrentPage() )
-        emit q->enableCloseCurrentTabAction( on && tabWidget.count() > 1 );
 }
 
 TabWidget::TabWidget( QWidget * p, Qt::WindowFlags f )
@@ -381,6 +402,13 @@ unsigned int TabWidget::count() const {
     return d->tabWidget.count();
 }
 
+bool TabWidget::canRenameTab( unsigned int idx ) const {
+    if ( const Page * const page = d->page( idx ) )
+        return page->canBeRenamed();
+    else
+        return false;
+}
+
 void TabWidget::newTab() {
     addView( QString(), "my-certificates" );
 }
@@ -399,7 +427,7 @@ void TabWidget::duplicateCurrentTab() {
         return;
     Page * const clone = page->clone();
     assert( clone );
-    clone->setCanBeClosed( true );
+    clone->liftAllRestrictions();
     d->addView( clone );
 }
 
@@ -428,8 +456,6 @@ QAbstractItemView * TabWidget::Private::addView( Page * page ) {
              q, SLOT(slotPageKeyFilterChanged(boost::shared_ptr<Kleo::KeyFilter>)) );
     connect( page, SIGNAL(stringFilterChanged(QString)),
              q, SLOT(slotPageStringFilterChanged(QString)) );
-    connect( page, SIGNAL(canBeClosedChanged(bool)),
-             q, SLOT(slotPageCanBeClosedChanged(bool)) );
 
     QAbstractItemView * const previous = q->currentView(); 
     tabWidget.addTab( page, page->title() );

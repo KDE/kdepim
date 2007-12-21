@@ -56,6 +56,9 @@ public Q_SLOTS:
     void setStringFilter( const QString & text );
     void setKeyFilter( const boost::shared_ptr<Kleo::KeyFilter> & filter );
 
+    void setChangeStringFilterEnabled( bool enable );
+    void setChangeKeyFilterEnabled( bool enable );
+
 Q_SIGNALS:
     void stringFilterChanged( const QString & text );
     void keyFilterChanged( const boost::shared_ptr<Kleo::KeyFilter> & filter );

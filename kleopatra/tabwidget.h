@@ -70,6 +70,8 @@ public:
 
     unsigned int count() const;
 
+    bool canRenameTab( unsigned int idx ) const;
+
 public Q_SLOTS:
     void newTab();
     void closeCurrentTab();
@@ -85,6 +87,8 @@ Q_SIGNALS:
     void keyFilterChanged( const boost::shared_ptr<Kleo::KeyFilter> & filter );
 
     void enableCloseCurrentTabAction( bool enable );
+    void enableChangeStringFilter( bool enable );
+    void enableChangeKeyFilter( bool enable );
 
 protected:
     void resizeEvent( QResizeEvent * );
@@ -97,7 +101,6 @@ private:
     Q_PRIVATE_SLOT( d, void slotPageTitleChanged( const QString & ) )
     Q_PRIVATE_SLOT( d, void slotPageKeyFilterChanged( const boost::shared_ptr<Kleo::KeyFilter> & ) )
     Q_PRIVATE_SLOT( d, void slotPageStringFilterChanged( const QString & ) )
-    Q_PRIVATE_SLOT( d, void slotPageCanBeClosedChanged( bool ) )
 };
 
 
