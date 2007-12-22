@@ -29,7 +29,6 @@
 *****************************************************************************/
 
 #include "progress_dialog_impl.h"
-#include <QProgressBar>
 
 DoubleProgressDialog::DoubleProgressDialog( QWidget *parent )
 	: QDialog( parent ),

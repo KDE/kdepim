@@ -28,12 +28,8 @@
 #include <klocale.h>
 #include <kmenu.h>
 
-#include <QColor>
 #include <QCheckBox>
-#include <QRadioButton>
-#include <QListView>
 #include <QString>
-#include <QTimer>
 
 
 /*

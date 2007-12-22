@@ -22,9 +22,10 @@
 
 #include <kdebug.h>
 
-#include <QBoxLayout>
-#include <QLabel>
 #include <QWidget>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QLabel>
 
 HVContainer::HVContainer( Qt::Orientation orientation, QObject * parent )
 	: BoxContainer( parent ),

@@ -20,7 +20,6 @@
 #include <kurl.h>
 #include <kdebug.h>
 #include <ktoolinvocation.h>
-#include <QtDBus>
 #include <kmailinterface.h>
 #include "filters.hxx"
 #include "kmailcvt.h"

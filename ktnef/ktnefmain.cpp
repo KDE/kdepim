@@ -36,7 +36,6 @@ using namespace KTnef;
 #include <kapplication.h>
 #include <kactioncollection.h>
 #include <kiconloader.h>
-#include <QPixmap>
 #include <kstandardshortcut.h>
 #include <QMessageBox>
 #include <kfiledialog.h>

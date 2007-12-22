@@ -17,7 +17,6 @@
 
 #include <kapplication.h>
 #include <kstandarddirs.h>
-#include <QLabel>
 
 #include "kimportpage.h"
 

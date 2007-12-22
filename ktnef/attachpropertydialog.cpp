@@ -25,7 +25,6 @@
 #endif
 //#include "qwmf.h"
 
-#include <QLabel>
 #include <QPixmap>
 #include <QTextStream>
 #include <k3listview.h>
@@ -37,7 +36,6 @@
 #include <kfiledialog.h>
 #include <QBuffer>
 #include <QDataStream>
-#include <QDateTime>
 
 using namespace KTnef;
 
