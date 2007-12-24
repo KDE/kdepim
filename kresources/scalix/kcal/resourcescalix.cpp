@@ -320,7 +320,15 @@ bool ResourceScalix::doSave( bool syncCache )
       && kmailTriggerSync( kmailJournalContentsType );
   */
 }
-void ResourceScalix::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase)
+
+bool ResourceScalix::doSave( bool syncCache, KCal::Incidence *incidence )
+{
+  Q_UNUSED( syncCache );
+  Q_UNUSED( incidence );
+  return true;
+}
+
+void ResourceScalix::incidenceUpdatedSilent( KCal::IncidenceBase *incidencebase)
 {
   if ( incidencebase->isReadOnly() ) return; // Should not happen (TM)
   const QString uid = incidencebase->uid();

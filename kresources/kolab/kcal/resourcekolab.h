@@ -66,6 +66,7 @@ public:
 
   /// Save resource data.
   bool doSave( bool syncCache );
+  bool doSave( bool syncCache, KCal::Incidence *incidence );
 
   /// Open the notes resource.
   bool doOpen();

@@ -167,6 +167,7 @@ class ResourceKABC : public ResourceCalendar
     bool doOpen();
     bool doLoad( bool syncCache );
     bool doSave( bool syncCache );
+    bool doSave( bool syncCache, Incidence *incidence );
 
   private Q_SLOTS:
     void reload();

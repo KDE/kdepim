@@ -53,6 +53,7 @@ class KCAL_FEATUREPLAN_EXPORT ResourceFeaturePlan : public ResourceCached
 
     bool doLoad( bool syncCache );
     bool doSave( bool syncCache );
+    bool doSave( bool syncCache, Incidence *incidence );
 
     KABC::Lock *lock();
 

@@ -323,7 +323,15 @@ bool ResourceKolab::doSave( bool syncCache )
       && kmailTriggerSync( kmailJournalContentsType );
   */
 }
-void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase)
+
+bool ResourceKolab::doSave( bool syncCache, KCal::Incidence *incidence )
+{
+  Q_UNUSED( syncCache );
+  Q_UNUSED( incidence );
+  return true;
+}
+
+void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase *incidencebase)
 {
   if ( incidencebase->isReadOnly() ) return; // Should not happen (TM)
   const QString uid = incidencebase->uid();

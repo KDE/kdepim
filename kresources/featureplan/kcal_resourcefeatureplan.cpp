@@ -80,10 +80,11 @@ void ResourceFeaturePlan::writeConfig( KConfigGroup &group )
   mPrefs->writeConfig();
 }
 
-bool ResourceFeaturePlan::doLoad( bool )
+bool ResourceFeaturePlan::doLoad( bool syncCache )
 {
-  kDebug() <<"ResourceFeaturePlan::load()";
+  kDebug();
 
+  Q_UNUSED( syncCache );
   calendar()->close();
 
   FeaturesParser parser;
@@ -141,8 +142,16 @@ void ResourceFeaturePlan::insertCategories( const Category::List &categories,
   }
 }
 
-bool ResourceFeaturePlan::doSave( bool )
+bool ResourceFeaturePlan::doSave( bool syncCache )
 {
+  Q_UNUSED( syncCache );
+  return true;
+}
+
+bool ResourceFeaturePlan::doSave( bool syncCache, Incidence *incidence )
+{
+  Q_UNUSED( syncCache );
+  Q_UNUSED( incidence );
   return true;
 }
 

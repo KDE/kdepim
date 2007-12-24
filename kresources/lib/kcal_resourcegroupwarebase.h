@@ -68,9 +68,10 @@ class KGROUPWAREBASE_EXPORT ResourceGroupwareBase : public ResourceCached
 
     bool doLoad( bool syncCache );
     bool doSave( bool syncCache );
+    bool doSave( bool syncCache, Incidence *incidence );
 
     KABC::Lock *lock();
-    
+
     bool addEvent( Event *event );
     bool addTodo( Todo *todo );
     bool addJournal( Journal *journal );
@@ -80,9 +81,9 @@ class KGROUPWAREBASE_EXPORT ResourceGroupwareBase : public ResourceCached
 
   protected:
     void init();
-    
+
     bool confirmSave();
-    
+
     KPIM::GroupwarePrefsBase *createPrefs();
     void setPrefs( KPIM::GroupwarePrefsBase *prefs );
     void setFolderLister( KPIM::FolderLister *folderLister );
@@ -100,7 +101,7 @@ class KGROUPWAREBASE_EXPORT ResourceGroupwareBase : public ResourceCached
 
   private:
     void enter_loop();
-    
+
     KPIM::GroupwarePrefsBase *mPrefs;
     KPIM::FolderLister *mFolderLister;
     KABC::LockNull mLock;
@@ -112,7 +113,7 @@ class KGROUPWAREBASE_EXPORT ResourceGroupwareBase : public ResourceCached
     bool mIsShowingError;
 
     bool mLoginFinished; // temp variable for the login job
-    
+
 };
 
 }

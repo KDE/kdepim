@@ -370,7 +370,14 @@ bool ResourceKABC::useCategories() const
 bool ResourceKABC::doSave( bool syncCache )
 {
   Q_UNUSED( syncCache );
+  // is always read only!
+  return true;
+}
 
+bool ResourceKABC::doSave( bool syncCache, Incidence *incidence )
+{
+  Q_UNUSED( syncCache );
+  Q_UNUSED( incidence );
   // is always read only!
   return true;
 }
