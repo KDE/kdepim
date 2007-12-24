@@ -62,10 +62,10 @@ public:
   virtual ~ResourceScalix();
 
   /// Load resource data.
-  bool doLoad();
+  bool doLoad( bool syncCache );
 
   /// Save resource data.
-  bool doSave();
+  bool doSave( bool syncCache );
 
   /// Open the notes resource.
   bool doOpen();

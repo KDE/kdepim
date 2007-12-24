@@ -235,8 +235,9 @@ bool ResourceScalix::loadSubResource( const QString& subResource,
   return true;
 }
 
-bool ResourceScalix::doLoad()
+bool ResourceScalix::doLoad( bool syncCache )
 {
+  Q_UNUSED( syncCache );
   if (!mUidMap.isEmpty() ) {
     return true;
   }
@@ -309,8 +310,9 @@ void ResourceScalix::removeIncidences( const QByteArray& incidenceType )
   }
 }
 
-bool ResourceScalix::doSave()
+bool ResourceScalix::doSave( bool syncCache )
 {
+  Q_UNUSED( syncCache );
   return true;
   /*
   return kmailTriggerSync( kmailCalendarContentsType )

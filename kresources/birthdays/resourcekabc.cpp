@@ -108,7 +108,7 @@ void ResourceKABC::writeConfig( KConfigGroup &group )
 
 bool ResourceKABC::doOpen()
 {
-  kDebug(5800) <<"ResourceKABC::doOpen()";
+  kDebug(5800);
 
   mAddressbook = KABC::StdAddressBook::self( true );
   connect( mAddressbook, SIGNAL(addressBookChanged(AddressBook*)), SLOT( reload() ) );
@@ -116,10 +116,11 @@ bool ResourceKABC::doOpen()
   return true;
 }
 
-bool ResourceKABC::doLoad()
+bool ResourceKABC::doLoad( bool syncCache )
 {
-  kDebug(5800) <<"ResourceKABC::load()";
+  kDebug(5800);
 
+  Q_UNUSED( syncCache );
   mCalendar.close();
 
   // import from kabc
@@ -366,8 +367,10 @@ bool ResourceKABC::useCategories() const
   return mUseCategories;
 }
 
-bool ResourceKABC::doSave()
+bool ResourceKABC::doSave( bool syncCache )
 {
+  Q_UNUSED( syncCache );
+
   // is always read only!
   return true;
 }
@@ -382,12 +385,12 @@ KABC::Lock *ResourceKABC::lock()
   return mLock;
 }
 
-bool ResourceKABC::addEvent(Event*)
+bool ResourceKABC::addEvent( Event * )
 {
   return false;
 }
 
-bool ResourceKABC::deleteEvent(Event*)
+bool ResourceKABC::deleteEvent( Event * )
 {
   return false;
 }

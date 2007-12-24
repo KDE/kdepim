@@ -238,8 +238,9 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
   return true;
 }
 
-bool ResourceKolab::doLoad()
+bool ResourceKolab::doLoad( bool syncCache )
 {
+  Q_UNUSED( syncCache );
   if (!mUidMap.isEmpty() ) {
     return true;
   }
@@ -312,8 +313,9 @@ void ResourceKolab::removeIncidences( const QByteArray& incidenceType )
   }
 }
 
-bool ResourceKolab::doSave()
+bool ResourceKolab::doSave( bool syncCache )
 {
+  Q_UNUSED( syncCache );
   return true;
   /*
   return kmailTriggerSync( kmailCalendarContentsType )
