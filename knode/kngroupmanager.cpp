@@ -409,7 +409,13 @@ void KNGroupManager::showGroupDialog(KNNntpAccount *a, QWidget *parent)
   connect(gDialog, SIGNAL(checkNew(KNNntpAccount*,QDate)), this, SLOT(slotCheckForNewGroups(KNNntpAccount*,QDate)));
   connect(this, SIGNAL(newListReady(KNGroupListData*)), gDialog, SLOT(slotReceiveList(KNGroupListData*)));
 
-  if(gDialog->exec()) {
+  QWidget *oldTopWidget = knGlobals.topWidget;
+  // if the list of groups is empty, the parent of the message box
+  // asking whether to fetch will be "knGlobals.topWidget"
+  knGlobals.topWidget = gDialog;
+  int accept = gDialog->exec();
+  knGlobals.topWidget = oldTopWidget;
+  if(accept) {
     KNGroup *g=0;
 
     QStringList lst;
