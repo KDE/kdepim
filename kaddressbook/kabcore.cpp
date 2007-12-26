@@ -1134,7 +1134,7 @@ void KABCore::initActions()
 
 
   mActionStoreAddresseeIn = coll->addAction( "edit_store_in" );
-  mActionStoreAddresseeIn->setIcon( KIcon("kaddressbook") );
+  mActionStoreAddresseeIn->setIcon( KIcon("office-address-book") );
   mActionStoreAddresseeIn->setText( i18n( "St&ore Contact In..." ) );
   connect(mActionStoreAddresseeIn, SIGNAL(triggered(bool) ), SLOT( storeContactIn() ));
   mActionStoreAddresseeIn->setWhatsThis( i18n( "Store a contact in a different Addressbook<p>You will be presented with a dialog where you can select a new storage place for this contact.</p>" ) );
@@ -1142,7 +1142,7 @@ void KABCore::initActions()
   // settings menu
   mActionJumpBar = coll->add<KToggleAction>( "options_show_jump_bar" );
   mActionJumpBar->setText( i18n( "Show Jump Bar" ) );
-  mActionJumpBar->setIcon( KIcon( "view-sort-descending" ) );
+  mActionJumpBar->setIcon( KIcon( "view-sort-ascending" ) );
   mActionJumpBar->setWhatsThis( i18n( "Toggle whether the jump button bar shall be visible." ) );
   mActionJumpBar->setCheckedState( KGuiItem(i18n( "Hide Jump Bar" )) );
   connect( mActionJumpBar, SIGNAL( toggled( bool ) ), SLOT( setJumpButtonBarVisible( bool ) ) );

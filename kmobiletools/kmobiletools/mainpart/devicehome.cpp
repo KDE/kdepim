@@ -164,7 +164,7 @@ DeviceHome::DeviceHome( QWidget *parentWidget, const QString &devicename, kmobil
     // Setup actions
     QAction* act=parent->actionCollection()->addAction("sms_new", this, SLOT(slotNewSMS()));
     act->setText(i18n("New SMS"));
-    act->setIcon(KIcon("mail_generic"));
+    act->setIcon(KIcon("mail-message-new"));
     l_actionList.append(act);
     act=parent->actionCollection()->addAction("exportsms", this, SLOT(slotExportSMSList()));
     act->setText(i18n("Export SMS List"));
@@ -172,7 +172,7 @@ DeviceHome::DeviceHome( QWidget *parentWidget, const QString &devicename, kmobil
     l_actionList.append(act);
     act=parent->actionCollection()->addAction("exportcsv", this, SLOT(slotExportSMSListToCSV()));
     act->setText(i18n("Export SMS List to CSV"));
-    act->setIcon(KIcon("mail_get"));
+    act->setIcon(KIcon("mail-receive"));
     l_actionList.append(act);
     QTimer::singleShot( 1000, this, SLOT(slotStatusBar() ) );
     updateAllContacts();
@@ -224,24 +224,24 @@ void DeviceHome::setupWidgets()
     p_listViewItem->setIcon( 0, DEVCFG(objectName() )->deviceTypeIcon(DEVCFG(objectName() )->currentGroup(), KIconLoader::NoGroup, KIconLoader::SizeSmall ) );
 
     (new QTreeWidgetItem( p_listViewItem, QStringList("Calls") ) )
-    ->setIcon( 0, KIcon( "kaddressbook" ) );
+    ->setIcon( 0, KIcon( "kcall" ) );
 
     (new QTreeWidgetItem( p_listViewItem, QStringList( i18n( "PhoneBook") ) ) )
-    ->setIcon( 0, KIcon( "kontact_contacts" ) );
+    ->setIcon( 0, KIcon( "office-address-book" ) );
 
 
     p_smsItem = new QTreeWidgetItem( p_listViewItem, QStringList( i18n("SMS") ) );
-    p_smsItem->setIcon( 0, KIcon( "mail_generic" ) );
+    p_smsItem->setIcon( 0, KIcon( "mail-message" ) );
     */
 
     //p_listViewItem->setOpen(true);
     //p_listViewItem->setPixmap(0,DEVCFG(objectName() )->deviceTypeIcon(DEVCFG(objectName() )->currentGroup(), KIconLoader::NoGroup, KIconLoader::SizeSmall ));
 //     (new K3ListViewItem(p_listViewItem, "Calls") )
-//             ->setPixmap(0,KIconLoader::global()->loadIcon("kaddressbook", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
+//             ->setPixmap(0,KIconLoader::global()->loadIcon("kcall", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
     //(new K3ListViewItem(p_listViewItem, i18n("PhoneBook") ) )
-    //        ->setPixmap(0,KIconLoader::global()->loadIcon("kontact_contacts", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
+    //        ->setPixmap(0,KIconLoader::global()->loadIcon("office-address-book", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
     //p_smsItem = new K3ListViewItem(p_listViewItem, i18n("SMS") );
-    //p_smsItem->setPixmap(0,KIconLoader::global()->loadIcon("mail_generic", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
+    //p_smsItem->setPixmap(0,KIconLoader::global()->loadIcon("mail-message", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
 
     // SMS Tree ListView
     SMSFolderListViewItem *sms_inbox= new SMSFolderListViewItem(ui.SMSFolderView, SMS::Sim | SMS::Phone, SMS::Unread | SMS::Read, i18n("Inbox") );
@@ -250,8 +250,8 @@ void DeviceHome::setupWidgets()
     SMSFolderListViewItem *sms_outbox= new SMSFolderListViewItem(ui.SMSFolderView, SMS::Sim | SMS::Phone, SMS::Sent | SMS::Unsent, i18n("Outgoing") );
     SMSFolderListViewItem *sms_outbox_phone= new SMSFolderListViewItem(sms_outbox, SMS::Phone, SMS::Sent | SMS::Unsent, i18n("Phone") );
     SMSFolderListViewItem *sms_outbox_sim= new SMSFolderListViewItem(sms_outbox, SMS::Sim, SMS::Sent | SMS::Unsent, i18n("Sim") );
-    sms_inbox->setPixmap(0,KIconLoader::global()->loadIcon("mail_get", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
-    sms_outbox->setPixmap(0,KIconLoader::global()->loadIcon("mail_send", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
+    sms_inbox->setPixmap(0,KIconLoader::global()->loadIcon("mail-receive", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
+    sms_outbox->setPixmap(0,KIconLoader::global()->loadIcon("mail-send", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
     sms_inbox_phone->setPixmap(0,KIconLoader::global()->loadIcon("kmobiletools", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
     sms_outbox_phone->setPixmap(0,KIconLoader::global()->loadIcon("kmobiletools", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
     sms_inbox_sim->setPixmap(0,KIconLoader::global()->loadIcon("simcard", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
@@ -293,7 +293,7 @@ void DeviceHome::setupWidgets()
     if(DEVCFG(objectName() )->calendar() )
     {
         (new K3ListViewItem(p_listViewItem, i18n("Calendar") ) )
-                ->setPixmap(0,KIconLoader::global()->loadIcon("date", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
+                ->setPixmap(0,KIconLoader::global()->loadIcon("office-calendar", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
         KParts::Factory *pfactory=(KParts::Factory *) (KLibLoader::self()->factory("libkorganizerpart") );
         QVBoxLayout *l1=new QVBoxLayout(ui.korg_frame);
         l1->setMargin(0);
@@ -308,7 +308,7 @@ void DeviceHome::setupWidgets()
                     p_calendar->load(KGlobal::dirs()->saveLocation( "data", "kmobiletools", true).append( "%1.vcs" ).arg(objectName() ) );
                 else p_calendar->save(KGlobal::dirs()->saveLocation( "data", "kmobiletools", true).append( "%1.vcs" ).arg(objectName() ) );
                 korgpart->openUrl( KGlobal::dirs()->saveLocation( "data", "kmobiletools", true).append( "%1.vcs" ).arg(objectName() ) );
-                KAction *act=new KAction(KIcon("date"), i18n("Fetch Calendar"), this);
+                KAction *act=new KAction(KIcon("office-calendar"), i18n("Fetch Calendar"), this);
                 connect(act, SIGNAL(triggered()), this, SLOT(slotFetchCalendar()));
                 parent()->actionCollection()->addAction("get_cal", act);
                 l_actionList.append(act);
@@ -458,7 +458,7 @@ void DeviceHome::addSMSFolders()
     {
         int fn = 1;
         QTreeWidgetItem* i = new QTreeWidgetItem( p_smsItem, QStringList( *it ) );
-        i->setIcon( 0, KIcon("mail_generic") );
+        i->setIcon( 0, KIcon("mail-message") );
         i->setText( 1, "SMSFolder" );
         i->setText( 2, QString::number( fn ) );
      }

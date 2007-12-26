@@ -43,17 +43,17 @@ popupNumber::popupNumber(const QString &deviceName, const QString &number, QWidg
     kDebug() <<"popupNumber" << this;
     addTitle(number);
     this->number=number;
-    addAction(KIcon("kaddressbook"), i18n("Call with this mobile phone"), this, SLOT(call() ) );
-    addAction(KIcon("mail_generic"), i18n("Send a SMS with this mobile phone"), this, SLOT(newSMS() ) );
+    addAction(KIcon("kcall"), i18n("Call with this mobile phone"), this, SLOT(call() ) );
+    addAction(KIcon("mail-message-new"), i18n("Send a SMS with this mobile phone"), this, SLOT(newSMS() ) );
     if(KMobileTools::EnginesList::instance()->count() >1 )
     {
         devicesPopup *callsPopup=new devicesPopup(0);
         devicesPopup *smsPopup=new devicesPopup(0);
         callsPopup->setTitle(i18n("Call with...") );
-        callsPopup->setIcon(KIcon("kaddressbook") );
+        callsPopup->setIcon(KIcon("kcall") );
         addMenu(callsPopup);
         smsPopup->setTitle(i18n("Send a SMS with...") );
-        smsPopup->setIcon(KIcon("mail_generic") );
+        smsPopup->setIcon(KIcon("mail-message-new") );
         addMenu(smsPopup);
         connect(callsPopup, SIGNAL(deviceActivated( const QString& ) ), this, SLOT(call( const QString& ) ) );
         connect(smsPopup, SIGNAL(deviceActivated( const QString& ) ), this, SLOT(newSMS( const QString& ) ) );

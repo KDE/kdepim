@@ -66,7 +66,7 @@ QString Addressbook::name() const {
 }
 
 KIcon Addressbook::icon() const {
-    return KIcon( "kaddressbook" );
+    return KIcon( "office-address-book" );
 }
 
 QWidget* Addressbook::widget() const {
@@ -229,7 +229,7 @@ void Addressbook::cleanUpItems() {
 void Addressbook::addEntry( const KMobileTools::AddressbookEntry& entry ) {
     AddressbookEntryItem* item = new AddressbookEntryItem( m_addresseeList );
     item->setText( entry.name() );
-    item->setIcon( KIcon( "user" ) );
+    item->setIcon( KIcon( "user-contact" ) );
     item->setAddressee( entry );
 }
 
@@ -251,7 +251,7 @@ void Addressbook::findAvailableSlots() {
 void Addressbook::requestEntryAddition( const KMobileTools::AddressbookEntry& entry ) {
     AddressbookEntryItem* item = new AddressbookEntryItem( m_addresseeList );
     item->setText( entry.name() );
-    item->setIcon( KIcon( "user" ) );
+    item->setIcon( KIcon( "user-contact" ) );
     item->setAddressee( entry );
     item->setState( AddressbookEntryItem::AdditionRequested );
 
