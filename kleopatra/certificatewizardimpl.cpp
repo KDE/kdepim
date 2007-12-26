@@ -153,17 +153,12 @@ static bool requirementsAreMet( const CertificateWizardImpl::AttrPairList & list
     if ( !le )
       continue;
     const QString key = (*it).first;
-#ifndef NDEBUG
-    kdbgstream s = kDebug();
-#else
-    kndbgstream s = kDebug();
-#endif
-    s << "requirementsAreMet(): checking \"" << key << "\" against \"" << le->text() << "\":";
+    kDebug() << "requirementsAreMet(): checking \"" << key << "\" against \"" << le->text() << "\":";
     if ( key.endsWith("!") && le->text().trimmed().isEmpty() ) {
-      s << "required field is empty!";
+      kDebug() << "required field is empty!";
       return false;
     }
-    s << "ok" << endl;
+    kDebug() << "ok" << endl;
   }
   return true;
 }
