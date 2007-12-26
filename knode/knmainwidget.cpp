@@ -620,7 +620,7 @@ void KNMainWidget::initActions()
 
   //collection-view - accounts
   a_ctAccProperties = actionCollection()->addAction("account_properties");
-  a_ctAccProperties->setIcon(KIcon("configure"));
+  a_ctAccProperties->setIcon(KIcon("document-properties"));
   a_ctAccProperties->setText(i18n("Account &Properties"));
   connect(a_ctAccProperties, SIGNAL(triggered(bool)), SLOT(slotAccProperties()));
 
@@ -661,7 +661,7 @@ void KNMainWidget::initActions()
 
   //collection-view - groups
   a_ctGrpProperties = actionCollection()->addAction("group_properties");
-  a_ctGrpProperties->setIcon(KIcon("configure"));
+  a_ctGrpProperties->setIcon(KIcon("document-properties"));
   a_ctGrpProperties->setText(i18n("Group &Properties"));
   connect(a_ctGrpProperties, SIGNAL(triggered(bool)), SLOT(slotGrpProperties()));
 
@@ -689,7 +689,7 @@ void KNMainWidget::initActions()
   connect(a_ctGrpUnsubscribe, SIGNAL(triggered(bool)), SLOT(slotGrpUnsubscribe()));
 
   a_ctGrpSetAllRead = actionCollection()->addAction("group_allRead");
-  a_ctGrpSetAllRead->setIcon(KIcon("go-jump"));
+  a_ctGrpSetAllRead->setIcon(KIcon("mail-mark-read"));
   a_ctGrpSetAllRead->setText(i18n("Mark All as &Read"));
   connect(a_ctGrpSetAllRead, SIGNAL(triggered(bool)), SLOT(slotGrpSetAllRead()));
 
@@ -836,7 +836,7 @@ void KNMainWidget::initActions()
 
   // scoring
   a_ctScoresEdit = actionCollection()->addAction("scoreedit");
-  a_ctScoresEdit->setIcon(KIcon("object-edit"));
+  a_ctScoresEdit->setIcon(KIcon("document-properties"));
   a_ctScoresEdit->setText(i18n("&Edit Scoring Rules..."));
   connect(a_ctScoresEdit, SIGNAL(triggered(bool)), SLOT(slotScoreEdit()));
   a_ctScoresEdit->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_E));
@@ -885,7 +885,7 @@ void KNMainWidget::initActions()
   connect(a_ctArtSendNow, SIGNAL(triggered(bool)), SLOT(slotArtSendNow()));
 
   a_ctArtEdit = actionCollection()->addAction("article_edit");
-  a_ctArtEdit->setIcon(KIcon("object-edit"));
+  a_ctArtEdit->setIcon(KIcon("document-properties"));
   a_ctArtEdit->setText(i18nc("edit article","&Edit Article..."));
   connect(a_ctArtEdit, SIGNAL(triggered(bool)), SLOT(slotArtEdit()));
   a_ctArtEdit->setShortcut(QKeySequence(Qt::Key_E));

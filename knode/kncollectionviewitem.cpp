@@ -65,7 +65,7 @@ void KNCollectionViewItem::setIcon() {
         setPixmap( 0, SmallIcon("folder-outbox") );
         break;
       case KFolderTreeItem::Drafts:
-        setPixmap( 0, SmallIcon("object-edit") );
+        setPixmap( 0, SmallIcon("document-properties") );
         break;
       case KFolderTreeItem::SentMail:
         setPixmap( 0, SmallIcon("folder-sent-mail") );
