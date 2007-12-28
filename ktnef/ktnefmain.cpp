@@ -36,7 +36,6 @@ using namespace KTnef;
 #include <kapplication.h>
 #include <kactioncollection.h>
 #include <kiconloader.h>
-#include <QPixmap>
 #include <kstandardshortcut.h>
 #include <QMessageBox>
 #include <kfiledialog.h>
@@ -89,31 +88,31 @@ void KTNEFMain::setupActions()
 {
 	// File menu
 	KStandardAction::open(this, SLOT(openFile()), actionCollection());
-	KStandardAction::quit(kapp, SLOT(quit()), actionCollection());
+	KStandardAction::quit(kapp, SLOT(closeAllWindows()), actionCollection());
 
 	// Action menu
 	KAction *action  = new KAction(KIcon(QString("zoom-original")), i18n("View"), this);
 	actionCollection()->addAction("view_file", action );
 	connect(action, SIGNAL(triggered(bool)), SLOT(viewFile()));
-	action  = new KAction(KIcon(QString("package_applications")), i18n("View With..."), this);
+	action  = new KAction(KIcon(QString("applications-other")), i18n("View With..."), this);
 	actionCollection()->addAction("view_file_as", action );
 	connect(action, SIGNAL(triggered(bool)), SLOT(viewFileAs()));
-	action  = new KAction(i18n("Extract"), this);
-	actionCollection()->addAction("extract_file", action );
-	connect(action, SIGNAL(triggered(bool) ), SLOT(extractFile()));
-	action  = new KAction(KIcon(QString("ktnef_extract_to")), i18n("Extract To..."), this);
-	actionCollection()->addAction("extract_file_to", action );
-	connect(action, SIGNAL(triggered(bool)), SLOT(extractFileTo()));
-	action  = new KAction(KIcon(QString("ktnef_extract_all_to")), i18n("Extract All To..."), this);
-	actionCollection()->addAction("extract_all_files", action );
+  action  = new KAction(i18n("Extract"), this);
+  actionCollection()->addAction("extract_file", action );
+  connect(action, SIGNAL(triggered(bool) ), SLOT(extractFile()));
+  action  = new KAction(KIcon(QString("archive-extract")), i18n("Extract To..."), this);
+  actionCollection()->addAction("extract_file_to", action );
+  connect(action, SIGNAL(triggered(bool)), SLOT(extractFileTo()));
+  action  = new KAction(KIcon(QString("archive-extract-all")), i18n("Extract All To..."), this);
+  actionCollection()->addAction("extract_all_files", action );
 	connect(action, SIGNAL(triggered(bool)), SLOT(extractAllFiles()));
-	action  = new KAction(KIcon("help-contents"), i18n("Message Properties"), this);
+	action  = new KAction(KIcon("help-about"), i18n("Message Properties"), this);
 	actionCollection()->addAction("msg_properties", action );
 	connect(action, SIGNAL(triggered(bool)), SLOT( slotShowMessageProperties() ));
-	action  = new KAction(KIcon(QString("help-contents")), i18n("Properties"), this);
+	action  = new KAction(KIcon(QString("document-properties")), i18n("Properties"), this);
 	actionCollection()->addAction("properties_file", action );
 	connect(action, SIGNAL(triggered(bool)), SLOT(propertiesFile()));
-	action  = new KAction(KIcon("mail"), i18n("Show Message Text"), this);
+	action  = new KAction(KIcon("mail-message"), i18n("Show Message Text"), this);
 	actionCollection()->addAction("msg_text", action );
 	connect(action, SIGNAL(triggered(bool)), SLOT( slotShowMessageText() ));
 	action  = new KAction(KIcon("document-save"), i18n("Save Message Text As..."), this);
@@ -127,7 +126,7 @@ void KTNEFMain::setupActions()
 	actionCollection()->action("properties_file")->setEnabled(false);
 
 	// Option menu
-	action  = new KAction(KIcon(QString("folder-open")), i18n("Default Folder..."), this);
+	action  = new KAction(KIcon(QString("document-open-folder")), i18n("Default Folder..."), this);
 	actionCollection()->addAction("options_default_dir", action );
 	connect(action, SIGNAL(triggered(bool)), SLOT(optionDefaultDir()));
 
@@ -348,15 +347,15 @@ void KTNEFMain::viewRightButtonPressed(Q3ListViewItem*, const QPoint& p, int)
 		if (list->count() == 1)
 		{
 			m.addAction(SmallIcon("zoom-original"), i18n("View"), this, SLOT(viewFile()));
-			m.addAction(SmallIcon("package_applications"), i18n("View With..."), this, SLOT(viewFileAs()));
+			m.addAction(SmallIcon("applications-other"), i18n("View With..."), this, SLOT(viewFileAs()));
 			m.addSeparator();
 		}
 		m.addAction(i18n("Extract"), this, SLOT(extractFile()));
-		m.addAction(SmallIcon("ktnef_extract_to"), i18n("Extract To..."), this, SLOT(extractFileTo()));
+		m.addAction(SmallIcon("archive-extract"), i18n("Extract To..."), this, SLOT(extractFileTo()));
 		if (list->count() == 1u)
 		{
 			m.addSeparator();
-			m.addAction(SmallIcon("help-contents"), i18n("Properties"), this, SLOT(propertiesFile()));
+			m.addAction(SmallIcon("document-properties"), i18n("Properties"), this, SLOT(propertiesFile()));
 		}
 	}
 	else if ( list->count() == 0 )

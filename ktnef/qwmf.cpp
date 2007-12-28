@@ -19,11 +19,9 @@
 
 #include <math.h>
 #include <assert.h>
-#include <QFileInfo>
 #include <QPixmap>
 #include <QPainter>
 #include <QDataStream>
-#include <QApplication>
 #include <QBuffer>
 //Added by qt3to4:
 #include <Q3CString>
