@@ -160,7 +160,7 @@ void AddresseeEditorWidget::setupTab1()
 
   // Person icon
   label = new QLabel( tab1 );
-  label->setPixmap( KIconLoader::global()->loadIcon( "personal", KIconLoader::Desktop,
+  label->setPixmap( KIconLoader::global()->loadIcon( "user-identity", KIconLoader::Desktop,
                                                       KIconLoader::SizeMedium ) );
   layout->addWidget( label, 0, 0, 2, 1);
 
@@ -215,7 +215,7 @@ void AddresseeEditorWidget::setupTab1()
   //////////////////////////////////////
   // Phone numbers (upper right)
   label = new QLabel( tab1 );
-  label->setPixmap( KIconLoader::global()->loadIcon( "kaddressbook",
+  label->setPixmap( KIconLoader::global()->loadIcon( "office-address-book",
                     KIconLoader::Desktop, KIconLoader::SizeMedium ) );
   layout->addWidget( label, 0, 3, 2, 1 );
 
@@ -240,7 +240,7 @@ void AddresseeEditorWidget::setupTab1()
   //////////////////////////////////////
   // Email / Web (lower right)
   label = new QLabel( tab1 );
-  label->setPixmap( KIconLoader::global()->loadIcon( "email", KIconLoader::Desktop,
+  label->setPixmap( KIconLoader::global()->loadIcon( "mail-message", KIconLoader::Desktop,
                                                      KIconLoader::SizeMedium ) );
   layout->addWidget( label, 5, 3, 2, 1);
 
@@ -253,7 +253,7 @@ void AddresseeEditorWidget::setupTab1()
   layout->addWidget( bar, 7, 3, 1, 4 );
 
   label = new QLabel( tab1 );
-  label->setPixmap( KIconLoader::global()->loadIcon( "homepage", KIconLoader::Desktop,
+  label->setPixmap( KIconLoader::global()->loadIcon( "internet-web-browser", KIconLoader::Desktop,
                                                      KIconLoader::SizeMedium ) );
   layout->addWidget( label, 9, 3, 1, 2, Qt::AlignTop );
 
@@ -387,7 +387,7 @@ void AddresseeEditorWidget::setupTab2()
   // Personal info
 
   label = new QLabel( tab2 );
-  label->setPixmap( KIconLoader::global()->loadIcon( "personal", KIconLoader::Desktop,
+  label->setPixmap( KIconLoader::global()->loadIcon( "user-identity", KIconLoader::Desktop,
                                                      KIconLoader::SizeMedium ) );
   layout->addWidget( label, 4, 0, 2, 1);
 

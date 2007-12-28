@@ -46,8 +46,6 @@
 #include <qdatetimeedit.h>
 #include <QCheckBox>
 #include <QLayout>
-//Added by qt3to4:
-#include <QVBoxLayout>
 
 #include <kdemacros.h>
 
@@ -139,7 +137,7 @@ static const char s_addnewservers_componentName[] = "dirmngr";
 static const char s_addnewservers_groupName[] = "LDAP";
 static const char s_addnewservers_entryName[] = "add-servers";
 
-DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( const KComponentData &instance, QWidget *parent, const QStringList &args )
+DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( const KComponentData &instance, QWidget *parent, const QVariantList &args )
     : KCModule( instance, parent, args )
 {
   mConfig = Kleo::CryptoBackendFactory::instance()->config();
@@ -263,7 +261,7 @@ void DirectoryServicesConfigurationPage::defaults()
 
 extern "C"
 {
-  KDE_EXPORT KCModule *create_kleopatra_config_dirserv( QWidget *parent=0, const QStringList &args=QStringList() )
+  KDE_EXPORT KCModule *create_kleopatra_config_dirserv( QWidget *parent=0, const QVariantList &args=QVariantList() )
   {
     DirectoryServicesConfigurationPage *page =
       new DirectoryServicesConfigurationPage( KComponentData( "kleopatra" ), parent, args );

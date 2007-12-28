@@ -60,7 +60,7 @@ class KCAL_RESOURCEREMOTE_EXPORT ResourceRemote : public ResourceCached
     ResourceRemote( const KConfigGroup &group );
     /**
       Create remote resource.
-      
+
       @param downloadUrl URL used to download iCalendar file
       @param uploadUrl   URL used to upload iCalendar file
     */
@@ -90,7 +90,6 @@ class KCAL_RESOURCEREMOTE_EXPORT ResourceRemote : public ResourceCached
 
     bool setValue( const QString &key, const QString &value );
 
-
   protected Q_SLOTS:
     void slotLoadJobResult( KJob * );
     void slotSaveJobResult( KJob * );
@@ -100,6 +99,7 @@ class KCAL_RESOURCEREMOTE_EXPORT ResourceRemote : public ResourceCached
   protected:
     bool doLoad( bool syncCache );
     bool doSave( bool syncCache );
+    bool doSave( bool syncCache, Incidence *incidence );
 
     void addInfoText( QString & ) const;
 
@@ -114,11 +114,11 @@ class KCAL_RESOURCEREMOTE_EXPORT ResourceRemote : public ResourceCached
 
     KIO::FileCopyJob *mDownloadJob;
     KIO::FileCopyJob *mUploadJob;
-    
+
     KPIM::ProgressItem *mProgress;
 
     Incidence::List mChangedIncidences;
-    
+
     KABC::Lock *mLock;
 
     class Private;

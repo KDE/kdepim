@@ -77,8 +77,8 @@ public:
     Q_DECLARE_FLAGS(MemorySlots, MemorySlot)
 
     SMS();
-    KDE_DEPRECATED SMS(const QStringList & numbers, const QString & text);
-    KDE_DEPRECATED SMS(const QStringList & numbers, const QString & text, const KDateTime & datetime);
+    KDE_CONSTRUCTOR_DEPRECATED SMS(const QStringList & numbers, const QString & text);
+    KDE_CONSTRUCTOR_DEPRECATED SMS(const QStringList & numbers, const QString & text, const KDateTime & datetime);
 
     virtual ~SMS();
 

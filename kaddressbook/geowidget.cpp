@@ -40,12 +40,6 @@
 #include <QPushButton>
 #include <QRegExp>
 #include <QString>
-//Added by qt3to4:
-#include <QTextStream>
-#include <QPaintEvent>
-#include <QGridLayout>
-#include <QFrame>
-#include <QMouseEvent>
 
 #include "geowidget.h"
 
@@ -172,7 +166,7 @@ void GeoWidget::editGeoData()
 
 
 
-GeoDialog::GeoDialog( QWidget *parent, const char *name )
+GeoDialog::GeoDialog( QWidget *parent )
   : KDialog( parent ),
     mUpdateSexagesimalInput( true )
 {

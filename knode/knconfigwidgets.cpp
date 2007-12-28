@@ -438,7 +438,8 @@ void KNode::NntpAccountListWidget::slotSubBtnClicked()
 
 KNode::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *parent ) :
     KPageDialog( parent ),
-    mAccount( a )
+    mAccount( a ),
+    mUseServerForName( false )
 {
   if ( a->id() != -1 )
     setCaption( i18n("Properties of %1", a->name()) );
@@ -456,7 +457,16 @@ KNode::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *
   mName->setText( a->name() );
   mServer->setText( a->server() );
   mPort->setValue( a->port() );
+#ifndef Q_WS_WIN
+// don't know how to set this in KDE4, where no related methods exists 
+  mPort->setSliderEnabled( false );
+#endif  
   mFetchDesc->setChecked( a->fetchDescriptions() );
+
+  connect( mServer, SIGNAL( textChanged( const QString& ) ),
+           this, SLOT( slotServerTextEdited() ) );
+  connect( mServer, SIGNAL( editingFinished() ),
+           this, SLOT( slotEditingFinished() ) );
 
   mLogin->setChecked( a->needsLogon() );
   mUser->setText( a->user() );
@@ -495,8 +505,6 @@ KNode::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *
   KNHelper::restoreWindowSize("accNewsPropDLG", this, sizeHint());
 
   setHelp("anc-setting-the-news-account");
-
-  connect( this, SIGNAL(okClicked()), SLOT(slotOk()) );
 }
 
 
@@ -505,39 +513,58 @@ KNode::NntpAccountConfDialog::~NntpAccountConfDialog()
   KNHelper::saveWindowSize("accNewsPropDLG", size());
 }
 
-
-void KNode::NntpAccountConfDialog::slotOk()
+void KNode::NntpAccountConfDialog::slotServerTextEdited()
 {
-  if ( mName->text().isEmpty() || mServer->text().trimmed().isEmpty() ) {
-    KMessageBox::sorry(this, i18n("Please enter an arbitrary name for the account and the\nhostname of the news server."));
-    return;
+  if ( mName->text().trimmed() == "" ) {
+    mUseServerForName = true;
   }
 
-  mAccount->setName( mName->text() );
-  mAccount->setServer( mServer->text().trimmed() );
-  mAccount->setPort( mPort->value() );
-  mAccount->setFetchDescriptions( mFetchDesc->isChecked() );
-  mAccount->setNeedsLogon( mLogin->isChecked() );
-  mAccount->setUser( mUser->text() );
-  mAccount->setPass( mPassword->text() );
+  if ( mUseServerForName ) {
+    mName->setText( mServer->text() );
+  }
+}
 
-  if ( mEncNone->isChecked() )
-    mAccount->setEncryption( KNServerInfo::None );
-  if ( mEncSSL->isChecked() )
-    mAccount->setEncryption( KNServerInfo::SSL );
-  if ( mEncTLS->isChecked() )
-    mAccount->setEncryption( KNServerInfo::TLS );
+void KNode::NntpAccountConfDialog::slotEditingFinished()
+{
+  mUseServerForName = false;
+}
 
-  mAccount->setIntervalChecking( mIntervalChecking->isChecked() );
-  mAccount->setCheckInterval( mInterval->value() );
+void KNode::NntpAccountConfDialog::slotButtonClicked( int button )
+{
+  if ( button == KDialog::Ok ) {
+    if ( mName->text().isEmpty() || mServer->text().trimmed().isEmpty() ) {
+      KMessageBox::sorry(this, i18n("Please enter an arbitrary name for the account and the\nhostname of the news server."));
+      return;
+    }
 
-  if ( mAccount->id() != -1 ) // only save if account has a valid id
-    mAccount->saveInfo();
+    mAccount->setName( mName->text() );
+    mAccount->setServer( mServer->text().trimmed() );
+    mAccount->setPort( mPort->value() );
+    mAccount->setFetchDescriptions( mFetchDesc->isChecked() );
+    mAccount->setNeedsLogon( mLogin->isChecked() );
+    mAccount->setUser( mUser->text() );
+    mAccount->setPass( mPassword->text() );
 
-  mIdentityWidget->save();
-  mCleanupWidget->save();
+    if ( mEncNone->isChecked() )
+      mAccount->setEncryption( KNServerInfo::None );
+    if ( mEncSSL->isChecked() )
+      mAccount->setEncryption( KNServerInfo::SSL );
+    if ( mEncTLS->isChecked() )
+      mAccount->setEncryption( KNServerInfo::TLS );
 
-  accept();
+    mAccount->setIntervalChecking( mIntervalChecking->isChecked() );
+    mAccount->setCheckInterval( mInterval->value() );
+
+    if ( mAccount->id() != -1 ) // only save if account has a valid id
+      mAccount->saveInfo();
+
+    mIdentityWidget->save();
+    mCleanupWidget->save();
+
+    accept();
+  } else {
+    KDialog::slotButtonClicked( button );
+  }
 }
 
 

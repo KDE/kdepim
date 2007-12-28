@@ -121,6 +121,7 @@ int main( int argc, char *argv[] )
     return 0;
 
   KAddressBookApp app;
+  QApplication::setWindowIcon( KIcon( "office-address-book" ) );
   KGlobal::locale()->insertCatalog( "libkdepim" );
 
   bool ret = app.exec();

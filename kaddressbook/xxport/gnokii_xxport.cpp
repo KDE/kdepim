@@ -312,7 +312,7 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 		// try to split Name into FamilyName and GivenName
 		s = GN_FROM(entry.name).simplified();
 		a->setFormattedName(s); // set formatted name as in Phone
-		if (s.find(',') == -1) {
+		if (s.indexOf(',') == -1) {
 		  // assumed format: "givenname [... familyname]"
 		  addrlist = s.split(' ', QString::SkipEmptyParts);
 		  if (addrlist.count() == 1) {
@@ -532,7 +532,7 @@ static QString makeValidPhone( const QString &number )
 	QString num = number.simplified();
 	QString allowed("0123456789*+#pw");
 	for (unsigned int i=num.length(); i>=1; i--)
-		if (allowed.find(num[i-1])==-1)
+		if (allowed.indexOf(num[i-1])==-1)
 			num.remove(i-1,1);
 	if (num.isEmpty())
 		num = "0";
@@ -557,7 +557,7 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 	if (s.isEmpty() && addr->phoneNumbers().count()>0)
 		s = (addr->phoneNumbers().at(0)).number();
 	s = makeValidPhone(s);
-	strncpy(entry.number, s.ascii(), sizeof(entry.number)-1);
+	strncpy(entry.number, s.toAscii(), sizeof(entry.number)-1);
 	entry.memory_type = memtype;
 	QString cg = addr->custom(APP, "X_GSM_CALLERGROUP");
 	if (cg.isEmpty())
@@ -604,7 +604,7 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 			default:			type = GN_PHONEBOOK_NUMBER_General;	break;
 		}
 		subentry->number_type = type;
-		strncpy(subentry->data.number, makeValidPhone(s).ascii(), sizeof(subentry->data.number)-1);
+		strncpy(subentry->data.number, makeValidPhone(s).toAscii(), sizeof(subentry->data.number)-1);
 		subentry->id = phone_location<<8+entry.subentries_count;
 		entry.subentries_count++;
 		subentry++;

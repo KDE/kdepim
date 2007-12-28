@@ -22,10 +22,8 @@
 #define MAX_LINE 4096
 #endif
 
-#include <QComboBox>
 #include <q3ptrlist.h>
 #include <q3listbox.h>
-#include <QLabel>
 
 #include "kimportpage.h"
 

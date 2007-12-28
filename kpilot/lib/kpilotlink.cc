@@ -175,13 +175,15 @@ KPilotLink::~KPilotLink()
 	KPILOT_DELETE(fPilotSysInfo);
 }
 
-void KPilotLink::customEvent(QEvent *e)
+/* virtual */ bool KPilotLink::event(QEvent *e)
 {
 	if ((int)e->type() == EventTickleTimeout)
 	{
 		stopTickle();
 		emit timeout();
+      return true;
 	}
+   else return QObject::event(e);
 }
 
 /*

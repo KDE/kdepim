@@ -183,7 +183,7 @@ KNode::Appearance::Appearance()
   i_cons[newFups]         = UserIcon("newsubs");
   i_cons[eyes]            = UserIcon("eyes");
   i_cons[ignore]          = UserIcon("ignore");
-  i_cons[mail]            = SmallIcon("mail");
+  i_cons[mail]            = SmallIcon("mail-message");
   i_cons[posting]         = UserIcon("article");
   i_cons[canceledPosting] = SmallIcon("edit-delete");
   i_cons[savedRemote]     = SmallIcon("edit-copy");

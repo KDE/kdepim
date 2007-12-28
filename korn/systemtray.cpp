@@ -22,7 +22,6 @@
 #include <kconfig.h>
 #include <kdebug.h>
 
-#include <QMovie>
 //Added by qt3to4:
 #include <QMouseEvent>
 

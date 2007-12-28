@@ -22,7 +22,6 @@
 #include <kdebug.h>
 #include <kurlrequester.h>
 
-#include <QLayout>
 #include <QList>
 #include <QVector>
 #include <QStringList>

@@ -27,7 +27,6 @@
 #include <QLabel>
 #include <QString>
 #include <QStringList>
-#include <QValidator>
 
 AccountInput::AccountInput( const QString& configName )
 	: _configName( new QString( configName ) )

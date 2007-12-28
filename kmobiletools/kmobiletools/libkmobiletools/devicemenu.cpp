@@ -40,15 +40,15 @@ deviceMenu::deviceMenu(bool loaded, KMobileTools::Engine *engine, QWidget *paren
     setObjectName(name);
     addTitle( DEVCFG(name)->deviceName() );
     if(loaded)
-        addAction( KIcon( "connect_no" ), i18n("Unload"), this, SLOT(slotUnloadDevice()) );
-    else addAction( KIcon( "connect_creating" ), i18n("Load"), this, SLOT(slotLoadDevice()) );
+        addAction( KIcon( "network-disconnect" ), i18n("Unload"), this, SLOT(slotUnloadDevice()) );
+    else addAction( KIcon( "network-connect" ), i18n("Load"), this, SLOT(slotLoadDevice()) );
     if (!engine)
-        addAction( KIcon( "goto" ), i18n("Switch to.."), this, SLOT(slotSwitchDevice()) );
+        addAction( KIcon( "go-jump" ), i18n("Switch to.."), this, SLOT(slotSwitchDevice()) );
     else
     {
         addSeparator();
-        addAction( KIcon( "personal" ),  i18n("Phonebook"), this, SLOT(slotGoPhonebook()) );
-        addAction( KIcon( "mail_get" ),  i18n("SMS"), this, SLOT(slotGoSMS()) );
+        addAction( KIcon( "user-contact" ),  i18n("Phonebook"), this, SLOT(slotGoPhonebook()) );
+        addAction( KIcon( "mail-receive" ),  i18n("SMS"), this, SLOT(slotGoSMS()) );
     }
     addAction( KIcon( "configure" ), i18n("Configure"), this, SLOT(slotConfigureDevice()) );
 }

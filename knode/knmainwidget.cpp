@@ -31,6 +31,7 @@
 #include <kedittoolbar.h>
 #include <kstandardaction.h>
 #include <kdebug.h>
+#include <kdeversion.h>
 #include <kmenubar.h>
 #include <kiconloader.h>
 #include <kstatusbar.h>
@@ -237,7 +238,13 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
     slotSettings();
   }
 
-  actionCollection()->associateWidget( this );
+  actionCollection()->addAssociatedWidget( this );
+  foreach (QAction* action, actionCollection()->actions())
+#if QT_VERSION < KDE_MAKE_VERSION(4,4,0)
+    action->setShortcutContext(Qt::WidgetShortcut); // remove after Qt4.4 becomes mandatory
+#else
+    action->setShortcutContext(Qt::WidgetWithChildrenShortcut);
+#endif
 }
 
 KNMainWidget::~KNMainWidget()
@@ -613,12 +620,12 @@ void KNMainWidget::initActions()
 
   //collection-view - accounts
   a_ctAccProperties = actionCollection()->addAction("account_properties");
-  a_ctAccProperties->setIcon(KIcon("configure"));
+  a_ctAccProperties->setIcon(KIcon("document-properties"));
   a_ctAccProperties->setText(i18n("Account &Properties"));
   connect(a_ctAccProperties, SIGNAL(triggered(bool)), SLOT(slotAccProperties()));
 
   a_ctAccRename = actionCollection()->addAction("account_rename");
-  a_ctAccRename->setIcon(KIcon("editinput"));
+  a_ctAccRename->setIcon(KIcon("edit-rename"));
   a_ctAccRename->setText(i18n("&Rename Account"));
   connect(a_ctAccRename, SIGNAL(triggered(bool)), SLOT(slotAccRename()));
 
@@ -637,7 +644,7 @@ void KNMainWidget::initActions()
   connect(a_ctAccGetNewHdrs, SIGNAL(triggered(bool)), SLOT(slotAccGetNewHdrs()));
 
   a_ctAccGetNewHdrsAll = actionCollection()->addAction("account_dnlAllHeaders");
-  a_ctAccGetNewHdrsAll->setIcon(KIcon("mail_get_all"));
+  a_ctAccGetNewHdrsAll->setIcon(KIcon("mail-receive-all"));
   a_ctAccGetNewHdrsAll->setText(i18n("&Get New Articles in All Accounts"));
   connect(a_ctAccGetNewHdrsAll, SIGNAL(triggered(bool)), SLOT(slotAccGetNewHdrsAll()));
 
@@ -654,12 +661,12 @@ void KNMainWidget::initActions()
 
   //collection-view - groups
   a_ctGrpProperties = actionCollection()->addAction("group_properties");
-  a_ctGrpProperties->setIcon(KIcon("configure"));
+  a_ctGrpProperties->setIcon(KIcon("document-properties"));
   a_ctGrpProperties->setText(i18n("Group &Properties"));
   connect(a_ctGrpProperties, SIGNAL(triggered(bool)), SLOT(slotGrpProperties()));
 
   a_ctGrpRename = actionCollection()->addAction("group_rename");
-  a_ctGrpRename->setIcon(KIcon("editinput"));
+  a_ctGrpRename->setIcon(KIcon("edit-rename"));
   a_ctGrpRename->setText(i18n("Rename &Group"));
   connect(a_ctGrpRename, SIGNAL(triggered(bool)), SLOT(slotGrpRename()));
 
@@ -682,7 +689,7 @@ void KNMainWidget::initActions()
   connect(a_ctGrpUnsubscribe, SIGNAL(triggered(bool)), SLOT(slotGrpUnsubscribe()));
 
   a_ctGrpSetAllRead = actionCollection()->addAction("group_allRead");
-  a_ctGrpSetAllRead->setIcon(KIcon("go-jump"));
+  a_ctGrpSetAllRead->setIcon(KIcon("mail-mark-read"));
   a_ctGrpSetAllRead->setText(i18n("Mark All as &Read"));
   connect(a_ctGrpSetAllRead, SIGNAL(triggered(bool)), SLOT(slotGrpSetAllRead()));
 
@@ -716,7 +723,7 @@ void KNMainWidget::initActions()
   connect(a_ctFolDelete, SIGNAL(triggered(bool)), SLOT(slotFolDelete()));
 
   a_ctFolRename = actionCollection()->addAction("folder_rename");
-  a_ctFolRename->setIcon(KIcon("editinput"));
+  a_ctFolRename->setIcon(KIcon("edit-rename"));
   a_ctFolRename->setText(i18n("&Rename Folder"));
   connect(a_ctFolRename, SIGNAL(triggered(bool)), SLOT(slotFolRename()));
 
@@ -829,7 +836,7 @@ void KNMainWidget::initActions()
 
   // scoring
   a_ctScoresEdit = actionCollection()->addAction("scoreedit");
-  a_ctScoresEdit->setIcon(KIcon("edit"));
+  a_ctScoresEdit->setIcon(KIcon("document-properties"));
   a_ctScoresEdit->setText(i18n("&Edit Scoring Rules..."));
   connect(a_ctScoresEdit, SIGNAL(triggered(bool)), SLOT(slotScoreEdit()));
   a_ctScoresEdit->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_E));
@@ -878,7 +885,7 @@ void KNMainWidget::initActions()
   connect(a_ctArtSendNow, SIGNAL(triggered(bool)), SLOT(slotArtSendNow()));
 
   a_ctArtEdit = actionCollection()->addAction("article_edit");
-  a_ctArtEdit->setIcon(KIcon("edit"));
+  a_ctArtEdit->setIcon(KIcon("document-properties"));
   a_ctArtEdit->setText(i18nc("edit article","&Edit Article..."));
   connect(a_ctArtEdit, SIGNAL(triggered(bool)), SLOT(slotArtEdit()));
   a_ctArtEdit->setShortcut(QKeySequence(Qt::Key_E));

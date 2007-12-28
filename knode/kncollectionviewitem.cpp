@@ -53,7 +53,7 @@ void KNCollectionViewItem::setIcon() {
     // news servers/groups
     switch ( type() ) {
       case KFolderTreeItem::Root:
-        setPixmap( 0, SmallIcon("server") );
+        setPixmap( 0, SmallIcon("network-server") );
         break;
       default:
         setPixmap( 0, UserIcon("group") );
@@ -65,10 +65,10 @@ void KNCollectionViewItem::setIcon() {
         setPixmap( 0, SmallIcon("folder-outbox") );
         break;
       case KFolderTreeItem::Drafts:
-        setPixmap( 0, SmallIcon("edit") );
+        setPixmap( 0, SmallIcon("document-properties") );
         break;
       case KFolderTreeItem::SentMail:
-        setPixmap( 0, SmallIcon("mail-folder-sent") );
+        setPixmap( 0, SmallIcon("folder-sent-mail") );
         break;
       default:
         setPixmap( 0, SmallIcon("folder") );

@@ -39,9 +39,7 @@
 #include <ktoolinvocation.h>
 #include <kvbox.h>
 #include <kcomponentdata.h>
-#include <QtDBus>
 
-#include <QBitmap>
 #include <QColor>
 #include <QFont>
 #include <QDateTime>

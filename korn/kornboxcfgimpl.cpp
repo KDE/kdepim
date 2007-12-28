@@ -35,8 +35,6 @@ class KConfig;
 #include <QCheckBox>
 #include <QColor>
 #include <QFont>
-#include <QLabel>
-#include <QListView>
 #include <QString>
 
 KornBoxCfgImpl::KornBoxCfgImpl( QWidget * parent, Settings *glob_settings, BoxSettings *settings )

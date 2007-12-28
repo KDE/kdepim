@@ -309,14 +309,15 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
 
       @return The success of the blog retrieval operation.
     */
-    bool doLoad( bool );
+    bool doLoad( bool syncCache );
 
     /**
       Save the resource cache.
 
       @return The success of the cache save operation.
     */
-    bool doSave( bool );
+    bool doSave( bool syncCache );
+    bool doSave( bool syncCache, Incidence *incidence );
 
     /**
       Add the URL and API of the blog to the string.

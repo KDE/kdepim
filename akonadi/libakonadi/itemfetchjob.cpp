@@ -24,7 +24,8 @@
 #include "imapparser.h"
 #include "itemserializerplugin.h"
 
-#include <QtCore/QDebug>
+#include <kdebug.h>
+
 #include <QtCore/QTimer>
 
 using namespace Akonadi;
@@ -150,7 +151,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
             item.addPart( QString::fromLatin1(key), fetch.value( i+1 ) );
           } catch ( ItemSerializerException &e ) {
             // FIXME how do we react to this? Should we still append?
-            qWarning() << "Failed to construct the payload of type: " << item.mimeType();
+            kWarning( 5250 ) << "Failed to construct the payload of type: " << item.mimeType();
           }
         }
 
@@ -163,7 +164,7 @@ void ItemFetchJob::doHandleResponse( const QByteArray & tag, const QByteArray & 
       return;
     }
   }
-  qDebug() << "Unhandled response in message fetch job: " << tag << data;
+  kDebug( 5250 ) << "Unhandled response: " << tag << data;
 }
 
 Item::List ItemFetchJob::items() const
@@ -193,7 +194,7 @@ Item ItemFetchJob::createItem(const QList< QByteArray > & fetchResponse)
   }
 
   if ( uid < 0 || rev < 0 || mimeType.isEmpty() ) {
-    qWarning() << "Broken fetch response: UID, RID, REV or MIMETYPE missing!";
+    kWarning( 5250 ) << "Broken fetch response: UID, RID, REV or MIMETYPE missing!";
     return Item();
   }
 

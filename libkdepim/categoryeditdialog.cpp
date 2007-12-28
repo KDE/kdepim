@@ -41,10 +41,12 @@
 
 using namespace KPIM;
 
-CategoryEditDialog::CategoryEditDialog( KPimPrefs *prefs, QWidget* parent )
+CategoryEditDialog::CategoryEditDialog( KPimPrefs *prefs, QWidget* parent,
+                                        bool modal )
   : KDialog( parent ), mPrefs( prefs )
 {
   setCaption( i18n( "Edit Categories" ) );
+  setModal( modal );
   setButtons( Ok|Apply|Cancel|Help );
   mWidgets = new Ui::CategoryEditDialog_base();
   QWidget *widget = new QWidget( this );
@@ -60,7 +62,7 @@ CategoryEditDialog::CategoryEditDialog( KPimPrefs *prefs, QWidget* parent )
 
   fillList();
 
-  connect( mWidgets->mCategories, 
+  connect( mWidgets->mCategories,
            SIGNAL( currentItemChanged( QTreeWidgetItem *, QTreeWidgetItem * )),
            SLOT( editItem( QTreeWidgetItem * )) );
   connect( mWidgets->mCategories, SIGNAL( itemSelectionChanged() ),
@@ -115,7 +117,7 @@ void CategoryEditDialog::slotSelectionChanged()
 void CategoryEditDialog::add()
 {
   if ( !mWidgets->mEdit->text().isEmpty() ) {
-    QTreeWidgetItem *newItem = 
+    QTreeWidgetItem *newItem =
       new QTreeWidgetItem( mWidgets->mCategories, QStringList( "" ) );
     // FIXME: Use a better string once string changes are allowed again
 //                                                i18n("New category") );
@@ -133,7 +135,7 @@ void CategoryEditDialog::add()
 void CategoryEditDialog::addSubcategory()
 {
   if ( !mWidgets->mEdit->text().isEmpty() ) {
-    QTreeWidgetItem *newItem = 
+    QTreeWidgetItem *newItem =
       new QTreeWidgetItem( mWidgets->mCategories->currentItem(), QStringList( "" ) );
     // FIXME: Use a better string once string changes are allowed again
 //                                                i18n("New category") );
@@ -148,21 +150,16 @@ void CategoryEditDialog::addSubcategory()
 
 void CategoryEditDialog::remove()
 {
-  QList<QTreeWidgetItem*> to_remove;
-  QTreeWidgetItemIterator it( mWidgets->mCategories, QTreeWidgetItemIterator::Selected );
-  while ( *it ) {
-    to_remove.append( *it++ );
-  }
-
-  QListIterator<QTreeWidgetItem*> items( to_remove );
-  while ( items.hasNext() ) {
-    delete items.next();
+  QList<QTreeWidgetItem*> to_remove = mWidgets->mCategories->selectedItems();
+  while ( !to_remove.isEmpty() ) {
+    delete to_remove.takeFirst();
   }
 
   mWidgets->mButtonRemove->setEnabled( mWidgets->mCategories->topLevelItemCount() > 0 );
   mWidgets->mButtonAddSubcategory->setEnabled( mWidgets->mCategories->topLevelItemCount() > 0 );
-  if ( mWidgets->mCategories->currentItem() )
+  if ( mWidgets->mCategories->currentItem() ) {
     mWidgets->mCategories->currentItem()->setSelected( true );
+  }
 }
 
 void CategoryEditDialog::slotOk()

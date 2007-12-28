@@ -103,7 +103,7 @@ void MainWidget::initGUI()
 
 void MainWidget::initActions()
 {
-  mActionSynchronize = new KAction( KIcon( "hotsync" ), i18n("Synchronize"), this );
+  mActionSynchronize = new KAction( KIcon( "sync-start" ), i18n("Synchronize"), this );
   mGUIClient->actionCollection()->addAction( "sync", mActionSynchronize );
   connect( mActionSynchronize, SIGNAL( triggered() ), this, SLOT( sync() ) );
 
@@ -115,7 +115,7 @@ void MainWidget::initActions()
   mGUIClient->actionCollection()->addAction( "delete_group", mActionDeleteGroup );
   connect( mActionDeleteGroup, SIGNAL( triggered() ), this, SLOT( deleteGroup() ) );
 
-  mActionEditGroup = new KAction( KIcon( "edit" ), i18n("Edit Group..."), this );
+  mActionEditGroup = new KAction( KIcon( "document-properties" ), i18n("Edit Group..."), this );
   mGUIClient->actionCollection()->addAction( "edit_group", mActionEditGroup );
   connect( mActionEditGroup, SIGNAL( triggered() ), this, SLOT( editGroup() ) );
 }

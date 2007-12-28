@@ -80,14 +80,14 @@ void DeviceItem::deviceConnected() {
     setFont( QFont() );
     m_connectDeviceAction->setEnabled( false );
     m_disconnectDeviceAction->setEnabled( true );
-    setIcon( KIcon( "connection-established" ) );
+    setIcon( KIcon( "network-connect" ) );
 }
 
 void DeviceItem::deviceDisconnected() {
     setFont( QFont() );
     m_connectDeviceAction->setEnabled( true );
     m_disconnectDeviceAction->setEnabled( false );
-    setIcon( KIcon( "connect-no" ) );
+    setIcon( KIcon( "network-disconnect" ) );
 }
 
 #include "deviceitem.moc"

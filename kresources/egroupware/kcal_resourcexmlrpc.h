@@ -196,6 +196,7 @@ class KCAL_XMLRPC_EXPORT ResourceXMLRPC : public ResourceCached
   protected:
     bool doLoad( bool syncCache );
     bool doSave( bool syncCache );
+    bool doSave( bool syncCache, Incidence *incidence );
 
   private slots:
     void reload();

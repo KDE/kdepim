@@ -31,7 +31,9 @@
 
 #include <pi-dlp.h>
 
+#include <QtCore/QEvent>
 #include <QtCore/QObject>
+
 #include <Qt3Support/Q3ValueList>
 #include "kpilot_export.h"
 /** @file
@@ -223,7 +225,7 @@ public:
 	* will be giving to us, including tickle timeouts and 
 	* device communication events. 
 	*/
-	void customEvent(QEvent *e);
+	virtual bool event(QEvent *e);
 
 	/**
 	* Install the list of files (full paths!) named by @p l

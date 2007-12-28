@@ -1,8 +1,6 @@
 project(kmailcvt)
 add_subdirectory( pics ) 
 
-
-
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 
 ########### next target ###############
@@ -28,9 +26,8 @@ set(kmailcvt_SRCS
    filter_thebat.cxx 
    filter_lnotes.cxx )
 
-qt4_add_dbus_interfaces(kmailcvt_SRCS ${CMAKE_SOURCE_DIR}/kmail/org.kde.kmail.kmail.xml )
 
-
+qt4_add_dbus_interfaces(kmailcvt_SRCS ${CMAKE_BINARY_DIR}/kmail/org.kde.kmail.kmail.xml )
 
 kde4_add_ui_files(kmailcvt_SRCS kselfilterpagedlg.ui kimportpagedlg.ui)
 
@@ -40,9 +37,8 @@ target_link_libraries(kmailcvt  ${QT_QT3SUPPORT_LIBRARY}  ${KDE4_KIO_LIBS} )
 
 install(TARGETS kmailcvt  DESTINATION ${BIN_INSTALL_DIR} )
 
-
+add_dependencies(kmailcvt kmail)
 ########### install files ###############
-
 
 kde4_install_icons( ${ICON_INSTALL_DIR}   )
 

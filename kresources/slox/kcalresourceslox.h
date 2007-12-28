@@ -107,6 +107,7 @@ class KCAL_SLOX_EXPORT KCalResourceSlox : public KCal::ResourceCached, public Sl
     void doClose();
     bool doLoad( bool syncCache );
     bool doSave( bool syncCache );
+    bool doSave( bool syncCache, KCal::Incidence *incidence );
 
     void requestEvents();
     void requestTodos();

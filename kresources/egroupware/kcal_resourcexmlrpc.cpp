@@ -177,7 +177,7 @@ void ResourceXMLRPC::writeConfig( KConfigGroup &group )
 
 bool ResourceXMLRPC::doOpen()
 {
-  kDebug(5800) <<"ResourceXMLRPC::doOpen()";
+  kDebug(5800);
 
   delete mServer;
 
@@ -201,7 +201,7 @@ bool ResourceXMLRPC::doOpen()
 
 void ResourceXMLRPC::doClose()
 {
-  kDebug(5800) <<"ResourceXMLRPC::doClose()";
+  kDebug(5800);
 
   QMap<QString, QVariant> args;
   args.insert( "sessionid", mSessionID );
@@ -214,10 +214,11 @@ void ResourceXMLRPC::doClose()
   mSynchronizer->start();
 }
 
-bool ResourceXMLRPC::doLoad( bool )
+bool ResourceXMLRPC::doLoad( bool syncCache )
 {
-  kDebug() <<"ResourceXMLRPC::load()";
+  kDebug();
 
+  Q_UNUSED( syncCache );
   calendar()->close();
 
   disableChangeNotification();
@@ -260,8 +261,9 @@ bool ResourceXMLRPC::doLoad( bool )
   return true;
 }
 
-bool ResourceXMLRPC::doSave( bool )
+bool ResourceXMLRPC::doSave( bool syncCache )
 {
+  Q_UNUSED( syncCache );
   if ( readOnly() || !hasChanges() ) {
     emit resourceSaved( this );
     return true;
@@ -307,6 +309,13 @@ bool ResourceXMLRPC::doSave( bool )
 
   mTodoStateMapper.save();
 
+  return true;
+}
+
+bool ResourceXMLRPC::doSave( bool syncCache, Incidence *incidence )
+{
+  Q_UNUSED( syncCache );
+  Q_UNUSED( incidence );
   return true;
 }
 
@@ -535,7 +544,7 @@ void ResourceXMLRPC::logoutFinished( const QList<QVariant>& variant,
   QMap<QString, QVariant> map = variant[ 0 ].toMap();
 
   if ( map[ "GOODBYE" ].toString() != "XOXO" )
-    kError() <<"logout failed";
+    kError() << "logout failed";
 
   KUrl url = KUrl( mPrefs->url() );
   mSessionID = mKp3 = "";
@@ -765,7 +774,7 @@ void ResourceXMLRPC::loadTodoCategoriesFinished( const QList<QVariant> &mapList,
 void ResourceXMLRPC::fault( int error, const QString& errorMsg,
                             const QVariant& )
 {
-  kError() <<"Server send error" << error <<":" << errorMsg;
+  kError() << "Server send error" << error << ":" << errorMsg;
   mSynchronizer->stop();
 }
 

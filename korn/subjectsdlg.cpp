@@ -8,7 +8,6 @@
 #include <kcursor.h>
 #include <kdebug.h>
 #include <kglobal.h>
-#include <QLayout>
 #include <QList>
 #include <QDateTime>
 #include <QTimer>

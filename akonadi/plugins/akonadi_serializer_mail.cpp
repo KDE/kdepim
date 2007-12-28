@@ -19,7 +19,7 @@
 
 #include "akonadi_serializer_mail.h"
 
-#include <QDebug>
+#include <kdebug.h>
 #include <kmime/kmime_message.h>
 #include <boost/shared_ptr.hpp>
 
@@ -37,7 +37,7 @@ template <typename T> static void parseAddrList( const QList<QByteArray> &addrLi
     QList<QByteArray> addr;
     ImapParser::parseParenthesizedList( *it, addr );
     if ( addr.count() != 4 ) {
-      qWarning() << "Error parsing envelope address field: " << addr;
+      kWarning( 5264 ) << "Error parsing envelope address field: " << addr;
       continue;
     }
     KMime::Types::Mailbox addrField;
@@ -77,7 +77,7 @@ bool SerializerPluginMail::deserialize( Item& item, const QString& label, QIODev
         QList<QByteArray> env;
         ImapParser::parseParenthesizedList( buffer, env );
         if ( env.count() < 10 ) {
-          qWarning() << "Akonadi KMime Deserializer: Got invalid envelope: " << env;
+          kWarning( 5264 ) << "Akonadi KMime Deserializer: Got invalid envelope: " << env;
           return false;
         }
         Q_ASSERT( env.count() >= 10 );
@@ -136,7 +136,8 @@ static QByteArray buildImapList( const QList<QByteArray> &list )
 template <typename T> static QByteArray buildAddrStruct( T const *hdr )
 {
   QList<QByteArray> addrList;
-  foreach ( const KMime::Types::Mailbox mbox, hdr->mailboxes() ) {
+  KMime::Types::Mailbox::List mb = hdr->mailboxes();
+  foreach ( const KMime::Types::Mailbox mbox, mb ) {
     QList<QByteArray> addrStruct;
     addrStruct << quoteImapListEntry( KMime::encodeRFC2047String( mbox.name(), "utf-8" ) );
     addrStruct << quoteImapListEntry( QByteArray() );

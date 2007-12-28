@@ -1,6 +1,6 @@
 RESOURCE_FILES="`find -name \"*.ui\" -o -name \"*.rc\" -o -name \"*.kcfg\"`"
 
-$EXTRACTRC $RESOURCE_FILES > rc.cpp
+$EXTRACTRC $RESOURCE_FILES >> rc.cpp
 
 SOURCE_FILES="`find -name \"*.cpp\" -o -name \"*.h\"`"
 

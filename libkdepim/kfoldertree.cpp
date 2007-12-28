@@ -148,7 +148,7 @@ int KFolderTreeItem::compare( Q3ListViewItem *i, int col, bool ) const
     return text( 0 ).localeAwareCompare( other->text( 0 ) );
   } else {
     // sort by unread or total-column
-    int a = 0, b = 0;
+    qint64 a = 0, b = 0;
     if ( col == static_cast<KFolderTree*>( listView() )->unreadIndex() ) {
       a = mUnread;
       b = other->unreadCount();
@@ -209,7 +209,7 @@ void KFolderTreeItem::setTotalCount( int aTotal )
 }
 
 //-----------------------------------------------------------------------------
-void KFolderTreeItem::setFolderSize( int aSize )
+void KFolderTreeItem::setFolderSize( qint64 aSize )
 {
   if ( aSize < 0 ) {
     return;  // we need to update even if nothing changed, kids ...
@@ -218,7 +218,7 @@ void KFolderTreeItem::setFolderSize( int aSize )
   mSize = aSize;
 
   QString size;
-  int recursiveSize = 0;
+  qint64 recursiveSize = 0;
 
   if ( childCount() > 0 && !isOpen() ) {
     recursiveSize = recursiveFolderSize();
@@ -246,9 +246,9 @@ void KFolderTreeItem::setFolderSize( int aSize )
 }
 
 //-----------------------------------------------------------------------------
-size_t KFolderTreeItem::recursiveFolderSize() const
+qint64 KFolderTreeItem::recursiveFolderSize() const
 {
-  int size = mSize;
+  qint64 size = mSize;
 
   for ( Q3ListViewItem *item = firstChild();  item; item = item->nextSibling() ) {
     size += static_cast<KFolderTreeItem*>( item )->recursiveFolderSize();

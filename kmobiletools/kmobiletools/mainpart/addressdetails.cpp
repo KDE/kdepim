@@ -56,10 +56,10 @@ addressDetails::~addressDetails()
 const QString addressDetails::getTemplate()
 {
     return  KMobiletoolsHelper::getTemplate()
-            .arg( KMobiletoolsHelper::getFooterLink( i18nc("Add new contact", "Add new"), "wizard", "contact:add" ) )
-            .arg( KMobiletoolsHelper::getFooterLink( i18nc("Fetch phonebook from the mobile", "Reload"), "reload", "contact:refresh" ) )
-            .arg( KMobiletoolsHelper::getFooterLink( i18nc("Import phonebook", "Import"), "revert", "contact:import" ) )
-            .arg( KMobiletoolsHelper::getFooterLink( i18nc("Export phonebook", "Export"), "fileexport", "contact:export" ) );
+            .arg( KMobiletoolsHelper::getFooterLink( i18nc("Add new contact", "Add new"), "contact-add", "contact:add" ) )
+            .arg( KMobiletoolsHelper::getFooterLink( i18nc("Fetch phonebook from the mobile", "Reload"), "view-refresh", "contact:refresh" ) )
+            .arg( KMobiletoolsHelper::getFooterLink( i18nc("Import phonebook", "Import"), "document-import", "contact:import" ) )
+            .arg( KMobiletoolsHelper::getFooterLink( i18nc("Export phonebook", "Export"), "document-export", "contact:export" ) );
 }
 /*!
     \fn addressDetails::showAddressee(KABC::Addressee &addressee)
@@ -69,22 +69,22 @@ void addressDetails::showAddressee(const KABC::Addressee &addressee, bool readOn
     if(addressee.isEmpty()) return;
     ro=readOnly;
     QString htmlData; // ="<img src=\"%1\" align=\"middle\"> <b><i>%2</b>";
-//     htmlData=htmlData.arg( KIconLoader::global()->iconPath("personal", KIcon::Desktop, false) ).arg( addressee.formattedName() );
+//     htmlData=htmlData.arg( KIconLoader::global()->iconPath("contact", KIcon::Desktop, false) ).arg( addressee.formattedName() );
     /*="<div style=\"border-bottom-style : hidden; border-bottom-width : 10; border-left-style : hidden;\
         border-left-width : 5; border-right-style : hidden; border-right-width : 5; border-spacing : 5; border-top-style :\
         hidden; border-top-width : 10;background-color: %1; color: %2\">\
     <img src=\"%3\" align=\"middle\"> <b><i>%4</b></i></div>\n\n";*/
-    QString renderData=getTemplate().arg( KIconLoader::global()->iconPath("personal", -KIconLoader::SizeHuge, false) )
+    QString renderData=getTemplate().arg( KIconLoader::global()->iconPath("contact", -KIconLoader::SizeHuge, false) )
             .arg( addressee.formattedName() );
     if(readOnly) renderData=renderData.arg(QString() ).arg(QString() );
     else renderData=renderData
-            .arg( KMobiletoolsHelper::getFooterLink( i18nc("Edit Contact", "Edit") , "edit", "contact:edit" ) )
-            .arg( KMobiletoolsHelper::getFooterLink( i18nc("Delete Contact", "Delete") , "editdelete", "contact:del" ) );
+            .arg( KMobiletoolsHelper::getFooterLink( i18nc("Edit Contact", "Edit") , "document-properties", "contact:edit" ) )
+            .arg( KMobiletoolsHelper::getFooterLink( i18nc("Delete Contact", "Delete") , "edit-delete", "contact:del" ) );
     /*
     htmlData = htmlData
                 .arg( KGlobalSettings::activeTitleColor().name() )
                 .arg( KGlobalSettings::activeTextColor().name() )
-                .arg( KIconLoader::global()->iconPath("personal", KIconLoader::Desktop, false) ).arg( addressee.formattedName() );
+                .arg( KIconLoader::global()->iconPath("contact", KIconLoader::Desktop, false) ).arg( addressee.formattedName() );
     */
     KABC::PhoneNumber::List numberList = addressee.phoneNumbers();
     for ( KABC::PhoneNumber::List::Iterator it = numberList.begin(); it != numberList.end(); it++ )
@@ -163,7 +163,7 @@ void addressDetails::openUrlRequest(const KUrl &url)
 void addressDetails::showHP()
 {
     begin();
-    write( getTemplate().arg(KIconLoader::global()->iconPath("kontact_contacts", -KIconLoader::SizeHuge, false) )
+    write( getTemplate().arg(KIconLoader::global()->iconPath("view-pim-contacts", -KIconLoader::SizeHuge, false) )
             .arg( i18n("%1 AddressBook", DEVCFG(objectName() )->devicename() ) )
             .arg("")            .arg("")
             .arg( i18n("<p><i>Click a contact on the left list to see details, or \"Reload\" to update the contacts list.</i></p>") )

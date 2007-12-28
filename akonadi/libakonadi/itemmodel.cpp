@@ -89,7 +89,7 @@ void ItemModel::Private::listingDone( KJob * job )
   ItemFetchJob *fetch = static_cast<ItemFetchJob*>( job );
   if ( job->error() ) {
     // TODO
-    kWarning() <<"Item query failed:" << job->errorString();
+    kWarning( 5250 ) << "Item query failed:" << job->errorString();
   }
 
   // start monitor
@@ -276,7 +276,7 @@ QVariant ItemModel::headerData( int section, Qt::Orientation orientation, int ro
 
 void ItemModel::setCollection( const Collection &collection )
 {
-  qWarning() << "ItemModel::setPath()";
+  kWarning( 5250 ) << "ItemModel::setPath()";
   if ( d->collection == collection )
     return;
   d->collection = collection;

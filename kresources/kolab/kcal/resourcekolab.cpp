@@ -238,8 +238,9 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
   return true;
 }
 
-bool ResourceKolab::doLoad()
+bool ResourceKolab::doLoad( bool syncCache )
 {
+  Q_UNUSED( syncCache );
   if (!mUidMap.isEmpty() ) {
     return true;
   }
@@ -312,8 +313,9 @@ void ResourceKolab::removeIncidences( const QByteArray& incidenceType )
   }
 }
 
-bool ResourceKolab::doSave()
+bool ResourceKolab::doSave( bool syncCache )
 {
+  Q_UNUSED( syncCache );
   return true;
   /*
   return kmailTriggerSync( kmailCalendarContentsType )
@@ -321,7 +323,15 @@ bool ResourceKolab::doSave()
       && kmailTriggerSync( kmailJournalContentsType );
   */
 }
-void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase* incidencebase)
+
+bool ResourceKolab::doSave( bool syncCache, KCal::Incidence *incidence )
+{
+  Q_UNUSED( syncCache );
+  Q_UNUSED( incidence );
+  return true;
+}
+
+void ResourceKolab::incidenceUpdatedSilent( KCal::IncidenceBase *incidencebase)
 {
   if ( incidencebase->isReadOnly() ) return; // Should not happen (TM)
   const QString uid = incidencebase->uid();

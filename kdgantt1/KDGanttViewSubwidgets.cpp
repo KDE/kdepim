@@ -3520,7 +3520,7 @@ KDCanvasRectangle::KDCanvasRectangle( KDTimeTableWidget* canvas,
 KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidget* parent,  const
     char* name ) : QCanvasView ( canvas, parent, name ),
     movingGVItem( 0 ),
-    scrollBarTimer( 0, "scrollBarTimer" )
+    scrollBarTimer( 0 )
 {
     setHScrollBarMode (QScrollView::AlwaysOn );
     setVScrollBarMode( QScrollView::AlwaysOn );
@@ -3561,7 +3561,7 @@ KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidg
     QMenu *afterMenu = onItem->addMenu( tr( "New After" ) );
     afterMenu->addAction( tr( "Event" ), this, SLOT( newSiblingEvent() ) );
     afterMenu->addAction( tr( "Task" ), this, SLOT( newSiblingTask() ) );
-    afterMenu->addAction( tr( "Summary" ), this, SLOT( newChildItem( int ) ) );
+    afterMenu->addAction( tr( "Summary" ), this, SLOT( newChildSummary() ) );
 
 
     QMenu *pasteMenu = onItem->addMenu( tr( "Paste" ) );

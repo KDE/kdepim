@@ -80,34 +80,41 @@ void SessionPrivate::socketError()
 
 void SessionPrivate::dataReceived()
 {
-  while ( socket->canReadLine() ) {
-    if ( !parser->parseNextLine( socket->readLine() ) )
-      continue; // response not yet completed
+  while ( socket->bytesAvailable() > 0 ) {
+    if ( parser->continuationSize() > 1 ) {
+      const QByteArray data = socket->read( qMin( socket->bytesAvailable(), parser->continuationSize() - 1 ) );
+      parser->parseBlock( data );
+    } else if ( socket->canReadLine() ) {
+      if ( !parser->parseNextLine( socket->readLine() ) )
+        continue; // response not yet completed
 
-    // handle login response
-    if ( parser->tag() == QByteArray("0") ) {
-      if ( parser->data().startsWith( "OK" ) ) {
-        connected = true;
-        startNext();
-      } else {
-        kWarning() <<"Unable to login to Akonadi server:" << parser->data();
-        socket->close();
-        QTimer::singleShot( 1000, mParent, SLOT(reconnect()) );
+      // handle login response
+      if ( parser->tag() == QByteArray("0") ) {
+        if ( parser->data().startsWith( "OK" ) ) {
+          connected = true;
+          startNext();
+        } else {
+          kWarning( 5250 ) << "Unable to login to Akonadi server:" << parser->data();
+          socket->close();
+          QTimer::singleShot( 1000, mParent, SLOT(reconnect()) );
+        }
       }
-    }
 
-    // send login command
-    if ( parser->tag() == "*" && parser->data().startsWith( "OK Akonadi" ) ) {
-      mParent->writeData( "0 LOGIN " + sessionId + '\n' );
+      // send login command
+      if ( parser->tag() == "*" && parser->data().startsWith( "OK Akonadi" ) ) {
+        mParent->writeData( "0 LOGIN " + sessionId + '\n' );
 
-    // work for the current job
+      // work for the current job
+      } else {
+        if ( currentJob )
+          currentJob->d->handleResponse( parser->tag(), parser->data() );
+      }
+
+      // reset parser stuff
+      parser->reset();
     } else {
-      if ( currentJob )
-        currentJob->d->handleResponse( parser->tag(), parser->data() );
+      break; // nothing we can do for now
     }
-
-    // reset parser stuff
-    parser->reset();
   }
 }
 
@@ -155,7 +162,7 @@ void SessionPrivate::jobDone(KJob * job)
   }
   // ### better handle the other cases too, user might have canceled jobs
   else {
-    kDebug() << job << "Non-current job finished.";
+    kDebug( 5250 ) << job << "Non-current job finished.";
   }
 }
 
@@ -184,10 +191,10 @@ Session::Session(const QByteArray & sessionId, QObject * parent) :
 
   QFileInfo fileInfo( connectionConfigFile );
   if ( !fileInfo.exists() ) {
-    qWarning() << "Akonadi Client Session: connection config file '"
-               << "akonadi/akonadiconnectionrc can not be found in '"
-               << XdgBaseDirs::homePath( "config" ) << "' nor in any of "
-               << XdgBaseDirs::systemPathList( "config" );
+    kWarning( 5250 ) << "Akonadi Client Session: connection config file '"
+                     << "akonadi/akonadiconnectionrc can not be found in '"
+                     << XdgBaseDirs::homePath( "config" ) << "' nor in any of "
+                     << XdgBaseDirs::systemPathList( "config" );
   }
 
   d->mConnectionSettings = new QSettings( connectionConfigFile, QSettings::IniFormat );

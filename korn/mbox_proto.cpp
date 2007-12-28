@@ -21,7 +21,6 @@
 
 #include <kdebug.h>
 
-#include <QLayout>
 #include <QList>
 #include <QVector>
 #include <QStringList>

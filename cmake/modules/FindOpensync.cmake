@@ -6,12 +6,12 @@
 
 INCLUDE(FindPkgConfig)
 
-if (OPENSYNC_INCLUDEDIR AND OPENSYNC_LIBDIR)
+if (OPENSYNC_INCLUDE_DIRS AND OPENSYNC_LDFLAGS)
 
   # in cache already
   SET(OPENSYNC_FOUND TRUE)
 
-else (OPENSYNC_INCLUDEDIR AND OPENSYNC_LIBDIR)
+else (OPENSYNC_INCLUDE_DIRS AND OPENSYNC_LDFLAGS)
 
   SET(OPENSYNC_FOUND FALSE)
   IF (NOT WIN32)
@@ -20,19 +20,9 @@ else (OPENSYNC_INCLUDEDIR AND OPENSYNC_LIBDIR)
     PKG_CHECK_MODULES(OPENSYNC opensync-1.0>=0.33)
   ENDIF(NOT WIN32)
 
-endif (OPENSYNC_INCLUDEDIR AND OPENSYNC_LIBDIR)
+  include(FindPackageHandleStandardArgs)
+  FIND_PACKAGE_HANDLE_STANDARD_ARGS(OPENSYNC DEFAULT_MSG OPENSYNC_LDFLAGS OPENSYNC_INCLUDE_DIRS)
 
-if (NOT Opensync_FIND_QUIETLY)
-   if (Opensync_FIND_REQUIRED)
-      set (_req TRUE)
-   else (Opensync_FIND_REQUIRED)
-      set (_req FALSE)
-   endif (Opensync_FIND_REQUIRED)
-   macro_log_feature(OPENSYNC_FOUND "opensync" "OpenSync Development Libraries" "http://www.opensync.org" ${_req} "0.33 or greater" "Needed to provide syncing functionality in KDE PIM applications. Necessary to compile kitchensync.")
-else (NOT Opensync_FIND_QUIETLY)
-   if (NOT OPENSYNC_FOUND)
-      if (Opensync_FIND_REQUIRED)
-         message(FATAL_ERROR "")
-      endif (Opensync_FIND_REQUIRED)
-   endif (NOT OPENSYNC_FOUND)
-endif (NOT Opensync_FIND_QUIETLY)
+  MARK_AS_ADVANCED(OPENSYNC_INCLUDE_DIRS OPENSYNC_LDFLAGS)
+
+endif (OPENSYNC_INCLUDE_DIRS AND OPENSYNC_LDFLAGS)

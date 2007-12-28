@@ -298,7 +298,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   connect(a_ctDoPost, SIGNAL(triggered(bool) ), SLOT(slotToggleDoPost()));
 
   a_ctDoMail = actionCollection()->add<KToggleAction>("send_mail");
-  a_ctDoMail->setIcon(KIcon("mail"));
+  a_ctDoMail->setIcon(KIcon("mail-send"));
   a_ctDoMail->setText(i18n("Send E&mail"));
   connect(a_ctDoMail, SIGNAL(triggered(bool) ), SLOT(slotToggleDoMail()));
 
@@ -1118,7 +1118,7 @@ void KNComposer::slotArtDelete()
 
 void KNComposer::slotAppendSig()
 {
-  v_iew->e_dit->appendSignature(s_ignature);
+  v_iew->e_dit->insertSignature(s_ignature);
 }
 
 

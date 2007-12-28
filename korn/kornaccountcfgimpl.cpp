@@ -31,10 +31,7 @@
 #include <kurlrequester.h>
 
 #include <QCheckBox>
-#include <QComboBox>
-#include <QLayout>
 #include <QMap>
-#include <QLabel>
 #include <QList>
 #include <QWidget>
 //Added by qt3to4:

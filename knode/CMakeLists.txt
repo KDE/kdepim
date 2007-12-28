@@ -78,7 +78,7 @@ kde4_add_kcfg_files(knodecommon_LIB_SRCS settings_base.kcfgc )
 
 kde4_add_library(knodecommon SHARED ${knodecommon_LIB_SRCS})
 
-kdepim4_link_unique_libraries(knodecommon ${KDE4_KMIME_LIBRARY} ${KDE4_KUTILS_LIBRARY} ${KDE4_KHTML_LIBS} ${KDE4_KPIMUTILS_LIBRARY} ${KDE4_MAILTRANSPORT_LIBS} kpgp kdepim)
+kdepim4_link_unique_libraries(knodecommon ${KDE4_KMIME_LIBRARY} ${KDE4_KUTILS_LIBRARY} ${KDE4_KHTML_LIBRARY} ${KDE4_KPIMUTILS_LIBRARY} ${KDE4_MAILTRANSPORT_LIBRARY} kpgp kdepim)
 
 set_target_properties(knodecommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS knodecommon  DESTINATION ${LIB_INSTALL_DIR})

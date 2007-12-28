@@ -25,12 +25,12 @@
 #include <libakonadi/itemstorejob.h>
 #include <libakonadi/session.h>
 
+#include <kdebug.h>
 #include <kfiledialog.h>
 #include <klocale.h>
 #include <kbookmarkmanager.h>
 #include <kbookmark.h>
 
-#include <QtCore/QDebug>
 #include <QtDBus/QDBusConnection>
 
 using namespace Akonadi;
@@ -160,11 +160,9 @@ void LocalBookmarksResource::retrieveItems(const Akonadi::Collection & col, cons
   Q_UNUSED( parts );
   if ( !col.isValid() )
   {
-    qDebug() << "Collection not valid";
+    kDebug( 5253 ) << "Collection not valid";
     return;
   }
-
-  changeProgress( 0 );
 
   KBookmarkGroup bkg;
   if ( col.remoteId() == settings()->value( "General/Path" ).toString() ) {
@@ -178,6 +176,7 @@ void LocalBookmarksResource::retrieveItems(const Akonadi::Collection & col, cons
     bkg = bk.toGroup();
   }
 
+  Item::List itemList;
   for ( KBookmark it = bkg.first(); !it.isNull(); it = bkg.next( it ) ) {
 
     if ( it.isGroup() || it.isSeparator() || it.isNull() )
@@ -186,16 +185,10 @@ void LocalBookmarksResource::retrieveItems(const Akonadi::Collection & col, cons
     Item item( DataReference( -1, it.address() ) );
     item.setMimeType( "application/x-xbel" );
     item.setPayload<KBookmark>( it );
-    ItemAppendJob *job = new ItemAppendJob( item, col, this );
-
-    if ( !job->exec() ) {
-      qDebug() << "Error while appending bookmark to storage: " << job->errorString();
-      continue;
-    }
+    itemList.append( item );
   }
 
-  changeProgress( 100 );
-  itemsRetrieved();
+  itemsRetrieved( itemList );
 }
 
 #include "localbookmarksresource.moc"
