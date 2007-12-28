@@ -2,6 +2,7 @@ project(konsolekalendar)
 
 add_subdirectory(pixmaps) 
 
+add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5860)
 include_directories(${CMAKE_SOURCE_DIR}/kcal)
 
 
