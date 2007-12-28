@@ -104,7 +104,7 @@ void Addressbook::setupActions() {
     m_newContact = new QAction( KIcon( "list-add-user" ), i18n( "New contact" ), this );
     m_newContact->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
 
-    m_editContact = new QAction( KIcon( "edit-user" ), i18n( "Edit contact" ), this );
+    m_editContact = new QAction( KIcon( "user-properties" ), i18n( "Edit contact" ), this );
     m_editContact->setEnabled( false );
 
     m_deleteContact = new QAction( KIcon( "list-remove-user" ), i18n( "Delete contact" ), this );
