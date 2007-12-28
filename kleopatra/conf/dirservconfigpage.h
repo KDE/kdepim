@@ -31,9 +31,9 @@
 
 #ifndef DIRSERVCONFIGPAGE_H
 #define DIRSERVCONFIGPAGE_H
-#define KDE3_SUPPORT
+
 #include <kcmodule.h>
-#undef KDE3_SUPPORT
+
 #include "libkleo/kleo/cryptoconfig.h"
 
 class QCheckBox;
@@ -53,7 +53,7 @@ namespace Kleo {
 class DirectoryServicesConfigurationPage : public KCModule {
   Q_OBJECT
 public:
-  DirectoryServicesConfigurationPage( const KComponentData &instance, QWidget *parent=0, const QStringList &args=QStringList() );
+  DirectoryServicesConfigurationPage( const KComponentData &instance, QWidget *parent=0, const QVariantList &args=QVariantList() );
 
   virtual void load();
   virtual void save();

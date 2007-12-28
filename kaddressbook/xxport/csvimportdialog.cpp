@@ -521,11 +521,12 @@ void CSVImportDialog::fillTable()
   else if ( code == Latin1 )
     inputStream.setCodec( "ISO 8859-1" );
   else if ( code == Guess ) {
-    QTextCodec* codec = QTextCodec::codecForContent( mFileArray.data(), mFileArray.size() );
-    if ( codec ) {
-      KMessageBox::information( this, i18n( "Using codec '%1'", QLatin1String( codec->name() ) ), i18n( "Encoding" ) );
-      inputStream.setCodec( codec );
-    }
+// following code does not work anymore with Qt4 (QTextCodec::codecForContent returns always a null pointer)
+//     QTextCodec* codec = QTextCodec::codecForContent( mFileArray.data(), mFileArray.size() );
+//     if ( codec ) {
+//       KMessageBox::information( this, i18n( "Using codec '%1'", QLatin1String( codec->name() ) ), i18n( "Encoding" ) );
+//       inputStream.setCodec( codec );
+//     }
   }
 
   int maxColumn = 0;

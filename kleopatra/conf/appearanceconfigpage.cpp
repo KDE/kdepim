@@ -38,7 +38,7 @@
 #include <kdebug.h>
 #include <kcomponentdata.h>
 
-AppearanceConfigurationPage::AppearanceConfigurationPage( const KComponentData &instance, QWidget *parent, const QStringList &args )
+AppearanceConfigurationPage::AppearanceConfigurationPage( const KComponentData &instance, QWidget *parent, const QVariantList &args )
     : KCModule( instance, parent, args )
 {
   QVBoxLayout* lay = new QVBoxLayout( this );
@@ -70,7 +70,7 @@ void AppearanceConfigurationPage::defaults()
 
 extern "C"
 {
-  KDE_EXPORT KCModule *create_kleopatra_config_appear( QWidget *parent=0, const QStringList &args=QStringList() )
+  KDE_EXPORT KCModule *create_kleopatra_config_appear( QWidget *parent=0, const QVariantList &args=QVariantList() )
   {
     AppearanceConfigurationPage *page =
       new AppearanceConfigurationPage( KComponentData( "kleopatra" ), parent, args );

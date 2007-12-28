@@ -82,7 +82,7 @@ class GeoDialog : public KDialog
   Q_OBJECT
 
   public:
-    GeoDialog( QWidget *parent, const char *name = 0 );
+    GeoDialog( QWidget *parent );
     ~GeoDialog();
 
     void setLatitude( double latitude );

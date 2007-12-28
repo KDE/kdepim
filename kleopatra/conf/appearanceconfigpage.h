@@ -31,9 +31,9 @@
 
 #ifndef KLEOPATRA_APPEARANCECONFIGPAGE_H
 #define KLEOPATRA_APPEARANCECONFIGPAGE_H
-#define KDE3_SUPPORT
+
 #include <kcmodule.h>
-#undef KDE3_SUPPORT
+
 namespace Kleo {
   class AppearanceConfigWidget;
 }
@@ -44,7 +44,7 @@ namespace Kleo {
 class AppearanceConfigurationPage : public KCModule {
   Q_OBJECT
 public:
-  AppearanceConfigurationPage( const KComponentData &instance, QWidget *parent=0, const QStringList &args=QStringList() );
+  AppearanceConfigurationPage( const KComponentData &instance, QWidget *parent=0, const QVariantList &args=QVariantList() );
 
   virtual void load();
   virtual void save();

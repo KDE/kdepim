@@ -3520,7 +3520,7 @@ KDCanvasRectangle::KDCanvasRectangle( KDTimeTableWidget* canvas,
 KDGanttCanvasView::KDGanttCanvasView( KDGanttView* sender,QCanvas* canvas, QWidget* parent,  const
     char* name ) : QCanvasView ( canvas, parent, name ),
     movingGVItem( 0 ),
-    scrollBarTimer( 0, "scrollBarTimer" )
+    scrollBarTimer( 0 )
 {
     setHScrollBarMode (QScrollView::AlwaysOn );
     setVScrollBarMode( QScrollView::AlwaysOn );

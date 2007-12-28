@@ -998,7 +998,8 @@ void KABCore::initGUI()
   QVBoxLayout *topLayout = new QVBoxLayout( mWidget );
   topLayout->setSpacing( 0 );
   topLayout->setMargin( 0 );
-  QWidget* searchTB = new QWidget( mWidget, "search toolbar" );
+  QWidget* searchTB = new QWidget( mWidget );
+  searchTB->setObjectName( "search toolbar" );
   searchTB->setLayout(new QHBoxLayout);
   searchTB->layout()->setMargin( 0 );
   searchTB->layout()->setSpacing( KDialog::spacingHint() );
