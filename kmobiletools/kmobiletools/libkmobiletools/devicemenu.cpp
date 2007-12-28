@@ -47,7 +47,7 @@ deviceMenu::deviceMenu(bool loaded, KMobileTools::Engine *engine, QWidget *paren
     else
     {
         addSeparator();
-        addAction( KIcon( "user-contact" ),  i18n("Phonebook"), this, SLOT(slotGoPhonebook()) );
+        addAction( KIcon( "x-office-contact" ),  i18n("Phonebook"), this, SLOT(slotGoPhonebook()) );
         addAction( KIcon( "mail-receive" ),  i18n("SMS"), this, SLOT(slotGoSMS()) );
     }
     addAction( KIcon( "configure" ), i18n("Configure"), this, SLOT(slotConfigureDevice()) );

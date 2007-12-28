@@ -69,12 +69,12 @@ void addressDetails::showAddressee(const KABC::Addressee &addressee, bool readOn
     if(addressee.isEmpty()) return;
     ro=readOnly;
     QString htmlData; // ="<img src=\"%1\" align=\"middle\"> <b><i>%2</b>";
-//     htmlData=htmlData.arg( KIconLoader::global()->iconPath("contact", KIcon::Desktop, false) ).arg( addressee.formattedName() );
+//     htmlData=htmlData.arg( KIconLoader::global()->iconPath("x-office-contact", KIcon::Desktop, false) ).arg( addressee.formattedName() );
     /*="<div style=\"border-bottom-style : hidden; border-bottom-width : 10; border-left-style : hidden;\
         border-left-width : 5; border-right-style : hidden; border-right-width : 5; border-spacing : 5; border-top-style :\
         hidden; border-top-width : 10;background-color: %1; color: %2\">\
     <img src=\"%3\" align=\"middle\"> <b><i>%4</b></i></div>\n\n";*/
-    QString renderData=getTemplate().arg( KIconLoader::global()->iconPath("contact", -KIconLoader::SizeHuge, false) )
+    QString renderData=getTemplate().arg( KIconLoader::global()->iconPath("x-office-contact", -KIconLoader::SizeHuge, false) )
             .arg( addressee.formattedName() );
     if(readOnly) renderData=renderData.arg(QString() ).arg(QString() );
     else renderData=renderData
@@ -84,7 +84,7 @@ void addressDetails::showAddressee(const KABC::Addressee &addressee, bool readOn
     htmlData = htmlData
                 .arg( KGlobalSettings::activeTitleColor().name() )
                 .arg( KGlobalSettings::activeTextColor().name() )
-                .arg( KIconLoader::global()->iconPath("contact", KIconLoader::Desktop, false) ).arg( addressee.formattedName() );
+                .arg( KIconLoader::global()->iconPath("x-office-contact", KIconLoader::Desktop, false) ).arg( addressee.formattedName() );
     */
     KABC::PhoneNumber::List numberList = addressee.phoneNumbers();
     for ( KABC::PhoneNumber::List::Iterator it = numberList.begin(); it != numberList.end(); it++ )
