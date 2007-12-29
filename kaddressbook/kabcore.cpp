@@ -22,9 +22,6 @@
 */
 
 #include <QClipboard>
-#include <QDir>
-#include <QFile>
-#include <QLayout>
 #include <QRegExp>
 #include <QSplitter>
 #include <QVBoxLayout>
@@ -63,7 +60,6 @@
 #include <libkdepim/categoryselectdialog.h>
 #include <ktoolinvocation.h>
 #include <krandom.h>
-#include <QtDBus>
 #include <ktoggleaction.h>
 #include <kaction.h>
 #include <kactioncollection.h>

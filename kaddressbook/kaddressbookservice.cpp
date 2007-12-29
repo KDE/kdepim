@@ -25,7 +25,6 @@
 
 #include "kaddressbookservice.h"
 #include "serviceadaptor.h"
-#include <QtDBus>
 
 KAddressBookService::KAddressBookService( KAB::Core *core )
   : mCore( core )

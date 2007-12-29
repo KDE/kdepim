@@ -23,14 +23,12 @@
 
 #include <QApplication>
 #include <q3iconview.h>
-#include <QLayout>
 #include <QStringList>
 //Added by qt3to4:
 #include <QPixmap>
 #include <QKeyEvent>
 #include <QEvent>
 #include <QDropEvent>
-#include <QList>
 #include <QVBoxLayout>
 
 #include <kabc/addressbook.h>

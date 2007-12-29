@@ -33,7 +33,6 @@
 #include <config-xxport.h>
 #include "config.h"
 
-#include <QCursor>
 #include <QProgressBar>
 
 #include <kdebug.h>

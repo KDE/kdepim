@@ -21,12 +21,9 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QApplication>
 #include <QComboBox>
 #include <QLabel>
-#include <QLayout>
 #include <QTimer>
-#include <QToolButton>
 
 
 //Added by qt3to4:

@@ -21,7 +21,6 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QMap>
 #include <QSignalMapper>
 
 #include <kaction.h>

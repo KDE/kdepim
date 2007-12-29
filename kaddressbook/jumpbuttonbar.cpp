@@ -23,10 +23,7 @@
 
 #include <QApplication>
 #include <QButtonGroup>
-#include <QEvent>
-#include <QFrame>
 #include <QGroupBox>
-#include <QLayout>
 #include <QList>
 #include <QPushButton>
 #include <QResizeEvent>

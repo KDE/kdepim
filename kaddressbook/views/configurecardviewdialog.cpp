@@ -22,7 +22,6 @@
 */
 
 #include <QString>
-#include <QLayout>
 #include <QLabel>
 #include <QCheckBox>
 #include <kvbox.h>

@@ -27,7 +27,6 @@
 #include <QWidget>
 #include <q3listview.h>
 #include <QString>
-#include <QDialog>
 #include <q3tabdialog.h>
 #include <QStringList>
 

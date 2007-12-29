@@ -22,7 +22,6 @@
 */
 
 #include <QLabel>
-#include <QLayout>
 //Added by qt3to4:
 #include <QHBoxLayout>
 

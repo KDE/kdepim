@@ -25,14 +25,12 @@
 #include <QComboBox>
 #include <QGroupBox>
 #include <QLabel>
-#include <QLayout>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QRadioButton>
 #include <QTableWidget>
 #include <QTextCodec>
 
-#include <QProgressBar>
 #include <QTextStream>
 #include <QGridLayout>
 #include <QHBoxLayout>

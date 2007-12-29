@@ -24,9 +24,7 @@
 
 #include <QGroupBox>
 #include <QLabel>
-#include <QLayout>
 #include <QPixmap>
-#include <QRadioButton>
 #include <QVBoxLayout>
 #include <QGridLayout>
 

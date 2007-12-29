@@ -21,7 +21,6 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QLayout>
 //Added by qt3to4:
 #include <QVBoxLayout>
 
@@ -37,7 +36,6 @@
 #include "kabcore.h"
 #include "kabprefs.h"
 #include "kaddressbookpartadaptor.h"
-#include <QtDBus>
 
 #include "kaddressbook_part.h"
 

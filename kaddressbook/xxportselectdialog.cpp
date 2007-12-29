@@ -30,14 +30,12 @@
 #include <QComboBox>
 #include <QGroupBox>
 #include <QLabel>
-#include <QLayout>
 #include <QPushButton>
 #include <QRadioButton>
 #include <QStringList>
 
 //Added by qt3to4:
 #include <QVBoxLayout>
-#include <QFrame>
 #include <QGridLayout>
 #include <ktoolinvocation.h>
 #include <kglobal.h>

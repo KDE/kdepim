@@ -27,19 +27,14 @@
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QHBoxLayout>
-#include <QLabel>
-#include <QLayout>
 #include <QList>
 #include <QPushButton>
 #include <QSignalMapper>
 #include <QString>
 #include <QVBoxLayout>
 
-#include <KApplication>
 #include <KComboBox>
-#include <KConfig>
 #include <KDebug>
-#include <KIconLoader>
 #include <KLineEdit>
 #include <KLocale>
 

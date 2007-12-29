@@ -25,7 +25,6 @@
 
 #include <QCheckBox>
 #include <qfontcombobox.h>
-#include <QLayout>
 #include <QPainter>
 #include <QtGui/QPrinter>
 

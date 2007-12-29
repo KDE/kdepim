@@ -22,17 +22,12 @@
 */
 
 #include <QApplication>
-#include <QLayout>
 #include <q3header.h>
 #include <q3vbox.h>
 #include <q3listbox.h>
 #include <QWidget>
-#include <QFile>
-#include <QImage>
-#include <QComboBox>
 #include <QEvent>
 #include <q3url.h>
-#include <QPixmap>
 //Added by qt3to4:
 #include <QVBoxLayout>
 #include <QKeyEvent>

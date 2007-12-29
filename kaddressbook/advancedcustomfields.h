@@ -28,9 +28,6 @@
 
 #include <klocale.h>
 
-#include <QMap>
-#include <QPair>
-#include <QStringList>
 
 #include <libkdepim/designerfields.h>
 

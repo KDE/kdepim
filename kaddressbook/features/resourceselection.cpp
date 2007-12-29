@@ -21,7 +21,6 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QLayout>
 #include <QPushButton>
 #include <QTimer>
 #include <QGridLayout>

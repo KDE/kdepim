@@ -23,7 +23,6 @@
 #include <q3groupbox.h>
 #include <q3header.h>
 #include <QLabel>
-#include <QLayout>
 #include <q3listview.h>
 #include <QPushButton>
 //Added by qt3to4:

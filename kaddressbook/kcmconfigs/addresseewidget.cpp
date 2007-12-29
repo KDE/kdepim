@@ -23,7 +23,6 @@
 
 #include <QGroupBox>
 #include <QLabel>
-#include <QLayout>
 #include <QListWidget>
 #include <QPushButton>
 #include <QHBoxLayout>

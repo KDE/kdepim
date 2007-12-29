@@ -41,7 +41,6 @@
 #include <QCheckBox>
 #include <QGroupBox>
 #include <QLabel>
-#include <QLayout>
 #include <QPixmap>
 #include <QImage>
 #include <QGridLayout>

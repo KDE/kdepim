@@ -26,7 +26,6 @@
  *
  */
 
-#include <QDateTime>
 #include <QFile>
 #include <QPixmap>
 #include <QImage>

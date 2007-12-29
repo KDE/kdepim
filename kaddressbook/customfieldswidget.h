@@ -28,8 +28,6 @@
 #include <kdialog.h>
 #include <klocale.h>
 
-#include <QMap>
-#include <QPair>
 #include <QStringList>
 #include <QWidget>
 //Added by qt3to4:

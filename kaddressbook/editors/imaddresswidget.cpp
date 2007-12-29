@@ -22,9 +22,6 @@
   without including the source code for Qt in the source distribution.
 */
 #include <QCheckBox>
-#include <QComboBox>
-#include <QLineEdit>
-#include <QLabel>
 #include <QList>
 
 #include <kdebug.h>

@@ -33,7 +33,6 @@
 #include <libkdepim/statusbarprogresswidget.h>
 #include <libkdepim/progressdialog.h>
 
-#include <QtDBus>
 #include "kaddressbookadaptor.h"
 
 #include "kabcore.h"

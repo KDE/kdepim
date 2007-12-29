@@ -28,7 +28,6 @@
 #include <QComboBox>
 #include <QGroupBox>
 #include <QLabel>
-#include <QLayout>
 #include <QPushButton>
 #include <QRadioButton>
 #include <QStringList>

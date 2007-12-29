@@ -21,7 +21,6 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QLayout>
 #include <kvbox.h>
 //Added by qt3to4:
 #include <QPixmap>
