@@ -86,7 +86,7 @@ QString MemberInfo::pluginIconName( const QString &pluginName )
     return "kontact";
   }
   if ( pluginName == "kio-sync" ) {
-    return "network";
+    return "network-workgroup";
   }
   if ( pluginName == "irmc-sync" ) {
     return "phone";
@@ -113,13 +113,13 @@ QString MemberInfo::pluginIconName( const QString &pluginName )
     return "phone";
   }
   if ( pluginName == "google-calendar" ) {
-    return "network";
+    return "office-calendar";
   }
   if ( pluginName == "gpe-sync" ) {
     return "pda";
   }
   if ( pluginName == "sunbird-sync" ) {
-    return "network";
+    return "office-calendar";
   }
 
   return QString();

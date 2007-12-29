@@ -1,5 +1,5 @@
 [Desktop Entry]
-Icon=network
+Icon=preferences-system-network
 Type=Service
 X-KDE-ServiceTypes=KCModule
 X-DocPath=kleopatra/configuration.html#configuration-directory-services
