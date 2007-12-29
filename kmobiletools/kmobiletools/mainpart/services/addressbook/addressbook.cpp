@@ -66,7 +66,7 @@ QString Addressbook::name() const {
 }
 
 KIcon Addressbook::icon() const {
-    return KIcon( "office-address-book" );
+    return KIcon( "x-office-address-book" );
 }
 
 QWidget* Addressbook::widget() const {
@@ -104,7 +104,7 @@ void Addressbook::setupActions() {
     m_newContact = new QAction( KIcon( "list-add-user" ), i18n( "New contact" ), this );
     m_newContact->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
 
-    m_editContact = new QAction( KIcon( "edit-user" ), i18n( "Edit contact" ), this );
+    m_editContact = new QAction( KIcon( "user-properties" ), i18n( "Edit contact" ), this );
     m_editContact->setEnabled( false );
 
     m_deleteContact = new QAction( KIcon( "list-remove-user" ), i18n( "Delete contact" ), this );
@@ -175,7 +175,7 @@ void Addressbook::addresseeActivated( QListWidgetItem* item ) {
 
         // prepare the header (ugly table style)
         html += "<table border=\"0\"><tr><td><img src=\"";
-        html += KIconLoader::global()->iconPath( "user", -KIconLoader::SizeMedium, false );
+        html += KIconLoader::global()->iconPath( "x-office-contact", -KIconLoader::SizeMedium, false );
         html += "\"></td><td valign=\"middle\"><h2>";
         html += addressee.name();
         html += "</h2></td></tr></table>";
@@ -229,7 +229,7 @@ void Addressbook::cleanUpItems() {
 void Addressbook::addEntry( const KMobileTools::AddressbookEntry& entry ) {
     AddressbookEntryItem* item = new AddressbookEntryItem( m_addresseeList );
     item->setText( entry.name() );
-    item->setIcon( KIcon( "user-contact" ) );
+    item->setIcon( KIcon( "x-office-contact" ) );
     item->setAddressee( entry );
 }
 
@@ -251,7 +251,7 @@ void Addressbook::findAvailableSlots() {
 void Addressbook::requestEntryAddition( const KMobileTools::AddressbookEntry& entry ) {
     AddressbookEntryItem* item = new AddressbookEntryItem( m_addresseeList );
     item->setText( entry.name() );
-    item->setIcon( KIcon( "user-contact" ) );
+    item->setIcon( KIcon( "x-office-contact" ) );
     item->setAddressee( entry );
     item->setState( AddressbookEntryItem::AdditionRequested );
 

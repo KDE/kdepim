@@ -42,7 +42,7 @@ MainWindow::MainWindow()
 
   item = new KPageWidgetItem( new DelegatePage( wdg ), i18n( "Delegates" ) );
   item->setHeader( i18n( "Setup delegates for my account" ) );
-  item->setIcon( KIcon( "contact" ) );
+  item->setIcon( KIcon( "user-identity" ) );
   wdg->addPage( item );
 
   item = new KPageWidgetItem( new OutOfOfficePage( wdg ), i18n( "Out of Office..." ) );

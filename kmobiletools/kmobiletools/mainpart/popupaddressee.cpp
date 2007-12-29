@@ -28,7 +28,7 @@ popupAddressee::popupAddressee(const QString &deviceName, const KABC::Addressee 
 {
     setObjectName(deviceName);
     if(addressee.isEmpty()) return;
-    addTitle( KIcon( "contact" ), addressee.formattedName() );
+    addTitle( KIcon( "x-office-contact" ), addressee.formattedName() );
     if(!ro) {
         addAction( KIcon("document-properties"), i18n("Edit"), this, SLOT(slotEdit()));
         addAction( KIcon("edit-delete"), i18n("Delete"), this, SLOT(slotDelete()));
