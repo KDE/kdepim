@@ -14,7 +14,6 @@
 
 #include <q3header.h>
 #include <QTextCodec>
-#include <QClipboard>
 #include <QApplication>
 #include <QGridLayout>
 #include <QKeyEvent>
@@ -27,6 +26,7 @@
 #include <QDragEnterEvent>
 #include <QCloseEvent>
 #include <QLabel>
+#include <QtDBus>
 #include <q3groupbox.h>
 #include <kdeversion.h>
 #include "addressesdialog.h"
@@ -49,7 +49,6 @@ using KPIM::RecentAddresses;
 #include <ktemporaryfile.h>
 #include <libkpgp/kpgp.h>
 #include <libkpgp/kpgpblock.h>
-#include <QCursor>
 #include <kpimutils/spellingfilter.h>
 #include <kcompletionbox.h>
 #include <kxmlguifactory.h>
@@ -73,7 +72,6 @@ using KPIM::RecentAddresses;
 
 #include <kmeditor.h>
 
-#include <QtDBus>
 
 KNLineEdit::KNLineEdit( KNComposer::ComposerView *_composerView, bool useCompletion,
                         QWidget *parent )

@@ -13,7 +13,6 @@
 */
 
 #include <QGroupBox>
-#include <QLayout>
 #include <QCheckBox>
 //Added by qt3to4:
 #include <QVBoxLayout>

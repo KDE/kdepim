@@ -18,7 +18,6 @@
 #include <QByteArray>
 #include <QList>
 #include <QListWidgetItem>
-#include <QPixmap>
 
 #include <kdialog.h>
 

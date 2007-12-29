@@ -15,10 +15,7 @@
 #ifndef KNARTICLE_H
 #define KNARTICLE_H
 
-#include <QStringList>
-#include <QTextStream>
 #include <QFile>
-#include <QFont>
 #include <QColor>
 #include <q3asciidict.h>
 #include <QList>

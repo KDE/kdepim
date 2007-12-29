@@ -19,7 +19,6 @@
 #include <QDir>
 #include <QFile>
 #include <QImage>
-#include <QLayout>
 #include <QMenu>
 #include <QStringList>
 #include <QTextCodec>

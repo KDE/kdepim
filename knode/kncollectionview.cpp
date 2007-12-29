@@ -14,7 +14,6 @@
 #include <QCursor>
 #include <q3header.h>
 //Added by qt3to4:
-#include <QKeyEvent>
 #include <QEvent>
 #include <QDropEvent>
 #include <QMouseEvent>

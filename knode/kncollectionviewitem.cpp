@@ -13,8 +13,6 @@
 */
 
 
-#include <QPainter>
-#include <QPixmap>
 #include <QDropEvent>
 
 #include <kiconloader.h>

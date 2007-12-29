@@ -19,11 +19,9 @@
 
 #include <kxmlguiwindow.h>
 #include <kdialog.h>
-#include <QLineEdit>
 #include <QRegExp>
 #include <QByteArray>
 #include <QCloseEvent>
-#include <Q3PtrList>
 #include <QKeyEvent>
 #include <QEvent>
 #include <QDropEvent>

@@ -13,7 +13,6 @@
 */
 
 #include <QLabel>
-#include <QLayout>
 #include <QRadioButton>
 #include <QCheckBox>
 //Added by qt3to4:

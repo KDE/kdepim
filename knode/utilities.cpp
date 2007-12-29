@@ -13,10 +13,8 @@
 */
 
 #include <QByteArray>
-#include <QLayout>
 #include <QListWidget>
 #include <QRegExp>
-#include <QApplication>
 #include <QCursor>
 //Added by qt3to4:
 #include <QHBoxLayout>

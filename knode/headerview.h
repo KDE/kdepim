@@ -16,7 +16,6 @@
 #define KNHEADERVIEW_H
 
 #include <QMouseEvent>
-#include <QFocusEvent>
 #include <QKeyEvent>
 #include <QEvent>
 

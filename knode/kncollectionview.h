@@ -15,7 +15,6 @@
 #define KNODE_KNCOLLECTIONVIEW_H
 
 #include <kfoldertree.h>
-#include <QFocusEvent>
 #include <QEvent>
 #include <QDropEvent>
 
