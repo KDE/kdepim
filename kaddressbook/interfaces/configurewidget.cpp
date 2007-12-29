@@ -36,12 +36,12 @@ ConfigureWidget::~ConfigureWidget()
 {
 }
 
-void ConfigureWidget::restoreSettings( KConfig* )
+void ConfigureWidget::restoreSettings( const KConfigGroup& )
 {
   // should be reimplemented in the views, extensions etc.
 }
 
-void ConfigureWidget::saveSettings( KConfig* )
+void ConfigureWidget::saveSettings( KConfigGroup & )
 {
   // should be reimplemented in the views, extensions etc.
 }

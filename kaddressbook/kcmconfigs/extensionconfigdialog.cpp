@@ -31,9 +31,9 @@
 #include "extensionconfigdialog.h"
 #include "extensionwidget.h"
 
-ExtensionConfigDialog::ExtensionConfigDialog( KAB::ExtensionFactory *factory, KConfig *config,
+ExtensionConfigDialog::ExtensionConfigDialog( KAB::ExtensionFactory *factory, KConfigGroup &config,
                                               QWidget *parent )
-  : KDialog(  parent ), mWidget( 0 ), mConfig( config )
+  : KDialog(  parent ), mWidget( 0 ), mConfigGroup( config )
 {
   setCaption( i18n( "Extension Settings" ) );
   setButtons( Ok | Cancel );
@@ -51,7 +51,7 @@ ExtensionConfigDialog::ExtensionConfigDialog( KAB::ExtensionFactory *factory, KC
   mWidget->setObjectName( "ExtensionConfigWidget" );
   layout->addWidget( mWidget, 0, 0 );
 
-  mWidget->restoreSettings( mConfig );
+  mWidget->restoreSettings( mConfigGroup );
   connect(this,SIGNAL(okClicked()),this,SLOT(slotOk()));
 }
 
@@ -61,7 +61,7 @@ ExtensionConfigDialog::~ExtensionConfigDialog()
 
 void ExtensionConfigDialog::slotOk()
 {
-  mWidget->saveSettings( mConfig );
+  mWidget->saveSettings( mConfigGroup );
 }
 
 #include "extensionconfigdialog.moc"

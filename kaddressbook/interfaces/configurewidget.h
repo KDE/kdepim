@@ -46,7 +46,7 @@ class KABINTERFACES_EXPORT ConfigureWidget : public QWidget
       values from the config file.
       Important: Don't change the group of cfg!
      */
-    virtual void restoreSettings( KConfig *cfg );
+    virtual void restoreSettings( const KConfigGroup &cfg );
 
     /**
       This method is called after the user clicked the 'Ok' button.
@@ -54,7 +54,7 @@ class KABINTERFACES_EXPORT ConfigureWidget : public QWidget
       the GUI to the config file.
       Important: Don't change the group of cfg!
      */
-    virtual void saveSettings( KConfig *cfg );
+    virtual void saveSettings( KConfigGroup &cfg );
 
 
     /**
