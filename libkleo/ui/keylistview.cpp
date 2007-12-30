@@ -713,7 +713,7 @@ void Kleo::SignatureKeyListViewItem::paintCell( QPainter * p, const QColorGroup 
 
 Kleo::KeyListView::ColumnStrategy::~ColumnStrategy() {}
 
-int Kleo::KeyListView::ColumnStrategy::compare( const GpgME::Key & key1, const GpgME::Key & key2, int col ) const {
+int Kleo::KeyListView::ColumnStrategy::compare( const GpgME::Key & key1, const GpgME::Key & key2, const int col ) const {
   return QString::localeAwareCompare( text( key1, col ), text( key2, col ) );
 }
 
@@ -721,15 +721,15 @@ int Kleo::KeyListView::ColumnStrategy::width( int col, const QFontMetrics & fm )
   return fm.width( title( col ) ) * 2;
 }
 
-int Kleo::KeyListView::ColumnStrategy::subkeyCompare( const GpgME::Subkey & sub1, const GpgME::Subkey & sub2, int col ) const {
+int Kleo::KeyListView::ColumnStrategy::subkeyCompare( const GpgME::Subkey & sub1, const GpgME::Subkey & sub2, const int col ) const {
   return QString::localeAwareCompare( subkeyText( sub1, col ), subkeyText( sub2, col ) );
 }
 
-int Kleo::KeyListView::ColumnStrategy::userIDCompare( const GpgME::UserID & uid1, const GpgME::UserID & uid2, int col ) const {
+int Kleo::KeyListView::ColumnStrategy::userIDCompare( const GpgME::UserID & uid1, const GpgME::UserID & uid2, const int col ) const {
   return QString::localeAwareCompare( userIDText( uid1, col ), userIDText( uid2, col ) );
 }
 
-int Kleo::KeyListView::ColumnStrategy::signatureCompare( const GpgME::UserID::Signature & sig1, const GpgME::UserID::Signature & sig2, int col ) const {
+int Kleo::KeyListView::ColumnStrategy::signatureCompare( const GpgME::UserID::Signature & sig1, const GpgME::UserID::Signature & sig2, const int col ) const {
   return QString::localeAwareCompare( signatureText( sig1, col ), signatureText( sig2, col ) );
 }
 
