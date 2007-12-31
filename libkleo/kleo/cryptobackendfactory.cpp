@@ -162,7 +162,10 @@ bool Kleo::CryptoBackendFactory::hasBackends() const {
 void Kleo::CryptoBackendFactory::scanForBackends( QStringList * reasons ) {
   for ( std::vector<CryptoBackend*>::const_iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it ) {
     assert( *it );
-    for ( int i = 0 ; const char * protocol = (*it)->enumerateProtocols( i ) ; ++i ) {
+    for ( int i = 0 ;; ++i ) {
+      const char * protocol = (*it)->enumerateProtocols( i );
+      if ( !protocol )
+        break;
       QString reason;
       if ( (*it)->supportsProtocol( protocol ) && !(*it)->checkForProtocol( protocol, &reason ) ) {
         if ( reasons ) {

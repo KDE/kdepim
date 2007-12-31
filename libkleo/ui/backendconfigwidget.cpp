@@ -249,20 +249,23 @@ void Kleo::BackendConfigWidget::load() {
   unsigned int backendCount = 0;
 
   // populate the plugin list:
-  BackendListViewItem * top = 0;
-  for ( unsigned int i = 0 ; const CryptoBackend * b = d->backendFactory->backend( i ) ; ++i ) {
+  for ( unsigned int i = 0 ;; ++i ) {
+    const CryptoBackend * b = d->backendFactory->backend( i );
+    if ( !b )
+      break;
 
-    top = new Kleo::BackendListViewItem( d->listView, top, b );
+    BackendListViewItem * top = new Kleo::BackendListViewItem( d->listView, top, b );
+    for ( int i = 0 ;; ++i ) {
+      const char * name = b->enumerateProtocols( i );
+      if ( !name )
+        break;
 
-    ProtocolCheckListItem * last = 0;
-    for ( int i = 0 ; const char * name = b->enumerateProtocols( i ) ; ++i ) {
       const CryptoBackend::Protocol * protocol = b->protocol( name );
-
       if ( protocol ) {
-        last = new ProtocolCheckListItem( top, last, name, protocol );
+        ProtocolCheckListItem *last = new ProtocolCheckListItem( top, last, name, protocol );
         last->setOn( protocol == d->backendFactory->protocol( name ) );
       } else if ( b->supportsProtocol( name ) ) {
-        last = new ProtocolCheckListItem( top, last, name, 0 );
+        ProtocolCheckListItem *last = new ProtocolCheckListItem( top, last, name, 0 );
         last->setOn( false );
         last->setEnabled( false );
       }
@@ -319,8 +322,12 @@ void Kleo::BackendConfigWidget::slotConfigureButtonClicked() {
 }
 
 void Kleo::BackendConfigWidget::save() const {
-  for ( int i = 0 ; const char * name = d->backendFactory->enumerateProtocols( i ) ; ++i )
+  for ( int i = 0 ;; ++i ) {
+    const char * name = d->backendFactory->enumerateProtocols( i );
+    if ( !name )
+      break;
     d->backendFactory->setProtocolBackend( name,  d->listView->chosenBackend( name ) );
+  }
 }
 
 void Kleo::BackendConfigWidget::virtual_hook( int, void* ) {}
