@@ -83,6 +83,7 @@ namespace {
     }
 }
 
+#ifndef KLEO_BUILD_OLD_MAINWINDOW
 static void fillKeyCache( KSplashScreen * splash ) {
 
   QEventLoop loop;
@@ -93,6 +94,7 @@ static void fillKeyCache( KSplashScreen * splash ) {
   loop.exec();
   splash->showMessage( i18n("Certificate cache loaded.") );
 }
+#endif
 
 int main( int argc, char** argv )
 {
