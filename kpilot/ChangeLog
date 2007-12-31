@@ -15,6 +15,29 @@ TODO: provide template-based, interpreted databases much like the
 TODO: give the knotes conduit a decent test mode.
 TODO: only re-write a local database if it is changed.
 
+2007-12-30  Jason 'vanRijn' Kasper
+* Fixing bug reported by Pablo Yepes on kdepim-users mailing list. We did
+  severe goofiness with middle names... The Palm can't handle them, so we
+  blindly tacked firstname + " " + lastname and stuck it into the Palm's
+  firstname field. The problem is that whenever a copy from palm->pc is
+  done, the kludged first name is transferred to kabc ("firstname middle").
+  And, it's compounded by every change in either direction. It's an ugly
+  hack and I've removed it. The only way to work around it would be to add
+  an additional check for !firstname.endsWith(abEntry.additionalName()),
+  but that's even sillier. Stop the insanity!
+
+2007-12-17  Jason 'vanRijn' Kasper
+* Woot! Fixing major breakage for funky usb devices.  pulled back some
+  removed code from KDE 3.5.6's kpilot for usb workaround code and fit it
+  into the new threaded model.  This fixes syncing for me on my Palm Treo
+  700p.
+* Reformatting and cleaning up kpilotdevicelink.cc.
+* New Private.h to hold the bits of kpilotdevicelink.cc that should not be
+  exposed via kpilotdevicelink.h.  Also, DeviceCommThread extends QObject
+  and QThread, so we need to have automoc run on it.
+* Switching from using QCustomEvent to using QEvent for device tickle
+  thread to match what is done in kpilotdevicelink.  
+
 2007-04-15  Jason 'vanRijn' Kasper
 * merging all development and bug fixes from kdepim-3.5.5+ branch into
   stable branches/KDE/3.5 in preparation for KDE 3.5.7

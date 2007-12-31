@@ -1290,11 +1290,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 		DEBUGKPILOT << fname  << ": last name not equal" << endl;
 			return false;
 		}
-		// goofiness that we do in _copy(), duplicated here for your viewing pleasure... *grrr*
-		QString firstAndMiddle = abEntry.givenName();
-		if(!abEntry.additionalName().isEmpty()) firstAndMiddle += CSL1(" ") + abEntry.additionalName();
-
-		if(!_equal(firstAndMiddle, piAddress->getField(entryFirstname)))
+		if(!_equal(abEntry.givenName(), piAddress->getField(entryFirstname)))
 		{
 		DEBUGKPILOT << fname  << ": first name not equal" << endl;
 			return false;
