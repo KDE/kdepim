@@ -519,9 +519,7 @@ void KABCSync::copy(PilotAddress &toPilotAddr,
 	// don't do a reset since this could wipe out non copied info
 	//toPilotAddr.reset();
 	toPilotAddr.setField(entryLastname, fromAbEntry.familyName());
-	QString firstAndMiddle = fromAbEntry.givenName();
-	if(!fromAbEntry.additionalName().isEmpty()) firstAndMiddle += CSL1(" ") + fromAbEntry.additionalName();
-	toPilotAddr.setField(entryFirstname, firstAndMiddle);
+	toPilotAddr.setField(entryFirstname, fromAbEntry.givenName());
 	toPilotAddr.setField(entryCompany, fromAbEntry.organization());
 	toPilotAddr.setField(entryTitle, fromAbEntry.prefix());
 	toPilotAddr.setField(entryNote, fromAbEntry.note());
