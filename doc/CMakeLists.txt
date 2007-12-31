@@ -4,8 +4,6 @@ if ( ONLY_KLEO )
   endif(NOT WIN32)
 else ( ONLY_KLEO )
 add_subdirectory(akregator)
-add_subdirectory(api)
-add_subdirectory(common)
 add_subdirectory(kaddressbook)
 add_subdirectory(kalarm)
 
