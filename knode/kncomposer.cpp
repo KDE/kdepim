@@ -26,7 +26,7 @@
 #include <QDragEnterEvent>
 #include <QCloseEvent>
 #include <QLabel>
-#include <QtDBus>
+#include <QtDBus/QtDBus>
 #include <q3groupbox.h>
 #include <kdeversion.h>
 #include "addressesdialog.h"
