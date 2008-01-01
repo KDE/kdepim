@@ -53,7 +53,7 @@ ViewConfigureWidget::ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent
 
   // Add the first page, the attributes
   KVBox *page = addPage( i18n( "Fields" ), QString(),
-                         KIconLoader::global()->loadIcon( "fileview-detailed",
+                         KIconLoader::global()->loadIcon( "view-list-details",
                          KIconLoader::Panel ) );
 
   // Add the select fields page
