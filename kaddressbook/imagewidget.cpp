@@ -142,7 +142,7 @@ ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent )
 
   mClearButton = new QPushButton( box );
   mClearButton->setSizePolicy( QSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum ) );
-  mClearButton->setIcon( KIcon( QApplication::isRightToLeft() ? "edit-clear-locationbar" : "edit-clear-locationbar-rtl" ) );
+  mClearButton->setIcon( KIcon( QApplication::isRightToLeft() ? "edit-clear-locationbar-ltr" : "edit-clear-locationbar-rtl" ) );
   mClearButton->setEnabled( false );
   boxLayout->addWidget( mClearButton, 0, 2 );
 
