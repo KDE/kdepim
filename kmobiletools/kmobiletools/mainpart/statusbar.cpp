@@ -36,8 +36,8 @@
 #include <qapplication.h>
 #include <qlayout.h>
 
-#define PIX_UP KIcon( "up" )
-#define PIX_DOWN KIcon( "down" )
+#define PIX_UP KIcon( "go-up" )
+#define PIX_DOWN KIcon( "go-down" )
 
 StatusBarScrollView::StatusBarScrollView(QWidget *parent, const char *name, Qt::WFlags f)
     : Q3ScrollView(parent, name, f)
@@ -215,26 +215,27 @@ SingleJobProgressBox::SingleJobProgressBox( int jobType, const QString &descript
     QLabel *iconLabel=new QLabel(this);
     switch( jobType ){
         case KMobileTools::Job::initPhone:
-            s_itemLabelName="connect_creating"; break;
+            s_itemLabelName="network-connect"; break;
+            // should be network-connecting, however that doesn't exist in KDE 4.0 yet
         case KMobileTools::Job::fetchSMS:
         case KMobileTools::Job::selectSMSSlot:
         case KMobileTools::Job::smsFolders:
         case KMobileTools::Job::sendStoredSMS:
-            s_itemLabelName="mail_generic"; break;
+            s_itemLabelName="mail-message"; break;
         case KMobileTools::Job::sendSMS:
         case KMobileTools::Job::storeSMS:
-            s_itemLabelName="mail_forward"; break;
+            s_itemLabelName="mail-forward"; break;
         case KMobileTools::Job::delAddressee:
         case KMobileTools::Job::addAddressee:
         case KMobileTools::Job::editAddressee:
         case KMobileTools::Job::fetchAddressBook:
-            s_itemLabelName="kontact_contacts"; break;
+            s_itemLabelName="view-pim-contacts"; break;
         case KMobileTools::Job::syncDateTimeJob:
             s_itemLabelName="kalarm"; break;
         case KMobileTools::Job::testPhoneFeatures:
-            s_itemLabelName="gear"; break;
+            s_itemLabelName="system-run"; break;
         case KMobileTools::Job::fetchKCal:
-            s_itemLabelName="date"; break;
+            s_itemLabelName="office-calendar"; break;
         default:
             s_itemLabelName="kmobiletools"; break;
     }
