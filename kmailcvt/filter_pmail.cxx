@@ -307,7 +307,7 @@ bool FilterPMail::parseFolderMatrix()
                     return false; 
                 }
             } 
-            folderMatrix.append(tmpArray);
+            folderMatrix.append(FolderStructure(tmpArray));
         }
     }
     hierarch.close();
