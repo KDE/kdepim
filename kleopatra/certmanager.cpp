@@ -106,17 +106,17 @@ namespace {
     ~DisplayStrategy() {}
 
     virtual QFont keyFont( const GpgME::Key& key, const QFont& font ) const {
-      const Kleo::KeyFilter* filter = 0;//todo Kleo::KeyFilterManager::instance()->filterMatching( key );
+      const boost::shared_ptr<Kleo::KeyFilter> filter = Kleo::KeyFilterManager::instance()->filterMatching( key, Kleo::KeyFilter::Appearance );
       return filter ? filter->font( font ) : font;
     }
     virtual QColor keyForeground( const GpgME::Key& key, const QColor& c ) const {
-      const Kleo::KeyFilter* filter = 0;//todo Kleo::KeyFilterManager::instance()->filterMatching( key );
+      const boost::shared_ptr<Kleo::KeyFilter> filter = Kleo::KeyFilterManager::instance()->filterMatching( key, Kleo::KeyFilter::Appearance );
       if ( filter && filter->fgColor().isValid() )
         return filter->fgColor();
       return c;
     }
     virtual QColor keyBackground( const GpgME::Key& key, const QColor& c  ) const {
-      const Kleo::KeyFilter* filter = 0;//todo Kleo::KeyFilterManager::instance()->filterMatching( key );
+      const boost::shared_ptr<Kleo::KeyFilter> filter = Kleo::KeyFilterManager::instance()->filterMatching( key, Kleo::KeyFilter::Appearance );
       if ( filter && filter->bgColor().isValid() )
         return filter->bgColor();
       return c;
