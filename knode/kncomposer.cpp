@@ -278,7 +278,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   a_ctPGPsign = actionCollection()->add<KToggleAction>("sign_article");
   a_ctPGPsign->setText(i18n("Sign Article with &PGP"));
-  a_ctPGPsign->setIcon(KIcon("signature"));
+  a_ctPGPsign->setIcon(KIcon("document-sign"));
 
   a_ctRemoveAttachment = actionCollection()->addAction("remove_attachment");
   a_ctRemoveAttachment->setText(i18n("&Remove"));
