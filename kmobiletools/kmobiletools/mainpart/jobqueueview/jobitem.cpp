@@ -51,7 +51,7 @@ JobItem::JobItem( KMobileTools::JobXP* job, QGraphicsItem* parent )
     switch( job->jobType() ) {
         case KMobileTools::JobXP::fetchAddressbook:
             m_caption = i18n( "Fetching address book" );
-            m_pixmap = KIconLoader::global()->loadIcon( "book2",
+            m_pixmap = KIconLoader::global()->loadIcon( "x-office-address-book",
                                                         KIconLoader::NoGroup,
                                                         KIconLoader::SizeMedium );
             break;

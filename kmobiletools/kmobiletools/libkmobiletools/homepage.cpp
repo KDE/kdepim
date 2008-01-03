@@ -145,9 +145,9 @@ void homepagePart::printIndexPage()
         htmlData+="<tr><td align=\"left\"><a href=\"config:newDevWiz\">\n\t<img src=\"%2\" align=\"absmiddle\"> <b>%3</b></a></td></tr>\
                 <tr><td align=\"left\"><a href=\"config:configDevices\">\n\t<img src=\"%4\" align=\"absmiddle\"> <b>%5</b></a></td></tr>";
         htmlData=htmlData.arg( i18n("KMobileTools handles your mobile phone devices, can read, write and send sms, synchronize your addressbook, and much more") )
-                .arg( KIconLoader::global()->iconPath("plasmagik" /* was "wizard"*/, -KIconLoader::SizeHuge) )
+                .arg( KIconLoader::global()->iconPath("tools-wizard", -KIconLoader::SizeHuge) )
                 .arg( i18n("Add a new mobile phone device") )
-                .arg( KIconLoader::global()->iconPath("package-utilities" /* was blockdevice"*/, -KIconLoader::SizeHuge) )
+                .arg( KIconLoader::global()->iconPath("preferences-other", -KIconLoader::SizeHuge) )
                 .arg( i18n("Configure devices") );
     } else
     for(QStringList::Iterator it = devices.begin(); it != devices.end(); ++it )
@@ -237,19 +237,19 @@ void homepagePart::printInfoPage(int i, const QString &mobileName, KMobileTools:
             htmlData+="<ul><li><b>%8</b></li></ul><p>%1 %2</p><p>%3 %4</p><div align='right'><a href=\"infopage:1\">%7</a></div>";
             htmlData=htmlData
                     .arg( QString("<a href=\"%1:sms\">").arg( devname ) +
-                    htmlIcon("mail_get",-KIconLoader::SizeSmallMedium) )
+                    htmlIcon("mail-receive",-KIconLoader::SizeSmallMedium) )
                     .arg(i18nc("sms count in device homepage", "%1 received SMS (%2 unread).",
                         ( l->count( SMS::Unread | SMS::Read, SMS::Phone | SMS::Sim) ),
                         ( l->count( SMS::Unread, SMS::Phone | SMS::Sim) ) ) + "</a>")
 //                     .arg( htmlIcon("phonecall",-KIconLoader::SizeSmallMedium) ).arg("No new calls")
-                    .arg(  QString("<a href=\"%1:phonebook\">").arg(devname ) + htmlIcon("personal",-KIconLoader::SizeSmallMedium) )
+                    .arg(  QString("<a href=\"%1:phonebook\">").arg(devname ) + htmlIcon("x-office-contact",-KIconLoader::SizeSmallMedium) )
                     .arg(i18np("%1 contact stored in phonebook.", "%1 contacts stored in phonebook.", engine->constEngineData()->contactsList()->count())
                     ) + "</a>";
         } else
         {
             htmlData+="<ul><li><b>%8</b></li></ul><p>%1 %2</p><p>%3 %4</p><div align='right'><a href=\"infopage:1\">%7</a></div>";
             htmlData=htmlData
-                    .arg(htmlIcon("stop",-KIconLoader::SizeSmallMedium) )
+                    .arg(htmlIcon("process-stop",-KIconLoader::SizeSmallMedium) )
                     .arg(QString("<a href=\"%1:tryconnect\">%2</a>").arg(devname).arg(i18n("Device disconnected. Click here to retry connect.") ) )
                     .arg(htmlIcon("configure",-KIconLoader::SizeSmallMedium) )
                     .arg(QString("<a href=\"%1:configure\">%2</a>").arg(devname).arg(i18n("Click here to configure this mobile phone.") ) );

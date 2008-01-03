@@ -461,12 +461,12 @@ void kmobiletoolsMainPart::setupDialogs() {
     KAction *curAction=0;
 
     // "Device manager" action
-    curAction = new KAction( KIcon("package-utilities"), i18n("Device Manager"), this );
+    curAction = new KAction( KIcon("phone"), i18n("Device Manager"), this );
     connect( curAction, SIGNAL(triggered(bool)), m_deviceManager, SLOT(show()) );
     actionCollection()->addAction( "device_manager", curAction );
 
     // "Show error log" action
-    curAction = new KAction( KIcon("text-enriched"), i18n("Show error log..."), this );
+    curAction = new KAction( KIcon("utilities-log-viewer"), i18n("Show error log..."), this );
     connect( curAction, SIGNAL(triggered(bool)), m_errorLogDialog, SLOT(show()) );
     actionCollection()->addAction( "error_log", curAction );
 }

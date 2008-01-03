@@ -96,10 +96,10 @@ w_fsConfig=new QWidget();
     #endif
 #endif
     genOptions=new Ui::genericDeviceOptions(); genOptions->setupUi(w_genOptions);
-    addPage(w_firstPage, i18n("Name and type"), QString("blockdevice") );
-    addPage(w_genOptions, i18n("Device Options"), "kmobiletools");
+    addPage(w_firstPage, i18n("Name and type"), QString("preferences-other") );
+    addPage(w_genOptions, i18n("Device Options"), "phone");
 //     addPage(w_at_engine, i18n("AT Engine"), "kmobiletools");
-    addPage(w_fsConfig, i18n("Files Access"), "folder_yellow");
+    addPage(w_fsConfig, i18n("Files Access"), "system-file-manager");
 
     connect(firstPage->combo_engine, SIGNAL(activated(const QString &) ), this, SLOT(slotEngineChanged(const QString & ) ) );
     connect(firstPage->kcfg_engine, SIGNAL(textChanged ( const QString & )), this, SLOT(readEngine(const QString&) ) );

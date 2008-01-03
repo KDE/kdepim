@@ -177,12 +177,12 @@ void smsPart::slotPopupMenu(const QString &url, const QPoint &point)
     {
         QAction *act=actionCollection()->addAction("sms_reply__", this, SLOT(slotReply()));
         act->setText(i18nc("Reply to this SMS", "Reply"));
-        act->setIcon(KIcon("mail_reply"));
+        act->setIcon(KIcon("mail-reply"));
         menu->addAction(act);
     }
     QAction *act=actionCollection()->addAction("sms_delete__", this, SLOT(slotRemove()));
     act->setText(i18nc("Delete this SMS", "Remove"));
-    act->setIcon(KIcon("cancel"));
+    act->setIcon(KIcon("edit-delete"));
     menu->addAction(act);
 
 //     menu->insertItem(url);
