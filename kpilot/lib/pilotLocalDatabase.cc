@@ -631,7 +631,7 @@ void PilotLocalDatabase::openDatabase()
 	}
 
 
-	PI_SIZE_T size = 0;
+	size_t size = 0;
 	void *tmpBuffer;
 	pi_file_get_info(dbFile, &fDBInfo);
 	pi_file_get_app_info(dbFile, &tmpBuffer, &size);

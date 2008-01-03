@@ -91,7 +91,7 @@ public:
 	} ;
 
 	/** Returns the length of the (whole) AppInfo block. */
-	inline PI_SIZE_T length() const
+	inline size_t length() const
 	{
 		return fLen;
 	} ;
@@ -123,7 +123,7 @@ public:
 
 protected:
 	struct CategoryAppInfo *fC;
-	PI_SIZE_T fLen;
+	size_t fLen;
 
 	bool fOwn;
 } ;
@@ -138,11 +138,11 @@ protected:
 template <typename appinfo,
 #if PILOT_LINK_IS(0,12,2)
 	/* There are additional consts introduced in 0.12.2 */
-	int(*unpack)(appinfo *, const unsigned char *, PI_SIZE_T),
-	int(*pack)(const appinfo *, unsigned char *, PI_SIZE_T)
+	int(*unpack)(appinfo *, const unsigned char *, size_t),
+	int(*pack)(const appinfo *, unsigned char *, size_t)
 #else
-	int(*unpack)(appinfo *, unsigned char *, PI_SIZE_T),
-	int(*pack)(appinfo *, unsigned char *, PI_SIZE_T)
+	int(*unpack)(appinfo *, unsigned char *, size_t),
+	int(*pack)(appinfo *, unsigned char *, size_t)
 #endif
 	>
 class PilotAppInfo : public PilotAppInfoBase
