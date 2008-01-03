@@ -62,7 +62,7 @@ GroupConfig::GroupConfig( QWidget *parent )
   QBoxLayout *nameLayout = new QHBoxLayout( titleFrame );
   nameLayout->setMargin( 0 );
 
-  QPixmap icon = KIconLoader::global()->loadIcon( "kontact_summary", KIconLoader::Desktop );
+  QPixmap icon = KIconLoader::global()->loadIcon( "view-pim-summary", KIconLoader::Desktop );
 
   QLabel *iconLabel = new QLabel( titleFrame );
   iconLabel->setPixmap( icon );
@@ -93,7 +93,7 @@ GroupConfig::GroupConfig( QWidget *parent )
   QFrame *page = new QFrame();
   KPageWidgetItem *item = mMemberView->addPage( page, i18n("Group") );
   item->setHeader( i18n("General Group Settings") );
-  item->setIcon( KIcon( "bookmark" ) );
+  item->setIcon( KIcon( "bookmarks" ) );
 
   QBoxLayout *pageLayout = new QVBoxLayout( page );
 
