@@ -53,7 +53,7 @@ Comment[uk]=Маєте вхідний дзвінок
 Comment[x-test]=xxThere is an incoming callxx
 Comment[zh_CN]=有来电
 Comment[zh_TW]=有來電
-Sound=KDE_Beep_Phone_1.ogg
+Sound=KD-Im-Phone.Ring.ogg
 Action=Sound|Popup|Taskbar
 
 
@@ -103,5 +103,5 @@ Comment[uk]=Знайдено нові вхідні SMS
 Comment[x-test]=xxNew incoming SMS were foundxx
 Comment[zh_CN]=发现新的短消息
 Comment[zh_TW]=收到新簡訊
-Sound=KDE_Beep_Double.ogg
+Sound=KDE-Im-Sms.ogg
 Action=Sound|Popup|Taskbar
