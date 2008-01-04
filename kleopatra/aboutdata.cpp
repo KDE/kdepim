@@ -37,7 +37,7 @@
 #include <klocale.h>
 
 static const char kleopatra_version[] = KLEOPATRA_VERSION_STRING;
-static const char description[] = I18N_NOOP("KDE Key Manager");
+static const char description[] = I18N_NOOP("KDE Certificate Manager");
 
 struct about_data {
   const char * name;
