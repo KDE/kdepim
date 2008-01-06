@@ -1005,7 +1005,6 @@ void KNComposer::initData(const QString &text)
   }
 }
 
-
 // inserts at cursor position if clear is false, replaces content otherwise
 // puts the file content into a box if box==true
 // "file" is already open for reading
@@ -1020,8 +1019,7 @@ void KNComposer::insertFile( QFile *file, bool clear, bool box, const QString &b
   if (box)
     temp = QString::fromLatin1(",----[ %1 ]\n").arg(boxTitle);
   //Laurent fixme
-#if 0
-  if (box && (v_iew->e_dit->wordWrap()!=Q3MultiLineEdit::NoWrap)) {
+  if (box && (v_iew->e_dit->wordWrapMode()!=QTextOption::NoWrap)) {
     int wrapAt = v_iew->e_dit->wrapColumnOrWidth();
     QStringList lst;
     QString line;
@@ -1030,6 +1028,7 @@ void KNComposer::insertFile( QFile *file, bool clear, bool box, const QString &b
       if (!file->atEnd())
         line+='\n';
       lst.append(line);
+      qDebug()<<" lst :"<<lst;
     }
     temp+=KNHelper::rewrapStringList(lst, wrapAt, '|', false, true);
   } else {
@@ -1041,7 +1040,6 @@ void KNComposer::insertFile( QFile *file, bool clear, bool box, const QString &b
         temp += '\n';
     }
   }
-
   if (box)
     temp += QString::fromLatin1("`----");
 
@@ -1049,7 +1047,6 @@ void KNComposer::insertFile( QFile *file, bool clear, bool box, const QString &b
     v_iew->e_dit->setText(temp);
   else
     v_iew->e_dit->insert(temp);
-#endif
 }
 
 
