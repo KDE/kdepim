@@ -75,9 +75,7 @@ bool VCard_LDIFCreator::readContents( const QString &path )
   text.truncate(0);
 
   // read the file
-  QTextStream t( &file );
-  t.setEncoding( QTextStream::UnicodeUTF8 );
-  QString contents = t.read();
+  QString contents = file.readAll();
   file.close();
 
   // convert the file contents to a KABC::Addressee address
