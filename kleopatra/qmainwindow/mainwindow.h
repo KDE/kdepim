@@ -42,8 +42,8 @@ public:
     explicit MainWindow( QWidget* parent = 0, Qt::WindowFlags f = 0 );
     ~MainWindow();
 
-    Q_PRIVATE_SLOT( d, void listKeys( void ) );
-    Q_PRIVATE_SLOT( d, void viewDetails( const QModelIndex& ) );
+    Q_PRIVATE_SLOT( d, void listKeys( void ) )
+    Q_PRIVATE_SLOT( d, void viewDetails( const QModelIndex& ) )
 
 private:
     class Private;

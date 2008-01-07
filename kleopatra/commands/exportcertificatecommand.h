@@ -51,7 +51,7 @@ namespace Kleo {
         class Private;
         inline Private * d_func();
         inline const Private * d_func() const;
-        Q_PRIVATE_SLOT( d_func(), void exportResult( GpgME::Error, QByteArray ) );
+        Q_PRIVATE_SLOT( d_func(), void exportResult( GpgME::Error, QByteArray ) )
     };
 }
 

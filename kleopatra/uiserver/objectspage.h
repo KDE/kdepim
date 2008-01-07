@@ -54,9 +54,9 @@ namespace Kleo {
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void add() );
-        Q_PRIVATE_SLOT( d, void remove() );
-        Q_PRIVATE_SLOT( d, void listSelectionChanged() );
+        Q_PRIVATE_SLOT( d, void add() )
+        Q_PRIVATE_SLOT( d, void remove() )
+        Q_PRIVATE_SLOT( d, void listSelectionChanged() )
     };
 }
 

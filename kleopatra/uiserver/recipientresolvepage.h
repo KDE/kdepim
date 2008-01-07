@@ -71,8 +71,8 @@ namespace Kleo {
         class Private;
         kdtools::pimpl_ptr<Private> d;
 
-        Q_PRIVATE_SLOT( d, void selectAnotherCertificate() );
-        Q_PRIVATE_SLOT( d, void currentIndexChanged( int ) );
+        Q_PRIVATE_SLOT( d, void selectAnotherCertificate() )
+        Q_PRIVATE_SLOT( d, void currentIndexChanged( int ) )
     };
 
     class RecipientResolvePage : public WizardPage {
@@ -129,10 +129,10 @@ namespace Kleo {
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void protocolSelected( int ) );
-        Q_PRIVATE_SLOT( d, void addRecipient() );
-        Q_PRIVATE_SLOT( d, void removeRecipient() );
-        Q_PRIVATE_SLOT( d, void modeSelected( int ) );
+        Q_PRIVATE_SLOT( d, void protocolSelected( int ) )
+        Q_PRIVATE_SLOT( d, void addRecipient() )
+        Q_PRIVATE_SLOT( d, void removeRecipient() )
+        Q_PRIVATE_SLOT( d, void modeSelected( int ) )
     };
 }
 

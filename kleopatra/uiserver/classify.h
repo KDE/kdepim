@@ -78,7 +78,7 @@ namespace Kleo {
             AnyType            = AnyMessageType|AnyCertStoreType|CertificateRequest,
             TypeMask           = AnyType
         };
-    };
+    }
 
     unsigned int classify( const QString & filename );
     QString findSignedData( const QString & signatureFileName );

@@ -59,7 +59,7 @@ public:
     enum KeyType {
         Any,
         SignOnly,
-        EncryptOnly,
+        EncryptOnly
     };
 
     explicit CertificateSelectionDialog( QWidget* parent = 0, Qt::WindowFlags flags = 0 );
