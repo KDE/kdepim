@@ -125,7 +125,7 @@ int main( int argc, char *argv[] )
   KGlobal::locale()->insertCatalog( "libkdepim" );
 
   bool ret = app.exec();
-  while ( !KMainWindow::memberList().isEmpty() )
-      delete KMainWindow::memberList().first();
+  qDeleteAll( KMainWindow::memberList() );\
+
   return ret;
 }
