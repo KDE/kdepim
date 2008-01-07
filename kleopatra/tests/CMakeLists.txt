@@ -20,6 +20,8 @@ target_link_libraries(test_keylistmodels kleo ${KDE4_KDECORE_LIBS} )
 
 ########### next target ###############
 
+if ( USABLE_ASSUAN_FOUND )
+
 kde4_add_executable( test_signencryptwizard TEST
   test_signencryptwizard.cpp
   ../uiserver/certificateresolver.cpp
@@ -40,6 +42,8 @@ kde4_add_executable( test_signencryptwizard TEST
   ../models/keycache.cpp 
   ../models/keylistmodel.cpp )
 target_link_libraries( test_signencryptwizard kleo ${KDE4_KMIME_LIBRARY} ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES} ${QT_QT3SUPPORT_LIBRARY} )
+
+endif ( USABLE_ASSUAN_FOUND )
 
 ########### next target ###############
 
