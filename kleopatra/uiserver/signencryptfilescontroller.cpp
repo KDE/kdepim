@@ -39,8 +39,8 @@
 #include "signencryptfilestask.h"
 #include "input.h"
 #include "output.h"
-#include "classify.h"
 
+#include <utils/classify.h>
 #include <utils/stl_util.h>
 
 #include <kmime/kmime_header_parsing.h>

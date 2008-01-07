@@ -35,8 +35,7 @@
 #include "detail_p.h"
 #include "kleo-assuan.h"
 
-#include "classify.h"
-
+#include <utils/classify.h>
 #include <utils/kdpipeiodevice.h>
 
 #include <KLocale>

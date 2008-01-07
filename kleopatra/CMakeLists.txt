@@ -39,7 +39,6 @@ if ( USABLE_ASSUAN_FOUND )
     ${_kleopatra_extra_uiserver_SRCS}
     uiserver/kleo-assuan.cpp
     uiserver/hex.cpp
-    uiserver/classify.cpp
     uiserver/input.cpp
     uiserver/output.cpp
     uiserver/uiserver.cpp
@@ -97,6 +96,7 @@ set( _kleopatra_common_SRCS
    utils/filenamerequester.cpp
    utils/formatting.cpp
    utils/wsastarter.cpp
+   utils/classify.cpp
    ${_kleopatra_uiserver_files}
    commands/command.cpp
    commands/detailscommand.cpp

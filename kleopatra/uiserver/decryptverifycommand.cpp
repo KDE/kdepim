@@ -37,7 +37,6 @@
 #include "decryptverifyoperationwidget.h"
 
 #include "kleo-assuan.h"
-#include "classify.h"
 #include "detail_p.h"
 #include "hex.h"
 #include "input.h"
@@ -46,6 +45,7 @@
 #include <models/keycache.h>
 #include <models/predicates.h>
 
+#include <utils/classify.h>
 #include <utils/formatting.h>
 #include <utils/stl_util.h>
 

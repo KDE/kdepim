@@ -33,7 +33,7 @@
 #include "importcertificatecommand.h"
 #include "command_p.h"
 
-#include "uiserver/classify.h"
+#include "utils/classify.h"
 
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/importjob.h>
