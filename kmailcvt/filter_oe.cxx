@@ -323,7 +323,7 @@ void FilterOE::dbxReadDataBlock( FilterInfo *info, QDataStream& ds, int filePos)
         }
     }
     if(currentIsFolderFile) {
-        folderStructure.append(folderEntry);
+        folderStructure.append(FolderStructure(folderEntry));
     }
     ds.device()->seek(wasAt); // Restore file position to same as when function called
 }

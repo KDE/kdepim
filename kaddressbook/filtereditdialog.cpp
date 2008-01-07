@@ -24,12 +24,9 @@
 #include <QButtonGroup>
 #include <QGroupBox>
 #include <QLabel>
-#include <QLayout>
 #include <QPushButton>
 #include <QRadioButton>
-#include <QRegExp>
 #include <QString>
-#include <QToolButton>
 
 #include <QWidget>
 #include <QVBoxLayout>

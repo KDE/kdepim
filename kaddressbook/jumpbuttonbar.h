@@ -24,7 +24,6 @@
 #ifndef JUMPBUTTONBAR_H
 #define JUMPBUTTONBAR_H
 
-#include <QSizePolicy>
 #include <QWidget>
 #include <QStringList>
 //Added by qt3to4:

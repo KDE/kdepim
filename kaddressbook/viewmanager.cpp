@@ -22,7 +22,6 @@
 */
 
 #include <QFile>
-#include <QLayout>
 #include <QStackedWidget>
 #include <QHBoxLayout>
 #include <QDropEvent>

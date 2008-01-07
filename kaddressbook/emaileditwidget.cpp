@@ -23,12 +23,8 @@
 
 #include <QCheckBox>
 #include <QLabel>
-#include <QLayout>
-#include <QPainter>
 #include <QPushButton>
-#include <QValidator>
 #include <QString>
-#include <QToolButton>
 
 //Added by qt3to4:
 #include <QGridLayout>

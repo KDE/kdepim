@@ -34,12 +34,12 @@
 #include <QFile>
 #include <QGroupBox>
 #include <QLabel>
-#include <QLayout>
 #include <QPainter>
 #include <QPixmap>
 #include <QPushButton>
 #include <QRegExp>
 #include <QString>
+#include <QGridLayout>
 
 #include "geowidget.h"
 

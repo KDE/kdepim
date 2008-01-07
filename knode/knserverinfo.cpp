@@ -26,7 +26,6 @@ using namespace KWallet;
 #include "knaccountmanager.h"
 #include "utilities.h"
 
-#include <QWidget>
 
 KNServerInfo::KNServerInfo() :
   i_d( -1 ), p_ort( 119 ),

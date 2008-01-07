@@ -22,9 +22,6 @@
 */
 
 #include <QClipboard>
-#include <QDir>
-#include <QFile>
-#include <QPointer>
 #include <QRegExp>
 #include <QSplitter>
 #include <QVBoxLayout>

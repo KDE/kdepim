@@ -139,12 +139,14 @@ void AkonadiServer::quit()
         mConnections[ i ]->wait();
       }
     }
+    // execute the deleteLater() calls for the threads so they free their db connections
+    // and the following db termination will work
+    QCoreApplication::instance()->processEvents();
 
-    QSettings settings( XdgBaseDirs::akonadiServerConfigFile(), QSettings::IniFormat );
-    if ( settings.value( QLatin1String("General/Driver") ).toString() == QLatin1String( "QMYSQL" )
-         && settings.value( QLatin1String( "QMYSQL/StartServer" ), true ).toBool() )
+    if ( mDatabaseProcess )
       stopDatabaseProcess();
 
+    QSettings settings( XdgBaseDirs::akonadiServerConfigFile(), QSettings::IniFormat );
     const QString connectionSettingsFile = XdgBaseDirs::akonadiConnectionConfigFile( XdgBaseDirs::WriteOnly );
 
 #ifndef Q_OS_WIN
@@ -184,6 +186,14 @@ AkonadiServer * AkonadiServer::instance()
 
 void AkonadiServer::startDatabaseProcess()
 {
+#ifdef MYSQLD_EXECUTABLE
+  const QString mysqldPath = QLatin1String( MYSQLD_EXECUTABLE );
+#else
+  const QString mysqldPath;
+  Q_ASSERT_X( false, "AkonadiServer::startDatabaseProcess()",
+              "mysqld was not found during compile time, you need to start a MySQL server yourself first and configure Akonadi accordingly" );
+#endif
+
   // create the database directories if they don't exists
   const QString dataDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/db_data" ) );
   const QString akDir   = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi/" ) );
@@ -228,8 +238,9 @@ void AkonadiServer::startDatabaseProcess()
   arguments << QString::fromLatin1( "--socket=%1/mysql.socket" ).arg( miscDir );
 
   mDatabaseProcess = new QProcess( this );
-  mDatabaseProcess->start( QLatin1String( "/usr/sbin/mysqld" ), arguments );
-  mDatabaseProcess->waitForStarted();
+  mDatabaseProcess->start( mysqldPath, arguments );
+  if ( !mDatabaseProcess->waitForStarted() )
+    qFatal( "Could not start database server '%s'", qPrintable( mysqldPath ) );
 
   QSqlDatabase db = QSqlDatabase::addDatabase( QLatin1String( "QMYSQL" ), QLatin1String( "initConnection" ) );
   db.setConnectOptions( QString::fromLatin1( "UNIX_SOCKET=%1/mysql.socket" ).arg( miscDir ) );

@@ -16,7 +16,6 @@
 
 #include <stdlib.h>
 
-#include <QTextCodec>
 #include <QPixmap>
 #include <QTextStream>
 

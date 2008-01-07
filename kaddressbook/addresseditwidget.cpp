@@ -32,24 +32,19 @@
 #include <QGroupBox>
 #include <QKeyEvent>
 #include <QLabel>
-#include <QLayout>
 #include <QList>
 #include <QPushButton>
 #include <QTextEdit>
-#include <QToolButton>
+#include <QApplication>
 
 #include <KAcceleratorManager>
-#include <KApplication>
 #include <KComboBox>
-#include <KConfig>
 #include <KDebug>
-#include <KIconLoader>
 #include <KInputDialog>
 #include <KLineEdit>
 #include <KLocale>
-#include <KMessageBox>
 #include <KSeparator>
-#include <KVBox>
+#include <KHBox>
 
 #include "addresseditwidget.h"
 

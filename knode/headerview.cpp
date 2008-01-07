@@ -25,7 +25,6 @@
 #include <kdebug.h>
 #include <kdeversion.h>
 #include <kmenu.h>
-#include <QTextDocument>
 
 #include "knglobals.h"
 #include "headerview.h"

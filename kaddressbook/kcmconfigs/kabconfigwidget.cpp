@@ -24,7 +24,6 @@
 #include <QCheckBox>
 #include <q3groupbox.h>
 #include <QLabel>
-#include <QLayout>
 #include <QLineEdit>
 #include <QPushButton>
 #include <QTabWidget>

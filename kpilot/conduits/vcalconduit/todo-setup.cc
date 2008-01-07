@@ -79,10 +79,11 @@ ToDoWidgetSetup::~ToDoWidgetSetup()
 {
 	ConduitConfigBase *t = new ToDoWidgetSetup(w);
 	t->setObjectName(n);
+	return t;
 }
 
 VCalConduitSettings*ToDoWidgetSetup::config()
 {
-  return TodoConduit::theConfig();
+	return TodoConduit::theConfig();
 }
 

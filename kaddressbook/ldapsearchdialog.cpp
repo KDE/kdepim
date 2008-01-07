@@ -23,7 +23,6 @@
 #include <q3groupbox.h>
 #include <q3header.h>
 #include <QLabel>
-#include <QLayout>
 #include <QMap>
 #include <q3listview.h>
 #include <QPointer>

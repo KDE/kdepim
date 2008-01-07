@@ -23,7 +23,6 @@
 
 #include <QFile>
 #include <QLabel>
-#include <QLayout>
 #include <QPushButton>
 //Added by qt3to4:
 #include <QGridLayout>

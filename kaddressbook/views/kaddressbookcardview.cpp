@@ -23,7 +23,6 @@
 
 #include <QApplication>
 #include <QEvent>
-#include <QLayout>
 #include <QStringList>
 #include <QDragEnterEvent>
 #include <QVBoxLayout>

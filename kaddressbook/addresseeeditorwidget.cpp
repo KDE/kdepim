@@ -24,14 +24,11 @@
 #include <QCheckBox>
 
 #include <QLabel>
-#include <QLayout>
 #include <QPushButton>
 #include <QTabWidget>
 #include <QTextEdit>
-#include <QToolButton>
 
 #include <QVBoxLayout>
-#include <QHBoxLayout>
 #include <QGridLayout>
 
 #include <kabc/resource.h>

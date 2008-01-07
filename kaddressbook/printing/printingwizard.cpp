@@ -22,12 +22,7 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QComboBox>
-#include <QLabel>
-#include <QLayout>
-#include <QPixmap>
 #include <QPushButton>
-#include <QRadioButton>
 #include <QtGui/QPrinter>
 
 #include <kabc/addresseelist.h>

@@ -38,4 +38,8 @@
     ALTER TABLE LocationTable DROP COLUMN firstUnseen;
   </update>
 
+  <update version="3" abortOnFailure="false">
+    UPDATE LocationTable SET subscribed = true;
+  </update>
+
 </updates>

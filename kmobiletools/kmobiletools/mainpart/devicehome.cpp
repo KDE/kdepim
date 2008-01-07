@@ -224,10 +224,10 @@ void DeviceHome::setupWidgets()
     p_listViewItem->setIcon( 0, DEVCFG(objectName() )->deviceTypeIcon(DEVCFG(objectName() )->currentGroup(), KIconLoader::NoGroup, KIconLoader::SizeSmall ) );
 
     (new QTreeWidgetItem( p_listViewItem, QStringList("Calls") ) )
-    ->setIcon( 0, KIcon( "kcall" ) );
+    ->setIcon( 0, KIcon( "internet-telephony" ) );
 
     (new QTreeWidgetItem( p_listViewItem, QStringList( i18n( "PhoneBook") ) ) )
-    ->setIcon( 0, KIcon( "office-address-book" ) );
+    ->setIcon( 0, KIcon( "x-office-address-book" ) );
 
 
     p_smsItem = new QTreeWidgetItem( p_listViewItem, QStringList( i18n("SMS") ) );
@@ -237,9 +237,9 @@ void DeviceHome::setupWidgets()
     //p_listViewItem->setOpen(true);
     //p_listViewItem->setPixmap(0,DEVCFG(objectName() )->deviceTypeIcon(DEVCFG(objectName() )->currentGroup(), KIconLoader::NoGroup, KIconLoader::SizeSmall ));
 //     (new K3ListViewItem(p_listViewItem, "Calls") )
-//             ->setPixmap(0,KIconLoader::global()->loadIcon("kcall", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
+//             ->setPixmap(0,KIconLoader::global()->loadIcon("internet-telephony", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
     //(new K3ListViewItem(p_listViewItem, i18n("PhoneBook") ) )
-    //        ->setPixmap(0,KIconLoader::global()->loadIcon("office-address-book", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
+    //        ->setPixmap(0,KIconLoader::global()->loadIcon("x-office-address-book", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
     //p_smsItem = new K3ListViewItem(p_listViewItem, i18n("SMS") );
     //p_smsItem->setPixmap(0,KIconLoader::global()->loadIcon("mail-message", KIconLoader::NoGroup, KIconLoader::SizeSmall) );
 

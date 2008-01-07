@@ -22,12 +22,8 @@
 */
 
 #include <q3header.h>
-#include <QIcon>
-#include <QImage>
-#include <QComboBox>
 #include <QPainter>
 #include <QBrush>
-#include <QEvent>
 #include <QPixmap>
 #include <QDropEvent>
 #include <QMouseEvent>

@@ -69,7 +69,7 @@ PassphraseDialog::PassphraseDialog( QWidget *parent,
   setCaption( caption );
   setButtons( Ok|Cancel );
 
-  setPixmap( BarIcon("pgp-keys") );
+  setPixmap( BarIcon("dialog-password") );
 
   if (keyID.isNull())
     setPrompt(i18n("Please enter your OpenPGP passphrase:"));

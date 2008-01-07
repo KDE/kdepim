@@ -22,7 +22,6 @@
 */
 
 #include <QLabel>
-#include <QLayout>
 #include <QPushButton>
 #include <QToolButton>
 #include <QApplication>

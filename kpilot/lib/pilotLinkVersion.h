@@ -53,8 +53,5 @@
 #error "You need at least pilot-link version 0.12.0 for KPilot"
 #endif
 
-#define PI_SIZE_T size_t
-
-
 #endif
 

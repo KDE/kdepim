@@ -24,9 +24,7 @@
 
 #include <q3listview.h>
 #include <QStringList>
-#include <QLayout>
 #include <QFont>
-#include <QPainter>
 #include <QList>
 
 #include <kdialog.h>

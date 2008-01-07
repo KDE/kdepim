@@ -18,7 +18,6 @@
 #include <QLabel>
 //Added by qt3to4:
 #include <QGridLayout>
-#include <QHBoxLayout>
 #include <QBoxLayout>
 #include <QVBoxLayout>
 #include <QTextEdit>
@@ -40,7 +39,6 @@
 #include <kurlcompletion.h>
 #include <kiconloader.h>
 #include <kpushbutton.h>
-#include <KStandardGuiItem>
 #include <kvbox.h>
 #include <krun.h>
 

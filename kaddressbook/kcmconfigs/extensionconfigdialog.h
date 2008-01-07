@@ -37,7 +37,7 @@ class ExtensionConfigDialog : public KDialog
   Q_OBJECT
 
   public:
-    ExtensionConfigDialog( KAB::ExtensionFactory *factory, KConfig *config,
+    ExtensionConfigDialog( KAB::ExtensionFactory *factory, KConfigGroup &config,
                            QWidget *parent );
     ~ExtensionConfigDialog();
 
@@ -46,7 +46,7 @@ class ExtensionConfigDialog : public KDialog
 
   private:
     KAB::ConfigureWidget *mWidget;
-    KConfig *mConfig;
+    KConfigGroup mConfigGroup;
 };
 
 #endif

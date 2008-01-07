@@ -30,7 +30,10 @@
 
 using namespace Akonadi;
 
-AkList::AkList(): Handler() {}
+AkList::AkList():
+    Handler(),
+    mOnlySubscribed( false )
+{}
 
 AkList::~AkList() {}
 
@@ -38,7 +41,12 @@ bool AkList::handleLine(const QByteArray& line )
 {
   // parse out the reference name and mailbox name
   int pos = line.indexOf( ' ' ) + 1; // skip tag
-  pos = line.indexOf( ' ', pos ) + 1; // skip command
+  QByteArray tmp;
+
+  // command
+  pos = ImapParser::parseString( line, tmp, pos );
+  if ( tmp == "X-AKLSUB" )
+    mOnlySubscribed = true;
 
   int baseCollection;
   bool ok = false;
@@ -47,7 +55,6 @@ bool AkList::handleLine(const QByteArray& line )
     return failureResponse( "Invalid base collection" );
 
   int depth;
-  QByteArray tmp;
   pos = ImapParser::parseString( line, tmp, pos );
   if ( tmp.isEmpty() )
     return failureResponse( "Specify listing depth" );
@@ -112,10 +119,9 @@ bool AkList::listCollection(const Location & root, int depth )
   }
 
   // filter if this node isn't needed by it's children
-  if ( !childrenFound ) {
-    if ( mResource.isValid() && root.resourceId() != mResource.id() )
-      return false;
-  }
+  bool hidden = (mResource.isValid() && root.resourceId() != mResource.id()) || (mOnlySubscribed && !root.subscribed());
+  if ( !childrenFound && hidden )
+    return false;
 
   Response response;
   response.setUntagged();
@@ -126,7 +132,10 @@ bool AkList::listCollection(const Location & root, int depth )
 
   // FIXME: escape " and "\"
   b += "NAME \"" + root.name().toUtf8() + "\" ";
-  b += "MIMETYPE (" + MimeType::joinByName( root.mimeTypes(), QLatin1String( " " ) ).toLatin1() + ") ";
+  if ( hidden )
+    b+= "MIMETYPE () ";
+  else
+    b += "MIMETYPE (" + MimeType::joinByName( root.mimeTypes(), QLatin1String( " " ) ).toLatin1() + ") ";
   b += "REMOTEID \"" + root.remoteId().toUtf8() + "\" ";
   b += "RESOURCE \"" + root.resource().name().toUtf8() + "\" ";
 

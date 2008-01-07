@@ -23,7 +23,6 @@
 
 #include <QString>
 #include <QWidget>
-#include <QLayout>
 #include <QRadioButton>
 #include <QCheckBox>
 #include <QVBoxLayout>

@@ -22,6 +22,7 @@
 
 #include <resourcebase.h>
 
+#include <kurl.h>
 #include <kio/job.h>
 
 class NntpResource : public Akonadi::ResourceBase
@@ -39,13 +40,18 @@ class NntpResource : public Akonadi::ResourceBase
     void retrieveCollections();
     void retrieveItems( const Akonadi::Collection &col, const QStringList &parts );
     bool retrieveItem( const Akonadi::Item &item, const QStringList &parts );
+    void collectionChanged( const Akonadi::Collection &collection );
 
-  protected:
+  private:
     /**
       Returns the base url used for all KIO operations, containing
       protocol, hostname and port.
     */
-    QString baseUrl() const;
+    KUrl baseUrl() const;
+
+    void setupKioJob( KIO::Job *job ) const;
+
+    QString findParent( const QStringList &_path );
 
   private slots:
     void listGroups( KIO::Job* job, const KIO::UDSEntryList &list );
@@ -60,8 +66,6 @@ class NntpResource : public Akonadi::ResourceBase
     Akonadi::Collection::List remoteCollections;
 
     bool mIncremental;
-
-    QString mConfig;
 };
 
 #endif

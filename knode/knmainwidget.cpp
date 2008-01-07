@@ -13,7 +13,6 @@
 */
 #include "knmainwidget.h"
 
-#include <QLayout>
 #include <Q3Accel>
 #include <QEvent>
 #include <QDropEvent>
@@ -21,7 +20,6 @@
 #include <QVBoxLayout>
 #include <QMenu>
 #include <QSplitter>
-#include <QtDBus>
 #include <ktoolbar.h>
 #include <kicon.h>
 #include <kactioncollection.h>

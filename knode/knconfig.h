@@ -17,12 +17,10 @@
 
 #include "knode_export.h"
 
-#include <QColor>
-#include <QDateTime>
-#include <QFont>
 #include <QList>
 #include <QObject>
 #include <QPixmap>
+#include <QDateTime>
 
 #include <kconfig.h>
 #include <kprocess.h>

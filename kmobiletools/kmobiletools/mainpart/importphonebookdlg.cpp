@@ -42,7 +42,7 @@ importPhonebookDlg::importPhonebookDlg(int availPBSlots, QWidget *parent, const 
     setCaption(i18n("Import Addressbook"));
     setButtons(Ok| Cancel);
     ui.setupUi(mainWidget());
-    ui.abcLoad->setIcon(KIcon("key_enter"));
+    ui.abcLoad->setIcon(KIcon("go-jump-locationbar"));
 //     connect(ui.fileUrl, SIGNAL(textChanged(const QString&)), this, SLOT(slotUrlChanged(const QString& )));
     connect(ui.fileUrl, SIGNAL(urlSelected(const QString&)), this, SLOT(slotUrlChanged(const QString& )));
     connect(ui.fileUrl, SIGNAL(returnPressed(const QString&)), this, SLOT(slotUrlChanged(const QString& )));

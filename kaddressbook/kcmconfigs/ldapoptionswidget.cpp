@@ -24,7 +24,6 @@
 #include <q3groupbox.h>
 #include <q3header.h>
 #include <QLabel>
-#include <QLayout>
 #include <QPushButton>
 #include <QToolButton>
 #include <QString>

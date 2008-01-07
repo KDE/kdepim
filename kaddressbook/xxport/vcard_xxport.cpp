@@ -26,8 +26,8 @@
 #include <QFrame>
 #include <QFont>
 #include <QLabel>
-#include <QLayout>
 #include <QPushButton>
+#include <QVBoxLayout>
 
 #include <kabc/vcardconverter.h>
 #include <kdialog.h>

@@ -505,7 +505,7 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
 
 	if (!fConduit)
 	{
-		WARNINGKPILOT << "Can't cast to ConduitAction." << endl;
+		WARNINGKPILOT << "Can't cast to ConduitAction.";
 		addSyncLogEntry(i18n("Could not create conduit %1.", fDesktopName));
 		return false;
 	}

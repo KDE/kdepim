@@ -16,7 +16,6 @@
 
 #include <stdlib.h>
 #include <klocale.h>
-#include <QTextCodec>
 #include <QMutex>
 //Added by qt3to4:
 #include <Q3StrList>

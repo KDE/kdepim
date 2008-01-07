@@ -33,7 +33,10 @@
 //#if defined(__unix__) || defined(__unix)
 #if defined(DW_UNIX)
 #  include <unistd.h>
-#  if defined(__SUNPRO_CC)
+// When building with SS12 but *not* using RW stdcxx, need sysent.h;
+// the combination of sysent + stdcxx is fatal (and we don't really
+// seem to need sysent.h anyway).
+#  if defined(__SUNPRO_CC) && !defined(_RWSTD_REENTRANT)
 #    include <sysent.h>
 #  endif // defined(__SUNPRO_CC)
 #endif // defined (DW_UNIX)

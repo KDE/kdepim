@@ -34,7 +34,6 @@
 #include <QCheckBox>
 #include <QtCore/QBuffer>
 #include <QLabel>
-#include <QLayout>
 #include <QPushButton>
 
 //Added by qt3to4:

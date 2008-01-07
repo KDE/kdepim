@@ -40,7 +40,7 @@ bool sudoRun(KCmdLineArgs *args)
     QString thisAppName=KStandardDirs::findExe(args->appName());
     kDebug() <<"Trying to start" << thisAppName;
     KProcess process;
-    process << "kdesu" << "-t" << KShell::quoteArg(thisAppName);
+    process << KStandardDirs::findExe("kdesu") << "-t" << KShell::quoteArg(thisAppName);
     if(process.execute()==0 ) return true;
     process.clearProgram();
     process << "gksu" << "-d" << KShell::quoteArg(thisAppName);

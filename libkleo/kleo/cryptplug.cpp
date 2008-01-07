@@ -650,7 +650,7 @@ reorder_dn( struct CryptPlug::DnPair *dn,
   /* prepend the unknown attrs if desired */
   if( unknownAttrsHandling &&
       !strcmp(unknownAttrsHandling, "PREFIX")
-      && *resultUnknowns ){
+      && !resultUnknowns.isEmpty() ){
     result.append( resultUnknowns );
     any = 1;
   }else{

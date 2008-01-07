@@ -24,9 +24,7 @@
 #include "ringbinderstyle.h"
 
 #include <QCheckBox>
-#include <QLayout>
 #include <QPainter>
-#include <QSpinBox>
 #include <QStringList>
 #include <QtGui/QPrinter>
 

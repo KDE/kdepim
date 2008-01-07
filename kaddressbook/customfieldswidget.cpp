@@ -27,7 +27,6 @@
 #include <QTimeEdit>
 #include <QFrame>
 #include <QLabel>
-#include <QLayout>
 #include <QPushButton>
 #include <QSpinBox>
 //Added by qt3to4:

@@ -24,10 +24,6 @@
 */
 
 #include <QCheckBox>
-#include <QComboBox>
-#include <QLayout>
-#include <QObject>
-#include <QSpinBox>
 #include <QRegExp>
 //Added by qt3to4:
 #include <QVBoxLayout>

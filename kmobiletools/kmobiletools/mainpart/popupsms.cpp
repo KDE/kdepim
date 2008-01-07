@@ -27,8 +27,8 @@ popupSMS::popupSMS(KMobileTools::SMS *sms, QWidget *parent)
     : KMenu(parent)
 {
     p_sms=sms;
-    addTitle( KIcon( "mail_generic" ), i18n("SMS") );
-    addAction(KIcon("editdelete"), i18n("Delete"), this, SLOT(slotRemove()));
+    addTitle( KIcon( "mail-message" ), i18n("SMS") );
+    addAction(KIcon("edit-delete"), i18n("Delete"), this, SLOT(slotRemove()));
 }
 
 

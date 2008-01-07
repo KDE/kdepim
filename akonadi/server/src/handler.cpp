@@ -40,6 +40,7 @@
 #include "handler/rename.h"
 #include "handler/searchpersistent.h"
 #include "handler/select.h"
+#include "handler/subscribe.h"
 #include "handler/status.h"
 #include "handler/store.h"
 #include "handler/transaction.h"
@@ -137,8 +138,10 @@ Handler * Handler::findHandlerForCommandAuthenticated( const QByteArray & comman
       return new TransactionHandler();
     if ( command == "X-AKAPPEND" )
       return new AkAppend();
-    if ( command == "X-AKLIST" )
+    if ( command == "X-AKLIST" || command == "X-AKLSUB" )
       return new AkList();
+    if ( command == "SUBSCRIBE" || command == "UNSUBSCRIBE" )
+      return new Subscribe();
 
     return 0;
 }
@@ -176,6 +179,17 @@ bool Akonadi::Handler::failureResponse( const QByteArray &failureMessage )
 bool Akonadi::Handler::failureResponse(const char * failureMessage)
 {
   return failureResponse( QLatin1String( failureMessage ) );
+}
+
+bool Handler::successResponse(const char * successMessage)
+{
+  Response response;
+  response.setTag( tag() );
+  response.setSuccess();
+  response.setString( QString::fromLatin1(successMessage) );
+  emit responseAvailable( response );
+  deleteLater();
+  return true;
 }
 
 void Handler::imapSetToQuery(const ImapSet & set, bool isUid, QueryBuilder & qb)

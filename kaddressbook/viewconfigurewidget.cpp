@@ -21,7 +21,6 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QLayout>
 #include <kvbox.h>
 //Added by qt3to4:
 #include <QPixmap>
@@ -54,7 +53,7 @@ ViewConfigureWidget::ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent
 
   // Add the first page, the attributes
   KVBox *page = addPage( i18n( "Fields" ), QString(),
-                         KIconLoader::global()->loadIcon( "fileview-detailed",
+                         KIconLoader::global()->loadIcon( "view-list-details",
                          KIconLoader::Panel ) );
 
   // Add the select fields page

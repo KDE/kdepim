@@ -14,7 +14,6 @@
 
 #include <q3header.h>
 #include <QTextCodec>
-#include <QClipboard>
 #include <QApplication>
 #include <QGridLayout>
 #include <QKeyEvent>
@@ -27,6 +26,7 @@
 #include <QDragEnterEvent>
 #include <QCloseEvent>
 #include <QLabel>
+#include <QtDBus/QtDBus>
 #include <q3groupbox.h>
 #include <kdeversion.h>
 #include "addressesdialog.h"
@@ -49,7 +49,6 @@ using KPIM::RecentAddresses;
 #include <ktemporaryfile.h>
 #include <libkpgp/kpgp.h>
 #include <libkpgp/kpgpblock.h>
-#include <QCursor>
 #include <kpimutils/spellingfilter.h>
 #include <kcompletionbox.h>
 #include <kxmlguifactory.h>
@@ -73,7 +72,6 @@ using KPIM::RecentAddresses;
 
 #include <kmeditor.h>
 
-#include <QtDBus>
 
 KNLineEdit::KNLineEdit( KNComposer::ComposerView *_composerView, bool useCompletion,
                         QWidget *parent )
@@ -209,7 +207,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   sb->insertItem( QString(), 5, 0 );                 // line
   sb->setItemAlignment( 5, Qt::AlignCenter | Qt::AlignVCenter );
   connect(v_iew->e_dit, SIGNAL(cursorPositionChanged()), SLOT(slotUpdateCursorPos()));
-  connect(v_iew->e_dit, SIGNAL(toggle_overwrite_signal()), SLOT(slotUpdateStatusBar()));
+  connect(v_iew->e_dit, SIGNAL(overwriteModeText()), SLOT(slotUpdateStatusBar()));
 
   QDBusConnection::sessionBus().registerObject( "/Composer", this, QDBusConnection::ExportScriptableSlots );
   //------------------------------- <Actions> --------------------------------------
@@ -280,7 +278,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 
   a_ctPGPsign = actionCollection()->add<KToggleAction>("sign_article");
   a_ctPGPsign->setText(i18n("Sign Article with &PGP"));
-  a_ctPGPsign->setIcon(KIcon("signature"));
+  a_ctPGPsign->setIcon(KIcon("document-sign"));
 
   a_ctRemoveAttachment = actionCollection()->addAction("remove_attachment");
   a_ctRemoveAttachment->setText(i18n("&Remove"));
@@ -1007,7 +1005,6 @@ void KNComposer::initData(const QString &text)
   }
 }
 
-
 // inserts at cursor position if clear is false, replaces content otherwise
 // puts the file content into a box if box==true
 // "file" is already open for reading
@@ -1022,8 +1019,7 @@ void KNComposer::insertFile( QFile *file, bool clear, bool box, const QString &b
   if (box)
     temp = QString::fromLatin1(",----[ %1 ]\n").arg(boxTitle);
   //Laurent fixme
-#if 0
-  if (box && (v_iew->e_dit->wordWrap()!=Q3MultiLineEdit::NoWrap)) {
+  if (box && (v_iew->e_dit->wordWrapMode()!=QTextOption::NoWrap)) {
     int wrapAt = v_iew->e_dit->wrapColumnOrWidth();
     QStringList lst;
     QString line;
@@ -1032,6 +1028,7 @@ void KNComposer::insertFile( QFile *file, bool clear, bool box, const QString &b
       if (!file->atEnd())
         line+='\n';
       lst.append(line);
+      qDebug()<<" lst :"<<lst;
     }
     temp+=KNHelper::rewrapStringList(lst, wrapAt, '|', false, true);
   } else {
@@ -1043,7 +1040,6 @@ void KNComposer::insertFile( QFile *file, bool clear, bool box, const QString &b
         temp += '\n';
     }
   }
-
   if (box)
     temp += QString::fromLatin1("`----");
 
@@ -1051,7 +1047,6 @@ void KNComposer::insertFile( QFile *file, bool clear, bool box, const QString &b
     v_iew->e_dit->setText(temp);
   else
     v_iew->e_dit->insert(temp);
-#endif
 }
 
 

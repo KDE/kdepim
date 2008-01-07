@@ -17,7 +17,6 @@
 #include <QDir>
 #include <QFile>
 #include <QLabel>
-#include <QLayout>
 #include <QProgressBar>
 #include <QVBoxLayout>
 #include <QApplication>
