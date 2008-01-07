@@ -205,10 +205,8 @@ KABC::AddresseeList VCardXXPort::importContacts( const QString& ) const
         if ( file.open( IO_ReadOnly ) ) {
           QByteArray rawData = file.readAll();
           file.close();
-          if ( rawData.size() > 0 ) {
-            const QString data = QString::fromUtf8( rawData.data(), rawData.size() );
-            addrList += parseVCard( data );
-          }
+          if ( rawData.size() > 0 )
+            addrList += parseVCard( rawData );
 
           KIO::NetAccess::removeTempFile( fileName );
         } else {
