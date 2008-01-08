@@ -172,10 +172,10 @@ namespace {
             return last;
 
         ForwardIterator dest = first;
-        dest->merge( *++first );
+        dest->mergeWith( *++first );
         while ( ++first != last )
             if ( pred( *dest, *first ) )
-                dest->merge( *first );
+                dest->mergeWith( *first );
             else
                 *++dest = *first;
         return ++dest;
