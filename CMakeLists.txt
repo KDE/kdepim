@@ -3,7 +3,7 @@ project(kdepim)
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 
 # search packages used by KDE
-find_package(KDE4 REQUIRED)
+find_package (KDE4 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 include(MacroOptionalAddSubdirectory)
@@ -36,28 +36,41 @@ macro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
         TARGET_LINK_LIBRARIES(${LINK_ARG_LIST})
 endmacro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
 
-
 find_package(KdepimLibs REQUIRED)
-find_package(Kode REQUIRED)
-find_package(ZLIB REQUIRED)
-find_package(Strigi REQUIRED)
 find_package(Boost REQUIRED)
 macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org/" TRUE "" "Required by Akonadi and kleopatra")
 
+if ( ONLY_KLEO )
+  find_package(QGpgme REQUIRED)
+  add_definitions (-D_FILE_OFFSET_BITS=64 -D_LARGE_FILES) # for off_t
+  add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS} -DHAVE_CONFIG_H=1)
+  include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${QT_QTDBUS_INCLUDE_DIR} )
+  include (kleopatra/ConfigureChecks.cmake)
+  add_subdirectory(libkleo)
+  FIND_PATH(TOPOLOGICAL_SORT_DIR NAMES boost/graph/topological_sort.hpp PATHS ${Boost_INCLUDE_DIRS})
+  if(TOPOLOGICAL_SORT_DIR)
+    macro_optional_add_subdirectory(kleopatra)
+  else(TOPOLOGICAL_SORT_DIR)
+    MESSAGE(STATUS "topological_sort.hpp is necessary to compile kleopatra. Please install package which contains it.")
+  endif(TOPOLOGICAL_SORT_DIR)
+
+  macro_optional_add_subdirectory(doc)
+
+else ( ONLY_KLEO )
+find_package(Kode REQUIRED)
+find_package(ZLIB REQUIRED)
+find_package(Strigi REQUIRED)
 if(Q_WS_X11)
    macro_log_feature(X11_Xscreensaver_LIB "libXss" "X Window Screen Saver Development Library" "http://xorg.freedesktop.org" FALSE "" "Required for building the KTimeTracker Program")
 endif(Q_WS_X11)
 
-#qgpgme is part of kdepimlibs, but it isn't ported to WIN32 yet.
-#remove the if(WIN32) part of the conditional below once qgpgme is ported.
-if(NOT WIN32)
-  find_package(QGpgme REQUIRED)
-else(NOT WIN32)
-  set(QGPGME_FOUND false)
-endif(NOT WIN32)
+find_package(QGpgme)
 
 macro_optional_find_package(GNOKII)
 macro_log_feature(GNOKII_FOUND "gnokii" "Gnokii Development Libraries" "http://www.gnokii.org" FALSE "" "Needed to provide the ability to import and export KDE addressbook entries to/from mobile phones that are accessible via gnokii")
+
+macro_optional_find_package(MySQL)
+macro_log_feature(MYSQL_EMBEDDED_FOUND "mysql-embedded" "MySQL/Embedded Library" "http://www.mysql.org" FALSE "" "Needed for the MySQL/Embedded Akonadi backend. Sqlite will be used instead.")
 
 macro_optional_find_package(Nepomuk)
 macro_log_feature(Nepomuk_FOUND "Nepomuk" "Nepomuk" "http://www.kde.org" FALSE "" "For adding desktop-wide tagging support to kmail")
@@ -77,6 +90,7 @@ include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${
 
 
 include (ConfigureChecks.cmake)
+include (kleopatra/ConfigureChecks.cmake)
 configure_file (config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
 set(libknotesresources_SRCS
@@ -155,8 +169,7 @@ endif(QGPGME_FOUND)
 
 if(NOT WIN32)
    macro_optional_find_package(Opensync)
-   macro_log_feature(OPENSYNC_FOUND "OpenSync" "OpenSync Development Libraries" "http://www.opensync.org" FALSE "0.33" "Needed to provide syncing functionality in KDE PIM applications. Required to build kitchensync.")
-
+   #macro_log_feature() not needed because FindOpensync.cmake does so for us
    macro_optional_find_package(GLIB2)
    macro_log_feature(GLIB2_FOUND "glib2" "Low-level core library for data structure handling, portability wrappers, etc." "http://www.gtk.org" FALSE "2.x" "Needed to provide synching applications from KDE PIM applications. Necessary to compile kitchensync and other PIM applications.")
    macro_optional_add_subdirectory(kmobiletools)
@@ -178,5 +191,7 @@ add_subdirectory(cmake)
 
 # maildir access library
 add_subdirectory(maildir)
+
+endif( ONLY_KLEO )
 
 macro_display_feature_log()

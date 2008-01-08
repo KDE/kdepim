@@ -36,27 +36,31 @@
 #include <kconfigbase.h>
 #include <kconfiggroup.h>
 #include <klocale.h>
+
+using namespace Kleo;
+using namespace GpgME;
+
 static const struct {
   const char * name;
-  GpgME::Key::OwnerTrust trust;
-  GpgME::UserID::Validity validity;
+  Key::OwnerTrust trust;
+  UserID::Validity validity;
 } ownerTrustAndValidityMap[] = {
-  { "unknown",   GpgME::Key::Unknown,   GpgME::UserID::Unknown   },
-  { "undefined", GpgME::Key::Undefined, GpgME::UserID::Undefined },
-  { "never",     GpgME::Key::Never,     GpgME::UserID::Never     },
-  { "marginal",  GpgME::Key::Marginal,  GpgME::UserID::Marginal  },
-  { "full",      GpgME::Key::Full,      GpgME::UserID::Full      },
-  { "ultimate",  GpgME::Key::Ultimate,  GpgME::UserID::Ultimate  },
+  { "unknown",   Key::Unknown,   UserID::Unknown   },
+  { "undefined", Key::Undefined, UserID::Undefined },
+  { "never",     Key::Never,     UserID::Never     },
+  { "marginal",  Key::Marginal,  UserID::Marginal  },
+  { "full",      Key::Full,      UserID::Full      },
+  { "ultimate",  Key::Ultimate,  UserID::Ultimate  },
 };
 
-static GpgME::Key::OwnerTrust map2OwnerTrust( const QString & s ) {
+static Key::OwnerTrust map2OwnerTrust( const QString & s ) {
   for ( unsigned int i = 0 ; i < sizeof ownerTrustAndValidityMap / sizeof *ownerTrustAndValidityMap ; ++i )
     if ( s.toLower() == ownerTrustAndValidityMap[i].name )
       return ownerTrustAndValidityMap[i].trust;
   return ownerTrustAndValidityMap[0].trust;
 }
 
-static GpgME::UserID::Validity map2Validity( const QString & s ) {
+static UserID::Validity map2Validity( const QString & s ) {
   for ( unsigned int i = 0 ; i < sizeof ownerTrustAndValidityMap / sizeof *ownerTrustAndValidityMap ; ++i )
     if ( s.toLower() == ownerTrustAndValidityMap[i].name )
       return ownerTrustAndValidityMap[i].validity;
@@ -64,8 +68,9 @@ static GpgME::UserID::Validity map2Validity( const QString & s ) {
 }
 
 
-Kleo::KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigGroup & config )
+KeyFilterImplBase::KeyFilterImplBase()
   : KeyFilter(),
+    mMatchContexts( AnyMatchContext ),
     mSpecificity( 0 ),
     mItalic( false ),
     mBold( false ),
@@ -84,14 +89,23 @@ Kleo::KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigGroup & config 
     mIsOpenPGP( DoesNotMatter ),
     mWasValidated( DoesNotMatter ),
     mOwnerTrust( LevelDoesNotMatter ),
-    mOwnerTrustReferenceLevel( GpgME::Key::Unknown ),
+    mOwnerTrustReferenceLevel( Key::Unknown ),
     mValidity( LevelDoesNotMatter ),
-    mValidityReferenceLevel( GpgME::UserID::Unknown )
+    mValidityReferenceLevel( UserID::Unknown )
 {
-  mFgColor = config.readEntry( "foreground-color" );
-  mBgColor = config.readEntry( "background-color" );
-  mName = config.readEntry( "name", i18n("<placeholder>unnamed</placeholder>") );
+
+}
+
+KeyFilterImplBase::~KeyFilterImplBase() {}
+
+KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigGroup & config )
+  : KeyFilterImplBase()
+{
+  mFgColor = config.readEntry<QColor>( "foreground-color", QColor() );
+  mBgColor = config.readEntry<QColor>( "background-color", QColor() );
+  mName = config.readEntry( "Name", config.name() );
   mIcon = config.readEntry( "icon" );
+  mId = config.readEntry( "id", config.name() );
   if ( config.hasKey( "font" ) ) {
     mUseFullFont = true;
     mFont = config.readEntry( "font" );
@@ -148,13 +162,42 @@ Kleo::KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigGroup & config 
       break;
     }
   }
+  static const struct {
+      const char * key;
+      MatchContext context;
+  } matchMap[] = {
+      { "any", AnyMatchContext },
+      { "appearance", Appearance },
+      { "filtering", Filtering },
+  };
+  const QStringList contexts = config.readEntry( "match-contexts", "any" ).toLower().split( QRegExp( "[^a-zA-Z0-9_-!]+" ), QString::SkipEmptyParts );
+  mMatchContexts = NoMatchContext;
+  Q_FOREACH( const QString & ctx, contexts ) {
+      bool found = false;
+      for ( unsigned int i = 0 ; i < sizeof matchMap / sizeof *matchMap ; ++i )
+          if ( ctx == matchMap[i].key ) {
+              mMatchContexts |= matchMap[i].context;
+              found = true;
+              break;
+          } else if ( ctx.startsWith( '!' ) && ctx.mid( 1 ) == matchMap[i].key ) {
+              mMatchContexts &= ~matchMap[i].context;
+              found = true;
+              break;
+          }
+      if ( !found )   
+          qWarning( "KConfigBasedKeyFilter: found unknown match context '%s' in group '%s'",
+                    qPrintable( ctx ), qPrintable( config.name() ) );
+  }
+  if ( mMatchContexts == NoMatchContext ) {
+      qWarning( "KConfigBasedKeyFilter: match context in group '%s' evaluates to NoMatchContext, "
+                "replaced by AnyMatchContext", qPrintable( config.name() ) );
+      mMatchContexts = AnyMatchContext;
+  }
 }
 
-Kleo::KConfigBasedKeyFilter::~KConfigBasedKeyFilter() {
-
-}
-
-bool Kleo::KConfigBasedKeyFilter::matches( const GpgME::Key & key ) const {
+bool KeyFilterImplBase::matches( const Key & key, MatchContexts contexts ) const {
+  if ( !( mMatchContexts & contexts ) )
+    return false;
 #ifdef MATCH
 #undef MATCH
 #endif
@@ -172,7 +215,7 @@ bool Kleo::KConfigBasedKeyFilter::matches( const GpgME::Key & key ) const {
   CAN_MATCH( Certify );
   CAN_MATCH( Authenticate );
   IS_MATCH( Qualified );
-  MATCH( mHasSecret, isSecret );
+  MATCH( mHasSecret, hasSecret );
 #undef MATCH
   if ( mIsOpenPGP != DoesNotMatter &&
        bool( key.protocol() == GpgME::OpenPGP ) != bool( mIsOpenPGP == Set ) )
@@ -201,7 +244,7 @@ bool Kleo::KConfigBasedKeyFilter::matches( const GpgME::Key & key ) const {
       return false;
     break;
   }
-  const GpgME::UserID uid = key.userID(0);
+  const UserID uid = key.userID(0);
   switch ( mValidity ) {
   default:
   case LevelDoesNotMatter:
@@ -243,7 +286,7 @@ static inline QFont adapt( QFont font, bool it, bool b, bool strike ) {
   return font;
 }
 
-QFont Kleo::KConfigBasedKeyFilter::font( const QFont & f ) const {
+QFont KeyFilterImplBase::font( const QFont & f ) const {
   if ( mUseFullFont )
     return resizedFont( mFont, f.pointSize(), mStrikeOut );
   else

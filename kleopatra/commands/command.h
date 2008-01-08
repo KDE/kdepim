@@ -49,6 +49,7 @@ namespace Kleo {
         Q_OBJECT
     public:
         explicit Command( KeyListController * parent );
+        explicit Command( QAbstractItemView * view, KeyListController * parent );
         ~Command();
 
         void setView( QAbstractItemView * view );
@@ -57,11 +58,13 @@ namespace Kleo {
 
     public Q_SLOTS:
         void start();
-	void cancel();
+        void cancel();
 
     Q_SIGNALS:
+        void info( const QString & message, int timeout = 0 );
+        void progress( const QString & message, int current, int total );
         void finished();
-	void canceled();
+        void canceled();
 
     private:
         virtual void doStart() = 0;
@@ -71,7 +74,8 @@ namespace Kleo {
         class Private;
         kdtools::pimpl_ptr<Private> d;
     protected:
-        explicit Command( KeyListController * parent, Private * pp );
+        explicit Command( Private * pp );
+        explicit Command( QAbstractItemView * view, Private * pp );
     };
 
 }

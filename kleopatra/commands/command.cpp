@@ -33,15 +33,17 @@
 #include "command.h"
 #include "command_p.h"
 
+#include <controllers/keylistcontroller.h>
+
 #include <QAbstractItemView>
 
 using namespace Kleo;
 
-Command::Private::Private( Command * qq )
+Command::Private::Private( Command * qq, KeyListController * controller )
     : q( qq ),
       indexes_(),
       view_(),
-      controller_( qobject_cast<KeyListController*>( qq->parent() ) )
+      controller_( controller )
 {
 
 }
@@ -49,15 +51,35 @@ Command::Private::Private( Command * qq )
 Command::Private::~Private() {}
 
 Command::Command( KeyListController * p )
-    : QObject( p ), d( new Private( this ) )
+    : QObject( p ), d( new Private( this, p ) )
 {
-
+    if ( p )
+        p->registerCommand( this );
 }
 
-Command::Command( KeyListController * p, Private * pp )
-    : QObject( p ), d( pp )
+Command::Command( QAbstractItemView * v, KeyListController * p )
+    : QObject( p ), d( new Private( this, p ) )
 {
+    if ( p )
+        p->registerCommand( this );
+    if ( v )
+        setView( v );
+}
 
+Command::Command( Private * pp )
+    : QObject( pp->controller_ ), d( pp )
+{
+    if ( pp->controller_ )
+        pp->controller_->registerCommand( this );
+}
+
+Command::Command( QAbstractItemView * v, Private * pp )
+    : QObject( pp->controller_ ), d( pp )
+{
+    if ( pp->controller_ )
+        pp->controller_->registerCommand( this );
+    if ( v )
+        setView( v );
 }
 
 Command::~Command() {}
@@ -65,7 +87,21 @@ Command::~Command() {}
 
 
 void Command::setView( QAbstractItemView * view ) {
+    if ( view == d->view_ )
+        return;
     d->view_ = view;
+    if ( !view || !d->indexes_.empty() )
+        return;
+    const QItemSelectionModel * const sm = view->selectionModel();
+    if ( !sm ) {
+        qWarning( "Command::setView: view %p has no selectionModel!", view );
+        return;
+    }
+    const QList<QModelIndex> selected = sm->selectedRows();
+    if ( !selected.empty() ) {
+        std::copy( selected.begin(), selected.end(), std::back_inserter( d->indexes_ ) );
+        return;
+    }
 }
 
 void Command::setIndex( const QModelIndex & idx ) {
@@ -74,7 +110,8 @@ void Command::setIndex( const QModelIndex & idx ) {
 }
 
 void Command::setIndexes( const QList<QModelIndex> & idx ) {
-    d->indexes_ = idx;
+    d->indexes_.clear();
+    std::copy( idx.begin(), idx.end(), std::back_inserter( d->indexes_ ) );
 }
 
 void Command::start() {

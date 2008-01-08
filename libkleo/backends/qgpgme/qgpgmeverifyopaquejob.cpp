@@ -39,6 +39,8 @@
 #include <gpgme++/verificationresult.h>
 #include <gpgme++/data.h>
 
+#include <KLocale>
+
 #include <assert.h>
 
 Kleo::QGpgMEVerifyOpaqueJob::QGpgMEVerifyOpaqueJob( GpgME::Context * context )
@@ -71,8 +73,29 @@ GpgME::Error Kleo::QGpgMEVerifyOpaqueJob::start( const QByteArray & signedData )
   return err;
 }
 
+void Kleo::QGpgMEVerifyOpaqueJob::setup( const boost::shared_ptr<QIODevice> & signedData, const boost::shared_ptr<QIODevice> & plainText ) {
+    assert( signedData );
+    assert( !mInData );
+    assert( !mOutData );
+
+    createInData( signedData );
+    if ( plainText )
+        createOutData( plainText );
+    else
+        createOutData();
+}
+
+void Kleo::QGpgMEVerifyOpaqueJob::start( const boost::shared_ptr<QIODevice> & signedData, const boost::shared_ptr<QIODevice> & plainText ) {
+    setup( signedData, plainText );
+
+    hookupContextToEventLoopInteractor();
+
+    if ( const GpgME::Error err = mCtx->startOpaqueSignatureVerification( *mInData, *mOutData ) )
+        doThrow( err, i18n("Can't start opaque signature verification") );
+}
+
 void Kleo::QGpgMEVerifyOpaqueJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->verificationResult(), mOutDataDataProvider->data() );
+    emit result( mCtx->verificationResult(), outData() );
 }
 
 

@@ -1,0 +1,7 @@
+# OPTION mode=email
+/sendfd test.data.pem r
+INPUT FD
+/sendfd test.data.gpgol-decrypt-cms.out w
+OUTPUT FD
+DECRYPT --protocol=CMS
+BYE

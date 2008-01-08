@@ -113,8 +113,8 @@ void KNFilterManager::loadFilters()
     QList<int> activeFilters = grp.readEntry("Active",QList<int>());
     menuOrder = grp.readEntry("Menu",QList<int>());
 
-    for ( QList<int>::Iterator it = activeFilters.begin(); it != activeFilters.end(); ++it ) {
-      KNArticleFilter *f = new KNArticleFilter( (*it) );
+    foreach ( int filterId, activeFilters ) {
+      KNArticleFilter *f = new KNArticleFilter( filterId );
       if ( f->loadInfo() )
         addFilter( f );
       else
@@ -137,8 +137,8 @@ void KNFilterManager::saveFilterLists()
   KConfig conf(dir+"filters.rc", KConfig::SimpleConfig);
   KConfigGroup grp(&conf, QString());
   QList<int> activeFilters;
-  for ( QList<KNArticleFilter*>::Iterator it = mFilterList.begin(); it != mFilterList.end(); ++it )
-    activeFilters << (*it)->id();
+  foreach ( KNArticleFilter *filter, mFilterList )
+    activeFilters << filter->id();
 
   grp.writeEntry("Active",activeFilters);
   grp.writeEntry("Menu",menuOrder);
@@ -151,16 +151,14 @@ void KNFilterManager::startConfig(KNode::FilterListWidget *fs)
   fset=fs;
   commitNeeded = false;
 
-  for ( QList<KNArticleFilter*>::Iterator it = mFilterList.begin(); it != mFilterList.end(); ++it )
-    fset->addItem( (*it) );
+  foreach ( KNArticleFilter* filter, mFilterList )
+    fset->addItem( filter );
 
-  QList<int>::Iterator it = menuOrder.begin();
-  while (it != menuOrder.end()) {
-    if ((*it)!=-1)
-      fset->addMenuItem(byID((*it)));
+  foreach ( int id, menuOrder ) {
+    if (id!=-1)
+      fset->addMenuItem(byID(id));
     else
       fset->addMenuItem(0);
-    ++it;
   }
 }
 
@@ -202,8 +200,8 @@ void KNFilterManager::addFilter(KNArticleFilter *f)
   if ( f->id() == -1 ) {      // new filter, find suitable ID
     QList<int> activeFilters;
     // ok, this is a ugly hack: we want to reuse old id's, so we try to find the first unused id
-    for ( QList<KNArticleFilter*>::Iterator it = mFilterList.begin(); it != mFilterList.end(); ++it )
-      activeFilters << (*it)->id();
+    foreach ( KNArticleFilter *filter, mFilterList )
+      activeFilters << filter->id();
     int newId = 1;
     while ( activeFilters.contains( newId ) > 0 )
       newId++;
@@ -280,8 +278,8 @@ void KNFilterManager::deleteFilter(KNArticleFilter *f)
 
 bool KNFilterManager::newNameIsOK(KNArticleFilter *f, const QString &newName)
 {
-  for ( QList<KNArticleFilter*>::Iterator it = mFilterList.begin(); it != mFilterList.end(); ++it )
-    if ( (*it) != f && newName == (*it)->translatedName() )
+  foreach ( KNArticleFilter *filter, mFilterList )
+    if ( filter != f && newName == filter->translatedName() )
       return false;
 
   return true;
@@ -309,9 +307,9 @@ KNArticleFilter* KNFilterManager::setFilter(const int id)
 
 KNArticleFilter* KNFilterManager::byID(int id)
 {
-  for ( QList<KNArticleFilter*>::Iterator it = mFilterList.begin(); it != mFilterList.end(); ++it )
-    if ( (*it)->id() == id )
-      return (*it);
+  foreach ( KNArticleFilter *filter, mFilterList )
+    if ( filter->id() == id )
+      return filter;
 
   return 0;
 }
@@ -326,10 +324,9 @@ void KNFilterManager::updateMenu()
   a_ctFilter->menu()->clear();
   KNArticleFilter *f=0;
 
-  QList<int>::Iterator it = menuOrder.begin();
-  for ( QList<int>::Iterator it = menuOrder.begin(); it != menuOrder.end(); ++it ) {
-    if ( (*it) != -1 ) {
-      if ( ( f = byID( (*it) ) ) )
+  foreach ( int id, menuOrder ) {
+    if ( id != -1 ) {
+      if ( ( f = byID( id ) ) )
         a_ctFilter->menu()->insertItem( f->translatedName(), f->id() );
     } else
       a_ctFilter->menu()->addSeparator();
@@ -356,11 +353,11 @@ void KNFilterManager::slotShowFilterChooser()
   QStringList items;
   QList<int> ids;
 
-  for ( QList<int>::Iterator it = menuOrder.begin(); it != menuOrder.end(); ++it ) {
-    if ( (*it) != -1 )
-      if ( ( f = byID( (*it) ) ) ) {
+  foreach ( int id, menuOrder ) {
+    if ( id != -1 )
+      if ( ( f = byID( id ) ) ) {
         items.append( f->translatedName() );
-        ids.append( *it );
+        ids.append( id );
       }
   }
 

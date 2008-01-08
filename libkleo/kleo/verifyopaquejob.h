@@ -2,7 +2,7 @@
     verifyopaquejob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -35,7 +35,10 @@
 
 #include "job.h"
 
-#include <QtCore/QByteArray>
+#include <boost/shared_ptr.hpp>
+
+class QByteArray;
+class QIODevice;
 
 namespace GpgME {
   class Error;
@@ -58,7 +61,7 @@ namespace Kleo {
      After result() is emitted, the VerifyOpaqueJob will schedule
      it's own destruction by calling QObject::deleteLater().
   */
-  class VerifyOpaqueJob : public Job {
+  class KLEO_EXPORT VerifyOpaqueJob : public Job {
     Q_OBJECT
   protected:
     explicit VerifyOpaqueJob( QObject * parent );
@@ -70,7 +73,18 @@ namespace Kleo {
        signature data, while \a signedData contains the data over
        which the signature was made.
     */
-    virtual GpgME::Error start( const QByteArray & signedData ) = 0;
+    virtual KDE_DEPRECATED GpgME::Error start( const QByteArray & signedData ) = 0;
+
+    /*!
+      \overload
+
+      If \a plainText is non-null, the plaintext is written
+      there. Otherwise, it will be delivered in the second argument
+      of result().
+
+      \throws GpgME::Exception if starting fails
+    */
+    virtual void start( const boost::shared_ptr<QIODevice> & signedData, const boost::shared_ptr<QIODevice> & plainText=boost::shared_ptr<QIODevice>() ) = 0;
 
   Q_SIGNALS:
     void result( const GpgME::VerificationResult & result, const QByteArray & plainText );

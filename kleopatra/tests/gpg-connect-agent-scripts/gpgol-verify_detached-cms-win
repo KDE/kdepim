@@ -1,0 +1,9 @@
+# OPTION mode=email
+/subst
+/serverpid
+/open msg test.data r
+MESSAGE FD=$msg
+/open in test.data-detached-signature.pem r
+INPUT FD=$in
+VERIFY --protocol=CMS
+BYE

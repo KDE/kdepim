@@ -1,0 +1,9 @@
+# OPTION mode=email
+/subst
+/serverpid
+/open in test.data.pem r
+INPUT FD=$in
+/open out test.data.gpgol-decrypt-cms.out w
+OUTPUT FD=$out
+DECRYPT --protocol=CMS
+BYE

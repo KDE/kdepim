@@ -127,7 +127,6 @@ void KNGroupDialog::updateItemState(CheckItem *it)
 
 void KNGroupDialog::toSubscribe(QList<KNGroupInfo> *l)
 {
-  KNGroupInfo *info;
   l->clear();
 
   bool moderated=false;

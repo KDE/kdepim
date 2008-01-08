@@ -37,27 +37,112 @@
 
 #include <kconfig.h>
 #include <kconfiggroup.h>
+#include <klocale.h>
 
 #include <QCoreApplication>
 #include <QRegExp>
 #include <QStringList>
-#include <QVector>
+#include <QAbstractListModel>
+#include <QModelIndex>
+
+#include <boost/bind.hpp>
 
 #include <algorithm>
+#include <vector>
 
-class Kleo::KeyFilterManager::Private {
+using namespace Kleo;
+using namespace boost;
+using namespace GpgME;
+
+namespace {
+
+    class Model : public QAbstractListModel {
+        KeyFilterManager::Private * m_keyFilterManagerPrivate;
+    public:
+        explicit Model( KeyFilterManager::Private * p )
+            : QAbstractListModel( 0 ), m_keyFilterManagerPrivate( p ) {}
+
+        /* reimp */ int rowCount( const QModelIndex & ) const;
+        /* reimp */ QVariant data( const QModelIndex & idx, int role ) const;
+        /* upgrade to public */ using QAbstractListModel::reset;
+    };
+
+    class MyCertificatesKeyFilter : public KeyFilterImplBase {
+    public:
+        MyCertificatesKeyFilter()
+            : KeyFilterImplBase()
+        {
+            mHasSecret = Set;
+            mSpecificity = UINT_MAX; // overly high for ordering
+
+            mName = i18n("My Certificates");
+            mId = "my-certificates";
+            mMatchContexts = AnyMatchContext;
+            mBold = true;
+        }
+    };
+
+    class TrustedCertificatesKeyFilter : public KeyFilterImplBase {
+    public:
+        TrustedCertificatesKeyFilter()
+            : KeyFilterImplBase()
+        {
+            mHasSecret = NotSet;
+            mRevoked = NotSet;
+            mValidity = IsAtLeast;
+            mValidityReferenceLevel = UserID::Marginal; // Full?
+            mSpecificity = UINT_MAX-1; // overly high for ordering
+
+            mName = i18n("Trusted Certificates");
+            mId = "trusted-certificates";
+            mMatchContexts = Filtering;
+        }
+    };
+
+    class OtherCertificatesKeyFilter : public KeyFilterImplBase {
+    public:
+        OtherCertificatesKeyFilter()
+            : KeyFilterImplBase()
+        {
+            mHasSecret = NotSet;
+            mValidity = IsAtMost;
+            mValidityReferenceLevel = UserID::Never;
+            mSpecificity = UINT_MAX-2; // overly high for ordering
+
+            mName = i18n("Other Certificates");
+            mId = "other-certificates";
+            mMatchContexts = Filtering;
+        }
+    };
+}
+
+static std::vector< shared_ptr<KeyFilter> > defaultFilters() {
+    std::vector<shared_ptr<KeyFilter> > result;
+    result.reserve( 3 );
+    result.push_back( shared_ptr<KeyFilter>( new MyCertificatesKeyFilter ) );
+    result.push_back( shared_ptr<KeyFilter>( new TrustedCertificatesKeyFilter ) );
+    result.push_back( shared_ptr<KeyFilter>( new OtherCertificatesKeyFilter ) );
+    return result;
+}
+
+
+class KeyFilterManager::Private {
 public:
-  void clear() {
-    qDeleteAll( filters );
-  }
+    Private() : filters(), model( this ) {}
+    void clear() {
+        filters.clear();
+        model.reset();
+    }
 
-  QVector<KeyFilter*> filters;
+    std::vector< shared_ptr<KeyFilter> > filters;
+    Model model;
 };
 
-Kleo::KeyFilterManager * Kleo::KeyFilterManager::mSelf = 0;
 
-Kleo::KeyFilterManager::KeyFilterManager( QObject * parent )
-  : QObject( parent ), d( new Private )
+KeyFilterManager * KeyFilterManager::mSelf = 0;
+
+KeyFilterManager::KeyFilterManager( QObject * parent )
+    : QObject( parent ), d( new Private )
 {
   mSelf = this;
   // ### DF: doesn't a KStaticDeleter work more reliably?
@@ -66,42 +151,105 @@ Kleo::KeyFilterManager::KeyFilterManager( QObject * parent )
   reload();
 }
 
-Kleo::KeyFilterManager::~KeyFilterManager() {
+KeyFilterManager::~KeyFilterManager() {
   mSelf = 0;
   if ( d )
     d->clear();
   delete d; d = 0;
 }
 
-Kleo::KeyFilterManager * Kleo::KeyFilterManager::instance() {
+KeyFilterManager * KeyFilterManager::instance() {
   if ( !mSelf )
-    mSelf = new Kleo::KeyFilterManager();
+    mSelf = new KeyFilterManager();
   return mSelf;
 }
 
-const Kleo::KeyFilter * Kleo::KeyFilterManager::filterMatching( const GpgME::Key & key ) const {
-    for ( QVector<KeyFilter*>::const_iterator it = d->filters.begin(), end = d->filters.end() ; it != end ; ++it )
-    if ( (*it)->matches( key ) )
-      return *it;
-  return 0;
+const shared_ptr<KeyFilter> & KeyFilterManager::filterMatching( const Key & key, KeyFilter::MatchContexts contexts ) const {
+    const std::vector< shared_ptr<KeyFilter> >::const_iterator it
+        = std::find_if( d->filters.begin(), d->filters.end(),
+                        bind( &KeyFilter::matches, _1, cref( key ), contexts ) );
+    if ( it != d->filters.end() )
+        return *it;
+    static const shared_ptr<KeyFilter> null;
+    return null;
 }
 
-static inline bool by_increasing_specificity( const Kleo::KeyFilter * left, const Kleo::KeyFilter * right ) {
-  return left->specificity() > right->specificity();
+namespace {
+    struct ByDecreasingSpecificity : std::binary_function<shared_ptr<KeyFilter>,shared_ptr<KeyFilter>,bool> {
+        bool operator()( const shared_ptr<KeyFilter> & lhs, const shared_ptr<KeyFilter> & rhs ) const {
+            return lhs->specificity() > rhs->specificity();
+        }
+    };
 }
 
-void Kleo::KeyFilterManager::reload() {
+void KeyFilterManager::reload() {
   d->clear();
 
-  KConfig * config = Kleo::CryptoBackendFactory::instance()->configObject();
-  if ( !config )
-    return;
-  const QStringList groups = config->groupList().filter( QRegExp( "^Key Filter #\\d+$" ) );
-  for ( QStringList::const_iterator it = groups.begin() ; it != groups.end() ; ++it ) {
-    const KConfigGroup cfg( config, *it );
-    d->filters.push_back( new KConfigBasedKeyFilter( cfg ) );
+  d->filters = defaultFilters();
+
+  if ( KConfig * config = CryptoBackendFactory::instance()->configObject() ) {
+      const QStringList groups = config->groupList().filter( QRegExp( "^Key Filter #\\d+$" ) );
+      for ( QStringList::const_iterator it = groups.begin() ; it != groups.end() ; ++it ) {
+          const KConfigGroup cfg( config, *it );
+          d->filters.push_back( shared_ptr<KeyFilter>( new KConfigBasedKeyFilter( cfg ) ) );
+      }
   }
-  std::stable_sort( d->filters.begin(), d->filters.end(), by_increasing_specificity );
+  std::stable_sort( d->filters.begin(), d->filters.end(), ByDecreasingSpecificity() );
+  qDebug( "KeyFilterManager::reload: final filter count is %lu", (unsigned long)d->filters.size() );
+}
+
+QAbstractItemModel * KeyFilterManager::model() const {
+    return &d->model;
+}
+
+const shared_ptr<KeyFilter> & KeyFilterManager::keyFilterByID( const QString & id ) const {
+    const std::vector< shared_ptr<KeyFilter> >::const_iterator it
+        = std::find_if( d->filters.begin(), d->filters.end(),
+                        bind( &KeyFilter::id, _1 ) == id );
+    if ( it != d->filters.end() )
+        return *it;
+    static const shared_ptr<KeyFilter> null;
+    return null;
+}
+
+const shared_ptr<KeyFilter> & KeyFilterManager::fromModelIndex( const QModelIndex & idx ) const {
+    if ( !idx.isValid() || idx.model() != &d->model || idx.row() < 0 ||
+         static_cast<unsigned>(idx.row()) >= d->filters.size() ) {
+        static const shared_ptr<KeyFilter> null;
+        return null;
+    }
+    return d->filters[idx.row()];
+}
+
+QModelIndex KeyFilterManager::toModelIndex( const shared_ptr<KeyFilter> & kf ) const {
+    if ( !kf )
+        return QModelIndex();
+    const std::pair<
+      std::vector<shared_ptr<KeyFilter> >::const_iterator,
+      std::vector<shared_ptr<KeyFilter> >::const_iterator
+    > pair = std::equal_range( d->filters.begin(), d->filters.end(), kf, ByDecreasingSpecificity() );
+    const std::vector<shared_ptr<KeyFilter> >::const_iterator it
+        = std::find( pair.first, pair.second, kf );
+    if ( it != pair.second )
+        return d->model.index( it - d->filters.begin() );
+    else
+        return QModelIndex();
+}
+
+int Model::rowCount( const QModelIndex & ) const {
+    return m_keyFilterManagerPrivate->filters.size();
+}
+
+QVariant Model::data( const QModelIndex & idx, int role ) const {
+    if ( role != Qt::DisplayRole && role != Qt::EditRole &&
+         role != Qt::ToolTipRole && role != Qt::DecorationRole ||
+         !idx.isValid() || idx.model() != this ||
+         idx.row() < 0 || static_cast<unsigned>(idx.row()) >  m_keyFilterManagerPrivate->filters.size() )
+        return QVariant();
+    if ( role == Qt::DecorationRole )
+        return m_keyFilterManagerPrivate->filters[idx.row()]->icon();
+    else
+        return m_keyFilterManagerPrivate->filters[idx.row()]->name();
 }
 
 #include "keyfiltermanager.moc"

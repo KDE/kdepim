@@ -276,7 +276,7 @@ Q_OBJECT
     /** Create the job to remove the item from the server. The base
         URL of the server is passed as uploadurl.  */
     virtual KIO::Job *createRemoveJob( const KUrl &, 
-                             KPIM::GroupwareUploadItem */*deletedItem*/ ) { return 0; }
+                             KPIM::GroupwareUploadItem * /*deletedItem*/ ) { return 0; }
     /** Create the job to change the item on the server (at the given URL) */
     virtual KIO::TransferJob *createUploadJob( const KUrl &,
                                                GroupwareUploadItem *item );

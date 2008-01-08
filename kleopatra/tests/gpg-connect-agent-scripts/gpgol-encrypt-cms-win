@@ -1,0 +1,10 @@
+# OPTION mode=email
+/subst
+/serverpid
+RECIPIENT <cms@kleo.example.org>
+/open in test.data r
+INPUT FD=$in
+/open out test.data.gpgol-encrypt-cms.pem w
+OUTPUT FD=$out
+ENCRYPT --protocol=CMS
+BYE

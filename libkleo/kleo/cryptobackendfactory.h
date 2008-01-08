@@ -36,6 +36,8 @@
 #include "kleo/kleo_export.h"
 #include "kleo/cryptobackend.h"
 
+#include <gpgme++/global.h>
+
 #include <QtCore/QObject>
 
 #include <vector>
@@ -67,6 +69,8 @@ namespace Kleo {
     const CryptoBackend::Protocol * smime() const;
     const CryptoBackend::Protocol * openpgp() const;
     const CryptoBackend::Protocol * protocol( const char * name ) const;
+    const CryptoBackend::Protocol * protocol( GpgME::Protocol proto ) const;
+
     CryptoConfig * config() const;
 
     const CryptoBackend * backend( unsigned int idx ) const;

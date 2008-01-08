@@ -8,8 +8,6 @@ set(libksieve_parser_SRCS
 	)
 
 add_subdirectory( ksieve ) 
-add_subdirectory( shared ) 
-add_subdirectory( parser ) 
 add_subdirectory( tests ) 
 
 

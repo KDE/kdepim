@@ -39,6 +39,8 @@
 #include <gpgme++/decryptionresult.h>
 #include <gpgme++/data.h>
 
+#include <KLocale>
+
 #include <assert.h>
 
 Kleo::QGpgMEDecryptJob::QGpgMEDecryptJob( GpgME::Context * context )
@@ -71,8 +73,29 @@ GpgME::Error Kleo::QGpgMEDecryptJob::start( const QByteArray & cipherText ) {
   return err;
 }
 
+void Kleo::QGpgMEDecryptJob::setup( const boost::shared_ptr<QIODevice> & cipherText, const boost::shared_ptr<QIODevice> & plainText ) {
+    assert( cipherText );
+    assert( !mInData );
+    assert( !mOutData );
+
+    createInData( cipherText );
+    if ( plainText )
+        createOutData( plainText );
+    else
+        createOutData();
+}
+
+void Kleo::QGpgMEDecryptJob::start( const boost::shared_ptr<QIODevice> & cipherText, const boost::shared_ptr<QIODevice> & plainText ) {
+    setup( cipherText, plainText );
+
+    hookupContextToEventLoopInteractor();
+
+    if ( const GpgME::Error err = mCtx->startDecryption( *mInData, *mOutData ) )
+        doThrow( err, i18n("Can't start decrypt job") );
+}
+
 void Kleo::QGpgMEDecryptJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->decryptionResult(), mOutDataDataProvider->data() );
+    emit result( mCtx->decryptionResult(), outData() );
 }
 
 #include "qgpgmedecryptjob.moc"

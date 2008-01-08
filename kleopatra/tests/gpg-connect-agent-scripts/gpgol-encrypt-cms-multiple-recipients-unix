@@ -1,0 +1,10 @@
+# OPTION mode=email
+RECIPIENT <cms@kleo.example.org>
+RECIPIENT <foo@bar.com>
+RECIPIENT <ceo@kleo.example.org>
+/sendfd test.data r
+INPUT FD
+/sendfd test.data.gpgol-encrypt-cms.pem w
+OUTPUT FD
+ENCRYPT --protocol=CMS
+BYE

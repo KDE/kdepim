@@ -37,27 +37,41 @@
 #include "controllers/keylistcontroller.h"
 #include "models/keylistmodel.h"
 
+#include <QAbstractItemView>
 #include <QPointer>
 #include <QList>
 #include <QModelIndex>
 
 #include <gpgme++/key.h>
 
+#include <algorithm>
+#include <iterator>
+
 class Kleo::Command::Private {
     friend class ::Kleo::Command;
+protected:
     Command * const q;
 public:
-    explicit Private( Command * qq );
+    explicit Private( Command * qq, KeyListController * controller );
     ~Private();
 
     QAbstractItemView * view() const { return view_; }
     AbstractKeyListModel * model() const { return controller_ ? controller_->model() : 0 ; }
-    const QList<QModelIndex> & indexes() const { return indexes_; }
+    QList<QModelIndex> indexes() const {
+        QList<QModelIndex> result;
+        std::copy( indexes_.begin(), indexes_.end(), std::back_inserter( result ) );
+        return result;
+    }
     GpgME::Key key() const { return model() && !indexes_.empty() ? model()->key( indexes_.front() ) : GpgME::Key::null ; }
-    std::vector<GpgME::Key> keys() const { return model() ? model()->keys( indexes_ ) : std::vector<GpgME::Key>() ; }
+    std::vector<GpgME::Key> keys() const { return model() ? model()->keys( indexes() ) : std::vector<GpgME::Key>() ; }
+
+    void finished() {
+        emit q->finished();
+        q->deleteLater();
+    }
 
 private:
-    QList<QModelIndex> indexes_;
+    QList<QPersistentModelIndex> indexes_;
     QPointer<QAbstractItemView> view_;
     QPointer<KeyListController> controller_;
 };

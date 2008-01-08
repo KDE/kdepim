@@ -292,7 +292,11 @@ QDate Formatting::creationDate( const UserID::Signature & sig ) {
 //
 
 QString Formatting::type( const Key & key ) {
-    return QString::fromUtf8( key.protocolAsString() );
+    if ( key.protocol() == CMS )
+        return hack::tr("X.509");
+    if ( key.protocol() == OpenPGP )
+        return hack::tr("OpenPGP");
+    return hack::tr("Unknown");
 }
 
 QString Formatting::type( const Subkey & subkey ) {
@@ -348,4 +352,12 @@ QString Formatting::validityShort( const UserID::Signature & sig ) {
     case UserID::Signature::NoPublicKey:  return QString();
     }
     return QString();
+}
+
+QString Formatting::formatForComboBox( const GpgME::Key & key ) {
+    const QString name = prettyName( key );
+    QString mail = prettyEMail( key );
+    if ( !mail.isEmpty() )
+        mail = '<' + mail + '>';
+    return hack::tr( "%1 %2 (%3)", "name, email, key id" ).arg( name, mail, key.shortKeyID() ).simplified();
 }

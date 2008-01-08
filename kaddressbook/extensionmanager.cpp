@@ -26,11 +26,14 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kservicetypetrader.h>
-
-#include <QSignalMapper>
-#include <QTimer>
 #include <ktoggleaction.h>
 #include <kvbox.h>
+
+#include <QHBoxLayout>
+#include <QSignalMapper>
+#include <QSplitter>
+#include <QStackedWidget>
+#include <QTimer>
 
 #include "addresseeeditorextension.h"
 #include "core.h"
@@ -38,15 +41,28 @@
 
 #include "extensionmanager.h"
 
-ExtensionManager::ExtensionManager( KAB::Core *core, QWidget *parent )
-  : KHBox( parent ), mCore( core ), mCurrentExtensionWidget( 0 ),
-    mMapper( 0 )
+ExtensionData::ExtensionData() : action( 0 ), widget( 0 ), weight( 0 ), isDetailsExtension( false )
 {
+}
+
+ExtensionManager::ExtensionManager( QWidget* extensionBar, QStackedWidget* detailsStack, KAB::Core *core, QObject *parent )
+    : QObject( parent ), mExtensionBar( extensionBar ), mCore( core ),
+    mMapper( 0 ), mDetailsStack( detailsStack ), mActiveDetailsWidget( 0 )
+{
+  Q_ASSERT( mCore );
+  Q_ASSERT( mExtensionBar );
+  Q_ASSERT( mDetailsStack );
+  QBoxLayout *layout = new QHBoxLayout( mExtensionBar );
+  layout->setMargin( 0 );
+  layout->setSpacing( 0 );
+  mSplitter = new QSplitter( mExtensionBar );
+  mSplitter->setOrientation( Qt::Vertical );
+  layout->addWidget( mSplitter );
+
   createExtensionWidgets();
 
-  mActionCollection = new KActionCollection( this);
+  mActionCollection = new KActionCollection( this );
   mActionCollection->setObjectName( "ActionCollection" );
-
   QTimer::singleShot( 0, this, SLOT( createActions() ) );
 }
 
@@ -54,38 +70,26 @@ ExtensionManager::~ExtensionManager()
 {
 }
 
-void ExtensionManager::restoreSettings()
+
+void ExtensionManager::restoreSettings() 
 {
-  for ( int index = 0; index < mExtensionList.size(); ++index ) {
-    ExtensionData data = mExtensionList[ index ];
-    if ( data.identifier == KABPrefs::instance()->currentExtension() ) {
-      KToggleAction *action = mActionList.size() > index ? static_cast<KToggleAction*>( mActionList.at( index ) ) : 0;
+  const QStringList activeExtensions = KABPrefs::instance()->activeExtensions();
+  Q_FOREACH ( const ExtensionData data, mExtensionMap ) {
+      if ( activeExtensions.contains( data.identifier ) ) {
+      KToggleAction *action = static_cast<KToggleAction*>( data.action );
       if ( action )
         action->setChecked( true );
-      setActiveExtension( index );
-      return;
+      setExtensionActive( data.identifier, true );
     }
   }
-
-  if ( !mActionList.isEmpty() && mActionList.first() )
-    static_cast<KToggleAction*>( mActionList.first() )->setChecked( true );
-  setActiveExtension( 0 );
+  //const QList<int> sizes = KABPrefs::instance()->extensionsSplitterSizes();
+  //mSplitter->setSizes( sizes );
 }
 
 void ExtensionManager::saveSettings()
 {
-  QAction *action;
-  int index = 0;
-  for (int i = 0; i < mActionList.size(); ++i) {
-    action = mActionList.at(i);
-    if ( static_cast<KToggleAction*>( action )->isChecked() ) {
-      index = i;
-      break;
-    }
-  }
-  Q_ASSERT( index < mExtensionList.size() );
-
-  KABPrefs::instance()->setCurrentExtension( mExtensionList[ index ].identifier );
+  KABPrefs::instance()->setActiveExtensions( mActiveExtensions );
+  KABPrefs::instance()->setExtensionsSplitterSizes( mSplitter->sizes() );
 }
 
 void ExtensionManager::reconfigure()
@@ -94,43 +98,71 @@ void ExtensionManager::reconfigure()
   createExtensionWidgets();
   createActions();
   restoreSettings();
+  updateExtensionBarVisibility();
 }
 
 bool ExtensionManager::isQuickEditVisible() const
 {
-  return ( mCurrentExtensionWidget &&
-      mCurrentExtensionWidget->identifier() == "contact_editor" );
+  return mActiveExtensions.contains( "contact_editor" );
 }
 
 void ExtensionManager::setSelectionChanged()
 {
-  if ( mCurrentExtensionWidget )
-    mCurrentExtensionWidget->contactsSelectionChanged();
+  foreach ( const QString i, mActiveExtensions ) {
+    if ( mExtensionMap.contains( i ) && mExtensionMap[i].widget )
+      mExtensionMap[i].widget->contactsSelectionChanged();
+  } 
 }
 
-void ExtensionManager::setActiveExtension( int id )
+void ExtensionManager::activationToggled( const QString &extid )
 {
-  if ( id == 0 ) {
-    hide();
-    if ( mCurrentExtensionWidget )
-      mCurrentExtensionWidget->hide();
-    mCurrentExtensionWidget = 0;
-  } else if ( id > 0 ) {
-    if ( mCurrentExtensionWidget )
-      mCurrentExtensionWidget->hide();
+  if ( !mExtensionMap.contains( extid ) )
+    return;
+  setExtensionActive( extid, mExtensionMap[ extid ].action->isChecked() );
+}
 
-    mCurrentExtensionWidget = mExtensionList[ id ].widget;
-    if ( mCurrentExtensionWidget ) {
-      show();
-      mCurrentExtensionWidget->show();
-      mCurrentExtensionWidget->contactsSelectionChanged();
-    } else {
-      hide();
-      mCurrentExtensionWidget = 0;
+void ExtensionManager::updateExtensionBarVisibility()
+{
+  foreach ( const QString i, mActiveExtensions ) {
+    if ( mExtensionMap[i].widget && !mExtensionMap[i].isDetailsExtension ) {
+      mExtensionBar->setVisible( true );
+      return;
     }
   }
+
+  mExtensionBar->setVisible( false );
 }
 
+void ExtensionManager::setExtensionActive( const QString& extid, bool active )
+{
+  if ( !mExtensionMap.contains( extid ) )
+    return;
+  if ( mActiveExtensions.contains( extid ) == active )
+    return; 
+  const ExtensionData data = mExtensionMap[ extid ];
+  if ( active ) {
+    mActiveExtensions.append( extid );
+    if ( data.widget ) {
+      if ( data.isDetailsExtension ) {
+        mActiveDetailsWidget = data.widget;
+        emit detailsWidgetActivated( data.widget );
+      } else {
+          data.widget->setVisible( true );
+      }
+      data.widget->contactsSelectionChanged();
+    }
+  } else {
+    mActiveExtensions.removeAll( extid );
+    if ( data.isDetailsExtension ) {
+      mActiveDetailsWidget = 0;
+      emit detailsWidgetDeactivated( data.widget );
+    } else {
+        data.widget->setVisible( false );
+    }
+  }
+  updateExtensionBarVisibility();
+}
+ 
 void ExtensionManager::createActions()
 {
   mCore->guiClient()->unplugActionList( "extensions_list" );
@@ -140,54 +172,41 @@ void ExtensionManager::createActions()
   delete mMapper;
   mMapper = new QSignalMapper( this );
   mMapper->setObjectName( "SignalMapper" );
-  connect( mMapper, SIGNAL( mapped( int ) ),
-           this, SLOT( setActiveExtension( int ) ) );
+  connect( mMapper, SIGNAL( mapped( const QString& ) ),
+           this, SLOT( activationToggled( const QString& ) ) );
 
-  int actionCounter = 0;
-  ExtensionData::List::ConstIterator it;
-  QActionGroup* extensionGroup = new QActionGroup(this);
-  for ( it = mExtensionList.begin(); it != mExtensionList.end(); ++it ) {
-    ExtensionData data = *it;
-    KToggleAction *action = mActionCollection->add<KToggleAction>( QString( data.identifier + "_extension" ) );
-    action->setText( data.title );
-    connect(action, SIGNAL(triggered(bool) ), mMapper, SLOT( map() ));
-    action->setActionGroup( extensionGroup );
-    mMapper->setMapping( action, actionCounter++ );
-    mActionList.append( action );
-
-    if ( data.widget == mCurrentExtensionWidget )
-      action->setChecked( true );
+  foreach ( const QString i, mExtensionMap.keys() ) {
+    ExtensionData& data = mExtensionMap[i];
+    data.action = mActionCollection->add<KToggleAction>( QString( data.identifier + "_extension" ) );
+    data.action->setText( data.title );
+    connect( data.action, SIGNAL(triggered(bool) ), mMapper, SLOT( map() ));
+    mMapper->setMapping( data.action, data.identifier );
+    mActionList.append( data.action );
+    if ( mActiveExtensions.contains( data.identifier ) )
+      data.action->setChecked( true );
   }
 
   mCore->guiClient()->plugActionList( "extensions_list", mActionList );
+  updateExtensionBarVisibility();
+}
 
-  if ( mCurrentExtensionWidget == 0 && !mActionList.isEmpty() && mActionList.first() )
-    static_cast<KToggleAction*>( mActionList.first() )->setChecked( true );
+QWidget* ExtensionManager::activeDetailsWidget() const
+{
+    return mActiveDetailsWidget;
 }
 
 void ExtensionManager::createExtensionWidgets()
 {
   // clean up
-  ExtensionData::List::ConstIterator dataIt;
-  for ( dataIt = mExtensionList.begin(); dataIt != mExtensionList.end(); ++dataIt )
-    delete (*dataIt).widget;
-  mExtensionList.clear();
-
-  KAB::ExtensionWidget *wdg = 0;
-
-  {
-    // add 'None' entry
-    ExtensionData data;
-    data.identifier = "none";
-    data.title = i18n( "None" );
-    data.widget = 0;
-    mExtensionList.append( data );
-  }
+  foreach ( const ExtensionData i, mExtensionMap ) 
+    delete i.widget;
+  mExtensionMap.clear();
 
   {
     // add addressee editor as default
-    wdg = new AddresseeEditorExtension( mCore, this );
-    wdg->hide();
+    KAB::ExtensionWidget *wdg = new AddresseeEditorExtension( mCore, 0 );
+    mDetailsStack->addWidget( wdg );
+    wdg->setVisible( false );
 
     connect( wdg, SIGNAL( modified( const KABC::Addressee::List& ) ),
              SIGNAL( modified( const KABC::Addressee::List& ) ) );
@@ -198,7 +217,8 @@ void ExtensionManager::createExtensionWidgets()
     data.identifier = wdg->identifier();
     data.title = wdg->title();
     data.widget = wdg;
-    mExtensionList.append( data );
+    data.isDetailsExtension = true;
+    mExtensionMap.insert( data.identifier, data );
   }
 
   // load the other extensions
@@ -220,9 +240,10 @@ void ExtensionManager::createExtensionWidgets()
       continue;
     }
 
-    wdg = extensionFactory->extension( mCore, this );
+    KAB::ExtensionWidget *wdg = extensionFactory->extension( mCore, 0 );
     if ( wdg ) {
-      wdg->hide();
+      mSplitter->addWidget( wdg );
+      wdg->setVisible( false );
       connect( wdg, SIGNAL( modified( const KABC::Addressee::List& ) ),
                SIGNAL( modified( const KABC::Addressee::List& ) ) );
       connect( wdg, SIGNAL( deleted( const QStringList& ) ),
@@ -232,11 +253,9 @@ void ExtensionManager::createExtensionWidgets()
       data.identifier = wdg->identifier();
       data.title = wdg->title();
       data.widget = wdg;
-      mExtensionList.append( data );
+      mExtensionMap.insert( data.identifier, data );
     }
   }
-
-  mCurrentExtensionWidget = 0;
 }
 
 #include "extensionmanager.moc"

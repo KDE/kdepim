@@ -31,7 +31,7 @@ using namespace KCal;
 
 // TODO: This is exactly the same code as for the DavAddressBookAdaptor::interpretListFoldersJob!
 //       But as this emits a signal, it needs to be located inside a QObject
-void DavCalendarAdaptor::interpretListFoldersJob( KIO::Job *job, KPIM::FolderLister */*folderLister*/ )
+void DavCalendarAdaptor::interpretListFoldersJob( KIO::Job *job, KPIM::FolderLister * /*folderLister*/ )
 {
   KIO::DavJob *davjob = dynamic_cast<KIO::DavJob*>( job );
   Q_ASSERT( davjob );

@@ -110,6 +110,12 @@ void KAddressbookPart::newContact()
   mCore->newContact();
 }
 
+
+void KAddressbookPart::newDistributionList()
+{
+  mCore->newDistributionList();
+}
+
 QString KAddressbookPart::getNameByPhone( QString phone )
 {
   return mCore->getNameByPhone( phone );

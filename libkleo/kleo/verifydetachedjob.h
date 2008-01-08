@@ -2,7 +2,7 @@
     verifydetachedjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -35,10 +35,13 @@
 
 #include "job.h"
 
-#include <QtCore/QByteArray>
+#include <boost/shared_ptr.hpp>
+
+class QByteArray;
+class QIODevice;
 
 namespace GpgME {
-  class Error;
+    class Error;
     class VerificationResult;
 }
 
@@ -70,8 +73,15 @@ namespace Kleo {
        signature data, while \a signedData contains the data over
        which the signature was made.
     */
-    virtual GpgME::Error start( const QByteArray & signature,
-				const QByteArray & signedData ) = 0;
+    virtual KDE_DEPRECATED GpgME::Error start( const QByteArray & signature,
+                                               const QByteArray & signedData ) = 0;
+
+    /*!
+      \overload
+
+      \throws GpgME::Exception if starting fails.
+    */
+    virtual void start( const boost::shared_ptr<QIODevice> & signature, const boost::shared_ptr<QIODevice> & signedData ) = 0;
 
   Q_SIGNALS:
     void result( const GpgME::VerificationResult & result );

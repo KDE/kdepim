@@ -43,6 +43,7 @@ class QAbstractItemView;
 namespace Kleo {
 
     class AbstractKeyListModel;
+    class Command;
 
     class KeyListController : public QObject {
         Q_OBJECT
@@ -57,7 +58,16 @@ namespace Kleo {
         void setModel( AbstractKeyListModel * model );
         AbstractKeyListModel * model() const;
 
-        
+        void registerCommand( Command * cmd );
+
+    public Q_SLOTS:
+        void cancelCommands();
+
+    Q_SIGNALS:
+        void progress( int current, int total );
+        void message( const QString & msg, int timeout=0 );
+
+        void commandsExecuting( bool );
 
     private:
         class Private;
@@ -69,6 +79,8 @@ namespace Kleo {
         Q_PRIVATE_SLOT( d, void slotSelectionChanged(QItemSelection,QItemSelection) )
         Q_PRIVATE_SLOT( d, void slotContextMenu(QPoint) )
         Q_PRIVATE_SLOT( d, void slotCommandFinished() )
+        Q_PRIVATE_SLOT( d, void slotAddKey(GpgME::Key) )
+        Q_PRIVATE_SLOT( d, void slotProgress(QString,int,int) )
     };
 
 }

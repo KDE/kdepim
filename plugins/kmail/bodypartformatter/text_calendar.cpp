@@ -71,6 +71,8 @@
 
 #include <kdemacros.h>
 #include <coreinterface.h>
+#include "calendarinterface.h"
+
 using namespace KCal;
 
 namespace {
@@ -255,23 +257,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return callback.mailICal( recv, msg, subject, status, type != Forward );
     }
 
-    bool saveFile( const QString& receiver, const QString& iCal,
-                   const QString& type ) const
+    void ensureKorganizerRunning() const
     {
-      KTemporaryFile file;
-      file.setPrefix(KStandardDirs::locateLocal( "data", "korganizer/income." + type + '/', true));
-      file.setAutoRemove(false);
-      if ( !file.open() ) {
-        KMessageBox::error( 0, i18n("Could not save file to KOrganizer") );
-        return false;
-      }
-      QTextStream ts ( &file );
-      ts.setCodec("UTF-8");
-      ts << receiver << '\n' << iCal;
-      file.flush();
-
-      // Now ensure that korganizer is running; otherwise start it, to prevent surprises
-      // (https://intevation.de/roundup/kolab/issue758)
       QString error;
       QString dbusService;
       int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/Organizer", QString(), &error, &dbusService );
@@ -298,6 +285,26 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       }
       else
         kWarning() <<"Couldn't start DBUS/Organizer:" << dbusService << error;
+    }
+
+    bool saveFile( const QString& receiver, const QString& iCal,
+                   const QString& type ) const
+    {
+      KTemporaryFile file;
+      file.setPrefix(KStandardDirs::locateLocal( "data", "korganizer/income." + type + '/', true));
+      file.setAutoRemove(false);
+      if ( !file.open() ) {
+        KMessageBox::error( 0, i18n("Could not save file to KOrganizer") );
+        return false;
+      }
+      QTextStream ts ( &file );
+      ts.setCodec("UTF-8");
+      ts << receiver << '\n' << iCal;
+      file.flush();
+
+      // Now ensure that korganizer is running; otherwise start it, to prevent surprises
+      // (https://intevation.de/roundup/kolab/issue758)
+      ensureKorganizerRunning();
 
       return true;
     }
@@ -307,9 +314,23 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     {
       bool ok = true;
       const QString receiver = callback.receiver();
+
       if ( receiver.isEmpty() )
         // Must be some error. Still return true though, since we did handle it
         return true;
+
+      // get comment for tentative acceptance
+      Incidence* incidence = icalToString( iCal );
+      
+      if ( callback.askForComment( status ) ) {
+        bool ok = false;
+        QString comment = KInputDialog::getMultiLineText( i18n("Reaction to Invitation"),
+            i18n("Comment:"), QString(), &ok );
+        if ( !ok )
+          return true;
+        if ( !comment.isEmpty() )
+          incidence->addComment( comment );
+      }
 
       // First, save it for KOrganizer to handle
       QString dir;
@@ -321,9 +342,6 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
       if ( status != Attendee::Delegated ) // we do that below for delegated incidences
         saveFile( receiver, iCal, dir );
-
-      // Now produce the return message
-      Incidence* incidence = icalToString( iCal );
 
       QString delegateString;
       bool delegatorRSVP = false;
@@ -389,7 +407,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           ok = mail( incidence, callback, dir, iTIPReply );
         }
       } else {
-        ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
+        if ( callback.deleteInvitationAfterReply() )
+          ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
       }
       delete incidence;
 
@@ -417,10 +436,35 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return ok;
     }
 
+    void showCalendar( const QDate &date ) const
+    {
+      ensureKorganizerRunning();
+      QDBusInterface *kontact = new QDBusInterface( "org.kde.kontact", "/KontactInterface", "org.kde.kontact.KontactInterface", QDBusConnection::sessionBus() );
+      if ( kontact->isValid() )
+        kontact->call( "selectPlugin", "kontact_korganizerplugin" );
+      delete kontact;
+
+      OrgKdeKorganizerCalendarInterface *iface = new OrgKdeKorganizerCalendarInterface( "org.kde.korganizer", "/Calendar", QDBusConnection::sessionBus(), 0 );
+      iface->showEventView();
+      iface->showDate( date );
+      delete iface;
+    }
+
     bool handleIgnore( const QString&, KMail::Callback& c ) const
     {
       // simply move the message to trash
       ( new KMDeleteMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
+      return true;
+    }
+
+    bool counterProposal( const QString &iCal, KMail::Callback &callback ) const
+    {
+      const QString receiver = callback.receiver();
+      if ( receiver.isEmpty() )
+        return true;
+      saveFile( receiver, iCal, "counter" );
+      if ( callback.deleteInvitationAfterReply() )
+        ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
       return true;
     }
 
@@ -433,6 +477,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         result = handleInvitation( iCal, Attendee::Accepted, c );
       if ( path == "accept_conditionally" )
         result = handleInvitation( iCal, Attendee::Tentative, c );
+      if ( path == "counter" )
+        result = counterProposal( iCal, c );
       if ( path == "ignore" )
         result = handleIgnore( iCal, c );
       if ( path == "decline" )
@@ -449,10 +495,15 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           return true;
         result = mail( incidence, c, "forward", iTIPRequest, fwdTo, Forward );
       }
+      if ( path == "check_calendar" ) {
+        Incidence* incidence = icalToString( iCal );
+        showCalendar( incidence->dtStart().date() );
+      }
       if ( path == "reply" || path == "cancel" ) {
         // These should just be saved with their type as the dir
         if ( saveFile( "Receiver Not Searched", iCal, path ) ) {
-          ( new KMDeleteMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
+          if ( c.deleteInvitationAfterReply() )
+            ( new KMDeleteMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
           result = true;
         }
       }
@@ -476,6 +527,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           return i18n("Accept incidence");
         if ( path == "accept_conditionally" )
           return i18n( "Accept incidence conditionally" );
+        if ( path == "counter" )
+          return i18n( "Create a counter proposal..." );
         if ( path == "ignore" )
           return i18n( "Throw mail away" );
         if ( path == "decline" )

@@ -39,6 +39,8 @@
 #include <gpgme++/verificationresult.h>
 #include <gpgme++/data.h>
 
+#include <KLocale>
+
 #include <assert.h>
 
 Kleo::QGpgMEVerifyDetachedJob::QGpgMEVerifyDetachedJob( GpgME::Context * context )
@@ -76,8 +78,28 @@ GpgME::Error Kleo::QGpgMEVerifyDetachedJob::start( const QByteArray & signature,
   return err;
 }
 
+void Kleo::QGpgMEVerifyDetachedJob::setup( const boost::shared_ptr<QIODevice> & signature, const boost::shared_ptr<QIODevice> & signedData ) {
+    assert( signature );
+    assert( signedData );
+    assert( !mInData );
+    assert( !mOutData );
+
+    createInData( signature );
+    // two "in" data objects - (mis|re)use the "out" data object for the second...
+    createOutData( signedData );
+}
+
+void Kleo::QGpgMEVerifyDetachedJob::start( const boost::shared_ptr<QIODevice> & signature, const boost::shared_ptr<QIODevice> & signedData ) {
+  setup( signature, signedData );
+
+  hookupContextToEventLoopInteractor();
+
+  if ( const GpgME::Error err = mCtx->startDetachedSignatureVerification( *mInData, *mOutData ) )
+      doThrow( err, i18n("Can't start detached signature verification") );
+}
+
 void Kleo::QGpgMEVerifyDetachedJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->verificationResult() );
+    emit result( mCtx->verificationResult() );
 }
 
 

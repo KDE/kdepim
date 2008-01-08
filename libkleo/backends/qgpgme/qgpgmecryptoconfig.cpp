@@ -502,7 +502,8 @@ QVariant QGpgMECryptoConfigEntry::stringToValue( const QString& str, bool unesca
       if ( val.isEmpty() )
         return QVariant( QString() ); // not set  [ok with lists too?]
       else if ( unescape ) {
-        Q_ASSERT( val[0] == '"' ); // see README.gpgconf
+        if( val[0] != '"' ) // see README.gpgconf
+          kWarning(5150) <<"String value should start with '\"' :" << val;
         val = val.mid( 1 );
       }
     }

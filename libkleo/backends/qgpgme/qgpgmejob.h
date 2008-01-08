@@ -2,7 +2,7 @@
     qgpgmejob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -39,6 +39,9 @@
 #include <gpgme++/interfaces/passphraseprovider.h>
 #include <gpgme++/key.h>
 
+#include <KPasswordDialog>
+
+#include <boost/shared_ptr.hpp>
 
 #include <vector>
 
@@ -46,19 +49,17 @@ namespace GpgME {
   class Error;
   class Context;
   class Data;
+  class DataProvider;
 }
 
 namespace Kleo {
   class Job;
 }
 
-namespace QGpgME {
-  class QByteArrayDataProvider;
-}
-
 class QString;
 class QStringList;
 class QEventLoop;
+class QIODevice;
 
 namespace Kleo {
 
@@ -100,11 +101,20 @@ namespace Kleo {
     unsigned int chunkSize() const { return mChunkSize; }
     /*! Creates an empty GpgME::Data/QGpgME::QByteArrayDataProvider pair */
     void createOutData();
+    /*! Creates a GpgME::Data/QGpgME::QByteArrayDataProvider pair associated with \a out */
+    void createOutData( const boost::shared_ptr<QIODevice> & out );
+    /*! Creates a GpgME::Data/QGpgME::QIODeviceDataProvider pair,
+      associated with \a in */
+    void createInData( const boost::shared_ptr<QIODevice> & in );
     /*! Creates a GpgME::Data/QGpgME::QByteArrayDataProvider pair,
       filled with the contents of \a in */
     void createInData( const QByteArray & in );
-    /*! Sets the list of signing keys */
-    GpgME::Error setSigningKeys( const std::vector<GpgME::Key> & signers );
+    /*! \return the result, but only if mOutDataDataProvider isn't a QIODeviceDataProvider */
+    QByteArray outData() const;
+    /*! Convenience function that throw a GpgME::Exception after calling deleteLater() */
+    void doThrow( const GpgME::Error & err, const QString & msg );
+    /*! Sets the list of signing keys. Throws GpgME::Exception on error. */
+    void setSigningKeys( const std::vector<GpgME::Key> & signers );
     /*! Call this to implement a slotOperationDoneEvent() */
     void doSlotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
 
@@ -132,9 +142,9 @@ namespace Kleo {
     Kleo::Job * mThis;
     GpgME::Context * mCtx;
     GpgME::Data * mInData;
-    QGpgME::QByteArrayDataProvider * mInDataDataProvider;
+    GpgME::DataProvider * mInDataDataProvider;
     GpgME::Data * mOutData;
-    QGpgME::QByteArrayDataProvider * mOutDataDataProvider;
+    GpgME::DataProvider * mOutDataDataProvider;
   private:
     const char* * mPatterns;
     // holds the entry - if any - in mPattern that was replaced with
@@ -144,6 +154,7 @@ namespace Kleo {
     unsigned int mChunkSize;
     unsigned int mPatternStartIndex, mPatternEndIndex;
     QEventLoop * mEventLoop;
+    KPasswordDialog mPassphraseDialog;
   };
 
 }

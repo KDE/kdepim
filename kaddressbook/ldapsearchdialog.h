@@ -21,11 +21,14 @@
 #ifndef LDAPSEARCHDIALOG_H
 #define LDAPSEARCHDIALOG_H
 
-#include <QCloseEvent>
-
-#include <kabc/addressbook.h>
 #include <ldapclient.h>
+
+#include <libkdepim/distributionlist.h>
+#include <kabc/addressbook.h>
+
 #include <kdialog.h>
+
+#include <QCloseEvent>
 
 class KComboBox;
 class KLineEdit;
@@ -34,6 +37,11 @@ class QCheckBox;
 class Q3ListView;
 class QPushButton;
 class KABCore;
+class ContactListItem;
+
+namespace KABC {
+    class Resource;
+}
 
 class LDAPSearchDialog : public KDialog
 {
@@ -59,8 +67,15 @@ class LDAPSearchDialog : public KDialog
     void slotError( const QString& );
     virtual void slotHelp();
     virtual void slotUser1();
+    virtual void slotUser2();
     void slotSelectAll();
     void slotUnselectAll();
+    /**
+     * Traverses the given items and adds them to the given resource,
+     * unless they already exist. Returns the list of both the added
+     * and the existing contacts.
+     */
+    KABC::Addressee::List importContactsUnlessTheyExist( const QList<ContactListItem*>& items, KABC::Resource * const resource );
 
   protected:
     QString selectedEMails() const;
@@ -69,6 +84,9 @@ class LDAPSearchDialog : public KDialog
 
   private:
     void saveSettings();
+    static KABC::Addressee convertLdapAttributesToAddressee( const KLDAP::LdapAttrMap& attrs );
+
+    KPIM::DistributionList selectDistributionList();
 
     QString makeFilter( const QString& query, const QString& attr, bool startsWith );
 
@@ -87,6 +105,8 @@ class LDAPSearchDialog : public KDialog
     QCheckBox* mRecursiveCheckbox;
     Q3ListView* mResultListView;
     QPushButton* mSearchButton;
+    class Private;
+    Private* const d;
 };
 
 #endif

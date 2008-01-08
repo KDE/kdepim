@@ -45,13 +45,16 @@ class KConfigGroup;
 
 namespace Kleo {
 
-  class KConfigBasedKeyFilter : public KeyFilter {
+  class KeyFilterImplBase : public KeyFilter {
   public:
-    explicit KConfigBasedKeyFilter( const KConfigGroup & config );
-    ~KConfigBasedKeyFilter();
-    bool matches( const GpgME::Key & key ) const;
+    KeyFilterImplBase();
+    ~KeyFilterImplBase();
+
+    bool matches( const GpgME::Key & key, MatchContexts ctx ) const;
 
     unsigned int specificity() const { return mSpecificity; }
+    QString id() const { return mId; }
+    MatchContexts availableMatchContexts() const { return mMatchContexts; }
 
     QColor fgColor() const { return mFgColor; }
     QColor bgColor() const { return mBgColor; }
@@ -59,10 +62,12 @@ namespace Kleo {
     QString name() const { return mName; }
     QString icon() const { return mIcon; }
 
-  private:
+  protected:
     QColor mFgColor, mBgColor;
     QString mName;
     QString mIcon;
+    QString mId;
+    MatchContexts mMatchContexts;
     unsigned int mSpecificity;
     bool mItalic;
     bool mBold;
@@ -98,6 +103,11 @@ namespace Kleo {
     GpgME::Key::OwnerTrust mOwnerTrustReferenceLevel;
     LevelState mValidity;
     GpgME::UserID::Validity mValidityReferenceLevel;
+  };
+
+  class KConfigBasedKeyFilter : public KeyFilterImplBase {
+  public:
+     explicit KConfigBasedKeyFilter( const KConfigGroup & group );
   };
 
 }

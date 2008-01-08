@@ -82,6 +82,7 @@ namespace Kleo {
       OpenPGPKeys = 256,
       SMIMEKeys = 512,
       AllKeys = PublicKeys | SecretKeys | OpenPGPKeys | SMIMEKeys,
+      ValidEncryptionKeys = AllKeys | EncryptionKeys | ValidKeys,
       ValidTrustedEncryptionKeys = AllKeys | EncryptionKeys | ValidKeys | TrustedKeys
     };
 

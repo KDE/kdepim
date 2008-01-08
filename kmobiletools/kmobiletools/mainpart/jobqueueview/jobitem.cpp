@@ -163,7 +163,6 @@ bool JobItem::sceneEvent( QEvent* event ) {
         }
     }
 
-	return true;
+    return true;
 }
-
 #include "jobitem.moc"

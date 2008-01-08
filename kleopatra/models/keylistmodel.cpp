@@ -37,6 +37,8 @@
 #include <kleo/keyfiltermanager.h>
 #include <kleo/keyfilter.h>
 
+#include <KLocale>
+
 #include <QDateTime>
 #include <QIcon>
 #include <QFont>
@@ -107,6 +109,7 @@ std::vector<Key> AbstractKeyListModel::keys( const QList<QModelIndex> & indexes 
     std::transform( indexes.begin(), indexes.end(),
                     std::back_inserter( result ),
                     bind( &AbstractKeyListModel::key, this, _1 ) );
+    result.erase( std::unique( result.begin(), result.end(), ByFingerprint<std::equal_to>() ), result.end() );
     return result;
 }
 
@@ -156,15 +159,29 @@ QVariant AbstractKeyListModel::headerData( int section, Qt::Orientation o, int r
     if ( o == Qt::Horizontal )
         if ( role == Qt::DisplayRole || role == Qt::EditRole || role == Qt::ToolTipRole )
             switch ( section ) {
-            case PrettyName:       return tr( "Name" );
-            case PrettyEMail:      return tr( "E-Mail" );
-            case ValidFrom:        return tr( "Valid From" );
-            case ValidUntil:       return tr( "Valid Until" );
-            case TechnicalDetails: return tr( "Details" );
-            case Fingerprint:      return tr( "Fingerprint" );
+            case PrettyName:       return i18n( "Name" );
+            case PrettyEMail:      return i18n( "E-Mail" );
+            case ValidFrom:        return i18n( "Valid From" );
+            case ValidUntil:       return i18n( "Valid Until" );
+            case TechnicalDetails: return i18n( "Details" );
+            case Fingerprint:      return i18n( "Fingerprint" );
             case NumColumns:       ;
             }
     return QVariant();
+}
+
+static QVariant returnIfValid( const QColor & t ) {
+    if ( t.isValid() )
+        return t;
+    else
+        return QVariant();
+}
+
+static QVariant returnIfValid( const QIcon & t ) {
+    if ( !t.isNull() )
+        return t;
+    else
+        return QVariant();
 }
 
 QVariant AbstractKeyListModel::data( const QModelIndex & index, int role ) const {
@@ -203,21 +220,21 @@ QVariant AbstractKeyListModel::data( const QModelIndex & index, int role ) const
         QFont font = qApp->font(); // ### correct font?
         if ( column == Fingerprint )
             font.setFamily( "courier" );
-        if ( const KeyFilter * const filter = KeyFilterManager::instance()->filterMatching( key ) )
+        if ( const shared_ptr<KeyFilter> & filter = KeyFilterManager::instance()->filterMatching( key, KeyFilter::Appearance ) )
             return filter->font( font );
         else
             return font;
     } else if ( role == Qt::DecorationRole || role == Qt::BackgroundRole || role == Qt::ForegroundRole ) {
-        if ( const KeyFilter * const filter = KeyFilterManager::instance()->filterMatching( key ) ) {
+        if ( const shared_ptr<KeyFilter> & filter = KeyFilterManager::instance()->filterMatching( key, KeyFilter::Appearance ) ) {
             switch ( role ) {
-            case Qt::DecorationRole: return column == Icon ? QIcon( filter->icon() ) : QVariant() ;
-            case Qt::BackgroundRole: return filter->bgColor();
-            case Qt::ForegroundRole: return filter->fgColor();
+            case Qt::DecorationRole: return column == Icon ? returnIfValid( QIcon( filter->icon() ) ) : QVariant() ;
+            case Qt::BackgroundRole: return returnIfValid( filter->bgColor() );
+            case Qt::ForegroundRole: return returnIfValid( filter->fgColor() );
             default: ; // silence compiler
             }
         }
-    } else if ( role == Qt::TextAlignmentRole ) // needed?
-        ;
+    } else if ( role == Qt::TextAlignmentRole ) { // needed?
+    }
     return QVariant();
 }
 

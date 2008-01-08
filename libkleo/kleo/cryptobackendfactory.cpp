@@ -39,8 +39,10 @@
 #include "libkleo/backends/kpgp/pgp6backend.h"
 #include "libkleo/backends/kpgp/gpg1backend.h"
 #endif
-#include "libkleo/backends/chiasmus/chiasmusbackend.h"
-#include "libkleo/ui/backendconfigwidget.h"
+#ifdef KLEO_BUILD_OLD_MAINWINDOW
+# include "libkleo/backends/chiasmus/chiasmusbackend.h"
+# include "libkleo/ui/backendconfigwidget.h"
+#endif
 
 #include <kconfig.h>
 #include <klocale.h>
@@ -57,7 +59,9 @@
 Kleo::CryptoBackendFactory * Kleo::CryptoBackendFactory::mSelf = 0;
 
 static const char * availableProtocols[] = {
+#ifdef KLEO_BUILD_OLD_MAINWINDOW
   "Chiasmus",
+#endif
   "OpenPGP", "SMIME",
 };
 static const unsigned int numAvailableProtocols = sizeof availableProtocols / sizeof *availableProtocols;
@@ -75,7 +79,9 @@ Kleo::CryptoBackendFactory::CryptoBackendFactory()
   mBackendList.push_back( new PGP6Backend() );
   mBackendList.push_back( new GPG1Backend() );
 #endif
+#ifdef KLEO_BUILD_OLD_MAINWINDOW
   mBackendList.push_back( new ChiasmusBackend() );
+#endif
   scanForBackends();
   readConfig();
 
@@ -135,6 +141,15 @@ const Kleo::CryptoBackend::Protocol * Kleo::CryptoBackendFactory::protocol( cons
   return it->second->protocol( name );
 }
 
+const Kleo::CryptoBackend::Protocol * Kleo::CryptoBackendFactory::protocol( GpgME::Protocol proto ) const {
+    if ( proto == GpgME::OpenPGP )
+        return openpgp();
+    else if ( proto == GpgME::CMS )
+        return smime();
+    else
+        return 0;
+}
+
 Kleo::CryptoConfig * Kleo::CryptoBackendFactory::config() const {
   // ## should we use mSMIMEBackend? mOpenPGPBackend? backend(0) i.e. always qgpgme?
   return backend( 0 ) ? backend( 0 )->config() : 0;
@@ -147,7 +162,10 @@ bool Kleo::CryptoBackendFactory::hasBackends() const {
 void Kleo::CryptoBackendFactory::scanForBackends( QStringList * reasons ) {
   for ( std::vector<CryptoBackend*>::const_iterator it = mBackendList.begin() ; it != mBackendList.end() ; ++it ) {
     assert( *it );
-    for ( int i = 0 ; const char * protocol = (*it)->enumerateProtocols( i ) ; ++i ) {
+    for ( int i = 0 ;; ++i ) {
+      const char * protocol = (*it)->enumerateProtocols( i );
+      if ( !protocol )
+        break;
       QString reason;
       if ( (*it)->supportsProtocol( protocol ) && !(*it)->checkForProtocol( protocol, &reason ) ) {
         if ( reasons ) {
@@ -173,7 +191,11 @@ const Kleo::CryptoBackend * Kleo::CryptoBackendFactory::backendByName( const QSt
 }
 
 Kleo::BackendConfigWidget * Kleo::CryptoBackendFactory::configWidget( QWidget * parent, const char * name ) const {
+#ifdef KLEO_BUILD_OLD_MAINWINDOW
   return new Kleo::BackendConfigWidget( mSelf, parent, name );
+#else
+  return 0;
+#endif
 }
 
 KConfig* Kleo::CryptoBackendFactory::configObject() const {
@@ -206,7 +228,9 @@ static const char * defaultBackend( const char * proto ) {
   } defaults[] = {
     { "OpenPGP", "gpgme" },
     { "SMIME", "gpgme" },
+#ifdef KLEO_BUILD_OLD_MAINWINDOW
     { "Chiasmus", "chiasmus" },
+#endif
   };
   for ( unsigned int i = 0 ; i < sizeof defaults / sizeof *defaults ; ++i )
     if ( qstricmp( proto, defaults[i].proto ) == 0 )

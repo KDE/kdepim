@@ -36,13 +36,16 @@
 #include "kleo/kleo_export.h"
 #include <QtCore/QObject>
 
+#include <boost/shared_ptr.hpp>
+
+#include <kleo/keyfilter.h>
+
 namespace GpgME {
   class Key;
 }
 
-namespace Kleo {
-  class KeyFilter;
-}
+class QAbstractItemModel;
+class QModelIndex;
 
 namespace Kleo {
 
@@ -55,12 +58,18 @@ namespace Kleo {
   public:
     static KeyFilterManager * instance();
 
-    const KeyFilter * filterMatching( const GpgME::Key & key ) const;
+    const boost::shared_ptr<KeyFilter> & filterMatching( const GpgME::Key & key, KeyFilter::MatchContexts contexts ) const;
+
+    QAbstractItemModel * model() const;
+
+    const boost::shared_ptr<KeyFilter> & keyFilterByID( const QString & id ) const;
+    const boost::shared_ptr<KeyFilter> & fromModelIndex( const QModelIndex & mi ) const;
+    QModelIndex toModelIndex( const boost::shared_ptr<KeyFilter> & kf ) const;
 
     void reload();
 
-  private:
     class Private;
+  private:
     Private * d;
     static KeyFilterManager * mSelf;
   };

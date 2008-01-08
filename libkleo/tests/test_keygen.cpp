@@ -159,7 +159,6 @@ int main( int argc, char** argv ) {
 
   KeyGenerator * keygen = new KeyGenerator( 0 );
   keygen->setObjectName( "KeyGenerator top-level" );
-  app.setMainWidget( keygen );
   keygen->show();
 
   return app.exec();

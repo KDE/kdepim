@@ -33,7 +33,10 @@
 #include "keylistcontroller.h"
 #include "commands/detailscommand.h"
 
+#include <models/keycache.h>
 #include <models/keylistmodel.h>
+
+#include <gpgme++/key.h>
 
 #include <QAbstractItemView>
 #include <QHeaderView>
@@ -42,11 +45,14 @@
 #include <QPointer>
 #include <QItemSelectionModel>
 
+#include <boost/bind.hpp>
+
 #include <algorithm>
 #include <cassert>
 
 using namespace Kleo;
-//using namespace GpgME;
+using namespace boost;
+using namespace GpgME;
 
 static const QHeaderView::ResizeMode resize_modes[Kleo::AbstractKeyListModel::NumColumns] = {
     QHeaderView::Stretch,          // Name
@@ -75,15 +81,24 @@ public:
     void connectView( QAbstractItemView * view );
     void connectCommand( Command * cmd );
     void connectModel();
+
     void addCommand( Command * cmd ) {
         connectCommand( cmd );
-        commands.push_back( cmd );
-        std::inplace_merge( commands.begin(), commands.end() - 1, commands.end() );
+        commands.insert( std::lower_bound( commands.begin(), commands.end(), cmd ), cmd );
     }
-
+    void addView( QAbstractItemView * view ) {
+        connectView( view );
+        views.insert( std::lower_bound( views.begin(), views.end(), view ), view );
+    }
+    void removeView( QAbstractItemView * view ) {
+        view->disconnect( q );
+        view->selectionModel()->disconnect( q );
+        views.erase( std::remove( views.begin(), views.end(), view ), views.end() );
+    }
 
 public:
     void slotDestroyed( QObject * o ) {
+        qDebug( "KeyListController::Private::slotDestroyed( %p )", o );
         views.erase( std::remove( views.begin(), views.end(), o ), views.end() );
 	commands.erase( std::remove( commands.begin(), commands.end(), o ), commands.end() );
     }
@@ -92,6 +107,12 @@ public:
     void slotSelectionChanged( const QItemSelection & old, const QItemSelection & new_ );
     void slotContextMenu( const QPoint & pos );
     void slotCommandFinished();
+    void slotAddKey( const Key & key );
+    void slotProgress( const QString & what, int current, int total ) {
+        emit q->progress( current, total );
+        if ( !what.isEmpty() )
+            emit q->message( what );
+    }
 
 private:
     std::vector<QAbstractItemView*> views;
@@ -106,7 +127,10 @@ KeyListController::Private::Private( KeyListController * qq )
       commands(),
       model( 0 )
 {
-
+    // We only connect to PublicKeyCache, since we assume that
+    // SecretKeyCache's content is a real subset of PublicKeyCache's:
+    connect( PublicKeyCache::mutableInstance().get(), SIGNAL(added(GpgME::Key)),
+             q, SLOT(slotAddKey(GpgME::Key)) );
 }
 
 KeyListController::Private::~Private() {}
@@ -121,22 +145,22 @@ KeyListController::~KeyListController() {}
 
 
 
-void KeyListController::addView( QAbstractItemView * view ) {
-    if ( view && std::binary_search( d->views.begin(), d->views.end(), view ) )
+void KeyListController::Private::slotAddKey( const Key & key ) {
+    if ( !model )
         return;
+    model->addKey( key ); 
+}
 
-    // merge 'view' in:
-    d->views.push_back( view );
-    std::inplace_merge( d->views.begin(), d->views.end() - 1, d->views.end() );
-
-    d->connectView( view );
+void KeyListController::addView( QAbstractItemView * view ) {
+    if ( !view || std::binary_search( d->views.begin(), d->views.end(), view ) )
+        return;
+    d->addView( view );
 }
 
 void KeyListController::removeView( QAbstractItemView * view ) {
-    if ( !view )
+    if ( !view || !std::binary_search( d->views.begin(), d->views.end(), view ) )
         return;
-    view->disconnect( this );
-    d->views.erase( std::remove( d->views.begin(), d->views.end(), view ), d->views.end() );
+    d->removeView( view );
 }
 
 std::vector<QAbstractItemView*> KeyListController::views() const {
@@ -152,17 +176,33 @@ void KeyListController::setModel( AbstractKeyListModel * model ) {
 
     d->model = model;
     
-    if ( model )
+    if ( model ) {
+        model->clear();
+        model->addKeys( PublicKeyCache::instance()->keys() );
         d->connectModel();
+    }
 }
 
 AbstractKeyListModel * KeyListController::model() const {
     return d->model;
 }
 
+void KeyListController::registerCommand( Command * cmd ) {
+    if ( !cmd || std::binary_search( d->commands.begin(), d->commands.end(), cmd ) )
+        return;
+    d->addCommand( cmd );
+    qDebug( "KeyListController::registerCommand( %p )", cmd );
+    if ( d->commands.size() == 1 )
+        emit commandsExecuting( true );
+}
+
+// slot
+void KeyListController::cancelCommands() {
+    std::for_each( d->commands.begin(), d->commands.end(),
+                   bind( &Command::cancel, _1 ) );
+}
 
 void KeyListController::Private::connectView( QAbstractItemView * view ) {
-    assert( std::binary_search( views.begin(), views.end(), view ) );
 
     connect( view, SIGNAL(destroyed(QObject*)),
              q, SLOT(slotDestroyed(QObject*)) );
@@ -192,6 +232,9 @@ void KeyListController::Private::connectCommand( Command * cmd ) {
         return;
     connect( cmd, SIGNAL(destroyed(QObject*)), q, SLOT(slotDestroyed(QObject*)) );
     connect( cmd, SIGNAL(finished()), q, SLOT(slotCommandFinished()) );
+    //connect( cmd, SIGNAL(canceled()), q, SLOT(slotCommandCanceled()) );
+    connect( cmd, SIGNAL(info(QString,int)), q, SIGNAL(message(QString,int)) );
+    connect( cmd, SIGNAL(progress(QString,int,int)), q, SLOT(slotProgress(QString,int,int)) );
 }
 
 
@@ -207,11 +250,9 @@ void KeyListController::Private::slotDoubleClicked( const QModelIndex & idx ) {
     if ( !view || !std::binary_search( views.begin(), views.end(), view ) )
 	return;
 
-    DetailsCommand * const c = new DetailsCommand( q );
-    addCommand( c );
+    DetailsCommand * const c = new DetailsCommand( view, q );
 
     c->setIndex( idx );
-    c->setView( view );
     c->start();
 }
 
@@ -240,7 +281,9 @@ void KeyListController::Private::slotCommandFinished() {
     Command * const cmd = qobject_cast<Command*>( q->sender() );
     if ( !cmd || !std::binary_search( commands.begin(), commands.end(), cmd ) )
         return;
-    // ### anything here?
+    qDebug( "KeyListController::Private::slotCommandFinished( %p )", cmd );
+    if ( commands.size() == 1 )
+        emit q->commandsExecuting( false );
 }
 
 #include "moc_keylistcontroller.cpp"

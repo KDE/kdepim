@@ -44,7 +44,7 @@
 #include <KProcess>
 
 class KProcess;
-class Q3ListViewItem;
+class QTreeWidgetItem;
 
 namespace GpgME {
   class KeyListResult;
@@ -58,7 +58,6 @@ public:
   }
 };
 
-
 class CertificateInfoWidgetImpl : public CertificateInfoWidget {
   Q_OBJECT
 public:
@@ -67,12 +66,14 @@ public:
 
   void setKey( const GpgME::Key & key );
 
-signals:
+  static KDialog * createDialog( const GpgME::Key & key, QWidget * parent );
+
+Q_SIGNALS:
   void requestCertificateDownload( const QString & fingerprint, const QString& displayName );
 
-private slots:
-  void slotShowInfo( Q3ListViewItem* );
-  void slotShowCertPathDetails( Q3ListViewItem* );
+private Q_SLOTS:
+  void slotShowInfo();
+  void slotShowCertPathDetails( QTreeWidgetItem* );
   void slotImportCertificate();
   void slotCertificateChainListingResult( const GpgME::KeyListResult & res );
   void slotNextKey( const GpgME::Key & key );
@@ -87,6 +88,7 @@ private:
   void startCertificateDump();
   void startKeyExistanceCheck();
   void updateChainView();
+  static KDialog * createDialog( CertificateInfoWidgetImpl * widget, QWidget * parent );
 
 private:
   QByteArray mDumpOutput;

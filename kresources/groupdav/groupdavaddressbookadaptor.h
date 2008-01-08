@@ -44,7 +44,7 @@ class GroupDavAddressBookAdaptor : public DavAddressBookAdaptor
     void customAdaptUploadUrl( KUrl &url );
     QString mimeType() const { return "text/x-vcard"; }
     QByteArray identifier() const { return "KABCResourceGroupDAV"; }
-    QString defaultNewItemName( KPIM::GroupwareUploadItem */*item*/ ) { return "new.vcf"; }
+    QString defaultNewItemName( KPIM::GroupwareUploadItem * /*item*/ ) { return "new.vcf"; }
     long flags() const { return 0; }
 
 

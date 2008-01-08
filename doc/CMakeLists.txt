@@ -1,6 +1,9 @@
+if ( ONLY_KLEO )
+  if(NOT WIN32)
+    add_subdirectory(kleopatra)
+  endif(NOT WIN32)
+else ( ONLY_KLEO )
 add_subdirectory(akregator)
-add_subdirectory(api)
-add_subdirectory(common)
 add_subdirectory(kaddressbook)
 add_subdirectory(kalarm)
 
@@ -25,3 +28,5 @@ endif(QGPGME_FOUND)
 add_subdirectory(korn)
 add_subdirectory(ktnef)
 add_subdirectory(kwatchgnupg)
+
+endif ( ONLY_KLEO )

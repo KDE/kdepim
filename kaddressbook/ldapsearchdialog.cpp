@@ -1,5 +1,5 @@
 /* ldapsearchdialogimpl.cpp - LDAP access
- *      Copyright (C) 2002 Klar�vdalens Datakonsult AB
+ *      Copyright (C) 2002 Klarälvdalens Datakonsult AB
  *
  *      Author: Steffen Hansen <hansen@kde.org>
  *
@@ -18,12 +18,14 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
-
+#include <QApplication>
 #include <QCheckBox>
 #include <q3groupbox.h>
 #include <q3header.h>
 #include <QLabel>
+#include <QMap>
 #include <q3listview.h>
+#include <QPointer>
 #include <QPushButton>
 //Added by qt3to4:
 #include <QGridLayout>
@@ -32,7 +34,7 @@
 #include <QVBoxLayout>
 
 #include <addresseelineedit.h>
-#include <kapplication.h>
+#include <KRandom>
 #include <KDialogButtonBox>
 #include <kcombobox.h>
 #include <kconfig.h>
@@ -45,6 +47,8 @@
 #include "kabcore.h"
 #include "ldapsearchdialog.h"
 #include "kablock.h"
+#include "distributionlistpicker.h"
+
 
 static QString asUtf8( const QByteArray &val )
 {
@@ -119,13 +123,32 @@ class ContactListItem : public Q3ListViewItem
     }
 };
 
+class LDAPSearchDialog::Private
+{
+  public:
+    static QList<ContactListItem*> selectedItems( Q3ListView* );
+    QMap<const ContactListItem*, QString> itemToServer;
+};
+
+QList<ContactListItem*> LDAPSearchDialog::Private::selectedItems( Q3ListView* view )
+{
+  QList<ContactListItem*> selected;
+  ContactListItem* cli = static_cast<ContactListItem*>( view->firstChild() );
+  while ( cli ) {
+    if ( cli->isSelected() )
+      selected.append( cli );
+    cli = static_cast<ContactListItem*>( cli->nextSibling() );
+  }
+  return selected;
+}
+
 LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
                                     QWidget* parent )
   : KDialog( parent ),
-    mAddressBook( ab ), mCore( core )
+    mAddressBook( ab ), mCore( core ), d( new Private )
 {
   setCaption( i18n( "Search for Addresses in Directory" ) );
-  setButtons( Help | User1 | Cancel );
+  setButtons( Help | User1 | User2 | Cancel );
   setDefaultButton( User1 );
   setModal( false );
   showButtonSeparator( true );
@@ -200,6 +223,7 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
   resize( QSize( 600, 400).expandedTo( minimumSizeHint() ) );
 
   setButtonText( User1, i18n( "Add Selected" ) );
+  setButtonText( User2, i18n( "Add to Distribution List..." ) );
 
   mNumHosts = 0;
   mIsOK = false;
@@ -213,6 +237,7 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
   setTabOrder(mFilterCombo, mSearchButton);
   mSearchEdit->setFocus();
   connect(this,SIGNAL(user1Clicked()),this,SLOT(slotUser1()));
+  connect(this,SIGNAL(user2Clicked()),this,SLOT(slotUser2()));
   connect(this,SIGNAL(helpClicked()),this,SLOT(slotHelp()));
   restoreSettings();
 }
@@ -220,6 +245,7 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
 LDAPSearchDialog::~LDAPSearchDialog()
 {
   saveSettings();
+  delete d;
 }
 
 void LDAPSearchDialog::restoreSettings()
@@ -292,6 +318,7 @@ void LDAPSearchDialog::restoreSettings()
     mResultListView->addColumn( i18n( "Title" ) );
 
     mResultListView->clear();
+    d->itemToServer.clear();
   }
 }
 
@@ -312,7 +339,8 @@ void LDAPSearchDialog::cancelQuery()
 
 void LDAPSearchDialog::slotAddResult( const KPIM::LdapClient&, const KLDAP::LdapObject& obj )
 {
-  new ContactListItem( mResultListView, obj.attributes() );
+  ContactListItem* item = new ContactListItem( mResultListView, obj.attributes() );
+  //d->itemToServer[item] = obj.client->server().host();
 }
 
 void LDAPSearchDialog::slotSetScope( bool rec )
@@ -378,7 +406,8 @@ void LDAPSearchDialog::slotStartSearch()
 
    // loop in the list and run the KPIM::LdapClients
   mResultListView->clear();
-  Q_FOREACH( KPIM::LdapClient* client , mLdapClientList )
+  d->itemToServer.clear();
+  Q_FOREACH( KPIM::LdapClient* const client , mLdapClientList )
     client->startQuery( filter );
 
   saveSettings();
@@ -460,80 +489,139 @@ void LDAPSearchDialog::slotSelectAll()
   mResultListView->selectAll( true );
 }
 
-void LDAPSearchDialog::slotUser1()
+KABC::Addressee LDAPSearchDialog::convertLdapAttributesToAddressee( const KLDAP::LdapAttrMap& attrs )
 {
+  KABC::Addressee addr;
 
-  KABC::Resource *resource = mCore->requestResource( this );
-  if ( !resource ) return;
-  KABLock::self( mAddressBook )->lock( resource );
+  // name
+  addr.setNameFromString( asUtf8( attrs["cn"].first() ) );
 
-  ContactListItem* cli = static_cast<ContactListItem*>( mResultListView->firstChild() );
-  while ( cli ) {
-    if ( cli->isSelected() ) {
-      KABC::Addressee addr;
-
-      // name
-      addr.setNameFromString( asUtf8( cli->mAttrs["cn"].first() ) );
-
-      // email
-      KLDAP::LdapAttrValue lst = cli->mAttrs["mail"];
-      KLDAP::LdapAttrValue::ConstIterator it = lst.begin();
-      bool pref = true;
-      if ( it != lst.end() ) {
-        addr.insertEmail( asUtf8( *it ), pref );
-        pref = false;
-        ++it;
-      }
-
-      addr.setOrganization( asUtf8( cli->mAttrs[ "o" ].first() ) );
-      if ( addr.organization().isEmpty() )
-         addr.setOrganization( asUtf8( cli->mAttrs[ "Company" ].first() ) );
-
-      addr.setDepartment( asUtf8( cli->mAttrs[ "department" ].first() ) );
-
-      // Address
-      KABC::Address workAddr( KABC::Address::Work );
-
-      workAddr.setStreet( asUtf8( cli->mAttrs[ "street" ].first()) );
-      workAddr.setLocality( asUtf8( cli->mAttrs[ "l" ].first()) );
-      workAddr.setRegion( asUtf8( cli->mAttrs[ "st" ].first()));
-      workAddr.setPostalCode( asUtf8( cli->mAttrs[ "postalCode" ].first()) );
-      workAddr.setCountry( asUtf8( cli->mAttrs[ "co" ].first()) );
-
-      if ( !workAddr.isEmpty() )
-        addr.insertAddress( workAddr );
-
-      // phone
-      KABC::PhoneNumber homeNr = asUtf8( cli->mAttrs[  "homePhone" ].first() );
-      homeNr.setType( KABC::PhoneNumber::Home );
-      addr.insertPhoneNumber( homeNr );
-
-      KABC::PhoneNumber workNr = asUtf8( cli->mAttrs[  "telephoneNumber" ].first() );
-      workNr.setType( KABC::PhoneNumber::Work );
-      addr.insertPhoneNumber( workNr );
-
-      KABC::PhoneNumber faxNr = asUtf8( cli->mAttrs[  "facsimileTelephoneNumber" ].first() );
-      faxNr.setType( KABC::PhoneNumber::Fax );
-      addr.insertPhoneNumber( faxNr );
-
-      KABC::PhoneNumber cellNr = asUtf8( cli->mAttrs[  "mobile" ].first() );
-      cellNr.setType( KABC::PhoneNumber::Cell );
-      addr.insertPhoneNumber( cellNr );
-
-      KABC::PhoneNumber pagerNr = asUtf8( cli->mAttrs[  "pager" ].first() );
-      pagerNr.setType( KABC::PhoneNumber::Pager );
-      addr.insertPhoneNumber( pagerNr );
-
-      if ( mAddressBook ) {
-        addr.setResource( resource );
-        mAddressBook->insertAddressee( addr );
-      }
-    }
-    cli = static_cast<ContactListItem*>( cli->nextSibling() );
+  // email
+  KLDAP::LdapAttrValue lst = attrs["mail"];
+  KLDAP::LdapAttrValue::ConstIterator it = lst.begin();
+  bool pref = true;
+  if ( it != lst.end() ) {
+    addr.insertEmail( asUtf8( *it ), pref );
+    pref = false;
+    ++it;
   }
 
-  KABLock::self( mAddressBook )->unlock( resource );
-  emit addresseesAdded();
+  addr.setOrganization( asUtf8( attrs[ "o" ].first() ) );
+  if ( addr.organization().isEmpty() )
+    addr.setOrganization( asUtf8( attrs[ "Company" ].first() ) );
+
+  // Address
+  KABC::Address workAddr( KABC::Address::Work );
+
+  addr.setDepartment( asUtf8( attrs[ "department" ].first() ) );
+
+  if ( !workAddr.isEmpty() )
+    addr.insertAddress( workAddr );
+
+  // phone
+  KABC::PhoneNumber homeNr = asUtf8( attrs[  "homePhone" ].first() );
+  homeNr.setType( KABC::PhoneNumber::Home );
+  addr.insertPhoneNumber( homeNr );
+
+  KABC::PhoneNumber workNr = asUtf8( attrs[  "telephoneNumber" ].first() );
+  workNr.setType( KABC::PhoneNumber::Work );
+  addr.insertPhoneNumber( workNr );
+
+  KABC::PhoneNumber faxNr = asUtf8( attrs[  "facsimileTelephoneNumber" ].first() );
+  faxNr.setType( KABC::PhoneNumber::Fax );
+  addr.insertPhoneNumber( faxNr );
+
+  KABC::PhoneNumber cellNr = asUtf8( attrs[  "mobile" ].first() );
+  cellNr.setType( KABC::PhoneNumber::Cell );
+  addr.insertPhoneNumber( cellNr );
+
+  KABC::PhoneNumber pagerNr = asUtf8( attrs[  "pager" ].first() );
+  pagerNr.setType( KABC::PhoneNumber::Pager );
+  addr.insertPhoneNumber( pagerNr );
+  return addr;
+}
+
+KPIM::DistributionList LDAPSearchDialog::selectDistributionList()
+{
+  QPointer<KPIM::DistributionListPickerDialog> picker = new KPIM::DistributionListPickerDialog( mCore->addressBook(), this );
+  picker->setLabelText( i18n( "Select a distribution list to add the selected contacts to." ) );
+  picker->setCaption( i18n( "Select Distribution List" ) );
+  picker->exec();
+  const KPIM::DistributionList list = KPIM::DistributionList::findByName( mCore->addressBook(), picker
+? picker->selectedDistributionList() : QString() );
+  delete picker;
+  return list;
+}
+
+KABC::Addressee::List LDAPSearchDialog::importContactsUnlessTheyExist( const QList<ContactListItem*>& selectedItems,
+                                                                       KABC::Resource * const resource )
+{
+    const QDateTime now = QDateTime::currentDateTime();
+    QStringList importedAddrs;
+    KABC::Addressee::List localAddrs;
+    
+    KABLock::self( mCore->addressBook() )->lock( resource );
+    
+    for ( QList<ContactListItem*>::ConstIterator it = selectedItems.begin(); it != selectedItems.end(); ++it ) {
+      const ContactListItem * const cli = *it;
+      KABC::Addressee addr = convertLdapAttributesToAddressee( cli->mAttrs );
+      const KABC::Addressee::List existing = mCore->addressBook()->findByEmail( addr.preferredEmail() );
+    
+      if ( existing.isEmpty() ) {
+        addr.setUid( KRandom::randomString( 10 ) );
+        addr.setNote( i18nc( "arguments are host name, datetime", "Imported from LDAP directory %1 on %2" ).arg( d->itemToServer[cli], KGlobal::locale()->formatDateTime( now ) ) );
+        addr.setResource( resource );
+        mCore->addressBook()->insertAddressee( addr );
+        importedAddrs.append( addr.fullEmail() );
+        localAddrs.append( addr );
+      } else {
+        localAddrs.append( existing.first() );
+      }
+    }
+    KABLock::self( mCore->addressBook() )->unlock( resource );
+    if ( !importedAddrs.isEmpty() ) {
+      KMessageBox::informationList( this, i18np( "The following contact was imported into your address book:",
+                                    "The following %n contacts were imported into your address book:", importedAddrs.count() ),
+                                    importedAddrs );
+      emit addresseesAdded();
+    }
+    return localAddrs;
+}
+
+void LDAPSearchDialog::slotUser2()
+{
+    KABC::Resource *resource = mCore->requestResource( this );
+    if ( !resource ) return;
+
+    const QList<ContactListItem*> selectedItems = d->selectedItems( mResultListView );
+    if ( selectedItems.isEmpty() ) {
+      KMessageBox::information( this, i18n( "Please select the contacts you want to add to the distribution list." ), i18n( "No Contacts Selected" ) );
+      return;
+    }
+    KPIM::DistributionList dist = selectDistributionList();
+    if ( dist.isEmpty() )
+      return;
+
+    KABC::Addressee::List localAddrs = importContactsUnlessTheyExist( selectedItems, resource );
+
+    if ( localAddrs.isEmpty() )
+      return;
+
+    Q_FOREACH ( const KABC::Addressee i, localAddrs ) {
+        dist.insertEntry( i, QString() );
+    }
+    KABLock::self( mCore->addressBook() )->lock( resource );
+    mCore->addressBook()->insertAddressee( dist );
+    emit addresseesAdded();
+    KABLock::self( mCore->addressBook() )->unlock( resource );
+}
+
+void LDAPSearchDialog::slotUser1()
+{
+    KABC::Resource *resource = mCore->requestResource( this );
+    if ( !resource ) return;
+    const QList<ContactListItem*> selectedItems = d->selectedItems( mResultListView );
+    importContactsUnlessTheyExist( selectedItems, resource );
 }
 
 #include "ldapsearchdialog.moc"

@@ -1,7 +1,7 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories( ${CMAKE_SOURCE_DIR}/libkleo  )
 
-
+if ( KLEO_BUILD_OLD_MAINWINDOW )
 ########### next target ###############
 
 set(test_keylister_SRCS test_keylister.cpp )
@@ -42,6 +42,8 @@ kde4_add_executable(test_cryptoconfig TEST ${test_cryptoconfig_SRCS})
 
 target_link_libraries(test_cryptoconfig  kleo ${KDE4_KDECORE_LIBS} )
 
+endif ( KLEO_BUILD_OLD_MAINWINDOW )
+
 ########### next target ###############
 
 set(test_gnupgprocessbase_SRCS test_gnupgprocessbase.cpp )
@@ -58,5 +60,5 @@ set(test_jobs_SRCS test_jobs.cpp )
 
 kde4_add_executable(test_jobs TEST ${test_jobs_SRCS})
 
-target_link_libraries(test_jobs  kleo ${KDE4_KDECORE_LIBS} )
+target_link_libraries(test_jobs  kleo ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KDECORE_LIBS} )
 

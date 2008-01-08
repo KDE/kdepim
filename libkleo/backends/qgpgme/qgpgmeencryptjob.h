@@ -2,7 +2,7 @@
     qgpgmeencryptjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -59,6 +59,12 @@ namespace Kleo {
 			const QByteArray & plainText, bool alwaysTrust );
 
     /*! \reimp from EncryptJob */
+    void start( const std::vector<GpgME::Key> & recipients,
+                const boost::shared_ptr<QIODevice> & plainText,
+                const boost::shared_ptr<QIODevice> & cipherText,
+                bool alwaysTrust );
+
+    /*! \reimp from EncryptJob */
     GpgME::EncryptionResult exec( const std::vector<GpgME::Key> & recipients,
 				  const QByteArray & plainText, bool alwaysTrust,
 				  QByteArray & cipherText );
@@ -75,6 +81,9 @@ namespace Kleo {
   private:
     void doOperationDoneEvent( const GpgME::Error & e );
     GpgME::Error setup( const std::vector<GpgME::Key> &, const QByteArray &, bool );
+    void setup( const std::vector<GpgME::Key> &,
+                const boost::shared_ptr<QIODevice> &,
+                const boost::shared_ptr<QIODevice> &, bool );
 
   private:
     GpgME::EncryptionResult mResult;

@@ -128,7 +128,6 @@ int main( int argc, char** argv ) {
   GnuPGViewer * gv = new GnuPGViewer();
   gv->setProcess( &gpg );
 
-  app.setMainWidget( gv );
   gv->show();
 
   gpg.setOutputChannelMode(KProcess::SeparateChannels);

@@ -41,16 +41,12 @@ namespace Kleo {
         Q_OBJECT
     public:
 	explicit DetailsCommand( KeyListController * parent );
+	explicit DetailsCommand( QAbstractItemView * view, KeyListController * parent );
 	~DetailsCommand();
 
     private:
 	/* reimp */ void doStart();
 	/* reimp */ void doCancel();
-	
-    private:
-	class Private;
-	inline Private * d_func();
-	inline const Private * d_func() const;
     };
 
 }

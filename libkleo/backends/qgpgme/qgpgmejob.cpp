@@ -2,7 +2,7 @@
     qgpgmejob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -34,19 +34,19 @@
 #include "qgpgmeprogresstokenmapper.h"
 
 #include "libkleo/kleo/job.h"
-#include <kpassworddialog.h>
 
 #include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
 
 #include <gpgme++/context.h>
 #include <gpgme++/data.h>
+#include <gpgme++/exception.h>
 
 #include <klocale.h>
 #include <kstandarddirs.h>
 #include <kiconloader.h>
 
-
+#include <QPointer>
 #include <QString>
 #include <QStringList>
 #include <QEventLoop>
@@ -219,15 +219,20 @@ const char* * Kleo::QGpgMEJob::patterns() const {
   return 0;
 }
 
-GpgME::Error Kleo::QGpgMEJob::setSigningKeys( const std::vector<GpgME::Key> & signers ) {
+void Kleo::QGpgMEJob::setSigningKeys( const std::vector<GpgME::Key> & signers ) {
   mCtx->clearSigningKeys();
-  for ( std::vector<GpgME::Key>::const_iterator it = signers.begin() ; it != signers.end() ; ++it ) {
-    if ( (*it).isNull() )
+  for ( std::vector<GpgME::Key>::const_iterator it = signers.begin(), end = signers.end() ; it != end ; ++it ) {
+    if ( it->isNull() )
       continue;
     if ( const GpgME::Error err = mCtx->addSigningKey( *it ) )
-      return err;
+        return doThrow( err, i18n("Error adding signer %1.", QString::fromLatin1( it->primaryFingerprint() ) ) );
   }
-  return GpgME::Error();
+}
+
+void Kleo::QGpgMEJob::createInData( const boost::shared_ptr<QIODevice> & in ) {
+  mInDataDataProvider = new QGpgME::QIODeviceDataProvider( in );
+  mInData = new GpgME::Data( mInDataDataProvider );
+  assert( !mInData->isNull() );
 }
 
 void Kleo::QGpgMEJob::createInData( const QByteArray & in ) {
@@ -236,10 +241,28 @@ void Kleo::QGpgMEJob::createInData( const QByteArray & in ) {
   assert( !mInData->isNull() );
 }
 
+void Kleo::QGpgMEJob::createOutData( const boost::shared_ptr<QIODevice> & out ) {
+  mOutDataDataProvider = new QGpgME::QIODeviceDataProvider( out );
+  mOutData = new GpgME::Data( mOutDataDataProvider );
+  assert( !mOutData->isNull() );
+}
+
 void Kleo::QGpgMEJob::createOutData() {
   mOutDataDataProvider = new QGpgME::QByteArrayDataProvider();
   mOutData = new GpgME::Data( mOutDataDataProvider );
   assert( !mOutData->isNull() );
+}
+
+QByteArray Kleo::QGpgMEJob::outData() const {
+    if ( const QGpgME::QByteArrayDataProvider * const dp = dynamic_cast<QGpgME::QByteArrayDataProvider*>( mOutDataDataProvider ) )
+        return dp->data();
+    else
+        return QByteArray();
+}
+
+void Kleo::QGpgMEJob::doThrow( const GpgME::Error & err, const QString & msg ) {
+    mThis->deleteLater();
+    throw GpgME::Exception( err, msg.toLocal8Bit().constData() );
 }
 
 void Kleo::QGpgMEJob::doSlotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
@@ -249,12 +272,19 @@ void Kleo::QGpgMEJob::doSlotOperationDoneEvent( GpgME::Context * context, const 
     if ( mEventLoop )
       mEventLoop->quit();
     else
-    mThis->deleteLater();
+      mThis->deleteLater();
   }
 }
 
 void Kleo::QGpgMEJob::doSlotCancel() {
-  mCtx->cancelPendingOperation();
+    if ( mPassphraseDialog.isVisible() )
+    {
+        mPassphraseDialog.reject();
+    }
+    else
+    {
+        mCtx->cancelPendingOperation();
+    }
 }
 
 void Kleo::QGpgMEJob::showProgress( const char * what, int type, int current, int total ) {
@@ -287,15 +317,20 @@ char * Kleo::QGpgMEJob::getPassphrase( const char * useridHint, const char * /*d
     QString("<a href=\"http://kmail.kde.org/kmail-pgpmime-howto.html\">http://kmail.kde.org/kmail-pgpmime-howto.html</a>") );
   msg += "<br/><br/>";
   msg += i18n( "Enter passphrase:" );
-  KPasswordDialog dlg;
-  dlg.setPrompt(msg);
-  dlg.setPixmap( DesktopIcon( "pgp-keys", KIconLoader::SizeMedium ) );
-  dlg.setCaption( i18n("Passphrase Dialog") );
-  if ( dlg.exec() != QDialog::Accepted ) {
+  mPassphraseDialog.setPrompt(msg);
+  mPassphraseDialog.setPixmap( DesktopIcon( "pgp-keys", KIconLoader::SizeMedium ) );
+  mPassphraseDialog.setCaption( i18n("Passphrase Dialog") );
+
+  QPointer<QObject> that( mThis );
+  const bool accepted = mPassphraseDialog.exec() == QDialog::Accepted; 
+  assert( that );
+
+  if ( !accepted ) {
     canceled = true;
     return 0;
   }
+
   canceled = false;
   // gpgme++ free()s it, and we need to copy as long as dlg isn't deleted :o
-  return strdup( dlg.password().toLocal8Bit() );
+  return strdup( mPassphraseDialog.password().toLocal8Bit() );
 }

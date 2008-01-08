@@ -89,12 +89,14 @@ namespace {
   }
 }
 
-CertListView::CertListView( QWidget * parent, const char * name, Qt::WFlags f )
+CertListView::CertListView( QWidget * parent, Qt::WFlags f )
   : Kleo::KeyListView( new TestColumnStrategy(), 0, parent, f )
 {
   setHierarchical( true );
   setRootIsDecorated( true );
 }
+
+CertListView::~CertListView() {}
 
 void CertListView::slotResult( const GpgME::KeyListResult & result ) {
   kDebug() <<"CertListView::slotResult()";
@@ -132,8 +134,7 @@ int main( int argc, char** argv ) {
   KCmdLineArgs::init( argc, argv, &aboutData );
   KApplication app;
 
-  CertListView * clv = new CertListView( 0, "CertListView top-level" );
-  app.setMainWidget( clv );
+  CertListView * clv = new CertListView;
   clv->show();
 
   QTimer::singleShot( 5000, clv, SLOT(slotStart()) );
