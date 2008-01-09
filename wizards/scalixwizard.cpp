@@ -412,7 +412,7 @@ ScalixWizard::ScalixWizard() : KConfigWizard( new ScalixPropagator )
 
   mSavePasswordCheck = new QCheckBox( i18n("Save password"), page );
   topLayout->addWidget( mSavePasswordCheck, 5, 0, 1, 2 );
-  mSavePasswordCheck->setWhatsThis( i18n( "Shall the password be saved in KWallet?." ) );
+  mSavePasswordCheck->setWhatsThis( i18n( "Shall the password be saved in KWallet?" ) );
 
   label = new QLabel( i18n( "Use Secure Connection:" ), page );
   topLayout->addWidget( label, 6, 0 );
