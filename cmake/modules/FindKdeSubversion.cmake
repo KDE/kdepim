@@ -66,12 +66,12 @@ IF(KdeSubversion_SVN_EXECUTABLE)
   SET(KdeSubversion_FOUND TRUE)
 
   MACRO(KdeSubversion_WC_INFO dir prefix)
-    EXECUTE_PROCESS(COMMAND ${KdeSubversion_SVN_EXECUTABLE} --version
+    EXECUTE_PROCESS(COMMAND "LC_ALL=C ${KdeSubversion_SVN_EXECUTABLE}" --version
       WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
       OUTPUT_VARIABLE KdeSubversion_VERSION_SVN
       OUTPUT_STRIP_TRAILING_WHITESPACE)
 
-    EXECUTE_PROCESS(COMMAND ${KdeSubversion_SVN_EXECUTABLE} info ${dir}
+    EXECUTE_PROCESS(COMMAND "${KdeSubversion_SVN_EXECUTABLE}" info ${dir}
       OUTPUT_VARIABLE ${prefix}_WC_INFO
       ERROR_VARIABLE KdeSubversion_svn_info_error
       RESULT_VARIABLE KdeSubversion_svn_info_result
