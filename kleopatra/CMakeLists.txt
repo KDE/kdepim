@@ -129,12 +129,6 @@ set( _kleopatra_mainwindow_SRCS
      tabwidget.cpp
      trayiconlistener.cpp )
 
-if ( KLEO_BUILD_QTONLY_MAINWINDOW )
-  add_definitions( -DKLEO_BUILD_QTONLY_MAINWINDOW )
-  set( _kleopatra_mainwindow_SRCS
-       qmainwindow/mainwindow.cpp )
- endif ( KLEO_BUILD_QTONLY_MAINWINDOW )
-
 if ( KLEO_BUILD_OLD_MAINWINDOW )
   add_definitions( -DKLEO_BUILD_OLD_MAINWINDOW )
   set(libconf_SRCS  ${CMAKE_SOURCE_DIR}/kleopatra/conf/configuredialog.cpp )
