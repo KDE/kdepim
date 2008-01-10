@@ -66,10 +66,13 @@
 #include <QProgressBar>
 #include <QApplication>
 #include <QCloseEvent>
+#include <QDialogButtonBox>
+#include <QProcess>
 #include <QTimer>
 
 #include <gpgme++/key.h>
 
+#include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
 #include <vector>
@@ -143,6 +146,8 @@ public:
         ( new ImportCertificateCommand( currentView(), &controller ) )->start();
     }
     void newCertificate();
+    
+    void checkConfiguration();
 
 private:
     void setupActions();
@@ -175,7 +180,7 @@ private:
         //QAction file_import_crls;
         QAction * file_close;
         QAction * file_quit;
-
+        QAction * check_configuration;
         //QAction view_stop_operations;
         //QAction view_certificate_details;
         //QAction view_hierarchical;
@@ -186,7 +191,10 @@ private:
             : file_close( KStandardAction::close( q, SLOT(close()), q->actionCollection() ) ),
               file_quit( KStandardAction::quit( q, SLOT(closeAndQuit()), q->actionCollection() ) )
         {
-
+            check_configuration = new KAction( q->actionCollection() );
+            check_configuration->setText( i18n( "Check GnuPG Configuration..." ) );
+            connect( check_configuration, SIGNAL( triggered() ), q, SLOT( checkConfiguration() ) );
+            q->actionCollection()->addAction( "check_configuration", check_configuration );
         }
 
     } actions;
@@ -247,7 +255,6 @@ MainWindow::Private::~Private() {}
 MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags )
     : KXmlGuiWindow( parent, flags ), d( new Private( this ) )
 {
-
 }
 
 MainWindow::~MainWindow() {}
@@ -308,7 +315,6 @@ void MainWindow::Private::setupActions() {
           "view-refresh", q, SLOT(validateCertificates()), i18n("SHIFT+F5"), false, true },
         // CRLs menu
         // Tools menu
-        // Settings menu
         // Window menu
         // (come from ui.tabWidget)
     };
@@ -370,6 +376,67 @@ void MainWindow::Private::newCertificate() {
     QPointer<CertificateWizardImpl> wiz( new CertificateWizardImpl( q ) );
     wiz->exec();
     delete wiz;
+}
+
+void MainWindow::Private::checkConfiguration()
+{
+    assert( actions.check_configuration->isEnabled() );
+    if ( !actions.check_configuration->isEnabled() )
+        return;
+
+    actions.check_configuration->setEnabled( false );
+    const shared_ptr<QAction> enabler( actions.check_configuration, bind( &QAction::setEnabled, _1, true ) );
+
+    // 1. start process
+    QProcess process;
+    process.setProcessChannelMode( QProcess::MergedChannels );
+    process.start( "gpgconf", QStringList() << "--check-config", QIODevice::ReadOnly );
+
+
+    // 2. show dialog:
+    QDialog dlg;
+    QVBoxLayout vlay( &dlg );
+    QLabel label( i18n("This is the result of the GnuPG config check:" ), &dlg );
+    QTextEdit textEdit( &dlg );
+    QDialogButtonBox box( QDialogButtonBox::Close, Qt::Horizontal, &dlg );
+
+    textEdit.setReadOnly( true );
+    textEdit.setWordWrapMode( QTextOption::NoWrap );
+
+    vlay.addWidget( &label );
+    vlay.addWidget( &textEdit, 1 );
+    vlay.addWidget( &box );
+
+    dlg.show();
+
+    connect( box.button( QDialogButtonBox::Close ), SIGNAL(clicked()), &dlg, SLOT(reject()) );
+    connect( &dlg, SIGNAL(finished(int)), &process, SLOT(terminate()) );
+
+    // 3. wait for either dialog close or process exit
+    QEventLoop loop;
+    connect( &process, SIGNAL(finished(int,QProcess::ExitStatus)), &loop, SLOT(quit()) );
+    connect( &dlg, SIGNAL(finished(int)), &loop, SLOT(quit()) );
+
+    const QPointer<QObject> Q( q );
+    loop.exec();
+
+    // safety exit:
+    if ( !Q )
+        return;
+
+    // check whether it was the dialog that was closed, and return in
+    // that case:
+    if ( !dlg.isVisible() )
+        return;
+
+    if ( process.error() != QProcess::UnknownError )
+        textEdit.setPlainText( QString::fromUtf8( process.readAll() ) + '\n' + process.errorString() );
+    else
+        textEdit.setPlainText( QString::fromUtf8( process.readAll() ) );
+
+    // wait for dialog close:
+    assert( dlg.isVisible() );
+    loop.exec();
 }
 
 void MainWindow::closeEvent( QCloseEvent * e ) {

@@ -87,7 +87,6 @@ private:
     QMenu menu;
     QAction openCertificateManagerAction;
     QAction aboutAction;
-    QAction checkConfigAction;
     QAction quitAction;
 
     QPointer<KAboutApplicationDialog> aboutDialog;
@@ -98,25 +97,20 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
       menu(),
       openCertificateManagerAction( i18n("&Open Certificate Manager..."), q ),
       aboutAction( i18n("&About %1...", KGlobal::mainComponent().aboutData()->programName() ), q ),
-      checkConfigAction( i18n("&Check GnuPG Config..."), q ),
       quitAction( i18n("&Shutdown Kleopatra"), q ),
       aboutDialog()
 {
     KDAB_SET_OBJECT_NAME( menu );
     KDAB_SET_OBJECT_NAME( openCertificateManagerAction );
     KDAB_SET_OBJECT_NAME( aboutAction );
-    KDAB_SET_OBJECT_NAME( checkConfigAction );
     KDAB_SET_OBJECT_NAME( quitAction );
 
     connect( &openCertificateManagerAction, SIGNAL(triggered()), q, SLOT(slotOpenCertificateManager()) );
     connect( &aboutAction, SIGNAL(triggered()), q, SLOT(slotAbout()) );
     connect( &quitAction, SIGNAL(triggered()), QCoreApplication::instance(), SLOT(quit()) );
-    connect( &checkConfigAction, SIGNAL(triggered()), q, SLOT(slotCheckConfiguration()) );
 
     menu.addAction( &openCertificateManagerAction );
     menu.addAction( &aboutAction );
-    menu.addSeparator();
-    menu.addAction( &checkConfigAction );
     menu.addSeparator();
     menu.addAction( &quitAction );
 
@@ -133,65 +127,6 @@ SystemTrayIcon::SystemTrayIcon( QObject * p )
 
 SystemTrayIcon::~SystemTrayIcon() {}
 
-void SystemTrayIcon::Private::slotCheckConfiguration() {
-    assert( checkConfigAction.isEnabled() );
-    if ( !checkConfigAction.isEnabled() )
-        return;
-
-    checkConfigAction.setEnabled( false );
-    const shared_ptr<QAction> enabler( &checkConfigAction, bind( &QAction::setEnabled, _1, true ) );
-
-    // 1. start process
-    QProcess process;
-    process.setProcessChannelMode( QProcess::MergedChannels );
-    process.start( "gpgconf", QStringList() << "--check-config", QIODevice::ReadOnly );
-
-
-    // 2. show dialog:
-    QDialog dlg;
-    QVBoxLayout vlay( &dlg );
-    QLabel label( i18n("This is the result of the GnuPG config check:" ), &dlg );
-    QTextEdit textEdit( &dlg );
-    QDialogButtonBox box( QDialogButtonBox::Close, Qt::Horizontal, &dlg );
-
-    textEdit.setReadOnly( true );
-    textEdit.setWordWrapMode( QTextOption::NoWrap );
-
-    vlay.addWidget( &label );
-    vlay.addWidget( &textEdit, 1 );
-    vlay.addWidget( &box );
-
-    dlg.show();
-
-    connect( box.button( QDialogButtonBox::Close ), SIGNAL(clicked()), &dlg, SLOT(reject()) );
-    connect( &dlg, SIGNAL(finished(int)), &process, SLOT(terminate()) );
-
-    // 3. wait for either dialog close or process exit
-    QEventLoop loop;
-    connect( &process, SIGNAL(finished(int,QProcess::ExitStatus)), &loop, SLOT(quit()) );
-    connect( &dlg, SIGNAL(finished(int)), &loop, SLOT(quit()) );
-
-    const QPointer<QObject> Q( q );
-    loop.exec();
-
-    // safety exit:
-    if ( !Q )
-        return;
-
-    // check whether it was the dialog that was closed, and return in
-    // that case:
-    if ( !dlg.isVisible() )
-        return;
-
-    if ( process.error() != QProcess::UnknownError )
-        textEdit.setPlainText( QString::fromUtf8( process.readAll() ) + '\n' + process.errorString() );
-    else
-        textEdit.setPlainText( QString::fromUtf8( process.readAll() ) );
-
-    // wait for dialog close:
-    assert( dlg.isVisible() );
-    loop.exec();
-}
 
 #include "moc_systemtrayicon.cpp"
 
