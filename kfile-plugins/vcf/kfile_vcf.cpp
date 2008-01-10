@@ -24,19 +24,10 @@
 #include <kprocess.h>
 #include <klocale.h>
 #include <kgenericfactory.h>
-#include <kstringvalidator.h>
+#include <kabc/vcardconverter.h>
 
 #include <qdict.h>
-#include <qvalidator.h>
-#include <qcstring.h>
 #include <qfile.h>
-#include <qdatetime.h>
-
-#if !defined(__osf__)
-#include <inttypes.h>
-#else
-typedef unsigned short uint32_t;
-#endif
 
 typedef KGenericFactory<KVcfPlugin> VcfFactory;
 
@@ -63,7 +54,6 @@ KVcfPlugin::KVcfPlugin(QObject *parent, const char *name,
 
 bool KVcfPlugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
 {
-
     QFile file(info.path());
 
     if (!file.open(IO_ReadOnly))
@@ -72,57 +62,37 @@ bool KVcfPlugin::readInfo( KFileMetaInfo& info, uint /*what*/ )
         return false;
     }
 
-    char id_name[] = "FN:";
-    char id_email[] = "EMAIL;INTERNET:";
+    // even the vcard thumbnail QString::fromUtf8(buf_name));creator reads the full file ...
+    // The following is partly copied from there
+    QString contents = file.readAll();
+    file.close();
 
-    // we need a buffer for lines
-    char linebuf[1000];
-
-    // we need a buffer for other stuff
-    char buf_name[1000] = "";
-    char buf_email[1000] = "";
-    buf_name[999] = '\0';
-    buf_email[999] = '\0';
-    char * myptr;
-
-    // FIXME: This is intensely inefficient!!!
-
-    bool done=false;
-    while (!done) {
-
-        // read a line
-        int r = file.readLine(linebuf, sizeof( linebuf ));
-
-        if ( r < 0 ) {
-            done = true;
-            break;
-        }
-
-        // have we got something useful?
-        if (memcmp(linebuf, id_name, 3) == 0) {
-            // we have a name
-            myptr = linebuf + 3;
-            strlcpy(buf_name, myptr, sizeof( buf_name ));
-        } else if (memcmp(linebuf, id_email, 15) == 0) {
-            // we have an email
-            myptr = linebuf + 15;
-            strlcpy(buf_email, myptr, sizeof( buf_email ));
-        }
-
-        // are we done yet?
-        if ((strlen(buf_name) > 0 && strlen(buf_email) > 0) || file.atEnd())
-            done = true;
-
-    }
-
+    KABC::VCardConverter converter;
+    KABC::Addressee addr = converter.parseVCard(contents);
 
     KFileMetaInfoGroup group = appendGroup(info, "Technical");
 
-    if (strlen(buf_name) > 0)
-        appendItem(group, "Name", QString::fromUtf8(buf_name));
+    // prepare the text
+    QString name = addr.formattedName().simplifyWhiteSpace();
+    if ( name.isEmpty() )
+      name = addr.givenName() + " " + addr.familyName();
+    name = name.simplifyWhiteSpace();
 
-    if (strlen(buf_email) > 0)
-        appendItem(group, "Email", buf_email);
+    if ( ! name.isEmpty() )
+        appendItem(group, "Name", name);
+
+    if ( ! addr.preferredEmail().isEmpty() )
+        appendItem(group, "Email", addr.preferredEmail());
+
+    KABC::PhoneNumber::List pnList = addr.phoneNumbers();
+    QStringList phoneNumbers;
+    for (unsigned int no=0; no<pnList.count(); ++no) {
+      QString pn = pnList[no].number().simplifyWhiteSpace();
+      if (!pn.isEmpty() && !phoneNumbers.contains(pn))
+        phoneNumbers.append(pn);
+    }
+    if ( !phoneNumbers.isEmpty() )
+        appendItem(group, "Telephone", phoneNumbers.join("\n"));
 
     return true;
 }
