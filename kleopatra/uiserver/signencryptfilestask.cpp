@@ -78,26 +78,28 @@ namespace {
     };
 
 
-    static QString makeErrorString( const SigningResult & result ) {
+    static QString makeResultString( const SigningResult & result ) {
         const Error err = result.error();
-
-        assuan_assert( err || err.isCanceled() );
 
         if ( err.isCanceled() )
             return i18n("Signing canceled.");
-        else // if ( err )
+        
+        if ( err )
             return i18n("Signing failed: %1.", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
+        
+        return i18n( "Signing succeeded." );
     }
 
-    static QString makeErrorString( const EncryptionResult & result ) {
+    static QString makeResultString( const EncryptionResult & result ) {
         const Error err = result.error();
-
-        assuan_assert( err || err.isCanceled() );
 
         if ( err.isCanceled() )
             return i18n("Encryption canceled.");
-        else // if ( err )
+        
+        if ( err )
             return i18n("Encryption failed: %1.", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
+        
+        return i18n("Encryption succeeded.");
     }
 
 }
@@ -300,7 +302,7 @@ std::auto_ptr<Kleo::EncryptJob> SignEncryptFilesTask::Private::createEncryptJob(
 void SignEncryptFilesTask::Private::slotResult( const SigningResult & result ) {
     if ( result.error().code() ) {
         output->cancel();
-        emit q->error( result.error().encodedError(), makeErrorString( result ) );
+        emit q->error( result.error().encodedError(), makeResultString( result ) );
     } else
         try {
             output->finalize();
@@ -313,10 +315,10 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & result ) {
 void SignEncryptFilesTask::Private::slotResult( const SigningResult & sresult, const EncryptionResult & eresult ) {
     if ( sresult.error().code() ) {
         output->cancel();
-        emit q->error( sresult.error().encodedError(), makeErrorString( sresult ) );
+        emit q->error( sresult.error().encodedError(), makeResultString( sresult ) );
     } else if ( eresult.error().code() ) {
         output->cancel();
-        emit q->error( eresult.error().encodedError(), makeErrorString( eresult ) );
+        emit q->error( eresult.error().encodedError(), makeResultString( eresult ) );
     } else
         try {
             output->finalize();
@@ -329,7 +331,7 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & sresult, c
 void SignEncryptFilesTask::Private::slotResult( const EncryptionResult & result ) {
     if ( result.error().code() ) {
         output->cancel();
-        emit q->error( result.error().encodedError(), makeErrorString( result ) );
+        emit q->error( result.error().encodedError(), makeResultString( result ) );
     } else
         try {
             output->finalize();
@@ -342,17 +344,23 @@ void SignEncryptFilesTask::Private::slotResult( const EncryptionResult & result 
 QString SignEncryptFilesResult::overview() const {
     const bool sign = !m_sresult.isNull();
     const bool encrypt = !m_eresult.isNull();
+    const bool haveError = m_sresult.error() || m_eresult.error();
+    const ErrorLevel level = haveError ? Error : NoError;
+        
     assuan_assert( sign || encrypt );
 
-    if ( sign && encrypt )
-        return
-            m_sresult.error().code() ? makeErrorString( m_sresult ) : 
-            m_eresult.error().code() ? makeErrorString( m_eresult ) :
-            i18n( "Combined signing/encryption succeeded" ) ;
+    if ( sign && encrypt ) {
+        return makeSimpleOverview( 
+            m_sresult.error().code() ? makeResultString( m_sresult ) : 
+            m_eresult.error().code() ? makeResultString( m_eresult ) :
+            i18n( "Combined signing/encryption succeeded" ),
+            level );
+    }
+    
     if ( sign )
-        return m_sresult.error().code() ? makeErrorString( m_sresult ) : i18n("Signing succeeded") ;
+        return makeSimpleOverview( makeResultString( m_sresult ), level );
     else
-        return m_eresult.error().code() ? makeErrorString( m_eresult ) : i18n("Encryption succeeded") ;
+        return makeSimpleOverview( makeResultString( m_eresult ), level );
 }
 
 QString SignEncryptFilesResult::details() const {

@@ -69,18 +69,18 @@ namespace {
         /* reimp */ QString details() const;
     };
 
-
-    static QString makeErrorString( const SigningResult & result ) {
-        const Error err = result.error();
-
-        assuan_assert( err || err.isCanceled() );
-
+    QString makeResultString( const SigningResult& res )
+    {
+        const Error err = res.error();
+        
         if ( err.isCanceled() )
-            return i18n("Signing canceled.");
-        else // if ( err )
-            return i18n("Signing failed: %1.", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
-    }
+            return i18n( "Signing canceled." );
 
+        if ( err )
+            return i18n( "Signing failed: %1", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
+        
+        return i18n( "Signing succeeded." );
+    }
 }
 
 class SignEMailTask::Private {
@@ -211,7 +211,7 @@ static QString collect_micalgs( const GpgME::SigningResult & result, GpgME::Prot
 void SignEMailTask::Private::slotResult( const SigningResult & result ) {
     if ( result.error().code() ) {
         output->cancel();
-        emit q->error( result.error().encodedError(), makeErrorString( result ) );
+        emit q->error( result.error().encodedError(), makeResultString( result ) );
     } else {
         output->finalize();
         micAlg = collect_micalgs( result, q->protocol() );
@@ -223,14 +223,14 @@ QString SignEMailTask::micAlg() const {
     return d->micAlg;
 }
 
+
 QString SignEMailResult::overview() const {
-    return m_result.error() ? i18n("Signing failed") : i18n("Signing succeeded");
+    return makeSimpleOverview( makeResultString( m_result ), m_result.error() ? Error : NoError );
 }
 
 QString SignEMailResult::details() const {
     return i18n("Not yet implemented");
 }
-
 
 #include "moc_signemailtask.cpp"
 

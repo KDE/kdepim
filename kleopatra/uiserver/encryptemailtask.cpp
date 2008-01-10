@@ -69,16 +69,17 @@ namespace {
         /* reimp */ QString details() const;
     };
 
-
-    static QString makeErrorString( const EncryptionResult & result ) {
-        const Error err = result.error();
-
-        assuan_assert( err || err.isCanceled() );
+    QString makeResultString( const EncryptionResult& res )
+    {
+        const Error err = res.error();
 
         if ( err.isCanceled() )
-            return i18n("Encryption canceled.");
-        else // if ( err )
-            return i18n("Encryption failed: %1.", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
+            return i18n( "Encryption canceled." );
+
+        if ( err )
+            return i18n( "Encryption failed: %1", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
+
+        return i18n( "Encryption succeeded." );
     }
 
 }
@@ -184,7 +185,7 @@ std::auto_ptr<Kleo::EncryptJob> EncryptEMailTask::Private::createJob( GpgME::Pro
 void EncryptEMailTask::Private::slotResult( const EncryptionResult & result ) {
     if ( result.error().code() ) {
         output->cancel();
-        emit q->error( result.error().encodedError(), makeErrorString( result ) );
+        emit q->error( result.error().encodedError(), makeResultString( result ) );
     } else {
         output->finalize();
         emit q->result( shared_ptr<Result>( new EncryptEMailResult( result ) ) );
@@ -192,13 +193,12 @@ void EncryptEMailTask::Private::slotResult( const EncryptionResult & result ) {
 }
 
 QString EncryptEMailResult::overview() const {
-    return m_result.error() ? i18n("Encryption failed") : i18n("Encryption succeeded");
+    return makeSimpleOverview( makeResultString( m_result ), m_result.error() ? Error : NoError );
 }
 
 QString EncryptEMailResult::details() const {
-    return i18n("Not yet implemented");
+    return i18n( "Not yet implemented" );
 }
-
 
 #include "moc_encryptemailtask.cpp"
 

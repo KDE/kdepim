@@ -65,10 +65,10 @@ namespace Kleo {
         void progress( const QString & what, int current, int total );
         void error( int err, const QString & details );
         void result( const boost::shared_ptr<const Kleo::Task::Result> & );
-
+        
     private:
         virtual void doStart() = 0;
-
+        
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
@@ -84,8 +84,14 @@ namespace Kleo {
 
         virtual QString overview() const = 0;
         virtual QString details() const = 0;
-
+        
     protected:
+        enum ErrorLevel {
+            NoError,
+            Warning,
+            Error
+        };
+        static QString makeSimpleOverview( const QString& summary, ErrorLevel level );
         QString formatKeyLink( const char * fingerprint, const QString & content ) const;
     };
         

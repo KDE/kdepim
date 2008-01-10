@@ -34,6 +34,7 @@
 
 #include "kleo-assuan.h"
 
+#include <KIconLoader>
 #include <KLocale>
 
 #include <QString>
@@ -88,6 +89,29 @@ QString Task::Result::formatKeyLink( const char * fpr, const QString & content )
     return "<a href=\"key:" + m_nonce + ':' + fpr + "\">" + content + "</a>";
 }
 
+static QString image( const char* img ) {
+    // ### escape?
+    return KIconLoader::global()->iconPath( img, KIconLoader::Small );
+}
+
+
+QString Task::Result::makeSimpleOverview( const QString& desc, ErrorLevel level )
+{
+    QString img;
+    switch ( level ) {
+        case Error:
+            img = image( "dialog-error" );
+            break;
+        case NoError:
+            img = image( "dialog-ok" );
+            break;
+        case Warning:
+            img = image( "dialog-warning" );
+            break;
+    }
+    
+    return QString( "<img src=\"%1\"/><b>%2</b>" ).arg( img, desc );
+}
 
 #include "moc_task.cpp"
 
