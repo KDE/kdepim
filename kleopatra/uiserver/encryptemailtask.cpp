@@ -69,7 +69,7 @@ namespace {
         /* reimp */ QString details() const;
         /* reimp */ int errorCode() const;
         /* reimp */ QString errorString() const;
-        
+
     private:
         ErrorLevel errorLevel() const;
     };
@@ -180,6 +180,8 @@ std::auto_ptr<Kleo::EncryptJob> EncryptEMailTask::Private::createJob( GpgME::Pro
     assuan_assert( backend );
     std::auto_ptr<Kleo::EncryptJob> encryptJob( backend->encryptJob( /*armor=*/proto == OpenPGP, /*textmode=*/false ) );
     assuan_assert( encryptJob.get() );
+    if ( proto == CMS )
+        encryptJob->setOutputIsBase64Encoded( true );
     connect( encryptJob.get(), SIGNAL(progress(QString,int,int)),
              q, SIGNAL(progress(QString,int,int)) );
     connect( encryptJob.get(), SIGNAL(result(GpgME::EncryptionResult,QByteArray)),
@@ -196,7 +198,7 @@ void EncryptEMailTask::Private::slotResult( const EncryptionResult & result ) {
     emit q->result( shared_ptr<Result>( new EncryptEMailResult( result ) ) );
 }
 
-QString EncryptEMailResult::overview() const {  
+QString EncryptEMailResult::overview() const {
     return makeSimpleOverview( makeResultString( m_result ), m_result.error().code() ? Error : NoError );
 }
 

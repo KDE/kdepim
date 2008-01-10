@@ -76,13 +76,13 @@ namespace {
     QString makeResultString( const SigningResult& res )
     {
         const Error err = res.error();
-        
+
         if ( err.isCanceled() )
             return i18n( "Signing canceled." );
 
         if ( err )
             return i18n( "Signing failed: %1", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
-        
+
         return i18n( "Signing succeeded." );
     }
 }
@@ -189,8 +189,10 @@ void SignEMailTask::cancel() {
 std::auto_ptr<Kleo::SignJob> SignEMailTask::Private::createJob( GpgME::Protocol proto ) {
     const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( proto );
     assuan_assert( backend );
-    std::auto_ptr<Kleo::SignJob> signJob( backend->signJob( /*armor=*/true, /*textmode=*/false ) );
+    std::auto_ptr<Kleo::SignJob> signJob( backend->signJob( /*armor=*/proto == OpenPGP, /*textmode=*/false ) );
     assuan_assert( signJob.get() );
+    if ( proto == CMS )
+        signJob->setOutputIsBase64Encoded( true );
     connect( signJob.get(), SIGNAL(progress(QString,int,int)),
              q, SIGNAL(progress(QString,int,int)) );
     connect( signJob.get(), SIGNAL(result(GpgME::SigningResult,QByteArray)),
