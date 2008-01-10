@@ -67,6 +67,11 @@ namespace {
 
         /* reimp */ QString overview() const;
         /* reimp */ QString details() const;
+        /* reimp */ int errorCode() const;
+        /* reimp */ QString errorString() const;
+        
+    private:
+        ErrorLevel errorLevel() const;
     };
 
     QString makeResultString( const EncryptionResult& res )
@@ -185,19 +190,33 @@ std::auto_ptr<Kleo::EncryptJob> EncryptEMailTask::Private::createJob( GpgME::Pro
 void EncryptEMailTask::Private::slotResult( const EncryptionResult & result ) {
     if ( result.error().code() ) {
         output->cancel();
-        emit q->error( result.error().encodedError(), makeResultString( result ) );
     } else {
         output->finalize();
-        emit q->result( shared_ptr<Result>( new EncryptEMailResult( result ) ) );
     }
+    emit q->result( shared_ptr<Result>( new EncryptEMailResult( result ) ) );
 }
 
-QString EncryptEMailResult::overview() const {
-    return makeSimpleOverview( makeResultString( m_result ), m_result.error() ? Error : NoError );
+QString EncryptEMailResult::overview() const {  
+    return makeSimpleOverview( makeResultString( m_result ), m_result.error().code() ? Error : NoError );
 }
 
 QString EncryptEMailResult::details() const {
     return i18n( "Not yet implemented" );
+}
+
+int EncryptEMailResult::errorCode() const {
+    return m_result.error().encodedError();
+}
+
+QString EncryptEMailResult::errorString() const {
+    return hasError() ? makeResultString( m_result ) : QString();
+}
+
+Task::Result::ErrorLevel EncryptEMailResult::errorLevel() const
+{
+    if ( m_result.error().isCanceled() )
+        return Warning;
+    return m_result.error().code() ? Error : NoError;
 }
 
 #include "moc_encryptemailtask.cpp"

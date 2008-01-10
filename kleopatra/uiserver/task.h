@@ -63,9 +63,14 @@ namespace Kleo {
 
     Q_SIGNALS:
         void progress( const QString & what, int current, int total );
-        void error( int err, const QString & details );
         void result( const boost::shared_ptr<const Kleo::Task::Result> & );
-        
+
+    protected:
+        static boost::shared_ptr<Result> makeErrorResult( int errCode, const QString& details );
+
+    private Q_SLOTS:
+        void emitError( int errCode, const QString& details );
+            
     private:
         virtual void doStart() = 0;
         
@@ -82,8 +87,12 @@ namespace Kleo {
 
         const QString & nonce() const { return m_nonce; }
 
+        bool hasError() const;
+        
         virtual QString overview() const = 0;
         virtual QString details() const = 0;
+        virtual int errorCode() const = 0;
+        virtual QString errorString() const = 0;
         
     protected:
         enum ErrorLevel {

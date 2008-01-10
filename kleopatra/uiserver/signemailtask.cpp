@@ -67,6 +67,10 @@ namespace {
 
         /* reimp */ QString overview() const;
         /* reimp */ QString details() const;
+        /* reimp */ int errorCode() const;
+        /* reimp */ QString errorString() const;
+    private:
+        ErrorLevel errorLevel() const;
     };
 
     QString makeResultString( const SigningResult& res )
@@ -211,12 +215,11 @@ static QString collect_micalgs( const GpgME::SigningResult & result, GpgME::Prot
 void SignEMailTask::Private::slotResult( const SigningResult & result ) {
     if ( result.error().code() ) {
         output->cancel();
-        emit q->error( result.error().encodedError(), makeResultString( result ) );
     } else {
         output->finalize();
         micAlg = collect_micalgs( result, q->protocol() );
-        emit q->result( shared_ptr<Result>( new SignEMailResult( result ) ) );
     }
+    emit q->result( shared_ptr<Result>( new SignEMailResult( result ) ) );
 }
 
 QString SignEMailTask::micAlg() const {
@@ -225,11 +228,25 @@ QString SignEMailTask::micAlg() const {
 
 
 QString SignEMailResult::overview() const {
-    return makeSimpleOverview( makeResultString( m_result ), m_result.error() ? Error : NoError );
+    return makeSimpleOverview( makeResultString( m_result ), errorLevel() );
 }
 
 QString SignEMailResult::details() const {
     return i18n("Not yet implemented");
+}
+
+int SignEMailResult::errorCode() const {
+    return m_result.error().encodedError();
+}
+
+QString SignEMailResult::errorString() const {
+    return hasError() ? makeResultString( m_result ) : QString();
+}
+
+Task::Result::ErrorLevel SignEMailResult::errorLevel() const {
+    if ( m_result.error().isCanceled() )
+        return Warning;
+    return m_result.error().code() ? Error : NoError;
 }
 
 #include "moc_signemailtask.cpp"

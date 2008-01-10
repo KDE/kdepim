@@ -343,7 +343,6 @@ shared_ptr<SignEncryptFilesTask> SignEncryptFilesController::Private::takeRunnab
 void SignEncryptFilesController::Private::connectTask( const shared_ptr<Task> & t, unsigned int idx ) {
     connect( t.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Task::Result>)),
              q, SLOT(slotTaskDone()) );
-    connect( t.get(), SIGNAL(error(int,QString)), q, SLOT(slotTaskDone()) );
     ensureWizardCreated();
     wizard->connectTask( t, idx );
 }

@@ -75,6 +75,11 @@ namespace {
 
         /* reimp */ QString overview() const;
         /* reimp */ QString details() const;
+        /* reimp */ int errorCode() const;
+        /* reimp */ QString errorString() const;
+        
+    private:
+        ErrorLevel errorLevel() const;
     };
 
 
@@ -302,72 +307,100 @@ std::auto_ptr<Kleo::EncryptJob> SignEncryptFilesTask::Private::createEncryptJob(
 void SignEncryptFilesTask::Private::slotResult( const SigningResult & result ) {
     if ( result.error().code() ) {
         output->cancel();
-        emit q->error( result.error().encodedError(), makeResultString( result ) );
-    } else
+    } else {
         try {
             output->finalize();
-            emit q->result( shared_ptr<Result>( new SignEncryptFilesResult( result ) ) );
         } catch ( const GpgME::Exception & e ) {
-            emit q->error( e.error().encodedError(), QString::fromLocal8Bit( e.what() ) );
+            emit q->result( makeErrorResult( e.error().encodedError(), QString::fromLocal8Bit( e.what() ) ) );
+            return;
         }
+    }
+   
+    emit q->result( shared_ptr<Result>( new SignEncryptFilesResult( result ) ) );
 }
 
 void SignEncryptFilesTask::Private::slotResult( const SigningResult & sresult, const EncryptionResult & eresult ) {
-    if ( sresult.error().code() ) {
+    if ( sresult.error().code() || eresult.error().code() ) {
         output->cancel();
-        emit q->error( sresult.error().encodedError(), makeResultString( sresult ) );
-    } else if ( eresult.error().code() ) {
-        output->cancel();
-        emit q->error( eresult.error().encodedError(), makeResultString( eresult ) );
-    } else
+    } else {
         try {
             output->finalize();
-            emit q->result( shared_ptr<Result>( new SignEncryptFilesResult( sresult, eresult ) ) );
         } catch ( const GpgME::Exception & e ) {
-            emit q->error( e.error().encodedError(), QString::fromLocal8Bit( e.what() ) );
+            emit q->result( makeErrorResult( e.error().encodedError(), QString::fromLocal8Bit( e.what() ) ) );
+            return;
         }
+    }
+    
+    emit q->result( shared_ptr<Result>( new SignEncryptFilesResult( sresult, eresult ) ) );
 }
 
 void SignEncryptFilesTask::Private::slotResult( const EncryptionResult & result ) {
     if ( result.error().code() ) {
         output->cancel();
-        emit q->error( result.error().encodedError(), makeResultString( result ) );
-    } else
+    } else {
         try {
             output->finalize();
-            emit q->result( shared_ptr<Result>( new SignEncryptFilesResult( result ) ) );
         } catch ( const GpgME::Exception & e ) {
-            emit q->error( e.error().encodedError(), QString::fromLocal8Bit( e.what() ) );
+            emit q->result( makeErrorResult( e.error().encodedError(), QString::fromLocal8Bit( e.what() ) ) );
+            return;
         }
+    }
+    emit q->result( shared_ptr<Result>( new SignEncryptFilesResult( result ) ) );
 }
 
 QString SignEncryptFilesResult::overview() const {
     const bool sign = !m_sresult.isNull();
     const bool encrypt = !m_eresult.isNull();
-    const bool haveError = m_sresult.error() || m_eresult.error();
-    const ErrorLevel level = haveError ? Error : NoError;
-        
+
     assuan_assert( sign || encrypt );
 
     if ( sign && encrypt ) {
         return makeSimpleOverview( 
-            m_sresult.error().code() ? makeResultString( m_sresult ) : 
-            m_eresult.error().code() ? makeResultString( m_eresult ) :
+            ( m_sresult.error().code() || m_eresult.error().code() ) ? errorString() :
             i18n( "Combined signing/encryption succeeded" ),
-            level );
+            errorLevel() );
     }
     
     if ( sign )
-        return makeSimpleOverview( makeResultString( m_sresult ), level );
+        return makeSimpleOverview( makeResultString( m_sresult ), errorLevel() );
     else
-        return makeSimpleOverview( makeResultString( m_eresult ), level );
+        return makeSimpleOverview( makeResultString( m_eresult ), errorLevel() );
+
 }
 
 QString SignEncryptFilesResult::details() const {
     return i18n("Not yet implemented");
 }
 
+int SignEncryptFilesResult::errorCode() const {
+   if ( m_sresult.error().code() )
+       return m_sresult.error().encodedError();
+   if ( m_eresult.error().code() )
+       return m_eresult.error().encodedError();
+   return 0;
+}
+    
+QString SignEncryptFilesResult::errorString() const {
+    const bool sign = !m_sresult.isNull();
+    const bool encrypt = !m_eresult.isNull();
+    
+    assuan_assert( sign || encrypt );
+
+    if ( sign && encrypt ) {
+        return 
+            m_sresult.error().code() ? makeResultString( m_sresult ) : 
+            m_eresult.error().code() ? makeResultString( m_eresult ) :
+            QString();
+    }
+    
+    return sign ? makeResultString( m_sresult ) : makeResultString( m_eresult );
+}
+
+Task::Result::ErrorLevel SignEncryptFilesResult::errorLevel() const
+{
+    if ( m_sresult.error().isCanceled() || m_eresult.error().isCanceled() )
+        return Warning;
+    return ( m_sresult.error().code() || m_eresult.error().code() ) ? Error : NoError;
+}
 
 #include "moc_signencryptfilestask.cpp"
-
-

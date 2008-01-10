@@ -223,8 +223,6 @@ void SignEncryptWizard::connectTask( const shared_ptr<Task> & task, unsigned int
     item->setLabel( task->label() );
     connect( task.get(), SIGNAL( progress( QString, int, int ) ),
              item, SLOT( setProgress( QString, int, int ) ) );
-    connect( task.get(), SIGNAL( error( int, QString ) ),
-             item, SLOT( setError( int, QString ) ) );
     connect( task.get(), SIGNAL(result( boost::shared_ptr<const Kleo::Task::Result> ) ),
              item, SLOT( setResult( boost::shared_ptr<const Kleo::Task::Result> ) ) );
     d->resultPage->addResultItem( item );

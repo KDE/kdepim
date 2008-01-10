@@ -45,6 +45,24 @@ using namespace Kleo;
 using namespace boost;
 using namespace GpgME;
 
+namespace {
+
+    class ErrorResult : public Task::Result {
+    public:
+        ErrorResult( int code, const QString & details )
+            : Task::Result(), m_code( code ), m_details( details ) {}
+
+        /* reimp */ QString overview() const { return makeSimpleOverview( m_details, Error ); }
+        /* reimp */ QString details() const { return QString(); }
+        /* reimp */ int errorCode() const { return m_code; }
+        /* reimp */ QString errorString() const { return m_details; }
+        
+    private:
+        int m_code;
+        QString m_details;
+    };
+}
+
 class Task::Private {
     friend class ::Kleo::Task;
     Task * const q;
@@ -73,8 +91,17 @@ void Task::start() {
     try {
         doStart();
     } catch ( const GpgME::Exception & e ) {
-        QMetaObject::invokeMethod( this, "error", Qt::QueuedConnection, Q_ARG( int, e.error().encodedError() ), Q_ARG( QString, QString::fromLocal8Bit( e.what() ) ) );
+        QMetaObject::invokeMethod( this, "emitError", Qt::QueuedConnection, Q_ARG( int, e.error().encodedError() ), Q_ARG( QString, QString::fromLocal8Bit( e.what() ) ) );
     }
+}
+
+void Task::emitError( int errCode, const QString& details ) {
+    emit result( makeErrorResult( errCode, details ) );
+}
+
+boost::shared_ptr<Task::Result> Task::makeErrorResult( int errCode, const QString& details )
+{
+    return boost::shared_ptr<Task::Result>( new ErrorResult( errCode, details ) );
 }
 
 static QString makeNonce() {
@@ -87,6 +114,11 @@ Task::Result::~Result() {}
 
 QString Task::Result::formatKeyLink( const char * fpr, const QString & content ) const {
     return "<a href=\"key:" + m_nonce + ':' + fpr + "\">" + content + "</a>";
+}
+
+bool Task::Result::hasError() const
+{
+    return errorCode() != 0;
 }
 
 static QString image( const char* img ) {
