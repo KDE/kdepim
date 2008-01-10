@@ -48,12 +48,17 @@
 
 Kleo::QGpgMESignJob::QGpgMESignJob( GpgME::Context * context )
   : SignJob( QGpgME::EventLoopInteractor::instance() ),
-    QGpgMEJob( this, context )
+    QGpgMEJob( this, context ),
+    mOutputIsBase64Encoded( false )
 {
   assert( context );
 }
 
 Kleo::QGpgMESignJob::~QGpgMESignJob() {
+}
+
+void Kleo::QGpgMESignJob::setOutputIsBase64Encoded( bool on ) {
+  mOutputIsBase64Encoded = on;
 }
 
 GpgME::Error Kleo::QGpgMESignJob::setup( const std::vector<GpgME::Key> & signers,
@@ -63,6 +68,9 @@ GpgME::Error Kleo::QGpgMESignJob::setup( const std::vector<GpgME::Key> & signers
 
   createInData( plainText );
   createOutData();
+
+  if ( mOutputIsBase64Encoded )
+    mOutData->setEncoding( GpgME::Data::Base64Encoding );
 
   try {
       setSigningKeys( signers );
@@ -98,6 +106,9 @@ void Kleo::QGpgMESignJob::setup( const std::vector<GpgME::Key> & signers,
         createOutData( signature );
     else
         createOutData();
+
+    if ( mOutputIsBase64Encoded )
+      mOutData->setEncoding( GpgME::Data::Base64Encoding );
 
     setSigningKeys( signers );
     hookupContextToEventLoopInteractor();

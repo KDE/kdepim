@@ -74,6 +74,9 @@ namespace Kleo {
     /*! \reimp from Job */
     void showErrorDialog( QWidget * parent, const QString & caption ) const;
 
+    /*! \reimp from SignJob */
+    void setOutputIsBase64Encoded( bool on );
+
   private Q_SLOTS:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
       QGpgMEJob::doSlotOperationDoneEvent( context, e );
@@ -86,6 +89,7 @@ namespace Kleo {
 
   private:
     GpgME::SigningResult mResult;
+    bool mOutputIsBase64Encoded;
   };
 
 }

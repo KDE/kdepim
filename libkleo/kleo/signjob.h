@@ -100,6 +100,12 @@ namespace Kleo {
 				       GpgME::SignatureMode mode,
 				       QByteArray & signature ) = 0;
 
+    /*!
+      This is a hack to request BASE64 output (instead of whatever
+      comes out normally).
+    */
+    virtual void setOutputIsBase64Encoded( bool ) = 0;
+
   Q_SIGNALS:
     void result( const GpgME::SigningResult & result, const QByteArray & signature );
   };

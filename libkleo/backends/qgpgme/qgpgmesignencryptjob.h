@@ -78,6 +78,9 @@ namespace Kleo {
     /*! \reimp from Job */
     void showErrorDialog( QWidget * parent, const QString & caption ) const;
 
+    /*! \reimp from SignEncryptJob */
+    void setOutputIsBase64Encoded( bool on );
+
   private Q_SLOTS:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
       QGpgMEJob::doSlotOperationDoneEvent( context, e );
@@ -93,6 +96,7 @@ namespace Kleo {
                 const boost::shared_ptr<QIODevice> &,
                 const boost::shared_ptr<QIODevice> &, bool );
   private:
+    bool mOutputIsBase64Encoded;
     std::pair<GpgME::SigningResult,GpgME::EncryptionResult> mResult;
   };
 
