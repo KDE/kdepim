@@ -178,7 +178,7 @@ void EncryptEMailTask::cancel() {
 std::auto_ptr<Kleo::EncryptJob> EncryptEMailTask::Private::createJob( GpgME::Protocol proto ) {
     const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( proto );
     assuan_assert( backend );
-    std::auto_ptr<Kleo::EncryptJob> encryptJob( backend->encryptJob( /*armor=*/true, /*textmode=*/false ) );
+    std::auto_ptr<Kleo::EncryptJob> encryptJob( backend->encryptJob( /*armor=*/proto == OpenPGP, /*textmode=*/false ) );
     assuan_assert( encryptJob.get() );
     connect( encryptJob.get(), SIGNAL(progress(QString,int,int)),
              q, SIGNAL(progress(QString,int,int)) );
