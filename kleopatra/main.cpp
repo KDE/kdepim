@@ -68,6 +68,7 @@
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <ksplashscreen.h>
+#include <KComponentData>
 
 #include <QTextDocument> // for Qt::escape
 #include <QSystemTrayIcon>
@@ -119,8 +120,14 @@ int main( int argc, char** argv )
   const boost::shared_ptr<Kleo::PublicKeyCache> publicKeyCache = Kleo::PublicKeyCache::mutableInstance();
   const boost::shared_ptr<Kleo::SecretKeyCache> secretKeyCache = Kleo::SecretKeyCache::mutableInstance();
 
+#ifdef ONLY_KLEO
+  QApplication app( argc, argv );
+  app.setApplicationName( "kleopatra" );
+  const KComponentData component( "kleopatra", "kleopatra" );
+#else
   KApplication app;
-
+#endif
+  
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
   KGlobal::locale()->insertCatalog( "libkleopatra" );
