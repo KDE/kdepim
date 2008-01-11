@@ -68,7 +68,7 @@
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <ksplashscreen.h>
-`
+
 #include <QTextDocument> // for Qt::escape
 #include <QSystemTrayIcon>
 #include <QMenu>
