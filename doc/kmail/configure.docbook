@@ -1938,6 +1938,21 @@ think they are SPAM.
 </listitem>
 </varlistentry>
 
+<varlistentry>
+<term><guilabel>MaximumAttachmentSize</guilabel></term>
+<listitem>
+<para>
+This allows the maximum file size allowed for attachments in the mail
+composer to be limited.
+
+To limit attachments to 20 MB ins size, for example, add a line reading (under [Composer] section):
+</para>
+<programlisting>MaximumAttachmentSize=20
+</programlisting>
+</listitem>
+</varlistentry>
+
+
 </variablelist>
 </sect2>
 
