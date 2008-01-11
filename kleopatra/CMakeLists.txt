@@ -1,7 +1,7 @@
 project(kleopatra)
 
 set( kleopatra_version 1.9.0 )
-if (EXISTS .svn)
+if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
   if ( NOT KdeSubversion_FOUND )
     find_package( KdeSubversion )
   endif ( NOT KdeSubversion_FOUND )
@@ -10,8 +10,7 @@ if (EXISTS .svn)
     string( SUBSTRING "${Kleopatra_WC_LAST_CHANGED_DATE}" 0 10 Kleopatra_WC_LAST_CHANGED_DATE )
     set( kleopatra_version "${kleopatra_version} (svn-${Kleopatra_WC_REVISION}, ${Kleopatra_WC_LAST_CHANGED_DATE})" )
   endif ( KdeSubversion_FOUND )
-endif (EXISTS .svn)
-
+endif (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-kleopatra.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kleopatra.h )
 
 include_directories( ${CMAKE_SOURCE_DIR}/libkleo ${Boost_INCLUDE_DIR} ${QGPGME_INCLUDES}  )
