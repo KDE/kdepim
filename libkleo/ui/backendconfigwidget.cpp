@@ -297,7 +297,7 @@ void Kleo::BackendConfigWidget::slotRescanButtonClicked() {
   if ( !reasons.empty() )
     KMessageBox::informationList( this,
 				  i18n("The following problems where encountered during scanning:"),
-				  reasons, i18n("Scan Results") );
+				  reasons, i18nc("@title:window Results of the scanning", "Scan Results") );
   load();
   emit changed( true );
 }
