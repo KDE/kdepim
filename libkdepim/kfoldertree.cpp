@@ -118,7 +118,7 @@ int KFolderTreeItem::compare( QListViewItem * i, int col, bool ) const
   else
   {
     // sort by unread or total-column
-    int a = 0, b = 0;
+    Q_INT64 a = 0, b = 0;
     if (col == static_cast<KFolderTree*>(listView())->unreadIndex())
     {
       a = mUnread;
@@ -181,7 +181,7 @@ void KFolderTreeItem::setTotalCount( int aTotal )
 }
 
 //-----------------------------------------------------------------------------
-void KFolderTreeItem::setFolderSize( int aSize )
+void KFolderTreeItem::setFolderSize( Q_INT64 aSize )
 {
   if ( aSize < 0 ) return;  // we need to update even if nothing changed, kids ...
 
@@ -195,7 +195,7 @@ void KFolderTreeItem::setFolderSize( int aSize )
           size = KIO::convertSize(mSize);
   }
   if ( childCount() > 0 && !isOpen() ) {
-      int recursiveSize = recursiveFolderSize();
+      Q_INT64 recursiveSize = recursiveFolderSize();
       if ( recursiveSize != mSize ) {
             if ( mType != Root )
                 size += QString::fromLatin1(" + %1").arg( KIO::convertSize( recursiveSize - mSize ) );
@@ -209,9 +209,9 @@ void KFolderTreeItem::setFolderSize( int aSize )
 }
 
 //-----------------------------------------------------------------------------
-size_t KFolderTreeItem::recursiveFolderSize() const
+Q_INT64 KFolderTreeItem::recursiveFolderSize() const
 {
-  int size = mSize;
+  Q_INT64 size = mSize;
 
   for ( QListViewItem *item = firstChild() ;
       item ; item = item->nextSibling() )
