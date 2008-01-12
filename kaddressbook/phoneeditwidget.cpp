@@ -95,7 +95,7 @@ void PhoneTypeCombo::update()
     }
   }
 
-  setCurrentItem( mTypeList.findIndex( mType ) );
+  setCurrentItem( mLastSelected = mTypeList.findIndex( mType ) );
 
   blockSignals( blocked );
 }
