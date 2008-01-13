@@ -249,12 +249,13 @@ void Kleo::BackendConfigWidget::load() {
   unsigned int backendCount = 0;
 
   // populate the plugin list:
+  BackendListViewItem * top = 0;
   for ( unsigned int i = 0 ;; ++i ) {
     const CryptoBackend * b = d->backendFactory->backend( i );
     if ( !b )
       break;
 
-    BackendListViewItem * top = new Kleo::BackendListViewItem( d->listView, top, b );
+    top = new Kleo::BackendListViewItem( d->listView, top, b );
     for ( int i = 0 ;; ++i ) {
       const char * name = b->enumerateProtocols( i );
       if ( !name )
