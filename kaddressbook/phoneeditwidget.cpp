@@ -88,11 +88,13 @@ void PhoneTypeCombo::update()
     if ( *it == -1 ) { // "Other..." entry
       addItem( i18n( "Other..." ) );
     } else {
-      addItem( KABC::PhoneNumber::typeLabel( KABC::PhoneNumber::Type( *it ) ) );
+      KABC::PhoneNumber number;
+      number.setType( KABC::PhoneNumber::Type( *it ) );
+      addItem( number.typeLabel() );
     }
   }
 
-  setCurrentIndex( mTypeList.indexOf( mType ) );
+  setCurrentIndex( mLastSelected = mTypeList.indexOf( mType ) );
 
   blockSignals( blocked );
 }
