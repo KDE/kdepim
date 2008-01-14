@@ -300,7 +300,7 @@ mailing list post</ulink>.</para></answer>
 <question><para>Are there any known bugs in &kmail;?</para></question>
 <answer>
 <para>A list of submitted bugs is linked at <ulink
-url="http://kontact.kde.org/kmail//">the &kmail; homepage</ulink>. Note that not all
+url="http://kontact.kde.org/kmail/">the &kmail; homepage</ulink>. Note that not all
 these bugs are valid. All in all we think that &kmail; is a very robust piece
 of software.</para>
 <para><warning><para>However, you should not run &kmail; while another email client is already
