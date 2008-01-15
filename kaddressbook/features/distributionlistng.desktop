@@ -2,6 +2,7 @@
 Encoding=UTF-8
 X-KDE-Library=libkaddrbk_distributionlistng
 Name=KAB Distribution List Next Generation Plugin
+Name[el]=Πρόσθετο λίστας διανομής επόμενης γενιάς του KAB
 Name[km]=កម្មវិធី​ជំនួយ​ជំនាន់​ក្រោយ​របស់​បញ្ជី​ចែកចាយ KAB
 Name[zh_TW]=第二代 KAB 分派清單外掛程式
 Comment=Plugin for managing distribution lists
