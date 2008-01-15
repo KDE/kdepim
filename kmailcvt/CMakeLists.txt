@@ -32,12 +32,12 @@ qt4_add_dbus_interfaces(kmailcvt_SRCS ${CMAKE_BINARY_DIR}/kmail/org.kde.kmail.km
 kde4_add_ui_files(kmailcvt_SRCS kselfilterpagedlg.ui kimportpagedlg.ui)
 
 kde4_add_executable(kmailcvt ${kmailcvt_SRCS})
+add_dependencies(kmailcvt kmail_xml)
 
 target_link_libraries(kmailcvt  ${QT_QT3SUPPORT_LIBRARY}  ${KDE4_KIO_LIBS} )
 
 install(TARGETS kmailcvt  DESTINATION ${BIN_INSTALL_DIR} )
 
-add_dependencies(kmailcvt kmail)
 ########### install files ###############
 
 kde4_install_icons( ${ICON_INSTALL_DIR}   )
