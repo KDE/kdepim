@@ -200,11 +200,11 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   sb->setItemAlignment( 1, Qt::AlignLeft | Qt::AlignVCenter );
   sb->insertItem( QString(), 2, 1 );                 // charset
   sb->setItemAlignment( 2, Qt::AlignLeft | Qt::AlignVCenter );
-  sb->insertItem( QString(), 3, 0 );                 // column
+  sb->insertItem( QString(), 3, 1 );                 // write mode
   sb->setItemAlignment(3, Qt::AlignCenter | Qt::AlignVCenter );
-  sb->insertItem( QString(), 4, 0 );                 // column
+  sb->insertItem( QString(), 4, 1 );                 // column
   sb->setItemAlignment(4, Qt::AlignCenter | Qt::AlignVCenter );
-  sb->insertItem( QString(), 5, 0 );                 // line
+  sb->insertItem( QString(), 5, 1 );                 // line
   sb->setItemAlignment( 5, Qt::AlignCenter | Qt::AlignVCenter );
   connect(v_iew->e_dit, SIGNAL(cursorPositionChanged()), SLOT(slotUpdateCursorPos()));
   connect(v_iew->e_dit, SIGNAL(overwriteModeText()), SLOT(slotUpdateStatusBar()));
