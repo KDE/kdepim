@@ -184,12 +184,12 @@ else() # not WIN32
 
     # if libassuan-config has been found
     if ( _ASSUANCONFIG_EXECUTABLE )
-
+      
       message( STATUS "Found libassuan-config at ${_ASSUANCONFIG_EXECUTABLE}" )
 
       exec_program( ${_ASSUANCONFIG_EXECUTABLE} ARGS --version OUTPUT_VARIABLE ASSUAN_VERSION )
 
-      set( _ASSUAN_MIN_VERSION "1.0.0" )
+      set( _ASSUAN_MIN_VERSION "1.0.4" )
       macro_ensure_version( ${_ASSUAN_MIN_VERSION} ${ASSUAN_VERSION} _ASSUAN_INSTALLED_VERSION_OK )
 
       if ( NOT _ASSUAN_INSTALLED_VERSION_OK )
