@@ -33,7 +33,7 @@
 </authorgroup>
 
 <copyright>
-<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year><year>2007</year>
+<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year><year>2007</year><year>2008</year>
 <holder>&David.Jarvie;</holder>
 </copyright>
 
@@ -41,8 +41,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2007-10-23</date>
-<releaseinfo>1.09.09</releaseinfo>
+<date>2008-01-16</date>
+<releaseinfo>1.09.11</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -4490,7 +4490,7 @@ conformance with RFC2445. In the VEVENT component:
 <literal>X-KDE-KALARM-FONTCOLOR</literal>,
 <literal>X-KDE-KALARM-VOLUME</literal>,
 <literal>X-KDE-KALARM-SPEAK</literal>,
-<literal>X-KDE-KALARM-KMAILID</literal>.</para>
+<literal>X-KDE-KALARM-EMAILID</literal>.</para>
 </answer>
 </qandaentry>
 
@@ -4518,7 +4518,7 @@ and the <application>alarm daemon</application>'s application name is
 &kalarm;
 </para>
 <para>
-Program copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007 &David.Jarvie; &David.Jarvie.mail;
+Program copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 &David.Jarvie; &David.Jarvie.mail;
 </para>
 <para>
 Alarm daemon authors:
@@ -4533,7 +4533,7 @@ Alarm daemon authors:
 </para>
 
 <para>
-Documentation copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007 &David.Jarvie; &David.Jarvie.mail;
+Documentation copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 &David.Jarvie; &David.Jarvie.mail;
 </para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
