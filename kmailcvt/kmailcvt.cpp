@@ -38,7 +38,7 @@ KMailCVT::KMailCVT(QWidget *parent)
 	importpage = new KImportPage;
 	page2 = new KPageWidgetItem( importpage, i18n( "Step 2: Importing..." ) );
 	addPage( page2 );
-
+        connect(this,SIGNAL(helpClicked()),this,SLOT(help()));
 }
 
 KMailCVT::~KMailCVT() {
