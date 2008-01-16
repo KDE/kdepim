@@ -98,9 +98,11 @@ if ( NOT ONLY_KLEO )
 endif ( NOT ONLY_KLEO)
 
 kde4_add_library(kleo SHARED ${kleo_LIB_SRCS})
-
+if(WIN32)
+target_link_libraries(kleo ${kleo_LIB_LIBS}  ${GPGME_VANILLA_LIBRARIES} )
+else(WIN32)
 target_link_libraries(kleo ${kleo_LIB_LIBS} )
-
+endif(WIN32)
 set_target_properties(kleo PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kleo DESTINATION ${LIB_INSTALL_DIR})
 
