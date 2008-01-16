@@ -33,7 +33,11 @@
 #include "log.h"
 
 #include "iodevicelogger.h"
+#include "config-kleopatra.h"
+
+#ifdef HAVE_ASSUAN
 #include <uiserver/kleo-assuan.h>
+#endif
 
 #include <KLocalizedString>
 #include <KRandom>
@@ -41,6 +45,7 @@
 #include <QDateTime>
 #include <QFile>
 #include <QString>
+#include <QDebug>
 
 #include <boost/weak_ptr.hpp>
 #include <exception>
@@ -112,10 +117,17 @@ shared_ptr<QIODevice> Log::createIOLogger( const shared_ptr<QIODevice>& io, cons
     
     const QString fn = d->m_outputDirectory + '/' + prefix + '-' + timestamp + '-' + KRandom::randomString( 4 );
     shared_ptr<QFile> file( new QFile( fn ) );
-    
+
     if ( !file->open( QIODevice::WriteOnly ) )
-        throw assuan_exception( gpg_error( GPG_ERR_EIO ), i18n( "Log Error: Couldn't open log file \"%1\" for write", fn ) );
- 
+    {
+        QString errorMessage = i18n( "Log Error: Couldn't open log file \"%1\" for write", fn );
+#ifdef HAVE_ASSUAN
+        throw assuan_exception( gpg_error( GPG_ERR_EIO ), errorMessage );
+#else
+        qDebug()<<errorMessage;
+        return io;
+#endif
+    }
     if ( mode & Read )    
         logger->setReadLogDevice( file );
     else // Write

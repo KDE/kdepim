@@ -13,6 +13,8 @@ if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
 endif (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-kleopatra.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kleopatra.h )
 
+macro_bool_to_01(USABLE_ASSUAN_FOUND HAVE_ASSUAN)
+
 include_directories( ${CMAKE_SOURCE_DIR}/libkleo ${Boost_INCLUDE_DIR} ${QGPGME_INCLUDES}  )
 if (USABLE_ASSUAN_FOUND)
    include_directories(${ASSUAN_INCLUDES} ${GPGME_INCLUDES})
