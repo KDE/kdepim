@@ -69,7 +69,10 @@
 #include <kiconloader.h>
 #include <ksplashscreen.h>
 
+#include <QDebug>
+#include <QFile>
 #include <QTextDocument> // for Qt::escape
+#include <QProcess>
 #include <QSystemTrayIcon>
 #include <QMenu>
 #include <QAction>
@@ -81,6 +84,53 @@ namespace {
     boost::shared_ptr<T> make_shared_ptr( T * t ) {
         return t ? boost::shared_ptr<T>( t ) : boost::shared_ptr<T>() ;
     }
+    
+    boost::shared_ptr<QIODevice> messageDevice;
+}
+
+static void messageHandler( QtMsgType type, const char* msg )
+{
+    Q_UNUSED( type )
+    qint64 toWrite = strlen( msg );
+    while ( toWrite > 0 )
+    {
+        const qint64 written = messageDevice->write( msg, toWrite );
+        if ( written == -1 )
+            return;
+        toWrite -= written;
+    }
+    //append newline:
+    while ( messageDevice->write( "\n", 1 ) == 0 ) ;
+}
+
+static QString environmentVariable( const QString& var )
+{
+    const QStringList env = QProcess::systemEnvironment();
+    Q_FOREACH ( const QString& i, env )
+    {
+        if ( i.startsWith( var ) + '=' )
+        {
+            const QStringList split = i.split( '=' ); 
+            if ( split.count() < 2 )
+                continue;
+            return split[1];
+        }
+    }
+    return QString();
+}
+
+static void setupLogging()
+{
+    const QString fn = environmentVariable( "KLEOPATRA_LOG" );
+    if ( fn.isEmpty() )
+        return;
+    std::auto_ptr<QFile> logFile( new QFile( fn ) );
+    if ( !logFile->open( QIODevice::WriteOnly ) ) {
+        qDebug() << "Could not open file for logging: " << fn;
+        return;
+    }
+    messageDevice.reset( logFile.release() );
+    qInstallMsgHandler( messageHandler );
 }
 
 #ifndef KLEO_BUILD_OLD_MAINWINDOW
@@ -119,6 +169,9 @@ int main( int argc, char** argv )
   const boost::shared_ptr<Kleo::PublicKeyCache> publicKeyCache = Kleo::PublicKeyCache::mutableInstance();
   const boost::shared_ptr<Kleo::SecretKeyCache> secretKeyCache = Kleo::SecretKeyCache::mutableInstance();
 
+  
+  setupLogging();
+  
   KApplication app;
   
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
@@ -210,5 +263,7 @@ int main( int argc, char** argv )
   }
 #endif
 
+  messageDevice.reset();
+  
   return rc;
 }
