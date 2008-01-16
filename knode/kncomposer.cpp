@@ -27,7 +27,7 @@
 #include <QCloseEvent>
 #include <QLabel>
 #include <QtDBus/QtDBus>
-#include <q3groupbox.h>
+#include <qgroupbox.h>
 #include <kdeversion.h>
 #include "addressesdialog.h"
 using KPIM::AddressesDialog;
@@ -1798,9 +1798,11 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
 #endif
   QVBoxLayout *notL=new QVBoxLayout(e_dit);
   notL->addStretch(1);
-  n_otification=new Q3GroupBox(2, Qt::Horizontal, e_dit);
+  n_otification=new QGroupBox(e_dit);
+  QHBoxLayout *v2 = new QHBoxLayout( n_otification );
   l=new QLabel(i18n("You are currently editing the article body\nin an external editor. To continue, you have\nto close the external editor."), n_otification);
   c_ancelEditorBtn=new QPushButton(i18n("&Kill External Editor"), n_otification);
+  v2->addWidget(c_ancelEditorBtn);
 #ifdef __GNUC__
 #warning Port me?
 #endif

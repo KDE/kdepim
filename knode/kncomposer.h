@@ -36,7 +36,7 @@
 #include <kprocess.h>
 #include <kabc/addresslineedit.h>
 
-class Q3GroupBox;
+class QGroupBox;
 
 class KSelectAction;
 class KToggleAction;
@@ -247,7 +247,7 @@ class KNComposer::ComposerView  : public QSplitter {
                 *t_oBtn;
 
     KMeditor    *e_dit;
-    Q3GroupBox  *n_otification;
+    QGroupBox  *n_otification;
     QPushButton *c_ancelEditorBtn;
 
     QWidget         *a_ttWidget;
