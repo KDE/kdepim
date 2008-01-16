@@ -110,13 +110,13 @@ static QString environmentVariable( const QString& var )
     const QStringList env = QProcess::systemEnvironment();
     Q_FOREACH ( const QString& i, env )
     {
-        if ( i.startsWith( var ) + '=' )
-        {
-            const QStringList split = i.split( '=' ); 
-            if ( split.count() < 2 )
-                continue;
-            return split[1];
-        }
+        if ( !i.startsWith( var + '=' ) )
+            continue;
+        
+        const QStringList split = i.split( '=' ); 
+        if ( split.count() < 2 )
+            continue;
+        return split[1];
     }
     return QString();
 }
@@ -127,7 +127,7 @@ static void setupLogging()
     if ( dir.isEmpty() )
         return;
     std::auto_ptr<QFile> logFile( new QFile( dir + "/kleo-log" ) );
-    if ( !logFile->open( QIODevice::WriteOnly ) ) {
+    if ( !logFile->open( QIODevice::WriteOnly | QIODevice::Append ) ) {
         qDebug() << "Could not open file for logging: " << dir + "/kleo-log";
         return;
     }
