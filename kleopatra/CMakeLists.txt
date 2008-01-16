@@ -98,6 +98,8 @@ set( _kleopatra_common_SRCS
    utils/formatting.cpp
    utils/wsastarter.cpp
    utils/classify.cpp
+   utils/iodevicelogger.cpp
+   utils/log.cpp
    ${_kleopatra_uiserver_files}
    commands/command.cpp
    commands/detailscommand.cpp

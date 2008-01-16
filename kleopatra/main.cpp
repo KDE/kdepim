@@ -44,6 +44,8 @@
 
 #include "libkleo/kleo/cryptobackendfactory.h"
 
+#include <utils/log.h>
+
 #ifdef HAVE_USABLE_ASSUAN
 # include <uiserver/uiserver.h>
 # include <uiserver/assuancommand.h>
@@ -121,14 +123,16 @@ static QString environmentVariable( const QString& var )
 
 static void setupLogging()
 {
-    const QString fn = environmentVariable( "KLEOPATRA_LOG" );
-    if ( fn.isEmpty() )
+    const QString dir = environmentVariable( "KLEOPATRA_LOGDIR" );
+    if ( dir.isEmpty() )
         return;
-    std::auto_ptr<QFile> logFile( new QFile( fn ) );
+    std::auto_ptr<QFile> logFile( new QFile( dir + "/kleo-log" ) );
     if ( !logFile->open( QIODevice::WriteOnly ) ) {
-        qDebug() << "Could not open file for logging: " << fn;
+        qDebug() << "Could not open file for logging: " << dir + "/kleo-log";
         return;
     }
+    Kleo::Log::mutableInstance()->setOutputDirectory( dir );
+    Kleo::Log::mutableInstance()->setIOLoggingEnabled( true );
     messageDevice.reset( logFile.release() );
     qInstallMsgHandler( messageHandler );
 }
@@ -169,6 +173,7 @@ int main( int argc, char** argv )
   const boost::shared_ptr<Kleo::PublicKeyCache> publicKeyCache = Kleo::PublicKeyCache::mutableInstance();
   const boost::shared_ptr<Kleo::SecretKeyCache> secretKeyCache = Kleo::SecretKeyCache::mutableInstance();
 
+  const boost::shared_ptr<Kleo::Log> log = Kleo::Log::mutableInstance();
   
   setupLogging();
   

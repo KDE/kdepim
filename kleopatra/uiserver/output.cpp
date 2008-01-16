@@ -36,6 +36,7 @@
 #include "kleo-assuan.h"
 
 #include <utils/kdpipeiodevice.h>
+#include <utils/log.h>
 
 #include <KLocale>
 #include <KMessageBox>

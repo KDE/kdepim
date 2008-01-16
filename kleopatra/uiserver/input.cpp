@@ -37,6 +37,7 @@
 
 #include <utils/classify.h>
 #include <utils/kdpipeiodevice.h>
+#include <utils/log.h>
 
 #include <KLocale>
 
@@ -71,7 +72,7 @@ namespace {
         /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_io; }
         /* reimp */ unsigned int classification() const;
     private:
-        shared_ptr<KDPipeIODevice> m_io;
+        shared_ptr<QIODevice> m_io;
     };
 
     class FileInput : public InputImplBase {
@@ -79,11 +80,12 @@ namespace {
         explicit FileInput( const QString & fileName );
         explicit FileInput( const shared_ptr<QFile> & file );
 
-        /* reimp */ QString label() const { return m_file ? m_file->fileName() : InputImplBase::label() ; }
-        /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_file; }
+        /* reimp */ QString label() const { return m_io ? m_fileName : InputImplBase::label() ; }
+        /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_io; }
         /* reimp */ unsigned int classification() const;
     private:
-        shared_ptr<QFile> m_file;
+        shared_ptr<QIODevice> m_io;
+        QString m_fileName;
     };
 
 #if 0
@@ -108,13 +110,15 @@ shared_ptr<Input> Input::createFromPipeDevice( assuan_fd_t fd, const QString & l
 
 PipeInput::PipeInput( assuan_fd_t fd )
     : InputImplBase(),
-      m_io( new KDPipeIODevice )
+      m_io()
 {
+    shared_ptr<KDPipeIODevice> kdp( new KDPipeIODevice );
     errno = 0;
-    if ( !m_io->open( fd, QIODevice::ReadOnly ) )
+    if ( !kdp->open( fd, QIODevice::ReadOnly ) )
         throw assuan_exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
-                                i18n( "Couldn't open FD %1 for writing",
+                                i18n( "Couldn't open FD %1 for reading",
                                       assuanFD2int( fd ) ) );
+    m_io = Log::instance()->createIOLogger( kdp, "pipe-input", Log::Read );
 }
 
 unsigned int PipeInput::classification() const {
@@ -131,30 +135,35 @@ shared_ptr<Input> Input::createFromFile( const shared_ptr<QFile> & file ) {
 
 FileInput::FileInput( const QString & fileName )
     : InputImplBase(),
-      m_file( new QFile( fileName ) )
+      m_io(), m_fileName( fileName )
 {
+    shared_ptr<QFile> file( new QFile( fileName ) );
+    
     errno = 0;
-    if ( !m_file->open( QIODevice::ReadOnly ) )
+    if ( !file->open( QIODevice::ReadOnly ) )
         throw assuan_exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
                                 i18n( "Couldn't open file \"%1\" for reading", fileName ) );
+    m_io = Log::instance()->createIOLogger( file, "file-in", Log::Read );
+
 }
 
 FileInput::FileInput( const shared_ptr<QFile> & file )
     : InputImplBase(),
-      m_file( file )
+      m_io(), m_fileName( file->fileName() )
 {
     assuan_assert( file );
     errno = 0;
-    if ( m_file->isOpen() && !m_file->isReadable() )
+    if ( file->isOpen() && !file->isReadable() )
         throw assuan_exception( gpg_error( GPG_ERR_INV_ARG ),
                                 i18n( "File \"%1\" is already open, but not for reading" ) );
-    if ( !m_file->isOpen() && !m_file->open( QIODevice::ReadOnly ) )
+    if ( !file->isOpen() && !file->open( QIODevice::ReadOnly ) )
         throw assuan_exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
-                                i18n( "Couldn't open file \"%1\" for reading", m_file->fileName() ) );
+                                i18n( "Couldn't open file \"%1\" for reading", m_fileName ) );
+    m_io = Log::instance()->createIOLogger( file, "file-in", Log::Read );
 }
 
 unsigned int FileInput::classification() const {
-    return classify( m_file->fileName() );
+    return classify( m_fileName );
 }
 
 #if 0
