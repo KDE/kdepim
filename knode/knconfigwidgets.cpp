@@ -1661,7 +1661,7 @@ KNode::PostNewsSpellingWidget::PostNewsSpellingWidget( const KComponentData &ins
 
   c_conf = new Sonnet::ConfigWidget(KNGlobals::self()->config(), this );
   topL->addWidget(c_conf);
-  //connect(c_conf, SIGNAL(configChanged()), SLOT(changed()));
+  connect(c_conf, SIGNAL(configChanged()), SLOT(changed()));
 
   topL->addStretch(1);
 }
