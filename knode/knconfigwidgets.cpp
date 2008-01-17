@@ -31,8 +31,7 @@
 #include <kfontdialog.h>
 #include <kfiledialog.h>
 #include <kscoringeditor.h>
-#include <k3spell.h>
-#include <k3sconfig.h>
+#include <sonnet/configwidget.h>
 #include <kcombobox.h>
 #include <libkpgp/kpgp.h>
 #include <libkpgp/kpgpui.h>
@@ -456,9 +455,9 @@ KNode::NntpAccountConfDialog::NntpAccountConfDialog( KNNntpAccount *a, QWidget *
   mServer->setText( a->server() );
   mPort->setValue( a->port() );
 #ifndef Q_WS_WIN
-// don't know how to set this in KDE4, where no related methods exists 
+// don't know how to set this in KDE4, where no related methods exists
   mPort->setSliderEnabled( false );
-#endif  
+#endif
   mFetchDesc->setChecked( a->fetchDescriptions() );
 
   connect( mServer, SIGNAL( textChanged( const QString& ) ),
@@ -1660,9 +1659,9 @@ KNode::PostNewsSpellingWidget::PostNewsSpellingWidget( const KComponentData &ins
   QVBoxLayout *topL=new QVBoxLayout(this);
   topL->setSpacing(5);
 
-  c_onf = new K3SpellConfig( this, 0, false );
-  topL->addWidget(c_onf);
-  connect(c_onf, SIGNAL(configChanged()), SLOT(changed()));
+  c_conf = new Sonnet::ConfigWidget(KNGlobals::self()->config(), this );
+  topL->addWidget(c_conf);
+  //connect(c_conf, SIGNAL(configChanged()), SLOT(changed()));
 
   topL->addStretch(1);
 }
@@ -1675,7 +1674,7 @@ KNode::PostNewsSpellingWidget::~PostNewsSpellingWidget()
 
 void KNode::PostNewsSpellingWidget::save()
 {
-  c_onf->writeGlobalSettings();
+  c_conf->save();
 }
 
 

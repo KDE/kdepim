@@ -39,8 +39,11 @@ class QListWidget;
 class KLineEdit;
 class KComboBox;
 class KIntSpinBox;
-class K3SpellConfig;
 class KUrlCompletion;
+
+namespace Sonnet{
+class ConfigWidget;
+}
 
 namespace KPIM {
   class KScoringEditorWidget;
@@ -562,7 +565,7 @@ class KNODE_EXPORT PostNewsSpellingWidget : public KCModule {
     void save();
 
   protected:
-     K3SpellConfig *c_onf;
+  Sonnet::ConfigWidget *c_conf;
 
 };
 
