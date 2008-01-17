@@ -111,10 +111,7 @@ static void setupLogging()
     const QString envOptions = environmentVariable( "KLEOPATRA_LOGOPTIONS", "io" );
     const bool logAll = envOptions.trimmed() == "all";
     const QStringList options = envOptions.split( ',' );
-    
-    if ( logAll || options.contains( "pipeio" ) )
-        KDPipeIODevice::setDebugLevel( KDPipeIODevice::Debug );
-    
+        
     const QString dir = environmentVariable( "KLEOPATRA_LOGDIR" );
     if ( dir.isEmpty() )
         return;
@@ -128,7 +125,11 @@ static void setupLogging()
     if ( logAll || options.contains( "io" ) )
         Kleo::Log::mutableInstance()->setIOLoggingEnabled( true );
     qInstallMsgHandler( Kleo::Log::messageHandler );
+    
 #ifdef HAVE_USABLE_ASSUAN
+    if ( logAll || options.contains( "pipeio" ) )
+        KDPipeIODevice::setDebugLevel( KDPipeIODevice::Debug );
+
     assuan_set_assuan_log_stream( Kleo::Log::instance()->logFile() );
 #endif
 }
