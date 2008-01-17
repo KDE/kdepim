@@ -31,24 +31,22 @@
 */
 
 #include "log.h"
-
+#include "exception.h"
 #include "iodevicelogger.h"
 #include "config-kleopatra.h"
-
-#ifdef HAVE_ASSUAN
-#include <uiserver/kleo-assuan.h>
-#endif
 
 #include <KLocalizedString>
 #include <KRandom>
 
 #include <QDateTime>
+#include <QDir>
 #include <QFile>
 #include <QString>
 #include <QDebug>
 
 #include <boost/weak_ptr.hpp>
-#include <exception>
+#include <cassert>
+#include <cstdio>
 
 using namespace boost;
 using namespace Kleo;
@@ -56,12 +54,37 @@ using namespace Kleo;
 class Log::Private {
     Log* const q;
 public:
-    explicit Private( Log* qq ) : q( qq ), m_ioLoggingEnabled( false ) {}
-    
+    explicit Private( Log* qq ) : q( qq ), m_ioLoggingEnabled( false ), m_logFile( 0 ) {}
+    ~Private();
     bool m_ioLoggingEnabled;
     QString m_outputDirectory;
+    FILE* m_logFile;
 };
 
+Log::Private::~Private()
+{
+    if ( m_logFile )
+        fclose( m_logFile );
+}
+
+void Log::messageHandler( QtMsgType type, const char* msg )
+{
+    Q_UNUSED( type )
+    FILE* const file = Log::instance()->logFile();
+    assert( file );
+    
+    qint64 toWrite = strlen( msg );
+    while ( toWrite > 0 )
+    {
+        const qint64 written = fprintf( file, msg );
+        if ( written == -1 )
+            return;
+        toWrite -= written;
+    }
+    //append newline:
+    while ( fprintf( file, "\n" ) == 0 ) ;
+    fflush( file );
+}
 
 shared_ptr<const Log> Log::instance() {
     return mutableInstance();
@@ -83,7 +106,12 @@ Log::Log() : d( new Private( this ) )
 }
 
 Log::~Log()
-{    
+{
+}
+
+FILE* Log::logFile() const
+{
+    return d->m_logFile;
 }
 
 void Log::setIOLoggingEnabled( bool enabled )
@@ -103,7 +131,13 @@ QString Log::outputDirectory() const
 
 void Log::setOutputDirectory( const QString& path )
 {
+    if ( d->m_outputDirectory == path )
+        return;
     d->m_outputDirectory = path;
+    assert( !d->m_logFile );
+    const QString lfn = path + "/kleo-log";
+    d->m_logFile = fopen( QDir::toNativeSeparators( lfn ).toLocal8Bit().constData(), "a" );
+    assert( d->m_logFile );
 }
 
 shared_ptr<QIODevice> Log::createIOLogger( const shared_ptr<QIODevice>& io, const QString& prefix, OpenMode mode ) const
@@ -119,15 +153,8 @@ shared_ptr<QIODevice> Log::createIOLogger( const shared_ptr<QIODevice>& io, cons
     shared_ptr<QFile> file( new QFile( fn ) );
 
     if ( !file->open( QIODevice::WriteOnly ) )
-    {
-        QString errorMessage = i18n( "Log Error: Couldn't open log file \"%1\" for write", fn );
-#ifdef HAVE_ASSUAN
-        throw assuan_exception( gpg_error( GPG_ERR_EIO ), errorMessage );
-#else
-        qDebug()<<errorMessage;
-        return io;
-#endif
-    }
+        throw Exception( i18n( "Log Error: Couldn't open log file \"%1\" for write", fn ) );
+ 
     if ( mode & Read )    
         logger->setReadLogDevice( file );
     else // Write

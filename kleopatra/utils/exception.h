@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    utils/log.h
+    exception.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2008 Klarälvdalens Datakonsult AB
@@ -30,59 +30,26 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_LOG_H__
-#define __KLEOPATRA_LOG_H__
+#ifndef __KLEO__EXCEPTION_H__
+#define __KLEO__EXCEPTION_H__
 
-#include <utils/pimpl_ptr.h>
+#include <stdexcept>
 
-#include <QtGlobal>
-
-#include <boost/shared_ptr.hpp>
-
-#include <cstdio>
-
-class QIODevice;
-class QFile;
-class QString;
+#include <QString>
 
 namespace Kleo {
 
-    class Log {
-    public:
-
-        enum OpenMode {
-            Read=0x1,
-            Write=0x2
-        };
-
-
-        static void messageHandler( QtMsgType type, const char* msg );
-        
-        static boost::shared_ptr<const Log> instance();
-        static boost::shared_ptr<Log> mutableInstance();
-
-        ~Log();
-        
-        bool ioLoggingEnabled() const; 
-        void setIOLoggingEnabled( bool enabled );
-        
-        QString outputDirectory() const;
-        void setOutputDirectory( const QString& path );
-        
-        boost::shared_ptr<QIODevice> createIOLogger( const boost::shared_ptr<QIODevice>& wrapped, const QString& prefix, OpenMode mode ) const;
-        
-        FILE* logFile() const;
-
-    private:
-        Log();
-        
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        
-        Q_DISABLE_COPY( Log )
-    };
+class Exception : public std::runtime_error {
+public:
+    explicit Exception( const QString& msg );
+    ~Exception() throw();
+    
+    QString message() const;
+    
+private:
+    QString m_message;
+};
 
 }
 
-#endif // __KLEOPATRA_LOG_H__
+#endif /*EXCEPTION_H_*/

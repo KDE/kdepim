@@ -47,6 +47,7 @@
 
 #include "input.h"
 #include "output.h"
+#include <utils/log.h>
 
 #include <gpgme++/data.h>
 
@@ -584,8 +585,9 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
     // for callbacks, associate the context with this connection:
     assuan_set_pointer( ctx.get(), this );
 
-    assuan_set_log_stream( ctx.get(), stderr );
-
+    FILE* const logFile = Log::instance()->logFile();
+    assuan_set_log_stream( ctx.get(), logFile ? logFile : stderr );
+    
     // register FDs with the event loop:
     assuan_fd_t fds[MAX_ACTIVE_FDS];
     const int numFDs = assuan_get_active_fds( ctx.get(), FOR_READING, fds, MAX_ACTIVE_FDS );

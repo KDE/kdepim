@@ -47,6 +47,7 @@
 #include <utils/log.h>
 
 #ifdef HAVE_USABLE_ASSUAN
+# include <assuan.h>
 # include <uiserver/uiserver.h>
 # include <uiserver/assuancommand.h>
 # include <uiserver/echocommand.h>
@@ -86,23 +87,6 @@ namespace {
     boost::shared_ptr<T> make_shared_ptr( T * t ) {
         return t ? boost::shared_ptr<T>( t ) : boost::shared_ptr<T>() ;
     }
-    
-    boost::shared_ptr<QIODevice> messageDevice;
-}
-
-static void messageHandler( QtMsgType type, const char* msg )
-{
-    Q_UNUSED( type )
-    qint64 toWrite = strlen( msg );
-    while ( toWrite > 0 )
-    {
-        const qint64 written = messageDevice->write( msg, toWrite );
-        if ( written == -1 )
-            return;
-        toWrite -= written;
-    }
-    //append newline:
-    while ( messageDevice->write( "\n", 1 ) == 0 ) ;
 }
 
 static QString environmentVariable( const QString& var )
@@ -128,13 +112,13 @@ static void setupLogging()
         return;
     std::auto_ptr<QFile> logFile( new QFile( dir + "/kleo-log" ) );
     if ( !logFile->open( QIODevice::WriteOnly | QIODevice::Append ) ) {
-        qDebug() << "Could not open file for logging: " << dir + "/kleo-log";
+        qDebug() << "Could not open file for logging: " << dir + "/kleo-log\nLogging disabled";
         return;
     }
     Kleo::Log::mutableInstance()->setOutputDirectory( dir );
     Kleo::Log::mutableInstance()->setIOLoggingEnabled( true );
-    messageDevice.reset( logFile.release() );
-    qInstallMsgHandler( messageHandler );
+    qInstallMsgHandler( Kleo::Log::messageHandler );
+    assuan_set_assuan_log_stream( Kleo::Log::instance()->logFile() );
 }
 
 #ifndef KLEO_BUILD_OLD_MAINWINDOW
@@ -268,7 +252,5 @@ int main( int argc, char** argv )
   }
 #endif
 
-  messageDevice.reset();
-  
-  return rc;
+    return rc;
 }
