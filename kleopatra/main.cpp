@@ -128,7 +128,9 @@ static void setupLogging()
     if ( logAll || options.contains( "io" ) )
         Kleo::Log::mutableInstance()->setIOLoggingEnabled( true );
     qInstallMsgHandler( Kleo::Log::messageHandler );
+#ifdef HAVE_USABLE_ASSUAN
     assuan_set_assuan_log_stream( Kleo::Log::instance()->logFile() );
+#endif
 }
 
 #ifndef KLEO_BUILD_OLD_MAINWINDOW
