@@ -75,7 +75,7 @@ class VerifyTest : public QObject
 
       GpgME::Signature sig = result.signature( 0 );
       QCOMPARE( sig.summary() & GpgME::Signature::KeyMissing, 0 );
-      QCOMPARE( sig.creationTime(), 1189650248L );
+      QCOMPARE( (qulonglong)sig.creationTime(), (qulonglong)1189650248UL );
       QCOMPARE( sig.validity(), GpgME::Signature::Full );
     }
 };
