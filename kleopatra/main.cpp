@@ -90,7 +90,7 @@ namespace {
     }
 }
 
-static QString environmentVariable( const QString& var, const QString& def=QString() )
+static QString environmentVariable( const QString& var, const QString& defaultValue=QString() )
 {
     const QStringList env = QProcess::systemEnvironment();
     Q_FOREACH ( const QString& i, env )
@@ -103,7 +103,7 @@ static QString environmentVariable( const QString& var, const QString& def=QStri
             continue;
         return split[1];
     }
-    return QString();
+    return defaultValue;
 }
 
 static void setupLogging()
