@@ -48,10 +48,14 @@
 const unsigned int BUFFER_SIZE = 4096;
 const bool ALLOW_QIODEVICE_BUFFERING = true;
 
-// comment to get trace output:
-#define qDebug if(1){}else qDebug
+namespace {
+    KDPipeIODevice::DebugLevel s_debugLevel = KDPipeIODevice::NoDebug;
+}
+
+#define qDebug if( s_debugLevel == KDPipeIODevice::NoDebug ){}else qDebug
 
 namespace {
+
 class Reader : public QThread {
     Q_OBJECT
 public:
@@ -198,6 +202,7 @@ class KDPipeIODevice::Private : public QObject {
     friend class ::KDPipeIODevice;
     KDPipeIODevice * const q;
 public:
+    
     explicit Private( KDPipeIODevice * qq );
     ~Private();
 
@@ -217,6 +222,16 @@ private:
     bool triedToStartReader;
     bool triedToStartWriter;
 };
+
+KDPipeIODevice::DebugLevel KDPipeIODevice::debugLevel()
+{
+    return s_debugLevel;
+}
+
+void KDPipeIODevice::setDebugLevel( KDPipeIODevice::DebugLevel level )
+{
+    s_debugLevel = level;
+}
 
 KDPipeIODevice::Private::Private( KDPipeIODevice * qq ) : QObject( qq ), q( qq ),
     fd( -1 ),

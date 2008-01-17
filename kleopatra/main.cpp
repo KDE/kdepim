@@ -44,6 +44,7 @@
 
 #include "libkleo/kleo/cryptobackendfactory.h"
 
+#include <utils/kdpipeiodevice.h>
 #include <utils/log.h>
 
 #ifdef HAVE_USABLE_ASSUAN
@@ -89,7 +90,7 @@ namespace {
     }
 }
 
-static QString environmentVariable( const QString& var )
+static QString environmentVariable( const QString& var, const QString& def=QString() )
 {
     const QStringList env = QProcess::systemEnvironment();
     Q_FOREACH ( const QString& i, env )
@@ -107,6 +108,13 @@ static QString environmentVariable( const QString& var )
 
 static void setupLogging()
 {
+    const QString envOptions = environmentVariable( "KLEOPATRA_LOGOPTIONS", "io" );
+    const bool logAll = envOptions.trimmed() == "all";
+    const QStringList options = envOptions.split( ',' );
+    
+    if ( logAll || options.contains( "pipeio" ) )
+        KDPipeIODevice::setDebugLevel( KDPipeIODevice::Debug );
+    
     const QString dir = environmentVariable( "KLEOPATRA_LOGDIR" );
     if ( dir.isEmpty() )
         return;
@@ -115,8 +123,10 @@ static void setupLogging()
         qDebug() << "Could not open file for logging: " << dir + "/kleo-log\nLogging disabled";
         return;
     }
+        
     Kleo::Log::mutableInstance()->setOutputDirectory( dir );
-    Kleo::Log::mutableInstance()->setIOLoggingEnabled( true );
+    if ( logAll || options.contains( "io" ) )
+        Kleo::Log::mutableInstance()->setIOLoggingEnabled( true );
     qInstallMsgHandler( Kleo::Log::messageHandler );
     assuan_set_assuan_log_stream( Kleo::Log::instance()->logFile() );
 }

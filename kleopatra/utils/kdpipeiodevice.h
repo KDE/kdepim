@@ -30,6 +30,14 @@ class KDPipeIODevice : public QIODevice {
     Q_OBJECT
     //KDAB_MAKE_CHECKABLE( KDPipeIODevice )
 public:
+    enum DebugLevel {
+        NoDebug,
+        Debug
+    };
+    
+    static DebugLevel debugLevel();
+    static void setDebugLevel( DebugLevel level );
+    
     explicit KDPipeIODevice( QObject * parent=0 );
     explicit KDPipeIODevice( int fd, OpenMode=ReadOnly, QObject * parent=0 );
     explicit KDPipeIODevice( Qt::HANDLE handle, OpenMode=ReadOnly, QObject * parent=0 );
