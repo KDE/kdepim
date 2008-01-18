@@ -1778,6 +1778,7 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
 
   //Editor
   e_dit=new KMeditor(this);
+  e_dit->switchTextMode( false );
   e_dit->setMinimumHeight(50);
 
   KConfigGroup config( knGlobals.config(), "VISUAL_APPEARANCE" );
