@@ -215,49 +215,6 @@ class KNComposer : public KXmlGuiWindow {
 
 };
 
-
-
-class KNLineEditSpell;
-class KNLineEdit;
-
-/** Message composer view. */
-class KNComposer::ComposerView  : public QSplitter {
-
-  public:
-    ComposerView( KNComposer *_composer );
-    ~ComposerView();
-    void focusNextPrevEdit(const QWidget* aCur, bool aNext);
-    void setMessageMode(KNComposer::MessageMode mode);
-    void showAttachmentView();
-    void hideAttachmentView();
-    void showExternalNotification();
-    void hideExternalNotification();
-    QList<QWidget*> mEdtList;
-
-    QLabel      *l_to,
-                *l_groups,
-                *l_fup2;
-    KNLineEditSpell *s_ubject;
-
-    KNLineEdit  *g_roups;
-    KNLineEdit  *t_o;
-
-    KComboBox   *f_up2;
-    QPushButton *g_roupsBtn,
-                *t_oBtn;
-
-    KMeditor    *e_dit;
-    QGroupBox  *n_otification;
-    QPushButton *c_ancelEditorBtn;
-
-    QWidget         *a_ttWidget;
-    AttachmentView  *a_ttView;
-    QPushButton     *a_ttAddBtn,
-                    *a_ttRemoveBtn,
-                    *a_ttEditBtn;
-    bool v_iewOpen;
-};
-
 #if 0
 /** Message Compser editor, handles tabs (expanding them in textLine(), etc.) */
 class KNComposer::Editor : public KEdit {
