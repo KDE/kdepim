@@ -76,7 +76,7 @@ void Log::messageHandler( QtMsgType type, const char* msg )
     qint64 toWrite = strlen( msg );
     while ( toWrite > 0 )
     {
-        const qint64 written = fprintf( file, msg );
+        const qint64 written = fprintf( file, "%s", msg );
         if ( written == -1 )
             return;
         toWrite -= written;
