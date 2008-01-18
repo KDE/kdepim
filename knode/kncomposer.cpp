@@ -71,6 +71,7 @@ using KPIM::RecentAddresses;
 #include "settings.h"
 #include "kncomposerview.h"
 #include <kmeditor.h>
+#include "kncomposereditor.h"
 
 
 KNLineEdit::KNLineEdit( KNComposer::ComposerView *_composerView, bool useCompletion,
