@@ -43,6 +43,7 @@ set(knodecommon_LIB_SRCS
    knhdrviewitem.cpp
    kncomposer.cpp
    kncomposerview.cpp
+   kncomposereditor.cpp
    knarticlefactory.cpp
    knfiltermanager.cpp
    knstatusfilter.cpp

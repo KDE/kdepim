@@ -11,6 +11,8 @@
     along with this program; if not, write to the Free Software Foundation,
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
+#ifndef KNCOMPOSERVIEW_H
+#define KNCOMPOSERVIEW_H
 
 class KNLineEditSpell;
 class KNLineEdit;
@@ -42,7 +44,7 @@ class KNComposer::ComposerView  : public QSplitter {
     QPushButton *g_roupsBtn,
                 *t_oBtn;
 
-    KMeditor    *e_dit;
+    KNComposerEditor    *e_dit;
     QGroupBox  *n_otification;
     QPushButton *c_ancelEditorBtn;
 
@@ -53,3 +55,5 @@ class KNComposer::ComposerView  : public QSplitter {
                     *a_ttEditBtn;
     bool v_iewOpen;
 };
+
+#endif
