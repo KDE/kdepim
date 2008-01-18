@@ -352,7 +352,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   a_ctExternalEditor->setText(i18n("Start &External Editor"));
   connect(a_ctExternalEditor, SIGNAL(triggered(bool)), SLOT(slotExternalEditor()));
 
-  a_ctSpellCheck = KStandardAction::spelling (this, SLOT(slotSpellcheck()), actionCollection());
+  a_ctSpellCheck = KStandardAction::spelling ( v_iew->e_dit, SLOT(checkSpelling()), actionCollection());
 
   //settings menu
   createStandardStatusBarAction();
