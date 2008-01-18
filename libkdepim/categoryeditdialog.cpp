@@ -43,6 +43,20 @@ class CategoryEditDialog::Private
     QPushButton *mDeleteButton;
 };
 
+class CategoryListViewItem : public QListViewItem
+{
+  public:
+    CategoryListViewItem( QListView *view, const QString &text ) :
+      QListViewItem( view, text )
+    {
+    }
+
+    void okRename ( int col ) // we need that public to explicitly accept renaming when closing the dialog
+    {
+      QListViewItem::okRename( col );
+    }
+};
+
 CategoryEditDialog::CategoryEditDialog( KPimPrefs *prefs, QWidget* parent,
                                         const char* name, bool modal )
   : KDialogBase::KDialogBase( parent, name, modal,
@@ -57,6 +71,7 @@ CategoryEditDialog::CategoryEditDialog( KPimPrefs *prefs, QWidget* parent,
   d->mView = new QListView( widget );
   d->mView->addColumn( "" );
   d->mView->header()->hide();
+  d->mView->setDefaultRenameAction( QListView::Accept );
 
   layout->addMultiCellWidget( d->mView, 0, 3, 0, 0 );
 
@@ -93,7 +108,7 @@ void CategoryEditDialog::fillList()
   for ( it = mPrefs->mCustomCategories.begin();
         it != mPrefs->mCustomCategories.end(); ++it ) {
 
-    QListViewItem *item = new QListViewItem( d->mView, *it );
+    QListViewItem *item = new CategoryListViewItem( d->mView, *it );
     item->setRenameEnabled( 0, true );
 
     categoriesExist = true;
@@ -109,7 +124,7 @@ void CategoryEditDialog::add()
   if ( d->mView->firstChild() )
     d->mView->setCurrentItem( d->mView->firstChild() );
 
-  QListViewItem *item = new QListViewItem( d->mView, i18n( "New category" ) );
+  QListViewItem *item = new CategoryListViewItem( d->mView, i18n( "New category" ) );
   item->setRenameEnabled( 0, true );
 
   d->mView->setSelected( item, true );
@@ -142,6 +157,9 @@ void CategoryEditDialog::remove()
 
 void CategoryEditDialog::slotOk()
 {
+  // accept the currently ongoing rename
+  if ( d->mView->selectedItem() )
+    static_cast<CategoryListViewItem*>( d->mView->selectedItem() )->okRename( 0 );
   slotApply();
   accept();
 }
