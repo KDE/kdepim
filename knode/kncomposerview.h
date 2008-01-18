@@ -17,6 +17,7 @@
 class KNLineEditSpell;
 class KNLineEdit;
 class KNComposer;
+class KNComposerEditor;
 
 /** Message composer view. */
 class KNComposer::ComposerView  : public QSplitter {
