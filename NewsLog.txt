@@ -3,9 +3,61 @@ Friday, January 18th 2008
 Problems addressed
 -------------------
 
-* kolab/issue 2399 "Out of Office" reply reminder is activated althrough "Out of Office "reply is not activated.
+* kolab/issue2275  upgrade removed groupware resources.( 745813 )
 
-* kolab/issue 2401 D'n'D attachment of a mail to the desktop: copy lots of different files to the desktop
+* kolab/issue2306 Crash below KMReaderWin::parseMsg after fast navigation through mails  (746845)
+
+* kolab/issue2313 Crashed when subscribing new folders (e.g. in KMFolderMgr::removeFolderAux()) ( 746873 )
+
+* kolab/issue2173 "Copy contact to" and "Move contact to" have the same icons. ( 746925 )
+
+* kolab/issue2146 Kontact evaluates HTML tags in Contacts ( 747182 )
+
+* kolab/issue2182 Kontact shows misleading error messages for a mail encrypted with unsupported cyphers.  ( 747318 )
+
+* kolab/issue2262 Crash below SnippetWidget::slotAdd()) (747340)
+
+* kolab/issue2286 Crash below KMail::CachedImapJob::slotPutMessageInfoData after working with tasks. ( 747584 )
+
+* kolab/issue2299 Sending a mail with softbreaks inserts newlines into this mail. (748016)
+
+* kolab/issue2220 "Action Item" and "Important" flag of mails behave different, if a folder is shared with read rights. (748416)
+
+* kolab/issue2344 Kontact crash on Deleting messages which are attachments shown in message viewer. (748425)
+
+* kolab/issue2191 filters lose conditions. (748479)
+
+* kolab/issue2004 Kontact, contact component: minsize of some components too wide (748501)
+
+* kolab/issue2061 three buttons lead to too large minimum width (in contact, calender and journal view). (748501)
+
+* kolab/issue2161 contacts view: distribution list view: Should have the usual buttons (748529)
+
+* kolab/issue2348 Crash on "checking" ToDo in calendar view (750031)
+
+* kolab/issue2304 Adding new attendees should be easier by clicking. (750093)
+
+* kolab/issue2301 Contacts: Undo asks to select a folder, after cutting some contacts. (750101)
+
+* kolab/issue2178 After inserting a text component to a mail the cursor should be at the end of this text component not at the beginning. (750499)
+
+* kolab/issue2169 Email header style "enterprise" does not jump to all email attachments (750562)
+
+* kolab/issue2008 Export of kontact profiles doesn't work. (750648)
+
+* kolab/issue1870 Display of whole day events in side-by-side view shows rubbish. (750879)
+
+* kolab/issue1952 favorite folder view: clicking on groupware folder should jump to corresponding view. (750904)
+
+* kolab/issue2379 Favorite todo folder: If the folder is already selected, clicking on it doesn't change the view. ( 758955 )
+
+* kolab/issue 2399 "Out of Office" reply reminder is activated althrough "Out of Office "reply is not activated. ( 762310 )
+
+* kolab/issue 2401 D'n'D attachment of a mail to the desktop: copy lots of different files to the desktop.( 762653 )
+
+* kolab/issue2195 German translation in kontact's Calendar box (long, Deppenapostroph). ( 762985 )
+
+
 
 Merges
 -------
