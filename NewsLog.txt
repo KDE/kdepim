@@ -1,3 +1,16 @@
+Friday, January 18th 2008
+
+Problems addressed
+-------------------
+
+* kolab/issue 2399 "Out of Office" reply reminder is activated althrough "Out of Office "reply is not activated.
+
+* kolab/issue 2401 D'n'D attachment of a mail to the desktop: copy lots of different files to the desktop
+
+Merges
+-------
+* More merges from all of kdepim.
+
 Monday, December 4th 2007
 
 Problems addressed
@@ -12,7 +25,7 @@ New functionality
 
 * prokde35-z Item 65: Merge of the attendee and free-busy tabs into the  main one, according to the usability suggestions and additional comments from the usability team (revision 744005)
 
-* prokde35-z Item 61: Implementation of the xfb concept (revision 744092) 
+* prokde35-z Item 61: Implementation of the xfb concept (revision 744092)
 
 * prokde35-z Item 203: implementation of the concept for better error messages for crypto operations (audit log) (revision 743026)
 
