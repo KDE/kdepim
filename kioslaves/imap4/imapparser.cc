@@ -872,7 +872,7 @@ const mailAddress& imapParser::parseAddress (parseString & inWords, mailAddress&
   inWords.pos++;
   skipWS (inWords);
 
-  retVal.setFullName(rfcDecoder::quoteIMAP(parseLiteralC(inWords)));
+  retVal.setFullName(parseLiteralC(inWords));
   retVal.setCommentRaw(parseLiteralC(inWords));
   retVal.setUser(parseLiteralC(inWords));
   retVal.setHost(parseLiteralC(inWords));
