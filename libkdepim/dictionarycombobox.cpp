@@ -36,7 +36,7 @@
 
 #include <QStringList>
 
-namespace KMail {
+namespace KPIM {
 
   DictionaryComboBox::DictionaryComboBox( QWidget * parent )
     : QComboBox( parent ),
@@ -137,6 +137,6 @@ namespace KMail {
     emit dictionaryChanged( idx );
   }
 
-} // namespace KMail
+} // namespace KPIM
 
 #include "dictionarycombobox.moc"

@@ -29,9 +29,10 @@
     your version.
 */
 
-#ifndef _KMAIL_DICTIONARYCOMBOBOX_H_
-#define _KMAIL_DICTIONARYCOMBOBOX_H_
+#ifndef _KPIM_DICTIONARYCOMBOBOX_H_
+#define _KPIM_DICTIONARYCOMBOBOX_H_
 
+#include "kdepim_export.h"
 #include <QComboBox>
 
 class QStringList;
@@ -40,14 +41,14 @@ namespace Sonnet {
   class Speller;
 }
 
-namespace KMail {
+namespace KPIM {
 
   /**
    * @short A combo box for selecting the dictionary used for spell checking.
    * @author Ingo Kloecker <kloecker@kde.org>
    **/
 
-  class DictionaryComboBox : public QComboBox {
+  class KDEPIM_EXPORT DictionaryComboBox : public QComboBox {
     Q_OBJECT
   public:
     DictionaryComboBox( QWidget * parent=0 );
@@ -78,6 +79,6 @@ namespace KMail {
     Sonnet::Speller *mspeller;
   };
 
-} // namespace KMail
+} // namespace KPIM
 
-#endif // _KMAIL_DICTIONARYCOMBOBOX_H_
+#endif // _KPIM_DICTIONARYCOMBOBOX_H_
