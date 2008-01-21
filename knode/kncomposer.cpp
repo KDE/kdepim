@@ -318,6 +318,14 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   a_ctWordWrap->setText(i18n("&Word Wrap"));
   connect(a_ctWordWrap, SIGNAL(triggered(bool) ), SLOT(slotToggleWordWrap()));
 
+  a_ctAutoSpellChecking = new KToggleAction( KIcon( "tools-check-spelling" ), i18n("&Automatic Spellchecking"), this );
+  actionCollection()->addAction( "options_auto_spellchecking", a_ctAutoSpellChecking );
+  a_ctAutoSpellChecking->setChecked( knGlobals.settings()->autoSpellChecking() );
+  slotUpdateCheckSpellChecking( knGlobals.settings()->autoSpellChecking() );
+  connect(a_ctAutoSpellChecking, SIGNAL(triggered(bool) ), SLOT(slotAutoSpellCheckingToggled()));
+  connect( v_iew->e_dit, SIGNAL(checkSpellingChanged(bool)), this, SLOT(slotUpdateCheckSpellChecking(bool)));
+
+
   //tools menu
 
   action = actionCollection()->addAction("tools_quote");
@@ -437,15 +445,18 @@ KNComposer::~KNComposer()
   delete mSpellingFilter;
   delete e_xternalEditor;  // this also kills the editor process if it's still running
 
-  if(e_ditorTempfile) {
-    delete e_ditorTempfile;
-  }
+  delete e_ditorTempfile;
 
   for ( QList<KNAttachment*>::Iterator it = mDeletedAttachments.begin(); it != mDeletedAttachments.end(); ++it )
     delete (*it);
 
   saveMainWindowSettings(knGlobals.config()->group("composerWindow_options"));
   qDeleteAll( m_listAction );
+}
+
+void KNComposer::slotUpdateCheckSpellChecking(bool _b)
+{
+  a_ctAutoSpellChecking->setChecked(_b);
 }
 
 int KNComposer::listOfResultOfCheckWord( const QStringList & lst , const QString & selectWord)
@@ -552,6 +563,7 @@ void KNComposer::setConfig(bool onlyFonts)
     v_iew->e_dit->setWrapColumnOrWidth( knGlobals.settings()->maxLineLength() );
     a_ctWordWrap->setChecked( knGlobals.settings()->wordWrap() );
 
+    a_ctAutoSpellChecking->setChecked( knGlobals.settings()->autoSpellChecking() );
     Kpgp::Module *pgp = Kpgp::Module::getKpgp();
     a_ctPGPsign->setEnabled(pgp->usePGP());
   }
@@ -1273,6 +1285,11 @@ void KNComposer::slotSetCharsetKeyboard()
 void KNComposer::slotToggleWordWrap()
 {
   v_iew->e_dit->wordWrapToggled(a_ctWordWrap->isChecked());
+}
+
+void KNComposer::slotAutoSpellCheckingToggled()
+{
+  v_iew->e_dit->setCheckSpellingEnabled( a_ctAutoSpellChecking->isChecked() );
 }
 
 

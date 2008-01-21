@@ -138,7 +138,7 @@ class KNComposer : public KXmlGuiWindow {
                   *a_ctAttachmentProperties,
                   *a_ctSetCharsetKeyb;
     KToggleAction *a_ctPGPsign,
-                  *a_ctDoPost, *a_ctDoMail, *a_ctWordWrap;
+                  *a_ctDoPost, *a_ctDoMail, *a_ctWordWrap, *a_ctAutoSpellChecking;
     KSelectAction *a_ctSetCharset;
     bool spellLineEdit;
   protected slots:
@@ -157,6 +157,7 @@ class KNComposer : public KXmlGuiWindow {
     void slotSetCharset(const QString &s);
     void slotSetCharsetKeyboard();
     void slotToggleWordWrap();
+    void slotAutoSpellCheckingToggled();
     void slotUndoRewrap();
     void slotExternalEditor();
 
@@ -165,6 +166,7 @@ class KNComposer : public KXmlGuiWindow {
     void slotConfKeys();
     void slotConfToolbar();
     void slotNewToolbarConfig();
+  void slotUpdateCheckSpellChecking(bool _b);
 
   //------------------------------ </Actions> ----------------------------
 

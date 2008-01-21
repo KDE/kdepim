@@ -237,6 +237,10 @@
       <label>Word wrap at column</label>
       <default>true</default>
     </entry>
+    <entry name="autoSpellChecking" type="Bool">
+      <label>Automatic Spellchecking</label>
+      <default>true</default>
+    </entry>
     <entry name="maxLineLength" key="maxLength" type="Int">
       <label>Maximum line length if word wrap is enabled</label>
       <default>76</default>
