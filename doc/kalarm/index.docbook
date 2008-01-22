@@ -18,14 +18,14 @@
 <firstname>David</firstname>
 <surname>Jarvie</surname>
 <affiliation>
-<address><email>software@astrojar.org.uk</email></address>
+<address><email>djarvie@kde.org</email></address>
 </affiliation>
 </author>
 
 <othercredit role="developer">
 <firstname>David</firstname>
 <surname>Jarvie</surname>
-<affiliation><address><email>software@astrojar.org.uk</email></address></affiliation>
+<affiliation><address><email>djarvie@kde.org</email></address></affiliation>
 <contrib>Developer</contrib>
 </othercredit>
 
@@ -33,7 +33,7 @@
 </authorgroup>
 
 <copyright>
-<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year>
+<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year><year>2007</year><year>2008</year>
 <holder>David Jarvie</holder>
 </copyright>
 
@@ -41,8 +41,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2007-04-16</date>
-<releaseinfo>1.04.11</releaseinfo>
+<date>2008-01-22</date>
+<releaseinfo>1.04.22</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -815,21 +815,19 @@ the selected sound levels.</para></tip>
 </listitem>
 
 <listitem>
-<para>Select the background color for the alarm message window.
-(The color selection list can be configured in the
-<link linkend="preferences-fontcolour">Preferences dialog</link>.)</para>
-</listitem>
-
-<listitem>
 <para>Use the <guibutton>Font &amp; Color...</guibutton> button to
-select a font, or foreground or background color, for the alarm
+select a font, and foreground and background colors, for the alarm
 message. In the <guilabel>Choose Alarm Font &amp; Color</guilabel>
 dialog, check <guilabel>Use default font</guilabel> to display the
 message in whatever font is configured as the default at the time
-the message is displayed. (The default font can be set in the
-<link linkend="preferences-fontcolour">Preferences dialog</link>.)
-To choose a specific font for the message, uncheck
-<guilabel>Use default font</guilabel>.</para>
+the message is displayed. To choose a specific font for the message,
+uncheck <guilabel>Use default font</guilabel>. (The default font, and
+the colors shown in the color selection lists, can be set in the
+<link linkend="preferences-fontcolour">Preferences dialog</link>.)</para>
+
+<para>The selected font and colors are shown in a sample text
+alongside the button. You can edit this text to show special
+characters.</para>
 </listitem>
 
 <listitem>
@@ -4048,14 +4046,14 @@ and the <application>alarm daemon</application>'s application name is
 &kalarm;
 </para>
 <para>
-Program copyright 2001, 2002, 2003, 2004, 2005, 2006 David Jarvie <email>software@astrojar.org.uk</email>
+Program copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 David Jarvie <email>djarvie@kde.org</email>
 </para>
 <para>
 Alarm daemon authors:
 <itemizedlist>
 <listitem><para>Preston Brown <email>pbrown@kde.org</email></para>
 </listitem>
-<listitem><para>David Jarvie <email>software@astrojar.org.uk</email></para>
+<listitem><para>David Jarvie <email>djarvie@kde.org</email></para>
 </listitem>
 <listitem><para>Cornelius Schumacher <email>schumacher@kde.org</email></para>
 </listitem>
@@ -4063,7 +4061,7 @@ Alarm daemon authors:
 </para>
 
 <para>
-Documentation copyright 2001, 2002, 2003, 2004, 2005, 2006 David Jarvie <email>software@astrojar.org.uk</email>
+Documentation copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 David Jarvie <email>djarvie@kde.org</email>
 </para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
