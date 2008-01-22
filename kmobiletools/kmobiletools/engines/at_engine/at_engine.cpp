@@ -87,7 +87,7 @@ AT_EngineFactory::AT_EngineFactory()
 AT_EngineFactory::~AT_EngineFactory()
 {
 }
-AT_Engine *AT_EngineFactory::createObject(QObject *parent, const char */*classname*/, const QStringList &/*args*/ )
+AT_Engine *AT_EngineFactory::createObject(QObject *parent, const char * /*classname*/, const QStringList &/*args*/ )
 {
     return new AT_Engine(parent); /// @TODO we have to specify engine name, perhaps in args
 }
