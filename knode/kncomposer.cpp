@@ -680,8 +680,7 @@ bool KNComposer::hasValidData()
   int sigLength = 0;
   int notQuoted = 0;
   int textLines = 0;
-  //Laurent fixme
-  QStringList text;// = v_iew->e_dit->processedText();
+  QStringList text = v_iew->e_dit->toPlainText().split("\n");
 
   for (QStringList::Iterator it = text.begin(); it != text.end(); ++it) {
 
@@ -878,12 +877,7 @@ bool KNComposer::applyChanges()
           ? KMime::Headers::CE8Bit : KMime::Headers::CEquPr );
   }
 
-  //assemble the text line by line
-  QString tmp;
-  //Laurent : fixme
-  QStringList textLines; //= v_iew->e_dit->processedText();
-  for (QStringList::Iterator it = textLines.begin(); it != textLines.end(); ++it)
-    tmp += *it + '\n';
+  QString tmp = v_iew->e_dit->toPlainText();
 
   // Sign article if needed
   if ( a_ctPGPsign->isChecked() ) {
@@ -1328,16 +1322,7 @@ void KNComposer::slotExternalEditor()
   bool ok=true;
   QTextCodec *codec=KGlobal::charsets()->codecForName(c_harset, ok);
 
-  QString tmp;
-// Laurent fixme
-
-  QStringList textLines;// = v_iew->e_dit->processedText();
-  for (QStringList::Iterator it = textLines.begin(); it != textLines.end();) {
-    tmp += *it;
-    ++it;
-    if (it != textLines.end())
-      tmp+='\n';
-  }
+  QString tmp = v_iew->e_dit->toPlainText();
 
   QByteArray local = codec->fromUnicode(tmp);
   e_ditorTempfile->write(local.data(),local.length());
