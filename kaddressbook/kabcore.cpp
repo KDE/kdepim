@@ -116,8 +116,6 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
   }
   mAddressBook->setErrorHandler( new KABC::GuiErrorHandler( mWidget ) );
 
-  mAddressBook->addCustomField( i18n( "Department" ), KABC::Field::Organization,
-                                "X-Department", "KADDRESSBOOK" );
   mAddressBook->addCustomField( i18n( "Profession" ), KABC::Field::Organization,
                                 "X-Profession", "KADDRESSBOOK" );
   mAddressBook->addCustomField( i18n( "Assistant's Name" ), KABC::Field::Organization,

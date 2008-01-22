@@ -542,6 +542,10 @@ void AddresseeEditorWidget::load()
 
   mRoleEdit->setText( mAddressee.role() );
   mOrgEdit->setText( mAddressee.organization() );
+  mDepartmentEdit->setText( mAddressee.department() );
+  // compatibility with older versions
+  if ( mAddressee.department().isEmpty() )
+    mDepartmentEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Department" ) );
   mURLEdit->setURL( mAddressee.url() );
   mURLEdit->home( false );
   mBlogEdit->setURL( mAddressee.custom( "KADDRESSBOOK", "BlogFeed" ) );
@@ -564,7 +568,6 @@ void AddresseeEditorWidget::load()
   mSpouseEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-SpousesName" ) );
   mManagerEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-ManagersName" ) );
   mAssistantEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-AssistantsName" ) );
-  mDepartmentEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Department" ) );
   mOfficeEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Office" ) );
   mProfessionEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Profession" ) );
   mTitleEdit->setText( mAddressee.title() );
@@ -585,6 +588,8 @@ void AddresseeEditorWidget::save()
 
   mAddressee.setRole( mRoleEdit->text() );
   mAddressee.setOrganization( mOrgEdit->text() );
+  mAddressee.setDepartment( mDepartmentEdit->text() );
+
   QString homepage = mURLEdit->text().stripWhiteSpace();
   if ( homepage.isEmpty() )
      mAddressee.setUrl( KURL() );
@@ -627,10 +632,6 @@ void AddresseeEditorWidget::save()
   else
     mAddressee.removeCustom( "KADDRESSBOOK", "X-AssistantsName" );
 
-  if ( !mDepartmentEdit->text().isEmpty() )
-    mAddressee.insertCustom( "KADDRESSBOOK", "X-Department", mDepartmentEdit->text() );
-  else
-    mAddressee.removeCustom( "KADDRESSBOOK", "X-Department" );
   if ( !mOfficeEdit->text().isEmpty() )
     mAddressee.insertCustom( "KADDRESSBOOK", "X-Office", mOfficeEdit->text() );
   else
