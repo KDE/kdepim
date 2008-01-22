@@ -82,7 +82,7 @@ public:
     std::vector<GpgME::Key> selectedKeys() const;
 
 private:
-    class Private;
+    struct Private;
     kdtools::pimpl_ptr<Private> d;
 };
 
