@@ -203,8 +203,8 @@ void RefreshKeysCommand::Private::mergeKeysAndUpdateKeyCache()
     kdtools::copy_if( keys.begin(), keys.end(), std::back_inserter( sec ),
                       bind( &Key::hasSecret, _1 ) );
 
-    PublicKeyCache::mutableInstance()->insert( keys );
-    SecretKeyCache::mutableInstance()->insert( sec );
+    PublicKeyCache::mutableInstance()->refresh( keys );
+    SecretKeyCache::mutableInstance()->refresh( sec );
 }
 
 void RefreshKeysCommand::Private::addKey( const Key & key )
