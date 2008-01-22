@@ -1,11 +1,18 @@
 Current Release is Proko2 2.1.12
 
+Changes since Proko2 2.1.12 (released x.x.2008)
+
+Fixes
+=====
+
+* Fixed de translation for msgid "Message was signed on %1 with key %2."
+  (kde-i18n rev764792).
+
+
 Changes since Proko2 2.1.11 (released 18.10.2007)
 
 Bugfixes
 ========
-
-That's apparently the correct way to check the error code.
 
 * Kolab/issue2184 Don't crash when trying to save a composer 
   backup copy of a message that is already being sent.
