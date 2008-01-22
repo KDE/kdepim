@@ -81,7 +81,6 @@ private:
             aboutDialog->show();
 
     }
-    void slotCheckConfiguration();
 
 private:    
     QMenu menu;
