@@ -131,7 +131,7 @@ set( _kleopatra_mainwindow_SRCS
      mainwindow.cpp 
      searchbar.cpp
      tabwidget.cpp
-     trayiconlistener.cpp )
+)
 
 if ( KLEO_BUILD_OLD_MAINWINDOW )
   add_definitions( -DKLEO_BUILD_OLD_MAINWINDOW )

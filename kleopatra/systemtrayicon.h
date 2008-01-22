@@ -43,12 +43,27 @@ public:
     explicit SystemTrayIcon( QObject * parent=0 );
     ~SystemTrayIcon();
 
+    void setMainWindow( QWidget * w );
+
+private:
+    virtual QWidget * doCreateMainWindow() const = 0;
+    /* reimp */ bool eventFilter( QObject *, QEvent * );
+
 private:
     class Private;
     kdtools::pimpl_ptr<Private> d;
-    Q_PRIVATE_SLOT( d, void slotOpenCertificateManager() )
     Q_PRIVATE_SLOT( d, void slotAbout() )
+    Q_PRIVATE_SLOT( d, void slotActivated( QSystemTrayIcon::ActivationReason reason=QSystemTrayIcon::Trigger ) )
+    Q_PRIVATE_SLOT( d, void slotEnableDisableActions() )
 };
 
+template <typename T_Widget>
+class SystemTrayIconFor : public SystemTrayIcon {
+public:
+    explicit SystemTrayIconFor( QObject * parent=0 ) : SystemTrayIcon( parent ) {}
+
+private:
+    /* reimp */ QWidget * doCreateMainWindow() const { return new T_Widget; }
+};
 
 #endif /* __KLEOPATRA_SYSTEMTRAYICON_H__ */

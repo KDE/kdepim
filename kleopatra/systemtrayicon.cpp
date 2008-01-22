@@ -66,9 +66,6 @@ public:
     ~Private();
 
 private:
-    void slotOpenCertificateManager() {
-        emit q->activated( QSystemTrayIcon::Trigger );
-    }
     void slotAbout() {
         if ( !aboutDialog ) {
             aboutDialog = new KAboutApplicationDialog( KGlobal::mainComponent().aboutData() );
@@ -79,16 +76,20 @@ private:
             aboutDialog->raise();
         else
             aboutDialog->show();
-
     }
+    void slotActivated( ActivationReason reason=QSystemTrayIcon::Trigger );
+    void slotEnableDisableActions();
 
-private:    
+private:
     QMenu menu;
     QAction openCertificateManagerAction;
     QAction aboutAction;
     QAction quitAction;
 
     QPointer<KAboutApplicationDialog> aboutDialog;
+
+    QPointer<QWidget> mainWindow;
+    QRect previousGeometry;
 };
 
 SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
@@ -97,16 +98,19 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
       openCertificateManagerAction( i18n("&Open Certificate Manager..."), q ),
       aboutAction( i18n("&About %1...", KGlobal::mainComponent().aboutData()->programName() ), q ),
       quitAction( i18n("&Shutdown Kleopatra"), q ),
-      aboutDialog()
+      aboutDialog(),
+      mainWindow(),
+      previousGeometry()
 {
     KDAB_SET_OBJECT_NAME( menu );
     KDAB_SET_OBJECT_NAME( openCertificateManagerAction );
     KDAB_SET_OBJECT_NAME( aboutAction );
     KDAB_SET_OBJECT_NAME( quitAction );
 
-    connect( &openCertificateManagerAction, SIGNAL(triggered()), q, SLOT(slotOpenCertificateManager()) );
+    connect( &openCertificateManagerAction, SIGNAL(triggered()), q, SLOT(slotActivated()) );
     connect( &aboutAction, SIGNAL(triggered()), q, SLOT(slotAbout()) );
     connect( &quitAction, SIGNAL(triggered()), QCoreApplication::instance(), SLOT(quit()) );
+    connect( q, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), q, SLOT(slotActivated(QSystemTrayIcon::ActivationReason)) );
 
     menu.addAction( &openCertificateManagerAction );
     menu.addAction( &aboutAction );
@@ -114,6 +118,8 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
     menu.addAction( &quitAction );
 
     q->setContextMenu( &menu );
+
+    slotEnableDisableActions();
 }
 
 SystemTrayIcon::Private::~Private() {}
@@ -126,6 +132,44 @@ SystemTrayIcon::SystemTrayIcon( QObject * p )
 
 SystemTrayIcon::~SystemTrayIcon() {}
 
+void SystemTrayIcon::setMainWindow( QWidget * mw ) {
+    if ( d->mainWindow )
+        return;
+    d->mainWindow = mw;
+    mw->installEventFilter( this );
+    d->slotEnableDisableActions();
+}
+
+bool SystemTrayIcon::eventFilter( QObject * o, QEvent * e ) {
+    if ( o == d->mainWindow &&
+         ( e->type() == QEvent::Close || e->type() == QEvent::Show || e->type() == QEvent::DeferredDelete ) )
+        QMetaObject::invokeMethod( this, "slotEnableDisableActions", Qt::QueuedConnection );
+    return false;
+}
+
+void SystemTrayIcon::Private::slotActivated( ActivationReason reason ) {
+    if ( reason != QSystemTrayIcon::Trigger )
+        return;
+    if ( !mainWindow ) {
+        mainWindow = q->doCreateMainWindow();
+        assert( mainWindow );
+        mainWindow->installEventFilter( q );
+    }
+    const bool visible = mainWindow->isVisible();
+    if ( visible ) {
+        previousGeometry = mainWindow->geometry();
+        mainWindow->setVisible( false );
+    } else {
+        if ( previousGeometry.isValid() )
+            mainWindow->setGeometry( previousGeometry );
+        mainWindow->setVisible( true );
+    }
+    //slotEnableDisableActions();
+}
+
+void SystemTrayIcon::Private::slotEnableDisableActions() {
+    openCertificateManagerAction.setEnabled( !mainWindow || !mainWindow->isVisible() );
+}
 
 #include "moc_systemtrayicon.cpp"
 

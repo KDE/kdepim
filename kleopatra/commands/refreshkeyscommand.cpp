@@ -80,6 +80,7 @@ private:
     const Mode mode;
     uint m_pubKeysJobs;
     uint m_secKeysJobs;
+    bool canceled;
 
     std::deque<Key> m_pubkeys, m_seckeys;
 };
@@ -107,6 +108,7 @@ RefreshKeysCommand::Private::Private( RefreshKeysCommand * qq, Mode m, KeyListCo
       mode( m ),
       m_pubKeysJobs( 0 ),
       m_secKeysJobs( 0 ),
+      canceled( false ),
       m_pubkeys(),
       m_seckeys()
 {
@@ -137,8 +139,13 @@ void RefreshKeysCommand::Private::startKeyListing( const char* backend, KeyType 
              q, SLOT(addKey(GpgME::Key)) );
     connect( q, SIGNAL(canceled()),
              job, SLOT(slotCancel()) );
-    job->start( QStringList(), type == SecretKeys ); 
+    const GpgME::Error error = job->start( QStringList(), type == SecretKeys );
     ++( type == PublicKeys ? m_pubKeysJobs : m_secKeysJobs );
+    if ( error || error.isCanceled() )
+        if ( type == PublicKeys )
+            publicKeyListingDone( KeyListResult( error ) );
+        else
+            secretKeyListingDone( KeyListResult( error ) );
 }
 
 void RefreshKeysCommand::Private::publicKeyListingDone( const KeyListResult & result )
@@ -228,9 +235,7 @@ void RefreshKeysCommand::doStart() {
 }
 
 void RefreshKeysCommand::doCancel() {
-    // empty implementation, as canceled(), emitted from
-    // Command::cancel(), is connected to Kleo::Job::slotCanceled()
-    // for all our jobs.
+    d->canceled = true;
 }
 
 #undef d

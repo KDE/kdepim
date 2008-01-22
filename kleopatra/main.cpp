@@ -38,7 +38,6 @@
 # include "certmanager.h"
 #else
 # include "mainwindow.h"
-# include "trayiconlistener.h"
 # include <commands/refreshkeyscommand.h>
 #endif
 
@@ -181,7 +180,7 @@ int main( int argc, char** argv )
   KGlobal::locale()->insertCatalog( "libkleopatra" );
   KIconLoader::global()->addAppDir( "libkleopatra" );
 
-  SystemTrayIcon sysTray;
+  SystemTrayIconFor<MainWindow> sysTray;
   sysTray.show();
 
   KSplashScreen splash( UserIcon( "kleopatra_splashscreen" ), Qt::WindowStaysOnTopHint );
@@ -210,12 +209,10 @@ int main( int argc, char** argv )
 
   fillKeyCache( &splash );
 
-  TrayIconListenerFor<MainWindow> trayIconListener( &sysTray );
-
   if ( !daemon ) {
     MainWindow* mainWindow = new MainWindow;
     mainWindow->show();
-    trayIconListener.setMainWindow( mainWindow );
+    sysTray.setMainWindow( mainWindow );
     splash.finish( mainWindow );
   }
 
