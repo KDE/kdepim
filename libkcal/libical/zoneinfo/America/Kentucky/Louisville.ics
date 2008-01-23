@@ -2,7 +2,7 @@ BEGIN:VCALENDAR
 PRODID:-//KDE//NONSGML KCal Olson-VTIMEZONE Converter//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/kde.org/Olson_20070903_1/America/Kentucky/Louisville
+TZID:/kde.org/Olson_20071016_1/America/Kentucky/Louisville
 X-LIC-LOCATION:America/Kentucky/Louisville
 BEGIN:DAYLIGHT
 TZOFFSETFROM:-0500
