@@ -91,11 +91,13 @@ void PhoneTypeCombo::update()
     if ( *it == -1 ) { // "Other..." entry
       insertItem( i18n( "Other..." ) );
     } else {
-      insertItem( KABC::PhoneNumber::typeLabel( *it ) );
+      KABC::PhoneNumber number;
+      number.setType( *it );
+      insertItem( number.typeLabel() );
     }
   }
 
-  setCurrentItem( mTypeList.findIndex( mType ) );
+  setCurrentItem( mLastSelected = mTypeList.findIndex( mType ) );
 
   blockSignals( blocked );
 }
