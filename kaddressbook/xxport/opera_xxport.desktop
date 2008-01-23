@@ -43,7 +43,7 @@ Name[sv]=AdressbokensOpera-överföringsinsticksprogram
 Name[ta]=KAB ஓப்பெரா ஏற்றுமதி சொருகுப்பொருள்
 Name[tg]=Мубодилаи иттилоот бо Opera
 Name[tr]=KAB Opera XXPort Eklentisi
-Name[uk]=Plugin KAB Opera XXPort 
+Name[uk]=Name=Втулок KAB для обміну з Opera
 Name[x-test]=xxKAB Opera XXPort Pluginxx
 Name[zh_CN]=KAB Opera XXPort 插件
 Name[zh_TW]=KAB Opera XXPort 外掛程式
@@ -92,7 +92,7 @@ Comment[sv]=Insticksprogram för import av Opera-kontakter
 Comment[ta]=ஓப்பெரா தொடர்புகளை இறக்குமதி செய்ய சொருகுப்பொருள்
 Comment[tg]=Модул барои воридоти алоқаи Opera
 Comment[tr]=Opera bağlantılarını alma eklentisi
-Comment[uk]=Plug masuk untuk import alamat perhubungan Opera
+Comment[uk]=Втулок для імпорту контактів Opera
 Comment[x-test]=xxPlugin to import Opera contactsxx
 Comment[zh_CN]=导入 Opera 联系人的插件
 Comment[zh_TW]=匯入 Opera 聯絡人的外掛程式
