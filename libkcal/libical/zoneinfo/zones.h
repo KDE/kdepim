@@ -112,6 +112,7 @@ N_("America/Indiana/Indianapolis");
 N_("America/Indiana/Knox");
 N_("America/Indiana/Marengo");
 N_("America/Indiana/Petersburg");
+N_("America/Indiana/Tell_City");
 N_("America/Indiana/Vevay");
 N_("America/Indiana/Vincennes");
 N_("America/Indiana/Winamac");

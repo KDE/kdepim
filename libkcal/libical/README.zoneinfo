@@ -4,9 +4,9 @@ To generate our zoneinfo .ics files:
     from ftp://elsie.nci.nih.gov/pub/ to the tzdata subdir
 
     % cd tzdata
-    % wget ftp://elsie.nci.nih.gov/pub/tzdata2007d.tar.gz
-    % cat tzdata2007d.tar.gz | gunzip -c | tar xvf -
-    % rm tzdata2007d.tar.gz
+    % wget ftp://elsie.nci.nih.gov/pub/tzdata2007g.tar.gz
+    % cat tzdata2007g.tar.gz | gunzip -c | tar xvf -
+    % rm tzdata2007g.tar.gz
     % cd ..
 
  2. Make sure we have the most recent version of the vzic program
