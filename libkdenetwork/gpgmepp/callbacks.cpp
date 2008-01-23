@@ -33,6 +33,7 @@
 #include <unistd.h>
 #include <cstdlib>
 #include <string.h>
+#include <cstdlib>
 
 static inline gpg_error_t makeErrorFromErrno() {
   return gpg_err_make_from_errno( (gpg_err_source_t)22, errno );
