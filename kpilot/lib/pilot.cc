@@ -31,6 +31,7 @@
 #include "pilot.h"
 
 #include <QtCore/QTextCodec>
+#include <QtCore/QMutex>
 
 #include <kcharsets.h>
 #include <kglobal.h>
@@ -44,6 +45,7 @@
 namespace Pilot
 {
 static QTextCodec *codec = 0L;
+static QMutex *mutex = 0L;
 
 
 QString fromPilot( const char *c, int len )
@@ -53,32 +55,45 @@ QString fromPilot( const char *c, int len )
 	{
 		return QString();
 	}
+	mutex->lock();
+	QString str;
 	// See if the C string is short
 	for (int i=0; i<len; ++i)
 	{
 		if (!c[i])
 		{
-			return codec->toUnicode(c,i);
+			str = codec->toUnicode(c,i);
 		}
 	}
 	// Use the whole length
-	return codec->toUnicode(c,len);
+	if (str.isEmpty()) {
+		str = codec->toUnicode(c,len);
+	}
+   mutex->unlock();
+	return str;
 }
 
 QString fromPilot( const char *c )
 {
-	return codec->toUnicode(c);
+   mutex->lock();
+	QString str = codec->toUnicode(c);
+   mutex->unlock();
+	return str;
 }
 
 QByteArray  toPilot( const QString &s )
 {
-	return codec->fromUnicode(s);
+   mutex->lock();
+	QByteArray str = codec->fromUnicode(s);
+   mutex->unlock();
+	return str;
 }
 
 int toPilot( const QString &s, char *buf, int len)
 {
 	FUNCTIONSETUPL(4);
 	// Clear out the entire buffer
+	mutex->lock();
 	memset( buf, 0, len );
 	if (len<1) // short-circuit for bad input
 	{
@@ -101,6 +116,7 @@ int toPilot( const QString &s, char *buf, int len)
 	}
 	// Get what's left (note no NUL termination)
 	memcpy( buf, cbuf.data(), used );
+	mutex->unlock();
 	return used;
 }
 
@@ -112,6 +128,8 @@ int toPilot( const QString &s, unsigned char *buf, int len)
 bool setupPilotCodec(const QString &s)
 {
 	FUNCTIONSETUP;
+	mutex = new QMutex();
+	mutex->lock();
 	QString encoding(KGlobal::charsets()->encodingForName(s));
 
 	DEBUGKPILOT << "Using codec name" << s;
@@ -125,6 +143,7 @@ bool setupPilotCodec(const QString &s)
 		DEBUGKPILOT << "Got codec" << codec->name().constData();
 	}
 
+	mutex->unlock();
 	return codec;
 }
 
@@ -140,7 +159,11 @@ QString category(const struct CategoryAppInfo *info, unsigned int i)
 		return QString();
 	}
 
-	return codec->toUnicode(info->name[i],CATEGORY_SIZE-1);
+	mutex->lock();
+	QString str = codec->toUnicode(info->name[i],
+                                  MIN(strlen(info->name[i]), CATEGORY_SIZE-1));
+	mutex->unlock();
+	return str;
 }
 
 
