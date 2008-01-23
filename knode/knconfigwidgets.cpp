@@ -709,10 +709,11 @@ void KNConfig::SmtpAccountWidget::useExternalMailerToggled( bool b )
 
 void KNConfig::SmtpAccountWidget::loginToggled( bool b )
 {
-  mUser->setEnabled( b );
-  mUserLabel->setEnabled( b );
-  mPassword->setEnabled( b );
-  mPasswordLabel->setEnabled( b );
+  bool canEnable = ( b && !mUseExternalMailer->isChecked() );
+  mUser->setEnabled( canEnable );
+  mUserLabel->setEnabled( canEnable );
+  mPassword->setEnabled( canEnable );
+  mPasswordLabel->setEnabled( canEnable );
   emit changed( true );
 }
 
