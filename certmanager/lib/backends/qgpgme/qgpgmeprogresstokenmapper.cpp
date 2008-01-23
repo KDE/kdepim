@@ -64,7 +64,7 @@ static const struct Desc primegen[] = {
 };
 
 static const struct Desc need_entropy[] = {
-  { 0, I18N_NOOP("Waiting for new entropy from random number generator (you might want to excercise the harddisks or move the mouse)..."), false, false }
+  { 0, I18N_NOOP("Waiting for new entropy from random number generator (you might want to exercise the harddisks or move the mouse)..."), false, false }
 };
 
 static const struct Desc tick[] = {
