@@ -97,11 +97,11 @@ Task::~Task() {
 void Task::setRunning( bool on, KarmStorage* storage, QDateTime whenStarted, QDateTime whenStopped  )
 // Sets a task running or stopped. If the task is to be stopped, whenStarted is not evaluated.
 // on=true if the task shall be started on=false if the task shall be stopped
+// This is the back-end, the front-end is StartTimerFor()
 {
   kdDebug(5970) << "Entering Task::setRunning " << "on=" << on << "whenStarted=" << whenStarted << " whenStopped=" << whenStopped << endl;
   if ( on ) 
   {
-    if (isComplete()) return; // don't start if its marked complete
     if (!_timer->isActive()) 
     {
       _timer->start(1000);
