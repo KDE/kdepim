@@ -29,9 +29,11 @@
 
 #include <errno.h>
 
+#include <qstringlist.h>
 #include <qthread.h>
 
 #include "kpilotdevicelink.h"
+#include "options.h"
 
 class QTimer;
 class QSocketNotifier;
