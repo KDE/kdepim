@@ -51,6 +51,7 @@ class PilotDatabase;     // A database
 class PilotRecord;       // ... has records
 class PilotCategoryInfo; // ... and category information
 
+#define MIN(X, Y)  ((X) < (Y) ? (X) : (Y))
 
 /**
 * The Pilot namespace holds constants that are global for
@@ -148,7 +149,11 @@ namespace Pilot
 	{
 		if ( ( i < CATEGORY_COUNT ) && ( info->name[i][0] ) )
 		{
-			return fromPilot( info->name[i], CATEGORY_SIZE );
+			/*
+			 * Seems to be important that we try to pass the real length here
+			 * to the codec.
+			 */
+			return fromPilot( info->name[i], MIN(strlen(info->name[i]),CATEGORY_SIZE) );
 		}
 		else
 		{

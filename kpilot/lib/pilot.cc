@@ -32,6 +32,7 @@
 #include "options.h"
 
 #include <qtextcodec.h>
+#include <qmutex.h>
 #include <kcharsets.h>
 #include <kglobal.h>
 
@@ -44,25 +45,36 @@
 namespace Pilot
 {
 static QTextCodec *codec = 0L;
+static QMutex* mutex = 0L;
 
 
 QString fromPilot( const char *c, int len )
 {
-	return codec->toUnicode(c,len);
+	mutex->lock();
+	QString str = codec->toUnicode(c,len);
+	mutex->unlock();
+	return str;
 }
 
 QString fromPilot( const char *c )
 {
-	return codec->toUnicode(c);
+	mutex->lock();
+	QString str = codec->toUnicode(c);
+	mutex->unlock();
+	return str;
 }
 
 QCString toPilot( const QString &s )
 {
-	return codec->fromUnicode(s);
+	mutex->lock();
+	QCString str = codec->fromUnicode(s);
+	mutex->unlock();
+	return str;
 }
 
 int toPilot( const QString &s, char *buf, int len)
 {
+	mutex->lock();
 	// See toPilot() below.
 	memset( buf, 0, len );
 	int used = len;
@@ -72,11 +84,13 @@ int toPilot( const QString &s, char *buf, int len)
 		used=len;
 	}
 	memcpy( buf, cbuf.data(), used );
+	mutex->unlock();
 	return used;
 }
 
 int toPilot( const QString &s, unsigned char *buf, int len)
 {
+	mutex->lock();
 	// Clear the buffer
 	memset( buf, 0, len );
 
@@ -95,12 +109,15 @@ int toPilot( const QString &s, unsigned char *buf, int len)
 
 	// Fill the buffer with encoded data.
 	memcpy( buf, cbuf.data(), used );
+	mutex->unlock();
 	return used;
 }
 
 bool setupPilotCodec(const QString &s)
 {
 	FUNCTIONSETUP;
+	mutex = new QMutex();
+	mutex->lock();
 	QString encoding(KGlobal::charsets()->encodingForName(s));
 
 	DEBUGKPILOT << fname << ": Using codec name " << s << endl;
@@ -114,6 +131,7 @@ bool setupPilotCodec(const QString &s)
 		DEBUGKPILOT << fname << ": Got codec " << codec->name() << endl;
 	}
 
+	mutex->unlock();
 	return codec;
 }
 
@@ -129,7 +147,11 @@ QString category(const struct CategoryAppInfo *info, unsigned int i)
 		return QString::null;
 	}
 
-	return codec->toUnicode(info->name[i],CATEGORY_SIZE-1);
+	mutex->lock();
+	QString str = codec->toUnicode(info->name[i],
+                                  MIN(strlen(info->name[i]), CATEGORY_SIZE-1));
+	mutex->unlock();
+	return str;
 }
 
 

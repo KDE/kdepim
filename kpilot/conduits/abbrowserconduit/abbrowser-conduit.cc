@@ -105,18 +105,14 @@ inline int faxTypeOnPC()
 
 using namespace KABC;
 
-AddressBook *AbbrowserConduit::aBook=0L;
-
 /*********************************************************************
                         C O N S T R U C T O R
  *********************************************************************/
 
 
-
-
-
 AbbrowserConduit::AbbrowserConduit(KPilotLink * o, const char *n, const QStringList & a):
 		ConduitAction(o, n, a),
+		aBook(0L),
 		fAddressAppInfo(0L),
 		addresseeMap(),
 		syncedIds(),
@@ -142,7 +138,7 @@ AbbrowserConduit::~AbbrowserConduit()
 		fTicket=0L;
 	}
 
-	_cleanupAddreessBookPointer();
+	_cleanupAddressBookPointer();
 	// unused function warnings.
 	compile_time_check();
 }
@@ -331,7 +327,7 @@ bool AbbrowserConduit::_loadAddressBook()
 		emit logError(i18n("Unable to initialize and load the addressbook for the sync.") );
 		addSyncLogEntry(i18n("Unable to initialize and load the addressbook for the sync.") );
 		WARNINGKPILOT << "Unable to initialize the addressbook for the sync." << endl;
-		_cleanupAddreessBookPointer();
+		_cleanupAddressBookPointer();
 		stopTickle();
 		return false;
 	}
@@ -343,7 +339,7 @@ bool AbbrowserConduit::_loadAddressBook()
 		WARNINGKPILOT << "Unable to lock addressbook for writing " << endl;
 		emit logError(i18n("Unable to lock addressbook for writing.  Can't sync!"));
 		addSyncLogEntry(i18n("Unable to lock addressbook for writing.  Can't sync!"));
-		_cleanupAddreessBookPointer();
+		_cleanupAddressBookPointer();
 		stopTickle();
 		return false;
 	}
@@ -442,7 +438,7 @@ void AbbrowserConduit::_setAppInfo()
 }
 
 
-void AbbrowserConduit::_cleanupAddreessBookPointer()
+void AbbrowserConduit::_cleanupAddressBookPointer()
 {
         if (fCreatedBook)
         {
@@ -1294,11 +1290,7 @@ bool AbbrowserConduit::_equal(const PilotAddress *piAddress, const Addressee &ab
 		DEBUGKPILOT << fname  << ": last name not equal" << endl;
 			return false;
 		}
-		// goofiness that we do in _copy(), duplicated here for your viewing pleasure... *grrr*
-		QString firstAndMiddle = abEntry.givenName();
-		if(!abEntry.additionalName().isEmpty()) firstAndMiddle += CSL1(" ") + abEntry.additionalName();
-
-		if(!_equal(firstAndMiddle, piAddress->getField(entryFirstname)))
+		if(!_equal(abEntry.givenName(), piAddress->getField(entryFirstname)))
 		{
 		DEBUGKPILOT << fname  << ": first name not equal" << endl;
 			return false;

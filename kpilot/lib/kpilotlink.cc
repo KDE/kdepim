@@ -115,7 +115,7 @@ void TickleThread::run()
 			{
 				if (!(--timeout))
 				{
-					QApplication::postEvent(fHandle, new QCustomEvent(static_cast<QEvent::Type>(KPilotLink::EventTickleTimeout)));
+					QApplication::postEvent(fHandle, new QEvent(static_cast<QEvent::Type>(KPilotLink::EventTickleTimeout)));
 					break;
 				}
 			}
@@ -169,13 +169,15 @@ KPilotLink::~KPilotLink()
 	KPILOT_DELETE(fPilotSysInfo);
 }
 
-void KPilotLink::customEvent(QCustomEvent *e)
+/* virtual */ bool KPilotLink::event(QEvent *e)
 {
 	if ((int)e->type() == EventTickleTimeout)
 	{
 		stopTickle();
 		emit timeout();
+		return true;
 	}
+	else return QObject::event(e);
 }
 
 /*
