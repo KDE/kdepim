@@ -542,9 +542,11 @@ void AddresseeEditorWidget::load()
 
   mRoleEdit->setText( mAddressee.role() );
   mOrgEdit->setText( mAddressee.organization() );
+#if KDE_IS_VERSION(3,5,8)
   mDepartmentEdit->setText( mAddressee.department() );
   // compatibility with older versions
   if ( mAddressee.department().isEmpty() )
+#endif
     mDepartmentEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Department" ) );
   mURLEdit->setURL( mAddressee.url() );
   mURLEdit->home( false );
@@ -588,7 +590,14 @@ void AddresseeEditorWidget::save()
 
   mAddressee.setRole( mRoleEdit->text() );
   mAddressee.setOrganization( mOrgEdit->text() );
+#if KDE_IS_VERSION(3,5,8)
   mAddressee.setDepartment( mDepartmentEdit->text() );
+#else
+  if ( !mDepartmentEdit->text().isEmpty() )
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-Department", mDepartmentEdit->text() );
+  else
+    mAddressee.removeCustom( "KADDRESSBOOK", "X-Department" );
+#endif
 
   QString homepage = mURLEdit->text().stripWhiteSpace();
   if ( homepage.isEmpty() )

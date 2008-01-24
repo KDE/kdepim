@@ -502,7 +502,11 @@ KABC::Addressee LDAPSearchDialog::convertLdapAttributesToAddressee( const KPIM::
   if ( addr.organization().isEmpty() )
     addr.setOrganization( asUtf8( attrs[ "Company" ].first() ) );
 
+#if KDE_IS_VERSION(3,5,8)
   addr.setDepartment( asUtf8( attrs[ "department" ].first() ) );
+#else
+  addr.insertCustom( "KADDRESSBOOK", "X-Department", asUtf8( attrs[ "department" ].first() ) );
+#endif
 
   // Address
   KABC::Address workAddr( KABC::Address::Work );
