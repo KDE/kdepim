@@ -553,7 +553,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         QString fwdTo = dlg.attendees().join( ", " );
         if ( fwdTo.isEmpty() )
           return true;
-        result = mail( incidence, c, Attendee::Delegated,
+        result = mail( incidence, c, Attendee::Delegated /*### right ?*/,
                        Scheduler::Request, fwdTo, Forward );
       }
       if ( path == "check_calendar" ) {
