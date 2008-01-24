@@ -558,28 +558,22 @@ void RecurrenceRule::setRecurrenceType( PeriodType period )
   setDirty();
 }
 
-
 QDateTime RecurrenceRule::endDt( bool *result ) const
 {
   if ( result ) *result = false;
   if ( mPeriod == rNone ) return QDateTime();
-  if ( mDuration < 0 ) {
-    if ( result ) result = false;
-    return QDateTime();
-  } else if ( mDuration == 0 ) {
+  if ( mDuration < 0 ) return QDateTime();
+  if ( mDuration == 0 ) {
+    if ( result ) *result = true;
     return mDateEnd;
-  } else {
-    // N occurrences. Check if we have a full cache. If so, return the cached end date.
-    if ( ! mCached ) {
-      // If not enough occurrences can be found (i.e. inconsistent constraints)
-      if ( !buildCache() ) {
-        if ( result ) result = false;
-        return QDateTime();
-      }
-    }
-    return mCachedDateEnd;
   }
-  return QDateTime();
+  // N occurrences. Check if we have a full cache. If so, return the cached end date.
+  if ( ! mCached ) {
+    // If not enough occurrences can be found (i.e. inconsistent constraints)
+    if ( !buildCache() ) return QDateTime();
+  }
+  if ( result ) *result = true;
+  return mCachedDateEnd;
 }
 
 void RecurrenceRule::setEndDt( const QDateTime &dateTime )

@@ -9,6 +9,7 @@ AM_CPPFLAGS = -DKDETOPSRCDIR=\"$(top_srcdir)\"
 check_PROGRAMS = testtostring \
                  testincidence \
                  testcalendar \
+                 fbrecurring \
                  readandwrite \
                  testresource \
                  testfields \
@@ -33,6 +34,10 @@ testcalendar_LDADD = ../libkcal.la
 testtostring_SOURCES = testtostring.cpp
 testtostring_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 testtostring_LDADD = ../libkcal.la
+
+fbrecurring_SOURCES = fbrecurring.cpp
+fbrecurring_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+fbrecurring_LDADD = ../libkcal.la
 
 readandwrite_SOURCES = readandwrite.cpp
 readandwrite_LDFLAGS = $(all_libraries) $(KDE_RPATH)
@@ -88,10 +93,10 @@ check-local: readandwrite testrecurrence testrecurprevious testrecurson testvcal
 #	  perl $(srcdir)/runtestcase.pl readandwrite "ical" $$i; \
 #	done;
 	for i in `find $(srcdir)/data/vCalendar/ -name "*.ics"`; do \
-		perl $(srcdir)/runtestcase.pl testvcalexport "vcal" $$i; \
+	  perl $(srcdir)/runtestcase.pl testvcalexport "vcal" $$i; \
 	done;
 	for i in `find $(srcdir)/data/vCalendar/ -name "*.vcs"`; do \
-		perl $(srcdir)/runtestcase.pl readandwrite "ical" $$i; \
+	  perl $(srcdir)/runtestcase.pl readandwrite "ical" $$i; \
 	done;
 	[ ! -e FAILED ]
 
