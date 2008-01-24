@@ -36,6 +36,7 @@
 #include "format.h"
 #include <zlib.h>
 #include <cassert>
+#include <cstring>
 #include <iostream>
 
 namespace {

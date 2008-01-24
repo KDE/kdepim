@@ -1,5 +1,6 @@
 #include "format.h"
 #include "mmap_manager.h"
+#include <cstring>
 
 #include <cstring>
 
