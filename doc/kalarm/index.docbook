@@ -18,14 +18,14 @@
 <firstname>David</firstname>
 <surname>Jarvie</surname>
 <affiliation>
-<address><email>djarvie@kde.org</email></address>
+<address><email>&David.Jarvie.mail;</email></address>
 </affiliation>
 </author>
 
 <othercredit role="developer">
 <firstname>David</firstname>
 <surname>Jarvie</surname>
-<affiliation><address><email>djarvie@kde.org</email></address></affiliation>
+<affiliation><address><email>&David.Jarvie.mail;</email></address></affiliation>
 <contrib>Developer</contrib>
 </othercredit>
 
@@ -41,8 +41,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2008-01-22</date>
-<releaseinfo>1.04.22</releaseinfo>
+<date>2008-01-23</date>
+<releaseinfo>1.05.00</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -772,9 +772,11 @@ dialog.</para></note>
 
 <itemizedlist>
 <listitem>
-<para>Enter the sound file path, or use the button beside the edit box
-to display a file selection dialog. You can listen to the selected
-file by clicking the play button to the left of the edit field.</para>
+<para>Enter the sound file path, or use the button beside the
+edit box to display a file selection dialog. You can listen to the
+selected file by clicking the play button to the left of the edit
+field. That button then changes function to allow you to stop playing
+when you have heard enough.</para>
 </listitem>
 
 <listitem>
@@ -1039,12 +1041,9 @@ want to display a reminder in advance of the main alarm and of each of
 its recurrences (if any). Enter how long in advance using the edit
 controls beside the checkbox.</para>
 
-<note><para>You can only display a reminder before each repetition of
-an alarm if the repetitions are set up using the
-<guilabel>Recurrence</guilabel> tab. If the
-<guibutton>Simple Repetition</guibutton> button is used instead, a
-reminder will be displayed before the first occurrence
-only.</para></note>
+<note><para>Reminders are not displayed for sub-repetitions within a
+recurrence. Reminders are only shown before each main
+recurrence of the alarm.</para></note>
 
 <para>If the alarm recurs, check <guilabel>Reminder for first
 recurrence only</guilabel> if you only want a reminder before the
@@ -1098,89 +1097,13 @@ showing at the expiry of the late-cancelation time.</para>
 <title>Recurrence</title>
 
 <para>Specify whether or how the alarm should be repeated using the
-<guibutton>Simple Repetition</guibutton> button and the
-<guilabel>Recurrence</guilabel> tab. The
-<guilabel>Recurrence</guilabel> tab allows the greatest flexibility
-in setting up a recurrence, but for simple repetitions which can be
-described in terms of a number of occurrences with a fixed interval
-between, the <guibutton>Simple Repetition</guibutton> button
-provides a simpler dialog.</para>
+<guilabel>Recurrence</guilabel> tab.</para>
 
-<note><para>Reminders are handled differently depending on which
-method is used to set up a repeating alarm. If you use the
-<guibutton>Simple Repetition</guibutton> button a reminder will only
-be displayed before the alarm's first occurrence, whereas if you use
-the <guilabel>Recurrence</guilabel> tab a reminder will be displayed
-before each recurrence.</para></note>
-
-<para>You can also use the <guibutton>Simple Repetition</guibutton>
-button in conjunction with the <guilabel>Recurrence</guilabel> tab to
-set up a repetition within a repetition. In this case, each time the
-alarm is due as specified in the <guilabel>Recurrence</guilabel> tab,
-instead of being triggered just once it is triggered repeatedly in
-accordance with your simple repetition specification. For example,
-to set up an alarm which repeats every hour from noon to 6 pm each
-Thursday, you would use the <guilabel>Recurrence</guilabel> tab to set
-up a weekly recurrence on Thursday at 12:00, and the Simple Repetition
-dialog to specify an interval of 1 hour and either a count of 7 or a
-duration of 6 hours.</para>
-
-<para>The alarm's basic repetition characteristics are displayed for
-convenience in the <guilabel>Alarm</guilabel> tab, beside the
-<guibutton>Simple Repetition</guibutton> button. The recurrence
-interval as set up in the <guilabel>Recurrence</guilabel> tab is shown
-first, followed by the repetition interval set up using the
-<guibutton>Simple Repetition</guibutton> button.</para>
-
-<sect3>
-<title>Simple Repetition dialog</title>
-
-<para>Check <guilabel>Repeat every</guilabel> to set up a repetition,
-or uncheck it to remove the repetition. If
-<guilabel>Repeat every</guilabel> is checked, set up the repetition as
-follows:</para>
-
-<itemizedlist>
-<listitem><para>Enter the time interval between repetitions in the
-controls beside <guilabel>Repeat every</guilabel>. Select the desired
-time units (&eg; <guilabel>days</guilabel>) and then enter the number
-of units.</para>
-</listitem>
-
-<listitem><para>Specify either the repetition count or its
-duration:</para>
-
-<itemizedlist>
-<listitem><para>Select <guilabel>Number of times</guilabel> to enter
-how many times the alarm should be triggered, including the initial
-occurrence. So, for example, to make the alarm occur an additional 3
-times after it first triggers, you should enter 4 here.</para>
-</listitem>
-
-<listitem><para>Select <guilabel>Duration</guilabel> to enter the
-total time period during which the alarm should be repeated. This need
-not be an exact multiple of the repetition interval; it will
-automatically be rounded down when you click
-<guibutton>OK</guibutton>.</para>
-</listitem>
-</itemizedlist>
-</listitem>
-</itemizedlist>
-
-<note><para>A simple repetition's duration is restricted if it is
-used in conjunction with a recurrence set up using the
-<guilabel>Recurrence</guilabel> tab. In this case, each time the alarm
-recurs as specified in the <guilabel>Recurrence</guilabel> tab, any
-still active simple repetition which started at the previous
-recurrence is automatically canceled. This prevents overlapping simple
-repetitions for the same alarm. The simple repetition's duration is
-therefore restricted to be less than the longest interval between
-recurrences.</para></note>
-
-</sect3>
-
-<sect3>
-<title>Recurrence tab</title>
+<note><para>The alarm's basic repetition characteristics are displayed
+for convenience in the title of the <guilabel>Recurrence</guilabel>
+tab. The recurrence interval is shown first, followed by any
+sub-repetition interval set up using the
+<guibutton>Sub-Repetition</guibutton> button.</para></note>
 
 <para>In the <guilabel>Recurrence Rule</guilabel> group box, set the
 recurrence type or time period as follows:</para>
@@ -1254,6 +1177,60 @@ exception, enter a date on the right and press
 the list, enter the new date on the right and press
 <guibutton>Change</guibutton>. To delete an exception, highlight it
 in the list and press <guibutton>Delete</guibutton>.</para>
+
+<sect3>
+<title>Sub-Repetition</title>
+
+<para>You can use the <guibutton>Sub-Repetition</guibutton> button to
+set up a repetition within a repetition. In this case, each time the
+alarm is due as specified in the main recurrence, instead of being
+triggered just once it is triggered repeatedly in accordance with your
+sub-repetition specification. For example, to set up an alarm which
+repeats every hour from noon to 6 pm each Thursday, you would set up a
+weekly recurrence on Thursday at 12:00, and use the Sub-Repetition
+dialog to specify an interval of 1 hour and either a count of 6 or a
+duration of 6 hours.</para>
+
+<para>In the Sub-Repetition dialog which is displayed when you click
+the <guibutton>Sub-Repetition</guibutton> button, check
+<guilabel>Repeat every</guilabel> to set up a repetition, or uncheck
+it to remove the repetition. If <guilabel>Repeat every</guilabel> is
+checked, set up the repetition as follows:</para>
+
+<itemizedlist>
+<listitem><para>Enter the time interval between repetitions in the
+controls beside <guilabel>Repeat every</guilabel>. Select the desired
+time units (&eg; <guilabel>days</guilabel>) and then enter the number
+of units.</para>
+</listitem>
+
+<listitem><para>Specify either the repetition count or its
+duration:</para>
+
+<itemizedlist>
+<listitem><para>Select <guilabel>Number of times</guilabel> to enter
+how many times the alarm should be triggered after the main
+recurrence. So, for example, to make the alarm occur 4 times at each
+main recurrence, &ie; 3 additional times, you should enter 3
+here.</para>
+</listitem>
+
+<listitem><para>Select <guilabel>Duration</guilabel> to enter the
+total time period during which the alarm should be repeated. This need
+not be an exact multiple of the repetition interval; it will
+automatically be rounded down when you click
+<guibutton>OK</guibutton>.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+</itemizedlist>
+
+<note><para>To prevent overlapping sub-repetitions for the same alarm,
+a sub-repetition's duration is restricted to be less than the longest
+interval between main recurrences. Each time the alarm recurs as
+specified in the main recurrence, any still active sub-repetition
+which started at the previous recurrence is automatically
+cancelled.</para></note>
 
 </sect3>
 </sect2>
@@ -2040,27 +2017,6 @@ aspects of &kalarm;'s appearance:</para>
 <itemizedlist>
 
 <listitem>
-<para><guilabel>Alarm List</guilabel> group box: These options control
-what information is initially shown in the alarm list, when &kalarm;
-starts up. (Once &kalarm; has started, use the <guimenu>View</guimenu>
-menu to change what is displayed.)</para>
-
-<itemizedlist>
-<listitem>
-<para><guilabel>Show alarm time</guilabel>: Select this option to show
-the date and time at which each alarm is next scheduled.</para>
-</listitem>
-
-<listitem>
-<para><guilabel>Show time until alarm</guilabel>: Select this option to
-show the length of time remaining before each alarm's next scheduled
-occurrence. The length of time is shown in days (if applicable), hours
-and minutes.</para>
-</listitem>
-</itemizedlist>
-</listitem>
-
-<listitem>
 <para><guilabel>System Tray Tooltip</guilabel> group box: These options
 control what information is shown in the tooltip which appears when the
 mouse cursor hovers over &kalarm;'s system tray icon.</para>
@@ -2104,14 +2060,6 @@ option controls whether alarm message windows are modal or not, &ie;
 whether they grab the keyboard focus when they appear. See the
 <link linkend="message-window">Alarm message window</link> section for
 details.</para>
-</listitem>
-
-<listitem><para><guilabel>Show expired alarms</guilabel>: Select this
-option to initially show expired alarms in the alarm list, when
-&kalarm; starts up. (Once &kalarm; has started, use the
-<menuchoice><guimenu>View</guimenu><guimenuitem>Show Expired
-Alarms</guimenuitem></menuchoice> menu option to change what is
-displayed.)</para>
 </listitem>
 
 <listitem><para><guilabel>System tray icon update interval</guilabel>: Set
@@ -2938,8 +2886,8 @@ bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>,
                      const KURL&amp; <replaceable>audioURL</replaceable>, 
                      int <replaceable>reminder</replaceable>, 
                      const QString&amp; <replaceable>recurrence</replaceable>,
-                     int <replaceable>simpleRepeatInterval</replaceable>, 
-                     int <replaceable>simpleRepeatCount</replaceable>)
+                     int <replaceable>subRepeatInterval</replaceable>, 
+                     int <replaceable>subRepeatCount</replaceable>)
 </synopsis>
 <synopsis>
 bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, 
@@ -3125,17 +3073,18 @@ date.</para>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>simpleRepeatInterval</parameter></term>
+<term><parameter>subRepeatInterval</parameter></term>
 <listitem>
-<para>Specifies the number of minutes between simple repetitions of
-the alarm. Specify 0 for no simple repetition.</para>
+<para>Specifies the number of minutes between sub-repetitions of
+the alarm. Specify 0 for no sub-repetition. Ignored if no recurrence
+is specified.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>simpleRepeatCount</parameter></term>
+<term><parameter>subRepeatCount</parameter></term>
 <listitem>
-<para>Specifies the number of simple repetitions of the alarm,
+<para>Specifies the number of sub-repetitions of the alarm,
 including the initial occurrence.</para>
 </listitem>
 </varlistentry>
@@ -3182,8 +3131,8 @@ bool scheduleFile(const KURL&amp; <replaceable>URL</replaceable>,
                   const KURL&amp; <replaceable>audioURL</replaceable>,
                   int <replaceable>reminder</replaceable>,
                   const QString&amp; <replaceable>recurrence</replaceable>,
-                  int <replaceable>simpleRepeatInterval</replaceable>, 
-                  int <replaceable>simpleRepeatCount</replaceable>)
+                  int <replaceable>subRepeatInterval</replaceable>, 
+                  int <replaceable>subRepeatCount</replaceable>)
 </synopsis>
 <synopsis>
 bool scheduleFile(const KURL&amp; <replaceable>URL</replaceable>,
@@ -3347,17 +3296,18 @@ date.</para>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>simpleRepeatInterval</parameter></term>
+<term><parameter>subRepeatInterval</parameter></term>
 <listitem>
-<para>Specifies the number of minutes between simple repetitions of
-the alarm. Specify 0 for no simple repetition.</para>
+<para>Specifies the number of minutes between sub-repetitions of
+the alarm. Specify 0 for no sub-repetition. Ignored if no recurrence
+is specified.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>simpleRepeatCount</parameter></term>
+<term><parameter>subRepeatCount</parameter></term>
 <listitem>
-<para>Specifies the number of simple repetitions of the alarm,
+<para>Specifies the number of sub-repetitions of the alarm,
 including the initial occurrence.</para>
 </listitem>
 </varlistentry>
@@ -3393,8 +3343,8 @@ bool scheduleCommand(const QString&amp; <replaceable>commandLine</replaceable>,
                      int <replaceable>lateCancel</replaceable>,
                      int <replaceable>flags</replaceable>,
                      const QString&amp; <replaceable>recurrence</replaceable>,
-                     int <replaceable>simpleRepeatInterval</replaceable>, 
-                     int <replaceable>simpleRepeatCount</replaceable>)
+                     int <replaceable>subRepeatInterval</replaceable>, 
+                     int <replaceable>subRepeatCount</replaceable>)
 </synopsis>
 <synopsis>
 bool scheduleCommand(const QString&amp; <replaceable>commandLine</replaceable>,
@@ -3520,17 +3470,18 @@ date.</para>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>simpleRepeatInterval</parameter></term>
+<term><parameter>subRepeatInterval</parameter></term>
 <listitem>
-<para>Specifies the number of minutes between simple repetitions of
-the alarm. Specify 0 for no simple repetition.</para>
+<para>Specifies the number of minutes between sub-repetitions of
+the alarm. Specify 0 for no sub-repetition. Ignored if no recurrence
+is specified.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>simpleRepeatCount</parameter></term>
+<term><parameter>subRepeatCount</parameter></term>
 <listitem>
-<para>Specifies the number of simple repetitions of the alarm,
+<para>Specifies the number of sub-repetitions of the alarm,
 including the initial occurrence.</para>
 </listitem>
 </varlistentry>
@@ -3570,8 +3521,8 @@ bool scheduleEmail(const QString&amp; <replaceable>fromID</replaceable>,
                    int <replaceable>lateCancel</replaceable>,
                    int <replaceable>flags</replaceable>,
                    const QString&amp; <replaceable>recurrence</replaceable>,
-                   int <replaceable>simpleRepeatInterval</replaceable>, 
-                   int <replaceable>simpleRepeatCount</replaceable>)
+                   int <replaceable>subRepeatInterval</replaceable>, 
+                   int <replaceable>subRepeatCount</replaceable>)
 </synopsis>
 <synopsis>
 bool scheduleEmail(const QString&amp; <replaceable>fromID</replaceable>,
@@ -3735,17 +3686,18 @@ date.</para>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>simpleRepeatInterval</parameter></term>
+<term><parameter>subRepeatInterval</parameter></term>
 <listitem>
-<para>Specifies the number of minutes between simple repetitions of
-the alarm. Specify 0 for no simple repetition.</para>
+<para>Specifies the number of minutes between sub-repetitions of
+the alarm. Specify 0 for no sub-repetition. Ignored if no recurrence
+is specified.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>simpleRepeatCount</parameter></term>
+<term><parameter>subRepeatCount</parameter></term>
 <listitem>
-<para>Specifies the number of simple repetitions of the alarm,
+<para>Specifies the number of sub-repetitions of the alarm,
 including the initial occurrence.</para>
 </listitem>
 </varlistentry>
@@ -4015,11 +3967,14 @@ Internet Calendaring and Scheduling Core Object Specification
 (iCalendar)</ulink>. This is the standard format used by all kdepim
 applications. &kalarm; uses certain non-standard properties in the
 Alarm component, in conformance with RFC2445:
+<literal>X-KDE-KALARM-NEXTRECUR</literal>,
+<literal>X-KDE-KALARM-REPEAT</literal>,
 <literal>X-KDE-KALARM-TYPE</literal>,
+<literal>X-KDE-KALARM-NEXTREPEAT</literal>,
 <literal>X-KDE-KALARM-FONTCOLOR</literal>,
 <literal>X-KDE-KALARM-VOLUME</literal>,
 <literal>X-KDE-KALARM-SPEAK</literal>,
-<literal>X-KDE-KALARM-KMAILID</literal>.</para>
+<literal>X-KDE-KALARM-EMAILID</literal>.</para>
 </answer>
 </qandaentry>
 
@@ -4047,14 +4002,14 @@ and the <application>alarm daemon</application>'s application name is
 &kalarm;
 </para>
 <para>
-Program copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 David Jarvie <email>djarvie@kde.org</email>
+Program copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 David Jarvie <email>&David.Jarvie.mail;</email>
 </para>
 <para>
 Alarm daemon authors:
 <itemizedlist>
 <listitem><para>Preston Brown <email>pbrown@kde.org</email></para>
 </listitem>
-<listitem><para>David Jarvie <email>djarvie@kde.org</email></para>
+<listitem><para>David Jarvie <email>&David.Jarvie.mail;</email></para>
 </listitem>
 <listitem><para>Cornelius Schumacher <email>schumacher@kde.org</email></para>
 </listitem>
@@ -4062,7 +4017,7 @@ Alarm daemon authors:
 </para>
 
 <para>
-Documentation copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 David Jarvie <email>djarvie@kde.org</email>
+Documentation copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 David Jarvie <email>&David.Jarvie.mail;</email>
 </para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
