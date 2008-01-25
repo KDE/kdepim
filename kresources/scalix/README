@@ -1,0 +1,9 @@
+The Scalix Resource is based on the code of the Kolab resource as both
+groupware servers use a similar storage concept (storing pim items as
+email attachments on an IMAP server).
+
+However the Scalix Resource has several modifications, e.g. the XML storage
+type was removed and freebusy handling is done via a separated KIO slave.
+
+If you have any problems, questions or suggestions contact me under
+  Tobias Koenig <tokoe@kde.org>

@@ -1,0 +1,8 @@
+[Protocol]
+DocPath=kioslave/scalix.html
+exec=kio_scalix
+input=none
+output=filesystem
+protocol=scalix
+reading=true
+writing=true
