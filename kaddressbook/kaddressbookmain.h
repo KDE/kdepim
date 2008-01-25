@@ -82,7 +82,7 @@ class KAddressBookMain : public KMainWindow, virtual public KAddressBookIface
 
     //override
     void loadProfile( const QString& path );
-    
+
     //override
     void saveToProfile( const QString& path ) const;
 

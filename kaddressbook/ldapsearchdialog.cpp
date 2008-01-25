@@ -563,14 +563,14 @@ KABC::Addressee::List LDAPSearchDialog::importContactsUnlessTheyExist( const QVa
     const QDateTime now = QDateTime::currentDateTime();
     QStringList importedAddrs;
     KABC::Addressee::List localAddrs;
-    
+
     KABLock::self( mCore->addressBook() )->lock( resource );
-    
+
     for ( QValueList<ContactListItem*>::ConstIterator it = selectedItems.begin(); it != selectedItems.end(); ++it ) {
       const ContactListItem * const cli = *it;
       KABC::Addressee addr = convertLdapAttributesToAddressee( cli->mAttrs );
       const KABC::Addressee::List existing = mCore->addressBook()->findByEmail( addr.preferredEmail() );
-    
+
       if ( existing.isEmpty() ) {
         addr.setUid( KApplication::randomString( 10 ) );
         addr.setNote( i18n( "arguments are host name, datetime", "Imported from LDAP directory %1 on %2" ).arg( d->itemToServer[cli], KGlobal::locale()->formatDateTime( now ) ) );
@@ -597,7 +597,7 @@ void LDAPSearchDialog::slotUser2()
 #ifdef KDEPIM_NEW_DISTRLISTS
     KABC::Resource *resource = mCore->requestResource( this );
     if ( !resource ) return;
-    
+
     const QValueList<ContactListItem*> selectedItems = d->selectedItems( mResultListView );
     if ( selectedItems.isEmpty() ) {
       KMessageBox::information( this, i18n( "Please select the contacts you want to add to the distribution list." ), i18n( "No Contacts Selected" ) );
@@ -607,7 +607,7 @@ void LDAPSearchDialog::slotUser2()
     if ( dist.isEmpty() )
       return;
 
-    
+
     KABC::Addressee::List localAddrs = importContactsUnlessTheyExist( selectedItems, resource );
 
     if ( localAddrs.isEmpty() )

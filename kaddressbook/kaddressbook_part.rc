@@ -4,9 +4,9 @@
   <MenuBar>
     <Menu name="file" noMerge="1"><text>&amp;File</text>
       <Menu name="file_new_actions_menu"><text>New</text>
-  	    <Action name="file_new_contact"/>
-	    <Action name="file_new_distributionlist"/>	  		      	  
-	  </Menu>        
+        <Action name="file_new_contact"/>
+        <Action name="file_new_distributionlist"/>
+      </Menu>
       <Separator/>
       <Action name="file_sync"/>
       <Menu name="file_import"><text>&amp;Import</text>
