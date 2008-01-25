@@ -33,6 +33,8 @@
 #ifndef __KLEO_CRYPTOBACKEND_H__
 #define __KLEO_CRYPTOBACKEND_H__
 
+#include <qstring.h>
+
 namespace Kleo {
   class CryptoConfig;
   class KeyListJob;
@@ -104,7 +106,8 @@ namespace Kleo {
     virtual KeyGenerationJob  * keyGenerationJob() const = 0;
     virtual ImportJob         * importJob() const = 0;
     virtual ExportJob         * publicKeyExportJob( bool armor=false ) const = 0;
-    virtual ExportJob         * secretKeyExportJob( bool armor=false ) const = 0;
+    // @param charset the encoding of the passphrase in the exported file
+    virtual ExportJob         * secretKeyExportJob( bool armor=false, const QString& charset = QString::null ) const = 0;
     virtual DownloadJob       * downloadJob( bool armor=false ) const = 0;
     virtual DeleteJob         * deleteJob() const = 0;
     virtual SignEncryptJob    * signEncryptJob( bool armor=false, bool textMode=false ) const = 0;

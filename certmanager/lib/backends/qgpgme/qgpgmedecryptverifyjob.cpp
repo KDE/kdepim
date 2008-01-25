@@ -82,6 +82,7 @@ Kleo::QGpgMEDecryptVerifyJob::exec( const QByteArray & cipherText, QByteArray & 
   const std::pair<GpgME::DecryptionResult,GpgME::VerificationResult> result =
     mCtx->decryptAndVerify( *mInData, *mOutData );
   plainText = mOutDataDataProvider->data();
+  getAuditLog();
   return result;
 }
 

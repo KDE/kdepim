@@ -66,6 +66,8 @@ namespace Kleo {
 
     virtual void showErrorDialog( QWidget * parent=0, const QString & caption=QString::null ) const;
 
+    virtual QString auditLogAsHtml() const;
+
   public slots:
     virtual void slotCancel() = 0;
 

@@ -36,6 +36,8 @@
 
 #include "qgpgmesignjob.h"
 
+#include "ui/messagebox.h"
+
 #include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
 
@@ -44,7 +46,6 @@
 #include <gpgmepp/data.h>
 #include <gpgmepp/key.h>
 
-#include <kmessagebox.h>
 #include <klocale.h>
 
 #include <assert.h>
@@ -84,6 +85,7 @@ GpgME::Error Kleo::QGpgMESignJob::start( const std::vector<GpgME::Key> & signers
 						  
   if ( err )
     deleteLater();
+  mResult = GpgME::SigningResult( err );
   return err;
 }
 
@@ -95,19 +97,17 @@ GpgME::SigningResult Kleo::QGpgMESignJob::exec( const std::vector<GpgME::Key> & 
     return mResult = GpgME::SigningResult( 0, err );
   mResult = mCtx->sign( *mInData, *mOutData, mode );
   signature = mOutDataDataProvider->data();
+  getAuditLog();
   return mResult;
 }
 
 void Kleo::QGpgMESignJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mResult, mOutDataDataProvider->data() );
+  emit result( mResult = mCtx->signingResult(), mOutDataDataProvider->data() );
 }
 
 void Kleo::QGpgMESignJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
-  if ( !mResult.error() || mResult.error().isCanceled() )
-    return;
-  const QString msg = i18n("Signing failed: %1")
-    .arg( QString::fromLocal8Bit( mResult.error().asString() ) );
-  KMessageBox::error( parent, msg, caption );
+  if ( mResult.error() && !mResult.error().isCanceled() )
+      Kleo::MessageBox::error( parent, mResult, this, caption );
 }
 
 #include "qgpgmesignjob.moc"

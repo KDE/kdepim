@@ -8,6 +8,7 @@ noinst_LTLIBRARIES = libkleopatra_ui.la
 
 libkleopatra_ui_la_SOURCES = \
         kdhorizontalline.cpp \
+	messagebox.cpp \
 	progressbar.cpp \
 	progressdialog.cpp \
 	keylistview.cpp \
@@ -27,6 +28,7 @@ libkleopatra_ui_la_SOURCES = \
 kleodir = $(includedir)/kleo
 kleo_HEADERS = \
         kdhorizontalline.h \
+	messagebox.h \
 	progressbar.h \
 	progressdialog.h \
 	keylistview.h \

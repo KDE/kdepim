@@ -57,7 +57,7 @@ namespace Kleo {
   class QGpgMESecretKeyExportJob : public ExportJob {
     Q_OBJECT
   public:
-    QGpgMESecretKeyExportJob( bool armour );
+    QGpgMESecretKeyExportJob( bool armour, const QString& charset );
     ~QGpgMESecretKeyExportJob();
 
     /*! \reimp from ExportJob */
@@ -77,6 +77,7 @@ namespace Kleo {
     QByteArray mKeyData;
     int mError;
     bool mArmour;
+    QString mCharset;
   };
 
 }

@@ -36,8 +36,7 @@
 
 #include "qgpgmeencryptjob.h"
 
-#include <klocale.h>
-#include <kmessagebox.h>
+#include "ui/messagebox.h"
 
 #include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
@@ -45,6 +44,8 @@
 #include <gpgmepp/context.h>
 #include <gpgmepp/encryptionresult.h>
 #include <gpgmepp/data.h>
+
+#include <klocale.h>
 
 #include <assert.h>
 
@@ -78,6 +79,7 @@ GpgME::Error Kleo::QGpgMEEncryptJob::start( const std::vector<GpgME::Key> & reci
 						  
   if ( err )
     deleteLater();
+  mResult = GpgME::EncryptionResult( err );
   return err;
 }
 
@@ -90,19 +92,17 @@ GpgME::EncryptionResult Kleo::QGpgMEEncryptJob::exec( const std::vector<GpgME::K
     alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None;
   mResult = mCtx->encrypt( recipients, *mInData, *mOutData, flags );
   ciphertext = mOutDataDataProvider->data();
+  getAuditLog();
   return mResult;
 }
 
 void Kleo::QGpgMEEncryptJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mResult, mOutDataDataProvider->data() );
+  emit result( mResult = mCtx->encryptionResult(), mOutDataDataProvider->data() );
 }
 
 void Kleo::QGpgMEEncryptJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
-  if ( !mResult.error() || mResult.error().isCanceled() )
-    return;
-  const QString msg = i18n("Encryption failed: %1")
-    .arg( QString::fromLocal8Bit( mResult.error().asString() ) );
-  KMessageBox::error( parent, msg, caption );
+  if ( mResult.error() && !mResult.error().isCanceled() )
+      Kleo::MessageBox::error( parent, mResult, this, caption );
 }
 
 #include "qgpgmeencryptjob.moc"
