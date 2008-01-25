@@ -22,6 +22,10 @@
 
 #include "calendarlocal.h"
 
+extern "C" {
+#include "icaltimezone.h"
+}
+
 #include <kaboutdata.h>
 #include <kapplication.h>
 #include <kdebug.h>
@@ -56,6 +60,9 @@ int main( int argc, char **argv )
   if ( args->count() < 1 ) {
     args->usage( "Wrong number of arguments." );
   }
+
+  // use zoneinfo data from source dir
+  set_zone_directory( KDETOPSRCDIR "/libkcal/libical/zoneinfo" );
 
   QString input = QFile::decodeName( args->arg( 0 ) );
   kdDebug(5800) << "Input file: " << input << endl;

@@ -1,5 +1,10 @@
-INCLUDES = -I$(top_srcdir)/libkcal -I$(top_srcdir) $(all_includes)
+INCLUDES = -I$(top_srcdir)/libkcal \
+  -I$(srcdir)/../libical/src/libical \
+  -I$(srcdir)/../libical/src/libicalss -I../libical/src/libical \
+  -I../libical/src/libicalss -I$(srcdir)/../versit \
+  -I$(top_srcdir) $(all_includes)
 
+AM_CPPFLAGS = -DKDETOPSRCDIR=\"$(top_srcdir)\"
 
 check_PROGRAMS = testtostring \
                  testincidence \
@@ -12,7 +17,8 @@ check_PROGRAMS = testtostring \
                  testrecurprevious \
                  testrecurson \
                  testrecurrencetype \
-                 testvcalexport
+                 testvcalexport \
+                 testfb
 
 
 METASOURCES = AUTO
@@ -66,22 +72,26 @@ testfields_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 testfields_LDADD   = ../libkcal.la
 testfields_CXXFLAGS= -DINPUT='"$(srcdir)/data/test_pilot.ics"'
 
+testfb_SOURCES = testfb.cpp
+testfb_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+testfb_LDADD = ../libkcal.la
+
 TESTFILES = test1.ics test2.ics test3.ics test4.ics test5.ics test_Mozilla.ics
 
 check-local: readandwrite testrecurrence testrecurprevious testrecurson testvcalexport
-	rm -f FAILED; \
+	rm -f FAILED;
 	for i in `find $(srcdir)/data/RecurrenceRule/ -name "*.ics"`; do \
 	  perl $(srcdir)/runtestcase.pl testrecurrence "next" $$i; \
-	done; \
+	done;
 	for i in `find $(srcdir)/data/RecurrenceRule/ -name "*.ics"`; do \
 	  perl $(srcdir)/runtestcase.pl testrecurprevious "prev" $$i; \
-	done; \
+	done;
 	for i in `find $(srcdir)/data/RecurrenceRule/ -name "*.ics"`; do \
 	  perl $(srcdir)/runtestcase.pl testrecurson "recurson" $$i; \
-	done; \
-	for i in `find $(srcdir)/data/Compat/ -name "*.ics"`; do \
-	  perl $(srcdir)/runtestcase.pl readandwrite "ical" $$i; \
-	done; \
+	done;
+#	for i in `find $(srcdir)/data/Compat/ -name "*.ics"`; do \
+#	  perl $(srcdir)/runtestcase.pl readandwrite "ical" $$i; \
+#	done;
 	for i in `find $(srcdir)/data/vCalendar/ -name "*.ics"`; do \
 	  perl $(srcdir)/runtestcase.pl testvcalexport "vcal" $$i; \
 	done;
