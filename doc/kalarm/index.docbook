@@ -33,7 +33,7 @@
 </authorgroup>
 
 <copyright>
-<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year>
+<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year><year>2007</year><year>2008</year>
 <holder>David Jarvie</holder>
 </copyright>
 
@@ -145,9 +145,10 @@ buttons.</para>
 <para>The main &kalarm; window displays the current list of pending
 alarms, showing their times, repetition intervals, colors, and
 message texts, names of files to display, commands to execute or email
-subjects. (For a recurring alarm or an alarm with a reminder, the time
-shown is its next scheduled trigger time.) An icon at the left of each
-alarm text/file/command/email subject indicates the type of
+subjects. (For a recurring alarm, the time shown is its next scheduled
+trigger time. For an alarm with a reminder, the time shown is the time
+of the alarm proper, not the reminder time.) An icon at the left of
+each alarm text/file/command/email subject indicates the type of
 alarm.</para>
 
 <screenshot>
@@ -758,7 +759,7 @@ synthesizer, &eg; <application>Festival</application>.</para>
 <para><guilabel>Sound file</guilabel> to play an audio file. Use the
 button on the right to display the Sound File dialog which lets you
 select a file to play and set volume and repetition options. If you
-hover the mouse over the button, a tooltip will display the audio file
+hover the mouse over the selector, a tooltip will display the audio file
 currently selected.</para>
 
 <note><para>&kalarm; uses the &arts; sound server for repetition and
@@ -817,21 +818,19 @@ the selected sound levels.</para></tip>
 </listitem>
 
 <listitem>
-<para>Select the background color for the alarm message window.
-(The color selection list can be configured in the
-<link linkend="preferences-fontcolour">Preferences dialog</link>.)</para>
-</listitem>
-
-<listitem>
 <para>Use the <guibutton>Font &amp; Color...</guibutton> button to
-select a font, or foreground or background color, for the alarm
+select a font, and foreground and background colors, for the alarm
 message. In the <guilabel>Choose Alarm Font &amp; Color</guilabel>
 dialog, check <guilabel>Use default font</guilabel> to display the
 message in whatever font is configured as the default at the time
-the message is displayed. (The default font can be set in the
-<link linkend="preferences-fontcolour">Preferences dialog</link>.)
-To choose a specific font for the message, uncheck
-<guilabel>Use default font</guilabel>.</para>
+the message is displayed. To choose a specific font for the message,
+uncheck <guilabel>Use default font</guilabel>. (The default font, and
+the colors shown in the color selection lists, can be set in the
+<link linkend="preferences-fontcolour">Preferences dialog</link>.)</para>
+
+<para>The selected font and colors are shown in a sample text
+alongside the button. You can edit this text to show special
+characters.</para>
 </listitem>
 
 <listitem>
@@ -846,20 +845,45 @@ dialog:</para>
 shell command to execute before the alarm is displayed.  Note that
 &kalarm; will wait for the command to complete before displaying the
 alarm.</para>
+
+<para>A pre-alarm action is only executed once when the alarm message
+is initially displayed, including when a reminder message is replaced
+by the actual alarm message. It is <emphasis>not</emphasis> executed
+in any of the following circumstances:</para>
+
+<itemizedlist>
+<listitem><para>When a reminder message is displayed.</para></listitem>
+<listitem><para>When the message is redisplayed after deferring the
+alarm.</para></listitem>
+<listitem><para>When the message was displaying at the time you logged
+off and is then restored when you log back in.</para></listitem>
+<listitem><para>When a recurring alarm triggers but the alarm message
+(or a deferred alarm message) from a previous occurrence of the alarm
+is still visible; in other words, when the previous occurrence of the
+alarm has not yet been acknowledged.</para></listitem>
+</itemizedlist>
 </listitem>
 
 <listitem>
 <para>In the <guilabel>Post-alarm action</guilabel> field, enter a
-shell command to execute when the alarm window is closed.</para>
+shell command to execute when the alarm is acknowledged (whether by
+clicking <guibutton>Close</guibutton> or by using the close button
+in the window's titlebar). It is <emphasis>not</emphasis>
+executed in any of the following circumstances:</para>
+
+<itemizedlist>
+<listitem><para>When a reminder message is closed.</para></listitem>
+<listitem><para>When you defer the alarm, except when the deferred
+alarm is finally acknowledged.</para></listitem>
+<listitem><para>When the alarm message is closed due to logging
+out.</para></listitem>
+</itemizedlist>
 </listitem>
 </itemizedlist>
 
 <para>See the description of Command alarms below for details of how
 shell commands are executed.</para>
 
-<para>Note that special actions are not executed if the alarm was
-displaying at the time you logged off and is then restored when you
-log in.</para>
 </listitem>
 </itemizedlist>
 </listitem>
@@ -4019,7 +4043,7 @@ who kindly agreed to allow the name &kalarm; to be used by this
 &install.intro.documentation;
 
 <para>&kalarm; is available for &kde; 2 and as a standalone package for
-&kde;3 from <ulink url="http://www.astrojar.org.uk/linux/kalarm.html">http://www.astrojar.org.uk/linux/kalarm.html</ulink>
+&kde;3 from <ulink url="http://www.astrojar.org.uk/kalarm">http://www.astrojar.org.uk/kalarm</ulink>
 </para>
 
 </sect1>
@@ -4056,7 +4080,7 @@ vary depending on your platform and configuration.</para>
 
 <para>You can find a list of changes in the
 <filename>ChangeLog</filename> file, or at <ulink
-url="http://www.astrojar.org.uk/linux/kalarm.html">http://www.astrojar.org.uk/linux/kalarm.html</ulink>.</para>
+url="http://www.astrojar.org.uk/kalarm">http://www.astrojar.org.uk/kalarm</ulink>.</para>
 </sect1>
 
 <sect1 id="compilation">
