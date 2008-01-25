@@ -211,7 +211,8 @@ instead of icons.</para>
 
 <para>If you dislike the sidebar, you can simply hide it by dragging the
 splitter. An alternative navigation between part is provided by the 
-<guilabel>navigator</guilabel> toolbar, which can be freely positioned.</para>
+<guilabel>navigator</guilabel> toolbar, which will always be aligned on the opposite
+side of the mainwindow from the side pane.</para>
 
 </sect1>
 
@@ -331,7 +332,9 @@ object.</para>
 </caption>
 </mediaobject>
 </screenshot>
-
+<para>
+Another common action is the <guimenuitem>Synchronize</guimenuitem> action. It synchronizes mail and groupware folders depending on the active component. E.g., if the Calendar component is active, the button synchronizes all Calendar folders. In the Summary, the action synchronizes all folders independent of their content. 
+</para>
 </sect1>
 
 <sect1 id="side-pane-drag-and-drop">
@@ -457,6 +460,20 @@ attendees.
 whereas dragging onto the Calendar creates an Event. More on this
 distinction is available in the 
 <ulink url="help:korganizer">&korganizer; documentation</ulink>
+</para>
+
+</sect2>
+
+<sect2 id="side-pane-drag-and-drop-knotes-todo">
+<title>&knotes; -> &korganizer;'s Todo List</title>
+
+<para>
+Dragging a note from &knotes; to the icon for &korganizer;'s Todo List
+(<guiicon><inlinemediaobject><imageobject> <imagedata
+                                           fileref="todo-list-sidebar-icon.png" 
+                                           format="PNG"/>
+</imageobject></inlinemediaobject></guiicon>) will create a new Todo
+with the title set to the title of the note and the description set to the note itself.
 </para>
 
 </sect2>
@@ -929,7 +946,14 @@ documentation</ulink>.
 </sect2>
 
 </sect1>
-
+<sect1 id="kontact-configure-profiles">
+<title>&kontact; Profiles</title>
+<para>&kontact;'s profile support makes it possible to load and save user settings in profiles.
+The settings stored in the profile include typical Look&amp;Feel related options such as app-specific color schemes, icon sets, toolbar layout and application defaults. Personal information, e.g. accounts and identities are not stored in profiles. 
+Two default profiles are provided by Kontact: &quot;&kontact; Style&quot;, which contains the default &kontact; settings, and &quot;Outlook Style&quot;, adapting &kontact; to Microsoft Outlook Look&amp;Feel.
+The user can adapt existing profiles, create new profiles from his current settings, and import and export profiles. To manage profiles, choose &quot;Configure Profiles&quot; from the &quot;Settings&quot; menu.
+</para>
+</sect1>
 </chapter>
 
 

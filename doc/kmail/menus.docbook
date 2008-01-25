@@ -692,6 +692,30 @@ This is only available for &imap; folders.</para>
 <term>
 <menuchoice>
 <guimenu>Folder</guimenu>
+<guimenuitem>Troubleshoot IMAP Cache...</guimenuitem>
+</menuchoice>
+</term>
+<listitem>
+<para>Opens a dialog that helps to solve problems with synchronizing disconnected &imap; folders.
+</para>
+<para><guilabel>Rebuild Index</guilabel>. As a first step to solve synchronization problems, you can rebuild the index file. This will take some time, but can not cause any problems or data loss.
+You can select if the indexes should be rebuilt for the selected folder only (<guilabel>Only current folder</guilabel>), the selected folder and its folder subtree (<guilabel>Current folder and all subfolders</guilabel>), or for the whole account (<guilabel>All folders of this account</guilabel>).
+</para>
+<para>
+<guilabel>Refresh Cache</guilabel>: 
+If rebuilding the index does not solve the problem, you can refresh the local IMAP cache for the current folder and all subfolders. The cache is deleted and the mails are refetched from the server. This will delete all your local changes in these folders!
+</para>
+<para>
+This option is only available for disconnected &imap; folders.
+</para>
+</listitem>
+</varlistentry>
+
+
+<varlistentry>
+<term>
+<menuchoice>
+<guimenu>Folder</guimenu>
 <guimenuitem>Move All Messages to Trash</guimenuitem>
 </menuchoice>
 </term>
