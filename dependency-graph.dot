@@ -32,7 +32,6 @@ digraph "inter-dependency graph for kdepim" {
         "libkcal" -> "korganizer";
         "libkcal" -> "kpilot";
         "libkcal" -> "kresources";
-        "libkcal" -> "ksync";
         "libkcal" -> "libkdepim";
         "libkcal" -> "libkpimexchange";
         "libkcal" -> "plugins";
