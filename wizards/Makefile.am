@@ -5,16 +5,16 @@ INCLUDES = -I$(top_srcdir)/libkpimidentities -I$(top_srcdir)/libkcal \
            -I$(top_srcdir)/knotes \
            -I$(top_srcdir)/certmanager/lib \
            -I$(top_builddir)/kresources/groupwise \
-	   -I$(top_builddir)/kresources/lib \
+           -I$(top_builddir)/kresources/lib \
            -I$(top_srcdir)/kresources/lib \
            $(all_includes)
 
 bin_PROGRAMS = groupwarewizard egroupwarewizard sloxwizard kolabwizard \
-               groupwisewizard exchangewizard
+               groupwisewizard exchangewizard scalixwizard
 
 kde_module_LTLIBRARIES = libegroupwarewizard.la libsloxwizard.la \
                          libkolabwizard.la libgroupwisewizard.la \
-                         libexchangewizard.la
+                         libexchangewizard.la libscalixwizard.la
 
 
 groupwarewizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
@@ -91,11 +91,25 @@ exchangewizard_LDADD = libexchangewizard.la
 exchangewizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
 exchangewizard_SOURCES = exchangemain.cpp
 
+# Scalix
+libscalixwizard_la_LDFLAGS = -avoid-version -no-undefined $(all_libraries)
+libscalixwizard_la_LIBADD = $(top_builddir)/kresources/scalix/kcal/libkcalscalix.la \
+                           $(top_builddir)/kresources/scalix/kabc/libkabcscalix.la \
+                           $(top_builddir)/libkcal/libkcal.la \
+                           $(top_builddir)/libkdepim/libkdepim.la \
+                           $(top_builddir)/libkpimidentities/libkpimidentities.la
+
+libscalixwizard_la_SOURCES = scalixwizard.cpp kmailchanges.cpp scalixconfig.kcfgc \
+  scalixkmailchanges.cpp
+
+scalixwizard_LDADD = libscalixwizard.la $(LIB_KDEUI)
+scalixwizard_LDFLAGS = $(all_libraries) $(KDE_RPATH)
+scalixwizard_SOURCES = scalixmain.cpp
 
 noinst_HEADERS = egroupwarewizard.h kmailchanges.h kolabwizard.h sloxwizard.h \
                  groupwisewizard.h exchangewizard.h
 
-kde_kcfg_DATA = egroupware.kcfg slox.kcfg kolab.kcfg groupwise.kcfg
+kde_kcfg_DATA = egroupware.kcfg slox.kcfg kolab.kcfg groupwise.kcfg scalix.kcfg
 
 messages: rc.cpp
 	$(XGETTEXT) *.cpp -o $(podir)/kdepimwizards.pot

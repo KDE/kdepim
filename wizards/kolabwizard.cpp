@@ -297,13 +297,6 @@ KolabWizard::KolabWizard() : KConfigWizard( new KolabPropagator )
   mKolab2 = new QRadioButton( i18n ( "Kolab 2" ), bg );
   topLayout->addMultiCellWidget( bg, 6, 6, 0, 1 );
 
-  //DF: I don't see the point in showing the user those pages.
-  //They are very 'internal' and of no use to anyone other than developers.
-  //(This is even more true for the rules page. The changes page is sort of OK)
-
-  setupRulesPage();
-  setupChangesPage();
-
   setInitialSize( QSize( 600, 300 ) );
 }
 
