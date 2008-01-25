@@ -1,5 +1,5 @@
 //
-//  Copyright (C) 2005 - 2006 Kevin Krammer <kevin.krammer@gmx.at>
+//  Copyright (C) 2005 - 2008 Kevin Krammer <kevin.krammer@gmx.at>
 //  Copyright (C) 2005 Tobias Koenig <tokoe@kde.org>
 //
 //  This program is free software; you can redistribute it and/or modify
@@ -214,7 +214,7 @@ int KABCClient::performAdd()
         if (addressee.isEmpty()) continue;
 
         // make sure we really append and don't overwrite
-        if (uids.find(addressee.uid()) != uids.end())
+        if (addressee.uid().isEmpty() || uids.find(addressee.uid()) != uids.end())
         {
             addressee.setUid(KRandom::randomString(10));
             uids.insert(addressee.uid());
