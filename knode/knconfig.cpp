@@ -611,6 +611,7 @@ KNConfig::ReadNewsNavigation::ReadNewsNavigation()
   m_arkThreadReadCloseThread=conf->readBoolEntry("markThreadReadCloseThread", false);
   i_gnoreThreadGoNext=conf->readBoolEntry("ignoreThreadGoNext", false);
   i_gnoreThreadCloseThread=conf->readBoolEntry("ignoreThreadCloseThread", false);
+  mLeaveGroupMarkAsRead = conf->readBoolEntry( "leaveGroupMarkAsRead", false );
 }
 
 
@@ -634,6 +635,7 @@ void KNConfig::ReadNewsNavigation::save()
   conf->writeEntry("markThreadReadCloseThread", m_arkThreadReadCloseThread);
   conf->writeEntry("ignoreThreadGoNext", i_gnoreThreadGoNext);
   conf->writeEntry("ignoreThreadCloseThread", i_gnoreThreadCloseThread);
+  conf->writeEntry("leaveGroupMarkAsRead=true", mLeaveGroupMarkAsRead );
   conf->sync();
   d_irty = false;
 }

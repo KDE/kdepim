@@ -280,13 +280,15 @@ class KDE_EXPORT ReadNewsNavigation : public Base {
     bool markThreadReadCloseThread()const  { return m_arkThreadReadCloseThread; }
     bool ignoreThreadGoNext()const         { return i_gnoreThreadGoNext; }
     bool ignoreThreadCloseThread()const   { return i_gnoreThreadCloseThread; }
+    bool leaveGroupMarkAsRead() const    { return mLeaveGroupMarkAsRead; }
 
   protected:
     bool  m_arkAllReadGoNext,
           m_arkThreadReadGoNext,
           m_arkThreadReadCloseThread,
           i_gnoreThreadGoNext,
-          i_gnoreThreadCloseThread;
+          i_gnoreThreadCloseThread,
+          mLeaveGroupMarkAsRead;
 
 };
 
