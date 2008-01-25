@@ -59,8 +59,8 @@ k_dcop:
   void fromKMailDelIncidence( const QString& type, const QString& resource,
                               const QString& xml );
   void fromKMailRefresh( const QString& type, const QString& resource );
-  void fromKMailAddSubresource( const QString& type, const QString& resource, 
-                                const QString& label, bool writable, 
+  void fromKMailAddSubresource( const QString& type, const QString& resource,
+                                const QString& label, bool writable,
                                 bool alarmRelevant );
   void fromKMailDelSubresource( const QString& type, const QString& resource );
   void fromKMailAsyncLoadResult( const QMap<Q_UINT32, QString>& map, const QString& type,
@@ -88,6 +88,10 @@ public:
 
   bool kmailGetAttachment( KURL& url, const QString& resource, Q_UINT32 sernum,
                            const QString& filename );
+  bool kmailAttachmentMimetype( QString &mimeType, const QString &resource,
+                                Q_UINT32 sernum, const QString &filename );
+  bool kmailListAttachments( QStringList &list, const QString &resource,
+                             Q_UINT32 sernum );
   bool kmailDeleteIncidence( const QString& resource, Q_UINT32 sernum );
   bool kmailUpdate( const QString& resource,
                     Q_UINT32& sernum,
@@ -102,6 +106,10 @@ public:
   bool kmailStorageFormat( KMailICalIface::StorageFormat& type, const QString& folder);
 
   bool kmailTriggerSync( const QString& contentsType );
+  bool kmailAddSubresource( const QString& resource,
+                            const QString& parent,
+                            const QString& contentsType );
+  bool kmailRemoveSubresource( const QString& resource );
 
 private slots:
   virtual void unregisteredFromDCOP( const QCString& );

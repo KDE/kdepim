@@ -1,6 +1,6 @@
 /*
     This file is part of libkabc and/or kaddressbook.
-    Copyright (c) 2002 - 2004 Klar‰lvdalens Datakonsult AB
+    Copyright (c) 2002 - 2004 Klar√§lvdalens Datakonsult AB
         <info@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
@@ -185,7 +185,7 @@ bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
 {
   int count = 0;
   if ( !kmailIncidencesCount( count, QString::null, subResource ) ) {
-    kdError() << "Communication problem in KABC::ResourceKolab::loadSubResourceHelper()\n";
+    kdError() << "Communication problem in KABC::ResourceKolab::loadSubResource()\n";
     return false;
   }
   if ( !count )
@@ -652,6 +652,19 @@ void KABC::ResourceKolab::setSubresourceActive( const QString &subresource, bool
   } else {
     kdDebug(5650) << "setSubresourceCompletionWeight: subresource " << subresource << " not found" << endl;
   }
+}
+
+
+/*virtual*/
+bool KABC::ResourceKolab::addSubresource( const QString& label, const QString& parent )
+{
+  return kmailAddSubresource( label, parent, s_kmailContentsType );
+}
+
+/*virtual*/
+bool KABC::ResourceKolab::removeSubresource( const QString& id )
+{
+  return kmailRemoveSubresource( id );
 }
 
 #include "resourcekolab.moc"

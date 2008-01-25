@@ -150,7 +150,7 @@ void KMailConnection::fromKMailAddSubresource( const QString& type,
 {
 //   kdDebug(5650) << "KMailConnection::fromKMailAddSubresource( " << type << ", "
 //                 << resource << " )\n";
-  mResource->fromKMailAddSubresource( type, resource, label, 
+  mResource->fromKMailAddSubresource( type, resource, label,
                                       writable, alarmRelevant );
 }
 
@@ -223,6 +223,27 @@ bool KMailConnection::kmailGetAttachment( KURL& url,
   return mKMailIcalIfaceStub->ok();
 }
 
+bool KMailConnection::kmailAttachmentMimetype( QString & mimeType,
+                                               const QString & resource,
+                                               Q_UINT32 sernum,
+                                               const QString & filename )
+{
+  if ( !connectToKMail() )
+    return false;
+  mimeType = mKMailIcalIfaceStub->attachmentMimetype( resource, sernum, filename );
+  return mKMailIcalIfaceStub->ok();
+}
+
+bool KMailConnection::kmailListAttachments(QStringList &list,
+                                            const QString & resource, Q_UINT32 sernum)
+{
+  if ( !connectToKMail() )
+    return false;
+
+  list = mKMailIcalIfaceStub->listAttachments( resource, sernum );
+  return mKMailIcalIfaceStub->ok();
+}
+
 bool KMailConnection::kmailDeleteIncidence( const QString& resource,
                                             Q_UINT32 sernum )
 {
@@ -250,6 +271,23 @@ bool KMailConnection::kmailUpdate( const QString& resource,
   } else
     return false;
 }
+
+bool KMailConnection::kmailAddSubresource( const QString& resource,
+                                           const QString& parent,
+                                           const QString& contentsType )
+{
+  return connectToKMail()
+      && mKMailIcalIfaceStub->addSubresource( resource, parent, contentsType )
+      && mKMailIcalIfaceStub->ok();
+}
+
+bool KMailConnection::kmailRemoveSubresource( const QString& resource )
+{
+  return connectToKMail()
+      && mKMailIcalIfaceStub->removeSubresource( resource )
+      && mKMailIcalIfaceStub->ok();
+}
+
 
 bool KMailConnection::kmailStorageFormat( KMailICalIface::StorageFormat& type,
                                           const QString& folder )

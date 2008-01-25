@@ -32,19 +32,28 @@
 */
 
 #include "incidence.h"
+#include "resourcekolab.h"
 
+#include <qfile.h>
 #include <qvaluelist.h>
 
 #include <libkcal/journal.h>
 #include <korganizer/version.h>
 #include <kdebug.h>
+#include <kmdcodec.h>
+#include <kurl.h>
+#include <kio/netaccess.h>
 
 using namespace Kolab;
 
 
-Incidence::Incidence( const QString& tz )
+Incidence::Incidence( KCal::ResourceKolab *res, const QString &subResource, Q_UINT32 sernum,
+                      const QString& tz )
   : KolabBase( tz ), mFloatingStatus( Unset ), mHasAlarm( false ),
-    mRevision( 0 )
+    mRevision( 0 ),
+    mResource( res ),
+    mSubResource( subResource ),
+    mSernum( sernum )
 {
 }
 
@@ -144,14 +153,14 @@ const QValueList<Incidence::Attendee>& Incidence::attendees() const
   return mAttendees;
 }
 
-void Incidence::setSchedulingID( const QString& sid )
+void Incidence::setInternalUID( const QString& iuid )
 {
-  mSchedulingID = sid;
+  mInternalUID = iuid;
 }
 
-QString Incidence::schedulingID() const
+QString Incidence::internalUID() const
 {
-  return mSchedulingID;
+  return mInternalUID;
 }
 
 void Incidence::setRevision( int revision )
@@ -189,6 +198,10 @@ bool Incidence::loadAttendeeAttribute( QDomElement& element,
         attendee.invitationSent = ( e.text().lower() != "true" );
       else if ( tagName == "role" )
         attendee.role = e.text();
+      else if ( tagName == "delegated-to" )
+        attendee.delegate = e.text();
+      else if ( tagName == "delegated-from" )
+        attendee.delegator = e.text();
       else
         // TODO: Unhandled tag - save for later storage
         kdDebug() << "Warning: Unhandled tag " << e.tagName() << endl;
@@ -212,6 +225,8 @@ void Incidence::saveAttendeeAttribute( QDomElement& element,
   writeString( e, "invitation-sent",
                ( attendee.invitationSent ? "true" : "false" ) );
   writeString( e, "role", attendee.role );
+  writeString( e, "delegated-to", attendee.delegate );
+  writeString( e, "delegated-from", attendee.delegator );
 }
 
 void Incidence::saveAttendees( QDomElement& element ) const
@@ -229,7 +244,7 @@ void Incidence::saveAttachments( QDomElement& element ) const
     if ( a->isUri() ) {
       writeString( element, "link-attachment", a->uri() );
     } else if ( a->isBinary() ) {
-      // TODO
+      writeString( element, "inline-attachment", a->label() );
     }
   }
 }
@@ -320,15 +335,13 @@ bool Incidence::loadAttribute( QDomElement& element )
       return true;
     } else
       return false;
-  } else if ( tagName == "inline-attachment" ) {
-    // TODO
   } else if ( tagName == "link-attachment" ) {
     mAttachments.push_back( new KCal::Attachment( element.text() ) );
   } else if ( tagName == "alarm" )
     // Alarms should be minutes before. Libkcal uses event time + alarm time
     setAlarm( - element.text().toInt() );
-  else if ( tagName == "scheduling-id" )
-    setSchedulingID( element.text() );
+  else if ( tagName == "x-kde-internaluid" )
+    setInternalUID( element.text() );
   else if ( tagName == "revision" ) {
     bool ok;
     int revision = element.text().toInt( &ok );
@@ -372,7 +385,7 @@ bool Incidence::saveAttributes( QDomElement& element ) const
     int alarmTime = qRound( -alarm() );
     writeString( element, "alarm", QString::number( alarmTime ) );
   }
-  writeString( element, "scheduling-id", schedulingID() );
+  writeString( element, "x-kde-internaluid", internalUID() );
   writeString( element, "revision", QString::number( revision() ) );
   saveCustomAttributes( element );
   return true;
@@ -413,6 +426,8 @@ static KCal::Attendee::PartStat attendeeStringToStatus( const QString& s )
     return KCal::Attendee::Tentative;
   if ( s == "declined" )
     return KCal::Attendee::Declined;
+  if ( s == "delegated" )
+    return KCal::Attendee::Delegated;
 
   // Default:
   return KCal::Attendee::Accepted;
@@ -430,6 +445,7 @@ static QString attendeeStatusToString( KCal::Attendee::PartStat status )
   case KCal::Attendee::Tentative:
     return "tentative";
   case KCal::Attendee::Delegated:
+    return "delegated";
   case KCal::Attendee::Completed:
   case KCal::Attendee::InProcess:
     // These don't have any meaning in the Kolab format, so just use:
@@ -617,6 +633,8 @@ void Incidence::setFields( const KCal::Incidence* incidence )
     // attendee.invitationSent = kcalAttendee->mFlag;
     // DF: Hmm? mFlag is set to true and never used at all.... Did you mean another field?
     attendee.role = attendeeRoleToString( kcalAttendee->role() );
+    attendee.delegate = kcalAttendee->delegate();
+    attendee.delegator = kcalAttendee->delegator();
 
     addAttendee( attendee );
   }
@@ -637,11 +655,21 @@ void Incidence::setFields( const KCal::Incidence* incidence )
   }
 
   // Handle the scheduling ID
-  if ( incidence->schedulingID() == incidence->uid() )
+  if ( incidence->schedulingID() == incidence->uid() ) {
     // There is no scheduling ID
-    setSchedulingID( QString::null );
-  else
-    setSchedulingID( incidence->schedulingID() );
+    setInternalUID( QString::null );
+  } else {
+    // We've internally been using a different uid, so save that as the
+    // temporary (internal) uid and restore the original uid, the one that
+    // is used in the folder and the outside world
+    setUid( incidence->schedulingID() );
+    setInternalUID( incidence->uid() );
+  }
+
+  if ( incidence->pilotId() != 0 )
+    setPilotSyncId( incidence->pilotId() );
+
+  setPilotSyncStatus( incidence->syncStatus() );
 
   // Unhandled tags and other custom properties (see libkcal/customproperties.h)
   const QMap<QCString, QString> map = incidence->customProperties();
@@ -700,10 +728,13 @@ void Incidence::saveTo( KCal::Incidence* incidence )
   for ( it = mAttendees.begin(); it != mAttendees.end(); ++it ) {
     KCal::Attendee::PartStat status = attendeeStringToStatus( (*it).status );
     KCal::Attendee::Role role = attendeeStringToRole( (*it).role );
-    incidence->addAttendee( new KCal::Attendee( (*it).displayName,
-                                                (*it).smtpAddress,
-                                                (*it).requestResponse,
-                                                status, role ) );
+    KCal::Attendee* attendee = new KCal::Attendee( (*it).displayName,
+                                                   (*it).smtpAddress,
+                                                   (*it).requestResponse,
+                                                    status, role );
+    attendee->setDelegate( (*it).delegate );
+    attendee->setDelegator( (*it).delegator );
+    incidence->addAttendee( attendee );
   }
 
   incidence->clearAttachments();
@@ -757,14 +788,50 @@ void Incidence::saveTo( KCal::Incidence* incidence )
     } // "none" is default since tje set*ly methods set infinite recurrence
 
     incidence->recurrence()->setExDates( mRecurrence.exclusions );
-  }
 
-  incidence->setSchedulingID( schedulingID() );
+  }
+  /* If we've stored a uid to be used internally instead of the real one
+   * (to deal with duplicates of events in different folders) before, then
+   * restore it, so it does not change. Keep the original uid around for
+   * scheduling purposes. */
+  if ( !internalUID().isEmpty() ) {
+    incidence->setUid( internalUID() );
+    incidence->setSchedulingID( uid() );
+  }
+  if ( hasPilotSyncId() )
+    incidence->setPilotId( pilotSyncId() );
+  if ( hasPilotSyncStatus() )
+    incidence->setSyncStatus( pilotSyncStatus() );
 
   for( QValueList<Custom>::ConstIterator it = mCustomList.begin(); it != mCustomList.end(); ++it ) {
     incidence->setNonKDECustomProperty( (*it).key, (*it).value );
   }
 
+}
+
+void Incidence::loadAttachments()
+{
+  QStringList attachments;
+  if ( mResource->kmailListAttachments( attachments, mSubResource, mSernum ) ) {
+    for ( QStringList::ConstIterator it = attachments.constBegin(); it != attachments.constEnd(); ++it ) {
+      QByteArray data;
+      KURL url;
+      if ( mResource->kmailGetAttachment( url, mSubResource, mSernum, *it ) && !url.isEmpty() ) {
+        QFile f( url.path() );
+        if ( f.open( IO_ReadOnly ) ) {
+          data = f.readAll();
+          QString mimeType;
+          if ( !mResource->kmailAttachmentMimetype( mimeType, mSubResource, mSernum, *it ) )
+            mimeType = "application/octet-stream";
+          KCal::Attachment *a = new KCal::Attachment( KCodecs::base64Encode( data ).data(), mimeType );
+          a->setLabel( *it );
+          mAttachments.append( a );
+          f.close();
+        }
+        f.remove();
+      }
+    }
+  }
 }
 
 QString Incidence::productID() const
@@ -775,3 +842,4 @@ QString Incidence::productID() const
 // Unhandled KCal::Incidence fields:
 // revision, status (unused), priority (done in tasks), attendee.uid,
 // mComments, mReadOnly
+

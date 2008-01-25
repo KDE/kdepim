@@ -1,6 +1,6 @@
 /*
     This file is part of libkabc and/or kaddressbook.
-    Copyright (c) 2002 - 2004 Klar‰lvdalens Datakonsult AB
+    Copyright (c) 2002 - 2004 Klar√§lvdalens Datakonsult AB
         <info@klaralvdalens-datakonsult.se>
 
     This library is free software; you can redistribute it and/or
@@ -126,10 +126,16 @@ public:
 
   /// Is this subresource active?
   bool subresourceActive( const QString& ) const;
-  /// Is this subresource writabel?
-  bool subresourceWritable( const QString& ) const;
+  /// Is this subresource writable?
+  virtual bool subresourceWritable( const QString& ) const;
 
   virtual void setSubresourceActive( const QString &, bool );
+
+  virtual bool addSubresource( const QString&, const QString& );
+
+  virtual bool removeSubresource( const QString& );
+
+  virtual bool canHaveSubresources() const { return true; }
 
   /// Completion weight for a given subresource
   virtual int subresourceCompletionWeight( const QString& ) const;
