@@ -4,7 +4,7 @@
 */
 
 /****************************************************************************
- ** Copyright (C)  2002-2004 Kl√§rlvdalens Datakonsult AB.  All rights reserved.
+ ** Copyright (C)  2002-2004 Klar‰lvdalens Datakonsult AB.  All rights reserved.
  **
  ** This file is part of the KDGantt library.
  **
@@ -50,6 +50,7 @@
 #include "KDGanttMinimizeSplitter.h"
 #include "KDGanttViewItemDrag.h"
 
+class KDIntervalColorRectangle;
 class KDGanttViewTaskLink;
 class QPrinter;
 class QIODevice;
@@ -259,6 +260,8 @@ public:
                                    const QColor& color,
 				   Scale mini =  KDGanttView::Minute ,
 				   Scale maxi =  KDGanttView::Month);
+#if 0
+   // This API has been replaced with KDIntervalColorRectangle and addIntervalBackgroundColor
     void setIntervalBackgroundColor( const QDateTime& start,
 				     const QDateTime& end,
 				     const QColor& color,
@@ -270,6 +273,8 @@ public:
 				   const QDateTime& newend );
     bool deleteBackgroundInterval( const QDateTime& start,
 				   const QDateTime& end );
+#endif
+    void addIntervalBackgroundColor( KDIntervalColorRectangle* newItem );
     void clearBackgroundColor();
     QColor columnBackgroundColor( const QDateTime& column ) const;
     void setWeekendBackgroundColor( const QColor& color );
@@ -338,7 +343,12 @@ public:
 
     void setLinkItemsEnabled(bool on);
     bool isLinkItemsEnabled() const;
-    
+
+    KDTimeTableWidget * timeTableWidget() { return myTimeTable; }
+    KDTimeHeaderWidget * timeHeaderWidget() { return myTimeHeader; }
+
+    void setFixedHorizon( bool f ) { mFixedHorizon = f; }
+
 public slots:
     void editItem( KDGanttViewItem* );
     void zoomToSelection( const QDateTime& start,  const QDateTime&  end);
@@ -346,7 +356,8 @@ public slots:
 signals:
     void timeIntervallSelected( const QDateTime& start,  const QDateTime&  end);
     void timeIntervalSelected( const QDateTime& start,  const QDateTime&  end);
-    void rescaling( Scale );
+    void rescaling( KDGanttView::Scale );
+    void intervalColorRectangleMoved( const QDateTime& start, const QDateTime& end );
 
     // the following signals are emitted if an item is clicked in the
     // listview (inclusive) or in the ganttview
@@ -357,7 +368,7 @@ signals:
 
     // The following signal is emitted when two items shall be linked
     void linkItems( KDGanttViewItem* from, KDGanttViewItem* to, int linkType );
-    
+
     // the following signals are emitted if an item is clicked in the
     // listview (exlusive) or in the ganttview
     // gv... means item in ganttview clicked
@@ -371,6 +382,7 @@ signals:
     void gvItemDoubleClicked( KDGanttViewItem* );
     // the point is the global position!!
     void gvContextMenuRequested ( KDGanttViewItem * item, const QPoint & pos );
+    void gvItemMoved( KDGanttViewItem* );
 
     // lv... means item in listview clicked
     void lvCurrentChanged( KDGanttViewItem* );
@@ -390,6 +402,8 @@ signals:
     void taskLinkMidClicked( KDGanttViewTaskLink* );
     void taskLinkRightClicked( KDGanttViewTaskLink* );
     void taskLinkDoubleClicked( KDGanttViewTaskLink* );
+
+    void dateTimeDoubleClicked (const QDateTime& );
 
     void dropped ( QDropEvent * e, KDGanttViewItem* droppedItem, KDGanttViewItem* itemBelowMouse);
 private slots:
@@ -413,6 +427,8 @@ private:
     };
     bool loadXML( const QDomDocument& doc );
     QDomDocument saveXML( bool withPI = true ) const;
+
+    void emptySpaceDoubleClicked( QMouseEvent* e );
 
     static QString scaleToString( Scale scale );
     static QString yearFormatToString( YearFormat format );
@@ -475,6 +491,7 @@ private:
     void initDefaults();
     KDGanttViewItem* myCurrentItem;
     KDGanttMinimizeSplitter *mySplitter;
+    bool  mFixedHorizon;
 protected:
   virtual QDragObject * dragObject ();
   virtual void startDrag ();
