@@ -14,4 +14,5 @@ KDE_CXXFLAGS = $(USE_EXCEPTIONS)
 
 INCLUDES = -I$(srcdir) -I$(top_srcdir) -I$(top_srcdir)/libkcal $(all_includes)
 
-TESTS = runscripts locking
+#TESTS = runscripts locking
+TESTS = locking
