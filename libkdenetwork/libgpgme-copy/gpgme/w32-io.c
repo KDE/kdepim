@@ -1,22 +1,23 @@
 /* w32-io.c - W32 API I/O functions.
    Copyright (C) 2000 Werner Koch (dd9jn)
-   Copyright (C) 2001, 2002, 2003 g10 Code GmbH
+   Copyright (C) 2001, 2002, 2003, 2004 g10 Code GmbH
 
    This file is part of GPGME.
  
    GPGME is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- 
+   under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of
+   the License, or (at your option) any later version.
+   
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
- 
-   You should have received a copy of the GNU General Public License
-   along with GPGME; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   Lesser General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -35,8 +36,8 @@
 
 #include "util.h"
 #include "sema.h"
-#include "io.h"
-
+#include "priv-io.h"
+#include "debug.h"
 
 /* We assume that a HANDLE can be represented by an int which should
    be true for all i386 systems (HANDLE is defined as void *) and
@@ -50,6 +51,7 @@
 
 #define READBUF_SIZE 4096
 #define WRITEBUF_SIZE 4096
+#define PIPEBUF_SIZE  4096
 #define MAX_READERS 20
 #define MAX_WRITERS 20
 
@@ -115,6 +117,23 @@ static struct {
 static int writer_table_size= MAX_WRITERS;
 DEFINE_STATIC_LOCK (writer_table_lock);
 
+
+
+static int
+get_desired_thread_priority (void)
+{
+  int value;
+
+  if (!_gpgme_get_conf_int ("IOThreadPriority", &value))
+    {
+      value = THREAD_PRIORITY_HIGHEST;
+      DEBUG1 ("** Using standard IOThreadPriority of %d\n", value);
+    }
+  else
+    DEBUG1 ("** Configured IOThreadPriority is %d\n", value);
+
+  return value;
+}
 
 
 static HANDLE
@@ -260,6 +279,12 @@ create_reader (HANDLE fd)
         free (c);
         return NULL;
     }    
+    else {
+      /* We set the priority of the thread higher because we know that
+         it only runs for a short time.  This greatly helps to increase
+         the performance of the I/O. */
+      SetThreadPriority (c->thread_hd, get_desired_thread_priority ());
+    }
 
     return c;
 }
@@ -394,12 +419,11 @@ _gpgme_io_read ( int fd, void *buffer, size_t count )
     UNLOCK (c->mutex);
 
     DEBUG2 ("fd %d: got %d bytes\n", fd, nread );
+    if (nread > 0)
+      _gpgme_debug (2, "fd %d: got `%.*s'\n", fd, nread, buffer);
 
     return nread;
 }
-
-
-
 /*
  * The writer does use a simple buffering strategy so that we are
  * informed about write errors as soon as possible (i.e. with the the
@@ -414,7 +438,13 @@ writer (void *arg)
     DEBUG2 ("writer thread %p for file %p started", c->thread_hd, c->file_hd );
     for (;;) {
         LOCK (c->mutex);
+        if ( c->stop_me ) {
+            UNLOCK (c->mutex);
+            break;
+        }
         if ( !c->nbytes ) { 
+            if (!SetEvent (c->is_empty))
+                DEBUG1 ("SetEvent failed: ec=%d", (int)GetLastError ());
             if (!ResetEvent (c->have_data) )
                 DEBUG1 ("ResetEvent failed: ec=%d", (int)GetLastError ());
             UNLOCK (c->mutex);
@@ -444,14 +474,6 @@ writer (void *arg)
       
         LOCK (c->mutex);
         c->nbytes -= nwritten;
-        if (c->stop_me) {
-            UNLOCK (c->mutex);
-            break;
-        }
-        if ( !c->nbytes ) {
-            if ( !SetEvent (c->is_empty) )
-                DEBUG1 ("SetEvent failed: ec=%d", (int)GetLastError ());
-        }
         UNLOCK (c->mutex);
     }
     /* indicate that we have an error  */
@@ -481,7 +503,7 @@ create_writer (HANDLE fd)
         return NULL;
 
     c->file_hd = fd;
-    c->have_data = CreateEvent (&sec_attr, FALSE, FALSE, NULL);
+    c->have_data = CreateEvent (&sec_attr, TRUE, FALSE, NULL);
     c->is_empty  = CreateEvent (&sec_attr, TRUE, TRUE, NULL);
     c->stopped = CreateEvent (&sec_attr, TRUE, FALSE, NULL);
     if (!c->have_data || !c->is_empty || !c->stopped ) {
@@ -513,6 +535,12 @@ create_writer (HANDLE fd)
         free (c);
         return NULL;
     }    
+    else {
+      /* We set the priority of the thread higher because we know that
+         it only runs for a short time.  This greatly helps to increase
+         the performance of the I/O. */
+      SetThreadPriority (c->thread_hd, get_desired_thread_priority ());
+    }
 
     return c;
 }
@@ -599,6 +627,7 @@ _gpgme_io_write ( int fd, const void *buffer, size_t count )
     struct writer_context_s *c = find_writer (fd,1);
 
     DEBUG2 ("fd %d: about to write %d bytes\n", fd, (int)count );
+    _gpgme_debug (2, "fd %d: write `%.*s'\n", fd, (int) count, buffer);
     if ( !c ) {
         DEBUG0 ( "no writer thread\n");
         return -1;
@@ -606,12 +635,14 @@ _gpgme_io_write ( int fd, const void *buffer, size_t count )
 
     LOCK (c->mutex);
     if ( c->nbytes ) { /* bytes are pending for send */
+        /* Reset the is_empty event.  Better safe than sorry.  */
+        if (!ResetEvent (c->is_empty))
+            DEBUG1 ("ResetEvent failed: ec=%d", (int)GetLastError ());
         UNLOCK (c->mutex);
         DEBUG2 ("fd %d: waiting for empty buffer in thread %p",
                 fd, c->thread_hd);
         WaitForSingleObject (c->is_empty, INFINITE);
         DEBUG2 ("fd %d: thread %p buffer is empty", fd, c->thread_hd);
-        assert (!c->nbytes);
         LOCK (c->mutex);
     }
     
@@ -620,11 +651,20 @@ _gpgme_io_write ( int fd, const void *buffer, size_t count )
         DEBUG1 ("fd %d: write error", fd );
         return -1;
     }
-      
+
+    /* If no error occured, the number of bytes in the buffer must be
+       zero.  */
+    assert (!c->nbytes);
+
     if (count > WRITEBUF_SIZE)
         count = WRITEBUF_SIZE;
     memcpy (c->buffer, buffer, count);
     c->nbytes = count;
+
+    /* We have to reset the is_empty event early, because it is also
+       used by the select() implementation to probe the channel.  */
+    if (!ResetEvent (c->is_empty))
+        DEBUG1 ("ResetEvent failed: ec=%d", (int)GetLastError ());
     if (!SetEvent (c->have_data))
         DEBUG1 ("SetEvent failed: ec=%d", (int)GetLastError ());
     UNLOCK (c->mutex);
@@ -645,9 +685,9 @@ _gpgme_io_pipe ( int filedes[2], int inherit_idx )
     sec_attr.nLength = sizeof sec_attr;
     sec_attr.bInheritHandle = FALSE;
     
-    if (!CreatePipe ( &r, &w, &sec_attr, 0))
+    if (!CreatePipe ( &r, &w, &sec_attr, PIPEBUF_SIZE))
         return -1;
-    /* make one end inheritable */
+    /* Make one end inheritable. */
     if ( inherit_idx == 0 ) {
         HANDLE h;
         if (!DuplicateHandle( GetCurrentProcess(), r,
@@ -759,29 +799,58 @@ _gpgme_io_set_nonblocking ( int fd )
 
 
 static char *
-build_commandline ( char **argv )
+build_commandline (char **argv)
 {
-    int i, n = 0;
-    char *buf, *p;
-
-    /* FIXME: we have to quote some things because under Windows the 
-     * program parses the commandline and does some unquoting */
-    for (i=0; argv[i]; i++)
-        n += strlen (argv[i]) + 2 + 1; /* 2 extra bytes for possible quoting */
-    buf = p = malloc (n);
-    if ( !buf )
-        return NULL;
-    *buf = 0;
-    if ( argv[0] )
-        p = stpcpy (p, argv[0]);
-    for (i = 1; argv[i]; i++) {
-        if (!*argv[i])
-            p = stpcpy (p, " \"\"");
-        else
-            p = stpcpy (stpcpy (p, " "), argv[i]);
+  int i;
+  int j;
+  int n = 0;
+  char *buf;
+  char *p;
+  
+  /* We have to quote some things because under Windows the program
+     parses the commandline and does some unquoting.  We enclose the
+     whole argument in double-quotes, and escape literal double-quotes
+     as well as backslashes with a backslash.  We end up with a
+     trailing space at the end of the line, but that is harmless.  */
+  for (i = 0; argv[i]; i++)
+    {
+      p = argv[i];
+      /* The leading double-quote.  */
+      n++;
+      while (*p)
+	{
+	  /* An extra one for each literal that must be escaped.  */
+	  if (*p == '\\' || *p == '"')
+	    n++;
+	  n++;
+	  p++;
+	}
+      /* The trailing double-quote and the delimiter.  */
+      n += 2;
     }
+  /* And a trailing zero.  */
+  n++;
 
-    return buf;
+  buf = p = malloc (n);
+  if (!buf)
+    return NULL;
+  for (i = 0; argv[i]; i++)
+    {
+      char *argvp = argv[i];
+
+      *(p++) = '"';
+      while (*argvp)
+	{
+	  if (*argvp == '\\' || *argvp == '"')
+	    *(p++) = '\\';
+	  *(p++) = *(argvp++);
+	}
+      *(p++) = '"';
+      *(p++) = ' ';
+    }
+  *(p++) = 0;
+
+  return buf;
 }
 
 
@@ -820,7 +889,7 @@ _gpgme_io_spawn ( const char *path, char **argv,
     memset (&si, 0, sizeof si);
     si.cb = sizeof (si);
     si.dwFlags = STARTF_USESTDHANDLES | STARTF_USESHOWWINDOW;
-    si.wShowWindow = debug_me? SW_SHOW : SW_MINIMIZE;
+    si.wShowWindow = debug_me? SW_SHOW : SW_HIDE;
     si.hStdInput = GetStdHandle (STD_INPUT_HANDLE);
     si.hStdOutput = GetStdHandle (STD_OUTPUT_HANDLE);
     si.hStdError = GetStdHandle (STD_ERROR_HANDLE);
@@ -890,13 +959,13 @@ _gpgme_io_spawn ( const char *path, char **argv,
         return -1;
     }
 
-    /* close the /dev/nul handle if used */
+    /* Close the /dev/nul handle if used. */
     if (hnul != INVALID_HANDLE_VALUE ) {
         if ( !CloseHandle ( hnul ) )
             DEBUG1 ("CloseHandle(hnul) failed: ec=%d\n", (int)GetLastError());
     }
 
-    /* Close the other ends of the pipes */
+    /* Close the other ends of the pipes. */
     for (i = 0; fd_parent_list[i].fd != -1; i++)
       _gpgme_io_close (fd_parent_list[i].fd);
 
@@ -917,60 +986,6 @@ _gpgme_io_spawn ( const char *path, char **argv,
 
     return handle_to_pid (pi.hProcess);
 }
-
-
-
-
-int
-_gpgme_io_waitpid ( int pid, int hang, int *r_status, int *r_signal )
-{
-    HANDLE proc = fd_to_handle (pid);
-    int code, ret = 0;
-    DWORD exc;
-
-    *r_status = 0;
-    *r_signal = 0;
-    code = WaitForSingleObject ( proc, hang? INFINITE : 0 );
-    switch (code) {
-      case WAIT_FAILED:
-        DEBUG2 ("WFSO pid=%d failed: %d\n", (int)pid, (int)GetLastError () );
-        break;
-
-      case WAIT_OBJECT_0:
-        if (!GetExitCodeProcess (proc, &exc)) {
-            DEBUG2 ("** GECP pid=%d failed: ec=%d\n",
-                    (int)pid, (int)GetLastError () );
-            *r_status = 4; 
-        }
-        else {
-            DEBUG2 ("GECP pid=%d exit code=%d\n", (int)pid,  exc);
-            *r_status = exc;
-        }
-        ret = 1;
-        break;
-
-      case WAIT_TIMEOUT:
-        if (hang)
-            DEBUG1 ("WFSO pid=%d timed out\n", (int)pid);
-        break;
-
-      default:
-        DEBUG2 ("WFSO pid=%d returned %d\n", (int)pid, code );
-        break;
-    }
-    return ret;
-}
-
-int
-_gpgme_io_kill ( int pid, int hard )
-{
-    HANDLE proc = fd_to_handle (pid);
-
-    #warning I am not sure how to kill a process
-    /* fixme: figure out how this can be done */
-    return 0;
-}
-
 
 
 /*
@@ -1032,18 +1047,11 @@ _gpgme_io_select ( struct io_select_fd_s *fds, size_t nfds, int nonblock )
                         DEBUG0 ("Too many objects for WFMO!" );
                         return -1;
                     }
-                    LOCK (c->mutex);
-                    if ( !c->nbytes ) {
-                        waitidx[nwait]   = i;
-                        waitbuf[nwait++] = c->is_empty;
-                        DEBUG_ADD1 (dbg_help, "w%d ", fds[i].fd );
-                        any = 1;
-                    }
-                    else {
-                        DEBUG_ADD1 (dbg_help, "w%d(ignored) ", fds[i].fd );
-                    }
-                    UNLOCK (c->mutex);
+		    waitidx[nwait]   = i;
+		    waitbuf[nwait++] = c->is_empty;
                 }
+		DEBUG_ADD1 (dbg_help, "w%d ", fds[i].fd );
+		any = 1;
             }
         }
     }
@@ -1063,7 +1071,7 @@ _gpgme_io_select ( struct io_select_fd_s *fds, size_t nfds, int nonblock )
          */
         any = 0;
         for (i=code - WAIT_OBJECT_0; i < nwait; i++ ) {
-            if (WaitForSingleObject ( waitbuf[i], NULL ) == WAIT_OBJECT_0) {
+            if (WaitForSingleObject (waitbuf[i], 0) == WAIT_OBJECT_0) {
                 assert (waitidx[i] >=0 && waitidx[i] < nfds);
                 fds[waitidx[i]].signaled = 1;
                 any = 1;
@@ -1084,7 +1092,7 @@ _gpgme_io_select ( struct io_select_fd_s *fds, size_t nfds, int nonblock )
             int k, j = handle_to_fd (waitbuf[i]);
                     
             DEBUG1 ("WFMO invalid handle %d removed\n", j);
-            for (k=0 ; k < nfds; i++ ) {
+            for (k=0 ; k < nfds; k++ ) {
                 if ( fds[k].fd == j ) {
                     fds[k].for_read = fds[k].for_write = 0;
                     goto restart;
@@ -1115,3 +1123,30 @@ _gpgme_io_select ( struct io_select_fd_s *fds, size_t nfds, int nonblock )
     
     return count;
 }
+
+void
+_gpgme_io_subsystem_init (void)
+{
+  
+}
+
+
+/* Write the printable version of FD to the buffer BUF of length
+   BUFLEN.  The printable version is the representation on the command
+   line that the child process expects.  */
+int
+_gpgme_io_fd2str (char *buf, int buflen, int fd)
+{
+  return snprintf (buf, buflen, "%d", fd);
+}
+
+
+/* The following interface is only useful for GPGME Glib.  */
+
+/* Look up the giochannel for file descriptor FD.  */
+void *
+gpgme_get_giochannel (int fd)
+{
+  return NULL;
+}
+

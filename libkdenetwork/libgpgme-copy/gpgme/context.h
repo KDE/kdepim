@@ -1,22 +1,23 @@
 /* context.h - Definitions for a GPGME context.
    Copyright (C) 2000 Werner Koch (dd9jn)
-   Copyright (C) 2001, 2002, 2003 g10 Code GmbH
+   Copyright (C) 2001, 2002, 2003, 2004, 2005 g10 Code GmbH
 
    This file is part of GPGME.
  
    GPGME is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- 
+   under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of
+   the License, or (at your option) any later version.
+   
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
- 
-   You should have received a copy of the GNU General Public License
-   along with GPGME; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   Lesser General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 #ifndef CONTEXT_H
 #define CONTEXT_H
@@ -62,6 +63,9 @@ typedef struct ctx_op_data *ctx_op_data_t;
    be performed (sequentially).  */
 struct gpgme_context
 {
+  /* The engine info for this context.  */
+  gpgme_engine_info_t engine_info;
+
   /* The protocol used by this context.  */
   gpgme_protocol_t protocol;
 
@@ -86,6 +90,9 @@ struct gpgme_context
   /* Size of the following array.  */
   unsigned int signers_size;
   gpgme_key_t *signers;
+
+  /* The signature notations for this context.  */
+  gpgme_sig_notation_t sig_notations;
 
   /* The locale for the pinentry.  */
   char *lc_ctype;

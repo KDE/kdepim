@@ -1,25 +1,38 @@
 /* debug.h - interface to debugging functions
- *      Copyright (C) 2002 g10 Code GmbH
- *
- * This file is part of GPGME.
- *
- * GPGME is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * GPGME is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
- */
+   Copyright (C) 2002, 2004, 2005 g10 Code GmbH
+ 
+   This file is part of GPGME.
+
+   GPGME is free software; you can redistribute it and/or modify it
+   under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of
+   the License, or (at your option) any later version.
+   
+   GPGME is distributed in the hope that it will be useful, but
+   WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+   Lesser General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 #ifndef DEBUG_H
 #define DEBUG_H
+
+#include <string.h>
+
+/* Remove path components from filenames (i.e. __FILE__) for cleaner
+   logs. */
+static __inline__ const char *_gpgme_debug_srcname (const char *file);
+
+static __inline__ const char *
+_gpgme_debug_srcname (const char *file)
+{
+  const char *s = strrchr (file, '/');
+  return s? s+1:file;
+}
 
 /* Log the formatted string FORMAT at debug level LEVEL or higher.  */
 void _gpgme_debug (int level, const char *format, ...);
@@ -76,22 +89,26 @@ void _gpgme_debug_end (void **helper);
 #else
 /* This finally works everywhere, horror.  */
 #define DEBUG0(fmt) \
-  _gpgme_debug (1, "%s:%s: " fmt, __FILE__, XSTRINGIFY (__LINE__))
+  _gpgme_debug (1, "%s:%s: " fmt, _gpgme_debug_srcname (__FILE__), \
+                XSTRINGIFY (__LINE__))
 #define DEBUG1(fmt,a) \
-  _gpgme_debug (1, "%s:%s: " fmt, __FILE__, XSTRINGIFY (__LINE__), (a))
+  _gpgme_debug (1, "%s:%s: " fmt, _gpgme_debug_srcname (__FILE__), \
+                XSTRINGIFY (__LINE__), (a))
 #define DEBUG2(fmt,a,b) \
-  _gpgme_debug (1, "%s:%s: " fmt, __FILE__, XSTRINGIFY (__LINE__), (a), (b))
+  _gpgme_debug (1, "%s:%s: " fmt, _gpgme_debug_srcname (__FILE__), \
+                XSTRINGIFY (__LINE__), (a), (b))
 #define DEBUG3(fmt,a,b,c) \
-  _gpgme_debug (1, "%s:%s: " fmt, __FILE__, XSTRINGIFY (__LINE__), (a), (b), \
-		(c))
+  _gpgme_debug (1, "%s:%s: " fmt, _gpgme_debug_srcname (__FILE__), \
+                XSTRINGIFY (__LINE__), (a), (b), (c))
 #define DEBUG4(fmt,a,b,c,d) \
-  _gpgme_debug (1, "%s:%s: " fmt, __FILE__, XSTRINGIFY (__LINE__), (a), (b), \
-		(c), (d))
+  _gpgme_debug (1, "%s:%s: " fmt, _gpgme_debug_srcname (__FILE__), \
+                XSTRINGIFY (__LINE__), (a), (b), (c), (d))
 #define DEBUG5(fmt,a,b,c,d,e) \
-  _gpgme_debug (1, "%s:%s: " fmt, __FILE__, XSTRINGIFY (__LINE__), (a), (b), \
-		(c), (d), (e))
+  _gpgme_debug (1, "%s:%s: " fmt, _gpgme_debug_srcname (__FILE__), \
+                XSTRINGIFY (__LINE__), (a), (b), (c), (d), (e))
 #define DEBUG_BEGIN(hlp,lvl,fmt) \
-  _gpgme_debug_begin (&(hlp), lvl, "%s:%s: " fmt, __FILE__, XSTRINGIFY (__LINE__))
+  _gpgme_debug_begin (&(hlp), lvl, "%s:%s: " fmt, \
+                      _gpgme_debug_srcname (__FILE__), XSTRINGIFY (__LINE__))
 #define DEBUG_ADD0(hlp,fmt) \
   _gpgme_debug_add (&(hlp), fmt)
 #define DEBUG_ADD1(hlp,fmt,a) \

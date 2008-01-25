@@ -1,22 +1,23 @@
 /* wait-global.c 
    Copyright (C) 2000 Werner Koch (dd9jn)
-   Copyright (C) 2001, 2002, 2003 g10 Code GmbH
+   Copyright (C) 2001, 2002, 2003, 2004, 2005 g10 Code GmbH
  
    This file is part of GPGME.
  
    GPGME is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- 
+   under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of
+   the License, or (at your option) any later version.
+   
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
- 
-   You should have received a copy of the GNU General Public License
-   along with GPGME; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   Lesser General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 #if HAVE_CONFIG_H
 #include <config.h>
@@ -31,7 +32,7 @@
 #include "util.h"
 #include "context.h"
 #include "wait.h"
-#include "io.h"
+#include "priv-io.h"
 
 /* The global event loop is used for all asynchronous operations
    (except key listing) for which no user I/O callbacks are specified.
@@ -200,7 +201,7 @@ _gpgme_wait_global_event_cb (void *data, gpgme_event_io_t type,
 
 	if (err)
 	  {
-	    /* An error occurred.  Close all fds in this context, and
+	    /* An error occured.  Close all fds in this context, and
 	       send the error in a done event.  */
 	    unsigned int idx;
 	    
@@ -309,10 +310,10 @@ gpgme_wait (gpgme_ctx_t ctx, gpgme_error_t *status, int hang)
 	      ictx = item->ctx;
 	      assert (ictx);
 
-	      err = item->handler (item->handler_value, fdt.fds[i].fd);
+	      err = _gpgme_run_io_cb (&fdt.fds[i], 0);
 	      if (err)
 		{
-		  /* An error occurred.  Close all fds in this context,
+		  /* An error occured.  Close all fds in this context,
 		     and signal it.  */
 		  unsigned int idx;
 	    
@@ -321,6 +322,11 @@ gpgme_wait (gpgme_ctx_t ctx, gpgme_error_t *status, int hang)
 		      _gpgme_io_close (ictx->fdt.fds[idx].fd);
 		  _gpgme_engine_io_event (ictx->engine, GPGME_EVENT_DONE,
 					  &err);
+
+		  /* Break out of the loop, and retry the select()
+		     from scratch, because now all fds should be
+		     gone.  */
+		  break;
 		}
 	    }
 	}
@@ -328,15 +334,30 @@ gpgme_wait (gpgme_ctx_t ctx, gpgme_error_t *status, int hang)
 
       /* Now some contexts might have finished successfully.  */
       LOCK (ctx_list_lock);
+    retry:
       for (li = ctx_active_list; li; li = li->next)
 	{
-	  for (i = 0; i < ctx->fdt.size; i++)
-	    if (ctx->fdt.fds[i].fd != -1)
+	  gpgme_ctx_t actx = li->ctx;
+
+	  for (i = 0; i < actx->fdt.size; i++)
+	    if (actx->fdt.fds[i].fd != -1)
 	      break;
-	  if (i == ctx->fdt.size)
+	  if (i == actx->fdt.size)
 	    {
 	      gpgme_error_t err = 0;
-	      _gpgme_engine_io_event (ctx->engine, GPGME_EVENT_DONE, &err);
+
+	      /* FIXME: This does not perform too well.  We have to
+		 release the lock because the I/O event handler
+		 acquires it to remove the context from the active
+		 list.  Two alternative strategies are worth
+		 considering: Either implement the DONE event handler
+		 here in a lock-free manner, or save a list of all
+		 contexts to be released and call the DONE events
+		 afterwards.  */
+	      UNLOCK (ctx_list_lock);
+	      _gpgme_engine_io_event (actx->engine, GPGME_EVENT_DONE, &err);
+	      LOCK (ctx_list_lock);
+	      goto retry;
 	    }
 	}
       UNLOCK (ctx_list_lock);
@@ -348,6 +369,12 @@ gpgme_wait (gpgme_ctx_t ctx, gpgme_error_t *status, int hang)
 	  {
 	    ctx = dctx;
 	    hang = 0;
+	  }
+	else if (!hang)
+	  {
+	    ctx = NULL;
+	    if (status)
+	      *status = 0;
 	  }
       }
     }

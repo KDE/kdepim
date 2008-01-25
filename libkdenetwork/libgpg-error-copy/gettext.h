@@ -13,7 +13,7 @@
 
    You should have received a copy of the GNU Library General Public
    License along with this program; if not, write to the Free Software
-   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301,
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307,
    USA.  */
 
 #ifndef _LIBGETTEXT_H
@@ -22,8 +22,14 @@
 /* NLS can be disabled through the configure --disable-nls option.  */
 #if ENABLE_NLS
 
+#if HAVE_W32_SYSTEM
+/* Redirect the gettext calls to an internal implementation on W32
+   targets.  */
+# include "w32-gettext.h"
+#else
 /* Get declarations of GNU message catalog functions.  */
 # include <libintl.h>
+#endif
 
 #else
 

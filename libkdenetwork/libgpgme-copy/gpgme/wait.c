@@ -1,22 +1,23 @@
 /* wait.c 
    Copyright (C) 2000 Werner Koch (dd9jn)
-   Copyright (C) 2001, 2002, 2003 g10 Code GmbH
+   Copyright (C) 2001, 2002, 2003, 2004, 2005 g10 Code GmbH
  
    This file is part of GPGME.
  
    GPGME is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- 
+   under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of
+   the License, or (at your option) any later version.
+   
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
- 
-   You should have received a copy of the GNU General Public License
-   along with GPGME; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   Lesser General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 #if HAVE_CONFIG_H
 #include <config.h>
@@ -32,7 +33,7 @@
 #include "ops.h"
 #include "wait.h"
 #include "sema.h"
-#include "io.h"
+#include "priv-io.h"
 #include "engine.h"
 #include "debug.h"
 
@@ -165,4 +166,39 @@ _gpgme_remove_io_cb (void *data)
   fdt->fds[idx].for_read = 0;
   fdt->fds[idx].for_write = 0;
   fdt->fds[idx].opaque = NULL;
+}
+
+
+/* This is slightly embarrassing.  The problem is that running an I/O
+   callback _may_ influence the status of other file descriptors.  Our
+   own event loops could compensate for that, but the external event
+   loops cannot.  FIXME: We may still want to optimize this a bit when
+   we are called from our own event loops.  So if CHECKED is 1, the
+   check is skipped.  */
+gpgme_error_t
+_gpgme_run_io_cb (struct io_select_fd_s *an_fds, int checked)
+{
+  struct wait_item_s *item;
+  item = (struct wait_item_s *) an_fds->opaque;
+  assert (item);
+
+  if (!checked)
+    {
+      int nr;
+      struct io_select_fd_s fds;
+
+      fds = *an_fds;
+      fds.signaled = 0;
+      /* Just give it a quick poll.  */
+      nr = _gpgme_io_select (&fds, 1, 1);
+      assert (nr <= 1);
+      if (nr < 0)
+	return errno;
+      else if (nr == 0)
+	/* The status changed in the meantime, there is nothing left
+	   to do.  */
+	return 0;
+    }
+
+  return item->handler (item->handler_value, an_fds->fd);
 }

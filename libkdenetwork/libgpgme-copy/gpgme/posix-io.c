@@ -1,22 +1,23 @@
 /* posix-io.c - Posix I/O functions
    Copyright (C) 2000 Werner Koch (dd9jn)
-   Copyright (C) 2001, 2002 g10 Code GmbH
+   Copyright (C) 2001, 2002, 2004, 2005 g10 Code GmbH
 
    This file is part of GPGME.
  
    GPGME is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- 
+   under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of
+   the License, or (at your option) any later version.
+   
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
- 
-   You should have received a copy of the GNU General Public License
-   along with GPGME; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   Lesser General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 #ifdef HAVE_CONFIG_H
 #include <config.h>
@@ -34,7 +35,7 @@
 #include <sys/wait.h>
 
 #include "util.h"
-#include "io.h"
+#include "priv-io.h"
 #include "sema.h"
 #include "ath.h"
 #include "debug.h"
@@ -53,6 +54,16 @@ _gpgme_io_subsystem_init (void)
       act.sa_flags = 0;
       sigaction (SIGPIPE, &act, NULL);
     }
+}
+
+
+/* Write the printable version of FD to the buffer BUF of length
+   BUFLEN.  The printable version is the representation on the command
+   line that the child process expects.  */
+int
+_gpgme_io_fd2str (char *buf, int buflen, int fd)
+{
+  return snprintf (buf, buflen, "%d", fd);
 }
 
 
@@ -173,6 +184,30 @@ _gpgme_io_set_nonblocking (int fd)
 }
 
 
+static int
+_gpgme_io_waitpid (int pid, int hang, int *r_status, int *r_signal)
+{
+  int status;
+
+  *r_status = 0;
+  *r_signal = 0;
+  if (_gpgme_ath_waitpid (pid, &status, hang? 0 : WNOHANG) == pid)
+    {
+      if (WIFSIGNALED (status))
+	{
+	  *r_status = 4; /* Need some value here.  */
+	  *r_signal = WTERMSIG (status);
+	}
+      else if (WIFEXITED (status))
+	*r_status = WEXITSTATUS (status);
+      else
+	*r_status = 4; /* Oops.  */
+      return 1;
+    }
+  return 0;
+}
+
+
 /* Returns 0 on success, -1 on error.  */
 int
 _gpgme_io_spawn (const char *path, char **argv,
@@ -269,37 +304,6 @@ _gpgme_io_spawn (const char *path, char **argv,
     _gpgme_io_close (fd_parent_list[i].fd);
 
   return 0;
-}
-
-
-int
-_gpgme_io_waitpid (int pid, int hang, int *r_status, int *r_signal)
-{
-  int status;
-
-  *r_status = 0;
-  *r_signal = 0;
-  if (_gpgme_ath_waitpid (pid, &status, hang? 0 : WNOHANG) == pid)
-    {
-      if (WIFSIGNALED (status))
-	{
-	  *r_status = 4; /* Need some value here.  */
-	  *r_signal = WTERMSIG (status);
-	}
-      else if (WIFEXITED (status))
-	*r_status = WEXITSTATUS (status);
-      else
-	*r_status = 4; /* Oops.  */
-      return 1;
-    }
-  return 0;
-}
-
-
-int
-_gpgme_io_kill (int pid, int hard)
-{
-  return kill (pid, hard ? SIGKILL : SIGTERM);
 }
 
 
@@ -408,3 +412,86 @@ _gpgme_io_select (struct io_select_fd_s *fds, size_t nfds, int nonblock)
     }
   return count;
 }
+
+
+int
+_gpgme_io_recvmsg (int fd, struct msghdr *msg, int flags)
+{
+  int nread;
+  int saved_errno;
+  struct iovec *iov;
+
+  nread = 0;
+  iov = msg->msg_iov;
+  while (iov < msg->msg_iov + msg->msg_iovlen)
+    {
+      nread += iov->iov_len;
+      iov++;
+    }
+  
+  DEBUG2 ("fd %d: about to receive %d bytes\n",
+	  fd, (int) nread);
+  do
+    {
+      nread = _gpgme_ath_recvmsg (fd, msg, flags);
+    }
+  while (nread == -1 && errno == EINTR);
+  saved_errno = errno;
+  DEBUG2 ("fd %d: got %d bytes\n", fd, nread);
+  if (nread > 0)
+    {
+      int nr = nread;
+
+      iov = msg->msg_iov;
+      while (nr > 0)
+	{
+	  int len = nr > iov->iov_len ? iov->iov_len : nr;
+	  _gpgme_debug (2, "fd %d: got `%.*s'\n", fd, len,
+			msg->msg_iov->iov_base);
+	  iov++;
+	  nr -= len;
+	}
+    }
+  errno = saved_errno;
+  return nread;
+}
+
+
+int
+_gpgme_io_sendmsg (int fd, const struct msghdr *msg, int flags)
+{
+  int saved_errno;
+  int nwritten;
+  struct iovec *iov;
+
+  nwritten = 0;
+  iov = msg->msg_iov;
+  while (iov < msg->msg_iov + msg->msg_iovlen)
+    {
+      nwritten += iov->iov_len;
+      iov++;
+    }
+
+  DEBUG2 ("fd %d: about to write %d bytes\n", fd, (int) nwritten);
+  iov = msg->msg_iov;
+  while (nwritten > 0)
+    {
+      int len = nwritten > iov->iov_len ? iov->iov_len : nwritten;
+      _gpgme_debug (2, "fd %d: write `%.*s'\n", fd, len,
+		    msg->msg_iov->iov_base);
+      iov++;
+      nwritten -= len;
+    }
+
+  do
+    {
+      nwritten = _gpgme_ath_sendmsg (fd, msg, flags);
+    }
+  while (nwritten == -1 && errno == EINTR);
+  saved_errno = errno;
+  DEBUG2 ("fd %d:          wrote %d bytes\n", fd, (int) nwritten);
+  errno = saved_errno;
+  return nwritten;
+}
+
+

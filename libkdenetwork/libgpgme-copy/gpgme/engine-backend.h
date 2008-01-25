@@ -1,21 +1,22 @@
-/* engine-backend.h -  A crypto backend for the engine interface.
-   Copyright (C) 2002, 2003 g10 Code GmbH
+/* engine-backend.h - A crypto backend for the engine interface.
+   Copyright (C) 2002, 2003, 2004 g10 Code GmbH
  
    This file is part of GPGME.
  
    GPGME is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- 
+   under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of
+   the License, or (at your option) any later version.
+   
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
- 
-   You should have received a copy of the GNU General Public License
-   along with GPGME; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   Lesser General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 #ifndef ENGINE_BACKEND_H
 #define ENGINE_BACKEND_H
@@ -30,14 +31,25 @@
 struct engine_ops
 {
   /* Static functions.  */
+
+  /* Return the default file name for the binary of this engine.  */
   const char *(*get_file_name) (void);
-  const char *(*get_version) (void);
+
+  /* Returns a malloced string containing the version of the engine
+     with the given binary file name (or the default if FILE_NAME is
+     NULL.  */
+  char *(*get_version) (const char *file_name);
+
+  /* Returns a statically allocated string containing the required
+     version.  */
   const char *(*get_req_version) (void);
+
   gpgme_error_t (*new) (void **r_engine,
-			const char *lc_ctype, const char *lc_messages);
+			const char *file_name, const char *home_dir);
 
   /* Member functions.  */
   void (*release) (void *engine);
+  gpgme_error_t (*reset) (void *engine);
   void (*set_status_handler) (void *engine, engine_status_handler_t fnc,
 			      void *fnc_value);
   gpgme_error_t (*set_command_handler) (void *engine,
@@ -46,6 +58,7 @@ struct engine_ops
   gpgme_error_t (*set_colon_line_handler) (void *engine,
 					   engine_colon_line_handler_t fnc,
 					   void *fnc_value);
+  gpgme_error_t (*set_locale) (void *engine, int category, const char *value);
   gpgme_error_t (*decrypt) (void *engine, gpgme_data_t ciph,
 			    gpgme_data_t plain);
   gpgme_error_t (*delete) (void *engine, gpgme_key_t key, int allow_secret);

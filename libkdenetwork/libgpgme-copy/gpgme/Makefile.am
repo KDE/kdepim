@@ -37,10 +37,10 @@ libgpgme_real_la_SOURCES =						\
 	import.c export.c genkey.c delete.c edit.c			\
 	engine.c rungpg.c 	\
 	posix-util.c posix-sema.c posix-io.c	\
-	engine-gpgsm.c \
+	engine-gpgsm.c sig-notation.c funopen.c \
 	debug.c gpgme.c version.c error.c
 
-libgpgme_la_SOURCES = ath-compat.c fakes.c
+libgpgme_la_SOURCES = ath.c
 
 AM_CPPFLAGS = $(assuan_cppflags) -I$(srcdir)/../../libgpg-error-copy -I../../libgpg-error-copy
 

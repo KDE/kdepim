@@ -1,3 +1,842 @@
+2007-02-26  Werner Koch  <wk@g10code.com>
+
+	* verify.c (op_data_t): New element PLAINTEXT_SEEN.
+	(_gpgme_verify_status_handler): Return an error if more than one
+	plaintext has been seen.
+	(parse_error): New arg SET_STATUS. Also detect it based on an
+	ERROR status (gpg > 1.4.6).
+
+2007-01-26  Werner Koch  <wk@g10code.com>
+
+	* w32-io.c (build_commandline): Fixed stupid quoting bug.
+	* w32-glib-io.c (build_commandline): Ditto.
+
+	* rungpg.c (gpg_set_locale): Avoid dangling pointer after free.
+
+	* gpgme-config.in: New options --get-gpg and --get-gpgsm.
+
+2007-01-18  Marcus Brinkmann  <marcus@g10code.de>
+
+	* data.h (_gpgme_data_get_fd): Add prototype.
+	(gpgme_data_get_fd_cb): New type.
+	(struct _gpgme_data_cbs): New member get_fd.
+	* data.c (_gpgme_data_get_fd): New function.
+	* data-fd.c (fd_get_fd): New function.
+	(fd_cbs): Add fd_get_fd.
+	* data-stream.c (stream_get_fd): New function.
+	(stream_cbs): Add stream_get_fd.
+	* data-mem.c (mem_cbs): Add NULL for get_fd callback.	
+	* data-user.c (user_cbs): Likewise.
+	* engine-gpgsm.c (gpgsm_set_fd) [USE_DESCRIPTOR_PASSING]: Try to
+	short-cut by passing the data descriptor directly.
+
+2007-01-17  Marcus Brinkmann  <marcus@g10code.de>
+
+	* w32-io.c (build_commandline): Quote all command line arguments.
+	* w32-glib-io.c (build_commandline): Likewise.
+
+2007-01-10  Werner Koch  <wk@g10code.com>
+
+	* ttyname_r.c (ttyname_r) [W32]: Return a dummy name.
+
+2007-01-08  Werner Koch  <wk@g10code.com>
+
+	* version.c (do_subsystem_inits): Do assuan init only if building
+	with Assuan.
+	* setenv.c: Include assuan-def.h only if building with Assuan
+	support.
+
+	* op-support.c (_gpgme_op_reset): Set LC_MESSAGES only if
+	if defined.
+	* engine-gpgsm.c (gpgsm_set_locale): Ditto.
+	* rungpg.c (gpg_set_locale): Ditto.
+
+2006-12-17  Marcus Brinkmann  <marcus@g10code.de>
+
+	* gpgme.c (gpgme_set_protocol): Shut down the engine when
+	switching protocols.
+	(gpgme_ctx_set_engine_info): Likewise for engine info.
+	* engine.h (_gpgme_engine_reset): New function prototype.
+	* engine.c (_gpgme_engine_reset): New function.
+	* engine-backend.h (struct engine_ops): New member RESET.
+	* rungpg.c (_gpgme_engine_ops_gpg): Add NULL for reset function.
+	* engine-gpgsm.c (_gpgme_engine_ops_gpgsm)
+	[USE_DESCRIPTOR_PASSING]: Add gpgsm_reset for reset.
+	(_gpgme_engine_ops_gpgsm) [!USE_DESCRIPTOR_PASSING]: Add NULL for
+	reset function.
+	(gpgsm_reset) [USE_DESCRIPTOR_PASSING]: New function.
+	* op-support.c (_gpgme_op_reset): Try to use the engine's reset
+	function if available.
+	* engine-gpgsm.c (gpgsm_new): Move code to dup status_fd to ...
+	(start): ... here.
+	* posix-io.c (_gpgme_io_recvmsg, _gpgme_io_sendmsg): New functions.
+	
+	* engine.h (_gpgme_engine_new): Remove arguments lc_ctype and
+	lc_messages from prototype.
+	(_gpgme_engine_set_locale): New prototype.
+	* engine.c (_gpgme_engine_set_locale): New function.
+	* op-support.c (_gpgme_op_reset): Call _gpgme_engine_set_locale.
+	* engine-backend.h (struct engine_ops): Add new member SET_LOCALE.
+	Remove arguments lc_messages and lc_ctype from member NEW.
+	* engine-gpgsm.c (struct engine_gpgsm): New members lc_ctype_set
+	and lc_messages_set.
+	(gpgsm_new): Remove lc_messages and lc_ctype
+	arguments.
+	(gpgsm_set_locale): New function.
+	(_gpgme_engine_ops_gpgsm): Add gpgsm_set_locale.
+	* rungpg.c (struct engine_gpg): Add new members lc_messages and
+	lc_ctype.
+	(gpg_release): Release lc_messages and lc_ctype if set.
+	(gpg_new): Remove lc_messages and lc_ctype arguments.
+	(gpg_set_locale): New function.
+	(_gpgme_engine_ops_gpg): Add gpg_set_locale.
+	(add_arg): Implement in terms of:
+	(add_arg_ext): New function.
+	(start): Set lc-messages and lc-ctype arguments here.
+
+2006-12-03  Marcus Brinkmann  <marcus@g10code.de>
+
+	* engine-gpgsm.c (struct engine_gpgsm): Move members
+	input_fd_server, output_fd_server, message_fd_server to ...
+	(iocb_data): ... here (as server_fd).
+	(close_notify_handler): Reset tags as well.
+	(gpgsm_new): Implement support for descriptor
+	passing.
+	(fd_type_t): New type.
+	(gpgsm_clear_fd): New function.  Use it instead of _gpgsm_io_close
+	for unused communication channels.
+	(gpgsm_set_fd): Rewritten to support descriptor passing.  All
+	relevant callers adjusted as well (previously of _gpgme_io_close).
+
+2006-12-02  Marcus Brinkmann  <marcus@g10code.de>
+
+	* version.c: Include "assuan.h".
+	(do_subsystem_inits): Call assuan_set_assuan_err_source.
+
+2006-12-01  Marcus Brinkmann  <marcus@g10code.de>
+
+	* Makefile.am (libgpgme_real_la_SOURCES): Rename to main_sources.
+	(libgpgme_la_SOURCES, libgpgme_pthread_la_SOURCES,
+	libgpgme_glib_la_SOURCES, libgpgme_pth_la_SOURCES): Add
+	$(main_sources).
+	(libgpgme_la_DEPENDENCIES, libgpgme_la_LIBADD,
+	libgpgme_pthread_la_DEPENDENCIES, libgpgme_pthread_la_LIBADD,
+	libgpgme_pth_la_DEPENDENCIES, libgpgme_pth_la_LIBADD,
+	libgpgme_glib_la_DEPENDENCIES, libgpgme_glib_la_LIBADD): Remove
+	libgpgme-real.la.
+	(noinst_LTLIBRARIES): Removed.
+	(libgpgme_glib_la_CFLAGS, libgpgme_pth_la_CFLAGS): Removed.
+	(AM_CFLAGS): New variable.
+
+2006-11-30  Marcus Brinkmann  <marcus@g10code.de>
+
+	* engine-gpgsm.c: Replace AssuanError with gpg_error_t and
+	ASSUAN_CONTEXT with assuan_context_t.
+
+2006-11-29  Marcus Brinkmann  <marcus@g10code.de>
+
+	* engine-gpgsm.c (gpgsm_new): Check return value of
+	assuan_pipe_connect.
+
+	* rungpg.c: Include <unistd.h>.
+	(gpg_new): Support --display, --ttyname, --ttytype, --lc-ctype and
+	--lc-messages.  Fixes issue 734.
+
+2006-10-24  Marcus Brinkmann  <marcus@g10code.de>
+
+	* trustlist.c (gpgme_op_trustlist_next): Return error if OPD is
+	NULL.
+
+2006-10-23  Marcus Brinkmann  <marcus@g10code.de>
+
+	* wait-global.c (gpgme_wait): Unlock CTX_LIST_LOCK while calling
+	_gpgme_engine_io_event().
+
+	* keylist.c (gpgme_op_keylist_next): Return error if OPD is NULL.
+
+2006-09-25  Marcus Brinkmann  <marcus@g10code.de>
+
+	* data-mem.c (gpgme_data_release_and_get_mem): Release the data
+	object properly.
+
+2006-09-22  Marcus Brinkmann  <marcus@g10code.de>
+
+	* keylist.c (keylist_colon_handler): Move debug output after
+	initialising KEY.
+
+2006-07-29  Marcus Brinkmann  <marcus@g10code.de>
+
+	* gpgme-config.in (Options): Add NETLIBS.
+	* Makefile.am (libgpgme_la_LIBADD, libgpgme_pthread_la_LIBADD,
+	libgpgme_pth_la_LIBADD, libgpgme_glib_la_LIBADD): Add NETLIBS.
+
+	* rungpg.c (read_status): Fix comparison disguising as an
+	assignment.
+
+2005-03-24  Marcus Brinkmann  <marcus@g10code.de>
+
+	* gpgme.c (gpgme_set_locale): Remove conditional on
+	HAVE_W32_SYSTEM, and just check for LC_MESSAGES.
+
+2006-07-16  Marcus Brinkmann  <marcus@g10code.de>
+
+	* rungpg.c (read_status): Strip potential carriage return.
+	* genkey.c (get_key_parameter): Skip potential carriage return.
+	* version.c (_gpgme_get_program_version): Strip potential carriage
+	return.
+
+	* data.c (gpgme_data_set_file_name): Allow to clear the file name
+	by passing NULL.
+
+2006-06-22  Marcus Brinkmann  <marcus@g10code.de>
+
+	* keylist.c (gpgme_get_key): Also clone the engine info.
+
+2006-03-06  Marcus Brinkmann  <marcus@g10code.de>
+
+	* gpgme-config.in (cflags_pth): Revert accidential removal of
+	pthread support with last change.
+
+2006-02-28  Marcus Brinkmann  <marcus@g10code.de>
+
+	* w32-glib-io.c (O_BINARY) [!O_BINARY]: New macro.
+	(_gpgme_io_pipe): Open pipes in binary mode.
+
+2006-02-22  Marcus Brinkmann  <marcus@g10code.de>
+
+	* engine.c (gpgme_engine_check_version): Reimplemented to allow
+	checking the version correctly even after changing the engine
+	information.  Bug reported by Stéphane Corthésy.
+
+	* rungpg.c (read_colon_line): Invoke colon preprocess handler if
+	it is set.
+	(colon_preprocessor_t): New type.
+	(struct engine_gpg): New member colon.preprocess_fnc.
+	(gpg_keylist_preprocess): New function.
+	* keylist.c (keylist_colon_handler): Allow short key IDs.
+
+2006-02-15  Marcus Brinkmann  <marcus@g10code.de>
+
+	* w32-io.c (create_writer): Make C->have_data a manually resetted
+	event.
+	(writer): Move code from end of if block to beginning, so it
+	is also run the first time.
+	(_gpgme_io_write): Move assert check after error check.  Reset
+	the is_empty event, and also do it eagerly.
+	(_gpgme_io_select): Unconditionally wait for the is_empty event.
+
+2006-01-26  Werner Koch  <wk@g10code.com>
+
+	* w32-util.c (_gpgme_get_conf_int): New.
+	* posix-util.c (_gpgme_get_conf_int): New.
+	* w32-io.c (get_desired_thread_priority): New.
+	(create_reader, create_writer): Use it here.
+
+2006-01-04  Werner Koch  <wk@g10code.com>
+
+	* debug.h (_gpgme_debug_srcname): New. Use it with the debug macros.
+
+	* w32-glib-io.c (_gpgme_io_set_nonblocking): Add debug
+	statements. Disable error return for failed nonblocking call.
+
+2006-01-03  Marcus Brinkmann  <marcus@g10code.de>
+
+	* w32-glib-io.c (_gpgme_io_close): Only close fd if there is no
+	channel for it.
+
+2005-12-31  Marcus Brinkmann  <marcus@g10code.de>
+
+	* w32-glib-io.c (find_channel): Set channel to unbuffered.
+	(_gpgme_io_select): Fix debug output.
+
+2005-12-23  Werner Koch  <wk@g10code.com>
+
+	* gpgme.h (struct _gpgme_signature): Append field PKA_ADDRESS.
+	* verify.c (release_op_data, _gpgme_verify_status_handler): Set
+	this field.
+
+2005-12-20  Werner Koch  <wk@g10code.com>
+
+	* gpgme.h (gpgme_status_code_t): Added GPGME_STATUS_PKA_TRUST_BAD
+	and GPGME_STATUS_PKA_TRUST_GOOD.
+	(struct _gpgme_signature): New field pka_trust.
+	* verify.c (_gpgme_verify_status_handler): Set pka_trust.
+
+2005-12-06  Werner Koch  <wk@g10code.com>
+
+	* keylist.c (keylist_colon_handler): Store fingerprints of the
+	subkeys.  Reset the secret flag of subkeys for stub secret keys.
+	(NR_FIELDS): Bumped up to 16
+
+2005-11-27  Marcus Brinkmann  <marcus@g10code.de>
+
+	* engine.c (_gpgme_set_engine_info): Use new_file_name in
+	engine_get_version invocation.  Reported by Stéphane Corthésy.
+
+2005-11-24  Marcus Brinkmann  <marcus@g10code.de>
+
+	* w32-glib-io.c (_gpgme_io_fd2str): Remove debug printf.
+
+2005-11-18  Werner Koch  <wk@g10code.com>
+
+	* w32-glib-io.c: Include glib.h before windows to avoid a symbol
+	shadowing warning.
+	(find_channel): Better use g_io_channel_win32_new_fd instead of
+	the autodetection function g_io_channel_unix_new.
+	(_gpgme_io_select): Rewritten.  It is now a fully working select
+	implementation.
+
+2005-11-18  Marcus Brinkmann  <marcus@g10code.de>
+
+	* priv-io.h (_gpgme_io_fd2str): New prototype.
+	* posix-io.c (_gpgme_io_fd2str): New function.
+	* w32-io.c (_gpgme_io_fd2str): New function.
+	* rungpg.c: Use this new function.
+	* w32-glib-io.c (_gpgme_io_fd2str): Rewrote the file handle code
+	again.  Two's company, three's the musketeers.
+
+	* w32-glib-io.c: Rewrote the file handle code.  We don't create
+	system fds for every handle (doesn't work for inherited handles),
+	but we create pseudo fds in a private namespace that designate a
+	handle and potentially a giochannel.
+
+2005-11-18  Werner Koch  <wk@g10code.com>
+
+	* versioninfo.rc.in: Set file version to LT-version + Svn-revision.
+
+2005-11-17  Marcus Brinkmann  <marcus@g10code.de>
+
+	* w32-glib-io.c: New file.
+	* gpgme.def (gpgme_get_giochannel): Add symbol.
+	* Makefile.am (system_components) [HAVE_DOSISH_SYSTEM]: Remove
+	w32-io.c.
+	(ltlib_gpgme_extra): New variable.
+	(lib_LTLIBRARIES): Add $(ltlib_gpgme_extra).
+	(system_components_not_extra): New variable.
+	(libgpgme_la_SOURCES, libgpgme_pthread_la_SOURCES,
+	(libgpgme_pth_la_SOURCES): Add $(system_components_not_extra).
+	(libgpgme_glib_la_LDFLAGS, libgpgme_glib_la_DEPENDENCIES,
+	(libgpgme_glib_la_LIBADD, libgpgme_glib_la_CFLAGS)
+	[BUILD_W32_GLIB]: New variables. 
+	* gpgme-config.in (glib): New option.
+	* gpgme.m4 (AM_PATH_GPGME_GLIB): New macro.
+
+2005-11-17  Marcus Brinkmann  <marcus@g10code.de>
+
+	* priv-io.h (_gpgme_io_waitpid, _gpgme_io_kill): Removed.
+	* w32-io.c (_gpgme_io_waitpid, _gpgme_io_kill): Removed.
+	* posix-io.c (_gpgme_io_kill): Removed.
+	(_gpgme_io_waitpid): Declare static.
+
+2005-10-24  Marcus Brinkmann  <marcus@g10code.de>
+
+	* w32-io.c (_gpgme_io_spawn): Don't minimize window, hide it.
+
+2005-10-21  Werner Koch  <wk@g10code.com>
+
+	* Makefile.am: Fixed cut+paste problem
+
+2005-10-20  Marcus Brinkmann  <marcus@g10code.de>
+
+	* Makefile.am: Build versioninfo.lo, not versioninfo.o.  Also, fix
+	the whole mess.
+
+2005-10-16  Marcus Brinkmann  <marcus@g10code.de>
+
+	* rungpg.c (gpg_edit): Don't add a key argument if in card edit
+	mode.
+
+2005-10-06  Marcus Brinkmann  <marcus@g10code.de>
+
+	* Makefile.am (gpgme.dll gpgme.dll.a): Use $(srcdir) for
+	gpgme.def.
+
+	* gpgme.h (gpgme_free): New prototype.
+	* data-mem.c (gpgme_free): New function.
+	* libgpgme.vers (GPGME_1.1): Add gpgme_free.
+	* gpgme.def: Add gpgme_free.
+
+2005-10-02  Marcus Brinkmann  <marcus@g10code.de>
+
+	* util.h (_gpgme_decode_percent_string): Add new argument BINARY
+	to prototype.
+	* verify.c (parse_notation): Likewise for invocation.
+	* conversion.c (_gpgme_decode_percent_string): Likewise to
+	declaration.  If set, do not replace '\0' characters with a
+	printable string.
+	* gpgme.h (struct _gpgme_key_sig): New field notations.
+	* ops.h (_gpgme_parse_notation): New prototype.
+	* sig-notation.c (_gpgme_parse_notation): New function.
+	* key.c (gpgme_key_unref): Free all signature notations.
+	* keylist.c (op_data_t): New member tmp_keysig.
+	(finish_key): Clear OPD->tmp_keysig.
+	* gpgme.c (gpgme_set_keylist_mode): Remove check.
+	* rungpg.c (gpg_keylist): Support listing signature notations.
+	(gpg_keylist_ext): Likewise.
+
+2005-10-01  Marcus Brinkmann  <marcus@g10code.de>
+
+	* engine.h (_gpgme_set_engine_info): Add prototype.
+	* engine-backend.h (struct engine_ops): Change return type of
+	get_file_name() to const char * to silence gcc warning.
+	* engine.c (engine_get_file_name): Change return type to const
+	char * to silence gcc warning.
+	(gpgme_get_engine_info): Use transitional variable to go from
+	const char * to char * to silence gcc warning.
+	(_gpgme_set_engine_info): Likewise.
+	* engine-gpgsm.c (struct engine_gpgsm): Change type of LINE to
+	char * to silence gcc warning.
+	(gpgsm_new): Make ARGV a pointer to const char.
+	(status_handler): Change type of SRC, END, DST, ALINE and NEWLINE
+	to char * to silence gcc warning.
+
+	* gpgme.def: Add gpgme_data_set_file_name,
+	gpgme_data_get_file_name, gpgme_sig_notation_clear,
+	gpgme_sig_notation_add and gpgme_sig_notation_get.
+	* libgpgme.vers: Add gpgme_sig_notation_clear,
+	gpgme_sig_notation_add and gpgme_sig_notation_get.
+	* Makefile.am (libgpgme_real_la_SOURCES): Add sig-notation.c.
+	* context.h (struct gpgme_context): New field sig_notations.
+	* gpgme.h (struct _gpgme_sig_notation): New member value_len and
+	critical.
+	(GPGME_SIG_NOTATION_CRITICAL): New symbol.
+	(gpgme_sig_notation_flags_t): New type.
+	(gpgme_sig_notation_add, gpgme_sig_notation_clear,
+	gpgme_sig_notation_get): New prototypes.
+	* ops.h (_gpgme_sig_notation_create, _gpgme_sig_notation_free):
+	New prototypes.
+	* sig-notation.c (_gpgme_sig_notation_free): New file.
+	* verify.c (parse_notation): Use support functions.
+	(release_op_data): Likewise.
+	* rungpg.c (append_args_from_sig_notations): New function.
+	(gpg_encrypt_sign, gpg_sign): Call it.
+
+2005-09-30  Marcus Brinkmann  <marcus@g10code.de>
+
+	* data.h (struct gpgme_data): New member file_name.
+	* data.c (gpgme_data_set_filename): New function.
+	(_gpgme_data_release): Free DH->filename if necessary.
+	(gpgme_data_get_filename): New function.
+	* rungpg.c (gpg_encrypt): Set filename option.
+	(gpg_encrypt_sign): Likewise.
+	(gpg_sign): Likewise.
+	* libgpgme.vers (GPGME_1.1): Add gpgme_data_set_file_name and
+	gpgme_data_get_file_name.
+
+	* decrpyt.c, verify.c, gpgme.h: Replace plaintext_filename with
+	file_name.
+
+2005-09-29  Marcus Brinkmann  <marcus@g10code.de>
+
+	* gpgme.h (struct _gpgme_key): Add field is_qualified.
+	(struct _gpgme_subkey): Likewise.
+	* keylist.c (set_subkey_capability, set_mainkey_capability): Set
+	field is_qualified.
+
+2005-09-23  Werner Koch  <wk@g10code.com>
+
+	* w32-io.c (_gpgme_io_pipe): Removed use of environment variable
+	again.
+	(create_reader, create_writer): Set thread priority higher.
+
+2005-09-19  Werner Koch  <wk@g10code.com>
+
+	* w32-io.c (_gpgme_io_pipe): New environment variable to change
+	the size of the pipe buffer.
+
+2005-09-13  Werner Koch  <wk@g10code.com>
+
+	* ath.c: Changes to make it work under W32.
+
+2005-09-12  Marcus Brinkmann  <marcus@g10code.de>
+
+	* Makefile.am (libgpgme_la_SOURCES): Set to ath.h and ath.c.
+	(ath_pth_src, ath_pthread_src): Removed.
+	(w32_o_files): Replace ath-compat.o with ath.o.
+	(libgpgme_pth_la_CFLAGS): New variable.
+	* ath-compat.c, ath-pthread-compat.c, ath-pth-compat.c: Removed.
+	* ath.h (ath_pthread_available, ath_pth_available): Removed.
+	(ath_init) [!_ATH_EXT_SYM_PREFIX]: Do not define macro.
+	(struct ath_ops, ath_init) [_ATH_COMPAT]: Removed.
+	(_ATH_COMPAT): Macro removed.
+	* posix-sema.c (_gpgme_sema_subsystem_init): Do not call
+	_gpgme_ath_init.
+
+2005-09-12  Marcus Brinkmann  <marcus@g10code.de>
+
+	* keylist.c (release_op_data): Do not free opd->tmp_uid.
+
+2005-09-07  Werner Koch  <wk@g10code.com>
+
+	* w32-io.c (build_commandline): Quote argv[0].
+
+2005-08-26  Marcus Brinkmann  <marcus@g10code.de>
+
+	* rungpg.c (command_handler): Use _gpgme_io_write instead of write.
+
+	* edit.c (command_handler): Do not depend on PROCESSED being
+	available.
+
+	* engine.h (engine_command_handler_t): Add new argument processed.
+	* ops.h (_gpgme_passphrase_command_handler_internal): Rename
+	prototype to ...
+	(_gpgme_passphrase_command_handler): ... this one.
+	* passphrase.c (_gpgme_passphrase_command_handler_internal):
+	Rename to ...
+	(_gpgme_passphrase_command_handler): ... this one.
+	* edit.c (command_handler): Add new argument processed.  Remove
+	local variable with the same name.  Always return processed as
+	true.
+	* rungpg.c (command_handler): Send a newline character if the
+	handler did not.
+
+2005-08-26  Werner Koch  <wk@g10code.com>
+
+	* w32-util.c (read_w32_registry_string): Updated from code used by
+	GnuPG.  This allows for expanding strings and features the
+	implicit fallback key.
+	(w32_shgetfolderpath, find_program_at_standard_place): New.
+	(_gpgme_get_gpg_path, _gpgme_get_gpgsm_path): With no registry
+	entry, locate the programs at the standard place.
+	(dlopen, dlsym, dlclose): New, so that we can keep on using what
+	we are accustomed to.
+
+	* debug.c (debug_init): Use PATHSEP_C so that under W32 a
+	semicolon is used which allows us to create files with drive
+	letters.
+
+	* w32-io.c (_gpgme_io_read, _gpgme_io_write): Print content in
+	debug mode too.
+
+2005-08-19  Werner Koch  <wk@g10code.com>
+
+	* gpgme.def: New.
+	* versioninfo.rc.in: New.
+	* Makefile.am: Addes support for building a W32 DLL.
+	
+	* ttyname_r.c (ttyname_r) [W32]: Return error.
+	* ath-compat.c [W32]: select and co are not yet supported; return
+	error.
+	* data-stream.c (stream_seek): Use ftell if ftello is not available.
+
+2005-08-08  Werner Koch  <wk@g10code.com>
+
+	* util.h (stpcpy): Renamed to ..
+	(_gpgme_stpcpy): .. this and made inline.  This avoids duplicate
+	definitions when linking statically.
+	* stpcpy.c: Removed.
+	
+2005-07-27  Marcus Brinkmann  <marcus@g10code.de>
+
+	* gpgme.h (gpgme_status_code_t): Add GPGME_STATUS_PLAINTEXT.
+	(struct _gpgme_op_decrypt_result): New member plaintext_filename.
+	(struct _gpgme_op_verify_result): Likewise.
+	* ops.h (_gpgme_parse_plaintext): Add prototype.
+	* op-support.c (_gpgme_parse_plaintext): New function.
+	* decrypt.c (release_op_data): Release
+	OPD->result.plaintext_filename.
+	(_gpgme_decrypt_status_handler): Handle GPGME_STATUS_PLAINTEXT.
+	* verify.c (release_op_data): Release
+	OPD->result.plaintext_filename.
+	(_gpgme_verify_status_handler): Handle GPGME_STATUS_PLAINTEXT.
+
+2005-07-26  Marcus Brinkmann  <marcus@g10code.de>
+
+	* keylist.c (gpgme_get_key): Allow key IDs.
+
+2005-06-20  Marcus Brinkmann  <marcus@g10code.de>
+
+	* gpgme.m4: Only call GPGME_CONFIG if found.
+
+2005-06-03  Marcus Brinkmann  <marcus@g10code.de>
+
+	* gpgme.h (struct _gpgme_signature): New members pubkey_algo and
+	hash_algo.
+	* verify.c (parse_valid_sig): Parse pubkey and hash algo numbers.
+	(parse_new_sig): Parse pubkey, hash algo and timestamp for ERRSIG.
+
+	(_gpgme_decrypt_status_handler): Fix last change.
+
+	* gpgme.h (struct _gpgme_recipient): New structure.
+	(gpgme_recipient_t): New type.
+	(struct _gpgme_op_decrypt_result): Add member recipients.
+	* decrypt.c (op_data_t): New member last_recipient_p.
+	(_gpgme_op_decrypt_init_result): Initialize last_recipient_p.
+	(parse_enc_to): New function.
+	(_gpgme_decrypt_status_handler): Handle status ENC_TO and
+	NO_SECKEY.
+
+	* wait-global.c (gpgme_wait): Break out of the fd processing loop
+	after an error.
+	Reported by Igor Belyi <gpgme@katehok.ac93.org>.
+
+2005-06-02  Marcus Brinkmann  <marcus@g10code.de>
+
+	* wait.h (_gpgme_run_io_cb): New prototype.
+	* wait.c (_gpgme_run_io_cb): New function.
+	* wait-global.c (gpgme_wait): Call it.
+	* wait-user.c (_gpgme_user_io_cb_handler): Likewise.
+	* wait-private.c (_gpgme_wait_on_condition): Likewise.
+
+2005-06-02  Werner Koch  <wk@g10code.com>
+
+	* passphrase.c (_gpgme_passphrase_status_handler): Take care of
+	GPGME_STATUS_NEED_PASSPHRASE_PIN.
+	(_gpgme_passphrase_command_handler_internal): Also act on the key
+	"passphrase.pin.ask".
+
+	* gpgme.h: Added status codes GPGME_STATUS_SIG_SUBPACKET,
+	GPGME_STATUS_NEED_PASSPHRASE_PIN, GPGME_STATUS_SC_OP_FAILURE,
+	GPGME_STATUS_SC_OP_SUCCESS, GPGME_STATUS_CARDCTRL,
+	GPGME_STATUS_BACKUP_KEY_CREATED.
+
+2005-05-28  Marcus Brinkmann  <marcus@g10code.de>
+
+	* data-user.c: Include <errno.h>.
+
+2005-05-17  Marcus Brinkmann  <marcus@g10code.de>
+
+	* gpgme.c (gpgme_new): Set the CTX->include_certs default to the
+	default.
+
+2005-05-11  Marcus Brinkmann  <marcus@g10code.de>
+
+	* w32-io.c (_gpgme_io_select): Fix loop increment.
+
+2005-05-05  Marcus Brinkmann  <marcus@g10code.de>
+
+	* data-user.c (user_release): Only call user hook if provided.
+	(user_seek): Return EBADF if no user hook is provided.
+	(user_read): Likewise.
+	(user_write): Likewise.
+
+2005-04-28  Marcus Brinkmann  <marcus@g10code.de>
+
+	* gpgme.h (GPGME_INCLUDE_CERTS_DEFAULT): New macro.
+	* engine-gpgsm.c (gpgsm_sign): Send the include-certs option after
+	the reset, just for cleanliness, and do not sent it at all if the
+	default is requested.
+	* gpgme.c (gpgme_set_include_certs): Allow to use
+	GPGME_INCLUDE_CERTS_DEFAULT.
+
+2005-04-21  Werner Koch  <wk@g10code.com>
+
+	* verify.c (calc_sig_summary): Set the key revoked bit.
+
+2005-04-14  Marcus Brinkmann  <marcus@g10code.de>
+
+	* wait-global.c (gpgme_wait): Use LI->ctx when checking a context
+	in the list, not the user-provided CTX.
+	Reported by Igor Belyi <gpgme@katehok.ac93.org>.
+
+	* wait-global.c (gpgme_wait): If no context is found, and we
+	should not hang, set *status to 0 and return NULL.
+	Reported by Igor Belyi <gpgme@katehok.ac93.org>.
+
+2005-03-24  Marcus Brinkmann  <marcus@g10code.de>
+
+	* data.h (EOPNOTSUPP) [_WIN32]: Remove definition.
+	* data.c (EOPNOTSUPP) [HAVE_W32_SYSTEM]: Remove definition.
+	(gpgme_data_read, gpgme_data_write, gpgme_data_seek): Return
+	ENOSYS instead EOPNOTSUPP.
+	* data-compat.c (EOPNOTSUPP) [HAVE_W32_SYSTEM]: Remove definition.
+	(gpgme_error_to_errno): Map GPG_ERR_NOT_SUPPORTED
+	to ENOSYS.
+
+2005-03-24  Marcus Brinkmann  <marcus@g10code.de>
+
+	* io.h: Rename to ...
+	* priv-io.h: ... this.
+	* Makefile.am (libgpgme_real_la_SOURCES): Change io.h to priv-io.h.
+	* data.c, engine-gpgsm.c, posix-io.c, rungpg.c, version.c,
+	w32-io.c, wait-private.c, wait-global.c, wait-user.c, wait.c:
+	Change all includes of "io.h" to "priv-io.h"
+	
+2005-03-09  Werner Koch  <wk@g10code.com>
+
+	* w32-util.c (_gpgme_get_gpg_path, _gpgme_get_gpgsm_path): Do not
+	cast away type checks.
+
+	* io.h [W32]: Do not include stdio.h.  If it is needed do it at
+	the right place.
+
+	* data.h [W32]: Removed kludge for EOPNOTSUP.
+	* data.c, data-compat.c [W32]: Explicitly test for it here.
+
+	Replaced use of _WIN32 by HAVE_W32_SYSTEM except for public header
+	files.
+
+2005-03-07  Timo Schulz  <twoaday@g10code.de>
+ 
+        * gpgme.h: [_WIN32] Removed ssize_t typedef.
+        * ath.h: [_WIN32] Added some (dummy) types.
+        * io.h: [_WIN32] include stdio.h.
+        * data.h: [_WIN32] Define EOPNOTSUPP.
+        * w32-io.c [_WIN32] (_gpgme_io_subsystem_init): New.
+        * gpgme.c [_WIN32] (gpgme_set_locale): Disabled.
+
+2004-12-12  Marcus Brinkmann  <marcus@g10code.de>
+
+	* engine.c (_gpgme_set_engine_info): Fix assertion.
+
+2004-12-11  Marcus Brinkmann  <marcus@g10code.de>
+
+	* util.h [HAVE_CONFIG_H && HAVE_TTYNAME_R] (ttyname_r): Define
+	prototype.
+	* ttyname_r.c: New file.
+
+2004-12-07  Marcus Brinkmann  <marcus@g10code.de>
+
+	* putc_unlocked.c, funopen.c: I just claim copyright on these
+	files and change their license to LGPL, because they are totally
+	trivial wrapper functions.
+	* isascii.c: Change copyright notice to the one from ctype/ctype.h
+	in the GNU C Library (CVS Head 2004-10-10), where isascii is
+	defined as a macro doing exactly the same as the function in this
+	file.
+	* memrchr.c: Update from the GNU C Library (CVS Head 2001-07-06).
+	* stpcpy.c: Update from the GNU C Library (CVS Head 2004-10-10).
+	* ath.c, ath-compat.c, ath.h, ath-pth.c, ath-pth-compat.c,
+	ath-pthread.c, ath-pthread-compat.c, context.h, conversion.c,
+	data.c, data-compat.c, data-fd.c, data.h, data-mem.c,
+	data-stream.c, data-user.c, debug.c, debug.h, decrypt.c,
+	decrypt-verify.c, delete.c, edit.c, encrypt.c, encrypt-sign.c,
+	engine-backend.h, engine.c, engine-gpgsm.c, engine.h, error.c,
+	export.c, genkey.c, get-env.c, gpgme.c, gpgme.h, import.c, io.h,
+	key.c, keylist.c, mkstatus, Makefile.am, ops.h, op-support.c,
+	passphrase.c, posix-io.c, posix-sema.c, posix-util.c, progress.c,
+	rungpg.c, sema.h, sign.c, signers.c, trust-item.c, trustlist.c,
+	util.h, verify.c, version.c, w32-io.c, w32-sema.c, w32-util.c,
+	wait.c, wait-global.c, wait.h, wait-private.c, wait-user.c: Change
+	license to LGPL.
+
+2004-12-07  Marcus Brinkmann  <marcus@g10code.de>
+
+	* libgpgme.vers (GPGME_1.1): New version.
+	* engine-backend.h (struct engine_ops): Add argument FILE_NAME to
+	member get_version().  Add arguments FILE_NAME and HOME_DIR to
+	member new().  Change return type of get_file_name and get_version
+	to char *.
+	* engine-gpgsm.c (gpgsm_get_version): Change return type to char
+	pointer.  Do not cache result.
+	(gpgsm_new): Add file_name and home_dir argument, and use them
+	instead of the defaults, if set.
+	* rungpg.c (struct engine_gpg): New member file_name.
+	(gpg_get_version): Change return type to char pointer, and do not
+	cache result.
+	(gpg_release): Free gpg->file_name.
+	(gpg_new): Take new arguments file_name and home_dir.  Set the
+	--homedir argument if HOME_DIR is not NULL.  Set gpg->file_name.
+	(start): Use gpg->file_name instead _gpgme_get_gpg_path, if set.
+	* engine.h (_gpgme_engine_info_copy, _gpgme_engine_info_release):
+	New prototypes.
+	(_gpgme_engine_new): Change first argument to gpgme_engine_info_t
+	info.
+	* engine.c: Include <assert.h>.
+	(gpgme_get_engine_info): Set *INFO within the lock.  Move
+	ENGINE_INFO and ENGINE_INFO_LOCK to ....
+	(engine_info, engine_info_lock): ... here.  New static variables.
+	(engine_get_version): Add file_name argument to
+	get_version invocation.  Change return type to char pointer.
+	(gpgme_engine_check_version): Rewritten to free() the return value
+	of engine_get_version after using it.
+	(_gpgme_engine_info_release): New function.
+	(gpgme_get_engine_info): Rewritten.
+	(_gpgme_engine_info_copy): New function.
+	(_gpgme_set_engine_info): New function.
+	(gpgme_set_engine_info): New function.
+	(_gpgme_engine_new): Change first argument to gpgme_engine_info_t
+	info, and use that.
+	* gpgme.h (struct _gpgme_engine_info): Change type of file_name
+	and version to char * (remove the const).  New member home_dir.
+	(gpgme_set_engine_info, gpgme_ctx_get_engine_info,
+	gpgme_ctx_set_engine_info): New prototypes.
+	* context.h (struct gpgme_context): New member engine_info.
+	* gpgme.c (gpgme_new): Allocate CTX->engine_info.
+	(gpgme_release): Deallocate CTX->engine_info.
+	(gpgme_ctx_get_engine_info, gpgme_ctx_set_engine_info): New
+	functions.
+	* op-support.c (_gpgme_op_reset): Look for correct engine info and
+	pass it to _gpgme_engine_new.
+	* version.c (gpgme_check_version): Adjust to
+	_gpgme_compare_versions returning an int.
+	(_gpgme_compare_versions): Return an int value, not a const char
+	pointer.
+	* ops.h (_gpgme_compare_versions): Same for prototype.
+
+2004-10-03  Marcus Brinkmann  <marcus@g10code.de>
+
+	* verify.c (parse_trust): If no reason is provided, set
+	SIG->validity_reason to 0.
+	(calc_sig_summary): Set GPGME_SIGSUM_CRL_TOO_OLD if appropriate.
+
+2004-10-22  Marcus Brinkmann  <marcus@g10code.de>
+
+	* engine-gpgsm.c (map_assuan_error): Return 0 if ERR is 0.
+	(start): Call map_assuan_error on return value of
+	assuan_write_line.
+
+2004-10-05  Marcus Brinkmann  <marcus@g10code.de>
+
+	* op-support.c (_gpgme_op_data_lookup): Use char pointer for
+	pointer arithmetic.
+
+2004-09-30  Marcus Brinkmann  <marcus@g10code.de>
+
+	* gpgme.m4: Implement the --api-version check.
+
+	* rungpg.c (read_status): Move the polling of the output data pipe
+	to just before removing the command fd, from just before adding
+	it.  This avoids buffering problems.
+
+	* data.c (_gpgme_data_inbound_handler): Use _gpgme_io_read, not
+	read, to improve debug output.
+
+2004-09-29  Marcus Brinkmann  <marcus@g10code.de>
+
+	* gpgme.h (GPGME_IMPORT_NEW, GPGME_IMPORT_UID, GPGME_IMPORT_SIG,
+	GPGME_IMPORT_SUBKEY, GPGME_IMPORT_SECRET,
+	(GPGME_KEYLIST_MODE_LOCAL, GPGME_KEYLIST_MODERN_EXTERN,
+	GPGME_KEYLIST_MODE_SIGS, GPGME_KEYLIST_MODE_VALIDATE): Change from
+	enum to macros.
+	(gpgme_keylist_mode_t): Define as unsigned int.
+	(gpgme_key_t): Change type of keylist_mode to
+	gpgme_keylist_mode_t.
+
+2004-09-23  Marcus Brinkmann  <marcus@g10code.de>
+
+	* data.c (_gpgme_data_outbound_handler): Close the file descriptor
+	if we get an EPIPE.
+	
+	* data-stream.c (stream_seek): Call ftello and return the current
+	offset.
+	* data.h (struct gpgme_data): Change type of data.mem.offset to
+	off_t.
+	* data.c (gpgme_data_seek): Check dh->cbs->seek callback, not read
+	callback.  If SEEK_CUR, adjust the offset by the pending buffer
+	size.  Clear pending buffer on success.
+
+
+2004-09-14  Marcus Brinkmann  <marcus@g10code.de>
+
+	* gpgme.m4: Add copyright notice.
+
+2004-08-18  Marcus Brinkmann  <marcus@g10code.de>
+
+	* passphrase.c (_gpgme_passphrase_status_handler): Always run the
+	status handler.
+
+2004-08-17  Marcus Brinkmann  <marcus@g10code.de>
+
+	* rungpg.c (build_argv): Use --no-sk-comment, not --no-comment.
+
+2004-06-23  Marcus Brinkmann  <marcus@g10code.de>
+
+	* key.c (_gpgme_key_append_name): Make sure tail points to the
+	byte following the uid.
+	(_gpgme_key_add_sig): Likewise.  Don't use calloc, but malloc and
+	memset.
+
 2004-06-02  Marcus Brinkmann  <marcus@g10code.de>
 
 	* libgpgme.vers: Remove C-style comment, which is not supported by
@@ -2664,7 +3503,7 @@
 	* import.c (append_xml_impinfo): Kludge to print fingerprint
 	instead of keyid for use with gpgsm.
 	(import_status_handler): Set a flag to know whether any import
-	occurred.
+	occured.
 	(gpgme_op_import): Reurn -1 if no certificate ewas imported.
 
 2002-06-25  Werner Koch  <wk@gnupg.org>
@@ -4462,7 +5301,7 @@
 	* data.c (gpgme_data_rewind): Allow to rewind data_type_none.
 
 
- Copyright 2001, 2002, 2003, 2004 g10 Code GmbH
+ Copyright 2001, 2002, 2003, 2004, 2005 g10 Code GmbH
 
  This file is free software; as a special exception the author gives
  unlimited permission to copy and/or distribute it, with or without

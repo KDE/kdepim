@@ -42,9 +42,10 @@ libassuan_la_SOURCES = \
 	assuan-socket-server.c \
 	assuan-pipe-connect.c \
 	assuan-socket-connect.c  \
+	assuan-socket.c  \
 	assuan-io.c \
-	assuan-domain-connect.c \
-	assuan-domain-server.c \
+	assuan-uds.c \
+	funopen.c \
 	assuan-logging.c
 
 libassuan_la_COMPILE_FIRST=assuan-errors.c

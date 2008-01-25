@@ -15,12 +15,14 @@
  
    You should have received a copy of the GNU Lesser General Public
    License along with libgpg-error; if not, write to the Free
-   Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
-   02110-1301, USA.  */
+   Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 #if HAVE_CONFIG_H
 #include <config.h>
 #endif
+
+#include <errno.h> 
 
 #include <gpg-error.h>
 
@@ -32,10 +34,33 @@
 gpg_err_code_t
 gpg_err_code_from_errno (int err)
 {
-  int idx = errno_to_idx (err);
+  int idx;
 
   if (!err)
     return GPG_ERR_NO_ERROR;
+
+  idx = errno_to_idx (err);
+
+  if (idx < 0)
+    return GPG_ERR_UNKNOWN_ERRNO;
+
+  return GPG_ERR_SYSTEM_ERROR | err_code_from_index[idx];
+}
+
+
+/* Retrieve the error code directly from the ERRNO variable.  This
+   returns GPG_ERR_UNKNOWN_ERRNO if the system error is not mapped
+   (report this) and GPG_ERR_MISSING_ERRNO if ERRNO has the value 0. */
+gpg_err_code_t
+gpg_err_code_from_syserror (void)
+{
+  int err = errno;
+  int idx;
+
+  if (!err)
+    return GPG_ERR_MISSING_ERRNO;
+
+  idx = errno_to_idx (err);
 
   if (idx < 0)
     return GPG_ERR_UNKNOWN_ERRNO;

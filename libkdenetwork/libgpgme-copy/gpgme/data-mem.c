@@ -1,21 +1,22 @@
 /* data-mem.c - A memory based data object.
-   Copyright (C) 2002, 2003 g10 Code GmbH
+   Copyright (C) 2002, 2003, 2004 g10 Code GmbH
  
    This file is part of GPGME.
  
    GPGME is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- 
+   under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of
+   the License, or (at your option) any later version.
+   
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
- 
-   You should have received a copy of the GNU General Public License
-   along with GPGME; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   Lesser General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 #if HAVE_CONFIG_H
 #include <config.h>
@@ -156,10 +157,12 @@ static struct _gpgme_data_cbs mem_cbs =
     mem_read,
     mem_write,
     mem_seek,
-    mem_release
+    mem_release,
+    NULL
   };
 
 
+/* Create a new data buffer and return it in R_DH.  */
 gpgme_error_t
 gpgme_data_new (gpgme_data_t *dh)
 {
@@ -199,25 +202,50 @@ gpgme_data_new_from_mem (gpgme_data_t *dh, const char *buffer,
 }
 
 
+/* Destroy the data buffer DH and return a pointer to its content.
+   The memory has be to released with gpgme_free() by the user.  It's
+   size is returned in R_LEN.  */
 char *
 gpgme_data_release_and_get_mem (gpgme_data_t dh, size_t *r_len)
 {
   char *str = NULL;
 
   if (!dh || dh->cbs != &mem_cbs)
-    return NULL;
+    {
+      gpgme_data_release (dh);
+      return NULL;
+    }
 
   str = dh->data.mem.buffer;
   if (!str && dh->data.mem.orig_buffer)
     {
       str = malloc (dh->data.mem.length);
       if (!str)
-	return NULL;
+	{
+	  gpgme_data_release (dh);
+	  return NULL;
+	}
       memcpy (str, dh->data.mem.orig_buffer, dh->data.mem.length);
     }
+  else
+    /* Prevent mem_release from releasing the buffer memory.  We must
+       not fail from this point.  */
+    dh->data.mem.buffer = NULL;
 
   if (r_len)
     *r_len = dh->data.mem.length;
 
+  gpgme_data_release (dh);
+
   return str;
 }
+
+
+/* Release the memory returned by gpgme_data_release_and_get_mem().  */
+void
+gpgme_free (void *buffer)
+{
+  if (buffer)
+    free (buffer);
+}
+

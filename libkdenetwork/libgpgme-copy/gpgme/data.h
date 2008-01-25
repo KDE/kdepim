@@ -1,21 +1,22 @@
 /* data.h - Internal data object abstraction interface.
-   Copyright (C) 2002 g10 Code GmbH
+   Copyright (C) 2002, 2004, 2005 g10 Code GmbH
  
    This file is part of GPGME.
  
    GPGME is free software; you can redistribute it and/or modify it
-   under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
- 
+   under the terms of the GNU Lesser General Public License as
+   published by the Free Software Foundation; either version 2.1 of
+   the License, or (at your option) any later version.
+   
    GPGME is distributed in the hope that it will be useful, but
    WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   General Public License for more details.
- 
-   You should have received a copy of the GNU General Public License
-   along with GPGME; if not, write to the Free Software Foundation,
-   Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.  */
+   Lesser General Public License for more details.
+   
+   You should have received a copy of the GNU Lesser General Public
+   License along with this program; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+   02111-1307, USA.  */
 
 #ifndef DATA_H
 #define DATA_H
@@ -51,12 +52,16 @@ typedef off_t (*gpgme_data_seek_cb) (gpgme_data_t dh, off_t offset,
 /* Release the data object with the handle DH.  */
 typedef void (*gpgme_data_release_cb) (gpgme_data_t dh);
 
+/* Get the FD associated with the handle DH, or -1.  */
+typedef int (*gpgme_data_get_fd_cb) (gpgme_data_t dh);
+
 struct _gpgme_data_cbs
 {
   gpgme_data_read_cb read;
   gpgme_data_write_cb write;
   gpgme_data_seek_cb seek;
   gpgme_data_release_cb release;
+  gpgme_data_get_fd_cb get_fd;
 };
 
 struct gpgme_data
@@ -75,6 +80,9 @@ struct gpgme_data
 #endif
   char pending[BUFFER_SIZE];
   int pending_len;
+
+  /* File name of the data object.  */
+  char *file_name;
 
   union
   {
@@ -99,7 +107,7 @@ struct gpgme_data
       /* Allocated size of BUFFER.  */
       size_t size;
       size_t length;
-      size_t offset;
+      off_t offset;
     } mem;
 
     /* For gpgme_data_new_from_read_cb.  */
@@ -116,5 +124,9 @@ gpgme_error_t _gpgme_data_new (gpgme_data_t *r_dh,
 			       struct _gpgme_data_cbs *cbs);
 
 void _gpgme_data_release (gpgme_data_t dh);
+
+/* Get the file descriptor associated with DH, if possible.  Otherwise
+   return -1.  */
+int _gpgme_data_get_fd (gpgme_data_t dh);
 
 #endif	/* DATA_H */
