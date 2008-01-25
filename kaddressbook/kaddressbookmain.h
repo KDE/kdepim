@@ -56,6 +56,7 @@ class KAddressBookMain : public KMainWindow, virtual public KAddressBookIface
     virtual void importVCardFromData( const QString& vCard );
     virtual ASYNC showContactEditor( QString uid );
     virtual void newContact();
+    virtual void newDistributionList();
     virtual QString getNameByPhone( QString phone );
     virtual void save();
     virtual void exit();
@@ -78,6 +79,12 @@ class KAddressBookMain : public KMainWindow, virtual public KAddressBookIface
     void readProperties( KConfig* );
 
     virtual bool queryClose();
+
+    //override
+    void loadProfile( const QString& path );
+
+    //override
+    void saveToProfile( const QString& path ) const;
 
   private slots:
     void configureKeyBindings();

@@ -109,8 +109,7 @@ class PhoneEditWidget : public QWidget
     void changed( int pos );
 
   private:
-    void updateWidgets();
-    void updateButtons();
+    void recreateNumberWidgets();
 
     KABC::PhoneNumber::List mPhoneNumberList;
     QPtrList<PhoneNumberWidget> mWidgets;

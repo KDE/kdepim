@@ -68,6 +68,20 @@ void SearchManager::search( const QString &pattern, const KABC::Field::List &fie
     } else
       ++rmIt;
   }
+
+  typedef KPIM::DistributionList::Entry Entry;
+  if ( !mSelectedDistributionList.isNull() ) {
+    const KPIM::DistributionList dl = KPIM::DistributionList::findByName( mAddressBook, mSelectedDistributionList );
+    if ( !dl.isEmpty() ) {
+      allContacts.clear();
+      const Entry::List entries = dl.entries( mAddressBook );
+      const Entry::List::ConstIterator end = entries.end();
+      for ( Entry::List::ConstIterator it = entries.begin(); it != end; ++it ) {
+        allContacts.append( (*it).addressee ); 
+      }
+    }
+  }
+
 #endif
 
   if ( mPattern.isEmpty() ) { // no pattern, return all
@@ -155,6 +169,15 @@ void SearchManager::reload()
 }
 
 #ifdef KDEPIM_NEW_DISTRLISTS
+
+void KAB::SearchManager::setSelectedDistributionList( const QString &name )
+{
+  if ( mSelectedDistributionList == name )
+    return;     
+  mSelectedDistributionList = name;
+  reload();
+}
+
 KPIM::DistributionList::List KAB::SearchManager::distributionLists() const
 {
   return mDistributionLists;

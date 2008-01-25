@@ -99,6 +99,11 @@ ASYNC KAddressBookMain::showContactEditor( QString uid )
   mCore->editContact( uid );
 }
 
+void KAddressBookMain::newDistributionList()
+{
+  mCore->newDistributionList();
+}
+
 void KAddressBookMain::newContact()
 {
   mCore->newContact();
@@ -151,6 +156,14 @@ void KAddressBookMain::initActions()
 void KAddressBookMain::configureKeyBindings()
 {
   KKeyDialog::configure( actionCollection(), this );
+}
+
+void KAddressBookMain::loadProfile( const QString& )
+{
+}
+
+void KAddressBookMain::saveToProfile( const QString& ) const
+{
 }
 
 void KAddressBookMain::configureToolbars()

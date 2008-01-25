@@ -107,6 +107,12 @@ void KAddressbookPart::newContact()
   mCore->newContact();
 }
 
+
+void KAddressbookPart::newDistributionList()
+{
+  mCore->newDistributionList();
+}
+
 QString KAddressbookPart::getNameByPhone( QString phone )
 {
   return mCore->getNameByPhone( phone );
@@ -160,6 +166,14 @@ void KAddressbookPart::guiActivateEvent( KParts::GUIActivateEvent *e )
     mCore->statusBar()->removeItem( 1 );
     mCore->statusBar()->removeItem( 2 );
   }
+}
+
+void KAddressbookPart::loadProfile( const QString& )
+{
+}
+
+void KAddressbookPart::saveToProfile( const QString& ) const
+{
 }
 
 #include "kaddressbook_part.moc"

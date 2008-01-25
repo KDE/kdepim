@@ -109,16 +109,30 @@ class KDE_EXPORT Core : public QObject
      */
     virtual void deleteContacts( const QStringList &uids ) = 0;
 
+    /**
+      Deletes given contacts from the address book.
+
+      @param uids The uids of the contacts, which shall be deleted.
+     */
+    virtual void deleteDistributionLists( const QStringList &uids ) = 0;
+
 #ifdef KDEPIM_NEW_DISTRLISTS
     /**
       Returns all the distribution lists.
      */
     virtual KPIM::DistributionList::List distributionLists() const = 0;
 
+
     /**
       Returns the name of all the distribution lists.
      */
     virtual QStringList distributionListNames() const = 0;
+
+    /**
+      sets the distribution list to display. If null, the regular
+      address book is to be displayed.  
+     */
+    virtual void setSelectedDistributionList( const QString &name ) = 0;
 #endif
 
     //// This class isn't part of interfaces/, so this method here isn't really useful
@@ -160,6 +174,11 @@ class KDE_EXPORT Core : public QObject
     virtual void newContact() = 0;
 
     /**
+      DCOP METHOD: Opens distribution list editor to input a new distribution list.
+     */
+    virtual void newDistributionList() = 0;
+
+    /**
       DCOP METHOD: Returns the name of the contact, that matches the given
                    phone number.
      */
@@ -169,6 +188,11 @@ class KDE_EXPORT Core : public QObject
       Shows an edit dialog for the given uid.
      */
     virtual void editContact( const QString &uid = QString::null ) = 0;
+
+    /**
+      Shows an edit dialog for the given distribution list 
+    */
+    virtual void editDistributionList( const QString &name ) = 0;
 
   private:
     KXMLGUIClient *mGUIClient;

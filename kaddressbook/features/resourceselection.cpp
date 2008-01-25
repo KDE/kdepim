@@ -24,6 +24,9 @@
 #include <qlayout.h>
 #include <qpushbutton.h>
 #include <qtimer.h>
+#include <qlabel.h>
+#include <qheader.h>
+#include <qtooltip.h>
 
 #include <kabc/resource.h>
 #include <kdialog.h>
@@ -363,22 +366,37 @@ ResourceItem* ResourceSelection::selectedItem() const
 
 void ResourceSelection::initGUI()
 {
-  QGridLayout *layout = new QGridLayout( this, 2, 3, 2, 5 );
+  QBoxLayout *topLayout = new QVBoxLayout( this );
+  topLayout->setSpacing( KDialog::spacingHint() );
+
+  QBoxLayout *buttonLayout = new QHBoxLayout();
+  buttonLayout->setSpacing( KDialog::spacingHint() );
+  topLayout->addLayout( buttonLayout );
+
+  QLabel *abLabel = new QLabel( i18n( "Address Books" ), this );
+  buttonLayout->addWidget( abLabel );
+  buttonLayout->addStretch( 1 );
+
+  mAddButton = new QPushButton( this );
+  mAddButton->setIconSet( SmallIconSet( "add" ) );
+  QToolTip::add( mAddButton, i18n( "Add addressbook" ) );
+  buttonLayout->addWidget( mAddButton );
+  mEditButton = new QPushButton( this );
+  mEditButton->setIconSet( SmallIconSet( "edit" ) );
+  mEditButton->setEnabled( false );
+  QToolTip::add( mEditButton, i18n( "Edit addressbook settings" ) );
+  buttonLayout->addWidget( mEditButton );
+  mRemoveButton = new QPushButton( this );
+  mRemoveButton->setIconSet( SmallIconSet( "remove" ) );
+  mRemoveButton->setEnabled( false );
+  QToolTip::add( mRemoveButton, i18n( "Remove addressbook" ) );
+  buttonLayout->addWidget( mRemoveButton );
 
   mListView = new KListView( this );
+  mListView->header()->hide();
   mListView->addColumn( i18n( "Address Books" ) );
   mListView->setFullWidth( true );
-  layout->addMultiCellWidget( mListView, 0, 0, 0, 2 );
-
-  mAddButton = new QPushButton( i18n( "Add..." ), this );
-  mEditButton = new QPushButton( i18n( "Edit..." ), this );
-  mEditButton->setEnabled( false );
-  mRemoveButton = new QPushButton( i18n( "Remove" ), this );
-  mRemoveButton->setEnabled( false );
-
-  layout->addWidget( mAddButton, 1, 0 );
-  layout->addWidget( mEditButton, 1, 1 );
-  layout->addWidget( mRemoveButton, 1, 2 );
+  topLayout->addWidget( mListView );
 }
 
 class ResourceSelectionFactory : public KAB::ExtensionFactory
