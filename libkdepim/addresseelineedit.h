@@ -61,6 +61,7 @@ class KDE_EXPORT AddresseeLineEdit : public ClickLineEdit, public DCOPObject
     virtual ~AddresseeLineEdit();
 
     virtual void setFont( const QFont& );
+    void allowSemiColonAsSeparator( bool );
 
   public slots:
     void cursorAtEnd();
@@ -92,12 +93,12 @@ class KDE_EXPORT AddresseeLineEdit : public ClickLineEdit, public DCOPObject
     virtual QPopupMenu *createPopupMenu();
 
     /**
-     * Adds the name of a completion source to the internal list of 
+     * Adds the name of a completion source to the internal list of
      * such sources and returns its index, such that that can be used
      * for insertion of items associated with that source.
      */
     int addCompletionSource( const QString& );
-    
+
     /** return whether we are using sorted or weighted display */
     static KCompletion::CompOrder completionOrder();
 
@@ -134,6 +135,7 @@ class KDE_EXPORT AddresseeLineEdit : public ClickLineEdit, public DCOPObject
     bool m_addressBookConnected;
     bool m_lastSearchMode;
     bool m_searchExtended; //has \" been added?
+    bool m_useSemiColonAsSeparator;
 
     //QMap<QString, KABC::Addressee> m_contactMap;
 

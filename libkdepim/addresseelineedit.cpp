@@ -182,6 +182,11 @@ void AddresseeLineEdit::setFont( const QFont& font )
     completionBox()->setFont( font );
 }
 
+void AddresseeLineEdit::allowSemiColonAsSeparator( bool useSemiColonAsSeparator )
+{
+  m_useSemiColonAsSeparator = useSemiColonAsSeparator;
+}
+
 void AddresseeLineEdit::keyPressEvent( QKeyEvent *e )
 {
   bool accept = false;
@@ -259,14 +264,15 @@ void AddresseeLineEdit::insert( const QString &t )
 
   QString contents = text();
   int start_sel = 0;
+  int end_sel = 0;
   int pos = cursorPosition( );
-
-  if ( hasSelectedText() ) {
+  if ( getSelection( &start_sel, &end_sel ) ) {
     // Cut away the selection.
-    start_sel = selectionStart();
-    pos = start_sel;
-    contents = contents.left( start_sel ) +
-               contents.mid( start_sel + selectedText().length() );
+    if ( pos > end_sel )
+      pos -= (end_sel - start_sel);
+    else if ( pos > start_sel )
+      pos = start_sel;
+    contents = contents.left( start_sel ) + contents.right( end_sel + 1 );
   }
 
   int eot = contents.length();
@@ -483,6 +489,7 @@ void AddresseeLineEdit::slotPopupCompletion( const QString& completion )
   setText( m_previousAddresses + completion.stripWhiteSpace() );
   cursorAtEnd();
 //  slotMatched( m_previousAddresses + completion );
+  updateSearchString();
 }
 
 void AddresseeLineEdit::slotReturnPressed( const QString& item )
@@ -785,6 +792,16 @@ void AddresseeLineEdit::setCompletedItems( const QStringList& items, bool autoSu
     if ( !items.isEmpty() &&
          !(items.count() == 1 && m_searchString == items.first()) )
     {
+        QString oldCurrentText = completionBox->currentText();
+        QListBoxItem *itemUnderMouse = completionBox->itemAt(
+            completionBox->viewport()->mapFromGlobal(QCursor::pos()) );
+        QString oldTextUnderMouse;
+        QPoint oldPosOfItemUnderMouse;
+        if ( itemUnderMouse ) {
+            oldTextUnderMouse = itemUnderMouse->text();
+            oldPosOfItemUnderMouse = completionBox->itemRect( itemUnderMouse ).topLeft();
+        }
+
         completionBox->setItems( items );
 
         if ( !completionBox->isVisible() ) {
@@ -798,11 +815,33 @@ void AddresseeLineEdit::setCompletedItems( const QStringList& items, bool autoSu
             qApp->installEventFilter( this );
         }
 
-        QListBoxItem* item = completionBox->item( 1 );
+        // Try to re-select what was selected before, otherrwise use the first
+        // item, if there is one
+        QListBoxItem* item = 0;
+        if ( oldCurrentText.isEmpty()
+           || ( item = completionBox->findItem( oldCurrentText ) ) == 0 ) {
+            item = completionBox->item( 1 );
+        }
         if ( item )
         {
+          if ( itemUnderMouse ) {
+              QListBoxItem *newItemUnderMouse = completionBox->findItem( oldTextUnderMouse );
+              // if the mouse was over an item, before, but now that's elsewhere,
+              // move the cursor, so folks don't accidently click the wrong item
+              if ( newItemUnderMouse ) {
+                  QRect r = completionBox->itemRect( newItemUnderMouse );
+                  QPoint target = r.topLeft();
+                  if ( oldPosOfItemUnderMouse != target ) {
+                      target.setX( target.x() + r.width()/2 );
+                      QCursor::setPos( completionBox->viewport()->mapToGlobal(target) );
+                  }
+              }
+          }
           completionBox->blockSignals( true );
           completionBox->setSelected( item, true );
+          completionBox->setCurrentItem( item );
+          completionBox->ensureCurrentVisible();
+
           completionBox->blockSignals( false );
         }
 
@@ -861,7 +900,20 @@ void KPIM::AddresseeLineEdit::slotUserCancelled( const QString& cancelText )
 void AddresseeLineEdit::updateSearchString()
 {
   m_searchString = text();
-  int n = m_searchString.findRev(',');
+
+  int n = -1;
+  bool inQuote = false;
+  for ( uint i = 0; i < m_searchString.length(); ++i ) {
+    if ( m_searchString[ i ] == '"' )
+      inQuote = !inQuote;
+    if ( m_searchString[ i ] == '\\' && (i + 1) < m_searchString.length() && m_searchString[ i + 1 ] == '"' )
+      ++i;
+    if ( inQuote )
+      continue;
+    if ( m_searchString[ i ] == ',' || ( m_useSemiColonAsSeparator && m_searchString[ i ] == ';' ) )
+      n = i;
+  }
+
   if ( n >= 0 ) {
     ++n; // Go past the ","
 
@@ -1018,7 +1070,7 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
       // find the next header (searching backwards, for Key_Backtab
       QListBoxItem *nextHeader = 0;
       const int iterationstep = ke->key() == Key_Tab ?  1 : -1;
-      // when iterating forward, start at the currentindex, when backwards, 
+      // when iterating forward, start at the currentindex, when backwards,
       // one up from our header, or at the end
       uint j = ke->key() == Key_Tab ? currentIndex : i==0 ? completionBox()->count()-1 : (i-1) % completionBox()->count();
       while ( ( nextHeader = completionBox()->item( j ) ) && nextHeader != myHeader ) {
@@ -1031,6 +1083,8 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
         QListBoxItem *item = completionBox()->item( j + 1 );
         if ( item && !itemIsHeader(item) ) {
           completionBox()->setSelected( j+1, true );
+          completionBox()->setCurrentItem( item );
+          completionBox()->ensureCurrentVisible();
         }
       }
       return true;

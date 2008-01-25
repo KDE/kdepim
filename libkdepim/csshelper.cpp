@@ -282,6 +282,10 @@ namespace KPIM {
                "div.senderstatus{\n"
                "  text-align:center ! important;\n"
                "}\n\n"
+
+               "div.noprint {\n"
+               "  display:none ! important;\n"
+               "}\n\n"
             )
       .arg( headerFont,
             cg.background().name(),
@@ -357,6 +361,10 @@ namespace KPIM {
       QString( "a {\n"
                "  color: %1 ! important;\n"
                "  text-decoration: none ! important;\n"
+               "}\n\n"
+
+               "a.white {\n"
+               "  color: white ! important;\n"
                "}\n\n"
 
                "table.textAtm { background-color: %2 ! important; }\n\n"
@@ -609,6 +617,17 @@ namespace KPIM {
       "  margin-left:-10px;\n"
       "}\n\n"
       ;
+  }
+
+
+  void CSSHelper::setBodyFont( const QFont& font )
+  {
+    mBodyFont = font;
+  }
+
+  void CSSHelper::setPrintFont( const QFont& font )
+  {
+    mPrintFont = font;
   }
 
 } // namespace KPIM

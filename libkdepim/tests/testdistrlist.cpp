@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
 
     KApplication::disableAutoDcopRegistration();
     KCmdLineArgs::init(argc,argv,"testdistrlist", 0, 0, 0, 0);
-    KApplication app;
+    KApplication app( false, false );
 
     TestDistrList test;
     test.setup();
@@ -111,6 +111,38 @@ bool TestDistrList::check(const QString& txt, QString a, QString b)
     return true;
 }
 
+// taken from KMail
+#include <sys/types.h>
+#include <dirent.h>
+static bool removeDirAndContentsRecursively( const QString & path )
+{
+  kdDebug() << k_funcinfo << path << endl;
+  bool success = true;
+
+  QDir d;
+  d.setPath( path );
+  d.setFilter( QDir::Files | QDir::Dirs | QDir::Hidden );
+
+  const QFileInfoList *list = d.entryInfoList();
+  QFileInfoListIterator it( *list );
+  QFileInfo *fi;
+
+  while ( (fi = it.current()) != 0 ) {
+    if( fi->isDir() && !fi->isSymLink() ) {
+      if ( fi->fileName() != "." && fi->fileName() != ".." )
+        success = success && removeDirAndContentsRecursively( fi->absFilePath() );
+    } else {
+      success = success && d.remove( fi->absFilePath() );
+    }
+    ++it;
+  }
+
+  if ( success ) {
+    success = success && d.rmdir( path ); // nuke ourselves, we should be empty now
+  }
+  return success;
+}
+
 void TestDistrList::cleanup()
 {
     kdDebug() << k_funcinfo << endl;
@@ -120,7 +152,9 @@ void TestDistrList::cleanup()
 
     QString kdehome = QFile::decodeName( getenv("KDEHOME") );
     KURL urlkdehome; urlkdehome.setPath( kdehome );
-    KIO::NetAccess::del( urlkdehome, 0 );
+    // don't use KIO::NetAccess here since it needs X
+    // KIO::NetAccess::del( urlkdehome, 0 )i;
+    assert( removeDirAndContentsRecursively( kdehome ) );
 }
 
 void TestDistrList::testEmpty()

@@ -27,6 +27,7 @@
 #include <kabc/address.h>
 #include <kabc/addressee.h>
 #include <kabc/phonenumber.h>
+#include <kabc/resource.h>
 #include <kactionclasses.h>
 #include <kapplication.h>
 #include <kconfig.h>
@@ -222,7 +223,7 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy *pro
     KABC::PhoneNumber::List phones = addr.phoneNumbers();
     KABC::PhoneNumber::List::ConstIterator phoneIt;
     for ( phoneIt = phones.begin(); phoneIt != phones.end(); ++phoneIt ) {
-      QString number = (*phoneIt).number();
+      QString number = QStyleSheet::escape( (*phoneIt).number() );
 
       QString url;
       if ( (*phoneIt).type() & KABC::PhoneNumber::Fax )
@@ -257,7 +258,7 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy *pro
       if ( linkMask & EmailLinks ) {
         dynamicPart += rowFmtStr.arg( type )
           .arg( QString::fromLatin1( "<a href=\"mailto:%1\">%2</a>" )
-          .arg( fullEmail, *emailIt ) );
+          .arg( fullEmail, QStyleSheet::escape( *emailIt ) ) );
       } else {
         dynamicPart += rowFmtStr.arg( type ).arg( *emailIt );
       }
@@ -293,28 +294,7 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy *pro
       if ( (*addrIt).label().isEmpty() ) {
         QString formattedAddress;
 
-#if KDE_IS_VERSION(3,1,90)
-        formattedAddress = (*addrIt).formattedAddress().stripWhiteSpace();
-#else
-        if ( !(*addrIt).street().isEmpty() )
-          formattedAddress += (*addrIt).street() + "\n";
-
-        if ( !(*addrIt).postOfficeBox().isEmpty() )
-          formattedAddress += (*addrIt).postOfficeBox() + "\n";
-
-        formattedAddress += (*addrIt).locality() + QString::fromLatin1(" ") + (*addrIt).region();
-
-        if ( !(*addrIt).postalCode().isEmpty() )
-          formattedAddress += QString::fromLatin1(", ") + (*addrIt).postalCode();
-
-        formattedAddress += "\n";
-
-        if ( !(*addrIt).country().isEmpty() )
-          formattedAddress += (*addrIt).country() + "\n";
-
-        formattedAddress += (*addrIt).extended();
-#endif
-
+        formattedAddress = QStyleSheet::escape( (*addrIt).formattedAddress().stripWhiteSpace() );
         formattedAddress = formattedAddress.replace( '\n', "<br>" );
 
         QString link = "<a href=\"addr:" + (*addrIt).id() + "\">" +
@@ -351,7 +331,8 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy *pro
     // @STYLE@ - substitute the cell style in first, and append
     // the data afterwards (keeps us safe from possible % signs
     // in either one).
-    notes = rowFmtStr.arg( i18n( "Notes" ) ).arg( addr.note().replace( '\n', "<br>" ) ) ;
+    notes = QStyleSheet::escape( addr.note() );
+    notes = rowFmtStr.arg( i18n( "Notes" ) ).arg( notes.replace( '\n', "<br>" ) ) ;
   }
 
   QString customData;
@@ -389,21 +370,21 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy *pro
           if ( keyIt != titleMap.end() )
             key = keyIt.data();
 
-          customData += rowFmtStr.arg( key ).arg( value ) ;
+          customData += rowFmtStr.arg( key ).arg( QStyleSheet::escape( value ) ) ;
         }
       }
     }
   }
 
-  QString name( addr.realName() );
-  QString role( addr.role() );
-  QString organization( addr.organization() );
+  QString name( QStyleSheet::escape( addr.realName() ) );
+  QString role( QStyleSheet::escape( addr.role() ) );
+  QString organization( QStyleSheet::escape( addr.organization() ) );
 
   if ( fieldMask & IMFields ) {
 
     const QString imAddress = addr.custom( "KADDRESSBOOK", "X-IMAddress" );
     if ( !imAddress.isEmpty() ) {
-      customData += rowFmtStr.arg( i18n( "IM Address" ) ).arg( imAddress ) ;
+      customData += rowFmtStr.arg( i18n( "IM Address" ) ).arg( QStyleSheet::escape( imAddress ) ) ;
     }
 
     if ( proxy ) {
@@ -485,6 +466,8 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy *pro
   strAddr.append( customData );
   strAddr.append( QString::fromLatin1( "</table></div>\n" ) );
 
+  if ( addr.resource() )
+      strAddr.append( i18n( "<p><b>Address book</b>: %1</p>" ).arg( addr.resource()->resourceName() ) );
   return strAddr;
 }
 

@@ -64,6 +64,9 @@ class CSSHelper {
 
     QFont bodyFont( bool fixedFont = false, bool printing = false ) const;
 
+    void setBodyFont( const QFont& font );
+    void setPrintFont( const QFont& font );
+
   protected:
     /** Recalculate PGP frame and body colors (should be called after changing
         color settings) */
