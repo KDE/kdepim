@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
+      http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
+  <kcfgfile name="scalixrc"/>
+
+  <group name="General">
+    <entry name="Server" type="String">
+      <default></default>
+    </entry>
+    <entry name="User" type="String">
+      <default></default>
+    </entry>
+    <entry name="RealName" type="String">
+      <default></default>
+    </entry>
+    <entry name="EMail" type="String">
+      <default></default>
+    </entry>
+    <entry name="Password" type="Password">
+      <default></default>
+    </entry>
+    <entry name="SavePassword" type="Bool">
+      <default>false</default>
+    </entry>
+  </group>
+  <group name="IMAP">
+    <entry name="Security" type="Enum">
+      <choices>
+        <choice name="None"/>
+        <choice name="TLS"/>
+        <choice name="SSL"/>
+      </choices>
+      <default>None</default>
+    </entry>
+    <entry name="Authentication" type="Enum">
+      <choices>
+        <choice name="Password"/>
+        <choice name="NTLM_SPA"/>
+        <choice name="GSSAPI"/>
+        <choice name="DIGEST_MD5"/>
+        <choice name="CRAM_MD5"/>
+      </choices>
+      <default>Password</default>
+    </entry>
+  </group>
+</kcfg>
