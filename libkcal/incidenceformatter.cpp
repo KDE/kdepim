@@ -30,6 +30,7 @@
 #include <libkcal/calendarlocal.h>
 #include <libkcal/icalformat.h>
 #include <libkcal/freebusy.h>
+#include <libkcal/calendarresources.h>
 
 #include <libemailfunctions/email.h>
 
@@ -160,6 +161,12 @@ static QString eventViewerFormatAttendees( Incidence *event )
     for( it = attendees.begin(); it != attendees.end(); ++it ) {
       Attendee *a = *it;
       tmpStr += linkPerson( a->email(), a->name(), a->uid() );
+      if ( !a->delegator().isEmpty() ) {
+          tmpStr += i18n(" (delegated by %1)" ).arg( a->delegator() );
+      }
+      if ( !a->delegate().isEmpty() ) {
+          tmpStr += i18n(" (delegated to %1)" ).arg( a->delegate() );
+      }
     }
     tmpStr += "</ul>";
   }
@@ -588,9 +595,59 @@ static QString string2HTML( const QString& str )
   return QStyleSheet::convertFromPlainText(str, QStyleSheetItem::WhiteSpaceNormal);
 }
 
+static QString eventStartTimeStr( Event *event )
+{
+  QString tmp;
+  if ( ! event->doesFloat() ) {
+    tmp =  i18n("%1: Start Date, %2: Start Time", "%1 %2")
+             .arg( event->dtStartDateStr(), event->dtStartTimeStr() );
+  } else {
+    tmp = i18n("%1: Start Date", "%1 (time unspecified)")
+            .arg( event->dtStartDateStr() );
+  }
+  return tmp;
+}
+
+static QString eventEndTimeStr( Event *event )
+{
+  QString tmp;
+  if ( event->hasEndDate() ) {
+    if ( ! event->doesFloat() ) {
+      tmp =  i18n("%1: End Date, %2: End Time", "%1 %2")
+               .arg( event->dtEndDateStr(), event->dtEndTimeStr() );
+    } else {
+      tmp = i18n("%1: End Date", "%1 (time unspecified)")
+              .arg( event->dtEndDateStr() );
+    }
+  } else {
+    tmp = i18n( "Unspecified" );
+  }
+  return tmp;
+}
+
 static QString invitationRow( const QString &cell1, const QString &cell2 )
 {
   return "<tr><td>" + cell1 + "</td><td>" + cell2 + "</td></tr>\n";
+}
+
+static QString invitationsDetailsIncidence( Incidence *incidence )
+{
+  QString html;
+  QString descr = incidence->description();
+  if( !descr.isEmpty() ) {
+    html += "<br/><u>" + i18n("Description:")
+      + "</u><table border=\"0\"><tr><td>&nbsp;</td><td>";
+    html += string2HTML(descr) + "</td></tr></table>";
+  }
+  QStringList comments = incidence->comments();
+  if ( !comments.isEmpty() ) {
+    html += "<br><u>" + i18n("Comments:")
+          + "</u><table border=\"0\"><tr><td>&nbsp;</td><td><ul>";
+    for ( uint i = 0; i < comments.count(); ++i )
+      html += "<li>" + string2HTML( comments[i] ) + "</li>";
+    html += "</ul></td></tr></table>";
+  }
+  return html;
 }
 
 static QString invitationDetailsEvent( Event* event )
@@ -622,28 +679,10 @@ static QString invitationDetailsEvent( Event* event )
   html += invitationRow( i18n( "Where:" ), sLocation );
 
   // Meeting Start Time Row
-  if ( ! event->doesFloat() ) {
-    tmp =  i18n("%1: Start Date, %2: Start Time", "%1 %2")
-             .arg( event->dtStartDateStr(), event->dtStartTimeStr() );
-  } else {
-    tmp = i18n("%1: Start Date", "%1 (time unspecified)")
-            .arg( event->dtStartDateStr() );
-  }
-  html += invitationRow( i18n( "Start Time:" ), tmp );
+  html += invitationRow( i18n( "Start Time:" ), eventStartTimeStr( event ) );
 
   // Meeting End Time Row
-  if ( event->hasEndDate() ) {
-    if ( ! event->doesFloat() ) {
-      tmp =  i18n("%1: End Date, %2: End Time", "%1 %2")
-               .arg( event->dtEndDateStr(), event->dtEndTimeStr() );
-    } else {
-      tmp = i18n("%1: End Date", "%1 (time unspecified)")
-              .arg( event->dtEndDateStr() );
-    }
-  } else {
-    tmp = i18n( "Unspecified" );
-  }
-  html += invitationRow( i18n( "End Time:" ), tmp );
+  html += invitationRow( i18n( "End Time:" ), eventEndTimeStr( event ) );
 
   // Meeting Duration Row
   if ( !event->doesFloat() && event->hasEndDate() ) {
@@ -662,6 +701,7 @@ static QString invitationDetailsEvent( Event* event )
   }
 
   html += "</table>\n";
+  html += invitationsDetailsIncidence( event );
   html += "</div>\n";
 
   return html;
@@ -685,6 +725,7 @@ static QString invitationDetailsTodo( Todo *todo )
   html += invitationRow( i18n( "Summary:" ), sSummary );
   html += invitationRow( i18n( "Description:" ), sDescr );
   html += "</table>\n";
+  html += invitationsDetailsIncidence( todo );
 
   return html;
 }
@@ -707,6 +748,7 @@ static QString invitationDetailsJournal( Journal *journal )
   html += invitationRow( i18n( "Date:" ), journal->dtStartDateStr( false ) );
   html += invitationRow( i18n( "Description:" ), sDescr );
   html += "</table>\n";
+  html += invitationsDetailsIncidence( journal );
 
   return html;
 }
@@ -775,6 +817,8 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
     case Scheduler::Publish:
         return i18n("This event has been published");
     case Scheduler::Request:
+        if ( event->revision() > 0 )
+            return i18n( "This meeting has been updated" );
         return i18n( "You have been invited to this meeting" );
     case Scheduler::Refresh:
         return i18n( "This invitation was refreshed" );
@@ -792,22 +836,49 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
           kdDebug(5850) << "Warning: attendeecount in the reply should be 1 "
                         << "but is " << attendees.count() << endl;
         Attendee* attendee = *attendees.begin();
+        QString attendeeName = attendee->name();
+        if ( attendeeName.isEmpty() )
+          attendeeName = attendee->email();
+        if ( attendeeName.isEmpty() )
+          attendeeName = i18n( "Sender" );
+
+        QString delegatorName, dummy;
+        KPIM::getNameAndMail( attendee->delegator(), delegatorName, dummy );
+        if ( delegatorName.isEmpty() )
+          delegatorName = attendee->delegator();
 
         switch( attendee->status() ) {
           case Attendee::NeedsAction:
-              return i18n( "Sender indicates this invitation still needs some action" );
+              return i18n( "%1 indicates this invitation still needs some action" ).arg( attendeeName );
           case Attendee::Accepted:
-              return i18n( "Sender accepts this meeting invitation" );
+              if ( delegatorName.isEmpty() )
+                  return i18n( "%1 accepts this meeting invitation" ).arg( attendeeName );
+              return i18n( "%1 accepts this meeting invitation on behalf of %2" )
+                  .arg( attendeeName ).arg( delegatorName );
           case Attendee::Tentative:
-              return i18n( "Sender tentatively accepts this meeting invitation" );
+              if ( delegatorName.isEmpty() )
+                  return i18n( "%1 tentatively accepts this meeting invitation" ).arg( attendeeName );
+              return i18n( "%1 tentatively accepts this meeting invitation on behalf of %2" )
+                  .arg( attendeeName ).arg( delegatorName );
           case Attendee::Declined:
-              return i18n( "Sender declines this meeting invitation" );
-          case Attendee::Delegated:
-              return i18n( "Sender has delegated this meeting invitation" );
+              if ( delegatorName.isEmpty() )
+                  return i18n( "%1 declines this meeting invitation" ).arg( attendeeName );
+              return i18n( "%1 declines this meeting invitation on behalf of %2" )
+                  .arg( attendeeName ).arg( delegatorName );
+          case Attendee::Delegated: {
+              QString delegate, dummy;
+              KPIM::getNameAndMail( attendee->delegate(), delegate, dummy );
+              if ( delegate.isEmpty() )
+                  delegate = attendee->delegate();
+              if ( !delegate.isEmpty() )
+                return i18n( "%1 has delegated this meeting invitation to %2" )
+                    .arg( attendeeName ) .arg( delegate );
+              return i18n( "%1 has delegated this meeting invitation" ).arg( attendeeName );
+          }
           case Attendee::Completed:
               return i18n( "This meeting invitation is now completed" );
           case Attendee::InProcess:
-              return i18n( "Sender is still processing the invitation" );
+              return i18n( "%1 is still processing the invitation" ).arg( attendeeName );
           default:
               return i18n( "Unknown response to this meeting invitation" );
         }
@@ -831,6 +902,8 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
     case Scheduler::Publish:
         return i18n("This task has been published");
     case Scheduler::Request:
+        if ( todo->revision() > 0 )
+            return i18n( "This task has been updated" );
         return i18n( "You have been assigned this task" );
     case Scheduler::Refresh:
         return i18n( "This task was refreshed" );
@@ -858,8 +931,15 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
               return i18n( "Sender tentatively accepts this task" );
           case Attendee::Declined:
               return i18n( "Sender declines this task" );
-          case Attendee::Delegated:
+          case Attendee::Delegated: {
+              QString delegate, dummy;
+              KPIM::getNameAndMail( attendee->delegate(), delegate, dummy );
+              if ( delegate.isEmpty() )
+                delegate = attendee->delegate();
+              if ( !delegate.isEmpty() )
+                return i18n( "Sender has delegated this request for the task to %1" ).arg( delegate );
               return i18n( "Sender has delegated this request for the task " );
+          }
           case Attendee::Completed:
               return i18n( "The request for this task is now completed" );
           case Attendee::InProcess:
@@ -1022,6 +1102,97 @@ class IncidenceFormatter::InvitationBodyVisitor :
     }
 };
 
+class IncidenceFormatter::IncidenceCompareVisitor :
+  public IncidenceBase::Visitor
+{
+  public:
+    IncidenceCompareVisitor() : mExistingIncidence(0) {}
+    bool act( IncidenceBase *incidence, Incidence* existingIncidence )
+    {
+      mExistingIncidence = existingIncidence;
+      return incidence->accept( *this );
+    }
+
+    QString result() const
+    {
+      if ( mChanges.isEmpty() )
+        return QString();
+      QString html = "<div align=\"left\"><ul><li>";
+      html += mChanges.join( "</li><li>" );
+      html += "</li><ul></div>";
+      return html;
+    }
+
+  protected:
+    bool visit( Event *event )
+    {
+      compareEvents( event, dynamic_cast<Event*>( mExistingIncidence ) );
+      compareIncidences( event, mExistingIncidence );
+      return !mChanges.isEmpty();
+    }
+    bool visit( Todo *todo )
+    {
+      compareIncidences( todo, mExistingIncidence );
+      return !mChanges.isEmpty();
+    }
+    bool visit( Journal *journal )
+    {
+      compareIncidences( journal, mExistingIncidence );
+      return !mChanges.isEmpty();
+    }
+    bool visit( FreeBusy *fb )
+    {
+      Q_UNUSED( fb );
+      return !mChanges.isEmpty();
+    }
+
+  private:
+    void compareEvents( Event *newEvent, Event *oldEvent )
+    {
+      if ( !oldEvent || !newEvent )
+        return;
+      if ( oldEvent->dtStart() != newEvent->dtStart() || oldEvent->doesFloat() != newEvent->doesFloat() )
+        mChanges += i18n( "The begin of the meeting has been changed from %1 to %2" )
+            .arg( eventStartTimeStr( oldEvent ) ).arg( eventStartTimeStr( newEvent ) );
+      if ( oldEvent->dtEnd() != newEvent->dtEnd() || oldEvent->doesFloat() != newEvent->doesFloat() )
+        mChanges += i18n( "The end of the meeting has been changed from %1 to %2" )
+            .arg( eventEndTimeStr( oldEvent ) ).arg( eventEndTimeStr( newEvent ) );
+    }
+
+    void compareIncidences( Incidence *newInc, Incidence *oldInc )
+    {
+      if ( !oldInc || !newInc )
+        return;
+      if ( oldInc->summary() != newInc->summary() )
+        mChanges += i18n( "The summary has been changed to: \"%1\"" ).arg( newInc->summary() );
+      if ( oldInc->location() != newInc->location() )
+        mChanges += i18n( "The location has been changed to: \"%1\"" ).arg( newInc->location() );
+      if ( oldInc->description() != newInc->description() )
+        mChanges += i18n( "The description has been changed to: \"%1\"" ).arg( newInc->description() );
+      Attendee::List oldAttendees = oldInc->attendees();
+      Attendee::List newAttendees = newInc->attendees();
+      for ( Attendee::List::ConstIterator it = newAttendees.constBegin(); it != newAttendees.constEnd(); ++it ) {
+        Attendee *oldAtt = oldInc->attendeeByMail( (*it)->email() );
+        if ( !oldAtt ) {
+          mChanges += i18n( "Attendee %1 has been added" ).arg( (*it)->fullName() );
+        } else {
+          if ( oldAtt->status() != (*it)->status() )
+            mChanges += i18n( "The status of attendee %1 has been changed to: %2" ).arg( (*it)->fullName() )
+                .arg( (*it)->statusStr() );
+        }
+      }
+      for ( Attendee::List::ConstIterator it = oldAttendees.constBegin(); it != oldAttendees.constEnd(); ++it ) {
+        Attendee *newAtt = newInc->attendeeByMail( (*it)->email() );
+        if ( !newAtt )
+          mChanges += i18n( "Attendee %1 has been removed" ).arg( (*it)->fullName() );
+      }
+    }
+
+  private:
+    Incidence* mExistingIncidence;
+    QStringList mChanges;
+};
+
 
 QString InvitationFormatterHelper::makeLink( const QString &id, const QString &text )
 {
@@ -1049,6 +1220,20 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
 
   IncidenceBase *incBase = msg->event();
 
+  Incidence* existingIncidence = 0;
+  if ( helper->calendar() ) {
+    existingIncidence = helper->calendar()->incidence( incBase->uid() );
+    if ( !existingIncidence ) {
+      const Incidence::List list = helper->calendar()->incidences();
+      for ( Incidence::List::ConstIterator it = list.begin(), end = list.end(); it != end; ++it ) {
+        if ( (*it)->schedulingID() == incBase->uid() ) {
+          existingIncidence = *it;
+          break;
+        }
+      }
+    }
+  }
+
   // First make the text of the message
   QString html;
 
@@ -1071,8 +1256,16 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     return QString::null;
   html += bodyVisitor.result();
 
-  html += "<br>&nbsp;<br>&nbsp;<br>";
-  html += "<table border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td><td>";
+  if ( msg->method() == Scheduler::Request ) { // ### Scheduler::Publish/Refresh/Add as well?
+    IncidenceCompareVisitor compareVisitor;
+    if ( compareVisitor.act( incBase, existingIncidence ) ) {
+      html += i18n("<p align=\"left\">The following changes have been made by the organizer:</p>");
+      html += compareVisitor.result();
+    }
+  }
+
+  html += "<br/>";
+  html += "<table border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td></tr><tr>";
 
 #if 0
   html += helper->makeLinkURL( "accept", i18n("[Enter this into my calendar]") );
@@ -1086,20 +1279,48 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     case Scheduler::Request:
     case Scheduler::Refresh:
     case Scheduler::Add:
-        // Accept
-        html += helper->makeLink( "accept", i18n( "[Accept]" ) );
-        html += "</td><td> &nbsp; </td><td>";
-        html += helper->makeLink( "accept_conditionally",
-                          i18n( "Accept conditionally", "[Accept cond.]" ) );
-        html += "</td><td> &nbsp; </td><td>";
-        // Decline
-        html += helper->makeLink( "decline", i18n( "[Decline]" ) );
-#if 0
-        // TODO: implement this
-        html += "</b></a></td><td> &nbsp; </td><td>";
-        html += helper->makeLink( "check_calendar", i18n("[Check my calendar...]" ) );
-#endif
+    {
+        Incidence *inc = dynamic_cast<Incidence*>( incBase );
+        if ( inc && inc->revision() > 0 && (existingIncidence || !helper->calendar()) ) {
+            if ( incBase->type() == "Todo" ) {
+                html += "<td colspan=\"9\">";
+                html += helper->makeLink( "reply", i18n( "[Enter this into my task list]" ) );
+            } else {
+                html += "<td colspan=\"13\">";
+                html += helper->makeLink( "reply", i18n( "[Enter this into my calendar]" ) );
+            }
+            html += "</td></tr><tr>";
+        }
+        html += "<td>";
+
+        if ( helper->calendar() && !existingIncidence ) {
+          // Accept
+          html += helper->makeLink( "accept", i18n( "[Accept]" ) );
+          html += "</td><td> &nbsp; </td><td>";
+          html += helper->makeLink( "accept_conditionally",
+                            i18n( "Accept conditionally", "[Accept cond.]" ) );
+          html += "</td><td> &nbsp; </td><td>";
+          // counter proposal
+          html += helper->makeLink( "counter", i18n( "[Counter proposal]" ) );
+          html += "</td><td> &nbsp; </td><td>";
+          // Decline
+          html += helper->makeLink( "decline", i18n( "[Decline]" ) );
+          html += "</td><td> &nbsp; </td><td>";
+
+          // Delegate
+          html += helper->makeLink( "delegate", i18n( "[Delegate]" ) );
+          html += "</td><td> &nbsp; </td><td>";
+
+          // Forward
+          html += helper->makeLink( "forward", i18n( "[Forward]" ) );
+
+          if ( incBase->type() == "Event" ) {
+              html += "</b></a></td><td> &nbsp; </td><td>";
+              html += helper->makeLink( "check_calendar", i18n("[Check my calendar]" ) );
+          }
+        }
         break;
+    }
 
     case Scheduler::Cancel:
         // Cancel event from my calendar
@@ -1122,17 +1343,6 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   }
 
   html += "</td></tr></table>";
-
-  Incidence* incidence = dynamic_cast<Incidence*>( incBase );
-  if ( incidence ) {
-    QString sDescr = incidence->description();
-    if( ( msg->method() == Scheduler::Request || msg->method() == Scheduler::Cancel ) &&
-        !sDescr.isEmpty() ) {
-      html += "<br>&nbsp;<br>&nbsp;<br><u>" + i18n("Description:")
-        + "</u><br><table border=\"0\"><tr><td>&nbsp;</td><td>";
-      html += string2HTML(sDescr) + "</td></tr></table>";
-    }
-  }
 
   html += "</td></tr></table><br></div>";
 
@@ -1922,4 +2132,60 @@ QString IncidenceFormatter::mailBodyString( IncidenceBase *incidence )
     return v.result();
   }
   return QString::null;
+}
+
+static QString recurEnd( Incidence *incidence )
+{
+  QString endstr;
+  if ( incidence->doesFloat() ) {
+    endstr = KGlobal::locale()->formatDate( incidence->recurrence()->endDate() );
+  } else {
+    endstr = KGlobal::locale()->formatDateTime( incidence->recurrence()->endDateTime() );
+  }
+  return endstr;
+}
+
+QString IncidenceFormatter::recurrenceString(Incidence * incidence)
+{
+  if ( !incidence->doesRecur() )
+    return i18n( "No recurrence" );
+
+  Recurrence *recur = incidence->recurrence();
+  switch ( recur->recurrenceType() ) {
+    case Recurrence::rNone:
+      return i18n( "No recurrence" );
+    case Recurrence::rMinutely:
+      if ( recur->duration() != -1 )
+        return i18n( "Recurs every minute until %1", "Recurs every %n minutes until %1", recur->frequency() )
+            .arg( recurEnd( incidence ) );
+      return i18n( "Recurs every minute", "Recurs every %n minutes", recur->frequency() );
+    case Recurrence::rHourly:
+      if ( recur->duration() != -1 )
+        return i18n( "Recurs hourly until %1", "Recurs every %n hours until %1", recur->frequency() )
+            .arg( recurEnd( incidence ) );
+      return i18n( "Recurs hourly", "Recurs every %n hours", recur->frequency() );
+    case Recurrence::rDaily:
+      if ( recur->duration() != -1 )
+        return i18n( "Recurs daily until %1", "Recurs every %n days until %1", recur->frequency() )
+            .arg( recurEnd( incidence ) );
+      return i18n( "Recurs daily", "Recurs every %n days", recur->frequency() );
+    case Recurrence::rWeekly:
+      if ( recur->duration() != -1 )
+        return i18n( "Recurs weekly until %1", "Recurs every %n weeks until %1", recur->frequency() )
+            .arg( recurEnd( incidence ) );
+      return i18n( "Recurs weekly", "Recurs every %n weeks", recur->frequency() );
+    case Recurrence::rMonthlyPos:
+    case Recurrence::rMonthlyDay:
+      if ( recur->duration() != -1 )
+        return i18n( "Recurs monthly until %1" ).arg( recurEnd( incidence ) );
+      return i18n( "Recurs monthly" );
+    case Recurrence::rYearlyMonth:
+    case Recurrence::rYearlyDay:
+    case Recurrence::rYearlyPos:
+      if ( recur->duration() != -1 )
+        return i18n( "Recurs yearly until %1" ).arg( recurEnd( incidence ) );
+      return i18n( "Recurs yearly" );
+    default:
+      return i18n( "Incidence recurs" );
+  }
 }

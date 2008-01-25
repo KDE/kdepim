@@ -99,6 +99,18 @@ void ResourceCalendar::setSubresourceActive( const QString &, bool )
 {
 }
 
+bool ResourceCalendar::addSubresource( const QString &, const QString & )
+{
+  return true;
+}
+
+bool ResourceCalendar::removeSubresource( const QString & )
+{
+  return true;
+}
+
+
+
 bool ResourceCalendar::load()
 {
   kdDebug(5800) << "Loading resource " + resourceName() << endl;
@@ -181,6 +193,12 @@ void ResourceCalendar::saveError( const QString &err )
 bool ResourceCalendar::setValue( const QString &key, const QString &value )
 {
   return false;
+}
+
+QString ResourceCalendar::subresourceType( const QString &resource )
+{
+  Q_UNUSED( resource );
+  return QString();
 }
 
 

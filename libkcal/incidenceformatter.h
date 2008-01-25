@@ -36,6 +36,7 @@ class LIBKCAL_EXPORT InvitationFormatterHelper
   public:
     virtual QString generateLinkURL( const QString &id ) { return id; }
     virtual QString makeLink( const QString &id, const QString &text );
+    virtual Calendar* calendar() const { return 0; }
 };
 
 /**
@@ -60,11 +61,14 @@ class LIBKCAL_EXPORT IncidenceFormatter
                                          InvitationFormatterHelper *helper );
     // Transform a TNEF attachment to an iCal or vCard
     static QString msTNEFToVPart( const QByteArray& tnef );
+
+    static QString recurrenceString( Incidence *incidence );
   private:
     class EventViewerVisitor;
     class ScheduleMessageVisitor;
     class InvitationHeaderVisitor;
     class InvitationBodyVisitor;
+    class IncidenceCompareVisitor;
     class ToolTipVisitor;
     class MailBodyVisitor;
 };

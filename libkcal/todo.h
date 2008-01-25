@@ -36,6 +36,7 @@ class LIBKCAL_EXPORT Todo : public Incidence
     Todo();
     Todo( const Todo & );
     ~Todo();
+    Todo& operator=( const Todo& );
     bool operator==( const Todo& ) const;
 
     QCString type() const { return "Todo"; }

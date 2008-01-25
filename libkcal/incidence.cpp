@@ -105,6 +105,50 @@ static bool stringCompare( const QString& s1, const QString& s2 )
   return ( s1.isEmpty() && s2.isEmpty() ) || (s1 == s2);
 }
 
+Incidence& Incidence::operator=( const Incidence &i )
+{
+  IncidenceBase::operator=( i );
+  mRevision = i.mRevision;
+  mCreated = i.mCreated;
+  mDescription = i.mDescription;
+  mSummary = i.mSummary;
+  mCategories = i.mCategories;
+  mRelatedTo = 0;
+  mRelatedToUid = i.mRelatedToUid;
+  mRelations.clear();
+  mResources = i.mResources;
+  mStatusString = i.mStatusString;
+  mStatus = i.mStatus;
+  mSecrecy = i.mSecrecy;
+  mPriority = i.mPriority;
+  mLocation = i.mLocation;
+
+  mAlarms.clear();
+  Alarm::List::ConstIterator it;
+  for( it = i.mAlarms.begin(); it != i.mAlarms.end(); ++it ) {
+    Alarm *b = new Alarm( **it );
+    b->setParent( this );
+    mAlarms.append( b );
+  }
+
+  mAttachments.clear();
+  Attachment::List::ConstIterator it1;
+  for ( it1 = i.mAttachments.begin(); it1 != i.mAttachments.end(); ++it1 ) {
+    Attachment *a = new Attachment( **it1 );
+    mAttachments.append( a );
+  }
+
+  delete mRecurrence;
+  if (i.mRecurrence) {
+    mRecurrence = new Recurrence( *(i.mRecurrence) );
+    mRecurrence->addObserver( this );
+  } else
+    mRecurrence = 0;
+
+  mSchedulingID = i.mSchedulingID;
+  return *this;
+}
+
 bool Incidence::operator==( const Incidence& i2 ) const
 {
     if( alarms().count() != i2.alarms().count() ) {

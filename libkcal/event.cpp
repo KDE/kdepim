@@ -50,6 +50,15 @@ Event *Event::clone()
   return new Event(*this);
 }
 
+Event& Event::operator=( const Event &e )
+{
+  Incidence::operator=( e );
+  mDtEnd = e.mDtEnd;
+  mHasEndDate = e.mHasEndDate;
+  mTransparency = e.mTransparency;
+  return *this;
+}
+
 bool Event::operator==( const Event& e2 ) const
 {
     return

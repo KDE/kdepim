@@ -87,12 +87,14 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
       public:
         virtual ~Observer() {}
         virtual void incidenceUpdated( IncidenceBase * ) = 0;
+        virtual void incidenceUpdatedSilent( IncidenceBase * ) {};
     };
 
     IncidenceBase();
     IncidenceBase( const IncidenceBase & );
     virtual ~IncidenceBase();
 
+    IncidenceBase& operator=( const IncidenceBase &i );
     bool operator==( const IncidenceBase & ) const;
 
     /**
@@ -222,6 +224,7 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
       Set synchronisation satus.
     */
     void setSyncStatus( int status );
+    void setSyncStatusSilent( int status );
     /**
       Return synchronisation status.
     */
@@ -250,6 +253,7 @@ class LIBKCAL_EXPORT IncidenceBase : public CustomProperties
       changed.
     */
     void updated();
+    void updatedSilent();
 
   protected:
     /**

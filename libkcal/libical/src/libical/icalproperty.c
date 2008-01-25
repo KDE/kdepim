@@ -387,15 +387,16 @@ icalproperty_get_value_kind(icalproperty *prop)
 	    =  icalproperty_kind_to_value_kind(prop->kind);
 
 	if(orig_val_param){
-	    orig_kind = (icalvalue_kind)icalparameter_get_value(orig_val_param);
+	    orig_kind = icalparameter_value_to_value_kind( icalparameter_get_value(orig_val_param) );
 	}
 
 	if(value != 0){
 	    this_kind = icalvalue_isa(value);
 	}
 	
-	
-	if(this_kind == default_kind &&
+    if ( orig_kind != ICAL_NO_VALUE ) {
+      kind_string = icalvalue_kind_to_string( orig_kind );
+    } else if(this_kind == default_kind &&
 	   orig_kind != ICAL_NO_VALUE){
 	    /* The kind is the default, so it does not need to be
                included, but do it anyway, since it was explicit in

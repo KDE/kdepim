@@ -193,6 +193,9 @@ class LIBKCAL_EXPORT CalendarLocal : public Calendar
   
   protected:
 
+    /** Notification function of IncidenceBase::Observer. */
+    void incidenceUpdated( IncidenceBase *i );
+
     /** inserts an event into its "proper place" in the calendar. */
     void insertEvent( Event *event );
 

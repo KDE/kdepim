@@ -181,7 +181,7 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
       keys are resource specific.
 
       This method is provided to make it possible
-      to set resource-type specific settings without actually linking to 
+      to set resource-type specific settings without actually linking to
       the resource's library. Its use is discouraged, but in
       some situations the only possibility to avoid unwanted compiling and
       linking dependencies. E.g. if you don't want to link to the remote
@@ -314,6 +314,11 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
     virtual QStringList subresources() const { return QStringList(); }
 
     /**
+      Is this subresource capable of having subresources or not?
+    */
+    virtual bool canHaveSubresources() const { return false; }
+
+    /**
       Is this subresource active or not?
     */
     virtual bool subresourceActive( const QString& ) const { return true; }
@@ -333,8 +338,27 @@ class LIBKCAL_EXPORT ResourceCalendar : public KRES::Resource
 
       @return the identifier of the subresource or an empty string.
     */
-    virtual QString subresourceIdentifier( Incidence *incidence ) 
+    virtual QString subresourceIdentifier( Incidence *incidence )
     { Q_UNUSED( incidence ); return QString(); }
+
+
+
+    /**
+     * Remove a subresource with the id @param resource
+     */
+    virtual bool removeSubresource( const QString& resource );
+
+    /**
+     * Add a subresource with the name @param resource and the parent
+     * id @param parent.
+     */
+    virtual bool addSubresource( const QString& resource, const QString& parent );
+
+    /**
+     * Returns the type of the subresource: "event", "todo" or "journal",
+     * QString() if unknown/mixed.
+     */
+    virtual QString subresourceType( const QString &resource );
 
   public slots:
     /**

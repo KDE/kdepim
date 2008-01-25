@@ -28,6 +28,7 @@
 
 #include <kdebug.h>
 #include <klocale.h>
+#include <kmdcodec.h>
 
 extern "C" {
   #include <ical.h>
@@ -610,6 +611,16 @@ icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
     icalproperty_add_parameter(p,icalparameter_uid);
   }
 
+  if ( !attendee->delegate().isEmpty() ) {
+    icalparameter* icalparameter_delegate = icalparameter_new_delegatedto( attendee->delegate().utf8() );
+    icalproperty_add_parameter( p, icalparameter_delegate );
+  }
+
+  if ( !attendee->delegator().isEmpty() ) {
+    icalparameter* icalparameter_delegator = icalparameter_new_delegatedfrom( attendee->delegator().utf8() );
+    icalproperty_add_parameter( p, icalparameter_delegator );
+  }
+
   return p;
 }
 
@@ -1068,13 +1079,19 @@ FreeBusy *ICalFormatImpl::readFreeBusy(icalcomponent *vfreebusy)
       case ICAL_FREEBUSY_PROPERTY: { //Any FreeBusy Times
         icalperiodtype icalperiod = icalproperty_get_freebusy(p);
         QDateTime period_start = readICalDateTime(icalperiod.start);
+        Period period;
         if ( !icaltime_is_null_time(icalperiod.end) ) {
           QDateTime period_end = readICalDateTime(icalperiod.end);
-          periods.append( Period(period_start, period_end) );
+          period = Period(period_start, period_end);
         } else {
           Duration duration = readICalDuration( icalperiod.duration );
-          periods.append( Period(period_start, duration) );
+          period = Period(period_start, duration);
         }
+        QCString param = icalproperty_get_parameter_as_string( p, "X-SUMMARY" );
+        period.setSummary( QString::fromUtf8( KCodecs::base64Decode( param ) ) );
+        param = icalproperty_get_parameter_as_string( p, "X-LOCATION" );
+        period.setLocation( QString::fromUtf8( KCodecs::base64Decode( param ) ) );
+        periods.append( period );
         break;}
 
       default:
@@ -1183,7 +1200,17 @@ Attendee *ICalFormatImpl::readAttendee(icalproperty *attendee)
     p = icalproperty_get_next_parameter(attendee,ICAL_X_PARAMETER);
   } */
 
-  return new Attendee( name, email, rsvp, status, role, uid );
+  Attendee *a = new Attendee( name, email, rsvp, status, role, uid );
+
+  p = icalproperty_get_first_parameter( attendee, ICAL_DELEGATEDTO_PARAMETER );
+  if ( p )
+    a->setDelegate( icalparameter_get_delegatedto( p ) );
+
+  p = icalproperty_get_first_parameter( attendee, ICAL_DELEGATEDFROM_PARAMETER );
+  if ( p )
+    a->setDelegator( icalparameter_get_delegatedfrom( p ) );
+
+  return a;
 }
 
 Person ICalFormatImpl::readOrganizer( icalproperty *organizer )
@@ -1211,7 +1238,7 @@ Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
 
   icalvalue_kind value_kind = icalvalue_isa(icalproperty_get_value(attach));
 
-  if ( value_kind == ICAL_ATTACH_VALUE ) {
+  if ( value_kind == ICAL_ATTACH_VALUE || value_kind == ICAL_BINARY_VALUE ) {
     icalattach *a = icalproperty_get_attach(attach);
 
     int isurl = icalattach_get_is_url (a);
@@ -1228,6 +1255,13 @@ Attachment *ICalFormatImpl::readAttachment(icalproperty *attach)
   icalparameter *p = icalproperty_get_first_parameter(attach, ICAL_FMTTYPE_PARAMETER);
   if (p && attachment)
     attachment->setMimeType(QString(icalparameter_get_fmttype(p)));
+
+  p = icalproperty_get_first_parameter(attach,ICAL_X_PARAMETER);
+  while (p) {
+   if ( strncmp (icalparameter_get_xname(p), "X-LABEL", 7) == 0 )
+     attachment->setLabel( icalparameter_get_xvalue(p) );
+    p = icalproperty_get_next_parameter(attach, ICAL_X_PARAMETER);
+  }
 
   return attachment;
 }
@@ -1454,7 +1488,7 @@ void ICalFormatImpl::readIncidenceBase(icalcomponent *parent,IncidenceBase *inci
   icalproperty *next =0;
 
   for ( p = icalcomponent_get_first_property(parent,ICAL_X_PROPERTY);
-       p != 0; 
+       p != 0;
        p = next )
   {
 
