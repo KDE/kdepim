@@ -244,7 +244,7 @@ public:
    * @param resultInfo The resultinfo from the command
    * @return success or failure
    */
-  bool clientAuthenticate (KIO::SlaveBase *slave, KIO::AuthInfo &ai, const QString & aFQDN, 
+  bool clientAuthenticate (KIO::SlaveBase *slave, KIO::AuthInfo &ai, const QString & aFQDN,
     const QString & aAuth, bool isSSL, QString & resultInfo);
 
   /**
@@ -294,6 +294,14 @@ public:
   void parseQuotaRoot (parseString & result);
   /** @brief parse a QUOTA line */
   void parseQuota (parseString & result);
+  /** @brief parse a custom command line */
+  void parseCustom (parseString & result);
+  /** @brief parse a OTHER-USER line */
+  void parseOtherUser (parseString & result);
+  /** @brief parse a DELEGATE line */
+  void parseDelegate (parseString & result);
+  /** @brief parse a OUT-OF-OFFICE line */
+  void parseOutOfOffice (parseString & result);
 
   /**
    * parses the results of a fetch command
@@ -377,7 +385,7 @@ public:
 
   /** extract the box,section,list type, uid, uidvalidity,info from an url */
   static void parseURL (const KURL & _url, QString & _box, QString & _section,
-                        QString & _type, QString & _uid, QString & _validity, 
+                        QString & _type, QString & _uid, QString & _validity,
                         QString & _info);
 
 
@@ -471,13 +479,13 @@ protected:
   /** @brief the results from search/acl commands */
   QStringList lastResults;
 
-  /** 
+  /**
    * @brief namespace prefix - delimiter association
-   * The namespace is cleaned before so that it does not contain the delimiter 
+   * The namespace is cleaned before so that it does not contain the delimiter
    */
   QMap<QString, QString> namespaceToDelimiter;
 
-  /** 
+  /**
    * @brief list of namespaces in the form: section=namespace=delimiter
    * section is 0 (personal), 1 (other users) or 2 (shared)
    */

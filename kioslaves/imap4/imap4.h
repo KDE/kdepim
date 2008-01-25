@@ -176,6 +176,9 @@ protected:
   /** Search current folder, the search string is passed as SECTION */
   void specialSearchCommand( QDataStream& );
 
+  /** Send a custom command to the server */
+  void specialCustomCommand( QDataStream& );
+
 private:
 
   // This method behaves like the above method but takes an already encoded url,

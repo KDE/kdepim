@@ -40,7 +40,12 @@ public:
     Deleted = 1 << 3,
     Draft = 1 << 4,
     Recent = 1 << 5,
-    User = 1 << 6
+    User = 1 << 6,
+    // non standard flags
+    Forwarded = 1 << 7,
+    Todo = 1 << 8,
+    Watched = 1 << 9,
+    Ignored = 1 << 10
   };
 
 
