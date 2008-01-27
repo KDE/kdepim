@@ -22,6 +22,7 @@
 #include <QtCore>
 
 #include <cassert>
+#include <cstring>
 #include <memory>
 #include <algorithm>
 
@@ -573,7 +574,7 @@ qint64 Reader::readData( char * data, qint64 maxSize ) {
     qDebug( "%p: KDPipeIODevice::readData: data=%p, maxSize=%lld; rptr=%u, wptr=%u (bytesInBuffer=%u); -> numRead=%lld", this,
             data, maxSize, rptr, wptr, bytesInBuffer(), numRead );
 
-    std::memcpy( data, buffer + rptr, numRead );
+    memcpy( data, buffer + rptr, numRead );
 
     rptr = ( rptr + numRead ) % sizeof buffer ;
 
@@ -616,7 +617,7 @@ qint64 Writer::writeData( const char * data, qint64 size ) {
     if ( size > static_cast<qint64>( sizeof buffer ) )
         size = sizeof buffer;
 
-    std::memcpy( buffer, data, size );
+    memcpy( buffer, data, size );
 
     numBytesInBuffer = size;
 
