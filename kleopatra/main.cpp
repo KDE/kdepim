@@ -64,13 +64,13 @@
 
 #include <models/keycache.h>
 
-#include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kmessagebox.h>
 #include <klocale.h>
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <ksplashscreen.h>
+#include <KUniqueApplication>
 
 #include <QDebug>
 #include <QFile>
@@ -163,6 +163,7 @@ int main( int argc, char** argv )
 #ifdef HAVE_USABLE_ASSUAN
   options.add("uiserver-socket <argument>", ki18n("Location of the socket the ui server is listening on" ) );
 #endif
+  
   KCmdLineArgs::addCmdLineOptions( options );
 
   // pin KeyCache to a shared_ptr to define it's minimum lifetime:
@@ -173,7 +174,7 @@ int main( int argc, char** argv )
   
   setupLogging();
   
-  KApplication app;
+  KUniqueApplication app;
   
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
