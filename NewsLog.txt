@@ -1,3 +1,23 @@
+Monday, January 28th 2008
+
+Problems addressed
+-------------------
+
+* kolab/issue2387  Crash when creating a subfolder of the calendar folder. (767033)
+
+* kolab/issue2369 After locally unsubscribed a shared folder, the grey "user" and the grey "ltest1" folder didn't vanish. (765237)
+
+* kolab/issue2216 Crash in KMFolderSearch::addSerNum (764894)
+
+* kolab/issue2403 Forwarded or Delegated event not displayed correctly.(764828)
+
+* kolab/issue2405 Printing a encrypted mail should be possible (764404)
+
+Merges
+-------
+
+Merging complete with respect to 3.5 branch.
+
 Friday, January 18th 2008
 
 Problems addressed
