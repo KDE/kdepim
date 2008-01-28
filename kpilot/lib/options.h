@@ -42,7 +42,7 @@
 
 #include <iostream>
 
-#define KPILOT_VERSION	"5.0.0-pre2 (gonzo)"
+#define KPILOT_VERSION	"5.0.1 (kermit)"
 
 extern KDE_EXPORT int debug_level;
 
