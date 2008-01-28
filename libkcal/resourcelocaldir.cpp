@@ -167,16 +167,16 @@ bool ResourceLocalDir::doFileLoad( CalendarLocal &cal, const QString &fileName )
 bool ResourceLocalDir::doSave()
 {
   Incidence::List list;
+  bool success = true;
 
   list = addedIncidences();
-  for (Incidence::List::iterator it = list.begin(); it != list.end(); ++it)
-    doSave(*it);
+  list += changedIncidences();
 
-  list = changedIncidences();
-  for (Incidence::List::iterator it = list.begin(); it != list.end(); ++it)
-    doSave(*it);
+  for ( Incidence::List::iterator it = list.begin(); it != list.end(); ++it )
+    if ( !doSave( *it ) )
+      success = false;
 
-  return true;
+  return success;
 }
 
 bool ResourceLocalDir::doSave( Incidence *incidence )
@@ -188,11 +188,11 @@ bool ResourceLocalDir::doSave( Incidence *incidence )
 
   CalendarLocal cal( mCalendar.timeZoneId() );
   cal.addIncidence( incidence->clone() );
-  cal.save( fileName );
+  const bool ret = cal.save( fileName );
 
   mDirWatch.startScan();
 
-  return true;
+  return ret;
 }
 
 KABC::Lock *ResourceLocalDir::lock()
@@ -204,7 +204,8 @@ void ResourceLocalDir::reload( const QString &file )
 {
   kdDebug(5800) << "ResourceLocalDir::reload()" << endl;
 
-  if ( !isOpen() ) return;
+  if ( !isOpen() )
+    return;
 
   kdDebug(5800) << "  File: '" << file << "'" << endl;
 
