@@ -4,6 +4,7 @@ X-KDE-Library=libkaddrbk_distributionlistng
 Name=KAB Distribution List Next Generation Plugin
 Name[da]=Næste generations-plugin til KAB-Distribution-liste
 Name[el]=Πρόσθετο επόμενης γενιάς λίστας διανομής του KAB
+Name[sk]=KAB plugin distribučného zoznamu ďaľšej generácie
 Name[sv]=Adressbokens nästa generation insticksprogram för distributionslistor
 Comment=Plugin for managing distribution lists
 Comment[af]=Inprop module vir die bestuur van verspreiding lyste

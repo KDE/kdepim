@@ -4,6 +4,7 @@ Name=Notes on Scalix Server via KMail
 Name[bg]=Бележки на сървъра Scalix чрез KMail
 Name[da]=Noter på Scalix-server via KMail
 Name[el]=Σημειώσεις σε εξυπηρετητή Scalix μέσω του KMail
+Name[sk]=Poznámky na Scalix serveri pomocou KMail
 Name[sv]=Anteckningar på Scalix-server via Kmail
 X-KDE-Library=knotes_scalix
 Type=Service
