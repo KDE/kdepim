@@ -5,7 +5,7 @@ INCLUDES = -I$(top_srcdir) \
 
 lib_LTLIBRARIES = libkgroupwarebase.la libkgroupwaredav.la
 
-libkgroupwarebase_la_SOURCES = folderlister.cpp folderconfig.cpp folderlistview.cpp \
+libkgroupwarebase_la_SOURCES = folderlister.cpp folderconfig.cpp folderlistview.cpp folderselectdialog.cpp \
   groupwaredataadaptor.cpp groupwaredownloadjob.cpp \
   calendaradaptor.cpp addressbookadaptor.cpp groupwareresourcejob.cpp \
   groupwareuploadjob.cpp kcal_resourcegroupwarebase.cpp kabc_resourcegroupwarebase.cpp \

@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir) $(all_includes)
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kresources/lib $(all_includes)
 
 noinst_HEADERS = resourcekolabbase.h kolabbase.h subresource.h
 
@@ -9,7 +9,7 @@ libresourcekolabshared_la_SOURCES = \
         subresource.cpp \
 	kmailconnection.skel kmailicalIface.stub
 libresourcekolabshared_la_METASOURCES = AUTO
-libresourcekolabshared_la_LIBADD = $(top_builddir)/libkcal/libkcal.la $(top_builddir)/libkdepim/libkdepim.la
+libresourcekolabshared_la_LIBADD = $(top_builddir)/libkcal/libkcal.la $(top_builddir)/libkdepim/libkdepim.la ../../lib/libkgroupwarebase.la
 libresourcekolabshared_la_LDFLAGS = -no-undefined
 
 kmailicalIface_DCOPIDLNG = true

@@ -33,6 +33,8 @@
 #include "resourcescalixbase.h"
 #include "kmailconnection.h"
 
+#include <folderselectdialog.h>
+
 #include <klocale.h>
 #include <kstandarddirs.h>
 #include <kinputdialog.h>
@@ -160,10 +162,10 @@ QString ResourceScalixBase::findWritableResource( const ResourceMap& resources )
     return possible.begin().data(); // yes this is the subresource key, i.e. location
 
   // Several found, ask the user
-  QString chosenLabel = KInputDialog::getItem( i18n( "Select Resource Folder" ),
-                                               i18n( "You have more than one writable resource folder. "
-                                                     "Please select the one you want to write to." ),
-                                               possible.keys() );
+  QString chosenLabel = KPIM::FolderSelectDialog::getItem( i18n( "Select Resource Folder" ),
+                                                           i18n( "You have more than one writable resource folder. "
+                                                                 "Please select the one you want to write to." ),
+                                                           possible.keys() );
   if ( chosenLabel.isEmpty() ) // cancelled
     return QString::null;
   return possible[chosenLabel];
