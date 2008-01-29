@@ -3,7 +3,7 @@
  *                                                                             *
  * KonsoleKalendar is a command line interface to KDE calendars                *
  * Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>             *
- * Copyright (C) 2003-2005  Allen Winter <winter@kde.org>                      *
+ * Copyright (C) 2003-2005,2008  Allen Winter <winter@kde.org>                 *
  *                                                                             *
  * This program is free software; you can redistribute it and/or modify        *
  * it under the terms of the GNU General Public License as published by        *
@@ -15,9 +15,9 @@
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the                *
  * GNU General Public License for more details.                                *
  *                                                                             *
- * You should have received a copy of the GNU General Public License           *
- * along with this program; if not, write to the Free Software                 *
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA. *
+ * You should have received a copy of the GNU General Public License along     *
+ * with this program; if not, write to the Free Software Foundation, Inc.,     *
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.                *
  *                                                                             *
  * As a special exception, permission is given to link this program            *
  * with any edition of Qt, and distribute the resulting executable,            *
@@ -672,12 +672,7 @@ int main( int argc, char *argv[] )
     calendarResource = new StdCalendar( variables.getCalendarFile(),
                                         i18n( "Active Calendar" ) );
   } else {
-    // TODO: when certain resources (kolab) don't try to gain access to
-    // an X server, or dcopserver, then put back the following line which
-    // supports all resources, not just the standard resource.
-    // calendarResource = new StdCalendar();
-    calendarResource = new StdCalendar(
-      KStandardDirs::locateLocal( "data", "korganizer/std.ics" ), i18n( "Default Calendar" ) );
+    calendarResource = new StdCalendar();
   }
   if ( !args->isSet( "import" ) ) {
     variables.setCalendar( calendarResource );
