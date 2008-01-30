@@ -72,8 +72,8 @@ char IcsEndAnalyzer::analyze( Strigi::AnalysisResult& idx, Strigi::InputStream* 
   }
 
   idx.addValue( m_factory->field( ProductId ), cal.productId().toUtf8().data() );
-  idx.addValue( m_factory->field( Events ), cal.events().count() );
-  idx.addValue( m_factory->field( Journals ), cal.journals().count() );
+  idx.addValue( m_factory->field( Events ), (uint32_t)cal.events().count() );
+  idx.addValue( m_factory->field( Journals ), (uint32_t)cal.journals().count() );
   Todo::List todos = cal.todos();
 
   // count completed and overdue
@@ -87,9 +87,9 @@ char IcsEndAnalyzer::analyze( Strigi::AnalysisResult& idx, Strigi::InputStream* 
     }
   }
 
-  idx.addValue( m_factory->field( Todos ), todos.count() );
-  idx.addValue( m_factory->field( TodosCompleted ), completed );
-  idx.addValue( m_factory->field( TodosOverdue ), overdue );
+  idx.addValue( m_factory->field( Todos ), (uint32_t)todos.count() );
+  idx.addValue( m_factory->field( TodosCompleted ), (uint32_t)completed );
+  idx.addValue( m_factory->field( TodosOverdue ), (uint32_t)overdue );
 
   cal.close();
 
