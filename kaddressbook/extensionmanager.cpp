@@ -235,6 +235,8 @@ void ExtensionManager::createExtensionWidgets()
 
     wdg = extensionFactory->extension( mCore, mSplitter );
     if ( wdg ) {
+      if ( wdg->identifier() == "distribution_list_editor_ng" )
+          mSplitter->moveToFirst( wdg );
       wdg->hide();
       connect( wdg, SIGNAL( modified( const KABC::Addressee::List& ) ),
                SIGNAL( modified( const KABC::Addressee::List& ) ) );
