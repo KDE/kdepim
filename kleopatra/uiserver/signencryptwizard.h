@@ -33,8 +33,9 @@
 #ifndef __KLEOPATRA_UISERVER_SIGNENCRYPTWIZARD_H__
 #define __KLEOPATRA_UISERVER_SIGNENCRYPTWIZARD_H__
 
-#include "wizard.h"
-#include "signerresolvepage.h"
+#include <crypto/gui/wizard.h>
+
+#include <uiserver/signerresolvepage.h>
 
 #include <utils/pimpl_ptr.h>
 
@@ -57,7 +58,7 @@ namespace Kleo {
 
     class Task;
 
-    class SignEncryptWizard : public Wizard {
+    class SignEncryptWizard : public Crypto::Gui::Wizard {
         Q_OBJECT
     public:
         explicit SignEncryptWizard( QWidget * parent=0, Qt::WindowFlags f=0 );

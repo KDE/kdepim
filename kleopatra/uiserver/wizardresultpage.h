@@ -33,13 +33,13 @@
 #ifndef __KLEOPATRA_UISERVER_WIZARDRESULTPAGE_H__
 #define __KLEOPATRA_UISERVER_WIZARDRESULTPAGE_H__
 
-#include "wizardpage.h"
+#include <crypto/gui/wizardpage.h>
 
 #include <utils/pimpl_ptr.h>
 
 namespace Kleo {
 
-    class WizardResultPage : public WizardPage {
+    class WizardResultPage : public Crypto::Gui::WizardPage {
         Q_OBJECT
     public:
         explicit WizardResultPage( QWidget * parent=0 );

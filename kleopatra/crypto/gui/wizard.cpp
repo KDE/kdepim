@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    wizard.cpp
+    crypto/gui/wizard.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -50,7 +50,7 @@
 
 #include <cassert>
 
-using namespace Kleo;
+using namespace Kleo::Crypto::Gui;
 
 class Wizard::Private {
     friend class ::Wizard;

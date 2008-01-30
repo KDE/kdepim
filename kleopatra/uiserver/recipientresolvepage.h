@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    certificatepickerwidget.h
+    recipientresolvepage.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_RESOLVERECIPIENTSPAGE_H__
 #define __KLEOPATRA_RESOLVERECIPIENTSPAGE_H__
 
-#include "wizardpage.h"
+#include <crypto/gui/wizardpage.h>
 
 #include <gpgme++/global.h>
 #include <kmime/kmime_header_parsing.h>
@@ -75,7 +75,7 @@ namespace Kleo {
         Q_PRIVATE_SLOT( d, void currentIndexChanged( int ) )
     };
 
-    class RecipientResolvePage : public WizardPage {
+    class RecipientResolvePage : public Crypto::Gui::WizardPage {
         Q_OBJECT
     public:
  

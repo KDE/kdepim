@@ -31,10 +31,10 @@ kde4_add_executable( test_signencryptwizard TEST
   ../uiserver/objectspage.cpp
   ../uiserver/wizardresultpage.cpp
   ../uiserver/resultdisplaywidget.cpp
-  ../uiserver/scrollarea.cpp
   ../uiserver/signerresolvepage.cpp
-  ../uiserver/wizardpage.cpp
-  ../uiserver/wizard.cpp
+  ../crypto/gui/scrollarea.cpp
+  ../crypto/gui/wizardpage.cpp
+  ../crypto/gui/wizard.cpp
   ../uiserver/signingcertificateselectiondialog.cpp
   ../certificateinfowidgetimpl.cpp
   ../utils/exception.cpp

@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    scrollarea.h
+    crypto/gui/scrollarea.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,24 +30,47 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_SCROLLAREA_H__
-#define __KLEOPATRA_SCROLLAREA_H__
 
-#include <QScrollArea>
+#include "scrollarea.h"
 
-namespace Kleo {
+#include <QScrollBar>
+#include <QVBoxLayout>
 
-    class ScrollArea : public QScrollArea {
-        Q_OBJECT
-    
-    public:
-        explicit ScrollArea( QWidget * p=0 );
-        ~ScrollArea();
+using namespace Kleo::Crypto::Gui;
 
-        /* reimp */ QSize minimumSizeHint() const;
-        /* reimp */ QSize sizeHint() const;
-    };
+
+namespace {
+
+    static QSize getMinimumSizeHint( const QWidget * w ) {
+        return w ? w->minimumSizeHint() : QSize( 0, 0 );
+    }
+
+    static QSize getSizeHint( const QWidget * w ) {
+        return w ? w->sizeHint() : QSize( 0, 0 );
+    }
 }
 
-#endif // __KLEOPATRA_SCROLLAREA_H__
+ScrollArea::ScrollArea( QWidget * parent ) : QScrollArea( parent )
+{
+    setWidget( new QWidget );
+    new QVBoxLayout( widget() );
+    setWidgetResizable( true );
+}
+
+ScrollArea::~ScrollArea()
+{
+}
+
+QSize ScrollArea::minimumSizeHint() const
+{
+    return QSize( getMinimumSizeHint( widget() ).width() + getSizeHint( verticalScrollBar() ).width() + 2*frameWidth(), 0 )
+        .expandedTo( QScrollArea::minimumSizeHint() );
+}
+
+QSize ScrollArea::sizeHint() const
+{
+    const QSize widgetSizeHint = getSizeHint( widget() );
+    const int fw = frameWidth();
+    return QScrollArea::sizeHint().expandedTo( widgetSizeHint + QSize( 2*fw, 2*fw ) + QSize( getSizeHint( verticalScrollBar() ).width(), 0 ) );
+}
 

@@ -33,7 +33,7 @@
 
 #include "wizardresultpage.h"
 
-#include "scrollarea.h"
+#include <crypto/gui/scrollarea.h>
 
 #include <KLocale>
 
@@ -42,6 +42,7 @@
 #include <cassert>
 
 using namespace Kleo;
+using namespace Kleo::Crypto::Gui;
 
 class WizardResultPage::Private {
     friend class ::WizardResultPage;

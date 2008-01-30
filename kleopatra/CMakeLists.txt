@@ -41,6 +41,11 @@ if ( USABLE_ASSUAN_FOUND )
     utils/hex.cpp
     utils/input.cpp
     utils/output.cpp
+
+    crypto/gui/wizard.cpp
+    crypto/gui/wizardpage.cpp
+    crypto/gui/scrollarea.cpp
+
     uiserver/uiserver.cpp
     uiserver/assuanserverconnection.cpp
     uiserver/echocommand.cpp
@@ -70,10 +75,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/recipientresolvepage.cpp
     uiserver/resolverecipientspage.cpp
     uiserver/wizardresultpage.cpp
-    uiserver/wizard.cpp
-    uiserver/wizardpage.cpp
     uiserver/signerresolvepage.cpp
-    uiserver/scrollarea.cpp
     )
   kde4_add_ui_files( _kleopatra_uiserver_SRCS uiserver/certificateselectionwidget.ui uiserver/signingcertificateselectionwidget.ui)
   if ( WIN32 )

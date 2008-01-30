@@ -34,7 +34,8 @@
 
 #include "decryptverifyoperationwidget.h"
 #include "decryptverifyresultwidget.h"
-#include "scrollarea.h"
+
+#include <crypto/gui/scrollarea.h>
 
 #include <utils/filenamerequester.h>
 #include <utils/stl_util.h>
@@ -56,6 +57,7 @@
 #include <cassert>
 
 using namespace Kleo;
+using namespace Kleo::Crypto::Gui;
 using namespace boost;
 
 namespace {

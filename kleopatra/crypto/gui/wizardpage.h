@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    wizard.h
+    crypto/gui/wizardpage.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,65 +30,58 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_WIZARD_H__
-#define __KLEOPATRA_WIZARD_H__
+#ifndef __KLEOPATRA_CRYPTO_GUI_WIZARDPAGE_H__
+#define __KLEOPATRA_CRYPTO_GUI_WIZARDPAGE_H__
 
-#include <KDialog>
+#include <QWidget>
 
 #include <utils/pimpl_ptr.h>
 
-#include <vector>
-
 namespace Kleo {
+namespace Crypto {
+namespace Gui {
 
-    class WizardPage;
+    class Wizard;
 
-    class Wizard : public QDialog {
+    class WizardPage : public QWidget {
+        friend class ::Kleo::Crypto::Gui::Wizard;
         Q_OBJECT
-            public:
-        explicit Wizard( QWidget * parent=0, Qt::WFlags f=0 );
-        virtual ~Wizard();
-        
-        enum Page {
-            InvalidPage=-1
-        };
+    public:
+        explicit WizardPage( QWidget * parent=0, Qt::WFlags f=0 );
+        virtual ~WizardPage();
 
-        void setPage( int id, WizardPage* page );
+        virtual bool isComplete() const = 0;
 
-        const WizardPage* page( int id ) const;
-        WizardPage* page( int id );
+        bool isCommitPage() const;
+        void setCommitPage( bool commitPage );
 
-        void setPageOrder( const std::vector<int>& pages );
-        void setPageVisible( int id, bool visible );
+        QString title() const;
+        void setTitle( const QString& title );
 
-        void setCurrentPage( int id );
-        
-        int currentPage() const;
+        QString subTitle() const; 
+        void setSubTitle( const QString& subTitle );
 
-        const WizardPage* currentPageWidget() const;
-        WizardPage* currentPageWidget();
-
-        bool canGoToPreviousPage() const;
-        bool canGoToNextPage() const;
-
-    public Q_SLOTS:
-        void next();
-        void back();
+        QString explanation() const;
+        void setExplanation( const QString& explanation );
 
     Q_SIGNALS:
-       void canceled();
+        void completeChanged();
+        void explanationChanged();
+        void titleChanged();
+        void subTitleChanged();
 
     protected:
-        virtual void onNext( int currentId );
-        virtual void onBack( int currentId );
-
+        
+        virtual void onNext();
+        
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void updateButtonStates() )
-        Q_PRIVATE_SLOT( d, void updateHeader() )
     };
+
+}
+}
 }
 
-#endif // __KLEOPATRA_WIZARD_H__ 
+#endif // __KLEOPATRA_CRYPTO_GUI_WIZARDPAGE_H__
 

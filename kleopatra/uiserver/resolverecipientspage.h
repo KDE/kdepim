@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_RESOLVERECIPIENTSPAGE__
 #define __KLEOPATRA_RESOLVERECIPIENTSPAGE__
 
-#include "wizardpage.h"
+#include <crypto/gui/wizardpage.h>
 
 #include <utils/pimpl_ptr.h>
 
@@ -56,7 +56,7 @@ namespace Kleo {
 
     class RecipientPreferences;
 
-    class ResolveRecipientsPage : public WizardPage {
+    class ResolveRecipientsPage : public Crypto::Gui::WizardPage {
         Q_OBJECT
     public:
     

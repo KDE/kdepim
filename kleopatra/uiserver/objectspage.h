@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_OBJECTSPAGE_H__
 #define __KLEOPATRA_OBJECTSPAGE_H__
 
-#include "wizardpage.h"
+#include <crypto/gui/wizardpage.h>
     
 #include <utils/pimpl_ptr.h>
 
@@ -41,7 +41,7 @@ class QStringList;
 
 namespace Kleo {
  
-    class ObjectsPage : public WizardPage {
+    class ObjectsPage : public Crypto::Gui::WizardPage {
         Q_OBJECT
             public:
         explicit ObjectsPage( QWidget * parent=0, Qt::WFlags f=0 );

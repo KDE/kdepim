@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_SIGNERRESOLVEPAGE_H__
 #define __KLEOPATRA_SIGNERRESOLVEPAGE_H__ 
 
-#include "wizardpage.h"
+#include <crypto/gui/wizardpage.h>
 
 #include <utils/pimpl_ptr.h>
 
@@ -50,7 +50,7 @@ namespace Kleo {
 
     class SigningPreferences;
     
-    class SignerResolvePage : public WizardPage {
+    class SignerResolvePage : public Crypto::Gui::WizardPage {
         Q_OBJECT
     public:
         explicit SignerResolvePage( QWidget * parent=0, Qt::WFlags f=0 );

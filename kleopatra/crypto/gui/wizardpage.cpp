@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    wizardpage.cpp
+    crypto/gui/wizardpage.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -33,7 +33,7 @@
 
 #include "wizardpage.h"
 
-using namespace Kleo;
+using namespace Kleo::Crypto::Gui;
 
 class WizardPage::Private {
     friend class ::WizardPage;
