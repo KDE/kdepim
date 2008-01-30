@@ -181,8 +181,10 @@ int main( int argc, char** argv )
   KGlobal::locale()->insertCatalog( "libkleopatra" );
   KIconLoader::global()->addAppDir( "libkleopatra" );
 
+#ifndef KLEO_BUILD_OLD_MAINWINDOW
   SystemTrayIconFor<MainWindow> sysTray;
   sysTray.show();
+#endif
 
   KSplashScreen splash( UserIcon( "kleopatra_splashscreen" ), Qt::WindowStaysOnTopHint );
 
