@@ -26,7 +26,10 @@
 #include <libkdepim/addresseelineedit.h>
 #include <libkdepim/distributionlist.h>
 
+#include <qpushbutton.h>
 #include <qstring.h>
+
+class QToolButton;
 
 namespace KABC {
     class Addressee;
@@ -52,7 +55,8 @@ public:
 
     void setEntry( const KPIM::DistributionList::Entry& entry );
     KPIM::DistributionList::Entry entry() const; 
-
+    void setFocusToLineEdit();
+    
 signals:
     void cleared();
     void textChanged();
@@ -67,6 +71,7 @@ private:
     QString m_uid;
     QString m_initialText;
     LineEdit* m_lineEdit;
+    QToolButton* m_clearButton;
     KABC::AddressBook* m_addressBook;
 };
 
