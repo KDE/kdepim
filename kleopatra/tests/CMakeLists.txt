@@ -17,34 +17,6 @@ target_link_libraries(test_keylistmodels kleo ${KDE4_KDECORE_LIBS} )
 #
 #target_link_libraries(test_verificationresultdialog kleo ${KDE4_KDECORE_LIBS} ${QT_QT3SUPPORT_LIBRARY})
 
-
-########### next target ###############
-
-if ( USABLE_ASSUAN_FOUND )
-
-kde4_add_executable( test_signencryptwizard TEST
-  test_signencryptwizard.cpp
-  ../uiserver/certificateresolver.cpp
-  ../uiserver/signencryptwizard.cpp 
-  ../uiserver/resolverecipientspage.cpp
-  ../uiserver/objectspage.cpp
-  ../uiserver/wizardresultpage.cpp
-  ../uiserver/resultdisplaywidget.cpp
-  ../uiserver/signerresolvepage.cpp
-  ../crypto/gui/scrollarea.cpp
-  ../crypto/gui/wizardpage.cpp
-  ../crypto/gui/wizard.cpp
-  ../crypto/gui/certificateselectiondialog.cpp
-  ../crypto/gui/signingcertificateselectiondialog.cpp
-  ../certificateinfowidgetimpl.cpp
-  ../utils/exception.cpp
-  ../utils/formatting.cpp
-  ../models/keycache.cpp 
-  ../models/keylistmodel.cpp )
-target_link_libraries( test_signencryptwizard kleo ${KDE4_KMIME_LIBRARY} ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES} ${QT_QT3SUPPORT_LIBRARY} )
-
-endif ( USABLE_ASSUAN_FOUND )
-
 ########### next target ###############
 
 set(test_verify_SRCS test_verify.cpp)

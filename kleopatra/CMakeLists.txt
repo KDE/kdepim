@@ -71,7 +71,6 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/prepencryptcommand.cpp
     uiserver/encryptcommand.cpp
     uiserver/resultdisplaywidget.cpp
-    uiserver/recipientresolvepage.cpp
     uiserver/resolverecipientspage.cpp
     uiserver/wizardresultpage.cpp
     uiserver/signerresolvepage.cpp
