@@ -43,8 +43,6 @@ class QFile;
 
 namespace Kleo {
 
-    class AssuanCommand;
-
     class Input {
     public:
         virtual ~Input();
