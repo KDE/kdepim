@@ -17,7 +17,7 @@ XXLIBS = $(top_builddir)/kaddressbook/interfaces/libkabinterfaces.la \
 if compile_newdistrlists
 libkaddrbk_distributionlistng_la_SOURCES = distributionlistngwidget.cpp
 libkaddrbk_distributionlistng_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries) -no-undefined
-ibkaddrbk_distributionlistng_la_LIBADD = $(XXLIBS)
+libkaddrbk_distributionlistng_la_LIBADD = $(XXLIBS)
 else
 llibkaddrbk_distributionlist_la_SOURCES = distributionlistwidget.cpp
 libkaddrbk_distributionlist_la_LDFLAGS = -module $(KDE_PLUGIN) $(KDE_RPATH) $(all_libraries) -no-undefined
