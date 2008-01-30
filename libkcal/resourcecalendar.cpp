@@ -109,8 +109,6 @@ bool ResourceCalendar::removeSubresource( const QString & )
   return true;
 }
 
-
-
 bool ResourceCalendar::load()
 {
   kdDebug(5800) << "Loading resource " + resourceName() << endl;
@@ -118,11 +116,13 @@ bool ResourceCalendar::load()
   mReceivedLoadError = false;
 
   bool success = true;
-  if ( !isOpen() ) success = open();
-  if ( success ) {
+  if ( !isOpen() )
+    success = open();
+  if ( success )
     success = doLoad();
-  }
-  if ( !success && !mReceivedLoadError ) loadError();
+
+  if ( !success && !mReceivedLoadError )
+    loadError();
 
   // If the resource is read-only, we need to set its incidences to read-only,
   // too. This can't be done at a lower-level, since the read-only setting

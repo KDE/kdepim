@@ -77,6 +77,7 @@ class LIBKCAL_EXPORT ResourceLocalDir : public ResourceCached
     void reload( const QString & );
 
   protected:
+    virtual bool doOpen();
     virtual bool doLoad();
     virtual bool doSave();
     bool doSave( Incidence * );
