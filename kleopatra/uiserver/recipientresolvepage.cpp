@@ -32,10 +32,12 @@
 
 #include "recipientresolvepage.h"
 #include "certificateselectiondialog.h"
-#include "kleo-assuan.h"
-#include "models/keycache.h"
-#include "utils/formatting.h"
+
 #include "certificateresolver.h"
+
+#include <models/keycache.h>
+#include <utils/formatting.h>
+#include <utils/kleo_assert.h>
 
 #include <gpgme++/key.h>
 

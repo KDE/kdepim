@@ -32,12 +32,12 @@
 
 #include "signencryptfilestask.h"
 
-#include "kleo-assuan.h"
-
 #include "input.h"
 #include "output.h"
 
 #include <utils/stl_util.h>
+#include <utils/kleo_assert.h>
+#include <utils/exception.h>
 
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/cryptobackend.h>

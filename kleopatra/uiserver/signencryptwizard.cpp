@@ -39,9 +39,9 @@
 #include "resultdisplaywidget.h"
 #include "wizardresultpage.h"
 #include "task.h"
-#include "kleo-assuan.h"
 
 #include <utils/stl_util.h>
+#include <utils/kleo_assert.h>
 
 #include <gpgme++/key.h>
 

@@ -32,7 +32,8 @@
 
 #include "wizard.h"
 #include "wizardpage.h"
-#include "kleo-assuan.h"
+
+#include <utils/kleo_assert.h>
 
 #include <KLocale>
 #include <KPushButton>

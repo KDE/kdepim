@@ -33,11 +33,12 @@
 #include "input.h"
 
 #include "detail_p.h"
-#include "kleo-assuan.h"
 
 #include <utils/classify.h>
 #include <utils/kdpipeiodevice.h>
 #include <utils/log.h>
+#include <utils/kleo_assert.h>
+#include <utils/exception.h>
 
 #include <KLocale>
 

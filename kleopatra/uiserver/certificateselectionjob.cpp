@@ -32,9 +32,11 @@
 
 #include "certificateselectionjob.h"
 #include "certificateselectiondialog.h"
-#include "kleo-assuan.h"
 #include "assuancommand.h" // for AssuanCommand::makeError()
-#include "models/keycache.h"
+
+#include <models/keycache.h>
+
+#include <utils/exception.h>
 
 #include <kleo/keylistjob.h>
 #include <kleo/cryptobackendfactory.h>

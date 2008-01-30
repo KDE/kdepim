@@ -33,9 +33,7 @@
 #ifndef __KLEOPATRA_UISERVER_INPUT_H__
 #define __KLEOPATRA_UISERVER_INPUT_H__
 
-#include <uiserver/kleo-assuan.h>
-
-#include <gpgme++/global.h>
+#include <assuan.h> // for assuan_fd_t
 
 #include <boost/shared_ptr.hpp>
 

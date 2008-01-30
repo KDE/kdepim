@@ -32,7 +32,6 @@
 
 #include "signencryptfilescontroller.h"
 
-#include "kleo-assuan.h"
 #include "assuancommand.h"
 #include "certificateresolver.h"
 #include "signencryptfileswizard.h"
@@ -42,6 +41,8 @@
 
 #include <utils/classify.h>
 #include <utils/stl_util.h>
+#include <utils/kleo_assert.h>
+#include <utils/exception.h>
 
 #include <kmime/kmime_header_parsing.h>
 

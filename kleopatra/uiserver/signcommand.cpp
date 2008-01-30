@@ -32,7 +32,8 @@
 
 #include "signcommand.h"
 #include "signemailcontroller.h"
-#include "kleo-assuan.h"
+
+#include <utils/exception.h>
 
 #include <KLocale>
 

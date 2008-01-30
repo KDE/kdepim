@@ -37,15 +37,15 @@
 #include "assuanserverconnection.h"
 #include "assuancommand.h"
 
-#include "kleo-assuan.h"
-
-#include "utils/wsastarter.h"
+#include <utils/wsastarter.h>
 
 #include <ktempdir.h>
 
 #include <QTcpServer>
 #include <QFile>
 #include <QDir>
+
+#include <assuan.h>
 
 #include <boost/bind.hpp>
 

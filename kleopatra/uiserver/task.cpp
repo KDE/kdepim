@@ -32,7 +32,7 @@
 
 #include "task.h"
 
-#include "kleo-assuan.h"
+#include <gpgme++/exception.h>
 
 #include <KIconLoader>
 #include <KLocale>

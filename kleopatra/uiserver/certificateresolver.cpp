@@ -32,8 +32,6 @@
 
 #include "certificateresolver.h"
 
-#include "kleo-assuan.h"
-
 #include <models/keycache.h>
 
 #include <gpgme++/key.h>

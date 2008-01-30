@@ -35,6 +35,8 @@
 #include "input.h"
 #include "output.h"
 
+#include <utils/exception.h>
+
 #include <gpg-error.h>
 
 #include <KLocale>

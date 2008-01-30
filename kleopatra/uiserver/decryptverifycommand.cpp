@@ -36,7 +36,6 @@
 #include "decryptverifyresultwidget.h"
 #include "decryptverifyoperationwidget.h"
 
-#include "kleo-assuan.h"
 #include "detail_p.h"
 #include "hex.h"
 #include "input.h"
@@ -48,6 +47,8 @@
 #include <utils/classify.h>
 #include <utils/formatting.h>
 #include <utils/stl_util.h>
+#include <utils/kleo_assert.h>
+#include <utils/exception.h>
 
 #include <kleo/verifyopaquejob.h>
 #include <kleo/verifydetachedjob.h>

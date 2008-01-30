@@ -32,7 +32,6 @@
 
 #include "encryptemailcontroller.h"
 
-#include "kleo-assuan.h"
 #include "assuancommand.h"
 #include "signencryptwizard.h"
 #include "encryptemailtask.h"
@@ -40,6 +39,8 @@
 #include "output.h"
 
 #include <utils/stl_util.h>
+#include <utils/kleo_assert.h>
+#include <utils/exception.h>
 
 #include <gpgme++/key.h>
 

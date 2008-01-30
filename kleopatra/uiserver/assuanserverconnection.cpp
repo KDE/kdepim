@@ -42,12 +42,14 @@
 #include "assuancommand.h"
 
 #include "detail_p.h"
-#include "kleo-assuan.h"
 #include "hex.h"
 
 #include "input.h"
 #include "output.h"
+
 #include <utils/log.h>
+#include <utils/exception.h>
+#include <utils/kleo_assert.h>
 
 #include <gpgme++/data.h>
 
@@ -62,6 +64,8 @@
 #include <QDebug>
 #include <QStringList>
 #include <QDialog>
+
+#include <assuan.h>
 
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/lexical_cast.hpp>

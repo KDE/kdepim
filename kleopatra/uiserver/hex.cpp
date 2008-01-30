@@ -32,7 +32,7 @@
 
 #include "hex.h"
 
-#include "kleo-assuan.h"
+#include <utils/exception.h>
 
 #include <KLocale>
 

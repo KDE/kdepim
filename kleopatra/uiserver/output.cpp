@@ -33,8 +33,9 @@
 #include "output.h"
 
 #include "detail_p.h"
-#include "kleo-assuan.h"
 
+#include <utils/kleo_assert.h>
+#include <utils/exception.h>
 #include <utils/kdpipeiodevice.h>
 #include <utils/log.h>
 

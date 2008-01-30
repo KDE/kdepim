@@ -35,9 +35,9 @@
 #include "uiserver.h"
 #include "uiserver_p.h"
 
-#include "kleo-assuan.h"
-
 #include "detail_p.h"
+
+#include <utils/exception.h>
 
 #include <QTcpSocket>
 #include <QDir>

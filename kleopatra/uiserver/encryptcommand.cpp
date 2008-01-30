@@ -32,7 +32,9 @@
 
 #include "encryptcommand.h"
 #include "encryptemailcontroller.h"
-#include "kleo-assuan.h"
+
+#include <utils/kleo_assert.h>
+#include <utils/exception.h>
 
 #include <KLocale>
 

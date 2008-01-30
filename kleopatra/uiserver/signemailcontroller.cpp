@@ -32,7 +32,6 @@
 
 #include "signemailcontroller.h"
 
-#include "kleo-assuan.h"
 #include "assuancommand.h"
 #include "certificateresolver.h"
 #include "signencryptwizard.h"
@@ -41,6 +40,7 @@
 #include "output.h"
 
 #include <utils/stl_util.h>
+#include <utils/kleo_assert.h>
 
 #include <kmime/kmime_header_parsing.h>
 

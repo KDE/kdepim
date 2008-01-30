@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_UISERVER_DETAIL_P_H__
 #define __KLEOPATRA_UISERVER_DETAIL_P_H__
 
-#include "kleo-assuan.h"
+#include <assuan.h>
 
 #include <boost/shared_ptr.hpp>
 

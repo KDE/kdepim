@@ -36,8 +36,10 @@
 #ifndef _ASSUAN_ONLY_GPG_ERRORS
 #define _ASSUAN_ONLY_GPG_ERRORS
 #endif
-#include "../uiserver/kleo-assuan.h"
+#include <assuan.h>
 #include <gpg-error.h>
+
+#include "../utils/exception.h"
 
 #include "../utils/wsastarter.h"
 #include "../uiserver/hex.h"
