@@ -31,8 +31,10 @@
 */
 
 #include "certificateselectionjob.h"
-#include "certificateselectiondialog.h"
+
 #include "assuancommand.h" // for AssuanCommand::makeError()
+
+#include <crypto/gui/certificateselectiondialog.h>
 
 #include <models/keycache.h>
 
@@ -50,6 +52,7 @@
 #include <gpgme++/keylistresult.h>
 
 using namespace Kleo;
+using namespace Kleo::Crypto::Gui;
 
 class CertificateSelectionJob::Private
 {

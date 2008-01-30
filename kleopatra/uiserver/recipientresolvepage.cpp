@@ -31,9 +31,10 @@
 */
 
 #include "recipientresolvepage.h"
-#include "certificateselectiondialog.h"
 
 #include "certificateresolver.h"
+
+#include <crypto/gui/certificateselectiondialog.h>
 
 #include <models/keycache.h>
 #include <utils/formatting.h>
@@ -63,6 +64,7 @@
 #include <cassert>
  
 using namespace Kleo;
+using namespace Kleo::Crypto::Gui;
 using namespace KMime::Types;
 using namespace GpgME;
 

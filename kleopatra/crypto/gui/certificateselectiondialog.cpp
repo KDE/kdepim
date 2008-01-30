@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/certificateselectiondialog.cpp
+    crypto/gui/certificateselectiondialog.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -33,7 +33,7 @@
 #include "certificateselectiondialog.h"
 #include "ui_certificateselectionwidget.h"
 
-#include "models/keylistmodel.h"
+#include <models/keylistmodel.h>
 
 #include <gpgme++/key.h>
 
@@ -46,6 +46,7 @@
 #include <cassert>
 
 using namespace Kleo;
+using namespace Kleo::Crypto::Gui;
 
 struct CertificateSelectionDialog::Private {
   

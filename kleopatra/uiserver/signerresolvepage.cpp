@@ -32,7 +32,8 @@
 
 #include "signerresolvepage.h"
 #include "certificateresolver.h"
-#include "signingcertificateselectiondialog.h"
+
+#include <crypto/gui/signingcertificateselectiondialog.h>
 
 #include <models/keycache.h>
 
@@ -60,6 +61,7 @@
 
 using namespace GpgME;
 using namespace Kleo;
+using namespace Kleo::Crypto::Gui;
 using namespace boost;
 
 namespace {

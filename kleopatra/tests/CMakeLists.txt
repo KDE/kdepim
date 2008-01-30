@@ -27,7 +27,6 @@ kde4_add_executable( test_signencryptwizard TEST
   ../uiserver/certificateresolver.cpp
   ../uiserver/signencryptwizard.cpp 
   ../uiserver/resolverecipientspage.cpp
-  ../uiserver/certificateselectiondialog.cpp
   ../uiserver/objectspage.cpp
   ../uiserver/wizardresultpage.cpp
   ../uiserver/resultdisplaywidget.cpp
@@ -35,7 +34,8 @@ kde4_add_executable( test_signencryptwizard TEST
   ../crypto/gui/scrollarea.cpp
   ../crypto/gui/wizardpage.cpp
   ../crypto/gui/wizard.cpp
-  ../uiserver/signingcertificateselectiondialog.cpp
+  ../crypto/gui/certificateselectiondialog.cpp
+  ../crypto/gui/signingcertificateselectiondialog.cpp
   ../certificateinfowidgetimpl.cpp
   ../utils/exception.cpp
   ../utils/formatting.cpp

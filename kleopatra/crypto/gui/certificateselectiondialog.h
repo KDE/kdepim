@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    signingcertificateselectiondialog.h
+    crypto/gui/certificateselectiondialog.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,36 +30,64 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_SIGNINGCERTIFICATESELECTIONDIALOG_H__
-#define __KLEOPATRA_SIGNINGCERTIFICATESELECTIONDIALOG_H__
+#ifndef __KLEOPATRA_CRYPTO_GUI_CERTIFICATESELECTIONDIALOG_H__
+#define __KLEOPATRA_CRYPTO_GUI_CERTIFICATESELECTIONDIALOG_H__
 
-
-#include <KDialog>
-    
-#include <gpgme++/key.h>
+#include <QDialog>
 
 #include <utils/pimpl_ptr.h>
 
-template <typename K, typename U> class QMap;
+#include <gpgme++/key.h>
 
-namespace Kleo {
-
-    class SigningCertificateSelectionDialog : public KDialog {
-        Q_OBJECT
-            public:
-        explicit SigningCertificateSelectionDialog( QWidget * parent=0, Qt::WFlags f=0 );
-        ~SigningCertificateSelectionDialog();
-        
-        void setSelectedCertificates( const QMap<GpgME::Protocol, GpgME::Key>& certificates );
-        QMap<GpgME::Protocol, GpgME::Key> selectedCertificates() const;
-
-        bool rememberAsDefault() const;
-        
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-    };
+namespace GpgME {
+    class Key;
 }
 
-#endif // __KLEOPATRA_SIGNINGCERTIFICATESELECTIONDIALOG_H__
- 
+namespace Kleo {
+namespace Crypto {
+namespace Gui {
+
+class CertificateSelectionDialog : public QDialog {
+    Q_OBJECT
+public:
+
+    enum SelectionMode {
+        SingleSelection,
+        MultiSelection
+    };
+
+    enum KeyType {
+        Any,
+        SignOnly,
+        EncryptOnly
+    };
+
+    explicit CertificateSelectionDialog( QWidget* parent = 0, Qt::WindowFlags flags = 0 );
+    ~CertificateSelectionDialog();
+
+    void addKeys( const std::vector<GpgME::Key> & keys );
+
+    void setCustomText( const QString& label );
+    QString customText() const;
+
+    void setProtocol( GpgME::Protocol protocol );
+    GpgME::Protocol protocol() const;
+
+    void setSelectionMode( SelectionMode mode );  
+    SelectionMode selectionMode() const;
+
+    void setAllowedKeys( KeyType type );
+    KeyType allowedKeys() const;
+
+    std::vector<GpgME::Key> selectedKeys() const;
+
+private:
+    struct Private;
+    kdtools::pimpl_ptr<Private> d;
+};
+
+}
+}
+}
+
+#endif /* __KLEOPATRA_CRYPTO_GUI_CERTIFICATESELECTIONDIALOG_H__ */

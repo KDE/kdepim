@@ -33,12 +33,17 @@
 #include "resolverecipientspage.h"
 #include "resolverecipientspage_p.h"
 #include "certificateresolver.h"
-#include "certificateselectiondialog.h"
-#include <utils/formatting.h>
+
+#include <crypto/gui/certificateselectiondialog.h>
+
 #include <models/keycache.h>
+
+#include <utils/formatting.h>
+
 #include <kmime/kmime_header_parsing.h>
 
 #include <gpgme++/key.h>
+
 #include <KLocalizedString>
 
 #include <QButtonGroup>
@@ -58,6 +63,7 @@
 
 using namespace GpgME;
 using namespace Kleo;
+using namespace Kleo::Crypto::Gui;
 using namespace KMime::Types;
 
 ResolveRecipientsPage::ListWidget::ListWidget( QWidget* parent, Qt::WindowFlags flags ) : QWidget( parent, flags ), m_protocol( UnknownProtocol )

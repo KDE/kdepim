@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    signingcertificateselectiondialog.cpp
+    crypto/gui/signingcertificateselectiondialog.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -33,18 +33,21 @@
 #include "signingcertificateselectiondialog.h"
 
 #include "ui_signingcertificateselectionwidget.h"
-#include "models/keycache.h"
-#include "utils/formatting.h"
 
+#include <models/keycache.h>
+
+#include <utils/formatting.h>
 #include <utils/stl_util.h>
 
 #include <QByteArray>
 #include <QMap>
 
 #include <boost/bind.hpp>
+
 #include <cassert>
 
 using namespace Kleo;
+using namespace Kleo::Crypto::Gui;
 
 class SigningCertificateSelectionDialog::Private {
     friend class ::SigningCertificateSelectionDialog;

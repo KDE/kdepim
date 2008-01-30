@@ -45,6 +45,8 @@ if ( USABLE_ASSUAN_FOUND )
     crypto/gui/wizard.cpp
     crypto/gui/wizardpage.cpp
     crypto/gui/scrollarea.cpp
+    crypto/gui/signingcertificateselectiondialog.cpp
+    crypto/gui/certificateselectiondialog.cpp
 
     uiserver/uiserver.cpp
     uiserver/assuanserverconnection.cpp
@@ -60,7 +62,6 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/signencryptfilescontroller.cpp
     uiserver/signencryptfileswizard.cpp
     uiserver/signencryptfilestask.cpp
-    uiserver/signingcertificateselectiondialog.cpp
     uiserver/certificateresolver.cpp
     uiserver/signencryptwizard.cpp
     uiserver/task.cpp
@@ -70,14 +71,13 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/prepencryptcommand.cpp
     uiserver/encryptcommand.cpp
     uiserver/resultdisplaywidget.cpp
-    uiserver/certificateselectiondialog.cpp
     uiserver/certificateselectionjob.cpp
     uiserver/recipientresolvepage.cpp
     uiserver/resolverecipientspage.cpp
     uiserver/wizardresultpage.cpp
     uiserver/signerresolvepage.cpp
     )
-  kde4_add_ui_files( _kleopatra_uiserver_SRCS uiserver/certificateselectionwidget.ui uiserver/signingcertificateselectionwidget.ui)
+  kde4_add_ui_files( _kleopatra_uiserver_SRCS crypto/gui/certificateselectionwidget.ui crypto/gui/signingcertificateselectionwidget.ui)
   if ( WIN32 )
     set( _kleopatra_uiserver_extra_libs ${ASSUAN_VANILLA_LIBRARIES} )
   else ( WIN32 )
