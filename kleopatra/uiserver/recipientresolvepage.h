@@ -54,6 +54,7 @@ namespace Kleo {
         Q_OBJECT
     public:
         explicit RecipientResolveWidget( QWidget* parent = 0 );
+        ~RecipientResolveWidget();
 
         void setIdentifier( const QString& identifier );
         void setCertificates( const std::vector<GpgME::Key>& keys );
@@ -78,7 +79,6 @@ namespace Kleo {
     class RecipientResolvePage : public Crypto::Gui::WizardPage {
         Q_OBJECT
     public:
- 
         explicit RecipientResolvePage( QWidget * parent=0 );
         ~RecipientResolvePage();
     

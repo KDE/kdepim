@@ -319,6 +319,8 @@ RecipientResolveWidget::RecipientResolveWidget( QWidget* parent ) : QWidget( par
 {
 }
 
+RecipientResolveWidget::~RecipientResolveWidget() {}
+
 bool RecipientResolveWidget::rememberSelection() const
 {
     return d->m_rememberChoiceCO->checkState() == Qt::Checked;
