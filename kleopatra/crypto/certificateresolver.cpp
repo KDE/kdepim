@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/certificateresolver.cpp
+    crypto/certificateresolver.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -49,6 +49,7 @@
 #include <iterator>
 
 using namespace Kleo;
+using namespace Kleo::Crypto;
 using namespace boost;
 using namespace GpgME;
 using namespace KMime::Types;
@@ -96,7 +97,7 @@ std::vector<Key> CertificateResolver::resolveSigner( const Mailbox & signer, Pro
 }
 
 class KConfigBasedRecipientPreferences::Private {
-    friend class Kleo::KConfigBasedRecipientPreferences;
+    friend class ::Kleo::Crypto::KConfigBasedRecipientPreferences;
     KConfigBasedRecipientPreferences* const q;
 public:
     explicit Private( KSharedConfigPtr config, KConfigBasedRecipientPreferences* qq );
@@ -192,7 +193,7 @@ void KConfigBasedRecipientPreferences::setPreferredCertificate( const Mailbox& r
 }
 
 class KConfigBasedSigningPreferences::Private {
-    friend class Kleo::KConfigBasedSigningPreferences;
+    friend class ::Kleo::Crypto::KConfigBasedSigningPreferences;
     KConfigBasedSigningPreferences* const q;
 public:
     explicit Private( KSharedConfigPtr config, KConfigBasedSigningPreferences* qq );

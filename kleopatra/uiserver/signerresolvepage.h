@@ -48,7 +48,9 @@ namespace GpgME {
 
 namespace Kleo {
 
-    class SigningPreferences;
+    namespace Crypto {
+        class SigningPreferences;
+    }
     
     class SignerResolvePage : public Crypto::Gui::WizardPage {
         Q_OBJECT
@@ -106,8 +108,8 @@ namespace Kleo {
         void setValidator( const boost::shared_ptr<Validator>& );
         boost::shared_ptr<Validator> validator() const;
 
-        void setSigningPreferences( const boost::shared_ptr<SigningPreferences>& prefs );
-        boost::shared_ptr<SigningPreferences> signingPreferences() const;
+        void setSigningPreferences( const boost::shared_ptr<Crypto::SigningPreferences>& prefs );
+        boost::shared_ptr<Crypto::SigningPreferences> signingPreferences() const;
         
     private:
         /*reimpl*/ void onNext();

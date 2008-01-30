@@ -33,9 +33,10 @@
 #include "signemailcontroller.h"
 
 #include "assuancommand.h"
-#include "certificateresolver.h"
 #include "signencryptwizard.h"
 #include "signemailtask.h"
+
+#include <crypto/certificateresolver.h>
 
 #include <utils/input.h>
 #include <utils/output.h>
@@ -52,6 +53,7 @@
 #include <boost/bind.hpp>
 
 using namespace Kleo;
+using namespace Kleo::Crypto;
 using namespace boost;
 using namespace GpgME;
 using namespace KMime::Types;

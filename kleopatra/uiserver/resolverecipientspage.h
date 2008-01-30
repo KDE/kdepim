@@ -54,7 +54,9 @@ namespace KMime {
 }
 namespace Kleo {
 
-    class RecipientPreferences;
+    namespace Crypto {
+        class RecipientPreferences;
+    }
 
     class ResolveRecipientsPage : public Crypto::Gui::WizardPage {
         Q_OBJECT
@@ -95,8 +97,8 @@ namespace Kleo {
         void setRecipients( const std::vector<KMime::Types::Mailbox>& recipients );
         std::vector<GpgME::Key> resolvedCertificates() const;
 
-        boost::shared_ptr<RecipientPreferences> recipientPreferences() const;
-        void setRecipientPreferences( const boost::shared_ptr<RecipientPreferences>& prefs );
+        boost::shared_ptr<Crypto::RecipientPreferences> recipientPreferences() const;
+        void setRecipientPreferences( const boost::shared_ptr<Crypto::RecipientPreferences>& prefs );
         
     Q_SIGNALS:
         void selectedProtocolChanged();

@@ -32,13 +32,14 @@
 
 #include "signencryptwizard.h"
 
-#include "certificateresolver.h"
 #include "objectspage.h"
 #include "resolverecipientspage.h"
 #include "signerresolvepage.h"
 #include "resultdisplaywidget.h"
 #include "wizardresultpage.h"
 #include "task.h"
+
+#include <crypto/certificateresolver.h>
 
 #include <utils/stl_util.h>
 #include <utils/kleo_assert.h>
@@ -55,6 +56,7 @@
 #include <boost/bind.hpp>
 
 using namespace Kleo;
+using namespace Kleo::Crypto;
 using namespace boost;
 using namespace GpgME;
 using namespace KMime::Types;

@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/certificateresolver.h
+    crypto/certificateresolver.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_CERTIFICATERESOLVER_H__
-#define __KLEOPATRA_UISERVER_CERTIFICATERESOLVER_H__
+#ifndef __KLEOPATRA_CRYPTO_CERTIFICATERESOLVER_H__
+#define __KLEOPATRA_CRYPTO_CERTIFICATERESOLVER_H__
 
 #include <utils/pimpl_ptr.h>
 
@@ -49,6 +49,7 @@ namespace GpgME {
 }
 
 namespace Kleo {
+namespace Crypto {
 
     class SigningPreferences {
     public:
@@ -99,6 +100,7 @@ namespace Kleo {
         static std::vector<GpgME::Key> resolveSigner( const KMime::Types::Mailbox & signer, GpgME::Protocol proto );
     };
 
+}
 }
 
 #endif /* __KLEOPATRA_UISERVER_CERTIFICATERESOLVER_H__ */

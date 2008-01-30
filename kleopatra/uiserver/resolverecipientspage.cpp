@@ -32,7 +32,8 @@
 
 #include "resolverecipientspage.h"
 #include "resolverecipientspage_p.h"
-#include "certificateresolver.h"
+
+#include <crypto/certificateresolver.h>
 
 #include <crypto/gui/certificateselectiondialog.h>
 
@@ -63,6 +64,7 @@
 
 using namespace GpgME;
 using namespace Kleo;
+using namespace Kleo::Crypto;
 using namespace Kleo::Crypto::Gui;
 using namespace KMime::Types;
 

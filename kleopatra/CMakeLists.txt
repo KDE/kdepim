@@ -42,6 +42,8 @@ if ( USABLE_ASSUAN_FOUND )
     utils/input.cpp
     utils/output.cpp
 
+    crypto/certificateresolver.cpp
+
     crypto/gui/wizard.cpp
     crypto/gui/wizardpage.cpp
     crypto/gui/scrollarea.cpp
@@ -62,7 +64,6 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/signencryptfilescontroller.cpp
     uiserver/signencryptfileswizard.cpp
     uiserver/signencryptfilestask.cpp
-    uiserver/certificateresolver.cpp
     uiserver/signencryptwizard.cpp
     uiserver/task.cpp
     uiserver/encryptemailtask.cpp
