@@ -32,9 +32,8 @@
 
 #include "echocommand.h"
 
-#include "input.h"
-#include "output.h"
-
+#include <utils/input.h>
+#include <utils/output.h>
 #include <utils/exception.h>
 
 #include <gpg-error.h>

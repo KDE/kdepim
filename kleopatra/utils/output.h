@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/output.h
+    utils/output.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_OUTPUT_H__
-#define __KLEOPATRA_UISERVER_OUTPUT_H__
+#ifndef __KLEOPATRA_UTILS_OUTPUT_H__
+#define __KLEOPATRA_UTILS_OUTPUT_H__
 
 #include <assuan.h> // for assuan_fd_t
 
@@ -57,5 +57,5 @@ namespace Kleo {
     };
 }
 
-#endif /* __KLEOPATRA_UISERVER_OUTPUT_H__ */
+#endif /* __KLEOPATRA_UTILS_OUTPUT_H__ */
 

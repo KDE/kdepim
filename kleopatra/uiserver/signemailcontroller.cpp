@@ -36,9 +36,9 @@
 #include "certificateresolver.h"
 #include "signencryptwizard.h"
 #include "signemailtask.h"
-#include "input.h"
-#include "output.h"
 
+#include <utils/input.h>
+#include <utils/output.h>
 #include <utils/stl_util.h>
 #include <utils/kleo_assert.h>
 

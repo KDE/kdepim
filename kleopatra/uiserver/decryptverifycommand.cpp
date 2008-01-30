@@ -36,12 +36,11 @@
 #include "decryptverifyresultwidget.h"
 #include "decryptverifyoperationwidget.h"
 
-#include "input.h"
-#include "output.h"
-
 #include <models/keycache.h>
 #include <models/predicates.h>
 
+#include <utils/input.h>
+#include <utils/output.h>
 #include <utils/detail_p.h>
 #include <utils/hex.h>
 #include <utils/classify.h>

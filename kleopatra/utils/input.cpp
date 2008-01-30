@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/input.cpp
+    utils/input.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -32,12 +32,12 @@
 
 #include "input.h"
 
-#include <utils/detail_p.h>
-#include <utils/classify.h>
-#include <utils/kdpipeiodevice.h>
-#include <utils/log.h>
-#include <utils/kleo_assert.h>
-#include <utils/exception.h>
+#include "detail_p.h"
+#include "classify.h"
+#include "kdpipeiodevice.h"
+#include "log.h"
+#include "kleo_assert.h"
+#include "exception.h"
 
 #include <KLocale>
 

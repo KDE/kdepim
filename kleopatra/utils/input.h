@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/input.h
+    utils/input.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_INPUT_H__
-#define __KLEOPATRA_UISERVER_INPUT_H__
+#ifndef __KLEOPATRA_UTILS_INPUT_H__
+#define __KLEOPATRA_UTILS_INPUT_H__
 
 #include <assuan.h> // for assuan_fd_t
 
@@ -58,5 +58,5 @@ namespace Kleo {
     };
 }
 
-#endif /* __KLEOPATRA_UISERVER_INPUT_H__ */
+#endif /* __KLEOPATRA_UTILS_INPUT_H__ */
 

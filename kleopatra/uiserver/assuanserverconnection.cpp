@@ -41,9 +41,8 @@
 #include "assuanserverconnection.h"
 #include "assuancommand.h"
 
-#include "input.h"
-#include "output.h"
-
+#include <utils/input.h>
+#include <utils/output.h>
 #include <utils/detail_p.h>
 #include <utils/hex.h>
 #include <utils/log.h>

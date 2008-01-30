@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/output.cpp
+    utils/output.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -32,11 +32,11 @@
 
 #include "output.h"
 
-#include <utils/detail_p.h>
-#include <utils/kleo_assert.h>
-#include <utils/exception.h>
-#include <utils/kdpipeiodevice.h>
-#include <utils/log.h>
+#include "detail_p.h"
+#include "kleo_assert.h"
+#include "exception.h"
+#include "kdpipeiodevice.h"
+#include "log.h"
 
 #include <KLocale>
 #include <KMessageBox>

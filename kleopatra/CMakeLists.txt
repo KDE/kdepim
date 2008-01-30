@@ -39,8 +39,8 @@ if ( USABLE_ASSUAN_FOUND )
     utils/kdpipeiodevice.cpp
     ${_kleopatra_extra_uiserver_SRCS}
     utils/hex.cpp
-    uiserver/input.cpp
-    uiserver/output.cpp
+    utils/input.cpp
+    utils/output.cpp
     uiserver/uiserver.cpp
     uiserver/assuanserverconnection.cpp
     uiserver/echocommand.cpp
