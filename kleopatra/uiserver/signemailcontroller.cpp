@@ -113,8 +113,8 @@ SignEMailController::~SignEMailController() {
 
 // ### extract to base
 void SignEMailController::setProtocol( Protocol proto ) {
-    assuan_assert( d->protocol == UnknownProtocol ||
-                   d->protocol == proto );
+    kleo_assert( d->protocol == UnknownProtocol ||
+                 d->protocol == proto );
     d->protocol = proto;
     d->ensureWizardCreated();
     d->wizard->setPresetProtocol( proto );
@@ -133,7 +133,7 @@ void SignEMailController::startResolveSigners( const std::vector<Mailbox> & sign
     const std::vector< std::vector<Key> > keys = CertificateResolver::resolveSigners( signers, d->protocol );
 
     if ( !signers.empty() )
-        assuan_assert( keys.size() == static_cast<size_t>( signers.size() ) );
+        kleo_assert( keys.size() == static_cast<size_t>( signers.size() ) );
 
     d->ensureWizardCreated();
 
@@ -143,10 +143,10 @@ void SignEMailController::startResolveSigners( const std::vector<Mailbox> & sign
 }
 
 void SignEMailController::setDetachedSignature( bool detached ) {
-    assuan_assert( !d->openpgp );
-    assuan_assert( !d->cms );
-    assuan_assert( d->completed.empty() );
-    assuan_assert( d->runnable.empty() );
+    kleo_assert( !d->openpgp );
+    kleo_assert( !d->cms );
+    kleo_assert( d->completed.empty() );
+    kleo_assert( d->runnable.empty() );
 
     d->detached = detached;
 }
@@ -163,13 +163,13 @@ void SignEMailController::Private::slotWizardCanceled() {
 // ### extract to base
 void SignEMailController::importIO() {
     const shared_ptr<AssuanCommand> cmd = d->command.lock();
-    assuan_assert( cmd );
+    kleo_assert( cmd );
 
     const std::vector< shared_ptr<Input> > & inputs = cmd->inputs();
-    assuan_assert( !inputs.empty() );
+    kleo_assert( !inputs.empty() );
 
     const std::vector< shared_ptr<Output> > & outputs = cmd->outputs();
-    assuan_assert( !outputs.empty() );
+    kleo_assert( !outputs.empty() );
 
     std::vector< shared_ptr<SignEMailTask> > tasks;
     tasks.reserve( inputs.size() );
@@ -177,7 +177,7 @@ void SignEMailController::importIO() {
     d->ensureWizardCreated();
 
     const std::vector<Key> keys = d->wizard->resolvedSigners();
-    assuan_assert( !keys.empty() );
+    kleo_assert( !keys.empty() );
 
     for ( unsigned int i = 0, end = inputs.size() ; i < end ; ++i ) {
 
@@ -217,7 +217,7 @@ void SignEMailController::Private::schedule() {
         }
 
     if ( !cms && !openpgp ) {
-        assuan_assert( runnable.empty() );
+        kleo_assert( runnable.empty() );
         QPointer<QObject> Q = q;
         Q_FOREACH( const shared_ptr<SignEMailTask> t, completed ) {
             emit q->reportMicAlg( t->micAlg() );

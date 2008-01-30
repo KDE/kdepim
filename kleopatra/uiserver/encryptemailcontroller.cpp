@@ -108,8 +108,8 @@ EncryptEMailController::~EncryptEMailController() {
 void EncryptEMailController::setProtocol( Protocol proto ) {
     d->ensureWizardCreated();
     const Protocol protocol = d->wizard->presetProtocol();
-    assuan_assert( protocol == UnknownProtocol ||
-                   protocol == proto );
+    kleo_assert( protocol == UnknownProtocol ||
+                 protocol == proto );
 
     d->wizard->setPresetProtocol( proto );
 }
@@ -126,8 +126,8 @@ const char * EncryptEMailController::protocolAsString() const {
     case OpenPGP: return "OpenPGP";
     case CMS:     return "CMS";
     default:
-        throw assuan_exception( gpg_error( GPG_ERR_INTERNAL ),
-                                i18n("Call to EncryptEMailController::protocolAsString() is ambiguous.") );
+        throw Kleo::Exception( gpg_error( GPG_ERR_INTERNAL ),
+                               i18n("Call to EncryptEMailController::protocolAsString() is ambiguous.") );
     }
 }
 
@@ -152,13 +152,13 @@ void EncryptEMailController::Private::slotWizardCanceled() {
 void EncryptEMailController::importIO() {
 
     const shared_ptr<AssuanCommand> cmd = d->command.lock();
-    assuan_assert( cmd );
+    kleo_assert( cmd );
 
     const std::vector< shared_ptr<Input> > & inputs = cmd->inputs();
-    assuan_assert( !inputs.empty() );
+    kleo_assert( !inputs.empty() );
 
     const std::vector< shared_ptr<Output> > & outputs = cmd->outputs();
-    assuan_assert( outputs.size() == inputs.size() );
+    kleo_assert( outputs.size() == inputs.size() );
 
     std::vector< shared_ptr<EncryptEMailTask> > tasks;
     tasks.reserve( inputs.size() );
@@ -166,7 +166,7 @@ void EncryptEMailController::importIO() {
     d->ensureWizardCreated();
 
     const std::vector<Key> keys = d->wizard->resolvedCertificates();
-    assuan_assert( !keys.empty() );
+    kleo_assert( !keys.empty() );
 
     for ( unsigned int i = 0, end = inputs.size() ; i < end ; ++i ) {
 
@@ -203,7 +203,7 @@ void EncryptEMailController::Private::schedule() {
         }
 
     if ( !cms && !openpgp ) {
-        assuan_assert( runnable.empty() );
+        kleo_assert( runnable.empty() );
         emit q->done();
     }
     

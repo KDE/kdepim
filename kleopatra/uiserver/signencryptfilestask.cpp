@@ -166,44 +166,44 @@ SignEncryptFilesTask::SignEncryptFilesTask( QObject * p )
 SignEncryptFilesTask::~SignEncryptFilesTask() {}
 
 void SignEncryptFilesTask::setInputFileName( const QString & fileName ) {
-    assuan_assert( !d->job );
-    assuan_assert( !fileName.isEmpty() );
+    kleo_assert( !d->job );
+    kleo_assert( !fileName.isEmpty() );
     d->inputFileName = fileName;
 }
 
 void SignEncryptFilesTask::setOutputFileName( const QString & fileName ) {
-    assuan_assert( !d->job );
-    assuan_assert( !fileName.isEmpty() );
+    kleo_assert( !d->job );
+    kleo_assert( !fileName.isEmpty() );
     d->outputFileName = fileName;
 }
 
 void SignEncryptFilesTask::setSigners( const std::vector<Key> & signers ) {
-    assuan_assert( !d->job );
+    kleo_assert( !d->job );
     d->signers = signers;
 }
 
 void SignEncryptFilesTask::setRecipients( const std::vector<Key> & recipients ) {
-    assuan_assert( !d->job );
+    kleo_assert( !d->job );
     d->recipients = recipients;
 }
 
 void SignEncryptFilesTask::setSign( bool sign ) {
-    assuan_assert( !d->job );
+    kleo_assert( !d->job );
     d->sign = sign;
 }
 
 void SignEncryptFilesTask::setEncrypt( bool encrypt ) {
-    assuan_assert( !d->job );
+    kleo_assert( !d->job );
     d->encrypt = encrypt;
 }
 
 void SignEncryptFilesTask::setAsciiArmor( bool ascii ) {
-    assuan_assert( !d->job );
+    kleo_assert( !d->job );
     d->ascii = ascii;
 }
 
 void SignEncryptFilesTask::setDetachedSignature( bool detached ) {
-    assuan_assert( !d->job );
+    kleo_assert( !d->job );
     d->detached = detached;
 }
 
@@ -215,8 +215,8 @@ Protocol SignEncryptFilesTask::protocol() const {
             return d->recipients.front().protocol();
         else
             return GpgME::OpenPGP; // symmetric OpenPGP encryption
-    throw assuan_exception( gpg_error( GPG_ERR_INTERNAL ),
-                            i18n("Cannot determine protocol for task") );
+    throw Kleo::Exception( gpg_error( GPG_ERR_INTERNAL ),
+                           i18n("Cannot determine protocol for task") );
 }
 
 QString SignEncryptFilesTask::label() const {
@@ -224,9 +224,9 @@ QString SignEncryptFilesTask::label() const {
 }
 
 void SignEncryptFilesTask::doStart() {
-    assuan_assert( !d->job );
+    kleo_assert( !d->job );
     if ( d->sign )
-        assuan_assert( !d->signers.empty() );
+        kleo_assert( !d->signers.empty() );
 
     d->input = Input::createFromFile( d->inputFileName );
     d->output = Output::createFromFile( d->outputFileName, false );
@@ -234,7 +234,7 @@ void SignEncryptFilesTask::doStart() {
     if ( d->encrypt )
         if ( d->sign ) {
             std::auto_ptr<Kleo::SignEncryptJob> job = d->createSignEncryptJob( protocol() );
-            assuan_assert( job.get() );
+            kleo_assert( job.get() );
 
             job->start( d->signers, d->recipients,
                         d->input->ioDevice(), d->output->ioDevice(), true );
@@ -242,7 +242,7 @@ void SignEncryptFilesTask::doStart() {
             d->job = job.release();
         } else {
             std::auto_ptr<Kleo::EncryptJob> job = d->createEncryptJob( protocol() );
-            assuan_assert( job.get() );
+            kleo_assert( job.get() );
 
             job->start( d->recipients, d->input->ioDevice(), d->output->ioDevice(), true );
 
@@ -251,7 +251,7 @@ void SignEncryptFilesTask::doStart() {
     else
         if ( d->sign ) {
             std::auto_ptr<Kleo::SignJob> job = d->createSignJob( protocol() );
-            assuan_assert( job.get() );
+            kleo_assert( job.get() );
 
             job->start( d->signers,
                         d->input->ioDevice(), d->output->ioDevice(),
@@ -259,7 +259,7 @@ void SignEncryptFilesTask::doStart() {
 
             d->job = job.release();
         } else {
-            assuan_assert( !"Either 'sign' or 'encrypt' must be set!" );
+            kleo_assert( !"Either 'sign' or 'encrypt' must be set!" );
         }
 }
 
@@ -270,9 +270,9 @@ void SignEncryptFilesTask::cancel() {
 
 std::auto_ptr<Kleo::SignJob> SignEncryptFilesTask::Private::createSignJob( GpgME::Protocol proto ) {
     const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( proto );
-    assuan_assert( backend );
+    kleo_assert( backend );
     std::auto_ptr<Kleo::SignJob> signJob( backend->signJob( /*armor=*/true, /*textmode=*/false ) );
-    assuan_assert( signJob.get() );
+    kleo_assert( signJob.get() );
     connect( signJob.get(), SIGNAL(progress(QString,int,int)),
              q, SIGNAL(progress(QString,int,int)) );
     connect( signJob.get(), SIGNAL(result(GpgME::SigningResult,QByteArray)),
@@ -282,9 +282,9 @@ std::auto_ptr<Kleo::SignJob> SignEncryptFilesTask::Private::createSignJob( GpgME
 
 std::auto_ptr<Kleo::SignEncryptJob> SignEncryptFilesTask::Private::createSignEncryptJob( GpgME::Protocol proto ) {
     const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( proto );
-    assuan_assert( backend );
+    kleo_assert( backend );
     std::auto_ptr<Kleo::SignEncryptJob> signEncryptJob( backend->signEncryptJob( /*armor=*/true, /*textmode=*/false ) );
-    assuan_assert( signEncryptJob.get() );
+    kleo_assert( signEncryptJob.get() );
     connect( signEncryptJob.get(), SIGNAL(progress(QString,int,int)),
              q, SIGNAL(progress(QString,int,int)) );
     connect( signEncryptJob.get(), SIGNAL(result(GpgME::SigningResult,GpgME::EncryptionResult,QByteArray)),
@@ -294,9 +294,9 @@ std::auto_ptr<Kleo::SignEncryptJob> SignEncryptFilesTask::Private::createSignEnc
 
 std::auto_ptr<Kleo::EncryptJob> SignEncryptFilesTask::Private::createEncryptJob( GpgME::Protocol proto ) {
     const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( proto );
-    assuan_assert( backend );
+    kleo_assert( backend );
     std::auto_ptr<Kleo::EncryptJob> encryptJob( backend->encryptJob( /*armor=*/true, /*textmode=*/false ) );
-    assuan_assert( encryptJob.get() );
+    kleo_assert( encryptJob.get() );
     connect( encryptJob.get(), SIGNAL(progress(QString,int,int)),
              q, SIGNAL(progress(QString,int,int)) );
     connect( encryptJob.get(), SIGNAL(result(GpgME::EncryptionResult,QByteArray)),
@@ -352,7 +352,7 @@ QString SignEncryptFilesResult::overview() const {
     const bool sign = !m_sresult.isNull();
     const bool encrypt = !m_eresult.isNull();
 
-    assuan_assert( sign || encrypt );
+    kleo_assert( sign || encrypt );
 
     if ( sign && encrypt ) {
         return makeSimpleOverview( 
@@ -384,7 +384,7 @@ QString SignEncryptFilesResult::errorString() const {
     const bool sign = !m_sresult.isNull();
     const bool encrypt = !m_eresult.isNull();
     
-    assuan_assert( sign || encrypt );
+    kleo_assert( sign || encrypt );
 
     if ( sign && encrypt ) {
         return 

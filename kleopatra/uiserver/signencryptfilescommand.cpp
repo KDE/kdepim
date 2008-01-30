@@ -74,36 +74,36 @@ SignEncryptFilesCommand::~SignEncryptFilesCommand() {}
 void SignEncryptFilesCommand::Private::checkForErrors() const {
 
     if ( !q->numFiles() )
-        throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),
-                                i18n("At least one FILE must be present") );
+        throw Exception( makeError( GPG_ERR_ASS_NO_INPUT ),
+                         i18n("At least one FILE must be present") );
 
 
     if ( !q->senders().empty() )
-        throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
-                                i18n( "%1 is an email mode command, "
-                                      "connection seems to be in email mode (%1 present)",
-                                      QString::fromLatin1( q->name() ), QLatin1String("SENDER") ) );
+        throw Exception( makeError( GPG_ERR_CONFLICT ),
+                         i18n( "%1 is an email mode command, "
+                               "connection seems to be in email mode (%1 present)",
+                               QString::fromLatin1( q->name() ), QLatin1String("SENDER") ) );
     if ( !q->recipients().empty() )
-        throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
-                                i18n( "%1 is an email mode command, "
-                                      "connection seems to be in email mode (%1 present)",
-                                      QString::fromLatin1( q->name() ), QLatin1String("RECIPIENT") ) );
+        throw Exception( makeError( GPG_ERR_CONFLICT ),
+                         i18n( "%1 is an email mode command, "
+                               "connection seems to be in email mode (%1 present)",
+                               QString::fromLatin1( q->name() ), QLatin1String("RECIPIENT") ) );
 
     if ( !q->inputs().empty() )
-        throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
-                                i18n( "%1 is an email mode command, "
-                                      "connection seems to be in email mode (%1 present)",
-                                      QString::fromLatin1( q->name() ), QLatin1String("INPUT") ) );
+        throw Exception( makeError( GPG_ERR_CONFLICT ),
+                         i18n( "%1 is an email mode command, "
+                               "connection seems to be in email mode (%1 present)",
+                               QString::fromLatin1( q->name() ), QLatin1String("INPUT") ) );
     if ( !q->outputs().empty() )
-        throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
-                                i18n( "%1 is an email mode command, "
-                                      "connection seems to be in email mode (%1 present)",
-                                      QString::fromLatin1( q->name() ), QLatin1String("OUTPUT") ) );
+        throw Exception( makeError( GPG_ERR_CONFLICT ),
+                         i18n( "%1 is an email mode command, "
+                               "connection seems to be in email mode (%1 present)",
+                               QString::fromLatin1( q->name() ), QLatin1String("OUTPUT") ) );
     if ( !q->messages().empty() )
-        throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
-                                i18n( "%1 is an email mode command, "
-                                      "connection seems to be in email mode (%1 present)",
-                                      QString::fromLatin1( q->name() ), QLatin1String("MESSAGE") ) );
+        throw Exception( makeError( GPG_ERR_CONFLICT ),
+                         i18n( "%1 is an email mode command, "
+                               "connection seems to be in email mode (%1 present)",
+                               QString::fromLatin1( q->name() ), QLatin1String("MESSAGE") ) );
 }
 
 int SignEncryptFilesCommand::doStart() {

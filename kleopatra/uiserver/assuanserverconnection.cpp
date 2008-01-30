@@ -179,8 +179,8 @@ static std::map<std::string,std::string> parse_commandline( const char * line ) 
                 begin = line + 1;
             } else if ( *line == '=' ) {
                 if ( line == begin )
-                    throw assuan_exception( gpg_error( GPG_ERR_ASS_SYNTAX ),
-                                            i18n("No option name given") );
+                    throw Exception( gpg_error( GPG_ERR_ASS_SYNTAX ),
+                                     i18n("No option name given") );
                 else
                     lastEQ = line;
             }
@@ -368,10 +368,10 @@ private:
 
                 const QString filePath = QFile::decodeName( options["FILE"].c_str() );
                 if ( filePath.isEmpty() )
-                    throw assuan_exception( gpg_error( GPG_ERR_ASS_SYNTAX ), i18n("Empty file path") );
+                    throw Exception( gpg_error( GPG_ERR_ASS_SYNTAX ), i18n("Empty file path") );
                 const QFileInfo fi( filePath );
                 if ( !fi.isAbsolute() )
-                    throw assuan_exception( gpg_error( GPG_ERR_INV_ARG ), i18n("Only absolute file paths are allowed") );
+                    throw Exception( gpg_error( GPG_ERR_INV_ARG ), i18n("Only absolute file paths are allowed") );
 
                 io = Input_or_Output<in>::type::createFromFile( fi.absoluteFilePath(), true );
 
@@ -422,20 +422,20 @@ private:
         try {
             const QFileInfo fi( QFile::decodeName( hexdecode( line ).c_str() ) );
             if ( !fi.isAbsolute() )
-                throw assuan_exception( gpg_error( GPG_ERR_INV_ARG ), i18n("Only absolute file paths are allowed") );
+                throw Exception( gpg_error( GPG_ERR_INV_ARG ), i18n("Only absolute file paths are allowed") );
             if ( fi.exists() && fi.isDir() )
-                throw assuan_exception( gpg_error( GPG_ERR_NOT_IMPLEMENTED ), i18n("Directory traversal is not yet implemented") );
+                throw Exception( gpg_error( GPG_ERR_NOT_IMPLEMENTED ), i18n("Directory traversal is not yet implemented") );
             const QString filePath = fi.absoluteFilePath();
             const shared_ptr<QFile> file( new QFile( filePath ) );
             if ( !file->open( QIODevice::ReadOnly ) )
-                throw assuan_exception( gpg_error_from_errno( errno ), i18n("Could not open file \"%1\" for reading", filePath) );
+                throw Exception( gpg_error_from_errno( errno ), i18n("Could not open file \"%1\" for reading", filePath) );
             const IOF io = {
                 filePath, file
             };
             conn.files.push_back( io );
 
             return assuan_process_done( conn.ctx.get(), 0 );
-        } catch ( const assuan_exception & e ) {
+        } catch ( const Exception & e ) {
             return assuan_process_done_msg( conn.ctx.get(), e.error().encodedError(), e.message().toUtf8().constData() );
         } catch ( ... ) {
             return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_UNEXPECTED ), i18n("unknown exception caught").toUtf8().constData() );
@@ -574,11 +574,11 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
 #endif
 
     if ( fd == ASSUAN_INVALID_FD )
-        throw assuan_exception( gpg_error( GPG_ERR_INV_ARG ), "pre-assuan_init_socket_server_ext" );
+        throw Exception( gpg_error( GPG_ERR_INV_ARG ), "pre-assuan_init_socket_server_ext" );
 
     assuan_context_t naked_ctx = 0;
     if ( const gpg_error_t err = assuan_init_socket_server_ext( &naked_ctx, fd, INIT_SOCKET_FLAGS ) )
-        throw assuan_exception( err, "assuan_init_socket_server_ext" );
+        throw Exception( err, "assuan_init_socket_server_ext" );
     
     ctx.reset( naked_ctx ); naked_ctx = 0;
 
@@ -609,26 +609,26 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
 
     // register our INPUT/OUTPUT/MESSGAE/FILE handlers:
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "INPUT",  input_handler ) )
-        throw assuan_exception( err, "register \"INPUT\" handler" );
+        throw Exception( err, "register \"INPUT\" handler" );
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "MESSAGE",  message_handler ) )
-        throw assuan_exception( err, "register \"MESSAGE\" handler" );
+        throw Exception( err, "register \"MESSAGE\" handler" );
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "OUTPUT", output_handler ) )
-        throw assuan_exception( err, "register \"OUTPUT\" handler" );
+        throw Exception( err, "register \"OUTPUT\" handler" );
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "FILE", file_handler ) )
-        throw assuan_exception( err, "register \"FILE\" handler" );
+        throw Exception( err, "register \"FILE\" handler" );
 
 
     // register user-defined commands:
     Q_FOREACH( shared_ptr<AssuanCommandFactory> fac, factories )
         if ( const gpg_error_t err = assuan_register_command( ctx.get(), fac->name(), fac->_handler() ) )
-            throw assuan_exception( err, std::string( "register \"" ) + fac->name() + "\" handler" );
+            throw Exception( err, std::string( "register \"" ) + fac->name() + "\" handler" );
 
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "GETINFO", getinfo_handler ) )
-        throw assuan_exception( err, "register \"GETINFO\" handler" );
+        throw Exception( err, "register \"GETINFO\" handler" );
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "RECIPIENT", recipient_handler ) )
-        throw assuan_exception( err, "register \"RECIPIENT\" handler" );
+        throw Exception( err, "register \"RECIPIENT\" handler" );
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "SENDER", sender_handler ) )
-        throw assuan_exception( err, "register \"SENDER\" handler" );
+        throw Exception( err, "register \"SENDER\" handler" );
 
     assuan_set_hello_line( ctx.get(), "GPG UI server (Kleopatra/" KLEOPATRA_VERSION_STRING ") ready to serve" );
     //assuan_set_hello_line( ctx.get(), GPG UI server (qApp->applicationName() + " v" + kapp->applicationVersion() + "ready to serve" )
@@ -636,15 +636,15 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
 
     // some notifiers we're interested in:
     if ( const gpg_error_t err = assuan_register_reset_notify( ctx.get(), reset_handler ) )
-        throw assuan_exception( err, "register reset notify" );
+        throw Exception( err, "register reset notify" );
     if ( const gpg_error_t err = assuan_register_option_handler( ctx.get(), option_handler ) )
-        throw assuan_exception( err, "register option handler" );
+        throw Exception( err, "register option handler" );
 
     // and last, we need to call assuan_accept, which doesn't block
     // (d/t INIT_SOCKET_FLAGS), but performs vital connection
     // establishing handling:
     if ( const gpg_error_t err = assuan_accept( ctx.get() ) )
-        throw assuan_exception( err, "assuan_accept" );
+        throw Exception( err, "assuan_accept" );
 }
 
 AssuanServerConnection::Private::~Private() {
@@ -748,7 +748,7 @@ int AssuanCommand::start() {
             if ( !d->done )
                 done( err );
         return 0;
-    } catch ( const assuan_exception & e ) {
+    } catch ( const Exception & e ) {
         if ( !d->done )
             done( e.error_code(), e.message() );
         return 0;
@@ -923,17 +923,17 @@ void AssuanCommand::sendStatusEncoded( const char * keyword, const std::string &
     if ( d->nohup )
         return;
     if ( const int err = assuan_write_status( d->ctx.get(), keyword, text.c_str() ) )
-        throw assuan_exception( err, i18n( "Can't send \"%1\" status", QString::fromLatin1( keyword ) ) );
+        throw Exception( err, i18n( "Can't send \"%1\" status", QString::fromLatin1( keyword ) ) );
 }
 
 void  AssuanCommand::sendData( const QByteArray & data, bool moreToCome ) {
     if ( d->nohup )
         return;
     if ( const gpg_error_t err = assuan_send_data( d->ctx.get(), data.constData(), data.size() ) )
-        throw assuan_exception( err, i18n( "Can't send data" ) );
+        throw Exception( err, i18n( "Can't send data" ) );
     if ( !moreToCome )
         if ( const gpg_error_t err = assuan_send_data( d->ctx.get(), 0, 0 ) ) // flush
-            throw assuan_exception( err, i18n( "Can't flush data" ) );
+            throw Exception( err, i18n( "Can't flush data" ) );
 }
 
 int AssuanCommand::inquire( const char * keyword, QObject * receiver, const char * slot, unsigned int maxSize ) {
@@ -1033,21 +1033,21 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
 
         const std::vector< shared_ptr<AssuanCommandFactory> >::const_iterator it
             = std::lower_bound( conn.factories.begin(), conn.factories.end(), commandName, _detail::ByName<std::less>() );
-        assuan_assert( it != conn.factories.end() );
-        assuan_assert( *it );
-        assuan_assert( qstricmp( (*it)->name(), commandName ) == 0 );
+        kleo_assert( it != conn.factories.end() );
+        kleo_assert( *it );
+        kleo_assert( qstricmp( (*it)->name(), commandName ) == 0 );
 
         const shared_ptr<AssuanCommand> cmd = (*it)->create();
-        assuan_assert( cmd );
+        kleo_assert( cmd );
 
         cmd->d->ctx     = conn.ctx;
         cmd->d->options = conn.options;
-        cmd->d->inputs.swap( conn.inputs );     assuan_assert( conn.inputs.empty() );
-        cmd->d->messages.swap( conn.messages ); assuan_assert( conn.messages.empty() );
-        cmd->d->outputs.swap( conn.outputs );   assuan_assert( conn.outputs.empty() );
-        cmd->d->files.swap( conn.files );       assuan_assert( conn.files.empty() );
-        cmd->d->senders.swap( conn.senders );   assuan_assert( conn.senders.empty() );
-        cmd->d->recipients.swap( conn.recipients ); assuan_assert( conn.recipients.empty() );
+        cmd->d->inputs.swap( conn.inputs );     kleo_assert( conn.inputs.empty() );
+        cmd->d->messages.swap( conn.messages ); kleo_assert( conn.messages.empty() );
+        cmd->d->outputs.swap( conn.outputs );   kleo_assert( conn.outputs.empty() );
+        cmd->d->files.swap( conn.files );       kleo_assert( conn.files.empty() );
+        cmd->d->senders.swap( conn.senders );   kleo_assert( conn.senders.empty() );
+        cmd->d->recipients.swap( conn.recipients ); kleo_assert( conn.recipients.empty() );
 
         const std::map<std::string,std::string> cmdline_options = parse_commandline( line );
         for ( std::map<std::string,std::string>::const_iterator it = cmdline_options.begin(), end = cmdline_options.end() ; it != end ; ++it )
@@ -1079,7 +1079,7 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
             return 0;
         }
 
-    } catch ( const assuan_exception & e ) {
+    } catch ( const Exception & e ) {
         return assuan_process_done_msg( conn.ctx.get(), e.error_code(), e.message() );
     } catch ( const std::exception & e ) {
         return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_UNEXPECTED ), e.what() );
@@ -1101,18 +1101,18 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
   \returns The parameter as an AssuanCommand::Mode enum value.
 
   If no \c --mode was given, or it's value wasn't recognized, throws
-  an assuan_exception.
+  an Kleo::Exception.
 */
 AssuanCommand::Mode AssuanCommand::checkMode() const {
     if ( !hasOption( "mode" ) )
-        throw assuan_exception( makeError( GPG_ERR_MISSING_VALUE ), i18n( "Required --mode option missing" ) );
+        throw Exception( makeError( GPG_ERR_MISSING_VALUE ), i18n( "Required --mode option missing" ) );
 
     const QString modeString = option("mode").toString().toLower();
     if ( modeString == QLatin1String( "filemanager" ) )
         return FileManager;
     if ( modeString == QLatin1String( "email" ) )
         return EMail;
-    throw assuan_exception( makeError( GPG_ERR_INV_ARG ), i18n( "invalid mode: \"%1\"", modeString ) );
+    throw Exception( makeError( GPG_ERR_INV_ARG ), i18n( "invalid mode: \"%1\"", modeString ) );
 }
 
 /*!
@@ -1121,28 +1121,28 @@ AssuanCommand::Mode AssuanCommand::checkMode() const {
   \returns The parameter as a GpgME::Protocol enum value.
 
   If \c --protocol was given, but has an invalid value, throws an
-  assuan_exception.
+  Kleo::Exception.
 
   If no \c --protocol was given, in FileManager mode, returns
   GpgME::UnknownProtocol, but if \a mode == \c EMail, throws an
-  assuan_exception instead.
+  Kleo::Exception instead.
 */
 GpgME::Protocol AssuanCommand::checkProtocol( Mode mode ) const {
     if ( !hasOption("protocol") )
         if ( mode == AssuanCommand::EMail )
-            throw assuan_exception( makeError( GPG_ERR_MISSING_VALUE ), i18n( "Required --protocol option missing" ) );
+            throw Exception( makeError( GPG_ERR_MISSING_VALUE ), i18n( "Required --protocol option missing" ) );
         else
             return GpgME::UnknownProtocol;
     else
         if ( mode == AssuanCommand::FileManager )
-            throw assuan_exception( makeError( GPG_ERR_INV_FLAG ), i18n("--protocol is not allowed here") );
+            throw Exception( makeError( GPG_ERR_INV_FLAG ), i18n("--protocol is not allowed here") );
 
     const QString protocolString = option("protocol").toString().toLower();
     if ( protocolString == QLatin1String( "openpgp" ) )
         return GpgME::OpenPGP;
     if ( protocolString == QLatin1String( "cms" ) )
         return GpgME::CMS;
-    throw assuan_exception( makeError( GPG_ERR_INV_ARG ), i18n( "invalid protocol \"%1\"", protocolString ) );
+    throw Exception( makeError( GPG_ERR_INV_ARG ), i18n( "invalid protocol \"%1\"", protocolString ) );
 }        
 
 void AssuanCommand::doApplyWindowID( QDialog * dlg ) const {

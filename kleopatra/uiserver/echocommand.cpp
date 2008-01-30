@@ -136,7 +136,7 @@ void EchoCommand::slotInquireData( int rc, const QByteArray & data ) {
         sendStatus( "ECHOINQ", data );
         if ( !d->operationsInFlight )
             done();
-    } catch ( const assuan_exception & e ) {
+    } catch ( const Exception & e ) {
         done( e.error(), e.message() );
     } catch ( const std::exception & e ) {
         done( makeError( GPG_ERR_UNEXPECTED ),

@@ -30,10 +30,11 @@
     your version.
 */
 
+#include "config-kleopatra.h"
+
 #include "log.h"
 #include "exception.h"
 #include "iodevicelogger.h"
-#include "config-kleopatra.h"
 
 #include <KLocalizedString>
 #include <KRandom>
@@ -153,7 +154,7 @@ shared_ptr<QIODevice> Log::createIOLogger( const shared_ptr<QIODevice>& io, cons
     shared_ptr<QFile> file( new QFile( fn ) );
 
     if ( !file->open( QIODevice::WriteOnly ) )
-        throw Exception( i18n( "Log Error: Couldn't open log file \"%1\" for write", fn ) );
+        throw Exception( gpg_error( GPG_ERR_EIO ), i18n( "Log Error: Couldn't open log file \"%1\" for write", fn ) );
  
     if ( mode & Read )    
         logger->setReadLogDevice( file );

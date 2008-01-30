@@ -38,7 +38,6 @@ if ( USABLE_ASSUAN_FOUND )
   set(_kleopatra_uiserver_SRCS
     utils/kdpipeiodevice.cpp
     ${_kleopatra_extra_uiserver_SRCS}
-    uiserver/kleo-assuan.cpp
     uiserver/hex.cpp
     uiserver/input.cpp
     uiserver/output.cpp

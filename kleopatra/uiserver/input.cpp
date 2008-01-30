@@ -115,9 +115,9 @@ PipeInput::PipeInput( assuan_fd_t fd )
     shared_ptr<KDPipeIODevice> kdp( new KDPipeIODevice );
     errno = 0;
     if ( !kdp->open( fd, QIODevice::ReadOnly ) )
-        throw assuan_exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
-                                i18n( "Couldn't open FD %1 for reading",
-                                      assuanFD2int( fd ) ) );
+        throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
+                         i18n( "Couldn't open FD %1 for reading",
+                               assuanFD2int( fd ) ) );
     m_io = Log::instance()->createIOLogger( kdp, "pipe-input", Log::Read );
 }
 
@@ -141,8 +141,8 @@ FileInput::FileInput( const QString & fileName )
     
     errno = 0;
     if ( !file->open( QIODevice::ReadOnly ) )
-        throw assuan_exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
-                                i18n( "Couldn't open file \"%1\" for reading", fileName ) );
+        throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
+                         i18n( "Couldn't open file \"%1\" for reading", fileName ) );
     m_io = Log::instance()->createIOLogger( file, "file-in", Log::Read );
 
 }
@@ -151,14 +151,14 @@ FileInput::FileInput( const shared_ptr<QFile> & file )
     : InputImplBase(),
       m_io(), m_fileName( file->fileName() )
 {
-    assuan_assert( file );
+    kleo_assert( file );
     errno = 0;
     if ( file->isOpen() && !file->isReadable() )
-        throw assuan_exception( gpg_error( GPG_ERR_INV_ARG ),
+        throw Exception( gpg_error( GPG_ERR_INV_ARG ),
                                 i18n( "File \"%1\" is already open, but not for reading" ) );
     if ( !file->isOpen() && !file->open( QIODevice::ReadOnly ) )
-        throw assuan_exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
-                                i18n( "Couldn't open file \"%1\" for reading", m_fileName ) );
+        throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
+                         i18n( "Couldn't open file \"%1\" for reading", m_fileName ) );
     m_io = Log::instance()->createIOLogger( file, "file-in", Log::Read );
 }
 

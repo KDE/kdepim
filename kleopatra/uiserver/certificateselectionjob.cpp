@@ -156,7 +156,7 @@ void CertificateSelectionJob::Private::startKeyListing()
              q, SLOT( nextKey( GpgME::Key ) ) );
     if ( const GpgME::Error err = keylisting->start( m_patterns, m_secretKeysOnly ) ) {
         q->deleteLater();
-        throw assuan_exception( err, "Unable to start keylisting" );
+        throw Exception( err, "Unable to start keylisting" );
     }
     keylisting = Kleo::CryptoBackendFactory::instance()->protocol( "smime" )->keyListJob();
     QObject::connect( keylisting, SIGNAL( result( GpgME::KeyListResult ) ),
@@ -165,7 +165,7 @@ void CertificateSelectionJob::Private::startKeyListing()
                       q, SLOT( nextKey( GpgME::Key ) ) );
     if ( const GpgME::Error err = keylisting->start( m_patterns, m_secretKeysOnly ) ) {
         q->deleteLater();
-        throw assuan_exception( err, "Unable to start keylisting" );
+        throw Exception( err, "Unable to start keylisting" );
     }
 }
 

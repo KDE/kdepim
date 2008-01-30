@@ -72,20 +72,20 @@ PrepEncryptCommand::~PrepEncryptCommand() {}
 void PrepEncryptCommand::Private::checkForErrors() const {
 
     if ( !q->inputs().empty() || !q->outputs().empty() || !q->messages().empty() )
-        throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
-                                i18n( "INPUT/OUTPUT/MESSAGE may only be given after PREP_ENCRYPT" ) );
+        throw Exception( makeError( GPG_ERR_CONFLICT ),
+                         i18n( "INPUT/OUTPUT/MESSAGE may only be given after PREP_ENCRYPT" ) );
     
     if ( q->numFiles() )
-        throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
-                                i18n( "PREP_ENCRYPT is an email mode command, connection seems to be in filemanager mode" ) );
+        throw Exception( makeError( GPG_ERR_CONFLICT ),
+                         i18n( "PREP_ENCRYPT is an email mode command, connection seems to be in filemanager mode" ) );
 
     if ( !q->senders().empty() )
-        throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
-                                i18n( "SENDER may not be given prior to PREP_ENCRYPT" ) );
+        throw Exception( makeError( GPG_ERR_CONFLICT ),
+                         i18n( "SENDER may not be given prior to PREP_ENCRYPT" ) );
 
     if ( q->recipients().empty() )
-        throw assuan_exception( makeError( GPG_ERR_MISSING_VALUE ),
-                                i18n( "No recipients given" ) );
+        throw Exception( makeError( GPG_ERR_MISSING_VALUE ),
+                         i18n( "No recipients given" ) );
 
 }
 
@@ -124,7 +124,7 @@ void PrepEncryptCommand::Private::slotRecipientsResolved() {
         q->done();
         return;
 
-    } catch ( const assuan_exception & e ) {
+    } catch ( const Exception & e ) {
         q->done( e.error(), e.message() );
     } catch ( const std::exception & e ) {
         q->done( makeError( GPG_ERR_UNEXPECTED ),

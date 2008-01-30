@@ -30,26 +30,40 @@
     your version.
 */
 
-#ifndef __KLEO__EXCEPTION_H__
-#define __KLEO__EXCEPTION_H__
+#ifndef __KLEOPATRA_UTILS_EXCEPTION_H__
+#define __KLEOPATRA_UTILS_EXCEPTION_H__
 
-#include <stdexcept>
+#include <gpg-error.h>
+#include <gpgme++/exception.h>
 
 #include <QString>
 
 namespace Kleo {
 
-class Exception : public std::runtime_error {
-public:
-    explicit Exception( const QString& msg );
-    ~Exception() throw();
-    
-    QString message() const;
-    
-private:
-    QString m_message;
-};
+    class Exception : public GpgME::Exception {
+    public:
+        Exception( gpg_error_t e, const std::string & msg )
+            : GpgME::Exception( GpgME::Error( e ), msg ) {}
+        Exception( gpg_error_t e, const char* msg )
+            : GpgME::Exception( GpgME::Error( e ), msg ) {}
+        Exception( gpg_error_t e, const QString & msg )
+            : GpgME::Exception( GpgME::Error( e ), msg.toLocal8Bit().constData() ) {}
+
+        Exception( const GpgME::Error & e, const std::string & msg )
+            : GpgME::Exception( e, msg ) {}
+        Exception( const GpgME::Error & e, const char* msg )
+            : GpgME::Exception( e, msg ) {}
+        Exception( const GpgME::Error & e, const QString & msg )
+            : GpgME::Exception( e, msg.toLocal8Bit().constData() ) {}
+
+        ~Exception() throw ();
+
+        const std::string & messageLocal8Bit() const { return GpgME::Exception::message(); }
+        gpg_error_t error_code() const { return error().encodedError(); }
+
+        QString message() const { return QString::fromLocal8Bit( GpgME::Exception::message().c_str() ); }
+    };
 
 }
 
-#endif /*EXCEPTION_H_*/
+#endif /* __KLEOPATRA_UTILS_EXCEPTION_H__ */

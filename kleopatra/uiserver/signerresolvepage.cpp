@@ -280,7 +280,7 @@ SignerResolvePage::~SignerResolvePage() {}
 void SignerResolvePage::setSignersAndCandidates( const std::vector<KMime::Types::Mailbox> & signers, 
                                                  const std::vector< std::vector<GpgME::Key> > & keys )
 {
-    assuan_assert( signers.empty() || signers.size() == keys.size() );
+    kleo_assert( signers.empty() || signers.size() == keys.size() );
 
     switch ( signers.size() )
     {
@@ -291,7 +291,7 @@ void SignerResolvePage::setSignersAndCandidates( const std::vector<KMime::Types:
         d->signerLabel->setText( signers.front().prettyAddress() );
         break;
     default: // > 1
-        assuan_assert( !"Resolving multiple signers not implemented" );
+        kleo_assert( !"Resolving multiple signers not implemented" );
     }
     d->updateUi();
 }

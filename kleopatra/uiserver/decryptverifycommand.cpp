@@ -358,8 +358,8 @@ int DecryptVerifyCommand::doStart() {
     d->taskList = d->buildTaskList();
 
     if ( d->taskList.empty() )
-        throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),
-                                i18n("No usable inputs found") );
+        throw Kleo::Exception( makeError( GPG_ERR_ASS_NO_INPUT ),
+                               i18n("No usable inputs found") );
 
     try {
         d->startTasks();
@@ -379,12 +379,12 @@ void DecryptVerifyCommand::doCanceled() {
 std::vector< shared_ptr<DVTask> > DecryptVerifyCommand::Private::buildTaskList()
 {
     if ( !q->senders().empty() )
-        throw assuan_exception( q->makeError( GPG_ERR_CONFLICT ),
-                                i18n("Can't use SENDER") );
+        throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ),
+                               i18n("Can't use SENDER") );
 
     if ( !q->recipients().empty() )
-        throw assuan_exception( q->makeError( GPG_ERR_CONFLICT ),
-                                i18n("Can't use RECIPIENT") );
+        throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ),
+                               i18n("Can't use RECIPIENT") );
 
     const unsigned int numInputs = q->inputs().size();
     const unsigned int numMessages = q->messages().size();
@@ -396,42 +396,42 @@ std::vector< shared_ptr<DVTask> > DecryptVerifyCommand::Private::buildTaskList()
 
     const unsigned int numFiles = q->numFiles();
 
-    assuan_assert( op != 0 );
+    kleo_assert( op != 0 );
 
     std::vector< shared_ptr<DVTask> > tasks;
 
     if ( mode == EMail ) {
 
         if ( numFiles )
-            throw assuan_exception( q->makeError( GPG_ERR_CONFLICT ), i18n("FILES present") );
+            throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ), i18n("FILES present") );
 
         if ( !numInputs )
-            throw assuan_exception( q->makeError( GPG_ERR_ASS_NO_INPUT ),
-                                    i18n("At least one INPUT needs to be provided") );
+            throw Kleo::Exception( q->makeError( GPG_ERR_ASS_NO_INPUT ),
+                                   i18n("At least one INPUT needs to be provided") );
 
         if ( numMessages )
             if ( numMessages != numInputs )
-                throw assuan_exception( q->makeError( GPG_ERR_ASS_NO_INPUT ),  //TODO use better error code if possible
-                                        i18n("INPUT/MESSAGE count mismatch") );
+                throw Kleo::Exception( q->makeError( GPG_ERR_ASS_NO_INPUT ),  //TODO use better error code if possible
+                                       i18n("INPUT/MESSAGE count mismatch") );
             else if ( op != VerifyImplied )
-                throw assuan_exception( q->makeError( GPG_ERR_CONFLICT ),
-                                        i18n("MESSAGE can only be given for detached signature verification") );
+                throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ),
+                                       i18n("MESSAGE can only be given for detached signature verification") );
 
         if ( numOutputs )
             if ( numOutputs != numInputs )
-                throw assuan_exception( q->makeError( GPG_ERR_ASS_NO_OUTPUT ), //TODO use better error code if possible
-                                        i18n("INPUT/OUTPUT count mismatch") );
+                throw Kleo::Exception( q->makeError( GPG_ERR_ASS_NO_OUTPUT ), //TODO use better error code if possible
+                                       i18n("INPUT/OUTPUT count mismatch") );
             else if ( numMessages )
-                throw assuan_exception( q->makeError( GPG_ERR_CONFLICT ),
-                                        i18n("Can't use OUTPUT and MESSAGE simultaneously") );
+                throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ),
+                                       i18n("Can't use OUTPUT and MESSAGE simultaneously") );
 
-        assuan_assert( proto != UnknownProtocol );
+        kleo_assert( proto != UnknownProtocol );
 
         const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( proto );
         if ( !backend )
-            throw assuan_exception( q->makeError( GPG_ERR_UNSUPPORTED_PROTOCOL ),
-                                    proto == OpenPGP ? i18n("No backend support for OpenPGP") :
-                                    proto == CMS     ? i18n("No backend support for S/MIME") : QString() );
+            throw Kleo::Exception( q->makeError( GPG_ERR_UNSUPPORTED_PROTOCOL ),
+                                   proto == OpenPGP ? i18n("No backend support for OpenPGP") :
+                                   proto == CMS     ? i18n("No backend support for S/MIME") : QString() );
 
         Type type;
         if ( numMessages )
@@ -454,16 +454,16 @@ std::vector< shared_ptr<DVTask> > DecryptVerifyCommand::Private::buildTaskList()
             task->type = type;
 
             task->input = q->inputs().at( i );
-            assuan_assert( task->input->ioDevice() );
+            kleo_assert( task->input->ioDevice() );
 
             if ( type == VerifyDetached ) {
                 task->signedData = q->messages().at( i );
-                assuan_assert( task->signedData->ioDevice() );
+                kleo_assert( task->signedData->ioDevice() );
             }
 
             if ( numOutputs ) {
                 task->output = q->outputs().at( i );
-                assuan_assert( task->output->ioDevice() );
+                kleo_assert( task->output->ioDevice() );
             }
 
             task->backend = backend;
@@ -474,11 +474,11 @@ std::vector< shared_ptr<DVTask> > DecryptVerifyCommand::Private::buildTaskList()
     } else {
 
         if ( numInputs )
-            throw assuan_exception( q->makeError( GPG_ERR_CONFLICT ), i18n("INPUT present") );
+            throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ), i18n("INPUT present") );
         if ( numMessages )
-            throw assuan_exception( q->makeError( GPG_ERR_CONFLICT ), i18n("MESSAGE present") );
+            throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ), i18n("MESSAGE present") );
         if ( numOutputs )
-            throw assuan_exception( q->makeError( GPG_ERR_CONFLICT ), i18n("OUTPUT present") );
+            throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ), i18n("OUTPUT present") );
 
         createWizard();
 
@@ -486,18 +486,18 @@ std::vector< shared_ptr<DVTask> > DecryptVerifyCommand::Private::buildTaskList()
         unsigned int counter = 0;
         Q_FOREACH( const shared_ptr<QFile> & file, q->files() ) {
 
-            assuan_assert( file );
+            kleo_assert( file );
 
             const QString fname = file->fileName();
 
-            assuan_assert( !fname.isEmpty() );
+            kleo_assert( !fname.isEmpty() );
 
             const unsigned int classification = classify( fname );
 
             if ( mayBeOpaqueSignature( classification ) || mayBeCipherText( classification ) ) {
 
                 DecryptVerifyOperationWidget * const op = wizard->operationWidget( counter++ );
-                assuan_assert( op != 0 );
+                kleo_assert( op != 0 );
 
                 op->setMode( DecryptVerifyOperationWidget::DecryptVerifyOpaque );
                 op->setInputFileName( fname );
@@ -509,7 +509,7 @@ std::vector< shared_ptr<DVTask> > DecryptVerifyCommand::Private::buildTaskList()
                 // heuristics say it's a detached signature
 
                 DecryptVerifyOperationWidget * const op = wizard->operationWidget( counter++ );
-                assuan_assert( op != 0 );
+                kleo_assert( op != 0 );
 
                 op->setMode( DecryptVerifyOperationWidget::VerifyDetachedWithSignature );
                 op->setInputFileName( fname );
@@ -526,7 +526,7 @@ std::vector< shared_ptr<DVTask> > DecryptVerifyCommand::Private::buildTaskList()
 
                 Q_FOREACH( const QString s, signatures ) {
                     DecryptVerifyOperationWidget * op = wizard->operationWidget( counter++ );
-                    assuan_assert( op != 0 );
+                    kleo_assert( op != 0 );
 
                     op->setMode( DecryptVerifyOperationWidget::VerifyDetachedWithSignedData );
                     op->setInputFileName( s );
@@ -538,21 +538,21 @@ std::vector< shared_ptr<DVTask> > DecryptVerifyCommand::Private::buildTaskList()
             }
         }
 
-        assuan_assert( counter == files.size() );
+        kleo_assert( counter == files.size() );
 
         if ( !counter )
-            throw assuan_exception( q->makeError( GPG_ERR_ASS_NO_INPUT ), i18n("No usable inputs found") );
+            throw Kleo::Exception( q->makeError( GPG_ERR_ASS_NO_INPUT ), i18n("No usable inputs found") );
 
         wizard->setOutputDirectory( q->heuristicBaseDirectory() );
         showWizard();
         if ( !wizard->waitForOperationSelection() )
-            throw assuan_exception( q->makeError( GPG_ERR_CANCELED ), i18n("Confirmation dialog canceled") );
+            throw Kleo::Exception( q->makeError( GPG_ERR_CANCELED ), i18n("Confirmation dialog canceled") );
 
         const QFileInfo outDirInfo( wizard->outputDirectory() );
-        assuan_assert( outDirInfo.isDir() );
+        kleo_assert( outDirInfo.isDir() );
 
         const QDir outDir( outDirInfo.absoluteFilePath() );
-        assuan_assert( outDir.exists() );
+        kleo_assert( outDir.exists() );
 
         for ( unsigned int i = 0 ; i < counter ; ++i )
             try {
@@ -573,7 +573,7 @@ static const CryptoBackend::Protocol * backendFor( const shared_ptr<Input> & inp
 // static
 shared_ptr<DVTask> DecryptVerifyCommand::Private::taskFromOperationWidget( const DecryptVerifyOperationWidget * w, const shared_ptr<QFile> & file, const QDir & outDir) {
 
-    assuan_assert( w );
+    kleo_assert( w );
 
     shared_ptr<DVTask> task( new DVTask );
 
@@ -584,7 +584,7 @@ shared_ptr<DVTask> DecryptVerifyCommand::Private::taskFromOperationWidget( const
         task->input = Input::createFromFile( file );
         task->signedData = Input::createFromFile( w->signedDataFileName() );
 
-        assuan_assert( file->fileName() == w->inputFileName() );
+        kleo_assert( file->fileName() == w->inputFileName() );
 
         break;
 
@@ -594,7 +594,7 @@ shared_ptr<DVTask> DecryptVerifyCommand::Private::taskFromOperationWidget( const
         task->input = Input::createFromFile( w->inputFileName() );
         task->signedData = Input::createFromFile( file );
 
-        assuan_assert( file->fileName() == w->signedDataFileName() );
+        kleo_assert( file->fileName() == w->signedDataFileName() );
 
         break;
 
@@ -604,7 +604,7 @@ shared_ptr<DVTask> DecryptVerifyCommand::Private::taskFromOperationWidget( const
         task->input = Input::createFromFile( file );
         task->output = Output::createFromFile( outDir.absoluteFilePath( outputFileName( QFileInfo( file->fileName() ).fileName() ) ), false );
 
-        assuan_assert( file->fileName() == w->inputFileName() );
+        kleo_assert( file->fileName() == w->inputFileName() );
 
         break;
     }
@@ -618,19 +618,19 @@ shared_ptr<DVTask> DecryptVerifyCommand::Private::taskFromOperationWidget( const
 
 void DecryptVerifyCommand::Private::startTasks()
 {
-    assuan_assert( !taskList.empty() );
+    kleo_assert( !taskList.empty() );
 
     unsigned int i = 0;
     Q_FOREACH ( shared_ptr<DVTask> task, taskList ) {
 
-        assuan_assert( task->backend );
+        kleo_assert( task->backend );
 
         QPointer<QObject> that = this;
         switch ( task->type ) {
         case Decrypt:
             try {
                 DecryptJob * const job = task->backend->decryptJob();
-                assuan_assert( job );
+                kleo_assert( job );
                 registerJob( i, job );
                 job->start( task->input->ioDevice(), task->output->ioDevice() );
             } catch ( const GpgME::Exception & e ) {
@@ -640,7 +640,7 @@ void DecryptVerifyCommand::Private::startTasks()
         case DecryptVerify:
             try {
                 DecryptVerifyJob * const job = task->backend->decryptVerifyJob();
-                assuan_assert( job );
+                kleo_assert( job );
                 registerJob( i, job );
                 job->start( task->input->ioDevice(), task->output->ioDevice() );
             } catch ( const GpgME::Exception & e ) {
@@ -650,7 +650,7 @@ void DecryptVerifyCommand::Private::startTasks()
         case VerifyOpaque:
             try {
                 VerifyOpaqueJob * const job = task->backend->verifyOpaqueJob();
-                assuan_assert( job );
+                kleo_assert( job );
                 registerJob( i, job );
                 job->start( task->input->ioDevice(), task->output->ioDevice() );
             } catch ( const GpgME::Exception & e ) {
@@ -660,7 +660,7 @@ void DecryptVerifyCommand::Private::startTasks()
         case VerifyDetached:
             try {
                 VerifyDetachedJob * const job = task->backend->verifyDetachedJob();
-                assuan_assert( job );
+                kleo_assert( job );
                 registerJob( i, job );
                 job->start( task->input->ioDevice(), task->signedData->ioDevice() );
             } catch ( const GpgME::Exception & e ) {
@@ -686,7 +686,7 @@ static const char * summaryToString( const Signature::Summary summary )
 
 static QString keyToString( const Key & key ) {
 
-    assuan_assert( !key.isNull() );
+    kleo_assert( !key.isNull() );
 
     const QString email = Formatting::prettyEMail( key );
     const QString name = Formatting::prettyName( key );
@@ -796,7 +796,7 @@ void DecryptVerifyCommand::Private::addResult( unsigned int id, const DVResult &
             if ( !that )
                 return;
 
-        } catch ( const assuan_exception& e ) {
+        } catch ( const Kleo::Exception & e ) {
             result->error = e.error_code();
             result->errorString = e.message();
             // FIXME ask to continue or cancel?

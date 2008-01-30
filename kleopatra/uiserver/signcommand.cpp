@@ -75,24 +75,24 @@ SignCommand::~SignCommand() {}
 void SignCommand::Private::checkForErrors() const {
 
     if ( q->numFiles() )
-        throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
-                                i18n( "SIGN is an email mode command, connection seems to be in filemanager mode" ) );
+        throw Exception( makeError( GPG_ERR_CONFLICT ),
+                         i18n( "SIGN is an email mode command, connection seems to be in filemanager mode" ) );
 
     if ( !q->recipients().empty() )
-        throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
-                                i18n( "RECIPIENT may not be given prior to SIGN" ) );
+        throw Exception( makeError( GPG_ERR_CONFLICT ),
+                         i18n( "RECIPIENT may not be given prior to SIGN" ) );
 
     if ( q->inputs().empty() )
-        throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),
-                                i18n( "At least one INPUT must be present" ) );
+        throw Exception( makeError( GPG_ERR_ASS_NO_INPUT ),
+                         i18n( "At least one INPUT must be present" ) );
 
     if ( q->outputs().size() != q->inputs().size() )
-        throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),
-                                i18n( "INPUT/OUTPUT count mismatch" ) );
+        throw Exception( makeError( GPG_ERR_ASS_NO_INPUT ),
+                         i18n( "INPUT/OUTPUT count mismatch" ) );
 
     if ( !q->messages().empty() )
-        throw assuan_exception( makeError( GPG_ERR_INV_VALUE ),
-                                i18n( "MESSAGE command is not allowed before SIGN" ) );
+        throw Exception( makeError( GPG_ERR_INV_VALUE ),
+                         i18n( "MESSAGE command is not allowed before SIGN" ) );
 
 }
 
@@ -127,7 +127,7 @@ void SignCommand::Private::slotSignersResolved() {
 
         return;
 
-    } catch ( const assuan_exception & e ) {
+    } catch ( const Exception & e ) {
         q->done( e.error(), e.message() );
     } catch ( const std::exception & e ) {
         q->done( makeError( GPG_ERR_UNEXPECTED ),
@@ -149,7 +149,7 @@ void SignCommand::Private::slotMicAlgDetermined( const QString & micalg ) {
         q->sendStatus( "MICALG", micalg );
         return;
 
-    } catch ( const assuan_exception & e ) {
+    } catch ( const Exception & e ) {
         q->done( e.error(), e.message() );
     } catch ( const std::exception & e ) {
         q->done( makeError( GPG_ERR_UNEXPECTED ),

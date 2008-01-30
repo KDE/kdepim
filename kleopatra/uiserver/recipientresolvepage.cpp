@@ -199,12 +199,12 @@ void RecipientResolvePage::setRecipients( const std::vector<Mailbox>& recipients
 void RecipientResolvePage::Private::protocolChanged()
 {
     const std::vector< std::vector<Key> > keys = CertificateResolver::resolveRecipients( recipients, q->selectedProtocol() );
-    assuan_assert( !keys.empty() );
-    assuan_assert( keys.size() == static_cast<size_t>( recipients.size() ) );
+    kleo_assert( !keys.empty() );
+    kleo_assert( keys.size() == static_cast<size_t>( recipients.size() ) );
 
     for ( unsigned int i = 0, end = keys.size() ; i < end ; ++i ) {
         RecipientResolveWidget * const rr = q->recipientResolveWidget( i );
-        assuan_assert( rr );
+        kleo_assert( rr );
         rr->setIdentifier( recipients[i].prettyAddress() );
         rr->setCertificates( keys[i] );
     }

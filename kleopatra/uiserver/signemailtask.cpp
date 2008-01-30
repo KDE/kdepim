@@ -131,30 +131,30 @@ SignEMailTask::SignEMailTask( QObject * p )
 SignEMailTask::~SignEMailTask() {}
 
 void SignEMailTask::setInput( const shared_ptr<Input> & input ) {
-    assuan_assert( !d->job );
-    assuan_assert( input );
+    kleo_assert( !d->job );
+    kleo_assert( input );
     d->input = input;
 }
 
 void SignEMailTask::setOutput( const shared_ptr<Output> & output ) {
-    assuan_assert( !d->job );
-    assuan_assert( output );
+    kleo_assert( !d->job );
+    kleo_assert( output );
     d->output = output;
 }
 
 void SignEMailTask::setSigners( const std::vector<Key> & signers ) {
-    assuan_assert( !d->job );
-    assuan_assert( !signers.empty() );
+    kleo_assert( !d->job );
+    kleo_assert( !signers.empty() );
     d->signers = signers;
 }
 
 void SignEMailTask::setDetachedSignature( bool detached ) {
-    assuan_assert( !d->job );
+    kleo_assert( !d->job );
     d->detached = detached;
 }
 
 Protocol SignEMailTask::protocol() const {
-    assuan_assert( !d->signers.empty() );
+    kleo_assert( !d->signers.empty() );
     return d->signers.front().protocol();
 }
 
@@ -164,15 +164,15 @@ QString SignEMailTask::label() const
 }
 
 void SignEMailTask::doStart() {
-    assuan_assert( !d->job );
-    assuan_assert( d->input );
-    assuan_assert( d->output );
-    assuan_assert( !d->signers.empty() );
+    kleo_assert( !d->job );
+    kleo_assert( d->input );
+    kleo_assert( d->output );
+    kleo_assert( !d->signers.empty() );
 
     d->micAlg.clear();
 
     std::auto_ptr<Kleo::SignJob> job = d->createJob( protocol() );
-    assuan_assert( job.get() );
+    kleo_assert( job.get() );
 
     job->start( d->signers,
                 d->input->ioDevice(), d->output->ioDevice(),
@@ -188,9 +188,9 @@ void SignEMailTask::cancel() {
 
 std::auto_ptr<Kleo::SignJob> SignEMailTask::Private::createJob( GpgME::Protocol proto ) {
     const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( proto );
-    assuan_assert( backend );
+    kleo_assert( backend );
     std::auto_ptr<Kleo::SignJob> signJob( backend->signJob( /*armor=*/proto == OpenPGP, /*textmode=*/false ) );
-    assuan_assert( signJob.get() );
+    kleo_assert( signJob.get() );
     if ( proto == CMS )
         signJob->setOutputIsBase64Encoded( true );
     connect( signJob.get(), SIGNAL(progress(QString,int,int)),

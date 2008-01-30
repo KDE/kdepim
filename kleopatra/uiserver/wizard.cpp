@@ -188,8 +188,8 @@ Wizard::~Wizard() {}
 
 void Wizard::setPage( int id, WizardPage* widget )
 {
-    assuan_assert( id != InvalidPage );
-    assuan_assert( d->idToPage.find( id ) == d->idToPage.end() );
+    kleo_assert( id != InvalidPage );
+    kleo_assert( d->idToPage.find( id ) == d->idToPage.end() );
     d->idToPage[id] = widget;
     d->stack->addWidget( widget );
     connect( widget, SIGNAL( completeChanged() ), this, SLOT( updateButtonStates() ) );
@@ -303,7 +303,7 @@ const WizardPage* Wizard::page( int id ) const
         return 0;
 
     const std::map<int, WizardPage*>::const_iterator it = d->idToPage.find( id );
-    assuan_assert( it != d->idToPage.end() );
+    kleo_assert( it != d->idToPage.end() );
     return (*it).second;
 }
 
@@ -335,7 +335,7 @@ WizardPage* Wizard::page( int id )
         return 0;
 
     const std::map<int, WizardPage*>::const_iterator it = d->idToPage.find( id );
-    assuan_assert( it != d->idToPage.end() );
+    kleo_assert( it != d->idToPage.end() );
     return (*it).second;
 }
 

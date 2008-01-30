@@ -114,7 +114,7 @@ QString SignEncryptFilesController::Private::titleForOperation( unsigned int op 
     const bool signDisallowed = (op & SignMask) == SignDisallowed;
     const bool encryptDisallowed = (op & EncryptMask) == EncryptDisallowed;
 
-    assuan_assert( !signDisallowed || !encryptDisallowed );
+    kleo_assert( !signDisallowed || !encryptDisallowed );
  
     if ( !signDisallowed && encryptDisallowed )
         return i18n( "Sign Files" );
@@ -138,8 +138,8 @@ SignEncryptFilesController::~SignEncryptFilesController() {
 }
 
 void SignEncryptFilesController::setProtocol( Protocol proto ) {
-    assuan_assert( d->protocol == UnknownProtocol ||
-                   d->protocol == proto );
+    kleo_assert( d->protocol == UnknownProtocol ||
+                 d->protocol == proto );
     d->protocol = proto;
     d->ensureWizardCreated();
     d->wizard->setPresetProtocol( proto );
@@ -155,13 +155,13 @@ void SignEncryptFilesController::setCommand( const shared_ptr<AssuanCommand> & c
 
 // static
 void SignEncryptFilesController::Private::assertValidOperation( unsigned int op ) {
-    assuan_assert( ( op & SignMask )    == SignDisallowed    ||
-                   ( op & SignMask )    == SignAllowed       ||
-                   ( op & SignMask )    == SignForced );
-    assuan_assert( ( op & EncryptMask ) == EncryptDisallowed ||
-                   ( op & EncryptMask ) == EncryptAllowed    ||
-                   ( op & EncryptMask ) == EncryptForced );
-    assuan_assert( ( op & ~(SignMask|EncryptMask) ) == 0 );
+    kleo_assert( ( op & SignMask )    == SignDisallowed    ||
+                 ( op & SignMask )    == SignAllowed       ||
+                 ( op & SignMask )    == SignForced );
+    kleo_assert( ( op & EncryptMask ) == EncryptDisallowed ||
+                 ( op & EncryptMask ) == EncryptAllowed    ||
+                 ( op & EncryptMask ) == EncryptForced );
+    kleo_assert( ( op & ~(SignMask|EncryptMask) ) == 0 );
 }
 
 void SignEncryptFilesController::setOperationMode( unsigned int mode ) {
@@ -172,7 +172,7 @@ void SignEncryptFilesController::setOperationMode( unsigned int mode ) {
 }
 
 void SignEncryptFilesController::setFiles( const QStringList & files ) {
-    assuan_assert( !files.empty() );
+    kleo_assert( !files.empty() );
     d->ensureWizardVisible();
     d->wizard->setFiles( files );
 }
@@ -242,7 +242,7 @@ void SignEncryptFilesController::Private::slotWizardOperationPrepared() {
 
     try {
 
-        assuan_assert( wizard );
+        kleo_assert( wizard );
 
         const bool sign = wizard->signingSelected();
         const bool encrypt = wizard->encryptionSelected();
@@ -259,7 +259,7 @@ void SignEncryptFilesController::Private::slotWizardOperationPrepared() {
             kdtools::copy_if( recipients.begin(), recipients.end(),
                               std::back_inserter( cmsRecipients ),
                               bind( &Key::protocol, _1 ) == GpgME::CMS );
-            assuan_assert( pgpRecipients.size() + cmsRecipients.size() == recipients.size() );
+            kleo_assert( pgpRecipients.size() + cmsRecipients.size() == recipients.size() );
         }
         if ( sign ) {
             const std::vector<Key> signers = wizard->resolvedSigners();
@@ -269,10 +269,10 @@ void SignEncryptFilesController::Private::slotWizardOperationPrepared() {
             kdtools::copy_if( signers.begin(), signers.end(),
                               std::back_inserter( cmsSigners ),
                               bind( &Key::protocol, _1 ) == GpgME::CMS );
-            assuan_assert( pgpSigners.size() + cmsSigners.size() == signers.size() );
+            kleo_assert( pgpSigners.size() + cmsSigners.size() == signers.size() );
         }
 
-        assuan_assert( !files.empty() );
+        kleo_assert( !files.empty() );
 
         std::vector< shared_ptr<SignEncryptFilesTask> > tasks;
         tasks.reserve( files.size() );
@@ -283,7 +283,7 @@ void SignEncryptFilesController::Private::slotWizardOperationPrepared() {
             tasks.insert( tasks.end(), created.begin(), created.end() );
         }
 
-        assuan_assert( runnable.empty() );
+        kleo_assert( runnable.empty() );
 
         runnable.swap( tasks );
 
@@ -293,7 +293,7 @@ void SignEncryptFilesController::Private::slotWizardOperationPrepared() {
 
         schedule();
         
-    } catch ( const assuan_exception & e ) {
+    } catch ( const Kleo::Exception & e ) {
         reportError( e.error().encodedError(), e.message() );
     } catch ( const std::exception & e ) {
         reportError( gpg_error( GPG_ERR_UNEXPECTED ),
@@ -320,7 +320,7 @@ void SignEncryptFilesController::Private::schedule() {
         }
 
     if ( !cms && !openpgp ) {
-        assuan_assert( runnable.empty() );
+        kleo_assert( runnable.empty() );
         if ( wizard->removeUnencryptedFile() && wizard->encryptionSelected() && !errorDetected )
             removeInputFiles();
         emit q->done();

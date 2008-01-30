@@ -218,7 +218,7 @@ void SignEncryptWizard::setSignersAndCandidates( const std::vector<Mailbox> & si
 
 
 void SignEncryptWizard::connectTask( const shared_ptr<Task> & task, unsigned int idx ) {
-    assuan_assert( task );
+    kleo_assert( task );
     ResultDisplayWidget* const item = new ResultDisplayWidget;
     item->setLabel( task->label() );
     connect( task.get(), SIGNAL( progress( QString, int, int ) ),

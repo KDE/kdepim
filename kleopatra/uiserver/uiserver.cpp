@@ -163,7 +163,7 @@ void UiServer::Private::incomingConnection( int fd ) {
                  this, SLOT(slotConnectionClosed(Kleo::AssuanServerConnection*)) );
         connections.push_back( c );
         qDebug( "UiServer: client connection %p established successfully", c.get() );
-    } catch ( const assuan_exception & e ) {
+    } catch ( const Exception & e ) {
         qDebug( "UiServer: client connection failed: %s", e.what() );
         QTcpSocket s;
         s.setSocketDescriptor( fd );

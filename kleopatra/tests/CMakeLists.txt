@@ -28,7 +28,6 @@ kde4_add_executable( test_signencryptwizard TEST
   ../uiserver/signencryptwizard.cpp 
   ../uiserver/resolverecipientspage.cpp
   ../uiserver/certificateselectiondialog.cpp
-  ../uiserver/kleo-assuan.cpp
   ../uiserver/objectspage.cpp
   ../uiserver/wizardresultpage.cpp
   ../uiserver/resultdisplaywidget.cpp
@@ -38,6 +37,7 @@ kde4_add_executable( test_signencryptwizard TEST
   ../uiserver/wizard.cpp
   ../uiserver/signingcertificateselectiondialog.cpp
   ../certificateinfowidgetimpl.cpp
+  ../utils/exception.cpp
   ../utils/formatting.cpp
   ../models/keycache.cpp 
   ../models/keylistmodel.cpp )
@@ -61,7 +61,7 @@ if ( USABLE_ASSUAN_FOUND  )
 
   add_definitions( -DGPG_ERR_SOURCE_DEFAULT=GPG_ERR_SOURCE_USER_2 )
 
-  set(test_uiserver_SRCS test_uiserver.cpp ../uiserver/kleo-assuan.cpp ../utils/wsastarter.cpp ../uiserver/hex.cpp )
+  set(test_uiserver_SRCS test_uiserver.cpp ../utils/exception.cpp ../utils/wsastarter.cpp ../uiserver/hex.cpp )
 
 #FIXME: omitting TEST makes test_uiserver print output again on a Win32 console;
 # find a better fix for this issue

@@ -33,17 +33,4 @@
 
 #include "exception.h"
 
-using namespace Kleo;
-
-Exception::Exception( const QString& msg ) : std::runtime_error( msg.toStdString() ), m_message( msg )
-{   
-}
-
-Exception::~Exception() throw()
-{   
-}
-
-QString Exception::message() const
-{
-    return m_message;
-}
+Kleo::Exception::~Exception() throw() {}

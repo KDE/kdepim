@@ -33,84 +33,9 @@
 #ifndef __KLEOPATRA_UISERVER_KLEO_ASSUAN_H__
 #define __KLEOPATRA_UISERVER_KLEO_ASSUAN_H__
 
-#include <gpg-error.h>
 #include <assuan.h>
 
-#include <gpgme++/exception.h>
-
-#include <QString>
-
-#include <boost/preprocessor/stringize.hpp>
-
-#include <assert.h>
-
-namespace Kleo {
-
-    class assuan_exception : public GpgME::Exception {
-    public:
-        assuan_exception( gpg_error_t e, const std::string & msg )
-            : GpgME::Exception( GpgME::Error( e ), msg ) {}
-        assuan_exception( gpg_error_t e, const char* msg )
-            : GpgME::Exception( GpgME::Error( e ), msg ) {}
-        assuan_exception( gpg_error_t e, const QString & msg )
-            : GpgME::Exception( GpgME::Error( e ), msg.toLocal8Bit().constData() ) {}
-
-        assuan_exception( const GpgME::Error & e, const std::string & msg )
-            : GpgME::Exception( e, msg ) {}
-        assuan_exception( const GpgME::Error & e, const char* msg )
-            : GpgME::Exception( e, msg ) {}
-        assuan_exception( const GpgME::Error & e, const QString & msg )
-            : GpgME::Exception( e, msg.toLocal8Bit().constData() ) {}
-
-        ~assuan_exception() throw ();
-
-        const std::string & messageLocal8Bit() const { return GpgME::Exception::message(); }
-        gpg_error_t error_code() const { return error().encodedError(); }
-
-        QString message() const { return QString::fromLocal8Bit( GpgME::Exception::message().c_str() ); }
-    };
-
-}
-
-#define assuan_assert_impl( cond, file, line )                          \
-    if ( cond ) {}                                                      \
-    else throw Kleo::assuan_exception( gpg_error( GPG_ERR_INTERNAL ),   \
-                                       "assertion \"" #cond "\" failed at " file ":" BOOST_PP_STRINGIZE( line ) )
-#define assuan_assert_impl_func( cond, file, line, func )               \
-    if ( cond ) {}                                                      \
-    else throw Kleo::assuan_exception( gpg_error( GPG_ERR_INTERNAL ),   \
-                                       std::string( "assertion \"" #cond "\" failed in " ) + func + " (" file ":" BOOST_PP_STRINGIZE( line ) ")" )
-// from glibc's assert.h:
-/* Version 2.4 and later of GCC define a magical variable `__PRETTY_FUNCTION__'
-   which contains the name of the function currently being defined.
-   This is broken in G++ before version 2.6.
-   C9x has a similar variable called __func__, but prefer the GCC one since
-   it demangles C++ function names.  */
-
-#if defined (__GNUC_PREREQ)
-# define KLEO_GNUC_PREREQ __GNUC_PREREQ
-#elif defined (__MINGW_GNUC_PREREQ)
-# define KLEO_GNUC_PREREQ __MINGW_GNUC_PREREQ
-#else
-# define KLEO_GNUC_PREREQ(maj, min) 0
-#endif
-
-#if KLEO_GNUC_PREREQ(2, 6)
-# define assuan_assert( cond ) assuan_assert_impl_func( cond, __FILE__, __LINE__, __PRETTY_FUNCTION__ )
-# define notImplemented() throw assuan_exception( gpg_error( GPG_ERR_NOT_IMPLEMENTED ), __PRETTY_FUNCTION__ )
-#elif defined __STDC_VERSION__ && __STDC_VERSION__ >= 199901L
-# define assuan_assert( cond ) assuan_assert_impl_func( cond, __FILE__, __LINE__, __func__ )
-# define notImplemented() throw assuan_exception( gpg_error( GPG_ERR_NOT_IMPLEMENTED ), __func__ )
-#endif
-
-#undef KLEO_GNUC_PREREQ
-
-#ifndef assuan_assert
-# define assuan_assert( cond ) assuan_assert_impl( cond, __FILE__, __LINE__ )
-#endif
-
-#ifndef notImplemented
-# define notImplemented() assuan_assert( !"Sorry, not yet implemented" )
-#endif
+#include <utils/exception.h>
+#include <utils/kleo_assert.h>
 
 #endif /* __KLEOPATRA_UISERVER_KLEO_ASSUAN_H__ */

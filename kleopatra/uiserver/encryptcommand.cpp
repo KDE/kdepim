@@ -77,50 +77,50 @@ EncryptCommand::~EncryptCommand() {}
 void EncryptCommand::Private::checkForErrors() const {
 
     if ( q->numFiles() )
-        throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
-                                i18n( "ENCRYPT is an email mode command, connection seems to be in filmanager mode" ) );
+        throw Exception( makeError( GPG_ERR_CONFLICT ),
+                         i18n( "ENCRYPT is an email mode command, connection seems to be in filmanager mode" ) );
 
     if ( !q->senders().empty() )
-        throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
-                                i18n( "SENDER may not be given prior to ENCRYPT" ) );
+        throw Exception( makeError( GPG_ERR_CONFLICT ),
+                         i18n( "SENDER may not be given prior to ENCRYPT" ) );
 
     if ( q->inputs().empty() )
-        throw assuan_exception( makeError( GPG_ERR_ASS_NO_INPUT ),
-                                i18n( "At least one INPUT must be present" ) );
+        throw Exception( makeError( GPG_ERR_ASS_NO_INPUT ),
+                         i18n( "At least one INPUT must be present" ) );
 
     if ( q->outputs().empty() )
-        throw assuan_exception( makeError( GPG_ERR_ASS_NO_OUTPUT ),
-                                i18n( "At least one OUTPUT must be present" ) );
+        throw Exception( makeError( GPG_ERR_ASS_NO_OUTPUT ),
+                         i18n( "At least one OUTPUT must be present" ) );
 
     if ( q->outputs().size() != q->inputs().size() )
-        throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
-                                i18n( "INPUT/OUTPUT count mismatch" ) );
+        throw Exception( makeError( GPG_ERR_CONFLICT ),
+                         i18n( "INPUT/OUTPUT count mismatch" ) );
 
     if ( !q->messages().empty() )
-        throw assuan_exception( makeError( GPG_ERR_INV_VALUE ),
-                                i18n( "MESSAGE command is not allowed before ENCRYPT" ) );
+        throw Exception( makeError( GPG_ERR_INV_VALUE ),
+                         i18n( "MESSAGE command is not allowed before ENCRYPT" ) );
 
     if ( q->hasMemento( EncryptEMailController::mementoName() ) ) {
 
         const shared_ptr<EncryptEMailController> m = q->mementoContent< shared_ptr<EncryptEMailController> >( EncryptEMailController::mementoName() );
-        assuan_assert( m );
+        kleo_assert( m );
 
         if ( m->protocol() != q->checkProtocol( EMail ) )
-            throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
-                                    i18n( "Protocol given conflicts with protocol determined by PREP_ENCRYPT" ) );
+            throw Exception( makeError( GPG_ERR_CONFLICT ),
+                             i18n( "Protocol given conflicts with protocol determined by PREP_ENCRYPT" ) );
 
         if ( !q->recipients().empty() )
-            throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
-                                    i18n( "New recipients added after PREP_ENCRYPT command" ) );
+            throw Exception( makeError( GPG_ERR_CONFLICT ),
+                             i18n( "New recipients added after PREP_ENCRYPT command" ) );
         if ( !q->senders().empty() )
-            throw assuan_exception( makeError( GPG_ERR_CONFLICT ),
-                                    i18n( "New senders added after PREP_ENCRYPT command" ) );
+            throw Exception( makeError( GPG_ERR_CONFLICT ),
+                             i18n( "New senders added after PREP_ENCRYPT command" ) );
 
     } else {
 
         if ( q->recipients().empty() )
-            throw assuan_exception( makeError( GPG_ERR_MISSING_VALUE ),
-                                    i18n( "No recipients given" ) );
+            throw Exception( makeError( GPG_ERR_MISSING_VALUE ),
+                             i18n( "No recipients given" ) );
 
     }
 
@@ -140,7 +140,7 @@ int EncryptCommand::doStart() {
         d->controller->setProtocol( checkProtocol( EMail ) );
     }
 
-    assuan_assert( d->controller );
+    kleo_assert( d->controller );
 
     d->controller->setCommand( shared_from_this() );
 
@@ -167,7 +167,7 @@ void EncryptCommand::Private::slotRecipientsResolved() {
 
         return;
 
-    } catch ( const assuan_exception & e ) {
+    } catch ( const Exception & e ) {
         q->done( e.error(), e.message() );
     } catch ( const std::exception & e ) {
         q->done( makeError( GPG_ERR_UNEXPECTED ),

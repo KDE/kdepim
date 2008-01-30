@@ -196,9 +196,9 @@ PipeOutput::PipeOutput( assuan_fd_t fd )
 {
     errno = 0;
     if ( !m_io->open( fd, QIODevice::WriteOnly ) )
-        throw assuan_exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
-                                i18n( "Couldn't open FD %1 for writing",
-                                      assuanFD2int( fd ) ) );
+        throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
+                         i18n( "Couldn't open FD %1 for writing",
+                               assuanFD2int( fd ) ) );
 }
 
 shared_ptr<Output> Output::createFromFile( const QString & fileName, bool allowOverwrite ) {
@@ -216,8 +216,8 @@ FileOutput::FileOutput( const QString & fileName )
 {
     errno = 0;
     if ( !m_tmpFile->open() )
-        throw assuan_exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
-                                i18n( "Couldn't create temporary file for output \"%1\"", fileName ) );
+        throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
+                         i18n( "Couldn't create temporary file for output \"%1\"", fileName ) );
 }
 
 static bool obtainOverwritePermission( const QString & fileName, QWidget * parent ) {
@@ -228,7 +228,7 @@ static bool obtainOverwritePermission( const QString & fileName, QWidget * paren
 
 void FileOutput::doFinalize() {
 
-    assuan_assert( m_tmpFile );
+    kleo_assert( m_tmpFile );
 
     if ( m_tmpFile->isOpen() )
         m_tmpFile->close();
@@ -241,21 +241,21 @@ void FileOutput::doFinalize() {
     }
 
     if ( !obtainOverwritePermission( m_fileName, 0 ) )
-        throw assuan_exception( gpg_error( GPG_ERR_CANCELED ),
-                                i18n( "Overwriting declined" ) );
+        throw Exception( gpg_error( GPG_ERR_CANCELED ),
+                         i18n( "Overwriting declined" ) );
 
     if ( !QFile::remove( m_fileName ) )
-        throw assuan_exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
-                                i18n("Couldn't remove file \"%1\" for overwriting.", m_fileName ) );
+        throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
+                         i18n("Couldn't remove file \"%1\" for overwriting.", m_fileName ) );
 
     if ( QFile::rename( tmpFileName, m_fileName ) ) {
         m_tmpFile->setAutoRemove( false );
         return;
     }
 
-    throw assuan_exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
-                            i18n( "Couldn't rename file \"%1\" to \"%2\"",
-                                  tmpFileName, m_fileName ) );
+    throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
+                     i18n( "Couldn't rename file \"%1\" to \"%2\"",
+                           tmpFileName, m_fileName ) );
 }
 
 #if 0

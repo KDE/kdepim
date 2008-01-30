@@ -184,7 +184,7 @@ int main( int argc, char * argv[] ) {
     assuan_context_t ctx = 0;
 
     if ( const gpg_error_t err = assuan_socket_connect_ext( &ctx, socket, -1, ASSUAN_CONNECT_FLAGS ) ) {
-        qDebug( "%s", assuan_exception( err, "assuan_socket_connect_ext" ).what() );
+        qDebug( "%s", Exception( err, "assuan_socket_connect_ext" ).what() );
         return 1;
     }
 
@@ -193,36 +193,36 @@ int main( int argc, char * argv[] ) {
 #ifndef Q_OS_WIN32
     for ( std::vector<int>::const_iterator it = inFDs.begin(), end = inFDs.end() ; it != end ; ++it ) {
         if ( const gpg_error_t err = assuan_sendfd( ctx, *it ) ) {
-            qDebug( "%s", assuan_exception( err, "assuan_sendfd( inFD )" ).what() );
+            qDebug( "%s", Exception( err, "assuan_sendfd( inFD )" ).what() );
             return 1;
         }
 
         if ( const gpg_error_t err = assuan_transact( ctx, "INPUT FD", 0, 0, 0, 0, 0, 0 ) ) {
-            qDebug( "%s", assuan_exception( err, "INPUT FD" ).what() );
+            qDebug( "%s", Exception( err, "INPUT FD" ).what() );
             return 1;
         }
     }
 
     for ( std::vector<int>::const_iterator it = msgFDs.begin(), end = msgFDs.end() ; it != end ; ++it ) {
         if ( const gpg_error_t err = assuan_sendfd( ctx, *it ) ) {
-            qDebug( "%s", assuan_exception( err, "assuan_sendfd( msgFD )" ).what() );
+            qDebug( "%s", Exception( err, "assuan_sendfd( msgFD )" ).what() );
             return 1;
         }
 
         if ( const gpg_error_t err = assuan_transact( ctx, "MESSAGE FD", 0, 0, 0, 0, 0, 0 ) ) {
-            qDebug( "%s", assuan_exception( err, "MESSAGE FD" ).what() );
+            qDebug( "%s", Exception( err, "MESSAGE FD" ).what() );
             return 1;
         }
     }
 
     for ( std::vector<int>::const_iterator it = outFDs.begin(), end = outFDs.end() ; it != end ; ++it ) {
         if ( const gpg_error_t err = assuan_sendfd( ctx, *it ) ) {
-            qDebug( "%s", assuan_exception( err, "assuan_sendfd( outFD )" ).what() );
+            qDebug( "%s", Exception( err, "assuan_sendfd( outFD )" ).what() );
             return 1;
         }
 
         if ( const gpg_error_t err = assuan_transact( ctx, "OUTPUT FD", 0, 0, 0, 0, 0, 0 ) ) {
-            qDebug( "%s", assuan_exception( err, "OUTPUT FD" ).what() );
+            qDebug( "%s", Exception( err, "OUTPUT FD" ).what() );
             return 1;
         }
     }    
@@ -234,7 +234,7 @@ int main( int argc, char * argv[] ) {
         sprintf( buffer, "INPUT FILE=%s", hexencode( *it ).c_str() );
 
         if ( const gpg_error_t err = assuan_transact( ctx, buffer, 0, 0, 0, 0, 0, 0 ) ) {
-            qDebug( "%s", assuan_exception( err, buffer ).what() );
+            qDebug( "%s", Exception( err, buffer ).what() );
             return 1;
         }
     }
@@ -245,7 +245,7 @@ int main( int argc, char * argv[] ) {
         sprintf( buffer, "MESSAGE FILE=%s", hexencode( *it ).c_str() );
 
         if ( const gpg_error_t err = assuan_transact( ctx, buffer, 0, 0, 0, 0, 0, 0 ) ) {
-            qDebug( "%s", assuan_exception( err, buffer ).what() );
+            qDebug( "%s", Exception( err, buffer ).what() );
             return 1;
         }
     }
@@ -256,7 +256,7 @@ int main( int argc, char * argv[] ) {
         sprintf( buffer, "OUTPUT FILE=%s", hexencode( *it ).c_str() );
 
         if ( const gpg_error_t err = assuan_transact( ctx, buffer, 0, 0, 0, 0, 0, 0 ) ) {
-            qDebug( "%s", assuan_exception( err, buffer ).what() );
+            qDebug( "%s", Exception( err, buffer ).what() );
             return 1;
         }
     }
@@ -267,13 +267,13 @@ int main( int argc, char * argv[] ) {
         std::string line = "OPTION ";
         line += opt;
         if ( const gpg_error_t err = assuan_transact( ctx, line.c_str(), 0, 0, 0, 0, 0, 0 ) ) {
-            qDebug( "%s", assuan_exception( err, line ).what() );
+            qDebug( "%s", Exception( err, line ).what() );
             return 1;
         }
     }
 
     if ( const gpg_error_t err = assuan_transact( ctx, command.c_str(), data, ctx, inquire, ctx, status, ctx ) ) {
-        qDebug( "%s", assuan_exception( err, command ).what() );
+        qDebug( "%s", Exception( err, command ).what() );
         return 1;
     }
 

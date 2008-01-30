@@ -127,25 +127,25 @@ EncryptEMailTask::EncryptEMailTask( QObject * p )
 EncryptEMailTask::~EncryptEMailTask() {}
 
 void EncryptEMailTask::setInput( const shared_ptr<Input> & input ) {
-    assuan_assert( !d->job );
-    assuan_assert( input );
+    kleo_assert( !d->job );
+    kleo_assert( input );
     d->input = input;
 }
 
 void EncryptEMailTask::setOutput( const shared_ptr<Output> & output ) {
-    assuan_assert( !d->job );
-    assuan_assert( output );
+    kleo_assert( !d->job );
+    kleo_assert( output );
     d->output = output;
 }
 
 void EncryptEMailTask::setRecipients( const std::vector<Key> & recipients ) {
-    assuan_assert( !d->job );
-    assuan_assert( !recipients.empty() );
+    kleo_assert( !d->job );
+    kleo_assert( !recipients.empty() );
     d->recipients = recipients;
 }
 
 Protocol EncryptEMailTask::protocol() const {
-    assuan_assert( !d->recipients.empty() );
+    kleo_assert( !d->recipients.empty() );
     return d->recipients.front().protocol();
 }
 
@@ -155,13 +155,13 @@ QString EncryptEMailTask::label() const
 }
 
 void EncryptEMailTask::doStart() {
-    assuan_assert( !d->job );
-    assuan_assert( d->input );
-    assuan_assert( d->output );
-    assuan_assert( !d->recipients.empty() );
+    kleo_assert( !d->job );
+    kleo_assert( d->input );
+    kleo_assert( d->output );
+    kleo_assert( !d->recipients.empty() );
 
     std::auto_ptr<Kleo::EncryptJob> job = d->createJob( protocol() );
-    assuan_assert( job.get() );
+    kleo_assert( job.get() );
 
     job->start( d->recipients,
                 d->input->ioDevice(), d->output->ioDevice(),
@@ -177,9 +177,9 @@ void EncryptEMailTask::cancel() {
 
 std::auto_ptr<Kleo::EncryptJob> EncryptEMailTask::Private::createJob( GpgME::Protocol proto ) {
     const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( proto );
-    assuan_assert( backend );
+    kleo_assert( backend );
     std::auto_ptr<Kleo::EncryptJob> encryptJob( backend->encryptJob( /*armor=*/proto == OpenPGP, /*textmode=*/false ) );
-    assuan_assert( encryptJob.get() );
+    kleo_assert( encryptJob.get() );
     if ( proto == CMS )
         encryptJob->setOutputIsBase64Encoded( true );
     connect( encryptJob.get(), SIGNAL(progress(QString,int,int)),

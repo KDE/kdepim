@@ -48,9 +48,9 @@ static unsigned char unhex( unsigned char ch ) {
     if ( ch >= 'a' && ch <= 'f' )
         return ch - 'a' + 10;
     const char cch = ch;
-    throw assuan_exception( gpg_error( GPG_ERR_ASS_SYNTAX ),
-                            i18n("Invalid hex char '%1' in input stream.",
-                                 QString::fromLatin1( &cch, 1 ) ) );
+    throw Exception( gpg_error( GPG_ERR_ASS_SYNTAX ),
+                     i18n("Invalid hex char '%1' in input stream.",
+                          QString::fromLatin1( &cch, 1 ) ) );
 }
 
 std::string Kleo::hexdecode( const std::string & in ) {
@@ -61,13 +61,13 @@ std::string Kleo::hexdecode( const std::string & in ) {
             ++it;
             unsigned char ch = '\0';
             if ( it == end )
-                throw assuan_exception( gpg_error( GPG_ERR_ASS_SYNTAX ),
-                                        i18n("Premature end of hex-encoded char in input stream") );
+                throw Exception( gpg_error( GPG_ERR_ASS_SYNTAX ),
+                                 i18n("Premature end of hex-encoded char in input stream") );
             ch |= unhex( *it ) << 4;
             ++it;
             if ( it == end )
-                throw assuan_exception( gpg_error( GPG_ERR_ASS_SYNTAX ),
-                                        i18n("Premature end of hex-encoded char in input stream") );
+                throw Exception( gpg_error( GPG_ERR_ASS_SYNTAX ),
+                                 i18n("Premature end of hex-encoded char in input stream") );
             ch |= unhex( *it );
             result.push_back( ch );
         } else if ( *it == '+' ) {
