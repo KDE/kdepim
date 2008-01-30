@@ -32,8 +32,7 @@
 
 #include "output.h"
 
-#include "detail_p.h"
-
+#include <utils/detail_p.h>
 #include <utils/kleo_assert.h>
 #include <utils/exception.h>
 #include <utils/kdpipeiodevice.h>

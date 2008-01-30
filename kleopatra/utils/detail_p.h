@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/detail_p.h
+    utils/detail_p.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_DETAIL_P_H__
-#define __KLEOPATRA_UISERVER_DETAIL_P_H__
+#ifndef __KLEOPATRA_UTILS_DETAIL_P_H__
+#define __KLEOPATRA_UTILS_DETAIL_P_H__
 
 #include <assuan.h>
 
@@ -99,4 +99,4 @@ namespace _detail {
 }
 }
 
-#endif /* __KLEOPATRA_UISERVER_DETAIL_P_H__ */
+#endif /* __KLEOPATRA_UTILS_DETAIL_P_H__ */

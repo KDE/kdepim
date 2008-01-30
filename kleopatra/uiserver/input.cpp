@@ -32,8 +32,7 @@
 
 #include "input.h"
 
-#include "detail_p.h"
-
+#include <utils/detail_p.h>
 #include <utils/classify.h>
 #include <utils/kdpipeiodevice.h>
 #include <utils/log.h>

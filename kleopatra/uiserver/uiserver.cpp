@@ -35,8 +35,7 @@
 #include "uiserver.h"
 #include "uiserver_p.h"
 
-#include "detail_p.h"
-
+#include <utils/detail_p.h>
 #include <utils/exception.h>
 
 #include <QTcpSocket>

@@ -41,11 +41,10 @@
 #include "assuanserverconnection.h"
 #include "assuancommand.h"
 
-#include "detail_p.h"
-
 #include "input.h"
 #include "output.h"
 
+#include <utils/detail_p.h>
 #include <utils/hex.h>
 #include <utils/log.h>
 #include <utils/exception.h>
