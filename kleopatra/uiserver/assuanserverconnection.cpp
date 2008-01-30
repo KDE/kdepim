@@ -42,11 +42,11 @@
 #include "assuancommand.h"
 
 #include "detail_p.h"
-#include "hex.h"
 
 #include "input.h"
 #include "output.h"
 
+#include <utils/hex.h>
 #include <utils/log.h>
 #include <utils/exception.h>
 #include <utils/kleo_assert.h>

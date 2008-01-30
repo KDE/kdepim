@@ -37,13 +37,13 @@
 #include "decryptverifyoperationwidget.h"
 
 #include "detail_p.h"
-#include "hex.h"
 #include "input.h"
 #include "output.h"
 
 #include <models/keycache.h>
 #include <models/predicates.h>
 
+#include <utils/hex.h>
 #include <utils/classify.h>
 #include <utils/formatting.h>
 #include <utils/stl_util.h>

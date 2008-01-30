@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/hex.cpp
+    utils/hex.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -32,7 +32,7 @@
 
 #include "hex.h"
 
-#include <utils/exception.h>
+#include "exception.h"
 
 #include <KLocale>
 

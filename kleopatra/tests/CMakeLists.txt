@@ -61,7 +61,7 @@ if ( USABLE_ASSUAN_FOUND  )
 
   add_definitions( -DGPG_ERR_SOURCE_DEFAULT=GPG_ERR_SOURCE_USER_2 )
 
-  set(test_uiserver_SRCS test_uiserver.cpp ../utils/exception.cpp ../utils/wsastarter.cpp ../uiserver/hex.cpp )
+  set(test_uiserver_SRCS test_uiserver.cpp ../utils/exception.cpp ../utils/wsastarter.cpp ../utils/hex.cpp )
 
 #FIXME: omitting TEST makes test_uiserver print output again on a Win32 console;
 # find a better fix for this issue

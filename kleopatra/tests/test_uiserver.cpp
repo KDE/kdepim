@@ -42,7 +42,7 @@
 #include "../utils/exception.h"
 
 #include "../utils/wsastarter.h"
-#include "../uiserver/hex.h"
+#include "../utils/hex.h"
 
 #include <QtCore>
 
