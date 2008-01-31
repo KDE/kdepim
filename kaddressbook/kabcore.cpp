@@ -224,6 +224,9 @@ void KABCore::restoreSettings()
   }
   mDetailsSplitter->setSizes( splitterSize );
 
+  const QValueList<int> leftSplitterSizes = KABPrefs::instance()->leftSplitter();
+  if ( !leftSplitterSizes.isEmpty() )    
+      mLeftSplitter->setSizes( leftSplitterSizes );
 }
 
 void KABCore::saveSettings()
@@ -231,7 +234,8 @@ void KABCore::saveSettings()
   KABPrefs::instance()->setJumpButtonBarVisible( mActionJumpBar->isChecked() );
   KABPrefs::instance()->setDetailsPageVisible( mActionDetails->isChecked() );
   KABPrefs::instance()->setDetailsSplitter( mDetailsSplitter->sizes() );
-
+  KABPrefs::instance()->setLeftSplitter( mLeftSplitter->sizes() );
+  
   mExtensionManager->saveSettings();
   mViewManager->saveSettings();
 
@@ -1094,18 +1098,22 @@ void KABCore::initGUI()
            SLOT( incrementalTextSearch( const QString& ) ) );
 
   mDetailsSplitter = new QSplitter( mWidget );
+
+  mLeftSplitter = new QSplitter( mDetailsSplitter );
+  mLeftSplitter->setOrientation( KABPrefs::instance()->contactListAboveExtensions() ? Qt::Vertical : Qt::Horizontal );
+
   topLayout->addWidget( searchTB );
   topLayout->addWidget( mDetailsSplitter );
-
+  
   mDetailsStack = new QWidgetStack( mDetailsSplitter );
-  mExtensionManager = new ExtensionManager( new QWidget( mDetailsSplitter ), mDetailsStack, this, this );
+  mExtensionManager = new ExtensionManager( new QWidget( mLeftSplitter ), mDetailsStack, this, this );
   connect( mExtensionManager, SIGNAL( detailsWidgetDeactivated( QWidget* ) ), 
            this, SLOT( deactivateDetailsWidget( QWidget* ) ) );
   connect( mExtensionManager, SIGNAL( detailsWidgetActivated( QWidget* ) ), 
            this, SLOT( activateDetailsWidget( QWidget* ) ) );
-
   
-  QWidget *viewWidget = new QWidget( mDetailsSplitter );
+  QWidget *viewWidget = new QWidget( mLeftSplitter );
+  mLeftSplitter->moveToFirst( viewWidget );
   QVBoxLayout *viewLayout = new QVBoxLayout( viewWidget );
   viewLayout->setSpacing( KDialog::spacingHint() );
 
