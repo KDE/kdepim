@@ -1172,7 +1172,7 @@ void AssuanCommand::doApplyWindowID( QDialog * dlg ) const {
 #else
     	//with other platforms, try to associate widget with the calling application
     	if ( wid )
-    		KWindowSystem::setMainWindow( dlg->winId(), wid );
+    		KWindowSystem::setMainWindow( dlg, wid );
 #endif
     }
 }
