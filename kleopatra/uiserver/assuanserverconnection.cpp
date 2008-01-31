@@ -53,7 +53,8 @@
 
 #include <kmime/kmime_header_parsing.h>
 
-#include <KLocale>
+#include <KLocalizedString>
+#include <KWindowSystem>
 
 #include <QSocketNotifier>
 #include <QVariant>
@@ -1163,12 +1164,17 @@ void AssuanCommand::doApplyWindowID( QDialog * dlg ) const {
     }
     if ( QWidget * pw = QWidget::find( wid ) )
         dlg->setParent( pw );
-#ifdef Q_WS_X11
-    else if ( wid )
-        XSetTransientForHint( QX11Info::display(), dlg->winId(), wid );
+    else {    	
+#ifdef Q_WS_WIN
+    	//On Windows, setMainWindow isn't implemented (maybe can't),
+    	//we try to bring the window to foreground instead
+    	KWindowSystem::forceActiveWindow( dlg->winId() );
+#else
+    	//with other platforms, try to associate widget with the calling application
+    	if ( wid )
+    		KWindowSystem::setMainWindow( dlg->winId(), wid );
 #endif
-    else
-        qDebug() << "QWidget::find(" << wid << ") returned NULL - ignoring";
+    }
 }
 
 static QString commonPrefix( const QString & s1, const QString & s2 ) {
