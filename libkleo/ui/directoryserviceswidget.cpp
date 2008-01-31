@@ -132,7 +132,7 @@ Kleo::DirectoryServicesWidget::DirectoryServicesWidget(
  */
 DirectoryServicesWidget::~DirectoryServicesWidget()
 {
-    // no need to delete child widgets, Qt does it all for us
+    delete d;
 }
 
 
