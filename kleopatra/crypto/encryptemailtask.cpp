@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/encryptemailtask.cpp
+    crypto/encryptemailtask.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -52,6 +52,7 @@
 #include <boost/bind.hpp>
 
 using namespace Kleo;
+using namespace Kleo::Crypto;
 using namespace boost;
 using namespace GpgME;
 
@@ -88,7 +89,7 @@ namespace {
 }
 
 class EncryptEMailTask::Private {
-    friend class ::Kleo::EncryptEMailTask;
+    friend class ::Kleo::Crypto::EncryptEMailTask;
     EncryptEMailTask * const q;
 public:
     explicit Private( EncryptEMailTask * qq );

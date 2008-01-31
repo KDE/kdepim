@@ -34,8 +34,8 @@
 
 #include "assuancommand.h"
 #include "signencryptfileswizard.h"
-#include "signencryptfilestask.h"
 
+#include <crypto/signencryptfilestask.h>
 #include <crypto/certificateresolver.h>
 
 #include <utils/input.h>
@@ -344,7 +344,7 @@ shared_ptr<SignEncryptFilesTask> SignEncryptFilesController::Private::takeRunnab
 }
 
 void SignEncryptFilesController::Private::connectTask( const shared_ptr<Task> & t, unsigned int idx ) {
-    connect( t.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Task::Result>)),
+    connect( t.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
              q, SLOT(slotTaskDone()) );
     ensureWizardCreated();
     wizard->connectTask( t, idx );

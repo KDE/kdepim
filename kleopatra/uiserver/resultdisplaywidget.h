@@ -35,7 +35,7 @@
 
 #include <QWidget>
 
-#include "task.h"
+#include <crypto/task.h>
 
 #include <utils/pimpl_ptr.h>
 
@@ -66,7 +66,7 @@ Q_SIGNALS:
 public Q_SLOTS:
     void setProgress( const QString & what, int current, int total );
     void setError( int err, const QString & details );
-    void setResult( const boost::shared_ptr<const Kleo::Task::Result> & result );
+    void setResult( const boost::shared_ptr<const Kleo::Crypto::Task::Result> & result );
 
 protected:
     static QString styleSheet( const QColor & color );

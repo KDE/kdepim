@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/signencryptfilestask.cpp
+    crypto/signencryptfilestask.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -56,6 +56,7 @@
 #include <boost/bind.hpp>
 
 using namespace Kleo;
+using namespace Kleo::Crypto;
 using namespace boost;
 using namespace GpgME;
 
@@ -109,7 +110,7 @@ namespace {
 }
 
 class SignEncryptFilesTask::Private {
-    friend class ::Kleo::SignEncryptFilesTask;
+    friend class ::Kleo::Crypto::SignEncryptFilesTask;
     SignEncryptFilesTask * const q;
 public:
     explicit Private( SignEncryptFilesTask * qq );

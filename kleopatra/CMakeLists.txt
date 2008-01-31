@@ -43,6 +43,10 @@ if ( USABLE_ASSUAN_FOUND )
     utils/output.cpp
 
     crypto/certificateresolver.cpp
+    crypto/task.cpp
+    crypto/encryptemailtask.cpp
+    crypto/signencryptfilestask.cpp
+    crypto/signemailtask.cpp
 
     crypto/gui/wizard.cpp
     crypto/gui/wizardpage.cpp
@@ -57,16 +61,12 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/decryptverifyresultwidget.cpp
     uiserver/decryptverifywizard.cpp
     uiserver/decryptverifycommand.cpp
-    uiserver/signemailtask.cpp
     uiserver/signemailcontroller.cpp
     uiserver/signcommand.cpp
     uiserver/signencryptfilescommand.cpp
     uiserver/signencryptfilescontroller.cpp
     uiserver/signencryptfileswizard.cpp
-    uiserver/signencryptfilestask.cpp
     uiserver/signencryptwizard.cpp
-    uiserver/task.cpp
-    uiserver/encryptemailtask.cpp
     uiserver/encryptemailcontroller.cpp
     uiserver/objectspage.cpp
     uiserver/prepencryptcommand.cpp

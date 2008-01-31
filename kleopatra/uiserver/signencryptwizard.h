@@ -55,8 +55,12 @@ template <typename T> class QList;
 typedef QList<QFileInfo> QFileInfoList;
 
 namespace Kleo {
-
+namespace Crypto {
     class Task;
+}
+}
+
+namespace Kleo {
 
     class SignEncryptWizard : public Crypto::Gui::Wizard {
         Q_OBJECT
@@ -111,7 +115,7 @@ namespace Kleo {
 
         void setSignersAndCandidates( const std::vector<KMime::Types::Mailbox> & signers, const std::vector< std::vector<GpgME::Key> > & keys );
 
-        void connectTask( const boost::shared_ptr<Task> & task, unsigned int idx );
+        void connectTask( const boost::shared_ptr<Crypto::Task> & task, unsigned int idx );
 
         std::vector<GpgME::Key> resolvedCertificates() const;
         std::vector<GpgME::Key> resolvedSigners() const;

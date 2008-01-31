@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/signemailtask.h
+    crypto/signemailtask.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,10 +30,10 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_SIGNEMAILTASK_H__
-#define __KLEOPATRA_UISERVER_SIGNEMAILTASK_H__
+#ifndef __KLEOPATRA_CRYPTO_SIGNEMAILTASK_H__
+#define __KLEOPATRA_CRYPTO_SIGNEMAILTASK_H__
 
-#include <uiserver/task.h>
+#include <crypto/task.h>
 
 #include <utils/pimpl_ptr.h>
 
@@ -48,9 +48,12 @@ namespace GpgME {
 }
 
 namespace Kleo {
-
     class Input;
     class Output;
+}
+
+namespace Kleo {
+namespace Crypto {
 
     class SignEMailTask : public Task {
         Q_OBJECT
@@ -78,7 +81,9 @@ namespace Kleo {
         kdtools::pimpl_ptr<Private> d;
         Q_PRIVATE_SLOT( d, void slotResult( const GpgME::SigningResult & ) )
     };
+
+}
 }
 
-#endif /* __KLEOPATRA_UISERVER_SIGNEMAILTASK_H__ */
+#endif /* __KLEOPATRA_CRYPTO_SIGNEMAILTASK_H__ */
 

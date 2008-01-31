@@ -50,6 +50,7 @@
 #include <cassert>
 
 using namespace Kleo;
+using namespace Kleo::Crypto;
 using namespace GpgME;
 
 static const char ERROR_STYLE_SHEET[] =
@@ -230,7 +231,7 @@ void ResultDisplayWidget::setError( int err, const QString & details )
     setError( details );
 }
 
-void ResultDisplayWidget::setResult( const boost::shared_ptr<const Kleo::Task::Result> & result )
+void ResultDisplayWidget::setResult( const boost::shared_ptr<const Task::Result> & result )
 {
     assert( result );
     QVBoxLayout * const layout = new QVBoxLayout( d->ui.result );

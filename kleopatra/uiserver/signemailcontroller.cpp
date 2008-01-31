@@ -34,8 +34,8 @@
 
 #include "assuancommand.h"
 #include "signencryptwizard.h"
-#include "signemailtask.h"
 
+#include <crypto/signemailtask.h>
 #include <crypto/certificateresolver.h>
 
 #include <utils/input.h>
@@ -246,7 +246,7 @@ shared_ptr<SignEMailTask> SignEMailController::Private::takeRunnable( GpgME::Pro
 
 // ### extract to base
 void SignEMailController::Private::connectTask( const shared_ptr<Task> & t, unsigned int idx ) {
-    connect( t.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Task::Result>)),
+    connect( t.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
              q, SLOT(slotTaskDone()) );
     ensureWizardCreated();
     wizard->connectTask( t, idx );

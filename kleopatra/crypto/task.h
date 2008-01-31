@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/signencryptfilestask.h
+    crypto/task.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,10 +30,11 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_SIGNENCRYPTFILESTASK_H__
-#define __KLEOPATRA_UISERVER_SIGNENCRYPTFILESTASK_H__
+#ifndef __KLEOPATRA_CRYPTO_TASK_H__
+#define __KLEOPATRA_CRYPTO_TASK_H__
 
-#include <uiserver/task.h>
+#include <QObject>
+#include <QString>
 
 #include <utils/pimpl_ptr.h>
 
@@ -41,48 +42,71 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include <vector>
-
-class QString;
-
-namespace GpgME {
-    class Key;
-}
-
 namespace Kleo {
+namespace Crypto {
 
-    class SignEncryptFilesTask : public Task {
+    class Task : public QObject {
         Q_OBJECT
     public:
-        explicit SignEncryptFilesTask( QObject * parent=0 );
-        ~SignEncryptFilesTask();
+        explicit Task( QObject * parent=0 );
+        ~Task();
 
-        void setInputFileName( const QString & fileName );
-        void setOutputFileName( const QString & fileName );
-        void setSigners( const std::vector<GpgME::Key> & singners );
-        void setRecipients( const std::vector<GpgME::Key> & recipients );
+        class Result;
 
-        void setSign( bool sign );
-        void setEncrypt( bool encrypt );
-        void setAsciiArmor( bool ascii );
-        void setDetachedSignature( bool detached );
+        virtual GpgME::Protocol protocol() const = 0;
 
-        GpgME::Protocol protocol() const;
+        void start();
 
-        /* reimp */ void cancel();
-        /* reimp */ QString label() const;
+        virtual QString label() const = 0;
 
+    public Q_SLOTS:
+        virtual void cancel() = 0;
+
+    Q_SIGNALS:
+        void progress( const QString & what, int current, int total );
+        void result( const boost::shared_ptr<const Kleo::Crypto::Task::Result> & );
+
+    protected:
+        static boost::shared_ptr<Result> makeErrorResult( int errCode, const QString& details );
+
+    private Q_SLOTS:
+        void emitError( int errCode, const QString& details );
+            
     private:
-        /* reimp */ void doStart();
-
+        virtual void doStart() = 0;
+        
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotResult( const GpgME::SigningResult & ) )
-        Q_PRIVATE_SLOT( d, void slotResult( const GpgME::SigningResult &, const GpgME::EncryptionResult & ) )
-        Q_PRIVATE_SLOT( d, void slotResult( const GpgME::EncryptionResult & ) )
     };
+
+    class Task::Result {
+        QString m_nonce;
+    public:
+        Result();
+        virtual ~Result();
+
+        const QString & nonce() const { return m_nonce; }
+
+        bool hasError() const;
+        
+        virtual QString overview() const = 0;
+        virtual QString details() const = 0;
+        virtual int errorCode() const = 0;
+        virtual QString errorString() const = 0;
+        
+    protected:
+        enum ErrorLevel {
+            NoError,
+            Warning,
+            Error
+        };
+        static QString makeSimpleOverview( const QString& summary, ErrorLevel level );
+        QString formatKeyLink( const char * fingerprint, const QString & content ) const;
+    };
+        
+}
 }
 
-#endif /* __KLEOPATRA_UISERVER_SIGNENCRYPTFILESTASK_H__ */
+#endif /* __KLEOPATRA_CRYPTO_TASK_H__ */
 

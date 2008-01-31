@@ -37,8 +37,8 @@
 #include "signerresolvepage.h"
 #include "resultdisplaywidget.h"
 #include "wizardresultpage.h"
-#include "task.h"
 
+#include <crypto/task.h>
 #include <crypto/certificateresolver.h>
 
 #include <utils/stl_util.h>
@@ -225,8 +225,8 @@ void SignEncryptWizard::connectTask( const shared_ptr<Task> & task, unsigned int
     item->setLabel( task->label() );
     connect( task.get(), SIGNAL( progress( QString, int, int ) ),
              item, SLOT( setProgress( QString, int, int ) ) );
-    connect( task.get(), SIGNAL(result( boost::shared_ptr<const Kleo::Task::Result> ) ),
-             item, SLOT( setResult( boost::shared_ptr<const Kleo::Task::Result> ) ) );
+    connect( task.get(), SIGNAL(result( boost::shared_ptr<const Kleo::Crypto::Task::Result> ) ),
+             item, SLOT( setResult( boost::shared_ptr<const Kleo::Crypto::Task::Result> ) ) );
     d->resultPage->addResultItem( item );
 }
 

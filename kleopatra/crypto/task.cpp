@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/task.cpp
+    crypto/task.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -42,6 +42,7 @@
 #include <boost/bind.hpp>
 
 using namespace Kleo;
+using namespace Kleo::Crypto;
 using namespace boost;
 using namespace GpgME;
 
@@ -64,7 +65,7 @@ namespace {
 }
 
 class Task::Private {
-    friend class ::Kleo::Task;
+    friend class ::Kleo::Crypto::Task;
     Task * const q;
 public:
     explicit Private( Task * qq );

@@ -34,7 +34,8 @@
 
 #include "assuancommand.h"
 #include "signencryptwizard.h"
-#include "encryptemailtask.h"
+
+#include <crypto/encryptemailtask.h>
 
 #include <utils/input.h>
 #include <utils/output.h>
@@ -52,6 +53,7 @@
 #include <boost/bind.hpp>
 
 using namespace Kleo;
+using namespace Kleo::Crypto;
 using namespace boost;
 using namespace GpgME;
 using namespace KMime::Types;
@@ -223,7 +225,7 @@ shared_ptr<EncryptEMailTask> EncryptEMailController::Private::takeRunnable( GpgM
 }
 
 void EncryptEMailController::Private::connectTask( const shared_ptr<Task> & t, unsigned int idx ) {
-    connect( t.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Task::Result>)),
+    connect( t.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
              q, SLOT(slotTaskDone()) );
     ensureWizardCreated();
     wizard->connectTask( t, idx );

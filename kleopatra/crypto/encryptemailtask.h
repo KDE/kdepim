@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/encryptemailtask.h
+    crypto/encryptemailtask.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,10 +30,10 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_ENCRYPTEMAILTASK_H__
-#define __KLEOPATRA_UISERVER_ENCRYPTEMAILTASK_H__
+#ifndef __KLEOPATRA_CRYPTO_ENCRYPTEMAILTASK_H__
+#define __KLEOPATRA_CRYPTO_ENCRYPTEMAILTASK_H__
 
-#include <uiserver/task.h>
+#include <crypto/task.h>
 
 #include <utils/pimpl_ptr.h>
 
@@ -48,9 +48,12 @@ namespace GpgME {
 }
 
 namespace Kleo {
-
     class Input;
     class Output;
+}
+
+namespace Kleo {
+namespace Crypto {
 
     class EncryptEMailTask : public Task {
         Q_OBJECT
@@ -75,7 +78,9 @@ namespace Kleo {
         kdtools::pimpl_ptr<Private> d;
         Q_PRIVATE_SLOT( d, void slotResult( const GpgME::EncryptionResult & ) )
     };
+
+}
 }
 
-#endif /* __KLEOPATRA_UISERVER_ENCRYPTEMAILTASK_H__ */
+#endif /* __KLEOPATRA_CRYPTO_ENCRYPTEMAILTASK_H__ */
 
