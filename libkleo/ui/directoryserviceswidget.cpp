@@ -136,19 +136,6 @@ DirectoryServicesWidget::~DirectoryServicesWidget()
 }
 
 
-/**
-   Enables or disables the widgets in this dialog according to the
-   capabilities of the current plugin passed as a parameter.
-*/
-void DirectoryServicesWidget::enableDisable( CryptPlugWrapper* cryptPlug ) // unused?
-{
-    // disable the whole page if the plugin does not support the use
-    // of directory services
-    setEnabled( cryptPlug->hasFeature( Feature_CertificateDirectoryService ) ||
-                cryptPlug->hasFeature( Feature_CRLDirectoryService ) );
-}
-
-
 /*
  * protected slot, connected to selectionChanged()
  */

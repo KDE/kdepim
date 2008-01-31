@@ -58,7 +58,6 @@ public:
   void load();
   void save();
 
-  void enableDisable( CryptPlugWrapper* wrapper ); // unused?
   void setInitialServices( const KUrl::List& urls );
   KUrl::List urlList() const;
   void clear();
