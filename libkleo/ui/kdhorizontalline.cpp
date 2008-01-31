@@ -47,31 +47,31 @@
 #endif
 #include <QFontMetrics>
 #include <QApplication>
-//Added by qt3to4:
 #include <QPaintEvent>
-#include <Q3Frame>
 
 KDHorizontalLine::KDHorizontalLine( QWidget * parent, const char * name, Qt::WFlags f )
-  : Q3Frame( parent, name, f ),
+  : QFrame( parent, f ),
     mAlign( Qt::AlignLeft ),
     mLenVisible( 0 )
 {
-  Q3Frame::setFrameStyle( HLine | Sunken );
+  setObjectName( name );
+  QFrame::setFrameStyle( HLine | Sunken );
 }
 
 KDHorizontalLine::KDHorizontalLine( const QString & title, QWidget * parent, const char * name, Qt::WFlags f )
-  : Q3Frame( parent, name, f ),
+  : QFrame( parent, f ),
     mAlign( Qt::AlignLeft ),
     mLenVisible( 0 )
 {
-  Q3Frame::setFrameStyle( HLine | Sunken );
+  setObjectName( name );
+  QFrame::setFrameStyle( HLine | Sunken );
   setTitle( title );
 }
 
 KDHorizontalLine::~KDHorizontalLine() {}
 
 void KDHorizontalLine::setFrameStyle( int style ) {
-  Q3Frame::setFrameStyle( ( style & ~Shape_Mask ) | HLine ); // force HLine
+  QFrame::setFrameStyle( ( style & ~Shape_Mask ) | HLine ); // force HLine
 }
 
 void KDHorizontalLine::setTitle( const QString & title ) {
@@ -161,7 +161,6 @@ void KDHorizontalLine::paintEvent( QPaintEvent * e ) {
     paint.setClipRegion( e->region().subtract( r ) ); // clip everything but title
   }
   drawFrame( &paint );
-  drawContents( &paint );
 }
 
 // static

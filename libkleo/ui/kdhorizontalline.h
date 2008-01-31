@@ -41,11 +41,11 @@
 #ifndef __KDTOOLS__KDHORIZONTALLINE_H__
 #define __KDTOOLS__KDHORIZONTALLINE_H__
 
-#include <Qt3Support/Q3Frame>
-#include <QtCore/QString>
-#include <QtGui/QPaintEvent>
+#include "kleo/kleo_export.h"
 
-class KDHorizontalLine : public Q3Frame {
+#include <QFrame>
+
+class KLEO_EXPORT KDHorizontalLine : public QFrame {
   Q_OBJECT
   Q_PROPERTY( QString title READ title WRITE setTitle )
 public:
