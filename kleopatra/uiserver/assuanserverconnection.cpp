@@ -669,6 +669,8 @@ AssuanServerConnection::~AssuanServerConnection() {}
 //
 //
 
+namespace Kleo {
+
 class InquiryHandler : public QObject {
     Q_OBJECT
 public:
@@ -719,6 +721,8 @@ private:
 Q_SIGNALS:
     void signal( int rc, const QByteArray & data, const QByteArray & keyword );
 };
+
+} // namespace Kleo
 
 class AssuanCommand::Private {
 public:
