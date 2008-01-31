@@ -101,10 +101,8 @@ int SignCommand::doStart() {
 
     d->checkForErrors();
 
-    d->controller.reset( new SignEMailController );
+    d->controller.reset( new SignEMailController( shared_from_this() ) );
     d->controller->setProtocol( checkProtocol( EMail ) );
-
-    d->controller->setCommand( shared_from_this() );
 
     QObject::connect( d->controller.get(), SIGNAL(signersResolved()), d.get(), SLOT(slotSignersResolved() ) );
     QObject::connect( d->controller.get(), SIGNAL(reportMicAlg(QString)), d.get(), SLOT(slotMicAlgDetermined(QString)) );

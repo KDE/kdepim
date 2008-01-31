@@ -62,7 +62,7 @@ class SignEMailController::Private {
     friend class ::Kleo::SignEMailController;
     SignEMailController * const q;
 public:
-    explicit Private( SignEMailController * qq );
+    explicit Private( const shared_ptr<AssuanCommand> & cmd, SignEMailController * qq );
 
 private:
     void slotWizardSignersResolved();
@@ -87,12 +87,12 @@ private:
     bool detached : 1;
 };
 
-SignEMailController::Private::Private( SignEMailController * qq )
+SignEMailController::Private::Private( const shared_ptr<AssuanCommand> & cmd, SignEMailController * qq )
     : q( qq ),
       runnable(),
       cms(),
       openpgp(),
-      command(),
+      command( cmd ),     
       wizard(),
       protocol( UnknownProtocol ),
       detached( false )
@@ -100,8 +100,8 @@ SignEMailController::Private::Private( SignEMailController * qq )
 
 }
 
-SignEMailController::SignEMailController( QObject * p )
-    : QObject( p ), d( new Private( this ) )
+SignEMailController::SignEMailController( const boost::shared_ptr<AssuanCommand> & cmd, QObject * p )
+    : QObject( p ), d( new Private( cmd, this ) )
 {
 
 }
@@ -124,11 +124,6 @@ void SignEMailController::setProtocol( Protocol proto ) {
 
 Protocol SignEMailController::protocol() const {
     return d->protocol;
-}
-
-// ### extract to base
-void SignEMailController::setCommand( const shared_ptr<AssuanCommand> & cmd ) {
-    d->command = cmd;
 }
 
 void SignEMailController::startResolveSigners( const std::vector<Mailbox> & signers ) {
@@ -304,7 +299,7 @@ void SignEMailController::Private::ensureWizardCreated() {
 
     std::auto_ptr<SignEncryptWizard> w( new SignEncryptWizard );
     if ( const shared_ptr<AssuanCommand> cmd = command.lock() )
-        w = cmd->applyWindowID( w );
+        cmd->applyWindowID( w.get() );
     // ### virtual hook here
     w->setWindowTitle( i18n("Sign Mail Message") );
 

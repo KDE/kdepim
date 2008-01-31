@@ -62,7 +62,7 @@ class EncryptEMailController::Private {
     friend class ::Kleo::EncryptEMailController;
     EncryptEMailController * const q;
 public:
-    explicit Private( EncryptEMailController * qq );
+    explicit Private( const shared_ptr<AssuanCommand> & cmd, EncryptEMailController * qq );
 
 private:
     void slotWizardRecipientsResolved();
@@ -73,7 +73,8 @@ private:
     void ensureWizardCreated() const;
     void ensureWizardVisible();
     void cancelAllTasks();
-
+    void applyWindowID() const;
+    
     void schedule();
     shared_ptr<EncryptEMailTask> takeRunnable( GpgME::Protocol proto );
     void connectTask( const shared_ptr<Task> & task, unsigned int idx );
@@ -85,19 +86,28 @@ private:
     mutable QPointer<SignEncryptWizard> wizard;
 };
 
-EncryptEMailController::Private::Private( EncryptEMailController * qq )
+EncryptEMailController::Private::Private( const shared_ptr<AssuanCommand> & cmd, EncryptEMailController * qq )
     : q( qq ),
       runnable(),
       cms(),
       openpgp(),
-      command(),
+      command( cmd ),
       wizard()
 {
 
 }
 
-EncryptEMailController::EncryptEMailController( QObject * p )
-    : QObject( p ), d( new Private( this ) )
+
+void EncryptEMailController::Private::applyWindowID() const
+{
+    if ( !wizard )
+        return;
+    if ( const shared_ptr<AssuanCommand> cmd = command.lock() )
+        cmd->applyWindowID( wizard );
+}
+
+EncryptEMailController::EncryptEMailController( const shared_ptr<AssuanCommand> & cmd, QObject * p )
+    : QObject( p ), d( new Private( cmd, this ) )
 {
 
 }
@@ -117,6 +127,11 @@ void EncryptEMailController::setProtocol( Protocol proto ) {
     d->wizard->setPresetProtocol( proto );
 }
 
+void EncryptEMailController::setCommand( const shared_ptr<AssuanCommand> & cmd )
+{
+    d->command = cmd;
+    d->applyWindowID();
+}
 
 Protocol EncryptEMailController::protocol() const {
     d->ensureWizardCreated();
@@ -132,10 +147,6 @@ const char * EncryptEMailController::protocolAsString() const {
         throw Kleo::Exception( gpg_error( GPG_ERR_INTERNAL ),
                                i18n("Call to EncryptEMailController::protocolAsString() is ambiguous.") );
     }
-}
-
-void EncryptEMailController::setCommand( const shared_ptr<AssuanCommand> & cmd ) {
-    d->command = cmd;
 }
 
 void EncryptEMailController::startResolveRecipients( const std::vector<Mailbox> & recipients ) {
@@ -278,8 +289,6 @@ void EncryptEMailController::Private::ensureWizardCreated() const {
         return;
 
     std::auto_ptr<SignEncryptWizard> w( new SignEncryptWizard );
-    if ( const shared_ptr<AssuanCommand> cmd = command.lock() )
-        w = cmd->applyWindowID( w );
     w->setWindowTitle( i18n("Encrypt Mail Message") );
    
     std::vector<int> pageOrder;
@@ -292,6 +301,7 @@ void EncryptEMailController::Private::ensureWizardCreated() const {
     connect( w.get(), SIGNAL(recipientsResolved()), q, SLOT(slotWizardRecipientsResolved()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
     wizard = w.release();
+    applyWindowID();
 }
 
 void EncryptEMailController::Private::ensureWizardVisible() {

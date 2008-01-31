@@ -51,14 +51,12 @@ namespace Kleo {
     class SignEncryptFilesController : public QObject {
         Q_OBJECT
     public:
-        explicit SignEncryptFilesController( QObject * parent=0 );
+        explicit SignEncryptFilesController( const boost::shared_ptr<AssuanCommand> & cmd, QObject * parent=0 );
         ~SignEncryptFilesController();
 
         void setProtocol( GpgME::Protocol proto );
         GpgME::Protocol protocol() const;
         //const char * protocolAsString() const;
-
-        void setCommand( const boost::shared_ptr<AssuanCommand> & cmd );
 
         enum Operation {
             SignDisallowed = 0,

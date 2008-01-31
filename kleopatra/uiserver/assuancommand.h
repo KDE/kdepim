@@ -239,17 +239,10 @@ namespace Kleo {
 
         GpgME::Protocol checkProtocol( Mode mode ) const;
 
-        template <typename T_Widget>
-        T_Widget * applyWindowID( T_Widget * w ) const {
+        void applyWindowID( QDialog* w ) const {
             doApplyWindowID( w );
-            return w;
         }
-        template <typename T_Widget>
-        std::auto_ptr<T_Widget> applyWindowID( std::auto_ptr<T_Widget> w ) const {
-            doApplyWindowID( w.get() );
-            return w;
-        }
-
+        
         QString heuristicBaseDirectory() const;
 
         bool isNohup() const;

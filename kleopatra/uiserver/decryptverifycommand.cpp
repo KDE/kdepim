@@ -250,7 +250,8 @@ public:
     void createWizard() {
         if ( wizard )
             return;
-        wizard = q->applyWindowID( new DecryptVerifyWizard );
+        wizard =  new DecryptVerifyWizard;
+        q->applyWindowID( wizard );
         wizard->setAttribute( Qt::WA_DeleteOnClose );
         connect( wizard, SIGNAL(finished(int)), this, SLOT(slotDialogClosed()) );
         //if ( requestedWindowTitle().isEmpty() )

@@ -111,8 +111,7 @@ int SignEncryptFilesCommand::doStart() {
 
     d->checkForErrors();
 
-    d->controller.reset( new SignEncryptFilesController );
-    d->controller->setCommand( shared_from_this() );
+    d->controller.reset( new SignEncryptFilesController( shared_from_this() ) );
 
     d->controller->setProtocol( checkProtocol( FileManager ) );
     d->controller->setOperationMode( operation() );

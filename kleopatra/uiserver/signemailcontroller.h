@@ -51,14 +51,12 @@ namespace Kleo {
     class SignEMailController : public QObject {
         Q_OBJECT
     public:
-        explicit SignEMailController( QObject * parent=0 );
+        explicit SignEMailController( const boost::shared_ptr<AssuanCommand> & cmd, QObject * parent=0 );
         ~SignEMailController();
 
         void setProtocol( GpgME::Protocol proto );
         GpgME::Protocol protocol() const;
         //const char * protocolAsString() const;
-
-        void setCommand( const boost::shared_ptr<AssuanCommand> & cmd );
 
         void startResolveSigners( const std::vector<KMime::Types::Mailbox> & signers );
 

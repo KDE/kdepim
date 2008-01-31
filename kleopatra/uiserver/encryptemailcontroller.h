@@ -51,16 +51,16 @@ namespace Kleo {
     class EncryptEMailController : public QObject {
         Q_OBJECT
     public:
-        explicit EncryptEMailController( QObject * parent=0 );
+        explicit EncryptEMailController( const boost::shared_ptr<AssuanCommand> & cmd, QObject * parent=0 );
         ~EncryptEMailController();
 
         static const char * mementoName() { return "EncryptEMailController"; }
 
+        void setCommand( const boost::shared_ptr<AssuanCommand> & cmd );
+        
         void setProtocol( GpgME::Protocol proto );
         const char * protocolAsString() const;
         GpgME::Protocol protocol() const;
-
-        void setCommand( const boost::shared_ptr<AssuanCommand> & cmd );
 
         void startResolveRecipients( const std::vector<KMime::Types::Mailbox> & recipients );
 

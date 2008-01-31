@@ -96,9 +96,7 @@ int PrepEncryptCommand::doStart() {
 
     d->checkForErrors();
 
-    d->controller.reset( new EncryptEMailController );
-
-    d->controller->setCommand( shared_from_this() );
+    d->controller.reset( new EncryptEMailController( shared_from_this() ) );
 
     if ( hasOption( "protocol" ) )
         // --protocol is optional for PREP_ENCRYPT

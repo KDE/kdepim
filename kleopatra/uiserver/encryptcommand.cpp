@@ -137,15 +137,14 @@ int EncryptCommand::doStart() {
     if ( hasPreviousMemento ) {
         d->controller = mementoContent< shared_ptr<EncryptEMailController> >( EncryptEMailController::mementoName() );
         removeMemento( EncryptEMailController::mementoName() );
+        d->controller->setCommand( shared_from_this() );
     } else {
-        d->controller.reset( new EncryptEMailController );
+        d->controller.reset( new EncryptEMailController( shared_from_this() ) );
         d->controller->setProtocol( checkProtocol( EMail ) );
     }
 
     kleo_assert( d->controller );
-
-    d->controller->setCommand( shared_from_this() );
-
+    
     QObject::connect( d->controller.get(), SIGNAL(recipientsResolved()), d.get(), SLOT(slotRecipientsResolved()), Qt::QueuedConnection );
     QObject::connect( d->controller.get(), SIGNAL(done()), d.get(), SLOT(slotDone()), Qt::QueuedConnection );
     QObject::connect( d->controller.get(), SIGNAL(error(int,QString)), d.get(), SLOT(slotError(int,QString)), Qt::QueuedConnection );

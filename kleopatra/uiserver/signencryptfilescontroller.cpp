@@ -65,7 +65,7 @@ class SignEncryptFilesController::Private {
     friend class ::Kleo::SignEncryptFilesController;
     SignEncryptFilesController * const q;
 public:
-    explicit Private( SignEncryptFilesController * qq );
+    explicit Private( const shared_ptr<AssuanCommand> & cmd, SignEncryptFilesController * qq );
 
 private:
     void slotWizardOperationPrepared();
@@ -98,12 +98,12 @@ private:
     bool errorDetected : 1;
 };
 
-SignEncryptFilesController::Private::Private( SignEncryptFilesController * qq )
+SignEncryptFilesController::Private::Private( const shared_ptr<AssuanCommand> & cmd, SignEncryptFilesController * qq )
     : q( qq ),
       runnable(),
       cms(),
       openpgp(),
-      command(),
+      command( cmd ),
       wizard(),
       operation( SignAllowed|EncryptAllowed ),
       protocol( UnknownProtocol ),
@@ -128,8 +128,8 @@ QString SignEncryptFilesController::Private::titleForOperation( unsigned int op 
     return i18n( "Sign/Encrypt Files" );
 }
 
-SignEncryptFilesController::SignEncryptFilesController( QObject * p )
-    : QObject( p ), d( new Private( this ) )
+SignEncryptFilesController::SignEncryptFilesController( const shared_ptr<AssuanCommand> & cmd, QObject * p )
+    : QObject( p ), d( new Private( cmd, this ) )
 {
 
 }
@@ -150,10 +150,6 @@ void SignEncryptFilesController::setProtocol( Protocol proto ) {
 
 Protocol SignEncryptFilesController::protocol() const {
     return d->protocol;
-}
-
-void SignEncryptFilesController::setCommand( const shared_ptr<AssuanCommand> & cmd ) {
-    d->command = cmd;
 }
 
 // static
@@ -399,7 +395,7 @@ void SignEncryptFilesController::Private::ensureWizardCreated() {
 
     std::auto_ptr<SignEncryptFilesWizard> w( new SignEncryptFilesWizard );
     if ( const shared_ptr<AssuanCommand> cmd = command.lock() )
-        w = cmd->applyWindowID( w );
+        cmd->applyWindowID( w.get() );
 
     w->setWindowTitle( titleForOperation( operation ) );
     w->setAttribute( Qt::WA_DeleteOnClose );
