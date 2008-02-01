@@ -47,7 +47,7 @@
       <number>6</number>
      </property>
      <item>
-      <widget class="Q3ListView" name="x500LV" >
+      <widget class="QTreeWidget" name="x500LV" >
        <property name="toolTip" >
         <string>Select Directory Services to Use Here</string>
        </property>
@@ -244,15 +244,6 @@ By clicking this button, you can remove the currently selected directory service
  </widget>
  <layoutdefault spacing="6" margin="11" />
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
- <customwidgets>
-  <customwidget>
-   <class>Q3ListView</class>
-   <extends></extends>
-   <header>q3listview.h</header>
-   <container>0</container>
-   <pixmap></pixmap>
-  </customwidget>
- </customwidgets>
  <resources/>
  <connections/>
 </ui>

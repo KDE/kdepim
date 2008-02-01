@@ -37,8 +37,8 @@
 #include <kurl.h>
 #include <QtGui/QWidget>
 
-class Q3ListViewItem;
-class CryptPlugWrapper;
+class QTreeWidgetItem;
+
 namespace Kleo {
 
 class CryptoConfigEntry;
@@ -50,7 +50,7 @@ class KLEO_EXPORT DirectoryServicesWidget : public QWidget
   Q_OBJECT
 
 public:
-  DirectoryServicesWidget(
+  explicit DirectoryServicesWidget(
     Kleo::CryptoConfigEntry* configEntry,
     QWidget* parent = 0, const char* name = 0, Qt::WFlags fl = 0 );
   ~DirectoryServicesWidget();
@@ -69,8 +69,8 @@ Q_SIGNALS:
   void changed();
 
 protected Q_SLOTS:
-  void slotServiceChanged( Q3ListViewItem* );
-  void slotServiceSelected( Q3ListViewItem* );
+  void slotServiceChanged();
+  void slotServiceSelected( QTreeWidgetItem * );
   void slotAddService();
   void slotDeleteService();
   void slotMoveUp();

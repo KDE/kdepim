@@ -40,53 +40,54 @@
 #include <kiconloader.h>
 #include <kdebug.h>
 
-#include <q3buttongroup.h>
 #include <QToolButton>
-#include <q3listview.h>
+#include <QTreeWidget>
 #include <QPushButton>
 
 using namespace Kleo;
 
-class QX500ListViewItem : public Q3ListViewItem
+class QX500ListViewItem : public QTreeWidgetItem
 {
 public:
-  QX500ListViewItem( Q3ListView* lv, Q3ListViewItem* prev,
+    QX500ListViewItem( QTreeWidget * lv, QTreeWidgetItem * prev,
                      const QString& serverName,
                      const QString& portNumber,
                      const QString& dn,
                      const QString& username,
                      const QString& password )
-    : Q3ListViewItem( lv, prev, serverName, portNumber, dn, username ) {
-    setPassword( password );
-  }
+        : QTreeWidgetItem( lv, prev )
+    {
+        setData( serverName, portNumber, dn, username, password );
+    }
 
-  void setPassword( const QString& pass ) {
-    mPassword = pass;
-    setText( 4, pass.isEmpty() ? QString() : QString::fromLatin1( "******" ) );
-  }
+    void setPassword( const QString& pass ) {
+        mPassword = pass;
+        setText( 4, pass.isEmpty() ? QString() : QString::fromLatin1( "******" ) );
+    }
 
-  const QString& password() const { return mPassword; }
+    const QString& password() const { return mPassword; }
 
-  void setData( const QString& serverName,
-                const QString& portNumber,
-                const QString& dn,
-                const QString& username,
-                const QString& password ) {
-    setText( 0, serverName );
-    setText( 1, portNumber );
-    setText( 2, dn );
-    setText( 3, username );
-    setPassword( password );
-  }
+    using QTreeWidgetItem::setData;
+    void setData( const QString& serverName,
+                  const QString& portNumber,
+                  const QString& dn,
+                  const QString& username,
+                  const QString& password ) {
+        setText( 0, serverName );
+        setText( 1, portNumber );
+        setText( 2, dn );
+        setText( 3, username );
+        setPassword( password );
+    }
 
-  void copyItem( QX500ListViewItem* item ) {
-    for ( unsigned int i = 0; i < 4 ; ++i )
-      setText( i, item->text( i ) );
-    setPassword( item->password() );
-  }
+    void copyItem( QX500ListViewItem* item ) {
+        for ( unsigned int i = 0; i < 4 ; ++i )
+            setText( i, item->text( i ) );
+        setPassword( item->password() );
+    }
 
 private:
-  QString mPassword;
+    QString mPassword;
 };
 
 class Kleo::DirectoryServicesWidgetPrivate
@@ -94,6 +95,12 @@ class Kleo::DirectoryServicesWidgetPrivate
 public:
   DirectoryServicesWidgetPrivate( Kleo::CryptoConfigEntry* config ) : configEntry( config )
   {}
+
+  QX500ListViewItem * selectedItem() const {
+    const QList<QTreeWidgetItem*> selectedItems = ui.x500LV->selectedItems();
+    return selectedItems.empty() ? 0 : static_cast<QX500ListViewItem*>( selectedItems.front() ) ;
+  }
+
   Kleo::CryptoConfigEntry* configEntry;
   Ui::DirectoryServicesWidgetBase ui;
 };
@@ -106,7 +113,7 @@ Kleo::DirectoryServicesWidget::DirectoryServicesWidget(
 {
     setObjectName(name);
     d->ui.setupUi(this);
-    d->ui.x500LV->setSorting( -1 );
+    //d->ui.x500LV->setSorting( -1 );
 
     // taken from kmail's configuredialog.cpp
     d->ui.upButton->setIcon( KIcon( "go-up" ) );
@@ -119,9 +126,10 @@ Kleo::DirectoryServicesWidget::DirectoryServicesWidget(
 
     connect( d->ui.addServicePB,SIGNAL( clicked () ),SLOT(slotAddService() ) );
     connect( d->ui.removeServicePB, SIGNAL( clicked() ), SLOT( slotDeleteService() ) );
-    connect( d->ui.x500LV, SIGNAL( returnPressed(Q3ListViewItem*) ), SLOT(slotServiceSelected(Q3ListViewItem*) ) );
-    connect( d->ui.x500LV, SIGNAL(doubleClicked(Q3ListViewItem*) ),SLOT( slotServiceSelected(Q3ListViewItem*) ) );
-    connect( d->ui.x500LV, SIGNAL( selectionChanged(Q3ListViewItem*) ), SLOT(slotServiceChanged(Q3ListViewItem*) ) );
+    connect( d->ui.x500LV, SIGNAL(itemDoubleClicked(QTreeWidgetItem*,int)),
+             this, SLOT(slotServiceSelected(QTreeWidgetItem*)) );
+    connect( d->ui.x500LV, SIGNAL(itemSelectionChanged()),
+             this, SLOT(slotServiceChanged()) );
     connect( d->ui.upButton, SIGNAL(clicked() ), SLOT(slotMoveUp() ) );
     connect( d->ui.downButton, SIGNAL( clicked() ), SLOT( slotMoveDown() ) );
 }
@@ -130,30 +138,46 @@ Kleo::DirectoryServicesWidget::DirectoryServicesWidget(
 /*
  *  Destroys the object and frees any allocated resources
  */
-DirectoryServicesWidget::~DirectoryServicesWidget()
-{
+DirectoryServicesWidget::~DirectoryServicesWidget() {
     delete d;
 }
 
+static QTreeWidgetItem * itemAbove( QTreeWidgetItem * item ) {
+    if ( !item )
+        return 0;
+    if ( const QTreeWidgetItem * const parent = item->parent() )
+        return parent->child( parent->indexOfChild( item ) - 1 );
+    return 0;
+}
+
+static QTreeWidgetItem * itemBelow( QTreeWidgetItem * item ) {
+    if ( !item )
+        return 0;
+    if ( const QTreeWidgetItem * const parent = item->parent() )
+        return parent->child( parent->indexOfChild( item ) + 1 );
+    return 0;
+}
+
+static QTreeWidgetItem * lastItem( const QTreeWidget * w ) {
+    return w ? w->topLevelItem( w->topLevelItemCount() - 1 ) : 0 ;
+}
 
 /*
  * protected slot, connected to selectionChanged()
  */
-void DirectoryServicesWidget::slotServiceChanged( Q3ListViewItem* item )
+void DirectoryServicesWidget::slotServiceChanged()
 {
-    if( item )
-        d->ui.removeServicePB->setEnabled( true );
-    else
-        d->ui.removeServicePB->setEnabled( false );
-    d->ui.downButton->setEnabled( item && item->itemBelow() );
-    d->ui.upButton->setEnabled( item && item->itemAbove() );
+    QTreeWidgetItem * const item = d->selectedItem();
+    d->ui.removeServicePB->setEnabled( item );
+    d->ui.downButton->setEnabled( item && itemBelow( item ) );
+    d->ui.upButton->setEnabled( item && itemAbove( item ) );
 }
 
 
 /*
  * protected slot, connected to returnPressed/doubleClicked
  */
-void DirectoryServicesWidget::slotServiceSelected( Q3ListViewItem* item )
+void DirectoryServicesWidget::slotServiceSelected( QTreeWidgetItem * item )
 {
     AddDirectoryServiceDialogImpl* dlg = new AddDirectoryServiceDialogImpl( this );
     dlg->serverNameED->setText( item->text( 0 ) );
@@ -182,14 +206,15 @@ void DirectoryServicesWidget::slotAddService()
 {
     AddDirectoryServiceDialogImpl* dlg = new AddDirectoryServiceDialogImpl( this );
     if( dlg->exec() == QDialog::Accepted ) {
-      QX500ListViewItem *item = new QX500ListViewItem( d->ui.x500LV, d->ui.x500LV->lastItem(),
+       QX500ListViewItem * item = new QX500ListViewItem( d->ui.x500LV, lastItem( d->ui.x500LV ),
                                      dlg->serverNameED->text(),
                                      dlg->portED->text(),
                                      dlg->descriptionED->text(),
                                      dlg->usernameED->text(),
                                      dlg->passwordED->text() );
-       slotServiceChanged(item);
-        emit changed();
+       item->setSelected( true );
+       slotServiceChanged();
+       emit changed();
     }
     delete dlg;
 }
@@ -199,16 +224,17 @@ void DirectoryServicesWidget::slotAddService()
  */
 void DirectoryServicesWidget::slotDeleteService()
 {
-    Q3ListViewItem* item = d->ui.x500LV->selectedItem();
-    Q_ASSERT( item );
+    QTreeWidgetItem * item = d->selectedItem();
     if( !item )
         return;
     else
         delete item;
-    d->ui.x500LV->triggerUpdate();
+
     item = d->ui.x500LV->currentItem();
-    d->ui.x500LV->setCurrentItem( item ); // seems necessary...
-    d->ui.x500LV->setSelected( item, true );
+    if ( item ) {
+        d->ui.x500LV->setCurrentItem( item ); // seems necessary...
+        item->setSelected( true );
+    }
     emit changed();
 }
 
@@ -216,9 +242,10 @@ void DirectoryServicesWidget::slotDeleteService()
 void DirectoryServicesWidget::setInitialServices( const KUrl::List& urls )
 {
     d->ui.x500LV->clear();
+    QX500ListViewItem * last = static_cast<QX500ListViewItem*>( lastItem( d->ui.x500LV ) );
     for( KUrl::List::const_iterator it = urls.begin(); it != urls.end(); ++it ) {
         QString dn = KUrl::fromPercentEncoding( (*it).query().mid( 1 ).toLatin1() ); // decode query and skip leading '?'
-        (void)new QX500ListViewItem( d->ui.x500LV, d->ui.x500LV->lastItem(),
+        last = new QX500ListViewItem( d->ui.x500LV, last,
                                      (*it).host(),
                                      QString::number( (*it).port() ),
                                      dn,
@@ -230,9 +257,9 @@ void DirectoryServicesWidget::setInitialServices( const KUrl::List& urls )
 KUrl::List DirectoryServicesWidget::urlList() const
 {
     KUrl::List lst;
-    Q3ListViewItemIterator it( d->ui.x500LV );
-    for ( ; it.current() ; ++it ) {
-        Q3ListViewItem* item = it.current();
+
+    for ( int i = 0, end = d->ui.x500LV->topLevelItemCount() ; i != end ; ++i ) {
+        const QTreeWidgetItem * const item = d->ui.x500LV->topLevelItem( i );
         KUrl url;
         url.setProtocol( "ldap" );
         url.setHost( item->text( 0 ) );
@@ -240,7 +267,7 @@ KUrl::List DirectoryServicesWidget::urlList() const
         url.setPath( "/" ); // workaround KUrl parsing bug
         url.setQuery( item->text( 2 ) );
         url.setUser( item->text( 3 ) );
-        url.setPass( static_cast<QX500ListViewItem *>( item )->password() );
+        url.setPass( static_cast<const QX500ListViewItem *>( item )->password() );
         kDebug() << url;
         lst << url;
     }
@@ -290,25 +317,25 @@ static void swapItems( QX500ListViewItem *item, QX500ListViewItem *other )
 
 void Kleo::DirectoryServicesWidget::slotMoveUp()
 {
-  QX500ListViewItem *item = static_cast<QX500ListViewItem *>( d->ui.x500LV->selectedItem() );
+  QX500ListViewItem *item = d->selectedItem();
   if ( !item ) return;
-  QX500ListViewItem *above = static_cast<QX500ListViewItem *>( item->itemAbove() );
+  QX500ListViewItem *above = static_cast<QX500ListViewItem *>( itemAbove( item ) );
   if ( !above ) return;
   swapItems( item, above );
   d->ui.x500LV->setCurrentItem( above );
-  d->ui.x500LV->setSelected( above, true );
+  above->setSelected( true );
   emit changed();
 }
 
 void Kleo::DirectoryServicesWidget::slotMoveDown()
 {
-  QX500ListViewItem *item = static_cast<QX500ListViewItem *>( d->ui.x500LV->selectedItem() );
+  QX500ListViewItem *item = d->selectedItem();
   if ( !item ) return;
-  QX500ListViewItem *below = static_cast<QX500ListViewItem *>( item->itemBelow() );
+  QX500ListViewItem *below = static_cast<QX500ListViewItem *>( itemBelow( item ) );
   if ( !below ) return;
   swapItems( item, below );
   d->ui.x500LV->setCurrentItem( below );
-  d->ui.x500LV->setSelected( below, true );
+  below->setSelected( true );
   emit changed();
 }
 
