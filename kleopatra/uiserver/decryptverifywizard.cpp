@@ -37,8 +37,9 @@
 
 #include <crypto/gui/scrollarea.h>
 
-#include <utils/filenamerequester.h>
 #include <utils/stl_util.h>
+
+#include "libkleo/ui/filenamerequester.h"
 
 #include <KLocale>
 

@@ -31,7 +31,6 @@
 */
 
 #include "certificatewizardimpl.h"
-#include "utils/filenamerequester.h"
 
 // libkleopatra
 #include "libkleo/kleo/oidmap.h"
@@ -39,6 +38,7 @@
 #include "libkleo/kleo/dn.h"
 #include "libkleo/kleo/cryptobackendfactory.h"
 #include "libkleo/ui/progressdialog.h"
+#include "libkleo/ui/filenamerequester.h"
 
 // gpgme++
 #include <gpgme++/keygenerationresult.h>

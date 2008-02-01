@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    utils/filenamerequester.h
+    ui/filenamerequester.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,18 +30,18 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UTIL_FILENAMEREQUESTER_H__
-#define __KLEOPATRA_UTIL_FILENAMEREQUESTER_H__
+#ifndef __KLEOPATRA_UI_FILENAMEREQUESTER_H__
+#define __KLEOPATRA_UI_FILENAMEREQUESTER_H__
+
+#include "kleo/kleo_export.h"
 
 #include <QWidget>
 
 #include <QDir>
 
-#include <utils/pimpl_ptr.h>
-
 namespace Kleo {
 
-    class FileNameRequester : public QWidget {
+    class KLEO_EXPORT FileNameRequester : public QWidget {
         Q_OBJECT
         Q_PROPERTY( QString fileName READ fileName WRITE setFileName )
         Q_PROPERTY( bool existingOnly READ existingOnly WRITE setExistingOnly )
@@ -60,17 +60,17 @@ namespace Kleo {
         QDir::Filters filter() const;
 
     Q_SIGNALS:
-        void fileNameChanged( const QString& filename );
+        void fileNameChanged( const QString & filename );
 
     private:
         virtual QString requestFileName();
 
     private:
         class Private;
-        kdtools::pimpl_ptr<Private> d;
+        Private * d;
         Q_PRIVATE_SLOT( d, void slotButtonClicked() )
     };
 
 }
 
-#endif /* __KLEOPATRA_UTIL_FILENAMEREQUESTER_H__ */
+#endif /* __KLEOPATRA_UI_FILENAMEREQUESTER_H__ */

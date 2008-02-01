@@ -32,7 +32,7 @@
 
 #include "decryptverifyoperationwidget.h"
 
-#include <utils/filenamerequester.h>
+#include "libkleo/ui/filenamerequester.h"
 
 #include <KLocale>
 #include <KIcon>

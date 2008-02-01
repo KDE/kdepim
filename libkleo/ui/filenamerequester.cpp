@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    utils/filenamerequester.cpp
+    ui/filenamerequester.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -76,11 +76,11 @@ FileNameRequester::Private::Private( FileNameRequester * qq )
       hlay( q ),
       existingOnly( true )
 {
-    KDAB_SET_OBJECT_NAME( dirmodel );
-    KDAB_SET_OBJECT_NAME( completer );
-    KDAB_SET_OBJECT_NAME( lineedit );
-    KDAB_SET_OBJECT_NAME( button );
-    KDAB_SET_OBJECT_NAME( hlay );
+    dirmodel.setObjectName( "dirmodel" );
+    completer.setObjectName( "completer" );
+    lineedit.setObjectName( "lineedit" );
+    button.setObjectName( "button" );
+    hlay.setObjectName( "hlay" );
 
     button.setIcon( KIcon("document-open") );
     lineedit.setCompleter( &completer );
@@ -91,8 +91,8 @@ FileNameRequester::Private::Private( FileNameRequester * qq )
 
     connect( &button, SIGNAL(clicked()),
              q, SLOT(slotButtonClicked()) );
-    connect( &lineedit, SIGNAL( textChanged( QString ) ),
-             q, SIGNAL( fileNameChanged( QString ) ) );
+    connect( &lineedit, SIGNAL(textChanged(QString)),
+             q, SIGNAL(fileNameChanged(QString)) );
 }
 
 FileNameRequester::Private::~Private() {}
@@ -109,7 +109,9 @@ FileNameRequester::FileNameRequester( QDir::Filters f, QWidget * p )
     d->dirmodel.setFilter( f );
 }
 
-FileNameRequester::~FileNameRequester() {}
+FileNameRequester::~FileNameRequester() {
+    delete d;
+}
 
 void FileNameRequester::setFileName( const QString & file ) {
     d->lineedit.setText( file );

@@ -72,6 +72,7 @@ set(libkleo_ui_SRCS    # make this a separate lib.
 )
 set(libkleo_ui_common_SRCS
    ui/kdhorizontalline.cpp
+   ui/filenamerequester.cpp
    ui/progressbar.cpp
    ui/progressdialog.cpp
 )
