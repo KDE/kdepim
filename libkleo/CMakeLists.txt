@@ -59,7 +59,6 @@ set(libkleo_core_SRCS
    )
 
 set(libkleo_ui_SRCS    # make this a separate lib.
-   ui/kdhorizontalline.cpp
    ui/keylistview.cpp
    ui/keyselectiondialog.cpp
    ui/keyrequester.cpp
@@ -72,6 +71,7 @@ set(libkleo_ui_SRCS    # make this a separate lib.
    ui/adddirectoryservicedialogimpl.cpp
 )
 set(libkleo_ui_common_SRCS
+   ui/kdhorizontalline.cpp
    ui/progressbar.cpp
    ui/progressdialog.cpp
 )
