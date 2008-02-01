@@ -184,7 +184,8 @@ Kleo::CryptoConfigComponentGUI::CryptoConfigComponentGUI(
       Q_ASSERT( group );
       if ( !group )
         continue;
-      KDHorizontalLine * hl = new KDHorizontalLine( group->description(), this );
+      const QString title = group->description();
+      KDHorizontalLine * hl = new KDHorizontalLine( title.isEmpty() ? *it : title, this );
       const int row = glay->rowCount();
       glay->addWidget( hl, row, 0, 1, 3 );
       mGroupGUIs.append( new CryptoConfigGroupGUI( module, group, glay, this ) );
