@@ -71,7 +71,7 @@
 #include <QTimer>
 
 #include <kleo/cryptobackendfactory.h>
-#include <kleo/ui/cryptoconfigdialog.h>
+#include <ui/cryptoconfigdialog.h>
 #include <kleo/cryptoconfig.h>
 
 #include <gpgme++/key.h>
