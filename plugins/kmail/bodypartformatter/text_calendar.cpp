@@ -471,7 +471,16 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     bool handleClick( KMail::Interface::BodyPart *part,
                       const QString &path, KMail::Callback& c ) const
     {
-      QString iCal = part->asText();
+      QString iCal;
+      /* If the bodypart does not have a charset specified, we need to fall back to
+         utf8, not the KMail fallback encoding, so get the contents as binary and decode
+         explicitely. */
+      if ( part->contentTypeParameter( "charset").isEmpty() ) {
+        const QByteArray &ba = part->asBinary();
+        iCal = QString::fromUtf8(ba);
+      } else {
+        iCal = part->asText();
+      }
       bool result = false;
       if ( path == "accept" )
         result = handleInvitation( iCal, Attendee::Accepted, c );
