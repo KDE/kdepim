@@ -70,6 +70,10 @@
 #include <QProcess>
 #include <QTimer>
 
+#include <kleo/cryptobackendfactory.h>
+#include <kleo/ui/cryptoconfigdialog.h>
+#include <kleo/cryptoconfig.h>
+
 #include <gpgme++/key.h>
 
 #include <boost/bind.hpp>
@@ -148,6 +152,7 @@ public:
     void newCertificate();
     
     void checkConfiguration();
+    void configureBackend();
 
 private:
     void setupActions();
@@ -180,21 +185,27 @@ private:
         //QAction file_import_crls;
         QAction * file_close;
         QAction * file_quit;
-        QAction * check_configuration;
         //QAction view_stop_operations;
         //QAction view_certificate_details;
         //QAction view_hierarchical;
         //QAction view_expandall;
         //QAction view_collapseall;
+        QAction * check_configuration;
+        QAction * configure_backend;
 
         explicit Actions( MainWindow * q )
             : file_close( KStandardAction::close( q, SLOT(close()), q->actionCollection() ) ),
-              file_quit( KStandardAction::quit( q, SLOT(closeAndQuit()), q->actionCollection() ) )
+              file_quit( KStandardAction::quit( q, SLOT(closeAndQuit()), q->actionCollection() ) ),
+              check_configuration( new KAction( q->actionCollection() ) ),
+              configure_backend( new KAction( q->actionCollection() ) )
         {
-            check_configuration = new KAction( q->actionCollection() );
             check_configuration->setText( i18n( "Check GnuPG Configuration..." ) );
-            connect( check_configuration, SIGNAL( triggered() ), q, SLOT( checkConfiguration() ) );
+            connect( check_configuration, SIGNAL(triggered()), q, SLOT(checkConfiguration()) );
             q->actionCollection()->addAction( "check_configuration", check_configuration );
+
+            configure_backend->setText( i18n("Configure GnuPG Backend..." ) );
+            connect( configure_backend, SIGNAL(triggered()), q, SLOT(configureBackend()) );
+            q->actionCollection()->addAction( "configure_backend", configure_backend );
         }
 
     } actions;
@@ -437,6 +448,28 @@ void MainWindow::Private::checkConfiguration()
     // wait for dialog close:
     assert( dlg.isVisible() );
     loop.exec();
+}
+
+void MainWindow::Private::configureBackend() {
+    Kleo::CryptoConfig * const config = Kleo::CryptoBackendFactory::instance()->config();
+    assert( config );
+
+    Kleo::CryptoConfigDialog dlg( config );
+
+    const int result = dlg.exec();
+
+    // Forget all data parsed from gpgconf, so that we show updated information
+    // when reopening the configuration dialog.
+    config->clear();
+
+    if ( result == QDialog::Accepted ) {
+#if 0
+        // Tell other apps (e.g. kmail) that the gpgconf data might have changed
+        QDBusMessage message =
+            QDBusMessage::createSignal(QString(), "org.kde.kleo.CryptoConfig", "changed");
+        QDBusConnection::sessionBus().send(message);
+#endif
+    }
 }
 
 void MainWindow::closeEvent( QCloseEvent * e ) {
