@@ -62,3 +62,7 @@ kde4_add_executable(test_jobs TEST ${test_jobs_SRCS})
 
 target_link_libraries(test_jobs  kleo ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KDECORE_LIBS} )
 
+########### next target ###############
+
+kde4_add_executable( test_kdhorizontalline TEST test_kdhorizontalline.cpp )
+target_link_libraries( test_kdhorizontalline kleo ${KDE4_KDECORE_LIBS} )
