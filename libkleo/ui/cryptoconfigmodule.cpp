@@ -33,6 +33,7 @@
 #include "cryptoconfigmodule_p.h"
 #include "directoryserviceswidget.h"
 #include "kdhorizontalline.h"
+#include "filenamerequester.h"
 
 #include "kleo/cryptoconfig.h"
 
@@ -43,8 +44,8 @@
 #include <kiconloader.h>
 #include <kglobal.h>
 #include <kcomponentdata.h>
-#include <kurlrequester.h>
 #include <kicon.h>
+#include <kurlrequester.h>
 
 #include <QApplication>
 #include <QLabel>
@@ -58,6 +59,7 @@
 #include <QGridLayout>
 #include <QScrollArea>
 #include <QDesktopWidget>
+#include <QCheckBox>
 
 using namespace Kleo;
 
@@ -393,31 +395,56 @@ Kleo::CryptoConfigEntryPath::CryptoConfigEntryPath(
   CryptoConfigModule* module,
   Kleo::CryptoConfigEntry* entry, const QString& entryName,
   QGridLayout * glay, QWidget* widget, const char* name )
-  : CryptoConfigEntryGUI( module, entry, entryName, name )
+    : CryptoConfigEntryGUI( module, entry, entryName, name ),
+      mUrlRequester( 0 ),
+      mFileNameRequester( 0 )
 {
   const int row = glay->rowCount();
-  mUrlRequester = new KUrlRequester( widget );
+  QWidget * req;
+#ifdef ONLY_KLEO
+  req = mFileNameRequester = new FileNameRequester( widget );
+  mFileNameRequester->setExistingOnly( true );
+  mFileNameRequester->setFilter( QDir::Files );
+#else
+  req = mUrlRequester = new KUrlRequester( widget );
   mUrlRequester->setMode( KFile::File | KFile::ExistingOnly | KFile::LocalOnly );
+#endif
   QLabel *label = new QLabel( description(), widget );
-  label->setBuddy( mUrlRequester );
+  label->setBuddy( req );
   glay->addWidget( label, row, 1 );
-  glay->addWidget( mUrlRequester, row, 2 );
+  glay->addWidget( req, row, 2 );
   if ( entry->isReadOnly() ) {
     label->setEnabled( false );
-    mUrlRequester->setEnabled( false );
+    if ( mUrlRequester )
+        mUrlRequester->setEnabled( false );
+    if ( mFileNameRequester )
+        mFileNameRequester->setEnabled( false );
   } else {
-    connect( mUrlRequester, SIGNAL( textChanged( const QString& ) ), SLOT( slotChanged() ) );
+      if ( mUrlRequester )
+          connect( mUrlRequester, SIGNAL(textChanged(QString)),
+                   this, SLOT(slotChanged()) );
+      if ( mFileNameRequester )
+          connect( mFileNameRequester, SIGNAL(fileNameChanged(QString)),
+                   this, SLOT(slotChanged()) );
   }
 }
 
 void Kleo::CryptoConfigEntryPath::doSave()
 {
+#ifdef ONLY_KLEO
+  mEntry->setURLValue( KUrl::fromPath( mFileNameRequester->fileName() ) );
+#else
   mEntry->setURLValue( mUrlRequester->url() );
+#endif
 }
 
 void Kleo::CryptoConfigEntryPath::doLoad()
 {
+#ifdef ONLY_KLEO
+  mFileNameRequester->setFileName( mEntry->urlValue().path() );
+#else
   mUrlRequester->setUrl( mEntry->urlValue() );
+#endif
 }
 
 ////
@@ -426,31 +453,56 @@ Kleo::CryptoConfigEntryDirPath::CryptoConfigEntryDirPath(
   CryptoConfigModule* module,
   Kleo::CryptoConfigEntry* entry, const QString& entryName,
   QGridLayout * glay, QWidget* widget, const char* name )
-  : CryptoConfigEntryGUI( module, entry, entryName, name )
+    : CryptoConfigEntryGUI( module, entry, entryName, name ),
+      mUrlRequester( 0 ),
+      mFileNameRequester( 0 )
 {
   const int row = glay->rowCount();
-  mUrlRequester = new KUrlRequester( widget );
+  QWidget * req;
+#ifdef ONLY_KLEO
+  req = mFileNameRequester = new FileNameRequester( widget );
+  mFileNameRequester->setExistingOnly( true );
+  mFileNameRequester->setFilter( QDir::Dirs );
+#else
+  req = mUrlRequester = new KUrlRequester( widget );
   mUrlRequester->setMode( KFile::Directory | KFile::ExistingOnly | KFile::LocalOnly );
+#endif
   QLabel *label = new QLabel( description(), widget );
-  label->setBuddy( mUrlRequester );
+  label->setBuddy( req );
   glay->addWidget( label, row, 1 );
-  glay->addWidget( mUrlRequester, row, 2 );
+  glay->addWidget( req, row, 2 );
   if ( entry->isReadOnly() ) {
     label->setEnabled( false );
-    mUrlRequester->setEnabled( false );
+    if ( mUrlRequester )
+        mUrlRequester->setEnabled( false );
+    if ( mFileNameRequester )
+        mFileNameRequester->setEnabled( false );
   } else {
-    connect( mUrlRequester, SIGNAL( textChanged( const QString& ) ), SLOT( slotChanged() ) );
+      if ( mUrlRequester )
+          connect( mUrlRequester, SIGNAL(textChanged(QString)),
+                   this, SLOT(slotChanged()) );
+      if ( mFileNameRequester )
+          connect( mFileNameRequester, SIGNAL(fileNameChanged(QString)),
+                   this, SLOT(slotChanged()) );
   }
 }
 
 void Kleo::CryptoConfigEntryDirPath::doSave()
 {
+#ifdef ONLY_KLEO
+  mEntry->setURLValue( KUrl::fromPath( mFileNameRequester->fileName() ) );
+#else
   mEntry->setURLValue( mUrlRequester->url() );
+#endif
 }
 
 void Kleo::CryptoConfigEntryDirPath::doLoad()
 {
+#ifdef ONLY_KLEO
+  mFileNameRequester->setFileName( mEntry->urlValue().path() );
+#else
   mUrlRequester->setUrl( mEntry->urlValue() );
+#endif
 }
 
 ////
@@ -459,31 +511,50 @@ Kleo::CryptoConfigEntryURL::CryptoConfigEntryURL(
   CryptoConfigModule* module,
   Kleo::CryptoConfigEntry* entry, const QString& entryName,
   QGridLayout * glay, QWidget* widget, const char* name )
-  : CryptoConfigEntryGUI( module, entry, entryName, name )
+    : CryptoConfigEntryGUI( module, entry, entryName, name ),
+      mUrlRequester( 0 ),
+      mLineEdit( 0 )
 {
   const int row = glay->rowCount();
-  mUrlRequester = new KUrlRequester( widget );
+  QWidget * req;
+#ifdef ONLY_KLEO
+  req = mLineEdit = new QLineEdit( widget );
+#else
+  req = mUrlRequester = new KUrlRequester( widget );
   mUrlRequester->setMode( KFile::File | KFile::ExistingOnly );
+#endif
   QLabel *label = new QLabel( description(), widget );
-  label->setBuddy( mUrlRequester );
+  label->setBuddy( req );
   glay->addWidget( label, row, 1 );
-  glay->addWidget( mUrlRequester, row, 2 );
+  glay->addWidget( req, row, 2 );
   if ( entry->isReadOnly() ) {
     label->setEnabled( false );
-    mUrlRequester->setEnabled( false );
+    if ( mUrlRequester )
+        mUrlRequester->setEnabled( false );
+    if ( mLineEdit )
+        mLineEdit->setEnabled( false );
   } else {
-    connect( mUrlRequester, SIGNAL( textChanged( const QString& ) ), SLOT( slotChanged() ) );
+      connect( req, SIGNAL(textChanged(QString)),
+               this, SLOT(slotChanged()) );
   }
 }
 
 void Kleo::CryptoConfigEntryURL::doSave()
 {
+#ifdef ONLY_KLEO
+  mEntry->setURLValue( KUrl( mLineEdit->text() ) );
+#else
   mEntry->setURLValue( mUrlRequester->url() );
+#endif
 }
 
 void Kleo::CryptoConfigEntryURL::doLoad()
 {
+#ifdef ONLY_KLEO
+  mLineEdit->setText( mEntry->urlValue().url() );
+#else
   mUrlRequester->setUrl( mEntry->urlValue().url() );
+#endif
 }
 
 ////

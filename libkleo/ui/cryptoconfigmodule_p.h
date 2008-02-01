@@ -32,13 +32,10 @@
 #ifndef CRYPTOCONFIGMODULE_P_H
 #define CRYPTOCONFIGMODULE_P_H
 
-#include <QTabWidget>
-#include <q3hbox.h>
-#include <QCheckBox>
-//Added by qt3to4:
-#include <QLabel>
+#include <QWidget>
+
 #include <QList>
-#include <QGridLayout>
+
 #include <kurl.h>
 
 class KLineEdit;
@@ -46,6 +43,13 @@ class KIntNumInput;
 class KUrlRequester;
 class QPushButton;
 class QGridLayout;
+class QLineEdit;
+class QLabel;
+class QCheckBox;
+
+namespace Kleo {
+    class FileNameRequester;
+}
 
 namespace Kleo {
 
@@ -180,6 +184,7 @@ namespace Kleo {
     virtual void doLoad();
   private:
     KUrlRequester* mUrlRequester;
+    Kleo::FileNameRequester * mFileNameRequester;
   };
 
   /**
@@ -199,6 +204,7 @@ namespace Kleo {
     virtual void doLoad();
   private:
     KUrlRequester* mUrlRequester;
+    Kleo::FileNameRequester * mFileNameRequester;
   };
 
   /**
@@ -218,6 +224,7 @@ namespace Kleo {
     virtual void doLoad();
   private:
     KUrlRequester * mUrlRequester;
+    QLineEdit * mLineEdit;
   };
 
   /**
