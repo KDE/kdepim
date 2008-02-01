@@ -1,3 +1,18 @@
+Friday, February 1st 2008
+
+Problems addressed
+-------------------
+
+* kolab/issue2036 Press "cancel" at the calender folder selection deletes an updated event. (76807)
+* kolab/issue2214 Creating a calender in local folder where the user have no rights shouldn't be possible.(768402)
+* kolab/issue2433 Debug log of kio_sieve shows password in base64. (768539)
+* kolab/issue2387 Crash when creating a subfolder of the calendar folder.(768738)
+* kolab/issue1841 Changing composer wrap margin does not affect currently open composer.(769033)
+* kolab/issue1843 Resized composer window snaps back if settings are changed.(769035)
+* kolab/issue2166 Rename "Create Task ..." to something that resembled "resubmission" or "reminder".(769042)
+* kolab/issue2159 Configure option: distribution list view and addressbook view under or left of the main list of contacts.(769058)
+* kolab/issue2167 New tasks should have reminder and until time set by default.(769058)
+
 Monday, January 28th 2008
 
 Problems addressed
