@@ -3,6 +3,8 @@ include_directories( ${CMAKE_BINARY_DIR}/kleo/backends/chiasmus/ ${GPGME_INCLUDE
 if ( NOT ONLY_KLEO )
   add_definitions( -DKLEO_BUILD_OLD_MAINWINDOW )
   add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
+else ( NOT ONLY_KLEO )
+  add_definitions( -DONLY_KLEO )
 endif ( NOT ONLY_KLEO )
 
 add_definitions( ${KDE4_ENABLE_EXCEPTIONS} )
@@ -65,16 +67,16 @@ set(libkleo_ui_SRCS    # make this a separate lib.
    ui/keyapprovaldialog.cpp
    ui/backendconfigwidget.cpp
    ui/dnattributeorderconfigwidget.cpp
-   ui/cryptoconfigmodule.cpp
-   ui/cryptoconfigdialog.cpp
-   ui/directoryserviceswidget.cpp
-   ui/adddirectoryservicedialogimpl.cpp
 )
 set(libkleo_ui_common_SRCS
    ui/kdhorizontalline.cpp
    ui/filenamerequester.cpp
    ui/progressbar.cpp
    ui/progressdialog.cpp
+   ui/cryptoconfigmodule.cpp
+   ui/cryptoconfigdialog.cpp
+   ui/directoryserviceswidget.cpp
+   ui/adddirectoryservicedialogimpl.cpp
 )
 
 set(libkleo_compat_SRCS # make this a separate lib.
@@ -83,7 +85,7 @@ set(libkleo_compat_SRCS # make this a separate lib.
    kleo/cryptplugwrapperlist.cpp
    kleo/cryptplugfactory.cpp )
 
-kde4_add_ui_files(libkleo_ui_SRCS
+kde4_add_ui_files(libkleo_ui_common_SRCS
 	ui/adddirectoryservicedialog.ui
 	ui/directoryserviceswidgetbase.ui
 )
