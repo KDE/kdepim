@@ -36,6 +36,8 @@
 #include "pilotDatabase.h"
 #include "pilotRecord.h"
 
+#include "category.h"
+
 #include "keyringhhdataproxy.h"
 #include "keyringhhrecord.h"
 #include "keyringsettings.h"
@@ -199,7 +201,7 @@ bool KeyringConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 	equal = equal && ( krPCRec->account() == krHHRec->account() );
 	equal = equal && ( krPCRec->password() == krHHRec->password() );
 	equal = equal && ( krPCRec->notes() == krHHRec->notes() );
-	equal = equal && ( krPCRec->categoryName() == krHHRec->categoryName() );
+	equal = equal && ( krPCRec->category()->index() == krHHRec->category()->index() );
 	
 	return equal;
 }

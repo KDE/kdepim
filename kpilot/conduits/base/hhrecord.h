@@ -32,12 +32,13 @@
 #include "record.h"
 
 class PilotRecord;
-class PilotAppInfoBase;
+class Category;
 
 class KPILOT_EXPORT HHRecord : public Record {
 
 protected:
 	PilotRecord *fRecord;
+	const Category *fCategory;
 	
 public:
 	HHRecord( PilotRecord *record );
@@ -64,21 +65,15 @@ public:
 	PilotRecord* pilotRecord() const;
 	
 	/**
-	 * Changes the label and also the category id in fPilotRecord. The caller
-	 * should make sure that the label matches the label in the appinfo block of
-	 * the database which contains this record.
+	 * Sets the category information for this record. Also changes the category
+	 * information held in PilotRecord instance.
 	 */
-	//void setCategory( int id, const QString label );
+	void setCategory( const Category *c );
 	
 	/**
-	 * Added for convenience. Returns the same as categories().first().
+	 * Returns the category of this HHRecord.
 	 */
-	QString categoryName() const;
-	
-	/**
-	 * Returns the id of the category which is set in fRecord.
-	 */
-	int categoryId() const;
+	const Category *category() const;
 	
 	virtual bool isArchived() const;
 	

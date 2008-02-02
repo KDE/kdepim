@@ -39,7 +39,7 @@
 #include "category.h"
 
 HHDataProxy::HHDataProxy( PilotDatabase *db ) : fDatabase( db )
-	, fLastUsedUniqueId( 0L )
+	, fLastUsedUniqueId( 0L ), fUnfiled( 0L )
 {
 }
 
@@ -163,6 +163,11 @@ void HHDataProxy::loadCategories()
 			
 			Category *cat = new Category( name, renamed, i, id );
 			fCategories.append( cat );
+			
+			if( i == (unsigned int) Pilot::Unfiled )
+			{
+				fUnfiled = cat;
+			}
 		}
 	}
 }
@@ -243,4 +248,17 @@ int HHDataProxy::categoryId( const QString &name ) const
 	}
 	
 	return 0;
+}
+
+Category* HHDataProxy::category( const QString &name ) const
+{
+	foreach( Category *cat, fCategories )
+	{
+		if( name == cat->name() )
+		{
+			return cat;
+		}
+	}
+	
+	return fUnfiled;
 }

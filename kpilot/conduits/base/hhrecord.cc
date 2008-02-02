@@ -27,12 +27,13 @@
 
 #include "hhrecord.h"
 
+#include "category.h"
 #include "options.h"
 #include "pilot.h"
 #include "pilotRecord.h"
 #include "pilotAppInfo.h"
 
-HHRecord::HHRecord( PilotRecord *record ) : fRecord( record )
+HHRecord::HHRecord( PilotRecord *record ) : fRecord( record ), fCategory( 0L )
 {
 }
 
@@ -139,21 +140,26 @@ PilotRecord* HHRecord::pilotRecord() const
 	return fRecord;
 }
 
-/*
-void HHRecord::setCategory( int catId, const QString name )
+
+void HHRecord::setCategory( const Category *cat )
 {
 	FUNCTIONSETUP;
 	
-	DEBUGKPILOT << "Setting category: " << name << " which has id: " << catId;
+	fCategory = cat;
 	
-	fCategory = name;
 	if( fRecord )
 	{
-		fRecord->setCategory( catId );
+		fRecord->setCategory( cat->index() );
 	}
 }
-*/
 
+const Category* HHRecord::category() const
+{
+	FUNCTIONSETUP;
+	return fCategory;
+}
+
+/*
 QString HHRecord::categoryName() const
 {
 	FUNCTIONSETUP;
@@ -177,6 +183,7 @@ int HHRecord::categoryId() const
 	// No record return unfiled.
 	return Pilot::Unfiled;
 }
+*/
 
 bool HHRecord::isArchived() const
 {

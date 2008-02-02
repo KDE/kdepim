@@ -30,6 +30,8 @@
 #include "options.h"
 #include "pilotRecord.h"
 
+#include "category.h"
+
 KeyringHHRecord::KeyringHHRecord( PilotRecord *rec, const QString &key )
 	: HHRecord( rec ), fKey( key )
 {
@@ -71,7 +73,7 @@ bool KeyringHHRecord::equal( const Record* other ) const
 		equal = equal && ( data.account == krOther->account() );
 		equal = equal && ( data.password == krOther->password() );
 		equal = equal && ( data.notes == krOther->notes() );
-		equal = equal && ( categoryName() == krOther->categoryName() );
+		equal = equal && ( fCategory->index() == krOther->category()->index() );
 		
 		return equal;
 	}

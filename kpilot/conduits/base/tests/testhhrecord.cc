@@ -27,12 +27,16 @@
 
 #include "testhhrecord.h"
 #include "testrecord.h"
+
+#include "category.h"
+
 #include "options.h"
 
 TestHHRecord::TestHHRecord( const QStringList& fields, const QString &id )
 	: HHRecord( 0L ), fId( id ), fFields( fields ), fModified( false )
 		, fDeleted( false ), fArchived( false )
 {
+	fCategory = new Category( CSL1("Test"), false, 1, '1' );
 }
 
 TestHHRecord::TestHHRecord( const TestHHRecord *other ) : HHRecord( 0L )

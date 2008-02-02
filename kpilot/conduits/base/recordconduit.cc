@@ -33,6 +33,7 @@
 #include "kpilotSettings.h"
 
 #include "idmapping.h"
+#include "category.h"
 #include "cudcounter.h"
 #include "dataproxy.h"
 #include "hhdataproxy.h"
@@ -1020,17 +1021,17 @@ void RecordConduit::copyCategory( const Record *from, HHRecord *to )
 	if( pcCategories.size() < 1 )
 	{
 		// The pc record has no categories.
-		// FIXME: Create a Category object here and set this object to the record.
-		//to->setCategory( Pilot::Unfiled, i18nc( "No category set for this record"
-		//	, "Unfiled" ) );
+		to->setCategory( fHHDataProxy->category(
+			i18nc( "No category set for this record", "Unfiled" ) ) );
+		
 		return;
 	}
 
 	// Quick check: does the record (not unfiled) have an entry
 	// in the categories list? If so, use that.
-	if( to->categoryId() != Pilot::Unfiled )
+	if( to->category()->index() != Pilot::Unfiled )
 	{
-		QString hhCat = to->categoryName();
+		QString hhCat = to->category()->name();
 		
 		if( pcCategories.contains( hhCat ) )
 		{
@@ -1084,8 +1085,8 @@ void RecordConduit::copyCategory( const HHRecord *from, Record *to  )
 	}
 
 	QStringList pcCategories = to->categoryNames();
-	QString hhCategory = from->categoryName();
-	int cat = from->categoryId();
+	QString hhCategory = from->category()->name();
+	int cat = from->category()->index();
 
 	DEBUGKPILOT << "HH category id " << cat << " label: [" << hhCategory << ']';
 
