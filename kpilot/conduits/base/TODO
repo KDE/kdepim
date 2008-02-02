@@ -24,3 +24,11 @@ CATEGORYSYNCING:
 		it that does something with keeping the category on the HHRecord and the
 		categories list in sync, keeping track of renamed categories, added
 		categories, etc.
+
+TESTCASES:
+	* The first test case would be open a pc data store and a palm data
+		store... add a record to the pc data store that has a new category that
+		doesn't exist in the palm data store, then sync the two data stores. the
+		outcome should be that the categories on the palm now contains the category
+		that was associated with the record on the pc, and that the palm record is
+		assigned to
