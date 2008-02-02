@@ -1020,8 +1020,9 @@ void RecordConduit::copyCategory( const Record *from, HHRecord *to )
 	if( pcCategories.size() < 1 )
 	{
 		// The pc record has no categories.
-		to->setCategory( Pilot::Unfiled, i18nc( "No category set for this record"
-			, "Unfiled" ) );
+		// FIXME: Create a Category object here and set this object to the record.
+		//to->setCategory( Pilot::Unfiled, i18nc( "No category set for this record"
+		//	, "Unfiled" ) );
 		return;
 	}
 
@@ -1060,13 +1061,15 @@ void RecordConduit::copyCategory( const Record *from, HHRecord *to )
 			// this *can't* fail.
 			int c = fHHDataProxy->categoryId( *it );
 			Q_ASSERT( Pilot::validCategory(c) );
-			to->setCategory( c, *it );
+			//FIXME: Use the Category class here.
+			//to->setCategory( c, *it );
 			return;
 		}
 	}
 
-	to->setCategory( Pilot::Unfiled, i18nc( "No category set for this record"
-			, "Unfiled" ) );
+	//FIXME: Use the Category class here.
+	//to->setCategory( Pilot::Unfiled, i18nc( "No category set for this record"
+	//		, "Unfiled" ) );
 }
 
 void RecordConduit::copyCategory( const HHRecord *from, Record *to  )

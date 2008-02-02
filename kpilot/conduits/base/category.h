@@ -33,7 +33,7 @@
 class KPILOT_EXPORT Category {
 
 public:
-	Category( int index, char id, QString name );
+	Category( QString name, bool renamed, int index, char id );
 
 	int index() const;
 	
@@ -48,9 +48,10 @@ public:
 	void setName( const QString &name );
 
 private:
+	QString fName;
+	bool fRenamed;
 	int fIndex;
 	char fId;
-	QString fName;
 };
 
 #endif

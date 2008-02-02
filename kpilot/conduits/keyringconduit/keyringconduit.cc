@@ -208,8 +208,7 @@ Record* KeyringConduit::createPCRecord( const HHRecord *hhRec )
 {
 	FUNCTIONSETUP;
 	
-	return new KeyringHHRecord( new PilotRecord( hhRec->pilotRecord() )
-	, hhRec->appInfo(), fDesKey );
+	return new KeyringHHRecord( new PilotRecord( hhRec->pilotRecord() ), fDesKey );
 }
 
 HHRecord* KeyringConduit::createHHRecord( const Record *pcRec )
@@ -220,8 +219,7 @@ HHRecord* KeyringConduit::createHHRecord( const Record *pcRec )
 	// we can do this safely. This conduit only deals with KeyringHHRecord objects.
 	const KeyringHHRecord *hhRec = static_cast<const KeyringHHRecord*>( pcRec );
 	
-	return new KeyringHHRecord( new PilotRecord( hhRec->pilotRecord() )
-		, hhRec->appInfo(), fDesKey );
+	return new KeyringHHRecord( new PilotRecord( hhRec->pilotRecord() ), fDesKey );
 }
 
 void KeyringConduit::_copy( const Record *from, HHRecord *to )

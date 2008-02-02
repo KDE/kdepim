@@ -36,6 +36,9 @@ class PilotDatabase;
 class PilotAppInfoBase;
 class PilotRecord;
 class HHRecord;
+class Category;
+
+struct CategoryAppInfo;
 
 class KPILOT_EXPORT HHDataProxy : public DataProxy {
 public:
@@ -75,12 +78,18 @@ protected:
 	/**
 	 * Reads the categories from the database into fAppInfo.
 	 */
-	virtual void loadCategories() = 0;
+	void loadCategories();
 	
 	/**
 	 * Saves the categories from fAppInfo back into the database.
 	 */
 	virtual void saveCategories() = 0;
+
+	/**
+	 * This virtual method is used by loadCategories to get the information about
+	 * the categories that are stored in the dataproxy.
+	 */
+	virtual CategoryAppInfo* readCategoryAppInfo() = 0;
 
 	/**
 	 * This function creates a (subclass of) HHRecord for @p rec.
@@ -109,8 +118,8 @@ protected:
 
 protected:
 	PilotDatabase *fDatabase;
-	PilotAppInfoBase *fAppInfo;
 	recordid_t fLastUsedUniqueId;
 	QList<recordid_t> fResettedRecords;
+	QList<Category*> fCategories;
 };
 #endif

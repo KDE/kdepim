@@ -40,7 +40,7 @@ protected:
 	PilotRecord *fRecord;
 	
 public:
-	HHRecord( PilotRecord *record, PilotAppInfoBase *appInfo );
+	HHRecord( PilotRecord *record );
 
 	virtual ~HHRecord();
 	
@@ -63,14 +63,12 @@ public:
 	
 	PilotRecord* pilotRecord() const;
 	
-	PilotAppInfoBase *appInfo() const;
-	
 	/**
 	 * Changes the label and also the category id in fPilotRecord. The caller
 	 * should make sure that the label matches the label in the appinfo block of
 	 * the database which contains this record.
 	 */
-	void setCategory( int id, const QString label );
+	//void setCategory( int id, const QString label );
 	
 	/**
 	 * Added for convenience. Returns the same as categories().first().
@@ -119,8 +117,5 @@ public:
 	 */
 	virtual QString toString() const;
 
-private:
-	QString fCategory;
-	PilotAppInfoBase *fAppInfo;
 };
 #endif

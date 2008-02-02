@@ -46,11 +46,9 @@ class KeyringHHRecordBase
 class KeyringHHRecord : public HHRecord
 {
 public:
-	KeyringHHRecord( PilotRecord *rec, PilotAppInfoBase *appInfo
-		, const QString &key );
+	KeyringHHRecord( PilotRecord *rec, const QString &key );
 	
-	KeyringHHRecord( PilotAppInfoBase *appInfo
-		, const QString &name = QString()
+	KeyringHHRecord( const QString &name = QString()
 		, const QString &account = QString()
 		, const QString &password = QString()
 		, const QString &notes = QString()

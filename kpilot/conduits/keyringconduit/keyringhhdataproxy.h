@@ -56,11 +56,6 @@ public:
 	bool openDatabase( const QString &pass );
 	
 	/**
-	 * Reads the categories from the database into fAppInfo.
-	 */
-	virtual void loadCategories();
-	
-	/**
 	 * Saves the categories after we've synced back to the database.
 	 */
 	virtual void saveCategories();
@@ -76,6 +71,8 @@ protected:
 	static const int MD5_DIGEST_LENGTH = 16;
 	static const int MD5_CBLOCK = 64;
 	static const int SALT_SIZE = 4;
+	
+	virtual CategoryAppInfo* readCategoryAppInfo();
 
 private: // functions
 	QCA::SecureArray getDigest( const QCA::SecureArray &salt

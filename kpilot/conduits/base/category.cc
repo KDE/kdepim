@@ -26,8 +26,8 @@
 
 #include "category.h"
 
-Category::Category( int index, char id, QString name )
-	: fIndex( index ), fId( id ), fName( name )
+Category::Category( QString name, bool renamed, int index, char id )
+	: fName( name ), fRenamed( renamed ), fIndex( index ), fId( id )
 {
 }
 

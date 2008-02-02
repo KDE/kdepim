@@ -85,7 +85,6 @@ KeyringHHDataProxy::~KeyringHHDataProxy()
 	}
 	
 	KPILOT_DELETE( fZeroRecord );
-	KPILOT_DELETE( fAppInfo );
 }
 
 bool KeyringHHDataProxy::openDatabase( const QString &pass )
@@ -161,21 +160,11 @@ bool KeyringHHDataProxy::openDatabase( const QString &pass )
 	return false;
 }
 
-void KeyringHHDataProxy::loadCategories()
-{
-	FUNCTIONSETUP;
-	
-	if( fDatabase && fDatabase->isOpen() )
-	{
-		KPILOT_DELETE(fAppInfo);
-		fAppInfo = new PilotKeyringInfo( fDatabase );
-	}
-}
-
 void KeyringHHDataProxy::saveCategories()
 {
 	FUNCTIONSETUP;
 	
+	/*
 	PilotKeyringInfo * appInfo = dynamic_cast<PilotKeyringInfo*>(fAppInfo);
 	
 	if( fDatabase && fDatabase->isOpen() && appInfo)
@@ -186,13 +175,14 @@ void KeyringHHDataProxy::saveCategories()
 		}
 		appInfo->writeTo(fDatabase);
 	}
+	*/
 }
 
 HHRecord* KeyringHHDataProxy::createHHRecord( PilotRecord *rec )
 {
 	FUNCTIONSETUP;
 	
-	return new KeyringHHRecord( rec, fAppInfo, fDesKey );
+	return new KeyringHHRecord( rec, fDesKey );
 }
 
 bool KeyringHHDataProxy::createDataStore()
@@ -247,7 +237,7 @@ bool KeyringHHDataProxy::createDataStore()
 		// we also add our 5th category by setting the category for this record
 		// to a new one...
 		KeyringHHRecord * fFirstRecord = 
-			new KeyringHHRecord( &appInfo,  i18n("KPilot cares"), i18n("KDE"), "",
+			new KeyringHHRecord( i18n("KPilot cares"), i18n("KDE"), "",
 					i18n("Thanks for using KPilot!"), fDesKey);
 		
 		fFirstRecord->setCategoryNames(QStringList() << CSL1("Web"));
@@ -298,4 +288,16 @@ QCA::SecureArray KeyringHHDataProxy::getDigest(
 	hash1.update( msg );
 	
 	return QCA::SecureArray( hash1.final() );
+}
+
+CategoryAppInfo* KeyringHHDataProxy::readCategoryAppInfo()
+{
+	if( fDatabase && fDatabase->isOpen() )
+	{
+		PilotKeyringInfo appInfo = PilotKeyringInfo( fDatabase );
+		
+		return appInfo.categoryInfo();
+	}
+
+	return 0;
 }

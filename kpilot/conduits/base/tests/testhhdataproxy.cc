@@ -69,10 +69,9 @@ void TestHHDataProxy::loadAllRecords()
 {
 }
 
-QString TestHHDataProxy::commitCreate( const Record *rec )
+void TestHHDataProxy::commitCreate( Record *rec )
 {
 	Q_UNUSED( rec );
-	return QString();
 }
 	
 void TestHHDataProxy::undoCommitCreate( const Record *rec )
@@ -80,8 +79,7 @@ void TestHHDataProxy::undoCommitCreate( const Record *rec )
 	Q_UNUSED( rec );
 }
 
-QString TestHHDataProxy::commitUpdate( const Record *rec )
+void TestHHDataProxy::commitUpdate( Record *rec )
 {
 	Q_UNUSED( rec );
-	return QString();
 }

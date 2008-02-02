@@ -32,11 +32,8 @@
 #include "pilotRecord.h"
 #include "pilotAppInfo.h"
 
-HHRecord::HHRecord( PilotRecord *record, PilotAppInfoBase *appInfo )
-	: fRecord( record ), fAppInfo( appInfo )
+HHRecord::HHRecord( PilotRecord *record ) : fRecord( record )
 {
-	if (fAppInfo && fRecord)
-		fCategory = fAppInfo->categoryName(fRecord->category());
 }
 
 HHRecord::~HHRecord()
@@ -47,7 +44,11 @@ HHRecord::~HHRecord()
 void HHRecord::setCategoryNames( const QStringList &cats )
 {
 	FUNCTIONSETUP;
+	Q_UNUSED( cats );
+	// FIXME: This type of logic should not be in the datamodel. Handle this in a
+	// more appropriate place like the hhdataproxy class.
 	
+	/*
 	int fCatId = -1;
 	
 	if( cats.size() < 1 )
@@ -116,14 +117,17 @@ void HHRecord::setCategoryNames( const QStringList &cats )
 			DEBUGKPILOT << "fAppInfo not initialized, category not changed";
 		}
 	}
+	*/
 }
 
 QStringList HHRecord::categoryNames() const
 {
 	FUNCTIONSETUP;
 	
+	// FIXME
+	
 	QStringList categories;
-	categories << fCategory;
+	//categories << fCategory;
 	
 	return categories;
 }
@@ -135,13 +139,7 @@ PilotRecord* HHRecord::pilotRecord() const
 	return fRecord;
 }
 
-PilotAppInfoBase* HHRecord::appInfo() const
-{
-	FUNCTIONSETUP;
-	
-	return fAppInfo;
-}
-
+/*
 void HHRecord::setCategory( int catId, const QString name )
 {
 	FUNCTIONSETUP;
@@ -154,13 +152,18 @@ void HHRecord::setCategory( int catId, const QString name )
 		fRecord->setCategory( catId );
 	}
 }
+*/
 
 QString HHRecord::categoryName() const
 {
 	FUNCTIONSETUP;
 	
-	return fCategory;
+	//FIXME: Make use of a category object here.
+	//return fCategory;
+	QString result;
+	return result;
 }
+
 
 int HHRecord::categoryId() const
 {

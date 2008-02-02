@@ -51,14 +51,17 @@ public:
 	
 	virtual void loadAllRecords();
 	
-	virtual QString commitCreate( const Record *rec );
-	
 	virtual void undoCommitCreate( const Record *rec );
-	
-	virtual QString commitUpdate( const Record *rec );
 	
 	virtual bool createDataStore() { return true; }
 	
 	QMap<QString, Record*>* records() { return &fRecords; }
+	
+protected:
+	virtual void commitCreate( Record *rec );
+	
+	virtual void commitUpdate( Record *rec );
+	
+	virtual CategoryAppInfo* readCategoryAppInfo() { return 0; };
 };
 #endif
