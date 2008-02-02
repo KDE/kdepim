@@ -1060,17 +1060,19 @@ void RecordConduit::copyCategory( const Record *from, HHRecord *to )
 		{
 			// Since the string is in the list of available categories,
 			// this *can't* fail.
-			int c = fHHDataProxy->categoryId( *it );
-			Q_ASSERT( Pilot::validCategory(c) );
-			//FIXME: Use the Category class here.
-			//to->setCategory( c, *it );
+			Category *cat = fHHDataProxy->category( *it );
+			Q_ASSERT( Pilot::validCategory( cat->index() ) );
+			to->setCategory( cat );
 			return;
 		}
 	}
 
-	//FIXME: Use the Category class here.
-	//to->setCategory( Pilot::Unfiled, i18nc( "No category set for this record"
-	//		, "Unfiled" ) );
+	// FIXME: There is no category on the handheld that is in the list of
+	// categories from the pcrecord. For now we set the hhrecord unfiled but here
+	// should be some code that tries to add the category to the handheld if
+	// possible.
+	Category *cat = fHHDataProxy->category( CSL1( "Unfiled") );
+	to->setCategory( cat );
 }
 
 void RecordConduit::copyCategory( const HHRecord *from, Record *to  )
