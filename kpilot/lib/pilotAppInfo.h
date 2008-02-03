@@ -115,6 +115,25 @@ public:
 	*/
 	bool setCategoryName(unsigned int i, const QString &s);
 
+	/*
+	 * Write this appinfo block to the database @p d; returns
+	 * the number of bytes written or -1 on failure. This
+	 * function is robust when called with a NULL database @p d.
+	 *
+	 * It would be nice if this could be pure virtual, but we should never
+	 * be dealing directly with this base class, so we'll at least not allow
+	 * this method to be executed. =:/
+	 *
+	 * TODO: We can actually implement saving the category information in
+	 * the base class directly, being that it's always the first segment of
+	 * the App Info block and always the same size.
+	 */
+	virtual int writeTo(PilotDatabase *d) {
+		Q_ASSERT(false);
+		Q_UNUSED(d);
+		return -1;
+	};
+
 	/** For debugging, display all the category names */
 	inline void dump() const
 	{
@@ -187,7 +206,7 @@ public:
 	* the number of bytes written or -1 on failure. This
 	* function is robust when called with a NULL database @p d.
 	*/
-	int writeTo(PilotDatabase *d)
+	virtual int writeTo(PilotDatabase *d)
 	{
 		unsigned char buffer[Pilot::MAX_APPINFO_SIZE];
 		if (!d || !d->isOpen())
