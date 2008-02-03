@@ -1,7 +1,7 @@
 /*
   This file is part of the blog resource.
 
-  Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
+  Copyright (c) 2007-2008 Mike Arthur <mike@mikearthur.co.uk>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -19,6 +19,12 @@
   Boston, MA 02110-1301, USA.
 */
 
+/*
+  TODO:
+  Configuration wizard.
+  Print out error messages to GUI.
+*/
+
 #include "resourceblog.h"
 
 #include <QDateTime>
@@ -27,6 +33,7 @@
 #include <KUrl>
 #include <KConfigGroup>
 #include <KLocale>
+#include <KMessageBox>
 
 #include <kcal/journal.h>
 #include <kcal/calendarlocal.h>
@@ -39,6 +46,7 @@
 #include <kblog/blogmedia.h>
 #include <kblog/movabletype.h>
 // #include <kblog/livejournal.h>
+#include <kblog/wordpressbuggy.h>
 #include <kblog/gdata.h>
 
 using namespace KCal;
@@ -146,6 +154,7 @@ QString ResourceBlog::password() const
 
 void ResourceBlog::setAPI( const QString &API )
 {
+  //TODO: Nasty, can we change KBlog to use a string we can get access to?
   if ( API == "Google Blogger Data" ) {
     mBlog = new KBlog::GData( mUrl, this );
 //  } else if ( API == "LiveJournal" ) {
@@ -156,6 +165,8 @@ void ResourceBlog::setAPI( const QString &API )
     mBlog = new KBlog::MetaWeblog( mUrl, this );
   } else if ( API == "Blogger 1.0" ) {
     mBlog = new KBlog::Blogger1( mUrl, this );
+  } else if ( API == "Movable Type (Wordpress <2.4, Drupal<=5.6 workarounds)" ) {
+    mBlog = new KBlog::WordpressBuggy( mUrl, this );
   } else {
     kError(5650) << "ResourceBlog::setAPI(): Unrecognised API:" << API;
     return;
@@ -167,19 +178,23 @@ void ResourceBlog::setAPI( const QString &API )
 QString ResourceBlog::API() const
 {
   if ( mBlog ) {
+    //TODO: Nasty, can we change KBlog to use a string we can get access to?
     if ( qobject_cast<KBlog::GData*>( mBlog ) ) {
       return "Google Blogger Data";
     }
 //    else if ( qobject_cast<KBlog::LiveJournal*>( mBlog ) ) {
 //      return "LiveJournal";
 //    }
-    else if ( qobject_cast<KBlog::MovableType*>( mBlog ) ) {
-      return "Movable Type";
-    }
-    else if ( qobject_cast<KBlog::MetaWeblog*>( mBlog ) ) {
-      return "MetaWeblog";
-    }
     else if ( qobject_cast<KBlog::Blogger1*>( mBlog ) ) {
+      if ( qobject_cast<KBlog::MetaWeblog*>( mBlog ) ) {
+        if ( qobject_cast<KBlog::MovableType*>( mBlog ) ) {
+          if ( qobject_cast<KBlog::WordpressBuggy*>( mBlog ) ) {
+            return "Movable Type (Wordpress <2.4, Drupal<=5.6 workarounds)";
+          }
+          return "Movable Type";
+        }
+        return "MetaWeblog";
+      }
       return "Blogger 1.0";
     }
   }
@@ -293,35 +308,33 @@ void ResourceBlog::slotError( const KBlog::Blog::ErrorType &type,
                               const QString &errorMessage )
 {
   kError(5650) << "ResourceBlog::slotError " << type << ": " << errorMessage;
-  mProgress->setComplete();
-  mProgress = 0;
-  //Q_ASSERT(false);
+  if ( mProgress ) {
+    mProgress->setComplete();
+    mProgress = 0;
+  }
+  emit resourceLoadError( this, errorMessage );
 }
 
 void ResourceBlog::slotErrorPost( const KBlog::Blog::ErrorType &type,
                               const QString &errorMessage,
                               KBlog::BlogPost *post )
 {
-  kError(5650) << "ResourceBlog::slotErrorPost " << type << ": " << errorMessage;
-  mProgress->setComplete();
-  mProgress = 0;
+  kError(5650) << "ResourceBlog::slotErrorPost()";
+  slotError( type, errorMessage );
   if ( post ) {
     delete post;
   }
-  //Q_ASSERT(false);
 }
 
 void ResourceBlog::slotErrorMedia( const KBlog::Blog::ErrorType &type,
                                      const QString &errorMessage,
                                      KBlog::BlogMedia *media )
 {
-  kError(5650) << "ResourceBlog::slotErrorMedia " << type << ": " << errorMessage;
-  mProgress->setComplete();
-  mProgress = 0;
+  kError(5650) << "ResourceBlog::slotErrorMedia()";
+  slotError( type, errorMessage );
   if ( media ) {
     delete media;
   }
-  //Q_ASSERT(false);
 }
 
 void ResourceBlog::slotSavedPost( KBlog::BlogPost *post )
@@ -454,21 +467,20 @@ void ResourceBlog::dump() const
   ResourceCalendar::dump();
   kDebug(5650) << "  URL: " << mUrl.url();
   kDebug(5650) << "  Username: " << mUsername;
-  kDebug(5650) << "  API: " << API();
-  kDebug(5650) << "  ReloadPolicy: " << reloadPolicy();
-  kDebug(5650) << "  BlogID: " << mBlogID;
-  kDebug(5650) << "  BlogName: " << mBlogName;
-  kDebug(5650) << "  DownloadCount: " << mDownloadCount;
+  kDebug(5650) << "  XML-RPC interface: " << API();
+  kDebug(5650) << "  Reload policy: " << reloadPolicy();
+  kDebug(5650) << "  Blog ID: " << mBlogID;
+  kDebug(5650) << "  Blog name: " << mBlogName;
+  kDebug(5650) << "  Posts to download: " << mDownloadCount;
 }
 
 void ResourceBlog::addInfoText( QString &txt ) const
 {
-  txt += "<br>";
-  txt += i18n( "URL: %1", mUrl.prettyUrl() );
-  txt += i18n( "Username: %1", mUsername );
-  txt += i18n( "API: %1", API() );
-  txt += i18n( "BlogName: %1", mBlogName );
-  txt += i18n( "DownloadCount: %1", mDownloadCount );
+  txt += "<br>" + i18n( "URL: %1", mUrl.prettyUrl() );
+  txt += "<br>" + i18n( "Username: %1", mUsername );
+  txt += "<br>" + i18n( "XML-RPC interface: %1", API() );
+  txt += "<br>" + i18n( "Blog name: %1", mBlogName );
+  txt += "<br>" + i18n( "Posts to download: %1", mDownloadCount );
 }
 
 bool ResourceBlog::setValue( const QString &key, const QString &value )
@@ -498,7 +510,10 @@ bool ResourceBlog::listBlogs() {
               SIGNAL( listedBlogs( const QList<QMap<QString,QString> > & ) ),
               this, SLOT( slotBlogInfoRetrieved(
                           const QList<QMap<QString,QString> > & ) ) );
-    //TODO: Error handling
+    connect ( blogger, SIGNAL( errorPost( const KBlog::Blog::ErrorType &,
+              const QString &, KBlog::BlogPost * ) ),
+              this, SLOT( slotErrorPost( const KBlog::Blog::ErrorType &,
+                          const QString &, KBlog::BlogPost * ) ) );
     blogger->listBlogs();
     return true;
   }
@@ -508,7 +523,10 @@ bool ResourceBlog::listBlogs() {
               SIGNAL( listedBlogs( const QList<QMap<QString,QString> > & ) ),
               this, SLOT( slotBlogInfoRetrieved(
                           const QList<QMap<QString,QString> > & ) ) );
-    //TODO: Error handling
+    connect ( gdata, SIGNAL( errorPost( const KBlog::Blog::ErrorType &,
+              const QString &, KBlog::BlogPost * ) ),
+              this, SLOT( slotErrorPost( const KBlog::Blog::ErrorType &,
+                          const QString &, KBlog::BlogPost * ) ) );
     gdata->listBlogs();
     return true;
   }

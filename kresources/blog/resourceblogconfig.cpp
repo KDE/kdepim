@@ -1,7 +1,7 @@
 /*
   This file is part of the blog resource.
 
-  Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
+  Copyright (c) 2007-2008 Mike Arthur <mike@mikearthur.co.uk>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -37,6 +37,8 @@ using namespace KCal;
 ResourceBlogConfig::ResourceBlogConfig
 ( QWidget *parent ) : KRES::ConfigWidget( parent )
 {
+  mBlog = new ResourceBlog();
+
   QGridLayout *mainLayout = new QGridLayout( this );
   mainLayout->setSpacing( KDialog::spacingHint() );
 
@@ -61,11 +63,13 @@ ResourceBlogConfig::ResourceBlogConfig
 
   label = new QLabel( i18n( "API:" ), this );
   mAPI = new KComboBox( false, this );
+  //TODO: Nasty, can we change KBlog to use a string we can get access to?
   mAPI->addItem( "Google Blogger Data" );
   mAPI->addItem( "LiveJournal" );
   mAPI->addItem( "Movable Type" );
   mAPI->addItem( "MetaWeblog" );
   mAPI->addItem( "Blogger 1.0" );
+  mAPI->addItem( "Movable Type (Wordpress <2.4, Drupal<=5.6 workarounds)" );
 
   mainLayout->addWidget( label, 4, 0 );
   mainLayout->addWidget( mAPI, 4, 1 );
@@ -93,6 +97,13 @@ ResourceBlogConfig::ResourceBlogConfig
   mainLayout->addWidget( mSaveConfig, 8, 0, 1, 2 );
 }
 
+ResourceBlogConfig::~ResourceBlogConfig()
+{
+  if ( mBlog ) {
+    delete (mBlog);
+  }
+}
+
 void ResourceBlogConfig::loadSettings( KRES::Resource *res )
 {
   ResourceBlog *resource = static_cast<ResourceBlog *>( res );
@@ -112,10 +123,10 @@ void ResourceBlogConfig::loadSettings( KRES::Resource *res )
     mReloadConfig->loadSettings( resource );
     mSaveConfig->loadSettings( resource );
     kDebug( 5650 ) << "ResourceBlogConfig::loadSettings(): reloaded";
-  } else {
-    kError( 5650 ) <<"ResourceBlogConfig::loadSettings():"
-                   << " no ResourceBlog, cast failed";
+    return;
   }
+  kError( 5650 ) <<"ResourceBlogConfig::loadSettings():"
+                  << " no ResourceBlog, cast failed";
 }
 
 void ResourceBlogConfig::saveSettings( KRES::Resource *res )
@@ -135,32 +146,27 @@ void ResourceBlogConfig::saveSettings( KRES::Resource *res )
     mReloadConfig->saveSettings( resource );
     mSaveConfig->saveSettings( resource );
     kDebug( 5650 ) << "ResourceBlogConfig::saveSettings(): saved";
-  } else {
-    kError( 5650 ) <<"ResourceBlogConfig::saveSettings():"
-      " no ResourceBlog, cast failed";
   }
+  kError( 5650 ) <<"ResourceBlogConfig::saveSettings():"
+    " no ResourceBlog, cast failed";
 }
 
 void ResourceBlogConfig::slotBlogInfoRetrieved(
     const QList<QMap<QString,QString> > &blogs )
 {
   kDebug( 5650 ) <<"ResourceBlogConfig::slotBlogInfoRetrieved()";
-  QList<QMap<QString,QString> >::const_iterator i;
-  for (i = blogs.constBegin(); i != blogs.constEnd(); ++i) {
-    mBlogs->addItem( (*i).value( "name" ), (*i).value( "id" ) );
+  QMap<QString,QString> blog;
+  foreach ( blog, blogs ) {
+    mBlogs->addItem( blog.value( "name" ), blog.value( "id" ) );
   }
   if ( mBlogs->count() ) {
     mBlogs->setEnabled( true );
-  }
-  if ( mBlog ) {
-    delete mBlog;
   }
 }
 
 void ResourceBlogConfig::slotBlogAPIChanged( int index )
 {
-  kDebug( 5650 ) <<"ResourceBlogConfig::slotBlogAPIChanged";
-  mBlog = new ResourceBlog();
+  kDebug( 5650 ) <<"ResourceBlogConfig::slotBlogAPIChanged()";
   if ( !mBlog ) {
     return;
   }
@@ -172,6 +178,7 @@ void ResourceBlogConfig::slotBlogAPIChanged( int index )
             const QList<QMap<QString,QString> > & ) ),
             this, SLOT( slotBlogInfoRetrieved(
                         const QList<QMap<QString,QString> > & ) ) );
+  //TODO: Error handling
   mBlog->listBlogs();
   mBlogs->clear();
   mBlogs->setEnabled( false );

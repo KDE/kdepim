@@ -1,7 +1,7 @@
 /*
   This file is part of the blog resource.
 
-  Copyright (c) 2007 Mike Arthur <mike@mikearthur.co.uk>
+  Copyright (c) 2007-2008 Mike Arthur <mike@mikearthur.co.uk>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -52,6 +52,11 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlogConfig : public KRES::ConfigWidget
       @param parent The parent widget to attach to.
     */
     ResourceBlogConfig( QWidget *parent = 0 );
+
+    /**
+      Destroy the configuration widget for blog resource.
+    */
+    ~ResourceBlogConfig();
 
   public Q_SLOTS:
     /**
