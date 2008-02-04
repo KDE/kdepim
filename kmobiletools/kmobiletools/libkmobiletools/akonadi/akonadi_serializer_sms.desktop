@@ -20,7 +20,7 @@ Name[pt_BR]=Serializador de SMS
 Name[sv]=SMS-serialisering
 Name[uk]=Серіалізатор SMS
 Name[x-test]=xxSMS Serializerxx
-Name[zh_CN]=短消息序列转换器
+Name[zh_CN]=手机短信序列转换器
 Name[zh_TW]=簡訊序列器
 Comment=An Akonadi serializer plugin for sms objects
 Comment[ca]=Un connector de serialització de l'Akonadi pels objectes SMS
@@ -42,7 +42,7 @@ Comment[pt]=Um 'plugin' de serialização do Akonadi para os objectos de SMS
 Comment[pt_BR]=Um 'plugin' de serialização do Akonadi para os objectos de SMS
 Comment[sv]=Ett insticksprogram till Akonadi för serialisering av SMS-objekt
 Comment[x-test]=xxAn Akonadi serializer plugin for sms objectsxx
-Comment[zh_CN]=对短消息对象进行序列转换的 Akonadi 插件
+Comment[zh_CN]=对手机短信对象进行序列转换的 Akonadi 插件
 Comment[zh_TW]=簡訊物件的 Akonadi 序列器外掛程式
 
 [Plugin]
