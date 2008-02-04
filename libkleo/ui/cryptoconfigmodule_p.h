@@ -223,7 +223,11 @@ namespace Kleo {
     virtual void doSave();
     virtual void doLoad();
   private:
+#ifdef ONLY_KLEO
+    FileNameRequester * m_UrlRequester;
+#else
     KUrlRequester * mUrlRequester;
+#endif
     QLineEdit * mLineEdit;
   };
 

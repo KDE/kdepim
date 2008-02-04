@@ -45,8 +45,9 @@
 #include <kglobal.h>
 #include <kcomponentdata.h>
 #include <kicon.h>
-#include <kurlrequester.h>
-
+#ifndef ONLY_KLEO
+# include <kurlrequester.h>
+#endif
 #include <QApplication>
 #include <QLabel>
 #include <QLayout>
@@ -60,6 +61,7 @@
 #include <QScrollArea>
 #include <QDesktopWidget>
 #include <QCheckBox>
+#include <QStyle>
 
 using namespace Kleo;
 
@@ -416,14 +418,18 @@ Kleo::CryptoConfigEntryPath::CryptoConfigEntryPath(
   glay->addWidget( req, row, 2 );
   if ( entry->isReadOnly() ) {
     label->setEnabled( false );
+#ifndef ONLY_KLEO
     if ( mUrlRequester )
         mUrlRequester->setEnabled( false );
+#endif
     if ( mFileNameRequester )
         mFileNameRequester->setEnabled( false );
   } else {
-      if ( mUrlRequester )
+#ifndef ONLY_KLEO
+	  if ( mUrlRequester )
           connect( mUrlRequester, SIGNAL(textChanged(QString)),
                    this, SLOT(slotChanged()) );
+#endif
       if ( mFileNameRequester )
           connect( mFileNameRequester, SIGNAL(fileNameChanged(QString)),
                    this, SLOT(slotChanged()) );
@@ -474,14 +480,18 @@ Kleo::CryptoConfigEntryDirPath::CryptoConfigEntryDirPath(
   glay->addWidget( req, row, 2 );
   if ( entry->isReadOnly() ) {
     label->setEnabled( false );
+#ifndef ONLY_KLEO
     if ( mUrlRequester )
         mUrlRequester->setEnabled( false );
+#endif
     if ( mFileNameRequester )
         mFileNameRequester->setEnabled( false );
   } else {
+#ifndef ONLY_KLEO
       if ( mUrlRequester )
           connect( mUrlRequester, SIGNAL(textChanged(QString)),
                    this, SLOT(slotChanged()) );
+#endif
       if ( mFileNameRequester )
           connect( mFileNameRequester, SIGNAL(fileNameChanged(QString)),
                    this, SLOT(slotChanged()) );
@@ -513,7 +523,9 @@ Kleo::CryptoConfigEntryURL::CryptoConfigEntryURL(
   Kleo::CryptoConfigEntry* entry, const QString& entryName,
   QGridLayout * glay, QWidget* widget, const char* name )
     : CryptoConfigEntryGUI( module, entry, entryName, name ),
+#ifndef ONLY_KLEO
       mUrlRequester( 0 ),
+#endif
       mLineEdit( 0 )
 {
   const int row = glay->rowCount();
@@ -530,8 +542,10 @@ Kleo::CryptoConfigEntryURL::CryptoConfigEntryURL(
   glay->addWidget( req, row, 2 );
   if ( entry->isReadOnly() ) {
     label->setEnabled( false );
+#ifndef ONLY_KLEO
     if ( mUrlRequester )
         mUrlRequester->setEnabled( false );
+#endif
     if ( mLineEdit )
         mLineEdit->setEnabled( false );
   } else {
