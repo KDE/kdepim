@@ -56,6 +56,7 @@ if ( USABLE_ASSUAN_FOUND )
 
     uiserver/uiserver.cpp
     uiserver/assuanserverconnection.cpp
+    uiserver/controller.cpp
     uiserver/echocommand.cpp
     uiserver/decryptverifyoperationwidget.cpp
     uiserver/decryptverifyresultwidget.cpp
