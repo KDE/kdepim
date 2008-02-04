@@ -51,6 +51,8 @@ class KLEO_EXPORT QGpgMECryptoConfig : public QObject, public Kleo::CryptoConfig
 
   Q_OBJECT
 public:
+    
+  static QString gpgConfPath();
   /**
    * Constructor
    */

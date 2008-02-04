@@ -40,6 +40,10 @@
 #include <kmessagebox.h>
 #include <klocale.h>
 #include <kshell.h>
+#include <KStandardDirs>
+
+#include <gpgme++/engineinfo.h>
+#include <gpgme++/global.h>
 
 #include <cassert>
 #include <ktemporaryfile.h>
@@ -61,6 +65,12 @@ static const int GPGCONF_FLAG_NOARG_DESC = 64; // option with optional arg; spec
 static const int GPGCONF_FLAG_NO_CHANGE = 128; // readonly
 // Change size of mFlags bitfield if adding new values here
 
+QString QGpgMECryptoConfig::gpgConfPath()
+{
+    const char* path = GpgME::engineInfo( GpgME::GpgConfEngine ).fileName();
+    return path ? QFile::decodeName( path ) : KStandardDirs::findExe( "gpgconf" );
+}
+
 QGpgMECryptoConfig::QGpgMECryptoConfig()
  :  mParsed( false )
 {
@@ -74,7 +84,8 @@ void QGpgMECryptoConfig::runGpgConf( bool showErrors )
 {
   // Run gpgconf --list-components to make the list of components
   KProcess process;
-  process << "gpgconf"; // must be in the PATH
+  
+  process << gpgConfPath();
   process << "--list-components";
 
 

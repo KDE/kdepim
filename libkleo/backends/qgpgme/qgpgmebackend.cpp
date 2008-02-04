@@ -258,7 +258,7 @@ QString Kleo::QGpgMEBackend::displayName() const {
 
 Kleo::CryptoConfig * Kleo::QGpgMEBackend::config() const {
   if ( !mCryptoConfig ) {
-    static bool hasGpgConf = !KStandardDirs::findExe( "gpgconf" ).isEmpty();
+    static bool hasGpgConf = !QGpgMECryptoConfig::gpgConfPath().isEmpty();
     if ( hasGpgConf )
       mCryptoConfig = new QGpgMECryptoConfig();
   }
