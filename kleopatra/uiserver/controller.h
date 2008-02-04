@@ -1,8 +1,8 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/encryptemailcontroller.h
+    uiserver/controller.h
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2008 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,60 +30,39 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_ENCRYPTEMAILCONTROLLER_H__
-#define __KLEOPATRA_UISERVER_ENCRYPTEMAILCONTROLLER_H__
+#ifndef __KLEOPATRA__UISERVER_CONTROLLER_H__
+#define __KLEOPATRA__UISERVER_CONTROLLER_H__
 
-#include "controller.h"
+#include <QObject>
 
 #include <utils/pimpl_ptr.h>
 
-#include <gpgme++/global.h>
-#include <kmime/kmime_header_parsing.h>
-
 #include <boost/shared_ptr.hpp>
+#include <boost/weak_ptr.hpp>
 
-#include <vector>
+class QDialog;
 
 namespace Kleo {
 
     class AssuanCommand;
 
-    class EncryptEMailController : public Controller {
+    class Controller : public QObject {
         Q_OBJECT
     public:
-        explicit EncryptEMailController( const boost::shared_ptr<AssuanCommand> & cmd, QObject * parent=0 );
-        ~EncryptEMailController();
+        explicit Controller( const boost::shared_ptr<AssuanCommand> & cmd, QObject * parent=0 );
+        ~Controller();
 
-        static const char * mementoName() { return "EncryptEMailController"; }
+        void setCommand( const boost::shared_ptr<AssuanCommand> & cmd );
+
+    protected:   
+        boost::weak_ptr<AssuanCommand> command() const;
+ 
+        void bringToForeground( QDialog* dlg );
         
-        void setProtocol( GpgME::Protocol proto );
-        const char * protocolAsString() const;
-        GpgME::Protocol protocol() const;
-
-        void startResolveRecipients( const std::vector<KMime::Types::Mailbox> & recipients );
-
-        void importIO();
-
-        void start();
-
-    public Q_SLOTS:
-        void cancel();
-
-    Q_SIGNALS:
-        void recipientsResolved();
-        void error( int err, const QString & details );
-        void done();
-
     private:
-
         class Private;
         kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotWizardRecipientsResolved() )
-        Q_PRIVATE_SLOT( d, void slotWizardCanceled() )
-        Q_PRIVATE_SLOT( d, void slotTaskDone() )
-        Q_PRIVATE_SLOT( d, void schedule() )
     };
 }
 
-#endif /* __KLEOPATRA_UISERVER_ENCRYPTEMAILCONTROLLER_H__ */
-
+#endif /* __KLEOPATRA__UISERVER_CONTROLLER_H__ */

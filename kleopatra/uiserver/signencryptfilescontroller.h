@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_UISERVER_SIGNENCRYPTFILESCONTROLLER_H__
 #define __KLEOPATRA_UISERVER_SIGNENCRYPTFILESCONTROLLER_H__
 
-#include <QObject>
+#include "controller.h"
 
 #include <utils/pimpl_ptr.h>
 
@@ -48,7 +48,7 @@ namespace Kleo {
 
     class AssuanCommand;
 
-    class SignEncryptFilesController : public QObject {
+    class SignEncryptFilesController : public Controller {
         Q_OBJECT
     public:
         explicit SignEncryptFilesController( const boost::shared_ptr<AssuanCommand> & cmd, QObject * parent=0 );

@@ -1169,15 +1169,7 @@ void AssuanCommand::doApplyWindowID( QDialog * dlg ) const {
     if ( QWidget * pw = QWidget::find( wid ) )
         dlg->setParent( pw );
     else {    	
-#ifdef Q_WS_WIN
-    	//On Windows, setMainWindow isn't implemented (maybe can't),
-    	//we try to bring the window to foreground instead
-    	KWindowSystem::forceActiveWindow( dlg->winId() );
-#else
-    	//with other platforms, try to associate widget with the calling application
-    	if ( wid )
-    		KWindowSystem::setMainWindow( dlg, wid );
-#endif
+        KWindowSystem::setMainWindow( dlg, wid );
     }
 }
 

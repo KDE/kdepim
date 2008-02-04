@@ -65,7 +65,7 @@ class SignEncryptFilesController::Private {
     friend class ::Kleo::SignEncryptFilesController;
     SignEncryptFilesController * const q;
 public:
-    explicit Private( const shared_ptr<AssuanCommand> & cmd, SignEncryptFilesController * qq );
+    explicit Private( SignEncryptFilesController * qq );
 
 private:
     void slotWizardOperationPrepared();
@@ -91,19 +91,17 @@ private:
 private:
     std::vector< shared_ptr<SignEncryptFilesTask> > runnable, completed;
     shared_ptr<SignEncryptFilesTask> cms, openpgp;
-    weak_ptr<AssuanCommand> command;
     QPointer<SignEncryptFilesWizard> wizard;
     unsigned int operation;
     Protocol protocol;
     bool errorDetected : 1;
 };
 
-SignEncryptFilesController::Private::Private( const shared_ptr<AssuanCommand> & cmd, SignEncryptFilesController * qq )
+SignEncryptFilesController::Private::Private( SignEncryptFilesController * qq )
     : q( qq ),
       runnable(),
       cms(),
       openpgp(),
-      command( cmd ),
       wizard(),
       operation( SignAllowed|EncryptAllowed ),
       protocol( UnknownProtocol ),
@@ -129,7 +127,7 @@ QString SignEncryptFilesController::Private::titleForOperation( unsigned int op 
 }
 
 SignEncryptFilesController::SignEncryptFilesController( const shared_ptr<AssuanCommand> & cmd, QObject * p )
-    : QObject( p ), d( new Private( cmd, this ) )
+    : Controller( cmd, p ), d( new Private( this ) )
 {
 
 }
@@ -394,9 +392,6 @@ void SignEncryptFilesController::Private::ensureWizardCreated() {
         return;
 
     std::auto_ptr<SignEncryptFilesWizard> w( new SignEncryptFilesWizard );
-    if ( const shared_ptr<AssuanCommand> cmd = command.lock() )
-        cmd->applyWindowID( w.get() );
-
     w->setWindowTitle( titleForOperation( operation ) );
     w->setAttribute( Qt::WA_DeleteOnClose );
 
@@ -407,10 +402,7 @@ void SignEncryptFilesController::Private::ensureWizardCreated() {
 
 void SignEncryptFilesController::Private::ensureWizardVisible() {
     ensureWizardCreated();
-    if ( wizard->isVisible() )
-        wizard->raise();
-    else
-        wizard->show();
+    q->bringToForeground( wizard );
 }
 
 void SignEncryptFilesController::Private::removeInputFiles() {

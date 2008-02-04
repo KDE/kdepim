@@ -62,7 +62,7 @@ class SignEMailController::Private {
     friend class ::Kleo::SignEMailController;
     SignEMailController * const q;
 public:
-    explicit Private( const shared_ptr<AssuanCommand> & cmd, SignEMailController * qq );
+    explicit Private( SignEMailController * qq );
 
 private:
     void slotWizardSignersResolved();
@@ -81,18 +81,16 @@ private:
 private:
     std::vector< shared_ptr<SignEMailTask> > runnable, completed; // ### extract to base
     shared_ptr<SignEMailTask> cms, openpgp; // ### extract to base
-    weak_ptr<AssuanCommand> command;    // ### extract to base
     QPointer<SignEncryptWizard> wizard; // ### extract to base
     Protocol protocol;                  // ### extract to base
     bool detached : 1;
 };
 
-SignEMailController::Private::Private( const shared_ptr<AssuanCommand> & cmd, SignEMailController * qq )
+SignEMailController::Private::Private( SignEMailController * qq )
     : q( qq ),
       runnable(),
       cms(),
       openpgp(),
-      command( cmd ),     
       wizard(),
       protocol( UnknownProtocol ),
       detached( false )
@@ -101,7 +99,7 @@ SignEMailController::Private::Private( const shared_ptr<AssuanCommand> & cmd, Si
 }
 
 SignEMailController::SignEMailController( const boost::shared_ptr<AssuanCommand> & cmd, QObject * p )
-    : QObject( p ), d( new Private( cmd, this ) )
+    : Controller( cmd, p ), d( new Private( this ) )
 {
 
 }
@@ -159,7 +157,7 @@ void SignEMailController::Private::slotWizardCanceled() {
 
 // ### extract to base
 void SignEMailController::importIO() {
-    const shared_ptr<AssuanCommand> cmd = d->command.lock();
+    const shared_ptr<AssuanCommand> cmd = command().lock();
     kleo_assert( cmd );
 
     const std::vector< shared_ptr<Input> > & inputs = cmd->inputs();
@@ -298,8 +296,6 @@ void SignEMailController::Private::ensureWizardCreated() {
         return;
 
     std::auto_ptr<SignEncryptWizard> w( new SignEncryptWizard );
-    if ( const shared_ptr<AssuanCommand> cmd = command.lock() )
-        cmd->applyWindowID( w.get() );
     // ### virtual hook here
     w->setWindowTitle( i18n("Sign Mail Message") );
 
@@ -325,10 +321,7 @@ void SignEMailController::Private::ensureWizardCreated() {
 // ### extract to base
 void SignEMailController::Private::ensureWizardVisible() {
     ensureWizardCreated();
-    if ( wizard->isVisible() )
-        wizard->raise();
-    else
-        wizard->show();
+    q->bringToForeground( wizard );
 }
 
 #include "moc_signemailcontroller.cpp"

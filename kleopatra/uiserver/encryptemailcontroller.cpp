@@ -62,7 +62,7 @@ class EncryptEMailController::Private {
     friend class ::Kleo::EncryptEMailController;
     EncryptEMailController * const q;
 public:
-    explicit Private( const shared_ptr<AssuanCommand> & cmd, EncryptEMailController * qq );
+    explicit Private( EncryptEMailController * qq );
 
 private:
     void slotWizardRecipientsResolved();
@@ -73,7 +73,6 @@ private:
     void ensureWizardCreated() const;
     void ensureWizardVisible();
     void cancelAllTasks();
-    void applyWindowID() const;
     
     void schedule();
     shared_ptr<EncryptEMailTask> takeRunnable( GpgME::Protocol proto );
@@ -82,32 +81,21 @@ private:
 private:
     std::vector< shared_ptr<EncryptEMailTask> > runnable, completed;
     shared_ptr<EncryptEMailTask> cms, openpgp;
-    weak_ptr<AssuanCommand> command;
     mutable QPointer<SignEncryptWizard> wizard;
 };
 
-EncryptEMailController::Private::Private( const shared_ptr<AssuanCommand> & cmd, EncryptEMailController * qq )
+EncryptEMailController::Private::Private( EncryptEMailController * qq )
     : q( qq ),
       runnable(),
       cms(),
       openpgp(),
-      command( cmd ),
       wizard()
 {
 
 }
 
-
-void EncryptEMailController::Private::applyWindowID() const
-{
-    if ( !wizard )
-        return;
-    if ( const shared_ptr<AssuanCommand> cmd = command.lock() )
-        cmd->applyWindowID( wizard );
-}
-
 EncryptEMailController::EncryptEMailController( const shared_ptr<AssuanCommand> & cmd, QObject * p )
-    : QObject( p ), d( new Private( cmd, this ) )
+    : Controller( cmd, p ), d( new Private( this ) )
 {
 
 }
@@ -125,12 +113,6 @@ void EncryptEMailController::setProtocol( Protocol proto ) {
                  protocol == proto );
 
     d->wizard->setPresetProtocol( proto );
-}
-
-void EncryptEMailController::setCommand( const shared_ptr<AssuanCommand> & cmd )
-{
-    d->command = cmd;
-    d->applyWindowID();
 }
 
 Protocol EncryptEMailController::protocol() const {
@@ -165,7 +147,7 @@ void EncryptEMailController::Private::slotWizardCanceled() {
 
 void EncryptEMailController::importIO() {
 
-    const shared_ptr<AssuanCommand> cmd = d->command.lock();
+    const shared_ptr<AssuanCommand> cmd = command().lock();
     kleo_assert( cmd );
 
     const std::vector< shared_ptr<Input> > & inputs = cmd->inputs();
@@ -301,15 +283,11 @@ void EncryptEMailController::Private::ensureWizardCreated() const {
     connect( w.get(), SIGNAL(recipientsResolved()), q, SLOT(slotWizardRecipientsResolved()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
     wizard = w.release();
-    applyWindowID();
 }
 
 void EncryptEMailController::Private::ensureWizardVisible() {
     ensureWizardCreated();
-    if ( wizard->isVisible() )
-        wizard->raise();
-    else
-        wizard->show();
+    q->bringToForeground( wizard );
 }
 
 #include "moc_encryptemailcontroller.cpp"
