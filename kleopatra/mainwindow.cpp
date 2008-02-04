@@ -74,6 +74,7 @@
 #include <ui/cryptoconfigdialog.h>
 #include <kleo/cryptoconfig.h>
 
+#include <backends/qgpgme/qgpgmecryptoconfig.h> // ### not public API 
 #include <gpgme++/key.h>
 
 #include <boost/bind.hpp>
@@ -401,7 +402,7 @@ void MainWindow::Private::checkConfiguration()
     // 1. start process
     QProcess process;
     process.setProcessChannelMode( QProcess::MergedChannels );
-    process.start( "gpgconf", QStringList() << "--check-config", QIODevice::ReadOnly );
+    process.start( QGpgMECryptoConfig::gpgConfPath(), QStringList() << "--check-config", QIODevice::ReadOnly );
 
 
     // 2. show dialog:
@@ -452,7 +453,10 @@ void MainWindow::Private::checkConfiguration()
 
 void MainWindow::Private::configureBackend() {
     Kleo::CryptoConfig * const config = Kleo::CryptoBackendFactory::instance()->config();
-    assert( config );
+    if ( !config ) {
+    	KMessageBox::error( q, i18n( "Could not configure the cryptography backend (gpgconf tool not found)" ), i18n( "Configuration Error" ) );
+    	return;
+    }
 
     Kleo::CryptoConfigDialog dlg( config );
 
