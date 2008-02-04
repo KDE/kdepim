@@ -222,12 +222,10 @@ namespace Kleo {
 
     virtual void doSave();
     virtual void doLoad();
+
   private:
-#ifdef ONLY_KLEO
 	QLineEdit * mLineEdit;
-#else
     KUrlRequester * mUrlRequester;
-#endif
   };
 
   /**
