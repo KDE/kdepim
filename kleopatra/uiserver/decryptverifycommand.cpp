@@ -65,6 +65,7 @@
 #include <KLocale>
 #include <KIconLoader>
 #include <KMessageBox>
+#include <KWindowSystem>
 
 #include <QFileDialog>
 #include <QObject>
@@ -268,6 +269,9 @@ public:
         if ( !wizard->isVisible() )
             wizard->show();
         wizard->raise();
+#ifdef Q_WS_WIN
+        KWindowSystem::forceActiveWindow( wizard->winId() );
+#endif
     }
 
 public Q_SLOTS:
