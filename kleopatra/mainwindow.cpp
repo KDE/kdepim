@@ -55,11 +55,13 @@
 #include <KAboutData>
 #include <KMessageBox>
 #include <KStandardGuiItem>
+#include <KStandardDirs>
 
 #include <QAbstractItemView>
 #include <QLabel>
 #include <QLineEdit>
 #include <QComboBox>
+#include <QFile>
 #include <QFileDialog>
 #include <QToolBar>
 #include <QWidgetAction>
@@ -74,7 +76,8 @@
 #include <ui/cryptoconfigdialog.h>
 #include <kleo/cryptoconfig.h>
 
-#include <backends/qgpgme/qgpgmecryptoconfig.h> // ### not public API 
+#include <gpgme++/engineinfo.h>
+#include <gpgme++/global.h>
 #include <gpgme++/key.h>
 
 #include <boost/bind.hpp>
@@ -87,6 +90,12 @@ using namespace boost;
 using namespace GpgME;
 
 namespace {
+	QString gpgConfPath()
+	{
+		const char* path = GpgME::engineInfo( GpgME::GpgConfEngine ).fileName();
+		return path ? QFile::decodeName( path ) : KStandardDirs::findExe( "gpgconf" );
+	}
+
     class ProgressBar : public QProgressBar {
         Q_OBJECT
     public:
@@ -402,7 +411,7 @@ void MainWindow::Private::checkConfiguration()
     // 1. start process
     QProcess process;
     process.setProcessChannelMode( QProcess::MergedChannels );
-    process.start( QGpgMECryptoConfig::gpgConfPath(), QStringList() << "--check-config", QIODevice::ReadOnly );
+    process.start( gpgConfPath(), QStringList() << "--check-config", QIODevice::ReadOnly );
 
 
     // 2. show dialog:
