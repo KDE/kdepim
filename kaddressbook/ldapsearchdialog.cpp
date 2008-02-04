@@ -20,7 +20,7 @@
 
 #include <QApplication>
 #include <QCheckBox>
-#include <q3groupbox.h>
+#include <qgroupbox.h>
 #include <q3header.h>
 #include <QLabel>
 #include <QMap>
@@ -159,13 +159,10 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
   topLayout->setSpacing( spacingHint() );
   topLayout->setMargin( marginHint() );
 
-  Q3GroupBox *groupBox = new Q3GroupBox( i18n( "Search for Addresses in Directory" ),
+  QGroupBox *groupBox = new QGroupBox( i18n( "Search for Addresses in Directory" ),
                                        page );
-  groupBox->setFrameShape( Q3GroupBox::Box );
-  groupBox->setFrameShadow( Q3GroupBox::Sunken );
-  groupBox->setColumnLayout( 0, Qt::Vertical );
   QGridLayout *boxLayout = new QGridLayout();
-  groupBox->layout()->addItem( boxLayout );
+  groupBox->setLayout( boxLayout );
   boxLayout->setSpacing( spacingHint() );
   boxLayout->setColumnStretch( 1, 1 );
 
@@ -559,14 +556,14 @@ KABC::Addressee::List LDAPSearchDialog::importContactsUnlessTheyExist( const QLi
     const QDateTime now = QDateTime::currentDateTime();
     QStringList importedAddrs;
     KABC::Addressee::List localAddrs;
-    
+
     KABLock::self( mCore->addressBook() )->lock( resource );
-    
+
     for ( QList<ContactListItem*>::ConstIterator it = selectedItems.begin(); it != selectedItems.end(); ++it ) {
       const ContactListItem * const cli = *it;
       KABC::Addressee addr = convertLdapAttributesToAddressee( cli->mAttrs );
       const KABC::Addressee::List existing = mCore->addressBook()->findByEmail( addr.preferredEmail() );
-    
+
       if ( existing.isEmpty() ) {
         addr.setUid( KRandom::randomString( 10 ) );
         addr.setNote( i18nc( "arguments are host name, datetime", "Imported from LDAP directory %1 on %2" ).arg( d->itemToServer[cli], KGlobal::locale()->formatDateTime( now ) ) );
