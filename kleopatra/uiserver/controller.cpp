@@ -102,7 +102,7 @@ void Controller::bringToForeground( QDialog* dlg )
         dlg->raise();
     else
         dlg->show();
-#if Q_WS_WIN
+#ifdef Q_WS_WIN
     KWindowSystem::forceActiveWindow( dlg->winId() );
 #endif
 }
