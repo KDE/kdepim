@@ -36,7 +36,7 @@ class PilotDatabase;
 class PilotAppInfoBase;
 class PilotRecord;
 class HHRecord;
-class Category;
+class HHCategory;
 
 struct CategoryAppInfo;
 
@@ -70,7 +70,7 @@ public:
 	 * Returns the Category object for the category with given name. If there is 
 	 * no category with given name, the unfiled category will be returned.
 	 */
-	Category* category( const QString &name ) const;
+	HHCategory* category( const QString &name ) const;
 	
 protected:
 	/**
@@ -125,7 +125,7 @@ protected:
 	PilotDatabase *fDatabase;
 	recordid_t fLastUsedUniqueId;
 	QList<recordid_t> fResettedRecords;
-	Category* fUnfiled;
-	QList<Category*> fCategories;
+	HHCategory* fUnfiled;
+	QList<HHCategory*> fCategories;
 };
 #endif

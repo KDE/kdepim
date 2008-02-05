@@ -33,7 +33,7 @@
 #include "kpilotSettings.h"
 
 #include "idmapping.h"
-#include "category.h"
+#include "hhcategory.h"
 #include "cudcounter.h"
 #include "dataproxy.h"
 #include "hhdataproxy.h"
@@ -1010,6 +1010,7 @@ void RecordConduit::copyCategory( const Record *from, HHRecord *to )
 {
 	FUNCTIONSETUP;
 	
+	/*
 	DEBUGKPILOT << "(Record *from, HHRecord *to)";
 		
 	if( !from || !to )
@@ -1073,12 +1074,13 @@ void RecordConduit::copyCategory( const Record *from, HHRecord *to )
 	// possible.
 	Category *cat = fHHDataProxy->category( CSL1( "Unfiled") );
 	to->setCategory( cat );
+	*/
 }
 
 void RecordConduit::copyCategory( const HHRecord *from, Record *to  )
 {
 	FUNCTIONSETUP;
-	
+	/*
 	DEBUGKPILOT << "(HHRecord *from, Record  *to)";
 	
 	if( !from || !to )
@@ -1112,4 +1114,5 @@ void RecordConduit::copyCategory( const HHRecord *from, Record *to  )
 	}
 
 	DEBUGKPILOT << "PC categories now: [" << pcCategories.join( "," ) << ']';
+	*/
 }

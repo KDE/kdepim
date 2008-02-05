@@ -30,10 +30,20 @@
 
 #include "options.h"
 
-class KPILOT_EXPORT Category {
+/**
+ * Class that contains additional category information stored on a handheld.
+ */
+class KPILOT_EXPORT HHCategory {
 
 public:
-	Category( QString name, bool renamed, int index, char id );
+	/**
+	 * Creates the "Unfiled" category.
+	 */
+	HHCategory();
+
+	HHCategory( QString name, bool renamed, int index, char id );
+	
+	HHCategory( const HHCategory &copy );
 
 	int index() const;
 	
@@ -46,6 +56,10 @@ public:
 	QString name() const;
 	
 	void setName( const QString &name );
+	
+	bool renamed() const;
+	
+	void setRenamed( bool renamed );
 
 private:
 	QString fName;

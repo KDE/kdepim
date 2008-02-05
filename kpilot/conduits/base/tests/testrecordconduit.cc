@@ -29,7 +29,6 @@
 
 #include "idmapping.h"
 #include "record.h"
-#include "category.h"
 
 #include "testrecordconduit.h"
 #include "testdataproxy.h"
@@ -128,12 +127,9 @@ bool TestRecordConduit::initDataProxies()
 		value1 = CSL1( "A value - " ) + QString::number( qrand() );
 		value2 = CSL1( "Another value - " ) + QString::number( qrand() );
 		
-		Category *c = new Category("First Test category", false, 1, '1' );
-		
 		hhRec = new TestHHRecord( fields, CSL1( "hh-2" ) );
 		hhRec->setValue( CSL1( "f1" ), value1 );
 		hhRec->setValue( CSL1( "f2" ), value2 );
-		hhRec->setCategory( c );
 		hhRec->setModified();
 		fHHDataProxy->records()->insert( hhRec->id(), hhRec );
 		

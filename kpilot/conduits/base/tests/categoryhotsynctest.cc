@@ -30,13 +30,14 @@
 
 #include "options.h"
 
-#include "category.h"
+#include "hhcategory.h"
 #include "record.h"
 #include "hhrecord.h"
 #include "idmapping.h"
 
 #include "testrecordconduit.h"
 #include "testhhrecord.h"
+#include "testrecord.h"
 
 /**
  * Testcases:
@@ -161,7 +162,7 @@ void CategoryHotSyncTest::initTestCase_652()
 	initTestCase();
 	
 	// Add a handheld record with a category to the hhdataproxy.
-	Category *c = new Category( "First Test category", false, 1, '1' );
+	HHCategory c( "First Test category", false, 1, '1' );
 		
 	TestHHRecord *hhRec = new TestHHRecord( QStringList(), CSL1( "hh-2" ) );
 	hhRec->setCategory( c );
@@ -177,7 +178,7 @@ void CategoryHotSyncTest::initTestCase_653a()
 	initTestCase();
 	
 	// Add a modified handheld record with a category to the hhdataproxy.
-	Category *c = new Category( "Second Test category", false, 2, '2' );
+	HHCategory c( "Second Test category", false, 2, '2' );
 		
 	TestHHRecord *hhRec = new TestHHRecord( QStringList(), CSL1( "hh-3" ) );
 	hhRec->setCategory( c );
@@ -186,7 +187,7 @@ void CategoryHotSyncTest::initTestCase_653a()
 	
 	// Add a handheld record with another (the previous) category to the backup 
 	// dataproxy.
-	c = new Category( "First Test category", false, 1, '1' );
+	c = HHCategory( "First Test category", false, 1, '1' );
 		
 	hhRec = new TestHHRecord( QStringList(), CSL1( "hh-3" ) );
 	hhRec->setCategory( c );
@@ -195,7 +196,7 @@ void CategoryHotSyncTest::initTestCase_653a()
 	// Add a pc record with the previous category to the pc dataproxy.
 	QString categorie( "First Test category" );
 		
-	TestRecord pcRec = new TestRecord( QStringList(), CSL1( "hh-3" ) );
+	TestRecord *pcRec = new TestRecord( QStringList(), CSL1( "hh-3" ) );
 	hhRec->setCategory( c );
 	fConduit->addBackupRecord( hhRec );
 }

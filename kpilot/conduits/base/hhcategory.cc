@@ -24,39 +24,62 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "category.h"
+#include "hhcategory.h"
 
-Category::Category( QString name, bool renamed, int index, char id )
+HHCategory::HHCategory() : fName( CSL1( "Unfiled" ) ), fRenamed( false )
+	, fIndex( 0 ), fId( '0' )
+{
+}
+
+HHCategory::HHCategory( QString name, bool renamed, int index, char id )
 	: fName( name ), fRenamed( renamed ), fIndex( index ), fId( id )
 {
 }
 
-int Category::index() const
+HHCategory::HHCategory( const HHCategory &copy )
+{
+	fName = copy.name();
+	fRenamed = copy.renamed();
+	fIndex = copy.index();
+	fId = copy.id();
+}
+
+int HHCategory::index() const
 {
 	return fIndex;
 }
 
-void Category::setIndex( const int index )
+void HHCategory::setIndex( const int index )
 {
 	fIndex = index;
 }
 
-char Category::id() const
+char HHCategory::id() const
 {
 	return fId;
 }
 
-void Category::setId( const char id )
+void HHCategory::setId( const char id )
 {
 	fId = id;
 }
 
-QString Category::name() const
+QString HHCategory::name() const
 {
 	return fName;
 }
 
-void Category::setName( const QString &name )
+void HHCategory::setName( const QString &name )
 {
 	fName = name;
+}
+
+bool HHCategory::renamed() const
+{
+	return fRenamed;
+}
+	
+void HHCategory::setRenamed( bool renamed )
+{
+	fRenamed = renamed;
 }

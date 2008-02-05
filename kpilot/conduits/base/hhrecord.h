@@ -30,15 +30,15 @@
 #include "kpilot_export.h"
 
 #include "record.h"
+#include "hhcategory.h"
 
 class PilotRecord;
-class Category;
 
 class KPILOT_EXPORT HHRecord : public Record {
 
 protected:
 	PilotRecord *fRecord;
-	const Category *fCategory;
+	HHCategory fCategory;
 	
 public:
 	HHRecord( PilotRecord *record );
@@ -68,12 +68,12 @@ public:
 	 * Sets the category information for this record. Also changes the category
 	 * information held in PilotRecord instance.
 	 */
-	void setCategory( const Category *c );
+	void setCategory( const HHCategory &c );
 	
 	/**
 	 * Returns the category of this HHRecord.
 	 */
-	const Category *category() const;
+	HHCategory category() const;
 	
 	virtual bool isArchived() const;
 	

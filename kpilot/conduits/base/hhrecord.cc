@@ -27,13 +27,13 @@
 
 #include "hhrecord.h"
 
-#include "category.h"
+#include "hhcategory.h"
 #include "options.h"
 #include "pilot.h"
 #include "pilotRecord.h"
 #include "pilotAppInfo.h"
 
-HHRecord::HHRecord( PilotRecord *record ) : fRecord( record ), fCategory( 0L )
+HHRecord::HHRecord( PilotRecord *record ) : fRecord( record )
 {
 }
 
@@ -126,7 +126,7 @@ QStringList HHRecord::categoryNames() const
 	FUNCTIONSETUP;
 	
 	QStringList categories;
-	categories << fCategory->name();
+	categories << fCategory.name();
 	
 	return categories;
 }
@@ -139,7 +139,7 @@ PilotRecord* HHRecord::pilotRecord() const
 }
 
 
-void HHRecord::setCategory( const Category *cat )
+void HHRecord::setCategory( const HHCategory &cat )
 {
 	FUNCTIONSETUP;
 	
@@ -147,41 +147,15 @@ void HHRecord::setCategory( const Category *cat )
 	
 	if( fRecord )
 	{
-		fRecord->setCategory( cat->index() );
+		fRecord->setCategory( cat.index() );
 	}
 }
 
-const Category* HHRecord::category() const
+HHCategory HHRecord::category() const
 {
 	FUNCTIONSETUP;
 	return fCategory;
 }
-
-/*
-QString HHRecord::categoryName() const
-{
-	FUNCTIONSETUP;
-	
-	//FIXME: Make use of a category object here.
-	//return fCategory;
-	QString result;
-	return result;
-}
-
-
-int HHRecord::categoryId() const
-{
-	FUNCTIONSETUP;
-	
-	if( fRecord )
-	{
-		return fRecord->category();
-	}
-	
-	// No record return unfiled.
-	return Pilot::Unfiled;
-}
-*/
 
 bool HHRecord::isArchived() const
 {

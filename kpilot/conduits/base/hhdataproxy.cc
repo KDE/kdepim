@@ -36,7 +36,7 @@
 #include "pilot.h"
 
 #include "hhrecord.h"
-#include "category.h"
+#include "hhcategory.h"
 
 HHDataProxy::HHDataProxy( PilotDatabase *db ) : fDatabase( db )
 	, fLastUsedUniqueId( 0L ), fUnfiled( 0L )
@@ -161,7 +161,7 @@ void HHDataProxy::loadCategories()
 			bool renamed = catAppInfo->renamed[i];
 			unsigned char id = catAppInfo->ID[i];
 			
-			Category *cat = new Category( name, renamed, i, id );
+			HHCategory *cat = new HHCategory( name, renamed, i, id );
 			fCategories.append( cat );
 			
 			if( i == (unsigned int) Pilot::Unfiled )
@@ -191,16 +191,19 @@ void HHDataProxy::loadAllRecords()
 			Record *rec = createHHRecord( pRec );
 			fRecords.insert( rec->id(), rec );
 			
-			Category *cat = fCategories[pRec->category()];
+			HHCategory *cat = fCategories[pRec->category()];
 			
 			if( cat )
 			{
 				// This essentialy doesn't add a category to the record but just the
 				// label for the category which is set in the pilot record.
-				QStringList categoryNames;
-				categoryNames.append( cat->name() );
 				
-				rec->setCategoryNames( categoryNames );
+				// FIXME: This is defenitly not the way to go.
+				
+				//QStringList categoryNames;
+				//categoryNames.append( cat->name() );
+				
+				//rec->setCategoryNames( categoryNames );
 			}
 			else
 			{
@@ -208,12 +211,14 @@ void HHDataProxy::loadAllRecords()
 				// bogus value. So we set it to 0, which is Unfiled normaly.
 				pRec->setCategory( 0 );
 				
-				//but if it does we set the category to Unfiled.
-				QStringList categoryNames;
-				categoryNames.append( i18nc( "Category not set for the record"
-					, "Unfiled" ) );
+				// FIXME: This is defenitly not the way to go.
 				
-				rec->setCategoryNames( categoryNames );
+				//but if it does we set the category to Unfiled.
+				//QStringList categoryNames;
+				//categoryNames.append( i18nc( "Category not set for the record"
+				//	, "Unfiled" ) );
+				
+				//rec->setCategoryNames( categoryNames );
 			}
 				
 			// Read the next one.
@@ -229,7 +234,7 @@ QStringList HHDataProxy::categoryNames() const
 {
 	QStringList names;
 	
-	foreach( Category *cat, fCategories )
+	foreach( HHCategory *cat, fCategories )
 	{
 		names.append( cat->name() );
 	}
@@ -239,7 +244,7 @@ QStringList HHDataProxy::categoryNames() const
 
 int HHDataProxy::categoryId( const QString &name ) const
 {
-	foreach( Category *cat, fCategories )
+	foreach( HHCategory *cat, fCategories )
 	{
 		if( name == cat->name() )
 		{
@@ -250,9 +255,9 @@ int HHDataProxy::categoryId( const QString &name ) const
 	return 0;
 }
 
-Category* HHDataProxy::category( const QString &name ) const
+HHCategory* HHDataProxy::category( const QString &name ) const
 {
-	foreach( Category *cat, fCategories )
+	foreach( HHCategory *cat, fCategories )
 	{
 		if( name == cat->name() )
 		{
