@@ -3,7 +3,7 @@ Friday, February 1st 2008
 Problems addressed
 -------------------
 
-* kolab/issue2036 Press "cancel" at the calender folder selection deletes an updated event. (76807)
+* kolab/issue2036 Press "cancel" at the calender folder selection deletes an updated event. (768070)
 * kolab/issue2214 Creating a calender in local folder where the user have no rights shouldn't be possible.(768402)
 * kolab/issue2433 Debug log of kio_sieve shows password in base64. (768539)
 * kolab/issue2387 Crash when creating a subfolder of the calendar folder.(768738)
