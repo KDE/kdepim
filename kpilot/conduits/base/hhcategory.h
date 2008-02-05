@@ -1,6 +1,6 @@
-#ifndef CATEGORY_H
-#define CATEGORY_H
-/* category.h			KPilot
+#ifndef HHCATEGORY_H
+#define HHCATEGORY_H
+/* hhcategory.h			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema <b.broeksema@kdemail.net>
 ** Copyright (C) 2007 by Jason "vanRijn" Kasper <vr@movingparts.net>
