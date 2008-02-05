@@ -92,8 +92,8 @@ using namespace GpgME;
 namespace {
 	QString gpgConfPath()
 	{
-		const char* path = GpgME::engineInfo( GpgME::GpgConfEngine ).fileName();
-		return path ? QFile::decodeName( path ) : KStandardDirs::findExe( "gpgconf" );
+	    const GpgME::EngineInfo info = GpgME::engineInfo( GpgME::GpgConfEngine );
+	    return info.fileName() ? QFile::decodeName( info.fileName() ) : KStandardDirs::findExe( "gpgconf" );
 	}
 
     class ProgressBar : public QProgressBar {
@@ -319,21 +319,21 @@ void MainWindow::Private::setupActions() {
     const action_data action_data[] = {
         // File menu
         { "file_new_certificate", i18n("New Certificate..."), QString(),
-          "document-new", q, SLOT(newCertificate()), i18n("Ctrl+N"), false, true },
+          "document-new", q, SLOT(newCertificate()), "Ctrl+N", false, true },
         { "file_export_certificates", i18n("Export Certificates..."), QString(),
-          "document-export", q, SLOT(exportCertificates()), i18n("Ctrl+E"), false, true }, // ### should be disabled until selected
+          "document-export", q, SLOT(exportCertificates()), "Ctrl+E", false, true }, // ### should be disabled until selected
         { "file_import_certificates", i18n("Import Certificates..."), QString(),
-          "document-import", q, SLOT(importCertificates()), i18n("Ctrl+I"), false, true }, // ### should be disabled until selected
+          "document-import", q, SLOT(importCertificates()), "Ctrl+I", false, true }, // ### should be disabled until selected
         // View menu
-        { "view_redisplay", i18n( "Redisplay" ), QString(),
-          "view-refresh", q, SLOT(refreshCertificates()), i18n("F5"), false, true },
+        { "view_redisplay", "Redisplay", QString(),
+          "view-refresh", q, SLOT(refreshCertificates()), "F5", false, true },
         { "view_stop_operations", i18n( "Stop Operation" ), QString(),
-          "process-stop", &controller, SLOT(cancelCommands()), i18n("Escape"), false, false },
+          "process-stop", &controller, SLOT(cancelCommands()), "Escape", false, false },
         { "view_certificate_details", i18n( "Certificate Details..." ), QString(),
           0, q, SLOT(certificateDetails()), QString(), false, true }, // ### should be disabled until selected
         // Certificate menu
         { "certificates_validate", i18n("Validate" ), QString()/*i18n("Validate selected certificates")*/,
-          "view-refresh", q, SLOT(validateCertificates()), i18n("SHIFT+F5"), false, true },
+          "view-refresh", q, SLOT(validateCertificates()), "SHIFT+F5", false, true },
         // CRLs menu
         // Tools menu
         // Window menu
