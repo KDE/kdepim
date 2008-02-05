@@ -15,12 +15,17 @@ Problems addressed
 
 Monday, January 28th 2008
 
+Warning
+--------
+The account password is shown in the debug output (See kolab/issue2344).
+Solution is to use "kdebugdialog" and switch "kio_sieve" off.
+
 Problems addressed
 -------------------
 
 * kolab/issue2387  Crash when creating a subfolder of the calendar folder. (767033)
 
-* kolab/issue2369 After locally unsubscribed a shared folder, the grey "user" and the grey "ltest1" folder didn't vanish. (765237)
+* kolab/issue2269 After locally unsubscribed a shared folder, the grey "user" and the grey "ltest1" folder didn't vanish. (765237)
 
 * kolab/issue2216 Crash in KMFolderSearch::addSerNum (764894)
 
