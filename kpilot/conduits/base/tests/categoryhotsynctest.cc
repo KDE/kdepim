@@ -100,31 +100,25 @@ void CategoryHotSyncTest::testCase_6_5_2()
 	// Preconditions:
 	// - The Handheld record should have a category.
 	// - The Handheld record should (always) have exactly one category.
-	// - PC Datastore should not contain that category.
 	Record* hhRec = fConduit->hhDataProxy()->records()->value( hhId );
 	
 	qDebug() << hhRec;
 	
-	QVERIFY( !hhRec->categoryNames().isEmpty() );
-	QCOMPARE( hhRec->categoryNames().size(), 1 );
+	QVERIFY( !hhRec->categories().isEmpty() );
+	QCOMPARE( hhRec->categories().size(), 1 );
 	
-	QString hhCat = hhRec->categoryNames().first();
-	
-	QVERIFY( !fConduit->pcDataProxy()->categoryNames().contains( hhCat ) );
+	Category hhCat = hhRec->categories().first();
 	
 	// Sync
 	fConduit->hotSyncTest();
 	
 	// Postconditions relevant for category syncing.
-	// - The pc datastore should have the categoryhotsynctest
 	// - The record in the pc datastore that maps to the hh record should have the
 	//   right Category.
-	QVERIFY( !fConduit->pcDataProxy()->categoryNames().contains( hhCat ) );
-	
 	QString pcId = fConduit->mapping()->pcRecordId( hhId );
 	Record *pcRec = fConduit->pcDataProxy()->records()->value( pcId );
 	
-	QVERIFY( pcRec->categoryNames().contains( hhCat ) );
+	QVERIFY( pcRec->categories().contains( hhCat ) );
 }
 
 /**

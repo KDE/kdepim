@@ -45,6 +45,7 @@ private:
 	bool fDeleted;
 	bool fArchived;
 	QMap<QString, QVariant> fValues;
+	QList<Category> fCategories;
 
 public:
 	TestHHRecord( const QStringList& fields, const QString &id );
@@ -76,6 +77,8 @@ public:
 	virtual bool isArchived() const { return fArchived; }
 	
 	virtual const QString id() const;
+	
+	virtual QList<Category> categories() const;
 	
 	virtual void setId( const QString &id );
 

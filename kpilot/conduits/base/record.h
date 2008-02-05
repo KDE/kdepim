@@ -32,6 +32,8 @@
 
 #include "kpilot_export.h"
 
+#include "category.h"
+
 /**
  * If subclassing Record, the only thing that should be reimplemented is the
  * isValid() function. If other methods are reimplemented it's not guaranteed
@@ -49,17 +51,12 @@ public:
 	 * Sets the id of this record to @p id;
 	 */
 	virtual void setId( const QString &id ) = 0;
-	
-	/**
-	 * Returns the catogories of this record.
-	 */
-	virtual QStringList categoryNames() const = 0;
-	
-	/**
-	 * Sets the categories which are filed for this record.
-	 */
-	virtual void setCategoryNames( const QStringList &names ) = 0;
 
+	/**
+	 * Returns the list of categories that is set for this record.
+	 */
+	virtual QList<Category> categories() const = 0;
+	
 	/**
 	 * Returns true if the record is modified and/or if it's marked as deleted.
 	 */

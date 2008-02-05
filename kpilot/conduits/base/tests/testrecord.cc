@@ -90,6 +90,11 @@ const QString TestRecord::id() const
 {
 	return fId;
 }
+
+QList<Category> TestRecord::categories() const
+{
+	return fCategories;
+}
 	
 void TestRecord::setId( const QString &id )
 {

@@ -94,6 +94,11 @@ const QString TestHHRecord::id() const
 {
 	return fId;
 }
+
+QList<Category> TestHHRecord::categories() const
+{
+	return fCategories;
+}
 	
 void TestHHRecord::setId( const QString &id )
 {

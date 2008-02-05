@@ -41,6 +41,7 @@ private:
 	bool fModified;
 	bool fDeleted;
 	QMap<QString, QVariant> fValues;
+	QList<Category> fCategories;
 	
 public:
 	TestRecord( const TestHHRecord *other );
@@ -50,10 +51,6 @@ public:
 	TestRecord( const QStringList& fields );
 	
 	TestRecord( const QStringList& fields, const QString &id );
-	
-	virtual void setCategoryNames( const QStringList &cats ) { Q_UNUSED( cats ); }
-	
-	virtual QStringList categoryNames() const { return QStringList(); }
 	
 	virtual ~TestRecord() {};
 	
@@ -74,6 +71,8 @@ public:
 	/** IMPLEMTED VIRTUAL FUNCTIONS FROM BASECLASS **/
 	
 	virtual const QString id() const;
+	
+	virtual QList<Category> categories() const;
 	
 	virtual void setId( const QString &id );
 
