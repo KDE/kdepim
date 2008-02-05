@@ -27,11 +27,13 @@
 
 #include <options.h>
 
+#include "idmapping.h"
+#include "record.h"
+#include "category.h"
+
 #include "testrecordconduit.h"
 #include "testdataproxy.h"
 #include "testhhdataproxy.h"
-#include "idmapping.h"
-#include "record.h"
 #include "testrecord.h"
 #include "testhhrecord.h"
 
@@ -64,10 +66,10 @@ bool TestRecordConduit::initDataProxies()
 		/*
 		 * The following table gives the status of the TestRecordConduit before sync.
 		 *
-		 * CASE  |      PC   |M| HH & BACKUP    |
+		 * CASE  |      PC   |M| HH & BACKUP    | Notes
 		 *       |   Id |STAT| | BU | HH | Id   |
 		 * 6.5.1 | pc-1 |  - |Y|  - |  - | hh-1 |
-		 * 6.5.2 |      |  X |N|  X |  N | hh-2 |
+		 * 6.5.2 |      |  X |N|  X |  N | hh-2 | HHRecord has category
 		 * 6.5.3 | pc-2 |  - |Y|  - |  M | hh-3 |
 		 * 6.5.4 | pc-3 |  - |Y|  - |  D | hh-4 |
 		 * 6.5.5 | pc-4 |  N |N|  X |  X |      |
@@ -126,9 +128,12 @@ bool TestRecordConduit::initDataProxies()
 		value1 = CSL1( "A value - " ) + QString::number( qrand() );
 		value2 = CSL1( "Another value - " ) + QString::number( qrand() );
 		
+		Category *c = new Category("First Test category", false, 1, '1' );
+		
 		hhRec = new TestHHRecord( fields, CSL1( "hh-2" ) );
 		hhRec->setValue( CSL1( "f1" ), value1 );
 		hhRec->setValue( CSL1( "f2" ), value2 );
+		hhRec->setCategory( c );
 		hhRec->setModified();
 		fHHDataProxy->records()->insert( hhRec->id(), hhRec );
 		

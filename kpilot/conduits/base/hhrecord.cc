@@ -125,10 +125,8 @@ QStringList HHRecord::categoryNames() const
 {
 	FUNCTIONSETUP;
 	
-	// FIXME
-	
 	QStringList categories;
-	//categories << fCategory;
+	categories << fCategory->name();
 	
 	return categories;
 }
