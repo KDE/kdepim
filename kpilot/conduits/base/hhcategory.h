@@ -28,12 +28,12 @@
 
 #include <QtCore/QString>
 
-#include "options.h"
+#include "category.h"
 
 /**
  * Class that contains additional category information stored on a handheld.
  */
-class KPILOT_EXPORT HHCategory {
+class KPILOT_EXPORT HHCategory : public Category {
 
 public:
 	/**
@@ -53,16 +53,11 @@ public:
 	
 	void setId( const char id );
 	
-	QString name() const;
-	
-	void setName( const QString &name );
-	
 	bool renamed() const;
 	
 	void setRenamed( bool renamed );
 
 private:
-	QString fName;
 	bool fRenamed;
 	int fIndex;
 	char fId;

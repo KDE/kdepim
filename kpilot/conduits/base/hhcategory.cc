@@ -26,19 +26,18 @@
 
 #include "hhcategory.h"
 
-HHCategory::HHCategory() : fName( CSL1( "Unfiled" ) ), fRenamed( false )
+HHCategory::HHCategory() : Category( CSL1( "Unfiled" ) ), fRenamed( false )
 	, fIndex( 0 ), fId( '0' )
 {
 }
 
 HHCategory::HHCategory( QString name, bool renamed, int index, char id )
-	: fName( name ), fRenamed( renamed ), fIndex( index ), fId( id )
+	: Category( name ), fRenamed( renamed ), fIndex( index ), fId( id )
 {
 }
 
-HHCategory::HHCategory( const HHCategory &copy )
+HHCategory::HHCategory( const HHCategory &copy ) : Category( copy )
 {
-	fName = copy.name();
 	fRenamed = copy.renamed();
 	fIndex = copy.index();
 	fId = copy.id();
@@ -62,16 +61,6 @@ char HHCategory::id() const
 void HHCategory::setId( const char id )
 {
 	fId = id;
-}
-
-QString HHCategory::name() const
-{
-	return fName;
-}
-
-void HHCategory::setName( const QString &name )
-{
-	fName = name;
 }
 
 bool HHCategory::renamed() const
