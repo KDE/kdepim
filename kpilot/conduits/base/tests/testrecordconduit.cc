@@ -625,3 +625,20 @@ void TestRecordConduit::copyPCToHHTest()
 	copyPCToHH();
 }
 
+void TestRecordConduit::addHHRecord( HHRecord *rec )
+{
+	static_cast<TestHHDataProxy*>( fHHDataProxy )->records()
+		->insert( rec->id(), rec );
+}
+
+void TestRecordConduit::addBackupRecord( HHRecord *rec )
+{
+	static_cast<TestHHDataProxy*>( fBackupDataProxy )->records()
+		->insert( rec->id(), rec );
+}
+
+void TestRecordConduit::addPCRecord( Record *rec )
+{
+	static_cast<TestDataProxy*>( fPCDataProxy )->records()
+		->insert( rec->id(), rec );
+}

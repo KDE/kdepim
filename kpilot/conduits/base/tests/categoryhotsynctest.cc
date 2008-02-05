@@ -30,10 +30,13 @@
 
 #include "options.h"
 
+#include "category.h"
 #include "record.h"
+#include "hhrecord.h"
 #include "idmapping.h"
 
 #include "testrecordconduit.h"
+#include "testhhrecord.h"
 
 /**
  * Testcases:
@@ -42,15 +45,10 @@
  *       |  Id |STAT| |BU|HH| Id  | Resolution for hotSync and hhOverides
  * ******|*****|****|*|**|**|*****|*********************************************
  * 6.5.2 |     |  X |N| X| N|hh-2 | add to pc
- *
- * 6.5.2a Category does not exist on PCDataProxy -> add category to list
- * 6.5.2b Category does not exist on PCDataProxy -> Make sure the category exists
- *                                                  only once.
- * ******|*****|****|*|**|**|*****|*********************************************
- *
+ * 6.5.3 |pc-2 |  - |Y| -| M|hh-3 | sync hh to pc
  *
  ********* Needs attention, for now just a copy from rchotsynctest ************
- * 6.5.3 |pc-2 |  - |Y| -| M|hh-3 | sync hh to pc
+ *
  * 6.5.4 |pc-3 |  - |Y| -| D|hh-4 | delete from pc
  * 6.5.5 |pc-4 |  N |N| X| X|     | add to hh
  * 6.5.6 |pc-5 |  M |Y| -| -|hh-5 | sync pc to hh
@@ -74,28 +72,27 @@ class CategoryHotSyncTest : public QObject
 	Q_OBJECT
 
 private slots:
-	void testCase_6_5_2a();
+	void testCase_6_5_2();
 
 private:
 	TestRecordConduit *fConduit;
 	
 	void initTestCase();
+	
+	/** These methods set up the preconditions for the tests. */
+	void initTestCase_652();
+	void initTestCase_653a();
 };
 
-void CategoryHotSyncTest::initTestCase()
-{
-	// NOTE: 2 == eHHOverrides, this is important for the solveConflict() method
-	QVariantList args = QVariantList() << CSL1( "--fullsync" )
-		<< CSL1( "--conflictResolution 2" );
-	
-	fConduit = new TestRecordConduit( args, true );
-	fConduit->initDataProxies();
-}
-
-void CategoryHotSyncTest::testCase_6_5_2a()
+/**
+ * Because of the fact that a record on the handheld only supports one category,
+ * we only have to test this one case. Wether a record on the pc supports one or
+ * more categories does not matter here.
+ */
+void CategoryHotSyncTest::testCase_6_5_2()
 {
 	// Set up the conduit and the dataproxies.
-	initTestCase();
+	initTestCase_652();
 	
 	QString hhId( "hh-2" );
 	
@@ -104,6 +101,8 @@ void CategoryHotSyncTest::testCase_6_5_2a()
 	// - The Handheld record should (always) have exactly one category.
 	// - PC Datastore should not contain that category.
 	Record* hhRec = fConduit->hhDataProxy()->records()->value( hhId );
+	
+	qDebug() << hhRec;
 	
 	QVERIFY( !hhRec->categoryNames().isEmpty() );
 	QCOMPARE( hhRec->categoryNames().size(), 1 );
@@ -125,6 +124,80 @@ void CategoryHotSyncTest::testCase_6_5_2a()
 	Record *pcRec = fConduit->pcDataProxy()->records()->value( pcId );
 	
 	QVERIFY( pcRec->categoryNames().contains( hhCat ) );
+}
+
+/**
+ * Case 6.5.3 can be split up in several options. If the category has changed on
+ * the handheld it can be that:
+ *
+ * a) No category was set on the pc, the record supports more categories
+ * b) No category was set on the pc, the record supports only one category
+ *    (e.g. keyring conduit)
+ * c) A category was set on the pc, the record supports only one category
+ * d) Another category is set on the pc but the record supports more categories
+ *    and does contain the new category of the hh record already.
+ * e) Another category is set on the pc, the record supports more categories
+ *    but does contain the new category of the hh record already.
+ */
+ 
+
+
+/** ***************************************************************************
+ *                      Initialization of test cases                          *
+ ******************************************************************************/
+void CategoryHotSyncTest::initTestCase()
+{
+	// NOTE: 2 == eHHOverrides, this is important for the solveConflict() method
+	QVariantList args = QVariantList() << CSL1( "--hotsync" )
+		<< CSL1( "--conflictResolution 2" );
+	
+	fConduit = new TestRecordConduit( args, false );
+	fConduit->initDataProxies();
+}
+
+void CategoryHotSyncTest::initTestCase_652()
+{
+	// Set up the conduit
+	initTestCase();
+	
+	// Add a handheld record with a category to the hhdataproxy.
+	Category *c = new Category( "First Test category", false, 1, '1' );
+		
+	TestHHRecord *hhRec = new TestHHRecord( QStringList(), CSL1( "hh-2" ) );
+	hhRec->setCategory( c );
+	hhRec->setModified();
+	fConduit->addHHRecord( hhRec );
+}
+
+void CategoryHotSyncTest::initTestCase_653a()
+{
+	// 6.5.3 |pc-2 |  - |Y| -| M|hh-3 | sync hh to pc
+	
+	// Set up the conduit
+	initTestCase();
+	
+	// Add a modified handheld record with a category to the hhdataproxy.
+	Category *c = new Category( "Second Test category", false, 2, '2' );
+		
+	TestHHRecord *hhRec = new TestHHRecord( QStringList(), CSL1( "hh-3" ) );
+	hhRec->setCategory( c );
+	hhRec->setModified();
+	fConduit->addHHRecord( hhRec );
+	
+	// Add a handheld record with another (the previous) category to the backup 
+	// dataproxy.
+	c = new Category( "First Test category", false, 1, '1' );
+		
+	hhRec = new TestHHRecord( QStringList(), CSL1( "hh-3" ) );
+	hhRec->setCategory( c );
+	fConduit->addBackupRecord( hhRec );
+	
+	// Add a pc record with the previous category to the pc dataproxy.
+	QString categorie( "First Test category" );
+		
+	TestRecord pcRec = new TestRecord( QStringList(), CSL1( "hh-3" ) );
+	hhRec->setCategory( c );
+	fConduit->addBackupRecord( hhRec );
 }
 
 QTEST_KDEMAIN( CategoryHotSyncTest, NoGUI )

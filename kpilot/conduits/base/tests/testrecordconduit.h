@@ -88,6 +88,12 @@ public:
 	
 	IDMapping *mapping() { return fMapping; }
 
+	void addHHRecord( HHRecord *rec );
+	
+	void addBackupRecord( HHRecord *rec );
+	
+	void addPCRecord( Record *rec );
+
 protected:
 	virtual void _copy( const Record *from, HHRecord *to );
 
