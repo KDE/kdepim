@@ -45,21 +45,6 @@ public:
 
 	virtual ~HHRecord();
 	
-	/**
-	 * Sets the (a handheld record only has one) category to this record. It
-	 * should be mentioned that only the label is set. This gets associated with
-	 * the category id set in fPilotRecord. The caller should make sure that it is
-	 * the label that can be found in the appinfo block of the database which
-	 * contains this record. If you want to change the category use 
-	 * setCategory( int id, const QString &label).
-	 */
-	virtual void setCategoryNames( const QStringList &categories );
-	
-	/**
-	 * Returns the catogories of this record.
-	 */
-	virtual QStringList categoryNames() const;
-	
 	/** HHRecord methods */
 	
 	PilotRecord* pilotRecord() const;
