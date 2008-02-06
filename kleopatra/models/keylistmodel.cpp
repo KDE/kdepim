@@ -613,10 +613,9 @@ QList<QModelIndex> HierarchicalKeyListModel::doAddKeys( const std::vector<Key> &
 
     std::vector<Key> merged;
     merged.reserve( keys.size() + mKeysByFingerprint.size() );
-    std::merge( keys.begin(), keys.end(),
-                mKeysByFingerprint.begin(), mKeysByFingerprint.end(),
-                std::back_inserter( merged ), ByFingerprint<std::less>() );
-    merged.erase( std::unique( merged.begin(), merged.end(), ByFingerprint<std::equal_to>() ), merged.end() );
+    std::set_union( keys.begin(), keys.end(),
+                    mKeysByFingerprint.begin(), mKeysByFingerprint.end(),
+                    std::back_inserter( merged ), ByFingerprint<std::less>() );
     
     mKeysByFingerprint = merged;
 
