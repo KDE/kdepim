@@ -240,7 +240,8 @@ bool KeyringHHDataProxy::createDataStore()
 			new KeyringHHRecord( i18n("KPilot cares"), i18n("KDE"), "",
 					i18n("Thanks for using KPilot!"), fDesKey);
 		
-		fFirstRecord->setCategoryNames(QStringList() << CSL1("Web"));
+		// FIXME: This is deprecated code.
+		//fFirstRecord->setCategoryNames(QStringList() << CSL1("Web"));
 		
 		fDatabase->writeRecord( fFirstRecord->pilotRecord() );
 		

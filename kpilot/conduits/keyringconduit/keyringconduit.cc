@@ -192,18 +192,7 @@ bool KeyringConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 		return false;
 	}
 	
-	const KeyringHHRecord *krPCRec = static_cast<const KeyringHHRecord*>( pcRec );
-	const KeyringHHRecord *krHHRec = static_cast<const KeyringHHRecord*>( hhRec );
-	
-	bool equal = true;
-	
-	equal = equal && ( krPCRec->name() == krHHRec->name() );
-	equal = equal && ( krPCRec->account() == krHHRec->account() );
-	equal = equal && ( krPCRec->password() == krHHRec->password() );
-	equal = equal && ( krPCRec->notes() == krHHRec->notes() );
-	equal = equal && ( krPCRec->category()->index() == krHHRec->category()->index() );
-	
-	return equal;
+	return pcRec->equal( hhRec );
 }
 
 Record* KeyringConduit::createPCRecord( const HHRecord *hhRec )
