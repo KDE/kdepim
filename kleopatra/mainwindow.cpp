@@ -45,6 +45,7 @@
 #include "commands/importcertificatecommand.h"
 #include "commands/refreshkeyscommand.h"
 #include "commands/detailscommand.h"
+#include "commands/deletecertificatescommand.h"
 
 #include <KActionCollection>
 #include <KLocale>
@@ -152,6 +153,9 @@ public:
     }
     void validateCertificates() {
         ( new RefreshKeysCommand( RefreshKeysCommand::Validate, currentView(), &controller ) )->start();
+    }
+    void deleteCertificates() {
+        ( new DeleteCertificatesCommand( currentView(), &controller ) )->start();
     }
     void exportCertificates() {
         ( new ExportCertificateCommand( currentView(), &controller ) )->start();
@@ -334,13 +338,15 @@ void MainWindow::Private::setupActions() {
         // Certificate menu
         { "certificates_validate", i18n("Validate" ), QString()/*i18n("Validate selected certificates")*/,
           "view-refresh", q, SLOT(validateCertificates()), "SHIFT+F5", false, true },
+        { "certificates_delete", i18n("Delete" ), QString()/*i18n("Delete selected certificates")*/,
+          "edit-delete", q, SLOT(deleteCertificates()), "Delete", false, true },
         // CRLs menu
         // Tools menu
         // Window menu
         // (come from ui.tabWidget)
     };
 
-    make_actions_from_data( action_data, sizeof action_data / sizeof *action_data, coll );
+    make_actions_from_data( action_data, /*sizeof action_data / sizeof *action_data,*/ coll );
 
     if ( QAction * action = coll->action( "view_stop_operations" ) )
         connect( &controller, SIGNAL(commandsExecuting(bool)), action, SLOT(setEnabled(bool)) );

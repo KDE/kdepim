@@ -107,6 +107,7 @@ set( _kleopatra_common_SRCS
    commands/exportcertificatecommand.cpp
    commands/importcertificatecommand.cpp
    commands/refreshkeyscommand.cpp
+   commands/deletecertificatescommand.cpp
    controllers/keylistcontroller.cpp
    models/keycache.cpp
    models/keylistmodel.cpp
