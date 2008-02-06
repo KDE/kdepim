@@ -173,6 +173,11 @@ TestRecord* TestRecord::duplicate() const
 	return new TestRecord( this );
 }
 
+void TestRecord::setSupportsMultipleCategories( bool support )
+{
+	fSupportsMultipleCategories = support;
+}
+
 
 bool TestRecord::equal( const Record *rec ) const
 {

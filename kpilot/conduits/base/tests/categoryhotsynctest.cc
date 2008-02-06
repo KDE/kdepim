@@ -75,6 +75,7 @@ class CategoryHotSyncTest : public QObject
 private slots:
 	void testCase_6_5_2();
 	void testCase_6_5_3a();
+	void testCase_6_5_3b();
 	
 	void cleanupTestCase();
 
@@ -86,6 +87,7 @@ private:
 	/** These methods set up the preconditions for the tests. */
 	void initTestCase_652();
 	void initTestCase_653a();
+	void initTestCase_653b();
 };
 
 /**
@@ -134,10 +136,14 @@ void CategoryHotSyncTest::testCase_6_5_2()
  * a) No category was set on the pc, the record supports more categories
  * b) No category was set on the pc, the record supports only one category
  *    (e.g. keyring conduit)
- * c) A category was set on the pc, the record supports only one category
- * d) Another category is set on the pc but the record supports more categories
+ * c) A category was set on the pc, the record supports only one category, the
+ *    conduit fails to set the Category on the pc record for some reason.
+ *    (e.g. When there's no room to store the new Category -> KeyringConduit)
+ * d) A category was set on the pc, the record supports only one category, the
+ *    conduit succeeds to set the Category on the pc record.
+ * e) Another category is set on the pc but the record supports more categories
  *    and does contain the new category of the hh record already.
- * e) Another category is set on the pc, the record supports more categories
+ * f) Another category is set on the pc, the record supports more categories
  *    but does contain the new category of the hh record already.
  */
 void CategoryHotSyncTest::testCase_6_5_3a()
@@ -186,7 +192,55 @@ void CategoryHotSyncTest::testCase_6_5_3a()
 	QCOMPARE( pcRec->categories().size(), 1 );
 	QVERIFY( pcRec->categories().first() == hhRec->categories().first() );
 	QVERIFY( backupRec->categories().first() == hhRec->categories().first() );
+}
+
+void CategoryHotSyncTest::testCase_6_5_3b()
+{
+	// Set up the test case
+	initTestCase_653b();
 	
+	// Preconditions:
+	// - The handheld record is modified and has a category, and supports only one
+	//   category.
+	// - The backup record does have the "Unfiled" category set and only supports
+	//   one category.
+	// - The pc record has no category but supports only one category.
+	// - There is a mapping for the records.
+	QString hhId( "hh-3" );
+	QString pcId( "pc-2" );
+	
+	Record *hhRec = fConduit->hhDataProxy()->records()->value( hhId );
+	Record *backupRec = fConduit->backupDataProxy()->records()->value( hhId );
+	Record *pcRec = fConduit->pcDataProxy()->records()->value( pcId );
+	
+	QVERIFY( hhRec->isModified() );
+	QCOMPARE( hhRec->categories().size(), 1 );
+	QVERIFY( hhRec->categories().first()->name() != QString( "Unfiled") );
+	QVERIFY( !hhRec->supportsMultipleCategories() );
+	
+	QVERIFY( !backupRec->isModified() );
+	QCOMPARE( backupRec->categories().size(), 1 );
+	QCOMPARE( backupRec->categories().first()->name(), QString( "Unfiled") );
+	QVERIFY( !backupRec->supportsMultipleCategories() );
+	
+	QVERIFY( !pcRec->isModified() );
+	QCOMPARE( pcRec->categories().size(), 0 );
+	// Supports only one
+	QVERIFY( !pcRec->supportsMultipleCategories() );
+	
+	QCOMPARE( fConduit->mapping()->pcRecordId( hhId ), pcId );
+	
+	// Sync
+	fConduit->hotSyncTest();
+	
+	// Postconditions
+	hhRec = fConduit->hhDataProxy()->records()->value( hhId );
+	backupRec = fConduit->backupDataProxy()->records()->value( hhId );
+	pcRec = fConduit->pcDataProxy()->records()->value( pcId );
+	
+	QCOMPARE( pcRec->categories().size(), 1 );
+	QVERIFY( pcRec->categories().first() == hhRec->categories().first() );
+	QVERIFY( backupRec->categories().first() == hhRec->categories().first() );
 }
 
 void CategoryHotSyncTest::cleanupTestCase()
@@ -226,7 +280,7 @@ void CategoryHotSyncTest::initTestCase_653a()
 	// 6.5.3 |pc-2 |  - |Y| -| M|hh-3 | sync hh to pc
 	// a) No category was set on the pc, the record supports more categories
 	//
-	// Solotion: Category set on the Handheld must be added to the new record on
+	// Solution: Category set on the Handheld must be added to the new record on
 	// the pc. And must be set in the backup record.
 	
 	// Set up the conduit
@@ -254,6 +308,25 @@ void CategoryHotSyncTest::initTestCase_653a()
 	
 	// Create a mapping
 	fConduit->mapping()->map( hhId, pcId );
+}
+
+void CategoryHotSyncTest::initTestCase_653b()
+{
+	// 6.5.3 |pc-2 |  - |Y| -| M|hh-3 | sync hh to pc
+	// b) No category was set on the pc, the record supports only one category
+	//    (e.g. keyring conduit)
+	//
+	// Solution: Category set on the Handheld must be set to the new record on
+	// the pc. And must be set in the backup record.
+	
+	// Set up the conduit
+	initTestCase_653a();
+	
+	// Make the record in the pc datastore only support one category
+	QString pcId( "pc-2" );
+	TestRecord *pcRec = static_cast<TestRecord*>(
+		fConduit->pcDataProxy()->records()->value( pcId ) );
+	pcRec->setSupportsMultipleCategories( false );
 }
 
 QTEST_KDEMAIN( CategoryHotSyncTest, NoGUI )

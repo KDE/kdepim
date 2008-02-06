@@ -69,6 +69,8 @@ public:
 	
 	TestRecord* duplicate() const;
 	
+	void setSupportsMultipleCategories( bool support );
+	
 	/** IMPLEMTED VIRTUAL FUNCTIONS FROM BASECLASS **/
 	
 	virtual const QString id() const;
