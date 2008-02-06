@@ -141,6 +141,7 @@ ConfigEntry* ConfigReader::Private::createEntryFromParsedLine( const QStringList
     std::auto_ptr<ConfigEntry> entry( new ConfigEntry( name ) );
     const int flags = (*it++).toInt();
     const int level = (*it++).toInt();
+    Q_UNUSED( level );
     entry->setDescription( *it++ );
     bool ok;
     // we keep the real (int) arg type, since it influences the parsing (e.g. for ldap urls)
@@ -251,11 +252,11 @@ void ConfigReader::Private::readConfConf( Config* cfg ) const
         if ( !lst[6].isEmpty() )
             entry->setValueFromRawString( lst[6].mid( 1 ) );
         
-        if ( flag == QString::fromLatin1( "no-change" ) )
+        if ( flag == QLatin1String( "no-change" ) )
             entry->setMutability( ConfigEntry::NoChange );
-        else if ( flag == QString::fromLatin1( "change" ) )
+        else if ( flag == QLatin1String( "change" ) )
             entry->setMutability( ConfigEntry::Change );
-        else if ( flag == QString::fromLatin1( "default" ) )
+        else if ( flag == QLatin1String( "default" ) )
             entry->setUseBuiltInDefault( true );
     }
     buf.close();
