@@ -191,10 +191,15 @@ QGpgMECryptoConfigComponent::~QGpgMECryptoConfigComponent()
 
 void QGpgMECryptoConfigComponent::runGpgConf()
 {
-  // Run gpgconf --list-options <component>, and create all groups and entries for that component
+  const QString gpgconf = QGpgMECryptoConfig::gpgConfPath();
+  if ( gpgconf.isEmpty() ) {
+      kWarning(5150) << "Can't get path to gpgconf executable...";
+      return;
+  }
 
+  // Run gpgconf --list-options <component>, and create all groups and entries for that component
   KProcess proc;
-  proc << "gpgconf"; // must be in the PATH
+  proc << gpgconf;
   proc << "--list-options";
   proc << mName;
 
@@ -317,7 +322,10 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
     return;
 
   // Call gpgconf --change-options <component>
-  QString commandLine = "gpgconf";
+  const QString gpgconf = QGpgMECryptoConfig::gpgConfPath();
+  QString commandLine = gpgconf.isEmpty()
+      ? QString::fromLatin1( "gpgconf" )
+      : KShell::quoteArg( gpgconf ) ;
   if ( runtime )
     commandLine += " --runtime";
   commandLine += " --change-options ";
@@ -336,7 +344,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
 
   if ( rc == -2 )
   {
-    QString wmsg = i18n( "Could not start gpgconf\nCheck that gpgconf is in the PATH and that it can be started" );
+    QString wmsg = i18n( "Could not start gpgconf.\nCheck that gpgconf is in the PATH and that it can be started." );
     kWarning(5150) << wmsg;
     KMessageBox::error(0, wmsg);
   }
