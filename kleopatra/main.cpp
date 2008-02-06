@@ -226,7 +226,6 @@ int main( int argc, char** argv )
   try {
       Kleo::UiServer server( args->getOption("uiserver-socket") );
 
-      sysTray.setToolTip( i18n( "Kleopatra UI Server listening on %1", server.socketName() ) );
 
 #define REGISTER( Command ) server.registerCommandFactory( boost::shared_ptr<Kleo::AssuanCommandFactory>( new Kleo::GenericAssuanCommandFactory<Kleo::Command> ) )
       REGISTER( DecryptCommand );
@@ -245,6 +244,8 @@ int main( int argc, char** argv )
 #undef REGISTER
 
       server.start();
+
+      sysTray.setToolTip( i18n( "Kleopatra UI Server listening on %1", server.socketName() ) );
 #endif
 
       args->clear();
