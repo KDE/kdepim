@@ -60,7 +60,7 @@ private:
 
 
 KeyListSortFilterProxyModel::KeyListSortFilterProxyModel( QObject * p )
-    : QSortFilterProxyModel( p ), d( new Private )
+    : QSortFilterProxyModel( p ), KeyListModelInterface(), d( new Private )
 {
     setDynamicSortFilter( true );
     setSortRole( Qt::EditRole );  // EditRole can be expected to be in a less formatted way, better for sorting
@@ -79,6 +79,46 @@ void KeyListSortFilterProxyModel::setKeyFilter( const shared_ptr<const KeyFilter
         return;
     d->keyFilter = kf;
     invalidateFilter();
+}
+
+Key KeyListSortFilterProxyModel::key( const QModelIndex & idx ) const {
+    const KeyListModelInterface * const klmi = dynamic_cast<KeyListModelInterface*>( sourceModel() );
+    if ( !klmi ) {
+        static Key null;
+        return null;
+    }
+    return klmi->key( mapToSource( idx ) );
+}
+
+std::vector<Key> KeyListSortFilterProxyModel::keys( const QList<QModelIndex> & indexes ) const {
+    const KeyListModelInterface * const klmi = dynamic_cast<KeyListModelInterface*>( sourceModel() );
+    if ( !klmi )
+        return std::vector<Key>();
+    QList<QModelIndex> mapped;
+    std::transform( indexes.begin(), indexes.end(),
+                    std::back_inserter( mapped ),
+                    bind( &QAbstractProxyModel::mapToSource, this, _1 ) );
+    return klmi->keys( mapped );
+}
+
+QModelIndex KeyListSortFilterProxyModel::index( const Key & key ) const {
+    if ( const KeyListModelInterface * const klmi = dynamic_cast<KeyListModelInterface*>( sourceModel() ) )
+        return mapFromSource( klmi->index( key ) );
+    else
+        return QModelIndex();
+}
+
+QList<QModelIndex> KeyListSortFilterProxyModel::indexes( const std::vector<Key> & keys ) const {
+    if ( const KeyListModelInterface * const klmi = dynamic_cast<KeyListModelInterface*>( sourceModel() ) ) {
+        const QList<QModelIndex> source = klmi->indexes( keys );
+        QList<QModelIndex> mapped;
+        std::transform( source.begin(), source.end(),
+                        std::back_inserter( mapped ),
+                        bind( &QAbstractProxyModel::mapFromSource, this, _1 ) );
+        return mapped;
+    } else {
+        return QList<QModelIndex>();
+    }
 }
 
 bool KeyListSortFilterProxyModel::filterAcceptsRow( int source_row, const QModelIndex & source_parent ) const {

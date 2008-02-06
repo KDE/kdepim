@@ -34,6 +34,8 @@
 
 #include <QSortFilterProxyModel>
 
+#include <models/keylistmodelinterface.h>
+
 #include <utils/pimpl_ptr.h>
 #include <boost/shared_ptr.hpp>
 
@@ -46,7 +48,7 @@ namespace Kleo {
     class AbstractKeyListModel;
     class KeyFilter;
 
-    class KeyListSortFilterProxyModel : public QSortFilterProxyModel {
+    class KeyListSortFilterProxyModel : public QSortFilterProxyModel, public KeyListModelInterface {
 	Q_OBJECT
     public:
 	explicit KeyListSortFilterProxyModel( QObject * parent=0 );
@@ -55,14 +57,12 @@ namespace Kleo {
 	boost::shared_ptr<const KeyFilter> keyFilter() const;
 	void setKeyFilter( const boost::shared_ptr<const KeyFilter> & kf );
 	
-#if 0
-        GpgME::Key key( const QModelIndex & idx ) const;
-        std::vector<GpgME::Key> keys( const QList<QModelIndex> & indexes ) const;
+        /* reimp */ GpgME::Key key( const QModelIndex & idx ) const;
+        /* reimp */ std::vector<GpgME::Key> keys( const QList<QModelIndex> & indexes ) const;
 
         using QAbstractItemModel::index;
-        QModelIndex index( const GpgME::Key & key, int col=0 ) const;
-        QList<QModelIndex> indexes( const std::vector<GpgME::Key> & keys ) const;
-#endif
+        /* reimp */ QModelIndex index( const GpgME::Key & key ) const;
+        /* reimp */ QList<QModelIndex> indexes( const std::vector<GpgME::Key> & keys ) const;
 
     protected:
 	/* reimp */ bool filterAcceptsRow( int source_row, const QModelIndex & source_parent ) const;

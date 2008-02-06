@@ -34,6 +34,8 @@
 
 #include <QAbstractItemModel>
 
+#include <models/keylistmodelinterface.h>
+
 #include <vector>
 
 namespace GpgME {
@@ -42,7 +44,7 @@ namespace GpgME {
 
 namespace Kleo {
 
-    class AbstractKeyListModel : public QAbstractItemModel {
+    class AbstractKeyListModel : public QAbstractItemModel, public KeyListModelInterface {
         Q_OBJECT
     public:
         explicit AbstractKeyListModel( QObject * parent=0 );
@@ -72,12 +74,15 @@ namespace Kleo {
             Icon = PrettyName // which column shall the icon be displayed in?
         };
 
-        GpgME::Key key( const QModelIndex & idx ) const;
-        std::vector<GpgME::Key> keys( const QList<QModelIndex> & indexes ) const;
+        /* reimp */ GpgME::Key key( const QModelIndex & idx ) const;
+        /* reimp */ std::vector<GpgME::Key> keys( const QList<QModelIndex> & indexes ) const;
 
         using QAbstractItemModel::index;
-        QModelIndex index( const GpgME::Key & key, int col=0 ) const;
-        QList<QModelIndex> indexes( const std::vector<GpgME::Key> & keys ) const;
+        /* reimp */ QModelIndex index( const GpgME::Key & key ) const {
+            return index( key, 0 );
+        }
+        QModelIndex index( const GpgME::Key & key, int col ) const;
+        /* reimp */ QList<QModelIndex> indexes( const std::vector<GpgME::Key> & keys ) const;
 
     Q_SIGNALS:
         void rowAboutToBeMoved( const QModelIndex & old_parent, int old_row );

@@ -56,7 +56,7 @@ public:
     ~Private();
 
     QAbstractItemView * view() const { return view_; }
-    AbstractKeyListModel * model() const { return controller_ ? controller_->model() : 0 ; }
+    KeyListModelInterface * model() const { return view_ ? dynamic_cast<KeyListModelInterface*>( view_->model() ) : 0 ; }
     QList<QModelIndex> indexes() const {
         QList<QModelIndex> result;
         std::copy( indexes_.begin(), indexes_.end(), std::back_inserter( result ) );

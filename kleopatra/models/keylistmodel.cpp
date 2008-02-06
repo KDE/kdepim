@@ -88,7 +88,7 @@ namespace {
 }
 
 AbstractKeyListModel::AbstractKeyListModel( QObject * p )
-    : QAbstractItemModel( p )
+    : QAbstractItemModel( p ), KeyListModelInterface()
 {
 
 }
