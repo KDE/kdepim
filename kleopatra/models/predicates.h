@@ -82,7 +82,7 @@ namespace _detail {
     make_comparator_str( ByFingerprint, .primaryFingerprint() );
     make_comparator_str( ByKeyID, .keyID() );
     make_comparator_str( ByShortKeyID, .shortKeyID() );
-
+    make_comparator_str( ByChainID, .chainID() );
 
 
 }
