@@ -63,6 +63,7 @@ namespace Kleo {
         void refresh( const std::vector<GpgME::Key> & keys );
 
         void remove( const GpgME::Key & key );
+        void remove( const std::vector<GpgME::Key> & keys );
 
         std::vector<GpgME::Key> keys() const;
 
@@ -88,6 +89,19 @@ namespace Kleo {
 
         std::vector<GpgME::Key> findRecipients( const GpgME::DecryptionResult & result ) const;
         std::vector<GpgME::Key> findSigners( const GpgME::VerificationResult & result ) const;
+
+        enum Option {
+            NoOption = 0,
+            RecursiveSearch = 1,
+        };
+
+        std::vector<GpgME::Key> findSubjects( const GpgME::Key & key, Option option=RecursiveSearch ) const;
+        std::vector<GpgME::Key> findSubjects( const std::vector<GpgME::Key> & keys, Option options=RecursiveSearch ) const;
+        std::vector<GpgME::Key> findSubjects( std::vector<GpgME::Key>::const_iterator first, std::vector<GpgME::Key>::const_iterator last, Option options=RecursiveSearch ) const;
+
+        std::vector<GpgME::Key> findIssuers( const GpgME::Key & key, Option options=RecursiveSearch ) const;
+        std::vector<GpgME::Key> findIssuers( const std::vector<GpgME::Key> & keys, Option options=RecursiveSearch ) const;
+        std::vector<GpgME::Key> findIssuers( std::vector<GpgME::Key>::const_iterator first, std::vector<GpgME::Key>::const_iterator last, Option options=RecursiveSearch ) const;
 
     public Q_SLOTS:
         void clear();
