@@ -34,7 +34,11 @@
 #include "configuration.h"
 #include "exception.h"
 
+#include <gpgme++/global.h>
+#include <gpgme++/engineinfo.h>
+
 #include <KLocale>
+#include <KStandardDirs>
 
 #include <QBuffer>
 #include <QByteArray>
@@ -42,6 +46,7 @@
 #include <QMap>
 #include <QProcess>
 #include <QStringList>
+#include <QFile>
 
 #include <cassert>
 #include <memory>
@@ -285,10 +290,15 @@ GpgConfResult ConfigReader::Private::runGpgConf( const QString& arg ) const
     return runGpgConf( QStringList( arg ) );
 }
 
+static QString gpgConfPath() {
+    const GpgME::EngineInfo ei = GpgME::engineInfo( GpgME::GpgConfEngine );
+    return ei.fileName() ? QFile::decodeName( ei.fileName() ) : KStandardDirs::findExe( "gpgconf" ) ;
+}
+
 GpgConfResult ConfigReader::Private::runGpgConf( const QStringList& args ) const
 {
     QProcess process;
-    process.start( "gpgconf", args );
+    process.start( gpgConfPath(), args );
 
     process.waitForStarted();
     process.waitForFinished();

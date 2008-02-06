@@ -15,7 +15,7 @@ set(_kgpgconf_SRCS
 kde4_add_ui_files( _kgpgconf_SRCS mainwidget.ui )
 
 kde4_add_executable(kgpgconf ${_kgpgconf_SRCS} )
-target_link_libraries(kgpgconf ${KDE4_KDEUI_LIBS} )
+target_link_libraries(kgpgconf ${QGPGME_LIBRARIES} ${KDE4_KDEUI_LIBS} )
 
 install(TARGETS kgpgconf DESTINATION ${BIN_INSTALL_DIR} )
 
