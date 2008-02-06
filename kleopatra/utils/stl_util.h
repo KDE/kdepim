@@ -116,6 +116,23 @@ namespace kdtools {
         return result;
     }
     //@}
+
+    template <typename ForwardIterator, typename ForwardIterator2, typename BinaryPredicate>
+        bool set_intersects( ForwardIterator first1,  ForwardIterator last1,
+                             ForwardIterator2 first2, ForwardIterator2 last2,
+                             BinaryPredicate pred )
+    {
+        while ( first1 != last1 && first2 != last2 ) {
+            if ( pred( *first1, *first2 ) ) {
+                first1 = std::lower_bound( ++first1, last1, *first2, pred );
+            } else if ( pred( *first2, *first1 ) ) {
+                first2 = std::lower_bound( ++first2, last2, *first1, pred );
+            } else {
+                return true;
+            }
+        }
+        return false;
+    }
 }
 
 #endif /* __KDTOOLSCORE_STL_UTIL_H__ */
