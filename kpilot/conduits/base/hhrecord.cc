@@ -27,7 +27,7 @@
 
 #include "hhrecord.h"
 
-#include "hhcategory.h"
+#include "category.h"
 #include "options.h"
 #include "pilot.h"
 #include "pilotRecord.h"
@@ -49,23 +49,35 @@ PilotRecord* HHRecord::pilotRecord() const
 	return fRecord;
 }
 
+bool HHRecord::supportsMultipleCategories() const
+{
+	return false;
+}
 
-void HHRecord::setCategory( const HHCategory &cat )
+void HHRecord::setCategories( const QList<Category*> &categories )
 {
 	FUNCTIONSETUP;
 	
-	fCategory = cat;
-	
-	if( fRecord )
+	foreach( Category* cat, categories )
 	{
-		fRecord->setCategory( cat.index() );
+		if( HHCategory *hhCat = dynamic_cast<HHCategory*>( cat ) )
+		{
+			fCategory = *hhCat;
+	
+			if( fRecord )
+			{
+				fRecord->setCategory( fCategory.index() );
+			}
+			
+			// Category changed, so step out of the loop.
+			return;
+		}
 	}
 }
 
-HHCategory HHRecord::category() const
+QList<Category*> HHRecord::categories() const
 {
-	FUNCTIONSETUP;
-	return fCategory;
+	return QList<Category*>() << new Category( fCategory );
 }
 
 bool HHRecord::isArchived() const

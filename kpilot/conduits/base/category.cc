@@ -54,3 +54,8 @@ bool Category::operator==( const Category &other ) const
 {
 	return fName == other.name();
 }
+
+bool Category::operator==( const Category *other ) const
+{
+	return fName == other->name();
+}

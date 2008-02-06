@@ -40,8 +40,9 @@ private:
 	QStringList fFields;
 	bool fModified;
 	bool fDeleted;
+	bool fSupportsMultipleCategories;
 	QMap<QString, QVariant> fValues;
-	QList<Category> fCategories;
+	QList<Category*> fCategories;
 	
 public:
 	TestRecord( const TestHHRecord *other );
@@ -72,7 +73,11 @@ public:
 	
 	virtual const QString id() const;
 	
-	virtual QList<Category> categories() const;
+	virtual bool supportsMultipleCategories() const;
+	
+	virtual QList<Category*> categories() const;
+	
+	virtual void setCategories( const QList<Category*> &cats );
 	
 	virtual void setId( const QString &id );
 

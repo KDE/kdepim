@@ -42,11 +42,15 @@ public:
 	
 	Category( const Category &other );
 	
+	virtual ~Category() {};
+	
 	QString name() const;
 	
 	void setName( const QString &name );
 	
 	bool operator==( const Category &other ) const;
+	
+	bool operator==( const Category *other ) const;
 	
 protected:
 	QString fName;

@@ -74,6 +74,9 @@ class CategoryHotSyncTest : public QObject
 
 private slots:
 	void testCase_6_5_2();
+	void testCase_6_5_3a();
+	
+	void cleanupTestCase();
 
 private:
 	TestRecordConduit *fConduit;
@@ -102,12 +105,10 @@ void CategoryHotSyncTest::testCase_6_5_2()
 	// - The Handheld record should (always) have exactly one category.
 	Record* hhRec = fConduit->hhDataProxy()->records()->value( hhId );
 	
-	qDebug() << hhRec;
-	
 	QVERIFY( !hhRec->categories().isEmpty() );
 	QCOMPARE( hhRec->categories().size(), 1 );
 	
-	Category hhCat = hhRec->categories().first();
+	Category *hhCat = hhRec->categories().first();
 	
 	// Sync
 	fConduit->hotSyncTest();
@@ -118,10 +119,15 @@ void CategoryHotSyncTest::testCase_6_5_2()
 	QString pcId = fConduit->mapping()->pcRecordId( hhId );
 	Record *pcRec = fConduit->pcDataProxy()->records()->value( pcId );
 	
+	// Warning I'm not sure if test will pass because hhCat is a pointer. The
+	// category class contains a ==( const Category *other) but i'm not sure if
+	// that's enough to make the test working as done below.
 	QVERIFY( pcRec->categories().contains( hhCat ) );
 }
 
 /**
+ * 6.5.3 |pc-2 |  - |Y| -| M|hh-3 | sync hh to pc
+ *
  * Case 6.5.3 can be split up in several options. If the category has changed on
  * the handheld it can be that:
  *
@@ -134,8 +140,59 @@ void CategoryHotSyncTest::testCase_6_5_2()
  * e) Another category is set on the pc, the record supports more categories
  *    but does contain the new category of the hh record already.
  */
- 
+void CategoryHotSyncTest::testCase_6_5_3a()
+{
+	// Set up the test case
+	initTestCase_653a();
+	
+	// Preconditions:
+	// - The handheld record is modified and has a category, and supports only one
+	//   category.
+	// - The backup record does have the "Unfiled" category set and only supports
+	//   one category.
+	// - The pc record has no category but supports more then one category.
+	// - There is a mapping for the records.
+	QString hhId( "hh-3" );
+	QString pcId( "pc-2" );
+	
+	Record *hhRec = fConduit->hhDataProxy()->records()->value( hhId );
+	Record *backupRec = fConduit->backupDataProxy()->records()->value( hhId );
+	Record *pcRec = fConduit->pcDataProxy()->records()->value( pcId );
+	
+	QVERIFY( hhRec->isModified() );
+	QCOMPARE( hhRec->categories().size(), 1 );
+	QVERIFY( hhRec->categories().first()->name() != QString( "Unfiled") );
+	QVERIFY( !hhRec->supportsMultipleCategories() );
+	
+	QVERIFY( !backupRec->isModified() );
+	QCOMPARE( backupRec->categories().size(), 1 );
+	QCOMPARE( backupRec->categories().first()->name(), QString( "Unfiled") );
+	QVERIFY( !backupRec->supportsMultipleCategories() );
+	
+	QVERIFY( !pcRec->isModified() );
+	QCOMPARE( pcRec->categories().size(), 0 );
+	QVERIFY( pcRec->supportsMultipleCategories() );
+	
+	QCOMPARE( fConduit->mapping()->pcRecordId( hhId ), pcId );
+	
+	// Sync
+	fConduit->hotSyncTest();
+	
+	// Postconditions
+	hhRec = fConduit->hhDataProxy()->records()->value( hhId );
+	backupRec = fConduit->backupDataProxy()->records()->value( hhId );
+	pcRec = fConduit->pcDataProxy()->records()->value( pcId );
+	
+	QCOMPARE( pcRec->categories().size(), 1 );
+	QVERIFY( pcRec->categories().first() == hhRec->categories().first() );
+	QVERIFY( backupRec->categories().first() == hhRec->categories().first() );
+	
+}
 
+void CategoryHotSyncTest::cleanupTestCase()
+{
+	delete fConduit;
+}
 
 /** ***************************************************************************
  *                      Initialization of test cases                          *
@@ -156,10 +213,10 @@ void CategoryHotSyncTest::initTestCase_652()
 	initTestCase();
 	
 	// Add a handheld record with a category to the hhdataproxy.
-	HHCategory c( "First Test category", false, 1, '1' );
+	HHCategory *c = new HHCategory( "First Test category", false, 1, '1' );
 		
 	TestHHRecord *hhRec = new TestHHRecord( QStringList(), CSL1( "hh-2" ) );
-	hhRec->setCategory( c );
+	hhRec->setCategories( QList<Category*>() << c );
 	hhRec->setModified();
 	fConduit->addHHRecord( hhRec );
 }
@@ -167,32 +224,36 @@ void CategoryHotSyncTest::initTestCase_652()
 void CategoryHotSyncTest::initTestCase_653a()
 {
 	// 6.5.3 |pc-2 |  - |Y| -| M|hh-3 | sync hh to pc
+	// a) No category was set on the pc, the record supports more categories
+	//
+	// Solotion: Category set on the Handheld must be added to the new record on
+	// the pc. And must be set in the backup record.
 	
 	// Set up the conduit
 	initTestCase();
 	
 	// Add a modified handheld record with a category to the hhdataproxy.
-	HHCategory c( "Second Test category", false, 2, '2' );
+	HHCategory *c = new HHCategory( "Second Test category", false, 2, '2' );
 		
-	TestHHRecord *hhRec = new TestHHRecord( QStringList(), CSL1( "hh-3" ) );
-	hhRec->setCategory( c );
+	QString hhId( "hh-3" );
+	QString pcId( "pc-2" );
+		
+	TestHHRecord *hhRec = new TestHHRecord( QStringList(), hhId);
+	hhRec->setCategories( QList<Category*>() << c );
 	hhRec->setModified();
 	fConduit->addHHRecord( hhRec );
 	
-	// Add a handheld record with another (the previous) category to the backup 
+	// Add a handheld record with no category set to the backup 
 	// dataproxy.
-	c = HHCategory( "First Test category", false, 1, '1' );
-		
-	hhRec = new TestHHRecord( QStringList(), CSL1( "hh-3" ) );
-	hhRec->setCategory( c );
-	fConduit->addBackupRecord( hhRec );
+	TestHHRecord *backupRec = new TestHHRecord( QStringList(), hhId );
+	fConduit->addBackupRecord( backupRec );
 	
-	// Add a pc record with the previous category to the pc dataproxy.
-	QString categorie( "First Test category" );
-		
-	TestRecord *pcRec = new TestRecord( QStringList(), CSL1( "hh-3" ) );
-	hhRec->setCategory( c );
-	fConduit->addBackupRecord( hhRec );
+	// Add a pc record with the no category set to the pc dataproxy.
+	TestRecord *pcRec = new TestRecord( QStringList(), pcId );
+	fConduit->addPCRecord( pcRec );
+	
+	// Create a mapping
+	fConduit->mapping()->map( hhId, pcId );
 }
 
 QTEST_KDEMAIN( CategoryHotSyncTest, NoGUI )

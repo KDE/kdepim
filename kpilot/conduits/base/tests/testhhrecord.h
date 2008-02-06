@@ -78,8 +78,6 @@ public:
 	
 	virtual const QString id() const;
 	
-	virtual QList<Category> categories() const;
-	
 	virtual void setId( const QString &id );
 
 	virtual bool isModified() const;
