@@ -56,7 +56,7 @@ namespace {
         unsigned int classification;
     } classifications[] = {
         // ordered by extension
-        { "asc", OpenPGP|  Ascii  | OpaqueSignature|CipherText|AnyCertStoreType },
+        { "asc", OpenPGP|  Ascii  | OpaqueSignature|DetachedSignature|CipherText|AnyCertStoreType },
         { "crt", CMS    | Binary  | Certificate },
         { "der", CMS    | Binary  | Certificate },
         { "gpg", OpenPGP| Binary  | OpaqueSignature|CipherText|AnyCertStoreType },
@@ -121,7 +121,7 @@ static QString chopped( QString s, unsigned int n ) {
   signatureFileName, or QString(), if no such file can be found.
 */
 QString Kleo::findSignedData( const QString & signatureFileName ) {
-    if ( !isDetachedSignature( signatureFileName ) )
+    if ( !mayBeDetachedSignature( signatureFileName ) )
         return QString();
     const QString baseName = chopped( signatureFileName, 4 );
     return QFile::exists( baseName ) ? baseName : QString() ;
