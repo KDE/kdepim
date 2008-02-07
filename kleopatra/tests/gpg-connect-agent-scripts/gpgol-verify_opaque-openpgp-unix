@@ -1,0 +1,7 @@
+# OPTION mode=email
+/sendfd test.data.signed-opaque.asc r
+INPUT FD
+/sendfd result-gpgol-verify_opaque-openpgp-unix w
+OUTPUT FD
+VERIFY --protocol=OpenPGP
+BYE

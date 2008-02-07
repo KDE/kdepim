@@ -1,0 +1,7 @@
+# OPTION mode=email
+/sendfd test.data.signed-opaque.p7s r
+INPUT FD
+/sendfd result-gpgol-verify_opaque-cms-unix w
+OUTPUT FD
+VERIFY --protocol=CMS
+BYE
