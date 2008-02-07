@@ -33,7 +33,7 @@
 #include "signemailcontroller.h"
 
 #include "assuancommand.h"
-#include "signencryptwizard.h"
+#include "signemailwizard.h"
 
 #include <crypto/signemailtask.h>
 #include <crypto/certificateresolver.h>
@@ -295,24 +295,10 @@ void SignEMailController::Private::ensureWizardCreated() {
     if ( wizard )
         return;
 
-    std::auto_ptr<SignEncryptWizard> w( new SignEncryptWizard );
-    // ### virtual hook here
-    w->setWindowTitle( i18n("Sign Mail Message") );
-
-    std::vector<int> pageOrder;
-    pageOrder.push_back( SignEncryptWizard::ResolveSignerPage );
-    pageOrder.push_back( SignEncryptWizard::ResultPage );
-    w->setPageOrder( pageOrder );
-    w->setCommitPage( SignEncryptWizard::ResolveSignerPage );
-
-    // ### end virtual hook
+    std::auto_ptr<SignEncryptWizard> w( new SignEMailWizard );
     w->setAttribute( Qt::WA_DeleteOnClose );
     connect( w.get(), SIGNAL(signersResolved()), q, SLOT(slotWizardSignersResolved()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
-    w->setEncryptionSelected( false );
-    w->setEncryptionUserMutable( false );
-    w->setSigningSelected( true );
-    w->setSigningUserMutable( false );
     w->setPresetProtocol( protocol );
 
     wizard = w.release();

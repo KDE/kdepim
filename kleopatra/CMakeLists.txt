@@ -63,6 +63,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/decryptverifywizard.cpp
     uiserver/decryptverifycommand.cpp
     uiserver/signemailcontroller.cpp
+    uiserver/signemailwizard.cpp
     uiserver/signcommand.cpp
     uiserver/signencryptfilescommand.cpp
     uiserver/signencryptfilescontroller.cpp
