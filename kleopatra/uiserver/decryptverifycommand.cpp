@@ -506,7 +506,7 @@ std::vector< shared_ptr<DVTask> > DecryptVerifyCommand::Private::buildTaskList()
 
                 op->setMode( DecryptVerifyOperationWidget::DecryptVerifyOpaque );
                 op->setInputFileName( fname );
-                op->setSignedDataFileName( QString() );
+                op->setSignedDataFileName( findSignedData( fname ) );
 
                 files.push_back( file );
 
