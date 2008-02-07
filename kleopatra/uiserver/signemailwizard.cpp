@@ -95,7 +95,6 @@ private:
 SignEMailWizard::Private::Private( SignEMailWizard * qq )
   : q( qq )
 {
-    // ### virtual hook here
     q->setWindowTitle( i18n("Sign Mail Message") );
 
     std::vector<int> pageOrder;
