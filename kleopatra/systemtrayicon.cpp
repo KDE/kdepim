@@ -141,9 +141,16 @@ void SystemTrayIcon::setMainWindow( QWidget * mw ) {
 }
 
 bool SystemTrayIcon::eventFilter( QObject * o, QEvent * e ) {
-    if ( o == d->mainWindow &&
-         ( e->type() == QEvent::Close || e->type() == QEvent::Show || e->type() == QEvent::DeferredDelete ) )
-        QMetaObject::invokeMethod( this, "slotEnableDisableActions", Qt::QueuedConnection );
+    if ( o == d->mainWindow )
+        switch ( e->type() ) {
+        case QEvent::Close:
+            d->previousGeometry = static_cast<QWidget*>( o )->geometry();
+            // fall through:
+        case QEvent::Show:
+        case QEvent::DeferredDelete:
+            QMetaObject::invokeMethod( this, "slotEnableDisableActions", Qt::QueuedConnection );
+        default: ;
+        }
     return false;
 }
 
@@ -153,18 +160,18 @@ void SystemTrayIcon::Private::slotActivated( ActivationReason reason ) {
     if ( !mainWindow ) {
         mainWindow = q->doCreateMainWindow();
         assert( mainWindow );
-        mainWindow->installEventFilter( q );
-    }
-    const bool visible = mainWindow->isVisible();
-    if ( visible ) {
-        previousGeometry = mainWindow->geometry();
-        mainWindow->setVisible( false );
-    } else {
         if ( previousGeometry.isValid() )
             mainWindow->setGeometry( previousGeometry );
-        mainWindow->setVisible( true );
+        mainWindow->installEventFilter( q );
     }
-    //slotEnableDisableActions();
+    if ( mainWindow->isMinimized() ) {
+        mainWindow->showNormal();
+        mainWindow->raise();
+    } else if ( mainWindow->isVisible() ) {
+        mainWindow->raise();
+    } else {
+        mainWindow->show();
+    }
 }
 
 void SystemTrayIcon::Private::slotEnableDisableActions() {
