@@ -46,6 +46,7 @@
 
 #include "addresseeview.h"
 #include "sendsmsdialog.h"
+#include "resourceabc.h"
 
 using namespace KPIM;
 
@@ -466,8 +467,17 @@ QString AddresseeView::vCardAsHTML( const KABC::Addressee& addr, ::KIMProxy *pro
   strAddr.append( customData );
   strAddr.append( QString::fromLatin1( "</table></div>\n" ) );
 
-  if ( addr.resource() )
-      strAddr.append( i18n( "<p><b>Address book</b>: %1</p>" ).arg( addr.resource()->resourceName() ) );
+  if ( addr.resource() ) {
+    QString addrBookName = addr.resource()->resourceName();
+    ResourceABC *r = dynamic_cast<ResourceABC*>( addr.resource() );
+    if ( r && !r->subresources().isEmpty() ) {
+      const QString subRes = r->uidToResourceMap()[ addr.uid() ];
+      const QString label = r->subresourceLabel( subRes );
+      if ( !label.isEmpty() )
+        addrBookName = label;
+    }
+    strAddr.append( i18n( "<p><b>Address book</b>: %1</p>" ).arg( addrBookName ) );
+  }
   return strAddr;
 }
 
