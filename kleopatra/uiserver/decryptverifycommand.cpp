@@ -657,7 +657,7 @@ void DecryptVerifyCommand::Private::startTasks()
                 VerifyOpaqueJob * const job = task->backend->verifyOpaqueJob();
                 kleo_assert( job );
                 registerJob( i, job );
-                job->start( task->input->ioDevice(), task->output->ioDevice() );
+                job->start( task->input->ioDevice(), task->output ? task->output->ioDevice() : shared_ptr<QIODevice>() );
             } catch ( const GpgME::Exception & e ) {
                 addResult( i, DVResult::fromVerifyOpaqueResult( e.error() ) );
             }
