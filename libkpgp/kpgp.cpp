@@ -19,6 +19,7 @@
 #include "kpgp.h"
 #include "kpgpbase.h"
 #include "kpgpui.h"
+#include "kde_file.h"
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -33,6 +34,7 @@
 #include <QCursor>
 #include <QApplication>
 #include <QByteArray>
+#include <QFileInfo>
 
 #include <stdio.h>
 #include <time.h>
@@ -1336,7 +1338,7 @@ Module::checkForPGP(void)
   havePgp=false;
 
   path = QString::fromLocal8Bit( getenv("PATH") );
-  pSearchPaths = path.split(":");
+  pSearchPaths = path.split( KPATH_SEPARATOR, QString::SkipEmptyParts );
 
   haveGpg=false;
   // lets try gpg
@@ -1345,7 +1347,7 @@ Module::checkForPGP(void)
   {
     path = curPath;
     path += "/gpg";
-    if ( !access( path.toLatin1() , X_OK ) ) // ### PORT: use Qt
+    if ( QFileInfo(path).isExecutable() )
     {
       kDebug( 5326 ) <<"Kpgp: gpg found";
       havePgp=true;
@@ -1360,7 +1362,7 @@ Module::checkForPGP(void)
   {
     path = curPath;
     path += "/pgpe";
-    if ( !access( path.toLatin1() , X_OK ) ) // ### PORT: use Qt
+    if ( QFileInfo(path).isExecutable() )
     {
       kDebug( 5326 ) <<"Kpgp: pgp 5 found";
       havePgp=true;
@@ -1375,7 +1377,7 @@ Module::checkForPGP(void)
     {
       path = curPath;
       path += "/pgp";
-      if ( !access( path.toLatin1() , X_OK ) ) // ### PORT: use Qt
+      if ( QFileInfo(path).isExecutable() )
       {
         kDebug( 5326 ) <<"Kpgp: pgp 2 or 6 found";
         havePgp=true;
