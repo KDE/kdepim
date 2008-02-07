@@ -37,6 +37,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QtAlgorithms>
+#include <QByteArrayMatcher>
 
 #include <boost/range.hpp>
 
@@ -51,12 +52,14 @@ using namespace Kleo::Class;
 
 namespace {
 
+    const unsigned int ExamineContentHint = 0x8000;
+
     static const struct _classification {
         char extension[4];
         unsigned int classification;
     } classifications[] = {
         // ordered by extension
-        { "asc", OpenPGP|  Ascii  | OpaqueSignature|DetachedSignature|CipherText|AnyCertStoreType },
+        { "asc", OpenPGP|  Ascii  | OpaqueSignature|DetachedSignature|CipherText|AnyCertStoreType | ExamineContentHint },
         { "crt", CMS    | Binary  | Certificate },
         { "der", CMS    | Binary  | Certificate },
         { "gpg", OpenPGP| Binary  | OpaqueSignature|CipherText|AnyCertStoreType },
@@ -65,7 +68,7 @@ namespace {
         { "p7c", CMS    | Binary  | Certificate  },
         { "p7m", CMS    | Binary  | CipherText },
         { "p7s", CMS    | Binary  | AnySignature },
-        { "pem", CMS    |  Ascii  | AnyType },
+        { "pem", CMS    |  Ascii  | AnyType | ExamineContentHint },
         { "sig", OpenPGP|AnyFormat| DetachedSignature },
     };
 
@@ -92,12 +95,47 @@ namespace {
         }
     };
 
+    static const struct _content_classification {
+        char content[28];
+        unsigned int classification;
+    } content_classifications[] = {
+        { "MESSAGE",           OpaqueSignature|CipherText },
+        { "PRIVATE KEY BLOCK", ExportedPSM },
+        { "PUBLIC KEY BLOCK",  Certificate },
+        { "SIGNATURE",         DetachedSignature },
+    };
+
+    template <template <typename U> class Op>
+    struct ByContent {
+        typedef bool result_type;
+
+        const unsigned int N;
+        explicit ByContent( unsigned int n ) : N( n ) {}
+
+        template <typename T>
+        bool operator()( const T & lhs, const T & rhs ) const {
+            return Op<int>()( qstrncmp( lhs.content, rhs.content, N ), 0 );
+        }
+        template <typename T>
+        bool operator()( const T & lhs, const char * rhs ) const {
+            return Op<int>()( qstrncmp( lhs.content, rhs, N ), 0 );
+        }
+        template <typename T>
+        bool operator()( const char * lhs, const T & rhs ) const {
+            return Op<int>()( qstrncmp( lhs, rhs.content, N ), 0 );
+        }
+        bool operator()( const char * lhs, const char * rhs ) const {
+            return Op<int>()( qstrncmp( lhs, rhs, N ), 0 );
+        }
+    };
+
 }
 
 
 unsigned int Kleo::classify( const QString & filename ) {
 #ifdef __GNUC__
     assert( __gnu_cxx::is_sorted( begin( classifications ), end( classifications ), ByExtension<std::less>() ) );
+    assert( __gnu_cxx::is_sorted( begin( content_classifications ), end( content_classifications ), ByContent<std::less>(100) ) );
 #endif
 
     const QFileInfo fi( filename );
@@ -107,8 +145,38 @@ unsigned int Kleo::classify( const QString & filename ) {
                                                     ByExtension<std::less>() );
     if ( it == end( classifications ) )
         return defaultClassification;
-    else
+    if ( !( it->classification & ExamineContentHint ) )
         return it->classification;
+
+    QFile file( filename );
+    if ( !file.open( QIODevice::ReadOnly|QIODevice::Text ) )
+        return it->classification;
+
+    const QByteArray read = file.read( 1024 );
+
+    static const char beginString[] = "-----BEGIN ";
+    static const QByteArrayMatcher beginMatcher( beginString );
+    int pos = beginMatcher.indexIn( read );
+    if ( pos < 0 )
+        return it->classification;
+    pos += sizeof beginString - 1;
+
+    const bool pgp = qstrncmp( read.data() + pos, "PGP ", 4 ) == 0;
+    if ( pgp )
+        pos += 4;
+
+    const int epos = read.indexOf( "-----\n", pos );
+    if ( epos < 0 )
+        return it->classification;
+
+    const _content_classification * const cit
+        = qBinaryFind( begin( content_classifications ), end( content_classifications ),
+                       read.data() + pos, ByContent<std::less>( epos - pos ) );
+
+    if ( cit == end( content_classifications ) )
+        return it->classification;
+    else
+        return cit->classification | ( pgp ? OpenPGP : CMS );
 }
 
 static QString chopped( QString s, unsigned int n ) {
