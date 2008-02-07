@@ -499,24 +499,16 @@ std::vector< shared_ptr<DVTask> > DecryptVerifyCommand::Private::buildTaskList()
 
             const unsigned int classification = classify( fname );
 
-            if ( mayBeOpaqueSignature( classification ) || mayBeCipherText( classification ) ) {
+            if ( mayBeOpaqueSignature( classification ) || mayBeCipherText( classification ) || mayBeDetachedSignature( classification ) ) {
 
                 DecryptVerifyOperationWidget * const op = wizard->operationWidget( counter++ );
                 kleo_assert( op != 0 );
 
-                op->setMode( DecryptVerifyOperationWidget::DecryptVerifyOpaque );
-                op->setInputFileName( fname );
-                op->setSignedDataFileName( findSignedData( fname ) );
+                if ( mayBeOpaqueSignature( classification ) || mayBeCipherText( classification ) )
+                    op->setMode( DecryptVerifyOperationWidget::DecryptVerifyOpaque );
+                else
+                    op->setMode( DecryptVerifyOperationWidget::VerifyDetachedWithSignature );
 
-                files.push_back( file );
-
-            } else if ( mayBeDetachedSignature( classification ) ) {
-                // heuristics say it's a detached signature
-
-                DecryptVerifyOperationWidget * const op = wizard->operationWidget( counter++ );
-                kleo_assert( op != 0 );
-
-                op->setMode( DecryptVerifyOperationWidget::VerifyDetachedWithSignature );
                 op->setInputFileName( fname );
                 op->setSignedDataFileName( findSignedData( fname ) );
 
