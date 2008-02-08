@@ -4,6 +4,7 @@ X-KDE-Library=libkaddrbk_ldif_xxport
 Name=KAB LDIF XXPort Plugin
 Name[af]=KAB LDIF XXPort inprop module
 Name[be]=Дапаўненне KAB "Імпарт LDIF"
+Name[bg]=Приставка за LDIF XXPort на KAB
 Name[br]=Lugent XXPorzh KAB LDIF
 Name[bs]=KAB dodatak za LDIF XXPort
 Name[ca]=Endollable per importació/exportació de LDIF per al KAB
