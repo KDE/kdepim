@@ -1,11 +1,18 @@
 [Desktop Entry]
 Encoding=UTF-8
 Name=Addressbook on Scalix Server via KMail
-Name[bg]=Адресник на сървъра Scalix чрез KMail
+Name[bg]=Адресник на сървъра Scalix през KMail
+Name[ca]=Llibreta d'adreces en un servidor Scalix mitjançant el KMail
 Name[da]=Adressebog på Scalix-server via KMail
 Name[de]=Adressbuch auf einem Scalix-Server via KMail
 Name[el]=Βιβλίο διευθύνσεων σε εξυπηρετητή Scalix μέσω του KMail
+Name[it]=Rubrica indirizzi su server Scalix via KMail
+Name[nds]=Adressbook op Scalix-Server över KMail
+Name[nl]=Adresboek op Scalix-server via KMail
+Name[sk]=Adresár na Scalix serveri pomocou KMail
 Name[sv]=Adressbok på Scalix-server via Kmail
+Name[zh_CN]=通过 KMail 访问 Scalix 服务器上的地址簿
+Name[zh_TW]=透過 KMail 取得 Scalix 伺服器上的通訊錄
 X-KDE-Library=kabc_scalix
 Type=Service
 ServiceTypes=KResources/Plugin
