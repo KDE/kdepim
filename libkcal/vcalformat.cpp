@@ -1427,7 +1427,7 @@ void VCalFormat::populate(VObject *vcal)
     methodType = fakeCString(vObjectUStringZValue(curVO));
     kdDebug(5800) << "This calendar is an iTIP transaction of type '"
               << methodType << "'" << endl;
-    delete methodType;
+    deleteStr(methodType);
   }
 
   // warn the user that we might have trouble reading non-known calendar.
