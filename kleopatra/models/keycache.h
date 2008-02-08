@@ -92,7 +92,7 @@ namespace Kleo {
 
         enum Option {
             NoOption = 0,
-            RecursiveSearch = 1,
+            RecursiveSearch = 1
         };
 
         std::vector<GpgME::Key> findSubjects( const GpgME::Key & key, Option option=RecursiveSearch ) const;
