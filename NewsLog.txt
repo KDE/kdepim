@@ -1,3 +1,19 @@
+Friday, February 8th 2008
+
+Problems addressed
+-------------------
+
+* kolab/issue1981 Context menu entry "Paste" in kalender view
+* kolab/issue2260 New resource calendar folder default colors
+* Fix message status change randomly not working for non-toplevel mails
+* Really apply the identity when we edit a received message
+* kolab/issue2394 IMAP sync keeps calendar items which are deleted on the server
+* kolab/issue2450 Kmail: D'n'D and "Move To" from a read only folder is possible
+* kolab/issue2092 A latin-9 attachment is treated like a utf-8 file
+* Fix reply actions being disabled when a collapsed thread is selected
+* kolab/issue2390 contact: Two resources on the same server could looks like the same source in the contact view
+
+
 Friday, February 1st 2008
 
 Problems addressed
