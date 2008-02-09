@@ -12,3 +12,9 @@
 /* Needed by ./libksieve/tests/parsertest.cpp; to be moved */
 #define SIZEOF_UNSIGNED_LONG ${SIZEOF_UNSIGNED_LONG}
 
+#if defined _WIN32 || defined _WIN64
+#define KPATH_SEPARATOR ';'
+#else
+#define KPATH_SEPARATOR ':'
+#endif
+
