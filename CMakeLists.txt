@@ -189,7 +189,7 @@ else ( ONLY_KLEO )
 
   if(NOT WIN32)
      macro_optional_find_package(Opensync)
-     #macro_log_feature() not needed because FindOpensync.cmake does so for us
+     macro_log_feature(OPENSYNC_FOUND "opensync" "OpenSync Development Libraries" "http://www.opensync.org" FALSE "0.30 or greater" "Needed to provide syncing functionality in KDE PIM applications. Necessary to compile kitchensync.")
      macro_optional_find_package(GLIB2)
      macro_log_feature(GLIB2_FOUND "glib2" "Low-level core library for data structure handling, portability wrappers, etc." "http://www.gtk.org" FALSE "2.x" "Needed to provide synching applications from KDE PIM applications. Necessary to compile kitchensync and other PIM applications.")
      macro_optional_add_subdirectory(kmobiletools)
