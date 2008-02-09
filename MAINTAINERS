@@ -11,7 +11,7 @@ kfile-plugins     ?
 kioslave          ?
 kleopatra         Marc Mutz <mutz@kde.org>
                   Steffen Hansen <hansen@kde.org>
-kmail             Ingo Klöcker <kloecker@kde.org>
+kmail             Thomas McGuire <thomas.mcguire@gmx.net>
                   Don Sanders <sanders@kde.org>
 kmailcvt          Danny Kukawka <danny.kukawka@web.de>
 kmobiletools      Marco Gulino <marco.gulino@gmail.com>
