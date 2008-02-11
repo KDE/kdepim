@@ -64,7 +64,7 @@ class EncryptEMailController::Private {
     friend class ::Kleo::EncryptEMailController;
     EncryptEMailController * const q;
 public:
-    explicit Private( EncryptEMailController * qq );
+    explicit Private( const shared_ptr<AssuanCommand> & cmd, EncryptEMailController * qq );
 
 private:
     void slotWizardRecipientsResolved();
@@ -81,13 +81,15 @@ private:
     void connectTask( const shared_ptr<Task> & task, unsigned int idx );
 
 private:
+    weak_ptr<AssuanCommand> command;
     std::vector< shared_ptr<EncryptEMailTask> > runnable, completed;
     shared_ptr<EncryptEMailTask> cms, openpgp;
     mutable QPointer<SignEncryptWizard> wizard;
 };
 
-EncryptEMailController::Private::Private( EncryptEMailController * qq )
+EncryptEMailController::Private::Private( const shared_ptr<AssuanCommand> & cmd, EncryptEMailController * qq )
     : q( qq ),
+      command( cmd ),
       runnable(),
       cms(),
       openpgp(),
@@ -97,7 +99,7 @@ EncryptEMailController::Private::Private( EncryptEMailController * qq )
 }
 
 EncryptEMailController::EncryptEMailController( const shared_ptr<AssuanCommand> & cmd, QObject * p )
-    : Controller( cmd, p ), d( new Private( this ) )
+    : Controller( cmd, p ), d( new Private( cmd, this ) )
 {
 
 }
@@ -106,6 +108,11 @@ EncryptEMailController::~EncryptEMailController() {
     if ( d->wizard && !d->wizard->isVisible() )
         delete d->wizard;
         //d->wizard->close(); ### ?
+}
+
+void EncryptEMailController::setCommand( const shared_ptr<AssuanCommand> & cmd ) {
+    d->command = cmd;
+    setExecutionContext( cmd );
 }
 
 void EncryptEMailController::setProtocol( Protocol proto ) {
@@ -149,7 +156,7 @@ void EncryptEMailController::Private::slotWizardCanceled() {
 
 void EncryptEMailController::importIO() {
 
-    const shared_ptr<AssuanCommand> cmd = command().lock();
+    const shared_ptr<AssuanCommand> cmd = d->command.lock();
     kleo_assert( cmd );
 
     const std::vector< shared_ptr<Input> > & inputs = cmd->inputs();

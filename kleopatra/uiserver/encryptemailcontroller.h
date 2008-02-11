@@ -55,6 +55,8 @@ namespace Kleo {
         ~EncryptEMailController();
 
         static const char * mementoName() { return "EncryptEMailController"; }
+
+        void setCommand( const boost::shared_ptr<AssuanCommand> & cmd );
         
         void setProtocol( GpgME::Protocol proto );
         const char * protocolAsString() const;

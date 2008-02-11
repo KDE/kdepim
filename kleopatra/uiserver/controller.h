@@ -38,24 +38,27 @@
 #include <utils/pimpl_ptr.h>
 
 #include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
 
 class QDialog;
 
 namespace Kleo {
 
-    class AssuanCommand;
+    class ExecutionContext {
+    public:
+        virtual ~ExecutionContext() {}
+        virtual void applyWindowID( QDialog * dialog ) const = 0;
+    };
 
     class Controller : public QObject {
         Q_OBJECT
     public:
-        explicit Controller( const boost::shared_ptr<AssuanCommand> & cmd, QObject * parent=0 );
+        explicit Controller( const boost::shared_ptr<const ExecutionContext> & cmd, QObject * parent=0 );
         ~Controller();
 
-        void setCommand( const boost::shared_ptr<AssuanCommand> & cmd );
+        void setExecutionContext( const boost::shared_ptr<const ExecutionContext> & cmd );
 
     protected:   
-        boost::weak_ptr<AssuanCommand> command() const;
+        boost::shared_ptr<const ExecutionContext> executionContext() const;
  
         void bringToForeground( QDialog* dlg );
         

@@ -33,10 +33,13 @@
 #ifndef __KLEOPATRA_UISERVER_ASSUANCOMMAND_H__
 #define __KLEOPATRA_UISERVER_ASSUANCOMMAND_H__
 
+#include <uiserver/controller.h>
+
 #include <utils/pimpl_ptr.h>
 
 #include <gpgme++/global.h>
 #include <gpgme++/error.h>
+
 #include <kmime/kmime_header_parsing.h>
 
 #include <boost/shared_ptr.hpp>
@@ -200,7 +203,7 @@ namespace Kleo {
       \endcode
 
     */
-    class AssuanCommand : public boost::enable_shared_from_this<AssuanCommand> {
+    class AssuanCommand : public ExecutionContext, public boost::enable_shared_from_this<AssuanCommand> {
         // defined in assuanserverconnection.cpp!
     public:
         AssuanCommand();
@@ -239,7 +242,7 @@ namespace Kleo {
 
         GpgME::Protocol checkProtocol( Mode mode ) const;
 
-        void applyWindowID( QDialog* w ) const {
+        /* reimp */ void applyWindowID( QDialog* w ) const {
             doApplyWindowID( w );
         }
         

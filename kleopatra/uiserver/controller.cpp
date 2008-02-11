@@ -32,12 +32,12 @@
 
 #include "controller.h"
 
-#include "assuancommand.h"
+#include <KWindowSystem>
 
 #include <QDialog>
 #include <QVector>
 
-#include <KWindowSystem>
+#include <boost/weak_ptr.hpp>
 
 using namespace boost;
 using namespace Kleo;
@@ -46,18 +46,17 @@ class Controller::Private {
     friend class ::Kleo::Controller;
     Controller * const q;
 public:
-    explicit Private( const shared_ptr<AssuanCommand> & cmd, Controller * qq );
+    explicit Private( const shared_ptr<const ExecutionContext> & ctx, Controller * qq );
     
     void applyWindowID( QDialog* dlg );
     
 private:
-    weak_ptr<AssuanCommand> command;
+    weak_ptr<const ExecutionContext> executionContext;
     QVector<QDialog*> idApplied;
-    
 };
 
-Controller::Private::Private( const shared_ptr<AssuanCommand> & cmd, Controller * qq )
-    : q( qq ), command( cmd )
+Controller::Private::Private( const shared_ptr<const ExecutionContext> & ctx, Controller * qq )
+    : q( qq ), executionContext( ctx )
 {
 
 }
@@ -66,15 +65,14 @@ void Controller::Private::applyWindowID( QDialog* dlg )
 {
     if ( idApplied.contains( dlg ) )
         return;
-    const shared_ptr<AssuanCommand> cmd = command.lock();
-    if ( cmd ) {
-        cmd->applyWindowID( dlg );
+    if ( const shared_ptr<const ExecutionContext> ctx = executionContext.lock() ) {
+        ctx->applyWindowID( dlg );
         idApplied.append( dlg );
     }
 }
 
-Controller::Controller( const shared_ptr<AssuanCommand> & cmd, QObject* parent )
-    : QObject( parent ), d( new Private( cmd, this ) )
+Controller::Controller( const shared_ptr<const ExecutionContext> & ctx, QObject* parent )
+    : QObject( parent ), d( new Private( ctx, this ) )
 {
     
 }
@@ -84,15 +82,15 @@ Controller::~Controller()
     
 }
 
-void Controller::setCommand( const shared_ptr<AssuanCommand> & cmd )
+void Controller::setExecutionContext( const shared_ptr<const ExecutionContext> & ctx )
 {
-    d->command = cmd;
+    d->executionContext = ctx;
     d->idApplied.clear();
 }
 
-weak_ptr<AssuanCommand> Controller::command() const
+shared_ptr<const ExecutionContext> Controller::executionContext() const
 {
-    return d->command;
+    return d->executionContext.lock();
 }
 
 void Controller::bringToForeground( QDialog* dlg )

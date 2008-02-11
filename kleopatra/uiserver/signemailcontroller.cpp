@@ -64,7 +64,8 @@ class SignEMailController::Private {
     friend class ::Kleo::SignEMailController;
     SignEMailController * const q;
 public:
-    explicit Private( SignEMailController * qq );
+    explicit Private( const shared_ptr<AssuanCommand> & cmd, SignEMailController * qq );
+    ~Private();
 
 private:
     void slotWizardSignersResolved();
@@ -81,6 +82,7 @@ private:
     void connectTask( const shared_ptr<Task> & task, unsigned int idx ); // ### extract to base
 
 private:
+    weak_ptr<AssuanCommand> command;
     std::vector< shared_ptr<SignEMailTask> > runnable, completed; // ### extract to base
     shared_ptr<SignEMailTask> cms, openpgp; // ### extract to base
     QPointer<SignEncryptWizard> wizard; // ### extract to base
@@ -88,8 +90,9 @@ private:
     bool detached : 1;
 };
 
-SignEMailController::Private::Private( SignEMailController * qq )
+SignEMailController::Private::Private( const shared_ptr<AssuanCommand> & cmd, SignEMailController * qq )
     : q( qq ),
+      command( cmd ),
       runnable(),
       cms(),
       openpgp(),
@@ -100,8 +103,10 @@ SignEMailController::Private::Private( SignEMailController * qq )
 
 }
 
+SignEMailController::Private::~Private() {}
+
 SignEMailController::SignEMailController( const boost::shared_ptr<AssuanCommand> & cmd, QObject * p )
-    : Controller( cmd, p ), d( new Private( this ) )
+    : Controller( cmd, p ), d( new Private( cmd, this ) )
 {
 
 }
@@ -159,7 +164,7 @@ void SignEMailController::Private::slotWizardCanceled() {
 
 // ### extract to base
 void SignEMailController::importIO() {
-    const shared_ptr<AssuanCommand> cmd = command().lock();
+    const shared_ptr<AssuanCommand> cmd = d->command.lock();
     kleo_assert( cmd );
 
     const std::vector< shared_ptr<Input> > & inputs = cmd->inputs();
