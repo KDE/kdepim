@@ -68,15 +68,16 @@ if ( USABLE_ASSUAN_FOUND )
     crypto/gui/signencryptfileswizard.cpp
     crypto/gui/signencryptwizard.cpp
 
+    crypto/controller.cpp
+    crypto/signencryptfilescontroller.cpp
+
     uiserver/uiserver.cpp
     uiserver/assuanserverconnection.cpp
-    uiserver/controller.cpp
     uiserver/echocommand.cpp
     uiserver/decryptverifycommand.cpp
     uiserver/signemailcontroller.cpp
     uiserver/signcommand.cpp
     uiserver/signencryptfilescommand.cpp
-    uiserver/signencryptfilescontroller.cpp
     uiserver/encryptemailcontroller.cpp
     uiserver/prepencryptcommand.cpp
     uiserver/encryptcommand.cpp

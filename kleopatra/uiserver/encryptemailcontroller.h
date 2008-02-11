@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_UISERVER_ENCRYPTEMAILCONTROLLER_H__
 #define __KLEOPATRA_UISERVER_ENCRYPTEMAILCONTROLLER_H__
 
-#include "controller.h"
+#include <crypto/controller.h>
 
 #include <utils/pimpl_ptr.h>
 
@@ -48,7 +48,7 @@ namespace Kleo {
 
     class AssuanCommand;
 
-    class EncryptEMailController : public Controller {
+    class EncryptEMailController : public Crypto::Controller {
         Q_OBJECT
     public:
         explicit EncryptEMailController( const boost::shared_ptr<AssuanCommand> & cmd, QObject * parent=0 );

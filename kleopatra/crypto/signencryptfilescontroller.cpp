@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/signencryptfilescontroller.cpp
+    crypto/signencryptfilescontroller.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -32,12 +32,10 @@
 
 #include "signencryptfilescontroller.h"
 
-#include "assuancommand.h"
+#include "signencryptfilestask.h"
+#include "certificateresolver.h"
 
 #include <crypto/gui/signencryptfileswizard.h>
-
-#include <crypto/signencryptfilestask.h>
-#include <crypto/certificateresolver.h>
 
 #include <utils/input.h>
 #include <utils/output.h>
@@ -64,7 +62,7 @@ using namespace GpgME;
 using namespace KMime::Types;
 
 class SignEncryptFilesController::Private {
-    friend class ::Kleo::SignEncryptFilesController;
+    friend class ::Kleo::Crypto::SignEncryptFilesController;
     SignEncryptFilesController * const q;
 public:
     explicit Private( SignEncryptFilesController * qq );
@@ -128,8 +126,8 @@ QString SignEncryptFilesController::Private::titleForOperation( unsigned int op 
     return i18n( "Sign/Encrypt Files" );
 }
 
-SignEncryptFilesController::SignEncryptFilesController( const shared_ptr<AssuanCommand> & cmd, QObject * p )
-    : Controller( cmd, p ), d( new Private( this ) )
+SignEncryptFilesController::SignEncryptFilesController( const shared_ptr<const ExecutionContext> & ctx, QObject * p )
+    : Controller( ctx, p ), d( new Private( this ) )
 {
 
 }

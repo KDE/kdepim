@@ -31,13 +31,15 @@
 */
 
 #include "signencryptfilescommand.h"
-#include "signencryptfilescontroller.h"
+
+#include <crypto/signencryptfilescontroller.h>
 
 #include <utils/exception.h>
 
 #include <KLocale>
 
 using namespace Kleo;
+using namespace Kleo::Crypto;
 using namespace boost;
 
 class SignEncryptFilesCommand::Private : public QObject {

@@ -1,8 +1,8 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/signencryptfilescontroller.h
+    crypto/controller.h
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2008 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,69 +30,45 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_SIGNENCRYPTFILESCONTROLLER_H__
-#define __KLEOPATRA_UISERVER_SIGNENCRYPTFILESCONTROLLER_H__
+#ifndef __KLEOPATRA_CRYPTO_CONTROLLER_H__
+#define __KLEOPATRA_CRYPTO_CONTROLLER_H__
 
-#include "controller.h"
+#include <QObject>
 
 #include <utils/pimpl_ptr.h>
 
-#include <gpgme++/global.h>
-#include <kmime/kmime_header_parsing.h>
-
 #include <boost/shared_ptr.hpp>
 
-#include <vector>
+class QDialog;
 
 namespace Kleo {
+namespace Crypto {
 
-    class AssuanCommand;
+    class ExecutionContext {
+    public:
+        virtual ~ExecutionContext() {}
+        virtual void applyWindowID( QDialog * dialog ) const = 0;
+    };
 
-    class SignEncryptFilesController : public Controller {
+    class Controller : public QObject {
         Q_OBJECT
     public:
-        explicit SignEncryptFilesController( const boost::shared_ptr<AssuanCommand> & cmd, QObject * parent=0 );
-        ~SignEncryptFilesController();
+        explicit Controller( const boost::shared_ptr<const ExecutionContext> & cmd, QObject * parent=0 );
+        ~Controller();
 
-        void setProtocol( GpgME::Protocol proto );
-        GpgME::Protocol protocol() const;
-        //const char * protocolAsString() const;
+        void setExecutionContext( const boost::shared_ptr<const ExecutionContext> & cmd );
 
-        enum Operation {
-            SignDisallowed = 0,
-            SignAllowed = 1,
-            SignForced  = 2,
-
-            SignMask = SignAllowed|SignForced,
-
-            EncryptDisallowed = 0,
-            EncryptAllowed = 4,
-            EncryptForced = 8,
-
-            EncryptMask = EncryptAllowed|EncryptForced
-        };
-        void setOperationMode( unsigned int mode );
-
-        void setFiles( const QStringList & files );
-
-        void start();
-
-    public Q_SLOTS:
-        void cancel();
-
-    Q_SIGNALS:
-        void error( int err, const QString & details );
-        void done();
-
+    protected:   
+        boost::shared_ptr<const ExecutionContext> executionContext() const;
+ 
+        void bringToForeground( QDialog* dlg );
+        
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotWizardOperationPrepared() )
-        Q_PRIVATE_SLOT( d, void slotWizardCanceled() )
-        Q_PRIVATE_SLOT( d, void slotTaskDone() )
-        Q_PRIVATE_SLOT( d, void schedule() )
     };
+
+}
 }
 
-#endif /* __KLEOPATRA_UISERVER_SIGNENCRYPTFILESCONTROLLER_H__ */
-
+#endif /* __KLEOPATRA_CRYPTO_CONTROLLER_H__ */

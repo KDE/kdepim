@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/controller.cpp
+    crypto/controller.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2008 Klarälvdalens Datakonsult AB
@@ -39,11 +39,12 @@
 
 #include <boost/weak_ptr.hpp>
 
-using namespace boost;
 using namespace Kleo;
+using namespace Kleo::Crypto;
+using namespace boost;
 
 class Controller::Private {
-    friend class ::Kleo::Controller;
+    friend class ::Kleo::Crypto::Controller;
     Controller * const q;
 public:
     explicit Private( const shared_ptr<const ExecutionContext> & ctx, Controller * qq );
