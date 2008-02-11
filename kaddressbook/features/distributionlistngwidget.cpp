@@ -55,8 +55,8 @@ void KAB::DistributionListNg::ListBox::dragMoveEvent( QDragMoveEvent *event )
     }
     else {
         event->accept( visualItemRect( item ) );
-    }   
-} 
+    }
+}
 
 void KAB::DistributionListNg::ListBox::dragEnterEvent( QDragEnterEvent *event )
 {
@@ -70,7 +70,7 @@ void KAB::DistributionListNg::ListBox::dropEvent( QDropEvent *event )
         return;
 
     KABC::Addressee::List addrs;
-    if ( !KPIM::KVCardDrag::fromMimeData( event->mimeData(), addrs ) ) 
+    if ( !KPIM::KVCardDrag::fromMimeData( event->mimeData(), addrs ) )
         return;
 
     emit dropped( item->text(), addrs );
@@ -96,12 +96,7 @@ class Factory : public KAB::ExtensionFactory
 }
 }
 
-extern "C" {
-  void *init_libkaddrbk_distributionlistng()
-  {
-    return ( new KAB::DistributionListNg::Factory );
-  }
-}
+K_EXPORT_PLUGIN(KAB::DistributionListNg::Factory)
 
 QString KAB::DistributionListNg::MainWidget::title() const
 {
@@ -125,11 +120,11 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
     mListBox = new ListBox;
     layout->addWidget( mListBox );
 
-    connect( mListBox, SIGNAL( contextMenuRequested( QListBoxItem*, const QPoint& ) ), 
+    connect( mListBox, SIGNAL( contextMenuRequested( QListBoxItem*, const QPoint& ) ),
              this, SLOT( contextMenuRequested( QListBoxItem*, const QPoint& ) ) );
-    connect( mListBox, SIGNAL( dropped( const QString &, const KABC::Addressee::List & ) ), 
+    connect( mListBox, SIGNAL( dropped( const QString &, const KABC::Addressee::List & ) ),
              this, SLOT( contactsDropped( const QString &, const KABC::Addressee::List & ) ) );
-    connect( mListBox, SIGNAL( highlighted( int ) ), 
+    connect( mListBox, SIGNAL( highlighted( int ) ),
              this, SLOT( itemSelected( int ) ) );
 
 
@@ -152,17 +147,17 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
 void KAB::DistributionListNg::MainWidget::contextMenuRequested( QListWidgetItem *item, const QPoint &point )
 {
     QPointer<KMenu> menu = new KMenu( this );
-    menu->insertItem( i18n( "New Distribution List..." ), core(), SLOT( newDistributionList() ) ); 
+    menu->insertItem( i18n( "New Distribution List..." ), core(), SLOT( newDistributionList() ) );
     if ( item )
     {
-        menu->insertItem( i18n( "Edit..." ), this, SLOT( editSelectedDistributionList() ) ); 
-        menu->insertItem( i18n( "Delete" ), this, SLOT( deleteSelectedDistributionList() ) ); 
+        menu->insertItem( i18n( "Edit..." ), this, SLOT( editSelectedDistributionList() ) );
+        menu->insertItem( i18n( "Delete" ), this, SLOT( deleteSelectedDistributionList() ) );
     }
     menu->exec( point );
     delete menu;
 }
 
-#endif 
+#endif
 
 void KAB::DistributionListNg::MainWidget::editSelectedDistributionList()
 {
@@ -202,7 +197,7 @@ void KAB::DistributionListNg::MainWidget::contactsDropped( const QString &listNa
 
     core()->addressBook()->insertAddressee( list );
     changed( list );
-} 
+}
 
 void KAB::DistributionListNg::MainWidget::changed( const KABC::Addressee& dist )
 {

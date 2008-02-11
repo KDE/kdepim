@@ -1,6 +1,6 @@
 [Desktop Entry]
 Encoding=UTF-8
-X-KDE-Library=libkaddrbk_distributionlistng
+X-KDE-Library=kaddrbk_distributionlistng
 Name=KAB Distribution List Next Generation Plugin
 Name[el]=Πρόσθετο λίστας διανομής επόμενης γενιάς του KAB
 Name[km]=កម្មវិធី​ជំនួយ​ជំនាន់​ក្រោយ​របស់​បញ្ជី​ចែកចាយ KAB
@@ -64,5 +64,5 @@ Comment[x-test]=xxPlugin for managing distribution listsxx
 Comment[zh_CN]=管理分发列表的插件
 Comment[zh_TW]=管理分配清單外掛程式
 Type=Service
-ServiceTypes=KAddressBook/Extension
+X-KDE-ServiceTypes=KAddressBook/Extension
 X-KDE-KAddressBook-ExtensionPluginVersion=1

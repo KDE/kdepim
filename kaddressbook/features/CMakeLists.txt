@@ -20,7 +20,7 @@ install(TARGETS kaddrbk_distributionlist  DESTINATION ${PLUGIN_INSTALL_DIR})
 set(kaddrbk_distributionlistng_PART_SRCS distributionlistngwidget.cpp )
 
 
-kde4_add_plugin(kaddrbk_distributionlistng WITH_PREFIX ${kaddrbk_distributionlistng_PART_SRCS})
+kde4_add_plugin(kaddrbk_distributionlistng ${kaddrbk_distributionlistng_PART_SRCS})
 
 target_link_libraries(kaddrbk_distributionlistng  ${KDE4_KABC_LIBS} kaddressbook ${LIB_KDE3SUPPORT})
 
