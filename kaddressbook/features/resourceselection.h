@@ -28,7 +28,7 @@
 
 #include "extensionwidget.h"
 
-class QPushButton;
+class QAbstractButton;
 
 namespace KABC { class ResourceABC; }
 
@@ -68,9 +68,9 @@ class ResourceSelection : public KAB::ExtensionWidget
     ResourceItem* selectedItem() const;
 
     QTreeWidget *mListView;
-    QPushButton *mAddButton;
-    QPushButton *mEditButton;
-    QPushButton *mRemoveButton;
+    QAbstractButton *mAddButton;
+    QAbstractButton *mEditButton;
+    QAbstractButton *mRemoveButton;
 
     QString mLastResource;
 

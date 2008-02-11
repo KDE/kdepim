@@ -22,8 +22,12 @@
 */
 
 #include <QPushButton>
+#include <QToolButton>
 #include <QTimer>
 #include <QGridLayout>
+#include <QHeaderView>
+#include <qlabel.h>
+#include <qtooltip.h>
 
 #include <kabc/resource.h>
 #include <kabc/resourceabc.h>
@@ -352,24 +356,36 @@ ResourceItem* ResourceSelection::selectedItem() const
 
 void ResourceSelection::initGUI()
 {
-  QGridLayout *layout = new QGridLayout( this );
-  layout->setSpacing( 5 );
-  layout->setMargin( 2 );
+  QBoxLayout *topLayout = new QVBoxLayout( this );
+  topLayout->setSpacing( KDialog::spacingHint() );
+  QBoxLayout *buttonLayout = new QHBoxLayout();
+  buttonLayout->setSpacing( KDialog::spacingHint() );
+  topLayout->addLayout( buttonLayout );
+
+  QLabel *abLabel = new QLabel( i18n( "Address Books" ), this );
+  buttonLayout->addWidget( abLabel );
+  buttonLayout->addStretch( 1 );
+
+  mAddButton = new QToolButton( this );
+  mAddButton->setIcon( KIcon( "list-add" ) );
+  mAddButton->setToolTip( i18n( "Add addressbook" ) );
+  buttonLayout->addWidget( mAddButton );
+  mEditButton = new QToolButton( this );
+  mEditButton->setIcon( KIcon( "document-properties" ) );
+  mEditButton->setEnabled( false );
+  mEditButton->setToolTip( i18n( "Edit addressbook settings" ) );
+  buttonLayout->addWidget( mEditButton );
+  mRemoveButton = new QToolButton( this );
+  mRemoveButton->setIcon( KIcon( "edit-delete" ) );
+  mRemoveButton->setEnabled( false );
+  mRemoveButton->setToolTip( i18n( "Remove addressbook" ) );
+  buttonLayout->addWidget( mRemoveButton );
 
   mListView = new QTreeWidget( this );
   mListView->setRootIsDecorated( false );
   mListView->setHeaderLabel( i18n( "Address Books" ) );
-  layout->addWidget( mListView, 0, 0, 1, 3 );
-
-  mAddButton = new QPushButton( i18n( "Add..." ), this );
-  mEditButton = new QPushButton( i18n( "Edit..." ), this );
-  mEditButton->setEnabled( false );
-  mRemoveButton = new QPushButton( i18n( "Remove" ), this );
-  mRemoveButton->setEnabled( false );
-
-  layout->addWidget( mAddButton, 1, 0 );
-  layout->addWidget( mEditButton, 1, 1 );
-  layout->addWidget( mRemoveButton, 1, 2 );
+  mListView->header()->hide();
+  topLayout->addWidget( mListView );
 }
 
 class ResourceSelectionFactory : public KAB::ExtensionFactory
