@@ -11,4 +11,5 @@ add_subdirectory( groupdav )
 add_subdirectory( birthdays ) 
 add_subdirectory( blog ) 
 #add_subdirectory( groupwise )
+add_subdirectory( akonadi )
 
