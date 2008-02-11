@@ -136,7 +136,7 @@ namespace {
     };
 
 
-
+#ifdef HAVE_USABLE_ASSUAN
     class PipeOutput : public OutputImplBase {
     public:
         explicit PipeOutput( assuan_fd_t fd );
@@ -147,6 +147,8 @@ namespace {
     private:
         shared_ptr< inhibit_close<KDPipeIODevice> > m_io;
     };
+
+#endif // HAVE_USABLE_ASSUAN
 
     class FileOutput : public OutputImplBase {
     public:
@@ -184,6 +186,8 @@ namespace {
 
 }
 
+#ifdef HAVE_USABLE_ASSUAN
+
 shared_ptr<Output> Output::createFromPipeDevice( assuan_fd_t fd, const QString & label ) {
     shared_ptr<PipeOutput> po( new PipeOutput( fd ) );
     po->setLabel( label );
@@ -200,6 +204,8 @@ PipeOutput::PipeOutput( assuan_fd_t fd )
                          i18n( "Couldn't open FD %1 for writing",
                                assuanFD2int( fd ) ) );
 }
+
+#endif // HAVE_USABLE_ASSUAN
 
 shared_ptr<Output> Output::createFromFile( const QString & fileName, bool allowOverwrite ) {
     shared_ptr<FileOutput> fo( new FileOutput( fileName ) );
