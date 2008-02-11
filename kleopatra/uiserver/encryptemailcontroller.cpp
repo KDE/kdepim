@@ -33,7 +33,8 @@
 #include "encryptemailcontroller.h"
 
 #include "assuancommand.h"
-#include "signencryptwizard.h"
+
+#include <crypto/gui/signencryptwizard.h>
 
 #include <crypto/encryptemailtask.h>
 
@@ -54,6 +55,7 @@
 
 using namespace Kleo;
 using namespace Kleo::Crypto;
+using namespace Kleo::Crypto::Gui;
 using namespace boost;
 using namespace GpgME;
 using namespace KMime::Types;

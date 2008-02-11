@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/signemailwizard.cpp
+    crypto/gui/signemailwizard.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2008 Klarälvdalens Datakonsult AB
@@ -41,6 +41,7 @@
 #include <cassert>
 
 using namespace Kleo;
+using namespace Kleo::Crypto::Gui;
 using namespace GpgME;
 
 namespace {
@@ -81,7 +82,7 @@ bool SignerResolveValidator::isComplete() const {
 }
 
 class SignEMailWizard::Private {
-    friend class ::SignEMailWizard;
+    friend class ::Kleo::Crypto::Gui::SignEMailWizard;
     SignEMailWizard * const q;
 public:
     explicit Private( SignEMailWizard * qq );

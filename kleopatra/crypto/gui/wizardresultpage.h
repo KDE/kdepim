@@ -1,8 +1,8 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/signemailwizard.h
+    crypto/gui/wizardresultpage.h
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2007 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,25 +30,35 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_SIGNEMAILWIZARD_H__
-#define __KLEOPATRA_SIGNEMAILWIZARD_H__
+#ifndef __KLEOPATRA_CRYPTO_GUI_WIZARDRESULTPAGE_H__
+#define __KLEOPATRA_CRYPTO_GUI_WIZARDRESULTPAGE_H__
 
-#include "signencryptwizard.h"
-    
+#include <crypto/gui/wizardpage.h>
+
 #include <utils/pimpl_ptr.h>
-    
-namespace Kleo {
 
-    class SignEMailWizard : public SignEncryptWizard {
+namespace Kleo {
+namespace Crypto {
+namespace Gui {
+
+    class WizardResultPage : public WizardPage {
         Q_OBJECT
-            public:
-        explicit SignEMailWizard( QWidget * parent=0, Qt::WFlags f=0 );
-        ~SignEMailWizard();
-        
+    public:
+        explicit WizardResultPage( QWidget * parent=0 );
+        ~WizardResultPage();
+    
+        void addResultItem( QWidget* widget );
+
+        /*reimpl*/ bool isComplete() const;
+
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
     };
+
+}
+}
 }
 
-#endif // __KLEOPATRA_SIGNEMAILWIZARD_H__
+#endif // __KLEOPATRA_CRYPTO_GUI_WIZARDRESULTPAGE_H__
+

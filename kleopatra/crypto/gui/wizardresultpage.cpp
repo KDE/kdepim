@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    wizardresultpage.cpp
+    crypto/gui/wizardresultpage.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -33,7 +33,7 @@
 
 #include "wizardresultpage.h"
 
-#include <crypto/gui/scrollarea.h>
+#include "scrollarea.h"
 
 #include <KLocale>
 
@@ -45,7 +45,7 @@ using namespace Kleo;
 using namespace Kleo::Crypto::Gui;
 
 class WizardResultPage::Private {
-    friend class ::WizardResultPage;
+    friend class ::Kleo::Crypto::Gui::WizardResultPage;
     WizardResultPage * const q;
 public:
     explicit Private( WizardResultPage * qq );

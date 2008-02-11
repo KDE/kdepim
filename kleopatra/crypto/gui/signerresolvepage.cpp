@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    signerresolvepage.cpp
+    crypto/gui/signerresolvepage.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -32,9 +32,9 @@
 
 #include "signerresolvepage.h"
 
-#include <crypto/certificateresolver.h>
+#include "signingcertificateselectiondialog.h"
 
-#include <crypto/gui/signingcertificateselectiondialog.h>
+#include <crypto/certificateresolver.h>
 
 #include <models/keycache.h>
 
@@ -76,7 +76,7 @@ namespace {
 }
 
 class SignerResolvePage::Private {
-    friend class ::SignerResolvePage;
+    friend class ::Kleo::Crypto::Gui::SignerResolvePage;
     SignerResolvePage * const q;
 public:
     explicit Private( SignerResolvePage * qq );

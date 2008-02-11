@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    resolverecipientspage.h
+    crypto/gui/resolverecipientspage.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_RESOLVERECIPIENTSPAGE__
-#define __KLEOPATRA_RESOLVERECIPIENTSPAGE__
+#ifndef __KLEOPATRA_CRYPTO_GUI_RESOLVERECIPIENTSPAGE_H__
+#define __KLEOPATRA_CRYPTO_GUI_RESOLVERECIPIENTSPAGE_H__
 
 #include <crypto/gui/wizardpage.h>
 
@@ -48,64 +48,65 @@ namespace GpgME {
 }
 
 namespace KMime {
-    namespace Types { 
-        class Mailbox;
-    }
+namespace Types { 
+    class Mailbox;
 }
+}
+
 namespace Kleo {
+namespace Crypto {
 
-    namespace Crypto {
-        class RecipientPreferences;
-    }
+    class RecipientPreferences;
 
-    class ResolveRecipientsPage : public Crypto::Gui::WizardPage {
+namespace Gui {
+
+    class ResolveRecipientsPage : public WizardPage {
         Q_OBJECT
     public:
-    
         explicit ResolveRecipientsPage( QWidget * parent=0 );
         ~ResolveRecipientsPage();
-    
+
         bool isComplete() const;
-    
+
         /** 
          * The protocol selected by the user (which is chosen by 
          * the user in case none was preset)
          */
         GpgME::Protocol selectedProtocol() const;
-    
+
         /**
          * the protocol set before the dialog is shown. Defaults to 
          * GpgME::UnknownProtocol */
         GpgME::Protocol presetProtocol() const;
         void setPresetProtocol( GpgME::Protocol protocol );
-    
+
         bool multipleProtocolsAllowed() const;
         void setMultipleProtocolsAllowed( bool allowed );
-    
+
         bool symmetricEncryptionSelected() const;
         void setSymmetricEncryptionSelected( bool enabled );
-    
+
         bool symmetricEncryptionSelectable() const;
         void setSymmetricEncryptionSelectable( bool selectable );
-   
+
         /** if true, the user is allowed to remove/add recipients via the UI.
          * Defaults to @p false.
          */
         bool recipientsUserMutable() const;
         void setRecipientsUserMutable( bool isMutable ); 
-    
+
         void setRecipients( const std::vector<KMime::Types::Mailbox>& recipients );
         std::vector<GpgME::Key> resolvedCertificates() const;
 
-        boost::shared_ptr<Crypto::RecipientPreferences> recipientPreferences() const;
-        void setRecipientPreferences( const boost::shared_ptr<Crypto::RecipientPreferences>& prefs );
-        
+        boost::shared_ptr<RecipientPreferences> recipientPreferences() const;
+        void setRecipientPreferences( const boost::shared_ptr<RecipientPreferences>& prefs );
+
     Q_SIGNALS:
         void selectedProtocolChanged();
 
     private:
         /*reimpl*/ void onNext();
-        
+
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
@@ -118,4 +119,7 @@ namespace Kleo {
     };
 
 }
-#endif // __KLEOPATRA_RESOLVERECIPIENTSPAGE__
+}
+}
+
+#endif // __KLEOPATRA_CRYPTO_GUI_RESOLVERECIPIENTSPAGE_H__

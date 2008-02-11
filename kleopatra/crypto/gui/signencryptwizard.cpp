@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/signencryptwizard.cpp
+    crypto/gui/signencryptwizard.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -36,8 +36,7 @@
 #include "resolverecipientspage.h"
 #include "signerresolvepage.h"
 #include "wizardresultpage.h"
-
-#include <crypto/gui/resultdisplaywidget.h>
+#include "resultdisplaywidget.h"
 
 #include <crypto/task.h>
 #include <crypto/certificateresolver.h>
@@ -64,7 +63,7 @@ using namespace GpgME;
 using namespace KMime::Types;
 
 class SignEncryptWizard::Private {
-    friend class ::Kleo::SignEncryptWizard;
+    friend class ::Kleo::Crypto::Gui::SignEncryptWizard;
     SignEncryptWizard * q;
 public:
     explicit Private( SignEncryptWizard * qq );
@@ -72,18 +71,18 @@ public:
 
     void setCommitPage( Page page );
 
-    Kleo::ResolveRecipientsPage * recipientResolvePage;
+    Gui::ResolveRecipientsPage * recipientResolvePage; // clashes with enum of same name
     SignerResolvePage * signerResolvePage;
-    Kleo::ObjectsPage * objectsPage;
+    Gui::ObjectsPage * objectsPage;                    // clashes with enum of same name
     WizardResultPage * resultPage;
 };
 
 
 SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
     : q( qq ),
-      recipientResolvePage( new Kleo::ResolveRecipientsPage ),
+      recipientResolvePage( new Gui::ResolveRecipientsPage ),
       signerResolvePage( new SignerResolvePage ),
-      objectsPage( new Kleo::ObjectsPage ),
+      objectsPage( new Gui::ObjectsPage ),
       resultPage( new WizardResultPage )
 {
     q->setPage( SignEncryptWizard::ResolveSignerPage, signerResolvePage );

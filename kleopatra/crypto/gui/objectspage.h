@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/signencryptfileswizard.h
+    crypto/gui/objectspage.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,32 +30,40 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_SIGNENCRYPTFILESWIZARD_H__
-#define __KLEOPATRA_SIGNENCRYPTFILESWIZARD_H__
+#ifndef __KLEOPATRA_CRYPTO_GUI_OBJECTSPAGE_H__
+#define __KLEOPATRA_CRYPTO_GUI_OBJECTSPAGE_H__
 
-#include "signencryptwizard.h"
+#include <crypto/gui/wizardpage.h>
     
 #include <utils/pimpl_ptr.h>
-    
+
+class QStringList;
+
 namespace Kleo {
-
-    class SignEncryptFilesWizard : public SignEncryptWizard {
+namespace Crypto {
+namespace Gui {
+ 
+    class ObjectsPage : public WizardPage {
         Q_OBJECT
-            public:
-        explicit SignEncryptFilesWizard( QWidget * parent=0, Qt::WFlags f=0 );
-        ~SignEncryptFilesWizard();
-        
+    public:
+        explicit ObjectsPage( QWidget * parent=0, Qt::WFlags f=0 );
+        ~ObjectsPage();
 
-        /*reimp*/ void onNext( int currentId );
-
-    Q_SIGNALS:
-        void operationPrepared();
+        bool isComplete() const;
+        void setFiles( const QStringList& files );
+        QStringList files() const;
 
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void operationSelected() )
+        Q_PRIVATE_SLOT( d, void add() )
+        Q_PRIVATE_SLOT( d, void remove() )
+        Q_PRIVATE_SLOT( d, void listSelectionChanged() )
     };
+
+}
+}
 }
 
-#endif // __KLEOPATRA_SIGNENCRYPTFILESWIZARD_H__
+#endif // __KLEOPATRA_CRYPTO_GUI_OBJECTSPAGE_H__
+ 

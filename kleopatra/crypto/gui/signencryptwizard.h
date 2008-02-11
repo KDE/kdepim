@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/signencryptwizard.h
+    crypto/gui/signencryptwizard.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,12 +30,12 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_SIGNENCRYPTWIZARD_H__
-#define __KLEOPATRA_UISERVER_SIGNENCRYPTWIZARD_H__
+#ifndef __KLEOPATRA_CRYPTO_GUI_SIGNENCRYPTWIZARD_H__
+#define __KLEOPATRA_CRYPTO_GUI_SIGNENCRYPTWIZARD_H__
 
 #include <crypto/gui/wizard.h>
 
-#include <uiserver/signerresolvepage.h>
+#include <crypto/gui/signerresolvepage.h>
 
 #include <utils/pimpl_ptr.h>
 
@@ -56,13 +56,12 @@ typedef QList<QFileInfo> QFileInfoList;
 
 namespace Kleo {
 namespace Crypto {
+
     class Task;
-}
-}
 
-namespace Kleo {
+namespace Gui {
 
-    class SignEncryptWizard : public Crypto::Gui::Wizard {
+    class SignEncryptWizard : public Wizard {
         Q_OBJECT
     public:
         explicit SignEncryptWizard( QWidget * parent=0, Qt::WindowFlags f=0 );
@@ -115,7 +114,7 @@ namespace Kleo {
 
         void setSignersAndCandidates( const std::vector<KMime::Types::Mailbox> & signers, const std::vector< std::vector<GpgME::Key> > & keys );
 
-        void connectTask( const boost::shared_ptr<Crypto::Task> & task, unsigned int idx );
+        void connectTask( const boost::shared_ptr<Task> & task, unsigned int idx );
 
         std::vector<GpgME::Key> resolvedCertificates() const;
         std::vector<GpgME::Key> resolvedSigners() const;
@@ -137,7 +136,6 @@ namespace Kleo {
     protected:
         SignerResolvePage* signerResolvePage();
         void setSignerResolvePageValidator( const boost::shared_ptr<SignerResolvePage::Validator>& validator );
-        
 
     private:
         class Private;
@@ -145,5 +143,7 @@ namespace Kleo {
     };
 
 }
+}
+}
 
-#endif /* __KLEOPATRA_UISERVER_SIGNENCRYPTWIZARD_H__ */
+#endif /* __KLEOPATRA_CRYPTO_GUI_SIGNENCRYPTWIZARD_H__ */

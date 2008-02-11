@@ -1,8 +1,8 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    objectspage.h
+    crypto/gui/signemailwizard.h
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2008 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,35 +30,30 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_OBJECTSPAGE_H__
-#define __KLEOPATRA_OBJECTSPAGE_H__
+#ifndef __KLEOPATRA_CRYPTO_GUI_SIGNEMAILWIZARD_H__
+#define __KLEOPATRA_CRYPTO_GUI_SIGNEMAILWIZARD_H__
 
-#include <crypto/gui/wizardpage.h>
+#include <crypto/gui/signencryptwizard.h>
     
 #include <utils/pimpl_ptr.h>
-
-class QStringList;
-
+    
 namespace Kleo {
- 
-    class ObjectsPage : public Crypto::Gui::WizardPage {
+namespace Crypto {
+namespace Gui {
+
+    class SignEMailWizard : public SignEncryptWizard {
         Q_OBJECT
-            public:
-        explicit ObjectsPage( QWidget * parent=0, Qt::WFlags f=0 );
-        ~ObjectsPage();
-        
-        bool isComplete() const;
-        void setFiles( const QStringList& files );
-        QStringList files() const;
+    public:
+        explicit SignEMailWizard( QWidget * parent=0, Qt::WFlags f=0 );
+        ~SignEMailWizard();
 
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void add() )
-        Q_PRIVATE_SLOT( d, void remove() )
-        Q_PRIVATE_SLOT( d, void listSelectionChanged() )
     };
+
+}
+}
 }
 
-#endif // __KLEOPATRA_OBJECTSPAGE_H__
- 
+#endif // __KLEOPATRA_SIGNEMAILWIZARD_H__

@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/signencryptfileswizard.cpp
+    crypto/gui/signencryptfileswizard.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -40,6 +40,7 @@
 #include <cassert>
 
 using namespace Kleo;
+using namespace Kleo::Crypto::Gui;
 
 namespace {
 
@@ -123,7 +124,7 @@ QString SignerResolveValidator::explanation() const
 
 
 class SignEncryptFilesWizard::Private {
-    friend class ::SignEncryptFilesWizard;
+    friend class ::Kleo::Crypto::Gui::SignEncryptFilesWizard;
     SignEncryptFilesWizard * const q;
 public:
     explicit Private( SignEncryptFilesWizard * qq );

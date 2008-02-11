@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    objectspage.cpp
+    crypto/gui/objectspage.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -45,9 +45,10 @@
 #include <cassert>
 
 using namespace Kleo;
+using namespace Kleo::Crypto::Gui;
 
 class ObjectsPage::Private {
-    friend class ::ObjectsPage;
+    friend class ::Kleo::Crypto::Gui::ObjectsPage;
     ObjectsPage * const q;
 public:
     explicit Private( ObjectsPage * qq );

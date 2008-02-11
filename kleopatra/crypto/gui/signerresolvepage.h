@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    signerresolvepage.h
+    crypto/gui/signerresolvepage.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_SIGNERRESOLVEPAGE_H__
-#define __KLEOPATRA_SIGNERRESOLVEPAGE_H__ 
+#ifndef __KLEOPATRA_CRYPTO_GUI_SIGNERRESOLVEPAGE_H__
+#define __KLEOPATRA_CRYPTO_GUI_SIGNERRESOLVEPAGE_H__
 
 #include <crypto/gui/wizardpage.h>
 
@@ -47,12 +47,13 @@ namespace GpgME {
 }
 
 namespace Kleo {
+namespace Crypto {
 
-    namespace Crypto {
-        class SigningPreferences;
-    }
-    
-    class SignerResolvePage : public Crypto::Gui::WizardPage {
+    class SigningPreferences;
+
+namespace Gui {
+
+    class SignerResolvePage : public WizardPage {
         Q_OBJECT
     public:
         explicit SignerResolvePage( QWidget * parent=0, Qt::WFlags f=0 );
@@ -108,8 +109,8 @@ namespace Kleo {
         void setValidator( const boost::shared_ptr<Validator>& );
         boost::shared_ptr<Validator> validator() const;
 
-        void setSigningPreferences( const boost::shared_ptr<Crypto::SigningPreferences>& prefs );
-        boost::shared_ptr<Crypto::SigningPreferences> signingPreferences() const;
+        void setSigningPreferences( const boost::shared_ptr<SigningPreferences>& prefs );
+        boost::shared_ptr<SigningPreferences> signingPreferences() const;
         
     private:
         /*reimpl*/ void onNext();
@@ -122,7 +123,10 @@ namespace Kleo {
         Q_PRIVATE_SLOT( d, void selectCertificates() )
         Q_PRIVATE_SLOT( d, void updateUi() )
     };
+
+}
+}
 }
 
-#endif // __KLEOPATRA_SIGNERRESOLVEPAGE_H__
+#endif // __KLEOPATRA_CRYPTO_GUI_SIGNERRESOLVEPAGE_H__
 

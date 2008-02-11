@@ -33,7 +33,8 @@
 #include "signencryptfilescontroller.h"
 
 #include "assuancommand.h"
-#include "signencryptfileswizard.h"
+
+#include <crypto/gui/signencryptfileswizard.h>
 
 #include <crypto/signencryptfilestask.h>
 #include <crypto/certificateresolver.h>
@@ -57,6 +58,7 @@
 
 using namespace Kleo;
 using namespace Kleo::Crypto;
+using namespace Kleo::Crypto::Gui;
 using namespace boost;
 using namespace GpgME;
 using namespace KMime::Types;

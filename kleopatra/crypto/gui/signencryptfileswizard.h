@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    wizardresultpage.h
+    crypto/gui/signencryptfileswizard.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,30 +30,36 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_WIZARDRESULTPAGE_H__
-#define __KLEOPATRA_UISERVER_WIZARDRESULTPAGE_H__
+#ifndef __KLEOPATRA_CRYPTO_GUI_SIGNENCRYPTFILESWIZARD_H__
+#define __KLEOPATRA_CRYPTO_GUI_SIGNENCRYPTFILESWIZARD_H__
 
-#include <crypto/gui/wizardpage.h>
-
+#include <crypto/gui/signencryptwizard.h>
+    
 #include <utils/pimpl_ptr.h>
-
+    
 namespace Kleo {
+namespace Crypto {
+namespace Gui {
 
-    class WizardResultPage : public Crypto::Gui::WizardPage {
+    class SignEncryptFilesWizard : public SignEncryptWizard {
         Q_OBJECT
     public:
-        explicit WizardResultPage( QWidget * parent=0 );
-        ~WizardResultPage();
-    
-        void addResultItem( QWidget* widget );
+        explicit SignEncryptFilesWizard( QWidget * parent=0, Qt::WFlags f=0 );
+        ~SignEncryptFilesWizard();
 
-        /*reimpl*/ bool isComplete() const;
+        /*reimp*/ void onNext( int currentId );
+
+    Q_SIGNALS:
+        void operationPrepared();
 
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
+        Q_PRIVATE_SLOT( d, void operationSelected() )
     };
+
+}
+}
 }
 
-#endif // __KLEOPATRA_UISERVER_WIZARDRESULTPAGE_H__
-
+#endif // __KLEOPATRA_CRYPTO_GUI_SIGNENCRYPTFILESWIZARD_H__

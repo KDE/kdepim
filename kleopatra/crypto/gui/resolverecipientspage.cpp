@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    resolverecipientspage.cpp
+    crypto/gui/resolverecipientspage.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -33,9 +33,9 @@
 #include "resolverecipientspage.h"
 #include "resolverecipientspage_p.h"
 
-#include <crypto/certificateresolver.h>
+#include "certificateselectiondialog.h"
 
-#include <crypto/gui/certificateselectiondialog.h>
+#include <crypto/certificateresolver.h>
 
 #include <models/keycache.h>
 
@@ -345,7 +345,7 @@ std::vector<Key> ResolveRecipientsPage::ItemWidget::certificates() const
 }
 
 class ResolveRecipientsPage::Private {
-    friend class ::ResolveRecipientsPage;
+    friend class ::Kleo::Crypto::Gui::ResolveRecipientsPage;
     ResolveRecipientsPage * const q;
 public:
     explicit Private( ResolveRecipientsPage * qq );
