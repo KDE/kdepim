@@ -153,6 +153,7 @@ else ( ONLY_KLEO )
 
   if(QGPGME_FOUND)
     set(KMAIL_SUPPORTED TRUE)
+    add_definitions(-DKMAIL_SUPPORTED)
     message(STATUS "KMail support enabled.")
     macro_optional_add_subdirectory(kmail)
     add_subdirectory(plugins)
