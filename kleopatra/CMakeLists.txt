@@ -36,42 +36,8 @@ endif ( WIN32 )
 
 if ( USABLE_ASSUAN_FOUND )
   set(_kleopatra_uiserver_SRCS
-    utils/kdpipeiodevice.cpp
-    ${_kleopatra_extra_uiserver_SRCS}
-    utils/hex.cpp
-    utils/input.cpp
-    utils/output.cpp
-
-    crypto/certificateresolver.cpp
-    crypto/task.cpp
-    crypto/encryptemailtask.cpp
-    crypto/signencryptfilestask.cpp
-    crypto/signemailtask.cpp
-
-    crypto/gui/wizard.cpp
-    crypto/gui/wizardpage.cpp
-    crypto/gui/scrollarea.cpp
-    crypto/gui/signingcertificateselectiondialog.cpp
-    crypto/gui/certificateselectiondialog.cpp
-
-    crypto/gui/resultdisplaywidget.cpp
-
-    crypto/gui/decryptverifyoperationwidget.cpp
-    crypto/gui/decryptverifyresultwidget.cpp
-    crypto/gui/decryptverifywizard.cpp
-
-    crypto/gui/objectspage.cpp
-    crypto/gui/resolverecipientspage.cpp
-    crypto/gui/wizardresultpage.cpp
-    crypto/gui/signerresolvepage.cpp
-    crypto/gui/signemailwizard.cpp
-    crypto/gui/signencryptfileswizard.cpp
-    crypto/gui/signencryptwizard.cpp
-
-    crypto/controller.cpp
-    crypto/signencryptfilescontroller.cpp
-
     uiserver/uiserver.cpp
+    ${_kleopatra_extra_uiserver_SRCS}
     uiserver/assuanserverconnection.cpp
     uiserver/echocommand.cpp
     uiserver/decryptverifycommand.cpp
@@ -100,31 +66,70 @@ else ( USABLE_ASSUAN_FOUND )
 endif ( USABLE_ASSUAN_FOUND )
 
 set( _kleopatra_common_SRCS
-   utils/exception.cpp
-   utils/formatting.cpp
-   utils/wsastarter.cpp
-   utils/classify.cpp
-   utils/iodevicelogger.cpp
-   utils/log.cpp
-   ${_kleopatra_uiserver_files}
-   commands/command.cpp
-   commands/detailscommand.cpp
-   commands/exportcertificatecommand.cpp
-   commands/importcertificatecommand.cpp
-   commands/refreshkeyscommand.cpp
-   commands/deletecertificatescommand.cpp
-   controllers/keylistcontroller.cpp
-   models/keycache.cpp
-   models/keylistmodel.cpp
-   models/keylistsortfilterproxymodel.cpp
-   models/subkeylistmodel.cpp
-   models/useridlistmodel.cpp
-   certificatewizardimpl.cpp
-   aboutdata.cpp
-   systemtrayicon.cpp
-   exportcertificatesdialog.cpp
-   certificateinfowidgetimpl.cpp
-   main.cpp )
+
+  utils/kdpipeiodevice.cpp
+  utils/hex.cpp
+  utils/input.cpp
+  utils/output.cpp
+  utils/exception.cpp
+  utils/formatting.cpp
+  utils/wsastarter.cpp
+  utils/classify.cpp
+  utils/iodevicelogger.cpp
+  utils/log.cpp
+
+  models/keycache.cpp
+  models/keylistmodel.cpp
+  models/keylistsortfilterproxymodel.cpp
+  models/subkeylistmodel.cpp
+  models/useridlistmodel.cpp
+
+  controllers/keylistcontroller.cpp
+
+  crypto/certificateresolver.cpp
+  crypto/task.cpp
+  crypto/encryptemailtask.cpp
+  crypto/signencryptfilestask.cpp
+  crypto/signemailtask.cpp
+
+  crypto/gui/wizard.cpp
+  crypto/gui/wizardpage.cpp
+  crypto/gui/scrollarea.cpp
+  crypto/gui/signingcertificateselectiondialog.cpp
+  crypto/gui/certificateselectiondialog.cpp
+
+  crypto/gui/resultdisplaywidget.cpp
+
+  crypto/gui/decryptverifyoperationwidget.cpp
+  crypto/gui/decryptverifyresultwidget.cpp
+  crypto/gui/decryptverifywizard.cpp
+
+  crypto/gui/objectspage.cpp
+  crypto/gui/resolverecipientspage.cpp
+  crypto/gui/wizardresultpage.cpp
+  crypto/gui/signerresolvepage.cpp
+  crypto/gui/signemailwizard.cpp
+  crypto/gui/signencryptfileswizard.cpp
+  crypto/gui/signencryptwizard.cpp
+
+  crypto/controller.cpp
+  crypto/signencryptfilescontroller.cpp
+
+  commands/command.cpp
+  commands/detailscommand.cpp
+  commands/exportcertificatecommand.cpp
+  commands/importcertificatecommand.cpp
+  commands/refreshkeyscommand.cpp
+  commands/deletecertificatescommand.cpp
+
+  ${_kleopatra_uiserver_files}
+
+  certificatewizardimpl.cpp
+  aboutdata.cpp
+  systemtrayicon.cpp
+  exportcertificatesdialog.cpp
+  certificateinfowidgetimpl.cpp
+  main.cpp )
 
 kde4_add_ui_files( _kleopatra_common_SRCS certificateinfowidget.ui certificatewizard.ui )
 
