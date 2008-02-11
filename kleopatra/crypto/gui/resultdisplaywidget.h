@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    ./resultdisplaywidget.h
+    crypto/gui/resultdisplaywidget.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef KLEO_RESULTDISPLAYWIDGET_H
-#define KLEO_RESULTDISPLAYWIDGET_H
+#ifndef __KLEOPATRA_CRYPTO_GUI_RESULTDISPLAYWIDGET_H__
+#define __KLEOPATRA_CRYPTO_GUI_RESULTDISPLAYWIDGET_H__
 
 #include <QWidget>
 
@@ -46,6 +46,8 @@ namespace GpgME {
 }
 
 namespace Kleo {
+namespace Crypto {
+namespace Gui {
 
 class ResultDisplayWidget : public QWidget {
     Q_OBJECT
@@ -85,5 +87,7 @@ private:
 };
 
 }
+}
+}
 
-#endif
+#endif /* __KLEOPATRA_CRYPTO_GUI_RESULTDISPLAYWIDGET_H__ */

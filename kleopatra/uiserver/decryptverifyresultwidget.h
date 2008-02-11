@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_UISERVER_DECRYPTVERIFYRESULTWIDGET_H__
 #define __KLEOPATRA_UISERVER_DECRYPTVERIFYRESULTWIDGET_H__
 
-#include <uiserver/resultdisplaywidget.h>
+#include <crypto/gui/resultdisplaywidget.h>
 
 #include <vector>
 
@@ -49,7 +49,7 @@ class QLabel;
 
 namespace Kleo {
 
-    class DecryptVerifyResultWidget : public ResultDisplayWidget {
+    class DecryptVerifyResultWidget : public Crypto::Gui::ResultDisplayWidget {
         Q_OBJECT
     public:
         explicit DecryptVerifyResultWidget( QWidget * parent );

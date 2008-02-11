@@ -50,6 +50,7 @@
 #include <QTextDocument> // for Qt::escape
 
 using namespace Kleo;
+using namespace Kleo::Crypto::Gui;
 using namespace GpgME;
 using namespace boost;
 

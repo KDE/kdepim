@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    ./resultdisplaywidget.cpp
+    crypto/gui/resultdisplaywidget.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -33,9 +33,10 @@
 #include "resultdisplaywidget.h"
 
 #include "certificateinfowidgetimpl.h"
-#include "utils/formatting.h"
 
-#include "models/predicates.h"
+#include <utils/formatting.h>
+
+#include <models/predicates.h>
 
 #include <QHash>
 #include <QPointer>
@@ -51,6 +52,7 @@
 
 using namespace Kleo;
 using namespace Kleo::Crypto;
+using namespace Kleo::Crypto::Gui;
 using namespace GpgME;
 
 static const char ERROR_STYLE_SHEET[] =
@@ -97,7 +99,7 @@ private:
 
 
 class ResultDisplayWidget::Private {
-    friend class ::Kleo::ResultDisplayWidget;
+    friend class ::Kleo::Crypto::Gui::ResultDisplayWidget;
     ResultDisplayWidget * const q;
 public:
     explicit Private( ResultDisplayWidget * qq )
@@ -160,8 +162,7 @@ bool ResultDisplayWidget::operationInProgress() const {
     return d->ui.stack->currentWidget() == d->ui.progress;
 }
 
-QString ResultDisplayWidget::renderKey(const Key & key)
-{
+QString ResultDisplayWidget::renderKey( const Key & key ) {
     if ( key.isNull() )
         return i18n( "Unknown key" );
     d->keys.push_back( key );
@@ -176,7 +177,7 @@ static QColor resaturate( const QColor & c, int sat ) {
 }
 
 // static
-QString Kleo::ResultDisplayWidget::styleSheet( const QColor & c ) {
+QString ResultDisplayWidget::styleSheet( const QColor & c ) {
     return
         "border:4px solid " + c.name() + "; border-radius:2px; "
         "background-color: qlineargradient( x1: 0, y1: 0, x2: 0, y2: 1, "
@@ -187,13 +188,11 @@ QString Kleo::ResultDisplayWidget::styleSheet( const QColor & c ) {
         ;
 }
 
-void Kleo::ResultDisplayWidget::setColor( const QColor &color )
-{
+void ResultDisplayWidget::setColor( const QColor & color ) {
     setStyleSheet( '#' + objectName() + '{' + styleSheet( color ) + '}' );
 }
 
-void ResultDisplayWidget::keyLinkActivated(const QString & link)
-{
+void ResultDisplayWidget::keyLinkActivated( const QString & link ) {
     if ( !link.startsWith( "key:" ) )
         return;
     const QString fpr = link.mid( 4 );
@@ -225,14 +224,12 @@ void ResultDisplayWidget::setProgress( const QString & what, int current, int to
     d->ui.progress->setProgress( current, total );
 }
 
-void ResultDisplayWidget::setError( int err, const QString & details )
-{
+void ResultDisplayWidget::setError( int err, const QString & details ) {
     Q_UNUSED( err );
     setError( details );
 }
 
-void ResultDisplayWidget::setResult( const boost::shared_ptr<const Task::Result> & result )
-{
+void ResultDisplayWidget::setResult( const boost::shared_ptr<const Task::Result> & result ) {
     assert( result );
     QVBoxLayout * const layout = new QVBoxLayout( d->ui.result );
     QLabel * const overview = new QLabel;

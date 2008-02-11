@@ -35,8 +35,9 @@
 #include "objectspage.h"
 #include "resolverecipientspage.h"
 #include "signerresolvepage.h"
-#include "resultdisplaywidget.h"
 #include "wizardresultpage.h"
+
+#include <crypto/gui/resultdisplaywidget.h>
 
 #include <crypto/task.h>
 #include <crypto/certificateresolver.h>
@@ -57,6 +58,7 @@
 
 using namespace Kleo;
 using namespace Kleo::Crypto;
+using namespace Kleo::Crypto::Gui;
 using namespace boost;
 using namespace GpgME;
 using namespace KMime::Types;

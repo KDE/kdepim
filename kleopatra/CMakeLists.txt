@@ -54,6 +54,8 @@ if ( USABLE_ASSUAN_FOUND )
     crypto/gui/signingcertificateselectiondialog.cpp
     crypto/gui/certificateselectiondialog.cpp
 
+    crypto/gui/resultdisplaywidget.cpp
+
     uiserver/uiserver.cpp
     uiserver/assuanserverconnection.cpp
     uiserver/controller.cpp
@@ -73,7 +75,6 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/objectspage.cpp
     uiserver/prepencryptcommand.cpp
     uiserver/encryptcommand.cpp
-    uiserver/resultdisplaywidget.cpp
     uiserver/resolverecipientspage.cpp
     uiserver/wizardresultpage.cpp
     uiserver/signerresolvepage.cpp
