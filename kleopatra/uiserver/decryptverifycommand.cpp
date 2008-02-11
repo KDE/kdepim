@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/verifycommand.cpp
+    uiserver/decryptverifycommand.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -32,9 +32,9 @@
 
 #include "decryptverifycommand.h"
 
-#include "decryptverifywizard.h"
-#include "decryptverifyresultwidget.h"
-#include "decryptverifyoperationwidget.h"
+#include <crypto/gui/decryptverifywizard.h>
+#include <crypto/gui/decryptverifyresultwidget.h>
+#include <crypto/gui/decryptverifyoperationwidget.h>
 
 #include <models/keycache.h>
 #include <models/predicates.h>
@@ -84,6 +84,7 @@
 #include <errno.h>
 
 using namespace Kleo;
+using namespace Kleo::Crypto::Gui;
 using namespace GpgME;
 using namespace boost;
 

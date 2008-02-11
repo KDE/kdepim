@@ -56,13 +56,14 @@ if ( USABLE_ASSUAN_FOUND )
 
     crypto/gui/resultdisplaywidget.cpp
 
+    crypto/gui/decryptverifyoperationwidget.cpp
+    crypto/gui/decryptverifyresultwidget.cpp
+    crypto/gui/decryptverifywizard.cpp
+
     uiserver/uiserver.cpp
     uiserver/assuanserverconnection.cpp
     uiserver/controller.cpp
     uiserver/echocommand.cpp
-    uiserver/decryptverifyoperationwidget.cpp
-    uiserver/decryptverifyresultwidget.cpp
-    uiserver/decryptverifywizard.cpp
     uiserver/decryptverifycommand.cpp
     uiserver/signemailcontroller.cpp
     uiserver/signemailwizard.cpp

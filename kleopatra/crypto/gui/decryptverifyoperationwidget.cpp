@@ -44,9 +44,10 @@
 #include <QStackedLayout>
 
 using namespace Kleo;
+using namespace Kleo::Crypto::Gui;
 
 class DecryptVerifyOperationWidget::Private {
-    friend class ::Kleo::DecryptVerifyOperationWidget;
+    friend class ::Kleo::Crypto::Gui::DecryptVerifyOperationWidget;
     DecryptVerifyOperationWidget * const q;
 public:
     explicit Private( DecryptVerifyOperationWidget * qq );

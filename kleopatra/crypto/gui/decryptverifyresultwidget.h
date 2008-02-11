@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/decryptverifyoperationwidget.h
+    crypto/gui/decryptverifyresultwidget.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,45 +30,47 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_DECRYPTVERIFYOPERATIONWIDGET_H__
-#define __KLEOPATRA_UISERVER_DECRYPTVERIFYOPERATIONWIDGET_H__
+#ifndef __KLEOPATRA_CRYPTO_GUI_DECRYPTVERIFYRESULTWIDGET_H__
+#define __KLEOPATRA_CRYPTO_GUI_DECRYPTVERIFYRESULTWIDGET_H__
 
-#include <QWidget>
+#include <crypto/gui/resultdisplaywidget.h>
 
-#include <utils/pimpl_ptr.h>
+#include <vector>
 
-namespace Kleo {
-
-    class DecryptVerifyOperationWidget : public QWidget {
-        Q_OBJECT
-        Q_ENUMS( Mode )
-        Q_PROPERTY( Mode mode READ mode WRITE setMode )
-        Q_PROPERTY( QString inputFileName READ inputFileName WRITE setInputFileName )
-        Q_PROPERTY( QString signedDataFileName READ signedDataFileName WRITE setSignedDataFileName )
-    public:
-        explicit DecryptVerifyOperationWidget( QWidget * parent=0 );
-        ~DecryptVerifyOperationWidget();
-
-        enum Mode {
-            VerifyDetachedWithSignature,
-            VerifyDetachedWithSignedData,
-            DecryptVerifyOpaque
-        };
-        void setMode( Mode mode );
-        Mode mode() const;
-
-        void setInputFileName( const QString & name );
-        QString inputFileName() const;
-
-        void setSignedDataFileName( const QString & name );
-        QString signedDataFileName() const;
-
-    private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-    };
-
-
+namespace GpgME {
+    class DecryptionResult;
+    class VerificationResult;
+    class Signature;
+    class Key;
 }
 
-#endif /* __KLEOPATRA_UISERVER_DECRYPTVERIFYOPERATIONWIDGET_H__ */
+class QVBoxLayout;
+class QLabel;
+
+namespace Kleo {
+namespace Crypto {
+namespace Gui {
+
+    class DecryptVerifyResultWidget : public ResultDisplayWidget {
+        Q_OBJECT
+    public:
+        explicit DecryptVerifyResultWidget( QWidget * parent );
+        ~DecryptVerifyResultWidget();
+
+        void setResult( const GpgME::DecryptionResult & decryptionResult, const GpgME::VerificationResult & verificationResult );
+
+    private:
+        QString formatDecryptionResult( const GpgME::DecryptionResult &, const std::vector<GpgME::Key> & );
+        QString formatVerificationResult( const GpgME::VerificationResult & ) const;
+        QString formatSignature( const GpgME::Signature &, const GpgME::Key & );
+        QLabel * formatSignatureWidget( QLabel *, const GpgME::Signature &, const GpgME::Key & );
+
+    private:
+        QVBoxLayout * m_box;
+    };
+
+}
+}
+}
+
+#endif /* __KLEOPATRA_CRYPTO_GUI_DECRYPTVERIFYRESULTWIDGET_H__ */

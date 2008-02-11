@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/decryptverifywizard.cpp
+    crypto/gui/decryptverifywizard.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -140,7 +140,7 @@ namespace {
 }
 
 class DecryptVerifyWizard::Private {
-    friend class ::Kleo::DecryptVerifyWizard;
+    friend class ::Kleo::Crypto::Gui::DecryptVerifyWizard;
     DecryptVerifyWizard * const q;
 public:
     Private( DecryptVerifyWizard * qq );

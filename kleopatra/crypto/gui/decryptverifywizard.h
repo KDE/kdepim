@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/decryptverifywizard.h
+    crypto/gui/decryptverifywizard.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,14 +30,16 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_DECRYPTVERIFYWIZARD_H__
-#define __KLEOPATRA_UISERVER_DECRYPTVERIFYWIZARD_H__
+#ifndef __KLEOPATRA_CRYPTO_GUI_DECRYPTVERIFYWIZARD_H__
+#define __KLEOPATRA_CRYPTO_GUI_DECRYPTVERIFYWIZARD_H__
 
 #include <QWizard>
 
 #include <utils/pimpl_ptr.h>
 
 namespace Kleo {
+namespace Crypto {
+namespace Gui {
 
     class DecryptVerifyOperationWidget;
     class DecryptVerifyResultWidget;
@@ -62,5 +64,7 @@ namespace Kleo {
     };
 
 }
+}
+}
 
-#endif /* __KLEOPATRA_UISERVER_DECRYPTVERIFYWIZARD_H__ */
+#endif /* __KLEOPATRA_CRYPTO_GUI_DECRYPTVERIFYWIZARD_H__ */
