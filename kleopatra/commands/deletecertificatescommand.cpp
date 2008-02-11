@@ -63,7 +63,7 @@ using namespace GpgME;
 using namespace Kleo;
 
 class DeleteCertificatesCommand::Private : public Command::Private {
-    friend class ::DeleteCertificatesCommand;
+    friend class ::Kleo::DeleteCertificatesCommand;
     DeleteCertificatesCommand * q_func() const { return static_cast<DeleteCertificatesCommand*>(q); }
 public:
     explicit Private( DeleteCertificatesCommand * qq, KeyListController * c );
