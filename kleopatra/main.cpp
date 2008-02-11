@@ -245,7 +245,9 @@ int main( int argc, char** argv )
 
       server.start();
 
+# ifndef KLEO_BUILD_OLD_MAINWINDOW
       sysTray.setToolTip( i18n( "Kleopatra UI Server listening on %1", server.socketName() ) );
+# endif
 #endif
 
       args->clear();
