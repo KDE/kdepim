@@ -1043,7 +1043,6 @@ bool kio_sieveProtocol::authenticate()
     firstCommand += "\"";
   }
 
-  ksDebug() << "firstCommand: " << firstCommand << endl;
 	if (!sendData( firstCommand.latin1() ))
 		return false;
 
