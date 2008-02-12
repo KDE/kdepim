@@ -1,7 +1,7 @@
 # assuan configure checks
 include(CheckFunctionExists)
 
-find_package(Assuan)
+macro_optional_find_package(Assuan)
 
 set( USABLE_ASSUAN_FOUND false )
 
