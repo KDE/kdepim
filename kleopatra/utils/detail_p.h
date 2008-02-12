@@ -33,7 +33,9 @@
 #ifndef __KLEOPATRA_UTILS_DETAIL_P_H__
 #define __KLEOPATRA_UTILS_DETAIL_P_H__
 
+#ifdef HAVE_USABLE_ASSUAN
 #include <assuan.h>
+#endif
 
 #include <boost/shared_ptr.hpp>
 
@@ -63,6 +65,7 @@ namespace _detail {
         }
     };
 
+#ifdef HAVE_USABLE_ASSUAN
     // inspired by GnuPG's translate_sys2libc_fd, this converts a HANDLE
     // to int fd on Windows, and is a NO-OP on POSIX:
     static inline int translate_sys2libc_fd( assuan_fd_t fd, bool for_write ) {
@@ -96,6 +99,7 @@ namespace _detail {
         return static_cast<qulonglong>( fd );
 #endif
     }
+#endif // HAVE_USABLE_ASSUAN
 }
 }
 

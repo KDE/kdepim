@@ -127,6 +127,7 @@ PipeInput::PipeInput( assuan_fd_t fd )
 
 unsigned int PipeInput::classification() const {
     notImplemented();
+    return 0;
 }
 
 #endif // HAVE_USABLE_ASSUAN
