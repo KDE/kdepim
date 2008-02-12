@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "output.h"
 
 #include "detail_p.h"
@@ -136,7 +138,6 @@ namespace {
     };
 
 
-#ifdef HAVE_USABLE_ASSUAN
     class PipeOutput : public OutputImplBase {
     public:
         explicit PipeOutput( assuan_fd_t fd );
@@ -148,7 +149,6 @@ namespace {
         shared_ptr< inhibit_close<KDPipeIODevice> > m_io;
     };
 
-#endif // HAVE_USABLE_ASSUAN
 
     class FileOutput : public OutputImplBase {
     public:
@@ -186,7 +186,6 @@ namespace {
 
 }
 
-#ifdef HAVE_USABLE_ASSUAN
 
 shared_ptr<Output> Output::createFromPipeDevice( assuan_fd_t fd, const QString & label ) {
     shared_ptr<PipeOutput> po( new PipeOutput( fd ) );
@@ -205,7 +204,6 @@ PipeOutput::PipeOutput( assuan_fd_t fd )
                                assuanFD2int( fd ) ) );
 }
 
-#endif // HAVE_USABLE_ASSUAN
 
 shared_ptr<Output> Output::createFromFile( const QString & fileName, bool allowOverwrite ) {
     shared_ptr<FileOutput> fo( new FileOutput( fileName ) );

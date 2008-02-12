@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "decryptverifycommand.h"
 
 #include <crypto/gui/decryptverifywizard.h>

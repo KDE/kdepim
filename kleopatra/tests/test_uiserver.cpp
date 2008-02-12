@@ -33,10 +33,10 @@
 //
 // Usage: test_uiserver <socket> --verify-detached <signed data> <signature>
 //
-#ifndef _ASSUAN_ONLY_GPG_ERRORS
-#define _ASSUAN_ONLY_GPG_ERRORS
-#endif
-#include <assuan.h>
+
+#include <config-kleopatra.h>
+
+#include <kleo-assuan.h>
 #include <gpg-error.h>
 
 #include "../utils/exception.h"

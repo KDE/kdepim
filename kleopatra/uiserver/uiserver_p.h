@@ -45,7 +45,7 @@
 #include <QFile>
 #include <QDir>
 
-#include <assuan.h>
+#include <kleo-assuan.h>
 
 #include <boost/bind.hpp>
 

@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "echocommand.h"
 
 #include <utils/input.h>

@@ -33,11 +33,7 @@
 #ifndef __KLEOPATRA_UTILS_OUTPUT_H__
 #define __KLEOPATRA_UTILS_OUTPUT_H__
 
-#include <config-kleopatra.h>
-
-#ifdef HAVE_USABLE_ASSUAN
-#include <assuan.h> // for assuan_fd_t
-#endif // HAVE_USABLE_ASSUAN
+#include <kleo-assuan.h> // for assuan_fd_t
 
 #include <boost/shared_ptr.hpp>
 
@@ -57,9 +53,7 @@ namespace Kleo {
         virtual void cancel() = 0;
 
         static boost::shared_ptr<Output> createFromFile( const QString & fileName, bool forceOverride );
-#ifdef HAVE_USABLE_ASSUAN
         static boost::shared_ptr<Output> createFromPipeDevice( assuan_fd_t fd, const QString & label );
-#endif // HAVE_USABLE_ASSUAN
     };
 }
 

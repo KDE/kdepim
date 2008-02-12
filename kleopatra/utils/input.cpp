@@ -65,7 +65,6 @@ namespace {
 
 
 
-#ifdef HAVE_USABLE_ASSUAN
     class PipeInput : public InputImplBase {
     public:
         explicit PipeInput( assuan_fd_t fd );
@@ -75,7 +74,6 @@ namespace {
     private:
         shared_ptr<QIODevice> m_io;
     };
-#endif // HAVE_USABLE_ASSUAN
 
     class FileInput : public InputImplBase {
     public:
@@ -104,7 +102,7 @@ namespace {
 
 }
 
-#ifdef HAVE_USABLE_ASSUAN
+
 shared_ptr<Input> Input::createFromPipeDevice( assuan_fd_t fd, const QString & label ) {
     shared_ptr<PipeInput> po( new PipeInput( fd ) );
     po->setLabel( label );
@@ -130,7 +128,6 @@ unsigned int PipeInput::classification() const {
     return 0;
 }
 
-#endif // HAVE_USABLE_ASSUAN
 
 shared_ptr<Input> Input::createFromFile( const QString & fileName, bool ) {
     return shared_ptr<Input>( new FileInput( fileName ) );

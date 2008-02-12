@@ -47,7 +47,7 @@
 #include <utils/log.h>
 
 #ifdef HAVE_USABLE_ASSUAN
-# include <assuan.h>
+# include "kleo-assuan.h"
 # include <uiserver/uiserver.h>
 # include <uiserver/assuancommand.h>
 # include <uiserver/echocommand.h>

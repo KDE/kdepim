@@ -35,7 +35,7 @@
 
 #include <QObject>
 
-#include <assuan.h> // for assuan_fd_t
+#include <kleo-assuan.h> // for assuan_fd_t
 
 #include <utils/pimpl_ptr.h>
 

@@ -28,6 +28,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "kleo_test.h"
 
 #include <kleo/cryptobackendfactory.h>

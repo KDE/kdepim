@@ -33,11 +33,7 @@
 #ifndef __KLEOPATRA_UTILS_INPUT_H__
 #define __KLEOPATRA_UTILS_INPUT_H__
 
-#include <config-kleopatra.h>
-
-#ifdef HAVE_USABLE_ASSUAN
-#include <assuan.h> // for assuan_fd_t
-#endif // HAVE_USABLE_ASSUAN
+#include <kleo-assuan.h> // for assuan_fd_t
 
 #include <boost/shared_ptr.hpp>
 
@@ -55,9 +51,7 @@ namespace Kleo {
         virtual boost::shared_ptr<QIODevice> ioDevice() const = 0;
         virtual unsigned int classification() const = 0;
         void finalize(); // equivalent to ioDevice()->close();
-#ifdef HAVE_USABLE_ASSUAN
         static boost::shared_ptr<Input> createFromPipeDevice( assuan_fd_t fd, const QString & label );
-#endif // HAVE_USABLE_ASSUAN
         static boost::shared_ptr<Input> createFromFile( const QString & filename, bool dummy=false );
         static boost::shared_ptr<Input> createFromFile( const boost::shared_ptr<QFile> & file );
     };

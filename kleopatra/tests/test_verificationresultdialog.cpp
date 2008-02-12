@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include <vector>
 #include <string>
 #include <cassert>

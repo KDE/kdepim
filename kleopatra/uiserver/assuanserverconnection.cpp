@@ -64,7 +64,7 @@
 #include <QStringList>
 #include <QDialog>
 
-#include <assuan.h>
+#include <kleo-assuan.h>
 
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/lexical_cast.hpp>

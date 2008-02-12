@@ -29,6 +29,9 @@
     you do not wish to do so, delete this exception statement from
     your version.
 */
+
+#include <config-kleopatra.h>
+
 #include <models/keylistmodel.h>
 #include <models/keylistsortfilterproxymodel.h>
 
