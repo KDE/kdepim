@@ -137,7 +137,6 @@ namespace {
 unsigned int Kleo::classify( const QString & filename ) {
 #ifdef __GNUC__
     assert( __gnu_cxx::is_sorted( begin( classifications ), end( classifications ), ByExtension<std::less>() ) );
-    assert( __gnu_cxx::is_sorted( begin( content_classifications ), end( content_classifications ), ByContent<std::less>(100) ) );
 #endif
 
     const QFileInfo fi( filename );
@@ -154,29 +153,39 @@ unsigned int Kleo::classify( const QString & filename ) {
     if ( !file.open( QIODevice::ReadOnly|QIODevice::Text ) )
         return it->classification;
 
-    const QByteArray read = file.read( 1024 );
+    const unsigned int contentClassification = classifyContent( file.read( 1024 ) );
+    if ( contentClassification != defaultClassification )
+        return contentClassification;
+    else
+        return it->classification;
+}
+
+unsigned int Kleo::classifyContent( const QByteArray & data ) {
+#ifdef __GNUC__
+    assert( __gnu_cxx::is_sorted( begin( content_classifications ), end( content_classifications ), ByContent<std::less>(100) ) );
+#endif
 
     static const char beginString[] = "-----BEGIN ";
     static const QByteArrayMatcher beginMatcher( beginString );
-    int pos = beginMatcher.indexIn( read );
+    int pos = beginMatcher.indexIn( data );
     if ( pos < 0 )
-        return it->classification;
+        return defaultClassification;
     pos += sizeof beginString - 1;
 
-    const bool pgp = qstrncmp( read.data() + pos, "PGP ", 4 ) == 0;
+    const bool pgp = qstrncmp( data.data() + pos, "PGP ", 4 ) == 0;
     if ( pgp )
         pos += 4;
 
-    const int epos = read.indexOf( "-----\n", pos );
+    const int epos = data.indexOf( "-----\n", pos );
     if ( epos < 0 )
-        return it->classification;
+        return defaultClassification;
 
     const _content_classification * const cit
         = qBinaryFind( begin( content_classifications ), end( content_classifications ),
-                       read.data() + pos, ByContent<std::less>( epos - pos ) );
+                       data.data() + pos, ByContent<std::less>( epos - pos ) );
 
     if ( cit == end( content_classifications ) )
-        return it->classification;
+        return defaultClassification;
     else
         return cit->classification | ( pgp ? OpenPGP : CMS );
 }

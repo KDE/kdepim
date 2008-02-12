@@ -81,6 +81,8 @@ namespace Kleo {
     }
 
     unsigned int classify( const QString & filename );
+    unsigned int classifyContent( const QByteArray & data );
+
     QString findSignedData( const QString & signatureFileName );
     QStringList findSignatures( const QString & signedDataFileName );
     QString outputFileName( const QString & input );
