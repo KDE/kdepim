@@ -118,13 +118,14 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
     layout->addWidget( label );
 
     mListBox = new ListBox;
+    mListBox->setContextMenuPolicy( Qt::CustomContextMenu );
     layout->addWidget( mListBox );
 
-    connect( mListBox, SIGNAL( contextMenuRequested( QListBoxItem*, const QPoint& ) ),
-             this, SLOT( contextMenuRequested( QListBoxItem*, const QPoint& ) ) );
+    connect( mListBox, SIGNAL( customContextMenuRequested( const QPoint& ) ),
+             this, SLOT( contextMenuRequested( const QPoint& ) ) );
     connect( mListBox, SIGNAL( dropped( const QString &, const KABC::Addressee::List & ) ),
              this, SLOT( contactsDropped( const QString &, const KABC::Addressee::List & ) ) );
-    connect( mListBox, SIGNAL( highlighted( int ) ),
+    connect( mListBox, SIGNAL( currentRowChanged( int ) ),
              this, SLOT( itemSelected( int ) ) );
 
 
@@ -140,24 +141,19 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
     QTimer::singleShot( 0, this, SLOT( updateEntries() ) );
 }
 
-#ifdef __GNUC__
-#warning port! PENDING(KDAB)
-#endif
-#if 0
-void KAB::DistributionListNg::MainWidget::contextMenuRequested( QListWidgetItem *item, const QPoint &point )
+void KAB::DistributionListNg::MainWidget::contextMenuRequested( const QPoint &point )
 {
+    QListWidgetItem *item = mListBox->itemAt( point );
     QPointer<KMenu> menu = new KMenu( this );
-    menu->insertItem( i18n( "New Distribution List..." ), core(), SLOT( newDistributionList() ) );
+    menu->addAction( KIcon( "list-add" ), i18n( "New Distribution List..." ), core(), SLOT( newDistributionList() ) );
     if ( item )
     {
-        menu->insertItem( i18n( "Edit..." ), this, SLOT( editSelectedDistributionList() ) );
-        menu->insertItem( i18n( "Delete" ), this, SLOT( deleteSelectedDistributionList() ) );
+        menu->addAction( KIcon( "document-properties" ), i18n( "Edit..." ), this, SLOT( editSelectedDistributionList() ) );
+        menu->addAction( KIcon( "edit-delete" ), i18n( "Delete" ), this, SLOT( deleteSelectedDistributionList() ) );
     }
-    menu->exec( point );
+    menu->exec( mListBox->mapToGlobal( point ) );
     delete menu;
 }
-
-#endif
 
 void KAB::DistributionListNg::MainWidget::editSelectedDistributionList()
 {
