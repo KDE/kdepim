@@ -128,6 +128,12 @@ QString SignEncryptFilesController::Private::titleForOperation( unsigned int op 
     return i18n( "Sign/Encrypt Files" );
 }
 
+SignEncryptFilesController::SignEncryptFilesController( QObject * p )
+    : Controller( p ), d( new Private( this ) )
+{
+
+}
+
 SignEncryptFilesController::SignEncryptFilesController( const shared_ptr<const ExecutionContext> & ctx, QObject * p )
     : Controller( ctx, p ), d( new Private( this ) )
 {

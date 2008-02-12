@@ -74,16 +74,19 @@ void Controller::Private::applyWindowID( QDialog* dlg )
     }
 }
 
+Controller::Controller( QObject * parent )
+    : QObject( parent ), d( new Private( shared_ptr<const ExecutionContext>(), this ) )
+{
+    
+}
+
 Controller::Controller( const shared_ptr<const ExecutionContext> & ctx, QObject* parent )
     : QObject( parent ), d( new Private( ctx, this ) )
 {
     
 }
 
-Controller::~Controller()
-{
-    
-}
+Controller::~Controller() {}
 
 void Controller::setExecutionContext( const shared_ptr<const ExecutionContext> & ctx )
 {

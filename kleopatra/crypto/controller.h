@@ -53,6 +53,7 @@ namespace Crypto {
     class Controller : public QObject {
         Q_OBJECT
     public:
+        explicit Controller( QObject * parent=0 );
         explicit Controller( const boost::shared_ptr<const ExecutionContext> & cmd, QObject * parent=0 );
         ~Controller();
 
