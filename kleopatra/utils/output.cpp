@@ -45,6 +45,9 @@
 
 #include <QTemporaryFile>
 #include <QString>
+#include <QClipboard>
+#include <QApplication>
+#include <QBuffer>
 
 #include <errno.h>
 
@@ -171,18 +174,18 @@ namespace {
         OverwritePolicy m_overwrite;
     };
 
-#if 0
-    class ClipboardOutput : public Output {
+    class ClipboardOutput : public OutputImplBase {
     public:
         explicit ClipboardOutput( QClipboard::Mode mode );
-        ~ClipboardOutput();
 
         /* reimp */ QString label() const;
-        /* reimp */ shared_ptr<QIODevice> ioDevice() const;
+        /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_buffer; }
         /* reimp */ void doFinalize();
         /* reimp */ void doCancel() {}
+    private:
+        const QClipboard::Mode m_mode;
+        shared_ptr<QBuffer> m_buffer;
     };
-#endif
 
 }
 
@@ -262,10 +265,42 @@ void FileOutput::doFinalize() {
                            tmpFileName, m_fileName ) );
 }
 
-#if 0
-shared_ptr<Output> Output::createFromClipboard( QClipboard::Mode mode ) {
-    notImplemented();
+shared_ptr<Output> Output::createFromClipboard() {
+    return shared_ptr<Output>( new ClipboardOutput( QClipboard::Clipboard ) );
 }
-#endif
+
+ClipboardOutput::ClipboardOutput( QClipboard::Mode mode )
+    : OutputImplBase(),
+      m_mode( mode ),
+      m_buffer( new QBuffer )
+{
+    errno = 0;
+    if ( !m_buffer->open( QIODevice::WriteOnly ) )
+        throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
+                         i18n( "Couldn't write to clipboard" ) );
+}
+
+QString ClipboardOutput::label() const {
+    switch ( m_mode ) {
+    case QClipboard::Clipboard:
+        return i18n( "Clipboard" );
+    case QClipboard::FindBuffer:
+        return i18n( "Find buffer" );
+    case QClipboard::Selection:
+        return i18n( "Selection" );
+    }
+    return QString();
+}
+
+void ClipboardOutput::doFinalize() {
+    m_buffer->close();
+    if ( QClipboard * const cb = QApplication::clipboard() )
+        cb->setText( QString::fromUtf8( m_buffer->data() ) );
+    else
+        throw Exception( gpg_error( GPG_ERR_EIO ),
+                         i18n( "Couldn't find clipboard" ) );
+}
+
+
 
 Output::~Output() {}

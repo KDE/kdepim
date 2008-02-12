@@ -45,11 +45,14 @@
 
 #include <QFile>
 #include <QString>
+#include <QClipboard>
+#include <QApplication>
+#include <QByteArray>
+#include <QBuffer>
 
 #include <errno.h>
 
 using namespace Kleo;
-using namespace Kleo::_detail;
 using namespace boost;
 
 namespace {
@@ -90,17 +93,17 @@ namespace {
         QString m_fileName;
     };
 
-#if 0
     class ClipboardInput : public Input {
     public:
         explicit ClipboardInput( QClipboard::Mode mode );
-        ~ClipboardInput();
 
         /* reimp */ QString label() const;
-        /* reimp */ shared_ptr<QIODevice> ioDevice() const;
+        /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_buffer; }
         /* reimp */ unsigned int classification() const;
+    private:
+        const QClipboard::Mode m_mode;
+        shared_ptr<QBuffer> m_buffer;
     };
-#endif
 
 }
 
@@ -120,7 +123,7 @@ PipeInput::PipeInput( assuan_fd_t fd )
     if ( !kdp->open( fd, QIODevice::ReadOnly ) )
         throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
                          i18n( "Couldn't open FD %1 for reading",
-                               assuanFD2int( fd ) ) );
+                               _detail::assuanFD2int( fd ) ) );
     m_io = Log::instance()->createIOLogger( kdp, "pipe-input", Log::Read );
 }
 
@@ -172,11 +175,43 @@ unsigned int FileInput::classification() const {
     return classify( m_fileName );
 }
 
-#if 0
-shared_ptr<Input> Input::createFromClipboard( QClipboard::Mode mode ) {
-    notImplemented();
+shared_ptr<Input> Input::createFromClipboard() {
+    return shared_ptr<Input>( new ClipboardInput( QClipboard::Clipboard ) );
 }
-#endif
+
+static QByteArray dataFromClipboard( QClipboard::Mode mode ) {
+    if ( QClipboard * const cb = QApplication::clipboard() )
+        return cb->text().toUtf8();
+    else
+        return QByteArray();
+}
+
+ClipboardInput::ClipboardInput( QClipboard::Mode mode )
+    : Input(),
+      m_mode( mode ),
+      m_buffer( new QBuffer )
+{
+    m_buffer->setData( dataFromClipboard( mode ) );
+    if ( !m_buffer->open( QIODevice::ReadOnly ) )
+        throw Exception( gpg_error( GPG_ERR_EIO ),
+                         i18n( "Couldn't open clipboard for reading" ) );
+}
+
+QString ClipboardInput::label() const {
+    switch ( m_mode ) {
+    case QClipboard::Clipboard:
+        return i18n( "Clipboard contents" );
+    case QClipboard::FindBuffer:
+        return i18n( "FindBuffer contents" );
+    case QClipboard::Selection:
+        return i18n( "Current selection" );
+    };
+    return QString();
+}
+
+unsigned int ClipboardInput::classification() const {
+    return classifyContent( m_buffer->data() );
+}
 
 Input::~Input() {}
 

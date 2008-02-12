@@ -51,9 +51,11 @@ namespace Kleo {
         virtual boost::shared_ptr<QIODevice> ioDevice() const = 0;
         virtual unsigned int classification() const = 0;
         void finalize(); // equivalent to ioDevice()->close();
+
         static boost::shared_ptr<Input> createFromPipeDevice( assuan_fd_t fd, const QString & label );
         static boost::shared_ptr<Input> createFromFile( const QString & filename, bool dummy=false );
         static boost::shared_ptr<Input> createFromFile( const boost::shared_ptr<QFile> & file );
+        static boost::shared_ptr<Input> createFromClipboard();
     };
 }
 
