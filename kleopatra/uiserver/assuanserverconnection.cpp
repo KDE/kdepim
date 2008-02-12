@@ -1167,7 +1167,7 @@ void AssuanCommand::doApplyWindowID( QDialog * dlg ) const {
         return;
     }
     if ( QWidget * pw = QWidget::find( wid ) )
-        dlg->setParent( pw );
+        dlg->setParent( pw, dlg->windowFlags() );
     else {    	
         KWindowSystem::setMainWindow( dlg, wid );
     }
