@@ -219,7 +219,7 @@ void KABCore::restoreSettings()
   updateIncSearchWidget();
   mIncSearchWidget->setCurrentItem( KABPrefs::instance()->currentIncSearchField() );
 
-  QList<int> splitterSize = KABPrefs::instance()->extensionsSplitter();
+  QList<int> splitterSize = KABPrefs::instance()->detailsSplitter();
   if ( splitterSize.isEmpty() ) {
     splitterSize.append( 360 );
     splitterSize.append( 260 );
