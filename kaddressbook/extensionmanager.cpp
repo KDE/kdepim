@@ -71,7 +71,7 @@ ExtensionManager::~ExtensionManager()
 }
 
 
-void ExtensionManager::restoreSettings() 
+void ExtensionManager::restoreSettings()
 {
   const QStringList activeExtensions = KABPrefs::instance()->activeExtensions();
   Q_FOREACH ( const ExtensionData data, mExtensionMap ) {
@@ -82,8 +82,8 @@ void ExtensionManager::restoreSettings()
       setExtensionActive( data.identifier, true );
     }
   }
-  //const QList<int> sizes = KABPrefs::instance()->extensionsSplitterSizes();
-  //mSplitter->setSizes( sizes );
+  const QList<int> sizes = KABPrefs::instance()->extensionsSplitterSizes();
+  mSplitter->setSizes( sizes );
 }
 
 void ExtensionManager::saveSettings()
@@ -111,7 +111,7 @@ void ExtensionManager::setSelectionChanged()
   foreach ( const QString i, mActiveExtensions ) {
     if ( mExtensionMap.contains( i ) && mExtensionMap[i].widget )
       mExtensionMap[i].widget->contactsSelectionChanged();
-  } 
+  }
 }
 
 void ExtensionManager::activationToggled( const QString &extid )
@@ -138,7 +138,7 @@ void ExtensionManager::setExtensionActive( const QString& extid, bool active )
   if ( !mExtensionMap.contains( extid ) )
     return;
   if ( mActiveExtensions.contains( extid ) == active )
-    return; 
+    return;
   const ExtensionData data = mExtensionMap[ extid ];
   if ( active ) {
     mActiveExtensions.append( extid );
@@ -162,7 +162,7 @@ void ExtensionManager::setExtensionActive( const QString& extid, bool active )
   }
   updateExtensionBarVisibility();
 }
- 
+
 void ExtensionManager::createActions()
 {
   mCore->guiClient()->unplugActionList( "extensions_list" );
@@ -198,7 +198,7 @@ QWidget* ExtensionManager::activeDetailsWidget() const
 void ExtensionManager::createExtensionWidgets()
 {
   // clean up
-  foreach ( const ExtensionData i, mExtensionMap ) 
+  foreach ( const ExtensionData i, mExtensionMap )
     delete i.widget;
   mExtensionMap.clear();
 
