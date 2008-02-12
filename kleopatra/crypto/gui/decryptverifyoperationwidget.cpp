@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "decryptverifyoperationwidget.h"
 
 #include "libkleo/ui/filenamerequester.h"

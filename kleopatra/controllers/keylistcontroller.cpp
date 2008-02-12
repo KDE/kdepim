@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "keylistcontroller.h"
 #include "commands/detailscommand.h"
 

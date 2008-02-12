@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "searchbar.h"
 
 #include <kleo/keyfilter.h>

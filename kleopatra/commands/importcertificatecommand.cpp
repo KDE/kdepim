@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "importcertificatecommand.h"
 #include "command_p.h"
 

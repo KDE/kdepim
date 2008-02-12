@@ -29,6 +29,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "dnorderconfigpage.h"
 
 #include "libkleo/ui/dnattributeorderconfigwidget.h"

@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "tabwidget.h"
 
 #include "action_data.h"

@@ -31,6 +31,8 @@
     your version.
  */
 
+#include <config-kleopatra.h>
+
 #include "appearanceconfigwidget.h"
 
 #include "libkleo/kleo/cryptobackendfactory.h"

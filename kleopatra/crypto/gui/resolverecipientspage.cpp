@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "resolverecipientspage.h"
 #include "resolverecipientspage_p.h"
 

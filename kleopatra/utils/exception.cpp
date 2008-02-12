@@ -31,6 +31,8 @@
 */
 
 
+#include <config-kleopatra.h>
+
 #include "exception.h"
 
 Kleo::Exception::~Exception() throw() {}

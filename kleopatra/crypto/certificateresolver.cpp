@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "certificateresolver.h"
 
 #include <models/keycache.h>

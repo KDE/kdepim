@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "refreshkeyscommand.h"
 #include "command_p.h"
 

@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "certlistview.h"
 #include <kurl.h>
 #include <kdebug.h>

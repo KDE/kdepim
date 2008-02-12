@@ -29,6 +29,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "appearanceconfigpage.h"
 #include <QLayout>
 #include <QVBoxLayout>

@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "signencryptfileswizard.h"
 #include "signerresolvepage.h"
 

@@ -31,6 +31,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "configuredialog.h"
 
 #include <kwindowsystem.h>

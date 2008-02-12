@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "signerresolvepage.h"
 
 #include "signingcertificateselectiondialog.h"

@@ -31,6 +31,8 @@
 */
 
 
+#include <config-kleopatra.h>
+
 #include "aboutdata.h"
 #include "kwatchgnupgmainwin.h"
 

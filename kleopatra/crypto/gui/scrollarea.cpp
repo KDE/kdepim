@@ -31,6 +31,8 @@
 */
 
 
+#include <config-kleopatra.h>
+
 #include "scrollarea.h"
 
 #include <QScrollBar>

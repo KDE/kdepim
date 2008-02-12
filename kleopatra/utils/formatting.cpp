@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "formatting.h"
 
 #include <kleo/dn.h>

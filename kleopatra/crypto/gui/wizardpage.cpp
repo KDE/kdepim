@@ -31,6 +31,8 @@
 */
 
 
+#include <config-kleopatra.h>
+
 #include "wizardpage.h"
 
 using namespace Kleo::Crypto::Gui;

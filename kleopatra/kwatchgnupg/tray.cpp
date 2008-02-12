@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "tray.h"
 #include "kwatchgnupgmainwin.h"
 

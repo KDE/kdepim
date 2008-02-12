@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "exportcertificatesdialog.h"
 
 #include "libkleo/ui/filenamerequester.h"

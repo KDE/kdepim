@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "task.h"
 
 #include <gpgme++/exception.h>

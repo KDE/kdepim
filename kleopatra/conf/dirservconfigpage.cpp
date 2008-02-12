@@ -29,6 +29,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "dirservconfigpage.h"
 #include "libkleo/ui/directoryserviceswidget.h"
 #include "libkleo/kleo/cryptobackendfactory.h"

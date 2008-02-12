@@ -31,6 +31,8 @@
 */
 
 
+#include <config-kleopatra.h>
+
 #include "wizardresultpage.h"
 
 #include "scrollarea.h"

@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "subkeylistmodel.h"
 
 #include <utils/formatting.h>

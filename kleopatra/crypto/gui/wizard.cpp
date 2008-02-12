@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "wizard.h"
 #include "wizardpage.h"
 

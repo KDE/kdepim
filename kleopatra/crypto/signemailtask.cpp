@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "signemailtask.h"
 
 #include <utils/input.h>

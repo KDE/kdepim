@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "controller.h"
 
 #include <KWindowSystem>

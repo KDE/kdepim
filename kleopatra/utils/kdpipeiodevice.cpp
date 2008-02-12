@@ -17,6 +17,8 @@
   Boston, MA 02110-1301, USA.
  */
 
+#include <config-kleopatra.h>
+
 #include "kdpipeiodevice.h"
 
 #include <QtCore>
