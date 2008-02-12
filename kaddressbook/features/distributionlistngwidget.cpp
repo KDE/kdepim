@@ -60,7 +60,7 @@ void KAB::DistributionListNg::ListBox::dragMoveEvent( QDragMoveEvent *event )
 
 void KAB::DistributionListNg::ListBox::dragEnterEvent( QDragEnterEvent *event )
 {
-    QListWidget::dragEnterEvent( event );
+    event->accept();
 }
 
 void KAB::DistributionListNg::ListBox::dropEvent( QDropEvent *event )
@@ -146,7 +146,7 @@ void KAB::DistributionListNg::MainWidget::contextMenuRequested( const QPoint &po
     QListWidgetItem *item = mListBox->itemAt( point );
     QPointer<KMenu> menu = new KMenu( this );
     menu->addAction( KIcon( "list-add" ), i18n( "New Distribution List..." ), core(), SLOT( newDistributionList() ) );
-    if ( item )
+    if ( item && mListBox->item( 0 ) != item )
     {
         menu->addAction( KIcon( "document-properties" ), i18n( "Edit..." ), this, SLOT( editSelectedDistributionList() ) );
         menu->addAction( KIcon( "edit-delete" ), i18n( "Delete" ), this, SLOT( deleteSelectedDistributionList() ) );
