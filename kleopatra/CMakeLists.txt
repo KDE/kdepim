@@ -127,6 +127,7 @@ set( _kleopatra_common_SRCS
   commands/importcertificatecommand.cpp
   commands/refreshkeyscommand.cpp
   commands/deletecertificatescommand.cpp
+  commands/signencryptfilescommand.cpp
 
   ${_kleopatra_uiserver_files}
 

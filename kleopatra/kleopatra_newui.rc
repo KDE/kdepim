@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui >
-<kpartgui name="kleopatra" version="408" >
+<kpartgui name="kleopatra" version="409" >
 <MenuBar>
 	<Menu name="file">
 		<text>&amp;File</text>
@@ -9,6 +9,9 @@
 		<Action name="file_import_crls"/>
 		<Action name="file_export_certificates"/>
 		<Action name="file_export_secret_keys"/>
+                <Separator/>
+                <Action name="file_sign_encrypt_files"/>
+                <Separator/>
 		<Action name="quit" />
 	</Menu>
 	<Menu name="view">

@@ -48,6 +48,7 @@
 #include "commands/refreshkeyscommand.h"
 #include "commands/detailscommand.h"
 #include "commands/deletecertificatescommand.h"
+#include "commands/signencryptfilescommand.h"
 
 #include <KActionCollection>
 #include <KLocale>
@@ -89,6 +90,7 @@
 #include <vector>
 
 using namespace Kleo;
+using namespace Kleo::Commands;
 using namespace boost;
 using namespace GpgME;
 
@@ -158,6 +160,9 @@ public:
     }
     void deleteCertificates() {
         ( new DeleteCertificatesCommand( currentView(), &controller ) )->start();
+    }
+    void signEncryptFiles() {
+        ( new SignEncryptFilesCommand( currentView(), &controller ) )->start();
     }
     void exportCertificates() {
         ( new ExportCertificateCommand( currentView(), &controller ) )->start();
@@ -330,6 +335,8 @@ void MainWindow::Private::setupActions() {
           "document-export", q, SLOT(exportCertificates()), "Ctrl+E", false, true }, // ### should be disabled until selected
         { "file_import_certificates", i18n("Import Certificates..."), QString(),
           "document-import", q, SLOT(importCertificates()), "Ctrl+I", false, true }, // ### should be disabled until selected
+        { "file_sign_encrypt_files", i18n("Sign/Encrypt Files..."), QString(),
+          "document-encrypt" /*"file-encrypt-sign"*/, q, SLOT(signEncryptFiles()), QString(), false, true },
         // View menu
         { "view_redisplay", "Redisplay", QString(),
           "view-refresh", q, SLOT(refreshCertificates()), "F5", false, true },
