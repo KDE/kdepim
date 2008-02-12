@@ -410,16 +410,16 @@ void KABCore::deleteDistributionLists( const QStringList & names )
   if ( names.isEmpty() )
       return;
   if ( KMessageBox::warningContinueCancelList( mWidget, i18np( "Do you really want to delete this distribution list?",
-                                                 "Do you really want to delete these %n distribution lists?", names.count() ),
+                                                 "Do you really want to delete these %1 distribution lists?", names.count() ),
                                                  names, QString::null, KStandardGuiItem::del() ) == KMessageBox::Cancel )
    return;
 
   QStringList uids;
   for ( QStringList::ConstIterator it = names.begin(); it != names.end(); ++it ) {
-      uids.append( KPIM::DistributionList::findByName( mAddressBook, *it ).uid() ); 
+      uids.append( KPIM::DistributionList::findByName( mAddressBook, *it ).uid() );
   }
   DeleteCommand *command = new DeleteCommand( mAddressBook, uids );
-  mCommandHistory->push( command );  
+  mCommandHistory->push( command );
   setModified( true );
 }
 
@@ -617,7 +617,7 @@ void KABCore::newDistributionList()
     bool foundUnused = false;
     int i = 1;
     while ( !foundUnused ) {
-      name = i18n( "New Distribution List (%1)", i++ );  
+      name = i18n( "New Distribution List (%1)", i++ );
       foundUnused = KPIM::DistributionList::findByName( addressBook(), name ).isEmpty();
     }
   }
@@ -1050,7 +1050,7 @@ void KABCore::slotEditorDestroyed( const QString &uid )
 
 void KABCore::initGUI()
 {
-  QVBoxLayout *topLayout = new QVBoxLayout( mWidget ); 
+  QVBoxLayout *topLayout = new QVBoxLayout( mWidget );
   topLayout->setSpacing( 0 );
   topLayout->setMargin( 0 );
   QWidget* searchTB = new QWidget( mWidget );
@@ -1075,11 +1075,11 @@ void KABCore::initGUI()
 
   QWidget* extensionWidget = new QWidget;
   mDetailsSplitter->addWidget( extensionWidget );
-  
+
   mExtensionManager = new ExtensionManager( extensionWidget, mDetailsStack, this, this );
-  connect( mExtensionManager, SIGNAL( detailsWidgetDeactivated( QWidget* ) ), 
+  connect( mExtensionManager, SIGNAL( detailsWidgetDeactivated( QWidget* ) ),
            this, SLOT( deactivateDetailsWidget( QWidget* ) ) );
-  connect( mExtensionManager, SIGNAL( detailsWidgetActivated( QWidget* ) ), 
+  connect( mExtensionManager, SIGNAL( detailsWidgetActivated( QWidget* ) ),
            this, SLOT( activateDetailsWidget( QWidget* ) ) );
 
   QWidget *viewWidget = new QWidget;
@@ -1102,7 +1102,7 @@ void KABCore::initGUI()
 
   KPushButton *addDistListButton = new KPushButton;
   addDistListButton->setText( i18n( "Add" ) );
-  connect( addDistListButton, SIGNAL( clicked() ), 
+  connect( addDistListButton, SIGNAL( clicked() ),
            this, SLOT( editSelectedDistributionList() ) );
   buttonLayout->addWidget( addDistListButton );
   mDistListButtonWidget->setVisible( false );
@@ -1110,7 +1110,7 @@ void KABCore::initGUI()
 
   KPushButton *removeDistListButton = new KPushButton;
   removeDistListButton->setText( i18n( "Remove" ) );
-  connect( removeDistListButton, SIGNAL( clicked() ), 
+  connect( removeDistListButton, SIGNAL( clicked() ),
            this, SLOT( removeSelectedContactsFromDistList() ) );
   buttonLayout->addWidget( removeDistListButton );
 
@@ -1199,7 +1199,7 @@ void KABCore::initActions()
   mActionMailVCard->setIcon( KIcon("mail-send") );
   mActionMailVCard->setText( i18n( "Send &Contact..." ) );
   connect(mActionMailVCard, SIGNAL(triggered(bool) ), SLOT( mailVCard() ));
-  
+
   action = coll->addAction( "file_new_distributionlist" );
   action->setIcon( KIcon("kontact_contacts") );
   action->setText( i18n( "&New Distribution List..." ) );
@@ -1498,12 +1498,12 @@ void KABCore::sendMailToDistributionList( const QString &name )
   KPIM::DistributionList dist = KPIM::DistributionList::findByName( addressBook(), name );
   if ( dist.isEmpty() )
     return;
-  typedef KPIM::DistributionList::Entry::List EntryList; 
+  typedef KPIM::DistributionList::Entry::List EntryList;
   QStringList mails;
   const EntryList entries = dist.entries( addressBook() );
   for ( EntryList::ConstIterator it = entries.begin(); it != entries.end(); ++it )
     mails += (*it).addressee.fullEmail( (*it).email );
-  sendMail( mails.join( ", " ) ); 
+  sendMail( mails.join( ", " ) );
 }
 
 void KABCore::editSelectedDistributionList()
@@ -1523,8 +1523,8 @@ void KABCore::showDistributionListEntry( const QString& uid )
   KPIM::DistributionList dist = KPIM::DistributionList::findByName( addressBook(), mSelectedDistributionList );
   if ( !dist.isEmpty() ) {
     mDistListEntryView->clear();
-    typedef KPIM::DistributionList::Entry::List EntryList;   
-    const EntryList entries = dist.entries( addressBook() ); 
+    typedef KPIM::DistributionList::Entry::List EntryList;
+    const EntryList entries = dist.entries( addressBook() );
     for (EntryList::ConstIterator it = entries.begin(); it != entries.end(); ++it ) {
       if ( (*it).addressee.uid() == uid ) {
         mDistListEntryView->setEntry( dist, *it );
@@ -1560,7 +1560,7 @@ void KABCore::setSelectedDistributionList( const QString &name )
 {
   mSelectedDistributionList = name;
   mSearchManager->setSelectedDistributionList( name );
-  mViewHeaderLabel->setText( name.isNull() ? i18n( "Contacts" ) : i18n( "Distribution List: %1" ).arg( name ) );
+  mViewHeaderLabel->setText( name.isNull() ? i18n( "Contacts" ) : i18n( "Distribution List: %1", name ) );
   mDistListButtonWidget->setVisible( !mSelectedDistributionList.isNull() );
   if ( !name.isNull() ) {
     mDetailsStack->setCurrentWidget( mDistListEntryView );

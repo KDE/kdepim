@@ -566,7 +566,7 @@ KABC::Addressee::List LDAPSearchDialog::importContactsUnlessTheyExist( const QLi
 
       if ( existing.isEmpty() ) {
         addr.setUid( KRandom::randomString( 10 ) );
-        addr.setNote( i18nc( "arguments are host name, datetime", "Imported from LDAP directory %1 on %2" ).arg( d->itemToServer[cli], KGlobal::locale()->formatDateTime( now ) ) );
+        addr.setNote( i18nc( "arguments are host name, datetime", "Imported from LDAP directory %1 on %2", d->itemToServer[cli], KGlobal::locale()->formatDateTime( now ) ) );
         addr.setResource( resource );
         mCore->addressBook()->insertAddressee( addr );
         importedAddrs.append( addr.fullEmail() );
@@ -578,7 +578,7 @@ KABC::Addressee::List LDAPSearchDialog::importContactsUnlessTheyExist( const QLi
     KABLock::self( mCore->addressBook() )->unlock( resource );
     if ( !importedAddrs.isEmpty() ) {
       KMessageBox::informationList( this, i18np( "The following contact was imported into your address book:",
-                                    "The following %n contacts were imported into your address book:", importedAddrs.count() ),
+                                    "The following %1 contacts were imported into your address book:", importedAddrs.count() ),
                                     importedAddrs );
       emit addresseesAdded();
     }

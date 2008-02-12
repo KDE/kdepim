@@ -54,7 +54,7 @@ KAB::DistributionListEntryView::DistributionListEntryView( KAB::Core* core, QWid
 
     m_distListLabel = new KUrlLabel( this );
     distLabel->setBuddy( m_distListLabel );
-    connect( m_distListLabel, SIGNAL( leftClickedUrl( const QString& ) ), 
+    connect( m_distListLabel, SIGNAL( leftClickedUrl( const QString& ) ),
              this, SIGNAL( distributionListClicked( const QString& ) ) );
     distLayout->addWidget( m_distListLabel );
     distLayout->addStretch();
@@ -95,7 +95,7 @@ void KAB::DistributionListEntryView::emailButtonClicked( int id )
     m_list.removeEntry( m_entry.addressee, m_entry.email );
     m_entry.email = email;
     m_list.insertEntry( m_entry.addressee, m_entry.email );
-    m_core->addressBook()->insertAddressee( m_list ); 
+    m_core->addressBook()->insertAddressee( m_list );
 }
 
 void KAB::DistributionListEntryView::clear()
@@ -104,7 +104,7 @@ void KAB::DistributionListEntryView::clear()
 }
 
 void KAB::DistributionListEntryView::setEntry( const KPIM::DistributionList& list, const KPIM::DistributionList::Entry& entry )
-{    
+{
     m_list = list;
     m_entry = entry;
 
@@ -122,7 +122,7 @@ void KAB::DistributionListEntryView::setEntry( const KPIM::DistributionList& lis
     m_addresseeLabel->setText( i18nc( "Formatted name, role, organization", "<qt><h2>%1</h2><p>%2<br/>%3</p></qt>", m_entry.addressee.formattedName(), m_entry.addressee.role(), m_entry.addressee.organization() ) );
     m_distListLabel->setUrl( m_list.name() );
     m_distListLabel->setText( m_list.name() );
-    m_resourceLabel->setText( i18n( "<b>Address book:</b> %1" ).arg( m_entry.addressee.resource() ? m_entry.addressee.resource()->resourceName() : QString() ) );
+    m_resourceLabel->setText( i18n( "<b>Address book:</b> %1", (m_entry.addressee.resource() ? m_entry.addressee.resource()->resourceName() : QString()) ) );
     m_resourceLabel->setWordWrap( false );
     m_emailGroup = new QWidget( this );
     QButtonGroup* buttonGroup = new QButtonGroup( m_emailGroup );
@@ -136,14 +136,14 @@ void KAB::DistributionListEntryView::setEntry( const KPIM::DistributionList& lis
     {
         QRadioButton* button = new QRadioButton( m_emailGroup );
         button->setText( it );
-        buttonGroup->addButton( button, ++nextId ); 
+        buttonGroup->addButton( button, ++nextId );
         m_idToEmail.insert( nextId, it );
         if ( it == preferred )
             button->setChecked( true );
         button->setVisible( true );
     }
-    connect( buttonGroup, SIGNAL( buttonClicked( int ) ), 
-             this, SLOT( emailButtonClicked( int ) ) ); 
+    connect( buttonGroup, SIGNAL( buttonClicked( int ) ),
+             this, SLOT( emailButtonClicked( int ) ) );
     m_radioLayout->addWidget( m_emailGroup, 0, 0 );
     m_emailGroup->setVisible( true );
     m_mainLayout->invalidate();

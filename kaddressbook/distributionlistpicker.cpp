@@ -63,7 +63,7 @@ KPIM::DistributionListPickerDialog::DistributionListPickerDialog( KABC::AddressB
              this, SLOT( slotCancel() ) );
     connect( this, SIGNAL( user1Clicked() ),
              this, SLOT( slotUser1() ) );
-                      
+
     setMainWidget( main );
     Q_FOREACH ( const KPIM::DistributionList i,
                 KPIM::DistributionList::allDistributionLists( m_book ) )
@@ -85,7 +85,7 @@ void KPIM::DistributionListPickerDialog::setLabelText( const QString& text )
 void KPIM::DistributionListPickerDialog::slotUser1()
 {
     QStringList listNames;
-    Q_FOREACH( const KPIM::DistributionList i, 
+    Q_FOREACH( const KPIM::DistributionList i,
                KPIM::DistributionList::allDistributionLists( m_book ) )
     {
         listNames += i.name();
@@ -111,7 +111,7 @@ void KPIM::DistributionListPickerDialog::slotUser1()
         }
         else
         {
-            KMessageBox::error( this, i18n( "A distribution list with the the name %1 already exists. Please choose another name" ).arg( name ), i18n( "Name Exists" ) );
+            KMessageBox::error( this, i18n( "A distribution list with the the name %1 already exists. Please choose another name", name ), i18n( "Name Exists" ) );
         }
     }
     while ( !validName );
