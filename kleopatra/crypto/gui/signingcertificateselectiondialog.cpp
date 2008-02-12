@@ -41,6 +41,7 @@
 #include <utils/formatting.h>
 #include <utils/stl_util.h>
 
+#include <KLocalizedString>
 #include <QByteArray>
 #include <QMap>
 
