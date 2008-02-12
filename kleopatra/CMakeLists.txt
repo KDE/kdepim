@@ -23,6 +23,18 @@ add_subdirectory( pics )
 add_subdirectory( kgpgconf )
 add_subdirectory( tests )
 
+if ( WIN32 )
+  set( _kleopatra_extra_uiserver_SRCS
+    utils/gnupg-registry.c
+    uiserver/uiserver_win.cpp
+    )
+else ( WIN32 )
+  set( _kleopatra_extra_uiserver_SRCS
+    uiserver/uiserver_unix.cpp
+    )
+endif ( WIN32 )
+
+
 if ( USABLE_ASSUAN_FOUND )
   set(_kleopatra_uiserver_SRCS
     uiserver/uiserver.cpp
@@ -57,18 +69,6 @@ endif ( USABLE_ASSUAN_FOUND )
 kde4_add_ui_files( _kleopatra_uiserver_SRCS 
                    crypto/gui/certificateselectionwidget.ui 
                    crypto/gui/signingcertificateselectionwidget.ui)
-
-
-if ( WIN32 )
-  set( _kleopatra_extra_uiserver_SRCS
-    utils/gnupg-registry.c
-    uiserver/uiserver_win.cpp
-    )
-else ( WIN32 )
-  set( _kleopatra_extra_uiserver_SRCS
-    uiserver/uiserver_unix.cpp
-    )
-endif ( WIN32 )
 
 
 set( _kleopatra_common_SRCS
