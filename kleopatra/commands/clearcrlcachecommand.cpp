@@ -133,23 +133,22 @@ void ClearCrlCacheCommand::doCancel() {
 }
 
 void ClearCrlCacheCommand::Private::slotProcessFinished( int code, QProcess::ExitStatus status ) {
-    if ( canceled )
-        /* be silent */ ;
-    else if ( status == QProcess::CrashExit )
-        KMessageBox::error( view(),
-                            i18n( "The DirMngr process that tried to clear the CRL cache "
-                                  "ended prematurely because of an unexpected error. "
-                                  "Please check the output of dirmngr --flush for details." ),
-                            i18n( "Clear CRL Cache Error" ) );
-    else if ( code )
-        KMessageBox::error( view(),
-                            i18n( "An error occurred while trying to clear the CRL cache. "
-                                  "The output from dirmngr was:\n%1", errorString() ),
-                            i18n( "Clear CRL Cache Error" ) );
-    else
-        KMessageBox::information( view(),
-                                  i18n( "CRL cache cleared successfully." ),
-                                  i18n( "Clear CRL Cache Finished" ) );
+    if ( !canceled )
+        if ( status == QProcess::CrashExit )
+            KMessageBox::error( view(),
+                                i18n( "The DirMngr process that tried to clear the CRL cache "
+                                      "ended prematurely because of an unexpected error. "
+                                      "Please check the output of dirmngr --flush for details." ),
+                                i18n( "Clear CRL Cache Error" ) );
+        else if ( code )
+            KMessageBox::error( view(),
+                                i18n( "An error occurred while trying to clear the CRL cache. "
+                                      "The output from dirmngr was:\n%1", errorString() ),
+                                i18n( "Clear CRL Cache Error" ) );
+        else
+            KMessageBox::information( view(),
+                                      i18n( "CRL cache cleared successfully." ),
+                                      i18n( "Clear CRL Cache Finished" ) );
     finished();
 }
 
