@@ -19,6 +19,7 @@ set(libkdgantt_SRCS
   ${CMAKE_SOURCE_DIR}/kdgantt/kdganttconstraintmodel.cpp
   ${CMAKE_SOURCE_DIR}/kdgantt/kdganttabstractgrid.cpp
   ${CMAKE_SOURCE_DIR}/kdgantt/kdganttdatetimegrid.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt/kdganttlegend.cpp
 )
 
 add_definitions(-DKDAB_NO_UNIT_TESTS)
@@ -38,6 +39,7 @@ set(libkdgantt_mocable_files
   kdganttproxymodel
   kdganttsummaryhandlingproxymodel
   kdganttview
+  kdganttlegend
 )
 foreach(it ${libkdgantt_mocable_files})
   qt4_generate_moc(${CMAKE_SOURCE_DIR}/kdgantt/${it}.h ${CMAKE_BINARY_DIR}/kdgantt/moc_${it}.cpp)

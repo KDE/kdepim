@@ -160,6 +160,20 @@ void View::Private::slotVerticalScrollValueChanged( int val )
     leftWidget->verticalScrollBar()->setValue( val/gfxview.verticalScrollBar()->singleStep() );
 }
 
+void View::Private::slotLeftWidgetVerticalRangeChanged(int min, int max )
+{
+    gfxview.verticalScrollBar()->setRange( min, max );
+}
+
+void View::Private::slotGfxViewVerticalRangeChanged( int min, int max )
+{
+    int leftMin = leftWidget->verticalScrollBar()->minimum();
+    int leftMax = leftWidget->verticalScrollBar()->maximum();
+    bool blocked = gfxview.verticalScrollBar()->blockSignals( true );
+    gfxview.verticalScrollBar()->setRange( qMax( min, leftMin ), qMax( max, leftMax ) );
+    gfxview.verticalScrollBar()->blockSignals( blocked );
+}
+
 /*!\class KDGantt::View kdganttview.h KDGanttView
  * \ingroup KDGantt
  * \brief This widget that consists of a QTreeView and a GraphicsView
@@ -190,6 +204,9 @@ View::~View()
 
 #define d d_func()
 
+/*! \param aiv The view to be used to the left, instead of the default tree view
+ * \sa setRowController()
+ */
 void View::setLeftView( QAbstractItemView* aiv )
 {
     assert( aiv );
@@ -215,6 +232,10 @@ void View::setLeftView( QAbstractItemView* aiv )
              d->leftWidget->verticalScrollBar(), SLOT( setValue( int ) ) );
     connect( d->leftWidget->verticalScrollBar(), SIGNAL( valueChanged( int ) ),
              d->gfxview.verticalScrollBar(), SLOT( setValue( int ) ) );
+    connect( d->leftWidget->verticalScrollBar(), SIGNAL( rangeChanged( int, int ) ),
+             this, SLOT( slotLeftWidgetVerticalRangeChanged( int, int ) ) );
+    connect( d->gfxview.verticalScrollBar(), SIGNAL( rangeChanged( int, int ) ),
+             this, SLOT( slotGfxViewVerticalRangeChanged( int, int ) ) );
 }
 
 /*! Sets \a ctrl to be the rowcontroller used by this View.

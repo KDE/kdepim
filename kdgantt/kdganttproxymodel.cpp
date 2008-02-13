@@ -42,12 +42,14 @@ ProxyModel::Private::Private( ProxyModel* _q )
     columnMap[StartTimeRole]      = 2;
     columnMap[EndTimeRole]        = 3;
     columnMap[TaskCompletionRole] = 4;
+    columnMap[LegendRole]         = 5;
 
     roleMap[Qt::DisplayRole]    = Qt::DisplayRole;
     roleMap[ItemTypeRole]       = Qt::DisplayRole;
     roleMap[StartTimeRole]      = Qt::DisplayRole;
     roleMap[EndTimeRole]        = Qt::DisplayRole;
     roleMap[TaskCompletionRole] = Qt::DisplayRole;
+    roleMap[LegendRole]         = Qt::DisplayRole;
 }
 
 ProxyModel::ProxyModel( QObject* parent )

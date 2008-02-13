@@ -46,6 +46,8 @@ QDebug operator<<( QDebug dbg, KDGantt::ItemDelegate::InteractionState state )
         PRINT_INTERACTIONSTATE( KDGantt::ItemDelegate::State_Move );
         PRINT_INTERACTIONSTATE( KDGantt::ItemDelegate::State_ExtendLeft );
         PRINT_INTERACTIONSTATE( KDGantt::ItemDelegate::State_ExtendRight );
+    default:
+        break;
     }
     return dbg;
 }
@@ -197,9 +199,8 @@ ItemDelegate::InteractionState ItemDelegate::interactionStateFor( const QPointF&
 								  const StyleOptionGanttItem& opt,
 								  const QModelIndex& idx ) const
 {
-    if( !idx.isValid() ) {
-        return State_None;
-    }
+    if ( !idx.isValid() ) return State_None;
+    if ( !( idx.model()->flags( idx ) & Qt::ItemIsEditable ) ) return State_None;
 
     int typ = static_cast<ItemType>( idx.model()->data( idx, ItemTypeRole ).toInt() );
     if ( typ == TypeNone || typ == TypeSummary ) return State_None;
@@ -219,6 +220,8 @@ ItemDelegate::InteractionState ItemDelegate::interactionStateFor( const QPointF&
 
 static void adjust_for_horizontal_alignment( QRectF* rect, Qt::Alignment a )
 {
+    Q_UNUSED( rect );
+    Q_UNUSED( a );
 }
 
 /*! Paints the gantt item \a idx using \a painter and \a opt
@@ -228,19 +231,20 @@ void ItemDelegate::paintGanttItem( QPainter* painter,
                                    const QModelIndex& idx )
 {
     if ( !idx.isValid() ) return;
-    ItemType typ = static_cast<ItemType>( idx.model()->data( idx, ItemTypeRole ).toInt() );
-    QString txt = idx.model()->data( idx, Qt::DisplayRole ).toString();
+    const ItemType typ = static_cast<ItemType>( idx.model()->data( idx, ItemTypeRole ).toInt() );
+    const QString& txt = opt.text;
     QRectF itemRect = opt.itemRect;
     QRectF boundingRect = opt.boundingRect;
     boundingRect.setY( itemRect.y() );
     boundingRect.setHeight( itemRect.height() );
     //qDebug() << "itemRect="<<itemRect<<", boundingRect="<<boundingRect;
+    
+    painter->save();
 
     QPen pen = defaultPen( typ );
     if ( opt.state & QStyle::State_Selected ) pen.setWidth( 2*pen.width() );
     painter->setPen( pen );
     painter->setBrush( defaultBrush( typ ) );
-    painter->setBrushOrigin( itemRect.topLeft() );
 
     qreal pw = painter->pen().width()/2.;
     switch( typ ) {
@@ -252,6 +256,8 @@ void ItemDelegate::paintGanttItem( QPainter* painter,
             QRectF r = itemRect;
             r.translate( 0., r.height()/6. );
             r.setHeight( 2.*r.height()/3. );
+            painter->setBrushOrigin( itemRect.topLeft() );
+            painter->save();
             painter->translate( 0.5, 0.5 );
             painter->drawRect( r );
             bool ok;
@@ -262,6 +268,7 @@ void ItemDelegate::paintGanttItem( QPainter* painter,
                            r.width()*completion/100., h/2.+1 /*??*/ );
                 painter->fillRect( cr, painter->pen().brush() );
             }
+            painter->restore();
             Qt::Alignment ta;
             switch( opt.displayPosition ) {
             case StyleOptionGanttItem::Left: ta = Qt::AlignLeft; break;
@@ -280,50 +287,57 @@ void ItemDelegate::paintGanttItem( QPainter* painter,
             const qreal delta = r.height()/2.;
             path.moveTo( r.topLeft() );
             path.lineTo( r.topRight() );
-            path.lineTo( QPointF( r.right(), 2.*delta ) );
-            //path.lineTo( QPointF( r.right()-3./2.*delta, delta ) );
-            path.quadTo( QPointF( r.right()-.5*delta, delta ), QPointF( r.right()-2*delta, delta ) );
-            //path.lineTo( QPointF( r.left()+3./2.*delta, delta ) );
-            path.lineTo( QPointF( r.left()+2*delta, delta ) );
-            path.quadTo( QPointF( r.left()+.5*delta, delta ), QPointF( r.left(), 2*delta ) );
+            path.lineTo( QPointF( r.right(), r.top() + 2.*delta ) );
+            //path.lineTo( QPointF( r.right()-3./2.*delta, r.top() + delta ) );
+            path.quadTo( QPointF( r.right()-.5*delta, r.top() + delta ), QPointF( r.right()-2.*delta, r.top() + delta ) );
+            //path.lineTo( QPointF( r.left()+3./2.*delta, r.top() + delta ) );
+            path.lineTo( QPointF( r.left() + 2.*delta, r.top() + delta ) );
+            path.quadTo( QPointF( r.left()+.5*delta, r.top() + delta ), QPointF( r.left(), r.top() + 2.*delta ) );
             path.closeSubpath();
+            painter->setBrushOrigin( itemRect.topLeft() );
+            painter->save();
             painter->translate( 0.5, 0.5 );
             painter->drawPath( path );
+            painter->restore();
             Qt::Alignment ta;
             switch( opt.displayPosition ) {
             case StyleOptionGanttItem::Left: ta = Qt::AlignLeft; break;
             case StyleOptionGanttItem::Right: ta = Qt::AlignRight; break;
             case StyleOptionGanttItem::Center: ta = Qt::AlignCenter; break;
             }
-            painter->drawText( boundingRect, ta, txt );
+            painter->drawText( boundingRect, ta | Qt::AlignVCenter, txt );
         }
         break;
     case TypeEvent: /* TODO */
         //qDebug() << opt.boundingRect << opt.itemRect;
         if ( opt.boundingRect.isValid() ) {
-            qreal pw = painter->pen().width()/2.;
-            pw-=1;
-            QRectF r = QRectF( opt.rect ).adjusted( -pw, -pw, pw, pw );
+            const qreal pw = painter->pen().width() / 2. - 1;
+            const QRectF r = QRectF( opt.rect ).adjusted( -pw, -pw, pw, pw );
             QPainterPath path;
-            qreal delta = static_cast<int>( r.height()/2 );
+            const qreal delta = static_cast< int >( r.height() / 2 );
             path.moveTo( delta, 0. );
             path.lineTo( 2.*delta, delta );
             path.lineTo( delta, 2.*delta );
             path.lineTo( 0., delta );
             path.closeSubpath();
+            painter->save();
             painter->translate( r.topLeft() );
             painter->translate( 0.5, 0.5 );
             painter->drawPath( path );
+            painter->restore();
             Qt::Alignment ta;
             switch( opt.displayPosition ) {
             case StyleOptionGanttItem::Left: ta = Qt::AlignLeft; break;
             case StyleOptionGanttItem::Right: ta = Qt::AlignRight; break;
             case StyleOptionGanttItem::Center: ta = Qt::AlignCenter; break;
             }
-            painter->drawText( boundingRect, ta, txt );
+            painter->drawText( boundingRect, ta | Qt::AlignVCenter, txt );
         }
         break;
+    default:
+        break;
     }
+    painter->restore();
 }
 
 static const qreal TURN = 10.;
@@ -363,20 +377,15 @@ QRectF ItemDelegate::constraintBoundingRect( const QPointF& start, const QPointF
  * \todo Review \a opt's type
  */
 void ItemDelegate::paintConstraintItem( QPainter* painter, const QStyleOptionGraphicsItem& opt,
-                                        const QPointF& start, const QPointF& end )
+                                        const QPointF& start, const QPointF& end, const QPen& pen )
 {
     Q_UNUSED( opt );
-    qreal midx = ( end.x()-start.x() )/2. + start.x();
+    qreal midx = end.x() - TURN;
     qreal midy = ( end.y()-start.y() )/2. + start.y();
 
-    // TODO: Make more flexible
-    if ( start.x() <= end.x() ) {
-        painter->setPen( Qt::black );
-        painter->setBrush( Qt::black );
-    } else {
-        painter->setPen( Qt::red );
-        painter->setBrush( Qt::red );
-    }
+    painter->setPen( pen );
+    painter->setBrush( pen.color() );
+    
     if ( start.x() > end.x()-TURN ) {
         QPolygonF poly;
             poly << start

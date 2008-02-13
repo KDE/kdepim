@@ -166,8 +166,6 @@ void SummaryHandlingProxyModel::sourceLayoutChanged()
 
 void SummaryHandlingProxyModel::sourceDataChanged( const QModelIndex& from, const QModelIndex& to )
 {
-    BASE::sourceDataChanged( from, to );
-#if 0
     QAbstractItemModel* model = sourceModel();
     QModelIndex parentIdx = from;
     do {
@@ -179,7 +177,8 @@ void SummaryHandlingProxyModel::sourceDataChanged( const QModelIndex& from, cons
             emit dataChanged( proxyDataIdx, proxyDataIdx );
         }
     } while ( ( parentIdx=model->parent( parentIdx ) ) != QModelIndex() );
-#endif
+
+    BASE::sourceDataChanged( from, to );
 }
 
 void SummaryHandlingProxyModel::sourceColumnsAboutToBeInserted( const QModelIndex& parentIdx,
@@ -299,7 +298,7 @@ KDAB_SCOPED_UNITTEST_SIMPLE( KDGantt, SummaryHandlingProxyModel, "test" ) {
 
 
     QDateTime startdt = QDateTime::currentDateTime();
-    QDateTime enddt = enddt.addDays( 1 );
+    QDateTime enddt = startdt.addDays( 1 );
 
 
     task1->setData( startdt, KDGantt::StartTimeRole );

@@ -27,6 +27,7 @@
 
 #include <QSharedData>
 #include <QPersistentModelIndex>
+#include <QMap>
 
 #include "kdganttconstraint.h"
 
@@ -37,12 +38,17 @@ namespace KDGantt {
         Private( const Private& other );
 
         inline bool equals( const Private& other ) const {
-            return start==other.start && end==other.end && type==other.type;
+	    /* Due to a Qt bug we have to check separately for invalid indexes */
+            return (start==other.start || (!start.isValid() && !other.start.isValid())) 
+		&& (end==other.end || (!end.isValid() && !other.end.isValid())) 
+		&& type==other.type
+        && data==other.data;
         }
 
         QPersistentModelIndex start;
         QPersistentModelIndex end;
         Type type;
+        QMap< int, QVariant > data;
     };
 }
 

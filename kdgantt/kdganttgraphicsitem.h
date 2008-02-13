@@ -61,7 +61,7 @@ namespace KDGantt {
         void setRect( const QRectF& r );
         void setBoundingRect( const QRectF& r );
 
-        QString ganttToolTip() const;
+        virtual QString ganttToolTip() const;
 
         const QPersistentModelIndex& index() const { return m_index; }
         void setIndex( const QPersistentModelIndex& idx );
@@ -74,7 +74,7 @@ namespace KDGantt {
         void removeStartConstraint( ConstraintGraphicsItem* );
         void removeEndConstraint( ConstraintGraphicsItem* );
         QList<ConstraintGraphicsItem*> startConstraints() const { return m_startConstraints; }
-        QList<ConstraintGraphicsItem*> endConstraints() const { return m_startConstraints; }
+        QList<ConstraintGraphicsItem*> endConstraints() const { return m_endConstraints; }
 
         /*reimp*/ QRectF boundingRect() const;
         /*reimp*/ void paint( QPainter* painter, const QStyleOptionGraphicsItem* option,
@@ -83,15 +83,15 @@ namespace KDGantt {
         /*reimp*/ QVariant itemChange( GraphicsItemChange, const QVariant& value );
     protected:
         /*reimp*/ void focusInEvent( QFocusEvent* event );
-	/*reimp*/ void hoverMoveEvent( QGraphicsSceneHoverEvent* );
-	/*reimp*/ void hoverLeaveEvent( QGraphicsSceneHoverEvent* );
+        /*reimp*/ void hoverMoveEvent( QGraphicsSceneHoverEvent* );
+        /*reimp*/ void hoverLeaveEvent( QGraphicsSceneHoverEvent* );
         /*reimp*/ void mousePressEvent( QGraphicsSceneMouseEvent* );
         /*reimp*/ void mouseReleaseEvent( QGraphicsSceneMouseEvent* );
         /*reimp*/ void mouseDoubleClickEvent( QGraphicsSceneMouseEvent* );
         /*reimp*/ void mouseMoveEvent( QGraphicsSceneMouseEvent* );
 
     private:
-	void init();
+        void init();
 
         QPointF startConnector() const;
         QPointF endConnector() const;
@@ -104,7 +104,7 @@ namespace KDGantt {
         QRectF m_boundingrect;
         QPersistentModelIndex m_index;
         bool m_isupdating;
-	int m_istate;
+        int m_istate;
         QPointF m_presspos;
         QPointF m_pressscenepos;
         QGraphicsLineItem* m_dragline;

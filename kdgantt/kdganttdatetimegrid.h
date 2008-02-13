@@ -52,8 +52,8 @@ namespace KDGantt {
         void setFreeDays( const QSet<Qt::DayOfWeek>& fd );
         QSet<Qt::DayOfWeek> freeDays() const;
 
-	void setScale( Scale s );
-	Scale scale() const;
+        void setScale( Scale s );
+        Scale scale() const;
 
         bool rowSeparators() const;
         void setRowSeparators( bool enable );

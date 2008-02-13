@@ -115,6 +115,7 @@ QDebug operator<<( QDebug dbg, KDGantt::ItemDataRole r)
   case KDGantt::EndTimeRole:        dbg << "KDGantt::EndTimeRole"; break;
   case KDGantt::TaskCompletionRole: dbg << "KDGantt::TaskCompletionRole"; break;
   case KDGantt::ItemTypeRole:       dbg << "KDGantt::ItemTypeRole"; break;
+  case KDGantt::LegendRole:         dbg << "KDGantt::LegendRole"; break;
   default: dbg << static_cast<Qt::ItemDataRole>(r);
   }
   return dbg;

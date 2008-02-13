@@ -74,13 +74,13 @@ void AbstractGrid::setRootIndex( const QModelIndex& idx )
     d->root = idx;
 }
 
-/*!\returns the curret root index for this grid */
+/*!\returns the current root index for this grid */
 QModelIndex AbstractGrid::rootIndex() const
 {
     return d->root;
 }
 
-/*!\returns true if the startpoint is not after the endpoint
+/*!\returns true if the startpoint is before the endpoint
  * of the constraint \a c.
  */
 bool AbstractGrid::isSatisfiedConstraint( const Constraint& c ) const
@@ -106,13 +106,14 @@ bool AbstractGrid::isSatisfiedConstraint( const Constraint& c ) const
  * \returns true if the update succeeded.
  */
 
-/*!\fn virtual void AbstractGrid::paintGrid( QPainter* painter, const QRectF& sceneRect, const QRectF& exposedRect, QWidget* widget=0 )
+/*!\fn virtual void AbstractGrid::paintGrid( QPainter* painter, const QRectF& sceneRect, const QRectF& exposedRect, AbstractRowController* rowController=0, QWidget* widget=0 )
  *
  * Implement this to paint the background of the view -- typically
  * with some grid lines.
  * \param painter -- the QPainter to paint with.
  * \param sceneRect -- the total bounding rectangle of the scene.
  * \param exposedRect -- the rectangle that needs to be painted.
+ * \param rowController -- the row controller used by the view -- may be 0.
  * \param widget -- the widget used by the view -- may be 0.
  */
 

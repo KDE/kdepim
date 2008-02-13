@@ -45,6 +45,7 @@ namespace KDGantt {
         QRectF itemRect;
         Position displayPosition;
         AbstractGrid* grid;
+        QString text;
     };
 }
 

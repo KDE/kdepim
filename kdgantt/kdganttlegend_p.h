@@ -22,28 +22,19 @@
  ** licensing are not clear to you.
  **
  **********************************************************************/
-#ifndef KDGANTTLISTVIEWROWCONTROLLER_P_H
-#define KDGANTTLISTVIEWROWCONTROLLER_P_H
+#ifndef KDGANTTLEGEND_P_H
+#define KDGANTTLEGEND_P_H
 
-#include "kdganttlistviewrowcontroller.h"
+#include "kdganttlegend.h"
 
-#include <QListView>
+#include "kdganttproxymodel.h"
 
 namespace KDGantt {
-    class ListViewRowController::Private {
+    class Legend::Private {
     public:
-        class HackListView : public QListView {
-	public:
-	    using QListView::verticalOffset;
-		using QListView::setViewportMargins;
-	};
-
-        Private(QListView* lv, QAbstractProxyModel* pm )
-	  : listview(lv), proxy(pm) {}
-        QListView* listview;
-        QAbstractProxyModel* proxy;
+        ProxyModel proxyModel;
     };
 }
 
-#endif /* KDGANTTLISTVIEWROWCONTROLLER_P_H */
+#endif /* KDGANTTLEGEND_P_H */
 

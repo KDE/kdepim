@@ -29,6 +29,10 @@
 
 using namespace KDGantt;
 
+/*!\class KDGantt::ConstraintProxy
+ * \internal
+ */
+
 ConstraintProxy::ConstraintProxy( QObject* parent )
     : QObject( parent )
 {

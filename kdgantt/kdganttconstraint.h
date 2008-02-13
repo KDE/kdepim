@@ -30,12 +30,25 @@
 #include <QSharedDataPointer>
 
 #include "kdgantt_export.h"
+#ifndef QT_NO_DEBUG_STREAM
+#include <QDebug>
+#endif
 
 namespace KDGantt {
     class KDGANTT_EXPORT Constraint {
         class Private;
     public:
-        enum Type { TypeSoft=0, TypeHard=1 };
+        enum Type
+        { 
+            TypeSoft = 0, 
+            TypeHard = 1
+        };	
+
+        enum ConstraintDataRole
+        {
+            ValidConstraintPen = Qt::UserRole,
+            InvalidConstraintPen
+        };
 
         Constraint( const QModelIndex& idx1,  const QModelIndex& idx2, Type type=TypeSoft);
         Constraint( const Constraint& other);
@@ -44,6 +57,9 @@ namespace KDGantt {
         Type type() const;
         QModelIndex startIndex() const;
         QModelIndex endIndex() const;
+
+        void setData( int role, const QVariant& value );
+        QVariant data( int role ) const;
 
         Constraint& operator=( const Constraint& other );
 
@@ -54,6 +70,9 @@ namespace KDGantt {
         }
 
         uint hash() const;
+#ifndef QT_NO_DEBUG_STREAM
+        QDebug debug( QDebug dbg) const;
+#endif
 
     private:
         QSharedDataPointer<Private> d;
@@ -63,12 +82,8 @@ namespace KDGantt {
 }
 
 #ifndef QT_NO_DEBUG_STREAM
-#include <QDebug>
-
 QDebug operator<<( QDebug dbg, const KDGantt::Constraint& c );
-
 #endif /* QT_NO_DEBUG_STREAM */
-
 
 #endif /* KDGANTTCONSTRAINT_H */
 

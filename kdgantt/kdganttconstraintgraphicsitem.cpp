@@ -23,6 +23,7 @@
  **
  **********************************************************************/
 #include "kdganttconstraintgraphicsitem.h"
+#include "kdganttconstraintmodel.h"
 #include "kdganttgraphicsscene.h"
 #include "kdganttitemdelegate.h"
 #include "kdganttsummaryhandlingproxymodel.h"
@@ -76,7 +77,29 @@ void ConstraintGraphicsItem::paint( QPainter* painter, const QStyleOptionGraphic
                                     QWidget* widget )
 {
     Q_UNUSED( widget );
-    scene()->itemDelegate()->paintConstraintItem( painter, *option, m_start, m_end );
+
+    QPen pen;
+    QVariant dataPen;
+
+    // default pens
+    if ( m_start.x() <= m_end.x() ) {
+        pen = QPen( Qt::black );
+        dataPen = m_constraint.data( Constraint::ValidConstraintPen );
+    } else {
+        pen = QPen( Qt::red );
+        dataPen = m_constraint.data( Constraint::InvalidConstraintPen );
+    }
+
+    // data() pen
+    if( qVariantCanConvert< QPen >( dataPen ) )
+        pen = qVariantValue< QPen >( dataPen );
+
+    scene()->itemDelegate()->paintConstraintItem( painter, *option, m_start, m_end, pen );
+}
+
+QString ConstraintGraphicsItem::ganttToolTip() const
+{
+    return m_constraint.data( Qt::ToolTipRole ).toString();
 }
 
 void ConstraintGraphicsItem::setStart( const QPointF& start )

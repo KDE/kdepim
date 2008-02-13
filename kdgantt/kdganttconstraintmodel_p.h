@@ -27,7 +27,7 @@
 
 #include "kdganttconstraintmodel.h"
 
-#include <QSet>
+#include <QList>
 #include <QMultiHash>
 #include <QPersistentModelIndex>
 
@@ -36,11 +36,13 @@ namespace KDGantt {
     public:
         Private();
 
-        void addConstraintToIndex( const QPersistentModelIndex& idx, const Constraint& c );
-        void removeConstraintFromIndex( const QPersistentModelIndex& idx,  const Constraint& c );
+        void addConstraintToIndex( const QModelIndex& idx, const Constraint& c );
+        void removeConstraintFromIndex( const QModelIndex& idx,  const Constraint& c );
 
-        QSet<Constraint> constraints;
-        QMultiHash<QPersistentModelIndex,Constraint> indexMap;
+	typedef QMultiHash<QPersistentModelIndex,Constraint> IndexType;
+
+        QList<Constraint> constraints;
+        IndexType indexMap;
     };
 }
 

@@ -64,9 +64,9 @@ namespace KDGantt {
 
         virtual void paintGanttItem( QPainter* p, const StyleOptionGanttItem& opt, const QModelIndex& idx );
         virtual void paintConstraintItem( QPainter* p, const QStyleOptionGraphicsItem& opt,
-                                          const QPointF& start, const QPointF& end );
+                                          const QPointF& start, const QPointF& end, const QPen& pen );
     };
-}
+};
 
 #ifndef QT_NO_DEBUG_STREAM
 QDebug operator<<( QDebug dbg, KDGantt::ItemDelegate::InteractionState );

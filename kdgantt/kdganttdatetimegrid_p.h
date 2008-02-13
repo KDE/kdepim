@@ -33,7 +33,7 @@
 namespace KDGantt {
     class DateTimeGrid::Private : public AbstractGrid::Private {
     public:
-        Private() : startDateTime( QDateTime::currentDateTime().addDays( 3 ) ),
+        Private() : startDateTime( QDateTime::currentDateTime().addDays( -3 ) ),
                     dayWidth( 100. ), scale(ScaleAuto), weekStart( Qt::Monday ),
                     freeDays( QSet<Qt::DayOfWeek>() << Qt::Saturday << Qt::Sunday ),
                     rowSeparators( false ) {}

@@ -104,8 +104,9 @@ StyleOptionGanttItem GraphicsItem::getStyleOption() const
     opt.itemRect = rect();
     opt.boundingRect = boundingRect();
     opt.displayPosition = StyleOptionGanttItem::Right;
-    opt.displayAlignment = Qt::Alignment( m_index.model()->data( m_index, Qt::TextAlignmentRole ).toInt() );
+    opt.displayAlignment = static_cast< Qt::Alignment >( m_index.model()->data( m_index, Qt::TextAlignmentRole ).toInt() );
     opt.grid = scene()->grid();
+    opt.text = m_index.model()->data( m_index, Qt::DisplayRole ).toString(); 
     if ( isEnabled() ) opt.state  |= QStyle::State_Enabled;
     if ( isSelected() ) opt.state |= QStyle::State_Selected;
     if ( hasFocus() ) opt.state   |= QStyle::State_HasFocus;
@@ -295,8 +296,8 @@ void GraphicsItem::updateModel()
         assert( model );
         assert( cmodel );
         if ( model ) {
-            ItemType typ = static_cast<ItemType>( model->data( index(),
-                                                               ItemTypeRole ).toInt() );
+            //ItemType typ = static_cast<ItemType>( model->data( index(),
+            //                                                   ItemTypeRole ).toInt() );
             const QModelIndex sourceIdx = scene()->summaryHandlingModel()->mapToSource( index() );
             QList<Constraint> constraints;
             for( QList<ConstraintGraphicsItem*>::iterator it1 = m_startConstraints.begin() ; it1 != m_startConstraints.end() ; ++it1 )
@@ -351,7 +352,7 @@ void GraphicsItem::mousePressEvent( QGraphicsSceneMouseEvent* event )
     switch( m_istate ) {
     case ItemDelegate::State_ExtendLeft:
     case ItemDelegate::State_ExtendRight:
-    default: /* and move */
+    default: /* None and Move */
         BASE::mousePressEvent( event );
         break;
     }
@@ -401,7 +402,8 @@ void GraphicsItem::updateItemFromMouse( const QPointF& scenepos )
     QRectF br = boundingRect();
     switch( m_istate ) {
     case ItemDelegate::State_Move:
-        setPos( p.x(), pos().y() ); break;
+        setPos( p.x(), pos().y() );
+        break;
     case ItemDelegate::State_ExtendLeft: {
         const qreal brr = br.right();
         const qreal rr = r.right();
@@ -417,6 +419,7 @@ void GraphicsItem::updateItemFromMouse( const QPointF& scenepos )
         br.setWidth( br.width() + r.right()-rr );
         break;
     }
+    default: return;
     }
     setRect( r );
     setBoundingRect( br );

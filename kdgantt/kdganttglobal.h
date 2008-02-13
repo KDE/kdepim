@@ -197,7 +197,8 @@ namespace KDGantt {
         StartTimeRole       = KDGanttRoleBase + 1,
         EndTimeRole         = KDGanttRoleBase + 2,
         TaskCompletionRole  = KDGanttRoleBase + 3,
-        ItemTypeRole        = KDGanttRoleBase + 4
+        ItemTypeRole        = KDGanttRoleBase + 4,
+        LegendRole          = KDGanttRoleBase + 5
     };
     enum ItemType {
         TypeNone    = 0,
@@ -221,6 +222,7 @@ namespace KDGantt {
 
         inline void setStart( qreal start ) { m_start=start; }
         inline qreal start() const { return m_start; }
+        inline void setEnd( qreal end ) { m_length = m_start-end; }
         inline qreal end() const { return m_start+m_length; }
 
         inline void setLength( qreal length ) { m_length=length; }
@@ -263,7 +265,7 @@ namespace KDGantt {
     inline bool operator!=( const DateTimeSpan& s1, const DateTimeSpan& s2) { return !s1.equals( s2 ); }
 }
 
-Q_DECLARE_METATYPE(KDGantt::ItemType)
+Q_DECLARE_METATYPE(KDGantt::ItemType);
 Q_DECLARE_TYPEINFO(KDGantt::Span, Q_MOVABLE_TYPE);
 Q_DECLARE_TYPEINFO(KDGantt::DateTimeSpan, Q_MOVABLE_TYPE);
 

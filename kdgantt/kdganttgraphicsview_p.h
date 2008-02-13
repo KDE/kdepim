@@ -44,6 +44,7 @@ namespace KDGantt {
         void scrollTo( int );
     protected:
         /*reimp*/ void paintEvent( QPaintEvent* ev );
+        /*reimp*/ void contextMenuEvent( QContextMenuEvent* ev );
     private:
         qreal m_offset;
     };
@@ -65,6 +66,7 @@ namespace KDGantt {
         void slotLayoutChanged();
         void slotModelReset();
         void slotRowsInserted( const QModelIndex& parent,  int start, int end );
+        void slotRowsAboutToBeRemoved( const QModelIndex& parent,  int start, int end );
         void slotRowsRemoved( const QModelIndex& parent,  int start, int end );
 
         void slotItemClicked( const QModelIndex& idx );

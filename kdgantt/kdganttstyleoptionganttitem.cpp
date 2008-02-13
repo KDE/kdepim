@@ -57,6 +57,7 @@ StyleOptionGanttItem& StyleOptionGanttItem::operator=( const StyleOptionGanttIte
     itemRect = other.itemRect;
     displayPosition = other.displayPosition;
     grid = other.grid;
+    text = other.text;
     return *this;
 }
 
@@ -68,6 +69,7 @@ QDebug operator<<( QDebug dbg, const KDGantt::StyleOptionGanttItem& s )
         <<", itemRect="<<s.itemRect
         <<", displayPosition="<<s.displayPosition
         <<", grid="<<s.grid
+        <<", text="<<s.text
         <<"]";
     return dbg;
 }
@@ -95,4 +97,8 @@ QDebug operator<<( QDebug dbg, const KDGantt::StyleOptionGanttItem& s )
 
 /*!\var StyleOptionGanttItem::grid
  * Contains a pointer to the AbstractGrid used by the view
+ */
+
+/*!\var StyleOptionGanttItem::text
+ * Contains a string printed to the item
  */

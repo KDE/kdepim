@@ -51,6 +51,7 @@ namespace KDGantt {
         /*reimp*/ bool setData( const QModelIndex& index, const QVariant& value, int role = Qt::EditRole );
 
     protected Q_SLOTS:
+        virtual void sourceModelAboutToBeReset();
         virtual void sourceModelReset();
         virtual void sourceLayoutAboutToBeChanged();
         virtual void sourceLayoutChanged();

@@ -38,8 +38,13 @@ using namespace KDGantt;
  * end-QModelIndex.
  */
 
-/*\enum KDGantt::Constraint::Type
+/*!\enum KDGantt::Constraint::Type
  * This enum is unused for now.
+ */
+
+/*!\enum KDGantt::Constraint::ConstraintDataRole
+ * Data roles used when specifying the pen to draw constraints with.
+ * \sa setData
  */
 
 Constraint::Private::Private()
@@ -55,7 +60,7 @@ Constraint::Private::Private( const Private& other )
     type=other.type;
 }
 
-/*! Constructor. Creates a dependency for \a idx2 on \a idx2.
+/*! Constructor. Creates a dependency for \a idx2 on \a idx1.
  * \param type controls if the constraint is a soft one that
  * is allowed to be broken (ie, go backwards in time) or a hard
  * constraint that will not allow the user to move an item so
@@ -71,6 +76,7 @@ Constraint::Constraint( const QModelIndex& idx1,  const QModelIndex& idx2, Type 
     d->start=idx1;
     d->end=idx2;
     d->type=type;
+    Q_ASSERT_X( idx1 != idx2 || !idx1.isValid(), "Constraint::Constraint", "cannot create a constraint with idx1 == idx2" );
 }
 
 /*! Copy-Constructor. */
@@ -109,11 +115,31 @@ QModelIndex Constraint::endIndex() const
     return d->end;
 }
 
+/*! \returns The data associated with this index for the specified role.
+ * \param role The role to fetch the data for.
+ * \sa ConstraintDataRole
+ */
+QVariant Constraint::data( int role ) const
+{
+    return d->data.value( role );
+}
+
+/*! Set data on this index for the specified role.
+ * \param role The role to set the data for.
+ * \param value The data to set on the index.
+ * \sa ConstraintDataRole
+ */
+void Constraint::setData( int role, const QVariant& value )
+{
+    d->data.insert( role, value );
+}
+
 /*! Compare two Constraint objects. Two Constraints are equal
  * if the have the same start and end indexes
  */
 bool Constraint::operator==( const Constraint& other ) const
 {
+    if ( d == other.d ) return true;
     return ( *d ).equals( *( other.d ) );
 }
 
@@ -125,9 +151,14 @@ uint Constraint::hash() const
 
 #ifndef QT_NO_DEBUG_STREAM
 
-QDebug operator<<( QDebug dbg, const KDGantt::Constraint& c )
+QDebug operator<<( QDebug dbg, const Constraint& c )
 {
-    dbg << "KDGantt::Constraint[ start="<<c.startIndex()<<" end="<<c.endIndex()<<"]";
+    return c.debug( dbg );
+}
+
+QDebug Constraint::debug( QDebug dbg ) const
+{
+    dbg << "KDGantt::Constraint[ start="<<d->start<<" end="<<d->end<<"]";
     return dbg;
 }
 
@@ -164,6 +195,9 @@ KDAB_SCOPED_UNITTEST_SIMPLE( KDGantt, Constraint, "test" )
     assertFalse( c4==c5 );
 
     assertEqual( c3.type(), Constraint::TypeSoft );
+
+    dummyModel.removeRow( 8 );
+    assertFalse( c4==c5 );
 }
 
 #endif /* KDAB_NO_UNIT_TESTS */

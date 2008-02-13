@@ -63,12 +63,13 @@ qreal DateTimeGrid::Private::dateTimeToChartX( const QDateTime& dt ) const
 
 QDateTime DateTimeGrid::Private::chartXtoDateTime( qreal x ) const
 {
-    // TODO
     assert( startDateTime.isValid() );
     int days = static_cast<int>( x/dayWidth );
     qreal secs = x*( 24.*60.*60. )/dayWidth;
     QDateTime dt = startDateTime;
-    QDateTime result = dt.addDays( days ).addSecs( qRound(secs-(days*24.*60.*60.) ) );
+    QDateTime result = dt.addDays( days )
+                       .addSecs( static_cast<int>(secs-(days*24.*60.*60.) ) )
+                       .addMSecs( qRound( ( secs-static_cast<int>( secs ) )*1000. ) );
     return result;
 }
 
@@ -82,71 +83,116 @@ DateTimeGrid::~DateTimeGrid()
 {
 }
 
+/*! \returns The QDateTime used as start date for the grid.
+ *
+ * The default is three days before the current date.
+ */
 QDateTime DateTimeGrid::startDateTime() const
 {
     return d->startDateTime;
 }
 
+/*! \param dt The start date of the grid. It is used as the beginning of the
+ * horizontal scrollbar in the view.
+ *
+ * Emits gridChanged() after the start date has changed.
+ */
 void DateTimeGrid::setStartDateTime( const QDateTime& dt )
 {
     d->startDateTime = dt;
     emit gridChanged();
 }
 
+/*! \returns The width in pixels for each day in the grid.
+ *
+ * The default is 100 pixels.
+ */
 qreal DateTimeGrid::dayWidth() const
 {
     return d->dayWidth;
 }
 
+/*! \param w The width in pixels for each day in the grid.
+ *
+ * The signal gridChanged() is emitted after the day width is changed.
+ */
 void DateTimeGrid::setDayWidth( qreal w )
 {
     d->dayWidth = w;
     emit gridChanged();
 }
 
+/*! \param s The scale to be used to paint the grid.
+ *
+ * The signal gridChanged() is emitted after the scale has changed.
+ * \sa Scale
+ */
 void DateTimeGrid::setScale( Scale s )
 {
 	d->scale = s;
 	emit gridChanged();
 }
 
+/*! \returns The scale used to paint the grid.
+ *
+ * The default is ScaleAuto, which means the day scale will be used
+ * as long as the day width is less or equal to 500.
+ * \sa Scale
+ */
 DateTimeGrid::Scale DateTimeGrid::scale() const
 {
 	return d->scale;
 }
 
+/*! \param ws The start day of the week.
+ *
+ * A solid line is drawn on the grid to mark the beginning of a new week.
+ * Emits gridChanged() after the start day has changed.
+ */
 void DateTimeGrid::setWeekStart( Qt::DayOfWeek ws )
 {
     d->weekStart = ws;
     emit gridChanged();
 }
 
+/*! \returns The start day of the week */
 Qt::DayOfWeek DateTimeGrid::weekStart() const
 {
     return d->weekStart;
 }
 
+/*! \param fd A set of days to mark as free in the grid.
+ *
+ * Free days are filled with the alternate base brush of the
+ * palette used by the view.
+ * The signal gridChanged() is emitted after the free days are changed.
+ */
 void DateTimeGrid::setFreeDays( const QSet<Qt::DayOfWeek>& fd )
 {
     d->freeDays = fd;
     emit gridChanged();
 }
 
+/*! \returns The days marked as free in the grid. */
 QSet<Qt::DayOfWeek> DateTimeGrid::freeDays() const
 {
     return d->freeDays;
 }
 
+/*! \returns true if row separators are used. */
 bool DateTimeGrid::rowSeparators() const
 {
     return d->rowSeparators;
 }
+/*! \param enable Whether to use row separators or not. */
 void DateTimeGrid::setRowSeparators( bool enable )
 {
     d->rowSeparators = enable;
 }
 
-
+/*! \param idx The index to get the Span for.
+ * \returns The start and end pixels, in a Span, of the specified index.
+ */
 Span DateTimeGrid::mapToChart( const QModelIndex& idx ) const
 {
     assert( model() );
@@ -164,7 +210,16 @@ Span DateTimeGrid::mapToChart( const QModelIndex& idx ) const
       if ( et.isValid() && st.isValid() ) {
         qreal sx = d->dateTimeToChartX( st );
         qreal ex = d->dateTimeToChartX( et )-sx;
+        //qDebug() << "DateTimeGrid::mapToChart("<<st<<et<<") => "<< Span( sx, ex );
         return Span( sx, ex);
+      }
+    }
+    // Special case for Events with only a start date
+    if( qVariantCanConvert<QDateTime>(sv) && !(sv.type() == QVariant::String && qVariantValue<QString>(sv).isEmpty()) ) {
+      QDateTime st = sv.toDateTime();
+      if ( st.isValid() ) {
+        qreal sx = d->dateTimeToChartX( st );
+        return Span( sx, 0 );
       }
     }
     return Span();
@@ -181,6 +236,20 @@ static void debug_print_idx( const QModelIndex& idx )
     qDebug() << idx << "["<<st<<et<<"]";
 }
 
+/*! Maps the supplied Span to QDateTimes, and puts them as start time and
+ * end time for the supplied index.
+ *
+ * \param span The span used to map from.
+ * \param idx The index used for setting the start time and end time in the model.
+ * \param constraints A list of hard constraints to match against the start time and
+ * end time mapped from the span.
+ *
+ * \returns true if the start time and time was successfully added to the model, or false
+ * if unsucessful.
+ * Also returns false if any of the constraints isn't satisfied. That is, if the start time of
+ * the constrained index is before the end time of the dependency index, or the end time of the
+ * constrained index is before the start time of the dependency index.
+ */
 bool DateTimeGrid::mapFromChart( const Span& span, const QModelIndex& idx,
     const QList<Constraint>& constraints ) const
 {
@@ -190,6 +259,7 @@ bool DateTimeGrid::mapFromChart( const Span& span, const QModelIndex& idx,
 
     QDateTime st = d->chartXtoDateTime(span.start());
     QDateTime et = d->chartXtoDateTime(span.start()+span.length());
+    //qDebug() << "DateTimeGrid::mapFromChart("<<span<<") => "<< st << et;
     Q_FOREACH( const Constraint& c, constraints ) {
         if ( c.type() != Constraint::TypeHard || !isSatisfiedConstraint( c )) continue;
         if ( c.startIndex() == idx ) {
@@ -265,10 +335,13 @@ void DateTimeGrid::paintHeader( QPainter* painter,  const QRectF& headerRect, co
 	}
 }
 
+/*! Paints the hour scale header.
+ * \sa paintHeader()
+ */
 void DateTimeGrid::paintHourScaleHeader( QPainter* painter,  const QRectF& headerRect, const QRectF& exposedRect,
                                 qreal offset, QWidget* widget )
 {
-    QStyle* style = widget->style();
+    QStyle* style = widget?widget->style():QApplication::style();
 
     // Paint a section for each hour
     QDateTime dt = d->chartXtoDateTime( offset+exposedRect.left() );
@@ -297,6 +370,9 @@ void DateTimeGrid::paintHourScaleHeader( QPainter* painter,  const QRectF& heade
     }
 }
 
+/*! Paints the day scale header.
+ * \sa paintHeader()
+ */
 void DateTimeGrid::paintDayScaleHeader( QPainter* painter,  const QRectF& headerRect, const QRectF& exposedRect,
                                 qreal offset, QWidget* widget )
 {
@@ -361,7 +437,7 @@ KDAB_SCOPED_UNITTEST_SIMPLE( KDGantt, DateTimeGrid, "test" ) {
     model.setData( model.index( 2, 0 ), dt.addDays( 19 ), EndTimeRole );
 
     Span s = grid.mapToChart( model.index( 0, 0 ) );
-    qDebug() << "span="<<s;
+    //qDebug() << "span="<<s;
 
     assertTrue( s.start()>0 );
     assertTrue( s.length()>0 );
@@ -383,6 +459,33 @@ KDAB_SCOPED_UNITTEST_SIMPLE( KDGantt, DateTimeGrid, "test" ) {
 
     assertTrue( grid.isSatisfiedConstraint( Constraint( model.index( 0, 0 ), model.index( 2, 0 ) ) ) );
     assertFalse( grid.isSatisfiedConstraint( Constraint( model.index( 2, 0 ), model.index( 0, 0 ) ) ) );
+
+    s = grid.mapToChart( model.index( 0, 0 ) );
+    s.setEnd( s.end()+100000. );
+    bool rc = grid.mapFromChart( s, model.index( 0, 0 ) );
+    assertTrue( rc );
+    assertEqual( s1, model.data( model.index( 0, 0 ), StartTimeRole ).toDateTime() );
+    Span newspan = grid.mapToChart( model.index( 0, 0 ) );
+    assertEqual( newspan.start(), s.start() );
+    assertEqual( newspan.length(), s.length() );
+
+    {
+        QDateTime startDateTime = QDateTime::currentDateTime();
+        qreal dayWidth = 100;
+        QDate currentDate = QDate::currentDate();
+        QDateTime dt( QDate(currentDate.year(), 1, 1),  QTime( 0, 0, 0, 0 ) );
+        assert( dt.isValid() );
+        qreal result = startDateTime.date().daysTo(dt.date())*24.*60.*60.;
+        result += startDateTime.time().msecsTo(dt.time())/1000.;
+        result *= dayWidth/( 24.*60.*60. );
+
+        int days = static_cast<int>( result/dayWidth );
+        qreal secs = result*( 24.*60.*60. )/dayWidth;
+        QDateTime dt2 = startDateTime;
+        QDateTime result2 = dt2.addDays( days ).addSecs( static_cast<int>(secs-(days*24.*60.*60.) ) ).addMSecs( qRound( ( secs-static_cast<int>( secs ) )*1000. ) );
+
+        assertEqual( dt, result2 );
+    }
 }
 
 #endif /* KDAB_NO_UNIT_TESTS */

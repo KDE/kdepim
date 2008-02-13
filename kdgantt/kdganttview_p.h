@@ -43,6 +43,8 @@
 
 class QAbstractProxyModel;
 class QGraphicsView;
+class QGraphicsScene;
+class QGraphicsRectItem;
 
 namespace KDGantt {
     class GraphicsItem;
@@ -76,6 +78,8 @@ namespace KDGantt {
         void slotCollapsed(const QModelIndex&);
         void slotExpanded(const QModelIndex&);
         void slotVerticalScrollValueChanged( int );
+        void slotLeftWidgetVerticalRangeChanged( int, int );
+        void slotGfxViewVerticalRangeChanged( int, int );
 
         View* q;
 

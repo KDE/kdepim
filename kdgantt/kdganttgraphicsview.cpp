@@ -28,6 +28,7 @@
 #include "kdganttgraphicsitem.h"
 #include "kdganttconstraintmodel.h"
 
+#include <QMenu>
 #include <QPainter>
 #include <QPaintEvent>
 #include <QResizeEvent>
@@ -39,6 +40,10 @@
 #if defined KDAB_EVAL
 #include "../evaldialog/evaldialog.h"
 #endif
+
+/*!\class KDGantt::HeaderWidget
+ * \internal
+ */
 
 using namespace KDGantt;
 
@@ -54,7 +59,6 @@ HeaderWidget::~HeaderWidget()
 
 void HeaderWidget::scrollTo( int v )
 {
-    qreal old = m_offset;
     m_offset = v;
     // QWidget::scroll() wont work properly for me on Mac
     //scroll( static_cast<int>( old-v ), 0 );
@@ -65,6 +69,88 @@ void HeaderWidget::paintEvent( QPaintEvent* ev )
 {
     QPainter p( this );
     view()->grid()->paintHeader( &p, rect(), ev->rect(), m_offset, this );
+}
+
+void HeaderWidget::contextMenuEvent( QContextMenuEvent* event )
+{
+    QMenu contextMenu;
+
+    DateTimeGrid* const grid = qobject_cast< DateTimeGrid* >( view()->grid() );
+    QAction* actionScaleAuto = 0;
+    QAction* actionScaleDay = 0;
+    QAction* actionScaleHour = 0;
+    QAction* actionZoomIn = 0;
+    QAction* actionZoomOut = 0;
+    if( grid != 0 )
+    {
+        QMenu* menuScale = new QMenu( tr( "Scale" ), &contextMenu );
+        QActionGroup* scaleGroup = new QActionGroup( &contextMenu );
+        scaleGroup->setExclusive( true );
+
+        actionScaleAuto = new QAction( tr( "Auto" ), menuScale );
+        actionScaleAuto->setCheckable( true );
+        actionScaleAuto->setChecked( grid->scale() == DateTimeGrid::ScaleAuto );
+        actionScaleDay = new QAction( tr( "Day" ), menuScale );
+        actionScaleDay->setCheckable( true );
+        actionScaleDay->setChecked( grid->scale() == DateTimeGrid::ScaleDay );
+        actionScaleHour = new QAction( tr( "Hour" ), menuScale );
+        actionScaleHour->setCheckable( true );
+        actionScaleHour->setChecked( grid->scale() == DateTimeGrid::ScaleHour );
+
+        scaleGroup->addAction( actionScaleAuto );
+        menuScale->addAction( actionScaleAuto );
+    
+        scaleGroup->addAction( actionScaleDay );
+        menuScale->addAction( actionScaleDay );
+    
+        scaleGroup->addAction( actionScaleHour );
+        menuScale->addAction( actionScaleHour );
+    
+        contextMenu.addMenu( menuScale );
+
+        contextMenu.addSeparator();
+
+        actionZoomIn = new QAction( tr( "Zoom In" ), &contextMenu );
+        contextMenu.addAction( actionZoomIn );
+        actionZoomOut = new QAction( tr( "Zoom Out" ), &contextMenu );
+        contextMenu.addAction( actionZoomOut );
+    }
+
+    if( contextMenu.isEmpty() )
+    {
+        event->ignore();
+        return;
+    }
+
+    const QAction* const action = contextMenu.exec( event->globalPos() );
+    if( action == 0 ) {}
+    else if( action == actionScaleAuto )
+    {
+        assert( grid != 0 );
+        grid->setScale( DateTimeGrid::ScaleAuto );
+    }
+    else if( action == actionScaleDay )
+    {
+        assert( grid != 0 );
+        grid->setScale( DateTimeGrid::ScaleDay );
+    }
+    else if( action == actionScaleHour )
+    {
+        assert( grid != 0 );
+        grid->setScale( DateTimeGrid::ScaleHour );
+    }
+    else if( action == actionZoomIn )
+    {
+        assert( grid != 0 );
+        grid->setDayWidth( grid->dayWidth() + 10.0 );
+    }
+    else if( action == actionZoomOut )
+    {
+        assert( grid != 0 );
+        grid->setDayWidth( grid->dayWidth() - 10.0 );
+    }
+
+    event->accept();
 }
 
 GraphicsView::Private::Private( GraphicsView* _q )
@@ -91,7 +177,12 @@ void GraphicsView::Private::slotGridChanged()
 
 void GraphicsView::Private::slotHorizontalScrollValueChanged( int val )
 {
-    headerwidget.scrollTo( val );
+#if QT_VERSION >= 0x040300
+    const QRectF viewRect = q->transform().mapRect( q->sceneRect() );
+#else
+    const QRectF viewRect = q->sceneRect();
+#endif
+    headerwidget.scrollTo( val-q->horizontalScrollBar()->minimum()+static_cast<int>( viewRect.left() ) );
 }
 
 void GraphicsView::Private::slotColumnsInserted( const QModelIndex& parent,  int start, int end )
@@ -144,12 +235,25 @@ void GraphicsView::Private::slotRowsInserted( const QModelIndex& parent,  int st
     q->updateScene(); // TODO: This might be optimised
 }
 
+void GraphicsView::Private::slotRowsAboutToBeRemoved( const QModelIndex& parent,  int start, int end )
+{
+    //qDebug() << "GraphicsView::Private::slotRowsAboutToBeRemoved("<<parent<<start<<end<<")";
+    for ( int row = start; row <= end; ++row ) {
+        for ( int col = 0; col < scene.summaryHandlingModel()->columnCount( parent ); ++col ) {
+            //qDebug() << "removing "<<scene.summaryHandlingModel()->index( row, col, parent );
+            scene.removeItem( scene.summaryHandlingModel()->index( row, col, parent ) );
+        }
+    }
+}
+
 void GraphicsView::Private::slotRowsRemoved( const QModelIndex& parent,  int start, int end )
 {
+    //qDebug() << "GraphicsView::Private::slotRowsRemoved("<<parent<<start<<end<<")";
     // TODO
     Q_UNUSED( parent );
     Q_UNUSED( start );
     Q_UNUSED( end );
+
     q->updateScene();
 }
 
@@ -266,6 +370,8 @@ void GraphicsView::setSummaryHandlingModel( QAbstractProxyModel* proxyModel )
              this,  SLOT( slotModelReset() ) );
     connect( proxyModel, SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
              this,  SLOT( slotRowsInserted( const QModelIndex&,  int, int ) ) );
+    connect( proxyModel, SIGNAL( rowsAboutToBeRemoved( const QModelIndex&, int, int ) ),
+             this,  SLOT( slotRowsAboutToBeRemoved( const QModelIndex&,  int, int ) ) );
     connect( proxyModel, SIGNAL( rowsRemoved( const QModelIndex&, int, int ) ),
              this,  SLOT( slotRowsRemoved( const QModelIndex&,  int, int ) ) );
 
@@ -409,7 +515,13 @@ void GraphicsView::resizeEvent( QResizeEvent* ev )
 {
     d->updateHeaderGeometry();
     QRectF r = scene()->itemsBoundingRect();
-    r.setSize( r.size().expandedTo( viewport()->size() ) );
+    // To scroll more to the left than the actual item start, bug #4516
+    r.setLeft( qMin( 0.0, r.left() ) );
+
+    QSizeF size = viewport()->size();
+    size.setHeight( size.height() + verticalScrollBar()->maximum() );
+    r.setSize( size.expandedTo( viewport()->size() ) );
+
     scene()->setSceneRect( r );
     BASE::resizeEvent( ev );
 }
@@ -451,7 +563,10 @@ void GraphicsView::updateSceneRect()
      * make collapsing items work
      */
     QRectF r = d->scene.itemsBoundingRect();
-    //r.setSize( r.size().expandedTo( viewport()->size() ) );
+    // To scroll more to the left than the actual item start, bug #4516
+    r.setLeft( qMin( 0.0, r.left() ) );
+    r.setSize( r.size().expandedTo( viewport()->size() ) );
+
     d->scene.setSceneRect( r );
 }
 
@@ -467,6 +582,8 @@ void GraphicsView::updateScene()
     do {
         updateRow( idx );
     } while ( ( idx = rowController()->indexBelow( idx ) ) != QModelIndex() && rowController()->isRowVisible(idx) );
+    //constraintModel()->cleanup();
+    //qDebug() << constraintModel();
     updateSceneRect();
 }
 
@@ -483,7 +600,7 @@ void GraphicsView::deleteSubtree( const QModelIndex& idx )
 }
 
 /*! Render the GanttView inside the rectangle \a target using the painter \a painter.
- * This is useful for printing. If \a target is a null rect, the dimensions of 
+ * This is useful for printing. If \a target is a null rect, the dimensions of
  * painter's paint device will be used.
  * If \a drawRowLabels is true, an additional per-row label
  * is drawn, mimicing the look of a listview.
