@@ -293,7 +293,8 @@ QString ClipboardOutput::label() const {
 }
 
 void ClipboardOutput::doFinalize() {
-    m_buffer->close();
+    if ( m_buffer->isOpen() )
+        m_buffer->close();
     if ( QClipboard * const cb = QApplication::clipboard() )
         cb->setText( QString::fromUtf8( m_buffer->data() ) );
     else
