@@ -49,6 +49,7 @@
 #include "commands/detailscommand.h"
 #include "commands/deletecertificatescommand.h"
 #include "commands/signencryptfilescommand.h"
+#include "commands/clearcrlcachecommand.h"
 
 #include <KActionCollection>
 #include <KLocale>
@@ -169,6 +170,9 @@ public:
     }
     void importCertificates() {
         ( new ImportCertificateCommand( currentView(), &controller ) )->start();
+    }
+    void clearCrlCache() {
+        ( new ClearCrlCacheCommand( currentView(), &controller ) )->start();
     }
     void newCertificate();
     
@@ -350,6 +354,8 @@ void MainWindow::Private::setupActions() {
         { "certificates_delete", i18n("Delete" ), QString()/*i18n("Delete selected certificates")*/,
           "edit-delete", q, SLOT(deleteCertificates()), "Delete", false, true },
         // CRLs menu
+        { "crl_clear_crl_cache", i18n("Clear CRL Cache..."), QString(),
+          0, q, SLOT(clearCrlCache()), QString(), false, true },
         // Tools menu
         // Window menu
         // (come from ui.tabWidget)

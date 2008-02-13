@@ -57,6 +57,7 @@ private:
     Q_PRIVATE_SLOT( d, void exportCertificates() )
     Q_PRIVATE_SLOT( d, void refreshCertificates() )
     Q_PRIVATE_SLOT( d, void validateCertificates() )
+    Q_PRIVATE_SLOT( d, void clearCrlCache() )
     Q_PRIVATE_SLOT( d, void newCertificate() )
     Q_PRIVATE_SLOT( d, void checkConfiguration() )
     Q_PRIVATE_SLOT( d, void configureBackend() )
