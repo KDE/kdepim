@@ -51,6 +51,8 @@ class AddresseeEditorExtension : public KAB::ExtensionWidget
      */
     virtual QString identifier() const;
 
+    QSize minimumSizeHint() const;
+
   private:
     AddresseeEditorBase *mAddresseeEditor;
     bool mDirty;

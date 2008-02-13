@@ -74,4 +74,13 @@ QString AddresseeEditorExtension::identifier() const
   return "contact_editor";
 }
 
+QSize AddresseeEditorExtension::minimumSizeHint() const
+{
+  // workaround for this rather large widget also enforcing its minimum size
+  // hint in the details stack when not used at all
+  if ( !isVisible() )
+    return QSize( 0, 0 );
+  return KAB::ExtensionWidget::minimumSizeHint();
+}
+
 #include "addresseeeditorextension.moc"
