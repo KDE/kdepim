@@ -131,6 +131,7 @@ set( _kleopatra_common_SRCS
   commands/deletecertificatescommand.cpp
   commands/signencryptfilescommand.cpp
   commands/clearcrlcachecommand.cpp
+  commands/dumpcrlcachecommand.cpp
 
   ${_kleopatra_uiserver_files}
 
