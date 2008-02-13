@@ -35,6 +35,7 @@ class QDragEnterEvent;
 class QDragMoveEvent;
 class QDropEvent;
 class QPoint;
+class QToolButton;
 
 namespace KABC {
     class DistributionListManager;
@@ -92,6 +93,9 @@ private slots:
 private:
     ListBox *mListBox;
     QStringList mCurrentEntries;
+    QToolButton *mAddButton;
+    QToolButton *mEditButton;
+    QToolButton *mRemoveButton;
 };
 
 } // namespace DistributionListNg

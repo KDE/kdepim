@@ -40,6 +40,7 @@
 #include <qpoint.h>
 #include <QPointer>
 #include <QTimer>
+#include <QToolButton>
 
 KAB::DistributionListNg::ListBox::ListBox( QWidget* parent ) : QListWidget( parent )
 {
@@ -113,9 +114,31 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
     QVBoxLayout *layout = new QVBoxLayout( this );
     layout->setSpacing( KDialog::spacingHint() );
 
+    QHBoxLayout *buttonLayout = new QHBoxLayout();
+    layout->addLayout( buttonLayout );
+
     QLabel *label = new QLabel;
     label->setText( i18n( "Distribution Lists" ) );
-    layout->addWidget( label );
+    buttonLayout->addWidget( label );
+    buttonLayout->addStretch( 1 );
+
+    mAddButton = new QToolButton( this );
+    mAddButton->setIcon( KIcon( "list-add" ) );
+    mAddButton->setToolTip( i18n( "Add distribution list" ) );
+    connect( mAddButton, SIGNAL(clicked()), core, SLOT(newDistributionList()) );
+    buttonLayout->addWidget( mAddButton );
+
+    mEditButton = new QToolButton( this );
+    mEditButton->setIcon( KIcon( "document-properties" ) );
+    mEditButton->setToolTip( i18n( "Edit distribution list" ) );
+    connect( mEditButton, SIGNAL(clicked()), this, SLOT(editSelectedDistributionList()) );
+    buttonLayout->addWidget( mEditButton );
+
+    mRemoveButton = new QToolButton( this );
+    mRemoveButton->setIcon( KIcon( "edit-delete" ) );
+    mRemoveButton->setToolTip( i18n( "Remove distribution list" ) );
+    connect( mRemoveButton, SIGNAL(clicked()), this, SLOT(deleteSelectedDistributionList()) );
+    buttonLayout->addWidget( mRemoveButton );
 
     mListBox = new ListBox;
     mListBox->setContextMenuPolicy( Qt::CustomContextMenu );
@@ -217,6 +240,8 @@ void KAB::DistributionListNg::MainWidget::updateEntries()
 void KAB::DistributionListNg::MainWidget::itemSelected( int index )
 {
     core()->setSelectedDistributionList( index == 0 ? QString() : mListBox->item( index )->text()  );
+    mEditButton->setEnabled( index > 0 );
+    mRemoveButton->setEnabled( index > 0 );
 }
 
 #include "distributionlistngwidget.moc"
