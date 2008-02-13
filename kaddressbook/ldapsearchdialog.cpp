@@ -491,7 +491,8 @@ KABC::Addressee LDAPSearchDialog::convertLdapAttributesToAddressee( const KLDAP:
   KABC::Addressee addr;
 
   // name
-  addr.setNameFromString( asUtf8( attrs["cn"].first() ) );
+  if ( !attrs.value( "cn" ).isEmpty() )
+    addr.setNameFromString( asUtf8( attrs["cn"].first() ) );
 
   // email
   KLDAP::LdapAttrValue lst = attrs["mail"];
@@ -503,38 +504,51 @@ KABC::Addressee LDAPSearchDialog::convertLdapAttributesToAddressee( const KLDAP:
     ++it;
   }
 
-  addr.setOrganization( asUtf8( attrs[ "o" ].first() ) );
-  if ( addr.organization().isEmpty() )
+  if ( !attrs.value( "o" ).isEmpty() )
+    addr.setOrganization( asUtf8( attrs[ "o" ].first() ) );
+  if ( addr.organization().isEmpty() && !attrs.value( "Company" ).isEmpty() )
     addr.setOrganization( asUtf8( attrs[ "Company" ].first() ) );
 
   // Address
   KABC::Address workAddr( KABC::Address::Work );
 
-  addr.setDepartment( asUtf8( attrs[ "department" ].first() ) );
+  if ( !attrs.value( "department" ).isEmpty() )
+    addr.setDepartment( asUtf8( attrs[ "department" ].first() ) );
 
   if ( !workAddr.isEmpty() )
     addr.insertAddress( workAddr );
 
   // phone
-  KABC::PhoneNumber homeNr = asUtf8( attrs[  "homePhone" ].first() );
-  homeNr.setType( KABC::PhoneNumber::Home );
-  addr.insertPhoneNumber( homeNr );
+  if ( !attrs.value( "homePhone" ).isEmpty() ) {
+    KABC::PhoneNumber homeNr = asUtf8( attrs[  "homePhone" ].first() );
+    homeNr.setType( KABC::PhoneNumber::Home );
+    addr.insertPhoneNumber( homeNr );
+  }
 
-  KABC::PhoneNumber workNr = asUtf8( attrs[  "telephoneNumber" ].first() );
-  workNr.setType( KABC::PhoneNumber::Work );
-  addr.insertPhoneNumber( workNr );
+  if ( !attrs.value( "telephoneNumber" ).isEmpty() ) {
+    KABC::PhoneNumber workNr = asUtf8( attrs[  "telephoneNumber" ].first() );
+    workNr.setType( KABC::PhoneNumber::Work );
+    addr.insertPhoneNumber( workNr );
+  }
 
-  KABC::PhoneNumber faxNr = asUtf8( attrs[  "facsimileTelephoneNumber" ].first() );
-  faxNr.setType( KABC::PhoneNumber::Fax );
-  addr.insertPhoneNumber( faxNr );
+  if ( !attrs.value( "facsimileTelephoneNumber" ).isEmpty() ) {
+    KABC::PhoneNumber faxNr = asUtf8( attrs[  "facsimileTelephoneNumber" ].first() );
+    faxNr.setType( KABC::PhoneNumber::Fax );
+    addr.insertPhoneNumber( faxNr );
+  }
 
-  KABC::PhoneNumber cellNr = asUtf8( attrs[  "mobile" ].first() );
-  cellNr.setType( KABC::PhoneNumber::Cell );
-  addr.insertPhoneNumber( cellNr );
+  if ( !attrs.value( "mobile" ).isEmpty() ) {
+    KABC::PhoneNumber cellNr = asUtf8( attrs[  "mobile" ].first() );
+    cellNr.setType( KABC::PhoneNumber::Cell );
+    addr.insertPhoneNumber( cellNr );
+  }
 
-  KABC::PhoneNumber pagerNr = asUtf8( attrs[  "pager" ].first() );
-  pagerNr.setType( KABC::PhoneNumber::Pager );
-  addr.insertPhoneNumber( pagerNr );
+  if ( !attrs.value( "pager" ).isEmpty() ) {
+    KABC::PhoneNumber pagerNr = asUtf8( attrs[  "pager" ].first() );
+    pagerNr.setType( KABC::PhoneNumber::Pager );
+    addr.insertPhoneNumber( pagerNr );
+  }
+
   return addr;
 }
 
