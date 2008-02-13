@@ -125,6 +125,7 @@ void KAB::DistributionListEntryView::setEntry( const KPIM::DistributionList& lis
     m_resourceLabel->setText( i18n( "<b>Address book:</b> %1", (m_entry.addressee.resource() ? m_entry.addressee.resource()->resourceName() : QString()) ) );
     m_resourceLabel->setWordWrap( false );
     m_emailGroup = new QWidget( this );
+    QBoxLayout *emailGroupLayout = new QVBoxLayout( m_emailGroup );
     QButtonGroup* buttonGroup = new QButtonGroup( m_emailGroup );
     buttonGroup->setExclusive( true );
 
@@ -141,6 +142,7 @@ void KAB::DistributionListEntryView::setEntry( const KPIM::DistributionList& lis
         if ( it == preferred )
             button->setChecked( true );
         button->setVisible( true );
+        emailGroupLayout->addWidget( button );
     }
     connect( buttonGroup, SIGNAL( buttonClicked( int ) ),
              this, SLOT( emailButtonClicked( int ) ) );
