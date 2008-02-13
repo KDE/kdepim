@@ -30,7 +30,6 @@
 
 /*!
   \class KDLogTextWidget
-  \ingroup gui
   \brief A high-speed text display widget.
 
   This widget provides very fast display of large amounts of
@@ -45,10 +44,6 @@
   Text formatting is currently limited to per-line text color, but is
   expected to be enhanced on client request in upcoming versions. You
   can pass the color to use to calls to message().
-
-  \image html kdlogtextwidget.png
-
-  \sa KDLog
 */
 
 class KDLogTextWidget::Private {

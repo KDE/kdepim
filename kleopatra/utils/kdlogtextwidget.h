@@ -23,15 +23,15 @@
 #ifndef __KDTOOLSGUI_KDLOGTEXTWIDGET_H__
 #define __KDTOOLSGUI_KDLOGTEXTWIDGET_H__
 
-#include <KDToolsCore/kdtoolsglobal.h>
-#include <KDToolsCore/pimpl_ptr.h>
+#include <utils/kdtoolsglobal.h>
+#include <utils/pimpl_ptr.h>
 #include <QtGui/QAbstractScrollArea>
 
 class QString;
 class QStringList;
 class QColor;
 
-class KDTOOLSGUI_EXPORT KDLogTextWidget : public QAbstractScrollArea {
+class KDLogTextWidget : public QAbstractScrollArea {
     Q_OBJECT
     Q_PROPERTY( uint historySize READ historySize WRITE setHistorySize )
     Q_PROPERTY( QString text READ text )

@@ -74,6 +74,8 @@ kde4_add_ui_files( _kleopatra_uiserver_SRCS
 set( _kleopatra_common_SRCS
 
   utils/kdpipeiodevice.cpp
+  utils/kdlogtextwidget.cpp
+
   utils/hex.cpp
   utils/input.cpp
   utils/output.cpp
