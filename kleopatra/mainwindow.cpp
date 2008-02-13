@@ -96,11 +96,10 @@ using namespace boost;
 using namespace GpgME;
 
 namespace {
-	QString gpgConfPath()
-	{
-	    const GpgME::EngineInfo info = GpgME::engineInfo( GpgME::GpgConfEngine );
-	    return info.fileName() ? QFile::decodeName( info.fileName() ) : KStandardDirs::findExe( "gpgconf" );
-	}
+    QString gpgConfPath() {
+        const GpgME::EngineInfo info = GpgME::engineInfo( GpgME::GpgConfEngine );
+        return info.fileName() ? QFile::decodeName( info.fileName() ) : KStandardDirs::findExe( "gpgconf" );
+    }
 
     class ProgressBar : public QProgressBar {
         Q_OBJECT
