@@ -37,6 +37,7 @@ class KDLogTextWidget : public QAbstractScrollArea {
     Q_PROPERTY( QString text READ text )
     Q_PROPERTY( QStringList lines READ lines WRITE setLines )
     Q_PROPERTY( uint minimumVisibleLines READ minimumVisibleLines WRITE setMinimumVisibleLines )
+    Q_PROPERTY( uint minimumVisibleColumns READ minimumVisibleColumns WRITE setMinimumVisibleColumns )
     Q_CLASSINFO( "description", "High-speed text display widget" )
 public:
     explicit KDLogTextWidget( QWidget * parent=0 );
@@ -52,6 +53,9 @@ public:
 
     void setMinimumVisibleLines( unsigned int num );
     unsigned int minimumVisibleLines() const;
+
+    void setMinimumVisibleColumns( unsigned int num );
+    unsigned int minimumVisibleColumns() const;
 
     /*! \reimp */ QSize minimumSizeHint() const;
     /*! \reimp */ QSize sizeHint() const;

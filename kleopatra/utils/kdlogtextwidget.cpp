@@ -96,6 +96,7 @@ private:
 
     unsigned int historySize;
     unsigned int minimumVisibleLines;
+    unsigned int minimumVisibleColumns;
 
     QBasicTimer timer;
 
@@ -107,6 +108,7 @@ private:
         struct {
             int lineSpacing;
             int ascent;
+            int averageCharWidth;
             QVector<int> lineWidths;
         } fontMetrics;
 
@@ -209,17 +211,43 @@ unsigned int KDLogTextWidget::minimumVisibleLines() const {
     return d->minimumVisibleLines;
 }
 
+/*!
+  \property KDLogTextWidget::minimumVisibleColumns
+
+  Specifies the number of columns that should be visible at any one
+  time. The default is 1 (one). The width is calculated using
+  QFont::averageCharWidth(), if that is available. Otherwise, the
+  width of \c M is used.
+
+  Get this property's value using %minimumVisibleColumns(), and set it
+  using %setMinimumVisibleColumns().
+*/
+void KDLogTextWidget::setMinimumVisibleColumns( unsigned int num ) {
+    if ( num == d->minimumVisibleColumns )
+        return;
+    d->minimumVisibleColumns = num;
+    updateGeometry();
+}
+
+unsigned int KDLogTextWidget::minimumVisibleColumns() const {
+    return d->minimumVisibleColumns;
+}
+
 QSize KDLogTextWidget::minimumSizeHint() const {
     d->updateCache();
     const QSize base = QAbstractScrollArea::minimumSizeHint();
-    const QSize view( 0, d->minimumVisibleLines * d->cache.fontMetrics.lineSpacing );
+    const QSize view( d->minimumVisibleColumns * d->cache.fontMetrics.averageCharWidth,
+                      d->minimumVisibleLines   * d->cache.fontMetrics.lineSpacing );
     const QSize scrollbars( verticalScrollBar() ? verticalScrollBar()->minimumSizeHint().width() : 0,
 			    horizontalScrollBar() ? horizontalScrollBar()->minimumSizeHint().height() : 0 );
     return base + view + scrollbars;
 }
 
 QSize KDLogTextWidget::sizeHint() const {
-    return 2 * minimumSizeHint();
+    if ( d->minimumVisibleLines > 1 || d->minimumVisibleColumns > 1 )
+        return minimumSizeHint();
+    else
+        return 2 * minimumSizeHint();
 }
 
 /*!
@@ -317,6 +345,7 @@ KDLogTextWidget::Private::Private( KDLogTextWidget * qq )
       pendingLines(),
       historySize( 0xFFFFFFFF ),
       minimumVisibleLines( 1 ),
+      minimumVisibleColumns( 1 ),
       timer(),
       cache()
 {
@@ -332,6 +361,11 @@ void KDLogTextWidget::Private::updateCache() const {
         const QFontMetrics & fm = q->fontMetrics();
         cache.fontMetrics.lineSpacing = fm.lineSpacing();
         cache.fontMetrics.ascent = fm.ascent();
+#if QT_VERSION < 0x040200
+        cache.fontMetrics.averageCharWidth = fm.width( QLatin1Char( 'M' ) );
+#else
+        cache.fontMetrics.averageCharWidth = fm.averageCharWidth();
+#endif
 
         QVector<int> & lw = cache.fontMetrics.lineWidths;
         lw.clear();
