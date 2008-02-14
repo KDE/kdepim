@@ -113,6 +113,12 @@ namespace {
 using namespace Kleo;
 using namespace Kleo::Commands;
 
+static QByteArray chomped( QByteArray ba ) {
+    while ( ba.endsWith( '\n' ) || ba.endsWith( '\r' ) )
+        ba.chop( 1 );
+    return ba;
+}
+
 class DumpCrlCacheCommand::Private : Command::Private {
     friend class ::Kleo::Commands::DumpCrlCacheCommand;
     DumpCrlCacheCommand * q_func() const { return static_cast<DumpCrlCacheCommand*>( q ); }
@@ -133,7 +139,7 @@ private:
 
     void slotProcessReadyReadStandardOutput() {
         while ( process.canReadLine() ) {
-            const QByteArray line = process.readLine();
+            const QByteArray line = chomped( process.readLine() );
             if ( dialog )
                 dialog->append( QString::fromLocal8Bit( line ) );
         }
