@@ -113,12 +113,14 @@ qreal DateTimeGrid::dayWidth() const
 }
 
 /*! \param w The width in pixels for each day in the grid.
+ * Day width is limited to minimum 1.0.
  *
  * The signal gridChanged() is emitted after the day width is changed.
  */
 void DateTimeGrid::setDayWidth( qreal w )
 {
-    d->dayWidth = w;
+    qDebug()<<"DateTimeGrid::setDayWidth"<<w;
+    d->dayWidth = qMax( w, 1.0 );
     emit gridChanged();
 }
 
