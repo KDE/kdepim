@@ -225,9 +225,11 @@ void KeyListController::Private::connectView( QAbstractItemView * view ) {
     view->setProperty( "allColumnsShowFocus", true );
     view->setProperty( "sortingEnabled", true );
 
+#if 0
     if ( QHeaderView * const hv = get_header_view( view ) )
         for ( int i = 0, end = std::min<int>( hv->count(), AbstractKeyListModel::NumColumns ) ; i < end ; ++i )
             hv->setResizeMode( i, resize_modes[i] );
+#endif
 }
 
 void KeyListController::Private::connectCommand( Command * cmd ) {
