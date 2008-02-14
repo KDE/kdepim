@@ -1413,6 +1413,34 @@ used to influence its starting behavior:</para>
 <userinput><option>--help-qt</option></userinput>.</para>
 </chapter>
 
+<chapter id="configure-non-gui-options">
+<title>Options Without a User Interface Representation</title>
+<para>
+Apart from the options presented in the configuration dialog, some options
+can only be set directly in the configuration file ($KDEHOME/share/config/kaddressbookrc)
+or through KIOSK.
+</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>ContactListAboveExtensions</guilabel></term>
+<listitem>
+<para>
+If enabled, extensions (e.g. the distribution list editor) are shown below the contact list, 
+not in an separate column. By default, this option is disabled.
+
+To enable this option, add a line reading (under [MainWindow] section):
+</para>
+<programlisting>ContactListAboveExtensions=true
+</programlisting>
+</listitem>
+</varlistentry>
+
+</variablelist>
+
+</chapter>
+
 <chapter id="credits">
 <title>Credits and License</title>
 

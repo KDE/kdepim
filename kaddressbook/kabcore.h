@@ -157,7 +157,7 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
 
     /**
       sets the distribution list to display. If null, the regular
-      address book is to be displayed.  
+      address book is to be displayed.
      */
     virtual void setSelectedDistributionList( const QString &name );
 
@@ -307,7 +307,7 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
      */
     virtual void newContact();
 
-    /** 
+    /**
      DCOP METHOD: Opens distribution list editor to create a new distribution list
     */
     virtual void newDistributionList();
@@ -413,7 +413,7 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
 
     void removeSelectedContactsFromDistList();
     void editSelectedDistributionList();
-    void sendMailToDistributionList( const QString &id ); 
+    void sendMailToDistributionList( const QString &id );
 
   private:
     void initGUI();
@@ -450,6 +450,7 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
     QWidget *mDetailsWidget;
     QHBoxLayout *mDetailsLayout;
     QSplitter *mDetailsSplitter;
+    QSplitter *mLeftSplitter;
     QStackedWidget *mDetailsStack;
     LDAPSearchDialog *mLdapSearchDialog;
     QHash<QString, AddresseeEditorDialog *> mEditorDict;

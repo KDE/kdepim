@@ -226,6 +226,9 @@ void KABCore::restoreSettings()
   }
   mDetailsSplitter->setSizes( splitterSize );
 
+  const QList<int> leftSplitterSizes = KABPrefs::instance()->leftSplitter();
+  if ( !leftSplitterSizes.isEmpty() )
+      mLeftSplitter->setSizes( leftSplitterSizes );
 }
 
 void KABCore::saveSettings()
@@ -233,6 +236,7 @@ void KABCore::saveSettings()
   KABPrefs::instance()->setJumpButtonBarVisible( mActionJumpBar->isChecked() );
   KABPrefs::instance()->setDetailsPageVisible( mActionDetails->isChecked() );
   KABPrefs::instance()->setDetailsSplitter( mDetailsSplitter->sizes() );
+  KABPrefs::instance()->setLeftSplitter( mLeftSplitter->sizes() );
 
   mExtensionManager->saveSettings();
   mViewManager->saveSettings();
@@ -1067,23 +1071,25 @@ void KABCore::initGUI()
   searchTB->layout()->addWidget( mFilterSelectionWidget );
 
   mDetailsSplitter = new QSplitter( mWidget );
+
+  mLeftSplitter = new QSplitter( mDetailsSplitter );
+  mLeftSplitter->setOrientation( KABPrefs::instance()->contactListAboveExtensions() ? Qt::Vertical : Qt::Horizontal );
+
   topLayout->addWidget( searchTB );
   topLayout->addWidget( mDetailsSplitter );
 
   mDetailsStack = new QStackedWidget;
   mDetailsSplitter->addWidget( mDetailsStack );
 
-  QWidget* extensionWidget = new QWidget;
-  mDetailsSplitter->addWidget( extensionWidget );
-
-  mExtensionManager = new ExtensionManager( extensionWidget, mDetailsStack, this, this );
+  mExtensionManager = new ExtensionManager( new QWidget( mLeftSplitter ), mDetailsStack, this, this );
   connect( mExtensionManager, SIGNAL( detailsWidgetDeactivated( QWidget* ) ),
            this, SLOT( deactivateDetailsWidget( QWidget* ) ) );
   connect( mExtensionManager, SIGNAL( detailsWidgetActivated( QWidget* ) ),
            this, SLOT( activateDetailsWidget( QWidget* ) ) );
 
-  QWidget *viewWidget = new QWidget;
-  mDetailsSplitter->addWidget( viewWidget );
+  QWidget *viewWidget = new QWidget( mLeftSplitter );
+  if ( KABPrefs::instance()->contactListAboveExtensions() )
+    mLeftSplitter->moveToFirst( viewWidget );
   QVBoxLayout *viewLayout = new QVBoxLayout( viewWidget );
   viewLayout->setSpacing( KDialog::spacingHint() );
 
