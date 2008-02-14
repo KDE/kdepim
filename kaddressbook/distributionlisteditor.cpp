@@ -57,7 +57,7 @@ public:
     QVBoxLayout* addresseeLayout;
     QList<KPIM::DistributionListEditor::Line*> addressees;
     KPIM::DistributionList distributionList;
-    void addLineForEntry( const KPIM::DistributionList::Entry& entry );
+    KPIM::DistributionListEditor::Line* addLineForEntry( const KPIM::DistributionList::Entry& entry );
     int lastLineId;
 };
 
@@ -79,6 +79,11 @@ void KPIM::DistributionListEditor::Line::textChanged( const QString& text )
     if ( text.isEmpty() )
         emit cleared();
     emit textChanged();
+}
+
+void KPIM::DistributionListEditor::Line::setFocusToLineEdit()
+{
+    m_lineEdit->setFocus();
 }
 
 void KPIM::DistributionListEditor::Line::setEntry( const KPIM::DistributionList::Entry& entry )
@@ -160,14 +165,13 @@ KPIM::DistributionListEditor::EditorWidget::EditorWidget( KABC::AddressBook* boo
     setModal( true );
     setWindowTitle( i18n( "Edit Distribution List" ) );
     QWidget* main = new QWidget( this );
-    QGridLayout* mainLayout = new QGridLayout( main );
+    QVBoxLayout* mainLayout = new QVBoxLayout( main );
     mainLayout->setMargin( KDialog::marginHint() );
     mainLayout->setSpacing( KDialog::spacingHint() );
 
     QWidget* nameWidget = new QWidget;
     QHBoxLayout* nameLayout = new QHBoxLayout( nameWidget );
     nameLayout->setSpacing( KDialog::spacingHint() );
-
     d->nameLabel = new QLabel;
     d->nameLabel->setText( i18n( "Name:" ) );
     nameLayout->addWidget( d->nameLabel );
@@ -176,16 +180,17 @@ KPIM::DistributionListEditor::EditorWidget::EditorWidget( KABC::AddressBook* boo
     d->nameLabel->setBuddy( d->nameLineEdit );
     nameLayout->addWidget( d->nameLineEdit );
 
-    mainLayout->addWidget( nameWidget, 0, 0 );
+    mainLayout->addWidget( nameWidget );
+    mainLayout->addSpacing( 30 );
 
     d->memberListLabel = new QLabel;
     d->memberListLabel->setText( i18n( "Distribution list members:" ) );
-    mainLayout->addWidget( d->memberListLabel, 1, 0 );
+    mainLayout->addWidget( d->memberListLabel );
 
     d->scrollView = new QScrollArea;
     d->scrollView->setFrameShape( QFrame::NoFrame );
     d->scrollView->setWidgetResizable( true );
-    mainLayout->addWidget( d->scrollView, 2, 0 );
+    mainLayout->addWidget( d->scrollView );
 
     d->memberListWidget = new QWidget( this );
     d->scrollView->setWidget( d->memberListWidget );
@@ -193,13 +198,13 @@ KPIM::DistributionListEditor::EditorWidget::EditorWidget( KABC::AddressBook* boo
     QVBoxLayout* memberLayout = new QVBoxLayout( d->memberListWidget );
     QWidget* addresseeWidget = new QWidget;
     d->addresseeLayout = new QVBoxLayout( addresseeWidget );
-    d->addresseeLayout->setSpacing( KDialog::spacingHint() );
     memberLayout->addWidget( addresseeWidget );
     memberLayout->addStretch();
 
     setMainWidget( main );
 
-    d->addLineForEntry( KPIM::DistributionList::Entry() );
+    const QSize hint = sizeHint();
+    resize( hint.width() * 1.5, hint.height() * 1.5 );
 }
 
 KPIM::DistributionListEditor::EditorWidget::~EditorWidget()
@@ -228,10 +233,11 @@ void KPIM::DistributionListEditor::EditorWidget::setDistributionList( const KPIM
 
     Q_FOREACH( const KPIM::DistributionList::Entry i, entries )
       d->addLineForEntry( i );
-    d->addLineForEntry( Entry() );
+    KPIM::DistributionListEditor::Line* const last = d->addLineForEntry( Entry() );
+    last->setFocusToLineEdit();
 }
 
-void KPIM::DistributionListEditor::EditorWidgetPrivate::addLineForEntry( const KPIM::DistributionList::Entry& entry )
+KPIM::DistributionListEditor::Line* KPIM::DistributionListEditor::EditorWidgetPrivate::addLineForEntry( const KPIM::DistributionList::Entry& entry )
 {
     KPIM::DistributionListEditor::Line* line = new KPIM::DistributionListEditor::Line( addressBook );
     line->setEntry( entry );
@@ -241,6 +247,7 @@ void KPIM::DistributionListEditor::EditorWidgetPrivate::addLineForEntry( const K
                       mapper, SLOT( map() ) );
     mapper->setMapping( line, ++lastLineId );
     line->setVisible( true );
+    return line;
 }
 
 void KPIM::DistributionListEditor::EditorWidget::saveList()

@@ -26,7 +26,10 @@
 #include <libkdepim/addresseelineedit.h>
 #include <libkdepim/distributionlist.h>
 
+#include <qpushbutton.h>
 #include <qstring.h>
+
+class QToolButton;
 
 namespace KABC {
     class Addressee;
@@ -51,14 +54,15 @@ public:
     explicit Line( KABC::AddressBook* book, QWidget* parent = 0 );
 
     void setEntry( const KPIM::DistributionList::Entry& entry );
-    KPIM::DistributionList::Entry entry() const; 
+    KPIM::DistributionList::Entry entry() const;
+    void setFocusToLineEdit();
 
 signals:
     void cleared();
     void textChanged();
 
 private:
-    KABC::Addressee findAddressee( const QString& name, const QString& email ) const; 
+    KABC::Addressee findAddressee( const QString& name, const QString& email ) const;
 
 private slots:
     void textChanged( const QString& );
