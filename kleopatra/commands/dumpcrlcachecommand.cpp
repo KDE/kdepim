@@ -93,6 +93,8 @@ namespace {
                 KDAB_SET_OBJECT_NAME( hlay );
 
                 logTextWidget.setFont( KGlobalSettings::fixedFont() );
+                logTextWidget.setMinimumVisibleLines( 25 );
+                logTextWidget.setMinimumVisibleColumns( 80 );
 
                 vlay.addWidget( &logTextWidget, 1 );
                 vlay.addLayout( &hlay );
@@ -150,7 +152,7 @@ private:
     }
 
     void slotUpdateRequested() {
-        if ( process.state() != QProcess::NotRunning )
+        if ( process.state() == QProcess::NotRunning )
             refreshView();
     }
 
@@ -218,6 +220,7 @@ void DumpCrlCacheCommand::doStart() {
 
     d->dialog = new DumpCrlCacheDialog;
     d->dialog->setAttribute( Qt::WA_DeleteOnClose );
+    d->dialog->setWindowTitle( i18n("CRL Cache Dump") );
 
     connect( d->dialog, SIGNAL(updateRequested()),
              this, SLOT(slotUpdateRequested()) );
