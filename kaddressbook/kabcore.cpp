@@ -1113,7 +1113,8 @@ void KABCore::initGUI()
            this, SLOT( activateDetailsWidget( QWidget* ) ) );
   
   QWidget *viewWidget = new QWidget( mLeftSplitter );
-  mLeftSplitter->moveToFirst( viewWidget );
+  if ( KABPrefs::instance()->contactListAboveExtensions() )
+    mLeftSplitter->moveToFirst( viewWidget );
   QVBoxLayout *viewLayout = new QVBoxLayout( viewWidget );
   viewLayout->setSpacing( KDialog::spacingHint() );
 
