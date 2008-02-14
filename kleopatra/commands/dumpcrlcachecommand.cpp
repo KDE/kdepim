@@ -208,6 +208,8 @@ void DumpCrlCacheCommand::Private::init() {
              q, SLOT(slotProcessFinished(int,QProcess::ExitStatus)) );
     connect( &process, SIGNAL(readyReadStandardError()),
              q, SLOT(slotProcessReadyReadStandardError()) );
+    connect( &process, SIGNAL(readyReadStandardOutput()),
+             q, SLOT(slotProcessReadyReadStandardOutput()) );
 }
 
 DumpCrlCacheCommand::~DumpCrlCacheCommand() {}
