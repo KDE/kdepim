@@ -51,6 +51,7 @@
 #include "commands/signencryptfilescommand.h"
 #include "commands/clearcrlcachecommand.h"
 #include "commands/dumpcrlcachecommand.h"
+#include "commands/importcrlcommand.h"
 
 #include <KActionCollection>
 #include <KLocale>
@@ -176,6 +177,9 @@ public:
     }
     void dumpCrlCache() {
         ( new DumpCrlCacheCommand( currentView(), &controller ) )->start();
+    }
+    void importCrlFromFile() {
+        ( new ImportCrlCommand( currentView(), &controller ) )->start();
     }
     void newCertificate();
     
@@ -361,6 +365,8 @@ void MainWindow::Private::setupActions() {
           0, q, SLOT(clearCrlCache()), QString(), false, true },
         { "crl_dump_crl_cache", i18n("Dump CRL Cache..."), QString(),
           0, q, SLOT(dumpCrlCache()), QString(), false, true },
+        { "crl_import_crl", i18n("Import CRL From File..."), QString(),
+          0, q, SLOT(importCrlFromFile()), QString(), false, true },
         // Tools menu
         // Window menu
         // (come from ui.tabWidget)

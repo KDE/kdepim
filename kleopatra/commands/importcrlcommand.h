@@ -1,8 +1,8 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    mainwindow.h
+    commands/importcrlcommand.h
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2008 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,40 +30,34 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_MAINWINDOW_H__
-#define __KLEOPATRA_MAINWINDOW_H__
+#ifndef __KLEOPATRA_COMMMANDS_IMPORTCRLCOMMAND_H__
+#define __KLEOPATRA_COMMMANDS_IMPORTCRLCOMMAND_H__
 
-#include <KXmlGuiWindow>
+#include <commands/command.h>
 
-#include <utils/pimpl_ptr.h>
+namespace Kleo {
+namespace Commands {
 
-class MainWindow : public KXmlGuiWindow {
-    Q_OBJECT
-public:
-    explicit MainWindow( QWidget * parent=0, Qt::WindowFlags f=KDE_DEFAULT_WINDOWFLAGS );
-    ~MainWindow();
+    class ImportCrlCommand : public Command {
+        Q_OBJECT
+    public:
+        explicit ImportCrlCommand( QAbstractItemView * view, KeyListController * parent );
+        explicit ImportCrlCommand( KeyListController * parent );
+        ~ImportCrlCommand();
 
-protected:
-    void closeEvent( QCloseEvent * e );
+    private:
+        /* reimp */ void doStart();
+        /* reimp */ void doCancel();
 
-private:
-    class Private;
-    kdtools::pimpl_ptr<Private> d;
-    Q_PRIVATE_SLOT( d, void closeAndQuit() )
-    Q_PRIVATE_SLOT( d, void signEncryptFiles() )
-    Q_PRIVATE_SLOT( d, void certificateDetails() )
-    Q_PRIVATE_SLOT( d, void deleteCertificates() )
-    Q_PRIVATE_SLOT( d, void importCertificates() )
-    Q_PRIVATE_SLOT( d, void exportCertificates() )
-    Q_PRIVATE_SLOT( d, void refreshCertificates() )
-    Q_PRIVATE_SLOT( d, void validateCertificates() )
-    Q_PRIVATE_SLOT( d, void clearCrlCache() )
-    Q_PRIVATE_SLOT( d, void dumpCrlCache() )
-    Q_PRIVATE_SLOT( d, void importCrlFromFile() )
-    Q_PRIVATE_SLOT( d, void newCertificate() )
-    Q_PRIVATE_SLOT( d, void checkConfiguration() )
-    Q_PRIVATE_SLOT( d, void configureBackend() )
-};
+    private:
+        class Private;
+        inline Private * d_func();
+        inline const Private * d_func() const;
+        Q_PRIVATE_SLOT( d_func(), void slotProcessFinished( int, QProcess::ExitStatus ) )
+        Q_PRIVATE_SLOT( d_func(), void slotProcessReadyReadStandardError() )
+    };
 
+}
+}
 
-#endif /* __KLEOPATRA_MAINWINDOW_H__ */
+#endif // __KLEOPATRA_COMMMANDS_IMPORTCRLCOMMAND_H__

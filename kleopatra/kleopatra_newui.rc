@@ -29,6 +29,8 @@
         </Menu>
 	<Menu name="crlMenu">
 		<text>C&amp;RLs</text>
+                <Action name="crl_import_crl"/>
+                <Separator/>
 		<Action name="crl_clear_crl_cache"/>
 		<Action name="crl_dump_crl_cache"/>
 	</Menu>

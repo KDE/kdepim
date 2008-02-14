@@ -1,0 +1,175 @@
+/* -*- mode: c++; c-basic-offset:4 -*-
+    commands/importcrlcommand.cpp
+
+    This file is part of Kleopatra, the KDE keymanager
+    Copyright (c) 2008 Klarälvdalens Datakonsult AB
+
+    Kleopatra is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    Kleopatra is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+    General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+
+    In addition, as a special exception, the copyright holders give
+    permission to link the code of this program with any edition of
+    the Qt library by Trolltech AS, Norway (or with modified versions
+    of Qt that use the same license as Qt), and distribute linked
+    combinations including the two.  You must obey the GNU General
+    Public License in all respects for all of the code used other than
+    Qt.  If you modify this file, you may extend this exception to
+    your version of the file, but you are not obligated to do so.  If
+    you do not wish to do so, delete this exception statement from
+    your version.
+*/
+
+#include "importcrlcommand.h"
+
+#include "command_p.h"
+
+#include <QString>
+#include <QByteArray>
+#include <QTimer>
+#include <QFileDialog>
+
+#include <KProcess>
+#include <KMessageBox>
+#include <KLocale>
+
+static const int PROCESS_TERMINATE_TIMEOUT = 5000; // milliseconds
+
+using namespace Kleo;
+using namespace Kleo::Commands;
+
+class ImportCrlCommand::Private : Command::Private {
+    friend class ::Kleo::Commands::ImportCrlCommand;
+    ImportCrlCommand * q_func() const { return static_cast<ImportCrlCommand*>( q ); }
+public:
+    explicit Private( ImportCrlCommand * qq, KeyListController * c );
+    ~Private();
+
+    QString errorString() const {
+        return QString::fromLocal8Bit( errorBuffer );
+    }
+
+private:
+    void init();
+    QString getFileName() {
+        const QString filter = i18n("Certificate Revocation Lists (*.crl *.arl *-crl.der *-arl.der)");
+        return QFileDialog::getOpenFileName( view(), i18n("Select CRL File to Import"),
+                                             QString(), filter );
+    }
+
+private:
+    void slotProcessFinished( int, QProcess::ExitStatus );
+    void slotProcessReadyReadStandardError();
+
+private:
+    KProcess process;
+    QByteArray errorBuffer;
+    bool canceled;
+};
+
+ImportCrlCommand::Private * ImportCrlCommand::d_func() { return static_cast<Private*>( d.get() ); }
+const ImportCrlCommand::Private * ImportCrlCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
+
+#define d d_func()
+#define q q_func()
+
+ImportCrlCommand::Private::Private( ImportCrlCommand * qq, KeyListController * c )
+    : Command::Private( qq, c ),
+      process(),
+      errorBuffer(),
+      canceled( false )
+{
+    process.setOutputChannelMode( KProcess::OnlyStderrChannel );
+    process << "gpgsm" << "--call-dirmngr" << "loadcrls";
+}
+
+ImportCrlCommand::Private::~Private() {}
+
+ImportCrlCommand::ImportCrlCommand( KeyListController * c )
+    : Command( new Private( this, c ) )
+{
+    d->init();
+}
+
+ImportCrlCommand::ImportCrlCommand( QAbstractItemView * v, KeyListController * c )
+    : Command( v, new Private( this, c ) )
+{
+    d->init();
+}
+
+void ImportCrlCommand::Private::init() {
+    connect( &process, SIGNAL(finished(int,QProcess::ExitStatus)),
+             q, SLOT(slotProcessFinished(int,QProcess::ExitStatus)) );
+    connect( &process, SIGNAL(readyReadStandardError()),
+             q, SLOT(slotProcessReadyReadStandardError()) );
+}
+
+ImportCrlCommand::~ImportCrlCommand() {}
+
+void ImportCrlCommand::doStart() {
+
+    const QString fileName = d->getFileName();
+    if ( fileName.isEmpty() ) {
+        emit canceled();
+        d->finished();
+    }
+
+    d->process << fileName;
+
+    d->process.start();
+
+    if ( !d->process.waitForStarted() ) {
+        KMessageBox::error( d->view(),
+                            i18n( "Unable to start process dirmngr. "
+                                  "Please check your installation." ),
+                            i18n( "Clear CRL Cache Error" ) );
+        finished();
+    }
+}
+
+void ImportCrlCommand::doCancel() {
+    d->canceled = true;
+    if ( d->process.state() != QProcess::NotRunning ) {
+        d->process.terminate();
+        QTimer::singleShot( PROCESS_TERMINATE_TIMEOUT, &d->process, SLOT(kill()) );
+    }
+}
+
+void ImportCrlCommand::Private::slotProcessFinished( int code, QProcess::ExitStatus status ) {
+    if ( !canceled )
+        if ( status == QProcess::CrashExit )
+            KMessageBox::error( view(),
+                                i18n( "The GpgSM process that tried to import the CRL file "
+                                      "ended prematurely because of an unexpected error. "
+                                      "Please check the output of gpgsm --call-dirmngr loadcrls &lt;filename&gt; for details." ),
+                                i18n( "Import CRL Error" ) );
+        else if ( code )
+            KMessageBox::error( view(),
+                                i18n( "An error occurred while trying to import the CRL file. "
+                                      "The output from gpgsm was:\n%1", errorString() ),
+                                i18n( "Import CRL Error" ) );
+        else
+            KMessageBox::information( view(),
+                                      i18n( "CRL file imported successfully." ),
+                                      i18n( "Import CRL Finished" ) );
+    finished();
+}
+
+void ImportCrlCommand::Private::slotProcessReadyReadStandardError() {
+    errorBuffer += process.readAllStandardError();
+}
+
+#undef d
+#undef q
+
+#include "moc_importcrlcommand.cpp"
