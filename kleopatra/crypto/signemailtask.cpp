@@ -204,9 +204,14 @@ std::auto_ptr<Kleo::SignJob> SignEMailTask::Private::createJob( GpgME::Protocol 
 static QString collect_micalgs( const GpgME::SigningResult & result, GpgME::Protocol proto ) {
     const std::vector<GpgME::CreatedSignature> css = result.createdSignatures();
     QStringList micalgs;
+#ifndef DASHBOT_HAS_STABLE_COMPILER
+    Q_FOREACH( const GpgME::CreatedSignature & sig, css )
+        micalgs.push_back( QString::fromLatin1( sig.hashAlgorithmAsString() ).toLower() );
+#else
     std::transform( css.begin(), css.end(),
                     std::back_inserter( micalgs ),
                     bind( &QString::toLower, bind( &QString::fromLatin1, bind( &GpgME::CreatedSignature::hashAlgorithmAsString, _1 ), -1 ) ) );
+#endif
     if ( proto == GpgME::OpenPGP )
         for ( QStringList::iterator it = micalgs.begin(), end = micalgs.end() ; it != end ; ++it )
             it->prepend( "pgp-" );
