@@ -223,6 +223,7 @@ void KeyListController::Private::connectView( QAbstractItemView * view ) {
     view->setSelectionMode( QAbstractItemView::ExtendedSelection );
     //view->setAlternatingRowColors( true );
     view->setProperty( "allColumnsShowFocus", true );
+    view->setProperty( "sortingEnabled", true );
 
     if ( QHeaderView * const hv = get_header_view( view ) )
         for ( int i = 0, end = std::min<int>( hv->count(), AbstractKeyListModel::NumColumns ) ; i < end ; ++i )
