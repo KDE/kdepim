@@ -268,8 +268,6 @@ void DumpCrlCacheCommand::Private::slotProcessFinished( int code, QProcess::Exit
                                 i18n( "An error occurred while trying to dump the CRL cache. "
                                       "The output from GpgSM was:\n%1", errorString() ),
                                 i18n( "Dump CRL Cache Error" ) );
-
-    finished();
 }
 
 #undef d
