@@ -265,7 +265,7 @@ namespace KDGantt {
     inline bool operator!=( const DateTimeSpan& s1, const DateTimeSpan& s2) { return !s1.equals( s2 ); }
 }
 
-Q_DECLARE_METATYPE(KDGantt::ItemType);
+Q_DECLARE_METATYPE(KDGantt::ItemType)
 Q_DECLARE_TYPEINFO(KDGantt::Span, Q_MOVABLE_TYPE);
 Q_DECLARE_TYPEINFO(KDGantt::DateTimeSpan, Q_MOVABLE_TYPE);
 
