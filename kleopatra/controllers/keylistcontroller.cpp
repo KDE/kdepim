@@ -82,7 +82,6 @@ public:
 
     void connectView( QAbstractItemView * view );
     void connectCommand( Command * cmd );
-    void connectModel();
 
     void addCommand( Command * cmd ) {
         connectCommand( cmd );
@@ -119,7 +118,7 @@ public:
 private:
     std::vector<QAbstractItemView*> views;
     std::vector<Command*> commands;
-    QPointer<AbstractKeyListModel> model;
+    QPointer<AbstractKeyListModel> flatModel, hierarchicalModel;
 };
 
 
@@ -127,7 +126,8 @@ KeyListController::Private::Private( KeyListController * qq )
     : q( qq ),
       views(),
       commands(),
-      model( 0 )
+      flatModel( 0 ),
+      hierarchicalModel( 0 )
 {
     // We only connect to PublicKeyCache, since we assume that
     // SecretKeyCache's content is a real subset of PublicKeyCache's:
@@ -148,9 +148,11 @@ KeyListController::~KeyListController() {}
 
 
 void KeyListController::Private::slotAddKey( const Key & key ) {
-    if ( !model )
-        return;
-    model->addKey( key ); 
+    // ### make model act on keycache directly...
+    if ( flatModel )
+        flatModel->addKey( key );
+    if ( hierarchicalModel )
+        hierarchicalModel->addKey( key );
 }
 
 void KeyListController::addView( QAbstractItemView * view ) {
@@ -169,24 +171,36 @@ std::vector<QAbstractItemView*> KeyListController::views() const {
     return d->views;
 }
 
-void KeyListController::setModel( AbstractKeyListModel * model ) {
-    if ( model == d->model )
+void KeyListController::setFlatModel( AbstractKeyListModel * model ) {
+    if ( model == d->flatModel )
         return;
 
-    if ( d->model )
-        d->model->disconnect( this );
-
-    d->model = model;
+    d->flatModel = model;
     
     if ( model ) {
         model->clear();
         model->addKeys( PublicKeyCache::instance()->keys() );
-        d->connectModel();
     }
 }
 
-AbstractKeyListModel * KeyListController::model() const {
-    return d->model;
+void KeyListController::setHierarchicalModel( AbstractKeyListModel * model ) {
+    if ( model == d->hierarchicalModel )
+        return;
+
+    d->hierarchicalModel = model;
+    
+    if ( model ) {
+        model->clear();
+        model->addKeys( PublicKeyCache::instance()->keys() );
+    }
+}
+
+AbstractKeyListModel * KeyListController::flatModel() const {
+    return d->flatModel;
+}
+
+AbstractKeyListModel * KeyListController::hierarchicalModel() const {
+    return d->hierarchicalModel;
 }
 
 void KeyListController::registerCommand( Command * cmd ) {
@@ -240,13 +254,6 @@ void KeyListController::Private::connectCommand( Command * cmd ) {
     //connect( cmd, SIGNAL(canceled()), q, SLOT(slotCommandCanceled()) );
     connect( cmd, SIGNAL(info(QString,int)), q, SIGNAL(message(QString,int)) );
     connect( cmd, SIGNAL(progress(QString,int,int)), q, SLOT(slotProgress(QString,int,int)) );
-}
-
-
-void KeyListController::Private::connectModel() {
-    if ( !model )
-        return;
-    // ### anything we want from the model??
 }
 
 

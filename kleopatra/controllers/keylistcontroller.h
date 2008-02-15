@@ -55,8 +55,11 @@ namespace Kleo {
         void removeView( QAbstractItemView * view );
         std::vector<QAbstractItemView*> views() const;
 
-        void setModel( AbstractKeyListModel * model );
-        AbstractKeyListModel * model() const;
+        void setFlatModel( AbstractKeyListModel * model );
+        AbstractKeyListModel * flatModel() const;
+
+        void setHierarchicalModel( AbstractKeyListModel * model );
+        AbstractKeyListModel * hierarchicalModel() const;
 
         void registerCommand( Command * cmd );
 

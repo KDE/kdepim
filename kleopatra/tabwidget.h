@@ -55,7 +55,8 @@ public:
     explicit TabWidget( QWidget * parent=0, Qt::WindowFlags f=0 );
     ~TabWidget();
 
-    void setModel( Kleo::AbstractKeyListModel * model );
+    void setFlatModel( Kleo::AbstractKeyListModel * model );
+    void setHierarchicalModel( Kleo::AbstractKeyListModel * model );
 
     QAbstractItemView * addView( const QString & title=QString(), const QString & keyFilterID=QString(), const QString & searchString=QString() );
     QAbstractItemView * addView( const KConfigGroup & group );
@@ -93,12 +94,14 @@ private:
     Q_PRIVATE_SLOT( d, void slotPageTitleChanged( const QString & ) )
     Q_PRIVATE_SLOT( d, void slotPageKeyFilterChanged( const boost::shared_ptr<Kleo::KeyFilter> & ) )
     Q_PRIVATE_SLOT( d, void slotPageStringFilterChanged( const QString & ) )
+    Q_PRIVATE_SLOT( d, void slotPageHierarchyChanged( bool ) )
     Q_PRIVATE_SLOT( d, void slotRenameCurrentTab() )
     Q_PRIVATE_SLOT( d, void slotNewTab() )
     Q_PRIVATE_SLOT( d, void slotDuplicateCurrentTab() )
     Q_PRIVATE_SLOT( d, void slotCloseCurrentTab() )
     Q_PRIVATE_SLOT( d, void slotMoveCurrentTabLeft() )
     Q_PRIVATE_SLOT( d, void slotMoveCurrentTabRight() )
+    Q_PRIVATE_SLOT( d, void slotToggleHierarchicalView( bool ) )
 };
 
 

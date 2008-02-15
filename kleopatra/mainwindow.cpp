@@ -204,7 +204,8 @@ private:
 
 private:
 
-    Kleo::AbstractKeyListModel * model;
+    Kleo::AbstractKeyListModel * flatModel;
+    Kleo::AbstractKeyListModel * hierarchicalModel;
     Kleo::KeyListController controller;
 
     QTimer refreshTimer;
@@ -264,7 +265,8 @@ private:
 
 MainWindow::Private::Private( MainWindow * qq )
     : q( qq ),
-      model( AbstractKeyListModel::createFlatKeyListModel( q ) ),
+      flatModel( AbstractKeyListModel::createFlatKeyListModel( q ) ),
+      hierarchicalModel( AbstractKeyListModel::createHierarchicalKeyListModel( q ) ),
       controller( q ),
       refreshTimer(),
       actions( q ),
@@ -272,14 +274,19 @@ MainWindow::Private::Private( MainWindow * qq )
 {
     KDAB_SET_OBJECT_NAME( controller );
     KDAB_SET_OBJECT_NAME( refreshTimer );
+    KDAB_SET_OBJECT_NAME( flatModel );
+    KDAB_SET_OBJECT_NAME( hierarchicalModel );
 
     refreshTimer.setInterval( 5 * 60 * 1000 );
     refreshTimer.setSingleShot( false );
     refreshTimer.start();
     connect( &refreshTimer, SIGNAL(timeout()), q, SLOT(validateCertificates()) );
 
-    controller.setModel( model );
-    ui.tabWidget.setModel( model );
+    controller.setFlatModel( flatModel );
+    controller.setHierarchicalModel( hierarchicalModel );
+
+    ui.tabWidget.setFlatModel( flatModel );
+    ui.tabWidget.setHierarchicalModel( hierarchicalModel );
 
     setupActions();
 
