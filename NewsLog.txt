@@ -1,3 +1,10 @@
+Friday, February 15th 2008
+
+Problems addressed
+-------------------
+* kolab/issue2160 contact view: move distribution list and addressbook view menu item to "views" (775026)
+* kolab/issue2477 Contacts: The Dist lists view is at the right side of the contacts list view. (775016)
+
 Friday, February 8th 2008
 
 Problems addressed
