@@ -517,11 +517,16 @@ void GraphicsView::resizeEvent( QResizeEvent* ev )
     QRectF r = scene()->itemsBoundingRect();
     // To scroll more to the left than the actual item start, bug #4516
     r.setLeft( qMin( 0.0, r.left() ) );
-
+    // TODO: take scrollbars into account (if not always on)
+    // The scene should be at least the size of the viewport
     QSizeF size = viewport()->size();
-    size.setHeight( size.height() + verticalScrollBar()->maximum() );
-    r.setSize( size.expandedTo( viewport()->size() ) );
-
+    //TODO: why -2 below? size should be ex. frames etc?
+    if ( size.width() > r.width() ) {
+        r.setWidth( size.width() - 2 ); 
+    }
+    if ( size.height() > r.height() ) {
+        r.setHeight( size.height() - 2 );
+    }
     scene()->setSceneRect( r );
     BASE::resizeEvent( ev );
 }

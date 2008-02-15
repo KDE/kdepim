@@ -92,6 +92,9 @@ void View::Private::init()
 
     gfxview.setAlignment(Qt::AlignTop|Qt::AlignLeft);
     //gfxview.setRenderHints( QPainter::Antialiasing );
+    
+    tw->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    gfxview.setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
 
     QVBoxLayout* layout = new QVBoxLayout(q);
     layout->setMargin(0);
