@@ -102,6 +102,8 @@ private:
     Q_PRIVATE_SLOT( d, void slotMoveCurrentTabLeft() )
     Q_PRIVATE_SLOT( d, void slotMoveCurrentTabRight() )
     Q_PRIVATE_SLOT( d, void slotToggleHierarchicalView( bool ) )
+    Q_PRIVATE_SLOT( d, void slotExpandAll() )
+    Q_PRIVATE_SLOT( d, void slotCollapseAll() )
 };
 
 

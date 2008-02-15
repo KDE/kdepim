@@ -22,6 +22,9 @@
                 <Action name="view_certificate_details"/>
                 <Separator/>
                 <Action name="window_view_hierarchical"/>
+                <Separator/>
+                <Action name="window_expand_all"/>
+                <Action name="window_collapse_all"/>
 	</Menu>
 	<Menu name="certMenu">
 		<text>&amp;Certificates</text>

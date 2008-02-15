@@ -79,7 +79,7 @@ public:
     Page( const KConfigGroup & group, QWidget * parent=0 );
     ~Page();
 
-    QAbstractItemView * view() const { return m_view; }
+    QTreeView * view() const { return m_view; }
 
     AbstractKeyListModel * model() const {
         return m_isHierarchical ? m_hierarchicalModel : m_flatModel ;
@@ -355,6 +355,12 @@ private:
     void slotToggleHierarchicalView( bool on ) {
         toggleHierarchicalView( currentPage(), on );
     }
+    void slotExpandAll() {
+        expandAll( currentPage() );
+    }
+    void slotCollapseAll() {
+        collapseAll( currentPage() );
+    }
 
     void renamePage( Page * page );
     void duplicatePage( Page * page );
@@ -362,6 +368,8 @@ private:
     void movePageLeft( Page * page );
     void movePageRight( Page * page );
     void toggleHierarchicalView( Page * page, bool on );
+    void expandAll( Page * page );
+    void collapseAll( Page * page );
 
     void enableDisableCurrentPageActions();
     void enableDisablePageActions( QAction * actions[], const Page * page );
@@ -386,14 +394,25 @@ private:
         return sp && sp == currentPage();
     }
 
-    QAbstractItemView * addView( Page * page );
+    QTreeView * addView( Page * page );
     void setCornerAction( QAction * action, Qt::Corner corner );
 
 private:
     AbstractKeyListModel * flatModel;
     AbstractKeyListModel * hierarchicalModel;
     KTabWidget tabWidget;
-    enum { Rename, Duplicate, Close, MoveLeft, MoveRight, Hierarchical, NumPageActions };
+    enum {
+        Rename,
+        Duplicate,
+        Close,
+        MoveLeft,
+        MoveRight,
+        Hierarchical,
+        ExpandAll,
+        CollapseAll,
+
+        NumPageActions
+    };
     QAction * newAction;
     QAction * currentPageActions[NumPageActions];
     QAction * otherPageActions[NumPageActions];
@@ -437,6 +456,10 @@ TabWidget::Private::Private( TabWidget * qq )
           0, q, SLOT(slotMoveCurrentTabRight()), i18n("CTRL+SHIFT+RIGHT"), false, false },
         { "window_view_hierarchical", i18n("Hierarchical Certificate List"), QString(),
           0, q, SLOT(slotToggleHierarchicalView(bool)), QString(), true, false },
+        { "window_expand_all", i18n("Expand All"), QString(),
+          0, q, SLOT(slotExpandAll()), i18n("CTRL+."), false, false },
+        { "window_collapse_all", i18n("Collapse All"), QString(),
+          0, q, SLOT(slotCollapseAll()), i18n("CTRL+,"), false, false },
     };
 
     for ( unsigned int i = 0 ; i < NumPageActions ; ++i )
@@ -469,8 +492,6 @@ void TabWidget::Private::slotContextMenu( QWidget * w, const QPoint & p ) {
     QMenu menu;
     menu.addAction( actions[Rename] );
     menu.addSeparator();
-    menu.addAction( actions[Hierarchical] );
-    menu.addSeparator();
     menu.addAction( newAction );
     menu.addAction( actions[Duplicate] );
     menu.addSeparator();
@@ -486,8 +507,6 @@ void TabWidget::Private::slotContextMenu( QWidget * w, const QPoint & p ) {
 
     if ( action == otherPageActions[Rename] )
         renamePage( contextMenuPage );
-    else if ( action == otherPageActions[Hierarchical] )
-        toggleHierarchicalView( contextMenuPage, action->isChecked() );
     else if ( action == otherPageActions[Duplicate] )
         duplicatePage( contextMenuPage );
     else if ( action == otherPageActions[Close] )
@@ -517,13 +536,15 @@ void TabWidget::Private::enableDisableCurrentPageActions() {
 }
 
 void TabWidget::Private::enableDisablePageActions( QAction * actions[], const Page * p ) {
-    actions[Rename]->setEnabled( p && p->canBeRenamed() );
-    actions[Duplicate]->setEnabled( p );
-    actions[Close]->setEnabled( p && p->canBeClosed() && tabWidget.count() > 1 );
-    actions[MoveLeft] ->setEnabled( p && tabWidget.indexOf( const_cast<Page*>(p) ) != 0 );
-    actions[MoveRight]->setEnabled( p && tabWidget.indexOf( const_cast<Page*>(p) ) != tabWidget.count()-1 );
+    actions[Rename]      ->setEnabled( p && p->canBeRenamed() );
+    actions[Duplicate]   ->setEnabled( p );
+    actions[Close]       ->setEnabled( p && p->canBeClosed() && tabWidget.count() > 1 );
+    actions[MoveLeft]    ->setEnabled( p && tabWidget.indexOf( const_cast<Page*>(p) ) != 0 );
+    actions[MoveRight]   ->setEnabled( p && tabWidget.indexOf( const_cast<Page*>(p) ) != tabWidget.count()-1 );
     actions[Hierarchical]->setEnabled( p && p->canChangeHierarchical() );
     actions[Hierarchical]->setChecked( p && p->isHierarchical() );
+    actions[ExpandAll]   ->setEnabled( p && p->isHierarchical() );
+    actions[CollapseAll] ->setEnabled( p && p->isHierarchical() );
 }
 
 void TabWidget::Private::slotPageTitleChanged( const QString & ) {
@@ -600,6 +621,18 @@ void TabWidget::Private::toggleHierarchicalView( Page * page, bool on ) {
     if ( !page )
         return;
     page->setHierarchical( on );
+}
+
+void TabWidget::Private::expandAll( Page * page ) {
+    if ( !page || !page->view() )
+        return;
+    page->view()->expandAll();
+}
+
+void TabWidget::Private::collapseAll( Page * page ) {
+    if ( !page || !page->view() )
+        return;
+    page->view()->collapseAll();
 }
 
 TabWidget::TabWidget( QWidget * p, Qt::WindowFlags f )
@@ -680,7 +713,7 @@ QAbstractItemView * TabWidget::addView( const KConfigGroup & group ) {
     return d->addView( new Page( group ) );
 }
 
-QAbstractItemView * TabWidget::Private::addView( Page * page ) {
+QTreeView * TabWidget::Private::addView( Page * page ) {
     if ( !page )
         return 0;
 
