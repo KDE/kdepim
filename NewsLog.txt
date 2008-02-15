@@ -5,6 +5,12 @@ Problems addressed
 * kolab/issue2160 contact view: move distribution list and addressbook view menu item to "views" (775026)
 * kolab/issue2477 Contacts: The Dist lists view is at the right side of the contacts list view. (775016)
 * Fixed cached imap local subscription so that it works for top-level folders.(774162)
+* Fixed the problem that filtering with online IMAP stopped after the first message had been processed.(773733)
+
+Merges
+------
+
+* Merges in from 3.5 branch.
 
 Friday, February 8th 2008
 
