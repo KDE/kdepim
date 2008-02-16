@@ -71,38 +71,31 @@ namespace {
       const QString diff = bodyPart->asText();
       if ( diff.isEmpty() ) return AsIcon;
 
+      const QString addedLineStyle( "style=\"" "color: green;\"" );
+      const QLatin1String fileAddStyle( "style=\"font-weight: bold; " "color: green; \"" );
 
-
-      QString addedLineStyle = QString::fromLatin1(
-        "style=\""
-        "color: green;\"");
-      QString fileAddStyle( "style=\"font-weight: bold; "
-                            "color: green; \"" );
-
-      QString removedLineStyle = QString::fromLatin1(
-        "style=\""
-        "color: red;\"");
-      QString fileRemoveStyle( "style=\"font-weight: bold; "
+      const QLatin1String removedLineStyle( "style=\"" "color: red;\"" );
+      const QLatin1String fileRemoveStyle( "style=\"font-weight: bold; "
                                "color: red ;\"" );
 
-      QString tableStyle = QString::fromLatin1(
+      const QLatin1String tableStyle(
         "style=\""
         "text-align: -khtml-auto; "
         "border: solid black 1px; "
         "padding: 0.5em; "
         "margin: 0em;\"");
 
-      QString sepStyle( "style=\"color: black; font-weight: bold;\"" );
-      QString chunkStyle( "style=\"color: blue;\"" );
+      const QLatin1String sepStyle( "style=\"color: black; font-weight: bold;\"" );
+      const QLatin1String chunkStyle( "style=\"color: blue;\"" );
 
       QString html = "<br><div align=\"center\">";
       html += "<pre " + tableStyle + '>';
 
-      QStringList lines = diff.split( '\n' );
-      for ( QStringList::Iterator it = lines.begin(); it != lines.end(); ++it ) {
-        QString line( Qt::escape( *it ) );
+      const QStringList lines = diff.split( '\n' );
+      for ( QStringList::ConstIterator it = lines.begin(); it != lines.end(); ++it ) {
+        const QString line( Qt::escape( *it ) );
         QString style;
-        if ( line.length() > 0 ) {
+        if ( !line.isEmpty() ) {
           if ( line.startsWith( "+++" ) ) {
             style = fileAddStyle;
           } else if ( line.startsWith( "---" ) ) {
@@ -115,15 +108,13 @@ namespace {
             style = sepStyle;
           } else if ( line.startsWith( "@@" ) ) {
             style = chunkStyle;
-          } else {
-            style = "";
           }
         }
         html += "<span " + style + '>' + line + "</span><br/>";
       }
 
       html += "</pre></div>";
-      //qDebug( "%s", html.toLatin1() );
+      //kDebug( "%s", html.toLatin1() );
       writer->queue( html );
 
       return Ok;
