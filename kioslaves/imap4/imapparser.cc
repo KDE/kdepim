@@ -1533,7 +1533,7 @@ void imapParser::parseFetch (ulong /* value */, parseString & inWords)
             parseBodyStructure (inWords, section, envelope);
           QByteArray data;
           QDataStream stream( data, IO_WriteOnly );
-          body->serialize(stream);
+          if (body) body->serialize(stream);
           parseRelay(data);
 
           delete body;
