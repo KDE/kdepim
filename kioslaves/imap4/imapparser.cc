@@ -280,7 +280,7 @@ imapParser::clientAuthenticate ( KIO::SlaveBase *slave, KIO::AuthInfo &ai,
   while ( true )
   {
     //read the next line
-    while (parseLoop() == 0);
+    while (parseLoop() == 0) ;
     if ( cmd->isComplete() ) break;
 
     if (!continuation.isEmpty())
@@ -895,6 +895,8 @@ void imapParser::parseExpunge (ulong value, parseString & result)
 
 void imapParser::parseAddressList (parseString & inWords, QPtrList<mailAddress>& list)
 {
+  if (inWords.isEmpty())
+    return;
   if (inWords[0] != '(')
   {
     parseOneWordC (inWords);     // parse NIL
@@ -915,7 +917,7 @@ void imapParser::parseAddressList (parseString & inWords, QPtrList<mailAddress>&
       }
     }
 
-    if (inWords[0] == ')')
+    if (inWords.length() && inWords[0] == ')')
       inWords.pos++;
     skipWS (inWords);
   }
@@ -931,7 +933,7 @@ const mailAddress& imapParser::parseAddress (parseString & inWords, mailAddress&
   retVal.setUser(parseLiteralC(inWords));
   retVal.setHost(parseLiteralC(inWords));
 
-  if (inWords[0] == ')')
+  if (inWords.length() && inWords[0] == ')')
     inWords.pos++;
   skipWS (inWords);
 
@@ -1004,7 +1006,7 @@ mailHeader * imapParser::parseEnvelope (parseString & inWords)
       parseLiteralC (inWords);
   }
 
-  if (inWords[0] == ')')
+  if (inWords.length() && inWords[0] == ')')
     inWords.pos++;
   skipWS (inWords);
 
@@ -1613,7 +1615,7 @@ void imapParser::parseFetch (ulong /* value */, parseString & inWords)
       parseLiteralC(inWords);
   }
 
-  if (inWords[0] != ')')
+  if (inWords.isEmpty() || inWords[0] != ')')
     return;
   inWords.pos++;
   skipWS (inWords);
@@ -1906,7 +1908,9 @@ imapParser::parseURL (const KURL & _url, QString & _box, QString & _section,
 
 QCString imapParser::parseLiteralC(parseString & inWords, bool relay, bool stopAtBracket, int *outlen) {
 
-  if (inWords[0] == '{')
+  kdDebug() << "imapParser::parseLiteralC " << inWords.length() << endl;
+
+  if (inWords.length() && inWords[0] == '{')
   {
     QCString retVal;
     ulong runLen = inWords.find ('}', 1);
