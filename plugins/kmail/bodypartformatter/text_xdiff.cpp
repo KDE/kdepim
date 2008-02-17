@@ -71,22 +71,22 @@ namespace {
       const QString diff = bodyPart->asText();
       if ( diff.isEmpty() ) return AsIcon;
 
-      const QString addedLineStyle( "style=\"" "color: green;\"" );
-      const QLatin1String fileAddStyle( "style=\"font-weight: bold; " "color: green; \"" );
+      static const QLatin1String addedLineStyle( "style=\"" "color: green;\"" );
+      static const QLatin1String fileAddStyle( "style=\"font-weight: bold; " "color: green; \"" );
 
-      const QLatin1String removedLineStyle( "style=\"" "color: red;\"" );
-      const QLatin1String fileRemoveStyle( "style=\"font-weight: bold; "
+      static const QLatin1String removedLineStyle( "style=\"" "color: red;\"" );
+      static const QLatin1String fileRemoveStyle( "style=\"font-weight: bold; "
                                "color: red ;\"" );
 
-      const QLatin1String tableStyle(
+      static const QLatin1String tableStyle(
         "style=\""
         "text-align: -khtml-auto; "
         "border: solid black 1px; "
         "padding: 0.5em; "
         "margin: 0em;\"");
 
-      const QLatin1String sepStyle( "style=\"color: black; font-weight: bold;\"" );
-      const QLatin1String chunkStyle( "style=\"color: blue;\"" );
+      static const QLatin1String sepStyle( "style=\"color: black; font-weight: bold;\"" );
+      static const QLatin1String chunkStyle( "style=\"color: blue;\"" );
 
       QString html = "<br><div align=\"center\">";
       html += "<pre " + tableStyle + '>';
