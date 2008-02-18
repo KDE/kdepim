@@ -34,7 +34,7 @@ namespace KDGantt {
         QHash<int, int> roleMap;
         bool calendarMode;
     };
-};
+}
 
 #endif /* KDGANTTPROXYMODEL_P_H */
 
