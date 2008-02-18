@@ -917,7 +917,7 @@ void imapParser::parseAddressList (parseString & inWords, QPtrList<mailAddress>&
       }
     }
 
-    if (inWords.length() && inWords[0] == ')')
+    if (!inWords.isEmpty() && inWords[0] == ')')
       inWords.pos++;
     skipWS (inWords);
   }
@@ -933,7 +933,7 @@ const mailAddress& imapParser::parseAddress (parseString & inWords, mailAddress&
   retVal.setUser(parseLiteralC(inWords));
   retVal.setHost(parseLiteralC(inWords));
 
-  if (inWords.length() && inWords[0] == ')')
+  if (!inWords.isEmpty() && inWords[0] == ')')
     inWords.pos++;
   skipWS (inWords);
 
@@ -1006,7 +1006,7 @@ mailHeader * imapParser::parseEnvelope (parseString & inWords)
       parseLiteralC (inWords);
   }
 
-  if (inWords.length() && inWords[0] == ')')
+  if (!inWords.isEmpty() && inWords[0] == ')')
     inWords.pos++;
   skipWS (inWords);
 
@@ -1908,9 +1908,7 @@ imapParser::parseURL (const KURL & _url, QString & _box, QString & _section,
 
 QCString imapParser::parseLiteralC(parseString & inWords, bool relay, bool stopAtBracket, int *outlen) {
 
-  kdDebug() << "imapParser::parseLiteralC " << inWords.length() << endl;
-
-  if (inWords.length() && inWords[0] == '{')
+  if (!inWords.isEmpty() && inWords[0] == '{')
   {
     QCString retVal;
     ulong runLen = inWords.find ('}', 1);
