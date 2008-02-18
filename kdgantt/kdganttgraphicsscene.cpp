@@ -153,6 +153,7 @@ GraphicsScene::~GraphicsScene()
 void GraphicsScene::init()
 {
     setConstraintModel( new ConstraintModel( this ) );
+    connect( d->grid, SIGNAL( gridChanged() ), this, SLOT( slotGridChanged() ) );
 }
 
 /* NOTE: The delegate should really be a property
