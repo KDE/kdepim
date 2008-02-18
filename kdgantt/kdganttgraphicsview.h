@@ -56,7 +56,7 @@ namespace KDGantt {
         Q_PRIVATE_SLOT( d, void slotLayoutChanged() )
         Q_PRIVATE_SLOT( d, void slotModelReset() )
         Q_PRIVATE_SLOT( d, void slotRowsInserted( const QModelIndex& parent,  int start, int end ) )
-        Q_PRIVATE_SLOT( d, void slotRowsAboutToBeRemoved( const QModelIndex& parent,  int start, int end ) );
+        Q_PRIVATE_SLOT( d, void slotRowsAboutToBeRemoved( const QModelIndex& parent,  int start, int end ) )
         Q_PRIVATE_SLOT( d, void slotRowsRemoved( const QModelIndex& parent,  int start, int end ) )
 
         Q_PRIVATE_SLOT( d, void slotItemClicked( const QModelIndex& idx ) )

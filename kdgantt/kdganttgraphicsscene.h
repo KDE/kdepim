@@ -127,6 +127,6 @@ namespace KDGantt {
         void slotConstraintRemoved( const Constraint& );
         void slotGridChanged();
     };
-};
+}
 
 #endif /* KDGANTTGRAPHICSSCENE_H */
