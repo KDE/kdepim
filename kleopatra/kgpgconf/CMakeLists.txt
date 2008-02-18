@@ -1,7 +1,7 @@
 project(kgpgconf)
 
 include_directories( ${CMAKE_SOURCE_DIR}/libkleo/backends/qgpgme )
-add_definitions ( ${KDE4_ENABLE_EXCEPTIONS} -D_ASSUAN_ONLY_GPG_ERRORS -UQT_NO_STL )
+add_definitions ( ${KDE4_ENABLE_EXCEPTIONS} -D_ASSUAN_ONLY_GPG_ERRORS -UQT_NO_STL -DKDE_DEFAULT_DEBUG_AREA=5154 )
 
 set(_kgpgconf_SRCS
     configreader.cpp
