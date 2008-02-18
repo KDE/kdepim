@@ -17,7 +17,7 @@ include_directories( ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_SOURCE_DIR}/libkleo ${B
 if (USABLE_ASSUAN_FOUND)
    include_directories(${ASSUAN_INCLUDES})
 endif(USABLE_ASSUAN_FOUND)
-add_definitions ( -DQT_STL -DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS ${KDE4_ENABLE_EXCEPTIONS} -D_ASSUAN_ONLY_GPG_ERRORS -UQT_NO_STL -DKDE_DEFAULT_DEBUG_AREA=5151 )
+add_definitions ( -DQT_STL -DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS ${KDE4_ENABLE_EXCEPTIONS} -D_ASSUAN_ONLY_GPG_ERRORS -UQT_NO_STL )
 
 add_subdirectory( pics )
 add_subdirectory( kgpgconf )
@@ -172,6 +172,8 @@ if ( KLEO_BUILD_OLD_MAINWINDOW )
 
   kde4_add_ui_files( _kleopatra_mainwindow_SRCS certificatewizard.ui)
 endif ( KLEO_BUILD_OLD_MAINWINDOW )
+
+add_definitions ( -DKDE_DEFAULT_DEBUG_AREA=5151 )
 
 kde4_add_executable(kleopatra_bin ${_kleopatra_common_SRCS} ${_kleopatra_mainwindow_SRCS} ${_kleopatra_uiserver_SRCS} )
 set_target_properties(kleopatra_bin  PROPERTIES OUTPUT_NAME kleopatra)
