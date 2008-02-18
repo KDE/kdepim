@@ -49,6 +49,7 @@
 #include <kmime/kmime_header_parsing.h>
 
 #include <KLocale>
+#include <kdebug.h>
 
 #include <QPointer>
 #include <QTimer>
@@ -68,6 +69,7 @@ class SignEncryptFilesController::Private {
     SignEncryptFilesController * const q;
 public:
     explicit Private( SignEncryptFilesController * qq );
+    ~Private();
 
 private:
     void slotWizardOperationPrepared();
@@ -112,6 +114,7 @@ SignEncryptFilesController::Private::Private( SignEncryptFilesController * qq )
 
 }
 
+SignEncryptFilesController::Private::~Private() { kDebug(); }
 
 QString SignEncryptFilesController::Private::titleForOperation( unsigned int op ) {
     const bool signDisallowed = (op & SignMask) == SignDisallowed;
@@ -141,6 +144,7 @@ SignEncryptFilesController::SignEncryptFilesController( const shared_ptr<const E
 }
 
 SignEncryptFilesController::~SignEncryptFilesController() {
+    kDebug();
     if ( d->wizard && !d->wizard->isVisible() )
         delete d->wizard;
         //d->wizard->close(); ### ?
@@ -183,6 +187,7 @@ void SignEncryptFilesController::setFiles( const QStringList & files ) {
 }
 
 void SignEncryptFilesController::Private::slotWizardCanceled() {
+    kDebug();
     reportError( gpg_error( GPG_ERR_CANCELED ), i18n("User cancel") );
 }
 
@@ -372,6 +377,7 @@ void SignEncryptFilesController::Private::slotTaskDone() {
 }
 
 void SignEncryptFilesController::cancel() {
+    kDebug();
     try {
         d->errorDetected = true;
         if ( d->wizard )

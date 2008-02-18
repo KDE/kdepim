@@ -40,6 +40,7 @@
 
 #include <KLocale>
 #include <KMessageBox>
+#include <kdebug.h>
 
 #include <QFileDialog>
 #include <QStringList>
@@ -97,7 +98,7 @@ SignEncryptFilesCommand::Private::Private( SignEncryptFilesCommand * qq, KeyList
     controller.setOperationMode( SignEncryptFilesController::SignAllowed | SignEncryptFilesController::EncryptAllowed );
 }
 
-SignEncryptFilesCommand::Private::~Private() {}
+SignEncryptFilesCommand::Private::~Private() { kDebug(); }
 
 SignEncryptFilesCommand::SignEncryptFilesCommand( KeyListController * c )
     : Command( new Private( this, c ) )
@@ -117,7 +118,7 @@ void SignEncryptFilesCommand::Private::init() {
     connect( &controller, SIGNAL(error(int,QString)), q, SLOT(slotControllerError(int,QString)) );
 }
 
-SignEncryptFilesCommand::~SignEncryptFilesCommand() {}
+SignEncryptFilesCommand::~SignEncryptFilesCommand() { kDebug(); }
 
 void SignEncryptFilesCommand::doStart() {
 
@@ -142,6 +143,7 @@ void SignEncryptFilesCommand::doStart() {
 }
 
 void SignEncryptFilesCommand::doCancel() {
+    kDebug();
     d->controller.cancel();
 }
 

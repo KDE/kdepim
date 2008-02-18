@@ -39,6 +39,7 @@
 
 #include <KLocale>
 #include <KPushButton>
+#include <kdebug.h>
 
 #include <QDialogButtonBox>
 #include <QFrame>
@@ -142,7 +143,7 @@ Wizard::Private::Private( Wizard * qq )
     q->connect( q, SIGNAL( rejected() ), q, SIGNAL( canceled() ) ); 
 }
 
-Wizard::Private::~Private() {}
+Wizard::Private::~Private() { kDebug(); }
 
 
 
@@ -187,7 +188,7 @@ Wizard::Wizard( QWidget * parent, Qt::WFlags f )
     
 }
 
-Wizard::~Wizard() {}
+Wizard::~Wizard() { kDebug(); }
 
 void Wizard::setPage( int id, WizardPage* widget )
 {

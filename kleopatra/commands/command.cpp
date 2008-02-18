@@ -37,6 +37,8 @@
 
 #include <controllers/keylistcontroller.h>
 
+#include <kdebug.h>
+
 #include <QAbstractItemView>
 
 using namespace Kleo;
@@ -50,7 +52,7 @@ Command::Private::Private( Command * qq, KeyListController * controller )
 
 }
 
-Command::Private::~Private() {}
+Command::Private::~Private() { kDebug(); }
 
 Command::Command( KeyListController * p )
     : QObject( p ), d( new Private( this, p ) )
@@ -84,7 +86,7 @@ Command::Command( QAbstractItemView * v, Private * pp )
         setView( v );
 }
 
-Command::~Command() {}
+Command::~Command() { kDebug(); }
 
 
 
@@ -121,6 +123,7 @@ void Command::start() {
 }
 
 void Command::cancel() {
+    kDebug();
     doCancel();
     emit canceled();
 }
