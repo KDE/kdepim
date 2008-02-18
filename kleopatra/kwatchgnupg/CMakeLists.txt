@@ -11,6 +11,7 @@ set(kwatchgnupg_SRCS
 
 
 kde4_add_executable(kwatchgnupg ${kwatchgnupg_SRCS})
+add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5153 )
 
 target_link_libraries(kwatchgnupg ${KDE4_KUTILS_LIBS} kleo)
 

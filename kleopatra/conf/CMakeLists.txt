@@ -11,6 +11,7 @@ set(kcm_kleopatra_PART_SRCS
    appearanceconfigwidget.cpp 
    dnorderconfigpage.cpp )
 
+add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5152 )
 
 kde4_add_ui_files(kcm_kleopatra_PART_SRCS appearanceconfigwidgetbase.ui )
 
