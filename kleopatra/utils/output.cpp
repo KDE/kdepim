@@ -42,6 +42,7 @@
 
 #include <KLocale>
 #include <KMessageBox>
+#include <kdebug.h>
 
 #include <QTemporaryFile>
 #include <QString>
@@ -108,6 +109,7 @@ namespace {
 
         /* reimp */ bool isFinalized() const { return m_isFinalized; }
         /* reimp */ void finalize() {
+            kDebug() << this;
             if ( m_isFinalized || m_isFinalizing )
                 return;
             m_isFinalizing = true;
@@ -119,6 +121,7 @@ namespace {
         }
 
         /* reimp */ void cancel() {
+            kDebug() << this;
             if ( m_isFinalizing ) {
                 m_cancelPending = true;
             } else if ( !m_canceled ) {
@@ -156,6 +159,7 @@ namespace {
     class FileOutput : public OutputImplBase {
     public:
         explicit FileOutput( const QString & fileName );
+        ~FileOutput() { kDebug() << this; }
 
         enum OverwritePolicy {
             Allow = true,
@@ -167,7 +171,7 @@ namespace {
         /* reimp */ QString label() const { return m_fileName; }
         /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_tmpFile; }
         /* reimp */ void doFinalize();
-        /* reimp */ void doCancel() {}
+        /* reimp */ void doCancel() { kDebug() << this; }
     private:
         const QString m_fileName;
         shared_ptr< TemporaryFile > m_tmpFile;
@@ -212,6 +216,7 @@ shared_ptr<Output> Output::createFromFile( const QString & fileName, bool allowO
     shared_ptr<FileOutput> fo( new FileOutput( fileName ) );
     if ( allowOverwrite )
         fo->setOverwritePolicy( FileOutput::Allow );
+    kDebug() << fo.get();
     return fo;
 }
 
@@ -234,6 +239,7 @@ static bool obtainOverwritePermission( const QString & fileName, QWidget * paren
 }
 
 void FileOutput::doFinalize() {
+    kDebug() << this;
 
     kleo_assert( m_tmpFile );
 
@@ -242,23 +248,34 @@ void FileOutput::doFinalize() {
 
     const QString tmpFileName = m_tmpFile->oldFileName();
 
+    kDebug() << this << " renaming " << tmpFileName << "->" << m_fileName ;
     if ( QFile::rename( tmpFileName, m_fileName ) ) {
+        kDebug() << this << "succeeded";
         m_tmpFile->setAutoRemove( false );
         return;
     }
+
+    kDebug() << this << "failed";
 
     if ( !obtainOverwritePermission( m_fileName, 0 ) )
         throw Exception( gpg_error( GPG_ERR_CANCELED ),
                          i18n( "Overwriting declined" ) );
 
+    kDebug() << this << "going to overwrite" << m_fileName ;
+
     if ( !QFile::remove( m_fileName ) )
         throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
                          i18n("Couldn't remove file \"%1\" for overwriting.", m_fileName ) );
 
+    kDebug() << this << "succeeded, renaming " << tmpFileName << "->" << m_fileName;
+
     if ( QFile::rename( tmpFileName, m_fileName ) ) {
+        kDebug() << this << "succeeded";
         m_tmpFile->setAutoRemove( false );
         return;
     }
+
+    kDebug() << this << "failed";
 
     throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
                      i18n( "Couldn't rename file \"%1\" to \"%2\"",
