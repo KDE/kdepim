@@ -227,6 +227,7 @@ Span DateTimeGrid::mapToChart( const QModelIndex& idx ) const
     return Span();
 }
 
+#if 0
 static void debug_print_idx( const QModelIndex& idx )
 {
     if ( !idx.isValid() ) {
@@ -237,6 +238,7 @@ static void debug_print_idx( const QModelIndex& idx )
     QDateTime et = idx.data( StartTimeRole ).toDateTime();
     qDebug() << idx << "["<<st<<et<<"]";
 }
+#endif
 
 /*! Maps the supplied Span to QDateTimes, and puts them as start time and
  * end time for the supplied index.

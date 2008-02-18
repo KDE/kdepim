@@ -218,12 +218,6 @@ ItemDelegate::InteractionState ItemDelegate::interactionStateFor( const QPointF&
     }
 }
 
-static void adjust_for_horizontal_alignment( QRectF* rect, Qt::Alignment a )
-{
-    Q_UNUSED( rect );
-    Q_UNUSED( a );
-}
-
 /*! Paints the gantt item \a idx using \a painter and \a opt
  */
 void ItemDelegate::paintGanttItem( QPainter* painter,
@@ -238,7 +232,7 @@ void ItemDelegate::paintGanttItem( QPainter* painter,
     boundingRect.setY( itemRect.y() );
     boundingRect.setHeight( itemRect.height() );
     //qDebug() << "itemRect="<<itemRect<<", boundingRect="<<boundingRect;
-    
+
     painter->save();
 
     QPen pen = defaultPen( typ );
@@ -385,7 +379,7 @@ void ItemDelegate::paintConstraintItem( QPainter* painter, const QStyleOptionGra
 
     painter->setPen( pen );
     painter->setBrush( pen.color() );
-    
+
     if ( start.x() > end.x()-TURN ) {
         QPolygonF poly;
             poly << start
