@@ -53,7 +53,7 @@ protected:
     Command * const q;
 public:
     explicit Private( Command * qq, KeyListController * controller );
-    ~Private();
+    virtual ~Private();
 
     QAbstractItemView * view() const { return view_; }
     KeyListModelInterface * model() const { return view_ ? dynamic_cast<KeyListModelInterface*>( view_->model() ) : 0 ; }
