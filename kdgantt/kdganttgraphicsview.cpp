@@ -519,13 +519,13 @@ void GraphicsView::resizeEvent( QResizeEvent* ev )
     r.setLeft( qMin( 0.0, r.left() ) );
     // TODO: take scrollbars into account (if not always on)
     // The scene should be at least the size of the viewport
-    QSizeF size = viewport()->size();
-    //TODO: why -2 below? size should be ex. frames etc?
+    // NOTE: scrollbar calculus uses maximumViewportSize() - frameWidth()*2 (not the same as viewport()->size())
+    QSizeF size = maximumViewportSize() - QSizeF( frameWidth()*2, frameWidth()*2 );
     if ( size.width() > r.width() ) {
-        r.setWidth( size.width() - 2 ); 
+        r.setWidth( size.width() );
     }
     if ( size.height() > r.height() ) {
-        r.setHeight( size.height() - 2 );
+        r.setHeight( size.height() );
     }
     scene()->setSceneRect( r );
     BASE::resizeEvent( ev );
