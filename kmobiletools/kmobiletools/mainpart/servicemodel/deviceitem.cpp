@@ -31,8 +31,8 @@ DeviceItem::DeviceItem( const QString& name, TreeItem* parent )
 {
     m_engine = KMobileTools::DeviceLoader::instance()->engine( name );
 
-    m_connectDeviceAction = new QAction( i18n( "Connect device" ), this );
-    m_disconnectDeviceAction = new QAction( i18n( "Disconnect device" ), this );
+    m_connectDeviceAction = new QAction( KIcon("network-connect"), i18n( "Connect device" ), this );
+    m_disconnectDeviceAction = new QAction( KIcon("network-disconnect"), i18n( "Disconnect device" ), this );
 
     m_connectDeviceAction->setEnabled( !m_engine->connected() );
     m_disconnectDeviceAction->setEnabled( m_engine->connected() );

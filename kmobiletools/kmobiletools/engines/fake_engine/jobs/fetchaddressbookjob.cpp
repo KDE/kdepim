@@ -20,6 +20,7 @@
 #include "fetchaddressbookjob.h"
 
 #include <KDE/ThreadWeaver/Thread>
+#include <KDE/KDebug>
 
 FetchAddressbookJob::FetchAddressbookJob( QObject* parent )
  : KMobileTools::JobXP( JobXP::fetchAddressbook, parent )
@@ -39,6 +40,7 @@ void FetchAddressbookJob::run() {
 }
 
 void FetchAddressbookJob::requestAbort() {
+	kDebug() << "========= job cancelled.";
 }
 
 #include "fetchaddressbookjob.moc"
