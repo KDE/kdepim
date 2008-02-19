@@ -24,8 +24,6 @@
 #include <QtGui/QGraphicsSceneHoverEvent>
 #include <QtGui/QGraphicsSceneEvent>
 
-#include <libkmobiletools/jobxp.h>
-
 #include <KDE/KIconLoader>
 #include <KDE/KColorScheme>
 #include <KDE/KLocale>
@@ -33,7 +31,7 @@
 #include <KDE/KIconEffect>
 
 JobItem::JobItem( KMobileTools::JobXP* job, QGraphicsItem* parent )
- : QGraphicsItem( parent )
+ : QGraphicsItem( parent ), m_job( job )
 {
     connect( job, SIGNAL(done(ThreadWeaver::Job*)),
              this, SLOT(jobSuccessful(ThreadWeaver::Job*)) );
@@ -139,6 +137,7 @@ void JobItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* option, 
 
 void JobItem::jobSuccessful( ThreadWeaver::Job* ) {
     emit removeItem( this );
+	//this->deleteLater();
 }
 
 void JobItem::jobProgressChanged( int progress ) {
@@ -158,8 +157,12 @@ bool JobItem::sceneEvent( QEvent* event ) {
         QGraphicsSceneMouseEvent* sceneEvent = dynamic_cast<QGraphicsSceneMouseEvent*>( event );
         if( sceneEvent->button() == Qt::LeftButton ) {
             QPointF pos = sceneEvent->pos();
-            if( m_cancelRect.contains( pos ) )
-                kDebug() << "triggering job cancellation...";
+            if( m_cancelRect.contains( pos ) ) {
+            	if( m_job->canBeAborted() ) {
+            		m_job->requestAbort();
+            		emit removeItem( this );
+            	}
+            }
         }
     }
 

@@ -25,6 +25,8 @@
 #include <QtGui/QGraphicsItem>
 #include <KDE/ThreadWeaver/Job>
 
+#include <libkmobiletools/jobxp.h>
+
 namespace KMobileTools {
     class JobXP;
 }
@@ -62,6 +64,7 @@ private:
     bool m_firstPaint;
     QRectF m_boundingRect;
 
+    KMobileTools::JobXP* m_job;
 };
 
 #endif

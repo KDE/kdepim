@@ -94,11 +94,11 @@ void JobQueueView::addJob( JobItem* jobItem )
 
     connect( jobItem, SIGNAL(removeItem(JobItem*)),
              this, SLOT(removeJob(JobItem*)) );
-
+    
     timer->start();
 }
 
-void JobQueueView::removeJob( JobItem* jobItem ) {
+void JobQueueView::removeJob( JobItem* jobItem ) {	
     // remove job item
     if( m_jobItems.contains( jobItem ) ) {
         // remove the item
