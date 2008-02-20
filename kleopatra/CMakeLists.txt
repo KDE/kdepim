@@ -158,7 +158,7 @@ set( _kleopatra_mainwindow_SRCS
 
 if ( KLEO_BUILD_OLD_MAINWINDOW )
   add_definitions( -DKLEO_BUILD_OLD_MAINWINDOW )
-  set(libconf_SRCS  ${CMAKE_SOURCE_DIR}/kleopatra/conf/configuredialog.cpp )
+  set(libconf_SRCS  conf/configuredialog.cpp )
   add_subdirectory( conf )
   add_subdirectory( kwatchgnupg )
 
