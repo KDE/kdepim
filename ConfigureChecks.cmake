@@ -25,5 +25,3 @@ macro_bool_to_01(GNOKII_FOUND HAVE_GNOKII_H)
 
 OPTION(WITH_INDEXLIB "Enable full-text indexing in KMail." OFF)
 macro_bool_to_01(WITH_INDEXLIB HAVE_INDEXLIB)
-
-check_type_size("long" SIZEOF_LONG)
