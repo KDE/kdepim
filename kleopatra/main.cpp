@@ -226,8 +226,8 @@ int main( int argc, char** argv )
   try {
       Kleo::UiServer server( args->getOption("uiserver-socket") );
 
-      sysTray.connect( &server, SIGNAL(startKeyManagerRequested()),
-                       SLOT(openOrRaiseMainWindow()) );
+      QObject::connect( &server, SIGNAL(startKeyManagerRequested()),
+                        &sysTray, SLOT(openOrRaiseMainWindow()) );
 
 #define REGISTER( Command ) server.registerCommandFactory( boost::shared_ptr<Kleo::AssuanCommandFactory>( new Kleo::GenericAssuanCommandFactory<Kleo::Command> ) )
       REGISTER( DecryptCommand );
@@ -257,6 +257,9 @@ int main( int argc, char** argv )
       rc = app.exec();
 
 #ifdef HAVE_USABLE_ASSUAN
+      QObject::disconnect( &server, SIGNAL(startKeyManagerRequested()),
+                           &sysTray, SLOT(openOrRaiseMainWindow()) );
+
       server.stop();
       server.waitForStopped();
   } catch ( const std::exception & e ) {
