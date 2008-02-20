@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "importcrlcommand.h"
 
 #include "command_p.h"

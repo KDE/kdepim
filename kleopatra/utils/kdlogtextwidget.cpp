@@ -20,6 +20,8 @@
 **
 **********************************************************************/
 
+#include <config-kleopatra.h>
+
 #include "kdlogtextwidget.h"
 
 #include <QtGui>

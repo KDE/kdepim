@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "clearcrlcachecommand.h"
 
 #include "command_p.h"
