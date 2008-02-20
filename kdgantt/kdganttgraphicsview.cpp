@@ -570,7 +570,7 @@ void GraphicsView::updateSceneRect()
     QRectF r = d->scene.itemsBoundingRect();
     // To scroll more to the left than the actual item start, bug #4516
     r.setLeft( qMin( 0.0, r.left() ) );
-    r.setSize( r.size().expandedTo( viewport()->size() ) );
+    r.setSize( r.size().expandedTo( maximumViewportSize() - QSizeF( frameWidth()*2, frameWidth()*2 ) ) );
 
     d->scene.setSceneRect( r );
 }
