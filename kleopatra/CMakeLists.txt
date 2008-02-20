@@ -170,7 +170,6 @@ if ( KLEO_BUILD_OLD_MAINWINDOW )
     crlview.cpp
     certlistview.cpp )
 
-  kde4_add_ui_files( _kleopatra_mainwindow_SRCS certificatewizard.ui)
 endif ( KLEO_BUILD_OLD_MAINWINDOW )
 
 add_definitions ( -DKDE_DEFAULT_DEBUG_AREA=5151 )
