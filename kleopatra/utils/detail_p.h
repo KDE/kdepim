@@ -35,6 +35,8 @@
 
 #include <kleo-assuan.h>
 
+#include <io.h>
+
 #include <boost/shared_ptr.hpp>
 
 #include <QByteArray>
