@@ -16,7 +16,7 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
-#include <config.h>
+#include <config-libkpgp.h> /* HAVE_SYS_POLL_H */
 
 #include "kpgpbase.h"
 #include "kpgp.h"

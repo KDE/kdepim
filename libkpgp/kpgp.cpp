@@ -50,8 +50,6 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 
-#include "config.h"
-
 #ifdef ERROR
 #undef ERROR
 #endif
