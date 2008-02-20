@@ -5,10 +5,6 @@
 /* Needed by akregator; to be moved to a config-akregator.h */
 #define SIZEOF_LONG ${SIZEOF_LONG}
 
-/* The size of a `unsigned long', as computed by sizeof. */
-/* Needed by ./libksieve/tests/parsertest.cpp; to be moved */
-#define SIZEOF_UNSIGNED_LONG ${SIZEOF_UNSIGNED_LONG}
-
 #if defined _WIN32 || defined _WIN64
 #define KPATH_SEPARATOR ';'
 #else

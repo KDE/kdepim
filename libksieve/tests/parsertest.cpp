@@ -29,7 +29,7 @@
     you do not wish to do so, delete this exception statement from
     your version.
 */
-#include <config.h>
+#include <config-libksieve.h> // SIZEOF_UNSIGNED_LONG
 #include <ksieve/parser.h>
 using KSieve::Parser;
 
@@ -651,7 +651,7 @@ int main( int argc, char * argv[]  ) {
       if ( v.ok() )
 	if ( ok )
 	  cerr << " ok";
-	else 
+	else
 	  cerr << " xfail";
       else
 	success = false;

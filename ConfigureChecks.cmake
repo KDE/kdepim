@@ -27,5 +27,3 @@ OPTION(WITH_INDEXLIB "Enable full-text indexing in KMail." OFF)
 macro_bool_to_01(WITH_INDEXLIB HAVE_INDEXLIB)
 
 check_type_size("long" SIZEOF_LONG)
-check_type_size("unsigned long" SIZEOF_UNSIGNED_LONG)
-
