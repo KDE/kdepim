@@ -34,7 +34,9 @@
 #define __KLEO_UI_DNATTRIBUTEORDERCONFIGWIDGET_H__
 
 #include "kleo/kleo_export.h"
+
 #include <QtGui/QWidget>
+
 namespace Kleo {
   class DNAttributeMapper;
 }
@@ -47,7 +49,7 @@ namespace Kleo {
     Q_OBJECT
   public:
     /*! Use Kleo::DNAttributeMapper::instance()->configWidget( parent, name ) instead. */
-    explicit DNAttributeOrderConfigWidget( DNAttributeMapper * mapper, QWidget * parent=0, const char * name=0, Qt::WFlags f=0 );
+    explicit DNAttributeOrderConfigWidget( DNAttributeMapper * mapper, QWidget * parent=0, Qt::WindowFlags f=0 );
     ~DNAttributeOrderConfigWidget();
 
     void load();

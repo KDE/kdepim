@@ -63,7 +63,7 @@ namespace Kleo {
 
     void setAttributeOrder( const QStringList & order );
 
-    DNAttributeOrderConfigWidget * configWidget( QWidget * parent=0, const char * name=0 ) const;
+    DNAttributeOrderConfigWidget * configWidget( QWidget * parent=0 ) const;
 
   private:
     class Private;

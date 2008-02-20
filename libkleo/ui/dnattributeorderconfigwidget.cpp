@@ -41,15 +41,14 @@
 #include <kconfig.h>
 
 #include <QToolButton>
-#include <QLayout>
-#include <q3header.h>
-#include <QLabel>
-#include <q3listview.h>
-
-//Added by qt3to4:
 #include <QGridLayout>
+#include <QLayout>
+#include <QLabel>
 
-#include <assert.h>
+#include <q3listview.h>
+#include <q3header.h>
+
+#include <cassert>
 
 class Kleo::DNAttributeOrderConfigWidget::Private {
 public:
@@ -72,10 +71,9 @@ static void prepare( Q3ListView * lv ) {
   lv->addColumn( i18n("Description") );
 }
 
-Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMapper * mapper, QWidget * parent, const char * name, Qt::WFlags f )
-  : QWidget( parent, f ), d( new Private() )
+Kleo::DNAttributeOrderConfigWidget::DNAttributeOrderConfigWidget( DNAttributeMapper * mapper, QWidget * parent, Qt::WindowFlags f )
+  : QWidget( parent, f ), d( new Private )
 {
-  setObjectName(name);
   assert( mapper );
   d->mapper = mapper;
 

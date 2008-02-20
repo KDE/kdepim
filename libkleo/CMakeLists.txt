@@ -2,11 +2,11 @@ include_directories( ${CMAKE_BINARY_DIR}/kleo/backends/chiasmus/ ${GPGME_INCLUDE
 
 if ( NOT ONLY_KLEO )
   add_definitions( -DKLEO_BUILD_OLD_MAINWINDOW )
-  add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 else ( NOT ONLY_KLEO )
   add_definitions( -DONLY_KLEO )
 endif ( NOT ONLY_KLEO )
 
+add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS )
 add_definitions( ${KDE4_ENABLE_EXCEPTIONS} )
 
 add_subdirectory( pics )
@@ -66,7 +66,6 @@ set(libkleo_ui_SRCS    # make this a separate lib.
    ui/keyrequester.cpp
    ui/keyapprovaldialog.cpp
    ui/backendconfigwidget.cpp
-   ui/dnattributeorderconfigwidget.cpp
 )
 set(libkleo_ui_common_SRCS
    ui/kdhorizontalline.cpp
@@ -77,6 +76,7 @@ set(libkleo_ui_common_SRCS
    ui/cryptoconfigdialog.cpp
    ui/directoryserviceswidget.cpp
    ui/adddirectoryservicedialogimpl.cpp
+   ui/dnattributeorderconfigwidget.cpp
 )
 
 set(libkleo_compat_SRCS # make this a separate lib.
@@ -91,10 +91,10 @@ kde4_add_ui_files(libkleo_ui_common_SRCS
 )
 
 set(kleo_LIB_SRCS ${libkleo_core_SRCS} ${libkleo_ui_common_SRCS} ${libkleo_backend_qgpgme_SRCS})
-set(kleo_LIB_LIBS ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES})
+set(kleo_LIB_LIBS ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES} ${QT_QT3SUPPORT_LIBRARY} )
 if ( NOT ONLY_KLEO )
    set( kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_ui_SRCS} ${libkleo_backend_chiasmus_SRCS} )
-   set( kleo_LIB_LIBS ${kleo_LIB_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${QT_QT3SUPPORT_LIBRARY} )
+   set( kleo_LIB_LIBS ${kleo_LIB_LIBS} ${KDE4_KDE3SUPPORT_LIBS} )
    if ( NOT KLEO_NO_COMPAT )
      set( kleo_LIB_SRCS ${kleo_LIB_SRCS} ${libkleo_compat_SRCS} )
    endif ( NOT KLEO_NO_COMPAT )
