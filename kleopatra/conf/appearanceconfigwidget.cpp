@@ -38,7 +38,6 @@
 #include "libkleo/kleo/cryptobackendfactory.h"
 #include "libkleo/kleo/keyfiltermanager.h"
 
-#include <k3listview.h>
 #include <kconfig.h>
 #include <kdialog.h>
 #include <klocale.h>
