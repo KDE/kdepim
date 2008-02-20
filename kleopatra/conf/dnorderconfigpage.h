@@ -31,9 +31,9 @@
 
 #ifndef __KLEOPATRA_CONF_DNORDERCONFIGPAGE_H__
 #define __KLEOPATRA_CONF_DNORDERCONFIGPAGE_H__
-#define KDE3_SUPPORT
+
 #include <kcmodule.h>
-#undef KDE3_SUPPORT
+
 namespace Kleo {
   class DNAttributeOrderConfigWidget;
 }
@@ -44,7 +44,7 @@ namespace Kleo {
 class DNOrderConfigPage : public KCModule {
   Q_OBJECT
 public:
-  DNOrderConfigPage( const KComponentData &instance, QWidget *parent=0, const QStringList &args=QStringList() );
+  DNOrderConfigPage( const KComponentData &instance, QWidget *parent=0, const QVariantList &args=QVariantList() );
 
   /*! reimplementation */
   void load();
@@ -53,7 +53,7 @@ public:
   /*! reimplementation */
   void defaults();
 
-private slots:
+private Q_SLOTS:
   void slotChanged();
 
 private:

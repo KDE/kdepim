@@ -35,16 +35,18 @@
 
 #include "libkleo/ui/dnattributeorderconfigwidget.h"
 #include "libkleo/kleo/dn.h"
+
 #include <kcomponentdata.h>
 
 #include <QLayout>
 #include <QVBoxLayout>
 
-DNOrderConfigPage::DNOrderConfigPage( const KComponentData &instance, QWidget *parent, const QStringList &args )
+DNOrderConfigPage::DNOrderConfigPage( const KComponentData &instance, QWidget *parent, const QVariantList &args )
   : KCModule( instance, parent, args )
 {
   QVBoxLayout * vlay = new QVBoxLayout( this );
-  mWidget = Kleo::DNAttributeMapper::instance()->configWidget( this, "mWidget" );
+  mWidget = Kleo::DNAttributeMapper::instance()->configWidget( this );
+  mWidget->setObjectName( "mWidget" );
   vlay->addWidget( mWidget );
 
   connect( mWidget, SIGNAL(changed()), SLOT(slotChanged()) );
@@ -72,7 +74,7 @@ void DNOrderConfigPage::slotChanged() {
   emit changed(true);
 }
 
-extern "C" KDE_EXPORT KCModule * create_kleopatra_config_dnorder( QWidget *parent=0, const QStringList &args=QStringList() ) {
+extern "C" KDE_EXPORT KCModule * create_kleopatra_config_dnorder( QWidget * parent, const QVariantList & args ) {
     DNOrderConfigPage *page = new DNOrderConfigPage( KComponentData( "kleopatra" ), parent, args );
     page->setObjectName( "kleopatra_config_dnorder" );
     return page;
