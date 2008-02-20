@@ -35,7 +35,9 @@
 
 #include <kleo-assuan.h>
 
+#ifdef Q_OS_WIN32
 #include <io.h>
+#endif
 
 #include <boost/shared_ptr.hpp>
 
