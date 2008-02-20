@@ -79,8 +79,14 @@ private:
         else
             aboutDialog->show();
     }
-    void slotActivated( ActivationReason reason=QSystemTrayIcon::Trigger );
-    void slotEnableDisableActions();
+    void slotActivated( ActivationReason reason ) {
+        if ( reason == QSystemTrayIcon::Trigger )
+            q->openOrRaiseMainWindow();
+    }
+
+    void slotEnableDisableActions() {
+        openCertificateManagerAction.setEnabled( !mainWindow || !mainWindow->isVisible() );
+    }
 
 private:
     QMenu menu;
@@ -109,7 +115,7 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
     KDAB_SET_OBJECT_NAME( aboutAction );
     KDAB_SET_OBJECT_NAME( quitAction );
 
-    connect( &openCertificateManagerAction, SIGNAL(triggered()), q, SLOT(slotActivated()) );
+    connect( &openCertificateManagerAction, SIGNAL(triggered()), q, SLOT(openOrRaiseMainWindow()) );
     connect( &aboutAction, SIGNAL(triggered()), q, SLOT(slotAbout()) );
     connect( &quitAction, SIGNAL(triggered()), QCoreApplication::instance(), SLOT(quit()) );
     connect( q, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), q, SLOT(slotActivated(QSystemTrayIcon::ActivationReason)) );
@@ -156,28 +162,22 @@ bool SystemTrayIcon::eventFilter( QObject * o, QEvent * e ) {
     return false;
 }
 
-void SystemTrayIcon::Private::slotActivated( ActivationReason reason ) {
-    if ( reason != QSystemTrayIcon::Trigger )
-        return;
-    if ( !mainWindow ) {
-        mainWindow = q->doCreateMainWindow();
-        assert( mainWindow );
-        if ( previousGeometry.isValid() )
-            mainWindow->setGeometry( previousGeometry );
-        mainWindow->installEventFilter( q );
+void SystemTrayIcon::openOrRaiseMainWindow() {
+    if ( !d->mainWindow ) {
+        d->mainWindow = doCreateMainWindow();
+        assert( d->mainWindow );
+        if ( d->previousGeometry.isValid() )
+            d->mainWindow->setGeometry( d->previousGeometry );
+        d->mainWindow->installEventFilter( this );
     }
-    if ( mainWindow->isMinimized() ) {
-        mainWindow->showNormal();
-        mainWindow->raise();
-    } else if ( mainWindow->isVisible() ) {
-        mainWindow->raise();
+    if ( d->mainWindow->isMinimized() ) {
+        d->mainWindow->showNormal();
+        d->mainWindow->raise();
+    } else if ( d->mainWindow->isVisible() ) {
+        d->mainWindow->raise();
     } else {
-        mainWindow->show();
+        d->mainWindow->show();
     }
-}
-
-void SystemTrayIcon::Private::slotEnableDisableActions() {
-    openCertificateManagerAction.setEnabled( !mainWindow || !mainWindow->isVisible() );
 }
 
 #include "moc_systemtrayicon.cpp"
