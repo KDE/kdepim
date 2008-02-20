@@ -4,7 +4,7 @@
     This file is part of kleopatra
     Copyright (C) 2000 Espen Sand, espen@kde.org
     Copyright (C) 2001-2002 Marc Mutz <mutz@kde.org>
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License,
@@ -41,16 +41,15 @@
 #include <kcmultidialog.h>
 #include <klocale.h>
 #include <kconfiggroup.h>
+
 #include <QApplication>
 #include <QIcon>
-#include <QHideEvent>
 
-ConfigureDialog::ConfigureDialog( QWidget *parent, bool modal )
+ConfigureDialog::ConfigureDialog( QWidget * parent )
   : KCMultiDialog( parent )
 {
   setFaceType( KPageDialog::List );
   setCaption( i18n( "Configure" ) );
-  setModal( modal );
 #ifdef Q_OS_UNIX
   KWindowSystem::setIcons( winId(), qApp->windowIcon().pixmap( IconSize( KIconLoader::Desktop ), IconSize( KIconLoader::Desktop ) ),
                   qApp->windowIcon().pixmap( IconSize( KIconLoader::Small ), IconSize( KIconLoader::Small ) ) );
@@ -74,10 +73,11 @@ ConfigureDialog::ConfigureDialog( QWidget *parent, bool modal )
 
 }
 
-void ConfigureDialog::hideEvent( QHideEvent * ) {
+void ConfigureDialog::hideEvent( QHideEvent * e ) {
   KConfigGroup geometry( KGlobal::config(), "Geometry" );
   geometry.writeEntry( "ConfigureDialogWidth", width() );
   geometry.writeEntry( "ConfigureDialogHeight",height() );
+  KCMultiDialog::hideEvent( e );
 }
 
 ConfigureDialog::~ConfigureDialog() {

@@ -31,23 +31,21 @@
     your version.
 */
 
-#ifndef _CONFIGURE_DIALOG_H_
-#define _CONFIGURE_DIALOG_H_
+#ifndef __KLEOPATRA_CONF_CONFIGUREDIALOG_H__
+#define __KLEOPATRA_CONF_CONFIGUREDIALOG_H__
 
 #include <kcmultidialog.h>
-#include <QHideEvent>
 
 class ConfigureDialog : public KCMultiDialog
 {
   Q_OBJECT
-
 public:
-  ConfigureDialog( QWidget *parent=0, bool modal=true );
+  explicit ConfigureDialog( QWidget * parent=0 );
   ~ConfigureDialog();
 
 protected:
-  void hideEvent( QHideEvent *i );
+  void hideEvent( QHideEvent * );
 
 };
 
-#endif
+#endif /* __KLEOPATRA_CONF_CONFIGUREDIALOG_H__ */
