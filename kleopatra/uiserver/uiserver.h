@@ -66,6 +66,7 @@ namespace Kleo {
 
     Q_SIGNALS:
         void stopped();
+        void startKeyManagerRequested();
 
     private:
         class Private;

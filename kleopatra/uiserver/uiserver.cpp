@@ -160,6 +160,8 @@ void UiServer::Private::incomingConnection( int fd ) {
         const shared_ptr<AssuanServerConnection> c( new AssuanServerConnection( (assuan_fd_t)fd, factories ) );
         connect( c.get(), SIGNAL(closed(Kleo::AssuanServerConnection*)),
                  this, SLOT(slotConnectionClosed(Kleo::AssuanServerConnection*)) );
+        connect( c.get(), SIGNAL(startKeyManagerRequested()),
+                 q, SIGNAL(startKeyManagerRequested()), Qt::QueuedConnection );
         connections.push_back( c );
         qDebug( "UiServer: client connection %p established successfully", c.get() );
     } catch ( const Exception & e ) {

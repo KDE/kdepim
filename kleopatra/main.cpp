@@ -226,6 +226,8 @@ int main( int argc, char** argv )
   try {
       Kleo::UiServer server( args->getOption("uiserver-socket") );
 
+      sysTray.connect( &server, SIGNAL(startKeyManagerRequested()),
+                       SLOT(openOrRaiseMainWindow()) );
 
 #define REGISTER( Command ) server.registerCommandFactory( boost::shared_ptr<Kleo::AssuanCommandFactory>( new Kleo::GenericAssuanCommandFactory<Kleo::Command> ) )
       REGISTER( DecryptCommand );

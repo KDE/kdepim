@@ -218,6 +218,9 @@ public:
     Private( assuan_fd_t fd_, const std::vector< shared_ptr<AssuanCommandFactory> > & factories_, AssuanServerConnection * qq );
     ~Private();
 
+Q_SIGNALS:
+    void startKeyManager();
+
 public Q_SLOTS:
     void slotReadActivity( int ) {
         assert( ctx );
@@ -322,6 +325,20 @@ private:
             return assuan_process_done_msg( ctx_, gpg_error( GPG_ERR_ASS_PARAMETER ), errorString );
         }
         return assuan_process_done( ctx_, assuan_send_data( ctx_, ba.constData(), ba.size() ) );
+    }
+
+    static int start_keymanager_handler( assuan_context_t ctx_, char * line ) {
+        assert( assuan_get_pointer( ctx_ ) );
+        AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
+
+        if ( line && *line ) {
+            static const QString errorString = i18n("START_KEYMANAGER does not take arguments");
+            return assuan_process_done_msg( ctx_, gpg_error( GPG_ERR_ASS_PARAMETER ), errorString );
+        }
+
+        emit conn.q->startKeyManagerRequested();
+
+        return assuan_process_done( ctx_, 0 );
     }
 
     template <bool in> struct Input_or_Output : mpl::if_c<in,Input,Output> {};
@@ -628,6 +645,8 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
 
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "GETINFO", getinfo_handler ) )
         throw Exception( err, "register \"GETINFO\" handler" );
+    if ( const gpg_error_t err = assuan_register_command( ctx.get(), "START_KEYMANAGER", start_keymanager_handler ) )
+        throw Exception( err, "register \"START_KEYMANAGER\" handler" );
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "RECIPIENT", recipient_handler ) )
         throw Exception( err, "register \"RECIPIENT\" handler" );
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "SENDER", sender_handler ) )
