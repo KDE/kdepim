@@ -63,6 +63,9 @@ private:
     Q_PRIVATE_SLOT( d, void newCertificate() )
     Q_PRIVATE_SLOT( d, void checkConfiguration() )
     Q_PRIVATE_SLOT( d, void configureBackend() )
+    Q_PRIVATE_SLOT( d, void editKeybindings() )
+    Q_PRIVATE_SLOT( d, void preferences() )
+    Q_PRIVATE_SLOT( d, void slotConfigCommitted() )
 };
 
 

@@ -20,6 +20,7 @@ endif(USABLE_ASSUAN_FOUND)
 add_definitions ( -DQT_STL -DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS ${KDE4_ENABLE_EXCEPTIONS} -D_ASSUAN_ONLY_GPG_ERRORS -UQT_NO_STL )
 
 add_subdirectory( pics )
+add_subdirectory( conf )
 add_subdirectory( kgpgconf )
 add_subdirectory( tests )
 
@@ -136,6 +137,8 @@ set( _kleopatra_common_SRCS
 
   ${_kleopatra_uiserver_files}
 
+  conf/configuredialog.cpp
+
   certificatewizardimpl.cpp
   aboutdata.cpp
   systemtrayicon.cpp
@@ -158,8 +161,6 @@ set( _kleopatra_mainwindow_SRCS
 
 if ( KLEO_BUILD_OLD_MAINWINDOW )
   add_definitions( -DKLEO_BUILD_OLD_MAINWINDOW )
-  set(libconf_SRCS  conf/configuredialog.cpp )
-  add_subdirectory( conf )
   add_subdirectory( kwatchgnupg )
 
   set( _kleopatra_mainwindow_SRCS
@@ -179,15 +180,19 @@ set_target_properties(kleopatra_bin  PROPERTIES OUTPUT_NAME kleopatra)
 
 if ( KLEO_BUILD_OLD_MAINWINDOW )
   if ( ONLY_KLEO )
-    set( _kleopatra_extra_libs ${KDE4_KUTILS_LIBS} ${KDE4_KDE3SUPPORT_LIBS} )
+    set( _kleopatra_extra_libs ${KDE4_KDE3SUPPORT_LIBS} )
   else ( ONLY_KLEO )
-    set( _kleopatra_extra_libs ${KDE4_KUTILS_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_KABC_LIBS} )
+    set( _kleopatra_extra_libs ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_KABC_LIBS} )
   endif ( ONLY_KLEO )
 else ( KLEO_BUILD_OLD_MAINWINDOW )
   set( _kleopatra_extra_libs ${QT_QT3SUPPORT_LIBRARY} )
 endif ( KLEO_BUILD_OLD_MAINWINDOW )
 
-target_link_libraries(kleopatra_bin ${_kleopatra_extra_libs} kleo ${QGPGME_LIBRARIES} ${KDE4_KMIME_LIBRARY} ${_kleopatra_uiserver_extra_libs} )
+if ( NOT KDE4_KCMUTILS_LIBS )
+  set( KDE4_KCMUTILS_LIBS ${KDE4_KUTILS_LIBS} )
+endif ( NOT KDE4_KCMUTILS_LIBS )
+
+target_link_libraries(kleopatra_bin ${_kleopatra_extra_libs} kleo ${QGPGME_LIBRARIES} ${KDE4_KMIME_LIBRARY} ${KDE4_KCMUTILS_LIBS} ${_kleopatra_uiserver_extra_libs} )
 
 install(TARGETS kleopatra_bin  DESTINATION ${BIN_INSTALL_DIR} )
 

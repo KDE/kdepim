@@ -40,9 +40,12 @@
 #include "tabwidget.h"
 
 #include "certificatewizardimpl.h"
+
 #include "models/keylistmodel.h"
 #include "models/keylistsortfilterproxymodel.h"
+
 #include "controllers/keylistcontroller.h"
+
 #include "commands/exportcertificatecommand.h"
 #include "commands/importcertificatecommand.h"
 #include "commands/refreshkeyscommand.h"
@@ -52,6 +55,8 @@
 #include "commands/clearcrlcachecommand.h"
 #include "commands/dumpcrlcachecommand.h"
 #include "commands/importcrlcommand.h"
+
+#include "conf/configuredialog.h"
 
 #include <KActionCollection>
 #include <KLocale>
@@ -63,6 +68,7 @@
 #include <KMessageBox>
 #include <KStandardGuiItem>
 #include <KStandardDirs>
+#include <KShortcutsDialog>
 
 #include <QAbstractItemView>
 #include <QLabel>
@@ -181,10 +187,16 @@ public:
     void importCrlFromFile() {
         ( new ImportCrlCommand( currentView(), &controller ) )->start();
     }
+    void editKeybindings() {
+        KShortcutsDialog::configure( q->actionCollection(), KShortcutsEditor::LetterShortcutsAllowed );
+    }
     void newCertificate();
     
     void checkConfiguration();
     void configureBackend();
+    void preferences();
+
+    void slotConfigCommitted();
 
 private:
     void setupActions();
@@ -209,27 +221,14 @@ private:
     Kleo::KeyListController controller;
 
     QTimer refreshTimer;
+    QPointer<ConfigureDialog> configureDialog;
 
     struct Actions {
-        //QAction file_new_certificate;
-        //QAction file_export_certificate;
-        //QAction file_export_secret_keys;
-        //QAction file_import_certificates;
-        //QAction file_import_crls;
-        QAction * file_close;
-        QAction * file_quit;
-        //QAction view_stop_operations;
-        //QAction view_certificate_details;
-        //QAction view_hierarchical;
-        //QAction view_expandall;
-        //QAction view_collapseall;
         QAction * check_configuration;
         QAction * configure_backend;
 
         explicit Actions( MainWindow * q )
-            : file_close( KStandardAction::close( q, SLOT(close()), q->actionCollection() ) ),
-              file_quit( KStandardAction::quit( q, SLOT(closeAndQuit()), q->actionCollection() ) ),
-              check_configuration( new KAction( q->actionCollection() ) ),
+            : check_configuration( new KAction( q->actionCollection() ) ),
               configure_backend( new KAction( q->actionCollection() ) )
         {
             check_configuration->setText( i18n( "Check GnuPG Configuration..." ) );
@@ -239,6 +238,11 @@ private:
             configure_backend->setText( i18n("Configure GnuPG Backend..." ) );
             connect( configure_backend, SIGNAL(triggered()), q, SLOT(configureBackend()) );
             q->actionCollection()->addAction( "configure_backend", configure_backend );
+
+            KStandardAction::close( q, SLOT(close()), q->actionCollection() );
+            KStandardAction::quit( q, SLOT(closeAndQuit()), q->actionCollection() );
+            KStandardAction::keyBindings( q, SLOT(editKeybindings()), q->actionCollection() );
+            KStandardAction::preferences( q, SLOT(preferences()), q->actionCollection() );
         }
 
     } actions;
@@ -269,6 +273,7 @@ MainWindow::Private::Private( MainWindow * qq )
       hierarchicalModel( AbstractKeyListModel::createHierarchicalKeyListModel( q ) ),
       controller( q ),
       refreshTimer(),
+      configureDialog(),
       actions( q ),
       ui( q )
 {
@@ -522,6 +527,23 @@ void MainWindow::Private::configureBackend() {
         QDBusConnection::sessionBus().send(message);
 #endif
     }
+}
+
+void MainWindow::Private::preferences() {
+    if ( !configureDialog ) {
+        configureDialog = new ConfigureDialog( q );
+        configureDialog->setAttribute( Qt::WA_DeleteOnClose );
+        connect( configureDialog, SIGNAL(configCommitted()), q, SLOT(slotConfigCommitted()) );
+    }
+
+    if ( configureDialog->isVisible() )
+        configureDialog->raise();
+    else
+        configureDialog->show();
+}
+
+void MainWindow::Private::slotConfigCommitted() {
+
 }
 
 void MainWindow::closeEvent( QCloseEvent * e ) {
