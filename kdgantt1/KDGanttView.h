@@ -518,7 +518,6 @@ private slots:
     void slotMouseButtonPressed (  int button, QListViewItem * item, const QPoint & pos, int c );
     void slotmouseButtonClicked ( int button, QListViewItem * item, const QPoint & pos, int c );
     void slotcontextMenuRequested ( QListViewItem * item, const QPoint & pos, int col );
-    void slotdoubleClicked ( QListViewItem * item );
     void slotItemExpanded ( QListViewItem * item );
     void slotItemCollapsed ( QListViewItem * item );
 #else
@@ -528,7 +527,6 @@ private slots:
     void slotMouseButtonPressed (  int button, Q3ListViewItem * item, const QPoint & pos, int c );
     void slotmouseButtonClicked ( int button, Q3ListViewItem * item, const QPoint & pos, int c );
     void slotcontextMenuRequested ( Q3ListViewItem * item, const QPoint & pos, int col );
-    void slotdoubleClicked ( Q3ListViewItem * item );
     void slotItemExpanded ( Q3ListViewItem * item );
     void slotItemCollapsed ( Q3ListViewItem * item );
 #endif
