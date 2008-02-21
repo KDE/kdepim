@@ -143,43 +143,50 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( const KC
     : KCModule( instance, parent, args )
 {
   mConfig = Kleo::CryptoBackendFactory::instance()->config();
-  QVBoxLayout* lay = new QVBoxLayout( this );
-  lay->setSpacing( KDialog::spacingHint() );
-  lay->setMargin( 0 );
+  QGridLayout * glay = new QGridLayout( this );
+  glay->setSpacing( KDialog::spacingHint() );
+  glay->setMargin( 0 );
+
+  int row = 0;
   Kleo::CryptoConfigEntry* entry = configEntry( s_dirserv_componentName, s_dirserv_groupName, s_dirserv_entryName,
                                                 Kleo::CryptoConfigEntry::ArgType_LDAPURL, true );
   mWidget = new Kleo::DirectoryServicesWidget( entry, this );
-  lay->addWidget( mWidget );
+  if ( QLayout * l = mWidget->layout() ) {
+      l->setSpacing( KDialog::spacingHint() );
+      l->setMargin( 0 );
+  }
+  glay->addWidget( mWidget, row, 0, 1, 3 );
   connect( mWidget, SIGNAL(changed()), this, SLOT(changed()) );
 
   // LDAP timeout
-  KHBox* box = new KHBox( this );
-  box->setSpacing( KDialog::spacingHint() );
-  lay->addWidget( box );
-  QLabel* label = new QLabel( i18n( "LDAP &timeout (minutes:seconds):" ), box );
-  mTimeout = new QTimeEdit( box );
+  ++row;
+  QLabel* label = new QLabel( i18n( "LDAP &timeout (minutes:seconds):" ), this );
+  mTimeout = new QTimeEdit( this );
   mTimeout->setDisplayFormat( "mm:ss" );
   connect( mTimeout, SIGNAL(timeChanged(QTime)), this, SLOT(changed()) );
   label->setBuddy( mTimeout );
-  QWidget* stretch = new QWidget( box );
-  box->setStretchFactor( stretch, 2 );
+  glay->addWidget( label, row, 0 );
+  glay->addWidget( mTimeout, row, 1 );
 
   // Max number of items returned by queries
-  box = new KHBox( this );
-  box->setSpacing( KDialog::spacingHint() );
-  lay->addWidget( box );
-  mMaxItems = new KIntNumInput( box );
-  mMaxItems->setLabel( i18n( "&Maximum number of items returned by query:" ), Qt::AlignLeft | Qt::AlignVCenter );
+  ++row;
+  label = new QLabel( i18n( "&Maximum number of items returned by query:" ), this );
+  mMaxItems = new KIntNumInput( this );
   mMaxItems->setMinimum( 0 );
+  label->setBuddy( mMaxItems );
   connect( mMaxItems, SIGNAL(valueChanged(int)), this, SLOT(changed()) );
-  stretch = new QWidget( box );
-  box->setStretchFactor( stretch, 2 );
+  glay->addWidget( label, row, 0 );
+  glay->addWidget( mMaxItems, row, 1 );
 
 #ifdef NOT_USEFUL_CURRENTLY
+  ++row
   mAddNewServersCB = new QCheckBox( i18n( "Automatically add &new servers discovered in CRL distribution points" ), this );
   connect( mAddNewServersCB, SIGNAL(clicked()), this, SLOT(changed()) );
-  lay->addWidget( mAddNewServersCB );
+  glay->addWidget( mAddNewServersCB, row, 0, 1, 3 );
 #endif
+
+  glay->setRowStretch( ++row, 1 );
+  glay->setColumnStretch( 2, 1 );
 
 #ifndef HAVE_UNBROKEN_KCMULTIDIALOG
   load();
