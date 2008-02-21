@@ -19,7 +19,8 @@
 #include "kpgp.h"
 #include "kpgpbase.h"
 #include "kpgpui.h"
-#include "kde_file.h"
+
+#include <kdepim-compat.h> // for KPATH_SEPARATOR, remove in KDEPIM 4.2
 
 #include <kdebug.h>
 #include <klocale.h>
@@ -29,6 +30,7 @@
 #include <kconfig.h>
 #include <k3staticdeleter.h>
 #include <kconfiggroup.h>
+#include <kde_file.h>
 
 #include <QLabel>
 #include <QCursor>
