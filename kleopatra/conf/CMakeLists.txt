@@ -4,11 +4,17 @@ set(kcm_kleopatra_PART_SRCS
    dirservconfigpage.cpp 
    appearanceconfigpage.cpp 
    appearanceconfigwidget.cpp 
-   dnorderconfigpage.cpp )
+   dnorderconfigpage.cpp
+   smimevalidationconfigurationwidget.cpp
+   smimevalidationconfigurationpage.cpp
+   )
 
 add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5152 )
 
-kde4_add_ui_files(kcm_kleopatra_PART_SRCS appearanceconfigwidgetbase.ui )
+kde4_add_ui_files( kcm_kleopatra_PART_SRCS
+  appearanceconfigwidgetbase.ui
+  smimevalidationconfigurationwidget.ui
+  )
 
 kde4_add_plugin(kcm_kleopatra ${kcm_kleopatra_PART_SRCS})
 
@@ -25,5 +31,6 @@ install( FILES
   kleopatra_config_dirserv.desktop
   kleopatra_config_appear.desktop
   kleopatra_config_dnorder.desktop
+  kleopatra_config_smimevalidation.desktop
   DESTINATION ${SERVICES_INSTALL_DIR})
 

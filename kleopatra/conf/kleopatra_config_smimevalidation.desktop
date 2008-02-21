@@ -1,0 +1,17 @@
+[Desktop Entry]
+Icon=preferences-system-network
+Type=Service
+X-KDE-ServiceTypes=KCModule
+X-DocPath=kleopatra/configuration.html#configuration-smime-validation
+
+X-KDE-ModuleType=Library
+X-KDE-Library=kcm_kleopatra
+X-KDE-FactoryName=kleopatra_config_smimevalidation
+X-KDE-HasReadOnlyMode=false
+X-KDE-ParentApp=kleopatra
+X-KDE-ParentComponents=kleopatra
+X-KDE-CfgDlgHierarchy=Kleopatra
+
+Name=S/MIME Validation
+Comment=Configuration of S/MIME certificate validation options
+X-KDE-Keywords=smime,validation,kleopatra,signing,encryption
