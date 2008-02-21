@@ -46,7 +46,7 @@ AppearanceConfigurationPage::AppearanceConfigurationPage( const KComponentData &
   QVBoxLayout* lay = new QVBoxLayout( this );
   mWidget = new Kleo::AppearanceConfigWidget( this );
   lay->addWidget( mWidget );
-  connect( mWidget, SIGNAL( changed() ), this, SLOT( slotChanged() ) );
+  connect( mWidget, SIGNAL(changed()), this, SLOT(changed()) );
 
 #ifndef HAVE_UNBROKEN_KCMULTIDIALOG
   load();
@@ -79,12 +79,6 @@ extern "C"
     page->setObjectName( "kleopatra_config_appear" );
     return page;
   }
-}
-
-// kdelibs-3.2 didn't have the changed signal in KCModule...
-void AppearanceConfigurationPage::slotChanged()
-{
-  emit changed(true);
 }
 
 #include "appearanceconfigpage.moc"

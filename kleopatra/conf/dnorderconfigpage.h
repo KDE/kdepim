@@ -44,7 +44,7 @@ namespace Kleo {
 class DNOrderConfigPage : public KCModule {
   Q_OBJECT
 public:
-  DNOrderConfigPage( const KComponentData &instance, QWidget *parent=0, const QVariantList &args=QVariantList() );
+  explicit DNOrderConfigPage( const KComponentData &instance, QWidget *parent=0, const QVariantList &args=QVariantList() );
 
   /*! reimplementation */
   void load();
@@ -52,9 +52,6 @@ public:
   void save();
   /*! reimplementation */
   void defaults();
-
-private Q_SLOTS:
-  void slotChanged();
 
 private:
   Kleo::DNAttributeOrderConfigWidget * mWidget;

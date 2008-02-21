@@ -53,14 +53,11 @@ namespace Kleo {
 class DirectoryServicesConfigurationPage : public KCModule {
   Q_OBJECT
 public:
-  DirectoryServicesConfigurationPage( const KComponentData &instance, QWidget *parent=0, const QVariantList &args=QVariantList() );
+  explicit DirectoryServicesConfigurationPage( const KComponentData &instance, QWidget *parent=0, const QVariantList &args=QVariantList() );
 
-  virtual void load();
-  virtual void save();
-  virtual void defaults();
-
-private slots:
-  void slotChanged();
+  /* reimp */ void load();
+  /* reimp */ void save();
+  /* reimp */ void defaults();
 
 private:
   Kleo::CryptoConfigEntry* configEntry( const char* componentName,

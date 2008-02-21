@@ -150,7 +150,7 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( const KC
                                                 Kleo::CryptoConfigEntry::ArgType_LDAPURL, true );
   mWidget = new Kleo::DirectoryServicesWidget( entry, this );
   lay->addWidget( mWidget );
-  connect( mWidget, SIGNAL( changed() ), this, SLOT( slotChanged() ) );
+  connect( mWidget, SIGNAL(changed()), this, SLOT(changed()) );
 
   // LDAP timeout
   KHBox* box = new KHBox( this );
@@ -159,7 +159,7 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( const KC
   QLabel* label = new QLabel( i18n( "LDAP &timeout (minutes:seconds):" ), box );
   mTimeout = new QTimeEdit( box );
   mTimeout->setDisplayFormat( "mm:ss" );
-  connect( mTimeout, SIGNAL(timeChanged(const QTime&)), this, SLOT(slotChanged()) );
+  connect( mTimeout, SIGNAL(timeChanged(QTime)), this, SLOT(changed()) );
   label->setBuddy( mTimeout );
   QWidget* stretch = new QWidget( box );
   box->setStretchFactor( stretch, 2 );
@@ -171,13 +171,13 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( const KC
   mMaxItems = new KIntNumInput( box );
   mMaxItems->setLabel( i18n( "&Maximum number of items returned by query:" ), Qt::AlignLeft | Qt::AlignVCenter );
   mMaxItems->setMinimum( 0 );
-  connect( mMaxItems, SIGNAL( valueChanged(int) ), this, SLOT( slotChanged() ) );
+  connect( mMaxItems, SIGNAL(valueChanged(int)), this, SLOT(changed()) );
   stretch = new QWidget( box );
   box->setStretchFactor( stretch, 2 );
 
 #ifdef NOT_USEFUL_CURRENTLY
   mAddNewServersCB = new QCheckBox( i18n( "Automatically add &new servers discovered in CRL distribution points" ), this );
-  connect( mAddNewServersCB, SIGNAL( clicked() ), this, SLOT( slotChanged() ) );
+  connect( mAddNewServersCB, SIGNAL(clicked()), this, SLOT(changed()) );
   lay->addWidget( mAddNewServersCB );
 #endif
 
@@ -271,13 +271,6 @@ extern "C"
     return page;
   }
 }
-
-// kdelibs-3.2 didn't have the changed signal in KCModule...
-void DirectoryServicesConfigurationPage::slotChanged()
-{
-  emit changed(true);
-}
-
 
 // Find config entry for ldap servers. Implements runtime checks on the configuration option.
 Kleo::CryptoConfigEntry* DirectoryServicesConfigurationPage::configEntry( const char* componentName,

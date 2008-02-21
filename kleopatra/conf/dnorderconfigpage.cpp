@@ -49,7 +49,7 @@ DNOrderConfigPage::DNOrderConfigPage( const KComponentData &instance, QWidget *p
   mWidget->setObjectName( "mWidget" );
   vlay->addWidget( mWidget );
 
-  connect( mWidget, SIGNAL(changed()), SLOT(slotChanged()) );
+  connect( mWidget, SIGNAL(changed()), SLOT(changed()) );
 
 #ifndef HAVE_UNBROKEN_KCMULTIDIALOG
   load();
@@ -67,11 +67,6 @@ void DNOrderConfigPage::save() {
 
 void DNOrderConfigPage::defaults() {
   mWidget->defaults();
-}
-
-// kdelibs-3.2 didn't have the changed signal in KCModule...
-void DNOrderConfigPage::slotChanged() {
-  emit changed(true);
 }
 
 extern "C" KDE_EXPORT KCModule * create_kleopatra_config_dnorder( QWidget * parent, const QVariantList & args ) {
