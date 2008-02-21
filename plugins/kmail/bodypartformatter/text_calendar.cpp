@@ -39,6 +39,7 @@
 #include <khtmlparthtmlwriter.h>
 
 #include <kcal/calendarlocal.h>
+#include <kcal/calendarresources.h>
 #include <kcal/icalformat.h>
 #include <kcal/attendee.h>
 #include <kcal/incidence.h>
@@ -77,11 +78,42 @@ using namespace KCal;
 
 namespace {
 
+class CalendarManager
+{
+  public:
+    CalendarManager();
+    ~CalendarManager();
+    static KCal::Calendar* calendar();
+
+  private:
+    KCal::CalendarResources* mCalendar;
+};
+
+CalendarManager::CalendarManager()
+{
+  mCalendar = new CalendarResources( KPIM::KPimPrefs::timeSpec() );
+  mCalendar->readConfig();
+  mCalendar->load();
+}
+
+CalendarManager::~CalendarManager()
+{
+  delete mCalendar;
+}
+
+KCal::Calendar* CalendarManager::calendar()
+{
+  K_GLOBAL_STATIC(CalendarManager, _self);
+  return _self->mCalendar;
+}
+
+
 class KMInvitationFormatterHelper : public KCal::InvitationFormatterHelper
 {
   public:
     KMInvitationFormatterHelper( KMail::Interface::BodyPart *bodyPart ) : mBodyPart( bodyPart ) {}
     virtual QString generateLinkURL( const QString &id ) { return mBodyPart->makeLink( id ); }
+    KCal::Calendar* calendar() const { return CalendarManager::calendar(); }
   private:
     KMail::Interface::BodyPart *mBodyPart;
 };
@@ -321,7 +353,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
 
       // get comment for tentative acceptance
       Incidence* incidence = icalToString( iCal );
-      
+
       if ( callback.askForComment( status ) ) {
         bool ok = false;
         QString comment = KInputDialog::getMultiLineText( i18n("Reaction to Invitation"),
