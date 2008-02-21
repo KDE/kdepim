@@ -718,7 +718,7 @@ public:
 
         \return  whether the relative feature is implemented or not
     */
-    bool hasFeature( Feature );
+    bool hasFeature( ::Feature );
 
 
     /* \ingroup groupSignAct
