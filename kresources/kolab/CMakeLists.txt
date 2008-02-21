@@ -10,3 +10,6 @@ add_subdirectory( kabc )
 add_subdirectory( knotes ) 
 add_subdirectory( kcal ) 
 
+install(FILES kolab-resource.upd DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
+install(PROGRAMS upgrade-resourcetype.pl DESTINATION ${KCONF_UPDATE_INSTALL_DIR})
+
