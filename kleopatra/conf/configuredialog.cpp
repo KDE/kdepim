@@ -60,7 +60,7 @@ ConfigureDialog::ConfigureDialog( QWidget * parent )
   addModule( "kleopatra_config_appear" );
   addModule( "kleopatra_config_dnorder" );
 
-  // We store the size of the dialog on hide, because otherwise
+  // We store the minimum size of the dialog on hide, because otherwise
   // the KCMultiDialog starts with the size of the first kcm, not
   // the largest one. This way at least after the first showing of
   // the largest kcm the size is kept.
@@ -74,9 +74,10 @@ ConfigureDialog::ConfigureDialog( QWidget * parent )
 }
 
 void ConfigureDialog::hideEvent( QHideEvent * e ) {
+  const QSize minSize = minimumSizeHint();
   KConfigGroup geometry( KGlobal::config(), "Geometry" );
-  geometry.writeEntry( "ConfigureDialogWidth", width() );
-  geometry.writeEntry( "ConfigureDialogHeight",height() );
+  geometry.writeEntry( "ConfigureDialogWidth", minSize.width() );
+  geometry.writeEntry( "ConfigureDialogHeight",minSize.height() );
   KCMultiDialog::hideEvent( e );
 }
 
