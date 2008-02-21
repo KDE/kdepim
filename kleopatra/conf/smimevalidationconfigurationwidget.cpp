@@ -70,6 +70,9 @@ private:
         {
             setupUi( q );
 
+            if ( QLayout * l = q->layout() )
+                l->setMargin( 0 );
+
             const struct {
                 QObject * object;
                 const char * signal;

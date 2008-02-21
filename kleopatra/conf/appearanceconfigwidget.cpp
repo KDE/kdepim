@@ -179,6 +179,8 @@ Kleo::AppearanceConfigWidget::AppearanceConfigWidget (
   QWidget* parent )
   : AppearanceConfigWidgetBase( parent)
 {
+   if ( QLayout * l = layout() )
+      l->setMargin( 0 );
    connect(foregroundButton,SIGNAL(clicked()),this,SLOT(slotForegroundClicked()));
    connect(backgroundButton,SIGNAL(clicked()),this,SLOT(slotBackgroundClicked()));
    connect(fontButton,SIGNAL(clicked()),this,SLOT(slotFontClicked()));
