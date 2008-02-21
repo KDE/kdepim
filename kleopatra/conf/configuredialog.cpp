@@ -59,6 +59,7 @@ ConfigureDialog::ConfigureDialog( QWidget * parent )
   addModule( "kleopatra_config_dirserv" );
   addModule( "kleopatra_config_appear" );
   addModule( "kleopatra_config_dnorder" );
+  addModule( "kleopatra_config_smimevalidation" );
 
   // We store the minimum size of the dialog on hide, because otherwise
   // the KCMultiDialog starts with the size of the first kcm, not
