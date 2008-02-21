@@ -2,7 +2,7 @@
     appearanceconfigwidget.cpp
 
     This file is part of kleopatra, the KDE key manager
-    Copyright (c) 2002,2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2002,2004,2008 Klarälvdalens Datakonsult AB
     Copyright (c) 2002,2003 Marc Mutz <mutz@kde.org>
 
     Libkleopatra is free software; you can redistribute it and/or
