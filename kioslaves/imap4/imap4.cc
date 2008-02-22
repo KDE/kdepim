@@ -313,7 +313,7 @@ IMAP4Protocol::get (const KURL & _url)
         cmd = sendCommand (imapCommand::clientFetch (aSequence, mySection));
         do
         {
-          while (!parseLoop ());
+          while (!parseLoop ()) ;
         }
         while (!cmd->isComplete ());
         completeQueue.removeRef (cmd);
@@ -332,7 +332,7 @@ IMAP4Protocol::get (const KURL & _url)
       aUpper = aSection.upper();
       do
       {
-        while (!(res = parseLoop()));
+        while (!(res = parseLoop())) ;
         if (res == -1) break;
 
         mailHeader *lastone = 0;
@@ -595,7 +595,7 @@ IMAP4Protocol::listDir (const KURL & _url)
         imapCache *cache;
         do
         {
-          while (!parseLoop ());
+          while (!parseLoop ()) ;
 
           cache = getLastHandled ();
 
@@ -824,7 +824,7 @@ IMAP4Protocol::put (const KURL & _url, int, bool, bool)
 
     imapCommand *cmd =
       sendCommand (imapCommand::clientAppend (aBox, aSection, length));
-    while (!parseLoop ());
+    while (!parseLoop ()) ;
 
     // see if server is waiting
     if (!cmd->isComplete () && !getContinuation ().isEmpty ())
@@ -1603,7 +1603,7 @@ IMAP4Protocol::specialCustomCommand( QDataStream& stream )
   if ( type == 'E' ) {
     kdDebug(7116) << "IMAP4Protocol::specialCustomCommand: extended mode" << endl;
     imapCommand *cmd = sendCommand (imapCommand::clientCustom( command, QString() ));
-    while ( !parseLoop () );
+    while ( !parseLoop () ) ;
 
     // see if server is waiting
     if (!cmd->isComplete () && !getContinuation ().isEmpty ())
@@ -1626,7 +1626,7 @@ IMAP4Protocol::specialCustomCommand( QDataStream& stream )
 
     do
     {
-      while (!parseLoop ());
+      while (!parseLoop ()) ;
     }
     while (!cmd->isComplete ());
 
@@ -2032,7 +2032,7 @@ bool IMAP4Protocol::makeLogin ()
     imapCommand *cmd;
 
     unhandled.clear ();
-    if (!alreadyConnected) while (!parseLoop ());    //get greeting
+    if (!alreadyConnected) while (!parseLoop ()) ;    //get greeting
     QString greeting;
     if (!unhandled.isEmpty()) greeting = unhandled.first().stripWhiteSpace();
     unhandled.clear ();       //get rid of it
