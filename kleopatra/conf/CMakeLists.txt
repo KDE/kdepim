@@ -1,4 +1,4 @@
-
+include_directories( ${CMAKE_SOURCE_DIR}/kleopatra )
 
 set(kcm_kleopatra_PART_SRCS 
    dirservconfigpage.cpp 

@@ -35,6 +35,8 @@
 
 #include <QWidget>
 
+#include <utils/pimpl_ptr.h>
+
 namespace Kleo {
 namespace Config {
 
@@ -50,7 +52,7 @@ namespace Config {
 
     private:
         class Private;
-        Private * d;
+        kdtools::pimpl_ptr<Private> d;
     };
 
 }    
