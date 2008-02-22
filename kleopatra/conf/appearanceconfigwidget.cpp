@@ -270,7 +270,7 @@ AppearanceConfigWidget::AppearanceConfigWidget( QWidget * p, Qt::WindowFlags f )
 }
 
 
-AppearanceConfigWidget::~AppearanceConfigWidget() { delete d; }
+AppearanceConfigWidget::~AppearanceConfigWidget() {}
 
 void AppearanceConfigWidget::Private::slotSelectionChanged() {
     enableDisableActions( selectedItem() );

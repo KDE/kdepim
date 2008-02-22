@@ -36,6 +36,8 @@
 
 #include <QWidget>
 
+#include <utils/pimpl_ptr.h>
+
 namespace Kleo {
 namespace Config {
 
@@ -55,7 +57,7 @@ namespace Config {
 
     private:
         class Private;
-        Private * d;
+        kdtools::pimpl_ptr<Private> d;
         Q_PRIVATE_SLOT( d, void slotIconClicked() )
         Q_PRIVATE_SLOT( d, void slotForegroundClicked() )
         Q_PRIVATE_SLOT( d, void slotBackgroundClicked() )
