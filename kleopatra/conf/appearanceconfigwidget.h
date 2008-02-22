@@ -31,52 +31,42 @@
     your version.
  */
 
-#ifndef APPEARANCECONFIGWIDGET_H
-#define APPEARANCECONFIGWIDGET_H
+#ifndef __KLEOPATRA_CONFIG_APPEARANCECONFIGWIDGET_H__
+#define __KLEOPATRA_CONFIG_APPEARANCECONFIGWIDGET_H__
 
-#include "ui_appearanceconfigwidgetbase.h"
-#include <QStringList>
-
-
-class AppearanceConfigWidgetBase : public QWidget, public Ui::AppearanceConfigWidgetBase
-{
-public:
-  AppearanceConfigWidgetBase( QWidget *parent ) : QWidget( parent ) {
-    setupUi( this );
-  }
-};
-
+#include <QWidget>
 
 namespace Kleo {
+namespace Config {
 
-  class AppearanceConfigWidget : public AppearanceConfigWidgetBase {
-    Q_OBJECT
+    class AppearanceConfigWidget : public QWidget {
+        Q_OBJECT
+    public:
+        explicit AppearanceConfigWidget( QWidget * parent=0, Qt::WindowFlags f=0 );
+        ~AppearanceConfigWidget();
 
-  public:
-    AppearanceConfigWidget(
-      QWidget * parent=0);
-    ~AppearanceConfigWidget();
+    public Q_SLOTS:
+        void load();
+        void save();
+        void defaults();
 
-    void load();
-    void save();
+    Q_SIGNALS:
+        void changed();
 
-  public slots:
-    void defaults();
-
-  signals:
-    void changed();
-
-  protected slots:
-    // reimplemented from the base class
-    virtual void slotDefaultClicked();
-    virtual void slotSelectionChanged( Q3ListViewItem * );
-    virtual void slotForegroundClicked();
-    virtual void slotBackgroundClicked();
-    virtual void slotFontClicked();
-    virtual void slotItalicClicked();
-    virtual void slotBoldClicked();
-    virtual void slotStrikeoutClicked();
+    private:
+        class Private;
+        Private * d;
+        Q_PRIVATE_SLOT( d, void slotForegroundClicked() )
+        Q_PRIVATE_SLOT( d, void slotBackgroundClicked() )
+        Q_PRIVATE_SLOT( d, void slotFontClicked() )
+        Q_PRIVATE_SLOT( d, void slotSelectionChanged() )
+        Q_PRIVATE_SLOT( d, void slotDefaultClicked() )
+        Q_PRIVATE_SLOT( d, void slotItalicToggled(bool) )
+        Q_PRIVATE_SLOT( d, void slotBoldToggled(bool) )
+        Q_PRIVATE_SLOT( d, void slotStrikeOutToggled(bool) )
   };
+
+}
 }
 
-#endif // APPEARANCECONFIGWIDGET_H
+#endif // __KLEOPATRA_CONFIG_APPEARANCECONFIGWIDGET_H__

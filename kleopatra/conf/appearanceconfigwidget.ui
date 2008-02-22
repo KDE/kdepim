@@ -2,8 +2,8 @@
   <author></author>
   <comment></comment>
   <exportmacro></exportmacro>
-  <class>AppearanceConfigWidgetBase</class>
-  <widget class="QWidget" name="AppearanceConfigWidgetBase" >
+  <class>AppearanceConfigWidget</class>
+  <widget class="QWidget" name="AppearanceConfigWidget" >
     <property name="geometry" >
       <rect>
         <x>0</x>
@@ -17,7 +17,7 @@
     </property>
     <layout class="QHBoxLayout" >
       <item>
-        <widget class="Q3ListView" name="categoriesLV" >
+        <widget class="QListWidget" name="categoriesLV" >
           <column>
             <property name="text" >
               <string>Key Categories</string>

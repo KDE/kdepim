@@ -30,29 +30,33 @@
     your version.
 */
 
-#ifndef KLEOPATRA_APPEARANCECONFIGPAGE_H
-#define KLEOPATRA_APPEARANCECONFIGPAGE_H
+#ifndef KLEOPATRA_CONFIG_APPEARANCECONFIGPAGE_H
+#define KLEOPATRA_CONFIG_APPEARANCECONFIGPAGE_H
 
 #include <kcmodule.h>
 
 namespace Kleo {
-  class AppearanceConfigWidget;
+namespace Config {
+
+    class AppearanceConfigWidget;
+
+    /**
+     * "Appearance" configuration page for kleopatra's configuration dialog
+     */
+    class AppearanceConfigurationPage : public KCModule {
+        Q_OBJECT
+    public:
+        explicit AppearanceConfigurationPage( const KComponentData &instance, QWidget *parent=0, const QVariantList &args=QVariantList() );
+
+        /* reimp */ void load();
+        /* reimp */ void save();
+        /* reimp */ void defaults();
+
+    private:
+        AppearanceConfigWidget* mWidget;
+    };
+
+}
 }
 
-/**
- * "Appearance" configuration page for kleopatra's configuration dialog
- */
-class AppearanceConfigurationPage : public KCModule {
-  Q_OBJECT
-public:
-  explicit AppearanceConfigurationPage( const KComponentData &instance, QWidget *parent=0, const QVariantList &args=QVariantList() );
-
-  /* reimp */ void load();
-  /* reimp */ void save();
-  /* reimp */ void defaults();
-
-private:
-  Kleo::AppearanceConfigWidget* mWidget;
-};
-
-#endif // KLEOPATRA_APPEARANCECONFIGPAGE_H
+#endif // KLEOPATRA_CONFIG_APPEARANCECONFIGPAGE_H

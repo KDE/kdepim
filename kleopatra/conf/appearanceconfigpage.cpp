@@ -33,19 +33,25 @@
 #include <config-kleopatra.h>
 
 #include "appearanceconfigpage.h"
-#include <QLayout>
-#include <QVBoxLayout>
+
 #include "appearanceconfigwidget.h"
+
 #include <kmessagebox.h>
 #include <klocale.h>
 #include <kdebug.h>
 #include <kcomponentdata.h>
 
+#include <QLayout>
+#include <QVBoxLayout>
+
+using namespace Kleo;
+using namespace Kleo::Config;
+
 AppearanceConfigurationPage::AppearanceConfigurationPage( const KComponentData &instance, QWidget *parent, const QVariantList &args )
     : KCModule( instance, parent, args )
 {
   QVBoxLayout* lay = new QVBoxLayout( this );
-  mWidget = new Kleo::AppearanceConfigWidget( this );
+  mWidget = new AppearanceConfigWidget( this );
   lay->addWidget( mWidget );
   connect( mWidget, SIGNAL(changed()), this, SLOT(changed()) );
 

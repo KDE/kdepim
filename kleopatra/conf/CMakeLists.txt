@@ -12,7 +12,7 @@ set(kcm_kleopatra_PART_SRCS
 add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5152 )
 
 kde4_add_ui_files( kcm_kleopatra_PART_SRCS
-  appearanceconfigwidgetbase.ui
+  appearanceconfigwidget.ui
   smimevalidationconfigurationwidget.ui
   )
 
