@@ -125,7 +125,7 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
                                 "X-AssistantsName", "KADDRESSBOOK" );
   mAddressBook->addCustomField( i18n( "Manager's Name" ), KABC::Field::Organization,
                                 "X-ManagersName", "KADDRESSBOOK" );
-  mAddressBook->addCustomField( i18n( "Partner's Name" ), KABC::Field::Personal,
+  mAddressBook->addCustomField( i18nc( "Wife/Husband/...", "Partner's Name" ), KABC::Field::Personal,
                                 "X-SpousesName", "KADDRESSBOOK" );
   mAddressBook->addCustomField( i18n( "Office" ), KABC::Field::Personal,
                                 "X-Office", "KADDRESSBOOK" );
