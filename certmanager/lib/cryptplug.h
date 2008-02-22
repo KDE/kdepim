@@ -408,7 +408,7 @@ bool initialize( void );
    \note This function <b>must</b> be implemented by each plug-in using
    this API specification.
 */
-bool hasFeature( Feature );
+bool hasFeature( ::Feature );
 
 /*! \ingroup groupSignCryptAct
    \brief Information record returned by signing and by encrypting
