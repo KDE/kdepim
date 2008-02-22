@@ -40,9 +40,9 @@
 #include <kleo/keyfilter.h>
 
 #include <KLocale>
+#include <KIcon>
 
 #include <QDateTime>
-#include <QIcon>
 #include <QFont>
 #include <QColor>
 #include <QApplication>
@@ -179,9 +179,9 @@ static QVariant returnIfValid( const QColor & t ) {
         return QVariant();
 }
 
-static QVariant returnIfValid( const QIcon & t ) {
-    if ( !t.isNull() )
-        return t;
+static QVariant returnIfValidIcon( const QString & t ) {
+    if ( !t.isEmpty() )
+        return QIcon( KIcon( t ) );
     else
         return QVariant();
 }
@@ -229,7 +229,7 @@ QVariant AbstractKeyListModel::data( const QModelIndex & index, int role ) const
     } else if ( role == Qt::DecorationRole || role == Qt::BackgroundRole || role == Qt::ForegroundRole ) {
         if ( const shared_ptr<KeyFilter> & filter = KeyFilterManager::instance()->filterMatching( key, KeyFilter::Appearance ) ) {
             switch ( role ) {
-            case Qt::DecorationRole: return column == Icon ? returnIfValid( QIcon( filter->icon() ) ) : QVariant() ;
+            case Qt::DecorationRole: return column == Icon ? returnIfValidIcon( filter->icon() ) : QVariant() ;
             case Qt::BackgroundRole: return returnIfValid( filter->bgColor() );
             case Qt::ForegroundRole: return returnIfValid( filter->fgColor() );
             default: ; // silence compiler
