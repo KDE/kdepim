@@ -29,7 +29,6 @@
     you do not wish to do so, delete this exception statement from
     your version.
 */
-#include <config.h>
 #include <ksieve/lexer.h>
 using KSieve::Lexer;
 
@@ -118,12 +117,12 @@ static const TestCase testcases[] = {
     { { Lexer::HashComment, "comment" }, { Lexer::None, 0 } },
     Error::None, 0, 0
   },
-  
+
   { "Basic hash comment (LF)", "#comment\n",
     { { Lexer::HashComment, "comment" }, { Lexer::None, 0 } },
     Error::None, 0, 0
   },
-  
+
   { "Basic hash comment (CRLF)", "#comment\r\n",
     { { Lexer::HashComment, "comment" }, { Lexer::None, 0 } },
     Error::None, 0, 0

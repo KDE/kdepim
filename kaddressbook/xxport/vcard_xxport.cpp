@@ -41,14 +41,12 @@
 #include <libkdepim/addresseeview.h>
 #include <kpushbutton.h>
 
-#include "config.h" // needed for gpgme++
 #include "gpgme++/context.h"
 #include "gpgme++/data.h"
 #include "gpgme++/key.h"
 #include "qgpgme/dataprovider.h"
 
 #include "xxportmanager.h"
-
 #include "vcard_xxport.h"
 
 K_EXPORT_KADDRESSBOOK_XXFILTER( kaddrbk_vcard_xxport, VCardXXPort )

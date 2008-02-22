@@ -28,7 +28,6 @@
 #include <ctype.h>
 #include <mimelib/uuencode.h>
 #include <kdefakes.h>
-#include <config.h>
 
 #if defined(DW_TESTING_UUENCODE)
 #include <stdlib.h>

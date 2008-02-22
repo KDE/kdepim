@@ -31,7 +31,6 @@
 	- handle callergroup value (Friend, VIP, Family, ...) better
 */
 #include <config-xxport.h>
-#include "config.h"
 
 #include <QProgressBar>
 

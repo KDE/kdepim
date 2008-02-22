@@ -21,7 +21,6 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <config.h>
 #include "libkleo/ui/keyrequester.h"
 #include "libkleo/kleo/cryptplugfactory.h"
 #include "libkleo/kleo/cryptplugwrapper.h"

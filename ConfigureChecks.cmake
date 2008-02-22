@@ -18,9 +18,6 @@ if (WIN32)
    set(CMAKE_REQUIRED_INCLUDES  ${KDEWIN32_INCLUDES} )
 endif (WIN32)
 
-OPTION(KDE4_KDEPIM_NEW_DISTRLISTS   "Whether to use new distribution lists, to store them like normal contacts; useful for Kolab") 
-
-macro_bool_to_01(KDE4_KDEPIM_NEW_DISTRLISTS KDEPIM_NEW_DISTRLISTS)
 macro_bool_to_01(GNOKII_FOUND HAVE_GNOKII_H)
 
 OPTION(WITH_INDEXLIB "Enable full-text indexing in KMail." OFF)

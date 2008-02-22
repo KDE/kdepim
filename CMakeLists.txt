@@ -1,5 +1,10 @@
 project(kdepim)
 
+option(KDE4_KDEPIM_NEW_DISTRLISTS "Whether to use new distribution lists, which stores them like normal contacts; useful for Kolab")
+if(KDE4_KDEPIM_NEW_DISTRLISTS)
+  add_definitions (-DKDEPIM_NEW_DISTRLISTS)
+endif(KDE4_KDEPIM_NEW_DISTRLISTS)
+
 set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
 
 # search packages used by KDE
@@ -98,7 +103,6 @@ else ( ONLY_KLEO )
 
   include (ConfigureChecks.cmake)
   include (kleopatra/ConfigureChecks.cmake)
-  configure_file (config.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config.h)
 
   set(libknotesresources_SRCS
      ${CMAKE_SOURCE_DIR}/knotes/resourcemanager.cpp

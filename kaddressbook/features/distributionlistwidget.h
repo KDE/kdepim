@@ -24,12 +24,11 @@
 #ifndef DISTRIBUTIONLISTWIDGET_H
 #define DISTRIBUTIONLISTWIDGET_H
 
-#include <config.h> // for KDEPIM_NEW_DISTRLISTS
-#include <KDialog>
-#include <QTreeWidget>
-
 #include "extensionwidget.h"
-//Added by qt3to4:
+
+#include <KDialog>
+
+#include <QTreeWidget>
 #include <QDragEnterEvent>
 #include <QLabel>
 #include <QDragMoveEvent>
