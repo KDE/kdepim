@@ -1,3 +1,15 @@
+Friday, February 22nd 2008
+
+Problems addressed
+------------------
+* Prevent the message in the reader window from jumping back to the start of the message when the font or the font size is changed in the separate reader window.
+
+Merges
+------
+
+* Merges in from 3.5 branch.
+
+
 Friday, February 15th 2008
 
 Problems addressed
