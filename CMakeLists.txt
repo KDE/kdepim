@@ -79,6 +79,7 @@ else ( ONLY_KLEO )
   endif(Q_WS_X11)
 
   macro_optional_find_package(GNOKII)
+  macro_bool_to_01(GNOKII_FOUND HAVE_GNOKII_H)
   macro_log_feature(GNOKII_FOUND "gnokii" "Gnokii Development Libraries" "http://www.gnokii.org" FALSE "" "Needed to provide the ability to import and export KDE addressbook entries to/from mobile phones that are accessible via gnokii")
 
   macro_optional_find_package(MySQL)
@@ -101,7 +102,6 @@ else ( ONLY_KLEO )
 
   include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${QT_QTDBUS_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/libkdepim/)
 
-  include (ConfigureChecks.cmake)
   include (kleopatra/ConfigureChecks.cmake)
 
   set(libknotesresources_SRCS
