@@ -494,7 +494,7 @@ bool readPixmapNode( const QDomElement& element, QPixmap& pixmap )
                 ba[ i ] = r;
             }
 
-            if( tempLength < (int)tempData.length() * 5 )
+            if( tempLength < (ulong)tempData.length() * 5 )
                 tempLength = tempData.length() * 5;
             QByteArray baunzip( tempLength, '\0' );
             ::uncompress( (uchar*) baunzip.data(), &tempLength,
