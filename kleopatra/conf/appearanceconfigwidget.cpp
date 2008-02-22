@@ -71,13 +71,22 @@ using namespace boost;
 using namespace Kleo::KioAvoidance;
 #endif
 
-/*! Records that the user has assigned a name (to avoid comparing with i18n-strings) */
-static const int HasNameRole = Qt::UserRole;
-/*! Records that the user has chosen  completely different font (as opposed to italic/bold/strikeout) */
-static const int HasFontRole = Qt::UserRole + 1;
-/*! Records the name of the icon (since QIcon won't give it out again, once set) */
-static const int IconNameRole = Qt::UserRole + 2;
-    
+enum {
+    HasNameRole = Qt::UserRole + 0x1234, /*!< Records that the user has assigned a name (to avoid comparing with i18n-strings) */
+    HasFontRole,                         /*!< Records that the user has chosen  completely different font (as opposed to italic/bold/strikeout) */
+    IconNameRole,                        /*!< Records the name of the icon (since QIcon won't give it out again, once set) */
+    MayChangeNameRole,
+    MayChangeForegroundRole,
+    MayChangeBackgroundRole,
+    MayChangeFontRole,
+    MayChangeItalicRole,
+    MayChangeBoldRole,
+    MayChangeStrikeOutRole,
+    MayChangeIconRole,
+
+    EndDummy
+};
+
 static QFont tryToFindFontFor( const QListWidgetItem * item ) {
     if ( item )
         if ( const QListWidget * const lw = item->listWidget() )
@@ -132,12 +141,15 @@ static void apply_config( const KConfigGroup & group, QListWidgetItem * item ) {
     const QString name = group.readEntry( "Name" );
     item->setText( name.isEmpty() ? i18nc("Key filter without user-assigned name", "<unnamed>") : name );
     item->setData( HasNameRole, !name.isEmpty() );
+    item->setData( MayChangeNameRole, !group.isEntryImmutable( "Name" ) );
 
     const QColor fg = group.readEntry( "foreground-color", QColor() );
     item->setData( Qt::ForegroundRole, fg.isValid() ? QBrush( fg ) : QVariant() );
+    item->setData( MayChangeForegroundRole, !group.isEntryImmutable( "foreground-color" ) );
 
     const QColor bg = group.readEntry( "background-color", QColor() );
     item->setData( Qt::BackgroundRole, bg.isValid() ? QBrush( bg ) : QVariant() );
+    item->setData( MayChangeBackgroundRole, !group.isEntryImmutable( "background-color" ) );
 
     const QFont defaultFont = tryToFindFontFor( item );
     if ( group.hasKey( "font" ) ) {
@@ -152,25 +164,64 @@ static void apply_config( const KConfigGroup & group, QListWidgetItem * item ) {
         item->setData( Qt::FontRole, font );
         item->setData( HasFontRole, false );
     }
+    item->setData( MayChangeFontRole, !group.isEntryImmutable( "font" ) );
+    item->setData( MayChangeItalicRole, !group.isEntryImmutable( "font-italic" ) );
+    item->setData( MayChangeBoldRole, !group.isEntryImmutable( "font-bold" ) );
+    item->setData( MayChangeStrikeOutRole, !group.isEntryImmutable( "font-strikeout" ) );
 
     const QString iconName = group.readEntry( "icon" );
     item->setData( Qt::DecorationRole, iconName.isEmpty() ? QVariant() : KIcon( iconName ) );
     item->setData( IconNameRole, iconName.isEmpty() ? QVariant() : iconName );
+    item->setData( MayChangeIconRole, !group.isEntryImmutable( "icon" ) );
+}
+
+static void erase_if_allowed( QListWidgetItem * item, int role, int allowRole ) {
+    if ( item && item->data( allowRole ).toBool() )
+        item->setData( role, QVariant() );
+}
+
+static void erase_if_allowed( QListWidgetItem * item, const int role[], size_t numRoles, int allowRole ) {
+    if ( item && item->data( allowRole ).toBool() )
+        for ( unsigned int i = 0 ; i < numRoles ; ++i )
+            item->setData( role[i], QVariant() );
+}
+
+#if 0
+static void erase_if_allowed( QListWidgetItem * item, int role, const int allowRole[], size_t numAllowRoles ) {
+    if ( !item )
+        return;
+    for ( unsigned int i = 0 ; i < numAllowRoles ; ++i )
+        if ( !item->data( allowRole[i] ).toBool() )
+            return;
+    item->setData( role, QVariant() );
+}
+#endif
+
+static void erase_if_allowed( QListWidgetItem * item, const int role[], size_t numRoles, const int allowRole[], size_t numAllowRoles ) {
+    if ( !item )
+        return;
+    for ( unsigned int i = 0 ; i < numAllowRoles ; ++i )
+        if ( !item->data( allowRole[i] ).toBool() )
+            return;
+    for ( unsigned int i = 0 ; i < numRoles ; ++i )
+        item->setData( role[i], QVariant() );
 }
 
 static void set_default_appearance( QListWidgetItem * item ) {
     if ( !item )
         return;
-    static const int rolesToErase[] = {
-        Qt::ForegroundRole,
-        Qt::BackgroundRole,
-        Qt::FontRole,
-        HasFontRole,
-        Qt::DecorationRole,
-        IconNameRole,
+    erase_if_allowed( item, Qt::ForegroundRole, MayChangeForegroundRole );
+    erase_if_allowed( item, Qt::BackgroundRole, MayChangeBackgroundRole );
+    static const int iconRoles[] = { Qt::DecorationRole, MayChangeIconRole };
+    erase_if_allowed( item, iconRoles, size( iconRoles ), MayChangeIconRole );
+    static const int fontRoles[] = { Qt::FontRole, HasFontRole };
+    static const int fontAllowRoles[] = {
+        MayChangeFontRole,
+        MayChangeItalicRole,
+        MayChangeBoldRole,
+        MayChangeStrikeOutRole,
     };
-    std::for_each( begin( rolesToErase ), end( rolesToErase ),
-                   bind( &QListWidgetItem::setData, item, _1, QVariant() ) );
+    erase_if_allowed( item, fontRoles, size( fontRoles ), fontAllowRoles, size( fontAllowRoles ) );
 }
 
 static void writeOrDelete( KConfigGroup & group, const char * key, const QVariant & value ) {
@@ -215,6 +266,17 @@ static void save_to_config( const QListWidgetItem * item, KConfigGroup & group )
         group.writeEntry( "font-bold", true );
 }
 
+static void kiosk_enable( QWidget * w, const QListWidgetItem * item, int allowRole ) {
+    if ( !w )
+        return;
+    if ( item && !item->data( allowRole ).toBool() ) {
+        w->setEnabled( false );
+        w->setToolTip( i18n( "This parameter has been locked down by the system administrator." ) );
+    } else {
+        w->setEnabled( item );
+        w->setToolTip( QString() );
+    }
+}
 
 
 
@@ -282,13 +344,14 @@ QListWidgetItem * AppearanceConfigWidget::Private::selectedItem() const {
 }
 
 void AppearanceConfigWidget::Private::enableDisableActions( QListWidgetItem * item ) {
-    iconButton->setEnabled( item );
-    foregroundButton->setEnabled( item );
-    backgroundButton->setEnabled( item );
-    fontButton->setEnabled( item );
-    italicCB->setEnabled( item );
-    boldCB->setEnabled( item );
-    strikeoutCB->setEnabled( item );
+    kiosk_enable( iconButton, item, MayChangeIconRole );
+    kiosk_enable( foregroundButton, item, MayChangeForegroundRole );
+    kiosk_enable( backgroundButton, item, MayChangeBackgroundRole );
+    kiosk_enable( fontButton, item, MayChangeFontRole );
+    kiosk_enable( italicCB, item, MayChangeItalicRole );
+    kiosk_enable( boldCB, item, MayChangeBoldRole );
+    kiosk_enable( strikeoutCB, item, MayChangeStrikeOutRole );
+
     defaultLookPB->setEnabled( item );
 
     italicCB->setChecked( is_italic( item ) );
@@ -410,9 +473,18 @@ void AppearanceConfigWidget::Private::slotFontClicked() {
     bool ok = false;
     const QFont defaultFont = tryToFindFontFor( item );
     const QFont initial = v.isValid() && v.type() == QVariant::Font ? v.value<QFont>() : defaultFont ;
-    const QFont f = QFontDialog::getFont( &ok, initial, q );
+    QFont f = QFontDialog::getFont( &ok, initial, q );
     if ( !ok )
         return;
+
+    // disallow circumventing KIOSK:
+    if ( !item->data( MayChangeItalicRole ).toBool() )
+        f.setItalic( initial.italic() );
+    if ( !item->data( MayChangeBoldRole ).toBool() )
+        f.setBold( initial.bold() );
+    if ( !item->data( MayChangeStrikeOutRole ).toBool() )
+        f.setStrikeOut( initial.strikeOut() );
+
     item->setData( Qt::FontRole, f != defaultFont ? f : QVariant() );
     item->setData( HasFontRole, true );
     emit q->changed();
