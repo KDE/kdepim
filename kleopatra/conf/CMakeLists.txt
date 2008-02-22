@@ -1,6 +1,16 @@
 include_directories( ${CMAKE_SOURCE_DIR}/kleopatra )
 
+if ( ONLY_KLEO )
+  add_definitions( -DONLY_KLEO )
+  set( _kcm_kleopatra_kleo_only_SRCS
+    ../utils/kleo_kicondialog.cpp
+    )
+else ( ONLY_KLEO )
+  set( _kcm_kleopatra_extra_libs ${KDE4_KIO_LIBS} )
+endif ( ONLY_KLEO )
+
 set(kcm_kleopatra_PART_SRCS 
+   ${_kcm_kleopatra_kleo_only_SRCS}
    dirservconfigpage.cpp 
    appearanceconfigpage.cpp 
    appearanceconfigwidget.cpp 

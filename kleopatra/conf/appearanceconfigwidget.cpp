@@ -39,12 +39,14 @@
 #include "libkleo/kleo/cryptobackendfactory.h"
 #include "libkleo/kleo/keyfiltermanager.h"
 
+#ifdef ONLY_KLEO
+# include <utils/kleo_kicondialog.h>
+#else
+# include <kicondialog.h>
+#endif
+
 #include <kconfig.h>
-#include <kdialog.h>
 #include <klocale.h>
-#include <kdebug.h>
-#include <kmessagebox.h>
-#include <kfontdialog.h>
 #include <kconfiggroup.h>
 
 #include <QColor>
@@ -65,6 +67,9 @@
 using namespace Kleo;
 using namespace Kleo::Config;
 using namespace boost;
+#ifdef ONLY_KLEO
+using namespace Kleo::KioAvoidance;
+#endif
 
 /*! Records that the user has assigned a name (to avoid comparing with i18n-strings) */
 static const int HasNameRole = Qt::UserRole;
@@ -230,6 +235,7 @@ public:
         if ( QLayout * const l = q->layout() )
             l->setMargin( 0 );
 
+        connect( iconButton, SIGNAL(clicked()), q, SLOT(slotIconClicked()) );
         connect( foregroundButton, SIGNAL(clicked()), q, SLOT(slotForegroundClicked()) );
         connect( backgroundButton, SIGNAL(clicked()), q, SLOT(slotBackgroundClicked()) );
         connect( fontButton, SIGNAL(clicked()), q, SLOT(slotFontClicked()) );
@@ -246,6 +252,7 @@ private:
     QListWidgetItem * selectedItem() const;
 
 private:
+    void slotIconClicked();
     void slotForegroundClicked();
     void slotBackgroundClicked();
     void slotFontClicked();
@@ -275,6 +282,7 @@ QListWidgetItem * AppearanceConfigWidget::Private::selectedItem() const {
 }
 
 void AppearanceConfigWidget::Private::enableDisableActions( QListWidgetItem * item ) {
+    iconButton->setEnabled( item );
     foregroundButton->setEnabled( item );
     backgroundButton->setEnabled( item );
     fontButton->setEnabled( item );
@@ -344,6 +352,21 @@ void AppearanceConfigWidget::save() {
     KeyFilterManager::instance()->reload();
 }
 
+void AppearanceConfigWidget::Private::slotIconClicked() {
+    QListWidgetItem * const item = selectedItem();
+    if ( !item )
+        return;
+
+    const QString iconName = KIconDialog::getIcon( /* repeating default arguments begin */
+                                                  KIconLoader::Desktop, KIconLoader::Application, false, 0, false,
+                                                  /* repeating default arguments end */
+                                                  q );
+    if ( iconName.isEmpty() )
+        return;
+
+    item->setIcon( KIcon( iconName ) );
+    item->setData( IconNameRole, iconName );
+}
 
 void AppearanceConfigWidget::Private::slotForegroundClicked() {
     QListWidgetItem * const item = selectedItem();

@@ -56,6 +56,7 @@ namespace Config {
     private:
         class Private;
         Private * d;
+        Q_PRIVATE_SLOT( d, void slotIconClicked() )
         Q_PRIVATE_SLOT( d, void slotForegroundClicked() )
         Q_PRIVATE_SLOT( d, void slotBackgroundClicked() )
         Q_PRIVATE_SLOT( d, void slotFontClicked() )
