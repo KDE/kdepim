@@ -13,5 +13,9 @@ X-KDE-ParentComponents=kleopatra
 X-KDE-CfgDlgHierarchy=Kleopatra
 
 Name=S/MIME Validation
+Name[pt]=Validação do S/MIME
+Name[pt_BR]=Validação do S/MIME
 Comment=Configuration of S/MIME certificate validation options
+Comment[pt]=Configuração das opções de validação do certificado de S/MIME
+Comment[pt_BR]=Configuração das opções de validação do certificado de S/MIME
 X-KDE-Keywords=smime,validation,kleopatra,signing,encryption
