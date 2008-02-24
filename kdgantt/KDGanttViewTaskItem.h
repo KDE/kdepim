@@ -60,8 +60,10 @@ public:
     void setStartTime( const QDateTime& start );
     void setEndTime( const QDateTime& end );
 
-private:
+protected:
     void showItem( bool show = true, int coordY = 0 );
+
+private:
     void initItem();
     void hideMe();
     QBrush myBrush, undefinedBrush;
