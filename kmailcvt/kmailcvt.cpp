@@ -69,8 +69,9 @@ void KMailCVT::next() {
 }
 
 void KMailCVT::reject() {
-	if ( currentPage() == page2 ) FilterInfo::terminateASAP(); // ie. import in progress
-	else KAssistantDialog::reject();
+	if ( currentPage() == page2 )
+          FilterInfo::terminateASAP(); // ie. import in progress
+	KAssistantDialog::reject();
 }
 
 void KMailCVT::help()
