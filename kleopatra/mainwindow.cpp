@@ -147,6 +147,15 @@ public:
     explicit Private( MainWindow * qq );
     ~Private();
 
+    template <typename T>
+    void createAndStart() {
+        ( new T( this->currentView(), &this->controller ) )->start();
+    }
+    template <typename T, typename A>
+    void createAndStart( const A & a ) {
+        ( new T( a, this->currentView(), &this->controller ) )->start();
+    }
+
     void closeAndQuit() {
         const QString app = KGlobal::mainComponent().aboutData()->programName();
         const int rc = KMessageBox::questionYesNoCancel( q,
@@ -162,34 +171,34 @@ public:
             qApp->quit();
     }
     void certificateDetails() {
-        ( new DetailsCommand( currentView(), &controller ) )->start();
+        createAndStart<DetailsCommand>();
     }
     void refreshCertificates() {
-        ( new RefreshKeysCommand( RefreshKeysCommand::Normal, currentView(), &controller ) )->start();
+        createAndStart<RefreshKeysCommand>( RefreshKeysCommand::Normal );
     }
     void validateCertificates() {
-        ( new RefreshKeysCommand( RefreshKeysCommand::Validate, currentView(), &controller ) )->start();
+        createAndStart<RefreshKeysCommand>( RefreshKeysCommand::Validate );
     }
     void deleteCertificates() {
-        ( new DeleteCertificatesCommand( currentView(), &controller ) )->start();
+        createAndStart<DeleteCertificatesCommand>();
     }
     void signEncryptFiles() {
-        ( new SignEncryptFilesCommand( currentView(), &controller ) )->start();
+        createAndStart<SignEncryptFilesCommand>();
     }
     void exportCertificates() {
-        ( new ExportCertificateCommand( currentView(), &controller ) )->start();
+        createAndStart<ExportCertificateCommand>();
     }
     void importCertificates() {
-        ( new ImportCertificateCommand( currentView(), &controller ) )->start();
+        createAndStart<ImportCertificateCommand>();
     }
     void clearCrlCache() {
-        ( new ClearCrlCacheCommand( currentView(), &controller ) )->start();
+        createAndStart<ClearCrlCacheCommand>();
     }
     void dumpCrlCache() {
-        ( new DumpCrlCacheCommand( currentView(), &controller ) )->start();
+        createAndStart<DumpCrlCacheCommand>();
     }
     void importCrlFromFile() {
-        ( new ImportCrlCommand( currentView(), &controller ) )->start();
+        createAndStart<ImportCrlCommand>();
     }
     void editKeybindings() {
         KShortcutsDialog::configure( q->actionCollection(), KShortcutsEditor::LetterShortcutsAllowed );
@@ -623,19 +632,12 @@ void MainWindow::dropEvent( QDropEvent * e ) {
 
     const QAction * const chosen = menu.exec( mapToGlobal( e->pos() ) );
 
-    if ( chosen == signEncrypt ) {
-        SignEncryptFilesCommand * cmd = new SignEncryptFilesCommand( d->currentView(), &d->controller );
-        cmd->setFiles( files );
-        cmd->start();
-    } else if ( chosen == importCerts ) {
-        ImportCertificateCommand * cmd = new ImportCertificateCommand( d->currentView(), &d->controller );
-        cmd->setFiles( files );
-        cmd->start();
-    } else if ( chosen == importCRLs ) {
-        ImportCrlCommand * cmd = new ImportCrlCommand( d->currentView(), &d->controller );
-        cmd->setFiles( files );
-        cmd->start();
-    }
+    if ( chosen == signEncrypt )
+        d->createAndStart<SignEncryptFilesCommand>( files );
+    else if ( chosen == importCerts )
+        d->createAndStart<ImportCertificateCommand>( files );
+    else if ( chosen == importCRLs )
+        d->createAndStart<ImportCrlCommand>( files );
 
     if ( chosen )
         e->accept();
