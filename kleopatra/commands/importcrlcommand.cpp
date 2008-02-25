@@ -63,10 +63,10 @@ public:
 
 private:
     void init();
-    QString getFileName() {
+    QStringList getFileNames() {
         const QString filter = i18n("Certificate Revocation Lists (*.crl *.arl *-crl.der *-arl.der)");
-        return QFileDialog::getOpenFileName( view(), i18n("Select CRL File to Import"),
-                                             QString(), filter );
+        return QFileDialog::getOpenFileNames( view(), i18n("Select CRL File to Import"),
+                                              QString(), filter );
     }
 
 private:
@@ -74,6 +74,7 @@ private:
     void slotProcessReadyReadStandardError();
 
 private:
+    QStringList files;
     KProcess process;
     QByteArray errorBuffer;
     bool canceled;
@@ -87,6 +88,7 @@ const ImportCrlCommand::Private * ImportCrlCommand::d_func() const { return stat
 
 ImportCrlCommand::Private::Private( ImportCrlCommand * qq, KeyListController * c )
     : Command::Private( qq, c ),
+      files(),
       process(),
       errorBuffer(),
       canceled( false )
@@ -118,15 +120,20 @@ void ImportCrlCommand::Private::init() {
 
 ImportCrlCommand::~ImportCrlCommand() {}
 
+void ImportCrlCommand::setFiles( const QStringList & files ) {
+    d->files = files;
+}
+
 void ImportCrlCommand::doStart() {
 
-    const QString fileName = d->getFileName();
-    if ( fileName.isEmpty() ) {
+    if ( d->files.empty() )
+        d->files = d->getFileNames();
+    if ( d->files.empty() ) {
         emit canceled();
         d->finished();
     }
 
-    d->process << fileName;
+    d->process << d->files;
 
     d->process.start();
 

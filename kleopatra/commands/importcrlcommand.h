@@ -35,6 +35,8 @@
 
 #include <commands/command.h>
 
+class QStringList;
+
 namespace Kleo {
 namespace Commands {
 
@@ -44,6 +46,8 @@ namespace Commands {
         explicit ImportCrlCommand( QAbstractItemView * view, KeyListController * parent );
         explicit ImportCrlCommand( KeyListController * parent );
         ~ImportCrlCommand();
+
+        void setFiles( const QStringList & files );
 
     private:
         /* reimp */ void doStart();
