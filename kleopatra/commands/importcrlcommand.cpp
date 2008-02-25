@@ -111,6 +111,20 @@ ImportCrlCommand::ImportCrlCommand( QAbstractItemView * v, KeyListController * c
     d->init();
 }
 
+ImportCrlCommand::ImportCrlCommand( const QStringList & files, KeyListController * c )
+    : Command( new Private( this, c ) )
+{
+    d->init();
+    d->files = files;
+}
+
+ImportCrlCommand::ImportCrlCommand( const QStringList & files, QAbstractItemView * v, KeyListController * c )
+    : Command( v, new Private( this, c ) )
+{
+    d->init();
+    d->files = files;
+}
+
 void ImportCrlCommand::Private::init() {
     connect( &process, SIGNAL(finished(int,QProcess::ExitStatus)),
              q, SLOT(slotProcessFinished(int,QProcess::ExitStatus)) );

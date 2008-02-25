@@ -44,6 +44,8 @@ namespace Kleo {
     public:
         explicit ImportCertificateCommand( KeyListController * parent );
         explicit ImportCertificateCommand( QAbstractItemView * view, KeyListController * parent );
+        explicit ImportCertificateCommand( const QStringList & files, KeyListController * parent );
+        explicit ImportCertificateCommand( const QStringList & files, QAbstractItemView * view, KeyListController * parent );
         ~ImportCertificateCommand();
     
         void setFiles( const QStringList & files );

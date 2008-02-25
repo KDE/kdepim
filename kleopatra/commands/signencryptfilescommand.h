@@ -47,6 +47,8 @@ namespace Commands {
     public:
         explicit SignEncryptFilesCommand( QAbstractItemView * view, KeyListController * parent );
         explicit SignEncryptFilesCommand( KeyListController * parent );
+        explicit SignEncryptFilesCommand( const QStringList & files, QAbstractItemView * view, KeyListController * parent );
+        explicit SignEncryptFilesCommand( const QStringList & files, KeyListController * parent );
         ~SignEncryptFilesCommand();
 
         void setFiles( const QStringList & files );

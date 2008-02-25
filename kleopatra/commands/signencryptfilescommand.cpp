@@ -114,6 +114,20 @@ SignEncryptFilesCommand::SignEncryptFilesCommand( QAbstractItemView * v, KeyList
     d->init();
 }
 
+SignEncryptFilesCommand::SignEncryptFilesCommand( const QStringList & files, KeyListController * c )
+    : Command( new Private( this, c ) )
+{
+    d->init();
+    d->files = files;
+}
+
+SignEncryptFilesCommand::SignEncryptFilesCommand( const QStringList & files, QAbstractItemView * v, KeyListController * c )
+    : Command( v, new Private( this, c ) )
+{
+    d->init();
+    d->files = files;
+}
+
 void SignEncryptFilesCommand::Private::init() {
     controller.setExecutionContext( shared_qq );
     connect( &controller, SIGNAL(done()), q, SLOT(slotControllerDone()) );

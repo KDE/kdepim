@@ -92,6 +92,9 @@ ImportCertificateCommand::Private::Private( ImportCertificateCommand * qq, KeyLi
 ImportCertificateCommand::Private::~Private() {}
 
 
+#define d d_func()
+#define q q_func()
+
 
 ImportCertificateCommand::ImportCertificateCommand( KeyListController * p )
     : Command( new Private( this, p ) )
@@ -105,10 +108,19 @@ ImportCertificateCommand::ImportCertificateCommand( QAbstractItemView * v, KeyLi
     
 }
 
-ImportCertificateCommand::~ImportCertificateCommand() {}
+ImportCertificateCommand::ImportCertificateCommand( const QStringList & files, KeyListController * p )
+    : Command( new Private( this, p ) )
+{
+    d->files = files;
+}
 
-#define d d_func()
-#define q q_func()
+ImportCertificateCommand::ImportCertificateCommand( const QStringList & files, QAbstractItemView * v, KeyListController * p )
+    : Command( v, new Private( this, p ) )
+{
+    d->files = files;
+}
+
+ImportCertificateCommand::~ImportCertificateCommand() {}
 
 void ImportCertificateCommand::setFiles( const QStringList & files )
 {
