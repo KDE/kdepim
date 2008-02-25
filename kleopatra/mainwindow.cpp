@@ -569,7 +569,6 @@ static bool can_decode_local_files( const QMimeData * data ) {
     if ( urls.size() > 1 && !urls.back().isValid() )
         --end;
     // end workaround
-    kDebug() << "urls = " << urls;
     // ### TODO: classify further
     return !urls.empty() && kdtools::all( urls.begin(), end,
                                           !bind( &QString::isEmpty,
@@ -590,7 +589,6 @@ static QStringList extract_local_files( const QMimeData * data ) {
                     bind( &QUrl::toLocalFile, _1 ) );
     result.erase( std::remove_if( result.begin(), result.end(),
                                   bind( &QString::isEmpty, _1 ) ), result.end() );
-    kDebug() << "result = " << result;
     return result;
 }
 
