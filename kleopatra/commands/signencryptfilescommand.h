@@ -37,6 +37,8 @@
 
 #include <crypto/controller.h>
 
+class QStringList;
+
 namespace Kleo {
 namespace Commands {
 
@@ -46,6 +48,8 @@ namespace Commands {
         explicit SignEncryptFilesCommand( QAbstractItemView * view, KeyListController * parent );
         explicit SignEncryptFilesCommand( KeyListController * parent );
         ~SignEncryptFilesCommand();
+
+        void setFiles( const QStringList & files );
 
     private:
         /* reimp */ void doStart();

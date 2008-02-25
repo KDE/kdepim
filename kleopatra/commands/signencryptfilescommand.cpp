@@ -79,6 +79,7 @@ private:
     }
 
 private:
+    QStringList files;
     shared_ptr<const ExecutionContext> shared_qq;
     SignEncryptFilesController controller;
 };
@@ -92,6 +93,7 @@ const SignEncryptFilesCommand::Private * SignEncryptFilesCommand::d_func() const
 
 SignEncryptFilesCommand::Private::Private( SignEncryptFilesCommand * qq, KeyListController * c )
     : Command::Private( qq, c ),
+      files(),
       shared_qq( qq, nodelete() ),
       controller()
 {
@@ -120,17 +122,22 @@ void SignEncryptFilesCommand::Private::init() {
 
 SignEncryptFilesCommand::~SignEncryptFilesCommand() { kDebug(); }
 
+void SignEncryptFilesCommand::setFiles( const QStringList & files ) {
+    d->files = files;
+}
+
 void SignEncryptFilesCommand::doStart() {
 
     try {
 
-        const QStringList files = d->selectFiles();
-        if ( files.empty() ) {
+        if ( d->files.empty() )
+            d->files = d->selectFiles();
+        if ( d->files.empty() ) {
             d->finished();
             return;
         }
 
-        d->controller.setFiles( files );
+        d->controller.setFiles( d->files );
         d->controller.start();
 
     } catch ( const std::exception & e ) {
