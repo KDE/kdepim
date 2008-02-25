@@ -35,6 +35,8 @@
 
 #include "command.h"
 
+class QStringList;
+
 namespace Kleo {
 
     class ImportCertificateCommand : public Command {
@@ -44,8 +46,8 @@ namespace Kleo {
         explicit ImportCertificateCommand( QAbstractItemView * view, KeyListController * parent );
         ~ImportCertificateCommand();
     
-        QString fileName() const;
-        void setFileName( const QString& fileName );
+        void setFiles( const QStringList & files );
+        QStringList files() const;
 
     private:
         /* reimp */ void doStart();

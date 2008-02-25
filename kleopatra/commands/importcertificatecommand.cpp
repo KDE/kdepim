@@ -77,7 +77,7 @@ public:
 
 private:
     QPointer<ImportJob> importJob;
-    QString filename;
+    QStringList files;
 };
 
 ImportCertificateCommand::Private * ImportCertificateCommand::d_func() { return static_cast<Private*>(d.get()); }
@@ -110,14 +110,9 @@ ImportCertificateCommand::~ImportCertificateCommand() {}
 #define d d_func()
 #define q q_func()
 
-QString ImportCertificateCommand::fileName() const
+void ImportCertificateCommand::setFiles( const QStringList & files )
 {
-    return d->filename;
-}
-
-void ImportCertificateCommand::setFileName( const QString& fileName )
-{
-    d->filename = fileName;
+    d->files = files;
 }
 
 void ImportCertificateCommand::doStart()
@@ -127,10 +122,19 @@ void ImportCertificateCommand::doStart()
         d->finished();
         return;
     }
+    // TODO: allow multiple files
+    if ( d->files.size() > 1 ) {
+        KMessageBox::information( d->view(), i18n( "Importing more than one file at a time is not yet implemented." ),
+                                  i18n( "Too many files" ) );
+        emit canceled();
+        d->finished();
+        return;
+    }
+        
     //TODO: use KIO here
-    QFile in( d->filename );
+    QFile in( d->files.front() );
     if ( !in.open( QIODevice::ReadOnly ) ) {
-        KMessageBox::error( d->view(), i18n( "Could not open file %1 for reading", d->filename ), i18n( "Certificate Import Failed" ) );
+        KMessageBox::error( d->view(), i18n( "Could not open file %1 for reading", in.fileName() ), i18n( "Certificate Import Failed" ) );
         d->finished();
         return;
     }
@@ -138,7 +142,7 @@ void ImportCertificateCommand::doStart()
     emit info( i18n( "Importing certificate..." ) );
 }
 
-static QString get_file_name( QWidget * parent ) {
+static QStringList get_file_name( QWidget * parent ) {
     const QString certificateFilter = i18n("Certificates (*.asc *.pem *.der *.p7c *.p12)");
     const QString anyFilesFilter = i18n("Any files (*)" );
     QString previousDir;
@@ -148,19 +152,19 @@ static QString get_file_name( QWidget * parent ) {
     }
     const QString fn = QFileDialog::getOpenFileName( parent, i18n( "Select Certificate File" ), previousDir, certificateFilter + ";;" + anyFilesFilter );
     if ( fn.isEmpty() )
-        return QString();
+        return QStringList();
     if ( const KSharedConfig::Ptr config = KGlobal::config() ) {
         KConfigGroup group( config, "Import Certificate" );
         group.writePathEntry( "last-open-file-directory", QFileInfo( fn ).path() );
     }
-    return fn;
+    return QStringList( fn );
 }
 
 bool ImportCertificateCommand::Private::ensureHaveFile()
 {
-    if ( filename.isEmpty() )
-        filename = get_file_name( view() );
-    return !filename.isEmpty();
+    if ( files.empty() )
+        files = get_file_name( view() );
+    return !files.empty();
 }
 
 void ImportCertificateCommand::Private::showDetails( const ImportResult& res )
@@ -215,7 +219,7 @@ void ImportCertificateCommand::Private::showDetails( const ImportResult& res )
     KMessageBox::information( view(),
                               i18n( "<qt><p>Detailed results of importing %1:</p>"
                                     "<table>%2</table></qt>" ,
-                                    filename, lines.join( QString() ) ),
+                                    files.front(), lines.join( QString() ) ),
                               i18n( "Certificate Import Result" ) );
 }
 
@@ -226,7 +230,7 @@ void ImportCertificateCommand::Private::showError( const GpgME::Error& err )
     const QString msg = i18n( "<qt><p>An error occurred while trying "
                               "to import the certificate %1:</p>"
                               "<p><b>%2</b></p></qt>",
-                              filename,
+                              files.front(),
                               QString::fromLocal8Bit( err.asString() ) );
     KMessageBox::error( view(), msg, i18n( "Certificate Import Failed" ) );
 }
@@ -247,9 +251,9 @@ void ImportCertificateCommand::Private::importResult( const GpgME::ImportResult&
 
 void ImportCertificateCommand::Private::startImport( const QByteArray& data )
 {
-    const GpgME::Protocol protocol = findProtocol( filename );
+    const GpgME::Protocol protocol = findProtocol( files.front() );
     if ( protocol == GpgME::UnknownProtocol ) { //TODO: might use exceptions here
-        KMessageBox::error( view(), i18n( "Could not determine certificate type of %1.", filename ), i18n( "Certificate Import Failed" ) );
+        KMessageBox::error( view(), i18n( "Could not determine certificate type of %1.", files.front() ), i18n( "Certificate Import Failed" ) );
         finished();
         return;
     }
