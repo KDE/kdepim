@@ -45,7 +45,7 @@
 
 #include <KLocale>
 #include <KMessageBox>
-#include <KJob>
+#include <KConfigGroup>
 
 #include <QByteArray>
 #include <QFile>
@@ -53,6 +53,7 @@
 #include <QPointer>
 #include <QString>
 #include <QWidget>
+#include <QFileInfo>
 
 #include <memory>
 #include <cassert>
@@ -137,11 +138,29 @@ void ImportCertificateCommand::doStart()
     emit info( i18n( "Importing certificate..." ) );
 }
 
+static QString get_file_name( QWidget * parent ) {
+    const QString certificateFilter = i18n("Certificates (*.asc *.pem *.der *.p7c *.p12)");
+    const QString anyFilesFilter = i18n("Any files (*)" );
+    QString previousDir;
+    if ( const KSharedConfig::Ptr config = KGlobal::config() ) {
+        const KConfigGroup group( config, "Import Certificate" );
+        previousDir = group.readPathEntry( "last-open-file-directory", QString() );
+    }
+    const QString fn = QFileDialog::getOpenFileName( parent, i18n( "Select Certificate File" ), previousDir, certificateFilter + ";;" + anyFilesFilter );
+    if ( fn.isEmpty() )
+        return QString();
+    if ( const KSharedConfig::Ptr config = KGlobal::config() ) {
+        KConfigGroup group( config, "Import Certificate" );
+        group.writePathEntry( "last-open-file-directory", QFileInfo( fn ).path() );
+    }
+    return fn;
+}
+
 bool ImportCertificateCommand::Private::ensureHaveFile()
 {
-   if ( filename.isNull() )
-       filename = QFileDialog::getOpenFileName( view(), i18n( "Select Certificate File" ), QString(), i18n( "Certificates (*.asc *.pem *.der *.p7c *.p12)" )  );
-   return !filename.isNull();
+    if ( filename.isEmpty() )
+        filename = get_file_name( view() );
+    return !filename.isEmpty();
 }
 
 void ImportCertificateCommand::Private::showDetails( const ImportResult& res )
