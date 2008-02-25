@@ -58,6 +58,8 @@
 
 #include "conf/configuredialog.h"
 
+#include "utils/stl_util.h"
+
 #include <KActionCollection>
 #include <KLocale>
 #include <KTabWidget>
@@ -69,6 +71,7 @@
 #include <KStandardGuiItem>
 #include <KStandardDirs>
 #include <KShortcutsDialog>
+#include <kdebug.h>
 
 #include <QAbstractItemView>
 #include <QLabel>
@@ -84,6 +87,7 @@
 #include <QDialogButtonBox>
 #include <QProcess>
 #include <QTimer>
+#include <QMenu>
 
 #include <kleo/cryptobackendfactory.h>
 #include <ui/cryptoconfigdialog.h>
@@ -301,6 +305,8 @@ MainWindow::Private::Private( MainWindow * qq )
     q->createGUI( "kleopatra_newui.rc" );
 
     q->resize( 640, 480 );
+
+    q->setAcceptDrops( true );
 
     setupViews();
 } 
@@ -549,9 +555,92 @@ void MainWindow::Private::slotConfigCommitted() {
 void MainWindow::closeEvent( QCloseEvent * e ) {
     // KMainWindow::closeEvent() insists on quitting the application,
     // so do not let it touch the event...
-    qDebug( "MainWindow::closeEvent()" );
+    kDebug();
     d->saveViews();
     e->accept();
+}
+
+static bool can_decode_local_files( const QMimeData * data ) {
+    if ( !data )
+        return false;
+    const QList<QUrl> urls = data->urls();
+    // begin workaround KDE/Qt misinterpretation of text/uri-list
+    QList<QUrl>::const_iterator end = urls.end();
+    if ( urls.size() > 1 && !urls.back().isValid() )
+        --end;
+    // end workaround
+    kDebug() << "urls = " << urls;
+    // ### TODO: classify further
+    return !urls.empty() && kdtools::all( urls.begin(), end,
+                                          !bind( &QString::isEmpty,
+                                                 bind( &QUrl::toLocalFile, _1 ) ) );
+}
+
+static QStringList extract_local_files( const QMimeData * data ) {
+    assert( can_decode_local_files( data ) );
+    const QList<QUrl> urls = data->urls();
+    // begin workaround KDE/Qt misinterpretation of text/uri-list
+    QList<QUrl>::const_iterator end = urls.end();
+    if ( urls.size() > 1 && !urls.back().isValid() )
+        --end;
+    // end workaround
+    QStringList result;
+    std::transform( urls.begin(), end,
+                    std::back_inserter( result ),
+                    bind( &QUrl::toLocalFile, _1 ) );
+    result.erase( std::remove_if( result.begin(), result.end(),
+                                  bind( &QString::isEmpty, _1 ) ), result.end() );
+    kDebug() << "result = " << result;
+    return result;
+}
+
+void MainWindow::dragEnterEvent( QDragEnterEvent * e ) {
+    kDebug();
+
+    if ( ( e->possibleActions() & Qt::CopyAction ) &&
+         can_decode_local_files( e->mimeData() ) )
+        e->acceptProposedAction();
+}
+
+void MainWindow::dropEvent( QDropEvent * e ) {
+    kDebug();
+
+    if ( !( e->possibleActions() & Qt::CopyAction ) ||
+         !can_decode_local_files( e->mimeData() ) )
+        return;
+
+    e->setDropAction( Qt::CopyAction );
+
+    const QStringList files = extract_local_files( e->mimeData() );
+
+    // ### todo: classify further
+
+    QMenu menu;
+    QAction * const signEncrypt = menu.addAction( i18n("Sign/Encrypt...") );
+    menu.addSeparator();
+    QAction * const importCerts = menu.addAction( i18n("Import Certificates") );
+    QAction * const importCRLs  = menu.addAction( i18n("Import CRLs") );
+    menu.addSeparator();
+    menu.addAction( i18n("Cancel") );
+
+    const QAction * const chosen = menu.exec( mapToGlobal( e->pos() ) );
+
+    if ( chosen == signEncrypt ) {
+        SignEncryptFilesCommand * cmd = new SignEncryptFilesCommand( d->currentView(), &d->controller );
+        cmd->setFiles( files );
+        cmd->start();
+    } else if ( chosen == importCerts ) {
+        ImportCertificateCommand * cmd = new ImportCertificateCommand( d->currentView(), &d->controller );
+        cmd->setFiles( files );
+        cmd->start();
+    } else if ( chosen == importCRLs ) {
+        ImportCrlCommand * cmd = new ImportCrlCommand( d->currentView(), &d->controller );
+        cmd->setFiles( files );
+        cmd->start();
+    }
+
+    if ( chosen )
+        e->accept();
 }
 
 #include "mainwindow.moc"
