@@ -135,7 +135,7 @@ KGuiItem KStandardGuiItem_quit() {
 
 KGuiItem KStandardGuiItem_close() {
     KGuiItem item = KStandardGuiItem::close();
-    item.setText( i18n("Only &Close the Window" ) );
+    item.setText( i18n("Only &Close Window" ) );
     return item;
 }
 
@@ -161,7 +161,7 @@ public:
         const int rc = KMessageBox::questionYesNoCancel( q,
                                                          i18n("%1 may be used by other applications as a service.\n"
                                                               "You may instead want to close this window without exiting %1.", app ),
-                                                         i18n("Really quit?"), KStandardGuiItem_quit(), KStandardGuiItem_close(), KStandardGuiItem::cancel(),
+                                                         i18n("Really Quit?"), KStandardGuiItem_quit(), KStandardGuiItem_close(), KStandardGuiItem::cancel(),
                                                          "really-quit-" + app.toLower() );
         if ( rc == KMessageBox::Cancel )
             return;
@@ -380,7 +380,7 @@ void MainWindow::Private::setupActions() {
           "view-refresh", q, SLOT(refreshCertificates()), "F5", false, true },
         { "view_stop_operations", i18n( "Stop Operation" ), QString(),
           "process-stop", &controller, SLOT(cancelCommands()), "Escape", false, false },
-        { "view_certificate_details", i18n( "Certificate Details..." ), QString(),
+        { "view_certificate_details", i18n( "Certificate Details" ), QString(),
           0, q, SLOT(certificateDetails()), QString(), false, true }, // ### should be disabled until selected
         // Certificate menu
         { "certificates_validate", i18n("Validate" ), QString()/*i18n("Validate selected certificates")*/,
@@ -388,9 +388,9 @@ void MainWindow::Private::setupActions() {
         { "certificates_delete", i18n("Delete" ), QString()/*i18n("Delete selected certificates")*/,
           "edit-delete", q, SLOT(deleteCertificates()), "Delete", false, true },
         // CRLs menu
-        { "crl_clear_crl_cache", i18n("Clear CRL Cache..."), QString(),
+        { "crl_clear_crl_cache", i18n("Clear CRL Cache"), QString(),
           0, q, SLOT(clearCrlCache()), QString(), false, true },
-        { "crl_dump_crl_cache", i18n("Dump CRL Cache..."), QString(),
+        { "crl_dump_crl_cache", i18n("Dump CRL Cache"), QString(),
           0, q, SLOT(dumpCrlCache()), QString(), false, true },
         { "crl_import_crl", i18n("Import CRL From File..."), QString(),
           0, q, SLOT(importCrlFromFile()), QString(), false, true },

@@ -26,7 +26,7 @@
    VIEW menu
   <!ENTITY view-redisplay "<menuchoice><shortcut><keycombo action="simul"><keycap>F5</keycap></keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Redisplay</guimenuitem></menuchoice>">
   <!ENTITY view-stop-operation "<menuchoice><shortcut><keycombo action="simul"><keycap>Esc</keycap></keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Stop Operation</guimenuitem></menuchoice>">
-  <!ENTITY view-certificate-details "<menuchoice><guimenu>View</guimenu><guimenuitem>Certificate Details...</guimenuitem></menuchoice>">
+  <!ENTITY view-certificate-details "<menuchoice><guimenu>View</guimenu><guimenuitem>Certificate Details</guimenuitem></menuchoice>">
   <!ENTITY view-hierarchical-key-list "<menuchoice><guimenu>View</guimenu><guimenuitem>Hierarchical Key List</guimenuitem></menuchoice>">
   <!ENTITY view-expand-all "<menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>.</keycap></keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Expand All</guimenuitem></menuchoice>">
   <!ENTITY view-collapse-all "<menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>,</keycap></keycombo></shortcut><guimenu>View</guimenu><guimenuitem>Collapse All</guimenuitem></menuchoice>">
@@ -38,8 +38,8 @@
   <!ENTITY certificates-download "<menuchoice><guimenu>Certificates</guimenu><guimenuitem>Download</guimenuitem></menuchoice>">
 
    CRLS menu
-  <!ENTITY crls-clear-crl-cache "<menuchoice><guimenu>CRLs</guimenu><guimenuitem>Clear CRL Cache...</guimenuitem></menuchoice>">
-  <!ENTITY crls-dump-crl-cache "<menuchoice><guimenu>CRLs</guimenu><guimenuitem>Dump CRL Cache...</guimenuitem></menuchoice>">
+  <!ENTITY crls-clear-crl-cache "<menuchoice><guimenu>CRLs</guimenu><guimenuitem>Clear CRL Cache</guimenuitem></menuchoice>">
+  <!ENTITY crls-dump-crl-cache "<menuchoice><guimenu>CRLs</guimenu><guimenuitem>Dump CRL Cache</guimenuitem></menuchoice>">
 
    TOOLS menu 
   <!ENTITY tools-gnupg-log-viewer "<menuchoice><guimenu>Tools</guimenu><guimenuitem>GnuPG Log Viewer...</guimenuitem></menuchoice>">
@@ -201,7 +201,7 @@ linkend="view-hierarchical-key-list"><menuchoice><guimenu>View</guimenu>
 
 <para>You can see the details of any certificate by double-clicking it
 or using <link linkend="view-certificate-details"><menuchoice><guimenu>View</guimenu>
-<guimenuitem>Certificate Details...</guimenuitem></menuchoice></link>. This opens a
+<guimenuitem>Certificate Details</guimenuitem></menuchoice></link>. This opens a
 dialog that shows the most common properties of the certificate, its
 certificate chain (&ie; the chain of issuers up to the root-&ca;), and
 a dump of all information the backend is able to extract from the
@@ -246,7 +246,7 @@ you want the certificate for) into the line edit, and click on the
 <guilabel>Find</guilabel> icon. The results will be displayed in the
 key list below the search bar, where you can select certificates to
 either look at them with <link linkend="view-certificate-details">
-<menuchoice><guimenu>View</guimenu><guimenuitem>Certificate Details...</guimenuitem></menuchoice></link> or
+<menuchoice><guimenu>View</guimenu><guimenuitem>Certificate Details</guimenuitem></menuchoice></link> or
 download them with <link linkend="certificates-download">
 <menuchoice><guimenu>Certificates</guimenu><guimenuitem>Download</guimenuitem></menuchoice></link> into the
 local keybox. Note that you can also download the certificate from the
@@ -342,9 +342,9 @@ keybox with <link linkend="certificates-delete"><menuchoice><shortcut>
 as manual handling of CRLs (<link linkend="certificates-refresh-crls">
 <menuchoice><guimenu>Certificates</guimenu><guimenuitem>Refresh CRLs</guimenuitem>
 </menuchoice></link>, <link linkend="crls-clear-crl-cache"><menuchoice><guimenu>CRLs</guimenu>
-<guimenuitem>Clear CRL Cache...</guimenuitem></menuchoice></link>, <link
+<guimenuitem>Clear CRL Cache</guimenuitem></menuchoice></link>, <link
 linkend="crls-dump-crl-cache"><menuchoice><guimenu>CRLs</guimenu>
-<guimenuitem>Dump CRL Cache...</guimenuitem></menuchoice></link>).</para>
+<guimenuitem>Dump CRL Cache</guimenuitem></menuchoice></link>).</para>
 
 </sect1>
 
@@ -440,7 +440,7 @@ contact the system administrator and ask them to install
 <application>dirmngr</application>.</para></note>
 
 <para>You can view the contents of the local CRL cache from the menu
-item <menuchoice><guimenu>CRLs</guimenu><guimenuitem>Dump CRL Cache...</guimenuitem>
+item <menuchoice><guimenu>CRLs</guimenu><guimenuitem>Dump CRL Cache</guimenuitem>
 </menuchoice>. This will display a dialog with
 information about the CRLs in the cache and the fingerprints of the
 certificates in each CRL.
@@ -510,7 +510,7 @@ behavior.</para></note>
 
 
 <varlistentry id="view-certificate-details">
-<term><menuchoice><guimenu>View</guimenu><guimenuitem>Certificate Details...</guimenuitem></menuchoice></term>
+<term><menuchoice><guimenu>View</guimenu><guimenuitem>Certificate Details</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action>Shows the details of the currently selected
@@ -690,7 +690,7 @@ the lot of certificates.</para>
 <variablelist>
 
 <varlistentry id="crls-clear-crl-cache">
-<term><menuchoice><guimenu>CRLs</guimenu><guimenuitem>Clear CRL Cache...</guimenuitem></menuchoice></term>
+<term><menuchoice><guimenu>CRLs</guimenu><guimenuitem>Clear CRL Cache</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action>Clears the &gpgsm; CRL cache.</action></para>
@@ -702,7 +702,7 @@ cache by selecting all certificates and using <link linkend="certificates-refres
 </varlistentry>
 
 <varlistentry id="crls-dump-crl-cache">
-<term><menuchoice><guimenu>CRLs</guimenu><guimenuitem>Dump CRL Cache...</guimenuitem></menuchoice></term>
+<term><menuchoice><guimenu>CRLs</guimenu><guimenuitem>Dump CRL Cache</guimenuitem></menuchoice></term>
 
 <listitem>
 <para><action>Shows the detailed contents of the &gpgsm; CRL

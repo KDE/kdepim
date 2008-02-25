@@ -347,7 +347,7 @@ void CertManager::createActions() {
   connectEnableOperationSignal( this, mExportSecretKeyAction );
 
   mViewCertDetailsAction = coll->addAction( "view_certificate_details" );
-  mViewCertDetailsAction->setText( i18n("Certificate Details...") );
+  mViewCertDetailsAction->setText( i18n("Certificate Details") );
   connect(mViewCertDetailsAction, SIGNAL(triggered(bool) ), SLOT(slotViewDetails()));
 
   mDownloadCertificateAction = coll->addAction( "download_certificate" );
@@ -356,12 +356,12 @@ void CertManager::createActions() {
 
   mDirMngrFound = !KStandardDirs::findExe( "dirmngr" ).isEmpty() && !KStandardDirs::findExe( "gpgsm" ).isEmpty();
   action = coll->addAction( "crl_dump_crl_cache" );
-  action->setText( i18n("Dump CRL Cache...") );
+  action->setText( i18n("Dump CRL Cache") );
   connect(action, SIGNAL(triggered(bool) ), SLOT(slotViewCRLs()));
   action->setEnabled( mDirMngrFound );
 
   action = coll->addAction( "crl_clear_crl_cache" );
-  action->setText( i18n("Clear CRL Cache..." ) );
+  action->setText( i18n("Clear CRL Cache" ) );
   connect(action, SIGNAL(triggered(bool) ), SLOT(slotClearCRLs()));
   action->setEnabled( mDirMngrFound );
 

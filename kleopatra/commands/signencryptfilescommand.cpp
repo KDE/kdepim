@@ -174,7 +174,7 @@ void SignEncryptFilesCommand::applyWindowID( QDialog * dlg ) const {
 }
 
 QStringList SignEncryptFilesCommand::Private::selectFiles() const {
-    return QFileDialog::getOpenFileNames( view(), i18n( "Select one of more files to sign and/or encrypt" ) );
+    return QFileDialog::getOpenFileNames( view(), i18n( "Select One or More Files to Sign and/or Encrypt" ) );
 }
 
 #undef d
