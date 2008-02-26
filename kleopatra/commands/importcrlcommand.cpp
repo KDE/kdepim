@@ -94,7 +94,7 @@ ImportCrlCommand::Private::Private( ImportCrlCommand * qq, KeyListController * c
       canceled( false )
 {
     process.setOutputChannelMode( KProcess::OnlyStderrChannel );
-    process << "gpgsm" << "--call-dirmngr" << "loadcrls";
+    process << "gpgsm" << "--call-dirmngr" << "loadcrl";
 }
 
 ImportCrlCommand::Private::~Private() {}
@@ -174,7 +174,7 @@ void ImportCrlCommand::Private::slotProcessFinished( int code, QProcess::ExitSta
             KMessageBox::error( view(),
                                 i18n( "The GpgSM process that tried to import the CRL file "
                                       "ended prematurely because of an unexpected error. "
-                                      "Please check the output of gpgsm --call-dirmngr loadcrls &lt;filename&gt; for details." ),
+                                      "Please check the output of gpgsm --call-dirmngr loadcrl &lt;filename&gt; for details." ),
                                 i18n( "Import CRL Error" ) );
         else if ( code )
             KMessageBox::error( view(),
