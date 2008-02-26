@@ -569,23 +569,7 @@ void MainWindow::closeEvent( QCloseEvent * e ) {
     e->accept();
 }
 
-static bool can_decode_local_files( const QMimeData * data ) {
-    if ( !data )
-        return false;
-    const QList<QUrl> urls = data->urls();
-    // begin workaround KDE/Qt misinterpretation of text/uri-list
-    QList<QUrl>::const_iterator end = urls.end();
-    if ( urls.size() > 1 && !urls.back().isValid() )
-        --end;
-    // end workaround
-    // ### TODO: classify further
-    return !urls.empty() && kdtools::all( urls.begin(), end,
-                                          !bind( &QString::isEmpty,
-                                                 bind( &QUrl::toLocalFile, _1 ) ) );
-}
-
 static QStringList extract_local_files( const QMimeData * data ) {
-    assert( can_decode_local_files( data ) );
     const QList<QUrl> urls = data->urls();
     // begin workaround KDE/Qt misinterpretation of text/uri-list
     QList<QUrl>::const_iterator end = urls.end();
@@ -599,6 +583,12 @@ static QStringList extract_local_files( const QMimeData * data ) {
     result.erase( std::remove_if( result.begin(), result.end(),
                                   bind( &QString::isEmpty, _1 ) ), result.end() );
     return result;
+}
+
+static bool can_decode_local_files( const QMimeData * data ) {
+    if ( !data )
+        return false;
+    return !extract_local_files( data ).empty();
 }
 
 void MainWindow::dragEnterEvent( QDragEnterEvent * e ) {
