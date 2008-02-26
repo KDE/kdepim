@@ -127,7 +127,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   grid->addWidget( mFaxHook, 1, 1 );
 
 
-  label = new QLabel( i18n( "SMS Text:" ), groupBox );
+  label = new QLabel( i18n( "SMS text:" ), groupBox );
   grid->addWidget( label, 2, 0 );
 
   mSMSHook = new QLineEdit( groupBox );
