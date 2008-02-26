@@ -38,6 +38,8 @@
 
 #include <gpgme++/key.h>
 
+#include <KLocale>
+
 #include <QString>
 #include <QStringList>
 #include <QDateTime>
@@ -46,13 +48,6 @@
 
 using namespace GpgME;
 using namespace Kleo;
-
-namespace {
-struct hack {
-    // now, if only this would work at namespace scope...
-    Q_DECLARE_TR_FUNCTIONS( Formatting )
-};
-}
 
 //
 // Name
@@ -132,10 +127,10 @@ namespace {
 
     template <typename T_arg>
     QString format_row( const QString & field, const T_arg & arg ) {
-	return hack::tr( "<tr><th>%1:</th><td>%2</td></tr>" ).arg( field ).arg( arg );
+	return i18n( "<tr><th>%1:</th><td>%2</td></tr>" ).arg( field ).arg( arg );
     }
     QString format_row( const QString & field, const QString & arg ) {
-	return hack::tr( "<tr><th>%1:</th><td>%2</td></tr>" ).arg( field, Qt::escape( arg ) );
+	return i18n( "<tr><th>%1:</th><td>%2</td></tr>" ).arg( field, Qt::escape( arg ) );
     }
     QString format_row( const QString & field, const char * arg ) {
 	return format_row( field, QString::fromUtf8( arg ) );
@@ -144,25 +139,25 @@ namespace {
     QString format_keytype( const Key & key ) {
 	const Subkey subkey = key.subkey( 0 );
 	if ( key.hasSecret() )
-	    return hack::tr( "%1-bit %2 (secret key available)" ).arg( subkey.length() ).arg( subkey.publicKeyAlgorithmAsString() );
+	    return i18n( "%1-bit %2 (secret key available)" ).arg( subkey.length() ).arg( subkey.publicKeyAlgorithmAsString() );
 	else
-	    return hack::tr( "%1-bit %2" ).arg( subkey.length() ).arg( subkey.publicKeyAlgorithmAsString() );
+	    return i18n( "%1-bit %2" ).arg( subkey.length() ).arg( subkey.publicKeyAlgorithmAsString() );
     }
 
     QString format_keyusage( const Key & key ) {
 	QStringList capabilites;
 	if ( key.canSign() )
 	    if ( key.isQualified() )
-		capabilites.push_back( hack::tr( "Signing EMails and Files (Qualified)" ) );
+		capabilites.push_back( i18n( "Signing EMails and Files (Qualified)" ) );
 	    else
-		capabilites.push_back( hack::tr( "Signing EMails and Files" ) );
+		capabilites.push_back( i18n( "Signing EMails and Files" ) );
 	if ( key.canEncrypt() )
-	    capabilites.push_back( hack::tr( "Encrypting EMails and Files" ) );
+	    capabilites.push_back( i18n( "Encrypting EMails and Files" ) );
 	if ( key.canCertify() )
-	    capabilites.push_back( hack::tr( "Certifying other Certificates" ) );
+	    capabilites.push_back( i18n( "Certifying other Certificates" ) );
 	if ( key.canAuthenticate() )
-	    capabilites.push_back( hack::tr( "Authenticate against Servers" ) );
-	return capabilites.join( hack::tr(", ") );
+	    capabilites.push_back( i18n( "Authenticate against Servers" ) );
+	return capabilites.join( i18n(", ") );
     }
 
     static QString time_t2string( time_t t ) {
@@ -185,30 +180,30 @@ QString Formatting::toolTip( const Key & key ) {
 
     QString result = QLatin1String( "<table border=\"0\">" );
     if ( key.protocol() == CMS ) {
-        result += format_row( hack::tr("Serial number"), key.issuerSerial() );
-        result += format_row( hack::tr("Issuer"), key.issuerName() );
+        result += format_row( i18n("Serial number"), key.issuerSerial() );
+        result += format_row( i18n("Issuer"), key.issuerName() );
     }
     result += format_row( key.protocol() == CMS
-                          ? hack::tr("Subject")
-                          : hack::tr("User-ID"), key.userID( 0 ).id() );
+                          ? i18n("Subject")
+                          : i18n("User-ID"), key.userID( 0 ).id() );
     for ( unsigned int i = 1, end = key.numUserIDs() ; i < end ; ++i )
-        result += format_row( hack::tr("a.k.a."), key.userID( i ).id() );
-    result += format_row( hack::tr("Validity"),
+        result += format_row( i18n("a.k.a."), key.userID( i ).id() );
+    result += format_row( i18n("Validity"),
                           subkey.neverExpires()
-                          ? hack::tr( "from %1 until forever" ).arg( time_t2string( subkey.creationTime() ) )
-                          : hack::tr( "from %1 through %2" ).arg( time_t2string( subkey.creationTime() ), time_t2string( subkey.expirationTime() ) ) );
-    result += format_row( hack::tr("Certificate type"), format_keytype( key ) );
-    result += format_row( hack::tr("Certificate usage"), format_keyusage( key ) );
-    result += format_row( hack::tr("Fingerprint"), key.primaryFingerprint() );
+                          ? i18n( "from %1 until forever" ).arg( time_t2string( subkey.creationTime() ) )
+                          : i18n( "from %1 through %2" ).arg( time_t2string( subkey.creationTime() ), time_t2string( subkey.expirationTime() ) ) );
+    result += format_row( i18n("Certificate type"), format_keytype( key ) );
+    result += format_row( i18n("Certificate usage"), format_keyusage( key ) );
+    result += format_row( i18n("Fingerprint"), key.primaryFingerprint() );
     result += QLatin1String( "</table><br>" );
 
     if ( key.protocol() == OpenPGP || ( key.keyListMode() & Validate ) )
         if ( key.isRevoked() )
-            result += make_red( hack::tr( "This certificate has been revoked." ) );
+            result += make_red( i18n( "This certificate has been revoked." ) );
         else if ( key.isExpired() )
-            result += make_red( hack::tr( "This certificate has expired." ) );
+            result += make_red( i18n( "This certificate has expired." ) );
         else if ( key.isDisabled() )
-            result += hack::tr( "This certificate has been disabled locally." );
+            result += i18n( "This certificate has been disabled locally." );
 
     return result;
 }
@@ -295,10 +290,10 @@ QDate Formatting::creationDate( const UserID::Signature & sig ) {
 
 QString Formatting::type( const Key & key ) {
     if ( key.protocol() == CMS )
-        return hack::tr("X.509");
+        return i18n("X.509");
     if ( key.protocol() == OpenPGP )
-        return hack::tr("OpenPGP");
-    return hack::tr("Unknown");
+        return i18n("OpenPGP");
+    return i18n("Unknown");
 }
 
 QString Formatting::type( const Subkey & subkey ) {
@@ -311,28 +306,28 @@ QString Formatting::type( const Subkey & subkey ) {
 
 QString Formatting::validityShort( const Subkey & subkey ) {
     if ( subkey.isRevoked() )
-	return hack::tr("revoked");
+	return i18n("revoked");
     if ( subkey.isExpired() )
-	return hack::tr("expired");
+	return i18n("expired");
     if ( subkey.isDisabled() )
-	return hack::tr("disabled");
+	return i18n("disabled");
     if ( subkey.isInvalid() )
-	return hack::tr("invalid");
-    return hack::tr("good");
+	return i18n("invalid");
+    return i18n("good");
 }
 
 QString Formatting::validityShort( const UserID & uid ) {
     if ( uid.isRevoked() )
-	return hack::tr("revoked");
+	return i18n("revoked");
     if ( uid.isInvalid() )
-	return hack::tr("invalid");
+	return i18n("invalid");
     switch ( uid.validity() ) {
-    case UserID::Unknown:   return hack::tr("unknown");
-    case UserID::Undefined: return hack::tr("undefined");
-    case UserID::Never:     return hack::tr("untrusted");
-    case UserID::Marginal:  return hack::tr("marginal");
-    case UserID::Full:      return hack::tr("full");
-    case UserID::Ultimate:  return hack::tr("ultimate");
+    case UserID::Unknown:   return i18n("unknown");
+    case UserID::Undefined: return i18n("undefined");
+    case UserID::Never:     return i18n("untrusted");
+    case UserID::Marginal:  return i18n("marginal");
+    case UserID::Full:      return i18n("full");
+    case UserID::Ultimate:  return i18n("ultimate");
     }
     return QString();
 }
@@ -342,15 +337,15 @@ QString Formatting::validityShort( const UserID::Signature & sig ) {
     case UserID::Signature::NoError:
 	if ( !sig.isInvalid() )
 	    if ( sig.certClass() > 0 )
-		return hack::tr("class %d").arg( sig.certClass() );
+		return i18n("class %d").arg( sig.certClass() );
 	    else
-		return hack::tr("good");
+		return i18n("good");
 	// fall through:
     case UserID::Signature::GeneralError:
-	return hack::tr("invalid");
-    case UserID::Signature::SigExpired:   return hack::tr("expired");
-    case UserID::Signature::KeyExpired:   return hack::tr("key expired");
-    case UserID::Signature::BadSignature: return hack::tr("bad");
+	return i18n("invalid");
+    case UserID::Signature::SigExpired:   return i18n("expired");
+    case UserID::Signature::KeyExpired:   return i18n("key expired");
+    case UserID::Signature::BadSignature: return i18n("bad");
     case UserID::Signature::NoPublicKey:  return QString();
     }
     return QString();
@@ -361,5 +356,5 @@ QString Formatting::formatForComboBox( const GpgME::Key & key ) {
     QString mail = prettyEMail( key );
     if ( !mail.isEmpty() )
         mail = '<' + mail + '>';
-    return hack::tr( "%1 %2 (%3)", "name, email, key id" ).arg( name, mail, key.shortKeyID() ).simplified();
+    return i18nc( "name, email, key id", "%1 %2 (%3)" ).arg( name, mail, key.shortKeyID() ).simplified();
 }
