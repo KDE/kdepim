@@ -69,7 +69,7 @@ Kleo::ChiasmusLibrary::main_func Kleo::ChiasmusLibrary::chiasmus( QString * reas
   assert( lib );
   const QString libfile = lib->urlValue().path();
   if ( !mXiaLibrary )
-    mXiaLibrary = KLibLoader::self()->library( QFile::encodeName( libfile ) );
+    mXiaLibrary = KLibLoader::self()->library( libfile );
   if ( !mXiaLibrary ) {
     if ( reason )
       *reason = i18n( "Failed to load %1: %2",
