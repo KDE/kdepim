@@ -133,7 +133,7 @@ else ( ONLY_KLEO )
 
 
   add_subdirectory(kode)
-  add_subdirectory(akonadi)
+  macro_optional_add_subdirectory(akonadi)
   add_subdirectory(libkdepim)
   add_subdirectory(libkholidays)
 
