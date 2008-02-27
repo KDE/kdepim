@@ -1,4 +1,4 @@
-INCLUDES = -I$(top_srcdir) $(all_includes)
+INCLUDES = -I$(top_srcdir) -I$(top_srcdir)/kresources/lib $(all_includes)
 
 noinst_HEADERS = resourcescalixbase.h scalixbase.h subresource.h
 
@@ -9,7 +9,7 @@ libresourcescalixshared_la_SOURCES = \
   subresource.cpp \
 	kmailconnection.skel kmailicalIface.stub
 libresourcescalixshared_la_METASOURCES = AUTO
-libresourcescalixshared_la_LIBADD = $(top_builddir)/libkcal/libkcal.la $(top_builddir)/libkdepim/libkdepim.la
+libresourcescalixshared_la_LIBADD = $(top_builddir)/libkcal/libkcal.la $(top_builddir)/libkdepim/libkdepim.la ../../lib/libkgroupwaredav.la
 libresourcescalixshared_la_LDFLAGS = -no-undefined
 
 kmailicalIface_DCOPIDLNG = true

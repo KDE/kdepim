@@ -34,6 +34,8 @@
 #include "resourcekolabbase.h"
 #include "kmailconnection.h"
 
+#include <folderselectdialog.h>
+
 #include <klocale.h>
 #include <kstandarddirs.h>
 #include <kinputdialog.h>
@@ -238,8 +240,8 @@ QString ResourceKolabBase::findWritableResource( const ResourceMap& resources,
           "Please select the one you want to write to." );
 
   // Several found, ask the user
-  QString chosenLabel = KInputDialog::getItem( i18n( "Select Resource Folder" ),
-                                               t, possible.keys() );
+  QString chosenLabel = KPIM::FolderSelectDialog::getItem( i18n( "Select Resource Folder" ),
+                                                           t, possible.keys() );
   if ( chosenLabel.isEmpty() ) // cancelled
     return QString::null;
   return possible[chosenLabel];
