@@ -23,6 +23,7 @@
 #include <stdlib.h>
 
 #include <qdatetime.h>
+#include <qfileinfo.h>
 #include <qstring.h>
 #include <qptrlist.h>
 
@@ -112,39 +113,50 @@ ResourceLocalDir::~ResourceLocalDir()
   delete mLock;
 }
 
+bool ResourceLocalDir::doOpen()
+{
+  QFileInfo dirInfo( mURL.path() );
+  return dirInfo.isDir() && dirInfo.isReadable() &&
+         ( dirInfo.isWritable() || readOnly() );
+}
+
 bool ResourceLocalDir::doLoad()
 {
   kdDebug(5800) << "ResourceLocalDir::load()" << endl;
 
   mCalendar.close();
   QString dirName = mURL.path();
-  bool success = true;
 
   if ( !( KStandardDirs::exists( dirName ) || KStandardDirs::exists( dirName + "/") ) ) {
-    kdDebug(5800) << "ResourceLocalDir::load(): Directory '" << dirName << "' doesn't exist yet. Creating it..." << endl;
-
+    kdDebug(5800) << "ResourceLocalDir::load(): Directory '" << dirName 
+                  << "' doesn't exist yet. Creating it..." << endl;
     // Create the directory. Use 0775 to allow group-writable if the umask
     // allows it (permissions will be 0775 & ~umask). This is desired e.g. for
     // group-shared directories!
-    success = KStandardDirs::makeDir( dirName, 0775 );
-  } else {
+    return KStandardDirs::makeDir( dirName, 0775 );
+  }
 
-    kdDebug(5800) << "ResourceLocalDir::load(): '" << dirName << "'" << endl;
-    QDir dir( dirName );
+  // The directory exists. Now try to open (the files in) it.
+  kdDebug(5800) << "ResourceLocalDir::load(): '" << dirName << "'" << endl;
+  QFileInfo dirInfo( dirName );
+  if ( !( dirInfo.isDir() && dirInfo.isReadable() && 
+          ( dirInfo.isWritable() || readOnly() ) ) )
+    return false;
 
-    QStringList entries = dir.entryList( QDir::Files | QDir::Readable );
+  QDir dir( dirName );
+  QStringList entries = dir.entryList( QDir::Files | QDir::Readable );
 
-    QStringList::ConstIterator it;
-    for( it = entries.begin(); it != entries.end(); ++it ) {
-      if ( (*it).endsWith( "~" ) ) // is backup file, ignore it
-        continue;
+  bool success = true;
+  QStringList::ConstIterator it;
+  for( it = entries.constBegin(); it != entries.constEnd(); ++it ) {
+    if ( (*it).endsWith( "~" ) ) // is backup file, ignore it
+      continue;
 
-      QString fileName = dirName + "/" + *it;
-      kdDebug(5800) << " read '" << fileName << "'" << endl;
-      CalendarLocal cal( mCalendar.timeZoneId() );
-      if ( !doFileLoad( cal, fileName ) ) {
-        success = false;
-      }
+    QString fileName = dirName + "/" + *it;
+    kdDebug(5800) << " read '" << fileName << "'" << endl;
+    CalendarLocal cal( mCalendar.timeZoneId() );
+    if ( !doFileLoad( cal, fileName ) ) {
+      success = false;
     }
   }
 

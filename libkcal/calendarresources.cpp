@@ -183,11 +183,11 @@ QWidget *CalendarResources::dialogParentWidget()
 {
   return mDestinationPolicy->parent();
 }
+
 void CalendarResources::setDialogParentWidget( QWidget *parent )
 {
   mDestinationPolicy->setParent( parent );
 }
-
 
 void CalendarResources::close()
 {
