@@ -265,9 +265,17 @@ was-validated=true
 is-qualified=true
 font-bold=true
 Name=Keys for Qualified Signatures
+Name[km]=សោ​សម្រាប់​ហត្ថលេខា​ដែល​មាន​​គុណភាព
+Name[pt]=Chaves das Assinaturas Qualificadas
+Name[pt_BR]=Chaves das Assinaturas Qualificadas
+Name[zh_TW]=合格簽章的金鑰
 
 [Key Filter #6]
 was-validated=true
 Name=Other Keys
+Name[km]=សោ​ផ្សេង​ទៀត
+Name[pt]=Outras Chaves
+Name[pt_BR]=Outras Chaves
+Name[zh_TW]=其他金鑰
 
 
