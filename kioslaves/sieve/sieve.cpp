@@ -393,8 +393,11 @@ void kio_sieveProtocol::disconnect(bool forcibly)
 	if (!forcibly) {
 		sendData("LOGOUT");
 
-		if (!operationSuccessful())
-			ksDebug() << "Server did not logout cleanly." << endl;
+		// This crashes under certain conditions as described in 
+		// http://intevation.de/roundup/kolab/issue2442
+		// Fixing KIO::TCPSlaveBase::atEnd() for !fd would also work but 3.x is on life support.
+		//if (!operationSuccessful())
+		//	ksDebug() << "Server did not logout cleanly." << endl;
 	}
 
 	closeDescriptor();
