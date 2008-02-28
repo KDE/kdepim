@@ -455,6 +455,7 @@ class KDE_EXPORT KABCore : public KAB::Core
     QWidget *mDetailsWidget;
     QHBoxLayout *mDetailsLayout;
     QSplitter *mDetailsSplitter;
+    QSplitter *mLeftSplitter;
     QWidgetStack *mDetailsStack;
     LDAPSearchDialog *mLdapSearchDialog;
     QDict<AddresseeEditorDialog> mEditorDict;
