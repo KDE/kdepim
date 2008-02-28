@@ -1544,7 +1544,7 @@ void KABCore::editDistributionList( const KPIM::DistributionList &dist )
     return;
   QGuardedPtr<KPIM::DistributionListEditor::EditorWidget> dlg = new KPIM::DistributionListEditor::EditorWidget( addressBook(), widget() );
   dlg->setDistributionList( dist );
-  if ( dlg->exec() == QDialog::Accepted ) {
+  if ( dlg->exec() == QDialog::Accepted && dlg ) {
     const KPIM::DistributionList newDist = dlg->distributionList();
     if ( newDist != dist ) {
       addressBook()->insertAddressee( newDist );
