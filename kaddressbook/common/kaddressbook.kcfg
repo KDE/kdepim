@@ -57,7 +57,7 @@
     <entry type="Bool" name="ContactListAboveExtensions">
       <default>false</default>
        <whatsthis>If true, the contact list will be placed above the extensions on the left (distribution list editor etc.) instead of in the middle of the main window</whatsthis>
-     
+
     </entry>
   </group>
 
@@ -65,7 +65,9 @@
     <entry type="String" name="CurrentExtension">
       <default>resourceselection</default>
     </entry>
-    <entry type="StringList" name="activeExtensions"/>
+    <entry type="StringList" name="activeExtensions">
+      <default>distribution_list_editor_ng,resourceselection</default>
+    </entry>
     <entry type="IntList" name="ExtensionsSplitterSizes"/>
   </group>
 

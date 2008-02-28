@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="22">
+<kpartgui name="kaddressbook" version="23">
 
   <MenuBar>
     <Menu name="file" noMerge="1"><text>&amp;File</text>
@@ -47,6 +47,8 @@
       <Action name="view_modify"/>
       <Action name="view_delete"/>
       <Separator/>
+      <ActionList name="extensions_list"/>
+      <Separator/>
       <Action name="view_refresh"/>
     </Menu>
 
@@ -56,9 +58,6 @@
 
     <Menu name="settings" noMerge="1"><text>&amp;Settings</text>
       <Merge name="StandardToolBarMenuHandler" />
-      <Menu name="show_extensions_menu"><text>Show Extension</text>
-        <ActionList name="extensions_list"/>
-      </Menu>
       <Action name="options_show_jump_bar"/>
       <Action name="options_show_details"/>
       <Action name="options_show_statusbar"/>

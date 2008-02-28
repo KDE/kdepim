@@ -46,10 +46,10 @@ ExtensionData::ExtensionData() : action( 0 ), widget( 0 ), weight( 0 ), isDetail
 
 ExtensionManager::ExtensionManager( QWidget* extensionBar, QWidgetStack* detailsStack, KAB::Core *core, QObject *parent,
                                     const char *name )
-    : QObject( parent, name ), mExtensionBar( extensionBar ), mCore( core ), 
+    : QObject( parent, name ), mExtensionBar( extensionBar ), mCore( core ),
       mMapper( 0 ), mDetailsStack( detailsStack ), mActiveDetailsWidget( 0 )
 {
-  Q_ASSERT( mExtensionBar ); 
+  Q_ASSERT( mExtensionBar );
   QVBoxLayout* layout = new QVBoxLayout( mExtensionBar );
   mSplitter = new QSplitter( mExtensionBar );
   mSplitter->setOrientation( QSplitter::Vertical );
@@ -68,7 +68,7 @@ ExtensionManager::~ExtensionManager()
 }
 
 
-void ExtensionManager::restoreSettings() 
+void ExtensionManager::restoreSettings()
 {
   const QStringList activeExtensions = KABPrefs::instance()->activeExtensions();
 
@@ -110,7 +110,7 @@ void ExtensionManager::setSelectionChanged()
   for ( QStringList::ConstIterator it = mActiveExtensions.begin(), end = mActiveExtensions.end(); it != end; ++it ) {
     if ( mExtensionMap.contains( *it ) && mExtensionMap[*it].widget )
       mExtensionMap[*it].widget->contactsSelectionChanged();
-  } 
+  }
 }
 
 void ExtensionManager::activationToggled( const QString &extid )
@@ -127,7 +127,7 @@ void ExtensionManager::setExtensionActive( const QString& extid, bool active )
   if ( !mExtensionMap.contains( extid ) )
     return;
   if ( mActiveExtensions.contains( extid ) == active )
-    return; 
+    return;
   const ExtensionData data = mExtensionMap[ extid ];
   if ( active ) {
     mActiveExtensions.append( extid );
@@ -152,7 +152,7 @@ void ExtensionManager::setExtensionActive( const QString& extid, bool active )
   }
   mExtensionBar->setShown( !mActiveExtensions.isEmpty() );
 }
- 
+
 void ExtensionManager::createActions()
 {
   mCore->guiClient()->unplugActionList( "extensions_list" );
@@ -178,6 +178,7 @@ void ExtensionManager::createActions()
       data.action->setChecked( true );
   }
 
+  mActionList.append( new KActionSeparator( mActionCollection ) );
   mCore->guiClient()->plugActionList( "extensions_list", mActionList );
 }
 
