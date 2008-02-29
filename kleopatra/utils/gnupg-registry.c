@@ -64,7 +64,7 @@ w32_shgetfolderpath (HWND a, int b, HANDLE c, DWORD d, LPSTR e)
 
       for (i=0, handle = NULL; !handle && dllnames[i]; i++)
         {
-          handle = LoadLibrary (dllnames[i]);
+          handle = LoadLibraryA (dllnames[i]);
           if (handle)
             {
               func = (HRESULT (WINAPI *)(HWND,int,HANDLE,DWORD,LPSTR))
@@ -124,30 +124,30 @@ read_w32_registry_string (const char *root, const char *dir, const char *name)
   if ( !(root_key = get_root_key(root) ) )
     return NULL;
 
-  if( RegOpenKeyEx( root_key, dir, 0, KEY_READ, &key_handle ) )
+  if( RegOpenKeyExA( root_key, dir, 0, KEY_READ, &key_handle ) )
     {
       if (root)
 	return NULL; /* no need for a RegClose, so return direct */
       /* It seems to be common practise to fall back to HKLM. */
-      if (RegOpenKeyEx (HKEY_LOCAL_MACHINE, dir, 0, KEY_READ, &key_handle) )
+      if (RegOpenKeyExA (HKEY_LOCAL_MACHINE, dir, 0, KEY_READ, &key_handle) )
 	return NULL; /* still no need for a RegClose, so return direct */
     }
 
   nbytes = 1;
-  if( RegQueryValueEx( key_handle, name, 0, NULL, NULL, &nbytes ) ) {
+  if( RegQueryValueExA( key_handle, name, 0, NULL, NULL, &nbytes ) ) {
     if (root)
       goto leave;
     /* Try to fallback to HKLM also vor a missing value.  */
     RegCloseKey (key_handle);
-    if (RegOpenKeyEx (HKEY_LOCAL_MACHINE, dir, 0, KEY_READ, &key_handle) )
+    if (RegOpenKeyExA (HKEY_LOCAL_MACHINE, dir, 0, KEY_READ, &key_handle) )
       return NULL; /* Nope.  */
-    if (RegQueryValueEx( key_handle, name, 0, NULL, NULL, &nbytes))
+    if (RegQueryValueExA( key_handle, name, 0, NULL, NULL, &nbytes))
       goto leave;
   }
   result = malloc( (n1=nbytes+1) );
   if( !result )
     goto leave;
-  if( RegQueryValueEx( key_handle, name, 0, &type, result, &n1 ) ) {
+  if( RegQueryValueExA( key_handle, name, 0, &type, result, &n1 ) ) {
     free(result); result = NULL;
     goto leave;
   }
@@ -159,14 +159,14 @@ read_w32_registry_string (const char *root, const char *dir, const char *name)
     tmp = malloc (n1+1);
     if (!tmp)
       goto leave;
-    nbytes = ExpandEnvironmentStrings (result, tmp, n1);
+    nbytes = ExpandEnvironmentStringsA (result, tmp, n1);
     if (nbytes && nbytes > n1) {
       free (tmp);
       n1 = nbytes;
       tmp = malloc (n1 + 1);
       if (!tmp)
 	goto leave;
-      nbytes = ExpandEnvironmentStrings (result, tmp, n1);
+      nbytes = ExpandEnvironmentStringsA (result, tmp, n1);
       if (nbytes && nbytes > n1) {
 	free (tmp); /* oops - truncated, better don't expand at all */
 	goto leave;
@@ -232,7 +232,7 @@ standard_homedir (void)
           
           /* Try to create the directory if it does not yet exists.  */
           if (access (dir, F_OK))
-            CreateDirectory (dir, NULL);
+            CreateDirectoryA (dir, NULL);
         }
       else
         dir = "C:\\gnupg";
