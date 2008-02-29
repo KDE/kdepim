@@ -1,3 +1,21 @@
+Friday, February 29th 2008
+
+Problems addressed
+-------------------
+
+* Prevent crash after changing the layout and replying then. (778728)
+* kolab/issue2442 Prevent crash in TCPSlaveBase if the connection is already closed and thus the file descriptor is invalid/null. (779694)
+* first couple lines of a message were not clickable.[ kde-bug#151150 ] (779994)
+* kolab/issue1700  (780211)
+* kolab/issue2168 making attachment quick view foldable in enterprise style. (780250)
+* kolab/issue2413 Allow to set the state of several thread at a time. (780251)
+* kolab/issue2312 ignore incidences in shared calendars (780286)
+
+
+Merges
+---------
+* Merges in from 3.5 branch
+
 Friday, February 22nd 2008
 
 Problems addressed
@@ -8,7 +26,6 @@ Merges
 ------
 
 * Merges in from 3.5 branch.
-
 
 Friday, February 15th 2008
 
