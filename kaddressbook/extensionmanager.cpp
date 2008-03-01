@@ -233,7 +233,7 @@ void ExtensionManager::createExtensionWidgets()
       continue;
     }
 
-    KAB::ExtensionFactory *extensionFactory = static_cast<KAB::ExtensionFactory*>( factory );
+    KAB::ExtensionFactory *extensionFactory = dynamic_cast<KAB::ExtensionFactory*>( factory );
 
     if ( !extensionFactory ) {
       kDebug(5720) <<"ExtensionManager::loadExtensions(): Cast failed";
