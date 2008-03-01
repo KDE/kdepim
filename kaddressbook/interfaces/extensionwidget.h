@@ -87,7 +87,7 @@ class KABINTERFACES_EXPORT ExtensionWidget : public QWidget
     ExtensionWidgetPrivate *d;
 };
 
-class ExtensionFactory : public KLibFactory
+class KABINTERFACES_EXPORT ExtensionFactory : public KLibFactory
 {
   public:
     virtual ExtensionWidget *extension( KAB::Core *core, QWidget *parent ) = 0;
