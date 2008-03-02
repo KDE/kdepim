@@ -560,7 +560,7 @@ void KNComposer::setConfig(bool onlyFonts)
 {
   if (!onlyFonts) {
     v_iew->e_dit->wordWrapToggled( knGlobals.settings()->wordWrap());
-    v_iew->e_dit->setWrapColumnOrWidth( knGlobals.settings()->maxLineLength() );
+    v_iew->e_dit->setLineWrapColumnOrWidth( knGlobals.settings()->maxLineLength() );
     a_ctWordWrap->setChecked( knGlobals.settings()->wordWrap() );
 
     a_ctAutoSpellChecking->setChecked( knGlobals.settings()->autoSpellChecking() );
@@ -1027,7 +1027,7 @@ void KNComposer::insertFile( QFile *file, bool clear, bool box, const QString &b
     temp = QString::fromLatin1(",----[ %1 ]\n").arg(boxTitle);
   //Laurent fixme
   if (box && (v_iew->e_dit->wordWrapMode()!=QTextOption::NoWrap)) {
-    int wrapAt = v_iew->e_dit->wrapColumnOrWidth();
+    int wrapAt = v_iew->e_dit->lineWrapColumnOrWidth();
     QStringList lst;
     QString line;
     while(!file->atEnd()) {
