@@ -135,6 +135,7 @@ static void setupLogging()
 }
 
 #ifndef KLEO_BUILD_OLD_MAINWINDOW
+#include <uiserver/uiserver.h>
 static void fillKeyCache( KSplashScreen * splash, Kleo::UiServer * server ) {
 
   QEventLoop loop;
