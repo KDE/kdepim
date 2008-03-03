@@ -24,6 +24,8 @@
 
 #include <algorithm>
 
+#include <boost/range.hpp>
+
 namespace kdtools {
 
     template <typename InputIterator, typename OutputIterator, typename UnaryPredicate>
@@ -133,6 +135,58 @@ namespace kdtools {
         }
         return false;
     }
+
+    //@{
+    /*! Versions of std algorithms that take ranges */
+
+    template <typename C, typename V>
+    bool contains( const C & c, const V & v ) {
+        return std::find( boost::begin( c ), boost::end( c ), v ) != boost::end( c ) ;
+    }
+
+    template <typename C, typename P>
+    bool contains_if( const C & c, P p ) {
+        return std::find_if( boost::begin( c ), boost::end( c ), p ) != boost::end( c );
+    }
+
+    template <typename C, typename V>
+    size_t count( const C & c, const V & v ) {
+        return std::count( boost::begin( c ), boost::end( c ), v );
+    }
+
+    template <typename C, typename P>
+    size_t count_if( const C & c, P p ) {
+        return std::count_if( boost::begin( c ), boost::end( c ), p );
+    }
+
+    template <typename O, typename I, typename P>
+    O transform( const I & i, P p ) {
+        O o;
+        std::transform( boost::begin( i ), boost::end( i ),
+                        std::back_inserter( o ), p );
+        return o;
+    }
+
+    template <typename O, typename I>
+    O copy( const I & i ) {
+        O o;
+        std::copy( boost::begin( i ), boost::end( i ), std::back_inserter( o ) );
+        return o;
+    }
+
+    template <typename O, typename I, typename P>
+    O copy_if( const I & i, P p ) {
+        O o;
+        copy_if( boost::begin( i ), boost::end( i ), std::back_inserter( o ) );
+        return o;
+    }
+
+    template <typename I, typename P>
+    P for_each( const I & i, P p ) {
+        return std::for_each( boost::begin( i ), boost::end( i ), p );
+    }
+
+    //@}
 }
 
 #endif /* __KDTOOLSCORE_STL_UTIL_H__ */
