@@ -138,7 +138,7 @@ static void setupLogging()
 static void fillKeyCache( KSplashScreen * splash, Kleo::UiServer * server ) {
 
   QEventLoop loop;
-  Kleo::RefreshKeysCommand * cmd = new Kleo::RefreshKeysCommand( Kleo::RefreshKeysCommand::Validate, 0 );
+  Kleo::RefreshKeysCommand * cmd = new Kleo::RefreshKeysCommand( 0 );
   QObject::connect( cmd, SIGNAL(finished()), &loop, SLOT(quit()) );
   QObject::connect( cmd, SIGNAL(finished()), server, SLOT(enableCryptoCommands()) );
   splash->showMessage( i18n("Loading certificate cache...") );

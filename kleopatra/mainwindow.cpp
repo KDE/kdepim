@@ -174,10 +174,7 @@ public:
         createAndStart<DetailsCommand>();
     }
     void refreshCertificates() {
-        createAndStart<RefreshKeysCommand>( RefreshKeysCommand::Normal );
-    }
-    void validateCertificates() {
-        createAndStart<RefreshKeysCommand>( RefreshKeysCommand::Validate );
+        createAndStart<RefreshKeysCommand>();
     }
     void deleteCertificates() {
         createAndStart<DeleteCertificatesCommand>();
@@ -298,7 +295,7 @@ MainWindow::Private::Private( MainWindow * qq )
     refreshTimer.setInterval( 5 * 60 * 1000 );
     refreshTimer.setSingleShot( false );
     refreshTimer.start();
-    connect( &refreshTimer, SIGNAL(timeout()), q, SLOT(validateCertificates()) );
+    connect( &refreshTimer, SIGNAL(timeout()), q, SLOT(refreshCertificates()) );
 
     controller.setFlatModel( flatModel );
     controller.setHierarchicalModel( hierarchicalModel );
@@ -381,8 +378,6 @@ void MainWindow::Private::setupActions() {
         { "view_certificate_details", i18n( "Certificate Details" ), QString(),
           0, q, SLOT(certificateDetails()), QString(), false, true }, // ### should be disabled until selected
         // Certificate menu
-        { "certificates_validate", i18n("Validate" ), QString()/*i18n("Validate selected certificates")*/,
-          "view-refresh", q, SLOT(validateCertificates()), "SHIFT+F5", false, true },
         { "certificates_delete", i18n("Delete" ), QString()/*i18n("Delete selected certificates")*/,
           "edit-delete", q, SLOT(deleteCertificates()), "Delete", false, true },
         // CRLs menu

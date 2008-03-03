@@ -41,13 +41,8 @@ namespace  Kleo {
     class RefreshKeysCommand : public Command {
         Q_OBJECT
     public:
-        enum Mode {
-            Normal,
-            Validate
-        };
-
-        RefreshKeysCommand( Mode mode, KeyListController* parent );
-        RefreshKeysCommand( Mode mode, QAbstractItemView * view, KeyListController* parent );
+        explicit RefreshKeysCommand( KeyListController* parent );
+        RefreshKeysCommand( QAbstractItemView * view, KeyListController* parent );
         ~RefreshKeysCommand();        
 
     private:

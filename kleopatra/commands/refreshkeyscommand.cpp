@@ -62,7 +62,7 @@ using namespace GpgME;
 class RefreshKeysCommand::Private : public Command::Private {
     friend class ::Kleo::RefreshKeysCommand;
 public:
-    Private( RefreshKeysCommand * qq, Mode mode, KeyListController* controller );
+    Private( RefreshKeysCommand * qq, KeyListController* controller );
     ~Private();
 
     enum KeyType {
@@ -79,7 +79,6 @@ public:
     void mergeKeysAndUpdateKeyCache();
 
 private:
-    const Mode mode;
     uint m_pubKeysJobs;
     uint m_secKeysJobs;
     bool canceled;
@@ -91,23 +90,22 @@ RefreshKeysCommand::Private * RefreshKeysCommand::d_func() { return static_cast<
 const RefreshKeysCommand::Private * RefreshKeysCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
 
 
-RefreshKeysCommand::RefreshKeysCommand( Mode mode, KeyListController * p )
-    : Command( new Private( this, mode, p ) )
+RefreshKeysCommand::RefreshKeysCommand( KeyListController * p )
+    : Command( new Private( this, p ) )
 {
 
 }
 
-RefreshKeysCommand::RefreshKeysCommand( Mode mode, QAbstractItemView * v, KeyListController * p )
-    : Command( v, new Private( this, mode, p ) )
+RefreshKeysCommand::RefreshKeysCommand( QAbstractItemView * v, KeyListController * p )
+    : Command( v, new Private( this, p ) )
 {
 
 }
 
 RefreshKeysCommand::~RefreshKeysCommand() {}
 
-RefreshKeysCommand::Private::Private( RefreshKeysCommand * qq, Mode m, KeyListController * controller )
+RefreshKeysCommand::Private::Private( RefreshKeysCommand * qq, KeyListController * controller )
     : Command::Private( qq, controller ),
-      mode( m ),
       m_pubKeysJobs( 0 ),
       m_secKeysJobs( 0 ),
       canceled( false ),
@@ -125,7 +123,7 @@ void RefreshKeysCommand::Private::startKeyListing( const char* backend, KeyType 
     const Kleo::CryptoBackend::Protocol * const protocol = Kleo::CryptoBackendFactory::instance()->protocol( backend );
     if ( !protocol )
         return;
-    Kleo::KeyListJob * const job = protocol->keyListJob( /*remote*/false, /*includeSigs*/false, mode == Validate );
+    Kleo::KeyListJob * const job = protocol->keyListJob( /*remote*/false, /*includeSigs*/false, /*validate*/true );
     if ( !job )
         return;
     if ( type == PublicKeys ) {

@@ -28,8 +28,6 @@
 	</Menu>
 	<Menu name="certMenu">
 		<text>&amp;Certificates</text>
-		<Action name="certificates_validate"/>
-                <Separator/>
 		<Action name="certificates_delete"/>
         </Menu>
 	<Menu name="crlMenu">
