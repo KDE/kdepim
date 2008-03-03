@@ -82,6 +82,8 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <cassert>
+
 namespace {
     template <typename T>
     boost::shared_ptr<T> make_shared_ptr( T * t ) {
@@ -96,11 +98,10 @@ static QString environmentVariable( const QString& var, const QString& defaultVa
     {
         if ( !i.startsWith( var + '=' ) )
             continue;
-        
-        const QStringList split = i.split( '=' ); 
-        if ( split.count() < 2 )
-            continue;
-        return split[1];
+
+        const int equalPos = i.indexOf( '=' );
+        assert( equalPos >= 0 );
+        return i.mid( equalPos + 1 );
     }
     return defaultValue;
 }
