@@ -35,8 +35,6 @@
 #include "command.h"
 #include "command_p.h"
 
-#include <controllers/keylistcontroller.h>
-
 #include <kdebug.h>
 
 #include <QAbstractItemView>
