@@ -76,6 +76,7 @@ set( _kleopatra_common_SRCS
 
   utils/kdpipeiodevice.cpp
   utils/kdlogtextwidget.cpp
+  utils/headerview.cpp
 
   utils/hex.cpp
   utils/input.cpp
