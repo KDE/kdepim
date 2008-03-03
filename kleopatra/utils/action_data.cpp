@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    action_data.cpp
+    utils/action_data.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -36,8 +36,6 @@
 
 #include <KToggleAction>
 #include <KActionCollection>
-
-using namespace Kleo;
 
 KAction * Kleo::make_action_from_data( const action_data & ad, QObject * parent ) {
 

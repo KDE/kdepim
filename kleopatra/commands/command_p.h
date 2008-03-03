@@ -34,7 +34,7 @@
 #define __KLEOPATRA_COMMANDS_COMMAND_P_H__
 
 #include "command.h"
-#include "controllers/keylistcontroller.h"
+#include "view/keylistcontroller.h"
 #include "models/keylistmodel.h"
 
 #include <QAbstractItemView>

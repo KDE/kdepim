@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    action_data.h
+    view/searchbar.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,43 +30,45 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_ACTIONDATA_H__
-#define __KLEOPATRA_ACTIONDATA_H__
+#ifndef __KLEOPATRA_VIEW_SEARCHBAR_H__
+#define __KLEOPATRA_VIEW_SEARCHBAR_H__
 
-#include <QString>
+#include <QWidget>
 
-class QObject;
-class KAction;
-class KActionCollection;
+#include <utils/pimpl_ptr.h>
+
+#include <boost/shared_ptr.hpp>
 
 namespace Kleo {
 
-    struct action_data {
-        const char * name;
-        QString text;
-        QString tooltip;
-        const char * icon;
-        const QObject * receiver;
-        const char * slot;
-        QString shortcut;
-        bool toggle;
-        bool enabled;
+    class KeyFilter;
+
+    class SearchBar : public QWidget {
+        Q_OBJECT
+    public:
+        explicit SearchBar( QWidget * parent=0, Qt::WindowFlags f=0 );
+        ~SearchBar();
+
+        QString stringFilter() const;
+        const boost::shared_ptr<KeyFilter> & keyFilter() const;
+                                                         
+    public Q_SLOTS:
+        void setStringFilter( const QString & text );
+        void setKeyFilter( const boost::shared_ptr<Kleo::KeyFilter> & filter );
+
+        void setChangeStringFilterEnabled( bool enable );
+        void setChangeKeyFilterEnabled( bool enable );
+
+    Q_SIGNALS:
+        void stringFilterChanged( const QString & text );
+        void keyFilterChanged( const boost::shared_ptr<Kleo::KeyFilter> & filter );
+
+    private:
+        class Private;
+        kdtools::pimpl_ptr<Private> d;
+        Q_PRIVATE_SLOT( d, void slotKeyFilterChanged(int) )
     };
-
-    void make_actions_from_data( const action_data * data, unsigned int numData, KActionCollection * collection );
-    void make_actions_from_data( const action_data * data, unsigned int numData, QObject * parent );
-
-    template <unsigned int N>
-    inline void make_actions_from_data( const action_data (&data)[N], KActionCollection * collection ) {
-        make_actions_from_data( data, N, collection );
-    }
-    template <unsigned int N>
-    inline void make_actions_from_data( const action_data (&data)[N], QObject * parent ) {
-        make_actions_from_data( data, N, parent );
-    }
-
-    KAction * make_action_from_data( const action_data & data, QObject * parent );
 
 }
 
-#endif /* __KLEOPATRA_ACTIONDATA_H__ */
+#endif // __KLEOPATRA_VIEW_SEARCHBAR_H__

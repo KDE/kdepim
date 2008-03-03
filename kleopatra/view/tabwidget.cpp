@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    tabwidget.cpp
+    view/tabwidget.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -34,11 +34,10 @@
 
 #include "tabwidget.h"
 
-#include "action_data.h"
-
 #include <models/keylistmodel.h>
 #include <models/keylistsortfilterproxymodel.h>
 
+#include <utils/action_data.h>
 #include <utils/headerview.h>
 #include <utils/stl_util.h>
 
@@ -336,7 +335,7 @@ void Page::setHierarchical( bool on ) {
 //
 
 class TabWidget::Private {
-    friend class ::TabWidget;
+    friend class ::Kleo::TabWidget;
     TabWidget * const q;
 public:
     explicit Private( TabWidget * qq );

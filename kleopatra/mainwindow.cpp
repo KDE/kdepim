@@ -34,17 +34,14 @@
 
 #include "mainwindow.h"
 
-#include "action_data.h"
-
-#include "searchbar.h"
-#include "tabwidget.h"
-
 #include "certificatewizardimpl.h"
 
 #include "models/keylistmodel.h"
 #include "models/keylistsortfilterproxymodel.h"
 
-#include "controllers/keylistcontroller.h"
+#include "view/searchbar.h"
+#include "view/tabwidget.h"
+#include "view/keylistcontroller.h"
 
 #include "commands/exportcertificatecommand.h"
 #include "commands/importcertificatecommand.h"
@@ -59,6 +56,7 @@
 #include "conf/configuredialog.h"
 
 #include "utils/stl_util.h"
+#include "utils/action_data.h"
 
 #include <KActionCollection>
 #include <KLocale>

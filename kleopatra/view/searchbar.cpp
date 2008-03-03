@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    searchbar.cpp
+    view/searchbar.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -50,7 +50,7 @@ using namespace Kleo;
 using namespace boost;
 
 class SearchBar::Private {
-    friend class ::SearchBar;
+    friend class ::Kleo::SearchBar;
     SearchBar * const q;
 public:
     explicit Private( SearchBar * qq );

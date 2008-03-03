@@ -87,6 +87,7 @@ set( _kleopatra_common_SRCS
   utils/classify.cpp
   utils/iodevicelogger.cpp
   utils/log.cpp
+  utils/action_data.cpp
 
   models/keycache.cpp
   models/keylistmodel.cpp
@@ -94,7 +95,9 @@ set( _kleopatra_common_SRCS
   models/subkeylistmodel.cpp
   models/useridlistmodel.cpp
 
-  controllers/keylistcontroller.cpp
+  view/keylistcontroller.cpp
+  view/searchbar.cpp
+  view/tabwidget.cpp
 
   crypto/certificateresolver.cpp
   crypto/task.cpp
@@ -154,10 +157,7 @@ if (ONLY_KLEO)
 endif(ONLY_KLEO)
 
 set( _kleopatra_mainwindow_SRCS
-     action_data.cpp
      mainwindow.cpp 
-     searchbar.cpp
-     tabwidget.cpp
 )
 
 if ( KLEO_BUILD_OLD_MAINWINDOW )
