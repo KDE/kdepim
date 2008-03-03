@@ -247,8 +247,7 @@ int main( int argc, char** argv )
 
       if ( !daemon )
           splash.show();
-
-      fillKeyCache( &splash, &server );
+      fillKeyCache( &splash, 0 );
 
       if ( !daemon ) {
           MainWindow* mainWindow = new MainWindow;
