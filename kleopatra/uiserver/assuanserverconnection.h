@@ -54,6 +54,9 @@ namespace Kleo {
         AssuanServerConnection( assuan_fd_t fd, const std::vector< boost::shared_ptr<AssuanCommandFactory> > & factories, QObject * parent=0 );
         ~AssuanServerConnection();
 
+    public Q_SLOTS:
+        void enableCryptoCommands( bool enable=true );
+
     Q_SIGNALS:
         void closed( Kleo::AssuanServerConnection * which );
         void startKeyManagerRequested();

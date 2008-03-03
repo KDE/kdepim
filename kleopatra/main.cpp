@@ -135,11 +135,12 @@ static void setupLogging()
 }
 
 #ifndef KLEO_BUILD_OLD_MAINWINDOW
-static void fillKeyCache( KSplashScreen * splash ) {
+static void fillKeyCache( KSplashScreen * splash, Kleo::UiServer * server ) {
 
   QEventLoop loop;
   Kleo::RefreshKeysCommand * cmd = new Kleo::RefreshKeysCommand( Kleo::RefreshKeysCommand::Normal, 0 );
   QObject::connect( cmd, SIGNAL(finished()), &loop, SLOT(quit()) );
+  QObject::connect( cmd, SIGNAL(finished()), server, SLOT(enableCryptoCommands()) );
   splash->showMessage( i18n("Loading certificate cache...") );
   cmd->start();
   loop.exec();
@@ -189,43 +190,12 @@ int main( int argc, char** argv )
 
   KSplashScreen splash( UserIcon( "kleopatra_splashscreen" ), Qt::WindowStaysOnTopHint );
 
-#ifdef KLEO_BUILD_OLD_MAINWINDOW
-  if( !Kleo::CryptoBackendFactory::instance()->smime() ) {
-    KMessageBox::error(0,
-			i18n( "<qt>The crypto plugin could not be initialized.<br />"
-			      "Certificate Manager will terminate now.</qt>") );
-    return -2;
-  }
-
-  splash.show();
-
-  CertManager* manager = new CertManager( args->isSet("external"),
-					  args->getOption("query"),
-					  args->getOption("import-certificate") );
-  manager->show();
-  splash.finish( manager );
-#else
-
-  const bool daemon = args->isSet("daemon");
-
-  if ( !daemon )
-      splash.show();
-
-  fillKeyCache( &splash );
-
-  if ( !daemon ) {
-    MainWindow* mainWindow = new MainWindow;
-    mainWindow->show();
-    sysTray.setMainWindow( mainWindow );
-    splash.finish( mainWindow );
-  }
-
-#endif
-
   int rc;
 #ifdef HAVE_USABLE_ASSUAN
   try {
       Kleo::UiServer server( args->getOption("uiserver-socket") );
+
+      server.enableCryptoCommands( false );
 
 # ifndef KLEO_BUILD_OLD_MAINWINDOW
       QObject::connect( &server, SIGNAL(startKeyManagerRequested()),
@@ -253,6 +223,39 @@ int main( int argc, char** argv )
 # ifndef KLEO_BUILD_OLD_MAINWINDOW
       sysTray.setToolTip( i18n( "Kleopatra UI Server listening on %1", server.socketName() ) );
 # endif
+#endif
+
+#ifdef KLEO_BUILD_OLD_MAINWINDOW
+      if( !Kleo::CryptoBackendFactory::instance()->smime() ) {
+          KMessageBox::error(0,
+                             i18n( "<qt>The crypto plugin could not be initialized.<br />"
+                                   "Certificate Manager will terminate now.</qt>") );
+          return -2;
+      }
+
+      splash.show();
+
+      CertManager* manager = new CertManager( args->isSet("external"),
+                                              args->getOption("query"),
+                                              args->getOption("import-certificate") );
+      manager->show();
+      splash.finish( manager );
+#else
+
+      const bool daemon = args->isSet("daemon");
+
+      if ( !daemon )
+          splash.show();
+
+      fillKeyCache( &splash, &server );
+
+      if ( !daemon ) {
+          MainWindow* mainWindow = new MainWindow;
+          mainWindow->show();
+          sysTray.setMainWindow( mainWindow );
+          splash.finish( mainWindow );
+      }
+
 #endif
 
       args->clear();

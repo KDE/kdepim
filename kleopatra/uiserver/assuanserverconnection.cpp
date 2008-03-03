@@ -57,6 +57,7 @@
 #include <KWindowSystem>
 
 #include <QSocketNotifier>
+#include <QEventLoop>
 #include <QVariant>
 #include <QPointer>
 #include <QFileInfo>
@@ -237,6 +238,14 @@ public Q_SLOTS:
     }
 
 private:
+    void waitForCryptoCommandsEnabled() {
+        if ( cryptoCommandsEnabled )
+            return;
+        QEventLoop l;
+        loop = &l;
+        l.exec();
+        loop = 0;
+    }
 
     void nohupDone( AssuanCommand * cmd ) {
         const std::vector< shared_ptr<AssuanCommand> >::iterator it
@@ -564,7 +573,9 @@ private:
 
     assuan_fd_t fd;
     AssuanContext ctx;
-    bool closed;
+    bool closed                : 1;
+    bool cryptoCommandsEnabled : 1;
+    QEventLoop * loop;
     std::vector< shared_ptr<QSocketNotifier> > notifiers;
     std::vector< shared_ptr<AssuanCommandFactory> > factories; // sorted: _detail::ByName<std::less>
     shared_ptr<AssuanCommand> currentCommand;
@@ -587,7 +598,13 @@ void AssuanServerConnection::Private::cleanup() {
 }
 
 AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< shared_ptr<AssuanCommandFactory> > & factories_, AssuanServerConnection * qq )
-    : QObject(), q( qq ), fd( fd_ ), closed( false ), factories( factories_ )
+    : QObject(),
+      q( qq ),
+      fd( fd_ ),
+      closed( false ),
+      cryptoCommandsEnabled( true ),
+      loop( 0 ),
+      factories( factories_ )
 {
 #ifdef __GNUC__
     assert( __gnu_cxx::is_sorted( factories_.begin(), factories_.end(), _detail::ByName<std::less>() ) );
@@ -680,6 +697,14 @@ AssuanServerConnection::AssuanServerConnection( assuan_fd_t fd, const std::vecto
 }
 
 AssuanServerConnection::~AssuanServerConnection() {}
+
+void AssuanServerConnection::enableCryptoCommands( bool on ) {
+    if ( on == d->cryptoCommandsEnabled )
+        return;
+    d->cryptoCommandsEnabled = on;
+    if ( d->loop )
+        d->loop->quit();
+}
 
 
 //
@@ -1086,6 +1111,10 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
             nohup = true;
             cmd->d->options.erase( "nohup" );
         }
+
+        conn.currentCommand = cmd;
+        conn.waitForCryptoCommandsEnabled();
+        conn.currentCommand.reset();
 
         if ( const int err = cmd->start() )
             if ( cmd->d->done )

@@ -63,6 +63,7 @@ namespace Kleo {
     public Q_SLOTS:
         void start();
         void stop();
+        void enableCryptoCommands( bool enable=true );
 
     Q_SIGNALS:
         void stopped();

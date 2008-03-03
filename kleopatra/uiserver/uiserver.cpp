@@ -37,6 +37,7 @@
 
 #include <utils/detail_p.h>
 #include <utils/exception.h>
+#include <utils/stl_util.h>
 
 #include <QTcpSocket>
 #include <QDir>
@@ -61,7 +62,8 @@ UiServer::Private::Private( UiServer * qq )
       factories(),
       connections(),
       suggestedSocketName(),
-      actualSocketName()
+      actualSocketName(),
+      cryptoCommandsEnabled( false )
 {
     assuan_set_assuan_err_source( GPG_ERR_SOURCE_DEFAULT );
 }
@@ -110,6 +112,14 @@ void UiServer::stop() {
     if ( d->file.exists() )
         d->file.remove();
 
+}
+
+void UiServer::enableCryptoCommands( bool on ) {
+    if ( on == d->cryptoCommandsEnabled )
+        return;
+    d->cryptoCommandsEnabled = on;
+    kdtools::for_each( d->connections,
+                       bind( &AssuanServerConnection::enableCryptoCommands, _1, on ) );
 }
 
 QString UiServer::socketName() const {
@@ -162,6 +172,7 @@ void UiServer::Private::incomingConnection( int fd ) {
                  this, SLOT(slotConnectionClosed(Kleo::AssuanServerConnection*)) );
         connect( c.get(), SIGNAL(startKeyManagerRequested()),
                  q, SIGNAL(startKeyManagerRequested()), Qt::QueuedConnection );
+        c->enableCryptoCommands( cryptoCommandsEnabled );
         connections.push_back( c );
         qDebug( "UiServer: client connection %p established successfully", c.get() );
     } catch ( const Exception & e ) {

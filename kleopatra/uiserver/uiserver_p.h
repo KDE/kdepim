@@ -94,6 +94,7 @@ namespace Kleo {
 	    QString actualSocketName;
 	    assuan_sock_nonce_t nonce;
 	    const WSAStarter _wsastarter;
+            bool cryptoCommandsEnabled;
 	};
 
 }
