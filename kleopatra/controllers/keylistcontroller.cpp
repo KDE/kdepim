@@ -38,10 +38,11 @@
 #include <models/keycache.h>
 #include <models/keylistmodel.h>
 
+#include <utils/headerview.h>
+
 #include <gpgme++/key.h>
 
 #include <QAbstractItemView>
-#include <QHeaderView>
 #include <QTreeView>
 #include <QTableView>
 #include <QPointer>
@@ -58,18 +59,18 @@ using namespace GpgME;
 
 static const QHeaderView::ResizeMode resize_modes[Kleo::AbstractKeyListModel::NumColumns] = {
     QHeaderView::Stretch,          // Name
-    QHeaderView::ResizeToContents, // EMail
-    QHeaderView::ResizeToContents, // Valid From
-    QHeaderView::ResizeToContents, // Valid Until
-    QHeaderView::ResizeToContents, // Details
-    QHeaderView::ResizeToContents, // Fingerprint
+    QHeaderView::Stretch, // EMail
+    QHeaderView::Fixed, // Valid From
+    QHeaderView::Fixed, // Valid Until
+    QHeaderView::Fixed, // Details
+    QHeaderView::Fixed, // Fingerprint
 };
 
-static QHeaderView * get_header_view( QAbstractItemView * view ) {
+static HeaderView * get_header_view( QAbstractItemView * view ) {
     if ( const QTableView * const table = qobject_cast<QTableView*>( view ) )
-        return table->horizontalHeader();
+        return qobject_cast<HeaderView*>( table->horizontalHeader() );
     if ( const QTreeView * const tree = qobject_cast<QTreeView*>( view ) )
-        return tree->header();
+        return qobject_cast<HeaderView*>( tree->header() );
     return 0;
 }
 
@@ -239,10 +240,10 @@ void KeyListController::Private::connectView( QAbstractItemView * view ) {
     view->setProperty( "allColumnsShowFocus", true );
     view->setProperty( "sortingEnabled", true );
 
-#if 0
-    if ( QHeaderView * const hv = get_header_view( view ) )
+#if 1
+    if ( HeaderView * const hv = get_header_view( view ) )
         for ( int i = 0, end = std::min<int>( hv->count(), AbstractKeyListModel::NumColumns ) ; i < end ; ++i )
-            hv->setResizeMode( i, resize_modes[i] );
+            hv->setSectionResizeMode( i, resize_modes[i] );
 #endif
 }
 

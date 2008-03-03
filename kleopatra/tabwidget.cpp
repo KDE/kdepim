@@ -39,6 +39,9 @@
 #include <models/keylistmodel.h>
 #include <models/keylistsortfilterproxymodel.h>
 
+#include <utils/headerview.h>
+#include <utils/stl_util.h>
+
 #include <kleo/keyfilter.h>
 #include <kleo/keyfiltermanager.h>
 
@@ -188,6 +191,7 @@ static const char TITLE_ENTRY[] = "title";
 static const char STRING_FILTER_ENTRY[] = "string-filter";
 static const char KEY_FILTER_ENTRY[] = "key-filter";
 static const char HIERARCHICAL_VIEW_ENTRY[] = "hierarchical-view";
+static const char COLUMN_SIZES[] = "column-sizes";
 
 Page::Page( const KConfigGroup & group, QWidget * parent )
     : QWidget( parent ),
@@ -206,11 +210,23 @@ Page::Page( const KConfigGroup & group, QWidget * parent )
       m_canChangeHierarchical( !group.isEntryImmutable( HIERARCHICAL_VIEW_ENTRY ) )
 {
     init();
+    assert( m_view );
+    assert( m_view->header() );
+    assert( qobject_cast<HeaderView*>( m_view->header() ) == static_cast<HeaderView*>( m_view->header() ) );
+    if ( HeaderView * const hv = static_cast<HeaderView*>( m_view->header() ) ) {
+        const QList<int> sizes = group.readEntry( COLUMN_SIZES, QList<int>() );
+        if ( !sizes.empty() )
+            hv->setSectionSizes( kdtools::copy< std::vector<int> >( sizes ) );
+    }
 }
 
 void Page::init() {
     KDAB_SET_OBJECT_NAME( m_proxy );
     KDAB_SET_OBJECT_NAME( m_view );
+
+    HeaderView * headerView = new HeaderView( Qt::Horizontal );
+    KDAB_SET_OBJECT_NAME( headerView );
+    m_view->setHeader( headerView );
 
     if ( model() )
         m_proxy.setSourceModel( model() );
@@ -227,7 +243,8 @@ void Page::saveTo( KConfigGroup & group ) const {
     group.writeEntry( STRING_FILTER_ENTRY, m_stringFilter );
     group.writeEntry( KEY_FILTER_ENTRY, m_keyFilter ? m_keyFilter->id() : QString() );
     group.writeEntry( HIERARCHICAL_VIEW_ENTRY, m_isHierarchical );
-
+    if ( const HeaderView * const hv = m_view ? qobject_cast<HeaderView*>( m_view->header() ) : 0 )
+        group.writeEntry( COLUMN_SIZES, kdtools::copy< QList<int> >( hv->sectionSizes() ) );
 }
 
 void Page::setFlatModel( AbstractKeyListModel * model ) {
