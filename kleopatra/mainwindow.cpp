@@ -213,7 +213,7 @@ public:
 
 private:
     void setupActions();
-    void setupViews();
+    void loadViews();
     void saveViews();
 
     void addView( const QString & title, const QString & keyFilterID=QString(), const QString & searchString=QString() );
@@ -313,11 +313,9 @@ MainWindow::Private::Private( MainWindow * qq )
 
     q->createGUI( "kleopatra_newui.rc" );
 
-    q->resize( 640, 480 );
-
     q->setAcceptDrops( true );
 
-    setupViews();
+    q->setAutoSaveSettings();
 } 
 
 MainWindow::Private::~Private() {} 
@@ -411,7 +409,7 @@ static QStringList extractViewGroups( const KSharedConfig::Ptr & config ) {
     return config->groupList().filter( QRegExp( "^View #\\d+$" ) );
 }
 
-void MainWindow::Private::setupViews() {
+void MainWindow::Private::loadViews() {
 
     if ( const KSharedConfig::Ptr config = KGlobal::config() ) {
 
@@ -566,7 +564,13 @@ void MainWindow::closeEvent( QCloseEvent * e ) {
     // so do not let it touch the event...
     kDebug();
     d->saveViews();
+    saveMainWindowSettings( KConfigGroup( KGlobal::config(), autoSaveGroup() ) );
     e->accept();
+}
+
+void MainWindow::showEvent( QShowEvent * e ) {
+    KXmlGuiWindow::showEvent( e );
+    d->loadViews();
 }
 
 static QStringList extract_local_files( const QMimeData * data ) {

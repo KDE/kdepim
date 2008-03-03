@@ -45,6 +45,7 @@ public:
 
 protected:
     void closeEvent( QCloseEvent * e );
+    void showEvent( QShowEvent * e );
     void dragEnterEvent( QDragEnterEvent * );
     void dropEvent( QDropEvent * );
 
