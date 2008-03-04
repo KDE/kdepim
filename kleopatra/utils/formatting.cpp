@@ -127,10 +127,10 @@ namespace {
 
     template <typename T_arg>
     QString format_row( const QString & field, const T_arg & arg ) {
-	return i18n( "<tr><th>%1:</th><td>%2</td></tr>" ).arg( field ).arg( arg );
+	return i18n( "<tr><th>%1:</th><td>%2</td></tr>", field, arg );
     }
     QString format_row( const QString & field, const QString & arg ) {
-	return i18n( "<tr><th>%1:</th><td>%2</td></tr>" ).arg( field, Qt::escape( arg ) );
+	return i18n( "<tr><th>%1:</th><td>%2</td></tr>", field, Qt::escape( arg ) );
     }
     QString format_row( const QString & field, const char * arg ) {
 	return format_row( field, QString::fromUtf8( arg ) );
@@ -139,9 +139,9 @@ namespace {
     QString format_keytype( const Key & key ) {
 	const Subkey subkey = key.subkey( 0 );
 	if ( key.hasSecret() )
-	    return i18n( "%1-bit %2 (secret key available)" ).arg( subkey.length() ).arg( subkey.publicKeyAlgorithmAsString() );
+	    return i18n( "%1-bit %2 (secret key available)", subkey.length(), subkey.publicKeyAlgorithmAsString() );
 	else
-	    return i18n( "%1-bit %2" ).arg( subkey.length() ).arg( subkey.publicKeyAlgorithmAsString() );
+	    return i18n( "%1-bit %2", subkey.length(), subkey.publicKeyAlgorithmAsString() );
     }
 
     QString format_keyusage( const Key & key ) {
@@ -190,8 +190,8 @@ QString Formatting::toolTip( const Key & key ) {
         result += format_row( i18n("a.k.a."), key.userID( i ).id() );
     result += format_row( i18n("Validity"),
                           subkey.neverExpires()
-                          ? i18n( "from %1 until forever" ).arg( time_t2string( subkey.creationTime() ) )
-                          : i18n( "from %1 through %2" ).arg( time_t2string( subkey.creationTime() ), time_t2string( subkey.expirationTime() ) ) );
+                          ? i18n( "from %1 until forever", time_t2string( subkey.creationTime() ) )
+                          : i18n( "from %1 through %2", time_t2string( subkey.creationTime() ), time_t2string( subkey.expirationTime() ) ) );
     result += format_row( i18n("Certificate type"), format_keytype( key ) );
     result += format_row( i18n("Certificate usage"), format_keyusage( key ) );
     result += format_row( i18n("Fingerprint"), key.primaryFingerprint() );
@@ -337,7 +337,7 @@ QString Formatting::validityShort( const UserID::Signature & sig ) {
     case UserID::Signature::NoError:
 	if ( !sig.isInvalid() )
 	    if ( sig.certClass() > 0 )
-		return i18n("class %d").arg( sig.certClass() );
+		return i18n("class %d", sig.certClass() );
 	    else
 		return i18n("good");
 	// fall through:
@@ -356,5 +356,5 @@ QString Formatting::formatForComboBox( const GpgME::Key & key ) {
     QString mail = prettyEMail( key );
     if ( !mail.isEmpty() )
         mail = '<' + mail + '>';
-    return i18nc( "name, email, key id", "%1 %2 (%3)" ).arg( name, mail, key.shortKeyID() ).simplified();
+    return i18nc( "name, email, key id", "%1 %2 (%3)", name, mail, key.shortKeyID() ).simplified();
 }
