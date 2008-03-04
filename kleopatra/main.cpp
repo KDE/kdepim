@@ -60,6 +60,10 @@
 # include <uiserver/encryptcommand.h>
 # include <uiserver/signcommand.h>
 # include <uiserver/signencryptfilescommand.h>
+#else
+namespace Kleo {
+    class UiServer;
+}
 #endif
 
 #include <models/keycache.h>
@@ -135,13 +139,16 @@ static void setupLogging()
 }
 
 #ifndef KLEO_BUILD_OLD_MAINWINDOW
-#include <uiserver/uiserver.h>
 static void fillKeyCache( KSplashScreen * splash, Kleo::UiServer * server ) {
 
   QEventLoop loop;
   Kleo::RefreshKeysCommand * cmd = new Kleo::RefreshKeysCommand( 0 );
   QObject::connect( cmd, SIGNAL(finished()), &loop, SLOT(quit()) );
+#ifdef HAVE_USABLE_ASSUAN
   QObject::connect( cmd, SIGNAL(finished()), server, SLOT(enableCryptoCommands()) );
+#else
+  Q_UNUSED( server );
+#endif
   splash->showMessage( i18n("Loading certificate cache...") );
   cmd->start();
   loop.exec();
@@ -247,7 +254,11 @@ int main( int argc, char** argv )
 
       if ( !daemon )
           splash.show();
+#ifdef HAVE_USABLE_ASSUAN
+      fillKeyCache( &splash, &server );
+#else
       fillKeyCache( &splash, 0 );
+#endif
 
       if ( !daemon ) {
           MainWindow* mainWindow = new MainWindow;
