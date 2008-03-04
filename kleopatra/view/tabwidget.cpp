@@ -801,5 +801,21 @@ void TabWidget::saveViews( KConfig * config ) const {
     }
 }
 
+static void xconnect( const QObject * o1, const char * signal, const QObject * o2, const char * slot ) {
+    QObject::connect( o1, signal, o2, slot );
+    QObject::connect( o2, signal, o1, slot );
+}
+
+void TabWidget::connectSearchBar( QObject * sb ) {
+    xconnect( sb, SIGNAL(stringFilterChanged(QString)),
+              this, SLOT(setStringFilter(QString)) );
+    xconnect( sb, SIGNAL(keyFilterChanged(boost::shared_ptr<Kleo::KeyFilter>)),
+              this, SLOT(setKeyFilter(boost::shared_ptr<Kleo::KeyFilter>)) );
+    connect( this, SIGNAL(enableChangeStringFilter(bool)),
+             sb, SLOT(setChangeStringFilterEnabled(bool)) );
+    connect( this, SIGNAL(enableChangeKeyFilter(bool)),
+             sb, SLOT(setChangeKeyFilterEnabled(bool)) );
+}
+
 #include "moc_tabwidget.cpp"
 #include "tabwidget.moc"

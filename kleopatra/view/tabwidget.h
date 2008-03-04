@@ -72,6 +72,7 @@ namespace Kleo {
         unsigned int count() const;
 
         void createActions( KActionCollection * collection );
+        void connectSearchBar( QObject * sb );
 
         void setMultiSelection( bool on );
 

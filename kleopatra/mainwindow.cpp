@@ -332,11 +332,6 @@ void MainWindow::Private::addView( const KConfigGroup & group ) {
         controller.addView( view );
 }
 
-static void xconnect( const QObject * o1, const char * signal, const QObject * o2, const char * slot ) {
-    QObject::connect( o1, signal, o2, slot );
-    QObject::connect( o2, signal, o1, slot );
-}
-
 void MainWindow::Private::setupActions() {
 
     KActionCollection * const coll = q->actionCollection();
@@ -344,14 +339,7 @@ void MainWindow::Private::setupActions() {
     QWidgetAction * const searchBarAction = new QWidgetAction( q );
     SearchBar * const searchBar = new SearchBar( q );
 
-    xconnect( searchBar, SIGNAL(stringFilterChanged(QString)),
-              &ui.tabWidget, SLOT(setStringFilter(QString)) );
-    xconnect( searchBar, SIGNAL(keyFilterChanged(boost::shared_ptr<Kleo::KeyFilter>)),
-              &ui.tabWidget, SLOT(setKeyFilter(boost::shared_ptr<Kleo::KeyFilter>)) );
-    connect( &ui.tabWidget, SIGNAL(enableChangeStringFilter(bool)),
-             searchBar, SLOT(setChangeStringFilterEnabled(bool)) );
-    connect( &ui.tabWidget, SIGNAL(enableChangeKeyFilter(bool)),
-             searchBar, SLOT(setChangeKeyFilterEnabled(bool)) );
+    ui.tabWidget.connectSearchBar( searchBar );
 
     searchBarAction->setDefaultWidget( searchBar );
     coll->addAction( "key_search_bar", searchBarAction );
