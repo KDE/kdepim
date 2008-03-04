@@ -193,7 +193,7 @@ QVariant AbstractKeyListModel::data( const QModelIndex & index, int role ) const
 
     const int column = index.column();
 
-    if ( role == Qt::DisplayRole || role == Qt::EditRole )
+    if ( role == Qt::DisplayRole || role == Qt::EditRole || role == Qt::ToolTipRole )
         switch ( column ) {
         case PrettyName:
             return Formatting::prettyName( key );
@@ -216,8 +216,10 @@ QVariant AbstractKeyListModel::data( const QModelIndex & index, int role ) const
         case NumColumns:
             break;
         }
+#if 0
     else if ( role == Qt::ToolTipRole )
         return Formatting::toolTip( key );
+#endif
     else if ( role == Qt::FontRole ) {
         QFont font = qApp->font(); // ### correct font?
         if ( column == Fingerprint )
