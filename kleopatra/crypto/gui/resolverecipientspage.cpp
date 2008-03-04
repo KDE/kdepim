@@ -35,7 +35,7 @@
 #include "resolverecipientspage.h"
 #include "resolverecipientspage_p.h"
 
-#include "certificateselectiondialog.h"
+#include <dialogs/certificateselectiondialog.h>
 
 #include <crypto/certificateresolver.h>
 
@@ -62,10 +62,14 @@
 #include <QStringList>
 #include <QVBoxLayout>
 
+#include <boost/shared_ptr.hpp>
+
 #include <cassert>
 
 using namespace GpgME;
+using namespace boost;
 using namespace Kleo;
+using namespace Kleo::Dialogs;
 using namespace Kleo::Crypto;
 using namespace Kleo::Crypto::Gui;
 using namespace KMime::Types;
@@ -242,21 +246,28 @@ bool ResolveRecipientsPage::ItemWidget::isSelected() const
     return m_selected;
 }
 
+static CertificateSelectionDialog::Option protocol2option( GpgME::Protocol proto ) {
+    switch ( proto ) {
+    case OpenPGP: return CertificateSelectionDialog::OpenPGPFormat;
+    case CMS:     return CertificateSelectionDialog::CMSFormat;
+    default:      return CertificateSelectionDialog::AnyFormat;
+    }
+}
+
 void ResolveRecipientsPage::ItemWidget::showSelectionDialog()
 {
-
     QPointer<CertificateSelectionDialog> dlg = new CertificateSelectionDialog( this );
-    dlg->setSelectionMode( CertificateSelectionDialog::SingleSelection );
-    dlg->setProtocol( m_protocol );
-    dlg->setAllowedKeys( CertificateSelectionDialog::EncryptOnly );
-    dlg->addKeys( PublicKeyCache::instance()->keys() );
-    if ( dlg->exec() == QDialog::Accepted && dlg )
-    {
-        const std::vector<GpgME::Key> keys = dlg->selectedKeys();
-        if ( !keys.empty() )
-        {
-            addCertificateToComboBox( keys[0] );
-            selectCertificateInComboBox( keys[0] );
+    const CertificateSelectionDialog::Options options =
+        CertificateSelectionDialog::SingleSelection |
+        CertificateSelectionDialog::EncryptOnly     |
+        protocol2option( m_protocol )               ;
+    dlg->setOptions( options );
+
+    if ( dlg->exec() == QDialog::Accepted && dlg /* still with us? */ ) {
+        const GpgME::Key cert = dlg->selectedCertificate();
+        if ( !cert.isNull() ) {
+            addCertificateToComboBox( cert );
+            selectCertificateInComboBox( cert );
         }
     }
 

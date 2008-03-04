@@ -68,7 +68,6 @@ else ( USABLE_ASSUAN_FOUND )
 endif ( USABLE_ASSUAN_FOUND )
 
 kde4_add_ui_files( _kleopatra_uiserver_SRCS 
-                   crypto/gui/certificateselectionwidget.ui 
                    crypto/gui/signingcertificateselectionwidget.ui)
 
 
@@ -99,6 +98,8 @@ set( _kleopatra_common_SRCS
   view/searchbar.cpp
   view/tabwidget.cpp
 
+  dialogs/certificateselectiondialog.cpp
+
   crypto/certificateresolver.cpp
   crypto/task.cpp
   crypto/encryptemailtask.cpp
@@ -109,7 +110,6 @@ set( _kleopatra_common_SRCS
   crypto/gui/wizardpage.cpp
   crypto/gui/scrollarea.cpp
   crypto/gui/signingcertificateselectiondialog.cpp
-  crypto/gui/certificateselectiondialog.cpp
 
   crypto/gui/resultdisplaywidget.cpp
 
