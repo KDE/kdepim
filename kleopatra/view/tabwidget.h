@@ -56,7 +56,9 @@ namespace Kleo {
         ~TabWidget();
 
         void setFlatModel( AbstractKeyListModel * model );
+        AbstractKeyListModel * flatModel() const;
         void setHierarchicalModel( AbstractKeyListModel * model );
+        AbstractKeyListModel * hierarchicalModel() const;
 
         QAbstractItemView * addView( const QString & title=QString(), const QString & keyFilterID=QString(), const QString & searchString=QString() );
         QAbstractItemView * addView( const KConfigGroup & group );
@@ -68,6 +70,8 @@ namespace Kleo {
         unsigned int count() const;
 
         void createActions( KActionCollection * collection );
+
+        void setMultiSelection( bool on );
 
     public Q_SLOTS:
         void setKeyFilter( const boost::shared_ptr<Kleo::KeyFilter> & filter );

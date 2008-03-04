@@ -668,6 +668,10 @@ void TabWidget::setFlatModel( AbstractKeyListModel * model ) {
             page->setFlatModel( model );
 }
 
+AbstractKeyListModel * TabWidget::flatModel() const {
+    return d->flatModel;
+}
+
 void TabWidget::setHierarchicalModel( AbstractKeyListModel * model ) {
     if ( model == d->hierarchicalModel )
         return;
@@ -675,6 +679,10 @@ void TabWidget::setHierarchicalModel( AbstractKeyListModel * model ) {
     for ( unsigned int i = 0, end = count() ; i != end ; ++i )
         if ( Page * const page = d->page( i ) )
             page->setHierarchicalModel( model );
+}
+
+AbstractKeyListModel * TabWidget::hierarchicalModel() const {
+    return d->hierarchicalModel;
 }
 
 void TabWidget::Private::setCornerAction( QAction * action, Qt::Corner corner ) {
@@ -704,6 +712,13 @@ QAbstractItemView * TabWidget::currentView() const {
 
 unsigned int TabWidget::count() const {
     return d->tabWidget.count();
+}
+
+void TabWidget::setMultiSelection( bool on ) {
+    for ( unsigned int i = 0, end = count() ; i != end ; ++i )
+        if ( const Page * const p = d->page( i ) )
+            if ( QTreeView * const view = p->view() )
+                view->setSelectionMode( on ? QAbstractItemView::ExtendedSelection : QAbstractItemView::SingleSelection );
 }
 
 void TabWidget::createActions( KActionCollection * coll ) {
