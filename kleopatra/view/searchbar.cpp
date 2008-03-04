@@ -86,6 +86,7 @@ SearchBar::Private::Private( SearchBar * qq )
   : q( qq )
 {
     QHBoxLayout * layout = new QHBoxLayout( q );
+    layout->setMargin( 0 );
     QLabel * label = new QLabel( i18n("&Find:"), q );
     layout->addWidget( label );
     lineEdit = new KLineEdit( q );
