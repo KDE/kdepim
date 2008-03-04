@@ -208,8 +208,6 @@ public:
 
 private:
     void setupActions();
-    void loadViews();
-    void saveViews();
 
     void addView( const QString & title, const QString & keyFilterID=QString(), const QString & searchString=QString() );
     void addView( const KConfigGroup & group );
@@ -398,51 +396,6 @@ void MainWindow::Private::setupActions() {
     ui.tabWidget.createActions( coll );
 }
 
-static QStringList extractViewGroups( const KSharedConfig::Ptr & config ) {
-    return config->groupList().filter( QRegExp( "^View #\\d+$" ) );
-}
-
-void MainWindow::Private::loadViews() {
-
-    if ( const KSharedConfig::Ptr config = KGlobal::config() ) {
-
-        const QStringList groups = extractViewGroups( config );
-
-        Q_FOREACH( const QString & groupName, groups ) {
-            const KConfigGroup group( config, groupName );
-            addView( group );
-        }
-
-    }
-
-    if ( numViews() == 0 ) {
-
-        // add defaults:
-
-        addView( QString(), "my-certificates" );
-        addView( QString(), "trusted-certificates" );
-        addView( QString(), "other-certificates" );
-
-    }
-
-}
-
-void MainWindow::Private::saveViews() {
-
-    KSharedConfig::Ptr config = KGlobal::config();
-    if ( !config )
-        return;
-
-    Q_FOREACH( QString group, extractViewGroups( config ) )
-        config->deleteGroup( group );
-
-    for ( unsigned int i = 0, end = numViews() ; i != end ; ++i ) {
-        KConfigGroup group( config, QString().sprintf( "View #%u", i ) );
-        ui.tabWidget.saveTab( i, group );
-    }
-
-}
-
 void MainWindow::Private::newCertificate() {
     QPointer<CertificateWizardImpl> wiz( new CertificateWizardImpl( q ) );
     wiz->exec();
@@ -556,14 +509,14 @@ void MainWindow::closeEvent( QCloseEvent * e ) {
     // KMainWindow::closeEvent() insists on quitting the application,
     // so do not let it touch the event...
     kDebug();
-    d->saveViews();
+    d->ui.tabWidget.saveViews( KGlobal::config().data() );
     saveMainWindowSettings( KConfigGroup( KGlobal::config(), autoSaveGroup() ) );
     e->accept();
 }
 
 void MainWindow::showEvent( QShowEvent * e ) {
     KXmlGuiWindow::showEvent( e );
-    d->loadViews();
+    d->ui.tabWidget.loadViews( KGlobal::config().data() );
 }
 
 static QStringList extract_local_files( const QMimeData * data ) {

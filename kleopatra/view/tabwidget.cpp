@@ -49,6 +49,7 @@
 #include <KLocale>
 #include <KTabWidget>
 #include <KConfigGroup>
+#include <KConfig>
 #include <KAction>
 #include <KActionCollection>
 
@@ -771,9 +772,33 @@ QTreeView * TabWidget::Private::addView( Page * page ) {
     return page->view();
 }
 
-void TabWidget::saveTab( unsigned int idx, KConfigGroup & group ) const {
-    if ( const Page * const page = d->page( idx ) )
-        page->saveTo( group );
+static QStringList extractViewGroups( const KConfig * config ) {
+    return config ? config->groupList().filter( QRegExp( "^View #\\d+$" ) ) : QStringList() ;
+}
+
+void TabWidget::loadViews( const KConfig * config ) {
+    if ( config )
+        Q_FOREACH( const QString & group, extractViewGroups( config ) )
+            addView( KConfigGroup( config, group ) );
+    if ( !count() ) {
+        // add default views:
+        addView( QString(), "my-certificates" );
+        addView( QString(), "trusted-certificates" );
+        addView( QString(), "other-certificates" );
+    }
+}
+
+void TabWidget::saveViews( KConfig * config ) const {
+    if ( !config )
+        return;
+    Q_FOREACH( QString group, extractViewGroups( config ) )
+        config->deleteGroup( group );
+    for ( unsigned int i = 0, end = count() ; i != end ; ++i ) {
+        if ( const Page * const p = d->page( i ) ) {
+            KConfigGroup group( config, QString().sprintf( "View #%u", i ) );
+            p->saveTo( group );
+        }
+    }
 }
 
 #include "moc_tabwidget.cpp"

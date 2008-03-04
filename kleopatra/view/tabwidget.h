@@ -43,6 +43,7 @@ class QAbstractItemView;
 
 class KConfigGroup;
 class KActionCollection;
+class KConfig;
 
 namespace Kleo {
 
@@ -63,7 +64,8 @@ namespace Kleo {
         QAbstractItemView * addView( const QString & title=QString(), const QString & keyFilterID=QString(), const QString & searchString=QString() );
         QAbstractItemView * addView( const KConfigGroup & group );
 
-        void saveTab( unsigned int idx, KConfigGroup & group ) const;
+        void loadViews( const KConfig * cfg );
+        void saveViews( KConfig * cfg ) const;
 
         QAbstractItemView * currentView() const;
 
