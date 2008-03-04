@@ -39,6 +39,7 @@
 #include <gpgme++/key.h>
 
 #include <KLocale>
+#include <KGlobal>
 
 #include <QString>
 #include <QStringList>
@@ -163,7 +164,7 @@ namespace {
     static QString time_t2string( time_t t ) {
 	QDateTime dt;
 	dt.setTime_t( t );
-	return dt.toString();
+	return KGlobal::locale()->formatDateTime( dt, KLocale::ShortDate );
     }
 
     static QString make_red( const QString & txt ) {
@@ -220,10 +221,13 @@ namespace {
 	dt.setTime_t( t );
 	return dt.date();
     }
+    static QString date2string( const QDate & date ) {
+        return KGlobal::locale()->formatDate( date, KLocale::ShortDate );
+    }
 
     template <typename T>
     QString expiration_date_string( const T & tee ) {
-	return tee.neverExpires() ? QString() : time_t2date( tee.expirationTime() ).toString() ;
+	return tee.neverExpires() ? QString() : date2string( time_t2date( tee.expirationTime() ) ) ;
     }
     template <typename T>
     QDate creation_date( const T & tee ) {
@@ -261,15 +265,15 @@ QDate Formatting::expirationDate( const UserID::Signature & sig ) {
 
 
 QString Formatting::creationDateString( const Key & key ) {
-    return creation_date( key.subkey( 0 ) ).toString();
+    return date2string( creation_date( key.subkey( 0 ) ) );
 }
 
 QString Formatting::creationDateString( const Subkey & subkey ) {
-    return creation_date( subkey ).toString();
+    return date2string( creation_date( subkey ) );
 }
 
 QString Formatting::creationDateString( const UserID::Signature & sig ) {
-    return creation_date( sig ).toString();
+    return date2string( creation_date( sig ) );
 }
 
 QDate Formatting::creationDate( const Key & key ) {
