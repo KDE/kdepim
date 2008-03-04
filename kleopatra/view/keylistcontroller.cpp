@@ -38,8 +38,6 @@
 #include <models/keycache.h>
 #include <models/keylistmodel.h>
 
-#include <utils/headerview.h>
-
 #include <gpgme++/key.h>
 
 #include <QAbstractItemView>
@@ -56,23 +54,6 @@
 using namespace Kleo;
 using namespace boost;
 using namespace GpgME;
-
-static const QHeaderView::ResizeMode resize_modes[Kleo::AbstractKeyListModel::NumColumns] = {
-    QHeaderView::Stretch,          // Name
-    QHeaderView::Stretch, // EMail
-    QHeaderView::Fixed, // Valid From
-    QHeaderView::Fixed, // Valid Until
-    QHeaderView::Fixed, // Details
-    QHeaderView::Fixed, // Fingerprint
-};
-
-static HeaderView * get_header_view( QAbstractItemView * view ) {
-    if ( const QTableView * const table = qobject_cast<QTableView*>( view ) )
-        return qobject_cast<HeaderView*>( table->horizontalHeader() );
-    if ( const QTreeView * const tree = qobject_cast<QTreeView*>( view ) )
-        return qobject_cast<HeaderView*>( tree->header() );
-    return 0;
-}
 
 class KeyListController::Private {
     friend class ::Kleo::KeyListController;
@@ -233,18 +214,6 @@ void KeyListController::Private::connectView( QAbstractItemView * view ) {
     view->setContextMenuPolicy( Qt::CustomContextMenu );
     connect( view, SIGNAL(customContextMenuRequested(QPoint)),
              q, SLOT(slotContextMenu(QPoint)) );
-
-    view->setSelectionBehavior( QAbstractItemView::SelectRows );
-    view->setSelectionMode( QAbstractItemView::ExtendedSelection );
-    //view->setAlternatingRowColors( true );
-    view->setProperty( "allColumnsShowFocus", true );
-    view->setProperty( "sortingEnabled", true );
-
-#if 1
-    if ( HeaderView * const hv = get_header_view( view ) )
-        for ( int i = 0, end = std::min<int>( hv->count(), AbstractKeyListModel::NumColumns ) ; i < end ; ++i )
-            hv->setSectionResizeMode( i, resize_modes[i] );
-#endif
 }
 
 void KeyListController::Private::connectCommand( Command * cmd ) {

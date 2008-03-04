@@ -220,6 +220,20 @@ Page::Page( const KConfigGroup & group, QWidget * parent )
     }
 }
 
+static const QHeaderView::ResizeMode resize_modes[AbstractKeyListModel::NumColumns] = {
+    QHeaderView::Stretch,          // Name
+    QHeaderView::Stretch, // EMail
+    QHeaderView::Fixed, // Valid From
+    QHeaderView::Fixed, // Valid Until
+    QHeaderView::Fixed, // Details
+    QHeaderView::Fixed, // Fingerprint
+};
+
+static void adjust_header( HeaderView * hv ) {
+    for ( int i = 0, end = AbstractKeyListModel::NumColumns ; i < end ; ++i )
+        hv->setSectionResizeMode( i, resize_modes[i] );
+}
+
 void Page::init() {
     KDAB_SET_OBJECT_NAME( m_proxy );
     KDAB_SET_OBJECT_NAME( m_view );
@@ -227,6 +241,13 @@ void Page::init() {
     HeaderView * headerView = new HeaderView( Qt::Horizontal );
     KDAB_SET_OBJECT_NAME( headerView );
     m_view->setHeader( headerView );
+    adjust_header( headerView );
+
+    m_view->setSelectionBehavior( QAbstractItemView::SelectRows );
+    m_view->setSelectionMode( QAbstractItemView::ExtendedSelection );
+    //m_view->setAlternatingRowColors( true );
+    m_view->setAllColumnsShowFocus( true );
+    m_view->setSortingEnabled( true );
 
     if ( model() )
         m_proxy.setSourceModel( model() );
