@@ -21,6 +21,7 @@
 #include <QLayout>
 #include <QItemSelectionModel>
 #include <QAbstractItemView>
+#include <QPointer>
 
 #include <boost/bind.hpp>
 
@@ -41,8 +42,14 @@ public:
 private:
     void refresh();
     void slotRefreshed();
+    void slotCurrentViewChanged( QAbstractItemView * newView );
+    void slotSelectionChanged();
+    void slotDoubleClicked( const QModelIndex & idx );
 
 private:
+    bool acceptable( const std::vector<Key> & keys ) {
+        return !keys.empty();
+    }
     void filterAllowedKeys( std::vector<Key> & keys );
     void updateLabelText() {
         ui.label.setText( !customLabelText.isEmpty() ? customLabelText :
@@ -52,6 +59,7 @@ private:
     }
 
 private:
+    QPointer<QAbstractItemView> lastView;
     QString customLabelText;
     Options options;
 
@@ -81,6 +89,7 @@ private:
             vlay.addWidget( &buttonBox );
 
             QPushButton * const ok = buttonBox.addButton( QDialogButtonBox::Ok );
+            ok->setEnabled( false );
             QPushButton * const cancel = buttonBox.addButton( QDialogButtonBox::Close );
             QPushButton * const refresh = buttonBox.addButton( i18n("&Refresh Certificates"), QDialogButtonBox::ActionRole );
 
@@ -99,6 +108,9 @@ CertificateSelectionDialog::Private::Private( CertificateSelectionDialog * qq )
     ui.tabWidget.setFlatModel( AbstractKeyListModel::createFlatKeyListModel() );
     ui.tabWidget.setHierarchicalModel( AbstractKeyListModel::createHierarchicalKeyListModel() );
     ui.tabWidget.connectSearchBar( &ui.searchBar );
+
+    connect( &ui.tabWidget, SIGNAL(currentViewChanged(QAbstractItemView*)),
+             q, SLOT(slotCurrentViewChanged(QAbstractItemView*)) );
 
     updateLabelText();
     q->setWindowTitle( i18n( "Certificate Selection" ) );
@@ -240,6 +252,46 @@ void CertificateSelectionDialog::Private::filterAllowedKeys( std::vector<Key> & 
         end = std::remove_if( keys.begin(), end, !bind( &Key::hasSecret, _1 ) );
 
     keys.erase( end, keys.end() );
+}
+
+void CertificateSelectionDialog::Private::slotCurrentViewChanged( QAbstractItemView * newView ) {
+    if ( lastView ) {
+        disconnect( lastView, SIGNAL(doubleClicked(QModelIndex)),
+                    q, SLOT(slotDoubleClicked(QModelIndex)) );
+        assert( lastView->selectionModel() );
+        disconnect( lastView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                    q, SLOT(slotSelectionChanged()) );
+    }
+    lastView = newView;
+    if ( newView ) {
+        connect( newView, SIGNAL(doubleClicked(QModelIndex)),
+                 q, SLOT(slotDoubleClicked(QModelIndex)) );
+        assert( newView->selectionModel() );
+        connect( newView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+                 q, SLOT(slotSelectionChanged()) );
+    }
+    slotSelectionChanged();
+}
+
+void CertificateSelectionDialog::Private::slotSelectionChanged() {
+    if ( QPushButton * const pb = ui.buttonBox.button( QDialogButtonBox::Ok ) )
+        pb->setEnabled( acceptable( q->selectedCertificates() ) );
+}
+
+void CertificateSelectionDialog::Private::slotDoubleClicked( const QModelIndex & idx ) {
+    QAbstractItemView * const view = ui.tabWidget.currentView();
+    assert( view );
+    const KeyListModelInterface * const model = dynamic_cast<KeyListModelInterface*>( view->model() );
+    assert( model );
+    QItemSelectionModel * const sm = view->selectionModel();
+    assert( sm );
+    sm->select( idx, QItemSelectionModel::ClearAndSelect );
+    QMetaObject::invokeMethod( q, "accept", Qt::QueuedConnection );
+}
+
+void CertificateSelectionDialog::accept() {
+    if ( d->acceptable( selectedCertificates() ) )
+        QDialog::accept();
 }
 
 #include "moc_certificateselectiondialog.cpp"

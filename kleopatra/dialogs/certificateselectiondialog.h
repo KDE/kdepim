@@ -63,6 +63,7 @@ namespace Dialogs {
     public Q_SLOTS:
         void setStringFilter( const QString & text );
         void setKeyFilter( const boost::shared_ptr<Kleo::KeyFilter> & filter );
+        /* reimp */ void accept();
 
     protected:
         void hideEvent( QHideEvent * );
@@ -72,6 +73,9 @@ namespace Dialogs {
         kdtools::pimpl_ptr<Private> d;
         Q_PRIVATE_SLOT( d, void refresh() )
         Q_PRIVATE_SLOT( d, void slotRefreshed() )
+        Q_PRIVATE_SLOT( d, void slotSelectionChanged() )
+        Q_PRIVATE_SLOT( d, void slotDoubleClicked( QModelIndex ) )
+        Q_PRIVATE_SLOT( d, void slotCurrentViewChanged( QAbstractItemView * ) )
     };
 
 }
