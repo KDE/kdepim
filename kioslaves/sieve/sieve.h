@@ -122,6 +122,11 @@ protected:
 	QString				m_sPass;
 	QString				m_sAuth;
 	bool				m_shouldBeConnected;
+
+private:
+	bool requestCapabilitiesAfterStartTLS() const;
+
+	QString m_implementation;
 };
 
 #endif
