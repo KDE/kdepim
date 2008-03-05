@@ -17,7 +17,7 @@
 /**
  * Portions adapted from the SMTP ioslave.
  * Copyright (c) 2000, 2001 Alex Zepeda <jazepeda@pacbell.net>
- * Copyright (c) 2001 Michael Häckel <Michael@Haeckel.Net>
+ * Copyright (c) 2001 Michael HÃ¤ckel <Michael@Haeckel.Net>
  * All rights reserved.
  *
  * Policy: the function where the error occurs calls error(). A result of
@@ -1186,7 +1186,10 @@ bool kio_sieveProtocol::receiveData(bool waitForData, QCString *reparse)
 		  {
 			// expecting {quantity}
 			start = 0;
-			end = interpret.find('}', start + 1);
+			end = interpret.find("+}", start + 1);
+			// some older versions of Cyrus enclose the literal size just in { } instead of { +}
+			if ( end == -1 )
+				end = interpret.find('}', start + 1);
 
 			bool ok = false;
 			r.setQuantity(interpret.mid(start + 1, end - start - 1).toUInt( &ok ));
