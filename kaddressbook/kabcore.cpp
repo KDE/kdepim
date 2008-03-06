@@ -1089,7 +1089,7 @@ void KABCore::initGUI()
 
   QWidget *viewWidget = new QWidget( mLeftSplitter );
   if ( KABPrefs::instance()->contactListAboveExtensions() )
-    mLeftSplitter->moveToFirst( viewWidget );
+    mLeftSplitter->insertWidget( 0, viewWidget );
   QVBoxLayout *viewLayout = new QVBoxLayout( viewWidget );
   viewLayout->setSpacing( KDialog::spacingHint() );
 
