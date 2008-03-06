@@ -617,7 +617,7 @@ void kio_sieveProtocol::put(const KURL& url, int /*permissions*/, bool /*overwri
 			// send the extra message off for re-processing
 			receiveData(false, &extra);
 
-			if (r.getAction() == kio_sieveResponse::QUANTITY) {
+			if (r.getType() == kio_sieveResponse::QUANTITY) {
 				// length of the error message
 				uint len = r.getQuantity();
 
@@ -632,6 +632,11 @@ void kio_sieveProtocol::put(const KURL& url, int /*permissions*/, bool /*overwri
 
 				// clear the rest of the incoming data
 				receiveData();
+			} else if (r.getType() == kio_sieveResponse::KEY_VAL_PAIR) {
+				error(ERR_INTERNAL_SERVER,
+						i18n("The script did not upload successfully.\n"
+							"This is probably due to errors in the script.\n"
+							"The server responded:\n%1").arg(r.getKey()));
 			} else
 				error(ERR_INTERNAL_SERVER,
 					i18n("The script did not upload successfully.\n"
