@@ -43,7 +43,7 @@ class KNodePart: public KParts::ReadOnlyPart
 {
     Q_OBJECT
   public:
-    KNodePart(QWidget *parentWidget, QObject *parent, const QStringList &);
+    KNodePart(QWidget *parentWidget, QObject *parent, const QVariantList &);
     virtual ~KNodePart();
 
     QWidget* parentWidget() const;

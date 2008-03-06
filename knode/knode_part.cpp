@@ -39,10 +39,10 @@
 #include <QVBoxLayout>
 
 
-typedef KParts::GenericFactory< KNodePart > KNodeFactory;
-K_EXPORT_COMPONENT_FACTORY( knodepart, KNodeFactory )
+K_PLUGIN_FACTORY(KNodeFactory, registerPlugin<KNodePart>();)
+K_EXPORT_PLUGIN(KNodeFactory( "knodepart" ))
 
-KNodePart::KNodePart( QWidget *parentWidget, QObject *parent, const QStringList &)
+KNodePart::KNodePart( QWidget *parentWidget, QObject *parent, const QVariantList &)
   : KParts::ReadOnlyPart( parent ),
   mParentWidget( parentWidget )
 {
