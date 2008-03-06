@@ -58,7 +58,7 @@ namespace Kleo {
      After result() is emitted, the DownloadJob will schedule it's own
      destruction by calling QObject::deleteLater().
   */
-  class DownloadJob : public Job {
+  class KLEO_EXPORT DownloadJob : public Job {
     Q_OBJECT
   protected:
     explicit DownloadJob( QObject * parent );
