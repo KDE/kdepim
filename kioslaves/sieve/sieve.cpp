@@ -17,7 +17,7 @@
 /**
  * Portions adapted from the SMTP ioslave.
  * Copyright (c) 2000, 2001 Alex Zepeda <jazepeda@pacbell.net>
- * Copyright (c) 2001 Michael Häckel <Michael@Haeckel.Net>
+ * Copyright (c) 2001 Michael HÃ¤ckel <Michael@Haeckel.Net>
  * All rights reserved.
  *
  * Policy: the function where the error occurs calls error(). A result of
@@ -41,6 +41,7 @@ extern "C" {
 #include <kglobal.h>
 
 #include <qcstring.h>
+#include <qregexp.h>
 
 #include <cstdlib>
 using std::exit;
@@ -252,6 +253,7 @@ bool kio_sieveProtocol::parseCapabilities(bool requestCapabilities/* = false*/)
 				ksDebug() << "Connected to Sieve server: " << r.getVal() << endl;
 				ret = true;
 				setMetaData("implementation", r.getVal());
+				m_implementation = r.getVal();
 			}
 
 		} else if (r.getKey() == "SASL") {
@@ -357,7 +359,7 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
 			if (retval == 1) {
 				ksDebug() << "TLS enabled successfully." << endl;
 				// reparse capabilities:
-				parseCapabilities(false);
+				parseCapabilities( requestCapabilitiesAfterStartTLS() );
 			} else {
 				ksDebug() << "TLS initiation failed, code " << retval << endl;
 				disconnect(true);
@@ -393,7 +395,7 @@ void kio_sieveProtocol::disconnect(bool forcibly)
 	if (!forcibly) {
 		sendData("LOGOUT");
 
-		// This crashes under certain conditions as described in 
+		// This crashes under certain conditions as described in
 		// http://intevation.de/roundup/kolab/issue2442
 		// Fixing KIO::TCPSlaveBase::atEnd() for !fd would also work but 3.x is on life support.
 		//if (!operationSuccessful())
@@ -1191,7 +1193,10 @@ bool kio_sieveProtocol::receiveData(bool waitForData, QCString *reparse)
 		  {
 			// expecting {quantity}
 			start = 0;
-			end = interpret.find('}', start + 1)-1;
+			end = interpret.find("+}", start + 1);
+			// some older versions of Cyrus enclose the literal size just in { } instead of { +}
+			if ( end == -1 )
+				end = interpret.find('}', start + 1);
 
 			bool ok = false;
 			r.setQuantity(interpret.mid(start + 1, end - start - 1).toUInt( &ok ));
@@ -1272,4 +1277,22 @@ int kio_sieveProtocol::operationResult()
 	}
 
 	return OTHER;
+}
+
+bool kio_sieveProtocol::requestCapabilitiesAfterStartTLS() const
+{
+  // Cyrus didn't send CAPABILITIES after STARTTLS until 2.3.11, which is
+  // not standard conform, but we need to support that anyway.
+  // m_implementation looks like this 'Cyrus timsieved v2.2.12' for Cyrus btw.
+  QRegExp regExp( "Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)", false );
+  if ( regExp.search( m_implementation ) >= 0 ) {
+    const int major = regExp.cap( 1 ).toInt();
+    const int minor = regExp.cap( 2 ).toInt();
+    const int patch = regExp.cap( 3 ).toInt();
+    if ( major < 2 || (major == 2 && (minor < 3 || (major == 3 && patch < 11))) ) {
+      ksDebug() << k_funcinfo << "Enabling compat mode for Cyrus < 2.3.11" << endl;
+      return true;
+    }
+  }
+  return false;
 }
