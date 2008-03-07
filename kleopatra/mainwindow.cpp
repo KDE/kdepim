@@ -199,7 +199,7 @@ public:
         KShortcutsDialog::configure( q->actionCollection(), KShortcutsEditor::LetterShortcutsAllowed );
     }
     void newCertificate();
-    
+
     void checkConfiguration();
     void configureBackend();
     void preferences();
@@ -237,7 +237,7 @@ private:
             : check_configuration( new KAction( q->actionCollection() ) ),
               configure_backend( new KAction( q->actionCollection() ) )
         {
-            check_configuration->setText( i18n( "Check GnuPG Configuration..." ) );
+            check_configuration->setText( i18n( "GnuPG Configuration Self-Check" ) );
             connect( check_configuration, SIGNAL(triggered()), q, SLOT(checkConfiguration()) );
             q->actionCollection()->addAction( "check_configuration", check_configuration );
 
@@ -309,9 +309,9 @@ MainWindow::Private::Private( MainWindow * qq )
     q->setAcceptDrops( true );
 
     q->setAutoSaveSettings();
-} 
+}
 
-MainWindow::Private::~Private() {} 
+MainWindow::Private::~Private() {}
 
 MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags )
     : KXmlGuiWindow( parent, flags ), d( new Private( this ) )
@@ -407,8 +407,9 @@ void MainWindow::Private::checkConfiguration()
 
     // 2. show dialog:
     QDialog dlg;
+    dlg.setWindowTitle( i18n( "GnuPG Configuration Self-Check Results" ) );
     QVBoxLayout vlay( &dlg );
-    QLabel label( i18n("This is the result of the GnuPG config check:" ), &dlg );
+    QLabel label( i18n("This is the result of the GnuPG configuration self-check:" ), &dlg );
     QTextEdit textEdit( &dlg );
     QDialogButtonBox box( QDialogButtonBox::Close, Qt::Horizontal, &dlg );
 
@@ -441,10 +442,34 @@ void MainWindow::Private::checkConfiguration()
     if ( !dlg.isVisible() )
         return;
 
-    if ( process.error() != QProcess::UnknownError )
-        textEdit.setPlainText( QString::fromUtf8( process.readAll() ) + '\n' + process.errorString() );
+    const QString output = QString::fromUtf8( process.readAll() );
+    const QString message = process.exitStatus() == QProcess::CrashExit ? i18n( "The process terminated prematurely" ) : process.errorString() ;
+
+    if ( process.exitStatus() != QProcess::NormalExit ||
+         process.error()      != QProcess::UnknownError )
+        textEdit.setPlainText( !output.trimmed().isEmpty()
+                               ? i18n( "There was an error executing the GnuPG configuration self-check:\n"
+                                       "  %1\n"
+                                       "You might want to execute \"gpgconf --check-config\" on the command line.\n"
+                                       "\n"
+                                       "Diagnostics:", message ) + '\n' + output
+                               : i18n( "There was an error executing \"gpgconf --check-config\":\n"
+                                       "  %1\n"
+                                       "You might want to execute \"gpgconf --check-config\" on the command line.", message ) );
+    else if ( process.exitCode() )
+        textEdit.setPlainText( !output.trimmed().isEmpty()
+                               ? i18n( "The GnuPG configuration self-check failed.\n"
+                                       "\n"
+                                       "Error code: %1\n"
+                                       "Diagnostics:", process.exitCode() ) + '\n' + output
+                               : i18n( "The GnuPG configuration self-check failed with error code %1.\n"
+                                       "No output was received." ) );
     else
-        textEdit.setPlainText( QString::fromUtf8( process.readAll() ) );
+        textEdit.setPlainText( !output.trimmed().isEmpty()
+                               ? i18n( "The GnuPG configuration self-check succeeded.\n"
+                                       "\n"
+                                       "Diagnostics:" ) + '\n' + output
+                               : i18n( "The GnuPG configuration self-check succeeded." ) );
 
     // wait for dialog close:
     assert( dlg.isVisible() );
