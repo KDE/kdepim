@@ -1,3 +1,13 @@
+Friday, March 6th 2008
+
+Problems addressed
+-------------------
+
+* kolab/issue2297 New event: Organisor is not attendee. (781595)
+* kolab/issue1988 Deleting a event should remove the deleter from the attendee list.(782029)
+* kolab/issue2443 kontact aborts sieve when imapd sends capabilities after starttls. (782672)
+
+
 Friday, February 29th 2008
 
 Problems addressed
