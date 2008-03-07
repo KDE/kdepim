@@ -21,7 +21,10 @@ Problems addressed
 * kolab/issue2413 Kmail: Cannot select "Mark Thread" in the popup menu if I select two or more threads. (780251)
 * kolab/issue2312 Rejecting an invitation does not always work (780286)
 
+Merges
+------
 
+* Merge35 Filter source folder whitelist (from proko2 ). (783244)
 Merges
 ---------
 * Merges in from 3.5 branch
