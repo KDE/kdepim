@@ -90,7 +90,7 @@ KAboutData *kmobiletoolsMainPart::createAboutData()
 }
 
 
-kmobiletoolsMainPart::kmobiletoolsMainPart( QWidget *parentWidget, QObject *parent, const QStringList &args )
+kmobiletoolsMainPart::kmobiletoolsMainPart( QWidget *parentWidget, QObject *parent, const QVariantList &args )
     : /*DCOPObject("KMobileTools"),*/ ///@TODO port to dbus
     KParts::ReadOnlyPart( parent )
 {

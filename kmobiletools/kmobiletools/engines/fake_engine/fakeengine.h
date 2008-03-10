@@ -170,7 +170,7 @@ public:
     FakeEngineFactory();
     virtual ~FakeEngineFactory();
 
-    vitual QObject *create(
+    virtual QObject *create(
         const char *iface, QWidget *parentWidget, QObject *parent, const QVariantList &args, const QString &keyword );
 };
 

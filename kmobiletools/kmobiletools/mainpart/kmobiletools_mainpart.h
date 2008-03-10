@@ -25,7 +25,7 @@
 #include <KParts/StatusBarExtension>
 #include <KParts/MainWindow>
 
-#include <QStringList>
+#include <QVariantList>
 #include <QList>
 #include <QHash>
 #include <QMutex>
@@ -76,7 +76,7 @@ public:
     * Constructs a new part (@see KParts::GenericFactory)
     */
     kmobiletoolsMainPart( QWidget *parentWidget, QObject *parent,
-                          const QStringList &args=QStringList() );
+                          const QVariantList &args= QVariantList() );
 
     /**
      * Destructs the part

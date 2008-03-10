@@ -100,7 +100,7 @@ bool DeviceLoader::loadDevice( const QString& deviceName, const QString& engineN
     // try to load the engine
 
 	// create the engine instance
-    KPluginFactory *factory = KPluginLoader pluginLoader( *engineService ).factory();
+    KPluginFactory *factory = KPluginLoader( *engineService ).factory();
     if( !factory )
         return false;
     QStringList argDeviceName( deviceName );
