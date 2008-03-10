@@ -78,21 +78,9 @@ void AT_Engine::queryClose()
         KMobileTools::Engine::queryClose();
 }
 
-K_EXPORT_COMPONENT_FACTORY( kmobiletools_at, AT_EngineFactory )
 
-
-AT_EngineFactory::AT_EngineFactory()
-{
-}
-AT_EngineFactory::~AT_EngineFactory()
-{
-}
-AT_Engine *AT_EngineFactory::createObject(QObject *parent, const char * /*classname*/, const QStringList &/*args*/ )
-{
-    return new AT_Engine(parent); /// @TODO we have to specify engine name, perhaps in args
-}
-
-
+K_PLUGIN_FACTORY( AT_EngineFactory, registerPlugin<AT_Engine>(); )
+K_EXPORT_PLUGIN( AT_EngineFactory("kmobiletools_at") )
 
 
 /*!

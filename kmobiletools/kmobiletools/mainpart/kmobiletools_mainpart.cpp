@@ -81,8 +81,8 @@
 #include "jobqueueview/jobqueueview.h"
 #include "jobqueueview/jobitem.h"
 
-typedef KParts::GenericFactory<kmobiletoolsMainPart> kmobiletoolsMainPartFactory;
-K_EXPORT_COMPONENT_FACTORY( kmobiletoolsmainpart, kmobiletoolsMainPartFactory )
+K_PLUGIN_FACTORY( kmobiletoolsMainPartFactory, registerPlugin<kmobiletoolsMainPart>(); )
+K_EXPORT_PLUGIN( kmobiletoolsMainPartFactory )
 
 KAboutData *kmobiletoolsMainPart::createAboutData()
 {

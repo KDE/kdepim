@@ -307,9 +307,10 @@ void FakeEngine::removeAddressee( const KMobileTools::AddressbookEntry& addresse
     status( QString( "Enqueued addressee \"%1\" to be removed." ).arg( addressee.name() ) );
 }
 
-K_EXPORT_COMPONENT_FACTORY( kmobiletools_fake, FakeEngineFactory )
+K_EXPORT_PLUGIN( FakeEngineFactory )
 
 FakeEngineFactory::FakeEngineFactory()
+ : KPluginFactory("kmobiletools_fake")
 {
 }
 
@@ -317,10 +318,13 @@ FakeEngineFactory::~FakeEngineFactory()
 {
 }
 
-FakeEngine *FakeEngineFactory::createObject(QObject *parent, const char *classname, const QStringList& args)
+QObject *FakeEngineFactory::create(
+  const char *iface, QWidget *parentWidget, QObject *parent, const QVariantList &args, const QString &keyword )
 {
-    Q_UNUSED(classname)
-    QString deviceName = args.at( 0 );
+    Q_UNUSED(iface)
+    Q_UNUSED(parentWidget)
+    Q_UNUSED(keyword)
+    QString deviceName = args.at( 0 ).toString();
     return new FakeEngine( parent, deviceName );
 }
 

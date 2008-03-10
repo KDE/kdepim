@@ -133,17 +133,4 @@ signals:
     void foundDeviceData(FindDeviceDataJob*);
 };
 
-
-class AT_EngineFactory : public KLibFactory
-{
-   Q_OBJECT
-public:
-    AT_EngineFactory();
-    virtual ~AT_EngineFactory();
-    virtual AT_Engine* createObject( QObject *parent, const char *classname, const QStringList &args );
-
-private:
-};
-
-
 #endif

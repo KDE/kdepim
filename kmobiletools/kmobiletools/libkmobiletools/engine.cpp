@@ -214,13 +214,14 @@ int Engine::statusJobsSuspended() const
 Engine *Engine::load(const QString &libname, QObject *parent)
 {
     kDebug() <<"Engine::load(" << libname <<")";
-    KLibFactory *factory=KLibLoader::self()->factory(qPrintable(libname));
+    KPluginLoader loader(libname);
+    KPluginFactory *factory=loader.factory();
     if(!factory) {
-        kDebug() <<"Error loading library:" << KLibLoader::self()->lastErrorMessage();
+        kDebug() <<"Error loading library:" << loader.errorString();
         return NULL;
     }
-    Engine *ret=static_cast<KMobileTools::Engine *>(factory->create(parent, "KMobileTools::Engine" ) );
-    if(parent) ret->setObjectName(parent->objectName());
+    Engine *ret=factory->create<KMobileTools::Engine>(parent);
+    if(ret && parent) ret->setObjectName(parent->objectName());
     return ret;
 }
 

@@ -155,13 +155,14 @@ private:
     QAction* m_deleteContact;
 };
 
-class AddressbookFactory : public KLibFactory
+class AddressbookFactory : public KPluginFactory
 {
    Q_OBJECT
 public:
     AddressbookFactory();
     virtual ~AddressbookFactory();
-    virtual Addressbook* createObject( QObject *parent, const char *classname, const QStringList &args );
+    virtual QObject *create(
+        const char *iface, QWidget *parentWidget, QObject *parent, const QVariantList &args, const QString &keyword );
 };
 
 #endif

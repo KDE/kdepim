@@ -319,9 +319,10 @@ void Addressbook::checkEnableActions() {
     }
 }
 
-K_EXPORT_COMPONENT_FACTORY( libkmtaddressbook_service, AddressbookFactory )
+K_EXPORT_PLUGIN( AddressbookFactory )
 
 AddressbookFactory::AddressbookFactory()
+ : KPluginFactory("libkmtaddressbook_service")
 {
 }
 
@@ -329,11 +330,13 @@ AddressbookFactory::~AddressbookFactory()
 {
 }
 
-Addressbook *AddressbookFactory::createObject(QObject *parent, const char *classname, const QStringList& args)
+QObject *AddressbookFactory::create(
+  const char *iface, QWidget *parentWidget, QObject *parent, const QVariantList &args, const QString &keyword )
 {
-    Q_UNUSED(classname)
-    QStringList arguments( args );
-    return new Addressbook( parent, arguments.at(0) );
+    Q_UNUSED(iface)
+    Q_UNUSED(parentWidget)
+    Q_UNUSED(keyword)
+    return new Addressbook( parent, args.at(0).toString() );
 }
 
 #include "addressbook.moc"

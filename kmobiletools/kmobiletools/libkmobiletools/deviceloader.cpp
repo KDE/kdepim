@@ -85,33 +85,31 @@ bool DeviceLoader::loadDevice( const QString& deviceName, const QString& engineN
         return false;
 
     // check if a there's a suitable engine service in the list
-    int serviceNumber = 0;
-    bool engineFound = false;
-    for( ; serviceNumber < d->m_engineOffers.size(); serviceNumber++ ) {
-        if( d->m_engineOffers.at( serviceNumber )->name() == engineName ) {
-            engineFound = true;
+    KService::Ptr engineService;
+    foreach( KService::Ptr engineOffer, d->m_engineOffers ) {
+        if( engineOffer->name() == engineName ) {
+            engineService = engineOffer;
             break;
         }
     }
 
     // no suitable engine available?
-    if( !engineFound )
+    if( engineService.isNull() )
         return false;
 
     // try to load the engine
-    QStringList argDeviceName( deviceName );
-
-	// get a reference to the service
-	const KService& engineService = *d->m_engineOffers.at( serviceNumber ).constData();
-	KPluginLoader pluginLoader( engineService );
 
 	// create the engine instance
-	KMobileTools::EngineXP* engine = pluginLoader.factory()->create<KMobileTools::EngineXP>((QObject*)0, argDeviceName );
+    KPluginFactory *factory = KPluginLoader pluginLoader( *engineService ).factory();
+    if( !factory )
+        return false;
+    QStringList argDeviceName( deviceName );
+	KMobileTools::EngineXP* engine = factory->create<KMobileTools::EngineXP>((QObject*)0, argDeviceName );
     if( !engine )
         return false;
 
     // retrieve information about the engine
-    d->m_engineInformation.insert( deviceName, KPluginInfo( d->m_engineOffers.at( serviceNumber ) ) );
+    d->m_engineInformation.insert( deviceName, KPluginInfo( engineService ) );
 
     d->m_loadedDevices.insert( deviceName, engine );
     emit deviceLoaded( deviceName );

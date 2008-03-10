@@ -86,27 +86,28 @@ void ServiceLoader::loadServices( const QString& deviceName ) {
         return;
 
     // iterate over the services and look which one we can use
-    KMobileTools::CoreService* service;
     QStringList deviceNameList;
     deviceNameList << deviceName;
-    for( int i=0; i<serviceOffers.size(); i++ ) {
-		// get a reference to the service
-		const KService& coreService = *serviceOffers.at( i ).constData();
-		KPluginLoader pluginLoader( coreService );
-
-		QObject* serviceObject = pluginLoader.factory()->create<KMobileTools::CoreService>((QObject*)0, deviceNameList );
+    foreach( KService::Ptr coreService, serviceOffers ) {
+        // get a reference to the service
+        KPluginFactory *factory = KPluginLoader( *coreService ).factory();
+        if( !factory )
+            continue;
+		QObject* serviceObject = factory->create<KMobileTools::CoreService>((QObject*)0, deviceNameList );
         if( !serviceObject )
             continue;
 
-        service = qobject_cast<KMobileTools::CoreService*>( serviceObject );
+        KMobileTools::CoreService* service = qobject_cast<KMobileTools::CoreService*>( serviceObject );
         if( !service )
             continue;
 
         bool fulfillsRequirements = true;
         QStringList requirements = service->requires();
-        for( int j=0; j<requirements.size(); j++ ) {
-            if( !engine->implements( requirements.at(i) ) )
+        foreach( const QString& requirement, requirements ) {
+            if( !engine->implements( requirement ) ) {
                 fulfillsRequirements = false;
+                break;
+            }
         }
 
         // service fulfills our requirements

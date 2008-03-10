@@ -163,13 +163,15 @@ private:
 
 };
 
-class FakeEngineFactory : public KLibFactory
+class FakeEngineFactory : public KPluginFactory
 {
    Q_OBJECT
 public:
     FakeEngineFactory();
     virtual ~FakeEngineFactory();
-    virtual FakeEngine* createObject( QObject *parent, const char *classname, const QStringList &args );
+
+    vitual QObject *create(
+        const char *iface, QWidget *parentWidget, QObject *parent, const QVariantList &args, const QString &keyword );
 };
 
 #endif
