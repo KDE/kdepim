@@ -24,7 +24,7 @@
 #include <kdemacros.h>
 
 #ifndef KADDRESSBOOK_EXPORT
-# if defined(MAKE_KADDRESSBOOK_LIB)
+# if defined(MAKE_KADDRESSBOOKPRIVATE_LIB)
    /* We are building this library */
 #  define KADDRESSBOOK_EXPORT KDE_EXPORT
 # else

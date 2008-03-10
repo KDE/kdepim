@@ -26,7 +26,7 @@
 
 #include "kaddressbook_export.h"
 #include <kabc/addressbook.h>
-#include <klibloader.h>
+#include <KPluginFactory>
 #include <QtGui/QWidget>
 
 #define KAB_EXTENSIONWIDGET_PLUGIN_VERSION 1
@@ -87,7 +87,7 @@ class KABINTERFACES_EXPORT ExtensionWidget : public QWidget
     ExtensionWidgetPrivate *d;
 };
 
-class KABINTERFACES_EXPORT ExtensionFactory : public KLibFactory
+class KABINTERFACES_EXPORT ExtensionFactory : public KPluginFactory
 {
   public:
     virtual ExtensionWidget *extension( KAB::Core *core, QWidget *parent ) = 0;
@@ -104,12 +104,6 @@ class KABINTERFACES_EXPORT ExtensionFactory : public KLibFactory
       widget.
      */
     virtual QString identifier() const = 0;
-
-  protected:
-    virtual QObject* createObject( QObject*, const char*, const QStringList & )
-    {
-      return 0;
-    }
 };
 
 }

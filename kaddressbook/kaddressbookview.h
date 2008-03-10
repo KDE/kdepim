@@ -30,7 +30,7 @@
 #include "filter.h"
 #include "viewconfigurewidget.h"
 #include <kabc/field.h>
-#include <klibloader.h>
+#include <KPluginFactory>
 
 #include <QStringList>
 #include <QWidget>
@@ -271,7 +271,7 @@ class KADDRESSBOOK_EXPORT KAddressBookView : public QWidget
     QWidget *mViewWidget;
 };
 
-class KADDRESSBOOK_EXPORT ViewFactory : public KLibFactory
+class KADDRESSBOOK_EXPORT ViewFactory : public KPluginFactory
 {
   public:
     virtual KAddressBookView *view( KAB::Core *core, QWidget *parent ) = 0;
@@ -299,12 +299,6 @@ class KADDRESSBOOK_EXPORT ViewFactory : public KLibFactory
      */
     virtual ViewConfigureWidget *configureWidget( KABC::AddressBook *ab,
                                                   QWidget *parent );
-
-  protected:
-    virtual QObject* createObject( QObject*, const char*, const QStringList & )
-    {
-      return 0;
-    }
 };
 
 #endif

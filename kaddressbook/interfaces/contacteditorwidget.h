@@ -26,7 +26,7 @@
 
 #include "kaddressbook_export.h"
 #include <kabc/addressbook.h>
-#include <klibloader.h>
+#include <KPluginFactory>
 
 #include <QtGui/QWidget>
 #include <QtCore/QList>
@@ -114,7 +114,7 @@ class KABINTERFACES_EXPORT ContactEditorWidget : public QWidget
     ContactEditorWidgetPrivate *d;
 };
 
-class ContactEditorWidgetFactory : public KLibFactory
+class ContactEditorWidgetFactory : public KPluginFactory
 {
   public:
     virtual ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent ) = 0;
@@ -129,12 +129,6 @@ class ContactEditorWidgetFactory : public KLibFactory
       shall belong to.
      */
     virtual QString pageIdentifier() const = 0;
-
-  protected:
-    virtual QObject* createObject( QObject*, const char*, const QStringList & )
-    {
-      return 0;
-    }
 };
 
 }

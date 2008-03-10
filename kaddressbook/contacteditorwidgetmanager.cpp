@@ -80,16 +80,15 @@ void ContactEditorWidgetManager::reload()
   const KService::List plugins = KServiceTypeTrader::self()->query( "KAddressBook/ContactEditorWidget",
     QString( "[X-KDE-KAddressBook-CEWPluginVersion] == %1" ).arg( KAB_CEW_PLUGIN_VERSION ) );
 
-  KService::List::ConstIterator it;
-  for ( it = plugins.begin(); it != plugins.end(); ++it ) {
-    KLibFactory *factory = KLibLoader::self()->factory( (*it)->library().toLatin1() );
+  foreach ( KService::Ptr pluginService, plugins ) {
+    KPluginFactory *factory = KPluginLoader( *pluginService ).factory();
     if ( !factory ) {
       kDebug(5720) <<"ContactEditorWidgetManager::reload(): Factory creation failed";
       continue;
     }
 
     KAB::ContactEditorWidgetFactory *pageFactory =
-                          static_cast<KAB::ContactEditorWidgetFactory*>( factory );
+                          dynamic_cast<KAB::ContactEditorWidgetFactory*>( factory );
 
     if ( !pageFactory ) {
       kDebug(5720) <<"ContactEditorWidgetManager::reload(): Cast failed";

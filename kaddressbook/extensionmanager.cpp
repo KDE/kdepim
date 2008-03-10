@@ -225,9 +225,8 @@ void ExtensionManager::createExtensionWidgets()
   const KService::List plugins = KServiceTypeTrader::self()->query( "KAddressBook/Extension",
     QString( "[X-KDE-KAddressBook-ExtensionPluginVersion] == %1" ).arg( KAB_EXTENSIONWIDGET_PLUGIN_VERSION ) );
 
-  KService::List::ConstIterator it;
-  for ( it = plugins.begin(); it != plugins.end(); ++it ) {
-    KLibFactory *factory = KLibLoader::self()->factory( (*it)->library().toLatin1() );
+  foreach ( KService::Ptr pluginService, plugins ) {
+    KPluginFactory *factory = KPluginLoader( *pluginService ).factory();
     if ( !factory ) {
       kDebug(5720) <<"ExtensionManager::loadExtensions(): Factory creation failed";
       continue;
@@ -244,7 +243,7 @@ void ExtensionManager::createExtensionWidgets()
     if ( wdg ) {
       mSplitter->addWidget( wdg );
       if ( wdg->identifier() == "distribution_list_editor_ng" )
-          mSplitter->moveToFirst( wdg );
+          mSplitter->insertWidget( 0, wdg );
       wdg->setVisible( false );
       connect( wdg, SIGNAL( modified( const KABC::Addressee::List& ) ),
                SIGNAL( modified( const KABC::Addressee::List& ) ) );

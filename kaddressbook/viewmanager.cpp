@@ -400,19 +400,14 @@ void ViewManager::createViewFactories()
 {
   const KService::List plugins = KServiceTypeTrader::self()->query( "KAddressBook/View",
     QString( "[X-KDE-KAddressBook-ViewPluginVersion] == %1" ).arg(  KAB_VIEW_PLUGIN_VERSION ) );
-  KService::List::ConstIterator it;
-  for ( it = plugins.begin(); it != plugins.end(); ++it ) {
-    if ( !(*it)->hasServiceType( "KAddressBook/View" ) )
-      continue;
-
-    KLibFactory *factory = KLibLoader::self()->factory( (*it)->library().toLatin1() );
-
+  foreach ( KService::Ptr pluginService, plugins ) {
+    KPluginFactory *factory = KPluginLoader( *pluginService ).factory();
     if ( !factory ) {
       kDebug(5720) <<"ViewManager::createViewFactories(): Factory creation failed";
       continue;
     }
 
-    ViewFactory *viewFactory = static_cast<ViewFactory*>( factory );
+    ViewFactory *viewFactory = dynamic_cast<ViewFactory*>( factory );
 
     if ( !viewFactory ) {
       kDebug(5720) <<"ViewManager::createViewFactories(): Cast failed";

@@ -593,7 +593,8 @@ void GeoMapWidget::paintEvent( QPaintEvent* )
   p.drawEllipse( x, y, 4, 4 );
 
   p.end();
-  bitBlt( this, 0, 0, &pm );
+  QPainter thisPainter(this);
+  thisPainter.drawPixmap( 0, 0, pm );
 }
 
 #include "geowidget.moc"

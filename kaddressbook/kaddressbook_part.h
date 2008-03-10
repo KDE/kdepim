@@ -36,7 +36,7 @@ class KAddressbookPart: public KParts::ReadOnlyPart
   Q_OBJECT
 
   public:
-    KAddressbookPart( QWidget *parentWidget, QObject *parent, const QStringList& );
+    KAddressbookPart( QWidget *parentWidget, QObject *parent, const QVariantList& );
     virtual ~KAddressbookPart();
 
     static KAboutData *createAboutData();

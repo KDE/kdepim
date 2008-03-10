@@ -29,7 +29,7 @@
 #include "kaddressbook_export.h"
 #include <kabc/addressbook.h>
 #include <kabc/addresseelist.h>
-#include <klibloader.h>
+#include <KPluginFactory>
 #include <kxmlguiclient.h>
 
 #define KAB_XXPORT_PLUGIN_VERSION 1
@@ -41,23 +41,21 @@ class KApplication;
   @libname	filename of the shared library, e.g. kaddrbk_bookmark_xxport
   @XXPortClass	the import/export class - derived from the XXPort class
   @catalog	catalog file to search for translation lookup (NULL if no catalog needed)
-  @see: K_EXPORT_COMPONENT_FACTORY()
+  @see: K_EXPORT_PLUGIN()
  */
 #define K_EXPORT_KADDRESSBOOK_XXFILTER_CATALOG( libname, XXPortClass, catalog ) \
- class KDE_NO_EXPORT localXXPortFactory : public KAB::XXPortFactory { \
-	KAB::XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name ) \
-	 { const char *cat = catalog; \
-	   if (cat) KGlobal::locale()->insertCatalog(cat); \
-	   return new XXPortClass( ab, parent, name ); \
-         } \
- }; \
- K_EXPORT_COMPONENT_FACTORY( libname, localXXPortFactory )
+class KDE_NO_EXPORT LocalXXPortFactory : public KAB::XXPortFactory { \
+    public: LocalXXPortFactory() : KAB::XXPortFactory(#libname, catalog) {} \
+      KAB::XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent, const char *name ) \
+      { return new XXPortClass( ab, parent, name ); } \
+}; \
+K_EXPORT_PLUGIN( LocalXXPortFactory )
 
 /**
   K_EXPORT_KADDRESSBOOK_XXFILTER() creates the stub for a KAddressbook import/export filter.
   @libname	filename of the shared library, e.g. kaddrbk_bookmark_xxport
   @XXPortClass	the import/export class - derived from the XXPort class
-  @see: K_EXPORT_COMPONENT_FACTORY()
+  @see: K_EXPORT_PLUGIN()
  */
 #define K_EXPORT_KADDRESSBOOK_XXFILTER( libname, XXPortClass ) \
 	K_EXPORT_KADDRESSBOOK_XXFILTER_CATALOG( libname, XXPortClass, NULL )
@@ -159,18 +157,14 @@ class KABINTERFACES_EXPORT XXPort : public QObject, virtual public KXMLGUIClient
     XXPortPrivate *d;
 };
 
-class XXPortFactory : public KLibFactory
+class KABINTERFACES_EXPORT XXPortFactory : public KPluginFactory
 {
   public:
+    XXPortFactory(const char *componentName = 0, const char *catalogName = 0)
+      : KPluginFactory(componentName, catalogName) {}
+
     virtual XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent,
                                   const char *name = 0 ) = 0;
-
-  protected:
-    virtual QObject* createObject( QObject*, const char*,
-                                   const QStringList & )
-    {
-      return 0;
-    }
 };
 
 

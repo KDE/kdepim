@@ -122,18 +122,14 @@ void XXPortManager::loadPlugins()
 
   const KService::List plugins = KServiceTypeTrader::self()->query( "KAddressBook/XXPort",
     QString( "[X-KDE-KAddressBook-XXPortPluginVersion] == %1" ).arg( KAB_XXPORT_PLUGIN_VERSION ) );
-  KService::List::ConstIterator it;
-  for ( it = plugins.begin(); it != plugins.end(); ++it ) {
-    if ( !(*it)->hasServiceType( "KAddressBook/XXPort" ) )
-      continue;
-
-    KLibFactory *factory = KLibLoader::self()->factory( (*it)->library().toLatin1() );
+  foreach ( KService::Ptr pluginService, plugins ) {
+    KPluginFactory *factory = KPluginLoader( *pluginService ).factory();
     if ( !factory ) {
       kDebug(5720) <<"XXPortManager::loadExtensions(): Factory creation failed";
       continue;
     }
 
-    KAB::XXPortFactory *xxportFactory = static_cast<KAB::XXPortFactory*>( factory );
+    KAB::XXPortFactory *xxportFactory = dynamic_cast<KAB::XXPortFactory*>( factory );
 
     if ( !xxportFactory ) {
       kDebug(5720) <<"XXPortManager::loadExtensions(): Cast failed";

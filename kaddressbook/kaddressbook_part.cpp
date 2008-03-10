@@ -39,11 +39,11 @@
 
 #include "kaddressbook_part.h"
 
-typedef KParts::GenericFactory< KAddressbookPart > KAddressbookFactory;
-K_EXPORT_COMPONENT_FACTORY( kaddressbookpart, KAddressbookFactory )
+K_PLUGIN_FACTORY(KAddressbookFactory, registerPlugin<KAddressbookPart>();)
+K_EXPORT_PLUGIN(KAddressbookFactory( "kaddressbookpart" ))
 
 KAddressbookPart::KAddressbookPart( QWidget *parentWidget, QObject *parent,
-                                    const QStringList & )
+                                    const QVariantList & )
   : KParts::ReadOnlyPart( parent )
 {
   setComponentData( KAddressbookFactory::componentData() );
