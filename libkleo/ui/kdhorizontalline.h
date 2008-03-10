@@ -43,7 +43,7 @@
 
 #include "kleo/kleo_export.h"
 
-#include <QFrame>
+#include <QtGui/QFrame>
 
 class KLEO_EXPORT KDHorizontalLine : public QFrame {
   Q_OBJECT

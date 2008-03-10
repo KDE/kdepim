@@ -33,7 +33,7 @@
 #ifndef __KLEO_KEYFILTER_H__
 #define __KLEO_KEYFILTER_H__
 
-#include <QFlags>
+#include <QtCore/QFlags>
 
 namespace GpgME {
   class Key;
