@@ -26,11 +26,11 @@
 
 #include "part.h"
 
-typedef KParts::GenericFactory< KitchenSyncPart > KitchenSyncFactory;
-K_EXPORT_COMPONENT_FACTORY( kitchensyncpart, KitchenSyncFactory )
+K_PLUGIN_FACTORY(KitchenSyncFactory, registerPlugin<KitchenSyncPart>();)
+K_EXPORT_PLUGIN(KitchenSyncFactory( "kitchensyncpart" ))
 
 KitchenSyncPart::KitchenSyncPart( QWidget *parentWidget, QObject *parent,
-                                  const QStringList &list )
+                                  const QVariantList &list )
   : KParts::ReadOnlyPart( parent )
 {
   Q_UNUSED( list );

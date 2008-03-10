@@ -33,7 +33,7 @@ class KitchenSyncPart: public KParts::ReadOnlyPart
 
   public:
     KitchenSyncPart( QWidget *parentWidget, QObject *parent,
-                     const QStringList &list );
+                     const QVariantList &list );
     virtual ~KitchenSyncPart();
 
     static KAboutData *createAboutData();
