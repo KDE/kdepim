@@ -50,5 +50,5 @@ public:
   }
 };
 
-K_EXPORT_COMPONENT_FACTORY(knotes_kolab,KolabFactory())
+K_EXPORT_PLUGIN( KolabFactory )
 

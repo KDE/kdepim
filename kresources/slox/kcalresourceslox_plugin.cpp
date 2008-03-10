@@ -20,21 +20,11 @@
 
 #include "kcalresourcesloxconfig.h"
 #include "kcalresourceslox.h"
+#include "kresources_export.h"
 
 #include <kglobal.h>
 #include <klocale.h>
 
 using namespace KCal;
 
-typedef KRES::PluginFactory<KCalResourceSlox,KCalResourceSloxConfig> SLOXFactory;
-// FIXME: Use K_EXPORT_COMPONENT_FACTORY( kcal_slox, SLOXFactory ); here
-// Problem: How do I insert the catalog???
-extern "C"
-{
-  KDE_EXPORT void *init_kcal_slox()
-  {
-    KGlobal::locale()->insertCatalog( "libkcal" );
-    KGlobal::locale()->insertCatalog( "kabc_slox" );
-    return new SLOXFactory;
-  }
-}
+EXPORT_KRESOURCES_PLUGIN2( KCalResourceSlox, KCalResourceSloxConfig, "libkcal", "kabc_slox" )

@@ -44,7 +44,7 @@
 using namespace KNotes;
 
 typedef KRES::PluginFactory< ResourceXMLRPC, ResourceXMLRPCConfig> XMLRPCFactory;
-K_EXPORT_COMPONENT_FACTORY( knotes_xmlrpc, XMLRPCFactory )
+K_EXPORT_PLUGIN( XMLRPCFactory )
 
 static const QString SearchNotesCommand = "infolog.boinfolog.search";
 static const QString AddNoteCommand = "infolog.boinfolog.write";

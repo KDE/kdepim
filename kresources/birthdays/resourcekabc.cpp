@@ -43,20 +43,13 @@
 #include <kresources/configwidget.h>
 
 #include "resourcekabcconfig.h"
-
 #include "resourcekabc.h"
+#include "kresources_export.h"
 
 using namespace KCal;
 
-extern "C"
-{
-  KDE_EXPORT void *init_kcal_kabc()
-  {
-    KGlobal::locale()->insertCatalog( "kres_birthday" );
-    KGlobal::locale()->insertCatalog( "libkcal" );
-    return new KRES::PluginFactory<ResourceKABC,ResourceKABCConfig>();
-  }
-}
+EXPORT_KRESOURCES_PLUGIN2( ResourceKABC, ResourceKABCConfig, "kres_birthday", "libkcal" )
+
 
 ResourceKABC::ResourceKABC( const KConfigGroup &group )
   : ResourceCalendar( group ), mCalendar( QString::fromLatin1( "UTC" ) ),

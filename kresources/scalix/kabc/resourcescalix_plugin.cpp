@@ -52,5 +52,5 @@ class ScalixFactory : public KRES::PluginFactoryBase
     }
 };
 
-K_EXPORT_COMPONENT_FACTORY(kabc_scalix,ScalixFactory)
+K_EXPORT_PLUGIN( ScalixFactory )
 

@@ -50,5 +50,5 @@ public:
   }
 };
 
-K_EXPORT_COMPONENT_FACTORY(knotes_scalix,ScalixFactory())
+K_EXPORT_PLUGIN( ScalixFactory )
 

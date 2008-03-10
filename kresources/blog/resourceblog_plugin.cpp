@@ -22,20 +22,11 @@
 
 #include "resourceblogconfig.h"
 #include "resourceblog.h"
+#include "kresources_export.h"
 
 #include <kglobal.h>
 #include <klocale.h>
 
 using namespace KCal;
 
-typedef KRES::PluginFactory<ResourceBlog,ResourceBlogConfig> BlogFactory;
-
-extern "C"
-{
-  KDE_EXPORT void *init_kcal_blog()
-  {
-    KGlobal::locale()->insertCatalog( "libkcal" );
-    KGlobal::locale()->insertCatalog( "kres_blog" );
-    return new BlogFactory;
-  }
-}
+EXPORT_KRESOURCES_PLUGIN2( ResourceBlog, ResourceBlogConfig, "libkcal", "kres_blog" )

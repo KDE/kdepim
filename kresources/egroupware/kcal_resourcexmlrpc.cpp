@@ -79,7 +79,7 @@
 using namespace KCal;
 
 typedef KRES::PluginFactory<ResourceXMLRPC, ResourceXMLRPCConfig> XMLRPCFactory;
-K_EXPORT_COMPONENT_FACTORY( kcal_xmlrpc, XMLRPCFactory )
+K_EXPORT_PLUGIN( XMLRPCFactory )
 
 
 static const QString SearchEventsCommand = "calendar.bocalendar.search";

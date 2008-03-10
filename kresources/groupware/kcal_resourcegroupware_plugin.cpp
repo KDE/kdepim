@@ -21,20 +21,11 @@
 
 #include "kcal_resourcegroupware.h"
 #include "kcal_resourcegroupwareconfig.h"
+#include "kresources_export.h"
 
 #include <kglobal.h>
 #include <klocale.h>
 
 using namespace KCal;
 
-typedef KRES::PluginFactory<ResourceGroupware, ResourceGroupwareConfig> GroupwareFactory;
-
-extern "C"
-{
-  KDE_EXPORT void *init_kcal_groupware()
-  {
-    KGlobal::locale()->insertCatalog( "libkcal" );
-    KGlobal::locale()->insertCatalog( "kres_groupware" );
-    return new ResourceGroupware;
-  }
-}
+EXPORT_KRESOURCES_PLUGIN2( ResourceGroupware, ResourceGroupwareConfig, "libkcal", "kres_groupware" )

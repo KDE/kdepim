@@ -21,20 +21,11 @@
 
 #include "kcal_resourcefeatureplan.h"
 #include "kcal_resourcefeatureplanconfig.h"
+#include "kresources_export.h"
 
 #include <kglobal.h>
 #include <klocale.h>
 
 using namespace KCal;
 
-typedef KRES::PluginFactory< ResourceFeaturePlan, ResourceFeaturePlanConfig > FeatureplanFactory;
-// FIXME K_EXPORT_COMPONENT_FACTORY( kcal_resourcefeatureplan, FeatureplanFactory )
-// Problem: How to insert the catalog!
-extern "C"
-{
-  KDE_EXPORT void* init_kcal_resourcefeatureplan()
-  {
-    KGlobal::locale()->insertCatalog( "kres_featureplan" );
-    return new FeatureplanFactory;
-  }
-}
+EXPORT_KRESOURCES_PLUGIN( ResourceFeaturePlan, ResourceFeaturePlanConfig, "kres_featureplan" )

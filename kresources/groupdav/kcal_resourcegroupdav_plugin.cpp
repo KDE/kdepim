@@ -23,21 +23,11 @@
 
 #include "kcal_resourcegroupdav.h"
 #include "kcal_resourcegroupwarebaseconfig.h"
+#include "kresources_export.h"
 
 #include <kglobal.h>
 #include <klocale.h>
 
 using namespace KCal;
 
-typedef KRES::PluginFactory< ResourceGroupDav, ResourceGroupwareBaseConfig > GroupDavFactory;
-// FIXME: Use K_EXPORT_COMPONENT_FACTORY( kcal_groupdav, GroupDavFactory ); here
-// Problem: How do I insert the catalog???
-extern "C"
-{
-  KDE_EXPORT void *init_kcal_groupdav()
-  {
-    KGlobal::locale()->insertCatalog( "kdepimresources" );
-    KGlobal::locale()->insertCatalog( "kres_groupdav" );
-    return new GroupDavFactory;
-  }
-}
+EXPORT_KRESOURCES_PLUGIN2( ResourceGroupDav, ResourceGroupwareBaseConfig, "kdepimresources", "kres_groupdav" )

@@ -20,20 +20,11 @@
 
 #include "kabcresourceslox.h"
 #include "kabcresourcesloxconfig.h"
+#include "kresources_export.h"
 
 #include <kglobal.h>
 #include <klocale.h>
 
 using namespace KABC;
 
-typedef KRES::PluginFactory< ResourceSlox, ResourceSloxConfig > SloxFactory;
-
-extern "C"
-{
-  KDE_EXPORT void *init_kabc_slox()
-  {
-    KGlobal::locale()->insertCatalog( "libkcal" );
-    KGlobal::locale()->insertCatalog( "kabc_slox" );
-    return new SloxFactory;
-  }
-}
+EXPORT_KRESOURCES_PLUGIN2( ResourceSlox, ResourceSloxConfig, "libkcal", "kabc_slox" )

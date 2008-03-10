@@ -71,7 +71,7 @@ class ScalixFactory : public KRES::PluginFactoryBase
     }
 };
 
-K_EXPORT_COMPONENT_FACTORY(kabc_scalix,ScalixFactory)
+K_EXPORT_PLUGIN( ScalixFactory )
 
 static const char* s_kmailContentsType = "Contact";
 static const char* s_attachmentMimeTypeContact = "application/x-vnd.kolab.contact";

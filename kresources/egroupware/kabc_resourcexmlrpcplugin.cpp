@@ -20,21 +20,11 @@
 
 #include "kabc_resourcexmlrpc.h"
 #include "kabc_resourcexmlrpcconfig.h"
+#include "kresources_export.h"
 
 #include <kglobal.h>
 #include <klocale.h>
 
 using namespace KABC;
 
-typedef KRES::PluginFactory< ResourceXMLRPC, ResourceXMLRPCConfig > XMLRPCFactory;
-
-// FIXME: Use K_EXPORT_COMPONENT_FACTORY( kabc_xmlrpc, XMLRPCFactory ); here
-// Problem: How to insert the catalog!
-extern "C"
-{
-  KDE_EXPORT void *init_kabc_xmlrpc()
-  {
-    KGlobal::locale()->insertCatalog( "kres_xmlrpc" );
-    return new XMLRPCFactory;
-  }
-}
+EXPORT_KRESOURCES_PLUGIN( ResourceXMLRPC, ResourceXMLRPCConfig, "kres_xmlrpc" )
