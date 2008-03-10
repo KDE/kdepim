@@ -39,6 +39,7 @@
 #include <KAboutApplicationDialog>
 #include <KAboutData>
 #include <KComponentData>
+#include <KWindowSystem>
 
 #include <QMenu>
 #include <QAction>
@@ -171,7 +172,7 @@ void SystemTrayIcon::openOrRaiseMainWindow() {
         d->mainWindow->installEventFilter( this );
     }
     if ( d->mainWindow->isMinimized() ) {
-        d->mainWindow->showNormal();
+        KWindowSystem::unminimizeWindow( d->mainWindow->winId());
         d->mainWindow->raise();
     } else if ( d->mainWindow->isVisible() ) {
         d->mainWindow->raise();
