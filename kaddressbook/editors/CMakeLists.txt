@@ -14,7 +14,7 @@ kde4_add_plugin(kaddrbk_cryptosettings ${kaddrbk_cryptosettings_PART_SRCS})
 
 
 
-target_link_libraries(kaddrbk_cryptosettings  ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} kleo kaddressbook)
+target_link_libraries(kaddrbk_cryptosettings  ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} kleo kaddressbook kabinterfaces )
 
 install(TARGETS kaddrbk_cryptosettings  DESTINATION ${PLUGIN_INSTALL_DIR})
 

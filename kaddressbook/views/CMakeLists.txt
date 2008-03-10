@@ -21,7 +21,7 @@ kde4_add_plugin(kaddrbk_cardview ${kaddrbk_cardview_PART_SRCS})
 
 
 
-target_link_libraries(kaddrbk_cardview  ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} kaddressbook kabcommon)
+target_link_libraries(kaddrbk_cardview  kaddressbook kabcommon ${KDE4_KABC_LIBS}  ${QT_QT3SUPPORT_LIBRARY})
 
 install(TARGETS kaddrbk_cardview  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -35,7 +35,7 @@ kde4_add_plugin(kaddrbk_iconview ${kaddrbk_iconview_PART_SRCS})
 
 
 
-target_link_libraries(kaddrbk_iconview ${KDE4_KABC_LIBS} kaddressbook ${LIB_KDE3SUPPORT})
+target_link_libraries(kaddrbk_iconview kaddressbook kabcommon ${KDE4_KABC_LIBS} ${QT_QT3SUPPORT_LIBRARY})
 
 install(TARGETS kaddrbk_iconview  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -49,7 +49,7 @@ kde4_add_plugin(kaddrbk_tableview ${kaddrbk_tableview_PART_SRCS})
 
 
 
-target_link_libraries(kaddrbk_tableview  ${KDE4_KABC_LIBS} kaddressbook ${LIB_KDE3SUPPORT})
+target_link_libraries(kaddrbk_tableview kaddressbook kabcommon ${KDE4_KABC_LIBS} ${QT_QT3SUPPORT_LIBRARY})
 
 install(TARGETS kaddrbk_tableview  DESTINATION ${PLUGIN_INSTALL_DIR})
 
