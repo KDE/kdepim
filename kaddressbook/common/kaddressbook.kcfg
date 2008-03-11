@@ -55,7 +55,7 @@
     <entry type="IntList" name="LeftSplitter">
     </entry>
     <entry type="Bool" name="ContactListAboveExtensions">
-      <default>false</default>
+      <default>true</default>
        <whatsthis>If true, the contact list will be placed above the extensions on the left (distribution list editor etc.) instead of in the middle of the main window</whatsthis>
 
     </entry>
