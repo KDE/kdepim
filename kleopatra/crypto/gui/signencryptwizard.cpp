@@ -97,7 +97,6 @@ SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
     q->resize( QSize( 640, 480 ).expandedTo( q->sizeHint() ) );
 }
 
-
 void SignEncryptWizard::onNext( int currentId )
 {
     if ( currentId == ResolveRecipientsPage )
@@ -271,7 +270,6 @@ void SignEncryptWizard::setRecipientsUserMutable( bool isMutable )
     d->recipientResolvePage->setRecipientsUserMutable( isMutable );
 }
 
-
 void SignEncryptWizard::setSignerResolvePageValidator( const boost::shared_ptr<SignerResolvePage::Validator>& validator )
 {
     d->signerResolvePage->setValidator( validator );
@@ -282,6 +280,10 @@ SignerResolvePage* SignEncryptWizard::signerResolvePage()
     return d->signerResolvePage;
 }
 
+void SignEncryptWizard::setOperationCompleted()
+{
+    d->resultPage->setOperationCompleted();
+}
 
 
 #include "moc_signencryptwizard.cpp"

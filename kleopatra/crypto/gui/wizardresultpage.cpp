@@ -55,11 +55,12 @@ public:
     
 private:
     ScrollArea* scrollArea;
+    bool operationCompleted;
 };
 
 
 WizardResultPage::Private::Private( WizardResultPage * qq )
-  : q( qq )
+  : q( qq ), operationCompleted( false )
 {
     QVBoxLayout* layout = new QVBoxLayout( q );
     scrollArea = new ScrollArea;
@@ -91,8 +92,16 @@ void WizardResultPage::addResultItem( QWidget* widget )
 WizardResultPage::~WizardResultPage() {}
 
 
+void WizardResultPage::setOperationCompleted()
+{
+    if ( d->operationCompleted )
+        return;
+    d->operationCompleted = true;
+    emit completeChanged();
+}
+
 bool WizardResultPage::isComplete() const
 {
-    return true;
+    return d->operationCompleted;
 }
 

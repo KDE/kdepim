@@ -49,6 +49,8 @@ namespace Gui {
     
         void addResultItem( QWidget* widget );
 
+        void setOperationCompleted();
+        
         /*reimpl*/ bool isComplete() const;
 
     private:

@@ -308,6 +308,8 @@ void SignEMailController::Private::ensureWizardCreated() {
     w->setAttribute( Qt::WA_DeleteOnClose );
     connect( w.get(), SIGNAL(signersResolved()), q, SLOT(slotWizardSignersResolved()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
+    connect( q, SIGNAL( done() ), w.get(), SLOT( setOperationCompleted() ), Qt::QueuedConnection );
+    connect( q, SIGNAL( error( int, QString ) ), w.get(), SLOT( setOperationCompleted() ), Qt::QueuedConnection );
     w->setPresetProtocol( protocol );
 
     wizard = w.release();
