@@ -99,6 +99,7 @@ set( _kleopatra_common_SRCS
   view/tabwidget.cpp
 
   dialogs/certificateselectiondialog.cpp
+  dialogs/expirydialog.cpp
 
   crypto/certificateresolver.cpp
   crypto/task.cpp
@@ -150,7 +151,7 @@ set( _kleopatra_common_SRCS
   certificateinfowidgetimpl.cpp
   main.cpp )
 
-kde4_add_ui_files( _kleopatra_common_SRCS certificateinfowidget.ui certificatewizard.ui )
+kde4_add_ui_files( _kleopatra_common_SRCS certificateinfowidget.ui certificatewizard.ui dialogs/expirydialog.ui )
 
 if (ONLY_KLEO)
    add_definitions( -DONLY_KLEO )
