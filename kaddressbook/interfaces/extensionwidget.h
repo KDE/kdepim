@@ -26,7 +26,7 @@
 
 #include "kaddressbook_export.h"
 #include <kabc/addressbook.h>
-#include <KPluginFactory>
+#include <kpluginfactory.h>
 #include <QtGui/QWidget>
 
 #define KAB_EXTENSIONWIDGET_PLUGIN_VERSION 1

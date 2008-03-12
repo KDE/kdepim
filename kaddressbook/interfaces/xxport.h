@@ -29,7 +29,7 @@
 #include "kaddressbook_export.h"
 #include <kabc/addressbook.h>
 #include <kabc/addresseelist.h>
-#include <KPluginFactory>
+#include <kpluginfactory.h>
 #include <kxmlguiclient.h>
 
 #define KAB_XXPORT_PLUGIN_VERSION 1
