@@ -49,6 +49,7 @@
 #include "qgpgmeverifydetachedjob.h"
 #include "qgpgmeimportjob.h"
 #include "qgpgmeverifyopaquejob.h"
+#include "qgpgmechangeexpiryjob.h"
 
 #ifdef KLEO_BUILD_OLD_MAINWINDOW // kleo_no_compat
 # include "kleo/cryptplugwrapper.h"
@@ -227,8 +228,16 @@ namespace {
       context->setTextMode( textMode );
       return new Kleo::QGpgMEDecryptVerifyJob( context );             
     }
-    
 
+    Kleo::ChangeExpiryJob * changeExpiryJob() const {
+      if ( mProtocol != GpgME::OpenPGP )
+        return 0; // only supported by gpg
+
+      GpgME::Context * context = GpgME::Context::createForProtocol( mProtocol );
+      if ( !context )
+        return 0;
+      return new Kleo::QGpgMEChangeExpiryJob( context );
+    }
   };
 
 }

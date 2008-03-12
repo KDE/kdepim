@@ -1,8 +1,8 @@
 /*
-    kleo/cryptobackend.cpp
+    qgpgmechangeexpiryjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2005 Klarälvdalens Datakonsult AB
+    Copyright (c) 2008 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,9 +30,38 @@
     your version.
 */
 
-#include "cryptobackend.h"
+#ifndef __KLEO_QGPGMECHANGEEXPIRYJOB_H__
+#define __KLEO_QGPGMECHANGEEXPIRYJOB_H__
 
-const char Kleo::CryptoBackend::OpenPGP[] = "OpenPGP";
-const char Kleo::CryptoBackend::SMIME[] = "SMIME";
+#include "kleo/changeexpiryjob.h"
 
-Kleo::ChangeExpiryJob * Kleo::CryptoBackend::Protocol::changeExpiryJob() const { return 0; }
+#include "qgpgmejob.h"
+
+namespace GpgME {
+  class Error;
+  class Context;
+}
+
+namespace Kleo {
+
+  class QGpgMEChangeExpiryJob : public ChangeExpiryJob, private QGpgMEJob {
+    Q_OBJECT QGPGME_JOB
+  public:
+    QGpgMEChangeExpiryJob( GpgME::Context * context );
+    ~QGpgMEChangeExpiryJob();
+
+    /*! \reimp from ChangeExpiryJob */
+    GpgME::Error start( const GpgME::Key & key, const QDateTime & expiry );
+
+  private:
+    void doOperationDoneEvent( const GpgME::Error & e );
+
+  private Q_SLOTS:
+    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
+      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+    }
+  };
+
+}
+
+#endif // __KLEO_QGPGMECHANGEEXPIRYJOB_H__

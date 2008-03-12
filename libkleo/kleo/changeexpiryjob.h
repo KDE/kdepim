@@ -1,8 +1,8 @@
 /*
-    kleo/cryptobackend.cpp
+    changeexpiryjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2005 Klarälvdalens Datakonsult AB
+    Copyright (c) 2008 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,9 +30,51 @@
     your version.
 */
 
-#include "cryptobackend.h"
+#ifndef __KLEO_CHANGEEXPIRYJOB_H__
+#define __KLEO_CHANGEEXPIRYJOB_H__
 
-const char Kleo::CryptoBackend::OpenPGP[] = "OpenPGP";
-const char Kleo::CryptoBackend::SMIME[] = "SMIME";
+#include "job.h"
 
-Kleo::ChangeExpiryJob * Kleo::CryptoBackend::Protocol::changeExpiryJob() const { return 0; }
+namespace GpgME {
+    class Error;
+    class Key;
+}
+
+class QDateTime;
+
+namespace Kleo {
+
+  /**
+     @short An abstract base class to change expiry asynchronously
+
+     To use a ChangeExpiryJob, first obtain an instance from the
+     CryptoBackend implementation, connect the progress() and result()
+     signals to suitable slots and then start the job with a call
+     to start(). This call might fail, in which case the ChangeExpiryJob
+     instance will have scheduled it's own destruction with a call to
+     QObject::deleteLater().
+
+     After result() is emitted, the ChangeExpiryJob will schedule it's own
+     destruction by calling QObject::deleteLater().
+  */
+  class KLEO_EXPORT ChangeExpiryJob : public Job {
+    Q_OBJECT
+  protected:
+    explicit ChangeExpiryJob( QObject * parent );
+  public:
+    ~ChangeExpiryJob();
+
+    /**
+       Starts the change-expiry operation. \a key is the key to change
+       the expiry of. \a expiry is the new expiry time. If \a expiry
+       is not valid, \a key is set to never expire.
+    */
+    virtual GpgME::Error start( const GpgME::Key & key, const QDateTime & expiry ) = 0;
+
+  Q_SIGNALS:
+    void result( const GpgME::Error & result );
+  };
+
+}
+
+#endif // __KLEO_CHANGEEXPIRYJOB_H__

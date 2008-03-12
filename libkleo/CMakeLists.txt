@@ -6,7 +6,7 @@ else ( NOT ONLY_KLEO )
   add_definitions( -DONLY_KLEO )
 endif ( NOT ONLY_KLEO )
 
-add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS )
+add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS -UQT_NO_STL )
 add_definitions( ${KDE4_ENABLE_EXCEPTIONS} )
 
 add_subdirectory( pics )
@@ -24,6 +24,7 @@ set(libkleo_backend_qgpgme_SRCS
 	backends/qgpgme/qgpgmeimportjob.cpp
 	backends/qgpgme/qgpgmeexportjob.cpp
 	backends/qgpgme/qgpgmesecretkeyexportjob.cpp
+	backends/qgpgme/qgpgmechangeexpiryjob.cpp
 	backends/qgpgme/qgpgmedownloadjob.cpp
 	backends/qgpgme/qgpgmedeletejob.cpp
 	backends/qgpgme/qgpgmeencryptjob.cpp
@@ -126,6 +127,7 @@ install( FILES
 	kleo/keygenerationjob.h
 	kleo/importjob.h
 	kleo/exportjob.h
+	kleo/changeexpiryjob.h
 	kleo/downloadjob.h
 	kleo/deletejob.h
 	kleo/encryptjob.h

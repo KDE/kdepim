@@ -44,6 +44,7 @@
 #include "keygenerationjob.h"
 #include "importjob.h"
 #include "exportjob.h"
+#include "changeexpiryjob.h"
 #include "downloadjob.h"
 #include "deletejob.h"
 #include "refreshkeysjob.h"
@@ -84,6 +85,7 @@ make_job_subclass(VerifyOpaqueJob)
 make_job_subclass(KeyGenerationJob)
 make_job_subclass(ImportJob)
 make_job_subclass(ExportJob)
+make_job_subclass(ChangeExpiryJob)
 make_job_subclass(DownloadJob)
 make_job_subclass(DeleteJob)
 make_job_subclass(RefreshKeysJob)
@@ -104,6 +106,7 @@ make_job_subclass(SpecialJob)
 #include "keygenerationjob.moc"
 #include "importjob.moc"
 #include "exportjob.moc"
+#include "changeexpiryjob.moc"
 #include "downloadjob.moc"
 #include "deletejob.moc"
 #include "refreshkeysjob.moc"
