@@ -72,6 +72,18 @@ namespace {
             QTemporaryFile::close();
         }
 
+        bool openNonInheritable() {
+            if ( !QTemporaryFile::open() )
+                return false;
+#ifdef Q_OS_WIN
+            //QTemporaryFile (tested with 4.3.3) creates the file handle as inheritable.
+            //The handle is then inherited by gpgsm, which prevents deletion of the temp file 
+            //in FileOutput::doFinalize() 
+            return SetHandleInformation( (HANDLE)_get_osfhandle( handle() ), HANDLE_FLAG_INHERIT, 0 );
+#endif
+            return true;
+        }
+
         QString oldFileName() const { return m_oldFileName; }
 
     private:
@@ -228,7 +240,7 @@ FileOutput::FileOutput( const QString & fileName )
       m_overwrite( Ask )
 {
     errno = 0;
-    if ( !m_tmpFile->open() )
+    if ( !m_tmpFile->openNonInheritable() )
         throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
                          i18n( "Couldn't create temporary file for output \"%1\"", fileName ) );
 }
