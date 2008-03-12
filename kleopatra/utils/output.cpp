@@ -49,6 +49,7 @@
 #include <QClipboard>
 #include <QApplication>
 #include <QBuffer>
+#include <QPointer>
 
 #include <errno.h>
 
@@ -241,17 +242,27 @@ static bool obtainOverwritePermission( const QString & fileName, QWidget * paren
 void FileOutput::doFinalize() {
     kDebug() << this;
 
+    struct Remover {
+        QString file;
+        ~Remover() { if ( QFile::exists( file ) ) QFile::remove( file ); }
+    } remover;
+
     kleo_assert( m_tmpFile );
 
     if ( m_tmpFile->isOpen() )
         m_tmpFile->close();
 
-    const QString tmpFileName = m_tmpFile->oldFileName();
+    const QString tmpFileName = remover.file = m_tmpFile->oldFileName();
+
+    m_tmpFile->setAutoRemove( false );
+    QPointer<QObject> guard = m_tmpFile.get();
+    m_tmpFile.reset(); // really close the file - needed on Windows for renaming :/
+    kleo_assert( !guard ); // if this triggers, we need to audit for holder of shared_ptr<QIODevice>s.
 
     kDebug() << this << " renaming " << tmpFileName << "->" << m_fileName ;
+
     if ( QFile::rename( tmpFileName, m_fileName ) ) {
         kDebug() << this << "succeeded";
-        m_tmpFile->setAutoRemove( false );
         return;
     }
 
@@ -271,7 +282,6 @@ void FileOutput::doFinalize() {
 
     if ( QFile::rename( tmpFileName, m_fileName ) ) {
         kDebug() << this << "succeeded";
-        m_tmpFile->setAutoRemove( false );
         return;
     }
 
