@@ -34,6 +34,7 @@ Description[pl]=Moduł do obsługi telefonów komórkowych
 Description[pt]=Um kioslave para o 'mobile'
 Description[pt_BR]=Um kioslave para o celular
 Description[sv]=En I/O-slav för mobiltelefoner
+Description[tr]=Cep telefonları için bir kioslave
 Description[uk]=kioslave для мобілок
 Description[x-test]=xxA kioslave for mobilexx
 Description[zh_CN]=移动电话的 kioslave

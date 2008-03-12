@@ -37,6 +37,7 @@ Description[pl]=Moduł do obsługi obex
 Description[pt]=Um 'kioslave' para o 'obex'
 Description[pt_BR]=Um kioslave para o obex
 Description[sv]=En I/O-slav för OBEX
+Description[tr]=Obex için bir kioslave
 Description[uk]=kioslave для obex
 Description[x-test]=xxA kioslave for obexxx
 Description[zh_CN]=obex 协议的 kioslave
