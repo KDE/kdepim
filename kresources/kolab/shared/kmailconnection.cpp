@@ -49,11 +49,11 @@ typedef QList<KMail::SubResource> QListKmailSubResource;
 typedef QMap<quint32, QString> Quint32StringMap;
 typedef QMap<QByteArray, QString> ByteArrayStringMap;
 
-Q_DECLARE_METATYPE(ByteArrayStringMap)
+/*Q_DECLARE_METATYPE(ByteArrayStringMap)
 Q_DECLARE_METATYPE(KMail::SubResource)
 Q_DECLARE_METATYPE(QListKmailSubResource)
 Q_DECLARE_METATYPE(Quint32StringMap)
-Q_DECLARE_METATYPE(KMail::StorageFormat)
+Q_DECLARE_METATYPE(KMail::StorageFormat)*/
 
 const QDBusArgument &operator<<(QDBusArgument &arg, const KMail::SubResource &subResource)
 {

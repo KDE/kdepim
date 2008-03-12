@@ -16,8 +16,7 @@ set(kcalkolab_LIB_SRCS ${libresourcekolabshared_SRCS}
 #    )
 
 
-qt4_generate_dbus_interface( ${CMAKE_SOURCE_DIR}/kmail/groupwareadaptor.h  org.kde.kmail.groupware.xml )
-QT4_ADD_DBUS_INTERFACE( kcalkolab_LIB_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.kde.kmail.groupware.xml kmail_groupwareinterface )
+QT4_ADD_DBUS_INTERFACE2( kcalkolab_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/org.kde.kmail.groupware.xml kmail_groupwareinterface kmail_util.h)
 
 
 

@@ -7,8 +7,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/kresources/kolab/shared ${CMAKE_SOURCE_
 set(knoteskolab_LIB_SRCS resourcekolab.cpp note.cpp ${libresourcekolabshared_SRCS} ${libknotesresources_SRCS})
 
 
-qt4_generate_dbus_interface( ${CMAKE_SOURCE_DIR}/kmail/groupwareadaptor.h  org.kde.kmail.groupware.xml )
-QT4_ADD_DBUS_INTERFACE( knoteskolab_LIB_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.kde.kmail.groupware.xml kmail_groupwareinterface )
+QT4_ADD_DBUS_INTERFACE2( knoteskolab_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/org.kde.kmail.groupware.xml kmail_groupwareinterface kmail_util.h)
 
 
 

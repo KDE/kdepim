@@ -6,8 +6,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/kresources/scalix/shared  )
 
 set(kabcscalix_LIB_SRCS resourcescalix.cpp contact.cpp ${libresourcescalixshared_SRCS})
 
-qt4_generate_dbus_interface( ${CMAKE_SOURCE_DIR}/kmail/groupwareadaptor.h  org.kde.kmail.groupware.xml )
-QT4_ADD_DBUS_INTERFACE( kabcscalix_LIB_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.kde.kmail.groupware.xml kmail_groupwareinterface )
+QT4_ADD_DBUS_INTERFACE2( kabcscalix_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/org.kde.kmail.groupware.xml kmail_groupwareinterface kmail_util.h)
 
 
 kde4_add_library(kabcscalix SHARED ${kabcscalix_LIB_SRCS})
