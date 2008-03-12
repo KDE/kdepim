@@ -40,7 +40,7 @@
 #include "kaddressbook_part.h"
 
 K_PLUGIN_FACTORY(KAddressbookFactory, registerPlugin<KAddressbookPart>();)
-K_EXPORT_PLUGIN(KAddressbookFactory( "kaddressbookpart" ))
+K_EXPORT_PLUGIN(KAddressbookFactory( "kaddressbook" ))
 
 KAddressbookPart::KAddressbookPart( QWidget *parentWidget, QObject *parent,
                                     const QVariantList & )

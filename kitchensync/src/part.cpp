@@ -27,7 +27,7 @@
 #include "part.h"
 
 K_PLUGIN_FACTORY(KitchenSyncFactory, registerPlugin<KitchenSyncPart>();)
-K_EXPORT_PLUGIN(KitchenSyncFactory( "kitchensyncpart" ))
+K_EXPORT_PLUGIN(KitchenSyncFactory( "kitchensync" ))
 
 KitchenSyncPart::KitchenSyncPart( QWidget *parentWidget, QObject *parent,
                                   const QVariantList &list )

@@ -40,7 +40,7 @@
 
 
 K_PLUGIN_FACTORY(KNodeFactory, registerPlugin<KNodePart>();)
-K_EXPORT_PLUGIN(KNodeFactory( "knodepart" ))
+K_EXPORT_PLUGIN(KNodeFactory( "knode" ))
 
 KNodePart::KNodePart( QWidget *parentWidget, QObject *parent, const QVariantList &)
   : KParts::ReadOnlyPart( parent ),
