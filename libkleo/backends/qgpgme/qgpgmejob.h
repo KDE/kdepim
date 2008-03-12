@@ -103,6 +103,9 @@ namespace Kleo {
     void createOutData();
     /*! Creates a GpgME::Data/QGpgME::QByteArrayDataProvider pair associated with \a out */
     void createOutData( const boost::shared_ptr<QIODevice> & out );
+    /*! Destroys all data objects (call this before the result signal
+      is emitted, or on error return from start()). */
+    void resetDataObjects();
     /*! Creates a GpgME::Data/QGpgME::QIODeviceDataProvider pair,
       associated with \a in */
     void createInData( const boost::shared_ptr<QIODevice> & in );

@@ -105,8 +105,10 @@ void Kleo::QGpgMEEncryptJob::setup( const std::vector<GpgME::Key> & recipients,
 
   const GpgME::Context::EncryptionFlags flags =
     alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None;
-  if ( const GpgME::Error err = mCtx->startEncryption( recipients, *mInData, *mOutData, flags ) )
+  if ( const GpgME::Error err = mCtx->startEncryption( recipients, *mInData, *mOutData, flags ) ) {
+      resetDataObjects();
       doThrow( err, i18n("Can't start encrypt job") );
+  }
 }
 
 void Kleo::QGpgMEEncryptJob::start( const std::vector<GpgME::Key> & recipients,
@@ -130,11 +132,16 @@ GpgME::EncryptionResult Kleo::QGpgMEEncryptJob::exec( const std::vector<GpgME::K
     return GpgME::EncryptionResult( err );
   waitForFinished();
   ciphertext = outData();
-  return mResult = mCtx->encryptionResult();
+  mResult = mCtx->encryptionResult();
+  resetDataObjects();
+  return mResult;
 }
 
 void Kleo::QGpgMEEncryptJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mResult = mCtx->encryptionResult(), outData() );
+  mResult = mCtx->encryptionResult();
+  const QByteArray ciphertext = outData();
+  resetDataObjects();
+  emit result( mResult, ciphertext );
 }
 
 void Kleo::QGpgMEEncryptJob::showErrorDialog( QWidget * parent, const QString & caption ) const {

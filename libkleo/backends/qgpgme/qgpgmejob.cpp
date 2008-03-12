@@ -133,11 +133,15 @@ void Kleo::QGpgMEJob::checkInvariants() const {
 Kleo::QGpgMEJob::~QGpgMEJob() {
   InvarianceChecker check( this );
   delete mCtx; mCtx = 0;
+  resetDataObjects();
+  deleteAllPatterns();
+}
+
+void Kleo::QGpgMEJob::resetDataObjects() {
   delete mInData; mInData = 0;
   delete mInDataDataProvider; mInDataDataProvider = 0;
   delete mOutData; mOutData = 0;
   delete mOutDataDataProvider; mOutDataDataProvider = 0;
-  deleteAllPatterns();
 }
 
 void Kleo::QGpgMEJob::deleteAllPatterns() {

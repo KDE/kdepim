@@ -117,8 +117,10 @@ void Kleo::QGpgMESignEncryptJob::setup( const std::vector<GpgME::Key> & signers,
 
   const GpgME::Context::EncryptionFlags flags =
     alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None ;
-  if ( const GpgME::Error err = mCtx->startCombinedSigningAndEncryption( recipients, *mInData, *mOutData, flags ) )
+  if ( const GpgME::Error err = mCtx->startCombinedSigningAndEncryption( recipients, *mInData, *mOutData, flags ) ) {
+      resetDataObjects();
       doThrow( err, i18n("Can't start combined sign-encrypt job") );
+  }
 }
 
 void Kleo::QGpgMESignEncryptJob::start( const std::vector<GpgME::Key> & signers,
@@ -131,6 +133,7 @@ void Kleo::QGpgMESignEncryptJob::start( const std::vector<GpgME::Key> & signers,
     } catch ( const GpgME::Exception & e ) {
         mResult.first = GpgME::SigningResult( e.error() );
         mResult.second = GpgME::EncryptionResult();
+        resetDataObjects();
         throw;
     }
 }
@@ -140,21 +143,27 @@ Kleo::QGpgMESignEncryptJob::exec( const std::vector<GpgME::Key> & signers,
 				  const std::vector<GpgME::Key> & recipients,
 				  const QByteArray & plainText, bool alwaysTrust,
 				  QByteArray & cipherText ) {
-  if ( GpgME::Error err = setup( signers, recipients, plainText, alwaysTrust ) )
-    return mResult = std::make_pair( GpgME::SigningResult( err ), GpgME::EncryptionResult() );
+  if ( const GpgME::Error err = setup( signers, recipients, plainText, alwaysTrust ) ) {
+    mResult = std::make_pair( GpgME::SigningResult( err ), GpgME::EncryptionResult() );
+    resetDataObjects();
+    return mResult;
+  }
 
   waitForFinished();
 
   cipherText = outData();
   mResult.first = mCtx->signingResult();
   mResult.second = mCtx->encryptionResult();
+  resetDataObjects();
   return mResult;
 }
 
 void Kleo::QGpgMESignEncryptJob::doOperationDoneEvent( const GpgME::Error & ) {
   mResult.first = mCtx->signingResult();
   mResult.second = mCtx->encryptionResult();
-  emit result( mResult.first, mResult.second, outData() );
+  const QByteArray cipherText = outData();
+  resetDataObjects();
+  emit result( mResult.first, mResult.second, cipherText );
 }
 
 void Kleo::QGpgMESignEncryptJob::showErrorDialog( QWidget * parent, const QString & caption ) const {

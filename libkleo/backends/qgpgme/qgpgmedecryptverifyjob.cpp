@@ -91,12 +91,18 @@ void Kleo::QGpgMEDecryptVerifyJob::start( const boost::shared_ptr<QIODevice> & c
 
     hookupContextToEventLoopInteractor();
 
-    if ( const GpgME::Error err = mCtx->startCombinedDecryptionAndVerification( *mInData, *mOutData ) )
+    if ( const GpgME::Error err = mCtx->startCombinedDecryptionAndVerification( *mInData, *mOutData ) ) {
+        resetDataObjects();
         doThrow( err, i18n("Can't start combined decrypt/verify operation") );
+    }
 }
 
 void Kleo::QGpgMEDecryptVerifyJob::doOperationDoneEvent( const GpgME::Error & ) {
-    emit result( mCtx->decryptionResult(), mCtx->verificationResult(), outData() );
+    const GpgME::DecryptionResult dr = mCtx->decryptionResult();
+    const GpgME::VerificationResult vr = mCtx->verificationResult();
+    const QByteArray plainText = outData();
+    resetDataObjects();
+    emit result( dr, vr, plainText );
 }
 
 #include "qgpgmedecryptverifyjob.moc"

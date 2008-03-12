@@ -113,8 +113,10 @@ void Kleo::QGpgMESignJob::setup( const std::vector<GpgME::Key> & signers,
     setSigningKeys( signers );
     hookupContextToEventLoopInteractor();
 
-    if ( const GpgME::Error err = mCtx->startSigning( *mInData, *mOutData, mode ) )
+    if ( const GpgME::Error err = mCtx->startSigning( *mInData, *mOutData, mode ) ) {
+        resetDataObjects();
         doThrow( err, i18n("Can't start sign job") );
+    }
 }
 
 void Kleo::QGpgMESignJob::start( const std::vector<GpgME::Key> & signers,
@@ -140,11 +142,15 @@ GpgME::SigningResult Kleo::QGpgMESignJob::exec( const std::vector<GpgME::Key> & 
   waitForFinished();
 
   signature = outData();
-  return mResult = mCtx->signingResult();
+  mResult = mCtx->signingResult();
+  resetDataObjects();
+  return mResult;
 }
 
 void Kleo::QGpgMESignJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mResult = mCtx->signingResult(), outData() );
+  mResult = mCtx->signingResult();
+  const QByteArray cipherText = outData();
+  emit result( mResult, cipherText );
 }
 
 void Kleo::QGpgMESignJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
