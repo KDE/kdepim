@@ -59,9 +59,13 @@ namespace Crypto {
 
         void setExecutionContext( const boost::shared_ptr<const ExecutionContext> & cmd );
 
+    Q_SIGNALS:
+        void error( int err, const QString & details );
+        void done();
+
     protected:   
         boost::shared_ptr<const ExecutionContext> executionContext() const;
- 
+
         void bringToForeground( QDialog* dlg );
         
     private:

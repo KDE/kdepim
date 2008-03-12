@@ -80,10 +80,6 @@ namespace Crypto {
     public Q_SLOTS:
         void cancel();
 
-    Q_SIGNALS:
-        void error( int err, const QString & details );
-        void done();
-
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;

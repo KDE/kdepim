@@ -73,8 +73,6 @@ namespace Kleo {
 
     Q_SIGNALS:
         void recipientsResolved();
-        void error( int err, const QString & details );
-        void done();
 
     private:
 
