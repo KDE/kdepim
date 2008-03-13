@@ -322,6 +322,8 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   actionCollection()->addAction( "options_auto_spellchecking", a_ctAutoSpellChecking );
   a_ctAutoSpellChecking->setChecked( knGlobals.settings()->autoSpellChecking() );
   slotUpdateCheckSpellChecking( knGlobals.settings()->autoSpellChecking() );
+  a_ctAutoSpellChecking->isChecked();
+  slotAutoSpellCheckingToggled();
   connect(a_ctAutoSpellChecking, SIGNAL(triggered(bool) ), SLOT(slotAutoSpellCheckingToggled()));
   connect( v_iew->e_dit, SIGNAL(checkSpellingChanged(bool)), this, SLOT(slotUpdateCheckSpellChecking(bool)));
 
@@ -361,7 +363,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   a_ctExternalEditor->setText(i18n("Start &External Editor"));
   connect(a_ctExternalEditor, SIGNAL(triggered(bool)), SLOT(slotExternalEditor()));
 
-  a_ctSpellCheck = KStandardAction::spelling ( v_iew->e_dit, SLOT(checkSpelling()), actionCollection());
+  a_ctSpellCheck = KStandardAction::spelling ( v_iew->e_dit, SLOT(slotCheckSpelling()), actionCollection());
 
   //settings menu
   createStandardStatusBarAction();
@@ -1283,7 +1285,7 @@ void KNComposer::slotToggleWordWrap()
 
 void KNComposer::slotAutoSpellCheckingToggled()
 {
-  v_iew->e_dit->setCheckSpellingEnabled( a_ctAutoSpellChecking->isChecked() );
+  v_iew->e_dit->toggleSpellChecking( a_ctAutoSpellChecking->isChecked() );
 }
 
 

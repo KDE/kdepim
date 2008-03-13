@@ -37,10 +37,10 @@ KNComposerEditor::~KNComposerEditor()
 
 void KNComposerEditor::changeHighlighterColors(KPIM::KEMailQuotingHighlighter * highlighter )
 {
-   KConfigGroup config( knGlobals.config(), "VISUAL_APPEARANCE" );
-  QColor defaultColor1( qApp->palette().color( QPalette::Text )); // defaults from kmreaderwin.cpp
-  QColor defaultColor2( qApp->palette().color( QPalette::Text ) );
-  QColor defaultColor3( qApp->palette().color( QPalette::Text ) );
+  KConfigGroup config( knGlobals.config(), "VISUAL_APPEARANCE" );
+  QColor defaultColor1( 0x00, 0x80, 0x00 ); // defaults from kmreaderwin.cpp
+  QColor defaultColor2( 0x00, 0x70, 0x00 );
+  QColor defaultColor3( 0x00, 0x60, 0x00 );
   QColor defaultForeground( qApp->palette().color( QPalette::Text ) );
   QColor col1 = config.readEntry( "ForegroundColor", defaultForeground );
   QColor col2 = config.readEntry( "quote3Color", defaultColor3 );
