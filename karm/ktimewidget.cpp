@@ -8,6 +8,7 @@
 #include <qwidget.h>
 
 #include <klocale.h>            // i18n
+#include <kglobal.h>
 #include "ktimewidget.h"
 
 enum ValidatorType { HOUR, MINUTE };
@@ -97,15 +98,19 @@ KArmTimeWidget::KArmTimeWidget( QWidget* parent, const char* name )
   setFocusProxy( _hourLE );
 }
 
-void KArmTimeWidget::setTime( int hour, int minute )
+void KArmTimeWidget::setTime( long minutes )
 {
   QString dummy;
+  long hourpart = labs(minutes) / 60;
+  long minutepart = labs(minutes) % 60;
 
-  dummy.setNum( hour );
+  dummy.setNum( hourpart );
+  if (minutes < 0)
+    dummy = KGlobal::locale()->negativeSign() + dummy;
   _hourLE->setText( dummy );
 
-  dummy.setNum( abs(minute) );
-  if (abs(minute) < 10 ) {
+  dummy.setNum( minutepart );
+  if (minutepart < 10 ) {
     dummy = QString::fromLatin1( "0" ) + dummy;
   }
   _minuteLE->setText( dummy );
@@ -113,12 +118,12 @@ void KArmTimeWidget::setTime( int hour, int minute )
 
 long KArmTimeWidget::time() const
 {
-  bool ok;
+  bool ok, isNegative;
   int h, m;
 
-  h = _hourLE->text().toInt( &ok );
+  h = abs(_hourLE->text().toInt( &ok ));
   m = _minuteLE->text().toInt( &ok );
+  isNegative = _hourLE->text().startsWith(KGlobal::locale()->negativeSign());
 
-  // if h is negative, we have to *subtract* m
-  return h * 60 + ( ( h < 0) ? -1 : 1 ) * m;
+  return (h * 60 + m) * ((isNegative) ? -1 : 1);
 }

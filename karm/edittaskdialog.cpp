@@ -298,8 +298,8 @@ void EditTaskDialog::setTask( const QString &name, long time, long session )
 {
   _name->setText( name );
   
-  _timeTW->setTime( time / 60, time % 60 );
-  _sessionTW->setTime( session / 60, session % 60 );
+  _timeTW->setTime( time );
+  _sessionTW->setTime( session );
   origTime = time;
   origSession = session;
 }
