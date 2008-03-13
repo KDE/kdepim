@@ -14,7 +14,7 @@ class KArmTimeWidget : public QWidget
 {
   public:
     KArmTimeWidget( QWidget* parent = 0, const char* name = 0 );
-    void setTime( int hour, int minute );
+    void setTime( long minutes );
     long time() const;
 
   private:

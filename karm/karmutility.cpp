@@ -14,7 +14,9 @@ QString formatTime( long minutes, bool decimal )
     time.sprintf("%.2f", minutes / 60.0);
     time.replace( '.', KGlobal::locale()->decimalSymbol() );
   }
-  else time.sprintf("%ld:%02ld", minutes / 60, labs(minutes % 60));
+  else time.sprintf("%s%ld:%02ld",
+    (minutes < 0) ? KGlobal::locale()->negativeSign().utf8().data() : "",
+    labs(minutes / 60), labs(minutes % 60));
   return time;
 }
 
