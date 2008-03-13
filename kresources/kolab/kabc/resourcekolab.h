@@ -36,7 +36,7 @@
 #include <kabc/resourceabc.h>
 #include "../shared/resourcekolabbase.h"
 #include "../shared/subresource.h"
-#include <kmail/kmail_util.h>
+#include <kmail/groupware_types.h>
 #include "kabckolab_export.h"
 
 namespace KABC {

@@ -39,7 +39,7 @@
 #include <QStringList>
 
 #include "subresource.h"
-#include <kmail/kmail_util.h>
+#include <kmail/groupware_types.h>
 
 class QString;
 class KUrl;
@@ -150,7 +150,7 @@ protected:
                     const QString& xml,
                     const QString& mimetype,
                     const QString& subject,
-                    const CustomHeaderMap& customHeaders = CustomHeaderMap(),
+                    const KMail::CustomHeader::List& customHeaders = KMail::CustomHeader::List(),
                     const QStringList& attachmentURLs = QStringList(),
                     const QStringList& attachmentMimetypes = QStringList(),
                     const QStringList& attachmentNames = QStringList(),

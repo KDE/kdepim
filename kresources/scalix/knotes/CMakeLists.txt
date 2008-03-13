@@ -7,7 +7,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/kresources/scalix/shared ${CMAKE_SOURCE
 set(knotesscalix_LIB_SRCS resourcescalix.cpp ${libresourcescalixshared_SRCS} ${libknotesresources_SRCS})
 
 
-QT4_ADD_DBUS_INTERFACE2( knotesscalix_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/org.kde.kmail.groupware.xml kmail_groupwareinterface kmail_util.h )
+QT4_ADD_DBUS_INTERFACE2( knotesscalix_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/org.kde.kmail.groupware.xml kmail_groupwareinterface groupware_types.h )
 
 
 

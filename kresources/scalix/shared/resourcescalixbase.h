@@ -39,7 +39,7 @@
 #include <QStringList>
 
 #include "subresource.h"
-#include <kmail/kmail_util.h>
+#include <kmail/groupware_types.h>
 
 class QString;
 class KUrl;

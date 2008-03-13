@@ -37,7 +37,7 @@
 #include <kurl.h>
 #include <kdbusservicestarter.h>
 #include <kmail_groupwareinterface.h>
-#include <kmail_util.h>
+#include <kmail/groupware_types.h>
 #include <klocale.h>
 #include <QDBusAbstractInterface>
 #include <QDBusError>
@@ -48,13 +48,13 @@ typedef QList<KMail::SubResource> QListKmailSubResource;
 typedef QMap<quint32, QString> Quint32StringMap;
 typedef QMap<QByteArray, QString> ByteArrayStringMap;
 
-/*Q_DECLARE_METATYPE(ByteArrayStringMap)
-Q_DECLARE_METATYPE(KMail::SubResource)
+Q_DECLARE_METATYPE(ByteArrayStringMap)
+/*Q_DECLARE_METATYPE(KMail::SubResource)
 Q_DECLARE_METATYPE(QListKmailSubResource)
 Q_DECLARE_METATYPE(Quint32StringMap)
 Q_DECLARE_METATYPE(KMail::StorageFormat)*/
 
-const QDBusArgument &operator<<(QDBusArgument &arg, const KMail::SubResource &subResource)
+/*const QDBusArgument &operator<<(QDBusArgument &arg, const KMail::SubResource &subResource)
 {
     arg.beginStructure();
     arg << subResource.location << subResource.label << subResource.writable << subResource.alarmRelevant;
@@ -86,17 +86,18 @@ const QDBusArgument &operator>>(const QDBusArgument &arg, KMail::StorageFormat &
     arg >> foo;
     arg.endStructure();
     return arg;
-}
+}*/
 
 static void registerTypes()
 {
     static bool registered = false;
     if (!registered) {
-      qDBusRegisterMetaType<KMail::SubResource>();
+/*      qDBusRegisterMetaType<KMail::SubResource>();
       qDBusRegisterMetaType<QListKmailSubResource>();
       qDBusRegisterMetaType<Quint32StringMap>();
-      qDBusRegisterMetaType<KMail::StorageFormat>();
+      qDBusRegisterMetaType<KMail::StorageFormat>();*/
       qDBusRegisterMetaType<ByteArrayStringMap>();
+      KMail::registerGroupwareTypes();
       registered = true;
     }
 }
@@ -139,12 +140,12 @@ bool KMailConnection::connectToKMail()
     registerTypes();
 
     QDBusConnection dbus = QDBusConnection::sessionBus();
-    dbus.connect( DBUS_KMAIL, "/Groupware", "org.kde.kmail.groupware", "incidenceAdded", this, SLOT(fromKMailAddIncidence(QString,QString,quint32,int,QString) ) );
-    dbus.connect( DBUS_KMAIL, "/Groupware", "org.kde.kmail.groupware", "incidenceDeleted", this, SLOT( fromKMailDelIncidence(QString,QString,QString) ) );
-    dbus.connect( DBUS_KMAIL, "/Groupware", "org.kde.kmail.groupware", "signalRefresh", this, SLOT( fromKMailRefresh(QString,QString) ) );
-    dbus.connect( DBUS_KMAIL, "/Groupware", "org.kde.kmail.groupware", "subresourceAdded", this, SLOT(fromKMailAddSubresource( QString, QString, QString, bool, bool ) ) );
-    dbus.connect( DBUS_KMAIL, "/Groupware", "org.kde.kmail.groupware", "subresourceDeleted", this, SLOT(fromKMailDelSubresource(QString,QString) ) );
-    dbus.connect( DBUS_KMAIL, "/Groupware", "org.kde.kmail.groupware", "asyncLoadResult", this, SLOT( fromKMailAsyncLoadResult(QMap<quint32, QString>, QString, QString) ) );
+    dbus.connect( KMAIL_DBUS_SERVICE, "/Groupware", "org.kde.kmail.groupware", "incidenceAdded", this, SLOT(fromKMailAddIncidence(QString,QString,quint32,int,QString) ) );
+    dbus.connect( KMAIL_DBUS_SERVICE, "/Groupware", "org.kde.kmail.groupware", "incidenceDeleted", this, SLOT( fromKMailDelIncidence(QString,QString,QString) ) );
+    dbus.connect( KMAIL_DBUS_SERVICE, "/Groupware", "org.kde.kmail.groupware", "signalRefresh", this, SLOT( fromKMailRefresh(QString,QString) ) );
+    dbus.connect( KMAIL_DBUS_SERVICE, "/Groupware", "org.kde.kmail.groupware", "subresourceAdded", this, SLOT(fromKMailAddSubresource( QString, QString, QString, bool, bool ) ) );
+    dbus.connect( KMAIL_DBUS_SERVICE, "/Groupware", "org.kde.kmail.groupware", "subresourceDeleted", this, SLOT(fromKMailDelSubresource(QString,QString) ) );
+    dbus.connect( KMAIL_DBUS_SERVICE, "/Groupware", "org.kde.kmail.groupware", "asyncLoadResult", this, SLOT( fromKMailAsyncLoadResult(QMap<quint32, QString>, QString, QString) ) );
 
   }
   return ( mKmailGroupwareInterface != 0 );

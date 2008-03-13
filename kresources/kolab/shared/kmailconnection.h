@@ -35,11 +35,11 @@
 #define KMAILCONNECTION_H
 
 #include <QObject>
-#include <kmail/kmail_util.h>
+#include <kmail/groupware_types.h>
 #include <QMap>
 class KUrl;
 class QString;
-class QDBusInterface;
+class OrgKdeKmailGroupwareInterface;
 
 namespace Kolab {
 
@@ -93,7 +93,7 @@ public:
                     quint32& sernum,
                     const QString& subject,
                     const QString& plainTextBody,
-                    const QMap<QByteArray, QString>& customHeaders,
+                    const KMail::CustomHeader::List& customHeaders,
                     const QStringList& attachmentURLs,
                     const QStringList& attachmentMimetypes,
                     const QStringList& attachmentNames,
@@ -112,7 +112,7 @@ private slots:
 
 private:
   ResourceKolabBase* mResource;
-  QDBusInterface* mKmailGroupwareInterface;
+  OrgKdeKmailGroupwareInterface* mKmailGroupwareInterface;
 };
 
 }

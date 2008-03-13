@@ -34,7 +34,7 @@
 #define KMAILCONNECTION_H
 
 #include <QObject>
-#include <kmail/kmail_util.h>
+#include <kmail/groupware_types.h>
 #include <QMap>
 class KUrl;
 class QString;

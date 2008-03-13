@@ -509,9 +509,9 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
       deletedAtts.removeAll( *it );
     }
   }
-  CustomHeaderMap customHeaders;
+  KMail::CustomHeader::List customHeaders;
   if ( incidence->schedulingID() != incidence->uid() )
-    customHeaders.insert( "X-Kolab-SchedulingID", incidence->schedulingID() );
+    customHeaders << KMail::CustomHeader( "X-Kolab-SchedulingID", incidence->schedulingID() );
 
   QString subject = incidencebase->uid();
   if ( !isXMLStorageFormat ) subject.prepend( "iCal " ); // conform to the old style

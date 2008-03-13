@@ -36,7 +36,7 @@
 #include <kabc/resourceabc.h>
 #include "../shared/resourcescalixbase.h"
 #include "../shared/subresource.h"
-#include <kmail/kmail_util.h>
+#include <kmail/groupware_types.h>
 #include "kabcscalix_export.h"
 
 namespace KABC {

@@ -131,7 +131,7 @@ bool ResourceKolabBase::kmailUpdate( const QString& resource,
                                      const QString& xml,
                                      const QString& mimetype,
                                      const QString& subject,
-                                     const CustomHeaderMap& _customHeaders,
+                                     const KMail::CustomHeader::List& _customHeaders,
                                      const QStringList& _attachmentURLs,
                                      const QStringList& _attachmentMimetypes,
                                      const QStringList& _attachmentNames,
@@ -165,8 +165,8 @@ bool ResourceKolabBase::kmailUpdate( const QString& resource,
     attachmentMimeTypes.prepend( mimetype );
     attachmentNames.prepend( "kolab.xml" );
 
-    CustomHeaderMap customHeaders( _customHeaders );
-    customHeaders.insert( "X-Kolab-Type", mimetype );
+    KMail::CustomHeader::List customHeaders( _customHeaders );
+    customHeaders << KMail::CustomHeader( "X-Kolab-Type", mimetype );
 
     return mConnection->kmailUpdate( resource, sernum, subj, plainTextBody(), customHeaders,
         attachmentURLs, attachmentMimeTypes, attachmentNames,

@@ -12,7 +12,7 @@ set(kcalscalix_LIB_SRCS ${libresourcescalixshared_SRCS}
 #    )
 
 
-QT4_ADD_DBUS_INTERFACE2( kcalscalix_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/org.kde.kmail.groupware.xml kmail_groupwareinterface kmail_util.h )
+QT4_ADD_DBUS_INTERFACE2( kcalscalix_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/org.kde.kmail.groupware.xml kmail_groupwareinterface groupware_types.h )
 
 
 

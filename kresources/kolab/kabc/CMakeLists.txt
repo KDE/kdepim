@@ -6,7 +6,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/kresources/kolab/shared  )
 
 set(kabckolab_LIB_SRCS resourcekolab.cpp contact.cpp ${libresourcekolabshared_SRCS})
 
-QT4_ADD_DBUS_INTERFACE2( kabckolab_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/org.kde.kmail.groupware.xml kmail_groupwareinterface kmail_util.h )
+QT4_ADD_DBUS_INTERFACE2( kabckolab_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/org.kde.kmail.groupware.xml kmail_groupwareinterface groupware_types.h )
 
 
 kde4_add_library(kabckolab SHARED ${kabckolab_LIB_SRCS})

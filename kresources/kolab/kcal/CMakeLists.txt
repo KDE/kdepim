@@ -5,10 +5,10 @@ include_directories( ${CMAKE_SOURCE_DIR}/kresources/kolab/shared  )
 ########### next target ###############
 
 set(kcalkolab_LIB_SRCS ${libresourcekolabshared_SRCS}
-   incidence.cpp 
-   event.cpp 
-   task.cpp 
-   journal.cpp 
+   incidence.cpp
+   event.cpp
+   task.cpp
+   journal.cpp
    resourcekolab.cpp )
 
 #kde4_add_dcop_skels(kcalkolab_LIB_SRCS
@@ -16,7 +16,7 @@ set(kcalkolab_LIB_SRCS ${libresourcekolabshared_SRCS}
 #    )
 
 
-QT4_ADD_DBUS_INTERFACE2( kcalkolab_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/org.kde.kmail.groupware.xml kmail_groupwareinterface kmail_util.h)
+QT4_ADD_DBUS_INTERFACE2( kcalkolab_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/org.kde.kmail.groupware.xml kmail_groupwareinterface groupware_types.h)
 
 
 
