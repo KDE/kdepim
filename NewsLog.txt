@@ -4,9 +4,10 @@ Problems addressed
 -------------------
 * kolab/issue1770 Delete attachment of a signed mail doesn't work. (783303)
 * kolab/issue2533 Reproducible crash in KMail::MessageProperty::filtering when refreshing IMAP cache. (784547)
-* kolab/issue2239 (Addressbook extension doesn't recognise the deletion of a contact folder.(785317)
-* KDE Bug 146679 Can't set negative absolute hours - fixed. (785054)
-
+* kolab/issue2239 Addressbook extension doesn't recognise the deletion of a contact folder.(785317)
+* KDE Bug 146679  Can't set negative absolute hours - fixed. (785054)
+* kolab/issue2168 Email attachment overlay view, header style "enterprise" : Should be made foldable.
+* kolab/issue2529 Email attachment overlay view, header style "enterprise": fold button should vanish, if the mail has no attachments.
 
 
 
