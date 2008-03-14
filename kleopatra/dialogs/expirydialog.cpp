@@ -4,6 +4,8 @@
 
 #include <QDate>
 
+#include <KDebug>
+
 #include <cassert>
 
 using namespace Kleo;
@@ -21,16 +23,16 @@ enum Period {
 
 
 static QDate date_by_amount_and_unit( int inAmount, int inUnit ) {
-    QDate date = QDate::currentDate();
+    const QDate current = QDate::currentDate();
     switch ( inUnit ) {
-    case Days:   date.addDays(   inAmount ); break;
-    case Weeks:  date.addDays( 7*inAmount ); break;
-    case Months: date.addMonths( inAmount ); break;
-    case Years:  date.addYears(  inAmount ); break;
+    case Days:   return current.addDays(   inAmount ); break;
+    case Weeks:  return current.addDays( 7*inAmount ); break;
+    case Months: return current.addMonths( inAmount ); break;
+    case Years:  return current.addYears(  inAmount ); break;
     default:
         assert( !"Shouldn't reach here" );
     }
-    return date;
+    return QDate();
 }
 
 // these calculations should be precise enough for the forseeable future...

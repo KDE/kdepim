@@ -139,6 +139,7 @@ set( _kleopatra_common_SRCS
   commands/clearcrlcachecommand.cpp
   commands/dumpcrlcachecommand.cpp
   commands/importcrlcommand.cpp
+  commands/changeexpirycommand.cpp
 
   ${_kleopatra_uiserver_files}
 

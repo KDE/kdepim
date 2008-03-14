@@ -29,6 +29,7 @@
 	<Menu name="certMenu">
 		<text>&amp;Certificates</text>
 		<Action name="certificates_delete"/>
+                <Action name="certificates_change_expiry"/>
         </Menu>
 	<Menu name="crlMenu">
 		<text>C&amp;RLs</text>

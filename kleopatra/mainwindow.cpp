@@ -52,6 +52,7 @@
 #include "commands/clearcrlcachecommand.h"
 #include "commands/dumpcrlcachecommand.h"
 #include "commands/importcrlcommand.h"
+#include "commands/changeexpirycommand.h"
 
 #include "conf/configuredialog.h"
 
@@ -176,6 +177,9 @@ public:
     }
     void deleteCertificates() {
         createAndStart<DeleteCertificatesCommand>();
+    }
+    void changeCertificateExpiry() {
+        createAndStart<ChangeExpiryCommand>();
     }
     void signEncryptFiles() {
         createAndStart<SignEncryptFilesCommand>();
@@ -364,6 +368,8 @@ void MainWindow::Private::setupActions() {
         // Certificate menu
         { "certificates_delete", i18n("Delete" ), QString()/*i18n("Delete selected certificates")*/,
           "edit-delete", q, SLOT(deleteCertificates()), "Delete", false, true },
+        { "certificates_change_expiry", i18n("Change Expiry Date..."), QString(),
+          0, q, SLOT(changeCertificateExpiry()), QString(), false, true },
         // CRLs menu
         { "crl_clear_crl_cache", i18n("Clear CRL Cache"), QString(),
           0, q, SLOT(clearCrlCache()), QString(), false, true },
