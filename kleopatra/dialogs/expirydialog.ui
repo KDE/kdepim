@@ -16,7 +16,7 @@
    <item>
     <widget class="QLabel" name="label" >
      <property name="text" >
-      <string>Please select the new date of expiry:</string>
+      <string>Please select when to expire this certificate:</string>
      </property>
     </widget>
    </item>
