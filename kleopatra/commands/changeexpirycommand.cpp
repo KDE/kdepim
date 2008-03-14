@@ -145,7 +145,9 @@ void ChangeExpiryCommand::doStart() {
 void ChangeExpiryCommand::Private::slotDialogAccepted() {
     assert( dialog );
 
-    const QDateTime expiry( dialog->dateOfExpiry(), QTime::currentTime() );
+    static const QTime END_OF_DAY( 23, 59, 59 ); // not used, so as good as any
+
+    const QDateTime expiry( dialog->dateOfExpiry(), END_OF_DAY );
 
     kDebug() << "expiry" << expiry;
 
