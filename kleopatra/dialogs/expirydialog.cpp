@@ -90,7 +90,7 @@ private:
 
             assert( inCB->count() == NumPeriods );
 
-            onCW->setMinimumDate( QDate::currentDate() );
+            onCW->setMinimumDate( QDate::currentDate().addDays( 1 ) );
         }
     } ui;
 };
