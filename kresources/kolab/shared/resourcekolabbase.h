@@ -142,8 +142,6 @@ protected:
 
   KMail::StorageFormat kmailStorageFormat( const QString& folder ) const;
 
-  typedef QMap<QByteArray, QString> CustomHeaderMap;
-
   /// Update an incidence. The list of attachments are URLs.
   /// The parameter sernum is updated with the right KMail serial number
   bool kmailUpdate( const QString& resource, quint32& sernum,

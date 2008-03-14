@@ -479,11 +479,11 @@ bool ResourceScalix::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const 
       deletedAtts.removeAll( *it );
     }
   }
-  CustomHeaderMap customHeaders;
+  KMail::CustomHeader::List customHeaders;
   if ( type == "Event" )
-    customHeaders.insert( "X-Scalix-Class", "IPM.Appointment" );
+    customHeaders << KMail::CustomHeader( "X-Scalix-Class", "IPM.Appointment" );
   else if ( type == "Todo" )
-    customHeaders.insert( "X-Scalix-Class", "IPM.Task" );
+    customHeaders << KMail::CustomHeader( "X-Scalix-Class", "IPM.Task" );
 
   QString subject = incidence->summary();
 

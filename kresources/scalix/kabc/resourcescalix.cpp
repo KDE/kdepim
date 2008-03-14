@@ -374,8 +374,8 @@ bool KABC::ResourceScalix::kmailUpdateAddressee( const Addressee& addr )
   QString mimetype = s_inlineMimeType;
   QString data = Contact::toXml( addr );
 
-  CustomHeaderMap customHeaders;
-  customHeaders.insert( "X-Scalix-Class", "IPM.Contact" );
+  KMail::CustomHeader::List customHeaders;
+  customHeaders << KMail::CustomHeader( "X-Scalix-Class", "IPM.Contact" );
 
   bool rc = kmailUpdate( subResource, sernum, data, mimetype, subject,
                          customHeaders,

@@ -92,7 +92,7 @@ public:
                     quint32& sernum,
                     const QString& subject,
                     const QString& plainTextBody,
-                    const QMap<QByteArray, QString>& customHeaders,
+                    const KMail::CustomHeader::List& customHeaders,
                     const QStringList& attachmentURLs,
                     const QStringList& attachmentMimetypes,
                     const QStringList& attachmentNames,

@@ -44,59 +44,11 @@
 #include <QMap>
 
 using namespace Scalix;
-typedef QList<KMail::SubResource> QListKmailSubResource;
-typedef QMap<quint32, QString> Quint32StringMap;
-typedef QMap<QByteArray, QString> ByteArrayStringMap;
-
-Q_DECLARE_METATYPE(ByteArrayStringMap)
-/*Q_DECLARE_METATYPE(KMail::SubResource)
-Q_DECLARE_METATYPE(QListKmailSubResource)
-Q_DECLARE_METATYPE(Quint32StringMap)
-Q_DECLARE_METATYPE(KMail::StorageFormat)*/
-
-/*const QDBusArgument &operator<<(QDBusArgument &arg, const KMail::SubResource &subResource)
-{
-    arg.beginStructure();
-    arg << subResource.location << subResource.label << subResource.writable << subResource.alarmRelevant;
-    arg.endStructure();
-    return arg;
-}
-
-const QDBusArgument &operator>>(const QDBusArgument &arg, KMail::SubResource &subResource)
-{
-    arg.beginStructure();
-    arg >> subResource.location >> subResource.label >> subResource.writable >> subResource.alarmRelevant;
-    arg.endStructure();
-    return arg;
-}
-
-const QDBusArgument &operator<<(QDBusArgument &arg, const KMail::StorageFormat &format)
-{
-    arg.beginStructure();
-    quint32 foo = format;
-    arg << foo;
-    arg.endStructure();
-    return arg;
-}
-
-const QDBusArgument &operator>>(const QDBusArgument &arg, KMail::StorageFormat &format)
-{
-    arg.beginStructure();
-    quint32 foo = format;
-    arg >> foo;
-    arg.endStructure();
-    return arg;
-}*/
 
 static void registerTypes()
 {
     static bool registered = false;
     if (!registered) {
-/*      qDBusRegisterMetaType<KMail::SubResource>();
-      qDBusRegisterMetaType<QListKmailSubResource>();
-      qDBusRegisterMetaType<Quint32StringMap>();
-      qDBusRegisterMetaType<KMail::StorageFormat>();*/
-      qDBusRegisterMetaType<ByteArrayStringMap>();
       KMail::registerGroupwareTypes();
       registered = true;
     }
@@ -215,7 +167,7 @@ bool KMailConnection::kmailSubresources( QList<KMail::SubResource>& lst,
     return false;
   registerTypes();
 
-  QDBusReply<QListKmailSubResource> r = mKmailGroupwareInterface->call( "subresourcesKolab", contentsType );
+  QDBusReply<KMail::SubResource::List> r = mKmailGroupwareInterface->call( "subresourcesKolab", contentsType );
   if ( r.isValid() )
   {
     lst = r;
@@ -244,7 +196,7 @@ bool KMailConnection::kmailIncidences( QMap<quint32, QString>& lst,
   if ( !connectToKMail() )
     return false;
   registerTypes();
-  QDBusReply<Quint32StringMap> r = mKmailGroupwareInterface->call( "incidencesKolab",  mimetype, resource, startIndex, nbMessages );
+  QDBusReply<Quint32QStringMap> r = mKmailGroupwareInterface->call( "incidencesKolab",  mimetype, resource, startIndex, nbMessages );
   if (r.isValid()) {
     lst = r.value();
   }
@@ -291,7 +243,7 @@ bool KMailConnection::kmailUpdate( const QString& resource,
                                    quint32& sernum,
                                    const QString& subject,
                                    const QString& plainTextBody,
-                                   const QMap<QByteArray, QString>& customHeaders,
+                                   const KMail::CustomHeader::List& customHeaders,
                                    const QStringList& attachmentURLs,
                                    const QStringList& attachmentMimetypes,
                                    const QStringList& attachmentNames,
