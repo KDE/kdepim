@@ -274,18 +274,16 @@ bool KMailConnection::kmailUpdate( const QString& resource,
 {
   bool ok = connectToKMail();
 
-  QList<QVariant> arguments;
-  arguments << resource;
-  arguments << sernum;
-  arguments << subject;
-  arguments << plainTextBody;
-  arguments << QVariant::fromValue( customHeaders );
-  arguments << attachmentURLs;
-  arguments << attachmentMimetypes;
-  arguments << attachmentNames;
-  arguments << deletedAttachments;
-
-  QDBusReply<quint32> reply = mKmailGroupwareInterface->callWithArgumentList( QDBus::Block, "update", arguments );
+  QDBusReply<quint32> reply = mKmailGroupwareInterface->update(
+      resource,
+      sernum,
+      subject,
+      plainTextBody,
+      customHeaders,
+      attachmentURLs,
+      attachmentMimetypes,
+      attachmentNames,
+      deletedAttachments );
 
   if ( reply.isValid() )
     sernum = reply;
