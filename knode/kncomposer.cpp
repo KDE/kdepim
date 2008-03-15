@@ -561,9 +561,8 @@ void KNComposer::slotSelectAll()
 void KNComposer::setConfig(bool onlyFonts)
 {
   if (!onlyFonts) {
-    v_iew->e_dit->wordWrapToggled( knGlobals.settings()->wordWrap());
-    v_iew->e_dit->setLineWrapColumnOrWidth( knGlobals.settings()->maxLineLength() );
     a_ctWordWrap->setChecked( knGlobals.settings()->wordWrap() );
+    slotToggleWordWrap();
 
     a_ctAutoSpellChecking->setChecked( knGlobals.settings()->autoSpellChecking() );
     Kpgp::Module *pgp = Kpgp::Module::getKpgp();
@@ -1280,7 +1279,10 @@ void KNComposer::slotSetCharsetKeyboard()
 
 void KNComposer::slotToggleWordWrap()
 {
-  v_iew->e_dit->wordWrapToggled(a_ctWordWrap->isChecked());
+  if ( a_ctWordWrap->isChecked() )
+    v_iew->e_dit->enableWordWrap( knGlobals.settings()->maxLineLength() );
+  else
+    v_iew->e_dit->disableWordWrap();
 }
 
 void KNComposer::slotAutoSpellCheckingToggled()
