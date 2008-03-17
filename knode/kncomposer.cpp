@@ -430,7 +430,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
     slotToggleDoMail();
   }
 
-  v_iew->e_dit->setModified(false);
+  v_iew->e_dit->document()->setModified(false);
 
   // restore window & toolbar configuration
   resize(535,450);    // default optimized for 800x600
@@ -928,7 +928,7 @@ bool KNComposer::applyChanges()
 
 void KNComposer::closeEvent(QCloseEvent *e)
 {
-  if(!v_iew->e_dit->isModified() && !a_ttChanged) {  // nothing to save, don't show nag screen
+  if(!v_iew->e_dit->document()->isModified() && !a_ttChanged) {  // nothing to save, don't show nag screen
     if(a_rticle->id()==-1)
       r_esult=CRdel;
     else
@@ -1054,7 +1054,7 @@ void KNComposer::insertFile( QFile *file, bool clear, bool box, const QString &b
   if(clear)
     v_iew->e_dit->setText(temp);
   else
-    v_iew->e_dit->insert(temp);
+    v_iew->e_dit->insertPlainText(temp);
 }
 
 

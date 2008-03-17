@@ -25,9 +25,8 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QString>
-
-//Added by qt3to4:
 #include <QGridLayout>
+
 #include <KListWidget>
 #include <kacceleratormanager.h>
 #include <kconfig.h>
@@ -160,8 +159,7 @@ void EmailEditWidget::textChanged( const QString &text )
 }
 
 
-EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent,
-                                  const char *name )
+EmailEditDialog::EmailEditDialog( const QStringList &list, QWidget *parent )
   : KDialog( parent)
 {
   setCaption( i18n( "Edit Email Addresses" ) );

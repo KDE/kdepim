@@ -94,7 +94,7 @@ KVBox *ViewConfigureWidget::addPage( const QString &item, const QString &header,
 }
 
 ViewConfigureDialog::ViewConfigureDialog( ViewConfigureWidget *wdg, const QString &viewName,
-                                          QWidget *parent, const char *name )
+                                          QWidget *parent )
   : KDialog( parent ), mConfigWidget( wdg )
 {
   setCaption( i18n( "Modify View: " ) + viewName );

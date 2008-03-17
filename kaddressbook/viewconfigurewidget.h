@@ -90,7 +90,7 @@ class ViewConfigureDialog : public KDialog
 
   public:
     ViewConfigureDialog( ViewConfigureWidget *wdg, const QString &viewName,
-                         QWidget *parent, const char *name = 0 );
+                         QWidget *parent );
     virtual ~ViewConfigureDialog();
 
     void restoreSettings( const KConfigGroup& );
