@@ -10,15 +10,18 @@
 IdleTimeDetector::IdleTimeDetector(int maxIdle)
 // Trigger a warning after maxIdle minutes
 {
-  kdDebug(5970) << "IdleTimeDetector::IdleTimeDetector" << endl;
+  kdDebug(5970) << "Entering IdleTimeDetector::IdleTimeDetector" << endl;
   _maxIdle = maxIdle;
 
 #ifdef HAVE_LIBXSS
+  kdDebug(5970) << "IdleTimeDetector: LIBXSS detected @ compile time" << endl;
   int event_base, error_base;
-  if(XScreenSaverQueryExtension(qt_xdisplay(), &event_base, &error_base)) {
+  if(XScreenSaverQueryExtension(qt_xdisplay(), &event_base, &error_base)) 
+  {
     _idleDetectionPossible = true;
   }
-  else {
+  else 
+  {
     _idleDetectionPossible = false;
   }
 
@@ -43,9 +46,9 @@ void IdleTimeDetector::check()
   {
     _mit_info = XScreenSaverAllocInfo ();
     XScreenSaverQueryInfo(qt_xdisplay(), qt_xrootwin(), _mit_info);
-    int idleMinutes = (_mit_info->idle/1000)/secsPerMinute;
-    if (idleMinutes >= _maxIdle)
-      informOverrun(idleMinutes);
+    int idleSeconds = (_mit_info->idle/1000);
+    if (idleSeconds >= _maxIdle)
+      informOverrun(idleSeconds);
   }
 #endif // HAVE_LIBXSS
 }
@@ -56,38 +59,38 @@ void IdleTimeDetector::setMaxIdle(int maxIdle)
 }
 
 #ifdef HAVE_LIBXSS
-void IdleTimeDetector::informOverrun(int idleMinutes)
+void IdleTimeDetector::informOverrun(int idleSeconds)
 {
+  kdDebug(5970) << "Entering IdleTimeDetector::informOverrun" << endl;
   if (!_overAllIdleDetect)
     return; // preferences say the user does not want idle detection.
 
   _timer->stop();
 
-  QDateTime start = QDateTime::currentDateTime();
-  QDateTime idleStart = start.addSecs(-60 * _maxIdle);
-  QString backThen = KGlobal::locale()->formatTime(idleStart.time());
+  QDateTime idleStart = QDateTime::currentDateTime().addSecs(-idleSeconds);
+  QString idleStartQString = KGlobal::locale()->formatTime(idleStart.time());
 
   int id =  QMessageBox::warning( 0, i18n("Idle Detection"),
                                      i18n("Desktop has been idle since %1."
-                                          " What should we do?").arg(backThen),
+                                          " What should we do?").arg(idleStartQString),
                                      i18n("Revert && Stop"),
                                      i18n("Revert && Continue"),
                                      i18n("Continue Timing"),0,2);
   QDateTime end = QDateTime::currentDateTime();
-  int diff = start.secsTo(end)/secsPerMinute;
+  int diff = idleStart.secsTo(end)/secsPerMinute;
 
   if (id == 0) 
   {
     // Revert And Stop
     kdDebug(5970) << "Now it is " << QDateTime::currentDateTime() << endl;
     kdDebug(5970) << "Reverting timer to " << KGlobal::locale()->formatTime(idleStart.time()).ascii() << endl;
-    emit(extractTime(idleMinutes+diff)); // we need to subtract the time that has been added during idleness.
+    emit(extractTime(idleSeconds/60+diff)); // we need to subtract the time that has been added during idleness.
     emit(stopAllTimersAt(idleStart));
   }
   else if (id == 1) 
   {
     // Revert and Continue
-    emit(extractTime(idleMinutes+diff));
+    emit(extractTime(idleSeconds/60+diff));
     _timer->start(testInterval);
   }
   else 
