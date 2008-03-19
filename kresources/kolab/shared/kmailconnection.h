@@ -53,7 +53,7 @@ class KMailConnection : public QObject {
   // These are the methods called by KMail when the resource changes
 public Q_SLOTS:
   bool fromKMailAddIncidence( const QString& type, const QString& resource,
-                             quint32 sernum, int format, const QString& xml );
+                             uint sernum, int format, const QString& xml );
   void fromKMailDelIncidence( const QString& type, const QString& resource,
                               const QString& xml );
   void fromKMailRefresh( const QString& type, const QString& resource );

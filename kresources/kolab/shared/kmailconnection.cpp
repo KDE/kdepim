@@ -92,43 +92,25 @@ bool KMailConnection::connectToKMail()
     registerTypes();
     mKmailGroupwareInterface = new OrgKdeKmailGroupwareInterface( dbusService, "/Groupware" , QDBusConnection::sessionBus() );
 
-    QDBusConnection dbus = QDBusConnection::sessionBus();
-    dbus.connect( KMAIL_DBUS_SERVICE, "/Groupware", "org.kde.kmail.groupware", "incidenceAdded", this, SLOT(fromKMailAddIncidence(QString,QString,quint32,int,QString) ) );
-    dbus.connect( KMAIL_DBUS_SERVICE, "/Groupware", "org.kde.kmail.groupware", "incidenceDeleted", this, SLOT( fromKMailDelIncidence(QString,QString,QString) ) );
-    dbus.connect( KMAIL_DBUS_SERVICE, "/Groupware", "org.kde.kmail.groupware", "signalRefresh", this, SLOT( fromKMailRefresh(QString,QString) ) );
-    dbus.connect( KMAIL_DBUS_SERVICE, "/Groupware", "org.kde.kmail.groupware", "subresourceAdded", this, SLOT(fromKMailAddSubresource( QString, QString, QString, bool, bool ) ) );
-    dbus.connect( KMAIL_DBUS_SERVICE, "/Groupware", "org.kde.kmail.groupware", "subresourceDeleted", this, SLOT(fromKMailDelSubresource(QString,QString) ) );
-    dbus.connect( KMAIL_DBUS_SERVICE, "/Groupware", "org.kde.kmail.groupware", "asyncLoadResult", this, SLOT( fromKMailAsyncLoadResult(QMap<quint32, QString>, QString, QString) ) );
-
-/*
-
-    // Attach to the KMail signals
-    if ( !connectKMailSignal( "incidenceAdded(QString,QString,quint32,int,QString)",
-                              "fromKMailAddIncidence(QString,QString,quint32,int,QString)" ) )
-      kError(5650) <<"DCOP connection to incidenceAdded failed";
-    if ( !connectKMailSignal( "incidenceDeleted(QString,QString,QString)",
-                              "fromKMailDelIncidence(QString,QString,QString)" ) )
-      kError(5650) <<"DCOP connection to incidenceDeleted failed";
-    if ( !connectKMailSignal( "signalRefresh(QString,QString)",
-                              "fromKMailRefresh(QString,QString)" ) )
-      kError(5650) <<"DCOP connection to signalRefresh failed";
-    if ( !connectKMailSignal( "subresourceAdded( QString, QString, QString, bool, bool )",
-                              "fromKMailAddSubresource( QString, QString, QString, bool, bool )" ) )
-      kError(5650) <<"DCOP connection to subresourceAdded failed";
-    if ( !connectKMailSignal( "subresourceDeleted(QString,QString)",
-                              "fromKMailDelSubresource(QString,QString)" ) )
-      kError(5650) <<"DCOP connection to subresourceDeleted failed";
-    if ( !connectKMailSignal( "asyncLoadResult(QMap<quint32, QString>, QString, QString)",
-                              "fromKMailAsyncLoadResult(QMap<quint32, QString>, QString, QString)" ) )
-      kError(5650) <<"DCOP connection to asyncLoadResult failed";
-*/
+    connect( mKmailGroupwareInterface, SIGNAL(incidenceAdded(QString,QString,uint,int,QString)),
+             SLOT(fromKMailAddIncidence(QString,QString,uint,int,QString)) );
+    connect( mKmailGroupwareInterface, SIGNAL(incidenceDeleted(QString,QString,QString)),
+             SLOT(fromKMailDelIncidence(QString,QString,QString)) );
+    connect( mKmailGroupwareInterface, SIGNAL(signalRefresh(QString,QString)),
+             SLOT( fromKMailRefresh(QString,QString)) );
+    connect( mKmailGroupwareInterface, SIGNAL(subresourceAdded(QString,QString,QString,bool,bool)),
+             SLOT(fromKMailAddSubresource( QString, QString, QString, bool, bool )) );
+    connect( mKmailGroupwareInterface, SIGNAL(subresourceDeleted(QString,QString)),
+             SLOT(fromKMailDelSubresource(QString,QString)) );
+    connect( mKmailGroupwareInterface, SIGNAL(asyncLoadResult(QMap<quint32,QString>,QString,QString)),
+             SLOT( fromKMailAsyncLoadResult(QMap<quint32,QString>,QString,QString)) );
   }
   return ( mKmailGroupwareInterface != 0 );
 }
 
 bool KMailConnection::fromKMailAddIncidence( const QString& type,
                                              const QString& folder,
-                                             quint32 sernum,
+                                             uint sernum,
                                              int format,
                                              const QString& data )
 {
