@@ -187,7 +187,7 @@ bool KMailConnection::kmailIncidencesCount( int& count,
   return (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
 }
 
-bool KMailConnection::kmailIncidences( QMap<quint32, QString>& lst,
+bool KMailConnection::kmailIncidences( KMail::SernumDataPair::List& lst,
                                        const QString& mimetype,
                                        const QString& resource,
                                        int startIndex,
@@ -196,7 +196,7 @@ bool KMailConnection::kmailIncidences( QMap<quint32, QString>& lst,
   if ( !connectToKMail() )
     return false;
   registerTypes();
-  QDBusReply<Quint32QStringMap> r = mKmailGroupwareInterface->call( "incidencesKolab",  mimetype, resource, startIndex, nbMessages );
+  QDBusReply<KMail::SernumDataPair::List> r = mKmailGroupwareInterface->call( "incidencesKolab",  mimetype, resource, startIndex, nbMessages );
   if (r.isValid()) {
     lst = r.value();
   }

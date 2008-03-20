@@ -109,7 +109,7 @@ bool ResourceScalix::loadSubResource( const QString& subResource,
     return false;
   }
 
-  QMap<quint32, QString> lst;
+  KMail::SernumDataPair::List lst;
   if( !kmailIncidences( lst, mimetype, subResource, 0, count ) ) {
     kError(5500) <<"Communication problem in"
                   << "ResourceScalix::getIncidenceList()\n";
@@ -121,11 +121,11 @@ bool ResourceScalix::loadSubResource( const QString& subResource,
   // Populate with the new entries
   const bool silent = mSilent;
   mSilent = true;
-  QMap<quint32, QString>::Iterator it;
+  KMail::SernumDataPair::List::ConstIterator it;
   for ( it = lst.begin(); it != lst.end(); ++it ) {
-    KCal::Journal* journal = addNote( it.value(), subResource, it.key(), mimetype );
+    KCal::Journal* journal = addNote( it->data, subResource, it->sernum, mimetype );
     if ( !journal )
-      kDebug(5500) <<"loading note" << it.key() <<" failed";
+      kDebug(5500) <<"loading note" << it->sernum <<" failed";
     else
       manager()->registerNote( this, journal );
   }

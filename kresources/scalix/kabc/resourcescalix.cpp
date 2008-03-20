@@ -219,7 +219,7 @@ bool KABC::ResourceScalix::loadSubResource( const QString& subResource )
     for ( int indexFormat = 0; indexFormat < 3; ++indexFormat ) {
       const char* mimetype = s_formats[indexFormat].mimetype;
       KMail::StorageFormat format = s_formats[indexFormat].format;
-      QMap<quint32, QString> lst;
+      KMail::SernumDataPair::List lst;
       if ( !kmailIncidences( lst, mimetype, subResource, startIndex, nbMessages ) ) {
         kError() <<"Communication problem in KABC::ResourceScalix::loadSubResource()";
 #if 0 // TODO port progress dialog
@@ -228,8 +228,8 @@ bool KABC::ResourceScalix::loadSubResource( const QString& subResource )
 #endif
         return false;
       }
-      for( QMap<quint32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
-        loadContact( it.value(), subResource, it.key(), format );
+      for( KMail::SernumDataPair::List::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
+        loadContact( it->data, subResource, it->sernum, format );
       }
 
     }

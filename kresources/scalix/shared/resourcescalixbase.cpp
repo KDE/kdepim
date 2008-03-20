@@ -80,7 +80,7 @@ bool ResourceScalixBase::kmailIncidencesCount( int &count,
   return mConnection->kmailIncidencesCount( count, mimetype, resource );
 }
 
-bool ResourceScalixBase::kmailIncidences( QMap<quint32, QString>& lst,
+bool ResourceScalixBase::kmailIncidences( KMail::SernumDataPair::List& lst,
                                          const QString& mimetype,
                                          const QString& resource,
                                          int startIndex,

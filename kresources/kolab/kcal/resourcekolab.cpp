@@ -204,7 +204,7 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
   }
 #endif
   for ( int startIndex = 0; startIndex < count; startIndex += nbMessages ) {
-    QMap<quint32, QString> lst;
+    KMail::SernumDataPair::List lst;
     if ( !kmailIncidences( lst, mimetype, subResource, startIndex, nbMessages ) ) {
       kError(5650) <<"Communication problem in ResourceKolab::load()";
 #if  0
@@ -215,8 +215,8 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
     }
     { // for RAII scoping below
       TemporarySilencer t( this );
-      for( QMap<quint32, QString>::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
-        addIncidence( mimetype, it.value(), subResource, it.key() );
+      for( KMail::SernumDataPair::List::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
+        addIncidence( mimetype, it->data, subResource, it->sernum );
       }
     }
 #if 0

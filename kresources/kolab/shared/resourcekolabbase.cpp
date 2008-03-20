@@ -80,7 +80,7 @@ bool ResourceKolabBase::kmailIncidencesCount( int &count,
   return mConnection->kmailIncidencesCount( count, mimetype, resource );
 }
 
-bool ResourceKolabBase::kmailIncidences( QMap<quint32, QString>& lst,
+bool ResourceKolabBase::kmailIncidences( KMail::SernumDataPair::List& lst,
                                          const QString& mimetype,
                                          const QString& resource,
                                          int startIndex,

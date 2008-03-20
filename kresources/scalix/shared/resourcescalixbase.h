@@ -117,7 +117,7 @@ protected:
 
   /// Get the mimetype attachments from a chunk of messages from this folder.
   /// Returns a QMap with serialNumber/attachment pairs.
-  bool kmailIncidences( QMap<quint32, QString>& lst, const QString& mimetype,
+  bool kmailIncidences( KMail::SernumDataPair::List& lst, const QString& mimetype,
                         const QString& resource,
                         int startIndex,
                         int nbMessages ) const;
