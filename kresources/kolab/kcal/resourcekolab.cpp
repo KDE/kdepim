@@ -494,14 +494,18 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
   QList<KTemporaryFile*> tmpFiles;
   for ( KCal::Attachment::List::ConstIterator it = atts.constBegin(); it != atts.constEnd(); ++it ) {
     KTemporaryFile* tempFile = new KTemporaryFile;
-    QByteArray decoded = QByteArray::fromBase64( (*it)->data() );
-    tempFile->write( decoded );
-    KUrl url;
-    url.setPath( tempFile->fileName() );
-    attURLs.append( url.url() );
-    attMimeTypes.append( (*it)->mimeType() );
-    attNames.append( (*it)->label() );
-    tempFile->close();
+    if ( tempFile->open() ) {
+      QByteArray decoded = QByteArray::fromBase64( (*it)->data() );
+      tempFile->write( decoded );
+      KUrl url;
+      url.setPath( tempFile->fileName() );
+      attURLs.append( url.url() );
+      attMimeTypes.append( (*it)->mimeType() );
+      attNames.append( (*it)->label() );
+      tempFile->close();
+    } else {
+      kWarning(5650) << "Cannot open temporary file for attachment";
+    }
   }
   QStringList deletedAtts;
   if ( kmailListAttachments( deletedAtts, subresource, sernum ) ) {
