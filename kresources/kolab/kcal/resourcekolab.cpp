@@ -493,6 +493,8 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
   QStringList attURLs, attMimeTypes, attNames;
   QList<KTemporaryFile*> tmpFiles;
   for ( KCal::Attachment::List::ConstIterator it = atts.constBegin(); it != atts.constEnd(); ++it ) {
+    if ( (*it)->isUri() )
+      continue;
     KTemporaryFile* tempFile = new KTemporaryFile;
     if ( tempFile->open() ) {
       QByteArray decoded = QByteArray::fromBase64( (*it)->data() );
