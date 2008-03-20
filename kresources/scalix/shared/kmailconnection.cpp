@@ -295,9 +295,9 @@ bool KMailConnection::kmailStorageFormat( KMail::StorageFormat& type,
                                           const QString& folder )
 {
   bool ok = connectToKMail();
-  QDBusReply<KMail::StorageFormat> reply = mKmailGroupwareInterface->call( "storageFormat", folder );
+  QDBusReply<int> reply = mKmailGroupwareInterface->call( "storageFormat", folder );
   if ( reply.isValid() )
-    type = reply;
+    type = static_cast<KMail::StorageFormat>( reply.value() );
   return ok && (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
 }
 
