@@ -25,7 +25,7 @@
 #include <boost/shared_ptr.hpp>
 
 #include <akonadi/item.h>
-#include <akonadi/private/imapparser.h> //FIXME: Do it right without internal class!
+#include <akonadi/private/imapparser_p.h> //FIXME: Do it right without internal class!
 
 #define SMS_MIMETYPE "application/x-kmobiletools-sms"
 
