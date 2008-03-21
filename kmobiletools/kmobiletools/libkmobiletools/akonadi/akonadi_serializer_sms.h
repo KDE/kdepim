@@ -22,7 +22,7 @@
 #ifndef __AKONADI_SERIALIZER_SMS_H__
 #define __AKONADI_SERIALIZER_SMS_H__
 
-#include <libakonadi/itemserializerplugin.h>
+#include <akonadi/itemserializerplugin.h>
 
 namespace Akonadi {
 
