@@ -1,4 +1,6 @@
-add_subdirectory( akonadi )
+if (AKONADI_FOUND)
+  add_subdirectory( akonadi )
+endif (AKONADI_FOUND)
 add_subdirectory( icons )
 
 IF (USE_CRASHHANDLER)
