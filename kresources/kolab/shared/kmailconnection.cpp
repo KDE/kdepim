@@ -46,15 +46,6 @@
 
 using namespace Kolab;
 
-static void registerTypes()
-{
-    static bool registered = false;
-    if (!registered) {
-      KMail::registerGroupwareTypes();
-      registered = true;
-    }
-}
-
 KMailConnection::KMailConnection( ResourceKolabBase* resource )
   : mResource( resource )
   , mKmailGroupwareInterface( 0 )
@@ -64,7 +55,7 @@ KMailConnection::KMailConnection( ResourceKolabBase* resource )
                    SIGNAL(serviceOwnerChanged(QString,QString,QString)),
                    this, SLOT(dbusServiceOwnerChanged(QString,QString,QString)));
 
-  registerTypes();
+  KMail::registerGroupwareTypes();
 }
 
 
@@ -89,8 +80,8 @@ bool KMailConnection::connectToKMail()
       // using e.g. KMessageBox
       return false;
     }
-    registerTypes();
-    mKmailGroupwareInterface = new OrgKdeKmailGroupwareInterface( dbusService, "/Groupware" , QDBusConnection::sessionBus() );
+    mKmailGroupwareInterface = new OrgKdeKmailGroupwareInterface( dbusService, KMAIL_DBUS_GROUPWARE_PATH,
+                                                                  QDBusConnection::sessionBus() );
 
     connect( mKmailGroupwareInterface, SIGNAL(incidenceAdded(QString,QString,uint,int,QString)),
              SLOT(fromKMailAddIncidence(QString,QString,uint,int,QString)) );
@@ -170,7 +161,6 @@ bool KMailConnection::kmailSubresources( QList<KMail::SubResource>& lst,
 {
   if ( !connectToKMail() )
     return false;
-  registerTypes();
 
   QDBusReply<KMail::SubResource::List> r = mKmailGroupwareInterface->subresourcesKolab( contentsType );
   if ( r.isValid() )
@@ -200,7 +190,6 @@ bool KMailConnection::kmailIncidences( KMail::SernumDataPair::List& lst,
 {
   if ( !connectToKMail() )
     return false;
-  registerTypes();
   QDBusReply< KMail::SernumDataPair::List > r = mKmailGroupwareInterface->incidencesKolab( mimetype, resource, startIndex, nbMessages );
   if (r.isValid()) {
     lst = r.value();
