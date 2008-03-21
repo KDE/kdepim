@@ -42,6 +42,7 @@ KitchenSyncPart::KitchenSyncPart( QWidget *parentWidget, QObject *parent,
   new MainWidget( this, canvas );
 
   KIconLoader::global()->addAppDir( "kitchensync" );
+  KIconLoader::global()->addAppDir( "kdepim" );
 
   setXMLFile( "kitchensync_part.rc" );
 }

@@ -51,6 +51,7 @@ CryptoWidgetFactory::CryptoWidgetFactory()
 {
   KGlobal::locale()->insertCatalog( "libkleopatra" );
   KIconLoader::global()->addAppDir( "libkleopatra" );
+  KIconLoader::global()->addAppDir( "kdepim" );
 }
 
 QString CryptoWidgetFactory::pageTitle() const

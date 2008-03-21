@@ -61,6 +61,7 @@ KNodePart::KNodePart( QWidget *parentWidget, QObject *parent, const QVariantList
 #endif
 //   kapp->dcopClient()->suspend(); // Don't handle DCOP requests yet
   KIconLoader::global()->addAppDir("knode");
+  KIconLoader::global()->addAppDir("kdepim");
   knGlobals.setComponentData( KNodeFactory::componentData() );
 
   // create a canvas to insert our widget

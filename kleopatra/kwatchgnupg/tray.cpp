@@ -48,6 +48,7 @@ KWatchGnuPGTray::KWatchGnuPGTray( KWatchGnuPGMainWindow* mainwin )
 
   setObjectName( "KWatchGnuPG Tray Window" );
   KIconLoader::global()->addAppDir( "kwatchgnupg" );
+  KIconLoader::global()->addAppDir( "kdepim" );
 
   mNormalPix = loadIcon("kwatchgnupg");
   mAttentionPix = loadIcon("kwatchgnupg2");

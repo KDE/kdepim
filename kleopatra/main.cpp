@@ -190,6 +190,7 @@ int main( int argc, char** argv )
 
   KGlobal::locale()->insertCatalog( "libkleopatra" );
   KIconLoader::global()->addAppDir( "libkleopatra" );
+  KIconLoader::global()->addAppDir( "kdepim" );
 
 #ifndef KLEO_BUILD_OLD_MAINWINDOW
   SystemTrayIconFor<MainWindow> sysTray;

@@ -90,6 +90,7 @@ void SloxFolderDialog::createFolderViewItem( SloxFolder *folder )
   folder->item->setText( 0, folder->name() );
   folder->item->setText( 1, folder->id() );
   KIconLoader::global()->addAppDir( "kmail" );
+  KIconLoader::global()->addAppDir( "kdepim" );
   switch ( folder->type() ) {
     case Calendar:
       folder->item->setPixmap( 0, SmallIcon( "kmgroupware_folder_calendar" ) );
