@@ -199,14 +199,16 @@ KABC::Addressee::List VCardXXPort::importContacts( const QString& ) const
 
           KIO::NetAccess::removeTempFile( fileName );
         } else {
-          QString text = i18n( "<qt>When trying to read the vCard, there was an error opening the file '%1': %2</qt>",
-                               (*it).url(),
-                               i18nc( "QFile", file.errorString().toLatin1() ) );
+          QString text = i18nc( "@info", 
+                                "<para>When trying to read the vCard, there was an error opening the file <filename>%1</filename>:</para>"
+                                "<para>%2</para>",
+                                (*it).pathOrUrl(),
+                                i18nc( "QFile", file.errorString().toLatin1() ) );
           KMessageBox::error( parentWidget(), text, caption );
           anyFailures = true;
         }
       } else {
-        QString text = i18n( "<qt>Unable to access vCard: %1</qt>", KIO::NetAccess::lastErrorString() );
+        QString text = i18nc( "@info", "<para>Unable to access vCard:</para><para>%1</para>", KIO::NetAccess::lastErrorString() );
         KMessageBox::error( parentWidget(), text, caption );
         anyFailures = true;
       }
