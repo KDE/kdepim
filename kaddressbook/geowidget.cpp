@@ -53,7 +53,7 @@ GeoWidget::GeoWidget( KABC::AddressBook *ab, QWidget *parent )
   topLayout->setSpacing( KDialog::spacingHint() );
 
   label = new QLabel( this );
-  label->setPixmap( KIconLoader::global()->loadIcon( "package-network",
+  label->setPixmap( KIconLoader::global()->loadIcon( "applications-internet",
                     KIconLoader::Desktop, KIconLoader::SizeMedium ) );
   label->setAlignment( Qt::AlignTop );
   topLayout->addWidget( label, 0, 0, 4, 1);

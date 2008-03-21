@@ -49,7 +49,7 @@ SoundWidget::SoundWidget( KABC::AddressBook *ab, QWidget *parent )
   topLayout->setMargin( KDialog::marginHint() );
 
   QLabel *label = new QLabel( this );
-  label->setPixmap( KIconLoader::global()->loadIcon( "multimedia",
+  label->setPixmap( KIconLoader::global()->loadIcon( "audio-x-vorbis+ogg",
                     KIconLoader::Desktop, KIconLoader::SizeMedium ) );
   label->setAlignment( Qt::AlignTop );
   topLayout->addWidget( label, 0, 0, 2, 1);
