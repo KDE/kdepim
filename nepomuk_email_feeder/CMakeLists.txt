@@ -6,9 +6,9 @@ include_directories(
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 
-kde4_add_executable(akonadi_nepomuk_feeder RUN_UNINSTALLED nepomukfeeder.cpp)
+kde4_add_executable(akonadi_nepomuk_email_feeder RUN_UNINSTALLED nepomukfeeder.cpp)
 
-target_link_libraries(akonadi_nepomuk_feeder
+target_link_libraries(akonadi_nepomuk_email_feeder
   akonadicore
   ${QT_QTCORE_LIBRARY}
   ${QT_QTDBUS_LIBRARY}
@@ -16,5 +16,5 @@ target_link_libraries(akonadi_nepomuk_feeder
   ${NEPOMUK_LIBRARY}
 )
 
-install(TARGETS akonadi_nepomuk_feeder DESTINATION ${BIN_INSTALL_DIR})
-install(FILES nepomukfeeder.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
+install(TARGETS akonadi_nepomuk_email_feeder DESTINATION ${BIN_INSTALL_DIR})
+install(FILES nepomukemailfeeder.desktop DESTINATION "${CMAKE_INSTALL_PREFIX}/share/akonadi/agents")
