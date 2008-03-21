@@ -1,3 +1,12 @@
+Friday, March 21st 2008
+
+Problems addressed
+------------------
+* kolab/issue1826 - Default (New Mail) template needs 3 spaces between the top and the signature.
+* kolab/issue2290 - Should warn and offer to change if there are two *.default groupware folders in one account.
+* kolab/issue2272 - Event Attendee Editor: After "Zoom To Fit" and zoom it is possible to scroll the fb part without the attendee part.
+
+
 Friday, March 14th 2008
 
 Problems addressed
