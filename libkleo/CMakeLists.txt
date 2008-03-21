@@ -6,7 +6,8 @@ else ( NOT ONLY_KLEO )
   add_definitions( -DONLY_KLEO )
 endif ( NOT ONLY_KLEO )
 
-add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS -UQT_NO_STL )
+remove_definitions( -DQT_NO_STL )
+add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS -DQT_STL )
 add_definitions( ${KDE4_ENABLE_EXCEPTIONS} )
 
 add_subdirectory( pics )
