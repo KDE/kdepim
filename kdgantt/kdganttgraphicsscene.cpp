@@ -412,30 +412,36 @@ void GraphicsScene::removeItem( const QModelIndex& idx )
     //qDebug() << "GraphicsScene::removeItem("<<idx<<")";
     QHash<QPersistentModelIndex,GraphicsItem*>::iterator it = d->items.find( idx );
     if ( it != d->items.end() ) {
+        GraphicsItem* item = *it;
+        // We have to remove the item from the list first because
+        // there is a good chance there will be reentrant calls
+        d->items.erase( it );
         {
             // Remove any constraintitems starting here
-            const QList<ConstraintGraphicsItem*> clst = ( *it )->startConstraints();
-            //qDebug() << clst;
+            const QList<ConstraintGraphicsItem*> clst = item->startConstraints();
+            //qDebug() << "GraphicsScene::removeItem" << clst;
             Q_FOREACH( ConstraintGraphicsItem* citem, clst ) {
-                GraphicsItem* end_item = d->items.value( summaryHandlingModel()->mapFromSource( citem->constraint().endIndex() ),0 );
+                const Constraint c = citem->constraint();
+                GraphicsItem* end_item = d->items.value( summaryHandlingModel()->mapFromSource( c.endIndex() ),0 );
                 if ( end_item ) end_item->removeEndConstraint( citem );
-                d->constraintModel->removeConstraint( citem->constraint() );
+                //d->constraintModel->removeConstraint( c );
                 delete citem;
             }
         }
-        {// Remove any constraintitems ending here
-            const QList<ConstraintGraphicsItem*> clst = ( *it )->endConstraints();
-            //qDebug() << clst;
+        {
+            const QList<ConstraintGraphicsItem*> clst = item->endConstraints();
+            //qDebug() << "GraphicsScene::removeItem" << clst;
             Q_FOREACH( ConstraintGraphicsItem* citem, clst ) {
-                GraphicsItem* end_item = d->items.value( summaryHandlingModel()->mapFromSource( citem->constraint().endIndex() ),0 );
-                if ( end_item ) end_item->removeStartConstraint( citem );
-                d->constraintModel->removeConstraint( citem->constraint() );
+                const Constraint c = citem->constraint();
+                GraphicsItem* start_item = d->items.value( summaryHandlingModel()->mapFromSource( c.startIndex() ),0 );
+                if ( start_item ) start_item->removeStartConstraint( citem );
+                //d->constraintModel->removeConstraint( c );
                 delete citem;
             }
+            // Remove any constraintitems ending here
         }
         // Get rid of the item
-        delete *it;
-        d->items.erase( it );
+        delete item;
     }
 }
 
