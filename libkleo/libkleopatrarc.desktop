@@ -271,6 +271,7 @@ Name[km]=សោ​សម្រាប់​ហត្ថលេខា​ដែល�
 Name[pt]=Chaves das Assinaturas Qualificadas
 Name[pt_BR]=Chaves para Assinaturas Qualificadas
 Name[tr]=Yetkilendirilmiş İmzalar için Anahtarlar
+Name[x-test]=xxKeys for Qualified Signaturesxx
 Name[zh_TW]=合格簽章的金鑰
 
 [Key Filter #6]
@@ -283,6 +284,7 @@ Name[km]=សោ​ផ្សេង​ទៀត
 Name[pt]=Outras Chaves
 Name[pt_BR]=Outras Chaves
 Name[tr]=Diğer Anahtarlar
+Name[x-test]=xxOther Keysxx
 Name[zh_TW]=其他金鑰
 
 
