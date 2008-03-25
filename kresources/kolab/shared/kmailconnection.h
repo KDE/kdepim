@@ -34,12 +34,18 @@
 #ifndef KMAILCONNECTION_H
 #define KMAILCONNECTION_H
 
-#include <QObject>
 #include <kmail/groupware_types.h>
+#include <kmail_groupwareinterface.h>
+
+#include <kdebug.h>
+
+#include <QObject>
 #include <QMap>
+#include <QDBusError>
+#include <QDBusReply>
+
 class KUrl;
 class QString;
-class OrgKdeKmailGroupwareInterface;
 
 namespace Kolab {
 
@@ -106,6 +112,25 @@ public:
                             const QString& parent,
                             const QString& contentsType );
   bool kmailRemoveSubresource( const QString& resource );
+
+  private:
+    template <typename T, typename V> inline bool checkReply( QDBusReply<T> reply, V &value ) const
+    {
+      if ( reply.isValid() && mKmailGroupwareInterface->lastError().type() == QDBusError::NoError ) {
+        value = reply.value();
+        return true;
+      }
+      kWarning(5650) << "D-Bus communication failed. Reply error is: " << reply.error()
+          << "Last interface error was: " << mKmailGroupwareInterface->lastError();
+      return false;
+    }
+
+    inline bool checkReply( QDBusReply<bool> reply ) const
+    {
+      bool b;
+      bool ok = checkReply( reply, b );
+      return b && ok;
+    }
 
 private slots:
   void dbusServiceOwnerChanged(const QString & service, const QString & oldOwner, const QString & newOwner);

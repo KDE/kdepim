@@ -37,11 +37,9 @@
 #include <kdebug.h>
 #include <kurl.h>
 #include <kdbusservicestarter.h>
-#include <kmail_groupwareinterface.h>
 #include <kmail/groupware_types.h>
 #include <klocale.h>
 #include <QDBusAbstractInterface>
-#include <QDBusError>
 #include <QMap>
 
 using namespace Kolab;
@@ -50,7 +48,6 @@ KMailConnection::KMailConnection( ResourceKolabBase* resource )
   : mResource( resource )
   , mKmailGroupwareInterface( 0 )
 {
-  // Make the connection to KMail ready
   QObject::connect(QDBusConnection::sessionBus().interface(),
                    SIGNAL(serviceOwnerChanged(QString,QString,QString)),
                    this, SLOT(dbusServiceOwnerChanged(QString,QString,QString)));
@@ -67,7 +64,6 @@ KMailConnection::~KMailConnection()
 
 bool KMailConnection::connectToKMail()
 {
-  kDebug()<<" bool KMailConnection::connectToKMail()";
   if ( !mKmailGroupwareInterface ) {
     QString error;
     QString dbusService;
@@ -161,13 +157,7 @@ bool KMailConnection::kmailSubresources( QList<KMail::SubResource>& lst,
 {
   if ( !connectToKMail() )
     return false;
-
-  QDBusReply<KMail::SubResource::List> r = mKmailGroupwareInterface->subresourcesKolab( contentsType );
-  if ( r.isValid() )
-  {
-    lst = r;
-  }
-  return (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
+  return checkReply( mKmailGroupwareInterface->subresourcesKolab( contentsType ), lst );
 }
 
 bool KMailConnection::kmailIncidencesCount( int& count,
@@ -176,10 +166,7 @@ bool KMailConnection::kmailIncidencesCount( int& count,
 {
   if ( !connectToKMail() )
     return false;
-
-  QDBusReply<int> val= mKmailGroupwareInterface->incidencesKolabCount( mimetype, resource );
-  count = val;
-  return (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
+  return checkReply( mKmailGroupwareInterface->incidencesKolabCount( mimetype, resource ), count );
 }
 
 bool KMailConnection::kmailIncidences( KMail::SernumDataPair::List& lst,
@@ -190,11 +177,7 @@ bool KMailConnection::kmailIncidences( KMail::SernumDataPair::List& lst,
 {
   if ( !connectToKMail() )
     return false;
-  QDBusReply< KMail::SernumDataPair::List > r = mKmailGroupwareInterface->incidencesKolab( mimetype, resource, startIndex, nbMessages );
-  if (r.isValid()) {
-    lst = r.value();
-  }
-  return (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
+  return checkReply( mKmailGroupwareInterface->incidencesKolab( mimetype, resource, startIndex, nbMessages ), lst );
 }
 
 
@@ -205,11 +188,7 @@ bool KMailConnection::kmailGetAttachment( KUrl& url,
 {
   if ( !connectToKMail() )
     return false;
-
-  QDBusReply<QString> val = mKmailGroupwareInterface->getAttachment( resource, sernum, filename );
-  QString tmp = val;
-  url = KUrl( val );
-  return (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
+  return checkReply( mKmailGroupwareInterface->getAttachment( resource, sernum, filename ), url );
 }
 
 bool KMailConnection::kmailListAttachments(QStringList &list,
@@ -217,20 +196,15 @@ bool KMailConnection::kmailListAttachments(QStringList &list,
 {
   if ( !connectToKMail() )
     return false;
-
-  QDBusReply<QStringList> r = mKmailGroupwareInterface->listAttachments( resource, sernum );
-  list = r;
-  return (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
+  return checkReply( mKmailGroupwareInterface->listAttachments( resource, sernum ), list );
 }
 
 bool KMailConnection::kmailDeleteIncidence( const QString& resource,
                                             quint32 sernum )
 {
-  QDBusReply<bool> deleteIncidence = mKmailGroupwareInterface->deleteIncidenceKolab( resource, sernum );
-  bool b = deleteIncidence;
-  return connectToKMail()
-    && b
-    && (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
+  if ( !connectToKMail() )
+    return false;
+  return checkReply( mKmailGroupwareInterface->deleteIncidenceKolab( resource, sernum ) );
 }
 
 bool KMailConnection::kmailUpdate( const QString& resource,
@@ -243,9 +217,9 @@ bool KMailConnection::kmailUpdate( const QString& resource,
                                    const QStringList& attachmentNames,
                                    const QStringList& deletedAttachments )
 {
-  bool ok = connectToKMail();
-
-  QDBusReply<quint32> reply = mKmailGroupwareInterface->update(
+  if ( !connectToKMail() )
+    return false;
+  return checkReply( mKmailGroupwareInterface->update(
       resource,
       sernum,
       subject,
@@ -254,52 +228,43 @@ bool KMailConnection::kmailUpdate( const QString& resource,
       attachmentURLs,
       attachmentMimetypes,
       attachmentNames,
-      deletedAttachments );
-
-  if ( reply.isValid() )
-    sernum = reply;
-
-  return ok && (mKmailGroupwareInterface->lastError().type() == QDBusError::NoError);
+      deletedAttachments ), sernum );
 }
 
 bool KMailConnection::kmailAddSubresource( const QString& resource,
                                            const QString& parent,
                                            const QString& contentsType )
 {
-  bool ok = connectToKMail();
-  QDBusReply<bool> reply = mKmailGroupwareInterface->addSubresource( resource, parent, contentsType );
-  if ( reply.isValid() )
-    ok = reply;
-  return ok && (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
+  if ( !connectToKMail() )
+    return false;
+  return checkReply( mKmailGroupwareInterface->addSubresource( resource, parent, contentsType ) );
 }
 
 bool KMailConnection::kmailRemoveSubresource( const QString& resource )
 {
-  bool ok = connectToKMail();
-  QDBusReply<bool> reply = mKmailGroupwareInterface->removeSubresource( resource );
-  if ( reply.isValid() )
-    ok = reply;
-  return ok && (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
+  if ( !connectToKMail() )
+    return false;
+  return checkReply( mKmailGroupwareInterface->removeSubresource( resource ) );
 }
 
 
 bool KMailConnection::kmailStorageFormat( KMail::StorageFormat& type,
                                           const QString& folder )
 {
-  bool ok = connectToKMail();
+  if ( !connectToKMail() )
+    return false;
   QDBusReply<int> reply = mKmailGroupwareInterface->storageFormat( folder );
   if ( reply.isValid() )
     type = static_cast<KMail::StorageFormat>( reply.value() );
-  return ok && (mKmailGroupwareInterface->lastError().type()==QDBusError::NoError);
+  return mKmailGroupwareInterface->lastError().type() == QDBusError::NoError;
 }
 
 
 bool KMailConnection::kmailTriggerSync( const QString &contentsType )
 {
-  bool ok = connectToKMail();
-  QDBusReply<bool> val =  mKmailGroupwareInterface->triggerSync( contentsType );
-  bool ret = val;
-  return ok && ret;
+  if ( !connectToKMail() )
+    return false;
+  return checkReply( mKmailGroupwareInterface->triggerSync( contentsType ) );
 }
 
 void KMailConnection::dbusServiceOwnerChanged(const QString & service, const QString&, const QString&)
