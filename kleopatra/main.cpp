@@ -107,24 +107,24 @@ namespace {
 
 static void checkForInvalidRegistryEntries( QWidget* msgParent )
 {
-    std::auto_ptr<const char> value( read_w32_registry_string( HKEY_CURRENT_USER, "Software\\GNU\\GnuPG", "gpgProgram" ) );
-    if ( !value )
+    std::auto_ptr<const char> value( read_w32_registry_string( "HKEY_CURRENT_USER", "Software\\GNU\\GnuPG", "gpgProgram" ) );
+    if ( !value.get() )
         return;
     if ( KMessageBox::questionYesNo( msgParent, 
-                                     i18n( "Kleopatra detected an obsolete registry key (\"HKLM\\GNU\\GnuPG\\gpgProgram\"),"
+                                     i18n( "Kleopatra detected an obsolete registry key (\"HKCU\\GNU\\GnuPG\\gpgProgram\"),"
                                            "added by either previous gpg4win versions or applications such as WinPT or EnigMail."
                                            "Keeping the entry might lead to problems during operations (old GnuPG backend being used)."
                                            "It is advised to delete the key." ),                         
                                      i18n( "Old Registry Entries Detected" ), 
-                                     i18n( "Delete Registry Key" ),
+                                     KGuiItem( i18n( "Delete Registry Key" ) ),
                                      KStandardGuiItem::cancel(),
                                      "doNotWarnAboutRegistryEntriesAgain" ) != KMessageBox::Yes )
         return;
-    LONG result = RegDeleteKey( HKEY_CURRENT_USER, "Software\\GNU\\GnuPG\\gpgProgram" );
+    const LONG result = RegDeleteKey( HKEY_CURRENT_USER, "Software\\GNU\\GnuPG\\gpgProgram" );
     if ( result == ERROR_SUCCESS )
         return;
     KMessageBox::error( msgParent, 
-                        i18n( "Could not delete the key \"HKLM\\GNU\\GnuPG\\gpgProgram\" from the registry." ), 
+                        i18n( "Could not delete the key \"HKCU\\GNU\\GnuPG\\gpgProgram\" from the registry." ), 
                         i18n( "Error Deleting Key" ) );
 }
 #endif // Q_OS_WIN
@@ -300,7 +300,7 @@ int main( int argc, char** argv )
           mainWindow->show();
           sysTray.setMainWindow( mainWindow );
           splash.finish( mainWindow );
-#if Q_OS_WIN
+#ifdef Q_OS_WIN
           checkForInvalidRegistryEntries( mainWindow );
 #endif // Q_OS_WIN
       }
