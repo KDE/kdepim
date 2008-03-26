@@ -45,6 +45,9 @@
 
 #include <utils/kdpipeiodevice.h>
 #include <utils/log.h>
+#ifdef Q_OS_WIN
+#include <utils/gnupg-registry.h>
+#endif
 
 #ifdef HAVE_USABLE_ASSUAN
 # include "kleo-assuan.h"
@@ -86,6 +89,11 @@ namespace Kleo {
 
 #include <boost/shared_ptr.hpp>
 
+#ifdef Q_OS_WIN
+#include <windows.h>
+#endif
+
+#include <memory>
 #include <cassert>
 
 namespace {
@@ -94,6 +102,32 @@ namespace {
         return t ? boost::shared_ptr<T>( t ) : boost::shared_ptr<T>() ;
     }
 }
+
+#ifdef Q_OS_WIN
+
+static void checkForInvalidRegistryEntries( QWidget* msgParent )
+{
+    std::auto_ptr<const char> value( read_w32_registry_string( HKEY_CURRENT_USER, "Software\\GNU\\GnuPG", "gpgProgram" ) );
+    if ( !value )
+        return;
+    if ( KMessageBox::questionYesNo( msgParent, 
+                                     i18n( "Kleopatra detected an obsolete registry key (\"HKLM\\GNU\\GnuPG\\gpgProgram\"),"
+                                           "added by either previous gpg4win versions or applications such as WinPT or EnigMail."
+                                           "Keeping the entry might lead to problems during operations (old GnuPG backend being used)."
+                                           "It is advised to delete the key." ),                         
+                                     i18n( "Old Registry Entries Detected" ), 
+                                     i18n( "Delete Registry Key" ),
+                                     KStandardGuiItem::cancel(),
+                                     "doNotWarnAboutRegistryEntriesAgain" ) != KMessageBox::Yes )
+        return;
+    LONG result = RegDeleteKey( HKEY_CURRENT_USER, "Software\\GNU\\GnuPG\\gpgProgram" );
+    if ( result == ERROR_SUCCESS )
+        return;
+    KMessageBox::error( msgParent, 
+                        i18n( "Could not delete the key \"HKLM\\GNU\\GnuPG\\gpgProgram\" from the registry." ), 
+                        i18n( "Error Deleting Key" ) );
+}
+#endif // Q_OS_WIN
 
 static QString environmentVariable( const QString& var, const QString& defaultValue=QString() )
 {
@@ -266,6 +300,9 @@ int main( int argc, char** argv )
           mainWindow->show();
           sysTray.setMainWindow( mainWindow );
           splash.finish( mainWindow );
+#if Q_OS_WIN
+          checkForInvalidRegistryEntries( mainWindow );
+#endif // Q_OS_WIN
       }
 
 #endif
