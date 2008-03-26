@@ -20,6 +20,8 @@ add_subdirectory( tests )
 
 set(kmobiletools_SRCS main.cpp kmobiletools.cpp kmobiletools.h )
 
+# todo: move to Oxygen icon
+kde4_add_app_icon(kmobiletools_SRCS "libkmobiletools/icons/hi*-app-kmobiletools.png")
 
 kde4_add_executable(kmobiletools_bin ${kmobiletools_SRCS})
 set_target_properties(kmobiletools_bin PROPERTIES OUTPUT_NAME kmobiletools)

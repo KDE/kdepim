@@ -111,6 +111,9 @@ qt4_add_dbus_interface(kpilotDaemon_SRCS
 	org.kde.kpilot.daemon.xml kpilot_daemon_interface
 )
 
+# todo: move to Oxygen icon
+kde4_add_app_icon(kpilotDaemon_SRCS "icons/hi*-app-kpilotDaemon.png")
+
 kde4_add_executable(kpilotDaemon ${kpilotDaemon_SRCS})
 
 target_link_libraries(kpilotDaemon
@@ -163,6 +166,9 @@ qt4_add_dbus_adaptor(kpilot_bin_SRCS
 qt4_add_dbus_interface(kpilot_bin_SRCS
 	org.kde.kpilot.daemon.xml daemon_interface
 )
+
+# todo: move to Oxygen icon
+kde4_add_app_icon(kpilot_bin_SRCS "icons/hi*-app-kpilot.png")
 
 kde4_add_executable(kpilot_bin ${kpilot_bin_SRCS})
 

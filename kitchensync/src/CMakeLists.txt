@@ -12,6 +12,9 @@ mainwindow.cpp
 )
 
 
+# todo: move to Oxygen icon
+kde4_add_app_icon(kitchensync_SRCS "pics/hi*-app-kitchensync.png")
+
 KDE4_ADD_EXECUTABLE(kitchensync ${kitchensync_SRCS})
 
 TARGET_LINK_LIBRARIES(kitchensync kitchensyncprivate ${QT_QTGUI_LIBRARY} ${KDE_KDEUI_LIBRARY} )

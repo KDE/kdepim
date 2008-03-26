@@ -63,6 +63,9 @@ kde4_add_ui_files(korn_SRCS
 qt4_add_dbus_adaptor(korn_SRCS org.kde.korn.BoxContainerItem.xml boxcontaineritem.h BoxContainerItem )
 qt4_add_dbus_adaptor(korn_SRCS org.kde.korn.MailDrop.xml dbusdrop.h DBUSDrop )
 
+# todo: move to Oxygen icon
+kde4_add_app_icon(korn_SRCS "hi*-app-korn.png")
+
 kde4_add_executable(korn ${korn_SRCS})
 
 target_link_libraries(korn  ${KDE4_KIO_LIBS} ${KDE4_PHONON_LIBS} ${KDE4_KDE3SUPPORT_LIBRARY} ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KMIME_LIBS})

@@ -20,6 +20,8 @@ set(konsolekalendar_SRCS
    main.cpp )
 
 
+kde4_add_app_icon(konsolekalendar_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/office-calendar.png")
+
 kde4_add_executable(konsolekalendar NOGUI ${konsolekalendar_SRCS})
 
 target_link_libraries(konsolekalendar  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim)

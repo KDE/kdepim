@@ -16,6 +16,10 @@ set(groupwarewizard_SRCS ${libknotesresources_SRCS} groupwarewizard.cpp groupwar
 
 kde4_add_kcfg_files(groupwarewizard_SRCS egroupwareconfig.kcfgc kolabconfig.kcfgc sloxconfig.kcfgc)
 
+
+# todo: more appropriate icon?
+kde4_add_app_icon(groupwarewizard_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/tools-wizard.png")
+
 kde4_add_executable(groupwarewizard ${groupwarewizard_SRCS})
 
 target_link_libraries(groupwarewizard  ${KDE4_KDECORE_LIBS} 
@@ -36,6 +40,9 @@ set(egroupwarewizard_SRCS ${libknotesresources_SRCS} egroupwarewizard.cpp egroup
 
 kde4_add_kcfg_files(egroupwarewizard_SRCS egroupwareconfig.kcfgc)
 
+# todo: more appropriate icon?
+kde4_add_app_icon(egroupwarewizard_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/tools-wizard.png")
+
 kde4_add_executable(egroupwarewizard ${egroupwarewizard_SRCS})
 
 target_link_libraries(egroupwarewizard  ${KDE4_KDECORE_LIBS} kabc_xmlrpc kcal_xmlrpc knotes_xmlrpc ${KDE4_KCAL_LIBS} kdepim)
@@ -49,6 +56,9 @@ set(sloxwizard_SRCS ${libknotesresources_SRCS} sloxwizard.cpp sloxmain.cpp)
 
 
 kde4_add_kcfg_files(sloxwizard_SRCS sloxconfig.kcfgc)
+
+# todo: more appropriate icon?
+kde4_add_app_icon(sloxwizard_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/tools-wizard.png")
 
 kde4_add_executable(sloxwizard ${sloxwizard_SRCS})
 
@@ -68,6 +78,9 @@ set(kolabwizard_SRCS ${libknotesresources_SRCS}
 
 kde4_add_kcfg_files(kolabwizard_SRCS kolabconfig.kcfgc)
 
+# todo: more appropriate icon?
+kde4_add_app_icon(kolabwizard_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/tools-wizard.png")
+
 kde4_add_executable(kolabwizard ${kolabwizard_SRCS})
 
 target_link_libraries(kolabwizard  ${KDE4_KCAL_LIBS} ${KDE4_KPIMIDENTITIES_LIBS} kabckolab knoteskolab kcalkolab kdepim)
@@ -84,6 +97,9 @@ set(scalixwizard_SRCS ${libknotesresources_SRCS}
 
 
 kde4_add_kcfg_files(scalixwizard_SRCS scalixconfig.kcfgc)
+
+# todo: more appropriate icon?
+kde4_add_app_icon(scalixwizard_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/tools-wizard.png")
 
 kde4_add_executable(scalixwizard ${scalixwizard_SRCS})
 

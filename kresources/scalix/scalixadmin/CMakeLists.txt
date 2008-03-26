@@ -22,6 +22,9 @@ set(scalixadmin_SRCS
   settings.cpp
 )
 
+# todo: more appropriate icon?
+kde4_add_app_icon(scalixadmin_SRCS "${KDE4_ICON_DIR}/oxygen/*/categories/preferences-system-network.png")
+
 kde4_add_executable(scalixadmin ${scalixadmin_SRCS})
 TARGET_LINK_LIBRARIES(scalixadmin ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KLDAP_LIBS} kdepim )
 set_target_properties(scalixadmin PROPERTIES OUTPUT_NAME scalixadmin)

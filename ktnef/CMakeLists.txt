@@ -18,6 +18,9 @@ set(ktnef_bin_SRCS
 
 kde4_add_ui_files(ktnef_bin_SRCS attachpropertydialogbase.ui )
 
+# todo: move to Oxygen icon
+kde4_add_app_icon(ktnef_bin_SRCS "pics/hi*-app-ktnef.png")
+
 kde4_add_executable(ktnef_bin ${ktnef_bin_SRCS})
 set_target_properties(ktnef_bin PROPERTIES OUTPUT_NAME ktnefviewer)
 

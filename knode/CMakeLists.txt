@@ -119,6 +119,9 @@ install(TARGETS knodepart  DESTINATION ${PLUGIN_INSTALL_DIR})
 set(knode_SRCS knode.cpp knapplication.cpp main.cpp )
 
 
+# todo: move to Oxygen icon
+kde4_add_app_icon(knode_SRCS "hi*-app-knode2.png")
+
 kde4_add_executable(knode ${knode_SRCS})
 
 kdepim4_link_unique_libraries(knode ${KDE4_KDECORE_LIBS} knodecommon )

@@ -17,7 +17,9 @@ include_directories( ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_SOURCE_DIR}/libkleo ${B
 if (USABLE_ASSUAN_FOUND)
    include_directories(${ASSUAN_INCLUDES})
 endif(USABLE_ASSUAN_FOUND)
-add_definitions ( -DQT_STL -DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS ${KDE4_ENABLE_EXCEPTIONS} -D_ASSUAN_ONLY_GPG_ERRORS -UQT_NO_STL )
+add_definitions ( -DQT_STL -DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS -D_ASSUAN_ONLY_GPG_ERRORS -UQT_NO_STL )
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 add_subdirectory( pics )
 add_subdirectory( conf )
@@ -178,6 +180,8 @@ endif ( KLEO_BUILD_OLD_MAINWINDOW )
 
 add_definitions ( -DKDE_DEFAULT_DEBUG_AREA=5151 )
 
+
+kde4_add_app_icon(_kleopatra_mainwindow_SRCS "ox*-app-kleopatra.png")
 kde4_add_executable(kleopatra_bin ${_kleopatra_common_SRCS} ${_kleopatra_mainwindow_SRCS} ${_kleopatra_uiserver_SRCS} )
 set_target_properties(kleopatra_bin  PROPERTIES OUTPUT_NAME kleopatra)
 
