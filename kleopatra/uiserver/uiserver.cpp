@@ -39,6 +39,8 @@
 #include <utils/exception.h>
 #include <utils/stl_util.h>
 
+#include <KLocalizedString>
+
 #include <QTcpSocket>
 #include <QDir>
 #include <QEventLoop>
@@ -202,7 +204,7 @@ void UiServer::Private::makeListeningSocket() {
         if ( isStaleAssuanSocket( fileName ) ) {
             QFile::remove( fileName );
         } else {
-            throw_<std::runtime_error>( tr( "Detected another running gnupg UI server listening at %1." ).arg( fileName ) );
+            throw_<std::runtime_error>( i18n( "Detected another running gnupg UI server listening at %1.", fileName ) );
         }
     }
 

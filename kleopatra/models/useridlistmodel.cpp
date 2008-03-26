@@ -38,6 +38,8 @@
 
 #include <gpgme++/key.h>
 
+#include <KLocalizedString>
+
 #include <QVariant>
 #include <QDate>
 
@@ -242,12 +244,12 @@ QVariant UserIDListModel::headerData( int section, Qt::Orientation o, int role )
     if ( o == Qt::Horizontal )
         if ( role == Qt::DisplayRole || role == Qt::EditRole || role == Qt::ToolTipRole )
             switch ( section ) {
-            case ID:          return tr( "ID" );
-	    case PrettyName:  return tr( "Signer Name" );
-	    case PrettyEMail: return tr( "Signer EMail" );
-            case ValidFrom:   return tr( "Valid From" );
-            case ValidUntil:  return tr( "Valid Until" );
-            case Status:      return tr( "Status" );
+            case ID:          return i18n( "ID" );
+	    case PrettyName:  return i18n( "Signer Name" );
+	    case PrettyEMail: return i18n( "Signer EMail" );
+            case ValidFrom:   return i18n( "Valid From" );
+            case ValidUntil:  return i18n( "Valid Until" );
+            case Status:      return i18n( "Status" );
             case NumColumns:       ;
             }
     return QVariant();
@@ -277,14 +279,14 @@ QVariant UserIDListModel::data( const QModelIndex & idx, int role ) const {
 	    return Formatting::validityShort( uid );
 #if 0
 	    if ( userID.isRevoked() )
-		return tr("revoked");
+		return i18n("revoked");
 	    if ( userID.isExpired() )
-		return tr("expired");
+		return i18n("expired");
 	    if ( userID.isDisabled() )
-		return tr("disabled");
+		return i18n("disabled");
 	    if ( userID.isInvalid() )
-		return tr("invalid");
-	    return tr("good");
+		return i18n("invalid");
+	    return i18n("good");
 #endif
 	}
 
@@ -312,14 +314,14 @@ QVariant UserIDListModel::data( const QModelIndex & idx, int role ) const {
 	    return Formatting::validityShort( signature );
 #if 0
 	    if ( userID.isRevoked() )
-		return tr("revoked");
+		return i18n("revoked");
 	    if ( userID.isExpired() )
-		return tr("expired");
+		return i18n("expired");
 	    if ( userID.isDisabled() )
-		return tr("disabled");
+		return i18n("disabled");
 	    if ( userID.isInvalid() )
-		return tr("invalid");
-	    return tr("good");
+		return i18n("invalid");
+	    return i18n("good");
 #endif
 	}
 
