@@ -105,13 +105,27 @@ namespace {
 
 #ifdef Q_OS_WIN
 
+QString formatError( LONG err )
+{
+    //TODO: fix encoding and language
+    char errMsg[1024];
+    FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, 
+                   0,
+                   err,
+                   0,
+                   errMsg, 
+                   sizeof errMsg,
+                   0 );
+   return QString::fromLocal8Bit( errMsg );
+}
+
 static void checkForInvalidRegistryEntries( QWidget* msgParent )
 {
     std::auto_ptr<const char> value( read_w32_registry_string( "HKEY_CURRENT_USER", "Software\\GNU\\GnuPG", "gpgProgram" ) );
     if ( !value.get() )
         return;
     if ( KMessageBox::questionYesNo( msgParent, 
-                                     i18n( "Kleopatra detected an obsolete registry key (\"HKCU\\GNU\\GnuPG\\gpgProgram\"),"
+                                     i18n( "Kleopatra detected an obsolete registry key (\"HKLM\\GNU\\GnuPG\\gpgProgram\"),"
                                            "added by either previous gpg4win versions or applications such as WinPT or EnigMail."
                                            "Keeping the entry might lead to problems during operations (old GnuPG backend being used)."
                                            "It is advised to delete the key." ),                         
@@ -120,11 +134,30 @@ static void checkForInvalidRegistryEntries( QWidget* msgParent )
                                      KStandardGuiItem::cancel(),
                                      "doNotWarnAboutRegistryEntriesAgain" ) != KMessageBox::Yes )
         return;
-    const LONG result = RegDeleteKey( HKEY_CURRENT_USER, "Software\\GNU\\GnuPG\\gpgProgram" );
-    if ( result == ERROR_SUCCESS )
+    
+    HKEY keyHandle;
+    const LONG openResult = RegOpenKeyEx( HKEY_CURRENT_USER, 
+                                          "Software\\GNU\\GnuPG",
+                                          0,
+                                          KEY_SET_VALUE,
+                                          &keyHandle );							  
+    if ( openResult != ERROR_SUCCESS )
+    {
+        KMessageBox::error( msgParent, 
+                            i18n( "Could not open key \"HKLM\\GNU\\GnuPG\\gpgProgram\" from the registry.\nError: \"%1\"", formatError( openResult ) ), 
+                            i18n( "Error Deleting Key" ) );
         return;
+    }
+    
+    const LONG deleteResult = RegDeleteValue( keyHandle, "gpgProgram" );
+    const LONG closeResult = RegCloseKey( keyHandle );
+    if ( closeResult != ERROR_SUCCESS )
+        qWarning() << "Could not close registry key \"HKLM\\GNU\\GnuPG\""; 
+    if ( deleteResult == ERROR_SUCCESS )
+        return;
+    
     KMessageBox::error( msgParent, 
-                        i18n( "Could not delete the key \"HKCU\\GNU\\GnuPG\\gpgProgram\" from the registry." ), 
+                        i18n( "Could not delete the key \"HKLM\\GNU\\GnuPG\\gpgProgram\" from the registry.\nError: \"%1\"", formatError( deleteResult ) ), 
                         i18n( "Error Deleting Key" ) );
 }
 #endif // Q_OS_WIN
