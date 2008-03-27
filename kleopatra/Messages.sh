@@ -1,3 +1,3 @@
 #! /bin/sh
-$EXTRACTRC conf/*.ui >> rc.cpp || exit 11
-$XGETTEXT conf/*.cpp *.cpp *.h -o $podir/kleopatra.pot
+$EXTRACTRC `find . -name \*.rc -o -name \*.ui -o -name \*.kcfg` >> rc.cpp || exit 11
+$XGETTEXT `find . -name \*.cc -o -name \*.cpp -o -name \*.h` -o $podir/kleopatra.pot
