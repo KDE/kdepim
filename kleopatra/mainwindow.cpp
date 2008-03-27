@@ -248,7 +248,8 @@ private:
             configure_backend->setText( i18n("Configure GnuPG Backend..." ) );
             connect( configure_backend, SIGNAL(triggered()), q, SLOT(configureBackend()) );
             q->actionCollection()->addAction( "configure_backend", configure_backend );
-
+            configure_backend->setMenuRole( QAction::NoRole ); //prevent Qt OS X heuristics for config* actions
+            
             KStandardAction::close( q, SLOT(close()), q->actionCollection() );
             KStandardAction::quit( q, SLOT(closeAndQuit()), q->actionCollection() );
             KStandardAction::keyBindings( q, SLOT(editKeybindings()), q->actionCollection() );
