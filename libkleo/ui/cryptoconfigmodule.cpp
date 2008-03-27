@@ -406,11 +406,11 @@ Kleo::CryptoConfigEntryPath::CryptoConfigEntryPath(
   QWidget * req;
 #ifdef ONLY_KLEO
   req = mFileNameRequester = new FileNameRequester( widget );
-  mFileNameRequester->setExistingOnly( true );
+  mFileNameRequester->setExistingOnly( false );
   mFileNameRequester->setFilter( QDir::Files );
 #else
   req = mUrlRequester = new KUrlRequester( widget );
-  mUrlRequester->setMode( KFile::File | KFile::ExistingOnly | KFile::LocalOnly );
+  mUrlRequester->setMode( KFile::File | KFile::LocalOnly );
 #endif
   QLabel *label = new QLabel( description(), widget );
   label->setBuddy( req );
