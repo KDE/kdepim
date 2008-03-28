@@ -429,11 +429,11 @@ void DeleteCertificatesCommand::Private::showErrorsAndFinish() {
         if ( cmsError )
             cmsErrorString = i18n( "CMS backend: %1", QString::fromLocal8Bit( cmsError.asString() ) );
 
-        const QString msg = i18n("<qt><p>An error occurred while trying to export "
+        const QString msg = i18n("<qt><p>An error occurred while trying to delete "
                                  "the certificate:</p>"
                                  "<p><b>%1</b></p></qt>",
                                  pgpError ? cmsError ? pgpErrorString + "</br>" + cmsErrorString : pgpErrorString : cmsErrorString );
-        KMessageBox::error( view(), msg, i18n("Certificate Export Failed") );
+        KMessageBox::error( view(), msg, i18n("Certificate Deletion Failed") );
     } else {
         std::vector<Key> keys = pgpKeys;
         keys.insert( keys.end(), cmsKeys.begin(), cmsKeys.end() );
