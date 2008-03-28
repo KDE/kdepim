@@ -418,6 +418,8 @@ void KeyCache::remove( const Key & key ) {
     if ( !fpr )
         return;
 
+    emit aboutToRemove( key );
+    
     {
         const std::pair<std::vector<Key>::iterator,std::vector<Key>::iterator> range
             = std::equal_range( d->by.fpr.begin(), d->by.fpr.end(), fpr,

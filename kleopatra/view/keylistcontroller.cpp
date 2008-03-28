@@ -91,6 +91,7 @@ public:
     void slotContextMenu( const QPoint & pos );
     void slotCommandFinished();
     void slotAddKey( const Key & key );
+    void slotAboutToRemoveKey( const Key & key );
     void slotProgress( const QString & what, int current, int total ) {
         emit q->progress( current, total );
         if ( !what.isEmpty() )
@@ -115,6 +116,9 @@ KeyListController::Private::Private( KeyListController * qq )
     // SecretKeyCache's content is a real subset of PublicKeyCache's:
     connect( PublicKeyCache::mutableInstance().get(), SIGNAL(added(GpgME::Key)),
              q, SLOT(slotAddKey(GpgME::Key)) );
+    connect( PublicKeyCache::mutableInstance().get(), SIGNAL(aboutToRemove(GpgME::Key)),
+             q, SLOT(slotAboutToRemoveKey(GpgME::Key)) );
+
 }
 
 KeyListController::Private::~Private() {}
@@ -135,6 +139,15 @@ void KeyListController::Private::slotAddKey( const Key & key ) {
         flatModel->addKey( key );
     if ( hierarchicalModel )
         hierarchicalModel->addKey( key );
+}
+
+
+void KeyListController::Private::slotAboutToRemoveKey( const Key & key ) {
+    // ### make model act on keycache directly...
+    if ( flatModel )
+        flatModel->removeKey( key );
+    if ( hierarchicalModel )
+        hierarchicalModel->removeKey( key );
 }
 
 void KeyListController::addView( QAbstractItemView * view ) {

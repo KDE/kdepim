@@ -83,6 +83,7 @@ namespace Kleo {
         Q_PRIVATE_SLOT( d, void slotContextMenu(QPoint) )
         Q_PRIVATE_SLOT( d, void slotCommandFinished() )
         Q_PRIVATE_SLOT( d, void slotAddKey(GpgME::Key) )
+        Q_PRIVATE_SLOT( d, void slotAboutToRemoveKey(GpgME::Key) )
         Q_PRIVATE_SLOT( d, void slotProgress(QString,int,int) )
     };
 
