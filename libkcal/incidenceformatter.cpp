@@ -1354,6 +1354,12 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
         break;
 
     case Scheduler::Counter:
+        html += helper->makeLink( "accept_counter", i18n("[Accept]") );
+        html += "&nbsp;";
+        html += helper->makeLink( "decline_counter", i18n("[Decline]") );
+        html += "&nbsp;";
+        html += helper->makeLink( "check_calendar", i18n("[Check my calendar]" ) );
+        break;
     case Scheduler::Declinecounter:
     case Scheduler::NoMethod:
         break;
