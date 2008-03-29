@@ -1,3 +1,16 @@
+Saturday, March 29st 2008
+
+Problems addressed
+------------------
+* kolab/issue2231 - Edit event: After adding and removing an mail address, an update mail is send to the address.
+* kolab/issue2217 - "open" button/funcationality in full search window missing (Z37)
+* kolab/issue2566 - Translation Error: German key
+* kolab/issue2565 - appointment dialog text quirks
+* kolab/issue2148 - counterproposal event should be inserted into the calender
+* kolab/issue2147 - There should exist two kind of counter proposals
+* kolab/issue2149 - A counterproposal should be displayed in a way, that the organizer understands.
+
+
 Friday, March 21st 2008
 
 Problems addressed
