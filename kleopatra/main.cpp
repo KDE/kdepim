@@ -90,6 +90,8 @@ namespace Kleo {
 #include <boost/shared_ptr.hpp>
 
 #ifdef Q_OS_WIN
+#include <QSettings>
+
 #include <windows.h>
 #endif
 
@@ -104,60 +106,31 @@ namespace {
 }
 
 #ifdef Q_OS_WIN
-
-QString formatError( LONG err )
-{
-    //TODO: fix encoding and language
-    char errMsg[1024];
-    FormatMessage( FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, 
-                   0,
-                   err,
-                   0,
-                   errMsg, 
-                   sizeof errMsg,
-                   0 );
-   return QString::fromLocal8Bit( errMsg );
-}
+static const char gnupg_key[] = "HKEY_CURRENT_USER\\Software\\GNU\\GnuPG";
+static const char gnupg_subkey[] = "gpgProgram";
 
 static void checkForInvalidRegistryEntries( QWidget* msgParent )
 {
-    std::auto_ptr<const char> value( read_w32_registry_string( "HKEY_CURRENT_USER", "Software\\GNU\\GnuPG", "gpgProgram" ) );
-    if ( !value.get() )
-        return;
+    QSettings settings( gnupg_key, QSettings::NativeFormat );
+    if ( !settings.contains( gnupg_subkey ) )
+      return;
     if ( KMessageBox::questionYesNo( msgParent, 
-                                     i18n( "Kleopatra detected an obsolete registry key (\"HKLM\\GNU\\GnuPG\\gpgProgram\"),"
-                                           "added by either previous gpg4win versions or applications such as WinPT or EnigMail."
-                                           "Keeping the entry might lead to problems during operations (old GnuPG backend being used)."
-                                           "It is advised to delete the key." ),                         
+                                     i18nc( "@info", "Kleopatra detected an obsolete registry key (<resource>%1\\%2</resource>), "
+                                           "added by either by previous gpg4win versions or applications such as WinPT or EnigMail."
+                                           "Keeping the entry might lead to problems during operations (old GnuPG backend being used). "
+                                           "It is advised to delete the key.", gnupg_key, gnupg_subkey ),
                                      i18n( "Old Registry Entries Detected" ), 
                                      KGuiItem( i18n( "Delete Registry Key" ) ),
                                      KStandardGuiItem::cancel(),
                                      "doNotWarnAboutRegistryEntriesAgain" ) != KMessageBox::Yes )
         return;
     
-    HKEY keyHandle;
-    const LONG openResult = RegOpenKeyEx( HKEY_CURRENT_USER, 
-                                          "Software\\GNU\\GnuPG",
-                                          0,
-                                          KEY_SET_VALUE,
-                                          &keyHandle );							  
-    if ( openResult != ERROR_SUCCESS )
-    {
-        KMessageBox::error( msgParent, 
-                            i18n( "Could not open key \"HKLM\\GNU\\GnuPG\\gpgProgram\" from the registry.\nError: \"%1\"", formatError( openResult ) ), 
-                            i18n( "Error Deleting Key" ) );
-        return;
-    }
-    
-    const LONG deleteResult = RegDeleteValue( keyHandle, "gpgProgram" );
-    const LONG closeResult = RegCloseKey( keyHandle );
-    if ( closeResult != ERROR_SUCCESS )
-        qWarning() << "Could not close registry key \"HKLM\\GNU\\GnuPG\""; 
-    if ( deleteResult == ERROR_SUCCESS )
-        return;
-    
+    settings.remove( gnupg_subkey );
+    settings.sync();
+    if ( settings.status() == QSettings::NoError )
+      return;
     KMessageBox::error( msgParent, 
-                        i18n( "Could not delete the key \"HKLM\\GNU\\GnuPG\\gpgProgram\" from the registry.\nError: \"%1\"", formatError( deleteResult ) ), 
+                        i18nc( "@info", "Could not delete the key <resource>%1\\%2</resource> from the registry.", gnupg_key, gnupg_subkey ), 
                         i18n( "Error Deleting Key" ) );
 }
 #endif // Q_OS_WIN
