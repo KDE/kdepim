@@ -44,8 +44,6 @@ macro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
 endmacro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
 
 find_package(KdepimLibs REQUIRED)
-macro_optional_find_package(Akonadi)
-macro_log_feature(AKONADI_FOUND "akonadi" "Akonadi client libraries (from kdepimlibs)" "http://pim.kde.org/akonadi" FALSE "" "Needed by various stuff")
 find_package(Boost REQUIRED)
 macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org/" TRUE "" "Required by Akonadi and kleopatra")
 
