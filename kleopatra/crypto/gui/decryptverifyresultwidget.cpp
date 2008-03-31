@@ -149,7 +149,7 @@ QString DecryptVerifyResultWidget::formatDecryptionResult( const DecryptionResul
     html += "<br/>";
 
     if ( recipients.empty() )
-        return html + "<i>" + i18np( "One unknown recipient.", "%n unknown recipients.", res.numRecipients() ) + "</i>";
+        return html + "<i>" + i18np( "One unknown recipient.", "%1 unknown recipients.", res.numRecipients() ) + "</i>";
 
     html += i18np( "Recipients:", "Recipients:", res.numRecipients() );
     if ( res.numRecipients() == 1 )
@@ -159,7 +159,7 @@ QString DecryptVerifyResultWidget::formatDecryptionResult( const DecryptionResul
     Q_FOREACH( const Key & key, recipients )
         html += "<li>" + renderKey( key ) + "</li>";
     if ( recipients.size() < res.numRecipients() )
-        html += "<li><i>" + i18np( "One unknown recipient", "%n unknown recipients",
+        html += "<li><i>" + i18np( "One unknown recipient", "%1 unknown recipients",
                                    res.numRecipients() - recipients.size() ) + "</i></li>";
 
     return html + "</ul>";
