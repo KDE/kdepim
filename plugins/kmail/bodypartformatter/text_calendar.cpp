@@ -557,7 +557,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         if ( !comment.isEmpty() )
           incidence->addComment( comment );
       }
-      return mail( incidence, callback, Attendee::NeedsAction, Scheduler::Declinecounter, QString::null, DeclineCounter );
+      return mail( incidence, callback, Attendee::NeedsAction, Scheduler::Declinecounter,
+                   callback.sender(), DeclineCounter );
     }
 
     bool counterProposal( const QString &iCal, KMail::Callback &callback ) const
