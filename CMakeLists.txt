@@ -84,9 +84,6 @@ else ( ONLY_KLEO )
   macro_bool_to_01(GNOKII_FOUND HAVE_GNOKII_H)
   macro_log_feature(GNOKII_FOUND "gnokii" "Gnokii Development Libraries" "http://www.gnokii.org" FALSE "" "Needed to provide the ability to import and export KDE addressbook entries to/from mobile phones that are accessible via gnokii")
 
-  macro_optional_find_package(MySQL)
-  macro_log_feature(MYSQL_EMBEDDED_FOUND "mysql-embedded" "MySQL/Embedded Library" "http://www.mysql.org" FALSE "" "Needed for the MySQL/Embedded Akonadi backend. Sqlite will be used instead.")
-
   macro_optional_find_package(Nepomuk)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "Nepomuk" "http://www.kde.org" FALSE "" "For adding desktop-wide tagging support to kmail")
 
