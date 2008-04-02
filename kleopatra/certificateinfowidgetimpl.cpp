@@ -382,7 +382,11 @@ void CertificateInfoWidgetImpl::slotShowCertPathDetails( QTreeWidgetItem * item 
 
   // skip pseudo root item with "not found message":
   if ( totalCount == mChain.size() + 1 )
+  {
+    if ( itemIndex == 0 ) // ignore pseudo 
+        return;
     --itemIndex;
+  }
 
   assert( itemIndex >= 0 );
 
