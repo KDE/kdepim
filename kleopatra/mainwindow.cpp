@@ -128,7 +128,7 @@ namespace {
 KGuiItem KStandardGuiItem_quit() {
     static const QString app = KGlobal::mainComponent().aboutData()->programName();
     KGuiItem item = KStandardGuiItem::quit();
-    item.setText( i18n( "&Quit %1", app ) );
+    item.setText( i18nc( "Quit [ApplicationName]", "&Quit %1", app ) );
     return item;
 }
 
@@ -470,7 +470,7 @@ void MainWindow::Private::checkConfiguration()
                                        "Error code: %1\n"
                                        "Diagnostics:", process.exitCode() ) + '\n' + output
                                : i18n( "The GnuPG configuration self-check failed with error code %1.\n"
-                                       "No output was received." ) );
+                                       "No output was received.", process.exitCode() ) );
     else
         textEdit.setPlainText( !output.trimmed().isEmpty()
                                ? i18n( "The GnuPG configuration self-check succeeded.\n"

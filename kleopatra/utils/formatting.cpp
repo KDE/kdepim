@@ -294,10 +294,10 @@ QDate Formatting::creationDate( const UserID::Signature & sig ) {
 
 QString Formatting::type( const Key & key ) {
     if ( key.protocol() == CMS )
-        return i18n("X.509");
+        return i18nc("X.509/CMS encryption standard", "X.509");
     if ( key.protocol() == OpenPGP )
         return i18n("OpenPGP");
-    return i18n("Unknown");
+    return i18nc("Unknown encryption protocol", "Unknown");
 }
 
 QString Formatting::type( const Subkey & subkey ) {
@@ -317,7 +317,7 @@ QString Formatting::validityShort( const Subkey & subkey ) {
 	return i18n("disabled");
     if ( subkey.isInvalid() )
 	return i18n("invalid");
-    return i18n("good");
+    return i18nc("as in good/valid signature", "good");
 }
 
 QString Formatting::validityShort( const UserID & uid ) {
@@ -326,12 +326,12 @@ QString Formatting::validityShort( const UserID & uid ) {
     if ( uid.isInvalid() )
 	return i18n("invalid");
     switch ( uid.validity() ) {
-    case UserID::Unknown:   return i18n("unknown");
-    case UserID::Undefined: return i18n("undefined");
+    case UserID::Unknown:   return i18nc("unknown trust level", "unknown");
+    case UserID::Undefined: return i18nc("undefined trust", "undefined");
     case UserID::Never:     return i18n("untrusted");
-    case UserID::Marginal:  return i18n("marginal");
-    case UserID::Full:      return i18n("full");
-    case UserID::Ultimate:  return i18n("ultimate");
+    case UserID::Marginal:  return i18nc("marginal trust", "marginal");
+    case UserID::Full:      return i18nc("full trust", "full");
+    case UserID::Ultimate:  return i18nc("ultimate trust", "ultimate");
     }
     return QString();
 }
@@ -341,15 +341,15 @@ QString Formatting::validityShort( const UserID::Signature & sig ) {
     case UserID::Signature::NoError:
 	if ( !sig.isInvalid() )
 	    if ( sig.certClass() > 0 )
-		return i18n("class %d", sig.certClass() );
+		return i18n("class %1", sig.certClass() );
 	    else
-		return i18n("good");
+		return i18nc("good/valid signature", "good");
 	// fall through:
     case UserID::Signature::GeneralError:
 	return i18n("invalid");
     case UserID::Signature::SigExpired:   return i18n("expired");
     case UserID::Signature::KeyExpired:   return i18n("key expired");
-    case UserID::Signature::BadSignature: return i18n("bad");
+    case UserID::Signature::BadSignature: return i18nc("fake/invalid signature", "bad");
     case UserID::Signature::NoPublicKey:  return QString();
     }
     return QString();

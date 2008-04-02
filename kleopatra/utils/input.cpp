@@ -164,7 +164,7 @@ FileInput::FileInput( const shared_ptr<QFile> & file )
     errno = 0;
     if ( file->isOpen() && !file->isReadable() )
         throw Exception( gpg_error( GPG_ERR_INV_ARG ),
-                                i18n( "File \"%1\" is already open, but not for reading" ) );
+                                i18n( "File \"%1\" is already open, but not for reading", file->fileName() ) );
     if ( !file->isOpen() && !file->open( QIODevice::ReadOnly ) )
         throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
                          i18n( "Couldn't open file \"%1\" for reading", m_fileName ) );
