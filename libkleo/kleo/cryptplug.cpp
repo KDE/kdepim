@@ -47,13 +47,6 @@
     \see cryptplug.h
 */
 
-// not defined on win32 :(
-#ifdef _WIN32
-# ifndef LC_MESSAGES
-#  define LC_MESSAGES 42
-# endif
-#endif
-
 #include <QString>
 //Added by qt3to4:
 #include <QByteArray>
@@ -276,7 +269,11 @@ CryptPlug::~CryptPlug() {
 
 bool CryptPlug::initialize() {
   GpgME::setDefaultLocale( LC_CTYPE, setlocale( LC_CTYPE, 0 ) );
+#ifdef Q_WS_WIN
+  // on Windows the following assertion is set for setlocale(): LC_MIN <= category && category <= LC_MAX; LC_MESSAGES is not available
+#else
   GpgME::setDefaultLocale( LC_MESSAGES, setlocale( LC_MESSAGES, 0 ) );
+#endif
   return (gpgme_engine_check_version (GPGMEPLUG_PROTOCOL) == GPG_ERR_NO_ERROR);
 }
 
