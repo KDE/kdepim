@@ -154,6 +154,11 @@ set( _kleopatra_common_SRCS
   certificateinfowidgetimpl.cpp
   main.cpp )
 
+if ( KLEO_MODEL_TEST )
+ add_definitions( -DKLEO_MODEL_TEST )
+ set( _kleopatra_common_SRCS ${_kleopatra_common_SRCS} models/modeltest.cpp )
+endif ( KLEO_MODEL_TEST )
+
 kde4_add_ui_files( _kleopatra_common_SRCS certificateinfowidget.ui certificatewizard.ui dialogs/expirydialog.ui )
 
 if (ONLY_KLEO)

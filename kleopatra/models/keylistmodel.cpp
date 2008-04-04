@@ -34,6 +34,10 @@
 
 #include "keylistmodel.h"
 
+#ifdef KLEO_MODEL_TEST
+# include "modeltest.h"
+#endif
+
 #include <utils/formatting.h>
 
 #include <kleo/keyfiltermanager.h>
@@ -739,12 +743,20 @@ void HierarchicalKeyListModel::doRemoveKey( const Key & key ) {
 
 // static
 AbstractKeyListModel * AbstractKeyListModel::createFlatKeyListModel( QObject * p ) {
-    return new FlatKeyListModel( p );
+    AbstractKeyListModel * const m = new FlatKeyListModel( p );
+#ifdef KLEO_MODEL_TEST
+    new ModelTest( m, p );
+#endif
+    return m;
 }
 
 // static
 AbstractKeyListModel * AbstractKeyListModel::createHierarchicalKeyListModel( QObject * p ) {
-    return new HierarchicalKeyListModel( p );
+    AbstractKeyListModel * const m = new HierarchicalKeyListModel( p );
+#ifdef KLEO_MODEL_TEST
+    new ModelTest( m, p );
+#endif
+    return m;
 }
 
 #include "moc_keylistmodel.cpp"

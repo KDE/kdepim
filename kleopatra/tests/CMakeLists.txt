@@ -4,6 +4,9 @@ include_directories( ${CMAKE_SOURCE_DIR}/kleopatra ${CMAKE_BINARY_DIR}/kleopatra
 ########### next target ###############
 
 set(test_keylistmodels_SRCS test_keylistmodels.cpp ../models/keylistmodel.cpp ../models/keylistsortfilterproxymodel.cpp ../utils/formatting.cpp )
+if ( KLEO_MODEL_TEST )
+   set(test_keylistmodels_SRCS ${test_keylistmodels_SRCS} ../models/modeltest.cpp )
+endif ( KLEO_MODEL_TEST )
 
 kde4_add_executable(test_keylistmodels TEST ${test_keylistmodels_SRCS})
 
