@@ -1,3 +1,16 @@
+Friday, April 4th 2008
+
+Problems addressed
+--------------------
+
+* kolab/issue2577 An invitation to a recurring event should give information about the recurrance. (792202)
+* kolab/issue2581 The reject counter proposal mail is send to a wrong account.(792230)
+* kolab/issue2580 A user cancels a counterpropsal and the invitation mail is gone. (792231)
+* kolab/issue2582 After pressing "decline" in the counter proposal dialog and sending the counter proposal the event can be found in the calendar. (792950)
+* kolab/issue2578 After deletion of an event the organizer gets a mail, that some attendee accepted the event. (792957)
+
+
+
 Saturday, March 29st 2008
 
 Problems addressed
