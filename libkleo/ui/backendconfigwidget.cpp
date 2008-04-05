@@ -256,6 +256,7 @@ void Kleo::BackendConfigWidget::load() {
       break;
 
     top = new Kleo::BackendListViewItem( d->listView, top, b );
+    ProtocolCheckListItem *last = 0;
     for ( int i = 0 ;; ++i ) {
       const char * name = b->enumerateProtocols( i );
       if ( !name )
@@ -263,10 +264,10 @@ void Kleo::BackendConfigWidget::load() {
 
       const CryptoBackend::Protocol * protocol = b->protocol( name );
       if ( protocol ) {
-        ProtocolCheckListItem *last = new ProtocolCheckListItem( top, last, name, protocol );
+        last = new ProtocolCheckListItem( top, last, name, protocol );
         last->setOn( protocol == d->backendFactory->protocol( name ) );
       } else if ( b->supportsProtocol( name ) ) {
-        ProtocolCheckListItem *last = new ProtocolCheckListItem( top, last, name, 0 );
+        last = new ProtocolCheckListItem( top, last, name, 0 );
         last->setOn( false );
         last->setEnabled( false );
       }
