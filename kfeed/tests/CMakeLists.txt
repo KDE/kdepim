@@ -8,7 +8,7 @@ set(testxmlitemserializer_SRCS testxmlitemserializer.cpp )
 
 kde4_add_unit_test(testxmlitemserializer TESTNAME kfeed-testxmlitemserializer  ${testxmlitemserializer_SRCS})
 
-target_link_libraries(testxmlitemserializer kfeed ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY} )
+target_link_libraries(testxmlitemserializer kfeed ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} )
 
 ########### next target ###############
 
