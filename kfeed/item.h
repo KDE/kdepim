@@ -25,7 +25,7 @@
 
 #include "kfeed_export.h"
 
-#include <QSharedDataPointer>
+#include <QtCore/QSharedDataPointer>
 
 class KDateTime;
 
