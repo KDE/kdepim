@@ -20,7 +20,7 @@
  *
  */
 
-#include "serializer.h"
+#include "itemserializer.h"
 #include "category.h"
 #include "enclosure.h"
 #include "item.h"
@@ -370,9 +370,9 @@ void readCustomProperty( KFeed::Item& item, QXmlStreamReader& reader )
 
 } // namespace
 
-KFeed::Serializer::~Serializer() {}
+KFeed::ItemSerializer::~ItemSerializer() {}
 
-void KFeed::XmlSerializerImpl::serialize( const KFeed::Item& item, QByteArray& array ) const 
+void KFeed::XmlItemSerializerImpl::serialize( const KFeed::Item& item, QByteArray& array ) const 
 {
     QXmlStreamWriter writer( &array );
     writer.writeStartDocument();
@@ -380,7 +380,7 @@ void KFeed::XmlSerializerImpl::serialize( const KFeed::Item& item, QByteArray& a
     writer.writeEndDocument();
 }
 
-bool KFeed::XmlSerializerImpl::deserialize( KFeed::Item& item, const QByteArray& array ) const
+bool KFeed::XmlItemSerializerImpl::deserialize( KFeed::Item& item, const QByteArray& array ) const
 {
     QXmlStreamReader reader( array );
     reader.setNamespaceProcessing( true );

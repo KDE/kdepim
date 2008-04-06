@@ -3,12 +3,12 @@ include_directories( ${CMAKE_SOURCE_DIR}/kfeed )
 
 ########### next target ###############
 
-set(testxmlserializer_SRCS testxmlserializer.cpp )
+set(testxmlitemserializer_SRCS testxmlitemserializer.cpp )
 
 
-kde4_add_unit_test(testxmlserializer TESTNAME kfeed-testxmlserializer  ${testxmlserializer_SRCS})
+kde4_add_unit_test(testxmlitemserializer TESTNAME kfeed-testxmlitemserializer  ${testxmlitemserializer_SRCS})
 
-target_link_libraries(testxmlserializer kfeed ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY} )
+target_link_libraries(testxmlitemserializer kfeed ${KDE4_KDECORE_LIBS} ${QT_QTTEST_LIBRARY} ${QT_QTGUI_LIBRARY} )
 
 ########### next target ###############
 

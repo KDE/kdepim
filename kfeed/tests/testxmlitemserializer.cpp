@@ -20,13 +20,13 @@
  *
  */
 
-#include "testxmlserializer.h"
+#include "testxmlitemserializer.h"
 
 #include "enclosure.h"
 #include "person.h"
 #include "category.h"
 #include "item.h"
-#include "serializer.h"
+#include "itemserializer.h"
 
 #include <KDateTime>
 
@@ -40,7 +40,7 @@ namespace {
 
 void printItem( const KFeed::Item& item )
 {
-    const KFeed::XmlSerializerImpl serializer;
+    const KFeed::XmlItemSerializerImpl serializer;
     QByteArray ba;
     serializer.serialize( item, ba );
     qDebug() << ba;
@@ -48,7 +48,7 @@ void printItem( const KFeed::Item& item )
 
 void testItem( const KFeed::Item& item )
 {
-    const KFeed::XmlSerializerImpl serializer;
+    const KFeed::XmlItemSerializerImpl serializer;
     QByteArray ba;
     serializer.serialize( item, ba );
     KFeed::Item deserialized;
@@ -64,12 +64,12 @@ void testItem( const KFeed::Item& item )
 
 }
 
-void TestXmlSerializer::testEmptyItem()
+void TestXmlItemSerializer::testEmptyItem()
 {
     ::testItem( KFeed::Item() );
 }
 
-void TestXmlSerializer::testDates()
+void TestXmlItemSerializer::testDates()
 {
     KFeed::Item item;
     const KDateTime updated = KDateTime::currentLocalDateTime();
@@ -79,7 +79,7 @@ void TestXmlSerializer::testDates()
     ::testItem( item );
 }
 
-void TestXmlSerializer::testSimpleItems()
+void TestXmlItemSerializer::testSimpleItems()
 {
     KFeed::Item item;
     item.setTitle( "Some title" );
@@ -95,7 +95,7 @@ void TestXmlSerializer::testSimpleItems()
     ::testItem( item );
 }
 
-void TestXmlSerializer::testStatus()
+void TestXmlItemSerializer::testStatus()
 {
     KFeed::Item item;
     item.setStatus( KFeed::Read );
@@ -110,7 +110,7 @@ void TestXmlSerializer::testStatus()
     ::testItem( item );
 }
 
-void TestXmlSerializer::testCustomProperties()
+void TestXmlItemSerializer::testCustomProperties()
 {
     KFeed::Item item;
     item.setId( "http://uniqueid" );
@@ -123,7 +123,7 @@ void TestXmlSerializer::testCustomProperties()
     ::testItem( item );
 }
 
-void TestXmlSerializer::testEnclosures()
+void TestXmlItemSerializer::testEnclosures()
 {
     KFeed::Item item;
     item.setLink( "http://akregator.kde.org" );
@@ -141,7 +141,7 @@ void TestXmlSerializer::testEnclosures()
     ::testItem( item );
 }
 
-void TestXmlSerializer::testCategories()
+void TestXmlItemSerializer::testCategories()
 {
     KFeed::Category cat;
     cat.setTerm( "term1" );
@@ -159,7 +159,7 @@ void TestXmlSerializer::testCategories()
     ::testItem( item );
 }
 
-void TestXmlSerializer::testAuthors()
+void TestXmlItemSerializer::testAuthors()
 {
     KFeed::Person a1;
     a1.setName( "John Doe" );
@@ -177,7 +177,7 @@ void TestXmlSerializer::testAuthors()
     ::testItem( item );
 }
 
-void TestXmlSerializer::testComments()
+void TestXmlItemSerializer::testComments()
 {
     KFeed::Item item;
     item.setCommentsCount( 10 );
@@ -188,6 +188,6 @@ void TestXmlSerializer::testComments()
 }
 
 
-QTEST_KDEMAIN( TestXmlSerializer, NoGUI )
+QTEST_KDEMAIN( TestXmlItemSerializer, NoGUI )
 
-#include "testxmlserializer.moc"
+#include "testxmlitemserializer.moc"

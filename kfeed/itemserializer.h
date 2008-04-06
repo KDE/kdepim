@@ -20,23 +20,33 @@
  *
  */
 
-#ifndef TESTXMLSERIALIZER_H
-#define TESTXMLSERIALIZER_H
+#ifndef KFEED_ITEMSERIALIZER_H
+#define KFEED_ITEMSERIALIZER_H
 
-#include <QObject>
+#include "kfeed_export.h"
 
-class TestXmlSerializer : public QObject {
-    Q_OBJECT
-private Q_SLOTS:
-    void testEmptyItem();
-    void testSimpleItems();
-    void testEnclosures();
-    void testCategories();
-    void testAuthors();
-    void testComments();
-    void testDates();
-    void testStatus();
-    void testCustomProperties();
+class QByteArray;
+
+namespace KFeed
+{
+
+class Item;
+
+class KFEED_EXPORT ItemSerializer
+{
+public:
+    virtual ~ItemSerializer();
+    virtual void serialize( const KFeed::Item& item, QByteArray& array ) const = 0;
+    virtual bool deserialize( KFeed::Item& item, const QByteArray& array ) const = 0;
 };
 
-#endif // TESTXMLSERIALIZER_H
+class KFEED_EXPORT XmlItemSerializerImpl : public ItemSerializer
+{
+public:
+    void serialize( const KFeed::Item& item, QByteArray& array ) const;
+    bool deserialize( KFeed::Item& item, const QByteArray& array ) const;
+};
+
+}
+
+#endif // KFEED_ITEMSERIALIZER_H
