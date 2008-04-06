@@ -25,11 +25,12 @@
 
 #include "kfeed_export.h"
 
+#include <QSharedDataPointer>
+
 class KDateTime;
 
 template <class T> class QList;
 template <class K, class T> class QHash;
-class QString;
 class QString;
 
 namespace KFeed {
@@ -46,8 +47,6 @@ enum StatusFlags {
     Important
 };
 
-class ItemPrivate;
-
 class KFEED_EXPORT Item
 {
 public:
@@ -55,6 +54,7 @@ public:
     Item( const Item& other );
     ~Item();
 
+    void swap( Item& other );
     Item& operator=( const Item& other );
     bool operator==( const Item& other ) const;
     bool operator!=( const Item& other ) const;
@@ -227,7 +227,8 @@ public:
     void setCustomProperty( const QString& key, const QString& value );
 
 private:
-    ItemPrivate* const d;
+    class Private;
+    QSharedDataPointer<Private> d;
 };
 
 } // namespace KFeedService

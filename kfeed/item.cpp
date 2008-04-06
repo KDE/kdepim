@@ -33,19 +33,24 @@
 #include <QList>
 #include <QString>
 
-class KFeed::ItemPrivate
+#include <algorithm>
+
+using namespace KFeed;
+
+class Item::Private : public QSharedData
 {
 public:
-    ItemPrivate() : status( Read ), hash( 0 ), idIsHash( false ), commentsCount( -1 ), feedId( -1 )
+    Private() : status( Read ), hash( 0 ), idIsHash( false ), commentsCount( -1 ), feedId( -1 )
     {}
 
-
-    bool operator!=( const ItemPrivate& other ) const
+    Private( const Private& other );
+    
+    bool operator!=( const Private& other ) const
     {
         return !( *this == other );
     }
 
-    bool operator==( const ItemPrivate& other ) const
+    bool operator==( const Private& other ) const
     {
         return status == other.status 
             && hash == other.hash 
@@ -67,6 +72,7 @@ public:
             && customProperties == other.customProperties
             && feedId == other.feedId;
     }
+    
     int status;
     int hash;
     bool idIsHash;
@@ -77,9 +83,9 @@ public:
     QString content;
     KDateTime datePublished;
     KDateTime dateUpdated;
-    QList<KFeed::Person> authors;
-    QList<KFeed::Enclosure> enclosures;
-    QList<KFeed::Category> categories;
+    QList<Person> authors;
+    QList<Enclosure> enclosures;
+    QList<Category> categories;
     QString language;
     int commentsCount;
     QString commentsLink;
@@ -89,238 +95,266 @@ public:
     int feedId;
 };
 
-KFeed::Item::Item() : d( new ItemPrivate )
+Item::Private::Private( const Private& other )
+    : QSharedData( other ),
+    status( other.status ),
+    hash( other.hash ),
+    idIsHash( other.idIsHash ),
+    id( other.id ),
+    title( other.title ),
+    link( other.link ),
+    description( other.description ),
+    content( other.content ),
+    datePublished( other.datePublished ),
+    dateUpdated( other.dateUpdated ),
+    authors( other.authors ),
+    enclosures( other.enclosures ),
+    categories( other.categories ),
+    language( other.language ),
+    commentsCount( other.commentsCount ),
+    commentsLink( other.commentsLink ),
+    commentPostUri( other.commentPostUri ),
+    customProperties( other.customProperties ),
+    feedId( other.feedId )
 {
 }
 
-KFeed::Item::~Item()
+Item::Item() : d( new Private )
 {
-    delete d;
 }
 
-KFeed::Item& KFeed::Item::operator=( const Item& other )
+Item::~Item()
 {
-    *d = *(other.d);
+}
+
+void Item::swap( Item& other )
+{
+    std::swap( d, other.d );
+}
+
+Item& Item::operator=( const Item& other )
+{
+    Item copy( other );
+    swap( copy );
     return *this;
 }
 
-bool KFeed::Item::operator==( const Item& other ) const
+bool Item::operator==( const Item& other ) const
 {
     return *d == *(other.d);
 }
 
-bool KFeed::Item::operator!=( const Item& other ) const
+bool Item::operator!=( const Item& other ) const
 {
     return *d != *(other.d);
 }
 
-KFeed::Item::Item( const Item& other ) : d( new ItemPrivate )
+Item::Item( const Item& other ) : d( other.d )
 {
-    *d = *(other.d);
 }
 
-QString KFeed::Item::title() const
+QString Item::title() const
 {
     return d->title;
 }
 
-void KFeed::Item::setTitle( const QString& title ) 
+void Item::setTitle( const QString& title ) 
 {
     d->title = title;
 }
 
-QString KFeed::Item::description() const
+QString Item::description() const
 {
     return d->description;
 }
 
-void KFeed::Item::setDescription( const QString& description ) 
+void Item::setDescription( const QString& description ) 
 {
     d->description = description;
 }
 
-QString KFeed::Item::link() const
+QString Item::link() const
 {
     return d->link;
 }
 
-void KFeed::Item::setLink( const QString& link ) 
+void Item::setLink( const QString& link ) 
 {
     d->link = link;
 }
 
-QString KFeed::Item::content() const
+QString Item::content() const
 {
     return d->content.isNull() ? d->description : d->content;
 }
 
-void KFeed::Item::setContent( const QString& content ) 
+void Item::setContent( const QString& content ) 
 {
     d->content = content;
 }
 
-KDateTime KFeed::Item::datePublished() const
+KDateTime Item::datePublished() const
 {
     return d->datePublished;
 }
 
-void KFeed::Item::setDatePublished( const KDateTime& datePublished ) 
+void Item::setDatePublished( const KDateTime& datePublished ) 
 {
     d->datePublished = datePublished;
 }
 
-KDateTime KFeed::Item::dateUpdated() const
+KDateTime Item::dateUpdated() const
 {
     return d->dateUpdated.isValid() ? d->dateUpdated : d->datePublished;
 }
 
-void KFeed::Item::setDateUpdated( const KDateTime& dateUpdated ) 
+void Item::setDateUpdated( const KDateTime& dateUpdated ) 
 {
     d->dateUpdated = dateUpdated;
 }
 
-QString KFeed::Item::id() const
+QString Item::id() const
 {
     return d->id;
 }
 
-void KFeed::Item::setId( const QString& id ) 
+void Item::setId( const QString& id ) 
 {
     d->id = id;
 }
 
-QList<KFeed::Person> KFeed::Item::authors() const
+QList<Person> Item::authors() const
 {
     return d->authors;
 }
 
-void KFeed::Item::setAuthors( const QList<KFeed::Person>& authors ) 
+void Item::setAuthors( const QList<Person>& authors ) 
 {
     d->authors = authors;
 }
 
-QList<KFeed::Category> KFeed::Item::categories() const
+QList<Category> Item::categories() const
 {
     return d->categories;
 }
 
-void KFeed::Item::setCategories( const QList<KFeed::Category>& categories ) 
+void Item::setCategories( const QList<Category>& categories ) 
 {
     d->categories = categories;
 }
 
-QList<KFeed::Enclosure> KFeed::Item::enclosures() const
+QList<Enclosure> Item::enclosures() const
 {
     return d->enclosures;
 }
 
-void KFeed::Item::setEnclosures( const QList<KFeed::Enclosure>& enclosures ) 
+void Item::setEnclosures( const QList<Enclosure>& enclosures ) 
 {
     d->enclosures = enclosures;
 }
 
-QString KFeed::Item::language() const
+QString Item::language() const
 {
     return d->language;
 }
 
-void KFeed::Item::setLanguage( const QString& language )
+void Item::setLanguage( const QString& language )
 {
     d->language = language;
 }
 
-int KFeed::Item::commentsCount() const
+int Item::commentsCount() const
 {
     return d->commentsCount;
 }
 
-void KFeed::Item::setCommentsCount( int commentsCount )
+void Item::setCommentsCount( int commentsCount )
 {
     d->commentsCount = commentsCount;
 }
 
-QString KFeed::Item::commentsLink() const
+QString Item::commentsLink() const
 {
     return d->commentsLink;
 }
 
-void KFeed::Item::setCommentsLink( const QString& commentsLink )
+void Item::setCommentsLink( const QString& commentsLink )
 {
     d->commentsLink = commentsLink;
 }
 
-QString KFeed::Item::commentsFeed() const
+QString Item::commentsFeed() const
 {
     return d->commentsFeed;
 }
 
-void KFeed::Item::setCommentsFeed( const QString& commentsFeed )
+void Item::setCommentsFeed( const QString& commentsFeed )
 {
     d->commentsFeed = commentsFeed;
 }
 
-QString KFeed::Item::commentPostUri() const
+QString Item::commentPostUri() const
 {
     return d->commentPostUri;
 }
 
-void KFeed::Item::setCommentPostUri( const QString& commentPostUri )
+void Item::setCommentPostUri( const QString& commentPostUri )
 {
     d->commentPostUri = commentPostUri;
 }
 
-bool KFeed::Item::idIsHash() const
+bool Item::idIsHash() const
 {
     return d->idIsHash;
 }
 
-void KFeed::Item::setIdIsHash( bool idIsHash )
+void Item::setIdIsHash( bool idIsHash )
 {
     d->idIsHash = idIsHash;
 }
 
-int KFeed::Item::hash() const
+int Item::hash() const
 {
     return d->hash;
 }
 
-void KFeed::Item::setHash( int hash )
+void Item::setHash( int hash )
 {
     d->hash = hash;
 }
 
-int KFeed::Item::status() const
+int Item::status() const
 {
     return d->status;
 }
 
-void KFeed::Item::setStatus( int status )
+void Item::setStatus( int status )
 {
     d->status = status;
 }
 
-int KFeed::Item::sourceFeedId() const
+int Item::sourceFeedId() const
 {
     return d->feedId;
 }
 
-void KFeed::Item::setSourceFeedId( int feedId )
+void Item::setSourceFeedId( int feedId )
 {
     d->feedId = feedId;
 }
 
-QHash<QString, QString> KFeed::Item::customProperties() const
+QHash<QString, QString> Item::customProperties() const
 {
     return d->customProperties;
 }
 
-QString KFeed::Item::customProperty( const QString& key ) const
+QString Item::customProperty( const QString& key ) const
 {
-    return d->customProperties[key];
+    return d->customProperties.value( key );
 }
 
-void KFeed::Item::setCustomProperty( const QString& key, const QString& value )
+void Item::setCustomProperty( const QString& key, const QString& value )
 {
-    d->customProperties[key] = value;
+    d->customProperties.insert( key, value );
 }
 

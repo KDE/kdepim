@@ -24,15 +24,23 @@
 
 #include <QString>
 
-class KFeed::CategoryPrivate
+#include <algorithm>
+
+using namespace KFeed;
+
+class Category::Private : public QSharedData
 {
 public:
-    bool operator==( const CategoryPrivate& other ) const
+    Private();
+    Private( const Private& other );
+    ~Private();
+    
+    bool operator==( const Category::Private& other ) const
     {
         return term == other.term && scheme == other.scheme && label == other.label;
     }
 
-    bool operator!=( const CategoryPrivate& other ) const
+    bool operator!=( const Category::Private& other ) const
     {
         return term != other.term && scheme != other.scheme && label != other.label;
     }
@@ -42,62 +50,79 @@ public:
     QString label;
 };
 
-KFeed::Category::Category() : d( new CategoryPrivate )
+Category::Private::Private() {}
+
+Category::Private::Private( const Private& other )
+    : QSharedData( other ),
+    term( other.term ),
+    scheme( other.scheme ),
+    label( other.label )
 {
 }
 
-KFeed::Category::Category( const Category& other) : d( new CategoryPrivate ) 
+Category::Private::~Private() {}
+
+
+Category::Category() : d( new Category::Private )
 {
-    *d = *(other.d);
 }
 
-KFeed::Category::~Category()
+Category::Category( const Category& other) : d( other.d ) 
 {
-    delete d;
 }
 
-KFeed::Category& KFeed::Category::operator=( const KFeed::Category& other )
+Category::~Category()
 {
-    *d = *(other.d);
+}
+
+Category& Category::operator=( const Category& other )
+{
+    Category copy( other );
+    swap( copy );
     return *this;
 }
 
-bool KFeed::Category::operator==( const KFeed::Category& other ) const
+void Category::swap( Category& other )
+{
+    std::swap( d, other.d );
+}
+
+bool Category::operator==( const Category& other ) const
 {
     return *d == *(other.d);
 }
 
-bool KFeed::Category::operator!=( const KFeed::Category& other ) const
+bool Category::operator!=( const Category& other ) const
 {
     return *d != *(other.d);
 }
 
-QString KFeed::Category::term() const
+QString Category::term() const
 {
     return d->term;
 }
 
-void KFeed::Category::setTerm( const QString& term )
+void Category::setTerm( const QString& term )
 {
     d->term = term;
 }
 
-QString KFeed::Category::scheme() const
+QString Category::scheme() const
 {
     return d->scheme;
 }
 
-void KFeed::Category::setScheme( const QString& scheme )
+void Category::setScheme( const QString& scheme )
 {
     d->scheme = scheme;
 }
 
-QString KFeed::Category::label() const
+QString Category::label() const
 {
     return d->label;
 }
 
-void KFeed::Category::setLabel( const QString& label )
+void Category::setLabel( const QString& label )
 {
     d->label = label;
 }

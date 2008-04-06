@@ -25,11 +25,11 @@
 
 #include "kfeed_export.h"
 
+#include <QSharedDataPointer>
+
 class QString;
 
 namespace KFeed {
-
-class PersonPrivate;
 
 class KFEED_EXPORT Person
 {
@@ -47,12 +47,14 @@ public:
     QString email() const;
     void setEmail( const QString& email );
 
+    void swap( Person& other );
     Person& operator=( const Person& other );
     bool operator==( const Person& other ) const;
     bool operator!=( const Person& other ) const;
 
 private:
-    PersonPrivate* const d;
+    class Private;
+    QSharedDataPointer<Private> d;
 };
 
 } // namespace KFeed

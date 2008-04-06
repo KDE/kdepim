@@ -24,19 +24,27 @@
 
 #include <QString>
 
-class KFeed::EnclosurePrivate
+#include <algorithm>
+
+using namespace KFeed;
+
+class Enclosure::Private : public QSharedData
 {
 public:
-    EnclosurePrivate() : length( 0 ), duration( 0 )
+    Private() : length( 0 ), duration( 0 )
     {
     }
 
-    bool operator==( const EnclosurePrivate& other ) const
+    Private( const Private& other );
+    
+    ~Private();
+    
+    bool operator==( const Private& other ) const
     {
         return url == other.url && title == other.title && type == other.type && length == other.length && duration == other.duration;
     }
 
-    bool operator!=( const EnclosurePrivate& other ) const
+    bool operator!=( const Private& other ) const
     {
         return url != other.url && title != other.title && type != other.type && length != other.length && duration != other.duration;
     }
@@ -48,83 +56,99 @@ public:
     uint duration;
 };
 
-KFeed::Enclosure::Enclosure() : d( new EnclosurePrivate )
+Enclosure::Private::Private( const Private& other )
+    : QSharedData( other ),
+    url( other.url ),
+    title( other.title ),
+    type( other.type ),
+    length( other.length ),
+    duration( other.duration )
+{    
+}
+
+Enclosure::Private::~Private() {}
+
+Enclosure::Enclosure() : d( new Private )
 {
 }
 
-KFeed::Enclosure::Enclosure( const Enclosure& other) : d( new EnclosurePrivate ) 
+Enclosure::Enclosure( const Enclosure& other ) : d( other.d ) 
 {
-    *d = *(other.d);
 }
 
-KFeed::Enclosure::~Enclosure()
+Enclosure::~Enclosure()
 {
-    delete d;
 }
 
-KFeed::Enclosure& KFeed::Enclosure::operator=( const KFeed::Enclosure& other )
+void Enclosure::swap( Enclosure& other )
 {
-    *d = *(other.d);
+    std::swap( d, other.d );
+}
+
+Enclosure& Enclosure::operator=( const Enclosure& other )
+{
+    Enclosure copy( other );
+    swap( copy );
     return *this;
 }
 
-bool KFeed::Enclosure::operator==( const KFeed::Enclosure& other ) const
+bool Enclosure::operator==( const Enclosure& other ) const
 {
     return *d == *(other.d);
 }
 
 
-bool KFeed::Enclosure::operator!=( const KFeed::Enclosure& other ) const
+bool Enclosure::operator!=( const Enclosure& other ) const
 {
     return *d != *(other.d);
 }
 
-QString KFeed::Enclosure::url() const
+QString Enclosure::url() const
 {
     return d->url;
 }
 
-void KFeed::Enclosure::setUrl( const QString& url )
+void Enclosure::setUrl( const QString& url )
 {
     d->url = url;
 }
 
-QString KFeed::Enclosure::title() const
+QString Enclosure::title() const
 {
     return d->title;
 }
 
-void KFeed::Enclosure::setTitle( const QString& title )
+void Enclosure::setTitle( const QString& title )
 {
     d->title = title;
 }
 
-QString KFeed::Enclosure::type() const
+QString Enclosure::type() const
 {
     return d->type;
 }
 
-void KFeed::Enclosure::setType( const QString& type )
+void Enclosure::setType( const QString& type )
 {
     d->type = type;
 }
 
-uint KFeed::Enclosure::length() const
+uint Enclosure::length() const
 {
     return d->length;
 }
 
-void KFeed::Enclosure::setLength( uint length )
+void Enclosure::setLength( uint length )
 {
     d->length = length;
 }
 
-uint KFeed::Enclosure::duration() const
+uint Enclosure::duration() const
 {
     return d->duration;
 }
 
-void KFeed::Enclosure::setDuration( uint duration )
+void Enclosure::setDuration( uint duration )
 {
     d->duration = duration;
 }

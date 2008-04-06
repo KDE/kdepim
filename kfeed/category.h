@@ -25,11 +25,11 @@
 
 #include "kfeed_export.h"
 
+#include <QSharedDataPointer>
+
 class QString;
 
 namespace KFeed {
-
-class CategoryPrivate;
 
 class KFEED_EXPORT Category
 {
@@ -51,8 +51,11 @@ public:
     bool operator==( const Category& other ) const;
     bool operator!=( const Category& other ) const;
 
+    void swap( Category& other );
+    
 private:
-    CategoryPrivate* const d;
+    class Private;
+    QSharedDataPointer<Private> d;
 };
 
 } // namespace KFeed

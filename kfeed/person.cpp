@@ -24,16 +24,24 @@
 
 #include <QString>
 
-class KFeed::PersonPrivate
+#include <algorithm>
+
+using namespace KFeed;
+
+class Person::Private : public QSharedData
 {
 public:
 
-    bool operator==( const PersonPrivate& other ) const
+    Private() {}
+    Private( const Private& other );
+    ~Private() {}
+    
+    bool operator==( const Private& other ) const
     {
         return name == other.name && email == other.email && uri == other.uri;
     }
 
-    bool operator!=( const PersonPrivate& other ) const
+    bool operator!=( const Private& other ) const
     {
         return name != other.name && email != other.email && uri != other.uri;
     }
@@ -43,62 +51,74 @@ public:
     QString uri;
 };
 
-QString KFeed::Person::name() const
+Person::Private::Private( const Private& other ) 
+    : QSharedData( other ),
+    name( other.name ),
+    email( other.email ),
+    uri( other.uri )
+{
+}
+
+QString Person::name() const
 {
     return d->name;
 }
 
-void KFeed::Person::setName( const QString& name )
+void Person::setName( const QString& name )
 {
     d->name = name;
 }
 
-QString KFeed::Person::email() const
+QString Person::email() const
 {
     return d->email;
 }
 
-void KFeed::Person::setEmail( const QString& email )
+void Person::setEmail( const QString& email )
 {
     d->email = email;
 }
 
-QString KFeed::Person::uri() const
+QString Person::uri() const
 {
     return d->uri;
 }
 
-void KFeed::Person::setUri( const QString& uri )
+void Person::setUri( const QString& uri )
 {
     d->uri = uri;
 }
 
-KFeed::Person::Person() : d( new PersonPrivate )
+Person::Person() : d( new Private )
 {
 }
 
-KFeed::Person::Person( const Person& other) : d( new PersonPrivate ) 
+Person::Person( const Person& other) : d( other.d ) 
 {
-    *d = *(other.d);
 }
 
-KFeed::Person::~Person()
+Person::~Person()
 {
-    delete d;
 }
 
-KFeed::Person& KFeed::Person::operator=( const KFeed::Person& other )
+void Person::swap( Person& other )
 {
-    *d = *(other.d);
+    std::swap( d, other.d );
+}
+
+Person& Person::operator=( const Person& other )
+{
+    Person copy( other );
+    swap( copy );
     return *this;
 }
 
-bool KFeed::Person::operator==( const KFeed::Person& other ) const
+bool Person::operator==( const Person& other ) const
 {
     return *d == *(other.d);
 }
 
-bool KFeed::Person::operator!=( const KFeed::Person& other ) const
+bool Person::operator!=( const Person& other ) const
 {
     return *d != *(other.d);
 }

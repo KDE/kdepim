@@ -25,13 +25,13 @@
 
 #include "kfeed_export.h"
 
+#include <QSharedDataPointer>
+
 class QString;
 
 typedef unsigned int uint;
 
 namespace KFeed {
-
-class EnclosurePrivate;
 
 class KFEED_EXPORT Enclosure
 {
@@ -55,12 +55,14 @@ public:
     uint duration() const;
     void setDuration( uint duration );
 
+    void swap( Enclosure& other );
     Enclosure& operator=( const Enclosure& other );
     bool operator==( const Enclosure& other ) const;
     bool operator!=( const Enclosure& other ) const;
 
 private:
-    EnclosurePrivate* const d;
+    class Private;
+    QSharedDataPointer<Private> d;
 };
 
 } // namespace KFeed
