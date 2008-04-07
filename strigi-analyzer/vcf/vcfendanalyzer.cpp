@@ -59,7 +59,10 @@ char VcfEndAnalyzer::analyze( Strigi::AnalysisResult& idx, Strigi::InputStream* 
 
   idx.addValue( m_factory->field( Name ), addr.assembledName().toUtf8().data() );
   idx.addValue( m_factory->field( Email ), addr.preferredEmail().toUtf8().data() );
-  idx.addValue( m_factory->field( Telephone ), addr.phoneNumbers().first().number().toUtf8().data() );
+  if (addr.phoneNumbers().size()) {
+    idx.addValue( m_factory->field( Telephone ),
+      addr.phoneNumbers().first().number().toUtf8().data() );
+  }
 
   return Strigi::Ok;
 }
