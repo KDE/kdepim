@@ -38,6 +38,8 @@
 #include <models/keycache.h>
 #include <models/keylistmodel.h>
 
+#include <utils/stl_util.h>
+
 #include <gpgme++/key.h>
 
 #include <QAbstractItemView>
@@ -45,6 +47,7 @@
 #include <QTableView>
 #include <QPointer>
 #include <QItemSelectionModel>
+#include <QAction>
 
 #include <boost/bind.hpp>
 
@@ -97,8 +100,18 @@ public:
         if ( !what.isEmpty() )
             emit q->message( what );
     }
+    void slotActionTriggered();
 
 private:
+    static Command::Restrictions calculateRestrictionsMask( const QItemSelectionModel * sm );
+
+private:
+    struct action_item {
+        QPointer<QAction> action;
+        Command::Restrictions restrictions;
+        Command * (KeyListController::*createCommand)();
+    };
+    std::vector<action_item> actions;
     std::vector<QAbstractItemView*> views;
     std::vector<Command*> commands;
     QPointer<AbstractKeyListModel> flatModel, hierarchicalModel;
@@ -107,6 +120,7 @@ private:
 
 KeyListController::Private::Private( KeyListController * qq )
     : q( qq ),
+      actions(),
       views(),
       commands(),
       flatModel( 0 ),
@@ -198,6 +212,18 @@ AbstractKeyListModel * KeyListController::hierarchicalModel() const {
     return d->hierarchicalModel;
 }
 
+void KeyListController::registerAction( QAction * action, Command::Restrictions restrictions, Command * (KeyListController::*create)() ) {
+    if ( !action )
+        return;
+    assert( !action->isCheckable() ); // can be added later, for now, disallow
+
+    const Private::action_item ai = {
+        action, restrictions, create
+    };
+    connect( action, SIGNAL(triggered()), this, SLOT(slotActionTriggered()) );
+    d->actions.push_back( ai );
+}
+
 void KeyListController::registerCommand( Command * cmd ) {
     if ( !cmd || std::binary_search( d->commands.begin(), d->commands.end(), cmd ) )
         return;
@@ -262,14 +288,14 @@ void KeyListController::Private::slotSelectionChanged( const QItemSelection & ol
     const QItemSelectionModel * const sm = qobject_cast<QItemSelectionModel*>( q->sender() );
     if ( !sm )
 	return;
-    // ### enable/disable actions
+    q->enableDisableActions( sm );
 }
 
 void KeyListController::Private::slotContextMenu( const QPoint & p ) {
     QAbstractItemView * const view = qobject_cast<QAbstractItemView*>( q->sender() );
     if ( !view || !std::binary_search( views.begin(), views.end(), view ) )
 	return;
-    
+
 }
 
 void KeyListController::Private::slotCommandFinished() {
@@ -279,6 +305,47 @@ void KeyListController::Private::slotCommandFinished() {
     qDebug( "KeyListController::Private::slotCommandFinished( %p )", cmd );
     if ( commands.size() == 1 )
         emit q->commandsExecuting( false );
+}
+
+void KeyListController::enableDisableActions( const QItemSelectionModel * sm ) const {
+    const Command::Restrictions restrictionsMask = d->calculateRestrictionsMask( sm );
+    Q_FOREACH( const Private::action_item & ai, d->actions )
+        if ( ai.action )
+            ai.action->setEnabled( ai.restrictions == ( ai.restrictions & restrictionsMask ) );
+}
+
+Command::Restrictions KeyListController::Private::calculateRestrictionsMask( const QItemSelectionModel * sm ) {
+    if ( !sm )
+        return 0;
+
+    const KeyListModelInterface * const m = dynamic_cast<const KeyListModelInterface*>( sm->model() );
+    if ( !m )
+        return 0;
+
+    const std::vector<Key> keys = m->keys( sm->selectedRows() );
+    if ( keys.empty() )
+        return 0;
+
+    Command::Restrictions result = Command::NeedSelection;
+
+    if ( keys.size() == 1 )
+        result |= Command::OnlyOneKey;
+
+    if ( kdtools::all( keys.begin(), keys.end(), bind( &Key::hasSecret, _1 ) ) )
+        result |= Command::NeedSecretKey;
+    else if ( !kdtools::any( keys.begin(), keys.end(), bind( &Key::hasSecret, _1 ) ) )
+        result |= Command::MustNotBeSecretKey;
+
+    if ( kdtools::all( keys.begin(), keys.end(), bind( &Key::protocol, _1 ) == OpenPGP ) )
+        result |= Command::MustBeOpenPGP;
+    else if ( kdtools::all( keys.begin(), keys.end(), bind( &Key::protocol, _1 ) == CMS ) )
+        result |= Command::MustBeCMS;
+
+    return result;
+}
+
+void KeyListController::Private::slotActionTriggered() {
+    qDebug( "KeyListController::Private::slotActionTriggered: not implemented" );
 }
 
 #include "moc_keylistcontroller.cpp"

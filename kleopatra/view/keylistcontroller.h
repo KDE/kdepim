@@ -34,11 +34,15 @@
 
 #include <QObject>
 
+#include <commands/command.h>
+
 #include <utils/pimpl_ptr.h>
 
 #include <vector>
 
 class QAbstractItemView;
+class QAction;
+class QItemSelectionModel;
 
 namespace Kleo {
 
@@ -51,8 +55,6 @@ namespace Kleo {
         explicit KeyListController( QObject * parent=0 );
         ~KeyListController();
 
-        void addView( QAbstractItemView * view );
-        void removeView( QAbstractItemView * view );
         std::vector<QAbstractItemView*> views() const;
 
         void setFlatModel( AbstractKeyListModel * model );
@@ -63,7 +65,20 @@ namespace Kleo {
 
         void registerCommand( Command * cmd );
 
+        template <typename T_Command>
+        void registerActionForCommand( QAction * action ) {
+            this->registerAction( action, T_Command::restrictions() /*, &KeyListController::create<T_Command>*/ );
+        }
+
+        void enableDisableActions( const QItemSelectionModel * sm ) const;
+
+    private:
+        void registerAction( QAction * action, Command::Restrictions restrictions , Command * (KeyListController::*create)()=0 );
+
     public Q_SLOTS:
+        void addView( QAbstractItemView * view );
+        void removeView( QAbstractItemView * view );
+
         void cancelCommands();
 
     Q_SIGNALS:
@@ -85,6 +100,7 @@ namespace Kleo {
         Q_PRIVATE_SLOT( d, void slotAddKey(GpgME::Key) )
         Q_PRIVATE_SLOT( d, void slotAboutToRemoveKey(GpgME::Key) )
         Q_PRIVATE_SLOT( d, void slotProgress(QString,int,int) )
+        Q_PRIVATE_SLOT( d, void slotActionTriggered() )
     };
 
 }

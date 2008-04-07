@@ -209,12 +209,10 @@ public:
     void preferences();
 
     void slotConfigCommitted();
+    void slotCurrentViewChanged( QAbstractItemView * view );
 
 private:
     void setupActions();
-
-    void addView( const QString & title, const QString & keyFilterID=QString(), const QString & searchString=QString() );
-    void addView( const KConfigGroup & group );
 
     unsigned int numViews() const {
         return ui.tabWidget.count();
@@ -309,6 +307,13 @@ MainWindow::Private::Private( MainWindow * qq )
     connect( &controller, SIGNAL(progress(int,int)), &ui.progressBar, SLOT(setProgress(int,int)) );
     connect( &controller, SIGNAL(message(QString,int)),  q->statusBar(), SLOT(showMessage(QString,int)) );
 
+    connect( &ui.tabWidget, SIGNAL(viewAdded(QAbstractItemView*)),
+             &controller, SLOT(addView(QAbstractItemView*)) );
+    connect( &ui.tabWidget, SIGNAL(viewAboutToBeRemoved(QAbstractItemView*)),
+             &controller, SLOT(removeView(QAbstractItemView*)) );
+    connect( &ui.tabWidget, SIGNAL(currentViewChanged(QAbstractItemView*)),
+             q, SLOT(slotCurrentViewChanged(QAbstractItemView*)) );
+
     q->createGUI( "kleopatra_newui.rc" );
 
     q->setAcceptDrops( true );
@@ -325,17 +330,6 @@ MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags )
 
 MainWindow::~MainWindow() {}
 
-
-void MainWindow::Private::addView( const QString & title, const QString & id, const QString & text ) {
-    QAbstractItemView * const view = ui.tabWidget.addView( title, id, text );
-    assert( view );
-    controller.addView( view );
-}
-
-void MainWindow::Private::addView( const KConfigGroup & group ) {
-    if ( QAbstractItemView * const view = ui.tabWidget.addView( group ) )
-        controller.addView( view );
-}
 
 void MainWindow::Private::setupActions() {
 
@@ -387,6 +381,20 @@ void MainWindow::Private::setupActions() {
 
     if ( QAction * action = coll->action( "view_stop_operations" ) )
         connect( &controller, SIGNAL(commandsExecuting(bool)), action, SLOT(setEnabled(bool)) );
+
+    // ### somehow make this better...
+    controller.registerActionForCommand<DetailsCommand>(            coll->action( "view_certificate_details" ) );
+    controller.registerActionForCommand<RefreshKeysCommand>(        coll->action( "view_redisplay" ) );
+    controller.registerActionForCommand<DeleteCertificatesCommand>( coll->action( "certificates_delete" ) );
+    controller.registerActionForCommand<ChangeExpiryCommand>(       coll->action( "certificates_change_expiry" ) );
+    controller.registerActionForCommand<SignEncryptFilesCommand>(   coll->action( "file_sign_encrypt_files" ) );
+    controller.registerActionForCommand<ExportCertificateCommand>(  coll->action( "file_export_certificates" ) );
+    controller.registerActionForCommand<ImportCertificateCommand>(  coll->action( "file_import_certificates" ) );
+    controller.registerActionForCommand<ClearCrlCacheCommand>(      coll->action( "crl_clear_crl_cache" ) );
+    controller.registerActionForCommand<DumpCrlCacheCommand>(       coll->action( "crl_dump_crl_cache" ) );
+    controller.registerActionForCommand<ImportCrlCommand>(          coll->action( "crl_import_crl" ) );
+
+    controller.enableDisableActions( 0 );
 
     ui.tabWidget.createActions( coll );
 }
@@ -601,6 +609,10 @@ void MainWindow::dropEvent( QDropEvent * e ) {
 
     if ( chosen )
         e->accept();
+}
+
+void MainWindow::Private::slotCurrentViewChanged( QAbstractItemView * view ) {
+    controller.enableDisableActions( view ? view->selectionModel() : 0 );
 }
 
 #include "mainwindow.moc"
