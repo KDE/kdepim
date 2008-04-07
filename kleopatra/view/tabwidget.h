@@ -81,6 +81,9 @@ namespace Kleo {
         void setStringFilter( const QString & filter );
 
     Q_SIGNALS:
+        void viewAdded( QAbstractItemView * view );
+        void viewAboutToBeRemoved( QAbstractItemView * view );
+
         void currentViewChanged( QAbstractItemView * view );
         void stringFilterChanged( const QString & filter );
         void keyFilterChanged( const boost::shared_ptr<Kleo::KeyFilter> & filter );

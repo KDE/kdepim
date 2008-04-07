@@ -631,6 +631,7 @@ void TabWidget::Private::duplicatePage( Page * page ) {
 void TabWidget::Private::closePage( Page * page) {
     if ( !page || !page->canBeClosed() || tabWidget.count() <= 1 )
         return;
+    emit q->viewAboutToBeRemoved( page->view() );
     tabWidget.removeTab( tabWidget.indexOf( page ) );
     enableDisableCurrentPageActions();
 }
@@ -790,7 +791,9 @@ QTreeView * TabWidget::Private::addView( Page * page ) {
     if ( previous != current )
         currentIndexChanged( tabWidget.currentIndex() );
     enableDisableCurrentPageActions();
-    return page->view();
+    QTreeView * view = page->view();
+    emit q->viewAdded( view );
+    return view;
 }
 
 static QStringList extractViewGroups( const KConfig * config ) {
