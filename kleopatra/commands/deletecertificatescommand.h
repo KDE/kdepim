@@ -43,6 +43,8 @@ namespace Kleo {
         explicit DeleteCertificatesCommand( KeyListController * parent );
         ~DeleteCertificatesCommand();
 
+        /* reimp */ static Restrictions restrictions() { return NeedSelection; }
+
     private:
         /* reimp */ void doStart();
         /* reimp */ void doCancel();

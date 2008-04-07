@@ -43,6 +43,8 @@ namespace Kleo {
         explicit ExportCertificateCommand( KeyListController * parent );
         ~ExportCertificateCommand();
 
+        /* reimp */ static Restrictions restrictions() { return NeedSelection; }
+
     private:
         /* reimp */ void doStart();
         /* reimp */ void doCancel();

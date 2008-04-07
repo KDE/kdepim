@@ -52,6 +52,21 @@ namespace Kleo {
         explicit Command( QAbstractItemView * view, KeyListController * parent );
         ~Command();
 
+        enum Restriction {
+            NoRestriction      = 0,
+            NeedSelection      = 1,
+            OnlyOneKey         = 2,
+            NeedSecretKey      = 4,
+            MustNotBeSecretKey = 8,
+            MustBeOpenPGP      = 16,
+            MustBeCMS          = 32,
+
+            AllRestrictions
+        };
+        Q_DECLARE_FLAGS( Restrictions, Restriction )
+
+        static Restrictions restrictions() { return NoRestriction; }
+
         void setView( QAbstractItemView * view );
         void setIndex( const QModelIndex & idx );
         void setIndexes( const QList<QModelIndex> & idx );
@@ -79,5 +94,7 @@ namespace Kleo {
     };
 
 }
+
+Q_DECLARE_OPERATORS_FOR_FLAGS( Kleo::Command::Restrictions )
 
 #endif /* __KLEOPATRA_COMMANDS_COMMAND_H__ */

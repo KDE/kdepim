@@ -45,6 +45,8 @@ namespace Commands {
         explicit ChangeExpiryCommand( KeyListController * parent );
         ~ChangeExpiryCommand();
 
+        /* reimp */ static Restrictions restrictions() { return OnlyOneKey|MustBeOpenPGP|NeedSecretKey; }
+
     private:
         /* reimp */ void doStart();
         /* reimp */ void doCancel();

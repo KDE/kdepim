@@ -44,6 +44,8 @@ namespace Kleo {
 	explicit DetailsCommand( QAbstractItemView * view, KeyListController * parent );
 	~DetailsCommand();
 
+        /* reimp */ static Restrictions restrictions() { return OnlyOneKey; }
+
     private:
 	/* reimp */ void doStart();
 	/* reimp */ void doCancel();
