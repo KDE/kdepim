@@ -25,8 +25,8 @@
  *                                                                             *
  ******************************************************************************/
 
-#ifndef _KONSOLEKALENDAREPOCH_H_
-#define _KONSOLEKALENDAREPOCH_H_
+#ifndef KONSOLEKALENDAREPOCH_H
+#define KONSOLEKALENDAREPOCH_H
 
 #include <QtCore/QDateTime>
 

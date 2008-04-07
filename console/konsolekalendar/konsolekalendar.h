@@ -25,8 +25,8 @@
  *                                                                             *
  ******************************************************************************/
 
-#ifndef _KONSOLEKALENDAR_H
-#define _KONSOLEKALENDAR_H
+#ifndef KONSOLEKALENDAR_H
+#define KONSOLEKALENDAR_H
 
 #include <QDateTime>
 

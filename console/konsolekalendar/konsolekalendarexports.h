@@ -25,8 +25,8 @@
  *                                                                             *
  ******************************************************************************/
 
-#ifndef _KONSOLEKALENDAREXPORTS_H_
-#define _KONSOLEKALENDAREXPORTS_H_
+#ifndef KONSOLEKALENDAREXPORTS_H
+#define KONSOLEKALENDAREXPORTS_H
 
 #include <QtCore/QTextStream>
 

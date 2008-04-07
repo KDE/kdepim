@@ -25,8 +25,8 @@
  *                                                                             *
  ******************************************************************************/
 
-#ifndef _KONSOLEKALENDARCHANGE_H_
-#define _KONSOLEKALENDARCHANGE_H_
+#ifndef KONSOLEKALENDARCHANGE_H
+#define KONSOLEKALENDARCHANGE_H
 
 #include "konsolekalendarvariables.h"
 

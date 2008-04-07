@@ -25,8 +25,8 @@
  *                                                                             *
  ******************************************************************************/
 
-#ifndef _KONSOLEKALENDARVARIABLES_H_
-#define _KONSOLEKALENDARVARIABLES_H_
+#ifndef KONSOLEKALENDARVARIABLES_H
+#define KONSOLEKALENDARVARIABLES_H
 
 #include <kcal/calendarlocal.h>
 #include <kcal/calendarresources.h>

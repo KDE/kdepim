@@ -25,8 +25,8 @@
  *                                                                             *
  ******************************************************************************/
 
-#ifndef _KONSOLEKALENDARDELETE_H_
-#define _KONSOLEKALENDARDELETE_H_
+#ifndef KONSOLEKALENDARDELETE_H
+#define KONSOLEKALENDARDELETE_H
 
 #include "konsolekalendarvariables.h"
 
