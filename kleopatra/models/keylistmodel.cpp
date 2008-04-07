@@ -438,13 +438,16 @@ int HierarchicalKeyListModel::rowCount( const QModelIndex & pidx ) const {
 
     // toplevel item:
     if ( !pidx.isValid() )
-	return mTopLevels.size();
-
+        return mTopLevels.size();
+    
+    if ( pidx.column() != 0 )
+        return 0;
+    
     // non-toplevel item - find the number of subjects for this issuer:
     const Key issuer = this->key( pidx );
     const char * const fpr = issuer.primaryFingerprint();
     if ( !fpr || !*fpr )
-	return 0;
+        return 0;
     const Map::const_iterator it = mKeysByExistingParent.find( fpr );
     if ( it == mKeysByExistingParent.end() )
         return 0;
