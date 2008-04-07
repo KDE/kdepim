@@ -295,6 +295,7 @@ bool KDPipeIODevice::open( Qt::HANDLE h, OpenMode mode ) { KDAB_CHECK_THIS;
     Q_UNUSED( h );
     Q_UNUSED( mode );
     assert( !"KDPipeIODevice::open( Qt::HANDLE, OpenMode ) should never be called except on Windows." );
+    return false;
     #endif
 }
 
