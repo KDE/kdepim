@@ -159,6 +159,8 @@ class KABINTERFACES_EXPORT XXPort : public QObject, virtual public KXMLGUIClient
 
 class KABINTERFACES_EXPORT XXPortFactory : public KPluginFactory
 {
+  Q_OBJECT
+
   public:
     XXPortFactory(const char *componentName = 0, const char *catalogName = 0)
       : KPluginFactory(componentName, catalogName) {}

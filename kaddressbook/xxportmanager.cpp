@@ -129,7 +129,7 @@ void XXPortManager::loadPlugins()
       continue;
     }
 
-    KAB::XXPortFactory *xxportFactory = dynamic_cast<KAB::XXPortFactory*>( factory );
+    KAB::XXPortFactory *xxportFactory = qobject_cast<KAB::XXPortFactory*>( factory );
 
     if ( !xxportFactory ) {
       kDebug(5720) <<"XXPortManager::loadExtensions(): Cast failed";
