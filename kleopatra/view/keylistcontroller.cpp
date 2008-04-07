@@ -293,9 +293,10 @@ void KeyListController::Private::slotSelectionChanged( const QItemSelection & ol
 
 void KeyListController::Private::slotContextMenu( const QPoint & p ) {
     QAbstractItemView * const view = qobject_cast<QAbstractItemView*>( q->sender() );
-    if ( !view || !std::binary_search( views.begin(), views.end(), view ) )
-	return;
-
+    if ( view && std::binary_search( views.begin(), views.end(), view ) )
+        emit q->contextMenuRequested( view, view->viewport()->mapToGlobal( p ) );
+    else
+        qDebug( "KeyListController::Private::slotContextMenu: sender is not a QAbstractItemView*!" );
 }
 
 void KeyListController::Private::slotCommandFinished() {

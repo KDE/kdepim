@@ -70,6 +70,7 @@ private:
     Q_PRIVATE_SLOT( d, void preferences() )
     Q_PRIVATE_SLOT( d, void slotConfigCommitted() )
     Q_PRIVATE_SLOT( d, void slotCurrentViewChanged(QAbstractItemView*) )
+    Q_PRIVATE_SLOT( d, void slotContextMenuRequested(QAbstractItemView*,QPoint) )
 };
 
 

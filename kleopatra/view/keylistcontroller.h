@@ -42,6 +42,7 @@
 
 class QAbstractItemView;
 class QAction;
+class QPoint;
 class QItemSelectionModel;
 
 namespace Kleo {
@@ -86,6 +87,8 @@ namespace Kleo {
         void message( const QString & msg, int timeout=0 );
 
         void commandsExecuting( bool );
+
+        void contextMenuRequested( QAbstractItemView * view, const QPoint & p );
 
     private:
         class Private;

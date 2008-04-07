@@ -70,6 +70,7 @@
 #include <KStandardGuiItem>
 #include <KStandardDirs>
 #include <KShortcutsDialog>
+#include <KXMLGUIFactory>
 #include <kdebug.h>
 
 #include <QAbstractItemView>
@@ -210,6 +211,12 @@ public:
 
     void slotConfigCommitted();
     void slotCurrentViewChanged( QAbstractItemView * view );
+    void slotContextMenuRequested( QAbstractItemView *, const QPoint & p ) {
+        if ( QMenu * const menu = qobject_cast<QMenu*>( q->factory()->container( "listview_popup", q ) ) )
+            menu->exec( p );
+        else
+            kDebug() << "no \"listview_popup\" <Menu> in kleopatra's ui.rc file";
+    }
 
 private:
     void setupActions();
@@ -306,6 +313,8 @@ MainWindow::Private::Private( MainWindow * qq )
 
     connect( &controller, SIGNAL(progress(int,int)), &ui.progressBar, SLOT(setProgress(int,int)) );
     connect( &controller, SIGNAL(message(QString,int)),  q->statusBar(), SLOT(showMessage(QString,int)) );
+    connect( &controller, SIGNAL(contextMenuRequested(QAbstractItemView*,QPoint)),
+             q, SLOT(slotContextMenuRequested(QAbstractItemView*,QPoint)) );
 
     connect( &ui.tabWidget, SIGNAL(viewAdded(QAbstractItemView*)),
              &controller, SLOT(addView(QAbstractItemView*)) );
