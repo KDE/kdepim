@@ -265,6 +265,7 @@ namespace {
         explicit TableModelMixin( QObject * p=0 ) : Base( p ) {}
         ~TableModelMixin() {}
 
+        using Base::index;
         /* reimp */ QModelIndex index( int row, int column, const QModelIndex & pidx=QModelIndex() ) const {
             return this->hasIndex( row, column, pidx ) ? this->createIndex( row, column, 0 ) : QModelIndex() ;
         }
