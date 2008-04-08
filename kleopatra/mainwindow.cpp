@@ -110,7 +110,7 @@ using namespace boost;
 using namespace GpgME;
 
 namespace {
-    QString gpgConfPath() {
+    static QString gpgConfPath() {
         const GpgME::EngineInfo info = GpgME::engineInfo( GpgME::GpgConfEngine );
         return info.fileName() ? QFile::decodeName( info.fileName() ) : KStandardDirs::findExe( "gpgconf" );
     }
@@ -127,7 +127,7 @@ namespace {
         }
     };
 
-    QStringList fileSystemWatchList()
+    static QStringList fileSystemWatchList()
     {
         const QString baseDir = _detail::gnupgHomeDirectory();
         QStringList res;
