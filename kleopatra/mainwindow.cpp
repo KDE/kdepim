@@ -389,9 +389,9 @@ void MainWindow::Private::setupActions() {
         { "file_new_certificate", i18n("New Certificate..."), QString(),
           "document-new", q, SLOT(newCertificate()), "Ctrl+N", false, true },
         { "file_export_certificates", i18n("Export Certificates..."), QString(),
-          "document-export", q, SLOT(exportCertificates()), "Ctrl+E", false, true }, // ### should be disabled until selected
+          "document-export", q, SLOT(exportCertificates()), "Ctrl+E", false, true },
         { "file_import_certificates", i18n("Import Certificates..."), QString(),
-          "document-import", q, SLOT(importCertificatesFromFile()), "Ctrl+I", false, true }, // ### should be disabled until selected
+          "document-import", q, SLOT(importCertificatesFromFile()), "Ctrl+I", false, true },
         { "file_sign_encrypt_files", i18n("Sign/Encrypt Files..."), QString(),
           "document-encrypt" /*"file-encrypt-sign"*/, q, SLOT(signEncryptFiles()), QString(), false, true },
         // View menu
@@ -400,7 +400,7 @@ void MainWindow::Private::setupActions() {
         { "view_stop_operations", i18n( "Stop Operation" ), QString(),
           "process-stop", &controller, SLOT(cancelCommands()), "Escape", false, false },
         { "view_certificate_details", i18n( "Certificate Details" ), QString(),
-          0, q, SLOT(certificateDetails()), QString(), false, true }, // ### should be disabled until selected
+          0, q, SLOT(certificateDetails()), QString(), false, true },
         // Certificate menu
         { "certificates_delete", i18n("Delete" ), QString()/*i18n("Delete selected certificates")*/,
           "edit-delete", q, SLOT(deleteCertificates()), "Delete", false, true },
