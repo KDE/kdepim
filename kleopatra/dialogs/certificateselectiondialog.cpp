@@ -219,7 +219,7 @@ std::vector<Key> CertificateSelectionDialog::selectedCertificates() const {
     assert( model );
     const QItemSelectionModel * const sm = view->selectionModel();
     assert( sm );
-    return model->keys( sm->selectedIndexes() );
+    return model->keys( sm->selectedRows() );
 }
 
 Key CertificateSelectionDialog::selectedCertificate() const {

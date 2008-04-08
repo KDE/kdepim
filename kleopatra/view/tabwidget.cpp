@@ -335,7 +335,7 @@ void Page::setHierarchical( bool on ) {
         return;
     if ( !m_canChangeHierarchical )
         return;
-    const std::vector<Key> selectedKeys = m_proxy.keys( m_view->selectionModel()->selectedIndexes() );
+    const std::vector<Key> selectedKeys = m_proxy.keys( m_view->selectionModel()->selectedRows() );
     const Key currentKey = m_proxy.key( m_view->currentIndex() );
     m_isHierarchical = on;
     m_proxy.setSourceModel( model() );
