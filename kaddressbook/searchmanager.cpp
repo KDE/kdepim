@@ -132,7 +132,7 @@ void SearchManager::search( const QString &pattern, const KABC::Field::List &fie
           } else if ( type == EndsWith && value.endsWith( pattern, Qt::CaseInsensitive ) ) {
             mContacts.append( *it );
             break;
-          } else if ( type == Contains && value.contains( pattern, Qt::CaseInsensitive ) != -1 ) {
+          } else if ( type == Contains && value.contains( pattern, Qt::CaseInsensitive ) ) {
             mContacts.append( *it );
             break;
           } else if ( type == Equals && value.localeAwareCompare( pattern ) == 0 ) {
