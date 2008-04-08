@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    importcertificatecommand.h
+    importcertificatefromfilecommand.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_IMPORTCERTIFICATECOMMAND_H__
-#define __KLEOPATRA_IMPORTCERTIFICATECOMMAND_H__
+#ifndef __KLEOPATRA_IMPORTCERTIFICATEFROMFILECOMMAND_H__
+#define __KLEOPATRA_IMPORTCERTIFICATEFROMFILECOMMAND_H__
 
 #include "command.h"
 
@@ -39,14 +39,14 @@ class QStringList;
 
 namespace Kleo {
 
-    class ImportCertificateCommand : public Command {
+    class ImportCertificateFromFileCommand : public Command {
         Q_OBJECT
     public:
-        explicit ImportCertificateCommand( KeyListController * parent );
-        explicit ImportCertificateCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit ImportCertificateCommand( const QStringList & files, KeyListController * parent );
-        explicit ImportCertificateCommand( const QStringList & files, QAbstractItemView * view, KeyListController * parent );
-        ~ImportCertificateCommand();
+        explicit ImportCertificateFromFileCommand( KeyListController * parent );
+        explicit ImportCertificateFromFileCommand( QAbstractItemView * view, KeyListController * parent );
+        explicit ImportCertificateFromFileCommand( const QStringList & files, KeyListController * parent );
+        explicit ImportCertificateFromFileCommand( const QStringList & files, QAbstractItemView * view, KeyListController * parent );
+        ~ImportCertificateFromFileCommand();
     
         void setFiles( const QStringList & files );
         QStringList files() const;
@@ -63,5 +63,5 @@ namespace Kleo {
     };
 }
 
-#endif // __KLEOPATRA_IMPORTCERTIFICATECOMMAND_H__
+#endif // __KLEOPATRA_IMPORTCERTIFICATEFROMFILECOMMAND_H__
 

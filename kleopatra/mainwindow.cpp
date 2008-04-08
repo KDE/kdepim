@@ -44,7 +44,7 @@
 #include "view/keylistcontroller.h"
 
 #include "commands/exportcertificatecommand.h"
-#include "commands/importcertificatecommand.h"
+#include "commands/importcertificatefromfilecommand.h"
 #include "commands/refreshkeyscommand.h"
 #include "commands/detailscommand.h"
 #include "commands/deletecertificatescommand.h"
@@ -189,7 +189,7 @@ public:
         createAndStart<ExportCertificateCommand>();
     }
     void importCertificates() {
-        createAndStart<ImportCertificateCommand>();
+        createAndStart<ImportCertificateFromFileCommand>();
     }
     void clearCrlCache() {
         createAndStart<ClearCrlCacheCommand>();
@@ -398,7 +398,7 @@ void MainWindow::Private::setupActions() {
     controller.registerActionForCommand<ChangeExpiryCommand>(       coll->action( "certificates_change_expiry" ) );
     controller.registerActionForCommand<SignEncryptFilesCommand>(   coll->action( "file_sign_encrypt_files" ) );
     controller.registerActionForCommand<ExportCertificateCommand>(  coll->action( "file_export_certificates" ) );
-    controller.registerActionForCommand<ImportCertificateCommand>(  coll->action( "file_import_certificates" ) );
+    controller.registerActionForCommand<ImportCertificateFromFileCommand>(  coll->action( "file_import_certificates" ) );
     controller.registerActionForCommand<ClearCrlCacheCommand>(      coll->action( "crl_clear_crl_cache" ) );
     controller.registerActionForCommand<DumpCrlCacheCommand>(       coll->action( "crl_dump_crl_cache" ) );
     controller.registerActionForCommand<ImportCrlCommand>(          coll->action( "crl_import_crl" ) );
@@ -612,7 +612,7 @@ void MainWindow::dropEvent( QDropEvent * e ) {
     if ( chosen == signEncrypt )
         d->createAndStart<SignEncryptFilesCommand>( files );
     else if ( chosen == importCerts )
-        d->createAndStart<ImportCertificateCommand>( files );
+        d->createAndStart<ImportCertificateFromFileCommand>( files );
     else if ( chosen == importCRLs )
         d->createAndStart<ImportCrlCommand>( files );
 

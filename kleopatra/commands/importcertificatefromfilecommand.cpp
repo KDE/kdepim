@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    importcertificatecommand.cpp
+    importcertificatefromfilecommand.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -32,7 +32,7 @@
 
 #include <config-kleopatra.h>
 
-#include "importcertificatecommand.h"
+#include "importcertificatefromfilecommand.h"
 #include "command_p.h"
 
 #include "utils/classify.h"
@@ -61,11 +61,11 @@
 using namespace GpgME;
 using namespace Kleo;
 
-class ImportCertificateCommand::Private : public Command::Private {
-    friend class ::ImportCertificateCommand;
-    ImportCertificateCommand * q_func() const { return static_cast<ImportCertificateCommand*>( q ); }
+class ImportCertificateFromFileCommand::Private : public Command::Private {
+    friend class ::ImportCertificateFromFileCommand;
+    ImportCertificateFromFileCommand * q_func() const { return static_cast<ImportCertificateFromFileCommand*>( q ); }
 public:
-    explicit Private( ImportCertificateCommand * qq, KeyListController * c );
+    explicit Private( ImportCertificateFromFileCommand * qq, KeyListController * c );
     ~Private();
 
     bool ensureHaveFile();
@@ -80,54 +80,54 @@ private:
     QStringList files;
 };
 
-ImportCertificateCommand::Private * ImportCertificateCommand::d_func() { return static_cast<Private*>(d.get()); }
-const ImportCertificateCommand::Private * ImportCertificateCommand::d_func() const { return static_cast<const Private*>(d.get()); }
+ImportCertificateFromFileCommand::Private * ImportCertificateFromFileCommand::d_func() { return static_cast<Private*>(d.get()); }
+const ImportCertificateFromFileCommand::Private * ImportCertificateFromFileCommand::d_func() const { return static_cast<const Private*>(d.get()); }
 
-ImportCertificateCommand::Private::Private( ImportCertificateCommand * qq, KeyListController * c )
+ImportCertificateFromFileCommand::Private::Private( ImportCertificateFromFileCommand * qq, KeyListController * c )
     : Command::Private( qq, c ), importJob( 0 )
 {
     
 }
 
-ImportCertificateCommand::Private::~Private() {}
+ImportCertificateFromFileCommand::Private::~Private() {}
 
 
 #define d d_func()
 #define q q_func()
 
 
-ImportCertificateCommand::ImportCertificateCommand( KeyListController * p )
+ImportCertificateFromFileCommand::ImportCertificateFromFileCommand( KeyListController * p )
     : Command( new Private( this, p ) )
 {
     
 }
 
-ImportCertificateCommand::ImportCertificateCommand( QAbstractItemView * v, KeyListController * p )
+ImportCertificateFromFileCommand::ImportCertificateFromFileCommand( QAbstractItemView * v, KeyListController * p )
     : Command( v, new Private( this, p ) )
 {
     
 }
 
-ImportCertificateCommand::ImportCertificateCommand( const QStringList & files, KeyListController * p )
+ImportCertificateFromFileCommand::ImportCertificateFromFileCommand( const QStringList & files, KeyListController * p )
     : Command( new Private( this, p ) )
 {
     d->files = files;
 }
 
-ImportCertificateCommand::ImportCertificateCommand( const QStringList & files, QAbstractItemView * v, KeyListController * p )
+ImportCertificateFromFileCommand::ImportCertificateFromFileCommand( const QStringList & files, QAbstractItemView * v, KeyListController * p )
     : Command( v, new Private( this, p ) )
 {
     d->files = files;
 }
 
-ImportCertificateCommand::~ImportCertificateCommand() {}
+ImportCertificateFromFileCommand::~ImportCertificateFromFileCommand() {}
 
-void ImportCertificateCommand::setFiles( const QStringList & files )
+void ImportCertificateFromFileCommand::setFiles( const QStringList & files )
 {
     d->files = files;
 }
 
-void ImportCertificateCommand::doStart()
+void ImportCertificateFromFileCommand::doStart()
 {
     if ( !d->ensureHaveFile() ) {
         emit canceled();
@@ -172,14 +172,14 @@ static QStringList get_file_name( QWidget * parent ) {
     return QStringList( fn );
 }
 
-bool ImportCertificateCommand::Private::ensureHaveFile()
+bool ImportCertificateFromFileCommand::Private::ensureHaveFile()
 {
     if ( files.empty() )
         files = get_file_name( view() );
     return !files.empty();
 }
 
-void ImportCertificateCommand::Private::showDetails( const ImportResult& res )
+void ImportCertificateFromFileCommand::Private::showDetails( const ImportResult& res )
 {
     // ### TODO: make a keylisting over Import::fingerprints(), then
     // ### highlight imported certificates in view(), or maybe in a new tab?
@@ -235,7 +235,7 @@ void ImportCertificateCommand::Private::showDetails( const ImportResult& res )
                               i18n( "Certificate Import Result" ) );
 }
 
-void ImportCertificateCommand::Private::showError( const GpgME::Error& err )
+void ImportCertificateFromFileCommand::Private::showError( const GpgME::Error& err )
 {
     assert( err );
     assert( !err.isCanceled() );
@@ -247,7 +247,7 @@ void ImportCertificateCommand::Private::showError( const GpgME::Error& err )
     KMessageBox::error( view(), msg, i18n( "Certificate Import Failed" ) );
 }
 
-void ImportCertificateCommand::Private::importResult( const GpgME::ImportResult& result )
+void ImportCertificateFromFileCommand::Private::importResult( const GpgME::ImportResult& result )
 {
     if ( result.error().code() ) {
         if ( result.error().isCanceled() )
@@ -261,7 +261,7 @@ void ImportCertificateCommand::Private::importResult( const GpgME::ImportResult&
     finished();
 }
 
-void ImportCertificateCommand::Private::startImport( const QByteArray& data )
+void ImportCertificateFromFileCommand::Private::startImport( const QByteArray& data )
 {
     const GpgME::Protocol protocol = findProtocol( files.front() );
     if ( protocol == GpgME::UnknownProtocol ) { //TODO: might use exceptions here
@@ -288,7 +288,7 @@ void ImportCertificateCommand::Private::startImport( const QByteArray& data )
 }
 
 
-void ImportCertificateCommand::doCancel()
+void ImportCertificateFromFileCommand::doCancel()
 {
     if ( d->importJob )
         d->importJob->slotCancel();
@@ -297,5 +297,5 @@ void ImportCertificateCommand::doCancel()
 #undef d
 #undef q
 
-#include "moc_importcertificatecommand.cpp"
+#include "moc_importcertificatefromfilecommand.cpp"
 
