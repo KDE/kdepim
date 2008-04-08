@@ -208,7 +208,7 @@ public:
     void exportCertificates() {
         createAndStart<ExportCertificateCommand>();
     }
-    void importCertificates() {
+    void importCertificatesFromFile() {
         createAndStart<ImportCertificateFromFileCommand>();
     }
     void clearCrlCache() {
@@ -391,7 +391,7 @@ void MainWindow::Private::setupActions() {
         { "file_export_certificates", i18n("Export Certificates..."), QString(),
           "document-export", q, SLOT(exportCertificates()), "Ctrl+E", false, true }, // ### should be disabled until selected
         { "file_import_certificates", i18n("Import Certificates..."), QString(),
-          "document-import", q, SLOT(importCertificates()), "Ctrl+I", false, true }, // ### should be disabled until selected
+          "document-import", q, SLOT(importCertificatesFromFile()), "Ctrl+I", false, true }, // ### should be disabled until selected
         { "file_sign_encrypt_files", i18n("Sign/Encrypt Files..."), QString(),
           "document-encrypt" /*"file-encrypt-sign"*/, q, SLOT(signEncryptFiles()), QString(), false, true },
         // View menu
