@@ -450,7 +450,7 @@ void CertificateWizardImpl::sendCertificate( const QString& email, const QByteAr
   if ( result != 0 ) {
     kDebug() <<"Couldn't connect to KMail";
     KMessageBox::error( this,
-                        i18n( "DCOP Communication Error, unable to send certificate using KMail.\n%1", error ) );
+                        i18n( "DBUS Communication Error, unable to send certificate using KMail.\n%1", error ) );
     return;
   }
 
