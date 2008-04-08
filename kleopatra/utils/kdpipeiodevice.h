@@ -69,6 +69,9 @@ protected:
     /* reimp */ qint64 writeData( const char * data, qint64 maxSize );
 
 private:
+    using QIODevice::open;
+
+private:
     class Private;
     Private * d;
 };
