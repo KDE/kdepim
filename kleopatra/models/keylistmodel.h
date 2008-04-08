@@ -89,6 +89,7 @@ namespace Kleo {
         void rowMoved( const QModelIndex & new_parent, int new_row );
 
     public Q_SLOTS:
+        void setKeys( const std::vector<GpgME::Key> & keys );
         QModelIndex addKey( const GpgME::Key & key );
         QList<QModelIndex> addKeys( const std::vector<GpgME::Key> & keys );
         void removeKey( const GpgME::Key & key );

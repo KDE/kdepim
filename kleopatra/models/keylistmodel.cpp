@@ -136,6 +136,11 @@ QList<QModelIndex> AbstractKeyListModel::indexes( const std::vector<Key> & keys 
     return result;
 }
 
+void AbstractKeyListModel::setKeys( const std::vector<Key> & keys ) {
+    clear();
+    addKeys( keys );
+}
+
 QModelIndex AbstractKeyListModel::addKey( const Key & key ) {
     const std::vector<Key> vec( 1, key );
     const QList<QModelIndex> l = doAddKeys( vec );
