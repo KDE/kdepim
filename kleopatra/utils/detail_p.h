@@ -43,6 +43,8 @@
 #include <io.h>
 #endif
 
+class QString;
+
 namespace Kleo {
 namespace _detail {
 
@@ -100,6 +102,8 @@ namespace _detail {
         return static_cast<qulonglong>( fd );
 #endif
     }
+
+    QString gnupgHomeDirectory();
 
 }
 }

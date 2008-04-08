@@ -56,6 +56,8 @@
 
 #include "conf/configuredialog.h"
 
+#include "utils/detail_p.h"
+#include <utils/filesystemwatcher.h>
 #include "utils/stl_util.h"
 #include "utils/action_data.h"
 
@@ -124,6 +126,22 @@ namespace {
             setValue( current );
         }
     };
+
+    QStringList fileSystemWatchList()
+    {
+        const QString baseDir = _detail::gnupgHomeDirectory();
+        QStringList res;
+        res.append( baseDir + "/pubring.gpg" );
+        res.append( baseDir + "/secring.gpg" );
+        res.append( baseDir + "/pubring.kbx" );
+        res.append( baseDir + "/private-keys-v1.d" );
+        res.append( baseDir + "/trustdb.gpg" );
+        res.append( baseDir + "/trustlist.txt" );
+        res.append( baseDir + "/gpg.conf" );
+        res.append( baseDir + "/gpgsm.conf" );
+        res.append( baseDir + "/gpg-agent.conf" );
+        return res;
+    }
 }
 
 KGuiItem KStandardGuiItem_quit() {
@@ -174,8 +192,10 @@ public:
         createAndStart<DetailsCommand>();
     }
     void refreshCertificates() {
+        refreshTimer.start(); // restart
         createAndStart<RefreshKeysCommand>();
     }
+    
     void deleteCertificates() {
         createAndStart<DeleteCertificatesCommand>();
     }
@@ -236,6 +256,8 @@ private:
     Kleo::KeyListController controller;
 
     QTimer refreshTimer;
+    FileSystemWatcher gnupgHomeDirsWatcher;
+
     QPointer<ConfigureDialog> configureDialog;
 
     struct Actions {
@@ -289,20 +311,30 @@ MainWindow::Private::Private( MainWindow * qq )
       hierarchicalModel( AbstractKeyListModel::createHierarchicalKeyListModel( q ) ),
       controller( q ),
       refreshTimer(),
+      gnupgHomeDirsWatcher(),
       configureDialog(),
       actions( q ),
       ui( q )
 {
     KDAB_SET_OBJECT_NAME( controller );
     KDAB_SET_OBJECT_NAME( refreshTimer );
+    KDAB_SET_OBJECT_NAME( gnupgHomeDirsWatcher );
     KDAB_SET_OBJECT_NAME( flatModel );
     KDAB_SET_OBJECT_NAME( hierarchicalModel );
 
-    refreshTimer.setInterval( 5 * 60 * 1000 );
+    refreshTimer.setInterval( 2 * 60 * 60 * 1000 ); //2h
     refreshTimer.setSingleShot( false );
     refreshTimer.start();
     connect( &refreshTimer, SIGNAL(timeout()), q, SLOT(refreshCertificates()) );
 
+    gnupgHomeDirsWatcher.addPaths( fileSystemWatchList() );
+    gnupgHomeDirsWatcher.setDelay( 1000 );
+    
+    connect( &gnupgHomeDirsWatcher, SIGNAL( directoryChanged( QString ) ),
+             q, SLOT( refreshCertificates() ) );
+    connect( &gnupgHomeDirsWatcher, SIGNAL( fileChanged( QString ) ),
+             q, SLOT( refreshCertificates() ) );
+    
     controller.setFlatModel( flatModel );
     controller.setHierarchicalModel( hierarchicalModel );
 
