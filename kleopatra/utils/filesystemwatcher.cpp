@@ -99,11 +99,13 @@ void FileSystemWatcher::Private::handleTimer()
     m_timer.start();
 }
 
-FileSystemWatcher::FileSystemWatcher( QObject* parent ) : d( new Private( this ) )
+FileSystemWatcher::FileSystemWatcher( QObject* p )
+    : QObject( p ), d( new Private( this ) )
 {
 }
 
-FileSystemWatcher::FileSystemWatcher( const QStringList& paths, QObject* parent ) : d( new Private( this, paths ) )
+FileSystemWatcher::FileSystemWatcher( const QStringList& paths, QObject* p )
+    : QObject( p ), d( new Private( this, paths ) )
 {
 }
 
