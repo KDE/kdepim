@@ -54,17 +54,18 @@ public:
     void handleTimer();
     void onTimeout();
 
-    QFileSystemWatcher m_watcher;
+    QFileSystemWatcher* m_watcher;
     QTimer m_timer;
     QSet<QString> m_cachedDirectories;
     QSet<QString> m_cachedFiles;
+    QStringList m_paths;
 };
 
-FileSystemWatcher::Private::Private( FileSystemWatcher* qq, const QStringList& paths ) : q( qq ), m_watcher( paths )
+FileSystemWatcher::Private::Private( FileSystemWatcher* qq, const QStringList& paths ) : q( qq ), m_watcher( paths.isEmpty() ? new QFileSystemWatcher : new QFileSystemWatcher( paths ) ), m_paths( paths )
 {
     m_timer.setSingleShot( true );
-    connect( &m_watcher, SIGNAL( directoryChanged( QString ) ), q, SLOT( onDirectoryChanged( QString ) ) );
-    connect( &m_watcher, SIGNAL( fileChanged( QString ) ), q, SLOT( onFileChanged( QString ) ) );
+    connect( m_watcher, SIGNAL( directoryChanged( QString ) ), q, SLOT( onDirectoryChanged( QString ) ) );
+    connect( m_watcher, SIGNAL( fileChanged( QString ) ), q, SLOT( onFileChanged( QString ) ) );
     connect( &m_timer, SIGNAL( timeout() ), q, SLOT( onTimeout() ) );
 }
 
@@ -102,6 +103,7 @@ void FileSystemWatcher::Private::handleTimer()
 FileSystemWatcher::FileSystemWatcher( QObject* p )
     : QObject( p ), d( new Private( this ) )
 {
+    setEnabled( true );
 }
 
 FileSystemWatcher::FileSystemWatcher( const QStringList& paths, QObject* p )
@@ -111,12 +113,26 @@ FileSystemWatcher::FileSystemWatcher( const QStringList& paths, QObject* p )
 
 void FileSystemWatcher::setEnabled( bool enable )
 {
-    d->m_watcher.blockSignals( !enable );
+    if ( isEnabled() == enable )
+        return;
+    if ( enable ) {
+        assert( !d->m_watcher );
+        d->m_watcher = new QFileSystemWatcher;
+        d->m_watcher->addPaths( d->m_paths );
+        connect( d->m_watcher, SIGNAL(directoryChanged(QString)),
+                 this, SIGNAL(directoryChanged(QString)) );
+        connect( d->m_watcher, SIGNAL(fileChanged(QString)),
+                 this, SIGNAL(fileChanged(QString)) );
+    } else {
+       assert( d->m_watcher );
+       delete d->m_watcher;
+       d->m_watcher = 0;
+    }
 }
 
 bool FileSystemWatcher::isEnabled() const
 {
-    return d->m_watcher.signalsBlocked();
+    return d->m_watcher != 0;
 }
 
 FileSystemWatcher::~FileSystemWatcher()
@@ -136,32 +152,27 @@ int FileSystemWatcher::delay() const
 
 void FileSystemWatcher::addPaths( const QStringList& paths )
 {
-    d->m_watcher.addPaths( paths );
+    d->m_paths += paths;
+    if ( d->m_watcher )
+        d->m_watcher->addPaths( paths );
 }
 
 void FileSystemWatcher::addPath( const QString& path )
 {
-    d->m_watcher.addPath( path );
-}
-
-QStringList FileSystemWatcher::directories() const
-{
-    return d->m_watcher.directories();
-}
-
-QStringList FileSystemWatcher::files() const
-{
-    return d->m_watcher.files();
+    addPaths( QStringList( path ) );
 }
 
 void FileSystemWatcher::removePaths( const QStringList& paths )
 {
-    d->m_watcher.removePaths( paths );
+    Q_FOREACH ( const QString& i, paths )
+        d->m_paths.removeAll( i );
+    if ( d->m_watcher )
+        d->m_watcher->removePaths( paths );
 }
 
 void FileSystemWatcher::removePath( const QString& path )
 {
-    d->m_watcher.removePath( path );
+    removePaths( QStringList( path ) );
 }
 
 #include "filesystemwatcher.moc"

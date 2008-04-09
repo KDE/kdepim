@@ -43,6 +43,8 @@
 
 #include "libkleo/kleo/cryptobackendfactory.h"
 
+#include <utils/detail_p.h>
+#include <utils/filesystemwatcher.h>
 #include <utils/kdpipeiodevice.h>
 #include <utils/log.h>
 #ifdef Q_OS_WIN
@@ -80,9 +82,12 @@ namespace Kleo {
 #include <KUniqueApplication>
 
 #include <QDebug>
+#include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QTextDocument> // for Qt::escape
 #include <QProcess>
+#include <QStringList>
 #include <QSystemTrayIcon>
 #include <QMenu>
 #include <QAction>
@@ -102,6 +107,19 @@ namespace {
     template <typename T>
     boost::shared_ptr<T> make_shared_ptr( T * t ) {
         return t ? boost::shared_ptr<T>( t ) : boost::shared_ptr<T>() ;
+    }
+    static QStringList watchList() {
+        const QString home = Kleo::_detail::gnupgHomeDirectory();
+        QFileInfo info( home );
+        if ( !info.isDir() )
+            return QStringList();
+        QDir homeDir( home );
+        QStringList fileList = homeDir.entryList( QDir::AllEntries | QDir::NoDotAndDotDot );
+        fileList.removeAll( "dirmngr-cache.d" );
+        QStringList result;
+        Q_FOREACH( const QString& i, fileList )
+            result.push_back( homeDir.absoluteFilePath( i ) );
+        return result;
     }
 }
 
@@ -216,16 +234,19 @@ int main( int argc, char** argv )
   
   KCmdLineArgs::addCmdLineOptions( options );
 
-  // pin KeyCache to a shared_ptr to define it's minimum lifetime:
-  const boost::shared_ptr<Kleo::PublicKeyCache> publicKeyCache = Kleo::PublicKeyCache::mutableInstance();
-  const boost::shared_ptr<Kleo::SecretKeyCache> secretKeyCache = Kleo::SecretKeyCache::mutableInstance();
-
-  const boost::shared_ptr<Kleo::Log> log = Kleo::Log::mutableInstance();
-  
-  setupLogging();
-  
   KUniqueApplication app;
+
+  // pin KeyCache to a shared_ptr to define it's minimum lifetime:
+  const boost::shared_ptr<Kleo::KeyCache> keyCache = Kleo::KeyCache::mutableInstance();
+  const boost::shared_ptr<Kleo::Log> log = Kleo::Log::mutableInstance();
+  const boost::shared_ptr<Kleo::FileSystemWatcher> watcher( new Kleo::FileSystemWatcher );
   
+  watcher->addPaths( watchList() );
+  watcher->setDelay( 1000 );
+  keyCache->addFileSystemWatcher( watcher );
+
+  setupLogging();
+    
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
   KGlobal::locale()->insertCatalog( "libkleopatra" );

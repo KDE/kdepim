@@ -243,7 +243,7 @@ void CertificateSelectionDialog::Private::refresh() {
 
 void CertificateSelectionDialog::Private::slotRefreshed() {
     q->setEnabled( true );
-    std::vector<Key> keys = (options & SecretKeys) ? SecretKeyCache::instance()->keys() : PublicKeyCache::instance()->keys() ;
+    std::vector<Key> keys = (options & SecretKeys) ? KeyCache::instance()->secretKeys() : KeyCache::instance()->keys() ;
     filterAllowedKeys( keys );
     const std::vector<Key> selected = q->selectedCertificates();
     if ( AbstractKeyListModel * const model = ui.tabWidget.flatModel() )

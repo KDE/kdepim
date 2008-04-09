@@ -239,7 +239,7 @@ void DeleteCertificatesCommand::doStart() {
 
     // 2. Remove issuers of secret keys:
 
-    const std::vector<Key> issuersOfSecretKeys = PublicKeyCache::instance()->findIssuers( SecretKeyCache::instance()->keys() );
+    const std::vector<Key> issuersOfSecretKeys = KeyCache::instance()->findIssuers( KeyCache::instance()->keys() );
 
     std::sort( keys.begin(), keysEnd, _detail::ByFingerprint<std::less>() );
 
@@ -330,7 +330,7 @@ void DeleteCertificatesCommand::doStart() {
                                       cmsBegin,
                                       _detail::ByFingerprint<std::less>() );
 
-    const std::vector<Key> subjects = PublicKeyCache::instance()->findSubjects( cmsBegin, cmsEnd );
+    const std::vector<Key> subjects = KeyCache::instance()->findSubjects( cmsBegin, cmsEnd );
 
     assert( !kdtools::any( subjects.begin(), subjects.end(), bind( &Key::hasSecret, _1 ) ) );
 
@@ -437,7 +437,7 @@ void DeleteCertificatesCommand::Private::showErrorsAndFinish() {
     } else {
         std::vector<Key> keys = pgpKeys;
         keys.insert( keys.end(), cmsKeys.begin(), cmsKeys.end() );
-        PublicKeyCache::mutableInstance()->remove( keys );
+        KeyCache::mutableInstance()->remove( keys );
     }
 
     finished();

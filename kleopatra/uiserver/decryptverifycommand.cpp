@@ -826,7 +826,7 @@ void DecryptVerifyCommand::Private::sendSigStatii() const {
 
         try {
             const std::vector<Signature> sigs = vResult.signatures();
-            const std::vector<Key> signers = PublicKeyCache::instance()->findSigners( vResult );
+            const std::vector<Key> signers = KeyCache::instance()->findSigners( vResult );
             Q_FOREACH ( const Signature & sig, sigs ) {
                 const QString s = signatureToString( sig, keyForSignature( sig, signers ) );
                 const char * color = summaryToString( sig.summary() );

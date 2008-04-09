@@ -46,15 +46,21 @@ namespace GpgME {
     class Key;
     class DecryptionResult;
     class VerificationResult;
+    class KeyListResult;
 }
 
 namespace Kleo {
+
+    class FileSystemWatcher;
 
     class KeyCache : public QObject {
         Q_OBJECT
     protected:
         explicit KeyCache();
     public:
+        static boost::shared_ptr<const KeyCache> instance();
+        static boost::shared_ptr<KeyCache> mutableInstance();
+
         ~KeyCache();
 
         void insert( const GpgME::Key & key );
@@ -65,12 +71,16 @@ namespace Kleo {
         void remove( const GpgME::Key & key );
         void remove( const std::vector<GpgME::Key> & keys );
 
+        void addFileSystemWatcher( const boost::shared_ptr<FileSystemWatcher>& watcher );
+
         std::vector<GpgME::Key> keys() const;
+        std::vector<GpgME::Key> secretKeys() const;
 
         const GpgME::Key & findByFingerprint( const char * fpr ) const;
         const GpgME::Key & findByFingerprint( const std::string & fpr ) const {
             return findByFingerprint( fpr.c_str() );
         }
+
         std::vector<GpgME::Key> findByFingerprint( const std::vector<std::string> & fprs ) const;
 
         std::vector<GpgME::Key> findByEMailAddress( const char * email ) const;
@@ -105,40 +115,22 @@ namespace Kleo {
 
     public Q_SLOTS:
         void clear();
+        void startKeyListing();
+        void cancelKeyListing();
 
     Q_SIGNALS:
         void changed( const GpgME::Key & key );
         void aboutToRemove( const GpgME::Key & key );
         void added( const GpgME::Key & key );
+        void keyListingDone( const GpgME::KeyListResult & result );
 
     private:
+        class RefreshKeysJob;
+        
         class Private;
         kdtools::pimpl_ptr<Private> d;
+        Q_PRIVATE_SLOT( d, void refreshJobDone( GpgME::KeyListResult ) );
     };
-
-    class PublicKeyCache : public KeyCache {
-        Q_OBJECT
-    private:
-        explicit PublicKeyCache();
-    public:
-        //static boost::shared_ptr<PublicKeyCache> make();
-
-        static boost::shared_ptr<const PublicKeyCache> instance();
-        static boost::shared_ptr<PublicKeyCache> mutableInstance();
-
-    };
-
-    class SecretKeyCache : public KeyCache {
-        Q_OBJECT
-    private:
-        explicit SecretKeyCache();
-    public:
-        //static boost::shared_ptr<SecretKeyCache> make();
-
-        static boost::shared_ptr<const SecretKeyCache> instance();
-        static boost::shared_ptr<SecretKeyCache> mutableInstance();
-    };
-
 }
 
 #endif /* __KLEOPATRA_MODELS_KEYCACHE_H__ */

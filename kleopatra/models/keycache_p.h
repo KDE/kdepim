@@ -1,8 +1,8 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    refreshkeyscommand.h
+    models/keycache_p.h
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2008 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,32 +30,40 @@
     your version.
 */
 
+#ifndef __KLEOPATRA_KEYCACHE_P_H__
+#define __KLEOPATRA_KEYCACHE_P_H__
 
-#ifndef __KLEOPATRA_REFRESHKEYSCOMMAND_H__
-#define __KLEOPATRA_REFRESHKEYSCOMMAND_H__
+#include "keycache.h"
+#include <utils/pimpl_ptr.h>
 
-#include <commands/command.h>
+namespace GpgME {
+    class KeyListResult;
+}
 
-namespace  Kleo {
+namespace Kleo {
 
-    class RefreshKeysCommand : public Command {
+    class KeyCache::RefreshKeysJob : public QObject {
         Q_OBJECT
     public:
-        explicit RefreshKeysCommand( KeyListController* parent );
-        RefreshKeysCommand( QAbstractItemView * view, KeyListController* parent );
-        ~RefreshKeysCommand();        
 
-    private:
-        void doStart();
-        void doCancel();
+        explicit RefreshKeysJob( KeyCache* cache, QObject* parent = 0 );
+        ~RefreshKeysJob();
+
+        void start();
+        void cancel();
+
+   Q_SIGNALS:
+        void done( const GpgME::KeyListResult & );
+        void canceled();
 
     private:
         class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-
-        Q_PRIVATE_SLOT( d_func(), void keyListingDone( GpgME::KeyListResult ) )
+        kdtools::pimpl_ptr<Private> d;
+        Q_PRIVATE_SLOT( d, void jobDone( GpgME::KeyListResult ) )
+        Q_PRIVATE_SLOT( d, void nextSecretKey( GpgME::Key ) )
+        Q_PRIVATE_SLOT( d, void nextPublicKey( GpgME::Key ) )
+        Q_PRIVATE_SLOT( d, void doStart() )
     };
 }
 
-#endif // __KLEOPATRA_REFRESHKEYSCOMMAND_H__
+#endif // __KLEOPATRA_KEYCACHE_P_H__

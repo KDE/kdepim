@@ -36,24 +36,10 @@
 #include "command_p.h"
 
 #include <models/keycache.h>
-#include <models/predicates.h>
 
-#include <utils/stl_util.h>
-
-#include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>
 
-#include <kleo/cryptobackendfactory.h>
-#include <kleo/keylistjob.h>
-
-#include <QStringList>
-
 #include <boost/bind.hpp>
-
-#include <deque>
-#include <vector>
-#include <algorithm>
-#include <cassert>
 
 using namespace Kleo;
 using namespace boost;
@@ -65,25 +51,7 @@ public:
     Private( RefreshKeysCommand * qq, KeyListController* controller );
     ~Private();
 
-    enum KeyType {
-        PublicKeys,
-        SecretKeys
-    };
-    void startKeyListing( const char* backend, KeyType type );
-
-    void publicKeyListingDone( const KeyListResult & result );
-    void secretKeyListingDone( const KeyListResult & result );
-
-    void addKey( const Key & key );
-
-    void mergeKeysAndUpdateKeyCache();
-
-private:
-    uint m_pubKeysJobs;
-    uint m_secKeysJobs;
-    bool canceled;
-
-    std::deque<Key> m_pubkeys, m_seckeys;
+    void keyListingDone( const KeyListResult & result );
 };
 
 RefreshKeysCommand::Private * RefreshKeysCommand::d_func() { return static_cast<Private*>( d.get() ); }
@@ -105,137 +73,27 @@ RefreshKeysCommand::RefreshKeysCommand( QAbstractItemView * v, KeyListController
 RefreshKeysCommand::~RefreshKeysCommand() {}
 
 RefreshKeysCommand::Private::Private( RefreshKeysCommand * qq, KeyListController * controller )
-    : Command::Private( qq, controller ),
-      m_pubKeysJobs( 0 ),
-      m_secKeysJobs( 0 ),
-      canceled( false ),
-      m_pubkeys(),
-      m_seckeys()
+    : Command::Private( qq, controller )
 {
-
 }
 
 RefreshKeysCommand::Private::~Private() {}
 
-
-void RefreshKeysCommand::Private::startKeyListing( const char* backend, KeyType type )
-{
-    const Kleo::CryptoBackend::Protocol * const protocol = Kleo::CryptoBackendFactory::instance()->protocol( backend );
-    if ( !protocol )
-        return;
-    Kleo::KeyListJob * const job = protocol->keyListJob( /*remote*/false, /*includeSigs*/false, /*validate*/true );
-    if ( !job )
-        return;
-    if ( type == PublicKeys ) {
-        connect( job, SIGNAL(result(GpgME::KeyListResult)),
-                 q, SLOT(publicKeyListingDone(GpgME::KeyListResult)) );
-    } else {
-        connect( job, SIGNAL(result(GpgME::KeyListResult)),
-                 q, SLOT(secretKeyListingDone(GpgME::KeyListResult)) );
-    }
-    connect( job, SIGNAL(progress(QString,int,int)),
-             q, SIGNAL(progress(QString,int,int)) );
-    connect( job, SIGNAL(nextKey(GpgME::Key)),
-             q, SLOT(addKey(GpgME::Key)) );
-    connect( q, SIGNAL(canceled()),
-             job, SLOT(slotCancel()) );
-    const GpgME::Error error = job->start( QStringList(), type == SecretKeys );
-    ++( type == PublicKeys ? m_pubKeysJobs : m_secKeysJobs );
-    if ( error || error.isCanceled() )
-        if ( type == PublicKeys )
-            publicKeyListingDone( KeyListResult( error ) );
-        else
-            secretKeyListingDone( KeyListResult( error ) );
-}
-
-void RefreshKeysCommand::Private::publicKeyListingDone( const KeyListResult & result )
-{
-    assert( m_pubKeysJobs > 0 );
-    --m_pubKeysJobs;
-    if ( result.error().isCanceled() )
-        finished();
-    else if ( m_pubKeysJobs == 0 ) {
-        startKeyListing( "openpgp", Private::SecretKeys );
-        startKeyListing( "smime", Private::SecretKeys );
-    }
-}
-
-
-void RefreshKeysCommand::Private::secretKeyListingDone( const KeyListResult & result )
-{
-    assert( m_secKeysJobs > 0 );
-    --m_secKeysJobs;
-    if ( result.error().isCanceled() || m_secKeysJobs == 0 )
-        finished();
-    if ( m_secKeysJobs == 0 )
-        mergeKeysAndUpdateKeyCache();
-}
-
-namespace {
-    template <typename ForwardIterator, typename BinaryPredicate>
-    ForwardIterator unique_by_merge( ForwardIterator first, ForwardIterator last, BinaryPredicate pred ) {
-        first = std::adjacent_find( first, last, pred );
-        if ( first == last )
-            return last;
-
-        ForwardIterator dest = first;
-        dest->mergeWith( *++first );
-        while ( ++first != last )
-            if ( pred( *dest, *first ) )
-                dest->mergeWith( *first );
-            else
-                *++dest = *first;
-        return ++dest;
-    }
-}
-
-void RefreshKeysCommand::Private::mergeKeysAndUpdateKeyCache()
-{
-    std::sort( m_pubkeys.begin(), m_pubkeys.end(), _detail::ByFingerprint<std::less>() );
-    std::sort( m_seckeys.begin(), m_seckeys.end(), _detail::ByFingerprint<std::less>() );
-
-    std::vector<Key> keys;
-    keys.reserve( m_pubkeys.size() + m_seckeys.size() );
-
-    std::merge( m_pubkeys.begin(), m_pubkeys.end(),
-                m_seckeys.begin(), m_seckeys.end(),
-                std::back_inserter( keys ),
-                _detail::ByFingerprint<std::less>() );
-
-    keys.erase( unique_by_merge( keys.begin(), keys.end(), _detail::ByFingerprint<std::equal_to>() ),
-                keys.end() );
-
-    std::vector<Key> sec;
-    sec.reserve( m_seckeys.size() );
-    kdtools::copy_if( keys.begin(), keys.end(), std::back_inserter( sec ),
-                      bind( &Key::hasSecret, _1 ) );
-
-    PublicKeyCache::mutableInstance()->refresh( keys );
-    SecretKeyCache::mutableInstance()->refresh( sec );
-}
-
-void RefreshKeysCommand::Private::addKey( const Key & key )
-{
-    if ( key.hasSecret() )
-        m_seckeys.push_back( key );
-    else
-        m_seckeys.push_back( key );
+void RefreshKeysCommand::Private::keyListingDone( const KeyListResult & result ) {
+    //TODO: handle result
+    finished();
 }
 
 #define d d_func()
 
 void RefreshKeysCommand::doStart() {
-    /* NOTE: first fetch public keys. when done, fetch secret keys. hasSecret() works only
-       correctly when the key was retrieved with --list-secret-keys (secretOnly flag
-       in gpgme keylist operations) so we overwrite the key from --list-keys (secret
-       not set) with the one from --list-secret-keys (with secret set).
-    */
-    d->startKeyListing( "openpgp", Private::PublicKeys );
-    d->startKeyListing( "smime", Private::PublicKeys );
+    connect( KeyCache::mutableInstance().get(), SIGNAL(keyListingDone(GpgME::KeyListResult)),
+             this, SLOT(keyListingDone(GpgME::KeyListResult)) );
+    KeyCache::mutableInstance()->startKeyListing();
 }
 
 void RefreshKeysCommand::doCancel() {
-    d->canceled = true;
+    KeyCache::mutableInstance()->cancelKeyListing();
 }
 
 #undef d

@@ -97,11 +97,11 @@ void SigningCertificateSelectionDialog::setSelectedCertificates( const QMap<GpgM
 std::vector<GpgME::Key> SigningCertificateSelectionDialog::Private::candidates( GpgME::Protocol prot ) const
 {
     assert( prot != GpgME::UnknownProtocol );
-    std::vector<GpgME::Key> keys = SecretKeyCache::instance()->keys();
+    std::vector<GpgME::Key> keys = KeyCache::instance()->keys();
     std::vector<GpgME::Key>::iterator end = keys.end();
 
     end = std::remove_if( keys.begin(), end, bind( &GpgME::Key::protocol, _1 ) != prot );
-    //end = std::remove_if( keys.begin(), end, !bind( &GpgME::Key::hasSecret, _1 ) );
+    end = std::remove_if( keys.begin(), end, !bind( &GpgME::Key::hasSecret, _1 ) );
     assert( kdtools::all( keys.begin(), end, bind( &GpgME::Key::hasSecret, _1 ) ) );
     end = std::remove_if( keys.begin(), end, !bind( &GpgME::Key::canSign, _1 ) );
     keys.erase( end, keys.end() );
@@ -122,9 +122,9 @@ QMap<GpgME::Protocol, GpgME::Key> SigningCertificateSelectionDialog::selectedCer
     QMap<GpgME::Protocol, GpgME::Key> res;
     
     const QByteArray pgpfpr = d->ui.pgpCombo->itemData( d->ui.pgpCombo->currentIndex() ).toByteArray();
-    res.insert( GpgME::OpenPGP, SecretKeyCache::instance()->findByFingerprint( pgpfpr.constData() ) );
+    res.insert( GpgME::OpenPGP, KeyCache::instance()->findByFingerprint( pgpfpr.constData() ) );
     const QByteArray cmsfpr = d->ui.cmsCombo->itemData( d->ui.cmsCombo->currentIndex() ).toByteArray();
-    res.insert( GpgME::CMS, SecretKeyCache::instance()->findByFingerprint( cmsfpr.constData() ) );
+    res.insert( GpgME::CMS, KeyCache::instance()->findByFingerprint( cmsfpr.constData() ) );
     return res;
 }
 

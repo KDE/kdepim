@@ -33,20 +33,34 @@
 #include <config-kleopatra.h>
 
 #include "keycache.h"
+#include "keycache_p.h"
+
 #include "predicates.h"
 
+#include <utils/filesystemwatcher.h>
 #include <utils/stl_util.h>
 
+#include <kleo/cryptobackendfactory.h>
 #include <kleo/dn.h>
+#include <kleo/keylistjob.h>
 
+#include <gpgme++/error.h>
 #include <gpgme++/key.h>
 #include <gpgme++/decryptionresult.h>
 #include <gpgme++/verificationresult.h>
+#include <gpgme++/keylistresult.h>
+
+#include <gpg-error.h>
+
+#include <QPointer>
+#include <QStringList>
+#include <QTimer>
 
 #include <boost/bind.hpp>
 #include <boost/range.hpp>
 #include <boost/weak_ptr.hpp>
 
+#include <deque>
 #include <utility>
 #include <algorithm>
 #include <functional>
@@ -56,59 +70,12 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
-//
-//
-// PublicKeyCache
-//
-//
-
-shared_ptr<const PublicKeyCache> PublicKeyCache::instance() {
-    return mutableInstance();
-}
-
-shared_ptr<PublicKeyCache> PublicKeyCache::mutableInstance() {
-    static weak_ptr<PublicKeyCache> self;
-    try {
-        return shared_ptr<PublicKeyCache>( self );
-    } catch ( const bad_weak_ptr & ) {
-        const shared_ptr<PublicKeyCache> s( new PublicKeyCache );
-        self = s;
-        return s;
-    }
-}
-
-PublicKeyCache::PublicKeyCache() : KeyCache() {}
-
-
-//
-//
-// SecretKeyCache
-//
-//
-
-shared_ptr<const SecretKeyCache> SecretKeyCache::instance() {
-    return mutableInstance();
-}
-
-shared_ptr<SecretKeyCache> SecretKeyCache::mutableInstance() {
-    static weak_ptr<SecretKeyCache> self;
-    try {
-        return shared_ptr<SecretKeyCache>( self );
-    } catch ( const bad_weak_ptr & ) {
-        const shared_ptr<SecretKeyCache> s( new SecretKeyCache );
-        self = s;
-        return s;
-    }
-}
-
-SecretKeyCache::SecretKeyCache() : KeyCache() {}
 
 //
 //
 // KeyCache
 //
 //
-
 
 namespace {
 
@@ -118,6 +85,25 @@ namespace {
         bool operator()( const char * s ) const { return !s || !*s; }
     };
 
+    template <typename ForwardIterator, typename BinaryPredicate>
+    ForwardIterator unique_by_merge( ForwardIterator first, ForwardIterator last, BinaryPredicate pred ) {
+        first = std::adjacent_find( first, last, pred );
+        if ( first == last )
+            return last;
+
+        ForwardIterator dest = first;
+        dest->mergeWith( *++first );
+        while ( ++first != last )
+            if ( pred( *dest, *first ) )
+                dest->mergeWith( *first );
+            else
+                *++dest = *first;
+        return ++dest;
+    }
+    
+    static bool isErrorOrCanceled( const Error & error ) {
+        return error || error.isCanceled();
+    }
 }
 
 class KeyCache::Private {
@@ -163,6 +149,11 @@ public:
                                  chain_id, _detail::ByChainID<std::less>() );
     }
 
+    void refreshJobDone( const KeyListResult & result );
+
+    QPointer<RefreshKeysJob> m_refreshJob;
+    std::vector<shared_ptr<FileSystemWatcher> > m_fsWatchers;
+
 private:
     struct By {
         std::vector<Key> fpr, keyid, shortkeyid, chainid;
@@ -171,6 +162,20 @@ private:
 };
 
 
+shared_ptr<const KeyCache> KeyCache::instance() {
+    return mutableInstance();
+}
+
+shared_ptr<KeyCache> KeyCache::mutableInstance() {
+    static weak_ptr<KeyCache> self;
+    try {
+        return shared_ptr<KeyCache>( self );
+    } catch ( const bad_weak_ptr & ) {
+        const shared_ptr<KeyCache> s( new KeyCache );
+        self = s;
+        return s;
+    }
+}
 
 KeyCache::KeyCache()
     : QObject(), d( new Private( this ) )
@@ -180,6 +185,43 @@ KeyCache::KeyCache()
 
 KeyCache::~KeyCache() {}
 
+void KeyCache::startKeyListing()
+{
+    if ( d->m_refreshJob )
+        return;
+    Q_FOREACH( const shared_ptr<FileSystemWatcher>& i, d->m_fsWatchers )
+        i->setEnabled( false );
+    d->m_refreshJob = new RefreshKeysJob( this );
+    connect( d->m_refreshJob, SIGNAL(done(GpgME::KeyListResult)), this, SLOT(refreshJobDone(GpgME::KeyListResult)) );
+    d->m_refreshJob->start();
+}
+
+void KeyCache::cancelKeyListing()
+{
+    if ( !d->m_refreshJob )
+        return;
+    d->m_refreshJob->cancel();
+}
+
+void KeyCache::addFileSystemWatcher( const shared_ptr<FileSystemWatcher>& watcher )
+{
+    if ( !watcher )
+        return;
+    d->m_fsWatchers.push_back( watcher );
+    connect( watcher.get(), SIGNAL( directoryChanged( QString ) ),
+             this, SLOT( startKeyListing() ) );
+    connect( watcher.get(), SIGNAL( fileChanged( QString ) ),
+             this, SLOT( startKeyListing() ) );
+
+    watcher->setEnabled( d->m_refreshJob == 0 );
+}
+
+void KeyCache::Private::refreshJobDone( const KeyListResult& result )
+{
+    emit q->keyListingDone( result );
+    Q_FOREACH( const shared_ptr<FileSystemWatcher>& i, m_fsWatchers )
+        i->setEnabled( true );
+}
 
 const Key & KeyCache::findByFingerprint( const char * fpr ) const {
     const std::vector<Key>::const_iterator it = d->find_fpr( fpr );
@@ -474,6 +516,13 @@ std::vector<GpgME::Key> KeyCache::keys() const
     return d->by.fpr;
 }
 
+std::vector<Key> KeyCache::secretKeys() const
+{
+    std::vector<Key> keys = this->keys();
+    keys.erase( std::remove_if( keys.begin(), keys.end(), !bind( &Key::hasSecret, _1 ) ) );
+    return keys;
+}
+
 void KeyCache::refresh( const std::vector<Key> & keys ) {
     // make this better...
     clear();
@@ -598,6 +647,154 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
 void KeyCache::clear() {
     d->by = Private::By();
 }
+//
+//
+// RefreshKeysJob
+//
+//
 
+class KeyCache::RefreshKeysJob::Private
+{
+    RefreshKeysJob * const q;
+public:
+    enum KeyType {
+        PublicKeys,
+        SecretKeys
+    };
+    
+    Private( KeyCache * cache, RefreshKeysJob * qq );
+    void doStart();
+    Error startKeyListing( const char* protocol, KeyType type );
+    void jobDone( const KeyListResult & res );
+    void emitDone( const KeyListResult & result );
+    void nextSecretKey( const Key & key );
+    void nextPublicKey( const Key & key );
+    void mergeKeysAndUpdateKeyCache();
+
+    KeyCache * m_cache;
+    uint m_jobsPending;
+    std::deque<Key> m_publicKeys;
+    std::deque<Key> m_secretKeys;
+    KeyListResult m_mergedResult;
+};
+
+KeyCache::RefreshKeysJob::Private::Private( KeyCache * cache, RefreshKeysJob * qq ) : q( qq ), m_cache( cache ), m_jobsPending( 0 )
+{
+    assert( m_cache );
+}
+
+void KeyCache::RefreshKeysJob::Private::jobDone( const KeyListResult & result )
+{
+    QObject* const sender = q->sender();
+    if ( sender )
+        sender->disconnect( q );
+    assert( m_jobsPending > 0 );
+    --m_jobsPending;
+    m_mergedResult.mergeWith( result );
+    if ( m_jobsPending > 0 )
+        return;
+    mergeKeysAndUpdateKeyCache();
+    emitDone( m_mergedResult );
+}
+
+void KeyCache::RefreshKeysJob::Private::emitDone( const KeyListResult & res )
+{
+    q->deleteLater();
+    emit q->done( res );
+}
+
+void KeyCache::RefreshKeysJob::Private::nextSecretKey( const Key & key )
+{
+    m_secretKeys.push_back( key );
+}
+
+void KeyCache::RefreshKeysJob::Private::nextPublicKey( const Key & key )
+{
+    m_publicKeys.push_back( key );
+}
+
+KeyCache::RefreshKeysJob::RefreshKeysJob( KeyCache * cache, QObject * parent ) : QObject( parent ), d( new Private( cache, this ) )
+{
+}
+
+KeyCache::RefreshKeysJob::~RefreshKeysJob() {}
+
+
+void KeyCache::RefreshKeysJob::start()
+{
+    QTimer::singleShot( 0, this, SLOT( doStart() ) );
+}
+
+void KeyCache::RefreshKeysJob::cancel()
+{
+    emit canceled();
+}
+
+void KeyCache::RefreshKeysJob::Private::doStart()
+{
+    assert( m_jobsPending == 0 );
+    m_mergedResult.mergeWith( KeyListResult( startKeyListing( "openpgp", PublicKeys ) ) );
+    m_mergedResult.mergeWith( KeyListResult( startKeyListing( "openpgp", SecretKeys ) ) );
+    m_mergedResult.mergeWith( KeyListResult( startKeyListing( "smime", PublicKeys ) ) );
+    m_mergedResult.mergeWith( KeyListResult( startKeyListing( "smime", SecretKeys ) ) );
+    
+    if ( m_jobsPending != 0 )
+        return;
+
+    const bool hasError = m_mergedResult.error() || m_mergedResult.error().isCanceled();
+    emitDone( hasError ? m_mergedResult : KeyListResult( Error( GPG_ERR_UNSUPPORTED_OPERATION ) ) );
+}
+
+void KeyCache::RefreshKeysJob::Private::mergeKeysAndUpdateKeyCache()
+{
+    std::sort( m_publicKeys.begin(), m_publicKeys.end(), _detail::ByFingerprint<std::less>() );
+    std::sort( m_secretKeys.begin(), m_secretKeys.end(), _detail::ByFingerprint<std::less>() );
+
+    std::vector<Key> keys;
+    keys.reserve( m_publicKeys.size() + m_secretKeys.size() );
+
+    std::merge( m_publicKeys.begin(), m_publicKeys.end(),
+                m_secretKeys.begin(), m_secretKeys.end(),
+                std::back_inserter( keys ),
+                _detail::ByFingerprint<std::less>() );
+
+    keys.erase( unique_by_merge( keys.begin(), keys.end(), _detail::ByFingerprint<std::equal_to>() ),
+                keys.end() );
+
+    m_cache->refresh( keys );
+}
+
+Error KeyCache::RefreshKeysJob::Private::startKeyListing( const char* backend, KeyType type )
+{
+    const Kleo::CryptoBackend::Protocol * const protocol = Kleo::CryptoBackendFactory::instance()->protocol( backend );
+    if ( !protocol )
+        return Error();
+    Kleo::KeyListJob * const job = protocol->keyListJob( /*remote*/false, /*includeSigs*/false, /*validate*/true );
+    if ( !job )
+        return Error();
+    connect( job, SIGNAL(result(GpgME::KeyListResult)),
+             q, SLOT(jobDone(GpgME::KeyListResult)) );
+#if 0
+    connect( job, SIGNAL(progress(QString,int,int)),
+             q, SIGNAL(progress(QString,int,int)) );
+#endif
+    connect( q, SIGNAL(canceled()),
+             job, SLOT(slotCancel()) );
+
+    if ( type == PublicKeys )
+        connect( job, SIGNAL(nextKey(GpgME::Key)),
+                 q, SLOT(nextPublicKey(GpgME::Key)) );
+    else
+        connect( job, SIGNAL(nextKey(GpgME::Key)),
+                 q, SLOT(nextSecretKey(GpgME::Key)) );
+    
+    const Error error = job->start( QStringList(), type == SecretKeys );
+    
+    if ( !error && !error.isCanceled() )
+        ++m_jobsPending;
+    return error;
+}
+
+#include "moc_keycache_p.cpp"
 #include "moc_keycache.cpp"
 

@@ -126,11 +126,9 @@ KeyListController::Private::Private( KeyListController * qq )
       flatModel( 0 ),
       hierarchicalModel( 0 )
 {
-    // We only connect to PublicKeyCache, since we assume that
-    // SecretKeyCache's content is a real subset of PublicKeyCache's:
-    connect( PublicKeyCache::mutableInstance().get(), SIGNAL(added(GpgME::Key)),
+    connect( KeyCache::mutableInstance().get(), SIGNAL(added(GpgME::Key)),
              q, SLOT(slotAddKey(GpgME::Key)) );
-    connect( PublicKeyCache::mutableInstance().get(), SIGNAL(aboutToRemove(GpgME::Key)),
+    connect( KeyCache::mutableInstance().get(), SIGNAL(aboutToRemove(GpgME::Key)),
              q, SLOT(slotAboutToRemoveKey(GpgME::Key)) );
 
 }
@@ -188,7 +186,7 @@ void KeyListController::setFlatModel( AbstractKeyListModel * model ) {
     
     if ( model ) {
         model->clear();
-        model->addKeys( PublicKeyCache::instance()->keys() );
+        model->addKeys( KeyCache::instance()->keys() );
     }
 }
 
@@ -200,7 +198,7 @@ void KeyListController::setHierarchicalModel( AbstractKeyListModel * model ) {
     
     if ( model ) {
         model->clear();
-        model->addKeys( PublicKeyCache::instance()->keys() );
+        model->addKeys( KeyCache::instance()->keys() );
     }
 }
 

@@ -340,7 +340,7 @@ void ResolveRecipientsPage::ItemWidget::setCertificates( const std::vector<Key>&
 
 Key ResolveRecipientsPage::ItemWidget::selectedCertificate() const
 {
-    return PublicKeyCache::instance()->findByKeyIDOrFingerprint( m_certCombo->itemData( m_certCombo->currentIndex(), ListWidget::IdRole ).toString().toStdString() );
+    return KeyCache::instance()->findByKeyIDOrFingerprint( m_certCombo->itemData( m_certCombo->currentIndex(), ListWidget::IdRole ).toString().toStdString() );
 }
 
 
@@ -353,7 +353,7 @@ std::vector<Key> ResolveRecipientsPage::ItemWidget::certificates() const
 {
     std::vector<Key> certs;
     for ( int i = 0; i < m_certCombo->count(); ++i )
-        certs.push_back( PublicKeyCache::instance()->findByKeyIDOrFingerprint( m_certCombo->itemData( i, ListWidget::IdRole ).toString().toStdString() ) );
+        certs.push_back( KeyCache::instance()->findByKeyIDOrFingerprint( m_certCombo->itemData( i, ListWidget::IdRole ).toString().toStdString() ) );
     return certs;
 }
 
