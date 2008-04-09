@@ -244,6 +244,7 @@ void ExtensionManager::createExtensionWidgets()
       mSplitter->addWidget( wdg );
       if ( wdg->identifier() == "distribution_list_editor_ng" )
           mSplitter->insertWidget( 0, wdg );
+      wdg->updateGeometry();
       wdg->setVisible( false );
       connect( wdg, SIGNAL( modified( const KABC::Addressee::List& ) ),
                SIGNAL( modified( const KABC::Addressee::List& ) ) );
