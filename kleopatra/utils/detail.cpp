@@ -46,7 +46,7 @@
 QString Kleo::_detail::gnupgHomeDirectory()
 {
 #ifdef Q_OS_WIN
-    return QFile::decodePath( default_homedir() );
+    return QFile::decodeName( default_homedir() );
 #else
     return QDir::homePath() + "/.gnupg";
 #endif
