@@ -87,7 +87,6 @@
 #include <QCloseEvent>
 #include <QDialogButtonBox>
 #include <QProcess>
-#include <QTimer>
 #include <QMenu>
 
 #include <kleo/cryptobackendfactory.h>
@@ -175,7 +174,6 @@ public:
         createAndStart<DetailsCommand>();
     }
     void refreshCertificates() {
-        refreshTimer.start(); // restart
         createAndStart<RefreshKeysCommand>();
     }
     
@@ -238,8 +236,6 @@ private:
     Kleo::AbstractKeyListModel * hierarchicalModel;
     Kleo::KeyListController controller;
 
-    QTimer refreshTimer;
-
     QPointer<ConfigureDialog> configureDialog;
 
     struct Actions {
@@ -292,21 +288,14 @@ MainWindow::Private::Private( MainWindow * qq )
       flatModel( AbstractKeyListModel::createFlatKeyListModel( q ) ),
       hierarchicalModel( AbstractKeyListModel::createHierarchicalKeyListModel( q ) ),
       controller( q ),
-      refreshTimer(),
       configureDialog(),
       actions( q ),
       ui( q )
 {
     KDAB_SET_OBJECT_NAME( controller );
-    KDAB_SET_OBJECT_NAME( refreshTimer );
     KDAB_SET_OBJECT_NAME( flatModel );
     KDAB_SET_OBJECT_NAME( hierarchicalModel );
 
-    refreshTimer.setInterval( 2 * 60 * 60 * 1000 ); //2h
-    refreshTimer.setSingleShot( false );
-    refreshTimer.start();
-    connect( &refreshTimer, SIGNAL(timeout()), q, SLOT(refreshCertificates()) );
-    
     controller.setFlatModel( flatModel );
     controller.setHierarchicalModel( hierarchicalModel );
 

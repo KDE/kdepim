@@ -110,7 +110,9 @@ class KeyCache::Private {
     friend class ::Kleo::KeyCache;
     KeyCache * const q;
 public:
-    explicit Private( KeyCache * qq ) : q( qq ) {}
+    explicit Private( KeyCache * qq ) : q( qq ) {
+        connect( &m_autoKeyListingTimer, SIGNAL( timeout() ), q, SLOT( startKeyListing() ) );
+    }
 
     template < template <template <typename U> class Op> class Comp >
     std::vector<Key>::const_iterator find( const std::vector<Key> & keys, const char * key ) const {
@@ -153,6 +155,7 @@ public:
 
     QPointer<RefreshKeysJob> m_refreshJob;
     std::vector<shared_ptr<FileSystemWatcher> > m_fsWatchers;
+    QTimer m_autoKeyListingTimer;
 
 private:
     struct By {
@@ -189,6 +192,8 @@ void KeyCache::startKeyListing()
 {
     if ( d->m_refreshJob )
         return;
+    if ( d->m_autoKeyListingTimer.isActive() )
+        d->m_autoKeyListingTimer.start(); //restart timer
     Q_FOREACH( const shared_ptr<FileSystemWatcher>& i, d->m_fsWatchers )
         i->setEnabled( false );
     d->m_refreshJob = new RefreshKeysJob( this );
@@ -647,6 +652,21 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
 void KeyCache::clear() {
     d->by = Private::By();
 }
+
+int KeyCache::autoKeyListingInterval() const
+{
+    return d->m_autoKeyListingTimer.interval();
+}
+
+void KeyCache::setAutoKeyListingInterval( int ms )
+{
+    d->m_autoKeyListingTimer.setInterval( ms );
+    if ( ms == 0 )
+        d->m_autoKeyListingTimer.stop();
+    else
+        d->m_autoKeyListingTimer.start();
+}
+
 //
 //
 // RefreshKeysJob

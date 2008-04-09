@@ -113,6 +113,9 @@ namespace Kleo {
         std::vector<GpgME::Key> findIssuers( const std::vector<GpgME::Key> & keys, Option options=RecursiveSearch ) const;
         std::vector<GpgME::Key> findIssuers( std::vector<GpgME::Key>::const_iterator first, std::vector<GpgME::Key>::const_iterator last, Option options=RecursiveSearch ) const;
 
+        int autoKeyListingInterval() const;
+        void setAutoKeyListingInterval( int ms );
+
     public Q_SLOTS:
         void clear();
         void startKeyListing();
