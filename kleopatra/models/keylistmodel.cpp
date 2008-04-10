@@ -714,7 +714,8 @@ QList<QModelIndex> HierarchicalKeyListModel::doAddKeys( const std::vector<Key> &
 
 void HierarchicalKeyListModel::doRemoveKey( const Key & key ) {
     const QModelIndex idx = index( key );
-
+    if ( !idx.isValid() )
+        return;
     //TODO: only removal of leaf nodes is implemented so far
     if ( hasChildren( idx ) )
         return;
@@ -731,7 +732,7 @@ void HierarchicalKeyListModel::doRemoveKey( const Key & key ) {
     assert( idx.isValid() );
     assert( !parentIdx.isValid() || !parentKey.isNull() );
 
-    beginRemoveRows( parentIdx, idx.row(), idx.row() );   
+    beginRemoveRows( parentIdx, idx.row(), idx.row() );
     mKeysByFingerprint.erase( it );
 
     if ( !parentIdx.isValid() ) {

@@ -781,6 +781,11 @@ void KeyCache::RefreshKeysJob::Private::mergeKeysAndUpdateKeyCache()
     keys.erase( unique_by_merge( keys.begin(), keys.end(), _detail::ByFingerprint<std::equal_to>() ),
                 keys.end() );
 
+    std::vector<Key> cachedKeys = m_cache->keys();
+    std::sort( cachedKeys.begin(), cachedKeys.end(), _detail::ByFingerprint<std::less>() );
+    std::vector<Key> keysToRemove;
+    std::set_difference( cachedKeys.begin(), cachedKeys.end(), keys.begin(), keys.end(), std::back_inserter( keysToRemove ), _detail::ByFingerprint<std::less>() );
+    m_cache->remove( keysToRemove );
     m_cache->refresh( keys );
 }
 
