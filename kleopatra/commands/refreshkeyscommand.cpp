@@ -37,6 +37,8 @@
 
 #include <models/keycache.h>
 
+#include <KDebug>
+
 #include <gpgme++/keylistresult.h>
 
 #include <boost/bind.hpp>
@@ -80,7 +82,8 @@ RefreshKeysCommand::Private::Private( RefreshKeysCommand * qq, KeyListController
 RefreshKeysCommand::Private::~Private() {}
 
 void RefreshKeysCommand::Private::keyListingDone( const KeyListResult & result ) {
-    //TODO: handle result
+    if ( result.error() ) // ### Show error message here? 
+        kError() << "Error occurred during key listing: " << result.error().asString();
     finished();
 }
 
