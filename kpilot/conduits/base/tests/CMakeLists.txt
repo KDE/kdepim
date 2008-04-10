@@ -35,7 +35,6 @@ set(testlib_SRCS
 
 kde4_add_library(testlib SHARED ${testlib_SRCS})
 target_link_libraries(testlib kpilot_conduit_base)
-install(TARGETS testlib LIBRARY DESTINATION ${LIB_INSTALL_DIR})
 
 RECORD_CONDUIT_UNIT_TESTS(
 	idmappingxmlsourcetest
