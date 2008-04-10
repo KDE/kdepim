@@ -100,10 +100,6 @@ namespace {
                 *++dest = *first;
         return ++dest;
     }
-    
-    static bool isErrorOrCanceled( const Error & error ) {
-        return error || error.isCanceled();
-    }
 }
 
 class KeyCache::Private {
