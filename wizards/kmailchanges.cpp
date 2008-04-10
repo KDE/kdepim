@@ -248,7 +248,8 @@ void CreateDisconnectedImapAccount::apply()
     group.writeEntry( "store-passwd", true );
   }
 
-  group = c.group( QString("Transport %1").arg( transportId ) );
+  KConfig transport( "mailtransports" );
+  group = transport.group( QString("Transport %1").arg( transportId ) );
   group.writeEntry( "name", mAccountName );
   group.writeEntry( "host", mServer );
   group.writeEntry( "type", "smtp" );
@@ -264,6 +265,7 @@ void CreateDisconnectedImapAccount::apply()
   } else if ( mAuthenticationSend == LOGIN ) {
     group.writeEntry( "authtype", "LOGIN" );
   }
+  group.writeEntry( "id", transportId );
   group.writeEntry( "user", mUser );
   if ( mEnableSavePassword ) {
     if ( !writeToWallet( "transport", transportId ) ) {
@@ -374,9 +376,17 @@ bool CreateImapAccount::writeToWallet(const QString & type, int id)
     mWallet = Wallet::openWallet( Wallet::NetworkWallet(), window );
     if ( !mWallet )
       return false;
-    if ( !mWallet->hasFolder( "kmail" ) )
-      mWallet->createFolder( "kmail" );
-    mWallet->setFolder( "kmail" );
   }
-  return mWallet->writePassword( type + '-' + QString::number( id ), mPassword );
+  QString folder, str_id;
+  if ( type=="transport" ) {
+    folder = "mailtransports";
+    str_id = QString::number( id );
+  } else {
+    folder = "kmail";
+    str_id = type + '-' + QString::number( id );
+  }
+  if ( !mWallet->hasFolder( folder ) )
+    mWallet->createFolder( folder );
+  mWallet->setFolder( folder );
+  return mWallet->writePassword( str_id, mPassword );
 }
