@@ -1,3 +1,16 @@
+Friday, April 11th 2008
+
+Problems addressed
+-----------------------
+
+* kolab/issue2272 - Event Attendee Editor: After "Zoom To Fit" and zoom it is possible to scroll the fb part without the attendee part. (794734)
+* kolab/issue1869 (side-by-side calender view size depends on folder path length.(795745)
+* kolab/issue1883 (wasting space with many time scales in side-by-side-view.(795745)
+* kolab/issue1947 (calendar side-by-side view: superfluous scrollbars in the dayappointments.(795745)
+* kolab/issue1948 (calendar side-by-side view: wasting space by several scrollbars? Fix one grid option.(795745)
+* kolab/issue2561 (Side-By-Side view: the view of some folders are of different size.(795745)
+
+
 Friday, April 4th 2008
 
 Problems addressed
