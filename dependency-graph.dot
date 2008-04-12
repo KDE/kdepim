@@ -35,7 +35,7 @@ strict digraph "inter-dependency graph for kdepim" {
         /* kabc ?? */
         "kaddressbook"[style=filled, fillcolor=lightcyan, URL="kaddressbook/html/index.html"];
         "kalarm"[style=filled, fillcolor=lightcyan, URL="kalarm/html/index.html"];
-        "karm"[style=filled, fillcolor=lightcyan, URL="karm/html/index.html"];
+        "ktimetracker"[style=filled, fillcolor=lightcyan, URL="ktimetracker/html/index.html"];
         "kdgantt"[style=filled, fillcolor=lightyellow, URL="kdgantt/html/index.html"];
         "kfile-plugins"[style=filled, fillcolor=palegreen];
         "kioslave"[style=filled, fillcolor=palegreen, URL="kioslave/html/index.html"];
@@ -82,7 +82,7 @@ strict digraph "inter-dependency graph for kdepim" {
         "kode" -> "kresources";
         "korganizer" -> "kontact";
         "korganizer" -> "wizards";
-        "kresources" -> "karm";
+        "kresources" -> "ktimetracker";
         "kresources" -> "wizards";
         "libkpimutils" -> "kmail";
         "libkpimutils" -> "knode";
@@ -92,7 +92,7 @@ strict digraph "inter-dependency graph for kdepim" {
         "libkpimutils" -> "libkpimidentities";
         "libkpimutils" -> "plugins";
         "libkcal" -> "kalarm";
-        "libkcal" -> "karm";
+        "libkcal" -> "ktimetracker";
         "libkcal" -> "kfile-plugins";
         "libkcal" -> "knotes";
         "libkcal" -> "konsolekalendar";
@@ -104,7 +104,7 @@ strict digraph "inter-dependency graph for kdepim" {
         "libkdepim" -> "akregator";
         "libkdepim" -> "kaddressbook";
         "libkdepim" -> "kalarm";
-        "libkdepim" -> "karm";
+        "libkdepim" -> "ktimetracker";
         "libkdepim" -> "kioslave";
         "libkdepim" -> "kmail";
         "libkdepim" -> "knode";
@@ -129,7 +129,7 @@ strict digraph "inter-dependency graph for kdepim" {
         "libkpimidentities" -> "kalarm";
         "libksieve" -> "kmail";
         "mimelib" -> "kmail";
-        "karm" -> "kontact";
+        "ktimetracker" -> "kontact";
         "knode" -> "kontact";
         "libsyndication" -> "akregator";
         "libsyndication" -> "kaddressbook";
