@@ -646,6 +646,8 @@ QList<QModelIndex> HierarchicalKeyListModel::doAddKeys( const std::vector<Key> &
         return QList<QModelIndex>();
 
 
+    const std::vector<Key> oldKeys = mKeysByFingerprint;
+
     std::vector<Key> merged;
     merged.reserve( keys.size() + mKeysByFingerprint.size() );
     std::set_union( keys.begin(), keys.end(),
@@ -655,58 +657,78 @@ QList<QModelIndex> HierarchicalKeyListModel::doAddKeys( const std::vector<Key> &
     mKeysByFingerprint = merged;
 
     Q_FOREACH( const Key & key, topological_sort( keys ) ) {
-	
-	const char * const issuer_fpr = cleanChainID( key );
-
-	if ( !issuer_fpr || !*issuer_fpr )
-	    // root or something...
-	    addTopLevelKey( key );
-	else if ( std::binary_search( mKeysByFingerprint.begin(), mKeysByFingerprint.end(), issuer_fpr, ByFingerprint<std::less>() ) )
-	    // parent exists...
-	    addKeyWithParent( issuer_fpr, key );
-	else
-	    // parent does't exist yet...
-	    addKeyWithoutParent( issuer_fpr, key );
 
         // check to see whether this key is a parent for a previously parent-less group:
         const char * const fpr = key.primaryFingerprint();
         if ( !fpr || !*fpr )
             continue;
+        
+        const bool keyAlreadyExisted = qBinaryFind( oldKeys.begin(), oldKeys.end(), key, ByFingerprint<std::less>() ) != oldKeys.end();
 
         const Map::iterator it = mKeysByNonExistingParent.find( fpr );
-        if ( it == mKeysByNonExistingParent.end() )
-            continue;
-        assert( !it->second.empty() );
+        const std::vector<Key> children = it != mKeysByNonExistingParent.end() ? it->second : std::vector<Key>();
+        if ( it != mKeysByNonExistingParent.end() )
+            mKeysByNonExistingParent.erase( it );
 
-        const std::vector<Key> children = it->second;
+        // Step 1: For new keys, remove children from toplevel:
 
-        // Step 1: Remove children from toplevel:
-        std::vector<Key>::iterator last = mTopLevels.begin();
-        Q_FOREACH( const Key & k, children ) {
-            last = qBinaryFind( last, mTopLevels.end(), k, ByFingerprint<std::less>() );
-            assert( last != mTopLevels.end() );
-            const int row = std::distance( mTopLevels.begin(), last );
-
-            emit rowAboutToBeMoved( QModelIndex(), row );
-            beginRemoveRows( QModelIndex(), row, row );
-            last = mTopLevels.erase( last );
-            endRemoveRows();
+        if ( !keyAlreadyExisted ) {
+            std::vector<Key>::iterator last = mTopLevels.begin();
+            std::vector<Key>::iterator lastFP = mKeysByFingerprint.begin();
+    
+            Q_FOREACH( const Key & k, children ) {
+                last = qBinaryFind( last, mTopLevels.end(), k, ByFingerprint<std::less>() );
+                assert( last != mTopLevels.end() );
+                const int row = std::distance( mTopLevels.begin(), last );
+    
+                lastFP = qBinaryFind( lastFP, mKeysByFingerprint.end(), k, ByFingerprint<std::less>() );
+                assert( lastFP != mKeysByFingerprint.end() );
+                const int fpRow = std::distance( mKeysByFingerprint.begin(), lastFP );
+    
+                emit rowAboutToBeMoved( QModelIndex(), row );
+                beginRemoveRows( QModelIndex(), row, row );
+                last = mTopLevels.erase( last );
+                lastFP = mKeysByFingerprint.erase( lastFP );
+                endRemoveRows();
+            }
         }
+        // Step 2: add/update key
 
-        mKeysByNonExistingParent.erase( it );
+        const char * const issuer_fpr = cleanChainID( key );
+        if ( !issuer_fpr || !*issuer_fpr )
+            // root or something...
+            addTopLevelKey( key );
+        else if ( std::binary_search( mKeysByFingerprint.begin(), mKeysByFingerprint.end(), issuer_fpr, ByFingerprint<std::less>() ) )
+            // parent exists...
+            addKeyWithParent( issuer_fpr, key );
+        else
+            // parent does't exist yet...
+            addKeyWithoutParent( issuer_fpr, key );
 
-        // Step 2: Add children to new parent ( == key )
-        const QModelIndex new_parent = index( key );
-        beginInsertRows( index( key ), 0, children.size()-1 );
-        assert( mKeysByExistingParent.find( fpr ) == mKeysByExistingParent.end() );
-        mKeysByExistingParent[fpr] = children;
-        endInsertRows();
+        // Step 3: Add children to new parent ( == key )
 
-        // emit the rowMoved() signals in reversed direction, so the
-        // implementation can use a stack for mapping.
-        for ( int i = children.size() - 1 ; i >= 0 ; --i )
-            emit rowMoved( new_parent, i );
-
+        if ( !keyAlreadyExisted && !children.empty() ) {
+            const QModelIndex new_parent = index( key );
+            beginInsertRows( index( key ), 0, children.size()-1 );
+            assert( mKeysByExistingParent.find( fpr ) == mKeysByExistingParent.end() );
+            mKeysByExistingParent[fpr] = children;
+            
+            //merge children into mKeysByFingerprint:
+            
+            std::vector<Key> mergedChildren;
+            mergedChildren.reserve( children.size() + mKeysByFingerprint.size() );
+            std::set_union( children.begin(), children.end(),
+                            mKeysByFingerprint.begin(), mKeysByFingerprint.end(),
+                            std::back_inserter( mergedChildren ), ByFingerprint<std::less>() );
+                
+            mKeysByFingerprint = mergedChildren;
+            endInsertRows();
+    
+            // emit the rowMoved() signals in reversed direction, so the
+            // implementation can use a stack for mapping.
+            for ( int i = children.size() - 1 ; i >= 0 ; --i )
+                emit rowMoved( new_parent, i );
+        }
     }
 
     return indexes( keys );
@@ -716,37 +738,46 @@ void HierarchicalKeyListModel::doRemoveKey( const Key & key ) {
     const QModelIndex idx = index( key );
     if ( !idx.isValid() )
         return;
+    
+    const char * const fpr = key.primaryFingerprint();
     //TODO: only removal of leaf nodes is implemented so far
-    if ( hasChildren( idx ) )
+    if ( mKeysByExistingParent.find( fpr ) != mKeysByExistingParent.end() )
         return;
 
-    const std::vector<Key>::iterator it
-        = qBinaryFind( mKeysByFingerprint.begin(), mKeysByFingerprint.end(),
-                       key, ByFingerprint<std::less>() );
-    if ( it == mKeysByFingerprint.end() )
-        return;
+    const std::vector<Key>::iterator it = qBinaryFind( mKeysByFingerprint.begin(), mKeysByFingerprint.end(),
+        key, ByFingerprint<std::less>() );
+    
+    assert( it != mKeysByFingerprint.end() );
+    assert( mKeysByNonExistingParent.find( fpr ) == mKeysByNonExistingParent.end() );
+    assert( mKeysByExistingParent.find( fpr ) == mKeysByExistingParent.end() );
 
-    const QModelIndex parentIdx = parent( idx );
-    const Key parentKey = this->key( parentIdx );
-
-    assert( idx.isValid() );
-    assert( !parentIdx.isValid() || !parentKey.isNull() );
-
-    beginRemoveRows( parentIdx, idx.row(), idx.row() );
+    beginRemoveRows( parent( idx ), idx.row(), idx.row() );
     mKeysByFingerprint.erase( it );
 
-    if ( !parentIdx.isValid() ) {
+    const char * const issuer_fpr = static_cast<const char*>( idx.internalPointer() );
+
+    if ( !issuer_fpr || !*issuer_fpr ) {
         const std::vector<Key>::iterator tlIt = qBinaryFind( mTopLevels.begin(), mTopLevels.end(), key, ByFingerprint<std::less>() );
-        if ( tlIt != mTopLevels.end() )
-            mTopLevels.erase( tlIt );
-        const char* const pfpr = cleanChainID( key );
-        const Map::iterator siblingsIt = mKeysByNonExistingParent.find( pfpr );
-        if ( siblingsIt != mKeysByNonExistingParent.end() )
-            siblingsIt->second.erase( std::remove_if( siblingsIt->second.begin(), siblingsIt->second.end(), bind( ByFingerprint<std::equal_to>(), key, _1 ) ), siblingsIt->second.end() );
+        assert( tlIt != mTopLevels.end() );
+        mTopLevels.erase( tlIt );
     } else {
-        const Map::iterator siblingsIt = mKeysByExistingParent.find( parentKey.primaryFingerprint() );
-        if ( siblingsIt != mKeysByExistingParent.end() )
-            siblingsIt->second.erase( std::remove_if( siblingsIt->second.begin(), siblingsIt->second.end(), bind( ByFingerprint<std::equal_to>(), key, _1 ) ), siblingsIt->second.end() );
+        const Map::iterator nexIt = mKeysByNonExistingParent.find( issuer_fpr );
+        if ( nexIt != mKeysByNonExistingParent.end() ) {
+            const std::vector<Key>::iterator eit = qBinaryFind( nexIt->second.begin(), nexIt->second.end(), key, ByFingerprint<std::less>() );
+            if ( eit != nexIt->second.end() )
+                nexIt->second.erase( eit );
+            if ( nexIt->second.empty() )
+                mKeysByNonExistingParent.erase( nexIt );
+        }
+    
+        const Map::iterator exIt = mKeysByExistingParent.find( issuer_fpr );
+        if ( exIt != mKeysByExistingParent.end() ) {
+            const std::vector<Key>::iterator eit = qBinaryFind( exIt->second.begin(), exIt->second.end(), key, ByFingerprint<std::less>() );
+            if ( eit != exIt->second.end() )
+                exIt->second.erase( eit );
+            if ( exIt->second.empty() )
+                mKeysByExistingParent.erase( exIt );
+        }
     }
     endRemoveRows();
 }
