@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui >
-<kpartgui name="kleopatra" version="414" >
+<kpartgui name="kleopatra" version="415" >
 <MenuBar>
 	<Menu name="file">
 		<text>&amp;File</text>
@@ -31,8 +31,8 @@
 		<Action name="certificates_delete"/>
                 <Action name="certificates_change_expiry"/>
         </Menu>
-	<Menu name="crlMenu">
-		<text>C&amp;RLs</text>
+	<Menu name="toolsMenu">
+		<text>&amp;Tools</text>
                 <Action name="crl_import_crl"/>
                 <Separator/>
 		<Action name="crl_clear_crl_cache"/>
