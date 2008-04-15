@@ -87,10 +87,10 @@ namespace Crypto {
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotResult( GpgME::DecryptionResult, QByteArray ) );
-        Q_PRIVATE_SLOT( d, void slotResult( GpgME::DecryptionResult, GpgME::VerificationResult, QByteArray ) );
-        Q_PRIVATE_SLOT( d, void slotResult( GpgME::VerificationResult, QByteArray ) );
-        Q_PRIVATE_SLOT( d, void slotResult( GpgME::VerificationResult ) );
+        Q_PRIVATE_SLOT( d, void slotResult( GpgME::DecryptionResult, QByteArray ) )
+        Q_PRIVATE_SLOT( d, void slotResult( GpgME::DecryptionResult, GpgME::VerificationResult, QByteArray ) )
+        Q_PRIVATE_SLOT( d, void slotResult( GpgME::VerificationResult, QByteArray ) )
+        Q_PRIVATE_SLOT( d, void slotResult( GpgME::VerificationResult ) )
     };
     
 }
