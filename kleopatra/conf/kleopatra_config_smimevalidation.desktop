@@ -14,6 +14,7 @@ X-KDE-CfgDlgHierarchy=Kleopatra
 
 Name=S/MIME Validation
 Name[ca]=Validació S/MIME
+Name[de]=S/MIME-Prüfung
 Name[el]=Επαλήθευση S/MIME
 Name[ja]=S/MIME 検証
 Name[km]=ការ​ធ្វើ​ឲ្យ S/MIME មាន​សុពលភាព
@@ -24,6 +25,7 @@ Name[x-test]=xxS/MIME Validationxx
 Name[zh_TW]=S/MIME 確認
 Comment=Configuration of S/MIME certificate validation options
 Comment[ca]=Configuració de les opcions de validació dels certificats S/MIME
+Comment[de]=Einrichtung der Optionen zur S/MIME-Zertifikatüberprüfung
 Comment[el]=Ρύθμιση επιλογών επαλήθευσης πιστοποιητικών S/MIME
 Comment[ja]=S/MIME 証明書の検証オプションの設定
 Comment[km]=ជម្រើស​ធ្វើ​ឲ្យ​ការ​កំណត់​​រចនា​សម្ព័ន្ធ​របស់​វិញ្ញាបនបត្រ​របស់ S/MIME ប្រើ​បាន
