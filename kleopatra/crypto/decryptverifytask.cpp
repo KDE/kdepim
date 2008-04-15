@@ -67,8 +67,8 @@
 
 #include <algorithm>
 
-using namespace Kleo;
 using namespace Kleo::Crypto;
+using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
@@ -593,19 +593,19 @@ DecryptVerifyTask::~DecryptVerifyTask()
 void DecryptVerifyTask::setInput( const shared_ptr<Input> & input )
 {
     d->m_input = input;
-    kleo_assert( d->m_input->ioDevice() );
+    kleo_assert( d->m_input && d->m_input->ioDevice() );
 }
 
 void DecryptVerifyTask::setSignedData( const shared_ptr<Input> & signedData )
 {
     d->m_signedData = signedData;
-    kleo_assert( d->m_signedData->ioDevice() );
+    kleo_assert( d->m_signedData && d->m_signedData->ioDevice() );
 }
 
 void DecryptVerifyTask::setOutput( const shared_ptr<Output> & output )
 {
     d->m_output = output;
-    kleo_assert( d->m_output->ioDevice() );
+    kleo_assert( d->m_output && d->m_output->ioDevice() );
 }
 
 void DecryptVerifyTask::setBackend( const CryptoBackend::Protocol* backend )
@@ -635,7 +635,8 @@ QString DecryptVerifyTask::label() const
 
 Protocol DecryptVerifyTask::protocol() const
 {
-    
+    kleo_assert( !"not implemented" );
+    return UnknownProtocol; // ### TODO
 }
 
 void DecryptVerifyTask::cancel()

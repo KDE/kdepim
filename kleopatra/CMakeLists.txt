@@ -45,6 +45,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/assuanserverconnection.cpp
     uiserver/echocommand.cpp
     uiserver/decryptverifycommand.cpp
+    uiserver/decryptverifyemailcontroller.cpp
     uiserver/signemailcontroller.cpp
     uiserver/signcommand.cpp
     uiserver/signencryptfilescommand.cpp
@@ -107,6 +108,7 @@ set( _kleopatra_common_SRCS
   crypto/certificateresolver.cpp
   crypto/task.cpp
   crypto/decryptverifytask.cpp
+  crypto/decryptverifyfilescontroller.cpp
   crypto/encryptemailtask.cpp
   crypto/signencryptfilestask.cpp
   crypto/signemailtask.cpp
