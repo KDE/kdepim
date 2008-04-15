@@ -56,6 +56,7 @@ using namespace Kleo;
 using namespace Kleo::Crypto;
 using namespace Kleo::Crypto::Gui;
 using namespace GpgME;
+using namespace boost;
 
 static const char ERROR_STYLE_SHEET[] =
     "border:4px solid red; "
@@ -112,6 +113,8 @@ public:
                  q, SIGNAL(operationStateChanged()) );
     }
 
+    void keyLinkActivated( const QString & url );
+
     std::vector<Key> keys;
     static QHash<QString, QPointer<CertificateInfoWidgetImpl> > dialogMap;
 
@@ -138,6 +141,8 @@ public:
             QVBoxLayout * layout = new QVBoxLayout( q );
             layout->addWidget( label );
             layout->addWidget( stack );
+
+            connect( label, SIGNAL(linkActivated(QString)), q, SLOT(keyLinkActivated(QString)));
 
             error->setStyleSheet( ERROR_STYLE_SHEET );
 
@@ -194,22 +199,22 @@ void ResultDisplayWidget::setColor( const QColor & color ) {
     setStyleSheet( '#' + objectName() + '{' + styleSheet( color ) + '}' );
 }
 
-void ResultDisplayWidget::keyLinkActivated( const QString & link ) {
+void ResultDisplayWidget::Private::keyLinkActivated( const QString & link ) {
     if ( !link.startsWith( "key:" ) )
         return;
     const QString fpr = link.mid( 4 );
     const std::vector<Key>::const_iterator kit
-        = qBinaryFind( d->keys.begin(), d->keys.end(), fpr.toStdString(), _detail::ByFingerprint<std::less>() );
-    if ( kit == d->keys.end() )
+        = qBinaryFind( keys.begin(), keys.end(), fpr.toStdString(), _detail::ByFingerprint<std::less>() );
+    if ( kit == keys.end() )
         return;
 
-    QHash<QString, QPointer<CertificateInfoWidgetImpl> >::const_iterator dit = d->dialogMap.find( fpr );
-    if ( dit == d->dialogMap.end() || !*dit ) {
+    QHash<QString, QPointer<CertificateInfoWidgetImpl> >::const_iterator dit = dialogMap.find( fpr );
+    if ( dit == dialogMap.end() || !*dit ) {
         CertificateInfoWidgetImpl * const dlg = new CertificateInfoWidgetImpl( *kit, false, 0 );
         dlg->setAttribute( Qt::WA_DeleteOnClose );
-        dit = d->dialogMap.insert( fpr, dlg );
+        dit = dialogMap.insert( fpr, dlg );
     }
-    assert( dit != d->dialogMap.end() );
+    assert( dit != dialogMap.end() );
 
     if ( (*dit)->isVisible() )
         (*dit)->raise();
@@ -231,13 +236,22 @@ void ResultDisplayWidget::setError( int err, const QString & details ) {
     setError( details );
 }
 
-void ResultDisplayWidget::setResult( const boost::shared_ptr<const Task::Result> & result ) {
+void ResultDisplayWidget::setResult( const shared_ptr<const Task::Result> & result ) {
     assert( result );
     QVBoxLayout * const layout = new QVBoxLayout( d->ui.result );
     QLabel * const overview = new QLabel;
     overview->setTextFormat( Qt::RichText );
     overview->setText( result->overview() );
+    connect( overview, SIGNAL(linkActivated(QString)), this, SLOT(keyLinkActivated(QString)));
     layout->addWidget( overview );
+    const QString detailsStr = result->details();
+    if ( !detailsStr.isEmpty() ) {
+        QLabel * const details = new QLabel;
+        details->setTextFormat( Qt::RichText );
+        details->setText( detailsStr );
+        connect( details, SIGNAL(linkActivated(QString)), this, SLOT(keyLinkActivated(QString)));
+        layout->addWidget( details );
+    }
     d->ui.stack->setCurrentWidget( d->ui.result );
 }
 

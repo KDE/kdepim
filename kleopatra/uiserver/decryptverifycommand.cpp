@@ -34,6 +34,8 @@
 
 #include "decryptverifycommand.h"
 
+#include <crypto/decryptverifytask.h>
+
 #include <crypto/gui/decryptverifywizard.h>
 #include <crypto/gui/decryptverifyresultwidget.h>
 #include <crypto/gui/decryptverifyoperationwidget.h>
@@ -75,7 +77,7 @@
 #include <QMap>
 #include <QHash>
 #include <QPointer>
-#include <QTemporaryFile>
+#include <QTimer>
 
 #include <boost/bind.hpp>
 
@@ -86,144 +88,10 @@
 #include <errno.h>
 
 using namespace Kleo;
+using namespace Kleo::Crypto;
 using namespace Kleo::Crypto::Gui;
 using namespace GpgME;
 using namespace boost;
-
-// -- helpers ---
-static
-// dup of same function in decryptverifyresultwidget.cpp
-const GpgME::Key & keyForSignature( const Signature & sig, const std::vector<Key> & keys ) {
-    if ( const char * const fpr = sig.fingerprint() ) {
-        const std::vector<Key>::const_iterator it
-            = std::lower_bound( keys.begin(), keys.end(), fpr, _detail::ByFingerprint<std::less>() );
-        if ( it != keys.end() && _detail::ByFingerprint<std::equal_to>()( *it, fpr ) )
-            return *it;
-    }
-    static const Key null;
-    return null;
-}
-
-namespace {
-
-    class TemporaryFile : public QTemporaryFile {
-    public:
-        explicit TemporaryFile() : QTemporaryFile() {}
-        explicit TemporaryFile( const QString & templateName ) : QTemporaryFile( templateName ) {}
-        explicit TemporaryFile( QObject * parent ) : QTemporaryFile( parent ) {}
-        explicit TemporaryFile( const QString & templateName, QObject * parent ) : QTemporaryFile( templateName, parent ) {}
-
-        /* reimp */ void close() {
-            if ( isOpen() )
-                m_oldFileName = fileName();
-            QTemporaryFile::close();
-        }
-
-        QString oldFileName() const { return m_oldFileName; }
-
-    private:
-        QString m_oldFileName;
-    };
-
-    enum Type {
-        Decrypt,
-        DecryptVerify,
-        VerifyOpaque,
-        VerifyDetached
-    } type;
-
-    struct DVResult {
-
-        Type type;
-        VerificationResult verificationResult;
-        DecryptionResult decryptionResult;
-        QByteArray stuff;
-        int error;
-        QString errorString;
-
-        static DVResult fromDecryptResult( const DecryptionResult & dr, const QByteArray & plaintext ) {
-            const DVResult res = {
-                Decrypt,
-                VerificationResult(),
-                dr,
-                plaintext,
-                0,
-                QString()
-            };
-            return res;
-        }
-        static DVResult fromDecryptResult( const Error & err ) {
-            return fromDecryptResult( DecryptionResult( err ), QByteArray() );
-        }
-
-        static DVResult fromDecryptVerifyResult( const DecryptionResult & dr, const VerificationResult & vr, const QByteArray & plaintext ) {
-            const DVResult res = {
-                DecryptVerify,
-                vr,
-                dr,
-                plaintext,
-                0,
-                QString()
-            };
-            return res;
-        }
-        static DVResult fromDecryptVerifyResult( const Error & err ) {
-            return fromDecryptVerifyResult( DecryptionResult( err ), VerificationResult(), QByteArray() );
-        }
-
-        static DVResult fromVerifyOpaqueResult( const VerificationResult & vr, const QByteArray & plaintext ) {
-            const DVResult res = {
-                VerifyOpaque,
-                vr,
-                DecryptionResult(),
-                plaintext,
-                0,
-                QString()
-            };
-            return res;
-        }
-        static DVResult fromVerifyOpaqueResult( const Error & err ) {
-            return fromVerifyOpaqueResult( VerificationResult( err ), QByteArray() );
-        }
-
-        static DVResult fromVerifyDetachedResult( const VerificationResult & vr ) {
-            const DVResult res = {
-                VerifyDetached,
-                vr,
-                DecryptionResult(),
-                QByteArray(),
-                0,
-                QString()
-            };
-            return res;
-        }
-        static DVResult fromVerifyDetachedResult( const Error & err ) {
-            return fromVerifyDetachedResult( VerificationResult( err ) );
-        }
-
-    };
-
-    struct DVTask {
-    private:
-        DVTask( const DVTask & );
-        DVTask & operator=( const DVTask & );
-    public:
-
-        DVTask() : type( VerifyDetached ), backend( 0 ) {}
-
-        Type type;
-
-        shared_ptr<Input> input, signedData;
-
-        shared_ptr<Output> output;
-
-        const CryptoBackend::Protocol* backend;
-
-        shared_ptr<DVResult> result;
-
-    };
-
-} // anon namespace
 
 class DecryptVerifyCommand::Private : public QObject {
     Q_OBJECT
@@ -234,9 +102,9 @@ public:
         : QObject(),
           q( qq ),
           wizard(),
-          taskList(),
-          m_errorString(),
-          m_error( 0U )
+          m_runnableTasks(),
+          m_completedTasks(),
+          m_runningTask()
     {
 
     }
@@ -244,29 +112,25 @@ public:
     ~Private() {
     }
 
-    std::vector< shared_ptr<DVTask> > buildTaskList();
-    static shared_ptr<DVTask> taskFromOperationWidget( const DecryptVerifyOperationWidget * w, const shared_ptr<QFile> & file, const QDir & outDir );
+    std::vector< shared_ptr<DecryptVerifyTask> > buildTaskList();
+    static shared_ptr<DecryptVerifyTask> taskFromOperationWidget( const DecryptVerifyOperationWidget * w, const shared_ptr<QFile> & file, const QDir & outDir );
 
-    void startTasks();
 
-    static QString signatureToString( const Signature& sig, const Key & key );
+    void connectTask( const shared_ptr<DecryptVerifyTask> & t, unsigned int idx );
 
-    void createWizard() {
+    void ensureWizardCreated() {
         if ( wizard )
             return;
         wizard =  new DecryptVerifyWizard;
         q->applyWindowID( wizard );
         wizard->setAttribute( Qt::WA_DeleteOnClose );
         connect( wizard, SIGNAL(finished(int)), this, SLOT(slotDialogClosed()) );
-        //if ( requestedWindowTitle().isEmpty() )
-            wizard->setWindowTitle( i18n("Decrypt/Verify Wizard") );
-        //else
-        //    wizard->setWindowTitle( i18n("Decrypt/Verify Wizard: %1", requestedWindowTitle() ) );
+        wizard->setWindowTitle( i18n( "Decrypt/Verify" ) );
     }
 
     void showWizard() {
         if ( !wizard ) {
-            createWizard();
+            ensureWizardCreated();
             wizard->next();
         }
         if ( !wizard->isVisible() )
@@ -281,32 +145,13 @@ public Q_SLOTS:
     void slotProgress( const QString & what, int current, int total );
 
 public:
-    void registerJob( int id, VerifyDetachedJob* job ) {
-        connect( job, SIGNAL(result(GpgME::VerificationResult)),
-                 this, SLOT(slotVerifyDetachedResult(GpgME::VerificationResult)) );
-        m_senderToId[job] = id;
-    }
-    void registerJob( int id, VerifyOpaqueJob* job ) {
-        connect( job, SIGNAL(result(GpgME::VerificationResult,QByteArray)),
-                 this, SLOT(slotVerifyOpaqueResult(GpgME::VerificationResult,QByteArray)) );
-        m_senderToId[job] = id;
-    }
-    void registerJob( int id, DecryptJob * job ) {
-        connect( job, SIGNAL(result(GpgME::DecryptionResult,QByteArray)),
-                 this, SLOT(slotDecryptResult(GpgME::DecryptionResult,QByteArray)) );
-        m_senderToId[job] = id;
-    }
-    void registerJob( int id, DecryptVerifyJob * job ) {
-        connect( job, SIGNAL(result(GpgME::DecryptionResult,GpgME::VerificationResult,QByteArray)),
-                 this, SLOT(slotDecryptVerifyResult(GpgME::DecryptionResult,GpgME::VerificationResult,QByteArray)) );
-        m_senderToId[job] = id;
-    }
 
-    bool hasError() const { return m_error; }
-    unsigned int error() const { return m_error; }
-    const QString & errorString() const { return m_errorString; }
-
-    void addResult( unsigned int id, const DVResult & res );
+    std::vector<shared_ptr<const DecryptVerifyResult> >::const_iterator firstErrorResult() const;
+    bool hasError() const;
+    unsigned int error() const;
+    QString errorString() const;
+    
+    void addStartErrorResult( unsigned int id, const shared_ptr<DecryptVerifyResult> & res );
     void sendSigStatii() const;
 
     void finishCommand() const {
@@ -321,35 +166,14 @@ private Q_SLOTS:
         finishCommand();
     }
 
-    void slotVerifyOpaqueResult( const GpgME::VerificationResult & result, const QByteArray & plainText ) {
-        assert( m_senderToId.contains( sender() ) );
-        const unsigned int id = m_senderToId[sender()];
-        addResult( id, DVResult::fromVerifyOpaqueResult( result, plainText ) );
-    }
-
-    void slotVerifyDetachedResult( const GpgME::VerificationResult & result ) {
-        assert( m_senderToId.contains( sender() ) );
-        const unsigned int id = m_senderToId[sender()];
-        addResult( id, DVResult::fromVerifyDetachedResult( result ) );
-    }
-
-    void slotDecryptResult( const GpgME::DecryptionResult & result, const QByteArray & plainText ) {
-        assert( m_senderToId.contains( sender() ) );
-        const unsigned int id = m_senderToId[sender()];
-        addResult( id, DVResult::fromDecryptResult( result, plainText ) );
-    }
-    void slotDecryptVerifyResult( const GpgME::DecryptionResult & dr, const GpgME::VerificationResult & vr, const QByteArray & plainText ) {
-        assert( m_senderToId.contains( sender() ) );
-        const unsigned int id = m_senderToId[sender()];
-        addResult( id, DVResult::fromDecryptVerifyResult( dr, vr, plainText ) );
-    }
+    void schedule();
+    void slotTaskDone( const boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult>& result );
 
 private:
     QPointer<DecryptVerifyWizard> wizard;
-    std::vector< shared_ptr<DVTask> > taskList;
-    QHash<QObject*, unsigned int> m_senderToId;
-    QString m_errorString;
-    unsigned int m_error;
+    std::vector< shared_ptr<DecryptVerifyTask> > m_runnableTasks, m_completedTasks;
+    shared_ptr<DecryptVerifyTask> m_runningTask;
+    std::vector<shared_ptr<const DecryptVerifyResult> > m_results;
 };
 
 
@@ -359,18 +183,89 @@ DecryptVerifyCommand::DecryptVerifyCommand()
 
 }
 
+void DecryptVerifyCommand::Private::schedule()
+{
+    if ( !m_runningTask && !m_runnableTasks.empty() ) {
+        const shared_ptr<DecryptVerifyTask> t = m_runnableTasks.back();
+        m_runnableTasks.pop_back();
+        t->start(); // ### FIXME: this might throw
+        m_runningTask = t;
+    }
+    if ( !m_runningTask ) {
+        kleo_assert( m_runnableTasks.empty() );
+#if KDAB_PENDING // remove encrypted inputs here if wanted?
+        if ( wizard->removeUnencryptedFile() && wizard->encryptionSelected() && !errorDetected )
+            removeInputFiles();
+#endif
+        sendSigStatii();
+    }
+}
+
+void DecryptVerifyCommand::Private::slotTaskDone( const shared_ptr<const DecryptVerifyResult>& result )
+{
+    assert( sender() );
+    
+    // We could just delete the tasks here, but we can't use
+    // Qt::QueuedConnection here (we need sender()) and other slots
+    // might not yet have executed. Therefore, we push completed tasks
+    // into a burial container
+
+    if ( sender() == m_runningTask.get() ) {
+        m_completedTasks.push_back( m_runningTask );
+        m_results.push_back( result );
+        m_runningTask.reset();
+    }
+
+    QTimer::singleShot( 0, this, SLOT(schedule()) );
+}
+
+std::vector<shared_ptr<const DecryptVerifyResult> >::const_iterator DecryptVerifyCommand::Private::firstErrorResult() const
+{
+    return std::find_if( m_results.begin(), m_results.end(), bind( &DecryptVerifyResult::hasError, _1 ) );
+}
+
+bool DecryptVerifyCommand::Private::hasError() const
+{
+    return firstErrorResult() != m_results.end();
+}
+
+QString DecryptVerifyCommand::Private::errorString() const
+{
+    const std::vector<shared_ptr<const DecryptVerifyResult> >::const_iterator it = firstErrorResult();
+    return it != m_results.end() ? (*it)->errorString() : QString();
+}
+
+unsigned int DecryptVerifyCommand::Private::error() const
+{
+    const std::vector<shared_ptr<const DecryptVerifyResult> >::const_iterator it = firstErrorResult();
+    return it != m_results.end() ? (*it)->errorCode() : 0;
+}
+
 DecryptVerifyCommand::~DecryptVerifyCommand() {}
+
+void DecryptVerifyCommand::Private::connectTask( const shared_ptr<DecryptVerifyTask> & t, unsigned int idx ) {
+    connect( t.get(), SIGNAL(decryptVerifyResult(boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult>)),
+             this, SLOT(slotTaskDone(boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult>)) );
+    ensureWizardCreated();
+    wizard->connectTask( t, idx );
+}
 
 int DecryptVerifyCommand::doStart() {
 
-    d->taskList = d->buildTaskList();
+    d->m_runnableTasks = d->buildTaskList();
 
-    if ( d->taskList.empty() )
+    if ( d->m_runnableTasks.empty() )
         throw Kleo::Exception( makeError( GPG_ERR_ASS_NO_INPUT ),
                                i18n("No usable inputs found") );
 
+
+    d->ensureWizardCreated();
+    uint i = d->m_results.size();
+    Q_FOREACH( const shared_ptr<DecryptVerifyTask> & task, d->m_runnableTasks )
+        d->connectTask( task, i++ );
+
     try {
-        d->startTasks();
+        d->schedule();
         return 0;
     } catch ( ... ) {
         //d->showWizard();
@@ -384,7 +279,7 @@ void DecryptVerifyCommand::doCanceled() {
         d->wizard->close();
 }
 
-std::vector< shared_ptr<DVTask> > DecryptVerifyCommand::Private::buildTaskList()
+std::vector< shared_ptr<DecryptVerifyTask> > DecryptVerifyCommand::Private::buildTaskList()
 {
     if ( !q->senders().empty() )
         throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ),
@@ -406,7 +301,7 @@ std::vector< shared_ptr<DVTask> > DecryptVerifyCommand::Private::buildTaskList()
 
     kleo_assert( op != 0 );
 
-    std::vector< shared_ptr<DVTask> > tasks;
+    std::vector< shared_ptr<DecryptVerifyTask> > tasks;
 
     if ( mode == EMail ) {
 
@@ -441,40 +336,34 @@ std::vector< shared_ptr<DVTask> > DecryptVerifyCommand::Private::buildTaskList()
                                    proto == OpenPGP ? i18n("No backend support for OpenPGP") :
                                    proto == CMS     ? i18n("No backend support for S/MIME") : QString() );
 
-        Type type;
+        DecryptVerifyTask::Type type;
         if ( numMessages )
-            type = VerifyDetached;
+            type = DecryptVerifyTask::VerifyDetached;
         else if ( (op&DecryptMask) == DecryptOff )
-            type = VerifyOpaque;
+            type = DecryptVerifyTask::VerifyOpaque;
         else if ( (op&VerifyMask) == VerifyOff )
-            type = Decrypt;
+            type = DecryptVerifyTask::Decrypt;
         else
-            type = DecryptVerify;
+            type = DecryptVerifyTask::DecryptVerify;
 
-        if ( type != Decrypt && !q->hasOption("silent") ) {
+        if ( type != DecryptVerifyTask::Decrypt && !q->hasOption("silent") ) {
             showWizard();
             wizard->next();
         }
 
         for ( unsigned int i = 0 ; i < numInputs ; ++i ) {
 
-            shared_ptr<DVTask> task( new DVTask );
-            task->type = type;
+            shared_ptr<DecryptVerifyTask> task( new DecryptVerifyTask( type ) );
 
-            task->input = q->inputs().at( i );
-            kleo_assert( task->input->ioDevice() );
+            task->setInput( q->inputs().at( i ) );
 
-            if ( type == VerifyDetached ) {
-                task->signedData = q->messages().at( i );
-                kleo_assert( task->signedData->ioDevice() );
-            }
+            if ( type == DecryptVerifyTask::VerifyDetached )
+                task->setSignedData( q->messages().at( i ) );
 
-            if ( numOutputs ) {
-                task->output = q->outputs().at( i );
-                kleo_assert( task->output->ioDevice() );
-            }
+            if ( numOutputs )
+                task->setOutput( q->outputs().at( i ) );
 
-            task->backend = backend;
+            task->setBackend( backend );
 
             tasks.push_back( task );
         }
@@ -488,7 +377,7 @@ std::vector< shared_ptr<DVTask> > DecryptVerifyCommand::Private::buildTaskList()
         if ( numOutputs )
             throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ), i18n("OUTPUT present") );
 
-        createWizard();
+        ensureWizardCreated();
 
         std::vector< shared_ptr<QFile> > files;
         unsigned int counter = 0;
@@ -554,45 +443,40 @@ std::vector< shared_ptr<DVTask> > DecryptVerifyCommand::Private::buildTaskList()
         const QDir outDir( outDirInfo.absoluteFilePath() );
         kleo_assert( outDir.exists() );
 
+        int failed = 0;
         for ( unsigned int i = 0 ; i < counter ; ++i )
             try {
                 tasks.push_back( taskFromOperationWidget( wizard->operationWidget( i ), files[i], outDir ) );
             } catch ( const GpgME::Exception & e ) {
-                addResult( i, DVResult::fromDecryptVerifyResult( e.error() ) );
+                addStartErrorResult( failed++, DecryptVerifyResult::fromDecryptVerifyResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
             }
-
     }
 
     return tasks;
 }
 
-static const CryptoBackend::Protocol * backendFor( const shared_ptr<Input> & input ) {
-    return CryptoBackendFactory::instance()->protocol( findProtocol( input->classification() ) );
-}
-
 // static
-shared_ptr<DVTask> DecryptVerifyCommand::Private::taskFromOperationWidget( const DecryptVerifyOperationWidget * w, const shared_ptr<QFile> & file, const QDir & outDir) {
+shared_ptr<DecryptVerifyTask> DecryptVerifyCommand::Private::taskFromOperationWidget( const DecryptVerifyOperationWidget * w, const shared_ptr<QFile> & file, const QDir & outDir) {
 
     kleo_assert( w );
 
-    shared_ptr<DVTask> task( new DVTask );
+    shared_ptr<DecryptVerifyTask> task;
 
     switch ( w->mode() ) {
     case DecryptVerifyOperationWidget::VerifyDetachedWithSignature:
 
-        task->type = VerifyDetached;
-        task->input = Input::createFromFile( file );
-        task->signedData = Input::createFromFile( w->signedDataFileName() );
+        task.reset( new DecryptVerifyTask( DecryptVerifyTask::VerifyDetached ) );
+        task->setInput( Input::createFromFile( file ) );
+        task->setSignedData( Input::createFromFile( w->signedDataFileName() ) );
 
         kleo_assert( file->fileName() == w->inputFileName() );
 
         break;
 
     case DecryptVerifyOperationWidget::VerifyDetachedWithSignedData:
-
-        task->type = VerifyDetached;
-        task->input = Input::createFromFile( w->inputFileName() );
-        task->signedData = Input::createFromFile( file );
+        task.reset( new DecryptVerifyTask( DecryptVerifyTask::VerifyDetached ) );
+        task->setInput( Input::createFromFile( w->inputFileName() ) );
+        task->setSignedData( Input::createFromFile( file ) );
 
         kleo_assert( file->fileName() == w->signedDataFileName() );
 
@@ -600,176 +484,35 @@ shared_ptr<DVTask> DecryptVerifyCommand::Private::taskFromOperationWidget( const
 
     case DecryptVerifyOperationWidget::DecryptVerifyOpaque:
 
-        task->type = DecryptVerify;
-        task->input = Input::createFromFile( file );
-        task->output = Output::createFromFile( outDir.absoluteFilePath( outputFileName( QFileInfo( file->fileName() ).fileName() ) ), false );
+        task.reset( new DecryptVerifyTask( DecryptVerifyTask::DecryptVerify ) );
+        task->setInput( Input::createFromFile( file ) );
+        task->setOutput( Output::createFromFile( outDir.absoluteFilePath( outputFileName( QFileInfo( file->fileName() ).fileName() ) ), false ) );
 
         kleo_assert( file->fileName() == w->inputFileName() );
 
         break;
     }
 
-    task->backend = backendFor( task->input );
-
+    task->autodetectBackendFromInput();
     return task;
-}
-
-
-
-void DecryptVerifyCommand::Private::startTasks()
-{
-    kleo_assert( !taskList.empty() );
-
-    unsigned int i = 0;
-    Q_FOREACH ( shared_ptr<DVTask> task, taskList ) {
-
-        kleo_assert( task->backend );
-
-        QPointer<QObject> that = this;
-        switch ( task->type ) {
-        case Decrypt:
-            try {
-                DecryptJob * const job = task->backend->decryptJob();
-                kleo_assert( job );
-                registerJob( i, job );
-                job->start( task->input->ioDevice(), task->output->ioDevice() );
-            } catch ( const GpgME::Exception & e ) {
-                addResult( i, DVResult::fromDecryptResult( e.error() ) );
-            }
-            break;
-        case DecryptVerify:
-            try {
-                DecryptVerifyJob * const job = task->backend->decryptVerifyJob();
-                kleo_assert( job );
-                registerJob( i, job );
-                job->start( task->input->ioDevice(), task->output->ioDevice() );
-            } catch ( const GpgME::Exception & e ) {
-                addResult( i, DVResult::fromDecryptVerifyResult( e.error() ) );
-            }
-            break;
-        case VerifyOpaque:
-            try {
-                VerifyOpaqueJob * const job = task->backend->verifyOpaqueJob();
-                kleo_assert( job );
-                registerJob( i, job );
-                job->start( task->input->ioDevice(), task->output ? task->output->ioDevice() : shared_ptr<QIODevice>() );
-            } catch ( const GpgME::Exception & e ) {
-                addResult( i, DVResult::fromVerifyOpaqueResult( e.error() ) );
-            }
-            break;
-        case VerifyDetached:
-            try {
-                VerifyDetachedJob * const job = task->backend->verifyDetachedJob();
-                kleo_assert( job );
-                registerJob( i, job );
-                job->start( task->input->ioDevice(), task->signedData->ioDevice() );
-            } catch ( const GpgME::Exception & e ) {
-                addResult( i, DVResult::fromVerifyDetachedResult( e.error() ) );
-            }
-            break;
-        }
-        if ( !that )
-            return;
-        ++i;
-    }
-
-}
-
-static const char * summaryToString( const Signature::Summary summary )
-{
-    if ( summary & Signature::Red )
-        return "RED";
-    if ( summary & Signature::Green )
-        return "GREEN";
-    return "YELLOW";
-}
-
-static QString keyToString( const Key & key ) {
-
-    kleo_assert( !key.isNull() );
-
-    const QString email = Formatting::prettyEMail( key );
-    const QString name = Formatting::prettyName( key );
-
-    if ( name.isEmpty() )
-        return email;
-    else if ( email.isEmpty() )
-        return name;
-    else
-        return QString::fromLatin1( "%1 <%2>" ).arg( name, email );
-}
-
-QString DecryptVerifyCommand::Private::signatureToString( const Signature & sig, const Key & key )
-{
-    if ( sig.isNull() )
-        return QString();
-
-    const bool red   = (sig.summary() & Signature::Red);
-    const bool valid = (sig.summary() & Signature::Valid);
-
-    if ( red )
-        if ( key.isNull() )
-            if ( const char * fpr = sig.fingerprint() )
-                return i18n("Bad signature by unknown key %1: %2", QString::fromLatin1( fpr ), QString::fromLocal8Bit( sig.status().asString() ) );
-            else
-                return i18n("Bad signature by an unknown key: %1", QString::fromLocal8Bit( sig.status().asString() ) );
-        else
-            return i18n("Bad signature by %1: %2", keyToString( key ), QString::fromLocal8Bit( sig.status().asString() ) );
-
-    else if ( valid )
-        if ( key.isNull() )
-            if ( const char * fpr = sig.fingerprint() )
-                return i18n("Good signature by unknown key %1.", QString::fromLatin1( fpr ) );
-            else
-                return i18n("Good signature by an unknown key.");
-        else
-            return i18n("Good signature by %1.", keyToString( key ) );
-
-    else
-        if ( key.isNull() )
-            if ( const char * fpr = sig.fingerprint() )
-                return i18n("Invalid signature by unknown key %1: %2", QString::fromLatin1( fpr ), QString::fromLocal8Bit( sig.status().asString() ) );
-            else
-                return i18n("Invalid signature by an unknown key: %1", QString::fromLocal8Bit( sig.status().asString() ) );
-        else
-            return i18n("Invalid signature by %1: %2", keyToString( key ), QString::fromLocal8Bit( sig.status().asString() ) );
-}
-
-static QStringList labels( const std::vector< shared_ptr<DVTask> > & taskList )
-{
-    QStringList labels;
-    for ( unsigned int i = 0, end = taskList.size() ; i < end ; ++i ) {
-        const shared_ptr<DVTask> & task = taskList[i];
-        switch ( task->type ) {
-        case Decrypt:
-        case DecryptVerify:
-            labels.push_back( i18n( "Decrypting: %1...", task->input->label() ) );
-            break;
-        case VerifyOpaque:
-            labels.push_back( i18n( "Verifying: %1...", task->input->label() ) );
-            break;
-        case VerifyDetached:
-            labels.push_back( i18n( "Verifying signature: %1...", task->input->label() ) );
-            break;
-        }
-    }
-    return labels;
 }
 
 void DecryptVerifyCommand::Private::slotProgress( const QString& what, int current, int total )
 {
-    // FIXME report progress, via sendStatus()
+    // ### FIXME report progress, via sendStatus()
 }
+
+#if KDAB_PENDING
 
 struct ResultPresentAndOutputFinalized {
     typedef bool result_type;
 
-    bool operator()( const shared_ptr<DVTask> & task ) const {
+    bool operator()( const shared_ptr<DecryptVerifyTask> & task ) const {
         return task->result && ( !task->output || task->output->isFinalized() );
     }
 };
 
-void DecryptVerifyCommand::Private::addResult( unsigned int id, const DVResult & res )
+void DecryptVerifyCommand::Private::addResult( unsigned int id, const shared_ptr<DecryptVerifyResult> & res )
 {
     const bool taskExists = id < taskList.size();
     assert( !taskExists || !taskList[id]->result );
@@ -813,30 +556,30 @@ void DecryptVerifyCommand::Private::addResult( unsigned int id, const DVResult &
     if ( kdtools::all( taskList.begin(), taskList.end(), ResultPresentAndOutputFinalized() ) )
         sendSigStatii();
 }
+#endif // KDAB_PENDING
+
+void DecryptVerifyCommand::Private::addStartErrorResult( unsigned int id, const shared_ptr<DecryptVerifyResult> & res )
+{
+    ensureWizardCreated();
+    wizard->resultWidget( id )->setResult( res );
+    m_results.push_back( res );
+}
 
 void DecryptVerifyCommand::Private::sendSigStatii() const {
 
-    Q_FOREACH( const shared_ptr<DVTask> & task, taskList ) {
-
-        const shared_ptr<DVResult> result = task->result;
-        if ( !result )
-            continue;
-
-        const VerificationResult & vResult = result->verificationResult;
-
+    Q_FOREACH( const shared_ptr<const DecryptVerifyResult> & result, m_results ) {
+        const VerificationResult vResult = result->verificationResult();
         try {
             const std::vector<Signature> sigs = vResult.signatures();
             const std::vector<Key> signers = KeyCache::instance()->findSigners( vResult );
             Q_FOREACH ( const Signature & sig, sigs ) {
-                const QString s = signatureToString( sig, keyForSignature( sig, signers ) );
-                const char * color = summaryToString( sig.summary() );
+                const QString s = DecryptVerifyResult::signatureToString( sig, DecryptVerifyResult::keyForSignature( sig, signers ) );
+                const char * color = DecryptVerifyResult::summaryToString( sig.summary() );
                 q->sendStatusEncoded( "SIGSTATUS",
                                       color + ( ' ' + hexencode( s.toUtf8().constData() ) ) );
             }
         } catch ( ... ) {}
-
     }
-
     finishCommand();
 }
 

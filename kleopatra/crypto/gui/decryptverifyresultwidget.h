@@ -58,7 +58,7 @@ namespace Gui {
         ~DecryptVerifyResultWidget();
 
         void setResult( const GpgME::DecryptionResult & decryptionResult, const GpgME::VerificationResult & verificationResult );
-
+        
     private:
         QString formatDecryptionResult( const GpgME::DecryptionResult &, const std::vector<GpgME::Key> & );
         QString formatVerificationResult( const GpgME::VerificationResult & ) const;

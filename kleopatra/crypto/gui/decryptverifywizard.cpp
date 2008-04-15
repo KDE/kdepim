@@ -35,10 +35,13 @@
 #include "decryptverifywizard.h"
 
 #include "decryptverifyoperationwidget.h"
-#include "decryptverifyresultwidget.h"
 
 #include <crypto/gui/scrollarea.h>
+#include <crypto/gui/resultdisplaywidget.h>
 
+#include <crypto/task.h>
+
+#include <utils/kleo_assert.h>
 #include <utils/stl_util.h>
 
 #include "libkleo/ui/filenamerequester.h"
@@ -118,7 +121,7 @@ namespace {
 
         void ensureIndexAvailable( unsigned int idx );
 
-        DecryptVerifyResultWidget * widget( unsigned int idx ) {
+        ResultDisplayWidget * widget( unsigned int idx ) {
             return m_widgets.at( idx );
         }
 
@@ -126,11 +129,11 @@ namespace {
         void slotMaybeNoMoreProgress() {
             wizard()->button( QWizard::CancelButton )
                 ->setEnabled( kdtools::any( m_widgets.begin(), m_widgets.end(),
-                                            bind( &DecryptVerifyResultWidget::operationInProgress, _1 ) ) );
+                                            bind( &ResultDisplayWidget::operationInProgress, _1 ) ) );
         }
 
     private:
-        std::vector<DecryptVerifyResultWidget*> m_widgets;
+        std::vector<ResultDisplayWidget*> m_widgets;
 
         struct UI {
             ScrollArea   scrollArea; // ### replace with KDScrollArea when done
@@ -180,9 +183,21 @@ DecryptVerifyOperationWidget * DecryptVerifyWizard::operationWidget( unsigned in
     return d->operationsPage.widget( idx );
 }
 
-DecryptVerifyResultWidget * DecryptVerifyWizard::resultWidget( unsigned int idx ) {
+ResultDisplayWidget * DecryptVerifyWizard::resultWidget( unsigned int idx ) {
     d->ensureIndexAvailable( idx );
     return d->resultPage.widget( idx );
+}
+
+
+void DecryptVerifyWizard::connectTask( const boost::shared_ptr<Task> & task, unsigned int idx )
+{
+    kleo_assert( task );
+    ResultDisplayWidget* const item = resultWidget( idx );
+    item->setLabel( task->label() );
+    connect( task.get(), SIGNAL( progress( QString, int, int ) ),
+             item, SLOT( setProgress( QString, int, int ) ) );
+    connect( task.get(), SIGNAL(result( boost::shared_ptr<const Kleo::Crypto::Task::Result> ) ),
+             item, SLOT( setResult( boost::shared_ptr<const Kleo::Crypto::Task::Result> ) ) );
 }
 
 bool DecryptVerifyWizard::waitForOperationSelection() {
@@ -319,7 +334,7 @@ void ResultPage::ensureIndexAvailable( unsigned int idx ) {
     for ( unsigned int i = m_widgets.size() ; i < idx+1 ; ++i ) {
         if ( i )
             blay.insertWidget( blay.count()-1, new HLine( m_ui.scrollArea.widget() ) );
-        DecryptVerifyResultWidget * w = new DecryptVerifyResultWidget( m_ui.scrollArea.widget() );
+        ResultDisplayWidget * w = new ResultDisplayWidget( m_ui.scrollArea.widget() );
         connect( w, SIGNAL(operationStateChanged()), this, SLOT(slotMaybeNoMoreProgress()) );
         blay.insertWidget( blay.count()-1, w );
         w->show();

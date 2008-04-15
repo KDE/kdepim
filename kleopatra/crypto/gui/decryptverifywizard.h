@@ -37,12 +37,15 @@
 
 #include <utils/pimpl_ptr.h>
 
+#include <boost/shared_ptr.hpp>
+
 namespace Kleo {
 namespace Crypto {
+    class Task;
 namespace Gui {
 
     class DecryptVerifyOperationWidget;
-    class DecryptVerifyResultWidget;
+    class ResultDisplayWidget;
 
     class DecryptVerifyWizard : public QWizard {
         Q_OBJECT
@@ -53,8 +56,10 @@ namespace Gui {
         void setOutputDirectory( const QString & dir );
         QString outputDirectory() const;
 
+        void connectTask( const boost::shared_ptr<Task>& task, unsigned int idx );
+
         DecryptVerifyOperationWidget * operationWidget( unsigned int idx );
-        DecryptVerifyResultWidget * resultWidget( unsigned int idx );
+        ResultDisplayWidget * resultWidget( unsigned int idx );
 
         bool waitForOperationSelection();
 

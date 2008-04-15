@@ -106,6 +106,7 @@ set( _kleopatra_common_SRCS
 
   crypto/certificateresolver.cpp
   crypto/task.cpp
+  crypto/decryptverifytask.cpp
   crypto/encryptemailtask.cpp
   crypto/signencryptfilestask.cpp
   crypto/signemailtask.cpp
@@ -118,7 +119,6 @@ set( _kleopatra_common_SRCS
   crypto/gui/resultdisplaywidget.cpp
 
   crypto/gui/decryptverifyoperationwidget.cpp
-  crypto/gui/decryptverifyresultwidget.cpp
   crypto/gui/decryptverifywizard.cpp
 
   crypto/gui/objectspage.cpp
