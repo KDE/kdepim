@@ -38,6 +38,7 @@
 
 #include <crypto/gui/scrollarea.h>
 #include <crypto/gui/resultdisplaywidget.h>
+#include <crypto/gui/wizardpage.h>
 
 #include <crypto/task.h>
 
@@ -49,13 +50,13 @@
 #include <KLocale>
 
 #include <QScrollArea>
-#include <QWizardPage>
 #include <QLayout>
 #include <QLabel>
 #include <QEventLoop>
 #include <QPointer>
 #include <QAbstractButton>
 #include <QScrollBar>
+#include <QTimer>
 
 #include <boost/bind.hpp>
 
@@ -78,11 +79,11 @@ namespace {
         }
     };
 
-    class OperationsPage : public QWizardPage {
+    class OperationsWidget : public WizardPage {
         Q_OBJECT
     public:
-        explicit OperationsPage( QWidget * p=0 );
-        ~OperationsPage();
+        explicit OperationsWidget( QWidget * p=0 );
+        ~OperationsWidget();
 
         void setOutputDirectory( const QString & dir ) {
             m_ui.outputDirectoryFNR.setFileName( dir );
@@ -98,6 +99,7 @@ namespace {
             return m_widgets.at( idx );
         }
 
+        bool isComplete() const { return true; }
     private:
         std::vector<DecryptVerifyOperationWidget*> m_widgets;
 
@@ -108,16 +110,16 @@ namespace {
             QVBoxLayout     vlay;
             QHBoxLayout      hlay;
 
-            explicit UI( OperationsPage * q );
+            explicit UI( OperationsWidget * q );
         } m_ui;
     };
 
 
-    class ResultPage : public QWizardPage {
+    class ResultWidget : public WizardPage {
         Q_OBJECT
     public:
-        explicit ResultPage( QWidget * p=0 );
-        ~ResultPage();
+        explicit ResultWidget( QWidget * p=0 );
+        ~ResultWidget();
 
         void ensureIndexAvailable( unsigned int idx );
 
@@ -142,7 +144,7 @@ namespace {
             ScrollArea   scrollArea; // ### replace with KDScrollArea when done
             QVBoxLayout vlay;
             
-            explicit UI( ResultPage * q );
+            explicit UI( ResultWidget * q );
         } m_ui;
     };
 }
@@ -160,14 +162,13 @@ public:
     }
 
 private:
-    OperationsPage operationsPage;
-    ResultPage resultPage;
-    mutable bool m_prepEmitted;
+    OperationsWidget operationsPage;
+    ResultWidget resultPage;
 };
 
 
 DecryptVerifyWizard::DecryptVerifyWizard( QWidget * p, Qt::WindowFlags f )
-    : QWizard( p, f ), d( new Private( this ) )
+    : Wizard( p, f ), d( new Private( this ) )
 {
 
 }
@@ -192,14 +193,11 @@ ResultDisplayWidget * DecryptVerifyWizard::resultWidget( unsigned int idx ) {
     return d->resultPage.widget( idx );
 }
 
-
-int DecryptVerifyWizard::nextId() const
+void DecryptVerifyWizard::onNext( int id )
 {
-    if ( currentPage() == &d->operationsPage && !d->m_prepEmitted ) {
-        d->m_prepEmitted = true;
-        emit const_cast<DecryptVerifyWizard*>( this )->operationPrepared();
-    }
-    return QWizard::nextId();
+    if ( id == OperationsPage )
+        QTimer::singleShot( 0, this, SIGNAL( operationPrepared() ) );
+    Wizard::onNext( id );
 }
 
 void DecryptVerifyWizard::connectTask( const boost::shared_ptr<Task> & task, unsigned int idx )
@@ -221,12 +219,15 @@ void DecryptVerifyWizard::setOperationCompleted()
 DecryptVerifyWizard::Private::Private( DecryptVerifyWizard * qq )
     : q( qq ),
       operationsPage( q ),
-      resultPage( q ),
-      m_prepEmitted( false )
+      resultPage( q )
 {
-    q->setOptions( q->options() | NoBackButtonOnStartPage | NoBackButtonOnLastPage );
-    q->addPage( &operationsPage );
-    q->addPage( &resultPage );
+    q->setPage( DecryptVerifyWizard::OperationsPage, &operationsPage );
+    q->setPage( DecryptVerifyWizard::ResultPage, &resultPage );
+    std::vector<int> order;
+    order.push_back( DecryptVerifyWizard::OperationsPage );
+    order.push_back( DecryptVerifyWizard::ResultPage );
+    q->setPageOrder( order );
+    operationsPage.setCommitPage( true );
 }
 
 DecryptVerifyWizard::Private::~Private() {}
@@ -237,19 +238,19 @@ DecryptVerifyWizard::Private::~Private() {}
 
 
 
-OperationsPage::OperationsPage( QWidget * p )
-    : QWizardPage( p ), m_widgets(), m_ui( this )
+OperationsWidget::OperationsWidget( QWidget * p )
+    : WizardPage( p ), m_widgets(), m_ui( this )
 {
     setTitle( i18n("Choose operations to be performed") );
     setSubTitle( i18n("Here you can check and, if needed, override "
                       "the operations Kleopatra detected for the input given.") );
     setCommitPage( true );
-    setButtonText( QWizard::CommitButton, i18n("&Decrypt/Verify") );
+    setCustomNextButton( KGuiItem( i18n( "&Decrypt/Verify" ) ) );
 }
 
-OperationsPage::~OperationsPage() {}
+OperationsWidget::~OperationsWidget() {}
 
-OperationsPage::UI::UI( OperationsPage * q )
+OperationsWidget::UI::UI( OperationsWidget * q )
     : outputDirectoryLB( i18n("&Output directory:"), q ),
       outputDirectoryFNR( q ),
       scrollArea( q ),
@@ -275,7 +276,7 @@ OperationsPage::UI::UI( OperationsPage * q )
     hlay.addWidget( &outputDirectoryFNR );
 }
 
-void OperationsPage::ensureIndexAvailable( unsigned int idx ) {
+void OperationsWidget::ensureIndexAvailable( unsigned int idx ) {
 
     if ( idx < m_widgets.size() )
         return;
@@ -299,17 +300,16 @@ void OperationsPage::ensureIndexAvailable( unsigned int idx ) {
 
 
 
-ResultPage::ResultPage( QWidget * p )
-    : QWizardPage( p ), m_widgets(), m_completed( false ), m_ui( this )
+ResultWidget::ResultWidget( QWidget * p )
+    : WizardPage( p ), m_widgets(), m_completed( false ), m_ui( this )
 {
     setTitle( i18n("Results") );
     setSubTitle( i18n("Detailed operation results") );
-    setButtonText( QWizard::FinishButton, i18n("&OK") );
 }
 
-ResultPage::~ResultPage() {}
+ResultWidget::~ResultWidget() {}
 
-ResultPage::UI::UI( ResultPage * q )
+ResultWidget::UI::UI( ResultWidget * q )
     : scrollArea( q ),
       vlay( q )
 {
@@ -322,7 +322,7 @@ ResultPage::UI::UI( ResultPage * q )
     vlay.addWidget( &scrollArea );
 }
 
-void ResultPage::ensureIndexAvailable( unsigned int idx ) {
+void ResultWidget::ensureIndexAvailable( unsigned int idx ) {
 
     if ( idx < m_widgets.size() )
         return;

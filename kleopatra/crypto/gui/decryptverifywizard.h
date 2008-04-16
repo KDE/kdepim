@@ -33,7 +33,7 @@
 #ifndef __KLEOPATRA_CRYPTO_GUI_DECRYPTVERIFYWIZARD_H__
 #define __KLEOPATRA_CRYPTO_GUI_DECRYPTVERIFYWIZARD_H__
 
-#include <QWizard>
+#include <crypto/gui/wizard.h>
 
 #include <utils/pimpl_ptr.h>
 
@@ -47,9 +47,14 @@ namespace Gui {
     class DecryptVerifyOperationWidget;
     class ResultDisplayWidget;
 
-    class DecryptVerifyWizard : public QWizard {
+    class DecryptVerifyWizard : public Wizard {
         Q_OBJECT
     public:
+        enum Page {
+            OperationsPage=0,
+            ResultPage
+        };
+
         explicit DecryptVerifyWizard( QWidget * parent=0, Qt::WindowFlags f=0 );
         ~DecryptVerifyWizard();
 
@@ -61,14 +66,14 @@ namespace Gui {
         DecryptVerifyOperationWidget * operationWidget( unsigned int idx );
         ResultDisplayWidget * resultWidget( unsigned int idx );
 
-        /* reimp */ int nextId() const;
-
     public Q_SLOTS:
         void setOperationCompleted();
 
     Q_SIGNALS:
-        void canceled();
         void operationPrepared();
+
+    private:
+        /* reimpl */ void onNext( int id );
 
     private:
         class Private;

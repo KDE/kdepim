@@ -37,9 +37,11 @@
 
 #include <utils/kleo_assert.h>
 
+#include <KDebug>
+#include <KGuiItem>
 #include <KLocale>
 #include <KPushButton>
-#include <kdebug.h>
+#include <KStandardGuiItem>
 
 #include <QDialogButtonBox>
 #include <QFrame>
@@ -73,11 +75,11 @@ private:
     std::map<int, WizardPage*> idToPage;
     int currentId;
     QStackedWidget* stack;
-    QPushButton* nextButton;
+    KPushButton* nextButton;
     QPushButton* backButton;
     QPushButton* cancelButton;
-    QString finishItem;
-    QString nextItem;
+    KGuiItem finishItem;
+    KGuiItem nextItem;
     QFrame* titleFrame;
     QLabel* titleLabel;
     QLabel* subTitleLabel;
@@ -90,8 +92,8 @@ Wizard::Private::Private( Wizard * qq )
     : q( qq ), currentId( -1 ), stack( new QStackedWidget )
 {
     const QWizard wiz;
-    nextItem = wiz.buttonText( QWizard::NextButton );
-    finishItem = wiz.buttonText( QWizard::FinishButton );
+    nextItem = KStandardGuiItem::forward();
+    finishItem = KStandardGuiItem::ok();
     QVBoxLayout * const top = new QVBoxLayout( q );
     top->setMargin( 0 );
     titleFrame = new QFrame;
@@ -132,8 +134,8 @@ Wizard::Private::Private( Wizard * qq )
     q->connect( backButton, SIGNAL( clicked() ), q, SLOT( back() ) );
     box->addButton( backButton, QDialogButtonBox::ActionRole );
 
-    nextButton = new QPushButton;
-    nextButton->setText( nextItem );
+    nextButton = new KPushButton;
+    nextButton->setGuiItem( nextItem );
     q->connect( nextButton, SIGNAL( clicked() ), q, SLOT( next() ) );
     box->addButton( nextButton, QDialogButtonBox::ActionRole );
     buttonLayout->addWidget( box );
@@ -156,10 +158,17 @@ void Wizard::Private::updateButtonStates()
 {
     const bool isLast = isLastPage( currentId );
     const bool canGoToNext = q->canGoToNextPage();
-    nextButton->setText( isLast ? finishItem : nextItem );
+    WizardPage* const page = q->page( currentId );
+    assert( page );
+    KGuiItem customNext = page->customNextButton();
+    if ( customNext.text().isEmpty() && customNext.icon().isNull() )
+        nextButton->setGuiItem( isLast ? finishItem : nextItem );
+    else
+        nextButton->setGuiItem( customNext );
     nextButton->setEnabled( canGoToNext );
     cancelButton->setEnabled( !isLast || !canGoToNext );
     backButton->setEnabled( q->canGoToPreviousPage() );
+        
 }
 
 void Wizard::Private::updateHeader()

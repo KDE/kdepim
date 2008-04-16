@@ -35,6 +35,8 @@
 
 #include "wizardpage.h"
 
+#include <KGuiItem>
+
 using namespace Kleo::Crypto::Gui;
 
 class WizardPage::Private {
@@ -49,6 +51,7 @@ private:
     QString title;
     QString subTitle;
     QString explanation;
+    KGuiItem customNextButton;
 };
 
 
@@ -116,6 +119,14 @@ void WizardPage::setExplanation( const QString& explanation )
     emit explanationChanged();
 }
 
+KGuiItem WizardPage::customNextButton() const
+{
+    return d->customNextButton;
+}
+void WizardPage::setCustomNextButton( const KGuiItem& item )
+{
+    d->customNextButton = item;
+}
 
 WizardPage::~WizardPage() {}
 

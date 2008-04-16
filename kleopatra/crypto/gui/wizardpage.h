@@ -37,6 +37,8 @@
 
 #include <utils/pimpl_ptr.h>
 
+class KGuiItem;
+
 namespace Kleo {
 namespace Crypto {
 namespace Gui {
@@ -63,6 +65,9 @@ namespace Gui {
 
         QString explanation() const;
         void setExplanation( const QString& explanation );
+
+        KGuiItem customNextButton() const;
+        void setCustomNextButton( const KGuiItem& item );
 
     Q_SIGNALS:
         void completeChanged();
