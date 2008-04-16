@@ -109,8 +109,6 @@ public:
         : q( qq ),
           ui( q )
     {
-        connect( ui.stack, SIGNAL(currentChanged(int)),
-                 q, SIGNAL(operationStateChanged()) );
     }
 
     void keyLinkActivated( const QString & url );
@@ -164,10 +162,6 @@ ResultDisplayWidget::ResultDisplayWidget( QWidget * p )
 }
 
 ResultDisplayWidget::~ResultDisplayWidget() {}
-
-bool ResultDisplayWidget::operationInProgress() const {
-    return d->ui.stack->currentWidget() == d->ui.progress;
-}
 
 QString ResultDisplayWidget::renderKey( const Key & key ) {
     if ( key.isNull() )
@@ -233,7 +227,8 @@ void ResultDisplayWidget::setProgress( const QString & what, int current, int to
 
 void ResultDisplayWidget::setError( int err, const QString & details ) {
     Q_UNUSED( err );
-    setError( details );
+    d->ui.error->setText( details );
+    d->ui.stack->setCurrentWidget( d->ui.error );
 }
 
 void ResultDisplayWidget::setResult( const shared_ptr<const Task::Result> & result ) {
@@ -253,16 +248,6 @@ void ResultDisplayWidget::setResult( const shared_ptr<const Task::Result> & resu
         layout->addWidget( details );
     }
     d->ui.stack->setCurrentWidget( d->ui.result );
-}
-
-
-void ResultDisplayWidget::showResultWidget() {
-    d->ui.stack->setCurrentWidget( d->ui.result );
-}
-
-void ResultDisplayWidget::setError( const QString & err ) {
-    d->ui.error->setText( err );
-    d->ui.stack->setCurrentWidget( d->ui.error );
 }
 
 QWidget * ResultDisplayWidget::resultWidget() {

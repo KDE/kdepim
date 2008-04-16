@@ -61,7 +61,14 @@ namespace Gui {
         DecryptVerifyOperationWidget * operationWidget( unsigned int idx );
         ResultDisplayWidget * resultWidget( unsigned int idx );
 
-        bool waitForOperationSelection();
+        /* reimp */ int nextId() const;
+
+    public Q_SLOTS:
+        void setOperationCompleted();
+
+    Q_SIGNALS:
+        void canceled();
+        void operationPrepared();
 
     private:
         class Private;

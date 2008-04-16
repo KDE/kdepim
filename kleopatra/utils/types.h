@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/verifycommand.h
+    utils/types.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,28 +30,22 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_VERIFYCOMMAND_H__
-#define __KLEOPATRA_UISERVER_VERIFYCOMMAND_H__
-
-#include "assuancommand.h"
-
-#include <utils/pimpl_ptr.h>
+#ifndef __KLEOPATRA_UTILS_TYPES_H__
+#define __KLEOPATRA_UTILS_TYPES_H__
 
 namespace Kleo {
-    class VerifyCommand : public AssuanCommandMixin<VerifyCommand,DecryptVerifyCommandEMailBase> {
-    public:
-        //VerifyCommand();
-        //~VerifyCommand();
-
-    private:
-        /* reimp */ DecryptVerifyOperation operation() const {
-            return Verify;
-        }
-        /* reimp */ Mode mode() const { return EMail; }
-    public:
-        static const char * staticName() { return "VERIFY"; }
+    enum DecryptVerifyOperation {
+        Decrypt,
+        Verify,
+        DecryptVerify/*,
+        VerifyOpaque,
+        VerifyDetached*/
     };
-
+    
+    enum VerificationMode {
+        Opaque,
+        Detached
+    };
 }
 
-#endif // __KLEOPATRA_UISERVER_VERIFYCOMMAND_H__
+#endif // __KLEOPATRA_UTILS_TYPES_H__

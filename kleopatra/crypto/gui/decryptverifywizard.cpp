@@ -125,15 +125,18 @@ namespace {
             return m_widgets.at( idx );
         }
 
-    private Q_SLOTS:
-        void slotMaybeNoMoreProgress() {
-            wizard()->button( QWizard::CancelButton )
-                ->setEnabled( kdtools::any( m_widgets.begin(), m_widgets.end(),
-                                            bind( &ResultDisplayWidget::operationInProgress, _1 ) ) );
+        void setOperationCompleted() {
+            if ( m_completed )
+                return;
+            m_completed = true;
+            emit completeChanged();
         }
+
+        /* reimpl */ bool isComplete() const { return m_completed; }
 
     private:
         std::vector<ResultDisplayWidget*> m_widgets;
+        bool m_completed;
 
         struct UI {
             ScrollArea   scrollArea; // ### replace with KDScrollArea when done
@@ -159,6 +162,7 @@ public:
 private:
     OperationsPage operationsPage;
     ResultPage resultPage;
+    mutable bool m_prepEmitted;
 };
 
 
@@ -189,6 +193,15 @@ ResultDisplayWidget * DecryptVerifyWizard::resultWidget( unsigned int idx ) {
 }
 
 
+int DecryptVerifyWizard::nextId() const
+{
+    if ( currentPage() == &d->operationsPage && !d->m_prepEmitted ) {
+        d->m_prepEmitted = true;
+        emit const_cast<DecryptVerifyWizard*>( this )->operationPrepared();
+    }
+    return QWizard::nextId();
+}
+
 void DecryptVerifyWizard::connectTask( const boost::shared_ptr<Task> & task, unsigned int idx )
 {
     kleo_assert( task );
@@ -200,29 +213,16 @@ void DecryptVerifyWizard::connectTask( const boost::shared_ptr<Task> & task, uns
              item, SLOT( setResult( boost::shared_ptr<const Kleo::Crypto::Task::Result> ) ) );
 }
 
-bool DecryptVerifyWizard::waitForOperationSelection() {
-    if ( !isVisible() )
-        return true;
-
-    assert( button( NextButton ) );
-    assert( button( CancelButton ) );
-
-    QEventLoop loop;
-    QPointer<QObject> that = this;
-    connect( this, SIGNAL(currentIdChanged(int)), &loop, SLOT(quit()) );
-    connect( this, SIGNAL(finished(int)), &loop, SLOT(quit()) );
-    loop.exec();
-
-    return that && currentPage() == &d->resultPage ;
+void DecryptVerifyWizard::setOperationCompleted()
+{
+   d->resultPage.setOperationCompleted(); 
 }
-
-
-
 
 DecryptVerifyWizard::Private::Private( DecryptVerifyWizard * qq )
     : q( qq ),
       operationsPage( q ),
-      resultPage( q )
+      resultPage( q ),
+      m_prepEmitted( false )
 {
     q->setOptions( q->options() | NoBackButtonOnStartPage | NoBackButtonOnLastPage );
     q->addPage( &operationsPage );
@@ -300,7 +300,7 @@ void OperationsPage::ensureIndexAvailable( unsigned int idx ) {
 
 
 ResultPage::ResultPage( QWidget * p )
-    : QWizardPage( p ), m_widgets(), m_ui( this )
+    : QWizardPage( p ), m_widgets(), m_completed( false ), m_ui( this )
 {
     setTitle( i18n("Results") );
     setSubTitle( i18n("Detailed operation results") );
@@ -335,7 +335,6 @@ void ResultPage::ensureIndexAvailable( unsigned int idx ) {
         if ( i )
             blay.insertWidget( blay.count()-1, new HLine( m_ui.scrollArea.widget() ) );
         ResultDisplayWidget * w = new ResultDisplayWidget( m_ui.scrollArea.widget() );
-        connect( w, SIGNAL(operationStateChanged()), this, SLOT(slotMaybeNoMoreProgress()) );
         blay.insertWidget( blay.count()-1, w );
         w->show();
         m_widgets.push_back( w );

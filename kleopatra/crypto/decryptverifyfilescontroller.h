@@ -35,11 +35,19 @@
 
 #include <crypto/controller.h>
 
+#include <utils/types.h>
+
+#include <QMetaType>
+
 #include<boost/shared_ptr.hpp>
 
 #include <vector>
 
 class QFile;
+
+namespace GpgME {
+    class VerificationResult;
+}
 
 namespace Kleo {
 namespace Crypto {
@@ -55,11 +63,14 @@ public:
     ~DecryptVerifyFilesController();
 
     void setFiles( const std::vector<boost::shared_ptr<QFile> >& files );
-
+    void setOperation( DecryptVerifyOperation op );
     void start();
 
+public Q_SLOTS:
+    void cancel();
+
 Q_SIGNALS:
-    void decryptVerifyResult( const boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult> & );
+    void verificationResult( const GpgME::VerificationResult & );
 
 private:
     class Private;
@@ -72,5 +83,7 @@ private:
 
 }
 }
+
+Q_DECLARE_METATYPE( GpgME::VerificationResult )
 
 #endif // __KLEOPATRA_CRYPTO_DECRYPTVERIFYFILESCONTROLLER_H__

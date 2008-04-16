@@ -35,13 +35,21 @@
 
 #include <crypto/controller.h>
 
+#include <utils/types.h>
+
 #include <gpgme++/global.h>
+
+#include <QMetaType>
 
 #include <boost/shared_ptr.hpp>
 
 #include <vector>
 
 class QFile;
+
+namespace GpgME {
+    class VerificationResult;
+}
 
 namespace Kleo {
 
@@ -57,38 +65,25 @@ class DecryptVerifyEMailController : public Controller {
     Q_OBJECT
 public:
 
-    enum Flags {
-        DecryptOff = 0x0,
-        DecryptOn = 0x1,
-        DecryptImplied = 0x2,
-
-        DecryptMask = 0x3,
-
-        VerifyOff = 0x00,
-        //VerifyOn  = 0x10, // non-sensical
-        VerifyImplied = 0x20,
-
-        VerifyMask = 0x30,
-
-        DefaultFlags = DecryptImplied|VerifyImplied
-    };
-
     explicit DecryptVerifyEMailController( const boost::shared_ptr<AssuanCommand> & cmd, QObject * parent=0 );
 
     ~DecryptVerifyEMailController();
     void setInputs( const std::vector<boost::shared_ptr<Input> > & inputs );
     void setSignedData( const std::vector<boost::shared_ptr<Input> > & data );
     void setOutputs( const std::vector<boost::shared_ptr<Output> > & outputs );
-    void setDetached( bool detached );
     void setWizardShown( bool shown );
 
-    void setOperation( int operation );
+    void setOperation( DecryptVerifyOperation operation );
+    void setVerificationMode( VerificationMode vm );
     void setProtocol( GpgME::Protocol protocol );
 
     void start();
 
+public Q_SLOTS:
+    void cancel();
+
 Q_SIGNALS:
-    void decryptVerifyResult( const boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult> & );
+    void verificationResult( const GpgME::VerificationResult & );
 
 private:
     class Private;
@@ -100,5 +95,7 @@ private:
 
 } //namespace Crypto
 } //namespace Kleo
+
+Q_DECLARE_METATYPE( GpgME::VerificationResult )
 
 #endif // __KLEOPATRA_UISERVER_DECRYPTVERIFYEMAILCONTROLLER_H__

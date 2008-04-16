@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/decryptverifycommand.h
+    uiserver/decryptverifycommandfilesbase.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2008 Klarälvdalens Datakonsult AB
@@ -30,16 +30,17 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_DECRYPTVERIFYCOMMAND_H__
-#define __KLEOPATRA_UISERVER_DECRYPTVERIFYCOMMAND_H__
+#ifndef __KLEOPATRA_UISERVER_DECRYPTVERIFYCOMMANDFILESBASE_H__
+#define __KLEOPATRA_UISERVER_DECRYPTVERIFYCOMMANDFILESBASE_H__
 
 #include "assuancommand.h"
 
 #include <utils/pimpl_ptr.h>
+#include <utils/types.h>
 
 namespace Kleo {
 
-    class DecryptVerifyCommand : public AssuanCommandMixin<DecryptVerifyCommand> {
+    class DecryptVerifyCommandFilesBase : public AssuanCommandMixin<DecryptVerifyCommandFilesBase> {
     public:
         enum Flags {
             DecryptOff = 0x0,
@@ -53,28 +54,25 @@ namespace Kleo {
             VerifyImplied = 0x20,
 
             VerifyMask = 0x30,
-
-            DefaultFlags = DecryptImplied|VerifyImplied
         };
 
-        explicit DecryptVerifyCommand();
-        ~DecryptVerifyCommand();
+        explicit DecryptVerifyCommandFilesBase();
+        ~DecryptVerifyCommandFilesBase();
 
     private:
-        virtual unsigned int operation() const { return DefaultFlags; }
-        virtual Mode mode() const { return checkMode(); }
+        virtual DecryptVerifyOperation operation() const = 0;
 
     private:
         int doStart();
         void doCanceled();
     public:
-        static const char * staticName() { return "DECRYPT_VERIFY"; }
+        // ### FIXME fix this
+        static const char * staticName() { return ""; }
 
         class Private;
     private:
         kdtools::pimpl_ptr<Private> d;
     };
-
 }
 
 #endif // __KLEOPATRA_UISERVER_DECRYPTCOMMAND_H__

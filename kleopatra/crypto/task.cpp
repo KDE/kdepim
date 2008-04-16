@@ -93,6 +93,7 @@ Task::~Task() {}
 void Task::start() {
     try {
         doStart();
+        emit started();
     } catch ( const GpgME::Exception & e ) {
         QMetaObject::invokeMethod( this, "emitError", Qt::QueuedConnection, Q_ARG( int, e.error().encodedError() ), Q_ARG( QString, QString::fromLocal8Bit( e.what() ) ) );
     }

@@ -44,7 +44,8 @@ if ( USABLE_ASSUAN_FOUND )
     ${_kleopatra_extra_uiserver_SRCS}
     uiserver/assuanserverconnection.cpp
     uiserver/echocommand.cpp
-    uiserver/decryptverifycommand.cpp
+    uiserver/decryptverifycommandemailbase.cpp
+    uiserver/decryptverifycommandfilesbase.cpp
     uiserver/decryptverifyemailcontroller.cpp
     uiserver/signemailcontroller.cpp
     uiserver/signcommand.cpp

@@ -33,20 +33,20 @@
 #ifndef __KLEOPATRA_UISERVER_VERIFYFILESCOMMAND_H__
 #define __KLEOPATRA_UISERVER_VERIFYFILESCOMMAND_H__
 
-#include <uiserver/decryptverifycommand.h>
+#include <uiserver/decryptverifycommandfilesbase.h>
 
 namespace Kleo {
 
-    class VerifyFilesCommand : public AssuanCommandMixin<VerifyFilesCommand,DecryptVerifyCommand> {
+    class VerifyFilesCommand : public AssuanCommandMixin<VerifyFilesCommand,DecryptVerifyCommandFilesBase> {
     public:
         //VerifyFilesCommand();
         //~VerifyFilesCommand();
 
     private:
-        /* reimp */ unsigned int operation() const {
-            return DecryptOff|VerifyImplied;
+        /* reimp */ DecryptVerifyOperation operation() const {
+            return Verify;
         }
-        /* reimp */ Mode mode() const { return FileManager; }
+
     public:
         static const char * staticName() { return "VERIFY_FILES"; }
     };

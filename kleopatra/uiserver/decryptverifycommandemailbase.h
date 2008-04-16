@@ -1,8 +1,8 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/verifycommand.h
+    uiserver/decryptverifycommand.h
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2008 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,28 +30,47 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_VERIFYCOMMAND_H__
-#define __KLEOPATRA_UISERVER_VERIFYCOMMAND_H__
+#ifndef __KLEOPATRA_UISERVER_DECRYPTVERIFYCOMMANDEMAILBASE_H__
+#define __KLEOPATRA_UISERVER_DECRYPTVERIFYCOMMANDEMAILBASE_H__
 
 #include "assuancommand.h"
 
 #include <utils/pimpl_ptr.h>
+#include <utils/types.h>
 
 namespace Kleo {
-    class VerifyCommand : public AssuanCommandMixin<VerifyCommand,DecryptVerifyCommandEMailBase> {
+
+    class DecryptVerifyCommandEMailBase : public AssuanCommandMixin<DecryptVerifyCommandEMailBase> {
     public:
-        //VerifyCommand();
-        //~VerifyCommand();
+        explicit DecryptVerifyCommandEMailBase();
+        ~DecryptVerifyCommandEMailBase();
 
     private:
-        /* reimp */ DecryptVerifyOperation operation() const {
-            return Verify;
-        }
-        /* reimp */ Mode mode() const { return EMail; }
-    public:
-        static const char * staticName() { return "VERIFY"; }
-    };
+        virtual DecryptVerifyOperation operation() const = 0;
+        virtual Mode mode() const { return EMail; }
 
+    private:
+        int doStart();
+        void doCanceled();
+    public:
+        static const char * staticName() { return ""; }
+
+        class Private;
+    private:
+        kdtools::pimpl_ptr<Private> d;
+    };
+    
+    class DecryptVerifyCommand : public AssuanCommandMixin<DecryptVerifyCommand,DecryptVerifyCommandEMailBase> {
+    public:
+        //DecryptVerifyFilesCommand();
+        //~DecryptVerifyFilesCommand();
+
+    private:
+        DecryptVerifyOperation operation() const { return DecryptVerify; }
+
+    public:
+        static const char * staticName() { return "DECRYPT_VERIFY"; }
+    };
 }
 
-#endif // __KLEOPATRA_UISERVER_VERIFYCOMMAND_H__
+#endif // __KLEOPATRA_UISERVER_DECRYPTCOMMAND_H__

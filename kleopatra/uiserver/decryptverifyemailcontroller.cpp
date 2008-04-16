@@ -86,6 +86,7 @@ public:
     }
 
     void addStartErrorResult( unsigned int id, const shared_ptr<DecryptVerifyResult> & res );
+    void cancelAllTasks();
 
 
     // ### TODO copy of AssuanCommand::makeError, merge
@@ -102,19 +103,23 @@ public:
     shared_ptr<DecryptVerifyTask> m_runningTask;
     weak_ptr<AssuanCommand> m_cmd;
     bool m_silent;
-    bool m_detached;
-    int m_operation;
+    DecryptVerifyOperation m_operation;
     Protocol m_protocol;
+    bool m_errorDetected;
+    VerificationMode m_verificationMode;
+
 };
 
 DecryptVerifyEMailController::Private::Private( const shared_ptr<AssuanCommand> & cmd, DecryptVerifyEMailController* qq )
     : q( qq ),
     m_cmd( cmd ),
     m_silent( false ),
-    m_detached( false ),
-    m_operation( 0 ),
-    m_protocol( UnknownProtocol )
+    m_operation( DecryptVerify ),
+    m_protocol( UnknownProtocol ),
+    m_errorDetected( false ),
+    m_verificationMode( Detached )
 {
+    qRegisterMetaType<VerificationResult>();
 }
 
 void DecryptVerifyEMailController::Private::connectTask( const shared_ptr<DecryptVerifyTask> & t, unsigned int idx )
@@ -164,7 +169,7 @@ void DecryptVerifyEMailController::Private::schedule()
             removeInputFiles();
 #endif
         Q_FOREACH ( const shared_ptr<const DecryptVerifyResult> & i, m_results )
-            emit q->decryptVerifyResult( i );
+            emit q->verificationResult( i->verificationResult() );
         emit q->done();
     }
 }
@@ -179,10 +184,8 @@ void DecryptVerifyEMailController::Private::ensureWizardCreated()
     w->setAttribute( Qt::WA_DeleteOnClose );
 
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
-#if KDAB_PENDING // ### port setOperationCompleted
     connect( q, SIGNAL( done() ), w.get(), SLOT( setOperationCompleted() ), Qt::QueuedConnection );
     connect( q, SIGNAL( error( int, QString ) ), w.get(), SLOT( setOperationCompleted() ), Qt::QueuedConnection );
-#endif
     m_wizard = w.release();
 
 }
@@ -193,26 +196,26 @@ std::vector< shared_ptr<DecryptVerifyTask> > DecryptVerifyEMailController::Priva
     const uint numMessages = m_signedDatas.size();
     const uint numOutputs = m_outputs.size();
  
-    // ### TODO move error handling to command?
+    // these are duplicated from DecryptVerifyCommandEMailBase::Private::checkForErrors with slightly modified error codes/messages
     if ( !numInputs )
-        throw Kleo::Exception( makeError( GPG_ERR_ASS_NO_INPUT ),
-                               i18n("At least one INPUT needs to be provided") );
+        throw Kleo::Exception( makeError( GPG_ERR_CONFLICT ),
+                               i18n("At least one input needs to be provided") );
 
     if ( numMessages )
         if ( numMessages != numInputs )
-            throw Kleo::Exception( makeError( GPG_ERR_ASS_NO_INPUT ),  //TODO use better error code if possible
-                                   i18n("INPUT/MESSAGE count mismatch") );
-        else if ( m_operation != VerifyImplied )
+            throw Kleo::Exception( makeError( GPG_ERR_CONFLICT ),  //TODO use better error code if possible
+                                   i18n("Signature/signed data count mismatch") );
+        else if ( m_operation != Verify || m_verificationMode != Detached )
             throw Kleo::Exception( makeError( GPG_ERR_CONFLICT ),
-                                   i18n("MESSAGE can only be given for detached signature verification") );
+                                   i18n("Signed data can only be given for detached signature verification") );
 
     if ( numOutputs )
         if ( numOutputs != numInputs )
-            throw Kleo::Exception( makeError( GPG_ERR_ASS_NO_OUTPUT ), //TODO use better error code if possible
-                                   i18n("INPUT/OUTPUT count mismatch") );
+            throw Kleo::Exception( makeError( GPG_ERR_CONFLICT ), //TODO use better error code if possible
+                                   i18n("Input/Output count mismatch") );
         else if ( numMessages )
             throw Kleo::Exception( makeError( GPG_ERR_CONFLICT ),
-                                   i18n("Can't use OUTPUT and MESSAGE simultaneously") );
+                                   i18n("Cannot use output and signed data simultaneously") );
 
     kleo_assert( m_protocol != UnknownProtocol );
 
@@ -222,33 +225,23 @@ std::vector< shared_ptr<DecryptVerifyTask> > DecryptVerifyEMailController::Priva
                                m_protocol == OpenPGP ? i18n("No backend support for OpenPGP") :
                                m_protocol == CMS     ? i18n("No backend support for S/MIME") : QString() );
 
-    DecryptVerifyTask::Type type;
-    if ( numMessages )
-        type = DecryptVerifyTask::VerifyDetached;
-    else if ( (m_operation&DecryptMask) == DecryptOff )
-        type = DecryptVerifyTask::VerifyOpaque;
-    else if ( (m_operation&VerifyMask) == VerifyOff )
-        type = DecryptVerifyTask::Decrypt;
-    else
-        type = DecryptVerifyTask::DecryptVerify;
 
-    if ( type != DecryptVerifyTask::Decrypt && !m_silent ) {
-        ensureWizardCreated();
-        m_wizard->next();
+    if ( m_operation != Decrypt && !m_silent ) {
         ensureWizardVisible();
+        m_wizard->next();
     }
 
     std::vector< shared_ptr<DecryptVerifyTask> > tasks;
     
     for ( unsigned int i = 0 ; i < numInputs ; ++i ) {
 
-        shared_ptr<DecryptVerifyTask> task( new DecryptVerifyTask( type ) );
+        shared_ptr<DecryptVerifyTask> task( new DecryptVerifyTask( m_operation ) );
 
         task->setInput( m_inputs.at( i ) );
+        task->setVerificationMode( m_verificationMode );
 
-        if ( type == DecryptVerifyTask::VerifyDetached )
+        if ( m_operation == Verify && m_verificationMode == Detached )
             task->setSignedData( m_signedDatas.at( i ) );
-
         if ( numOutputs )
             task->setOutput( m_outputs.at( i ) );
 
@@ -298,11 +291,6 @@ void DecryptVerifyEMailController::setOutputs( const std::vector<shared_ptr<Outp
     d->m_outputs = outputs;
 }
 
-void DecryptVerifyEMailController::setDetached( bool detached )
-{
-    d->m_detached = detached;
-}
-
 void DecryptVerifyEMailController::setWizardShown( bool shown )
 {
     d->m_silent = !shown;
@@ -310,9 +298,19 @@ void DecryptVerifyEMailController::setWizardShown( bool shown )
         d->m_wizard->setVisible( shown );
 }
 
-void DecryptVerifyEMailController::setOperation( int operation )
+void DecryptVerifyEMailController::setOperation( DecryptVerifyOperation operation )
 {
     d->m_operation = operation;
+}
+
+void DecryptVerifyEMailController::setVerificationMode( VerificationMode vm )
+{
+    d->m_verificationMode = vm;
+}
+
+void DecryptVerifyEMailController::setProtocol( Protocol prot )
+{
+    d->m_protocol = prot;
 }
 
 void DecryptVerifyEMailController::Private::addStartErrorResult( unsigned int id, const shared_ptr<DecryptVerifyResult> & res )
@@ -320,6 +318,31 @@ void DecryptVerifyEMailController::Private::addStartErrorResult( unsigned int id
     ensureWizardCreated();
     m_wizard->resultWidget( id )->setResult( res );
     m_results.push_back( res );
+}
+
+
+void DecryptVerifyEMailController::cancel()
+{
+    kDebug();
+    try {
+        d->m_errorDetected = true;
+        if ( d->m_wizard )
+            d->m_wizard->close();
+        d->cancelAllTasks();
+    } catch ( const std::exception & e ) {
+        qDebug( "Caught exception: %s", e.what() );
+    }
+}
+
+void DecryptVerifyEMailController::Private::cancelAllTasks() {
+
+    // we just kill all runnable tasks - this will not result in
+    // signal emissions.
+    m_runnableTasks.clear();
+
+    // a cancel() will result in a call to 
+    if ( m_runningTask )
+        m_runningTask->cancel();
 }
 
 #include "decryptverifyemailcontroller.moc"

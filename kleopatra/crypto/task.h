@@ -65,6 +65,7 @@ namespace Crypto {
     Q_SIGNALS:
         void progress( const QString & what, int current, int total );
         void result( const boost::shared_ptr<const Kleo::Crypto::Task::Result> & );
+        void started();
 
     protected:
         static boost::shared_ptr<Result> makeErrorResult( int errCode, const QString& details );

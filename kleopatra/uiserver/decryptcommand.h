@@ -33,23 +33,22 @@
 #ifndef __KLEOPATRA_UISERVER_DECRYPTCOMMAND_H__
 #define __KLEOPATRA_UISERVER_DECRYPTCOMMAND_H__
 
-#include <uiserver/decryptverifycommand.h>
+#include <uiserver/decryptverifycommandemailbase.h>
 
 namespace Kleo {
 
-    class DecryptCommand : public AssuanCommandMixin<DecryptCommand,DecryptVerifyCommand> {
+    class DecryptCommand : public AssuanCommandMixin<DecryptCommand,DecryptVerifyCommandEMailBase> {
     public:
         //DecryptCommand();
         //~DecryptCommand();
 
     private:
-        /* reimp */ unsigned int operation() const {
+        /* reimp */ DecryptVerifyOperation operation() const {
             if ( hasOption( "no-verify" ) )
-                return DecryptOn|VerifyOff;
+                return Decrypt;
             else
-                return DecryptOn|VerifyImplied;
+                return DecryptVerify;
         }
-        /* reimp */ Mode mode() const { return EMail; }
     public:
         static const char * staticName() { return "DECRYPT"; }
     };

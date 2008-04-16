@@ -35,6 +35,8 @@
 
 #include "task.h"
 
+#include <utils/types.h>
+
 #include <kleo/cryptobackendfactory.h>
 
 #include <gpgme++/verificationresult.h>
@@ -53,20 +55,14 @@ namespace Crypto {
     class DecryptVerifyTask : public Task {
         Q_OBJECT
     public:
-
-        enum Type {
-            Decrypt,
-            DecryptVerify,
-            VerifyOpaque,
-            VerifyDetached
-        };
-
-        explicit DecryptVerifyTask( Type type, QObject* parent = 0 );
+        explicit DecryptVerifyTask( DecryptVerifyOperation op, QObject* parent = 0 );
         ~DecryptVerifyTask();
 
         void setInput( const boost::shared_ptr<Input> & input );
         void setSignedData( const boost::shared_ptr<Input> & signedData );
         void setOutput( const boost::shared_ptr<Output> & output );
+
+        void setVerificationMode( VerificationMode mode );
 
         void setBackend( const CryptoBackend::Protocol* backend );
         void autodetectBackendFromInput();
@@ -136,7 +132,7 @@ namespace Crypto {
         DecryptVerifyResult( const DecryptVerifyResult& );
         DecryptVerifyResult& operator=( const DecryptVerifyResult& other );
 
-        DecryptVerifyResult( DecryptVerifyTask::Type type,
+        DecryptVerifyResult( DecryptVerifyOperation op,
                   const GpgME::VerificationResult& vr,
                   const GpgME::DecryptionResult& dr,
                   const QByteArray& stuff,

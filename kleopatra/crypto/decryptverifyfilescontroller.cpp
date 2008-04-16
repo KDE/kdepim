@@ -89,7 +89,7 @@ public:
     }
 
     void addStartErrorResult( unsigned int id, const shared_ptr<DecryptVerifyResult> & res );
-
+    void cancelAllTasks();
 
     // ### TODO copy of AssuanCommand::makeError, merge
     static int makeError( int code ) {
@@ -101,6 +101,8 @@ public:
     std::vector<shared_ptr<const DecryptVerifyResult> > m_results;
     std::vector<shared_ptr<DecryptVerifyTask> > m_runnableTasks, m_completedTasks;
     shared_ptr<DecryptVerifyTask> m_runningTask;
+    bool m_errorDetected;
+    DecryptVerifyOperation m_operation;
 };
 
 // static
@@ -113,7 +115,8 @@ shared_ptr<DecryptVerifyTask> DecryptVerifyFilesController::Private::taskFromOpe
     switch ( w->mode() ) {
     case DecryptVerifyOperationWidget::VerifyDetachedWithSignature:
 
-        task.reset( new DecryptVerifyTask( DecryptVerifyTask::VerifyDetached ) );
+        task.reset( new DecryptVerifyTask( Verify ) );
+        task->setVerificationMode( Detached );
         task->setInput( Input::createFromFile( file ) );
         task->setSignedData( Input::createFromFile( w->signedDataFileName() ) );
 
@@ -122,7 +125,8 @@ shared_ptr<DecryptVerifyTask> DecryptVerifyFilesController::Private::taskFromOpe
         break;
 
     case DecryptVerifyOperationWidget::VerifyDetachedWithSignedData:
-        task.reset( new DecryptVerifyTask( DecryptVerifyTask::VerifyDetached ) );
+        task.reset( new DecryptVerifyTask( Verify ) );
+        task->setVerificationMode( Detached );
         task->setInput( Input::createFromFile( w->inputFileName() ) );
         task->setSignedData( Input::createFromFile( file ) );
 
@@ -132,7 +136,8 @@ shared_ptr<DecryptVerifyTask> DecryptVerifyFilesController::Private::taskFromOpe
 
     case DecryptVerifyOperationWidget::DecryptVerifyOpaque:
 
-        task.reset( new DecryptVerifyTask( DecryptVerifyTask::DecryptVerify ) );
+        task.reset( new DecryptVerifyTask( DecryptVerify ) );
+        task->setVerificationMode( Opaque );
         task->setInput( Input::createFromFile( file ) );
         task->setOutput( Output::createFromFile( outDir.absoluteFilePath( outputFileName( QFileInfo( file->fileName() ).fileName() ) ), false ) );
 
@@ -145,8 +150,9 @@ shared_ptr<DecryptVerifyTask> DecryptVerifyFilesController::Private::taskFromOpe
     return task;
 }
 
-DecryptVerifyFilesController::Private::Private( DecryptVerifyFilesController* qq ) : q( qq )
+DecryptVerifyFilesController::Private::Private( DecryptVerifyFilesController* qq ) : q( qq ), m_errorDetected( false ), m_operation( DecryptVerify )
 {
+    qRegisterMetaType<VerificationResult>();
 }
 
 void DecryptVerifyFilesController::Private::connectTask( const shared_ptr<DecryptVerifyTask> & t, unsigned int idx )
@@ -217,12 +223,8 @@ void DecryptVerifyFilesController::Private::schedule()
     }
     if ( !m_runningTask ) {
         kleo_assert( m_runnableTasks.empty() );
-#if KDAB_PENDING // remove encrypted inputs here if wanted?
-        if ( m_wizard->removeUnencryptedFile() && m_wizard->encryptionSelected() && !errorDetected )
-            removeInputFiles();
-#endif
         Q_FOREACH ( const shared_ptr<const DecryptVerifyResult> & i, m_results )
-            emit q->decryptVerifyResult( i );
+            emit q->verificationResult( i->verificationResult() );
         emit q->done();
     }
 }
@@ -238,10 +240,8 @@ void DecryptVerifyFilesController::Private::ensureWizardCreated()
 
     connect( w.get(), SIGNAL(operationPrepared()), q, SLOT(slotWizardOperationPrepared()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
-#if KDAB_PENDING // ### port setOperationCompleted
     connect( q, SIGNAL( done() ), w.get(), SLOT( setOperationCompleted() ), Qt::QueuedConnection );
     connect( q, SIGNAL( error( int, QString ) ), w.get(), SLOT( setOperationCompleted() ), Qt::QueuedConnection );
-#endif
     m_wizard = w.release();
 
 }
@@ -391,6 +391,35 @@ QString DecryptVerifyFilesController::Private::heuristicBaseDirectory( const QSt
         return candidate;
     else
         return fi.absolutePath();
+}
+
+void DecryptVerifyFilesController::setOperation( DecryptVerifyOperation op )
+{
+    d->m_operation = op;
+}
+
+void DecryptVerifyFilesController::Private::cancelAllTasks() {
+
+    // we just kill all runnable tasks - this will not result in
+    // signal emissions.
+    m_runnableTasks.clear();
+
+    // a cancel() will result in a call to 
+    if ( m_runningTask )
+        m_runningTask->cancel();
+}
+
+void DecryptVerifyFilesController::cancel()
+{
+    kDebug();
+    try {
+        d->m_errorDetected = true;
+        if ( d->m_wizard )
+            d->m_wizard->close();
+        d->cancelAllTasks();
+    } catch ( const std::exception & e ) {
+        qDebug( "Caught exception: %s", e.what() );
+    }
 }
 
 #include "decryptverifyfilescontroller.moc"
