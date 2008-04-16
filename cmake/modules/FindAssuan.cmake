@@ -115,22 +115,22 @@ if ( WIN32 )
         ${CMAKE_INSTALL_PREFIX}/lib
     )
 
-    set( ASSUAN_INCLUDES ${ASSUAN_INCLUDES} CACHE INTERNAL "The assuan include paths" )
+    set( ASSUAN_INCLUDES ${ASSUAN_INCLUDES} )
 
     if ( _assuan_vanilla_library AND _gpg_error_library )
-      set( ASSUAN_VANILLA_LIBRARIES ${_assuan_vanilla_library} ${_gpg_error_library} CACHE INTERNAL "The assuan (vanilla) libraries" )
+      set( ASSUAN_VANILLA_LIBRARIES ${_assuan_vanilla_library} ${_gpg_error_library} )
       set( ASSUAN_VANILLA_FOUND     true )
       set( ASSUAN_FOUND             true )
     endif()
 
     #if ( _assuan_glib_library AND _gpg_error_library )
-    #  set( ASSUAN_GLIB_LIBRARIES    ${_assuan_glib_library}    ${_gpg_error_library} CACHE INTERNAL "The assuan-glib libraries" )
+    #  set( ASSUAN_GLIB_LIBRARIES    ${_assuan_glib_library}    ${_gpg_error_library} )
     #  set( ASSUAN_GLIB_FOUND        true )
     #  set( ASSUAN_FOUND             true )
     #endif()
 
     #if ( _assuan_qt_library AND _gpg_error_library )
-    #  set( ASSUAN_QT_LIBRARIES      ${_assuan_qt_library}      ${_gpg_error_library} CACHE INTERNAL "The assuan-qt libraries" )
+    #  set( ASSUAN_QT_LIBRARIES      ${_assuan_qt_library}      ${_gpg_error_library} )
     #  set( ASSUAN_QT_FOUND          true )
     #  set( ASSUAN_FOUND             true )
     #endif()
@@ -289,10 +289,10 @@ else() # not WIN32
           endforeach( _flavour )
 
           # ensure that they are cached
-          set( ASSUAN_INCLUDES          ${ASSUAN_INCLUDES}          CACHE INTERNAL "The assuan include paths" )
-          set( ASSUAN_VANILLA_LIBRARIES ${ASSUAN_VANILLA_LIBRARIES} CACHE INTERNAL "The assuan (vanilla) libraries" )
-          set( ASSUAN_PTHREAD_LIBRARIES ${ASSUAN_PTHREAD_LIBRARIES} CACHE INTERNAL "The assuan-pthread libraries" )
-          set( ASSUAN_PTH_LIBRARIES     ${ASSUAN_PTH_LIBRARIES}     CACHE INTERNAL "The assuan-pth libraries" )
+          set( ASSUAN_INCLUDES          ${ASSUAN_INCLUDES}          )
+          set( ASSUAN_VANILLA_LIBRARIES ${ASSUAN_VANILLA_LIBRARIES} )
+          set( ASSUAN_PTHREAD_LIBRARIES ${ASSUAN_PTHREAD_LIBRARIES} )
+          set( ASSUAN_PTH_LIBRARIES     ${ASSUAN_PTH_LIBRARIES}     )
 
           if ( ASSUAN_VANILLA_FOUND OR ASSUAN_PTHREAD_FOUND OR ASSUAN_PTH_FOUND )
             set( ASSUAN_FOUND true )
