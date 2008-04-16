@@ -43,7 +43,7 @@
 
 #include "libkleo/kleo/cryptobackendfactory.h"
 
-#include <utils/detail_p.h>
+#include <utils/gnupg-helper.h>
 #include <utils/filesystemwatcher.h>
 #include <utils/kdpipeiodevice.h>
 #include <utils/log.h>
@@ -109,7 +109,7 @@ namespace {
         return t ? boost::shared_ptr<T>( t ) : boost::shared_ptr<T>() ;
     }
     static QStringList watchList() {
-        const QString home = Kleo::_detail::gnupgHomeDirectory();
+        const QString home = Kleo::gnupgHomeDirectory();
         QFileInfo info( home );
         if ( !info.isDir() )
             return QStringList();

@@ -43,6 +43,7 @@
 
 #include <utils/input.h>
 #include <utils/output.h>
+#include <utils/gnupg-helper.h>
 #include <utils/detail_p.h>
 #include <utils/hex.h>
 #include <utils/log.h>
@@ -825,7 +826,7 @@ void AssuanCommand::canceled() {
 
 // static
 int AssuanCommand::makeError( int code ) {
-    return gpg_error( static_cast<gpg_err_code_t>( code ) );
+    return makeGnuPGError( code );
 }
 
 bool AssuanCommand::hasOption( const char * opt ) const {

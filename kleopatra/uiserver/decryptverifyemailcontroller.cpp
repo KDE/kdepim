@@ -42,6 +42,7 @@
 #include <crypto/decryptverifytask.h>
 
 #include <utils/classify.h>
+#include <utils/gnupg-helper.h>
 #include <utils/input.h>
 #include <utils/output.h>
 #include <utils/kleo_assert.h>
@@ -89,8 +90,8 @@ public:
     void cancelAllTasks();
 
 
-    // ### TODO copy of AssuanCommand::makeError, merge
-    static int makeError( int code ) {
+    // ### TODO copy of AssuanCommand::makeGnuPGError, merge
+    static int makeGnuPGError( int code ) {
         return gpg_error( static_cast<gpg_err_code_t>( code ) );
     }
 
@@ -198,30 +199,30 @@ std::vector< shared_ptr<DecryptVerifyTask> > DecryptVerifyEMailController::Priva
  
     // these are duplicated from DecryptVerifyCommandEMailBase::Private::checkForErrors with slightly modified error codes/messages
     if ( !numInputs )
-        throw Kleo::Exception( makeError( GPG_ERR_CONFLICT ),
+        throw Kleo::Exception( makeGnuPGError( GPG_ERR_CONFLICT ),
                                i18n("At least one input needs to be provided") );
 
     if ( numMessages )
         if ( numMessages != numInputs )
-            throw Kleo::Exception( makeError( GPG_ERR_CONFLICT ),  //TODO use better error code if possible
+            throw Kleo::Exception( makeGnuPGError( GPG_ERR_CONFLICT ),  //TODO use better error code if possible
                                    i18n("Signature/signed data count mismatch") );
         else if ( m_operation != Verify || m_verificationMode != Detached )
-            throw Kleo::Exception( makeError( GPG_ERR_CONFLICT ),
+            throw Kleo::Exception( makeGnuPGError( GPG_ERR_CONFLICT ),
                                    i18n("Signed data can only be given for detached signature verification") );
 
     if ( numOutputs )
         if ( numOutputs != numInputs )
-            throw Kleo::Exception( makeError( GPG_ERR_CONFLICT ), //TODO use better error code if possible
+            throw Kleo::Exception( makeGnuPGError( GPG_ERR_CONFLICT ), //TODO use better error code if possible
                                    i18n("Input/Output count mismatch") );
         else if ( numMessages )
-            throw Kleo::Exception( makeError( GPG_ERR_CONFLICT ),
+            throw Kleo::Exception( makeGnuPGError( GPG_ERR_CONFLICT ),
                                    i18n("Cannot use output and signed data simultaneously") );
 
     kleo_assert( m_protocol != UnknownProtocol );
 
     const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( m_protocol );
     if ( !backend )
-        throw Kleo::Exception( makeError( GPG_ERR_UNSUPPORTED_PROTOCOL ),
+        throw Kleo::Exception( makeGnuPGError( GPG_ERR_UNSUPPORTED_PROTOCOL ),
                                m_protocol == OpenPGP ? i18n("No backend support for OpenPGP") :
                                m_protocol == CMS     ? i18n("No backend support for S/MIME") : QString() );
 

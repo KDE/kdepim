@@ -102,9 +102,6 @@ namespace _detail {
         return static_cast<qulonglong>( fd );
 #endif
     }
-
-    QString gnupgHomeDirectory();
-
 }
 }
 

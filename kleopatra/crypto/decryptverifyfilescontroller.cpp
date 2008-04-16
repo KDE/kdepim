@@ -39,6 +39,7 @@
 #include <crypto/decryptverifytask.h>
 
 #include <utils/classify.h>
+#include <utils/gnupg-helper.h>
 #include <utils/input.h>
 #include <utils/output.h>
 #include <utils/kleo_assert.h>
@@ -90,11 +91,6 @@ public:
 
     void addStartErrorResult( unsigned int id, const shared_ptr<DecryptVerifyResult> & res );
     void cancelAllTasks();
-
-    // ### TODO copy of AssuanCommand::makeError, merge
-    static int makeError( int code ) {
-        return gpg_error( static_cast<gpg_err_code_t>( code ) );
-    }
 
     std::vector<shared_ptr<QFile> > m_passedFiles, m_filesAfterPreparation;
     QPointer<DecryptVerifyWizard> m_wizard;
@@ -302,7 +298,7 @@ std::vector<shared_ptr<QFile> > DecryptVerifyFilesController::Private::prepareWi
     kleo_assert( counter == files.size() );
 
     if ( !counter )
-        throw Kleo::Exception( makeError( GPG_ERR_ASS_NO_INPUT ), i18n("No usable inputs found") );
+        throw Kleo::Exception( makeGnuPGError( GPG_ERR_ASS_NO_INPUT ), i18n("No usable inputs found") );
 
     m_wizard->setOutputDirectory( heuristicBaseDirectory() );
     return files;
