@@ -34,6 +34,8 @@
 
 #include "decryptverifytask.h"
 
+
+#include <kleo/cryptobackendfactory.h>
 #include <kleo/verifyopaquejob.h>
 #include <kleo/verifydetachedjob.h>
 #include <kleo/decryptjob.h>
@@ -432,7 +434,7 @@ AbstractDecryptVerifyTask::~AbstractDecryptVerifyTask() {}
 class DecryptVerifyTask::Private {
     DecryptVerifyTask* const q;
 public:
-    explicit Private( DecryptVerifyTask* qq ) : q( qq ) {}
+    explicit Private( DecryptVerifyTask* qq ) : q( qq ), m_backend( 0 ), m_protocol( UnknownProtocol )  {}
 
     void slotResult( const DecryptionResult&, const VerificationResult&, const QByteArray& );
 
@@ -446,6 +448,7 @@ public:
     shared_ptr<Input> m_input;
     shared_ptr<Output> m_output;
     const CryptoBackend::Protocol* m_backend;
+    Protocol m_protocol;
 };
 
 
@@ -492,15 +495,18 @@ void DecryptVerifyTask::setOutput( const shared_ptr<Output> & output )
     kleo_assert( d->m_output && d->m_output->ioDevice() );
 }
 
-void DecryptVerifyTask::setBackend( const CryptoBackend::Protocol* backend )
+void DecryptVerifyTask::setProtocol( Protocol prot )
 {
-    d->m_backend = backend;
+    kleo_assert( prot != UnknownProtocol );
+    d->m_protocol = prot;
+    d->m_backend = CryptoBackendFactory::instance()->protocol( prot );
+    kleo_assert( d->m_backend );
 }
 
-void DecryptVerifyTask::autodetectBackendFromInput() 
+void DecryptVerifyTask::autodetectProtocolFromInput() 
 {
     if ( d->m_input )
-        setBackend( CryptoBackendFactory::instance()->protocol( findProtocol( d->m_input->classification() ) ) );
+        setProtocol( findProtocol( d->m_input->classification() ) );
 }
 
 QString DecryptVerifyTask::label() const
@@ -510,8 +516,7 @@ QString DecryptVerifyTask::label() const
 
 Protocol DecryptVerifyTask::protocol() const
 {
-    kleo_assert( !"not implemented" );
-    return UnknownProtocol; // ### TODO
+    return d->m_protocol;
 }
 
 void DecryptVerifyTask::cancel()
@@ -535,7 +540,7 @@ void DecryptVerifyTask::doStart()
 class DecryptTask::Private {
     DecryptTask* const q;
 public:
-    explicit Private( DecryptTask* qq ) : q( qq ) {}
+    explicit Private( DecryptTask* qq ) : q( qq ), m_backend( 0 ), m_protocol( UnknownProtocol )  {}
 
     void slotResult( const DecryptionResult&, const QByteArray& );
 
@@ -549,6 +554,7 @@ public:
     shared_ptr<Input> m_input;
     shared_ptr<Output> m_output;
     const CryptoBackend::Protocol* m_backend;
+    Protocol m_protocol;
 };
 
 
@@ -594,15 +600,18 @@ void DecryptTask::setOutput( const shared_ptr<Output> & output )
     kleo_assert( d->m_output && d->m_output->ioDevice() );
 }
 
-void DecryptTask::setBackend( const CryptoBackend::Protocol* backend )
+void DecryptTask::setProtocol( Protocol prot )
 {
-    d->m_backend = backend;
+    kleo_assert( prot != UnknownProtocol );
+    d->m_protocol = prot;
+    d->m_backend = CryptoBackendFactory::instance()->protocol( prot );
+    kleo_assert( d->m_backend );
 }
 
-void DecryptTask::autodetectBackendFromInput() 
+void DecryptTask::autodetectProtocolFromInput() 
 {
     if ( d->m_input )
-        setBackend( CryptoBackendFactory::instance()->protocol( findProtocol( d->m_input->classification() ) ) );
+        setProtocol( findProtocol( d->m_input->classification() ) );
 }
 
 QString DecryptTask::label() const
@@ -638,7 +647,7 @@ void DecryptTask::doStart()
 class VerifyOpaqueTask::Private {
     VerifyOpaqueTask* const q;
 public:
-    explicit Private( VerifyOpaqueTask* qq ) : q( qq ) {}
+    explicit Private( VerifyOpaqueTask* qq ) : q( qq ), m_backend( 0 ), m_protocol( UnknownProtocol )  {}
 
     void slotResult( const VerificationResult&, const QByteArray& );
 
@@ -652,6 +661,7 @@ public:
     shared_ptr<Input> m_input;
     shared_ptr<Output> m_output;
     const CryptoBackend::Protocol* m_backend;
+    Protocol m_protocol;
 };
 
 
@@ -697,15 +707,18 @@ void VerifyOpaqueTask::setOutput( const shared_ptr<Output> & output )
     kleo_assert( d->m_output && d->m_output->ioDevice() );
 }
 
-void VerifyOpaqueTask::setBackend( const CryptoBackend::Protocol* backend )
+void VerifyOpaqueTask::setProtocol( Protocol prot )
 {
-    d->m_backend = backend;
+    kleo_assert( prot != UnknownProtocol );
+    d->m_protocol = prot;
+    d->m_backend = CryptoBackendFactory::instance()->protocol( prot );
+    kleo_assert( d->m_backend );
 }
 
-void VerifyOpaqueTask::autodetectBackendFromInput() 
+void VerifyOpaqueTask::autodetectProtocolFromInput() 
 {
     if ( d->m_input )
-        setBackend( CryptoBackendFactory::instance()->protocol( findProtocol( d->m_input->classification() ) ) );
+        setProtocol( findProtocol( d->m_input->classification() ) );
 }
 
 QString VerifyOpaqueTask::label() const
@@ -715,8 +728,7 @@ QString VerifyOpaqueTask::label() const
 
 Protocol VerifyOpaqueTask::protocol() const
 {
-    kleo_assert( !"not implemented" );
-    return UnknownProtocol; // ### TODO
+    return d->m_protocol;
 }
 
 void VerifyOpaqueTask::cancel()
@@ -741,7 +753,7 @@ void VerifyOpaqueTask::doStart()
 class VerifyDetachedTask::Private {
     VerifyDetachedTask* const q;
 public:
-    explicit Private( VerifyDetachedTask* qq ) : q( qq ) {}
+    explicit Private( VerifyDetachedTask* qq ) : q( qq ), m_backend( 0 ), m_protocol( UnknownProtocol ) {}
 
     void slotResult( const VerificationResult& );
 
@@ -754,6 +766,7 @@ public:
     
     shared_ptr<Input> m_input, m_signedData;
     const CryptoBackend::Protocol* m_backend;
+    Protocol m_protocol;
 };
 
 
@@ -788,15 +801,18 @@ void VerifyDetachedTask::setSignedData( const shared_ptr<Input> & signedData )
     kleo_assert( d->m_signedData && d->m_signedData->ioDevice() );
 }
 
-void VerifyDetachedTask::setBackend( const CryptoBackend::Protocol* backend )
+void VerifyDetachedTask::setProtocol( Protocol prot )
 {
-    d->m_backend = backend;
+    kleo_assert( prot != UnknownProtocol );
+    d->m_protocol = prot;
+    d->m_backend = CryptoBackendFactory::instance()->protocol( prot );
+    kleo_assert( d->m_backend );
 }
 
-void VerifyDetachedTask::autodetectBackendFromInput() 
+void VerifyDetachedTask::autodetectProtocolFromInput() 
 {
     if ( d->m_input )
-        setBackend( CryptoBackendFactory::instance()->protocol( findProtocol( d->m_input->classification() ) ) );
+        setProtocol( findProtocol( d->m_input->classification() ) );
 }
 
 QString VerifyDetachedTask::label() const

@@ -142,7 +142,7 @@ shared_ptr<AbstractDecryptVerifyTask> DecryptVerifyFilesController::Private::tas
     break;
     }
     
-    task->autodetectBackendFromInput();
+    task->autodetectProtocolFromInput();
     return task;
 }
 

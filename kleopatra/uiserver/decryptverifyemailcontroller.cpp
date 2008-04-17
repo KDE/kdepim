@@ -49,6 +49,8 @@
 
 #include <uiserver/assuancommand.h>
 
+#include <kleo/cryptobackendfactory.h>
+
 #include <KDebug>
 #include <KLocalizedString>
 
@@ -237,7 +239,7 @@ std::vector< shared_ptr<AbstractDecryptVerifyTask> > DecryptVerifyEMailControlle
                 t->setInput( m_inputs.at( i ) );
                 assert( numOutputs );
                 t->setOutput( m_outputs.at( i ) );
-                t->setBackend( backend );
+                t->setProtocol( m_protocol );
                 task = t;
             }
             break;
@@ -247,14 +249,14 @@ std::vector< shared_ptr<AbstractDecryptVerifyTask> > DecryptVerifyEMailControlle
                     shared_ptr<VerifyDetachedTask> t( new VerifyDetachedTask );
                     t->setInput( m_inputs.at( i ) );
                     t->setSignedData( m_signedDatas.at( i ) );
-                    t->setBackend( backend );
+                    t->setProtocol( m_protocol );
                     task = t;
                 } else {
                     shared_ptr<VerifyOpaqueTask> t( new VerifyOpaqueTask );
                     t->setInput( m_inputs.at( i ) );
                     if ( numOutputs )
                         t->setOutput( m_outputs.at( i ) );
-                    t->setBackend( backend );
+                    t->setProtocol( m_protocol );
                     task = t;
                 }
             }
@@ -265,7 +267,7 @@ std::vector< shared_ptr<AbstractDecryptVerifyTask> > DecryptVerifyEMailControlle
                 t->setInput( m_inputs.at( i ) );
                 assert( numOutputs );
                 t->setOutput( m_outputs.at( i ) );
-                t->setBackend( backend );
+                t->setProtocol( m_protocol );
                 task = t;                
             }
         }

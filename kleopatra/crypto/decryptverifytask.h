@@ -37,8 +37,6 @@
 
 #include <utils/types.h>
 
-#include <kleo/cryptobackendfactory.h>
-
 #include <gpgme++/verificationresult.h>
 
 #include <boost/shared_ptr.hpp>
@@ -59,7 +57,7 @@ namespace Crypto {
         virtual ~AbstractDecryptVerifyTask();
 
     public:
-        virtual void autodetectBackendFromInput() = 0;
+        virtual void autodetectProtocolFromInput() = 0;
         
     Q_SIGNALS:
         void decryptVerifyResult( const boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult> & );
@@ -78,8 +76,8 @@ namespace Crypto {
         void setInput( const boost::shared_ptr<Input> & input );
         void setOutput( const boost::shared_ptr<Output> & output );
 
-        void setBackend( const CryptoBackend::Protocol* backend );
-        void autodetectBackendFromInput();
+        void setProtocol( GpgME::Protocol prot );
+        void autodetectProtocolFromInput();
 
         /* reimp */ QString label() const;
 
@@ -106,8 +104,8 @@ namespace Crypto {
         void setInput( const boost::shared_ptr<Input> & input );
         void setSignedData( const boost::shared_ptr<Input> & signedData );
 
-        void setBackend( const CryptoBackend::Protocol* backend );
-        void autodetectBackendFromInput();
+        void setProtocol( GpgME::Protocol prot );
+        void autodetectProtocolFromInput();
 
         /* reimp */ QString label() const;
 
@@ -134,8 +132,8 @@ namespace Crypto {
         void setInput( const boost::shared_ptr<Input> & input );
         void setOutput( const boost::shared_ptr<Output> & output );
 
-        void setBackend( const CryptoBackend::Protocol* backend );
-        void autodetectBackendFromInput();
+        void setProtocol( GpgME::Protocol prot );
+        void autodetectProtocolFromInput();
 
         /* reimp */ QString label() const;
 
@@ -163,8 +161,8 @@ namespace Crypto {
         void setSignedData( const boost::shared_ptr<Input> & signedData );
         void setOutput( const boost::shared_ptr<Output> & output );
 
-        void setBackend( const CryptoBackend::Protocol* backend );
-        void autodetectBackendFromInput();
+        void setProtocol( GpgME::Protocol prot );
+        void autodetectProtocolFromInput();
 
         /* reimp */ QString label() const;
 

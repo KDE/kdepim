@@ -48,6 +48,8 @@
 #include <utils/kleo_assert.h>
 #include <utils/exception.h>
 
+#include <kleo/cryptobackendfactory.h>
+
 #include <gpgme++/error.h>
 #include <gpgme++/key.h>
 #include <gpgme++/verificationresult.h>
