@@ -53,7 +53,7 @@ namespace Kleo {
             //VerifyOn  = 0x10, // non-sensical
             VerifyImplied = 0x20,
 
-            VerifyMask = 0x30,
+            VerifyMask = 0x30
         };
 
         explicit DecryptVerifyCommandFilesBase();
