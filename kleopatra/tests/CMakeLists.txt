@@ -3,7 +3,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/kleopatra ${CMAKE_BINARY_DIR}/kleopatra
 
 ########### next target ###############
 
-set(test_keylistmodels_SRCS test_keylistmodels.cpp ../models/keylistmodel.cpp ../models/keylistsortfilterproxymodel.cpp ../utils/formatting.cpp )
+set(test_keylistmodels_SRCS test_keylistmodels.cpp ../models/keylistmodel.cpp ../models/keylistsortfilterproxymodel.cpp ../utils/formatting.cpp ../utils/exception.cpp )
 if ( KLEO_MODEL_TEST )
    set(test_keylistmodels_SRCS ${test_keylistmodels_SRCS} ../models/modeltest.cpp )
 endif ( KLEO_MODEL_TEST )

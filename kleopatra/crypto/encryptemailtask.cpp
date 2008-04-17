@@ -204,7 +204,7 @@ QString EncryptEMailResult::overview() const {
 }
 
 QString EncryptEMailResult::details() const {
-    return i18n( "Not yet implemented" );
+    return QString();
 }
 
 int EncryptEMailResult::errorCode() const {

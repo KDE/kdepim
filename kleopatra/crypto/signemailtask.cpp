@@ -240,7 +240,7 @@ QString SignEMailResult::overview() const {
 }
 
 QString SignEMailResult::details() const {
-    return i18n("Not yet implemented");
+    return QString();
 }
 
 int SignEMailResult::errorCode() const {

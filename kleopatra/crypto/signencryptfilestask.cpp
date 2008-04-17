@@ -371,7 +371,7 @@ QString SignEncryptFilesResult::overview() const {
 }
 
 QString SignEncryptFilesResult::details() const {
-    return i18n("Not yet implemented");
+    return QString();
 }
 
 int SignEncryptFilesResult::errorCode() const {
