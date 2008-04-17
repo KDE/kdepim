@@ -421,30 +421,20 @@ const Key & DecryptVerifyResult::keyForSignature( const Signature & sig, const s
     return null;
 }
 
+class AbstractDecryptVerifyTask::Private {
+    
+};
+
+AbstractDecryptVerifyTask::AbstractDecryptVerifyTask( QObject * parent ) : Task( parent ), d( new Private ) {}
+
+AbstractDecryptVerifyTask::~AbstractDecryptVerifyTask() {}
+
 class DecryptVerifyTask::Private {
     DecryptVerifyTask* const q;
 public:
-    explicit Private( DecryptVerifyOperation type, DecryptVerifyTask* qq ) : q( qq ), m_type( type ), m_verificationMode( Detached ) {}
+    explicit Private( DecryptVerifyTask* qq ) : q( qq ) {}
 
-    void slotResult( const DecryptionResult&, const QByteArray& );
     void slotResult( const DecryptionResult&, const VerificationResult&, const QByteArray& );
-    void slotResult( const VerificationResult&, const QByteArray& );
-    void slotResult( const VerificationResult& );
-
-    void registerJob( VerifyDetachedJob* job ) {
-        q->connect( job, SIGNAL(result(GpgME::VerificationResult)),
-                    q, SLOT(slotResult(GpgME::VerificationResult)) );
-    }
-
-    void registerJob( VerifyOpaqueJob* job ) {
-        q->connect( job, SIGNAL(result(GpgME::VerificationResult,QByteArray)),
-                    q, SLOT(slotResult(GpgME::VerificationResult,QByteArray)) );
-    }
-
-    void registerJob( DecryptJob * job ) {
-        q->connect( job, SIGNAL(result(GpgME::DecryptionResult,QByteArray)),
-                    q, SLOT(slotResult(GpgME::DecryptionResult,QByteArray)) );
-    }
 
     void registerJob( DecryptVerifyJob * job ) {
         q->connect( job, SIGNAL(result(GpgME::DecryptionResult,GpgME::VerificationResult,QByteArray)),
@@ -453,11 +443,9 @@ public:
 
     void emitResult( const shared_ptr<DecryptVerifyResult>& result );
     
-    DecryptVerifyOperation m_type;
-    shared_ptr<Input> m_input, m_signedData;
+    shared_ptr<Input> m_input;
     shared_ptr<Output> m_output;
     const CryptoBackend::Protocol* m_backend;
-    VerificationMode m_verificationMode;
 };
 
 
@@ -465,22 +453,6 @@ void DecryptVerifyTask::Private::emitResult( const shared_ptr<DecryptVerifyResul
 {
     emit q->result( result );
     emit q->decryptVerifyResult( result );
-}
-
-void DecryptVerifyTask::Private::slotResult( const DecryptionResult& result, const QByteArray& plainText )
-{
-    if ( result.error().code() ) {
-        m_output->cancel();
-    } else {
-        try {
-            m_output->finalize();
-        } catch ( const GpgME::Exception & e ) {
-            emitResult( DecryptVerifyResult::fromDecryptResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
-            return;
-        }
-    }
-
-    emitResult( DecryptVerifyResult::fromDecryptResult( result, plainText ) );
 }
 
 void DecryptVerifyTask::Private::slotResult( const DecryptionResult& dr, const VerificationResult& vr, const QByteArray& plainText )
@@ -499,29 +471,8 @@ void DecryptVerifyTask::Private::slotResult( const DecryptionResult& dr, const V
     emitResult( DecryptVerifyResult::fromDecryptVerifyResult( dr, vr, plainText ) );
 }
 
-void DecryptVerifyTask::Private::slotResult( const VerificationResult& result, const QByteArray& plainText )
-{
-    if ( result.error().code() ) {
-        m_output->cancel();
-    } else {
-        try {
-            m_output->finalize();
-        } catch ( const GpgME::Exception & e ) {
-            emitResult( DecryptVerifyResult::fromDecryptResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
-            return;
-        }
-    }
 
-    emitResult( DecryptVerifyResult::fromVerifyOpaqueResult( result, plainText ) );
-}
-
-void DecryptVerifyTask::Private::slotResult( const VerificationResult& result )
-{
-    assert( !m_output );
-    emitResult( DecryptVerifyResult::fromVerifyDetachedResult( result ) );
-}
-
-DecryptVerifyTask::DecryptVerifyTask( DecryptVerifyOperation type, QObject* parent ) : Task( parent ), d( new Private( type, this ) )
+DecryptVerifyTask::DecryptVerifyTask( QObject* parent ) : AbstractDecryptVerifyTask( parent ), d( new Private( this ) )
 {
 }
 
@@ -535,21 +486,10 @@ void DecryptVerifyTask::setInput( const shared_ptr<Input> & input )
     kleo_assert( d->m_input && d->m_input->ioDevice() );
 }
 
-void DecryptVerifyTask::setSignedData( const shared_ptr<Input> & signedData )
-{
-    d->m_signedData = signedData;
-    kleo_assert( d->m_signedData && d->m_signedData->ioDevice() );
-}
-
 void DecryptVerifyTask::setOutput( const shared_ptr<Output> & output )
 {
     d->m_output = output;
     kleo_assert( d->m_output && d->m_output->ioDevice() );
-}
-
-void DecryptVerifyTask::setVerificationMode( VerificationMode mode )
-{
-    d->m_verificationMode = mode;
 }
 
 void DecryptVerifyTask::setBackend( const CryptoBackend::Protocol* backend )
@@ -565,17 +505,7 @@ void DecryptVerifyTask::autodetectBackendFromInput()
 
 QString DecryptVerifyTask::label() const
 {
-    switch ( d->m_type ) {
-      case Decrypt:
-      case DecryptVerify:
-          return i18n( "Decrypting: %1...", d->m_input->label() );
-      case Verify:
-          if ( d->m_verificationMode == Opaque )
-              return i18n( "Verifying: %1...", d->m_input->label() );
-          else
-              return i18n( "Verifying signature: %1...", d->m_input->label() );
-    }
-    return i18n( "not implemented" );
+    return i18n( "Decrypting: %1...", d->m_input->label() );
 }
 
 Protocol DecryptVerifyTask::protocol() const
@@ -592,48 +522,309 @@ void DecryptVerifyTask::cancel()
 void DecryptVerifyTask::doStart()
 {
     kleo_assert( d->m_backend );
+    try {
+        DecryptVerifyJob * const job = d->m_backend->decryptVerifyJob();
+        kleo_assert( job );
+        d->registerJob( job );
+        job->start( d->m_input->ioDevice(), d->m_output->ioDevice() );
+    } catch ( const GpgME::Exception & e ) {
+        d->emitResult( DecryptVerifyResult::fromDecryptVerifyResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
+    }
+}
 
-    switch ( d->m_type ) {
-    case Decrypt:
+class DecryptTask::Private {
+    DecryptTask* const q;
+public:
+    explicit Private( DecryptTask* qq ) : q( qq ) {}
+
+    void slotResult( const DecryptionResult&, const QByteArray& );
+
+    void registerJob( DecryptJob * job ) {
+        q->connect( job, SIGNAL(result(GpgME::DecryptionResult,QByteArray)),
+                    q, SLOT(slotResult(GpgME::DecryptionResult,QByteArray)) );
+    }
+
+    void emitResult( const shared_ptr<DecryptVerifyResult>& result );
+    
+    shared_ptr<Input> m_input;
+    shared_ptr<Output> m_output;
+    const CryptoBackend::Protocol* m_backend;
+};
+
+
+void DecryptTask::Private::emitResult( const shared_ptr<DecryptVerifyResult>& result )
+{
+    emit q->result( result );
+    emit q->decryptVerifyResult( result );
+}
+
+void DecryptTask::Private::slotResult( const DecryptionResult& result, const QByteArray& plainText )
+{
+    if ( result.error().code() ) {
+        m_output->cancel();
+    } else {
         try {
-            DecryptJob * const job = d->m_backend->decryptJob();
-            kleo_assert( job );
-            d->registerJob( job );
-            job->start( d->m_input->ioDevice(), d->m_output->ioDevice() );
+            m_output->finalize();
         } catch ( const GpgME::Exception & e ) {
-            d->emitResult( DecryptVerifyResult::fromDecryptResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
+            emitResult( DecryptVerifyResult::fromDecryptResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
+            return;
         }
-        break;
-    case DecryptVerify:
+    }
+
+    emitResult( DecryptVerifyResult::fromDecryptResult( result, plainText ) );
+}
+
+DecryptTask::DecryptTask( QObject* parent ) : AbstractDecryptVerifyTask( parent ), d( new Private( this ) )
+{
+}
+
+DecryptTask::~DecryptTask()
+{
+}
+
+void DecryptTask::setInput( const shared_ptr<Input> & input )
+{
+    d->m_input = input;
+    kleo_assert( d->m_input && d->m_input->ioDevice() );
+}
+
+void DecryptTask::setOutput( const shared_ptr<Output> & output )
+{
+    d->m_output = output;
+    kleo_assert( d->m_output && d->m_output->ioDevice() );
+}
+
+void DecryptTask::setBackend( const CryptoBackend::Protocol* backend )
+{
+    d->m_backend = backend;
+}
+
+void DecryptTask::autodetectBackendFromInput() 
+{
+    if ( d->m_input )
+        setBackend( CryptoBackendFactory::instance()->protocol( findProtocol( d->m_input->classification() ) ) );
+}
+
+QString DecryptTask::label() const
+{
+    return i18n( "Decrypting: %1...", d->m_input->label() );
+}
+
+Protocol DecryptTask::protocol() const
+{
+    kleo_assert( !"not implemented" );
+    return UnknownProtocol; // ### TODO
+}
+
+void DecryptTask::cancel()
+{
+    
+}
+
+void DecryptTask::doStart()
+{
+    kleo_assert( d->m_backend );
+
+    try {
+        DecryptJob * const job = d->m_backend->decryptJob();
+        kleo_assert( job );
+        d->registerJob( job );
+        job->start( d->m_input->ioDevice(), d->m_output->ioDevice() );
+    } catch ( const GpgME::Exception & e ) {
+        d->emitResult( DecryptVerifyResult::fromDecryptResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
+    }
+}
+
+class VerifyOpaqueTask::Private {
+    VerifyOpaqueTask* const q;
+public:
+    explicit Private( VerifyOpaqueTask* qq ) : q( qq ) {}
+
+    void slotResult( const VerificationResult&, const QByteArray& );
+
+    void registerJob( VerifyOpaqueJob* job ) {
+        q->connect( job, SIGNAL(result(GpgME::VerificationResult,QByteArray)),
+                    q, SLOT(slotResult(GpgME::VerificationResult,QByteArray)) );
+    }
+
+    void emitResult( const shared_ptr<DecryptVerifyResult>& result );
+    
+    shared_ptr<Input> m_input;
+    shared_ptr<Output> m_output;
+    const CryptoBackend::Protocol* m_backend;
+};
+
+
+void VerifyOpaqueTask::Private::emitResult( const shared_ptr<DecryptVerifyResult>& result )
+{
+    emit q->result( result );
+    emit q->decryptVerifyResult( result );
+}
+
+void VerifyOpaqueTask::Private::slotResult( const VerificationResult& result, const QByteArray& plainText )
+{
+    if ( result.error().code() ) {
+        m_output->cancel();
+    } else {
         try {
-            DecryptVerifyJob * const job = d->m_backend->decryptVerifyJob();
-            kleo_assert( job );
-            d->registerJob( job );
-            job->start( d->m_input->ioDevice(), d->m_output->ioDevice() );
+            m_output->finalize();
         } catch ( const GpgME::Exception & e ) {
-            d->emitResult( DecryptVerifyResult::fromDecryptVerifyResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
+            emitResult( DecryptVerifyResult::fromDecryptResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
+            return;
         }
-        break;
-    case Verify:
-        if ( d->m_verificationMode == Opaque ) {
-            try {
-                VerifyOpaqueJob * const job = d->m_backend->verifyOpaqueJob();
-                kleo_assert( job );
-                d->registerJob( job );
-                job->start( d->m_input->ioDevice(), d->m_output ? d->m_output->ioDevice() : shared_ptr<QIODevice>() );
-            } catch ( const GpgME::Exception & e ) {
-                d->emitResult( DecryptVerifyResult::fromVerifyOpaqueResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
-            }
-        } else {
-            try {
-                VerifyDetachedJob * const job = d->m_backend->verifyDetachedJob();
-                kleo_assert( job );
-                d->registerJob( job );
-                job->start( d->m_input->ioDevice(), d->m_signedData->ioDevice() );
-            } catch ( const GpgME::Exception & e ) {
-                d->emitResult( DecryptVerifyResult::fromVerifyDetachedResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
-            }
-        }
+    }
+
+    emitResult( DecryptVerifyResult::fromVerifyOpaqueResult( result, plainText ) );
+}
+
+VerifyOpaqueTask::VerifyOpaqueTask( QObject* parent ) : AbstractDecryptVerifyTask( parent ), d( new Private( this ) )
+{
+}
+
+VerifyOpaqueTask::~VerifyOpaqueTask()
+{
+}
+
+void VerifyOpaqueTask::setInput( const shared_ptr<Input> & input )
+{
+    d->m_input = input;
+    kleo_assert( d->m_input && d->m_input->ioDevice() );
+}
+
+void VerifyOpaqueTask::setOutput( const shared_ptr<Output> & output )
+{
+    d->m_output = output;
+    kleo_assert( d->m_output && d->m_output->ioDevice() );
+}
+
+void VerifyOpaqueTask::setBackend( const CryptoBackend::Protocol* backend )
+{
+    d->m_backend = backend;
+}
+
+void VerifyOpaqueTask::autodetectBackendFromInput() 
+{
+    if ( d->m_input )
+        setBackend( CryptoBackendFactory::instance()->protocol( findProtocol( d->m_input->classification() ) ) );
+}
+
+QString VerifyOpaqueTask::label() const
+{
+    return i18n( "Verifying: %1...", d->m_input->label() );
+}
+
+Protocol VerifyOpaqueTask::protocol() const
+{
+    kleo_assert( !"not implemented" );
+    return UnknownProtocol; // ### TODO
+}
+
+void VerifyOpaqueTask::cancel()
+{
+    
+}
+
+void VerifyOpaqueTask::doStart()
+{
+    kleo_assert( d->m_backend );
+
+    try {
+        VerifyOpaqueJob * const job = d->m_backend->verifyOpaqueJob();
+        kleo_assert( job );
+        d->registerJob( job );
+        job->start( d->m_input->ioDevice(), d->m_output ? d->m_output->ioDevice() : shared_ptr<QIODevice>() );
+    } catch ( const GpgME::Exception & e ) {
+        d->emitResult( DecryptVerifyResult::fromVerifyOpaqueResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
+    }
+}
+
+class VerifyDetachedTask::Private {
+    VerifyDetachedTask* const q;
+public:
+    explicit Private( VerifyDetachedTask* qq ) : q( qq ) {}
+
+    void slotResult( const VerificationResult& );
+
+    void registerJob( VerifyDetachedJob* job ) {
+        q->connect( job, SIGNAL(result(GpgME::VerificationResult)),
+                    q, SLOT(slotResult(GpgME::VerificationResult)) );
+    }
+
+    void emitResult( const shared_ptr<DecryptVerifyResult>& result );
+    
+    shared_ptr<Input> m_input, m_signedData;
+    const CryptoBackend::Protocol* m_backend;
+};
+
+
+void VerifyDetachedTask::Private::emitResult( const shared_ptr<DecryptVerifyResult>& result )
+{
+    emit q->result( result );
+    emit q->decryptVerifyResult( result );
+}
+
+void VerifyDetachedTask::Private::slotResult( const VerificationResult& result )
+{
+    emitResult( DecryptVerifyResult::fromVerifyDetachedResult( result ) );
+}
+
+VerifyDetachedTask::VerifyDetachedTask( QObject* parent ) : AbstractDecryptVerifyTask( parent ), d( new Private( this ) )
+{
+}
+
+VerifyDetachedTask::~VerifyDetachedTask()
+{
+}
+
+void VerifyDetachedTask::setInput( const shared_ptr<Input> & input )
+{
+    d->m_input = input;
+    kleo_assert( d->m_input && d->m_input->ioDevice() );
+}
+
+void VerifyDetachedTask::setSignedData( const shared_ptr<Input> & signedData )
+{
+    d->m_signedData = signedData;
+    kleo_assert( d->m_signedData && d->m_signedData->ioDevice() );
+}
+
+void VerifyDetachedTask::setBackend( const CryptoBackend::Protocol* backend )
+{
+    d->m_backend = backend;
+}
+
+void VerifyDetachedTask::autodetectBackendFromInput() 
+{
+    if ( d->m_input )
+        setBackend( CryptoBackendFactory::instance()->protocol( findProtocol( d->m_input->classification() ) ) );
+}
+
+QString VerifyDetachedTask::label() const
+{
+    return i18n( "Verifying signature: %1...", d->m_input->label() );
+}
+
+Protocol VerifyDetachedTask::protocol() const
+{
+    kleo_assert( !"not implemented" );
+    return UnknownProtocol; // ### TODO
+}
+
+void VerifyDetachedTask::cancel()
+{
+    
+}
+
+void VerifyDetachedTask::doStart()
+{
+    kleo_assert( d->m_backend );
+    try {
+        VerifyDetachedJob * const job = d->m_backend->verifyDetachedJob();
+        kleo_assert( job );
+        d->registerJob( job );
+        job->start( d->m_input->ioDevice(), d->m_signedData->ioDevice() );
+    } catch ( const GpgME::Exception & e ) {
+        d->emitResult( DecryptVerifyResult::fromVerifyDetachedResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
     }
 }
 

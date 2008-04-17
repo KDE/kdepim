@@ -77,11 +77,11 @@ public:
     void slotTaskDone( const shared_ptr<const DecryptVerifyResult> & );
     void schedule();
 
-    std::vector<shared_ptr<DecryptVerifyTask> > buildTasks();
+    std::vector<shared_ptr<AbstractDecryptVerifyTask> > buildTasks();
 
     void ensureWizardCreated();
     void ensureWizardVisible();
-    void connectTask( const shared_ptr<DecryptVerifyTask> & task, unsigned int idx );
+    void connectTask( const shared_ptr<AbstractDecryptVerifyTask> & task, unsigned int idx );
     void reportError( int err, const QString & details ) {
         emit q->error( err, details );
     }
@@ -94,8 +94,8 @@ public:
         
     QPointer<DecryptVerifyWizard> m_wizard;
     std::vector<shared_ptr<const DecryptVerifyResult> > m_results;
-    std::vector<shared_ptr<DecryptVerifyTask> > m_runnableTasks, m_completedTasks;
-    shared_ptr<DecryptVerifyTask> m_runningTask;
+    std::vector<shared_ptr<AbstractDecryptVerifyTask> > m_runnableTasks, m_completedTasks;
+    shared_ptr<AbstractDecryptVerifyTask> m_runningTask;
     weak_ptr<AssuanCommand> m_cmd;
     bool m_silent;
     DecryptVerifyOperation m_operation;
@@ -117,7 +117,7 @@ DecryptVerifyEMailController::Private::Private( const shared_ptr<AssuanCommand> 
     qRegisterMetaType<VerificationResult>();
 }
 
-void DecryptVerifyEMailController::Private::connectTask( const shared_ptr<DecryptVerifyTask> & t, unsigned int idx )
+void DecryptVerifyEMailController::Private::connectTask( const shared_ptr<AbstractDecryptVerifyTask> & t, unsigned int idx )
 {
     connect( t.get(), SIGNAL(decryptVerifyResult(boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult>)),
              q, SLOT(slotTaskDone(boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult>)) );
@@ -152,7 +152,7 @@ void DecryptVerifyEMailController::Private::slotTaskDone(  const shared_ptr<cons
 void DecryptVerifyEMailController::Private::schedule()
 {
     if ( !m_runningTask && !m_runnableTasks.empty() ) {
-        const shared_ptr<DecryptVerifyTask> t = m_runnableTasks.back();
+        const shared_ptr<AbstractDecryptVerifyTask> t = m_runnableTasks.back();
         m_runnableTasks.pop_back();
         t->start();
         m_runningTask = t;
@@ -185,7 +185,7 @@ void DecryptVerifyEMailController::Private::ensureWizardCreated()
 
 }
 
-std::vector< shared_ptr<DecryptVerifyTask> > DecryptVerifyEMailController::Private::buildTasks()
+std::vector< shared_ptr<AbstractDecryptVerifyTask> > DecryptVerifyEMailController::Private::buildTasks()
 {
     const uint numInputs = m_inputs.size();
     const uint numMessages = m_signedDatas.size();
@@ -226,22 +226,51 @@ std::vector< shared_ptr<DecryptVerifyTask> > DecryptVerifyEMailController::Priva
         m_wizard->next();
     }
 
-    std::vector< shared_ptr<DecryptVerifyTask> > tasks;
+    std::vector< shared_ptr<AbstractDecryptVerifyTask> > tasks;
     
     for ( unsigned int i = 0 ; i < numInputs ; ++i ) {
+        shared_ptr<AbstractDecryptVerifyTask> task;
+        switch ( m_operation ) {
+            case Decrypt:
+            {
+                shared_ptr<DecryptTask> t( new DecryptTask );
+                t->setInput( m_inputs.at( i ) );
+                assert( numOutputs );
+                t->setOutput( m_outputs.at( i ) );
+                t->setBackend( backend );
+                task = t;
+            }
+            break;
+            case Verify:
+            {
+                if ( m_verificationMode == Detached ) {
+                    shared_ptr<VerifyDetachedTask> t( new VerifyDetachedTask );
+                    t->setInput( m_inputs.at( i ) );
+                    t->setSignedData( m_signedDatas.at( i ) );
+                    t->setBackend( backend );
+                    task = t;
+                } else {
+                    shared_ptr<VerifyOpaqueTask> t( new VerifyOpaqueTask );
+                    t->setInput( m_inputs.at( i ) );
+                    if ( numOutputs )
+                        t->setOutput( m_outputs.at( i ) );
+                    t->setBackend( backend );
+                    task = t;
+                }
+            }
+            break;
+            case DecryptVerify:
+            {
+                shared_ptr<DecryptVerifyTask> t( new DecryptVerifyTask );
+                t->setInput( m_inputs.at( i ) );
+                assert( numOutputs );
+                t->setOutput( m_outputs.at( i ) );
+                t->setBackend( backend );
+                task = t;                
+            }
+        }
 
-        shared_ptr<DecryptVerifyTask> task( new DecryptVerifyTask( m_operation ) );
-
-        task->setInput( m_inputs.at( i ) );
-        task->setVerificationMode( m_verificationMode );
-
-        if ( m_operation == Verify && m_verificationMode == Detached )
-            task->setSignedData( m_signedDatas.at( i ) );
-        if ( numOutputs )
-            task->setOutput( m_outputs.at( i ) );
-
-        task->setBackend( backend );
-
+        assert( task );
         tasks.push_back( task );
     }
     
@@ -264,7 +293,7 @@ void DecryptVerifyEMailController::start()
 {
     d->m_runnableTasks = d->buildTasks();
     int i = 0;
-    Q_FOREACH( const shared_ptr<DecryptVerifyTask> task, d->m_runnableTasks )
+    Q_FOREACH( const shared_ptr<AbstractDecryptVerifyTask> task, d->m_runnableTasks )
         d->connectTask( task, i++ );
 
     d->ensureWizardVisible();

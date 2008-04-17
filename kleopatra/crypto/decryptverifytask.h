@@ -52,17 +52,31 @@ namespace Crypto {
 
     class DecryptVerifyResult;
 
-    class DecryptVerifyTask : public Task {
+    class AbstractDecryptVerifyTask : public Task {
         Q_OBJECT
     public:
-        explicit DecryptVerifyTask( DecryptVerifyOperation op, QObject* parent = 0 );
-        ~DecryptVerifyTask();
+        explicit AbstractDecryptVerifyTask( QObject* parent = 0 );
+        virtual ~AbstractDecryptVerifyTask();
+
+    public:
+        virtual void autodetectBackendFromInput() = 0;
+        
+    Q_SIGNALS:
+        void decryptVerifyResult( const boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult> & );
+
+    private:
+         class Private;
+         kdtools::pimpl_ptr<Private> d;
+    };
+
+    class DecryptTask : public AbstractDecryptVerifyTask {
+        Q_OBJECT
+    public:
+        explicit DecryptTask( QObject* parent = 0 );
+        ~DecryptTask();
 
         void setInput( const boost::shared_ptr<Input> & input );
-        void setSignedData( const boost::shared_ptr<Input> & signedData );
         void setOutput( const boost::shared_ptr<Output> & output );
-
-        void setVerificationMode( VerificationMode mode );
 
         void setBackend( const CryptoBackend::Protocol* backend );
         void autodetectBackendFromInput();
@@ -71,24 +85,102 @@ namespace Crypto {
 
         /* reimp */ GpgME::Protocol protocol() const;
 
-   public Q_SLOTS:
-        /* reimp */ void cancel();
-
-    Q_SIGNALS:
-        void decryptVerifyResult( const boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult> & );
+    public Q_SLOTS:
+         /* reimp */ void cancel();
 
     private:
         /* reimp */ void doStart();
 
     private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotResult( GpgME::DecryptionResult, QByteArray ) )
-        Q_PRIVATE_SLOT( d, void slotResult( GpgME::DecryptionResult, GpgME::VerificationResult, QByteArray ) )
-        Q_PRIVATE_SLOT( d, void slotResult( GpgME::VerificationResult, QByteArray ) )
-        Q_PRIVATE_SLOT( d, void slotResult( GpgME::VerificationResult ) )
+         class Private;
+         kdtools::pimpl_ptr<Private> d;
+         Q_PRIVATE_SLOT( d, void slotResult( GpgME::DecryptionResult, QByteArray ) )
     };
     
+    class VerifyDetachedTask : public AbstractDecryptVerifyTask {
+        Q_OBJECT
+    public:
+        explicit VerifyDetachedTask( QObject* parent = 0 );
+        ~VerifyDetachedTask();
+
+        void setInput( const boost::shared_ptr<Input> & input );
+        void setSignedData( const boost::shared_ptr<Input> & signedData );
+
+        void setBackend( const CryptoBackend::Protocol* backend );
+        void autodetectBackendFromInput();
+
+        /* reimp */ QString label() const;
+
+        /* reimp */ GpgME::Protocol protocol() const;
+
+    public Q_SLOTS:
+         /* reimp */ void cancel();
+
+    private:
+        /* reimp */ void doStart();
+
+    private:
+         class Private;
+         kdtools::pimpl_ptr<Private> d;
+         Q_PRIVATE_SLOT( d, void slotResult( GpgME::VerificationResult ) )
+    };
+    
+    class VerifyOpaqueTask : public AbstractDecryptVerifyTask {
+        Q_OBJECT
+    public:
+        explicit VerifyOpaqueTask( QObject* parent = 0 );
+        ~VerifyOpaqueTask();
+
+        void setInput( const boost::shared_ptr<Input> & input );
+        void setOutput( const boost::shared_ptr<Output> & output );
+
+        void setBackend( const CryptoBackend::Protocol* backend );
+        void autodetectBackendFromInput();
+
+        /* reimp */ QString label() const;
+
+        /* reimp */ GpgME::Protocol protocol() const;
+
+    public Q_SLOTS:
+         /* reimp */ void cancel();
+
+    private:
+        /* reimp */ void doStart();
+
+    private:
+         class Private;
+         kdtools::pimpl_ptr<Private> d;
+         Q_PRIVATE_SLOT( d, void slotResult( GpgME::VerificationResult, QByteArray ) )
+    };
+
+    class DecryptVerifyTask : public AbstractDecryptVerifyTask {
+        Q_OBJECT
+    public:
+        explicit DecryptVerifyTask( QObject* parent = 0 );
+        ~DecryptVerifyTask();
+
+        void setInput( const boost::shared_ptr<Input> & input );
+        void setSignedData( const boost::shared_ptr<Input> & signedData );
+        void setOutput( const boost::shared_ptr<Output> & output );
+
+        void setBackend( const CryptoBackend::Protocol* backend );
+        void autodetectBackendFromInput();
+
+        /* reimp */ QString label() const;
+
+        /* reimp */ GpgME::Protocol protocol() const;
+
+    public Q_SLOTS:
+         /* reimp */ void cancel();
+
+    private:
+        /* reimp */ void doStart();
+
+    private:
+         class Private;
+         kdtools::pimpl_ptr<Private> d;
+         Q_PRIVATE_SLOT( d, void slotResult( GpgME::DecryptionResult, GpgME::VerificationResult, QByteArray ) )
+    };
 }
 }
 

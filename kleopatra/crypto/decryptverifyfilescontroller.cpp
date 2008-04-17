@@ -68,7 +68,7 @@ class DecryptVerifyFilesController::Private {
 public:
 
     static QString heuristicBaseDirectory( const QStringList& fileNames );    
-    static shared_ptr<DecryptVerifyTask> taskFromOperationWidget( const DecryptVerifyOperationWidget * w, const shared_ptr<QFile> & file, const QDir & outDir );
+    static shared_ptr<AbstractDecryptVerifyTask> taskFromOperationWidget( const DecryptVerifyOperationWidget * w, const shared_ptr<QFile> & file, const QDir & outDir );
 
     explicit Private( DecryptVerifyFilesController* qq );
 
@@ -78,13 +78,13 @@ public:
     void schedule();
 
     std::vector< shared_ptr<QFile> > prepareWizardFromPassedFiles();
-    std::vector<shared_ptr<DecryptVerifyTask> > buildTasks( const std::vector<shared_ptr<QFile> > & );
+    std::vector<shared_ptr<AbstractDecryptVerifyTask> > buildTasks( const std::vector<shared_ptr<QFile> > & );
 
     QString heuristicBaseDirectory() const;
 
     void ensureWizardCreated();
     void ensureWizardVisible();
-    void connectTask( const shared_ptr<DecryptVerifyTask> & task, unsigned int idx );
+    void connectTask( const shared_ptr<AbstractDecryptVerifyTask> & task, unsigned int idx );
     void reportError( int err, const QString & details ) {
         emit q->error( err, details );
     }
@@ -95,53 +95,53 @@ public:
     std::vector<shared_ptr<QFile> > m_passedFiles, m_filesAfterPreparation;
     QPointer<DecryptVerifyWizard> m_wizard;
     std::vector<shared_ptr<const DecryptVerifyResult> > m_results;
-    std::vector<shared_ptr<DecryptVerifyTask> > m_runnableTasks, m_completedTasks;
-    shared_ptr<DecryptVerifyTask> m_runningTask;
+    std::vector<shared_ptr<AbstractDecryptVerifyTask> > m_runnableTasks, m_completedTasks;
+    shared_ptr<AbstractDecryptVerifyTask> m_runningTask;
     bool m_errorDetected;
     DecryptVerifyOperation m_operation;
 };
 
 // static
-shared_ptr<DecryptVerifyTask> DecryptVerifyFilesController::Private::taskFromOperationWidget( const DecryptVerifyOperationWidget * w, const shared_ptr<QFile> & file, const QDir & outDir) {
+shared_ptr<AbstractDecryptVerifyTask> DecryptVerifyFilesController::Private::taskFromOperationWidget( const DecryptVerifyOperationWidget * w, const shared_ptr<QFile> & file, const QDir & outDir) {
 
     kleo_assert( w );
 
-    shared_ptr<DecryptVerifyTask> task;
+    shared_ptr<AbstractDecryptVerifyTask> task;
 
     switch ( w->mode() ) {
     case DecryptVerifyOperationWidget::VerifyDetachedWithSignature:
+    {
 
-        task.reset( new DecryptVerifyTask( Verify ) );
-        task->setVerificationMode( Detached );
-        task->setInput( Input::createFromFile( file ) );
-        task->setSignedData( Input::createFromFile( w->signedDataFileName() ) );
+        shared_ptr<VerifyDetachedTask> t( new VerifyDetachedTask );
+        t->setInput( Input::createFromFile( file ) );
+        t->setSignedData( Input::createFromFile( w->signedDataFileName() ) );
+        task = t;
 
         kleo_assert( file->fileName() == w->inputFileName() );
-
-        break;
-
+    }
+    break;
     case DecryptVerifyOperationWidget::VerifyDetachedWithSignedData:
-        task.reset( new DecryptVerifyTask( Verify ) );
-        task->setVerificationMode( Detached );
-        task->setInput( Input::createFromFile( w->inputFileName() ) );
-        task->setSignedData( Input::createFromFile( file ) );
+    {
+        shared_ptr<VerifyDetachedTask> t( new VerifyDetachedTask );
+        t->setInput( Input::createFromFile( w->inputFileName() ) );
+        t->setSignedData( Input::createFromFile( file ) );
+        task = t;
 
         kleo_assert( file->fileName() == w->signedDataFileName() );
-
-        break;
-
+    }
+    break;
     case DecryptVerifyOperationWidget::DecryptVerifyOpaque:
-
-        task.reset( new DecryptVerifyTask( DecryptVerify ) );
-        task->setVerificationMode( Opaque );
-        task->setInput( Input::createFromFile( file ) );
-        task->setOutput( Output::createFromFile( outDir.absoluteFilePath( outputFileName( QFileInfo( file->fileName() ).fileName() ) ), false ) );
+    {
+        shared_ptr<DecryptVerifyTask> t( new DecryptVerifyTask );
+        t->setInput( Input::createFromFile( file ) );
+        t->setOutput( Output::createFromFile( outDir.absoluteFilePath( outputFileName( QFileInfo( file->fileName() ).fileName() ) ), false ) );
+        task = t;
 
         kleo_assert( file->fileName() == w->inputFileName() );
-
-        break;
     }
-
+    break;
+    }
+    
     task->autodetectBackendFromInput();
     return task;
 }
@@ -151,7 +151,7 @@ DecryptVerifyFilesController::Private::Private( DecryptVerifyFilesController* qq
     qRegisterMetaType<VerificationResult>();
 }
 
-void DecryptVerifyFilesController::Private::connectTask( const shared_ptr<DecryptVerifyTask> & t, unsigned int idx )
+void DecryptVerifyFilesController::Private::connectTask( const shared_ptr<AbstractDecryptVerifyTask> & t, unsigned int idx )
 {
     connect( t.get(), SIGNAL(decryptVerifyResult(boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult>)),
              q, SLOT(slotTaskDone(boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult>)) );
@@ -162,13 +162,13 @@ void DecryptVerifyFilesController::Private::connectTask( const shared_ptr<Decryp
 void DecryptVerifyFilesController::Private::slotWizardOperationPrepared()
 {
     try {
-        std::vector<shared_ptr<DecryptVerifyTask> > tasks = buildTasks( m_filesAfterPreparation );
+        std::vector<shared_ptr<AbstractDecryptVerifyTask> > tasks = buildTasks( m_filesAfterPreparation );
         
         kleo_assert( m_runnableTasks.empty() );
         m_runnableTasks.swap( tasks );
         
         int i = 0;
-        Q_FOREACH( const shared_ptr<DecryptVerifyTask> task, m_runnableTasks )
+        Q_FOREACH( const shared_ptr<AbstractDecryptVerifyTask> task, m_runnableTasks )
             connectTask( task, i++ );
 
         QTimer::singleShot( 0, q, SLOT( schedule() ) );
@@ -212,7 +212,7 @@ void DecryptVerifyFilesController::Private::slotTaskDone(  const shared_ptr<cons
 void DecryptVerifyFilesController::Private::schedule()
 {
     if ( !m_runningTask && !m_runnableTasks.empty() ) {
-        const shared_ptr<DecryptVerifyTask> t = m_runnableTasks.back();
+        const shared_ptr<AbstractDecryptVerifyTask> t = m_runnableTasks.back();
         m_runnableTasks.pop_back();
         t->start();
         m_runningTask = t;
@@ -304,7 +304,7 @@ std::vector<shared_ptr<QFile> > DecryptVerifyFilesController::Private::prepareWi
     return files;
 }
 
-std::vector< shared_ptr<DecryptVerifyTask> > DecryptVerifyFilesController::Private::buildTasks( const std::vector<shared_ptr<QFile> > &  files )
+std::vector< shared_ptr<AbstractDecryptVerifyTask> > DecryptVerifyFilesController::Private::buildTasks( const std::vector<shared_ptr<QFile> > &  files )
 {
     const QFileInfo outDirInfo( m_wizard->outputDirectory() );
     kleo_assert( outDirInfo.isDir() );
@@ -312,7 +312,7 @@ std::vector< shared_ptr<DecryptVerifyTask> > DecryptVerifyFilesController::Priva
     const QDir outDir( outDirInfo.absoluteFilePath() );
     kleo_assert( outDir.exists() );    
 
-    std::vector<shared_ptr<DecryptVerifyTask> > tasks;
+    std::vector<shared_ptr<AbstractDecryptVerifyTask> > tasks;
     int failed = 0;
     for ( unsigned int i = 0 ; i < files.size(); ++i )
         try {
