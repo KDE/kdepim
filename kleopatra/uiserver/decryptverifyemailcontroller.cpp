@@ -89,12 +89,6 @@ public:
     void addStartErrorResult( unsigned int id, const shared_ptr<DecryptVerifyResult> & res );
     void cancelAllTasks();
 
-
-    // ### TODO copy of AssuanCommand::makeGnuPGError, merge
-    static int makeGnuPGError( int code ) {
-        return gpg_error( static_cast<gpg_err_code_t>( code ) );
-    }
-
     std::vector<shared_ptr<Input> > m_inputs, m_signedDatas;
     std::vector<shared_ptr<Output> > m_outputs;
         
