@@ -102,7 +102,6 @@ namespace GpgME {
 namespace Kleo {
 namespace Crypto {
     class DecryptVerifyResult : public Task::Result {
-
     public:
         
         /* reimpl */ QString overview() const;
@@ -122,10 +121,10 @@ namespace Crypto {
         static boost::shared_ptr<DecryptVerifyResult> fromVerifyDetachedResult( const GpgME::VerificationResult & vr );
         static boost::shared_ptr<DecryptVerifyResult> fromVerifyDetachedResult( const GpgME::Error & err, const QString & details );
 
-        static QString keyToString( const GpgME::Key & key );
-        static QString signatureToString( const GpgME::Signature & sig, const GpgME::Key & key );
-        static const char * summaryToString( GpgME::Signature::Summary summary );
         static const GpgME::Key & keyForSignature( const GpgME::Signature & sig, const std::vector<GpgME::Key> & keys );
+
+private:
+        static QString keyToString( const GpgME::Key & key );
 
     private:
         DecryptVerifyResult();

@@ -80,6 +80,11 @@ namespace Formatting {
     QString validityShort( const GpgME::UserID::Signature & sig );
 
     QString formatForComboBox( const GpgME::Key & key );
+
+    QString signatureToString( const GpgME::Signature & sig, const GpgME::Key & key );
+
+    const char * summaryToString( GpgME::Signature::Summary summary );
+
 }
 }
 

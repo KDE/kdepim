@@ -38,6 +38,8 @@
 
 #include <uiserver/decryptverifyemailcontroller.h>
 
+#include <utils/formatting.h>
+
 #include <models/keycache.h>
 
 #include <utils/hex.h>
@@ -58,6 +60,7 @@
 
 using namespace Kleo;
 using namespace Kleo::Crypto;
+using namespace Kleo::Formatting;
 using namespace GpgME;
 using namespace boost;
 
@@ -195,8 +198,8 @@ void DecryptVerifyCommandEMailBase::Private::verificationResult( const Verificat
         const std::vector<Signature> sigs = vResult.signatures();
         const std::vector<Key> signers = KeyCache::instance()->findSigners( vResult );
         Q_FOREACH ( const Signature & sig, sigs ) {
-            const QString s = DecryptVerifyResult::signatureToString( sig, DecryptVerifyResult::keyForSignature( sig, signers ) );
-            const char * color = DecryptVerifyResult::summaryToString( sig.summary() );
+            const QString s = signatureToString( sig, DecryptVerifyResult::keyForSignature( sig, signers ) );
+            const char * color = summaryToString( sig.summary() );
             q->sendStatusEncoded( "SIGSTATUS",
                                   color + ( ' ' + hexencode( s.toUtf8().constData() ) ) );
         }

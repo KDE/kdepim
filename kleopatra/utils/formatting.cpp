@@ -34,6 +34,8 @@
 
 #include "formatting.h"
 
+#include <utils/kleo_assert.h>
+
 #include <kleo/dn.h>
 
 #include <gpgme++/key.h>
@@ -361,4 +363,68 @@ QString Formatting::formatForComboBox( const GpgME::Key & key ) {
     if ( !mail.isEmpty() )
         mail = '<' + mail + '>';
     return i18nc( "name, email, key id", "%1 %2 (%3)", name, mail, key.shortKeyID() ).simplified();
+}
+
+namespace {
+
+static QString keyToString( const Key & key ) {
+
+    kleo_assert( !key.isNull() );
+
+    const QString email = Formatting::prettyEMail( key );
+    const QString name = Formatting::prettyName( key );
+
+    if ( name.isEmpty() )
+        return email;
+    else if ( email.isEmpty() )
+        return name;
+    else
+        return QString::fromLatin1( "%1 <%2>" ).arg( name, email );
+}
+
+}
+
+const char * Formatting::summaryToString( const Signature::Summary summary )
+{
+    if ( summary & Signature::Red )
+        return "RED";
+    if ( summary & Signature::Green )
+        return "GREEN";
+    return "YELLOW";
+}
+
+QString Formatting::signatureToString( const Signature & sig, const Key & key )
+{
+    if ( sig.isNull() )
+        return QString();
+
+    const bool red   = (sig.summary() & Signature::Red);
+    const bool valid = (sig.summary() & Signature::Valid);
+
+    if ( red )
+        if ( key.isNull() )
+            if ( const char * fpr = sig.fingerprint() )
+                return i18n("Bad signature by unknown key %1: %2", QString::fromLatin1( fpr ), QString::fromLocal8Bit( sig.status().asString() ) );
+            else
+                return i18n("Bad signature by an unknown key: %1", QString::fromLocal8Bit( sig.status().asString() ) );
+        else
+            return i18n("Bad signature by %1: %2", keyToString( key ), QString::fromLocal8Bit( sig.status().asString() ) );
+
+    else if ( valid )
+        if ( key.isNull() )
+            if ( const char * fpr = sig.fingerprint() )
+                return i18n("Good signature by unknown key %1.", QString::fromLatin1( fpr ) );
+            else
+                return i18n("Good signature by an unknown key.");
+        else
+            return i18n("Good signature by %1.", keyToString( key ) );
+
+    else
+        if ( key.isNull() )
+            if ( const char * fpr = sig.fingerprint() )
+                return i18n("Invalid signature by unknown key %1: %2", QString::fromLatin1( fpr ), QString::fromLocal8Bit( sig.status().asString() ) );
+            else
+                return i18n("Invalid signature by an unknown key: %1", QString::fromLocal8Bit( sig.status().asString() ) );
+        else
+            return i18n("Invalid signature by %1: %2", keyToString( key ), QString::fromLocal8Bit( sig.status().asString() ) );
 }
