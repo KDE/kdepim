@@ -181,7 +181,16 @@ QString Formatting::toolTip( const Key & key ) {
 
     const Subkey subkey = key.subkey( 0 );
 
-    QString result = QLatin1String( "<table border=\"0\">" );
+    QString result;
+    if ( key.protocol() == OpenPGP || ( key.keyListMode() & Validate ) )
+        if ( key.isRevoked() )
+            result += make_red( i18n( "This certificate has been revoked." ) );
+        else if ( key.isExpired() )
+            result += make_red( i18n( "This certificate has expired." ) );
+        else if ( key.isDisabled() )
+            result += i18n( "This certificate has been disabled locally." );
+
+    result += QLatin1String( "<table border=\"0\">" );
     if ( key.protocol() == CMS ) {
         result += format_row( i18n("Serial number"), key.issuerSerial() );
         result += format_row( i18n("Issuer"), key.issuerName() );
@@ -199,14 +208,6 @@ QString Formatting::toolTip( const Key & key ) {
     result += format_row( i18n("Certificate usage"), format_keyusage( key ) );
     result += format_row( i18n("Fingerprint"), key.primaryFingerprint() );
     result += QLatin1String( "</table><br>" );
-
-    if ( key.protocol() == OpenPGP || ( key.keyListMode() & Validate ) )
-        if ( key.isRevoked() )
-            result += make_red( i18n( "This certificate has been revoked." ) );
-        else if ( key.isExpired() )
-            result += make_red( i18n( "This certificate has expired." ) );
-        else if ( key.isDisabled() )
-            result += i18n( "This certificate has been disabled locally." );
 
     return result;
 }
