@@ -159,8 +159,7 @@ void Wizard::Private::updateButtonStates()
     const bool isLast = isLastPage( currentId );
     const bool canGoToNext = q->canGoToNextPage();
     WizardPage* const page = q->page( currentId );
-    assert( page );
-    KGuiItem customNext = page->customNextButton();
+    const KGuiItem customNext = page ? page->customNextButton() : KGuiItem();
     if ( customNext.text().isEmpty() && customNext.icon().isNull() )
         nextButton->setGuiItem( isLast ? finishItem : nextItem );
     else
