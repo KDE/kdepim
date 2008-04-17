@@ -160,7 +160,7 @@ void DecryptVerifyEMailController::Private::schedule()
     if ( !m_runningTask && !m_runnableTasks.empty() ) {
         const shared_ptr<DecryptVerifyTask> t = m_runnableTasks.back();
         m_runnableTasks.pop_back();
-        t->start(); // ### FIXME: this might throw
+        t->start();
         m_runningTask = t;
     }
     if ( !m_runningTask ) {
@@ -274,7 +274,7 @@ void DecryptVerifyEMailController::start()
         d->connectTask( task, i++ );
 
     d->ensureWizardVisible();
-    d->schedule();
+    QTimer::singleShot( 0, this, SLOT(schedule()) );
 }
 
 void DecryptVerifyEMailController::setInputs( const std::vector<shared_ptr<Input> > & inputs )

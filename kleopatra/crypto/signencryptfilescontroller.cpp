@@ -301,8 +301,8 @@ void SignEncryptFilesController::Private::slotWizardOperationPrepared() {
         Q_FOREACH( const shared_ptr<Task> task, runnable )
             connectTask( task, i++ );
 
-        schedule();
-        
+        QTimer::singleShot( 0, q, SLOT(schedule()) );
+
     } catch ( const Kleo::Exception & e ) {
         reportError( e.error().encodedError(), e.message() );
     } catch ( const std::exception & e ) {

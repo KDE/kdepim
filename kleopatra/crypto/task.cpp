@@ -34,7 +34,12 @@
 
 #include "task.h"
 
+#include <utils/exception.h>
+#include <utils/gnupg-helper.h>
+
 #include <gpgme++/exception.h>
+
+#include <gpg-error.h>
 
 #include <KIconLoader>
 #include <KLocale>
@@ -93,10 +98,16 @@ Task::~Task() {}
 void Task::start() {
     try {
         doStart();
-        emit started();
+    } catch ( const Kleo::Exception & e ) {
+        QMetaObject::invokeMethod( this, "emitError", Qt::QueuedConnection, Q_ARG( int, e.error().encodedError() ), Q_ARG( QString, e.message() ) );
     } catch ( const GpgME::Exception & e ) {
         QMetaObject::invokeMethod( this, "emitError", Qt::QueuedConnection, Q_ARG( int, e.error().encodedError() ), Q_ARG( QString, QString::fromLocal8Bit( e.what() ) ) );
+    } catch ( const std::exception & e ) {
+        QMetaObject::invokeMethod( this, "emitError", Qt::QueuedConnection, Q_ARG( int, makeGnuPGError( GPG_ERR_UNEXPECTED ) ), Q_ARG( QString, QString::fromLocal8Bit( e.what() ) ) );
+    } catch ( ... ) {
+        QMetaObject::invokeMethod( this, "emitError", Qt::QueuedConnection, Q_ARG( int, makeGnuPGError( GPG_ERR_UNEXPECTED ) ), Q_ARG( QString, i18n( "Unknown exception in Task::start()") ) );
     }
+    emit started();
 }
 
 void Task::emitError( int errCode, const QString& details ) {

@@ -171,7 +171,7 @@ void DecryptVerifyFilesController::Private::slotWizardOperationPrepared()
         Q_FOREACH( const shared_ptr<DecryptVerifyTask> task, m_runnableTasks )
             connectTask( task, i++ );
 
-        schedule();
+        QTimer::singleShot( 0, q, SLOT( schedule() ) );
         
     } catch ( const Kleo::Exception & e ) {
         reportError( e.error().encodedError(), e.message() );
@@ -214,7 +214,7 @@ void DecryptVerifyFilesController::Private::schedule()
     if ( !m_runningTask && !m_runnableTasks.empty() ) {
         const shared_ptr<DecryptVerifyTask> t = m_runnableTasks.back();
         m_runnableTasks.pop_back();
-        t->start(); // ### FIXME: this might throw
+        t->start();
         m_runningTask = t;
     }
     if ( !m_runningTask ) {
