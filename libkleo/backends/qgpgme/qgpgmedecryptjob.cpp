@@ -99,7 +99,9 @@ void Kleo::QGpgMEDecryptJob::start( const boost::shared_ptr<QIODevice> & cipherT
 void Kleo::QGpgMEDecryptJob::doOperationDoneEvent( const GpgME::Error & ) {
     const GpgME::DecryptionResult res = mCtx->decryptionResult();
     const QByteArray plainText = outData();
+#ifndef KLEO_SYNCHRONOUS_API_HOTFIX
     resetDataObjects();
+#endif
     emit result( res, plainText );
 }
 

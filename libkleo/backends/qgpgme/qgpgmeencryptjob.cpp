@@ -140,7 +140,9 @@ GpgME::EncryptionResult Kleo::QGpgMEEncryptJob::exec( const std::vector<GpgME::K
 void Kleo::QGpgMEEncryptJob::doOperationDoneEvent( const GpgME::Error & ) {
   mResult = mCtx->encryptionResult();
   const QByteArray ciphertext = outData();
+#ifndef KLEO_SYNCHRONOUS_API_HOTFIX
   resetDataObjects();
+#endif
   emit result( mResult, ciphertext );
 }
 

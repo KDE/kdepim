@@ -162,7 +162,9 @@ void Kleo::QGpgMESignEncryptJob::doOperationDoneEvent( const GpgME::Error & ) {
   mResult.first = mCtx->signingResult();
   mResult.second = mCtx->encryptionResult();
   const QByteArray cipherText = outData();
+#ifndef KLEO_SYNCHRONOUS_API_HOTFIX
   resetDataObjects();
+#endif
   emit result( mResult.first, mResult.second, cipherText );
 }
 

@@ -101,7 +101,9 @@ void Kleo::QGpgMEDecryptVerifyJob::doOperationDoneEvent( const GpgME::Error & ) 
     const GpgME::DecryptionResult dr = mCtx->decryptionResult();
     const GpgME::VerificationResult vr = mCtx->verificationResult();
     const QByteArray plainText = outData();
+#ifndef KLEO_SYNCHRONOUS_API_HOTFIX
     resetDataObjects();
+#endif
     emit result( dr, vr, plainText );
 }
 
