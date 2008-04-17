@@ -56,6 +56,7 @@ private:
     Q_PRIVATE_SLOT( d, void closeAndQuit() )
     Q_PRIVATE_SLOT( d, void signEncryptFiles() )
     Q_PRIVATE_SLOT( d, void certificateDetails() )
+    Q_PRIVATE_SLOT( d, void decryptVerifyFiles() )
     Q_PRIVATE_SLOT( d, void deleteCertificates() )
     Q_PRIVATE_SLOT( d, void importCertificatesFromFile() )
     Q_PRIVATE_SLOT( d, void exportCertificates() )

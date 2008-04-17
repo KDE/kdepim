@@ -48,6 +48,7 @@
 #include "commands/refreshkeyscommand.h"
 #include "commands/detailscommand.h"
 #include "commands/deletecertificatescommand.h"
+#include "commands/decryptverifyfilescommand.h"
 #include "commands/signencryptfilescommand.h"
 #include "commands/clearcrlcachecommand.h"
 #include "commands/dumpcrlcachecommand.h"
@@ -185,6 +186,9 @@ public:
     }
     void signEncryptFiles() {
         createAndStart<SignEncryptFilesCommand>();
+    }
+    void decryptVerifyFiles() {
+        createAndStart<DecryptVerifyFilesCommand>();
     }
     void exportCertificates() {
         createAndStart<ExportCertificateCommand>();
@@ -353,6 +357,8 @@ void MainWindow::Private::setupActions() {
           "document-export", q, SLOT(exportCertificates()), "Ctrl+E", false, true },
         { "file_import_certificates", i18n("Import Certificates..."), QString(),
           "document-import", q, SLOT(importCertificatesFromFile()), "Ctrl+I", false, true },
+        { "file_decrypt_verify_files", i18n("Decrypt/Verify Files..."), QString(),
+          "document-decrypt" /*"file-decrypt-verify"*/, q, SLOT(decryptVerifyFiles()), QString(), false, true },
         { "file_sign_encrypt_files", i18n("Sign/Encrypt Files..."), QString(),
           "document-encrypt" /*"file-encrypt-sign"*/, q, SLOT(signEncryptFiles()), QString(), false, true },
         // View menu
