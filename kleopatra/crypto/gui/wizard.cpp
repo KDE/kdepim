@@ -92,7 +92,7 @@ Wizard::Private::Private( Wizard * qq )
     : q( qq ), currentId( -1 ), stack( new QStackedWidget )
 {
     const QWizard wiz;
-    nextItem = KStandardGuiItem::forward();
+    nextItem = KGuiItem( i18n( "&Next" ) );
     finishItem = KStandardGuiItem::ok();
     QVBoxLayout * const top = new QVBoxLayout( q );
     top->setMargin( 0 );
