@@ -140,7 +140,7 @@ inline std::ostream& operator <<(std::ostream &o, const KPilotDepthCount &d)
 #define FUNCTIONSETUPL(a) const int fname = a; Q_UNUSED(fname);
 #endif
 
-#define KPILOT_VERSION	"4.9.3-359 (palo alto)"
+#define KPILOT_VERSION	"4.9.4-3510 (elsewhere)"
 
 
 // Function to expand newlines in rich text to <br>\n

@@ -35,10 +35,13 @@
 #include <libkcal/calendar.h>
 #include <libkcal/calendarlocal.h>
 
+#include "options.h"
+
 static const KCmdLineOptions options[] =
 {
 	{"korgfile <path>","KOrganizer master file", 0},
 	{"newfile <path>","Calendar file to merge into korganizer", 0},
+	{"category <string>","Category to remove from 'korgfile' and to add to events in 'newfile' for synch purposes", 0},
 	{"verbose", "Verbose debugging", 0},
 	KCmdLineLastOption
 };
@@ -62,16 +65,21 @@ int main(int argc, char **argv)
 
 	QString korgfile = args->getOption("korgfile");
 	QString newfile = args->getOption("newfile");
+	QString category = args->getOption("category");
 
 	if (korgfile.isEmpty())
 	{
-		kdError() << "! Must provide a korganizer file." << endl;
+		WARNINGKPILOT << "! Must provide a korganizer file." << endl;
 	}
 	if (newfile.isEmpty())
 	{
-		kdError() << "! Must provide a newfile file." << endl;
+		WARNINGKPILOT << "! Must provide a newfile file." << endl;
 	}
-	if (korgfile.isEmpty() || newfile.isEmpty())
+	if (category.isEmpty())
+	{
+		WARNINGKPILOT << "! Must provide a category to use." << endl;
+	}
+	if (korgfile.isEmpty() || newfile.isEmpty() || category.isEmpty())
 	{
 		return 1;
 	}
@@ -79,37 +87,36 @@ int main(int argc, char **argv)
 	QString korgsave = QString("%1.updated").arg(korgfile);
 	QString newfilesave = QString("%1.updated").arg(newfile);
 
-	kdDebug() << "Using korgfile: [" << korgfile 
+	DEBUGKPILOT << "Using korgfile: [" << korgfile 
 		<< "]" << endl;
-	kdDebug() << "Using newfile: [" << newfile
+	DEBUGKPILOT << "Using newfile: [" << newfile
 		<< "]" << endl;
-	kdDebug() << "Will save korgfile to: [" << korgsave 
+	DEBUGKPILOT << "Will save korgfile to: [" << korgsave 
 		<< "]" << endl;
-	kdDebug() << "Will save newfile to: [" << newfilesave
+	DEBUGKPILOT << "Will save newfile to: [" << newfilesave
 		<< "]" << endl << endl;
 
 	KCal::CalendarLocal *calkorg = new KCal::CalendarLocal( QString::fromLatin1("UTC") );
 	KCal::CalendarLocal *calnew = new KCal::CalendarLocal( QString::fromLatin1("UTC") );
 	if (!calkorg || !calnew)
 	{
-		kdError() << "Unable to create base calendar objects." << endl;
+		WARNINGKPILOT << "Unable to create base calendar objects." << endl;
 		return 1;
 	}
 
 	if (!calkorg->load(korgfile) || !calnew->load(newfile))
 	{
-		kdError() << "Unable to load calendar files." << endl;
+		WARNINGKPILOT << "Unable to load calendar files." << endl;
 		return 1;
 	}
 
 	int numkorgstart = calkorg->incidences().count();
 	int numnewstart = calnew->incidences().count();
 
-	kdDebug() << "  - Opened korganizer calendar with: [" 
+	DEBUGKPILOT << "  - Opened korganizer calendar with: [" 
 		<< numkorgstart << "] incidences." << endl;
-	kdDebug() << "  - Opened newfile calendar with: [" 
+	DEBUGKPILOT << "  - Opened newfile calendar with: [" 
 		<< numnewstart << "] incidences." << endl;
-	
 
 	KCal::Event::List korgEvents;
 	KCal::Event::List::ConstIterator korgIt;
@@ -121,7 +128,7 @@ int main(int argc, char **argv)
 	newEvents = calnew->events();
 	newEvents.setAutoDelete(false);
 
-	kdDebug() << "Looking for previous pilot ids for exchange events..." << endl;
+	DEBUGKPILOT << "Looking for previous pilot ids for exchange events..." << endl;
 
 	// iterate through all events and try to find a korganizer event
 	// that matches up with this external event's UID
@@ -132,7 +139,7 @@ int main(int argc, char **argv)
 		ev = *newIt;
 		QString uid = ev->uid();
 		if (debug_level)
-			kdDebug() << "  - Looking at event: [" 
+			DEBUGKPILOT << "  - Looking at event: [" 
 			<< ev->summary() << "], uid: ["
 			<< uid << "]" << endl;
 
@@ -142,7 +149,7 @@ int main(int argc, char **argv)
 			unsigned long pilotId = evkorg->pilotId();
 
 			if (debug_level)
-				kdDebug() << "Found korg event for uid: ["
+				DEBUGKPILOT << "Found korg event for uid: ["
 				<< uid << "], pilotId: [" 
 				<< pilotId << "]" << endl;
 
@@ -153,15 +160,15 @@ int main(int argc, char **argv)
 		}
 	}
 
-	kdDebug() << "Matched: [" << numkorgpilotids << "] events."<< endl;
+	DEBUGKPILOT << "Matched: [" << numkorgpilotids << "] events."<< endl;
 
-	kdDebug() << "Now searching for previous WorkXChange events in korganizer's calendar." << endl;
+	DEBUGKPILOT << "Now searching for previous events of category: [" << category << "] in korganizer's calendar." << endl;
 
 	// iterate through all events and try to find a korganizer event
 	// that matches up with this external event's UID
 	unsigned int numkorgremoved = 0;
 
-	QString categoryToken = QString("WorkXChange");
+	QString categoryToken = category;
 
 	// careful iterating and removing...
 	KCal::Event *next = 0;
@@ -169,7 +176,7 @@ int main(int argc, char **argv)
 	korgIt = korgEvents.begin();
 	for ( ev = *korgIt; ev != 0; ev = next )
 	{
-		if (++korgIt == korgEvents.end()) 
+		if (++korgIt == korgEvents.end())
 		{
 			next = 0;
 		}
@@ -181,7 +188,7 @@ int main(int argc, char **argv)
 		if (ev->categoriesStr().contains(categoryToken))
 		{
 			if (debug_level)
-				kdDebug() << "  - Found matching event: [" 
+				DEBUGKPILOT << "  - Found matching event: [" 
 				<< ev->summary() << "], uid: ["
 				<< ev->uid() << "]. Removing." << endl;
 
@@ -192,27 +199,28 @@ int main(int argc, char **argv)
 		}
 	}
 
-	kdDebug() << "  - Found: [" << numkorgremoved
+	DEBUGKPILOT << "  - Found: [" << numkorgremoved
 		<< "] prior: [" << categoryToken 
 		<< "] category events." << endl;
 	
-	kdDebug() << "Merging new events into korganizer calendar..." 
+	DEBUGKPILOT << "Merging new events into korganizer calendar..." 
 		<< endl;
 
 	for (newIt = newEvents.begin(); newIt != newEvents.end(); ++newIt ) 
 	{
 		ev = *newIt;
+		ev->setCategories(category);
 		korgEvents.append(ev);
 		calkorg->addEvent(ev);
 	}
 
-	kdDebug() << "Ended up with: [" << korgEvents.count() 
+	DEBUGKPILOT << "Ended up with: [" << korgEvents.count() 
 		<< "] events in korganizer calendar." << endl;
 
-	kdDebug() << "Saving updated korganizer file..." << endl;
+	DEBUGKPILOT << "Saving updated korganizer file..." << endl;
 	calkorg->save(korgsave);
 
-	kdDebug() << "Saving updated newfile file..." << endl;
+	DEBUGKPILOT << "Saving updated newfile file..." << endl;
 	calnew->save(newfilesave);
 
 	return 0;

@@ -1582,11 +1582,12 @@ bool AbbrowserConduit::_buildResolutionTable(ResolutionTable*tab, const Addresse
 	{
 		backupAddrCategoryLabel = fAddressAppInfo->categoryName(backupAddr->category());
 	}
+	int category = palmAddr ? palmAddr->category() : 0;
 	tab->append(new ResolutionItem(
 		i18n("Category"),
 		tab->fExistItems,
 		!pcAddr.isEmpty() ?
-			KABCSync::bestMatchedCategoryName(pcAddr.categories(), *fAddressAppInfo,palmAddr->category()) :
+			KABCSync::bestMatchedCategoryName(pcAddr.categories(), *fAddressAppInfo, category) :
 			QString::null,
 		palmAddrCategoryLabel,
 		backupAddrCategoryLabel));
