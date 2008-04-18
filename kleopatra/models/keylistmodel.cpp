@@ -716,22 +716,8 @@ QList<QModelIndex> HierarchicalKeyListModel::doAddKeys( const std::vector<Key> &
         // Step 3: Add children to new parent ( == key )
 
         if ( !keyAlreadyExisted && !children.empty() ) {
+            addKeys( children );
             const QModelIndex new_parent = index( key );
-            beginInsertRows( index( key ), 0, children.size()-1 );
-            assert( mKeysByExistingParent.find( fpr ) == mKeysByExistingParent.end() );
-            mKeysByExistingParent[fpr] = children;
-            
-            //merge children into mKeysByFingerprint:
-            
-            std::vector<Key> mergedChildren;
-            mergedChildren.reserve( children.size() + mKeysByFingerprint.size() );
-            std::set_union( children.begin(), children.end(),
-                            mKeysByFingerprint.begin(), mKeysByFingerprint.end(),
-                            std::back_inserter( mergedChildren ), ByFingerprint<std::less>() );
-                
-            mKeysByFingerprint = mergedChildren;
-            endInsertRows();
-    
             // emit the rowMoved() signals in reversed direction, so the
             // implementation can use a stack for mapping.
             for ( int i = children.size() - 1 ; i >= 0 ; --i )
