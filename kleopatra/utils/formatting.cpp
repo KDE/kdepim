@@ -133,7 +133,9 @@ namespace {
 	return i18n( "<tr><th>%1:</th><td>%2</td></tr>", field, arg );
     }
     QString format_row( const QString & field, const QString & arg ) {
-	return i18n( "<tr><th>%1:</th><td>%2</td></tr>", field, Qt::escape( arg ) );
+    // ### strings like <foo@bar.com> are only not interpreted as HTML tag if escaped twice
+    // happened Qt 4.3.3 and Qt 4.4rc1. Change back to one escape() call if you see entities like &lt; in tooltips
+        return i18n( "<tr><th>%1:</th><td>%2</td></tr>", field, Qt::escape( Qt::escape( arg ) ) );
     }
     QString format_row( const QString & field, const char * arg ) {
 	return format_row( field, QString::fromUtf8( arg ) );
