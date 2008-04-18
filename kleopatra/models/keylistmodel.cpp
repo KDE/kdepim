@@ -61,6 +61,7 @@
 #include <algorithm>
 #include <vector>
 #include <map>
+#include <set>
 #include <iterator>
 #include <cassert>
 
@@ -654,6 +655,8 @@ QList<QModelIndex> HierarchicalKeyListModel::doAddKeys( const std::vector<Key> &
     
     mKeysByFingerprint = merged;
 
+    std::set<Key, ByFingerprint<std::less> > changedParents;
+
     Q_FOREACH( const Key & key, topological_sort( keys ) ) {
 
         // check to see whether this key is a parent for a previously parent-less group:
@@ -703,6 +706,13 @@ QList<QModelIndex> HierarchicalKeyListModel::doAddKeys( const std::vector<Key> &
             // parent does't exist yet...
             addKeyWithoutParent( issuer_fpr, key );
 
+        const QModelIndex key_idx = index( key );
+        QModelIndex key_parent = key_idx.parent();
+        while ( key_parent.isValid() ) {
+            changedParents.insert( doMapToKey( key_parent ) );
+            key_parent = key_parent.parent();
+        }
+
         // Step 3: Add children to new parent ( == key )
 
         if ( !keyAlreadyExisted && !children.empty() ) {
@@ -728,7 +738,13 @@ QList<QModelIndex> HierarchicalKeyListModel::doAddKeys( const std::vector<Key> &
                 emit rowMoved( new_parent, i );
         }
     }
-
+    //emit dataChanged for all parents with new children. This triggers KeyListSortFilterProxyModel to
+    //show a parent node if it just got children matching the proxy's filter 
+    Q_FOREACH( const Key & i, changedParents ) {
+        const QModelIndex idx = index( i );
+        if ( idx.isValid() )
+            emit dataChanged( idx.sibling( idx.row(), 0 ), idx.sibling( idx.row(), NumColumns - 1 ) );
+    }
     return indexes( keys );
 }
 
