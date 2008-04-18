@@ -150,6 +150,9 @@ GpgME::SigningResult Kleo::QGpgMESignJob::exec( const std::vector<GpgME::Key> & 
 void Kleo::QGpgMESignJob::doOperationDoneEvent( const GpgME::Error & ) {
   mResult = mCtx->signingResult();
   const QByteArray cipherText = outData();
+#ifndef KLEO_SYNCHRONOUS_API_HOTFIX
+  resetDataObjects();
+#endif
   emit result( mResult, cipherText );
 }
 
