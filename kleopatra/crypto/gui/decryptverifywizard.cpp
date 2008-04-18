@@ -200,7 +200,7 @@ void DecryptVerifyWizard::onNext( int id )
     Wizard::onNext( id );
 }
 
-void DecryptVerifyWizard::connectTask( const boost::shared_ptr<Task> & task, unsigned int idx )
+void DecryptVerifyWizard::connectTask( const boost::shared_ptr<Kleo::Crypto::Task> & task, unsigned int idx )
 {
     kleo_assert( task );
     ResultDisplayWidget* const item = resultWidget( idx );
