@@ -104,6 +104,8 @@ std::vector<GpgME::Key> SigningCertificateSelectionDialog::Private::candidates( 
     end = std::remove_if( keys.begin(), end, !bind( &GpgME::Key::hasSecret, _1 ) );
     assert( kdtools::all( keys.begin(), end, bind( &GpgME::Key::hasSecret, _1 ) ) );
     end = std::remove_if( keys.begin(), end, !bind( &GpgME::Key::canSign, _1 ) );
+    end = std::remove_if( keys.begin(), end, bind( &GpgME::Key::isExpired, _1 ) );
+    end = std::remove_if( keys.begin(), end, bind( &GpgME::Key::isRevoked, _1 ) );
     keys.erase( end, keys.end() );
     return keys;
 }
