@@ -1,3 +1,17 @@
+Friday, April 18th 2008
+
+Problems addressed
+-----------------------
+
+* kolab/issue2630 calendar: Wrong scrolling in the side-by-side view.
+* kolab/issue2629 calendar: At the headers of a week in the side-by-side view are not above the right columns
+
+Merges
+-------
+* Merges in from 3.5 branch.
+
+
+
 Friday, April 11th 2008
 
 Problems addressed
