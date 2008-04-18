@@ -124,7 +124,7 @@ namespace {
 }
 
 #ifdef Q_OS_WIN
-static const char gnupg_key[] = "HKEY_CURRENT_USER\\Software\\GNU\\GnuPG";
+static const char gnupg_key[] = "HKEY_LOCAL_MACHINE\\Software\\GNU\\GnuPG";
 static const char gnupg_subkey[] = "gpgProgram";
 
 static void checkForInvalidRegistryEntries( QWidget* msgParent )
