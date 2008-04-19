@@ -98,7 +98,7 @@ void CalendarLocal::close()
   deleteAllTodos();
   deleteAllJournals();
 
-  mDeletedIncidences.clear();
+  mDeletedIncidences.clearAll();
   setModified( false );
 
   setObserversEnabled( true );
@@ -194,7 +194,7 @@ void CalendarLocal::deleteAllTodos()
   }
 
   mTodoList.setAutoDelete( true );
-  mTodoList.clear();
+  mTodoList.clearAll();
   mTodoList.setAutoDelete( false );
 }
 
@@ -542,7 +542,7 @@ void CalendarLocal::deleteAllJournals()
   }
 
   mJournalList.setAutoDelete( true );
-  mJournalList.clear();
+  mJournalList.clearAll();
   mJournalList.setAutoDelete( false );
 }
 

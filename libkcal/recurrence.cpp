@@ -426,15 +426,15 @@ void Recurrence::setDuration( int duration )
 void Recurrence::unsetRecurs()
 {
   if ( mRecurReadOnly ) return;
-  mRRules.clear();
+  mRRules.clearAll();
   updated();
 }
 
 void Recurrence::clear()
 {
   if ( mRecurReadOnly ) return;
-  mRRules.clear();
-  mExRules.clear();
+  mRRules.clearAll();
+  mExRules.clearAll();
   mRDates.clear();
   mRDateTimes.clear();
   mExDates.clear();
@@ -561,7 +561,7 @@ QValueList<RecurrenceRule::WDayPos> Recurrence::yearPositions() const
 RecurrenceRule *Recurrence::setNewRecurrenceType( RecurrenceRule::PeriodType type, int freq )
 {
   if ( mRecurReadOnly || freq <= 0 ) return 0;
-  mRRules.clear();
+  mRRules.clearAll();
   updated();
   RecurrenceRule *rrule = defaultRRule( true );
   if ( !rrule ) return 0;

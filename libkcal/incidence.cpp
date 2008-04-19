@@ -123,7 +123,7 @@ Incidence& Incidence::operator=( const Incidence &i )
   mPriority = i.mPriority;
   mLocation = i.mLocation;
 
-  mAlarms.clear();
+  mAlarms.clearAll();
   Alarm::List::ConstIterator it;
   for( it = i.mAlarms.begin(); it != i.mAlarms.end(); ++it ) {
     Alarm *b = new Alarm( **it );
@@ -131,7 +131,7 @@ Incidence& Incidence::operator=( const Incidence &i )
     mAlarms.append( b );
   }
 
-  mAttachments.clear();
+  mAttachments.clearAll();
   Attachment::List::ConstIterator it1;
   for ( it1 = i.mAttachments.begin(); it1 != i.mAttachments.end(); ++it1 ) {
     Attachment *a = new Attachment( **it1 );
@@ -654,7 +654,7 @@ Attachment::List Incidence::attachments(const QString& mime) const
 
 void Incidence::clearAttachments()
 {
-  mAttachments.clear();
+  mAttachments.clearAll();
 }
 
 void Incidence::setResources(const QStringList &resources)
@@ -796,7 +796,7 @@ void Incidence::removeAlarm(Alarm *alarm)
 
 void Incidence::clearAlarms()
 {
-  mAlarms.clear();
+  mAlarms.clearAll();
   updated();
 }
 
