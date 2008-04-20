@@ -57,19 +57,25 @@ void DesktopTracker::changeTimers()
   // emit updateButtons();
 }
 
-void DesktopTracker::startTracking()
+QString DesktopTracker::startTracking()
 {
+  QString err;
   int currentDesktop = kWinModule.currentDesktop() -1;
   // TODO: removed? fixed by Lubos?
   // currentDesktop will return 0 if no window manager is started
   if ( currentDesktop < 0 ) currentDesktop = 0;
-
-  TaskVector &tv = desktopTracker[ currentDesktop ];
-  TaskVector::iterator tit = tv.begin();
-  while(tit!=tv.end()) {
-    emit reachedtActiveDesktop(*tit);
-    tit++;
+  if ( currentDesktop < maxDesktops )
+  {
+    TaskVector &tv = desktopTracker[ currentDesktop ];
+    TaskVector::iterator tit = tv.begin();
+    while(tit!=tv.end()) 
+    {
+      emit reachedtActiveDesktop(*tit);
+      tit++;
+    }
   }
+  else err="ETooHighDeskTopNumber";
+  return err;
 }
 
 void DesktopTracker::registerForDesktops( Task* task, DesktopList desktopList)

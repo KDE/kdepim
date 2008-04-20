@@ -207,7 +207,8 @@ void TaskView::load( QString fileName )
 
   setSelected(first_child(), true);
   setCurrentItem(first_child());
-  _desktopTracker->startTracking();
+  if ( _desktopTracker->startTracking() != QString() ) 
+    KMessageBox::error( 0, i18n("You are on a too high logical desktop, desktop tracking will not work") );
   _isloading = false;
   refresh();
 }
@@ -299,7 +300,8 @@ void TaskView::loadFromFlatFile()
     setSelected(first_child(), true);
     setCurrentItem(first_child());
 
-    _desktopTracker->startTracking();
+    if ( _desktopTracker->startTracking() != QString() )
+      KMessageBox::error(0, i18n("You are on a too high logical desktop, desktop tracking will not work") );
   }
 }
 
