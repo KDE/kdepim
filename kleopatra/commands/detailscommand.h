@@ -35,6 +35,10 @@
 
 #include <commands/command.h>
 
+namespace GpgME {
+    class Key;
+}
+
 namespace Kleo {
 
     class DetailsCommand : public Command {
@@ -42,6 +46,8 @@ namespace Kleo {
     public:
 	explicit DetailsCommand( KeyListController * parent );
 	explicit DetailsCommand( QAbstractItemView * view, KeyListController * parent );
+	explicit DetailsCommand( const GpgME::Key & key, KeyListController * parent );
+	explicit DetailsCommand( const GpgME::Key & key, QAbstractItemView * view, KeyListController * parent );
 	~DetailsCommand();
 
         /* reimp */ static Restrictions restrictions() { return OnlyOneKey; }
@@ -49,6 +55,11 @@ namespace Kleo {
     private:
 	/* reimp */ void doStart();
 	/* reimp */ void doCancel();
+
+    private:
+        class Private;
+        inline Private * d_func();
+        inline const Private * d_func() const;
     };
 
 }

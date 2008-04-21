@@ -44,34 +44,88 @@
 #include <cassert>
 
 using namespace Kleo;
+//using namespace Kleo::Commands;
+using namespace GpgME;
+
+class DetailsCommand::Private : public Command::Private {
+    friend class ::DetailsCommand;
+    DetailsCommand * q_func() const { return static_cast<DetailsCommand*>( q ); }
+public:
+    explicit Private( DetailsCommand * qq, KeyListController * c );
+    ~Private();
+
+    void init();
+
+private:
+    Key key;
+};
+
+DetailsCommand::Private * DetailsCommand::d_func() { return static_cast<Private*>( d.get() ); }
+const DetailsCommand::Private * DetailsCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
+
+#define q q_func()
+#define d d_func()
+
+DetailsCommand::Private::Private( DetailsCommand * qq, KeyListController * c )
+    : Command::Private( qq, c ),
+      key()
+{
+
+}
+
+DetailsCommand::Private::~Private() {}
 
 DetailsCommand::DetailsCommand( KeyListController * p )
-    : Command( p )
+    : Command( new Private( this, p ) )
 {
 
 }
 
 DetailsCommand::DetailsCommand( QAbstractItemView * v, KeyListController * p )
-    : Command( v, p )
+    : Command( v, new Private( this, p ) )
 {
 
+}
+
+DetailsCommand::DetailsCommand( const Key & key, KeyListController * p )
+    : Command( new Private( this, p ) )
+{
+    assert( !key.isNull() );
+    d->key = key;
+}
+
+DetailsCommand::DetailsCommand( const Key & key, QAbstractItemView * v, KeyListController * p )
+    : Command( v, new Private( this, p ) )
+{
+    assert( !key.isNull() );
+    d->key = key;
 }
 
 DetailsCommand::~DetailsCommand() {}
 
 void DetailsCommand::doStart() {
-    if ( d->indexes().size() == 1 ) {
-        KDialog * const dlg = CertificateInfoWidgetImpl::createDialog( d->key(), d->view() );
+    Key key;
+    if ( !d->key.isNull() )
+        key = d->key;
+    else if ( d->indexes().size() == 1 )
+        key = d->Command::Private::key();
+    else
+        qWarning( "DetailsCommand::doStart: can only work with one certificate at a time" );
+
+    if ( !key.isNull() ) {
+        KDialog * const dlg = CertificateInfoWidgetImpl::createDialog( key, d->view() );
         assert( dlg );
         dlg->setAttribute( Qt::WA_DeleteOnClose );
         dlg->show();
-    } else
-        qWarning( "DetailsCommand::doStart: can only work with one certificate at a time" );
+    }
 
     d->finished();
 }
 
 
 void DetailsCommand::doCancel() {}
+
+#undef q_func
+#undef d_func
 
 #include "moc_detailscommand.cpp"
