@@ -1,15 +1,6 @@
 include_directories( ${CMAKE_BINARY_DIR}/kleo/backends/chiasmus/ ${GPGME_INCLUDES} ${Boost_INCLUDE_DIR} )
 
-if ( NOT ONLY_KLEO )
-  add_definitions( -DKLEO_BUILD_OLD_MAINWINDOW )
-else ( NOT ONLY_KLEO )
-  add_definitions( -DONLY_KLEO )
-endif ( NOT ONLY_KLEO )
-
-# hotfix for bug 160881, remove when fixed:
-if (KLEO_SYNCHRONOUS_API_HOTFIX)
-add_definitions( -DKLEO_SYNCHRONOUS_API_HOTFIX )
-endif (KLEO_SYNCHRONOUS_API_HOTFIX)
+add_definitions( -DONLY_KLEO )
 
 remove_definitions( -DQT_NO_STL )
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS -DQT_STL )
