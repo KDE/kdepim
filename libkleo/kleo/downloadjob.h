@@ -41,7 +41,13 @@ namespace GpgME {
   class Error;
 }
 
+namespace boost {
+    template <typename T> class shared_ptr;
+}
+
 class QStringList;
+class QIODevice;
+class QByteArray;
 
 namespace Kleo {
 
@@ -66,13 +72,25 @@ namespace Kleo {
     ~DownloadJob();
 
     /**
+       Starts the download operation. \a fingerprint is the
+       fingerprint of the key to download. If \a fingerprint is empty,
+       contains only whitespace or anything other than a fingerprint,
+       the result is undefined.
+
+       Output is written to \a keyData, if given. Otherwise, it is
+       passed as the second argument of result().
+    */
+    virtual GpgME::Error start( const QByteArray & fingerprint,
+                                const boost::shared_ptr<QIODevice> & keyData ) = 0;
+
+    /**
        Starts the download operation. \a fingerprints is a list of
        fingerprints used to specify the list of keys downloaded. Empty
        patterns are ignored. If \a fingerprints is empty, contains
        only empty strings or anything other than fingerprints, the
        result is undefined.
     */
-    virtual GpgME::Error start( const QStringList & fingerprints ) = 0;
+    virtual KDE_DEPRECATED GpgME::Error start( const QStringList & fingerprints ) = 0;
 
   Q_SIGNALS:
     void result( const GpgME::Error & result, const QByteArray & keyData );

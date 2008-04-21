@@ -62,8 +62,30 @@ GpgME::Error Kleo::QGpgMEDownloadJob::start( const QStringList & pats ) {
 
   const GpgME::Error err = mCtx->startPublicKeyExport( patterns(), *mOutData );
 
-  if ( err )
+  if ( err ) {
+    resetDataObjects();
     deleteLater();
+  }
+  return err;
+}
+
+GpgME::Error Kleo::QGpgMEDownloadJob::start( const QByteArray & fpr, const boost::shared_ptr<QIODevice> & keyData ) {
+  assert( !patterns() );
+  assert( !mOutData );
+
+  if ( keyData )
+      createOutData( keyData );
+  else
+      createOutData();
+  setPatterns( QStringList( QString::fromLatin1( fpr.data() ) ) );
+  hookupContextToEventLoopInteractor();
+
+  const GpgME::Error err = mCtx->startPublicKeyExport( patterns(), *mOutData );
+
+  if ( err ) {
+    resetDataObjects();
+    deleteLater();
+  }
   return err;
 }
 

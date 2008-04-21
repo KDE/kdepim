@@ -53,10 +53,13 @@ namespace Kleo {
     /*! \reimp from DownloadJob */
     GpgME::Error start( const QStringList & fingerprints );
 
+    /*! \reimp from DownloadJob */
+    GpgME::Error start( const QByteArray & fingerprint, const boost::shared_ptr<QIODevice> & keyData );
+
   private:
     void doOperationDoneEvent( const GpgME::Error & e );
 
-  private slots:
+  private Q_SLOTS:
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
       QGpgMEJob::doSlotOperationDoneEvent( context, e );
     }
