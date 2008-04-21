@@ -36,6 +36,8 @@
 
 #include <models/keylistmodelinterface.h>
 
+#include <utils/pimpl_ptr.h>
+
 #include <vector>
 
 namespace GpgME {
@@ -100,12 +102,24 @@ namespace Kleo {
         /* reimp */ QVariant headerData( int section, Qt::Orientation o, int role=Qt::DisplayRole ) const;
         /* reimp */ QVariant data( const QModelIndex & index, int role=Qt::DisplayRole ) const;
 
+        /**
+         * defines which information is displayed in tooltips 
+         * see Kleo::Formatting::ToolTipOption
+         */
+        int toolTipOptions() const;
+
+        void setToolTipOptions( int opts );
+
     private:
         virtual GpgME::Key doMapToKey( const QModelIndex & index ) const = 0;
         virtual QModelIndex doMapFromKey( const GpgME::Key & key, int column ) const = 0;
         virtual QList<QModelIndex> doAddKeys( const std::vector<GpgME::Key> & keys ) = 0;
         virtual void doRemoveKey( const GpgME::Key & key ) = 0;
         virtual void doClear() = 0;
+
+    private:
+        class Private;
+        kdtools::pimpl_ptr<Private> d;
     };
 
 }

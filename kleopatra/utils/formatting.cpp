@@ -177,38 +177,49 @@ namespace {
 
 }
 
-QString Formatting::toolTip( const Key & key ) {
-    if ( key.protocol() != CMS && key.protocol() != OpenPGP )
+QString Formatting::toolTip( const Key & key, int flags ) {
+    if ( flags == 0 || key.protocol() != CMS && key.protocol() != OpenPGP )
         return QString();
 
     const Subkey subkey = key.subkey( 0 );
 
     QString result;
-    if ( key.protocol() == OpenPGP || ( key.keyListMode() & Validate ) )
-        if ( key.isRevoked() )
-            result += make_red( i18n( "This certificate has been revoked." ) );
-        else if ( key.isExpired() )
-            result += make_red( i18n( "This certificate has expired." ) );
-        else if ( key.isDisabled() )
-            result += i18n( "This certificate has been disabled locally." );
+    if ( flags & Validity ) 
+        if ( key.protocol() == OpenPGP || ( key.keyListMode() & Validate ) )
+            if ( key.isRevoked() )
+                result += make_red( i18n( "This certificate has been revoked." ) );
+            else if ( key.isExpired() )
+                result += make_red( i18n( "This certificate has expired." ) );
+            else if ( key.isDisabled() )
+                result += i18n( "This certificate has been disabled locally." );
+    if ( flags == Validity )
+        return result;
 
     result += QLatin1String( "<table border=\"0\">" );
     if ( key.protocol() == CMS ) {
-        result += format_row( i18n("Serial number"), key.issuerSerial() );
-        result += format_row( i18n("Issuer"), key.issuerName() );
+        if ( flags & SerialNumber )
+            result += format_row( i18n("Serial number"), key.issuerSerial() );
+        if ( flags & Issuer )
+            result += format_row( i18n("Issuer"), key.issuerName() );
     }
-    result += format_row( key.protocol() == CMS
-                          ? i18n("Subject")
-                          : i18n("User-ID"), key.userID( 0 ).id() );
-    for ( unsigned int i = 1, end = key.numUserIDs() ; i < end ; ++i )
-        result += format_row( i18n("a.k.a."), key.userID( i ).id() );
-    result += format_row( i18n("Validity"),
-                          subkey.neverExpires()
-                          ? i18n( "from %1 until forever", time_t2string( subkey.creationTime() ) )
-                          : i18n( "from %1 through %2", time_t2string( subkey.creationTime() ), time_t2string( subkey.expirationTime() ) ) );
-    result += format_row( i18n("Certificate type"), format_keytype( key ) );
-    result += format_row( i18n("Certificate usage"), format_keyusage( key ) );
-    result += format_row( i18n("Fingerprint"), key.primaryFingerprint() );
+    if ( flags & UserIDs ) {
+        result += format_row( key.protocol() == CMS
+                              ? i18n("Subject")
+                              : i18n("User-ID"), key.userID( 0 ).id() );
+        for ( unsigned int i = 1, end = key.numUserIDs() ; i < end ; ++i )
+            result += format_row( i18n("a.k.a."), key.userID( i ).id() );
+    }
+    if ( flags & ExpiryDates )
+        result += format_row( i18n("Validity"),
+                              subkey.neverExpires()
+                              ? i18n( "from %1 until forever", time_t2string( subkey.creationTime() ) )
+                              : i18n( "from %1 through %2", time_t2string( subkey.creationTime() ), time_t2string( subkey.expirationTime() ) ) );
+    if ( flags & CertificateType )
+        result += format_row( i18n("Certificate type"), format_keytype( key ) );
+    if ( flags & CertificateUsage )
+        result += format_row( i18n("Certificate usage"), format_keyusage( key ) );
+    if ( flags & Fingerprint )
+        result += format_row( i18n("Fingerprint"), key.primaryFingerprint() );
     result += QLatin1String( "</table><br>" );
 
     return result;

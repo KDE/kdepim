@@ -538,7 +538,7 @@ void MainWindow::Private::preferences() {
 }
 
 void MainWindow::Private::slotConfigCommitted() {
-
+    controller.updateConfig();
 }
 
 void MainWindow::closeEvent( QCloseEvent * e ) {

@@ -13,7 +13,12 @@ if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
 endif (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-kleopatra.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kleopatra.h )
 
-include_directories( ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_SOURCE_DIR}/libkleo ${Boost_INCLUDE_DIR} ${QGPGME_INCLUDES} ${GPGME_INCLUDES} )
+include_directories(
+  ${CMAKE_CURRENT_BINARY_DIR}
+  ${CMAKE_SOURCE_DIR}/libkleo
+  ${Boost_INCLUDE_DIR}
+  ${QGPGME_INCLUDES}
+  ${GPGME_INCLUDES} )
 if (USABLE_ASSUAN_FOUND)
    include_directories(${ASSUAN_INCLUDES})
 endif(USABLE_ASSUAN_FOUND)
@@ -149,7 +154,7 @@ set( _kleopatra_common_SRCS
   commands/dumpcrlcachecommand.cpp
   commands/importcrlcommand.cpp
   commands/changeexpirycommand.cpp
-
+  
   ${_kleopatra_uiserver_files}
 
   conf/configuredialog.cpp
@@ -172,6 +177,8 @@ kde4_add_ui_files( _kleopatra_common_SRCS
   dialogs/expirydialog.ui
   dialogs/lookupcertificatesdialog.ui
   )
+kde4_add_kcfg_files( _kleopatra_common_SRCS common/kleopatraprefs.kcfgc )
+
 
 if (ONLY_KLEO)
    add_definitions( -DONLY_KLEO )

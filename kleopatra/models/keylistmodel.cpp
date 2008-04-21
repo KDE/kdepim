@@ -94,14 +94,28 @@ namespace {
 
 }
 
+class AbstractKeyListModel::Private {
+public:
+    Private() : m_toolTipOptions( Formatting::Validity ) {}
+    int m_toolTipOptions;
+};
 AbstractKeyListModel::AbstractKeyListModel( QObject * p )
-    : QAbstractItemModel( p ), KeyListModelInterface()
+    : QAbstractItemModel( p ), KeyListModelInterface(), d( new Private )
 {
 
 }
 
 AbstractKeyListModel::~AbstractKeyListModel() {}
 
+void AbstractKeyListModel::setToolTipOptions( int opts )
+{
+    d->m_toolTipOptions = opts;
+}
+
+int AbstractKeyListModel::toolTipOptions() const
+{
+    return d->m_toolTipOptions;
+}
 
 Key AbstractKeyListModel::key( const QModelIndex & idx ) const {
     if ( idx.isValid() )
@@ -233,7 +247,7 @@ QVariant AbstractKeyListModel::data( const QModelIndex & index, int role ) const
             break;
         }
     else if ( role == Qt::ToolTipRole )
-        return Formatting::toolTip( key );
+        return Formatting::toolTip( key, toolTipOptions() );
     else if ( role == Qt::FontRole ) {
         QFont font = qApp->font(); // ### correct font?
         if ( column == Fingerprint )

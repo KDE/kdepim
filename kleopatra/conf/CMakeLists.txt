@@ -1,4 +1,4 @@
-include_directories( ${CMAKE_SOURCE_DIR}/kleopatra )
+include_directories( ${CMAKE_SOURCE_DIR}/kleopatra ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/kleopatra/interfaces)
 
 if ( ONLY_KLEO )
   add_definitions( -DONLY_KLEO )
@@ -30,7 +30,7 @@ kde4_add_plugin(kcm_kleopatra ${kcm_kleopatra_PART_SRCS})
 
 
 
-target_link_libraries(kcm_kleopatra ${KDE4_KDEUI_LIBS} kleo )
+target_link_libraries(kcm_kleopatra ${KDE4_KDEUI_LIBS} kleo kleopatrainterfaces )
 
 install(TARGETS kcm_kleopatra  DESTINATION ${PLUGIN_INSTALL_DIR})
 

@@ -36,6 +36,9 @@
 #include "appearanceconfigwidget.h"
 #include "ui_appearanceconfigwidget.h"
 
+
+#include <kleopatra/kleopatraprefs.h>
+
 #include "libkleo/kleo/cryptobackendfactory.h"
 #include "libkleo/kleo/keyfiltermanager.h"
 
@@ -306,7 +309,9 @@ public:
         connect( italicCB, SIGNAL(toggled(bool)), q, SLOT(slotItalicToggled(bool)) );
         connect( boldCB, SIGNAL(toggled(bool)), q, SLOT(slotBoldToggled(bool)) );
         connect( strikeoutCB, SIGNAL(toggled(bool)), q, SLOT(slotStrikeOutToggled(bool)) );
-
+        connect( tooltipValidityCheckBox, SIGNAL(toggled(bool)), q, SLOT(slotTooltipValidityChanged(bool)) );
+        connect( tooltipOwnerCheckBox, SIGNAL(toggled(bool)), q, SLOT(slotTooltipOwnerChanged(bool)) );
+        connect( tooltipDetailsCheckBox, SIGNAL(toggled(bool)), q, SLOT(slotTooltipDetailsChanged(bool)) );
     }
 
 private:
@@ -323,12 +328,15 @@ private:
     void slotItalicToggled(bool);
     void slotBoldToggled(bool);
     void slotStrikeOutToggled(bool);
+    void slotTooltipValidityChanged(bool);
+    void slotTooltipOwnerChanged(bool);
+    void slotTooltipDetailsChanged(bool);
 };
 
 AppearanceConfigWidget::AppearanceConfigWidget( QWidget * p, Qt::WindowFlags f )
     : QWidget( p, f ), d( new Private( this ) )
 {
-    load();
+//    load();
 }
 
 
@@ -375,6 +383,9 @@ void AppearanceConfigWidget::defaults() {
     // This simply means "default look for every category"
     for ( int i = 0, end = d->categoriesLV->count() ; i != end ; ++i )
         set_default_appearance( d->categoriesLV->item( i ) );
+    d->tooltipValidityCheckBox->setChecked( true );
+    d->tooltipOwnerCheckBox->setChecked( false );
+    d->tooltipDetailsCheckBox->setChecked( false );
     emit changed();
 }
 
@@ -388,9 +399,20 @@ void AppearanceConfigWidget::load() {
         //QListWidgetItem * item = new QListWidgetItem( d->categoriesLV );
         apply_config( KConfigGroup( config, group ), new QListWidgetItem( d->categoriesLV ) );
     }
+
+    const Preferences prefs;
+    d->tooltipValidityCheckBox->setChecked( prefs.showValidity() );
+    d->tooltipOwnerCheckBox->setChecked( prefs.showOwnerInformation() );
+    d->tooltipDetailsCheckBox->setChecked( prefs.showCertificateDetails() );
 }
 
 void AppearanceConfigWidget::save() {
+    Preferences prefs;
+    prefs.setShowValidity( d->tooltipValidityCheckBox->isChecked() );
+    prefs.setShowOwnerInformation( d->tooltipOwnerCheckBox->isChecked() );
+    prefs.setShowCertificateDetails( d->tooltipDetailsCheckBox->isChecked() );
+    prefs.writeConfig();
+
     KConfig * const config = CryptoBackendFactory::instance()->configObject();
     if ( !config )
         return;
@@ -411,6 +433,7 @@ void AppearanceConfigWidget::save() {
         KConfigGroup group( config, groups[i] );
         save_to_config( item, group );
     }
+
     config->sync();
     KeyFilterManager::instance()->reload();
 }
@@ -504,5 +527,21 @@ void AppearanceConfigWidget::Private::slotStrikeOutToggled( bool on ) {
     set_strikeout( selectedItem(), on );
     emit q->changed();
 }
+
+void AppearanceConfigWidget::Private::slotTooltipValidityChanged( bool on )
+{
+    emit q->changed();
+}
+
+void AppearanceConfigWidget::Private::slotTooltipOwnerChanged( bool on )
+{
+    emit q->changed();
+}
+
+void AppearanceConfigWidget::Private::slotTooltipDetailsChanged( bool on )
+{
+    emit q->changed();
+}
+
 
 #include "appearanceconfigwidget.moc"

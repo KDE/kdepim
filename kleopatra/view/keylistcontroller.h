@@ -81,6 +81,7 @@ namespace Kleo {
         void removeView( QAbstractItemView * view );
 
         void cancelCommands();
+        void updateConfig();
 
     Q_SIGNALS:
         void progress( int current, int total );

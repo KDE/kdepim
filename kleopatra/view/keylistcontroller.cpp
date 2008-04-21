@@ -33,12 +33,16 @@
 #include <config-kleopatra.h>
 
 #include "keylistcontroller.h"
+
 #include "commands/detailscommand.h"
 
 #include <models/keycache.h>
 #include <models/keylistmodel.h>
 
+#include <utils/formatting.h>
 #include <utils/stl_util.h>
+
+#include "kleopatraprefs.h"
 
 #include <gpgme++/key.h>
 
@@ -54,7 +58,7 @@
 #include <algorithm>
 #include <cassert>
 
-using namespace Kleo;
+using namespace Kleo; 
 using namespace boost;
 using namespace GpgME;
 
@@ -102,6 +106,8 @@ public:
     }
     void slotActionTriggered();
 
+    int toolTipOptions() const;
+
 private:
     static Command::Restrictions calculateRestrictionsMask( const QItemSelectionModel * sm );
 
@@ -130,7 +136,6 @@ KeyListController::Private::Private( KeyListController * qq )
              q, SLOT(slotAddKey(GpgME::Key)) );
     connect( KeyCache::mutableInstance().get(), SIGNAL(aboutToRemove(GpgME::Key)),
              q, SLOT(slotAboutToRemoveKey(GpgME::Key)) );
-
 }
 
 KeyListController::Private::~Private() {}
@@ -187,6 +192,7 @@ void KeyListController::setFlatModel( AbstractKeyListModel * model ) {
     if ( model ) {
         model->clear();
         model->addKeys( KeyCache::instance()->keys() );
+        model->setToolTipOptions( d->toolTipOptions() );
     }
 }
 
@@ -199,6 +205,7 @@ void KeyListController::setHierarchicalModel( AbstractKeyListModel * model ) {
     if ( model ) {
         model->clear();
         model->addKeys( KeyCache::instance()->keys() );
+        model->setToolTipOptions( d->toolTipOptions() );
     }
 }
 
@@ -345,6 +352,30 @@ Command::Restrictions KeyListController::Private::calculateRestrictionsMask( con
 
 void KeyListController::Private::slotActionTriggered() {
     qDebug( "KeyListController::Private::slotActionTriggered: not implemented" );
+}
+
+int KeyListController::Private::toolTipOptions() const
+{
+    using namespace Kleo::Formatting;
+    static const int validityFlags = Validity;
+    static const int ownerFlags = Subject|Issuer|UserIDs|SerialNumber;
+    static const int detailsFlags = ExpiryDates|CertificateType|CertificateUsage|Fingerprint;
+
+    const Preferences prefs;
+    
+    int flags = prefs.showValidity() ? validityFlags : 0;
+    flags |= prefs.showOwnerInformation() ? ownerFlags : 0;
+    flags |= prefs.showCertificateDetails() ? detailsFlags : 0;
+    return flags;
+}
+
+void KeyListController::updateConfig()
+{
+    const int opts = d->toolTipOptions();
+    if ( d->flatModel )
+        d->flatModel->setToolTipOptions( opts );
+    if ( d->hierarchicalModel )
+        d->hierarchicalModel->setToolTipOptions( opts );
 }
 
 #include "moc_keylistcontroller.cpp"
