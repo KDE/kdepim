@@ -83,7 +83,7 @@ namespace Formatting {
 
     QString signatureToString( const GpgME::Signature & sig, const GpgME::Key & key );
 
-    const char * summaryToString( GpgME::Signature::Summary summary );
+    const char * summaryToString( const GpgME::Signature::Summary summary );
 
 }
 }
