@@ -1,8 +1,8 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    importcertificatefromfilecommand.h
+    commands/importcertificatescommand.h
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2007, 2008 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,37 +30,36 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_IMPORTCERTIFICATEFROMFILECOMMAND_H__
-#define __KLEOPATRA_IMPORTCERTIFICATEFROMFILECOMMAND_H__
+#ifndef __KLEOPATRA_IMPORTCERTIFICATESCOMMAND_H__
+#define __KLEOPATRA_IMPORTCERTIFICATESCOMMAND_H__
 
-#include "importcertificatescommand.h"
+#include "command.h"
 
 class QStringList;
 
 namespace Kleo {
 
-    class ImportCertificateFromFileCommand : public ImportCertificatesCommand {
+    class ImportCertificatesCommand : public Command {
         Q_OBJECT
     public:
-        explicit ImportCertificateFromFileCommand( KeyListController * parent );
-        explicit ImportCertificateFromFileCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit ImportCertificateFromFileCommand( const QStringList & files, KeyListController * parent );
-        explicit ImportCertificateFromFileCommand( const QStringList & files, QAbstractItemView * view, KeyListController * parent );
-        ~ImportCertificateFromFileCommand();
+        explicit ImportCertificatesCommand( KeyListController * parent );
+        explicit ImportCertificatesCommand( QAbstractItemView * view, KeyListController * parent );
+        ~ImportCertificatesCommand();
     
-        void setFiles( const QStringList & files );
-        QStringList files() const;
+    protected:
+        /* reimp */ void doCancel();
 
-    private:
-        /* reimp */ void doStart();
-
-    private:
+    protected:
         class Private;
         inline Private * d_func();
         inline const Private * d_func() const;
         Q_PRIVATE_SLOT( d_func(), void importResult( GpgME::ImportResult ) )
+
+    protected:
+        explicit ImportCertificatesCommand( Private * pp );
+        explicit ImportCertificatesCommand( QAbstractItemView * view, Private * pp );
     };
 }
 
-#endif // __KLEOPATRA_IMPORTCERTIFICATEFROMFILECOMMAND_H__
+#endif // __KLEOPATRA_IMPORTCERTIFICATESCOMMAND_H__
 

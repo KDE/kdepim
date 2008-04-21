@@ -33,7 +33,7 @@
 #include <config-kleopatra.h>
 
 #include "importcertificatefromfilecommand.h"
-#include "command_p.h"
+#include "importcertificatescommand_p.h"
 
 #include "utils/classify.h"
 
@@ -61,7 +61,7 @@
 using namespace GpgME;
 using namespace Kleo;
 
-class ImportCertificateFromFileCommand::Private : public Command::Private {
+class ImportCertificateFromFileCommand::Private : public ImportCertificatesCommand::Private {
     friend class ::ImportCertificateFromFileCommand;
     ImportCertificateFromFileCommand * q_func() const { return static_cast<ImportCertificateFromFileCommand*>( q ); }
 public:
@@ -69,14 +69,10 @@ public:
     ~Private();
 
     bool ensureHaveFile();
-    void startImport( const QByteArray& data );
-    void importResult( const GpgME::ImportResult& );
     GpgME::Protocol checkProtocol( const QByteArray& data, const QString& filename ) const;
-    void showError( const GpgME::Error& error );
-    void showDetails( const ImportResult& result );
+    void importResult( const ImportResult & result );
 
 private:
-    QPointer<ImportJob> importJob;
     QStringList files;
 };
 
@@ -84,7 +80,8 @@ ImportCertificateFromFileCommand::Private * ImportCertificateFromFileCommand::d_
 const ImportCertificateFromFileCommand::Private * ImportCertificateFromFileCommand::d_func() const { return static_cast<const Private*>(d.get()); }
 
 ImportCertificateFromFileCommand::Private::Private( ImportCertificateFromFileCommand * qq, KeyListController * c )
-    : Command::Private( qq, c ), importJob( 0 )
+    : ImportCertificatesCommand::Private( qq, c ),
+      files()
 {
     
 }
@@ -97,25 +94,25 @@ ImportCertificateFromFileCommand::Private::~Private() {}
 
 
 ImportCertificateFromFileCommand::ImportCertificateFromFileCommand( KeyListController * p )
-    : Command( new Private( this, p ) )
+    : ImportCertificatesCommand( new Private( this, p ) )
 {
     
 }
 
 ImportCertificateFromFileCommand::ImportCertificateFromFileCommand( QAbstractItemView * v, KeyListController * p )
-    : Command( v, new Private( this, p ) )
+    : ImportCertificatesCommand( v, new Private( this, p ) )
 {
     
 }
 
 ImportCertificateFromFileCommand::ImportCertificateFromFileCommand( const QStringList & files, KeyListController * p )
-    : Command( new Private( this, p ) )
+    : ImportCertificatesCommand( new Private( this, p ) )
 {
     d->files = files;
 }
 
 ImportCertificateFromFileCommand::ImportCertificateFromFileCommand( const QStringList & files, QAbstractItemView * v, KeyListController * p )
-    : Command( v, new Private( this, p ) )
+    : ImportCertificatesCommand( v, new Private( this, p ) )
 {
     d->files = files;
 }
@@ -142,7 +139,7 @@ void ImportCertificateFromFileCommand::doStart()
         d->finished();
         return;
     }
-        
+
     //TODO: use KIO here
     QFile in( d->files.front() );
     if ( !in.open( QIODevice::ReadOnly ) ) {
@@ -150,7 +147,13 @@ void ImportCertificateFromFileCommand::doStart()
         d->finished();
         return;
     }
-    d->startImport( in.readAll() ); 
+    const GpgME::Protocol protocol = findProtocol( d->files.front() );
+    if ( protocol == GpgME::UnknownProtocol ) { //TODO: might use exceptions here
+        KMessageBox::error( d->view(), i18n( "Could not determine certificate type of %1.", d->files.front() ), i18n( "Certificate Import Failed" ) );
+        d->finished();
+        return;
+    }
+    d->startImport( protocol, in.readAll(), d->files.front() );
     emit info( i18n( "Importing certificate..." ) );
 }
 
@@ -179,120 +182,20 @@ bool ImportCertificateFromFileCommand::Private::ensureHaveFile()
     return !files.empty();
 }
 
-void ImportCertificateFromFileCommand::Private::showDetails( const ImportResult& res )
-{
-    // ### TODO: make a keylisting over Import::fingerprints(), then
-    // ### highlight imported certificates in view(), or maybe in a new tab?
-
-    const KLocalizedString normalLine = ki18n("<tr><td align=\"right\">%1</td><td>%2</td></tr>");
-    const KLocalizedString boldLine = ki18n("<tr><td align=\"right\"><b>%1</b></td><td>%2</td></tr>");
-
-    QStringList lines;
-    lines.push_back( normalLine.subs( i18n("Total number processed:") )
-                     .subs( res.numConsidered() ).toString() );
-    lines.push_back( normalLine.subs( i18n("Imported:") )
-                     .subs( res.numImported() ).toString() );
-    if ( res.newSignatures() )
-        lines.push_back( normalLine.subs( i18n("New signatures:") )
-                         .subs( res.newSignatures() ).toString() );
-    if ( res.newUserIDs() )
-        lines.push_back( normalLine.subs( i18n("New user IDs:") )
-                         .subs( res.newUserIDs() ).toString() );
-    if ( res.numKeysWithoutUserID() )
-        lines.push_back( normalLine.subs( i18n("Keys without user IDs:") )
-                         .subs( res.numKeysWithoutUserID() ).toString() );
-    if ( res.newSubkeys() )
-        lines.push_back( normalLine.subs( i18n("New subkeys:") )
-                         .subs( res.newSubkeys() ).toString() );
-    if ( res.newRevocations() )
-        lines.push_back( boldLine.subs( i18n("Newly revoked:") )
-                         .subs( res.newRevocations() ).toString() );
-    if ( res.notImported() )
-        lines.push_back( boldLine.subs( i18n("Not imported:") )
-                         .subs( res.notImported() ).toString() );
-    if ( res.numUnchanged() )
-        lines.push_back( normalLine.subs( i18n("Unchanged:") )
-                         .subs( res.numUnchanged() ).toString() );
-    if ( res.numSecretKeysConsidered() )
-        lines.push_back( normalLine.subs( i18n("Secret keys processed:") )
-                         .subs( res.numSecretKeysConsidered() ).toString() );
-    if ( res.numSecretKeysImported() )
-        lines.push_back( normalLine.subs( i18n("Secret keys imported:") )
-                         .subs( res.numSecretKeysImported() ).toString() );
-    if ( res.numSecretKeysConsidered() - res.numSecretKeysImported() - res.numSecretKeysUnchanged() > 0 )
-        lines.push_back( boldLine.subs( i18n("Secret keys <em>not</em> imported:") )
-                         .subs(  res.numSecretKeysConsidered()
-                                 - res.numSecretKeysImported()
-                                 - res.numSecretKeysUnchanged() ).toString() );
-    if ( res.numSecretKeysUnchanged() )
-        lines.push_back( normalLine.subs( i18n("Secret keys unchanged:") )
-                         .subs( res.numSecretKeysUnchanged() ).toString() );
-    
-    KMessageBox::information( view(),
-                              i18n( "<qt><p>Detailed results of importing %1:</p>"
-                                    "<table>%2</table></qt>" ,
-                                    files.front(), lines.join( QString() ) ),
-                              i18n( "Certificate Import Result" ) );
-}
-
-void ImportCertificateFromFileCommand::Private::showError( const GpgME::Error& err )
-{
-    assert( err );
-    assert( !err.isCanceled() );
-    const QString msg = i18n( "<qt><p>An error occurred while trying "
-                              "to import the certificate %1:</p>"
-                              "<p><b>%2</b></p></qt>",
-                              files.front(),
-                              QString::fromLocal8Bit( err.asString() ) );
-    KMessageBox::error( view(), msg, i18n( "Certificate Import Failed" ) );
-}
-
 void ImportCertificateFromFileCommand::Private::importResult( const GpgME::ImportResult& result )
 {
     if ( result.error().code() ) {
         if ( result.error().isCanceled() )
             emit q->canceled();
         else
-            showError( result.error() );
+            showError( result.error(), files.front() );
     } else {
-        showDetails( result );
+        showDetails( result, files.front() );
     }
 
     finished();
 }
 
-void ImportCertificateFromFileCommand::Private::startImport( const QByteArray& data )
-{
-    const GpgME::Protocol protocol = findProtocol( files.front() );
-    if ( protocol == GpgME::UnknownProtocol ) { //TODO: might use exceptions here
-        KMessageBox::error( view(), i18n( "Could not determine certificate type of %1.", files.front() ), i18n( "Certificate Import Failed" ) );
-        finished();
-        return;
-    }
-
-    std::auto_ptr<ImportJob> job( CryptoBackendFactory::instance()->protocol( protocol )->importJob() );
-    assert( job.get() );
-    connect( job.get(), SIGNAL(result(GpgME::ImportResult)),
-             q, SLOT(importResult(GpgME::ImportResult)) );
-    connect( job.get(), SIGNAL(progress(QString,int,int)), 
-             q, SIGNAL(progress(QString,int,int)) );
-    if ( const GpgME::Error err = job->start( data ) ) {
-        showError( err );
-        finished();
-    } else if ( err.isCanceled() ) {
-        emit q->canceled();
-        finished();
-    } else {
-        importJob = job.release();
-    }
-}
-
-
-void ImportCertificateFromFileCommand::doCancel()
-{
-    if ( d->importJob )
-        d->importJob->slotCancel();
-}
 
 #undef d
 #undef q

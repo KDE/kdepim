@@ -105,6 +105,7 @@ set( _kleopatra_common_SRCS
 
   dialogs/certificateselectiondialog.cpp
   dialogs/expirydialog.cpp
+  dialogs/lookupcertificatesdialog.cpp
 
   crypto/certificateresolver.cpp
   crypto/task.cpp
@@ -138,6 +139,7 @@ set( _kleopatra_common_SRCS
   commands/command.cpp
   commands/detailscommand.cpp
   commands/exportcertificatecommand.cpp
+  commands/importcertificatescommand.cpp
   commands/importcertificatefromfilecommand.cpp
   commands/refreshkeyscommand.cpp
   commands/deletecertificatescommand.cpp
@@ -164,7 +166,12 @@ if ( KLEO_MODEL_TEST )
  set( _kleopatra_common_SRCS ${_kleopatra_common_SRCS} models/modeltest.cpp )
 endif ( KLEO_MODEL_TEST )
 
-kde4_add_ui_files( _kleopatra_common_SRCS certificateinfowidget.ui certificatewizard.ui dialogs/expirydialog.ui )
+kde4_add_ui_files( _kleopatra_common_SRCS
+  certificateinfowidget.ui
+  certificatewizard.ui
+  dialogs/expirydialog.ui
+  dialogs/lookupcertificatesdialog.ui
+  )
 
 if (ONLY_KLEO)
    add_definitions( -DONLY_KLEO )
