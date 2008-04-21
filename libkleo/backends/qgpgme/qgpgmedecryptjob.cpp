@@ -91,7 +91,7 @@ void Kleo::QGpgMEDecryptJob::start( const boost::shared_ptr<QIODevice> & cipherT
     hookupContextToEventLoopInteractor();
 
     if ( const GpgME::Error err = mCtx->startDecryption( *mInData, *mOutData ) ) {
-        resetDataObjects();
+        resetQIODeviceDataObjects();
         doThrow( err, i18n("Can't start decrypt job") );
     }
 }
@@ -99,9 +99,7 @@ void Kleo::QGpgMEDecryptJob::start( const boost::shared_ptr<QIODevice> & cipherT
 void Kleo::QGpgMEDecryptJob::doOperationDoneEvent( const GpgME::Error & ) {
     const GpgME::DecryptionResult res = mCtx->decryptionResult();
     const QByteArray plainText = outData();
-#ifndef KLEO_SYNCHRONOUS_API_HOTFIX
-    resetDataObjects();
-#endif
+    resetQIODeviceDataObjects();
     emit result( res, plainText );
 }
 

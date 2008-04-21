@@ -133,15 +133,22 @@ void Kleo::QGpgMEJob::checkInvariants() const {
 Kleo::QGpgMEJob::~QGpgMEJob() {
   InvarianceChecker check( this );
   delete mCtx; mCtx = 0;
-  resetDataObjects();
+  delete mOutData; mOutData = 0;
+  delete mOutDataDataProvider; mOutDataDataProvider = 0;
+  delete mInData; mInData = 0;
+  delete mInDataDataProvider; mInDataDataProvider = 0;
   deleteAllPatterns();
 }
 
-void Kleo::QGpgMEJob::resetDataObjects() {
-  delete mInData; mInData = 0;
-  delete mInDataDataProvider; mInDataDataProvider = 0;
-  delete mOutData; mOutData = 0;
-  delete mOutDataDataProvider; mOutDataDataProvider = 0;
+void Kleo::QGpgMEJob::resetQIODeviceDataObjects() {
+    if ( const QGpgME::QByteArrayDataProvider * const dp = dynamic_cast<QGpgME::QByteArrayDataProvider*>( mOutDataDataProvider ) ) {
+        delete mOutData; mOutData = 0;
+        delete mOutDataDataProvider; mOutDataDataProvider = 0;
+    }
+    if ( const QGpgME::QByteArrayDataProvider * const dp = dynamic_cast<QGpgME::QByteArrayDataProvider*>( mInDataDataProvider ) ) {
+        delete mInData; mInData = 0;
+        delete mInDataDataProvider; mInDataDataProvider = 0;
+    }
 }
 
 void Kleo::QGpgMEJob::deleteAllPatterns() {

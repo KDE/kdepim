@@ -106,7 +106,7 @@ void Kleo::QGpgMEEncryptJob::setup( const std::vector<GpgME::Key> & recipients,
   const GpgME::Context::EncryptionFlags flags =
     alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None;
   if ( const GpgME::Error err = mCtx->startEncryption( recipients, *mInData, *mOutData, flags ) ) {
-      resetDataObjects();
+      resetQIODeviceDataObjects();
       doThrow( err, i18n("Can't start encrypt job") );
   }
 }
@@ -133,16 +133,14 @@ GpgME::EncryptionResult Kleo::QGpgMEEncryptJob::exec( const std::vector<GpgME::K
   waitForFinished();
   ciphertext = outData();
   mResult = mCtx->encryptionResult();
-  resetDataObjects();
+  resetQIODeviceDataObjects();
   return mResult;
 }
 
 void Kleo::QGpgMEEncryptJob::doOperationDoneEvent( const GpgME::Error & ) {
   mResult = mCtx->encryptionResult();
   const QByteArray ciphertext = outData();
-#ifndef KLEO_SYNCHRONOUS_API_HOTFIX
-  resetDataObjects();
-#endif
+  resetQIODeviceDataObjects();
   emit result( mResult, ciphertext );
 }
 

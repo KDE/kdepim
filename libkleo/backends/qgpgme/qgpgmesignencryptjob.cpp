@@ -118,7 +118,7 @@ void Kleo::QGpgMESignEncryptJob::setup( const std::vector<GpgME::Key> & signers,
   const GpgME::Context::EncryptionFlags flags =
     alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None ;
   if ( const GpgME::Error err = mCtx->startCombinedSigningAndEncryption( recipients, *mInData, *mOutData, flags ) ) {
-      resetDataObjects();
+      resetQIODeviceDataObjects();
       doThrow( err, i18n("Can't start combined sign-encrypt job") );
   }
 }
@@ -133,7 +133,7 @@ void Kleo::QGpgMESignEncryptJob::start( const std::vector<GpgME::Key> & signers,
     } catch ( const GpgME::Exception & e ) {
         mResult.first = GpgME::SigningResult( e.error() );
         mResult.second = GpgME::EncryptionResult();
-        resetDataObjects();
+        resetQIODeviceDataObjects();
         throw;
     }
 }
@@ -145,7 +145,7 @@ Kleo::QGpgMESignEncryptJob::exec( const std::vector<GpgME::Key> & signers,
 				  QByteArray & cipherText ) {
   if ( const GpgME::Error err = setup( signers, recipients, plainText, alwaysTrust ) ) {
     mResult = std::make_pair( GpgME::SigningResult( err ), GpgME::EncryptionResult() );
-    resetDataObjects();
+    resetQIODeviceDataObjects();
     return mResult;
   }
 
@@ -154,7 +154,7 @@ Kleo::QGpgMESignEncryptJob::exec( const std::vector<GpgME::Key> & signers,
   cipherText = outData();
   mResult.first = mCtx->signingResult();
   mResult.second = mCtx->encryptionResult();
-  resetDataObjects();
+  resetQIODeviceDataObjects();
   return mResult;
 }
 
@@ -162,9 +162,7 @@ void Kleo::QGpgMESignEncryptJob::doOperationDoneEvent( const GpgME::Error & ) {
   mResult.first = mCtx->signingResult();
   mResult.second = mCtx->encryptionResult();
   const QByteArray cipherText = outData();
-#ifndef KLEO_SYNCHRONOUS_API_HOTFIX
-  resetDataObjects();
-#endif
+  resetQIODeviceDataObjects();
   emit result( mResult.first, mResult.second, cipherText );
 }
 

@@ -95,16 +95,14 @@ void Kleo::QGpgMEVerifyDetachedJob::start( const boost::shared_ptr<QIODevice> & 
   hookupContextToEventLoopInteractor();
 
   if ( const GpgME::Error err = mCtx->startDetachedSignatureVerification( *mInData, *mOutData ) ) {
-      resetDataObjects();
+      resetQIODeviceDataObjects();
       doThrow( err, i18n("Can't start detached signature verification") );
   }
 }
 
 void Kleo::QGpgMEVerifyDetachedJob::doOperationDoneEvent( const GpgME::Error & ) {
     const GpgME::VerificationResult vr = mCtx->verificationResult();
-#ifndef KLEO_SYNCHRONOUS_API_HOTFIX
-    resetDataObjects();
-#endif
+    resetQIODeviceDataObjects();
     emit result( vr );
 }
 

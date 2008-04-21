@@ -63,7 +63,7 @@ GpgME::Error Kleo::QGpgMEDownloadJob::start( const QStringList & pats ) {
   const GpgME::Error err = mCtx->startPublicKeyExport( patterns(), *mOutData );
 
   if ( err ) {
-    resetDataObjects();
+    resetQIODeviceDataObjects();
     deleteLater();
   }
   return err;
@@ -83,7 +83,7 @@ GpgME::Error Kleo::QGpgMEDownloadJob::start( const QByteArray & fpr, const boost
   const GpgME::Error err = mCtx->startPublicKeyExport( patterns(), *mOutData );
 
   if ( err ) {
-    resetDataObjects();
+    resetQIODeviceDataObjects();
     deleteLater();
   }
   return err;

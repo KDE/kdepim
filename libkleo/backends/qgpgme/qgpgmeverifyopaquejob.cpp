@@ -91,7 +91,7 @@ void Kleo::QGpgMEVerifyOpaqueJob::start( const boost::shared_ptr<QIODevice> & si
     hookupContextToEventLoopInteractor();
 
     if ( const GpgME::Error err = mCtx->startOpaqueSignatureVerification( *mInData, *mOutData ) ) {
-        resetDataObjects();
+        resetQIODeviceDataObjects();
         doThrow( err, i18n("Can't start opaque signature verification") );
     }
 }
@@ -99,7 +99,7 @@ void Kleo::QGpgMEVerifyOpaqueJob::start( const boost::shared_ptr<QIODevice> & si
 void Kleo::QGpgMEVerifyOpaqueJob::doOperationDoneEvent( const GpgME::Error & ) {
     const GpgME::VerificationResult vr = mCtx->verificationResult();
     const QByteArray plainText = outData();
-    resetDataObjects();
+    resetQIODeviceDataObjects();
     emit result( vr, plainText );
 }
 

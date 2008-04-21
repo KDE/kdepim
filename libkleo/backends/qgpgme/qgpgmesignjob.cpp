@@ -114,7 +114,7 @@ void Kleo::QGpgMESignJob::setup( const std::vector<GpgME::Key> & signers,
     hookupContextToEventLoopInteractor();
 
     if ( const GpgME::Error err = mCtx->startSigning( *mInData, *mOutData, mode ) ) {
-        resetDataObjects();
+        resetQIODeviceDataObjects();
         doThrow( err, i18n("Can't start sign job") );
     }
 }
@@ -143,16 +143,14 @@ GpgME::SigningResult Kleo::QGpgMESignJob::exec( const std::vector<GpgME::Key> & 
 
   signature = outData();
   mResult = mCtx->signingResult();
-  resetDataObjects();
+  resetQIODeviceDataObjects();
   return mResult;
 }
 
 void Kleo::QGpgMESignJob::doOperationDoneEvent( const GpgME::Error & ) {
   mResult = mCtx->signingResult();
   const QByteArray cipherText = outData();
-#ifndef KLEO_SYNCHRONOUS_API_HOTFIX
-  resetDataObjects();
-#endif
+  resetQIODeviceDataObjects();
   emit result( mResult, cipherText );
 }
 
