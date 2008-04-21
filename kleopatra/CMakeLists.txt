@@ -146,6 +146,7 @@ set( _kleopatra_common_SRCS
   commands/exportcertificatecommand.cpp
   commands/importcertificatescommand.cpp
   commands/importcertificatefromfilecommand.cpp
+  commands/lookupcertificatescommand.cpp
   commands/refreshkeyscommand.cpp
   commands/deletecertificatescommand.cpp
   commands/decryptverifyfilescommand.cpp
