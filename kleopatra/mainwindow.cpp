@@ -45,6 +45,7 @@
 
 #include "commands/exportcertificatecommand.h"
 #include "commands/importcertificatefromfilecommand.h"
+#include "commands/lookupcertificatescommand.h"
 #include "commands/refreshkeyscommand.h"
 #include "commands/detailscommand.h"
 #include "commands/deletecertificatescommand.h"
@@ -195,6 +196,9 @@ public:
     }
     void importCertificatesFromFile() {
         createAndStart<ImportCertificateFromFileCommand>();
+    }
+    void lookupCertificates() {
+        createAndStart<LookupCertificatesCommand>();
     }
     void clearCrlCache() {
         createAndStart<ClearCrlCacheCommand>();
@@ -355,6 +359,8 @@ void MainWindow::Private::setupActions() {
           "document-new", q, SLOT(newCertificate()), "Ctrl+N", false, true },
         { "file_export_certificates", i18n("Export Certificates..."), QString(),
           "document-export", q, SLOT(exportCertificates()), "Ctrl+E", false, true },
+        { "file_lookup_certificates", i18n("Lookup Certificates on Server..."), QString(),
+          "edit-find", q, SLOT(lookupCertificates()), "Shift+Ctrl+I", false, true },
         { "file_import_certificates", i18n("Import Certificates..."), QString(),
           "document-import", q, SLOT(importCertificatesFromFile()), "Ctrl+I", false, true },
         { "file_decrypt_verify_files", i18n("Decrypt/Verify Files..."), QString(),
