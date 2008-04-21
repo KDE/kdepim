@@ -307,7 +307,7 @@ KAboutData *KABCore::createAboutData()
                     "mpilone@slac.com" );
   about->addAuthor( ki18n("Greg Stern"), ki18n( "DCOP interface" ) );
   about->addAuthor( ki18n("Mark Westcott"), ki18n( "Contact pinning" ) );
-  about->addAuthor( ki18n("Mischel Boyer de la Giroday"), ki18n( "LDAP Lookup" ),
+  about->addAuthor( ki18n("Michel Boyer de la Giroday"), ki18n( "LDAP Lookup" ),
                     "michel@klaralvdalens-datakonsult.se" );
   about->addAuthor( ki18n("Steffen Hansen"), ki18n( "LDAP Lookup" ),
                     "hansen@kde.org" );
