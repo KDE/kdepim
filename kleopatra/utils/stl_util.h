@@ -23,8 +23,11 @@
 #define __KDTOOLSCORE_STL_UTIL_H__
 
 #include <algorithm>
+#include <numeric>
+#include <utility>
 
 #include <boost/range.hpp>
+#include <boost/iterator/filter_iterator.hpp>
 
 namespace kdtools {
 
@@ -38,6 +41,34 @@ namespace kdtools {
 	    ++first;
 	}
 	return dest;
+    }
+
+    template <typename OutputIterator, typename InputIterator, typename UnaryFunction, typename UnaryPredicate>
+    OutputIterator transform_if( InputIterator first, InputIterator last, OutputIterator dest, UnaryPredicate pred, UnaryFunction filter ) {
+        return std::transform( boost::make_filter_iterator( filter, first, last ),
+                               boost::make_filter_iterator( filter, last,  last ),
+                               dest, pred );
+    }
+
+    template <typename Value, typename InputIterator, typename UnaryPredicate>
+    Value accumulate_if( InputIterator first, InputIterator last, UnaryPredicate filter, const Value & value=Value() ) {
+        return std::accumulate( boost::make_filter_iterator( filter, first, last ),
+                                boost::make_filter_iterator( filter, last,  last ), value );
+    }
+
+    template <typename InputIterator, typename OutputIterator1, typename OutputIterator2, typename UnaryPredicate>
+    std::pair<OutputIterator1,OutputIterator2> separate_if( InputIterator first, InputIterator last, OutputIterator1 dest1, OutputIterator2 dest2, UnaryPredicate pred ) {
+        while ( first != last ) {
+            if ( pred( *first ) ) {
+                *dest1 = *first;
+                ++dest1;
+            } else {
+                *dest2 = *first;
+                ++dest2;
+            }
+            ++first;
+        }
+        return std::make_pair( dest1, dest2 );
     }
 
     template <typename InputIterator>
@@ -167,6 +198,19 @@ namespace kdtools {
         return o;
     }
 
+    template <typename O, typename I, typename P, typename F>
+    O transform_if( const I & i, P p, F f ) {
+        O o;
+        transform_if( boost::begin( i ), boost::end( i ),
+                      std::back_inserter( o ), p, f );
+        return o;
+    }
+
+    template <typename V, typename I, typename F>
+    V accumulate_if( const I & i, F f, V v=V() ) {
+        return accumulate_if( boost::begin( i ), boost::end( i ), f, v );
+    }
+
     template <typename O, typename I>
     O copy( const I & i ) {
         O o;
@@ -187,6 +231,27 @@ namespace kdtools {
     }
 
     //@}
+
+    template <typename C>
+    bool any( const C & c ) {
+        return any( boost::begin( c ), boost::end( c ) );
+    }
+
+    template <typename C, typename P>
+    bool any( const C & c, P p ) {
+        return any( boost::begin( c ), boost::end( c ), p );
+    }
+
+    template <typename C>
+    bool all( const C & c ) {
+        return all( boost::begin( c ), boost::end( c ) );
+    }
+
+    template <typename C, typename P>
+    bool all( const C & c, P p ) {
+        return all( boost::begin( c ), boost::end( c ), p );
+    }
+
 }
 
 #endif /* __KDTOOLSCORE_STL_UTIL_H__ */
