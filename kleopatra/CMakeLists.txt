@@ -189,20 +189,6 @@ set( _kleopatra_mainwindow_SRCS
      mainwindow.cpp 
 )
 
-if ( KLEO_BUILD_OLD_MAINWINDOW )
-  add_definitions( -DKLEO_BUILD_OLD_MAINWINDOW )
-  add_subdirectory( kwatchgnupg )
-
-  set( _kleopatra_mainwindow_SRCS
-    ${libconf_SRCS}
-    customactions.cpp
-    certmanager.cpp
-    hierarchyanalyser.cpp
-    crlview.cpp
-    certlistview.cpp )
-
-endif ( KLEO_BUILD_OLD_MAINWINDOW )
-
 add_definitions ( -DKDE_DEFAULT_DEBUG_AREA=5151 )
 
 
@@ -210,15 +196,7 @@ kde4_add_app_icon(_kleopatra_mainwindow_SRCS "ox*-app-kleopatra.png")
 kde4_add_executable(kleopatra_bin ${_kleopatra_common_SRCS} ${_kleopatra_mainwindow_SRCS} ${_kleopatra_uiserver_SRCS} )
 set_target_properties(kleopatra_bin  PROPERTIES OUTPUT_NAME kleopatra)
 
-if ( KLEO_BUILD_OLD_MAINWINDOW )
-  if ( ONLY_KLEO )
-    set( _kleopatra_extra_libs ${KDE4_KDE3SUPPORT_LIBS} )
-  else ( ONLY_KLEO )
-    set( _kleopatra_extra_libs ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_KABC_LIBS} )
-  endif ( ONLY_KLEO )
-else ( KLEO_BUILD_OLD_MAINWINDOW )
-  set( _kleopatra_extra_libs ${QT_QT3SUPPORT_LIBRARY} )
-endif ( KLEO_BUILD_OLD_MAINWINDOW )
+set( _kleopatra_extra_libs ${QT_QT3SUPPORT_LIBRARY} )
 
 if ( NOT KDE4_KCMUTILS_LIBS )
   set( KDE4_KCMUTILS_LIBS ${KDE4_KUTILS_LIBS} )
