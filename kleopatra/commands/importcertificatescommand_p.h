@@ -58,10 +58,16 @@ public:
     explicit Private( ImportCertificatesCommand * qq, KeyListController * c );
     ~Private();
 
-    void startImport( GpgME::Protocol proto, const QByteArray & data, const QString & id );
+    void startImport( GpgME::Protocol proto, const QByteArray & data, const QString & id=QString() );
     void importResult( const GpgME::ImportResult & );
-    void showError( const GpgME::Error & error, const QString & id=QString() );
-    void showDetails( const GpgME::ImportResult & result, const QString & id=QString() );
+    void showError( QWidget * parent, const GpgME::Error & error, const QString & id=QString() );
+    void showError( const GpgME::Error & error, const QString & id=QString() ) {
+        showError( view(), error, id );
+    }
+    void showDetails( QWidget * parent, const GpgME::ImportResult & result, const QString & id=QString() );
+    void showDetails( const GpgME::ImportResult & result, const QString & id=QString() ) {
+        showDetails( view(), result, id );
+    }
 
 private:
     QPointer<Kleo::ImportJob> cmsImportJob, pgpImportJob;

@@ -85,7 +85,7 @@ ImportCertificatesCommand::ImportCertificatesCommand( QAbstractItemView * v, Key
 
 ImportCertificatesCommand::~ImportCertificatesCommand() {}
 
-void ImportCertificatesCommand::Private::showDetails( const ImportResult & res, const QString & id ) {
+void ImportCertificatesCommand::Private::showDetails( QWidget * parent, const ImportResult & res, const QString & id ) {
     // ### TODO: make a keylisting over Import::fingerprints(), then
     // ### highlight imported certificates in view(), or maybe in a new tab?
 
@@ -133,7 +133,7 @@ void ImportCertificatesCommand::Private::showDetails( const ImportResult & res, 
         lines.push_back( normalLine.subs( i18n("Secret keys unchanged:") )
                          .subs( res.numSecretKeysUnchanged() ).toString() );
     
-    KMessageBox::information( view(),
+    KMessageBox::information( parent,
                               id.isEmpty()
                               ? i18n( "<qt><p>Detailed results of certificate import:</p>"
                                       "<table>%1</table></qt>",
@@ -144,7 +144,7 @@ void ImportCertificatesCommand::Private::showDetails( const ImportResult & res, 
                               i18n( "Certificate Import Result" ) );
 }
 
-void ImportCertificatesCommand::Private::showError( const Error & err, const QString & id ) {
+void ImportCertificatesCommand::Private::showError( QWidget * parent, const Error & err, const QString & id ) {
     assert( err );
     assert( !err.isCanceled() );
     const QString msg = id.isEmpty()
@@ -156,7 +156,7 @@ void ImportCertificatesCommand::Private::showError( const Error & err, const QSt
                 "to import the certificate %1:</p>"
                 "<p><b>%2</b></p></qt>",
                 id, QString::fromLocal8Bit( err.asString() ) );
-    KMessageBox::error( view(), msg, i18n( "Certificate Import Failed" ) );
+    KMessageBox::error( parent, msg, i18n( "Certificate Import Failed" ) );
 }
 
 void ImportCertificatesCommand::Private::importResult( const ImportResult & result ) {
