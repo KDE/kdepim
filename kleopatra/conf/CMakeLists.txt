@@ -1,4 +1,4 @@
-include_directories( ${CMAKE_SOURCE_DIR}/kleopatra ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${CMAKE_SOURCE_DIR}/kleopatra/interfaces)
+include_directories( ${CMAKE_SOURCE_DIR}/kleopatra ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
 
 if ( ONLY_KLEO )
   add_definitions( -DONLY_KLEO )
@@ -26,11 +26,12 @@ kde4_add_ui_files( kcm_kleopatra_PART_SRCS
   smimevalidationconfigurationwidget.ui
   )
 
+kde4_add_kcfg_files( kcm_kleopatra_PART_SRCS ${CMAKE_SOURCE_DIR}/kleopatra/common/kleopatraprefs.kcfgc )
 kde4_add_plugin(kcm_kleopatra ${kcm_kleopatra_PART_SRCS})
 
 
 
-target_link_libraries(kcm_kleopatra ${KDE4_KDEUI_LIBS} kleo kleopatrainterfaces )
+target_link_libraries(kcm_kleopatra ${KDE4_KDEUI_LIBS} kleo )
 
 install(TARGETS kcm_kleopatra  DESTINATION ${PLUGIN_INSTALL_DIR})
 
