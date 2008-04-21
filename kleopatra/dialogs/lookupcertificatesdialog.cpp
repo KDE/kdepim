@@ -124,10 +124,8 @@ private:
             resultTV->setHeader( hv );
             adjust_header( hv );
 
-            connect( resultTV,   SIGNAL(itemDoubleClicked(QModelIndex)),
+            connect( resultTV,   SIGNAL(doubleClicked(QModelIndex)),
                      importPB(), SLOT(animateClick()) );
-            connect( resultTV->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-                     q, SLOT(slotSelectionChanged()) );
 
             findED->setFocus();
         }
@@ -149,6 +147,9 @@ LookupCertificatesDialog::Private::Private( LookupCertificatesDialog * qq )
 
     proxy.setSourceModel( model );
     ui.resultTV->setModel( &proxy );
+
+    connect( ui.resultTV->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
+             q, SLOT(slotSelectionChanged()) );
 
     enableDisableWidgets();
 }
