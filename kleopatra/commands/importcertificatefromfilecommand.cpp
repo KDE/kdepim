@@ -202,3 +202,4 @@ void ImportCertificateFromFileCommand::Private::importResult( const GpgME::Impor
 
 #include "moc_importcertificatefromfilecommand.cpp"
 
+

@@ -74,3 +74,4 @@ inline Kleo::ImportCertificatesCommand::ImportCertificatesCommand( Private * pp 
 inline Kleo::ImportCertificatesCommand::ImportCertificatesCommand( QAbstractItemView * v, Private * pp ) : Command( v, pp ) {}
 
 #endif /* __KLEOPATRA_IMPORTCERTIFICATESCOMMAND_P_H__ */
+
