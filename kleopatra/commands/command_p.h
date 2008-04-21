@@ -57,6 +57,7 @@ public:
 
     QAbstractItemView * view() const { return view_; }
     KeyListModelInterface * model() const { return view_ ? dynamic_cast<KeyListModelInterface*>( view_->model() ) : 0 ; }
+    KeyListController * controller() const { return controller_; }
     QList<QModelIndex> indexes() const {
         QList<QModelIndex> result;
         std::copy( indexes_.begin(), indexes_.end(), std::back_inserter( result ) );
