@@ -107,7 +107,7 @@ private:
     }
     void startKeyListJob( GpgME::Protocol proto, const QString & str );
     void startDownloadJob( const Key & key );
-    void checkForDownloadFinsished();
+    void checkForDownloadFinished();
 
     QWidget * dialogOrView() const { if ( dialog ) return dialog; else return view(); }
 
@@ -144,6 +144,7 @@ LookupCertificatesCommand::Private::Private( LookupCertificatesCommand * qq, Key
 }
 
 LookupCertificatesCommand::Private::~Private() {
+    kDebug();
     delete dialog;
 }
 
@@ -163,7 +164,7 @@ void LookupCertificatesCommand::Private::init() {
 
 }
 
-LookupCertificatesCommand::~LookupCertificatesCommand() {}
+LookupCertificatesCommand::~LookupCertificatesCommand() { kDebug(); }
 
 
 void LookupCertificatesCommand::doStart() {
@@ -305,7 +306,7 @@ void LookupCertificatesCommand::Private::slotOpenPGPDownloadResult( const GpgME:
     it->job = 0;
     it->error = err;
 
-    checkForDownloadFinsished();
+    checkForDownloadFinished();
 }
 
 void LookupCertificatesCommand::Private::slotCMSDownloadResult( const GpgME::Error & err, const QByteArray & keyData ) {
@@ -319,10 +320,10 @@ void LookupCertificatesCommand::Private::slotCMSDownloadResult( const GpgME::Err
     it->job = 0;
     it->error = err;
 
-    checkForDownloadFinsished();
+    checkForDownloadFinished();
 }
 
-void LookupCertificatesCommand::Private::checkForDownloadFinsished() {
+void LookupCertificatesCommand::Private::checkForDownloadFinished() {
 
     if ( kdtools::any( downloads, mem_fn( &DownloadVariables::job ) ) )
         return; // still jobs to end
@@ -353,8 +354,10 @@ void LookupCertificatesCommand::Private::checkForDownloadFinsished() {
     const QByteArray cms = cmsDownloadData;//combined_nonfailed_data( CMS,     downloads );
     const QByteArray pgp = openPGPDownloadData;//combined_nonfailed_data( OpenPGP, downloads );
 
-    startImport( CMS,     cms );
-    startImport( OpenPGP, pgp );
+    if ( !cms.isEmpty() )
+        startImport( CMS,     cms );
+    if ( !pgp.isEmpty() )
+        startImport( OpenPGP, pgp );
 }
 
 void LookupCertificatesCommand::Private::slotSaveAsRequested( const std::vector<Key> & keys ) {
