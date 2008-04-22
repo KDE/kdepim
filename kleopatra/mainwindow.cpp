@@ -153,6 +153,10 @@ public:
     void createAndStart() {
         ( new T( this->currentView(), &this->controller ) )->start();
     }
+    template <typename T>
+    void createAndStart( QAbstractItemView * view ) {
+        ( new T( view, &this->controller ) )->start();
+    }
     template <typename T, typename A>
     void createAndStart( const A & a ) {
         ( new T( a, this->currentView(), &this->controller ) )->start();
@@ -195,10 +199,10 @@ public:
         createAndStart<ExportCertificateCommand>();
     }
     void importCertificatesFromFile() {
-        createAndStart<ImportCertificateFromFileCommand>();
+        createAndStart<ImportCertificateFromFileCommand>( ui.tabWidget.addTemporaryView( i18n("Imported Certificates") ) );
     }
     void lookupCertificates() {
-        createAndStart<LookupCertificatesCommand>();
+        createAndStart<LookupCertificatesCommand>( ui.tabWidget.addTemporaryView( i18n("Imported Certificates" ) ) );
     }
     void clearCrlCache() {
         createAndStart<ClearCrlCacheCommand>();
@@ -404,6 +408,7 @@ void MainWindow::Private::setupActions() {
     controller.registerActionForCommand<SignEncryptFilesCommand>(   coll->action( "file_sign_encrypt_files" ) );
     controller.registerActionForCommand<ExportCertificateCommand>(  coll->action( "file_export_certificates" ) );
     controller.registerActionForCommand<ImportCertificateFromFileCommand>(  coll->action( "file_import_certificates" ) );
+    controller.registerActionForCommand<LookupCertificatesCommand>( coll->action( "file_lookup_certificates" ) );
     controller.registerActionForCommand<ClearCrlCacheCommand>(      coll->action( "crl_clear_crl_cache" ) );
     controller.registerActionForCommand<DumpCrlCacheCommand>(       coll->action( "crl_dump_crl_cache" ) );
     controller.registerActionForCommand<ImportCrlCommand>(          coll->action( "crl_import_crl" ) );
