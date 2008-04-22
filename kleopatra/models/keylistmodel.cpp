@@ -678,8 +678,7 @@ QList<QModelIndex> HierarchicalKeyListModel::doAddKeys( const std::vector<Key> &
     
                 lastFP = qBinaryFind( lastFP, mKeysByFingerprint.end(), k, _detail::ByFingerprint<std::less>() );
                 assert( lastFP != mKeysByFingerprint.end() );
-                const int fpRow = std::distance( mKeysByFingerprint.begin(), lastFP );
-    
+
                 emit rowAboutToBeMoved( QModelIndex(), row );
                 beginRemoveRows( QModelIndex(), row, row );
                 last = mTopLevels.erase( last );
