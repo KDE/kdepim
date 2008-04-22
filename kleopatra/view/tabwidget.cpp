@@ -90,6 +90,9 @@ public:
     void setFlatModel( AbstractKeyListModel * model );
     void setHierarchicalModel( AbstractKeyListModel * model );
 
+    void setTemporary( bool temporary );
+    bool isTemporary() const { return m_isTemporary; }
+
     void setHierarchical( bool hierarchical );
     bool isHierarchical() const { return m_isHierarchical; }
 
@@ -105,7 +108,7 @@ public:
     bool canBeClosed() const { return m_canBeClosed; }
     bool canBeRenamed() const { return m_canBeRenamed; }
     bool canChangeStringFilter() const { return m_canChangeStringFilter; }
-    bool canChangeKeyFilter() const { return m_canChangeKeyFilter; }
+    bool canChangeKeyFilter() const { return m_canChangeKeyFilter && !m_isTemporary; }
     bool canChangeHierarchical() const { return m_canChangeHierarchical; }
 
     void saveTo( KConfigGroup & group ) const;
@@ -141,6 +144,7 @@ private:
     shared_ptr<KeyFilter> m_keyFilter;
     QString m_title;
     bool m_isHierarchical : 1;
+    bool m_isTemporary : 1;
     bool m_canBeClosed : 1;
     bool m_canBeRenamed : 1;
     bool m_canChangeStringFilter : 1;
@@ -159,6 +163,7 @@ Page::Page( const Page & other )
       m_keyFilter( other.m_keyFilter ),
       m_title( other.m_title ),
       m_isHierarchical( other.m_isHierarchical ),
+      m_isTemporary( other.m_isTemporary ),
       m_canBeClosed( other.m_canBeClosed ),
       m_canBeRenamed( other.m_canBeRenamed ),
       m_canChangeStringFilter( other.m_canChangeStringFilter ),
@@ -178,6 +183,7 @@ Page::Page( const QString & title, const QString & id, const QString & text, QWi
       m_keyFilter( KeyFilterManager::instance()->keyFilterByID( id ) ),
       m_title( title ),
       m_isHierarchical( true ),
+      m_isTemporary( false ),
       m_canBeClosed( true ),
       m_canBeRenamed( true ),
       m_canChangeStringFilter( true ),
@@ -203,6 +209,7 @@ Page::Page( const KConfigGroup & group, QWidget * parent )
       m_keyFilter( KeyFilterManager::instance()->keyFilterByID( group.readEntry( KEY_FILTER_ENTRY ) ) ),
       m_title( group.readEntry( TITLE_ENTRY ) ),
       m_isHierarchical( group.readEntry( HIERARCHICAL_VIEW_ENTRY, true ) ),
+      m_isTemporary( false ),
       m_canBeClosed( !group.isImmutable() ),
       m_canBeRenamed( !group.isEntryImmutable( TITLE_ENTRY ) ),
       m_canChangeStringFilter( !group.isEntryImmutable( STRING_FILTER_ENTRY ) ),
@@ -348,6 +355,16 @@ void Page::setHierarchical( bool on ) {
         }
     }
     emit hierarchicalChanged( on );
+}
+
+void Page::setTemporary( bool on ) {
+    if ( on == m_isTemporary )
+        return;
+    m_isTemporary = on;
+    if ( on && m_keyFilter ) {
+        m_keyFilter.reset();
+        emit keyFilterChanged( shared_ptr<KeyFilter>() );
+    }
 }
 
 //
@@ -767,6 +784,12 @@ QAbstractItemView * TabWidget::addView( const KConfigGroup & group ) {
     return d->addView( new Page( group ) );
 }
 
+QAbstractItemView * TabWidget::addTemporaryView( const QString & title ) {
+    Page * const page = new Page( title, QString(), QString() );
+    page->setTemporary( true );
+    return d->addView( page );
+}
+
 QTreeView * TabWidget::Private::addView( Page * page ) {
     if ( !page )
         return 0;
@@ -817,9 +840,12 @@ void TabWidget::saveViews( KConfig * config ) const {
         return;
     Q_FOREACH( QString group, extractViewGroups( config ) )
         config->deleteGroup( group );
+    unsigned int vg = 0;
     for ( unsigned int i = 0, end = count() ; i != end ; ++i ) {
         if ( const Page * const p = d->page( i ) ) {
-            KConfigGroup group( config, QString().sprintf( "View #%u", i ) );
+            if ( p->isTemporary() )
+                continue;
+            KConfigGroup group( config, QString().sprintf( "View #%u", vg++ ) );
             p->saveTo( group );
         }
     }
