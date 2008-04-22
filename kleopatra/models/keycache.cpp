@@ -2,7 +2,7 @@
     models/keycache.cpp
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2007,2008 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -37,6 +37,8 @@
 
 #include "predicates.h"
 
+#include "smimevalidationpreferences.h"
+
 #include <utils/filesystemwatcher.h>
 #include <utils/stl_util.h>
 
@@ -70,6 +72,7 @@ using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
 
+static const unsigned int hours2ms = 1000 * 60 * 60;
 
 //
 //
@@ -108,6 +111,7 @@ class KeyCache::Private {
 public:
     explicit Private( KeyCache * qq ) : q( qq ) {
         connect( &m_autoKeyListingTimer, SIGNAL( timeout() ), q, SLOT( startKeyListing() ) );
+        updateAutoKeyListingTimer();
     }
 
     template < template <template <typename U> class Op> class Comp >
@@ -149,11 +153,22 @@ public:
 
     void refreshJobDone( const KeyListResult & result );
 
+
+    void updateAutoKeyListingTimer() {
+        setAutoKeyListingInterval( hours2ms * SMimeValidationPreferences().refreshInterval() );
+    }
+    void setAutoKeyListingInterval( int ms ) {
+        m_autoKeyListingTimer.stop();
+        m_autoKeyListingTimer.setInterval( ms );
+        if ( ms != 0 )
+            m_autoKeyListingTimer.start();
+    }
+
+private:
     QPointer<RefreshKeysJob> m_refreshJob;
     std::vector<shared_ptr<FileSystemWatcher> > m_fsWatchers;
     QTimer m_autoKeyListingTimer;
 
-private:
     struct By {
         std::vector<Key> fpr, keyid, shortkeyid, chainid;
         std::vector< std::pair<std::string,Key> > email;
@@ -188,8 +203,9 @@ void KeyCache::startKeyListing()
 {
     if ( d->m_refreshJob )
         return;
-    if ( d->m_autoKeyListingTimer.isActive() )
-        d->m_autoKeyListingTimer.start(); //restart timer
+
+    d->updateAutoKeyListingTimer();
+
     Q_FOREACH( const shared_ptr<FileSystemWatcher>& i, d->m_fsWatchers )
         i->setEnabled( false );
     d->m_refreshJob = new RefreshKeysJob( this );
@@ -647,20 +663,6 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
 
 void KeyCache::clear() {
     d->by = Private::By();
-}
-
-int KeyCache::autoKeyListingInterval() const
-{
-    return d->m_autoKeyListingTimer.interval();
-}
-
-void KeyCache::setAutoKeyListingInterval( int ms )
-{
-    d->m_autoKeyListingTimer.setInterval( ms );
-    if ( ms == 0 )
-        d->m_autoKeyListingTimer.stop();
-    else
-        d->m_autoKeyListingTimer.start();
 }
 
 //

@@ -244,7 +244,6 @@ int main( int argc, char** argv )
   watcher->addPaths( watchList() );
   watcher->setDelay( 1000 );
   keyCache->addFileSystemWatcher( watcher );
-  keyCache->setAutoKeyListingInterval( 2 * 60 * 60 * 1000 ); //2h
   setupLogging();
     
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
