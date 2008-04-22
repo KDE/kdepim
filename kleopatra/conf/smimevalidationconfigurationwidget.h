@@ -46,13 +46,18 @@ namespace Config {
         explicit SMimeValidationConfigurationWidget( QWidget * parent=0, Qt::WindowFlags f=0 );
         ~SMimeValidationConfigurationWidget();
 
+    public Q_SLOTS:
         void load();
         void save() const;
         void defaults();
 
+    Q_SIGNALS:
+        void changed();
+
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
+        Q_PRIVATE_SLOT( d, void enableDisableActions() )
     };
 
 }    

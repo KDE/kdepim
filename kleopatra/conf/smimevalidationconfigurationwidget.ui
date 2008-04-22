@@ -5,11 +5,63 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>501</width>
-    <height>535</height>
+    <width>502</width>
+    <height>572</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" >
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout" >
+     <item>
+      <widget class="QCheckBox" name="intervalRefreshCB" >
+       <property name="whatsThis" >
+        <string>This option enables interval checking of certificate validity. You can also choose the checking interval (in hours). Note that validation is perfomed implicitly whenever significant files in ~/.gnupg change. This option therefore only affects external factors of certificate validity.</string>
+       </property>
+       <property name="text" >
+        <string>Check certificate validity every</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QSpinBox" name="intervalRefreshSB" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="whatsThis" >
+        <string>This option enables interval checking of certificate validity. You can also choose the checking interval (in hours). Note that validation is perfomed implicitly whenever significant files in ~/.gnupg change. This option therefore only affects external factors of certificate validity.</string>
+       </property>
+       <property name="alignment" >
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+       <property name="specialValueText" >
+        <string>hour</string>
+       </property>
+       <property name="suffix" >
+        <string> hours</string>
+       </property>
+       <property name="minimum" >
+        <number>1</number>
+       </property>
+       <property name="maximum" >
+        <number>24</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="horizontalSpacer" >
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0" >
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
    <item>
     <widget class="QRadioButton" name="CRLRB" >
      <property name="whatsThis" >
@@ -115,6 +167,14 @@
    <item>
     <widget class="QTabWidget" name="requestsTabs" >
      <widget class="QWidget" name="tabHTTP" >
+      <property name="geometry" >
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>480</width>
+        <height>158</height>
+       </rect>
+      </property>
       <attribute name="title" >
        <string>&amp;HTTP Requests</string>
       </attribute>
@@ -178,7 +238,7 @@
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0" >
           <size>
            <width>320</width>
            <height>16</height>
@@ -189,6 +249,14 @@
       </layout>
      </widget>
      <widget class="QWidget" name="tabLDAP" >
+      <property name="geometry" >
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>480</width>
+        <height>158</height>
+       </rect>
+      </property>
       <attribute name="title" >
        <string>&amp;LDAP Requests</string>
       </attribute>
@@ -236,7 +304,7 @@ The syntax is "HOST" or "HOST:PORT". If PORT is omitted, port 389 (standard LDAP
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0" >
           <size>
            <width>320</width>
            <height>16</height>
@@ -280,12 +348,12 @@ The syntax is "HOST" or "HOST:PORT". If PORT is omitted, port 389 (standard LDAP
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>33</x>
-     <y>405</y>
+     <x>44</x>
+     <y>542</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>270</x>
-     <y>406</y>
+     <x>481</x>
+     <y>542</y>
     </hint>
    </hints>
   </connection>
@@ -296,12 +364,12 @@ The syntax is "HOST" or "HOST:PORT". If PORT is omitted, port 389 (standard LDAP
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>179</x>
-     <y>358</y>
+     <x>190</x>
+     <y>440</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>177</x>
-     <y>374</y>
+     <x>188</x>
+     <y>471</y>
     </hint>
    </hints>
   </connection>
@@ -312,12 +380,12 @@ The syntax is "HOST" or "HOST:PORT". If PORT is omitted, port 389 (standard LDAP
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>125</x>
-     <y>362</y>
+     <x>136</x>
+     <y>440</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>135</x>
-     <y>398</y>
+     <x>146</x>
+     <y>508</y>
     </hint>
    </hints>
   </connection>
@@ -328,12 +396,12 @@ The syntax is "HOST" or "HOST:PORT". If PORT is omitted, port 389 (standard LDAP
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>317</x>
-     <y>360</y>
+     <x>328</x>
+     <y>440</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>323</x>
-     <y>394</y>
+     <x>481</x>
+     <y>508</y>
     </hint>
    </hints>
   </connection>
@@ -344,12 +412,12 @@ The syntax is "HOST" or "HOST:PORT". If PORT is omitted, port 389 (standard LDAP
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>327</x>
-     <y>360</y>
+     <x>338</x>
+     <y>440</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>327</x>
-     <y>370</y>
+     <x>338</x>
+     <y>471</y>
     </hint>
    </hints>
   </connection>
@@ -360,12 +428,12 @@ The syntax is "HOST" or "HOST:PORT". If PORT is omitted, port 389 (standard LDAP
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>105</x>
-     <y>358</y>
+     <x>116</x>
+     <y>440</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>115</x>
-     <y>396</y>
+     <x>126</x>
+     <y>507</y>
     </hint>
    </hints>
   </connection>
@@ -376,12 +444,28 @@ The syntax is "HOST" or "HOST:PORT". If PORT is omitted, port 389 (standard LDAP
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>81</x>
-     <y>362</y>
+     <x>92</x>
+     <y>440</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>87</x>
-     <y>402</y>
+     <x>98</x>
+     <y>542</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>intervalRefreshCB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>intervalRefreshSB</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>282</x>
+     <y>243</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>334</x>
+     <y>245</y>
     </hint>
    </hints>
   </connection>

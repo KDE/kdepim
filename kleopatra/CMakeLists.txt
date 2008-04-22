@@ -178,7 +178,10 @@ kde4_add_ui_files( _kleopatra_common_SRCS
   dialogs/expirydialog.ui
   dialogs/lookupcertificatesdialog.ui
   )
-kde4_add_kcfg_files( _kleopatra_common_SRCS common/kleopatraprefs.kcfgc )
+kde4_add_kcfg_files( _kleopatra_common_SRCS
+  common/kleopatraprefs.kcfgc
+  common/smimevalidationpreferences.kcfgc
+  )
 
 
 if (ONLY_KLEO)

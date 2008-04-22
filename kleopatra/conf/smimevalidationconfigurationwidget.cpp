@@ -36,6 +36,8 @@
 
 #include "ui_smimevalidationconfigurationwidget.h"
 
+#include "smimevalidationpreferences.h"
+
 #include <kleo/cryptoconfig.h>
 #include <kleo/cryptobackendfactory.h>
 
@@ -77,6 +79,8 @@ private:
                 QObject * object;
                 const char * signal;
             } sources[] = {
+                { intervalRefreshCB, SIGNAL(toggled(bool)) },
+                { intervalRefreshSB, SIGNAL(valueChanged(int)) },
                 { CRLRB, SIGNAL(toggled(bool)) },
                 { OCSPRB, SIGNAL(toggled(bool)) },
                 { OCSPResponderURL, SIGNAL(textChanged(QString)) },
@@ -190,6 +194,11 @@ void SMimeValidationConfigurationWidget::defaults() {
 }
 
 void SMimeValidationConfigurationWidget::load() {
+    const SMimeValidationPreferences preferences;
+    const unsigned int refreshInterval = preferences.refreshInterval();
+    d->ui.intervalRefreshCB->setChecked( refreshInterval > 0 );
+    d->ui.intervalRefreshSB->setValue( refreshInterval );
+
     CryptoConfig * const config = CryptoBackendFactory::instance()->config();
     if ( !config ) {
         setEnabled( false );
@@ -270,6 +279,12 @@ void SMimeValidationConfigurationWidget::save() const {
     if ( !config )
         return;
 
+    {
+        SMimeValidationPreferences preferences;
+        preferences.setRefreshInterval( d->ui.intervalRefreshCB->isChecked() ? d->ui.intervalRefreshSB->value() : 0 );
+        preferences.writeConfig();
+    }
+
     // Create config entries
     // Don't keep them around, they'll get deleted by clear(), which could be done by the
     // "configure backend" button.
@@ -335,3 +350,6 @@ CryptoConfigEntry * SMIMECryptoConfigEntries::configEntry( const char * componen
     }
     return entry;
 }
+
+
+#include "moc_smimevalidationconfigurationwidget.cpp"
