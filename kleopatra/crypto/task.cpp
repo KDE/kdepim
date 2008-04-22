@@ -109,7 +109,7 @@ int Task::totalSize() const
 
 QString Task::progressLabel() const
 {
-    d->m_progressLabel;
+    return d->m_progressLabel;
 }
 
 void Task::setProgress( const QString & label, int processed, int total )
