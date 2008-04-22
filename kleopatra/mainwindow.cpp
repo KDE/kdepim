@@ -252,31 +252,6 @@ private:
 
     QPointer<ConfigureDialog> configureDialog;
 
-    struct Actions {
-        QAction * check_configuration;
-        QAction * configure_backend;
-
-        explicit Actions( MainWindow * q )
-            : check_configuration( new KAction( q->actionCollection() ) ),
-              configure_backend( new KAction( q->actionCollection() ) )
-        {
-            check_configuration->setText( i18n( "GnuPG Configuration Self-Check" ) );
-            connect( check_configuration, SIGNAL(triggered()), q, SLOT(checkConfiguration()) );
-            q->actionCollection()->addAction( "check_configuration", check_configuration );
-
-            configure_backend->setText( i18n("Configure GnuPG Backend..." ) );
-            connect( configure_backend, SIGNAL(triggered()), q, SLOT(configureBackend()) );
-            q->actionCollection()->addAction( "configure_backend", configure_backend );
-            configure_backend->setMenuRole( QAction::NoRole ); //prevent Qt OS X heuristics for config* actions
-            
-            KStandardAction::close( q, SLOT(close()), q->actionCollection() );
-            KStandardAction::quit( q, SLOT(closeAndQuit()), q->actionCollection() );
-            KStandardAction::keyBindings( q, SLOT(editKeybindings()), q->actionCollection() );
-            KStandardAction::preferences( q, SLOT(preferences()), q->actionCollection() );
-        }
-
-    } actions;
-
     struct UI {
 
         TabWidget tabWidget;
@@ -303,7 +278,6 @@ MainWindow::Private::Private( MainWindow * qq )
       hierarchicalModel( AbstractKeyListModel::createHierarchicalKeyListModel( q ) ),
       controller( q ),
       configureDialog(),
-      actions( q ),
       ui( q )
 {
     KDAB_SET_OBJECT_NAME( controller );
@@ -385,14 +359,18 @@ void MainWindow::Private::setupActions() {
           "edit-delete", q, SLOT(deleteCertificates()), "Delete", false, true },
         { "certificates_change_expiry", i18n("Change Expiry Date..."), QString(),
           0, q, SLOT(changeCertificateExpiry()), QString(), false, true },
-        // CRLs menu
+        // Tools menu
         { "crl_clear_crl_cache", i18n("Clear CRL Cache"), QString(),
           0, q, SLOT(clearCrlCache()), QString(), false, true },
         { "crl_dump_crl_cache", i18n("Dump CRL Cache"), QString(),
           0, q, SLOT(dumpCrlCache()), QString(), false, true },
         { "crl_import_crl", i18n("Import CRL From File..."), QString(),
           0, q, SLOT(importCrlFromFile()), QString(), false, true },
-        // Tools menu
+        // Settings menu
+        { "check_configuration", i18n("GnuPG Configuration Self-Check"), QString(),
+          0, q, SLOT(checkConfiguration()), QString(), false, true },
+        { "configure_backend", i18n("Configure GnuPG Backend..."), QString(),
+          0, q, SLOT(configureBackend()), QString(), false, true },
         // Window menu
         // (come from ui.tabWidget)
     };
@@ -401,6 +379,15 @@ void MainWindow::Private::setupActions() {
 
     if ( QAction * action = coll->action( "view_stop_operations" ) )
         connect( &controller, SIGNAL(commandsExecuting(bool)), action, SLOT(setEnabled(bool)) );
+
+    if ( QAction * action = coll->action( "configure_backend" ) )
+        action->setMenuRole( QAction::NoRole ); //prevent Qt OS X heuristics for config* actions
+
+    KStandardAction::close( q, SLOT(close()), q->actionCollection() );
+    KStandardAction::quit( q, SLOT(closeAndQuit()), q->actionCollection() );
+    KStandardAction::keyBindings( q, SLOT(editKeybindings()), q->actionCollection() );
+    KStandardAction::preferences( q, SLOT(preferences()), q->actionCollection() );
+
 
     // ### somehow make this better...
     controller.registerActionForCommand<DetailsCommand>(            coll->action( "view_certificate_details" ) );
@@ -428,12 +415,14 @@ void MainWindow::Private::newCertificate() {
 
 void MainWindow::Private::checkConfiguration()
 {
-    assert( actions.check_configuration->isEnabled() );
-    if ( !actions.check_configuration->isEnabled() )
+    QAction * action = q->actionCollection()->action( "check_configuration" );
+    assert( action );
+    assert( action->isEnabled() );
+    if ( !action->isEnabled() )
         return;
 
-    actions.check_configuration->setEnabled( false );
-    const shared_ptr<QAction> enabler( actions.check_configuration, bind( &QAction::setEnabled, _1, true ) );
+    action->setEnabled( false );
+    const shared_ptr<QAction> enabler( action, bind( &QAction::setEnabled, _1, true ) );
 
     // 1. start process
     QProcess process;
