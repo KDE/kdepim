@@ -60,7 +60,19 @@
 	<Menu name="help"/>
 </MenuBar>
 
-<ToolBar position="Top" iconText="IconOnly" noMerge="1" name="searchToolBar" >
+<ToolBar fullWidth="false" name="mainToolBar">
+        <text>Main Toolbar</text>
+        <Action name="file_sign_encrypt_files"/>
+        <Action name="file_decrypt_verify_files"/>
+        <Separator/>
+        <Action name="view_redisplay"/>
+        <Action name="view_stop_operations"/>
+        <Separator/>
+        <Action name="certificates_delete"/>
+        <Action name="certificates_change_expiry"/>
+</ToolBar>
+
+<ToolBar position="Top" iconText="IconOnly" noMerge="1" name="searchToolBar" noEdit="true">
 	<text>Search Toolbar</text>
 	<Action name="key_search_bar" />
 </ToolBar>

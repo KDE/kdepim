@@ -74,6 +74,7 @@
 #include <KStandardDirs>
 #include <KShortcutsDialog>
 #include <KXMLGUIFactory>
+#include <KEditToolBar>
 #include <kdebug.h>
 
 #include <QAbstractItemView>
@@ -214,6 +215,10 @@ public:
     }
     void importCrlFromFile() {
         createAndStart<ImportCrlCommand>();
+    }
+    void configureToolbars() {
+        KEditToolBar dlg( q->factory() );
+        dlg.exec();
     }
     void editKeybindings() {
         KShortcutsDialog::configure( q->actionCollection(), KShortcutsEditor::LetterShortcutsAllowed );
@@ -385,6 +390,7 @@ void MainWindow::Private::setupActions() {
 
     KStandardAction::close( q, SLOT(close()), q->actionCollection() );
     KStandardAction::quit( q, SLOT(closeAndQuit()), q->actionCollection() );
+    KStandardAction::configureToolbars( q, SLOT(configureToolbars()), q->actionCollection() );
     KStandardAction::keyBindings( q, SLOT(editKeybindings()), q->actionCollection() );
     KStandardAction::preferences( q, SLOT(preferences()), q->actionCollection() );
 
