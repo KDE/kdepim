@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui >
-<kpartgui name="kleopatra" version="416" >
+<kpartgui name="kleopatra" version="419" >
 <MenuBar>
 	<Menu name="file">
 		<text>&amp;File</text>
@@ -34,14 +34,19 @@
 		<Action name="certificates_delete"/>
                 <Action name="certificates_change_expiry"/>
         </Menu>
-	<Menu name="toolsMenu">
+	<Menu name="tools">
 		<text>&amp;Tools</text>
                 <Action name="crl_import_crl"/>
                 <Separator/>
 		<Action name="crl_clear_crl_cache"/>
 		<Action name="crl_dump_crl_cache"/>
 	</Menu>
-        <Menu name="window">
+	<Menu name="settings">
+		<text>&amp;Settings</text>
+		<Action name="check_configuration"/>
+		<Action name="configure_backend"/>
+	</Menu>
+        <Menu name="window" append="settings_merge">
                 <text>&amp;Window</text>
                 <Action name="window_rename_tab"/>
                 <Separator/>
@@ -52,12 +57,6 @@
                 <Action name="window_move_tab_left"/>
                 <Action name="window_move_tab_right"/>
         </Menu>
-	<Menu name="settings">
-		<text>&amp;Settings</text>
-		<Action name="check_configuration"/>
-		<Action name="configure_backend"/>
-	</Menu>
-        
 	<Menu name="help"/>
 </MenuBar>
 
