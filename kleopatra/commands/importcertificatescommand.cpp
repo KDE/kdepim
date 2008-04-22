@@ -35,6 +35,11 @@
 #include "importcertificatescommand.h"
 #include "importcertificatescommand_p.h"
 
+#include <models/keylistsortfilterproxymodel.h>
+#include <models/predicates.h>
+
+#include <utils/formatting.h>
+
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/importjob.h>
 
@@ -44,6 +49,7 @@
 #include <KLocale>
 #include <KMessageBox>
 #include <KConfigGroup>
+#include <KDebug>
 
 #include <QByteArray>
 #include <QFile>
@@ -54,10 +60,88 @@
 #include <QFileInfo>
 
 #include <memory>
+#include <algorithm>
 #include <cassert>
 
 using namespace GpgME;
 using namespace Kleo;
+
+namespace {
+
+    make_comparator_str( ByImportFingerprint, .fingerprint() );
+
+    class ImportResultProxyModel : public AbstractKeyListSortFilterProxyModel {
+        Q_OBJECT
+    public:
+        explicit ImportResultProxyModel( const ImportResult & result, QObject * parent )
+            : AbstractKeyListSortFilterProxyModel( parent ),
+              m_result()
+        {
+            updateFindCache( result );
+        }
+
+        ~ImportResultProxyModel() {}
+
+        void setImportResult( const ImportResult & result ) {
+            m_result = result;
+            updateFindCache( result );
+            invalidateFilter();
+        }
+
+    protected:
+        /* reimp */ QVariant data( const QModelIndex & index, int role ) const {
+            if ( !index.isValid() || role != Qt::ToolTipRole )
+                return AbstractKeyListSortFilterProxyModel::data( index, role );
+            // get the fingerprint:
+            const QModelIndex fprIndex = index.sibling( index.row(), AbstractKeyListModel::Fingerprint );
+            assert( fprIndex.isValid() );
+            const QString fpr = fprIndex.data( Qt::EditRole ).toString();
+            // find information:
+            const std::vector<Import>::const_iterator it
+                = qBinaryFind( m_importsByFingerprint.begin(), m_importsByFingerprint.end(),
+                               fpr.toLatin1().constData(),
+                               ByImportFingerprint<std::less>() );
+            if ( it == m_importsByFingerprint.end() )
+                return AbstractKeyListSortFilterProxyModel::data( index, role );
+            else
+                return Formatting::importMetaData( *it );
+        }
+        /* reimp */ bool filterAcceptsRow( int source_row, const QModelIndex & source_parent ) const {
+            //
+            // 0. Keep parents of matching children:
+            //
+            const QModelIndex index = sourceModel()->index( source_row, 0, source_parent );
+            assert( index.isValid() );
+            for ( int i = 0, end = sourceModel()->rowCount( index ) ; i != end ; ++i )
+                if ( filterAcceptsRow( i, index ) )
+                    return true;
+            //
+            // 1. Check that this is an imported key:
+            //
+            const QModelIndex fprIndex = sourceModel()->index( source_row, AbstractKeyListModel::Fingerprint, source_parent );
+            assert( fprIndex.isValid() );
+            const QString fpr = fprIndex.data( Qt::EditRole ).toString();
+            
+            return std::binary_search( m_importsByFingerprint.begin(), m_importsByFingerprint.end(),
+                                       fpr.toLatin1().constData(),
+                                       ByImportFingerprint<std::less>() );
+        }
+
+    private:
+        void updateFindCache( const ImportResult & result ) {
+            m_importsByFingerprint.clear();
+            m_result = result;
+            m_importsByFingerprint = result.imports();
+            std::sort( m_importsByFingerprint.begin(), m_importsByFingerprint.end(),
+                       ByImportFingerprint<std::less>() );
+        }
+
+    private:
+        mutable std::vector<Import> m_importsByFingerprint;
+        ImportResult m_result;
+    };
+
+}
 
 ImportCertificatesCommand::Private::Private( ImportCertificatesCommand * qq, KeyListController * c )
     : Command::Private( qq, c ), cmsImportJob( 0 ), pgpImportJob( 0 )
@@ -85,9 +169,31 @@ ImportCertificatesCommand::ImportCertificatesCommand( QAbstractItemView * v, Key
 
 ImportCertificatesCommand::~ImportCertificatesCommand() {}
 
+static void inject_import_result_proxy_model( QAbstractItemView * qaiv, const ImportResult & res ) {
+
+    if ( !qaiv )
+        return;
+    QAbstractItemModel * m = qaiv->model();
+    assert( m );
+    QAbstractProxyModel * pm = qobject_cast<QAbstractProxyModel*>( m );
+    for ( QAbstractProxyModel * pit = pm ; pit ; pit = qobject_cast<QAbstractProxyModel*>( pit->sourceModel() ) )
+        pm = pit;
+    if ( pm )
+        m = pm->sourceModel();
+    assert( m );
+    assert( !qobject_cast<QAbstractProxyModel*>( m ) );
+    ImportResultProxyModel * const irpm = new ImportResultProxyModel( res, qaiv );
+    irpm->setSourceModel( m );
+    if ( pm )
+        pm->setSourceModel( irpm );
+    else
+        qaiv->setModel( irpm );
+
+}
+
 void ImportCertificatesCommand::Private::showDetails( QWidget * parent, const ImportResult & res, const QString & id ) {
-    // ### TODO: make a keylisting over Import::fingerprints(), then
-    // ### highlight imported certificates in view(), or maybe in a new tab?
+
+    inject_import_result_proxy_model( view(), res );
 
     const KLocalizedString normalLine = ki18n("<tr><td align=\"right\">%1</td><td>%2</td></tr>");
     const KLocalizedString boldLine = ki18n("<tr><td align=\"right\"><b>%1</b></td><td>%2</td></tr>");
@@ -160,6 +266,14 @@ void ImportCertificatesCommand::Private::showError( QWidget * parent, const Erro
 }
 
 void ImportCertificatesCommand::Private::importResult( const ImportResult & result ) {
+
+    if ( q->sender() == cmsImportJob )
+        cmsImportJob = 0;
+    if ( q->sender() == pgpImportJob )
+        pgpImportJob = 0;
+
+    // ### merge results when gpgme gains copy ctors for result objects
+
     if ( result.error().code() )
         if ( result.error().isCanceled() )
             emit q->canceled();
@@ -205,5 +319,5 @@ void ImportCertificatesCommand::doCancel() {
 #undef q
 
 #include "moc_importcertificatescommand.cpp"
-
+#include "importcertificatescommandc.moc"
 
