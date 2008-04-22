@@ -68,6 +68,8 @@ namespace Kleo {
     /*!
       \brief Base class for GnuPG UI Server commands
 
+      \note large parts of this are outdated by now!
+
       <h3>Implementing a new AssuanCommand</h3>
 
       You do not directly inherit AssuanCommand, unless you want to
