@@ -73,6 +73,8 @@ namespace Kleo {
 
         void enableDisableActions( const QItemSelectionModel * sm ) const;
 
+        bool hasRunningCommands() const;
+
     private:
         void registerAction( QAction * action, Command::Restrictions restrictions , Command * (KeyListController::*create)()=0 );
 

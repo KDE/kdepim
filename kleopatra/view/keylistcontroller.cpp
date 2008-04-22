@@ -238,6 +238,13 @@ void KeyListController::registerCommand( Command * cmd ) {
         emit commandsExecuting( true );
 }
 
+bool KeyListController::hasRunningCommands() const {
+    QDebug dbg = kDebug();
+    Q_FOREACH( const Command * cmd, d->commands )
+        dbg << cmd;
+    return !d->commands.empty();
+}
+
 // slot
 void KeyListController::cancelCommands() {
     std::for_each( d->commands.begin(), d->commands.end(),
