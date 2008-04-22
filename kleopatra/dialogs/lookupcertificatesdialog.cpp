@@ -38,6 +38,7 @@
 #include <models/keylistsortfilterproxymodel.h>
 
 #include <utils/headerview.h>
+#include <utils/stl_util.h>
 
 #include <gpgme++/key.h>
 
@@ -50,11 +51,17 @@
 #include <QHeaderView>
 #include <QLabel>
 
+#include <boost/bind.hpp>
+
 #include <cassert>
+
+static const bool ALLOW_MULTI_SELECTION = false;
+static const bool ALLOW_MULTI_PROTOCOL  = false;
 
 using namespace Kleo;
 using namespace Kleo::Dialogs;
 using namespace GpgME;
+using namespace boost;
 
 static const int minimalSearchTextLength = 2; // ### TODO: make that KIOSK-able
 
@@ -100,7 +107,12 @@ private:
     void enableDisableWidgets();
 
     QString searchText() const { return ui.findED->text().trimmed(); }
-    QModelIndexList selectedIndexes() const { return ui.resultTV->selectionModel()->selectedRows(); }
+    QModelIndexList selectedIndexes() const {
+        if ( const QItemSelectionModel * const sm = ui.resultTV->selectionModel() )
+            return sm->selectedRows();
+        else
+            return QModelIndexList();
+    }
 private:
     AbstractKeyListModel * model;
     KeyListSortFilterProxyModel proxy;
@@ -115,9 +127,16 @@ private:
 
             saveAsPB->hide(); // ### not yet implemented in LookupCertificatesCommand
 
+            if ( !ALLOW_MULTI_SELECTION ) {
+                resultTV->setSelectionMode( QAbstractItemView::SingleSelection );
+                selectAllPB->hide();
+                deselectAllPB->hide();
+            }
+
             findED->setClearButtonShown( true );
 
             importPB()->setText( i18n("Import") );
+            importPB()->setEnabled( false );
 
             HeaderView * hv = new HeaderView( Qt::Horizontal );
             KDAB_SET_OBJECT_NAME( hv );
@@ -150,8 +169,6 @@ LookupCertificatesDialog::Private::Private( LookupCertificatesDialog * qq )
 
     connect( ui.resultTV->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
              q, SLOT(slotSelectionChanged()) );
-
-    enableDisableWidgets();
 }
 
 LookupCertificatesDialog::Private::~Private() {}
@@ -200,11 +217,20 @@ void LookupCertificatesDialog::Private::enableDisableWidgets() {
 
     ui.findPB->setEnabled( searchText().length() > minimalSearchTextLength );
 
-    const QModelIndexList selection = selectedIndexes();
+    const std::vector<Key> selection = q->selectedCertificates();
 
     ui.detailsPB->setEnabled(   selection.size() == 1 );
     ui.saveAsPB->setEnabled(    selection.size() == 1 );
-    ui.importPB()->setEnabled( !selection.empty() );
+    if ( ALLOW_MULTI_SELECTION ) {
+        // this is commented out until such a time as we know how to
+        // import more than one key in one go.
+        ui.importPB()->setEnabled( !selection.empty() &&
+                                   ALLOW_MULTI_PROTOCOL ||
+                                   // suppress mixed imports:
+                                   kdtools::all( selection, bind( &Key::protocol, _1 ) == selection.front().protocol() ) );
+    } else {
+        ui.importPB()->setEnabled(  selection.size() == 1 );
+    }
 }
 
 #include "moc_lookupcertificatesdialog.cpp"
