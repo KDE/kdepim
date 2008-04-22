@@ -39,6 +39,7 @@
 #include <kleo/dn.h>
 
 #include <gpgme++/key.h>
+#include <gpgme++/importresult.h>
 
 #include <KLocale>
 #include <KGlobal>
@@ -442,3 +443,38 @@ QString Formatting::signatureToString( const Signature & sig, const Key & key )
         else
             return i18n("Invalid signature by %1: %2", keyToString( key ), QString::fromLocal8Bit( sig.status().asString() ) );
 }
+
+//
+// ImportResult
+//
+
+QString Formatting::importMetaData( const Import & import ) {
+
+    if ( import.isNull() )
+        return QString();
+
+    if ( import.error().isCanceled() )
+        return i18n( "The import of this certificate was canceled." );
+    if ( import.error() )
+        return i18n( "An error occurred importing this certificate: %1",
+                     QString::fromLocal8Bit( import.error().asString() ) );
+
+    const unsigned int status = import.status();
+    if ( status & Import::NewKey )
+        return ( status & Import::ContainedSecretKey )
+            ? i18n( "This certificate was new to your keystore. The secret key is available." )
+            : i18n( "This certificate is new to your keystore." ) ;
+
+    QStringList results;
+    if ( status & Import::NewUserIDs )
+        results.push_back( i18n( "New user-ids were added to this certificate by the import." ) );
+    if ( status & Import::NewSignatures )
+        results.push_back( i18n( "New signatures were added to this certificate by the import." ) );
+    if ( status & Import::NewSubkeys )
+        results.push_back( i18n( "New subkeys were added to this certificate by the import." ) );
+
+    return results.empty()
+        ? i18n( "The import contained no new data for this certifcate. It is unchanged.")
+        : results.join( "\n" );
+}
+
