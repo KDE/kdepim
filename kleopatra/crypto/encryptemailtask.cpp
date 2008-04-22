@@ -184,7 +184,7 @@ std::auto_ptr<Kleo::EncryptJob> EncryptEMailTask::Private::createJob( GpgME::Pro
     if ( proto == CMS )
         encryptJob->setOutputIsBase64Encoded( true );
     connect( encryptJob.get(), SIGNAL(progress(QString,int,int)),
-             q, SIGNAL(progress(QString,int,int)) );
+             q, SLOT(setProgress(QString,int,int)) );
     connect( encryptJob.get(), SIGNAL(result(GpgME::EncryptionResult,QByteArray)),
              q, SLOT(slotResult(GpgME::EncryptionResult)) );
     return encryptJob;

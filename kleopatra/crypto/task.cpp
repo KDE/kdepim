@@ -78,11 +78,13 @@ public:
     explicit Private( Task * qq );
 
 private:
-    // ### 
+    QString m_progressLabel;
+    int m_processedSize;
+    int m_totalSize;
 };
 
 Task::Private::Private( Task * qq )
-    : q( qq )
+    : q( qq ), m_progressLabel(), m_processedSize( 0 ), m_totalSize( 0 )
 {
 
 }
@@ -94,6 +96,31 @@ Task::Task( QObject * p )
 }
 
 Task::~Task() {}
+
+int Task::processedSize() const
+{
+    return d->m_processedSize;
+}
+
+int Task::totalSize() const
+{
+    return d->m_totalSize;
+}
+
+QString Task::progressLabel() const
+{
+    d->m_progressLabel;
+}
+
+void Task::setProgress( const QString & label, int processed, int total )
+{
+    if ( processed == d->m_processedSize && total == d->m_totalSize && d->m_progressLabel == label )
+        return;
+    d->m_processedSize = processed;
+    d->m_totalSize == total;
+    d->m_progressLabel = label;
+    emit progress( label, processed, total );
+}
 
 void Task::start() {
     try {

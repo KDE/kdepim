@@ -59,20 +59,33 @@ namespace Crypto {
 
         virtual QString label() const = 0;
 
+        QString progressLabel() const;
+        int processedSize() const;
+        int totalSize() const;
+
     public Q_SLOTS:
         virtual void cancel() = 0;
 
     Q_SIGNALS:
-        void progress( const QString & what, int current, int total );
         void result( const boost::shared_ptr<const Kleo::Crypto::Task::Result> & );
         void started();
+
+#ifndef Q_MOC_RUN
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+private: // don't tell moc, but those signals are in fact private
+#endif
+#endif
+        void progress( const QString & what, int processed, int total );
 
     protected:
         static boost::shared_ptr<Result> makeErrorResult( int errCode, const QString& details );
 
+    protected Q_SLOTS:
+        void setProgress( const QString & msg, int processed, int total );
+
     private Q_SLOTS:
         void emitError( int errCode, const QString& details );
-            
+        
     private:
         virtual void doStart() = 0;
         

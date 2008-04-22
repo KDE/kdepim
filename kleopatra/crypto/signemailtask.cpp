@@ -195,7 +195,7 @@ std::auto_ptr<Kleo::SignJob> SignEMailTask::Private::createJob( GpgME::Protocol 
     if ( proto == CMS )
         signJob->setOutputIsBase64Encoded( true );
     connect( signJob.get(), SIGNAL(progress(QString,int,int)),
-             q, SIGNAL(progress(QString,int,int)) );
+             q, SLOT(setProgress(QString,int,int)) );
     connect( signJob.get(), SIGNAL(result(GpgME::SigningResult,QByteArray)),
              q, SLOT(slotResult(GpgME::SigningResult)) );
     return signJob;

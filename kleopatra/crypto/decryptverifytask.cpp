@@ -441,6 +441,8 @@ public:
     void registerJob( DecryptVerifyJob * job ) {
         q->connect( job, SIGNAL(result(GpgME::DecryptionResult,GpgME::VerificationResult,QByteArray)),
                     q, SLOT(slotResult(GpgME::DecryptionResult,GpgME::VerificationResult,QByteArray)) );
+        q->connect( job, SIGNAL(progress(QString,int,int)),
+                    q, SLOT(setProgress(QString,int,int)) );
     }
 
     void emitResult( const shared_ptr<DecryptVerifyResult>& result );
@@ -547,6 +549,8 @@ public:
     void registerJob( DecryptJob * job ) {
         q->connect( job, SIGNAL(result(GpgME::DecryptionResult,QByteArray)),
                     q, SLOT(slotResult(GpgME::DecryptionResult,QByteArray)) );
+        q->connect( job, SIGNAL(progress(QString,int,int)),
+                    q, SLOT(setProgress(QString,int,int)) );
     }
 
     void emitResult( const shared_ptr<DecryptVerifyResult>& result );
@@ -654,6 +658,8 @@ public:
     void registerJob( VerifyOpaqueJob* job ) {
         q->connect( job, SIGNAL(result(GpgME::VerificationResult,QByteArray)),
                     q, SLOT(slotResult(GpgME::VerificationResult,QByteArray)) );
+        q->connect( job, SIGNAL(progress(QString,int,int)),
+                    q, SLOT(setProgress(QString,int,int)) );
     }
 
     void emitResult( const shared_ptr<DecryptVerifyResult>& result );
@@ -760,6 +766,8 @@ public:
     void registerJob( VerifyDetachedJob* job ) {
         q->connect( job, SIGNAL(result(GpgME::VerificationResult)),
                     q, SLOT(slotResult(GpgME::VerificationResult)) );
+        q->connect( job, SIGNAL(progress(QString,int,int)),
+                    q, SLOT(setProgress(QString,int,int)) );
     }
 
     void emitResult( const shared_ptr<DecryptVerifyResult>& result );
