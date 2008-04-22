@@ -150,7 +150,7 @@ void ImportCertificatesCommand::Private::showError( QWidget * parent, const Erro
     const QString msg = id.isEmpty()
         ? i18n( "<qt><p>An error occurred while trying "
                 "to import the certificate:</p>"
-                "<p><b>%2</b></p></qt>",
+                "<p><b>%1</b></p></qt>",
                 QString::fromLocal8Bit( err.asString() ) )
         : i18n( "<qt><p>An error occurred while trying "
                 "to import the certificate %1:</p>"
