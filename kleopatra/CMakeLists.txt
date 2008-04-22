@@ -210,7 +210,7 @@ install(TARGETS kleopatra_bin  DESTINATION ${BIN_INSTALL_DIR} )
 ########### install files ###############
 
 install( FILES kleopatra_import.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
-install( FILES kleopatraui.rc kleopatra_newui.rc  DESTINATION ${DATA_INSTALL_DIR}/kleopatra)
+install( FILES kleopatra.rc              DESTINATION ${DATA_INSTALL_DIR}/kleopatra)
 
 kde4_install_icons( ${ICON_INSTALL_DIR} )
 

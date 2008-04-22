@@ -304,7 +304,7 @@ MainWindow::Private::Private( MainWindow * qq )
     connect( &ui.tabWidget, SIGNAL(currentViewChanged(QAbstractItemView*)),
              q, SLOT(slotCurrentViewChanged(QAbstractItemView*)) );
 
-    q->createGUI( "kleopatra_newui.rc" );
+    q->createGUI( "kleopatra.rc" );
 
     q->setAcceptDrops( true );
 
