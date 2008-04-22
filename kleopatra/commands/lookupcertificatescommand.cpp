@@ -190,6 +190,8 @@ void LookupCertificatesCommand::Private::createDialog() {
              q, SLOT(slotImportRequested(std::vector<GpgME::Key>)) );
     connect( dialog, SIGNAL(detailsRequested(GpgME::Key)),
              q, SLOT(slotDetailsRequested(GpgME::Key)) );
+    connect( dialog, SIGNAL(rejected()),
+             q, SLOT(cancel()) );
 }
 
 void LookupCertificatesCommand::Private::slotSearchTextChanged( const QString & str ) {
@@ -370,6 +372,10 @@ void LookupCertificatesCommand::Private::slotDetailsRequested( const Key & key )
 
 void LookupCertificatesCommand::doCancel() {
     ImportCertificatesCommand::doCancel();
+    if ( QDialog * const dlg = d->dialog ) {
+        d->dialog = 0;
+        dlg->close();
+    }
 }
 
 void LookupCertificatesCommand::Private::showError( QWidget * parent, const KeyListResult & result ) {
