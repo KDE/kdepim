@@ -85,29 +85,29 @@ void SignEncryptFilesCommand::Private::checkForErrors() const {
 
     if ( !q->senders().empty() )
         throw Exception( makeError( GPG_ERR_CONFLICT ),
-                         i18n( "%1 is an email mode command, "
-                               "connection seems to be in email mode (%1 present)",
+                         i18n( "%1 is a filemanager mode command, "
+                               "connection seems to be in email mode (%2 present)",
                                QString::fromLatin1( q->name() ), QLatin1String("SENDER") ) );
     if ( !q->recipients().empty() )
         throw Exception( makeError( GPG_ERR_CONFLICT ),
-                         i18n( "%1 is an email mode command, "
-                               "connection seems to be in email mode (%1 present)",
+                         i18n( "%1 is a filemanager mode command, "
+                               "connection seems to be in email mode (%2 present)",
                                QString::fromLatin1( q->name() ), QLatin1String("RECIPIENT") ) );
 
     if ( !q->inputs().empty() )
         throw Exception( makeError( GPG_ERR_CONFLICT ),
-                         i18n( "%1 is an email mode command, "
-                               "connection seems to be in email mode (%1 present)",
+                         i18n( "%1 is a filemanager mode command, "
+                               "connection seems to be in email mode (%2 present)",
                                QString::fromLatin1( q->name() ), QLatin1String("INPUT") ) );
     if ( !q->outputs().empty() )
         throw Exception( makeError( GPG_ERR_CONFLICT ),
-                         i18n( "%1 is an email mode command, "
-                               "connection seems to be in email mode (%1 present)",
+                         i18n( "%1 is a filemanager mode command, "
+                               "connection seems to be in email mode (%2 present)",
                                QString::fromLatin1( q->name() ), QLatin1String("OUTPUT") ) );
     if ( !q->messages().empty() )
         throw Exception( makeError( GPG_ERR_CONFLICT ),
-                         i18n( "%1 is an email mode command, "
-                               "connection seems to be in email mode (%1 present)",
+                         i18n( "%1 is a filemanager mode command, "
+                               "connection seems to be in email mode (%2 present)",
                                QString::fromLatin1( q->name() ), QLatin1String("MESSAGE") ) );
 }
 
