@@ -90,6 +90,7 @@
 #include <QDialogButtonBox>
 #include <QProcess>
 #include <QMenu>
+#include <QTimer>
 
 #include <kleo/cryptobackendfactory.h>
 #include <ui/cryptoconfigdialog.h>
@@ -128,14 +129,14 @@ namespace {
     };
 }
 
-KGuiItem KStandardGuiItem_quit() {
+static KGuiItem KStandardGuiItem_quit() {
     static const QString app = KGlobal::mainComponent().aboutData()->programName();
     KGuiItem item = KStandardGuiItem::quit();
     item.setText( i18nc( "Quit [ApplicationName]", "&Quit %1", app ) );
     return item;
 }
 
-KGuiItem KStandardGuiItem_close() {
+static KGuiItem KStandardGuiItem_close() {
     KGuiItem item = KStandardGuiItem::close();
     item.setText( i18n("Only &Close Window" ) );
     return item;
@@ -171,7 +172,8 @@ public:
                                                          "really-quit-" + app.toLower() );
         if ( rc == KMessageBox::Cancel )
             return;
-        q->close();
+        if ( !q->close() )
+            return;
         // WARNING: 'this' might be deleted at this point!
         if ( rc == KMessageBox::Yes )
             qApp->quit();
@@ -556,6 +558,28 @@ void MainWindow::closeEvent( QCloseEvent * e ) {
     // KMainWindow::closeEvent() insists on quitting the application,
     // so do not let it touch the event...
     kDebug();
+    if ( d->controller.hasRunningCommands() ) {
+        const int ret = KMessageBox::warningContinueCancel( this, i18n("There are still some background operations ongoing. "
+                                                                       "These will be terminated when closing the window. "
+                                                                       "Proceed?"),
+                                                            i18n("Ongoing Background Tasks") );
+        if ( ret != KMessageBox::Continue ) {
+            e->ignore();
+            return;
+        }
+        d->controller.cancelCommands();
+        if ( d->controller.hasRunningCommands() ) {
+            // wait for them to be finished:
+            setEnabled( false );
+            QEventLoop ev;
+            QTimer::singleShot( 100, &ev, SLOT(quit()) );
+            connect( &d->controller, SIGNAL(commandsExecuting(bool)), &ev, SLOT(quit()) );
+            ev.exec();
+            kWarning( d->controller.hasRunningCommands() )
+                << "controller still has commands running, this may crash now...";
+            setEnabled( true );
+        }
+    }
     d->ui.tabWidget.saveViews( KGlobal::config().data() );
     saveMainWindowSettings( KConfigGroup( KGlobal::config(), autoSaveGroup() ) );
     e->accept();
