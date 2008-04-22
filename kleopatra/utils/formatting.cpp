@@ -193,6 +193,10 @@ QString Formatting::toolTip( const Key & key, int flags ) {
                 result += make_red( i18n( "This certificate has expired." ) );
             else if ( key.isDisabled() )
                 result += i18n( "This certificate has been disabled locally." );
+            else
+                result += i18n( "This certificate appears to be valid." );
+        else
+            result += i18n( "The validity of this certificate cannot be checked at the moment." );
     if ( flags == Validity )
         return result;
 
