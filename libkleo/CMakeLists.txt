@@ -1,6 +1,8 @@
 include_directories( ${CMAKE_BINARY_DIR}/kleo/backends/chiasmus/ ${GPGME_INCLUDES} ${Boost_INCLUDE_DIR} )
 
-add_definitions( -DONLY_KLEO )
+if (ONLY_KLEO)
+  add_definitions( -DONLY_KLEO )
+endif (ONLY_KLEO)
 
 remove_definitions( -DQT_NO_STL )
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS -DQT_STL )
