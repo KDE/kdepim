@@ -39,6 +39,7 @@
 #include <crypto/gui/signencryptwizard.h>
 
 #include <crypto/encryptemailtask.h>
+#include <crypto/taskcollection.h>
 
 #include <utils/input.h>
 #include <utils/output.h>
@@ -80,7 +81,6 @@ private:
     
     void schedule();
     shared_ptr<EncryptEMailTask> takeRunnable( GpgME::Protocol proto );
-    void connectTask( const shared_ptr<Task> & task, unsigned int idx );
 
 private:
     weak_ptr<AssuanCommand> command;
@@ -189,9 +189,15 @@ void EncryptEMailController::importIO() {
 }
 
 void EncryptEMailController::start() {
-    int i = 0;
-    Q_FOREACH( const shared_ptr<Task> task, d->runnable )
-        d->connectTask( task, i++ );
+    shared_ptr<TaskCollection> coll( new TaskCollection );
+    std::vector<shared_ptr<Task> > tmp;
+    std::copy( d->runnable.begin(), d->runnable.end(), std::back_inserter( tmp ) );
+    coll->setTasks( tmp );
+    d->ensureWizardCreated();
+    d->wizard->setTaskCollection( coll );
+    Q_FOREACH( const shared_ptr<Task> & t, tmp )
+        connect( t.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
+             this, SLOT(slotTaskDone()) );
     d->schedule();
 }
 
@@ -226,13 +232,6 @@ shared_ptr<EncryptEMailTask> EncryptEMailController::Private::takeRunnable( GpgM
     const shared_ptr<EncryptEMailTask> result = *it;
     runnable.erase( it );
     return result;
-}
-
-void EncryptEMailController::Private::connectTask( const shared_ptr<Task> & t, unsigned int idx ) {
-    connect( t.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
-             q, SLOT(slotTaskDone()) );
-    ensureWizardCreated();
-    wizard->connectTask( t, idx );
 }
 
 void EncryptEMailController::Private::slotTaskDone() {

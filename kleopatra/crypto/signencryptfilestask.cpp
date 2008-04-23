@@ -68,12 +68,12 @@ namespace {
         const SigningResult m_sresult;
         const EncryptionResult m_eresult;
     public:
-        explicit SignEncryptFilesResult( const SigningResult & sr )
-            : Task::Result(), m_sresult( sr ) {}
-        explicit SignEncryptFilesResult( const EncryptionResult & er )
-            : Task::Result(), m_eresult( er ) {}
-        explicit SignEncryptFilesResult( const SigningResult & sr, const EncryptionResult & er )
-            : Task::Result(), m_sresult( sr ), m_eresult( er ) {}
+        SignEncryptFilesResult( int id, const SigningResult & sr )
+            : Task::Result( id ), m_sresult( sr ) {}
+        SignEncryptFilesResult( int id, const EncryptionResult & er )
+            : Task::Result( id ), m_eresult( er ) {}
+        SignEncryptFilesResult( int id, const SigningResult & sr, const EncryptionResult & er )
+            : Task::Result( id ), m_sresult( sr ), m_eresult( er ) {}
 
         /* reimp */ QString overview() const;
         /* reimp */ QString details() const;
@@ -83,7 +83,6 @@ namespace {
     private:
         ErrorLevel errorLevel() const;
     };
-
 
     static QString makeResultString( const SigningResult & result ) {
         const Error err = result.error();
@@ -313,12 +312,12 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & result ) {
         try {
             output->finalize();
         } catch ( const GpgME::Exception & e ) {
-            emit q->result( makeErrorResult( e.error().encodedError(), QString::fromLocal8Bit( e.what() ) ) );
+            q->emitResult( q->makeErrorResult( e.error().encodedError(), QString::fromLocal8Bit( e.what() ) ) );
             return;
         }
     }
    
-    emit q->result( shared_ptr<Result>( new SignEncryptFilesResult( result ) ) );
+    q->emitResult( shared_ptr<Result>( new SignEncryptFilesResult( q->id(), result ) ) );
 }
 
 void SignEncryptFilesTask::Private::slotResult( const SigningResult & sresult, const EncryptionResult & eresult ) {
@@ -328,12 +327,12 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & sresult, c
         try {
             output->finalize();
         } catch ( const GpgME::Exception & e ) {
-            emit q->result( makeErrorResult( e.error().encodedError(), QString::fromLocal8Bit( e.what() ) ) );
+            q->emitResult( q->makeErrorResult( e.error().encodedError(), QString::fromLocal8Bit( e.what() ) ) );
             return;
         }
     }
     
-    emit q->result( shared_ptr<Result>( new SignEncryptFilesResult( sresult, eresult ) ) );
+    q->emitResult( shared_ptr<Result>( new SignEncryptFilesResult( q->id(), sresult, eresult ) ) );
 }
 
 void SignEncryptFilesTask::Private::slotResult( const EncryptionResult & result ) {
@@ -343,11 +342,11 @@ void SignEncryptFilesTask::Private::slotResult( const EncryptionResult & result 
         try {
             output->finalize();
         } catch ( const GpgME::Exception & e ) {
-            emit q->result( makeErrorResult( e.error().encodedError(), QString::fromLocal8Bit( e.what() ) ) );
+            q->emitResult( q->makeErrorResult( e.error().encodedError(), QString::fromLocal8Bit( e.what() ) ) );
             return;
         }
     }
-    emit q->result( shared_ptr<Result>( new SignEncryptFilesResult( result ) ) );
+    q->emitResult( shared_ptr<Result>( new SignEncryptFilesResult( q->id(), result ) ) );
 }
 
 QString SignEncryptFilesResult::overview() const {
@@ -357,16 +356,13 @@ QString SignEncryptFilesResult::overview() const {
     kleo_assert( sign || encrypt );
 
     if ( sign && encrypt ) {
-        return makeSimpleOverview( 
+        return makeOverview(
             ( m_sresult.error().code() || m_eresult.error().code() ) ? errorString() :
-            i18n( "Combined signing/encryption succeeded" ),
-            errorLevel() );
+            i18n( "Combined signing/encryption succeeded" ) );
     }
     
-    if ( sign )
-        return makeSimpleOverview( makeResultString( m_sresult ), errorLevel() );
-    else
-        return makeSimpleOverview( makeResultString( m_eresult ), errorLevel() );
+
+    return makeOverview( sign ? makeResultString( m_sresult ) : makeResultString( m_eresult ) );
 
 }
 

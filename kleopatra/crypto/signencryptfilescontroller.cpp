@@ -38,6 +38,7 @@
 #include "certificateresolver.h"
 
 #include <crypto/gui/signencryptfileswizard.h>
+#include <crypto/taskcollection.h>
 
 #include <utils/input.h>
 #include <utils/output.h>
@@ -88,7 +89,6 @@ private:
 
     void schedule();
     shared_ptr<SignEncryptFilesTask> takeRunnable( GpgME::Protocol proto );
-    void connectTask( const shared_ptr<Task> & task, unsigned int idx );
 
     static void assertValidOperation( unsigned int );
     static QString titleForOperation( unsigned int op );
@@ -298,8 +298,17 @@ void SignEncryptFilesController::Private::slotWizardOperationPrepared() {
         runnable.swap( tasks );
 
         int i = 0;
+        
         Q_FOREACH( const shared_ptr<Task> task, runnable )
-            connectTask( task, i++ );
+            connect( task.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
+                     q, SLOT(slotTaskDone()) );
+
+        ensureWizardCreated();
+        shared_ptr<TaskCollection> coll( new TaskCollection );
+        std::vector<shared_ptr<Task> > tmp;
+        std::copy( runnable.begin(), runnable.end(), std::back_inserter( tmp ) );
+        coll->setTasks( tmp );
+        wizard->setTaskCollection( coll );
 
         QTimer::singleShot( 0, q, SLOT(schedule()) );
 
@@ -348,13 +357,6 @@ shared_ptr<SignEncryptFilesTask> SignEncryptFilesController::Private::takeRunnab
     const shared_ptr<SignEncryptFilesTask> result = *it;
     runnable.erase( it );
     return result;
-}
-
-void SignEncryptFilesController::Private::connectTask( const shared_ptr<Task> & t, unsigned int idx ) {
-    connect( t.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
-             q, SLOT(slotTaskDone()) );
-    ensureWizardCreated();
-    wizard->connectTask( t, idx );
 }
 
 void SignEncryptFilesController::Private::slotTaskDone() {

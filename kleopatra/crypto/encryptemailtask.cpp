@@ -48,6 +48,7 @@
 
 #include <KLocale>
 
+#include <QIcon>
 #include <QPointer>
 #include <QTextDocument> // for Qt::escape
 
@@ -63,8 +64,8 @@ namespace {
     class EncryptEMailResult : public Task::Result {
         const EncryptionResult m_result;
     public:
-        explicit EncryptEMailResult( const EncryptionResult & r )
-            : Task::Result(), m_result( r ) {}
+        EncryptEMailResult( int id, const EncryptionResult & r )
+            : Task::Result( id ), m_result( r ) {}
 
         /* reimp */ QString overview() const;
         /* reimp */ QString details() const;
@@ -196,11 +197,11 @@ void EncryptEMailTask::Private::slotResult( const EncryptionResult & result ) {
     } else {
         output->finalize();
     }
-    emit q->result( shared_ptr<Result>( new EncryptEMailResult( result ) ) );
+    q->emitResult( shared_ptr<Result>( new EncryptEMailResult( q->id(), result ) ) );
 }
 
 QString EncryptEMailResult::overview() const {
-    return makeSimpleOverview( makeResultString( m_result ), m_result.error().code() ? Error : NoError );
+    return makeOverview( makeResultString( m_result ) );
 }
 
 QString EncryptEMailResult::details() const {

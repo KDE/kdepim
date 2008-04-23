@@ -37,10 +37,11 @@
 #include "objectspage.h"
 #include "resolverecipientspage.h"
 #include "signerresolvepage.h"
-#include "wizardresultpage.h"
+#include "resultpage.h"
 #include "resultdisplaywidget.h"
 
 #include <crypto/task.h>
+#include <crypto/taskcollection.h>
 #include <crypto/certificateresolver.h>
 
 #include <utils/stl_util.h>
@@ -75,8 +76,8 @@ public:
 
     Gui::ResolveRecipientsPage * recipientResolvePage; // clashes with enum of same name
     SignerResolvePage * signerResolvePage;
-    Gui::ObjectsPage * objectsPage;                    // clashes with enum of same name
-    WizardResultPage * resultPage;
+    Gui::ObjectsPage * objectsPage; // clashes with enum of same name
+    Gui::ResultPage * resultPage;  // clashes with enum of same name
 };
 
 
@@ -85,7 +86,7 @@ SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
       recipientResolvePage( new Gui::ResolveRecipientsPage ),
       signerResolvePage( new SignerResolvePage ),
       objectsPage( new Gui::ObjectsPage ),
-      resultPage( new WizardResultPage )
+      resultPage( new Gui::ResultPage )
 {
     q->setPage( SignEncryptWizard::ResolveSignerPage, signerResolvePage );
     q->setPage( SignEncryptWizard::ObjectsPage, objectsPage );
@@ -220,16 +221,10 @@ void SignEncryptWizard::setSignersAndCandidates( const std::vector<Mailbox> & si
 }
 
 
-
-void SignEncryptWizard::connectTask( const shared_ptr<Task> & task, unsigned int idx ) {
-    kleo_assert( task );
-    ResultDisplayWidget* const item = new ResultDisplayWidget;
-    item->setLabel( task->label() );
-    connect( task.get(), SIGNAL( progress( QString, int, int ) ),
-             item, SLOT( setProgress( QString, int, int ) ) );
-    connect( task.get(), SIGNAL(result( boost::shared_ptr<const Kleo::Crypto::Task::Result> ) ),
-             item, SLOT( setResult( boost::shared_ptr<const Kleo::Crypto::Task::Result> ) ) );
-    d->resultPage->addResultItem( item );
+void SignEncryptWizard::setTaskCollection( const shared_ptr<TaskCollection> & coll )
+{
+    kleo_assert( coll );
+    d->resultPage->setTaskCollection( coll );
 }
 
 std::vector<Key> SignEncryptWizard::resolvedCertificates() const {

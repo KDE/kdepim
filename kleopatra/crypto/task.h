@@ -42,6 +42,8 @@
 
 #include <boost/shared_ptr.hpp>
 
+class QIcon;
+
 namespace Kleo {
 namespace Crypto {
 
@@ -63,12 +65,12 @@ namespace Crypto {
         int processedSize() const;
         int totalSize() const;
 
+        int id() const;
+
     public Q_SLOTS:
         virtual void cancel() = 0;
 
     Q_SIGNALS:
-        void result( const boost::shared_ptr<const Kleo::Crypto::Task::Result> & );
-        void started();
 
 #ifndef Q_MOC_RUN
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -76,9 +78,13 @@ private: // don't tell moc, but those signals are in fact private
 #endif
 #endif
         void progress( const QString & what, int processed, int total );
+        void result( const boost::shared_ptr<const Kleo::Crypto::Task::Result> & );
+        void started();
 
     protected:
-        static boost::shared_ptr<Result> makeErrorResult( int errCode, const QString& details );
+        boost::shared_ptr<Result> makeErrorResult( int errCode, const QString& details );
+
+        void emitResult( const boost::shared_ptr<Task::Result> & result );
 
     protected Q_SLOTS:
         void setProgress( const QString & msg, int processed, int total );
@@ -97,26 +103,37 @@ private: // don't tell moc, but those signals are in fact private
     class Task::Result {
         QString m_nonce;
     public:
-        Result();
+        explicit Result( int id );
         virtual ~Result();
 
         const QString & nonce() const { return m_nonce; }
 
         bool hasError() const;
-        
+  
+        virtual QString icon() const;
         virtual QString overview() const = 0;
         virtual QString details() const = 0;
         virtual int errorCode() const = 0;
         virtual QString errorString() const = 0;
-        
+
+        int id() const;
+
     protected:
         enum ErrorLevel {
             NoError,
             Warning,
             Error
         };
-        static QString makeSimpleOverview( const QString& summary, ErrorLevel level );
+        static QString iconPath( ErrorLevel level );
         QString formatKeyLink( const char * fingerprint, const QString & content ) const;
+        static QString makeOverview( const QString& msg );
+
+    private:
+        Result();
+
+    private:
+        class Private;
+        kdtools::pimpl_ptr<Private> d;
     };
         
 }

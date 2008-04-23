@@ -63,8 +63,8 @@ namespace {
     class SignEMailResult : public Task::Result {
         const SigningResult m_result;
     public:
-        explicit SignEMailResult( const SigningResult & r )
-            : Task::Result(), m_result( r ) {}
+        explicit SignEMailResult( int id, const SigningResult & r )
+            : Task::Result( id ), m_result( r ) {}
 
         /* reimp */ QString overview() const;
         /* reimp */ QString details() const;
@@ -227,7 +227,7 @@ void SignEMailTask::Private::slotResult( const SigningResult & result ) {
         output->finalize();
         micAlg = collect_micalgs( result, q->protocol() );
     }
-    emit q->result( shared_ptr<Result>( new SignEMailResult( result ) ) );
+    q->emitResult( shared_ptr<Result>( new SignEMailResult( q->id(), result ) ) );
 }
 
 QString SignEMailTask::micAlg() const {
@@ -236,7 +236,7 @@ QString SignEMailTask::micAlg() const {
 
 
 QString SignEMailResult::overview() const {
-    return makeSimpleOverview( makeResultString( m_result ), errorLevel() );
+    return makeOverview( makeResultString( m_result ) );
 }
 
 QString SignEMailResult::details() const {

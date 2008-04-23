@@ -58,6 +58,7 @@ namespace Kleo {
 namespace Crypto {
 
     class Task;
+    class TaskCollection;
 
 namespace Gui {
 
@@ -114,7 +115,7 @@ namespace Gui {
 
         void setSignersAndCandidates( const std::vector<KMime::Types::Mailbox> & signers, const std::vector< std::vector<GpgME::Key> > & keys );
 
-        void connectTask( const boost::shared_ptr<Task> & task, unsigned int idx );
+        void setTaskCollection( const boost::shared_ptr<TaskCollection> & tasks );
 
         std::vector<GpgME::Key> resolvedCertificates() const;
         std::vector<GpgME::Key> resolvedSigners() const;

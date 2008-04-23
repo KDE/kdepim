@@ -128,41 +128,24 @@ QString formatVerificationResultOverview( const VerificationResult & res ) {
 
     const Error err = res.error();
 
-    QString overview;
 
-    // Icon:
-    overview += image( err ? "dialog-error" : "dialog-ok" );
-
-    // Summary:
-    overview += "<b>";
     if ( err.isCanceled() )
-        overview += i18n("Verification canceled.");
+        return i18n("<b>Verification canceled.</b>");
     else if ( err )
-        overview += i18n( "Verification failed: %1.", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
-    else
-        overview += i18n("Verification succeeded.");
-    overview += "</b>";
+        return i18n( "<b>Verification failed: %1.</b>", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
 
-    return overview;
+    return i18n("<b>Verification succeeded.</b>");
 }
 
 static QString formatDecryptionResultOverview( const DecryptionResult & result )
 {
     const Error err = result.error();
-    QString overview;
 
-    // Icon:
-    overview += image( err ? "dialog-error" : "dialog-ok" );
-
-    overview += "<b>";
     if ( err.isCanceled() )
-        overview += i18n("Decryption canceled.");
+        return i18n("<b>Decryption canceled.</b>");
     else if ( err )
-        overview += i18n( "Decryption failed: %1.", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
-    else
-        overview += i18n("Decryption succeeded." );
-    overview += "</b>";
-    return overview;
+        return i18n( "<b>Decryption failed: %1.</b>", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
+    return i18n("<b>Decryption succeeded.</b>" );
 }
 
 
@@ -286,8 +269,9 @@ public:
     QString m_errorString;
 };
 
-shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromDecryptResult( const DecryptionResult & dr, const QByteArray & plaintext ) {
+shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromDecryptResult( int id, const DecryptionResult & dr, const QByteArray & plaintext ) {
     return shared_ptr<DecryptVerifyResult>( new DecryptVerifyResult(
+        id,
         Decrypt,
         VerificationResult(),
         dr,
@@ -296,8 +280,9 @@ shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromDecryptResult( const De
         QString() ) );
 }
 
-shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromDecryptResult( const GpgME::Error & err, const QString& what ) {
+shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromDecryptResult( int id, const GpgME::Error & err, const QString& what ) {
     return shared_ptr<DecryptVerifyResult>( new DecryptVerifyResult(
+        id,
         Decrypt,
         VerificationResult(),
         DecryptionResult( err ),
@@ -306,8 +291,9 @@ shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromDecryptResult( const Gp
         what ) );
 }
 
-shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromDecryptVerifyResult( const DecryptionResult & dr, const VerificationResult & vr, const QByteArray & plaintext ) {
+shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromDecryptVerifyResult( int id, const DecryptionResult & dr, const VerificationResult & vr, const QByteArray & plaintext ) {
     return shared_ptr<DecryptVerifyResult>( new DecryptVerifyResult(
+        id,
         DecryptVerify,
         vr,
         dr,
@@ -316,8 +302,9 @@ shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromDecryptVerifyResult( co
         QString() ) );
 }
 
-shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromDecryptVerifyResult( const GpgME::Error & err, const QString & details ) {
+shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromDecryptVerifyResult( int id, const GpgME::Error & err, const QString & details ) {
     return shared_ptr<DecryptVerifyResult>( new DecryptVerifyResult(
+        id,
         DecryptVerify,
         VerificationResult(),
         DecryptionResult( err ),
@@ -326,8 +313,9 @@ shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromDecryptVerifyResult( co
         details ) );
 }
 
-shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromVerifyOpaqueResult( const VerificationResult & vr, const QByteArray & plaintext ) {
+shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromVerifyOpaqueResult( int id, const VerificationResult & vr, const QByteArray & plaintext ) {
     return shared_ptr<DecryptVerifyResult>( new DecryptVerifyResult(
+        id,
         Verify,
         vr,
         DecryptionResult(),
@@ -335,8 +323,9 @@ shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromVerifyOpaqueResult( con
         0,
         QString() ) );
 }
-shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromVerifyOpaqueResult( const GpgME::Error & err, const QString & details ) {
+shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromVerifyOpaqueResult( int id, const GpgME::Error & err, const QString & details ) {
     return shared_ptr<DecryptVerifyResult>( new DecryptVerifyResult(
+        id,
         Verify,
         VerificationResult( err ),
         DecryptionResult(),
@@ -345,8 +334,9 @@ shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromVerifyOpaqueResult( con
         details ) );
 }
 
-shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromVerifyDetachedResult( const VerificationResult & vr ) {
+shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromVerifyDetachedResult( int id, const VerificationResult & vr ) {
     return shared_ptr<DecryptVerifyResult>( new DecryptVerifyResult( 
+        id,
         Verify,
         vr,
         DecryptionResult(),
@@ -354,8 +344,9 @@ shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromVerifyDetachedResult( c
         0,
         QString() ) );
 }
-shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromVerifyDetachedResult( const GpgME::Error & err, const QString & details ) {
-    return shared_ptr<DecryptVerifyResult>( new DecryptVerifyResult( 
+shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromVerifyDetachedResult( int id, const GpgME::Error & err, const QString & details ) {
+    return shared_ptr<DecryptVerifyResult>( new DecryptVerifyResult(
+        id,
         Verify,
         VerificationResult( err ),
         DecryptionResult(),
@@ -364,13 +355,13 @@ shared_ptr<DecryptVerifyResult> DecryptVerifyResult::fromVerifyDetachedResult( c
         details ) );
 }
 
-DecryptVerifyResult::DecryptVerifyResult( DecryptVerifyOperation type,
+DecryptVerifyResult::DecryptVerifyResult( int id, DecryptVerifyOperation type,
                     const VerificationResult& vr,
                     const DecryptionResult& dr,
                     const QByteArray& stuff,
                     int errCode,
                     const QString& errString )
-    : Task::Result(), d( new Private( type, vr, dr, stuff, errCode, errString ) )
+    : Task::Result( id ), d( new Private( type, vr, dr, stuff, errCode, errString ) )
 {
 }
 
@@ -456,7 +447,7 @@ public:
 
 void DecryptVerifyTask::Private::emitResult( const shared_ptr<DecryptVerifyResult>& result )
 {
-    emit q->result( result );
+    q->emitResult( result );
     emit q->decryptVerifyResult( result );
 }
 
@@ -468,12 +459,12 @@ void DecryptVerifyTask::Private::slotResult( const DecryptionResult& dr, const V
         try {
             m_output->finalize();
         } catch ( const GpgME::Exception & e ) {
-            emitResult( DecryptVerifyResult::fromDecryptResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
+            emitResult( DecryptVerifyResult::fromDecryptResult( q->id(), e.error(), QString::fromLocal8Bit( e.what() ) ) );
             return;
         }
     }
 
-    emitResult( DecryptVerifyResult::fromDecryptVerifyResult( dr, vr, plainText ) );
+    emitResult( DecryptVerifyResult::fromDecryptVerifyResult( q->id(), dr, vr, plainText ) );
 }
 
 
@@ -535,7 +526,7 @@ void DecryptVerifyTask::doStart()
         d->registerJob( job );
         job->start( d->m_input->ioDevice(), d->m_output->ioDevice() );
     } catch ( const GpgME::Exception & e ) {
-        d->emitResult( DecryptVerifyResult::fromDecryptVerifyResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
+        d->emitResult( DecryptVerifyResult::fromDecryptVerifyResult( id(), e.error(), QString::fromLocal8Bit( e.what() ) ) );
     }
 }
 
@@ -564,7 +555,7 @@ public:
 
 void DecryptTask::Private::emitResult( const shared_ptr<DecryptVerifyResult>& result )
 {
-    emit q->result( result );
+    q->emitResult( result );
     emit q->decryptVerifyResult( result );
 }
 
@@ -576,12 +567,12 @@ void DecryptTask::Private::slotResult( const DecryptionResult& result, const QBy
         try {
             m_output->finalize();
         } catch ( const GpgME::Exception & e ) {
-            emitResult( DecryptVerifyResult::fromDecryptResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
+            emitResult( DecryptVerifyResult::fromDecryptResult( q->id(), e.error(), QString::fromLocal8Bit( e.what() ) ) );
             return;
         }
     }
 
-    emitResult( DecryptVerifyResult::fromDecryptResult( result, plainText ) );
+    emitResult( DecryptVerifyResult::fromDecryptResult( q->id(), result, plainText ) );
 }
 
 DecryptTask::DecryptTask( QObject* parent ) : AbstractDecryptVerifyTask( parent ), d( new Private( this ) )
@@ -644,7 +635,7 @@ void DecryptTask::doStart()
         d->registerJob( job );
         job->start( d->m_input->ioDevice(), d->m_output->ioDevice() );
     } catch ( const GpgME::Exception & e ) {
-        d->emitResult( DecryptVerifyResult::fromDecryptResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
+        d->emitResult( DecryptVerifyResult::fromDecryptResult( id(), e.error(), QString::fromLocal8Bit( e.what() ) ) );
     }
 }
 
@@ -673,7 +664,7 @@ public:
 
 void VerifyOpaqueTask::Private::emitResult( const shared_ptr<DecryptVerifyResult>& result )
 {
-    emit q->result( result );
+    q->emitResult( result );
     emit q->decryptVerifyResult( result );
 }
 
@@ -685,12 +676,12 @@ void VerifyOpaqueTask::Private::slotResult( const VerificationResult& result, co
         try {
             m_output->finalize();
         } catch ( const GpgME::Exception & e ) {
-            emitResult( DecryptVerifyResult::fromDecryptResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
+            emitResult( DecryptVerifyResult::fromDecryptResult( q->id(), e.error(), QString::fromLocal8Bit( e.what() ) ) );
             return;
         }
     }
 
-    emitResult( DecryptVerifyResult::fromVerifyOpaqueResult( result, plainText ) );
+    emitResult( DecryptVerifyResult::fromVerifyOpaqueResult( q->id(), result, plainText ) );
 }
 
 VerifyOpaqueTask::VerifyOpaqueTask( QObject* parent ) : AbstractDecryptVerifyTask( parent ), d( new Private( this ) )
@@ -752,7 +743,7 @@ void VerifyOpaqueTask::doStart()
         d->registerJob( job );
         job->start( d->m_input->ioDevice(), d->m_output ? d->m_output->ioDevice() : shared_ptr<QIODevice>() );
     } catch ( const GpgME::Exception & e ) {
-        d->emitResult( DecryptVerifyResult::fromVerifyOpaqueResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
+        d->emitResult( DecryptVerifyResult::fromVerifyOpaqueResult( id(), e.error(), QString::fromLocal8Bit( e.what() ) ) );
     }
 }
 
@@ -780,13 +771,13 @@ public:
 
 void VerifyDetachedTask::Private::emitResult( const shared_ptr<DecryptVerifyResult>& result )
 {
-    emit q->result( result );
+    q->emitResult( result );
     emit q->decryptVerifyResult( result );
 }
 
 void VerifyDetachedTask::Private::slotResult( const VerificationResult& result )
 {
-    emitResult( DecryptVerifyResult::fromVerifyDetachedResult( result ) );
+    emitResult( DecryptVerifyResult::fromVerifyDetachedResult( q->id(), result ) );
 }
 
 VerifyDetachedTask::VerifyDetachedTask( QObject* parent ) : AbstractDecryptVerifyTask( parent ), d( new Private( this ) )
@@ -848,7 +839,7 @@ void VerifyDetachedTask::doStart()
         d->registerJob( job );
         job->start( d->m_input->ioDevice(), d->m_signedData->ioDevice() );
     } catch ( const GpgME::Exception & e ) {
-        d->emitResult( DecryptVerifyResult::fromVerifyDetachedResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
+        d->emitResult( DecryptVerifyResult::fromVerifyDetachedResult( id(), e.error(), QString::fromLocal8Bit( e.what() ) ) );
     }
 }
 

@@ -202,14 +202,14 @@ namespace Crypto {
 
         GpgME::VerificationResult verificationResult() const;
 
-        static boost::shared_ptr<DecryptVerifyResult> fromDecryptResult( const GpgME::DecryptionResult & dr, const QByteArray & plaintext );
-        static boost::shared_ptr<DecryptVerifyResult> fromDecryptResult( const GpgME::Error & err, const QString& details );
-        static boost::shared_ptr<DecryptVerifyResult> fromDecryptVerifyResult( const GpgME::DecryptionResult & dr, const GpgME::VerificationResult & vr, const QByteArray & plaintext );
-        static boost::shared_ptr<DecryptVerifyResult> fromDecryptVerifyResult( const GpgME::Error & err, const QString & what );
-        static boost::shared_ptr<DecryptVerifyResult> fromVerifyOpaqueResult( const GpgME::VerificationResult & vr, const QByteArray & plaintext );
-        static boost::shared_ptr<DecryptVerifyResult> fromVerifyOpaqueResult( const GpgME::Error & err, const QString & details );
-        static boost::shared_ptr<DecryptVerifyResult> fromVerifyDetachedResult( const GpgME::VerificationResult & vr );
-        static boost::shared_ptr<DecryptVerifyResult> fromVerifyDetachedResult( const GpgME::Error & err, const QString & details );
+        static boost::shared_ptr<DecryptVerifyResult> fromDecryptResult( int id, const GpgME::DecryptionResult & dr, const QByteArray & plaintext );
+        static boost::shared_ptr<DecryptVerifyResult> fromDecryptResult( int id, const GpgME::Error & err, const QString& details );
+        static boost::shared_ptr<DecryptVerifyResult> fromDecryptVerifyResult( int id, const GpgME::DecryptionResult & dr, const GpgME::VerificationResult & vr, const QByteArray & plaintext );
+        static boost::shared_ptr<DecryptVerifyResult> fromDecryptVerifyResult( int id, const GpgME::Error & err, const QString & what );
+        static boost::shared_ptr<DecryptVerifyResult> fromVerifyOpaqueResult( int id, const GpgME::VerificationResult & vr, const QByteArray & plaintext );
+        static boost::shared_ptr<DecryptVerifyResult> fromVerifyOpaqueResult( int id, const GpgME::Error & err, const QString & details );
+        static boost::shared_ptr<DecryptVerifyResult> fromVerifyDetachedResult( int id, const GpgME::VerificationResult & vr );
+        static boost::shared_ptr<DecryptVerifyResult> fromVerifyDetachedResult( int id, const GpgME::Error & err, const QString & details );
 
         static const GpgME::Key & keyForSignature( const GpgME::Signature & sig, const std::vector<GpgME::Key> & keys );
 
@@ -221,7 +221,8 @@ private:
         DecryptVerifyResult( const DecryptVerifyResult& );
         DecryptVerifyResult& operator=( const DecryptVerifyResult& other );
 
-        DecryptVerifyResult( DecryptVerifyOperation op,
+        DecryptVerifyResult( int id,
+                  DecryptVerifyOperation op,
                   const GpgME::VerificationResult& vr,
                   const GpgME::DecryptionResult& dr,
                   const QByteArray& stuff,

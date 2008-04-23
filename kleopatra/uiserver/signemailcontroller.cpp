@@ -40,6 +40,7 @@
 
 #include <crypto/signemailtask.h>
 #include <crypto/certificateresolver.h>
+#include <crypto/taskcollection.h>
 
 #include <utils/input.h>
 #include <utils/output.h>
@@ -81,7 +82,6 @@ private:
 
     void schedule();            // ### extract to base
     shared_ptr<SignEMailTask> takeRunnable( GpgME::Protocol proto ); // ### extract to base
-    void connectTask( const shared_ptr<Task> & task, unsigned int idx ); // ### extract to base
 
 private:
     weak_ptr<AssuanCommand> command;
@@ -199,9 +199,16 @@ void SignEMailController::importIO() {
 
 // ### extract to base
 void SignEMailController::start() {
-    int i = 0;
-    Q_FOREACH( const shared_ptr<Task> task, d->runnable )
-        d->connectTask( task, i++ );
+    shared_ptr<TaskCollection> coll( new TaskCollection );
+    std::vector<shared_ptr<Task> > tmp;
+    std::copy( d->runnable.begin(), d->runnable.end(), std::back_inserter( tmp ) );
+    coll->setTasks( tmp );
+    d->ensureWizardCreated();
+    d->wizard->setTaskCollection( coll );
+    Q_FOREACH( const shared_ptr<Task> & t, tmp )
+        connect( t.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
+             this, SLOT(slotTaskDone()) );
+
     d->schedule();
 }
 
@@ -244,14 +251,6 @@ shared_ptr<SignEMailTask> SignEMailController::Private::takeRunnable( GpgME::Pro
     const shared_ptr<SignEMailTask> result = *it;
     runnable.erase( it );
     return result;
-}
-
-// ### extract to base
-void SignEMailController::Private::connectTask( const shared_ptr<Task> & t, unsigned int idx ) {
-    connect( t.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
-             q, SLOT(slotTaskDone()) );
-    ensureWizardCreated();
-    wizard->connectTask( t, idx );
 }
 
 // ### extract to base

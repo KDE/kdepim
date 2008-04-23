@@ -318,7 +318,7 @@ std::vector< shared_ptr<AbstractDecryptVerifyTask> > DecryptVerifyFilesControlle
         try {
             tasks.push_back( taskFromOperationWidget( m_wizard->operationWidget( i ), files[i], outDir ) );
         } catch ( const GpgME::Exception & e ) {
-            addStartErrorResult( failed++, DecryptVerifyResult::fromDecryptVerifyResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
+            addStartErrorResult( failed++, DecryptVerifyResult::fromDecryptVerifyResult( /**FIXME*/0, e.error(), QString::fromLocal8Bit( e.what() ) ) );
         }
 
     return tasks;
