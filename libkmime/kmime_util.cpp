@@ -235,6 +235,11 @@ QString decodeRFC2047String(const QCString &src, const char **usedCS,
   return codec->toUnicode(result.data(), result.length());
 }
 
+QString decodeRFC2047String(const QCString &src)
+{
+  const char *usedCS;
+  return decodeRFC2047String(src, &usedCS, "utf-8", false);
+}
 
 QCString encodeRFC2047String(const QString &src, const char *charset,
 			     bool addressHeader, bool allow8BitHeaders)

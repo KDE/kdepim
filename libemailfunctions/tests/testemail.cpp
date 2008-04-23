@@ -144,6 +144,13 @@ static bool checkNormalizeAddressesAndEncodeIDNs( const QString& input, const QS
   return true;
 }
 
+static bool checkNormalizeAddressesAndDecodeIDNs( const QString& input, const QString& expResult )
+{
+  QString result = KPIM::normalizeAddressesAndDecodeIDNs( input );
+  check( "normalizeAddressesAndDecodeIDNs( \"" + input + "\" ) result ", result, expResult );
+  return true;
+}
+
 static bool checkQuoteIfNecessary( const QString& input, const QString& expResult )
 {
   QString result = quoteNameIfNecessary( input );
@@ -457,6 +464,10 @@ int main(int argc, char *argv[])
   checkNormalizeAddressesAndEncodeIDNs( "Matt Douhan (jongel,fibbel) <matt@fruitsalad.org>", "Matt Douhan (jongel,fibbel) <matt@fruitsalad.org>" );
   checkNormalizeAddressesAndEncodeIDNs( "matt@fruitsalad.org (jongel,fibbel)", "\"jongel,fibbel\" <matt@fruitsalad.org>" );
   checkNormalizeAddressesAndEncodeIDNs( "matt@fruitsalad.org (\"jongel,fibbel\")", "\"jongel,fibbel\" <matt@fruitsalad.org>" );
+
+  // check checkNormalizeAddressesAndDecodeIDNs
+  checkNormalizeAddressesAndDecodeIDNs( "=?us-ascii?Q?Surname=2C=20Name?= <nobody@example.org>", "\"Surname, Name\" <nobody@example.org>" );
+  checkNormalizeAddressesAndDecodeIDNs( "=?iso-8859-1?B?5Hf8b2xmLPZBbmRyZWFz?= <nobody@example.org>", QString::fromUtf8("\"äwüolf,öAndreas\" <nobody@example.org>") );
 
   // check the "quote if necessary" method
   checkQuoteIfNecessary( "Matt Douhan", "Matt Douhan");
