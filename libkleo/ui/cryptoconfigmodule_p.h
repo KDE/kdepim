@@ -41,11 +41,13 @@
 class KLineEdit;
 class KIntNumInput;
 class KUrlRequester;
+
 class QPushButton;
 class QGridLayout;
 class QLineEdit;
 class QLabel;
 class QCheckBox;
+class QComboBox;
 
 namespace Kleo {
     class FileNameRequester;
@@ -164,6 +166,22 @@ namespace Kleo {
   private:
     KLineEdit* mLineEdit;
   };
+
+  /**
+   * A widget manager for a debug-level entry in the crypto config
+   */
+  class CryptoConfigEntryDebugLevel : public CryptoConfigEntryGUI {
+      Q_OBJECT
+  public:
+      CryptoConfigEntryDebugLevel( CryptoConfigModule * module, Kleo::CryptoConfigEntry * entry,
+                                   const QString & entryName, QGridLayout * layout, QWidget * parent=0 );
+
+      /* reimp */ void doSave();
+      /* reimp */ void doLoad();
+  private:
+      QComboBox * mComboBox;
+  };
+
 
   /**
    * A widget manager for a path entry in the crypto config

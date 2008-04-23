@@ -83,7 +83,10 @@ namespace Kleo {
                    ArgType_Path = 4,
                    ArgType_URL = 5,
                    ArgType_LDAPURL = 6,
-                   ArgType_DirPath = 7 };
+                   ArgType_DirPath = 7,
+
+                   NumArgType
+    };
 
 #ifdef __cplusplus
     virtual ~CryptoConfigEntry() {}

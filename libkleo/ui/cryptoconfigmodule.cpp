@@ -48,6 +48,7 @@
 #ifndef ONLY_KLEO
 # include <kurlrequester.h>
 #endif
+
 #include <QApplication>
 #include <QLabel>
 #include <QLayout>
@@ -62,6 +63,9 @@
 #include <QDesktopWidget>
 #include <QCheckBox>
 #include <QStyle>
+#include <QComboBox>
+
+#include <cassert>
 
 using namespace Kleo;
 
@@ -286,50 +290,72 @@ void Kleo::CryptoConfigGroupGUI::defaults()
 
 ////
 
+typedef CryptoConfigEntryGUI * (*constructor)( CryptoConfigModule *, Kleo::CryptoConfigEntry *, const QString &, QGridLayout *, QWidget * ); 
+
+namespace {
+template <typename T_Widget>
+CryptoConfigEntryGUI * _create( CryptoConfigModule * m, Kleo::CryptoConfigEntry * e, const QString & n, QGridLayout * l, QWidget * p ) {
+    return new T_Widget( m, e, n, l, p );
+}
+}
+
+static const struct WidgetsByEntryName {
+    const char * entryName;
+    constructor create;
+} widgetsByEntryName[] = {
+    // sort by 'name' !!
+    { "debug-level", &_create<CryptoConfigEntryDebugLevel> },
+};
+static const unsigned int numWidgetsByEntryName = sizeof widgetsByEntryName / sizeof *widgetsByEntryName;
+
+static const constructor listWidgets[CryptoConfigEntry::NumArgType] = {
+    // None: A list of options with no arguments (e.g. -v -v -v) is shown as a spinbox
+    &_create<CryptoConfigEntrySpinBox>,
+    0, // String
+    // Int/UInt: Let people type list of numbers (1,2,3....). Untested.
+    &_create<CryptoConfigEntryLineEdit>,
+    &_create<CryptoConfigEntryLineEdit>,
+    0, // Path
+    0, // URL
+    &_create<CryptoConfigEntryLDAPURL>,
+    0, // DirPath
+};
+
+static const constructor scalarWidgets[CryptoConfigEntry::NumArgType] = {
+  &_create<CryptoConfigEntryCheckBox>, // None
+  &_create<CryptoConfigEntryLineEdit>, // String
+  &_create<CryptoConfigEntrySpinBox>,  // Int
+  &_create<CryptoConfigEntrySpinBox>,  // UInt
+  &_create<CryptoConfigEntryPath>,     // Path
+  &_create<CryptoConfigEntryURL>,      // URL
+  0,                                   // LDAPURL
+  &_create<CryptoConfigEntryDirPath>,  // DirPath
+};
+
 CryptoConfigEntryGUI* Kleo::CryptoConfigEntryGUIFactory::createEntryGUI( CryptoConfigModule* module, Kleo::CryptoConfigEntry* entry, const QString& entryName, QGridLayout * glay, QWidget* widget )
 {
-  if ( entry->isList() ) {
-    switch( entry->argType() ) {
-    case Kleo::CryptoConfigEntry::ArgType_None:
-      // A list of options with no arguments (e.g. -v -v -v) is shown as a spinbox
-      return new CryptoConfigEntrySpinBox( module, entry, entryName, glay, widget );
-    case Kleo::CryptoConfigEntry::ArgType_Int:
-    case Kleo::CryptoConfigEntry::ArgType_UInt:
-      // Let people type list of numbers (1,2,3....). Untested.
-      return new CryptoConfigEntryLineEdit( module, entry, entryName, glay, widget );
-    case Kleo::CryptoConfigEntry::ArgType_URL:
-    case Kleo::CryptoConfigEntry::ArgType_Path:
-    case Kleo::CryptoConfigEntry::ArgType_DirPath:
-    case Kleo::CryptoConfigEntry::ArgType_String:
-      kWarning(5150) <<"No widget implemented for list of type" << entry->argType();
-      return 0; // TODO when the need arises :)
-    case Kleo::CryptoConfigEntry::ArgType_LDAPURL:
-      return new CryptoConfigEntryLDAPURL( module, entry, entryName, glay, widget );
-    }
-    kWarning(5150) <<"No widget implemented for list of (unknown) type" << entry->argType();
-    return 0;
-  }
+    assert( entry );
 
-  switch( entry->argType() ) {
-  case Kleo::CryptoConfigEntry::ArgType_None:
-    return new CryptoConfigEntryCheckBox( module, entry, entryName, glay, widget );
-  case Kleo::CryptoConfigEntry::ArgType_Int:
-  case Kleo::CryptoConfigEntry::ArgType_UInt:
-    return new CryptoConfigEntrySpinBox( module, entry, entryName, glay, widget );
-  case Kleo::CryptoConfigEntry::ArgType_URL:
-    return new CryptoConfigEntryURL( module, entry, entryName, glay, widget );
-  case Kleo::CryptoConfigEntry::ArgType_Path:
-    return new CryptoConfigEntryPath( module, entry, entryName, glay, widget );
-  case Kleo::CryptoConfigEntry::ArgType_DirPath:
-    return new CryptoConfigEntryDirPath( module, entry, entryName, glay, widget );
-  case Kleo::CryptoConfigEntry::ArgType_LDAPURL:
-      kWarning(5150) <<"No widget implemented for type" << entry->argType();
-      return 0; // TODO when the need arises :)
-  case Kleo::CryptoConfigEntry::ArgType_String:
-    return new CryptoConfigEntryLineEdit( module, entry, entryName, glay, widget );
-  }
-  kWarning(5150) <<"No widget implemented for (unknown) type" << entry->argType();
-  return 0;
+    // try to lookup by name:
+    for ( unsigned int i = 0 ; i < numWidgetsByEntryName ; ++i )
+        if ( entryName == QLatin1String( widgetsByEntryName[i].entryName ) )
+            return widgetsByEntryName[i].create( module, entry, entryName, glay, widget );
+
+    // none found, so look up by type:
+    const unsigned int argType = entry->argType();
+    assert( argType < CryptoConfigEntry::NumArgType );
+    if ( entry->isList() )
+        if ( const constructor create = listWidgets[argType] )
+            return create( module, entry, entryName, glay, widget );
+        else
+            kWarning(5150) <<"No widget implemented for list of type" << entry->argType();
+    else
+        if ( const constructor create = scalarWidgets[argType] )
+            return create( module, entry, entryName, glay, widget );
+        else
+            kWarning(5150) <<"No widget implemented for type" << entry->argType();
+
+    return 0;
 }
 
 ////
@@ -387,6 +413,63 @@ void Kleo::CryptoConfigEntryLineEdit::doSave()
 void Kleo::CryptoConfigEntryLineEdit::doLoad()
 {
   mLineEdit->setText( mEntry->stringValue() );
+}
+
+////
+
+static const struct {
+    const char * label;
+    const char * name;
+} debugLevels[] = {
+    { I18N_NOOP( "None (no debugging at all)" ),               "none"     },
+    { I18N_NOOP( "Basic (some basic debug messages)" ),        "basic"    },
+    { I18N_NOOP( "Advanced (more verbose debug messages)" ),   "advanced" },
+    { I18N_NOOP( "Expert (even more detailed messages)" ),     "expert"   },
+    { I18N_NOOP( "Guru (all of the debug messages you can get)" ), "guru" },
+};
+static const unsigned int numDebugLevels = sizeof debugLevels / sizeof *debugLevels;
+
+Kleo::CryptoConfigEntryDebugLevel::CryptoConfigEntryDebugLevel( CryptoConfigModule * module, Kleo::CryptoConfigEntry * entry,
+                                                                const QString & entryName, QGridLayout * glay, QWidget * widget )
+    : CryptoConfigEntryGUI( module, entry, entryName ),
+      mComboBox( new QComboBox( widget ) )
+{
+    QLabel *label = new QLabel( description(), widget );
+    label->setBuddy( mComboBox );
+
+    for ( unsigned int i = 0 ; i < numDebugLevels ; ++i )
+        mComboBox->addItem( i18n( debugLevels[i].label ) );
+
+    if ( entry->isReadOnly() ) {
+        label->setEnabled( false );
+        mComboBox->setEnabled( false );
+    } else {
+        connect( mComboBox, SIGNAL(currentIndexChanged(int)), SLOT(slotChanged()) );
+    }
+
+    const int row = glay->rowCount();
+    glay->addWidget( label, row, 1 );
+    glay->addWidget( mComboBox, row, 2 );
+}
+
+void Kleo::CryptoConfigEntryDebugLevel::doSave()
+{
+    const unsigned int idx = mComboBox->currentIndex();
+    if ( idx < numDebugLevels )
+        mEntry->setStringValue( QLatin1String( debugLevels[idx].name ) );
+    else
+        mEntry->setStringValue( QString() );
+}
+
+void Kleo::CryptoConfigEntryDebugLevel::doLoad()
+{
+    const QString str = mEntry->stringValue();
+    for ( unsigned int i = 0 ; i < numDebugLevels ; ++i )
+        if ( str == QLatin1String( debugLevels[i].name ) ) {
+            mComboBox->setCurrentIndex( i );
+            return;
+        }
+    mComboBox->setCurrentIndex( 0 );
 }
 
 ////
