@@ -239,9 +239,6 @@ void KeyListController::registerCommand( Command * cmd ) {
 }
 
 bool KeyListController::hasRunningCommands() const {
-    QDebug dbg = kDebug();
-    Q_FOREACH( const Command * cmd, d->commands )
-        dbg << cmd;
     return !d->commands.empty();
 }
 
