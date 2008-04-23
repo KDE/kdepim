@@ -159,8 +159,8 @@ public:
     void createAndStart( QAbstractItemView * view ) {
         ( new T( view, &this->controller ) )->start();
     }
-    template <typename T, typename A>
-    void createAndStart( const A & a ) {
+    template <typename T>
+    void createAndStart( const QStringList & a ) {
         ( new T( a, this->currentView(), &this->controller ) )->start();
     }
 
