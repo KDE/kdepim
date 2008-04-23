@@ -41,6 +41,9 @@
 #endif
 #ifdef KLEO_BUILD_OLD_MAINWINDOW
 # include "libkleo/backends/chiasmus/chiasmusbackend.h"
+#endif
+
+#ifndef ONLY_KLEO
 # include "libkleo/ui/backendconfigwidget.h"
 #endif
 
@@ -191,7 +194,7 @@ const Kleo::CryptoBackend * Kleo::CryptoBackendFactory::backendByName( const QSt
 }
 
 Kleo::BackendConfigWidget * Kleo::CryptoBackendFactory::configWidget( QWidget * parent, const char * name ) const {
-#ifdef KLEO_BUILD_OLD_MAINWINDOW
+#ifndef ONLY_KLEO
   return new Kleo::BackendConfigWidget( mSelf, parent, name );
 #else
   return 0;
@@ -294,4 +297,3 @@ bool Kleo::CryptoBackendFactory::knowsAboutProtocol( const char * name ) const {
 }
 
 #include "cryptobackendfactory.moc"
-
