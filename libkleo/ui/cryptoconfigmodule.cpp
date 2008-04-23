@@ -371,10 +371,18 @@ Kleo::CryptoConfigEntryGUI::CryptoConfigEntryGUI(
 
 QString Kleo::CryptoConfigEntryGUI::description() const
 {
-  QString descr = mEntry->description();
-  if ( descr.isEmpty() ) // shouldn't happen
-    descr = QString( "<%1>" ).arg( mName );
-  return descr;
+    QString descr = mEntry->description();
+    if ( descr.isEmpty() ) // shouldn't happen
+        return QString( "<%1>" ).arg( mName );
+    if ( i18nc( "Translate this to 'yes' or 'no' (use the English words!) "
+                "depending on whether your language uses "
+                "Sentence style capitalisation in GUI labels (yes) or not (no). "
+                "Context: We get some backend strings in that have the wrong "
+                "capitalizaion (in English, at least) so we need to force the "
+                "first character to upper-case. It is this behaviour you can "
+                "control for your language with this translation.", "yes" ) == QLatin1String( "yes" ) )
+        descr[0] = descr[0].toUpper();
+    return descr;
 }
 
 void Kleo::CryptoConfigEntryGUI::resetToDefault()
@@ -434,7 +442,7 @@ Kleo::CryptoConfigEntryDebugLevel::CryptoConfigEntryDebugLevel( CryptoConfigModu
     : CryptoConfigEntryGUI( module, entry, entryName ),
       mComboBox( new QComboBox( widget ) )
 {
-    QLabel *label = new QLabel( description(), widget );
+    QLabel *label = new QLabel( i18n("Set the debugging level to"), widget );
     label->setBuddy( mComboBox );
 
     for ( unsigned int i = 0 ; i < numDebugLevels ; ++i )
