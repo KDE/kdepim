@@ -113,7 +113,8 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
     scrollArea->setWidgetResizable( true );
 
     CryptoConfigComponentGUI* compGUI =
-      new CryptoConfigComponentGUI( this, comp, scrollArea, (*it).toLocal8Bit() );
+      new CryptoConfigComponentGUI( this, comp, scrollArea );
+    compGUI->setObjectName( *it );
     scrollArea->setWidget( compGUI );
     // KJanusWidget doesn't seem to have iterators, so we store a copy...
     mComponentGUIs.append( compGUI );
@@ -171,11 +172,10 @@ void Kleo::CryptoConfigModule::cancel()
 
 Kleo::CryptoConfigComponentGUI::CryptoConfigComponentGUI(
   CryptoConfigModule* module, Kleo::CryptoConfigComponent* component,
-  QWidget* parent, const char* name )
+  QWidget* parent )
   : QWidget( parent ),
     mComponent( component )
 {
-  setObjectName( name );
   QGridLayout * glay = new QGridLayout( this );
   glay->setSpacing( KDialog::spacingHint() );
   const QStringList groups = mComponent->groupList();
@@ -228,10 +228,9 @@ void Kleo::CryptoConfigComponentGUI::defaults()
 
 Kleo::CryptoConfigGroupGUI::CryptoConfigGroupGUI(
   CryptoConfigModule* module, Kleo::CryptoConfigGroup* group,
-  QGridLayout * glay, QWidget* widget, const char* name )
+  QGridLayout * glay, QWidget* widget)
   : QObject( module ), mGroup( group )
 {
-  setObjectName( name );
   const int startRow = glay->rowCount();
   const QStringList entries = mGroup->entryList();
   for( QStringList::const_iterator it = entries.begin(), end = entries.end() ; it != end; ++it ) {
@@ -287,17 +286,17 @@ void Kleo::CryptoConfigGroupGUI::defaults()
 
 ////
 
-CryptoConfigEntryGUI* Kleo::CryptoConfigEntryGUIFactory::createEntryGUI( CryptoConfigModule* module, Kleo::CryptoConfigEntry* entry, const QString& entryName, QGridLayout * glay, QWidget* widget, const char* name )
+CryptoConfigEntryGUI* Kleo::CryptoConfigEntryGUIFactory::createEntryGUI( CryptoConfigModule* module, Kleo::CryptoConfigEntry* entry, const QString& entryName, QGridLayout * glay, QWidget* widget )
 {
   if ( entry->isList() ) {
     switch( entry->argType() ) {
     case Kleo::CryptoConfigEntry::ArgType_None:
       // A list of options with no arguments (e.g. -v -v -v) is shown as a spinbox
-      return new CryptoConfigEntrySpinBox( module, entry, entryName, glay, widget, name );
+      return new CryptoConfigEntrySpinBox( module, entry, entryName, glay, widget );
     case Kleo::CryptoConfigEntry::ArgType_Int:
     case Kleo::CryptoConfigEntry::ArgType_UInt:
       // Let people type list of numbers (1,2,3....). Untested.
-      return new CryptoConfigEntryLineEdit( module, entry, entryName, glay, widget, name );
+      return new CryptoConfigEntryLineEdit( module, entry, entryName, glay, widget );
     case Kleo::CryptoConfigEntry::ArgType_URL:
     case Kleo::CryptoConfigEntry::ArgType_Path:
     case Kleo::CryptoConfigEntry::ArgType_DirPath:
@@ -305,7 +304,7 @@ CryptoConfigEntryGUI* Kleo::CryptoConfigEntryGUIFactory::createEntryGUI( CryptoC
       kWarning(5150) <<"No widget implemented for list of type" << entry->argType();
       return 0; // TODO when the need arises :)
     case Kleo::CryptoConfigEntry::ArgType_LDAPURL:
-      return new CryptoConfigEntryLDAPURL( module, entry, entryName, glay, widget, name );
+      return new CryptoConfigEntryLDAPURL( module, entry, entryName, glay, widget );
     }
     kWarning(5150) <<"No widget implemented for list of (unknown) type" << entry->argType();
     return 0;
@@ -313,21 +312,21 @@ CryptoConfigEntryGUI* Kleo::CryptoConfigEntryGUIFactory::createEntryGUI( CryptoC
 
   switch( entry->argType() ) {
   case Kleo::CryptoConfigEntry::ArgType_None:
-    return new CryptoConfigEntryCheckBox( module, entry, entryName, glay, widget, name );
+    return new CryptoConfigEntryCheckBox( module, entry, entryName, glay, widget );
   case Kleo::CryptoConfigEntry::ArgType_Int:
   case Kleo::CryptoConfigEntry::ArgType_UInt:
-    return new CryptoConfigEntrySpinBox( module, entry, entryName, glay, widget, name );
+    return new CryptoConfigEntrySpinBox( module, entry, entryName, glay, widget );
   case Kleo::CryptoConfigEntry::ArgType_URL:
-    return new CryptoConfigEntryURL( module, entry, entryName, glay, widget, name );
+    return new CryptoConfigEntryURL( module, entry, entryName, glay, widget );
   case Kleo::CryptoConfigEntry::ArgType_Path:
-    return new CryptoConfigEntryPath( module, entry, entryName, glay, widget, name );
+    return new CryptoConfigEntryPath( module, entry, entryName, glay, widget );
   case Kleo::CryptoConfigEntry::ArgType_DirPath:
-    return new CryptoConfigEntryDirPath( module, entry, entryName, glay, widget, name );
+    return new CryptoConfigEntryDirPath( module, entry, entryName, glay, widget );
   case Kleo::CryptoConfigEntry::ArgType_LDAPURL:
       kWarning(5150) <<"No widget implemented for type" << entry->argType();
       return 0; // TODO when the need arises :)
   case Kleo::CryptoConfigEntry::ArgType_String:
-    return new CryptoConfigEntryLineEdit( module, entry, entryName, glay, widget, name );
+    return new CryptoConfigEntryLineEdit( module, entry, entryName, glay, widget );
   }
   kWarning(5150) <<"No widget implemented for (unknown) type" << entry->argType();
   return 0;
@@ -338,11 +337,9 @@ CryptoConfigEntryGUI* Kleo::CryptoConfigEntryGUIFactory::createEntryGUI( CryptoC
 Kleo::CryptoConfigEntryGUI::CryptoConfigEntryGUI(
   CryptoConfigModule* module,
   Kleo::CryptoConfigEntry* entry,
-  const QString& entryName,
-  const char* name )
+  const QString& entryName )
   : QObject( module ), mEntry( entry ), mName( entryName ), mChanged( false )
 {
-  setObjectName( name );
   connect( this, SIGNAL( changed() ), module, SIGNAL( changed() ) );
 }
 
@@ -365,8 +362,8 @@ void Kleo::CryptoConfigEntryGUI::resetToDefault()
 Kleo::CryptoConfigEntryLineEdit::CryptoConfigEntryLineEdit(
   CryptoConfigModule* module,
   Kleo::CryptoConfigEntry* entry, const QString& entryName,
-  QGridLayout * glay, QWidget* widget, const char* name )
-  : CryptoConfigEntryGUI( module, entry, entryName, name )
+  QGridLayout * glay, QWidget* widget )
+  : CryptoConfigEntryGUI( module, entry, entryName )
 {
   const int row = glay->rowCount();
   mLineEdit = new KLineEdit( widget );
@@ -397,8 +394,8 @@ void Kleo::CryptoConfigEntryLineEdit::doLoad()
 Kleo::CryptoConfigEntryPath::CryptoConfigEntryPath(
   CryptoConfigModule* module,
   Kleo::CryptoConfigEntry* entry, const QString& entryName,
-  QGridLayout * glay, QWidget* widget, const char* name )
-    : CryptoConfigEntryGUI( module, entry, entryName, name ),
+  QGridLayout * glay, QWidget* widget )
+    : CryptoConfigEntryGUI( module, entry, entryName ),
       mUrlRequester( 0 ),
       mFileNameRequester( 0 )
 {
@@ -459,8 +456,8 @@ void Kleo::CryptoConfigEntryPath::doLoad()
 Kleo::CryptoConfigEntryDirPath::CryptoConfigEntryDirPath(
   CryptoConfigModule* module,
   Kleo::CryptoConfigEntry* entry, const QString& entryName,
-  QGridLayout * glay, QWidget* widget, const char* name )
-    : CryptoConfigEntryGUI( module, entry, entryName, name ),
+  QGridLayout * glay, QWidget* widget )
+    : CryptoConfigEntryGUI( module, entry, entryName ),
       mUrlRequester( 0 ),
       mFileNameRequester( 0 )
 {
@@ -521,8 +518,8 @@ void Kleo::CryptoConfigEntryDirPath::doLoad()
 Kleo::CryptoConfigEntryURL::CryptoConfigEntryURL(
   CryptoConfigModule* module,
   Kleo::CryptoConfigEntry* entry, const QString& entryName,
-  QGridLayout * glay, QWidget* widget, const char* name )
-    : CryptoConfigEntryGUI( module, entry, entryName, name ),
+  QGridLayout * glay, QWidget* widget )
+    : CryptoConfigEntryGUI( module, entry, entryName ),
 #ifndef ONLY_KLEO
       mUrlRequester( 0 ),
 #endif
@@ -577,8 +574,8 @@ void Kleo::CryptoConfigEntryURL::doLoad()
 Kleo::CryptoConfigEntrySpinBox::CryptoConfigEntrySpinBox(
   CryptoConfigModule* module,
   Kleo::CryptoConfigEntry* entry, const QString& entryName,
-  QGridLayout * glay, QWidget* widget, const char* name )
-  : CryptoConfigEntryGUI( module, entry, entryName, name )
+  QGridLayout * glay, QWidget* widget )
+  : CryptoConfigEntryGUI( module, entry, entryName )
 {
 
   if ( entry->argType() == Kleo::CryptoConfigEntry::ArgType_None && entry->isList() ) {
@@ -645,8 +642,8 @@ void Kleo::CryptoConfigEntrySpinBox::doLoad()
 Kleo::CryptoConfigEntryCheckBox::CryptoConfigEntryCheckBox(
   CryptoConfigModule* module,
   Kleo::CryptoConfigEntry* entry, const QString& entryName,
-  QGridLayout * glay, QWidget* widget, const char* name )
-  : CryptoConfigEntryGUI( module, entry, entryName, name )
+  QGridLayout * glay, QWidget* widget )
+  : CryptoConfigEntryGUI( module, entry, entryName )
 {
   const int row = glay->rowCount();
   mCheckBox = new QCheckBox( widget );
@@ -673,8 +670,8 @@ Kleo::CryptoConfigEntryLDAPURL::CryptoConfigEntryLDAPURL(
   CryptoConfigModule* module,
   Kleo::CryptoConfigEntry* entry,
   const QString& entryName,
-  QGridLayout * glay, QWidget* widget, const char* name )
-  : CryptoConfigEntryGUI( module, entry, entryName, name )
+  QGridLayout * glay, QWidget* widget )
+  : CryptoConfigEntryGUI( module, entry, entryName )
 {
   mLabel = new QLabel( widget );
   mPushButton = new QPushButton( i18n( "Edit..." ), widget );

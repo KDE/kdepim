@@ -69,7 +69,7 @@ namespace Kleo {
 
   public:
     CryptoConfigComponentGUI( CryptoConfigModule* module, Kleo::CryptoConfigComponent* component,
-                              QWidget* parent, const char* name = 0 );
+                              QWidget* parent=0 );
 
     bool save();
     void load();
@@ -88,7 +88,7 @@ namespace Kleo {
 
   public:
     CryptoConfigGroupGUI( CryptoConfigModule* module, Kleo::CryptoConfigGroup* group,
-                          QGridLayout * layout, QWidget* parent, const char* name = 0 );
+                          QGridLayout * layout, QWidget* parent=0 );
 
     bool save();
     void load();
@@ -108,7 +108,7 @@ namespace Kleo {
     static CryptoConfigEntryGUI* createEntryGUI(
       CryptoConfigModule* module,
       Kleo::CryptoConfigEntry* entry, const QString& entryName,
-      QGridLayout * layout, QWidget* widget, const char* name = 0 );
+      QGridLayout * layout, QWidget* widget );
   };
 
   /**
@@ -119,9 +119,7 @@ namespace Kleo {
   public:
     CryptoConfigEntryGUI( CryptoConfigModule* module,
                           Kleo::CryptoConfigEntry* entry,
-                          const QString& entryName,
-                          const char* name = 0 );
-    virtual ~CryptoConfigEntryGUI() {}
+                          const QString& entryName );
 
     void load() { doLoad(); mChanged = false; }
     void save() { Q_ASSERT( mChanged ); doSave(); mChanged = false; }
@@ -130,10 +128,10 @@ namespace Kleo {
     QString description() const;
     bool isChanged() const { return mChanged; }
 
-  signals:
+  Q_SIGNALS:
     void changed();
 
-  protected slots:
+  protected Q_SLOTS:
     void slotChanged() {
       mChanged = true;
       emit changed();
@@ -159,10 +157,10 @@ namespace Kleo {
                                Kleo::CryptoConfigEntry* entry,
                                const QString& entryName,
                                QGridLayout * layout,
-                               QWidget* parent, const char* name = 0 );
+                               QWidget* parent=0 );
 
-    virtual void doSave();
-    virtual void doLoad();
+    /* reimp */ void doSave();
+    /* reimp */ void doLoad();
   private:
     KLineEdit* mLineEdit;
   };
@@ -178,10 +176,10 @@ namespace Kleo {
                            Kleo::CryptoConfigEntry* entry,
                            const QString& entryName,
                            QGridLayout * layout,
-                           QWidget* parent, const char* name = 0 );
+                           QWidget* parent=0 );
 
-    virtual void doSave();
-    virtual void doLoad();
+    /* reimp */ void doSave();
+    /* reimp */ void doLoad();
   private:
     KUrlRequester* mUrlRequester;
     Kleo::FileNameRequester * mFileNameRequester;
@@ -198,10 +196,10 @@ namespace Kleo {
                               Kleo::CryptoConfigEntry* entry,
                               const QString& entryName,
                               QGridLayout * layout,
-                              QWidget* parent, const char* name = 0 );
+                              QWidget* parent=0 );
 
-    virtual void doSave();
-    virtual void doLoad();
+    /* reimp */ void doSave();
+    /* reimp */ void doLoad();
   private:
     KUrlRequester* mUrlRequester;
     Kleo::FileNameRequester * mFileNameRequester;
@@ -218,10 +216,10 @@ namespace Kleo {
                           Kleo::CryptoConfigEntry* entry,
                           const QString& entryName,
                           QGridLayout * layout,
-                          QWidget* parent, const char* name = 0 );
+                          QWidget* parent=0 );
 
-    virtual void doSave();
-    virtual void doLoad();
+    /* reimp */ void doSave();
+    /* reimp */ void doLoad();
 
   private:
 	QLineEdit * mLineEdit;
@@ -239,9 +237,9 @@ namespace Kleo {
                               Kleo::CryptoConfigEntry* entry,
                               const QString& entryName,
                               QGridLayout * layout,
-                              QWidget* parent, const char* name = 0 );
-    virtual void doSave();
-    virtual void doLoad();
+                              QWidget* parent=0 );
+    /* reimp */ void doSave();
+    /* reimp */ void doLoad();
   private:
     enum { Int, UInt, ListOfNone } mKind;
     KIntNumInput* mNumInput;
@@ -258,9 +256,9 @@ namespace Kleo {
                                Kleo::CryptoConfigEntry* entry,
                                const QString& entryName,
                                QGridLayout * layout,
-                               QWidget* parent, const char* name = 0 );
-    virtual void doSave();
-    virtual void doLoad();
+                               QWidget* parent=0 );
+    /* reimp */ void doSave();
+    /* reimp */ void doLoad();
   private:
     QCheckBox* mCheckBox;
   };
@@ -276,10 +274,10 @@ namespace Kleo {
                               Kleo::CryptoConfigEntry* entry,
                               const QString& entryName,
                               QGridLayout * layout,
-                              QWidget* parent, const char* name = 0 );
-    virtual void doSave();
-    virtual void doLoad();
-  private slots:
+                              QWidget* parent=0 );
+    /* reimp */ void doSave();
+    /* reimp */ void doLoad();
+  private Q_SLOTS:
     void slotOpenDialog();
   private:
     void setURLList( const KUrl::List& urlList );
