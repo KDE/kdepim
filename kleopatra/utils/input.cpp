@@ -49,6 +49,7 @@
 #include <QApplication>
 #include <QByteArray>
 #include <QBuffer>
+#include <QFileInfo>
 
 #include <errno.h>
 
@@ -85,7 +86,9 @@ namespace {
         explicit FileInput( const QString & fileName );
         explicit FileInput( const shared_ptr<QFile> & file );
 
-        /* reimp */ QString label() const { return m_io ? m_fileName : InputImplBase::label() ; }
+        /* reimp */ QString label() const {
+            return m_io ? QFileInfo( m_fileName ).fileName() : InputImplBase::label();
+        }
         /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_io; }
         /* reimp */ unsigned int classification() const;
     private:

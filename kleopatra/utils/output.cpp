@@ -44,6 +44,7 @@
 #include <KMessageBox>
 #include <kdebug.h>
 
+#include <QFileInfo>
 #include <QTemporaryFile>
 #include <QString>
 #include <QClipboard>
@@ -181,7 +182,7 @@ namespace {
         };
         void setOverwritePolicy( OverwritePolicy overwrite ) { m_overwrite = overwrite; }
 
-        /* reimp */ QString label() const { return m_fileName; }
+        /* reimp */ QString label() const { return QFileInfo( m_fileName ).fileName(); }
         /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_tmpFile; }
         /* reimp */ void doFinalize();
         /* reimp */ void doCancel() { kDebug() << this; }
