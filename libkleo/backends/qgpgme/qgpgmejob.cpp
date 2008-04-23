@@ -141,11 +141,11 @@ Kleo::QGpgMEJob::~QGpgMEJob() {
 }
 
 void Kleo::QGpgMEJob::resetQIODeviceDataObjects() {
-    if ( const QGpgME::QByteArrayDataProvider * const dp = dynamic_cast<QGpgME::QByteArrayDataProvider*>( mOutDataDataProvider ) ) {
+    if ( const QGpgME::QIODeviceDataProvider * const dp = dynamic_cast<QGpgME::QIODeviceDataProvider*>( mOutDataDataProvider ) ) {
         delete mOutData; mOutData = 0;
         delete mOutDataDataProvider; mOutDataDataProvider = 0;
     }
-    if ( const QGpgME::QByteArrayDataProvider * const dp = dynamic_cast<QGpgME::QByteArrayDataProvider*>( mInDataDataProvider ) ) {
+    if ( const QGpgME::QIODeviceDataProvider * const dp = dynamic_cast<QGpgME::QIODeviceDataProvider*>( mInDataDataProvider ) ) {
         delete mInData; mInData = 0;
         delete mInDataDataProvider; mInDataDataProvider = 0;
     }
