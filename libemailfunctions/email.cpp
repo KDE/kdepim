@@ -23,6 +23,7 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kidna.h>
+#include <kmime_util.h>
 
 #include <qregexp.h>
 
@@ -803,7 +804,7 @@ QString KPIM::normalizedAddress( const QString & displayName,
   if ( displayName.isEmpty() && comment.isEmpty() )
     return addrSpec;
   else if ( comment.isEmpty() )
-    return displayName + " <" + addrSpec + ">";
+    return quoteNameIfNecessary( displayName ) + " <" + addrSpec + ">";
   else if ( displayName.isEmpty() ) {
     QString commentStr = comment;
     return quoteNameIfNecessary( commentStr ) + " <" + addrSpec + ">";
@@ -862,6 +863,9 @@ QString KPIM::normalizeAddressesAndDecodeIDNs( const QString & str )
     if( !(*it).isEmpty() ) {
       if ( KPIM::splitAddress( (*it).utf8(), displayName, addrSpec, comment )
            == AddressOk ) {
+
+        displayName = KMime::decodeRFC2047String(displayName).utf8();
+        comment = KMime::decodeRFC2047String(comment).utf8();
 
         normalizedAddressList <<
           normalizedAddress( QString::fromUtf8( displayName ),

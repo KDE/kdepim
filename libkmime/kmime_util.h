@@ -77,6 +77,13 @@ namespace KMime {
   extern QString decodeRFC2047String(const QCString &src, const char **usedCS,
 				     const QCString &defaultCS, bool forceCS) KDE_EXPORT;
 
+  /** Decode string @p src according to RFC2047 (ie. the
+      =?charset?[qb]?encoded?= construct).
+      @param src       source string.
+      @return the decoded string.
+  */
+  extern QString decodeRFC2047String(const QCString &src) KDE_EXPORT;
+
   /** Encode string @p src according to RFC2047 using charset
       @p charset.
       @param src           source string.

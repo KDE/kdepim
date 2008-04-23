@@ -13,6 +13,7 @@ libkcal_la_LIBADD  = versit/libversit.la $(LIB_KIO) \
                      ./libical/src/libical/libical.la \
                      ./libical/src/libicalss/libicalss.la \
                      $(top_builddir)/ktnef/lib/libktnef.la \
+                     ../libkmime/libkmime.la \
                      ../libemailfunctions/libemailfunctions.la \
                      -lkresources -lkabc
 
