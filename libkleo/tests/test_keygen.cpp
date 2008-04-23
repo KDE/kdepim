@@ -54,7 +54,7 @@
 
 #include <assert.h>
 
-static const char * keyParams[] = {
+static const char * const keyParams[] = {
   "Key-Type", "Key-Length",
   "Subkey-Type", "Subkey-Length",
   "Name-Real", "Name-Comment", "Name-Email", "Name-DN",
