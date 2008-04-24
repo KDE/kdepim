@@ -282,7 +282,7 @@ namespace Kleo {
   };
 
   /**
-   * A widget manager for a bool entry in the crypto config
+   * A widget manager for an LDAP list entry in the crypto config
    */
   class CryptoConfigEntryLDAPURL : public CryptoConfigEntryGUI {
     Q_OBJECT
@@ -302,6 +302,27 @@ namespace Kleo {
     QLabel* mLabel;
     QPushButton* mPushButton;
     KUrl::List mURLList;
+  };
+
+  /**
+   * A widget manager for an LDAP list entry in the crypto config
+   */
+  class CryptoConfigEntryKeyserver : public CryptoConfigEntryGUI {
+    Q_OBJECT
+
+  public:
+    CryptoConfigEntryKeyserver( CryptoConfigModule* module,
+                                Kleo::CryptoConfigEntry* entry,
+                                const QString& entryName,
+                                QGridLayout * layout,
+                                QWidget* parent=0 );
+    /* reimp */ void doSave();
+    /* reimp */ void doLoad();
+  private Q_SLOTS:
+    void slotOpenDialog();
+  private:
+    QLabel* mLabel;
+    QPushButton* mPushButton;
   };
 }
 

@@ -305,6 +305,7 @@ static const struct WidgetsByEntryName {
 } widgetsByEntryName[] = {
     // sort by 'name' !!
     { "debug-level", &_create<CryptoConfigEntryDebugLevel> },
+    { "keyserver",   &_create<CryptoConfigEntryKeyserver>  },
 };
 static const unsigned int numWidgetsByEntryName = sizeof widgetsByEntryName / sizeof *widgetsByEntryName;
 
@@ -757,6 +758,8 @@ void Kleo::CryptoConfigEntryCheckBox::doLoad()
   mCheckBox->setChecked( mEntry->boolValue() );
 }
 
+
+
 Kleo::CryptoConfigEntryLDAPURL::CryptoConfigEntryLDAPURL(
   CryptoConfigModule* module,
   Kleo::CryptoConfigEntry* entry,
@@ -807,10 +810,8 @@ void Kleo::CryptoConfigEntryLDAPURL::slotOpenDialog()
   dirserv->setAllowedProtocols( DirectoryServicesWidget::X509Protocol );
   dirserv->addX509Services( mURLList );
   dialog.setMainWidget( dirserv );
-  connect( &dialog, SIGNAL( defaultClicked() ), dirserv, SLOT( defaults() ) );
+  connect( &dialog, SIGNAL(defaultClicked()), dirserv, SLOT(clear()) );
   if ( dialog.exec() ) {
-    // Note that we just grab the urls from the dialog, we don't call its save method,
-    // since the user hasn't confirmed the big config dialog yet.
     setURLList( dirserv->x509Services() );
     slotChanged();
   }
@@ -823,6 +824,73 @@ void Kleo::CryptoConfigEntryLDAPURL::setURLList( const KUrl::List& urlList )
     mLabel->setText( i18n( "No server configured yet" ) );
   else
     mLabel->setText( i18np( "1 server configured", "%1 servers configured", mURLList.count() ) );
+}
+
+
+
+Kleo::CryptoConfigEntryKeyserver::CryptoConfigEntryKeyserver(
+  CryptoConfigModule* module,
+  Kleo::CryptoConfigEntry* entry,
+  const QString& entryName,
+  QGridLayout * glay, QWidget* widget )
+  : CryptoConfigEntryGUI( module, entry, entryName )
+{
+  mLabel = new QLabel( widget );
+  mPushButton = new QPushButton( i18n( "Edit..." ), widget );
+
+
+  const int row = glay->rowCount();
+  QLabel *label = new QLabel( i18n("Use keyserver at"), widget );
+  label->setBuddy( mPushButton );
+  glay->addWidget( label, row, 1 );
+  QHBoxLayout * hlay = new QHBoxLayout;
+  glay->addLayout( hlay, row, 2 );
+  hlay->addWidget( mLabel, 1 );
+  hlay->addWidget( mPushButton );
+
+  if ( entry->isReadOnly() ) {
+    mLabel->setEnabled( false );
+    mPushButton->hide();
+  } else {
+    connect( mPushButton, SIGNAL( clicked() ), SLOT( slotOpenDialog() ) );
+  }
+}
+
+void Kleo::CryptoConfigEntryKeyserver::doLoad()
+{
+  mLabel->setText( mEntry->stringValue() );
+}
+
+void Kleo::CryptoConfigEntryKeyserver::doSave()
+{
+  mEntry->setStringValue( mLabel->text() );
+}
+
+static KUrl string2url( const QString & str ) {
+    return KUrl( str );
+}
+
+static QString urls2string( const KUrl::List & urls ) {
+    return urls.empty() ? QString() : urls.front().url() ;
+}
+
+void Kleo::CryptoConfigEntryKeyserver::slotOpenDialog()
+{
+  // I'm a bad boy and I do it all on the stack. Enough classes already :)
+  // This is just a simple dialog around the directory-services-widget
+  KDialog dialog( mPushButton->parentWidget() );
+  dialog.setCaption( i18n( "Configure LDAP Servers" ) );
+  dialog.setButtons( KDialog::Default|KDialog::Cancel|KDialog::Ok );
+  DirectoryServicesWidget dirserv( &dialog );
+  dirserv.setAllowedSchemes( DirectoryServicesWidget::AllSchemes );
+  dirserv.setAllowedProtocols( DirectoryServicesWidget::OpenPGPProtocol );
+  dirserv.addOpenPGPServices( string2url( mLabel->text() ) );
+  dialog.setMainWidget( &dirserv );
+  connect( &dialog, SIGNAL(defaultClicked()), &dirserv, SLOT(clear()) );
+  if ( dialog.exec() ) {
+    mLabel->setText( urls2string( dirserv.openPGPServices() ) );
+    slotChanged();
+  }
 }
 
 #include "cryptoconfigmodule.moc"
