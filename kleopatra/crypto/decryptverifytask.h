@@ -199,6 +199,7 @@ namespace Crypto {
         /* reimpl */ bool hasError() const;
         /* reimpl */ int errorCode() const;
         /* reimpl */ QString errorString() const;
+        /* reimpl */ VisualCode code() const;
 
         GpgME::VerificationResult verificationResult() const;
 

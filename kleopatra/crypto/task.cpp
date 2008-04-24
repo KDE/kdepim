@@ -33,6 +33,7 @@
 #include <config-kleopatra.h>
 
 #include "task.h"
+#include "task_p.h"
 
 #include <utils/exception.h>
 #include <utils/gnupg-helper.h>
@@ -66,7 +67,7 @@ namespace {
         /* reimp */ QString details() const { return QString(); }
         /* reimp */ int errorCode() const { return m_code; }
         /* reimp */ QString errorString() const { return m_details; }
-
+        /* reimp */ VisualCode code() const { return NeutralError; }
     private:
         int m_code;
         QString m_details;
@@ -103,6 +104,12 @@ Task::Task( QObject * p )
 }
 
 Task::~Task() {}
+
+shared_ptr<Task> Task::makeErrorTask( int code, const QString & details, const QString & label ) {
+    const shared_ptr<SimpleTask> t( new SimpleTask( label ) );
+    t->setResult( t->makeErrorResult( code, details ) );
+    return t;
+}
 
 int Task::id() const
 {
@@ -153,15 +160,15 @@ void Task::emitError( int errCode, const QString& details ) {
     emitResult( makeErrorResult( errCode, details ) );
 }
 
-void Task::emitResult( const shared_ptr<Task::Result> & r )
+void Task::emitResult( const shared_ptr<const Task::Result> & r )
 {
     d->m_processedSize = d->m_totalSize;
     emit result( r );
 }
 
-boost::shared_ptr<Task::Result> Task::makeErrorResult( int errCode, const QString& details )
+shared_ptr<Task::Result> Task::makeErrorResult( int errCode, const QString& details )
 {
-    return boost::shared_ptr<Task::Result>( new ErrorResult( id(), errCode, details ) );
+    return shared_ptr<Task::Result>( new ErrorResult( id(), errCode, details ) );
 }
 
 
@@ -203,21 +210,25 @@ QString Task::Result::makeOverview( const QString& msg )
     return "<b>" + msg + "</b>";
 }
 
-QString Task::Result::iconPath( ErrorLevel level )
+QString Task::Result::iconPath( VisualCode code )
 {
-    switch ( level ) {
-        case Error:
+    switch ( code ) {
+        case Danger:
             return image( "dialog-error" );
-        case NoError:
+        case AllGood:
             return image( "dialog-ok" );
         case Warning:
             return image( "dialog-warning" );
+        case NeutralError:
+        case NeutralSuccess:
+        default:
+            return QString();
+
     }
 }
 
-QString Task::Result::icon() const { return iconPath( hasError() ? Error : NoError ); }
+QString Task::Result::icon() const { return iconPath( code() ); }
 
 
+#include "task_p.moc"
 #include "moc_task.cpp"
-
-

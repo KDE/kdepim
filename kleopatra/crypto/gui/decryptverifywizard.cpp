@@ -36,11 +36,13 @@
 
 #include "decryptverifyoperationwidget.h"
 
-#include <crypto/gui/scrollarea.h>
 #include <crypto/gui/resultdisplaywidget.h>
+#include <crypto/gui/resultpage.h>
+#include <crypto/gui/scrollarea.h>
 #include <crypto/gui/wizardpage.h>
 
 #include <crypto/task.h>
+#include <crypto/taskcollection.h>
 
 #include <utils/kleo_assert.h>
 #include <utils/stl_util.h>
@@ -113,40 +115,6 @@ namespace {
             explicit UI( OperationsWidget * q );
         } m_ui;
     };
-
-
-    class ResultWidget : public WizardPage {
-        Q_OBJECT
-    public:
-        explicit ResultWidget( QWidget * p=0 );
-        ~ResultWidget();
-
-        void ensureIndexAvailable( unsigned int idx );
-
-        ResultDisplayWidget * widget( unsigned int idx ) {
-            return m_widgets.at( idx );
-        }
-
-        void setOperationCompleted() {
-            if ( m_completed )
-                return;
-            m_completed = true;
-            emit completeChanged();
-        }
-
-        /* reimpl */ bool isComplete() const { return m_completed; }
-
-    private:
-        std::vector<ResultDisplayWidget*> m_widgets;
-        bool m_completed;
-
-        struct UI {
-            ScrollArea   scrollArea; // ### replace with KDScrollArea when done
-            QVBoxLayout vlay;
-            
-            explicit UI( ResultWidget * q );
-        } m_ui;
-    };
 }
 
 class DecryptVerifyWizard::Private {
@@ -158,12 +126,11 @@ public:
 
     void ensureIndexAvailable( unsigned int idx ) {
         operationsPage.ensureIndexAvailable( idx );
-        resultPage.ensureIndexAvailable( idx );
     }
 
 private:
     OperationsWidget operationsPage;
-    ResultWidget resultPage;
+    Gui::ResultPage resultPage;
 };
 
 
@@ -188,11 +155,6 @@ DecryptVerifyOperationWidget * DecryptVerifyWizard::operationWidget( unsigned in
     return d->operationsPage.widget( idx );
 }
 
-ResultDisplayWidget * DecryptVerifyWizard::resultWidget( unsigned int idx ) {
-    d->ensureIndexAvailable( idx );
-    return d->resultPage.widget( idx );
-}
-
 void DecryptVerifyWizard::onNext( int id )
 {
     if ( id == OperationsPage )
@@ -200,15 +162,10 @@ void DecryptVerifyWizard::onNext( int id )
     Wizard::onNext( id );
 }
 
-void DecryptVerifyWizard::connectTask( const boost::shared_ptr<Kleo::Crypto::Task> & task, unsigned int idx )
+void DecryptVerifyWizard::setTaskCollection( const shared_ptr<TaskCollection> & coll )
 {
-    kleo_assert( task );
-    ResultDisplayWidget* const item = resultWidget( idx );
-    item->setLabel( task->label() );
-    connect( task.get(), SIGNAL( progress( QString, int, int ) ),
-             item, SLOT( setProgress( QString, int, int ) ) );
-    connect( task.get(), SIGNAL(result( boost::shared_ptr<const Kleo::Crypto::Task::Result> ) ),
-             item, SLOT( setResult( boost::shared_ptr<const Kleo::Crypto::Task::Result> ) ) );
+    kleo_assert( coll );
+    d->resultPage.setTaskCollection( coll );
 }
 
 void DecryptVerifyWizard::setOperationCompleted()
@@ -294,57 +251,6 @@ void OperationsWidget::ensureIndexAvailable( unsigned int idx ) {
         m_widgets.push_back( w );
     }
 }
-
-
-
-
-
-
-ResultWidget::ResultWidget( QWidget * p )
-    : WizardPage( p ), m_widgets(), m_completed( false ), m_ui( this )
-{
-    setTitle( i18n("Results") );
-    setSubTitle( i18n("Detailed operation results") );
-}
-
-ResultWidget::~ResultWidget() {}
-
-ResultWidget::UI::UI( ResultWidget * q )
-    : scrollArea( q ),
-      vlay( q )
-{
-    KDAB_SET_OBJECT_NAME( scrollArea );
-    KDAB_SET_OBJECT_NAME( vlay );
-
-    assert( qobject_cast<QBoxLayout*>(scrollArea.widget()->layout()) );
-    static_cast<QBoxLayout*>(scrollArea.widget()->layout())->addStretch( 1 );
-
-    vlay.addWidget( &scrollArea );
-}
-
-void ResultWidget::ensureIndexAvailable( unsigned int idx ) {
-
-    if ( idx < m_widgets.size() )
-        return;
-
-    assert( m_ui.scrollArea.widget() );
-    assert( qobject_cast<QBoxLayout*>( m_ui.scrollArea.widget()->layout() ) );
-    QBoxLayout & blay = *static_cast<QBoxLayout*>( m_ui.scrollArea.widget()->layout() );
-
-    for ( unsigned int i = m_widgets.size() ; i < idx+1 ; ++i ) {
-        if ( i )
-            blay.insertWidget( blay.count()-1, new HLine( m_ui.scrollArea.widget() ) );
-        ResultDisplayWidget * w = new ResultDisplayWidget( m_ui.scrollArea.widget() );
-        blay.insertWidget( blay.count()-1, w );
-        w->show();
-        m_widgets.push_back( w );
-    }
-    
-}
-
-
-
-
 
 #include "decryptverifywizard.moc"
 #include "moc_decryptverifywizard.cpp"

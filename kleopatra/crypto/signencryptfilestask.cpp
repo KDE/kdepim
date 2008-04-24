@@ -79,9 +79,7 @@ namespace {
         /* reimp */ QString details() const;
         /* reimp */ int errorCode() const;
         /* reimp */ QString errorString() const;
-        
-    private:
-        ErrorLevel errorLevel() const;
+        /* reimp */ VisualCode code() const;
     };
 
     static QString makeResultString( const SigningResult & result ) {
@@ -377,7 +375,7 @@ int SignEncryptFilesResult::errorCode() const {
        return m_eresult.error().encodedError();
    return 0;
 }
-    
+
 QString SignEncryptFilesResult::errorString() const {
     const bool sign = !m_sresult.isNull();
     const bool encrypt = !m_eresult.isNull();
@@ -394,11 +392,11 @@ QString SignEncryptFilesResult::errorString() const {
     return sign ? makeResultString( m_sresult ) : makeResultString( m_eresult );
 }
 
-Task::Result::ErrorLevel SignEncryptFilesResult::errorLevel() const
+Task::Result::VisualCode SignEncryptFilesResult::code() const
 {
     if ( m_sresult.error().isCanceled() || m_eresult.error().isCanceled() )
         return Warning;
-    return ( m_sresult.error().code() || m_eresult.error().code() ) ? Error : NoError;
+    return ( m_sresult.error().code() || m_eresult.error().code() ) ? NeutralSuccess : NeutralError;
 }
 
 #include "moc_signencryptfilestask.cpp"

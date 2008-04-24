@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    crypto/gui/decryptverifywizard.h
+    crypto/task_p.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,58 +30,35 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_CRYPTO_GUI_DECRYPTVERIFYWIZARD_H__
-#define __KLEOPATRA_CRYPTO_GUI_DECRYPTVERIFYWIZARD_H__
+#ifndef __KLEOPATRA_CRYPTO_TASK_P_H__
+#define __KLEOPATRA_CRYPTO_TASK_P_H__
 
-#include <crypto/gui/wizard.h>
+#include <crypto/task.h>
 
-#include <utils/pimpl_ptr.h>
-
-#include <boost/shared_ptr.hpp>
+#include <QString>
+#include <QTimer>
 
 namespace Kleo {
 namespace Crypto {
-    class Task;
-    class TaskCollection;
-namespace Gui {
 
-    class DecryptVerifyOperationWidget;
-    class ResultDisplayWidget;
-
-    class DecryptVerifyWizard : public Wizard {
+    class SimpleTask : public Task {
         Q_OBJECT
     public:
-        enum Page {
-            OperationsPage=0,
-            ResultPage
-        };
-
-        explicit DecryptVerifyWizard( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~DecryptVerifyWizard();
-
-        void setOutputDirectory( const QString & dir );
-        QString outputDirectory() const;
-
-        void setTaskCollection( const boost::shared_ptr<TaskCollection> & coll );
-
-        DecryptVerifyOperationWidget * operationWidget( unsigned int idx );
-
-    public Q_SLOTS:
-        void setOperationCompleted();
-
-    Q_SIGNALS:
-        void operationPrepared();
+        explicit SimpleTask( const QString & label ) : m_result(), m_label( label ) {}
+        
+        void setResult( const boost::shared_ptr<const Task::Result> & res ) { m_result = res; }
+        GpgME::Protocol protocol() const { return GpgME::UnknownProtocol; }
+        QString label() const { return m_label; }
+        void cancel() {}
 
     private:
-        /* reimpl */ void onNext( int id );
-
+        void doStart() { QTimer::singleShot( 0, this, SLOT(slotEmitResult()) ); }
+    private Q_SLOTS:
+        void slotEmitResult() { emitResult( m_result ); }
     private:
-        class Private;
-        kdtools::pimpl_ptr<Private> d;
-    };
-
+        boost::shared_ptr<const Task::Result> m_result;
+        QString m_label;
+    };    
 }
 }
-}
-
-#endif /* __KLEOPATRA_CRYPTO_GUI_DECRYPTVERIFYWIZARD_H__ */
+#endif // __KLEOPATRA_CRYPTO_TASK_P_H__

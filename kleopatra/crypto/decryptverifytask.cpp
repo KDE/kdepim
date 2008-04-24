@@ -67,6 +67,10 @@
 #include <QColor>
 #include <QTextDocument> // Qt::escape
 
+#include <KDebug>
+
+#include <boost/bind.hpp>
+
 #include <algorithm>
 
 using namespace Kleo::Crypto;
@@ -120,6 +124,22 @@ QString renderKey( const Key & key ) {
     if ( key.isNull() )
         return i18n( "Unknown key" );
     return QString::fromLatin1( "<a href=\"key:%1\">%2</a>" ).arg( key.primaryFingerprint(), Formatting::prettyName( key ) );
+}
+
+Task::Result::VisualCode codeForVerificationResult( const VerificationResult & res )
+{
+    if ( res.isNull() )
+        return Task::Result::NeutralSuccess;
+
+    const std::vector<Signature> sigs = res.signatures();
+    if ( sigs.empty() )
+        return Task::Result::NeutralSuccess;
+
+    if ( !std::count_if( sigs.begin(), sigs.end(), bind( &Signature::summary, _1 ) != Signature::Valid ) )
+        return Task::Result::AllGood;
+    if ( std::count_if( sigs.begin(), sigs.end(), bind( &Signature::summary, _1 ) == Signature::Red ) )
+        return Task::Result::Danger;
+    return Task::Result::Warning;
 }
 
 QString formatVerificationResultOverview( const VerificationResult & res ) {
@@ -190,7 +210,8 @@ static QString formatVerificationResultDetails( const VerificationResult & res )
     const std::vector<Signature> sigs = res.signatures();
     const std::vector<Key> signers = KeyCache::instance()->findSigners( res );
     QString details;
-    Q_FOREACH ( const Signature & sig, sigs )
+    kDebug() << "sigs: " << sigs.size(); 
+    Q_FOREACH ( const Signature & sig, sigs ) 
         details += formatSignature( sig, DecryptVerifyResult::keyForSignature( sig, signers ) ) + '\n';
     details = details.trimmed();
     details.replace( '\n', "<br/>" );
@@ -396,6 +417,12 @@ int DecryptVerifyResult::errorCode() const
 QString DecryptVerifyResult::errorString() const
 {
     return d->m_errorString;
+}
+
+Task::Result::VisualCode DecryptVerifyResult::code() const {
+    if ( d->m_type == DecryptVerify || d->m_type == Verify )
+            return codeForVerificationResult( d->m_verificationResult );
+    return hasError() ? NeutralError : NeutralSuccess;
 }
 
 GpgME::VerificationResult DecryptVerifyResult::verificationResult() const

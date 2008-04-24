@@ -35,8 +35,8 @@
 #include "decryptverifyfilescontroller.h"
 #include <crypto/gui/decryptverifyoperationwidget.h>
 #include <crypto/gui/decryptverifywizard.h>
-#include <crypto/gui/resultdisplaywidget.h>
 #include <crypto/decryptverifytask.h>
+#include <crypto/taskcollection.h>
 
 #include <utils/classify.h>
 #include <utils/gnupg-helper.h>
@@ -49,6 +49,7 @@
 
 #include <QDir>
 #include <QFile>
+#include <QFileInfo>
 #include <QPointer>
 #include <QTimer>
 
@@ -74,29 +75,27 @@ public:
 
     void slotWizardOperationPrepared();
     void slotWizardCanceled();
+    void slotTaskDone();
     void slotTaskDone( const shared_ptr<const DecryptVerifyResult> & );
     void schedule();
 
     std::vector< shared_ptr<QFile> > prepareWizardFromPassedFiles();
-    std::vector<shared_ptr<AbstractDecryptVerifyTask> > buildTasks( const std::vector<shared_ptr<QFile> > & );
+    std::vector<shared_ptr<Task> > buildTasks( const std::vector<shared_ptr<QFile> > & );
 
     QString heuristicBaseDirectory() const;
 
     void ensureWizardCreated();
     void ensureWizardVisible();
-    void connectTask( const shared_ptr<AbstractDecryptVerifyTask> & task, unsigned int idx );
     void reportError( int err, const QString & details ) {
         emit q->error( err, details );
     }
-
-    void addStartErrorResult( unsigned int id, const shared_ptr<DecryptVerifyResult> & res );
     void cancelAllTasks();
 
     std::vector<shared_ptr<QFile> > m_passedFiles, m_filesAfterPreparation;
     QPointer<DecryptVerifyWizard> m_wizard;
     std::vector<shared_ptr<const DecryptVerifyResult> > m_results;
-    std::vector<shared_ptr<AbstractDecryptVerifyTask> > m_runnableTasks, m_completedTasks;
-    shared_ptr<AbstractDecryptVerifyTask> m_runningTask;
+    std::vector<shared_ptr<Task> > m_runnableTasks, m_completedTasks;
+    shared_ptr<Task> m_runningTask;
     bool m_errorDetected;
     DecryptVerifyOperation m_operation;
 };
@@ -151,25 +150,26 @@ DecryptVerifyFilesController::Private::Private( DecryptVerifyFilesController* qq
     qRegisterMetaType<VerificationResult>();
 }
 
-void DecryptVerifyFilesController::Private::connectTask( const shared_ptr<AbstractDecryptVerifyTask> & t, unsigned int idx )
-{
-    connect( t.get(), SIGNAL(decryptVerifyResult(boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult>)),
-             q, SLOT(slotTaskDone(boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult>)) );
-    ensureWizardCreated();
-    m_wizard->connectTask( t, idx );
-}
-
 void DecryptVerifyFilesController::Private::slotWizardOperationPrepared()
 {
     try {
-        std::vector<shared_ptr<AbstractDecryptVerifyTask> > tasks = buildTasks( m_filesAfterPreparation );
-        
+        std::vector<shared_ptr<Task> > tasks = buildTasks( m_filesAfterPreparation );
         kleo_assert( m_runnableTasks.empty() );
         m_runnableTasks.swap( tasks );
-        
-        int i = 0;
-        Q_FOREACH( const shared_ptr<AbstractDecryptVerifyTask> task, m_runnableTasks )
-            connectTask( task, i++ );
+
+        shared_ptr<TaskCollection> coll( new TaskCollection );
+        Q_FOREACH( const shared_ptr<Task> & i, m_runnableTasks ) {
+            const shared_ptr<AbstractDecryptVerifyTask> dv = dynamic_pointer_cast<AbstractDecryptVerifyTask>( i );
+            if ( dv )
+                connect( dv.get(), SIGNAL(decryptVerifyResult(boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult>)),
+                         q, SLOT(slotTaskDone(boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult>)) );
+            else
+                connect( dv.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
+                         q, SLOT(slotTaskDone()) );
+        }
+        coll->setTasks( m_runnableTasks );
+        ensureWizardCreated();
+        m_wizard->setTaskCollection( coll );
 
         QTimer::singleShot( 0, q, SLOT( schedule() ) );
         
@@ -191,28 +191,32 @@ void DecryptVerifyFilesController::Private::slotWizardCanceled()
     reportError( gpg_error( GPG_ERR_CANCELED ), i18n("User canceled") );
 }
 
-void DecryptVerifyFilesController::Private::slotTaskDone(  const shared_ptr<const DecryptVerifyResult> & result )
+void DecryptVerifyFilesController::Private::slotTaskDone()
 {
     assert( q->sender() );
+    assert( q->sender() == m_runningTask.get() );
     
     // We could just delete the tasks here, but we can't use
     // Qt::QueuedConnection here (we need sender()) and other slots
     // might not yet have executed. Therefore, we push completed tasks
     // into a burial container
-
-    if ( q->sender() == m_runningTask.get() ) {
-        m_completedTasks.push_back( m_runningTask );
-        m_results.push_back( result );
-        m_runningTask.reset();
-    }
+    
+    m_completedTasks.push_back( m_runningTask );
+    m_runningTask.reset();
 
     QTimer::singleShot( 0, q, SLOT(schedule()) );
+}
+
+void DecryptVerifyFilesController::Private::slotTaskDone(  const shared_ptr<const DecryptVerifyResult> & result )
+{
+    m_results.push_back( result );
+    slotTaskDone();
 }
 
 void DecryptVerifyFilesController::Private::schedule()
 {
     if ( !m_runningTask && !m_runnableTasks.empty() ) {
-        const shared_ptr<AbstractDecryptVerifyTask> t = m_runnableTasks.back();
+        const shared_ptr<Task> t = m_runnableTasks.back();
         m_runnableTasks.pop_back();
         t->start();
         m_runningTask = t;
@@ -304,7 +308,7 @@ std::vector<shared_ptr<QFile> > DecryptVerifyFilesController::Private::prepareWi
     return files;
 }
 
-std::vector< shared_ptr<AbstractDecryptVerifyTask> > DecryptVerifyFilesController::Private::buildTasks( const std::vector<shared_ptr<QFile> > &  files )
+std::vector< shared_ptr<Task> > DecryptVerifyFilesController::Private::buildTasks( const std::vector<shared_ptr<QFile> > &  files )
 {
     const QFileInfo outDirInfo( m_wizard->outputDirectory() );
     kleo_assert( outDirInfo.isDir() );
@@ -312,13 +316,12 @@ std::vector< shared_ptr<AbstractDecryptVerifyTask> > DecryptVerifyFilesControlle
     const QDir outDir( outDirInfo.absoluteFilePath() );
     kleo_assert( outDir.exists() );    
 
-    std::vector<shared_ptr<AbstractDecryptVerifyTask> > tasks;
-    int failed = 0;
+    std::vector<shared_ptr<Task> > tasks;
     for ( unsigned int i = 0 ; i < files.size(); ++i )
         try {
             tasks.push_back( taskFromOperationWidget( m_wizard->operationWidget( i ), files[i], outDir ) );
         } catch ( const GpgME::Exception & e ) {
-            addStartErrorResult( failed++, DecryptVerifyResult::fromDecryptVerifyResult( /**FIXME*/0, e.error(), QString::fromLocal8Bit( e.what() ) ) );
+            tasks.push_back( Task::makeErrorTask( e.error().code(), QString::fromLocal8Bit( e.what() ), QFileInfo( *files[i] ).fileName() ) );
         }
 
     return tasks;
@@ -372,13 +375,6 @@ QString DecryptVerifyFilesController::Private::heuristicBaseDirectory() const {
     return heuristicBaseDirectory( fileNames );
 }
 
-
-void DecryptVerifyFilesController::Private::addStartErrorResult( unsigned int id, const shared_ptr<DecryptVerifyResult> & res )
-{
-    ensureWizardCreated();
-    m_wizard->resultWidget( id )->setResult( res );
-    m_results.push_back( res );
-}
 
 QString DecryptVerifyFilesController::Private::heuristicBaseDirectory( const QStringList& fileNames ) {
     const QString candidate = longestCommonPrefix( fileNames );

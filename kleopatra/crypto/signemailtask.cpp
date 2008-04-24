@@ -70,8 +70,7 @@ namespace {
         /* reimp */ QString details() const;
         /* reimp */ int errorCode() const;
         /* reimp */ QString errorString() const;
-    private:
-        ErrorLevel errorLevel() const;
+        /* reimp */ VisualCode code() const;
     };
 
     QString makeResultString( const SigningResult& res )
@@ -251,10 +250,10 @@ QString SignEMailResult::errorString() const {
     return hasError() ? makeResultString( m_result ) : QString();
 }
 
-Task::Result::ErrorLevel SignEMailResult::errorLevel() const {
+Task::Result::VisualCode SignEMailResult::code() const {
     if ( m_result.error().isCanceled() )
         return Warning;
-    return m_result.error().code() ? Error : NoError;
+    return m_result.error().code() ? NeutralError : NeutralSuccess;
 }
 
 #include "moc_signemailtask.cpp"

@@ -42,6 +42,7 @@
 
 #include <boost/shared_ptr.hpp>
 
+class QColor;
 class QIcon;
 
 namespace Kleo {
@@ -67,6 +68,9 @@ namespace Crypto {
 
         int id() const;
 
+
+        static boost::shared_ptr<Task> makeErrorTask( int code, const QString & details, const QString & label );
+
     public Q_SLOTS:
         virtual void cancel() = 0;
 
@@ -84,7 +88,7 @@ private: // don't tell moc, but those signals are in fact private
     protected:
         boost::shared_ptr<Result> makeErrorResult( int errCode, const QString& details );
 
-        void emitResult( const boost::shared_ptr<Task::Result> & result );
+        void emitResult( const boost::shared_ptr<const Task::Result> & result );
 
     protected Q_SLOTS:
         void setProgress( const QString & msg, int processed, int total );
@@ -109,22 +113,26 @@ private: // don't tell moc, but those signals are in fact private
         const QString & nonce() const { return m_nonce; }
 
         bool hasError() const;
-  
+
+        enum VisualCode {
+            AllGood,
+            Warning,
+            Danger,
+            NeutralSuccess,
+            NeutralError
+        };
+
         virtual QString icon() const;
         virtual QString overview() const = 0;
         virtual QString details() const = 0;
         virtual int errorCode() const = 0;
         virtual QString errorString() const = 0;
+        virtual VisualCode code() const = 0;
 
         int id() const;
 
     protected:
-        enum ErrorLevel {
-            NoError,
-            Warning,
-            Error
-        };
-        static QString iconPath( ErrorLevel level );
+        static QString iconPath( VisualCode code );
         QString formatKeyLink( const char * fingerprint, const QString & content ) const;
         static QString makeOverview( const QString& msg );
 

@@ -55,30 +55,55 @@ using namespace Kleo::Crypto;
 using namespace Kleo::Crypto::Gui;
 using namespace boost;
 
+namespace {
+    static QColor colorForVisualCode( Task::Result::VisualCode code ) {
+        switch ( code ) {
+            case Task::Result::AllGood:
+                return Qt::green;
+            case Task::Result::NeutralError:
+            case Task::Result::Warning:
+                return Qt::yellow;
+            case Task::Result::Danger:
+                return Qt::red;
+            case Task::Result::NeutralSuccess:
+            default:
+                return Qt::blue;
+        }
+    }
+}
+
 void ResultItemWidget::updateShowDetailsLabel()
 {
     if ( !m_showDetailsLabel || !m_detailsLabel )
         return;
     
     const bool show = !m_detailsLabel->isVisible();
-    m_showDetailsLabel->setText( QString("<a href=\"kleoresultitem://toggleDetails/\">%1</a>").arg( show ? i18n( "Show Details" ) : i18n( "Hide Details" ) ) );
+    m_showDetailsLabel->setText( QString("<a href=\"kleoresultitem://toggledetails/\">%1</a>").arg( show ? i18n( "Show Details" ) : i18n( "Hide Details" ) ) );
 }
 
 ResultItemWidget::ResultItemWidget( const shared_ptr<const Task::Result> & result, const QString & label, QWidget * parent, Qt::WindowFlags flags) : QWidget( parent, flags ), m_result( result ), m_detailsLabel( 0 ), m_showDetailsLabel( 0 )
 {
     assert( m_result );
-    QVBoxLayout* layout = new QVBoxLayout( this );
+    const QColor color = colorForVisualCode( m_result->code() );
+    setStyleSheet( QString( "* { background-color: %1; margin: 0px; } QFrame#resultFrame{ border-color: %2; border-style: solid; border-radius: 3px; border-width: 2px } QLabel { padding: 5px; border-radius: 3px }" ).arg( color.lighter( 150 ).name(), color.name() ) );
+    QVBoxLayout* topLayout = new QVBoxLayout( this );
+    QFrame* frame = new QFrame;
+    frame->setObjectName( "resultFrame" );
+    topLayout->addWidget( frame );
+    QVBoxLayout* layout = new QVBoxLayout( frame );
     layout->setMargin( 0 );
+    layout->setSpacing( 0 );
     QWidget* hbox = new QWidget;
     QHBoxLayout* hlay = new QHBoxLayout( hbox );
     hlay->setMargin( 0 );
+    hlay->setSpacing( 0 );
     QLabel* overview = new QLabel;
     overview->setWordWrap( true );
     overview->setTextFormat( Qt::RichText );
-    overview->setText( i18nc( "%1: action %2: result; example: Decrypting foo.txt: Succeeded", "<img src=\"%1\"/>%2: %3", m_result->icon(), label, m_result->overview() ) );
+    overview->setText( i18nc( "%1: action %2: result; example: Decrypting foo.txt: Succeeded", "%1: %2", label, m_result->overview() ) );
     connect( overview, SIGNAL(linkActivated(QString)), this, SLOT(slotLinkActivated(QString)) );
 
-    hlay->addWidget( overview );
+    hlay->addWidget( overview, 1 );
     layout->addWidget( hbox );
 
     const QString details = m_result->details();
@@ -97,7 +122,6 @@ ResultItemWidget::ResultItemWidget( const shared_ptr<const Task::Result> & resul
     connect( m_detailsLabel, SIGNAL(linkActivated(QString)), this, SLOT(slotLinkActivated(QString)) );
     layout->addWidget( m_detailsLabel );
     m_detailsLabel->setVisible( false );
-    layout->addWidget( hbox );
     
     updateShowDetailsLabel();
 }
@@ -123,8 +147,7 @@ void ResultItemWidget::slotLinkActivated( const QString & link )
         emit linkActivated( link );
         return;
     }
-    
-    if ( url.host() == "toggleDetails" ) {
+    if ( url.host() == "toggledetails" ) {
         showDetails( !detailsVisible() );
         return;
     }
@@ -175,8 +198,9 @@ ResultPage::Private::Private( ResultPage* qq ) : q( qq ), m_lastErrorItemIndex( 
     layout->addWidget( m_progressDetails );
     m_scrollArea = new ScrollArea;
     assert( qobject_cast<QBoxLayout*>( m_scrollArea->widget()->layout() ) );
-    static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() )->setSpacing( 2 );
-    static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() )->addStretch( 2 );
+    static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() )->setMargin( 0 );
+    static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() )->setSpacing( 0 );
+    static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() )->addStretch( 1 );
     layout->addWidget( m_scrollArea );
 }
 
@@ -199,6 +223,7 @@ void ResultPage::Private::result( const shared_ptr<const Task::Result> & result 
     if ( m_tasks->allTasksCompleted() ) {
         m_progressBar->setRange( 0, 100 );
         m_progressBar->setValue( 100 );
+        m_progressLabel->setText( i18n( "All operations completed." ) );
         emit q->completeChanged();
     }
 }

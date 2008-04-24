@@ -40,6 +40,7 @@
 #include <crypto/gui/decryptverifywizard.h>
 #include <crypto/gui/resultdisplaywidget.h>
 #include <crypto/decryptverifytask.h>
+#include <crypto/taskcollection.h>
 
 #include <utils/classify.h>
 #include <utils/gnupg-helper.h>
@@ -83,12 +84,10 @@ public:
 
     void ensureWizardCreated();
     void ensureWizardVisible();
-    void connectTask( const shared_ptr<AbstractDecryptVerifyTask> & task, unsigned int idx );
     void reportError( int err, const QString & details ) {
         emit q->error( err, details );
     }
 
-    void addStartErrorResult( unsigned int id, const shared_ptr<DecryptVerifyResult> & res );
     void cancelAllTasks();
 
     std::vector<shared_ptr<Input> > m_inputs, m_signedDatas;
@@ -117,14 +116,6 @@ DecryptVerifyEMailController::Private::Private( const shared_ptr<AssuanCommand> 
     m_verificationMode( Detached )
 {
     qRegisterMetaType<VerificationResult>();
-}
-
-void DecryptVerifyEMailController::Private::connectTask( const shared_ptr<AbstractDecryptVerifyTask> & t, unsigned int idx )
-{
-    connect( t.get(), SIGNAL(decryptVerifyResult(boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult>)),
-             q, SLOT(slotTaskDone(boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult>)) );
-    ensureWizardCreated();
-    m_wizard->connectTask( t, idx );
 }
 
 void DecryptVerifyEMailController::Private::slotWizardCanceled()
@@ -295,8 +286,17 @@ void DecryptVerifyEMailController::start()
 {
     d->m_runnableTasks = d->buildTasks();
     int i = 0;
-    Q_FOREACH( const shared_ptr<AbstractDecryptVerifyTask> task, d->m_runnableTasks )
-        d->connectTask( task, i++ );
+
+    shared_ptr<TaskCollection> coll( new TaskCollection );
+    std::vector<shared_ptr<Task> > tsks;
+    Q_FOREACH( const shared_ptr<Task> & i, d->m_runnableTasks ) { 
+        connect( i.get(), SIGNAL(decryptVerifyResult(boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult>)),
+                 this, SLOT(slotTaskDone(boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult>)) );
+        tsks.push_back( i );
+    }
+    coll->setTasks( tsks );
+    d->ensureWizardCreated();
+    d->m_wizard->setTaskCollection( coll );
 
     d->ensureWizardVisible();
     QTimer::singleShot( 0, this, SLOT(schedule()) );
@@ -338,14 +338,6 @@ void DecryptVerifyEMailController::setProtocol( Protocol prot )
 {
     d->m_protocol = prot;
 }
-
-void DecryptVerifyEMailController::Private::addStartErrorResult( unsigned int id, const shared_ptr<DecryptVerifyResult> & res )
-{
-    ensureWizardCreated();
-    m_wizard->resultWidget( id )->setResult( res );
-    m_results.push_back( res );
-}
-
 
 void DecryptVerifyEMailController::cancel()
 {
