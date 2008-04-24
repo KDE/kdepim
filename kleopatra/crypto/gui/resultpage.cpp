@@ -33,8 +33,7 @@
 #include <config-kleopatra.h>
 
 #include "resultpage.h"
-#include "resultpage_p.h"
-
+#include "resultitemwidget.h"
 #include "scrollarea.h"
 
 #include <crypto/taskcollection.h>
@@ -45,7 +44,6 @@
 #include <QIcon>
 #include <QLabel>
 #include <QProgressBar>
-#include <QUrl>
 #include <QVBoxLayout>
 
 #include <cassert>
@@ -54,111 +52,6 @@ using namespace Kleo;
 using namespace Kleo::Crypto;
 using namespace Kleo::Crypto::Gui;
 using namespace boost;
-
-namespace {
-    static QColor colorForVisualCode( Task::Result::VisualCode code ) {
-        switch ( code ) {
-            case Task::Result::AllGood:
-                return Qt::green;
-            case Task::Result::NeutralError:
-            case Task::Result::Warning:
-                return Qt::yellow;
-            case Task::Result::Danger:
-                return Qt::red;
-            case Task::Result::NeutralSuccess:
-            default:
-                return Qt::blue;
-        }
-    }
-}
-
-void ResultItemWidget::updateShowDetailsLabel()
-{
-    if ( !m_showDetailsLabel || !m_detailsLabel )
-        return;
-    
-    const bool show = !m_detailsLabel->isVisible();
-    m_showDetailsLabel->setText( QString("<a href=\"kleoresultitem://toggledetails/\">%1</a>").arg( show ? i18n( "Show Details" ) : i18n( "Hide Details" ) ) );
-}
-
-ResultItemWidget::ResultItemWidget( const shared_ptr<const Task::Result> & result, const QString & label, QWidget * parent, Qt::WindowFlags flags) : QWidget( parent, flags ), m_result( result ), m_detailsLabel( 0 ), m_showDetailsLabel( 0 )
-{
-    assert( m_result );
-    const QColor color = colorForVisualCode( m_result->code() );
-    setStyleSheet( QString( "* { background-color: %1; margin: 0px; } QFrame#resultFrame{ border-color: %2; border-style: solid; border-radius: 3px; border-width: 2px } QLabel { padding: 5px; border-radius: 3px }" ).arg( color.lighter( 150 ).name(), color.name() ) );
-    QVBoxLayout* topLayout = new QVBoxLayout( this );
-    QFrame* frame = new QFrame;
-    frame->setObjectName( "resultFrame" );
-    topLayout->addWidget( frame );
-    QVBoxLayout* layout = new QVBoxLayout( frame );
-    layout->setMargin( 0 );
-    layout->setSpacing( 0 );
-    QWidget* hbox = new QWidget;
-    QHBoxLayout* hlay = new QHBoxLayout( hbox );
-    hlay->setMargin( 0 );
-    hlay->setSpacing( 0 );
-    QLabel* overview = new QLabel;
-    overview->setWordWrap( true );
-    overview->setTextFormat( Qt::RichText );
-    overview->setText( i18nc( "%1: action %2: result; example: Decrypting foo.txt: Succeeded", "%1: %2", label, m_result->overview() ) );
-    connect( overview, SIGNAL(linkActivated(QString)), this, SLOT(slotLinkActivated(QString)) );
-
-    hlay->addWidget( overview, 1 );
-    layout->addWidget( hbox );
-
-    const QString details = m_result->details();
- 
-    if ( details.isEmpty() )
-        return;
-    
-    m_showDetailsLabel = new QLabel;
-    connect( m_showDetailsLabel, SIGNAL(linkActivated(QString)), this, SLOT(slotLinkActivated(QString)) );
-    hlay->addWidget( m_showDetailsLabel );
-
-    m_detailsLabel = new QLabel;
-    m_detailsLabel->setWordWrap( true );
-    m_detailsLabel->setTextFormat( Qt::RichText );
-    m_detailsLabel->setText( details );
-    connect( m_detailsLabel, SIGNAL(linkActivated(QString)), this, SLOT(slotLinkActivated(QString)) );
-    layout->addWidget( m_detailsLabel );
-    m_detailsLabel->setVisible( false );
-    
-    updateShowDetailsLabel();
-}
-
-ResultItemWidget::~ResultItemWidget()
-{
-}
-
-bool ResultItemWidget::detailsVisible() const
-{
-    return m_detailsLabel && m_detailsLabel->isVisible();
-}
-
-bool ResultItemWidget::hasErrorResult() const
-{
-    return m_result->hasError();
-}
-
-void ResultItemWidget::slotLinkActivated( const QString & link )
-{
-    const QUrl url( link );
-    if ( url.scheme() != "kleoresultitem" ) {
-        emit linkActivated( link );
-        return;
-    }
-    if ( url.host() == "toggledetails" ) {
-        showDetails( !detailsVisible() );
-        return;
-    }
-}
-
-void ResultItemWidget::showDetails( bool show )
-{
-    if ( m_detailsLabel )
-        m_detailsLabel->setVisible( show );
-    updateShowDetailsLabel();
-}
 
 class ResultPage::Private {
     ResultPage* const q;
@@ -268,5 +161,4 @@ bool ResultPage::isComplete() const
 }
 
 
-#include "resultpage_p.moc"
 #include "resultpage.moc"

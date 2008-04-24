@@ -1,8 +1,8 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    crypto/gui/resultdisplaywidget.h
+    crypto/gui/resultitemwidget.h
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2008 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_CRYPTO_GUI_RESULTDISPLAYWIDGET_H__
-#define __KLEOPATRA_CRYPTO_GUI_RESULTDISPLAYWIDGET_H__
+#ifndef __KLEOPATRA_CRYPTO_GUI_RESULTITEMWIDGET_H__
+#define __KLEOPATRA_CRYPTO_GUI_RESULTITEMWIDGET_H__
 
 #include <QWidget>
 
@@ -39,44 +39,39 @@
 
 #include <utils/pimpl_ptr.h>
 
-class QColor;
+#include <boost/shared_ptr.hpp>
 
-namespace GpgME {
-    class Key;
-}
+class QString;
 
 namespace Kleo {
 namespace Crypto {
+
+class Task;
+
 namespace Gui {
 
-class ResultDisplayWidget : public QWidget {
-    Q_OBJECT
-public:
-    explicit ResultDisplayWidget( QWidget * parent = 0 );
-    ~ResultDisplayWidget();
+    class ResultItemWidget : public QWidget {
+        Q_OBJECT
+    public:
+        ResultItemWidget( const boost::shared_ptr<const Task::Result> &result, const QString & taskLabel, QWidget * parent=0, Qt::WindowFlags flags=0 );
+        ~ResultItemWidget();
 
-    void setLabel( const QString & str );
+        bool detailsVisible() const;
+        bool hasErrorResult() const;
 
-public Q_SLOTS:
-    void setProgress( const QString & what, int current, int total );
-    void setError( int err, const QString & details );
-    void setResult( const boost::shared_ptr<const Kleo::Crypto::Task::Result> & result );
+    public Q_SLOTS:
+        void showDetails( bool show = true );
 
-private:
-    static QString styleSheet( const QColor & color );
+    Q_SIGNALS:
+        void linkActivated( const QString & link );
 
-    QString renderKey( const GpgME::Key &key );
-    void setColor( const QColor &color );
-    QWidget * resultWidget();
-
-private:
-    class Private;
-    kdtools::pimpl_ptr<Private> d;
-    Q_PRIVATE_SLOT( d, void keyLinkActivated( QString ) )
-};
-
+    private:
+        class Private;
+        kdtools::pimpl_ptr<Private> d;
+        Q_PRIVATE_SLOT( d, void slotLinkActivated( QString ) )
+    };
 }
 }
 }
 
-#endif /* __KLEOPATRA_CRYPTO_GUI_RESULTDISPLAYWIDGET_H__ */
+#endif // __KLEOPATRA_CRYPTO_GUI_RESULTITEMWIDGET_H__
