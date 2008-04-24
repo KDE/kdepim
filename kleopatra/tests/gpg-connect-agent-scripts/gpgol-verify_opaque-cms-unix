@@ -1,5 +1,5 @@
 # OPTION mode=email
-/sendfd test.data.signed-opaque.p7s r
+/sendfd test.data.gpgol-sign_opaque-cms.pem r
 INPUT FD
 /sendfd result-gpgol-verify_opaque-cms-unix w
 OUTPUT FD

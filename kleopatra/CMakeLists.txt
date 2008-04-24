@@ -127,6 +127,7 @@ set( _kleopatra_common_SRCS
   crypto/gui/signingcertificateselectiondialog.cpp
 
   crypto/gui/resultitemwidget.cpp
+  crypto/gui/resultlistwidget.cpp
   crypto/gui/resultpage.cpp
 
   crypto/gui/decryptverifyoperationwidget.cpp

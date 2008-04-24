@@ -35,6 +35,8 @@
 #include "resultitemwidget.h"
 
 #include <KLocalizedString>
+#include <KPushButton>
+#include <KStandardGuiItem>
 
 #include <QHBoxLayout>
 #include <QLabel>
@@ -75,6 +77,7 @@ public:
     const shared_ptr<const Task::Result> m_result;
     QLabel * m_detailsLabel;
     QLabel * m_showDetailsLabel;
+    KPushButton * m_closeButton;
 };
 
 void ResultItemWidget::Private::updateShowDetailsLabel()
@@ -112,27 +115,37 @@ ResultItemWidget::ResultItemWidget( const shared_ptr<const Task::Result> & resul
     layout->addWidget( hbox );
 
     const QString details = d->m_result->details();
- 
-    if ( details.isEmpty() )
-        return;
     
     d->m_showDetailsLabel = new QLabel;
     connect( d->m_showDetailsLabel, SIGNAL(linkActivated(QString)), this, SLOT(slotLinkActivated(QString)) );
     hlay->addWidget( d->m_showDetailsLabel );
-
+    d->m_showDetailsLabel->setVisible( !details.isEmpty() );
+    
     d->m_detailsLabel = new QLabel;
     d->m_detailsLabel->setWordWrap( true );
     d->m_detailsLabel->setTextFormat( Qt::RichText );
     d->m_detailsLabel->setText( details );
     connect( d->m_detailsLabel, SIGNAL(linkActivated(QString)), this, SLOT(slotLinkActivated(QString)) );
     layout->addWidget( d->m_detailsLabel );
+
     d->m_detailsLabel->setVisible( false );
     
+    d->m_closeButton = new KPushButton;
+    d->m_closeButton->setGuiItem( KStandardGuiItem::close() );
+    connect( d->m_closeButton, SIGNAL(clicked()), this, SIGNAL(closeButtonClicked()) );
+    layout->addWidget( d->m_closeButton );
+    d->m_closeButton->setVisible( false );
+
     d->updateShowDetailsLabel();
 }
 
 ResultItemWidget::~ResultItemWidget()
 {
+}
+
+void ResultItemWidget::showCloseButton( bool show )
+{
+    d->m_closeButton->setVisible( show );
 }
 
 bool ResultItemWidget::detailsVisible() const

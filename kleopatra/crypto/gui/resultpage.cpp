@@ -33,6 +33,7 @@
 #include <config-kleopatra.h>
 
 #include "resultpage.h"
+#include "resultlistwidget.h"
 #include "resultitemwidget.h"
 #include "scrollarea.h"
 
@@ -69,6 +70,7 @@ public:
     QLabel* m_progressDetails;
     int m_lastErrorItemIndex;
     ScrollArea* m_scrollArea;
+    ResultListWidget* m_resultList;
 };
 
 void ResultPage::Private::addResultWidget( ResultItemWidget* widget )
@@ -89,12 +91,8 @@ ResultPage::Private::Private( ResultPage* qq ) : q( qq ), m_lastErrorItemIndex( 
     layout->addWidget( m_progressBar );
     m_progressDetails = new QLabel;
     layout->addWidget( m_progressDetails );
-    m_scrollArea = new ScrollArea;
-    assert( qobject_cast<QBoxLayout*>( m_scrollArea->widget()->layout() ) );
-    static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() )->setMargin( 0 );
-    static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() )->setSpacing( 0 );
-    static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() )->addStretch( 1 );
-    layout->addWidget( m_scrollArea );
+    m_resultList = new ResultListWidget;
+    layout->addWidget( m_resultList, 2 );
 }
 
 void ResultPage::Private::progress( const QString & msg, int progress, int total )
@@ -106,13 +104,8 @@ void ResultPage::Private::progress( const QString & msg, int progress, int total
     m_progressBar->setValue( progress );
 }
 
-void ResultPage::Private::result( const shared_ptr<const Task::Result> & result )
+void ResultPage::Private::result( const shared_ptr<const Task::Result> & )
 {
-    assert( result );
-    const shared_ptr<const Task> task = m_tasks->taskById( result->id() );
-    assert( task );
-    ResultItemWidget* wid = new ResultItemWidget( result, task->label() );
-    addResultWidget( wid );
     if ( m_tasks->allTasksCompleted() ) {
         m_progressBar->setRange( 0, 100 );
         m_progressBar->setValue( 100 );
@@ -147,6 +140,7 @@ void ResultPage::setTaskCollection( const shared_ptr<TaskCollection> & coll )
         return;
     d->m_tasks = coll;
     assert( d->m_tasks );
+    d->m_resultList->setTaskCollection( coll );
     connect( d->m_tasks.get(), SIGNAL(progress(QString,int,int)),
              this, SLOT(progress(QString,int,int)) );
     connect( d->m_tasks.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),

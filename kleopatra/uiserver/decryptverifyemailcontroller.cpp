@@ -151,10 +151,6 @@ void DecryptVerifyEMailController::Private::schedule()
     }
     if ( !m_runningTask ) {
         kleo_assert( m_runnableTasks.empty() );
-#ifdef KDAB_PENDING // remove encrypted inputs here if wanted?
-        if ( m_wizard->removeUnencryptedFile() && m_wizard->encryptionSelected() && !errorDetected )
-            removeInputFiles();
-#endif
         Q_FOREACH ( const shared_ptr<const DecryptVerifyResult> & i, m_results )
             emit q->verificationResult( i->verificationResult() );
         emit q->done();

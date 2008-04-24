@@ -74,6 +74,10 @@ int TaskCollection::numberOfCompletedTasks() const
     return d->m_nCompleted;
 }
 
+size_t TaskCollection::size() const {
+    return d->m_tasks.size();
+}
+
 bool TaskCollection::allTasksCompleted() const
 {
     assert( d->m_nCompleted <= d->m_tasks.size() );

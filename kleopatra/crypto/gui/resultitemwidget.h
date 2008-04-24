@@ -59,11 +59,14 @@ namespace Gui {
         bool detailsVisible() const;
         bool hasErrorResult() const;
 
+        void showCloseButton( bool show );
+
     public Q_SLOTS:
         void showDetails( bool show = true );
 
     Q_SIGNALS:
         void linkActivated( const QString & link );
+        void closeButtonClicked();
 
     private:
         class Private;

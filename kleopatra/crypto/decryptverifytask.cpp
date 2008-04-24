@@ -67,8 +67,6 @@
 #include <QColor>
 #include <QTextDocument> // Qt::escape
 
-#include <KDebug>
-
 #include <boost/bind.hpp>
 
 #include <algorithm>
@@ -211,7 +209,6 @@ static QString formatVerificationResultDetails( const VerificationResult & res )
     const std::vector<Signature> sigs = res.signatures();
     const std::vector<Key> signers = KeyCache::instance()->findSigners( res );
     QString details;
-    kDebug() << "sigs: " << sigs.size(); 
     Q_FOREACH ( const Signature & sig, sigs ) 
         details += formatSignature( sig, DecryptVerifyResult::keyForSignature( sig, signers ) ) + '\n';
     details = details.trimmed();

@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    crypto/taskcollection.h
+    crypto/gui/resultlistwidget.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2008 Klarälvdalens Datakonsult AB
@@ -30,52 +30,49 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_CRYPTO_TASKCOLLECTION_H__
-#define __KLEOPATRA_CRYPTO_TASKCOLLECTION_H__
+#ifndef __KLEOPATRA_CRYPTO_GUI_RESULTLISTWIDGET_H__
+#define __KLEOPATRA_CRYPTO_GUI_RESULTLISTWIDGET_H__
 
-#include <QObject>
+#include <QWidget>
 
-#include <crypto/task.h>
+#include <crypto/taskcollection.h>
 
 #include <utils/pimpl_ptr.h>
 
 #include <boost/shared_ptr.hpp>
 
-#include <vector>
+class QString;
 
 namespace Kleo {
 namespace Crypto {
 
-    class TaskCollection : public QObject {
+class TaskCollection;
+
+namespace Gui {
+
+    class ResultListWidget : public QWidget {
         Q_OBJECT
     public:
-        explicit TaskCollection( QObject * parent=0 );
-        ~TaskCollection();
+        ResultListWidget( QWidget * parent=0, Qt::WindowFlags flags=0 );
+        ~ResultListWidget();
 
-        std::vector<boost::shared_ptr<Task> > tasks() const;
-        boost::shared_ptr<Task> taskById( int id ) const;
+        void setTaskCollection( const boost::shared_ptr<TaskCollection> & coll );
 
-        void setTasks( const std::vector<boost::shared_ptr<Task> > & tasks );
+        void setStandaloneMode( bool standalone );
 
-        bool isEmpty() const;
-        size_t size() const;
-
-        int numberOfCompletedTasks() const;
-        bool allTasksCompleted() const;
+        bool isComplete() const;
 
     Q_SIGNALS:
-        void progress( const QString & msg, int processed, int total );
-        void result( const boost::shared_ptr<const Kleo::Crypto::Task::Result> & result );
-        void started( const boost::shared_ptr<Kleo::Crypto::Task> & task );
+        void completeChanged();
 
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void taskProgress( QString, int, int ) )
-        Q_PRIVATE_SLOT( d, void taskResult( boost::shared_ptr<const Kleo::Crypto::Task::Result> ) )
-        Q_PRIVATE_SLOT( d, void taskStarted() )
+        Q_PRIVATE_SLOT( d, void result( boost::shared_ptr<const Kleo::Crypto::Task::Result> ) )
+        Q_PRIVATE_SLOT( d, void started( boost::shared_ptr<Kleo::Crypto::Task> ) )
     };
 }
 }
+}
 
-#endif // __KLEOPATRA_CRYPTO_TASKCOLLECTION_H__
+#endif // __KLEOPATRA_CRYPTO_GUI_RESULTLISTWIDGET_H__
