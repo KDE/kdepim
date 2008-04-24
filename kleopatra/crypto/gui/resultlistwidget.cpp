@@ -148,6 +148,7 @@ void ResultListWidget::Private::result( const shared_ptr<const Task::Result> & r
     assert( task );
     ResultItemWidget* wid = new ResultItemWidget( result, task->label() );
     q->connect( wid, SIGNAL(detailsToggled(bool)), q, SLOT(detailsToggled(bool)) );
+    q->connect( wid, SIGNAL(linkActivated(QString)), q, SIGNAL(linkActivated(QString)) );
     q->connect( wid, SIGNAL(closeButtonClicked()), q, SLOT(close()) );
 
     addResultWidget( wid );

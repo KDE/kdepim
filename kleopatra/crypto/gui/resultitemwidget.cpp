@@ -34,12 +34,14 @@
 
 #include "resultitemwidget.h"
 
+#include <KDebug>
 #include <KLocalizedString>
 #include <KPushButton>
 #include <KStandardGuiItem>
 
 #include <QHBoxLayout>
 #include <QLabel>
+#include <QStringList>
 #include <QUrl>
 #include <QVBoxLayout>
 
@@ -163,15 +165,22 @@ bool ResultItemWidget::hasErrorResult() const
 
 void ResultItemWidget::Private::slotLinkActivated( const QString & link )
 {
-    const QUrl url( link );
-    if ( url.scheme() != "kleoresultitem" ) {
-        emit q->linkActivated( link );
-        return;
+    assert( m_result );
+    if ( link.startsWith( "key:" ) ) {
+        const QStringList split = link.split( ':' );
+        if ( split.size() == 3 || m_result->nonce() != split.value( 1 ) )
+            emit q->linkActivated( "key://" + split.value( 2 ) );
+        else
+            kWarning() << "key link invalid, or nonce not matching! link=" << link << " nonce" << m_result->nonce();
     }
+
+    const QUrl url( link );
     if ( url.host() == "toggledetails" ) {
         q->showDetails( !q->detailsVisible() );
         return;
     }
+    
+    kWarning() << "Unexpected link scheme: " << link;
 }
 
 void ResultItemWidget::showDetails( bool show )

@@ -179,6 +179,8 @@ DecryptVerifyWizard::Private::Private( DecryptVerifyWizard * qq )
 {
     q->setPage( DecryptVerifyWizard::OperationsPage, &operationsPage );
     q->setPage( DecryptVerifyWizard::ResultPage, &resultPage );
+    connect( &resultPage, SIGNAL(linkActivated(QString)), q, SIGNAL(linkActivated(QString)) );
+
     std::vector<int> order;
     order.push_back( DecryptVerifyWizard::OperationsPage );
     order.push_back( DecryptVerifyWizard::ResultPage );

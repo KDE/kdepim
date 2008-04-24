@@ -63,6 +63,7 @@ namespace Gui {
         bool isComplete() const;
 
     Q_SIGNALS:
+        void linkActivated( const QString & link );
         void completeChanged();
 
     private:

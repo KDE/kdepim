@@ -71,6 +71,7 @@ namespace Gui {
 
     Q_SIGNALS:
         void operationPrepared();
+        void linkActivated( const QString & link );
 
     private:
         /* reimpl */ void onNext( int id );

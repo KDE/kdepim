@@ -87,6 +87,7 @@ SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
       objectsPage( new Gui::ObjectsPage ),
       resultPage( new Gui::ResultPage )
 {
+    connect( resultPage, SIGNAL(linkActivated(QString)), q, SIGNAL(linkActivated(QString)) );
     q->setPage( SignEncryptWizard::ResolveSignerPage, signerResolvePage );
     q->setPage( SignEncryptWizard::ObjectsPage, objectsPage );
     q->setPage( SignEncryptWizard::ResolveRecipientsPage, recipientResolvePage );
