@@ -137,7 +137,7 @@ Task::Result::VisualCode codeForVerificationResult( const VerificationResult & r
 
     if ( !std::count_if( sigs.begin(), sigs.end(), bind( &Signature::summary, _1 ) != Signature::Valid ) )
         return Task::Result::AllGood;
-    if ( std::count_if( sigs.begin(), sigs.end(), bind( &Signature::summary, _1 ) == Signature::Red ) )
+    if ( std::find_if( sigs.begin(), sigs.end(), bind( &Signature::summary, _1 ) == Signature::Red ) != sigs.end() )
         return Task::Result::Danger;
     return Task::Result::Warning;
 }
@@ -148,13 +148,20 @@ QString formatVerificationResultOverview( const VerificationResult & res ) {
 
     const Error err = res.error();
 
-
     if ( err.isCanceled() )
         return i18n("<b>Verification canceled.</b>");
     else if ( err )
         return i18n( "<b>Verification failed: %1.</b>", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
 
-    return i18n("<b>Verification succeeded.</b>");
+    const std::vector<Signature> sigs = res.signatures();
+
+    const uint bad = std::count_if( sigs.begin(), sigs.end(), bind( &Signature::summary, _1 ) == Signature::Red );
+    if ( bad > 0 )
+        return i18np("<b>Bad signature</b>", "<b>%1 bad signatures</b>", bad );
+    const uint invalid = std::count_if( sigs.begin(), sigs.end(), bind( &Signature::summary, _1 ) != Signature::Valid );
+    if ( invalid > 0 )
+            return i18np("<b>Invalid signature</b>", "<b>%1 invalid signatures</b>", invalid );
+    return i18np("<b>Good signature</b>", "<b>%1 good signatures</b>", sigs.size() );
 }
 
 static QString formatDecryptionResultOverview( const DecryptionResult & result )
@@ -243,10 +250,9 @@ static QString formatDecryptionResultDetails( const DecryptionResult & res, cons
 
 static QString formatDecryptVerifyResultOverview( const DecryptionResult & dr, const VerificationResult & vr )
 {
-    const QString drOverview = formatDecryptionResultOverview( dr );
     if ( IsErrorOrCanceled( dr ) )
-        return drOverview;
-    return drOverview + "<br/>" + formatVerificationResultOverview( vr );
+        return formatDecryptionResultOverview( dr );
+    return formatVerificationResultOverview( vr );
 }
 
 
