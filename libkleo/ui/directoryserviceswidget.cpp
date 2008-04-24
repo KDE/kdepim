@@ -102,6 +102,14 @@ namespace {
             return url.scheme();
     }
 
+    static QString display_host( const KUrl & url ) {
+        // work around "subkeys.pgp.net" being interpreted as a path, not host
+        if ( url.host().isEmpty() )
+            return url.path();
+        else
+            return url.host();
+    }
+
     static unsigned short display_port( const KUrl & url ) {
         if ( url.port() > 0 )
             return url.port();
@@ -122,7 +130,7 @@ namespace {
     struct KUrl_compare : std::binary_function<KUrl,KUrl,bool> {
         bool operator()( const KUrl & lhs, const KUrl & rhs ) const {
             return QString::compare( display_scheme( lhs ), display_scheme( rhs ), Qt::CaseInsensitive ) == 0
-                && QString::compare( lhs.host(), rhs.host(), Qt::CaseInsensitive ) == 0
+                && QString::compare( display_host( lhs ), display_host( rhs ), Qt::CaseInsensitive ) == 0
                 && lhs.port() == rhs.port()
                 && lhs.user() == rhs.user()
                 // ... ignore password...
@@ -548,7 +556,7 @@ QVariant Model::data( const QModelIndex & index, int role ) const {
             case Scheme:
                 return display_scheme( m_items[row].url );
             case Host:
-                return m_items[row].url.host();
+                return display_host( m_items[row].url );
             case Port:
                 return display_port( m_items[row].url );
             case BaseDN:
@@ -568,7 +576,7 @@ QVariant Model::data( const QModelIndex & index, int role ) const {
         case Qt::CheckStateRole:
             switch ( index.column() ) {
             case X509:
-                return m_items[row].x509 ? Qt::Checked : Qt::Unchecked ;
+                return m_items[row].x509 && isLdapRow( row ) ? Qt::Checked : Qt::Unchecked ;
             case OpenPGP:
                 return m_items[row].pgp  ? Qt::Checked : Qt::Unchecked ;
             default:
@@ -644,6 +652,10 @@ bool Model::doSetData( unsigned int row, unsigned int column, const QVariant & v
             m_items[row].url.setProtocol( value.toString() );
             return true;
         case Host:
+            if ( display_host( m_items[row].url ) != m_items[row].url.host() ) {
+                m_items[row].url.setProtocol( display_scheme( m_items[row].url ) );
+                m_items[row].url.setPath( "/" );
+            }
             m_items[row].url.setHost( value.toString() );
             return true;
         case Port:
