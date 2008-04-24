@@ -79,9 +79,9 @@ using namespace boost;
 namespace {
 
 static const char * iconForSignature( const Signature & sig ) {
-    if ( sig.summary() & GpgME::Signature::Green )
+    if ( sig.summary() & Signature::Green )
         return "dialog-ok";
-    if ( sig.summary() & GpgME::Signature::Red )
+    if ( sig.summary() & Signature::Red )
         return "dialog-error";
     return "dialog-warning";
 }
@@ -118,6 +118,16 @@ QString renderKey( const Key & key ) {
     return QString::fromLatin1( "<a href=\"key:%1\">%2</a>" ).arg( key.primaryFingerprint(), Formatting::prettyName( key ) );
 }
 
+namespace {
+
+    bool IsBad( const Signature & sig ) {
+        return sig.summary() & Signature::Red;
+    }
+    bool IsValid( const Signature & sig ) {
+        return sig.summary() & Signature::Valid;
+    }
+}
+
 Task::Result::VisualCode codeForVerificationResult( const VerificationResult & res )
 {
     if ( res.isNull() )
@@ -127,9 +137,9 @@ Task::Result::VisualCode codeForVerificationResult( const VerificationResult & r
     if ( sigs.empty() )
         return Task::Result::Warning;
 
-    if ( !std::count_if( sigs.begin(), sigs.end(), bind( &Signature::summary, _1 ) != Signature::Valid ) )
+    if ( !std::count_if( sigs.begin(), sigs.end(), IsBad ) )
         return Task::Result::AllGood;
-    if ( std::find_if( sigs.begin(), sigs.end(), bind( &Signature::summary, _1 ) == Signature::Red ) != sigs.end() )
+    if ( std::find_if( sigs.begin(), sigs.end(), IsBad ) != sigs.end() )
         return Task::Result::Danger;
     return Task::Result::Warning;
 }
@@ -150,10 +160,10 @@ QString formatVerificationResultOverview( const VerificationResult & res ) {
     if ( sigs.empty() )
         return i18n( "<b>No signatures found</b>" );
 
-    const uint bad = std::count_if( sigs.begin(), sigs.end(), bind( &Signature::summary, _1 ) == Signature::Red );
+    const uint bad = std::count_if( sigs.begin(), sigs.end(), IsBad );
     if ( bad > 0 )
         return i18np("<b>Bad signature</b>", "<b>%1 bad signatures</b>", bad );
-    const uint invalid = std::count_if( sigs.begin(), sigs.end(), bind( &Signature::summary, _1 ) != Signature::Valid );
+    const uint invalid = std::count_if( sigs.begin(), sigs.end(), !bind( IsValid, _1 ) );
     if ( invalid > 0 )
             return i18np("<b>Invalid signature</b>", "<b>%1 invalid signatures</b>", invalid );
     return i18np("<b>Good signature</b>", "<b>%1 good signatures</b>", sigs.size() );
