@@ -87,7 +87,7 @@ set(libkleo_compat_SRCS # make this a separate lib.
 
 kde4_add_ui_files(libkleo_ui_common_SRCS
 	ui/adddirectoryservicedialog.ui
-	ui/directoryserviceswidgetbase.ui
+	ui/directoryserviceswidget.ui
 )
 
 set(kleo_LIB_SRCS ${libkleo_core_SRCS} ${libkleo_ui_common_SRCS} ${libkleo_backend_qgpgme_SRCS})

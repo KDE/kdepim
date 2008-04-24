@@ -72,6 +72,8 @@ private:
   KIntNumInput* mMaxItems;
   QCheckBox* mAddNewServersCB;
 
+  Kleo::CryptoConfigEntry* mX509ServicesEntry;
+  Kleo::CryptoConfigEntry* mOpenPGPServiceEntry;
   Kleo::CryptoConfigEntry* mTimeoutConfigEntry;
   Kleo::CryptoConfigEntry* mMaxItemsConfigEntry;
   Kleo::CryptoConfigEntry* mAddNewServersConfigEntry;

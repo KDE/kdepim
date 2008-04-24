@@ -52,6 +52,8 @@
 
 #include <kdemacros.h>
 
+using namespace Kleo;
+
 #if 0 // disabled, since it is apparently confusing
 // For sync'ing kabldaprc
 class KABSynchronizer
@@ -124,9 +126,13 @@ private:
 
 #endif
 
-static const char s_dirserv_componentName[] = "dirmngr";
-static const char s_dirserv_groupName[] = "LDAP";
-static const char s_dirserv_entryName[] = "LDAP Server";
+static const char s_x509services_componentName[] = "dirmngr";
+static const char s_x509services_groupName[] = "LDAP";
+static const char s_x509services_entryName[] = "LDAP Server";
+
+static const char s_pgpservice_componentName[] = "gpg";
+static const char s_pgpservice_groupName[] = "Keyserver";
+static const char s_pgpservice_entryName[] = "keyserver";
 
 static const char s_timeout_componentName[] = "dirmngr";
 static const char s_timeout_groupName[] = "LDAP";
@@ -149,9 +155,7 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( const KC
   glay->setMargin( 0 );
 
   int row = 0;
-  Kleo::CryptoConfigEntry* entry = configEntry( s_dirserv_componentName, s_dirserv_groupName, s_dirserv_entryName,
-                                                Kleo::CryptoConfigEntry::ArgType_LDAPURL, true );
-  mWidget = new Kleo::DirectoryServicesWidget( entry, this );
+  mWidget = new Kleo::DirectoryServicesWidget( this );
   if ( QLayout * l = mWidget->layout() ) {
       l->setSpacing( KDialog::spacingHint() );
       l->setMargin( 0 );
@@ -196,7 +200,29 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( const KC
 
 void DirectoryServicesConfigurationPage::load()
 {
-  mWidget->load();
+
+  mWidget->clear();
+
+  mX509ServicesEntry = configEntry( s_x509services_componentName, s_x509services_groupName, s_x509services_entryName,
+                                    Kleo::CryptoConfigEntry::ArgType_LDAPURL, true );
+  if ( mX509ServicesEntry )
+      mWidget->addX509Services( mX509ServicesEntry->urlValueList() );
+
+  mOpenPGPServiceEntry = configEntry( s_pgpservice_componentName, s_pgpservice_groupName, s_pgpservice_entryName,
+                                      Kleo::CryptoConfigEntry::ArgType_String, false );
+  if ( mOpenPGPServiceEntry )
+      mWidget->addOpenPGPServices( KUrl( mOpenPGPServiceEntry->stringValue() ) );
+
+  if ( mX509ServicesEntry )
+      if ( mOpenPGPServiceEntry )
+          mWidget->setAllowedProtocols( DirectoryServicesWidget::AllProtocols );
+      else
+          mWidget->setAllowedProtocols( DirectoryServicesWidget::X509Protocol );
+  else
+      if ( mOpenPGPServiceEntry )
+          mWidget->setAllowedProtocols( DirectoryServicesWidget::OpenPGPProtocol );
+      else
+          mWidget->setDisabled( true );
 
   mTimeoutConfigEntry = configEntry( s_timeout_componentName, s_timeout_groupName, s_timeout_entryName, Kleo::CryptoConfigEntry::ArgType_UInt, false );
   if ( mTimeoutConfigEntry ) {
@@ -222,7 +248,16 @@ void DirectoryServicesConfigurationPage::load()
 
 void DirectoryServicesConfigurationPage::save()
 {
-  mWidget->save();
+  if ( mX509ServicesEntry )
+      mX509ServicesEntry->setURLValueList( mWidget->x509Services() );
+
+  if ( mOpenPGPServiceEntry ) {
+      const KUrl::List serv = mWidget->openPGPServices();
+      if ( serv.empty() )
+          mOpenPGPServiceEntry->setStringValue( QString() );
+      else
+          mOpenPGPServiceEntry->setStringValue( serv.front().url() );
+  }
 
   QTime time( mTimeout->time() );
   unsigned int timeout = time.minute() * 60 + time.second();
@@ -257,7 +292,12 @@ void DirectoryServicesConfigurationPage::save()
 
 void DirectoryServicesConfigurationPage::defaults()
 {
-  mWidget->defaults();
+  // these guys don't have a default, to clear them:
+  if ( mX509ServicesEntry )
+    mX509ServicesEntry->setURLValueList( KUrl() );
+  if ( mOpenPGPServiceEntry )
+    mOpenPGPServiceEntry->setStringValue( QString() );
+  // these presumably have a default, use that one:
   if ( mTimeoutConfigEntry )
     mTimeoutConfigEntry->resetToDefault();
   if ( mMaxItemsConfigEntry )

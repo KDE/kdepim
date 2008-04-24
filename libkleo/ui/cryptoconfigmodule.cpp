@@ -802,14 +802,16 @@ void Kleo::CryptoConfigEntryLDAPURL::slotOpenDialog()
   KDialog dialog( mPushButton->parentWidget() );
   dialog.setCaption( i18n( "Configure LDAP Servers" ) );
   dialog.setButtons( KDialog::Default|KDialog::Cancel|KDialog::Ok );
-  DirectoryServicesWidget* dirserv = new DirectoryServicesWidget( mEntry, &dialog );
-  dirserv->load();
+  DirectoryServicesWidget* dirserv = new DirectoryServicesWidget( &dialog );
+  dirserv->setAllowedSchemes( DirectoryServicesWidget::LDAP );
+  dirserv->setAllowedProtocols( DirectoryServicesWidget::X509Protocol );
+  dirserv->addX509Services( mURLList );
   dialog.setMainWidget( dirserv );
   connect( &dialog, SIGNAL( defaultClicked() ), dirserv, SLOT( defaults() ) );
   if ( dialog.exec() ) {
     // Note that we just grab the urls from the dialog, we don't call its save method,
     // since the user hasn't confirmed the big config dialog yet.
-    setURLList( dirserv->urlList() );
+    setURLList( dirserv->x509Services() );
     slotChanged();
   }
 }

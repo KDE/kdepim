@@ -37,47 +37,59 @@
 #include <kurl.h>
 #include <QtGui/QWidget>
 
-class QTreeWidgetItem;
-
 namespace Kleo {
 
-class CryptoConfigEntry;
-
-class DirectoryServicesWidgetPrivate;
-
-class KLEO_EXPORT DirectoryServicesWidget : public QWidget
-{
+class KLEO_EXPORT DirectoryServicesWidget : public QWidget {
   Q_OBJECT
-
 public:
-  explicit DirectoryServicesWidget(
-    Kleo::CryptoConfigEntry* configEntry,
-    QWidget* parent = 0, const char* name = 0, Qt::WFlags fl = 0 );
+  explicit DirectoryServicesWidget( QWidget * parent=0, Qt::WindowFlags f=0 );
   ~DirectoryServicesWidget();
 
-  void load();
-  void save();
+  enum Scheme {
+      NoScheme = 0,
+      HKP      = 1,
+      HTTP     = 2,
+      FTP      = 4,
+      LDAP     = 8,
 
-  void setInitialServices( const KUrl::List& urls );
-  KUrl::List urlList() const;
-  void clear();
+      AllSchemes = HKP|HTTP|FTP|LDAP
+  };
+  Q_DECLARE_FLAGS( Schemes, Scheme )
+
+  enum Protocol {
+      NoProtocol = 0,
+      X509Protocol = 1,
+      OpenPGPProtocol = 2,
+
+      AllProtocols = X509Protocol|OpenPGPProtocol
+  };
+  Q_DECLARE_FLAGS( Protocols, Protocol )
+
+  void setAllowedSchemes( Schemes schemes );
+  Schemes allowedSchemes() const;
+
+  void setAllowedProtocols( Protocols protocols );
+  Protocols allowedProtocols() const;
+
+  void addOpenPGPServices( const KUrl::List& urls );
+  KUrl::List openPGPServices() const;
+
+  void addX509Services( const KUrl::List& urls );
+  KUrl::List x509Services() const;
 
 public Q_SLOTS:
-  void defaults();
+  void clear();
 
 Q_SIGNALS:
   void changed();
 
-protected Q_SLOTS:
-  void slotServiceChanged();
-  void slotServiceSelected( QTreeWidgetItem * );
-  void slotAddService();
-  void slotDeleteService();
-  void slotMoveUp();
-  void slotMoveDown();
-
 private:
-  DirectoryServicesWidgetPrivate * d;
+  class Private;
+  Private * const d;
+  Q_PRIVATE_SLOT( d, void slotNewClicked() )
+  Q_PRIVATE_SLOT( d, void slotDeleteClicked() )
+  Q_PRIVATE_SLOT( d, void slotSelectionChanged() )
+  Q_PRIVATE_SLOT( d, void slotShowUserAndPasswordToggled(bool) )
 };
 
 }
