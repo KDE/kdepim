@@ -38,7 +38,6 @@
 #include "resolverecipientspage.h"
 #include "signerresolvepage.h"
 #include "resultpage.h"
-#include "resultdisplaywidget.h"
 
 #include <crypto/task.h>
 #include <crypto/taskcollection.h>

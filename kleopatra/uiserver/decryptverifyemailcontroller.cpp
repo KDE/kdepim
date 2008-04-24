@@ -38,7 +38,6 @@
 #include "decryptverifyemailcontroller.h"
 #include <crypto/gui/decryptverifyoperationwidget.h>
 #include <crypto/gui/decryptverifywizard.h>
-#include <crypto/gui/resultdisplaywidget.h>
 #include <crypto/decryptverifytask.h>
 #include <crypto/taskcollection.h>
 

@@ -36,7 +36,6 @@
 
 #include "decryptverifyoperationwidget.h"
 
-#include <crypto/gui/resultdisplaywidget.h>
 #include <crypto/gui/resultpage.h>
 #include <crypto/gui/scrollarea.h>
 #include <crypto/gui/wizardpage.h>
