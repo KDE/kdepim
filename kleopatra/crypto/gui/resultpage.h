@@ -59,8 +59,6 @@ public:
 
     void setTaskCollection( const boost::shared_ptr<TaskCollection> & coll );
 
-    void setOperationCompleted();
-
     bool isComplete() const;
 
 private:

@@ -131,7 +131,7 @@ set( _kleopatra_common_SRCS
   crypto/gui/resultpage.cpp
 
   crypto/gui/decryptverifyoperationwidget.cpp
-  crypto/gui/decryptverifywizard.cpp
+  crypto/gui/decryptverifyfileswizard.cpp
 
   crypto/gui/objectspage.cpp
   crypto/gui/resolverecipientspage.cpp

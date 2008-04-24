@@ -275,10 +275,4 @@ SignerResolvePage* SignEncryptWizard::signerResolvePage()
     return d->signerResolvePage;
 }
 
-void SignEncryptWizard::setOperationCompleted()
-{
-    d->resultPage->setOperationCompleted();
-}
-
-
 #include "moc_signencryptwizard.cpp"

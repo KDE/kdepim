@@ -128,9 +128,6 @@ namespace Gui {
 
         /*reimp*/ void onNext( int currentId );
 
-    public Q_SLOTS:
-        void setOperationCompleted();
-
     Q_SIGNALS:
         //void operationResolved();
         void signersResolved();

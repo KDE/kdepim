@@ -129,11 +129,6 @@ ResultPage::~ResultPage()
 {
 }
 
-void ResultPage::setOperationCompleted()
-{
-    //### TODO
-}
-
 void ResultPage::setTaskCollection( const shared_ptr<TaskCollection> & coll )
 {
     if ( d->m_tasks == coll )

@@ -32,7 +32,7 @@
 
 #include <config-kleopatra.h>
 
-#include "decryptverifywizard.h"
+#include "decryptverifyfileswizard.h"
 
 #include "decryptverifyoperationwidget.h"
 
@@ -116,11 +116,11 @@ namespace {
     };
 }
 
-class DecryptVerifyWizard::Private {
-    friend class ::Kleo::Crypto::Gui::DecryptVerifyWizard;
-    DecryptVerifyWizard * const q;
+class DecryptVerifyFilesWizard::Private {
+    friend class ::Kleo::Crypto::Gui::DecryptVerifyFilesWizard;
+    DecryptVerifyFilesWizard * const q;
 public:
-    Private( DecryptVerifyWizard * qq );
+    Private( DecryptVerifyFilesWizard * qq );
     ~Private();
 
     void ensureIndexAvailable( unsigned int idx ) {
@@ -133,62 +133,57 @@ private:
 };
 
 
-DecryptVerifyWizard::DecryptVerifyWizard( QWidget * p, Qt::WindowFlags f )
+DecryptVerifyFilesWizard::DecryptVerifyFilesWizard( QWidget * p, Qt::WindowFlags f )
     : Wizard( p, f ), d( new Private( this ) )
 {
 
 }
 
-DecryptVerifyWizard::~DecryptVerifyWizard() {}
+DecryptVerifyFilesWizard::~DecryptVerifyFilesWizard() {}
 
-void DecryptVerifyWizard::setOutputDirectory( const QString & dir ) {
+void DecryptVerifyFilesWizard::setOutputDirectory( const QString & dir ) {
     d->operationsPage.setOutputDirectory( dir );
 }
 
-QString DecryptVerifyWizard::outputDirectory() const {
+QString DecryptVerifyFilesWizard::outputDirectory() const {
     return d->operationsPage.outputDirectory();
 }
 
-DecryptVerifyOperationWidget * DecryptVerifyWizard::operationWidget( unsigned int idx ) {
+DecryptVerifyOperationWidget * DecryptVerifyFilesWizard::operationWidget( unsigned int idx ) {
     d->ensureIndexAvailable( idx );
     return d->operationsPage.widget( idx );
 }
 
-void DecryptVerifyWizard::onNext( int id )
+void DecryptVerifyFilesWizard::onNext( int id )
 {
     if ( id == OperationsPage )
         QTimer::singleShot( 0, this, SIGNAL( operationPrepared() ) );
     Wizard::onNext( id );
 }
 
-void DecryptVerifyWizard::setTaskCollection( const shared_ptr<TaskCollection> & coll )
+void DecryptVerifyFilesWizard::setTaskCollection( const shared_ptr<TaskCollection> & coll )
 {
     kleo_assert( coll );
     d->resultPage.setTaskCollection( coll );
 }
 
-void DecryptVerifyWizard::setOperationCompleted()
-{
-   d->resultPage.setOperationCompleted(); 
-}
-
-DecryptVerifyWizard::Private::Private( DecryptVerifyWizard * qq )
+DecryptVerifyFilesWizard::Private::Private( DecryptVerifyFilesWizard * qq )
     : q( qq ),
       operationsPage( q ),
       resultPage( q )
 {
-    q->setPage( DecryptVerifyWizard::OperationsPage, &operationsPage );
-    q->setPage( DecryptVerifyWizard::ResultPage, &resultPage );
+    q->setPage( DecryptVerifyFilesWizard::OperationsPage, &operationsPage );
+    q->setPage( DecryptVerifyFilesWizard::ResultPage, &resultPage );
     connect( &resultPage, SIGNAL(linkActivated(QString)), q, SIGNAL(linkActivated(QString)) );
 
     std::vector<int> order;
-    order.push_back( DecryptVerifyWizard::OperationsPage );
-    order.push_back( DecryptVerifyWizard::ResultPage );
+    order.push_back( DecryptVerifyFilesWizard::OperationsPage );
+    order.push_back( DecryptVerifyFilesWizard::ResultPage );
     q->setPageOrder( order );
     operationsPage.setCommitPage( true );
 }
 
-DecryptVerifyWizard::Private::~Private() {}
+DecryptVerifyFilesWizard::Private::~Private() {}
 
 
 
@@ -253,5 +248,5 @@ void OperationsWidget::ensureIndexAvailable( unsigned int idx ) {
     }
 }
 
-#include "decryptverifywizard.moc"
-#include "moc_decryptverifywizard.cpp"
+#include "decryptverifyfileswizard.moc"
+#include "moc_decryptverifyfileswizard.cpp"

@@ -168,8 +168,6 @@ void DecryptVerifyEMailController::Private::ensureWizardCreated()
 
 #if 0
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
-    connect( q, SIGNAL( done() ), w.get(), SLOT( setOperationCompleted() ), Qt::QueuedConnection );
-    connect( q, SIGNAL( error( int, QString ) ), w.get(), SLOT( setOperationCompleted() ), Qt::QueuedConnection );
 #endif
     m_wizard = w.release();
 

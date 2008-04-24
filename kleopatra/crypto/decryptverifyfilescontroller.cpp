@@ -34,7 +34,7 @@
 
 #include "decryptverifyfilescontroller.h"
 #include <crypto/gui/decryptverifyoperationwidget.h>
-#include <crypto/gui/decryptverifywizard.h>
+#include <crypto/gui/decryptverifyfileswizard.h>
 #include <crypto/decryptverifytask.h>
 #include <crypto/taskcollection.h>
 
@@ -92,7 +92,7 @@ public:
     void cancelAllTasks();
 
     std::vector<shared_ptr<QFile> > m_passedFiles, m_filesAfterPreparation;
-    QPointer<DecryptVerifyWizard> m_wizard;
+    QPointer<DecryptVerifyFilesWizard> m_wizard;
     std::vector<shared_ptr<const DecryptVerifyResult> > m_results;
     std::vector<shared_ptr<Task> > m_runnableTasks, m_completedTasks;
     shared_ptr<Task> m_runningTask;
@@ -234,14 +234,12 @@ void DecryptVerifyFilesController::Private::ensureWizardCreated()
     if ( m_wizard )
         return;
 
-    std::auto_ptr<DecryptVerifyWizard> w( new DecryptVerifyWizard );
+    std::auto_ptr<DecryptVerifyFilesWizard> w( new DecryptVerifyFilesWizard );
     w->setWindowTitle( i18n( "Decrypt/Verify Files" ) );
     w->setAttribute( Qt::WA_DeleteOnClose );
 
     connect( w.get(), SIGNAL(operationPrepared()), q, SLOT(slotWizardOperationPrepared()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
-    connect( q, SIGNAL( done() ), w.get(), SLOT( setOperationCompleted() ), Qt::QueuedConnection );
-    connect( q, SIGNAL( error( int, QString ) ), w.get(), SLOT( setOperationCompleted() ), Qt::QueuedConnection );
     m_wizard = w.release();
 
 }

@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    crypto/gui/decryptverifywizard.h
+    crypto/gui/decryptverifyfileswizard.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_CRYPTO_GUI_DECRYPTVERIFYWIZARD_H__
-#define __KLEOPATRA_CRYPTO_GUI_DECRYPTVERIFYWIZARD_H__
+#ifndef __KLEOPATRA_CRYPTO_GUI_DECRYPTVERIFYFILESWIZARD_H__
+#define __KLEOPATRA_CRYPTO_GUI_DECRYPTVERIFYFILESWIZARD_H__
 
 #include <crypto/gui/wizard.h>
 
@@ -48,7 +48,7 @@ namespace Gui {
     class DecryptVerifyOperationWidget;
     class ResultDisplayWidget;
 
-    class DecryptVerifyWizard : public Wizard {
+    class DecryptVerifyFilesWizard : public Wizard {
         Q_OBJECT
     public:
         enum Page {
@@ -56,8 +56,8 @@ namespace Gui {
             ResultPage
         };
 
-        explicit DecryptVerifyWizard( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~DecryptVerifyWizard();
+        explicit DecryptVerifyFilesWizard( QWidget * parent=0, Qt::WindowFlags f=0 );
+        ~DecryptVerifyFilesWizard();
 
         void setOutputDirectory( const QString & dir );
         QString outputDirectory() const;
@@ -65,9 +65,6 @@ namespace Gui {
         void setTaskCollection( const boost::shared_ptr<TaskCollection> & coll );
 
         DecryptVerifyOperationWidget * operationWidget( unsigned int idx );
-
-    public Q_SLOTS:
-        void setOperationCompleted();
 
     Q_SIGNALS:
         void operationPrepared();
@@ -85,4 +82,4 @@ namespace Gui {
 }
 }
 
-#endif /* __KLEOPATRA_CRYPTO_GUI_DECRYPTVERIFYWIZARD_H__ */
+#endif /* __KLEOPATRA_CRYPTO_GUI_DECRYPTVERIFYFILESWIZARD_H__ */
