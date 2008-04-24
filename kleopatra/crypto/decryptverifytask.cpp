@@ -125,7 +125,7 @@ Task::Result::VisualCode codeForVerificationResult( const VerificationResult & r
 
     const std::vector<Signature> sigs = res.signatures();
     if ( sigs.empty() )
-        return Task::Result::NeutralSuccess;
+        return Task::Result::Warning;
 
     if ( !std::count_if( sigs.begin(), sigs.end(), bind( &Signature::summary, _1 ) != Signature::Valid ) )
         return Task::Result::AllGood;
@@ -146,6 +146,9 @@ QString formatVerificationResultOverview( const VerificationResult & res ) {
         return i18n( "<b>Verification failed: %1.</b>", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
 
     const std::vector<Signature> sigs = res.signatures();
+
+    if ( sigs.empty() )
+        return i18n( "<b>No signatures found</b>" );
 
     const uint bad = std::count_if( sigs.begin(), sigs.end(), bind( &Signature::summary, _1 ) == Signature::Red );
     if ( bad > 0 )
