@@ -47,7 +47,7 @@ namespace Crypto {
     class ExecutionContext {
     public:
         virtual ~ExecutionContext() {}
-        virtual void applyWindowID( QDialog * dialog ) const = 0;
+        virtual void applyWindowID( QWidget* widget ) const = 0;
     };
 
     class Controller : public QObject {
@@ -66,7 +66,7 @@ namespace Crypto {
     protected:   
         boost::shared_ptr<const ExecutionContext> executionContext() const;
 
-        void bringToForeground( QDialog* dlg );
+        void bringToForeground( QWidget* wid );
         
     private:
         class Private;

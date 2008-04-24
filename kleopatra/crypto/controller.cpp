@@ -51,11 +51,11 @@ class Controller::Private {
 public:
     explicit Private( const shared_ptr<const ExecutionContext> & ctx, Controller * qq );
     
-    void applyWindowID( QDialog* dlg );
+    void applyWindowID( QWidget* wid );
     
 private:
     weak_ptr<const ExecutionContext> executionContext;
-    QVector<QDialog*> idApplied;
+    QVector<QWidget*> idApplied;
 };
 
 Controller::Private::Private( const shared_ptr<const ExecutionContext> & ctx, Controller * qq )
@@ -64,13 +64,13 @@ Controller::Private::Private( const shared_ptr<const ExecutionContext> & ctx, Co
 
 }
 
-void Controller::Private::applyWindowID( QDialog* dlg )
+void Controller::Private::applyWindowID( QWidget* wid )
 {
-    if ( idApplied.contains( dlg ) )
+    if ( idApplied.contains( wid ) )
         return;
     if ( const shared_ptr<const ExecutionContext> ctx = executionContext.lock() ) {
-        ctx->applyWindowID( dlg );
-        idApplied.append( dlg );
+        ctx->applyWindowID( wid );
+        idApplied.append( wid );
     }
 }
 
@@ -99,15 +99,15 @@ shared_ptr<const ExecutionContext> Controller::executionContext() const
     return d->executionContext.lock();
 }
 
-void Controller::bringToForeground( QDialog* dlg )
+void Controller::bringToForeground( QWidget* wid )
 {
-    d->applyWindowID( dlg );
-    if ( dlg->isVisible() )
-        dlg->raise();
+    d->applyWindowID( wid );
+    if ( wid->isVisible() )
+        wid->raise();
     else
-        dlg->show();
+        wid->show();
 #ifdef Q_WS_WIN
-    KWindowSystem::forceActiveWindow( dlg->winId() );
+    KWindowSystem::forceActiveWindow( wid->winId() );
 #endif
 }
 

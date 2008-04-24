@@ -36,8 +36,7 @@
 #include <config-kleopatra.h>
 
 #include "decryptverifyemailcontroller.h"
-#include <crypto/gui/decryptverifyoperationwidget.h>
-#include <crypto/gui/decryptverifywizard.h>
+#include <crypto/gui/resultlistwidget.h>
 #include <crypto/decryptverifytask.h>
 #include <crypto/taskcollection.h>
 
@@ -92,7 +91,7 @@ public:
     std::vector<shared_ptr<Input> > m_inputs, m_signedDatas;
     std::vector<shared_ptr<Output> > m_outputs;
         
-    QPointer<DecryptVerifyWizard> m_wizard;
+    QPointer<ResultListWidget> m_wizard;
     std::vector<shared_ptr<const DecryptVerifyResult> > m_results;
     std::vector<shared_ptr<AbstractDecryptVerifyTask> > m_runnableTasks, m_completedTasks;
     shared_ptr<AbstractDecryptVerifyTask> m_runningTask;
@@ -162,13 +161,16 @@ void DecryptVerifyEMailController::Private::ensureWizardCreated()
     if ( m_wizard )
         return;
 
-    std::auto_ptr<DecryptVerifyWizard> w( new DecryptVerifyWizard );
+    std::auto_ptr<ResultListWidget> w( new ResultListWidget );
     w->setWindowTitle( i18n( "Decrypt/Verify E-Mail" ) );
     w->setAttribute( Qt::WA_DeleteOnClose );
+    w->setStandaloneMode( true );
 
+#if 0
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
     connect( q, SIGNAL( done() ), w.get(), SLOT( setOperationCompleted() ), Qt::QueuedConnection );
     connect( q, SIGNAL( error( int, QString ) ), w.get(), SLOT( setOperationCompleted() ), Qt::QueuedConnection );
+#endif
     m_wizard = w.release();
 
 }
@@ -209,10 +211,8 @@ std::vector< shared_ptr<AbstractDecryptVerifyTask> > DecryptVerifyEMailControlle
                                m_protocol == CMS     ? i18n("No backend support for S/MIME") : QString() );
 
 
-    if ( m_operation != Decrypt && !m_silent ) {
+    if ( m_operation != Decrypt && !m_silent )
         ensureWizardVisible();
-        m_wizard->next();
-    }
 
     std::vector< shared_ptr<AbstractDecryptVerifyTask> > tasks;
     

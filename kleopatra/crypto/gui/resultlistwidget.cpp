@@ -59,6 +59,7 @@ public:
 
     void result( const shared_ptr<const Task::Result> & result );
     void started( const shared_ptr<Task> & task );
+    void detailsToggled( bool );
 
     void addResultWidget( ResultItemWidget* widget );
     void setupSingle();
@@ -115,7 +116,7 @@ void ResultListWidget::Private::setupMulti()
     m_scrollArea = new ScrollArea;
     assert( qobject_cast<QBoxLayout*>( m_scrollArea->widget()->layout() ) );
     static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() )->setMargin( 0 );
-    static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() )->setSpacing( 0 );
+    static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() )->setSpacing( 2 );
     static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() )->addStretch( 1 );
     m_layout->insertWidget( 1, m_scrollArea );
 }
@@ -135,6 +136,8 @@ void ResultListWidget::Private::addResultWidget( ResultItemWidget* widget )
         widget->showCloseButton( m_standaloneMode );
         m_layout->addWidget( widget );
     }
+    if ( m_standaloneMode )
+        q->resize( q->size().expandedTo( q->sizeHint() ) );
 }
 
 void ResultListWidget::Private::result( const shared_ptr<const Task::Result> & result )
@@ -144,6 +147,9 @@ void ResultListWidget::Private::result( const shared_ptr<const Task::Result> & r
     const shared_ptr<const Task> task = m_tasks->taskById( result->id() );
     assert( task );
     ResultItemWidget* wid = new ResultItemWidget( result, task->label() );
+    q->connect( wid, SIGNAL(detailsToggled(bool)), q, SLOT(detailsToggled(bool)) );
+    q->connect( wid, SIGNAL(closeButtonClicked()), q, SLOT(close()) );
+
     addResultWidget( wid );
     if ( m_tasks->allTasksCompleted() ) {
         m_progressLabel->setVisible( false );
@@ -172,6 +178,10 @@ void ResultListWidget::setTaskCollection( const shared_ptr<TaskCollection> & col
     setStandaloneMode( d->m_standaloneMode );
 }
 
+void ResultListWidget::Private::detailsToggled( bool ) {
+    if ( m_standaloneMode )
+        q->resize( q->size().expandedTo( q->sizeHint() ) );
+}
 
 void ResultListWidget::Private::started( const shared_ptr<Task> & task )
 {
@@ -179,6 +189,8 @@ void ResultListWidget::Private::started( const shared_ptr<Task> & task )
     assert( task );
     assert( m_progressLabel );
     m_progressLabel->setText( i18nc( "number, operation description", "Operation %1: %2", m_tasks->numberOfCompletedTasks() + 1, task->label() ) );
+    if ( m_standaloneMode )
+        q->resize( q->size().expandedTo( q->sizeHint() ) );
 }
 
 void ResultListWidget::setStandaloneMode( bool standalone ) {

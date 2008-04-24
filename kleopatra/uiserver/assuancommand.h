@@ -244,7 +244,7 @@ namespace Kleo {
 
         GpgME::Protocol checkProtocol( Mode mode ) const;
 
-        /* reimp */ void applyWindowID( QDialog* w ) const {
+        /* reimp */ void applyWindowID( QWidget* w ) const {
             doApplyWindowID( w );
         }
         
@@ -301,7 +301,7 @@ namespace Kleo {
         virtual int doStart() = 0;
 
     private:
-        void doApplyWindowID( QDialog * w ) const;
+        void doApplyWindowID( QWidget * w ) const;
 
     private:
         friend class ::Kleo::AssuanCommandFactory;

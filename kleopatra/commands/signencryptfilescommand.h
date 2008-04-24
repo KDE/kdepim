@@ -57,7 +57,7 @@ namespace Commands {
         /* reimp */ void doStart();
         /* reimp */ void doCancel();
 
-        /* reimp */ void applyWindowID( QDialog * dlg ) const;
+        /* reimp */ void applyWindowID( QWidget * wid ) const;
 
     private:
         class Private;

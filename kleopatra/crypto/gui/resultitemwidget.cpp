@@ -95,6 +95,8 @@ ResultItemWidget::ResultItemWidget( const shared_ptr<const Task::Result> & resul
     const QColor color = colorForVisualCode( d->m_result->code() );
     setStyleSheet( QString( "* { background-color: %1; margin: 0px; } QFrame#resultFrame{ border-color: %2; border-style: solid; border-radius: 3px; border-width: 2px } QLabel { padding: 5px; border-radius: 3px }" ).arg( color.lighter( 150 ).name(), color.name() ) );
     QVBoxLayout* topLayout = new QVBoxLayout( this );
+    topLayout->setMargin( 0 );
+    topLayout->setSpacing( 0 );
     QFrame* frame = new QFrame;
     frame->setObjectName( "resultFrame" );
     topLayout->addWidget( frame );
@@ -132,8 +134,9 @@ ResultItemWidget::ResultItemWidget( const shared_ptr<const Task::Result> & resul
     
     d->m_closeButton = new KPushButton;
     d->m_closeButton->setGuiItem( KStandardGuiItem::close() );
+    d->m_closeButton->setFixedSize( d->m_closeButton->sizeHint() );
     connect( d->m_closeButton, SIGNAL(clicked()), this, SIGNAL(closeButtonClicked()) );
-    layout->addWidget( d->m_closeButton );
+    layout->addWidget( d->m_closeButton, 0, Qt::AlignRight );
     d->m_closeButton->setVisible( false );
 
     d->updateShowDetailsLabel();
@@ -173,9 +176,11 @@ void ResultItemWidget::Private::slotLinkActivated( const QString & link )
 
 void ResultItemWidget::showDetails( bool show )
 {
-    if ( d->m_detailsLabel )
-        d->m_detailsLabel->setVisible( show );
+    if ( show == d->m_detailsLabel->isVisible() )
+        return;
+    d->m_detailsLabel->setVisible( show );
     d->updateShowDetailsLabel();
+    emit detailsToggled( show );
 }
 
 #include "resultitemwidget.moc"

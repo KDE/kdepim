@@ -67,6 +67,7 @@ namespace Gui {
     Q_SIGNALS:
         void linkActivated( const QString & link );
         void closeButtonClicked();
+        void detailsToggled( bool );
 
     private:
         class Private;

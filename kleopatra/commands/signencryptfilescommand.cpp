@@ -168,9 +168,9 @@ void SignEncryptFilesCommand::doCancel() {
     d->controller.cancel();
 }
 
-void SignEncryptFilesCommand::applyWindowID( QDialog * dlg ) const {
-    if ( dlg )
-        dlg->setParent( d->view(), dlg->windowFlags() );
+void SignEncryptFilesCommand::applyWindowID( QWidget * wid ) const {
+    if ( wid )
+        wid->setParent( d->view(), wid->windowFlags() );
 }
 
 QStringList SignEncryptFilesCommand::Private::selectFiles() const {

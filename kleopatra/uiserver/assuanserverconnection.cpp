@@ -1201,8 +1201,8 @@ GpgME::Protocol AssuanCommand::checkProtocol( Mode mode ) const {
     throw Exception( makeError( GPG_ERR_INV_ARG ), i18n( "invalid protocol \"%1\"", protocolString ) );
 }        
 
-void AssuanCommand::doApplyWindowID( QDialog * dlg ) const {
-    if ( !dlg || !hasOption( "window-id" ) )
+void AssuanCommand::doApplyWindowID( QWidget * widget ) const {
+    if ( !widget || !hasOption( "window-id" ) )
         return;
     const QString winIdStr = option("window-id").toString();
     bool ok = false;
@@ -1216,9 +1216,9 @@ void AssuanCommand::doApplyWindowID( QDialog * dlg ) const {
         return;
     }
     if ( QWidget * pw = QWidget::find( wid ) )
-        dlg->setParent( pw, dlg->windowFlags() );
+        widget->setParent( pw, widget->windowFlags() );
     else {    	
-        KWindowSystem::setMainWindow( dlg, wid );
+        KWindowSystem::setMainWindow( widget, wid );
     }
 }
 

@@ -170,9 +170,9 @@ void DecryptVerifyFilesCommand::doCancel() {
     d->controller.cancel();
 }
 
-void DecryptVerifyFilesCommand::applyWindowID( QDialog * dlg ) const {
-    if ( dlg )
-        dlg->setParent( d->view(), dlg->windowFlags() );
+void DecryptVerifyFilesCommand::applyWindowID( QWidget * wid ) const {
+    if ( wid )
+        wid->setParent( d->view(), wid->windowFlags() );
 }
 
 QStringList DecryptVerifyFilesCommand::Private::selectFiles() const {
