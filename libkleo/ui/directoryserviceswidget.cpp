@@ -63,7 +63,7 @@ namespace {
     static KUrl defaultOpenPGPService() {
         KUrl url;
         url.setProtocol( "hkp" );
-        url.setHost( "subkeys.pgp.net" );
+        url.setHost( "keys.gnupg.net" );
         return url;
     }
 
