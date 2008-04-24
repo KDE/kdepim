@@ -88,12 +88,6 @@ static const char * iconForSignature( const Signature & sig ) {
     return "dialog-warning";
 }
 
-
-static QString image( const char * img ) {
-    // ### escape?
-    return "<img src=\"" + KIconLoader::global()->iconPath( img, KIconLoader::Small ) + "\"/>";
-}
-
 static QColor color( const DecryptionResult & dr, const VerificationResult & vr ) {
     if ( !dr.isNull() && dr.error() )
         return Qt::red;
