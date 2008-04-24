@@ -396,7 +396,7 @@ Task::Result::VisualCode SignEncryptFilesResult::code() const
 {
     if ( m_sresult.error().isCanceled() || m_eresult.error().isCanceled() )
         return Warning;
-    return ( m_sresult.error().code() || m_eresult.error().code() ) ? NeutralSuccess : NeutralError;
+    return ( m_sresult.error().code() || m_eresult.error().code() ) ? NeutralError : NeutralSuccess;
 }
 
 #include "moc_signencryptfilestask.cpp"
