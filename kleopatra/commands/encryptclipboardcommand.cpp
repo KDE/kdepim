@@ -98,7 +98,7 @@ EncryptClipboardCommand::Private::Private( EncryptClipboardCommand * qq, KeyList
     : Command::Private( qq, c ),
       shared_qq( qq, nodelete() ),
       input(),
-      controller()
+      controller( EncryptEMailController::ClipboardMode )
 {
 
 }

@@ -143,7 +143,7 @@ int EncryptCommand::doStart() {
         removeMemento( EncryptEMailController::mementoName() );
         d->controller->setExecutionContext( shared_from_this() );
     } else {
-        d->controller.reset( new EncryptEMailController( shared_from_this() ) );
+        d->controller.reset( new EncryptEMailController( shared_from_this(), EncryptEMailController::GpgOLMode ) );
         d->controller->setProtocol( checkProtocol( EMail ) );
     }
 

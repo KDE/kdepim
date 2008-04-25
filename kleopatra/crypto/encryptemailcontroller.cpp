@@ -69,7 +69,7 @@ class EncryptEMailController::Private {
     friend class ::Kleo::Crypto::EncryptEMailController;
     EncryptEMailController * const q;
 public:
-    explicit Private( EncryptEMailController * qq );
+    explicit Private( Mode mode, EncryptEMailController * qq );
 
 private:
     void slotWizardRecipientsResolved();
@@ -85,13 +85,15 @@ private:
     shared_ptr<EncryptEMailTask> takeRunnable( GpgME::Protocol proto );
 
 private:
+    const Mode mode;
     std::vector< shared_ptr<EncryptEMailTask> > runnable, completed;
     shared_ptr<EncryptEMailTask> cms, openpgp;
     mutable QPointer<SignEncryptWizard> wizard;
 };
 
-EncryptEMailController::Private::Private( EncryptEMailController * qq )
+EncryptEMailController::Private::Private( Mode m, EncryptEMailController * qq )
     : q( qq ),
+      mode( m ),
       runnable(),
       cms(),
       openpgp(),
@@ -100,14 +102,14 @@ EncryptEMailController::Private::Private( EncryptEMailController * qq )
 
 }
 
-EncryptEMailController::EncryptEMailController( const shared_ptr<ExecutionContext> & xc, QObject * p )
-    : Controller( xc, p ), d( new Private( this ) )
+EncryptEMailController::EncryptEMailController( const shared_ptr<ExecutionContext> & xc, Mode mode, QObject * p )
+    : Controller( xc, p ), d( new Private( mode, this ) )
 {
 
 }
 
-EncryptEMailController::EncryptEMailController( QObject * p )
-    : Controller( p ), d( new Private( this ) )
+EncryptEMailController::EncryptEMailController( Mode mode, QObject * p )
+    : Controller( p ), d( new Private( mode, this ) )
 {
 
 }
@@ -116,6 +118,10 @@ EncryptEMailController::~EncryptEMailController() {
     if ( d->wizard && !d->wizard->isVisible() )
         delete d->wizard;
         //d->wizard->close(); ### ?
+}
+
+EncryptEMailController::Mode EncryptEMailController::mode() const {
+    return d->mode;
 }
 
 void EncryptEMailController::setProtocol( Protocol proto ) {
@@ -183,6 +189,8 @@ void EncryptEMailController::setInputsAndOutputs( const std::vector< shared_ptr<
         const shared_ptr<EncryptEMailTask> task( new EncryptEMailTask );
         task->setInput( inputs[i] );
         task->setOutput( outputs[i] );
+        if ( d->mode == ClipboardMode )
+            task->setAsciiArmor( true );
         task->setRecipients( keys );
 
         tasks.push_back( task );

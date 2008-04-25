@@ -63,9 +63,18 @@ namespace Crypto {
     class EncryptEMailController : public Controller {
         Q_OBJECT
     public:
-        explicit EncryptEMailController( QObject * parent=0 );
-        explicit EncryptEMailController( const boost::shared_ptr<ExecutionContext> & xc, QObject * parent=0 );
+        enum Mode {
+            GpgOLMode,
+            ClipboardMode,
+
+            NumModes
+        };
+
+        explicit EncryptEMailController( Mode mode, QObject * parent=0 );
+        explicit EncryptEMailController( const boost::shared_ptr<ExecutionContext> & xc, Mode mode, QObject * parent=0 );
         ~EncryptEMailController();
+
+        Mode mode() const;
 
         static const char * mementoName() { return "EncryptEMailController"; }
 
