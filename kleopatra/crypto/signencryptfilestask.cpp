@@ -52,6 +52,7 @@
 
 #include <KLocalizedString>
 
+#include <QFile>
 #include <QPointer>
 #include <QTextDocument> // for Qt::escape
 
@@ -72,14 +73,14 @@ namespace {
 
     class SignEncryptFilesResult : public Task::Result {
     public:
-        SignEncryptFilesResult( int id, const SigningResult & sr, const QString & input, const QString & output )
-            : Task::Result( id ), m_sresult( sr ), m_inputLabel( input ), m_outputLabel( output ) {
+        SignEncryptFilesResult( int id, const SigningResult & sr, const QString & input, const QString & output, bool inputRemoved, bool outputCreated )
+            : Task::Result( id ), m_sresult( sr ), m_inputLabel( input ), m_outputLabel( output ), m_inputRemoved( inputRemoved ), m_outputCreated( outputCreated ) {
             
         }
-        SignEncryptFilesResult( int id, const EncryptionResult & er, const QString & input, const QString & output )
-            : Task::Result( id ), m_eresult( er ), m_inputLabel( input ), m_outputLabel( output ) {}
-        SignEncryptFilesResult( int id, const SigningResult & sr, const EncryptionResult & er, const QString & input, const QString & output )
-            : Task::Result( id ), m_sresult( sr ), m_eresult( er ), m_inputLabel( input ), m_outputLabel( output ) {}
+        SignEncryptFilesResult( int id, const EncryptionResult & er, const QString & input, const QString & output, bool inputRemoved, bool outputCreated  )
+            : Task::Result( id ), m_eresult( er ), m_inputLabel( input ), m_outputLabel( output ), m_inputRemoved( inputRemoved ), m_outputCreated( outputCreated ) {}
+        SignEncryptFilesResult( int id, const SigningResult & sr, const EncryptionResult & er, const QString & input, const QString & output, bool inputRemoved, bool outputCreated )
+            : Task::Result( id ), m_sresult( sr ), m_eresult( er ), m_inputLabel( input ), m_outputLabel( output ), m_inputRemoved( inputRemoved ), m_outputCreated( outputCreated ) {}
 
         /* reimp */ QString overview() const;
         /* reimp */ QString details() const;
@@ -90,8 +91,10 @@ namespace {
     private:
         const SigningResult m_sresult;
         const EncryptionResult m_eresult;
-        QString m_inputLabel;
-        QString m_outputLabel;
+        const QString m_inputLabel;
+        const QString m_outputLabel;
+        const bool m_inputRemoved;
+        const bool m_outputCreated;
     };
 
     static QString makeErrorOverview( const SigningResult & result ) {
@@ -167,7 +170,8 @@ private:
     bool encrypt  : 1;
     bool ascii    : 1;
     bool detached : 1;
-
+    bool removeInput : 1;
+    
     QPointer<Kleo::Job> job;
 };
 
@@ -183,6 +187,7 @@ SignEncryptFilesTask::Private::Private( SignEncryptFilesTask * qq )
       encrypt( true ),
       ascii( true ),
       detached( false ),
+      removeInput( false ),
       job( 0 )
 {
 
@@ -226,6 +231,12 @@ void SignEncryptFilesTask::setSign( bool sign ) {
 void SignEncryptFilesTask::setEncrypt( bool encrypt ) {
     kleo_assert( !d->job );
     d->encrypt = encrypt;
+}
+
+void SignEncryptFilesTask::setRemoveInputFileOnSuccess( bool remove )
+{
+    kleo_assert( !d->job );
+    d->removeInput = remove;
 }
 
 void SignEncryptFilesTask::setAsciiArmor( bool ascii ) {
@@ -336,47 +347,65 @@ std::auto_ptr<Kleo::EncryptJob> SignEncryptFilesTask::Private::createEncryptJob(
 }
 
 void SignEncryptFilesTask::Private::slotResult( const SigningResult & result ) {
+    bool inputRemoved = false;
+    bool outputCreated = false;
     if ( result.error().code() ) {
         output->cancel();
     } else {
         try {
             output->finalize();
+            outputCreated = true;
+            if ( removeInput ) {
+                inputRemoved = QFile::remove( inputFileName );
+            }
         } catch ( const GpgME::Exception & e ) {
             q->emitResult( q->makeErrorResult( e.error().encodedError(), QString::fromLocal8Bit( e.what() ) ) );
             return;
         }
     }
    
-    q->emitResult( shared_ptr<Result>( new SignEncryptFilesResult( q->id(), result, input->label(), output->label() ) ) );
+    q->emitResult( shared_ptr<Result>( new SignEncryptFilesResult( q->id(), result, input->label(), output->label(), inputRemoved, outputCreated ) ) );
 }
 
 void SignEncryptFilesTask::Private::slotResult( const SigningResult & sresult, const EncryptionResult & eresult ) {
+    bool inputRemoved = false;
+    bool outputCreated = false;
     if ( sresult.error().code() || eresult.error().code() ) {
         output->cancel();
     } else {
         try {
             output->finalize();
+            outputCreated = true;
+            if ( removeInput ) {
+                inputRemoved = QFile::remove( inputFileName );
+            }
         } catch ( const GpgME::Exception & e ) {
             q->emitResult( q->makeErrorResult( e.error().encodedError(), QString::fromLocal8Bit( e.what() ) ) );
             return;
         }
     }
     
-    q->emitResult( shared_ptr<Result>( new SignEncryptFilesResult( q->id(), sresult, eresult, input->label(), output->label() ) ) );
+    q->emitResult( shared_ptr<Result>( new SignEncryptFilesResult( q->id(), sresult, eresult, input->label(), output->label(), inputRemoved, outputCreated ) ) );
 }
 
 void SignEncryptFilesTask::Private::slotResult( const EncryptionResult & result ) {
+    bool inputRemoved = false;
+    bool outputCreated = false;
     if ( result.error().code() ) {
         output->cancel();
     } else {
         try {
             output->finalize();
+            outputCreated = true;
+            if ( removeInput ) {
+                inputRemoved = QFile::remove( inputFileName );
+            }
         } catch ( const GpgME::Exception & e ) {
             q->emitResult( q->makeErrorResult( e.error().encodedError(), QString::fromLocal8Bit( e.what() ) ) );
             return;
         }
     }
-    q->emitResult( shared_ptr<Result>( new SignEncryptFilesResult( q->id(), result, input->label(), output->label() ) ) );
+    q->emitResult( shared_ptr<Result>( new SignEncryptFilesResult( q->id(), result, input->label(), output->label(), inputRemoved, outputCreated ) ) );
 }
 
 QString SignEncryptFilesResult::overview() const {
@@ -384,11 +413,8 @@ QString SignEncryptFilesResult::overview() const {
     const bool encrypt = !m_eresult.isNull();
  
     kleo_assert( sign || encrypt );
-    
-    const bool strikeOutput = hasError();
-    const bool strikeInput = false ; // //### TODO: get information whether input was deleted
 
-    const QString files = formatInputOutputLabel( m_inputLabel, m_outputLabel, strikeInput, strikeOutput );
+    const QString files = formatInputOutputLabel( m_inputLabel, m_outputLabel, m_inputRemoved, !m_outputCreated );
    
     return files + ' ' + makeOverview( sign ? makeErrorOverview( m_sresult ) : makeErrorOverview( m_eresult ) );
 }

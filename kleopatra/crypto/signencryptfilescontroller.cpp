@@ -82,10 +82,8 @@ private:
     void ensureWizardVisible();
     void cancelAllTasks();
     void reportError( int err, const QString & details ) {
-        errorDetected = true;
         emit q->error( err, details );
     }
-    void removeInputFiles();
 
     void schedule();
     shared_ptr<SignEncryptFilesTask> takeRunnable( GpgME::Protocol proto );
@@ -98,7 +96,6 @@ private:
     QPointer<SignEncryptFilesWizard> wizard;
     unsigned int operation;
     Protocol protocol;
-    bool errorDetected : 1;
 };
 
 SignEncryptFilesController::Private::Private( SignEncryptFilesController * qq )
@@ -108,8 +105,7 @@ SignEncryptFilesController::Private::Private( SignEncryptFilesController * qq )
       openpgp(),
       wizard(),
       operation( SignAllowed|EncryptAllowed ),
-      protocol( UnknownProtocol ),
-      errorDetected( false )
+      protocol( UnknownProtocol )
 {
 
 }
@@ -196,11 +192,12 @@ void SignEncryptFilesController::start() {
 }
 
 static shared_ptr<SignEncryptFilesTask>
-createSignEncryptTaskForFileInfo( const QFileInfo & fi, bool pgp, bool sign, bool encrypt, bool ascii, const std::vector<Key> & recipients, const std::vector<Key> & signers ) {
+createSignEncryptTaskForFileInfo( const QFileInfo & fi, bool pgp, bool sign, bool encrypt, bool ascii, bool removeUnencrypted, const std::vector<Key> & recipients, const std::vector<Key> & signers ) {
     const shared_ptr<SignEncryptFilesTask> task( new SignEncryptFilesTask );
     task->setSign( sign );
     task->setEncrypt( encrypt );
     task->setAsciiArmor( ascii );
+    task->setRemoveInputFileOnSuccess( removeUnencrypted );
     if ( sign )
         task->setSigners( signers );
     if ( encrypt )
@@ -227,7 +224,7 @@ createSignEncryptTaskForFileInfo( const QFileInfo & fi, bool pgp, bool sign, boo
 }
 
 static std::vector< shared_ptr<SignEncryptFilesTask> >
-createSignEncryptTasksForFileInfo( const QFileInfo & fi, bool sign, bool encrypt, bool ascii, const std::vector<Key> & pgpRecipients, const std::vector<Key> & pgpSigners, const std::vector<Key> & cmsRecipients, const std::vector<Key> & cmsSigners ) {
+createSignEncryptTasksForFileInfo( const QFileInfo & fi, bool sign, bool encrypt, bool ascii, bool removeUnencrypted, const std::vector<Key> & pgpRecipients, const std::vector<Key> & pgpSigners, const std::vector<Key> & cmsRecipients, const std::vector<Key> & cmsSigners ) {
     std::vector< shared_ptr<SignEncryptFilesTask> > result;
 
     const bool shallPgpSign = sign && !pgpSigners.empty();
@@ -241,9 +238,9 @@ createSignEncryptTasksForFileInfo( const QFileInfo & fi, bool sign, bool encrypt
     result.reserve( pgp + cms );
 
     if ( pgp )
-        result.push_back( createSignEncryptTaskForFileInfo( fi, true, sign, encrypt, ascii, pgpRecipients, pgpSigners ) );
+        result.push_back( createSignEncryptTaskForFileInfo( fi, true, sign, encrypt, ascii, removeUnencrypted, pgpRecipients, pgpSigners ) );
     if ( cms )
-        result.push_back( createSignEncryptTaskForFileInfo( fi, false, sign, encrypt, ascii, cmsRecipients, cmsSigners ) );
+        result.push_back( createSignEncryptTaskForFileInfo( fi, false, sign, encrypt, ascii, removeUnencrypted, cmsRecipients, cmsSigners ) );
 
     return result;
 }
@@ -258,6 +255,7 @@ void SignEncryptFilesController::Private::slotWizardOperationPrepared() {
         const bool encrypt = wizard->encryptionSelected();
 
         const bool ascii = wizard->isAsciiArmorEnabled();
+        const bool removeUnencrypted = wizard->removeUnencryptedFile();
         const QFileInfoList files = wizard->resolvedFiles();
 
         std::vector<Key> pgpRecipients, cmsRecipients, pgpSigners, cmsSigners;
@@ -289,7 +287,7 @@ void SignEncryptFilesController::Private::slotWizardOperationPrepared() {
 
         Q_FOREACH( const QFileInfo & fi, files ) {
             const std::vector< shared_ptr<SignEncryptFilesTask> > created = 
-                createSignEncryptTasksForFileInfo( fi, sign, encrypt, ascii, pgpRecipients, pgpSigners, cmsRecipients, cmsSigners );
+                createSignEncryptTasksForFileInfo( fi, sign, encrypt, ascii, removeUnencrypted, pgpRecipients, pgpSigners, cmsRecipients, cmsSigners );
             tasks.insert( tasks.end(), created.begin(), created.end() );
         }
 
@@ -340,8 +338,6 @@ void SignEncryptFilesController::Private::schedule() {
 
     if ( !cms && !openpgp ) {
         kleo_assert( runnable.empty() );
-        if ( wizard->removeUnencryptedFile() && wizard->encryptionSelected() && !errorDetected )
-            removeInputFiles();
         emit q->done();
     }
     
@@ -381,7 +377,6 @@ void SignEncryptFilesController::Private::slotTaskDone() {
 void SignEncryptFilesController::cancel() {
     kDebug();
     try {
-        d->errorDetected = true;
         if ( d->wizard )
             d->wizard->close();
         d->cancelAllTasks();
@@ -419,19 +414,6 @@ void SignEncryptFilesController::Private::ensureWizardCreated() {
 void SignEncryptFilesController::Private::ensureWizardVisible() {
     ensureWizardCreated();
     q->bringToForeground( wizard );
-}
-
-void SignEncryptFilesController::Private::removeInputFiles() {
-    if ( !wizard ) {
-        qWarning( "SignEncryptFilesController::Private::removeInputFiles: no wizard!" );
-        return;
-    }
-    if ( errorDetected )
-        return;
-
-    const QFileInfoList files = wizard->resolvedFiles();
-    Q_FOREACH( const QFileInfo & fi, files )
-        QFile::remove( fi.absoluteFilePath() );
 }
 
 #include "moc_signencryptfilescontroller.cpp"
