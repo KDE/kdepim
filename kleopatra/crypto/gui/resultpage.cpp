@@ -111,6 +111,7 @@ void ResultPage::Private::result( const shared_ptr<const Task::Result> & )
         m_progressBar->setRange( 0, 100 );
         m_progressBar->setValue( 100 );
         m_progressLabel->setText( i18n( "All operations completed." ) );
+        m_tasks.reset();
         emit q->completeChanged();
     }
 }
@@ -147,7 +148,7 @@ void ResultPage::setTaskCollection( const shared_ptr<TaskCollection> & coll )
 
 bool ResultPage::isComplete() const
 {
-    return d->m_tasks ? d->m_tasks->allTasksCompleted() : false;
+    return d->m_tasks ? d->m_tasks->allTasksCompleted() : true;
 }
 
 
