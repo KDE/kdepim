@@ -50,7 +50,13 @@
         <number>0</number>
        </property>
        <item>
-        <widget class="QPushButton" name="newPB" >
+        <widget class="QToolButton" name="newTB" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
          <property name="toolTip" >
           <string>Click to add a service</string>
          </property>
@@ -60,10 +66,16 @@
          <property name="text" >
           <string>New</string>
          </property>
+         <property name="popupMode" >
+          <enum>QToolButton::MenuButtonPopup</enum>
+         </property>
+         <property name="toolButtonStyle" >
+          <enum>Qt::ToolButtonTextBesideIcon</enum>
+         </property>
         </widget>
        </item>
        <item>
-        <widget class="QPushButton" name="deletePB" >
+        <widget class="QToolButton" name="deleteTB" >
          <property name="enabled" >
           <bool>false</bool>
          </property>
@@ -75,6 +87,9 @@
          </property>
          <property name="text" >
           <string>Delete</string>
+         </property>
+         <property name="toolButtonStyle" >
+          <enum>Qt::ToolButtonTextBesideIcon</enum>
          </property>
         </widget>
        </item>
@@ -112,7 +127,7 @@
  <resources/>
  <connections>
   <connection>
-   <sender>newPB</sender>
+   <sender>newTB</sender>
    <signal>clicked()</signal>
    <receiver>DirectoryServicesWidget</receiver>
    <slot>slotNewClicked()</slot>
@@ -128,7 +143,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>deletePB</sender>
+   <sender>deleteTB</sender>
    <signal>clicked()</signal>
    <receiver>DirectoryServicesWidget</receiver>
    <slot>slotDeleteClicked()</slot>

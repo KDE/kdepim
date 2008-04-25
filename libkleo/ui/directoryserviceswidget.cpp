@@ -42,6 +42,8 @@
 #include <QSpinBox>
 #include <QComboBox>
 #include <QHeaderView>
+#include <QMenu>
+#include <QAction>
 
 #include <boost/bind.hpp>
 
@@ -59,6 +61,7 @@ namespace {
     static KUrl defaultX509Service() {
         KUrl url;
         url.setProtocol( "ldap" );
+        url.setHost( i18nc("default server name, keep it a valid domain name, ie. no spaces", "server") );
         return url;
     }
     static KUrl defaultOpenPGPService() {
@@ -393,27 +396,33 @@ private:
         int row = selectedRow();
         if ( row < 0 )
             row = currentRow();
-        QModelIndex index;
-        if ( row < 0 ) {
+        if ( row < 0 )
             if ( protocols & OpenPGPProtocol )
-                index = model.addOpenPGPService( defaultOpenPGPService() );
+                slotNewOpenPGPClicked();
             else if ( protocols & X509Protocol )
-                index = model.addX509Service( defaultX509Service() );
+                slotNewX509Clicked();
             else
                 assert( !"This should not happen.");
-        } else {
-            index = model.duplicateRow( row );
-        }
+        else
+            edit( model.duplicateRow( row ) );
+    }
+    void edit( const QModelIndex & index ) {
         if ( index.isValid() ) {
             ui.treeView->clearSelection();
             ui.treeView->edit( index );
         }
     }
+    void slotNewX509Clicked() {
+        edit( model.addX509Service( defaultX509Service() ) );
+    }
+    void slotNewOpenPGPClicked() {
+        edit( model.addOpenPGPService( defaultOpenPGPService() ) );
+    }
     void slotDeleteClicked() {
         model.deleteRow( selectedRow() );
     }
     void slotSelectionChanged() {
-        ui.deletePB->setEnabled( selectedRow() >= 0 );
+        ui.deleteTB->setEnabled( selectedRow() >= 0 );
     }
     void slotShowUserAndPasswordToggled( bool on ) {
         QHeaderView * const hv = ui.treeView->header();
@@ -433,16 +442,46 @@ private:
 
     void showHideColumns();
 
+    void enableDisableActions() {
+        ui.newX509Action.setEnabled( protocols & X509Protocol );
+        ui.newOpenPGPAction.setEnabled( protocols & OpenPGPProtocol );
+        if ( protocols == AllProtocols ) {
+            ui.newTB->setMenu( &ui.newMenu );
+            ui.newTB->setPopupMode( QToolButton::MenuButtonPopup );
+        } else {
+            ui.newTB->setMenu( 0 );
+            ui.newTB->setPopupMode( QToolButton::DelayedPopup );
+        }
+    }
+
 private:
     Protocols protocols;
     Model model;
     Delegate delegate;
     struct UI : Ui_DirectoryServicesWidget {
+        QAction newX509Action;
+        QAction newOpenPGPAction;
+        QMenu newMenu;
 
         explicit UI( DirectoryServicesWidget * q )
-            : Ui_DirectoryServicesWidget()
+            : Ui_DirectoryServicesWidget(),
+              newX509Action( i18nc("New X.509 Directory Server", "X.509"), q ),
+              newOpenPGPAction( i18nc("New OpenPGP Directory Server", "OpenPGP"), q ),
+              newMenu( q )
         {
+            newX509Action.setObjectName( "newX509Action" );
+            newOpenPGPAction.setObjectName( "newOpenPGPAction" );
+            newMenu.setObjectName( "newMenu" );
+
             setupUi( q );
+
+            connect( &newX509Action, SIGNAL(triggered()), q, SLOT(slotNewX509Clicked()) );
+            connect( &newOpenPGPAction, SIGNAL(triggered()), q, SLOT(slotNewOpenPGPClicked()) );
+
+            newMenu.addAction( &newX509Action );
+            newMenu.addAction( &newOpenPGPAction );
+            
+            newTB->setMenu( &newMenu );
         }
 
     } ui;
@@ -473,6 +512,7 @@ void DirectoryServicesWidget::setAllowedProtocols( Protocols protocols ) {
         return;
     d->protocols = protocols;
     d->showHideColumns();
+    d->enableDisableActions();
 }
 
 DirectoryServicesWidget::Protocols DirectoryServicesWidget::allowedProtocols() const {
