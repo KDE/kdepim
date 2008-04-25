@@ -34,6 +34,11 @@
 
 #include "systemtrayicon.h"
 
+#include <commands/encryptclipboardcommand.h>
+//#include <commands/signclipboardcommand.h>
+//#include <commands/decryptclipboardcommand.h>
+//#include <commands/verifyclipboardcommand.h>
+
 #include <KIcon>
 #include <KLocale>
 #include <KAboutApplicationDialog>
@@ -50,7 +55,8 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 
-#include <QCoreApplication>
+#include <QApplication>
+#include <QClipboard>
 #include <QProcess>
 #include <QPointer>
 
@@ -60,6 +66,7 @@
 #include <cassert>
 
 using namespace boost;
+using namespace Kleo::Commands;
 
 class SystemTrayIcon::Private {
     friend class ::SystemTrayIcon;
@@ -87,6 +94,26 @@ private:
 
     void slotEnableDisableActions() {
         openCertificateManagerAction.setEnabled( !mainWindow || !mainWindow->isVisible() );
+        encryptClipboardAction.setEnabled( EncryptClipboardCommand::canEncryptCurrentClipboard() );
+        signClipboardAction.setEnabled( false /*SignClipboardCommand::canSignCurrentClipboard()*/ );
+        decryptClipboardAction.setEnabled( false /*DecryptClipboardCommand::canDecryptCurrentClipboard()*/ );
+        verifyClipboardAction.setEnabled( false /*VerifyClipboardCommand::canVerifyCurrentClipboard()*/ );
+    }
+
+    void slotEncryptClipboard() {
+        ( new EncryptClipboardCommand( 0 ) )->start();
+    }
+
+    void slotSignClipboard() {
+        //( new SignClipboardCommand( 0 ) )->start();
+    }
+
+    void slotDecryptClipboard() {
+        //( new DecryptClipboardCommand( 0 ) )->start();
+    }
+
+    void slotVerifyClipboard() {
+        //( new VerifyClipboardCommand( 0 ) )->start();
     }
 
 private:
@@ -94,6 +121,11 @@ private:
     QAction openCertificateManagerAction;
     QAction aboutAction;
     QAction quitAction;
+    QMenu clipboardMenu;
+    QAction encryptClipboardAction;
+    QAction signClipboardAction;
+    QAction decryptClipboardAction;
+    QAction verifyClipboardAction;
 
     QPointer<KAboutApplicationDialog> aboutDialog;
 
@@ -107,6 +139,11 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
       openCertificateManagerAction( i18n("&Open Certificate Manager..."), q ),
       aboutAction( i18n("&About %1...", KGlobal::mainComponent().aboutData()->programName() ), q ),
       quitAction( i18n("&Shutdown Kleopatra"), q ),
+      clipboardMenu( i18n("Clipboard" ) ),
+      encryptClipboardAction( i18n("Encrypt..."), q ),
+      signClipboardAction( i18n("Sign..."), q ),
+      decryptClipboardAction( i18n("Decrypt..."), q ),
+      verifyClipboardAction( i18n("Verify..."), q ),
       aboutDialog(),
       mainWindow(),
       previousGeometry()
@@ -115,14 +152,33 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
     KDAB_SET_OBJECT_NAME( openCertificateManagerAction );
     KDAB_SET_OBJECT_NAME( aboutAction );
     KDAB_SET_OBJECT_NAME( quitAction );
+    KDAB_SET_OBJECT_NAME( clipboardMenu );
+    KDAB_SET_OBJECT_NAME( encryptClipboardAction );
+    KDAB_SET_OBJECT_NAME( signClipboardAction );
+    KDAB_SET_OBJECT_NAME( decryptClipboardAction );
+    KDAB_SET_OBJECT_NAME( verifyClipboardAction );
 
     connect( &openCertificateManagerAction, SIGNAL(triggered()), q, SLOT(openOrRaiseMainWindow()) );
     connect( &aboutAction, SIGNAL(triggered()), q, SLOT(slotAbout()) );
     connect( &quitAction, SIGNAL(triggered()), QCoreApplication::instance(), SLOT(quit()) );
+    connect( &encryptClipboardAction, SIGNAL(triggered()), q, SLOT(slotEncryptClipboard()) );
+    connect( &signClipboardAction, SIGNAL(triggered()), q, SLOT(slotSignClipboard()) );
+    connect( &decryptClipboardAction, SIGNAL(triggered()), q, SLOT(slotDecryptClipboard()) );
+    connect( &verifyClipboardAction, SIGNAL(triggered()), q, SLOT(slotVerifyClipboard()) );
+
+    connect( QApplication::clipboard(), SIGNAL(changed(QClipboard::Mode)),
+             q, SLOT(slotEnableDisableActions()) );
+
     connect( q, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), q, SLOT(slotActivated(QSystemTrayIcon::ActivationReason)) );
 
     menu.addAction( &openCertificateManagerAction );
     menu.addAction( &aboutAction );
+    menu.addSeparator();
+    menu.addMenu( &clipboardMenu );
+    clipboardMenu.addAction( &encryptClipboardAction );
+    clipboardMenu.addAction( &signClipboardAction );
+    clipboardMenu.addAction( &decryptClipboardAction );
+    clipboardMenu.addAction( &verifyClipboardAction );
     menu.addSeparator();
     menu.addAction( &quitAction );
 

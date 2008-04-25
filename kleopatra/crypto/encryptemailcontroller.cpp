@@ -106,6 +106,12 @@ EncryptEMailController::EncryptEMailController( const shared_ptr<ExecutionContex
 
 }
 
+EncryptEMailController::EncryptEMailController( QObject * p )
+    : Controller( p ), d( new Private( this ) )
+{
+
+}
+
 EncryptEMailController::~EncryptEMailController() {
     if ( d->wizard && !d->wizard->isVisible() )
         delete d->wizard;
@@ -137,6 +143,12 @@ const char * EncryptEMailController::protocolAsString() const {
     }
 }
 
+void EncryptEMailController::startResolveRecipients() {
+    d->ensureWizardCreated();
+    d->wizard->setRecipients( std::vector<Mailbox>() ); // ### needed?
+    d->ensureWizardVisible();
+}
+
 void EncryptEMailController::startResolveRecipients( const std::vector<Mailbox> & recipients ) {
     d->ensureWizardCreated();
     d->wizard->setRecipients( recipients );
@@ -149,6 +161,10 @@ void EncryptEMailController::Private::slotWizardRecipientsResolved() {
 
 void EncryptEMailController::Private::slotWizardCanceled() {
     emit q->error( gpg_error( GPG_ERR_CANCELED ), i18n("User cancel") );
+}
+
+void EncryptEMailController::setInputAndOutput( const shared_ptr<Input> & input, const shared_ptr<Output> & output ) {
+    setInputsAndOutputs( std::vector< shared_ptr<Input> >( 1, input ), std::vector< shared_ptr<Output> >( 1, output ) );
 }
 
 void EncryptEMailController::setInputsAndOutputs( const std::vector< shared_ptr<Input> > & inputs, const std::vector< shared_ptr<Output> > & outputs ) {

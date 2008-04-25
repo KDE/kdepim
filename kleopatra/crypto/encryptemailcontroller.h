@@ -63,6 +63,7 @@ namespace Crypto {
     class EncryptEMailController : public Controller {
         Q_OBJECT
     public:
+        explicit EncryptEMailController( QObject * parent=0 );
         explicit EncryptEMailController( const boost::shared_ptr<ExecutionContext> & xc, QObject * parent=0 );
         ~EncryptEMailController();
 
@@ -72,8 +73,11 @@ namespace Crypto {
         const char * protocolAsString() const;
         GpgME::Protocol protocol() const;
 
+        void startResolveRecipients();
         void startResolveRecipients( const std::vector<KMime::Types::Mailbox> & recipients );
 
+        void setInputAndOutput( const boost::shared_ptr<Kleo::Input>  & input,
+                                const boost::shared_ptr<Kleo::Output> & output );
         void setInputsAndOutputs( const std::vector< boost::shared_ptr<Kleo::Input> >  & inputs,
                                   const std::vector< boost::shared_ptr<Kleo::Output> > & outputs );
 

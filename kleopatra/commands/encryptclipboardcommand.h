@@ -1,8 +1,8 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    systemtrayicon.h
+    commands/encryptclipboardcommand.h
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2008 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,47 +30,41 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_SYSTEMTRAYICON_H__
-#define __KLEOPATRA_SYSTEMTRAYICON_H__
+#ifndef __KLEOPATRA_COMMMANDS_ENCRYPTCLIPBOARDCOMMAND_H__
+#define __KLEOPATRA_COMMMANDS_ENCRYPTCLIPBOARDCOMMAND_H__
 
-#include <QSystemTrayIcon>
+#include <commands/command.h>
 
-#include <utils/pimpl_ptr.h>
+#include <crypto/controller.h>
 
-class SystemTrayIcon : public QSystemTrayIcon {
-    Q_OBJECT
-public:
-    explicit SystemTrayIcon( QObject * parent=0 );
-    ~SystemTrayIcon();
+namespace Kleo {
+namespace Commands {
 
-    void setMainWindow( QWidget * w );
+    class EncryptClipboardCommand : public Command, public Crypto::ExecutionContext {
+        Q_OBJECT
+    public:
+        explicit EncryptClipboardCommand( QAbstractItemView * view, KeyListController * parent );
+        explicit EncryptClipboardCommand( KeyListController * parent );
+        ~EncryptClipboardCommand();
 
-public Q_SLOTS:
-    void openOrRaiseMainWindow();
+        static bool canEncryptCurrentClipboard();
 
-private:
-    virtual QWidget * doCreateMainWindow() const = 0;
-    /* reimp */ bool eventFilter( QObject *, QEvent * );
+    private:
+        /* reimp */ void doStart();
+        /* reimp */ void doCancel();
 
-private:
-    class Private;
-    kdtools::pimpl_ptr<Private> d;
-    Q_PRIVATE_SLOT( d, void slotAbout() )
-    Q_PRIVATE_SLOT( d, void slotActivated( QSystemTrayIcon::ActivationReason ) )
-    Q_PRIVATE_SLOT( d, void slotEnableDisableActions() )
-    Q_PRIVATE_SLOT( d, void slotEncryptClipboard() )
-    Q_PRIVATE_SLOT( d, void slotSignClipboard() )
-    Q_PRIVATE_SLOT( d, void slotDecryptClipboard() )
-    Q_PRIVATE_SLOT( d, void slotVerifyClipboard() )
-};
+        /* reimp */ void applyWindowID( QWidget * wid ) const;
 
-template <typename T_Widget>
-class SystemTrayIconFor : public SystemTrayIcon {
-public:
-    explicit SystemTrayIconFor( QObject * parent=0 ) : SystemTrayIcon( parent ) {}
+    private:
+        class Private;
+        inline Private * d_func();
+        inline const Private * d_func() const;
+        Q_PRIVATE_SLOT( d_func(), void slotRecipientsResolved() )
+        Q_PRIVATE_SLOT( d_func(), void slotControllerDone() )
+        Q_PRIVATE_SLOT( d_func(), void slotControllerError(int,QString) )
+    };
 
-private:
-    /* reimp */ QWidget * doCreateMainWindow() const { return new T_Widget; }
-};
+}
+}
 
-#endif /* __KLEOPATRA_SYSTEMTRAYICON_H__ */
+#endif // __KLEOPATRA_COMMMANDS_ENCRYPTCLIPBOARDCOMMAND_H__
