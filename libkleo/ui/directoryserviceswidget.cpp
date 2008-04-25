@@ -395,10 +395,10 @@ private:
             row = currentRow();
         QModelIndex index;
         if ( row < 0 ) {
-            if ( protocols & X509Protocol )
-                index = model.addX509Service( defaultX509Service() );
-            else if ( protocols & OpenPGPProtocol )
+            if ( protocols & OpenPGPProtocol )
                 index = model.addOpenPGPService( defaultOpenPGPService() );
+            else if ( protocols & X509Protocol )
+                index = model.addX509Service( defaultX509Service() );
             else
                 assert( !"This should not happen.");
         } else {
@@ -413,7 +413,7 @@ private:
         model.deleteRow( selectedRow() );
     }
     void slotSelectionChanged() {
-        ui.deletePB->setEnabled( selectedRow() > 0 );
+        ui.deletePB->setEnabled( selectedRow() >= 0 );
     }
     void slotShowUserAndPasswordToggled( bool on ) {
         QHeaderView * const hv = ui.treeView->header();
