@@ -92,6 +92,7 @@ ResultPage::Private::Private( ResultPage* qq ) : q( qq ), m_lastErrorItemIndex( 
     m_progressDetails = new QLabel;
     layout->addWidget( m_progressDetails );
     m_resultList = new ResultListWidget;
+    connect( m_resultList, SIGNAL(linkActivated(QString)), q, SIGNAL(linkActivated(QString)) );
     layout->addWidget( m_resultList );
 }
 

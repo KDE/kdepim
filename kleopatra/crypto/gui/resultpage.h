@@ -61,6 +61,9 @@ public:
 
     bool isComplete() const;
 
+Q_SIGNALS:
+    void linkActivated( const QString & link );
+
 private:
     class Private;
     kdtools::pimpl_ptr<Private> d;
