@@ -50,6 +50,7 @@ namespace Kleo {
         virtual QString label() const = 0;
         virtual boost::shared_ptr<QIODevice> ioDevice() const = 0;
         virtual unsigned int classification() const = 0;
+        virtual unsigned long long size() const = 0;
         void finalize(); // equivalent to ioDevice()->close();
 
         static boost::shared_ptr<Input> createFromPipeDevice( assuan_fd_t fd, const QString & label );

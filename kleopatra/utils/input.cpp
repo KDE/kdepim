@@ -77,6 +77,8 @@ namespace {
 
         /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_io; }
         /* reimp */ unsigned int classification() const;
+        /* reimp */ unsigned long long size() const { return 0; }
+
     private:
         shared_ptr<QIODevice> m_io;
     };
@@ -91,6 +93,8 @@ namespace {
         }
         /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_io; }
         /* reimp */ unsigned int classification() const;
+        /* reimp */ unsigned long long size() const { return QFileInfo( m_fileName ).size(); }
+
     private:
         shared_ptr<QIODevice> m_io;
         QString m_fileName;
@@ -103,6 +107,8 @@ namespace {
         /* reimp */ QString label() const;
         /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_buffer; }
         /* reimp */ unsigned int classification() const;
+        /* reimp */ unsigned long long size() const { return m_buffer ? m_buffer->buffer().size() : 0; }
+
     private:
         const QClipboard::Mode m_mode;
         shared_ptr<QBuffer> m_buffer;
