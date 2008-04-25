@@ -65,6 +65,7 @@
 #include <cassert>
 
 using namespace Kleo;
+using namespace Kleo::Crypto;
 using namespace Kleo::Crypto::Gui;
 using namespace boost;
 
