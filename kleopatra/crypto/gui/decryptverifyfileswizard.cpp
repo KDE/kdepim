@@ -50,6 +50,7 @@
 
 #include <KLocale>
 
+#include <QCheckBox>
 #include <QScrollArea>
 #include <QLayout>
 #include <QLabel>
@@ -95,6 +96,10 @@ namespace {
             return m_ui.outputDirectoryFNR.fileName();
         }
 
+        bool useOutputDirectory() const {
+            return m_ui.useOutputDirectoryCB.isChecked();
+        }
+
         void ensureIndexAvailable( unsigned int idx );
 
         DecryptVerifyOperationWidget * widget( unsigned int idx ) {
@@ -106,6 +111,7 @@ namespace {
         std::vector<DecryptVerifyOperationWidget*> m_widgets;
 
         struct UI {
+            QCheckBox useOutputDirectoryCB; 
             QLabel            outputDirectoryLB;
             FileNameRequester outputDirectoryFNR;
             ScrollArea       scrollArea; // ### replace with KDScrollArea when done
@@ -148,6 +154,10 @@ void DecryptVerifyFilesWizard::setOutputDirectory( const QString & dir ) {
 
 QString DecryptVerifyFilesWizard::outputDirectory() const {
     return d->operationsPage.outputDirectory();
+}
+
+bool DecryptVerifyFilesWizard::useOutputDirectory() const {
+    return d->operationsPage.useOutputDirectory();
 }
 
 DecryptVerifyOperationWidget * DecryptVerifyFilesWizard::operationWidget( unsigned int idx ) {
@@ -195,7 +205,7 @@ DecryptVerifyFilesWizard::Private::~Private() {}
 OperationsWidget::OperationsWidget( QWidget * p )
     : WizardPage( p ), m_widgets(), m_ui( this )
 {
-    setTitle( i18n("Choose operations to be performed") );
+    setTitle( i18n("<b>Choose operations to be performed</b>") );
     setSubTitle( i18n("Here you can check and, if needed, override "
                       "the operations Kleopatra detected for the input given.") );
     setCommitPage( true );
@@ -205,18 +215,24 @@ OperationsWidget::OperationsWidget( QWidget * p )
 OperationsWidget::~OperationsWidget() {}
 
 OperationsWidget::UI::UI( OperationsWidget * q )
-    : outputDirectoryLB( i18n("&Output directory:"), q ),
+    : useOutputDirectoryCB( i18n( "Create all output files in a single folder" ), q ),
+      outputDirectoryLB( i18n("&Output folder:"), q ),
       outputDirectoryFNR( q ),
       scrollArea( q ),
       vlay( q ),
       hlay()
 {
+    KDAB_SET_OBJECT_NAME( useOutputDirectoryCB );
     KDAB_SET_OBJECT_NAME( outputDirectoryLB );
     KDAB_SET_OBJECT_NAME( outputDirectoryFNR );
     KDAB_SET_OBJECT_NAME( scrollArea );
 
     KDAB_SET_OBJECT_NAME( vlay );
     KDAB_SET_OBJECT_NAME( hlay );
+
+    useOutputDirectoryCB.setChecked( true );
+    connect( &useOutputDirectoryCB, SIGNAL(toggled(bool)), &outputDirectoryLB, SLOT(setEnabled(bool)) );
+    connect( &useOutputDirectoryCB, SIGNAL(toggled(bool)), &outputDirectoryFNR, SLOT(setEnabled(bool)) );
 
     assert( qobject_cast<QBoxLayout*>(scrollArea.widget()->layout()) );
     static_cast<QBoxLayout*>(scrollArea.widget()->layout())->addStretch( 1 );
@@ -225,6 +241,7 @@ OperationsWidget::UI::UI( OperationsWidget * q )
     hlay.setMargin( 0 );
 
     vlay.addWidget( &scrollArea, 1 );
+    vlay.addWidget( &useOutputDirectoryCB );
     vlay.addLayout( &hlay );
     hlay.addWidget( &outputDirectoryLB );
     hlay.addWidget( &outputDirectoryFNR );

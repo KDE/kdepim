@@ -61,6 +61,7 @@ namespace Gui {
 
         void setOutputDirectory( const QString & dir );
         QString outputDirectory() const;
+        bool useOutputDirectory() const;
 
         void setTaskCollection( const boost::shared_ptr<TaskCollection> & coll );
 

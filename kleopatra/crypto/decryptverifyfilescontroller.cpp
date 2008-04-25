@@ -308,16 +308,20 @@ std::vector<shared_ptr<QFile> > DecryptVerifyFilesController::Private::prepareWi
 
 std::vector< shared_ptr<Task> > DecryptVerifyFilesController::Private::buildTasks( const std::vector<shared_ptr<QFile> > &  files )
 {
+    const bool useOutDir = m_wizard->useOutputDirectory();
     const QFileInfo outDirInfo( m_wizard->outputDirectory() );
-    kleo_assert( outDirInfo.isDir() );
+
+    kleo_assert( !useOutDir || outDirInfo.isDir() );
 
     const QDir outDir( outDirInfo.absoluteFilePath() );
-    kleo_assert( outDir.exists() );    
+    kleo_assert( !useOutDir || outDir.exists() );
 
     std::vector<shared_ptr<Task> > tasks;
     for ( unsigned int i = 0 ; i < files.size(); ++i )
         try {
-            tasks.push_back( taskFromOperationWidget( m_wizard->operationWidget( i ), files[i], outDir ) );
+            const QDir fileDir = QFileInfo( *files[i] ).absoluteDir();
+            kleo_assert( fileDir.exists() );
+            tasks.push_back( taskFromOperationWidget( m_wizard->operationWidget( i ), files[i], useOutDir ? outDir : fileDir ) );
         } catch ( const GpgME::Exception & e ) {
             tasks.push_back( Task::makeErrorTask( e.error().code(), QString::fromLocal8Bit( e.what() ), QFileInfo( *files[i] ).fileName() ) );
         }
