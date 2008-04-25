@@ -125,6 +125,10 @@ SignEMailController::~SignEMailController() {
         //d->wizard->close(); ### ?
 }
 
+SignEMailController::Mode SignEMailController::mode() const {
+    return d->mode;
+}
+
 // ### extract to base
 void SignEMailController::setProtocol( Protocol proto ) {
     kleo_assert( d->protocol == UnknownProtocol ||
