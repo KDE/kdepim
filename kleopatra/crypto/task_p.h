@@ -47,12 +47,13 @@ namespace Crypto {
         explicit SimpleTask( const QString & label ) : m_result(), m_label( label ) {}
         
         void setResult( const boost::shared_ptr<const Task::Result> & res ) { m_result = res; }
-        GpgME::Protocol protocol() const { return GpgME::UnknownProtocol; }
-        QString label() const { return m_label; }
-        void cancel() {}
-
+        /*reimp*/ GpgME::Protocol protocol() const { return GpgME::UnknownProtocol; }
+        /*reimp*/ QString label() const { return m_label; }
+        /*reimp*/ void cancel() {}
     private:
-        void doStart() { QTimer::singleShot( 0, this, SLOT(slotEmitResult()) ); }
+        /*reimp*/ void doStart() { QTimer::singleShot( 0, this, SLOT(slotEmitResult()) ); }
+        /*reimp*/ unsigned long long inputSize() const { return 0; }
+
     private Q_SLOTS:
         void slotEmitResult() { emitResult( m_result ); }
     private:

@@ -83,8 +83,7 @@ public:
 
 private:
     QString m_progressLabel;
-    int m_processedSize;
-    int m_totalSize;
+    double m_processedPercent;
     int m_id;
 };
 
@@ -93,7 +92,7 @@ namespace {
 }
 
 Task::Private::Private( Task * qq )
-    : q( qq ), m_progressLabel(), m_processedSize( 0 ), m_totalSize( 0 ), m_id( nextTaskId++ )
+    : q( qq ), m_progressLabel(), m_processedPercent( 0.0 ), m_id( nextTaskId++ )
 {
 
 }
@@ -117,14 +116,14 @@ int Task::id() const
     return d->m_id;
 }
 
-int Task::processedSize() const
+unsigned long long Task::processedSize() const
 {
-    return d->m_processedSize;
+    return qRound( d->m_processedPercent * totalSize() );
 }
 
-int Task::totalSize() const
+unsigned long long Task::totalSize() const
 {
-    return d->m_totalSize;
+    return inputSize();
 }
 
 QString Task::progressLabel() const
@@ -134,12 +133,10 @@ QString Task::progressLabel() const
 
 void Task::setProgress( const QString & label, int processed, int total )
 {
-    if ( processed == d->m_processedSize && total == d->m_totalSize && d->m_progressLabel == label )
-        return;
-    d->m_processedSize = processed;
-    d->m_totalSize == total;
+    const double percent = total > 0 ? static_cast<double>( processed ) / total : 0.0;
+    d->m_processedPercent = percent;
     d->m_progressLabel = label;
-    emit progress( label, processed, total );
+    emit progress( label, processedSize(), totalSize() );
 }
 
 void Task::start() {
@@ -163,7 +160,8 @@ void Task::emitError( int errCode, const QString& details ) {
 
 void Task::emitResult( const shared_ptr<const Task::Result> & r )
 {
-    d->m_processedSize = d->m_totalSize;
+    d->m_processedPercent = 1.0;
+    emit progress( progressLabel(), processedSize(), totalSize() );
     emit result( r );
 }
 

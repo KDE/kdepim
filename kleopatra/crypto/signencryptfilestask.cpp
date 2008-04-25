@@ -53,6 +53,7 @@
 #include <KLocalizedString>
 
 #include <QFile>
+#include <QFileInfo>
 #include <QPointer>
 #include <QTextDocument> // for Qt::escape
 
@@ -302,6 +303,11 @@ Protocol SignEncryptFilesTask::protocol() const {
 
 QString SignEncryptFilesTask::label() const {
     return d->input ? d->input->label() : QString();
+}
+
+unsigned long long SignEncryptFilesTask::inputSize() const
+{
+    return QFileInfo( d->inputFileName ).size();
 }
 
 void SignEncryptFilesTask::doStart() {

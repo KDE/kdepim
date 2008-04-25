@@ -64,7 +64,8 @@ public:
     void addResultWidget( ResultItemWidget* widget );
     void setupSingle();
     void setupMulti();
-
+    void resizeIfStandalone();
+    
     shared_ptr<TaskCollection> m_tasks;
     bool m_standaloneMode;
     int m_lastErrorItemIndex;
@@ -112,6 +113,12 @@ void ResultListWidget::Private::setupSingle()
     m_layout->addStretch();
 }
 
+void ResultListWidget::Private::resizeIfStandalone()
+{
+    if ( m_standaloneMode )
+        q->resize( q->sizeHint() );
+}
+
 void ResultListWidget::Private::setupMulti()
 {
     m_scrollArea = new ScrollArea;
@@ -137,8 +144,7 @@ void ResultListWidget::Private::addResultWidget( ResultItemWidget* widget )
         widget->showCloseButton( m_standaloneMode );
         m_layout->insertWidget( m_layout->count() - 1, widget );
     }
-    if ( m_standaloneMode )
-        q->resize( q->size().expandedTo( q->sizeHint() ) );
+    resizeIfStandalone();
 }
 
 void ResultListWidget::Private::result( const shared_ptr<const Task::Result> & result )
@@ -179,8 +185,7 @@ void ResultListWidget::setTaskCollection( const shared_ptr<TaskCollection> & col
 }
 
 void ResultListWidget::Private::detailsToggled( bool ) {
-    if ( m_standaloneMode )
-        q->resize( q->size().expandedTo( q->sizeHint() ) );
+    resizeIfStandalone();
 }
 
 void ResultListWidget::Private::started( const shared_ptr<Task> & task )
@@ -189,8 +194,7 @@ void ResultListWidget::Private::started( const shared_ptr<Task> & task )
     assert( task );
     assert( m_progressLabel );
     m_progressLabel->setText( i18nc( "number, operation description", "Operation %1: %2", m_tasks->numberOfCompletedTasks() + 1, task->label() ) );
-    if ( m_standaloneMode )
-        q->resize( q->size().expandedTo( q->sizeHint() ) );
+    resizeIfStandalone();
 }
 
 void ResultListWidget::setStandaloneMode( bool standalone ) {

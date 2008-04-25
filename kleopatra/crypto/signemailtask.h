@@ -75,6 +75,7 @@ namespace Crypto {
 
     private:
         /* reimp */ void doStart();
+        /* reimp */ unsigned long long inputSize() const;
 
     private:
         class Private;

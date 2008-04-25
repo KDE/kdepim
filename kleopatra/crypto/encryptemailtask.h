@@ -68,10 +68,11 @@ namespace Crypto {
         GpgME::Protocol protocol() const;
 
         /* reimp */ void cancel();
-        /* reimpl */ QString label() const;
+        /* reimp */ QString label() const;
 
     private:
         /* reimp */ void doStart();
+        /* reimp */ unsigned long long inputSize() const;
 
     private:
         class Private;

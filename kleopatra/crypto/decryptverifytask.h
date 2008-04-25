@@ -109,6 +109,7 @@ namespace Crypto {
         /* reimp */ void doStart();
         /* reimp */ QString inputLabel() const;
         /* reimp */ QString outputLabel() const;
+        /* reimp */ unsigned long long inputSize() const;
 
     private:
          class Private;
@@ -139,6 +140,7 @@ namespace Crypto {
         /* reimp */ void doStart();
         /* reimp */ QString inputLabel() const;
         /* reimp */ QString outputLabel() const;
+        /* reimp */ unsigned long long inputSize() const;
 
     private:
          class Private;
@@ -169,6 +171,7 @@ namespace Crypto {
         /* reimp */ void doStart();
         /* reimp */ QString inputLabel() const;
         /* reimp */ QString outputLabel() const;
+        /* reimp */ unsigned long long inputSize() const;
 
     private:
          class Private;
@@ -200,6 +203,7 @@ namespace Crypto {
         /* reimp */ void doStart();
         /* reimp */ QString inputLabel() const;
         /* reimp */ QString outputLabel() const;
+        /* reimp */ unsigned long long inputSize() const;
 
     private:
          class Private;
@@ -211,12 +215,12 @@ namespace Crypto {
         friend class ::Kleo::Crypto::AbstractDecryptVerifyTask;
     public:
         
-        /* reimpl */ QString overview() const;
-        /* reimpl */ QString details() const;
-        /* reimpl */ bool hasError() const;
-        /* reimpl */ int errorCode() const;
-        /* reimpl */ QString errorString() const;
-        /* reimpl */ VisualCode code() const;
+        /* reimp */ QString overview() const;
+        /* reimp */ QString details() const;
+        /* reimp */ bool hasError() const;
+        /* reimp */ int errorCode() const;
+        /* reimp */ QString errorString() const;
+        /* reimp */ VisualCode code() const;
 
         GpgME::VerificationResult verificationResult() const;
 

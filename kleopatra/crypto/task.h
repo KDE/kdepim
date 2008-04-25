@@ -63,8 +63,8 @@ namespace Crypto {
         virtual QString label() const = 0;
 
         QString progressLabel() const;
-        int processedSize() const;
-        int totalSize() const;
+        unsigned long long processedSize() const;
+        unsigned long long totalSize() const;
 
         int id() const;
 
@@ -98,7 +98,8 @@ private: // don't tell moc, but those signals are in fact private
         
     private:
         virtual void doStart() = 0;
-        
+        virtual unsigned long long inputSize() const = 0;
+
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;

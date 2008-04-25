@@ -583,6 +583,11 @@ QString DecryptVerifyTask::label() const
     return i18n( "Decrypting: %1...", d->m_input->label() );
 }
 
+unsigned long long DecryptVerifyTask::inputSize() const
+{
+    return d->m_input ? d->m_input->size() : 0;
+}
+
 QString DecryptVerifyTask::inputLabel() const
 {
     return d->m_input ? d->m_input->label() : QString();
@@ -698,6 +703,11 @@ void DecryptTask::autodetectProtocolFromInput()
 QString DecryptTask::label() const
 {
     return i18n( "Decrypting: %1...", d->m_input->label() );
+}
+
+unsigned long long DecryptTask::inputSize() const
+{
+    return d->m_input ? d->m_input->size() : 0;
 }
 
 QString DecryptTask::inputLabel() const
@@ -819,6 +829,11 @@ QString VerifyOpaqueTask::label() const
     return i18n( "Verifying: %1...", d->m_input->label() );
 }
 
+unsigned long long VerifyOpaqueTask::inputSize() const
+{
+    return d->m_input ? d->m_input->size() : 0;
+}
+
 QString VerifyOpaqueTask::inputLabel() const
 {
     return d->m_input ? d->m_input->label() : QString();
@@ -918,6 +933,11 @@ void VerifyDetachedTask::autodetectProtocolFromInput()
 {
     if ( d->m_input )
         setProtocol( findProtocol( d->m_input->classification() ) );
+}
+
+unsigned long long VerifyDetachedTask::inputSize() const
+{
+    return d->m_signedData ? d->m_signedData->size() : 0;
 }
 
 QString VerifyDetachedTask::label() const

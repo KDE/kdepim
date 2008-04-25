@@ -163,6 +163,11 @@ QString SignEMailTask::label() const
     return d->input ? d->input->label() : QString();
 }
 
+unsigned long long SignEMailTask::inputSize() const
+{
+    return d->input ? d->input->size() : 0;
+}
+
 void SignEMailTask::doStart() {
     kleo_assert( !d->job );
     kleo_assert( d->input );
