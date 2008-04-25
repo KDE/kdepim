@@ -33,7 +33,8 @@
 #include <config-kleopatra.h>
 
 #include "encryptcommand.h"
-#include "encryptemailcontroller.h"
+
+#include <crypto/encryptemailcontroller.h>
 
 #include <utils/kleo_assert.h>
 #include <utils/exception.h>
@@ -43,6 +44,7 @@
 #include <QTimer>
 
 using namespace Kleo;
+using namespace Kleo::Crypto;
 using namespace boost;
 
 class EncryptCommand::Private : public QObject {
@@ -139,7 +141,7 @@ int EncryptCommand::doStart() {
     if ( hasPreviousMemento ) {
         d->controller = mementoContent< shared_ptr<EncryptEMailController> >( EncryptEMailController::mementoName() );
         removeMemento( EncryptEMailController::mementoName() );
-        d->controller->setCommand( shared_from_this() );
+        d->controller->setExecutionContext( shared_from_this() );
     } else {
         d->controller.reset( new EncryptEMailController( shared_from_this() ) );
         d->controller->setProtocol( checkProtocol( EMail ) );
@@ -165,7 +167,7 @@ void EncryptCommand::Private::slotRecipientsResolved() {
 
     try {
 
-        cont->importIO();
+        cont->setInputsAndOutputs( q->inputs(), q->outputs() );
         cont->start();
 
         return;

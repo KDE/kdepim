@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/encryptemailcontroller.h
+    crypto/encryptemailcontroller.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,41 +30,52 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_ENCRYPTEMAILCONTROLLER_H__
-#define __KLEOPATRA_UISERVER_ENCRYPTEMAILCONTROLLER_H__
+#ifndef __KLEOPATRA_CRYPTO_ENCRYPTEMAILCONTROLLER_H__
+#define __KLEOPATRA_CRYPTO_ENCRYPTEMAILCONTROLLER_H__
 
 #include <crypto/controller.h>
 
 #include <utils/pimpl_ptr.h>
 
 #include <gpgme++/global.h>
-#include <kmime/kmime_header_parsing.h>
-
-#include <boost/shared_ptr.hpp>
 
 #include <vector>
 
+namespace KMime {
+namespace Types {
+    class Mailbox;
+}
+}
+
+namespace boost {
+    template <typename T> class shared_ptr;
+}
+
 namespace Kleo {
+
+    class Input;
+    class Output;
+
+namespace Crypto {
 
     class AssuanCommand;
 
-    class EncryptEMailController : public Crypto::Controller {
+    class EncryptEMailController : public Controller {
         Q_OBJECT
     public:
-        explicit EncryptEMailController( const boost::shared_ptr<AssuanCommand> & cmd, QObject * parent=0 );
+        explicit EncryptEMailController( const boost::shared_ptr<ExecutionContext> & xc, QObject * parent=0 );
         ~EncryptEMailController();
 
         static const char * mementoName() { return "EncryptEMailController"; }
 
-        void setCommand( const boost::shared_ptr<AssuanCommand> & cmd );
-        
         void setProtocol( GpgME::Protocol proto );
         const char * protocolAsString() const;
         GpgME::Protocol protocol() const;
 
         void startResolveRecipients( const std::vector<KMime::Types::Mailbox> & recipients );
 
-        void importIO();
+        void setInputsAndOutputs( const std::vector< boost::shared_ptr<Kleo::Input> >  & inputs,
+                                  const std::vector< boost::shared_ptr<Kleo::Output> > & outputs );
 
         void start();
 
@@ -83,7 +94,9 @@ namespace Kleo {
         Q_PRIVATE_SLOT( d, void slotTaskDone() )
         Q_PRIVATE_SLOT( d, void schedule() )
     };
-}
 
-#endif /* __KLEOPATRA_UISERVER_ENCRYPTEMAILCONTROLLER_H__ */
+} // Crypto
+} // Kleo
+
+#endif /* __KLEOPATRA_CRYPTO_ENCRYPTEMAILCONTROLLER_H__ */
 

@@ -58,7 +58,7 @@ namespace Kleo {
 
 namespace Crypto {
 
-    class SignEMailController : public Crypto::Controller {
+    class SignEMailController : public Controller {
         Q_OBJECT
     public:
         explicit SignEMailController( const boost::shared_ptr<ExecutionContext> & xc, QObject * parent=0 );

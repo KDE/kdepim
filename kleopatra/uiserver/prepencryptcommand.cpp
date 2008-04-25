@@ -33,7 +33,8 @@
 #include <config-kleopatra.h>
 
 #include "prepencryptcommand.h"
-#include "encryptemailcontroller.h"
+
+#include <crypto/encryptemailcontroller.h>
 
 #include <utils/exception.h>
 
@@ -42,6 +43,7 @@
 #include <QPointer>
 
 using namespace Kleo;
+using namespace Kleo::Crypto;
 using namespace boost;
 
 class PrepEncryptCommand::Private : public QObject {

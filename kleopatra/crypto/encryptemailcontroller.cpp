@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/encryptemailcontroller.cpp
+    crypto/encryptemailcontroller.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -34,12 +34,11 @@
 
 #include "encryptemailcontroller.h"
 
-#include "assuancommand.h"
+#include "encryptemailtask.h"
+#include "taskcollection.h"
 
 #include <crypto/gui/signencryptwizard.h>
 
-#include <crypto/encryptemailtask.h>
-#include <crypto/taskcollection.h>
 
 #include <utils/input.h>
 #include <utils/output.h>
@@ -49,12 +48,15 @@
 
 #include <gpgme++/key.h>
 
+#include <kmime/kmime_header_parsing.h>
+
 #include <KLocale>
 
 #include <QPointer>
 #include <QTimer>
 
 #include <boost/bind.hpp>
+#include <boost/shared_ptr.hpp>
 
 using namespace Kleo;
 using namespace Kleo::Crypto;
@@ -64,10 +66,10 @@ using namespace GpgME;
 using namespace KMime::Types;
 
 class EncryptEMailController::Private {
-    friend class ::Kleo::EncryptEMailController;
+    friend class ::Kleo::Crypto::EncryptEMailController;
     EncryptEMailController * const q;
 public:
-    explicit Private( const shared_ptr<AssuanCommand> & cmd, EncryptEMailController * qq );
+    explicit Private( EncryptEMailController * qq );
 
 private:
     void slotWizardRecipientsResolved();
@@ -83,15 +85,13 @@ private:
     shared_ptr<EncryptEMailTask> takeRunnable( GpgME::Protocol proto );
 
 private:
-    weak_ptr<AssuanCommand> command;
     std::vector< shared_ptr<EncryptEMailTask> > runnable, completed;
     shared_ptr<EncryptEMailTask> cms, openpgp;
     mutable QPointer<SignEncryptWizard> wizard;
 };
 
-EncryptEMailController::Private::Private( const shared_ptr<AssuanCommand> & cmd, EncryptEMailController * qq )
+EncryptEMailController::Private::Private( EncryptEMailController * qq )
     : q( qq ),
-      command( cmd ),
       runnable(),
       cms(),
       openpgp(),
@@ -100,8 +100,8 @@ EncryptEMailController::Private::Private( const shared_ptr<AssuanCommand> & cmd,
 
 }
 
-EncryptEMailController::EncryptEMailController( const shared_ptr<AssuanCommand> & cmd, QObject * p )
-    : Controller( cmd, p ), d( new Private( cmd, this ) )
+EncryptEMailController::EncryptEMailController( const shared_ptr<ExecutionContext> & xc, QObject * p )
+    : Controller( xc, p ), d( new Private( this ) )
 {
 
 }
@@ -110,11 +110,6 @@ EncryptEMailController::~EncryptEMailController() {
     if ( d->wizard && !d->wizard->isVisible() )
         delete d->wizard;
         //d->wizard->close(); ### ?
-}
-
-void EncryptEMailController::setCommand( const shared_ptr<AssuanCommand> & cmd ) {
-    d->command = cmd;
-    setExecutionContext( cmd );
 }
 
 void EncryptEMailController::setProtocol( Protocol proto ) {
@@ -156,15 +151,9 @@ void EncryptEMailController::Private::slotWizardCanceled() {
     emit q->error( gpg_error( GPG_ERR_CANCELED ), i18n("User cancel") );
 }
 
-void EncryptEMailController::importIO() {
+void EncryptEMailController::setInputsAndOutputs( const std::vector< shared_ptr<Input> > & inputs, const std::vector< shared_ptr<Output> > & outputs ) {
 
-    const shared_ptr<AssuanCommand> cmd = d->command.lock();
-    kleo_assert( cmd );
-
-    const std::vector< shared_ptr<Input> > & inputs = cmd->inputs();
     kleo_assert( !inputs.empty() );
-
-    const std::vector< shared_ptr<Output> > & outputs = cmd->outputs();
     kleo_assert( outputs.size() == inputs.size() );
 
     std::vector< shared_ptr<EncryptEMailTask> > tasks;
