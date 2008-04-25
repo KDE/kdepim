@@ -40,6 +40,7 @@
 #include <KLocale>
 
 using namespace Kleo;
+using namespace Kleo::Crypto;
 using namespace boost;
 
 class SignCommand::Private : public QObject {
@@ -123,7 +124,7 @@ void SignCommand::Private::slotSignersResolved() {
     try {
 
         controller->setDetachedSignature( q->hasOption("detached" ) );
-        controller->importIO();
+        controller->setInputsAndOutputs( q->inputs(), q->outputs() );
         controller->start();
 
         return;

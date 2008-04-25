@@ -38,20 +38,30 @@
 #include <utils/pimpl_ptr.h>
 
 #include <gpgme++/global.h>
-#include <kmime/kmime_header_parsing.h>
-
-#include <boost/shared_ptr.hpp>
 
 #include <vector>
 
+namespace KMime {
+namespace Types {
+    class Mailbox;
+}
+}
+
+namespace boost {
+    template <typename T> class shared_ptr;
+}
+
 namespace Kleo {
 
-    class AssuanCommand;
+    class Input;
+    class Output;
+
+namespace Crypto {
 
     class SignEMailController : public Crypto::Controller {
         Q_OBJECT
     public:
-        explicit SignEMailController( const boost::shared_ptr<AssuanCommand> & cmd, QObject * parent=0 );
+        explicit SignEMailController( const boost::shared_ptr<ExecutionContext> & xc, QObject * parent=0 );
         ~SignEMailController();
 
         void setProtocol( GpgME::Protocol proto );
@@ -62,7 +72,8 @@ namespace Kleo {
 
         void setDetachedSignature( bool detached );
 
-        void importIO();
+        void setInputsAndOutputs( const std::vector< boost::shared_ptr<Kleo::Input> >  & inputs,
+                                  const std::vector< boost::shared_ptr<Kleo::Output> > & outputs );
 
         void start();
 
@@ -81,7 +92,9 @@ namespace Kleo {
         Q_PRIVATE_SLOT( d, void slotTaskDone() )
         Q_PRIVATE_SLOT( d, void schedule() )
     };
-}
+
+} // Crypto
+} // Kleo
 
 #endif /* __KLEOPATRA_UISERVER_SIGNEMAILCONTROLLER_H__ */
 

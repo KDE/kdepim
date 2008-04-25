@@ -34,8 +34,6 @@
 
 #include "signemailcontroller.h"
 
-#include "assuancommand.h"
-
 #include <crypto/gui/signemailwizard.h>
 
 #include <crypto/signemailtask.h>
@@ -55,6 +53,7 @@
 #include <QTimer>
 
 #include <boost/bind.hpp>
+#include <boost/shared_ptr.hpp>
 
 using namespace Kleo;
 using namespace Kleo::Crypto;
@@ -64,10 +63,10 @@ using namespace GpgME;
 using namespace KMime::Types;
 
 class SignEMailController::Private {
-    friend class ::Kleo::SignEMailController;
+    friend class ::Kleo::Crypto::SignEMailController;
     SignEMailController * const q;
 public:
-    explicit Private( const shared_ptr<AssuanCommand> & cmd, SignEMailController * qq );
+    explicit Private( SignEMailController * qq );
     ~Private();
 
 private:
@@ -84,7 +83,6 @@ private:
     shared_ptr<SignEMailTask> takeRunnable( GpgME::Protocol proto ); // ### extract to base
 
 private:
-    weak_ptr<AssuanCommand> command;
     std::vector< shared_ptr<SignEMailTask> > runnable, completed; // ### extract to base
     shared_ptr<SignEMailTask> cms, openpgp; // ### extract to base
     QPointer<SignEncryptWizard> wizard; // ### extract to base
@@ -92,9 +90,8 @@ private:
     bool detached : 1;
 };
 
-SignEMailController::Private::Private( const shared_ptr<AssuanCommand> & cmd, SignEMailController * qq )
+SignEMailController::Private::Private( SignEMailController * qq )
     : q( qq ),
-      command( cmd ),
       runnable(),
       cms(),
       openpgp(),
@@ -107,8 +104,8 @@ SignEMailController::Private::Private( const shared_ptr<AssuanCommand> & cmd, Si
 
 SignEMailController::Private::~Private() {}
 
-SignEMailController::SignEMailController( const boost::shared_ptr<AssuanCommand> & cmd, QObject * p )
-    : Controller( cmd, p ), d( new Private( cmd, this ) )
+SignEMailController::SignEMailController( const boost::shared_ptr<ExecutionContext> & xc, QObject * p )
+    : Controller( xc, p ), d( new Private( this ) )
 {
 
 }
@@ -165,14 +162,8 @@ void SignEMailController::Private::slotWizardCanceled() {
 }
 
 // ### extract to base
-void SignEMailController::importIO() {
-    const shared_ptr<AssuanCommand> cmd = d->command.lock();
-    kleo_assert( cmd );
-
-    const std::vector< shared_ptr<Input> > & inputs = cmd->inputs();
+void SignEMailController::setInputsAndOutputs( const std::vector< shared_ptr<Input> > & inputs, const std::vector< shared_ptr<Output> > & outputs ) {
     kleo_assert( !inputs.empty() );
-
-    const std::vector< shared_ptr<Output> > & outputs = cmd->outputs();
     kleo_assert( !outputs.empty() );
 
     std::vector< shared_ptr<SignEMailTask> > tasks;
