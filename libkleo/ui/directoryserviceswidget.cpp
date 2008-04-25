@@ -49,6 +49,7 @@
 
 #include <climits>
 #include <cassert>
+#include <algorithm>
 
 using namespace Kleo;
 using namespace boost;
