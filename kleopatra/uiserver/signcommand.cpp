@@ -105,7 +105,7 @@ int SignCommand::doStart() {
 
     d->checkForErrors();
 
-    d->controller.reset( new SignEMailController( shared_from_this() ) );
+    d->controller.reset( new SignEMailController( shared_from_this(), SignEMailController::GpgOLMode ) );
     d->controller->setProtocol( checkProtocol( EMail ) );
 
     QObject::connect( d->controller.get(), SIGNAL(signersResolved()), d.get(), SLOT(slotSignersResolved() ) );

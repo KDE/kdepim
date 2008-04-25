@@ -84,6 +84,7 @@ public:
 private:
     QString m_progressLabel;
     double m_processedPercent;
+    bool m_asciiArmor;
     int m_id;
 };
 
@@ -92,7 +93,7 @@ namespace {
 }
 
 Task::Private::Private( Task * qq )
-    : q( qq ), m_progressLabel(), m_processedPercent( 0.0 ), m_id( nextTaskId++ )
+    : q( qq ), m_progressLabel(), m_processedPercent( 0.0 ), m_asciiArmor( false ), m_id( nextTaskId++ )
 {
 
 }
@@ -104,6 +105,16 @@ Task::Task( QObject * p )
 }
 
 Task::~Task() {}
+
+void Task::setAsciiArmor( bool armor )
+{
+    d->m_asciiArmor = armor;
+}
+
+bool Task::asciiArmor() const
+{
+    d->m_asciiArmor;
+}
 
 shared_ptr<Task> Task::makeErrorTask( int code, const QString & details, const QString & label ) {
     const shared_ptr<SimpleTask> t( new SimpleTask( label ) );

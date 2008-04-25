@@ -203,7 +203,6 @@ private:
 
     bool sign     : 1;
     bool encrypt  : 1;
-    bool ascii    : 1;
     bool detached : 1;
     bool removeInput : 1;
     
@@ -220,12 +219,11 @@ SignEncryptFilesTask::Private::Private( SignEncryptFilesTask * qq )
       recipients(),
       sign( true ),
       encrypt( true ),
-      ascii( true ),
       detached( false ),
       removeInput( false ),
       job( 0 )
 {
-
+    q->setAsciiArmor( true );
 }
 
 shared_ptr<const Task::Result> SignEncryptFilesTask::Private::makeErrorResult( const Error & err, const QString & errStr )
@@ -277,11 +275,6 @@ void SignEncryptFilesTask::setRemoveInputFileOnSuccess( bool remove )
 {
     kleo_assert( !d->job );
     d->removeInput = remove;
-}
-
-void SignEncryptFilesTask::setAsciiArmor( bool ascii ) {
-    kleo_assert( !d->job );
-    d->ascii = ascii;
 }
 
 void SignEncryptFilesTask::setDetachedSignature( bool detached ) {

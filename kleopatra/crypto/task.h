@@ -56,6 +56,9 @@ namespace Crypto {
 
         class Result;
 
+        void setAsciiArmor( bool armor );
+        bool asciiArmor() const;
+
         virtual GpgME::Protocol protocol() const = 0;
 
         void start();

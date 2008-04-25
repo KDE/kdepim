@@ -66,7 +66,6 @@ namespace Crypto {
         void setSign( bool sign );
         void setEncrypt( bool encrypt );
         void setRemoveInputFileOnSuccess( bool );
-        void setAsciiArmor( bool ascii );
         void setDetachedSignature( bool detached );
 
         GpgME::Protocol protocol() const;

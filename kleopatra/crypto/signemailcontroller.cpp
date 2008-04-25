@@ -66,7 +66,7 @@ class SignEMailController::Private {
     friend class ::Kleo::Crypto::SignEMailController;
     SignEMailController * const q;
 public:
-    explicit Private( SignEMailController * qq );
+    explicit Private( Mode m, SignEMailController * qq );
     ~Private();
 
 private:
@@ -83,6 +83,7 @@ private:
     shared_ptr<SignEMailTask> takeRunnable( GpgME::Protocol proto ); // ### extract to base
 
 private:
+    const Mode mode;
     std::vector< shared_ptr<SignEMailTask> > runnable, completed; // ### extract to base
     shared_ptr<SignEMailTask> cms, openpgp; // ### extract to base
     QPointer<SignEncryptWizard> wizard; // ### extract to base
@@ -90,8 +91,9 @@ private:
     bool detached : 1;
 };
 
-SignEMailController::Private::Private( SignEMailController * qq )
+SignEMailController::Private::Private( Mode m, SignEMailController * qq )
     : q( qq ),
+      mode( m ),
       runnable(),
       cms(),
       openpgp(),
@@ -104,8 +106,14 @@ SignEMailController::Private::Private( SignEMailController * qq )
 
 SignEMailController::Private::~Private() {}
 
-SignEMailController::SignEMailController( const boost::shared_ptr<ExecutionContext> & xc, QObject * p )
-    : Controller( xc, p ), d( new Private( this ) )
+SignEMailController::SignEMailController( Mode mode, QObject * p )
+    : Controller( p ), d( new Private( mode, this ) )
+{
+
+}
+
+SignEMailController::SignEMailController( const boost::shared_ptr<ExecutionContext> & xc, Mode mode, QObject * p )
+    : Controller( xc, p ), d( new Private( mode, this ) )
 {
 
 }
@@ -128,6 +136,10 @@ void SignEMailController::setProtocol( Protocol proto ) {
 
 Protocol SignEMailController::protocol() const {
     return d->protocol;
+}
+
+void SignEMailController::startResolveSigners() {
+    startResolveSigners( std::vector<Mailbox>() );
 }
 
 void SignEMailController::startResolveSigners( const std::vector<Mailbox> & signers ) {
@@ -161,6 +173,10 @@ void SignEMailController::Private::slotWizardCanceled() {
     emit q->error( gpg_error( GPG_ERR_CANCELED ), i18n("User cancel") );
 }
 
+void SignEMailController::setInputAndOutput( const shared_ptr<Input> & input, const shared_ptr<Output> & output ) {
+    setInputsAndOutputs( std::vector< shared_ptr<Input> >( 1, input ), std::vector< shared_ptr<Output> >( 1, output ) );
+}
+
 // ### extract to base
 void SignEMailController::setInputsAndOutputs( const std::vector< shared_ptr<Input> > & inputs, const std::vector< shared_ptr<Output> > & outputs ) {
     kleo_assert( !inputs.empty() );
@@ -179,6 +195,8 @@ void SignEMailController::setInputsAndOutputs( const std::vector< shared_ptr<Inp
         const shared_ptr<SignEMailTask> task( new SignEMailTask );
         task->setInput( inputs[i] );
         task->setOutput( outputs[i] );
+        if ( d->mode == ClipboardMode )
+            task->setAsciiArmor( true );
         task->setSigners( keys );
         task->setDetachedSignature( d->detached );
 

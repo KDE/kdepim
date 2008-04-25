@@ -61,17 +61,30 @@ namespace Crypto {
     class SignEMailController : public Controller {
         Q_OBJECT
     public:
-        explicit SignEMailController( const boost::shared_ptr<ExecutionContext> & xc, QObject * parent=0 );
+        enum Mode {
+            GpgOLMode,
+            ClipboardMode,
+
+            NumModes
+        };
+
+        explicit SignEMailController( Mode mode, QObject * parent=0 );
+        explicit SignEMailController( const boost::shared_ptr<ExecutionContext> & xc, Mode mode, QObject * parent=0 );
         ~SignEMailController();
+
+        Mode mode() const;
 
         void setProtocol( GpgME::Protocol proto );
         GpgME::Protocol protocol() const;
         //const char * protocolAsString() const;
 
+        void startResolveSigners();
         void startResolveSigners( const std::vector<KMime::Types::Mailbox> & signers );
 
         void setDetachedSignature( bool detached );
 
+        void setInputAndOutput( const boost::shared_ptr<Kleo::Input>  & input,
+                                const boost::shared_ptr<Kleo::Output> & output );
         void setInputsAndOutputs( const std::vector< boost::shared_ptr<Kleo::Input> >  & inputs,
                                   const std::vector< boost::shared_ptr<Kleo::Output> > & outputs );
 
