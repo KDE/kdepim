@@ -154,6 +154,7 @@ set( _kleopatra_common_SRCS
   commands/decryptverifyfilescommand.cpp
   commands/signencryptfilescommand.cpp
   commands/encryptclipboardcommand.cpp
+  commands/signclipboardcommand.cpp
   commands/clearcrlcachecommand.cpp
   commands/dumpcrlcachecommand.cpp
   commands/importcrlcommand.cpp

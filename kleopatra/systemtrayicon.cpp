@@ -35,7 +35,7 @@
 #include "systemtrayicon.h"
 
 #include <commands/encryptclipboardcommand.h>
-//#include <commands/signclipboardcommand.h>
+#include <commands/signclipboardcommand.h>
 //#include <commands/decryptclipboardcommand.h>
 //#include <commands/verifyclipboardcommand.h>
 
@@ -95,7 +95,8 @@ private:
     void slotEnableDisableActions() {
         openCertificateManagerAction.setEnabled( !mainWindow || !mainWindow->isVisible() );
         encryptClipboardAction.setEnabled( EncryptClipboardCommand::canEncryptCurrentClipboard() );
-        signClipboardAction.setEnabled( false /*SignClipboardCommand::canSignCurrentClipboard()*/ );
+        openPGPSignClipboardAction.setEnabled( SignClipboardCommand::canSignCurrentClipboard() );
+        smimeSignClipboardAction.setEnabled( SignClipboardCommand::canSignCurrentClipboard() );
         decryptClipboardAction.setEnabled( false /*DecryptClipboardCommand::canDecryptCurrentClipboard()*/ );
         verifyClipboardAction.setEnabled( false /*VerifyClipboardCommand::canVerifyCurrentClipboard()*/ );
     }
@@ -104,8 +105,12 @@ private:
         ( new EncryptClipboardCommand( 0 ) )->start();
     }
 
-    void slotSignClipboard() {
-        //( new SignClipboardCommand( 0 ) )->start();
+    void slotOpenPGPSignClipboard() {
+        ( new SignClipboardCommand( GpgME::OpenPGP, 0 ) )->start();
+    }
+
+    void slotSMIMESignClipboard() {
+        ( new SignClipboardCommand( GpgME::CMS, 0 ) )->start();
     }
 
     void slotDecryptClipboard() {
@@ -123,7 +128,8 @@ private:
     QAction quitAction;
     QMenu clipboardMenu;
     QAction encryptClipboardAction;
-    QAction signClipboardAction;
+    QAction smimeSignClipboardAction;
+    QAction openPGPSignClipboardAction;
     QAction decryptClipboardAction;
     QAction verifyClipboardAction;
 
@@ -141,7 +147,8 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
       quitAction( i18n("&Shutdown Kleopatra"), q ),
       clipboardMenu( i18n("Clipboard" ) ),
       encryptClipboardAction( i18n("Encrypt..."), q ),
-      signClipboardAction( i18n("Sign..."), q ),
+      smimeSignClipboardAction( i18n("S/MIME-Sign..."), q ),
+      openPGPSignClipboardAction( i18n("OpenPGP-Sign..."), q ),
       decryptClipboardAction( i18n("Decrypt..."), q ),
       verifyClipboardAction( i18n("Verify..."), q ),
       aboutDialog(),
@@ -154,7 +161,8 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
     KDAB_SET_OBJECT_NAME( quitAction );
     KDAB_SET_OBJECT_NAME( clipboardMenu );
     KDAB_SET_OBJECT_NAME( encryptClipboardAction );
-    KDAB_SET_OBJECT_NAME( signClipboardAction );
+    KDAB_SET_OBJECT_NAME( smimeSignClipboardAction );
+    KDAB_SET_OBJECT_NAME( openPGPSignClipboardAction );
     KDAB_SET_OBJECT_NAME( decryptClipboardAction );
     KDAB_SET_OBJECT_NAME( verifyClipboardAction );
 
@@ -162,7 +170,8 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
     connect( &aboutAction, SIGNAL(triggered()), q, SLOT(slotAbout()) );
     connect( &quitAction, SIGNAL(triggered()), QCoreApplication::instance(), SLOT(quit()) );
     connect( &encryptClipboardAction, SIGNAL(triggered()), q, SLOT(slotEncryptClipboard()) );
-    connect( &signClipboardAction, SIGNAL(triggered()), q, SLOT(slotSignClipboard()) );
+    connect( &smimeSignClipboardAction, SIGNAL(triggered()), q, SLOT(slotSMIMESignClipboard()) );
+    connect( &openPGPSignClipboardAction, SIGNAL(triggered()), q, SLOT(slotOpenPGPSignClipboard()) );
     connect( &decryptClipboardAction, SIGNAL(triggered()), q, SLOT(slotDecryptClipboard()) );
     connect( &verifyClipboardAction, SIGNAL(triggered()), q, SLOT(slotVerifyClipboard()) );
 
@@ -176,7 +185,8 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
     menu.addSeparator();
     menu.addMenu( &clipboardMenu );
     clipboardMenu.addAction( &encryptClipboardAction );
-    clipboardMenu.addAction( &signClipboardAction );
+    clipboardMenu.addAction( &smimeSignClipboardAction );
+    clipboardMenu.addAction( &openPGPSignClipboardAction );
     clipboardMenu.addAction( &decryptClipboardAction );
     clipboardMenu.addAction( &verifyClipboardAction );
     menu.addSeparator();
