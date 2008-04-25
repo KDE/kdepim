@@ -166,11 +166,14 @@ namespace {
                 it->x509 |= x509;
                 it->pgp  |= pgp;
                 row = it - m_items.begin() ;
+                emit dataChanged( index( row, std::min( X509, OpenPGP ) ), index( row, std::max( X509, OpenPGP ) ) );
             } else {
                 // append new item
                 const Item item = { url, x509, pgp };
+                row = m_items.size();
+                beginInsertRows( QModelIndex(), row, row );
                 m_items.push_back( item );
-                row = m_items.size() - 1 ;
+                endInsertRows();
             }
             return index( row, firstEditableColumn( row ) );
         }
