@@ -33,7 +33,8 @@
 #include <config-kleopatra.h>
 
 #include "signcommand.h"
-#include "signemailcontroller.h"
+
+#include <crypto/signemailcontroller.h>
 
 #include <utils/exception.h>
 

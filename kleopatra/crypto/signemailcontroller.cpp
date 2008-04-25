@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/signemailcontroller.cpp
+    crypto/signemailcontroller.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -34,11 +34,11 @@
 
 #include "signemailcontroller.h"
 
-#include <crypto/gui/signemailwizard.h>
+#include "signemailtask.h"
+#include "certificateresolver.h"
+#include "taskcollection.h"
 
-#include <crypto/signemailtask.h>
-#include <crypto/certificateresolver.h>
-#include <crypto/taskcollection.h>
+#include <crypto/gui/signemailwizard.h>
 
 #include <utils/input.h>
 #include <utils/output.h>

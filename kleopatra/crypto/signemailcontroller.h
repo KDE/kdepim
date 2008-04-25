@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    uiserver/signemailcontroller.h
+    crypto/signemailcontroller.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_SIGNEMAILCONTROLLER_H__
-#define __KLEOPATRA_UISERVER_SIGNEMAILCONTROLLER_H__
+#ifndef __KLEOPATRA_CRYPTO_SIGNEMAILCONTROLLER_H__
+#define __KLEOPATRA_CRYPTO_SIGNEMAILCONTROLLER_H__
 
 #include <crypto/controller.h>
 
@@ -96,5 +96,5 @@ namespace Crypto {
 } // Crypto
 } // Kleo
 
-#endif /* __KLEOPATRA_UISERVER_SIGNEMAILCONTROLLER_H__ */
+#endif /* __KLEOPATRA_CRYPTO_SIGNEMAILCONTROLLER_H__ */
 
