@@ -34,6 +34,7 @@
 
 #include "objectspage.h"
 
+#include <KIcon>
 #include <KLocale>
 
 #include <QFileDialog>
@@ -65,7 +66,6 @@ public:
 
 private:
     QListWidget * fileListWidget;
-    QPushButton * addButton;
     QPushButton * removeButton;
 };
 
@@ -82,10 +82,6 @@ ObjectsPage::Private::Private( ObjectsPage * qq )
     top->addWidget( fileListWidget );
     QWidget* const buttonWidget = new QWidget;
     QHBoxLayout* const buttonLayout = new QHBoxLayout( buttonWidget );
-    addButton = new QPushButton;
-    addButton->setText( i18n( "Add..." ) );
-    connect( addButton, SIGNAL( clicked() ), q, SLOT( add() ) );
-    buttonLayout->addWidget( addButton );
     removeButton = new QPushButton;
     removeButton->setText( i18n( "Remove Selected" ) );
     connect( removeButton, SIGNAL( clicked() ), q, SLOT( remove() ) );
@@ -141,6 +137,8 @@ void ObjectsPage::setFiles( const QStringList& list )
 void ObjectsPage::Private::addFile( const QFileInfo& info )
 {
     QListWidgetItem* const item = new QListWidgetItem;
+    if ( info.isDir() )
+        item->setIcon( KIcon( "folder" ) );
     item->setText( info.fileName() );
     item->setData( AbsoluteFilePathRole, info.absoluteFilePath() ); 
     fileListWidget->addItem( item );
