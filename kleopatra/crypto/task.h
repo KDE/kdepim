@@ -107,7 +107,7 @@ private: // don't tell moc, but those signals are in fact private
     class Task::Result {
         QString m_nonce;
     public:
-        explicit Result( int id );
+        Result();
         virtual ~Result();
 
         const QString & nonce() const { return m_nonce; }
@@ -129,15 +129,10 @@ private: // don't tell moc, but those signals are in fact private
         virtual QString errorString() const = 0;
         virtual VisualCode code() const = 0;
 
-        int id() const;
-
     protected:
         static QString iconPath( VisualCode code );
         QString formatKeyLink( const char * fingerprint, const QString & content ) const;
         static QString makeOverview( const QString& msg );
-
-    private:
-        Result();
 
     private:
         class Private;

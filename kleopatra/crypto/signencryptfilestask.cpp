@@ -73,8 +73,8 @@ namespace {
 
     class ErrorResult : public Task::Result {
     public:
-        ErrorResult( int id, bool sign, bool encrypt, const Error & err, const QString & errStr, const QString & input, const QString & output ) 
-            : Task::Result( id ), m_sign( sign ), m_encrypt( encrypt ), m_error( err ), m_errString( errStr ), m_inputLabel( input ), m_outputLabel( output ) {}
+        ErrorResult( bool sign, bool encrypt, const Error & err, const QString & errStr, const QString & input, const QString & output ) 
+            : Task::Result(), m_sign( sign ), m_encrypt( encrypt ), m_error( err ), m_errString( errStr ), m_inputLabel( input ), m_outputLabel( output ) {}
 
         /* reimp */ QString overview() const;
         /* reimp */ QString details() const;
@@ -93,14 +93,14 @@ namespace {
     
     class SignEncryptFilesResult : public Task::Result {
     public:
-        SignEncryptFilesResult( int id, const SigningResult & sr, const QString & input, const QString & output, bool inputRemoved, bool outputCreated )
-            : Task::Result( id ), m_sresult( sr ), m_inputLabel( input ), m_outputLabel( output ), m_inputRemoved( inputRemoved ), m_outputCreated( outputCreated ) {
+        SignEncryptFilesResult( const SigningResult & sr, const QString & input, const QString & output, bool inputRemoved, bool outputCreated )
+            : Task::Result(), m_sresult( sr ), m_inputLabel( input ), m_outputLabel( output ), m_inputRemoved( inputRemoved ), m_outputCreated( outputCreated ) {
             
         }
-        SignEncryptFilesResult( int id, const EncryptionResult & er, const QString & input, const QString & output, bool inputRemoved, bool outputCreated  )
-            : Task::Result( id ), m_eresult( er ), m_inputLabel( input ), m_outputLabel( output ), m_inputRemoved( inputRemoved ), m_outputCreated( outputCreated ) {}
-        SignEncryptFilesResult( int id, const SigningResult & sr, const EncryptionResult & er, const QString & input, const QString & output, bool inputRemoved, bool outputCreated )
-            : Task::Result( id ), m_sresult( sr ), m_eresult( er ), m_inputLabel( input ), m_outputLabel( output ), m_inputRemoved( inputRemoved ), m_outputCreated( outputCreated ) {}
+        SignEncryptFilesResult( const EncryptionResult & er, const QString & input, const QString & output, bool inputRemoved, bool outputCreated  )
+            : Task::Result(), m_eresult( er ), m_inputLabel( input ), m_outputLabel( output ), m_inputRemoved( inputRemoved ), m_outputCreated( outputCreated ) {}
+        SignEncryptFilesResult( const SigningResult & sr, const EncryptionResult & er, const QString & input, const QString & output, bool inputRemoved, bool outputCreated )
+            : Task::Result(), m_sresult( sr ), m_eresult( er ), m_inputLabel( input ), m_outputLabel( output ), m_inputRemoved( inputRemoved ), m_outputCreated( outputCreated ) {}
 
         /* reimp */ QString overview() const;
         /* reimp */ QString details() const;
@@ -229,7 +229,7 @@ SignEncryptFilesTask::Private::Private( SignEncryptFilesTask * qq )
 
 shared_ptr<const Task::Result> SignEncryptFilesTask::Private::makeErrorResult( const Error & err, const QString & errStr )
 {
-    return shared_ptr<const ErrorResult>( new ErrorResult( q->id(), sign, encrypt, err, errStr, input->label(), output->label() ) );
+    return shared_ptr<const ErrorResult>( new ErrorResult( sign, encrypt, err, errStr, input->label(), output->label() ) );
 }
 
 SignEncryptFilesTask::SignEncryptFilesTask( QObject * p )
@@ -403,7 +403,7 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & result ) {
         }
     }
    
-    q->emitResult( shared_ptr<Result>( new SignEncryptFilesResult( q->id(), result, input->label(), output->label(), inputRemoved, outputCreated ) ) );
+    q->emitResult( shared_ptr<Result>( new SignEncryptFilesResult( result, input->label(), output->label(), inputRemoved, outputCreated ) ) );
 }
 
 void SignEncryptFilesTask::Private::slotResult( const SigningResult & sresult, const EncryptionResult & eresult ) {
@@ -424,7 +424,7 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & sresult, c
         }
     }
     
-    q->emitResult( shared_ptr<Result>( new SignEncryptFilesResult( q->id(), sresult, eresult, input->label(), output->label(), inputRemoved, outputCreated ) ) );
+    q->emitResult( shared_ptr<Result>( new SignEncryptFilesResult( sresult, eresult, input->label(), output->label(), inputRemoved, outputCreated ) ) );
 }
 
 void SignEncryptFilesTask::Private::slotResult( const EncryptionResult & result ) {
@@ -444,7 +444,7 @@ void SignEncryptFilesTask::Private::slotResult( const EncryptionResult & result 
             return;
         }
     }
-    q->emitResult( shared_ptr<Result>( new SignEncryptFilesResult( q->id(), result, input->label(), output->label(), inputRemoved, outputCreated ) ) );
+    q->emitResult( shared_ptr<Result>( new SignEncryptFilesResult( result, input->label(), output->label(), inputRemoved, outputCreated ) ) );
 }
 
 QString SignEncryptFilesResult::overview() const {

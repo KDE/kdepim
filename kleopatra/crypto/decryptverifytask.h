@@ -41,6 +41,14 @@
 
 #include <boost/shared_ptr.hpp>
 
+
+namespace GpgME {
+    class DecryptionResult;
+    class VerificationResult;
+    class Key;
+    class Signature;
+}
+
 namespace Kleo {
 
 class Input;
@@ -55,12 +63,23 @@ namespace Crypto {
     public:
         explicit AbstractDecryptVerifyTask( QObject* parent = 0 );
         virtual ~AbstractDecryptVerifyTask();
-
-    public:
         virtual void autodetectProtocolFromInput() = 0;
         
     Q_SIGNALS:
         void decryptVerifyResult( const boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult> & );
+
+    protected:
+        boost::shared_ptr<DecryptVerifyResult> fromDecryptResult( const GpgME::DecryptionResult & dr, const QByteArray & plaintext );
+        boost::shared_ptr<DecryptVerifyResult> fromDecryptResult( const GpgME::Error & err, const QString& details );
+        boost::shared_ptr<DecryptVerifyResult> fromDecryptVerifyResult( const GpgME::DecryptionResult & dr, const GpgME::VerificationResult & vr, const QByteArray & plaintext );
+        boost::shared_ptr<DecryptVerifyResult> fromDecryptVerifyResult( const GpgME::Error & err, const QString & what );
+        boost::shared_ptr<DecryptVerifyResult> fromVerifyOpaqueResult( const GpgME::VerificationResult & vr, const QByteArray & plaintext );
+        boost::shared_ptr<DecryptVerifyResult> fromVerifyOpaqueResult( const GpgME::Error & err, const QString & details );
+        boost::shared_ptr<DecryptVerifyResult> fromVerifyDetachedResult( const GpgME::VerificationResult & vr );
+        boost::shared_ptr<DecryptVerifyResult> fromVerifyDetachedResult( const GpgME::Error & err, const QString & details );
+
+        virtual QString inputLabel() const = 0;
+        virtual QString outputLabel() const = 0;
 
     private:
          class Private;
@@ -88,6 +107,8 @@ namespace Crypto {
 
     private:
         /* reimp */ void doStart();
+        /* reimp */ QString inputLabel() const;
+        /* reimp */ QString outputLabel() const;
 
     private:
          class Private;
@@ -116,6 +137,8 @@ namespace Crypto {
 
     private:
         /* reimp */ void doStart();
+        /* reimp */ QString inputLabel() const;
+        /* reimp */ QString outputLabel() const;
 
     private:
          class Private;
@@ -144,6 +167,8 @@ namespace Crypto {
 
     private:
         /* reimp */ void doStart();
+        /* reimp */ QString inputLabel() const;
+        /* reimp */ QString outputLabel() const;
 
     private:
          class Private;
@@ -173,25 +198,17 @@ namespace Crypto {
 
     private:
         /* reimp */ void doStart();
+        /* reimp */ QString inputLabel() const;
+        /* reimp */ QString outputLabel() const;
 
     private:
          class Private;
          kdtools::pimpl_ptr<Private> d;
          Q_PRIVATE_SLOT( d, void slotResult( GpgME::DecryptionResult, GpgME::VerificationResult, QByteArray ) )
     };
-}
-}
 
-namespace GpgME {
-    class DecryptionResult;
-    class VerificationResult;
-    class Key;
-    class Signature;
-}
-
-namespace Kleo {
-namespace Crypto {
     class DecryptVerifyResult : public Task::Result {
+        friend class ::Kleo::Crypto::AbstractDecryptVerifyTask;
     public:
         
         /* reimpl */ QString overview() const;
@@ -203,15 +220,6 @@ namespace Crypto {
 
         GpgME::VerificationResult verificationResult() const;
 
-        static boost::shared_ptr<DecryptVerifyResult> fromDecryptResult( int id, const GpgME::DecryptionResult & dr, const QByteArray & plaintext );
-        static boost::shared_ptr<DecryptVerifyResult> fromDecryptResult( int id, const GpgME::Error & err, const QString& details );
-        static boost::shared_ptr<DecryptVerifyResult> fromDecryptVerifyResult( int id, const GpgME::DecryptionResult & dr, const GpgME::VerificationResult & vr, const QByteArray & plaintext );
-        static boost::shared_ptr<DecryptVerifyResult> fromDecryptVerifyResult( int id, const GpgME::Error & err, const QString & what );
-        static boost::shared_ptr<DecryptVerifyResult> fromVerifyOpaqueResult( int id, const GpgME::VerificationResult & vr, const QByteArray & plaintext );
-        static boost::shared_ptr<DecryptVerifyResult> fromVerifyOpaqueResult( int id, const GpgME::Error & err, const QString & details );
-        static boost::shared_ptr<DecryptVerifyResult> fromVerifyDetachedResult( int id, const GpgME::VerificationResult & vr );
-        static boost::shared_ptr<DecryptVerifyResult> fromVerifyDetachedResult( int id, const GpgME::Error & err, const QString & details );
-
         static const GpgME::Key & keyForSignature( const GpgME::Signature & sig, const std::vector<GpgME::Key> & keys );
 
 private:
@@ -222,14 +230,15 @@ private:
         DecryptVerifyResult( const DecryptVerifyResult& );
         DecryptVerifyResult& operator=( const DecryptVerifyResult& other );
 
-        DecryptVerifyResult( int id,
-                  DecryptVerifyOperation op,
+        DecryptVerifyResult( DecryptVerifyOperation op,
                   const GpgME::VerificationResult& vr,
                   const GpgME::DecryptionResult& dr,
                   const QByteArray& stuff,
                   int errCode,
-                  const QString& errString );
-        
+                  const QString & errString,
+                  const QString & inputLabel,
+                  const QString & outputLabel );
+
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;

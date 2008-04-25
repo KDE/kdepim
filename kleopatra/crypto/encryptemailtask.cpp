@@ -64,8 +64,8 @@ namespace {
     class EncryptEMailResult : public Task::Result {
         const EncryptionResult m_result;
     public:
-        EncryptEMailResult( int id, const EncryptionResult & r )
-            : Task::Result( id ), m_result( r ) {}
+        EncryptEMailResult( const EncryptionResult & r )
+            : Task::Result(), m_result( r ) {}
 
         /* reimp */ QString overview() const;
         /* reimp */ QString details() const;
@@ -195,7 +195,7 @@ void EncryptEMailTask::Private::slotResult( const EncryptionResult & result ) {
     } else {
         output->finalize();
     }
-    q->emitResult( shared_ptr<Result>( new EncryptEMailResult( q->id(), result ) ) );
+    q->emitResult( shared_ptr<Result>( new EncryptEMailResult( result ) ) );
 }
 
 QString EncryptEMailResult::overview() const {

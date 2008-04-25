@@ -60,14 +60,15 @@ namespace {
 
     class ErrorResult : public Task::Result {
     public:
-        ErrorResult( int id, int code, const QString & details )
-            : Task::Result( id ), m_code( code ), m_details( details ) {}
+        ErrorResult( int code, const QString & details )
+            : Task::Result(), m_code( code ), m_details( details ) {}
 
         /* reimp */ QString overview() const { return makeOverview( m_details ); }
         /* reimp */ QString details() const { return QString(); }
         /* reimp */ int errorCode() const { return m_code; }
         /* reimp */ QString errorString() const { return m_details; }
         /* reimp */ VisualCode code() const { return NeutralError; }
+
     private:
         int m_code;
         QString m_details;
@@ -168,7 +169,7 @@ void Task::emitResult( const shared_ptr<const Task::Result> & r )
 
 shared_ptr<Task::Result> Task::makeErrorResult( int errCode, const QString& details )
 {
-    return shared_ptr<Task::Result>( new ErrorResult( id(), errCode, details ) );
+    return shared_ptr<Task::Result>( new ErrorResult( errCode, details ) );
 }
 
 
@@ -179,20 +180,14 @@ static QString makeNonce() {
 
 class Task::Result::Private {
 public:
-    explicit Private( int id ) : m_id( id ) {}
-    int m_id;
+    Private() {}
 };
 
-Task::Result::Result( int id ) : m_nonce( makeNonce() ), d( new Private( id ) ) {}
+Task::Result::Result() : m_nonce( makeNonce() ), d( new Private() ) {}
 Task::Result::~Result() {}
 
 QString Task::Result::formatKeyLink( const char * fpr, const QString & content ) const {
     return "<a href=\"key:" + m_nonce + ':' + fpr + "\">" + content + "</a>";
-}
-
-int Task::Result::id() const
-{
-    return d->m_id;
 }
 
 bool Task::Result::hasError() const
