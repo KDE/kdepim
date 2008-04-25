@@ -198,8 +198,10 @@ createSignEncryptTaskForFileInfo( const QFileInfo & fi, bool pgp, bool sign, boo
     task->setEncrypt( encrypt );
     task->setAsciiArmor( ascii );
     task->setRemoveInputFileOnSuccess( removeUnencrypted );
-    if ( sign )
+    if ( sign ) {
         task->setSigners( signers );
+        task->setDetachedSignature( true );
+    }
     if ( encrypt )
         task->setRecipients( recipients );
 
