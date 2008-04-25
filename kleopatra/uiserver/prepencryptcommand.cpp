@@ -116,7 +116,7 @@ int PrepEncryptCommand::doStart() {
 
 void PrepEncryptCommand::Private::slotRecipientsResolved() {
     //hold local shared_ptr to member as q->done() deletes *this
-    const shared_ptr<EncryptEMailController> cont( controller );
+    const shared_ptr<EncryptEMailController> cont = controller;
     QPointer<Private> that( this );
 
     try {
