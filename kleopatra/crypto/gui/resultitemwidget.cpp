@@ -91,7 +91,7 @@ void ResultItemWidget::Private::updateShowDetailsLabel()
     m_showDetailsLabel->setText( QString("<a href=\"kleoresultitem://toggledetails/\">%1</a>").arg( show ? i18n( "Show Details" ) : i18n( "Hide Details" ) ) );
 }
 
-ResultItemWidget::ResultItemWidget( const shared_ptr<const Task::Result> & result, const QString & label, QWidget * parent, Qt::WindowFlags flags) : QWidget( parent, flags ), d( new Private( result, this ) )
+ResultItemWidget::ResultItemWidget( const shared_ptr<const Task::Result> & result, QWidget * parent, Qt::WindowFlags flags ) : QWidget( parent, flags ), d( new Private( result, this ) )
 {
     assert( d->m_result );
     const QColor color = colorForVisualCode( d->m_result->code() );
@@ -112,7 +112,7 @@ ResultItemWidget::ResultItemWidget( const shared_ptr<const Task::Result> & resul
     QLabel* overview = new QLabel;
     overview->setWordWrap( true );
     overview->setTextFormat( Qt::RichText );
-    overview->setText( i18nc( "%1: action %2: result; example: Decrypting foo.txt: Succeeded", "%1: %2", label, d->m_result->overview() ) );
+    overview->setText( d->m_result->overview() );
     connect( overview, SIGNAL(linkActivated(QString)), this, SLOT(slotLinkActivated(QString)) );
 
     hlay->addWidget( overview, 1 );

@@ -109,6 +109,7 @@ ResultListWidget::~ResultListWidget()
 
 void ResultListWidget::Private::setupSingle()
 {
+    m_layout->addStretch();
 }
 
 void ResultListWidget::Private::setupMulti()
@@ -134,7 +135,7 @@ void ResultListWidget::Private::addResultWidget( ResultItemWidget* widget )
         blay.insertWidget( widget->hasErrorResult() ? m_lastErrorItemIndex++ : ( blay.count() - 1 ), widget );
     } else { // single task
         widget->showCloseButton( m_standaloneMode );
-        m_layout->addWidget( widget );
+        m_layout->insertWidget( m_layout->count() - 1, widget );
     }
     if ( m_standaloneMode )
         q->resize( q->size().expandedTo( q->sizeHint() ) );
@@ -144,9 +145,7 @@ void ResultListWidget::Private::result( const shared_ptr<const Task::Result> & r
 {
     assert( result );
     assert( m_tasks && !m_tasks->isEmpty() );
-    const shared_ptr<const Task> task = m_tasks->taskById( result->id() );
-    assert( task );
-    ResultItemWidget* wid = new ResultItemWidget( result, task->label() );
+    ResultItemWidget* wid = new ResultItemWidget( result );
     q->connect( wid, SIGNAL(detailsToggled(bool)), q, SLOT(detailsToggled(bool)) );
     q->connect( wid, SIGNAL(linkActivated(QString)), q, SIGNAL(linkActivated(QString)) );
     q->connect( wid, SIGNAL(closeButtonClicked()), q, SLOT(close()) );
