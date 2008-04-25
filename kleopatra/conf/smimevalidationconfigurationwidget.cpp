@@ -233,10 +233,8 @@ void SMimeValidationConfigurationWidget::load() {
 
     if ( e.mOCSPResponderURLConfigEntry )
         d->ui.OCSPResponderURL->setText( e.mOCSPResponderURLConfigEntry->stringValue() );
-#if 0
     if ( e.mOCSPResponderSignature )
-        d->ui.OCSPResponderSignature->setFingerprint( e.mOCSPResponderSignature->stringValue() );
-#endif
+        d->ui.OCSPResponderSignature->setText/*Fingerprint*/( e.mOCSPResponderSignature->stringValue() );
 
     // dirmngr-0.9.0 options
     initializeDirmngrCheckbox( d->ui.ignoreServiceURLCB, e.mIgnoreServiceURLEntry );
@@ -305,11 +303,9 @@ void SMimeValidationConfigurationWidget::save() const {
     if ( e.mOCSPResponderURLConfigEntry && e.mOCSPResponderURLConfigEntry->stringValue() != txt )
         e.mOCSPResponderURLConfigEntry->setStringValue( txt );
 
-#if 0
-    txt = d->ui.OCSPResponderSignature->fingerprint();
+    txt = d->ui.OCSPResponderSignature->text();//fingerprint();
     if ( e.mOCSPResponderSignature && e.mOCSPResponderSignature->stringValue() != txt )
         e.mOCSPResponderSignature->setStringValue( txt );
-#endif
 
     //dirmngr-0.9.0 options
     saveCheckBoxToKleoEntry( d->ui.ignoreServiceURLCB, e.mIgnoreServiceURLEntry );
