@@ -118,7 +118,7 @@ namespace {
         const bool m_outputCreated;
     };
 
-    static QString makeSigningErrorOverview( const Error & err ) {
+    static QString makeSigningOverview( const Error & err ) {
         if ( err.isCanceled() )
             return i18n("Signing canceled.");
         
@@ -127,11 +127,11 @@ namespace {
         return i18n("Signing succeeded.");
     }
     
-    static QString makeErrorOverview( const SigningResult & result ) {
-        return makeSigningErrorOverview( result.error() );
+    static QString makeResultOverview( const SigningResult & result ) {
+        return makeSigningOverview( result.error() );
     }
 
-    static QString makeEncryptionErrorOverview( const Error & err ) {
+    static QString makeEncryptionOverview( const Error & err ) {
         if ( err.isCanceled() )
             return i18n("Encryption canceled.");
         
@@ -141,18 +141,33 @@ namespace {
         return i18n("Encryption succeeded.");
     }
 
-    static QString makeErrorOverview( const EncryptionResult & result ) {
-        return makeEncryptionErrorOverview( result.error() );
+    
+    static QString makeResultOverview( const EncryptionResult & result ) {
+        return makeEncryptionOverview( result.error() );
     }
 
-    static QString makeErrorDetails( const SigningResult & result ) {
+    static QString makeResultOverview( const SigningResult & sr, const EncryptionResult & er ) {
+        if ( er.isNull() && sr.isNull() )
+            return QString();
+        if ( er.isNull() )
+            return makeResultOverview( sr );
+        if ( sr.isNull() )
+            return makeResultOverview( er );
+        if ( sr.error().isCanceled() || sr.error() )
+            return makeResultOverview( sr );
+        if ( er.error().isCanceled() || er.error() )
+            return makeResultOverview( er );
+        return i18n( "Signing and encryption succeeded." );
+    }
+
+    static QString makeResultDetails( const SigningResult & result ) {
         const Error err = result.error();
         if ( err )
             return Qt::escape( QString::fromLocal8Bit( err.asString() ) );
         return QString();
     }
     
-    static QString makeErrorDetails( const EncryptionResult & result ) {
+    static QString makeResultDetails( const EncryptionResult & result ) {
         const Error err = result.error();
         if ( err )
             return Qt::escape( QString::fromLocal8Bit( err.asString() ) );
@@ -170,7 +185,7 @@ QString ErrorResult::overview() const {
     if ( m_sign && m_encrypt )
         return canceled ? i18n( "%1: <b>Sign/encrypt canceled.</b>", label ) : i18n( " %1: Sign/encrypt failed.", label );
     return i18nc( "label: result. Example: foo -> foo.gpg: Encryption failed.", "%1: <b>%2</b>", label, 
-                  m_sign ? makeSigningErrorOverview( m_error ) :makeEncryptionErrorOverview( m_error ) );
+                  m_sign ? makeSigningOverview( m_error ) :makeEncryptionOverview( m_error ) );
 }
 
 QString ErrorResult::details() const {
@@ -450,11 +465,11 @@ QString SignEncryptFilesResult::overview() const {
     const bool sign = !m_sresult.isNull();
     const bool encrypt = !m_eresult.isNull();
  
-    kleo_assert( sign || encrypt );
+    kleo_assert( !m_sresult.isNull() || !m_eresult.isNull() );
 
     const QString files = formatInputOutputLabel( m_inputLabel, m_outputLabel, m_inputRemoved, !m_outputCreated );
-   
-    return files + ": " + makeOverview( sign ? makeErrorOverview( m_sresult ) : makeErrorOverview( m_eresult ) );
+
+    return files + ": " + makeOverview( makeResultOverview( m_sresult, m_eresult ) );
 }
 
 QString SignEncryptFilesResult::details() const {
@@ -477,12 +492,12 @@ QString SignEncryptFilesResult::errorString() const {
 
     if ( sign && encrypt ) {
         return 
-            m_sresult.error().code() ? makeErrorDetails( m_sresult ) : 
-            m_eresult.error().code() ? makeErrorDetails( m_eresult ) :
+            m_sresult.error().code() ? makeResultDetails( m_sresult ) : 
+            m_eresult.error().code() ? makeResultDetails( m_eresult ) :
             QString();
     }
     
-    return sign ? makeErrorDetails( m_sresult ) : makeErrorDetails( m_eresult );
+    return sign ? makeResultDetails( m_sresult ) : makeResultDetails( m_eresult );
 }
 
 Task::Result::VisualCode SignEncryptFilesResult::code() const
