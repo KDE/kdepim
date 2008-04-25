@@ -866,8 +866,8 @@ void Kleo::CryptoConfigEntryKeyserver::doSave()
   mEntry->setStringValue( mLabel->text() );
 }
 
-static KUrl string2url( const QString & str ) {
-    return KUrl( str );
+static KUrl::List string2urls( const QString & str ) {
+    return str.isEmpty() ? KUrl::List() : KUrl( str ) ;
 }
 
 static QString urls2string( const KUrl::List & urls ) {
@@ -884,7 +884,7 @@ void Kleo::CryptoConfigEntryKeyserver::slotOpenDialog()
   DirectoryServicesWidget dirserv( &dialog );
   dirserv.setAllowedSchemes( DirectoryServicesWidget::AllSchemes );
   dirserv.setAllowedProtocols( DirectoryServicesWidget::OpenPGPProtocol );
-  dirserv.addOpenPGPServices( string2url( mLabel->text() ) );
+  dirserv.addOpenPGPServices( string2urls( mLabel->text() ) );
   dialog.setMainWidget( &dirserv );
   connect( &dialog, SIGNAL(defaultClicked()), &dirserv, SLOT(clear()) );
   if ( dialog.exec() ) {

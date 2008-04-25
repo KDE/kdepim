@@ -198,6 +198,10 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( const KC
 #endif
 }
 
+static KUrl::List string2urls( const QString & str ) {
+    return str.isEmpty() ? KUrl::List() : KUrl( str ) ;
+}
+
 void DirectoryServicesConfigurationPage::load()
 {
 
@@ -211,7 +215,7 @@ void DirectoryServicesConfigurationPage::load()
   mOpenPGPServiceEntry = configEntry( s_pgpservice_componentName, s_pgpservice_groupName, s_pgpservice_entryName,
                                       Kleo::CryptoConfigEntry::ArgType_String, false );
   if ( mOpenPGPServiceEntry )
-      mWidget->addOpenPGPServices( KUrl( mOpenPGPServiceEntry->stringValue() ) );
+      mWidget->addOpenPGPServices( string2urls( mOpenPGPServiceEntry->stringValue() ) );
 
   if ( mX509ServicesEntry )
       if ( mOpenPGPServiceEntry )
