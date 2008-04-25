@@ -144,9 +144,7 @@ const char * EncryptEMailController::protocolAsString() const {
 }
 
 void EncryptEMailController::startResolveRecipients() {
-    d->ensureWizardCreated();
-    d->wizard->setRecipients( std::vector<Mailbox>() ); // ### needed?
-    d->ensureWizardVisible();
+    startResolveRecipients( std::vector<Mailbox>() );
 }
 
 void EncryptEMailController::startResolveRecipients( const std::vector<Mailbox> & recipients ) {
