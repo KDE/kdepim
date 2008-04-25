@@ -117,8 +117,8 @@ void ResultListWidget::Private::setupMulti()
     assert( qobject_cast<QBoxLayout*>( m_scrollArea->widget()->layout() ) );
     static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() )->setMargin( 0 );
     static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() )->setSpacing( 2 );
-    static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() )->addStretch( 1 );
-    m_layout->insertWidget( 1, m_scrollArea );
+    static_cast<QBoxLayout*>( m_scrollArea->widget()->layout() )->addStretch();
+    m_layout->insertWidget( 0, m_scrollArea );
 }
 
 void ResultListWidget::Private::addResultWidget( ResultItemWidget* widget )

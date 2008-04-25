@@ -92,7 +92,7 @@ ResultPage::Private::Private( ResultPage* qq ) : q( qq ), m_lastErrorItemIndex( 
     m_progressDetails = new QLabel;
     layout->addWidget( m_progressDetails );
     m_resultList = new ResultListWidget;
-    layout->addWidget( m_resultList, 2 );
+    layout->addWidget( m_resultList );
 }
 
 void ResultPage::Private::progress( const QString & msg, int progress, int total )
