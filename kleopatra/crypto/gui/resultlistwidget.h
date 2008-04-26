@@ -71,7 +71,7 @@ namespace Gui {
         kdtools::pimpl_ptr<Private> d;
         Q_PRIVATE_SLOT( d, void result( boost::shared_ptr<const Kleo::Crypto::Task::Result> ) )
         Q_PRIVATE_SLOT( d, void started( boost::shared_ptr<Kleo::Crypto::Task> ) )
-        Q_PRIVATE_SLOT( d, void detailsToggled(bool) );
+        Q_PRIVATE_SLOT( d, void detailsToggled(bool) )
     };
 }
 }
