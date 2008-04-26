@@ -88,7 +88,7 @@ private:
   Private * const d;
   Q_PRIVATE_SLOT( d, void slotNewClicked() )
   Q_PRIVATE_SLOT( d, void slotNewX509Clicked() )
-  Q_PRIVATE_SLOT( d, void slotNewOpenPGPClicked() );
+  Q_PRIVATE_SLOT( d, void slotNewOpenPGPClicked() )
   Q_PRIVATE_SLOT( d, void slotDeleteClicked() )
   Q_PRIVATE_SLOT( d, void slotSelectionChanged() )
   Q_PRIVATE_SLOT( d, void slotShowUserAndPasswordToggled(bool) )
