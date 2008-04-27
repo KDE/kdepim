@@ -91,12 +91,12 @@ public:
     ~Private();
     
     void operationSelected();
-private:
 
+    bool m_quickMode;
 };
 
 SignEMailWizard::Private::Private( SignEMailWizard * qq )
-  : q( qq )
+  : q( qq ), m_quickMode( false )
 {
     q->setWindowTitle( i18n("Sign Mail Message") );
 
@@ -118,6 +118,20 @@ SignEMailWizard::Private::~Private() {}
 SignEMailWizard::SignEMailWizard( QWidget * parent, Qt::WFlags f )
   : SignEncryptWizard( parent, f ), d( new Private( this ) )
 {
+}
+
+bool SignEMailWizard::quickMode() const
+{
+    return d->m_quickMode;
+}
+
+void SignEMailWizard::setQuickMode( bool quick )
+{
+    if ( quick == d->m_quickMode )
+        return;
+    d->m_quickMode = quick;
+    signerResolvePage()->setAutoAdvance( quick );
+    setKeepResultPageOpenWhenDone( !quick );
 }
 
 SignEMailWizard::~SignEMailWizard() {}

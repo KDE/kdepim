@@ -4,6 +4,19 @@
       xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0
       http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
  <kcfgfile name="kleopatrarc" />
+
+ <group name="EMailOperations">
+ <entry name="QuickSignEMail" key="quick-sign-email" type="Bool">
+   <label>Quick Sign EMail</label>
+   <whatsthis>Minimize the number of steps when signing emails, use preset defaults unless problems occurr</whatsthis>
+   <default>false</default>
+ </entry>
+ <entry name="QuickEncryptEMail" key="quick-encrypt-email" type="Bool">
+   <label>Quick Encrypt EMail</label>
+   <whatsthis>Minimize the number of steps when encrypting emails, use preset defaults unless problems occurr</whatsthis>
+   <default>false</default>
+ </entry>
+ </group>
  <group name="Tooltip" >
    <entry name="ShowValidity" key="show-validity" type="Bool" >
      <label>Show certificate validity</label>

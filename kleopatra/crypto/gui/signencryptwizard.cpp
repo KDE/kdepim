@@ -270,9 +270,39 @@ void SignEncryptWizard::setSignerResolvePageValidator( const boost::shared_ptr<S
     d->signerResolvePage->setValidator( validator );
 }
 
-SignerResolvePage* SignEncryptWizard::signerResolvePage()
+Gui::SignerResolvePage* SignEncryptWizard::signerResolvePage()
 {
     return d->signerResolvePage;
+}
+
+const Gui::SignerResolvePage* SignEncryptWizard::signerResolvePage() const
+{
+    return d->signerResolvePage;
+}
+
+Gui::ResolveRecipientsPage* SignEncryptWizard::resolveRecipientsPage()
+{
+    return d->recipientResolvePage;
+}
+
+Gui::ObjectsPage* SignEncryptWizard::objectsPage()
+{
+    return d->objectsPage;
+}
+
+Gui::ResultPage* SignEncryptWizard::resultPage()
+{
+    return d->resultPage;
+}
+
+bool SignEncryptWizard::keepResultPageOpenWhenDone() const
+{
+    return d->resultPage->keepOpenWhenDone();
+}
+
+void SignEncryptWizard::setKeepResultPageOpenWhenDone( bool keep )
+{
+    d->resultPage->setKeepOpenWhenDone( keep );
 }
 
 #include "moc_signencryptwizard.cpp"

@@ -45,6 +45,8 @@
 #include <utils/stl_util.h>
 #include <utils/kleo_assert.h>
 
+#include "kleopatraprefs.h"
+
 #include <kmime/kmime_header_parsing.h>
 
 #include <KLocale>
@@ -86,7 +88,7 @@ private:
     const Mode mode;
     std::vector< shared_ptr<SignEMailTask> > runnable, completed; // ### extract to base
     shared_ptr<SignEMailTask> cms, openpgp; // ### extract to base
-    QPointer<SignEncryptWizard> wizard; // ### extract to base
+    QPointer<SignEMailWizard> wizard; // ### extract to base
     Protocol protocol;                  // ### extract to base
     bool detached : 1;
 };
@@ -316,12 +318,13 @@ void SignEMailController::Private::ensureWizardCreated() {
     if ( wizard )
         return;
 
-    std::auto_ptr<SignEncryptWizard> w( new SignEMailWizard );
+    std::auto_ptr<SignEMailWizard> w( new SignEMailWizard );
     w->setAttribute( Qt::WA_DeleteOnClose );
     connect( w.get(), SIGNAL(signersResolved()), q, SLOT(slotWizardSignersResolved()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
     w->setPresetProtocol( protocol );
-
+    Kleo::Preferences prefs;
+    wizard->setQuickMode( prefs.quickSignEMail() );
     wizard = w.release();
 }
 

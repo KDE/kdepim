@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    crypto/gui/resultpage.h
+    crypto/gui/encryptemailwizard.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2008 Klarälvdalens Datakonsult AB
@@ -30,55 +30,29 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_CRYPTO_GUI_RESULTPAGE_H__
-#define __KLEOPATRA_CRYPTO_GUI_RESULTPAGE_H__
+#ifndef __KLEOPATRA_ENCRYPTEMAILWIZARD_H__
+#define __KLEOPATRA_ENCRYPTEMAILWIZARD_H__
 
-#include <crypto/gui/wizardpage.h>
-#include <crypto/task.h>
-
-#include <utils/pimpl_ptr.h>
-
-#include <QAbstractItemDelegate>
-#include <QAbstractItemModel>
-
-#include <boost/shared_ptr.hpp>
+#include <crypto/gui/signencryptwizard.h>
 
 namespace Kleo {
 namespace Crypto {
-
-class TaskCollection;
-
 namespace Gui {
 
-class ResultPage : public WizardPage {
-    Q_OBJECT
+    class EncryptEMailWizard : public SignEncryptWizard {
+        Q_OBJECT
+    public:
+        explicit EncryptEMailWizard( QWidget * parent=0, Qt::WindowFlags flags=0 );
+        ~EncryptEMailWizard();
 
-public:
-    explicit ResultPage( QWidget* parent = 0, Qt::WindowFlags flags = 0 );
-    ~ResultPage();
+        bool quickMode() const;
+        void setQuickMode( bool quick );
 
-    void setTaskCollection( const boost::shared_ptr<TaskCollection> & coll );
-
-    bool isComplete() const;
-
-    bool keepOpenWhenDone() const;
-    void setKeepOpenWhenDone( bool keep );
-
-Q_SIGNALS:
-    void linkActivated( const QString & link );
-
-private:
-    class Private;
-    kdtools::pimpl_ptr<Private> d;
-    Q_PRIVATE_SLOT( d, void progress( QString, int, int ) )
-    Q_PRIVATE_SLOT( d, void result( boost::shared_ptr<const Kleo::Crypto::Task::Result> ) )
-    Q_PRIVATE_SLOT( d, void started( boost::shared_ptr<Kleo::Crypto::Task> ) )
-    Q_PRIVATE_SLOT( d, void keepOpenWhenDone( bool ) )
-    Q_PRIVATE_SLOT( d, void allDone() )
-};
-
+    private:
+        class Private;
+        kdtools::pimpl_ptr<Private> d;
+    };
 }
 }
 }
-
-#endif // __KLEOPATRA_CRYPTO_GUI_RESULTPAGE_H__
+#endif // __KLEOPATRA_ENCRYPTEMAILWIZARD_H__

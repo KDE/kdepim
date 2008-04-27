@@ -136,6 +136,7 @@ set( _kleopatra_common_SRCS
   crypto/gui/objectspage.cpp
   crypto/gui/resolverecipientspage.cpp
   crypto/gui/signerresolvepage.cpp
+  crypto/gui/encryptemailwizard.cpp
   crypto/gui/signemailwizard.cpp
   crypto/gui/signencryptfileswizard.cpp
   crypto/gui/signencryptwizard.cpp

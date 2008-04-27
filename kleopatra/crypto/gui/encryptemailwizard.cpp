@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    crypto/gui/resultpage.h
+    crypto/gui/encryptemailwizard.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2008 Klarälvdalens Datakonsult AB
@@ -30,55 +30,48 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_CRYPTO_GUI_RESULTPAGE_H__
-#define __KLEOPATRA_CRYPTO_GUI_RESULTPAGE_H__
+#include "encryptemailwizard.h"
+#include <crypto/gui/resolverecipientspage.h>
 
-#include <crypto/gui/wizardpage.h>
-#include <crypto/task.h>
+#include <KLocalizedString>
 
-#include <utils/pimpl_ptr.h>
+using namespace Kleo;
+using namespace Kleo::Crypto;
+using namespace Kleo::Crypto::Gui;
 
-#include <QAbstractItemDelegate>
-#include <QAbstractItemModel>
-
-#include <boost/shared_ptr.hpp>
-
-namespace Kleo {
-namespace Crypto {
-
-class TaskCollection;
-
-namespace Gui {
-
-class ResultPage : public WizardPage {
-    Q_OBJECT
-
+class EncryptEMailWizard::Private {
 public:
-    explicit ResultPage( QWidget* parent = 0, Qt::WindowFlags flags = 0 );
-    ~ResultPage();
-
-    void setTaskCollection( const boost::shared_ptr<TaskCollection> & coll );
-
-    bool isComplete() const;
-
-    bool keepOpenWhenDone() const;
-    void setKeepOpenWhenDone( bool keep );
-
-Q_SIGNALS:
-    void linkActivated( const QString & link );
-
-private:
-    class Private;
-    kdtools::pimpl_ptr<Private> d;
-    Q_PRIVATE_SLOT( d, void progress( QString, int, int ) )
-    Q_PRIVATE_SLOT( d, void result( boost::shared_ptr<const Kleo::Crypto::Task::Result> ) )
-    Q_PRIVATE_SLOT( d, void started( boost::shared_ptr<Kleo::Crypto::Task> ) )
-    Q_PRIVATE_SLOT( d, void keepOpenWhenDone( bool ) )
-    Q_PRIVATE_SLOT( d, void allDone() )
+    Private() : m_quickMode( false ) {}
+    bool m_quickMode;
 };
+EncryptEMailWizard::EncryptEMailWizard( QWidget * parent, Qt::WindowFlags flags ) : SignEncryptWizard( parent, flags ), d( new Private )
+{
+    setWindowTitle( i18n("Encrypt Mail Message") );
+    std::vector<int> pageOrder;
+    pageOrder.push_back( ResolveRecipientsPage );
+    pageOrder.push_back( ResultPage );
+    setPageOrder( pageOrder );
+    setCommitPage( SignEncryptWizard::ResolveRecipientsPage );
+}
 
-}
-}
+EncryptEMailWizard::~EncryptEMailWizard()
+{
+    
 }
 
-#endif // __KLEOPATRA_CRYPTO_GUI_RESULTPAGE_H__
+bool EncryptEMailWizard::quickMode() const
+{
+    return d->m_quickMode;
+}
+
+void EncryptEMailWizard::setQuickMode( bool quick )
+{
+    if ( quick == d->m_quickMode )
+        return;
+    d->m_quickMode = quick;
+    signerResolvePage()->setAutoAdvance( quick );
+    resolveRecipientsPage()->setAutoAdvance( quick );
+    setKeepResultPageOpenWhenDone( !quick );
+}
+
+#include "encryptemailwizard.h"

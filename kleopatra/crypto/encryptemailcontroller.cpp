@@ -37,7 +37,7 @@
 #include "encryptemailtask.h"
 #include "taskcollection.h"
 
-#include <crypto/gui/signencryptwizard.h>
+#include <crypto/gui/encryptemailwizard.h>
 
 
 #include <utils/input.h>
@@ -45,6 +45,8 @@
 #include <utils/stl_util.h>
 #include <utils/kleo_assert.h>
 #include <utils/exception.h>
+
+#include "kleopatraprefs.h"
 
 #include <gpgme++/key.h>
 
@@ -88,7 +90,7 @@ private:
     const Mode mode;
     std::vector< shared_ptr<EncryptEMailTask> > runnable, completed;
     shared_ptr<EncryptEMailTask> cms, openpgp;
-    mutable QPointer<SignEncryptWizard> wizard;
+    mutable QPointer<EncryptEMailWizard> wizard;
 };
 
 EncryptEMailController::Private::Private( Mode m, EncryptEMailController * qq )
@@ -291,16 +293,10 @@ void EncryptEMailController::Private::ensureWizardCreated() const {
     if ( wizard )
         return;
 
-    std::auto_ptr<SignEncryptWizard> w( new SignEncryptWizard );
-    w->setWindowTitle( i18n("Encrypt Mail Message") );
-   
-    std::vector<int> pageOrder;
-    pageOrder.push_back( SignEncryptWizard::ResolveRecipientsPage );
-    pageOrder.push_back( SignEncryptWizard::ResultPage );
-    w->setPageOrder( pageOrder );
-    w->setCommitPage( SignEncryptWizard::ResolveRecipientsPage );
-
+    std::auto_ptr<EncryptEMailWizard> w( new EncryptEMailWizard );
     w->setAttribute( Qt::WA_DeleteOnClose );
+    Kleo::Preferences prefs;
+    wizard->setQuickMode( prefs.quickEncryptEMail() );
     connect( w.get(), SIGNAL(recipientsResolved()), q, SLOT(slotWizardRecipientsResolved()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
 

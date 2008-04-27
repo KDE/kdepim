@@ -148,6 +148,16 @@ ResultPage::~ResultPage()
 {
 }
 
+bool ResultPage::keepOpenWhenDone() const
+{
+    return d->m_keepOpenCB->isChecked();
+}
+
+void ResultPage::setKeepOpenWhenDone( bool keep )
+{
+    d->m_keepOpenCB->setChecked( keep );
+}
+
 void ResultPage::setTaskCollection( const shared_ptr<TaskCollection> & coll )
 {
     if ( d->m_tasks == coll )

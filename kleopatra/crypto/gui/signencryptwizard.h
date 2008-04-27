@@ -62,6 +62,11 @@ namespace Crypto {
 
 namespace Gui {
 
+    class ObjectsPage;
+    class ResolveRecipientsPage;
+    class ResultPage;
+    class SignerResolvePage;
+
     class SignEncryptWizard : public Wizard {
         Q_OBJECT
     public:
@@ -126,17 +131,24 @@ namespace Gui {
         bool removeUnencryptedFile() const;
         void setRemoveUnencryptedFile( bool remove );
 
+        bool keepResultPageOpenWhenDone() const;
+        void setKeepResultPageOpenWhenDone( bool keep );
+
         /*reimp*/ void onNext( int currentId );
 
     Q_SIGNALS:
-        //void operationResolved();
         void signersResolved();
         void objectsResolved();
         void recipientsResolved();
         void linkActivated( const QString & link );
 
     protected:
-        SignerResolvePage* signerResolvePage();
+        Gui::SignerResolvePage* signerResolvePage();
+        const Gui::SignerResolvePage* signerResolvePage() const;
+        Gui::ObjectsPage* objectsPage();
+        Gui::ResultPage* resultPage();
+        Gui::ResolveRecipientsPage* resolveRecipientsPage();
+
         void setSignerResolvePageValidator( const boost::shared_ptr<SignerResolvePage::Validator>& validator );
 
     private:

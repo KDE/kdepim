@@ -47,6 +47,9 @@ namespace Gui {
         explicit SignEMailWizard( QWidget * parent=0, Qt::WFlags f=0 );
         ~SignEMailWizard();
 
+        bool quickMode() const;
+        void setQuickMode( bool quick );
+
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
