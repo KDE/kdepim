@@ -376,6 +376,12 @@ QString Formatting::validityShort( const UserID::Signature & sig ) {
     return QString();
 }
 
+QString Formatting::formatKeyLink( const Key & key ) {
+    if ( key.isNull() )
+        return QString();
+    return QString::fromLatin1( "<a href=\"key:%1\">%2</a>" ).arg( key.primaryFingerprint(), Formatting::prettyName( key ) );
+}
+
 QString Formatting::formatForComboBox( const GpgME::Key & key ) {
     const QString name = prettyName( key );
     QString mail = prettyEMail( key );

@@ -44,6 +44,7 @@ public:
     Private() : m_quickMode( false ) {}
     bool m_quickMode;
 };
+
 EncryptEMailWizard::EncryptEMailWizard( QWidget * parent, Qt::WindowFlags flags ) : SignEncryptWizard( parent, flags ), d( new Private )
 {
     setWindowTitle( i18n("Encrypt Mail Message") );

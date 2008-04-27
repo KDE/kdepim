@@ -96,12 +96,13 @@ namespace Formatting {
 
     QString formatForComboBox( const GpgME::Key & key );
 
+    QString formatKeyLink( const GpgME::Key & key );
+
     QString signatureToString( const GpgME::Signature & sig, const GpgME::Key & key );
 
     const char * summaryToString( const GpgME::Signature::Summary summary );
 
     QString importMetaData( const GpgME::Import & import );
-
 }
 }
 

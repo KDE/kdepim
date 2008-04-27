@@ -95,6 +95,8 @@ namespace Gui {
         bool recipientsUserMutable() const;
         void setRecipientsUserMutable( bool isMutable ); 
 
+        void setAdditionalRecipientsInfo( const std::vector<GpgME::Key> & recipients );
+
         void setRecipients( const std::vector<KMime::Types::Mailbox>& recipients );
         std::vector<GpgME::Key> resolvedCertificates() const;
 

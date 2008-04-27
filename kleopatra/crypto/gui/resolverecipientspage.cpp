@@ -380,6 +380,7 @@ private:
     QPushButton* m_removeButton;
     QRadioButton* m_pgpRB;
     QRadioButton* m_cmsRB;
+    QLabel* m_additionalRecipientsLabel;
     Protocol m_presetProtocol;
     Protocol m_selectedProtocol;
     bool m_multipleProtocolsAllowed;
@@ -395,6 +396,10 @@ ResolveRecipientsPage::Private::Private( ResolveRecipientsPage * qq )
     connect( m_listWidget, SIGNAL( selectionChanged() ), q, SLOT( selectionChanged() ) );
     connect( m_listWidget, SIGNAL( completeChanged() ), q, SIGNAL( completeChanged() ) );
     layout->addWidget( m_listWidget );
+    m_additionalRecipientsLabel = new QLabel;
+    m_additionalRecipientsLabel->setWordWrap( true );
+    layout->addWidget( m_additionalRecipientsLabel );
+    m_additionalRecipientsLabel->setVisible( false );
     QWidget* buttonWidget = new QWidget;
     QHBoxLayout* buttonLayout = new QHBoxLayout( buttonWidget );
     buttonLayout->setMargin( 0 );
@@ -534,9 +539,9 @@ void ResolveRecipientsPage::Private::addRecipient()
 {
     int i = 0;
     const QStringList existing = m_listWidget->identifiers();
-    QString rec = i18n( "Additional Recipient" );
+    QString rec = i18n( "Recipient" );
     while ( existing.contains( rec ) )
-        rec = i18nc( "%1 == number", "Additional Recipient (%1)", ++i );
+        rec = i18nc( "%1 == number", "Recipient (%1)", ++i );
     addRecipient( rec, rec );
     m_listWidget->showSelectionDialog( rec );
 }
@@ -553,6 +558,19 @@ namespace {
              suggestions = CertificateResolver::resolveRecipient( mb, prot );
          return suggestions;
     }
+}
+
+static QString listKeysForInfo( const std::vector<Key> & keys ) {
+    QStringList list;
+    std::transform( keys.begin(), keys.end(), list.begin(), &Formatting::formatKeyLink );
+    return list.join( "<br/>" );
+}
+
+void ResolveRecipientsPage::setAdditionalRecipientsInfo( const std::vector<Key> & recipients ) {
+    d->m_additionalRecipientsLabel->setVisible( !recipients.empty() );
+    if ( recipients.empty() )
+        return;
+    d->m_additionalRecipientsLabel->setText( i18n( "<qt><p>Recipients predefined via GnuPG settings:</p>%1", listKeysForInfo( recipients ) ) );
 }
 
 void ResolveRecipientsPage::setRecipients( const std::vector<Mailbox>& recipients )
