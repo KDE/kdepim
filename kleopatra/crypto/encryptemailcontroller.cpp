@@ -296,7 +296,7 @@ void EncryptEMailController::Private::ensureWizardCreated() const {
     std::auto_ptr<EncryptEMailWizard> w( new EncryptEMailWizard );
     w->setAttribute( Qt::WA_DeleteOnClose );
     Kleo::Preferences prefs;
-    wizard->setQuickMode( prefs.quickEncryptEMail() );
+    w->setQuickMode( prefs.quickEncryptEMail() );
     connect( w.get(), SIGNAL(recipientsResolved()), q, SLOT(slotWizardRecipientsResolved()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
 
