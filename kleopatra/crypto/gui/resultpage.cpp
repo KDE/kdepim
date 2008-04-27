@@ -70,7 +70,6 @@ public:
     shared_ptr<TaskCollection> m_tasks;
     QProgressBar* m_progressBar;
     QLabel* m_progressLabel;
-    QLabel* m_progressDetails;
     int m_lastErrorItemIndex;
     ScrollArea* m_scrollArea;
     ResultListWidget* m_resultList;
@@ -93,8 +92,6 @@ ResultPage::Private::Private( ResultPage* qq ) : q( qq ), m_lastErrorItemIndex( 
     layout->addWidget( m_progressLabel );
     m_progressBar = new QProgressBar;
     layout->addWidget( m_progressBar );
-    m_progressDetails = new QLabel;
-    layout->addWidget( m_progressDetails );
     m_resultList = new ResultListWidget;
     connect( m_resultList, SIGNAL(linkActivated(QString)), q, SIGNAL(linkActivated(QString)) );
     layout->addWidget( m_resultList );
@@ -109,7 +106,6 @@ void ResultPage::Private::progress( const QString & msg, int progress, int total
 {
     assert( progress >= 0 );
     assert( total >= 0 );
-    m_progressDetails->setText( msg );
     m_progressBar->setRange( 0, total );
     m_progressBar->setValue( progress );
 }
