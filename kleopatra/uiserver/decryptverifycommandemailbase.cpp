@@ -35,8 +35,7 @@
 #include "decryptverifycommandemailbase.h"
 
 #include <crypto/decryptverifytask.h>
-
-#include <uiserver/decryptverifyemailcontroller.h>
+#include <crypto/decryptverifyemailcontroller.h>
 
 #include <utils/formatting.h>
 
@@ -149,7 +148,6 @@ void DecryptVerifyCommandEMailBase::Private::checkForErrors() const
 
     const unsigned int numFiles = q->numFiles();
 
-    std::vector< shared_ptr<DecryptVerifyTask> > tasks;
     if ( numFiles )
         throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ), i18n("FILES present") );
 

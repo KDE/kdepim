@@ -30,8 +30,8 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_UISERVER_DECRYPTVERIFYEMAILCONTROLLER_H__
-#define __KLEOPATRA_UISERVER_DECRYPTVERIFYEMAILCONTROLLER_H__
+#ifndef __KLEOPATRA_CRYPTO_DECRYPTVERIFYEMAILCONTROLLER_H__
+#define __KLEOPATRA_CRYPTO_DECRYPTVERIFYEMAILCONTROLLER_H__
 
 #include <crypto/controller.h>
 
@@ -64,7 +64,6 @@ class DecryptVerifyResult;
 class DecryptVerifyEMailController : public Controller {
     Q_OBJECT
 public:
-
     explicit DecryptVerifyEMailController( QObject * parent=0 );
     explicit DecryptVerifyEMailController( const boost::shared_ptr<const ExecutionContext> & cmd, QObject * parent=0 );
  
@@ -99,4 +98,4 @@ private:
 
 Q_DECLARE_METATYPE( GpgME::VerificationResult )
 
-#endif // __KLEOPATRA_UISERVER_DECRYPTVERIFYEMAILCONTROLLER_H__
+#endif // __KLEOPATRA_CTYPTO_DECRYPTVERIFYEMAILCONTROLLER_H__

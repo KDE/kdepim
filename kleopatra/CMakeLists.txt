@@ -51,7 +51,6 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/echocommand.cpp
     uiserver/decryptverifycommandemailbase.cpp
     uiserver/decryptverifycommandfilesbase.cpp
-    uiserver/decryptverifyemailcontroller.cpp
     uiserver/signcommand.cpp
     uiserver/signencryptfilescommand.cpp
     uiserver/prepencryptcommand.cpp
@@ -114,6 +113,7 @@ set( _kleopatra_common_SRCS
   crypto/task.cpp
   crypto/taskcollection.cpp
   crypto/decryptverifytask.cpp
+  crypto/decryptverifyemailcontroller.cpp
   crypto/decryptverifyfilescontroller.cpp
   crypto/encryptemailtask.cpp
   crypto/encryptemailcontroller.cpp
