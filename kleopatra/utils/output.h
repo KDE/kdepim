@@ -35,12 +35,36 @@
 
 #include <kleo-assuan.h> // for assuan_fd_t
 
+#include <utils/pimpl_ptr.h>
+
 #include <boost/shared_ptr.hpp>
 
 class QIODevice;
 class QString;
+class QWidget;
 
 namespace Kleo {
+
+    class OverwritePolicy {
+    public:
+        enum Policy {
+            Allow,
+            Deny,
+            Ask
+        };
+
+        explicit OverwritePolicy( QWidget * parent, Policy initialPolicy=Ask );
+        ~OverwritePolicy();
+
+        Policy policy() const;
+        void setPolicy( Policy );
+
+        QWidget * parentWidget() const;
+
+    private:
+        class Private;
+        kdtools::pimpl_ptr<Private> d;
+    };
 
     class Output {
     public:
@@ -52,7 +76,8 @@ namespace Kleo {
         virtual void finalize() = 0;
         virtual void cancel() = 0;
 
-        static boost::shared_ptr<Output> createFromFile( const QString & fileName, bool allowOverwrite );
+        static boost::shared_ptr<Output> createFromFile( const QString & fileName, const boost::shared_ptr<OverwritePolicy> & );
+        static boost::shared_ptr<Output> createFromFile( const QString & fileName, bool forceOverwrite );
         static boost::shared_ptr<Output> createFromPipeDevice( assuan_fd_t fd, const QString & label );
         static boost::shared_ptr<Output> createFromClipboard();
     };

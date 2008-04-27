@@ -51,12 +51,37 @@
 #include <QApplication>
 #include <QBuffer>
 #include <QPointer>
+#include <QWidget>
 
 #include <errno.h>
 
 using namespace Kleo;
 using namespace Kleo::_detail;
 using namespace boost;
+
+class OverwritePolicy::Private {
+public:
+    Private( QWidget* p, OverwritePolicy::Policy pol ) : policy( pol ), widget( widget ) {}
+    OverwritePolicy::Policy policy;
+    QWidget* widget;
+};
+
+OverwritePolicy::OverwritePolicy( QWidget * parent, Policy initialPolicy ) : d( new Private( parent, initialPolicy ) ) {
+}
+
+OverwritePolicy::~OverwritePolicy() {}
+
+OverwritePolicy::Policy OverwritePolicy::policy() const {
+    return d->policy;
+}
+
+void OverwritePolicy::setPolicy( Policy policy ) {
+    d->policy = policy;
+}
+
+QWidget * OverwritePolicy::parentWidget() const {
+    return d->widget;
+}
 
 namespace {
 
@@ -172,24 +197,20 @@ namespace {
 
     class FileOutput : public OutputImplBase {
     public:
-        explicit FileOutput( const QString & fileName );
+        explicit FileOutput( const QString & fileName, const shared_ptr<OverwritePolicy> & policy );
         ~FileOutput() { kDebug() << this; }
-
-        enum OverwritePolicy {
-            Allow = true,
-            Deny = false,
-            Ask
-        };
-        void setOverwritePolicy( OverwritePolicy overwrite ) { m_overwrite = overwrite; }
 
         /* reimp */ QString label() const { return QFileInfo( m_fileName ).fileName(); }
         /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_tmpFile; }
         /* reimp */ void doFinalize();
         /* reimp */ void doCancel() { kDebug() << this; }
     private:
+        bool obtainOverwritePermission();
+
+    private:
         const QString m_fileName;
         shared_ptr< TemporaryFile > m_tmpFile;
-        OverwritePolicy m_overwrite;
+        const shared_ptr<OverwritePolicy> m_policy;
     };
 
     class ClipboardOutput : public OutputImplBase {
@@ -226,30 +247,41 @@ PipeOutput::PipeOutput( assuan_fd_t fd )
 }
 
 
-shared_ptr<Output> Output::createFromFile( const QString & fileName, bool allowOverwrite ) {
-    shared_ptr<FileOutput> fo( new FileOutput( fileName ) );
-    if ( allowOverwrite )
-        fo->setOverwritePolicy( FileOutput::Allow );
+shared_ptr<Output> Output::createFromFile( const QString & fileName, bool forceOverwrite ) {
+    return createFromFile( fileName, shared_ptr<OverwritePolicy>( new OverwritePolicy( 0, forceOverwrite ? OverwritePolicy::Allow : OverwritePolicy::Deny ) ) );
+    
+}
+shared_ptr<Output> Output::createFromFile( const QString & fileName, const shared_ptr<OverwritePolicy> & policy ) {
+    shared_ptr<FileOutput> fo( new FileOutput( fileName, policy ) );
     kDebug() << fo.get();
     return fo;
 }
 
-FileOutput::FileOutput( const QString & fileName )
+FileOutput::FileOutput( const QString & fileName, const shared_ptr<OverwritePolicy> & policy )
     : OutputImplBase(),
       m_fileName( fileName ),
       m_tmpFile( new TemporaryFile( fileName ) ),
-      m_overwrite( Ask )
+      m_policy( policy )
 {
+    assert( m_policy );
     errno = 0;
     if ( !m_tmpFile->openNonInheritable() )
         throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
                          i18n( "Couldn't create temporary file for output \"%1\"", fileName ) );
 }
 
-static bool obtainOverwritePermission( const QString & fileName, QWidget * parent ) {
-    return KMessageBox::questionYesNo( parent, i18n("The file <b>%1</b> already exists.\n"
-                                                    "Overwrite?", fileName ),
-                                       i18n("Overwrite Existing File?"), KStandardGuiItem::overwrite(), KStandardGuiItem::cancel() ) == KMessageBox::Yes ;
+bool FileOutput::obtainOverwritePermission() {
+    if ( m_policy->policy() != OverwritePolicy::Ask )
+        return m_policy->policy() == OverwritePolicy::Allow;
+    const int sel = KMessageBox::questionYesNoCancel( m_policy->parentWidget(), i18n("The file <b>%1</b> already exists.\n"
+                                                                                      "Overwrite?", m_fileName ),
+                                                      i18n("Overwrite Existing File?"),
+                                                      KStandardGuiItem::overwrite(),
+                                                      KGuiItem( i18n( "Overwrite All" ) ), 
+                                                      KStandardGuiItem::cancel() );
+    if ( sel == KMessageBox::No ) //Overwrite All
+        m_policy->setPolicy( OverwritePolicy::Allow );
+    return sel == KMessageBox::Yes || sel == KMessageBox::No;
 }
 
 void FileOutput::doFinalize() {
@@ -281,7 +313,7 @@ void FileOutput::doFinalize() {
 
     kDebug() << this << "failed";
 
-    if ( !obtainOverwritePermission( m_fileName, 0 ) )
+    if ( !obtainOverwritePermission() )
         throw Exception( gpg_error( GPG_ERR_CANCELED ),
                          i18n( "Overwriting declined" ) );
 

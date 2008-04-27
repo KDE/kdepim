@@ -222,6 +222,7 @@ private:
     bool removeInput : 1;
     
     QPointer<Kleo::Job> job;
+    shared_ptr<OverwritePolicy> m_overwritePolicy;
 };
 
 SignEncryptFilesTask::Private::Private( SignEncryptFilesTask * qq )
@@ -236,7 +237,8 @@ SignEncryptFilesTask::Private::Private( SignEncryptFilesTask * qq )
       encrypt( true ),
       detached( false ),
       removeInput( false ),
-      job( 0 )
+      job( 0 ),
+      m_overwritePolicy( new OverwritePolicy( 0 ) )
 {
     q->setAsciiArmor( true );
 }
@@ -274,6 +276,12 @@ void SignEncryptFilesTask::setSigners( const std::vector<Key> & signers ) {
 void SignEncryptFilesTask::setRecipients( const std::vector<Key> & recipients ) {
     kleo_assert( !d->job );
     d->recipients = recipients;
+}
+
+
+void SignEncryptFilesTask::setOverwritePolicy( const shared_ptr<OverwritePolicy> & policy ) {
+    kleo_assert( !d->job );
+    d->m_overwritePolicy = policy;
 }
 
 void SignEncryptFilesTask::setSign( bool sign ) {
@@ -324,7 +332,7 @@ void SignEncryptFilesTask::doStart() {
         kleo_assert( !d->signers.empty() );
 
     d->input = Input::createFromFile( d->inputFileName );
-    d->output = Output::createFromFile( d->outputFileName, false );
+    d->output = Output::createFromFile( d->outputFileName, d->m_overwritePolicy );
 
     if ( d->encrypt )
         if ( d->sign ) {

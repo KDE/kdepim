@@ -69,7 +69,7 @@ class DecryptVerifyFilesController::Private {
 public:
 
     static QString heuristicBaseDirectory( const QStringList& fileNames );    
-    static shared_ptr<AbstractDecryptVerifyTask> taskFromOperationWidget( const DecryptVerifyOperationWidget * w, const shared_ptr<QFile> & file, const QDir & outDir );
+    static shared_ptr<AbstractDecryptVerifyTask> taskFromOperationWidget( const DecryptVerifyOperationWidget * w, const shared_ptr<QFile> & file, const QDir & outDir, const shared_ptr<OverwritePolicy> & overwritePolicy );
 
     explicit Private( DecryptVerifyFilesController* qq );
 
@@ -80,7 +80,7 @@ public:
     void schedule();
 
     std::vector< shared_ptr<QFile> > prepareWizardFromPassedFiles();
-    std::vector<shared_ptr<Task> > buildTasks( const std::vector<shared_ptr<QFile> > & );
+    std::vector<shared_ptr<Task> > buildTasks( const std::vector<shared_ptr<QFile> > &, const shared_ptr<OverwritePolicy> & );
 
     QString heuristicBaseDirectory() const;
 
@@ -101,7 +101,7 @@ public:
 };
 
 // static
-shared_ptr<AbstractDecryptVerifyTask> DecryptVerifyFilesController::Private::taskFromOperationWidget( const DecryptVerifyOperationWidget * w, const shared_ptr<QFile> & file, const QDir & outDir) {
+shared_ptr<AbstractDecryptVerifyTask> DecryptVerifyFilesController::Private::taskFromOperationWidget( const DecryptVerifyOperationWidget * w, const shared_ptr<QFile> & file, const QDir & outDir, const shared_ptr<OverwritePolicy> & overwritePolicy ) {
 
     kleo_assert( w );
 
@@ -133,7 +133,7 @@ shared_ptr<AbstractDecryptVerifyTask> DecryptVerifyFilesController::Private::tas
     {
         shared_ptr<DecryptVerifyTask> t( new DecryptVerifyTask );
         t->setInput( Input::createFromFile( file ) );
-        t->setOutput( Output::createFromFile( outDir.absoluteFilePath( outputFileName( QFileInfo( file->fileName() ).fileName() ) ), false ) );
+        t->setOutput( Output::createFromFile( outDir.absoluteFilePath( outputFileName( QFileInfo( file->fileName() ).fileName() ) ), overwritePolicy ) );
         task = t;
 
         kleo_assert( file->fileName() == w->inputFileName() );
@@ -153,7 +153,8 @@ DecryptVerifyFilesController::Private::Private( DecryptVerifyFilesController* qq
 void DecryptVerifyFilesController::Private::slotWizardOperationPrepared()
 {
     try {
-        std::vector<shared_ptr<Task> > tasks = buildTasks( m_filesAfterPreparation );
+        ensureWizardCreated();
+        std::vector<shared_ptr<Task> > tasks = buildTasks( m_filesAfterPreparation, shared_ptr<OverwritePolicy>( new OverwritePolicy( m_wizard ) ) );
         kleo_assert( m_runnableTasks.empty() );
         m_runnableTasks.swap( tasks );
 
@@ -168,7 +169,6 @@ void DecryptVerifyFilesController::Private::slotWizardOperationPrepared()
                          q, SLOT(slotTaskDone()) );
         }
         coll->setTasks( m_runnableTasks );
-        ensureWizardCreated();
         m_wizard->setTaskCollection( coll );
 
         QTimer::singleShot( 0, q, SLOT( schedule() ) );
@@ -306,7 +306,7 @@ std::vector<shared_ptr<QFile> > DecryptVerifyFilesController::Private::prepareWi
     return files;
 }
 
-std::vector< shared_ptr<Task> > DecryptVerifyFilesController::Private::buildTasks( const std::vector<shared_ptr<QFile> > &  files )
+std::vector< shared_ptr<Task> > DecryptVerifyFilesController::Private::buildTasks( const std::vector<shared_ptr<QFile> > & files, const shared_ptr<OverwritePolicy> & overwritePolicy )
 {
     const bool useOutDir = m_wizard->useOutputDirectory();
     const QFileInfo outDirInfo( m_wizard->outputDirectory() );
@@ -321,7 +321,7 @@ std::vector< shared_ptr<Task> > DecryptVerifyFilesController::Private::buildTask
         try {
             const QDir fileDir = QFileInfo( *files[i] ).absoluteDir();
             kleo_assert( fileDir.exists() );
-            tasks.push_back( taskFromOperationWidget( m_wizard->operationWidget( i ), files[i], useOutDir ? outDir : fileDir ) );
+            tasks.push_back( taskFromOperationWidget( m_wizard->operationWidget( i ), files[i], useOutDir ? outDir : fileDir, overwritePolicy ) );
         } catch ( const GpgME::Exception & e ) {
             tasks.push_back( Task::makeErrorTask( e.error().code(), QString::fromLocal8Bit( e.what() ), QFileInfo( *files[i] ).fileName() ) );
         }

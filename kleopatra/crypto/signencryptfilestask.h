@@ -50,6 +50,7 @@ namespace GpgME {
 }
 
 namespace Kleo {
+    class OverwritePolicy;
 namespace Crypto {
 
     class SignEncryptFilesTask : public Task {
@@ -68,6 +69,7 @@ namespace Crypto {
         void setRemoveInputFileOnSuccess( bool );
         void setDetachedSignature( bool detached );
 
+        void setOverwritePolicy( const boost::shared_ptr<OverwritePolicy> & policy );
         GpgME::Protocol protocol() const;
 
         /* reimp */ void cancel();

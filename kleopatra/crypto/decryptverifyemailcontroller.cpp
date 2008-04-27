@@ -30,9 +30,6 @@
     your version.
 */
 
-#include "decryptverifyemailcontroller.h"
-
-
 #include <config-kleopatra.h>
 
 #include "decryptverifyemailcontroller.h"
@@ -55,7 +52,6 @@
 #include <QTimer>
 
 #include <boost/shared_ptr.hpp>
-#include <boost/weak_ptr.hpp>
 
 #include <memory>
 #include <vector>

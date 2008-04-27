@@ -287,23 +287,26 @@ void SignEncryptFilesController::Private::slotWizardOperationPrepared() {
         std::vector< shared_ptr<SignEncryptFilesTask> > tasks;
         tasks.reserve( files.size() );
 
+        ensureWizardCreated();
+        const shared_ptr<OverwritePolicy> overwritePolicy( new OverwritePolicy( wizard ) );
+
         Q_FOREACH( const QFileInfo & fi, files ) {
             const std::vector< shared_ptr<SignEncryptFilesTask> > created = 
                 createSignEncryptTasksForFileInfo( fi, sign, encrypt, ascii, removeUnencrypted, pgpRecipients, pgpSigners, cmsRecipients, cmsSigners );
+            Q_FOREACH( const shared_ptr<SignEncryptFilesTask> & i, created )
+                i->setOverwritePolicy( overwritePolicy );
             tasks.insert( tasks.end(), created.begin(), created.end() );
         }
 
         kleo_assert( runnable.empty() );
 
         runnable.swap( tasks );
-
-        int i = 0;
         
-        Q_FOREACH( const shared_ptr<Task> task, runnable )
+        Q_FOREACH( const shared_ptr<Task> task, runnable ) {
             connect( task.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
                      q, SLOT(slotTaskDone()) );
+        }
 
-        ensureWizardCreated();
         shared_ptr<TaskCollection> coll( new TaskCollection );
         std::vector<shared_ptr<Task> > tmp;
         std::copy( runnable.begin(), runnable.end(), std::back_inserter( tmp ) );
