@@ -48,6 +48,7 @@ public:
     
 private:
     bool commitPage;
+    bool autoAdvance;
     QString title;
     QString subTitle;
     QString explanation;
@@ -56,7 +57,7 @@ private:
 
 
 WizardPage::Private::Private( WizardPage * qq )
-    : q( qq ), commitPage( false )
+    : q( qq ), commitPage( false ), autoAdvance( false )
 {
     
 }
@@ -78,6 +79,19 @@ bool WizardPage::isCommitPage() const
 void WizardPage::setCommitPage( bool commitPage )
 {
     d->commitPage = commitPage;
+}
+
+bool WizardPage::autoAdvance() const
+{
+    return d->autoAdvance;
+}
+
+void WizardPage::setAutoAdvance( bool enabled )
+{
+    if ( d->autoAdvance == enabled )
+        return;
+    d->autoAdvance = enabled;
+    emit autoAdvanceChanged();
 }
 
 QString WizardPage::title() const

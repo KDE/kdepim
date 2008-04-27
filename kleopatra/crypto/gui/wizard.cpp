@@ -47,6 +47,7 @@
 #include <QFrame>
 #include <QLabel>
 #include <QStackedWidget>
+#include <QTimer>
 #include <QVBoxLayout>
 #include <QWizard>
 
@@ -85,13 +86,16 @@ private:
     QLabel* subTitleLabel;
     QFrame* explanationFrame;
     QLabel* explanationLabel;
+    QTimer* nextPageTimer;
 };
 
 
 Wizard::Private::Private( Wizard * qq )
     : q( qq ), currentId( -1 ), stack( new QStackedWidget )
 {
-    const QWizard wiz;
+    nextPageTimer = new QTimer( q );
+    nextPageTimer->setInterval( 0 );
+    connect( nextPageTimer, SIGNAL(timeout()), q, SLOT(next()) );
     nextItem = KGuiItem( i18n( "&Next" ) );
     finishItem = KStandardGuiItem::ok();
     QVBoxLayout * const top = new QVBoxLayout( q );
@@ -130,7 +134,7 @@ Wizard::Private::Private( Wizard * qq )
     q->connect( cancelButton, SIGNAL( clicked() ), q, SLOT( reject() ) );
 
     backButton = new QPushButton;
-    backButton->setText( wiz.buttonText( QWizard::BackButton ) );
+    backButton->setText( i18n( "Back" ) );
     q->connect( backButton, SIGNAL( clicked() ), q, SLOT( back() ) );
     box->addButton( backButton, QDialogButtonBox::ActionRole );
 
@@ -167,7 +171,8 @@ void Wizard::Private::updateButtonStates()
     nextButton->setEnabled( canGoToNext );
     cancelButton->setEnabled( !isLast || !canGoToNext );
     backButton->setEnabled( q->canGoToPreviousPage() );
-        
+    if ( page && page->autoAdvance() && page->isComplete() )
+        nextPageTimer->start();
 }
 
 void Wizard::Private::updateHeader()
@@ -208,6 +213,7 @@ void Wizard::setPage( int id, WizardPage* widget )
     connect( widget, SIGNAL( titleChanged() ), this, SLOT( updateHeader() ) );
     connect( widget, SIGNAL( subTitleChanged() ), this, SLOT( updateHeader() ) );
     connect( widget, SIGNAL( explanationChanged() ), this, SLOT( updateHeader() ) );
+    connect( widget, SIGNAL( autoAdvanceChanged() ), this, SLOT( updateButtonStates() ) );
 }
 
 void Wizard::setPageOrder( const std::vector<int>& pageOrder )

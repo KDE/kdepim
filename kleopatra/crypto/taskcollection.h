@@ -62,11 +62,13 @@ namespace Crypto {
 
         int numberOfCompletedTasks() const;
         bool allTasksCompleted() const;
+        bool errorOccurred() const;
 
     Q_SIGNALS:
         void progress( const QString & msg, int processed, int total );
         void result( const boost::shared_ptr<const Kleo::Crypto::Task::Result> & result );
         void started( const boost::shared_ptr<Kleo::Crypto::Task> & task );
+        void done();
 
     private:
         class Private;

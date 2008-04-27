@@ -57,6 +57,9 @@ namespace Gui {
         bool isCommitPage() const;
         void setCommitPage( bool commitPage );
 
+        bool autoAdvance() const;
+        void setAutoAdvance( bool enabled );
+
         QString title() const;
         void setTitle( const QString& title );
 
@@ -74,6 +77,7 @@ namespace Gui {
         void explanationChanged();
         void titleChanged();
         void subTitleChanged();
+        void autoAdvanceChanged();
 
     protected:
         

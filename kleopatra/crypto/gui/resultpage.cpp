@@ -41,6 +41,7 @@
 
 #include <KLocalizedString>
 
+#include <QCheckBox>
 #include <QHBoxLayout>
 #include <QIcon>
 #include <QLabel>
@@ -62,8 +63,10 @@ public:
     void progress( const QString & msg, int progress, int total );
     void result( const shared_ptr<const Task::Result> & result );
     void started( const shared_ptr<Task> & result );
+    void allDone();
     void addResultWidget( ResultItemWidget* widget );
-    
+    void keepOpenWhenDone( bool keep );
+
     shared_ptr<TaskCollection> m_tasks;
     QProgressBar* m_progressBar;
     QLabel* m_progressLabel;
@@ -71,6 +74,7 @@ public:
     int m_lastErrorItemIndex;
     ScrollArea* m_scrollArea;
     ResultListWidget* m_resultList;
+    QCheckBox* m_keepOpenCB;
 };
 
 void ResultPage::Private::addResultWidget( ResultItemWidget* widget )
@@ -94,6 +98,11 @@ ResultPage::Private::Private( ResultPage* qq ) : q( qq ), m_lastErrorItemIndex( 
     m_resultList = new ResultListWidget;
     connect( m_resultList, SIGNAL(linkActivated(QString)), q, SIGNAL(linkActivated(QString)) );
     layout->addWidget( m_resultList );
+    m_keepOpenCB = new QCheckBox;
+    m_keepOpenCB->setText( i18n( "Keep open after operation completed" ) );
+    m_keepOpenCB->setChecked(true );
+    connect( m_keepOpenCB, SIGNAL(toggled(bool)), q, SLOT(keepOpenWhenDone(bool)) );
+    layout->addWidget( m_keepOpenCB );
 }
 
 void ResultPage::Private::progress( const QString & msg, int progress, int total )
@@ -105,15 +114,23 @@ void ResultPage::Private::progress( const QString & msg, int progress, int total
     m_progressBar->setValue( progress );
 }
 
+void ResultPage::Private::keepOpenWhenDone( bool )
+{
+}
+
+void ResultPage::Private::allDone()
+{
+    assert( m_tasks );
+    q->setAutoAdvance( !m_keepOpenCB->isChecked() && !m_tasks->errorOccurred() );
+    m_progressBar->setRange( 0, 100 );
+    m_progressBar->setValue( 100 );
+    m_progressLabel->setText( i18n( "All operations completed." ) );
+    m_tasks.reset();
+    emit q->completeChanged();
+}
+
 void ResultPage::Private::result( const shared_ptr<const Task::Result> & )
 {
-    if ( m_tasks->allTasksCompleted() ) {
-        m_progressBar->setRange( 0, 100 );
-        m_progressBar->setValue( 100 );
-        m_progressLabel->setText( i18n( "All operations completed." ) );
-        m_tasks.reset();
-        emit q->completeChanged();
-    }
 }
 
 void ResultPage::Private::started( const shared_ptr<Task> & task )
@@ -140,10 +157,13 @@ void ResultPage::setTaskCollection( const shared_ptr<TaskCollection> & coll )
     d->m_resultList->setTaskCollection( coll );
     connect( d->m_tasks.get(), SIGNAL(progress(QString,int,int)),
              this, SLOT(progress(QString,int,int)) );
+    connect( d->m_tasks.get(), SIGNAL(done()),
+             this, SLOT(allDone()) );
     connect( d->m_tasks.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
              this, SLOT(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)) );
     connect( d->m_tasks.get(), SIGNAL(started(boost::shared_ptr<Kleo::Crypto::Task>)),
              this, SLOT(started(boost::shared_ptr<Kleo::Crypto::Task>)) );
+    emit completeChanged();
 }
 
 bool ResultPage::isComplete() const

@@ -62,10 +62,11 @@ public:
     mutable int m_totalSize;
     mutable int m_processedSize;
     int m_nCompleted;
-    QString m_lastProgressMessage; 
+    QString m_lastProgressMessage;
+    bool m_errorOccurred;
 };
 
-TaskCollection::Private::Private( TaskCollection* qq ) : q( qq ), m_totalSize( 0 ), m_processedSize( 0 ), m_nCompleted( 0 )
+TaskCollection::Private::Private( TaskCollection* qq ) : q( qq ), m_totalSize( 0 ), m_processedSize( 0 ), m_nCompleted( 0 ), m_errorOccurred( false )
 {
 }
 
@@ -92,10 +93,14 @@ void TaskCollection::Private::taskProgress( const QString & msg, int, int )
 
 void TaskCollection::Private::taskResult( const shared_ptr<const Task::Result> & result )
 {
+    assert( result );
     ++m_nCompleted;
+    m_errorOccurred = m_errorOccurred || result->hasError();
     m_lastProgressMessage.clear();
     calculateAndEmitProgress();
     emit q->result( result );
+    if ( q->allTasksCompleted() )
+        emit q->done();
 }
 
 void TaskCollection::Private::taskStarted()
@@ -143,6 +148,11 @@ TaskCollection::~TaskCollection()
 bool TaskCollection::isEmpty() const
 {
     return d->m_tasks.empty();
+}
+
+bool TaskCollection::errorOccurred() const
+{
+    return d->m_errorOccurred;
 }
 
 shared_ptr<Task> TaskCollection::taskById( int id ) const
