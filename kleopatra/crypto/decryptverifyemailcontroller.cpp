@@ -92,7 +92,6 @@ public:
     bool m_silent;
     DecryptVerifyOperation m_operation;
     Protocol m_protocol;
-    bool m_errorDetected;
     VerificationMode m_verificationMode;
 
 };
@@ -102,7 +101,6 @@ DecryptVerifyEMailController::Private::Private( DecryptVerifyEMailController* qq
     m_silent( false ),
     m_operation( DecryptVerify ),
     m_protocol( UnknownProtocol ),
-    m_errorDetected( false ),
     m_verificationMode( Detached )
 {
     qRegisterMetaType<VerificationResult>();
@@ -332,7 +330,6 @@ void DecryptVerifyEMailController::cancel()
 {
     kDebug();
     try {
-        d->m_errorDetected = true;
         if ( d->m_wizard )
             d->m_wizard->close();
         d->cancelAllTasks();
