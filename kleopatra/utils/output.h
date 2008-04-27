@@ -52,7 +52,7 @@ namespace Kleo {
         virtual void finalize() = 0;
         virtual void cancel() = 0;
 
-        static boost::shared_ptr<Output> createFromFile( const QString & fileName, bool forceOverride );
+        static boost::shared_ptr<Output> createFromFile( const QString & fileName, bool allowOverwrite );
         static boost::shared_ptr<Output> createFromPipeDevice( assuan_fd_t fd, const QString & label );
         static boost::shared_ptr<Output> createFromClipboard();
     };
