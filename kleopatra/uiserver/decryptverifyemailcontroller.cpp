@@ -46,8 +46,6 @@
 #include <utils/output.h>
 #include <utils/kleo_assert.h>
 
-#include <uiserver/assuancommand.h>
-
 #include <kleo/cryptobackendfactory.h>
 
 #include <KDebug>
@@ -72,7 +70,7 @@ class DecryptVerifyEMailController::Private {
     DecryptVerifyEMailController* const q;
 public:
 
-    explicit Private( const shared_ptr<AssuanCommand> & cmd, DecryptVerifyEMailController* qq );
+    explicit Private( DecryptVerifyEMailController* qq );
 
     void slotWizardCanceled();
     void slotTaskDone( const shared_ptr<const DecryptVerifyResult> & );
@@ -95,7 +93,6 @@ public:
     std::vector<shared_ptr<const DecryptVerifyResult> > m_results;
     std::vector<shared_ptr<AbstractDecryptVerifyTask> > m_runnableTasks, m_completedTasks;
     shared_ptr<AbstractDecryptVerifyTask> m_runningTask;
-    weak_ptr<AssuanCommand> m_cmd;
     bool m_silent;
     DecryptVerifyOperation m_operation;
     Protocol m_protocol;
@@ -104,9 +101,8 @@ public:
 
 };
 
-DecryptVerifyEMailController::Private::Private( const shared_ptr<AssuanCommand> & cmd, DecryptVerifyEMailController* qq )
+DecryptVerifyEMailController::Private::Private( DecryptVerifyEMailController* qq )
     : q( qq ),
-    m_cmd( cmd ),
     m_silent( false ),
     m_operation( DecryptVerify ),
     m_protocol( UnknownProtocol ),
@@ -269,7 +265,11 @@ void DecryptVerifyEMailController::Private::ensureWizardVisible()
     q->bringToForeground( m_wizard );
 }
 
-DecryptVerifyEMailController::DecryptVerifyEMailController( const shared_ptr<AssuanCommand> & cmd, QObject* parent ) : Controller( parent ), d( new Private( cmd, this ) )
+DecryptVerifyEMailController::DecryptVerifyEMailController( QObject* parent ) : Controller( parent ), d( new Private( this ) )
+{
+}
+
+DecryptVerifyEMailController::DecryptVerifyEMailController( const shared_ptr<const ExecutionContext> & ctx, QObject* parent ) : Controller( ctx, parent ), d( new Private( this ) )
 {
 }
 

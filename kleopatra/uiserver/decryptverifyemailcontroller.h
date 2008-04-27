@@ -65,8 +65,9 @@ class DecryptVerifyEMailController : public Controller {
     Q_OBJECT
 public:
 
-    explicit DecryptVerifyEMailController( const boost::shared_ptr<AssuanCommand> & cmd, QObject * parent=0 );
-
+    explicit DecryptVerifyEMailController( QObject * parent=0 );
+    explicit DecryptVerifyEMailController( const boost::shared_ptr<const ExecutionContext> & cmd, QObject * parent=0 );
+ 
     ~DecryptVerifyEMailController();
     void setInputs( const std::vector<boost::shared_ptr<Input> > & inputs );
     void setSignedData( const std::vector<boost::shared_ptr<Input> > & data );
