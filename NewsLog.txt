@@ -1,3 +1,14 @@
+Monday, April 28th 2008
+
+Problems addressed
+-----------------------
+
+* kolab/issue2585 contacts of a LDAP resource folder should be seen in the mail address text completion of a composer
+* kolab/issue2443 kontact aborts sieve when imapd sends capabilities after starttls
+* kolab/issue2608 Calendar: counter proposal is not sent to the organizer
+* KDE bug 126025: Replying to address with umlaut and comma creates two addressees
+
+
 Friday, April 18th 2008
 
 Problems addressed
