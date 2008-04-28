@@ -121,8 +121,8 @@ int DecryptVerifyCommandEMailBase::doStart() {
                       d.get(), SLOT(slotDone()), Qt::QueuedConnection );
     QObject::connect( d->controller.get(), SIGNAL(error(int,QString)),
                       d.get(), SLOT(slotError(int,QString)), Qt::QueuedConnection );
-    QObject::connect( d->controller.get(), SIGNAL(decryptVerifyResult( boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult>)), 
-                      d.get(), SLOT(decryptVerifyResult( boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult>)), Qt::QueuedConnection );
+    QObject::connect( d->controller.get(), SIGNAL(verificationResult(GpgME::VerificationResult)), 
+                      d.get(), SLOT(verificationResult(GpgME::VerificationResult)), Qt::QueuedConnection );
 
     d->controller->start();
 
