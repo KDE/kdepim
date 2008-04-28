@@ -88,7 +88,7 @@ QString RefreshX509CertsCommand::crashExitMessage( const QStringList & args ) co
 
 QString RefreshX509CertsCommand::errorExitMessage( const QStringList & args ) const {
     return i18n( "An error occurred while trying to refresh X.509 certificates. "
-                 "The output from % 1 was:\n%2", args[0], errorString() );
+                 "The output from %1 was:\n%2", args[0], errorString() );
 }
 
 QString RefreshX509CertsCommand::successMessage( const QStringList & ) const {

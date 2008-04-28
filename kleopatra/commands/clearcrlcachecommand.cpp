@@ -74,7 +74,7 @@ QString ClearCrlCacheCommand::crashExitMessage( const QStringList & args ) const
 
 QString ClearCrlCacheCommand::errorExitMessage( const QStringList & args ) const {
     return i18n( "An error occurred while trying to clear the CRL cache. "
-                 "The output from % 1 was:\n%2", args[0], errorString() );
+                 "The output from %1 was:\n%2", args[0], errorString() );
 }
 
 QString ClearCrlCacheCommand::successMessage( const QStringList & ) const {
