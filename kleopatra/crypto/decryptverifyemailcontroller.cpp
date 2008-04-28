@@ -277,9 +277,8 @@ DecryptVerifyEMailController::~DecryptVerifyEMailController() { kDebug(); }
 void DecryptVerifyEMailController::start()
 {
     d->m_runnableTasks = d->buildTasks();
-    int i = 0;
 
-    shared_ptr<TaskCollection> coll( new TaskCollection );
+    const shared_ptr<TaskCollection> coll( new TaskCollection );
     std::vector<shared_ptr<Task> > tsks;
     Q_FOREACH( const shared_ptr<Task> & i, d->m_runnableTasks ) { 
         connect( i.get(), SIGNAL(decryptVerifyResult(boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult>)),
