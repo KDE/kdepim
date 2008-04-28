@@ -78,12 +78,12 @@ using namespace boost;
 
 namespace {
 
-QString strikeOut( const QString & str, bool strike ) {
+static QString strikeOut( const QString & str, bool strike ) {
 
     return QString( strike ? "<s>%1</s>" : "%1" ).arg( Qt::escape( str ) );
 }
 
-QString formatInputOutputLabel( const QString & input, const QString & output, bool inputDeleted, bool outputDeleted ) {
+static QString formatInputOutputLabel( const QString & input, const QString & output, bool inputDeleted, bool outputDeleted ) {
     if ( output.isEmpty() )
         return strikeOut( input, inputDeleted );
     return i18nc( "Input file --> Output file (rarr is arrow", "%1 &rarr; %2", 
@@ -125,7 +125,7 @@ static bool IsErrorOrCanceled( const Result & res )
     return IsErrorOrCanceled( res.error() );
 }
 
-QString renderKey( const Key & key ) {
+static QString renderKey( const Key & key ) {
     if ( key.isNull() )
         return i18n( "Unknown key" );
     return QString::fromLatin1( "<a href=\"key:%1\">%2</a>" ).arg( key.primaryFingerprint(), Formatting::prettyName( key ) );
@@ -133,15 +133,15 @@ QString renderKey( const Key & key ) {
 
 namespace {
 
-    bool IsBad( const Signature & sig ) {
+    static bool IsBad( const Signature & sig ) {
         return sig.summary() & Signature::Red;
     }
-    bool IsValid( const Signature & sig ) {
+    static bool IsValid( const Signature & sig ) {
         return sig.summary() & Signature::Valid;
     }
 }
 
-Task::Result::VisualCode codeForVerificationResult( const VerificationResult & res )
+static Task::Result::VisualCode codeForVerificationResult( const VerificationResult & res )
 {
     if ( res.isNull() )
         return Task::Result::NeutralSuccess;
@@ -157,7 +157,7 @@ Task::Result::VisualCode codeForVerificationResult( const VerificationResult & r
     return Task::Result::Warning;
 }
 
-QString formatVerificationResultOverview( const VerificationResult & res ) {
+static QString formatVerificationResultOverview( const VerificationResult & res ) {
     if ( res.isNull() )
         return QString();
 
@@ -194,7 +194,7 @@ static QString formatDecryptionResultOverview( const DecryptionResult & result )
 }
 
 
-QString formatSignature( const Signature & sig, const Key & key ) {
+static QString formatSignature( const Signature & sig, const Key & key ) {
     if ( sig.isNull() )
         return QString();
 
