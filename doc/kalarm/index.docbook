@@ -4184,6 +4184,9 @@ holds your &kalarm; preferences.</para>
 <para>
 <filename>$KDEHOME/share/config/kresources/alarms/stdrc</filename>
 holds your alarm resource configuration.</para>
+
+<para>($<envar>KDEHOME</envar> is usually
+<filename class="directory">~/.kde</filename> or similar.)</para>
 </answer>
 </qandaentry>
 
@@ -4256,11 +4259,26 @@ conformance with RFC2445. In the VEVENT component:
 
 <qandaentry>
 <question>
-<para>What is the application name of &kalarm;?</para>
+<para>What is the program <application>kalarmautostart</application>?</para>
 </question>
 <answer>
-<para>&kalarm;'s application name is
-<application>kalarm</application>.</para>
+<para><application>kalarmautostart</application> is a little helper
+program whose function is to autostart &kalarm; at login.</para>
+
+<para>&kalarm; is usually restored by the session manager at login
+(to redisplay its windows in the same state as they were when you
+logged off). But if it was not running when you logged off, it would
+not be started by the session manager and therefore needs to be
+autostarted. The problem is that when an application is both session
+managed and autostarted, there is no guarantee as to which will occur
+first. If autostart gets in first, it will prevent the session manager
+from restoring the application's state.</para>
+
+<para>To avoid this problem,
+<application>kalarmautostart</application> is autostarted at login
+instead of &kalarm;. All it does is wait for a short time (to ensure
+that the session manager has time to do its job) before starting
+&kalarm;, at which point it terminates.</para>
 </answer>
 </qandaentry>
 
