@@ -113,7 +113,7 @@ void Task::setAsciiArmor( bool armor )
 
 bool Task::asciiArmor() const
 {
-    d->m_asciiArmor;
+    return d->m_asciiArmor;
 }
 
 shared_ptr<Task> Task::makeErrorTask( int code, const QString & details, const QString & label ) {
