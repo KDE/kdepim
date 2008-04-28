@@ -294,14 +294,29 @@ void DecryptVerifyEMailController::start()
     QTimer::singleShot( 0, this, SLOT(schedule()) );
 }
 
+void DecryptVerifyEMailController::setInput( const shared_ptr<Input> & input )
+{
+    d->m_inputs.resize( 1, input );
+}
+
 void DecryptVerifyEMailController::setInputs( const std::vector<shared_ptr<Input> > & inputs )
 {
     d->m_inputs = inputs;
 }
 
+void DecryptVerifyEMailController::setSignedData( const shared_ptr<Input> & data )
+{
+    d->m_signedDatas.resize( 1, data );
+}
+
 void DecryptVerifyEMailController::setSignedData( const std::vector<shared_ptr<Input> > & data )
 {
     d->m_signedDatas = data;
+}
+
+void DecryptVerifyEMailController::setOutput( const shared_ptr<Output> & output )
+{
+    d->m_outputs.resize( 1, output );
 }
 
 void DecryptVerifyEMailController::setOutputs( const std::vector<shared_ptr<Output> > & outputs )

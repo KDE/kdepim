@@ -68,9 +68,16 @@ public:
     explicit DecryptVerifyEMailController( const boost::shared_ptr<const ExecutionContext> & cmd, QObject * parent=0 );
  
     ~DecryptVerifyEMailController();
+
+    void setInput( const boost::shared_ptr<Input> & input );
     void setInputs( const std::vector<boost::shared_ptr<Input> > & inputs );
+
+    void setSignedData( const boost::shared_ptr<Input> & data );
     void setSignedData( const std::vector<boost::shared_ptr<Input> > & data );
+
+    void setOutput( const boost::shared_ptr<Output> & output );
     void setOutputs( const std::vector<boost::shared_ptr<Output> > & outputs );
+
     void setWizardShown( bool shown );
 
     void setOperation( DecryptVerifyOperation operation );
