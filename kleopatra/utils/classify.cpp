@@ -101,10 +101,11 @@ namespace {
         char content[28];
         unsigned int classification;
     } content_classifications[] = {
-        { "MESSAGE",           OpaqueSignature|CipherText|ClearsignedMessage },
+        { "MESSAGE",           OpaqueSignature|CipherText },
         { "PRIVATE KEY BLOCK", ExportedPSM },
         { "PUBLIC KEY BLOCK",  Certificate },
         { "SIGNATURE",         DetachedSignature },
+        { "SIGNED MESSAGE",    ClearsignedMessage },
     };
 
     template <template <typename U> class Op>
