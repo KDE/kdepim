@@ -63,6 +63,7 @@ public:
     void result( const shared_ptr<const Task::Result> & result );
     void started( const shared_ptr<Task> & task );
     void detailsToggled( bool );
+    void allTasksDone();
 
     void addResultWidget( ResultItemWidget* widget );
     void setupSingle();
@@ -150,9 +151,16 @@ void ResultListWidget::Private::addResultWidget( ResultItemWidget* widget )
         blay.insertWidget( widget->hasErrorResult() ? m_lastErrorItemIndex++ : ( blay.count() - 1 ), widget );
     } else { // single task
         widget->showCloseButton( m_standaloneMode );
-        m_layout->insertWidget( m_layout->count() - 1, widget );
+        m_layout->insertWidget( m_layout->count() - 1, widget, 1 );
     }
+    widget->show();
     resizeIfStandalone();
+}
+
+void ResultListWidget::Private::allTasksDone() {
+    m_progressLabel->setVisible( false );
+    resizeIfStandalone();
+    emit q->completeChanged();
 }
 
 void ResultListWidget::Private::result( const shared_ptr<const Task::Result> & result )
@@ -163,12 +171,7 @@ void ResultListWidget::Private::result( const shared_ptr<const Task::Result> & r
     q->connect( wid, SIGNAL(detailsToggled(bool)), q, SLOT(detailsToggled(bool)) );
     q->connect( wid, SIGNAL(linkActivated(QString)), q, SIGNAL(linkActivated(QString)) );
     q->connect( wid, SIGNAL(closeButtonClicked()), q, SLOT(close()) );
-
     addResultWidget( wid );
-    if ( m_tasks->allTasksCompleted() ) {
-        m_progressLabel->setVisible( false );
-        emit q->completeChanged();
-    }
 }
 
 bool ResultListWidget::isComplete() const
@@ -185,6 +188,7 @@ void ResultListWidget::setTaskCollection( const shared_ptr<TaskCollection> & col
              this, SLOT(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)) );
     connect( d->m_tasks.get(), SIGNAL(started(boost::shared_ptr<Kleo::Crypto::Task>)),
              this, SLOT(started(boost::shared_ptr<Kleo::Crypto::Task>)) );
+    connect( d->m_tasks.get(), SIGNAL(done()), this, SLOT(allTasksDone()) );
     if ( coll->size() == 1 )
         d->setupSingle();
     else
