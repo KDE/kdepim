@@ -61,19 +61,20 @@ namespace Kleo {
             // type:
             DetachedSignature  = 0x010,
             OpaqueSignature    = 0x020,
+            ClearsignedMessage = 0x040,
 
-            AnySignature       = DetachedSignature|OpaqueSignature,
+            AnySignature       = DetachedSignature|OpaqueSignature|ClearsignedMessage,
 
-            CipherText         = 0x040,
+            CipherText         = 0x080,
 
-            AnyMessageType     = DetachedSignature|OpaqueSignature|CipherText,
+            AnyMessageType     = AnySignature|CipherText,
 
-            Certificate        = 0x080,
-            ExportedPSM        = 0x100,
+            Certificate        = 0x100,
+            ExportedPSM        = 0x200,
 
             AnyCertStoreType   = Certificate|ExportedPSM,
 
-            CertificateRequest = 0x200,
+            CertificateRequest = 0x400,
 
             AnyType            = AnyMessageType|AnyCertStoreType|CertificateRequest,
             TypeMask           = AnyType
@@ -112,6 +113,7 @@ namespace Kleo {
     make_convenience( DetachedSignature, TypeMask )
     make_convenience( OpaqueSignature,   TypeMask )
     make_convenience( CipherText,        TypeMask )
+    make_convenience( AnyMessageType,    TypeMask )
 #undef make_convenience
 
     inline GpgME::Protocol findProtocol( const unsigned int classifcation ) {

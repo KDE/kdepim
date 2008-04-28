@@ -101,7 +101,7 @@ namespace {
         char content[28];
         unsigned int classification;
     } content_classifications[] = {
-        { "MESSAGE",           OpaqueSignature|CipherText },
+        { "MESSAGE",           OpaqueSignature|CipherText|ClearsignedMessage },
         { "PRIVATE KEY BLOCK", ExportedPSM },
         { "PUBLIC KEY BLOCK",  Certificate },
         { "SIGNATURE",         DetachedSignature },
