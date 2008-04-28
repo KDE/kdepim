@@ -37,7 +37,7 @@
 #include "ui_appearanceconfigwidget.h"
 
 
-#include <kleopatra/kleopatraprefs.h>
+#include "kleopatraprefs.h"
 
 #include "libkleo/kleo/cryptobackendfactory.h"
 #include "libkleo/kleo/keyfiltermanager.h"
