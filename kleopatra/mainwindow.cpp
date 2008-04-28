@@ -353,7 +353,7 @@ void MainWindow::Private::setupActions() {
         { "file_sign_encrypt_files", i18n("Sign/Encrypt Files..."), QString(),
           "document-encrypt" /*"file-encrypt-sign"*/, q, SLOT(signEncryptFiles()), QString(), false, true },
         // View menu
-        { "view_redisplay", "Redisplay", QString(),
+        { "view_redisplay", i18n("Redisplay"), QString(),
           "view-refresh", q, SLOT(reloadCertificates()), "F5", false, true },
         { "view_stop_operations", i18n( "Stop Operation" ), QString(),
           "process-stop", &controller, SLOT(cancelCommands()), "Escape", false, false },
