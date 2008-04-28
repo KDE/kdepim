@@ -528,17 +528,17 @@ void AppearanceConfigWidget::Private::slotStrikeOutToggled( bool on ) {
     emit q->changed();
 }
 
-void AppearanceConfigWidget::Private::slotTooltipValidityChanged( bool on )
+void AppearanceConfigWidget::Private::slotTooltipValidityChanged( bool )
 {
     emit q->changed();
 }
 
-void AppearanceConfigWidget::Private::slotTooltipOwnerChanged( bool on )
+void AppearanceConfigWidget::Private::slotTooltipOwnerChanged( bool )
 {
     emit q->changed();
 }
 
-void AppearanceConfigWidget::Private::slotTooltipDetailsChanged( bool on )
+void AppearanceConfigWidget::Private::slotTooltipDetailsChanged( bool )
 {
     emit q->changed();
 }
