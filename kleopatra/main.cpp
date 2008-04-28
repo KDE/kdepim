@@ -38,7 +38,7 @@
 # include "certmanager.h"
 #else
 # include "mainwindow.h"
-# include <commands/refreshkeyscommand.h>
+# include <commands/reloadkeyscommand.h>
 #endif
 
 #include "libkleo/kleo/cryptobackendfactory.h"
@@ -200,7 +200,7 @@ static void setupLogging()
 static void fillKeyCache( KSplashScreen * splash, Kleo::UiServer * server ) {
 
   QEventLoop loop;
-  Kleo::RefreshKeysCommand * cmd = new Kleo::RefreshKeysCommand( 0 );
+  Kleo::ReloadKeysCommand * cmd = new Kleo::ReloadKeysCommand( 0 );
   QObject::connect( cmd, SIGNAL(finished()), &loop, SLOT(quit()) );
 #ifdef HAVE_USABLE_ASSUAN
   QObject::connect( cmd, SIGNAL(finished()), server, SLOT(enableCryptoCommands()) );

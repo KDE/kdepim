@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    refreshkeyscommand.h
+    reloadkeyscommand.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -31,19 +31,19 @@
 */
 
 
-#ifndef __KLEOPATRA_REFRESHKEYSCOMMAND_H__
-#define __KLEOPATRA_REFRESHKEYSCOMMAND_H__
+#ifndef __KLEOPATRA_RELOADKEYSCOMMAND_H__
+#define __KLEOPATRA_RELOADKEYSCOMMAND_H__
 
 #include <commands/command.h>
 
 namespace  Kleo {
 
-    class RefreshKeysCommand : public Command {
+    class ReloadKeysCommand : public Command {
         Q_OBJECT
     public:
-        explicit RefreshKeysCommand( KeyListController* parent );
-        RefreshKeysCommand( QAbstractItemView * view, KeyListController* parent );
-        ~RefreshKeysCommand();        
+        explicit ReloadKeysCommand( KeyListController* parent );
+        ReloadKeysCommand( QAbstractItemView * view, KeyListController* parent );
+        ~ReloadKeysCommand();        
 
     private:
         void doStart();
@@ -58,4 +58,4 @@ namespace  Kleo {
     };
 }
 
-#endif // __KLEOPATRA_REFRESHKEYSCOMMAND_H__
+#endif // __KLEOPATRA_RELOADKEYSCOMMAND_H__

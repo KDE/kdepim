@@ -103,8 +103,8 @@ namespace Dialogs {
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void refresh() )
-        Q_PRIVATE_SLOT( d, void slotRefreshed() )
+        Q_PRIVATE_SLOT( d, void reload() )
+        Q_PRIVATE_SLOT( d, void slotReloaded() )
         Q_PRIVATE_SLOT( d, void slotSelectionChanged() )
         Q_PRIVATE_SLOT( d, void slotDoubleClicked( QModelIndex ) )
         Q_PRIVATE_SLOT( d, void slotCurrentViewChanged( QAbstractItemView * ) )

@@ -38,7 +38,7 @@
 #include <models/keylistmodel.h>
 #include <models/keycache.h>
 
-#include <commands/refreshkeyscommand.h>
+#include <commands/reloadkeyscommand.h>
 
 #include <gpgme++/key.h>
 
@@ -72,8 +72,8 @@ public:
 
 
 private:
-    void refresh();
-    void slotRefreshed();
+    void reload();
+    void slotReloaded();
     void slotCurrentViewChanged( QAbstractItemView * newView );
     void slotSelectionChanged();
     void slotDoubleClicked( const QModelIndex & idx );
@@ -123,11 +123,11 @@ private:
             QPushButton * const ok = buttonBox.addButton( QDialogButtonBox::Ok );
             ok->setEnabled( false );
             QPushButton * const cancel = buttonBox.addButton( QDialogButtonBox::Close );
-            QPushButton * const refresh = buttonBox.addButton( i18n("&Refresh Certificates"), QDialogButtonBox::ActionRole );
+            QPushButton * const reload = buttonBox.addButton( i18n("&Reload Certificates"), QDialogButtonBox::ActionRole );
 
             connect( &buttonBox, SIGNAL(accepted()), q, SLOT(accept()) );
             connect( &buttonBox, SIGNAL(rejected()), q, SLOT(reject()) );
-            connect( refresh,    SIGNAL(clicked()),  q, SLOT(refresh()) );
+            connect( reload,     SIGNAL(clicked()),  q, SLOT(reload()) );
         }
     } ui;
 };
@@ -155,7 +155,7 @@ CertificateSelectionDialog::CertificateSelectionDialog( QWidget * parent, Qt::Wi
     d->ui.tabWidget.loadViews( config.data() );
     const KConfigGroup geometry( config, "Geometry" );
     resize( geometry.readEntry( "size", size() ) );
-    d->slotRefreshed();
+    d->slotReloaded();
 }
 
 CertificateSelectionDialog::~CertificateSelectionDialog() {}
@@ -178,7 +178,7 @@ void CertificateSelectionDialog::setOptions( Options options ) {
 
     d->ui.tabWidget.setMultiSelection( options & MultiSelection );
 
-    d->slotRefreshed();
+    d->slotReloaded();
 }
 
 CertificateSelectionDialog::Options CertificateSelectionDialog::options() const {
@@ -235,13 +235,13 @@ void CertificateSelectionDialog::hideEvent( QHideEvent * e ) {
     QDialog::hideEvent( e );
 }
 
-void CertificateSelectionDialog::Private::refresh() {
-    Command * const cmd = new RefreshKeysCommand( 0 );
-    connect( cmd, SIGNAL(finsihed()), q, SLOT(slotRefreshed()) );
+void CertificateSelectionDialog::Private::reload() {
+    Command * const cmd = new ReloadKeysCommand( 0 );
+    connect( cmd, SIGNAL(finsihed()), q, SLOT(slotReloaded()) );
     cmd->start();
 }
 
-void CertificateSelectionDialog::Private::slotRefreshed() {
+void CertificateSelectionDialog::Private::slotReloaded() {
     q->setEnabled( true );
     std::vector<Key> keys = (options & SecretKeys) ? KeyCache::instance()->secretKeys() : KeyCache::instance()->keys() ;
     filterAllowedKeys( keys );

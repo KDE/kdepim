@@ -46,7 +46,7 @@
 #include "commands/exportcertificatecommand.h"
 #include "commands/importcertificatefromfilecommand.h"
 #include "commands/lookupcertificatescommand.h"
-#include "commands/refreshkeyscommand.h"
+#include "commands/reloadkeyscommand.h"
 #include "commands/detailscommand.h"
 #include "commands/deletecertificatescommand.h"
 #include "commands/decryptverifyfilescommand.h"
@@ -182,8 +182,8 @@ public:
     void certificateDetails() {
         createAndStart<DetailsCommand>();
     }
-    void refreshCertificates() {
-        createAndStart<RefreshKeysCommand>();
+    void reloadCertificates() {
+        createAndStart<ReloadKeysCommand>();
     }
     
     void deleteCertificates() {
@@ -354,7 +354,7 @@ void MainWindow::Private::setupActions() {
           "document-encrypt" /*"file-encrypt-sign"*/, q, SLOT(signEncryptFiles()), QString(), false, true },
         // View menu
         { "view_redisplay", "Redisplay", QString(),
-          "view-refresh", q, SLOT(refreshCertificates()), "F5", false, true },
+          "view-refresh", q, SLOT(reloadCertificates()), "F5", false, true },
         { "view_stop_operations", i18n( "Stop Operation" ), QString(),
           "process-stop", &controller, SLOT(cancelCommands()), "Escape", false, false },
         { "view_certificate_details", i18n( "Certificate Details" ), QString(),
@@ -397,7 +397,7 @@ void MainWindow::Private::setupActions() {
 
     // ### somehow make this better...
     controller.registerActionForCommand<DetailsCommand>(            coll->action( "view_certificate_details" ) );
-    controller.registerActionForCommand<RefreshKeysCommand>(        coll->action( "view_redisplay" ) );
+    controller.registerActionForCommand<ReloadKeysCommand>(         coll->action( "view_redisplay" ) );
     controller.registerActionForCommand<DeleteCertificatesCommand>( coll->action( "certificates_delete" ) );
     controller.registerActionForCommand<ChangeExpiryCommand>(       coll->action( "certificates_change_expiry" ) );
     controller.registerActionForCommand<SignEncryptFilesCommand>(   coll->action( "file_sign_encrypt_files" ) );

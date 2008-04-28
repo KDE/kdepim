@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    refreshkeyscommand.cpp
+    reloadkeyscommand.cpp
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2007 Klarälvdalens Datakonsult AB
@@ -32,7 +32,7 @@
 
 #include <config-kleopatra.h>
 
-#include "refreshkeyscommand.h"
+#include "reloadkeyscommand.h"
 #include "command_p.h"
 
 #include <models/keycache.h>
@@ -47,41 +47,41 @@ using namespace Kleo;
 using namespace boost;
 using namespace GpgME;
 
-class RefreshKeysCommand::Private : public Command::Private {
-    friend class ::Kleo::RefreshKeysCommand;
+class ReloadKeysCommand::Private : public Command::Private {
+    friend class ::Kleo::ReloadKeysCommand;
 public:
-    Private( RefreshKeysCommand * qq, KeyListController* controller );
+    Private( ReloadKeysCommand * qq, KeyListController* controller );
     ~Private();
 
     void keyListingDone( const KeyListResult & result );
 };
 
-RefreshKeysCommand::Private * RefreshKeysCommand::d_func() { return static_cast<Private*>( d.get() ); }
-const RefreshKeysCommand::Private * RefreshKeysCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
+ReloadKeysCommand::Private * ReloadKeysCommand::d_func() { return static_cast<Private*>( d.get() ); }
+const ReloadKeysCommand::Private * ReloadKeysCommand::d_func() const { return static_cast<const Private*>( d.get() ); }
 
 
-RefreshKeysCommand::RefreshKeysCommand( KeyListController * p )
+ReloadKeysCommand::ReloadKeysCommand( KeyListController * p )
     : Command( new Private( this, p ) )
 {
 
 }
 
-RefreshKeysCommand::RefreshKeysCommand( QAbstractItemView * v, KeyListController * p )
+ReloadKeysCommand::ReloadKeysCommand( QAbstractItemView * v, KeyListController * p )
     : Command( v, new Private( this, p ) )
 {
 
 }
 
-RefreshKeysCommand::~RefreshKeysCommand() {}
+ReloadKeysCommand::~ReloadKeysCommand() {}
 
-RefreshKeysCommand::Private::Private( RefreshKeysCommand * qq, KeyListController * controller )
+ReloadKeysCommand::Private::Private( ReloadKeysCommand * qq, KeyListController * controller )
     : Command::Private( qq, controller )
 {
 }
 
-RefreshKeysCommand::Private::~Private() {}
+ReloadKeysCommand::Private::~Private() {}
 
-void RefreshKeysCommand::Private::keyListingDone( const KeyListResult & result ) {
+void ReloadKeysCommand::Private::keyListingDone( const KeyListResult & result ) {
     if ( result.error() ) // ### Show error message here? 
         kError() << "Error occurred during key listing: " << result.error().asString();
     finished();
@@ -89,16 +89,16 @@ void RefreshKeysCommand::Private::keyListingDone( const KeyListResult & result )
 
 #define d d_func()
 
-void RefreshKeysCommand::doStart() {
+void ReloadKeysCommand::doStart() {
     connect( KeyCache::mutableInstance().get(), SIGNAL(keyListingDone(GpgME::KeyListResult)),
              this, SLOT(keyListingDone(GpgME::KeyListResult)) );
     KeyCache::mutableInstance()->startKeyListing();
 }
 
-void RefreshKeysCommand::doCancel() {
+void ReloadKeysCommand::doCancel() {
     KeyCache::mutableInstance()->cancelKeyListing();
 }
 
 #undef d
 
-#include "moc_refreshkeyscommand.cpp"
+#include "moc_reloadkeyscommand.cpp"
