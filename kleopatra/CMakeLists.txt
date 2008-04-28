@@ -145,6 +145,7 @@ set( _kleopatra_common_SRCS
   crypto/signencryptfilescontroller.cpp
 
   commands/command.cpp
+  commands/gnupgprocesscommand.cpp
   commands/detailscommand.cpp
   commands/exportcertificatecommand.cpp
   commands/importcertificatescommand.cpp
