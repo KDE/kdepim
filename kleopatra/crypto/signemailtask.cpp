@@ -104,6 +104,7 @@ private:
     shared_ptr<Output> output;
     std::vector<Key> signers;
     bool detached;
+    bool clearsign;
 
     QString micAlg;
 
@@ -116,6 +117,7 @@ SignEMailTask::Private::Private( SignEMailTask * qq )
       output(),
       signers(),
       detached( false ),
+      clearsign( false ),
       micAlg(),
       job( 0 )
 {
@@ -151,6 +153,13 @@ void SignEMailTask::setSigners( const std::vector<Key> & signers ) {
 void SignEMailTask::setDetachedSignature( bool detached ) {
     kleo_assert( !d->job );
     d->detached = detached;
+    d->clearsign = false;
+}
+
+void SignEMailTask::setClearsign( bool clear ) {
+    kleo_assert( !d->job );
+    d->clearsign = clear;
+    d->detached = false;
 }
 
 Protocol SignEMailTask::protocol() const {
@@ -181,7 +190,7 @@ void SignEMailTask::doStart() {
 
     job->start( d->signers,
                 d->input->ioDevice(), d->output->ioDevice(),
-                d->detached ? GpgME::Detached : GpgME::NormalSignatureMode );
+                d->clearsign ? GpgME::Clearsigned : d->detached ? GpgME::Detached : GpgME::NormalSignatureMode );
 
     d->job = job.release();
 }

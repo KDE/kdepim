@@ -64,7 +64,9 @@ namespace Crypto {
         void setInput( const boost::shared_ptr<Input> & input );
         void setOutput( const boost::shared_ptr<Output> & output );
         void setSigners( const std::vector<GpgME::Key> & recipients );
+
         void setDetachedSignature( bool detached );
+        void setClearsign( bool clear );
 
         GpgME::Protocol protocol() const;
 

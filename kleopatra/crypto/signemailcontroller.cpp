@@ -201,10 +201,13 @@ void SignEMailController::setInputsAndOutputs( const std::vector< shared_ptr<Inp
         const shared_ptr<SignEMailTask> task( new SignEMailTask );
         task->setInput( inputs[i] );
         task->setOutput( outputs[i] );
-        if ( d->mode == ClipboardMode )
-            task->setAsciiArmor( true );
         task->setSigners( keys );
         task->setDetachedSignature( d->detached );
+        if ( d->mode == ClipboardMode )
+            if ( d->protocol == OpenPGP )
+                task->setClearsign( true );
+            else
+                task->setAsciiArmor( true );
 
         tasks.push_back( task );
     }
