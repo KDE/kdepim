@@ -21,6 +21,8 @@
 **
 ****************************************************************************/
 
+#include <config-kleopatra.h>
+
 #include <QtGui/QtGui>
 
 #include "modeltest.h"

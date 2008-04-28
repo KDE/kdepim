@@ -11,6 +11,8 @@
  * exact licensing terms.
  */
 
+#include <config-kleopatra.h>
+
 #include "kleo_kicondialog.h"
 
 #include <kbuttongroup.h>

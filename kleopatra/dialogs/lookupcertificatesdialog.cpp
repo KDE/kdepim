@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "lookupcertificatesdialog.h"
 
 #include "ui_lookupcertificatesdialog.h"

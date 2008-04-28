@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "expirydialog.h"
 
 #include "ui_expirydialog.h"

@@ -30,6 +30,8 @@
     your version.
 */
 
+#include <config-kleopatra.h>
+
 #include "certificateselectiondialog.h"
 
 #include <view/searchbar.h>
