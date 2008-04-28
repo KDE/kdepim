@@ -36,8 +36,7 @@
 
 #include <commands/encryptclipboardcommand.h>
 #include <commands/signclipboardcommand.h>
-//#include <commands/decryptclipboardcommand.h>
-//#include <commands/verifyclipboardcommand.h>
+#include <commands/decryptverifyclipboardcommand.h>
 
 #include <KIcon>
 #include <KLocale>
@@ -97,8 +96,7 @@ private:
         encryptClipboardAction.setEnabled( EncryptClipboardCommand::canEncryptCurrentClipboard() );
         openPGPSignClipboardAction.setEnabled( SignClipboardCommand::canSignCurrentClipboard() );
         smimeSignClipboardAction.setEnabled( SignClipboardCommand::canSignCurrentClipboard() );
-        decryptClipboardAction.setEnabled( false /*DecryptClipboardCommand::canDecryptCurrentClipboard()*/ );
-        verifyClipboardAction.setEnabled( false /*VerifyClipboardCommand::canVerifyCurrentClipboard()*/ );
+        decryptVerifyClipboardAction.setEnabled( DecryptVerifyClipboardCommand::canDecryptVerifyCurrentClipboard() );
     }
 
     void slotEncryptClipboard() {
@@ -113,12 +111,8 @@ private:
         ( new SignClipboardCommand( GpgME::CMS, 0 ) )->start();
     }
 
-    void slotDecryptClipboard() {
-        //( new DecryptClipboardCommand( 0 ) )->start();
-    }
-
-    void slotVerifyClipboard() {
-        //( new VerifyClipboardCommand( 0 ) )->start();
+    void slotDecryptVerifyClipboard() {
+        ( new DecryptVerifyClipboardCommand( 0 ) )->start();
     }
 
 private:
@@ -130,8 +124,7 @@ private:
     QAction encryptClipboardAction;
     QAction smimeSignClipboardAction;
     QAction openPGPSignClipboardAction;
-    QAction decryptClipboardAction;
-    QAction verifyClipboardAction;
+    QAction decryptVerifyClipboardAction;
 
     QPointer<KAboutApplicationDialog> aboutDialog;
 
@@ -149,8 +142,7 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
       encryptClipboardAction( i18n("Encrypt..."), q ),
       smimeSignClipboardAction( i18n("S/MIME-Sign..."), q ),
       openPGPSignClipboardAction( i18n("OpenPGP-Sign..."), q ),
-      decryptClipboardAction( i18n("Decrypt..."), q ),
-      verifyClipboardAction( i18n("Verify..."), q ),
+      decryptVerifyClipboardAction( i18n("Decrypt/Verify..."), q ),
       aboutDialog(),
       mainWindow(),
       previousGeometry()
@@ -163,8 +155,7 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
     KDAB_SET_OBJECT_NAME( encryptClipboardAction );
     KDAB_SET_OBJECT_NAME( smimeSignClipboardAction );
     KDAB_SET_OBJECT_NAME( openPGPSignClipboardAction );
-    KDAB_SET_OBJECT_NAME( decryptClipboardAction );
-    KDAB_SET_OBJECT_NAME( verifyClipboardAction );
+    KDAB_SET_OBJECT_NAME( decryptVerifyClipboardAction );
 
     connect( &openCertificateManagerAction, SIGNAL(triggered()), q, SLOT(openOrRaiseMainWindow()) );
     connect( &aboutAction, SIGNAL(triggered()), q, SLOT(slotAbout()) );
@@ -172,8 +163,7 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
     connect( &encryptClipboardAction, SIGNAL(triggered()), q, SLOT(slotEncryptClipboard()) );
     connect( &smimeSignClipboardAction, SIGNAL(triggered()), q, SLOT(slotSMIMESignClipboard()) );
     connect( &openPGPSignClipboardAction, SIGNAL(triggered()), q, SLOT(slotOpenPGPSignClipboard()) );
-    connect( &decryptClipboardAction, SIGNAL(triggered()), q, SLOT(slotDecryptClipboard()) );
-    connect( &verifyClipboardAction, SIGNAL(triggered()), q, SLOT(slotVerifyClipboard()) );
+    connect( &decryptVerifyClipboardAction, SIGNAL(triggered()), q, SLOT(slotDecryptVerifyClipboard()) );
 
     connect( QApplication::clipboard(), SIGNAL(changed(QClipboard::Mode)),
              q, SLOT(slotEnableDisableActions()) );
@@ -187,8 +177,7 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
     clipboardMenu.addAction( &encryptClipboardAction );
     clipboardMenu.addAction( &smimeSignClipboardAction );
     clipboardMenu.addAction( &openPGPSignClipboardAction );
-    clipboardMenu.addAction( &decryptClipboardAction );
-    clipboardMenu.addAction( &verifyClipboardAction );
+    clipboardMenu.addAction( &decryptVerifyClipboardAction );
     menu.addSeparator();
     menu.addAction( &quitAction );
 
