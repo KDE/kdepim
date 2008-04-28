@@ -49,6 +49,8 @@ namespace Commands {
         ~GnuPGProcessCommand();
 
     private:
+        virtual bool preStartHook( QWidget * parentWidget ) const;
+
         virtual QStringList arguments() const = 0;
 
         virtual QString errorCaption() const = 0;

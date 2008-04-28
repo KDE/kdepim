@@ -109,7 +109,16 @@ void GnuPGProcessCommand::Private::init() {
 
 GnuPGProcessCommand::~GnuPGProcessCommand() {}
 
+bool GnuPGProcessCommand::preStartHook( QWidget * ) const {
+    return true;
+}
+
 void GnuPGProcessCommand::doStart() {
+
+    if ( !preStartHook( d->view() ) ) {
+        d->finished();
+        return;
+    }
 
     d->arguments = arguments();
 
