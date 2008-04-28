@@ -34,6 +34,8 @@
 
 #include "resultlistwidget.h"
 
+#include "kleopatraprefs.h"
+
 #include <crypto/gui/resultitemwidget.h>
 #include <crypto/gui/scrollarea.h>
 #include <crypto/taskcollection.h>
@@ -43,6 +45,7 @@
 #include <KStandardGuiItem>
 
 #include <QLabel>
+#include <QMoveEvent>
 #include <QVBoxLayout>
 
 #include <cassert>
@@ -106,6 +109,11 @@ ResultListWidget::ResultListWidget( QWidget* parent, Qt::WindowFlags f ) : QWidg
 
 ResultListWidget::~ResultListWidget()
 {
+    if ( !d->m_standaloneMode )
+        return;
+    Preferences prefs;
+    prefs.setDecryptVerifyPopupPosition( pos() );
+    prefs.writeConfig();
 }
 
 void ResultListWidget::Private::setupSingle()
