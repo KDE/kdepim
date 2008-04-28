@@ -324,7 +324,7 @@ void SignEMailController::Private::ensureWizardCreated() {
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
     w->setPresetProtocol( protocol );
     Kleo::Preferences prefs;
-    wizard->setQuickMode( prefs.quickSignEMail() );
+    w->setQuickMode( prefs.quickSignEMail() );
     wizard = w.release();
 }
 
