@@ -59,8 +59,10 @@ bool RefreshX509CertsCommand::preStartHook( QWidget * parent ) const {
                                                i18n("Refreshing X.509 certificates implies downloading CRLs for all certificates, "
                                                     "even if they might otherwise still be valid. "
                                                     "This can put a severe strain on your own as well as other people's network "
-                                                    "connection. Are you sure you want to continue?"),
-                                               i18n("Certitifcate Refresh"),
+                                                    "connection, and can take up to an hour or more to complete, depending on "
+                                                    "your network connection, and the number of certificates to check. "
+                                                    "Are you sure you want to continue?"),
+                                               i18n("X.509 Certitifcate Refresh"),
                                                KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
                                                QLatin1String( "warn-refresh-x509-expensive" ) )
         == KMessageBox::Continue;
