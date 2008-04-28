@@ -401,6 +401,7 @@ void MainWindow::Private::setupActions() {
     controller.registerActionForCommand<DeleteCertificatesCommand>( coll->action( "certificates_delete" ) );
     controller.registerActionForCommand<ChangeExpiryCommand>(       coll->action( "certificates_change_expiry" ) );
     controller.registerActionForCommand<SignEncryptFilesCommand>(   coll->action( "file_sign_encrypt_files" ) );
+    controller.registerActionForCommand<DecryptVerifyFilesCommand>( coll->action( "file_decrypt_verify_files" ) );
     controller.registerActionForCommand<ExportCertificateCommand>(  coll->action( "file_export_certificates" ) );
     controller.registerActionForCommand<ImportCertificateFromFileCommand>(  coll->action( "file_import_certificates" ) );
     controller.registerActionForCommand<LookupCertificatesCommand>( coll->action( "file_lookup_certificates" ) );
