@@ -41,7 +41,7 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2008-04-21</date>
+<date>2008-04-29</date>
 <releaseinfo>2.00.00</releaseinfo>
 
 <abstract>
@@ -870,7 +870,7 @@ resources.</para>
 </varlistentry>
 
 <varlistentry>
-<term><menuchoice><guimenuitem>Set Color</guimenuitem></menuchoice></term>
+<term><menuchoice><guimenuitem>Set Color...</guimenuitem></menuchoice></term>
 <listitem>
 <para>Select a background color for highlighting this resource's alarms
 in the alarm list. This enables you to see at a glance which alarms
@@ -1658,7 +1658,7 @@ the computer at the time. If the alarm's scheduled time is in a
 different time zone from your local computer's setting, its time zone
 will also be displayed. (For reminder messages, the date/time shown is
 that for the main alarm or its recurrence, not the reminder message
-time, and the window title is <quote>Reminder</quote>).</para>
+time, and the window title is <quote>Reminder</quote>.)</para>
 
 <para>Alarm message windows remain visible until you acknowledge them,
 unless <guilabel>Auto-close window after late-cancelation
@@ -1731,9 +1731,30 @@ a convenient way to activate &kalarm;.</para>
 </listitem>
 </itemizedlist>
 
-<para>The alarm message window may be displayed in two different
-modes, depending on your preferences. You can choose the mode in the
-<link linkend="preferences-view">Preferences dialog</link>.</para>
+<para>You can choose in the
+<link linkend="preferences-view">Preferences dialog</link> which of
+two schemes should be used to position alarm message windows:</para>
+
+<itemizedlist>
+<listitem>
+<para>The windows are displayed as far away from the current mouse
+cursor as possible. This minimizes disruption to your work flow and
+minimizes the possibility of accidentally acknowledging the
+alarm.</para>
+</listitem>
+
+<listitem>
+<para>The windows are displayed in the center of the screen. To reduce
+the chance of accidentally acknowledging the alarm, the buttons on the
+window are initially disabled, becoming active only after a
+configurable delay.</para>
+</listitem>
+</itemizedlist>
+
+<para>You can also choose in the
+<link linkend="preferences-view">Preferences dialog</link> which of
+two different modes should be used to display alarm message
+windows:</para>
 
 <itemizedlist>
 <listitem>
@@ -1862,10 +1883,16 @@ it should have been, you can refresh the alarm list and trigger any
 missed alarms by selecting
 <menuchoice>
 <guimenu>Actions</guimenu><guimenuitem>Refresh Alarms</guimenuitem>
-</menuchoice>.</para>
+</menuchoice>. This causes &kalarm; to reload all alarm calendar files
+and resources.</para>
 
-<para>This causes &kalarm; to reload all alarm calendar files and
-resources.</para>
+<para>You can reload an individual resource and refresh its alarms in
+the alarm list by
+<mousebutton>Right</mousebutton> clicking the resource in the
+resources list and selecting the
+<menuchoice><guimenuitem>Reload</guimenuitem></menuchoice> menu
+option. See <link linkend="resources">Alarm Resources</link> for
+details.</para>
 
 </sect1>
 
@@ -1878,10 +1905,10 @@ individually:</para>
 <itemizedlist>
 <listitem>
 <para><quote>Alarm monitoring</quote> applies to alarms as a whole.
-While alarm monitoring is disabled, &kalarm; no alarms are triggered
-at all. While alarm monitoring is enabled (the normal situation), all
-alarms which are not individually disabled will trigger at the
-appropriate times.</para>
+While alarm monitoring is disabled, no alarms are triggered at all.
+While alarm monitoring is enabled (the normal situation), all alarms
+which are not individually disabled will trigger at the appropriate
+times.</para>
 
 <para>When alarm monitoring is re-enabled, alarms which would have
 triggered while it was disabled are now triggered (unless any
@@ -2413,11 +2440,36 @@ time at which the alarm is scheduled.</para>
 </itemizedlist>
 </listitem>
 
-<listitem><para><guilabel>Message windows have a titlebar and take keyboard focus</guilabel>: This
+<listitem>
+<para><guilabel>Alarm Message Windows</guilabel> group box: These options
+control the appearance of alarm message windows.</para>
+
+<itemizedlist>
+<listitem>
+<para><guilabel>Position windows far from mouse cursor</guilabel>:
+Select this option to display alarm message windows as far away from
+the current mouse cursor position as possible. This minimizes the
+chance of accidentally acknowledging an alarm by unintentionally
+clicking on a button just as the message window appears.</para>
+</listitem>
+
+<listitem>
+<para><guilabel>Center windows, delay activating window buttons</guilabel>:
+Select this option to display alarm message windows in the center of
+the screen. To reduce the chance of accidentally acknowledging the
+alarm, the window's buttons are initially disabled. The delay in
+seconds before they become active is set in
+<guilabel>Button activation delay (seconds)</guilabel>.</para>
+</listitem>
+
+<listitem>
+<para><guilabel>Message windows have a titlebar and take keyboard focus</guilabel>: This
 option controls whether alarm message windows are modal or not, &ie;
 whether they grab the keyboard focus when they appear. See the
 <link linkend="message-window">Alarm Message Window</link> section for
 details.</para>
+</listitem>
+</itemizedlist>
 </listitem>
 </itemizedlist>
 </sect1>
@@ -2947,8 +2999,6 @@ request the following functions:</para>
 
 <itemizedlist>
 <listitem><para>schedule a new alarm</para></listitem>
-<listitem><para>trigger or cancel an already scheduled
-alarm</para></listitem>
 <listitem><para>cancel an already scheduled alarm</para></listitem>
 <listitem><para>trigger an already scheduled alarm</para></listitem>
 <listitem><para>display the Alarm Edit dialog</para></listitem>
@@ -3045,57 +3095,6 @@ occurrences of the alarm up to the current time, and if no repetitions
 of the alarm still remain, the alarm is deleted from the calendar. If
 the alarm is not due yet, its scheduled occurrences are left
 unchanged.</para>
-
-</refsect1>
-</refentry>
-
-<refentry id="handleEvent">
-<refmeta>
-<refentrytitle>handleEvent</refentrytitle>
-</refmeta>
-<refnamediv>
-<refname>handleEvent</refname>
-<refpurpose>trigger or cancel an already scheduled alarm.</refpurpose>
-</refnamediv>
-<refsynopsisdiv>
-<synopsis>
-void handleEvent(const QString&amp; <replaceable>eventID</replaceable>)
-</synopsis>
-
-<refsect2>
-<title>Parameters</title>
-<variablelist>
-<varlistentry>
-<term><parameter>eventID</parameter></term>
-<listitem>
-<para>Specifies the unique ID of the event to be displayed/executed or
-canceled.</para>
-</listitem>
-</varlistentry>
-</variablelist>
-</refsect2>
-</refsynopsisdiv>
-
-<refsect1>
-<title>Description</title>
-
-<para><function>handleEvent()</function> is a &DCOP; call to
-display/execute or cancel the specified alarm. &kalarm; retrieves the
-alarm from the calendar and then determines what action to take
-depending on when the alarm is due.</para>
-
-<itemizedlist>
-<listitem><para>If the alarm is not yet due, nothing happens.</para>
-</listitem>
-
-<listitem><para>If the alarm is due, it acts as follows. If a
-late-cancel value is set and the alarm is too late, &ie; the scheduled
-trigger time was longer than late-cancel minutes ago, &kalarm; does
-not display or execute the alarm; otherwise, &kalarm; displays or
-executes the alarm. If no repetitions of the alarm are still
-scheduled, &kalarm; then deletes the alarm from the calendar.</para>
-</listitem>
-</itemizedlist>
 
 </refsect1>
 </refentry>
@@ -4132,28 +4131,21 @@ information).</para></note>
 <tbody>
 <row>
   <entry><option>--cancelEvent <replaceable>eventID</replaceable></option></entry>
-  <entry>Cancel the alarm with the specified event ID.</entry>
+  <entry>Cancel the alarm with the specified event ID.
+  <option>--triggerEvent</option> cannot be specified with this
+  option.</entry>
 </row>
 <row>
   <entry><option>--triggerEvent <replaceable>eventID</replaceable></option></entry>
   <entry>Trigger the alarm with the specified event ID. The action
   taken is the same as for the
-  <link linkend="triggerEvent">triggerEvent()</link> &DCOP;
-  call.</entry>
-</row>
-<row>
-  <entry><option>--handleEvent <replaceable>eventID</replaceable></option></entry>
-  <entry>Trigger or cancel the alarm with the specified event
-  ID. &kalarm; determines which action to take in the same way as for
-  the <link linkend="handleEvent">handleEvent()</link> &DCOP; call.</entry>
+  <link linkend="triggerEvent">triggerEvent()</link> &DCOP; call.
+  <option>--cancelEvent</option> cannot be specified with this
+  option.</entry>
 </row>
 </tbody>
 </tgroup>
 </informaltable>
-
-<para><option>--cancelEvent</option>, <option>--triggerEvent</option>
-and <option>--handleEvent</option> are mutually
-exclusive.</para>
 
 <para>Examples are:</para>
 
