@@ -36,11 +36,22 @@
 
 #include <utils/gnupg-helper.h>
 
+#include <kleo/cryptobackendfactory.h>
+#include <kleo/cryptoconfig.h>
+
 #include <KLocale>
 #include <KMessageBox>
 
 using namespace Kleo;
 using namespace Kleo::Commands;
+
+static bool haveKeyserverConfigured() {
+    const Kleo::CryptoConfig * const config = Kleo::CryptoBackendFactory::instance()->config();
+    if ( !config )
+        return false;
+    const Kleo::CryptoConfigEntry * const entry = config->entry( "gpg", "Keyserver", "keyserver" );
+    return entry && !entry->stringValue().isEmpty();
+}
 
 RefreshOpenPGPCertsCommand::RefreshOpenPGPCertsCommand( KeyListController * c )
     : GnuPGProcessCommand( c )
@@ -57,13 +68,28 @@ RefreshOpenPGPCertsCommand::RefreshOpenPGPCertsCommand( QAbstractItemView * v, K
 RefreshOpenPGPCertsCommand::~RefreshOpenPGPCertsCommand() {}
 
 bool RefreshOpenPGPCertsCommand::preStartHook( QWidget * parent ) const {
+    if ( !haveKeyserverConfigured() )
+        if ( KMessageBox::warningContinueCancel( parent,
+                                                 i18n( "<para>No OpenPGP directory services have been configured. "
+                                                       "If not all of the certificates carry the name of their preferred "
+                                                       "certificate server, a fallback server is needed to fetch from. "
+                                                       "Since none is configured, the backend might report an error to that "
+                                                       "effect.</para>"
+                                                       "<para>You can configure OpenPGP directory servers in Kleopatra's "
+                                                       "configuration dialog.</para>"
+                                                       "<para>Do you want to continue without a fallback server?</para>" ),
+                                                 i18n("OpenPGP Certitifcate Refresh"),
+                                                 KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
+                                                 QLatin1String( "warn-refresh-openpgp-missing-keyserver" ) )
+             != KMessageBox::Continue )
+            return false;
     return KMessageBox::warningContinueCancel( parent,
-                                               i18n("Refreshing OpenPGP certificates implies downloading all certificates anew, "
-                                                    "to check if any of them have been revoked in the meantime. "
-                                                    "This can put a severe strain on your own as well as other people's network "
+                                               i18n("<para>Refreshing OpenPGP certificates implies downloading all certificates anew, "
+                                                    "to check if any of them have been revoked in the meantime.</para>"
+                                                    "<para>This can put a severe strain on your own as well as other people's network "
                                                     "connection, and can take up to an hour or more to complete, depending on "
-                                                    "your network connection, and the number of certificates to check. "
-                                                    "Are you sure you want to continue?"),
+                                                    "your network connection, and the number of certificates to check.</para> "
+                                                    "<para>Are you sure you want to continue?</para>"),
                                                i18n("OpenPGP Certitifcate Refresh"),
                                                KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
                                                QLatin1String( "warn-refresh-openpgp-expensive" ) )
@@ -83,14 +109,15 @@ QString RefreshOpenPGPCertsCommand::successCaption() const {
 }
 
 QString RefreshOpenPGPCertsCommand::crashExitMessage( const QStringList & args ) const {
-    return i18n( "The GPG process that tried to refresh OpenPGP certificates "
-                 "ended prematurely because of an unexpected error. "
-                 "Please check the output of %1 for details.", args.join( " " ) ) ;
+    return i18n( "<para>The GPG process that tried to refresh OpenPGP certificates "
+                 "ended prematurely because of an unexpected error.</para>"
+                 "<para>Please check the output of <icode>%1</icode> for details.</para>", args.join( " " ) ) ;
 }
 
 QString RefreshOpenPGPCertsCommand::errorExitMessage( const QStringList & args ) const {
-    return i18n( "An error occurred while trying to refresh OpenPGP certificates. "
-                 "The output from %1 was:\n%2", args[0], errorString() );
+    return i18n( "<para>An error occurred while trying to refresh OpenPGP certificates.</para> "
+                 "<para>The output from <command>%1</command> was: <message>%2</message></para>",
+                 args[0], errorString() );
 }
 
 QString RefreshOpenPGPCertsCommand::successMessage( const QStringList & ) const {
