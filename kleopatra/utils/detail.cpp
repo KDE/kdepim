@@ -35,20 +35,3 @@
 
 #include "detail_p.h"
 
-#include <QDir>
-#include <QFile>
-#include <QString>
-
-#ifdef Q_OS_WIN
-#include "gnupg-registry.h"
-#endif // Q_OS_WIN
-
-QString Kleo::_detail::gnupgHomeDirectory()
-{
-#ifdef Q_OS_WIN
-    return QFile::decodeName( default_homedir() );
-#else
-    return QDir::homePath() + "/.gnupg";
-#endif
-}
-
