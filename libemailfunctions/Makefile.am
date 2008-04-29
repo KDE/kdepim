@@ -1,4 +1,4 @@
-INCLUDES = $(all_includes) -I../libkmime/
+INCLUDES = $(all_includes) -I$(srcdir)/../libkmime/
 
 noinst_LTLIBRARIES = libemailfunctions.la
 libemailfunctions_la_SOURCES = email.cpp idmapper.cpp kasciistricmp.cpp \
