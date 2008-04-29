@@ -53,7 +53,11 @@ QString Kleo::gnupgHomeDirectory()
 #ifdef Q_OS_WIN
     return QFile::decodeName( default_homedir() );
 #else
-    return QDir::homePath() + "/.gnupg";
+    const QByteArray gnupgHome = qgetenv( "GNUPGHOME" );
+    if ( !gnupgHome.isEmpty() )
+        return QFile::decodeName( gnupgHome );
+    else
+        return QDir::homePath() + "/.gnupg";
 #endif
 }
 
