@@ -2,7 +2,7 @@
     kwatchgnupgconfig.h
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2001,2002,2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2001,2002,2004,2008 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -40,25 +40,30 @@ class QComboBox;
 class QSpinBox;
 class KUrlRequester;
 
+namespace Kleo {
+    class FileNameRequester;
+}
+
 class KWatchGnuPGConfig : public KDialog {
   Q_OBJECT
 public:
-  KWatchGnuPGConfig( QWidget* parent );
+  explicit KWatchGnuPGConfig( QWidget * parent=0 );
+  ~KWatchGnuPGConfig();
 
   void loadConfig();
   void saveConfig();
 
-signals:
+Q_SIGNALS:
   void reconfigure();
 
-private slots:
+private Q_SLOTS:
   void slotChanged();
   void slotSave();
   void slotSetHistorySizeUnlimited();
 
 private:
-  KUrlRequester* mExeED;
-  KUrlRequester* mSocketED;
+  Kleo::FileNameRequester* mExeED;
+  Kleo::FileNameRequester* mSocketED;
   QComboBox* mLogLevelCB;
   QSpinBox* mLoglenSB;
   QCheckBox* mWordWrapCB;
