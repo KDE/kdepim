@@ -50,7 +50,6 @@ macro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
   target_link_libraries(${LINK_ARG_LIST})
 endmacro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
 
-find_package(KdepimLibs REQUIRED)
 find_package(Boost REQUIRED)
 macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org/" TRUE "" "Required by Akonadi and kleopatra")
 
