@@ -273,7 +273,8 @@ void KWatchGnuPGMainWindow::slotConfigure()
 void KWatchGnuPGMainWindow::slotReadConfig()
 {
   const KConfigGroup config(KGlobal::config(), "LogWindow");
-  mCentralWidget->setHistorySize( config.readEntry( "MaxLogLen", 10000 ) );
+  const int maxLogLen = config.readEntry( "MaxLogLen", 10000 );
+  mCentralWidget->setHistorySize( maxLogLen < 1 ? -1 : maxLogLen );
   setGnuPGConfig();
   startWatcher();
 }
