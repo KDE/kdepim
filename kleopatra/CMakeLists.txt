@@ -153,6 +153,7 @@ set( _kleopatra_common_SRCS
   commands/lookupcertificatescommand.cpp
   commands/reloadkeyscommand.cpp
   commands/refreshx509certscommand.cpp
+  commands/refreshopenpgpcertscommand.cpp
   commands/deletecertificatescommand.cpp
   commands/decryptverifyfilescommand.cpp
   commands/signencryptfilescommand.cpp
