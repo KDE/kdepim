@@ -167,6 +167,8 @@ KWatchGnuPGConfig::KWatchGnuPGConfig( QWidget* parent )
   connect( this, SIGNAL(okClicked()), SLOT(slotSave()) );
 }
 
+KWatchGnuPGConfig::~KWatchGnuPGConfig() {}
+
 void KWatchGnuPGConfig::slotSetHistorySizeUnlimited() {
   mLoglenSB->setValue( 0 );
 }

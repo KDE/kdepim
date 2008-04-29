@@ -35,17 +35,19 @@
 
 #include <kxmlguiwindow.h>
 #include <QProcess>
+
 class KWatchGnuPGTray;
 class KWatchGnuPGConfig;
 class KProcess;
-class QTextEdit;
+class KDLogTextWidget;
 
 class KWatchGnuPGMainWindow : public KXmlGuiWindow {
   Q_OBJECT
 public:
-  KWatchGnuPGMainWindow( QWidget* parent = 0 );
-  virtual ~KWatchGnuPGMainWindow();
-public slots:
+  explicit KWatchGnuPGMainWindow( QWidget* parent = 0 );
+  ~KWatchGnuPGMainWindow();
+
+private Q_SLOTS:
   void slotWatcherExited(int, QProcess::ExitStatus);
   void slotReadStdout();
 
@@ -58,9 +60,12 @@ public slots:
   void configureShortcuts();
   void slotReadConfig();
 
-  virtual void show();
+public Q_SLOTS:
+  /* reimp */ void show();
+
 protected:
-  virtual bool queryClose();
+  /* reimp */ bool queryClose();
+
 private:
   void createActions();
   void startWatcher();
@@ -68,7 +73,7 @@ private:
 
   KProcess* mWatcher;
 
-  QTextEdit* mCentralWidget;
+  KDLogTextWidget* mCentralWidget;
   KWatchGnuPGTray* mSysTray;
   KWatchGnuPGConfig* mConfig;
 };

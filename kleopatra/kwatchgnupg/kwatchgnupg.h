@@ -32,10 +32,11 @@
 #ifndef KWATCHGNUPG_H
 #define KWATCHGNUPG_H
 
-#include <QDir>
+#include <QString>
+#include <utils/gnupg-helper.h>
 
-#define WATCHGNUPGBINARY "watchgnupg"
-#define WATCHGNUPGSOCKET ( QDir::home().canonicalPath() + "/.gnupg/log-socket")
+#define WATCHGNUPGBINARY QString::fromLatin1("watchgnupg")
+#define WATCHGNUPGSOCKET ( Kleo::gnupgHomeDirectory() + QLatin1String("/log-socket") )
 
 #endif /* KWATCHGNUPG_H */
 

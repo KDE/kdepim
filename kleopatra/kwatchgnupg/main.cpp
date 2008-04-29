@@ -65,10 +65,8 @@ KWatchGnuPGApplication::~KWatchGnuPGApplication()
 
 int KWatchGnuPGApplication::newInstance()
 {
-  if( !mMainWin ) {
-	mMainWin = new KWatchGnuPGMainWindow;
-	setMainWidget( mMainWin );
-  }
+  if( !mMainWin )
+      mMainWin = new KWatchGnuPGMainWindow;
   mMainWin->show();
   return KUniqueApplication::newInstance();
 }
@@ -89,6 +87,7 @@ int main( int argc, char** argv )
 	return 0;
   }
 #endif
+
   KWatchGnuPGApplication app;
   return app.exec();
 }

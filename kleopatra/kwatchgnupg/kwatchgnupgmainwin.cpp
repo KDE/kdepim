@@ -40,6 +40,8 @@
 #include "libkleo/kleo/cryptobackendfactory.h"
 #include "libkleo/kleo/cryptoconfig.h"
 
+#include "utils/kdlogtextwidget.h"
+
 #include <kdebug.h>
 #include <kmessagebox.h>
 #include <klocale.h>
@@ -49,9 +51,10 @@
 #include <kstandardaction.h>
 #include <kprocess.h>
 #include <kconfig.h>
-#include <kfiledialog.h>
 #include <kedittoolbar.h>
 #include <kshortcutsdialog.h>
+#include <kglobal.h>
+#include <kicon.h>
 
 #include <QTextEdit>
 #include <QDir>
@@ -60,8 +63,7 @@
 #include <QTextCodec>
 #include <QTextStream>
 #include <QDateTime>
-#include <kglobal.h>
-#include <kicon.h>
+#include <QFileDialog>
 
 KWatchGnuPGMainWindow::KWatchGnuPGMainWindow( QWidget* parent )
   : KXmlGuiWindow( parent, Qt::WType_TopLevel ), mConfig(0)
@@ -69,10 +71,9 @@ KWatchGnuPGMainWindow::KWatchGnuPGMainWindow( QWidget* parent )
   createActions();
   createGUI();
 
-  mCentralWidget = new QTextEdit( this );
-  mCentralWidget->setObjectName( "central log view" );
-  mCentralWidget->setTextFormat( Qt::LogText );
-  mCentralWidget->setReadOnly(true);
+  mCentralWidget = new KDLogTextWidget( this );
+  KDAB_SET_OBJECT_NAME( mCentralWidget );
+
   setCentralWidget( mCentralWidget );
 
   mWatcher = new KProcess;
@@ -85,8 +86,9 @@ KWatchGnuPGMainWindow::KWatchGnuPGMainWindow( QWidget* parent )
   slotReadConfig();
   mSysTray = new KWatchGnuPGTray( this );
   mSysTray->show();
-  connect( mSysTray, SIGNAL( quitSelected() ),
-		   this, SLOT( slotQuit() ) );
+  connect( mSysTray, SIGNAL(quitSelected()),
+           this, SLOT(slotQuit()) );
+
   setAutoSaveSettings();
 }
 
@@ -98,7 +100,7 @@ KWatchGnuPGMainWindow::~KWatchGnuPGMainWindow()
 void KWatchGnuPGMainWindow::slotClear()
 {
   mCentralWidget->clear();
-  mCentralWidget->append( i18n("[%1] Log cleared", QDateTime::currentDateTime().toString(Qt::ISODate) ) );
+  mCentralWidget->message( i18n("[%1] Log cleared", QDateTime::currentDateTime().toString(Qt::ISODate) ) );
 }
 
 void KWatchGnuPGMainWindow::createActions()
@@ -106,7 +108,7 @@ void KWatchGnuPGMainWindow::createActions()
   QAction *action = actionCollection()->addAction( "clear_log" );
   action->setIcon( KIcon("edit-clear-history") );
   action->setText( i18n("C&lear History") );
-  connect(action, SIGNAL(triggered(bool) ), SLOT( slotClear() ));
+  connect(action, SIGNAL(triggered()), SLOT( slotClear() ));
   action->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_L));
   (void)KStandardAction::saveAs( this, SLOT(slotSaveAs()), actionCollection() );
   (void)KStandardAction::close( this, SLOT(close()), actionCollection() );
@@ -114,13 +116,6 @@ void KWatchGnuPGMainWindow::createActions()
   (void)KStandardAction::preferences( this, SLOT(slotConfigure()), actionCollection() );
   ( void )KStandardAction::keyBindings(this, SLOT(configureShortcuts()), actionCollection());
   ( void )KStandardAction::configureToolbars(this, SLOT(slotConfigureToolbars()), actionCollection());
-
-#if 0
-  (void)new KAction( i18n("Configure KWatchGnuPG..."), QString::fromLatin1("configure"),
-					 0, this, SLOT( slotConfigure() ),
-					 actionCollection(), "configure" );
-#endif
-
 }
 
 void KWatchGnuPGMainWindow::configureShortcuts()
@@ -143,21 +138,24 @@ void KWatchGnuPGMainWindow::startWatcher()
 	while( mWatcher->state()== QProcess::Running ) {
 	  qApp->processEvents(QEventLoop::ExcludeUserInput);
 	}
-	mCentralWidget->append(i18n("[%1] Log stopped", QDateTime::currentDateTime().toString(Qt::ISODate)));
+	mCentralWidget->message(i18n("[%1] Log stopped", QDateTime::currentDateTime().toString(Qt::ISODate)));
   }
   mWatcher->clearProgram();
-  KConfigGroup config(KGlobal::config(), "WatchGnuPG");
-  *mWatcher << config.readEntry("Executable", WATCHGNUPGBINARY);
-  *mWatcher << "--force";
-  *mWatcher << config.readEntry("Socket", WATCHGNUPGSOCKET);
-  config.changeGroup(QString());
+
+  {
+    const KConfigGroup config(KGlobal::config(), "WatchGnuPG");
+    *mWatcher << config.readEntry("Executable", WATCHGNUPGBINARY);
+    *mWatcher << "--force";
+    *mWatcher << config.readEntry("Socket", WATCHGNUPGSOCKET);
+  }
+
   mWatcher->setOutputChannelMode( KProcess::OnlyStdoutChannel );
   mWatcher->start();
   const bool ok = mWatcher->waitForStarted();
   if( !ok) {
 	KMessageBox::sorry( this, i18n("The watchgnupg logging process could not be started.\nPlease install watchgnupg somewhere in your $PATH.\nThis log window is now completely useless." ) );
   } else {
-	mCentralWidget->append( i18n("[%1] Log started",QDateTime::currentDateTime().toString(Qt::ISODate) ) );
+	mCentralWidget->message( i18n("[%1] Log started",QDateTime::currentDateTime().toString(Qt::ISODate) ) );
   }
   connect( mWatcher, SIGNAL( finished(int, QProcess::ExitStatus) ),
            this, SLOT( slotWatcherExited(int, QProcess::ExitStatus) ) );
@@ -199,7 +197,7 @@ void KWatchGnuPGMainWindow::setGnuPGConfig()
 void KWatchGnuPGMainWindow::slotWatcherExited(int, QProcess::ExitStatus)
 {
   if( KMessageBox::questionYesNo( this, i18n("The watchgnupg logging process died.\nDo you want to try to restart it?"), QString(), KGuiItem(i18n("Try Restart")), KGuiItem(i18n("Do Not Try")) ) == KMessageBox::Yes ) {
-	mCentralWidget->append( i18n("====== Restarting logging process =====") );
+	mCentralWidget->message( i18n("====== Restarting logging process =====") );
 	startWatcher();
   } else {
 	KMessageBox::sorry( this, i18n("The watchgnupg logging process is not running.\nThis log window is now completely useless." ) );
@@ -216,7 +214,7 @@ void KWatchGnuPGMainWindow::slotReadStdout()
 	   str.chop( 1 );
 	if ( str.endsWith( '\r' ) )
 	   str.chop( 1 );
-	mCentralWidget->append(str);
+	mCentralWidget->message(str);
 	if( !isVisible() ) {
 	    // Change tray icon to show something happened
 	    // PENDING(steffen)
@@ -233,23 +231,23 @@ void KWatchGnuPGMainWindow::show()
 
 void KWatchGnuPGMainWindow::slotSaveAs()
 {
-  QString filename = KFileDialog::getSaveFileName( QString(), QString(), this, i18n("Save Log to File") );
+  const QString filename = QFileDialog::getSaveFileName( this, i18n("Save Log to File") );
   if( filename.isEmpty() ) return;
   QFile file(filename);
   if( file.exists() ) {
-	if( KMessageBox::Yes !=
-		KMessageBox::warningYesNo( this, i18n("The file named \"%1\" already "
-											  "exists. Are you sure you want "
-											  "to overwrite it?", filename),
-								   i18n("Overwrite File"), KStandardGuiItem::overwrite(), KStandardGuiItem::cancel() ) ) {
-	  return;
-	}
+    if( KMessageBox::Yes !=
+        KMessageBox::warningYesNo( this, i18n("The file named \"%1\" already "
+                                              "exists. Are you sure you want "
+                                              "to overwrite it?", filename),
+                                   i18n("Overwrite File"), KStandardGuiItem::overwrite(), KStandardGuiItem::cancel() ) ) {
+      return;
+    }
   }
-  if( file.open( QIODevice::WriteOnly ) ) {
-	QTextStream st(&file);
-	st << mCentralWidget->toPlainText();
-	file.close();
-  }
+  if( file.open( QIODevice::WriteOnly ) )
+      QTextStream( &file ) << mCentralWidget->text();
+  else
+      KMessageBox::information( this, i18n("Could not save file %1: %2",
+                                           filename, file.errorString() ) );
 }
 
 void KWatchGnuPGMainWindow::slotQuit()
@@ -263,10 +261,10 @@ void KWatchGnuPGMainWindow::slotQuit()
 void KWatchGnuPGMainWindow::slotConfigure()
 {
   if( !mConfig ) {
-	mConfig = new KWatchGnuPGConfig( this );
-	mConfig->setObjectName( "config dialog" );
-	connect( mConfig, SIGNAL( reconfigure() ),
-			 this, SLOT( slotReadConfig() ) );
+      mConfig = new KWatchGnuPGConfig( this );
+      mConfig->setObjectName( "config dialog" );
+      connect( mConfig, SIGNAL( reconfigure() ),
+               this, SLOT( slotReadConfig() ) );
   }
   mConfig->loadConfig();
   mConfig->exec();
@@ -274,11 +272,8 @@ void KWatchGnuPGMainWindow::slotConfigure()
 
 void KWatchGnuPGMainWindow::slotReadConfig()
 {
-  KConfigGroup config(KGlobal::config(), "LogWindow");
-  mCentralWidget->setWordWrapMode( config.readEntry("WordWrap", false)
-							   ?QTextOption::WordWrap
-							   :QTextOption::NoWrap );
-  mCentralWidget->document()->setMaximumBlockCount( config.readEntry( "MaxLogLen", 10000 ) );
+  const KConfigGroup config(KGlobal::config(), "LogWindow");
+  mCentralWidget->setHistorySize( config.readEntry( "MaxLogLen", 10000 ) );
   setGnuPGConfig();
   startWatcher();
 }
