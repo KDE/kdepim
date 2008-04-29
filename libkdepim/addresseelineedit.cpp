@@ -541,6 +541,7 @@ void AddresseeLineEdit::loadContacts()
       KABC::Resource::Iterator it;
       for ( it = resource->begin(); it != resource->end(); ++it )
         addContact( *it, weight, s_completionSources->size()-1 );
+    }
   }
 
 #ifndef KDEPIM_NEW_DISTRLISTS // new distr lists are normal contact, already done above
