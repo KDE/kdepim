@@ -39,6 +39,10 @@ namespace Kleo {
 
     QString gnupgHomeDirectory();
 
+    QString gpgConfPath();
+    QString gpgSmPath();
+    QString gpgPath();
+
     int makeGnuPGError( int code );
 }
 

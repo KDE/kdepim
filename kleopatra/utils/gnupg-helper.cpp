@@ -34,6 +34,10 @@
 
 #include "gnupg-helper.h"
 
+#include <gpgme++/engineinfo.h>
+
+#include <KStandardDirs>
+
 #include <QDir>
 #include <QFile>
 #include <QString>
@@ -56,3 +60,21 @@ QString Kleo::gnupgHomeDirectory()
 int Kleo::makeGnuPGError( int code ) {
     return gpg_error( static_cast<gpg_err_code_t>( code ) );
 }
+
+static QString findGpgExe( GpgME::Engine engine, const char * exe ) {
+    const GpgME::EngineInfo info = GpgME::engineInfo( engine );
+    return info.fileName() ? QFile::decodeName( info.fileName() ) : KStandardDirs::findExe( exe ) ;
+}
+
+QString Kleo::gpgConfPath() {
+    return findGpgExe( GpgME::GpgConfEngine, "gpgconf" );
+}
+
+QString Kleo::gpgSmPath() {
+    return findGpgExe( GpgME::GpgSMEngine, "gpgsm" );
+}
+
+QString Kleo::gpgPath() {
+    return findGpgExe( GpgME::GpgEngine, "gpg" );
+}
+
