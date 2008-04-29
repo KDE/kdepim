@@ -32,9 +32,10 @@
 
 #include <config-kleopatra.h>
 
-#include "kleopatraprefs.h"
+#include "emailoperationspreferences.h"
 
 #include "decryptverifyemailcontroller.h"
+
 #include <crypto/gui/resultlistwidget.h>
 #include <crypto/decryptverifytask.h>
 #include <crypto/taskcollection.h>
@@ -158,7 +159,7 @@ void DecryptVerifyEMailController::Private::ensureWizardCreated()
     w->setWindowTitle( i18n( "Decrypt/Verify E-Mail" ) );
     w->setAttribute( Qt::WA_DeleteOnClose );
     w->setStandaloneMode( true );
-    const QPoint preferredPos = Preferences().decryptVerifyPopupPosition();
+    const QPoint preferredPos = EMailOperationsPreferences().decryptVerifyPopupPosition();
     if ( !preferredPos.isNull() )
         w->move( preferredPos );
 #if 0

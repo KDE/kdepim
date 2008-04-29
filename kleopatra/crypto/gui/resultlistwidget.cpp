@@ -34,7 +34,7 @@
 
 #include "resultlistwidget.h"
 
-#include "kleopatraprefs.h"
+#include "emailoperationspreferences.h"
 
 #include <crypto/gui/resultitemwidget.h>
 #include <crypto/gui/scrollarea.h>
@@ -112,7 +112,7 @@ ResultListWidget::~ResultListWidget()
 {
     if ( !d->m_standaloneMode )
         return;
-    Preferences prefs;
+    EMailOperationsPreferences prefs;
     prefs.setDecryptVerifyPopupPosition( pos() );
     prefs.writeConfig();
 }

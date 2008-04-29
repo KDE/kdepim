@@ -27,7 +27,8 @@ kde4_add_ui_files( kcm_kleopatra_PART_SRCS
   )
 
 kde4_add_kcfg_files( kcm_kleopatra_PART_SRCS
-  ${CMAKE_SOURCE_DIR}/kleopatra/kcfg/kleopatraprefs.kcfgc
+  ${CMAKE_SOURCE_DIR}/kleopatra/kcfg/tooltippreferences.kcfgc
+  ${CMAKE_SOURCE_DIR}/kleopatra/kcfg/emailoperationspreferences.kcfgc
   ${CMAKE_SOURCE_DIR}/kleopatra/kcfg/smimevalidationpreferences.kcfgc
  )
 kde4_add_plugin(kcm_kleopatra ${kcm_kleopatra_PART_SRCS})

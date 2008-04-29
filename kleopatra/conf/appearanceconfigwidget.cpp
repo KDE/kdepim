@@ -37,7 +37,7 @@
 #include "ui_appearanceconfigwidget.h"
 
 
-#include "kleopatraprefs.h"
+#include "tooltippreferences.h"
 
 #include "libkleo/kleo/cryptobackendfactory.h"
 #include "libkleo/kleo/keyfiltermanager.h"
@@ -400,14 +400,14 @@ void AppearanceConfigWidget::load() {
         apply_config( KConfigGroup( config, group ), new QListWidgetItem( d->categoriesLV ) );
     }
 
-    const Preferences prefs;
+    const TooltipPreferences prefs;
     d->tooltipValidityCheckBox->setChecked( prefs.showValidity() );
     d->tooltipOwnerCheckBox->setChecked( prefs.showOwnerInformation() );
     d->tooltipDetailsCheckBox->setChecked( prefs.showCertificateDetails() );
 }
 
 void AppearanceConfigWidget::save() {
-    Preferences prefs;
+    TooltipPreferences prefs;
     prefs.setShowValidity( d->tooltipValidityCheckBox->isChecked() );
     prefs.setShowOwnerInformation( d->tooltipOwnerCheckBox->isChecked() );
     prefs.setShowCertificateDetails( d->tooltipDetailsCheckBox->isChecked() );

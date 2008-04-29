@@ -46,7 +46,7 @@
 #include <utils/kleo_assert.h>
 #include <utils/exception.h>
 
-#include "kleopatraprefs.h"
+#include "emailoperationspreferences.h"
 
 #include <gpgme++/key.h>
 
@@ -295,7 +295,7 @@ void EncryptEMailController::Private::ensureWizardCreated() const {
 
     std::auto_ptr<EncryptEMailWizard> w( new EncryptEMailWizard );
     w->setAttribute( Qt::WA_DeleteOnClose );
-    Kleo::Preferences prefs;
+    Kleo::EMailOperationsPreferences prefs;
     w->setQuickMode( prefs.quickEncryptEMail() );
     connect( w.get(), SIGNAL(recipientsResolved()), q, SLOT(slotWizardRecipientsResolved()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );

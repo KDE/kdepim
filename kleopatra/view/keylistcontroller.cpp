@@ -42,7 +42,7 @@
 #include <utils/formatting.h>
 #include <utils/stl_util.h>
 
-#include "kleopatraprefs.h"
+#include "tooltippreferences.h"
 
 #include <gpgme++/key.h>
 
@@ -365,7 +365,7 @@ int KeyListController::Private::toolTipOptions() const
     static const int ownerFlags = Subject|Issuer|UserIDs|SerialNumber;
     static const int detailsFlags = ExpiryDates|CertificateType|CertificateUsage|Fingerprint;
 
-    const Preferences prefs;
+    const TooltipPreferences prefs;
     
     int flags = prefs.showValidity() ? validityFlags : 0;
     flags |= prefs.showOwnerInformation() ? ownerFlags : 0;

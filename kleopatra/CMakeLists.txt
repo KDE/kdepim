@@ -189,7 +189,8 @@ kde4_add_ui_files( _kleopatra_common_SRCS
   dialogs/lookupcertificatesdialog.ui
   )
 kde4_add_kcfg_files( _kleopatra_common_SRCS
-  kcfg/kleopatraprefs.kcfgc
+  kcfg/tooltippreferences.kcfgc
+  kcfg/emailoperationspreferences.kcfgc
   kcfg/smimevalidationpreferences.kcfgc
   )
 

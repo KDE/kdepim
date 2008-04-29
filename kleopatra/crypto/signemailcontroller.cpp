@@ -45,7 +45,7 @@
 #include <utils/stl_util.h>
 #include <utils/kleo_assert.h>
 
-#include "kleopatraprefs.h"
+#include "emailoperationspreferences.h"
 
 #include <kmime/kmime_header_parsing.h>
 
@@ -326,7 +326,7 @@ void SignEMailController::Private::ensureWizardCreated() {
     connect( w.get(), SIGNAL(signersResolved()), q, SLOT(slotWizardSignersResolved()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
     w->setPresetProtocol( protocol );
-    Kleo::Preferences prefs;
+    EMailOperationsPreferences prefs;
     w->setQuickMode( prefs.quickSignEMail() );
     wizard = w.release();
 }
