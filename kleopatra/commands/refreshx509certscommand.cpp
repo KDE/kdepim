@@ -34,6 +34,8 @@
 
 #include "refreshx509certscommand.h"
 
+#include <utils/gnupg-helper.h>
+
 #include <KLocale>
 #include <KMessageBox>
 
@@ -69,7 +71,7 @@ bool RefreshX509CertsCommand::preStartHook( QWidget * parent ) const {
 }
 
 QStringList RefreshX509CertsCommand::arguments() const {
-    return QStringList() << "gpgsm" << "-k" << "--with-validation" << "--force-crl-refresh" << "--enable-crl-checks";
+    return QStringList() << gpgSmPath() << "-k" << "--with-validation" << "--force-crl-refresh" << "--enable-crl-checks";
 }
 
 QString RefreshX509CertsCommand::errorCaption() const {
