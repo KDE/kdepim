@@ -70,14 +70,15 @@ RefreshOpenPGPCertsCommand::~RefreshOpenPGPCertsCommand() {}
 bool RefreshOpenPGPCertsCommand::preStartHook( QWidget * parent ) const {
     if ( !haveKeyserverConfigured() )
         if ( KMessageBox::warningContinueCancel( parent,
-                                                 i18n( "<para>No OpenPGP directory services have been configured. "
-                                                       "If not all of the certificates carry the name of their preferred "
-                                                       "certificate server, a fallback server is needed to fetch from. "
-                                                       "Since none is configured, the backend might report an error to that "
-                                                       "effect.</para>"
+                                                 i18n( "<para>No OpenPGP directory services have been configured.</para>"
+                                                       "<para>If not all of the certificates carry the name of their preferred "
+                                                       "certificate server (few do), a fallback server is needed to fetch from.</para>"
+                                                       "<para>Since none is configured, <application>Kleopatra</application> will use "
+                                                       "<resource>keys.gnupg.net</resource> as the fallback.</para>"
                                                        "<para>You can configure OpenPGP directory servers in Kleopatra's "
                                                        "configuration dialog.</para>"
-                                                       "<para>Do you want to continue without a fallback server?</para>" ),
+                                                       "<para>Do you want to continue with <resource>keys.gnupg.net</resource> "
+                                                       "as fallback server?</para>" ),
                                                  i18n("OpenPGP Certitifcate Refresh"),
                                                  KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
                                                  QLatin1String( "warn-refresh-openpgp-missing-keyserver" ) )
@@ -97,7 +98,12 @@ bool RefreshOpenPGPCertsCommand::preStartHook( QWidget * parent ) const {
 }
 
 QStringList RefreshOpenPGPCertsCommand::arguments() const {
-    return QStringList() << gpgPath() << "--refresh-keys";
+    QStringList result;
+    result << gpgPath();
+    if ( !haveKeyserverConfigured() )
+        result << "--keyserver" << "keys.gnupg.net";
+    result << "--refresh-keys";
+    return result;
 }
 
 QString RefreshOpenPGPCertsCommand::errorCaption() const {
