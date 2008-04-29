@@ -47,6 +47,8 @@
 #include "commands/importcertificatefromfilecommand.h"
 #include "commands/lookupcertificatescommand.h"
 #include "commands/reloadkeyscommand.h"
+#include "commands/refreshx509certscommand.h"
+#include "commands/refreshopenpgpcertscommand.h"
 #include "commands/detailscommand.h"
 #include "commands/deletecertificatescommand.h"
 #include "commands/decryptverifyfilescommand.h"
@@ -59,6 +61,7 @@
 #include "conf/configuredialog.h"
 
 #include "utils/detail_p.h"
+#include "utils/gnupg-helper.h"
 #include "utils/stl_util.h"
 #include "utils/action_data.h"
 
@@ -112,11 +115,6 @@ using namespace boost;
 using namespace GpgME;
 
 namespace {
-    static QString gpgConfPath() {
-        const GpgME::EngineInfo info = GpgME::engineInfo( GpgME::GpgConfEngine );
-        return info.fileName() ? QFile::decodeName( info.fileName() ) : KStandardDirs::findExe( "gpgconf" );
-    }
-
     class ProgressBar : public QProgressBar {
         Q_OBJECT
     public:
@@ -184,6 +182,13 @@ public:
     }
     void reloadCertificates() {
         createAndStart<ReloadKeysCommand>();
+    }
+
+    void refreshX509Certificates() {
+        createAndStart<RefreshX509CertsCommand>();
+    }
+    void refreshOpenPGPCertificates() {
+        createAndStart<RefreshOpenPGPCertsCommand>();
     }
     
     void deleteCertificates() {
@@ -365,6 +370,10 @@ void MainWindow::Private::setupActions() {
         { "certificates_change_expiry", i18n("Change Expiry Date..."), QString(),
           0, q, SLOT(changeCertificateExpiry()), QString(), false, true },
         // Tools menu
+        { "tools_refresh_x509_certificates", i18n("Refresh X.509 Certificates"), QString(),
+          "view-refresh", q, SLOT(refreshX509Certificates()), QString(), false, true },
+        { "tools_refresh_openpgp_certificates", i18n("Refresh OpenPGP Certificates"), QString(),
+          "view-refresh", q, SLOT(refreshOpenPGPCertificates()), QString(), false, true },
         { "crl_clear_crl_cache", i18n("Clear CRL Cache"), QString(),
           0, q, SLOT(clearCrlCache()), QString(), false, true },
         { "crl_dump_crl_cache", i18n("Dump CRL Cache"), QString(),
@@ -398,12 +407,14 @@ void MainWindow::Private::setupActions() {
     // ### somehow make this better...
     controller.registerActionForCommand<DetailsCommand>(            coll->action( "view_certificate_details" ) );
     controller.registerActionForCommand<ReloadKeysCommand>(         coll->action( "view_redisplay" ) );
+    controller.registerActionForCommand<RefreshX509CertsCommand>(   coll->action( "view_redisplay" ) );
+    controller.registerActionForCommand<RefreshOpenPGPCertsCommand>( coll->action( "view_redisplay" ) );
     controller.registerActionForCommand<DeleteCertificatesCommand>( coll->action( "certificates_delete" ) );
     controller.registerActionForCommand<ChangeExpiryCommand>(       coll->action( "certificates_change_expiry" ) );
     controller.registerActionForCommand<SignEncryptFilesCommand>(   coll->action( "file_sign_encrypt_files" ) );
     controller.registerActionForCommand<DecryptVerifyFilesCommand>( coll->action( "file_decrypt_verify_files" ) );
     controller.registerActionForCommand<ExportCertificateCommand>(  coll->action( "file_export_certificates" ) );
-    controller.registerActionForCommand<ImportCertificateFromFileCommand>(  coll->action( "file_import_certificates" ) );
+    controller.registerActionForCommand<ImportCertificateFromFileCommand>( coll->action( "file_import_certificates" ) );
     controller.registerActionForCommand<LookupCertificatesCommand>( coll->action( "file_lookup_certificates" ) );
     controller.registerActionForCommand<ClearCrlCacheCommand>(      coll->action( "crl_clear_crl_cache" ) );
     controller.registerActionForCommand<DumpCrlCacheCommand>(       coll->action( "crl_dump_crl_cache" ) );
