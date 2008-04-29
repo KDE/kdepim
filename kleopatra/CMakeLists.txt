@@ -1,6 +1,6 @@
 project(kleopatra)
 
-set( kleopatra_version 1.9.0 )
+set( kleopatra_version 1.9.1 )
 if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
   if ( NOT KdeSubversion_FOUND )
     find_package( KdeSubversion )
