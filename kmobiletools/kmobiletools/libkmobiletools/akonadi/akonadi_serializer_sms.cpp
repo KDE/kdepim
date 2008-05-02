@@ -51,8 +51,10 @@ template <typename T> static void parseAddrList( const QList<QByteArray> &addrLi
 }
 
 
-bool SerializerPluginSMS::deserialize( Item& item, const QByteArray& label, QIODevice& data )
+bool SerializerPluginSMS::deserialize( Item& item, const QByteArray& label, QIODevice& data, int version )
 {
+    Q_UNUSED( version );
+
     kDebug() <<"()" << label;
     if ( label != "SMS" ) {
       return false;
@@ -112,8 +114,10 @@ bool SerializerPluginSMS::deserialize( Item& item, const QByteArray& label, QIOD
 }
 
 
-void SerializerPluginSMS::serialize( const Item& item, const QByteArray& label, QIODevice& data )
+void SerializerPluginSMS::serialize( const Item& item, const QByteArray& label, QIODevice& data, int &version )
 {
+    Q_UNUSED( version );
+
     kDebug() <<"()" << label;
     if ( label != "SMS" )
       return;
