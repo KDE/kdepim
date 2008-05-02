@@ -77,6 +77,17 @@ class ListBase : public QValueList<T *>
       }
     }
 
+    void clearAll()
+    {
+      if ( mAutoDelete ) {
+        for ( QValueListIterator<T*> it = QValueList<T*>::begin();
+              it != QValueList<T*>::end(); ++it ) {
+          delete *it;
+        }
+      }
+      QValueList<T*>::clear();
+    }
+
   private:
     bool mAutoDelete;
 };

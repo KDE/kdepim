@@ -11,7 +11,7 @@ class Task;
 class QTimer;
 
 typedef std::vector<Task *> TaskVector;
-const int maxDesktops = 16;
+const int maxDesktops = 20;
 
 /** A utility to associate tasks with desktops
  *  As soon as a desktop is activated/left - an signal is emited for
@@ -25,7 +25,7 @@ class DesktopTracker: public QObject
   public:
     DesktopTracker();
     void printTrackers();
-    void startTracking();
+    QString startTracking();
     void registerForDesktops( Task* task, DesktopList dl );
     int desktopCount() const { return _desktopCount; };
 
