@@ -276,8 +276,23 @@ void Kleo::QGpgMEJob::doThrow( const GpgME::Error & err, const QString & msg ) {
     throw GpgME::Exception( err, msg.toLocal8Bit().constData() );
 }
 
+static const unsigned int GetAuditLogFlags = GpgME::Context::AuditLogWithHelp|GpgME::Context::HtmlAuditLog;
+
+static QString audit_log_as_html( GpgME::Context * ctx ) {
+    if ( !ctx )
+        return QString();
+    QGpgME::QByteArrayDataProvider dp;
+    GpgME::Data data( &dp );
+    assert( !data.isNull() );
+    if ( const GpgME::Error err = ctx->getAuditLog( data, GetAuditLogFlags ) )
+        return QString();
+    else
+        return QString::fromUtf8( dp.data().data() );
+}
+
 void Kleo::QGpgMEJob::doSlotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
   if ( context == mCtx ) {
+    getAuditLog();
     doEmitDoneSignal();
     doOperationDoneEvent( e );
     if ( mEventLoop )
@@ -285,6 +300,10 @@ void Kleo::QGpgMEJob::doSlotOperationDoneEvent( GpgME::Context * context, const 
     else
       mThis->deleteLater();
   }
+}
+
+void Kleo::QGpgMEJob::getAuditLog() {
+    mAuditLogAsHtml = audit_log_as_html( mCtx );
 }
 
 void Kleo::QGpgMEJob::doSlotCancel() {

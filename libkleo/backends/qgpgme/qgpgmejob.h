@@ -40,6 +40,7 @@
 #include <gpgme++/key.h>
 
 #include <KPasswordDialog>
+#include <qstring.h>
 
 #include <boost/shared_ptr.hpp>
 
@@ -120,6 +121,8 @@ namespace Kleo {
     void setSigningKeys( const std::vector<GpgME::Key> & signers );
     /*! Call this to implement a slotOperationDoneEvent() */
     void doSlotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
+    /*! Call this to extract the audit log from mCtx */
+    void getAuditLog();
 
     //
     // only boring stuff below this line...
@@ -130,6 +133,7 @@ namespace Kleo {
     virtual void doEmitDoneSignal() = 0;
     void doSlotCancel();
     void waitForFinished();
+    QString auditLogAsHtml() const { return mAuditLogAsHtml; }
 
   private:
     /*! \reimp from GpgME::ProgressProvider */
@@ -158,6 +162,7 @@ namespace Kleo {
     unsigned int mPatternStartIndex, mPatternEndIndex;
     QEventLoop * mEventLoop;
     KPasswordDialog mPassphraseDialog;
+    QString mAuditLogAsHtml;
   };
 
 }
@@ -165,6 +170,7 @@ namespace Kleo {
 #define make_slot_cancel private: void slotCancel() { QGpgMEJob::doSlotCancel(); }
 #define make_progress_emitter private: void doEmitProgressSignal( const QString & what, int cur, int tot ) { emit progress( what, cur, tot ); }
 #define make_done_emitter private: void doEmitDoneSignal() { emit done(); }
-#define QGPGME_JOB make_slot_cancel make_progress_emitter make_done_emitter
+#define make_auditLogAsHtml private: QString auditLogAsHtml() const { return QGpgMEJob::auditLogAsHtml(); }
+#define QGPGME_JOB make_slot_cancel make_progress_emitter make_done_emitter make_auditLogAsHtml
 
 #endif // __KLEO_QGPGMEJOB_H__

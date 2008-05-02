@@ -144,6 +144,7 @@ GpgME::SigningResult Kleo::QGpgMESignJob::exec( const std::vector<GpgME::Key> & 
   signature = outData();
   mResult = mCtx->signingResult();
   resetQIODeviceDataObjects();
+  getAuditLog();
   return mResult;
 }
 

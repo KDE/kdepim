@@ -134,6 +134,7 @@ GpgME::EncryptionResult Kleo::QGpgMEEncryptJob::exec( const std::vector<GpgME::K
   ciphertext = outData();
   mResult = mCtx->encryptionResult();
   resetQIODeviceDataObjects();
+  getAuditLog();
   return mResult;
 }
 

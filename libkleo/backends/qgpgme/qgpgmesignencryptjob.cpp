@@ -155,6 +155,7 @@ Kleo::QGpgMESignEncryptJob::exec( const std::vector<GpgME::Key> & signers,
   mResult.first = mCtx->signingResult();
   mResult.second = mCtx->encryptionResult();
   resetQIODeviceDataObjects();
+  getAuditLog();
   return mResult;
 }
 

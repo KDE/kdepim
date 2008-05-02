@@ -68,7 +68,10 @@ void Kleo::Job::showErrorDialog( QWidget *, const QString & ) const {
   kDebug() <<"Kleo::Job::showErrorDialog() should be reimplemented in Kleo::Job subclasses!";
 }
 
-
+QString Kleo::Job::auditLogAsHtml() const {
+    kDebug() << "Kleo::Job::auditLogAsHtml() should be reimplemented in Kleo::Job subclasses!" << endl;
+    return QString();
+}
 
 #define make_job_subclass(x) \
   Kleo::x::x( QObject * parent ) : Job( parent ) {} \
