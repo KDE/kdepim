@@ -1,3 +1,10 @@
+Saturday, May 3rd 2008
+
+Merges
+-------
+
+* Enterprise in sync with kdepim 3.5 branch.
+
 Monday, April 28th 2008
 
 Problems addressed
