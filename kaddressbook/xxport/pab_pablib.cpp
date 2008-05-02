@@ -323,7 +323,7 @@ void pab::size(content_t A,pabsize_t & s1,pabsize_t & s2)
 byte_t pab::readbyte(void)
 {
 byte_t c;
-    c=in.getch();
+    in.getChar((char*)&c);
 return c;
 }
 

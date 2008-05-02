@@ -274,10 +274,7 @@ void ViewConfigureFieldsPage::initGUI()
   slotShowFields( 0 );
 
   sizeHint = sizeHint.expandedTo( mSelectedBox->sizeHint() );
-#ifdef __GNUC__
-#warning Port me!
-#endif
-  //sizeHint.setWidth( mUnSelectedBox->maxItemWidth() );
+  sizeHint.setWidth( mUnSelectedBox->sizeHintForColumn( 0 ) );
   mUnSelectedBox->setMinimumSize( sizeHint );
   mSelectedBox->setMinimumSize( sizeHint );
 

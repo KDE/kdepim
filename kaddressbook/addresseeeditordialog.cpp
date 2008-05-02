@@ -36,8 +36,7 @@
 
 #include "addresseeeditordialog.h"
 
-AddresseeEditorDialog::AddresseeEditorDialog( KAB::Core * /*core*/,
-                                              QWidget *parent, const char *name )
+AddresseeEditorDialog::AddresseeEditorDialog( KAB::Core*, QWidget *parent )
   : KDialog( parent )
 {
   setCaption( i18n( "Edit Contact" ) );

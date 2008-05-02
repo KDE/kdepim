@@ -385,11 +385,8 @@ void KABCore::mailVCard( const QStringList &uids )
 void KABCore::startChat()
 {
   QStringList uids = mViewManager->selectedUids();
-#ifdef __GNUC__
-#warning Port KIMProxy usage!
-#endif
-//  if ( !uids.isEmpty() )
-//    mKIMProxy->chatWithContact( uids.first() );
+  if ( !uids.isEmpty() )
+    mKIMProxy->chatWithContact( uids.first() );
 }
 
 void KABCore::browse( const QString& url )
@@ -926,10 +923,10 @@ void KABCore::print()
   QPrinter printer;
   printer.setDocName( i18n( "Address Book" ) );
   printer.setOutputFileName( "addressbook.pdf" );
-  printer.setOutputToFile(false);
+  printer.setOutputFormat( QPrinter::PdfFormat );
 
-  QPrintDialog printDialog(&printer, mWidget);
-  printDialog.setWindowTitle(i18n("Print Addresses"));
+  QPrintDialog printDialog( &printer, mWidget );
+  printDialog.setWindowTitle( i18n( "Print Addresses" ) );
   if ( !printDialog.exec() )
     return;
 
@@ -1012,11 +1009,10 @@ void KABCore::addressBookChanged()
   updateCategories();
 }
 
-AddresseeEditorDialog *KABCore::createAddresseeEditorDialog( QWidget *parent,
-                                                             const char *name )
+AddresseeEditorDialog *KABCore::createAddresseeEditorDialog( QWidget *parent )
 {
-  AddresseeEditorDialog *dialog = new AddresseeEditorDialog( this, parent,
-                                                 name ? name : "editorDialog" );
+  AddresseeEditorDialog *dialog = new AddresseeEditorDialog( this, parent );
+
   connect( dialog, SIGNAL( contactModified( const KABC::Addressee& ) ),
            SLOT( contactModified( const KABC::Addressee& ) ) );
   connect( dialog, SIGNAL( editorDestroyed( const QString& ) ),
@@ -1067,7 +1063,7 @@ void KABCore::initGUI()
   connect( mIncSearchWidget, SIGNAL( doSearch( const QString& ) ),
            SLOT( incrementalTextSearch( const QString& ) ) );
 
-  mFilterSelectionWidget = new FilterSelectionWidget( searchTB , "kde toolbar widget" );
+  mFilterSelectionWidget = new FilterSelectionWidget( searchTB );
   searchTB->layout()->addWidget( mFilterSelectionWidget );
 
   mDetailsSplitter = new QSplitter( mWidget );

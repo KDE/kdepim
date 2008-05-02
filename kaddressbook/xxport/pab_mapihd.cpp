@@ -143,7 +143,7 @@ int          i,j;
 pabrec_entry e=pr_unknown;
 
   for(i=0;mapi_map[i]!=NULL && e==pr_unknown;i++) {
-    for(j=1;mapi_map[i][j]!=0 && _tag!=mapi_map[i][j];j++);
+    for(j=1;mapi_map[i][j]!=0 && _tag!=mapi_map[i][j];j++) {};
     if (mapi_map[i][j]!=0) {
       e=(pabrec_entry) mapi_map[i][0];
     }

@@ -42,8 +42,7 @@ class AddViewDialog : public KDialog
   Q_OBJECT
 
   public:
-    AddViewDialog( QHash<QString, ViewFactory*> *viewFactoryDict, QWidget *parent,
-                   const char *name = 0 );
+    AddViewDialog( QHash<QString, ViewFactory*> *viewFactoryDict, QWidget *parent );
     ~AddViewDialog();
 
     QString viewName()const;

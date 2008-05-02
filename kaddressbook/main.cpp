@@ -58,7 +58,6 @@ int KAddressBookApp::newInstance()
     // There can only be one main window
     if ( KMainWindow::canBeRestored( 1 ) ) {
       mMainWin = new KAddressBookMain;
-      setMainWidget( mMainWin );
       mMainWin->show();
       mMainWin->restore( 1 );
     }
@@ -68,7 +67,6 @@ int KAddressBookApp::newInstance()
     if ( args->isSet( "editor-only" ) ) {
         if ( !mMainWin ) {
           mMainWin = new KAddressBookMain;
-          setMainWidget( mMainWin );
           mMainWin->hide();
         }
         // otherwise, leave the window like it is (hidden or shown)
@@ -81,7 +79,6 @@ int KAddressBookApp::newInstance()
       if ( !( file.isEmpty() && mDefaultIsOpen ) ) {
         if ( !mMainWin ) {
           mMainWin = new KAddressBookMain( file );
-          setMainWidget( mMainWin );
           mMainWin->show();
         } else {
           KAddressBookMain *m = new KAddressBookMain( file );

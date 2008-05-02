@@ -180,7 +180,7 @@ void KeyWidget::exportKey()
   s << key.textData();
   s.flush();
 
-  KIO::NetAccess::upload( tempFile.fileName(), url, kapp->mainWidget() );
+  KIO::NetAccess::upload( tempFile.fileName(), url, QApplication::activeWindow() );
 }
 
 void KeyWidget::updateKeyCombo()

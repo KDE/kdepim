@@ -18,20 +18,19 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
-#include <QApplication>
-#include <QCheckBox>
-#include <qgroupbox.h>
-#include <q3header.h>
-#include <QLabel>
-#include <QMap>
-#include <q3listview.h>
-#include <QPointer>
-#include <QPushButton>
-//Added by qt3to4:
-#include <QGridLayout>
-#include <QCloseEvent>
-#include <QFrame>
-#include <QVBoxLayout>
+#include <QtCore/QPair>
+#include <QtCore/QPointer>
+#include <QtGui/QApplication>
+#include <QtGui/QCheckBox>
+#include <QtGui/QCloseEvent>
+#include <QtGui/QFrame>
+#include <QtGui/QGridLayout>
+#include <QtGui/QGroupBox>
+#include <QtGui/QHeaderView>
+#include <QtGui/QLabel>
+#include <QtGui/QPushButton>
+#include <QtGui/QTableView>
+#include <QtGui/QVBoxLayout>
 
 #include <addresseelineedit.h>
 #include <KRandom>
@@ -105,47 +104,171 @@ static QMap<QString, QString>& adrbookattr2ldap()
   return keys;
 }
 
-class ContactListItem : public Q3ListViewItem
+class ContactListModel : public QAbstractTableModel
 {
   public:
-    ContactListItem( Q3ListView* parent, const KLDAP::LdapAttrMap& attrs )
-      : Q3ListViewItem( parent ), mAttrs( attrs )
-    { }
+    enum Role {
+      ServerRole = Qt::UserRole + 1
+    };
 
-    KLDAP::LdapAttrMap mAttrs;
-
-    virtual QString text( int col ) const
+    ContactListModel( QObject *parent )
+      : QAbstractTableModel( parent )
     {
-      // Look up a suitable attribute for column col
-      const QString colName = listView()->columnText( col );
-      const QString ldapAttrName = adrbookattr2ldap()[ colName ];
-      return join( mAttrs[ ldapAttrName ], ", " );
     }
+
+    void addContact( const KLDAP::LdapAttrMap &contact, const QString &server )
+    {
+      mContactList.append( contact );
+      mServerList.append( server );
+      reset();
+    }
+
+    QPair<KLDAP::LdapAttrMap, QString> contact( const QModelIndex &index ) const
+    {
+      if ( !index.isValid() || index.row() < 0 || index.row() >= mContactList.count() )
+        return qMakePair( KLDAP::LdapAttrMap(), QString() );
+
+      return qMakePair( mContactList.at( index.row() ), mServerList.at( index.row() ) );
+    }
+
+    QString email( const QModelIndex &index ) const
+    {
+      if ( !index.isValid() || index.row() < 0 || index.row() >= mContactList.count() )
+        return QString();
+
+      return asUtf8( mContactList.at( index.row() ).value( "mail" ).first() ).trimmed();
+    }
+
+    QString fullName( const QModelIndex &index ) const
+    {
+      if ( !index.isValid() || index.row() < 0 || index.row() >= mContactList.count() )
+        return QString();
+
+      return asUtf8( mContactList.at( index.row() ).value( "cn" ).first() ).trimmed();
+    }
+
+    void clear()
+    {
+      mContactList.clear();
+      mServerList.clear();
+      reset();
+    }
+
+    virtual int rowCount( const QModelIndex &parent = QModelIndex() ) const
+    {
+      if ( !parent.isValid() )
+        return mContactList.count();
+      else
+        return 0;
+    }
+
+    virtual int columnCount( const QModelIndex &parent = QModelIndex() ) const
+    {
+      if ( !parent.isValid() )
+        return 18;
+      else
+        return 0;
+    }
+
+    virtual QVariant headerData( int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const
+    {
+      if ( orientation == Qt::Vertical || role != Qt::DisplayRole || section < 0 || section > 17 )
+        return QVariant();
+
+      switch ( section ) {
+        case  0: return i18n( "Full Name" ); break;
+        case  1: return i18n( "Email" ); break;
+        case  2: return i18n( "Home Number" ); break;
+        case  3: return i18n( "Work Number" ); break;
+        case  4: return i18n( "Mobile Number" ); break;
+        case  5: return i18n( "Fax Number" ); break;
+        case  6: return i18n( "Company" ); break;
+        case  7: return i18n( "Organization" ); break;
+        case  8: return i18n( "Street" ); break;
+        case  9: return i18n( "State" ); break;
+        case 10: return i18n( "Country" ); break;
+        case 11: return i18n( "Zip Code" ); break;
+        case 12: return i18n( "Postal Address" ); break;
+        case 13: return i18n( "City" ); break;
+        case 14: return i18n( "Department" ); break;
+        case 15: return i18n( "Description" ); break;
+        case 16: return i18n( "User ID" ); break;
+        case 17: return i18n( "Title" ); break;
+        default: return QVariant(); break;
+      };
+
+      return QVariant();
+    }
+
+    virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const
+    {
+      if ( !index.isValid() )
+        return QVariant();
+
+      if ( index.row() < 0 || index.row() >= mContactList.count() || index.column() < 0 || index.column() > 17 )
+        return QVariant();
+
+      if ( role == ServerRole )
+        return mServerList.at( index.row() );
+
+      if ( role != Qt::DisplayRole )
+        return QVariant();
+
+      const KLDAP::LdapAttrMap map = mContactList.at( index.row() );
+
+      switch ( index.column() ) {
+        case  0: return join( map.value( "cn" ), ", " ); break;
+        case  1: return join( map.value( "mail" ), ", " ); break;
+        case  2: return join( map.value( "homePhone" ), ", " ); break;
+        case  3: return join( map.value( "telephoneNumber" ), ", " ); break;
+        case  4: return join( map.value( "mobile" ), ", " ); break;
+        case  5: return join( map.value( "facsimileTelephoneNumber" ), ", " ); break;
+        case  6: return join( map.value( "Company" ), ", " ); break;
+        case  7: return join( map.value( "o" ), ", " ); break;
+        case  8: return join( map.value( "street" ), ", " ); break;
+        case  9: return join( map.value( "st" ), ", " ); break;
+        case 10: return join( map.value( "co" ), ", " ); break;
+        case 11: return join( map.value( "postalCode" ), ", " ); break;
+        case 12: return join( map.value( "postalAddress" ), ", " ); break;
+        case 13: return join( map.value( "l" ), ", " ); break;
+        case 14: return join( map.value( "department" ), ", " ); break;
+        case 15: return join( map.value( "description" ), ", " ); break;
+        case 16: return join( map.value( "uid" ), ", " ); break;
+        case 17: return join( map.value( "title" ), ", " ); break;
+        default: return QVariant(); break;
+      }
+
+    }
+
+  private:
+    QList<KLDAP::LdapAttrMap> mContactList;
+    QStringList mServerList;
 };
 
 class LDAPSearchDialog::Private
 {
   public:
-    static QList<ContactListItem*> selectedItems( Q3ListView* );
-    QMap<const ContactListItem*, QString> itemToServer;
+    static QList< QPair<KLDAP::LdapAttrMap, QString> > selectedItems( QAbstractItemView * );
 };
 
-QList<ContactListItem*> LDAPSearchDialog::Private::selectedItems( Q3ListView* view )
+QList< QPair<KLDAP::LdapAttrMap, QString> > LDAPSearchDialog::Private::selectedItems( QAbstractItemView* view )
 {
-  QList<ContactListItem*> selected;
-  ContactListItem* cli = static_cast<ContactListItem*>( view->firstChild() );
-  while ( cli ) {
-    if ( cli->isSelected() )
-      selected.append( cli );
-    cli = static_cast<ContactListItem*>( cli->nextSibling() );
-  }
-  return selected;
+  QList< QPair<KLDAP::LdapAttrMap, QString> > contacts;
+
+  ContactListModel *model = static_cast<ContactListModel*>( view->model() );
+
+  const QModelIndexList selected = view->selectionModel()->selectedIndexes();
+  for ( int i = 0; i < selected.count(); ++i )
+    contacts.append( model->contact( selected.at( i ) ) );
+
+  return contacts;
 }
 
 LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
                                     QWidget* parent )
   : KDialog( parent ),
-    mAddressBook( ab ), mCore( core ), d( new Private )
+    mAddressBook( ab ), mCore( core ), mModel( 0 ),
+    d( new Private )
 {
   setCaption( i18n( "Search for Addresses in Directory" ) );
   setButtons( Help | User1 | User2 | Cancel );
@@ -205,11 +328,13 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
 
   topLayout->addWidget( groupBox );
 
-  mResultListView = new Q3ListView( page );
-  mResultListView->setSelectionMode( Q3ListView::Multi );
-  mResultListView->setAllColumnsShowFocus( true );
-  mResultListView->setShowSortIndicator( true );
-  topLayout->addWidget( mResultListView );
+  mResultView = new QTableView( page );
+  mResultView->setSelectionMode( QTableView::MultiSelection );
+  mResultView->setSelectionBehavior( QTableView::SelectRows );
+  mModel = new ContactListModel( mResultView );
+  mResultView->setModel( mModel );
+  mResultView->verticalHeader()->hide();
+  topLayout->addWidget( mResultView );
 
   KDialogButtonBox *buttons = new KDialogButtonBox( page, Qt::Horizontal );
   buttons->addButton( i18n( "Select All" ), QDialogButtonBox::ActionRole, this, SLOT( slotSelectAll() ) );
@@ -226,9 +351,9 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
   mIsOK = false;
 
   connect( mRecursiveCheckbox, SIGNAL( toggled( bool ) ),
-	   this, SLOT( slotSetScope( bool ) ) );
+           this, SLOT( slotSetScope( bool ) ) );
   connect( mSearchButton, SIGNAL( clicked() ),
-	   this, SLOT( slotStartSearch() ) );
+           this, SLOT( slotStartSearch() ) );
 
   setTabOrder(mSearchEdit, mFilterCombo);
   setTabOrder(mFilterCombo, mSearchButton);
@@ -290,32 +415,7 @@ void LDAPSearchDialog::restoreSettings()
       mLdapClientList.append( ldapClient );
     }
 
-/** CHECKIT*/
-    while ( mResultListView->header()->count() > 0 ) {
-      mResultListView->removeColumn(0);
-    }
-
-    mResultListView->addColumn( i18n( "Full Name" ) );
-    mResultListView->addColumn( i18n( "Email" ) );
-    mResultListView->addColumn( i18n( "Home Number" ) );
-    mResultListView->addColumn( i18n( "Work Number" ) );
-    mResultListView->addColumn( i18n( "Mobile Number" ) );
-    mResultListView->addColumn( i18n( "Fax Number" ) );
-    mResultListView->addColumn( i18n( "Company" ) );
-    mResultListView->addColumn( i18n( "Organization" ) );
-    mResultListView->addColumn( i18n( "Street" ) );
-    mResultListView->addColumn( i18n( "State" ) );
-    mResultListView->addColumn( i18n( "Country" ) );
-    mResultListView->addColumn( i18n( "Zip Code" ) );
-    mResultListView->addColumn( i18n( "Postal Address" ) );
-    mResultListView->addColumn( i18n( "City" ) );
-    mResultListView->addColumn( i18n( "Department" ) );
-    mResultListView->addColumn( i18n( "Description" ) );
-    mResultListView->addColumn( i18n( "User ID" ) );
-    mResultListView->addColumn( i18n( "Title" ) );
-
-    mResultListView->clear();
-    d->itemToServer.clear();
+    mModel->clear();
   }
 }
 
@@ -334,10 +434,9 @@ void LDAPSearchDialog::cancelQuery()
   }
 }
 
-void LDAPSearchDialog::slotAddResult( const KPIM::LdapClient&, const KLDAP::LdapObject& obj )
+void LDAPSearchDialog::slotAddResult( const KPIM::LdapClient &client, const KLDAP::LdapObject& obj )
 {
-  ContactListItem* item = new ContactListItem( mResultListView, obj.attributes() );
-  //d->itemToServer[item] = obj.client->server().host();
+  mModel->addContact( obj.attributes(), client.server().host() );
 }
 
 void LDAPSearchDialog::slotSetScope( bool rec )
@@ -402,8 +501,7 @@ void LDAPSearchDialog::slotStartSearch()
   QString filter = makeFilter( mSearchEdit->text().trimmed(), mFilterCombo->currentText(), startsWith );
 
    // loop in the list and run the KPIM::LdapClients
-  mResultListView->clear();
-  d->itemToServer.clear();
+  mModel->clear();
   Q_FOREACH( KPIM::LdapClient* const client , mLdapClientList )
     client->startQuery( filter );
 
@@ -452,20 +550,18 @@ void LDAPSearchDialog::closeEvent( QCloseEvent* e )
 QString LDAPSearchDialog::selectedEMails() const
 {
   QStringList result;
-  ContactListItem* cli = static_cast<ContactListItem*>( mResultListView->firstChild() );
-  while ( cli ) {
-    if ( cli->isSelected() ) {
-      QString email = asUtf8( cli->mAttrs[ "mail" ].first() ).trimmed();
-      if ( !email.isEmpty() ) {
-        QString name = asUtf8( cli->mAttrs[ "cn" ].first() ).trimmed();
-        if ( name.isEmpty() ) {
-          result << email;
-        } else {
-          result << name + " <" + email + '>';
-        }
+
+  const QModelIndexList selected = mResultView->selectionModel()->selectedIndexes();
+  for ( int i = 0; i < selected.count(); ++i ) {
+    QString email = mModel->email( selected.at( i ) );
+    if ( !email.isEmpty() ) {
+      QString name = mModel->fullName( selected.at( i ) );
+      if ( name.isEmpty() ) {
+        result << email;
+      } else {
+        result << name + " <" + email + '>';
       }
     }
-    cli = static_cast<ContactListItem*>( cli->nextSibling() );
   }
 
   return result.join( ", " );
@@ -478,12 +574,12 @@ void LDAPSearchDialog::slotHelp()
 
 void LDAPSearchDialog::slotUnselectAll()
 {
-  mResultListView->selectAll( false );
+  mResultView->clearSelection();
 }
 
 void LDAPSearchDialog::slotSelectAll()
 {
-  mResultListView->selectAll( true );
+  mResultView->selectAll();
 }
 
 KABC::Addressee LDAPSearchDialog::convertLdapAttributesToAddressee( const KLDAP::LdapAttrMap& attrs )
@@ -564,7 +660,7 @@ KPIM::DistributionList LDAPSearchDialog::selectDistributionList()
   return list;
 }
 
-KABC::Addressee::List LDAPSearchDialog::importContactsUnlessTheyExist( const QList<ContactListItem*>& selectedItems,
+KABC::Addressee::List LDAPSearchDialog::importContactsUnlessTheyExist( const QList< QPair<KLDAP::LdapAttrMap, QString> >& selectedItems,
                                                                        KABC::Resource * const resource )
 {
     const QDateTime now = QDateTime::currentDateTime();
@@ -573,14 +669,14 @@ KABC::Addressee::List LDAPSearchDialog::importContactsUnlessTheyExist( const QLi
 
     KABLock::self( mCore->addressBook() )->lock( resource );
 
-    for ( QList<ContactListItem*>::ConstIterator it = selectedItems.begin(); it != selectedItems.end(); ++it ) {
-      const ContactListItem * const cli = *it;
-      KABC::Addressee addr = convertLdapAttributesToAddressee( cli->mAttrs );
+    for ( int i = 0; i < selectedItems.count(); ++i ) {
+      KABC::Addressee addr = convertLdapAttributesToAddressee( selectedItems.at( i ).first );
       const KABC::Addressee::List existing = mCore->addressBook()->findByEmail( addr.preferredEmail() );
 
       if ( existing.isEmpty() ) {
         addr.setUid( KRandom::randomString( 10 ) );
-        addr.setNote( i18nc( "arguments are host name, datetime", "Imported from LDAP directory %1 on %2", d->itemToServer[cli], KGlobal::locale()->formatDateTime( now ) ) );
+        addr.setNote( i18nc( "arguments are host name, datetime", "Imported from LDAP directory %1 on %2",
+                             selectedItems.at( i ).second, KGlobal::locale()->formatDateTime( now ) ) );
         addr.setResource( resource );
         mCore->addressBook()->insertAddressee( addr );
         importedAddrs.append( addr.fullEmail() );
@@ -604,9 +700,10 @@ void LDAPSearchDialog::slotUser2()
     KABC::Resource *resource = mCore->requestResource( this );
     if ( !resource ) return;
 
-    const QList<ContactListItem*> selectedItems = d->selectedItems( mResultListView );
+    const QList< QPair<KLDAP::LdapAttrMap, QString> > selectedItems = d->selectedItems( mResultView );
     if ( selectedItems.isEmpty() ) {
-      KMessageBox::information( this, i18n( "Please select the contacts you want to add to the distribution list." ), i18n( "No Contacts Selected" ) );
+      KMessageBox::information( this, i18n( "Please select the contacts you want to add to the distribution list." ),
+                                      i18n( "No Contacts Selected" ) );
       return;
     }
     KPIM::DistributionList dist = selectDistributionList();
@@ -630,9 +727,11 @@ void LDAPSearchDialog::slotUser2()
 void LDAPSearchDialog::slotUser1()
 {
     KABC::Resource *resource = mCore->requestResource( this );
-    if ( !resource ) return;
-    const QList<ContactListItem*> selectedItems = d->selectedItems( mResultListView );
-    importContactsUnlessTheyExist( selectedItems, resource );
+
+    if ( !resource )
+      return;
+
+    importContactsUnlessTheyExist( d->selectedItems( mResultView ), resource );
 }
 
 #include "ldapsearchdialog.moc"

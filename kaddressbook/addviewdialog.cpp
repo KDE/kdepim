@@ -35,9 +35,9 @@
 #include "addviewdialog.h"
 
 AddViewDialog::AddViewDialog( QHash<QString, ViewFactory*> *viewFactoryDict,
-                              QWidget *parent, const char *name )
+                              QWidget *parent )
   : KDialog( parent),
-   mViewFactoryDict( viewFactoryDict )
+    mViewFactoryDict( viewFactoryDict )
 {
   setCaption( i18n( "Add View" ) );
   setButtons( KDialog::Ok | KDialog::Cancel );

@@ -207,13 +207,8 @@ void FilterDialog::edit()
 
   dlg.setFilter( mFilterList[ pos ] );
 
-  if ( dlg.exec() ) {
-    mFilterList.removeAt(  pos  );
-#ifdef __GNUC__
-#warning "kde4: correct ?"
-#endif
-    mFilterList.insert( pos , dlg.filter() );
-  }
+  if ( dlg.exec() )
+    mFilterList.replace( pos , dlg.filter() );
 
   refresh();
 
@@ -222,9 +217,6 @@ void FilterDialog::edit()
 
 void FilterDialog::remove()
 {
-#ifdef __GNUC__
-#warning "kde4: correct ?"
-#endif
   mFilterList.removeAt( mFilterListBox->currentRow()  );
 
   selectionChanged();

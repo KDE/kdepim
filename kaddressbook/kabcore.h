@@ -423,8 +423,7 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
     void updateCategories();
     QStringList allCategories() const;
 
-    AddresseeEditorDialog *createAddresseeEditorDialog( QWidget *parent,
-                                                        const char *name = 0 );
+    AddresseeEditorDialog *createAddresseeEditorDialog( QWidget *parent );
 
     QWidget *mWidget;
     KABC::AddressBook *mAddressBook;

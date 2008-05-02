@@ -93,7 +93,6 @@ void PrintStyle::addPage( QWidget *page, const QString &title )
 void PrintStyle::showPages()
 {
   QWidget *wdg = 0;
-  int i = 0;
 
   Q_FOREACH( wdg, mPageList ) {
     mWizard->setAppropriate( mPageItems[ wdg ], true );

@@ -53,7 +53,7 @@ ConfigureCardViewWidget::ConfigureCardViewWidget( KABC::AddressBook *ab, QWidget
   : ViewConfigureWidget( ab, parent )
 {
   QWidget *page = addPage( i18n( "Look & Feel" ), QString(),
-                           DesktopIcon( "looknfeel" ) );
+                           DesktopIcon( "preferences-desktop-theme" ) );
   mAdvancedPage = new CardViewLookNFeelPage( page );
 }
 
@@ -275,21 +275,26 @@ void CardViewLookNFeelPage::initGUI()
   vbFonts = new QWidget( fntTab );
   QGridLayout *gFnts = new QGridLayout( vbFonts );
   gFnts->setSpacing( spacing );
-  gFnts->setAutoAdd( true );
   gFnts->setColumnStretch( 1, 1 );
   QLabel *lTFnt = new QLabel( i18n("&Text font:"), vbFonts );
+  gFnts->addWidget( lTFnt, 0, 0 );
   lTextFont = new QLabel( vbFonts );
   lTextFont->setFrameStyle( QFrame::Panel|QFrame::Sunken );
+  gFnts->addWidget( lTextFont, 0, 1 );
   btnFont = new KPushButton( i18n("Choose..."), vbFonts );
   lTFnt->setBuddy( btnFont );
   connect( btnFont, SIGNAL(clicked()), this, SLOT(setTextFont()) );
+  gFnts->addWidget( btnFont, 0, 2 );
 
   QLabel *lHFnt = new QLabel( i18n("&Header font:"), vbFonts );
+  gFnts->addWidget( lTFnt, 1, 0 );
   lHeaderFont = new QLabel( vbFonts );
   lHeaderFont->setFrameStyle( QFrame::Panel|QFrame::Sunken );
+  gFnts->addWidget( lHeaderFont, 1, 1 );
   btnHeaderFont = new KPushButton( i18n("Choose..."), vbFonts );
   lHFnt->setBuddy( btnHeaderFont );
   connect( btnHeaderFont, SIGNAL(clicked()), this, SLOT(setHeaderFont()) );
+  gFnts->addWidget( btnHeaderFont, 1, 2 );
 
   fntTab->setStretchFactor( new QWidget( fntTab ), 1 );
 

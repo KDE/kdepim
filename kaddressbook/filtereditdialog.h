@@ -35,8 +35,6 @@ namespace KPIM {
 class CategorySelectWidget;
 }
 
-class KPIM::CategorySelectWidget;
-
 #include <kdialog.h>
 
 #include "filter.h"

@@ -257,7 +257,7 @@ void PhoneEditWidget::remove()
 void PhoneEditWidget::recreateNumberWidgets()
 {
   foreach ( QWidget *const w, mWidgets ) {
-    mWidgetLayout->remove( w );
+    mWidgetLayout->removeWidget( w );
     w->deleteLater();
   }
   mWidgets.clear();

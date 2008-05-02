@@ -142,13 +142,9 @@ U TypeCombo<T, U>::selectedType()
 template <class T, typename U>
 typename TypeCombo<T, U>::Iterator TypeCombo<T, U>::selectedElement()
 {
-#ifdef __GNUC__
-#warning Ugly porting hack!
-#endif
-   typename TypeCombo<T, U>::Iterator it = mTypeList.begin();
-  for ( int i = 0; i < currentIndex(); ++i, ++it );
+  typename TypeCombo<T, U>::Iterator it = mTypeList.begin();
+  for ( int i = 0; i < currentIndex(); ++i, ++it ) {};
   return it;
-//  return mTypeList.at( currentItem() );
 }
 
 template <class T, typename U>

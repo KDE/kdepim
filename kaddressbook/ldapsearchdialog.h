@@ -34,10 +34,10 @@ class KComboBox;
 class KLineEdit;
 
 class QCheckBox;
-class Q3ListView;
 class QPushButton;
+class QTableView;
 class KABCore;
-class ContactListItem;
+class ContactListModel;
 
 namespace KABC {
     class Resource;
@@ -55,10 +55,10 @@ class LDAPSearchDialog : public KDialog
 
     void restoreSettings();
 
-  signals:
+  Q_SIGNALS:
     void addresseesAdded();
 
-  protected slots:
+  protected Q_SLOTS:
     void slotAddResult( const KPIM::LdapClient &client, const KLDAP::LdapObject& obj );
     void slotSetScope( bool rec );
     void slotStartSearch();
@@ -70,12 +70,7 @@ class LDAPSearchDialog : public KDialog
     virtual void slotUser2();
     void slotSelectAll();
     void slotUnselectAll();
-    /**
-     * Traverses the given items and adds them to the given resource,
-     * unless they already exist. Returns the list of both the added
-     * and the existing contacts.
-     */
-    KABC::Addressee::List importContactsUnlessTheyExist( const QList<ContactListItem*>& items, KABC::Resource * const resource );
+    KABC::Addressee::List importContactsUnlessTheyExist( const QList< QPair<KLDAP::LdapAttrMap, QString> >& items, KABC::Resource * const resource );
 
   protected:
     QString selectedEMails() const;
@@ -103,8 +98,9 @@ class LDAPSearchDialog : public KDialog
     KLineEdit* mSearchEdit;
 
     QCheckBox* mRecursiveCheckbox;
-    Q3ListView* mResultListView;
+    QTableView* mResultView;
     QPushButton* mSearchButton;
+    ContactListModel* mModel;
     class Private;
     Private* const d;
 };

@@ -112,13 +112,11 @@ void KAB::DistributionListEntryView::setEntry( const KPIM::DistributionList& lis
     m_emailGroup = 0;
 
     QPixmap pixmap;
-#ifdef __GNUC__
-#warning Port!
-#endif
-#if 0
-    pixmap.convertFromImage( m_entry.addressee.photo().data() );
-    m_imageLabel->setPixmap( pixmap.isNull() ? KIcon( "personal" ) : pixmap );
-#endif
+    if ( m_entry.addressee.photo().data().isNull() )
+      pixmap = KIcon( "personal" ).pixmap( 100, 140 );
+    else
+      pixmap = QPixmap::fromImage( m_entry.addressee.photo().data() );
+    m_imageLabel->setPixmap( pixmap );
     m_addresseeLabel->setText( i18nc( "Formatted name, role, organization", "<qt><h2>%1</h2><p>%2<br/>%3</p></qt>", m_entry.addressee.formattedName(), m_entry.addressee.role(), m_entry.addressee.organization() ) );
     m_distListLabel->setUrl( m_list.name() );
     m_distListLabel->setText( m_list.name() );

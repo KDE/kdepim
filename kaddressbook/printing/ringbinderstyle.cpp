@@ -165,10 +165,10 @@ void RingBinderPrintStyle::print( const KABC::Addressee::List &contacts, PrintPr
   painter.setPen( Qt::black );
   printer->setFullPage( true ); // use whole page
 
-  left = qMax( printer->margins().width(), marginLeft );
-  top = qMax( printer->margins().height(), marginTop );
-  width = printer->width() - left - qMax( printer->margins().width(), marginRight );
-  height = printer->height() - top - qMax( printer->margins().height(), marginBottom );
+  left = qMax( printer->paperRect().left() - printer->pageRect().left(), marginLeft );
+  top = qMax( printer->paperRect().top() - printer->pageRect().top(), marginTop );
+  width = printer->width() - left - qMax( printer->paperRect().right() - printer->pageRect().right(), marginRight );
+  height = printer->height() - top - qMax( printer->paperRect().bottom() - printer->pageRect().bottom(), marginBottom );
 
   painter.setViewport( left, top, width, height );
   progress->addMessage( i18n( "Printing" ) );

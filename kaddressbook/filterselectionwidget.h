@@ -38,7 +38,7 @@ class FilterSelectionWidget : public KHBox
   Q_OBJECT
 
   public:
-    FilterSelectionWidget( QWidget *parent, const char *name = 0 );
+    FilterSelectionWidget( QWidget *parent = 0 );
     virtual ~FilterSelectionWidget();
 
     void setItems( const QStringList &names );
