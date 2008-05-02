@@ -101,7 +101,7 @@ K_EXPORT_PLUGIN(KAB::DistributionListNg::Factory)
 
 QString KAB::DistributionListNg::MainWidget::title() const
 {
-    return i18n( "Distribution List Editor NG" );
+    return i18n( "Distribution List Editor" );
 }
 
 QString KAB::DistributionListNg::MainWidget::identifier() const
@@ -131,12 +131,14 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
     mEditButton = new QToolButton( this );
     mEditButton->setIcon( KIcon( "document-properties" ) );
     mEditButton->setToolTip( i18n( "Edit distribution list" ) );
+    mEditButton->setEnabled( false );
     connect( mEditButton, SIGNAL(clicked()), this, SLOT(editSelectedDistributionList()) );
     buttonLayout->addWidget( mEditButton );
 
     mRemoveButton = new QToolButton( this );
     mRemoveButton->setIcon( KIcon( "edit-delete" ) );
     mRemoveButton->setToolTip( i18n( "Remove distribution list" ) );
+    mRemoveButton->setEnabled( false );
     connect( mRemoveButton, SIGNAL(clicked()), this, SLOT(deleteSelectedDistributionList()) );
     buttonLayout->addWidget( mRemoveButton );
 
@@ -152,8 +154,6 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
              this, SLOT( itemSelected( int ) ) );
 
 
-    connect( core, SIGNAL( contactsUpdated() ),
-             this, SLOT( updateEntries() ) );
     connect( core->addressBook(), SIGNAL( addressBookChanged( AddressBook* ) ),
              this, SLOT( updateEntries() ) );
 
@@ -189,14 +189,15 @@ void KAB::DistributionListNg::MainWidget::editSelectedDistributionList()
 void KAB::DistributionListNg::MainWidget::deleteSelectedDistributionList()
 {
     const QList<QListWidgetItem*> items = mListBox->selectedItems();
-
-    const QString name = items.isEmpty() ? items.first()->text() : QString();
-    if ( name.isNull() )
+    const QString name = items.isEmpty() ? QString() : items.first()->text();
+    if ( name.isEmpty() )
         return;
+
     const KPIM::DistributionList list = KPIM::DistributionList::findByName(
     core()->addressBook(), name );
     if ( list.isEmpty() )
         return;
+
     core()->deleteDistributionLists( QStringList( name ) );
 }
 
@@ -239,7 +240,14 @@ void KAB::DistributionListNg::MainWidget::updateEntries()
 
 void KAB::DistributionListNg::MainWidget::itemSelected( int index )
 {
-    core()->setSelectedDistributionList( index == 0 ? QString() : mListBox->item( index )->text()  );
+    QString selectedList;
+    if ( index != 0 ) {
+      QListWidgetItem *item = mListBox->item( index );
+      if ( item )
+        selectedList = item->text();
+    }
+
+    core()->setSelectedDistributionList( selectedList );
     mEditButton->setEnabled( index > 0 );
     mRemoveButton->setEnabled( index > 0 );
 }

@@ -1,20 +1,6 @@
 
 include_directories( ${CMAKE_SOURCE_DIR}/kaddressbook/interfaces ${CMAKE_SOURCE_DIR}/kaddressbook  )
 
-
-########### next target ###############
-
-set(kaddrbk_distributionlist_PART_SRCS distributionlistwidget.cpp )
-
-
-kde4_add_plugin(kaddrbk_distributionlist ${kaddrbk_distributionlist_PART_SRCS})
-
-
-
-target_link_libraries(kaddrbk_distributionlist kaddressbookprivate kabinterfaces kabcommon ${KDE4_KABC_LIBS})
-
-install(TARGETS kaddrbk_distributionlist  DESTINATION ${PLUGIN_INSTALL_DIR})
-
 ########### next target ###############
 
 set(kaddrbk_distributionlistng_PART_SRCS distributionlistngwidget.cpp )
@@ -43,5 +29,5 @@ install(TARGETS kaddrbk_resourceselection  DESTINATION ${PLUGIN_INSTALL_DIR})
 
 ########### install files ###############
 
-install( FILES distributionlist.desktop distributionlistng.desktop resourceselection.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kaddressbook)
+install( FILES distributionlistng.desktop resourceselection.desktop  DESTINATION ${SERVICES_INSTALL_DIR}/kaddressbook)
 
