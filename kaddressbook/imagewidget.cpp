@@ -24,90 +24,170 @@
 #include <kabc/picture.h>
 #include <kdebug.h>
 #include <kdialog.h>
+#include <kfiledialog.h>
 #include <kglobalsettings.h>
 #include <kiconloader.h>
 #include <kimageio.h>
 #include <kio/netaccess.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kurlrequester.h>
 #include <kpixmapregionselectordialog.h>
 
-#include <syndication/loader.h>
-#include <syndication/feed.h>
-#include <syndication/image.h>
-
-#include <QApplication>
-#include <QCheckBox>
-#include <QGroupBox>
-#include <QLabel>
-#include <QPixmap>
-#include <QImage>
-#include <QGridLayout>
-#include <QFrame>
-#include <QHBoxLayout>
-#include <QDropEvent>
-#include <QDragEnterEvent>
-#include <QMouseEvent>
+#include <QtGui/QGroupBox>
+#include <QtGui/QImage>
+#include <QtGui/QMenu>
+#include <QtGui/QMouseEvent>
+#include <QtGui/QPixmap>
+#include <QtGui/QVBoxLayout>
 
 #include "imagewidget.h"
 
-ImageLabel::ImageLabel( const QString &title, QWidget *parent )
-  : QLabel( title, parent ), mReadOnly( false )
+ImageLoader::ImageLoader( QWidget *parent )
+  : QObject( 0 ), mParent( parent )
 {
-  setAcceptDrops( true );
 }
 
-void ImageLabel::setReadOnly( bool readOnly )
+KABC::Picture ImageLoader::loadPicture( const KUrl &url, bool *ok )
+{
+  KABC::Picture picture;
+  QString tempFile;
+
+  if ( url.isEmpty() )
+    return picture;
+
+  (*ok) = false;
+
+  QImage image;
+  if ( url.isLocalFile() ) {
+    image.load( url.path() );
+    picture.setData( image );
+    (*ok) = true;
+  } else if ( KIO::NetAccess::download( url, tempFile, mParent ) ) {
+    image.load( tempFile );
+    picture.setData( image );
+    (*ok) = true;
+    KIO::NetAccess::removeTempFile( tempFile );
+  }
+
+  if ( !(*ok) ) {
+    // image does not exist (any more)
+    KMessageBox::sorry( mParent, i18n( "This contact's image cannot be found." ) );
+    return picture;
+  }
+
+  QPixmap pixmap = QPixmap::fromImage( picture.data() );
+
+  image = KPixmapRegionSelectorDialog::getSelectedImage( pixmap, 100, 140, mParent );
+  if ( image.isNull() ) {
+    (*ok) = false;
+    return picture;
+  }
+
+  if ( image.height() != 140 || image.width() != 100 ) {
+    if ( image.height() > image.width() )
+      image = image.scaledToHeight( 140 );
+    else
+      image = image.scaledToWidth( 100 );
+  }
+
+  picture.setData( image );
+  (*ok) = true;
+
+  return picture;
+}
+
+ImageButton::ImageButton( QWidget *parent )
+  : QPushButton( parent ),
+    mReadOnly( false ), mImageLoader( 0 )
+{
+  setAcceptDrops( true );
+  setIconSize( QSize( 100, 140 ) );
+
+  connect( this, SIGNAL( clicked() ), SLOT( load() ) );
+}
+
+void ImageButton::setReadOnly( bool readOnly )
 {
   mReadOnly = readOnly;
 }
 
-void ImageLabel::startDrag()
+void ImageButton::setPicture( const KABC::Picture &picture )
 {
-  if ( pixmap() && !pixmap()->isNull() ) {
+  mPicture = picture;
+  updateGui();
+}
+
+KABC::Picture ImageButton::picture() const
+{
+  return mPicture;
+}
+
+void ImageButton::setImageLoader( ImageLoader *loader )
+{
+  mImageLoader = loader;
+}
+
+void ImageButton::startDrag()
+{
+  if ( !mPicture.data().isNull() ) {
     QDrag *drag = new QDrag( this );
     drag->setMimeData( new QMimeData() );
-    drag->mimeData()->setImageData( pixmap()->toImage() );
+    drag->mimeData()->setImageData( mPicture.data() );
     drag->start();
   }
 }
 
-void ImageLabel::dragEnterEvent( QDragEnterEvent *event )
+void ImageButton::updateGui()
+{
+  if ( mPicture.data().isNull() ) {
+    setIcon( KIcon( "personal" ) );
+  } else {
+    setIcon( QPixmap::fromImage( mPicture.data() ) );
+  }
+}
+
+void ImageButton::dragEnterEvent( QDragEnterEvent *event )
 {
   const QMimeData *md = event->mimeData();
   event->setAccepted( md->hasImage() || md->hasUrls());
 }
 
-void ImageLabel::dropEvent( QDropEvent *event )
+void ImageButton::dropEvent( QDropEvent *event )
 {
   if ( mReadOnly )
     return;
 
   const QMimeData *md = event->mimeData();
   if ( md->hasImage() ) {
-      QImage image = qvariant_cast<QImage>(md->imageData());
-      setPixmap( QPixmap::fromImage( image ) );
-      emit changed();
+    QImage image = qvariant_cast<QImage>(md->imageData());
+    mPicture.setData( image );
+    updateGui();
+    emit changed();
   }
 
   KUrl::List urls = KUrl::List::fromMimeData( md );
   if ( urls.isEmpty() ) { // oops, no data
-      event->setAccepted( false );
-      return;
+    event->setAccepted( false );
   } else {
-      emit urlDropped( urls.first() );
-      emit changed();
+    if ( mImageLoader ) {
+      bool ok = false;
+      KABC::Picture pic = mImageLoader->loadPicture( urls.first(), &ok );
+      if ( ok ) {
+        mPicture = pic;
+        updateGui();
+        emit changed();
+      }
+    }
   }
 }
 
-void ImageLabel::mousePressEvent( QMouseEvent *event )
+void ImageButton::mousePressEvent( QMouseEvent *event )
 {
   mDragStartPos = event->pos();
-  QLabel::mousePressEvent( event );
+  QPushButton::mousePressEvent( event );
 }
 
-void ImageLabel::mouseMoveEvent( QMouseEvent *event )
+void ImageButton::mouseMoveEvent( QMouseEvent *event )
 {
   if ( (event->buttons() & Qt::LeftButton) &&
        (event->pos() - mDragStartPos).manhattanLength() >
@@ -116,252 +196,83 @@ void ImageLabel::mouseMoveEvent( QMouseEvent *event )
   }
 }
 
+void ImageButton::contextMenuEvent( QContextMenuEvent *event )
+{
+  QMenu menu;
+  menu.addAction( i18n( "Reset" ), this, SLOT( clear() ) );
+  menu.exec( event->globalPos() );
+}
+
+void ImageButton::load()
+{
+  KUrl url = KFileDialog::getOpenUrl( QString(), KImageIO::pattern(), this );
+  if ( url.isValid() ) {
+    if ( mImageLoader ) {
+      bool ok = false;
+      KABC::Picture pic = mImageLoader->loadPicture( url, &ok );
+      if ( ok ) {
+        mPicture = pic;
+        updateGui();
+        emit changed();
+      }
+    }
+  }
+}
+
+void ImageButton::clear()
+{
+  mPicture = KABC::Picture();
+  updateGui();
+
+  emit changed();
+}
 
 ImageBaseWidget::ImageBaseWidget( const QString &title, QWidget *parent )
-  : QWidget( parent ), mReadOnly( false ), mRssLoader( 0 )
+  : QWidget( parent ), mReadOnly( false )
 {
-  QHBoxLayout *topLayout = new QHBoxLayout( this );
-  topLayout->setSpacing( KDialog::spacingHint() );
+  mImageLoader = new ImageLoader( this );
+
+  QVBoxLayout *topLayout = new QVBoxLayout( this );
   topLayout->setMargin( KDialog::marginHint() );
+  topLayout->setSpacing( KDialog::spacingHint() );
+
   QGroupBox *box = new QGroupBox( title, this );
-  QGridLayout *boxLayout = new QGridLayout();
-  box->setLayout( boxLayout );
-  boxLayout->setSpacing( KDialog::spacingHint() );
-  boxLayout->setMargin( KDialog::marginHint() );
-  boxLayout->setRowStretch( 3, 1 );
+  QVBoxLayout *layout = new QVBoxLayout( box );
+  layout->setSpacing( KDialog::spacingHint() );
 
-  mImageLabel = new ImageLabel( i18n( "Picture" ), box );
-  mImageLabel->setFixedSize( 100, 140 );
-  mImageLabel->setFrameStyle( QFrame::Panel | QFrame::Sunken );
-  boxLayout->addWidget( mImageLabel, 0, 0, 4, 1, Qt::AlignTop );
+  mImageButton = new ImageButton( box );
+  mImageButton->setFixedSize( 120, 160 );
+  mImageButton->setImageLoader( mImageLoader );
 
-  mImageUrl = new KUrlRequester( box );
-  mImageUrl->setFilter( KImageIO::pattern() );
-  mImageUrl->setMode( KFile::File );
-  boxLayout->addWidget( mImageUrl, 0, 1 );
-
-  mClearButton = new QPushButton( box );
-  mClearButton->setSizePolicy( QSizePolicy( QSizePolicy::Minimum, QSizePolicy::Minimum ) );
-  mClearButton->setIcon( KIcon( QApplication::isRightToLeft() ? "edit-clear-locationbar-ltr" : "edit-clear-locationbar-rtl" ) );
-  mClearButton->setEnabled( false );
-  boxLayout->addWidget( mClearButton, 0, 2 );
-
-  mBlogButton = new QPushButton( i18n( "Get From Blog" ), box );
-  boxLayout->addWidget( mBlogButton, 1, 1, 1, 2 );
-  connect( mBlogButton, SIGNAL( clicked() ), SLOT( getPictureFromBlog() ) );
-  showBlogButton( false );
-
-  mUseImageUrl = new QCheckBox( i18n( "Store as URL" ), box );
-  mUseImageUrl->setEnabled( false );
-  boxLayout->addWidget( mUseImageUrl, 2, 1, 1, 2 );
+  layout->addWidget( mImageButton );
 
   topLayout->addWidget( box );
 
-  mClearButton->setToolTip( i18n( "Reset" ) );
-
-  connect( mImageLabel, SIGNAL( changed() ),
-           SIGNAL( changed() ) );
-  connect( mImageLabel, SIGNAL( urlDropped( const KUrl& ) ),
-           SLOT( urlDropped( const KUrl& ) ) );
-  connect( mImageUrl, SIGNAL( textChanged( const QString& ) ),
-           SIGNAL( changed() ) );
-  connect( mImageUrl, SIGNAL( textChanged( const QString& ) ),
-           SLOT( updateGUI() ) );
-  connect( mImageUrl, SIGNAL( urlSelected( const KUrl& ) ),
-           SLOT( loadImage() ) );
-  connect( mImageUrl, SIGNAL( urlSelected( const KUrl& ) ),
-           SIGNAL( changed() ) );
-  connect( mImageUrl, SIGNAL( urlSelected( const KUrl& ) ),
-           SLOT( updateGUI() ) );
-  connect( mUseImageUrl, SIGNAL( toggled( bool ) ),
-           SIGNAL( changed() ) );
-  // FIXME: Is there really no race condition with all these mImageUrl signals?
-  connect( mClearButton, SIGNAL( clicked() ),
-           SLOT( clear() ) );
+  connect( mImageButton, SIGNAL( changed() ), SIGNAL( changed() ) );
 }
 
 ImageBaseWidget::~ImageBaseWidget()
 {
+  delete mImageLoader;
+  mImageLoader = 0;
 }
 
 void ImageBaseWidget::setReadOnly( bool readOnly )
 {
   mReadOnly = readOnly;
-  mImageLabel->setReadOnly( mReadOnly );
-  mImageUrl->setEnabled( !mReadOnly );
-  if ( !mBlogFeed.isEmpty() ) mBlogButton->setEnabled( !readOnly );
-}
-
-void ImageBaseWidget::showBlogButton( bool show )
-{
-  if ( show )
-    mBlogButton->show();
-  else
-    mBlogButton->hide();
-}
-
-void ImageBaseWidget::setBlogFeed( const QString &feed )
-{
-  mBlogFeed = feed;
-  mBlogButton->setEnabled( !feed.isEmpty() );
+  mImageButton->setReadOnly( mReadOnly );
 }
 
 void ImageBaseWidget::setImage( const KABC::Picture &photo )
 {
-  bool blocked = signalsBlocked();
-  blockSignals( true );
-
-  if ( photo.isIntern() ) {
-    QPixmap px = QPixmap::fromImage( photo.data(), Qt::AutoColor | Qt::ThresholdDither );
-
-    if ( px.height() != 140 || px.width() != 100 ) {
-      px = QPixmap::fromImage( px.toImage().scaled( 100, 140, Qt::KeepAspectRatio, Qt::SmoothTransformation ) );
-    }
-
-    mImageLabel->setPixmap( px );
-    mUseImageUrl->setChecked( false );
-  } else {
-    mImageUrl->setUrl( photo.url() );
-    if ( !photo.url().isEmpty() )
-      mUseImageUrl->setChecked( true );
-    loadImage();
-  }
-
-  blockSignals( blocked );
-
-  updateGUI();
+  mImageButton->setPicture( photo );
 }
 
 KABC::Picture ImageBaseWidget::image() const
 {
-  KABC::Picture photo;
-
-  if ( mUseImageUrl->isChecked() )
-    photo.setUrl( mImageUrl->url().url() );
-  else {
-    if ( mImageLabel->pixmap() ) {
-      photo.setData( mImageLabel->pixmap()->toImage() );
-    }
-  }
-
-  return photo;
+  return mImageButton->picture();
 }
 
-void ImageBaseWidget::urlDropped( const KUrl &url )
-{
-  mImageUrl->setUrl( url );
-  loadImage();
-  mImageUrl->setUrl( url );
-
-  emit changed();
-}
-
-void ImageBaseWidget::loadImage()
-{
-  QPixmap pixmap = loadPixmap( KUrl( mImageUrl->url() ) );
-  if(! pixmap.isNull() )
-    mImageLabel->setPixmap( pixmap );
-}
-
-void ImageBaseWidget::updateGUI()
-{
-  if ( !mReadOnly ) {
-    mUseImageUrl->setEnabled( !mImageUrl->url().isEmpty() );
-    mClearButton->setEnabled( !mImageUrl->url().isEmpty() || ( mImageLabel->pixmap() && !mImageLabel->pixmap()->isNull() ) );
-  }
-}
-
-void ImageBaseWidget::clear()
-{
-  mImageLabel->clear();
-  mImageUrl->clear();
-  mUseImageUrl->setChecked( false );
-
-  updateGUI();
-
-  emit changed();
-}
-
-void ImageBaseWidget::imageChanged()
-{
-  updateGUI();
-
-  emit changed();
-}
-
-QPixmap ImageBaseWidget::loadPixmap( const KUrl &url )
-{
-  QString tempFile;
-  QPixmap pixmap;
-
-  if ( url.isEmpty() )
-    return pixmap;
-
-  if ( url.isLocalFile() )
-    pixmap = QPixmap( url.path() );
-  else if ( KIO::NetAccess::download( url, tempFile, this ) ) {
-    pixmap = QPixmap( tempFile );
-    KIO::NetAccess::removeTempFile( tempFile );
-  }
-
-  if ( pixmap.isNull() ) {
-    // image does not exist (any more)
-    KMessageBox::sorry( this, i18n( "This contact's image cannot be found." ) );
-    return pixmap;
-  }
-
-  QPixmap selectedPixmap = QPixmap::fromImage( KPixmapRegionSelectorDialog::getSelectedImage( pixmap, 100, 140, this ) );
-  if ( selectedPixmap.isNull() )
-    return QPixmap();
-  pixmap = selectedPixmap;
-  mImageUrl->clear();
-
-  if ( pixmap.height() != 140 || pixmap.width() != 100 ) {
-    pixmap = QPixmap::fromImage( pixmap.toImage().scaled( 100, 140, Qt::KeepAspectRatio, Qt::SmoothTransformation ) );
-  }
-
-  return pixmap;
-}
-
-void ImageBaseWidget::getPictureFromBlog()
-{
-  if ( mRssLoader ) {
-    return;
-  }
-
-  mRssLoader = Syndication::Loader::create();
-  connect( mRssLoader, SIGNAL( loadingComplete( Syndication::Loader *, Syndication::FeedPtr,
-    Syndication::ErrorCode ) ),
-    SLOT( slotLoadingComplete( Syndication::Loader *, Syndication::FeedPtr, Syndication::ErrorCode ) ) );
-  mRssLoader->loadFrom( mBlogFeed );
-
-  // TODO: Show progress for fetching image from blog.
-}
-
-void ImageBaseWidget::slotLoadingComplete( Syndication::Loader *loader,
-  Syndication::FeedPtr feed, Syndication::ErrorCode error )
-{
-  if ( error != Syndication::Success ) {
-    KMessageBox::sorry( this,
-      i18n( "Unable to retrieve blog feed from '%1': %2", mBlogFeed ,
-        loader->errorCode() ) );
-    return;
-  }
-
-  if ( feed->image()->isNull() ) {
-    KMessageBox::sorry( this,
-      i18n( "Blog feed at '%1' does not contain an image.", mBlogFeed ) );
-    return;
-  }
-
-  blockSignals( true );
-  mImageUrl->setUrl( feed->image()->url() );
-  loadImage();
-  blockSignals( false );
-  imageChanged();
-
-  mRssLoader = 0;
-}
 
 ImageWidget::ImageWidget( KABC::AddressBook *ab, QWidget *parent )
   : KAB::ContactEditorWidget( ab, parent )
@@ -372,7 +283,6 @@ ImageWidget::ImageWidget( KABC::AddressBook *ab, QWidget *parent )
 
   mPhotoWidget = new ImageBaseWidget( KABC::Addressee::photoLabel(), this );
   layout->addWidget( mPhotoWidget );
-  mPhotoWidget->showBlogButton( true );
 
   mLogoWidget = new ImageBaseWidget( KABC::Addressee::logoLabel(), this );
   layout->addWidget( mLogoWidget );
@@ -384,7 +294,6 @@ ImageWidget::ImageWidget( KABC::AddressBook *ab, QWidget *parent )
 void ImageWidget::loadContact( KABC::Addressee *addr )
 {
   mPhotoWidget->setImage( addr->photo() );
-  mPhotoWidget->setBlogFeed( addr->custom( "KADDRESSBOOK", "BlogFeed" ) );
   mLogoWidget->setImage( addr->logo() );
 }
 

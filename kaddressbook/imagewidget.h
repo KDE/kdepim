@@ -24,39 +24,49 @@
 #ifndef IMAGEWIDGET_H
 #define IMAGEWIDGET_H
 
-#include <QLabel>
-//Added by qt3to4:
 #include <QDragEnterEvent>
-#include <QMouseEvent>
-#include <QPixmap>
 #include <QDropEvent>
+#include <QMouseEvent>
+#include <QPushButton>
 
 #include <kabc/picture.h>
-#include <kdialog.h>
 
 #include "contacteditorwidget.h"
-
-class KUrlRequester;
-class QCheckBox;
-
-#include <syndication/global.h>
-
-namespace Syndication {
-class Loader;
-class Feed;
-}
 
 /**
   Small helper class
  */
-class ImageLabel : public QLabel
+class ImageLoader : public QObject
 {
   Q_OBJECT
 
   public:
-    ImageLabel( const QString &title, QWidget *parent );
+    ImageLoader( QWidget *parent );
+
+    KABC::Picture loadPicture( const KUrl &url, bool *ok );
+
+  private:
+    KABC::Picture mPicture;
+    QWidget *mParent;
+};
+
+
+/**
+  Small helper class
+ */
+class ImageButton : public QPushButton
+{
+  Q_OBJECT
+
+  public:
+    ImageButton( QWidget *parent );
 
     void setReadOnly( bool readOnly );
+
+    void setPicture( const KABC::Picture &picture );
+    KABC::Picture picture() const;
+
+    void setImageLoader( ImageLoader *loader );
 
   signals:
     void changed();
@@ -67,12 +77,21 @@ class ImageLabel : public QLabel
     virtual void dropEvent( QDropEvent *event );
     virtual void mouseMoveEvent( QMouseEvent *event );
     virtual void mousePressEvent( QMouseEvent *event );
+    virtual void contextMenuEvent( QContextMenuEvent *event );
+
+  private Q_SLOTS:
+    void load();
+    void clear();
 
   private:
     void startDrag();
+    void updateGui();
 
     bool mReadOnly;
     QPoint mDragStartPos;
+    KABC::Picture mPicture;
+
+    ImageLoader *mImageLoader;
 };
 
 class ImageBaseWidget : public QWidget
@@ -82,16 +101,6 @@ class ImageBaseWidget : public QWidget
   public:
     ImageBaseWidget( const QString &title, QWidget *parent );
     ~ImageBaseWidget();
-
-    /**
-      Show/hide button for getting image from blog feed.
-    */
-    void showBlogButton( bool show );
-
-    /**
-      Set URL of blog feed for getting the image.
-    */
-    void setBlogFeed( const QString & );
 
     /**
       Sets the photo object.
@@ -108,32 +117,11 @@ class ImageBaseWidget : public QWidget
   signals:
     void changed();
 
-  public slots:
-    void urlDropped( const KUrl& );
-
-  private slots:
-    void loadImage();
-    void updateGUI();
-    void clear();
-    void imageChanged();
-    void getPictureFromBlog();
-    void slotLoadingComplete( Syndication::Loader *loader, Syndication::FeedPtr feed, Syndication::ErrorCode error );
-
   private:
-    QPixmap loadPixmap( const KUrl &url );
-
-    ImageLabel *mImageLabel;
-    KUrlRequester *mImageUrl;
-
-    QCheckBox *mUseImageUrl;
-    QPushButton *mClearButton;
-
-    QPushButton *mBlogButton;
-    QString mBlogFeed;
+    ImageButton *mImageButton;
+    ImageLoader *mImageLoader;
 
     bool mReadOnly;
-
-    Syndication::Loader *mRssLoader;
 };
 
 class ImageWidget : public KAB::ContactEditorWidget
