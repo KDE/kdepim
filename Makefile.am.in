@@ -8,6 +8,7 @@
 # don't change these in Makefile.am, but rather in Makefile.am.in!
 #
 # Libraries and their upwards dependencies
+COMPILE_AFTER_libkmime = libemailfunctions
 COMPILE_AFTER_libemailfunctions = libkcal libkpimidentities kmail korganizer
 COMPILE_AFTER_libkholidays = korganizer kontact
 COMPILE_AFTER_libkcal = kalarm kitchensync konsolekalendar korganizer libkpimexchange kpilot libkdepim karm knotes kresources kfile-plugins
