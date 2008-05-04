@@ -274,6 +274,7 @@ Name[pt]=Chaves das Assinaturas Qualificadas
 Name[pt_BR]=Chaves para Assinaturas Qualificadas
 Name[sv]=Nycklar för kvalificerade signaturer
 Name[tr]=Yetkilendirilmiş İmzalar için Anahtarlar
+Name[uk]=Ключі підписів обмеженого використання
 Name[x-test]=xxKeys for Qualified Signaturesxx
 Name[zh_TW]=合格簽章的金鑰
 
@@ -290,6 +291,7 @@ Name[pt]=Outras Chaves
 Name[pt_BR]=Outras Chaves
 Name[sv]=Andra nycklar
 Name[tr]=Diğer Anahtarlar
+Name[uk]=Інші ключі
 Name[x-test]=xxOther Keysxx
 Name[zh_TW]=其他金鑰
 
