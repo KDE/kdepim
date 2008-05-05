@@ -39,11 +39,9 @@
 #include "libkleo/backends/kpgp/pgp6backend.h"
 #include "libkleo/backends/kpgp/gpg1backend.h"
 #endif
-#ifdef KLEO_BUILD_OLD_MAINWINDOW
-# include "libkleo/backends/chiasmus/chiasmusbackend.h"
-#endif
 
 #ifndef ONLY_KLEO
+# include "libkleo/backends/chiasmus/chiasmusbackend.h"
 # include "libkleo/ui/backendconfigwidget.h"
 #endif
 
@@ -62,7 +60,7 @@
 Kleo::CryptoBackendFactory * Kleo::CryptoBackendFactory::mSelf = 0;
 
 static const char * availableProtocols[] = {
-#ifdef KLEO_BUILD_OLD_MAINWINDOW
+#ifndef ONLY_KLEO
   "Chiasmus",
 #endif
   "OpenPGP", "SMIME",
@@ -82,7 +80,7 @@ Kleo::CryptoBackendFactory::CryptoBackendFactory()
   mBackendList.push_back( new PGP6Backend() );
   mBackendList.push_back( new GPG1Backend() );
 #endif
-#ifdef KLEO_BUILD_OLD_MAINWINDOW
+#ifndef ONLY_KLEO
   mBackendList.push_back( new ChiasmusBackend() );
 #endif
   scanForBackends();
@@ -231,7 +229,7 @@ static const char * defaultBackend( const char * proto ) {
   } defaults[] = {
     { "OpenPGP", "gpgme" },
     { "SMIME", "gpgme" },
-#ifdef KLEO_BUILD_OLD_MAINWINDOW
+#ifndef ONLY_KLEO
     { "Chiasmus", "chiasmus" },
 #endif
   };

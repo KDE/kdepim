@@ -1,16 +1,13 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories( ${CMAKE_SOURCE_DIR}/libkleo  )
 
-if ( KLEO_BUILD_OLD_MAINWINDOW )
 ########### next target ###############
 
-set(test_keylister_SRCS test_keylister.cpp )
+#set(test_keylister_SRCS test_keylister.cpp )
 
+#kde4_add_executable(test_keylister TEST ${test_keylister_SRCS})
 
-
-kde4_add_executable(test_keylister TEST ${test_keylister_SRCS})
-
-target_link_libraries(test_keylister  kleo ${KDE4_KDECORE_LIBS} )
+#target_link_libraries(test_keylister  kleo ${KDE4_KDECORE_LIBS} )
 
 
 ########### next target ###############
@@ -26,12 +23,11 @@ target_link_libraries(test_keygen  kleo ${KDE4_KDECORE_LIBS} )
 
 ########### next target ###############
 
-set(test_keyselectiondialog_SRCS test_keyselectiondialog.cpp )
+#set(test_keyselectiondialog_SRCS test_keyselectiondialog.cpp )
 
+#kde4_add_executable(test_keyselectiondialog TEST ${test_keyselectiondialog_SRCS})
 
-kde4_add_executable(test_keyselectiondialog TEST ${test_keyselectiondialog_SRCS})
-
-target_link_libraries(test_keyselectiondialog kleo ${KDE4_KDECORE_LIBS} )
+#target_link_libraries(test_keyselectiondialog kleo ${KDE4_KDECORE_LIBS} )
 
 ########### next target ###############
 
@@ -41,8 +37,6 @@ set(test_cryptoconfig_SRCS test_cryptoconfig.cpp )
 kde4_add_executable(test_cryptoconfig TEST ${test_cryptoconfig_SRCS})
 
 target_link_libraries(test_cryptoconfig  kleo ${KDE4_KDECORE_LIBS} )
-
-endif ( KLEO_BUILD_OLD_MAINWINDOW )
 
 ########### next target ###############
 
