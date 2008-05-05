@@ -70,6 +70,7 @@ set(libkleo_ui_SRCS    # make this a separate lib.
 set(libkleo_ui_common_SRCS
    ui/kdhorizontalline.cpp
    ui/filenamerequester.cpp
+   ui/messagebox.cpp
    ui/progressbar.cpp
    ui/progressdialog.cpp
    ui/cryptoconfigmodule.cpp
@@ -146,6 +147,7 @@ install( FILES
 
 install ( FILES
 	ui/kdhorizontalline.h
+	ui/messagebox.h
 	ui/progressbar.h
 	ui/progressdialog.h
 	ui/keylistview.h

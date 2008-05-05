@@ -32,8 +32,7 @@
 
 #include "qgpgmesignencryptjob.h"
 
-#include <klocale.h>
-#include <kmessagebox.h>
+#include "ui/messagebox.h"
 
 #include <qgpgme/eventloopinteractor.h>
 
@@ -41,6 +40,8 @@
 #include <gpgme++/data.h>
 #include <gpgme++/key.h>
 #include <gpgme++/exception.h>
+
+#include <klocale.h>
 
 #include <assert.h>
 
@@ -168,14 +169,9 @@ void Kleo::QGpgMESignEncryptJob::doOperationDoneEvent( const GpgME::Error & ) {
 }
 
 void Kleo::QGpgMESignEncryptJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
-  if ( !mResult.first.error() && !mResult.second.error() )
-    return;
-  if ( mResult.first.error().isCanceled() || mResult.second.error().isCanceled() )
-    return;
-  const QString msg = mResult.first.error()
-    ? i18n("Signing failed: %1", QString::fromLocal8Bit( mResult.first.error().asString() ) )
-    : i18n("Encryption failed: %1", QString::fromLocal8Bit( mResult.second.error().asString() ) ) ;
-  KMessageBox::error( parent, msg, caption );
+    if ( mResult.first.error()  && !mResult.first.error().isCanceled() ||
+         mResult.second.error() && !mResult.second.error().isCanceled() )
+        Kleo::MessageBox::error( parent, mResult.first, mResult.second, this, caption );
 }
 
 #include "qgpgmesignencryptjob.moc"
