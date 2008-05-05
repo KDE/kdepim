@@ -1070,6 +1070,7 @@ void KABCore::initGUI()
 
   mLeftSplitter = new QSplitter( mDetailsSplitter );
   mLeftSplitter->setOrientation( KABPrefs::instance()->contactListAboveExtensions() ? Qt::Vertical : Qt::Horizontal );
+  mLeftSplitter->setChildrenCollapsible( false );
 
   topLayout->addWidget( searchTB );
   topLayout->addWidget( mDetailsSplitter );

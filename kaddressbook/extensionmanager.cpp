@@ -57,6 +57,7 @@ ExtensionManager::ExtensionManager( QWidget* extensionBar, QStackedWidget* detai
   layout->setSpacing( 0 );
   mSplitter = new QSplitter( mExtensionBar );
   mSplitter->setOrientation( Qt::Vertical );
+  mSplitter->setChildrenCollapsible( false );
   layout->addWidget( mSplitter );
 
   createExtensionWidgets();
@@ -83,7 +84,9 @@ void ExtensionManager::restoreSettings()
     }
   }
   const QList<int> sizes = KABPrefs::instance()->extensionsSplitterSizes();
-  mSplitter->setSizes( sizes );
+  if (!sizes.isEmpty()) {
+    mSplitter->setSizes( sizes );
+  }
 }
 
 void ExtensionManager::saveSettings()
