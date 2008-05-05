@@ -45,6 +45,8 @@ namespace GpgME {
 namespace Kleo {
 namespace Formatting {
 
+    QString protocolDisplayName( GpgME::Protocol prot );
+
     QString prettyName( int proto, const char * id, const char * name, const char * comment );
     QString prettyName( const GpgME::Key & key );
     QString prettyName( const GpgME::UserID & uid );
@@ -85,7 +87,7 @@ namespace Formatting {
     QDate creationDate( const GpgME::Subkey & subkey );
     QDate creationDate( const GpgME::UserID::Signature & sig );
 
-
+    QString displayName( GpgME::Protocol prot );
     QString type( const GpgME::Key & key );
     QString type( const GpgME::Subkey & subkey );
 

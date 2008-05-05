@@ -287,7 +287,16 @@ void ImportCertificatesCommand::Private::importResult( const ImportResult & resu
 
 void ImportCertificatesCommand::Private::startImport( GpgME::Protocol protocol, const QByteArray & data, const QString & id ) {
     assert( protocol != UnknownProtocol );
-    std::auto_ptr<ImportJob> job( CryptoBackendFactory::instance()->protocol( protocol )->importJob() );
+    const Kleo::CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( protocol );
+    if ( !backend ) {
+        KMessageBox::error( view(), 
+                            i18n( "The type of this certificate (%1) is not supported by this Kleopatra installation.",
+                                  Formatting::displayName( protocol ) ),
+                            i18n( "Certificate Import Failed" ) );
+        finished();
+        return;
+    }
+    std::auto_ptr<ImportJob> job( backend->importJob() );
     assert( job.get() );
     connect( job.get(), SIGNAL(result(GpgME::ImportResult)),
              q, SLOT(importResult(GpgME::ImportResult)) );

@@ -313,12 +313,16 @@ QDate Formatting::creationDate( const UserID::Signature & sig ) {
 // Types
 //
 
-QString Formatting::type( const Key & key ) {
-    if ( key.protocol() == CMS )
+QString Formatting::displayName( Protocol p ) {
+    if ( p == CMS )
         return i18nc("X.509/CMS encryption standard", "X.509");
-    if ( key.protocol() == OpenPGP )
+    if ( p == OpenPGP )
         return i18n("OpenPGP");
     return i18nc("Unknown encryption protocol", "Unknown");
+}
+
+QString Formatting::type( const Key & key ) {
+    return displayName( key.protocol() );
 }
 
 QString Formatting::type( const Subkey & subkey ) {
