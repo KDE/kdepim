@@ -33,7 +33,11 @@
 #ifndef __KLEO_UI_MESSAGEBOX_H__
 #define __KLEO_UI_MESSAGEBOX_H__
 
+#include "kleo/kleo_export.h"
+
 #include <kmessagebox.h>
+
+#undef MessageBox // Windows
 
 namespace GpgME {
     class SigningResult;
@@ -51,7 +55,7 @@ class QString;
 
 namespace Kleo {
 
-    class MessageBox {
+    class KLEO_EXPORT MessageBox {
     public:
         static void information( QWidget * parent, const GpgME::SigningResult & result, const Kleo::Job * job, const QString & caption, KMessageBox::Options options=KMessageBox::Notify );
         static void information( QWidget * parent, const GpgME::SigningResult & result, const Kleo::Job * job, KMessageBox::Options options=KMessageBox::Notify );
