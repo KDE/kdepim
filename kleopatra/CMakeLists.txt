@@ -84,6 +84,7 @@ set( _kleopatra_common_SRCS
   utils/kdpipeiodevice.cpp
   utils/kdlogtextwidget.cpp
   utils/headerview.cpp
+  utils/scrollarea.cpp
 
   utils/hex.cpp
   utils/input.cpp
@@ -124,7 +125,6 @@ set( _kleopatra_common_SRCS
 
   crypto/gui/wizard.cpp
   crypto/gui/wizardpage.cpp
-  crypto/gui/scrollarea.cpp
   crypto/gui/signingcertificateselectiondialog.cpp
 
   crypto/gui/resultitemwidget.cpp

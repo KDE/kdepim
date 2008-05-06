@@ -37,12 +37,12 @@
 #include "decryptverifyoperationwidget.h"
 
 #include <crypto/gui/resultpage.h>
-#include <crypto/gui/scrollarea.h>
 #include <crypto/gui/wizardpage.h>
 
 #include <crypto/task.h>
 #include <crypto/taskcollection.h>
 
+#include <utils/scrollarea.h>
 #include <utils/kleo_assert.h>
 #include <utils/stl_util.h>
 
@@ -51,7 +51,6 @@
 #include <KLocale>
 
 #include <QCheckBox>
-#include <QScrollArea>
 #include <QLayout>
 #include <QLabel>
 #include <QEventLoop>

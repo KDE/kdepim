@@ -35,9 +35,10 @@
 #include "resultpage.h"
 #include "resultlistwidget.h"
 #include "resultitemwidget.h"
-#include "scrollarea.h"
 
 #include <crypto/taskcollection.h>
+
+#include <utils/scrollarea.h>
 
 #include <KLocalizedString>
 

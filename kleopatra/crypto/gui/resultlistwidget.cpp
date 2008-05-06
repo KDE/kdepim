@@ -37,8 +37,9 @@
 #include "emailoperationspreferences.h"
 
 #include <crypto/gui/resultitemwidget.h>
-#include <crypto/gui/scrollarea.h>
 #include <crypto/taskcollection.h>
+
+#include <utils/scrollarea.h>
 
 #include <KLocalizedString>
 #include <KPushButton>
