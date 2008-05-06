@@ -96,12 +96,16 @@ namespace {
     public:
         SignEncryptFilesResult( const SigningResult & sr, const QString & input, const QString & output, bool inputRemoved, bool outputCreated )
             : Task::Result(), m_sresult( sr ), m_inputLabel( input ), m_outputLabel( output ), m_inputRemoved( inputRemoved ), m_outputCreated( outputCreated ) {
-            
+            assert( !m_sresult.isNull() );
         }
         SignEncryptFilesResult( const EncryptionResult & er, const QString & input, const QString & output, bool inputRemoved, bool outputCreated  )
-            : Task::Result(), m_eresult( er ), m_inputLabel( input ), m_outputLabel( output ), m_inputRemoved( inputRemoved ), m_outputCreated( outputCreated ) {}
+            : Task::Result(), m_eresult( er ), m_inputLabel( input ), m_outputLabel( output ), m_inputRemoved( inputRemoved ), m_outputCreated( outputCreated ) {
+            assert( !m_eresult.isNull() );
+        }
         SignEncryptFilesResult( const SigningResult & sr, const EncryptionResult & er, const QString & input, const QString & output, bool inputRemoved, bool outputCreated )
-            : Task::Result(), m_sresult( sr ), m_eresult( er ), m_inputLabel( input ), m_outputLabel( output ), m_inputRemoved( inputRemoved ), m_outputCreated( outputCreated ) {}
+            : Task::Result(), m_sresult( sr ), m_eresult( er ), m_inputLabel( input ), m_outputLabel( output ), m_inputRemoved( inputRemoved ), m_outputCreated( outputCreated ) {
+            assert( !m_sresult.isNull() || !m_eresult.isNull() );
+        }
 
         /* reimp */ QString overview() const;
         /* reimp */ QString details() const;
@@ -473,13 +477,7 @@ void SignEncryptFilesTask::Private::slotResult( const EncryptionResult & result 
 }
 
 QString SignEncryptFilesResult::overview() const {
-    const bool sign = !m_sresult.isNull();
-    const bool encrypt = !m_eresult.isNull();
- 
-    kleo_assert( !m_sresult.isNull() || !m_eresult.isNull() );
-
     const QString files = formatInputOutputLabel( m_inputLabel, m_outputLabel, m_inputRemoved, !m_outputCreated );
-
     return files + ": " + makeOverview( makeResultOverview( m_sresult, m_eresult ) );
 }
 
