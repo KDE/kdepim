@@ -533,6 +533,7 @@ void DecryptVerifyTask::Private::slotResult( const DecryptionResult& dr, const V
         m_output->cancel();
     } else {
         try {
+            kleo_assert( !dr.isNull() || !vr.isNull() );
             m_output->finalize();
         } catch ( const GpgME::Exception & e ) {
             emitResult( q->fromDecryptResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
@@ -656,6 +657,7 @@ void DecryptTask::Private::slotResult( const DecryptionResult& result, const QBy
         m_output->cancel();
     } else {
         try {
+            kleo_assert( !result.isNull() );
             m_output->finalize();
         } catch ( const GpgME::Exception & e ) {
             emitResult( q->fromDecryptResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
@@ -780,6 +782,7 @@ void VerifyOpaqueTask::Private::slotResult( const VerificationResult& result, co
         m_output->cancel();
     } else {
         try {
+            kleo_assert( !result.isNull() );
             m_output->finalize();
         } catch ( const GpgME::Exception & e ) {
             emitResult( q->fromDecryptResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
@@ -898,7 +901,12 @@ void VerifyDetachedTask::Private::emitResult( const shared_ptr<DecryptVerifyResu
 
 void VerifyDetachedTask::Private::slotResult( const VerificationResult& result )
 {
-    emitResult( q->fromVerifyDetachedResult( result ) );
+    try {
+        kleo_assert( !result.isNull() );
+        emitResult( q->fromVerifyDetachedResult( result ) );
+    } catch ( const GpgME::Exception & e ) {
+        emitResult( q->fromVerifyDetachedResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
+    }
 }
 
 VerifyDetachedTask::VerifyDetachedTask( QObject* parent ) : AbstractDecryptVerifyTask( parent ), d( new Private( this ) )

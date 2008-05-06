@@ -414,6 +414,7 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & result ) {
         output->cancel();
     } else {
         try {
+            kleo_assert( !result.isNull() );
             output->finalize();
             outputCreated = true;
             if ( removeInput ) {
@@ -435,6 +436,7 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & sresult, c
         output->cancel();
     } else {
         try {
+            kleo_assert( !sresult.isNull() || !eresult.isNull() );
             output->finalize();
             outputCreated = true;
             if ( removeInput ) {
@@ -456,6 +458,7 @@ void SignEncryptFilesTask::Private::slotResult( const EncryptionResult & result 
         output->cancel();
     } else {
         try {
+            kleo_assert( !result.isNull() );
             output->finalize();
             outputCreated = true;
             if ( removeInput ) {
