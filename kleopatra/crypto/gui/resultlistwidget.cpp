@@ -151,7 +151,7 @@ void ResultListWidget::Private::addResultWidget( ResultItemWidget* widget )
         blay.insertWidget( widget->hasErrorResult() ? m_lastErrorItemIndex++ : ( blay.count() - 1 ), widget );
     } else { // single task
         widget->showCloseButton( m_standaloneMode );
-        m_layout->insertWidget( m_layout->count() - 1, widget, 1 );
+        m_layout->insertWidget( m_layout->count() - 1, widget, m_standaloneMode ? 1 : 0 );
     }
     widget->show();
     resizeIfStandalone();
