@@ -15,8 +15,6 @@ include(MacroOptionalAddSubdirectory)
 include(CheckIncludeFiles)
 include(FindKdepimLibs)
 
-find_package(Akonadi REQUIRED)
-
 if(WIN32)
     set(LIB_INSTALL_DIR ${LIB_INSTALL_DIR}
                         RUNTIME DESTINATION ${BIN_INSTALL_DIR}
@@ -73,6 +71,8 @@ if ( ONLY_KLEO )
 
 else ( ONLY_KLEO )
   # regular case, build everything
+
+  find_package(Akonadi REQUIRED)
 
   find_package(Kode REQUIRED)
   find_package(ZLIB REQUIRED)
