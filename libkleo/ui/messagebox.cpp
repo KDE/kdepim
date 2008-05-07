@@ -37,7 +37,13 @@
 #include <gpgme++/signingresult.h>
 #include <gpgme++/encryptionresult.h>
 
-#include <kfiledialog.h>
+
+#ifndef ONLY_KLEO
+# include <kfiledialog.h>
+#else
+# include <QFileDialog>
+#endif
+
 #include <kdialog.h>
 #include <klocale.h>
 #include <ksavefile.h>
@@ -94,8 +100,12 @@ public:
 
 private:
     void slotUser1() {
+#ifndef ONLY_KLEO
         const QString fileName = KFileDialog::getSaveFileName( QString(), QString(),
                                                                this, i18n("Choose File to Save GnuPG Audit Log to") );
+#else
+        const QString fileName = QFileDialog::getSaveFileName( this, i18n("Choose File to Save GnuPG Audit Log to") );
+#endif
         if ( fileName.isEmpty() )
             return;
 
