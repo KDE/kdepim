@@ -71,6 +71,11 @@ public:
         q->deleteLater();
     }
 
+    void canceled() {
+        emit q->canceled();
+        finished();
+    }
+
 private:
     QList<QPersistentModelIndex> indexes_;
     QPointer<QAbstractItemView> view_;
