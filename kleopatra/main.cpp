@@ -46,10 +46,6 @@
 #include <utils/log.h>
 #include <utils/stl_util.h>
 
-#ifdef Q_OS_WIN
-#include <utils/gnupg-registry.h>
-#endif
-
 #include <selftest/enginecheck.h>
 #include <selftest/registrycheck.h>
 #include <dialogs/selftestdialog.h>
@@ -77,30 +73,23 @@ namespace Kleo {
 #include <models/keycache.h>
 
 #include <kcmdlineargs.h>
-#include <kmessagebox.h>
 #include <klocale.h>
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <ksplashscreen.h>
 #include <KUniqueApplication>
+#include <KDebug>
 
-#include <QDebug>
 #include <QDir>
 #include <QFile>
 #include <QFileInfo>
 #include <QTextDocument> // for Qt::escape
 #include <QProcess>
 #include <QStringList>
-#include <QSystemTrayIcon>
-#include <QMenu>
-#include <QAction>
+#include <QMessageBox>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/mem_fn.hpp>
-
-#ifdef Q_OS_WIN
-#include <windows.h>
-#endif
 
 #include <memory>
 #include <cassert>
@@ -174,7 +163,7 @@ static void setupLogging()
         return;
     std::auto_ptr<QFile> logFile( new QFile( dir + "/kleo-log" ) );
     if ( !logFile->open( QIODevice::WriteOnly | QIODevice::Append ) ) {
-        qDebug() << "Could not open file for logging: " << dir + "/kleo-log\nLogging disabled";
+        kDebug() << "Could not open file for logging: " << dir + "/kleo-log\nLogging disabled";
         return;
     }
         
