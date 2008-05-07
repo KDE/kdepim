@@ -98,6 +98,7 @@ set( _kleopatra_common_SRCS
   utils/action_data.cpp
 
   selftest/selftest.cpp
+  selftest/registrycheck.cpp
   selftest/enginecheck.cpp
 
   models/keycache.cpp

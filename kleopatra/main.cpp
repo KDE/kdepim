@@ -47,11 +47,14 @@
 #include <utils/filesystemwatcher.h>
 #include <utils/kdpipeiodevice.h>
 #include <utils/log.h>
+#include <utils/stl_util.h>
+
 #ifdef Q_OS_WIN
 #include <utils/gnupg-registry.h>
 #endif
 
 #include <selftest/enginecheck.h>
+#include <selftest/registrycheck.h>
 #include <dialogs/selftestdialog.h>
 
 #ifdef HAVE_USABLE_ASSUAN
@@ -96,6 +99,7 @@ namespace Kleo {
 #include <QAction>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/mem_fn.hpp>
 
 #ifdef Q_OS_WIN
 #include <QSettings>
@@ -128,53 +132,26 @@ namespace {
     }
 
     static bool selfCheck( KSplashScreen & splash ) {
+        std::vector< shared_ptr<Kleo::SelfTest> > tests;
         splash.showMessage( i18n("Checking gpg installation...") );
-        const shared_ptr<Kleo::SelfTest> gpg = Kleo::makeGpgEngineCheckSelfTest();
+        tests.push_back( Kleo::makeGpgEngineCheckSelfTest() );
         splash.showMessage( i18n("Checking gpgsm installation...") );
-        const shared_ptr<Kleo::SelfTest> gpgsm = Kleo::makeGpgSmEngineCheckSelfTest();
+        tests.push_back( Kleo::makeGpgSmEngineCheckSelfTest() );
         splash.showMessage( i18n("Checking gpgconf installation...") );
-        const shared_ptr<Kleo::SelfTest> gpgconf = Kleo::makeGpgConfEngineCheckSelfTest();
-        if ( !gpg->passed() || !gpgsm->passed() || !gpgconf->passed() ) {
-            Kleo::Dialogs::SelfTestDialog dlg;
-            dlg.addSelfTest( gpg );
-            dlg.addSelfTest( gpgsm );
-            dlg.addSelfTest( gpgconf );
+        tests.push_back( Kleo::makeGpgConfEngineCheckSelfTest() );
+#ifdef Q_OS_WIN
+        splash.showMessage( i18n("Checking Windows Registry...") );
+        tests.push_back( Kleo::makeGpgProgramRegistryCheckSelfTest() );
+#endif
+
+        if ( !kdtools::all( tests, mem_fn( &Kleo::SelfTest::passed ) ) ) {
+            Kleo::Dialogs::SelfTestDialog dlg( tests );
             if ( !dlg.exec() )
                 return false;
         }
         return true;
     }
 }
-
-#ifdef Q_OS_WIN
-static const char gnupg_key[] = "HKEY_LOCAL_MACHINE\\Software\\GNU\\GnuPG";
-static const char gnupg_subkey[] = "gpgProgram";
-
-static void checkForInvalidRegistryEntries( QWidget* msgParent )
-{
-    QSettings settings( gnupg_key, QSettings::NativeFormat );
-    if ( !settings.contains( gnupg_subkey ) )
-      return;
-    if ( KMessageBox::questionYesNo( msgParent, 
-                                     i18nc( "@info", "Kleopatra detected an obsolete registry key (<resource>%1\\%2</resource>), "
-                                           "added by either by previous gpg4win versions or applications such as WinPT or EnigMail."
-                                           "Keeping the entry might lead to problems during operations (old GnuPG backend being used). "
-                                           "It is advised to delete the key.", gnupg_key, gnupg_subkey ),
-                                     i18n( "Old Registry Entries Detected" ), 
-                                     KGuiItem( i18n( "Delete Registry Key" ) ),
-                                     KStandardGuiItem::cancel(),
-                                     "doNotWarnAboutRegistryEntriesAgain" ) != KMessageBox::Yes )
-        return;
-    
-    settings.remove( gnupg_subkey );
-    settings.sync();
-    if ( settings.status() == QSettings::NoError )
-      return;
-    KMessageBox::error( msgParent, 
-                        i18nc( "@info", "Could not delete the key <resource>%1\\%2</resource> from the registry.", gnupg_key, gnupg_subkey ), 
-                        i18n( "Error Deleting Key" ) );
-}
-#endif // Q_OS_WIN
 
 static QString environmentVariable( const QString& var, const QString& defaultValue=QString() )
 {
