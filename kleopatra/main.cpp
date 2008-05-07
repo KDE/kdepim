@@ -51,6 +51,9 @@
 #include <utils/gnupg-registry.h>
 #endif
 
+#include <selftest/enginecheck.h>
+#include <dialogs/selftestdialog.h>
+
 #ifdef HAVE_USABLE_ASSUAN
 # include "kleo-assuan.h"
 # include <uiserver/uiserver.h>
@@ -103,6 +106,8 @@ namespace Kleo {
 #include <memory>
 #include <cassert>
 
+using namespace boost;
+
 namespace {
     template <typename T>
     boost::shared_ptr<T> make_shared_ptr( T * t ) {
@@ -120,6 +125,24 @@ namespace {
         Q_FOREACH( const QString& i, fileList )
             result.push_back( homeDir.absoluteFilePath( i ) );
         return result;
+    }
+
+    static bool selfCheck( KSplashScreen & splash ) {
+        splash.showMessage( i18n("Checking gpg installation...") );
+        const shared_ptr<Kleo::SelfTest> gpg = Kleo::makeGpgEngineCheckSelfTest();
+        splash.showMessage( i18n("Checking gpgsm installation...") );
+        const shared_ptr<Kleo::SelfTest> gpgsm = Kleo::makeGpgSmEngineCheckSelfTest();
+        splash.showMessage( i18n("Checking gpgconf installation...") );
+        const shared_ptr<Kleo::SelfTest> gpgconf = Kleo::makeGpgConfEngineCheckSelfTest();
+        if ( !gpg->passed() || !gpgsm->passed() || !gpgconf->passed() ) {
+            Kleo::Dialogs::SelfTestDialog dlg;
+            dlg.addSelfTest( gpg );
+            dlg.addSelfTest( gpgsm );
+            dlg.addSelfTest( gpgconf );
+            if ( !dlg.exec() )
+                return false;
+        }
+        return true;
     }
 }
 
@@ -315,6 +338,8 @@ int main( int argc, char** argv )
 
       if ( !daemon )
           splash.show();
+      if ( !selfCheck( splash ) )
+          return 1;
 #ifdef HAVE_USABLE_ASSUAN
       fillKeyCache( &splash, &server );
 #else

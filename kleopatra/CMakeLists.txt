@@ -97,6 +97,9 @@ set( _kleopatra_common_SRCS
   utils/log.cpp
   utils/action_data.cpp
 
+  selftest/selftest.cpp
+  selftest/enginecheck.cpp
+
   models/keycache.cpp
   models/keylistmodel.cpp
   models/keylistsortfilterproxymodel.cpp
@@ -110,6 +113,7 @@ set( _kleopatra_common_SRCS
   dialogs/certificateselectiondialog.cpp
   dialogs/expirydialog.cpp
   dialogs/lookupcertificatesdialog.cpp
+  dialogs/selftestdialog.cpp
 
   crypto/certificateresolver.cpp
   crypto/task.cpp
@@ -187,6 +191,7 @@ kde4_add_ui_files( _kleopatra_common_SRCS
   certificatewizard.ui
   dialogs/expirydialog.ui
   dialogs/lookupcertificatesdialog.ui
+  dialogs/selftestdialog.ui
   )
 kde4_add_kcfg_files( _kleopatra_common_SRCS
   kcfg/tooltippreferences.kcfgc
