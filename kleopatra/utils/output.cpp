@@ -61,7 +61,7 @@ using namespace boost;
 
 class OverwritePolicy::Private {
 public:
-    Private( QWidget* p, OverwritePolicy::Policy pol ) : policy( pol ), widget( widget ) {}
+    Private( QWidget* p, OverwritePolicy::Policy pol ) : policy( pol ), widget( p ) {}
     OverwritePolicy::Policy policy;
     QWidget* widget;
 };
