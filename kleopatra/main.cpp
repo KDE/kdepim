@@ -34,12 +34,9 @@
 
 #include "aboutdata.h"
 #include "systemtrayicon.h"
-#ifdef KLEO_BUILD_OLD_MAINWINDOW
-# include "certmanager.h"
-#else
-# include "mainwindow.h"
-# include <commands/reloadkeyscommand.h>
-#endif
+#include "mainwindow.h"
+
+#include <commands/reloadkeyscommand.h>
 
 #include "libkleo/kleo/cryptobackendfactory.h"
 
@@ -102,8 +99,6 @@ namespace Kleo {
 #include <boost/mem_fn.hpp>
 
 #ifdef Q_OS_WIN
-#include <QSettings>
-
 #include <windows.h>
 #endif
 
@@ -196,7 +191,6 @@ static void setupLogging()
 #endif
 }
 
-#ifndef KLEO_BUILD_OLD_MAINWINDOW
 static void fillKeyCache( KSplashScreen * splash, Kleo::UiServer * server ) {
 
   QEventLoop loop;
@@ -212,7 +206,6 @@ static void fillKeyCache( KSplashScreen * splash, Kleo::UiServer * server ) {
   loop.exec();
   splash->showMessage( i18n("Certificate cache loaded.") );
 }
-#endif
 
 int main( int argc, char** argv )
 {
@@ -221,12 +214,7 @@ int main( int argc, char** argv )
   KCmdLineArgs::init(argc, argv, &aboutData);
 
   KCmdLineOptions options;
-#ifdef KLEO_BUILD_OLD_MAINWINDOW
-  options.add("external", ki18n("Search for external certificates initially"));
-  options.add("query ", ki18n("Initial query string"));
-#else
   options.add("daemon", ki18n("Run UI server only, hide main window"));
-#endif
   options.add("import-certificate ", ki18n("Name of certificate file to import"));
 #ifdef HAVE_USABLE_ASSUAN
   options.add("uiserver-socket <argument>", ki18n("Location of the socket the ui server is listening on" ) );
@@ -252,10 +240,8 @@ int main( int argc, char** argv )
   KIconLoader::global()->addAppDir( "libkleopatra" );
   KIconLoader::global()->addAppDir( "kdepim" );
 
-#ifndef KLEO_BUILD_OLD_MAINWINDOW
   SystemTrayIconFor<MainWindow> sysTray;
   sysTray.show();
-#endif
 
   KSplashScreen splash( UserIcon( "kleopatra_splashscreen" ), Qt::WindowStaysOnTopHint );
 
@@ -266,10 +252,8 @@ int main( int argc, char** argv )
 
       server.enableCryptoCommands( false );
 
-# ifndef KLEO_BUILD_OLD_MAINWINDOW
       QObject::connect( &server, SIGNAL(startKeyManagerRequested()),
                         &sysTray, SLOT(openOrRaiseMainWindow()) );
-# endif
 
 #define REGISTER( Command ) server.registerCommandFactory( boost::shared_ptr<Kleo::AssuanCommandFactory>( new Kleo::GenericAssuanCommandFactory<Kleo::Command> ) )
       REGISTER( DecryptCommand );
@@ -289,27 +273,8 @@ int main( int argc, char** argv )
 
       server.start();
 
-# ifndef KLEO_BUILD_OLD_MAINWINDOW
       sysTray.setToolTip( i18n( "Kleopatra UI Server listening on %1", server.socketName() ) );
-# endif
 #endif
-
-#ifdef KLEO_BUILD_OLD_MAINWINDOW
-      if( !Kleo::CryptoBackendFactory::instance()->smime() ) {
-          KMessageBox::error(0,
-                             i18n( "<qt>The crypto plugin could not be initialized.<br />"
-                                   "Certificate Manager will terminate now.</qt>") );
-          return -2;
-      }
-
-      splash.show();
-
-      CertManager* manager = new CertManager( args->isSet("external"),
-                                              args->getOption("query"),
-                                              args->getOption("import-certificate") );
-      manager->show();
-      splash.finish( manager );
-#else
 
       const bool daemon = args->isSet("daemon");
 
@@ -328,22 +293,15 @@ int main( int argc, char** argv )
           mainWindow->show();
           sysTray.setMainWindow( mainWindow );
           splash.finish( mainWindow );
-#ifdef Q_OS_WIN
-          checkForInvalidRegistryEntries( mainWindow );
-#endif // Q_OS_WIN
       }
-
-#endif
 
       args->clear();
       QApplication::setQuitOnLastWindowClosed( false );
       rc = app.exec();
 
 #ifdef HAVE_USABLE_ASSUAN
-# ifndef KLEO_BUILD_OLD_MAINWINDOW
       QObject::disconnect( &server, SIGNAL(startKeyManagerRequested()),
                            &sysTray, SLOT(openOrRaiseMainWindow()) );
-#endif
 
       server.stop();
       server.waitForStopped();
