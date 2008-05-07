@@ -1493,10 +1493,10 @@ IMAP4Protocol::specialACLCommand( int command, QDataStream& stream )
     }
     // Returning information to the application from a special() command isn't easy.
     // I'm reusing the infoMessage trick seen above (for capabilities), but this
-    // limits me to a string instead of a stringlist. I'm using space as separator,
-    // since I don't think it can be used in login names.
+    // limits me to a string instead of a stringlist. Using DQUOTE as separator,
+    // because it's forbidden in userids by rfc3501
     kdDebug(7116) << getResults() << endl;
-    infoMessage(getResults().join( " " ));
+    infoMessage(getResults().join( "\"" ));
     finished();
     break;
   }
