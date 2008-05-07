@@ -73,6 +73,7 @@ GpgME::Error Kleo::QGpgMEChangeExpiryJob::start( const GpgME::Key & key, const Q
 }
 
 void Kleo::QGpgMEChangeExpiryJob::doOperationDoneEvent( const GpgME::Error & error ) {
+  getAuditLog();
   emit result( error );
 }
 

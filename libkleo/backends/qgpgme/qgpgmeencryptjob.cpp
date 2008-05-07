@@ -143,6 +143,7 @@ void Kleo::QGpgMEEncryptJob::doOperationDoneEvent( const GpgME::Error & ) {
   mResult = mCtx->encryptionResult();
   const QByteArray ciphertext = outData();
   resetQIODeviceDataObjects();
+  getAuditLog();
   emit result( mResult, ciphertext );
 }
 

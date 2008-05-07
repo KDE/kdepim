@@ -153,6 +153,7 @@ void Kleo::QGpgMESignJob::doOperationDoneEvent( const GpgME::Error & ) {
   mResult = mCtx->signingResult();
   const QByteArray cipherText = outData();
   resetQIODeviceDataObjects();
+  getAuditLog();
   emit result( mResult, cipherText );
 }
 

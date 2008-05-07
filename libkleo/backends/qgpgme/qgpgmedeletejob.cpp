@@ -60,6 +60,7 @@ GpgME::Error Kleo::QGpgMEDeleteJob::start( const GpgME::Key & key, bool allowSec
 }
 
 void Kleo::QGpgMEDeleteJob::doOperationDoneEvent( const GpgME::Error & error ) {
+  getAuditLog();
   emit result( error );
 }
 

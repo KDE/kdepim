@@ -100,6 +100,7 @@ void Kleo::QGpgMEDecryptJob::doOperationDoneEvent( const GpgME::Error & ) {
     const GpgME::DecryptionResult res = mCtx->decryptionResult();
     const QByteArray plainText = outData();
     resetQIODeviceDataObjects();
+    getAuditLog();
     emit result( res, plainText );
 }
 

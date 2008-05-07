@@ -70,7 +70,9 @@ GpgME::Error Kleo::QGpgMEImportJob::start( const QByteArray & keyData ) {
 }
 
 void Kleo::QGpgMEImportJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->importResult() );
+  const GpgME::ImportResult res = mCtx->importResult();
+  getAuditLog();
+  emit result( res );
 }
 
 

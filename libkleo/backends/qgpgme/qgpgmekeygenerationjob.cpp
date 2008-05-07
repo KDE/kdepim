@@ -77,7 +77,10 @@ GpgME::Error Kleo::QGpgMEKeyGenerationJob::start( const QString & parameters ) {
 }
 
 void Kleo::QGpgMEKeyGenerationJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->keyGenerationResult(), mPubKeyDataProvider ? mPubKeyDataProvider->data() : QByteArray() );
+  const GpgME::KeyGenerationResult res = mCtx->keyGenerationResult();
+  const QByteArray data = mPubKeyDataProvider ? mPubKeyDataProvider->data() : QByteArray() ;
+  getAuditLog();
+  emit result( res, data );
 }
 
 #include "qgpgmekeygenerationjob.moc"

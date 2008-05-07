@@ -102,6 +102,7 @@ void Kleo::QGpgMEDecryptVerifyJob::doOperationDoneEvent( const GpgME::Error & ) 
     const GpgME::VerificationResult vr = mCtx->verificationResult();
     const QByteArray plainText = outData();
     resetQIODeviceDataObjects();
+    getAuditLog();
     emit result( dr, vr, plainText );
 }
 

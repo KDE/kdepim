@@ -292,7 +292,6 @@ static QString audit_log_as_html( GpgME::Context * ctx ) {
 
 void Kleo::QGpgMEJob::doSlotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
   if ( context == mCtx ) {
-    getAuditLog();
     doEmitDoneSignal();
     doOperationDoneEvent( e );
     if ( mEventLoop )

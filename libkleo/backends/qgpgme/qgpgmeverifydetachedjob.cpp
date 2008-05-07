@@ -103,6 +103,7 @@ void Kleo::QGpgMEVerifyDetachedJob::start( const boost::shared_ptr<QIODevice> & 
 void Kleo::QGpgMEVerifyDetachedJob::doOperationDoneEvent( const GpgME::Error & ) {
     const GpgME::VerificationResult vr = mCtx->verificationResult();
     resetQIODeviceDataObjects();
+    getAuditLog();
     emit result( vr );
 }
 

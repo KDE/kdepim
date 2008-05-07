@@ -90,7 +90,9 @@ GpgME::Error Kleo::QGpgMEDownloadJob::start( const QByteArray & fpr, const boost
 }
 
 void Kleo::QGpgMEDownloadJob::doOperationDoneEvent( const GpgME::Error & error ) {
-  emit result( error, outData() );
+  const QByteArray data = outData();
+  getAuditLog();
+  emit result( error, data );
 }
 
 #include "qgpgmedownloadjob.moc"
