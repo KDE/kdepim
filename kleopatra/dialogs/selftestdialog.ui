@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>376</width>
-    <height>386</height>
+    <height>500</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -16,7 +16,7 @@
    <item>
     <widget class="QLabel" name="label" >
      <property name="text" >
-      <string>These are the results of the Kleopatra self-test suite. To see details for a particular test, select it.</string>
+      <string comment="@info" >&lt;para>These are the results of the Kleopatra self-test suite. Details are available in tooltips.&lt;/para>&lt;para>Note that all but the first failure might be consecutive.&lt;/para></string>
      </property>
      <property name="wordWrap" >
       <bool>true</bool>
@@ -75,7 +75,11 @@
             <number>0</number>
            </property>
            <item>
-            <widget class="QLabel" name="proposedCorrectiveActionLB" />
+            <widget class="QLabel" name="proposedCorrectiveActionLB" >
+             <property name="wordWrap" >
+              <bool>true</bool>
+             </property>
+            </widget>
            </item>
           </layout>
          </widget>
