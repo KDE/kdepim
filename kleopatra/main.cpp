@@ -37,6 +37,7 @@
 #include "mainwindow.h"
 
 #include <commands/reloadkeyscommand.h>
+#include <commands/selftestcommand.h>
 
 #include "libkleo/kleo/cryptobackendfactory.h"
 
@@ -44,11 +45,6 @@
 #include <utils/filesystemwatcher.h>
 #include <utils/kdpipeiodevice.h>
 #include <utils/log.h>
-#include <utils/stl_util.h>
-
-#include <selftest/enginecheck.h>
-#include <selftest/registrycheck.h>
-#include <dialogs/selftestdialog.h>
 
 #ifdef HAVE_USABLE_ASSUAN
 # include "kleo-assuan.h"
@@ -87,6 +83,8 @@ namespace Kleo {
 #include <QProcess>
 #include <QStringList>
 #include <QMessageBox>
+#include <QPointer>
+#include <QTimer>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/mem_fn.hpp>
@@ -101,38 +99,37 @@ namespace {
     boost::shared_ptr<T> make_shared_ptr( T * t ) {
         return t ? boost::shared_ptr<T>( t ) : boost::shared_ptr<T>() ;
     }
-    static QStringList watchList() {
-        const QString home = Kleo::gnupgHomeDirectory();
-        QFileInfo info( home );
-        if ( !info.isDir() )
-            return QStringList();
-        QDir homeDir( home );
-        QStringList fileList = homeDir.entryList( QDir::AllEntries | QDir::NoDotAndDotDot );
-        fileList.removeAll( "dirmngr-cache.d" );
-        QStringList result;
-        Q_FOREACH( const QString& i, fileList )
-            result.push_back( homeDir.absoluteFilePath( i ) );
-        return result;
-    }
+}
 
-    static bool selfCheck( KSplashScreen & splash ) {
-        std::vector< shared_ptr<Kleo::SelfTest> > tests;
-        splash.showMessage( i18n("Checking gpg installation...") );
-        tests.push_back( Kleo::makeGpgEngineCheckSelfTest() );
-        splash.showMessage( i18n("Checking gpgsm installation...") );
-        tests.push_back( Kleo::makeGpgSmEngineCheckSelfTest() );
-        splash.showMessage( i18n("Checking gpgconf installation...") );
-        tests.push_back( Kleo::makeGpgConfEngineCheckSelfTest() );
-#ifdef Q_OS_WIN
-        splash.showMessage( i18n("Checking Windows Registry...") );
-        tests.push_back( Kleo::makeGpgProgramRegistryCheckSelfTest() );
-#endif
+static QStringList watchList() {
+    const QString home = Kleo::gnupgHomeDirectory();
+    QFileInfo info( home );
+    if ( !info.isDir() )
+        return QStringList();
+    QDir homeDir( home );
+    QStringList fileList = homeDir.entryList( QDir::AllEntries | QDir::NoDotAndDotDot );
+    fileList.removeAll( "dirmngr-cache.d" );
+    QStringList result;
+    Q_FOREACH( const QString& i, fileList )
+        result.push_back( homeDir.absoluteFilePath( i ) );
+    return result;
+}
 
-        if ( !kdtools::all( tests, mem_fn( &Kleo::SelfTest::passed ) ) ) {
-            Kleo::Dialogs::SelfTestDialog dlg( tests );
-            if ( !dlg.exec() )
-                return false;
-        }
+static bool selfCheck( KSplashScreen & splash ) {
+    splash.showMessage( i18n("Performing Self-Check...") );
+    const QPointer<Kleo::Commands::SelfTestCommand> cmd = new Kleo::Commands::SelfTestCommand( 0 );
+    cmd->setAutomaticMode( true );
+    QEventLoop loop;
+    QObject::connect( cmd, SIGNAL(finished()), &loop, SLOT(quit()) );
+    QObject::connect( cmd, SIGNAL(info(QString)), &splash, SLOT(showMessage(QString)) );
+    QTimer::singleShot( 0, cmd, SLOT(start()) ); // start() may emit finished()...
+    loop.exec();
+    assert( cmd );
+    if ( cmd->isCanceled() ) {
+        splash.showMessage( i18n("Self-Check Failed") );
+        return false;
+    } else {
+        splash.showMessage( i18n("Self-Check Passed") );
         return true;
     }
 }

@@ -194,10 +194,20 @@ private:
     Model model;
 
     struct UI : public Ui_SelfTestDialog {
+
+        QPushButton * rerunPB;
+
         explicit UI( SelfTestDialog * qq )
-            : Ui_SelfTestDialog()
+            : Ui_SelfTestDialog(),
+              rerunPB( new QPushButton( i18n("Rerun Tests") ) )
         {
             setupUi( qq );
+
+            buttonBox->addButton( rerunPB, QDialogButtonBox::ActionRole );
+            buttonBox->button( QDialogButtonBox::Ok )->setText( i18n("Continue") );
+
+            connect( rerunPB, SIGNAL(clicked()),
+                     qq, SIGNAL(updateRequested()) );
         }
     } ui;
 };
@@ -216,6 +226,10 @@ SelfTestDialog::SelfTestDialog( const std::vector< shared_ptr<SelfTest> > & test
 
 SelfTestDialog::~SelfTestDialog() {}
 
+void SelfTestDialog::clear() {
+    d->model.clear();
+}
+
 void SelfTestDialog::addSelfTest( const shared_ptr<SelfTest> & test ) {
     d->model.append( std::vector< shared_ptr<SelfTest> >( 1, test ) );
 }
@@ -224,6 +238,19 @@ void SelfTestDialog::addSelfTests( const std::vector< shared_ptr<SelfTest> > & t
     d->model.append( tests );
 }
 
+void SelfTestDialog::setRunAtStartUp( bool on ) {
+    d->ui.runAtStartUpCB->setChecked( on );
+}
+
+bool SelfTestDialog::runAtStartUp() const {
+    return d->ui.runAtStartUpCB->isChecked();
+}
+
+void SelfTestDialog::setAutomaticMode( bool automatic ) {
+    d->ui.buttonBox->button( QDialogButtonBox::Ok     )->setVisible(  automatic );
+    d->ui.buttonBox->button( QDialogButtonBox::Cancel )->setVisible(  automatic );
+    d->ui.buttonBox->button( QDialogButtonBox::Close  )->setVisible( !automatic );
+}
 
 #include "selftestdialog.moc"
 #include "moc_selftestdialog.cpp"

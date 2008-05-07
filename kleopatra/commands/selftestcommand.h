@@ -1,5 +1,5 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    dialogs/selftestdialog.h
+    commands/selftestcommand.h
 
     This file is part of Kleopatra, the KDE keymanager
     Copyright (c) 2008 Klarälvdalens Datakonsult AB
@@ -30,55 +30,39 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_DIALOGS_SELFTESTDIALOG_H__
-#define __KLEOPATRA_DIALOGS_SELFTESTDIALOG_H__
+#ifndef __KLEOPATRA_COMMMANDS_SELFTESTCOMMAND_H__
+#define __KLEOPATRA_COMMMANDS_SELFTESTCOMMAND_H__
 
-#include <QDialog>
-
-#include <utils/pimpl_ptr.h>
-
-#include <vector>
-
-namespace boost {
-    template <typename T> class shared_ptr;
-}
+#include <commands/command.h>
 
 namespace Kleo {
+namespace Commands {
 
-    class SelfTest;
-
-namespace Dialogs {
-
-    class SelfTestDialog : public QDialog {
+    class SelfTestCommand : public Command {
         Q_OBJECT
-        Q_PROPERTY( bool runAtStartUp READ runAtStartUp WRITE setRunAtStartUp )
     public:
-        explicit SelfTestDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
-        explicit SelfTestDialog( const std::vector< boost::shared_ptr<SelfTest> > & tests, QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~SelfTestDialog();
+        explicit SelfTestCommand( QAbstractItemView * view, KeyListController * parent );
+        explicit SelfTestCommand( KeyListController * parent );
+        ~SelfTestCommand();
 
         void setAutomaticMode( bool automatic );
 
-        void addSelfTest( const boost::shared_ptr<SelfTest> & test );
-        void addSelfTests( const std::vector< boost::shared_ptr<SelfTest> > & tests );
+        bool isCanceled() const;
 
-        void setRunAtStartUp( bool run );
-        bool runAtStartUp() const;
-
-    public Q_SLOTS:
-        void clear();
-
-    Q_SIGNALS:
-        void updateRequested();
+    private:
+        /* reimp */ void doStart();
+        /* reimp */ void doCancel();
 
     private:
         class Private;
-        kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void slotSelectionChanged() )
-        Q_PRIVATE_SLOT( d, void slotDoItClicked() )
+        inline Private * d_func();
+        inline const Private * d_func() const;
+        Q_PRIVATE_SLOT( d_func(), void slotUpdateRequested() )
+        Q_PRIVATE_SLOT( d_func(), void slotDialogAccepted() )
+        Q_PRIVATE_SLOT( d_func(), void slotDialogRejected() )
     };
 
 }
 }
 
-#endif /* __KLEOPATRA_DIALOGS_SELFTESTDIALOG_H__ */
+#endif // __KLEOPATRA_COMMMANDS_SELFTESTCOMMAND_H__

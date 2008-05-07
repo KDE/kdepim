@@ -117,12 +117,19 @@
     </widget>
    </item>
    <item>
-    <widget class="QDialogButtonBox" name="buttonBox" >
-     <property name="orientation" >
-      <enum>Qt::Horizontal</enum>
+    <widget class="QCheckBox" name="runAtStartUpCB" >
+     <property name="text" >
+      <string>Run these tests at startup</string>
      </property>
+     <property name="checked" >
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox" >
      <property name="standardButtons" >
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Close|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>
@@ -145,8 +152,8 @@
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>227</x>
-     <y>357</y>
+     <x>236</x>
+     <y>490</y>
     </hint>
     <hint type="destinationlabel" >
      <x>157</x>
@@ -161,8 +168,8 @@
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>295</x>
-     <y>363</y>
+     <x>304</x>
+     <y>490</y>
     </hint>
     <hint type="destinationlabel" >
      <x>286</x>
@@ -177,8 +184,8 @@
    <slot>slotDoItClicked()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>337</x>
-     <y>302</y>
+     <x>354</x>
+     <y>467</y>
     </hint>
     <hint type="destinationlabel" >
      <x>375</x>
