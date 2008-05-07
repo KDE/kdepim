@@ -145,7 +145,7 @@ CSVImportDialog::CSVImportDialog( KABC::AddressBook *ab, QWidget *parent )
   connect( mUrlRequester, SIGNAL( returnPressed( const QString& ) ),
            this, SLOT( setFile( const QString& ) ) );
   connect( mUrlRequester, SIGNAL( urlSelected( const KUrl& ) ),
-           this, SLOT( setFile( const QString& ) ) );
+           this, SLOT( setFile( const KUrl& ) ) );
   connect( mUrlRequester->lineEdit(), SIGNAL( textChanged ( const QString& ) ),
            this, SLOT( urlChanged( const QString& ) ) );
 
