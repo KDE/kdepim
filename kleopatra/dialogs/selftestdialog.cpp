@@ -123,11 +123,11 @@ namespace {
             endRemoveRows();
         }
 
-        void append( const shared_ptr<SelfTest> & test ) {
-            if ( !test )
+        void append( const std::vector< shared_ptr<SelfTest> > & tests ) {
+            if ( tests.empty() )
                 return;
-            beginInsertRows( QModelIndex(), m_tests.size(), m_tests.size() );
-            m_tests.push_back( test );
+            beginInsertRows( QModelIndex(), m_tests.size(), m_tests.size() + tests.size() );
+            m_tests.insert( m_tests.end(), tests.begin(), tests.end() );
             endInsertRows();
         }
 
@@ -169,7 +169,7 @@ private:
         } else {
             ui.proposedCorrectiveActionGB->setEnabled( true );
             ui.proposedCorrectiveActionLB->setText( model.at(row)->proposedFix() );
-            ui.doItPB->setEnabled( model.at(row)->canFixAutomatically() );
+            ui.doItPB->setEnabled( !model.at(row)->passed() && model.at(row)->canFixAutomatically() );
         }
     }
     void slotDoItClicked() {
@@ -208,10 +208,20 @@ SelfTestDialog::SelfTestDialog( QWidget * p, Qt::WindowFlags f )
 
 }
 
+SelfTestDialog::SelfTestDialog( const std::vector< shared_ptr<SelfTest> > & tests, QWidget * p, Qt::WindowFlags f )
+    : QDialog( p, f ), d( new Private( this ) )
+{
+    addSelfTests( tests );
+}
+
 SelfTestDialog::~SelfTestDialog() {}
 
 void SelfTestDialog::addSelfTest( const shared_ptr<SelfTest> & test ) {
-    d->model.append( test );
+    d->model.append( std::vector< shared_ptr<SelfTest> >( 1, test ) );
+}
+
+void SelfTestDialog::addSelfTests( const std::vector< shared_ptr<SelfTest> > & tests ) {
+    d->model.append( tests );
 }
 
 

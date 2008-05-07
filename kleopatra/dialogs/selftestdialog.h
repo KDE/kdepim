@@ -37,6 +37,8 @@
 
 #include <utils/pimpl_ptr.h>
 
+#include <vector>
+
 namespace boost {
     template <typename T> class shared_ptr;
 }
@@ -51,9 +53,11 @@ namespace Dialogs {
         Q_OBJECT
     public:
         explicit SelfTestDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
+        explicit SelfTestDialog( const std::vector< boost::shared_ptr<SelfTest> > & tests, QWidget * parent=0, Qt::WindowFlags f=0 );
         ~SelfTestDialog();
 
         void addSelfTest( const boost::shared_ptr<SelfTest> & test );
+        void addSelfTests( const std::vector< boost::shared_ptr<SelfTest> > & tests );
 
     private:
         class Private;
