@@ -134,6 +134,8 @@ CertificateWizardImpl::CertificateWizardImpl( QWidget* parent )
     QVBoxLayout* layout = new QVBoxLayout( storeCAWidget );
     layout->setMargin( 0 );
     _storeFR = new Kleo::FileNameRequester;
+    _storeFR->setExistingOnly( false );
+    _storeFR->setFilter( QDir::Files );
     connect( storeInFileRB, SIGNAL( toggled( bool ) ), 
             _storeFR, SLOT( setEnabled( bool ) ) );
     layout->addWidget( _storeFR );
