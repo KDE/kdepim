@@ -83,6 +83,7 @@ private:
                  q, SLOT(slotDialogRejected()) );
 
         dialog->setRunAtStartUp( runAtStartUp() );
+        dialog->setAutomaticMode( automatic );
     }
 
     void ensureDialogShown() {
