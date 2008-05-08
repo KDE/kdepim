@@ -135,7 +135,7 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
      */
     QWidget *widget() const;
 
-    static KAboutData *createAboutData();
+    static KAboutData createAboutData();
 
     void setStatusBar( KStatusBar *statusBar );
 

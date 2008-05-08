@@ -27,8 +27,6 @@
 #include <kparts/factory.h>
 #include <kparts/part.h>
 
-class KAboutData;
-
 class KABCore;
 
 class KAddressbookPart: public KParts::ReadOnlyPart
@@ -38,8 +36,6 @@ class KAddressbookPart: public KParts::ReadOnlyPart
   public:
     KAddressbookPart( QWidget *parentWidget, QObject *parent, const QVariantList& );
     virtual ~KAddressbookPart();
-
-    static KAboutData *createAboutData();
 
   public slots:
     virtual void addEmail( QString addr );

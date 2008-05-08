@@ -292,25 +292,25 @@ QWidget *KABCore::widget() const
   return mWidget;
 }
 
-KAboutData *KABCore::createAboutData()
+KAboutData KABCore::createAboutData()
 {
-  KAboutData *about = new KAboutData( "kaddressbook", 0, ki18n( "KAddressBook" ),
-                                      "3.5", ki18n( "The KDE Address Book" ),
-                                      KAboutData::License_GPL_V2,
-                                      ki18n( "(c) 1997-2005, The KDE PIM Team" ) );
-  about->addAuthor( ki18n("Tobias Koenig"), ki18n( "Current maintainer" ), "tokoe@kde.org" );
-  about->addAuthor( ki18n("Don Sanders"), ki18n( "Original author" ) );
-  about->addAuthor( ki18n("Cornelius Schumacher"),
-                    ki18n( "Co-maintainer, libkabc port, CSV import/export" ),
-                    "schumacher@kde.org" );
-  about->addAuthor( ki18n("Mike Pilone"), ki18n( "GUI and framework redesign" ),
-                    "mpilone@slac.com" );
-  about->addAuthor( ki18n("Greg Stern"), ki18n( "DCOP interface" ) );
-  about->addAuthor( ki18n("Mark Westcott"), ki18n( "Contact pinning" ) );
-  about->addAuthor( ki18n("Michel Boyer de la Giroday"), ki18n( "LDAP Lookup" ),
-                    "michel@klaralvdalens-datakonsult.se" );
-  about->addAuthor( ki18n("Steffen Hansen"), ki18n( "LDAP Lookup" ),
-                    "hansen@kde.org" );
+  KAboutData about( "kaddressbook", 0, ki18n( "KAddressBook" ),
+                    "3.5", ki18n( "The KDE Address Book" ),
+                    KAboutData::License_GPL_V2,
+                    ki18n( "(c) 1997-2005, The KDE PIM Team" ) );
+  about.addAuthor( ki18n("Tobias Koenig"), ki18n( "Current maintainer" ), "tokoe@kde.org" );
+  about.addAuthor( ki18n("Don Sanders"), ki18n( "Original author" ) );
+  about.addAuthor( ki18n("Cornelius Schumacher"),
+                   ki18n( "Co-maintainer, libkabc port, CSV import/export" ),
+                   "schumacher@kde.org" );
+  about.addAuthor( ki18n("Mike Pilone"), ki18n( "GUI and framework redesign" ),
+                   "mpilone@slac.com" );
+  about.addAuthor( ki18n("Greg Stern"), ki18n( "DCOP interface" ) );
+  about.addAuthor( ki18n("Mark Westcott"), ki18n( "Contact pinning" ) );
+  about.addAuthor( ki18n("Michel Boyer de la Giroday"), ki18n( "LDAP Lookup" ),
+                   "michel@klaralvdalens-datakonsult.se" );
+  about.addAuthor( ki18n("Steffen Hansen"), ki18n( "LDAP Lookup" ),
+                   "hansen@kde.org" );
 
   return about;
 }

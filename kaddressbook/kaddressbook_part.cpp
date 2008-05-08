@@ -21,7 +21,6 @@
     without including the source code for Qt in the source distribution.
 */
 
-//Added by qt3to4:
 #include <QVBoxLayout>
 
 #include <kaction.h>
@@ -39,8 +38,14 @@
 
 #include "kaddressbook_part.h"
 
-K_PLUGIN_FACTORY(KAddressbookFactory, registerPlugin<KAddressbookPart>();)
-K_EXPORT_PLUGIN(KAddressbookFactory( "kaddressbook" ))
+static const KAboutData &createAboutData()
+{
+  static KAboutData about = KABCore::createAboutData();
+  return about;
+}
+
+K_PLUGIN_FACTORY( KAddressbookFactory, registerPlugin<KAddressbookPart>(); )
+K_EXPORT_PLUGIN( KAddressbookFactory( createAboutData() ) )
 
 KAddressbookPart::KAddressbookPart( QWidget *parentWidget, QObject *parent,
                                     const QVariantList & )
@@ -79,11 +84,6 @@ KAddressbookPart::~KAddressbookPart()
 
   KABPrefs::instance()->writeConfig();
   closeUrl();
-}
-
-KAboutData *KAddressbookPart::createAboutData()
-{
-  return KABCore::createAboutData();
 }
 
 void KAddressbookPart::addEmail( QString addr )
