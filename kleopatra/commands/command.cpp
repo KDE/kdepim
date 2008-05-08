@@ -43,6 +43,7 @@ using namespace Kleo;
 
 Command::Private::Private( Command * qq, KeyListController * controller )
     : q( qq ),
+      autoDelete( true ),
       indexes_(),
       view_(),
       controller_( controller )
@@ -86,7 +87,13 @@ Command::Command( QAbstractItemView * v, Private * pp )
 
 Command::~Command() { kDebug(); }
 
+void Command::setAutoDelete( bool on ) {
+    d->autoDelete = on;
+}
 
+bool Command::autoDelete() const {
+    return d->autoDelete;
+}
 
 void Command::setView( QAbstractItemView * view ) {
     if ( view == d->view_ )

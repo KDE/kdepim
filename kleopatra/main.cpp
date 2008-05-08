@@ -117,15 +117,15 @@ static QStringList watchList() {
 
 static bool selfCheck( KSplashScreen & splash ) {
     splash.showMessage( i18n("Performing Self-Check...") );
-    const QPointer<Kleo::Commands::SelfTestCommand> cmd = new Kleo::Commands::SelfTestCommand( 0 );
-    cmd->setAutomaticMode( true );
+    Kleo::Commands::SelfTestCommand cmd( 0 );
+    cmd.setAutoDelete( false );
+    cmd.setAutomaticMode( true );
     QEventLoop loop;
-    QObject::connect( cmd, SIGNAL(finished()), &loop, SLOT(quit()) );
-    QObject::connect( cmd, SIGNAL(info(QString)), &splash, SLOT(showMessage(QString)) );
-    QTimer::singleShot( 0, cmd, SLOT(start()) ); // start() may emit finished()...
+    QObject::connect( &cmd, SIGNAL(finished()), &loop, SLOT(quit()) );
+    QObject::connect( &cmd, SIGNAL(info(QString)), &splash, SLOT(showMessage(QString)) );
+    QTimer::singleShot( 0, &cmd, SLOT(start()) ); // start() may emit finished()...
     loop.exec();
-    assert( cmd );
-    if ( cmd->isCanceled() ) {
+    if ( cmd.isCanceled() ) {
         splash.showMessage( i18n("Self-Check Failed") );
         return false;
     } else {

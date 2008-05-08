@@ -71,6 +71,9 @@ namespace Kleo {
         void setIndex( const QModelIndex & idx );
         void setIndexes( const QList<QModelIndex> & idx );
 
+        void setAutoDelete( bool on );
+        bool autoDelete() const;
+
     public Q_SLOTS:
         void start();
         void cancel();

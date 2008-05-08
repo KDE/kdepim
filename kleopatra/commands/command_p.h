@@ -68,7 +68,8 @@ public:
 
     void finished() {
         emit q->finished();
-        q->deleteLater();
+        if ( autoDelete )
+            q->deleteLater();
     }
 
     void canceled() {
@@ -77,6 +78,7 @@ public:
     }
 
 private:
+    bool autoDelete : 1;
     QList<QPersistentModelIndex> indexes_;
     QPointer<QAbstractItemView> view_;
     QPointer<KeyListController> controller_;
