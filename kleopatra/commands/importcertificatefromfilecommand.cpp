@@ -185,6 +185,7 @@ bool ImportCertificateFromFileCommand::Private::ensureHaveFile()
 void ImportCertificateFromFileCommand::Private::importResult( const GpgME::ImportResult& result )
 {
     if ( result.error().code() ) {
+        setImportResultProxyModel( result );
         if ( result.error().isCanceled() )
             emit q->canceled();
         else

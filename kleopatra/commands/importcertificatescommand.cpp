@@ -191,9 +191,13 @@ static void inject_import_result_proxy_model( QAbstractItemView * qaiv, const Im
 
 }
 
+void ImportCertificatesCommand::Private::setImportResultProxyModel( const ImportResult & result ) {
+    inject_import_result_proxy_model( view(), result );
+}
+
 void ImportCertificatesCommand::Private::showDetails( QWidget * parent, const ImportResult & res, const QString & id ) {
 
-    inject_import_result_proxy_model( view(), res );
+    setImportResultProxyModel( res );
 
     const KLocalizedString normalLine = ki18n("<tr><td align=\"right\">%1</td><td>%2</td></tr>");
     const KLocalizedString boldLine = ki18n("<tr><td align=\"right\"><b>%1</b></td><td>%2</td></tr>");
@@ -274,14 +278,15 @@ void ImportCertificatesCommand::Private::importResult( const ImportResult & resu
 
     // ### merge results when gpgme gains copy ctors for result objects
 
-    if ( result.error().code() )
+    if ( result.error().code() ) {
+        setImportResultProxyModel( result );
         if ( result.error().isCanceled() )
             emit q->canceled();
         else
             showError( result.error() );
+    }
     else
         showDetails( result );
-
     finished();
 }
 
@@ -289,6 +294,7 @@ void ImportCertificatesCommand::Private::startImport( GpgME::Protocol protocol, 
     assert( protocol != UnknownProtocol );
     const Kleo::CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( protocol );
     if ( !backend ) {
+        setImportResultProxyModel( ImportResult() );
         KMessageBox::error( view(), 
                             i18n( "The type of this certificate (%1) is not supported by this Kleopatra installation.",
                                   Formatting::displayName( protocol ) ),
@@ -303,9 +309,11 @@ void ImportCertificatesCommand::Private::startImport( GpgME::Protocol protocol, 
     connect( job.get(), SIGNAL(progress(QString,int,int)), 
              q, SIGNAL(progress(QString,int,int)) );
     if ( const GpgME::Error err = job->start( data ) ) {
+        setImportResultProxyModel( ImportResult( err ) );
         showError( err, id );
         finished();
     } else if ( err.isCanceled() ) {
+        setImportResultProxyModel( ImportResult( err ) );
         emit q->canceled();
         finished();
     } else {
