@@ -450,6 +450,7 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & sresult, c
             kleo_assert( !sresult.isNull() || !eresult.isNull() );
             output->finalize();
             outputCreated = true;
+            input->finalize();
             if ( removeInput ) {
                 inputRemoved = QFile::remove( inputFileName );
             }
