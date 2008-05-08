@@ -161,9 +161,8 @@ bool KeyListSortFilterProxyModel::filterAcceptsRow( int source_row, const QModel
     //
     if ( d->keyFilter ) { // avoid artifacts when no filters are defined
 
-        assert( qobject_cast<AbstractKeyListModel*>( sourceModel() ) );
-        const AbstractKeyListModel * const klm = static_cast<AbstractKeyListModel*>( sourceModel() );
-
+        const KeyListModelInterface * const klm = dynamic_cast<KeyListModelInterface*>( sourceModel() );
+        assert( klm );
         const Key key = klm->key( nameIndex );
 
         return d->keyFilter->matches( key, KeyFilter::Filtering );
