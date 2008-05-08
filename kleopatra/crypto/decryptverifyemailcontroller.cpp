@@ -146,7 +146,7 @@ void DecryptVerifyEMailController::Private::schedule()
         kleo_assert( m_runnableTasks.empty() );
         Q_FOREACH ( const shared_ptr<const DecryptVerifyResult> & i, m_results )
             emit q->verificationResult( i->verificationResult() );
-        emit q->done();
+        // there is no done() call here on purpose. The E-Mail client is supposed to close the connection/cancel the command when done (which then closes possible popups)
     }
 }
 
