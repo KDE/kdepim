@@ -159,16 +159,16 @@ static QString formatDate( const QDateTime & dt ) {
 static QString formatSigningInformation( const Signature & sig, const Key & key ) {
     if ( sig.isNull() )
         return QString();
-    const QDateTime dt = QDateTime::fromTime_t( sig.creationTime() );
+    const QDateTime dt = sig.creationTime() != 0 ? QDateTime::fromTime_t( sig.creationTime() ) : QDateTime();
     const QString signer = key.isNull() ? QString() : renderKeyEMailOnlyNameAsFallback( key );
     const bool haveKey = !key.isNull();
     const bool haveSigner = !signer.isEmpty();
     const bool haveDate = dt.isValid();
     if ( !haveKey )
         if ( haveDate )
-            return i18n( "Message was signed on %1 with unknown key %2.", formatDate( dt ), sig.fingerprint() );
+            return i18n( "Message was signed on %1 with unknown key %2.", formatDate( dt ), renderFingerprint( sig.fingerprint() ) );
         else
-            return i18n( "Message was signed with unknown key %1.", sig.fingerprint() );
+            return i18n( "Message was signed with unknown key %1.", renderFingerprint( sig.fingerprint() ) );
     if ( haveSigner )
         if ( haveDate )
             return i18nc( "date, key owner, key ID",
@@ -312,11 +312,11 @@ static QString formatSignature( const Signature & sig, const Key & key ) {
     if ( red )
         if ( key.isNull() )
             if ( const char * fpr = sig.fingerprint() )
-                return text + i18n("Bad signature by unknown key %1: %2", signatureSummaryToString( sig.summary() ) );
+                return text + i18n("Bad signature by unknown key %1.", renderFingerprint( fpr ) );
             else
-                return text + i18n("Bad signature by an unknown key: %1", signatureSummaryToString( sig.summary() ) );
+                return text + i18n("Bad signature by an unknown key." );
         else
-            return text + i18n("Bad signature by %1: %2", renderKey( key ), signatureSummaryToString( sig.summary() ) );
+            return text + i18n("Bad signature by %1.", renderKey( key ) );
     if ( key.isNull() )
         if ( const char * fpr = sig.fingerprint() )
             return text + i18n("Invalid signature by unknown key %1: %2", renderFingerprint( fpr ), signatureSummaryToString( sig.summary() ) );
