@@ -136,6 +136,7 @@ private:
         finished();
     }
     void slotDialogRejected() {
+        canceled = true;
         Command::Private::canceled();
     }
     void slotUpdateRequested() {
