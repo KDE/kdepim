@@ -34,12 +34,17 @@ add_subdirectory( tests )
 
 if ( WIN32 )
   set( _kleopatra_extra_uiserver_SRCS
-    utils/gnupg-registry.c
     uiserver/uiserver_win.cpp
+    )
+  set( _kleopatra_extra_SRCS
+    utils/gnupg-registry.c
+    selftest/registrycheck.cpp
     )
 else ( WIN32 )
   set( _kleopatra_extra_uiserver_SRCS
     uiserver/uiserver_unix.cpp
+    )
+  set( _kleopatra_extra_SRCS
     )
 endif ( WIN32 )
 
@@ -78,7 +83,7 @@ kde4_add_ui_files( _kleopatra_uiserver_SRCS
                    crypto/gui/signingcertificateselectionwidget.ui)
 
 
-set( _kleopatra_common_SRCS
+set( _kleopatra_SRCS
   utils/gnupg-helper.cpp
   utils/filesystemwatcher.cpp
   utils/kdpipeiodevice.cpp
@@ -98,8 +103,9 @@ set( _kleopatra_common_SRCS
   utils/action_data.cpp
 
   selftest/selftest.cpp
-  selftest/registrycheck.cpp
   selftest/enginecheck.cpp
+
+  ${_kleopatra_extra_SRCS}
 
   models/keycache.cpp
   models/keylistmodel.cpp
@@ -185,17 +191,17 @@ set( _kleopatra_common_SRCS
 
 if ( KLEO_MODEL_TEST )
  add_definitions( -DKLEO_MODEL_TEST )
- set( _kleopatra_common_SRCS ${_kleopatra_common_SRCS} models/modeltest.cpp )
+ set( _kleopatra_SRCS ${_kleopatra_SRCS} models/modeltest.cpp )
 endif ( KLEO_MODEL_TEST )
 
-kde4_add_ui_files( _kleopatra_common_SRCS
+kde4_add_ui_files( _kleopatra_SRCS
   certificateinfowidget.ui
   certificatewizard.ui
   dialogs/expirydialog.ui
   dialogs/lookupcertificatesdialog.ui
   dialogs/selftestdialog.ui
   )
-kde4_add_kcfg_files( _kleopatra_common_SRCS
+kde4_add_kcfg_files( _kleopatra_SRCS
   kcfg/tooltippreferences.kcfgc
   kcfg/emailoperationspreferences.kcfgc
   kcfg/smimevalidationpreferences.kcfgc
@@ -214,7 +220,7 @@ add_definitions ( -DKDE_DEFAULT_DEBUG_AREA=5151 )
 
 
 kde4_add_app_icon(_kleopatra_mainwindow_SRCS "ox*-app-kleopatra.png")
-kde4_add_executable(kleopatra_bin ${_kleopatra_common_SRCS} ${_kleopatra_mainwindow_SRCS} ${_kleopatra_uiserver_SRCS} )
+kde4_add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_mainwindow_SRCS} ${_kleopatra_uiserver_SRCS} )
 set_target_properties(kleopatra_bin  PROPERTIES OUTPUT_NAME kleopatra)
 
 set( _kleopatra_extra_libs ${QT_QT3SUPPORT_LIBRARY} )

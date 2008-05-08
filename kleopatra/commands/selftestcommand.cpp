@@ -39,7 +39,9 @@
 #include <dialogs/selftestdialog.h>
 
 #include <selftest/enginecheck.h>
-#include <selftest/registrycheck.h>
+#ifdef Q_OS_WIN
+# include <selftest/registrycheck.h>
+#endif
 
 #include <utils/stl_util.h>
 
