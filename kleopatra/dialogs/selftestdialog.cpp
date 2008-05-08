@@ -215,13 +215,14 @@ private:
 SelfTestDialog::SelfTestDialog( QWidget * p, Qt::WindowFlags f )
     : QDialog( p, f ), d( new Private( this ) )
 {
-
+    setAutomaticMode( false );
 }
 
 SelfTestDialog::SelfTestDialog( const std::vector< shared_ptr<SelfTest> > & tests, QWidget * p, Qt::WindowFlags f )
     : QDialog( p, f ), d( new Private( this ) )
 {
     addSelfTests( tests );
+    setAutomaticMode( false );
 }
 
 SelfTestDialog::~SelfTestDialog() {}
