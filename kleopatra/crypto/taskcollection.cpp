@@ -61,7 +61,7 @@ public:
     std::map<int, shared_ptr<Task> > m_tasks;
     mutable int m_totalSize;
     mutable int m_processedSize;
-    int m_nCompleted;
+    unsigned int m_nCompleted;
     QString m_lastProgressMessage;
     bool m_errorOccurred;
 };
