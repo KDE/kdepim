@@ -304,7 +304,7 @@ void Page::setStringFilter( const QString & filter ) {
 void Page::setKeyFilter( const shared_ptr<KeyFilter> & filter ) {
     if ( filter == m_keyFilter || filter && m_keyFilter && filter->id() == m_keyFilter->id() )
         return;
-    if ( !m_canChangeKeyFilter )
+    if ( !canChangeKeyFilter() )
         return;
     const QString oldTitle = title();
     m_keyFilter = filter;
