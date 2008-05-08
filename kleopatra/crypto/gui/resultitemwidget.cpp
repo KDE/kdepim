@@ -120,7 +120,7 @@ ResultItemWidget::ResultItemWidget( const shared_ptr<const Task::Result> & resul
     overview->setText( d->m_result->overview() );
     connect( overview, SIGNAL(linkActivated(QString)), this, SLOT(slotLinkActivated(QString)) );
 
-    hlay->addWidget( overview, 1 );
+    hlay->addWidget( overview, 1, Qt::AlignTop );
     layout->addWidget( hbox );
 
     const QString details = d->m_result->details();
