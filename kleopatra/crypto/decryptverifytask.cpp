@@ -61,10 +61,12 @@
 #include <gpg-error.h>
 
 #include <KIconLoader>
+#include <KLocale>
 #include <KLocalizedString>
 
 #include <QByteArray>
 #include <QColor>
+#include <QDateTime>
 #include <QTextDocument> // Qt::escape
 
 #include <boost/bind.hpp>
@@ -78,8 +80,106 @@ using namespace boost;
 
 namespace {
 
-static QString strikeOut( const QString & str, bool strike ) {
+static QString signatureSummaryToString( int summary )
+{
+    if ( summary & Signature::None )
+        return i18n( "Error: Signature not verified" );
+    else if ( summary & Signature::Valid || summary & Signature::Green )
+        return i18n( "Good signature" );
+    else if ( summary & Signature::Red )
+        return i18n( "Bad signature" );
+    else if ( summary & Signature::KeyRevoked )
+        return i18n( "Signing certificate revoked" );
+    else if ( summary & Signature::KeyExpired )
+        return i18n( "Signing certificate expired" );
+        else if ( summary & Signature::KeyMissing )
+        return i18n( "No public key to verify the signature" );
+    else if ( summary & Signature::SigExpired )
+        return i18n( "Signature expired" );
+    else if ( summary & Signature::KeyMissing )
+        return i18n( "Key missing" );
+    else if ( summary & Signature::CrlMissing )
+        return i18n( "CRL missing" );
+    else if ( summary & Signature::CrlTooOld )
+        return i18n( "CRL too old" );
+    else if ( summary & Signature::BadPolicy )
+        return i18n( "Bad policy" );
+    else if ( summary & Signature::SysError )
+        return i18n( "System error" ); //### retrieve system error details?
+    return QString();
+}
 
+static QString formatValidSignatureWithTrustLevel( const Key & key ) {
+    assert( !key.isNull() );
+    switch ( key.ownerTrust() ) {
+        case Key::Marginal:
+            return i18n( "The signature is valid but the trust in the certificate's validity is only marginal." );
+        case Key::Full:
+            return i18n( "The signature is valid and the certificate's validity is fully trusted." );
+        case Key::Ultimate:
+            return i18n( "The signature is valid and the certificate's validity is ultimately trusted." );
+        case Key::Never:
+            return i18n( "The signature is valid but the certificate's validity is <em>not trusted</em>." );
+        case Key::Unknown:
+            return i18n( "The signature is valid but the certificate's validity is unknown." );
+        case Key::Undefined:
+        default:
+            return i18n( "The signature is valid but the certificate's validity is undefined." );
+    }
+}
+
+static QString renderFingerprint( const char * fpr ) {
+    if ( !fpr )
+        return QString();
+    return QString( "0x%1" ).arg( QString::fromAscii( fpr ).toUpper() );
+}
+
+static QString renderKey( const Key & key ) {
+    if ( key.isNull() )
+        return i18n( "Unknown key" );
+    return QString::fromLatin1( "<a href=\"key:%1\">%2</a>" ).arg( key.primaryFingerprint(), Formatting::prettyName( key ) );
+}
+
+static QString renderKeyEMailOnlyNameAsFallback( const Key & key ) {
+    if ( key.isNull() )
+        return i18n( "Unknown key" );
+    const QString email = Formatting::prettyEMail( key );
+    const QString user = !email.isNull() ? email : Formatting::prettyName( key );
+    return QString::fromLatin1( "<a href=\"key:%1\">%2</a>" ).arg( key.primaryFingerprint(), user );
+}
+
+static QString formatDate( const QDateTime & dt ) {
+    return KGlobal::locale()->formatDateTime( dt );
+}
+static QString formatSigningInformation( const Signature & sig, const Key & key ) {
+    if ( sig.isNull() )
+        return QString();
+    const QDateTime dt = QDateTime::fromTime_t( sig.creationTime() );
+    const QString signer = key.isNull() ? QString() : renderKeyEMailOnlyNameAsFallback( key );
+    const bool haveKey = !key.isNull();
+    const bool haveSigner = !signer.isEmpty();
+    const bool haveDate = dt.isValid();
+    if ( !haveKey )
+        if ( haveDate )
+            return i18n( "Message was signed on %1 with unknown key %2.", formatDate( dt ), sig.fingerprint() );
+        else
+            return i18n( "Message was signed with unknown key %1.", sig.fingerprint() );
+    if ( haveSigner )
+        if ( haveDate )
+            return i18nc( "date, key owner, key ID",
+                          "Message was signed on %1 by %2 (Key ID: %3).", 
+                          formatDate( dt ),
+                          signer,
+                          renderFingerprint( key.keyID() ) );
+        else
+            return i18n( "Message was signed by %1 with key %2.", signer, renderKey( key ) );
+    if ( haveDate )
+        return i18n( "Message was signed on %1 with key %2.", formatDate( dt ), renderKey( key ) );
+    return i18n( "Message was signed with key %1.", renderKey( key ) );
+
+}
+
+static QString strikeOut( const QString & str, bool strike ) {
     return QString( strike ? "<s>%1</s>" : "%1" ).arg( Qt::escape( str ) );
 }
 
@@ -125,20 +225,11 @@ static bool IsErrorOrCanceled( const Result & res )
     return IsErrorOrCanceled( res.error() );
 }
 
-static QString renderKey( const Key & key ) {
-    if ( key.isNull() )
-        return i18n( "Unknown key" );
-    return QString::fromLatin1( "<a href=\"key:%1\">%2</a>" ).arg( key.primaryFingerprint(), Formatting::prettyName( key ) );
+static bool IsBad( const Signature & sig ) {
+    return sig.summary() & Signature::Red;
 }
-
-namespace {
-
-    static bool IsBad( const Signature & sig ) {
-        return sig.summary() & Signature::Red;
-    }
-    static bool IsValid( const Signature & sig ) {
-        return sig.summary() & Signature::Valid;
-    }
+static bool IsValid( const Signature & sig ) {
+    return sig.summary() & Signature::Valid;
 }
 
 static Task::Result::VisualCode codeForVerificationResult( const VerificationResult & res )
@@ -169,17 +260,27 @@ static QString formatVerificationResultOverview( const VerificationResult & res 
         return i18n( "<b>Verification failed: %1.</b>", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
 
     const std::vector<Signature> sigs = res.signatures();
+    const std::vector<Key> signers = KeyCache::instance()->findSigners( res );
 
     if ( sigs.empty() )
-        return i18n( "<b>No signatures found</b>" );
+        return i18n( "<b>No signatures found.</b>" );
 
     const uint bad = std::count_if( sigs.begin(), sigs.end(), IsBad );
-    if ( bad > 0 )
-        return i18np("<b>Bad signature</b>", "<b>%1 bad signatures</b>", bad );
-    const uint invalid = std::count_if( sigs.begin(), sigs.end(), !bind( IsValid, _1 ) );
-    if ( invalid > 0 )
-            return i18np("<b>Invalid signature</b>", "<b>%1 invalid signatures</b>", invalid );
-    return i18np("<b>Good signature</b>", "<b>%1 good signatures</b>", sigs.size() );
+    if ( bad > 0 ) {
+        return i18np("<b>Invalid signature.</b>", "<b>%1 invalid signatures.</b>", bad );
+    }
+    const uint warn = std::count_if( sigs.begin(), sigs.end(), !bind( IsValid, _1 ) );
+    if ( warn > 0 )
+        return i18np("<b>Not enough information to check signature validity.</b>", "<b>%1 signatures could not be verified.</b>", warn );
+
+    //All good:
+    if ( sigs.size() == 1 ) {
+        const Key key = DecryptVerifyResult::keyForSignature( sigs[0], signers );
+        if ( key.isNull() )
+            return i18n( "<b>Signature is valid.</b>" );
+        return i18n( "<b>Signed by %1</b>", renderKeyEMailOnlyNameAsFallback( key ) );
+    }
+    return i18np("<b>Valid signature.</b>", "<b>%1 valid signatures.</b>", sigs.size() );
 }
 
 static QString formatDecryptionResultOverview( const DecryptionResult & result )
@@ -193,41 +294,31 @@ static QString formatDecryptionResultOverview( const DecryptionResult & result )
     return i18n("<b>Decryption succeeded.</b>" );
 }
 
-
 static QString formatSignature( const Signature & sig, const Key & key ) {
     if ( sig.isNull() )
         return QString();
 
-    const bool red   = (sig.summary() & Signature::Red);
-    //const bool green = (sig.summary() & Signature::Green);
-    const bool valid = (sig.summary() & Signature::Valid);
+    QString text = formatSigningInformation( sig, key ) + "<br/>";
+    
+    const bool red = sig.summary() & Signature::Red;
+    if ( sig.summary() & Signature::Valid )
+        return text + formatValidSignatureWithTrustLevel( key ); // ### TODO handle key.isNull()?
 
     if ( red )
         if ( key.isNull() )
             if ( const char * fpr = sig.fingerprint() )
-                return i18n("Bad signature by unknown key %1: %2", QString::fromLatin1( fpr ), QString::fromLocal8Bit( sig.status().asString() ) );
+                return text + i18n("Bad signature by unknown key %1: %2", signatureSummaryToString( sig.summary() ) );
             else
-                return i18n("Bad signature by an unknown key: %1", QString::fromLocal8Bit( sig.status().asString() ) );
+                return text + i18n("Bad signature by an unknown key: %1", signatureSummaryToString( sig.summary() ) );
         else
-            return i18n("Bad signature by %1: %2", renderKey( key ), QString::fromLocal8Bit( sig.status().asString() ) );
-
-    else if ( valid )
-        if ( key.isNull() )
-            if ( const char * fpr = sig.fingerprint() )
-                return i18n("Good signature by unknown key %1.", QString::fromLatin1( fpr ) );
-            else
-                return i18n("Good signature by an unknown key.");
+            return text + i18n("Bad signature by %1: %2", renderKey( key ), signatureSummaryToString( sig.summary() ) );
+    if ( key.isNull() )
+        if ( const char * fpr = sig.fingerprint() )
+            return text + i18n("Invalid signature by unknown key %1: %2", renderFingerprint( fpr ), signatureSummaryToString( sig.summary() ) );
         else
-            return i18n("Good signature by %1.", renderKey( key ) );
-
+            return text + i18n("Invalid signature by an unknown key: %1", signatureSummaryToString( sig.summary() ) );
     else
-        if ( key.isNull() )
-            if ( const char * fpr = sig.fingerprint() )
-                return i18n("Invalid signature by unknown key %1: %2", QString::fromLatin1( fpr ), QString::fromLocal8Bit( sig.status().asString() ) );
-            else
-                return i18n("Invalid signature by an unknown key: %1", QString::fromLocal8Bit( sig.status().asString() ) );
-        else
-            return i18n("Invalid signature by %1: %2", renderKey( key ), QString::fromLocal8Bit( sig.status().asString() ) );
+        return text + i18n("Invalid signature by %1: %2", renderKey( key ), signatureSummaryToString( sig.summary() ) );
 }
 
 static QString formatVerificationResultDetails( const VerificationResult & res )
@@ -283,7 +374,7 @@ static QString formatDecryptVerifyResultDetails( const DecryptionResult & dr,
     return drDetails + ( drDetails.isEmpty() ? "" : "<br/>" ) + formatVerificationResultDetails( vr );
 }
 
-}
+} // anon namespace
 
 class DecryptVerifyResult::Private {
     DecryptVerifyResult* const q;
