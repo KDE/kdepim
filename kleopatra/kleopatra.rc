@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui >
-<kpartgui name="kleopatra" version="420" >
+<kpartgui name="kleopatra" version="422" >
 <MenuBar>
 	<Menu name="file">
 		<text>&amp;File</text>
@@ -46,7 +46,7 @@
 	</Menu>
 	<Menu name="settings">
 		<text>&amp;Settings</text>
-		<Action name="check_configuration"/>
+		<Action name="settings_self_test"/>
 		<Action name="configure_backend"/>
 	</Menu>
         <Menu name="window" append="settings_merge">

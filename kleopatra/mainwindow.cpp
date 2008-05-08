@@ -57,6 +57,7 @@
 #include "commands/dumpcrlcachecommand.h"
 #include "commands/importcrlcommand.h"
 #include "commands/changeexpirycommand.h"
+#include "commands/selftestcommand.h"
 
 #include "conf/configuredialog.h"
 
@@ -81,9 +82,6 @@
 #include <kdebug.h>
 
 #include <QAbstractItemView>
-#include <QLabel>
-#include <QLineEdit>
-#include <QComboBox>
 #include <QFile>
 #include <QFileDialog>
 #include <QToolBar>
@@ -91,18 +89,12 @@
 #include <QProgressBar>
 #include <QApplication>
 #include <QCloseEvent>
-#include <QDialogButtonBox>
-#include <QProcess>
 #include <QMenu>
 #include <QTimer>
 
 #include <kleo/cryptobackendfactory.h>
 #include <ui/cryptoconfigdialog.h>
 #include <kleo/cryptoconfig.h>
-
-#include <gpgme++/engineinfo.h>
-#include <gpgme++/global.h>
-#include <gpgme++/key.h>
 
 #include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
@@ -230,7 +222,9 @@ public:
     }
     void newCertificate();
 
-    void checkConfiguration();
+    void selfTest() {
+        createAndStart<SelfTestCommand>();
+    }
     void configureBackend();
     void preferences();
 
@@ -381,8 +375,8 @@ void MainWindow::Private::setupActions() {
         { "crl_import_crl", i18n("Import CRL From File..."), QString(),
           0, q, SLOT(importCrlFromFile()), QString(), false, true },
         // Settings menu
-        { "check_configuration", i18n("GnuPG Configuration Self-Check"), QString(),
-          0, q, SLOT(checkConfiguration()), QString(), false, true },
+        { "settings_self_test", i18n("Perform Self-Test"), QString(),
+          0, q, SLOT(selfTest()), QString(), false, true },
         { "configure_backend", i18n("Configure GnuPG Backend..."), QString(),
           0, q, SLOT(configureBackend()), QString(), false, true },
         // Window menu
@@ -419,6 +413,7 @@ void MainWindow::Private::setupActions() {
     controller.registerActionForCommand<ClearCrlCacheCommand>(      coll->action( "crl_clear_crl_cache" ) );
     controller.registerActionForCommand<DumpCrlCacheCommand>(       coll->action( "crl_dump_crl_cache" ) );
     controller.registerActionForCommand<ImportCrlCommand>(          coll->action( "crl_import_crl" ) );
+    controller.registerActionForCommand<SelfTestCommand>(           coll->action( "settings_self_test" ) );
 
     controller.enableDisableActions( 0 );
 
@@ -429,94 +424,6 @@ void MainWindow::Private::newCertificate() {
     QPointer<CertificateWizardImpl> wiz( new CertificateWizardImpl( q ) );
     wiz->exec();
     delete wiz;
-}
-
-void MainWindow::Private::checkConfiguration()
-{
-    QAction * action = q->actionCollection()->action( "check_configuration" );
-    assert( action );
-    assert( action->isEnabled() );
-    if ( !action->isEnabled() )
-        return;
-
-    action->setEnabled( false );
-    const shared_ptr<QAction> enabler( action, bind( &QAction::setEnabled, _1, true ) );
-
-    // 1. start process
-    QProcess process;
-    process.setProcessChannelMode( QProcess::MergedChannels );
-    process.start( gpgConfPath(), QStringList() << "--check-config", QIODevice::ReadOnly );
-
-
-    // 2. show dialog:
-    QDialog dlg;
-    dlg.setWindowTitle( i18n( "GnuPG Configuration Self-Check Results" ) );
-    QVBoxLayout vlay( &dlg );
-    QLabel label( i18n("This is the result of the GnuPG configuration self-check:" ), &dlg );
-    QTextEdit textEdit( &dlg );
-    QDialogButtonBox box( QDialogButtonBox::Close, Qt::Horizontal, &dlg );
-
-    textEdit.setReadOnly( true );
-    textEdit.setWordWrapMode( QTextOption::NoWrap );
-
-    vlay.addWidget( &label );
-    vlay.addWidget( &textEdit, 1 );
-    vlay.addWidget( &box );
-
-    dlg.show();
-
-    connect( box.button( QDialogButtonBox::Close ), SIGNAL(clicked()), &dlg, SLOT(reject()) );
-    connect( &dlg, SIGNAL(finished(int)), &process, SLOT(terminate()) );
-
-    // 3. wait for either dialog close or process exit
-    QEventLoop loop;
-    connect( &process, SIGNAL(finished(int,QProcess::ExitStatus)), &loop, SLOT(quit()) );
-    connect( &dlg, SIGNAL(finished(int)), &loop, SLOT(quit()) );
-
-    const QPointer<QObject> Q( q );
-    loop.exec();
-
-    // safety exit:
-    if ( !Q )
-        return;
-
-    // check whether it was the dialog that was closed, and return in
-    // that case:
-    if ( !dlg.isVisible() )
-        return;
-
-    const QString output = QString::fromUtf8( process.readAll() );
-    const QString message = process.exitStatus() == QProcess::CrashExit ? i18n( "The process terminated prematurely" ) : process.errorString() ;
-
-    if ( process.exitStatus() != QProcess::NormalExit ||
-         process.error()      != QProcess::UnknownError )
-        textEdit.setPlainText( !output.trimmed().isEmpty()
-                               ? i18n( "There was an error executing the GnuPG configuration self-check:\n"
-                                       "  %1\n"
-                                       "You might want to execute \"gpgconf --check-config\" on the command line.\n"
-                                       "\n"
-                                       "Diagnostics:", message ) + '\n' + output
-                               : i18n( "There was an error executing \"gpgconf --check-config\":\n"
-                                       "  %1\n"
-                                       "You might want to execute \"gpgconf --check-config\" on the command line.", message ) );
-    else if ( process.exitCode() )
-        textEdit.setPlainText( !output.trimmed().isEmpty()
-                               ? i18n( "The GnuPG configuration self-check failed.\n"
-                                       "\n"
-                                       "Error code: %1\n"
-                                       "Diagnostics:", process.exitCode() ) + '\n' + output
-                               : i18n( "The GnuPG configuration self-check failed with error code %1.\n"
-                                       "No output was received.", process.exitCode() ) );
-    else
-        textEdit.setPlainText( !output.trimmed().isEmpty()
-                               ? i18n( "The GnuPG configuration self-check succeeded.\n"
-                                       "\n"
-                                       "Diagnostics:" ) + '\n' + output
-                               : i18n( "The GnuPG configuration self-check succeeded." ) );
-
-    // wait for dialog close:
-    assert( dlg.isVisible() );
-    loop.exec();
 }
 
 void MainWindow::Private::configureBackend() {

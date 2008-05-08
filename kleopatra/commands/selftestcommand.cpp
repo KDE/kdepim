@@ -38,10 +38,11 @@
 
 #include <dialogs/selftestdialog.h>
 
-#include <selftest/enginecheck.h>
 #ifdef Q_OS_WIN
 # include <selftest/registrycheck.h>
 #endif
+#include <selftest/enginecheck.h>
+#include <selftest/gpgconfcheck.h>
 
 #include <utils/stl_util.h>
 
@@ -107,16 +108,18 @@ private:
     void runTests() {
         std::vector< shared_ptr<Kleo::SelfTest> > tests;
 
+#ifdef Q_OS_WIN
+        //emit q->info( i18n("Checking Windows Registry...") );
+        tests.push_back( makeGpgProgramRegistryCheckSelfTest() );
+#endif
         //emit q->info( i18n("Checking gpg installation...") );
         tests.push_back( makeGpgEngineCheckSelfTest() );
         //emit q->info( i18n("Checking gpgsm installation...") );
         tests.push_back( makeGpgSmEngineCheckSelfTest() );
         //emit q->info( i18n("Checking gpgconf installation...") );
         tests.push_back( makeGpgConfEngineCheckSelfTest() );
-#ifdef Q_OS_WIN
-        //emit q->info( i18n("Checking Windows Registry...") );
-        tests.push_back( makeGpgProgramRegistryCheckSelfTest() );
-#endif
+        //emit q->info( i18n("Checking gpgconf configuration...") );
+        tests.push_back( makeGpgConfCheckConfigurationSelfTest() );
 
         if ( !dialog && kdtools::all( tests, mem_fn( &Kleo::SelfTest::passed ) ) ) {
             finished();

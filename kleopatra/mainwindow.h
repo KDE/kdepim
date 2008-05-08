@@ -68,7 +68,7 @@ private:
     Q_PRIVATE_SLOT( d, void dumpCrlCache() )
     Q_PRIVATE_SLOT( d, void importCrlFromFile() )
     Q_PRIVATE_SLOT( d, void newCertificate() )
-    Q_PRIVATE_SLOT( d, void checkConfiguration() )
+    Q_PRIVATE_SLOT( d, void selfTest() )
     Q_PRIVATE_SLOT( d, void configureBackend() )
     Q_PRIVATE_SLOT( d, void configureToolbars() )
     Q_PRIVATE_SLOT( d, void editKeybindings() )
