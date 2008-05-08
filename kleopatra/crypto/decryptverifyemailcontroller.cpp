@@ -94,6 +94,7 @@ public:
     std::vector<shared_ptr<AbstractDecryptVerifyTask> > m_runnableTasks, m_completedTasks;
     shared_ptr<AbstractDecryptVerifyTask> m_runningTask;
     bool m_silent;
+    bool m_operationCompleted;
     DecryptVerifyOperation m_operation;
     Protocol m_protocol;
     VerificationMode m_verificationMode;
@@ -103,6 +104,7 @@ public:
 DecryptVerifyEMailController::Private::Private( DecryptVerifyEMailController* qq )
     : q( qq ),
     m_silent( false ),
+    m_operationCompleted( false ),
     m_operation( DecryptVerify ),
     m_protocol( UnknownProtocol ),
     m_verificationMode( Detached )
@@ -113,7 +115,10 @@ DecryptVerifyEMailController::Private::Private( DecryptVerifyEMailController* qq
 void DecryptVerifyEMailController::Private::slotWizardCanceled()
 {
     kDebug();
-    reportError( gpg_error( GPG_ERR_CANCELED ), i18n("User canceled") );
+    if ( m_operationCompleted )
+        q->done();
+    else
+        reportError( gpg_error( GPG_ERR_CANCELED ), i18n("User canceled") );
 }
 
 void DecryptVerifyEMailController::Private::slotTaskDone(  const shared_ptr<const DecryptVerifyResult> & result )
@@ -146,7 +151,7 @@ void DecryptVerifyEMailController::Private::schedule()
         kleo_assert( m_runnableTasks.empty() );
         Q_FOREACH ( const shared_ptr<const DecryptVerifyResult> & i, m_results )
             emit q->verificationResult( i->verificationResult() );
-        // there is no done() call here on purpose. The E-Mail client is supposed to close the connection/cancel the command when done (which then closes possible popups)
+        m_operationCompleted = true;
     }
 }
 
@@ -162,9 +167,7 @@ void DecryptVerifyEMailController::Private::ensureWizardCreated()
     const QPoint preferredPos = EMailOperationsPreferences().decryptVerifyPopupPosition();
     if ( !preferredPos.isNull() )
         w->move( preferredPos );
-#if 0
-    connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
-#endif
+    connect( w.get(), SIGNAL(destroyed()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
     m_wizard = w.release();
 
 }
@@ -350,8 +353,10 @@ void DecryptVerifyEMailController::cancel()
 {
     kDebug();
     try {
-        if ( d->m_wizard )
+        if ( d->m_wizard ) {
+            disconnect( d->m_wizard );
             d->m_wizard->close();
+        }
         d->cancelAllTasks();
     } catch ( const std::exception & e ) {
         qDebug( "Caught exception: %s", e.what() );
