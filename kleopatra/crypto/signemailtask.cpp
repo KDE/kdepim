@@ -62,15 +62,17 @@ namespace {
 
     class SignEMailResult : public Task::Result {
         const SigningResult m_result;
+        const QString m_auditLog;
     public:
-        explicit SignEMailResult( const SigningResult & r )
-            : Task::Result(), m_result( r ) {}
+        explicit SignEMailResult( const SigningResult & r, const QString & auditLog )
+            : Task::Result(), m_result( r ), m_auditLog( auditLog ) {}
 
         /* reimp */ QString overview() const;
         /* reimp */ QString details() const;
         /* reimp */ int errorCode() const;
         /* reimp */ QString errorString() const;
         /* reimp */ VisualCode code() const;
+        /* reimp */ QString auditLogAsHtml() const;
     };
 
     QString makeResultString( const SigningResult& res )
@@ -234,13 +236,14 @@ static QString collect_micalgs( const GpgME::SigningResult & result, GpgME::Prot
 }
 
 void SignEMailTask::Private::slotResult( const SigningResult & result ) {
+    const Job * const job = qobject_cast<const Job*>( q->sender() );
     if ( result.error().code() ) {
         output->cancel();
     } else {
         output->finalize();
         micAlg = collect_micalgs( result, q->protocol() );
     }
-    q->emitResult( shared_ptr<Result>( new SignEMailResult( result ) ) );
+    q->emitResult( shared_ptr<Result>( new SignEMailResult( result, job ? job->auditLogAsHtml() : QString() ) ) );
 }
 
 QString SignEMailTask::micAlg() const {
@@ -268,6 +271,10 @@ Task::Result::VisualCode SignEMailResult::code() const {
     if ( m_result.error().isCanceled() )
         return Warning;
     return m_result.error().code() ? NeutralError : NeutralSuccess;
+}
+
+QString SignEMailResult::auditLogAsHtml() const {
+    return m_auditLog;
 }
 
 #include "moc_signemailtask.cpp"

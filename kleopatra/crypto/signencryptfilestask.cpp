@@ -74,15 +74,15 @@ namespace {
 
     class ErrorResult : public Task::Result {
     public:
-        ErrorResult( bool sign, bool encrypt, const Error & err, const QString & errStr, const QString & input, const QString & output ) 
-            : Task::Result(), m_sign( sign ), m_encrypt( encrypt ), m_error( err ), m_errString( errStr ), m_inputLabel( input ), m_outputLabel( output ) {}
+        ErrorResult( bool sign, bool encrypt, const Error & err, const QString & errStr, const QString & input, const QString & output, const QString & auditLog ) 
+            : Task::Result(), m_sign( sign ), m_encrypt( encrypt ), m_error( err ), m_errString( errStr ), m_inputLabel( input ), m_outputLabel( output ), m_auditLog( auditLog ) {}
 
         /* reimp */ QString overview() const;
         /* reimp */ QString details() const;
         /* reimp */ int errorCode() const { return m_error.encodedError(); }
         /* reimp */ QString errorString() const { return m_errString; }
         /* reimp */ VisualCode code() const { return NeutralError; }
-
+        /* reimp */ QString auditLogAsHtml() const { return m_auditLog; }
     private:
         const bool m_sign;
         const bool m_encrypt;
@@ -90,20 +90,21 @@ namespace {
         const QString m_errString;
         const QString m_inputLabel;
         const QString m_outputLabel;
+        const QString m_auditLog;
     };
     
     class SignEncryptFilesResult : public Task::Result {
     public:
-        SignEncryptFilesResult( const SigningResult & sr, const QString & input, const QString & output, bool inputRemoved, bool outputCreated )
-            : Task::Result(), m_sresult( sr ), m_inputLabel( input ), m_outputLabel( output ), m_inputRemoved( inputRemoved ), m_outputCreated( outputCreated ) {
+        SignEncryptFilesResult( const SigningResult & sr, const QString & input, const QString & output, bool inputRemoved, bool outputCreated, const QString & auditLog )
+            : Task::Result(), m_sresult( sr ), m_inputLabel( input ), m_outputLabel( output ), m_inputRemoved( inputRemoved ), m_outputCreated( outputCreated ), m_auditLog( auditLog ) {
             assert( !m_sresult.isNull() );
         }
-        SignEncryptFilesResult( const EncryptionResult & er, const QString & input, const QString & output, bool inputRemoved, bool outputCreated  )
-            : Task::Result(), m_eresult( er ), m_inputLabel( input ), m_outputLabel( output ), m_inputRemoved( inputRemoved ), m_outputCreated( outputCreated ) {
+        SignEncryptFilesResult( const EncryptionResult & er, const QString & input, const QString & output, bool inputRemoved, bool outputCreated, const QString & auditLog )
+            : Task::Result(), m_eresult( er ), m_inputLabel( input ), m_outputLabel( output ), m_inputRemoved( inputRemoved ), m_outputCreated( outputCreated ), m_auditLog( auditLog ) {
             assert( !m_eresult.isNull() );
         }
-        SignEncryptFilesResult( const SigningResult & sr, const EncryptionResult & er, const QString & input, const QString & output, bool inputRemoved, bool outputCreated )
-            : Task::Result(), m_sresult( sr ), m_eresult( er ), m_inputLabel( input ), m_outputLabel( output ), m_inputRemoved( inputRemoved ), m_outputCreated( outputCreated ) {
+        SignEncryptFilesResult( const SigningResult & sr, const EncryptionResult & er, const QString & input, const QString & output, bool inputRemoved, bool outputCreated,  const QString & auditLog )
+            : Task::Result(), m_sresult( sr ), m_eresult( er ), m_inputLabel( input ), m_outputLabel( output ), m_inputRemoved( inputRemoved ), m_outputCreated( outputCreated ), m_auditLog( auditLog ) {
             assert( !m_sresult.isNull() || !m_eresult.isNull() );
         }
 
@@ -112,7 +113,8 @@ namespace {
         /* reimp */ int errorCode() const;
         /* reimp */ QString errorString() const;
         /* reimp */ VisualCode code() const;
-        
+        /* reimp */ QString auditLogAsHtml() const;
+
     private:
         const SigningResult m_sresult;
         const EncryptionResult m_eresult;
@@ -120,6 +122,7 @@ namespace {
         const QString m_outputLabel;
         const bool m_inputRemoved;
         const bool m_outputCreated;
+        const QString m_auditLog;
     };
 
     static QString makeSigningOverview( const Error & err ) {
@@ -206,7 +209,7 @@ private:
     std::auto_ptr<Kleo::SignJob> createSignJob( GpgME::Protocol proto );
     std::auto_ptr<Kleo::SignEncryptJob> createSignEncryptJob( GpgME::Protocol proto );
     std::auto_ptr<Kleo::EncryptJob> createEncryptJob( GpgME::Protocol proto );
-    shared_ptr<const Task::Result> makeErrorResult( const Error & err, const QString & errStr );
+    shared_ptr<const Task::Result> makeErrorResult( const Error & err, const QString & errStr, const QString & auditLog );
 
 private:
     void slotResult( const SigningResult & );
@@ -247,9 +250,9 @@ SignEncryptFilesTask::Private::Private( SignEncryptFilesTask * qq )
     q->setAsciiArmor( true );
 }
 
-shared_ptr<const Task::Result> SignEncryptFilesTask::Private::makeErrorResult( const Error & err, const QString & errStr )
+shared_ptr<const Task::Result> SignEncryptFilesTask::Private::makeErrorResult( const Error & err, const QString & errStr, const QString & auditLog )
 {
-    return shared_ptr<const ErrorResult>( new ErrorResult( sign, encrypt, err, errStr, input->label(), output->label() ) );
+    return shared_ptr<const ErrorResult>( new ErrorResult( sign, encrypt, err, errStr, input->label(), output->label(), auditLog ) );
 }
 
 SignEncryptFilesTask::SignEncryptFilesTask( QObject * p )
@@ -412,6 +415,8 @@ std::auto_ptr<Kleo::EncryptJob> SignEncryptFilesTask::Private::createEncryptJob(
 }
 
 void SignEncryptFilesTask::Private::slotResult( const SigningResult & result ) {
+    const Job * const job = qobject_cast<const Job*>( q->sender() );
+    const QString auditLog = job ? job->auditLogAsHtml() : QString();
     bool inputRemoved = false;
     bool outputCreated = false;
     if ( result.error().code() ) {
@@ -425,15 +430,17 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & result ) {
                 inputRemoved = QFile::remove( inputFileName );
             }
         } catch ( const GpgME::Exception & e ) {
-            q->emitResult( makeErrorResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
+            q->emitResult( makeErrorResult( e.error(), QString::fromLocal8Bit( e.what() ), auditLog ) );
             return;
         }
     }
    
-    q->emitResult( shared_ptr<Result>( new SignEncryptFilesResult( result, input->label(), output->label(), inputRemoved, outputCreated ) ) );
+    q->emitResult( shared_ptr<Result>( new SignEncryptFilesResult( result, input->label(), output->label(), inputRemoved, outputCreated, auditLog ) ) );
 }
 
 void SignEncryptFilesTask::Private::slotResult( const SigningResult & sresult, const EncryptionResult & eresult ) {
+    const Job * const job = qobject_cast<const Job*>( q->sender() );
+    const QString auditLog = job ? job->auditLogAsHtml() : QString();
     bool inputRemoved = false;
     bool outputCreated = false;
     if ( sresult.error().code() || eresult.error().code() ) {
@@ -447,15 +454,17 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & sresult, c
                 inputRemoved = QFile::remove( inputFileName );
             }
         } catch ( const GpgME::Exception & e ) {
-            q->emitResult( makeErrorResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
+            q->emitResult( makeErrorResult( e.error(), QString::fromLocal8Bit( e.what() ), auditLog ) );
             return;
         }
     }
     
-    q->emitResult( shared_ptr<Result>( new SignEncryptFilesResult( sresult, eresult, input->label(), output->label(), inputRemoved, outputCreated ) ) );
+    q->emitResult( shared_ptr<Result>( new SignEncryptFilesResult( sresult, eresult, input->label(), output->label(), inputRemoved, outputCreated, auditLog ) ) );
 }
 
 void SignEncryptFilesTask::Private::slotResult( const EncryptionResult & result ) {
+    const Job * const job = qobject_cast<const Job*>( q->sender() );
+    const QString auditLog = job ? job->auditLogAsHtml() : QString();
     bool inputRemoved = false;
     bool outputCreated = false;
     if ( result.error().code() ) {
@@ -469,11 +478,11 @@ void SignEncryptFilesTask::Private::slotResult( const EncryptionResult & result 
                 inputRemoved = QFile::remove( inputFileName );
             }
         } catch ( const GpgME::Exception & e ) {
-            q->emitResult( makeErrorResult( e.error(), QString::fromLocal8Bit( e.what() ) ) );
+            q->emitResult( makeErrorResult( e.error(), QString::fromLocal8Bit( e.what() ), auditLog ) );
             return;
         }
     }
-    q->emitResult( shared_ptr<Result>( new SignEncryptFilesResult( result, input->label(), output->label(), inputRemoved, outputCreated ) ) );
+    q->emitResult( shared_ptr<Result>( new SignEncryptFilesResult( result, input->label(), output->label(), inputRemoved, outputCreated, auditLog ) ) );
 }
 
 QString SignEncryptFilesResult::overview() const {
@@ -514,6 +523,10 @@ Task::Result::VisualCode SignEncryptFilesResult::code() const
     if ( m_sresult.error().isCanceled() || m_eresult.error().isCanceled() )
         return Warning;
     return ( m_sresult.error().code() || m_eresult.error().code() ) ? NeutralError : NeutralSuccess;
+}
+
+QString SignEncryptFilesResult::auditLogAsHtml() const {
+    return m_auditLog;
 }
 
 #include "moc_signencryptfilestask.cpp"

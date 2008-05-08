@@ -132,6 +132,7 @@ private: // don't tell moc, but those signals are in fact private
         virtual int errorCode() const = 0;
         virtual QString errorString() const = 0;
         virtual VisualCode code() const = 0;
+        virtual QString auditLogAsHtml() const = 0;
 
     protected:
         static QString iconPath( VisualCode code );

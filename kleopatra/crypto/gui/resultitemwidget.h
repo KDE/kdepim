@@ -63,6 +63,7 @@ namespace Gui {
 
     public Q_SLOTS:
         void showDetails( bool show = true );
+        void showAuditLog();
 
     Q_SIGNALS:
         void linkActivated( const QString & link );

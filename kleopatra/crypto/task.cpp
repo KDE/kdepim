@@ -68,7 +68,7 @@ namespace {
         /* reimp */ int errorCode() const { return m_code; }
         /* reimp */ QString errorString() const { return m_details; }
         /* reimp */ VisualCode code() const { return NeutralError; }
-
+        /* reimp */ QString auditLogAsHtml() const { return QString(); }
     private:
         int m_code;
         QString m_details;

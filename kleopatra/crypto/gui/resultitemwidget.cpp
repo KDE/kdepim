@@ -34,6 +34,8 @@
 
 #include "resultitemwidget.h"
 
+#include <ui/messagebox.h>
+
 #include <KDebug>
 #include <KLocalizedString>
 #include <KPushButton>
@@ -71,8 +73,8 @@ namespace {
 class ResultItemWidget::Private {
     ResultItemWidget* const q;
 public:
-    explicit Private( const shared_ptr<const Task::Result> result, ResultItemWidget* qq ) : q( qq ), m_result( result ), m_detailsLabel( 0 ), m_showDetailsLabel( 0 ) {}
-    
+    explicit Private( const shared_ptr<const Task::Result> result, ResultItemWidget* qq ) : q( qq ), m_result( result ), m_detailsLabel( 0 ), m_showDetailsLabel( 0 ) { assert( m_result ); }
+
     void slotLinkActivated( const QString & );
     void updateShowDetailsLabel();
 
@@ -87,13 +89,16 @@ void ResultItemWidget::Private::updateShowDetailsLabel()
     if ( !m_showDetailsLabel || !m_detailsLabel )
         return;
     
-    const bool show = !m_detailsLabel->isVisible();
-    m_showDetailsLabel->setText( QString("<a href=\"kleoresultitem://toggledetails/\">%1</a>").arg( show ? i18n( "Show Details" ) : i18n( "Hide Details" ) ) );
+    const bool detailsVisible = m_detailsLabel->isVisible();
+    const bool hasAuditLog = !m_result->auditLogAsHtml().isEmpty();
+    if ( detailsVisible )
+        m_showDetailsLabel->setText( QString("<a href=\"kleoresultitem://toggledetails/\">%1</a><br/>%2").arg( i18n( "Hide Details" ), hasAuditLog ?  QString( "<a href=\"kleoresultitem://showauditlog/\">%1</a>" ).arg( i18n( "Show Audit Log" ) ) : i18n( "No Audit Log available" ) ) );
+    else
+        m_showDetailsLabel->setText( QString("<a href=\"kleoresultitem://toggledetails/\">%1</a>").arg( i18n( "Show Details" ) ) );
 }
 
 ResultItemWidget::ResultItemWidget( const shared_ptr<const Task::Result> & result, QWidget * parent, Qt::WindowFlags flags ) : QWidget( parent, flags ), d( new Private( result, this ) )
 {
-    assert( d->m_result );
     const QColor color = colorForVisualCode( d->m_result->code() );
     setStyleSheet( QString( "* { background-color: %1; margin: 0px; } QFrame#resultFrame{ border-color: %2; border-style: solid; border-radius: 3px; border-width: 2px } QLabel { padding: 5px; border-radius: 3px }" ).arg( color.lighter( 150 ).name(), color.name() ) );
     QVBoxLayout* topLayout = new QVBoxLayout( this );
@@ -180,7 +185,15 @@ void ResultItemWidget::Private::slotLinkActivated( const QString & link )
         return;
     }
     
+    if ( url.host() == "showauditlog" ) {
+        q->showAuditLog();
+        return;
+    }
     kWarning() << "Unexpected link scheme: " << link;
+}
+
+void ResultItemWidget::showAuditLog() {
+    MessageBox::auditLog( this, d->m_result->auditLogAsHtml() );
 }
 
 void ResultItemWidget::showDetails( bool show )

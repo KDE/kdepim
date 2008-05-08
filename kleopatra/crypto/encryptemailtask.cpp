@@ -63,15 +63,17 @@ namespace {
 
     class EncryptEMailResult : public Task::Result {
         const EncryptionResult m_result;
+        const QString m_auditLog;
     public:
-        EncryptEMailResult( const EncryptionResult & r )
-            : Task::Result(), m_result( r ) {}
+        EncryptEMailResult( const EncryptionResult & r, const QString & auditLog )
+            : Task::Result(), m_result( r ), m_auditLog( auditLog ) {}
 
         /* reimp */ QString overview() const;
         /* reimp */ QString details() const;
         /* reimp */ int errorCode() const;
         /* reimp */ QString errorString() const;
         /* reimp */ VisualCode code() const;
+        /* reimp */ QString auditLogAsHtml() const;
     };
 
     QString makeResultString( const EncryptionResult& res )
@@ -194,12 +196,13 @@ std::auto_ptr<Kleo::EncryptJob> EncryptEMailTask::Private::createJob( GpgME::Pro
 }
 
 void EncryptEMailTask::Private::slotResult( const EncryptionResult & result ) {
+    const Job * const job = qobject_cast<const Job*>( q->sender() );
     if ( result.error().code() ) {
         output->cancel();
     } else {
         output->finalize();
     }
-    q->emitResult( shared_ptr<Result>( new EncryptEMailResult( result ) ) );
+    q->emitResult( shared_ptr<Result>( new EncryptEMailResult( result, job ? job->auditLogAsHtml() : QString() ) ) );
 }
 
 QString EncryptEMailResult::overview() const {
@@ -216,6 +219,10 @@ int EncryptEMailResult::errorCode() const {
 
 QString EncryptEMailResult::errorString() const {
     return hasError() ? makeResultString( m_result ) : QString();
+}
+
+QString EncryptEMailResult::auditLogAsHtml() const {
+    return m_auditLog;
 }
 
 Task::Result::VisualCode EncryptEMailResult::code() const
