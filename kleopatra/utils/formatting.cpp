@@ -488,7 +488,7 @@ QString Formatting::importMetaData( const Import & import ) {
         results.push_back( i18n( "New subkeys were added to this certificate by the import." ) );
 
     return results.empty()
-        ? i18n( "The import contained no new data for this certifcate. It is unchanged.")
+        ? i18n( "The import contained no new data for this certificate. It is unchanged.")
         : results.join( "\n" );
 }
 
