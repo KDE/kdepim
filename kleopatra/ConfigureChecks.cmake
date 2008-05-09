@@ -133,7 +133,7 @@ if ( BUILD_libkleopatraclient )
   set ( YUP TRUE )
   if ( YUP )
     set ( ASSUAN_LINKABLE_TO_DSO true )
-    message( STATUS "--> Assuming that is can. If compilation of libkleopatraclient fails on AMD64, check that libassuan is compiled with -fPIC and try again. Otherwise, pass -DBUILD_libkleopatraclient=OFF." )
+    message( STATUS "--> Assuming that it can. If compilation of libkleopatraclient fails on AMD64, check that libassuan is compiled with -fPIC and try again. Otherwise, pass -DBUILD_libkleopatraclient=OFF." )
   else ( YUP )
   # TODO: make this one executed at configure time, so the check below works:
   add_library( dso_with_assuan_check SHARED ${CMAKE_SOURCE_DIR}/kleopatra/dso_with_assuan_check.c )
