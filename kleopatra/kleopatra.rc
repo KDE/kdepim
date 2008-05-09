@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui >
-<kpartgui name="kleopatra" version="422" >
+<kpartgui name="kleopatra" version="423" >
 <MenuBar>
 	<Menu name="file">
 		<text>&amp;File</text>
