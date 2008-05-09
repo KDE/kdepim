@@ -39,6 +39,10 @@
 #include <commands/reloadkeyscommand.h>
 #include <commands/selftestcommand.h>
 
+#ifdef HAVE_KLEOPATRACLIENT_LIBRARY
+# include <libkleopatraclient/core/initialization.h>
+#endif
+
 #include "libkleo/kleo/cryptobackendfactory.h"
 
 #include <utils/gnupg-helper.h>
@@ -196,6 +200,10 @@ static void fillKeyCache( KSplashScreen * splash, Kleo::UiServer * server ) {
 int main( int argc, char** argv )
 {
   AboutData aboutData;
+
+#ifdef HAVE_KLEOPATRACLIENT_LIBRARY
+  const KleopatraClient::Initialization kleoclientinit;
+#endif
   
   KCmdLineArgs::init(argc, argv, &aboutData);
 

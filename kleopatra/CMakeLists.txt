@@ -1,5 +1,7 @@
 project(kleopatra)
 
+include(MacroOptionalAddSubdirectory)
+
 set( kleopatra_version 1.9.1 )
 if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
   if ( NOT KdeSubversion_FOUND )
@@ -28,6 +30,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}")
 
 add_subdirectory( pics )
 add_subdirectory( conf )
+if ( USABLE_ASSUAN_FOUND AND BUILD_libkleopatraclient )
+  # can't use macro_optional_add_subdirectory here, since it's split
+  # off into ConfigureChecks.cmake..
+  add_subdirectory( libkleopatraclient )
+endif ( USABLE_ASSUAN_FOUND AND BUILD_libkleopatraclient )
 add_subdirectory( kgpgconf )
 add_subdirectory( kwatchgnupg )
 add_subdirectory( tests )
@@ -68,6 +75,12 @@ if ( USABLE_ASSUAN_FOUND )
   else ( WIN32 )
     set( _kleopatra_uiserver_extra_libs ${ASSUAN_PTHREAD_LIBRARIES} )
   endif( WIN32 )
+  if ( BUILD_libkleopatraclient )
+    set( _kleopatra_uiserver_extra_libs ${_kleopatra_uiserver_extra_libs} kleopatraclientcore )
+    set( _kleopatra_uiserver_SRCS ${_kleopatra_uiserver_SRCS}
+      selftest/uiservercheck.cpp
+      )
+  endif ( BUILD_libkleopatraclient )
 
   if ( HAVE_GPG_ERR_SOURCE_KLEO )
     add_definitions( -DGPG_ERR_SOURCE_DEFAULT=GPG_ERR_SOURCE_KLEO )

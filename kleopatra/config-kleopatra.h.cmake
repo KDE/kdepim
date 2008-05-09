@@ -13,4 +13,7 @@
 /* Define to 1 if your libassuan has the assuan_sock_get_nonce function */
 #cmakedefine HAVE_ASSUAN_SOCK_GET_NONCE 1
 
+/* Define to 1 if you build libkleopatraclient */
+#cmakedefine HAVE_KLEOPATRACLIENT_LIBRARY 1
+
 #define KLEOPATRA_VERSION_STRING "@kleopatra_version@"

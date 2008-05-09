@@ -113,7 +113,45 @@ else ( USABLE_ASSUAN_FOUND )
   message( STATUS "NO usable assuan found for Kleopatra" )
 endif ( USABLE_ASSUAN_FOUND )
 
+#
+# Check that libassuan (which is built statically) can be linked into a DSO
+# (e.g. on amd64, this requires it to be compiled with -fPIC).
+#
+
+set ( ASSUAN_LINKABLE_TO_DSO false )
+
+OPTION( BUILD_libkleopatraclient "Build directory kleopatra/libkleopatraclient" ${USABLE_ASSUAN_FOUND} )
+
+if ( NOT USABLE_ASSUAN_FOUND )
+  set( BUILD_libkleopatraclient false )
+endif ( NOT USABLE_ASSUAN_FOUND )
+
+if ( BUILD_libkleopatraclient )
+
+  message( STATUS "Checking whether libassuan can be linked against from DSO's" )
+
+  set ( YUP TRUE )
+  if ( YUP )
+    set ( ASSUAN_LINKABLE_TO_DSO true )
+    message( STATUS "--> Assuming that is can. If compilation of libkleopatraclient fails on AMD64, check that libassuan is compiled with -fPIC and try again. Otherwise, pass -DBUILD_libkleopatraclient=OFF." )
+  else ( YUP )
+  # TODO: make this one executed at configure time, so the check below works:
+  add_library( dso_with_assuan_check SHARED ${CMAKE_SOURCE_DIR}/kleopatra/dso_with_assuan_check.c )
+
+  set( CMAKE_REQUIRED_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES} dso_with_assuan_check )
+  check_cxx_source_compiles( "int main() { return 0; }" ASSUAN_LINKABLE_TO_DSO )
+
+  if ( ASSUAN_LINKABLE_TO_DSO )
+    message( STATUS "Usable assuan found for libkleopatraclient" )
+  else ( ASSUAN_LINKABLE_TO_DSO )
+    message( STATUS "NO usable assuan found for libkleopatraclient - if this is AMD64, check that libassuan is compiled with -fPIC" )
+  endif ( ASSUAN_LINKABLE_TO_DSO )
+  endif ( YUP )
+
+endif ( BUILD_libkleopatraclient )
+
 macro_bool_to_01( USABLE_ASSUAN_FOUND  HAVE_USABLE_ASSUAN )
+macro_bool_to_01( ASSUAN_LINKABLE_TO_DSO HAVE_KLEOPATRACLIENT_LIBRARY )
 
 set(CMAKE_REQUIRED_INCLUDES)
 set(CMAKE_REQUIRED_LIBRARIES)

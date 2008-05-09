@@ -43,6 +43,9 @@
 #endif
 #include <selftest/enginecheck.h>
 #include <selftest/gpgconfcheck.h>
+#ifdef HAVE_KLEOPATRACLIENT_LIBRARY
+# include <selftest/uiservercheck.h>
+#endif
 
 #include <utils/stl_util.h>
 
@@ -120,6 +123,10 @@ private:
         tests.push_back( makeGpgConfEngineCheckSelfTest() );
         //emit q->info( i18n("Checking gpgconf configuration...") );
         tests.push_back( makeGpgConfCheckConfigurationSelfTest() );
+#ifdef HAVE_KLEOPATRACLIENT_LIBRARY
+        //emit q->info( i18n("Checking Ui Server connectivity...") );
+        tests.push_back( makeUiServerConnectivitySelfTest() );
+#endif
 
         if ( !dialog && kdtools::all( tests, mem_fn( &Kleo::SelfTest::passed ) ) ) {
             finished();
