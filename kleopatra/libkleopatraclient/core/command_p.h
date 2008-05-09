@@ -44,13 +44,8 @@ public:
         : QThread(),
           q( qq ),
           mutex( QMutex::Recursive ),
-          nonValueOptions(),
-          valueOptions(),
-          errorString(),
-          data(),
-          parentWId( 0 ),
-          serverPid( 0 ),
-          command()
+          inputs(),
+          outputs()
     {
 
     }
@@ -64,13 +59,19 @@ private:
 
 private:
     QMutex mutex;
-    std::vector<std::string> nonValueOptions;
-    std::map<std::string,QVariant> valueOptions;
-    QString errorString;
-    QByteArray data;
-    WId parentWId;
-    qint64 serverPid;
-    QByteArray command;
+    struct Inputs {
+        Inputs() : parentWId( 0 ) {}
+        std::vector<std::string> nonValueOptions;
+        std::map<std::string,QVariant> valueOptions;
+        WId parentWId;
+        QByteArray command;
+    } inputs;
+    struct Outputs {
+        Outputs() : serverPid( 0 ) {}
+        QString errorString;
+        QByteArray data;
+        qint64 serverPid;
+    } outputs;
 };
 
 #endif /* __LIBKLEOPATRACLIENT_CORE_COMMAND_P_H__ */
