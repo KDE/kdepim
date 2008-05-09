@@ -1,3 +1,21 @@
+Friday, May 9th 2008
+
+Problems addressed
+-------------------
+
+* kolab/issue2560 Unsuccessful Sieve connection causes strange Progress Dialog.(804616)
+* kolab/issue2675 Calendar side-by-side view: scale doesn't fit with the hours view.(804642)
+* kolab/issue2669 (Profile does not save background color of emails.(804994)
+* kolab/issue2148 (counterproposal event should be inserted into the calender
+* Kolab issues 2148, 2678, 2681, 2683, 2680 - Counter proposal issues. (805191,805702)
+* kolab/issue2247 (Command line switch to choose Kontact profile (W1-32) (805348)
+
+Merges
+--------
+
+* Enterprise in sync with kdepim 3.5 branch.
+
+
 Saturday, May 3rd 2008
 
 Merges
