@@ -746,7 +746,7 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 		return false;
 	}
 
-	const char * fileName = QFile::encodeName( path );
+	QCString fileName = QFile::encodeName( path );
 	f = pi_file_open( fileName );
 	if (!f)
 	{
