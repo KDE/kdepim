@@ -65,6 +65,8 @@ namespace Crypto {
 
         virtual QString label() const = 0;
 
+        virtual QString tag() const;
+
         QString progressLabel() const;
         unsigned long long processedSize() const;
         unsigned long long totalSize() const;

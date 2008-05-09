@@ -34,6 +34,7 @@
 
 #include "signencryptfilestask.h"
 
+#include <utils/formatting.h>
 #include <utils/input.h>
 #include <utils/output.h>
 #include <utils/stl_util.h>
@@ -326,6 +327,10 @@ Protocol SignEncryptFilesTask::protocol() const {
 
 QString SignEncryptFilesTask::label() const {
     return d->input ? d->input->label() : QString();
+}
+
+QString SignEncryptFilesTask::tag() const {
+    return Formatting::displayName( protocol() );
 }
 
 unsigned long long SignEncryptFilesTask::inputSize() const

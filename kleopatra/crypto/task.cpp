@@ -137,6 +137,10 @@ unsigned long long Task::totalSize() const
     return inputSize();
 }
 
+QString Task::tag() const {
+    return QString();
+}
+
 QString Task::progressLabel() const
 {
     return d->m_progressLabel;

@@ -74,6 +74,7 @@ namespace Crypto {
 
         /* reimp */ void cancel();
         /* reimp */ QString label() const;
+        /* reimp */ QString tag() const;
 
     private:
         /* reimp */ void doStart();
