@@ -166,21 +166,21 @@ static QString formatSigningInformation( const Signature & sig, const Key & key 
     const bool haveDate = dt.isValid();
     if ( !haveKey )
         if ( haveDate )
-            return i18n( "Message was signed on %1 with unknown key %2.", formatDate( dt ), renderFingerprint( sig.fingerprint() ) );
+            return i18n( "Signed on %1 with unknown key %2.", formatDate( dt ), renderFingerprint( sig.fingerprint() ) );
         else
-            return i18n( "Message was signed with unknown key %1.", renderFingerprint( sig.fingerprint() ) );
+            return i18n( "Signed with unknown key %1.", renderFingerprint( sig.fingerprint() ) );
     if ( haveSigner )
         if ( haveDate )
             return i18nc( "date, key owner, key ID",
-                          "Message was signed on %1 by %2 (Key ID: %3).", 
+                          "Signed on %1 by %2 (Key ID: %3).", 
                           formatDate( dt ),
                           signer,
                           renderFingerprint( key.keyID() ) );
         else
-            return i18n( "Message was signed by %1 with key %2.", signer, renderKey( key ) );
+            return i18n( "Signed by %1 with key %2.", signer, renderKey( key ) );
     if ( haveDate )
-        return i18n( "Message was signed on %1 with key %2.", formatDate( dt ), renderKey( key ) );
-    return i18n( "Message was signed with key %1.", renderKey( key ) );
+        return i18n( "Signed on %1 with key %2.", formatDate( dt ), renderKey( key ) );
+    return i18n( "Signed with key %1.", renderKey( key ) );
 
 }
 
