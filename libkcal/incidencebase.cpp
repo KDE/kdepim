@@ -59,10 +59,6 @@ IncidenceBase::IncidenceBase(const IncidenceBase &i) :
   mSyncStatus = i.mSyncStatus;
   mComments = i.mComments;
 
-  // The copied object is a new one, so it isn't observed by the observer
-  // of the original object.
-  mObservers.clear();
-
   mAttendees.setAutoDelete( true );
 }
 
