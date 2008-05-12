@@ -26,6 +26,7 @@
 
 #ifdef Q_OS_WIN
 # include <utils/gnupg-registry.h>
+# include <windows.h>
 #endif
 
 #include <QMutexLocker>
@@ -301,8 +302,8 @@ void Command::Private::run() {
     qDebug() << "Server PID =" << out.serverPid;
 
 #ifdef Q_OS_WIN
-    if ( !AllowSetForegroundWindow( (pid_t)pid ) )
-        qDebug() << "AllowSetForegroundWindow(" << pid << ") failed: " << GetLastError();
+    if ( !AllowSetForegroundWindow( (pid_t)out.serverPid ) )
+        qDebug() << "AllowSetForegroundWindow(" << out.serverPid << ") failed: " << GetLastError();
 #endif
 
     if ( in.command.isEmpty() )
