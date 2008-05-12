@@ -87,7 +87,7 @@ namespace {
                 m_proposedFix = QString();
             } else if ( process.exitCode() ) {
                 m_passed = false;
-                m_error = i18n("self-check didn't pass", "Failed");
+                m_error = i18nc("self-check didn't pass", "Failed");
                 m_explaination = !output.trimmed().isEmpty()
                     ? i18nc("Self-test didn't pass",
                             "The GnuPG configuration self-check failed.\n"
