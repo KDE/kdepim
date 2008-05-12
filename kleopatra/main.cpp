@@ -130,7 +130,7 @@ static bool selfCheck( KSplashScreen & splash ) {
     QTimer::singleShot( 0, &cmd, SLOT(start()) ); // start() may emit finished()...
     loop.exec();
     if ( cmd.isCanceled() ) {
-        splash.showMessage( i18n("Self-Check Failed") );
+        splash.showMessage( i18nc("didn't pass", "Self-Check Failed") );
         return false;
     } else {
         splash.showMessage( i18n("Self-Check Passed") );
