@@ -28,7 +28,8 @@
 
 #ifdef Q_OS_WIN // HACK: AllowSetForegroundWindow needs _WIN32_WINDOWS >= 0x0490 set
 # ifndef _WIN32_WINDOWS
-#  define _WIN32_WINDOWS 0x0490
+#  define _WIN32_WINDOWS 0x0500
+#  define _WIN32_WINNT 0x0500 // good enough for Vista too
 # endif
 # include <utils/gnupg-registry.h>
 # include <windows.h>
