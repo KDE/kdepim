@@ -32,6 +32,12 @@
 
 #include <config-kleopatra.h>
 
+#ifdef QT_NO_STL
+#undef QT_NO_STL
+#undef QT_STL
+#define QT_STL
+#endif
+
 #include "echocommand.h"
 
 #include <utils/input.h>
