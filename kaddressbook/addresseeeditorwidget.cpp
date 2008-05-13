@@ -212,7 +212,7 @@ void AddresseeEditorWidget::setupTab1()
   //////////////////////////////////////
   // Phone numbers (upper right)
   label = new QLabel( tab1 );
-  label->setPixmap( KIconLoader::global()->loadIcon( "office-address-book",
+  label->setPixmap( KIconLoader::global()->loadIcon( "x-office-contact",
                     KIconLoader::Desktop, KIconLoader::SizeMedium ) );
   layout->addWidget( label, 0, 3, 2, 1 );
 
