@@ -42,6 +42,8 @@
 
 #include <boost/shared_ptr.hpp>
 
+#include <vector>
+
 namespace GpgME {
     class Key;
 }
