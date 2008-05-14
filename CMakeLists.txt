@@ -193,7 +193,6 @@ else ( ONLY_KLEO )
   endif(QGPGME_FOUND AND KMAIL_SUPPORTED)
   macro_optional_add_subdirectory(knotes)
   macro_optional_add_subdirectory(console)
-  macro_optional_add_subdirectory(kontact)
 
   if(QGPGME_FOUND AND KMAIL_SUPPORTED)
      macro_optional_add_subdirectory(korganizer)
@@ -210,10 +209,12 @@ else ( ONLY_KLEO )
 
      set(KMOBILETOOLS_SUPPORTED TRUE)
      add_definitions(-DKMOBILETOOLS_SUPPORTED)
+     message(STATUS "KMobileTools support enabled.")
      macro_optional_add_subdirectory(kmobiletools)
 
      set(KPILOT_SUPPORTED TRUE)
      add_definitions(-DKPILOT_SUPPORTED)
+     message(STATUS "KPilot support enabled.")
      macro_optional_add_subdirectory(kpilot)
 
      if(OPENSYNC_FOUND AND GLIB2_FOUND)
@@ -242,6 +243,7 @@ else ( ONLY_KLEO )
   macro_optional_add_subdirectory(korn)
   add_subdirectory(kresources)
   macro_optional_add_subdirectory(ktnef)
+  macro_optional_add_subdirectory(kontact)
 
   if(QGPGME_FOUND)
      add_subdirectory(wizards)
