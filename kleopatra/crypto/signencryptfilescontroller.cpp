@@ -75,8 +75,7 @@ public:
 private:
     void slotWizardOperationPrepared();
     void slotWizardCanceled();
-    void slotTaskDone();
-    
+
 private:
     void ensureWizardCreated();
     void ensureWizardVisible();
@@ -302,10 +301,8 @@ void SignEncryptFilesController::Private::slotWizardOperationPrepared() {
 
         runnable.swap( tasks );
         
-        Q_FOREACH( const shared_ptr<Task> task, runnable ) {
-            connect( task.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
-                     q, SLOT(slotTaskDone()) );
-        }
+        Q_FOREACH( const shared_ptr<Task> task, runnable )
+            q->connectTask( task );
 
         shared_ptr<TaskCollection> coll( new TaskCollection );
         std::vector<shared_ptr<Task> > tmp;
@@ -343,9 +340,8 @@ void SignEncryptFilesController::Private::schedule() {
 
     if ( !cms && !openpgp ) {
         kleo_assert( runnable.empty() );
-        emit q->done();
+        q->emitDoneOrError();
     }
-    
 }
 
 shared_ptr<SignEncryptFilesTask> SignEncryptFilesController::Private::takeRunnable( GpgME::Protocol proto ) {
@@ -360,23 +356,23 @@ shared_ptr<SignEncryptFilesTask> SignEncryptFilesController::Private::takeRunnab
     return result;
 }
 
-void SignEncryptFilesController::Private::slotTaskDone() {
-    assert( q->sender() );
-    
+void SignEncryptFilesController::doTaskDone( const Task * task, const shared_ptr<const Task::Result> & result ) {
+    assert( task );
+
     // We could just delete the tasks here, but we can't use
     // Qt::QueuedConnection here (we need sender()) and other slots
     // might not yet have executed. Therefore, we push completed tasks
     // into a burial container
 
-    if ( q->sender() == cms.get() ) {
-        completed.push_back( cms );
-        cms.reset();
-    } else if ( q->sender() == openpgp.get() ) {
-        completed.push_back( openpgp );
-        openpgp.reset();
+    if ( task == d->cms.get() ) {
+        d->completed.push_back( d->cms );
+        d->cms.reset();
+    } else if ( task == d->openpgp.get() ) {
+        d->completed.push_back( d->openpgp );
+        d->openpgp.reset();
     }
-
-    QTimer::singleShot( 0, q, SLOT(schedule()) );
+    
+    QTimer::singleShot( 0, this, SLOT(schedule()) );
 }
 
 void SignEncryptFilesController::cancel() {

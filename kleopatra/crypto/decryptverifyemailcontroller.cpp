@@ -73,7 +73,6 @@ public:
     explicit Private( DecryptVerifyEMailController* qq );
 
     void slotWizardCanceled();
-    void slotTaskDone( const shared_ptr<const DecryptVerifyResult> & );
     void schedule();
 
     std::vector<shared_ptr<AbstractDecryptVerifyTask> > buildTasks();
@@ -98,7 +97,6 @@ public:
     DecryptVerifyOperation m_operation;
     Protocol m_protocol;
     VerificationMode m_verificationMode;
-
 };
 
 DecryptVerifyEMailController::Private::Private( DecryptVerifyEMailController* qq )
@@ -116,27 +114,29 @@ void DecryptVerifyEMailController::Private::slotWizardCanceled()
 {
     kDebug();
     if ( m_operationCompleted )
-        q->done();
+        q->emitDoneOrError();
     else
         reportError( gpg_error( GPG_ERR_CANCELED ), i18n("User canceled") );
 }
 
-void DecryptVerifyEMailController::Private::slotTaskDone(  const shared_ptr<const DecryptVerifyResult> & result )
-{
-    assert( q->sender() );
+void DecryptVerifyEMailController::doTaskDone( const Task* task, const shared_ptr<const Task::Result> & result ) {
+    assert( task );
     
     // We could just delete the tasks here, but we can't use
     // Qt::QueuedConnection here (we need sender()) and other slots
     // might not yet have executed. Therefore, we push completed tasks
     // into a burial container
 
-    if ( q->sender() == m_runningTask.get() ) {
-        m_completedTasks.push_back( m_runningTask );
-        m_results.push_back( result );
-        m_runningTask.reset();
+    if ( task == d->m_runningTask.get() ) {
+        d->m_completedTasks.push_back( d->m_runningTask );
+        const shared_ptr<const DecryptVerifyResult> & dvr = boost::dynamic_pointer_cast<const DecryptVerifyResult>( result );
+        assert( dvr );
+        d->m_results.push_back( dvr );
+        d->m_runningTask.reset();
     }
 
-    QTimer::singleShot( 0, q, SLOT(schedule()) );
+    QTimer::singleShot( 0, this, SLOT(schedule()) );
+
 }
 
 void DecryptVerifyEMailController::Private::schedule()
@@ -155,7 +155,7 @@ void DecryptVerifyEMailController::Private::schedule()
         // Otherwise (silent case), finish immediately
         m_operationCompleted = true;
         if ( m_silent ) 
-            q->done();
+            q->emitDoneOrError();
     }
 }
 
@@ -288,9 +288,8 @@ void DecryptVerifyEMailController::start()
 
     const shared_ptr<TaskCollection> coll( new TaskCollection );
     std::vector<shared_ptr<Task> > tsks;
-    Q_FOREACH( const shared_ptr<Task> & i, d->m_runnableTasks ) { 
-        connect( i.get(), SIGNAL(decryptVerifyResult(boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult>)),
-                 this, SLOT(slotTaskDone(boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult>)) );
+    Q_FOREACH( const shared_ptr<Task> & i, d->m_runnableTasks ) {
+        connectTask( i );
         tsks.push_back( i );
     }
     coll->setTasks( tsks );

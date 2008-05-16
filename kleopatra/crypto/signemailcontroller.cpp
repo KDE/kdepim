@@ -74,7 +74,6 @@ public:
 private:
     void slotWizardSignersResolved();
     void slotWizardCanceled(); // ### extract to base
-    void slotTaskDone( const shared_ptr<const Task::Result> & result );       // ### extract to base
 
 private:
     void ensureWizardCreated(); // ### extract to base
@@ -90,8 +89,6 @@ private:
     shared_ptr<SignEMailTask> cms, openpgp; // ### extract to base
     QPointer<SignEMailWizard> wizard; // ### extract to base
     Protocol protocol;                  // ### extract to base
-    int lastError;
-    QString lastErrorString;
     bool detached : 1;
 };
 
@@ -103,7 +100,6 @@ SignEMailController::Private::Private( Mode m, SignEMailController * qq )
       openpgp(),
       wizard(),
       protocol( UnknownProtocol ),
-      lastError( 0 ),
       detached( false )
 {
 
@@ -227,8 +223,7 @@ void SignEMailController::start() {
     d->ensureWizardCreated();
     d->wizard->setTaskCollection( coll );
     Q_FOREACH( const shared_ptr<Task> & t, tmp )
-        connect( t.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
-                 this, SLOT(slotTaskDone(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>))) );
+        connectTask( t );
 
     d->schedule();
 }
@@ -256,12 +251,8 @@ void SignEMailController::Private::schedule() {
             if ( !Q )
                 return;
         }
-        if ( lastError )
-            emit q->error( lastError, lastErrorString );
-        else
-            emit q->done();
+        q->emitDoneOrError();
     }
-    
 }
 
 // ### extract to base
@@ -278,27 +269,23 @@ shared_ptr<SignEMailTask> SignEMailController::Private::takeRunnable( GpgME::Pro
 }
 
 // ### extract to base
-void SignEMailController::Private::slotTaskDone( const shared_ptr<const Task::Result> & result ) {
-    assert( q->sender() );
+void SignEMailController::doTaskDone( const Task * task, const shared_ptr<const Task::Result> & result ) {
+    assert( task );
     
     // We could just delete the tasks here, but we can't use
     // Qt::QueuedConnection here (we need sender()) and other slots
     // might not yet have executed. Therefore, we push completed tasks
     // into a burial container
 
-    if ( q->sender() == cms.get() ) {
-        completed.push_back( cms );
-        cms.reset();
-    } else if ( q->sender() == openpgp.get() ) {
-        completed.push_back( openpgp );
-        openpgp.reset();
+    if ( task == d->cms.get() ) {
+        d->completed.push_back( d->cms );
+        d->cms.reset();
+    } else if ( task == d->openpgp.get() ) {
+        d->completed.push_back( d->openpgp );
+        d->openpgp.reset();
     }
 
-    if ( result->hasError() ) {
-        lastError = result->errorCode();
-        lastErrorString = result->errorString();
-    }
-    QTimer::singleShot( 0, q, SLOT(schedule()) );
+    QTimer::singleShot( 0, this, SLOT(schedule()) );
 }
 
 // ### extract to base

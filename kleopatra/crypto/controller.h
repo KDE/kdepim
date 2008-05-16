@@ -35,6 +35,8 @@
 
 #include <QObject>
 
+#include <crypto/task.h>
+
 #include <utils/pimpl_ptr.h>
 
 #include <boost/shared_ptr.hpp>
@@ -59,15 +61,30 @@ namespace Crypto {
 
         void setExecutionContext( const boost::shared_ptr<const ExecutionContext> & cmd );
 
-    Q_SIGNALS:
-        void error( int err, const QString & details );
-        void done();
+     Q_SIGNALS:
+         void error( int err, const QString & details );
 
     protected:   
         boost::shared_ptr<const ExecutionContext> executionContext() const;
+        void emitDoneOrError();
+        void connectTask( const boost::shared_ptr<Task> & task );
 
         void bringToForeground( QWidget* wid );
-        
+
+        virtual void doTaskDone( const Task* task, const boost::shared_ptr<const Task::Result> & result ) = 0;
+
+    protected Q_SLOTS:
+        void taskDone( const boost::shared_ptr<const Kleo::Crypto::Task::Result> & );
+
+    Q_SIGNALS:
+
+#ifndef Q_MOC_RUN
+# ifndef DOXYGEN_SHOULD_SKIP_THIS
+    private: // don't tell moc or doxygen, but those signals are in fact private
+# endif
+#endif
+        void done();
+
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;

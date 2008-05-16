@@ -56,10 +56,15 @@ public:
 private:
     weak_ptr<const ExecutionContext> executionContext;
     QVector<QWidget*> idApplied;
+    int lastError;
+    QString lastErrorString;
 };
 
 Controller::Private::Private( const shared_ptr<const ExecutionContext> & ctx, Controller * qq )
-    : q( qq ), executionContext( ctx )
+    : q( qq ), 
+    executionContext( ctx ),
+    lastError( 0 ),
+    lastErrorString()
 {
 
 }
@@ -97,6 +102,29 @@ void Controller::setExecutionContext( const shared_ptr<const ExecutionContext> &
 shared_ptr<const ExecutionContext> Controller::executionContext() const
 {
     return d->executionContext.lock();
+}
+
+void Controller::taskDone( const boost::shared_ptr<const Task::Result> & result ) {
+    if ( result->hasError() ) {
+        d->lastError = result->errorCode();
+        d->lastErrorString = result->errorString();
+    }
+    const Task * task = qobject_cast<const Task*>( sender() );
+    assert( task );
+    doTaskDone( task, result );
+}
+
+void Controller::connectTask( const shared_ptr<Task> & task ) {
+    assert( task );
+    connect( task.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
+             this, SLOT(taskDone(boost::shared_ptr<const Kleo::Crypto::Task::Result>)) );
+}
+
+void Controller::emitDoneOrError() {
+    if ( d->lastError != 0 )
+        emit error( d->lastError, d->lastErrorString );
+    else
+        emit done();
 }
 
 void Controller::bringToForeground( QWidget* wid )

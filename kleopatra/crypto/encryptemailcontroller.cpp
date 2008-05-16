@@ -76,7 +76,6 @@ public:
 private:
     void slotWizardRecipientsResolved();
     void slotWizardCanceled();
-    void slotTaskDone( const shared_ptr<const Task::Result> & );
 
 private:
     void ensureWizardCreated() const;
@@ -91,8 +90,6 @@ private:
     std::vector< shared_ptr<EncryptEMailTask> > runnable, completed;
     shared_ptr<EncryptEMailTask> cms, openpgp;
     mutable QPointer<EncryptEMailWizard> wizard;
-    int lastError;
-    QString lastErrorString;
 };
 
 EncryptEMailController::Private::Private( Mode m, EncryptEMailController * qq )
@@ -101,9 +98,7 @@ EncryptEMailController::Private::Private( Mode m, EncryptEMailController * qq )
       runnable(),
       cms(),
       openpgp(),
-      wizard(),
-      lastError( 0 ),
-      lastErrorString()
+      wizard()
 {
 
 }
@@ -213,8 +208,7 @@ void EncryptEMailController::start() {
     d->ensureWizardCreated();
     d->wizard->setTaskCollection( coll );
     Q_FOREACH( const shared_ptr<Task> & t, tmp )
-        connect( t.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
-             this, SLOT(slotTaskDone(boost::shared_ptr<const Kleo::Crypto::Task::Result>)) );
+        connectTask( t );
     d->schedule();
 }
 
@@ -235,10 +229,7 @@ void EncryptEMailController::Private::schedule() {
     if ( cms || openpgp )
         return;
     kleo_assert( runnable.empty() );
-    if ( lastError )
-        emit q->error( lastError, lastErrorString );
-    else
-        emit q->done();
+    q->emitDoneOrError();
 }
 
 shared_ptr<EncryptEMailTask> EncryptEMailController::Private::takeRunnable( GpgME::Protocol proto ) {
@@ -253,26 +244,23 @@ shared_ptr<EncryptEMailTask> EncryptEMailController::Private::takeRunnable( GpgM
     return result;
 }
 
-void EncryptEMailController::Private::slotTaskDone( const shared_ptr<const Task::Result> & result ) {
-    assert( q->sender() );
+void EncryptEMailController::doTaskDone( const Task * task, const shared_ptr<const Task::Result> & result ) {
+    assert( task );
     
     // We could just delete the tasks here, but we can't use
     // Qt::QueuedConnection here (we need sender()) and other slots
     // might not yet have executed. Therefore, we push completed tasks
     // into a burial container
 
-    if ( q->sender() == cms.get() ) {
-        completed.push_back( cms );
-        cms.reset();
-    } else if ( q->sender() == openpgp.get() ) {
-        completed.push_back( openpgp );
-        openpgp.reset();
+    if ( task == d->cms.get() ) {
+        d->completed.push_back( d->cms );
+        d->cms.reset();
+    } else if ( task == d->openpgp.get() ) {
+        d->completed.push_back( d->openpgp );
+        d->openpgp.reset();
     }
-    if ( result->hasError() ) {
-        lastError = result->errorCode();
-        lastErrorString = result->errorString();
-    }
-    QTimer::singleShot( 0, q, SLOT(schedule()) );
+
+    QTimer::singleShot( 0, this, SLOT(schedule()) );
 }
 
 void EncryptEMailController::cancel() {
