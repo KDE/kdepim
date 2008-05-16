@@ -69,6 +69,18 @@
 
 using namespace Kleo;
 
+namespace {
+
+class ScrollArea : public QScrollArea {
+public:
+    explicit ScrollArea( QWidget* p ) : QScrollArea( p ) {}
+    /* reimp */ QSize sizeHint() const {
+        const QSize wsz = widget() ? widget()->sizeHint() : QSize();
+        return QSize( wsz.width() + style()->pixelMetric( QStyle::PM_ScrollBarExtent ), QScrollArea::sizeHint().height() );
+    }
+};
+
+}
 inline KIcon loadIcon( const QString &s ) {
   QString ss = s;
   return KIcon( ss.replace( QRegExp( "[^a-zA-Z0-9_]" ), "-" ) );
@@ -111,20 +123,22 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
       addPage(pageItem);
     }
 
-    QScrollArea* scrollArea = new QScrollArea( this );
-    vlay->addWidget( scrollArea );
-    scrollArea->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    ScrollArea* scrollArea = new ScrollArea( this );
     scrollArea->setWidgetResizable( true );
+
+    vlay->addWidget( scrollArea );
 
     CryptoConfigComponentGUI* compGUI =
       new CryptoConfigComponentGUI( this, comp, scrollArea );
     compGUI->setObjectName( *it );
     scrollArea->setWidget( compGUI );
+    scrollArea->setSizePolicy( QSizePolicy::MinimumExpanding, QSizePolicy::Preferred );
     // KJanusWidget doesn't seem to have iterators, so we store a copy...
     mComponentGUIs.append( compGUI );
 
     // Set a nice startup size
     const int deskHeight = QApplication::desktop()->height();
+    const int deskWidth = QApplication::desktop()->width();
     int dialogHeight;
     if (deskHeight > 1000) // very big desktop ?
       dialogHeight = 800;
@@ -132,10 +146,8 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
       dialogHeight = 500;
     else // small (800x600, 640x480) desktop
       dialogHeight = 400;
-    QSize sz = scrollArea->sizeHint();
-    scrollArea->setMinimumSize( sz.width()
-                                + scrollArea->style()->pixelMetric(QStyle::PM_ScrollBarExtent),
-                                qMin( compGUI->sizeHint().height(), dialogHeight ) );
+    assert( scrollArea->widget() );
+    scrollArea->setMinimumHeight( qMin( compGUI->sizeHint().height(), dialogHeight ) );
   }
 }
 
