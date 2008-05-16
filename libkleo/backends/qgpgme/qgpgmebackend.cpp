@@ -50,6 +50,7 @@
 #include "qgpgmeimportjob.h"
 #include "qgpgmeverifyopaquejob.h"
 #include "qgpgmechangeexpiryjob.h"
+#include "qgpgmechangeownertrustjob.h"
 
 #include <gpgme++/error.h>
 #include <gpgme++/engineinfo.h>
@@ -234,6 +235,18 @@ namespace {
         return 0;
       return new Kleo::QGpgMEChangeExpiryJob( context );
     }
+    
+
+    Kleo::ChangeOwnerTrustJob * changeOwnerTrustJob() const {
+      if ( mProtocol != GpgME::OpenPGP )
+        return 0; // only supported by gpg
+
+      GpgME::Context * context = GpgME::Context::createForProtocol( mProtocol );
+      if ( !context )
+        return 0;
+      return new Kleo::QGpgMEChangeOwnerTrustJob( context );
+    }
+
   };
 
 }

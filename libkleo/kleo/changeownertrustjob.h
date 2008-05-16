@@ -1,8 +1,8 @@
 /*
-    kleo/cryptobackend.cpp
+    changeownertrustjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2005 Klarälvdalens Datakonsult AB
+    Copyright (c) 2008 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,10 +30,46 @@
     your version.
 */
 
-#include "cryptobackend.h"
+#ifndef __KLEO_CHANGEOWNERTRUST_H__
+#define __KLEO_CHANGEOWNERTRUST_H__
 
-const char Kleo::CryptoBackend::OpenPGP[] = "OpenPGP";
-const char Kleo::CryptoBackend::SMIME[] = "SMIME";
+#include "job.h"
 
-Kleo::ChangeExpiryJob * Kleo::CryptoBackend::Protocol::changeExpiryJob() const { return 0; }
-Kleo::ChangeOwnerTrustJob * Kleo::CryptoBackend::Protocol::changeOwnerTrustJob() const { return 0; }
+
+#include <gpgme++/key.h>
+
+namespace Kleo {
+
+  /**
+     @short An abstract base class to change owner trust asynchronously
+
+     To use a ChangeOwnerTrustJob, first obtain an instance from the
+     CryptoBackend implementation, connect the progress() and result()
+     signals to suitable slots and then start the job with a call
+     to start(). This call might fail, in which case the ChangeOwnerTrustJob
+     instance will have scheduled it's own destruction with a call to
+     QObject::deleteLater().
+
+     After result() is emitted, the ChangeOwnerTrustJob will schedule it's own
+     destruction by calling QObject::deleteLater().
+  */
+  class KLEO_EXPORT ChangeOwnerTrustJob : public Job {
+    Q_OBJECT
+  protected:
+    explicit ChangeOwnerTrustJob( QObject * parent );
+  public:
+    ~ChangeOwnerTrustJob();
+
+    /**
+       Starts the change-owner trust operation. \a key is the key to change
+       the owner trust of . \a trust is the new trust level.
+    */
+    virtual GpgME::Error start( const GpgME::Key & key, GpgME::Key::OwnerTrust trust ) = 0;
+
+  Q_SIGNALS:
+    void result( const GpgME::Error & result );
+  };
+
+}
+
+#endif // __KLEO_CHANGEOWNERTRUSTJOB_H__

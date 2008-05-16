@@ -52,6 +52,7 @@ namespace Kleo {
   class DecryptVerifyJob;
   class RefreshKeysJob;
   class ChangeExpiryJob;
+  class ChangeOwnerTrustJob;
   class SpecialJob;
 }
 
@@ -98,25 +99,26 @@ namespace Kleo {
 
     virtual QString displayName() const = 0;
 
-    virtual KeyListJob        * keyListJob( bool remote=false, bool includeSigs=false, bool validate=false ) const = 0;
-    virtual EncryptJob        * encryptJob( bool armor=false, bool textmode=false ) const = 0;
-    virtual DecryptJob        * decryptJob() const = 0;
-    virtual SignJob           * signJob( bool armor=false, bool textMode=false ) const = 0;
-    virtual VerifyDetachedJob * verifyDetachedJob( bool textmode=false) const = 0;
-    virtual VerifyOpaqueJob   * verifyOpaqueJob( bool textmode=false ) const = 0;
-    virtual KeyGenerationJob  * keyGenerationJob() const = 0;
-    virtual ImportJob         * importJob() const = 0;
-    virtual ExportJob         * publicKeyExportJob( bool armor=false ) const = 0;
+    virtual KeyListJob          * keyListJob( bool remote=false, bool includeSigs=false, bool validate=false ) const = 0;
+    virtual EncryptJob          * encryptJob( bool armor=false, bool textmode=false ) const = 0;
+    virtual DecryptJob          * decryptJob() const = 0;
+    virtual SignJob             * signJob( bool armor=false, bool textMode=false ) const = 0;
+    virtual VerifyDetachedJob   * verifyDetachedJob( bool textmode=false) const = 0;
+    virtual VerifyOpaqueJob     * verifyOpaqueJob( bool textmode=false ) const = 0;
+    virtual KeyGenerationJob    * keyGenerationJob() const = 0;
+    virtual ImportJob           * importJob() const = 0;
+    virtual ExportJob           * publicKeyExportJob( bool armor=false ) const = 0;
     // @param charset the encoding of the passphrase in the exported file
-    virtual ExportJob         * secretKeyExportJob( bool armor=false, const QString& charset = QString() ) const = 0;
-    virtual DownloadJob       * downloadJob( bool armor=false ) const = 0;
-    virtual DeleteJob         * deleteJob() const = 0;
-    virtual SignEncryptJob    * signEncryptJob( bool armor=false, bool textMode=false ) const = 0;
-    virtual DecryptVerifyJob  * decryptVerifyJob( bool textmode=false ) const = 0;
-    virtual RefreshKeysJob    * refreshKeysJob() const = 0;
-    virtual ChangeExpiryJob   * changeExpiryJob() const;
+    virtual ExportJob           * secretKeyExportJob( bool armor=false, const QString& charset = QString() ) const = 0;
+    virtual DownloadJob         * downloadJob( bool armor=false ) const = 0;
+    virtual DeleteJob           * deleteJob() const = 0;
+    virtual SignEncryptJob      * signEncryptJob( bool armor=false, bool textMode=false ) const = 0;
+    virtual DecryptVerifyJob    * decryptVerifyJob( bool textmode=false ) const = 0;
+    virtual RefreshKeysJob      * refreshKeysJob() const = 0;
+    virtual ChangeExpiryJob     * changeExpiryJob() const;
+    virtual ChangeOwnerTrustJob * changeOwnerTrustJob() const;
 
-    virtual SpecialJob        * specialJob( const char * type, const QMap<QString,QVariant> & args ) const = 0;
+    virtual SpecialJob          * specialJob( const char * type, const QMap<QString,QVariant> & args ) const = 0;
   };
 
 }
