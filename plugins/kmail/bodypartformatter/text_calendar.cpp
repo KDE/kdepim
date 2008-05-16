@@ -504,9 +504,9 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
                       const QString &path, KMail::Callback& c ) const
     {
       QString iCal;
-      /* If the bodypart does not have a charset specified, we need to fall back to
-         utf8, not the KMail fallback encoding, so get the contents as binary and decode
-         explicitely. */
+      /* If the bodypart does not have a charset specified, we need to fall back
+         to utf8, not the KMail fallback encoding, so get the contents as binary
+         and decode explicitly. */
       if ( part->contentTypeParameter( "charset").isEmpty() ) {
         const QByteArray &ba = part->asBinary();
         iCal = QString::fromUtf8(ba);
