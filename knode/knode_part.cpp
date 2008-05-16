@@ -35,12 +35,11 @@
 #include <kstatusbar.h>
 #include <ksqueezedtextlabel.h>
 
-//Added by qt3to4:
 #include <QVBoxLayout>
 
 
 K_PLUGIN_FACTORY(KNodeFactory, registerPlugin<KNodePart>();)
-K_EXPORT_PLUGIN(KNodeFactory( "knode" ))
+K_EXPORT_PLUGIN(KNodeFactory(KNode::AboutData()))
 
 KNodePart::KNodePart( QWidget *parentWidget, QObject *parent, const QVariantList &)
   : KParts::ReadOnlyPart( parent ),
