@@ -333,6 +333,22 @@ QString Formatting::type( const Subkey & subkey ) {
 // Status / Validity
 //
 
+
+QString Formatting::ownerTrustShort( Key::OwnerTrust trust ) {
+    switch ( trust ) {
+        case Key::Unknown:   return i18nc("unknown trust level", "unknown");
+        case Key::Never:     return i18n("untrusted");
+        case Key::Marginal:  return i18nc("marginal trust", "marginal");
+        case Key::Full:      return i18nc("full trust", "full");
+        case Key::Ultimate:  return i18nc("ultimate trust", "ultimate");
+        case Key::Undefined: return i18nc("undefined trust", "undefined");
+        default:
+            assert( !"unexpected owner trust value" );
+            break;
+    }
+    return QString();
+}
+
 QString Formatting::validityShort( const Subkey & subkey ) {
     if ( subkey.isRevoked() )
 	return i18n("revoked");

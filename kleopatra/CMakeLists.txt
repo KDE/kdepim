@@ -134,6 +134,7 @@ set( _kleopatra_SRCS
   dialogs/certificateselectiondialog.cpp
   dialogs/expirydialog.cpp
   dialogs/lookupcertificatesdialog.cpp
+  dialogs/ownertrustdialog.cpp
   dialogs/selftestdialog.cpp
 
   crypto/certificateresolver.cpp
@@ -190,6 +191,7 @@ set( _kleopatra_SRCS
   commands/dumpcrlcachecommand.cpp
   commands/importcrlcommand.cpp
   commands/changeexpirycommand.cpp
+  commands/changeownertrustcommand.cpp
   commands/selftestcommand.cpp
   
   ${_kleopatra_uiserver_files}
@@ -213,6 +215,7 @@ kde4_add_ui_files( _kleopatra_SRCS
   certificatewizard.ui
   dialogs/expirydialog.ui
   dialogs/lookupcertificatesdialog.ui
+  dialogs/ownertrustdialog.ui
   dialogs/selftestdialog.ui
   )
 kde4_add_kcfg_files( _kleopatra_SRCS

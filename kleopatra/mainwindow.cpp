@@ -57,6 +57,7 @@
 #include "commands/dumpcrlcachecommand.h"
 #include "commands/importcrlcommand.h"
 #include "commands/changeexpirycommand.h"
+#include "commands/changeownertrustcommand.h"
 #include "commands/selftestcommand.h"
 
 #include "conf/configuredialog.h"
@@ -188,6 +189,9 @@ public:
     }
     void changeCertificateExpiry() {
         createAndStart<ChangeExpiryCommand>();
+    }
+    void changeCertificateOwnerTrust() {
+        createAndStart<ChangeOwnerTrustCommand>();
     }
     void signEncryptFiles() {
         createAndStart<SignEncryptFilesCommand>();
@@ -363,7 +367,9 @@ void MainWindow::Private::setupActions() {
           "edit-delete", q, SLOT(deleteCertificates()), "Delete", false, true },
         { "certificates_change_expiry", i18n("Change Expiry Date..."), QString(),
           0, q, SLOT(changeCertificateExpiry()), QString(), false, true },
-        // Tools menu
+          { "certificates_change_owner_trust", i18n("Change Owner Trust..."), QString(),
+            0, q, SLOT(changeCertificateOwnerTrust()), QString(), false, true },
+          // Tools menu
         { "tools_refresh_x509_certificates", i18n("Refresh X.509 Certificates"), QString(),
           "view-refresh", q, SLOT(refreshX509Certificates()), QString(), false, true },
         { "tools_refresh_openpgp_certificates", i18n("Refresh OpenPGP Certificates"), QString(),

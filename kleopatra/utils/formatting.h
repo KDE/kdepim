@@ -92,6 +92,8 @@ namespace Formatting {
     QString type( const GpgME::Subkey & subkey );
 
 
+    QString ownerTrustShort( GpgME::Key::OwnerTrust trust );
+
     QString validityShort( const GpgME::Subkey & subkey );
     QString validityShort( const GpgME::UserID & uid );
     QString validityShort( const GpgME::UserID::Signature & sig );
