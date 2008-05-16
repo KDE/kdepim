@@ -31,7 +31,7 @@ What it is
 * ktimetracker: Time tracker.
 * kfile-plugins: vCard KFIleItem plugin.
 * knotes: yellow notes application
-* konsolecalendar: Command line tool for accessing calendar files.
+* konsolekalendar: Command line tool for accessing calendar files.
 * korn: mail checker
 * akregator: Feed reader
 
@@ -43,6 +43,7 @@ There is also quite an amount of infrastructure in this package:
 * libkpimexchange: connecting to Exchange2000 servers
 * kdgantt: alternative lib for Gantt diagrams, used by the free/busy view of
            KOrganizer (yes, we should decide for one of the Gantt libs)
+* kontactinterfaces: The glue for embedding KParts into Kontact
 
 The following subdirectories have been moved to kdenonbeta/kdepim:
 

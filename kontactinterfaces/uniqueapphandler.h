@@ -1,29 +1,29 @@
 /*
-   This file is part of KDE Kontact.
+  This file is part of the KDE Kontact Plugin Interface Library.
 
-   Copyright (c) 2003 David Faure <faure@kde.org>
+  Copyright (c) 2003 David Faure <faure@kde.org>
 
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public License
-   along with this library; see the file COPYING.LIB.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 
-#ifndef KONTACT_UNIQUEAPPHANDLER_H
-#define KONTACT_UNIQUEAPPHANDLER_H
+#ifndef KONTACTINTERFACES_UNIQUEAPPHANDLER_H
+#define KONTACTINTERFACES_UNIQUEAPPHANDLER_H
 
-#include "kontact_export.h"
-#include <plugin.h>
+#include "kontactinterfaces_export.h"
+#include "plugin.h"
 
 namespace Kontact
 {
@@ -35,11 +35,12 @@ namespace Kontact
  * By default this means simply bringing the main window to the front,
  * but newInstance can be reimplemented.
  */
-class KPINTERFACES_EXPORT UniqueAppHandler
+class KONTACTINTERFACES_EXPORT UniqueAppHandler
 {
   public:
     UniqueAppHandler( Plugin *plugin );
     virtual ~UniqueAppHandler();
+
     /// This must be reimplemented so that app-specific command line options can be parsed
     virtual void loadCommandLineOptions() = 0;
 
@@ -47,13 +48,14 @@ class KPINTERFACES_EXPORT UniqueAppHandler
     /// to newInstance can't be expressed in terms of normal data types.
     virtual int newInstance();
 
-    Plugin *plugin() const { return mPlugin; }
+    Plugin *plugin() const;
 
     /// Load the kontact command line options.
     static void loadKontactCommandLineOptions();
 
   private:
-    Plugin *mPlugin;
+    class Private;
+    Private *const d;
 };
 
 /// Base class for UniqueAppHandler
@@ -86,7 +88,7 @@ template <class T> class UniqueAppHandlerFactory : public UniqueAppHandlerFactor
  * Kontact takes over from there.
  *
  */
-class KPINTERFACES_EXPORT UniqueAppWatcher : public QObject
+class KONTACTINTERFACES_EXPORT UniqueAppWatcher : public QObject
 {
   Q_OBJECT
 
@@ -104,17 +106,17 @@ class KPINTERFACES_EXPORT UniqueAppWatcher : public QObject
 
     virtual ~UniqueAppWatcher();
 
-    bool isRunningStandalone() const { return mRunningStandalone; }
+    bool isRunningStandalone() const;
 
-  protected slots:
+  protected Q_SLOTS:
     void unregisteredFromDCOP( const QByteArray &appId );
 
   private:
-    bool mRunningStandalone;
-    UniqueAppHandlerFactoryBase *mFactory;
-    Plugin *mPlugin;
+    class Private;
+    Private *const d;
 };
 
 } // namespace
 
-#endif /* KONTACT_UNIQUEAPPHANDLER_H */
+#endif
+

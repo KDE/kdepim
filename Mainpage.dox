@@ -69,6 +69,9 @@
         * - <a href="kdgantt/html/index.html"><b>kdgantt</b></a>
         *   (<a href="kdgantt/html/classes.html">classes</a>)\n
         *   <i>Klarälvdalens Datakonsult AB's gantt charting engine.</i>
+        * - <a href="kontactinterfaces/html/index.html"><b>kontactinterfaces</b></a>
+        *   (<a href="kontactinterfaces/html/classes.html">classes</a>)\n
+        *   <i>The glue for embedding KParts into Kontact.</i>
 	* </td>
 	* </tr></table>
         *

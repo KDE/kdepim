@@ -1,5 +1,5 @@
 /*
-  This file is part of KDE Kontact.
+  This file is part of the KDE Kontact Plugin Interface Library.
 
   Copyright (c) 2003 David Faure <faure@kde.org>
 
@@ -22,12 +22,12 @@
 #include "uniqueapphandler.h"
 #include "core.h"
 
-#include <kstartupinfo.h>
+#include <kapplication.h>
 #include <kcmdlineargs.h>
-#include <kwindowsystem.h>
 #include <kdebug.h>
-#include <klocale.h>
+#include <kstartupinfo.h>
 #include <kuniqueapplication.h>
+#include <kwindowsystem.h>
 
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
@@ -78,29 +78,46 @@
 
 using namespace Kontact;
 
-UniqueAppHandler::UniqueAppHandler( Plugin *plugin )
- : mPlugin( plugin )
+//@cond PRIVATE
+class UniqueAppHandler::Private
 {
-  kDebug() << " plugin->objectName().toLatin1() :"<<plugin->objectName().toLatin1();
-  QDBusConnection::sessionBus().registerService( "org.kde." + plugin->objectName().toLatin1() );
+  public:
+    Plugin *mPlugin;
+};
+//@endcond
+
+UniqueAppHandler::UniqueAppHandler( Plugin *plugin )
+ : d( new Private )
+{
+  kDebug() << " plugin->objectName().toLatin1() :" << plugin->objectName().toLatin1();
+
+  d->mPlugin = plugin;
+  QDBusConnection::sessionBus().registerService(
+    "org.kde." + plugin->objectName().toLatin1() );
 }
 
 UniqueAppHandler::~UniqueAppHandler()
 {
+  delete d;
 }
 
 int UniqueAppHandler::newInstance()
 {
-  // This bit is duplicated from KUniqueApplication::newInstance()
-  if ( kapp->mainWidget() ) {
-    kapp->mainWidget()->show();
-    KWindowSystem::forceActiveWindow( kapp->mainWidget()->winId() );
+  QWidget *w = kapp->activeWindow();
+  if ( w ) {
+    w->show();
+    KWindowSystem::forceActiveWindow( w->winId() );
     KStartupInfo::appStarted();
   }
 
   // Then ensure the part appears in kontact
-  mPlugin->core()->selectPlugin( mPlugin );
+  d->mPlugin->core()->selectPlugin( d->mPlugin );
   return 0;
+}
+
+Plugin *UniqueAppHandler::plugin() const
+{
+  return d->mPlugin;
 }
 
 #ifdef __GNUC__
@@ -131,7 +148,7 @@ int UniqueAppHandler::newInstance()
     _replyStream << newInstance( );
   } else if ( fun == "load()" ) {
     replyType = "bool";
-    (void)mPlugin->part(); // load the part without bringing it to front
+    (void)d->mPlugin->part(); // load the part without bringing it to front
 
     QDataStream _replyStream( &replyData,QIODevice::WriteOnly );
     _replyStream.setVersion(QDataStream::Qt_3_1);
@@ -155,55 +172,79 @@ DCOPCStringList UniqueAppHandler::functions()
   funcs << "int newInstance()";
   funcs << "bool load()";
   return funcs;
-}*/
+}
+*/
+
+//@cond PRIVATE
+class UniqueAppWatcher::Private
+{
+  public:
+    UniqueAppHandlerFactoryBase *mFactory;
+    Plugin *mPlugin;
+    bool mRunningStandalone;
+};
+//@endcond
 
 UniqueAppWatcher::UniqueAppWatcher( UniqueAppHandlerFactoryBase *factory, Plugin *plugin )
-  : QObject( plugin ), mFactory( factory ), mPlugin( plugin )
+  : QObject( plugin ), d( new Private )
 {
+  d->mFactory = factory;
+  d->mPlugin = plugin;
+
   // The app is running standalone if 1) that name is known to D-Bus
   QString serviceName = "org.kde." + plugin->objectName().toLatin1();
-  mRunningStandalone =
+  d->mRunningStandalone =
     QDBusConnection::sessionBus().interface()->isServiceRegistered( serviceName );
   kDebug() << " plugin->objectName() :" << plugin->objectName()
-           << " isServiceRegistered ? :" << mRunningStandalone;
+           << " isServiceRegistered ? :" << d->mRunningStandalone;
 
   QString owner = QDBusConnection::sessionBus().interface()->serviceOwner( serviceName );
-  if ( mRunningStandalone && ( owner == QDBusConnection::sessionBus().baseService() ) ) {
-    mRunningStandalone = false;
+  if ( d->mRunningStandalone && ( owner == QDBusConnection::sessionBus().baseService() ) ) {
+    d->mRunningStandalone = false;
   }
 
-  if ( mRunningStandalone ) {
+  if ( d->mRunningStandalone ) {
     //TODO port it
     //kapp->dcopClient()->setNotifications( true );
-    //connect( kapp->dcopClient(), SIGNAL( applicationRemoved( const QByteArray& ) ), this, SLOT( unregisteredFromDCOP( const QByteArray& ) ) );
+    //connect( kapp->dcopClient(), SIGNAL(applicationRemoved(const QByteArray&)),
+    //         this, SLOT(unregisteredFromDCOP(const QByteArray&)) );
   } else {
-    mFactory->createHandler( mPlugin );
+    d->mFactory->createHandler( d->mPlugin );
   }
 }
 
 UniqueAppWatcher::~UniqueAppWatcher()
 {
+  delete d;
+
 #ifdef __GNUC__
 #warning Port to DBus!
 #endif
-//  if ( mRunningStandalone )
+//  if ( d->mRunningStandalone )
 //    kapp->dcopClient()->setNotifications( false );
 
-  delete mFactory;
+  //TODO: deleting the mFactory here causes a crash. determine why, or if this
+  //is needed at all.
+  //delete d->mFactory;
+}
+
+bool UniqueAppWatcher::isRunningStandalone() const
+{
+  return d->mRunningStandalone;
 }
 
 void UniqueAppWatcher::unregisteredFromDCOP( const QByteArray &appId )
 {
-  if ( appId == mPlugin->objectName() && mRunningStandalone ) {
+  if ( appId == d->mPlugin->objectName() && d->mRunningStandalone ) {
 #ifdef __GNUC__
 #warning Port to DBus!
 #endif
-//    disconnect( kapp->dcopClient(), SIGNAL( applicationRemoved( const QByteArray& ) ),
-//                this, SLOT( unregisteredFromDCOP( const QByteArray& ) ) );
-    kDebug(5601) << appId;
-    mFactory->createHandler( mPlugin );
+//    disconnect( kapp->dcopClient(), SIGNAL(applicationRemoved(const QByteArray&)),
+//                this, SLOT(unregisteredFromDCOP(const QByteArray&)) );
+    kDebug() << appId;
+    d->mFactory->createHandler( d->mPlugin );
 //    kapp->dcopClient()->setNotifications( false );
-    mRunningStandalone = false;
+    d->mRunningStandalone = false;
   }
 }
 

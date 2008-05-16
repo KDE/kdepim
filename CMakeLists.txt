@@ -141,6 +141,7 @@ else ( ONLY_KLEO )
   macro_optional_add_subdirectory(akonadi)
   add_subdirectory(libkdepim)
   add_subdirectory(libkholidays)
+  add_subdirectory(kontactinterfaces)
 
   find_path(TOPOLOGICAL_SORT_DIR NAMES boost/graph/topological_sort.hpp PATHS ${Boost_INCLUDE_DIRS})
   if(QGPGME_FOUND)

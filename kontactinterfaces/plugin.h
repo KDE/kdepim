@@ -1,61 +1,65 @@
 /*
-   This file is part of KDE Kontact.
+  This file is part of the KDE Kontact Plugin Interface Library.
 
-   Copyright (c) 2001 Matthias Hoelzer-Kluepfel <mhk@kde.org>
-   Copyright (c) 2002-2003 Daniel Molkentin <molkentin@kde.org>
-   Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2001 Matthias Hoelzer-Kluepfel <mhk@kde.org>
+  Copyright (c) 2002-2003 Daniel Molkentin <molkentin@kde.org>
+  Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
 
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public License
-   along with this library; see the file COPYING.LIB.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 
-#ifndef KONTACT_PLUGIN_H
-#define KONTACT_PLUGIN_H
+#ifndef KONTACTINTERFACES_PLUGIN_H
+#define KONTACTINTERFACES_PLUGIN_H
 
-#include "kontact_export.h"
+#include "kontactinterfaces_export.h"
+
 #include <kxmlguiclient.h>
-#include <KDE/KPluginFactory>
+#include <kpluginfactory.h>
+
 #include <QtCore/QList>
 #include <QtCore/QObject>
-#include <QtGui/QDropEvent>
 
-class QStringList;
 class KAboutData;
 class KAction;
 class KConfig;
 class KConfigGroup;
-class QWidget;
+class QDropEvent;
 class QMimeData;
-namespace KParts { class ReadOnlyPart; }
+class QStringList;
+class QWidget;
+namespace KParts {
+  class ReadOnlyPart;
+}
 
 /**
   Exports Kontact plugin.
  */
 #define EXPORT_KONTACT_PLUGIN( pluginclass, pluginname ) \
-class Instance                                                        \
-{                                                                     \
-  public:                                                             \
+class Instance                                           \
+{                                                        \
+  public:                                                \
     static QObject *createInstance( QWidget *, QObject *parent, const QVariantList &list ) \
     { return new pluginclass( static_cast<Kontact::Core*>( parent ), list ); } \
 };                                                                    \
-K_PLUGIN_FACTORY( KontactPluginFactory, registerPlugin< pluginclass >( QString(), Instance::createInstance ); ) \
+K_PLUGIN_FACTORY( KontactPluginFactory, registerPlugin< pluginclass >   \
+                  ( QString(), Instance::createInstance ); )            \
 K_EXPORT_PLUGIN( KontactPluginFactory( "kontact_" #pluginname "plugin" ) )
 
 /**
-  Increase this version number whenever you make a change
-  in the API.
+  Increase this version number whenever you make a change in the API.
  */
 #define KONTACT_PLUGIN_VERSION 7
 
@@ -70,7 +74,7 @@ class Summary;
   to get a plugin. It can insert an icon into the sidepane,
   add widgets to the widgetstack and add menu items via XMLGUI.
  */
-class KPINTERFACES_EXPORT Plugin : public QObject, virtual public KXMLGUIClient
+class KONTACTINTERFACES_EXPORT Plugin : public QObject, virtual public KXMLGUIClient
 {
   Q_OBJECT
 
@@ -119,12 +123,12 @@ class KPINTERFACES_EXPORT Plugin : public QObject, virtual public KXMLGUIClient
     QString icon() const;
 
     /**
-      Sets the name of executable (if existant).
+      Sets the name of executable (if existent).
     */
     void setExecutableName( const QString &bin );
 
     /**
-      Returns the name of the binary (if existant).
+      Returns the name of the binary (if existent).
     */
     QString executableName() const;
 
@@ -137,13 +141,14 @@ class KPINTERFACES_EXPORT Plugin : public QObject, virtual public KXMLGUIClient
       Create the D-Bus interface for the given @p serviceType, if this
       plugin provides it. Return false otherwise.
     */
-    virtual bool createDBUSInterface( const QString & /*serviceType*/) { return false; }
+    virtual bool createDBUSInterface( const QString &serviceType );
 
     /**
-      Reimplement this method and return whether a standalone application is still running
-      This is only required if your part is also available as standalone application.
+      Reimplement this method and return whether a standalone application
+      is still running. This is only required if your part is also available
+      as standalone application.
     */
-    virtual bool isRunningStandalone() { return false; }
+    virtual bool isRunningStandalone();
 
     /**
       Reimplement this method if your application needs a different approach to be brought
@@ -186,7 +191,7 @@ class KPINTERFACES_EXPORT Plugin : public QObject, virtual public KXMLGUIClient
       Reimplement this method if you want to add a widget for your application
       to Kontact's summary page.
     */
-    virtual Summary *createSummaryWidget( QWidget * /*parent*/) { return 0; }
+    virtual Summary *createSummaryWidget( QWidget *parent );
 
     /**
       Returns whether the plugin provides a part that should be shown in the sidebar.
@@ -204,7 +209,7 @@ class KPINTERFACES_EXPORT Plugin : public QObject, virtual public KXMLGUIClient
       If any loaded plugin returns false from this method, then the
       main kontact window will not close.
     */
-    virtual bool queryClose() const { return true; }
+    virtual bool queryClose() const;
 
     QString registerClient();
 
@@ -212,7 +217,7 @@ class KPINTERFACES_EXPORT Plugin : public QObject, virtual public KXMLGUIClient
       Return the weight of the plugin. The higher the weight the lower it will
       be displayed in the sidebar. The default implementation returns 0.
     */
-    virtual int weight() const { return 0; }
+    virtual int weight() const;
 
     /**
       Insert "New" action.
@@ -225,24 +230,24 @@ class KPINTERFACES_EXPORT Plugin : public QObject, virtual public KXMLGUIClient
     void insertSyncAction( KAction *action );
 
     /**
-      FIXME: write API doc for Kontact::Plugin::newActions().
+      FIXME: write API doc for Plugin::newActions().
     */
     QList<KAction*>* newActions() const;
 
     /**
-      FIXME: write API doc for Kontact::Plugin::syncActions().
+      FIXME: write API doc for Plugin::syncActions().
     */
     QList<KAction*>* syncActions() const;
 
     /**
       Returns a list of action name which shall be hidden in the main toolbar.
      */
-    virtual QStringList invisibleToolbarActions() const { return QStringList(); }
+    virtual QStringList invisibleToolbarActions() const;
 
     /**
       Return, if the plugin can handle the drag object of the given mime type.
     */
-    virtual bool canDecodeMimeData( const QMimeData * ) { return false; }
+    virtual bool canDecodeMimeData( const QMimeData *data );
 
     /**
       Process drop event.
@@ -283,7 +288,7 @@ class KPINTERFACES_EXPORT Plugin : public QObject, virtual public KXMLGUIClient
 
   private:
     class Private;
-    Private *d;
+    Private *const d;
     Q_PRIVATE_SLOT( d, void partDestroyed() )
 };
 

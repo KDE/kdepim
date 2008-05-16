@@ -1,23 +1,23 @@
 /*
-   This file is part of KDE Kontact.
+  This file is part of the KDE Kontact Plugin Interface Library.
 
-   Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
-   Copyright (c) 2003 Daniel Molkentin <molkentin@kde.org>
+  Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2003 Daniel Molkentin <molkentin@kde.org>
 
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public License
-   along with this library; see the file COPYING.LIB.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 
 #include "summary.h"
@@ -37,6 +37,8 @@
 
 using namespace Kontact;
 
+//@cond PRIVATE
+namespace Kontact {
 class SummaryMimeData : public QMimeData
 {
   public:
@@ -45,17 +47,20 @@ class SummaryMimeData : public QMimeData
       if ( format == "application/x-kontact-summary" ) {
         return true;
       }
-
       return false;
     }
 };
+}
+//@endcond
 
+//@cond PRIVATE
 class Summary::Private
 {
   public:
     KStatusBar *mStatusBar;
     QPoint mDragStartPoint;
 };
+//@endcond
 
 Summary::Summary( QWidget *parent )
   : QWidget( parent ), d( new Private )
@@ -66,6 +71,11 @@ Summary::Summary( QWidget *parent )
 Summary::~Summary()
 {
   delete d;
+}
+
+int Summary::summaryHeight() const
+{
+  return 1;
 }
 
 QWidget *Summary::createHeader( QWidget *parent, const QString &iconname, const QString &heading )
@@ -95,6 +105,16 @@ QWidget *Summary::createHeader( QWidget *parent, const QString &iconname, const 
   hbox->setMaximumHeight( hbox->minimumSizeHint().height() );
 
   return hbox;
+}
+
+QStringList Summary::configModules() const
+{
+  return QStringList();
+}
+
+void Summary::updateSummary( bool force )
+{
+  Q_UNUSED( force );
 }
 
 void Summary::mousePressEvent( QMouseEvent *event )

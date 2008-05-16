@@ -1,23 +1,23 @@
 /*
-   This file is part of KDE Kontact.
+  This file is part of the KDE Kontact Plugin Interface Library.
 
-   Copyright (c) 2001 Matthias Hoelzer-Kluepfel <mhk@kde.org>
-   Copyright (c) 2002-2003 Daniel Molkentin <molkentin@kde.org>
+  Copyright (c) 2001 Matthias Hoelzer-Kluepfel <mhk@kde.org>
+  Copyright (c) 2002-2003 Daniel Molkentin <molkentin@kde.org>
 
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public License
-   along with this library; see the file COPYING.LIB.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 
 #include "plugin.h"
@@ -25,7 +25,6 @@
 
 #include <kparts/componentfactory.h>
 #include <kxmlguifactory.h>
-#include <klocale.h>
 #include <kaboutdata.h>
 #include <kglobal.h>
 #include <kdebug.h>
@@ -37,13 +36,18 @@
 
 using namespace Kontact;
 
+/**
+  Private class that helps to provide binary compatibility between releases.
+  @internal
+*/
+//@cond PRIVATE
 class Plugin::Private
 {
   public:
 
     void partDestroyed();
 
-    Kontact::Core *core;
+    Core *core;
     QList<KAction*> *newActions;
     QList<KAction*> *syncActions;
     QString identifier;
@@ -56,8 +60,9 @@ class Plugin::Private
     KParts::ReadOnlyPart *part;
     bool disabled;
 };
+//@endcond
 
-Plugin::Plugin( Kontact::Core *core, QObject *parent, const char *name )
+Plugin::Plugin( Core *core, QObject *parent, const char *name )
   : KXMLGUIClient( core ), QObject( parent ), d( new Private )
 {
   setObjectName( name );
@@ -123,6 +128,17 @@ void Plugin::setPartLibraryName( const QByteArray &libName )
   d->partLibraryName = libName;
 }
 
+bool Plugin::createDBUSInterface( const QString &serviceType )
+{
+  Q_UNUSED( serviceType );
+  return false;
+}
+
+bool Plugin::isRunningStandalone()
+{
+  return false;
+}
+
 KParts::ReadOnlyPart *Plugin::loadPart()
 {
   return core()->createPart( d->partLibraryName );
@@ -132,11 +148,12 @@ const KAboutData *Plugin::aboutData()
 {
   KPluginLoader loader( d->partLibraryName );
   KPluginFactory *factory = loader.factory();
-  kDebug(5601) << "filename:" << loader.fileName();
-  kDebug(5601) << "libname:" << d->partLibraryName;
+  kDebug() << "filename:" << loader.fileName();
+  kDebug() << "libname:" << d->partLibraryName;
 
   if ( factory ) {
     if ( factory->componentData().isValid() ) {
+      kDebug() << "returning factory component aboutdata";
       return factory->componentData().aboutData();
     } else {
       // If the componentData of the factory is invalid, the likely cause is that
@@ -144,19 +161,19 @@ const KAboutData *Plugin::aboutData()
       // In that case, fallback to the old method of loading component data, which
       // does only work for old-style parts.
 
-      kDebug(5601) << "Unable to load component data for" << loader.fileName()
-                   << "trying to use the old style plugin system now.";
+      kDebug() << "Unable to load component data for" << loader.fileName()
+               << "trying to use the old style plugin system now.";
       const KComponentData instance =
-          KParts::Factory::partComponentDataFromLibrary( d->partLibraryName );
+        KParts::Factory::partComponentDataFromLibrary( d->partLibraryName );
       if ( instance.isValid() ) {
         return instance.aboutData();
       } else {
-        kDebug(5601) << "Invalid instance, unable to get about information!";
+        kDebug() << "Invalid instance, unable to get about information!";
       }
     }
   }
 
-  kError(5601) << "Can't load instance for" << title();
+  kError() << "Cannot load instance for" << title();
   return 0;
 }
 
@@ -165,7 +182,7 @@ KParts::ReadOnlyPart *Plugin::part()
   if ( !d->part ) {
     d->part = createPart();
     if ( d->part ) {
-      connect( d->part, SIGNAL( destroyed() ), SLOT( partDestroyed() ) );
+      connect( d->part, SIGNAL(destroyed()), SLOT(partDestroyed()) );
       core()->partLoaded( this, d->part );
     }
   }
@@ -184,6 +201,11 @@ QString Plugin::registerClient()
     QDBusConnection::sessionBus().registerService( d->serviceName );
   }
   return d->serviceName;
+}
+
+int Plugin::weight() const
+{
+  return 0;
 }
 
 void Plugin::insertNewAction( KAction *action )
@@ -206,7 +228,18 @@ QList<KAction*> *Plugin::syncActions() const
   return d->syncActions;
 }
 
-Kontact::Core *Plugin::core() const
+QStringList Plugin::invisibleToolbarActions() const
+{
+  return QStringList();
+}
+
+bool Plugin::canDecodeMimeData( const QMimeData *data )
+{
+  Q_UNUSED( data );
+  return false;
+}
+
+Core *Plugin::core() const
 {
   return d->core;
 }
@@ -219,10 +252,12 @@ void Plugin::configUpdated()
 {
 }
 
+//@cond PRIVATE
 void Plugin::Private::partDestroyed()
 {
   part = 0;
 }
+//@endcond
 
 void Plugin::slotConfigUpdated()
 {
@@ -236,22 +271,33 @@ void Plugin::bringToForeground()
   }
 }
 
-bool Kontact::Plugin::showInSideBar() const
+Summary *Plugin::createSummaryWidget( QWidget *parent )
+{
+  Q_UNUSED( parent );
+  return 0;
+}
+
+bool Plugin::showInSideBar() const
 {
   return d->hasPart;
 }
 
-void Kontact::Plugin::setShowInSideBar( bool hasPart )
+void Plugin::setShowInSideBar( bool hasPart )
 {
   d->hasPart = hasPart;
 }
 
-void Kontact::Plugin::setDisabled( bool disabled )
+bool Plugin::queryClose() const
+{
+  return true;
+}
+
+void Plugin::setDisabled( bool disabled )
 {
   d->disabled = disabled;
 }
 
-bool Kontact::Plugin::disabled() const
+bool Plugin::disabled() const
 {
   return d->disabled;
 }

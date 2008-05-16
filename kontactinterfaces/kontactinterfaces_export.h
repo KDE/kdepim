@@ -1,7 +1,7 @@
 /*
-  This file is part of Kontact.
+  This file is part of the KDE Kontact Plugin Interface Library.
 
-  Copyright (C) 2003 Tobias Koenig <tokoe@kde.org>
+  Copyright (C) 2007 David Faure <faure@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -19,24 +19,20 @@
   Boston, MA 02110-1301, USA.
 */
 
-#ifndef NEWSTICKER_PLUGIN_H
-#define NEWSTICKER_PLUGIN_H
+#ifndef KONTACTINTERFACES_EXPORT_H
+#define KONTACTINTERFACES_EXPORT_H
 
-#include <kontactinterfaces/plugin.h>
+/* needed for KDE_EXPORT and KDE_IMPORT macros */
+#include <kdemacros.h>
 
-class SummaryWidget;
-
-class NewsTickerPlugin : public Kontact::Plugin
-{
-  public:
-    NewsTickerPlugin( Kontact::Core *core, const QVariantList & );
-    NewsTickerPlugin();
-
-    int weight() const { return 1000; }
-    virtual Kontact::Summary *createSummaryWidget( QWidget *parentWidget );
-
-  protected:
-    virtual KParts::ReadOnlyPart *createPart() { return 0; }
-};
+#ifndef KONTACTINTERFACES_EXPORT
+# if defined(MAKE_KONTACTINTERFACES_LIB)
+   /* We are building this library */
+#  define KONTACTINTERFACES_EXPORT KDE_EXPORT
+# else
+   /* We are using this library */
+#  define KONTACTINTERFACES_EXPORT KDE_IMPORT
+# endif
+#endif
 
 #endif

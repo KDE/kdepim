@@ -1,37 +1,39 @@
 /*
-   This file is part of KDE Kontact.
+  This file is part of the KDE Kontact Plugin Interface Library.
 
-   Copyright (c) 2001 Matthias Hoelzer-Kluepfel <mhk@kde.org>
-   Copyright (c) 2002-2003 Daniel Molkentin <molkentin@kde.org>
-   Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
+  Copyright (c) 2001 Matthias Hoelzer-Kluepfel <mhk@kde.org>
+  Copyright (c) 2002-2003 Daniel Molkentin <molkentin@kde.org>
+  Copyright (c) 2003 Cornelius Schumacher <schumacher@kde.org>
 
-   This library is free software; you can redistribute it and/or
-   modify it under the terms of the GNU Library General Public
-   License as published by the Free Software Foundation; either
-   version 2 of the License, or (at your option) any later version.
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Library General Public
+  License as published by the Free Software Foundation; either
+  version 2 of the License, or (at your option) any later version.
 
-   This library is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-   Library General Public License for more details.
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Library General Public License for more details.
 
-   You should have received a copy of the GNU Library General Public License
-   along with this library; see the file COPYING.LIB.  If not, write to
-   the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
-   Boston, MA 02110-1301, USA.
+  You should have received a copy of the GNU Library General Public License
+  along with this library; see the file COPYING.LIB.  If not, write to
+  the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor,
+  Boston, MA 02110-1301, USA.
 */
 
 #include "core.h"
 
+#include <kdebug.h>
 #include <kparts/part.h>
 #include <kparts/componentfactory.h>
-#include <kdebug.h>
+
+#include <QDateTime>
 #include <QTimer>
-#include <klocale.h>
 
 using namespace Kontact;
 
-class Core::Private
+//@cond PRIVATE
+class Kontact::Core::Private
 {
   Core *const q;
 
@@ -50,6 +52,7 @@ Core::Private::Private( Core *qq )
   : q( qq ), mLastDate( QDate::currentDate() )
 {
 }
+//@endcond
 
 Core::Core( QWidget *parent, Qt::WindowFlags f )
   : KParts::MainWindow( parent, f ), d( new Private( this ) )
@@ -66,7 +69,7 @@ Core::~Core()
 
 KParts::ReadOnlyPart *Core::createPart( const char *libname )
 {
-  kDebug(5601) << libname;
+  kDebug() << libname;
 
   QMap<QByteArray,KParts::ReadOnlyPart *>::ConstIterator it;
   it = d->mParts.find( libname );
@@ -74,10 +77,10 @@ KParts::ReadOnlyPart *Core::createPart( const char *libname )
     return it.value();
   }
 
-  kDebug(5601) << "Creating new KPart";
+  kDebug() << "Creating new KPart";
 
   KPluginLoader loader( libname );
-  kDebug(5601) << loader.fileName();
+  kDebug() << loader.fileName();
   KPluginFactory *factory = loader.factory();
   KParts::ReadOnlyPart *part = 0;
   if ( factory ) {
@@ -90,13 +93,14 @@ KParts::ReadOnlyPart *Core::createPart( const char *libname )
                       SLOT(slotPartDestroyed(QObject *)) );
   } else {
     d->lastErrorMessage = loader.errorString();
-    kWarning(5601) << d->lastErrorMessage;
+    kWarning() << d->lastErrorMessage;
   }
 
   return part;
 }
 
-void Core::Private::slotPartDestroyed( QObject * obj )
+//@cond PRIVATE
+void Core::Private::slotPartDestroyed( QObject *obj )
 {
   // the part was deleted, we need to remove it from the part map to not return
   // a dangling pointer in createPart
@@ -118,6 +122,7 @@ void Core::Private::checkNewDay()
 
   mLastDate = QDate::currentDate();
 }
+//@endcond
 
 QString Core::lastErrorMessage() const
 {
