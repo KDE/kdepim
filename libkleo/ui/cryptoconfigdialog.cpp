@@ -37,7 +37,7 @@
 Kleo::CryptoConfigDialog::CryptoConfigDialog( Kleo::CryptoConfig* config, QWidget *parent )
   : KDialog( parent)
 {
-  setCaption( i18n( "Configure" ) );
+  setCaption( i18n( "Configure GnuPG Backend" ) );
   setButtons( Default|Cancel|Apply|Ok|User1 );
   setDefaultButton( Ok );
   setModal( true );
