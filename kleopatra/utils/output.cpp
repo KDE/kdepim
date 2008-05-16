@@ -53,6 +53,10 @@
 #include <QPointer>
 #include <QWidget>
 
+#ifdef Q_OS_WIN
+# include <windows.h>
+#endif
+
 #include <errno.h>
 
 using namespace Kleo;
