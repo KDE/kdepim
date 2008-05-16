@@ -74,7 +74,7 @@ public:
 private:
     void slotWizardSignersResolved();
     void slotWizardCanceled(); // ### extract to base
-    void slotTaskDone();       // ### extract to base
+    void slotTaskDone( const shared_ptr<const Task::Result> & result );       // ### extract to base
 
 private:
     void ensureWizardCreated(); // ### extract to base
@@ -90,6 +90,8 @@ private:
     shared_ptr<SignEMailTask> cms, openpgp; // ### extract to base
     QPointer<SignEMailWizard> wizard; // ### extract to base
     Protocol protocol;                  // ### extract to base
+    int lastError;
+    QString lastErrorString;
     bool detached : 1;
 };
 
@@ -101,6 +103,7 @@ SignEMailController::Private::Private( Mode m, SignEMailController * qq )
       openpgp(),
       wizard(),
       protocol( UnknownProtocol ),
+      lastError( 0 ),
       detached( false )
 {
 
@@ -225,7 +228,7 @@ void SignEMailController::start() {
     d->wizard->setTaskCollection( coll );
     Q_FOREACH( const shared_ptr<Task> & t, tmp )
         connect( t.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
-             this, SLOT(slotTaskDone()) );
+                 this, SLOT(slotTaskDone(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>))) );
 
     d->schedule();
 }
@@ -253,7 +256,10 @@ void SignEMailController::Private::schedule() {
             if ( !Q )
                 return;
         }
-        emit q->done();
+        if ( lastError )
+            emit q->error( lastError, lastErrorString );
+        else
+            emit q->done();
     }
     
 }
@@ -272,7 +278,7 @@ shared_ptr<SignEMailTask> SignEMailController::Private::takeRunnable( GpgME::Pro
 }
 
 // ### extract to base
-void SignEMailController::Private::slotTaskDone() {
+void SignEMailController::Private::slotTaskDone( const shared_ptr<const Task::Result> & result ) {
     assert( q->sender() );
     
     // We could just delete the tasks here, but we can't use
@@ -288,6 +294,10 @@ void SignEMailController::Private::slotTaskDone() {
         openpgp.reset();
     }
 
+    if ( result->hasError() ) {
+        lastError = result->errorCode();
+        lastErrorString = result->errorString();
+    }
     QTimer::singleShot( 0, q, SLOT(schedule()) );
 }
 

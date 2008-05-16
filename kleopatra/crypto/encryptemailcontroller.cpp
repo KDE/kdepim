@@ -76,7 +76,7 @@ public:
 private:
     void slotWizardRecipientsResolved();
     void slotWizardCanceled();
-    void slotTaskDone();
+    void slotTaskDone( const shared_ptr<const Task::Result> & );
 
 private:
     void ensureWizardCreated() const;
@@ -91,6 +91,8 @@ private:
     std::vector< shared_ptr<EncryptEMailTask> > runnable, completed;
     shared_ptr<EncryptEMailTask> cms, openpgp;
     mutable QPointer<EncryptEMailWizard> wizard;
+    int lastError;
+    QString lastErrorString;
 };
 
 EncryptEMailController::Private::Private( Mode m, EncryptEMailController * qq )
@@ -99,7 +101,9 @@ EncryptEMailController::Private::Private( Mode m, EncryptEMailController * qq )
       runnable(),
       cms(),
       openpgp(),
-      wizard()
+      wizard(),
+      lastError( 0 ),
+      lastErrorString()
 {
 
 }
@@ -210,7 +214,7 @@ void EncryptEMailController::start() {
     d->wizard->setTaskCollection( coll );
     Q_FOREACH( const shared_ptr<Task> & t, tmp )
         connect( t.get(), SIGNAL(result(boost::shared_ptr<const Kleo::Crypto::Task::Result>)),
-             this, SLOT(slotTaskDone()) );
+             this, SLOT(slotTaskDone(boost::shared_ptr<const Kleo::Crypto::Task::Result>)) );
     d->schedule();
 }
 
@@ -228,11 +232,13 @@ void EncryptEMailController::Private::schedule() {
             openpgp = t;
         }
 
-    if ( !cms && !openpgp ) {
-        kleo_assert( runnable.empty() );
+    if ( cms || openpgp )
+        return;
+    kleo_assert( runnable.empty() );
+    if ( lastError )
+        emit q->error( lastError, lastErrorString );
+    else
         emit q->done();
-    }
-    
 }
 
 shared_ptr<EncryptEMailTask> EncryptEMailController::Private::takeRunnable( GpgME::Protocol proto ) {
@@ -247,7 +253,7 @@ shared_ptr<EncryptEMailTask> EncryptEMailController::Private::takeRunnable( GpgM
     return result;
 }
 
-void EncryptEMailController::Private::slotTaskDone() {
+void EncryptEMailController::Private::slotTaskDone( const shared_ptr<const Task::Result> & result ) {
     assert( q->sender() );
     
     // We could just delete the tasks here, but we can't use
@@ -262,7 +268,10 @@ void EncryptEMailController::Private::slotTaskDone() {
         completed.push_back( openpgp );
         openpgp.reset();
     }
-
+    if ( result->hasError() ) {
+        lastError = result->errorCode();
+        lastErrorString = result->errorString();
+    }
     QTimer::singleShot( 0, q, SLOT(schedule()) );
 }
 

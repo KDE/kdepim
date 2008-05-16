@@ -104,7 +104,7 @@ namespace Crypto {
         kdtools::pimpl_ptr<Private> d;
         Q_PRIVATE_SLOT( d, void slotWizardRecipientsResolved() )
         Q_PRIVATE_SLOT( d, void slotWizardCanceled() )
-        Q_PRIVATE_SLOT( d, void slotTaskDone() )
+        Q_PRIVATE_SLOT( d, void slotTaskDone( boost::shared_ptr<const Kleo::Crypto::Task::Result>) )
         Q_PRIVATE_SLOT( d, void schedule() )
     };
 
