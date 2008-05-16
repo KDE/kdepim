@@ -177,6 +177,7 @@ void ResultItemWidget::Private::slotLinkActivated( const QString & link )
             emit q->linkActivated( "key://" + split.value( 2 ) );
         else
             kWarning() << "key link invalid, or nonce not matching! link=" << link << " nonce" << m_result->nonce();
+        return;
     }
 
     const QUrl url( link );
