@@ -34,6 +34,8 @@ What it is
 * konsolekalendar: Command line tool for accessing calendar files.
 * korn: mail checker
 * akregator: Feed reader
+* kjots: manager for several "books" with a subject and notes
+
 
 There is also quite an amount of infrastructure in this package:
 
