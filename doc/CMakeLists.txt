@@ -17,6 +17,7 @@ if(NOT WIN32)
 endif(NOT WIN32)
 
 add_subdirectory(knode)
+add_subdirectory(kjots)
 add_subdirectory(knotes)
 add_subdirectory(konsolekalendar)
 add_subdirectory(kontact)

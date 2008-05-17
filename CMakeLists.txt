@@ -160,6 +160,7 @@ else ( ONLY_KLEO )
   macro_optional_add_subdirectory(akregator)
   macro_optional_add_subdirectory(doc)
   macro_optional_add_subdirectory(knode)
+  macro_optional_add_subdirectory(kjots)
 
   if(QGPGME_FOUND)
     set(KMAIL_SUPPORTED TRUE)

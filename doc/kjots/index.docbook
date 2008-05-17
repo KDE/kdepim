@@ -2,7 +2,7 @@
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN" "dtd/kdex.dtd" [
   <!-- nothing below must be removed -->
   <!ENTITY kappname "&kjots;">
-  <!ENTITY package "kdeutils">
+  <!ENTITY package "kdepim">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
 ]>
@@ -58,7 +58,7 @@ notes.</para></abstract>
 <keywordset>
 <keyword>KDE</keyword>
 <keyword>KJots</keyword>
-<keyword>kdeutils</keyword>
+<keyword>kdepim</keyword>
 <keyword>notes</keyword>
 <keyword>organizer</keyword>
 </keywordset>
