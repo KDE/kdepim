@@ -21,4 +21,4 @@
  */
 
 // DOXYGEN_PROJECTNAME = Kontact Plugin Interface Library
-// DOXYGEN_REFERENCES = kdecore
+// DOXYGEN_REFERENCES = kdecore kdeui
