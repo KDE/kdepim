@@ -15,7 +15,9 @@ set(kjots_SRCS
    bookshelf.cpp
    kjotscomponent.cpp
    kjotsreplacenextdialog.cpp
-   kjotsbrowser.cpp )
+   kjotsbrowser.cpp
+   kjotslinkdialog.cpp
+ )
 
 kde4_add_ui_files(kjots_SRCS confpagemisc.ui )
 

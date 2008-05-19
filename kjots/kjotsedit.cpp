@@ -36,6 +36,7 @@
 #include <kactioncollection.h>
 
 #include "kjotsentry.h"
+#include "kjotslinkdialog.h"
 #include "bookshelf.h"
 
 KJotsEdit::KJotsEdit ( QWidget *parent ) : KRichTextWidget(parent)
@@ -73,7 +74,7 @@ void KJotsEdit::DelayedInitialization ( KActionCollection *collection, Bookshelf
     actionCollection = collection;
 
     connect(actionCollection->action("auto_bullet"), SIGNAL(triggered()), SLOT(onAutoBullet()));
-    connect(actionCollection->action("linkify"), SIGNAL(triggered()), SLOT(onLinkify()));
+    connect(actionCollection->action("manage_link"), SIGNAL(triggered()), SLOT(onLinkify()));
     connect(actionCollection->action("insert_checkmark"), SIGNAL(triggered()), SLOT(addCheckmark()));
 
     connect(bookshelf, SIGNAL(itemSelectionChanged()), SLOT(onBookshelfSelection()));
@@ -154,15 +155,16 @@ void KJotsEdit::onAutoBullet ( void )
 
 void KJotsEdit::onLinkify ( void )
 {
-//     KJotsLinkDialog* linkDialog = new KJotsLinkDialog(this, QString(), QString(), bookshelf->model());
-//     linkDialog->exec();
-//     QTextCursor selectionCursor = textCursor();
-//     Q_ASSERT(selectionCursor.hasSelection());
-// 
-//     QString linkified = QString("<a href='%1'>%2</a> ")
-//         .arg(selectionCursor.selectedText()).arg(selectionCursor.selectedText());
-// 
-//     insertHtml(linkified);
+    selectLinkText();
+    KJotsLinkDialog* linkDialog = new KJotsLinkDialog(this, bookshelf);
+    linkDialog->setLinkText(currentLinkText());
+    linkDialog->setLinkUrl(currentLinkUrl());
+
+    if (linkDialog->exec()) {
+        updateLink(linkDialog->linkUrl(), linkDialog->linkText());
+    }
+
+    delete linkDialog;
 }
 
 void KJotsEdit::addCheckmark( void )

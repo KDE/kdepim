@@ -211,6 +211,10 @@ KJotsComponent::KJotsComponent(QWidget* parent, KActionCollection *collection) :
     action->setIcon(KIcon("format-list-unordered"));
     action->setCheckable(true);
 
+    action = actionCollection->addAction("manage_link");
+    action->setText(i18n("Link"));
+    action->setIcon(KIcon("insert-link"));
+
     action = actionCollection->addAction("insert_checkmark");
     action->setText(i18n("Insert Checkmark"));
     action->setIcon(KIcon("checkmark"));
@@ -352,7 +356,7 @@ void KJotsComponent::DelayedInitialization()
     pageOnlyActions->addAction( "del_page", actionCollection->action("del_page") );
     pageOnlyActions->addAction( "insert_date", actionCollection->action("insert_date") );
     pageOnlyActions->addAction( "auto_bullet", actionCollection->action("auto_bullet") );
-    pageOnlyActions->addAction( "linkify", actionCollection->action("linkify") );
+    pageOnlyActions->addAction( "manage_link", actionCollection->action("manage_link") );
     pageOnlyActions->addAction( "insert_checkmark", actionCollection->action("insert_checkmark") );
 
     pageOnlyActions->addAction( "format_text_italic", actionCollection->action("format_text_italic") );

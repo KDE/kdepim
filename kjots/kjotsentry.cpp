@@ -129,6 +129,7 @@ void KJotsEntry::setId(quint64 id)
 
     all_ids << id;
     m_id = id;
+    setText(1, QString::number(id));
     return;
 }
 
@@ -185,6 +186,37 @@ void KJotsEntry::parseXml( QDomElement &e, bool )
 
     return;
 }
+
+
+bool KJotsEntry::isKJotsLink(const QString &link)
+{
+    return link.startsWith(kjotsLinkStringPrefix()); 
+}
+
+QString KJotsEntry::kjotsLinkUrl()
+{
+    return kjotsLinkStringPrefix() + id();
+}
+
+QString KJotsEntry::kjotsLinkUrlFromId(quint64 id)
+{
+    return kjotsLinkStringPrefix() + QString::number(id);
+}
+
+quint64 KJotsEntry::idFromLinkUrl(const QString &link)
+{
+    if (!link.startsWith(kjotsLinkStringPrefix()))
+    {
+        return 0;
+    } else {
+        QString s(link);
+        QString idString = s.remove(kjotsLinkStringPrefix());
+        bool ok;
+        quint64 id = idString.toULongLong(&ok, 10);
+        return ok == true ? id : 0;
+    }
+}
+
 
 //
 // KJotsBook
@@ -499,7 +531,7 @@ void KJotsBook::generateHtml( KJotsEntry* top, bool diskMode, QTextCursor *curso
             toc = QString("<h2><a name=\"%1\">%2</a></h2>").arg(id()).arg(htmlTitle);
         } else {
             //We need to fake QUrl in to thinking this is a real URL
-            toc = QString("<h2><a name=\"%1\">&nbsp;</a><a href=\"kjots://0.0.0.0/%2\">%3</a></h2>").arg(id()).arg(id()).arg(htmlTitle);
+            toc = QString("<h2><a name=\"%1\">&nbsp;</a><a href=\"%2\">%3</a></h2>").arg(id()).arg(kjotsLinkUrl()).arg(htmlTitle);
         }
     }
 
@@ -762,7 +794,7 @@ void KJotsPage::generateHtml( KJotsEntry *top, bool diskMode, QTextCursor *curso
         //We need to fake QUrl in to thinking this is a real URL
         
         html = "<table><tr><td>";
-        html += QString("<h3><a name=\"%1\">&nbsp;</a><a href=\"kjots://0.0.0.0/%2\" >%3</a></h3>").arg(id()).arg(id()).arg(htmlSubject);
+        html += QString("<h3><a name=\"%1\">&nbsp;</a><a href=\"%2\" >%3</a></h3>").arg(id()).arg(kjotsLinkUrl()).arg(htmlSubject);
         html += "</td></tr></table>";
     }
     html += "<br>";
