@@ -16,7 +16,17 @@ target_link_libraries(soapdebug  ${KDE4_KDECORE_LIBS} gwsoap ${KDE4_KCAL_LIBS} k
 
 ########### next target ###############
 
+set(gwsoap_SRCS
+   contactconverter.cpp
+   gwconverter.cpp
+   incidenceconverter.cpp
+   groupwiseserver.cpp
+   gwjobs.cpp
+   soapC.cpp soapClient.cpp stdsoap2.cpp
+   )
 
+kde4_add_library(gwsoap SHARED ${gwsoap_SRCS})
+target_link_libraries(gwsoap ${KDE4_KCAL_LIBS} ${KDE4_KABC_LIBS})
 ########### install files ###############
 
 

@@ -23,9 +23,9 @@
 
 #include <kcal/event.h>
 #include <kcal/todo.h>
+#include <KDateTime>
 
 #include <time.h>
-
 #include "gwconverter.h"
 
 class ngwt__Recipient;
@@ -33,7 +33,7 @@ class ngwt__Recipient;
 class IncidenceConverter : public GWConverter
 {
   public:
-    IncidenceConverter( struct soap* );
+    IncidenceConverter( KDateTime::Spec, struct soap* );
 
     void setFrom( const QString &name, const QString &email,
       const QString &uuid );
@@ -66,7 +66,7 @@ class IncidenceConverter : public GWConverter
     ngwt__Recipient *createRecipient( const QString &name,
       const QString &email, const QString &uuid = QString() );
 
-    QString mTimezone;
+    KDateTime::Spec mTimeSpec;
 
     QString mFromName;
     QString mFromEmail;

@@ -21,13 +21,16 @@
 #ifndef GROUPWISESERVER_H
 #define GROUPWISESERVER_H
 
+#include <kdemacros.h>
 #include <kio/job.h>
 #include <kio/jobclasses.h>
+#include <KDateTime>
 #include <QApplication>
 #include <QMap>
 #include <QObject>
 #include <QString>
 #include <QThread>
+#include <QSslError>
 
 
 #include <string>
@@ -49,7 +52,7 @@ class ResourceCached;
 
 class ngwt__Settings;
 
-class KExtendedSocket;
+class QTcpSocket;
 
 struct soap;
 
@@ -88,17 +91,17 @@ class DeltaInfo
 };
 }
 
-class GroupwiseServer : public QObject
+class KDE_EXPORT GroupwiseServer : public QObject
 {
   Q_OBJECT
 
   public:
     enum RetractCause { DueToResend, Other };
     GroupwiseServer( const QString &url, const QString &user,
-                     const QString &password, QObject *parent );
+                     const QString &password, const KDateTime::Spec & timeSpec, QObject *parent );
     ~GroupwiseServer();
 
-    QString error() const { return mError; }
+    QStringList error() const { return mErrors; }
 
     bool login();
     bool logout();
@@ -174,6 +177,7 @@ class GroupwiseServer : public QObject
     QString userEmail() const { return mUserEmail; }
     QString userName() const { return mUserName; }
     QString userUuid() const { return mUserUuid; }
+    bool checkResponse( int result, ngwt__Status *status );
 
   signals:
     void readAddressBookTotalSize( int );
@@ -190,7 +194,6 @@ class GroupwiseServer : public QObject
     void dumpTask( ngwt__Task * );
     void dumpMail( ngwt__Mail * );
 
-    bool checkResponse( int result, ngwt__Status *status );
 
     /**
      * Given a partial record ID, query the server for the full version from the calendar folder 
@@ -205,7 +208,7 @@ class GroupwiseServer : public QObject
     void log( const QString &prefix, const char *s, size_t n );
 
   protected slots:
-    void slotSslError();
+    void slotSslErrors(const QList<QSslError> &);
 
   private:
     QString mUrl;
@@ -225,11 +228,12 @@ class GroupwiseServer : public QObject
     struct soap *mSoap;
     GroupWiseBinding *mBinding;
     
-    KExtendedSocket *m_sock;
+    QTcpSocket *m_sock;
 
-    QString mError;
+    QStringList mErrors;
 
     QString mLogFile;
+    KDateTime::Spec mTimeSpec;
 };
 
 #endif

@@ -65,7 +65,7 @@ ngwt__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
     std::vector<ngwt__ContainerRef*>* container = soap_new_std__vectorTemplateOfPointerTongwt__ContainerRef( soap(), -1 );
     ngwt__ContainerRef* containerRef = soap_new_ngwt__ContainerRef( soap(), -1 );
     containerRef->deleted = 0;
-    containerRef->__item = addr.custom( "GWRESOURCE", "CONTAINER" ).toLatin1();
+    containerRef->__item = addr.custom( "GWRESOURCE", "CONTAINER" ).toLatin1().data();
     container->push_back( containerRef );
 
     contact->container = *container;
@@ -110,7 +110,7 @@ ngwt__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
 
     QStringList::Iterator it;
     for ( it = emails.begin(); it != emails.end(); ++it )
-      list->push_back( std::string( (*it).utf8() ) );
+      list->push_back( std::string( (*it).toUtf8().data() ) );
 
     emailList->email = *list;
     contact->emailList = emailList;
@@ -308,8 +308,9 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
        std::vector<std::string> list = contact->emailList->email;
        std::vector<std::string>::const_iterator it;
        for ( it = list.begin(); it != list.end(); ++it ) {
-         if ( emails.find( stringToQString( *it ) ) == emails.end() )
-           emails.append( stringToQString( *it ) );
+         QString searchingFor = stringToQString( *it );
+         if ( !emails.contains( searchingFor ) )
+           emails.append( searchingFor );
        }
      }
 
@@ -366,9 +367,9 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
     ngwt__PersonalInfo* info = contact->personalInfo;
 
     if ( info->birthday ) {
-      QDateTime date = stringToQDateTime( info->birthday );
+      KDateTime date = stringToKDateTime( info->birthday );
       if ( date.isValid() )
-        addr.setBirthday( date );
+        addr.setBirthday( date.dateTime() );
     }
 
     if ( info->website ) // we might overwrite the office info website here... :(
@@ -451,7 +452,7 @@ ngwt__PhoneNumber* ContactConverter::convertPhoneNumber( const KABC::PhoneNumber
     return 0;
 
   ngwt__PhoneNumber* phoneNumber = soap_new_ngwt__PhoneNumber( soap(), -1 );
-  phoneNumber->__item = number.number().toLatin1();
+  phoneNumber->__item = number.number().toLatin1().data();
 
   if ( number.type() & KABC::PhoneNumber::Fax ) {
     phoneNumber->type = Fax;
@@ -592,8 +593,8 @@ ngwt__ImAddressList* ContactConverter::convertImAddresses( const KABC::Addressee
           address->service = soap_new_std__string( soap(), -1 );
           address->address = soap_new_std__string( soap(), -1 );
           address->type = soap_new_std__string( soap(), -1 );
-          address->service->append( protocol.utf8() );
-          address->address->append( (*it).utf8() );
+          address->service->append( protocol.toUtf8().data() );
+          address->address->append( (*it).toUtf8().data() );
           address->type->append( "all" );
           kDebug() <<"adding: service:" << protocol <<" address:" << *it <<" type: all";
           list->push_back( address );
@@ -613,12 +614,12 @@ ngwt__ImAddressList* ContactConverter::convertImAddresses( const KABC::Addressee
 
 void ContactConverter::splitField( const QString &str, QString &app, QString &name, QString &value )
 {
-  int colon = str.find( ':' );
+  int colon = str.indexOf( ':' );
   if ( colon != -1 ) {
     QString tmp = str.left( colon );
     value = str.mid( colon + 1 );
 
-    int dash = tmp.find( '-' );
+    int dash = tmp.indexOf( '-' );
     if ( dash != -1 ) {
       app = tmp.left( dash );
       name = tmp.mid( dash + 1 );

@@ -20,6 +20,7 @@
 
 #include "gwconverter.h"
 
+#include <KTimeZone>
 #include <libkdepim/kpimprefs.h>
 
 #include <kdebug.h>
@@ -40,7 +41,7 @@ struct soap* GWConverter::soap() const
 std::string* GWConverter::qStringToString( const QString &string )
 {
   std::string *str = soap_new_std__string( mSoap, -1 );
-  str->append( string.utf8() );
+  str->append( string.toUtf8().data() );
 
   return str;
 }
@@ -58,7 +59,7 @@ QString GWConverter::stringToQString( std::string *str )
 
 char* GWConverter::qStringToChar( const QString &string )
 {
-  QByteArray str = string.utf8();
+  QByteArray str = string.toUtf8();
 
   char* charStr = (char*)soap_malloc( mSoap, str.length() + 1 );
   memcpy( charStr, str, str.length() );
@@ -73,41 +74,42 @@ QDate GWConverter::charToQDate( const char *str )
   return QDate::fromString( QString::fromUtf8( str ), Qt::ISODate );
 }
 
-char *GWConverter::qDateTimeToChar( const QDateTime &dt,
+char *GWConverter::kDateTimeToChar( const KDateTime &dt,
                                     const KDateTime::Spec &timeSpec )
 {
-  QDateTime qdt = dt;
-  qdt.setTimeSpec( Qt::LocalTime );
-  return qDateTimeToChar( KDateTime( qdt, timeSpec ).toUtc().dateTime() );
+  KDateTime kdt = dt;
+  kdt.setTimeSpec( KDateTime::Spec::LocalZone() );
+  return kDateTimeToChar( kdt );
 }
 
-char *GWConverter::qDateTimeToChar( const QDateTime &dt )
+char *GWConverter::kDateTimeToChar( const KDateTime &dt )
 {
   return qStringToChar( dt.toString( "yyyyMMddThhmmZ" ) );
 }
 
-std::string* GWConverter::qDateTimeToString( const QDateTime &dt, const KDateTime::Spec &timeSpec )
+std::string* GWConverter::kDateTimeToString( const KDateTime &dt, const KDateTime::Spec &timeSpec )
 {
-  QDateTime qdt = dt;
-  qdt.setTimeSpec( Qt::LocalTime );
-  return qDateTimeToString( KDateTime( qdt, timeSpec ).toUtc().dateTime() );
+  KDateTime kdt = dt;
+  kdt.setTimeSpec( KDateTime::Spec::LocalZone() );
+  return kDateTimeToString( kdt );
 }
 
-std::string* GWConverter::qDateTimeToString( const QDateTime &dt )
+std::string* GWConverter::kDateTimeToString( const KDateTime &dt )
 {
   return qStringToString( dt.toString( "yyyyMMddThhmmZ" ) );
 }
 
-QDateTime GWConverter::stringToQDateTime( const std::string* str )
+KDateTime GWConverter::stringToKDateTime( const std::string* str )
 {
-  QDateTime dt = QDateTime::fromString( QString::fromUtf8( str->c_str() ), Qt::ISODate );
+  KDateTime dt = KDateTime::fromString( QString::fromUtf8( str->c_str() ), KDateTime::ISODate );
   return dt;
 }
 
 KDateTime GWConverter::stringToKDateTime( const std::string* str, const KDateTime::Spec &timeSpec )
 {
-  QDateTime dt = QDateTime::fromString( QString::fromUtf8( str->c_str() ), Qt::ISODate );
-  return KDateTime( dt, timeSpec );
+  KDateTime dt = KDateTime::fromString( QString::fromUtf8( str->c_str() ), KDateTime::ISODate );
+  dt.setTimeSpec( timeSpec );
+  return dt;
 }
 
 char* GWConverter::qDateToChar( const QDate &date )
@@ -125,11 +127,11 @@ QDate GWConverter::stringToQDate( std::string* str )
   return QDate::fromString( QString::fromUtf8( str->c_str() ) );
 }
 
-QDateTime GWConverter::charToQDateTime( const char *str )
+KDateTime GWConverter::charToKDateTime( const char *str )
 {
-  if ( !str ) return QDateTime();
-//  kDebug() <<"charToQDateTime():" << str;
-  QDateTime dt = QDateTime::fromString( QString::fromUtf8( str ), Qt::ISODate );
+  if ( !str ) return KDateTime();
+//  kDebug() <<"charToKDateTime():" << str;
+  KDateTime dt = KDateTime::fromString( QString::fromUtf8( str ), KDateTime::ISODate );
 //  kDebug() << dt.toString();
   return dt;
 }
@@ -138,13 +140,9 @@ KDateTime GWConverter::charToKDateTime( const char *str,
                                         const KDateTime::Spec &timeSpec )
 {
   if ( !str ) return KDateTime();
-  QDateTime utc = charToQDateTime( str );
-  utc.setTimeSpec( Qt::UTC );
-  return KDateTime( utc, timeSpec );
+  KDateTime utc = charToKDateTime( str );
+  utc.setTimeSpec( KDateTime::UTC );
+  return utc;
 }
 
-QDateTime GWConverter::charToQDateTime( const char *str,
-                                        const KDateTime::Spec &timeSpec )
-{
-  return charToKDateTime( str, timeSpec ).dateTime();
-}
+
