@@ -21,7 +21,7 @@
 
 #include "groupwiseserver.h"
 
-#include <libkdepim/kabcresourcecached.h>
+#include <kabc/resourcecached.h>
 
 #include <kcal/freebusy.h>
 #include <kcal/icalformat.h>
@@ -181,7 +181,7 @@ void Groupwise::getFreeBusy( const KUrl &url )
     if ( user.isEmpty() || pass.isEmpty() ) {
       errorMessage( i18n("Need username and password to read Free/Busy information.") );
     } else {
-      GroupwiseServer server( u, user, pass, 0 );
+      GroupwiseServer server( u, user, pass, /*Hack*/ KDateTime::Spec::LocalZone(), 0 );
 
       // FIXME: Read range from configuration or URL parameters.
       QDate start = QDate::currentDate().addDays( -3 );
@@ -214,9 +214,9 @@ void Groupwise::getFreeBusy( const KUrl &url )
     // FIXME: This does not take into account the time zone!
     KCal::ICalFormat format;
 
-    QString ical = format.createScheduleMessage( fb, KCal::Scheduler::Publish );
+    QString ical = format.createScheduleMessage( fb, KCal::iTIPPublish );
 
-    data( ical.utf8() );
+    data( ical.toUtf8().data() );
 
     finished();
   }
@@ -233,7 +233,7 @@ void Groupwise::getCalendar( const KUrl &url )
   debugMessage( "User: " + user );
   debugMessage( "Password: " + pass );
 
-  GroupwiseServer server( u, user, pass, 0 );
+  GroupwiseServer server( u, user, pass, /*Hack*/ KDateTime::Spec::LocalZone(), 0 );
 
   KCal::CalendarLocal calendar( QString::fromLatin1("UTC"));
 
@@ -253,7 +253,7 @@ void Groupwise::getCalendar( const KUrl &url )
 
   QString ical = format.toString( &calendar );
 
-  data( ical.utf8() );
+  data( ical.toUtf8().data() );
 
   finished();
 }
@@ -287,7 +287,7 @@ void Groupwise::getAddressbook( const KUrl &url )
     
     debugMessage( "IDs: " + ids.join( "," ) );
 
-    GroupwiseServer server( u, user, pass, 0 );
+    GroupwiseServer server( u, user, pass, /*Hack*/ KDateTime::Spec::LocalZone(), 0 );
 
     connect( &server, SIGNAL( readAddressBookTotalSize( int ) ),
       SLOT( slotReadAddressBookTotalSize( int ) ) );
@@ -358,7 +358,7 @@ void Groupwise::updateAddressbook( const KUrl &url )
     
     debugMessage( "update IDs: " + ids.join( "," ) );
 
-    GroupwiseServer server( u, user, pass, 0 );
+    GroupwiseServer server( u, user, pass, /*Hack*/ KDateTime::Spec::LocalZone(), 0 );
     connect( &server, SIGNAL( errorMessage( const QString &, bool ) ),
       SLOT( slotServerErrorMessage( const QString &, bool ) ) );
     connect( &server, SIGNAL( gotAddressees( const KABC::Addressee::List ) ),
@@ -387,7 +387,7 @@ void Groupwise::errorMessage( const QString &msg )
 void Groupwise::debugMessage( const QString &msg )
 {
 #if 0
-  data( ( msg + "\n" ).utf8() );
+  data( ( msg + "\n" ).toUtf8().data() );
 #else
   Q_UNUSED( msg );
 #endif

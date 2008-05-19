@@ -101,7 +101,7 @@ class KDE_EXPORT GroupwiseServer : public QObject
                      const QString &password, const KDateTime::Spec & timeSpec, QObject *parent );
     ~GroupwiseServer();
 
-    QStringList error() const { return mErrors; }
+    QString error() const { return mErrors.join( "," ); }
 
     bool login();
     bool logout();

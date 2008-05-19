@@ -119,7 +119,7 @@ void ResourceGroupwiseConfig::loadSettings( KRES::Resource *res )
     return;
   }
 
-  mURL->setURL( mResource->prefs()->url() );
+  mURL->setUrl( mResource->prefs()->url() );
   mUser->setText( mResource->prefs()->user() );
   mPassword->setText( mResource->prefs()->password() );
   mReadAddressBookIds = mResource->prefs()->readAddressBooks();
@@ -142,7 +142,7 @@ void ResourceGroupwiseConfig::saveSettings( KRES::Resource *res )
 
 void ResourceGroupwiseConfig::saveServerSettings( ResourceGroupwise *resource )
 {
-  resource->prefs()->setUrl( mURL->url() );
+  resource->prefs()->setUrl( mURL->url().url() );
   resource->prefs()->setUser( mUser->text() );
   resource->prefs()->setPassword( mPassword->text() );  
 }
@@ -173,13 +173,13 @@ void ResourceGroupwiseConfig::saveAddressBookSettings()
   // if so, clear the resource to clear the SAB data that is no longer required.
   // also, set the sequence numbers to 0 so that we know the SAB should be re-fetched in its entirety the next time we do load it
   QString sab = mResource->prefs()->systemAddressBook();
-  if ( ( mReadAddressBookIds.find( sab ) != mReadAddressBookIds.end() ) && ( selectedRead.find( sab ) == selectedRead.end() ) )
+  if ( mReadAddressBookIds.contains( sab ) && !selectedRead.contains( sab ) )
   {
     mResource->clearCache();
     mResource->prefs()->setLastSequenceNumber( 0 );
     mResource->prefs()->setFirstSequenceNumber( 0 );
   }
-  selectedWrite = mWriteAddressBookIds[ mAddressBookBox->currentItem() ];
+  selectedWrite = mWriteAddressBookIds[ mAddressBookBox->currentIndex() ];
 
   mResource->prefs()->setReadAddressBooks( selectedRead );
   mResource->prefs()->setWriteAddressBook( selectedWrite );
@@ -200,15 +200,13 @@ void ResourceGroupwiseConfig::updateAddressBookView()
   GroupWise::AddressBook::List::ConstIterator abIt;
   for ( abIt = addressBooks.begin(); abIt != addressBooks.end(); ++abIt ) {
     AddressBookItem *item = new AddressBookItem( mAddressBookView, *abIt );
-    if ( selectedRead.find( (*abIt).id ) != selectedRead.end() )
+    if ( selectedRead.contains( (*abIt).id ) )
       item->setOn( true );
 
-    mAddressBookBox->insertItem( (*abIt).name );
+    mAddressBookBox->addItem( (*abIt).name );
     mWriteAddressBookIds.append( (*abIt).id );
   }
 
-  int index = mWriteAddressBookIds.findIndex( mResource->prefs()->writeAddressBook() );
-  mAddressBookBox->setCurrentItem( index );
+  int index = mWriteAddressBookIds.indexOf( mResource->prefs()->writeAddressBook() );
+  mAddressBookBox->setCurrentIndex( index );
 }
-
-#include "kabc_resourcegroupwiseconfig.moc"

@@ -128,8 +128,10 @@ void ResourceGroupwiseConfig::slotViewUserSettings()
 	  dialog->setCaption(i18n( "GroupWise Settings" ) );
 	  dialog->setModal(true);
 //       QVBoxLayout * layout = new QVBoxLayout( dialog );
-      GroupWiseSettingsWidget * settingsWidget = new GroupWiseSettingsWidget( dialog );
-      dialog->setMainWidget( settingsWidget );
+      QWidget * wid = new QWidget( dialog );
+      GroupWiseSettingsWidget settingsWidget;
+      settingsWidget.setupUi( wid );
+      dialog->setMainWidget( wid );
       // populate dialog
       kDebug() <<"slotViewUserSettings() - settings are:";
       std::vector<class ngwt__SettingsGroup *>::const_iterator it;
@@ -142,7 +144,7 @@ void ResourceGroupwiseConfig::slotViewUserSettings()
           groupName = QString::fromUtf8( group->type->c_str() );
           kDebug() <<"GROUP:" << groupName;;
         }
-        K3ListViewItem * groupLVI = new K3ListViewItem( settingsWidget->m_settingsList, groupName ); 
+        K3ListViewItem * groupLVI = new K3ListViewItem( settingsWidget.m_settingsList, groupName ); 
         std::vector<ngwt__Custom * > setting = group->setting;
         std::vector<class ngwt__Custom *>::const_iterator it2;
         for( it2 = setting.begin(); it2 != setting.end(); ++it2 )
@@ -167,7 +169,7 @@ void ResourceGroupwiseConfig::slotViewUserSettings()
       dialog->show();
       if ( dialog->exec() == QDialog::Accepted )
       {
-        QMap<QString, QString> settings = settingsWidget->dirtySettings();
+        QMap<QString, QString> settings = settingsWidget.dirtySettings();
         mResource->modifyUserSettings( settings );
       }
     }

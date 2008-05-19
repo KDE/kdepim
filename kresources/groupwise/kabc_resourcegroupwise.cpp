@@ -87,7 +87,7 @@ void ResourceGroupwise::init()
 void ResourceGroupwise::initGroupwise()
 {
   mServer = new GroupwiseServer( mPrefs->url(), mPrefs->user(),
-                                 mPrefs->password(), this );
+                                 mPrefs->password(), KDateTime::Spec::LocalZone(), this );
 
   // TODO: find out what this was meant to do.  the ReadAddressBooksJob could cause the server to emit this job when its run() ends
   // connect( mServer, SIGNAL( readAddressBooksFinished() ),
@@ -103,7 +103,7 @@ ResourceGroupwise::~ResourceGroupwise()
   mPrefs = 0;
 }
 
-void ResourceGroupwise::readConfig( const KConfigGroup & );
+void ResourceGroupwise::readConfig( const KConfigGroup & )
 {
   mPrefs->readConfig();
 
@@ -178,7 +178,7 @@ void ResourceGroupwise::retrieveAddressBooks()
 
   GroupwiseServer server( prefs()->url(),
                           prefs()->user(),
-                          prefs()->password(), this );
+                          prefs()->password(), /*HACK*/ KDateTime::Spec::LocalZone(), this );
 
   if ( server.login() )
   {
@@ -204,7 +204,7 @@ void ResourceGroupwise::retrieveAddressBooks()
     }
   }
   else
-    emit loadingError( this, server.error() );
+    emit loadingError( this, server.error());
 }
 
 Ticket *ResourceGroupwise::requestSaveTicket()
@@ -259,11 +259,11 @@ bool ResourceGroupwise::asyncLoad()
   QStringList ids = mPrefs->readAddressBooks(); // start with all the address books
 
   // check if we are fetching the SAB and we previously fetched it
-  if ( ( ids.find( mPrefs->systemAddressBook() ) != ids.end() ) &&
-     mPrefs->lastSequenceNumber() != 0 ) 
+  if ( ids.contains( mPrefs->systemAddressBook() ) &&
+     mPrefs->lastSequenceNumber() != 0 )
   {
     kDebug() <<"ResourceGroupwise::asyncLoad() - Found previous sequence number, updating SAB";
-    ids.remove( mPrefs->systemAddressBook() ); // we don't need to read this one again
+    ids.removeOne( mPrefs->systemAddressBook() ); // we don't need to read this one again
     mUpdateSystemAddressBook = true;
     if ( ids.isEmpty() )
     {
@@ -370,7 +370,7 @@ void ResourceGroupwise::slotFetchJobResult( KJob *job )
 
   // now we fetched addressbooks, if we are using the SAB,  update it with deltas
   QStringList ids = mPrefs->readAddressBooks();
-  if ( ids.find( mPrefs->systemAddressBook() ) != ids.end() )
+  if ( ids.contains( mPrefs->systemAddressBook() ) )
   {
     if ( mUpdateSystemAddressBook )
     {
@@ -383,7 +383,7 @@ void ResourceGroupwise::slotFetchJobResult( KJob *job )
       kDebug() <<"fetched whole SAB, now fetching delta info";
       if ( mServer->login() )
       {
-        GroupWise::DeltaInfo deltaInfo = mServer->getDeltaInfo( mPrefs->systemAddressBook() );
+        GroupWise::DeltaInfo deltaInfo = mServer->getDeltaInfo( QStringList( mPrefs->systemAddressBook() ) );
         mServer->logout();
     
         kDebug() <<"storing delta info to prefs";
@@ -478,14 +478,14 @@ void ResourceGroupwise::slotReadJobData( KIO::Job *, const QByteArray &data )
 {
   kDebug() <<"ResourceGroupwise::slotReadJobData()";
 
-  mJobData.append( data.data() );
+  mJobData.append( data );
   //mAddrMap.clear(); //ideally we would remove all the contacts from the personal addressbooks and keep the ones from the SAB
   // for the moment we will just have to deal with double removal.
 
   KABC::VCardConverter conv;
   QTime profile;
   profile.start();
-  Addressee::List addressees = conv.parseVCards( mJobData );
+  Addressee::List addressees = conv.parseVCards( data );
   kDebug() <<"ResourceGroupwise::slotReadJobData() - parsed" << addressees.count() <<" contacts in"  << profile.elapsed() <<"ms, now adding to resource...";
 
   Addressee::List::ConstIterator it;
@@ -567,6 +567,5 @@ void ResourceGroupwise::cancelLoad()
   if ( mProgress ) mProgress->setComplete();
   mProgress = 0;
 }
-
 
 #include "kabc_resourcegroupwise.moc"
