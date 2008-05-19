@@ -91,7 +91,7 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
 
   //Editor
   e_dit=new KNComposerEditor(this);
-  e_dit->switchToPlainText();
+  e_dit->toPlainText();
   e_dit->setMinimumHeight(50);
 
   QVBoxLayout *notL=new QVBoxLayout(e_dit);
