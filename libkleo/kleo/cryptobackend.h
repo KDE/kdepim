@@ -46,6 +46,7 @@ namespace Kleo {
   class EncryptJob;
   class DecryptJob;
   class SignJob;
+  class SignKeyJob;
   class VerifyDetachedJob;
   class VerifyOpaqueJob;
   class SignEncryptJob;
@@ -117,7 +118,7 @@ namespace Kleo {
     virtual RefreshKeysJob      * refreshKeysJob() const = 0;
     virtual ChangeExpiryJob     * changeExpiryJob() const;
     virtual ChangeOwnerTrustJob * changeOwnerTrustJob() const;
-
+    virtual SignKeyJob          * signKeyJob() const;
     virtual SpecialJob          * specialJob( const char * type, const QMap<QString,QVariant> & args ) const = 0;
   };
 

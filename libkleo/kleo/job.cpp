@@ -38,6 +38,7 @@
 #include "decryptjob.h"
 #include "decryptverifyjob.h"
 #include "signjob.h"
+#include "signkeyjob.h"
 #include "signencryptjob.h"
 #include "verifydetachedjob.h"
 #include "verifyopaquejob.h"
@@ -84,6 +85,7 @@ make_job_subclass(DecryptJob)
 make_job_subclass(DecryptVerifyJob)
 make_job_subclass(SignJob)
 make_job_subclass(SignEncryptJob)
+make_job_subclass(SignKeyJob)
 make_job_subclass(VerifyDetachedJob)
 make_job_subclass(VerifyOpaqueJob)
 make_job_subclass(KeyGenerationJob)
@@ -106,6 +108,7 @@ make_job_subclass(SpecialJob)
 #include "decryptverifyjob.moc"
 #include "signjob.moc"
 #include "signencryptjob.moc"
+#include "signkeyjob.moc"
 #include "verifydetachedjob.moc"
 #include "verifyopaquejob.moc"
 #include "keygenerationjob.moc"

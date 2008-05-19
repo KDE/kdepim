@@ -1,8 +1,8 @@
 /*
-    kleo/cryptobackend.cpp
+    signkeyjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2005 Klarälvdalens Datakonsult AB
+    Copyright (c) 2008 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,11 +30,53 @@
     your version.
 */
 
-#include "cryptobackend.h"
+#ifndef __KLEO_SIGNKEYJOB_H__
+#define __KLEO_SIGNKEYJOB_H__
 
-const char Kleo::CryptoBackend::OpenPGP[] = "OpenPGP";
-const char Kleo::CryptoBackend::SMIME[] = "SMIME";
+#include "job.h"
 
-Kleo::ChangeExpiryJob * Kleo::CryptoBackend::Protocol::changeExpiryJob() const { return 0; }
-Kleo::ChangeOwnerTrustJob * Kleo::CryptoBackend::Protocol::changeOwnerTrustJob() const { return 0; }
-Kleo::SignKeyJob * Kleo::CryptoBackend::Protocol::signKeyJob() const { return 0; }
+namespace GpgME {
+    class Error;
+    class Key;
+}
+
+namespace Kleo {
+
+  /**
+     @short An abstract base class to sign keys asynchronously
+
+     To use a SignKeyJob, first obtain an instance from the
+     CryptoBackend implementation, connect the progress() and result()
+     signals to suitable slots and then start the job with a call
+     to start(). This call might fail, in which case the ChangeExpiryJob
+     instance will have scheduled it's own destruction with a call to
+     QObject::deleteLater().
+
+     After result() is emitted, the SignKeyJob will schedule it's own
+     destruction by calling QObject::deleteLater().
+  */
+  class KLEO_EXPORT SignKeyJob : public Job {
+    Q_OBJECT
+  protected:
+    explicit SignKeyJob( QObject * parent );
+  public:
+
+    enum SigningOption {
+        LocalSignature,
+        ExportableSignature
+    };
+    ~SignKeyJob();
+
+    /**
+       Starts the key signing operation. \a key is the key to sign.
+       @param option the signing mode, either local or exportable 
+     */
+    virtual GpgME::Error start( const GpgME::Key & key, SigningOption option ) = 0;
+
+  Q_SIGNALS:
+    void result( const GpgME::Error & result );
+  };
+
+}
+
+#endif // __KLEO_SIGNKEYJOB_H__

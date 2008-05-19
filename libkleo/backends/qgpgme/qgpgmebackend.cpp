@@ -45,6 +45,7 @@
 #include "qgpgmesignencryptjob.h"
 #include "qgpgmeencryptjob.h"
 #include "qgpgmesignjob.h"
+#include "qgpgmesignkeyjob.h"
 #include "qgpgmeexportjob.h"
 #include "qgpgmeverifydetachedjob.h"
 #include "qgpgmeimportjob.h"
@@ -131,7 +132,7 @@ namespace {
       context->setTextMode( textMode );
       return new Kleo::QGpgMESignJob( context );                    
     }
-
+    
     Kleo::VerifyDetachedJob * verifyDetachedJob( bool textMode ) const {
       GpgME::Context * context = GpgME::Context::createForProtocol( mProtocol );
       if ( !context )
@@ -235,7 +236,18 @@ namespace {
         return 0;
       return new Kleo::QGpgMEChangeExpiryJob( context );
     }
-    
+
+
+    Kleo::SignKeyJob * signKeyJob() const {
+      if ( mProtocol != GpgME::OpenPGP )
+        return 0; // only supported by gpg
+
+      GpgME::Context * context = GpgME::Context::createForProtocol( mProtocol );
+      if ( !context )
+        return 0;
+      return new Kleo::QGpgMESignKeyJob( context );
+    }
+
 
     Kleo::ChangeOwnerTrustJob * changeOwnerTrustJob() const {
       if ( mProtocol != GpgME::OpenPGP )
