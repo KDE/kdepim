@@ -85,7 +85,7 @@
 
 <Menu name="listview_popup">
 	<text>&amp;Certificates</text>
-		<Action name="certificates_sign_certificate"/>
+	<Action name="certificates_sign_certificate"/>
         <Action name="certificates_change_expiry"/>
         <Action name="certificates_change_owner_trust"/>
 	<Action name="certificates_delete"/>
