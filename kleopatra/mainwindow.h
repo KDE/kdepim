@@ -54,6 +54,7 @@ private:
     kdtools::pimpl_ptr<Private> d;
     Q_PRIVATE_SLOT( d, void changeCertificateExpiry() )
     Q_PRIVATE_SLOT( d, void changeCertificateOwnerTrust() )
+    Q_PRIVATE_SLOT( d, void changePassphrase() )
     Q_PRIVATE_SLOT( d, void closeAndQuit() )
     Q_PRIVATE_SLOT( d, void signEncryptFiles() )
     Q_PRIVATE_SLOT( d, void signCertificate() )

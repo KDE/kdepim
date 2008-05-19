@@ -193,6 +193,7 @@ set( _kleopatra_SRCS
   commands/importcrlcommand.cpp
   commands/changeexpirycommand.cpp
   commands/changeownertrustcommand.cpp
+  commands/changepassphrasecommand.cpp
   commands/signcertificatecommand.cpp
   commands/selftestcommand.cpp
   

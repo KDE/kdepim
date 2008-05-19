@@ -45,6 +45,7 @@
 
 #include "commands/exportcertificatecommand.h"
 #include "commands/importcertificatefromfilecommand.h"
+#include "commands/changepassphrasecommand.h"
 #include "commands/lookupcertificatescommand.h"
 #include "commands/reloadkeyscommand.h"
 #include "commands/refreshx509certscommand.h"
@@ -184,7 +185,9 @@ public:
     void refreshOpenPGPCertificates() {
         createAndStart<RefreshOpenPGPCertsCommand>();
     }
-    
+    void changePassphrase() {
+        createAndStart<ChangePassphraseCommand>();
+    }
     void deleteCertificates() {
         createAndStart<DeleteCertificatesCommand>();
     }
@@ -369,12 +372,14 @@ void MainWindow::Private::setupActions() {
         // Certificate menu
         { "certificates_delete", i18n("Delete" ), QString()/*i18n("Delete selected certificates")*/,
           "edit-delete", q, SLOT(deleteCertificates()), "Delete", false, true },
-          { "certificates_sign_certificate", i18n("Sign Certificate..."), QString(),
-              0, q, SLOT(signCertificate()), QString(), false, true },
+        { "certificates_sign_certificate", i18n("Sign Certificate..."), QString(),
+          0, q, SLOT(signCertificate()), QString(), false, true },
         { "certificates_change_expiry", i18n("Change Expiry Date..."), QString(),
           0, q, SLOT(changeCertificateExpiry()), QString(), false, true },
         { "certificates_change_owner_trust", i18n("Change Owner Trust..."), QString(),
-            0, q, SLOT(changeCertificateOwnerTrust()), QString(), false, true },
+          0, q, SLOT(changeCertificateOwnerTrust()), QString(), false, true },
+        { "certificates_change_passphrase", i18n("Change Passphrase..."), QString(),
+          0, q, SLOT(changePassphrase()), QString(), false, true },
           // Tools menu
         { "tools_refresh_x509_certificates", i18n("Refresh X.509 Certificates"), QString(),
           "view-refresh", q, SLOT(refreshX509Certificates()), QString(), false, true },
@@ -417,6 +422,9 @@ void MainWindow::Private::setupActions() {
     controller.registerActionForCommand<RefreshOpenPGPCertsCommand>( coll->action( "view_redisplay" ) );
     controller.registerActionForCommand<DeleteCertificatesCommand>( coll->action( "certificates_delete" ) );
     controller.registerActionForCommand<ChangeExpiryCommand>(       coll->action( "certificates_change_expiry" ) );
+    controller.registerActionForCommand<ChangeOwnerTrustCommand>(   coll->action( "certificates_change_owner_trust" ) );
+    controller.registerActionForCommand<ChangePassphraseCommand>(   coll->action( "certificates_change_passphrase" ) );
+    controller.registerActionForCommand<SignCertificateCommand>(    coll->action( "certificates_sign_certificate" ) );
     controller.registerActionForCommand<SignEncryptFilesCommand>(   coll->action( "file_sign_encrypt_files" ) );
     controller.registerActionForCommand<DecryptVerifyFilesCommand>( coll->action( "file_decrypt_verify_files" ) );
     controller.registerActionForCommand<ExportCertificateCommand>(  coll->action( "file_export_certificates" ) );
