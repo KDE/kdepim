@@ -144,7 +144,7 @@ void SignCertificateCommand::Private::slotDialogAccepted() {
     createJob();
     assert( job );
 
-    if ( const Error err = job->start( key, opt ) ) {
+    if ( const Error err = job->start( key, std::vector<UserID>(), Key(), 0u, opt ) ) {
         showErrorDialog( err );
         finished();
     }

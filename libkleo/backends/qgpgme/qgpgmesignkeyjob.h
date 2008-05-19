@@ -51,7 +51,11 @@ namespace Kleo {
     ~QGpgMESignKeyJob();
 
     /*! \reimp from SignKeyJob */
-    GpgME::Error start( const GpgME::Key & key, SigningOption option );
+    GpgME::Error start( const GpgME::Key & key,
+                        const std::vector<GpgME::UserID> & userIdsToSign,
+                        const GpgME::Key & signingKey,
+                        unsigned int checkLevel,
+                        SigningOption option );
 
   private:
     void doOperationDoneEvent( const GpgME::Error & e );

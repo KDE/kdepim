@@ -52,13 +52,20 @@ Kleo::QGpgMESignKeyJob::QGpgMESignKeyJob( GpgME::Context * context )
 Kleo::QGpgMESignKeyJob::~QGpgMESignKeyJob() {
 }
 
-GpgME::Error Kleo::QGpgMESignKeyJob::start( const GpgME::Key & key, SigningOption option ) {
+GpgME::Error Kleo::QGpgMESignKeyJob::start( const GpgME::Key & key,
+                                            const std::vector<GpgME::UserID> & userIdsToSign,
+                                            const GpgME::Key & signingKey,
+                                            unsigned int checkLevel,
+                                            SigningOption option  ) {
   assert( !mOutData );
 
   createOutData();
   hookupContextToEventLoopInteractor();
 
-  std::auto_ptr<GpgME::EditInteractor> ei( new GpgME::GpgSignKeyEditInteractor( option == LocalSignature ? GpgME::GpgSignKeyEditInteractor::LocalSignature : GpgME::GpgSignKeyEditInteractor::ExportableSignature ) );
+  std::auto_ptr<GpgME::EditInteractor> ei( new GpgME::GpgSignKeyEditInteractor( userIdsToSign,
+                                                                                signingKey,
+                                                                                checkLevel,
+                                                                                option == LocalSignature ? GpgME::GpgSignKeyEditInteractor::LocalSignature : GpgME::GpgSignKeyEditInteractor::ExportableSignature ) );
 
   const GpgME::Error err = mCtx->startEditing( key, ei, *mOutData );
 
