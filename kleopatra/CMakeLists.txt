@@ -2,7 +2,7 @@ project(kleopatra)
 
 include(MacroOptionalAddSubdirectory)
 
-set( kleopatra_version 1.9.1 )
+set( kleopatra_version 1.9.2-beta )
 if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
   if ( NOT KdeSubversion_FOUND )
     find_package( KdeSubversion )
