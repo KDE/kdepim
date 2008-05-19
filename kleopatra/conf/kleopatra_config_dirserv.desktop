@@ -65,6 +65,7 @@ Name[x-test]=xxDirectory Servicesxx
 Name[zh_CN]=目录服务
 Name[zh_TW]=目錄服務
 Comment=Configuration of directory services
+Comment[de]=Einrichtung von Verzeichnisdiensten
 Comment[el]=Ρυθμίσεις των υπηρεσιών καταλόγου
 Comment[ga]=Cumraíocht seirbhísí eolaire
 Comment[km]=ការ​កំណត់​រចនាសម្ព័ន្ធ​សេវា​ថត

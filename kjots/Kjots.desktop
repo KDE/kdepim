@@ -2,6 +2,9 @@
 X-DocPath=kjots/index.html
 Name=KJots
 GenericName=Note Taker
+GenericName[pt]=Bloco de Notas
+GenericName[pt_BR]=Tomador de Notas
+GenericName[uk]=Записна книжка
 Icon=kjots
 Exec=kjots -caption "%c"
 Type=Application
