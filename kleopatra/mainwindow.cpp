@@ -44,6 +44,7 @@
 #include "view/keylistcontroller.h"
 
 #include "commands/exportcertificatecommand.h"
+#include "commands/exportsecretkeycommand.h"
 #include "commands/importcertificatefromfilecommand.h"
 #include "commands/changepassphrasecommand.h"
 #include "commands/lookupcertificatescommand.h"
@@ -209,6 +210,9 @@ public:
     void exportCertificates() {
         createAndStart<ExportCertificateCommand>();
     }
+    void exportSecretKey() {
+        createAndStart<ExportSecretKeyCommand>();
+    }
     void importCertificatesFromFile() {
         createAndStart<ImportCertificateFromFileCommand>( ui.tabWidget.addTemporaryView( i18n("Imported Certificates") ) );
     }
@@ -354,6 +358,8 @@ void MainWindow::Private::setupActions() {
           "document-new", q, SLOT(newCertificate()), "Ctrl+N", false, true },
         { "file_export_certificates", i18n("Export Certificates..."), QString(),
           "document-export", q, SLOT(exportCertificates()), "Ctrl+E", false, true },
+        { "file_export_secret_keys", i18n("Export Secret Key..."), QString(),
+          "document-export", q, SLOT(exportSecretKey()), QString(), false, true },
         { "file_lookup_certificates", i18n("Lookup Certificates on Server..."), QString(),
           "edit-find", q, SLOT(lookupCertificates()), "Shift+Ctrl+I", false, true },
         { "file_import_certificates", i18n("Import Certificates..."), QString(),
@@ -428,6 +434,7 @@ void MainWindow::Private::setupActions() {
     controller.registerActionForCommand<SignEncryptFilesCommand>(   coll->action( "file_sign_encrypt_files" ) );
     controller.registerActionForCommand<DecryptVerifyFilesCommand>( coll->action( "file_decrypt_verify_files" ) );
     controller.registerActionForCommand<ExportCertificateCommand>(  coll->action( "file_export_certificates" ) );
+    controller.registerActionForCommand<ExportSecretKeyCommand>(    coll->action( "file_export_secret_keys" ) );
     controller.registerActionForCommand<ImportCertificateFromFileCommand>( coll->action( "file_import_certificates" ) );
     controller.registerActionForCommand<LookupCertificatesCommand>( coll->action( "file_lookup_certificates" ) );
     controller.registerActionForCommand<ClearCrlCacheCommand>(      coll->action( "crl_clear_crl_cache" ) );

@@ -137,6 +137,7 @@ set( _kleopatra_SRCS
   dialogs/ownertrustdialog.cpp
   dialogs/selftestdialog.cpp
   dialogs/signcertificatedialog.cpp
+  dialogs/exportsecretkeydialog.cpp
 
   crypto/certificateresolver.cpp
   crypto/task.cpp
@@ -196,6 +197,7 @@ set( _kleopatra_SRCS
   commands/changepassphrasecommand.cpp
   commands/signcertificatecommand.cpp
   commands/selftestcommand.cpp
+  commands/exportsecretkeycommand.cpp
   
   ${_kleopatra_uiserver_files}
 
@@ -221,6 +223,7 @@ kde4_add_ui_files( _kleopatra_SRCS
   dialogs/ownertrustdialog.ui
   dialogs/selftestdialog.ui
   dialogs/signcertificatedialog.ui
+  dialogs/exportsecretkeydialog.ui
   )
 kde4_add_kcfg_files( _kleopatra_SRCS
   kcfg/tooltippreferences.kcfgc
