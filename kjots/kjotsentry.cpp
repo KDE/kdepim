@@ -302,7 +302,7 @@ void KJotsBook::saveBook(void)
     // Are we a new book?
     if ( m_fileName.isEmpty() ) {
         KTemporaryFile file;
-        file.setPrefix(KStandardDirs::locateLocal("appdata",""));
+        file.setPrefix(KStandardDirs::locateLocal("data","kjots/"));
         file.setSuffix(".book");
         file.setAutoRemove(false);
         if ( file.open() ) {

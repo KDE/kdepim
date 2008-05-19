@@ -63,6 +63,7 @@ KJotsPart::KJotsPart( QWidget *parentWidget, QObject *parent, const QVariantList
 
 KJotsPart::~KJotsPart()
 {
+	component->queryClose();
 }
 
 

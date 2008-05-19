@@ -134,7 +134,7 @@ void Bookshelf::DelayedInitialization ( KActionCollection *actionCollection ) {
 */
 void Bookshelf::loadBooks ( void )
 {
-    QDir dir(KStandardDirs::locateLocal("appdata",""));
+    QDir dir(KStandardDirs::locateLocal("data","kjots"));
     QList<KJotsBook*> books;
 
     QStringList filter;

@@ -263,7 +263,7 @@ KJotsComponent::KJotsComponent(QWidget* parent, KActionCollection *collection) :
     bookmarkMenu->setIcon(KIcon("bookmarks"));
     KJotsBookmarks* bookmarks = new KJotsBookmarks(bookshelf);
     /*KBookmarkMenu *bmm =*/ new KBookmarkMenu(
-        KBookmarkManager::managerForFile(KStandardDirs::locateLocal("appdata","bookmarks.xml"), "kjots"),
+        KBookmarkManager::managerForFile(KStandardDirs::locateLocal("data","kjots/bookmarks.xml"), "kjots"),
         bookmarks, bookmarkMenu->menu(), actionCollection);
 
     m_autosaveTimer = new QTimer(this);
@@ -1097,7 +1097,7 @@ void KJotsComponent::importBook()
 
     if (!openUrl.isEmpty()) {
         KTemporaryFile file;
-        file.setPrefix(KStandardDirs::locateLocal("appdata",""));
+        file.setPrefix(KStandardDirs::locateLocal("data","kjots"));
         file.setSuffix(".book");
         file.setAutoRemove(false);
 
