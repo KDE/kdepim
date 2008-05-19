@@ -121,19 +121,15 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="1" >
-       <widget class="QLineEdit" name="OCSPResponderSignature" >
-        <property name="whatsThis" >
-         <string>Enter here the certificate used to sign responses of the server for online validation of certificates (OCSP responder). The certificate is identified by its &lt;em>fingerprint&lt;/em>.</string>
-        </property>
-       </widget>
-      </item>
       <item row="2" column="0" colspan="2" >
        <widget class="QCheckBox" name="ignoreServiceURLCB" >
         <property name="text" >
          <string>Ignore service URL of certificates</string>
         </property>
        </widget>
+      </item>
+      <item row="1" column="1" >
+       <widget class="KleopatraClient::Gui::CertificateRequester" native="1" name="OCSPResponderSignature" />
       </item>
      </layout>
     </widget>
@@ -176,7 +172,7 @@
         <x>0</x>
         <y>0</y>
         <width>480</width>
-        <height>158</height>
+        <height>165</height>
        </rect>
       </property>
       <attribute name="title" >
@@ -324,6 +320,14 @@ The syntax is "HOST" or "HOST:PORT". If PORT is omitted, port 389 (standard LDAP
  </widget>
  <layoutdefault spacing="6" margin="11" />
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
+ <customwidgets>
+  <customwidget>
+   <class>KleopatraClient::Gui::CertificateRequester</class>
+   <extends>QWidget</extends>
+   <header>libkleopatraclient/gui/certificaterequester.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <includes>
   <include location="local" >ui/keyrequester.h</include>
  </includes>

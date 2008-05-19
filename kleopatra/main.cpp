@@ -64,6 +64,7 @@
 # include <uiserver/encryptcommand.h>
 # include <uiserver/signcommand.h>
 # include <uiserver/signencryptfilescommand.h>
+# include <uiserver/selectcertificatecommand.h>
 #else
 namespace Kleo {
     class UiServer;
@@ -258,6 +259,7 @@ int main( int argc, char** argv )
       REGISTER( EncryptFilesCommand );
       REGISTER( EncryptSignFilesCommand );
       REGISTER( PrepEncryptCommand );
+      REGISTER( SelectCertificateCommand );
       REGISTER( SignCommand );
       REGISTER( SignEncryptFilesCommand );
       REGISTER( SignFilesCommand );

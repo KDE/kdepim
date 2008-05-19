@@ -35,7 +35,7 @@ kde4_add_plugin(kcm_kleopatra ${kcm_kleopatra_PART_SRCS})
 
 
 
-target_link_libraries(kcm_kleopatra ${KDE4_KDEUI_LIBS} kleo )
+target_link_libraries(kcm_kleopatra ${KDE4_KDEUI_LIBS} kleo kleopatraclientgui )
 
 install(TARGETS kcm_kleopatra  DESTINATION ${PLUGIN_INSTALL_DIR})
 

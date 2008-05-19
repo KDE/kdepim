@@ -68,6 +68,7 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/signencryptfilescommand.cpp
     uiserver/prepencryptcommand.cpp
     uiserver/encryptcommand.cpp
+    uiserver/selectcertificatecommand.cpp
     )
 
   if ( WIN32 )
