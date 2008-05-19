@@ -59,6 +59,7 @@
 #include "commands/changeexpirycommand.h"
 #include "commands/changeownertrustcommand.h"
 #include "commands/selftestcommand.h"
+#include "commands/signcertificatecommand.h"
 
 #include "conf/configuredialog.h"
 
@@ -195,6 +196,9 @@ public:
     }
     void signEncryptFiles() {
         createAndStart<SignEncryptFilesCommand>();
+    }
+    void signCertificate() {
+        createAndStart<SignCertificateCommand>();
     }
     void decryptVerifyFiles() {
         createAndStart<DecryptVerifyFilesCommand>();
@@ -365,9 +369,11 @@ void MainWindow::Private::setupActions() {
         // Certificate menu
         { "certificates_delete", i18n("Delete" ), QString()/*i18n("Delete selected certificates")*/,
           "edit-delete", q, SLOT(deleteCertificates()), "Delete", false, true },
+          { "certificates_sign_certificate", i18n("Sign Certificate..."), QString(),
+              0, q, SLOT(signCertificate()), QString(), false, true },
         { "certificates_change_expiry", i18n("Change Expiry Date..."), QString(),
           0, q, SLOT(changeCertificateExpiry()), QString(), false, true },
-          { "certificates_change_owner_trust", i18n("Change Owner Trust..."), QString(),
+        { "certificates_change_owner_trust", i18n("Change Owner Trust..."), QString(),
             0, q, SLOT(changeCertificateOwnerTrust()), QString(), false, true },
           // Tools menu
         { "tools_refresh_x509_certificates", i18n("Refresh X.509 Certificates"), QString(),
