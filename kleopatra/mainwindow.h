@@ -64,6 +64,7 @@ private:
     Q_PRIVATE_SLOT( d, void importCertificatesFromFile() )
     Q_PRIVATE_SLOT( d, void lookupCertificates() )
     Q_PRIVATE_SLOT( d, void exportCertificates() )
+    Q_PRIVATE_SLOT( d, void exportCertificatesToServer() )
     Q_PRIVATE_SLOT( d, void exportSecretKey() )
     Q_PRIVATE_SLOT( d, void reloadCertificates() )
     Q_PRIVATE_SLOT( d, void refreshX509Certificates() )

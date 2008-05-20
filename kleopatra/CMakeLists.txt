@@ -199,6 +199,7 @@ set( _kleopatra_SRCS
   commands/signcertificatecommand.cpp
   commands/selftestcommand.cpp
   commands/exportsecretkeycommand.cpp
+  commands/exportopenpgpcertstoservercommand.cpp
   
   ${_kleopatra_uiserver_files}
 
