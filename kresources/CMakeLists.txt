@@ -20,7 +20,6 @@ ENDMACRO(QT4_ADD_DBUS_INTERFACE2)
 
 include_directories( ${CMAKE_CURRENT_SOURCE_DIR} )
 
-message( STATUS "GroupWise resources are disabled." )
 add_subdirectory( lib ) 
 add_subdirectory( remote ) 
 add_subdirectory( egroupware ) 

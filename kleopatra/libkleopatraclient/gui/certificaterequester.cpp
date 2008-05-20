@@ -30,6 +30,7 @@
 #include <QLayout>
 #include <QMessageBox>
 
+#include <algorithm>
 
 using namespace KleopatraClient;
 using namespace KleopatraClient::Gui;
