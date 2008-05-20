@@ -241,11 +241,11 @@ bool ResourceGroupwise::doSave( bool )
   if ( !confirmSave() ) return false;
 
   GroupwiseServer server( mPrefs->url(), mPrefs->user(), mPrefs->password(),
-    0 );
+    timeSpec(), 0 );
 
   if ( !server.login() ) {
-    kError() <<"Unable to login to server";
-    emit resourceSaveError( this, i18n( "Unable to login to server: " ) + server.error() );
+    kError() <<"Unable to login to server" << server.error();
+    emit resourceSaveError( this, i18n( "Unable to login to server: TODO: return whole error list; see console output" ) );
     return false;
   }
 
@@ -306,7 +306,7 @@ bool ResourceGroupwise::userSettings( ngwt__Settings *&settings )
 
   GroupwiseServer server( prefs()->url(),
                           prefs()->user(),
-                          prefs()->password(), this );
+                          prefs()->password(), timeSpec(), this );
 
   server.login();
   // get these out again, once we discover their format.
@@ -328,7 +328,7 @@ bool ResourceGroupwise::modifyUserSettings( QMap<QString, QString> & settings )
 
   GroupwiseServer server( prefs()->url(),
                           prefs()->user(),
-                          prefs()->password(), this );
+                          prefs()->password(),  timeSpec(), this );
 
   server.login();
   // get these out again, once we discover their format.
@@ -336,5 +336,3 @@ bool ResourceGroupwise::modifyUserSettings( QMap<QString, QString> & settings )
   server.logout();
   return success;
 }
-
-#include "kcal_resourcegroupwise.moc"

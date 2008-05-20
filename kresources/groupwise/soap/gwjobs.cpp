@@ -38,15 +38,14 @@
 #define READ_ADDRESS_FOLDER_CHUNK_SIZE 250
 #define READ_CALENDAR_FOLDER_CHUNK_SIZE 50
 
-GWJob::GWJob( GroupwiseServer *server, struct soap *soap, const QString &url,
-  const std::string &session )
-  : mServer( server ), mSoap( soap ), mUrl( url ), mSession( session )
+GWJob::GWJob( GroupwiseServer *server, struct soap *soap, const QString &url, const KDateTime::Spec & timeSpec, const std::string &session )
+  : mServer( server ), mSoap( soap ), mUrl( url ), mSession( session ), mTimeSpec( timeSpec )
 {
 }
 
 ReadAddressBooksJob::ReadAddressBooksJob( GroupwiseServer *server,
-  struct soap *soap, const QString &url, const std::string &session )
-  : GWJob( server, soap, url, session )
+  struct soap *soap, const QString &url, const KDateTime::Spec & spec, const std::string &session )
+  : GWJob( server, soap, url, spec, session )
 {
 }
 
@@ -82,7 +81,7 @@ void ReadAddressBooksJob::run()
       } else {
         QString id = GWConverter::stringToQString( (*it)->id );
         kDebug() <<"Reading ID:" << id;
-        if ( mAddressBookIds.find( id ) != mAddressBookIds.end() ) {
+        if ( mAddressBookIds.contains( id ) ) {
           readAddressBook( *(*it)->id );
           mProgress += 100;
         }
@@ -294,9 +293,9 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
 #endif
 }
 
-ReadCalendarJob::ReadCalendarJob( GroupwiseServer *server, struct soap *soap, const QString &url,
+ReadCalendarJob::ReadCalendarJob( GroupwiseServer *server, struct soap *soap, const QString &url, const KDateTime::Spec & timeSpec,
                                   const std::string &session )
-  : GWJob( server, soap, url, session ), mCalendar( 0 )
+  : GWJob( server, soap, url, timeSpec, session ), mCalendar( 0 )
 {
   kDebug() <<"ReadCalendarJob()";
 }
@@ -537,7 +536,7 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
     }
   
     if ( readCursorResponse.items ) {
-      IncidenceConverter conv( mSoap );
+      IncidenceConverter conv( mTimeSpec, mSoap );
       conv.setFrom( mServer->userName(), mServer->userEmail(), mServer->userUuid() );
 
       std::vector<class ngwt__Item * >::const_iterator it;
@@ -598,8 +597,8 @@ void ReadCalendarJob::readCalendarFolder( const std::string &id, ReadItemCounts 
 }
 
 UpdateAddressBooksJob::UpdateAddressBooksJob( GroupwiseServer *server,
-  struct soap *soap, const QString &url, const std::string &session )
-  : GWJob( server, soap, url, session )
+  struct soap *soap, const QString &url, const KDateTime::Spec & spec, const std::string &session )
+  : GWJob( server, soap, url, spec, session )
 {
 }
 

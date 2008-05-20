@@ -14,6 +14,7 @@ kde4_add_library( kleopatraclientcore SHARED
   ${_kleopatraclientcore_extra_SRCS}
   initialization.cpp
   command.cpp
+  selectcertificatecommand.cpp
   #connection.cpp
   )
 

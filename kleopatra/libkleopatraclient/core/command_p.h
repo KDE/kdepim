@@ -31,7 +31,6 @@
 #include <QVariant>
 
 #include <map>
-#include <vector>
 #include <string>
 
 class KleopatraClient::Command::Private : public QThread {
@@ -59,18 +58,24 @@ private:
 
 private:
     QMutex mutex;
+    struct Option {
+        QVariant value;
+        bool hasValue : 1;
+        bool isCritical : 1;
+    };
     struct Inputs {
         Inputs() : parentWId( 0 ) {}
-        std::vector<std::string> nonValueOptions;
-        std::map<std::string,QVariant> valueOptions;
+        std::map<std::string,Option> options;
         WId parentWId;
         QByteArray command;
     } inputs;
     struct Outputs {
-        Outputs() : serverPid( 0 ) {}
+        Outputs() : canceled( false ), serverPid( 0 ) {}
         QString errorString;
+        bool canceled : 1;
         QByteArray data;
         qint64 serverPid;
+        QString serverLocation;
     } outputs;
 };
 

@@ -42,10 +42,14 @@ namespace KleopatraClient {
         void setParentWId( WId wid );
         WId parentWId() const;
 
+        void setServerLocation( const QString & location );
+        QString serverLocation() const;
+
         bool waitForFinished();
         bool waitForFinished( unsigned long ms );
 
         bool error() const;
+        bool wasCanceled() const;
         QString errorString() const;
 
         qint64 serverPid() const;
@@ -59,12 +63,13 @@ namespace KleopatraClient {
         void finished();
 
     protected:
-        void setOptionValue( const char * name, const QVariant & value );
-        QVariant optionValue( const char * name ) const;
-
-        void setOption( const char * name );
+        void setOptionValue( const char * name, const QVariant & value, bool critical=true );
+        void setOption( const char * name, bool critical=true );
         void unsetOption( const char * name );
+
+        QVariant optionValue( const char * name ) const;
         bool isOptionSet( const char * name ) const;
+        bool isOptionCritical( const char * name ) const;
 
         QByteArray receivedData() const;
 

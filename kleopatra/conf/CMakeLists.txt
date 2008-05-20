@@ -9,14 +9,43 @@ else ( ONLY_KLEO )
   set( _kcm_kleopatra_extra_libs ${KDE4_KIO_LIBS} )
 endif ( ONLY_KLEO )
 
+if ( BUILD_libkleopatraclient )
+
+   set( _kcm_kleopatra_libkleopatraclient_extra_SRCS
+     smimevalidationconfigurationwidget.cpp
+     smimevalidationconfigurationpage.cpp
+     )
+   kde4_add_ui_files( _kcm_kleopatra_libkleopatraclient_extra_SRCS
+     smimevalidationconfigurationwidget.ui
+     )
+   kde4_add_kcfg_files( _kcm_kleopatra_libkleopatraclient_extra_SRCS
+     ${CMAKE_SOURCE_DIR}/kleopatra/kcfg/smimevalidationpreferences.kcfgc
+     )
+
+   set( _kcm_kleopatra_libkleopatraclient_extra_LIBS
+     kleopatraclientgui
+     )
+
+   set( _kcm_kleopatra_libkleopatraclient_extra_install_FILES
+     kleopatra_config_smimevalidation.desktop
+     )
+
+else ( BUILD_libkleopatraclient )
+  set( _kcm_kleopatra_libkleopatraclient_extra_SRCS
+    )
+  set( _kcm_kleopatra_libkleopatraclient_extra_LIBS
+    )
+  set( _kcm_kleopatra_libkleopatraclient_extra_install_FILES
+    )
+endif ( BUILD_libkleopatraclient )
+
 set(kcm_kleopatra_PART_SRCS 
    ${_kcm_kleopatra_kleo_only_SRCS}
    dirservconfigpage.cpp 
    appearanceconfigpage.cpp 
    appearanceconfigwidget.cpp 
    dnorderconfigpage.cpp
-   smimevalidationconfigurationwidget.cpp
-   smimevalidationconfigurationpage.cpp
+   ${_kcm_kleopatra_libkleopatraclient_extra_SRCS}
    )
 
 add_definitions( -DKDE_DEFAULT_DEBUG_AREA=5152 )
@@ -29,13 +58,13 @@ kde4_add_ui_files( kcm_kleopatra_PART_SRCS
 kde4_add_kcfg_files( kcm_kleopatra_PART_SRCS
   ${CMAKE_SOURCE_DIR}/kleopatra/kcfg/tooltippreferences.kcfgc
   ${CMAKE_SOURCE_DIR}/kleopatra/kcfg/emailoperationspreferences.kcfgc
-  ${CMAKE_SOURCE_DIR}/kleopatra/kcfg/smimevalidationpreferences.kcfgc
- )
+  )
+
 kde4_add_plugin(kcm_kleopatra ${kcm_kleopatra_PART_SRCS})
 
 
 
-target_link_libraries(kcm_kleopatra ${KDE4_KDEUI_LIBS} kleo )
+target_link_libraries(kcm_kleopatra ${KDE4_KDEUI_LIBS} kleo ${_kcm_kleopatra_libkleopatraclient_extra_LIBS} )
 
 install(TARGETS kcm_kleopatra  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -46,6 +75,6 @@ install( FILES
   kleopatra_config_dirserv.desktop
   kleopatra_config_appear.desktop
   kleopatra_config_dnorder.desktop
-  kleopatra_config_smimevalidation.desktop
+  ${_kcm_kleopatra_libkleopatraclient_extra_install_FILES}
   DESTINATION ${SERVICES_INSTALL_DIR})
 

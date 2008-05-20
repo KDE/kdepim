@@ -63,6 +63,11 @@ class KJotsEntry : public QObject, public QTreeWidgetItem
         bool isBook() const { return m_isBook; }
         bool isPage() const { return !m_isBook; }
 
+        static bool isKJotsLink(const QString &link);
+        QString kjotsLinkUrl();
+        static quint64 idFromLinkUrl(const QString &link);
+        static QString kjotsLinkUrlFromId(quint64 id);
+
     protected:
         void setId(quint64);
         bool m_isBook; //!< used for speed and code clarity.
@@ -70,6 +75,7 @@ class KJotsEntry : public QObject, public QTreeWidgetItem
     private:
         quint64 m_id; //!< unique ID for this entry
         static QSet<quint64> all_ids;
+        static QString kjotsLinkStringPrefix() { return QString("kjots://0.0.0.0/"); }
 };
 
 //

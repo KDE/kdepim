@@ -48,7 +48,7 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
                        const QString &user, const QString &password,
                        const QStringList &readAddressBooks,
                        const QString &writeAddressBook );
-    ~ResourceGroupwise();
+    virtual ~ResourceGroupwise();
 
     void readConfig( const KConfigGroup &group );
     void writeConfig( KConfigGroup &group );
@@ -99,7 +99,7 @@ class KDE_EXPORT ResourceGroupwise : public ResourceCached
 
     KIO::TransferJob *mDownloadJob;
     KPIM::ProgressItem *mProgress;
-    QString mJobData;
+    QByteArray mJobData;
     bool mUpdateSystemAddressBook;
 };
 

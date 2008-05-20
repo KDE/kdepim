@@ -7,7 +7,7 @@
 #include <kdebug.h>
 #include <ktemporaryfile.h>
 
-#include <kabcresourcecached.h>
+#include <kabc/resourcecached.h>
 
 #include <kcal/icalformat.h>
 #include <kcal/resourcelocal.h>
@@ -71,8 +71,8 @@ int main( int argc, char **argv )
     return 1; 
   }
 #endif
-
-  GroupwiseServer server( url, user, pass, 0 );
+  KDateTime::Spec spec = KDateTime::Spec::LocalZone();
+  GroupwiseServer server( url, user, pass, spec, 0 );
 
 #if 1
   if ( !server.login() ) {

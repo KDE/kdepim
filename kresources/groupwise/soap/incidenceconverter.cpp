@@ -20,7 +20,6 @@
 
 #include <klocale.h>
 #include <kcodecs.h>
-#include <libkdepim/kpimprefs.h>
 #include <kcal/event.h>
 #include <kcal/journal.h>
 #include <kcal/recurrence.h>
@@ -32,14 +31,12 @@
 #include "incidenceconverter.h"
 //Added by qt3to4:
 #include <QList>
-#include <Q3PtrList>
 
 #define GW_MAX_RECURRENCES 50
 
-IncidenceConverter::IncidenceConverter( struct soap* soap )
-  : GWConverter( soap )
+IncidenceConverter::IncidenceConverter( KDateTime::Spec spec, struct soap* soap )
+  : GWConverter( soap ), mTimeSpec( spec )
 {
-  mTimezone = KPimPrefs::timezone();
 }
 
 void IncidenceConverter::setFrom( const QString &name,
@@ -65,25 +62,25 @@ KCal::Event* IncidenceConverter::convertFromAppointment( ngwt__Appointment* appo
 
   if ( appointment->allDayEvent && (*appointment->allDayEvent) )
   {
-    event->setFloats( true );
+    event->setAllDay( true );
 
     if ( appointment->startDay != 0 )
-      event->setDtStart( QDateTime::fromString( QString::fromUtf8( appointment->startDay->c_str() ), Qt::ISODate ) );
+      event->setDtStart( KDateTime::fromString( QString::fromUtf8( appointment->startDay->c_str() ), KDateTime::ISODate ) );
 
     if ( appointment->endDay != 0 )
 //TODO: Use KDateTime::fromString()?
-      event->setDtEnd( KDateTime( QDateTime::fromString( QString::fromUtf8( appointment->endDay->c_str() ), Qt::ISODate ), mTimezone ).addDays( -1 ) );
+      event->setDtEnd( KDateTime( KDateTime::fromString( QString::fromUtf8( appointment->endDay->c_str() ), KDateTime::ISODate ) ).addDays( -1 ) );
     kDebug() <<" all day event.";
   }
   else
   {
-    event->setFloats( false );
+    event->setAllDay( false );
 
     if ( appointment->startDate != 0 )
-      event->setDtStart( charToKDateTime( appointment->startDate, mTimezone ) );
+      event->setDtStart( charToKDateTime( appointment->startDate, mTimeSpec ) );
 
     if ( appointment->endDate != 0 )
-      event->setDtEnd( charToKDateTime( appointment->endDate, mTimezone ) );
+      event->setDtEnd( charToKDateTime( appointment->endDate, mTimeSpec ) );
   }
 
   kDebug() <<"start date:" << event->dtStart();
@@ -130,7 +127,8 @@ ngwt__Appointment* IncidenceConverter::convertToAppointment( KCal::Event* event 
     return 0;
   }
 
-  if ( event->floats() ) {
+  if ( event->allDay
+      () ) {
     bool *allDayEvent = (bool*)soap_malloc( soap(), 1 );
     (*allDayEvent ) = true;
 
@@ -146,10 +144,10 @@ ngwt__Appointment* IncidenceConverter::convertToAppointment( KCal::Event* event 
     appointment->allDayEvent = 0;
 
     if ( event->dtStart().isValid() )
-      appointment->startDate = qDateTimeToChar( event->dtStart(), mTimezone );
+      appointment->startDate = kDateTimeToChar( event->dtStart(), mTimeSpec );
 
     if ( event->hasEndDate() )
-      appointment->endDate = qDateTimeToChar( event->dtEnd(), mTimezone );
+      appointment->endDate = kDateTimeToChar( event->dtEnd(), mTimeSpec );
   }
 
   enum ngwt__AcceptLevel * al = (enum ngwt__AcceptLevel*)soap_malloc(soap(), sizeof(enum ngwt__AcceptLevel));
@@ -194,12 +192,12 @@ KCal::Todo* IncidenceConverter::convertFromTask( ngwt__Task* task )
 
   if ( task->startDate ) {
     todo->setHasStartDate( true );
-    todo->setDtStart( stringToKDateTime( task->startDate, mTimezone ) );
+    todo->setDtStart( stringToKDateTime( task->startDate, mTimeSpec ) );
   }
 
   if ( task->dueDate ) {
     todo->setHasDueDate( true );
-    todo->setDtDue( stringToKDateTime( task->dueDate, mTimezone ) );
+    todo->setDtDue( stringToKDateTime( task->dueDate, mTimeSpec ) );
   }
 
   if ( task->taskPriority ) {
@@ -236,10 +234,10 @@ ngwt__Task* IncidenceConverter::convertToTask( KCal::Todo* todo )
   }
 
   if ( todo->dtStart().isValid() )
-    task->startDate = qDateTimeToString( todo->dtStart(), mTimezone );
+    task->startDate = kDateTimeToString( todo->dtStart(), mTimeSpec );
 
   if ( todo->hasDueDate() ) {
-    task->dueDate = qDateTimeToString( todo->dtDue() );
+    task->dueDate = kDateTimeToString( todo->dtDue() );
   }
 
   // FIXME: Restore custom priorities
@@ -268,7 +266,7 @@ KCal::Journal* IncidenceConverter::convertFromNote( ngwt__Note* note)
   }
 
   if ( note->startDate ) {
-    journal->setDtStart( stringToKDateTime( note->startDate, mTimezone ) );
+    journal->setDtStart( stringToKDateTime( note->startDate, mTimeSpec ) );
   }
 
   return journal;
@@ -286,12 +284,12 @@ ngwt__Note* IncidenceConverter::convertToNote( KCal::Journal* journal )
     return 0;
   }
 
-  if ( journal->floats() ) {
+  if ( journal->allDay() ) {
     if ( journal->dtStart().isValid() )
       note->startDate = qDateToString( journal->dtStart().date() );
   } else {
     if ( journal->dtStart().isValid() )
-      note->startDate = qDateTimeToString( journal->dtStart(), mTimezone );
+      note->startDate = kDateTimeToString( journal->dtStart(), mTimeSpec );
   }
 
   if ( !note->subject )
@@ -326,7 +324,7 @@ bool IncidenceConverter::convertToCalendarItem( KCal::Incidence* incidence, ngwt
   item->status = 0;
   item->thread = 0;
   item->msgId = 0;
-  item->messageId = 0;
+  //item->messageId = 0;
   item->source = 0;
   item->returnSentItemsId = 0;
   item->delivered = 0;
@@ -352,7 +350,7 @@ bool IncidenceConverter::convertToCalendarItem( KCal::Incidence* incidence, ngwt
     std::vector<ngwt__ContainerRef*>* container = soap_new_std__vectorTemplateOfPointerTongwt__ContainerRef( soap(), -1 );
     ngwt__ContainerRef* containerRef = soap_new_ngwt__ContainerRef( soap(), -1 );
     containerRef->deleted = 0;
-    containerRef->__item = incidence->customProperty( "GWRESOURCE", "CONTAINER" ).toUtf8().data()/*.utf8()*/;
+    containerRef->__item = incidence->customProperty( "GWRESOURCE", "CONTAINER" ).toUtf8().data()/*.toUtf8().data()*/;
     container->push_back( containerRef );
 
     item->container = *container;
@@ -387,12 +385,12 @@ bool IncidenceConverter::convertToCalendarItem( KCal::Incidence* incidence, ngwt
 
 // TODO: reinstate when we know that this isn't causing problems with recurrence
 //   if ( incidence->created().isValid() ) {
-//     item->created = qDateTimeToChar( incidence->created(), mTimezone );
+//     item->created = kDateTimeToChar( incidence->created(), mTimeSpec );
 //   } else
 //     item->created = 0;
 
 //   if ( incidence->lastModified().isValid() )
-//     item->modified = qDateTimeToChar( incidence->lastModified(), mTimezone );
+//     item->modified = kDateTimeToChar( incidence->lastModified(), mTimeSpec );
 
   setItemDescription( incidence, item );
 
@@ -501,10 +499,10 @@ bool IncidenceConverter::convertFromCalendarItem( ngwt__CalendarItem* item,
   kDebug() <<"SUMMARY:" << incidence->summary();
 
   if ( item->created )
-    incidence->setCreated( charToKDateTime( item->created, mTimezone ) );
+    incidence->setCreated( charToKDateTime( item->created, mTimeSpec ) );
 
   if ( item->modified != 0 )
-    incidence->setLastModified( charToKDateTime( item->modified, mTimezone ) );
+    incidence->setLastModified( charToKDateTime( item->modified, mTimeSpec ) );
 
   getItemDescription( item, incidence );
   getAttendees( item, incidence );
@@ -565,8 +563,8 @@ void IncidenceConverter::setItemDescription( KCal::Incidence *incidence,
 
     xsd__base64Binary data;
     data.__ptr =
-      (unsigned char*)qStringToChar( incidence->description().utf8() );
-    data.__size = incidence->description().utf8().length();
+      (unsigned char*)qStringToChar( incidence->description().toUtf8().data() );
+    data.__size = incidence->description().toUtf8().length();
     data.id = data.type = data.option = 0;
     data.soap = 0;
 
@@ -625,7 +623,7 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
   ngwt__Frequency * freq;
   const KCal::Recurrence * recur = incidence->recurrence();
 
-  if ( incidence->doesRecur() )
+  if ( incidence->recurs() )
   {
     item->rrule = soap_new_ngwt__RecurrenceRule( soap(), -1 );
     item->rrule->frequency = 0; //
@@ -647,11 +645,7 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
       item->rrule->count = (long unsigned int *)soap_malloc( soap(), sizeof( long unsigned int * ) );
       *item->rrule->count = recur->duration();
     }
-#if LIBKCAL_IS_VERSION( 1, 3, 0 )
     else if ( recur->endDateTime().isValid() )
-#else
-		else if ( recur->endDate().isValid() )
-#endif
       item->rrule->until = qDateToString( recur->endDate() );
     else // GROUPWISE doesn't accept infinite recurrence so end after GW_MAX_RECURRENCES recurrences
     {
@@ -661,42 +655,30 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
 
     // recurrence date - try setting it using the recurrence start date - didn't help
 /*    std::string startDate;
-    startDate.append( recur->recurStart().date().toString( Qt::ISODate ).utf8() );
+    startDate.append( recur->recurStart().date().toString( Qt::ISODate ).toUtf8().data() );
     item->rdate = soap_new_ngwt__RecurrenceDateType( soap(), -1 );
     item->rdate->date.push_back( startDate );*/
     // exceptions list - try sending empty list even if no exceptions
-#if LIBKCAL_IS_VERSION( 1, 3, 0 )
     KCal::DateList exceptions = recur->exDates();
-#else
-		KCal::DateList exceptions = incidence->exDates();
-#endif
     if ( !exceptions.isEmpty() )
     {
       item->exdate = soap_new_ngwt__RecurrenceDateType( soap(), -1 );
       for ( KCal::DateList::ConstIterator it = exceptions.begin(); it != exceptions.end(); ++it )
       {
         std::string startDate;
-        startDate.append( (*it).toString( Qt::ISODate ).utf8() );
+        startDate.append( (*it).toString( Qt::ISODate ).toUtf8().data() );
         item->exdate->date.push_back( startDate );
       }
     }
   }
 
-#if LIBKCAL_IS_VERSION( 1, 3, 0 )
   if ( incidence->recurrenceType() == KCal::Recurrence::rDaily )
-#else
-  if ( incidence->doesRecur() == KCal::Recurrence::rDaily )
-#endif
   {
     kDebug() <<"incidence recurs daily";
     *freq = Daily;
     item->rrule->frequency = freq;
   }
-#if LIBKCAL_IS_VERSION( 1, 3, 0 )
   else if ( incidence->recurrenceType() == KCal::Recurrence::rWeekly )
-#else
-  else if ( incidence->doesRecur() == KCal::Recurrence::rWeekly )
-#endif
   {
     kDebug() <<"incidence recurs weekly";
     *freq = Weekly;
@@ -740,11 +722,7 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
     // add the list of days to the recurrence rule
     item->rrule->byDay = weeklyDays;
   }
-#if LIBKCAL_IS_VERSION( 1, 3, 0 )
-   else if ( incidence->recurrenceType() == KCal::Recurrence::rMonthlyDay )
-#else
-   else if ( incidence->doesRecur() == KCal::Recurrence::rMonthlyDay )
-#endif
+  else if ( incidence->recurrenceType() == KCal::Recurrence::rMonthlyDay )
   {
     kDebug() <<"incidence recurs monthly";
     ;
@@ -753,35 +731,21 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
 
     // TODO: translate '3rd wednesday of month' etc into rdates
   }
-#if LIBKCAL_IS_VERSION( 1, 3, 0 )
   else if ( incidence->recurrenceType() == KCal::Recurrence::rYearlyDay )
-#else
-  else if ( incidence->doesRecur() == KCal::Recurrence::rYearlyDay )
-#endif
   {
     kDebug() <<"incidence recurs yearly on day #";
     *freq = Yearly;
     item->rrule->frequency = freq;
     // TODO: translate '1st sunday in may'
     ngwt__DayOfYearList * daysOfYear = soap_new_ngwt__DayOfYearList( soap(), -1 );
-#if LIBKCAL_IS_VERSION( 1, 3, 0 )
     QList<int> rmd;
     rmd = recur->yearMonths();
     daysOfYear->day.push_back( rmd.first() );
-#else
-    Q3PtrList<int> rmd;
-    rmd = recur->yearNums();
-    daysOfYear->day.push_back( *rmd.first() );
-#endif
 
     item->rrule->byYearDay = daysOfYear;
     // no need to do MonthList recurrence as these will appear as separate instances when fetched from GW
   }
-#if LIBKCAL_IS_VERSION( 1, 3, 0 )
   else if ( incidence->recurrenceType() == KCal::Recurrence::rYearlyMonth )
-#else
-  else if ( incidence->doesRecur() == KCal::Recurrence::rYearlyMonth )
-#endif
   {
     kDebug() <<"incidence recurs yearly on monthday";
     *freq = Yearly;

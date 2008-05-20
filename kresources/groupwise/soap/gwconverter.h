@@ -45,17 +45,16 @@ class GWConverter
     std::string* qDateToString( const QDate &string );
     QDate stringToQDate( std::string* );
 
-    char *qDateTimeToChar( const QDateTime &dt, const KDateTime::Spec &timeSpec );
-    char *qDateTimeToChar( const QDateTime &dt );
+    char *kDateTimeToChar( const KDateTime &dt, const KDateTime::Spec &timeSpec );
+    char *kDateTimeToChar( const KDateTime &dt );
 
-    QDateTime charToQDateTime( const char *str );
-    QDateTime charToQDateTime( const char *str, const KDateTime::Spec &timeSpec );
+    KDateTime charToKDateTime( const char *str );
     KDateTime charToKDateTime( const char *str, const KDateTime::Spec &timeSpec );
 
-    std::string* qDateTimeToString( const QDateTime &string, const KDateTime::Spec &timeSpec );
-    std::string* qDateTimeToString( const QDateTime &string );
-    
-    QDateTime stringToQDateTime( const std::string* );
+    std::string* kDateTimeToString( const KDateTime &string, const KDateTime::Spec &timeSpec );
+    std::string* kDateTimeToString( const KDateTime &string );
+
+    KDateTime stringToKDateTime( const std::string* );
     KDateTime stringToKDateTime( const std::string*, const KDateTime::Spec &timeSpec );
 
 

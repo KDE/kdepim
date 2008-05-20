@@ -34,7 +34,7 @@
 
 #include "uiserver_p.h"
 
-#include "utils/gnupg-registry.h"
+#include "utils/gnupg-helper.h"
 
 #include <KLocalizedString>
 
@@ -66,8 +66,8 @@ QString UiServer::Private::makeFileName( const QString & socket ) const {
         return socket;
     if ( tmpDir.status() != 0 )
         throw_<std::runtime_error>( i18n( "Couldn't create directory %1: %2", tmpDirPrefix() + "XXXXXXXX", system_error_string() ) );
-    const char * const gnupg_home = default_homedir();
-    const QDir dir( gnupg_home ? QFile::decodeName( gnupg_home ) : tmpDir.name() );
+    const QString gnupgHome = gnupgHomeDirectory();
+    const QDir dir( gnupgHome.isEmpty() ? tmpDir.name() : gnupgHome );
     assert( dir.exists() );
     return dir.absoluteFilePath( "S.uiserver" );
 }

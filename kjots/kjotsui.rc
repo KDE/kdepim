@@ -44,7 +44,6 @@
   <Menu name="tools">
    <Action name="insert_date"/>
    <Action name="copyIntoTitle"/>
-   <Action name="linkify"/>
   </Menu>
   
   <Action name="bookmarks"/>

@@ -22,6 +22,7 @@
 
 #include <qobject.h>
 
+#include <KTimeZone>
 #include <string>
 
 #include <kabc/addressee.h>
@@ -45,19 +46,20 @@ class GroupwiseServer;
 class GWJob
 {
   public:
-    GWJob( GroupwiseServer *server, struct soap *soap, const QString &url, const std::string &session );
+    GWJob( GroupwiseServer *server, struct soap *soap, const QString &url, const KDateTime::Spec & spec, const std::string &session );
   protected:
     GroupwiseServer *mServer;
     struct soap *mSoap;
     QString mUrl;
     const std::string mSession;
+    KDateTime::Spec mTimeSpec;
 };
 
 class ReadAddressBooksJob : public GWJob
 {
   public:
     ReadAddressBooksJob( GroupwiseServer *server, struct soap *soap,
-      const QString &url,
+      const QString &url, const KDateTime::Spec & spec,
       const std::string &session );
 
     void setAddressBookIds( const QStringList& );
@@ -77,7 +79,7 @@ class ReadCalendarJob : public GWJob
 {
   public:
     ReadCalendarJob( GroupwiseServer *server, struct soap *soap, const QString &url,
-      const std::string &session );
+        const KDateTime::Spec & spec, const std::string &session );
 
     void setCalendarFolder( std::string* );
     void setChecklistFolder( std::string* );
@@ -99,7 +101,7 @@ class UpdateAddressBooksJob : public GWJob
 {
   public:
     UpdateAddressBooksJob( GroupwiseServer *server, struct soap *soap,
-      const QString &url,
+      const QString &url, const KDateTime::Spec & spec,
       const std::string &session );
 
     /** set the address book IDs to update - at the moment this is only the System Address Book (SAB) */

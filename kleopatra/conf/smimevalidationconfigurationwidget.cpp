@@ -84,7 +84,7 @@ private:
                 { CRLRB, SIGNAL(toggled(bool)) },
                 { OCSPRB, SIGNAL(toggled(bool)) },
                 { OCSPResponderURL, SIGNAL(textChanged(QString)) },
-                { OCSPResponderSignature, SIGNAL(changed()) },
+                { OCSPResponderSignature, SIGNAL(selectedCertificatesChanged(QStringList)) },
                 { doNotCheckCertPolicyCB, SIGNAL(toggled(bool)) },
                 { neverConsultCB, SIGNAL(toggled(bool)) },
                 { fetchMissingCB, SIGNAL(toggled(bool)) },
@@ -105,11 +105,10 @@ private:
             connect( disableHTTPCB, SIGNAL(toggled(bool)),
                      q, SLOT(enableDisableActions()) );
 
-#if 0
-            OCSPResponderSignature->setAllowedKeys( KeySelectionDialog::SMIMEKeys|KeySelectionDialog::TrustedKeys|KeySelectionDialog::ValidKeys|KeySelectionDialog::SigningKeys|KeySelectionDialog::PublicKeys );
-            OCSPResponderSignature->setMultipleKeysEnabled( false );
-#endif
-
+            OCSPResponderSignature->setOnlyX509CertificatesAllowed( true );
+            OCSPResponderSignature->setOnlySigningCertificatesAllowed( true );
+            OCSPResponderSignature->setMultipleCertificatesAllowed( false );
+            //OCSPResponderSignature->setAllowedKeys( KeySelectionDialog::TrustedKeys|KeySelectionDialog::ValidKeys );
         }
     } ui;
 };
@@ -234,7 +233,7 @@ void SMimeValidationConfigurationWidget::load() {
     if ( e.mOCSPResponderURLConfigEntry )
         d->ui.OCSPResponderURL->setText( e.mOCSPResponderURLConfigEntry->stringValue() );
     if ( e.mOCSPResponderSignature )
-        d->ui.OCSPResponderSignature->setText/*Fingerprint*/( e.mOCSPResponderSignature->stringValue() );
+        d->ui.OCSPResponderSignature->setSelectedCertificate( e.mOCSPResponderSignature->stringValue() );
 
     // dirmngr-0.9.0 options
     initializeDirmngrCheckbox( d->ui.ignoreServiceURLCB, e.mIgnoreServiceURLEntry );
@@ -303,7 +302,7 @@ void SMimeValidationConfigurationWidget::save() const {
     if ( e.mOCSPResponderURLConfigEntry && e.mOCSPResponderURLConfigEntry->stringValue() != txt )
         e.mOCSPResponderURLConfigEntry->setStringValue( txt );
 
-    txt = d->ui.OCSPResponderSignature->text();//fingerprint();
+    txt = d->ui.OCSPResponderSignature->selectedCertificate();
     if ( e.mOCSPResponderSignature && e.mOCSPResponderSignature->stringValue() != txt )
         e.mOCSPResponderSignature->setStringValue( txt );
 

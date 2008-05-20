@@ -83,6 +83,17 @@ WId Command::parentWId() const {
 }
 
 
+void Command::setServerLocation( const QString & location ) {
+    const QMutexLocker locker( &d->mutex );
+    d->outputs.serverLocation = location;
+}
+
+QString Command::serverLocation() const {
+    const QMutexLocker locker( &d->mutex );
+    return d->outputs.serverLocation;
+}
+
+
 bool Command::waitForFinished() {
     return d->wait();
 }
@@ -95,6 +106,11 @@ bool Command::waitForFinished( unsigned long ms ) {
 bool Command::error() const {
     const QMutexLocker locker( &d->mutex );
     return !d->outputs.errorString.isEmpty();
+}
+
+bool Command::wasCanceled() const {
+    const QMutexLocker locker( &d->mutex );
+    return d->outputs.canceled;
 }
 
 QString Command::errorString() const {
@@ -118,11 +134,16 @@ void Command::cancel() {
 }
 
 
-void Command::setOptionValue( const char * name, const QVariant & value ) {
+void Command::setOptionValue( const char * name, const QVariant & value, bool critical ) {
     if ( !name || !*name )
         return;
     const QMutexLocker locker( &d->mutex );
-    d->inputs.valueOptions[name] = value;
+    const Private::Option opt = {
+        value,
+        true,
+        critical
+    };
+    d->inputs.options[name] = opt;
 }
 
 QVariant Command::optionValue( const char * name ) const {
@@ -130,15 +151,15 @@ QVariant Command::optionValue( const char * name ) const {
         return QVariant();
     const QMutexLocker locker( &d->mutex );
 
-    const std::map<std::string,QVariant>::const_iterator it = d->inputs.valueOptions.find( name );
-    if ( it == d->inputs.valueOptions.end() )
+    const std::map<std::string,Private::Option>::const_iterator it = d->inputs.options.find( name );
+    if ( it == d->inputs.options.end() )
         return QVariant();
     else
-        return it->second;
+        return it->second.value;
 }
 
 
-void Command::setOption( const char * name ) {
+void Command::setOption( const char * name, bool critical ) {
     if ( !name || !*name )
         return;
     const QMutexLocker locker( &d->mutex );
@@ -146,25 +167,36 @@ void Command::setOption( const char * name ) {
     if ( isOptionSet( name ) )
         unsetOption( name );
 
-    d->inputs.nonValueOptions.push_back( name );
+    const Private::Option opt = {
+        QVariant(),
+        false,
+        critical
+    };
+
+    d->inputs.options[name] = opt;
 }
 
 void Command::unsetOption( const char * name ) {
     if ( !name || !*name )
         return;
     const QMutexLocker locker( &d->mutex );
-    d->inputs.nonValueOptions.erase( std::remove( d->inputs.nonValueOptions.begin(), d->inputs.nonValueOptions.end(), name ),
-                                     d->inputs.nonValueOptions.end() );
+    d->inputs.options.erase( name );
 }
 
 bool Command::isOptionSet( const char * name ) const {
     if ( !name || !*name )
         return false;
     const QMutexLocker locker( &d->mutex );
-    return std::find( d->inputs.nonValueOptions.begin(), d->inputs.nonValueOptions.end(), name )
-        != d->inputs.nonValueOptions.end() ;
+    return d->inputs.options.count( name );
 }
 
+bool Command::isOptionCritical( const char * name ) const {
+    if ( !name || !*name )
+        return false;
+    const QMutexLocker locker( &d->mutex );
+    const std::map<std::string,Private::Option>::const_iterator it = d->inputs.options.find( name );
+    return it != d->inputs.options.end() && it->second.isCritical;
+}
 
 QByteArray Command::receivedData() const {
     const QMutexLocker locker( &d->mutex );
@@ -250,6 +282,19 @@ static int getinfo_pid_cb( void * opaque, const void * buffer, size_t length ) {
     return 0;
 }
 
+static int command_data_cb( void * opaque, const void * buffer, size_t length ) {
+    QByteArray & ba = *static_cast<QByteArray*>( opaque );
+    ba.append( QByteArray( static_cast<const char*>(buffer), length ) );
+    return 0;
+}
+
+static int send_option( const AssuanClientContext & ctx, const char * name, const QVariant & value ) {
+    if ( value.isValid() )
+        return my_assuan_transact( ctx, QString().sprintf( "OPTION %s=%s", name, value.toString().toUtf8().constData() ).toUtf8().constData() );
+    else
+        return my_assuan_transact( ctx, QString().sprintf( "OPTION %s", name ).toUtf8().constData() );
+}
+
 void Command::Private::run() {
 
     // Take a snapshot of the input data, and clear the output data:
@@ -261,12 +306,17 @@ void Command::Private::run() {
         outputs = out;
     }
 
+    out.canceled = false;
+
     int err = 0;
 
     assuan_context_t naked_ctx = 0;
     AssuanClientContext ctx;
 
-    const QString socketName = default_socket_name();
+    if ( out.serverLocation.isEmpty() )
+        out.serverLocation = default_socket_name();
+
+    const QString socketName = out.serverLocation;
     if ( socketName.isEmpty() ) {
         out.errorString = tr("Invalid socket name!");
         goto leave;
@@ -296,6 +346,7 @@ void Command::Private::run() {
     }
 
     ctx.reset( naked_ctx );
+    naked_ctx = 0;
 
     out.serverPid = -1;
     err = my_assuan_transact( ctx, "GETINFO pid", &getinfo_pid_cb, &out.serverPid );
@@ -315,15 +366,36 @@ void Command::Private::run() {
     if ( in.command.isEmpty() )
         goto leave;
 
-#if 0
-    if ( in.parentWid ) {
-        err = send_option( ctx, "window-id", QString().sprintf( "%lx", static_cast<unsigned long>( wid ) ) );
+    if ( in.parentWId ) {
+        err = send_option( ctx, "window-id", QString().sprintf( "%lx", static_cast<unsigned long>( in.parentWId ) ) );
         if ( err )
             qDebug( "sending option window-id failed - ignoring" );
     }
-    send options
-    send command
+
+    for ( std::map<std::string,Option>::const_iterator it = in.options.begin(), end = in.options.end() ; it != end ; ++it )
+        if ( ( err = send_option( ctx, it->first.c_str(), it->second.hasValue ? it->second.value.toString() : QVariant() ) ) )
+            if ( it->second.isCritical ) {
+                out.errorString = tr("Failed to send critical option %1: %2")
+                    .arg( QString::fromLatin1( it->first.c_str() ), to_error_string( err ) );
+                goto leave;
+            } else {
+                qDebug() << "Failed to send non-critical option" << it->first.c_str() << ":" << to_error_string( err );
+            }
+
+#if 0
+    setup I/O;
 #endif
+
+    err = my_assuan_transact( ctx, in.command.constData(), &command_data_cb, &out.data );
+    if ( err ) {
+        if ( gpg_err_code( err ) == GPG_ERR_CANCELED )
+            out.canceled = true;
+        else
+            out.errorString = tr( "Command (%1) failed: %2" )
+                .arg( QString::fromLatin1( in.command.constData() ) ).arg( to_error_string( err ) );
+        goto leave;
+    }
+                                    
 
  leave:
     const QMutexLocker locker( &mutex );

@@ -19,6 +19,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
+#include "groupwiseserver.h"
+
 // The namespace mapping table is required and associates namespace prefixes
 // with namespace names:
 #include "GroupWiseBinding.nsmap"
@@ -41,8 +43,8 @@
 #include <QFile>
 //Added by qt3to4:
 #include <QByteArray>
+#include <QSslSocket>
 
-#include "ksslsocket.h"
 #include "contactconverter.h"
 #include "incidenceconverter.h"
 #include "kcal_resourcegroupwise.h"
@@ -53,7 +55,6 @@
 #include <string>
 #include <vector>
 
-#include "groupwiseserver.h"
 
 static QMap<struct soap *,GroupwiseServer *> mServerMap;
 
@@ -112,28 +113,28 @@ int GroupwiseServer::gSoapOpen( struct soap *, const char *,
 
   if ( mSSL ) {
 //    kDebug() <<"Creating KSSLSocket()";
-    m_sock = new KSSLSocket();
-    connect( m_sock, SIGNAL( sslFailure() ), SLOT( slotSslError() ) );
+    m_sock = new QSslSocket();
+    connect( m_sock, SIGNAL( sslErrors(const QList<QSslError> &) ), SLOT( slotSslErrors(const QList<QSslError> &) ) );
   } else {
-    m_sock = new KExtendedSocket();
+    m_sock = new QTcpSocket();
   }
-  mError.clear();
+  mErrors.clear();
 
   m_sock->reset();
-  m_sock->setBlockingMode( false );
-  m_sock->setSocketFlags( KExtendedSocket::inetSocket );
+  //m_sock->setBlockingMode( false );
+  //m_sock->setSocketFlags( KExtendedSocket::inetSocket );
 
-  m_sock->setAddress( host, port );
-  m_sock->lookup();
-  int rc = m_sock->connect();
+  int rc = 0;
+  //TODO: handle errors async
+  m_sock->connectToHost( host, port );
   if ( rc != 0 ) {
     kError() <<"gSoapOpen: connect failed" << rc;
-    mError = i18n("Connect failed: %1.", rc );
+    mErrors.append( i18n("Connect failed: %1.", rc ) );
     if ( rc == -1 ) perror( 0 );
     return SOAP_INVALID_SOCKET;
   }
-  m_sock->enableRead( true );
-  m_sock->enableWrite( true );
+  //m_sock->enableRead( true );
+  //m_sock->enableWrite( true );
 
   // hopefully never really used by SOAP
 #if 0
@@ -165,7 +166,7 @@ int GroupwiseServer::gSoapSendCallback( struct soap *, const char *s, size_t n )
     kError() <<"no open connection";
     return SOAP_TCP_ERROR;
   }
-  if ( !mError.isEmpty() ) {
+  if ( !mErrors.isEmpty() ) {
     kError() <<"SSL is in error state.";
     return SOAP_SSL_ERROR;
   }
@@ -184,16 +185,16 @@ int GroupwiseServer::gSoapSendCallback( struct soap *, const char *s, size_t n )
   while ( n > 0 ) {
     ret = m_sock->write( s, n );
     if ( ret < 0 ) {
-      kError() << "Send failed:" << strerror( m_sock->systemError() )
-               << m_sock->socketStatus() << m_sock->fd();
+      kError() << "Send failed:" << m_sock->errorString()
+               << m_sock->state() << m_sock->error();
       return SOAP_TCP_ERROR;
     }
     n -= ret;
   }
 
   if ( n !=0 ) {
-    kError() << "Send failed:" << strerror( m_sock->systemError() )
-             << m_sock->socketStatus() << m_sock->fd();
+    kError() << "Send failed:" << m_sock->errorString()
+             << m_sock->state() << m_sock->error();
   }
 
   m_sock->flush();
@@ -211,7 +212,7 @@ size_t GroupwiseServer::gSoapReceiveCallback( struct soap *soap, char *s,
     soap->error = SOAP_FAULT;
     return 0;
   }
-  if ( !mError.isEmpty() ) {
+  if ( !mErrors.isEmpty() ) {
     kError() <<"SSL is in error state.";
     soap->error = SOAP_SSL_ERROR;
     return 0;
@@ -220,8 +221,8 @@ size_t GroupwiseServer::gSoapReceiveCallback( struct soap *soap, char *s,
 //   m_sock->open();
   long ret = m_sock->read( s, n );
   if ( ret < 0 ) {
-    kError() << "Receive failed:" << strerror( m_sock->systemError() )
-             << m_sock->socketStatus() << m_sock->fd();
+    kError() << "Receive failed:" << m_sock->errorString()
+             << m_sock->state() << m_sock->error();
   } else {
     if ( getenv("DEBUG_GW_RESOURCE") ) {
       qDebug("*************************");
@@ -239,11 +240,12 @@ size_t GroupwiseServer::gSoapReceiveCallback( struct soap *soap, char *s,
 }
 
 GroupwiseServer::GroupwiseServer( const QString &url, const QString &user,
-                                  const QString &password, QObject *parent )
-  : QObject( parent, "GroupwiseServer" ),
+                                  const QString &password, const KDateTime::Spec & spec, QObject *parent )
+  : QObject( parent ),
     mUrl( url ), mUser( user ), mPassword( password ),
-    mSSL( url.left(6)=="https:" ), m_sock( 0 )
+    mSSL( url.left(6)=="https:" ), m_sock( 0 ), mTimeSpec( spec )
 {
+  setObjectName( "groupwiseserver" );
   mBinding = new GroupWiseBinding;
   mSoap = mBinding->soap;
 
@@ -258,8 +260,8 @@ GroupwiseServer::GroupwiseServer( const QString &url, const QString &user,
   mSoap->frecv = myReceiveCallback;
   mSoap->fclose = myClose;
 
-  KConfig cfg( "groupwiserc" );
-  cfg.setGroup( "Debug" );
+  KConfig gwcfg( "groupwiserc" );
+  KConfigGroup cfg( &gwcfg, "Debug" );
   mLogFile = cfg.readEntry( "LogFile" );
   
   if ( !mLogFile.isEmpty() ) {
@@ -292,8 +294,8 @@ bool GroupwiseServer::login()
   pt.username = mUser.toUtf8().data();
   pt.password = conv.qStringToString( mPassword );
   loginReq.auth = &pt;
-  mSoap->userid = strdup( mUser.utf8() );
-  mSoap->passwd = strdup( mPassword.utf8() );
+  mSoap->userid = strdup( mUser.toUtf8().data() );
+  mSoap->passwd = strdup( mPassword.toUtf8().data() );
 
   mSession = "";
 
@@ -315,7 +317,7 @@ bool GroupwiseServer::login()
   if ( mSession.size() == 0 ) // workaround broken loginResponse error reporting
   {
     kDebug() <<"Login failed but the server didn't report an error";
-    mError = i18n( "Login failed, but the GroupWise server did not report an error" );
+    mErrors.append( i18n( "Login failed, but the GroupWise server did not report an error" ) );
     return false;
   }
 
@@ -700,7 +702,7 @@ bool GroupwiseServer::readAddressBooksSynchronous( const QStringList &addrBookId
   }
 
   ReadAddressBooksJob *job = new ReadAddressBooksJob( this, mSoap,
-    mUrl, mSession );
+    mUrl, mTimeSpec, mSession );
   job->setAddressBookIds( addrBookIds );
 
   job->run();
@@ -715,7 +717,7 @@ bool GroupwiseServer::updateAddressBooks( const QStringList &addrBookIds, const 
     return false;
   }
 
-  UpdateAddressBooksJob * job = new UpdateAddressBooksJob( this, mSoap, mUrl, mSession );
+  UpdateAddressBooksJob * job = new UpdateAddressBooksJob( this, mSoap, mUrl, mTimeSpec, mSession );
   job->setAddressBookIds( addrBookIds );
   job->setStartSequenceNumber( startSequenceNumber );
 
@@ -825,7 +827,7 @@ bool GroupwiseServer::acceptIncidence( KCal::Incidence *incidence )
     gwUID = getFullIDFor( gwRecordIDFromIcal );
   }
   else
-    gwUID = qGwUid.toLatin1();
+    gwUID = qGwUid.toLatin1().data();
 
   if ( gwUID.empty() )
   {
@@ -841,7 +843,7 @@ bool GroupwiseServer::acceptIncidence( KCal::Incidence *incidence )
   request.recurrenceAllInstances = 0; /*FIXME: This should be the recurrence key for recurring events */
   request.items = soap_new_ngwt__ItemRefList( mSoap, -1 );
 /*  std::string acceptedItem;
-  acceptedItem.append( gwRecordID.utf8() );*/
+  acceptedItem.append( gwRecordID.toUtf8().data() );*/
   request.items->item.push_back( gwUID );
 
   mSoap->header->ngwt__session = mSession;
@@ -862,7 +864,7 @@ bool GroupwiseServer::declineIncidence( KCal::Incidence *incidence )
 
   GWConverter conv( mSoap );
 
-  std::string gwUID = incidence->customProperty( "GWRESOURCE", "UID" ).toLatin1();
+  std::string gwUID = incidence->customProperty( "GWRESOURCE", "UID" ).toLatin1().data();
 
   if ( gwUID.empty() )
   {
@@ -885,7 +887,7 @@ bool GroupwiseServer::declineIncidence( KCal::Incidence *incidence )
   request.recurrenceAllInstances = 0; /*FIXME: This should be the recurrence key for recurring events */
   request.items = soap_new_ngwt__ItemRefList( mSoap, -1 );
 /*  std::string acceptedItem;
-  acceptedItem.append( gwRecordID.utf8() );*/
+  acceptedItem.append( gwRecordID.toUtf8().data() );*/
   request.items->item.push_back( gwUID );
 
   mSoap->header->ngwt__session = mSession;
@@ -915,7 +917,7 @@ bool GroupwiseServer::addIncidence( KCal::Incidence *incidence,
   else
     kDebug() <<"Incidence has no scheduling ID.";
 
-  IncidenceConverter converter( mSoap );
+  IncidenceConverter converter( mTimeSpec, mSoap );
   converter.setFrom( mUserName, mUserEmail, mUserUuid );
 
   incidence->setCustomProperty( "GWRESOURCE", "CONTAINER",
@@ -999,7 +1001,7 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
     return true;
   }
 
-  IncidenceConverter converter( mSoap );
+  IncidenceConverter converter( mTimeSpec, mSoap );
   converter.setFrom( mUserName, mUserEmail, mUserUuid );
 
   incidence->setCustomProperty( "GWRESOURCE", "CONTAINER",
@@ -1050,7 +1052,7 @@ bool GroupwiseServer::checkResponse( int result, ngwt__Status *status )
     if ( status->description ) {
       msg += " ";
       msg += status->description->c_str();
-      mError = status->description->c_str();
+      mErrors.append( status->description->c_str() );
     }
     kError() << msg;
     return false;
@@ -1101,7 +1103,7 @@ bool GroupwiseServer::deleteIncidence( KCal::Incidence *incidence )
 
   GWConverter converter( mSoap );
   request.container = converter.qStringToString( incidence->customProperty( "GWRESOURCE", "CONTAINER" ) );
-  request.id = std::string( incidence->customProperty( "GWRESOURCE", "UID" ).utf8() );
+  request.id = std::string( incidence->customProperty( "GWRESOURCE", "UID" ).toUtf8().data() );
 
   int result = soap_call___ngw__removeItemRequest( mSoap, mUrl.toLatin1(), 0,
                                                     &request, &response );
@@ -1210,7 +1212,7 @@ bool GroupwiseServer::removeAddressee( const KABC::Addressee &addr )
 
   GWConverter converter( mSoap );
   request.container = converter.qStringToString( addr.custom( "GWRESOURCE", "CONTAINER" ) );
-  request.id = std::string( addr.custom( "GWRESOURCE", "UID" ).utf8() );
+  request.id = std::string( addr.custom( "GWRESOURCE", "UID" ).toUtf8().data() );
 
   int result = soap_call___ngw__removeItemRequest( mSoap, mUrl.toLatin1(), 0,
                                                     &request, &response );
@@ -1226,7 +1228,7 @@ bool GroupwiseServer::readCalendarSynchronous( KCal::Calendar *cal )
     return false;
   }
 
-  ReadCalendarJob *job = new ReadCalendarJob( this, mSoap, mUrl, mSession );
+  ReadCalendarJob *job = new ReadCalendarJob( this, mSoap, mUrl, mTimeSpec, mSession );
   job->setCalendarFolder( &mCalendarFolder );
   job->setChecklistFolder( &mCheckListFolder );
   job->setCalendar( cal );
@@ -1281,7 +1283,7 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
 
   // Get free/busy data
   _ngwm__getFreeBusyRequest getFreeBusyRequest;
-  getFreeBusyRequest.freeBusySessionId = QString::number( fbSessionId ).utf8();
+  getFreeBusyRequest.freeBusySessionId = QString::number( fbSessionId ).toUtf8().data();
 
   _ngwm__getFreeBusyResponse getFreeBusyResponse;
 
@@ -1319,8 +1321,8 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
         if ( blocks ) {
           std::vector<class ngwt__FreeBusyBlock *>::const_iterator it2;
           for( it2 = blocks->begin(); it2 != blocks->end(); ++it2 ) {
-            KDateTime blockStart = conv.charToKDateTime( (*it2)->startDate, KPimPrefs::timeSpec() );
-            KDateTime blockEnd = conv.charToKDateTime( (*it2)->endDate, KPimPrefs::timeSpec() );
+            KDateTime blockStart = conv.charToKDateTime( (*it2)->startDate, mTimeSpec );
+            KDateTime blockEnd = conv.charToKDateTime( (*it2)->endDate, mTimeSpec );
             ngwt__AcceptLevel acceptLevel = *(*it2)->acceptLevel;
 
             /* we need to support these as people use it for checking others' calendars */ 
@@ -1352,11 +1354,14 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
   return true;
 }
 
-void GroupwiseServer::slotSslError()
+void GroupwiseServer::slotSslErrors(const QList<QSslError> & errors)
 {
   kDebug() <<"********************** SSL ERROR";
+  mErrors.append( i18n("SSL Error") );
 
-  mError = i18n("SSL Error");
+  foreach( QSslError err, errors ) {
+    mErrors.append( err.errorString() );
+  }
 }
 
 void GroupwiseServer::emitReadAddressBookTotalSize( int s )
@@ -1491,9 +1496,9 @@ bool GroupwiseServer::modifyUserSettings( QMap<QString, QString> & settings  )
     kDebug() <<" creating Custom for" << it.key() <<"," << it.value();
     ngwt__Custom * custom = soap_new_ngwt__Custom( mSoap, -1 );
     custom->locked = 0;
-    custom->field.append( it.key().utf8() );
+    custom->field.append( it.key().toUtf8().data() );
     custom->value = soap_new_std__string( mSoap, -1 );
-    custom->value->append( it.value().utf8() );
+    custom->value->append( it.value().toUtf8().data() );
     request.settings->setting.push_back( custom );
 
   }

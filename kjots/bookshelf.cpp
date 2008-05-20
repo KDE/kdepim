@@ -51,10 +51,11 @@ Bookshelf::Bookshelf ( QWidget *parent ) : QTreeWidget(parent)
     sortOrder = Qt::DescendingOrder;
 
     setObjectName( "bookshelf" );
-    setColumnCount(1);
+    setColumnCount(2);
+    setColumnHidden(1, true);
     setRootIsDecorated(true);
     setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Expanding));
-    setMinimumWidth(fontMetrics().maxWidth() * 10 + 5);
+    setMinimumWidth(fontMetrics().maxWidth() * 5 + 5);
     setSelectionMode(QAbstractItemView::ExtendedSelection);
     headerItem()->setText(0, i18n("Bookshelf"));
     header()->setClickable(true);
@@ -134,7 +135,7 @@ void Bookshelf::DelayedInitialization ( KActionCollection *actionCollection ) {
 */
 void Bookshelf::loadBooks ( void )
 {
-    QDir dir(KStandardDirs::locateLocal("appdata",""));
+    QDir dir(KStandardDirs::locateLocal("data","kjots"));
     QList<KJotsBook*> books;
 
     QStringList filter;
@@ -602,7 +603,7 @@ void Bookshelf::copyLinkAddress()
     KJotsEntry *entry = static_cast<KJotsEntry*>(selection.at(0));
     QMimeData *mimeData = new QMimeData();
 
-    QString link = QString("<a href=\"kjots://0.0.0.0/%1\">%2</a>").arg(entry->id()).arg(entry->title());
+    QString link = QString("<a href=\"%1\">%2</a>").arg(entry->kjotsLinkUrl()).arg(entry->title());
 
     mimeData->setData("kjots/internal_link", link.toUtf8());
     mimeData->setText(entry->title());

@@ -26,13 +26,13 @@
 
 class Q3ListViewItem;
 
-#include "groupwisesettingswidgetbase.h"
+#include "ui_groupwisesettingswidgetbase.h"
 
-class GroupWiseSettingsWidget : public GroupWiseSettingsWidgetBase
+class GroupWiseSettingsWidget : public QObject, public Ui_GroupWiseSettingsWidgetBase
 {
 Q_OBJECT
 public:
-  GroupWiseSettingsWidget( QWidget * parent );
+  GroupWiseSettingsWidget();
   QMap<QString, QString> dirtySettings();
   void reset();
 protected slots:
