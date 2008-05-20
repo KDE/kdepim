@@ -1,5 +1,8 @@
 
-include_directories( ${CMAKE_SOURCE_DIR}/kresources/groupwise/soap  )
+include_directories( 
+  ${CMAKE_SOURCE_DIR}/kresources/groupwise
+  ${CMAKE_SOURCE_DIR}/kresources/groupwise/soap
+)
 
 
 ########### next target ###############

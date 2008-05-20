@@ -26,6 +26,8 @@
 #include <kresources/resource.h>
 #include <kresources/configwidget.h>
 
+#include "groupwise_export.h"
+
 class KLineEdit;
 
 namespace KCal {
@@ -38,7 +40,7 @@ class ResourceCachedSaveConfig;
   
   @see KCalResourceGroupwise
 */
-class KDE_EXPORT ResourceGroupwiseConfig : public KRES::ConfigWidget
+class KCAL_GROUPWISE_EXPORT ResourceGroupwiseConfig : public KRES::ConfigWidget
 { 
     Q_OBJECT
   public:

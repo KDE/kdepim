@@ -20,6 +20,7 @@
 #ifndef KABC_RESOURCEGROUPWISECONFIG_H
 #define KABC_RESOURCEGROUPWISECONFIG_H
 
+#include "groupwise_export.h"
 #include "soap/groupwiseserver.h"
 
 #include <kresources/configwidget.h>
@@ -36,7 +37,7 @@ namespace KABC {
 
 class ResourceGroupwise;
 
-class KDE_EXPORT ResourceGroupwiseConfig : public KRES::ConfigWidget
+class KABC_GROUPWISE_EXPORT ResourceGroupwiseConfig : public KRES::ConfigWidget
 { 
   Q_OBJECT
 

@@ -20,6 +20,7 @@
 #ifndef KABC_RESOURCEGROUPWISE_H
 #define KABC_RESOURCEGROUPWISE_H
 
+#include "groupwise_export.h"
 #include "soap/groupwiseserver.h"
 
 #include <kabc/resourcecached.h>
@@ -35,7 +36,7 @@ namespace KABC {
 
 class GroupwisePrefs;
 
-class KDE_EXPORT ResourceGroupwise : public ResourceCached
+class KABC_GROUPWISE_EXPORT ResourceGroupwise : public ResourceCached
 {
   Q_OBJECT
   friend class ResourceGroupwiseConfig;

@@ -47,7 +47,6 @@
 
 #include "contactconverter.h"
 #include "incidenceconverter.h"
-#include "kcal_resourcegroupwise.h"
 #include "soapH.h"
 #include "soapGroupWiseBindingProxy.h"
 #include <stdlib.h>

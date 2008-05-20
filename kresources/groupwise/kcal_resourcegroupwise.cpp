@@ -336,3 +336,5 @@ bool ResourceGroupwise::modifyUserSettings( QMap<QString, QString> & settings )
   server.logout();
   return success;
 }
+
+#include "kcal_resourcegroupwise.moc"
