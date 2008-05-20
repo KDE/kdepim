@@ -63,6 +63,7 @@
 #include "commands/changeownertrustcommand.h"
 #include "commands/selftestcommand.h"
 #include "commands/signcertificatecommand.h"
+#include "commands/adduseridcommand.h"
 
 #include "conf/configuredialog.h"
 
@@ -204,6 +205,9 @@ public:
     }
     void signCertificate() {
         createAndStart<SignCertificateCommand>();
+    }
+    void addUserID() {
+        createAndStart<AddUserIDCommand>();
     }
     void decryptVerifyFiles() {
         createAndStart<DecryptVerifyFilesCommand>();
@@ -392,6 +396,8 @@ void MainWindow::Private::setupActions() {
           0, q, SLOT(changeCertificateOwnerTrust()), QString(), false, true },
         { "certificates_change_passphrase", i18n("Change Passphrase..."), QString(),
           0, q, SLOT(changePassphrase()), QString(), false, true },
+        { "certificates_add_userid", i18n("Add User-ID..."), QString(),
+          0, q, SLOT(addUserID()), QString(), false, true },
           // Tools menu
         { "tools_refresh_x509_certificates", i18n("Refresh X.509 Certificates"), QString(),
           "view-refresh", q, SLOT(refreshX509Certificates()), QString(), false, true },
@@ -437,6 +443,7 @@ void MainWindow::Private::setupActions() {
     controller.registerActionForCommand<ChangeOwnerTrustCommand>(   coll->action( "certificates_change_owner_trust" ) );
     controller.registerActionForCommand<ChangePassphraseCommand>(   coll->action( "certificates_change_passphrase" ) );
     controller.registerActionForCommand<SignCertificateCommand>(    coll->action( "certificates_sign_certificate" ) );
+    controller.registerActionForCommand<AddUserIDCommand>(          coll->action( "certificates_add_userid" ) );
     controller.registerActionForCommand<SignEncryptFilesCommand>(   coll->action( "file_sign_encrypt_files" ) );
     controller.registerActionForCommand<DecryptVerifyFilesCommand>( coll->action( "file_decrypt_verify_files" ) );
     controller.registerActionForCommand<ExportCertificateCommand>(  coll->action( "file_export_certificates" ) );

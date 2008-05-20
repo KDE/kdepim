@@ -54,6 +54,7 @@ namespace Kleo {
   class RefreshKeysJob;
   class ChangeExpiryJob;
   class ChangeOwnerTrustJob;
+  class AddUserIDJob;
   class SpecialJob;
 }
 
@@ -119,6 +120,7 @@ namespace Kleo {
     virtual ChangeExpiryJob     * changeExpiryJob() const;
     virtual ChangeOwnerTrustJob * changeOwnerTrustJob() const;
     virtual SignKeyJob          * signKeyJob() const;
+    virtual AddUserIDJob        * addUserIDJob() const;
     virtual SpecialJob          * specialJob( const char * type, const QMap<QString,QVariant> & args ) const = 0;
   };
 

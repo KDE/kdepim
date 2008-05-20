@@ -31,6 +31,7 @@ set(libkleo_backend_qgpgme_SRCS
 	backends/qgpgme/qgpgmedecryptjob.cpp
 	backends/qgpgme/qgpgmesignjob.cpp
 	backends/qgpgme/qgpgmesignkeyjob.cpp
+        backends/qgpgme/qgpgmeadduseridjob.cpp
 	backends/qgpgme/qgpgmeverifydetachedjob.cpp
 	backends/qgpgme/qgpgmeverifyopaquejob.cpp
 	backends/qgpgme/qgpgmesignencryptjob.cpp
@@ -142,6 +143,7 @@ install( FILES
 	kleo/decryptverifyjob.h
 	kleo/signencryptjob.h
 	kleo/signkeyjob.h
+        kleo/adduseridjob.h
 	kleo/refreshkeysjob.h
 	kleo/multideletejob.h
 	kleo/hierarchicalkeylistjob.h

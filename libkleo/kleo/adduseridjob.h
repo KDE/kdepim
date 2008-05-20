@@ -1,8 +1,8 @@
 /*
-    kleo/cryptobackend.cpp
+    adduseridjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2005 Klarälvdalens Datakonsult AB
+    Copyright (c) 2008 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -30,12 +30,51 @@
     your version.
 */
 
-#include "cryptobackend.h"
+#ifndef __KLEO_ADDUSERIDJOB_H__
+#define __KLEO_ADDUSERIDJOB_H__
 
-const char Kleo::CryptoBackend::OpenPGP[] = "OpenPGP";
-const char Kleo::CryptoBackend::SMIME[] = "SMIME";
+#include "job.h"
 
-Kleo::ChangeExpiryJob * Kleo::CryptoBackend::Protocol::changeExpiryJob() const { return 0; }
-Kleo::ChangeOwnerTrustJob * Kleo::CryptoBackend::Protocol::changeOwnerTrustJob() const { return 0; }
-Kleo::SignKeyJob * Kleo::CryptoBackend::Protocol::signKeyJob() const { return 0; }
-Kleo::AddUserIDJob * Kleo::CryptoBackend::Protocol::addUserIDJob() const { return 0; }
+#include <QString>
+
+namespace GpgME {
+    class Error;
+    class Key;
+}
+
+namespace Kleo {
+
+  /**
+     @short An abstract base class to asynchronously add UIDs to OpenPGP keys
+
+     To use a AddUserIDJob, first obtain an instance from the
+     CryptoBackend implementation, connect the progress() and result()
+     signals to suitable slots and then start the job with a call
+     to start(). This call might fail, in which case the AddUserIDJob
+     instance will have scheduled it's own destruction with a call to
+     QObject::deleteLater().
+
+     After result() is emitted, the AddUserIDJob will schedule it's own
+     destruction by calling QObject::deleteLater().
+  */
+  class KLEO_EXPORT AddUserIDJob : public Job {
+    Q_OBJECT
+  protected:
+    explicit AddUserIDJob( QObject * parent );
+  public:
+    ~AddUserIDJob();
+
+    /**
+       Starts the operation. \a key is the key to add the UID to. \a
+       name, \a email and \a comment are the components of the user id.
+    */
+    virtual GpgME::Error start( const GpgME::Key & key, const QString & name,
+                                const QString & email, const QString & comment=QString() ) = 0;
+
+  Q_SIGNALS:
+    void result( const GpgME::Error & result );
+  };
+
+}
+
+#endif // __KLEO_ADDUSERIDJOB_H__
