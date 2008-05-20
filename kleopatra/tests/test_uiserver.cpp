@@ -152,7 +152,7 @@ int main( int argc, char * argv[] ) {
             inFDs.push_back( inFD );
         } else if ( qstrcmp( arg, "--output-fd" ) == 0 ) {
             int outFD;
-            if ( (outFD = open( argv[++optind], O_WRONLY|O_CREAT )) ==  -1 ) {
+            if ( (outFD = open( argv[++optind], O_WRONLY|O_CREAT, 0666 )) ==  -1 ) {
                 perror( "--output-fd open()" );
                 return 1;
             }
