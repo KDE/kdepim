@@ -45,7 +45,7 @@ namespace Commands {
         explicit SignCertificateCommand( KeyListController * parent );
         ~SignCertificateCommand();
 
-        /* reimp */ static Restrictions restrictions() { return OnlyOneKey|MustBeOpenPGP; }
+        /* reimp */ static Restrictions restrictions() { return OnlyOneKey|MustBeOpenPGP|MustNotBeSecretKey; }
 
     private:
         /* reimp */ void doStart();
