@@ -64,6 +64,18 @@ ExportSecretKeyCommand::ExportSecretKeyCommand( QAbstractItemView * v, KeyListCo
 
 ExportSecretKeyCommand::~ExportSecretKeyCommand() {}
 
+void ExportSecretKeyCommand::setFileName( const QString & fileName ) {
+    m_filename = fileName;
+}
+
+void ExportSecretKeyCommand::setPassphraseCharset( const QByteArray & charset ) {
+    m_charset = charset;
+}
+
+void ExportSecretKeyCommand::setUseArmor( bool armor ) {
+    m_armor = armor;
+}
+
 bool ExportSecretKeyCommand::preStartHook( QWidget * parent ) const {
     if ( !m_filename.isEmpty() )
         return true;

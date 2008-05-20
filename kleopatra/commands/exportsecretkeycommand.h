@@ -48,6 +48,15 @@ namespace Commands {
         explicit ExportSecretKeyCommand( KeyListController * parent );
         ~ExportSecretKeyCommand();
 
+        void setFileName( const QString & fileName );
+        QString fileName() const { return m_filename; }
+
+        void setPassphraseCharset( const QByteArray & charset );
+        QByteArray passphraseCharset() const { return m_charset; }
+
+        void setUseArmor( bool armor );
+        bool useArmor() const { return m_armor; }
+
         /* reimp */ static Restrictions restrictions() { return OnlyOneKey|NeedSecretKey; }
 
     private:
