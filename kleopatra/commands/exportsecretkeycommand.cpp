@@ -106,7 +106,7 @@ QStringList ExportSecretKeyCommand::arguments() const {
     if ( m_armor )
         result << "--armor";
 
-    if ( !m_charset.isEmpty() )
+    if ( key.protocol() == CMS && !m_charset.isEmpty() )
         result << "--p12-charset" << m_charset;
 
     if ( key.protocol() == OpenPGP )
