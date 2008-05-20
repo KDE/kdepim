@@ -1,3 +1,16 @@
+Tuesday, May 20th 2008
+
+Problems addressed
+--------------------
+* kolab/issue2667 - Kontact sometimes tries to re-create existing folders and fails. (807761)
+* kolab/issue2717 - Composer option "Insert signatures above quoted text" doesn't work. (810237)
+
+Merges
+-------
+
+* Enterprise in sync with kdepim 3.5 branch.
+
+
 Friday, May 9th 2008
 
 Problems addressed
