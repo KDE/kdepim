@@ -115,6 +115,12 @@ ChangeOwnerTrustCommand::ChangeOwnerTrustCommand( QAbstractItemView * v, KeyList
     d->init();
 }
 
+ChangeOwnerTrustCommand::ChangeOwnerTrustCommand( const Key & key )
+    : Command( key, new Private( this, 0 ) )
+{
+    d->init();
+}
+
 void ChangeOwnerTrustCommand::Private::init() {
 
 }

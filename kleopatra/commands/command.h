@@ -56,6 +56,8 @@ namespace Kleo {
     public:
         explicit Command( KeyListController * parent );
         explicit Command( QAbstractItemView * view, KeyListController * parent );
+        explicit Command( const GpgME::Key & key );
+        explicit Command( const std::vector<GpgME::Key> & keys );
         ~Command();
 
         enum Restriction {
@@ -104,6 +106,8 @@ namespace Kleo {
     protected:
         explicit Command( Private * pp );
         explicit Command( QAbstractItemView * view, Private * pp );
+        explicit Command( const std::vector<GpgME::Key> & keys, Private * pp );
+        explicit Command( const GpgME::Key & key, Private * pp );
     };
 
 }

@@ -59,6 +59,12 @@ ChangePassphraseCommand::ChangePassphraseCommand( QAbstractItemView * v, KeyList
 
 }
 
+ChangePassphraseCommand::ChangePassphraseCommand( const Key & key )
+    : GnuPGProcessCommand( key )
+{
+
+}
+
 ChangePassphraseCommand::~ChangePassphraseCommand() {}
 
 QStringList ChangePassphraseCommand::arguments() const {

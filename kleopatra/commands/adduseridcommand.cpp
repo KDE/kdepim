@@ -113,6 +113,12 @@ AddUserIDCommand::AddUserIDCommand( QAbstractItemView * v, KeyListController * c
     d->init();
 }
 
+AddUserIDCommand::AddUserIDCommand( const GpgME::Key & key )
+    : Command( key, new Private( this, 0 ) )
+{
+    d->init();
+}
+
 void AddUserIDCommand::Private::init() {
 
 }

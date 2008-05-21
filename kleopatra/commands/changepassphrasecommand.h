@@ -43,6 +43,7 @@ namespace Commands {
     public:
         explicit ChangePassphraseCommand( QAbstractItemView * view, KeyListController * parent );
         explicit ChangePassphraseCommand( KeyListController * parent );
+        explicit ChangePassphraseCommand( const GpgME::Key & key );
         ~ChangePassphraseCommand();
 
         /* reimp */ static Restrictions restrictions() { return OnlyOneKey; }

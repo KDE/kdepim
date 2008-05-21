@@ -43,6 +43,7 @@ namespace Commands {
     public:
         explicit AddUserIDCommand( QAbstractItemView * view, KeyListController * parent );
         explicit AddUserIDCommand( KeyListController * parent );
+        explicit AddUserIDCommand( const GpgME::Key & key );
         ~AddUserIDCommand();
 
         /* reimp */ static Restrictions restrictions() { return OnlyOneKey|MustBeOpenPGP; }

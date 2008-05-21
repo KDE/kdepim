@@ -86,6 +86,30 @@ Command::Command( QAbstractItemView * v, Private * pp )
         setView( v );
 }
 
+Command::Command( const Key & key )
+    : QObject( 0 ), d( new Private( this, 0 ) )
+{
+    d->keys_ = std::vector<Key>( 1, key );
+}
+
+Command::Command( const std::vector<Key> & keys )
+    : QObject( 0 ), d( new Private( this, 0 ) )
+{
+    d->keys_ = keys;
+}
+
+Command::Command( const Key & key, Private * pp )
+    : QObject( 0 ), d( pp )
+{
+    d->keys_ = std::vector<Key>( 1, key );
+}
+
+Command::Command( const std::vector<Key> & keys, Private * pp )
+    : QObject( 0 ), d( pp )
+{
+    d->keys_ = keys;
+}
+
 Command::~Command() { kDebug(); }
 
 void Command::setAutoDelete( bool on ) {

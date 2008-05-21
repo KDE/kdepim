@@ -115,6 +115,12 @@ ChangeExpiryCommand::ChangeExpiryCommand( QAbstractItemView * v, KeyListControll
     d->init();
 }
 
+ChangeExpiryCommand::ChangeExpiryCommand( const GpgME::Key & key )
+    : Command( key, new Private( this, 0 ) )
+{
+    d->init();
+}
+
 void ChangeExpiryCommand::Private::init() {
 
 }
