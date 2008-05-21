@@ -37,6 +37,7 @@
 #include "ui_certificatedetailsdialog.h"
 
 #include <models/useridlistmodel.h>
+#include <models/keycache.h>
 
 #include <commands/changepassphrasecommand.h>
 #include <commands/changeownertrustcommand.h>
@@ -82,6 +83,8 @@ public:
         ui.certificationsTV->setModel( &certificationsModel );
         connect( ui.certificationsTV->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
                  q, SLOT(slotCertificationSelectionChanged()) );
+        connect( KeyCache::instance().get(), SIGNAL(keysMayHaveChanged()),
+                 q, SLOT(slotKeysMayHaveChanged()) );
     }
 
 private:
@@ -148,6 +151,11 @@ private:
 
     void slotCertificationSelectionChanged() {
         enableDisableWidgets();
+    }
+
+    void slotKeysMayHaveChanged() {
+        if ( const char * const fpr = key.primaryFingerprint() )
+            q->setKey( KeyCache::instance()->findByFingerprint( fpr ) );
     }
 
 private:
@@ -245,8 +253,6 @@ CertificateDetailsDialog::~CertificateDetailsDialog() {}
 
 
 void CertificateDetailsDialog::setKey( const Key & key ) {
-    if ( qstricmp( key.primaryFingerprint(), d->key.primaryFingerprint() ) == 0 )
-        return;
     d->key = key;
     d->updateWidgetVisibility();
     d->enableDisableWidgets();
