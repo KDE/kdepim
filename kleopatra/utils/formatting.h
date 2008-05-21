@@ -67,7 +67,9 @@ namespace Formatting {
         CertificateType=0x20,
         CertificateUsage=0x40,
         Fingerprint=0x80,
-        UserIDs=0x100
+        UserIDs=0x100,
+
+        AllOptions = 0x1ff
     };
 
     QString toolTip( const GpgME::Key & key, int opts );
@@ -107,6 +109,8 @@ namespace Formatting {
     const char * summaryToString( const GpgME::Signature::Summary summary );
 
     QString importMetaData( const GpgME::Import & import );
+
+    QString formatOverview( const GpgME::Key & key );
 }
 }
 

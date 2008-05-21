@@ -508,3 +508,11 @@ QString Formatting::importMetaData( const Import & import ) {
         : results.join( "\n" );
 }
 
+
+//
+// Overview in CertificateDetailsDialog
+//
+
+QString Formatting::formatOverview( const Key & key ) {
+    return toolTip( key, AllOptions );
+}
