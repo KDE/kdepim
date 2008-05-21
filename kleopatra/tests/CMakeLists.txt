@@ -14,6 +14,17 @@ target_link_libraries(test_keylistmodels kleo ${KDE4_KDECORE_LIBS} )
 
 ########### next target ###############
 
+set(test_useridlistmodels_SRCS test_useridlistmodels.cpp ../models/useridlistmodel.cpp ../utils/formatting.cpp ../utils/exception.cpp )
+if ( KLEO_MODEL_TEST )
+   set(test_useridlistmodels_SRCS ${test_useridlistmodels_SRCS} ../models/modeltest.cpp )
+endif ( KLEO_MODEL_TEST )
+
+kde4_add_executable(test_useridlistmodels TEST ${test_useridlistmodels_SRCS})
+
+target_link_libraries(test_useridlistmodels kleo ${KDE4_KDECORE_LIBS} )
+
+########### next target ###############
+
 #set(test_verificationresultdialog_SRCS test_verificationresultdialog.cpp ../uiserver/signaturedisplaywidget.cpp ../utils/formatting.cpp ../certificateinfowidgetimpl.cpp ../uiserver/resultdisplaywidget.cpp)
 #kde4_add_ui_files( test_verificationresultdialog_SRCS ../certificateinfowidget.ui)
 #kde4_add_executable(test_verificationresultdialog TEST ${test_verificationresultdialog_SRCS})
