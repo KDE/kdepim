@@ -63,8 +63,8 @@ public:
         std::copy( indexes_.begin(), indexes_.end(), std::back_inserter( result ) );
         return result;
     }
-    GpgME::Key key() const { return model() && !indexes_.empty() ? model()->key( indexes_.front() ) : GpgME::Key::null ; }
-    std::vector<GpgME::Key> keys() const { return model() ? model()->keys( indexes() ) : std::vector<GpgME::Key>() ; }
+    GpgME::Key key() const { return keys_.empty() ? model() && !indexes_.empty() ? model()->key( indexes_.front() ) : GpgME::Key::null : keys_.front() ; }
+    std::vector<GpgME::Key> keys() const { return keys_.empty() ? model() ? model()->keys( indexes() ) : std::vector<GpgME::Key>() : keys_ ; }
 
     void finished() {
         emit q->finished();
@@ -79,6 +79,7 @@ public:
 
 private:
     bool autoDelete : 1;
+    std::vector<GpgME::Key> keys_;
     QList<QPersistentModelIndex> indexes_;
     QPointer<QAbstractItemView> view_;
     QPointer<KeyListController> controller_;

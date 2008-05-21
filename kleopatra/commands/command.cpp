@@ -40,6 +40,7 @@
 #include <QAbstractItemView>
 
 using namespace Kleo;
+using namespace GpgME;
 
 Command::Private::Private( Command * qq, KeyListController * controller )
     : q( qq ),
@@ -121,6 +122,16 @@ void Command::setIndex( const QModelIndex & idx ) {
 void Command::setIndexes( const QList<QModelIndex> & idx ) {
     d->indexes_.clear();
     std::copy( idx.begin(), idx.end(), std::back_inserter( d->indexes_ ) );
+}
+
+void Command::setKey( const Key & key ) {
+    d->keys_.clear();
+    if ( !key.isNull() )
+        d->keys_.push_back( key );
+}
+
+void Command::setKeys( const std::vector<Key> & keys ) {
+    d->keys_ = keys;
 }
 
 void Command::start() {

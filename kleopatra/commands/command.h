@@ -37,9 +37,15 @@
 
 #include <utils/pimpl_ptr.h>
 
+#include <vector>
+
 class QModelIndex;
 template <typename T> class QList;
 class QAbstractItemView;
+
+namespace GpgME {
+    class Key;
+}
 
 namespace Kleo {
 
@@ -61,8 +67,10 @@ namespace Kleo {
             MustBeOpenPGP      = 16,
             MustBeCMS          = 32,
 
-            AllRestrictions
+            _AllRestrictions_Helper,
+            AllRestrictions = 2*(_AllRestrictions_Helper-1) - 1
         };
+
         Q_DECLARE_FLAGS( Restrictions, Restriction )
 
         static Restrictions restrictions() { return NoRestriction; }
@@ -70,6 +78,8 @@ namespace Kleo {
         void setView( QAbstractItemView * view );
         void setIndex( const QModelIndex & idx );
         void setIndexes( const QList<QModelIndex> & idx );
+        void setKey( const GpgME::Key & key );
+        void setKeys( const std::vector<GpgME::Key> & keys );
 
         void setAutoDelete( bool on );
         bool autoDelete() const;
