@@ -101,6 +101,6 @@
         * \dotfile dependency-graph.dot
         *
         */
-// DOXYGEN_VERSION=4.0
+// DOXYGEN_VERSION=4.1
 // DOXYGEN_NAME=kdepim
 // DOXYGEN_ENABLE=YES
