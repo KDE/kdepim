@@ -162,11 +162,12 @@ void AddUserIDCommand::Private::slotDialogRejected() {
 
 void AddUserIDCommand::Private::slotResult( const Error & err ) {
     if ( err.isCanceled() )
-        finished();
+        ;
     else if ( err )
         showErrorDialog( err );
     else
         showSuccessDialog();
+    finished();
 }
 
 void AddUserIDCommand::doCancel() {
