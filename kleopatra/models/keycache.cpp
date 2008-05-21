@@ -659,6 +659,8 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
 
     Q_FOREACH( const Key & key, sorted )
         emit added( key ); 
+
+    emit keysMayHaveChanged();
 }
 
 void KeyCache::clear() {
