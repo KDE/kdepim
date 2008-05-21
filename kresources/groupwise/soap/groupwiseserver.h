@@ -38,6 +38,7 @@
 #include <kabc/addressee.h>
 #include <kcal/freebusy.h>
 
+#include "groupwise_export.h"
 #include "gwjobs.h"
 
 namespace KABC {
@@ -91,7 +92,7 @@ class DeltaInfo
 };
 }
 
-class KDE_EXPORT GroupwiseServer : public QObject
+class GWSOAP_EXPORT GroupwiseServer : public QObject
 {
   Q_OBJECT
 

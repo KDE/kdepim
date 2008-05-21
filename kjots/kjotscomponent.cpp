@@ -29,6 +29,7 @@
 
 #include <q3header.h>
 #include <QStackedWidget>
+#include <QtDBus/QDBusConnection>
 #include <QPainter>
 #include <QtGui/QPrinter>
 #include <QtGui/QPrintDialog>
@@ -89,6 +90,9 @@ KJotsComponent::KJotsComponent(QWidget* parent, KActionCollection *collection) :
     actionCollection = collection;
     selectionOnlyActions = pageOnlyActions = 0;
     searchDialog = 0;
+
+    QDBusConnection dbus = QDBusConnection::sessionBus();
+    dbus.registerObject("/KJotsComponent", this, QDBusConnection::ExportScriptableSlots);
 
     //
     // Main widget
@@ -492,6 +496,7 @@ void KJotsComponent::newPage()
         bookshelf->clearSelection();
         bookshelf->setItemSelected(page, true);
     }
+
 }
 
 void KJotsComponent::configure()

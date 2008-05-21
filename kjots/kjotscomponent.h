@@ -64,6 +64,7 @@ public:
 class KJotsComponent : public QWidget
 {
     Q_OBJECT
+    Q_CLASSINFO("D-Bus Interface", "org.kde.KJotsComponent")
 
     public:
         KJotsComponent(QWidget* parent, KActionCollection *actionCollection);
@@ -78,18 +79,17 @@ class KJotsComponent : public QWidget
     public slots:
         void updateCaption();
         void updateMenu();
+        Q_SCRIPTABLE void newPage();
+        Q_SCRIPTABLE bool createNewBook();
 
     signals:
         void captionChanged(QString);
- 
 
     protected slots:
         void DelayedInitialization();
-        bool createNewBook();
         void deleteBook();
         void deletePage();
         void deleteMultiple();
-        void newPage();
         void onRenameEntry();
         void configure();
         void updateConfiguration();

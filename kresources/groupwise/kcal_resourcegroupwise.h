@@ -21,6 +21,7 @@
 #ifndef KCAL_RESOURCEGROUPWISE_H
 #define KCAL_RESOURCEGROUPWISE_H
 
+#include "groupwise_export.h"
 #include <kresources/idmapper.h>
 
 #include <libkdepim/progressmanager.h>
@@ -41,7 +42,7 @@ class GroupwisePrefsBase;
 /**
   This class provides a resource for accessing a Groupwise calendar.
 */
-class KDE_EXPORT ResourceGroupwise : public ResourceCached
+class KCAL_GROUPWISE_EXPORT ResourceGroupwise : public ResourceCached
 {
   Q_OBJECT
 

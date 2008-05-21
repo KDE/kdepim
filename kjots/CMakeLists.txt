@@ -1,6 +1,7 @@
 project(kjots)
 
 add_subdirectory( icons )
+include_directories( ${CMAKE_BINARY_DIR}/kjots )
 
 #########################################################################
 # Main Application SECTION
@@ -18,6 +19,12 @@ set(kjots_SRCS
    kjotsbrowser.cpp
    kjotslinkdialog.cpp
  )
+
+
+# D-Bus interface
+qt4_generate_dbus_interface( kjotscomponent.h org.kde.KJotsComponent.xml OPTIONS -m )
+qt4_add_dbus_interfaces(kjots_SRCS
+    ${CMAKE_BINARY_DIR}/kjots/org.kde.KJotsComponent.xml)
 
 kde4_add_ui_files(kjots_SRCS confpagemisc.ui )
 
