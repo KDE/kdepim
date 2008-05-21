@@ -59,14 +59,18 @@ namespace Dialogs {
         class Private;
         kdtools::pimpl_ptr<Private> d;
         Q_PRIVATE_SLOT( d, void slotChangePassphraseClicked() )
+        Q_PRIVATE_SLOT( d, void slotChangePassphraseCommandFinished() )
         Q_PRIVATE_SLOT( d, void slotChangeTrustLevelClicked() )
+        Q_PRIVATE_SLOT( d, void slotChangeOwnerTrustCommandFinished() )
         Q_PRIVATE_SLOT( d, void slotChangeExpiryDateClicked() )
+        Q_PRIVATE_SLOT( d, void slotChangeExpiryDateCommandFinished() )
         Q_PRIVATE_SLOT( d, void slotRevokeCertificateClicked() )
         Q_PRIVATE_SLOT( d, void slotAddUserIDClicked() )
+        Q_PRIVATE_SLOT( d, void slotAddUserIDCommandFinished() )
         Q_PRIVATE_SLOT( d, void slotRevokeUserIDClicked() )
         Q_PRIVATE_SLOT( d, void slotCertifyUserIDClicked() )
         Q_PRIVATE_SLOT( d, void slotRevokeCertificationClicked() )
-        Q_PRIVATE_SLOT( d, void slotShowCertificationsToggled( bool ) )
+        Q_PRIVATE_SLOT( d, void slotShowCertificationsClicked() )
         Q_PRIVATE_SLOT( d, void slotCertificationSelectionChanged() )
     };
 

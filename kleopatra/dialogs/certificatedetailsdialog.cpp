@@ -38,6 +38,11 @@
 
 #include <models/useridlistmodel.h>
 
+#include <commands/changepassphrasecommand.h>
+#include <commands/changeownertrustcommand.h>
+#include <commands/changeexpirycommand.h>
+#include <commands/adduseridcommand.h>
+
 #include <utils/formatting.h>
 
 #include <gpgme++/key.h>
@@ -46,6 +51,8 @@
 #include <KMessageBox>
 #include <KLocalizedString>
 
+#include <QPointer>
+
 #include <boost/mem_fn.hpp>
 
 #include <algorithm>
@@ -53,6 +60,7 @@
 
 using namespace Kleo;
 using namespace Kleo::Dialogs;
+using namespace Kleo::Commands;
 using namespace GpgME;
 using namespace boost;
 
@@ -77,18 +85,66 @@ public:
     }
 
 private:
-    void slotChangePassphraseClicked();
-    void slotChangeTrustLevelClicked();
-    void slotChangeExpiryDateClicked();
+    void slotChangePassphraseClicked() {
+        if ( changePassphraseCommand )
+            return;
+        changePassphraseCommand = new ChangePassphraseCommand( key );
+        connect( changePassphraseCommand, SIGNAL(finished()), q, SLOT(slotChangePassphraseCommandFinished()) );
+        changePassphraseCommand->start();
+        enableDisableWidgets();
+    }
+    void slotChangePassphraseCommandFinished() {
+        changePassphraseCommand = 0;
+        enableDisableWidgets();
+    }
+
+    void slotChangeTrustLevelClicked() {
+        if ( changeOwnerTrustCommand )
+            return;
+        changeOwnerTrustCommand = new ChangeOwnerTrustCommand( key );
+        connect( changeOwnerTrustCommand, SIGNAL(finished()), q, SLOT(slotChangeOwnerTrustCommandFinished()) );
+        changeOwnerTrustCommand->start();
+        enableDisableWidgets();
+    }
+    void slotChangeOwnerTrustCommandFinished() {
+        changeOwnerTrustCommand = 0;
+        enableDisableWidgets();
+    }
+
+    void slotChangeExpiryDateClicked() {
+        if ( changeExpiryDateCommand )
+            return;
+        changeExpiryDateCommand = new ChangeExpiryCommand( key );
+        connect( changeExpiryDateCommand, SIGNAL(finished()), q, SLOT(slotChangeExpiryDateCommandFinished()) );
+        changeExpiryDateCommand->start();
+        enableDisableWidgets();
+    }
+    void slotChangeExpiryDateCommandFinished() {
+        changeExpiryDateCommand = 0;
+        enableDisableWidgets();
+    }
+
     void slotRevokeCertificateClicked();
 
-    void slotAddUserIDClicked();
+    void slotAddUserIDClicked() {
+        if ( addUserIDCommand )
+            return;
+        addUserIDCommand = new AddUserIDCommand( key );
+        connect( addUserIDCommand, SIGNAL(finished()), q, SLOT(slotAddUserIDCommandFinished()) );
+        addUserIDCommand->start();
+        enableDisableWidgets();
+    }
+    void slotAddUserIDCommandFinished() {
+        addUserIDCommand = 0;
+        enableDisableWidgets();
+    }
+
     void slotRevokeUserIDClicked();
     void slotCertifyUserIDClicked();
 
     void slotRevokeCertificationClicked();
 
-    void slotShowCertificationsToggled( bool );
+    void slotShowCertificationsClicked();
 
     void slotCertificationSelectionChanged() {
         enableDisableWidgets();
@@ -99,6 +155,7 @@ private:
         const bool x509 = key.protocol() == CMS;
         const bool pgp = key.protocol() == OpenPGP;
         const bool secret = key.hasSecret();
+        const bool sigs = (key.keyListMode() & Signatures);
 
         // Overview Tab
         ui.changePassphrasePB->setVisible(         secret );
@@ -110,6 +167,7 @@ private:
         ui.certificationsActionGB->setVisible( pgp );
         ui.addUserIDPB->setVisible( secret );
         ui.certifyUserIDPB->setVisible( !secret );
+        ui.showCertificationsPB->setVisible( pgp && !sigs );
 
         // ...
     }
@@ -133,7 +191,13 @@ private:
     }
 
     void enableDisableWidgets() {
+        // Overview Tab
+        ui.changePassphrasePB->setEnabled( !changePassphraseCommand );
+        ui.changeTrustLevelPB->setEnabled( !changeOwnerTrustCommand );
+        ui.changeExpiryDatePB->setEnabled( !changeExpiryDateCommand );
+
         // Certifications Tab
+        ui.addUserIDPB->setEnabled( !addUserIDCommand );
 
         const std::vector<UserID> uids = selectedUserIDs();
         const std::vector<UserID::Signature> sigs = selectedSignatures();
@@ -155,6 +219,12 @@ private:
 private:
     Key key;
     UserIDListModel certificationsModel;
+
+    QPointer<ChangePassphraseCommand> changePassphraseCommand;
+    QPointer<ChangeOwnerTrustCommand> changeOwnerTrustCommand;
+    QPointer<ChangeExpiryCommand>     changeExpiryDateCommand;
+
+    QPointer<AddUserIDCommand> addUserIDCommand;
 
     struct UI : public Ui_CertificateDetailsDialog {
         explicit UI( Dialogs::CertificateDetailsDialog * qq )
@@ -189,25 +259,10 @@ Key CertificateDetailsDialog::key() const {
 }
 
 
-void CertificateDetailsDialog::Private::slotChangePassphraseClicked() {
-
-}
-
-void CertificateDetailsDialog::Private::slotChangeTrustLevelClicked() {
-
-}
-
-void CertificateDetailsDialog::Private::slotChangeExpiryDateClicked() {
-
-}
-
 void CertificateDetailsDialog::Private::slotRevokeCertificateClicked() {
 
 }
 
-void CertificateDetailsDialog::Private::slotAddUserIDClicked() {
-
-}
 
 void CertificateDetailsDialog::Private::slotRevokeUserIDClicked() {
 
@@ -221,7 +276,7 @@ void CertificateDetailsDialog::Private::slotRevokeCertificationClicked() {
 
 }
 
-void CertificateDetailsDialog::Private::slotShowCertificationsToggled( bool ) {
+void CertificateDetailsDialog::Private::slotShowCertificationsClicked() {
 
 }
 

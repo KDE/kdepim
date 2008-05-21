@@ -200,9 +200,9 @@
         </layout>
        </item>
        <item>
-        <widget class="QCheckBox" name="showSignaturesCB" >
+        <widget class="QPushButton" name="showCertificationsPB" >
          <property name="text" >
-          <string>Show certifcations</string>
+          <string>Show Certifcations (may take a while)</string>
          </property>
         </widget>
        </item>
@@ -283,7 +283,6 @@
    <container>1</container>
   </customwidget>
  </customwidgets>
- <includes/>
  <resources/>
  <connections>
   <connection>
@@ -309,8 +308,8 @@
    <slot>slotChangePassphraseClicked()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>726</x>
-     <y>348</y>
+     <x>748</x>
+     <y>390</y>
     </hint>
     <hint type="destinationlabel" >
      <x>782</x>
@@ -431,18 +430,18 @@
    </hints>
   </connection>
   <connection>
-   <sender>showSignaturesCB</sender>
-   <signal>toggled(bool)</signal>
+   <sender>showCertificationsPB</sender>
+   <signal>clicked()</signal>
    <receiver>CertificateDetailsDialog</receiver>
-   <slot>slotShowCertificationsToggled(bool)</slot>
+   <slot>slotShowCertificationsClicked()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>740</x>
-     <y>518</y>
+     <x>748</x>
+     <y>510</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>780</x>
-     <y>478</y>
+     <x>776</x>
+     <y>490</y>
     </hint>
    </hints>
   </connection>
@@ -456,6 +455,6 @@
   <slot>slotCertifyUserIDClicked()</slot>
   <slot>slotRevokeUserIDClicked()</slot>
   <slot>slotRevokeCertificationClicked()</slot>
-  <slot>slotShowCertificationsToggled(bool)</slot>
+  <slot>slotShowCertificationsClicked()</slot>
  </slots>
 </ui>
