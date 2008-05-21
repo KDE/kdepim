@@ -59,6 +59,7 @@
 #include <cassert>
 
 using namespace Kleo; 
+using namespace Kleo::Commands; 
 using namespace boost;
 using namespace GpgME;
 

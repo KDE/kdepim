@@ -140,6 +140,7 @@ set( _kleopatra_SRCS
   dialogs/signcertificatedialog.cpp
   dialogs/exportsecretkeydialog.cpp
   dialogs/adduseriddialog.cpp
+  dialogs/certificatedetailsdialog.cpp
 
   crypto/certificateresolver.cpp
   crypto/task.cpp
@@ -211,7 +212,6 @@ set( _kleopatra_SRCS
   aboutdata.cpp
   systemtrayicon.cpp
   exportcertificatesdialog.cpp
-  certificateinfowidgetimpl.cpp
   main.cpp )
 
 if ( KLEO_MODEL_TEST )
@@ -220,7 +220,6 @@ if ( KLEO_MODEL_TEST )
 endif ( KLEO_MODEL_TEST )
 
 kde4_add_ui_files( _kleopatra_SRCS
-  certificateinfowidget.ui
   certificatewizard.ui
   dialogs/expirydialog.ui
   dialogs/lookupcertificatesdialog.ui
@@ -229,6 +228,7 @@ kde4_add_ui_files( _kleopatra_SRCS
   dialogs/signcertificatedialog.ui
   dialogs/exportsecretkeydialog.ui
   dialogs/adduseriddialog.ui
+  dialogs/certificatedetailsdialog.ui
   )
 kde4_add_kcfg_files( _kleopatra_SRCS
   kcfg/tooltippreferences.kcfgc

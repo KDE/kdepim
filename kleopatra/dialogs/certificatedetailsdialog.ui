@@ -1,0 +1,461 @@
+<ui version="4.0" >
+ <class>CertificateDetailsDialog</class>
+ <widget class="QDialog" name="CertificateDetailsDialog" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>783</width>
+    <height>596</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Certificate Details</string>
+  </property>
+  <layout class="QVBoxLayout" >
+   <item>
+    <widget class="QTabWidget" name="tabWidget" >
+     <widget class="QWidget" name="overviewTab" >
+      <property name="geometry" >
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>761</width>
+        <height>499</height>
+       </rect>
+      </property>
+      <attribute name="title" >
+       <string>Overview</string>
+      </attribute>
+      <layout class="QGridLayout" >
+       <item rowspan="2" row="0" column="0" >
+        <widget class="QGroupBox" name="groupBox_2" >
+         <property name="title" >
+          <string>Photo</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_2" >
+          <item>
+           <widget class="QLabel" name="photoLB" >
+            <property name="text" >
+             <string>&lt;p>At the moment, Kleopatra does not support photos in certificates. It has no support for adding, nor for displaying them. This is for the following reasons:&lt;/p>
+&lt;ul>
+&lt;li>Photos give a false sense of security.&lt;/li>
+&lt;li>Photos increase the size of certificates.&lt;/li>
+&lt;/ul></string>
+            </property>
+            <property name="scaledContents" >
+             <bool>false</bool>
+            </property>
+            <property name="wordWrap" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="1" >
+        <widget class="QGroupBox" name="groupBox" >
+         <property name="title" >
+          <string>Actions</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout" >
+          <item>
+           <widget class="QPushButton" name="changePassphrasePB" >
+            <property name="text" >
+             <string>Change Passphrase...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="changeTrustLevelPB" >
+            <property name="text" >
+             <string>Trust Certifications made by this Certificate...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="changeExpiryDatePB" >
+            <property name="text" >
+             <string>Change Expiry Date...</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="revokeCertificatePB" >
+            <property name="text" >
+             <string>Revoke this Certificate...</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="0" column="1" >
+        <widget class="QLabel" name="overviewLB" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+           <horstretch>1</horstretch>
+           <verstretch>1</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="textFormat" >
+          <enum>Qt::RichText</enum>
+         </property>
+         <property name="alignment" >
+          <set>Qt::AlignCenter</set>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="certificationsTab" >
+      <property name="geometry" >
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>761</width>
+        <height>499</height>
+       </rect>
+      </property>
+      <attribute name="title" >
+       <string>User-IDs and Certifications</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout_6" >
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2" >
+         <item>
+          <widget class="QTreeView" name="certificationsTV" >
+           <property name="selectionMode" >
+            <enum>QAbstractItemView::ExtendedSelection</enum>
+           </property>
+           <property name="allColumnsShowFocus" >
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <layout class="QVBoxLayout" name="verticalLayout_5" >
+           <item>
+            <widget class="QGroupBox" name="userIDsActionsGB" >
+             <property name="title" >
+              <string>User-IDs</string>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_3" >
+              <item>
+               <widget class="QPushButton" name="addUserIDPB" >
+                <property name="text" >
+                 <string>Add...</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="revokeUserIDPB" >
+                <property name="text" >
+                 <string>Revoke...</string>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QPushButton" name="certifyUserIDPB" >
+                <property name="text" >
+                 <string>Certify...</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <widget class="QGroupBox" name="certificationsActionGB" >
+             <property name="title" >
+              <string>Certifications</string>
+             </property>
+             <layout class="QVBoxLayout" name="verticalLayout_4" >
+              <item>
+               <widget class="QPushButton" name="revokeCertificationPB" >
+                <property name="text" >
+                 <string>Revoke...</string>
+                </property>
+               </widget>
+              </item>
+             </layout>
+            </widget>
+           </item>
+           <item>
+            <spacer name="verticalSpacer_2" >
+             <property name="orientation" >
+              <enum>Qt::Vertical</enum>
+             </property>
+             <property name="sizeHint" stdset="0" >
+              <size>
+               <width>20</width>
+               <height>40</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+          </layout>
+         </item>
+        </layout>
+       </item>
+       <item>
+        <widget class="QCheckBox" name="showSignaturesCB" >
+         <property name="text" >
+          <string>Show certifcations</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="detailsTab" >
+      <property name="geometry" >
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>761</width>
+        <height>499</height>
+       </rect>
+      </property>
+      <attribute name="title" >
+       <string>Technical Details</string>
+      </attribute>
+     </widget>
+     <widget class="QWidget" name="chainTab" >
+      <property name="geometry" >
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>761</width>
+        <height>499</height>
+       </rect>
+      </property>
+      <attribute name="title" >
+       <string>Chain</string>
+      </attribute>
+      <layout class="QVBoxLayout" >
+       <item>
+        <widget class="QTreeView" name="chainTV" >
+         <property name="allColumnsShowFocus" >
+          <bool>true</bool>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="dumpTab" >
+      <property name="geometry" >
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>761</width>
+        <height>499</height>
+       </rect>
+      </property>
+      <attribute name="title" >
+       <string>Dump</string>
+      </attribute>
+      <layout class="QVBoxLayout" >
+       <item>
+        <widget class="KDLogTextWidget" native="1" name="widget" />
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons" >
+      <set>QDialogButtonBox::Close|QDialogButtonBox::Help</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KDLogTextWidget</class>
+   <extends>QWidget</extends>
+   <header>utils/kdlogtextwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <includes/>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>CertificateDetailsDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>295</x>
+     <y>573</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>changePassphrasePB</sender>
+   <signal>clicked()</signal>
+   <receiver>CertificateDetailsDialog</receiver>
+   <slot>slotChangePassphraseClicked()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>726</x>
+     <y>348</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>782</x>
+     <y>350</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>changeTrustLevelPB</sender>
+   <signal>clicked()</signal>
+   <receiver>CertificateDetailsDialog</receiver>
+   <slot>slotChangeTrustLevelClicked()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>742</x>
+     <y>400</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>784</x>
+     <y>402</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>changeExpiryDatePB</sender>
+   <signal>clicked()</signal>
+   <receiver>CertificateDetailsDialog</receiver>
+   <slot>slotChangeExpiryDateClicked()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>742</x>
+     <y>448</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>780</x>
+     <y>450</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>revokeCertificatePB</sender>
+   <signal>clicked()</signal>
+   <receiver>CertificateDetailsDialog</receiver>
+   <slot>slotRevokeCertificateClicked()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>728</x>
+     <y>496</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>778</x>
+     <y>498</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>addUserIDPB</sender>
+   <signal>clicked()</signal>
+   <receiver>CertificateDetailsDialog</receiver>
+   <slot>slotAddUserIDClicked()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>738</x>
+     <y>100</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>780</x>
+     <y>100</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>revokeUserIDPB</sender>
+   <signal>clicked()</signal>
+   <receiver>CertificateDetailsDialog</receiver>
+   <slot>slotRevokeUserIDClicked()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>738</x>
+     <y>150</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>778</x>
+     <y>152</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>certifyUserIDPB</sender>
+   <signal>clicked()</signal>
+   <receiver>CertificateDetailsDialog</receiver>
+   <slot>slotCertifyUserIDClicked()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>736</x>
+     <y>190</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>780</x>
+     <y>190</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>revokeCertificationPB</sender>
+   <signal>clicked()</signal>
+   <receiver>CertificateDetailsDialog</receiver>
+   <slot>slotRevokeCertificationClicked()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>732</x>
+     <y>272</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>780</x>
+     <y>272</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>showSignaturesCB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>CertificateDetailsDialog</receiver>
+   <slot>slotShowCertificationsToggled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>740</x>
+     <y>518</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>780</x>
+     <y>478</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>slotChangePassphraseClicked()</slot>
+  <slot>slotChangeTrustLevelClicked()</slot>
+  <slot>slotChangeExpiryDateClicked()</slot>
+  <slot>slotRevokeCertificateClicked()</slot>
+  <slot>slotAddUserIDClicked()</slot>
+  <slot>slotCertifyUserIDClicked()</slot>
+  <slot>slotRevokeUserIDClicked()</slot>
+  <slot>slotRevokeCertificationClicked()</slot>
+  <slot>slotShowCertificationsToggled(bool)</slot>
+ </slots>
+</ui>

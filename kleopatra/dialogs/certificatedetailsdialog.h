@@ -1,8 +1,8 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    commands/detailscommand.h
+    dialogs/certificatedetailsdialog.h
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2008 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,41 +30,47 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_COMMANDS_DETAILSCOMMAND_H__
-#define __KLEOPATRA_COMMANDS_DETAILSCOMMAND_H__
+#ifndef __KLEOPATRA_DIALOGS_CERTIFICATEDETAILS_H__
+#define __KLEOPATRA_DIALOGS_CERTIFICATEDETAILS_H__
 
-#include <commands/command.h>
+#include <QDialog>
+
+#include <utils/pimpl_ptr.h>
+
+class QDate;
 
 namespace GpgME {
     class Key;
 }
 
 namespace Kleo {
-namespace Commands {
+namespace Dialogs {
 
-    class DetailsCommand : public Command {
+    class CertificateDetailsDialog : public QDialog {
         Q_OBJECT
     public:
-	explicit DetailsCommand( KeyListController * parent );
-	explicit DetailsCommand( QAbstractItemView * view, KeyListController * parent );
-	explicit DetailsCommand( const GpgME::Key & key, KeyListController * parent );
-	explicit DetailsCommand( const GpgME::Key & key, QAbstractItemView * view, KeyListController * parent );
-	~DetailsCommand();
+        explicit CertificateDetailsDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
+        ~CertificateDetailsDialog();
 
-        /* reimp */ static Restrictions restrictions() { return OnlyOneKey; }
-
-    private:
-	/* reimp */ void doStart();
-	/* reimp */ void doCancel();
+        void setKey( const GpgME::Key & key );
+        GpgME::Key key() const;
 
     private:
         class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-        Q_PRIVATE_SLOT( d_func(), void slotDialogClosed() )
+        kdtools::pimpl_ptr<Private> d;
+        Q_PRIVATE_SLOT( d, void slotChangePassphraseClicked() )
+        Q_PRIVATE_SLOT( d, void slotChangeTrustLevelClicked() )
+        Q_PRIVATE_SLOT( d, void slotChangeExpiryDateClicked() )
+        Q_PRIVATE_SLOT( d, void slotRevokeCertificateClicked() )
+        Q_PRIVATE_SLOT( d, void slotAddUserIDClicked() )
+        Q_PRIVATE_SLOT( d, void slotRevokeUserIDClicked() )
+        Q_PRIVATE_SLOT( d, void slotCertifyUserIDClicked() )
+        Q_PRIVATE_SLOT( d, void slotRevokeCertificationClicked() )
+        Q_PRIVATE_SLOT( d, void slotShowCertificationsToggled( bool ) )
+        Q_PRIVATE_SLOT( d, void slotCertificationSelectionChanged() )
     };
 
 }
 }
 
-#endif /* __KLEOPATRA_COMMANDS_DETAILSCOMMAND_H__ */
+#endif /* __KLEOPATRA_DIALOGS_CERTIFICATEDETAILS_H__ */
