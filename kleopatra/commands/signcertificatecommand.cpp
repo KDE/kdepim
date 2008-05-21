@@ -157,11 +157,12 @@ void SignCertificateCommand::Private::slotDialogRejected() {
 
 void SignCertificateCommand::Private::slotResult( const Error & err ) {
     if ( err.isCanceled() )
-        finished();
+        ;
     else if ( err )
         showErrorDialog( err );
     else
         showSuccessDialog();
+    finished();
 }
 
 void SignCertificateCommand::doCancel() {

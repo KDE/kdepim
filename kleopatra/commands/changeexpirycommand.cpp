@@ -173,11 +173,12 @@ void ChangeExpiryCommand::Private::slotDialogRejected() {
 
 void ChangeExpiryCommand::Private::slotResult( const Error & err ) {
     if ( err.isCanceled() )
-        finished();
+        ;
     else if ( err )
         showErrorDialog( err );
     else
         showSuccessDialog();
+    finished();
 }
 
 void ChangeExpiryCommand::doCancel() {

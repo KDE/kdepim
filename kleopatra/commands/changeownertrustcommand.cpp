@@ -169,11 +169,12 @@ void ChangeOwnerTrustCommand::Private::slotDialogRejected() {
 
 void ChangeOwnerTrustCommand::Private::slotResult( const Error & err ) {
     if ( err.isCanceled() )
-        finished();
+        ;
     else if ( err )
         showErrorDialog( err );
     else
         showSuccessDialog();
+    finished();
 }
 
 void ChangeOwnerTrustCommand::doCancel() {
