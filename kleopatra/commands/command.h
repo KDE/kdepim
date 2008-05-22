@@ -69,6 +69,9 @@ namespace Kleo {
             MustBeOpenPGP      = 16,
             MustBeCMS          = 32,
 
+            // esoteric:
+            MayOnlyBeSecretKeyIfOwnerTrustIsNotYetUltimate = 64, // for set-owner-trust
+
             _AllRestrictions_Helper,
             AllRestrictions = 2*(_AllRestrictions_Helper-1) - 1
         };
