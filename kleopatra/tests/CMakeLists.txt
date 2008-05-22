@@ -59,7 +59,7 @@ if ( USABLE_ASSUAN_FOUND  )
 
   target_link_libraries(test_uiserver ${KDE4_KDECORE_LIBS} )
   if(WIN32)
-	 target_link_libraries(test_uiserver ${ASSUAN_VANILLA_LIBRARIES} ${QGPGME_LIBRARIES} Ws2_32)
+	 target_link_libraries(test_uiserver ${ASSUAN_VANILLA_LIBRARIES} ${QGPGME_LIBRARIES} ws2_32)
   else(WIN32)
 	 target_link_libraries(test_uiserver ${ASSUAN_PTHREAD_LIBRARIES} ${QGPGME_LIBRARIES} )
   endif(WIN32)
