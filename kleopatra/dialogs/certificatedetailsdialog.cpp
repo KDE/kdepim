@@ -233,14 +233,15 @@ private:
 
 private:
     void updateWidgetVisibility() {
-        const bool x509 = key.protocol() == CMS;
+        //const bool x509 = key.protocol() == CMS;
         const bool pgp = key.protocol() == OpenPGP;
         const bool secret = key.hasSecret();
         const bool sigs = (key.keyListMode() & Signatures);
+        const bool ultimateTrust = key.ownerTrust() == Key::Ultimate;
 
         // Overview Tab
         ui.changePassphrasePB->setVisible(         secret );
-        ui.changeTrustLevelPB->setVisible( pgp && !secret );
+        ui.changeTrustLevelPB->setVisible( pgp && ( !secret || !ultimateTrust ) );
         ui.changeExpiryDatePB->setVisible( pgp &&  secret );
 
         // Certifications Tab
