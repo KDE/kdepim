@@ -8,6 +8,13 @@ kde4_add_library( kleopatraclientgui SHARED
 
 target_link_libraries( kleopatraclientgui ${QT_QTGUI_LIBRARY} kleopatraclientcore )
 
+set_target_properties( kleopatraclientgui
+  PROPERTIES
+    VERSION   ${libkleopatraclient_version}
+    SOVERSION ${libkleopatraclient_soversion}
+  )
+
+
 install(
   TARGETS kleopatraclientgui
   DESTINATION ${LIB_INSTALL_DIR}

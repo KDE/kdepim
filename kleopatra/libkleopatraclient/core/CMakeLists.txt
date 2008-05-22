@@ -18,6 +18,13 @@ kde4_add_library( kleopatraclientcore SHARED
   #connection.cpp
   )
 
+set_target_properties( kleopatraclientcore
+  PROPERTIES
+    VERSION   ${libkleopatraclient_version}
+    SOVERSION ${libkleopatraclient_soversion}
+  )
+
+
 if ( WIN32 )
   target_link_libraries( kleopatraclientcore ${QT_QTCORE_LIBRARY} ${ASSUAN_VANILLA_LIBRARIES} Ws2_32 )
 else ( WIN32 )
