@@ -138,7 +138,7 @@ else ( ONLY_KLEO )
      ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttXMLTools.cpp
   )
 
-
+  macro_optional_add_subdirectory(doc)
   add_subdirectory(kode)
   macro_optional_add_subdirectory(akonadi)
   add_subdirectory(libkdepim)
@@ -160,7 +160,6 @@ else ( ONLY_KLEO )
   add_subdirectory(mimelib)
   add_subdirectory(icons)
   macro_optional_add_subdirectory(akregator)
-  macro_optional_add_subdirectory(doc)
   macro_optional_add_subdirectory(knode)
   macro_optional_add_subdirectory(kjots)
 
