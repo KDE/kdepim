@@ -1,36 +1,313 @@
 <ui version="4.0" >
- <class>Kleo::Dialogs::OwnerTrustDialog</class>
- <widget class="QDialog" name="Kleo::Dialogs::OwnerTrustDialog" >
+ <class>OwnerTrustDialog</class>
+ <widget class="QDialog" name="OwnerTrustDialog" >
   <property name="geometry" >
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>442</width>
-    <height>356</height>
+    <width>700</width>
+    <height>680</height>
    </rect>
   </property>
-  <property name="windowTitle" >
-   <string>Change Trust in Certificate Owner</string>
-  </property>
-  <layout class="QVBoxLayout" >
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <property name="sizeConstraint" >
+    <enum>QLayout::SetMinimumSize</enum>
+   </property>
    <item>
     <widget class="QLabel" name="label" >
-     <property name="text" >
-      <string>TODO: Display Certificate information and text about trust levels</string>
+     <property name="wordWrap" >
+      <bool>true</bool>
      </property>
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" >
+    <layout class="QHBoxLayout" name="horizontalLayout_10" >
      <item>
-      <widget class="QLabel" name="label_2" >
+      <widget class="QRadioButton" name="unknownRB" >
        <property name="text" >
-        <string>New trust level:</string>
+        <string>I don't know</string>
+       </property>
+       <property name="checked" >
+        <bool>true</bool>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="QComboBox" name="trustCB" />
+      <widget class="QLabel" name="label_7" >
+       <property name="enabled" >
+        <bool>true</bool>
+       </property>
+       <property name="text" >
+        <string>&lt;i>(unknown trust)&lt;/i></string>
+       </property>
+       <property name="alignment" >
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout" >
+     <item>
+      <spacer>
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType" >
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0" >
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_2" >
+       <property name="enabled" >
+        <bool>true</bool>
+       </property>
+       <property name="text" >
+        <string>&lt;font size="-1">Choose this if you have no opinion about the trustworthyness of the certificate's owner.&lt;br>Certifications at this trust level are ignored when checking the validity of OpenPGP certificates.&lt;/font></string>
+       </property>
+       <property name="wordWrap" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_9" >
+     <item>
+      <widget class="QRadioButton" name="neverRB" >
+       <property name="text" >
+        <string>I do NOT trust them</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_8" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="text" >
+        <string>&lt;i>(never trust)&lt;/i></string>
+       </property>
+       <property name="alignment" >
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_2" >
+     <item>
+      <spacer>
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType" >
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0" >
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_3" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="text" >
+        <string>&lt;font size="-1">Choose this if you explicitly do &lt;em>not&lt;/em> trust the certificate owner, e.g. because you have knowledge of him certifying without checking or without the certificate owner's consent.&lt;br>Certifications at this trust level are ignored when checking the validity of OpenPGP certificates.&lt;/font></string>
+       </property>
+       <property name="wordWrap" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_8" >
+     <item>
+      <widget class="QRadioButton" name="marginalRB" >
+       <property name="text" >
+        <string>I believe checks are casual</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_9" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="text" >
+        <string>&lt;i>(marginal trust)&lt;/i></string>
+       </property>
+       <property name="alignment" >
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_3" >
+     <item>
+      <spacer>
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType" >
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0" >
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_4" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="text" >
+        <string>&lt;font size="-1">Choose this if you trust certifications are not done blindly, but not very accuratly, either.&lt;br>Certificates will only become valid with multiple certifications (typically three) at this trust level. This is usually a good choice.&lt;/font></string>
+       </property>
+       <property name="wordWrap" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_7" >
+     <item>
+      <widget class="QRadioButton" name="fullRB" >
+       <property name="text" >
+        <string>I believe checks are very accurate</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_10" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="text" >
+        <string>&lt;i>(full trust)&lt;/i></string>
+       </property>
+       <property name="alignment" >
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_4" >
+     <item>
+      <spacer>
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType" >
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0" >
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_5" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="text" >
+        <string>&lt;font size="-1">Choose this if you trust certifications are done very accurately.&lt;br>Certificates will become valid with just a single certification at this trust level, so assign this much trust with care.&lt;/font></string>
+       </property>
+       <property name="wordWrap" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_6" >
+     <item>
+      <widget class="QRadioButton" name="ultimateRB" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="text" >
+        <string>This is my certificate</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_11" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="text" >
+        <string>&lt;i>(ultimate trust)&lt;/i></string>
+       </property>
+       <property name="alignment" >
+        <set>Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter</set>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout_5" >
+     <item>
+      <spacer>
+       <property name="orientation" >
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeType" >
+        <enum>QSizePolicy::Fixed</enum>
+       </property>
+       <property name="sizeHint" stdset="0" >
+        <size>
+         <width>20</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QLabel" name="label_6" >
+       <property name="enabled" >
+        <bool>false</bool>
+       </property>
+       <property name="text" >
+        <string>&lt;font size="-1">Choose this if and only if this is your certificate. This is the default if the secret key is available, but if you imported this certificate, you might need to adjust the trust level yourself.&lt;br>Certificates will become valid with just a single certification at this trust level.&lt;/font></string>
+       </property>
+       <property name="wordWrap" >
+        <bool>true</bool>
+       </property>
+      </widget>
      </item>
     </layout>
    </item>
@@ -39,9 +316,9 @@
      <property name="orientation" >
       <enum>Qt::Vertical</enum>
      </property>
-     <property name="sizeHint" >
+     <property name="sizeHint" stdset="0" >
       <size>
-       <width>20</width>
+       <width>501</width>
        <height>40</height>
       </size>
      </property>
@@ -53,23 +330,36 @@
       <enum>Qt::Horizontal</enum>
      </property>
      <property name="standardButtons" >
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::NoButton|QDialogButtonBox::Ok</set>
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
      </property>
     </widget>
    </item>
   </layout>
+  <zorder>label</zorder>
+  <zorder>unknownRB</zorder>
+  <zorder>neverRB</zorder>
+  <zorder>marginalRB</zorder>
+  <zorder>fullRB</zorder>
+  <zorder>ultimateRB</zorder>
+  <zorder>buttonBox</zorder>
+  <zorder>label_7</zorder>
+  <zorder>label_8</zorder>
+  <zorder>label_9</zorder>
+  <zorder>label_10</zorder>
+  <zorder>label_11</zorder>
+  <zorder>label_6</zorder>
  </widget>
  <resources/>
  <connections>
   <connection>
    <sender>buttonBox</sender>
    <signal>accepted()</signal>
-   <receiver>Kleo::Dialogs::OwnerTrustDialog</receiver>
+   <receiver>OwnerTrustDialog</receiver>
    <slot>accept()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>227</x>
-     <y>369</y>
+     <x>434</x>
+     <y>670</y>
     </hint>
     <hint type="destinationlabel" >
      <x>157</x>
@@ -80,12 +370,12 @@
   <connection>
    <sender>buttonBox</sender>
    <signal>rejected()</signal>
-   <receiver>Kleo::Dialogs::OwnerTrustDialog</receiver>
+   <receiver>OwnerTrustDialog</receiver>
    <slot>reject()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>295</x>
-     <y>375</y>
+     <x>502</x>
+     <y>670</y>
     </hint>
     <hint type="destinationlabel" >
      <x>286</x>
@@ -93,5 +383,248 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>unknownRB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_2</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>248</x>
+     <y>56</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>246</x>
+     <y>106</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>neverRB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_3</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>217</x>
+     <y>174</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>243</x>
+     <y>262</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>marginalRB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_4</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>257</x>
+     <y>300</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>285</x>
+     <y>368</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fullRB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_5</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>311</x>
+     <y>406</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>345</x>
+     <y>474</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ultimateRB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_6</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>217</x>
+     <y>512</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>247</x>
+     <y>580</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>unknownRB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_7</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>317</x>
+     <y>46</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>468</x>
+     <y>54</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>neverRB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_8</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>319</x>
+     <y>162</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>368</x>
+     <y>168</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>marginalRB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_9</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>321</x>
+     <y>284</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>370</x>
+     <y>288</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fullRB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_10</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>323</x>
+     <y>382</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>364</x>
+     <y>388</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ultimateRB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>label_11</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>325</x>
+     <y>496</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>380</x>
+     <y>497</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>unknownRB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>OwnerTrustDialog</receiver>
+   <slot>slotTrustLevelChanged()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>35</x>
+     <y>54</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>21</x>
+     <y>78</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>neverRB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>OwnerTrustDialog</receiver>
+   <slot>slotTrustLevelChanged()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>61</x>
+     <y>160</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>11</x>
+     <y>184</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>marginalRB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>OwnerTrustDialog</receiver>
+   <slot>slotTrustLevelChanged()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>41</x>
+     <y>282</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>13</x>
+     <y>310</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fullRB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>OwnerTrustDialog</receiver>
+   <slot>slotTrustLevelChanged()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>83</x>
+     <y>386</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>17</x>
+     <y>416</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>ultimateRB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>OwnerTrustDialog</receiver>
+   <slot>slotTrustLevelChanged()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>57</x>
+     <y>496</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>19</x>
+     <y>538</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <slots>
+  <slot>slotTrustLevelChanged()</slot>
+ </slots>
 </ui>

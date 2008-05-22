@@ -80,7 +80,6 @@ private:
     void showSuccessDialog();
 
 private:
-    GpgME::Key key;
     QPointer<OwnerTrustDialog> dialog;
     QPointer<ChangeOwnerTrustJob> job;
 };
@@ -94,7 +93,6 @@ const ChangeOwnerTrustCommand::Private * ChangeOwnerTrustCommand::d_func() const
 
 ChangeOwnerTrustCommand::Private::Private( ChangeOwnerTrustCommand * qq, KeyListController * c )
     : Command::Private( qq, c ),
-      key(),
       dialog(),
       job()
 {
@@ -129,19 +127,24 @@ ChangeOwnerTrustCommand::~ChangeOwnerTrustCommand() { kDebug(); }
 
 void ChangeOwnerTrustCommand::doStart() {
 
-    const std::vector<Key> keys = d->keys();
-    if ( keys.size() != 1 ||
-         keys.front().protocol() != GpgME::OpenPGP ||
-         keys.front().hasSecret() ) {
+    if ( d->keys().size() != 1 ) {
         d->finished();
         return;
     }
 
-    d->key = keys.front();
+    const Key key = d->key();
+    if ( key.protocol() != GpgME::OpenPGP || key.hasSecret() && key.ownerTrust() == Key::Ultimate ) {
+        d->finished();
+        return;
+    }
 
     d->ensureDialogCreated();
     assert( d->dialog );
-    d->dialog->setOwnerTrust( d->key.ownerTrust() );
+
+    d->dialog->setHasSecretKey( key.hasSecret() );
+    d->dialog->setFormattedCertificateName( Formatting::formatForComboBox( key ) );
+    d->dialog->setOwnerTrust( key.ownerTrust() );
+
     d->dialog->show();
     
 }
@@ -156,7 +159,7 @@ void ChangeOwnerTrustCommand::Private::slotDialogAccepted() {
     createJob();
     assert( job );
 
-    if ( const Error err = job->start( key, trust ) ) {
+    if ( const Error err = job->start( key(), trust ) ) {
         showErrorDialog( err );
         finished();
     }
@@ -197,7 +200,7 @@ void ChangeOwnerTrustCommand::Private::ensureDialogCreated() {
 void ChangeOwnerTrustCommand::Private::createJob() {
     assert( !job );
 
-    const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( key.protocol() );
+    const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( key().protocol() );
     if ( !backend )
         return;
 
@@ -217,7 +220,7 @@ void ChangeOwnerTrustCommand::Private::showErrorDialog( const Error & err ) {
     KMessageBox::error( view(),
                         i18n("<p>An error occurred while trying to change "
                              "the owner trust for <b>%1</b>:</p><p>%2</p>",
-                             Formatting::formatForComboBox( key ),
+                             Formatting::formatForComboBox( key() ),
                              QString::fromLocal8Bit( err.asString() ) ),
                         i18n("Owner Trust Change Error") );
 }
