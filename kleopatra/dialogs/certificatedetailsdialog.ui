@@ -195,6 +195,20 @@
              </property>
             </spacer>
            </item>
+           <item>
+            <widget class="QPushButton" name="expandAllCertificationsPB" >
+             <property name="text" >
+              <string>Expand All</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <widget class="QPushButton" name="collapseAllCertificationsPB" >
+             <property name="text" >
+              <string>Collapse All</string>
+             </property>
+            </widget>
+           </item>
           </layout>
          </item>
         </layout>
@@ -202,7 +216,7 @@
        <item>
         <widget class="QPushButton" name="showCertificationsPB" >
          <property name="text" >
-          <string>Show Certifcations (may take a while)</string>
+          <string/>
          </property>
         </widget>
        </item>
@@ -442,6 +456,38 @@
     <hint type="destinationlabel" >
      <x>776</x>
      <y>490</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>expandAllCertificationsPB</sender>
+   <signal>clicked()</signal>
+   <receiver>certificationsTV</receiver>
+   <slot>expandAll()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>665</x>
+     <y>424</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>525</x>
+     <y>320</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>collapseAllCertificationsPB</sender>
+   <signal>clicked()</signal>
+   <receiver>certificationsTV</receiver>
+   <slot>collapseAll()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>701</x>
+     <y>464</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>585</x>
+     <y>352</y>
     </hint>
    </hints>
   </connection>

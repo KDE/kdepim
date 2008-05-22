@@ -47,13 +47,19 @@
 
 #include <utils/formatting.h>
 
+#include <kleo/cryptobackendfactory.h>
+#include <kleo/cryptobackend.h>
+#include <kleo/keylistjob.h>
+
 #include <gpgme++/key.h>
+#include <gpgme++/keylistresult.h>
 
 #include <KDebug>
 #include <KMessageBox>
 #include <KLocalizedString>
 
 #include <QPointer>
+#include <QHeaderView>
 
 #include <boost/mem_fn.hpp>
 
@@ -67,8 +73,13 @@ using namespace GpgME;
 using namespace boost;
 
 static bool own( const std::vector<UserID::Signature> & sigs ) {
-    // ### check whether we have secret keys for all sigs (by fingerprint)
-    return false;
+    const shared_ptr<const KeyCache> kc = KeyCache::instance();
+    Q_FOREACH( const UserID::Signature & sig, sigs ) {
+        const Key signer = kc->findByKeyIDOrFingerprint( sig.signerKeyID() );
+        if ( signer.isNull() || !signer.hasSecret() )
+            return false;
+    }
+    return !sigs.empty();
 }
 
 class CertificateDetailsDialog::Private {
@@ -161,7 +172,54 @@ private:
     }
 
     void slotShowCertificationsClicked() {
+        startSignatureListing();
+        enableDisableWidgets();
+    }
 
+    void startSignatureListing() {
+        if ( keyListJob )
+            return;
+        const CryptoBackend::Protocol * const protocol = CryptoBackendFactory::instance()->protocol( key.protocol() );
+        if ( !protocol )
+            return;
+        KeyListJob * const job = protocol->keyListJob( /*remote*/false, /*includeSigs*/true, /*validate*/true );
+        if ( !job )
+            return;
+        connect( job, SIGNAL(result(GpgME::KeyListResult)),
+                 q, SLOT(slotSignatureListingDone(GpgME::KeyListResult)) );
+        connect( job, SIGNAL(nextKey(GpgME::Key)),
+                 q, SLOT(slotSignatureListingNextKey(GpgME::Key)) );
+        if ( const Error err = job->start( QStringList( QString::fromLatin1( key.primaryFingerprint() ) ) ) )
+            showSignatureListingErrorDialog( err );
+        else
+            keyListJob = job;
+    }
+    void slotSignatureListingNextKey( const Key & key ) {
+        // don't lose the secret flags ...
+        Key merged = key;
+        merged.mergeWith( this->key );
+        q->setKey( merged );
+
+        // fixup the tree view
+        ui.certificationsTV->expandAll();
+        ui.certificationsTV->header()->resizeSections( QHeaderView::ResizeToContents );
+    }
+    void slotSignatureListingDone( const KeyListResult & result ) {
+        if ( result.error().isCanceled() )
+            ;
+        else if ( result.error() )
+            showSignatureListingErrorDialog( result.error() );
+        else
+            ;
+        keyListJob = 0;
+        enableDisableWidgets();
+    }
+    void showSignatureListingErrorDialog( const Error & err ) {
+        KMessageBox::information( q, i18nc("@info",
+                                           "<para>An error occurred while loading the certifications: "
+                                           "<message>%1</message></para>",
+                                           QString::fromLocal8Bit( err.asString() ) ),
+                                  i18nc("@title","Certifications Loading Failed") );
     }
 
     void slotCertificationSelectionChanged() {
@@ -189,6 +247,8 @@ private:
         ui.userIDsActionsGB->setVisible( pgp );
         ui.certificationsActionGB->setVisible( pgp );
         ui.addUserIDPB->setVisible( secret );
+        ui.expandAllCertificationsPB->setVisible( pgp && sigs );
+        ui.collapseAllCertificationsPB->setVisible( pgp && sigs );
         ui.showCertificationsPB->setVisible( pgp && !sigs );
 
         // ...
@@ -220,6 +280,10 @@ private:
 
         // Certifications Tab
         ui.addUserIDPB->setEnabled( !addUserIDCommand );
+        ui.showCertificationsPB->setEnabled( !keyListJob );
+        ui.showCertificationsPB->setText( keyListJob
+                                          ? i18n("(please wait while certifications are being loaded)")
+                                          : i18n("Load Certifications (may take a while)") );
 
         const std::vector<UserID> uids = selectedUserIDs();
         const std::vector<UserID::Signature> sigs = selectedSignatures();
@@ -249,6 +313,8 @@ private:
     QPointer<Command> addUserIDCommand;
     QPointer<Command> signCertificateCommand;
 
+    QPointer<KeyListJob> keyListJob;
+
     struct UI : public Ui_CertificateDetailsDialog {
         explicit UI( Dialogs::CertificateDetailsDialog * qq )
             : Ui_CertificateDetailsDialog()
@@ -270,9 +336,9 @@ CertificateDetailsDialog::~CertificateDetailsDialog() {}
 void CertificateDetailsDialog::setKey( const Key & key ) {
     d->key = key;
     d->updateWidgetVisibility();
-    d->enableDisableWidgets();
     d->updateLabel();
     d->propagateKey();
+    d->enableDisableWidgets();
 }
 
 Key CertificateDetailsDialog::key() const {
