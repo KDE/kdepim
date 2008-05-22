@@ -69,6 +69,7 @@ namespace Dialogs {
         Q_PRIVATE_SLOT( d, void slotAddUserIDCommandFinished() )
         Q_PRIVATE_SLOT( d, void slotRevokeUserIDClicked() )
         Q_PRIVATE_SLOT( d, void slotCertifyUserIDClicked() )
+        Q_PRIVATE_SLOT( d, void slotSignCertificateCommandFinished() )
         Q_PRIVATE_SLOT( d, void slotRevokeCertificationClicked() )
         Q_PRIVATE_SLOT( d, void slotShowCertificationsClicked() )
         Q_PRIVATE_SLOT( d, void slotCertificationSelectionChanged() )

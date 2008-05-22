@@ -43,6 +43,7 @@
 #include <commands/changeownertrustcommand.h>
 #include <commands/changeexpirycommand.h>
 #include <commands/adduseridcommand.h>
+#include <commands/signcertificatecommand.h>
 
 #include <utils/formatting.h>
 
@@ -93,12 +94,16 @@ private:
         ptr->start();
         enableDisableWidgets();
     }
-    template <typename T>
-    void startCommand( QPointer<Command> & ptr, const char * slot ) {
+    template <typename T, typename A>
+    void startCommand( QPointer<Command> & ptr, const A & arg, const char * slot ) {
         if ( ptr )
             return;
-        ptr = new T( this->key );
+        ptr = new T( arg );
         startCommandImplementation( ptr, slot );
+    }
+    template <typename T>
+    void startCommand( QPointer<Command> & ptr, const char * slot ) {
+        startCommand<T>( ptr, this->key, slot );
     }
     void commandFinished( QPointer<Command> & ptr ) {
         ptr = 0;
@@ -126,8 +131,6 @@ private:
         commandFinished( changeExpiryDateCommand );
     }
 
-    void slotRevokeCertificateClicked();
-
     void slotAddUserIDClicked() {
         startCommand<AddUserIDCommand>( addUserIDCommand, SLOT(slotAddUserIDCommandFinished()) );
     }
@@ -135,12 +138,31 @@ private:
         commandFinished( addUserIDCommand );
     }
 
-    void slotRevokeUserIDClicked();
-    void slotCertifyUserIDClicked();
+    void slotCertifyUserIDClicked() {
+        const std::vector<UserID> uids = selectedUserIDs();
+        if ( uids.empty() )
+            return;
+        startCommand<SignCertificateCommand>( signCertificateCommand, uids, SLOT(slotSignCertificateCommandFinished()) );
+    }
+    void slotSignCertificateCommandFinished() {
+        commandFinished( signCertificateCommand );
+    }
 
-    void slotRevokeCertificationClicked();
+    void slotRevokeCertificateClicked() {
 
-    void slotShowCertificationsClicked();
+    }
+
+    void slotRevokeUserIDClicked() {
+
+    }
+
+    void slotRevokeCertificationClicked() {
+
+    }
+
+    void slotShowCertificationsClicked() {
+
+    }
 
     void slotCertificationSelectionChanged() {
         enableDisableWidgets();
@@ -167,7 +189,6 @@ private:
         ui.userIDsActionsGB->setVisible( pgp );
         ui.certificationsActionGB->setVisible( pgp );
         ui.addUserIDPB->setVisible( secret );
-        ui.certifyUserIDPB->setVisible( !secret );
         ui.showCertificationsPB->setVisible( pgp && !sigs );
 
         // ...
@@ -203,7 +224,7 @@ private:
         const std::vector<UserID> uids = selectedUserIDs();
         const std::vector<UserID::Signature> sigs = selectedSignatures();
 
-        ui.certifyUserIDPB->setEnabled(      !uids.empty() &&  sigs.empty() );
+        ui.certifyUserIDPB->setEnabled(      !uids.empty() &&  sigs.empty() && !signCertificateCommand );
         ui.revokeUserIDPB->setEnabled(       !uids.empty() &&  sigs.empty() );
         ui.revokeCertificationPB->setEnabled( uids.empty() && !sigs.empty() && own( sigs ) );
     }
@@ -226,6 +247,7 @@ private:
     QPointer<Command> changeExpiryDateCommand;
 
     QPointer<Command> addUserIDCommand;
+    QPointer<Command> signCertificateCommand;
 
     struct UI : public Ui_CertificateDetailsDialog {
         explicit UI( Dialogs::CertificateDetailsDialog * qq )
@@ -256,29 +278,6 @@ void CertificateDetailsDialog::setKey( const Key & key ) {
 Key CertificateDetailsDialog::key() const {
     return d->key;
 }
-
-
-void CertificateDetailsDialog::Private::slotRevokeCertificateClicked() {
-
-}
-
-
-void CertificateDetailsDialog::Private::slotRevokeUserIDClicked() {
-
-}
-
-void CertificateDetailsDialog::Private::slotCertifyUserIDClicked() {
-
-}
-
-void CertificateDetailsDialog::Private::slotRevokeCertificationClicked() {
-
-}
-
-void CertificateDetailsDialog::Private::slotShowCertificationsClicked() {
-
-}
-
 
 
 #include "moc_certificatedetailsdialog.cpp"
