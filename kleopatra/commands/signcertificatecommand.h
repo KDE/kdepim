@@ -35,6 +35,10 @@
 
 #include <commands/command.h>
 
+namespace GpgME {
+    class UserID;
+}
+
 namespace Kleo {
 namespace Commands {
 
@@ -43,9 +47,20 @@ namespace Commands {
     public:
         explicit SignCertificateCommand( QAbstractItemView * view, KeyListController * parent );
         explicit SignCertificateCommand( KeyListController * parent );
+        explicit SignCertificateCommand( const GpgME::Key & key );
+        explicit SignCertificateCommand( const GpgME::UserID & uid );
+        explicit SignCertificateCommand( const std::vector<GpgME::UserID> & uids );
         ~SignCertificateCommand();
 
-        /* reimp */ static Restrictions restrictions() { return OnlyOneKey|MustBeOpenPGP|MustNotBeSecretKey; }
+        /* reimp */ static Restrictions restrictions() { return OnlyOneKey|MustBeOpenPGP; }
+
+        void setSignatureExportable( bool on );
+        void setSignatureRevocable( bool on );
+
+        void setSigningKey( const GpgME::Key & signer );
+
+        void setUserID( const GpgME::UserID & uid );
+        void setUserIDs( const std::vector<GpgME::UserID> & uids );
 
     private:
         /* reimp */ void doStart();

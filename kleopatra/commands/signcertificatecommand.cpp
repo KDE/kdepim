@@ -78,7 +78,7 @@ private:
     void showSuccessDialog();
 
 private:
-    GpgME::Key key;
+    std::vector<UserID> uids;
     QPointer<SignCertificateDialog> dialog;
     QPointer<SignKeyJob> job;
 };
@@ -92,7 +92,7 @@ const SignCertificateCommand::Private * SignCertificateCommand::d_func() const {
 
 SignCertificateCommand::Private::Private( SignCertificateCommand * qq, KeyListController * c )
     : Command::Private( qq, c ),
-      key(),
+      uids(),
       dialog(),
       job()
 {
@@ -113,25 +113,75 @@ SignCertificateCommand::SignCertificateCommand( QAbstractItemView * v, KeyListCo
     d->init();
 }
 
+SignCertificateCommand::SignCertificateCommand( const Key & key )
+    : Command( key, new Private( this, 0 ) )
+{
+    d->init();
+}
+
+SignCertificateCommand::SignCertificateCommand( const UserID & uid )
+    : Command( uid.parent(), new Private( this, 0 ) )
+{
+    std::vector<UserID>( 1, uid ).swap( d->uids );
+    d->init();
+}
+
+SignCertificateCommand::SignCertificateCommand( const std::vector<UserID> & uids )
+    : Command( uids.empty() ? Key() : uids.front().parent(), new Private( this, 0 ) )
+{
+    d->uids = uids;
+    d->init();
+}
+
 void SignCertificateCommand::Private::init() {
 
 }
 
 SignCertificateCommand::~SignCertificateCommand() { kDebug(); }
 
+void SignCertificateCommand::setSignatureExportable( bool on ) {
+
+}
+
+void SignCertificateCommand::setSignatureRevocable( bool on ) {
+
+}
+
+void SignCertificateCommand::setSigningKey( const Key & signer ) {
+
+}
+
+void SignCertificateCommand::setUserIDs( const std::vector<UserID> & uids ) {
+    d->uids = uids;
+    if ( !uids.empty() && d->key().isNull() )
+        setKey( uids.front().parent() );
+}
+
+void SignCertificateCommand::setUserID( const UserID & uid ) {
+    setUserIDs( std::vector<UserID>( 1, uid ) );
+}
+
 void SignCertificateCommand::doStart() {
 
     const std::vector<Key> keys = d->keys();
     if ( keys.size() != 1 ||
-         keys.front().protocol() != GpgME::OpenPGP ||
-         keys.front().hasSecret() ) {
+         keys.front().protocol() != GpgME::OpenPGP ) {
         d->finished();
         return;
     }
 
-    d->key = keys.front();
+    const Key & key = keys.front();
+
+    Q_FOREACH( const UserID & uid, d->uids )
+        if ( qstricmp( uid.parent().primaryFingerprint(), key.primaryFingerprint() ) != 0 ) {
+            kWarning() << "User-ID <-> Key mismatch!";
+            d->finished();
+            return;
+        }
 
     d->ensureDialogCreated();
+    //d->dialog->setKey( key );
+    //d->dialog->setUserIDs( uids );
     assert( d->dialog );
     d->dialog->show();
 }
@@ -144,7 +194,7 @@ void SignCertificateCommand::Private::slotDialogAccepted() {
     createJob();
     assert( job );
 
-    if ( const Error err = job->start( key, std::vector<UserID>(), Key(), 0u, opt ) ) {
+    if ( const Error err = job->start( key(), std::vector<UserID>(), Key(), 0u, opt ) ) {
         showErrorDialog( err );
         finished();
     }
@@ -185,7 +235,7 @@ void SignCertificateCommand::Private::ensureDialogCreated() {
 void SignCertificateCommand::Private::createJob() {
     assert( !job );
 
-    const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( key.protocol() );
+    const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( key().protocol() );
     if ( !backend )
         return;
 
@@ -204,7 +254,7 @@ void SignCertificateCommand::Private::createJob() {
 void SignCertificateCommand::Private::showErrorDialog( const Error & err ) {
     KMessageBox::error( view(),
                         i18n("<p>An error occurred while trying to sign the certificate <b>%1</b>:</p><p>%2</p>",
-                             Formatting::formatForComboBox( key ),
+                             Formatting::formatForComboBox( key() ),
                              QString::fromLocal8Bit( err.asString() ) ),
                         i18n("Certificate Signing Error") );
 }
