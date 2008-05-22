@@ -57,7 +57,7 @@ Comment[uk]=Маєте вхідний дзвінок
 Comment[x-test]=xxThere is an incoming callxx
 Comment[zh_CN]=有来电
 Comment[zh_TW]=有來電
-Sound=KD-Im-Phone.Ring.ogg
+Sound=KDE-Im-Phone-Ring.ogg
 Action=Sound|Popup|Taskbar
 
 
