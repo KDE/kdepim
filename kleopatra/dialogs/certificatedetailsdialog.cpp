@@ -88,58 +88,51 @@ public:
     }
 
 private:
-    void slotChangePassphraseClicked() {
-        if ( changePassphraseCommand )
-            return;
-        changePassphraseCommand = new ChangePassphraseCommand( key );
-        connect( changePassphraseCommand, SIGNAL(finished()), q, SLOT(slotChangePassphraseCommandFinished()) );
-        changePassphraseCommand->start();
+    void startCommandImplementation( const QPointer<Command> & ptr, const char * slot ) {
+        connect( ptr, SIGNAL(finished()), q, slot );
+        ptr->start();
         enableDisableWidgets();
     }
-    void slotChangePassphraseCommandFinished() {
-        changePassphraseCommand = 0;
+    template <typename T>
+    void startCommand( QPointer<Command> & ptr, const char * slot ) {
+        if ( ptr )
+            return;
+        ptr = new T( this->key );
+        startCommandImplementation( ptr, slot );
+    }
+    void commandFinished( QPointer<Command> & ptr ) {
+        ptr = 0;
         enableDisableWidgets();
+    }
+
+    void slotChangePassphraseClicked() {
+        startCommand<ChangePassphraseCommand>( changePassphraseCommand, SLOT(slotChangePassphraseCommandFinished()) );
+    }
+    void slotChangePassphraseCommandFinished() {
+        commandFinished( changePassphraseCommand );
     }
 
     void slotChangeTrustLevelClicked() {
-        if ( changeOwnerTrustCommand )
-            return;
-        changeOwnerTrustCommand = new ChangeOwnerTrustCommand( key );
-        connect( changeOwnerTrustCommand, SIGNAL(finished()), q, SLOT(slotChangeOwnerTrustCommandFinished()) );
-        changeOwnerTrustCommand->start();
-        enableDisableWidgets();
+        startCommand<ChangeOwnerTrustCommand>( changeOwnerTrustCommand, SLOT(slotChangeOwnerTrustCommandFinished()) );
     }
     void slotChangeOwnerTrustCommandFinished() {
-        changeOwnerTrustCommand = 0;
-        enableDisableWidgets();
+        commandFinished( changeOwnerTrustCommand );
     }
 
     void slotChangeExpiryDateClicked() {
-        if ( changeExpiryDateCommand )
-            return;
-        changeExpiryDateCommand = new ChangeExpiryCommand( key );
-        connect( changeExpiryDateCommand, SIGNAL(finished()), q, SLOT(slotChangeExpiryDateCommandFinished()) );
-        changeExpiryDateCommand->start();
-        enableDisableWidgets();
+        startCommand<ChangeExpiryCommand>( changeExpiryDateCommand, SLOT(slotChangeExpiryDateCommandFinished()) );
     }
     void slotChangeExpiryDateCommandFinished() {
-        changeExpiryDateCommand = 0;
-        enableDisableWidgets();
+        commandFinished( changeExpiryDateCommand );
     }
 
     void slotRevokeCertificateClicked();
 
     void slotAddUserIDClicked() {
-        if ( addUserIDCommand )
-            return;
-        addUserIDCommand = new AddUserIDCommand( key );
-        connect( addUserIDCommand, SIGNAL(finished()), q, SLOT(slotAddUserIDCommandFinished()) );
-        addUserIDCommand->start();
-        enableDisableWidgets();
+        startCommand<AddUserIDCommand>( addUserIDCommand, SLOT(slotAddUserIDCommandFinished()) );
     }
     void slotAddUserIDCommandFinished() {
-        addUserIDCommand = 0;
-        enableDisableWidgets();
+        commandFinished( addUserIDCommand );
     }
 
     void slotRevokeUserIDClicked();
@@ -228,11 +221,11 @@ private:
     Key key;
     UserIDListModel certificationsModel;
 
-    QPointer<ChangePassphraseCommand> changePassphraseCommand;
-    QPointer<ChangeOwnerTrustCommand> changeOwnerTrustCommand;
-    QPointer<ChangeExpiryCommand>     changeExpiryDateCommand;
+    QPointer<Command> changePassphraseCommand;
+    QPointer<Command> changeOwnerTrustCommand;
+    QPointer<Command> changeExpiryDateCommand;
 
-    QPointer<AddUserIDCommand> addUserIDCommand;
+    QPointer<Command> addUserIDCommand;
 
     struct UI : public Ui_CertificateDetailsDialog {
         explicit UI( Dialogs::CertificateDetailsDialog * qq )
