@@ -22,7 +22,7 @@
 
 #include <QLabel>
 #include <QGridLayout>
-#include <QtGui>
+#include <QRadioButton>
 
 #include <KLocale>
 #include <KComboBox>

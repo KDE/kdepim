@@ -22,8 +22,6 @@
 //  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //
 
-#include <memory>
-
 //Own Header
 #include "kjotscomponent.h"
 
@@ -41,7 +39,6 @@
 #include <QTextFrame>
 #include <QFont>
 
-//Added by qt3to4:
 #include <QFrame>
 #include <QVBoxLayout>
 #include <kactionmenu.h>
@@ -79,8 +76,7 @@
 #include "bookshelf.h"
 #include "kjotsreplacenextdialog.h"
 
-
-
+#include <memory>
 
 //----------------------------------------------------------------------
 // KJOTSMAIN
@@ -1069,7 +1065,7 @@ void KJotsComponent::saveToFile(KJotsComponent::ExportType type)
         }
 
         interimFile.release();
-        
+
         KJob *job = KIO::move(tempUrl, saveUrl);
         connect( job, SIGNAL( result(KJob*) ), this, SLOT( saveFinished(KJob*) ) );
     }
