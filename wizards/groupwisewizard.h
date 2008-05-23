@@ -24,6 +24,7 @@
 
 class KLineEdit;
 class QCheckBox;
+class QFrame;
 class QSpinBox;
 class QGroupBox;
 
