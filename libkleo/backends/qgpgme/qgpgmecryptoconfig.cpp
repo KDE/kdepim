@@ -308,7 +308,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
         } else {                       // unset option
           line += ":16:";
         }
-#if Q_OS_WIN
+#ifdef Q_OS_WIN
         line += '\r';
 #endif
         line += '\n';
