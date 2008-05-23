@@ -43,6 +43,9 @@ public:
     explicit MainWindow( QWidget * parent=0, Qt::WindowFlags f=KDE_DEFAULT_WINDOWFLAGS );
     ~MainWindow();
 
+public Q_SLOTS:
+    void importCertificatesFromFile( const QStringList & files );
+
 protected:
     void closeEvent( QCloseEvent * e );
     void showEvent( QShowEvent * e );

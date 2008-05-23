@@ -155,6 +155,10 @@ public:
     void createAndStart( const QStringList & a ) {
         ( new T( a, this->currentView(), &this->controller ) )->start();
     }
+    template <typename T>
+    void createAndStart( const QStringList & a, QAbstractItemView * view ) {
+        ( new T( a, view, &this->controller ) )->start();
+    }
 
     void closeAndQuit() {
         const QString app = KGlobal::mainComponent().aboutData()->programName();
@@ -515,6 +519,12 @@ void MainWindow::showEvent( QShowEvent * e ) {
     KXmlGuiWindow::showEvent( e );
     d->ui.tabWidget.loadViews( KGlobal::config().data() );
 }
+
+void MainWindow::importCertificatesFromFile( const QStringList & files ) {
+    if ( !files.empty() )
+        d->createAndStart<ImportCertificateFromFileCommand>( files, d->ui.tabWidget.addTemporaryView( i18n("Imported Certificates") ) );
+}
+
 
 static QStringList extract_local_files( const QMimeData * data ) {
     const QList<QUrl> urls = data->urls();
