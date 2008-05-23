@@ -89,6 +89,9 @@ namespace Kleo {
 	virtual void doCancel() = 0;
 
     protected:
+        void addTemporaryView( const QString & title );
+
+    protected:
         class Private;
         kdtools::pimpl_ptr<Private> d;
     protected:

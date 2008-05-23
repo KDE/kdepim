@@ -211,10 +211,10 @@ public:
         createAndStart<ExportCertificateCommand>();
     }
     void importCertificatesFromFile() {
-        createAndStart<ImportCertificateFromFileCommand>( ui.tabWidget.addTemporaryView( i18n("Imported Certificates") ) );
+        createAndStart<ImportCertificateFromFileCommand>();
     }
     void lookupCertificates() {
-        createAndStart<LookupCertificatesCommand>( ui.tabWidget.addTemporaryView( i18n("Imported Certificates" ) ) );
+        createAndStart<LookupCertificatesCommand>();
     }
     void clearCrlCache() {
         createAndStart<ClearCrlCacheCommand>();
@@ -515,7 +515,7 @@ void MainWindow::showEvent( QShowEvent * e ) {
 
 void MainWindow::importCertificatesFromFile( const QStringList & files ) {
     if ( !files.empty() )
-        d->createAndStart<ImportCertificateFromFileCommand>( files, d->ui.tabWidget.addTemporaryView( i18n("Imported Certificates") ) );
+        d->createAndStart<ImportCertificateFromFileCommand>( files );
 }
 
 

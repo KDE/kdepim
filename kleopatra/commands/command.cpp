@@ -35,6 +35,8 @@
 #include "command.h"
 #include "command_p.h"
 
+#include <view/tabwidget.h>
+
 #include <kdebug.h>
 
 #include <QAbstractItemView>
@@ -131,6 +133,12 @@ void Command::cancel() {
     kDebug();
     doCancel();
     emit canceled();
+}
+
+void Command::addTemporaryView( const QString & title ) {
+    if ( TabWidget * const tw = d->controller_ ? d->controller_->tabWidget() : 0 )
+        if ( QAbstractItemView * const v = tw->addTemporaryView( title ) )
+            setView( v );
 }
 
 #include "moc_command.cpp"

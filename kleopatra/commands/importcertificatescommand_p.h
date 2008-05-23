@@ -68,7 +68,7 @@ public:
     void showDetails( const GpgME::ImportResult & result, const QString & id=QString() ) {
         showDetails( view(), result, id );
     }
-    void setImportResultProxyModel( const GpgME::ImportResult & result );
+    void setImportResultProxyModel( const GpgME::ImportResult & result, const QString & id=QString() );
 
 private:
     QPointer<Kleo::ImportJob> cmsImportJob, pgpImportJob;
