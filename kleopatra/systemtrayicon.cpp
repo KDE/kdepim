@@ -67,6 +67,23 @@
 using namespace boost;
 using namespace Kleo::Commands;
 
+namespace {
+    class SignalBlocker {
+    public:
+        explicit SignalBlocker( QObject * obj ) : object( obj ), previous( object && object->blockSignals( true ) ) {
+            assert( object );
+        }
+
+        ~SignalBlocker() {
+            if ( object )
+                object->blockSignals( previous );
+        }
+    private:
+        const QPointer<QObject> object;
+        const bool previous;
+    };
+}
+
 class SystemTrayIcon::Private {
     friend class ::SystemTrayIcon;
     SystemTrayIcon * const q;
@@ -92,6 +109,9 @@ private:
     }
 
     void slotEnableDisableActions() {
+        //work around a Qt bug (seen with Qt 4.4.0, Windows): QClipBoard->mimeData() triggers QClipboard::changed(),
+        //triggering slotEnableDisableActions again
+        const SignalBlocker block( QApplication::clipboard() );
         openCertificateManagerAction.setEnabled( !mainWindow || !mainWindow->isVisible() );
         encryptClipboardAction.setEnabled( EncryptClipboardCommand::canEncryptCurrentClipboard() );
         openPGPSignClipboardAction.setEnabled( SignClipboardCommand::canSignCurrentClipboard() );
