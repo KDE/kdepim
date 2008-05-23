@@ -49,6 +49,7 @@ namespace Kleo {
 
     class AbstractKeyListModel;
     class Command;
+    class TabWidget;
 
     class KeyListController : public QObject {
         Q_OBJECT
@@ -63,6 +64,9 @@ namespace Kleo {
 
         void setHierarchicalModel( AbstractKeyListModel * model );
         AbstractKeyListModel * hierarchicalModel() const;
+
+        void setTabWidget( TabWidget * tabs );
+        TabWidget * tabWidget() const;
 
         void registerCommand( Command * cmd );
 
@@ -107,6 +111,7 @@ namespace Kleo {
         Q_PRIVATE_SLOT( d, void slotAboutToRemoveKey(GpgME::Key) )
         Q_PRIVATE_SLOT( d, void slotProgress(QString,int,int) )
         Q_PRIVATE_SLOT( d, void slotActionTriggered() )
+        Q_PRIVATE_SLOT( d, void slotCurrentViewChanged(QAbstractItemView*) )
     };
 
 }

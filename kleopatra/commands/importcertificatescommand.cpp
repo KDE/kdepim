@@ -58,6 +58,7 @@
 #include <QString>
 #include <QWidget>
 #include <QFileInfo>
+#include <QTreeView>
 
 #include <memory>
 #include <algorithm>
@@ -191,13 +192,18 @@ static void inject_import_result_proxy_model( QAbstractItemView * qaiv, const Im
 
 }
 
-void ImportCertificatesCommand::Private::setImportResultProxyModel( const ImportResult & result ) {
+void ImportCertificatesCommand::Private::setImportResultProxyModel( const ImportResult & result, const QString & id ) {
+    if ( result.imports().empty() )
+        return;
+    q->addTemporaryView( id.isEmpty() ? i18n("Imported Certificates") : i18n( "Imported Certificates from %1", id ) );
     inject_import_result_proxy_model( view(), result );
+    if ( QTreeView * const tv = qobject_cast<QTreeView*>( view() ) )
+        tv->expandAll();
 }
 
 void ImportCertificatesCommand::Private::showDetails( QWidget * parent, const ImportResult & res, const QString & id ) {
 
-    setImportResultProxyModel( res );
+    setImportResultProxyModel( res, id );
 
     const KLocalizedString normalLine = ki18n("<tr><td align=\"right\">%1</td><td>%2</td></tr>");
     const KLocalizedString boldLine = ki18n("<tr><td align=\"right\"><b>%1</b></td><td>%2</td></tr>");
@@ -294,7 +300,7 @@ void ImportCertificatesCommand::Private::startImport( GpgME::Protocol protocol, 
     assert( protocol != UnknownProtocol );
     const Kleo::CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( protocol );
     if ( !backend ) {
-        setImportResultProxyModel( ImportResult() );
+        setImportResultProxyModel( ImportResult(), id );
         KMessageBox::error( view(), 
                             i18n( "The type of this certificate (%1) is not supported by this Kleopatra installation.",
                                   Formatting::displayName( protocol ) ),
@@ -309,11 +315,11 @@ void ImportCertificatesCommand::Private::startImport( GpgME::Protocol protocol, 
     connect( job.get(), SIGNAL(progress(QString,int,int)), 
              q, SIGNAL(progress(QString,int,int)) );
     if ( const GpgME::Error err = job->start( data ) ) {
-        setImportResultProxyModel( ImportResult( err ) );
+        setImportResultProxyModel( ImportResult( err ), id );
         showError( err, id );
         finished();
     } else if ( err.isCanceled() ) {
-        setImportResultProxyModel( ImportResult( err ) );
+        setImportResultProxyModel( ImportResult( err ), id );
         emit q->canceled();
         finished();
     } else {

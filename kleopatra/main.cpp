@@ -274,6 +274,7 @@ int main( int argc, char** argv )
 #endif
 
       const bool daemon = args->isSet("daemon");
+      const QStringList certificateToImport = args->getOptionList("import-certificate");
 
       if ( !daemon )
           splash.show();
@@ -287,6 +288,8 @@ int main( int argc, char** argv )
 
       if ( !daemon ) {
           MainWindow* mainWindow = new MainWindow;
+          if ( !certificateToImport.isEmpty() )
+              mainWindow->importCertificatesFromFile( certificateToImport );
           mainWindow->show();
           sysTray.setMainWindow( mainWindow );
           splash.finish( mainWindow );

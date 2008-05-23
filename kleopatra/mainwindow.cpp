@@ -159,6 +159,10 @@ public:
     void createAndStart( const QStringList & a ) {
         ( new T( a, this->currentView(), &this->controller ) )->start();
     }
+    template <typename T>
+    void createAndStart( const QStringList & a, QAbstractItemView * view ) {
+        ( new T( a, view, &this->controller ) )->start();
+    }
 
     void closeAndQuit() {
         const QString app = KGlobal::mainComponent().aboutData()->programName();
@@ -222,10 +226,10 @@ public:
         createAndStart<ExportSecretKeyCommand>();
     }
     void importCertificatesFromFile() {
-        createAndStart<ImportCertificateFromFileCommand>( ui.tabWidget.addTemporaryView( i18n("Imported Certificates") ) );
+        createAndStart<ImportCertificateFromFileCommand>();
     }
     void lookupCertificates() {
-        createAndStart<LookupCertificatesCommand>( ui.tabWidget.addTemporaryView( i18n("Imported Certificates" ) ) );
+        createAndStart<LookupCertificatesCommand>();
     }
     void clearCrlCache() {
         createAndStart<ClearCrlCacheCommand>();
@@ -252,7 +256,6 @@ public:
     void preferences();
 
     void slotConfigCommitted();
-    void slotCurrentViewChanged( QAbstractItemView * view );
     void slotContextMenuRequested( QAbstractItemView *, const QPoint & p ) {
         if ( QMenu * const menu = qobject_cast<QMenu*>( q->factory()->container( "listview_popup", q ) ) )
             menu->exec( p );
@@ -313,6 +316,7 @@ MainWindow::Private::Private( MainWindow * qq )
 
     controller.setFlatModel( flatModel );
     controller.setHierarchicalModel( hierarchicalModel );
+    controller.setTabWidget( &ui.tabWidget );
 
     ui.tabWidget.setFlatModel( flatModel );
     ui.tabWidget.setHierarchicalModel( hierarchicalModel );
@@ -323,13 +327,6 @@ MainWindow::Private::Private( MainWindow * qq )
     connect( &controller, SIGNAL(message(QString,int)),  q->statusBar(), SLOT(showMessage(QString,int)) );
     connect( &controller, SIGNAL(contextMenuRequested(QAbstractItemView*,QPoint)),
              q, SLOT(slotContextMenuRequested(QAbstractItemView*,QPoint)) );
-
-    connect( &ui.tabWidget, SIGNAL(viewAdded(QAbstractItemView*)),
-             &controller, SLOT(addView(QAbstractItemView*)) );
-    connect( &ui.tabWidget, SIGNAL(viewAboutToBeRemoved(QAbstractItemView*)),
-             &controller, SLOT(removeView(QAbstractItemView*)) );
-    connect( &ui.tabWidget, SIGNAL(currentViewChanged(QAbstractItemView*)),
-             q, SLOT(slotCurrentViewChanged(QAbstractItemView*)) );
 
     q->createGUI( "kleopatra.rc" );
 
@@ -545,6 +542,12 @@ void MainWindow::showEvent( QShowEvent * e ) {
     d->ui.tabWidget.loadViews( KGlobal::config().data() );
 }
 
+void MainWindow::importCertificatesFromFile( const QStringList & files ) {
+    if ( !files.empty() )
+        d->createAndStart<ImportCertificateFromFileCommand>( files );
+}
+
+
 static QStringList extract_local_files( const QMimeData * data ) {
     const QList<QUrl> urls = data->urls();
     // begin workaround KDE/Qt misinterpretation of text/uri-list
@@ -607,10 +610,6 @@ void MainWindow::dropEvent( QDropEvent * e ) {
 
     if ( chosen )
         e->accept();
-}
-
-void MainWindow::Private::slotCurrentViewChanged( QAbstractItemView * view ) {
-    controller.enableDisableActions( view ? view->selectionModel() : 0 );
 }
 
 #include "mainwindow.moc"
