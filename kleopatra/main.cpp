@@ -125,6 +125,7 @@ static bool selfCheck( KSplashScreen & splash ) {
     Kleo::Commands::SelfTestCommand cmd( 0 );
     cmd.setAutoDelete( false );
     cmd.setAutomaticMode( true );
+    cmd.setSplashScreen( &splash );
     QEventLoop loop;
     QObject::connect( &cmd, SIGNAL(finished()), &loop, SLOT(quit()) );
     QObject::connect( &cmd, SIGNAL(info(QString)), &splash, SLOT(showMessage(QString)) );
