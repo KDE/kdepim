@@ -95,8 +95,8 @@ else ( ONLY_KLEO )
   macro_optional_find_package(Nepomuk)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "Nepomuk" "http://www.kde.org" FALSE "" "For adding desktop-wide tagging support to kmail")
 
-  macro_optional_find_package(LibXslt)
-  macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "xsltproc" "http://xmlsoft.org/XSLT/" FALSE "" "Needed to generate Akonadi database code")
+  find_program(XSLTPROC_EXECUTABLE xsltproc)
+  macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "The command line XSLT processor from libxslt" "http://xmlsoft.org/XSLT/" FALSE "" "Needed for building Akonadi resources. Recommended.")
 
   # is this really required here ?
   if (APPLE)
@@ -138,7 +138,7 @@ else ( ONLY_KLEO )
      ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttXMLTools.cpp
   )
 
-
+  macro_optional_add_subdirectory(doc)
   add_subdirectory(kode)
   macro_optional_add_subdirectory(akonadi)
   add_subdirectory(libkdepim)
@@ -160,7 +160,6 @@ else ( ONLY_KLEO )
   add_subdirectory(mimelib)
   add_subdirectory(icons)
   macro_optional_add_subdirectory(akregator)
-  macro_optional_add_subdirectory(doc)
   macro_optional_add_subdirectory(knode)
   macro_optional_add_subdirectory(kjots)
 

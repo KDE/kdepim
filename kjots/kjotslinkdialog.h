@@ -39,7 +39,7 @@ class KJotsLinkDialog : public KDialog
 {
     Q_OBJECT
     public:
-        KJotsLinkDialog(QWidget *parent = 0, Bookshelf *bookshelf =0 );
+        explicit KJotsLinkDialog(QWidget *parent = 0, Bookshelf *bookshelf =0 );
 
 
     /**

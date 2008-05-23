@@ -22,8 +22,6 @@
 //  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //
 
-#include <memory>
-
 //Own Header
 #include "kjotscomponent.h"
 
@@ -41,7 +39,6 @@
 #include <QTextFrame>
 #include <QFont>
 
-//Added by qt3to4:
 #include <QFrame>
 #include <QVBoxLayout>
 #include <kactionmenu.h>
@@ -79,8 +76,7 @@
 #include "bookshelf.h"
 #include "kjotsreplacenextdialog.h"
 
-
-
+#include <memory>
 
 //----------------------------------------------------------------------
 // KJOTSMAIN
@@ -362,20 +358,6 @@ void KJotsComponent::DelayedInitialization()
     pageOnlyActions->addAction( "auto_bullet", actionCollection->action("auto_bullet") );
     pageOnlyActions->addAction( "manage_link", actionCollection->action("manage_link") );
     pageOnlyActions->addAction( "insert_checkmark", actionCollection->action("insert_checkmark") );
-
-    pageOnlyActions->addAction( "format_text_italic", actionCollection->action("format_text_italic") );
-    pageOnlyActions->addAction( "format_text_bold", actionCollection->action("format_text_bold") );
-    pageOnlyActions->addAction( "format_text_underline", actionCollection->action("format_text_underline") );
-    pageOnlyActions->addAction( "format_text_strikeout", actionCollection->action("format_text_strikeout") );
-    pageOnlyActions->addAction( "format_text_foreground_color", actionCollection->action("format_text_foreground_color") );
-    pageOnlyActions->addAction( "format_text_background_color", actionCollection->action("format_text_background_color") );
-    pageOnlyActions->addAction( "insert_horizontal_rule", actionCollection->action("insert_horizontal_rule") );
-    pageOnlyActions->addAction( "format_font_family", actionCollection->action("format_font_family") );
-    pageOnlyActions->addAction( "format_font_size", actionCollection->action("format_font_size") );
-    pageOnlyActions->addAction( "format_painter", actionCollection->action("format_painter") );
-    pageOnlyActions->addAction( "format_list_style", actionCollection->action("format_list_style") );
-    pageOnlyActions->addAction( "format_list_indent_more", actionCollection->action("format_list_indent_more") );
-    pageOnlyActions->addAction( "format_list_indent_less", actionCollection->action("format_list_indent_less") );
 
     // Actions that are used only when a page is selected.
     bookOnlyActions = new KActionCollection((QObject*)this);
@@ -1083,7 +1065,7 @@ void KJotsComponent::saveToFile(KJotsComponent::ExportType type)
         }
 
         interimFile.release();
-        
+
         KJob *job = KIO::move(tempUrl, saveUrl);
         connect( job, SIGNAL( result(KJob*) ), this, SLOT( saveFinished(KJob*) ) );
     }
@@ -1263,6 +1245,7 @@ void KJotsComponent::updateMenu()
             action->setEnabled(false);
         foreach ( QAction* action, bookOnlyActions->actions() )
             action->setEnabled(false);
+        editor->setActionsEnabled( false );
     } else if ( selectionSize > 1 ) {
         // soon...
     } else { //selectionSize == 1
@@ -1275,11 +1258,14 @@ void KJotsComponent::updateMenu()
                 action->setEnabled(false);
             foreach ( QAction* action, bookOnlyActions->actions() )
                 action->setEnabled(true);
+            editor->setActionsEnabled( false );
         } else {
             foreach ( QAction* action, pageOnlyActions->actions() )
                 action->setEnabled(true);
             foreach ( QAction* action, bookOnlyActions->actions() )
                 action->setEnabled(false);
+            editor->setActionsEnabled( true );
+            
         }
     }
 }
