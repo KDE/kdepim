@@ -81,7 +81,7 @@ namespace {
 
         void runTest() {
 
-            KleopatraClient::Command command;
+            KleopatraClientCopy::Command command;
 
             {
                 QEventLoop loop;

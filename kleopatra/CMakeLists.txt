@@ -57,6 +57,7 @@ endif ( WIN32 )
 
 
 if ( USABLE_ASSUAN_FOUND )
+  add_definitions ( -DKLEOPATRACLIENT_NAMESPACE=KleopatraClientCopy )
   set(_kleopatra_uiserver_SRCS
     uiserver/uiserver.cpp
     ${_kleopatra_extra_uiserver_SRCS}
@@ -69,6 +70,9 @@ if ( USABLE_ASSUAN_FOUND )
     uiserver/prepencryptcommand.cpp
     uiserver/encryptcommand.cpp
     uiserver/selectcertificatecommand.cpp
+
+    libkleopatraclient/core/command.cpp
+    selftest/uiservercheck.cpp
     )
 
   if ( WIN32 )
@@ -76,12 +80,6 @@ if ( USABLE_ASSUAN_FOUND )
   else ( WIN32 )
     set( _kleopatra_uiserver_extra_libs ${ASSUAN_PTHREAD_LIBRARIES} )
   endif( WIN32 )
-  if ( BUILD_libkleopatraclient )
-    set( _kleopatra_uiserver_extra_libs ${_kleopatra_uiserver_extra_libs} kleopatraclientcore )
-    set( _kleopatra_uiserver_SRCS ${_kleopatra_uiserver_SRCS}
-      selftest/uiservercheck.cpp
-      )
-  endif ( BUILD_libkleopatraclient )
 
   if ( HAVE_GPG_ERR_SOURCE_KLEO )
     add_definitions( -DGPG_ERR_SOURCE_DEFAULT=GPG_ERR_SOURCE_KLEO )
