@@ -241,7 +241,6 @@ public:
     void preferences();
 
     void slotConfigCommitted();
-    void slotCurrentViewChanged( QAbstractItemView * view );
     void slotContextMenuRequested( QAbstractItemView *, const QPoint & p ) {
         if ( QMenu * const menu = qobject_cast<QMenu*>( q->factory()->container( "listview_popup", q ) ) )
             menu->exec( p );
@@ -302,6 +301,7 @@ MainWindow::Private::Private( MainWindow * qq )
 
     controller.setFlatModel( flatModel );
     controller.setHierarchicalModel( hierarchicalModel );
+    controller.setTabWidget( &ui.tabWidget );
 
     ui.tabWidget.setFlatModel( flatModel );
     ui.tabWidget.setHierarchicalModel( hierarchicalModel );
@@ -312,13 +312,6 @@ MainWindow::Private::Private( MainWindow * qq )
     connect( &controller, SIGNAL(message(QString,int)),  q->statusBar(), SLOT(showMessage(QString,int)) );
     connect( &controller, SIGNAL(contextMenuRequested(QAbstractItemView*,QPoint)),
              q, SLOT(slotContextMenuRequested(QAbstractItemView*,QPoint)) );
-
-    connect( &ui.tabWidget, SIGNAL(viewAdded(QAbstractItemView*)),
-             &controller, SLOT(addView(QAbstractItemView*)) );
-    connect( &ui.tabWidget, SIGNAL(viewAboutToBeRemoved(QAbstractItemView*)),
-             &controller, SLOT(removeView(QAbstractItemView*)) );
-    connect( &ui.tabWidget, SIGNAL(currentViewChanged(QAbstractItemView*)),
-             q, SLOT(slotCurrentViewChanged(QAbstractItemView*)) );
 
     q->createGUI( "kleopatra.rc" );
 
@@ -588,10 +581,6 @@ void MainWindow::dropEvent( QDropEvent * e ) {
 
     if ( chosen )
         e->accept();
-}
-
-void MainWindow::Private::slotCurrentViewChanged( QAbstractItemView * view ) {
-    controller.enableDisableActions( view ? view->selectionModel() : 0 );
 }
 
 #include "mainwindow.moc"

@@ -33,8 +33,9 @@
 #include <config-kleopatra.h>
 
 #include "keylistcontroller.h"
+#include "tabwidget.h"
 
-#include "commands/detailscommand.h"
+#include <commands/detailscommand.h>
 
 #include <models/keycache.h>
 #include <models/keylistmodel.h>
@@ -72,6 +73,9 @@ public:
     void connectView( QAbstractItemView * view );
     void connectCommand( Command * cmd );
 
+    void connectTabWidget();
+    void disconnectTabWidget();
+
     void addCommand( Command * cmd ) {
         connectCommand( cmd );
         commands.insert( std::lower_bound( commands.begin(), commands.end(), cmd ), cmd );
@@ -105,7 +109,11 @@ public:
             emit q->message( what );
     }
     void slotActionTriggered();
+    void slotCurrentViewChanged( QAbstractItemView * view ) {
+        q->enableDisableActions( view ? view->selectionModel() : 0 );
+    }
 
+private:
     int toolTipOptions() const;
 
 private:
@@ -120,6 +128,7 @@ private:
     std::vector<action_item> actions;
     std::vector<QAbstractItemView*> views;
     std::vector<Command*> commands;
+    QPointer<TabWidget> tabWidget;
     QPointer<AbstractKeyListModel> flatModel, hierarchicalModel;
 };
 
@@ -129,8 +138,9 @@ KeyListController::Private::Private( KeyListController * qq )
       actions(),
       views(),
       commands(),
-      flatModel( 0 ),
-      hierarchicalModel( 0 )
+      tabWidget(),
+      flatModel(),
+      hierarchicalModel()
 {
     connect( KeyCache::mutableInstance().get(), SIGNAL(added(GpgME::Key)),
              q, SLOT(slotAddKey(GpgME::Key)) );
@@ -209,12 +219,51 @@ void KeyListController::setHierarchicalModel( AbstractKeyListModel * model ) {
     }
 }
 
+void KeyListController::setTabWidget( TabWidget * tabWidget ) {
+    if ( tabWidget == d->tabWidget )
+        return;
+
+    d->disconnectTabWidget();
+
+    d->tabWidget = tabWidget;
+
+    d->connectTabWidget();
+}
+
+static const struct {
+    const char * signal;
+    const char * slot;
+} tabs2controller[] = {
+    { SIGNAL(viewAdded(QAbstractItemView*)),            SLOT(addView(QAbstractItemView*))                },
+    { SIGNAL(viewAboutToBeRemoved(QAbstractItemView*)), SLOT(removeView(QAbstractItemView*))             },
+    { SIGNAL(currentViewChanged(QAbstractItemView*)),   SLOT(slotCurrentViewChanged(QAbstractItemView*)) },
+};
+static const unsigned int numTabs2Controller = sizeof tabs2controller / sizeof *tabs2controller ;
+
+void KeyListController::Private::connectTabWidget() {
+    if ( !tabWidget )
+        return;
+    for ( unsigned int i = 0 ; i < numTabs2Controller ; ++i )
+        connect( tabWidget, tabs2controller[i].signal, q, tabs2controller[i].slot );
+}
+
+void KeyListController::Private::disconnectTabWidget() {
+    if ( !tabWidget )
+        return;
+    for ( unsigned int i = 0 ; i < numTabs2Controller ; ++i )
+        disconnect( tabWidget, tabs2controller[i].signal, q, tabs2controller[i].slot );
+}
+
 AbstractKeyListModel * KeyListController::flatModel() const {
     return d->flatModel;
 }
 
 AbstractKeyListModel * KeyListController::hierarchicalModel() const {
     return d->hierarchicalModel;
+}
+
+TabWidget * KeyListController::tabWidget() const {
+    return d->tabWidget;
 }
 
 void KeyListController::registerAction( QAction * action, Command::Restrictions restrictions, Command * (KeyListController::*create)() ) {
