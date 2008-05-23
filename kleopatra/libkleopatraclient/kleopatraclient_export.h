@@ -47,4 +47,8 @@
 #define KLEOPATRACLIENTGUI_EXPORT KDE_EXPORT
 #endif /* not windows */
 
+#ifndef KLEOPATRACLIENT_NAMESPACE
+# define KLEOPATRACLIENT_NAMESPACE KleopatraClient
+#endif
+
 #endif

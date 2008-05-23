@@ -24,7 +24,7 @@
 
 #include <libkleopatraclient/core/command.h>
 
-namespace KleopatraClient {
+namespace KLEOPATRACLIENT_NAMESPACE {
 
     class KLEOPATRACLIENTCORE_EXPORT SelectCertificateCommand : public Command {
         Q_OBJECT

@@ -31,7 +31,7 @@ class QString;
 class QByteArray;
 class QVariant;
 
-namespace KleopatraClient {
+namespace KLEOPATRACLIENT_NAMESPACE {
 
     class KLEOPATRACLIENTCORE_EXPORT Command : public QObject {
         Q_OBJECT

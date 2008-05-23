@@ -21,7 +21,7 @@
 
 #include "selectcertificatecommand.h"
 
-using namespace KleopatraClient;
+using namespace KLEOPATRACLIENT_NAMESPACE;
 
 SelectCertificateCommand::SelectCertificateCommand( QObject * p )
     : Command( p )

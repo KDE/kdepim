@@ -26,7 +26,7 @@
 
 #include <QWidget>
 
-namespace KleopatraClient {
+namespace KLEOPATRACLIENT_NAMESPACE {
 namespace Gui {
 
     class KLEOPATRACLIENTGUI_EXPORT CertificateRequester : public QWidget {
