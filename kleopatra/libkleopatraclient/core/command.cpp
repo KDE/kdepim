@@ -48,7 +48,7 @@
 
 #include <algorithm>
 
-using namespace KleopatraClient;
+using namespace KLEOPATRACLIENT_NAMESPACE;
 using namespace boost;
 
 Command::Command( QObject * p )

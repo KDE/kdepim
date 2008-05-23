@@ -176,5 +176,6 @@ void Command::addTemporaryView( const QString & title ) {
             setView( v );
 }
 
-#include "moc_command.cpp"
+//#include "moc_command.cpp"
+#include "command.moc" // the above clashes with libkleopatra/core/command.cpp, since CMake/Automoc4 is too stupid to handle that situation
 

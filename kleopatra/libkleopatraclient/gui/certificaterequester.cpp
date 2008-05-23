@@ -32,11 +32,11 @@
 
 #include <memory>
 
-using namespace KleopatraClient;
-using namespace KleopatraClient::Gui;
+using namespace KLEOPATRACLIENT_NAMESPACE;
+using namespace KLEOPATRACLIENT_NAMESPACE::Gui;
 
 class CertificateRequester::Private {
-    friend class ::KleopatraClient::Gui::CertificateRequester;
+    friend class ::KLEOPATRACLIENT_NAMESPACE::Gui::CertificateRequester;
     CertificateRequester * const q;
 public:
     explicit Private( CertificateRequester * qq )
