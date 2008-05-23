@@ -150,8 +150,12 @@ private:
         finished();
     }
     void slotDialogRejected() {
-        canceled = true;
-        Command::Private::canceled();
+        if ( automatic ) {
+            canceled = true;
+            Command::Private::canceled();
+        } else {
+            slotDialogAccepted();
+        }
     }
     void slotUpdateRequested() {
         runTests();
