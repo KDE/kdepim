@@ -308,6 +308,9 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
         } else {                       // unset option
           line += ":16:";
         }
+#if Q_OS_WIN
+        line += '\r';
+#endif
         line += '\n';
         QByteArray line8bit = line.toUtf8(); // encode with utf8, and K3ProcIO uses utf8 when reading.
         tmpFile.write( line8bit.data(), line8bit.size()-1 /*no 0*/ );
