@@ -787,7 +787,9 @@ QAbstractItemView * TabWidget::addView( const KConfigGroup & group ) {
 QAbstractItemView * TabWidget::addTemporaryView( const QString & title ) {
     Page * const page = new Page( title, QString(), QString() );
     page->setTemporary( true );
-    return d->addView( page );
+    QAbstractItemView * v = d->addView( page );
+    d->tabWidget.setCurrentIndex( d->tabWidget.count()-1 );
+    return v;
 }
 
 QTreeView * TabWidget::Private::addView( Page * page ) {
