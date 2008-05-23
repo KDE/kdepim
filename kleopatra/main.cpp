@@ -313,5 +313,9 @@ int main( int argc, char** argv )
   }
 #endif
 
+    // work around kdelibs bug https://bugs.kde.org/show_bug.cgi?id=162514
+    KGlobal::config()->sync();
+  
+
     return rc;
 }
