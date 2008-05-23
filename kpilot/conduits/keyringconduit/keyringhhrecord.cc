@@ -168,7 +168,7 @@ KeyringHHRecordBase KeyringHHRecord::unpack() const
 	// Encrypted data is in fRecord->data()[n..size]
 	QCA::SymmetricKey sKey( QCA::hexToArray( fKey ) );
 	
-	QCA::Cipher::Cipher cipher( "tripledes", QCA::Cipher::ECB
+	QCA::Cipher cipher( "tripledes", QCA::Cipher::ECB
 		, QCA::Cipher::NoPadding , QCA::Decode, sKey );
 	QCA::SecureArray result = cipher.update( encryptedData );
 	cipher.final();
@@ -284,7 +284,7 @@ void KeyringHHRecord::pack( const KeyringHHRecordBase &data )
 	QCA::Initializer init;
 	QCA::SymmetricKey sKey( QCA::hexToArray( fKey ) );
 	
-	QCA::Cipher::Cipher cipher( "tripledes", QCA::Cipher::ECB
+	QCA::Cipher cipher( "tripledes", QCA::Cipher::ECB
 		, QCA::Cipher::NoPadding , QCA::Encode, sKey );
 		
 	QCA::SecureArray result = cipher.update( unencryptedData );
