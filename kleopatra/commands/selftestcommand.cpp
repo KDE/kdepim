@@ -52,6 +52,7 @@
 #include <KLocale>
 #include <KGlobal>
 #include <KConfigGroup>
+#include <KSplashScreen>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/mem_fn.hpp>
@@ -96,6 +97,8 @@ private:
             dialog->raise();
         else
             dialog->show();
+        if ( splash )
+            splash->finish( dialog );
     }
 
     bool runAtStartUp() const {
@@ -147,14 +150,19 @@ private:
         finished();
     }
     void slotDialogRejected() {
-        canceled = true;
-        Command::Private::canceled();
+        if ( automatic ) {
+            canceled = true;
+            Command::Private::canceled();
+        } else {
+            slotDialogAccepted();
+        }
     }
     void slotUpdateRequested() {
         runTests();
     }
 
 private:
+    QPointer<KSplashScreen> splash;
     QPointer<SelfTestDialog> dialog;
     bool canceled;
     bool automatic;
@@ -168,6 +176,8 @@ const SelfTestCommand::Private * SelfTestCommand::d_func() const { return static
 
 SelfTestCommand::Private::Private( SelfTestCommand * qq, KeyListController * c )
     : Command::Private( qq, c ),
+      splash(),
+      dialog(),
       canceled( false ),
       automatic( false )
 {
@@ -200,6 +210,10 @@ void SelfTestCommand::setAutomaticMode( bool on ) {
     d->automatic = on;
     if ( d->dialog )
         d->dialog->setAutomaticMode( on );
+}
+
+void SelfTestCommand::setSplashScreen( KSplashScreen * splash ) {
+    d->splash = splash;
 }
 
 bool SelfTestCommand::isCanceled() const {

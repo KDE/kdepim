@@ -41,6 +41,7 @@ install(
   FILES
     initialization.h
     command.h
+    selectcertificatecommand.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/libkleopatraclient/core
   )
 

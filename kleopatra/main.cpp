@@ -125,6 +125,7 @@ static bool selfCheck( KSplashScreen & splash ) {
     Kleo::Commands::SelfTestCommand cmd( 0 );
     cmd.setAutoDelete( false );
     cmd.setAutomaticMode( true );
+    cmd.setSplashScreen( &splash );
     QEventLoop loop;
     QObject::connect( &cmd, SIGNAL(finished()), &loop, SLOT(quit()) );
     QObject::connect( &cmd, SIGNAL(info(QString)), &splash, SLOT(showMessage(QString)) );
@@ -311,6 +312,10 @@ int main( int argc, char** argv )
       rc = app.exec();
   }
 #endif
+
+    // work around kdelibs bug https://bugs.kde.org/show_bug.cgi?id=162514
+    KGlobal::config()->sync();
+  
 
     return rc;
 }
