@@ -297,7 +297,7 @@ private:
 
     static int option_handler( assuan_context_t ctx_, const char * key, const char * value ) {
         assert( assuan_get_pointer( ctx_ ) );
-        
+
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
 
         if ( key && key[0] == '-' && key[1] == '-' )
@@ -392,7 +392,7 @@ private:
                 options.erase( "FD" );
 
             } else if ( options.count( "FILE" ) ) {
-                
+
                 if ( options.count( "FD" ) )
                     throw gpg_error( GPG_ERR_CONFLICT );
 
@@ -617,7 +617,7 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
     assuan_context_t naked_ctx = 0;
     if ( const gpg_error_t err = assuan_init_socket_server_ext( &naked_ctx, fd, INIT_SOCKET_FLAGS ) )
         throw Exception( err, "assuan_init_socket_server_ext" );
-    
+
     ctx.reset( naked_ctx ); naked_ctx = 0;
 
     // for callbacks, associate the context with this connection:
@@ -625,7 +625,7 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
 
     FILE* const logFile = Log::instance()->logFile();
     assuan_set_log_stream( ctx.get(), logFile ? logFile : stderr );
-    
+
     // register FDs with the event loop:
     assuan_fd_t fds[MAX_ACTIVE_FDS];
     const int numFDs = assuan_get_active_fds( ctx.get(), FOR_READING, fds, MAX_ACTIVE_FDS );
@@ -703,7 +703,7 @@ void AssuanServerConnection::enableCryptoCommands( bool on ) {
     if ( on == d->cryptoCommandsEnabled )
         return;
     d->cryptoCommandsEnabled = on;
-    if ( d->loop )
+    if ( on && d->loop )
         d->loop->quit();
 }
 
@@ -884,7 +884,7 @@ QByteArray AssuanCommand::registerMemento( const QByteArray & tag, const shared_
     // oh, hack :(
     assert( assuan_get_pointer( d->ctx.get() ) );
     AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( d->ctx.get() ) );
-    
+
     conn.mementos[tag] = mem;
     return tag;
 }
@@ -893,7 +893,7 @@ void AssuanCommand::removeMemento( const QByteArray & tag ) {
     // oh, hack :(
     assert( assuan_get_pointer( d->ctx.get() ) );
     AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( d->ctx.get() ) );
-    
+
     conn.mementos.erase( tag );
 }
 
@@ -1199,7 +1199,7 @@ GpgME::Protocol AssuanCommand::checkProtocol( Mode mode ) const {
     if ( protocolString == QLatin1String( "cms" ) )
         return GpgME::CMS;
     throw Exception( makeError( GPG_ERR_INV_ARG ), i18n( "invalid protocol \"%1\"", protocolString ) );
-}        
+}
 
 void AssuanCommand::doApplyWindowID( QWidget * widget ) const {
     if ( !widget || !hasOption( "window-id" ) )
@@ -1217,7 +1217,7 @@ void AssuanCommand::doApplyWindowID( QWidget * widget ) const {
     }
     if ( QWidget * pw = QWidget::find( wid ) )
         widget->setParent( pw, widget->windowFlags() );
-    else {    	
+    else {
         KWindowSystem::setMainWindow( widget, wid );
     }
 }
