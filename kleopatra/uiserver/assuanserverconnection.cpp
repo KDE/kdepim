@@ -58,7 +58,7 @@
 #include <KWindowSystem>
 
 #include <QSocketNotifier>
-#include <QEventLoop>
+#include <QTimer>
 #include <QVariant>
 #include <QPointer>
 #include <QFileInfo>
@@ -238,9 +238,9 @@ public Q_SLOTS:
         }
     }
 
-private:
-    int startCommand( const shared_ptr<AssuanCommand> & cmd, bool nohup );
+    int startCommandBottomHalf();
 
+private:
     void nohupDone( AssuanCommand * cmd ) {
         const std::vector< shared_ptr<AssuanCommand> >::iterator it
             = std::find_if( nohupedCommands.begin(), nohupedCommands.end(),
@@ -569,7 +569,8 @@ private:
     AssuanContext ctx;
     bool closed                : 1;
     bool cryptoCommandsEnabled : 1;
-    QEventLoop * loop;
+    bool commandWaitingForCryptoCommandsEnabled : 1;
+    bool currentCommandIsNohup : 1;
     std::vector< shared_ptr<QSocketNotifier> > notifiers;
     std::vector< shared_ptr<AssuanCommandFactory> > factories; // sorted: _detail::ByName<std::less>
     shared_ptr<AssuanCommand> currentCommand;
@@ -586,6 +587,8 @@ void AssuanServerConnection::Private::cleanup() {
     assert( nohupedCommands.empty() );
     reset();
     currentCommand.reset();
+    currentCommandIsNohup = false;
+    commandWaitingForCryptoCommandsEnabled = false;
     notifiers.clear();
     ctx.reset();
     fd = ASSUAN_INVALID_FD;
@@ -596,8 +599,9 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
       q( qq ),
       fd( fd_ ),
       closed( false ),
-      cryptoCommandsEnabled( true ),
-      loop( 0 ),
+      cryptoCommandsEnabled( false ),
+      commandWaitingForCryptoCommandsEnabled( false ),
+      currentCommandIsNohup( false ),
       factories( factories_ )
 {
 #ifdef __GNUC__
@@ -696,8 +700,8 @@ void AssuanServerConnection::enableCryptoCommands( bool on ) {
     if ( on == d->cryptoCommandsEnabled )
         return;
     d->cryptoCommandsEnabled = on;
-    if ( on && d->loop )
-        d->loop->quit();
+    if ( d->commandWaitingForCryptoCommandsEnabled )
+        QTimer::singleShot( 0, d.get(), SLOT(startCommandBottomHalf()) );
 }
 
 
@@ -1114,7 +1118,12 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
             cmd->d->options.erase( "nohup" );
         }
 
-        return conn.startCommand( cmd, nohup );
+        conn.currentCommand = cmd;
+        conn.currentCommandIsNohup = nohup;
+
+        QTimer::singleShot( 0, &conn, SLOT(startCommandBottomHalf()) );
+
+        return 0;
 
     } catch ( const Exception & e ) {
         return assuan_process_done_msg( conn.ctx.get(), e.error_code(), e.message() );
@@ -1125,18 +1134,21 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
     }
 }
 
-int AssuanServerConnection::Private::startCommand( const shared_ptr<AssuanCommand> & cmd, bool nohup ) {
+int AssuanServerConnection::Private::startCommandBottomHalf() {
 
-        currentCommand = cmd;
+    commandWaitingForCryptoCommandsEnabled = currentCommand && !cryptoCommandsEnabled;
 
-        if ( !cryptoCommandsEnabled ) {
-            QEventLoop l;
-            loop = &l;
-            l.exec();
-            loop = 0;
-        }
+    if ( !cryptoCommandsEnabled )
+        return 0;
 
-        currentCommand.reset();
+    const shared_ptr<AssuanCommand> cmd = currentCommand;
+    if ( !cmd )
+        return 0;
+
+    currentCommand.reset();
+
+    const bool nohup = currentCommandIsNohup;
+    currentCommandIsNohup = false;
 
     try {
 

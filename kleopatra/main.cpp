@@ -238,8 +238,6 @@ int main( int argc, char** argv )
   try {
       Kleo::UiServer server( args->getOption("uiserver-socket") );
 
-      server.enableCryptoCommands( false );
-
       QObject::connect( &server, SIGNAL(startKeyManagerRequested()),
                         &sysTray, SLOT(openOrRaiseMainWindow()) );
 
