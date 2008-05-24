@@ -227,6 +227,7 @@ void SelfTestCommand::doStart() {
             d->finished();
             return;
         }
+    } else {
         d->ensureDialogCreated();
     }
 
