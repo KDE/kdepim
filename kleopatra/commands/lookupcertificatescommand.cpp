@@ -205,8 +205,12 @@ void LookupCertificatesCommand::Private::createDialog() {
 }
 
 void LookupCertificatesCommand::Private::slotSearchTextChanged( const QString & str ) {
-    dialog->setPassive( true );
-    dialog->setCertificates( std::vector<Key>() );
+    // pressing return might trigger both search and dialog destruction (search focused and default key set)
+    // On Windows, the dialog is then destroyed before this slot is called
+    if ( dialog ) { //thus test
+        dialog->setPassive( true );
+        dialog->setCertificates( std::vector<Key>() );
+    }
 
     startKeyListJob( CMS,     str );
     startKeyListJob( OpenPGP, str );
@@ -294,7 +298,7 @@ namespace {
     template <typename T>
     QStringList filter_and_format_successful_downloads( const T & t ) {
         QStringList result;
-        
+
         return result;
     }
 

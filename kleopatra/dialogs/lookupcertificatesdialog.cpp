@@ -233,6 +233,7 @@ void LookupCertificatesDialog::Private::enableDisableWidgets() {
     } else {
         ui.importPB()->setEnabled(  selection.size() == 1 );
     }
+    ui.importPB()->setDefault( false ); // otherwise Import becomes default button if enabled and return triggers both a search and accept()
 }
 
 #include "moc_lookupcertificatesdialog.cpp"
