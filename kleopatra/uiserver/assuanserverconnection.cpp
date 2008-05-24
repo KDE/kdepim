@@ -1135,38 +1135,36 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
 
 int AssuanServerConnection::Private::startCommand( const shared_ptr<AssuanCommand> & cmd, bool nohup ) {
 
-    AssuanServerConnection::Private & conn = *this;
-
     try {
 
-        conn.currentCommand = cmd;
-        conn.waitForCryptoCommandsEnabled();
-        conn.currentCommand.reset();
+        currentCommand = cmd;
+        waitForCryptoCommandsEnabled();
+        currentCommand.reset();
 
         if ( const int err = cmd->start() )
             if ( cmd->isDone() )
                 return err;
             else
-                return assuan_process_done( conn.ctx.get(), err );
+                return assuan_process_done( ctx.get(), err );
 
         if ( cmd->isDone() )
             return 0;
 
         if ( nohup ) {
             cmd->setNohup( true );
-            conn.nohupedCommands.push_back( cmd );
-            return assuan_process_done_msg( conn.ctx.get(), 0, "Command put in the background to continue executing after connection end." );
+            nohupedCommands.push_back( cmd );
+            return assuan_process_done_msg( ctx.get(), 0, "Command put in the background to continue executing after connection end." );
         } else {
-            conn.currentCommand = cmd;
+            currentCommand = cmd;
             return 0;
         }
 
     } catch ( const Exception & e ) {
-        return assuan_process_done_msg( conn.ctx.get(), e.error_code(), e.message() );
+        return assuan_process_done_msg( ctx.get(), e.error_code(), e.message() );
     } catch ( const std::exception & e ) {
-        return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_UNEXPECTED ), e.what() );
+        return assuan_process_done_msg( ctx.get(), gpg_error( GPG_ERR_UNEXPECTED ), e.what() );
     } catch ( ... ) {
-        return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_UNEXPECTED ), i18n("Caught unknown exception") );
+        return assuan_process_done_msg( ctx.get(), gpg_error( GPG_ERR_UNEXPECTED ), i18n("Caught unknown exception") );
     }
 
 }
