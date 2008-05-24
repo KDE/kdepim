@@ -8,7 +8,7 @@ set(soapdebug_SRCS soapdebug.cpp )
 
 
 # todo: more appropriate icon?
-kde4_add_app_icon(soapdebug_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/kbugbuster.png")
+#kde4_add_app_icon(soapdebug_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/kbugbuster.png")
 
 kde4_add_executable(soapdebug TEST ${soapdebug_SRCS})
 
