@@ -263,7 +263,7 @@ GroupwiseServer::GroupwiseServer( const QString &url, const QString &user,
   KConfig gwcfg( "groupwiserc" );
   KConfigGroup cfg( &gwcfg, "Debug" );
   mLogFile = cfg.readEntry( "LogFile" );
-  
+
   if ( !mLogFile.isEmpty() ) {
     kDebug() <<"Debug log file enabled:" << mLogFile;
   }
@@ -286,7 +286,7 @@ bool GroupwiseServer::login()
   loginReq.application->append( "KDEPIM" );
   loginReq.language.append( "us" );
   loginReq.version.append( "1" );
-  
+
   GWConverter conv( mSoap );
 
   ngwt__PlainText pt;
@@ -303,7 +303,7 @@ bool GroupwiseServer::login()
 
   int result = 1, maxTries = 3;
   mBinding->endpoint = mUrl.toLatin1();
-  
+
 //  while ( --maxTries && result ) {
     result = soap_call___ngw__loginRequest( mSoap, mUrl.toLatin1(), NULL,
       &loginReq, &loginResp );
@@ -347,7 +347,7 @@ bool GroupwiseServer::getCategoryList()
     kError() <<"GroupwiseServer::getCategoryList(): no session.";
     return false;
   }
-  
+
 /*SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getCategoryListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getCategoryListRequest *ngwm__getCategoryListRequest, _ngwm__getCategoryListResponse *ngwm__getCategoryListResponse);*/
 
   _ngwm__getCategoryListRequest catListReq;
@@ -479,7 +479,7 @@ void GroupwiseServer::dumpFolderList()
           kError() <<"Missing calendar id";
         } else {
           dumpCalendarFolder( *( (*it)->id ) );
-        }   
+        }
 #endif
       }
     }
@@ -547,7 +547,7 @@ void GroupwiseServer::dumpTask( ngwt__Task *t )
 {
   dumpMail( t );
   if ( t->completed ) {
-    kDebug() <<"  COMPLETED:" << ( t->completed ?"true" :"false" ); 
+    kDebug() <<"  COMPLETED:" << ( t->completed ?"true" :"false" );
   }
 }
 
@@ -762,8 +762,8 @@ std::string GroupwiseServer::getFullIDFor( const QString & gwRecordIDFromIcal )
     kError() <<"couldn't get calendar folder ID in order to accept invitation";
     return false;
   }
-  
-  // now get the full Item ID of the 
+
+  // now get the full Item ID of the
   std::string fullItemID;
 
   _ngwm__getItemsRequest getItemRequest;
@@ -985,7 +985,7 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
   }
   else  // If I am not the organizer restrict my changes to accept or decline requests.
   {
-    // find myself as attendee.   
+    // find myself as attendee.
     KCal::Attendee::List attendees = incidence->attendees();
     KCal::Attendee::List::ConstIterator it;
     for( it = attendees.begin(); it != attendees.end(); ++it ) {
@@ -1050,7 +1050,7 @@ bool GroupwiseServer::checkResponse( int result, ngwt__Status *status )
   if ( status && status->code != 0 ) {
     QString msg = "SOAP Response Status: " + QString::number( status->code );
     if ( status->description ) {
-      msg += " ";
+      msg += ' ';
       msg += status->description->c_str();
       mErrors.append( status->description->c_str() );
     }
@@ -1287,7 +1287,7 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
 
   _ngwm__getFreeBusyResponse getFreeBusyResponse;
 
-  
+
 
   bool done = false;
 
@@ -1306,7 +1306,7 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
       kDebug() <<"NO STATS!";
     } else {
       kDebug() << "COUNT:" << stats->responded << stats->outstanding
-               << stats->total; 
+               << stats->total;
     }
 
     std::vector<class ngwt__FreeBusyInfo *> *infos = 0;
@@ -1325,7 +1325,7 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
             KDateTime blockEnd = conv.charToKDateTime( (*it2)->endDate, mTimeSpec );
             ngwt__AcceptLevel acceptLevel = *(*it2)->acceptLevel;
 
-            /* we need to support these as people use it for checking others' calendars */ 
+            /* we need to support these as people use it for checking others' calendars */
 /*            if ( (*it2)->subject )
               std::string subject = *(*it2)->subject;*/
   //          kDebug() <<"BLOCK Subject:" << subject.c_str();
@@ -1390,11 +1390,10 @@ void GroupwiseServer::log( const QString &prefix, const char *s, size_t n )
 
   kDebug() <<"GroupwiseServer::log()" << prefix << n << "bytes";
 
-  QString log = mLogFile + "_" + QString::number( getpid() ) +
-    "_" + prefix + ".log";
+  QString log = mLogFile + '_' + QString::number( getpid() ) + '_' + prefix + ".log";
   QFile f( log );
   if ( !f.open( QIODevice::WriteOnly | QIODevice::Append ) ) {
-    kError() <<"Unable to open log file '" << log <<"'";
+    kError() << "Unable to open log file '" << log << "'";
   } else {
     uint written = 0;
     while ( written < n ) {
@@ -1402,7 +1401,7 @@ void GroupwiseServer::log( const QString &prefix, const char *s, size_t n )
       int w = f.write( s + written, n - written );
       kDebug() <<"w:" << w;
       if ( w < 0 ) {
-        kError() <<"Unable to write log '" << log <<"'";
+        kError() << "Unable to write log '" << log << "'";
         break;
       }
       written += w;
@@ -1471,11 +1470,11 @@ bool GroupwiseServer::readUserSettings( ngwt__Settings *&returnedSettings )
     *(setting2->locked) = true;
     grp->setting.push_back( setting1 );
     grp->setting.push_back( setting2 );
-    
+
     returnedSettings->group.push_back( grp );
   }
   kDebug() <<"GroupwiseServer::userSettings() - done.";
-  
+
   return true; /** FIXME return false if no settings fetched */
 }
 

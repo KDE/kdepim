@@ -42,7 +42,7 @@
 SloxAccounts::SloxAccounts( SloxBase *res, const KUrl &baseUrl )
   : mBaseUrl( baseUrl ), mRes( res )
 {
-  kDebug() <<"SloxAccounts():" << baseUrl;
+  kDebug() << baseUrl;
 
   mDownloadJob = 0;
 
@@ -51,21 +51,21 @@ SloxAccounts::SloxAccounts( SloxBase *res, const KUrl &baseUrl )
   QStringList l = server.split( '.' );
 
   if ( l.count() < 2 ) mDomain = server;
-  else mDomain = l[ l.count() - 2 ] + "." + l[ l.count() - 1 ];
+  else mDomain = l[ l.count() - 2 ] + '.' + l[ l.count() - 1 ];
 
   readAccounts();
 }
 
 SloxAccounts::~SloxAccounts()
 {
-  kDebug() <<"~SloxAccounts()";
+  kDebug();
 
   if ( mDownloadJob ) mDownloadJob->kill();
 }
 
 void SloxAccounts::insertUser( const QString &id, const KABC::Addressee &a )
 {
-  kDebug() <<"SloxAccount::insertUser()" << id;
+  kDebug() << id;
 
   mUsers.insert( id, a );
 

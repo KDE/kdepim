@@ -110,13 +110,13 @@ QString Contact::toXml( const KABC::Addressee &addr )
     }
 
     xml += QString( "<email%1_address_type>" ).arg( i + 1 ) + type +
-           QString( "</email%1_address_type>" ).arg( i + 1 ) +"\n";
+           QString( "</email%1_address_type>" ).arg( i + 1 ) + '\n';
     xml += QString( "<email%1_address>" ).arg( i + 1 ) + address +
-           QString( "</email%1_address>" ).arg( i + 1 ) +"\n";
+           QString( "</email%1_address>" ).arg( i + 1 ) + '\n';
     xml += QString( "<email%1_address_with_comment>" ).arg( i + 1 ) + comment +
-           QString( "</email%1_address_with_comment>" ).arg( i + 1 ) + "\n";
+           QString( "</email%1_address_with_comment>" ).arg( i + 1 ) + '\n';
     xml += QString( "<email%1_display_name>" ).arg( i + 1 ) + display +
-           QString( "</email%1_display_name>" ).arg( i + 1 ) + "\n";
+           QString( "</email%1_display_name>" ).arg( i + 1 ) + '\n';
   }
 
   KABC::PhoneNumber phone = addr.phoneNumber( KABC::PhoneNumber::Home );

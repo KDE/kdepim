@@ -74,7 +74,7 @@ void WebdavHandler::log( const QString &text )
 {
   if ( mLogFile.isEmpty() ) return;
 
-  QString filename = mLogFile + "-" + QString::number( mLogCount );
+  QString filename = mLogFile + '-' + QString::number( mLogCount );
   QFile file( filename );
   if ( !file.open( QIODevice::WriteOnly ) ) {
     kWarning() <<"Unable to open log file '" << filename <<"'";
@@ -195,7 +195,7 @@ QDateTime WebdavHandler::sloxToQDateTime( const QString &str )
 {
   QString s = str.mid( 0, str.length() - 3 );
 
-  bool preEpoch = s.startsWith("-");
+  bool preEpoch = s.startsWith('-');
   if (preEpoch)
      s = s.mid(1);
 

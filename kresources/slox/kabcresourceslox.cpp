@@ -310,7 +310,7 @@ void ResourceSlox::slotUploadResult( KJob *job )
     for( it = items.begin(); it != items.end(); ++it ) {
       SloxItem item = *it;
       if ( !item.response.contains( "200" ) ) {
-        savingError( this, item.response + "\n" + item.responseDescription );
+        savingError( this, item.response + '\n' + item.responseDescription );
         continue;
       }
       if ( item.status == SloxItem::New ) {

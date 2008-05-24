@@ -112,8 +112,7 @@ void Scalix::retrieveFreeBusy( const KUrl &url )
   stream << (int) 'X' << 'E' << command << argument;
 
   QString imapUrl = QString( "imap://%1@%3/" ).arg( url.pass().isEmpty() ?
-                                                   url.user() : url.user() + ":" + url.pass() )
-                                                .arg( url.host() );
+                                                    url.user() : url.user() + ':' + url.pass() ).arg( url.host() );
 
   mFreeBusyData = QString();
 
@@ -180,7 +179,7 @@ void Scalix::publishFreeBusy( const KUrl &url )
   stream << (int) 'X' << 'E' << command << argument;
 
   QString imapUrl = QString( "imap://%1@%3/" ).arg( url.pass().isEmpty() ?
-                                                   url.user() : url.user() + ":" + url.pass() )
+                                                    url.user() : url.user() + ':' + url.pass() )
                                                 .arg( url.host() );
 
   KIO::SimpleJob *job = KIO::special( imapUrl, packedArgs, false );
