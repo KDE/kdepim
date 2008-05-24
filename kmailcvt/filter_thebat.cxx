@@ -60,10 +60,10 @@ void FilterTheBat::import( FilterInfo *info )
         info->alert( i18n( "No directory selected." ) );
     }
     /**
-     * If the user only select homedir no import needed because 
+     * If the user only select homedir no import needed because
      * there should be no files and we surely import wrong files.
      */
-    else if ( mailDir == QDir::homePath() || mailDir == ( QDir::homePath() + "/" ) ) {
+    else if ( mailDir == QDir::homePath() || mailDir == ( QDir::homePath() + '/' ) ) {
         info->addLog( i18n( "No files found for import." ) );
     } else {
         info->setOverall(0);
@@ -84,7 +84,7 @@ void FilterTheBat::import( FilterInfo *info )
         info->addLog( i18np("1 duplicate message not imported", "%1 duplicate messages not imported", count_duplicates));
     }
     if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
-    
+
     count_duplicates = 0;
     info->setCurrent(100);
     info->setOverall(100);
@@ -98,14 +98,14 @@ void FilterTheBat::import( FilterInfo *info )
 void FilterTheBat::importDirContents( FilterInfo *info, const QString& dirName)
 {
     if(info->shouldTerminate()) return;
-    
+
     /** Here Import all archives in the current dir */
     QDir dir(dirName);
     QDir importDir (dirName);
     QStringList files = importDir.entryList(QStringList("*.[tT][bB][bB]"), QDir::Files, QDir::Name);
     for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile) {
         QString temp_mailfile = *mailFile;
-        importFiles(info, (dirName + "/" + temp_mailfile));
+        importFiles(info, (dirName + '/' + temp_mailfile));
         if(info->shouldTerminate()) return;
     }
 
