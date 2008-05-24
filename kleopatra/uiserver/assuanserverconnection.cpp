@@ -240,14 +240,6 @@ public Q_SLOTS:
 
 private:
     int startCommand( const shared_ptr<AssuanCommand> & cmd, bool nohup );
-    void waitForCryptoCommandsEnabled() {
-        if ( cryptoCommandsEnabled )
-            return;
-        QEventLoop l;
-        loop = &l;
-        l.exec();
-        loop = 0;
-    }
 
     void nohupDone( AssuanCommand * cmd ) {
         const std::vector< shared_ptr<AssuanCommand> >::iterator it
@@ -1138,7 +1130,14 @@ int AssuanServerConnection::Private::startCommand( const shared_ptr<AssuanComman
     try {
 
         currentCommand = cmd;
-        waitForCryptoCommandsEnabled();
+
+        if ( !cryptoCommandsEnabled ) {
+            QEventLoop l;
+            loop = &l;
+            l.exec();
+            loop = 0;
+        }
+
         currentCommand.reset();
 
         if ( const int err = cmd->start() )
