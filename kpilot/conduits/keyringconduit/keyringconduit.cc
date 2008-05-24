@@ -221,7 +221,7 @@ void KeyringConduit::_copy( const Record *from, HHRecord *to )
 	if( !from->equal( to ) )
 	{
 		const KeyringHHRecord *krFrom = static_cast<const KeyringHHRecord*>( from );
-		KeyringHHRecord *krTo = static_cast<const KeyringHHRecord*>( to );
+		KeyringHHRecord *krTo = static_cast<KeyringHHRecord*>( to );
 		
 		if( krTo->name() != krFrom->name() )
 		{
