@@ -35,7 +35,7 @@ namespace KDGantt {
         Q_OBJECT
         KDGANTT_DECLARE_PRIVATE_DERIVED( DateTimeGrid )
     public:
-		enum Scale { ScaleAuto, ScaleHour, ScaleDay };
+		enum Scale { ScaleAuto, ScaleHour, ScaleDay, ScaleWeek };
 	
         DateTimeGrid();
         virtual ~DateTimeGrid();
@@ -72,6 +72,8 @@ namespace KDGantt {
                                     qreal offset, QWidget* widget=0 );
 		virtual void paintDayScaleHeader( QPainter* painter, const QRectF& headerRect, const QRectF& exposedRect,
                                     qreal offset, QWidget* widget=0 );
+        virtual void paintWeekScaleHeader( QPainter* painter, const QRectF& headerRect, const QRectF& exposedRect,
+                                          qreal offset, QWidget* widget=0 );
 
     };
 }

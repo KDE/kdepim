@@ -286,7 +286,7 @@ void DateTimeGrid::paintGrid( QPainter* painter,
                               AbstractRowController* rowController,
                               QWidget* widget )
 {
-    // TODO: Support hours
+    // TODO: Support hours and weeks
     QDateTime dt = d->chartXtoDateTime( exposedRect.left() );
     dt.setTime( QTime( 0, 0, 0, 0 ) );
     for ( qreal x = d->dateTimeToChartX( dt ); x < exposedRect.right();
@@ -331,11 +331,17 @@ void DateTimeGrid::paintHeader( QPainter* painter,  const QRectF& headerRect, co
 {
 	switch(scale()) {
 		case ScaleHour: paintHourScaleHeader(painter,headerRect,exposedRect,offset,widget); break;
-		case ScaleDay: paintDayScaleHeader(painter,headerRect,exposedRect,offset,widget); break;
-		case ScaleAuto:
-			if(dayWidth()>500) paintHourScaleHeader(painter,headerRect,exposedRect,offset,widget);
-			else paintDayScaleHeader(painter,headerRect,exposedRect,offset,widget);
-			break;
+        case ScaleDay: paintDayScaleHeader(painter,headerRect,exposedRect,offset,widget); break;
+        case ScaleWeek: paintWeekScaleHeader(painter,headerRect,exposedRect,offset,widget); break;
+        case ScaleAuto:
+            if ( dayWidth() > 500) {
+                paintHourScaleHeader(painter,headerRect,exposedRect,offset,widget);
+            } else if (dayWidth() < 10) {
+                paintWeekScaleHeader(painter,headerRect,exposedRect,offset,widget);
+            } else {
+                paintDayScaleHeader(painter,headerRect,exposedRect,offset,widget);
+            }
+            break;
 	}
 }
 
@@ -407,6 +413,43 @@ void DateTimeGrid::paintDayScaleHeader( QPainter* painter,  const QRectF& header
         opt.init( widget );
         opt.rect = QRectF( x2-offset, headerRect.top(), dayWidth()*7., headerRect.height()/2. ).toRect();
         opt.text = QString::number( dt.date().weekNumber() );
+        opt.textAlignment = Qt::AlignCenter;
+        style->drawControl(QStyle::CE_Header, &opt, painter, widget);
+    }
+}
+
+/*! Paints the week scale header.
+ * \sa paintHeader()
+ */
+void DateTimeGrid::paintWeekScaleHeader( QPainter* painter,  const QRectF& headerRect, const QRectF& exposedRect,
+                                        qreal offset, QWidget* widget )
+{
+    QStyle* style = widget?widget->style():QApplication::style();
+
+    // Paint a section for each week
+    QDateTime dt = d->chartXtoDateTime( offset+exposedRect.left() );
+    dt.setTime( QTime( 0, 0, 0, 0 ) );
+    // Go backwards until start of week
+    while ( dt.date().dayOfWeek() != d->weekStart ) dt = dt.addDays( -1 );
+    for ( qreal x = d->dateTimeToChartX( dt ); x < exposedRect.right()+offset;
+            dt = dt.addDays( 7 ),x=d->dateTimeToChartX( dt ) ) {
+        QStyleOptionHeader opt;
+        opt.init( widget );
+        opt.rect = QRectF( x-offset, headerRect.top()+headerRect.height()/2., dayWidth()*7, headerRect.height()/2. ).toRect();
+        opt.text = QString::number( dt.date().weekNumber() );
+        opt.textAlignment = Qt::AlignCenter;
+        style->drawControl(QStyle::CE_Header, &opt, painter, widget);
+    }
+
+    dt = d->chartXtoDateTime( offset+exposedRect.left() );
+    dt.setTime( QTime( 0, 0, 0, 0 ) );
+    // Paint a section for each month
+    for ( qreal x2 = d->dateTimeToChartX( dt ); x2 < exposedRect.right()+offset;
+            dt = dt.addMonths( 1 ),x2=d->dateTimeToChartX( dt ) ) {
+        QStyleOptionHeader opt;
+        opt.init( widget );
+        opt.rect = QRectF( x2-offset, headerRect.top(), dayWidth()*dt.date().daysInMonth(), headerRect.height()/2. ).toRect();
+        opt.text = QDate::longMonthName( dt.date().month() );
         opt.textAlignment = Qt::AlignCenter;
         style->drawControl(QStyle::CE_Header, &opt, painter, widget);
     }

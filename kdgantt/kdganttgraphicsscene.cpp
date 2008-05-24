@@ -89,14 +89,32 @@ void GraphicsScene::Private::createConstraintItem( const Constraint& c )
     //q->insertConstraintItem( c, citem );
 }
 
+// Delete the constraint item, and clean up pointers in the start- and end item
+void GraphicsScene::Private::deleteConstraintItem( ConstraintGraphicsItem *citem )
+{
+    //qDebug()<<"GraphicsScene::Private::deleteConstraintItem citem="<<(void*)citem;
+    if ( citem == 0 ) {
+        return;
+    }
+    Constraint c = citem->constraint();
+    GraphicsItem* item = items.value( summaryHandlingModel->mapFromSource( c.startIndex() ), 0 );
+    if ( item ) {
+        //qDebug()<<"GraphicsScene::Private::deleteConstraintItem startConstraints"<<item<<(void*)citem;
+        item->removeStartConstraint( citem );
+    } //else qDebug()<<"GraphicsScene::Private::deleteConstraintItem"<<c.startIndex()<<"start item not found";
+    item = items.value( summaryHandlingModel->mapFromSource( c.endIndex() ), 0 );
+    if ( item ) {
+        //qDebug()<<"GraphicsScene::Private::deleteConstraintItem endConstraints"<<item<<(void*)citem;
+        item->removeEndConstraint( citem );
+    } //else qDebug()<<"GraphicsScene::Private::deleteConstraintItem"<<c.endIndex()<<"end item not found";
+    //qDebug()<<"GraphicsScene::Private::deleteConstraintItem"<<citem<<"deleted";
+    delete citem;
+}
+
 void GraphicsScene::Private::deleteConstraintItem( const Constraint& c )
 {
-    ConstraintGraphicsItem* citem = findConstraintItem( c );
-    GraphicsItem* item = items.value( c.startIndex(), 0 );
-    if ( item ) item->removeStartConstraint( citem );
-    item = items.value( c.endIndex(), 0 );
-    if ( item ) item->removeEndConstraint( citem );
-    if ( citem ) delete citem;
+    //qDebug()<<"GraphicsScene::Private::deleteConstraintItem c="<<c;
+    deleteConstraintItem( findConstraintItem( c ) );
 }
 
 namespace {
@@ -125,15 +143,31 @@ namespace {
 ConstraintGraphicsItem* GraphicsScene::Private::findConstraintItem( const Constraint& c ) const
 {
     GraphicsItem* item = items.value( summaryHandlingModel->mapFromSource( c.startIndex() ), 0 );
-    if ( !item ) return 0;
-    QList<ConstraintGraphicsItem*> clst = item->startConstraints();
-    QList<ConstraintGraphicsItem*>::iterator it = clst.begin();
-	for( ; it != clst.end() ; ++it )
-		if ((*it)->constraint() == c )
-			break;
-    if (  it != clst.end() ) {
-        return *it;
-    } else return 0;
+    if ( item ) {
+        QList<ConstraintGraphicsItem*> clst = item->startConstraints();
+        QList<ConstraintGraphicsItem*>::iterator it = clst.begin();
+        //qDebug()<<"GraphicsScene::Private::findConstraintItem start:"<<c<<item<<clst;
+        for( ; it != clst.end() ; ++it )
+            if ((*it)->constraint() == c )
+                break;
+        if (  it != clst.end() ) {
+            return *it;
+        }
+    }
+    item = items.value( summaryHandlingModel->mapFromSource( c.endIndex() ), 0 );
+    if ( item ) {
+        QList<ConstraintGraphicsItem*> clst = item->endConstraints();
+        QList<ConstraintGraphicsItem*>::iterator it = clst.begin();
+        //qDebug()<<"GraphicsScene::Private::findConstraintItem end:"<<c<<item<<clst;
+        for( ; it != clst.end() ; ++it )
+            if ((*it)->constraint() == c )
+                break;
+        if (  it != clst.end() ) {
+            return *it;
+        }
+    }
+    //qDebug()<<"GraphicsScene::Private::findConstraintItem No item or constraintitem"<<c;
+    return 0;
 }
 
 GraphicsScene::GraphicsScene( QObject* parent )
@@ -416,29 +450,23 @@ void GraphicsScene::removeItem( const QModelIndex& idx )
         // We have to remove the item from the list first because
         // there is a good chance there will be reentrant calls
         d->items.erase( it );
+        //qDebug() << "GraphicsScene::removeItem item="<<item;
         {
             // Remove any constraintitems starting here
             const QList<ConstraintGraphicsItem*> clst = item->startConstraints();
-            //qDebug() << "GraphicsScene::removeItem" << clst;
+            //qDebug()<<"GraphicsScene::removeItem start:"<<clst;
             Q_FOREACH( ConstraintGraphicsItem* citem, clst ) {
-                const Constraint c = citem->constraint();
-                GraphicsItem* end_item = d->items.value( summaryHandlingModel()->mapFromSource( c.endIndex() ),0 );
-                if ( end_item ) end_item->removeEndConstraint( citem );
-                //d->constraintModel->removeConstraint( c );
-                delete citem;
+                //qDebug()<<"GraphicsScene::removeItem start citem="<<citem;
+                d->deleteConstraintItem( citem );
             }
         }
-        {
+        {// Remove any constraintitems ending here
             const QList<ConstraintGraphicsItem*> clst = item->endConstraints();
-            //qDebug() << "GraphicsScene::removeItem" << clst;
+            //qDebug()<<"GraphicsScene::removeItem end:"<<clst;
             Q_FOREACH( ConstraintGraphicsItem* citem, clst ) {
-                const Constraint c = citem->constraint();
-                GraphicsItem* start_item = d->items.value( summaryHandlingModel()->mapFromSource( c.startIndex() ),0 );
-                if ( start_item ) start_item->removeStartConstraint( citem );
-                //d->constraintModel->removeConstraint( c );
-                delete citem;
+                //qDebug()<<"GraphicsScene::removeItem end citem="<<citem;
+                d->deleteConstraintItem( citem );
             }
-            // Remove any constraintitems ending here
         }
         // Get rid of the item
         delete item;
@@ -463,6 +491,7 @@ GraphicsItem* GraphicsScene::findItem( const QPersistentModelIndex& idx ) const
 
 void GraphicsScene::clearItems()
 {
+    // TODO constraints
     qDeleteAll( items() );
     d->items.clear();
 }

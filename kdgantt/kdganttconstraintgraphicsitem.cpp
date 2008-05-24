@@ -70,7 +70,7 @@ Constraint ConstraintGraphicsItem::proxyConstraint() const
 
 QRectF ConstraintGraphicsItem::boundingRect() const
 {
-    return scene()->itemDelegate()->constraintBoundingRect( m_start, m_end );
+    return scene()->itemDelegate()->constraintBoundingRect( m_start, m_end, m_constraint );
 }
 
 void ConstraintGraphicsItem::paint( QPainter* painter, const QStyleOptionGraphicsItem* option,
@@ -78,23 +78,7 @@ void ConstraintGraphicsItem::paint( QPainter* painter, const QStyleOptionGraphic
 {
     Q_UNUSED( widget );
 
-    QPen pen;
-    QVariant dataPen;
-
-    // default pens
-    if ( m_start.x() <= m_end.x() ) {
-        pen = QPen( Qt::black );
-        dataPen = m_constraint.data( Constraint::ValidConstraintPen );
-    } else {
-        pen = QPen( Qt::red );
-        dataPen = m_constraint.data( Constraint::InvalidConstraintPen );
-    }
-
-    // data() pen
-    if( qVariantCanConvert< QPen >( dataPen ) )
-        pen = qVariantValue< QPen >( dataPen );
-
-    scene()->itemDelegate()->paintConstraintItem( painter, *option, m_start, m_end, pen );
+    scene()->itemDelegate()->paintConstraintItem( painter, *option, m_start, m_end, m_constraint );
 }
 
 QString ConstraintGraphicsItem::ganttToolTip() const

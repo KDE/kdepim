@@ -42,12 +42,14 @@ namespace KDGantt {
             return (start==other.start || (!start.isValid() && !other.start.isValid())) 
 		&& (end==other.end || (!end.isValid() && !other.end.isValid())) 
 		&& type==other.type
+                && relationType==other.relationType
         && data==other.data;
         }
 
         QPersistentModelIndex start;
         QPersistentModelIndex end;
         Type type;
+        RelationType relationType;
         QMap< int, QVariant > data;
     };
 }
