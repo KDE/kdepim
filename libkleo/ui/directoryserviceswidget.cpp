@@ -385,6 +385,10 @@ public:
 
         connect( &model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
                  q, SIGNAL(changed()) );
+        connect( &model, SIGNAL(rowsInserted(QModelIndex,int,int)),
+                 q, SIGNAL(changed()) );
+        connect( &model, SIGNAL(rowsRemoved(QModelIndex,int,int)),
+                 q, SIGNAL(changed()) );
         connect( ui.treeView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
                  q, SLOT(slotSelectionChanged()) );
 
