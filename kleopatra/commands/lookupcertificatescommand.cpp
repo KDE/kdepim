@@ -206,6 +206,7 @@ void LookupCertificatesCommand::Private::createDialog() {
 
 void LookupCertificatesCommand::Private::slotSearchTextChanged( const QString & str ) {
     dialog->setPassive( true );
+    dialog->setCertificates( std::vector<Key>() );
 
     startKeyListJob( CMS,     str );
     startKeyListJob( OpenPGP, str );
