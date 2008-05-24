@@ -250,7 +250,9 @@ namespace Kleo {
         
         QString heuristicBaseDirectory() const;
 
+        void setNohup( bool on );
         bool isNohup() const;
+        bool isDone() const;
 
         const std::vector<KMime::Types::Mailbox> & recipients() const;
         const std::vector<KMime::Types::Mailbox> & senders() const;

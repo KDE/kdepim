@@ -239,6 +239,7 @@ public Q_SLOTS:
     }
 
 private:
+    int startCommand( const shared_ptr<AssuanCommand> & cmd, bool nohup );
     void waitForCryptoCommandsEnabled() {
         if ( cryptoCommandsEnabled )
             return;
@@ -1065,8 +1066,16 @@ void AssuanCommand::done( const GpgME::Error& err ) {
 }
 
 
+void AssuanCommand::setNohup( bool nohup ) {
+    d->nohup = nohup;
+}
+
 bool AssuanCommand::isNohup() const {
     return d->nohup;
+}
+
+bool AssuanCommand::isDone() const {
+    return d->done;
 }
 
 const std::vector<KMime::Types::Mailbox> & AssuanCommand::recipients() const {
@@ -1113,21 +1122,38 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
             cmd->d->options.erase( "nohup" );
         }
 
+        return conn.startCommand( cmd, nohup );
+
+    } catch ( const Exception & e ) {
+        return assuan_process_done_msg( conn.ctx.get(), e.error_code(), e.message() );
+    } catch ( const std::exception & e ) {
+        return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_UNEXPECTED ), e.what() );
+    } catch ( ... ) {
+        return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_UNEXPECTED ), i18n("Caught unknown exception") );
+    }
+}
+
+int AssuanServerConnection::Private::startCommand( const shared_ptr<AssuanCommand> & cmd, bool nohup ) {
+
+    AssuanServerConnection::Private & conn = *this;
+
+    try {
+
         conn.currentCommand = cmd;
         conn.waitForCryptoCommandsEnabled();
         conn.currentCommand.reset();
 
         if ( const int err = cmd->start() )
-            if ( cmd->d->done )
+            if ( cmd->isDone() )
                 return err;
             else
                 return assuan_process_done( conn.ctx.get(), err );
 
-        if ( cmd->d->done )
+        if ( cmd->isDone() )
             return 0;
 
         if ( nohup ) {
-            cmd->d->nohup = true;
+            cmd->setNohup( true );
             conn.nohupedCommands.push_back( cmd );
             return assuan_process_done_msg( conn.ctx.get(), 0, "Command put in the background to continue executing after connection end." );
         } else {
