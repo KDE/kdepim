@@ -1127,8 +1127,6 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
 
 int AssuanServerConnection::Private::startCommand( const shared_ptr<AssuanCommand> & cmd, bool nohup ) {
 
-    try {
-
         currentCommand = cmd;
 
         if ( !cryptoCommandsEnabled ) {
@@ -1139,6 +1137,8 @@ int AssuanServerConnection::Private::startCommand( const shared_ptr<AssuanComman
         }
 
         currentCommand.reset();
+
+    try {
 
         if ( const int err = cmd->start() )
             if ( cmd->isDone() )
