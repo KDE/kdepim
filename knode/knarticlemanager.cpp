@@ -594,6 +594,7 @@ bool KNArticleManager::deleteArticles(KNLocalArticle::List &l, bool ask)
   if ( f ) {
     f->removeArticles( l, true );
     knGlobals.memoryManager()->updateCacheEntry( f );
+    return false; // composers for those articles were already removed in removeArticles
   }
   else {
     for ( KNLocalArticle::List::Iterator it = l.begin(); it != l.end(); ++it )

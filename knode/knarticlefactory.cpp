@@ -702,7 +702,7 @@ void KNArticleFactory::deleteComposerForArticle(KNLocalArticle *a)
   KNComposer *com = findComposer( a );
   if ( com ) {
     mCompList.removeAll( com );
-    delete com;
+    com->deleteLater();
   }
 }
 
