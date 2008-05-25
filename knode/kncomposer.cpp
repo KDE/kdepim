@@ -1034,20 +1034,19 @@ void KNComposer::insertFile( QFile *file, bool clear, bool box, const QString &b
     int wrapAt = v_iew->e_dit->lineWrapColumnOrWidth();
     QStringList lst;
     QString line;
-    while(!file->atEnd()) {
+    while(!ts.atEnd()) {
       line=ts.readLine();
-      if (!file->atEnd())
+      if (!ts.atEnd())
         line+='\n';
       lst.append(line);
-      qDebug()<<" lst :"<<lst;
     }
     temp+=KNHelper::rewrapStringList(lst, wrapAt, '|', false, true);
   } else {
-    while(!file->atEnd()) {
+    while(!ts.atEnd()) {
       if (box)
         temp+="| ";
       temp+=ts.readLine();
-      if (!file->atEnd())
+      if (!ts.atEnd())
         temp += '\n';
     }
   }
