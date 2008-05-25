@@ -1354,7 +1354,7 @@ void KNComposer::slotExternalEditor()
   if(!filenameAdded)    // no %f in the editor command
     (*e_xternalEditor) << e_ditorTempfile->fileName();
 
-  connect(e_xternalEditor, SIGNAL( finished ( int, QProcess::ExitStatus)),this, SLOT(slotEditorFinished( finished ( int, QProcess::ExitStatus))));
+  connect(e_xternalEditor, SIGNAL( finished ( int, QProcess::ExitStatus)),this, SLOT(slotEditorFinished( int, QProcess::ExitStatus)));
   e_xternalEditor->start();
   if(!e_xternalEditor->waitForStarted()) {
     KMessageBox::error(this, i18n("Unable to start external editor.\nPlease check your configuration in the settings dialog."));
