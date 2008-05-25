@@ -51,7 +51,7 @@ using namespace Kleo;
 using namespace Kleo::Crypto;
 using namespace Kleo::Crypto::Gui;
 using namespace boost;
- 
+
 namespace {
     //### TODO move outta here, make colors configurable
     static QColor colorForVisualCode( Task::Result::VisualCode code ) {
@@ -88,7 +88,7 @@ void ResultItemWidget::Private::updateShowDetailsLabel()
 {
     if ( !m_showDetailsLabel || !m_detailsLabel )
         return;
-    
+
     const bool detailsVisible = m_detailsLabel->isVisible();
     const bool hasAuditLog = !m_result->auditLogAsHtml().isEmpty();
     if ( detailsVisible )
@@ -124,12 +124,12 @@ ResultItemWidget::ResultItemWidget( const shared_ptr<const Task::Result> & resul
     layout->addWidget( hbox );
 
     const QString details = d->m_result->details();
-    
+
     d->m_showDetailsLabel = new QLabel;
     connect( d->m_showDetailsLabel, SIGNAL(linkActivated(QString)), this, SLOT(slotLinkActivated(QString)) );
     hlay->addWidget( d->m_showDetailsLabel );
     d->m_showDetailsLabel->setVisible( !details.isEmpty() );
-    
+
     d->m_detailsLabel = new QLabel;
     d->m_detailsLabel->setWordWrap( true );
     d->m_detailsLabel->setTextFormat( Qt::RichText );
@@ -138,7 +138,7 @@ ResultItemWidget::ResultItemWidget( const shared_ptr<const Task::Result> & resul
     layout->addWidget( d->m_detailsLabel );
 
     d->m_detailsLabel->setVisible( false );
-    
+
     d->m_closeButton = new KPushButton;
     d->m_closeButton->setGuiItem( KStandardGuiItem::close() );
     d->m_closeButton->setFixedSize( d->m_closeButton->sizeHint() );
@@ -185,7 +185,7 @@ void ResultItemWidget::Private::slotLinkActivated( const QString & link )
         q->showDetails( !q->detailsVisible() );
         return;
     }
-    
+
     if ( url.host() == "showauditlog" ) {
         q->showAuditLog();
         return;
@@ -194,7 +194,7 @@ void ResultItemWidget::Private::slotLinkActivated( const QString & link )
 }
 
 void ResultItemWidget::showAuditLog() {
-    MessageBox::auditLog( this, d->m_result->auditLogAsHtml() );
+    MessageBox::auditLog( parentWidget(), d->m_result->auditLogAsHtml() );
 }
 
 void ResultItemWidget::showDetails( bool show )
