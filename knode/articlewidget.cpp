@@ -154,7 +154,7 @@ void ArticleWidget::initActions()
   connect(mViewSourceAction, SIGNAL(triggered(bool) ), SLOT(slotViewSource()));
   mViewSourceAction->setShortcut(QKeySequence(Qt::Key_V));
   mReplyAction = mActionCollection->addAction("article_postReply");
-  mReplyAction->setIcon(KIcon("message_reply"));
+  mReplyAction->setIcon(KIcon("mail-reply-all"));
   mReplyAction->setText(i18n("&Followup to Newsgroup..."));
   connect(mReplyAction, SIGNAL(triggered(bool)), SLOT(slotReply()));
   mReplyAction->setShortcut(QKeySequence(Qt::Key_R));
