@@ -445,6 +445,9 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 KNComposer::~KNComposer()
 {
   delete mSpellingFilter;
+  // prevent slotEditorFinished from being called
+  if (e_xternalEditor)
+    e_xternalEditor->disconnect();
   delete e_xternalEditor;  // this also kills the editor process if it's still running
 
   delete e_ditorTempfile;
@@ -1539,7 +1542,8 @@ void KNComposer::slotEditorFinished(int, QProcess::ExitStatus exitStatus)
 
 void KNComposer::slotCancelEditor()
 {
-  delete e_xternalEditor;  // this also kills the editor process if it's still running
+  if (e_xternalEditor)
+    e_xternalEditor->deleteLater();  // this also kills the editor process if it's still running
   e_xternalEditor=0;
   delete e_ditorTempfile;
   e_ditorTempfile=0;
