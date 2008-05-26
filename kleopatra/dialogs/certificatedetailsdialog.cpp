@@ -228,7 +228,8 @@ private:
 
     void slotKeysMayHaveChanged() {
         if ( const char * const fpr = key.primaryFingerprint() )
-            q->setKey( KeyCache::instance()->findByFingerprint( fpr ) );
+            if ( !(key.keyListMode() & Extern) )
+                q->setKey( KeyCache::instance()->findByFingerprint( fpr ) );
     }
 
 private:
@@ -238,15 +239,17 @@ private:
         const bool secret = key.hasSecret();
         const bool sigs = (key.keyListMode() & Signatures);
         const bool ultimateTrust = key.ownerTrust() == Key::Ultimate;
+        const bool external = (key.keyListMode() & Extern);
 
         // Overview Tab
+        ui.overviewActionsGB->setVisible( !external );
         ui.changePassphrasePB->setVisible(         secret );
         ui.changeTrustLevelPB->setVisible( pgp && ( !secret || !ultimateTrust ) );
         ui.changeExpiryDatePB->setVisible( pgp &&  secret );
 
         // Certifications Tab
-        ui.userIDsActionsGB->setVisible( pgp );
-        ui.certificationsActionGB->setVisible( pgp );
+        ui.userIDsActionsGB->setVisible( !external && pgp );
+        ui.certificationsActionGB->setVisible( !external && pgp );
         ui.addUserIDPB->setVisible( secret );
         ui.expandAllCertificationsPB->setVisible( pgp && sigs );
         ui.collapseAllCertificationsPB->setVisible( pgp && sigs );
