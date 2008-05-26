@@ -37,10 +37,12 @@
 #include "implementation_p.h"
 
 #include <utils/gnupg-helper.h>
+#include <utils/hex.h>
 
 #include <KLocale>
 
 #include <QProcess>
+#include <QDir>
 
 #include <boost/shared_ptr.hpp>
 
@@ -63,14 +65,39 @@ namespace {
         }
 
         QStringList arguments() const {
-            QStringList result;
-            result << "--check-options";
+            if ( m_component.isEmpty() )
+                return QStringList() << "--check-config" ;
+            else
+                return QStringList() << "--check-options" << m_component ;
+        }
+
+        bool canRun() const {
             if ( !m_component.isEmpty() )
-                result << m_component;
-            return result;
+                return true;
+            QProcess gpgconf;
+            gpgconf.setReadChannel( QProcess::StandardOutput );
+            gpgconf.start( gpgConfPath(), QStringList() << "--list-dirs", QIODevice::ReadOnly );
+            gpgconf.waitForFinished();
+            if ( gpgconf.exitStatus() != QProcess::NormalExit || gpgconf.exitCode() != 0 ) {
+                qDebug( "GpgConfCheck: \"gpgconf --list-dirs\" gives error, disabling" );
+                return false;
+            }
+            const QList<QByteArray> lines = gpgconf.readAll().split( '\n' );
+            Q_FOREACH( const QByteArray & line, lines )
+                if ( line.startsWith( "sysconfdir:" ) )
+                    try {
+                        return QDir( QFile::decodeName( hexdecode( line.mid( strlen( "sysconfdir:" ) ) ) ) ).exists( "gpgconf.conf" );
+                    } catch ( ... ) { return false; }
+            qDebug( "GpgConfCheck: \"gpgconf --list-dirs\" has no sysconfdir entry" );
+            return false;
         }
 
         void runTest() {
+
+            if ( !canRun() ) {
+                m_passed = true;
+                return;
+            }
 
             QProcess process;
             process.setProcessChannelMode( QProcess::MergedChannels );

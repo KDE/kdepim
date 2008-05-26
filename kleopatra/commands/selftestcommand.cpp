@@ -65,6 +65,7 @@ using namespace Kleo::Dialogs;
 using namespace boost;
 
 static const char * const components[] = {
+    0, // gpgconf
     "gpg",
     "gpg-agent",
     "scdaemon",
