@@ -55,6 +55,7 @@ NamePartWidget::NamePartWidget( const QString &title, const QString &label,
   group->setLayout( groupLayout );
 
   mBox = new QListWidget( group );
+  mBox->setMaximumWidth( 100 );
   connect( mBox, 
            SIGNAL( currentItemChanged( QListWidgetItem *, QListWidgetItem * ) ),
            SLOT( selectionChanged( QListWidgetItem * ) ) );
