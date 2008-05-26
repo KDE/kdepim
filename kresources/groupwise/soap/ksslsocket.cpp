@@ -255,7 +255,7 @@ int KSSLSocket::verifyCertificate()
 	for(KSSLCertificate::KSSLValidationList::ConstIterator it = ksvl.begin();
 		it != ksvl.end(); ++it)
 	{
-		errorStr += QString::number(*it)+":";
+		errorStr += QString::number(*it) + ':';
 	}
 
 	setMetaData("ssl_cert_errors", errorStr);
@@ -268,7 +268,7 @@ int KSSLSocket::verifyCertificate()
 		for (KSSLCertificate *c = chain.first(); c; c = chain.next())
 		{
 			theChain += c->toString();
-			theChain += "\n";
+			theChain += '\n';
 		}
 		setMetaData("ssl_peer_chain", theChain);
 	}
@@ -304,7 +304,7 @@ int KSSLSocket::verifyCertificate()
 			permacache = d->cc->isPermanent(pc);
 		}
 
-		if (!_IPmatchesCN && (metaData("ssl_militant") == "TRUE") 
+		if (!_IPmatchesCN && (metaData("ssl_militant") == "TRUE")
  		    && cp == KSSLCertificateCache::Accept)
 		{
 			cp = KSSLCertificateCache::Prompt;

@@ -230,7 +230,7 @@ bool ResourceXMLRPC::doLoad( bool syncCache )
   clearChanges();
 
   loadFromCache();
-  mTodoStateMapper.setIdentifier( type() + "_" + identifier() );
+  mTodoStateMapper.setIdentifier( type() + '_' + identifier() );
   mTodoStateMapper.load();
 
   QMap<QString, QVariant> args, columns;

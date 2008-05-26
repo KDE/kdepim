@@ -48,7 +48,8 @@ using namespace KDGantt;
  */
 
 Constraint::Private::Private()
-    : type( TypeSoft )
+    : type( TypeSoft ),
+      relationType( FinishStart )
 {
 }
 
@@ -58,6 +59,7 @@ Constraint::Private::Private( const Private& other )
     start=other.start;
     end=other.end;
     type=other.type;
+    relationType=other.relationType;
 }
 
 /*! Constructor. Creates a dependency for \a idx2 on \a idx1.
@@ -69,20 +71,26 @@ Constraint::Private::Private( const Private& other )
  *
  * Actually enforcing hard constraints is the responsibility of
  * the AbstractGrid subclass used in the view.
+ *
+ * \param relationType defines how the tasks depends on each other.
+ * relationType can be FinishStart (default), FinishFinish, StartStart or StartFinish.
  */
-Constraint::Constraint( const QModelIndex& idx1,  const QModelIndex& idx2, Type type )
+Constraint::Constraint( const QModelIndex& idx1,  const QModelIndex& idx2, Constraint::Type type, Constraint::RelationType relationType )
     : d( new Private )
 {
     d->start=idx1;
     d->end=idx2;
     d->type=type;
+    d->relationType=relationType;
     Q_ASSERT_X( idx1 != idx2 || !idx1.isValid(), "Constraint::Constraint", "cannot create a constraint with idx1 == idx2" );
+    //qDebug()<<"Constraint::Constraint"<<*this;
 }
 
 /*! Copy-Constructor. */
 Constraint::Constraint( const Constraint& other )
     : d( other.d )
 {
+    //qDebug()<<"Constraint::Constraint"<<*this<<other;
 }
 
 /*! Destructor */
@@ -101,6 +109,12 @@ Constraint& Constraint::operator=( const Constraint& other )
 Constraint::Type Constraint::type() const
 {
     return d->type;
+}
+
+/*! This is unused for now. */
+Constraint::RelationType Constraint::relationType() const
+{
+    return d->relationType;
 }
 
 /*! \returns The dependency index */
@@ -158,7 +172,7 @@ QDebug operator<<( QDebug dbg, const Constraint& c )
 
 QDebug Constraint::debug( QDebug dbg ) const
 {
-    dbg << "KDGantt::Constraint[ start="<<d->start<<" end="<<d->end<<"]";
+    dbg << "KDGantt::Constraint[ start=" << d->start << "end=" << d->end << "relationType=" << d->relationType << "]";
     return dbg;
 }
 

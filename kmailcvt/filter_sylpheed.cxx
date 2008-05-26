@@ -29,7 +29,7 @@ FilterSylpheed::FilterSylpheed( void ) :
                       "<p>Select the base directory of the Sylpheed mailfolder you want to import "
                       "(usually: ~/Mail ).</p>"
                       "<p>Since it is possible to recreate the folder structure, the folders "
-                      "will be stored under: \"Sylpheed-Import\" in your local folder.</p>" 
+                      "will be stored under: \"Sylpheed-Import\" in your local folder.</p>"
                       "<p>This filter also recreates the status of message, e.g. new or forwarded.</p>") )
 {}
 
@@ -55,10 +55,10 @@ void FilterSylpheed::import( FilterInfo *info )
         info->alert( i18n( "No directory selected." ) );
     }
     /**
-     * If the user only select homedir no import needed because 
+     * If the user only select homedir no import needed because
      * there should be no files and we surely import wrong files.
      */
-    else if ( mailDir == QDir::homePath() || mailDir == ( QDir::homePath() + "/" ) ) {
+    else if ( mailDir == QDir::homePath() || mailDir == ( QDir::homePath() + '/' ) ) {
         info->addLog( i18n( "No files found for import." ) );
     } else {
         info->setOverall(0);
@@ -92,7 +92,7 @@ void FilterSylpheed::import( FilterInfo *info )
 void FilterSylpheed::importDirContents( FilterInfo *info, const QString& dirName)
 {
     if(info->shouldTerminate()) return;
-    
+
     /** Here Import all archives in the current dir */
     importFiles(info, dirName);
 
@@ -123,9 +123,9 @@ void FilterSylpheed::importFiles( FilterInfo *info, const QString& dirName)
     QDir importDir (dirName);
     QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
     int currentFile = 1, numFiles = files.size();
-    
+
     readMarkFile(info, dir.filePath(".sylpheed_mark"), msgflags);
-    
+
     for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile, ++currentFile) {
         if(info->shouldTerminate()) return;
         QString _mfile = *mailFile;
@@ -146,7 +146,7 @@ void FilterSylpheed::importFiles( FilterInfo *info, const QString& dirName)
             QString flags;
             if (msgflags[_mfile])
                 flags = msgFlagsToString(*(msgflags[_mfile]));
-             
+
             if(info->removeDupMsg) {
                 if(! addMessage( info, _path, dir.filePath(*mailFile), flags )) {
                     info->addLog( i18n("Could not import %1", *mailFile ) );
@@ -171,19 +171,19 @@ void FilterSylpheed::readMarkFile( FilterInfo *info, const QString &path, Q3Dict
      * the flag bits, and procmsg.c.
      *
      * Note that the mark file stores 32 bit unsigned integers in the
-     * platform's native "endianness". 
+     * platform's native "endianness".
      *
      * The mark file starts with a 32 bit unsigned integer with a version
      * number. It is then followed by pairs of 32 bit unsigned integers,
-     * the first one with the message file name (which is a number), 
+     * the first one with the message file name (which is a number),
      * and the second one with the actual message flags */
 
     quint32 in, flags;
     QFile file(path);
 
-    if (!file.open(QIODevice::ReadOnly)) 
+    if (!file.open(QIODevice::ReadOnly))
         return;
-    
+
     QDataStream stream(&file);
 
     if (Q_BYTE_ORDER == Q_LITTLE_ENDIAN)
@@ -192,10 +192,10 @@ void FilterSylpheed::readMarkFile( FilterInfo *info, const QString &path, Q3Dict
 
 
     /* Read version; if the value is reasonably too big, we're looking
-     * at a file created on another platform. I don't have any test 
+     * at a file created on another platform. I don't have any test
      * marks/folders, so just ignoring this case */
     stream >> in;
-    if (in > (quint32) 0xffff) 
+    if (in > (quint32) 0xffff)
         return;
 
     while (!stream.atEnd()) {
@@ -214,7 +214,7 @@ void FilterSylpheed::readMarkFile( FilterInfo *info, const QString &path, Q3Dict
 QString FilterSylpheed::msgFlagsToString(unsigned long flags)
 {
     QString status;
-    
+
     /* see sylpheed's procmsg.h */
     if (flags & 1UL) status += 'N';
     if (flags & 2UL) status += 'U';
@@ -222,6 +222,6 @@ QString FilterSylpheed::msgFlagsToString(unsigned long flags)
     if (flags & 8UL) status += 'D';
     if (flags & 16UL) status += 'A';
     if (flags & 32UL) status += 'F';
-    
+
     return status;
 }

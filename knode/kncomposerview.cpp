@@ -100,6 +100,7 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
   QHBoxLayout *v2 = new QHBoxLayout( n_otification );
   l=new QLabel(i18n("You are currently editing the article body\nin an external editor. To continue, you have\nto close the external editor."), n_otification);
   c_ancelEditorBtn=new QPushButton(i18n("&Kill External Editor"), n_otification);
+  v2->addWidget(l);
   v2->addWidget(c_ancelEditorBtn);
 #ifdef __GNUC__
 #warning Port me?

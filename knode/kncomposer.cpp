@@ -445,6 +445,9 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
 KNComposer::~KNComposer()
 {
   delete mSpellingFilter;
+  // prevent slotEditorFinished from being called
+  if (e_xternalEditor)
+    e_xternalEditor->disconnect();
   delete e_xternalEditor;  // this also kills the editor process if it's still running
 
   delete e_ditorTempfile;
@@ -1031,20 +1034,19 @@ void KNComposer::insertFile( QFile *file, bool clear, bool box, const QString &b
     int wrapAt = v_iew->e_dit->lineWrapColumnOrWidth();
     QStringList lst;
     QString line;
-    while(!file->atEnd()) {
+    while(!ts.atEnd()) {
       line=ts.readLine();
-      if (!file->atEnd())
+      if (!ts.atEnd())
         line+='\n';
       lst.append(line);
-      qDebug()<<" lst :"<<lst;
     }
     temp+=KNHelper::rewrapStringList(lst, wrapAt, '|', false, true);
   } else {
-    while(!file->atEnd()) {
+    while(!ts.atEnd()) {
       if (box)
         temp+="| ";
       temp+=ts.readLine();
-      if (!file->atEnd())
+      if (!ts.atEnd())
         temp += '\n';
     }
   }
@@ -1354,7 +1356,7 @@ void KNComposer::slotExternalEditor()
   if(!filenameAdded)    // no %f in the editor command
     (*e_xternalEditor) << e_ditorTempfile->fileName();
 
-  connect(e_xternalEditor, SIGNAL( finished ( int, QProcess::ExitStatus)),this, SLOT(slotEditorFinished( finished ( int, QProcess::ExitStatus))));
+  connect(e_xternalEditor, SIGNAL( finished ( int, QProcess::ExitStatus)),this, SLOT(slotEditorFinished( int, QProcess::ExitStatus)));
   e_xternalEditor->start();
   if(!e_xternalEditor->waitForStarted()) {
     KMessageBox::error(this, i18n("Unable to start external editor.\nPlease check your configuration in the settings dialog."));
@@ -1539,7 +1541,8 @@ void KNComposer::slotEditorFinished(int, QProcess::ExitStatus exitStatus)
 
 void KNComposer::slotCancelEditor()
 {
-  delete e_xternalEditor;  // this also kills the editor process if it's still running
+  if (e_xternalEditor)
+    e_xternalEditor->deleteLater();  // this also kills the editor process if it's still running
   e_xternalEditor=0;
   delete e_ditorTempfile;
   e_ditorTempfile=0;

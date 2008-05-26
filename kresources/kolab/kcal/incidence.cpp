@@ -714,8 +714,8 @@ void Incidence::saveTo( KCal::Incidence* incidence )
   if ( organizer().displayName.isEmpty() )
     incidence->setOrganizer( organizer().smtpAddress );
   else
-    incidence->setOrganizer( organizer().displayName + "<"
-                             + organizer().smtpAddress + ">" );
+    incidence->setOrganizer( organizer().displayName + '<'
+                             + organizer().smtpAddress + '>' );
 
   incidence->clearAttendees();
   QList<Attendee>::ConstIterator it;

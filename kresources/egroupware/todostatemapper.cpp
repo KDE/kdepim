@@ -139,7 +139,7 @@ int TodoStateMapper::toLocal( const QString &remoteState )
     return 100;
   else {
     QString number( remoteState );
-    number.replace( "%", "" );
+    number.remove( '%' );
     return number.toInt();
   }
 }
@@ -159,7 +159,7 @@ QString TodoStateMapper::toRemote( int localState )
 QString TodoStateMapper::filename()
 {
   QString file = mPath;
-  if ( !file.endsWith( "/" ) ) file += "/";
+  if ( !file.endsWith( '/' ) ) file += '/';
   file += mIdentifier;
 
   return KStandardDirs::locateLocal( "data", file );

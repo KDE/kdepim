@@ -116,7 +116,7 @@ void PasswordPage::finished( KJob* job )
   updateState( false );
 
   if ( job->error() ) {
-    KMessageBox::error( this, i18n( "Unable to change the password" ) + "\n" + job->errorString() );
+    KMessageBox::error( this, i18n( "Unable to change the password" ) + '\n' + job->errorString() );
     return;
   }
 

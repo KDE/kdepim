@@ -28,6 +28,7 @@
 #include "kdganttitemdelegate.h"
 #include "kdganttconstraintgraphicsitem.h"
 #include "kdganttconstraintmodel.h"
+#include "kdganttconstraint.h"
 #include "kdganttabstractgrid.h"
 #include "kdganttabstractrowcontroller.h"
 
@@ -173,13 +174,27 @@ QRectF GraphicsItem::boundingRect() const
     return m_boundingrect;
 }
 
-QPointF GraphicsItem::startConnector() const
+QPointF GraphicsItem::startConnector( int relationType ) const
 {
+    switch ( relationType ) {
+        case Constraint::StartStart:
+        case Constraint::StartFinish:
+            return mapToScene( m_rect.left(), m_rect.top()+m_rect.height()/2. );
+        default:
+            break;
+    }
     return mapToScene( m_rect.right(), m_rect.top()+m_rect.height()/2. );
 }
 
-QPointF GraphicsItem::endConnector() const
+QPointF GraphicsItem::endConnector( int relationType ) const
 {
+    switch ( relationType ) {
+        case Constraint::FinishFinish:
+        case Constraint::StartFinish:
+            return mapToScene( m_rect.right(), m_rect.top()+m_rect.height()/2. );
+        default:
+            break;
+    }
     return mapToScene( m_rect.left(), m_rect.top()+m_rect.height()/2. );
 }
 
@@ -188,14 +203,14 @@ void GraphicsItem::addStartConstraint( ConstraintGraphicsItem* item )
 {
     assert( item );
     m_startConstraints << item;
-    item->setStart( startConnector() );
+    item->setStart( startConnector( item->constraint().relationType() ) );
 }
 
 void GraphicsItem::addEndConstraint( ConstraintGraphicsItem* item )
 {
     assert( item );
     m_endConstraints << item;
-    item->setEnd( endConnector() );
+    item->setEnd( endConnector( item->constraint().relationType() ) );
 }
 
 void GraphicsItem::removeStartConstraint( ConstraintGraphicsItem* item )
@@ -212,14 +227,14 @@ void GraphicsItem::removeEndConstraint( ConstraintGraphicsItem* item )
 
 void GraphicsItem::updateConstraintItems()
 {
-    QPointF s = startConnector();
-    QPointF e = endConnector();
     { // Workaround for multiple definition error with MSVC6
     Q_FOREACH( ConstraintGraphicsItem* item, m_startConstraints ) {
+        QPointF s = startConnector( item->constraint().relationType() );
         item->setStart( s );
     }}
     {// Workaround for multiple definition error with MSVC6
     Q_FOREACH( ConstraintGraphicsItem* item, m_endConstraints ) {
+        QPointF e = endConnector( item->constraint().relationType() );
         item->setEnd( e );
     }}
 }

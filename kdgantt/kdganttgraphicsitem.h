@@ -93,8 +93,8 @@ namespace KDGantt {
     private:
         void init();
 
-        QPointF startConnector() const;
-        QPointF endConnector() const;
+        QPointF startConnector( int relationType ) const;
+        QPointF endConnector( int relationType ) const;
         void updateConstraintItems();
         StyleOptionGanttItem getStyleOption() const;
         void updateModel();

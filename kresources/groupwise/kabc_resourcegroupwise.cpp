@@ -148,7 +148,7 @@ void ResourceGroupwise::readAddressBooks()
     ab.name = names[ i ];
     ab.isPersonal = personals[ i ] == "1";
     ab.isFrequentContacts = frequents[ i ] == "1";
-    
+
     mAddressBooks.append( ab );
   }
 }
@@ -186,7 +186,7 @@ void ResourceGroupwise::retrieveAddressBooks()
     server.logout();
 
     QStringList reads;
-    QString write; 
+    QString write;
 
     GroupWise::AddressBook::List::ConstIterator it;
     for( it = mAddressBooks.begin(); it != mAddressBooks.end(); ++it ) {
@@ -270,14 +270,14 @@ bool ResourceGroupwise::asyncLoad()
       kDebug() <<"ResourceGroupwise::asyncLoad() - No user addressbooks specified, just updating SAB";
       updateAddressBooks();
       mUpdateSystemAddressBook = false;
-      return true; 
+      return true;
     }
   }
 
   KUrl url( prefs()->url() );
-  if ( url.protocol() == "http" ) 
+  if ( url.protocol() == "http" )
     url.setProtocol( "groupwise" );
-  else 
+  else
     url.setProtocol( "groupwises" );
 
   url.setPath( url.path() + "/addressbook/" );
@@ -289,7 +289,7 @@ bool ResourceGroupwise::asyncLoad()
   for( it = ids.begin(); it != ids.end(); ++it ) {
     if ( *it == mPrefs->systemAddressBook() )
       kDebug() <<"fetching SAB" << (ids.size() > 1 ?", and user addressbooks" :", and only SAB" );
-    if ( it != ids.begin() ) query += "&";
+    if ( it != ids.begin() ) query += '&';
     query += "addressbookid=" + *it;
   }
   url.setQuery( query );
@@ -385,7 +385,7 @@ void ResourceGroupwise::slotFetchJobResult( KJob *job )
       {
         GroupWise::DeltaInfo deltaInfo = mServer->getDeltaInfo( QStringList( mPrefs->systemAddressBook() ) );
         mServer->logout();
-    
+
         kDebug() <<"storing delta info to prefs";
         mPrefs->setFirstSequenceNumber( deltaInfo.firstSequence );
         mPrefs->setLastSequenceNumber( deltaInfo.lastSequence );
@@ -417,7 +417,7 @@ void ResourceGroupwise::slotUpdateJobResult( KJob *job )
 bool ResourceGroupwise::updateAddressBooks()
 {
   kDebug() <<"ResourceGroupwise::updateAddressBooks() - Updating address books.";
-    
+
   if ( mDownloadJob ) {
     kWarning() <<"Download still in progress";
     return false;
@@ -433,9 +433,9 @@ bool ResourceGroupwise::updateAddressBooks()
   ids.append( mPrefs->systemAddressBook() );
 
   KUrl url( prefs()->url() );
-  if ( url.protocol() == "http" ) 
+  if ( url.protocol() == "http" )
     url.setProtocol( "groupwise" );
-  else 
+  else
     url.setProtocol( "groupwises" );
 
   url.setPath( url.path() + "/addressbook/" );
@@ -445,7 +445,7 @@ bool ResourceGroupwise::updateAddressBooks()
   QString query = "?";
   QStringList::ConstIterator it;
   for( it = ids.begin(); it != ids.end(); ++it ) {
-    if ( it != ids.begin() ) query += "&";
+    if ( it != ids.begin() ) query += '&';
     query += "addressbookid=" + *it;
   }
   query += "&update=true";
@@ -453,7 +453,7 @@ bool ResourceGroupwise::updateAddressBooks()
 
   url.setQuery( query );
 
-  kDebug() <<"Update URL:" << url;
+  kDebug() << "Update URL:" << url;
 
   mJobData.clear();
 
@@ -547,7 +547,7 @@ void ResourceGroupwise::slotUpdateJobData( KIO::Job *, const QByteArray &data )
             removeAddressee( addrToDelete );
           }
         }
-        else 
+        else
           kError() <<"Addressee to delete did not have a remote UID, unable to find the corresponding local contact";
       }
     }

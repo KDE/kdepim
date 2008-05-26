@@ -59,7 +59,7 @@ void FilterKMail_maildir::import( FilterInfo *info )
      * If the user only select homedir no import needed because
      * there should be no files and we surely import wrong files.
      */
-    else if ( mailDir == QDir::homePath() || mailDir == ( QDir::homePath() + "/" ) ) {
+    else if ( mailDir == QDir::homePath() || mailDir == ( QDir::homePath() + '/' ) ) {
         info->addLog( i18n( "No files found for import." ) );
     } else {
         info->setOverall(0);
@@ -140,13 +140,13 @@ void FilterKMail_maildir::importFiles( FilterInfo *info, const QString& dirName)
                 for ( QStringList::Iterator it = subFList.begin(); it != subFList.end(); ++it ) {
                     QString _cat = *it;
                     if(!(_cat == *mailFile)) {
-                        if(_cat.startsWith(".") && _cat.endsWith(".directory")) {
+                        if(_cat.startsWith('.') && _cat.endsWith(".directory")) {
                             _cat.remove(0,1);
                             _cat.remove((_cat.length() - 10), 10);
-                        } else if (_cat.startsWith(".")) {
+                        } else if (_cat.startsWith('.')) {
                             _cat = _cat.remove(0 , 1);
                         }
-                        _path += "/" + _cat;
+                        _path += '/' + _cat;
                     }
                 }
                 if(_path.endsWith("cur"))

@@ -77,6 +77,7 @@ void HeaderWidget::contextMenuEvent( QContextMenuEvent* event )
 
     DateTimeGrid* const grid = qobject_cast< DateTimeGrid* >( view()->grid() );
     QAction* actionScaleAuto = 0;
+    QAction* actionScaleWeek = 0;
     QAction* actionScaleDay = 0;
     QAction* actionScaleHour = 0;
     QAction* actionZoomIn = 0;
@@ -90,6 +91,9 @@ void HeaderWidget::contextMenuEvent( QContextMenuEvent* event )
         actionScaleAuto = new QAction( tr( "Auto" ), menuScale );
         actionScaleAuto->setCheckable( true );
         actionScaleAuto->setChecked( grid->scale() == DateTimeGrid::ScaleAuto );
+        actionScaleWeek = new QAction( tr( "Week" ), menuScale );
+        actionScaleWeek->setCheckable( true );
+        actionScaleWeek->setChecked( grid->scale() == DateTimeGrid::ScaleWeek );
         actionScaleDay = new QAction( tr( "Day" ), menuScale );
         actionScaleDay->setCheckable( true );
         actionScaleDay->setChecked( grid->scale() == DateTimeGrid::ScaleDay );
@@ -99,6 +103,9 @@ void HeaderWidget::contextMenuEvent( QContextMenuEvent* event )
 
         scaleGroup->addAction( actionScaleAuto );
         menuScale->addAction( actionScaleAuto );
+    
+        scaleGroup->addAction( actionScaleWeek );
+        menuScale->addAction( actionScaleWeek );
     
         scaleGroup->addAction( actionScaleDay );
         menuScale->addAction( actionScaleDay );
@@ -128,6 +135,11 @@ void HeaderWidget::contextMenuEvent( QContextMenuEvent* event )
     {
         assert( grid != 0 );
         grid->setScale( DateTimeGrid::ScaleAuto );
+    }
+    else if( action == actionScaleWeek )
+    {
+        assert( grid != 0 );
+        grid->setScale( DateTimeGrid::ScaleWeek );
     }
     else if( action == actionScaleDay )
     {
@@ -241,7 +253,12 @@ void GraphicsView::Private::slotRowsAboutToBeRemoved( const QModelIndex& parent,
     for ( int row = start; row <= end; ++row ) {
         for ( int col = 0; col < scene.summaryHandlingModel()->columnCount( parent ); ++col ) {
             //qDebug() << "removing "<<scene.summaryHandlingModel()->index( row, col, parent );
-            scene.removeItem( scene.summaryHandlingModel()->index( row, col, parent ) );
+            const QModelIndex idx = scene.summaryHandlingModel()->index( row, col, parent );
+            QList<Constraint> clst = scene.constraintModel()->constraintsForIndex( idx );
+            Q_FOREACH( Constraint c, clst ) {
+                scene.constraintModel()->removeConstraint( c );
+            }
+            scene.removeItem( idx );
         }
     }
 }

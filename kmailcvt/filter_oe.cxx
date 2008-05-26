@@ -79,7 +79,7 @@ void FilterOE::import(FilterInfo *info)
     /** search the folderfile to recreate folder struct */
     for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
         if(*mailFile == "Folders.dbx") {
-            info->addLog(i18n("Import folder structure..."));            
+            info->addLog(i18n("Import folder structure..."));
             importMailBox(info, dir.filePath(*mailFile));
             if(!folderStructure.isEmpty()) parsedFolder = true;
             // remove file from QStringList::files, no longer needed
@@ -88,7 +88,7 @@ void FilterOE::import(FilterInfo *info)
             break;
         }
     }
-    
+
     int n=0;
     for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
         if ( info->shouldTerminate() ) break;
@@ -112,9 +112,9 @@ void FilterOE::importMailBox( FilterInfo *info, const QString& fileName)
     QFileInfo mailfileinfo(fileName);
     QString _nameOfFile = fileName;
     _nameOfFile.remove( mailDir );
-    _nameOfFile.remove( "/" );
+    _nameOfFile.remove( '/' );
     info->setFrom(mailfileinfo.fileName());
-    
+
     if (!mailfile.open(QIODevice::ReadOnly)) {
         info->addLog(i18n("Unable to open mailbox %1", fileName));
         return;
@@ -230,7 +230,7 @@ void FilterOE::dbxImport( FilterInfo *info, QDataStream& ds)
 
 void FilterOE::dbxReadIndex( FilterInfo *info, QDataStream& ds, int filePos)
 {
-    
+
     if(info->shouldTerminate()) return;
     quint32 self, unknown, nextIndexPtr, parent, indexCount;
     quint8 unknown2, ptrCount;
@@ -270,9 +270,9 @@ void FilterOE::dbxReadDataBlock( FilterInfo *info, QDataStream& ds, int filePos)
     quint16 unknown;
     quint8 count, unknown2;
     int wasAt = ds.device()->pos();
-    
+
     QString folderEntry[4];
-    
+
     ds.device()->seek(filePos);
 
     ds >> curOffset >> blockSize >> unknown >> count >> unknown2; // _dbx_email_headerstruct
@@ -311,11 +311,11 @@ void FilterOE::dbxReadDataBlock( FilterInfo *info, QDataStream& ds, int filePos)
             } else if (type == 0x03) {
                 // kDebug() <<"**** FOLDER: filename ****";
                 folderEntry[1] = parseFolderString(ds, filePos + 12 + value + (count*4) );
-                
+
             } else if (type == 0x80) {
                 // kDebug() <<"**** FOLDER: current ID ****";
-                folderEntry[2] = QString::number(value); 
-                
+                folderEntry[2] = QString::number(value);
+
             } else if (type == 0x81) {
                 // kDebug() <<"**** FOLDER: parent ID ****";
                 folderEntry[3] =  QString::number(value);
@@ -375,7 +375,7 @@ QString FilterOE::parseFolderString( QDataStream& ds, int filePos )
     QString returnString;
     int wasAt = ds.device()->pos();
     ds.device()->seek(filePos);
-    
+
     // read while != 0x00
     while( !ds.device()->atEnd() ) {
         ds.device()->getChar(&tmp);
@@ -389,7 +389,7 @@ QString FilterOE::parseFolderString( QDataStream& ds, int filePos )
 }
 
 /** get the foldername for a given file ID from folderMatrix */
-QString FilterOE::getFolderName(QString filename) 
+QString FilterOE::getFolderName(QString filename)
 {
     bool found = false;
     bool foundFilename = false;
@@ -397,7 +397,7 @@ QString FilterOE::getFolderName(QString filename)
     // we must do this because folder with more than one upper letter
     // at start have maybe not a file named like the folder !!!
     QString search = filename.toLower();
-    
+
     while (!found)
     {
         for ( FolderStructureIterator it = folderStructure.begin(); it != folderStructure.end(); it++) {

@@ -43,6 +43,13 @@ namespace KDGantt {
             TypeSoft = 0, 
             TypeHard = 1
         };	
+        enum RelationType
+        { 
+            FinishStart = 0,
+            FinishFinish = 1,
+            StartStart = 2,
+            StartFinish = 3
+        };
 
         enum ConstraintDataRole
         {
@@ -50,11 +57,12 @@ namespace KDGantt {
             InvalidConstraintPen
         };
 
-        Constraint( const QModelIndex& idx1,  const QModelIndex& idx2, Type type=TypeSoft);
+        Constraint( const QModelIndex& idx1,  const QModelIndex& idx2, Type type=TypeSoft, RelationType=FinishStart );
         Constraint( const Constraint& other);
         ~Constraint();
 
         Type type() const;
+        RelationType relationType() const;
         QModelIndex startIndex() const;
         QModelIndex endIndex() const;
 

@@ -702,7 +702,7 @@ void KNArticleFactory::deleteComposerForArticle(KNLocalArticle *a)
   KNComposer *com = findComposer( a );
   if ( com ) {
     mCompList.removeAll( com );
-    delete com;
+    com->deleteLater();
   }
 }
 
@@ -1059,7 +1059,7 @@ void KNArticleFactory::slotComposerDone(KNComposer *com)
 
   if ( delCom ) {
     mCompList.removeAll( com );
-    delete com;
+    com->deleteLater();
   }
 #ifdef Q_OS_UNIX
   else

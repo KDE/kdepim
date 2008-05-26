@@ -42,6 +42,7 @@ namespace KDGantt {
 
         void resetConstraintItems();
         void createConstraintItem( const Constraint& c );
+        void deleteConstraintItem( ConstraintGraphicsItem* citem );
         void deleteConstraintItem( const Constraint& c );
         ConstraintGraphicsItem* findConstraintItem( const Constraint& c ) const;
 

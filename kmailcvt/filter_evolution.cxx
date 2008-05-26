@@ -57,10 +57,10 @@ void FilterEvolution::import(FilterInfo *info)
         info->alert(i18n("No directory selected."));
     }
     /**
-     * If the user only select homedir no import needed because 
+     * If the user only select homedir no import needed because
      * there should be no files and we surely import wrong files.
      */
-    else if ( mailDir == QDir::homePath() || mailDir == (QDir::homePath() + "/")) {
+    else if ( mailDir == QDir::homePath() || mailDir == (QDir::homePath() + '/')) {
         info->addLog(i18n("No files found for import."));
     } else {
         info->setOverall(0);
@@ -99,7 +99,7 @@ void FilterEvolution::importDirContents(FilterInfo *info, const QString& dirName
         for(QStringList::Iterator filename = subDirs.begin() ; filename != subDirs.end() ; ++filename) {
             QString kSubDir;
             if(!KMailSubDir.isNull()) {
-                kSubDir = KMailSubDir + "/" + *filename;
+                kSubDir = KMailSubDir + '/' + *filename;
             } else {
                 kSubDir = *filename;
             }
@@ -151,9 +151,9 @@ void FilterEvolution::importMBox(FilterInfo *info, const QString& mboxName, cons
             KTemporaryFile tmp;
             tmp.open();
             /* comment by Danny:
-            * Don't use QTextStream to read from mbox, better use QDataStream. QTextStream only 
-            * support Unicode/Latin1/Locale. So you lost information from emails with 
-            * charset!=Unicode/Latin1/Locale (e.g. KOI8-R) and Content-Transfer-Encoding != base64 
+            * Don't use QTextStream to read from mbox, better use QDataStream. QTextStream only
+            * support Unicode/Latin1/Locale. So you lost information from emails with
+            * charset!=Unicode/Latin1/Locale (e.g. KOI8-R) and Content-Transfer-Encoding != base64
             * (e.g. 8Bit). It also not help to convert the QTextStream to Unicode. By this you
             * get Unicode/UTF-email but KMail can't detect the correct charset.
             */
@@ -172,7 +172,7 @@ void FilterEvolution::importMBox(FilterInfo *info, const QString& mboxName, cons
 
             QString destFolder = rootDir;
             if(!targetDir.isNull()) {
-                destFolder = "Evolution-Import/" + destFolder + "/" + targetDir;
+                destFolder = "Evolution-Import/" + destFolder + '/' + targetDir;
             } else {
                 destFolder = "Evolution-Import/" + destFolder;
             }

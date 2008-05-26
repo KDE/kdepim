@@ -336,7 +336,7 @@ void KNode::NntpAccountListWidget::slotAddItem(KNNntpAccount *a)
   AccountListItem *item;
   item = new AccountListItem( a );
   item->setText( a->name() );
-  item->setIcon( SmallIcon( "server" ) );
+  item->setIcon( SmallIcon( "network-server" ) );
   mAccountList->addItem( item );
   emit changed( true );
 }

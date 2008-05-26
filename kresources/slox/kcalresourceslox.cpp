@@ -611,7 +611,7 @@ void KCalResourceSlox::parseMembersAttribute( const QDomElement &e,
         if ( a ) continue;
 
         name = member;
-        email = member + "@" + KUrl( mPrefs->url() ).host();
+        email = member + '@' + KUrl( mPrefs->url() ).host();
       } else {
         name = account.realName();
         email = account.preferredEmail();
@@ -1113,11 +1113,11 @@ void KCalResourceSlox::slotUploadResult( KJob *job )
           QDomElement statusElement = status.toElement();
           QString response = statusElement.text();
         if ( !response.contains( "200" ) ) {
-            QString error = "'" + mUploadedIncidence->summary() + "'\n";
+            QString error = '\'' + mUploadedIncidence->summary() + "'\n";
             error += response;
             QDomNode dn = propstat.namedItem( "responsedescription" );
             QString d = dn.toElement().text();
-            if ( !d.isEmpty() ) error += "\n" + d;
+            if ( !d.isEmpty() ) error += '\n' + d;
             saveError( error );
             continue;
           }

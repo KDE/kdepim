@@ -25,6 +25,7 @@
 #include "kdganttitemdelegate_p.h"
 #include "kdganttglobal.h"
 #include "kdganttstyleoptionganttitem.h"
+#include "kdganttconstraint.h"
 
 #include <QPainter>
 #include <QPainterPath>
@@ -341,72 +342,287 @@ static const qreal PW = 1.5;
  * a constraint between points \a start and \a end (typically an
  * arrow)
  */
-QRectF ItemDelegate::constraintBoundingRect( const QPointF& start, const QPointF& end ) const
+QRectF ItemDelegate::constraintBoundingRect( const QPointF& start, const QPointF& end, const Constraint &constraint ) const
 {
     QPolygonF poly;
-    if ( start.x() > end.x()-TURN ) {
-        if ( start.y() < end.y() ) {
-            poly << QPointF( start.x()+TURN, start.y()-TURN/2. )
-                 << QPointF( end.x()-TURN, end.y()+TURN/2. );
-        } else {
-            poly << QPointF( start.x()+TURN, start.y()+TURN/2. )
-                 << QPointF( end.x()-TURN, end.y()-TURN/2. );
-        }
-    } else {
-        if ( start.y() < end.y() ) {
-            poly << QPointF( start.x(), start.y()-TURN/2. )
-                 << QPointF( end.x(), end.y()+TURN/2. );
-        } else {
-            poly << QPointF( start.x(), start.y()+TURN/2. )
-                 << QPointF( end.x(), end.y()-TURN/2. );
-        }
+    switch ( constraint.relationType() ) {
+        case Constraint::FinishStart:
+            poly = finishStartLine( start, end ) + finishStartArrow( start, end );
+            break;
+        case Constraint::FinishFinish:
+            poly = finishFinishLine( start, end ) + finishFinishArrow( start, end );
+            break;
+        case Constraint::StartStart:
+            poly = startStartLine( start, end ) + startStartArrow( start, end );
+            break;
+        case Constraint::StartFinish:
+            poly = startFinishLine( start, end ) + startFinishArrow( start, end );
+            break;
+        default:
+            break;
     }
     return poly.boundingRect().adjusted( -PW, -PW, PW, PW );
 }
 
 
-/*! Paints the constraint item between points \a start and \a end
+/*! Paints the \a constraint between points \a start and \a end
  * using \a painter and \a opt.
  *
  * \todo Review \a opt's type
  */
 void ItemDelegate::paintConstraintItem( QPainter* painter, const QStyleOptionGraphicsItem& opt,
-                                        const QPointF& start, const QPointF& end, const QPen& pen )
+                                        const QPointF& start, const QPointF& end, const Constraint &constraint )
+{
+    //qDebug()<<"ItemDelegate::paintConstraintItem"<<start<<end<<constraint;
+    switch ( constraint.relationType() ) {
+        case Constraint::FinishStart: 
+            paintFinishStartConstraint( painter, opt, start, end, constraint );
+            break;
+        case Constraint::FinishFinish: 
+            paintFinishFinishConstraint( painter, opt, start, end, constraint );
+            break;
+        case Constraint::StartStart: 
+            paintStartStartConstraint( painter, opt, start, end, constraint );
+            break;
+        case Constraint::StartFinish: 
+            paintStartFinishConstraint( painter, opt, start, end, constraint );
+            break;
+        default:
+            break;
+    }
+}
+
+void ItemDelegate::paintFinishStartConstraint( QPainter* painter, const QStyleOptionGraphicsItem& opt, const QPointF& start, const QPointF& end, const Constraint &constraint )
 {
     Q_UNUSED( opt );
-    qreal midx = end.x() - TURN;
-    qreal midy = ( end.y()-start.y() )/2. + start.y();
+    
+    QPen pen;
+    QVariant dataPen;
+
+    // default pens
+    if ( start.x() <= end.x() ) {
+        pen = QPen( Qt::black );
+        dataPen = constraint.data( Constraint::ValidConstraintPen );
+    } else {
+        pen = QPen( Qt::red );
+        dataPen = constraint.data( Constraint::InvalidConstraintPen );
+    }
+
+    // data() pen
+    if( qVariantCanConvert< QPen >( dataPen ) )
+        pen = qVariantValue< QPen >( dataPen );
 
     painter->setPen( pen );
     painter->setBrush( pen.color() );
+    
+    painter->drawPolyline( finishStartLine( start, end ) );
+    painter->drawPolygon( finishStartArrow( start, end ) );
+}
+
+QPolygonF ItemDelegate::finishStartLine( const QPointF& start, const QPointF& end ) const
+{
+    QPolygonF poly;
+    qreal midx = end.x() - TURN;
+    qreal midy = ( end.y()-start.y() )/2. + start.y();
 
     if ( start.x() > end.x()-TURN ) {
-        QPolygonF poly;
-            poly << start
-                 << QPointF( start.x()+TURN, start.y() )
-                 << QPointF( start.x()+TURN, midy )
-                 << QPointF( end.x()-TURN, midy )
-                 << QPointF( end.x()-TURN, end.y() )
-                 << end;
-        painter->drawPolyline( poly );
-        QPolygonF arrow;
-        arrow << end
-              << QPointF( end.x()-TURN/2., end.y()-TURN/2. )
-              << QPointF( end.x()-TURN/2., end.y()+TURN/2. );
-        painter->drawPolygon( arrow );
-    } else {
-        QPolygonF poly;
         poly << start
-             << QPointF( midx, start.y() )
-             << QPointF( midx, end.y() )
-             << end;
-        painter->drawPolyline( poly );
-        QPolygonF arrow;
-        arrow << end
-              << QPointF( end.x()-TURN/2., end.y()-TURN/2. )
-              << QPointF( end.x()-TURN/2., end.y()+TURN/2. );
-        painter->drawPolygon( arrow );
+                << QPointF( start.x()+TURN, start.y() )
+                << QPointF( start.x()+TURN, midy )
+                << QPointF( end.x()-TURN, midy )
+                << QPointF( end.x()-TURN, end.y() )
+                << end;
+    } else {
+        poly << start
+                << QPointF( midx, start.y() )
+                << QPointF( midx, end.y() )
+                << end;
     }
+    return poly;
 }
+
+QPolygonF ItemDelegate::finishStartArrow( const QPointF& start, const QPointF& end ) const
+{
+    QPolygonF poly;
+    poly << end
+            << QPointF( end.x()-TURN/2., end.y()-TURN/2. )
+            << QPointF( end.x()-TURN/2., end.y()+TURN/2. );
+    return poly;
+}
+
+void ItemDelegate::paintFinishFinishConstraint( QPainter* painter, const QStyleOptionGraphicsItem& opt, const QPointF& start, const QPointF& end, const Constraint &constraint )
+{
+    Q_UNUSED( opt );
+    
+    QPen pen;
+    QVariant dataPen;
+
+    // default pens
+    if ( start.x() <= end.x() ) {
+        pen = QPen( Qt::black );
+        dataPen = constraint.data( Constraint::ValidConstraintPen );
+    } else {
+        pen = QPen( Qt::red );
+        dataPen = constraint.data( Constraint::InvalidConstraintPen );
+    }
+
+    // data() pen
+    if( qVariantCanConvert< QPen >( dataPen ) )
+        pen = qVariantValue< QPen >( dataPen );
+    
+    painter->setPen( pen );
+    painter->setBrush( pen.color() );
+    
+    painter->drawPolyline( finishFinishLine( start, end ) );
+    painter->drawPolygon( finishFinishArrow( start, end ) );
+}
+
+QPolygonF ItemDelegate::finishFinishLine( const QPointF& start, const QPointF& end ) const
+{
+    QPolygonF poly;
+    qreal midx = end.x() + TURN;
+    qreal midy = ( end.y()-start.y() )/2. + start.y();
+
+    if ( start.x() > end.x()+TURN ) {
+        poly << start
+                << QPointF( start.x()+TURN, start.y() )
+                << QPointF( start.x()+TURN, end.y() )
+                << end;
+    } else {
+        poly << start
+                << QPointF( midx, start.y() )
+                << QPointF( midx, midy )
+                << QPointF( end.x()+TURN, midy )
+                << QPointF( end.x()+TURN, end.y() )
+                << end;
+    }
+    return poly;
+}
+
+QPolygonF ItemDelegate::finishFinishArrow( const QPointF& start, const QPointF& end ) const
+{
+    QPolygonF poly;
+    poly << end
+            << QPointF( end.x()+TURN/2., end.y()-TURN/2. )
+            << QPointF( end.x()+TURN/2., end.y()+TURN/2. );
+    return poly;
+}
+
+void ItemDelegate::paintStartStartConstraint( QPainter* painter, const QStyleOptionGraphicsItem& opt, const QPointF& start, const QPointF& end, const Constraint &constraint )
+{
+    Q_UNUSED( opt );
+        
+    QPen pen;
+    QVariant dataPen;
+
+    // default pens
+    if ( start.x() <= end.x() ) {
+        pen = QPen( Qt::black );
+        dataPen = constraint.data( Constraint::ValidConstraintPen );
+    } else {
+        pen = QPen( Qt::red );
+        dataPen = constraint.data( Constraint::InvalidConstraintPen );
+    }
+
+    // data() pen
+    if( qVariantCanConvert< QPen >( dataPen ) )
+        pen = qVariantValue< QPen >( dataPen );
+
+    painter->setPen( pen );
+    painter->setBrush( pen.color() );
+    
+    painter->drawPolyline( startStartLine( start, end ) );
+    painter->drawPolygon( startStartArrow( start, end ) );
+
+}
+
+QPolygonF ItemDelegate::startStartLine( const QPointF& start, const QPointF& end ) const
+{
+    QPolygonF poly;
+    qreal midx = start.x() - TURN;
+    qreal midy = ( end.y()-start.y() )/2. + start.y();
+
+    if ( start.x() > end.x() ) {
+        poly << start
+                << QPointF( end.x()-TURN, start.y() )
+                << QPointF( end.x()-TURN, end.y() )
+                << end;
+    } else {
+        poly << start
+                << QPointF( start.x()-TURN, start.y() )
+                << QPointF( start.x()-TURN, end.y() )
+                << QPointF( end.x()-TURN, end.y() )
+                << end;
+    }
+    return poly;
+}
+
+QPolygonF ItemDelegate::startStartArrow( const QPointF& start, const QPointF& end ) const
+{
+    QPolygonF poly;
+    poly << end
+            << QPointF( end.x()-TURN/2., end.y()-TURN/2. )
+            << QPointF( end.x()-TURN/2., end.y()+TURN/2. );
+    return poly;
+}
+
+void ItemDelegate::paintStartFinishConstraint( QPainter* painter, const QStyleOptionGraphicsItem& opt, const QPointF& start, const QPointF& end, const Constraint &constraint )
+{
+    Q_UNUSED( opt );
+        
+    QPen pen;
+    QVariant dataPen;
+
+    // default pens
+    if ( start.x() <= end.x() ) {
+        pen = QPen( Qt::black );
+        dataPen = constraint.data( Constraint::ValidConstraintPen );
+    } else {
+        pen = QPen( Qt::red );
+        dataPen = constraint.data( Constraint::InvalidConstraintPen );
+    }
+
+    // data() pen
+    if( qVariantCanConvert< QPen >( dataPen ) )
+        pen = qVariantValue< QPen >( dataPen );
+
+    painter->setPen( pen );
+    painter->setBrush( pen.color() );
+    
+    painter->drawPolyline( startFinishLine( start, end ) );
+    painter->drawPolygon( startFinishArrow( start, end ) );
+}
+
+QPolygonF ItemDelegate::startFinishLine( const QPointF& start, const QPointF& end ) const
+{
+    QPolygonF poly;
+    qreal midx = end.x() + TURN;
+    qreal midy = ( end.y()-start.y() )/2. + start.y();
+
+    if ( start.x()-TURN > end.x()+TURN ) {
+        poly << start
+                << QPointF( midx, start.y() )
+                << QPointF( midx, end.y() )
+                << end;
+    } else {
+        poly << start
+                << QPointF( start.x()-TURN, start.y() )
+                << QPointF( start.x()-TURN, midy )
+                << QPointF( midx, midy )
+                << QPointF( end.x()+TURN, end.y() )
+                << end;
+    }
+    return poly;
+}
+
+QPolygonF ItemDelegate::startFinishArrow( const QPointF& start, const QPointF& end ) const
+{
+    QPolygonF poly;
+    poly << end
+            << QPointF( end.x()+TURN/2., end.y()-TURN/2. )
+            << QPointF( end.x()+TURN/2., end.y()+TURN/2. );
+    return poly;
+}
+
 
 #include "moc_kdganttitemdelegate.cpp"

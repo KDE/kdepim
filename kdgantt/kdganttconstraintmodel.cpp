@@ -171,8 +171,8 @@ QList<Constraint> ConstraintModel::constraints() const
  */
 QList<Constraint> ConstraintModel::constraintsForIndex( const QModelIndex& idx ) const
 {
-    assert( !idx.isValid() || d->indexMap.isEmpty() || !d->indexMap.keys().front().model() || idx.model() == d->indexMap.keys().front().model() );
-    if ( !idx.isValid() ) {
+    assert( idx.isValid() || !d->indexMap.isEmpty() || d->indexMap.keys().front().model() || idx.model() == d->indexMap.keys().front().model() );
+    if ( !idx.isValid() ) { //Why the assert idx.isValid() above? (dag)
         // Because of a Qt bug we need to treat this as a special case
         QSet<Constraint> result;
         Q_FOREACH( Constraint c, d->constraints ) {

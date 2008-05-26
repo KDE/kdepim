@@ -86,37 +86,42 @@ void ConstraintProxy::copyFromSource()
         QList<Constraint> lst = m_source->constraints();
         Q_FOREACH( const Constraint& c, lst ) {
             m_destination->addConstraint( Constraint( m_proxy->mapFromSource( c.startIndex() ),
-                                                      m_proxy->mapFromSource( c.endIndex() ) ) );
+                                                      m_proxy->mapFromSource( c.endIndex() ),
+                                                      c.type(), c.relationType() ) );
         }
     }
 }
 
 void ConstraintProxy::slotSourceConstraintAdded( const Constraint& c )
 {
-    qDebug() << "ConstraintProxy::slotSourceConstraintAdded(     "<<c<<")";
+    //qDebug() << "ConstraintProxy::slotSourceConstraintAdded("<<c<<")";
     if ( m_destination ) m_destination->addConstraint( Constraint( m_proxy->mapFromSource( c.startIndex() ),
-                                                                   m_proxy->mapFromSource( c.endIndex() ) ) );
+                                                                   m_proxy->mapFromSource( c.endIndex() ),
+                                                                   c.type(), c.relationType() ) );
 }
 
 void ConstraintProxy::slotSourceConstraintRemoved( const Constraint& c )
 {
-    qDebug() << "ConstraintProxy::slotSourceConstraintRemoved(     "<<c<<")";
+    //qDebug() << "ConstraintProxy::slotSourceConstraintRemoved("<<c<<")";
     if ( m_destination ) m_destination->removeConstraint( Constraint( m_proxy->mapFromSource( c.startIndex() ),
-                                                                      m_proxy->mapFromSource( c.endIndex() ) ) );
+                                                                      m_proxy->mapFromSource( c.endIndex() ),
+                                                                      c.type(), c.relationType() ) );
 }
 
 void ConstraintProxy::slotDestinationConstraintAdded( const Constraint& c )
 {
-    qDebug() << "ConstraintProxy::slotDestinationConstraintAdded("<<c<<")";
+    //qDebug() << "ConstraintProxy::slotDestinationConstraintAdded("<<c<<")";
     if ( m_source ) m_source->addConstraint( Constraint( m_proxy->mapToSource( c.startIndex() ),
-                                                         m_proxy->mapToSource( c.endIndex() ) ) );
+                                                         m_proxy->mapToSource( c.endIndex() ),
+                                                         c.type(), c.relationType() ) );
 }
 
 void ConstraintProxy::slotDestinationConstraintRemoved( const Constraint& c )
 {
-    qDebug() << "ConstraintProxy::slotDestinationConstraintRemoved("<<c<<")";
+    //qDebug() << "ConstraintProxy::slotDestinationConstraintRemoved("<<c<<")";
     if ( m_source ) m_source->removeConstraint( Constraint( m_proxy->mapToSource( c.startIndex() ),
-                                                            m_proxy->mapToSource( c.endIndex() ) ) );
+                                                            m_proxy->mapToSource( c.endIndex() ),
+                                                            c.type(), c.relationType() ) );
 }
 
 #include "moc_kdganttconstraintproxy.cpp"

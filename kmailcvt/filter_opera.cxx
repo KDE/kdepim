@@ -59,10 +59,10 @@ void FilterOpera::import(FilterInfo *info)
         info->alert(i18n("No directory selected."));
     }
     /**
-     * If the user only select homedir no import needed because 
+     * If the user only select homedir no import needed because
      * there should be no files and we surely import wrong files.
      */
-    else if ( operaDir == QDir::homePath() || operaDir == (QDir::homePath() + "/")) {
+    else if ( operaDir == QDir::homePath() || operaDir == (QDir::homePath() + '/')) {
         info->addLog(i18n("No files found for import."));
     } else {
         info->setOverall(0);
@@ -100,9 +100,9 @@ void FilterOpera::import(FilterInfo *info)
                         KTemporaryFile tmp;
                         tmp.open();
                         /* comment by Danny:
-                        * Don't use QTextStream to read from mbox, better use QDataStream. QTextStream only 
-                        * support Unicode/Latin1/Locale. So you lost information from emails with 
-                        * charset!=Unicode/Latin1/Locale (e.g. KOI8-R) and Content-Transfer-Encoding != base64 
+                        * Don't use QTextStream to read from mbox, better use QDataStream. QTextStream only
+                        * support Unicode/Latin1/Locale. So you lost information from emails with
+                        * charset!=Unicode/Latin1/Locale (e.g. KOI8-R) and Content-Transfer-Encoding != base64
                         * (e.g. 8Bit). It also not help to convert the QTextStream to Unicode. By this you
                         * get Unicode/UTF-email but KMail can't detect the correct charset.
                         */

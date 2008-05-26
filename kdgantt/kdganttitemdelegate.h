@@ -35,6 +35,7 @@
 
 namespace KDGantt {
     class StyleOptionGanttItem;
+    class Constraint;
 
     class KDGANTT_EXPORT ItemDelegate : public QItemDelegate {
         Q_OBJECT
@@ -57,14 +58,37 @@ namespace KDGantt {
         QPen defaultPen( ItemType type ) const;
 
         virtual Span itemBoundingSpan(const StyleOptionGanttItem& opt, const QModelIndex& idx) const;
-        virtual QRectF constraintBoundingRect( const QPointF& start, const QPointF& end ) const;
+        virtual QRectF constraintBoundingRect( const QPointF& start, const QPointF& end, const Constraint &constraint ) const;
         virtual InteractionState interactionStateFor( const QPointF& pos,
 						      const StyleOptionGanttItem& opt,
 						      const QModelIndex& idx ) const;
 
         virtual void paintGanttItem( QPainter* p, const StyleOptionGanttItem& opt, const QModelIndex& idx );
         virtual void paintConstraintItem( QPainter* p, const QStyleOptionGraphicsItem& opt,
-                                          const QPointF& start, const QPointF& end, const QPen& pen );
+                                          const QPointF& start, const QPointF& end, const Constraint &constraint );
+        
+    protected:
+        void paintFinishStartConstraint( QPainter* p, const QStyleOptionGraphicsItem& opt,
+                const QPointF& start, const QPointF& end, const Constraint &constraint );
+        QPolygonF finishStartLine( const QPointF& start, const QPointF& end ) const;
+        QPolygonF finishStartArrow( const QPointF& start, const QPointF& end ) const;
+
+        void paintFinishFinishConstraint( QPainter* p, const QStyleOptionGraphicsItem& opt,
+                const QPointF& start, const QPointF& end, const Constraint &constraint );
+        QPolygonF finishFinishLine( const QPointF& start, const QPointF& end ) const;
+        QPolygonF finishFinishArrow( const QPointF& start, const QPointF& end ) const;
+        
+        void paintStartStartConstraint( QPainter* p, const QStyleOptionGraphicsItem& opt,
+                const QPointF& start, const QPointF& end, const Constraint &constraint );
+        QPolygonF startStartLine( const QPointF& start, const QPointF& end ) const;
+        QPolygonF startStartArrow( const QPointF& start, const QPointF& end ) const;
+        
+        void paintStartFinishConstraint( QPainter* p, const QStyleOptionGraphicsItem& opt,
+                const QPointF& start, const QPointF& end, const Constraint &constraint );
+        QPolygonF startFinishLine( const QPointF& start, const QPointF& end ) const;
+        QPolygonF startFinishArrow( const QPointF& start, const QPointF& end ) const;
+
+        
     };
 }
 
