@@ -90,11 +90,8 @@ void ResultItemWidget::Private::updateShowDetailsLabel()
         return;
 
     const bool detailsVisible = m_detailsLabel->isVisible();
-    const bool hasAuditLog = !m_result->auditLogAsHtml().isEmpty();
-    if ( detailsVisible )
-        m_showDetailsLabel->setText( QString("<a href=\"kleoresultitem://toggledetails/\">%1</a><br/>%2").arg( i18n( "Hide Details" ), hasAuditLog ?  QString( "<a href=\"kleoresultitem://showauditlog/\">%1</a>" ).arg( i18n( "Show Audit Log" ) ) : i18n( "No Audit Log available" ) ) );
-    else
-        m_showDetailsLabel->setText( QString("<a href=\"kleoresultitem://toggledetails/\">%1</a>").arg( i18n( "Show Details" ) ) );
+    const QString auditLogLink = !m_result->auditLogAsHtml().isEmpty() ?  QString( "<a href=\"kleoresultitem://showauditlog/\">%1</a>" ).arg( i18n( "Show Audit Log" ) ) : i18n( "No Audit Log available" );
+    m_showDetailsLabel->setText( QString( "<a href=\"kleoresultitem://toggledetails/\">%1</a><br/>%2" ).arg( detailsVisible ? i18n( "Hide Details" ) : i18n( "Show Details" ), auditLogLink ) );
 }
 
 ResultItemWidget::ResultItemWidget( const shared_ptr<const Task::Result> & result, QWidget * parent, Qt::WindowFlags flags ) : QWidget( parent, flags ), d( new Private( result, this ) )
