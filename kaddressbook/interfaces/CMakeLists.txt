@@ -21,12 +21,6 @@ install(TARGETS kabinterfaces  DESTINATION ${LIB_INSTALL_DIR})
 
 ########### install files ###############
 
-install( FILES
-   configurewidget.h
-   contacteditorwidget.h
-   extensionwidget.h
-   xxport.h
-   DESTINATION ${INCLUDE_INSTALL_DIR}/kaddressbook)
 install( FILES kaddressbook_contacteditorwidget.desktop kaddressbook_extension.desktop kaddressbook_xxport.desktop  DESTINATION ${SERVICETYPES_INSTALL_DIR})
 
 
