@@ -295,7 +295,6 @@ private:
 	    KDAB_SET_OBJECT_NAME( progressBar );
 
             progressBar.setFixedSize( progressBar.sizeHint() );
-            tabWidget.setMinimumHeight( 100 );
 
             q->setCentralWidget( &tabWidget );
             q->statusBar()->addPermanentWidget( &progressBar );

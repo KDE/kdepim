@@ -95,6 +95,10 @@ namespace Kleo {
     protected:
         void resizeEvent( QResizeEvent * );
 
+    public:
+        /* reimp */ QSize sizeHint() const;
+        /* reimp */ QSize minimumSizeHint() const;
+
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;

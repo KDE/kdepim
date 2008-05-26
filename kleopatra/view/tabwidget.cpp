@@ -119,6 +119,9 @@ public:
         m_canBeClosed = m_canBeRenamed = m_canChangeStringFilter = m_canChangeKeyFilter = m_canChangeHierarchical = true;
     }
 
+    /* reimp */ QSize sizeHint() const { return m_view->sizeHint(); }
+    /* reimp */ QSize minimumSizeHint() const { return m_view->minimumSizeHint(); }
+
 Q_SIGNALS:
     void titleChanged( const QString & title );
     void stringFilterChanged( const QString & filter );
@@ -769,6 +772,14 @@ void TabWidget::createActions( KActionCollection * coll ) {
         QAction * a = d->currentPageActions[i];
         coll->addAction( a->objectName(), a );
     }
+}
+
+QSize TabWidget::sizeHint() const {
+    return d->tabWidget.sizeHint();
+}
+
+QSize TabWidget::minimumSizeHint() const {
+    return d->tabWidget.minimumSizeHint();
 }
 
 void TabWidget::resizeEvent( QResizeEvent * e ) {
