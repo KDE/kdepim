@@ -78,6 +78,7 @@ QString LocationMap::createUrl( const KABC::Address &addr )
       %r region
       %l locality
       %z zip code
+      %n country name
       %c country (in ISO format)
    */
 
@@ -91,6 +92,7 @@ QString LocationMap::createUrl( const KABC::Address &addr )
                      replace( "%r", addr.region() ).
                      replace( "%l", addr.locality() ).
                      replace( "%z", addr.postalCode() ).
+                     replace( "%n", addr.country() ).
                      replace( "%c", addr.countryToISO( addr.country() ) );
 }
 
