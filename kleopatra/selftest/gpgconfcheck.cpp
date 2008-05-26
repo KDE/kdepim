@@ -53,18 +53,29 @@ using namespace boost;
 namespace {
 
     class GpgConfCheck : public SelfTestImplementation {
+        QString m_component;
     public:
-        explicit GpgConfCheck()
-            : SelfTestImplementation( i18nc("@title", "GpgConf Configuration Check") )
+        explicit GpgConfCheck( const char * component )
+            : SelfTestImplementation( i18nc("@title", "%1 Configuration Check", component && *component ? component : "gpgconf" ) ),
+              m_component( component )
         {
             runTest();
+        }
+
+        QStringList arguments() const {
+            QStringList result;
+            result << "--check-options";
+            if ( !m_component.isEmpty() )
+                result << m_component;
+            return result;
         }
 
         void runTest() {
 
             QProcess process;
             process.setProcessChannelMode( QProcess::MergedChannels );
-            process.start( gpgConfPath(), QStringList() << "--check-config", QIODevice::ReadOnly );
+
+            process.start( gpgConfPath(), arguments(), QIODevice::ReadOnly );
 
             process.waitForFinished();
 
@@ -75,15 +86,14 @@ namespace {
                  process.error()      != QProcess::UnknownError ) {
                 m_passed = false;
                 m_error = i18nc("self-test didn't pass", "Failed");
-                m_explaination = !output.trimmed().isEmpty()
-                    ? i18n( "There was an error executing the GnuPG configuration self-check:\n"
-                            "  %1\n"
-                            "You might want to execute \"gpgconf --check-config\" on the command line.\n"
-                            "\n"
-                            "Diagnostics:", message ) + '\n' + output
-                    : i18n( "There was an error executing \"gpgconf --check-config\":\n"
-                            "  %1\n"
-                            "You might want to execute \"gpgconf --check-config\" on the command line.", message );
+                m_explaination =
+                    i18n( "There was an error executing the GnuPG configuration self-check for %2:\n"
+                          "  %1\n"
+                          "You might want to execute \"gpgconf %3\" on the command line.\n",
+                          message, m_component.isEmpty() ? "GnuPG" : m_component, arguments().join(" ") );
+                if ( !output.trimmed().isEmpty() )
+                    m_explaination += '\n' + i18n("Diagnostics:") + '\n' + output ;
+
                 m_proposedFix = QString();
             } else if ( process.exitCode() ) {
                 m_passed = false;
@@ -106,6 +116,6 @@ namespace {
     };
 }
 
-shared_ptr<SelfTest> Kleo::makeGpgConfCheckConfigurationSelfTest() {
-    return shared_ptr<SelfTest>( new GpgConfCheck );
+shared_ptr<SelfTest> Kleo::makeGpgConfCheckConfigurationSelfTest( const char * component ) {
+    return shared_ptr<SelfTest>( new GpgConfCheck( component ) );
 }

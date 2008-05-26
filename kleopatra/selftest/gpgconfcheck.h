@@ -43,7 +43,7 @@ namespace Kleo {
 
     class SelfTest;
 
-    boost::shared_ptr<SelfTest> makeGpgConfCheckConfigurationSelfTest();
+    boost::shared_ptr<SelfTest> makeGpgConfCheckConfigurationSelfTest( const char * component=0 );
 
 }
 

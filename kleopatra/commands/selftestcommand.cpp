@@ -64,6 +64,15 @@ using namespace Kleo::Commands;
 using namespace Kleo::Dialogs;
 using namespace boost;
 
+static const char * const components[] = {
+    "gpg",
+    "gpg-agent",
+    "scdaemon",
+    "gpgsm",
+    "dirmngr",
+};
+static const unsigned int numComponents = sizeof components / sizeof *components;
+
 class SelfTestCommand::Private : Command::Private {
     friend class ::Kleo::Commands::SelfTestCommand;
     SelfTestCommand * q_func() const { return static_cast<SelfTestCommand*>( q ); }
@@ -124,8 +133,10 @@ private:
         tests.push_back( makeGpgSmEngineCheckSelfTest() );
         //emit q->info( i18n("Checking gpgconf installation...") );
         tests.push_back( makeGpgConfEngineCheckSelfTest() );
-        //emit q->info( i18n("Checking gpgconf configuration...") );
-        tests.push_back( makeGpgConfCheckConfigurationSelfTest() );
+        for ( unsigned int i = 0 ; i < numComponents ; ++i ) {
+            //emit q->info( i18n("Checking %1 configuration...", components[i]) );
+            tests.push_back( makeGpgConfCheckConfigurationSelfTest( components[i] ) );
+        }
 #ifdef HAVE_KLEOPATRACLIENT_LIBRARY
         //emit q->info( i18n("Checking Ui Server connectivity...") );
         tests.push_back( makeUiServerConnectivitySelfTest() );
