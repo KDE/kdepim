@@ -13,6 +13,9 @@
    <string>Kleopatra Self-Test Results</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3" >
+   <property name="sizeConstraint" >
+    <enum>QLayout::SetMinimumSize</enum>
+   </property>
    <item>
     <widget class="QLabel" name="label" >
      <property name="text" >
@@ -32,6 +35,12 @@
       <bool>false</bool>
      </property>
      <widget class="QTreeView" name="resultsTV" >
+      <property name="sizePolicy" >
+       <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+        <horstretch>0</horstretch>
+        <verstretch>1</verstretch>
+       </sizepolicy>
+      </property>
       <property name="minimumSize" >
        <size>
         <width>0</width>
@@ -191,7 +200,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>354</x>
-     <y>467</y>
+     <y>398</y>
     </hint>
     <hint type="destinationlabel" >
      <x>375</x>
