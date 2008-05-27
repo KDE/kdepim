@@ -64,7 +64,7 @@ class ResourceItem : public QTreeWidgetItem
     {
       setFlags( flags() | Qt::ItemIsUserCheckable );
       setCheckState( 0, resource->isActive() ? Qt::Checked : Qt::Unchecked );
-      setIcon( 0, KIcon( "help-contents" ) );
+      setIcon( 0, KIcon( "x-office-address-book" ) );
     }
 
     ResourceItem( KABC::ResourceABC *resourceABC, ResourceItem* parent,
@@ -77,7 +77,7 @@ class ResourceItem : public QTreeWidgetItem
       setFlags( flags() | Qt::ItemIsUserCheckable );
       KABC::ResourceABC* res = static_cast<KABC::ResourceABC *>( mResource );
       setCheckState( 0, res->subresourceActive( mResourceIdentifier ) ? Qt::Checked : Qt::Unchecked );
-      setIcon( 0, KIcon( "help-contents" ) );
+      setIcon( 0, KIcon( "x-office-address-book" ) );
 
       treeWidget()->setRootIsDecorated( true );
     }

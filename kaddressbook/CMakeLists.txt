@@ -69,8 +69,7 @@ set(kaddressbook_bin_SRCS
 
 qt4_add_dbus_adaptor(kaddressbook_bin_SRCS org.kde.KAddressbook.Core.xml kaddressbookmain.h KAddressBookMain kaddressbookadaptor )
 
-# todo: move to Oxygen icon
-kde4_add_app_icon(kaddressbook_bin_SRCS "hi*-app-kaddressbook.png")
+kde4_add_app_icon(kaddressbook_bin_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/pics/hi*-apps-kaddressbook.png")
 kde4_add_executable(kaddressbook_bin ${kaddressbook_bin_SRCS})
 set_target_properties(kaddressbook_bin PROPERTIES OUTPUT_NAME kaddressbook)
 
@@ -165,5 +164,4 @@ install( FILES kaddressbookui.rc kaddressbook_part.rc  DESTINATION ${DATA_INSTAL
 install( FILES kaddressbook_view.desktop dbusaddressbook.desktop  DESTINATION ${SERVICETYPES_INSTALL_DIR})
 install( FILES org.kde.KAddressbook.Core.xml DESTINATION ${KDE4_DBUS_INTERFACES_DIR} )
 install( FILES kaddressbook_export.h  DESTINATION ${INCLUDE_INSTALL_DIR}/kaddressbook)
-kde4_install_icons( ${ICON_INSTALL_DIR}   )
 

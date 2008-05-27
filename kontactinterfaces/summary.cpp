@@ -91,7 +91,6 @@ QWidget *Summary::createHeader( QWidget *parent, const QString &iconname, const 
   boldFont.setPointSize( boldFont.pointSize() + 2 );
 
   QLabel *label = new QLabel( hbox );
-  label->setBackgroundRole( QPalette::AlternateBase );
   label->setPixmap( KIconLoader::global()->loadIcon( iconname, KIconLoader::Toolbar ) );
 
   label->setFixedSize( label->sizeHint() );
@@ -141,7 +140,7 @@ void Summary::mouseMoveEvent( QMouseEvent *event )
 
     QPainter painter;
     painter.begin( &pm );
-    painter.setPen( Qt::gray );
+    painter.setPen( QPalette::AlternateBase );
     painter.drawRect( 0, 0, pm.width(), pm.height() );
     painter.end();
     drag->setPixmap( pm );

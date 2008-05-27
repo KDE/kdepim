@@ -147,7 +147,8 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
 
   mLocationMapURL = new QComboBox( groupBox );
   mLocationMapURL->setEditable( true );
-  mLocationMapURL->setSizePolicy( QSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed ) );
+  mLocationMapURL->setMinimumContentsLength( 20 );
+  mLocationMapURL->setSizeAdjustPolicy( QComboBox::AdjustToMinimumContentsLength );
   mLocationMapURL->setToolTip( i18n( "<ul> <li>%s: Street</li>"
                                  "<li>%r: Region</li>"
                                  "<li>%l: Location</li>"
