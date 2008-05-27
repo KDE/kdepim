@@ -126,7 +126,7 @@ kde4_add_executable(knode ${knode_SRCS})
 
 kdepim4_link_unique_libraries(knode ${KDE4_KDECORE_LIBS} knodecommon )
 
-install(TARGETS knode  DESTINATION ${BIN_INSTALL_DIR} )
+install(TARGETS knode  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 
 ########### install files ###############

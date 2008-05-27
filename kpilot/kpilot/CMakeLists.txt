@@ -184,8 +184,8 @@ set_target_properties(kpilot_bin PROPERTIES OUTPUT_NAME kpilot)
 ######################### INSTALL STUFF #######################################
 
 install(TARGETS kcm_kpilot    DESTINATION ${PLUGIN_INSTALL_DIR})
-install(TARGETS kpilot_bin    DESTINATION ${BIN_INSTALL_DIR})
-install(TARGETS kpilotDaemon  DESTINATION ${BIN_INSTALL_DIR})
+install(TARGETS kpilot_bin    ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS kpilotDaemon  ${INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES   kpilotui.rc   DESTINATION ${DATA_INSTALL_DIR}/kpilot)
 install(FILES
 	kpilot.desktop

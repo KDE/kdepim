@@ -43,7 +43,7 @@ kde4_add_executable(kpalmdoc ${kpalmdoc_SRCS})
 target_link_libraries(kpalmdoc ${QT_LIBRARIES} kpilot  ${KDE4_KIO_LIBS})
 
 install(
-	TARGETS kpalmdoc DESTINATION ${BIN_INSTALL_DIR}) 
+	TARGETS kpalmdoc ${INSTALL_TARGETS_DEFAULT_ARGS}) 
 
 install(
 	FILES doc_conduit.desktop DESTINATION ${SERVICES_INSTALL_DIR}

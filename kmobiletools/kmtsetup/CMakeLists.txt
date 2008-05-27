@@ -10,7 +10,7 @@ kde4_add_executable(kmtsetup ${kmtsetup_SRCS})
 
 target_link_libraries(kmtsetup  ${KDE4_KIO_LIBS} )
 
-install(TARGETS kmtsetup DESTINATION ${BIN_INSTALL_DIR})
+install(TARGETS kmtsetup ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### install files ###############

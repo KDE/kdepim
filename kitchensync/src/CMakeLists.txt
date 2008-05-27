@@ -19,7 +19,7 @@ KDE4_ADD_EXECUTABLE(kitchensync ${kitchensync_SRCS})
 
 TARGET_LINK_LIBRARIES(kitchensync kitchensyncprivate ${QT_QTGUI_LIBRARY} ${KDE_KDEUI_LIBRARY} )
 
-INSTALL(TARGETS kitchensync DESTINATION ${BIN_INSTALL_DIR})
+INSTALL(TARGETS kitchensync ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### next target ###############

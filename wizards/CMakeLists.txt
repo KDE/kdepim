@@ -30,7 +30,7 @@ kcalkolab kresources
 kabc kcal kdepim ${KDE4_KPIMIDENTITIES_LIBS}
 )
 
-install(TARGETS groupwarewizard  DESTINATION ${BIN_INSTALL_DIR})
+install(TARGETS groupwarewizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### next target ###############
@@ -47,7 +47,7 @@ kde4_add_executable(egroupwarewizard ${egroupwarewizard_SRCS})
 
 target_link_libraries(egroupwarewizard  ${KDE4_KDECORE_LIBS} kabc_xmlrpc kcal_xmlrpc knotes_xmlrpc ${KDE4_KCAL_LIBS} kdepim)
 
-install(TARGETS egroupwarewizard  DESTINATION ${BIN_INSTALL_DIR})
+install(TARGETS egroupwarewizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### next target ###############
@@ -64,7 +64,7 @@ kde4_add_executable(sloxwizard ${sloxwizard_SRCS})
 
 target_link_libraries(sloxwizard  ${KDE4_KDECORE_LIBS} kcal_slox kabc_slox ${KDE4_KCAL_LIBS} ${KDE4_KABC_LIBS} kdepim)
 
-install(TARGETS sloxwizard  DESTINATION ${BIN_INSTALL_DIR})
+install(TARGETS sloxwizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### next target ###############
@@ -85,7 +85,7 @@ kde4_add_executable(kolabwizard ${kolabwizard_SRCS})
 
 target_link_libraries(kolabwizard  ${KDE4_KCAL_LIBS} ${KDE4_KPIMIDENTITIES_LIBS} kabckolab knoteskolab kcalkolab kdepim)
 
-install(TARGETS kolabwizard  DESTINATION ${BIN_INSTALL_DIR})
+install(TARGETS kolabwizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### next target ###############
 
@@ -105,7 +105,7 @@ kde4_add_executable(scalixwizard ${scalixwizard_SRCS})
 
 target_link_libraries(scalixwizard  ${KDE4_KCAL_LIBS} ${KDE4_KPIMIDENTITIES_LIBS} kabcscalix knotesscalix kcalscalix kdepim)
 
-install(TARGETS scalixwizard  DESTINATION ${BIN_INSTALL_DIR})
+install(TARGETS scalixwizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### install files ###############
 

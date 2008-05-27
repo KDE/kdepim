@@ -70,7 +70,7 @@ kde4_add_executable(korn ${korn_SRCS})
 
 target_link_libraries(korn  ${KDE4_KIO_LIBS} ${KDE4_PHONON_LIBS} ${KDE4_KDE3SUPPORT_LIBRARY} ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KMIME_LIBS})
 
-install(TARGETS korn  DESTINATION ${BIN_INSTALL_DIR} )
+install(TARGETS korn  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 
 ########### install files ###############

@@ -37,7 +37,7 @@ add_dependencies(kmailcvt kmail_xml)
 
 target_link_libraries(kmailcvt  ${QT_QT3SUPPORT_LIBRARY}  ${KDE4_KIO_LIBS} )
 
-install(TARGETS kmailcvt  DESTINATION ${BIN_INSTALL_DIR} )
+install(TARGETS kmailcvt  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 ########### install files ###############
 

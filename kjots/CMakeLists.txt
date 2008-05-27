@@ -34,7 +34,7 @@ kde4_add_executable(kjots ${kjots_SRCS})
 
 target_link_libraries(kjots ${KDE4_KIO_LIBS} )
 
-install(TARGETS kjots  DESTINATION ${BIN_INSTALL_DIR} )
+install(TARGETS kjots  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 
 ########### install files ###############
