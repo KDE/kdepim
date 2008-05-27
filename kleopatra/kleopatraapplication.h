@@ -38,6 +38,8 @@
 #include <utils/pimpl_ptr.h>
 
 class KCmdLineOptions;
+class MainWindow;
+template <typename T> class SystemTrayIconFor;
 
 class KleopatraApplication : public KUniqueApplication {
     Q_OBJECT
@@ -48,6 +50,19 @@ public:
     static KCmdLineOptions commandLineOptions();
 
     /* reimp */ int newInstance();
+
+    const MainWindow * mainWindow() const;
+    MainWindow * mainWindow();
+
+    const SystemTrayIconFor<MainWindow> * sysTrayIcon() const;
+    SystemTrayIconFor<MainWindow> * sysTrayIcon();
+
+    void setIgnoreNewInstance( bool on );
+    bool ignoreNewInstance() const;
+
+public Q_SLOTS:
+    void openOrRaiseMainWindow();
+    void importCertificatesFromFile( const QStringList & files );
 
 private:
     class Private;

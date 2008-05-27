@@ -34,7 +34,6 @@
 
 #include "aboutdata.h"
 #include "kleopatraapplication.h"
-#include "systemtrayicon.h"
 #include "mainwindow.h"
 
 #include <commands/reloadkeyscommand.h>
@@ -43,7 +42,6 @@
 #include <utils/gnupg-helper.h>
 
 #ifdef HAVE_USABLE_ASSUAN
-# include "kleo-assuan.h"
 # include <uiserver/uiserver.h>
 # include <uiserver/assuancommand.h>
 # include <uiserver/echocommand.h>
@@ -69,14 +67,9 @@ namespace Kleo {
 #include <ksplashscreen.h>
 #include <KDebug>
 
-#include <QDir>
-#include <QFile>
-#include <QFileInfo>
 #include <QTextDocument> // for Qt::escape
-#include <QProcess>
 #include <QStringList>
 #include <QMessageBox>
-#include <QPointer>
 #include <QTimer>
 #include <QEventLoop>
 
@@ -141,9 +134,6 @@ int main( int argc, char** argv )
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  SystemTrayIconFor<MainWindow> sysTray;
-  sysTray.show();
-
   KSplashScreen splash( UserIcon( "kleopatra_splashscreen" ), Qt::WindowStaysOnTopHint );
 
   int rc;
@@ -152,7 +142,7 @@ int main( int argc, char** argv )
       Kleo::UiServer server( args->getOption("uiserver-socket") );
 
       QObject::connect( &server, SIGNAL(startKeyManagerRequested()),
-                        &sysTray, SLOT(openOrRaiseMainWindow()) );
+                        &app, SLOT(openOrRaiseMainWindow()) );
 
 #define REGISTER( Command ) server.registerCommandFactory( boost::shared_ptr<Kleo::AssuanCommandFactory>( new Kleo::GenericAssuanCommandFactory<Kleo::Command> ) )
       REGISTER( DecryptCommand );
@@ -175,7 +165,6 @@ int main( int argc, char** argv )
 #endif
 
       const bool daemon = args->isSet("daemon");
-      const QStringList certificateToImport = args->getOptionList("import-certificate");
 
       if ( !daemon )
           splash.show();
@@ -187,19 +176,19 @@ int main( int argc, char** argv )
       fillKeyCache( &splash, 0 );
 #endif
 
+      app.setIgnoreNewInstance( false );
+
       if ( !daemon ) {
-          sysTray.openOrRaiseMainWindow();
-          if ( !certificateToImport.isEmpty() )
-              sysTray.mainWindow()->importCertificatesFromFile( certificateToImport );
-          splash.finish( sysTray.mainWindow() );
+          app.newInstance();
+          splash.finish( app.mainWindow() );
       }
 
-      args->clear();
       rc = app.exec();
 
 #ifdef HAVE_USABLE_ASSUAN
+      app.setIgnoreNewInstance( true );
       QObject::disconnect( &server, SIGNAL(startKeyManagerRequested()),
-                           &sysTray, SLOT(openOrRaiseMainWindow()) );
+                           &app, SLOT(openOrRaiseMainWindow()) );
 
       server.stop();
       server.waitForStopped();
@@ -210,7 +199,9 @@ int main( int argc, char** argv )
                                      "You can use Kleopatra as a certificate manager, but cryptographic plugins that "
                                      "rely on a GPG UI Server being present might not work correctly, or at all.</qt>",
                                      Qt::escape( QString::fromUtf8( e.what() ) ) ));
+      app.setIgnoreNewInstance( false );
       rc = app.exec();
+      app.setIgnoreNewInstance( true );
   }
 #endif
 

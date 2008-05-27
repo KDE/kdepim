@@ -34,6 +34,9 @@
 
 #include "kleopatraapplication.h"
 
+#include "mainwindow.h"
+#include "systemtrayicon.h"
+
 #include <utils/gnupg-helper.h>
 #include <utils/filesystemwatcher.h>
 #include <utils/kdpipeiodevice.h>
@@ -90,6 +93,11 @@ static QList<QByteArray> default_logging_options() {
 
 class KleopatraApplication::Private {
 public:
+    Private() : ignoreNewInstance( true ) {}
+
+public:
+    bool ignoreNewInstance;
+    SystemTrayIconFor<MainWindow> sysTray;
     shared_ptr<KeyCache> keyCache;
     shared_ptr<Log> log;
     shared_ptr<FileSystemWatcher> watcher;
@@ -137,11 +145,12 @@ public:
 
 
 KleopatraApplication::KleopatraApplication()
-    : KUniqueApplication()
+    : KUniqueApplication(), d( new Private )
 {
     add_resources();
     d->setupKeyCache();
     d->setupLogging();
+    d->sysTray.show();
     setQuitOnLastWindowClosed( false );
 }
 
@@ -151,9 +160,47 @@ KleopatraApplication::~KleopatraApplication() {
 }
 
 int KleopatraApplication::newInstance() {
-    kDebug();
-    return KUniqueApplication::newInstance();
+    kDebug() << d->ignoreNewInstance;
+    if ( d->ignoreNewInstance )
+        return 0;
+    KCmdLineArgs * const args = KCmdLineArgs::parsedArgs();
+    importCertificatesFromFile( args->getOptionList("import-certificate") );
+    args->clear();
+    return 0;
 }
 
+const SystemTrayIconFor<MainWindow> * KleopatraApplication::sysTrayIcon() const {
+    return &d->sysTray;
+}
+
+SystemTrayIconFor<MainWindow> * KleopatraApplication::sysTrayIcon() {
+    return &d->sysTray;
+}
+
+const MainWindow * KleopatraApplication::mainWindow() const {
+    return d->sysTray.mainWindow();
+}
+
+MainWindow * KleopatraApplication::mainWindow() {
+    return d->sysTray.mainWindow();
+}
+
+void KleopatraApplication::openOrRaiseMainWindow() {
+    d->sysTray.openOrRaiseMainWindow();
+}
+
+void KleopatraApplication::importCertificatesFromFile( const QStringList & files ) {
+    d->sysTray.openOrRaiseMainWindow();
+    if ( !files.empty() )
+        d->sysTray.mainWindow()->importCertificatesFromFile( files );
+}
+
+void KleopatraApplication::setIgnoreNewInstance( bool ignore ) {
+    d->ignoreNewInstance = ignore;
+}
+
+bool KleopatraApplication::ignoreNewInstance() const {
+    return d->ignoreNewInstance;
+}
 
 #include "moc_kleopatraapplication.cpp"
