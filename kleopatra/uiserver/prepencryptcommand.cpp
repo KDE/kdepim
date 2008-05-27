@@ -84,13 +84,13 @@ void PrepEncryptCommand::Private::checkForErrors() const {
         throw Exception( makeError( GPG_ERR_CONFLICT ),
                          i18n( "PREP_ENCRYPT is an email mode command, connection seems to be in filemanager mode" ) );
 
-    if ( !q->senders().empty() )
+    if ( !q->senders().empty() && !q->informativeSenders() )
         throw Exception( makeError( GPG_ERR_CONFLICT ),
-                         i18n( "SENDER may not be given prior to PREP_ENCRYPT" ) );
+                         i18n( "SENDER may not be given prior to PREP_ENCRYPT, except with --info" ) );
 
-    if ( q->recipients().empty() )
+    if ( q->recipients().empty() || q->informativeRecipients() )
         throw Exception( makeError( GPG_ERR_MISSING_VALUE ),
-                         i18n( "No recipients given" ) );
+                         i18n( "No recipients given, or only with --info" ) );
 
 }
 

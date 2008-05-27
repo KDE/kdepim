@@ -254,6 +254,9 @@ namespace Kleo {
         bool isNohup() const;
         bool isDone() const;
 
+        bool informativeRecipients() const;
+        bool informativeSenders() const;
+
         const std::vector<KMime::Types::Mailbox> & recipients() const;
         const std::vector<KMime::Types::Mailbox> & senders() const;
 

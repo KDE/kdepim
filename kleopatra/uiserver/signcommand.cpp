@@ -83,9 +83,9 @@ void SignCommand::Private::checkForErrors() const {
         throw Exception( makeError( GPG_ERR_CONFLICT ),
                          i18n( "SIGN is an email mode command, connection seems to be in filemanager mode" ) );
 
-    if ( !q->recipients().empty() )
+    if ( !q->recipients().empty() && !q->informativeRecipients() )
         throw Exception( makeError( GPG_ERR_CONFLICT ),
-                         i18n( "RECIPIENT may not be given prior to SIGN" ) );
+                         i18n( "RECIPIENT may not be given prior to SIGN, except with --info" ) );
 
     if ( q->inputs().empty() )
         throw Exception( makeError( GPG_ERR_ASS_NO_INPUT ),

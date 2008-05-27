@@ -131,13 +131,15 @@ int DecryptVerifyCommandEMailBase::doStart() {
 
 void DecryptVerifyCommandEMailBase::Private::checkForErrors() const
 {
-    if ( !q->senders().empty() )
+    if ( !q->senders().empty() && !q->informativeSenders() )
         throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ),
-                               i18n("Can't use SENDER") );
+                               i18n("Can't use non-info SENDER") );
 
-    if ( !q->recipients().empty() )
+    if ( !q->recipients().empty() && !q->informativeRecipients() )
         throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ),
-                               i18n("Can't use RECIPIENT") );
+                               i18n("Can't use non-info RECIPIENT") );
+
+    // ### use informative recipients and senders
 
     const unsigned int numInputs = q->inputs().size();
     const unsigned int numMessages = q->messages().size();

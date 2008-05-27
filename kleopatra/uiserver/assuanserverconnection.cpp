@@ -465,8 +465,23 @@ private:
         }
     }
 
-    template <typename T_memptr>
-    static int recipient_sender_handler( T_memptr mp, assuan_context_t ctx, char * line ) {
+    static bool parse_informative( const char * & begin, const char * const end ) {
+        if ( qstrnicmp( begin, "--info", strlen("--info") ) != 0 )
+            return false;
+        const char * pos = begin + strlen("--info");
+        if ( *pos == '=' )
+            ;
+        else if ( *pos == ' ' || *pos == '\t' )
+            while ( *pos == ' ' || *pos == '\t' )
+                ++pos;
+        else
+            return false;
+        begin = pos;
+        return true;
+    }
+
+    template <typename T_memptr, typename T_memptr2>
+    static int recipient_sender_handler( T_memptr mp, T_memptr2 info, assuan_context_t ctx, char * line ) {
         assert( assuan_get_pointer( ctx ) );
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx ) );
 
@@ -474,6 +489,10 @@ private:
             return assuan_process_done( conn.ctx.get(), gpg_error( GPG_ERR_INV_ARG ) );
         const char * begin     = line;
         const char * const end = begin + qstrlen( line );
+        const bool informative = parse_informative( begin, end );
+        if ( !(conn.*mp).empty() && informative != (conn.*info) )
+            return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_CONFLICT ),
+                                            i18n("Cannot mix --info with non-info SENDER or RECIPIENT").toUtf8().constData() );
         KMime::Types::Mailbox mb;
         if ( !KMime::HeaderParsing::parseMailbox( begin, end, mb ) )
             return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_INV_ARG ),
@@ -481,16 +500,17 @@ private:
         if ( begin != end )
             return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_INV_ARG ),
                                             i18n("Garbage after valid RFC-2822 mailbox detected").toUtf8().constData() );
+        (conn.*info) = informative;
         (conn.*mp).push_back( mb );
         return assuan_process_done( ctx, 0 );
     }
 
     static int recipient_handler( assuan_context_t ctx, char * line ) {
-        return recipient_sender_handler( &Private::recipients, ctx, line );
+        return recipient_sender_handler( &Private::recipients, &Private::informativeRecipients, ctx, line );
     }
 
     static int sender_handler( assuan_context_t ctx, char * line ) {
-        return recipient_sender_handler( &Private::senders, ctx, line );
+        return recipient_sender_handler( &Private::senders, &Private::informativeSenders, ctx, line );
     }
 
     QByteArray dumpOptions() const {
@@ -550,7 +570,9 @@ private:
     void reset() {
         options.clear();
         senders.clear();
+        informativeSenders = false;
         recipients.clear();
+        informativeRecipients = false;
         mementos.clear();
         close_all( files );
         files.clear();
@@ -571,6 +593,8 @@ private:
     bool cryptoCommandsEnabled : 1;
     bool commandWaitingForCryptoCommandsEnabled : 1;
     bool currentCommandIsNohup : 1;
+    bool informativeSenders;    // address taken, so no : 1
+    bool informativeRecipients; // address taken, so no : 1
     std::vector< shared_ptr<QSocketNotifier> > notifiers;
     std::vector< shared_ptr<AssuanCommandFactory> > factories; // sorted: _detail::ByName<std::less>
     shared_ptr<AssuanCommand> currentCommand;
@@ -602,6 +626,8 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
       cryptoCommandsEnabled( false ),
       commandWaitingForCryptoCommandsEnabled( false ),
       currentCommandIsNohup( false ),
+      informativeSenders( false ),
+      informativeRecipients( false ),
       factories( factories_ )
 {
 #ifdef __GNUC__
@@ -768,13 +794,21 @@ Q_SIGNALS:
 
 class AssuanCommand::Private {
 public:
-    Private() : done( false ), nohup( false ) {}
+    Private()
+        : informativeRecipients( false ),
+          informativeSenders( false ),
+          done( false ),
+          nohup( false )
+    {
+
+    }
 
     std::map<std::string,QVariant> options;
     std::vector< shared_ptr<Input> > inputs, messages;
     std::vector< shared_ptr<Output> > outputs;
     std::vector<IOF> files;
     std::vector<KMime::Types::Mailbox> recipients, senders;
+    bool informativeRecipients, informativeSenders;
     QByteArray utf8ErrorKeepAlive;
     AssuanContext ctx;
     bool done;
@@ -1074,6 +1108,14 @@ bool AssuanCommand::isDone() const {
     return d->done;
 }
 
+bool AssuanCommand::informativeSenders() const {
+    return d->informativeSenders;
+}
+
+bool AssuanCommand::informativeRecipients() const {
+    return d->informativeRecipients;
+}
+
 const std::vector<KMime::Types::Mailbox> & AssuanCommand::recipients() const {
     return d->recipients;
 }
@@ -1105,6 +1147,8 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
         cmd->d->files.swap( conn.files );       kleo_assert( conn.files.empty() );
         cmd->d->senders.swap( conn.senders );   kleo_assert( conn.senders.empty() );
         cmd->d->recipients.swap( conn.recipients ); kleo_assert( conn.recipients.empty() );
+        cmd->d->informativeRecipients = conn.informativeRecipients;
+        cmd->d->informativeSenders    = conn.informativeSenders;
 
         const std::map<std::string,std::string> cmdline_options = parse_commandline( line );
         for ( std::map<std::string,std::string>::const_iterator it = cmdline_options.begin(), end = cmdline_options.end() ; it != end ; ++it )

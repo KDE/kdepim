@@ -86,9 +86,9 @@ void EncryptCommand::Private::checkForErrors() const {
         throw Exception( makeError( GPG_ERR_CONFLICT ),
                          i18n( "ENCRYPT is an email mode command, connection seems to be in filmanager mode" ) );
 
-    if ( !q->senders().empty() )
+    if ( !q->senders().empty() && !q->informativeSenders() )
         throw Exception( makeError( GPG_ERR_CONFLICT ),
-                         i18n( "SENDER may not be given prior to ENCRYPT" ) );
+                         i18n( "SENDER may not be given prior to ENCRYPT, except with --info" ) );
 
     if ( q->inputs().empty() )
         throw Exception( makeError( GPG_ERR_ASS_NO_INPUT ),
@@ -124,9 +124,9 @@ void EncryptCommand::Private::checkForErrors() const {
 
     } else {
 
-        if ( q->recipients().empty() )
+        if ( q->recipients().empty() || q->informativeRecipients() )
             throw Exception( makeError( GPG_ERR_MISSING_VALUE ),
-                             i18n( "No recipients given" ) );
+                             i18n( "No recipients given, or only with --info" ) );
 
     }
 
