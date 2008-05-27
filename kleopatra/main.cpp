@@ -40,12 +40,7 @@
 #include <commands/reloadkeyscommand.h>
 #include <commands/selftestcommand.h>
 
-#include "libkleo/kleo/cryptobackendfactory.h"
-
 #include <utils/gnupg-helper.h>
-#include <utils/filesystemwatcher.h>
-#include <utils/kdpipeiodevice.h>
-#include <utils/log.h>
 
 #ifdef HAVE_USABLE_ASSUAN
 # include "kleo-assuan.h"
@@ -68,8 +63,6 @@ namespace Kleo {
 }
 #endif
 
-#include <models/keycache.h>
-
 #include <kcmdlineargs.h>
 #include <klocale.h>
 #include <kiconloader.h>
@@ -88,9 +81,7 @@ namespace Kleo {
 #include <QEventLoop>
 
 #include <boost/shared_ptr.hpp>
-#include <boost/mem_fn.hpp>
 
-#include <memory>
 #include <cassert>
 
 using namespace boost;
@@ -100,20 +91,6 @@ namespace {
     boost::shared_ptr<T> make_shared_ptr( T * t ) {
         return t ? boost::shared_ptr<T>( t ) : boost::shared_ptr<T>() ;
     }
-}
-
-static QStringList watchList() {
-    const QString home = Kleo::gnupgHomeDirectory();
-    QFileInfo info( home );
-    if ( !info.isDir() )
-        return QStringList();
-    QDir homeDir( home );
-    QStringList fileList = homeDir.entryList( QDir::AllEntries | QDir::NoDotAndDotDot );
-    fileList.removeAll( "dirmngr-cache.d" );
-    QStringList result;
-    Q_FOREACH( const QString& i, fileList )
-        result.push_back( homeDir.absoluteFilePath( i ) );
-    return result;
 }
 
 static bool selfCheck( KSplashScreen & splash ) {
@@ -134,49 +111,6 @@ static bool selfCheck( KSplashScreen & splash ) {
         splash.showMessage( i18n("Self-Check Passed") );
         return true;
     }
-}
-
-static QString environmentVariable( const QString& var, const QString& defaultValue=QString() )
-{
-    const QStringList env = QProcess::systemEnvironment();
-    Q_FOREACH ( const QString& i, env )
-    {
-        if ( !i.startsWith( var + '=' ) )
-            continue;
-
-        const int equalPos = i.indexOf( '=' );
-        assert( equalPos >= 0 );
-        return i.mid( equalPos + 1 );
-    }
-    return defaultValue;
-}
-
-static void setupLogging()
-{
-    const QString envOptions = environmentVariable( "KLEOPATRA_LOGOPTIONS", "io" );
-    const bool logAll = envOptions.trimmed() == "all";
-    const QStringList options = envOptions.split( ',' );
-        
-    const QString dir = environmentVariable( "KLEOPATRA_LOGDIR" );
-    if ( dir.isEmpty() )
-        return;
-    std::auto_ptr<QFile> logFile( new QFile( dir + "/kleo-log" ) );
-    if ( !logFile->open( QIODevice::WriteOnly | QIODevice::Append ) ) {
-        kDebug() << "Could not open file for logging: " << dir + "/kleo-log\nLogging disabled";
-        return;
-    }
-        
-    Kleo::Log::mutableInstance()->setOutputDirectory( dir );
-    if ( logAll || options.contains( "io" ) )
-        Kleo::Log::mutableInstance()->setIOLoggingEnabled( true );
-    qInstallMsgHandler( Kleo::Log::messageHandler );
-    
-#ifdef HAVE_USABLE_ASSUAN
-    if ( logAll || options.contains( "pipeio" ) )
-        KDPipeIODevice::setDebugLevel( KDPipeIODevice::Debug );
-
-    assuan_set_assuan_log_stream( Kleo::Log::instance()->logFile() );
-#endif
 }
 
 static void fillKeyCache( KSplashScreen * splash, Kleo::UiServer * server ) {
@@ -205,16 +139,6 @@ int main( int argc, char** argv )
 
   KleopatraApplication app;
 
-  // pin KeyCache to a shared_ptr to define it's minimum lifetime:
-  const boost::shared_ptr<Kleo::KeyCache> keyCache = Kleo::KeyCache::mutableInstance();
-  const boost::shared_ptr<Kleo::Log> log = Kleo::Log::mutableInstance();
-  const boost::shared_ptr<Kleo::FileSystemWatcher> watcher( new Kleo::FileSystemWatcher );
-  
-  watcher->addPaths( watchList() );
-  watcher->setDelay( 1000 );
-  keyCache->addFileSystemWatcher( watcher );
-  setupLogging();
-    
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
   SystemTrayIconFor<MainWindow> sysTray;
@@ -266,16 +190,13 @@ int main( int argc, char** argv )
 #endif
 
       if ( !daemon ) {
-          MainWindow* mainWindow = new MainWindow;
+          sysTray.openOrRaiseMainWindow();
           if ( !certificateToImport.isEmpty() )
-              mainWindow->importCertificatesFromFile( certificateToImport );
-          mainWindow->show();
-          sysTray.setMainWindow( mainWindow );
-          splash.finish( mainWindow );
+              sysTray.mainWindow()->importCertificatesFromFile( certificateToImport );
+          splash.finish( sysTray.mainWindow() );
       }
 
       args->clear();
-      QApplication::setQuitOnLastWindowClosed( false );
       rc = app.exec();
 
 #ifdef HAVE_USABLE_ASSUAN

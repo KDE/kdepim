@@ -34,11 +34,31 @@
 
 #include "kleopatraapplication.h"
 
+#include <utils/gnupg-helper.h>
+#include <utils/filesystemwatcher.h>
+#include <utils/kdpipeiodevice.h>
+#include <utils/log.h>
+
+#include <models/keycache.h>
+
+#ifdef HAVE_USABLE_ASSUAN
+# include <uiserver/uiserver.h>
+#endif
+
 #include <KGlobal>
 #include <KIconLoader>
 #include <KLocale>
 #include <KCmdLineOptions>
 #include <KDebug>
+
+#include <QFile>
+
+#include <boost/shared_ptr.hpp>
+
+#include <memory>
+
+using namespace Kleo;
+using namespace boost;
 
 static void add_resources() {
   KGlobal::locale()->insertCatalog( "libkleopatra" );
@@ -62,10 +82,67 @@ KCmdLineOptions KleopatraApplication::commandLineOptions() {
     return options;
 }
 
+static QList<QByteArray> default_logging_options() {
+    QList<QByteArray> result;
+    result.push_back( "io" );
+    return result;
+}
+
+class KleopatraApplication::Private {
+public:
+    shared_ptr<KeyCache> keyCache;
+    shared_ptr<Log> log;
+    shared_ptr<FileSystemWatcher> watcher;
+
+public:
+    void setupKeyCache() {
+        keyCache = KeyCache::mutableInstance();
+        watcher.reset( new FileSystemWatcher );
+  
+        watcher->addPaths( gnupgFileWatchList() );
+        watcher->setDelay( 1000 );
+        keyCache->addFileSystemWatcher( watcher );
+    }
+
+    void setupLogging() {
+        log = Log::mutableInstance();
+
+        const QByteArray envOptions = qgetenv( "KLEOPATRA_LOGOPTIONS" );
+        const bool logAll = envOptions.trimmed() == "all";
+        const QList<QByteArray> options = envOptions.isEmpty() ? default_logging_options() : envOptions.split( ',' ) ;
+        
+        const QByteArray dirNative = qgetenv( "KLEOPATRA_LOGDIR" );
+        if ( dirNative.isEmpty() )
+            return;
+        const QString dir = QFile::decodeName( dirNative );
+        std::auto_ptr<QFile> logFile( new QFile( dir + "/kleo-log" ) );
+        if ( !logFile->open( QIODevice::WriteOnly | QIODevice::Append ) ) {
+            kDebug() << "Could not open file for logging: " << dir + "/kleo-log\nLogging disabled";
+            return;
+        }
+        
+        log->setOutputDirectory( dir );
+        if ( logAll || options.contains( "io" ) )
+            log->setIOLoggingEnabled( true );
+        qInstallMsgHandler( Log::messageHandler );
+    
+#ifdef HAVE_USABLE_ASSUAN
+        if ( logAll || options.contains( "pipeio" ) )
+            KDPipeIODevice::setDebugLevel( KDPipeIODevice::Debug );
+        UiServer::setLogStream( log->logFile() );
+#endif
+
+    }
+};
+
+
 KleopatraApplication::KleopatraApplication()
     : KUniqueApplication()
 {
     add_resources();
+    d->setupKeyCache();
+    d->setupLogging();
+    setQuitOnLastWindowClosed( false );
 }
 
 KleopatraApplication::~KleopatraApplication() {

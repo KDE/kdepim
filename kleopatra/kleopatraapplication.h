@@ -35,6 +35,8 @@
 
 #include <KUniqueApplication>
 
+#include <utils/pimpl_ptr.h>
+
 class KCmdLineOptions;
 
 class KleopatraApplication : public KUniqueApplication {
@@ -46,6 +48,10 @@ public:
     static KCmdLineOptions commandLineOptions();
 
     /* reimp */ int newInstance();
+
+private:
+    class Private;
+    kdtools::pimpl_ptr<Private> d;
 };
 
 #endif // __KLEOPATRAAPPLICATION_H__
