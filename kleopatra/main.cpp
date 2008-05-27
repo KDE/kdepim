@@ -172,8 +172,6 @@ int main( int argc, char** argv )
 #undef REGISTER
 
       server.start();
-
-      sysTray.setToolTip( i18n( "Kleopatra UI Server listening on %1", server.socketName() ) );
 #endif
 
       const bool daemon = args->isSet("daemon");
