@@ -65,6 +65,7 @@
 #include <QDebug>
 #include <QStringList>
 #include <QDialog>
+#include <QRegExp>
 
 #include <kleo-assuan.h>
 
@@ -301,6 +302,38 @@ private:
         //return gpg_error( GPG_ERR_UNKNOWN_OPTION );
     }
 
+    static int session_handler( assuan_context_t ctx_, char * line ) {
+        assert( assuan_get_pointer( ctx_ ) );
+        AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
+
+        const QString str = QString::fromUtf8( line );
+        QRegExp rx( QLatin1String( "(\\d+)(?:\\s+(.*))" ) );
+        if ( !rx.exactMatch( str ) ) {
+            static const QString errorString = i18n("Parse error");
+            return assuan_process_done_msg( ctx_, gpg_error( GPG_ERR_ASS_SYNTAX ), errorString );
+        }
+        if ( rx.cap( 1 ) != QLatin1String( "0" ) ) {
+            static const QString errorString = i18n("Session association is not supported by this version of Kleopatra");
+            return assuan_process_done_msg( ctx_, gpg_error( GPG_ERR_NOT_IMPLEMENTED ), errorString );
+        }
+        if ( !rx.cap( 2 ).isEmpty() )
+            conn.sessionTitle = rx.cap( 2 );
+        return 0;
+    }
+
+    static int capabilities_handler( assuan_context_t ctx_, char * line ) {
+        if ( !QByteArray( line ).trimmed().isEmpty() ) {
+            static const QString errorString = i18n("CAPABILITIES doesn't take arguments");
+            return assuan_process_done_msg( ctx_, gpg_error( GPG_ERR_ASS_PARAMETER ), errorString );
+        }
+        static const char capabilities[] =
+            "SENDER=info\n"
+            "RECIPIENT=info\n"
+            "SESSION\n"
+        ;
+        return assuan_process_done( ctx_, assuan_send_data( ctx_, capabilities, sizeof capabilities - 1 ) );
+    }
+
     static int getinfo_handler( assuan_context_t ctx_, char * line ) {
         assert( assuan_get_pointer( ctx_ ) );
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
@@ -465,7 +498,7 @@ private:
         }
     }
 
-    static bool parse_informative( const char * & begin, const char * const end ) {
+    static bool parse_informative( const char * & begin ) {
         if ( qstrnicmp( begin, "--info", strlen("--info") ) != 0 )
             return false;
         const char * pos = begin + strlen("--info");
@@ -489,7 +522,7 @@ private:
             return assuan_process_done( conn.ctx.get(), gpg_error( GPG_ERR_INV_ARG ) );
         const char * begin     = line;
         const char * const end = begin + qstrlen( line );
-        const bool informative = parse_informative( begin, end );
+        const bool informative = parse_informative( begin );
         if ( !(conn.*mp).empty() && informative != (conn.*info) )
             return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_CONFLICT ),
                                             i18n("Cannot mix --info with non-info SENDER or RECIPIENT").toUtf8().constData() );
@@ -573,6 +606,7 @@ private:
         informativeSenders = false;
         recipients.clear();
         informativeRecipients = false;
+        sessionTitle.clear();
         mementos.clear();
         close_all( files );
         files.clear();
@@ -595,6 +629,7 @@ private:
     bool currentCommandIsNohup : 1;
     bool informativeSenders;    // address taken, so no : 1
     bool informativeRecipients; // address taken, so no : 1
+    QString sessionTitle;
     std::vector< shared_ptr<QSocketNotifier> > notifiers;
     std::vector< shared_ptr<AssuanCommandFactory> > factories; // sorted: _detail::ByName<std::less>
     shared_ptr<AssuanCommand> currentCommand;
@@ -692,6 +727,10 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
         throw Exception( err, "register \"RECIPIENT\" handler" );
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "SENDER", sender_handler ) )
         throw Exception( err, "register \"SENDER\" handler" );
+    if ( const gpg_error_t err = assuan_register_command( ctx.get(), "SESSION", session_handler ) )
+        throw Exception( err, "register \"SESSION\" handler" );
+    if ( const gpg_error_t err = assuan_register_command( ctx.get(), "CAPABILITIES", capabilities_handler ) )
+        throw Exception( err, "register \"CAPABILITIES\" handler" );
 
     assuan_set_hello_line( ctx.get(), "GPG UI server (Kleopatra/" KLEOPATRA_VERSION_STRING ") ready to serve" );
     //assuan_set_hello_line( ctx.get(), GPG UI server (qApp->applicationName() + " v" + kapp->applicationVersion() + "ready to serve" )
@@ -809,6 +848,7 @@ public:
     std::vector<IOF> files;
     std::vector<KMime::Types::Mailbox> recipients, senders;
     bool informativeRecipients, informativeSenders;
+    QString sessionTitle;
     QByteArray utf8ErrorKeepAlive;
     AssuanContext ctx;
     bool done;
@@ -1108,6 +1148,10 @@ bool AssuanCommand::isDone() const {
     return d->done;
 }
 
+QString AssuanCommand::sessionTitle() const {
+    return d->sessionTitle;
+}
+
 bool AssuanCommand::informativeSenders() const {
     return d->informativeSenders;
 }
@@ -1149,6 +1193,7 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
         cmd->d->recipients.swap( conn.recipients ); kleo_assert( conn.recipients.empty() );
         cmd->d->informativeRecipients = conn.informativeRecipients;
         cmd->d->informativeSenders    = conn.informativeSenders;
+        cmd->d->sessionTitle          = conn.sessionTitle;
 
         const std::map<std::string,std::string> cmdline_options = parse_commandline( line );
         for ( std::map<std::string,std::string>::const_iterator it = cmdline_options.begin(), end = cmdline_options.end() ; it != end ; ++it )
