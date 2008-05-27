@@ -625,7 +625,7 @@ void TabWidget::Private::slotPageHierarchyChanged( bool ) {
 }
 
 void TabWidget::Private::slotNewTab() {
-    q->addView( QString(), "my-certificates" );
+    q->addView( QString(), "all-certificates" );
     tabWidget.setCurrentIndex( tabWidget.count()-1 );
 }
 
