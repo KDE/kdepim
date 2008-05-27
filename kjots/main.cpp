@@ -25,7 +25,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <kuniqueapplication.h>
+#include <libkdepim/pimapplication.h>
 #include <kcmdlineargs.h>
 #include <kconfig.h>
 #include <kaboutdata.h>
@@ -49,14 +49,14 @@ int main( int argc, char **argv )
     aboutData.addAuthor(ki18n("Stanislav Kljuhhin"), KLocalizedString(), "crz@starman.ee");
     aboutData.addAuthor(ki18n("Christoph Neerfeld"), ki18n("Original author"), "chris@kde.org");
     KCmdLineArgs::init(argc, argv, &aboutData);
-    KUniqueApplication::addCmdLineOptions();
+    KPIM::PimApplication::addCmdLineOptions();
 
-    if (!KUniqueApplication::start()) {
+    if (!KPIM::PimApplication::start()) {
         fprintf(stderr, "kjots is already running!\n");
         exit(0);
     }
 
-    KUniqueApplication a;
+    KPIM::PimApplication a;
 
     // backwards compatibility code to convert "old" user font settings
     // to the new config settings

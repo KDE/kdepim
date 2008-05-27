@@ -1,7 +1,7 @@
 project(kjots)
 
 add_subdirectory( icons )
-include_directories( ${CMAKE_BINARY_DIR}/kjots )
+include_directories( ${CMAKE_BINARY_DIR}/libkdepim ${CMAKE_SOURCE_DIR}/libkdepim )
 
 #########################################################################
 # Main Application SECTION
@@ -32,7 +32,7 @@ kde4_add_kcfg_files(kjots_SRCS KJotsSettings.kcfgc )
 
 kde4_add_executable(kjots ${kjots_SRCS})
 
-target_link_libraries(kjots ${KDE4_KIO_LIBS} )
+target_link_libraries(kjots ${KDE4_KIO_LIBS} kdepim)
 
 install(TARGETS kjots  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
@@ -55,7 +55,7 @@ set(kjotspart_PART_SRCS
 
 kde4_add_plugin(kjotspart ${kjotspart_PART_SRCS} ${kjots_SRCS} )
 
-target_link_libraries(kjotspart ${KDE4_KDEUI_LIBS} ${KDE4_KPARTS_LIBS} )
+target_link_libraries(kjotspart ${KDE4_KPARTS_LIBS} kdepim)
 
 install( FILES kjotspart.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR} )
 install( FILES kjotspartui.rc  DESTINATION ${DATA_INSTALL_DIR}/kjots)
