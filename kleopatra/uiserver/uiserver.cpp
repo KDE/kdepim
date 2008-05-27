@@ -56,6 +56,11 @@
 using namespace Kleo;
 using namespace boost;
 
+// static
+void UiServer::setLogStream( FILE * stream ) {
+    assuan_set_assuan_log_stream( stream );
+}
+
 UiServer::Private::Private( UiServer * qq )
     : QTcpServer(),
       q( qq ),
