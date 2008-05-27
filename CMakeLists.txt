@@ -1,5 +1,7 @@
 project(kdepim)
 
+add_definitions(-DKDE_DEFAULT_DEBUG_AREA=5149)
+
 option(KDE4_KDEPIM_NEW_DISTRLISTS "Whether to use new distribution lists, which stores them like normal contacts; useful for Kolab")
 if(KDE4_KDEPIM_NEW_DISTRLISTS)
   add_definitions (-DKDEPIM_NEW_DISTRLISTS)
