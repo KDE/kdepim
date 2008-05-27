@@ -79,6 +79,7 @@ public:
 
 private:
     bool autoDelete : 1;
+    bool warnWhenRunningAtShutdown : 1;
     std::vector<GpgME::Key> keys_;
     QList<QPersistentModelIndex> indexes_;
     QPointer<QAbstractItemView> view_;

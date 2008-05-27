@@ -47,6 +47,7 @@ using namespace GpgME;
 Command::Private::Private( Command * qq, KeyListController * controller )
     : q( qq ),
       autoDelete( true ),
+      warnWhenRunningAtShutdown( true ),
       indexes_(),
       view_(),
       controller_( controller )
@@ -120,6 +121,14 @@ void Command::setAutoDelete( bool on ) {
 
 bool Command::autoDelete() const {
     return d->autoDelete;
+}
+
+void Command::setWarnWhenRunningAtShutdown( bool on ) {
+    d->warnWhenRunningAtShutdown = on;
+}
+
+bool Command::warnWhenRunningAtShutdown() const {
+    return d->warnWhenRunningAtShutdown;
 }
 
 void Command::setView( QAbstractItemView * view ) {

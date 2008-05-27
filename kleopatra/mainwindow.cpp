@@ -511,13 +511,15 @@ void MainWindow::closeEvent( QCloseEvent * e ) {
     // so do not let it touch the event...
     kDebug();
     if ( d->controller.hasRunningCommands() ) {
-        const int ret = KMessageBox::warningContinueCancel( this, i18n("There are still some background operations ongoing. "
-                                                                       "These will be terminated when closing the window. "
-                                                                       "Proceed?"),
-                                                            i18n("Ongoing Background Tasks") );
-        if ( ret != KMessageBox::Continue ) {
-            e->ignore();
-            return;
+        if ( d->controller.shutdownWarningRequired() ) {
+            const int ret = KMessageBox::warningContinueCancel( this, i18n("There are still some background operations ongoing. "
+                                                                           "These will be terminated when closing the window. "
+                                                                           "Proceed?"),
+                                                                i18n("Ongoing Background Tasks") );
+            if ( ret != KMessageBox::Continue ) {
+                e->ignore();
+                return;
+            }
         }
         d->controller.cancelCommands();
         if ( d->controller.hasRunningCommands() ) {

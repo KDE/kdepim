@@ -292,6 +292,10 @@ bool KeyListController::hasRunningCommands() const {
     return !d->commands.empty();
 }
 
+bool KeyListController::shutdownWarningRequired() const {
+    return kdtools::any( d->commands, mem_fn( &Command::warnWhenRunningAtShutdown ) );
+}
+
 // slot
 void KeyListController::cancelCommands() {
     std::for_each( d->commands.begin(), d->commands.end(),

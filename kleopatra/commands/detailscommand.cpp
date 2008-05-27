@@ -71,6 +71,10 @@ private:
             dialog->show();
     }
 
+    void init() {
+        q->setWarnWhenRunningAtShutdown( false );
+    }
+
 private:
     void slotDialogClosed();
 
@@ -96,19 +100,20 @@ DetailsCommand::Private::~Private() {}
 DetailsCommand::DetailsCommand( KeyListController * p )
     : Command( new Private( this, p ) )
 {
-
+    d->init();
 }
 
 DetailsCommand::DetailsCommand( QAbstractItemView * v, KeyListController * p )
     : Command( v, new Private( this, p ) )
 {
-
+    d->init();
 }
 
 DetailsCommand::DetailsCommand( const Key & key, KeyListController * p )
     : Command( new Private( this, p ) )
 {
     assert( !key.isNull() );
+    d->init();
     setKey( key );
 }
 
@@ -116,6 +121,7 @@ DetailsCommand::DetailsCommand( const Key & key, QAbstractItemView * v, KeyListC
     : Command( v, new Private( this, p ) )
 {
     assert( !key.isNull() );
+    d->init();
     setKey( key );
 }
 

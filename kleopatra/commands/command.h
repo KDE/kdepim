@@ -89,6 +89,9 @@ namespace Kleo {
         void setAutoDelete( bool on );
         bool autoDelete() const;
 
+        void setWarnWhenRunningAtShutdown( bool warn );
+        bool warnWhenRunningAtShutdown() const;
+
     public Q_SLOTS:
         void start();
         void cancel();
