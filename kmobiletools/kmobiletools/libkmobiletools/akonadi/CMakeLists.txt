@@ -1,8 +1,8 @@
 #add_subdirectory( tests )
 
 include_directories(
-        ${CMAKE_SOURCE_DIR}/akonadi
         ${Boost_INCLUDE_DIR}
+        ${AKONADI_INCLUDE_DIR}
 )
 
 set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
