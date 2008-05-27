@@ -209,6 +209,7 @@ set( _kleopatra_SRCS
   certificatewizardimpl.cpp
   aboutdata.cpp
   systemtrayicon.cpp
+  kleopatraapplication.cpp
   exportcertificatesdialog.cpp
   main.cpp )
 

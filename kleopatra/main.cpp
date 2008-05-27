@@ -33,6 +33,7 @@
 #include <config-kleopatra.h>
 
 #include "aboutdata.h"
+#include "kleopatraapplication.h"
 #include "systemtrayicon.h"
 #include "mainwindow.h"
 
@@ -71,10 +72,8 @@ namespace Kleo {
 
 #include <kcmdlineargs.h>
 #include <klocale.h>
-#include <kglobal.h>
 #include <kiconloader.h>
 #include <ksplashscreen.h>
-#include <KUniqueApplication>
 #include <KDebug>
 
 #include <QDir>
@@ -86,6 +85,7 @@ namespace Kleo {
 #include <QMessageBox>
 #include <QPointer>
 #include <QTimer>
+#include <QEventLoop>
 
 #include <boost/shared_ptr.hpp>
 #include <boost/mem_fn.hpp>
@@ -201,16 +201,9 @@ int main( int argc, char** argv )
 
   KCmdLineArgs::init(argc, argv, &aboutData);
 
-  KCmdLineOptions options;
-  options.add("daemon", ki18n("Run UI server only, hide main window"));
-  options.add("import-certificate ", ki18n("Name of certificate file to import"));
-#ifdef HAVE_USABLE_ASSUAN
-  options.add("uiserver-socket <argument>", ki18n("Location of the socket the ui server is listening on" ) );
-#endif
-  
-  KCmdLineArgs::addCmdLineOptions( options );
+  KCmdLineArgs::addCmdLineOptions( KleopatraApplication::commandLineOptions() );
 
-  KUniqueApplication app;
+  KleopatraApplication app;
 
   // pin KeyCache to a shared_ptr to define it's minimum lifetime:
   const boost::shared_ptr<Kleo::KeyCache> keyCache = Kleo::KeyCache::mutableInstance();
@@ -223,10 +216,6 @@ int main( int argc, char** argv )
   setupLogging();
     
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
-
-  KGlobal::locale()->insertCatalog( "libkleopatra" );
-  KIconLoader::global()->addAppDir( "libkleopatra" );
-  KIconLoader::global()->addAppDir( "kdepim" );
 
   SystemTrayIconFor<MainWindow> sysTray;
   sysTray.show();
@@ -305,10 +294,6 @@ int main( int argc, char** argv )
       rc = app.exec();
   }
 #endif
-
-    // work around kdelibs bug https://bugs.kde.org/show_bug.cgi?id=162514
-    KGlobal::config()->sync();
-  
 
     return rc;
 }
