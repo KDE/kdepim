@@ -1447,7 +1447,7 @@ bool KABCore::handleCommandLine()
   QString addrStr = args->getOption( "addr" );
   QString uidStr = args->getOption( "uid" );
 
-  OrgKdeKAddressbookCoreInterface interface("org.kde.KAddressbook", "/KAddressbook", QDBusConnection::sessionBus());
+  OrgKdeKAddressbookCoreInterface interface("org.kde.kaddressbook", "/KAddressBook", QDBusConnection::sessionBus());
   QString addr, uid, vcard;
   if ( !addrStr.isEmpty() )
     addr = addrStr ;
