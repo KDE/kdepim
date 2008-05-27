@@ -34,6 +34,7 @@
 #define __KLEOPATRA_GNUPGHELPER_H__
 
 class QString;
+class QStringList;
 
 namespace Kleo {
 
@@ -42,6 +43,8 @@ namespace Kleo {
     QString gpgConfPath();
     QString gpgSmPath();
     QString gpgPath();
+
+    QStringList gnupgFileWatchList();
 
     int makeGnuPGError( int code );
 }
