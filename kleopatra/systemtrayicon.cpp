@@ -224,6 +224,10 @@ void SystemTrayIcon::setMainWindow( QWidget * mw ) {
     d->slotEnableDisableActions();
 }
 
+QWidget * SystemTrayIcon::mainWindow() const {
+    return d->mainWindow;
+}
+
 bool SystemTrayIcon::eventFilter( QObject * o, QEvent * e ) {
     if ( o == d->mainWindow )
         switch ( e->type() ) {
