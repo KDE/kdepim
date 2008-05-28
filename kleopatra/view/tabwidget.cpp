@@ -243,6 +243,7 @@ void Page::init() {
     KDAB_SET_OBJECT_NAME( m_layout );
     KDAB_SET_OBJECT_NAME( m_view );
 
+    m_layout->setMargin( 0 );
     m_layout->addWidget( m_view );
 
     HeaderView * headerView = new HeaderView( Qt::Horizontal );
@@ -484,6 +485,7 @@ TabWidget::Private::Private( TabWidget * qq )
     KDAB_SET_OBJECT_NAME( tabWidget );
     KDAB_SET_OBJECT_NAME( layout );
 
+    layout.setMargin( 0 );
     layout.addWidget( &tabWidget );
 
     tabWidget.setTabBarHidden( true );
