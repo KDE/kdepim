@@ -71,6 +71,15 @@ public:
   void setAllowedProtocols( Protocols protocols );
   Protocols allowedProtocols() const;
 
+  void setX509Allowed( bool allowed );
+  void setOpenPGPAllowed( bool allowed );
+
+  void setReadOnlyProtocols( Protocols protocols );
+  Protocols readOnlyProtocols() const;
+
+  void setOpenPGPReadOnly( bool ro );
+  void setX509ReadOnly( bool ro );
+
   void addOpenPGPServices( const KUrl::List& urls );
   KUrl::List openPGPServices() const;
 
@@ -94,6 +103,34 @@ private:
   Q_PRIVATE_SLOT( d, void slotShowUserAndPasswordToggled(bool) )
 };
 
+}
+
+inline void Kleo::DirectoryServicesWidget::setOpenPGPAllowed( bool allowed ) {
+    if ( allowed )
+        setAllowedProtocols( allowedProtocols() | OpenPGPProtocol );
+    else
+        setAllowedProtocols( allowedProtocols() & ~OpenPGPProtocol );
+}
+
+inline void Kleo::DirectoryServicesWidget::setX509Allowed( bool allowed ) {
+    if ( allowed )
+        setAllowedProtocols( allowedProtocols() | X509Protocol );
+    else
+        setAllowedProtocols( allowedProtocols() & ~X509Protocol );
+}
+
+inline void Kleo::DirectoryServicesWidget::setOpenPGPReadOnly( bool ro ) {
+    if ( ro )
+        setReadOnlyProtocols( readOnlyProtocols() | OpenPGPProtocol );
+    else
+        setReadOnlyProtocols( readOnlyProtocols() & ~OpenPGPProtocol );
+}
+
+inline void Kleo::DirectoryServicesWidget::setX509ReadOnly( bool ro ) {
+    if ( ro )
+        setReadOnlyProtocols( readOnlyProtocols() | X509Protocol );
+    else
+        setReadOnlyProtocols( readOnlyProtocols() & ~X509Protocol );
 }
 
 #endif // DIRECTORYSERVICESWIDGET_H

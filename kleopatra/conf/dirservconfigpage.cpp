@@ -212,10 +212,14 @@ void DirectoryServicesConfigurationPage::load()
   if ( mX509ServicesEntry )
       mWidget->addX509Services( mX509ServicesEntry->urlValueList() );
 
+  mWidget->setX509ReadOnly( mX509ServicesEntry && mX509ServicesEntry->isReadOnly() );
+
   mOpenPGPServiceEntry = configEntry( s_pgpservice_componentName, s_pgpservice_groupName, s_pgpservice_entryName,
                                       Kleo::CryptoConfigEntry::ArgType_String, false );
   if ( mOpenPGPServiceEntry )
       mWidget->addOpenPGPServices( string2urls( mOpenPGPServiceEntry->stringValue() ) );
+
+  mWidget->setOpenPGPReadOnly( mOpenPGPServiceEntry && mOpenPGPServiceEntry->isReadOnly() );
 
   if ( mX509ServicesEntry )
       if ( mOpenPGPServiceEntry )
@@ -227,6 +231,10 @@ void DirectoryServicesConfigurationPage::load()
           mWidget->setAllowedProtocols( DirectoryServicesWidget::OpenPGPProtocol );
       else
           mWidget->setDisabled( true );
+
+  DirectoryServicesWidget::Protocols readOnlyProtocols;
+  if ( mX509ServicesEntry && mX509ServicesEntry->isReadOnly() )
+      readOnlyProtocols = DirectoryServicesWidget::X509Protocol;
 
   mTimeoutConfigEntry = configEntry( s_timeout_componentName, s_timeout_groupName, s_timeout_entryName, Kleo::CryptoConfigEntry::ArgType_UInt, false );
   if ( mTimeoutConfigEntry ) {

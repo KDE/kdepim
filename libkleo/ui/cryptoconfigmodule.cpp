@@ -780,7 +780,7 @@ Kleo::CryptoConfigEntryLDAPURL::CryptoConfigEntryLDAPURL(
   : CryptoConfigEntryGUI( module, entry, entryName )
 {
   mLabel = new QLabel( widget );
-  mPushButton = new QPushButton( i18n( "Edit..." ), widget );
+  mPushButton = new QPushButton( entry->isReadOnly() ? i18n("Show...") : i18n( "Edit..." ), widget );
 
 
   const int row = glay->rowCount();
@@ -792,12 +792,9 @@ Kleo::CryptoConfigEntryLDAPURL::CryptoConfigEntryLDAPURL(
   hlay->addWidget( mLabel, 1 );
   hlay->addWidget( mPushButton );
 
-  if ( entry->isReadOnly() ) {
+  if ( entry->isReadOnly() )
     mLabel->setEnabled( false );
-    mPushButton->hide();
-  } else {
-    connect( mPushButton, SIGNAL( clicked() ), SLOT( slotOpenDialog() ) );
-  }
+  connect( mPushButton, SIGNAL( clicked() ), SLOT( slotOpenDialog() ) );
 }
 
 void Kleo::CryptoConfigEntryLDAPURL::doLoad()
@@ -818,6 +815,7 @@ void Kleo::CryptoConfigEntryLDAPURL::slotOpenDialog()
   dialog.setCaption( i18n( "Configure LDAP Servers" ) );
   dialog.setButtons( KDialog::Default|KDialog::Cancel|KDialog::Ok );
   DirectoryServicesWidget* dirserv = new DirectoryServicesWidget( &dialog );
+  dirserv->setX509ReadOnly( mEntry->isReadOnly() );
   dirserv->setAllowedSchemes( DirectoryServicesWidget::LDAP );
   dirserv->setAllowedProtocols( DirectoryServicesWidget::X509Protocol );
   dirserv->addX509Services( mURLList );
@@ -891,9 +889,10 @@ void Kleo::CryptoConfigEntryKeyserver::slotOpenDialog()
   // I'm a bad boy and I do it all on the stack. Enough classes already :)
   // This is just a simple dialog around the directory-services-widget
   KDialog dialog( mPushButton->parentWidget() );
-  dialog.setCaption( i18n( "Configure LDAP Servers" ) );
+  dialog.setCaption( i18n( "Configure Keyservers" ) );
   dialog.setButtons( KDialog::Default|KDialog::Cancel|KDialog::Ok );
   DirectoryServicesWidget dirserv( &dialog );
+  dirserv.setOpenPGPReadOnly( mEntry->isReadOnly() );
   dirserv.setAllowedSchemes( DirectoryServicesWidget::AllSchemes );
   dirserv.setAllowedProtocols( DirectoryServicesWidget::OpenPGPProtocol );
   dirserv.addOpenPGPServices( string2urls( mLabel->text() ) );
