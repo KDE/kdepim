@@ -1,5 +1,7 @@
 [Desktop Entry]
 Name=PlasmoBiff
+Name[sv]=Plasmobiff
+Name[x-test]=xxPlasmoBiffxx
 Type=Service
 X-KDE-ServiceTypes=Plasma/Applet
 
