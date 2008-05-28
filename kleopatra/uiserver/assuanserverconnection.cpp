@@ -72,6 +72,7 @@
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/bind.hpp>
+#include <boost/mem_fn.hpp>
 #include <boost/mpl/if.hpp>
 
 #include <vector>
@@ -690,14 +691,14 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
     assert( numFDs != -1 ); // == 1
 
     if ( !numFDs || fds[0] != fd ) {
-        const shared_ptr<QSocketNotifier> sn( new QSocketNotifier( (int)fd, QSocketNotifier::Read ) );
+        const shared_ptr<QSocketNotifier> sn( new QSocketNotifier( (int)fd, QSocketNotifier::Read ), mem_fn( &QObject::deleteLater ) );
         connect( sn.get(), SIGNAL(activated(int)), this, SLOT(slotReadActivity(int)) );
         notifiers.push_back( sn );
     }
 
     notifiers.reserve( notifiers.size() + numFDs );
     for ( int i = 0 ; i < numFDs ; ++i ) {
-        const shared_ptr<QSocketNotifier> sn( new QSocketNotifier( (int)fds[i], QSocketNotifier::Read ) );
+        const shared_ptr<QSocketNotifier> sn( new QSocketNotifier( (int)fds[i], QSocketNotifier::Read ), mem_fn( &QObject::deleteLater ) );
         connect( sn.get(), SIGNAL(activated(int)), this, SLOT(slotReadActivity(int)) );
         notifiers.push_back( sn );
     }
