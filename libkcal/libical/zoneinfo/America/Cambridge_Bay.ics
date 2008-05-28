@@ -2,7 +2,7 @@ BEGIN:VCALENDAR
 PRODID:-//KDE//NONSGML KCal Olson-VTIMEZONE Converter//EN
 VERSION:2.0
 BEGIN:VTIMEZONE
-TZID:/kde.org/Olson_20071016_1/America/Cambridge_Bay
+TZID:/kde.org/Olson_20080523_1/America/Cambridge_Bay
 X-LIC-LOCATION:America/Cambridge_Bay
 BEGIN:DAYLIGHT
 TZOFFSETFROM:-0700
