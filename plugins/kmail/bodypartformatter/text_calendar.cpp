@@ -297,20 +297,13 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       if ( result == 0 ) {
         // OK, so korganizer (or kontact) is running. Now ensure the object we want is available
         // [that's not the case when kontact was already running, but korganizer not loaded into it...]
-#ifdef __GNUC__
-#warning Port me to DBus!
-#endif
-/*        static const char* const dcopObjectId = "KOrganizerIface";
-        DCOPCString dummy;
-        if ( !kapp->dcopClient()->findObject( dbusService, dcopObjectId, "", QByteArray(), dummy, dummy ) ) {
-          DCOPRef ref( dcopService, dbusService ); // talk to the KUniqueApplication or its kontact wrapper
-          DCOPReply reply = ref.call( "load()" );
-          if ( reply.isValid() && (bool)reply ) {
-            kDebug() <<"Loaded" << dbusService <<" successfully";
-            Q_ASSERT( kapp->dcopClient()->findObject( dbusService, dcopObjectId, "", QByteArray(), dummy, dummy ) );
-          } else
-            kWarning() <<"Error loading" << dbusService;
-        }*/
+        QDBusInterface iface( "org.kde.korganizer", "/korganizer_PimApplication", "org.kde.KUniqueApplication" );
+        if ( iface.isValid() ) {
+          QDBusReply<bool> r = iface.call( "load" );
+          if ( !r.isValid() || !r.value() )
+            kWarning() << "Loading korganizer failed: " << iface.lastError().message();
+        } else
+          kWarning() << "Couldn't obtain korganizer D-Bus interface" << iface.lastError().message();
 
         // We don't do anything with it, we just need it to be running so that it handles
         // the incoming directory.
@@ -539,6 +532,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       if ( path == "check_calendar" ) {
         Incidence* incidence = icalToString( iCal );
         showCalendar( incidence->dtStart().date() );
+        return true;
       }
       if ( path == "reply" || path == "cancel" ) {
         // These should just be saved with their type as the dir
