@@ -55,7 +55,6 @@
 
 #include <QGridLayout>
 #include <QTimer>
-#include <QResizeEvent>
 #include <QSortFilterProxyModel>
 #include <QTreeView>
 #include <QToolButton>
@@ -64,6 +63,7 @@
 #include <QInputDialog>
 #include <QItemSelectionModel>
 #include <QItemSelection>
+#include <QLayout>
 
 #include <map>
 #include <vector>
@@ -119,26 +119,18 @@ public:
         m_canBeClosed = m_canBeRenamed = m_canChangeStringFilter = m_canChangeKeyFilter = m_canChangeHierarchical = true;
     }
 
-    /* reimp */ QSize sizeHint() const { return m_view->sizeHint(); }
-    /* reimp */ QSize minimumSizeHint() const { return m_view->minimumSizeHint(); }
-
 Q_SIGNALS:
     void titleChanged( const QString & title );
     void stringFilterChanged( const QString & filter );
     void keyFilterChanged( const boost::shared_ptr<Kleo::KeyFilter> & filter );
     void hierarchicalChanged( bool on );
 
-protected:
-    void resizeEvent( QResizeEvent * e ) {
-        QWidget::resizeEvent( e );
-        m_view->resize( e->size() );
-    }
-
 private:
     void init();
 
 private:
     KeyListSortFilterProxyModel m_proxy;
+    QVBoxLayout * m_layout;
     QTreeView * m_view;
     AbstractKeyListModel * m_flatModel;
     AbstractKeyListModel * m_hierarchicalModel;
@@ -159,6 +151,7 @@ private:
 Page::Page( const Page & other )
     : QWidget( 0 ),
       m_proxy(),
+      m_layout( new QVBoxLayout( this ) ),
       m_view( new QTreeView( this ) ),
       m_flatModel( other.m_flatModel ),
       m_hierarchicalModel( other.m_hierarchicalModel ),
@@ -179,6 +172,7 @@ Page::Page( const Page & other )
 Page::Page( const QString & title, const QString & id, const QString & text, QWidget * parent )
     : QWidget( parent ),
       m_proxy(),
+      m_layout( new QVBoxLayout( this ) ),
       m_view( new QTreeView( this ) ),
       m_flatModel( 0 ),
       m_hierarchicalModel( 0 ),
@@ -205,6 +199,7 @@ static const char COLUMN_SIZES[] = "column-sizes";
 Page::Page( const KConfigGroup & group, QWidget * parent )
     : QWidget( parent ),
       m_proxy(),
+      m_layout( new QVBoxLayout( this ) ),
       m_view( new QTreeView( this ) ),
       m_flatModel( 0 ),
       m_hierarchicalModel( 0 ),
@@ -246,7 +241,10 @@ static void adjust_header( HeaderView * hv ) {
 
 void Page::init() {
     KDAB_SET_OBJECT_NAME( m_proxy );
+    KDAB_SET_OBJECT_NAME( m_layout );
     KDAB_SET_OBJECT_NAME( m_view );
+
+    m_layout->addWidget( m_view );
 
     HeaderView * headerView = new HeaderView( Qt::Horizontal );
     KDAB_SET_OBJECT_NAME( headerView );
@@ -459,6 +457,7 @@ private:
     AbstractKeyListModel * flatModel;
     AbstractKeyListModel * hierarchicalModel;
     KTabWidget tabWidget;
+    QVBoxLayout layout;
     enum {
         Rename,
         Duplicate,
@@ -480,9 +479,13 @@ TabWidget::Private::Private( TabWidget * qq )
     : q( qq ),
       flatModel( 0 ),
       hierarchicalModel( 0 ),
-      tabWidget( q )
+      tabWidget( q ),
+      layout( q )
 {
     KDAB_SET_OBJECT_NAME( tabWidget );
+    KDAB_SET_OBJECT_NAME( layout );
+
+    layout.addWidget( &tabWidget );
 
     tabWidget.setTabBarHidden( true );
     tabWidget.setTabReorderingEnabled( true );
@@ -772,19 +775,6 @@ void TabWidget::createActions( KActionCollection * coll ) {
         QAction * a = d->currentPageActions[i];
         coll->addAction( a->objectName(), a );
     }
-}
-
-QSize TabWidget::sizeHint() const {
-    return d->tabWidget.sizeHint();
-}
-
-QSize TabWidget::minimumSizeHint() const {
-    return d->tabWidget.minimumSizeHint();
-}
-
-void TabWidget::resizeEvent( QResizeEvent * e ) {
-    QWidget::resizeEvent( e );
-    d->tabWidget.resize( e->size() );
 }
 
 QAbstractItemView * TabWidget::addView( const QString & title, const QString & id, const QString & text ) {

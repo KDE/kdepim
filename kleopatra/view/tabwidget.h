@@ -92,13 +92,6 @@ namespace Kleo {
         void enableChangeStringFilter( bool enable );
         void enableChangeKeyFilter( bool enable );
 
-    protected:
-        void resizeEvent( QResizeEvent * );
-
-    public:
-        /* reimp */ QSize sizeHint() const;
-        /* reimp */ QSize minimumSizeHint() const;
-
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
