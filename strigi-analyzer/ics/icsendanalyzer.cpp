@@ -56,14 +56,16 @@ char IcsEndAnalyzer::analyze( Strigi::AnalysisResult& idx, Strigi::InputStream* 
   CalendarLocal cal( QString::fromLatin1( "UTC" ) );
 
   const char* data;
-  //FIXME: large calendars will exhaust memory; incremental loading would be nice
-  if ( in->read( data, 1, in->size() ) < 0 ) {
+  //FIXME: large calendars will exhaust memory; incremental loading would be
+  // nice
+  int32_t nread = in->read( data, 1, in->size() );
+  if ( nread <= 0 ) {
     //kDebug() <<"Reading data from input stream failed";
     return Strigi::Error;
   }
 
   ICalFormat ical;
-  if ( !ical.fromRawString( &cal, data ) ) {
+  if ( !ical.fromRawString( &cal, QByteArray::fromRawData(data, nread) ) ) {
     VCalFormat vcal;
     if ( !vcal.fromRawString( &cal, data ) ) {
       //kDebug() <<"Could not load calendar";
