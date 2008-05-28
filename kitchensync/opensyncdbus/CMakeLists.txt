@@ -13,7 +13,7 @@ KDE3_ADD_EXECUTABLE(opensyncdbus ${opensyncdbus_SRCS})
 
 TARGET_LINK_LIBRARIES(opensyncdbus  ${QT_AND_KDECORE_LIBS} qopensync dbus-1-qt3 dbus-1 )
 
-INSTALL(TARGETS opensyncdbus DESTINATION ${BIN_INSTALL_DIR} )
+INSTALL(TARGETS opensyncdbus ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 
 ########### install files ###############

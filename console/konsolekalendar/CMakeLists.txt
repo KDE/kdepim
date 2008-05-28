@@ -26,7 +26,7 @@ kde4_add_executable(konsolekalendar NOGUI ${konsolekalendar_SRCS})
 
 target_link_libraries(konsolekalendar  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim)
 
-install(TARGETS konsolekalendar  DESTINATION ${BIN_INSTALL_DIR})
+install(TARGETS konsolekalendar  ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### install files ###############

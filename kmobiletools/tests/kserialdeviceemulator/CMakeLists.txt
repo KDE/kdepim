@@ -14,7 +14,7 @@ kde4_add_executable(kserialdeviceemulator ${kserialdeviceemulator_SRCS})
 
 target_link_libraries(kserialdeviceemulator  ${KDE4_KDEUI_LIBS} kmobiletools )
 
-install(TARGETS kserialdeviceemulator DESTINATION ${BIN_INSTALL_DIR})
+install(TARGETS kserialdeviceemulator ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### install files ###############

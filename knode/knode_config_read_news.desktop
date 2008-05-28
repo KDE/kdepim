@@ -10,6 +10,7 @@ X-KDE-HasReadOnlyMode=false
 X-KDE-ParentApp=knode
 X-KDE-ParentComponents=knode,kontact_knodeplugin
 X-KDE-CfgDlgHierarchy=KNode
+X-KDE-Weight=400
 
 Name=Reading News
 Name[de]=Artikel lesen

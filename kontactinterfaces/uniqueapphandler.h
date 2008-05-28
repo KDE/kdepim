@@ -29,14 +29,18 @@ namespace Kontact
 {
 
 /**
- * DCOP Object that has the name of the standalone application (e.g. "kmail")
+ * D-Bus Object that has the name of the standalone application (e.g. "kmail")
  * and implements newInstance() so that running the separate application does
  * the right thing when kontact is running.
  * By default this means simply bringing the main window to the front,
  * but newInstance can be reimplemented.
  */
-class KONTACTINTERFACES_EXPORT UniqueAppHandler
+class KONTACTINTERFACES_EXPORT UniqueAppHandler : public QObject
 {
+  Q_OBJECT
+  // We implement the KUniqueApplication interface
+  Q_CLASSINFO("D-Bus Interface", "org.kde.KUniqueApplication")
+
   public:
     UniqueAppHandler( Plugin *plugin );
     virtual ~UniqueAppHandler();
@@ -44,14 +48,17 @@ class KONTACTINTERFACES_EXPORT UniqueAppHandler
     /// This must be reimplemented so that app-specific command line options can be parsed
     virtual void loadCommandLineOptions() = 0;
 
-    /// We can't use k_dcop and dcopidl here, because the data passed
-    /// to newInstance can't be expressed in terms of normal data types.
-    virtual int newInstance();
-
     Plugin *plugin() const;
 
-    /// Load the kontact command line options.
-    static void loadKontactCommandLineOptions();
+    // for kontact
+    static void setMainWidget(QWidget* widget);
+
+  public Q_SLOTS: // DBUS methods
+    int newInstance(const QByteArray &asn_id, const QByteArray &args);
+    bool load();
+
+  protected:
+    virtual int newInstance();
 
   private:
     class Private;
@@ -108,8 +115,8 @@ class KONTACTINTERFACES_EXPORT UniqueAppWatcher : public QObject
 
     bool isRunningStandalone() const;
 
-  protected Q_SLOTS:
-    void unregisteredFromDCOP( const QByteArray &appId );
+  private Q_SLOTS:
+    void slotApplicationRemoved(const QString & name, const QString & oldOwner, const QString & newOwner);
 
   private:
     class Private;

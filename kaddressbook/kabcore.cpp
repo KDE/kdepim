@@ -1207,7 +1207,7 @@ void KABCore::initActions()
   action->setIcon( KIcon("kontact_contacts") );
   action->setText( i18n( "&New Distribution List..." ) );
   connect( action, SIGNAL( triggered(bool) ), SLOT( newDistributionList() ) );
-  action->setWhatsThis( i18n( "Create a new distribution list<p>You will be presented with a dialog where you can create a new distribution list." ) );
+  action->setWhatsThis( i18n( "Create a new distribution list<p>You will be presented with a dialog where you can create a new distribution list.</p>" ) );
 
   mActionMailVCard->setWhatsThis( i18n( "Send a mail with the selected contact as attachment." ) );
 
@@ -1246,7 +1246,7 @@ void KABCore::initActions()
   mActionDelete->setShortcut(QKeySequence(Qt::Key_Delete));
   mActionDelete->setWhatsThis( i18n( "Delete all selected contacts." ) );
 
-  const QString copyMoveWhatsThis = i18n( "Store a contact in a different Addressbook<p>You will be presented with a dialog where you can select a new storage place for this contact." );
+  const QString copyMoveWhatsThis = i18n( "Store a contact in a different Addressbook<p>You will be presented with a dialog where you can select a new storage place for this contact.</p>" );
   mActionCopyAddresseeTo = coll->addAction( "copy_contact_to" );
   mActionCopyAddresseeTo->setText( i18n( "C&opy Contact To..." ) );
   connect(mActionCopyAddresseeTo, SIGNAL(triggered(bool) ), SLOT( copySelectedContactToResource() ));
@@ -1447,7 +1447,7 @@ bool KABCore::handleCommandLine()
   QString addrStr = args->getOption( "addr" );
   QString uidStr = args->getOption( "uid" );
 
-  OrgKdeKAddressbookCoreInterface interface("org.kde.KAddressbook", "/KAddressbook", QDBusConnection::sessionBus());
+  OrgKdeKAddressbookCoreInterface interface("org.kde.kaddressbook", "/KAddressBook", QDBusConnection::sessionBus());
   QString addr, uid, vcard;
   if ( !addrStr.isEmpty() )
     addr = addrStr ;

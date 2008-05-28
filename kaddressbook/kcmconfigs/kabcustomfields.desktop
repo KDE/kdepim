@@ -8,6 +8,7 @@ X-KDE-Library=kcm_kabcustomfields
 X-KDE-ParentApp=kaddressbook
 X-KDE-ParentComponents=kaddressbook,kontact_kaddressbookplugin
 X-KDE-CfgDlgHierarchy=KAB
+X-KDE-Weight=200
 
 Name=Custom Pages
 Name[de]=Benutzerdefinierte Seiten

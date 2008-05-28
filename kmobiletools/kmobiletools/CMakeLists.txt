@@ -28,7 +28,7 @@ set_target_properties(kmobiletools_bin PROPERTIES OUTPUT_NAME kmobiletools)
 
 target_link_libraries(kmobiletools_bin ${KDE4_KPARTS_LIBS} kmobiletoolslib )
 
-install(TARGETS kmobiletools_bin DESTINATION ${BIN_INSTALL_DIR})
+install(TARGETS kmobiletools_bin ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### install files ###############

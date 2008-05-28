@@ -33,14 +33,14 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kstartupinfo.h>
-#include <kuniqueapplication.h>
+#include <libkdepim/pimapplication.h>
 #include <kwindowsystem.h>
 
 #include "kaddressbookmain.h"
 #include "kaddressbook_options.h"
 #include "kabcore.h"
 
-class KAddressBookApp : public KUniqueApplication {
+class KAddressBookApp : public KPIM::PimApplication {
   public:
     KAddressBookApp() : mMainWin( 0 ), mDefaultIsOpen( false ) {}
     ~KAddressBookApp() {}

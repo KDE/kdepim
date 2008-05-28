@@ -75,7 +75,7 @@ set_target_properties(kaddressbook_bin PROPERTIES OUTPUT_NAME kaddressbook)
 
 kdepim4_link_unique_libraries(kaddressbook_bin  kaddressbookprivate ${KDE4_KHTML_LIBS})
 
-install(TARGETS kaddressbook_bin  DESTINATION ${BIN_INSTALL_DIR} )
+install(TARGETS kaddressbook_bin  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 
 ########### next target ###############

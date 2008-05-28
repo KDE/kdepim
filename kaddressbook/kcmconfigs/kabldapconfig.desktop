@@ -8,6 +8,7 @@ X-KDE-Library=kcm_kabldapconfig
 X-KDE-ParentApp=kaddressbook
 X-KDE-ParentComponents=kaddressbook,kontact_kaddressbookplugin
 X-KDE-CfgDlgHierarchy=KAB
+X-KDE-Weight=300
 
 Name=LDAP Lookup
 Name[de]=LDAP-Nachschlagefunktion

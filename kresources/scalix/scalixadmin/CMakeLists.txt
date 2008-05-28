@@ -29,4 +29,4 @@ kde4_add_executable(scalixadmin ${scalixadmin_SRCS})
 TARGET_LINK_LIBRARIES(scalixadmin ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KLDAP_LIBS} kdepim )
 set_target_properties(scalixadmin PROPERTIES OUTPUT_NAME scalixadmin)
 
-install(TARGETS scalixadmin DESTINATION ${BIN_INSTALL_DIR} )
+install(TARGETS scalixadmin ${INSTALL_TARGETS_DEFAULT_ARGS} )

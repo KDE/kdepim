@@ -20,6 +20,7 @@
 */
 
 #include "uniqueapphandler.h"
+#include <qdbusabstractadaptor.h>
 #include "core.h"
 
 #include <kapplication.h>
@@ -40,7 +41,7 @@
  1b) type "kmail" -> it switches to kmail
  1c) type "kaddressbook" -> it switches to kaddressbook
  1d) type "kmail foo@kde.org" -> it opens a kmail composer, without switching
- 1e) type "knode" -> it switches to knode
+ 1e) type "knode" -> it switches to knode [unless configured to be external]
  1f) type "kaddressbook --new-contact" -> it opens a kaddressbook contact window
  1g) type "knode news://foobar/group" -> it pops up "can't resolve hostname"
 
@@ -69,7 +70,7 @@
  5d) type "knode" -> kontact is brought to front
 
  6) start "kontact --module summaryplugin"
- 6a) type "dcop kmail kmail newInstance" -> kontact switches to kmail (#103775)
+ 6a) type "qdbus org.kde.kmail /kmail_PimApplication newInstance '' ''" -> kontact switches to kmail (#103775)
  6b) type "kmail" -> kontact is brought to front
  6c) type "kontact" -> kontact is brought to front
  6d) type "kontact --module summaryplugin" -> kontact switches to summary
@@ -89,11 +90,14 @@ class UniqueAppHandler::Private
 UniqueAppHandler::UniqueAppHandler( Plugin *plugin )
  : d( new Private )
 {
-  kDebug() << " plugin->objectName().toLatin1() :" << plugin->objectName().toLatin1();
+  //kDebug() << "plugin->objectName():" << plugin->objectName();
 
   d->mPlugin = plugin;
-  QDBusConnection::sessionBus().registerService(
-    "org.kde." + plugin->objectName().toLatin1() );
+  QDBusConnection session = QDBusConnection::sessionBus();
+  const QString appName = plugin->objectName();
+  session.registerService("org.kde." + appName);
+  const QString objectName = QString('/') + appName + "_PimApplication";
+  session.registerObject(objectName, this, QDBusConnection::ExportAllSlots);
 }
 
 UniqueAppHandler::~UniqueAppHandler()
@@ -101,12 +105,30 @@ UniqueAppHandler::~UniqueAppHandler()
   delete d;
 }
 
-int UniqueAppHandler::newInstance()
+// DBUS call
+int UniqueAppHandler::newInstance(const QByteArray &asn_id, const QByteArray &args)
 {
-  QWidget *w = kapp->activeWindow();
-  if ( w ) {
-    w->show();
-    KWindowSystem::forceActiveWindow( w->winId() );
+  if (!asn_id.isEmpty())
+    kapp->setStartupId(asn_id);
+
+  KCmdLineArgs::reset(); // forget options defined by other "applications"
+  loadCommandLineOptions(); // implemented by plugin
+
+  // This bit is duplicated from KUniqueApplicationAdaptor::newInstance()
+  QDataStream ds(args);
+  KCmdLineArgs::loadAppArgs(ds);
+
+  return newInstance();
+}
+
+static QWidget* s_mainWidget = 0;
+
+// Plugin-specific newInstance implementation, called by above method
+int Kontact::UniqueAppHandler::newInstance()
+{
+  if ( s_mainWidget ) {
+    s_mainWidget->show();
+    KWindowSystem::forceActiveWindow( s_mainWidget->winId() );
     KStartupInfo::appStarted();
   }
 
@@ -120,60 +142,11 @@ Plugin *UniqueAppHandler::plugin() const
   return d->mPlugin;
 }
 
-#ifdef __GNUC__
-#warning Port to DBus!
-#endif
-/*bool UniqueAppHandler::process( const DCOPCString &fun, const QByteArray &data,
-                                DCOPCString& replyType, QByteArray &replyData )
+bool Kontact::UniqueAppHandler::load()
 {
-  if ( fun == "newInstance()" ) {
-    replyType = "int";
-
-    KCmdLineArgs::reset(); // forget options defined by other "applications"
-    loadCommandLineOptions(); // implemented by plugin
-
-    // This bit is duplicated from KUniqueApplication::processDelayed()
-    QByteArray tmp(data);
-	QDataStream ds( &tmp,QIODevice::ReadOnly );
-    ds.setVersion(QDataStream::Qt_3_1);
-    KCmdLineArgs::loadAppArgs( ds );
-    if ( !ds.atEnd() ) { // backwards compatibility
-      QByteArray asn_id;
-      ds >> asn_id;
-      kapp->setStartupId( asn_id );
-    }
-
-    QDataStream _replyStream( &replyData,QIODevice::WriteOnly );
-    _replyStream.setVersion(QDataStream::Qt_3_1);
-    _replyStream << newInstance( );
-  } else if ( fun == "load()" ) {
-    replyType = "bool";
-    (void)d->mPlugin->part(); // load the part without bringing it to front
-
-    QDataStream _replyStream( &replyData,QIODevice::WriteOnly );
-    _replyStream.setVersion(QDataStream::Qt_3_1);
-    _replyStream << true;
-  } else {
-    return DCOPObject::process( fun, data, replyType, replyData );
-  }
+  (void)d->mPlugin->part(); // load the part without bringing it to front
   return true;
 }
-
-DCOPCStringList UniqueAppHandler::interfaces()
-{
-  DCOPCStringList ifaces = DCOPObject::interfaces();
-  ifaces += "Kontact::UniqueAppHandler";
-  return ifaces;
-}
-
-DCOPCStringList UniqueAppHandler::functions()
-{
-  DCOPCStringList funcs = DCOPObject::functions();
-  funcs << "int newInstance()";
-  funcs << "bool load()";
-  return funcs;
-}
-*/
 
 //@cond PRIVATE
 class UniqueAppWatcher::Private
@@ -192,22 +165,21 @@ UniqueAppWatcher::UniqueAppWatcher( UniqueAppHandlerFactoryBase *factory, Plugin
   d->mPlugin = plugin;
 
   // The app is running standalone if 1) that name is known to D-Bus
-  QString serviceName = "org.kde." + plugin->objectName().toLatin1();
+  const QString serviceName = "org.kde." + plugin->objectName();
   d->mRunningStandalone =
     QDBusConnection::sessionBus().interface()->isServiceRegistered( serviceName );
-  kDebug() << " plugin->objectName() :" << plugin->objectName()
-           << " isServiceRegistered ? :" << d->mRunningStandalone;
 
   QString owner = QDBusConnection::sessionBus().interface()->serviceOwner( serviceName );
   if ( d->mRunningStandalone && ( owner == QDBusConnection::sessionBus().baseService() ) ) {
     d->mRunningStandalone = false;
   }
+  //kDebug() << " plugin->objectName()=" << plugin->objectName()
+  //         << " running standalone:" << d->mRunningStandalone;
 
   if ( d->mRunningStandalone ) {
-    //TODO port it
-    //kapp->dcopClient()->setNotifications( true );
-    //connect( kapp->dcopClient(), SIGNAL(applicationRemoved(const QByteArray&)),
-    //         this, SLOT(unregisteredFromDCOP(const QByteArray&)) );
+    QObject::connect(QDBusConnection::sessionBus().interface(),
+                     SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+                     this, SLOT(slotApplicationRemoved(QString,QString,QString)));
   } else {
     d->mFactory->createHandler( d->mPlugin );
   }
@@ -215,17 +187,8 @@ UniqueAppWatcher::UniqueAppWatcher( UniqueAppHandlerFactoryBase *factory, Plugin
 
 UniqueAppWatcher::~UniqueAppWatcher()
 {
+  delete d->mFactory;
   delete d;
-
-#ifdef __GNUC__
-#warning Port to DBus!
-#endif
-//  if ( d->mRunningStandalone )
-//    kapp->dcopClient()->setNotifications( false );
-
-  //TODO: deleting the mFactory here causes a crash. determine why, or if this
-  //is needed at all.
-  //delete d->mFactory;
 }
 
 bool UniqueAppWatcher::isRunningStandalone() const
@@ -233,31 +196,20 @@ bool UniqueAppWatcher::isRunningStandalone() const
   return d->mRunningStandalone;
 }
 
-void UniqueAppWatcher::unregisteredFromDCOP( const QByteArray &appId )
+void Kontact::UniqueAppWatcher::slotApplicationRemoved(const QString & name, const QString & oldOwner, const QString & newOwner)
 {
-  if ( appId == d->mPlugin->objectName() && d->mRunningStandalone ) {
-#ifdef __GNUC__
-#warning Port to DBus!
-#endif
-//    disconnect( kapp->dcopClient(), SIGNAL(applicationRemoved(const QByteArray&)),
-//                this, SLOT(unregisteredFromDCOP(const QByteArray&)) );
-    kDebug() << appId;
+  if (oldOwner.isEmpty() || !newOwner.isEmpty())
+    return;
+  const QString serviceName = "org.kde." + d->mPlugin->objectName();
+  if (name == serviceName && d->mRunningStandalone) {
     d->mFactory->createHandler( d->mPlugin );
-//    kapp->dcopClient()->setNotifications( false );
     d->mRunningStandalone = false;
   }
 }
 
-void Kontact::UniqueAppHandler::loadKontactCommandLineOptions()
+void Kontact::UniqueAppHandler::setMainWidget(QWidget* widget)
 {
-
-  KCmdLineOptions options;
-  options.add( "module <module>", ki18n( "Start with a specific Kontact module" ) );
-  options.add( "iconify", ki18n( "Start in iconified (minimized) mode" ) );
-  options.add( "list", ki18n( "List all possible modules and exit" ) );
-  KCmdLineArgs::addCmdLineOptions( options );
-  KUniqueApplication::addCmdLineOptions();
-  KCmdLineArgs::addStdCmdLineOptions();
+  s_mainWidget = widget;
 }
 
 #include "uniqueapphandler.moc"
