@@ -80,6 +80,7 @@ LDAPOptionsWidget::LDAPOptionsWidget( QWidget* parent,  const char* name )
   mHostListView->setFullWidth( true );
   mHostListView->addColumn( QString() );
   mHostListView->header()->hide();
+  QTimer::singleShot( 0, mHostListView, SLOT(triggerUpdate()) );
 
   connect( mHostListView, SIGNAL( selectionChanged( Q3ListViewItem* ) ),
            SLOT( slotSelectionChanged( Q3ListViewItem* ) ) );
