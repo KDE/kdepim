@@ -236,7 +236,7 @@ Contributors:
 </listitem>
 <listitem><para>&Preston.Brown; <email>pbrown@redhat.com</email></para>
 </listitem>
-<listitem><para>VCal and Todo Conduits by: Herwin Jan Steehouwer,
+<listitem><para>VCal and To-do Conduits by: Herwin Jan Steehouwer,
 Kenneth Albanowski, &Michael.Kropfberger;
 </para></listitem>
 <listitem><para>Popmail Conduit overhaul: Marko Gr&ouml;nroos
@@ -264,7 +264,7 @@ Documentation copyright 2004,2005 Carlos Leonhard Woelz
 <email>carloswoelz@imap-mail.com</email>
 </para>
 
-<!-- TRANS:CREDITS_FOR_TRANSLATORS -->
+<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
 &underFDL;
 &underGPL;
 </chapter>
