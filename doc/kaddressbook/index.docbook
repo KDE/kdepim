@@ -749,7 +749,7 @@ a dialog where you can select which contacts are to be exported.</para>
 
 <varlistentry>
 <term><guilabel>MS Exchange Personal Address Book (.PAB)</guilabel></term>
-<listitem><para>With this entry you can import your contacts from your Addressbook on a MS Exchange personal address book, which is used
+<listitem><para>With this entry you can import your contacts from your Address book on a MS Exchange personal address book, which is used
 by MS Outlook and MS Outlook Express to store their contact data.</para></listitem>
 </varlistentry>
 
