@@ -19,7 +19,7 @@
    <item>
     <widget class="QLabel" name="label" >
      <property name="text" >
-      <string comment="@info" >&lt;para>These are the results of the Kleopatra self-test suite. Details are available in tooltips.&lt;/para>&lt;para>Note that all but the first failure might be consecutive.&lt;/para></string>
+      <string comment="@info" >&lt;para>These are the results of the Kleopatra self-test suite. Details are available in tooltips.&lt;/para>&lt;para>Note that all but the first failure might be due to prior tests failing.&lt;/para></string>
      </property>
      <property name="wordWrap" >
       <bool>true</bool>
