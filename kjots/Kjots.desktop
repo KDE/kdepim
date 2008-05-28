@@ -1,17 +1,7 @@
 [Desktop Entry]
 X-DocPath=kjots/index.html
 Name=KJots
-Name[pl]=Notatki
-Name[sv]=Kjots
 GenericName=Note Taker
-GenericName[km]=កម្មវិធី​ទទួល​ចំណាំ
-GenericName[nds]=Notizenprogramm
-GenericName[pl]=Notatki
-GenericName[pt]=Bloco de Notas
-GenericName[pt_BR]=Tomador de Notas
-GenericName[sv]=Anteckningsblock
-GenericName[uk]=Записна книжка
-GenericName[zh_TW]=便條取用器
 Icon=kjots
 Exec=kjots -caption "%c"
 Type=Application

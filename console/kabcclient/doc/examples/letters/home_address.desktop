@@ -3,30 +3,7 @@
 
 [Misc]
 Name=Letter home/private address
-Name[ca]=Adreça postal particular/privada
 Name[de]=Postanschrift (privat)
-Name[el]=Διευθύνσεις οικιακής/προσωπικής αλληλογραφίας
-Name[es]=Dirección postal personal/privada
-Name[et]=Kirja kodune/era-aadress
-Name[fr]=Adresse postale personnelle
-Name[ga]=Seoladh baile/pearsanta
-Name[it]=Indirizzo postale di casa/privato
-Name[ja]=手紙の自宅/プライベート住所
-Name[km]=អាសយដ្ឋាន​សំបុត្រ​ផ្ទះ/ឯកជន
-Name[lv]=Vēstules privātā/mājas adrese
-Name[nb]=Brevadresse hjemme/privat
-Name[nds]=Postadress (privaat)
-Name[ne]=चिठ्ठी गृह/निजी ठेगाना
-Name[nl]=Postadres thuis/privé
-Name[pl]=Adres domowy/prywatny
-Name[pt]=Endereço privado/residencial da carta
-Name[pt_BR]=Endereço residencial/privativo da carta
-Name[sv]=Brev hem/privatadress
-Name[tr]=Özel/Ev mektup adresi
-Name[uk]=Домашня/особиста адреса для листування
-Name[x-test]=xxLetter home/private addressxx
-Name[zh_CN]=标识家庭/私人地址
-Name[zh_TW]=信件私人地址
 
 [General]
 # user defined delimiter

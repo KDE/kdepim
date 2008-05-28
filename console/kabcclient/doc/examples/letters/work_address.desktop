@@ -3,30 +3,7 @@
 
 [Misc]
 Name=Letter business/work address
-Name[ca]=Adreça postal negoci/treball
 Name[de]=Postanschrift (geschäftlich)
-Name[el]=Διευθύνσεις επιχείρησης/εργασίας αλληλογραφίας
-Name[es]=Dirección postal de negocios/del trabajo
-Name[et]=Kirja äri/tööaadress
-Name[fr]=Adresse postale professionnelle
-Name[ga]=Seoladh gnó/oibre
-Name[it]=Indirizzo postale di lavoro/affari
-Name[ja]=手紙の勤務先/ビジネス住所
-Name[km]=អាសយដ្ឋាន​សំបុត្រ​​កន្លែង​ធ្វើការ/ការងារ
-Name[lv]=Vēstules darījumu/darba adrese
-Name[nb]=Brevadresse firma/arbeid
-Name[nds]=Postadress (Arbeit)
-Name[ne]=चिठ्ठी व्यवसायिक/कार्य ठेगाना
-Name[nl]=Postadres werk
-Name[pl]=Adres biznesowy/do pracy
-Name[pt]=Endereço de trabalho/emprego da carta
-Name[pt_BR]=Endereço negócios/comercial da carta
-Name[sv]=Brev företag/arbetsadress
-Name[tr]=İş/Çalışma mektup adresi
-Name[uk]=Бізнесова/робоча адреса для листування
-Name[x-test]=xxLetter business/work addressxx
-Name[zh_CN]=标识商务/工作地址
-Name[zh_TW]=信件工作地址
 
 [General]
 # user defined delimiter

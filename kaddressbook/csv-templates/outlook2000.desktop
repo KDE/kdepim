@@ -6,11 +6,6 @@ QuoteType=0
 
 [Misc]
 Name=Outlook 2000
-Name[eo]=Redmondo 2000
-Name[fa]=اوت لوک ۲۰۰۰
-Name[ne]=आउटलुक २०००
-Name[ta]=அவுட்லுக் 2000
-Name[x-test]=xxOutlook 2000xx
 
 [csv column map]
 0=5
