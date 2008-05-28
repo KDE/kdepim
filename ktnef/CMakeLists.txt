@@ -26,7 +26,7 @@ set_target_properties(ktnef_bin PROPERTIES OUTPUT_NAME ktnefviewer)
 
 target_link_libraries(ktnef_bin ${KDE4_KIO_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_KTNEF_LIBS} )
 
-install(TARGETS ktnef_bin  DESTINATION ${BIN_INSTALL_DIR} )
+install(TARGETS ktnef_bin  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
 
 ########### install files ###############
