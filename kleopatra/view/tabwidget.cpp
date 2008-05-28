@@ -55,7 +55,6 @@
 
 #include <QGridLayout>
 #include <QTimer>
-#include <QSortFilterProxyModel>
 #include <QTreeView>
 #include <QToolButton>
 #include <QAction>
