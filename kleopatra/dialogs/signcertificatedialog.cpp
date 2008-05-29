@@ -55,7 +55,7 @@ using namespace boost;
 using namespace GpgME;
 using namespace Kleo;
 using namespace Kleo::Dialogs;
-using namespace Kleo::Dialogs::SignCertificateDialogPrivate;
+using namespace Kleo::Dialogs::CertifyCertificateDialogPrivate;
 
 
 void UserIDModel::setCertificateToCertify( const Key & key ) {
@@ -105,7 +105,7 @@ Key SecretKeysModel::keyFromIndex( const QModelIndex & idx ) const {
 }
 
 SelectUserIDsPage::SelectUserIDsPage( QWidget * parent ) : QWizardPage( parent ), m_userIDModel() {
-    setTitle( i18n( "Please select the user IDs you wish to sign:" ) );
+    setTitle( i18n( "Please select the user IDs you wish to certify:" ) );
     QVBoxLayout * const layout = new QVBoxLayout ( this );
     m_listView = new QListView;
     m_listView->setModel( &m_userIDModel );
@@ -165,7 +165,7 @@ void OptionsPage::setCertificatesWithSecretKeys( const std::vector<Key> & keys )
     m_model.setSecretKeys( keys );
     if ( keys.size() == 1 ) {
         m_ui.stackedWidget->setCurrentWidget( m_ui.singleKeyPage );
-        m_ui.singleKeyLabel->setText( i18n( "Signing will be performed using key %1.", Formatting::prettyNameAndEMail( keys[0] ) ) );
+        m_ui.singleKeyLabel->setText( i18n( "Certification will be performed using certificate %1.", Formatting::prettyNameAndEMail( keys[0] ) ) );
     } else {
         m_ui.stackedWidget->setCurrentWidget( m_ui.multipleKeysPage );
     }
@@ -211,12 +211,12 @@ void SummaryPage::setError( const Error & err ) {
 
 }
 
-class SignCertificateDialog::Private {
-    friend class ::Kleo::Dialogs::SignCertificateDialog;
-    SignCertificateDialog * const q;
+class CertifyCertificateDialog::Private {
+    friend class ::Kleo::Dialogs::CertifyCertificateDialog;
+    CertifyCertificateDialog * const q;
 
 public:
-    explicit Private( SignCertificateDialog * qq )
+    explicit Private( CertifyCertificateDialog * qq )
         : q( qq ),
         summaryPageId( 0 ),
         selectUserIDsPage( 0 ),
@@ -252,43 +252,43 @@ public:
 
 
 
-SignCertificateDialog::SignCertificateDialog( QWidget * p, Qt::WindowFlags f )
+CertifyCertificateDialog::CertifyCertificateDialog( QWidget * p, Qt::WindowFlags f )
     : QWizard( p, f ), d( new Private( this ) )
 {
 }
 
-SignCertificateDialog::~SignCertificateDialog() {}
+CertifyCertificateDialog::~CertifyCertificateDialog() {}
 
-void SignCertificateDialog::setCertificateToCertify( const Key & key ) {
+void CertifyCertificateDialog::setCertificateToCertify( const Key & key ) {
     d->selectUserIDsPage->setCertificateToCertify( key );
 }
 
-void SignCertificateDialog::setCertificatesWithSecretKeys( const std::vector<Key> & keys ) {
+void CertifyCertificateDialog::setCertificatesWithSecretKeys( const std::vector<Key> & keys ) {
     d->optionsPage->setCertificatesWithSecretKeys( keys );
 }
 
 
-void SignCertificateDialog::setSigningOption( SignKeyJob::SigningOption option ) {
+void CertifyCertificateDialog::setSigningOption( SignKeyJob::SigningOption option ) {
     d->optionsPage->setCertificationOption( option );
 }
 
-SignKeyJob::SigningOption SignCertificateDialog::signingOption() const {
+SignKeyJob::SigningOption CertifyCertificateDialog::signingOption() const {
     return d->optionsPage->selectedCertificationOption();
 }
 
-Key SignCertificateDialog::selectedSecretKey() const {
+Key CertifyCertificateDialog::selectedSecretKey() const {
     return d->optionsPage->selectedSecretKey();
 }
 
-bool SignCertificateDialog::sendToServer() const {
+bool CertifyCertificateDialog::sendToServer() const {
     return d->optionsPage->sendToServer();
 }
 
-void SignCertificateDialog::connectJob( SignKeyJob * job ) {
+void CertifyCertificateDialog::connectJob( SignKeyJob * job ) {
     connect( job, SIGNAL(result(GpgME::Error)), this, SLOT(certificationResult(GpgME::Error)) );
 }
 
-void SignCertificateDialog::setError( const Error & error ) {
+void CertifyCertificateDialog::setError( const Error & error ) {
     d->setOperationCompleted();
     d->summaryPage->setError( error );
     d->ensureSummaryPageVisible();
@@ -296,12 +296,12 @@ void SignCertificateDialog::setError( const Error & error ) {
         close();
 }
 
-void SignCertificateDialog::Private::certificationResult( const Error & err ) {
+void CertifyCertificateDialog::Private::certificationResult( const Error & err ) {
     setOperationCompleted();
     ensureSummaryPageVisible();
 }
 
-void SignCertificateDialog::Private::ensureSummaryPageVisible() {
+void CertifyCertificateDialog::Private::ensureSummaryPageVisible() {
     while ( q->currentId() != summaryPageId )
         q->next();
 }

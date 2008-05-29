@@ -42,15 +42,15 @@ namespace GpgME {
 namespace Kleo {
 namespace Commands {
 
-    class SignCertificateCommand : public Command {
+    class CertifyCertificateCommand : public Command {
         Q_OBJECT
     public:
-        explicit SignCertificateCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit SignCertificateCommand( KeyListController * parent );
-        explicit SignCertificateCommand( const GpgME::Key & key );
-        explicit SignCertificateCommand( const GpgME::UserID & uid );
-        explicit SignCertificateCommand( const std::vector<GpgME::UserID> & uids );
-        ~SignCertificateCommand();
+        explicit CertifyCertificateCommand( QAbstractItemView * view, KeyListController * parent );
+        explicit CertifyCertificateCommand( KeyListController * parent );
+        explicit CertifyCertificateCommand( const GpgME::Key & key );
+        explicit CertifyCertificateCommand( const GpgME::UserID & uid );
+        explicit CertifyCertificateCommand( const std::vector<GpgME::UserID> & uids );
+        ~CertifyCertificateCommand();
 
         /* reimp */ static Restrictions restrictions() { return OnlyOneKey|MustBeOpenPGP; }
 

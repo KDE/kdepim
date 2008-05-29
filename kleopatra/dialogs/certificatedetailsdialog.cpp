@@ -153,7 +153,7 @@ private:
         const std::vector<UserID> uids = selectedUserIDs();
         if ( uids.empty() )
             return;
-        startCommand<SignCertificateCommand>( signCertificateCommand, uids, SLOT(slotSignCertificateCommandFinished()) );
+        startCommand<CertifyCertificateCommand>( signCertificateCommand, uids, SLOT(slotSignCertificateCommandFinished()) );
     }
     void slotSignCertificateCommandFinished() {
         commandFinished( signCertificateCommand );

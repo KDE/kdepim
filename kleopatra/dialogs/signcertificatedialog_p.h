@@ -47,7 +47,7 @@ class QListView;
 
 namespace Kleo {
     namespace Dialogs {
-        namespace SignCertificateDialogPrivate {
+        namespace CertifyCertificateDialogPrivate {
             class UserIDModel : public QStandardItemModel {
                 Q_OBJECT
             public:

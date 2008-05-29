@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>Kleo::Dialogs::SignCertificateDialogPrivate::CertificationOptionsWidget</class>
- <widget class="QWidget" name="Kleo::Dialogs::SignCertificateDialogPrivate::CertificationOptionsWidget" >
+ <class>Kleo::Dialogs::CertifyCertificateDialogPrivate::CertificationOptionsWidget</class>
+ <widget class="QWidget" name="Kleo::Dialogs::CertifyCertificateDialogPrivate::CertificationOptionsWidget" >
   <property name="geometry" >
    <rect>
     <x>0</x>
@@ -16,7 +16,10 @@
    <item row="0" column="0" colspan="3" >
     <widget class="QLabel" name="label_6" >
      <property name="text" >
-      <string>&lt;b>Step 3: &lt;/b>Choose how to sign</string>
+      <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
+p, li { white-space: pre-wrap; }
+&lt;/style>&lt;/head>&lt;body style=" font-family:'Lucida Grande'; font-size:13pt; font-weight:400; font-style:normal;">
+&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">&lt;span style=" font-weight:600;">Step 3: &lt;/span>Choose how to certify&lt;/p>&lt;/body>&lt;/html></string>
      </property>
     </widget>
    </item>
@@ -44,7 +47,7 @@
        <item>
         <widget class="QLabel" name="singleKeyLabel" >
          <property name="text" >
-          <string>Signing will be performed using key %1.</string>
+          <string>Certification will be performed using certificate %1.</string>
          </property>
          <property name="alignment" >
           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
@@ -60,7 +63,7 @@
      <item>
       <widget class="QRadioButton" name="localSignatureRB" >
        <property name="text" >
-        <string>Sign only for myself</string>
+        <string>Certify only for myself</string>
        </property>
        <property name="checked" >
         <bool>true</bool>
@@ -70,7 +73,7 @@
      <item>
       <widget class="QRadioButton" name="exportableSignatureRB" >
        <property name="text" >
-        <string>Sign for everyone to see</string>
+        <string>Certify for everyone to see</string>
        </property>
       </widget>
      </item>
@@ -98,7 +101,7 @@
           <bool>false</bool>
          </property>
          <property name="text" >
-          <string>Send key to server afterwards</string>
+          <string>Send certified certificate to server afterwards</string>
          </property>
          <property name="checked" >
           <bool>true</bool>

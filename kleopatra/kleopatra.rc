@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui >
-<kpartgui name="kleopatra" version="428" >
+<kpartgui name="kleopatra" version="429" >
 <MenuBar>
 	<Menu name="file">
 		<text>&amp;File</text>
@@ -33,7 +33,7 @@
 	<Menu name="certMenu">
 		<text>&amp;Certificates</text>
 		<Action name="certificates_delete"/>
-                <Action name="certificates_sign_certificate"/>
+                <Action name="certificates_certify_certificate"/>
                 <Action name="certificates_change_owner_trust"/>
                 <Action name="certificates_change_expiry"/>
                 <Action name="certificates_change_passphrase"/>

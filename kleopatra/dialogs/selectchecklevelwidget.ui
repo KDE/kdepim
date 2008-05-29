@@ -1,6 +1,6 @@
 <ui version="4.0" >
- <class>Kleo::Dialogs::SignCertificateDialogPrivate::SelectCheckLevelWidget</class>
- <widget class="QWidget" name="Kleo::Dialogs::SignCertificateDialogPrivate::SelectCheckLevelWidget" >
+ <class>Kleo::Dialogs::CertifyCertificateDialogPrivate::SelectCheckLevelWidget</class>
+ <widget class="QWidget" name="Kleo::Dialogs::CertifyCertificateDialogPrivate::SelectCheckLevelWidget" >
   <property name="geometry" >
    <rect>
     <x>0</x>

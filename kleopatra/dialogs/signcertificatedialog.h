@@ -52,11 +52,11 @@ namespace Kleo {
 
 namespace Dialogs {
 
-    class SignCertificateDialog : public QWizard {
+    class CertifyCertificateDialog : public QWizard {
         Q_OBJECT
     public:
-        explicit SignCertificateDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
-        ~SignCertificateDialog();
+        explicit CertifyCertificateDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
+        ~CertifyCertificateDialog();
 
         void setSigningOption(  Kleo::SignKeyJob::SigningOption option );
         Kleo::SignKeyJob::SigningOption signingOption() const;
