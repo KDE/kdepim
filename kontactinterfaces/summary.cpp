@@ -23,7 +23,6 @@
 #include "summary.h"
 
 #include <QImage>
-#include <khbox.h>
 #include <QFont>
 #include <QLabel>
 #include <QPainter>
@@ -32,8 +31,10 @@
 #include <QDragEnterEvent>
 #include <QDropEvent>
 
-#include <kiconloader.h>
-#include <kdialog.h>
+#include <KGlobalSettings>
+#include <KHBox>
+#include <KIconLoader>
+#include <KDialog>
 
 using namespace Kontact;
 
@@ -86,7 +87,7 @@ QWidget *Summary::createHeader( QWidget *parent, const QString &iconname, const 
   hbox->setForegroundRole( QPalette::WindowText );
   hbox->setAutoFillBackground( true );
 
-  QFont boldFont;
+  QFont boldFont = KGlobalSettings::generalFont();
   boldFont.setBold( true );
   boldFont.setPointSize( boldFont.pointSize() + 2 );
 
