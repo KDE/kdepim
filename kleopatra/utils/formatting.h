@@ -47,11 +47,17 @@ namespace Formatting {
 
     QString protocolDisplayName( GpgME::Protocol prot );
 
+    QString prettyNameAndEMail( int proto, const char * id, const char * name, const char * email, const char * comment );
+    QString prettyNameAndEMail( const GpgME::Key & key );
+    QString prettyNameAndEMail( const GpgME::UserID & key );
+
+    QString prettyUserID( const GpgME::UserID & uid );
+    QString prettyKeyID( const char * id );
+
     QString prettyName( int proto, const char * id, const char * name, const char * comment );
     QString prettyName( const GpgME::Key & key );
     QString prettyName( const GpgME::UserID & uid );
     QString prettyName( const GpgME::UserID::Signature & sig );
-
 
     QString prettyEMail( const char * email, const char * id );
     QString prettyEMail( const GpgME::Key & key );
@@ -73,7 +79,6 @@ namespace Formatting {
     };
 
     QString toolTip( const GpgME::Key & key, int opts );
-
 
     QString expirationDateString( const GpgME::Key & key );
     QString expirationDateString( const GpgME::Subkey & subkey );

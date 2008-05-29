@@ -220,9 +220,11 @@ endif ( KLEO_MODEL_TEST )
 
 kde4_add_ui_files( _kleopatra_SRCS
   certificatewizard.ui
+  dialogs/certificationoptionswidget.ui
   dialogs/expirydialog.ui
   dialogs/lookupcertificatesdialog.ui
   dialogs/ownertrustdialog.ui
+  dialogs/selectchecklevelwidget.ui
   dialogs/selftestdialog.ui
   dialogs/signcertificatedialog.ui
   dialogs/exportsecretkeydialog.ui

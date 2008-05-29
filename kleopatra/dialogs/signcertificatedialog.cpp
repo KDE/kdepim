@@ -32,60 +32,279 @@
 
 #include <config-kleopatra.h>
 
+#include "signcertificatedialog.h"
+#include "signcertificatedialog_p.h"
+
 #include <utils/formatting.h>
 
-#include "signcertificatedialog.h"
-
-#include "ui_signcertificatedialog.h"
-
 #include <KDebug>
+#include <KLocalizedString>
+
+#include <QStandardItem>
+#include <QStandardItemModel>
+#include <QListView>
+#include <QListWidgetItem>
+#include <QVBoxLayout>
+#include <QWizardPage>
+
+#include <boost/bind.hpp>
 
 #include <cassert>
 
+using namespace boost;
 using namespace GpgME;
 using namespace Kleo;
 using namespace Kleo::Dialogs;
+using namespace Kleo::Dialogs::SignCertificateDialogPrivate;
 
+
+void UserIDModel::setCertificateToCertify( const Key & key ) {
+    m_key = key;
+    clear();
+    const std::vector<UserID> ids = key.userIDs();
+    for ( unsigned int i = 0; i < ids.size(); ++i ) {
+        QStandardItem * const item = new QStandardItem;
+        item->setText( Formatting::prettyUserID( key.userID( i ) ) );
+        item->setData( i, UserIDIndex );
+        item->setCheckable( true );
+        item->setEditable( false );
+        appendRow( item );
+    }
+}
+
+std::vector<UserID> UserIDModel::checkedUserIDs() const {
+    std::vector<UserID> ids;
+    for ( int i = 0; i < rowCount(); ++i )
+        if ( item( i )->checkState() == Qt::Checked )
+            ids.push_back( m_key.userID( item( i )->data( UserIDIndex ).toUInt() ) );
+    return ids;
+}
+
+void SecretKeysModel::setSecretKeys( const std::vector<Key> & keys ) {
+    clear();
+    m_secretKeys = keys;
+    for ( unsigned int i = 0; i < m_secretKeys.size(); ++i ) {
+        const Key key = m_secretKeys[i];
+        QStandardItem * const item = new QStandardItem;
+        item->setText( Formatting::prettyNameAndEMail( key ) );
+        item->setData( i, IndexRole );
+        item->setEditable( false );
+        appendRow( item );
+    }
+}
+
+Key SecretKeysModel::keyFromItem( const QStandardItem * item ) const {
+    assert( item );
+    const unsigned int idx = item->data( IndexRole ).toUInt();
+    assert( idx < m_secretKeys.size() );
+    return m_secretKeys[idx];
+}
+
+Key SecretKeysModel::keyFromIndex( const QModelIndex & idx ) const {
+    return keyFromItem( itemFromIndex( idx ) );
+}
+
+SelectUserIDsPage::SelectUserIDsPage( QWidget * parent ) : QWizardPage( parent ), m_userIDModel() {
+    setTitle( i18n( "Please select the user IDs you wish to sign:" ) );
+    QVBoxLayout * const layout = new QVBoxLayout ( this );
+    m_listView = new QListView;
+    m_listView->setModel( &m_userIDModel );
+    connect( &m_userIDModel, SIGNAL(itemChanged(QStandardItem*)), this, SIGNAL(completeChanged()) );
+    layout->addWidget( m_listView );
+}
+
+bool SelectUserIDsPage::isComplete() const {
+    return !selectedUserIDs().empty();
+}
+
+std::vector<UserID> SelectUserIDsPage::selectedUserIDs() const {
+    return m_userIDModel.checkedUserIDs();
+}
+
+void SelectUserIDsPage::setCertificateToCertify( const Key & key ) {
+    m_userIDModel.setCertificateToCertify( key );
+
+}
+
+SelectCheckLevelPage::SelectCheckLevelPage( QWidget * parent ) : QWizardPage( parent ), m_ui() {
+    m_ui.setupUi( this );
+}
+
+unsigned int SelectCheckLevelPage::checkLevel() const {
+    if ( m_ui.checkLevelNotCheckedRB->isChecked() )
+        return 0;
+    if ( m_ui.checkLevelCasualRB->isChecked() )
+        return 1;
+    if ( m_ui.checkLevelThoroughlyRB->isChecked() )
+        return 2;
+    assert( !"No check level radiobutton checked" );
+    return 0;
+}
+
+OptionsPage::OptionsPage( QWidget * parent ) : QWizardPage( parent ), m_ui() {
+    m_ui.setupUi( this );
+    m_ui.keyListView->setModel( &m_model );
+    connect( m_ui.keyListView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)), this, SIGNAL(completeChanged()) );
+    setCommitPage( true );
+    setButtonText( QWizard::CommitButton, i18n( "Certify" ) );
+}
+
+void OptionsPage::OptionsPage::setCertificationOption( SignKeyJob::SigningOption opt ) {
+    if ( opt == SignKeyJob::LocalSignature )
+        m_ui.localSignatureRB->setChecked( true );
+    else
+        m_ui.exportableSignatureRB->setChecked( true );
+}
+
+SignKeyJob::SigningOption OptionsPage::selectedCertificationOption() const {
+    return m_ui.exportableSignatureRB->isChecked() ? SignKeyJob::ExportableSignature : SignKeyJob::LocalSignature;
+}
+
+void OptionsPage::setCertificatesWithSecretKeys( const std::vector<Key> & keys ) {
+    assert( !keys.empty() );
+    m_model.setSecretKeys( keys );
+    if ( keys.size() == 1 ) {
+        m_ui.stackedWidget->setCurrentWidget( m_ui.singleKeyPage );
+        m_ui.singleKeyLabel->setText( i18n( "Signing will be performed using key %1.", Formatting::prettyNameAndEMail( keys[0] ) ) );
+    } else {
+        m_ui.stackedWidget->setCurrentWidget( m_ui.multipleKeysPage );
+    }
+    emit completeChanged();
+}
+
+Key OptionsPage::selectedSecretKey() const {
+    const QModelIndexList idxs = m_ui.keyListView->selectionModel()->selectedIndexes();
+    assert( idxs.size() <= 1 );
+    return idxs.isEmpty() ? Key() : m_model.keyFromIndex( idxs[0] );
+}
+
+bool OptionsPage::sendToServer() const {
+    return m_ui.sendToServerCB->isChecked();
+}
+
+bool OptionsPage::validatePage() {
+    emit nextClicked();
+    return true;
+}
+
+bool OptionsPage::isComplete() const {
+    return !selectedSecretKey().isNull();
+}
+
+SummaryPage::SummaryPage( QWidget * parent ) : QWizardPage( parent ), m_complete( false ) {
+    QVBoxLayout * const layout = new QVBoxLayout( this );
+    m_resultLabel = new QLabel;
+    layout->addWidget( m_resultLabel );
+}
+
+bool SummaryPage::isComplete() const {
+    return m_complete;
+}
+
+void SummaryPage::setComplete( bool complete ) {
+    if ( complete == m_complete )
+        return;
+    m_complete = complete;
+    emit completeChanged();
+}
+void SummaryPage::setError( const Error & err ) {
+
+}
 
 class SignCertificateDialog::Private {
     friend class ::Kleo::Dialogs::SignCertificateDialog;
     SignCertificateDialog * const q;
+
 public:
     explicit Private( SignCertificateDialog * qq )
         : q( qq ),
-          ui( qq )
+        summaryPageId( 0 ),
+        selectUserIDsPage( 0 ),
+        selectCheckLevelPage( 0 ),
+        optionsPage( 0 ),
+        summaryPage( 0 )
     {
+        selectUserIDsPage = new SelectUserIDsPage( q );
+        q->addPage( selectUserIDsPage );
+        selectCheckLevelPage = new SelectCheckLevelPage( q );
+        q->addPage( selectCheckLevelPage );
+        optionsPage = new OptionsPage( q );
+        q->addPage( optionsPage );
+        summaryPage = new SummaryPage( q );
+        summaryPageId = q->addPage( summaryPage );
+        connect( optionsPage, SIGNAL(nextClicked()), q, SIGNAL(certificationPrepared()) );
     }
-    
-private:
 
-    struct UI : public Ui::SignCertificateDialog {
-        explicit UI( Dialogs::SignCertificateDialog * qq )
-            : Ui::SignCertificateDialog()
-        {
-            setupUi( qq );
-        }
-    } ui;
+    void ensureSummaryPageVisible();
+
+    void certificationResult( const Error & error );
+
+    void setOperationCompleted() {
+        summaryPage->setComplete( true );
+    }
+
+    int summaryPageId;
+    SelectUserIDsPage * selectUserIDsPage;
+    SelectCheckLevelPage * selectCheckLevelPage;
+    OptionsPage * optionsPage;
+    SummaryPage * summaryPage;
 };
 
-SignCertificateDialog::SignCertificateDialog( QWidget * p, Qt::WindowFlags f )
-    : QDialog( p, f ), d( new Private( this ) )
-{
 
+
+SignCertificateDialog::SignCertificateDialog( QWidget * p, Qt::WindowFlags f )
+    : QWizard( p, f ), d( new Private( this ) )
+{
 }
 
 SignCertificateDialog::~SignCertificateDialog() {}
 
+void SignCertificateDialog::setCertificateToCertify( const Key & key ) {
+    d->selectUserIDsPage->setCertificateToCertify( key );
+}
+
+void SignCertificateDialog::setCertificatesWithSecretKeys( const std::vector<Key> & keys ) {
+    d->optionsPage->setCertificatesWithSecretKeys( keys );
+}
+
+
 void SignCertificateDialog::setSigningOption( SignKeyJob::SigningOption option ) {
-    if ( option == SignKeyJob::LocalSignature )
-        d->ui.localRB->setChecked( true );
-    else
-        d->ui.exportableRB->setChecked( true );
+    d->optionsPage->setCertificationOption( option );
 }
 
 SignKeyJob::SigningOption SignCertificateDialog::signingOption() const {
-    return d->ui.localRB->isChecked() ? SignKeyJob::LocalSignature : SignKeyJob::ExportableSignature;
+    return d->optionsPage->selectedCertificationOption();
 }
 
+Key SignCertificateDialog::selectedSecretKey() const {
+    return d->optionsPage->selectedSecretKey();
+}
+
+bool SignCertificateDialog::sendToServer() const {
+    return d->optionsPage->sendToServer();
+}
+
+void SignCertificateDialog::connectJob( SignKeyJob * job ) {
+    connect( job, SIGNAL(result(GpgME::Error)), this, SLOT(certificationResult(GpgME::Error)) );
+}
+
+void SignCertificateDialog::setError( const Error & error ) {
+    d->setOperationCompleted();
+    d->summaryPage->setError( error );
+    d->ensureSummaryPageVisible();
+    if ( error.isCanceled() )
+        close();
+}
+
+void SignCertificateDialog::Private::certificationResult( const Error & err ) {
+    setOperationCompleted();
+    ensureSummaryPageVisible();
+}
+
+void SignCertificateDialog::Private::ensureSummaryPageVisible() {
+    while ( q->currentId() != summaryPageId )
+        q->next();
+}
 
 #include "moc_signcertificatedialog.cpp"
+#include "moc_signcertificatedialog_p.cpp"

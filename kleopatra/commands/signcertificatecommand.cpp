@@ -15,8 +15,7 @@
     General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+    along with this program; if not, write to the Free Softwarls   Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
     In addition, as a special exception, the copyright holders give
     permission to link the code of this program with any edition of
@@ -38,6 +37,8 @@
 
 #include <dialogs/signcertificatedialog.h>
 
+#include <models/keycache.h>
+
 #include <utils/formatting.h>
 
 #include <kleo/cryptobackendfactory.h>
@@ -49,6 +50,8 @@
 #include <KLocale>
 #include <KMessageBox>
 #include <kdebug.h>
+
+#include <boost/bind.hpp>
 
 #include <cassert>
 
@@ -67,9 +70,9 @@ public:
     void init();
 
 private:
-    void slotDialogAccepted();
     void slotDialogRejected();
     void slotResult( const Error & err );
+    void slotCertificationPrepared();
 
 private:
     void ensureDialogCreated();
@@ -170,6 +173,18 @@ void SignCertificateCommand::doStart() {
         return;
     }
 
+    std::vector<Key> secKeys = KeyCache::instance()->secretKeys();
+    std::vector<Key>::iterator it = std::remove_if( secKeys.begin(), secKeys.end(), !bind( &Key::canCertify, _1 ) );
+    it = std::remove_if( it, secKeys.end(), bind( &Key::protocol, _1 ) != OpenPGP );
+    secKeys.erase( it );
+
+    if ( secKeys.empty() ) {
+        KMessageBox::error( d->view(),
+                            i18n( "To certify other certificates, you first need to create an OpenPGP certificate for yourself. Choose <interface>File->New Certificate...</interface> to create one." ),
+                            i18n( "Certification Not Possible" ) );
+        d->finished();
+        return;
+    }
     const Key & key = keys.front();
 
     Q_FOREACH( const UserID & uid, d->uids )
@@ -183,21 +198,9 @@ void SignCertificateCommand::doStart() {
     //d->dialog->setKey( key );
     //d->dialog->setUserIDs( uids );
     assert( d->dialog );
+    d->dialog->setCertificateToCertify( d->key() );
+    d->dialog->setCertificatesWithSecretKeys( secKeys );
     d->dialog->show();
-}
-
-void SignCertificateCommand::Private::slotDialogAccepted() {
-    assert( dialog );
-
-    const SignKeyJob::SigningOption opt = dialog->signingOption();
-
-    createJob();
-    assert( job );
-
-    if ( const Error err = job->start( key(), std::vector<UserID>(), Key(), 0u, opt ) ) {
-        showErrorDialog( err );
-        finished();
-    }
 }
 
 void SignCertificateCommand::Private::slotDialogRejected() {
@@ -206,13 +209,32 @@ void SignCertificateCommand::Private::slotDialogRejected() {
 }
 
 void SignCertificateCommand::Private::slotResult( const Error & err ) {
+#if 0
     if ( err.isCanceled() )
         ;
     else if ( err )
         showErrorDialog( err );
     else
         showSuccessDialog();
+#endif
     finished();
+}
+
+void SignCertificateCommand::Private::slotCertificationPrepared() {
+    assert( dialog );
+
+    const SignKeyJob::SigningOption opt = dialog->signingOption();
+
+    createJob();
+    assert( job );
+    dialog->connectJob( job );
+
+#if 0
+    if ( const Error err = job->start( key(), std::vector<unsigned int>(), Key(), 0u, opt ) ) {
+        dialog->setError( err );
+        finished();
+    }
+#endif
 }
 
 void SignCertificateCommand::doCancel() {
@@ -228,13 +250,14 @@ void SignCertificateCommand::Private::ensureDialogCreated() {
     dialog = new SignCertificateDialog( view() );
     dialog->setAttribute( Qt::WA_DeleteOnClose );
 
-    connect( dialog, SIGNAL(accepted()), q, SLOT(slotDialogAccepted()) );
     connect( dialog, SIGNAL(rejected()), q, SLOT(slotDialogRejected()) );
+    connect( dialog, SIGNAL(certificationPrepared()), q, SLOT(slotCertificationPrepared()) );
 }
 
 void SignCertificateCommand::Private::createJob() {
     assert( !job );
 
+    assert( key().protocol() == OpenPGP );
     const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( key().protocol() );
     if ( !backend )
         return;

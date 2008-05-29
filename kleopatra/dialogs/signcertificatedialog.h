@@ -35,16 +35,24 @@
 
 #include <QDialog>
 
-#include <utils/pimpl_ptr.h>
+#include <QWizard>
 
 #include <kleo/signkeyjob.h>
 
 #include <gpgme++/key.h>
 
+#include <utils/pimpl_ptr.h>
+
+namespace GpgME {
+    class Error;
+}
+
 namespace Kleo {
+    class SignKeyJob;
+
 namespace Dialogs {
 
-    class SignCertificateDialog : public QDialog {
+    class SignCertificateDialog : public QWizard {
         Q_OBJECT
     public:
         explicit SignCertificateDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
@@ -52,10 +60,22 @@ namespace Dialogs {
 
         void setSigningOption(  Kleo::SignKeyJob::SigningOption option );
         Kleo::SignKeyJob::SigningOption signingOption() const;
+        std::vector<GpgME::UserID> selectedUserIDs() const;
+        GpgME::Key selectedSecretKey() const;
+        bool sendToServer() const;
+
+        void setCertificateToCertify( const GpgME::Key & key );
+        void setCertificatesWithSecretKeys( const std::vector<GpgME::Key> & keys );
+        void connectJob( Kleo::SignKeyJob * job );
+        void setError( const GpgME::Error & error );
+
+    Q_SIGNALS:
+        void certificationPrepared();
 
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
+        Q_PRIVATE_SLOT( d, void certificationResult(GpgME::Error) )
     };
 
 }

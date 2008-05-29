@@ -80,6 +80,58 @@ QString Formatting::prettyName( int proto, const char * id, const char * name_, 
     return QString();
 }
 
+QString Formatting::prettyNameAndEMail( int proto, const char * id, const char * name_, const char * email_, const char * comment_ ) {
+
+    if ( proto == OpenPGP ) {
+        const QString name = QString::fromUtf8( name_ ).trimmed();
+        const QString email = QString::fromUtf8( email_ ).trimmed();
+        const QString comment = QString::fromUtf8( comment_ ).trimmed();
+        if ( name.isEmpty() )
+            if ( email.isEmpty() )
+                return QString();
+            else if ( comment.isEmpty() )
+                return QString::fromLatin1( "<%1>" ).arg( email );
+            else
+                return QString::fromLatin1( "<%1> (%2)" ).arg( email, comment );
+        if ( email.isEmpty() )
+            if ( comment.isEmpty() )
+                return name;
+            else
+                return QString::fromLatin1( "%1 (%2)" ).arg( name, comment );
+        if ( comment.isEmpty() )
+            return QString::fromLatin1( "%1 <%2>" ).arg( name, email );
+        else
+            return QString::fromLatin1( "%1 <%2> (%3)" ).arg( name, email, comment );
+    }
+
+    if ( proto == CMS ) {
+        const DN subject( id );
+        const QString cn = subject["CN"].trimmed();
+        if ( cn.isEmpty() )
+            return subject.prettyDN();
+        return cn;
+    }
+    return QString();
+}
+
+QString Formatting::prettyUserID( const UserID & uid ) {
+    return prettyNameAndEMail( uid );
+}
+
+QString Formatting::prettyKeyID( const char * id ) {
+    if ( !id )
+        return QString();
+    return "0x" + QString::fromLatin1( id ).toUpper();
+}
+
+QString Formatting::prettyNameAndEMail( const UserID & uid ) {
+    return prettyNameAndEMail( uid.parent().protocol(), uid.id(), uid.name(), uid.email(), uid.comment() );
+}
+
+QString Formatting::prettyNameAndEMail( const Key & key ) {
+    return prettyNameAndEMail( key.userID( 0 ) );
+}
+
 QString Formatting::prettyName( const Key & key ) {
     return prettyName( key.userID( 0 ) );
 }
@@ -185,7 +237,7 @@ QString Formatting::toolTip( const Key & key, int flags ) {
     const Subkey subkey = key.subkey( 0 );
 
     QString result;
-    if ( flags & Validity ) 
+    if ( flags & Validity )
         if ( key.protocol() == OpenPGP || ( key.keyListMode() & Validate ) )
             if ( key.isRevoked() )
                 result += make_red( i18n( "This certificate has been revoked." ) );
