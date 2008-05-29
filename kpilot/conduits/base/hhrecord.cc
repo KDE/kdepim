@@ -49,36 +49,6 @@ PilotRecord* HHRecord::pilotRecord() const
 	return fRecord;
 }
 
-bool HHRecord::supportsMultipleCategories() const
-{
-	return false;
-}
-
-void HHRecord::setCategories( const QList<Category*> &categories )
-{
-	FUNCTIONSETUP;
-	
-	foreach( Category* cat, categories )
-	{
-		if( HHCategory *hhCat = dynamic_cast<HHCategory*>( cat ) )
-		{
-			fCategory = *hhCat;
-	
-			if( fRecord )
-			{
-				fRecord->setCategory( fCategory.index() );
-			}
-			
-			// Category changed, so step out of the loop.
-			return;
-		}
-	}
-}
-
-QList<Category*> HHRecord::categories() const
-{
-	return QList<Category*>() << new Category( fCategory );
-}
 
 bool HHRecord::isArchived() const
 {

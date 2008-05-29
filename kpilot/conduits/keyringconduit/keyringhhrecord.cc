@@ -73,8 +73,6 @@ bool KeyringHHRecord::equal( const Record* other ) const
 		equal = equal && ( data.account == krOther->account() );
 		equal = equal && ( data.password == krOther->password() );
 		equal = equal && ( data.notes == krOther->notes() );
-		equal = equal && ( fCategory.index() 
-			== dynamic_cast<HHCategory*>( krOther->categories().first() )->index() );
 		
 		return equal;
 	}

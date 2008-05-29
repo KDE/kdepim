@@ -58,7 +58,6 @@ TestRecord::TestRecord( const TestHHRecord *other )
 	
 	fModified = other->isModified();
 	fDeleted = other->isDeleted();
-	fSupportsMultipleCategories = other->supportsMultipleCategories();
 }
 
 TestRecord::TestRecord( const TestRecord *other )

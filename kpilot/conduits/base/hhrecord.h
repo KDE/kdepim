@@ -38,7 +38,6 @@ class KPILOT_EXPORT HHRecord : public Record {
 
 protected:
 	PilotRecord *fRecord;
-	HHCategory fCategory;
 	
 public:
 	HHRecord( PilotRecord *record );
@@ -48,27 +47,6 @@ public:
 	/** HHRecord methods */
 	
 	PilotRecord* pilotRecord() const;
-	
-	/**
-	 * Returns always false because records on a handheld can only have one
-	 * category.
-	 */
-	virtual bool supportsMultipleCategories() const;
-	
-	/**
-	 * Sets the category information for this record. Also changes the category
-	 * information held in PilotRecord instance. The function will iterate over
-	 * the Category instances and try to cast them to HHCategory. The first found
-	 * will be set as new Category for this record. Otherwhise the category keeps
-	 * unchanged.
-	 */
-	virtual void setCategories( const QList<Category*> &categories );
-	
-	/**
-	 * Return the category set for this record. Note: this list will always
-	 * contain only one record because a handheld can only have one category.
-	 */
-	virtual QList<Category*> categories() const;
 	
 	/**
 	 * Return wether or not this record is marked for deletion and archiving.
