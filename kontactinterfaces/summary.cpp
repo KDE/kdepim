@@ -66,6 +66,7 @@ class Summary::Private
 Summary::Summary( QWidget *parent )
   : QWidget( parent ), d( new Private )
 {
+  setFont( KGlobalSettings::generalFont() );
   setAcceptDrops( true );
 }
 
