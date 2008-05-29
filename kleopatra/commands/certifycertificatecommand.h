@@ -54,10 +54,10 @@ namespace Commands {
 
         /* reimp */ static Restrictions restrictions() { return OnlyOneKey|MustBeOpenPGP; }
 
-        void setSignatureExportable( bool on );
-        void setSignatureRevocable( bool on );
+        void setCertificationExportable( bool on );
+        void setCertificationRevocable( bool on );
 
-        void setSigningKey( const GpgME::Key & signer );
+        void setCertifyingKey( const GpgME::Key & key );
 
         void setUserID( const GpgME::UserID & uid );
         void setUserIDs( const std::vector<GpgME::UserID> & uids );

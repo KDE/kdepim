@@ -140,15 +140,15 @@ void CertifyCertificateCommand::Private::init() {
 
 CertifyCertificateCommand::~CertifyCertificateCommand() { kDebug(); }
 
-void CertifyCertificateCommand::setSignatureExportable( bool on ) {
+void CertifyCertificateCommand::setCertificationExportable( bool on ) {
 
 }
 
-void CertifyCertificateCommand::setSignatureRevocable( bool on ) {
+void CertifyCertificateCommand::setCertificationRevocable( bool on ) {
 
 }
 
-void CertifyCertificateCommand::setSigningKey( const Key & signer ) {
+void CertifyCertificateCommand::setCertifyingKey( const Key & signer ) {
 
 }
 
