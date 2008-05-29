@@ -1,7 +1,7 @@
 /*
   This file is part of the KDE Kontact Plugin Interface Library.
 
-  Copyright (c) 2003 David Faure <faure@kde.org>
+  Copyright (c) 2003,2008 David Faure <faure@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -70,7 +70,7 @@
  5d) type "knode" -> kontact is brought to front
 
  6) start "kontact --module summaryplugin"
- 6a) type "qdbus org.kde.kmail /kmail_PimApplication newInstance '' ''" -> kontact switches to kmail (#103775)
+ 6a) type "qdbus org.kde.kmail /kmail_PimApplication newInstance '' ''" -> kontact switches to kmail
  6b) type "kmail" -> kontact is brought to front
  6c) type "kontact" -> kontact is brought to front
  6d) type "kontact --module summaryplugin" -> kontact switches to summary
@@ -95,9 +95,9 @@ UniqueAppHandler::UniqueAppHandler( Plugin *plugin )
   d->mPlugin = plugin;
   QDBusConnection session = QDBusConnection::sessionBus();
   const QString appName = plugin->objectName();
-  session.registerService("org.kde." + appName);
-  const QString objectName = QString('/') + appName + "_PimApplication";
-  session.registerObject(objectName, this, QDBusConnection::ExportAllSlots);
+  session.registerService( "org.kde." + appName );
+  const QString objectName = QString( '/' ) + appName + "_PimApplication";
+  session.registerObject( objectName, this, QDBusConnection::ExportAllSlots );
 }
 
 UniqueAppHandler::~UniqueAppHandler()
@@ -106,22 +106,23 @@ UniqueAppHandler::~UniqueAppHandler()
 }
 
 // DBUS call
-int UniqueAppHandler::newInstance(const QByteArray &asn_id, const QByteArray &args)
+int UniqueAppHandler::newInstance( const QByteArray &asn_id, const QByteArray &args )
 {
-  if (!asn_id.isEmpty())
-    kapp->setStartupId(asn_id);
+  if ( !asn_id.isEmpty() ) {
+    kapp->setStartupId( asn_id );
+  }
 
   KCmdLineArgs::reset(); // forget options defined by other "applications"
   loadCommandLineOptions(); // implemented by plugin
 
   // This bit is duplicated from KUniqueApplicationAdaptor::newInstance()
-  QDataStream ds(args);
-  KCmdLineArgs::loadAppArgs(ds);
+  QDataStream ds( args );
+  KCmdLineArgs::loadAppArgs( ds );
 
   return newInstance();
 }
 
-static QWidget* s_mainWidget = 0;
+static QWidget *s_mainWidget = 0;
 
 // Plugin-specific newInstance implementation, called by above method
 int Kontact::UniqueAppHandler::newInstance()
@@ -177,9 +178,9 @@ UniqueAppWatcher::UniqueAppWatcher( UniqueAppHandlerFactoryBase *factory, Plugin
   //         << " running standalone:" << d->mRunningStandalone;
 
   if ( d->mRunningStandalone ) {
-    QObject::connect(QDBusConnection::sessionBus().interface(),
-                     SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-                     this, SLOT(slotApplicationRemoved(QString,QString,QString)));
+    QObject::connect( QDBusConnection::sessionBus().interface(),
+                      SIGNAL(serviceOwnerChanged(QString,QString,QString)),
+                      this, SLOT(slotApplicationRemoved(QString,QString,QString)) );
   } else {
     d->mFactory->createHandler( d->mPlugin );
   }
@@ -196,18 +197,22 @@ bool UniqueAppWatcher::isRunningStandalone() const
   return d->mRunningStandalone;
 }
 
-void Kontact::UniqueAppWatcher::slotApplicationRemoved(const QString & name, const QString & oldOwner, const QString & newOwner)
+void Kontact::UniqueAppWatcher::slotApplicationRemoved( const QString &name,
+                                                        const QString &oldOwner,
+                                                        const QString &newOwner )
 {
-  if (oldOwner.isEmpty() || !newOwner.isEmpty())
+  if ( oldOwner.isEmpty() || !newOwner.isEmpty() ) {
     return;
+  }
+
   const QString serviceName = "org.kde." + d->mPlugin->objectName();
-  if (name == serviceName && d->mRunningStandalone) {
+  if ( name == serviceName && d->mRunningStandalone ) {
     d->mFactory->createHandler( d->mPlugin );
     d->mRunningStandalone = false;
   }
 }
 
-void Kontact::UniqueAppHandler::setMainWidget(QWidget* widget)
+void Kontact::UniqueAppHandler::setMainWidget( QWidget *widget )
 {
   s_mainWidget = widget;
 }
