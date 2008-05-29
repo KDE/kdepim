@@ -135,7 +135,7 @@ set( _kleopatra_SRCS
   dialogs/lookupcertificatesdialog.cpp
   dialogs/ownertrustdialog.cpp
   dialogs/selftestdialog.cpp
-  dialogs/signcertificatedialog.cpp
+  dialogs/certifycertificatedialog.cpp
   dialogs/exportsecretkeydialog.cpp
   dialogs/adduseriddialog.cpp
   dialogs/certificatedetailsdialog.cpp
@@ -196,7 +196,7 @@ set( _kleopatra_SRCS
   commands/changeexpirycommand.cpp
   commands/changeownertrustcommand.cpp
   commands/changepassphrasecommand.cpp
-  commands/signcertificatecommand.cpp
+  commands/certifycertificatecommand.cpp
   commands/selftestcommand.cpp
   commands/exportsecretkeycommand.cpp
   commands/exportopenpgpcertstoservercommand.cpp
@@ -226,7 +226,6 @@ kde4_add_ui_files( _kleopatra_SRCS
   dialogs/ownertrustdialog.ui
   dialogs/selectchecklevelwidget.ui
   dialogs/selftestdialog.ui
-  dialogs/signcertificatedialog.ui
   dialogs/exportsecretkeydialog.ui
   dialogs/adduseriddialog.ui
   dialogs/certificatedetailsdialog.ui

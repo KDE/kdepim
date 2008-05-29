@@ -31,11 +31,11 @@
 
 #include <config-kleopatra.h>
 
-#include "signcertificatecommand.h"
+#include "certifycertificatecommand.h"
 
 #include "command_p.h"
 
-#include <dialogs/signcertificatedialog.h>
+#include <dialogs/certifycertificatedialog.h>
 
 #include <models/keycache.h>
 
@@ -268,4 +268,4 @@ void CertifyCertificateCommand::Private::createJob() {
 #undef d
 #undef q
 
-#include "moc_signcertificatecommand.cpp"
+#include "moc_certifycertificatecommand.cpp"

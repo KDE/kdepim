@@ -62,7 +62,7 @@
 #include "commands/changeexpirycommand.h"
 #include "commands/changeownertrustcommand.h"
 #include "commands/selftestcommand.h"
-#include "commands/signcertificatecommand.h"
+#include "commands/certifycertificatecommand.h"
 #include "commands/adduseridcommand.h"
 
 #include "conf/configuredialog.h"
@@ -439,7 +439,7 @@ void MainWindow::Private::setupActions() {
     controller.registerActionForCommand<ChangeExpiryCommand>(       coll->action( "certificates_change_expiry" ) );
     controller.registerActionForCommand<ChangeOwnerTrustCommand>(   coll->action( "certificates_change_owner_trust" ) );
     controller.registerActionForCommand<ChangePassphraseCommand>(   coll->action( "certificates_change_passphrase" ) );
-    controller.registerActionForCommand<CertifyCertificateCommand>(    coll->action( "certificates_sign_certificate" ) );
+    controller.registerActionForCommand<CertifyCertificateCommand>(    coll->action( "certificates_certify_certificate" ) );
     controller.registerActionForCommand<AddUserIDCommand>(          coll->action( "certificates_add_userid" ) );
     controller.registerActionForCommand<SignEncryptFilesCommand>(   coll->action( "file_sign_encrypt_files" ) );
     controller.registerActionForCommand<DecryptVerifyFilesCommand>( coll->action( "file_decrypt_verify_files" ) );

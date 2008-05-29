@@ -43,7 +43,7 @@
 #include <commands/changeownertrustcommand.h>
 #include <commands/changeexpirycommand.h>
 #include <commands/adduseridcommand.h>
-#include <commands/signcertificatecommand.h>
+#include <commands/certifycertificatecommand.h>
 
 #include <utils/formatting.h>
 

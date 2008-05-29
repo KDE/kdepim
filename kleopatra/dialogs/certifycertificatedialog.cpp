@@ -32,8 +32,8 @@
 
 #include <config-kleopatra.h>
 
-#include "signcertificatedialog.h"
-#include "signcertificatedialog_p.h"
+#include "certifycertificatedialog.h"
+#include "certifycertificatedialog_p.h"
 
 #include <utils/formatting.h>
 
@@ -306,5 +306,5 @@ void CertifyCertificateDialog::Private::ensureSummaryPageVisible() {
         q->next();
 }
 
-#include "moc_signcertificatedialog.cpp"
-#include "moc_signcertificatedialog_p.cpp"
+#include "moc_certifycertificatedialog.cpp"
+#include "moc_certifycertificatedialog_p.cpp"
