@@ -40,7 +40,6 @@
 namespace GpgME {
     class Error;
     class Key;
-    class UserID;
 }
 
 namespace Kleo {
@@ -79,7 +78,7 @@ namespace Kleo {
        @param option the signing mode, either local or exportable
      */
     virtual GpgME::Error start( const GpgME::Key & keyToSign,
-                                const std::vector<GpgME::UserID> & idsToSign,
+                                const std::vector<unsigned int> & idsToSign,
                                 const GpgME::Key & signingKey,
                                 unsigned int checkLevel,
                                 SigningOption option ) = 0;

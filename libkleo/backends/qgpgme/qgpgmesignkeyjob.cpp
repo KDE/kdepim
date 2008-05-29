@@ -42,6 +42,10 @@
 #include <cassert>
 #include <memory>
 
+
+using GpgME::Key;
+using GpgME::UserID;
+
 Kleo::QGpgMESignKeyJob::QGpgMESignKeyJob( GpgME::Context * context )
   : SignKeyJob( QGpgME::EventLoopInteractor::instance() ),
     QGpgMEJob( this, context )
@@ -49,26 +53,27 @@ Kleo::QGpgMESignKeyJob::QGpgMESignKeyJob( GpgME::Context * context )
   assert( context );
 }
 
+
 Kleo::QGpgMESignKeyJob::~QGpgMESignKeyJob() {
 }
 
 GpgME::Error Kleo::QGpgMESignKeyJob::start( const GpgME::Key & key,
-                                            const std::vector<GpgME::UserID> & userIdsToSign,
+                                            const std::vector<unsigned int> & userIdsToSign,
                                             const GpgME::Key & signingKey,
                                             unsigned int checkLevel,
                                             SigningOption option  ) {
   assert( !mOutData );
-
+#if 0
   createOutData();
   hookupContextToEventLoopInteractor();
 
   std::auto_ptr<GpgME::EditInteractor> ei( new GpgME::GpgSignKeyEditInteractor( userIdsToSign,
                                                                                 signingKey,
                                                                                 checkLevel,
-                                                                                option == LocalSignature ? GpgME::GpgSignKeyEditInteractor::LocalSignature : GpgME::GpgSignKeyEditInteractor::ExportableSignature ) );
+                                                                                option == LocalSignature ? GpgME::GpgSignKeyEditInteractor::Local : GpgME::GpgSignKeyEditInteractor::Exportable ) );
 
   const GpgME::Error err = mCtx->startEditing( key, ei, *mOutData );
-
+#endif
   if ( err )
     deleteLater();
   return err;
