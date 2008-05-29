@@ -21,6 +21,8 @@
 </personname>
 <email>marco@kmobiletools.org</email>
 </author>
+
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
 <copyright>
@@ -396,7 +398,7 @@ Section</link> for the answer.</para>
 </qandaentry>
 <qandaentry>
 <question>
-<para>Why can't I twiddle my documents?</para>
+<para>Why I cannot twiddle my documents?</para>
 </question>
 <answer>
 <para>You can only twiddle your documents if you have the foobar.lib
@@ -436,7 +438,6 @@ Documentation Copyright &copy; 1999 George N. Ugnacious <email>gnu@kde.org</emai
 </para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
-
 &underFDL;               <!-- FDL: do not remove -->
 
 <!-- Determine which license your application is licensed under,
