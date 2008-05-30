@@ -1,3 +1,16 @@
+Friday, May 30th 2008
+
+Problems addressed
+---------------------
+* kolab/issue2717 - Composer option "Insert signatures above quoted text" doesn't work. Implemented for replytoall for consistency.
+
+
+Merges
+-------
+* Enterprise in sync with kdepim 3.5 branch.
+
+
+
 Tuesday, May 20th 2008
 
 Problems addressed
