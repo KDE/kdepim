@@ -97,6 +97,7 @@
 #include <QCloseEvent>
 #include <QMenu>
 #include <QTimer>
+#include <QProcess>
 
 #include <kleo/cryptobackendfactory.h>
 #include <ui/cryptoconfigdialog.h>
@@ -255,6 +256,20 @@ public:
     void configureBackend();
     void preferences();
 
+    void gnupgLogViewer() {
+        if( !QProcess::startDetached("kwatchgnupg" ) )
+            KMessageBox::error( q, i18n( "Could not start the GnuPG Log Viewer (kwatchgnupg). "
+                                         "Please check your installation!" ),
+                                i18n( "Error Starting KWatchGnuPG" ) );
+    }
+
+    void gnupgAdministrativeConsole() {
+        if( !QProcess::startDetached("kgpgconf" ) )
+            KMessageBox::error( q, i18n( "Could not start the GnuPG Administrative Console (kgpgconf). "
+                                         "Please check your installation!" ),
+                                i18n( "Error Starting KGpgConf" ) );
+    }
+
     void slotConfigCommitted();
     void slotContextMenuRequested( QAbstractItemView *, const QPoint & p ) {
         if ( QMenu * const menu = qobject_cast<QMenu*>( q->factory()->container( "listview_popup", q ) ) )
@@ -396,6 +411,12 @@ void MainWindow::Private::setupActions() {
         { "certificates_add_userid", i18n("Add User-ID..."), QString(),
           0, q, SLOT(addUserID()), QString(), false, true },
           // Tools menu
+        { "tools_start_kwatchgnupg", i18n("GnuPG Log Viewer"), QString(),
+          "kwatchgnupg", q, SLOT(gnupgLogViewer()), QString(), false, true },
+#if 0
+        { "tools_start_kgpgconf", i18n("GnuPG Administrative Console"), QString(),
+          "kgpgconf", q, SLOT(gnupgLogViewer()), QString(), false, true },
+#endif
         { "tools_refresh_x509_certificates", i18n("Refresh X.509 Certificates"), QString(),
           "view-refresh", q, SLOT(refreshX509Certificates()), QString(), false, true },
         { "tools_refresh_openpgp_certificates", i18n("Refresh OpenPGP Certificates"), QString(),
@@ -428,6 +449,8 @@ void MainWindow::Private::setupActions() {
     KStandardAction::configureToolbars( q, SLOT(configureToolbars()), q->actionCollection() );
     KStandardAction::keyBindings( q, SLOT(editKeybindings()), q->actionCollection() );
     KStandardAction::preferences( q, SLOT(preferences()), q->actionCollection() );
+    q->createStandardStatusBarAction();
+    q->setStandardToolBarMenuEnabled( true );
 
 
     // ### somehow make this better...
