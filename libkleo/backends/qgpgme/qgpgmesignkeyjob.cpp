@@ -62,8 +62,8 @@ GpgME::Error Kleo::QGpgMESignKeyJob::start( const GpgME::Key & key,
                                             const GpgME::Key & signingKey,
                                             unsigned int checkLevel,
                                             SigningOption option  ) {
-  assert( !mOutData );
 #if 0
+  assert( !mOutData );
   createOutData();
   hookupContextToEventLoopInteractor();
 
@@ -73,10 +73,12 @@ GpgME::Error Kleo::QGpgMESignKeyJob::start( const GpgME::Key & key,
                                                                                 option == LocalSignature ? GpgME::GpgSignKeyEditInteractor::Local : GpgME::GpgSignKeyEditInteractor::Exportable ) );
 
   const GpgME::Error err = mCtx->startEditing( key, ei, *mOutData );
-#endif
   if ( err )
     deleteLater();
   return err;
+#else
+  return GpgME::Error();
+#endif
 }
 
 void Kleo::QGpgMESignKeyJob::doOperationDoneEvent( const GpgME::Error & error ) {
