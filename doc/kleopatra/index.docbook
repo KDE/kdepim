@@ -151,7 +151,7 @@ said to have had an intimate relationship with.</para>
 
 <para>The name was chosen since this program originates from the
 <ulink url="http://www.gnupg.org/aegypten2/">&Auml;gypten
-Projects</ulink> (&Auml;gypten is German for Egypt). Kleopatra is the
+Projects</ulink> (&Auml;gypten is German for Egypt). &kleopatra; is the
 German spelling of Cleopatra.</para></note>
 
 </chapter>
@@ -823,7 +823,7 @@ keybox.</action></para>
 <term>&commandline-option-import-certificate;</term>
 
 <listitem>
-<para><action>Specifies a file or URL from which to import
+<para><action>Specifies a file or &URL; from which to import
 certificates (or secret keys) from.</action></para>
 
 <para>This is the command line equivalent of <link
@@ -981,20 +981,20 @@ order.</para>
 <para>Given the &dn;</para>
 <blockquote>
 <para>
- O=KDE, C=US, CN=Dave Devel, X-BAR=foo, OU=Kleopatra, X-FOO=bar,
+ O=&kde;, C=US, CN=Dave Devel, X-BAR=foo, OU=&kleopatra;, X-FOO=bar,
 </para>
 </blockquote>
 <para>the default attribute order of <quote>CN, L, _X_, OU, O,
 C</quote> will produce the following formatted &dn;:</para>
 <blockquote>
 <para>
- CN=Dave Devel, X-BAR=foo, X-FOO=bar, OU=Kleopatra, O=KDE, C=US
+ CN=Dave Devel, X-BAR=foo, X-FOO=bar, OU=&kleopatra;, O=&kde;, C=US
 </para>
 </blockquote>
 <para>while <quote>CN, L, OU, O, C</quote> will produce</para>
 <blockquote>
 <para>
- CN=Dave Devel, OU=Kleopatra, O=KDE, C=US
+ CN=Dave Devel, OU=&kleopatra;, O=&kde;, C=US
 </para>
 </blockquote>
 </informalexample>
