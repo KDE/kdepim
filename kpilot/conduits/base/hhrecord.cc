@@ -33,7 +33,8 @@
 #include "pilotRecord.h"
 #include "pilotAppInfo.h"
 
-HHRecord::HHRecord( PilotRecord *record ) : fRecord( record )
+HHRecord::HHRecord( PilotRecord *record, const QString &category ) 
+	: fRecord( record ), fCategory( category )
 {
 }
 
@@ -49,36 +50,6 @@ PilotRecord* HHRecord::pilotRecord() const
 	return fRecord;
 }
 
-bool HHRecord::supportsMultipleCategories() const
-{
-	return false;
-}
-
-void HHRecord::setCategories( const QList<Category*> &categories )
-{
-	FUNCTIONSETUP;
-	
-	foreach( Category* cat, categories )
-	{
-		if( HHCategory *hhCat = dynamic_cast<HHCategory*>( cat ) )
-		{
-			fCategory = *hhCat;
-	
-			if( fRecord )
-			{
-				fRecord->setCategory( fCategory.index() );
-			}
-			
-			// Category changed, so step out of the loop.
-			return;
-		}
-	}
-}
-
-QList<Category*> HHRecord::categories() const
-{
-	return QList<Category*>() << new Category( fCategory );
-}
 
 bool HHRecord::isArchived() const
 {
@@ -120,6 +91,38 @@ void HHRecord::setId( const QString &id )
 	{
 		fRecord->setID( rid );
 	}
+}
+
+
+int HHRecord::categoryCount() const
+{
+	FUNCTIONSETUP;
+	
+	return 1;
+}
+
+bool HHRecord::containsCategory( const QString& category ) const
+{
+	FUNCTIONSETUP;
+	
+	return fCategory == category;
+}
+
+QStringList HHRecord::categories() const
+{
+	FUNCTIONSETUP;
+	
+	QStringList categories;
+	categories << fCategory;
+	return categories;
+}
+
+
+QString HHRecord::category() const
+{
+	FUNCTIONSETUP;
+
+	return fCategory;
 }
 
 bool HHRecord::isModified() const

@@ -32,15 +32,20 @@
 
 #include "category.h"
 
-KeyringHHRecord::KeyringHHRecord( PilotRecord *rec, const QString &key )
-	: HHRecord( rec ), fKey( key )
+KeyringHHRecord::KeyringHHRecord( PilotRecord *rec, const QString &category
+                                , const QString &key )
+	: HHRecord( rec, category ), fKey( key )
 {
 	fName = QString( fRecord->data() );
 }
 
-KeyringHHRecord::KeyringHHRecord( const QString &name, const QString &account, 
-	const QString &password, const QString &notes, const QString &key )
-	: HHRecord( 0L ), fKey( key ), fName( name )
+KeyringHHRecord::KeyringHHRecord( const QString &name
+                                , const QString &category
+                                , const QString &account
+                                , const QString &password
+                                , const QString &notes
+                                , const QString &key )
+	: HHRecord( 0L, category ), fKey( key ), fName( name )
 {
 	KeyringHHRecordBase data;
 	data.account = account;
@@ -73,8 +78,6 @@ bool KeyringHHRecord::equal( const Record* other ) const
 		equal = equal && ( data.account == krOther->account() );
 		equal = equal && ( data.password == krOther->password() );
 		equal = equal && ( data.notes == krOther->notes() );
-		equal = equal && ( fCategory.index() 
-			== dynamic_cast<HHCategory*>( krOther->categories().first() )->index() );
 		
 		return equal;
 	}

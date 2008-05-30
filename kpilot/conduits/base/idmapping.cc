@@ -157,6 +157,28 @@ void IDMapping::removePCId( const QString &recordId )
 	}
 }
 
+void IDMapping::storeHHCategory( const QString &hhRecordId
+                               , const QString &category )
+{
+	FUNCTIONSETUP;
+
+	if( containsHHId( hhRecordId ) )
+	{
+		fSource.setHHCategory( hhRecordId, category );
+	}
+}
+
+void IDMapping::storePCCategories( const QString &pcRecordId
+                                 , const QStringList &categories )
+{
+	FUNCTIONSETUP;
+	
+	if( containsPCId( pcRecordId ) )
+	{
+		fSource.setPCCategories( pcRecordId, categories );
+	}
+}
+
 bool IDMapping::containsHHId( const QString &recordId ) const
 {
 	FUNCTIONSETUP;

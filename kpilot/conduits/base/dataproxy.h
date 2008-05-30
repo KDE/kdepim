@@ -140,6 +140,24 @@ public:
 	QMap<QString, QString> changedIds();
 	
 	/**
+	 * Sets the given category as the only category to the record and might do
+	 * some internal things needed for category handling in the datastore.
+	 * 
+	 * All other categories that might have been set to this record should be
+	 * removed.
+	 */
+	virtual void setCategory( Record* rec, const QString& category ) = 0;
+
+	/**
+	 * Adds the given category to the record and might do some internal things
+	 * needed for category handling in the datastore.
+	 * 
+	 * All other categories that might have been set to this record should be
+	 * unchanged.
+	 */
+	virtual void addCategory( Record* rec, const QString& category ) = 0;
+
+	/**
 	 * Returns true when the proxy was able to open the underlying data store 
 	 * in read/write mode.
 	 */

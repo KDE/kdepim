@@ -77,6 +77,19 @@ public:
 	void removePCId( const QString &pcRecordId );
 
 	/**
+	 * Stores the category for the record with @p hhRecordId in the mapping. Does
+	 * nothing when there is no mapping for @p hhRecordId.
+	 */
+	void storeHHCategory( const QString &hhRecordId, const QString &category );
+
+	/**
+	 * Stores the categories for the record with @p pcRecordId in the mapping.
+	 * Does nothing when there is no mapping for @p pcRecordId.
+	 */
+	void storePCCategories( const QString &pcRecordId
+	                      , const QStringList &categories );
+
+	/**
 	 * Method to find out wether or not there is a mapping for hh record with 
 	 * @p hhRecordId.
 	 */

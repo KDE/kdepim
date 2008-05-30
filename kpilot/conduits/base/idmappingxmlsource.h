@@ -52,6 +52,11 @@ public:
 	QMap<QString, QString>* mappings() { return &fMappings; }
 	
 	const QMap<QString, QString>* constMappings() const { return &fMappings; }
+
+	// TODO: Save the categories to the xml file.
+	void setHHCategory( const QString &hhRecordId, const QString &category );
+
+	void setPCCategories( const QString &pcRecordId, const QStringList &categories );
 	
 	QStringList* archivedRecords() { return &fArchivedRecords; }
 	
@@ -77,6 +82,8 @@ private:
 	 * Mappings between handheld ids (keys) and pc ids (values).
 	 */
 	QMap<QString, QString> fMappings;
+	QMap<QString, QString> fHHCategory;       // Key: HHRecordId, Value: Category name
+	QMap<QString, QStringList> fPCCategories; // Key: PCRecordId, Value: Categories
 	QStringList fArchivedRecords;
 	QDateTime fLastSyncedDateTime;
 	QString fLastSyncedPC;

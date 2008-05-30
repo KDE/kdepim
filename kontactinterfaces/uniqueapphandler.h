@@ -1,7 +1,7 @@
 /*
   This file is part of the KDE Kontact Plugin Interface Library.
 
-  Copyright (c) 2003 David Faure <faure@kde.org>
+  Copyright (c) 2003,2008 David Faure <faure@kde.org>
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Library General Public
@@ -39,7 +39,7 @@ class KONTACTINTERFACES_EXPORT UniqueAppHandler : public QObject
 {
   Q_OBJECT
   // We implement the KUniqueApplication interface
-  Q_CLASSINFO("D-Bus Interface", "org.kde.KUniqueApplication")
+  Q_CLASSINFO( "D-Bus Interface", "org.kde.KUniqueApplication" )
 
   public:
     UniqueAppHandler( Plugin *plugin );
@@ -51,10 +51,10 @@ class KONTACTINTERFACES_EXPORT UniqueAppHandler : public QObject
     Plugin *plugin() const;
 
     // for kontact
-    static void setMainWidget(QWidget* widget);
+    static void setMainWidget( QWidget *widget );
 
   public Q_SLOTS: // DBUS methods
-    int newInstance(const QByteArray &asn_id, const QByteArray &args);
+    int newInstance( const QByteArray &asn_id, const QByteArray &args );
     bool load();
 
   protected:
@@ -116,7 +116,8 @@ class KONTACTINTERFACES_EXPORT UniqueAppWatcher : public QObject
     bool isRunningStandalone() const;
 
   private Q_SLOTS:
-    void slotApplicationRemoved(const QString & name, const QString & oldOwner, const QString & newOwner);
+    void slotApplicationRemoved( const QString &name, const QString &oldOwner,
+                                 const QString &newOwner );
 
   private:
     class Private;

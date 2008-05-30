@@ -1009,110 +1009,45 @@ void RecordConduit::copy( const HHRecord *from, Record *to  )
 void RecordConduit::copyCategory( const Record *from, HHRecord *to )
 {
 	FUNCTIONSETUP;
-	
-	/*
-	DEBUGKPILOT << "(Record *from, HHRecord *to)";
-		
-	if( !from || !to )
-	{
-		return;
-	}
-
-	QStringList pcCategories = to->categoryNames();
-	if( pcCategories.size() < 1 )
-	{
-		// The pc record has no categories.
-		to->setCategory( fHHDataProxy->category(
-			i18nc( "No category set for this record", "Unfiled" ) ) );
-		
-		return;
-	}
-
-	// Quick check: does the record (not unfiled) have an entry
-	// in the categories list? If so, use that.
-	if( to->category()->index() != Pilot::Unfiled )
-	{
-		QString hhCat = to->category()->name();
-		
-		if( pcCategories.contains( hhCat ) )
-		{
-			// Found, so leave the category unchanged.
-			return;
-		}
-	}
-
-	QStringList availableHandheldCategories = fHHDataProxy->categoryNames();
-
-	// Either the record is unfiled, and should be filed, or
-	// it has a category set which is not in the list of
-	// categories that the event has. So go looking for
-	// a category that is available both for the event
-	// and on the handheld.
-	for ( QStringList::ConstIterator it = pcCategories.begin();
-		it != pcCategories.end(); ++it )
-	{
-		// Odd, an empty category string.
-		if( (*it).isEmpty() )
-		{
-			continue;
-		}
-
-		if( availableHandheldCategories.contains( *it ) )
-		{
-			// Since the string is in the list of available categories,
-			// this *can't* fail.
-			Category *cat = fHHDataProxy->category( *it );
-			Q_ASSERT( Pilot::validCategory( cat->index() ) );
-			to->setCategory( cat );
-			return;
-		}
-	}
-
-	// FIXME: There is no category on the handheld that is in the list of
-	// categories from the pcrecord. For now we set the hhrecord unfiled but here
-	// should be some code that tries to add the category to the handheld if
-	// possible.
-	Category *cat = fHHDataProxy->category( CSL1( "Unfiled") );
-	to->setCategory( cat );
-	*/
+	Q_UNUSED( from );
+	Q_UNUSED( to );
 }
 
 void RecordConduit::copyCategory( const HHRecord *from, Record *to  )
 {
 	FUNCTIONSETUP;
-	/*
-	DEBUGKPILOT << "(HHRecord *from, Record  *to)";
 	
-	if( !from || !to )
+	/*
+	 * Whe a pc record has only one or no category set the dataproxy should
+	 * replace that category with the new category from the handheld. The beauty
+	 * of this is that when the PC data store is also an handheld data base (as
+	 * is the case for the Keyring conduit for example) the categoryCount will
+	 * always be zero (unfiled) or one. So the addCategory doesn't have to be
+	 * implemented in that case.
+	 * 
+	 * Otherwhise (thus when the pc record has more then one category) the
+	 * dataproxy can check if that category is set already and if that's not the
+	 * case it should add the category to the pc record.
+	 *
+	 * NOTE: the equal( pcRecord, hhRecord ); is now virtual and not implemented.
+	 *       This has to change and it should also compare the categories of the
+	 *       records and the categories stored in the mapping. Otherwhise fullSync
+	 *       will not work as expected.
+	 */
+	if( to->categoryCount() <= 1 )
 	{
-		return;
+		fPCDataProxy->setCategory( to, from->category() );
 	}
-
-	QStringList pcCategories = to->categoryNames();
-	QString hhCategory = from->category()->name();
-	int cat = from->category()->index();
-
-	DEBUGKPILOT << "HH category id " << cat << " label: [" << hhCategory << ']';
-
-	if( Pilot::validCategory( cat ) && ( cat != Pilot::Unfiled ) )
+	else
 	{
-		if( !pcCategories.contains( hhCategory ) )
+		if( !to->containsCategory( from->category() ) )
 		{
-			// if this event only has one category associated with it, then we can
-			// safely assume that what we should be doing here is changing it to match
-			// the palm. if there's already more than one category in the event,
-			// however, we won't cause data loss--we'll just append what the palm has
-			// to the event's categories.
-			if( pcCategories.count() <= 1 )
-			{
-				pcCategories.clear();
-			}
-
-			pcCategories.append( hhCategory );
-			to->setCategoryNames( pcCategories );
+			// Keeps categories and adds another one
+			fPCDataProxy->addCategory( to, from->category() );
 		}
 	}
-
-	DEBUGKPILOT << "PC categories now: [" << pcCategories.join( "," ) << ']';
-	*/
+	
+	// Store the last synced category.
+	fMapping->storeHHCategory( from->id(), from->category() );
+	fMapping->storePCCategories( to->id(), to->categories() ); // might be more then one.
 }

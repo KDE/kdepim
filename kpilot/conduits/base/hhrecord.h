@@ -38,37 +38,16 @@ class KPILOT_EXPORT HHRecord : public Record {
 
 protected:
 	PilotRecord *fRecord;
-	HHCategory fCategory;
+	QString fCategory;
 	
 public:
-	HHRecord( PilotRecord *record );
+	HHRecord( PilotRecord *record, const QString &category );
 
 	virtual ~HHRecord();
 	
 	/** HHRecord methods */
 	
 	PilotRecord* pilotRecord() const;
-	
-	/**
-	 * Returns always false because records on a handheld can only have one
-	 * category.
-	 */
-	virtual bool supportsMultipleCategories() const;
-	
-	/**
-	 * Sets the category information for this record. Also changes the category
-	 * information held in PilotRecord instance. The function will iterate over
-	 * the Category instances and try to cast them to HHCategory. The first found
-	 * will be set as new Category for this record. Otherwhise the category keeps
-	 * unchanged.
-	 */
-	virtual void setCategories( const QList<Category*> &categories );
-	
-	/**
-	 * Return the category set for this record. Note: this list will always
-	 * contain only one record because a handheld can only have one category.
-	 */
-	virtual QList<Category*> categories() const;
 	
 	/**
 	 * Return wether or not this record is marked for deletion and archiving.
@@ -89,6 +68,26 @@ public:
 	 */
 	virtual void setId( const QString &id );
 	
+	/**
+	 * Returns the number of categories that is set for this record.
+	 */
+	virtual int categoryCount() const;
+	
+	/**
+	 * Returns wether or not the given category is set for this record.
+	 */
+	virtual bool containsCategory( const QString& category ) const;
+
+	/**
+	 * Returns the list of categories set for this record.
+	 */
+	virtual QStringList categories() const;
+
+	/**
+	 * Returns the category of this record.
+	 */
+	virtual QString category() const;
+
 	/**
 	 * Returns true if the record is modified and/or if it's marked as deleted.
 	 */

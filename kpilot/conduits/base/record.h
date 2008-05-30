@@ -51,21 +51,6 @@ public:
 	 * Sets the id of this record to @p id;
 	 */
 	virtual void setId( const QString &id ) = 0;
-
-	/**
-	 * Returns true if this record can get assigned more then one category.
-	 */
-	virtual bool supportsMultipleCategories() const = 0;
-
-	/**
-	 * Returns the list of categories that is set for this record.
-	 */
-	virtual QList<Category*> categories() const = 0;
-	
-	/**
-	 * Sets the categories for this record.
-	 */
-	virtual void setCategories( const QList<Category*> &categories ) = 0;
 	
 	/**
 	 * Returns true if the record is modified and/or if it's marked as deleted.
@@ -83,6 +68,21 @@ public:
 	 */
 	virtual void synced() = 0;
 	
+	/**
+	 * Returns the number of categories that is set for this record.
+	 */
+	virtual int categoryCount() const = 0;
+	
+	/**
+	 * Returns wether or not the given category is set for this record.
+	 */
+	virtual bool containsCategory( const QString& category ) const = 0;
+
+	/**
+	 * Returns the list of categories set for this record.
+	 */
+	virtual QStringList categories() const = 0;
+
 	/**
 	 * Returns a string representation of the record.
 	 */
