@@ -38,9 +38,10 @@ class KPILOT_EXPORT HHRecord : public Record {
 
 protected:
 	PilotRecord *fRecord;
+	QString fCategory;
 	
 public:
-	HHRecord( PilotRecord *record );
+	HHRecord( PilotRecord *record, const QString &category );
 
 	virtual ~HHRecord();
 	
@@ -67,6 +68,26 @@ public:
 	 */
 	virtual void setId( const QString &id );
 	
+	/**
+	 * Returns the number of categories that is set for this record.
+	 */
+	virtual int categoryCount() const;
+	
+	/**
+	 * Returns wether or not the given category is set for this record.
+	 */
+	virtual bool containsCategory( const QString& category ) const;
+
+	/**
+	 * Returns the list of categories set for this record.
+	 */
+	virtual QStringList categories() const;
+
+	/**
+	 * Returns the category of this record.
+	 */
+	virtual QString category() const;
+
 	/**
 	 * Returns true if the record is modified and/or if it's marked as deleted.
 	 */

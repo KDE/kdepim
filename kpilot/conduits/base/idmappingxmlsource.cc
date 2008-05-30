@@ -96,6 +96,20 @@ void IDMappingXmlSource::setLastSyncedPC( const QString &pc )
 	fLastSyncedPC = pc;
 }
 
+void IDMappingXmlSource::setHHCategory( const QString &hhRecordId, const QString &category )
+{
+	FUNCTIONSETUP;
+	
+	fHHCategory.insert( hhRecordId, category );
+}
+
+void IDMappingXmlSource::setPCCategories( const QString &pcRecordId, const QStringList &categories )
+{
+	FUNCTIONSETUP;
+	
+	fPCCategories.insert( pcRecordId, categories );
+}
+
 void IDMappingXmlSource::loadMapping()
 {
 	FUNCTIONSETUP;

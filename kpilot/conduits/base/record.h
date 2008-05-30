@@ -69,6 +69,21 @@ public:
 	virtual void synced() = 0;
 	
 	/**
+	 * Returns the number of categories that is set for this record.
+	 */
+	virtual int categoryCount() const = 0;
+	
+	/**
+	 * Returns wether or not the given category is set for this record.
+	 */
+	virtual bool containsCategory( const QString& category ) const = 0;
+
+	/**
+	 * Returns the list of categories set for this record.
+	 */
+	virtual QStringList categories() const = 0;
+
+	/**
 	 * Returns a string representation of the record.
 	 */
 	virtual QString toString() const = 0;

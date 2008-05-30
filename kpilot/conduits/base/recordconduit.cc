@@ -1009,9 +1009,45 @@ void RecordConduit::copy( const HHRecord *from, Record *to  )
 void RecordConduit::copyCategory( const Record *from, HHRecord *to )
 {
 	FUNCTIONSETUP;
+	Q_UNUSED( from );
+	Q_UNUSED( to );
 }
 
 void RecordConduit::copyCategory( const HHRecord *from, Record *to  )
 {
 	FUNCTIONSETUP;
+	
+	/*
+	 * Whe a pc record has only one or no category set the dataproxy should
+	 * replace that category with the new category from the handheld. The beauty
+	 * of this is that when the PC data store is also an handheld data base (as
+	 * is the case for the Keyring conduit for example) the categoryCount will
+	 * always be zero (unfiled) or one. So the addCategory doesn't have to be
+	 * implemented in that case.
+	 * 
+	 * Otherwhise (thus when the pc record has more then one category) the
+	 * dataproxy can check if that category is set already and if that's not the
+	 * case it should add the category to the pc record.
+	 *
+	 * NOTE: the equal( pcRecord, hhRecord ); is now virtual and not implemented.
+	 *       This has to change and it should also compare the categories of the
+	 *       records and the categories stored in the mapping. Otherwhise fullSync
+	 *       will not work as expected.
+	 */
+	if( to->categoryCount() <= 1 )
+	{
+		fPCDataProxy->setCategory( to, from->category() );
+	}
+	else
+	{
+		if( !to->containsCategory( from->category() ) )
+		{
+			// Keeps categories and adds another one
+			fPCDataProxy->addCategory( to, from->category() );
+		}
+	}
+	
+	// Store the last synced category.
+	fMapping->storeHHCategory( from->id(), from->category() );
+	fMapping->storePCCategories( to->id(), to->categories() ); // might be more then one.
 }
