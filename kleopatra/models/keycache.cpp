@@ -478,7 +478,7 @@ void KeyCache::remove( const Key & key ) {
         return;
 
     emit aboutToRemove( key );
-    
+
     {
         const std::pair<std::vector<Key>::iterator,std::vector<Key>::iterator> range
             = std::equal_range( d->by.fpr.begin(), d->by.fpr.end(), fpr,
@@ -512,7 +512,7 @@ void KeyCache::remove( const Key & key ) {
             = std::equal_range( begin( range ), end( range ), fpr, _detail::ByFingerprint<std::less>() );
         d->by.chainid.erase( begin( range2 ), end( range2 ) );
     }
-        
+
 
     Q_FOREACH( const std::string & email, emails( key ) ) {
         const std::pair<std::vector<std::pair<std::string,Key> >::iterator,std::vector<std::pair<std::string,Key> >::iterator> range
@@ -520,7 +520,7 @@ void KeyCache::remove( const Key & key ) {
         const std::vector< std::pair<std::string,Key> >::iterator it
             = std::remove_if( begin( range ), end( range ), bind( qstricmp, fpr, bind( &Key::primaryFingerprint, bind( &std::pair<std::string,Key>::second,_1 ) ) ) == 0 );
         d->by.email.erase( it, end( range ) );
-    }                
+    }
 }
 
 void KeyCache::remove( const std::vector<Key> & keys ) {
@@ -536,7 +536,7 @@ std::vector<GpgME::Key> KeyCache::keys() const
 std::vector<Key> KeyCache::secretKeys() const
 {
     std::vector<Key> keys = this->keys();
-    keys.erase( std::remove_if( keys.begin(), keys.end(), !bind( &Key::hasSecret, _1 ) ) );
+    keys.erase( std::remove_if( keys.begin(), keys.end(), !bind( &Key::hasSecret, _1 ) ), keys.end() );
     return keys;
 }
 
@@ -580,7 +580,7 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
                          bind( is_empty(), bind( &Key::primaryFingerprint, _1 ) ) );
 
     Q_FOREACH( const Key & key, sorted )
-        remove( key ); // this is sub-optimal, but makes implementation from here on much easier 
+        remove( key ); // this is sub-optimal, but makes implementation from here on much easier
 
     // 2. sort by fingerprint:
     std::sort( sorted.begin(), sorted.end(), _detail::ByFingerprint<std::less>() );
@@ -620,7 +620,7 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
 
     // 3.5: stable-sort by chain-id (effectively lexicographically<ByChainID,ByFingerprint>)
     std::stable_sort( sorted.begin(), sorted.end(), _detail::ByChainID<std::less>() );
-    
+
     // 3.5a: insert into chain-id index:
     std::vector<Key> by_chainid;
     by_chainid.reserve( sorted.size() + d->by.chainid.size() );
@@ -658,7 +658,7 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
     by_email.swap( d->by.email );
 
     Q_FOREACH( const Key & key, sorted )
-        emit added( key ); 
+        emit added( key );
 
     emit keysMayHaveChanged();
 }
@@ -681,7 +681,7 @@ public:
         PublicKeys,
         SecretKeys
     };
-    
+
     Private( KeyCache * cache, RefreshKeysJob * qq );
     void doStart();
     Error startKeyListing( const char* protocol, KeyType type );
@@ -757,7 +757,7 @@ void KeyCache::RefreshKeysJob::Private::doStart()
     m_mergedResult.mergeWith( KeyListResult( startKeyListing( "openpgp", SecretKeys ) ) );
     m_mergedResult.mergeWith( KeyListResult( startKeyListing( "smime", PublicKeys ) ) );
     m_mergedResult.mergeWith( KeyListResult( startKeyListing( "smime", SecretKeys ) ) );
-    
+
     if ( m_jobsPending != 0 )
         return;
 
@@ -812,9 +812,9 @@ Error KeyCache::RefreshKeysJob::Private::startKeyListing( const char* backend, K
     else
         connect( job, SIGNAL(nextKey(GpgME::Key)),
                  q, SLOT(nextSecretKey(GpgME::Key)) );
-    
+
     const Error error = job->start( QStringList(), type == SecretKeys );
-    
+
     if ( !error && !error.isCanceled() )
         ++m_jobsPending;
     return error;
