@@ -149,7 +149,7 @@ OptionsPage::OptionsPage( QWidget * parent ) : QWizardPage( parent ), m_ui() {
     setButtonText( QWizard::CommitButton, i18n( "Certify" ) );
 }
 
-void OptionsPage::OptionsPage::setCertificationOption( SignKeyJob::SigningOption opt ) {
+void OptionsPage::setCertificationOption( SignKeyJob::SigningOption opt ) {
     if ( opt == SignKeyJob::LocalSignature )
         m_ui.localSignatureRB->setChecked( true );
     else
