@@ -98,12 +98,6 @@ else ( ONLY_KLEO )
   find_program(XSLTPROC_EXECUTABLE xsltproc)
   macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "The command line XSLT processor from libxslt" "http://xmlsoft.org/XSLT/" FALSE "" "Needed for building Akonadi resources. Recommended.")
 
-  # is this really required here ?
-  if (APPLE)
-    find_package(Carbon REQUIRED)
-  endif (APPLE)
-
-
   add_definitions (-D_FILE_OFFSET_BITS=64 -D_LARGE_FILES) # for off_t
   add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 
