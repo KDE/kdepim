@@ -138,7 +138,6 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
 
     // Set a nice startup size
     const int deskHeight = QApplication::desktop()->height();
-    const int deskWidth = QApplication::desktop()->width();
     int dialogHeight;
     if (deskHeight > 1000) // very big desktop ?
       dialogHeight = 800;
@@ -302,7 +301,7 @@ void Kleo::CryptoConfigGroupGUI::defaults()
 
 ////
 
-typedef CryptoConfigEntryGUI * (*constructor)( CryptoConfigModule *, Kleo::CryptoConfigEntry *, const QString &, QGridLayout *, QWidget * ); 
+typedef CryptoConfigEntryGUI * (*constructor)( CryptoConfigModule *, Kleo::CryptoConfigEntry *, const QString &, QGridLayout *, QWidget * );
 
 namespace {
 template <typename T_Widget>
@@ -624,10 +623,10 @@ Kleo::CryptoConfigEntryURL::CryptoConfigEntryURL(
   Kleo::CryptoConfigEntry* entry, const QString& entryName,
   QGridLayout * glay, QWidget* widget )
     : CryptoConfigEntryGUI( module, entry, entryName ),
+    mLineEdit( 0 )
 #ifndef ONLY_KLEO
-      mUrlRequester( 0 ),
+      , mUrlRequester( 0 )
 #endif
-      mLineEdit( 0 )
 {
   const int row = glay->rowCount();
   QWidget * req;
