@@ -62,11 +62,6 @@ namespace Kleo {
   protected:
     explicit SignKeyJob( QObject * parent );
   public:
-
-    enum SigningOption {
-        LocalSignature,
-        ExportableSignature
-    };
     ~SignKeyJob();
 
     /**
@@ -74,14 +69,41 @@ namespace Kleo {
        @param keyToSign the key to be signed
        @param idsToSign the user IDs to sign
        @param signingKey the secret key to use for signing
-       @param the check level, ranges from 0 (no claim) and 3 (extensively checked)
        @param option the signing mode, either local or exportable
      */
-    virtual GpgME::Error start( const GpgME::Key & keyToSign,
-                                const std::vector<unsigned int> & idsToSign,
-                                const GpgME::Key & signingKey,
-                                unsigned int checkLevel,
-                                SigningOption option ) = 0;
+    virtual GpgME::Error start( const GpgME::Key & keyToSign ) = 0;
+
+
+    /**
+     * If explicitely specified, only the listed user IDs will be signed. Otherwise all user IDs
+     * are signed.
+     * @param list of user ID indexes (of the key to be signed).
+     */
+    virtual void setUserIDsToSign( const std::vector<unsigned int> & idsToSign ) = 0;
+
+    /**
+     * sets the check level
+     * @param the check level, ranges from 0 (no claim) and 3 (extensively checked),
+     * default is 0
+     */
+    virtual void setCheckLevel( unsigned int checkLevel ) = 0;
+
+    /**
+     * sets whether the signature should be exportable, or local only.
+     * default is local.
+     */
+    virtual void setExportable( bool exportable ) = 0;
+
+    /**
+     * sets an alternate signing key
+     */
+    virtual void setSigningKey( const GpgME::Key & key ) = 0;
+
+    /**
+     * if set, the created signature won't be revocable. By default signatures
+     * can be revoked.
+     */
+    virtual void setNonRevocable( bool nonRevocable ) = 0;
 
   Q_SIGNALS:
     void result( const GpgME::Error & result );

@@ -39,6 +39,7 @@
 
 namespace GpgME {
   class Error;
+  class Key;
   class Context;
 }
 
@@ -51,11 +52,22 @@ namespace Kleo {
     ~QGpgMESignKeyJob();
 
     /*! \reimp from SignKeyJob */
-    GpgME::Error start( const GpgME::Key & key,
-                        const std::vector<unsigned int> & userIdsToSign,
-                        const GpgME::Key & signingKey,
-                        unsigned int checkLevel,
-                        SigningOption option );
+    GpgME::Error start( const GpgME::Key & key );
+
+    /*! \reimp from SignKeyJob */
+    void setUserIDsToSign( const std::vector<unsigned int> & idsToSign );
+
+    /*! \reimp from SignKeyJob */
+    void setCheckLevel( unsigned int checkLevel );
+
+    /*! \reimp from SignKeyJob */
+    void setExportable( bool exportable );
+
+    /*! \reimp from SignKeyJob */
+    void setSigningKey( const GpgME::Key & key );
+
+    /*! \reimp from SignKeyJob */
+    void setNonRevocable( bool nonRevocable );
 
   private:
     void doOperationDoneEvent( const GpgME::Error & e );
@@ -64,6 +76,14 @@ namespace Kleo {
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
       QGpgMEJob::doSlotOperationDoneEvent( context, e );
     }
+
+  private:
+      std::vector<unsigned int> m_userIDsToSign;
+      unsigned int m_checkLevel;
+      bool m_exportable;
+      GpgME::Key m_signingKey;
+      bool m_nonRevocable;
+      bool m_started;
   };
 }
 
