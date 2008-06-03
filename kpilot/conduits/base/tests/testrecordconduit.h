@@ -59,6 +59,10 @@ public:
 
 	virtual void copy( const HHRecord *from, Record *to  );
 	
+	virtual void setCategory( Record* r, const QString& c ) { Q_UNUSED( r ); Q_UNUSED( c ); };
+
+	virtual void addCategory( Record* r, const QString& c ) { Q_UNUSED( r ); Q_UNUSED( c ); };
+	
 	/** Methods below are added for testpurposes **/
 	
 	void solveConflictTest( Record *pcRecord, HHRecord *hhRecord );

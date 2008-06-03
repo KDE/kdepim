@@ -52,6 +52,7 @@ private slots:
 	void testWeirdCase();
 	void testSamePCIdForMoreHHids();
 	void testSameHHIdForMorePCids();
+	void testStoreHHCategory();
 	void cleanupTestCase();
 	
 
@@ -221,6 +222,14 @@ void IDMappingTest::testSameHHIdForMorePCids()
 	QVERIFY( mapping.pcRecordId( CSL1( "hh-1" ) ) == CSL1( "pc-2" ) );
 	QVERIFY( mapping.hhRecordId( CSL1( "pc-2" ) ) == CSL1( "hh-1" ) );
 	QVERIFY( !mapping.containsPCId( CSL1( "pc-1" ) ) );
+}
+
+void IDMappingTest::testStoreHHCategory()
+{
+	IDMapping mapping( fUser, fConduit );
+	mapping.map( CSL1( "hh-1" ), CSL1( "pc-1" ) );
+	
+	mapping.storeHHCategory( CSL1( "hh-1" ), CSL1( "" ) );
 }
 
 void IDMappingTest::cleanDir()
