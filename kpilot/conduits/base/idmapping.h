@@ -83,11 +83,23 @@ public:
 	void storeHHCategory( const QString &hhRecordId, const QString &category );
 
 	/**
+	 * Returns the category for the given record or QString() if no category is
+	 * set.
+	 */
+	QString hhCategory( const QString &hhRecordId ) const;
+
+	/**
 	 * Stores the categories for the record with @p pcRecordId in the mapping.
 	 * Does nothing when there is no mapping for @p pcRecordId.
 	 */
 	void storePCCategories( const QString &pcRecordId
 	                      , const QStringList &categories );
+
+	/**
+	 * Returns the categories for the given record or QString() if no category is
+	 * set.
+	 */
+	QStringList pcCategories( const QString &pcRecordId ) const;
 
 	/**
 	 * Method to find out wether or not there is a mapping for hh record with 

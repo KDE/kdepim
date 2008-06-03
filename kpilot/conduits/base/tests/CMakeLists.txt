@@ -1,4 +1,3 @@
-set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/..
 )
@@ -35,6 +34,8 @@ set(testlib_SRCS
 
 kde4_add_library(testlib SHARED ${testlib_SRCS})
 target_link_libraries(testlib kpilot_conduit_base)
+
+# NOTE: To run individual test with verbose output do ctest -V -R <testname>
 
 RECORD_CONDUIT_UNIT_TESTS(
 	idmappingxmlsourcetest

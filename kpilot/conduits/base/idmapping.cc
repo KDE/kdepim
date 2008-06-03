@@ -168,6 +168,13 @@ void IDMapping::storeHHCategory( const QString &hhRecordId
 	}
 }
 
+QString IDMapping::hhCategory( const QString &hhRecordId ) const
+{
+	FUNCTIONSETUP;
+	
+	return fSource.hhCategory( hhRecordId );
+}
+
 void IDMapping::storePCCategories( const QString &pcRecordId
                                  , const QStringList &categories )
 {
@@ -177,6 +184,13 @@ void IDMapping::storePCCategories( const QString &pcRecordId
 	{
 		fSource.setPCCategories( pcRecordId, categories );
 	}
+}
+
+QStringList IDMapping::pcCategories( const QString &pcRecordId ) const
+{
+	FUNCTIONSETUP;
+	
+	return fSource.pcCategories( pcRecordId );
 }
 
 bool IDMapping::containsHHId( const QString &recordId ) const

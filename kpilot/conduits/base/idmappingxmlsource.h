@@ -53,10 +53,13 @@ public:
 	
 	const QMap<QString, QString>* constMappings() const { return &fMappings; }
 
-	// TODO: Save the categories to the xml file.
 	void setHHCategory( const QString &hhRecordId, const QString &category );
+	
+	QString hhCategory( const QString &hhRecordId ) const;
 
 	void setPCCategories( const QString &pcRecordId, const QStringList &categories );
+	
+	QStringList pcCategories( const QString &pcRecordId ) const;
 	
 	QStringList* archivedRecords() { return &fArchivedRecords; }
 	
