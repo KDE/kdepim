@@ -45,5 +45,5 @@ RECORD_CONDUIT_UNIT_TESTS(
 	rcfirstsynctest
 	rccopyhhtopctest
 	rccopypctohhtest
-	categoryhotsynctest
+	#categoryhotsynctest
 )
