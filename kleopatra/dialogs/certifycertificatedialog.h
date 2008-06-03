@@ -58,14 +58,23 @@ namespace Dialogs {
         explicit CertifyCertificateDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
         ~CertifyCertificateDialog();
 
-        void setSigningOption(  Kleo::SignKeyJob::SigningOption option );
-        Kleo::SignKeyJob::SigningOption signingOption() const;
-        std::vector<GpgME::UserID> selectedUserIDs() const;
+        bool exportableCertificationSelected() const;
+
+        bool trustCertificationSelected() const;
+
+        bool nonRevocableCertificationSelected() const;
+
+        std::vector<unsigned int> selectedUserIDs() const;
+
+        void setCertificatesWithSecretKeys( const std::vector<GpgME::Key> & keys );
         GpgME::Key selectedSecretKey() const;
+
         bool sendToServer() const;
 
+        unsigned int selectedCheckLevel() const;
+
         void setCertificateToCertify( const GpgME::Key & key );
-        void setCertificatesWithSecretKeys( const std::vector<GpgME::Key> & keys );
+
         void connectJob( Kleo::SignKeyJob * job );
         void setError( const GpgME::Error & error );
 

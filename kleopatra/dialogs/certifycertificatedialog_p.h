@@ -55,8 +55,9 @@ namespace Kleo {
                     UserIDIndex=Qt::UserRole
                 };
                 explicit UserIDModel( QObject * parent=0 ) : QStandardItemModel( parent ) {}
+                GpgME::Key certificateToCertify() const { return m_key; }
                 void setCertificateToCertify( const GpgME::Key & key );
-                std::vector<GpgME::UserID> checkedUserIDs() const;
+                std::vector<unsigned int> checkedUserIDs() const;
 
             private:
                 GpgME::Key m_key;
@@ -83,8 +84,9 @@ namespace Kleo {
                 explicit SelectUserIDsPage( QWidget * parent=0 );
                 /* reimp */ bool isComplete() const;
 
-                std::vector<GpgME::UserID> selectedUserIDs() const;
+                std::vector<unsigned int> selectedUserIDs() const;
                 void setCertificateToCertify( const GpgME::Key & ids );
+                GpgME::Key certificateToCertify() const { return m_userIDModel.certificateToCertify(); }
 
             private:
                 QListView * m_listView;
@@ -105,8 +107,7 @@ namespace Kleo {
             public:
                 explicit OptionsPage( QWidget * parent=0 );
 
-                void setCertificationOption( SignKeyJob::SigningOption option );
-                SignKeyJob::SigningOption selectedCertificationOption() const;
+                bool exportableCertificationSelected() const;
                 void setCertificatesWithSecretKeys( const std::vector<GpgME::Key> & keys );
                 GpgME::Key selectedSecretKey() const;
                 bool sendToServer() const;
@@ -129,10 +130,24 @@ namespace Kleo {
                 /* reimp */ bool isComplete() const;
                 void setComplete( bool complete );
 
-                void setError( const GpgME::Error & err );
+                void setResult( const GpgME::Error & err );
+
+                struct Summary {
+                    std::vector<unsigned int> selectedUserIDs;
+                    unsigned int checkLevel;
+                    GpgME::Key certificateToCertify;
+                    GpgME::Key secretKey;
+                    bool exportable;
+                    bool sendToServer;
+                };
+
+                void setSummary( const Summary & summary );
 
             private:
                 bool m_complete;
+                QLabel * m_userIDsLabel;
+                QLabel * m_secretKeyLabel;
+                QLabel * m_checkLevelLabel;
                 QLabel * m_resultLabel;
             };
         }

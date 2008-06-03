@@ -40,6 +40,7 @@
 #include <KDebug>
 #include <KLocalizedString>
 
+#include <QGridLayout>
 #include <QStandardItem>
 #include <QStandardItemModel>
 #include <QListView>
@@ -47,7 +48,7 @@
 #include <QVBoxLayout>
 #include <QWizardPage>
 
-#include <boost/bind.hpp>
+#include <QTextDocument> // Qt::escape
 
 #include <cassert>
 
@@ -72,11 +73,11 @@ void UserIDModel::setCertificateToCertify( const Key & key ) {
     }
 }
 
-std::vector<UserID> UserIDModel::checkedUserIDs() const {
-    std::vector<UserID> ids;
+std::vector<unsigned int> UserIDModel::checkedUserIDs() const {
+    std::vector<unsigned int> ids;
     for ( int i = 0; i < rowCount(); ++i )
         if ( item( i )->checkState() == Qt::Checked )
-            ids.push_back( m_key.userID( item( i )->data( UserIDIndex ).toUInt() ) );
+            ids.push_back( item( i )->data( UserIDIndex ).toUInt() );
     return ids;
 }
 
@@ -105,8 +106,9 @@ Key SecretKeysModel::keyFromIndex( const QModelIndex & idx ) const {
 }
 
 SelectUserIDsPage::SelectUserIDsPage( QWidget * parent ) : QWizardPage( parent ), m_userIDModel() {
-    setTitle( i18n( "Please select the user IDs you wish to certify:" ) );
     QVBoxLayout * const layout = new QVBoxLayout ( this );
+    QLabel * const label = new QLabel;
+    label->setText( i18n( "<b>Step 1:</b> Please select the user IDs you wish to certify." ) );
     m_listView = new QListView;
     m_listView->setModel( &m_userIDModel );
     connect( &m_userIDModel, SIGNAL(itemChanged(QStandardItem*)), this, SIGNAL(completeChanged()) );
@@ -117,7 +119,7 @@ bool SelectUserIDsPage::isComplete() const {
     return !selectedUserIDs().empty();
 }
 
-std::vector<UserID> SelectUserIDsPage::selectedUserIDs() const {
+std::vector<unsigned int> SelectUserIDsPage::selectedUserIDs() const {
     return m_userIDModel.checkedUserIDs();
 }
 
@@ -132,11 +134,11 @@ SelectCheckLevelPage::SelectCheckLevelPage( QWidget * parent ) : QWizardPage( pa
 
 unsigned int SelectCheckLevelPage::checkLevel() const {
     if ( m_ui.checkLevelNotCheckedRB->isChecked() )
-        return 0;
-    if ( m_ui.checkLevelCasualRB->isChecked() )
         return 1;
-    if ( m_ui.checkLevelThoroughlyRB->isChecked() )
+    if ( m_ui.checkLevelCasualRB->isChecked() )
         return 2;
+    if ( m_ui.checkLevelThoroughlyRB->isChecked() )
+        return 3;
     assert( !"No check level radiobutton checked" );
     return 0;
 }
@@ -149,15 +151,9 @@ OptionsPage::OptionsPage( QWidget * parent ) : QWizardPage( parent ), m_ui() {
     setButtonText( QWizard::CommitButton, i18n( "Certify" ) );
 }
 
-void OptionsPage::setCertificationOption( SignKeyJob::SigningOption opt ) {
-    if ( opt == SignKeyJob::LocalSignature )
-        m_ui.localSignatureRB->setChecked( true );
-    else
-        m_ui.exportableSignatureRB->setChecked( true );
-}
 
-SignKeyJob::SigningOption OptionsPage::selectedCertificationOption() const {
-    return m_ui.exportableSignatureRB->isChecked() ? SignKeyJob::ExportableSignature : SignKeyJob::LocalSignature;
+bool OptionsPage::exportableCertificationSelected() const {
+    return m_ui.exportableSignatureRB->isChecked();
 }
 
 void OptionsPage::setCertificatesWithSecretKeys( const std::vector<Key> & keys ) {
@@ -192,13 +188,44 @@ bool OptionsPage::isComplete() const {
 }
 
 SummaryPage::SummaryPage( QWidget * parent ) : QWizardPage( parent ), m_complete( false ) {
-    QVBoxLayout * const layout = new QVBoxLayout( this );
-    m_resultLabel = new QLabel;
-    layout->addWidget( m_resultLabel );
+    QGridLayout * const layout = new QGridLayout( this );
+    QLabel * const uidLabelLabel = new QLabel( i18n( "Signed user IDs:" ) );
+    uidLabelLabel->setAlignment( Qt::AlignTop );
+    layout->addWidget( uidLabelLabel, 0, 0 );
+    layout->addWidget( m_userIDsLabel = new QLabel, 0, 1 );
+    layout->addWidget( new QLabel( i18n( "Check level:"  )), 1, 0 );
+    layout->addWidget( m_checkLevelLabel = new QLabel, 1, 1 );
+    layout->addWidget( new QLabel( i18n( "Selected secret certificate:" ) ), 2, 0 );
+    layout->addWidget( m_secretKeyLabel = new QLabel, 2, 1 );
+    m_secretKeyLabel->setTextFormat( Qt::PlainText );
+    layout->addWidget( m_resultLabel = new QLabel, 3, 0, 2, 1 );
 }
 
 bool SummaryPage::isComplete() const {
     return m_complete;
+}
+
+void SummaryPage::setSummary( const SummaryPage::Summary & sum ) {
+    const Key key = sum.certificateToCertify;
+    QStringList ids;
+    Q_FOREACH ( const unsigned int i, sum.selectedUserIDs )
+        ids += Qt::escape( Formatting::prettyUserID( key.userID( i ) ) );
+    m_userIDsLabel->setText( "<qt>" + ids.join( "<br/>" ) + "</qt>" );
+    m_secretKeyLabel->setText( sum.secretKey.isNull() ? i18n( "Default certificate" ) : Formatting::prettyNameAndEMail( sum.secretKey ) );
+    switch( sum.checkLevel ) {
+        case 0:
+            m_checkLevelLabel->setText( i18n( "No statement made" ) );
+            break;
+        case 1:
+            m_checkLevelLabel->setText( i18n( "Not checked" ) );
+            break;
+        case 2:
+            m_checkLevelLabel->setText( i18n( "Casually checked" ) );
+            break;
+        case 3:
+            m_checkLevelLabel->setText( i18n( "Thoroughly checked" ) );
+            break;
+    }
 }
 
 void SummaryPage::setComplete( bool complete ) {
@@ -207,8 +234,13 @@ void SummaryPage::setComplete( bool complete ) {
     m_complete = complete;
     emit completeChanged();
 }
-void SummaryPage::setError( const Error & err ) {
-
+void SummaryPage::setResult( const Error & err ) {
+    if ( err && !err.isCanceled() )
+        m_resultLabel->setText( i18n( "<b>Error</b>: %1", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) ) );
+    else if ( err.isCanceled() )
+        m_resultLabel->setText( "Certification canceled." );
+    else
+        m_resultLabel->setText("Certification finished." );
 }
 
 class CertifyCertificateDialog::Private {
@@ -243,6 +275,17 @@ public:
         summaryPage->setComplete( true );
     }
 
+    SummaryPage::Summary createSummary() const {
+        SummaryPage::Summary sum;
+        sum.selectedUserIDs = selectUserIDsPage->selectedUserIDs();
+        sum.secretKey = optionsPage->selectedSecretKey();
+        sum.certificateToCertify = selectUserIDsPage->certificateToCertify();
+        sum.checkLevel = selectCheckLevelPage->checkLevel();
+        sum.exportable = optionsPage->exportableCertificationSelected();
+        sum.sendToServer = optionsPage->sendToServer();
+        return sum;
+    }
+
     int summaryPageId;
     SelectUserIDsPage * selectUserIDsPage;
     SelectCheckLevelPage * selectCheckLevelPage;
@@ -260,6 +303,7 @@ CertifyCertificateDialog::CertifyCertificateDialog( QWidget * p, Qt::WindowFlags
 CertifyCertificateDialog::~CertifyCertificateDialog() {}
 
 void CertifyCertificateDialog::setCertificateToCertify( const Key & key ) {
+    setWindowTitle( i18nc( "arg is name, email of certificate holder", "Certify Certificate: %1", Formatting::prettyName( key ) ) );
     d->selectUserIDsPage->setCertificateToCertify( key );
 }
 
@@ -267,13 +311,16 @@ void CertifyCertificateDialog::setCertificatesWithSecretKeys( const std::vector<
     d->optionsPage->setCertificatesWithSecretKeys( keys );
 }
 
-
-void CertifyCertificateDialog::setSigningOption( SignKeyJob::SigningOption option ) {
-    d->optionsPage->setCertificationOption( option );
+bool CertifyCertificateDialog::exportableCertificationSelected() const {
+    return d->optionsPage->exportableCertificationSelected();
 }
 
-SignKeyJob::SigningOption CertifyCertificateDialog::signingOption() const {
-    return d->optionsPage->selectedCertificationOption();
+bool CertifyCertificateDialog::trustCertificationSelected() const {
+    return false;
+}
+
+bool CertifyCertificateDialog::nonRevocableCertificationSelected() const {
+    return false;
 }
 
 Key CertifyCertificateDialog::selectedSecretKey() const {
@@ -284,13 +331,18 @@ bool CertifyCertificateDialog::sendToServer() const {
     return d->optionsPage->sendToServer();
 }
 
+unsigned int CertifyCertificateDialog::selectedCheckLevel() const {
+    return d->selectCheckLevelPage->checkLevel();
+}
+
 void CertifyCertificateDialog::connectJob( SignKeyJob * job ) {
     connect( job, SIGNAL(result(GpgME::Error)), this, SLOT(certificationResult(GpgME::Error)) );
+    d->summaryPage->setSummary( d->createSummary() );
 }
 
 void CertifyCertificateDialog::setError( const Error & error ) {
     d->setOperationCompleted();
-    d->summaryPage->setError( error );
+    d->summaryPage->setResult( error );
     d->ensureSummaryPageVisible();
     if ( error.isCanceled() )
         close();
@@ -298,7 +350,12 @@ void CertifyCertificateDialog::setError( const Error & error ) {
 
 void CertifyCertificateDialog::Private::certificationResult( const Error & err ) {
     setOperationCompleted();
+    summaryPage->setResult( err );
     ensureSummaryPageVisible();
+}
+
+std::vector<unsigned int> CertifyCertificateDialog::selectedUserIDs() const {
+    return d->selectUserIDsPage->selectedUserIDs();
 }
 
 void CertifyCertificateDialog::Private::ensureSummaryPageVisible() {

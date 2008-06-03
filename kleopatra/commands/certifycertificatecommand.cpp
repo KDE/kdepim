@@ -174,7 +174,7 @@ void CertifyCertificateCommand::doStart() {
     std::vector<Key> secKeys = KeyCache::instance()->secretKeys();
     std::vector<Key>::iterator it = std::remove_if( secKeys.begin(), secKeys.end(), !bind( &Key::canCertify, _1 ) );
     it = std::remove_if( it, secKeys.end(), bind( &Key::protocol, _1 ) != OpenPGP );
-    secKeys.erase( it );
+    secKeys.erase( it, secKeys.end() );
 
     if ( secKeys.empty() ) {
         KMessageBox::error( d->view(),
@@ -193,8 +193,6 @@ void CertifyCertificateCommand::doStart() {
         }
 
     d->ensureDialogCreated();
-    //d->dialog->setKey( key );
-    //d->dialog->setUserIDs( uids );
     assert( d->dialog );
     d->dialog->setCertificateToCertify( d->key() );
     d->dialog->setCertificatesWithSecretKeys( secKeys );
@@ -213,18 +211,20 @@ void CertifyCertificateCommand::Private::slotResult( const Error & err ) {
 void CertifyCertificateCommand::Private::slotCertificationPrepared() {
     assert( dialog );
 
-    const SignKeyJob::SigningOption opt = dialog->signingOption();
-
     createJob();
     assert( job );
+    job->setExportable( dialog->exportableCertificationSelected() );
+    job->setNonRevocable( dialog->nonRevocableCertificationSelected() );
+    job->setUserIDsToSign( dialog->selectedUserIDs() );
+    job->setSigningKey( dialog->selectedSecretKey() );
+    job->setCheckLevel( dialog->selectedCheckLevel() );
+
     dialog->connectJob( job );
 
-#if 0
-    if ( const Error err = job->start( key(), std::vector<unsigned int>(), Key(), 0u, opt ) ) {
+    if ( const Error err = job->start( key() ) ) {
         dialog->setError( err );
         finished();
     }
-#endif
 }
 
 void CertifyCertificateCommand::doCancel() {
@@ -245,6 +245,9 @@ void CertifyCertificateCommand::Private::ensureDialogCreated() {
 }
 
 void CertifyCertificateCommand::Private::createJob() {
+    if ( dialog )
+        disconnect( dialog, SIGNAL(certificationPrepared()), q, SLOT(slotCertificationPrepared()) );
+
     assert( !job );
 
     assert( key().protocol() == OpenPGP );
