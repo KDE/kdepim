@@ -41,8 +41,6 @@
 
 #include <gpgme++/context.h>
 
-#include <qgpgme/eventloopinteractor.h>
-
 #include <QByteArray>
 #include <QStringList>
 
@@ -51,7 +49,7 @@
 #include <assert.h>
 
 Kleo::QGpgMERefreshKeysJob::QGpgMERefreshKeysJob()
-  : RefreshKeysJob( QGpgME::EventLoopInteractor::instance() ),
+  : RefreshKeysJob( 0 ),
     mProcess( 0 ),
     mError( 0 )
 {

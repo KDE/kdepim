@@ -33,54 +33,37 @@
 #include "qgpgmekeygenerationjob.h"
 
 #include <qgpgme/dataprovider.h>
-#include <qgpgme/eventloopinteractor.h>
 
 #include <gpgme++/context.h>
-#include <gpgme++/keygenerationresult.h>
 #include <gpgme++/data.h>
 
-#include <assert.h>
+#include <cassert>
 
-Kleo::QGpgMEKeyGenerationJob::QGpgMEKeyGenerationJob( GpgME::Context * context )
-  : KeyGenerationJob( QGpgME::EventLoopInteractor::instance() ),
-    QGpgMEJob( this, context ),
-    mPubKeyDataProvider( 0 ),
-    mPubKey( 0 )
+using namespace Kleo;
+using namespace GpgME;
+using namespace boost;
+
+QGpgMEKeyGenerationJob::QGpgMEKeyGenerationJob( Context * context )
+  : mixin_type( context )
 {
-  assert( context );
+  lateInitialization();
 }
 
-Kleo::QGpgMEKeyGenerationJob::~QGpgMEKeyGenerationJob() {
-  delete mPubKey; mPubKey = 0;
-  delete mPubKeyDataProvider; mPubKeyDataProvider = 0;
+QGpgMEKeyGenerationJob::~QGpgMEKeyGenerationJob() {}
+
+static QGpgMEKeyGenerationJob::result_type generate_key( Context * ctx, const QString & parameters ) {
+  QGpgME::QByteArrayDataProvider dp;
+  Data data = ctx->protocol() == CMS ? Data( &dp ) : Data( Data::null ) ;
+  assert( data.isNull() == ( ctx->protocol() != CMS ) );
+
+  const KeyGenerationResult res = ctx->generateKey( parameters.toUtf8().constData(), data );
+  const QString log = _detail::audit_log_as_html( ctx );
+  return make_tuple( res, dp.data(), log );
 }
 
-GpgME::Error Kleo::QGpgMEKeyGenerationJob::start( const QString & parameters ) {
-  assert( !mPubKey );
-
-  // set up empty data object for the public key data
-  if ( mCtx->protocol() == GpgME::CMS ) {
-    mPubKeyDataProvider = new QGpgME::QByteArrayDataProvider();
-    mPubKey = new GpgME::Data( mPubKeyDataProvider );
-    assert( !mPubKey->isNull() );
-  }
-
-  hookupContextToEventLoopInteractor();
-
-  GpgME::Data null = GpgME::Data::null;
-  const GpgME::Error err =
-    mCtx->startKeyGeneration( parameters.toUtf8().data(), mPubKey ? *mPubKey : null );
-
-  if ( err )
-    deleteLater();
-  return err;
-}
-
-void Kleo::QGpgMEKeyGenerationJob::doOperationDoneEvent( const GpgME::Error & ) {
-  const GpgME::KeyGenerationResult res = mCtx->keyGenerationResult();
-  const QByteArray data = mPubKeyDataProvider ? mPubKeyDataProvider->data() : QByteArray() ;
-  getAuditLog();
-  emit result( res, data );
+Error QGpgMEKeyGenerationJob::start( const QString & parameters ) {
+  run( bind( &generate_key, _1, parameters ) );
+  return Error();
 }
 
 #include "qgpgmekeygenerationjob.moc"

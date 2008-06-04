@@ -17,7 +17,7 @@ set(libkleo_backend_qgpgme_SRCS
 	backends/qgpgme/gnupgprocessbase.cpp
 	backends/qgpgme/qgpgmeprogresstokenmapper.cpp
 	backends/qgpgme/qgpgmebackend.cpp
-	backends/qgpgme/qgpgmejob.cpp
+        backends/qgpgme/threadedjobmixin.cpp
 	backends/qgpgme/qgpgmekeylistjob.cpp
 	backends/qgpgme/qgpgmekeygenerationjob.cpp
 	backends/qgpgme/qgpgmeimportjob.cpp

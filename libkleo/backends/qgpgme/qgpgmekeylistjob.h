@@ -2,7 +2,7 @@
     qgpgmekeylistjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -35,22 +35,27 @@
 
 #include "kleo/keylistjob.h"
 
+#include "threadedjobmixin.h"
+
 #include <gpgme++/keylistresult.h>
-
-#include "qgpgmejob.h"
-
-namespace GpgME {
-  class Error;
-  class Context;
-  class Key;
-}
+#include <gpgme++/key.h>
 
 namespace Kleo {
 
-  class QGpgMEKeyListJob : public KeyListJob, private QGpgMEJob {
-    Q_OBJECT QGPGME_JOB
+  class QGpgMEKeyListJob
+#ifdef Q_MOC_RUN
+    : public KeyListJob
+#else
+    : public _detail::ThreadedJobMixin<KeyListJob, boost::tuple<GpgME::KeyListResult, std::vector<GpgME::Key>, QString> >
+#endif
+  {
+    Q_OBJECT
+#ifdef Q_MOC_RUN
+  public Q_SLOTS:
+    void slotFinished();
+#endif
   public:
-    QGpgMEKeyListJob( GpgME::Context * context );
+    explicit QGpgMEKeyListJob( GpgME::Context * context );
     ~QGpgMEKeyListJob();
 
     /*! \reimp from KeyListJob */
@@ -62,14 +67,8 @@ namespace Kleo {
     /*! \reimp from Job */
     void showErrorDialog( QWidget * parent, const QString & caption ) const;
 
-  private slots:
-    void slotNextKeyEvent( GpgME::Context * context, const GpgME::Key & key );
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
-
-  private:
-    void doOperationDoneEvent( const GpgME::Error &) {} // unused, we implement slotOperationDoneEvent ourselves.
-    void setup( const QStringList &, bool );
-    GpgME::KeyListResult attemptSyncKeyListing( std::vector<GpgME::Key> & );
+    /*! \reimp from ThreadedJobMixin */
+    void resultHook( const result_type & result );
 
   private:
     GpgME::KeyListResult mResult;

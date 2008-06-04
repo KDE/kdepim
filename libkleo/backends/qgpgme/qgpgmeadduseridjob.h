@@ -35,31 +35,28 @@
 
 #include "kleo/adduseridjob.h"
 
-#include "qgpgmejob.h"
-
-namespace GpgME {
-  class Error;
-  class Context;
-}
+#include "threadedjobmixin.h"
 
 namespace Kleo {
 
-  class QGpgMEAddUserIDJob : public AddUserIDJob, private QGpgMEJob {
-    Q_OBJECT QGPGME_JOB
+  class QGpgMEAddUserIDJob
+#ifdef Q_MOC_RUN
+    : public AddUserIDJob
+#else
+    : public _detail::ThreadedJobMixin<AddUserIDJob>
+#endif
+  {
+    Q_OBJECT
+#ifdef Q_MOC_RUN
+  private Q_SLOTS:
+    void slotFinished();
+#endif
   public:
-    QGpgMEAddUserIDJob( GpgME::Context * context );
+    explicit QGpgMEAddUserIDJob( GpgME::Context * context );
     ~QGpgMEAddUserIDJob();
 
     /*! \reimp from AddUserIDJob */
     GpgME::Error start( const GpgME::Key & key, const QString & name, const QString & email, const QString & comment );
-
-  private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-
-  private Q_SLOTS:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, e );
-    }
   };
 }
 

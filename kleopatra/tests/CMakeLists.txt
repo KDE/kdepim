@@ -3,6 +3,7 @@ include_directories( ${CMAKE_SOURCE_DIR}/kleopatra ${CMAKE_BINARY_DIR}/kleopatra
 
 ########### next target ###############
 
+if ( PORT_ME_AWAY_FROM_EVENT_LOOPS )
 set(test_keylistmodels_SRCS test_keylistmodels.cpp ../models/keylistmodel.cpp ../models/keylistsortfilterproxymodel.cpp ../utils/formatting.cpp ../utils/exception.cpp )
 if ( KLEO_MODEL_TEST )
    set(test_keylistmodels_SRCS ${test_keylistmodels_SRCS} ../models/modeltest.cpp )
@@ -30,6 +31,8 @@ target_link_libraries(test_useridlistmodels kleo ${KDE4_KDECORE_LIBS} )
 #kde4_add_executable(test_verificationresultdialog TEST ${test_verificationresultdialog_SRCS})
 #
 #target_link_libraries(test_verificationresultdialog kleo ${KDE4_KDECORE_LIBS} ${QT_QT3SUPPORT_LIBRARY})
+
+endif ( PORT_ME_AWAY_FROM_EVENT_LOOPS )
 
 ########### next target ###############
 

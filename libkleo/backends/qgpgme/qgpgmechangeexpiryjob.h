@@ -35,31 +35,28 @@
 
 #include "kleo/changeexpiryjob.h"
 
-#include "qgpgmejob.h"
-
-namespace GpgME {
-  class Error;
-  class Context;
-}
+#include "threadedjobmixin.h"
 
 namespace Kleo {
 
-  class QGpgMEChangeExpiryJob : public ChangeExpiryJob, private QGpgMEJob {
-    Q_OBJECT QGPGME_JOB
+  class QGpgMEChangeExpiryJob
+#ifdef Q_MOC_RUN
+    : public ChangeExpiryJob
+#else
+    : public _detail::ThreadedJobMixin<ChangeExpiryJob>
+#endif
+  {
+    Q_OBJECT
+#ifdef Q_MOC_RUN
+  private Q_SLOTS:
+    void slotFinished();
+#endif
   public:
-    QGpgMEChangeExpiryJob( GpgME::Context * context );
+    explicit QGpgMEChangeExpiryJob( GpgME::Context * context );
     ~QGpgMEChangeExpiryJob();
 
     /*! \reimp from ChangeExpiryJob */
     GpgME::Error start( const GpgME::Key & key, const QDateTime & expiry );
-
-  private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-
-  private Q_SLOTS:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, e );
-    }
   };
 
 }

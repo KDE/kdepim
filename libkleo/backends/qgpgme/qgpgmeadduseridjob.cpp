@@ -32,51 +32,49 @@
 
 #include "qgpgmeadduseridjob.h"
 
-#include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
 
 #include <gpgme++/context.h>
 #include <gpgme++/data.h>
 #include <gpgme++/gpgadduserideditinteractor.h>
+#include <gpgme++/key.h>
 
 #include <cassert>
 #include <memory>
 
-Kleo::QGpgMEAddUserIDJob::QGpgMEAddUserIDJob( GpgME::Context * context )
-  : AddUserIDJob( QGpgME::EventLoopInteractor::instance() ),
-    QGpgMEJob( this, context )
+using namespace Kleo;
+using namespace GpgME;
+using namespace boost;
+
+QGpgMEAddUserIDJob::QGpgMEAddUserIDJob( Context * context )
+  : mixin_type( context )
 {
-  assert( context );
+  lateInitialization();
 }
 
-Kleo::QGpgMEAddUserIDJob::~QGpgMEAddUserIDJob() {
-}
+QGpgMEAddUserIDJob::~QGpgMEAddUserIDJob() {}
 
-GpgME::Error Kleo::QGpgMEAddUserIDJob::start( const GpgME::Key & key, const QString & name, const QString & email, const QString & comment ) {
+static QGpgMEAddUserIDJob::result_type add_user_id( Context * ctx, const Key & key, const QString & name, const QString & email, const QString & comment ) {
 
-  assert( !mOutData );
-
-  createOutData();
-  hookupContextToEventLoopInteractor();
-
-  std::auto_ptr<GpgME::GpgAddUserIDEditInteractor> gau( new GpgME::GpgAddUserIDEditInteractor );
+  std::auto_ptr<GpgAddUserIDEditInteractor> gau( new GpgAddUserIDEditInteractor );
 
   gau->setNameUtf8(       name.toUtf8().constData() );
   gau->setEmailUtf8(     email.toUtf8().constData() );
   gau->setCommentUtf8( comment.toUtf8().constData() );
 
-  std::auto_ptr<GpgME::EditInteractor> ei( gau );
+  std::auto_ptr<EditInteractor> ei( gau );
 
-  const GpgME::Error err = mCtx->startEditing( key, ei, *mOutData );
-
-  if ( err )
-    deleteLater();
-  return err;
+  QGpgME::QByteArrayDataProvider dp;
+  Data data( &dp );
+  assert( !data.isNull() );
+  const Error err = ctx->edit( key, ei, data );
+  const QString log = _detail::audit_log_as_html( ctx );
+  return make_tuple( err, log );
 }
 
-void Kleo::QGpgMEAddUserIDJob::doOperationDoneEvent( const GpgME::Error & error ) {
-  getAuditLog();
-  emit result( error );
+Error QGpgMEAddUserIDJob::start( const Key & key, const QString & name, const QString & email, const QString & comment ) {
+  run( bind( &add_user_id, _1, key, name, email, comment ) );
+  return Error();
 }
 
 #include "qgpgmeadduseridjob.moc"

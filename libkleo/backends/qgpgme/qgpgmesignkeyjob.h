@@ -35,20 +35,22 @@
 
 #include "kleo/signkeyjob.h"
 
-#include "qgpgmejob.h"
+#include "threadedjobmixin.h"
 
-namespace GpgME {
-  class Error;
-  class Key;
-  class Context;
-}
+#include <gpgme++/key.h>
 
 namespace Kleo {
 
-  class QGpgMESignKeyJob : public SignKeyJob, private QGpgMEJob {
-    Q_OBJECT QGPGME_JOB
+  class QGpgMESignKeyJob
+#ifdef Q_MOC_RUN
+    : public SignKeyJob
+#else
+    : public _detail::ThreadedJobMixin<SignKeyJob>
+#endif
+  {
+    Q_OBJECT
   public:
-    QGpgMESignKeyJob( GpgME::Context * context );
+    explicit QGpgMESignKeyJob( GpgME::Context * context );
     ~QGpgMESignKeyJob();
 
     /*! \reimp from SignKeyJob */
@@ -68,14 +70,6 @@ namespace Kleo {
 
     /*! \reimp from SignKeyJob */
     void setNonRevocable( bool nonRevocable );
-
-  private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-
-  private Q_SLOTS:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, e );
-    }
 
   private:
       std::vector<unsigned int> m_userIDsToSign;

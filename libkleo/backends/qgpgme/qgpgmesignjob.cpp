@@ -2,7 +2,7 @@
     qgpgmesignjob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004,2007,2008 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -14,9 +14,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
     In addition, as a special exception, the copyright holders give
     permission to link the code of this program with any edition of
@@ -34,132 +34,99 @@
 
 #include "ui/messagebox.h"
 
-#include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
 
 #include <gpgme++/context.h>
 #include <gpgme++/signingresult.h>
 #include <gpgme++/data.h>
-#include <gpgme++/key.h>
-#include <gpgme++/exception.h>
 
-#include <klocale.h>
+#include <QBuffer>
 
-#include <assert.h>
+#include <cassert>
 
-Kleo::QGpgMESignJob::QGpgMESignJob( GpgME::Context * context )
-  : SignJob( QGpgME::EventLoopInteractor::instance() ),
-    QGpgMEJob( this, context ),
+using namespace Kleo;
+using namespace GpgME;
+using namespace boost;
+
+QGpgMESignJob::QGpgMESignJob( Context * context )
+  : mixin_type( context ),
     mOutputIsBase64Encoded( false )
 {
-  assert( context );
+  lateInitialization();
 }
 
-Kleo::QGpgMESignJob::~QGpgMESignJob() {
-}
+QGpgMESignJob::~QGpgMESignJob() {}
 
-void Kleo::QGpgMESignJob::setOutputIsBase64Encoded( bool on ) {
+void QGpgMESignJob::setOutputIsBase64Encoded( bool on ) {
   mOutputIsBase64Encoded = on;
 }
 
-GpgME::Error Kleo::QGpgMESignJob::setup( const std::vector<GpgME::Key> & signers,
-					 const QByteArray & plainText, GpgME::SignatureMode mode ) {
-  assert( !mInData );
-  assert( !mOutData );
+static QGpgMESignJob::result_type sign( Context * ctx, const std::vector<Key> & signers, const shared_ptr<QIODevice> & plainText, const shared_ptr<QIODevice> & signature, SignatureMode mode, bool outputIsBsse64Encoded ) {
 
-  createInData( plainText );
-  createOutData();
+  QGpgME::QIODeviceDataProvider in( plainText );
+  const Data indata( &in );
 
-  if ( mOutputIsBase64Encoded )
-    mOutData->setEncoding( GpgME::Data::Base64Encoding );
+  ctx->clearSigningKeys();
+  Q_FOREACH( const Key & signer, signers )
+    if ( !signer.isNull() )
+      if ( const Error err = ctx->addSigningKey( signer ) )
+        return make_tuple( SigningResult( err ), QByteArray(), QString() );
 
-  try {
-      setSigningKeys( signers );
-  } catch ( const GpgME::Exception & e ) {
-      return e.error();
+  if ( !signature ) {
+    QGpgME::QByteArrayDataProvider out;
+    Data outdata( &out );
+
+    if ( outputIsBsse64Encoded )
+      outdata.setEncoding( Data::Base64Encoding );
+
+    const SigningResult res = ctx->sign( indata, outdata, mode );
+    const QString log = _detail::audit_log_as_html( ctx );
+    return make_tuple( res, out.data(), log );
+  } else {
+    QGpgME::QIODeviceDataProvider out( signature );
+    Data outdata( &out );
+
+    if ( outputIsBsse64Encoded )
+      outdata.setEncoding( Data::Base64Encoding );
+
+    const SigningResult res = ctx->sign( indata, outdata, mode );
+    const QString log = _detail::audit_log_as_html( ctx );
+    return make_tuple( res, QByteArray(), log );
   }
 
-  hookupContextToEventLoopInteractor();
-
-  return mCtx->startSigning( *mInData, *mOutData, mode );
 }
 
-GpgME::Error Kleo::QGpgMESignJob::start( const std::vector<GpgME::Key> & signers,
-					 const QByteArray & plainText,
-					 GpgME::SignatureMode mode ) {
-  const GpgME::Error err = setup( signers, plainText, mode );
-  if ( err )
-    deleteLater();
-  mResult = GpgME::SigningResult( err );
-  return err;
+static QGpgMESignJob::result_type sign_qba( Context * ctx, const std::vector<Key> & signers, const QByteArray & plainText, SignatureMode mode, bool outputIsBsse64Encoded ) {
+  const shared_ptr<QBuffer> buffer( new QBuffer );
+  buffer->setData( plainText );
+  if ( !buffer->open( QIODevice::ReadOnly ) )
+    assert( !"This should never happen: QBuffer::open() failed" );
+  return sign( ctx, signers, buffer, shared_ptr<QIODevice>(), mode, outputIsBsse64Encoded );
 }
 
-void Kleo::QGpgMESignJob::setup( const std::vector<GpgME::Key> & signers,
-                                 const boost::shared_ptr<QIODevice> & plainText,
-                                 const boost::shared_ptr<QIODevice> & signature,
-                                 GpgME::SignatureMode mode )
-{
-    assert( !mInData );
-    assert( !mOutData );
-
-    createInData( plainText );
-    if ( signature )
-        createOutData( signature );
-    else
-        createOutData();
-
-    if ( mOutputIsBase64Encoded )
-      mOutData->setEncoding( GpgME::Data::Base64Encoding );
-
-    setSigningKeys( signers );
-    hookupContextToEventLoopInteractor();
-
-    if ( const GpgME::Error err = mCtx->startSigning( *mInData, *mOutData, mode ) ) {
-        resetQIODeviceDataObjects();
-        doThrow( err, i18n("Can't start sign job") );
-    }
+Error QGpgMESignJob::start( const std::vector<Key> & signers, const QByteArray & plainText, SignatureMode mode ) {
+  run( bind( &sign_qba, _1, signers, plainText, mode, mOutputIsBase64Encoded ) );
+  return Error();
 }
 
-void Kleo::QGpgMESignJob::start( const std::vector<GpgME::Key> & signers,
-                                 const boost::shared_ptr<QIODevice> & plainText,
-                                 const boost::shared_ptr<QIODevice> & signature,
-                                 GpgME::SignatureMode mode )
-{
-    try {
-        setup( signers, plainText, signature, mode );
-    } catch ( const GpgME::Exception & e ) {
-        mResult = GpgME::SigningResult( e.error() );
-        throw;
-    }
+void QGpgMESignJob::start( const std::vector<Key> & signers, const shared_ptr<QIODevice> & plainText, const shared_ptr<QIODevice> & signature, SignatureMode mode ) {
+  run( bind( &sign, _1, signers, plainText, signature, mode, mOutputIsBase64Encoded ) );
 }
 
-GpgME::SigningResult Kleo::QGpgMESignJob::exec( const std::vector<GpgME::Key> & signers,
-						const QByteArray & plainText,
-						GpgME::SignatureMode mode,
-						QByteArray & signature ) {
-  if ( const GpgME::Error err = setup( signers, plainText, mode ) )
-    return mResult = GpgME::SigningResult( err );
-
-  waitForFinished();
-
-  signature = outData();
-  mResult = mCtx->signingResult();
-  resetQIODeviceDataObjects();
-  getAuditLog();
+SigningResult QGpgMESignJob::exec( const std::vector<Key> & signers, const QByteArray & plainText, SignatureMode mode, QByteArray & signature ) {
+  const result_type r = sign_qba( context(), signers, plainText, mode, mOutputIsBase64Encoded );
+  signature = get<1>( r );
+  resultHook( r );
   return mResult;
 }
 
-void Kleo::QGpgMESignJob::doOperationDoneEvent( const GpgME::Error & ) {
-  mResult = mCtx->signingResult();
-  const QByteArray cipherText = outData();
-  resetQIODeviceDataObjects();
-  getAuditLog();
-  emit result( mResult, cipherText );
+void QGpgMESignJob::resultHook( const result_type & tuple ) {
+  mResult = get<0>( tuple );
 }
 
-void Kleo::QGpgMESignJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
+void QGpgMESignJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
   if ( mResult.error() && !mResult.error().isCanceled() )
-      Kleo::MessageBox::error( parent, mResult, this, caption );
+      MessageBox::error( parent, mResult, this, caption );
 }
 
 #include "qgpgmesignjob.moc"

@@ -70,7 +70,7 @@ namespace Kleo {
     virtual GpgME::Error start( const GpgME::Key & key, bool allowSecretKeyDeletion=false ) = 0;
 
   Q_SIGNALS:
-    void result( const GpgME::Error & result );
+    void result( const GpgME::Error & result, const QString & auditLogAsHtml=QString() );
   };
 
 }

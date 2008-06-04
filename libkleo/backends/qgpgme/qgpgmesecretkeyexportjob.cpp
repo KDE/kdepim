@@ -40,8 +40,6 @@
 #include <gpgme++/context.h>
 #include <gpgme++/data.h>
 
-#include <qgpgme/eventloopinteractor.h>
-
 #include <QStringList>
 
 #include <gpg-error.h>
@@ -50,7 +48,7 @@
 #include <assert.h>
 
 Kleo::QGpgMESecretKeyExportJob::QGpgMESecretKeyExportJob( bool armour, const QString& charset )
-  : ExportJob( QGpgME::EventLoopInteractor::instance() ),
+  : ExportJob( 0 ),
     mProcess( 0 ),
     mError( 0 ),
     mArmour( armour ),

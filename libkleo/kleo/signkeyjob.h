@@ -106,7 +106,7 @@ namespace Kleo {
     virtual void setNonRevocable( bool nonRevocable ) = 0;
 
   Q_SIGNALS:
-    void result( const GpgME::Error & result );
+    void result( const GpgME::Error & result, const QString & auditLogAsHtml=QString() );
   };
 
 }
