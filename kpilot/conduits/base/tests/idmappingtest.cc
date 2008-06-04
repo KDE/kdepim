@@ -52,6 +52,8 @@ private slots:
 	void testWeirdCase();
 	void testSamePCIdForMoreHHids();
 	void testSameHHIdForMorePCids();
+	void testStoreHHCategory();
+	void testStorePCCategories();
 	void cleanupTestCase();
 	
 
@@ -221,6 +223,42 @@ void IDMappingTest::testSameHHIdForMorePCids()
 	QVERIFY( mapping.pcRecordId( CSL1( "hh-1" ) ) == CSL1( "pc-2" ) );
 	QVERIFY( mapping.hhRecordId( CSL1( "pc-2" ) ) == CSL1( "hh-1" ) );
 	QVERIFY( !mapping.containsPCId( CSL1( "pc-1" ) ) );
+}
+
+void IDMappingTest::testStoreHHCategory()
+{
+	IDMapping mapping( fUser, fConduit );
+	mapping.map( CSL1( "hh-1" ), CSL1( "pc-1" ) );
+	
+	QCOMPARE( mapping.hhCategory( CSL1( "hh-1" ) ), QString() );
+	
+	mapping.storeHHCategory( CSL1( "hh-1" ), CSL1( "TestCategory" ) );
+	
+	QCOMPARE( mapping.hhCategory( CSL1( "hh-1" ) ), CSL1( "TestCategory" ) );
+}
+
+void IDMappingTest::testStorePCCategories()
+{
+	IDMapping mapping( fUser, fConduit );
+	mapping.map( CSL1( "hh-1" ), CSL1( "pc-1" ) );
+	
+	QCOMPARE( mapping.pcCategories( CSL1( "pc-1" ) ), QStringList() );
+	
+	// One category
+	QStringList categories;
+	categories << CSL1( "TestCategory" );
+	
+	mapping.storePCCategories( CSL1( "pc-1" ), categories );
+	
+	QCOMPARE( mapping.pcCategories( CSL1( "pc-1" ) ), categories );
+	
+	// More categories
+	mapping.map( CSL1( "hh-2" ), CSL1( "pc-2" ) );
+	categories << CSL1( "AnotherTestCategory" );
+	
+	mapping.storePCCategories( CSL1( "pc-2" ), categories );
+	
+	QCOMPARE( mapping.pcCategories( CSL1( "pc-2" ) ), categories );
 }
 
 void IDMappingTest::cleanDir()

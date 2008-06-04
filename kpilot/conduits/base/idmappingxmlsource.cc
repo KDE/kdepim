@@ -103,11 +103,25 @@ void IDMappingXmlSource::setHHCategory( const QString &hhRecordId, const QString
 	fHHCategory.insert( hhRecordId, category );
 }
 
+QString IDMappingXmlSource::hhCategory( const QString &hhRecordId ) const
+{
+	FUNCTIONSETUP;
+	
+	return fHHCategory.value( hhRecordId );
+}
+
 void IDMappingXmlSource::setPCCategories( const QString &pcRecordId, const QStringList &categories )
 {
 	FUNCTIONSETUP;
 	
 	fPCCategories.insert( pcRecordId, categories );
+}
+
+QStringList IDMappingXmlSource::pcCategories( const QString &pcRecordId ) const
+{
+	FUNCTIONSETUP;
+	
+	return fPCCategories.value( pcRecordId );
 }
 
 void IDMappingXmlSource::loadMapping()

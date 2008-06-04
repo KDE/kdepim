@@ -1,4 +1,3 @@
-akonadiserver     ?
 akregator         Frank Osterfeld <osterfeld@kde.org>
 kabcclient        Kevin Krammer <kevin.krammer@gmx.at>
 kaddressbook      Tobias Koenig <tokoe@kde.org>
@@ -8,6 +7,7 @@ kdgantt           Kalle Dalheimer <kalle@klaralvdalens-datakonsult.se>
                   Lutz Rogowski <lutz@klaralvdalens-datakonsult.se>
 kfile-plugins     ?
 kioslave          ?
+kitchensync       Tobias Koenig <tokoe@kde.org>
 kjots             Stephen Kelly <steveire@gmail.com>
 kleopatra         Marc Mutz <mutz@kde.org>
                   Steffen Hansen <hansen@kde.org>
@@ -28,7 +28,6 @@ kpilot            Jason 'vanRijn' Kasper <vR@movingparts.net>
                   Adriaan de Groot <groot@kde.org>
 kresources        ?
 ktimetracker      Thorsten Staerk <dev@staerk.de>
-libakonadi        ?
 libkdepim         Marc Mutz <mutz@kde.org>
                   Mathias Waack <mathias@atoll-net.de> (Scoring)
                   Ingo Klöcker <kloecker@kde.org>
@@ -42,7 +41,6 @@ libkholidays      Allen Winter <winter@kde.org>
 libkpgp           Ingo Klöcker <kloecker@kde.org>
 libksieve         Marc Mutz <mutz@kde.org>
 mimelib           ?
-networkstatus     Will Stephenson <lists@stevello.free-online.co.uk>
 plugins           ?
 qpgpme            Marc Mutz <mutz@kde.org>
 wizards           ?

@@ -24,7 +24,6 @@
 #include "detailledstyle.h"
 
 #include <QCheckBox>
-#include <qfontcombobox.h>
 #include <QPainter>
 #include <QtGui/QPrinter>
 

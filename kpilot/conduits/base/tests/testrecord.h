@@ -40,9 +40,7 @@ private:
 	QStringList fFields;
 	bool fModified;
 	bool fDeleted;
-	bool fSupportsMultipleCategories;
 	QMap<QString, QVariant> fValues;
-	QList<Category*> fCategories;
 	
 public:
 	TestRecord( const TestHHRecord *other );
@@ -69,17 +67,15 @@ public:
 	
 	TestRecord* duplicate() const;
 	
-	void setSupportsMultipleCategories( bool support );
-	
 	/** IMPLEMTED VIRTUAL FUNCTIONS FROM BASECLASS **/
 	
 	virtual const QString id() const;
 	
-	virtual bool supportsMultipleCategories() const;
+	virtual int categoryCount() const { return 1; };
 	
-	virtual QList<Category*> categories() const;
-	
-	virtual void setCategories( const QList<Category*> &cats );
+	virtual bool containsCategory( const QString& c ) const { Q_UNUSED(c); return false; };
+
+	virtual QStringList categories() const { return QStringList(); };
 	
 	virtual void setId( const QString &id );
 

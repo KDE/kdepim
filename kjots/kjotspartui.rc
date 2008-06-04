@@ -34,6 +34,7 @@
   </Menu>
 
   <Menu name="go">
+   <text>&amp;Go</text>
    <Action name="go_next_page"/>
    <Action name="go_prev_page"/>
    <Separator/>
@@ -42,6 +43,7 @@
   </Menu>
 
   <Menu name="tools">
+   <text>&amp;Tools</text>
    <Action name="insert_date"/>
    <Action name="copyIntoTitle"/>
    <Action name="linkify"/>
@@ -56,9 +58,6 @@
 
  <ToolBar name="mainToolBar" fullWidth="true" noMerge="1">
   <text>Main Toobar</text>
-  <Separator/>
-  <Action name="new_book"/>
-  <Action name="new_page"/>
   <Separator/>
   <Action name="file_print"/>
   <Separator/>

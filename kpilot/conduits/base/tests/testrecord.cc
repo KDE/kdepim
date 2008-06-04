@@ -31,14 +31,12 @@
 
 TestRecord::TestRecord( const QStringList& fields )
 	: fFields( fields ), fModified( false ), fDeleted( false )
-		, fSupportsMultipleCategories( true )
 {
 }
 
 
 TestRecord::TestRecord( const QStringList& fields, const QString &id )
 	: fId( id ), fFields( fields ), fModified( false ), fDeleted( false )
-		, fSupportsMultipleCategories( true )
 {
 }
 
@@ -76,7 +74,6 @@ TestRecord::TestRecord( const TestRecord *other )
 	
 	fModified = other->isModified();
 	fDeleted = other->isDeleted();
-	fSupportsMultipleCategories = other->supportsMultipleCategories();
 }
 
 void TestRecord::setDeleted()
@@ -94,21 +91,6 @@ const QString TestRecord::id() const
 	return fId;
 }
 
-bool TestRecord::supportsMultipleCategories() const
-{
-	return fSupportsMultipleCategories;
-}
-
-QList<Category*> TestRecord::categories() const
-{
-	return fCategories;
-}
-
-void TestRecord::setCategories( const QList<Category*> &cats )
-{
-	fCategories = cats;
-}
-	
 void TestRecord::setId( const QString &id )
 {
 	fId = id;
@@ -171,12 +153,6 @@ TestRecord* TestRecord::duplicate() const
 {
 	return new TestRecord( this );
 }
-
-void TestRecord::setSupportsMultipleCategories( bool support )
-{
-	fSupportsMultipleCategories = support;
-}
-
 
 bool TestRecord::equal( const Record *rec ) const
 {
