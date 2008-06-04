@@ -48,6 +48,7 @@ private slots:
 	void testLastSyncedPC();
 	void testMappings();
 	void testSaveLoad();
+	void testHHCategory();
 	void cleanupTestCase();
 
 private:
@@ -153,6 +154,28 @@ void TestIDMappingXmlSource::testSaveLoad()
 		
 	QVERIFY( source2.archivedRecords()->size() == 1 );
 	QVERIFY( source2.archivedRecords()->contains( CSL1( "test-pc2" ) ) );
+}
+
+void TestIDMappingXmlSource::testHHCategory()
+{
+	
+	QDateTime dt = QDateTime::currentDateTime();
+	// Correct msecs, these wont be saved and the test 
+	// dt == source2.lastSyncedDate() will fail.
+	dt = dt.addMSecs( -dt.time().msec() );
+	QString pc( CSL1( "test-pc" ) );
+
+	IDMappingXmlSource source( fUser, fConduit );
+	source.setLastSyncedDate( dt );
+	source.setLastSyncedPC( pc );
+	source.mappings()->insert( CSL1( "test-hh" ), CSL1( "test-pc" ) );
+	source.setHHCategory( CSL1( "test-hh" ), CSL1( "TestCategory" ) );
+	source.saveMapping();
+	
+	IDMappingXmlSource source2( fUser, fConduit );
+	source2.loadMapping();
+	
+	QVERIFY( source2.hhCategory( "test-hh" ) == "TestCategory" );
 }
 
 void TestIDMappingXmlSource::cleanDir()

@@ -90,6 +90,9 @@ private:
 	QStringList fArchivedRecords;
 	QDateTime fLastSyncedDateTime;
 	QString fLastSyncedPC;
+	
+	QString fCurrentHHId;
+	QString fCurrentPCId;
 };
 
 #endif /*IDMAPPERXMLSOURCE_H */
