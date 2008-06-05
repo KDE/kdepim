@@ -48,6 +48,10 @@ private slots:
 	void testLastSyncedPC();
 	void testMappings();
 	void testSaveLoad();
+	void testHHCategory();
+	void testOnePCCategory();
+	void testOneHHAndOnePCCategory();
+	void testOneHHAndMultiplePCCategories();
 	void cleanupTestCase();
 
 private:
@@ -153,6 +157,121 @@ void TestIDMappingXmlSource::testSaveLoad()
 		
 	QVERIFY( source2.archivedRecords()->size() == 1 );
 	QVERIFY( source2.archivedRecords()->contains( CSL1( "test-pc2" ) ) );
+}
+
+void TestIDMappingXmlSource::testHHCategory()
+{
+	
+	QDateTime dt = QDateTime::currentDateTime();
+	// Correct msecs, these wont be saved and the test 
+	// dt == source2.lastSyncedDate() will fail.
+	dt = dt.addMSecs( -dt.time().msec() );
+	QString pc( CSL1( "test-pc" ) );
+
+	IDMappingXmlSource source( fUser, fConduit );
+	source.setLastSyncedDate( dt );
+	source.setLastSyncedPC( pc );
+	source.mappings()->insert( CSL1( "test-hh" ), CSL1( "test-pc" ) );
+	source.setHHCategory( CSL1( "test-hh" ), CSL1( "TestCategory" ) );
+	source.saveMapping();
+	
+	IDMappingXmlSource source2( fUser, fConduit );
+	source2.loadMapping();
+	
+	QVERIFY( source2.hhCategory( "test-hh" ) == "TestCategory" );
+}
+
+void TestIDMappingXmlSource::testOnePCCategory()
+{
+	
+	QDateTime dt = QDateTime::currentDateTime();
+	// Correct msecs, these wont be saved and the test 
+	// dt == source2.lastSyncedDate() will fail.
+	dt = dt.addMSecs( -dt.time().msec() );
+	QString pc( CSL1( "test-pc" ) );
+
+	IDMappingXmlSource source( fUser, fConduit );
+	source.setLastSyncedDate( dt );
+	source.setLastSyncedPC( pc );
+	source.mappings()->insert( CSL1( "test-hh" ), CSL1( "test-pc" ) );
+	
+	QStringList categories;
+	categories << CSL1( "TestCategory" );
+	
+	source.setPCCategories( CSL1( "test-pc" ), categories );
+	source.saveMapping();
+	
+	IDMappingXmlSource source2( fUser, fConduit );
+	source2.loadMapping();
+	
+	QVERIFY( source2.pcCategories( "test-pc" ).size() == 1 );
+	QVERIFY( source2.pcCategories( "test-pc" ).contains( CSL1( "TestCategory" ) ) );
+}
+
+void TestIDMappingXmlSource::testOneHHAndOnePCCategory()
+{
+	QDateTime dt = QDateTime::currentDateTime();
+	// Correct msecs, these wont be saved and the test 
+	// dt == source2.lastSyncedDate() will fail.
+	dt = dt.addMSecs( -dt.time().msec() );
+	QString pc( CSL1( "test-pc" ) );
+
+	IDMappingXmlSource source( fUser, fConduit );
+	source.setLastSyncedDate( dt );
+	source.setLastSyncedPC( pc );
+	source.mappings()->insert( CSL1( "test-hh" ), CSL1( "test-pc" ) );
+	source.setHHCategory( CSL1( "test-hh" ), CSL1( "TestCategory" ) );
+	
+	QStringList categories;
+	categories << CSL1( "TestPCCategory" );
+	
+	source.setPCCategories( CSL1( "test-pc" ), categories );
+	source.saveMapping();
+	
+	IDMappingXmlSource source2( fUser, fConduit );
+	source2.loadMapping();
+	
+	QVERIFY( source2.hhCategory( "test-hh" ) == "TestCategory" );
+	
+	QStringList cats = source2.pcCategories( "test-pc" );
+	
+	QVERIFY( cats.size() == 1 );
+	QVERIFY( cats.contains( CSL1( "TestPCCategory" ) ) );
+}
+
+void TestIDMappingXmlSource::testOneHHAndMultiplePCCategories()
+{
+	QDateTime dt = QDateTime::currentDateTime();
+	// Correct msecs, these wont be saved and the test 
+	// dt == source2.lastSyncedDate() will fail.
+	dt = dt.addMSecs( -dt.time().msec() );
+	QString pc( CSL1( "test-pc" ) );
+
+	IDMappingXmlSource source( fUser, fConduit );
+	source.setLastSyncedDate( dt );
+	source.setLastSyncedPC( pc );
+	source.mappings()->insert( CSL1( "test-hh" ), CSL1( "test-pc" ) );
+	source.setHHCategory( CSL1( "test-hh" ), CSL1( "TestCategory" ) );
+	
+	QStringList categories;
+	categories << CSL1( "TestPCCategory1" );
+	categories << CSL1( "TestPCCategory2" );
+	categories << CSL1( "TestPCCategory3" );
+	
+	source.setPCCategories( CSL1( "test-pc" ), categories );
+	source.saveMapping();
+	
+	IDMappingXmlSource source2( fUser, fConduit );
+	source2.loadMapping();
+	
+	QVERIFY( source2.hhCategory( "test-hh" ) == "TestCategory" );
+	
+	QStringList cats = source2.pcCategories( "test-pc" );
+	
+	QVERIFY( cats.size() == 3 );
+	QVERIFY( cats.contains( CSL1( "TestPCCategory1" ) ) );
+	QVERIFY( cats.contains( CSL1( "TestPCCategory2" ) ) );
+	QVERIFY( cats.contains( CSL1( "TestPCCategory3" ) ) );
 }
 
 void TestIDMappingXmlSource::cleanDir()

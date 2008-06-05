@@ -185,6 +185,22 @@ bool IDMappingXmlSource::saveMapping()
 		mappingElement.setAttribute( CSL1("hh"), it.key() );
 		mappingElement.setAttribute( CSL1("pc"), it.value() );
 		
+		if( !fHHCategory.value( it.key() ).isEmpty() )
+		{
+			QDomElement hhCatElement = doc.createElement( CSL1("hhcategory") );
+			hhCatElement.setAttribute( CSL1("value"), fHHCategory.value( it.key() ) );
+			
+			mappingElement.appendChild( hhCatElement );
+		}
+		
+		foreach( const QString& pcCat, fPCCategories.value( it.value() ) )
+		{
+			QDomElement pcCatElement = doc.createElement( CSL1("pccategory") );
+			pcCatElement.setAttribute( CSL1("value"), pcCat );
+			
+			mappingElement.appendChild( pcCatElement );
+		}
+		
 		if( fArchivedRecords.contains( it.value() ) )
 		{
 			mappingElement.setAttribute( CSL1( "archived" ), CSL1( "yes" ) );
@@ -256,6 +272,9 @@ bool IDMappingXmlSource::startElement( const QString &namespaceURI
 	
 	if( qName == CSL1( "mapping" ) )
 	{
+		fCurrentHHId = attribs.value( CSL1( "hh" ) );
+		fCurrentPCId = attribs.value( CSL1( "pc" ) );
+		
 		QString hh( attribs.value( CSL1( "hh" ) ) );
 		QString pc( attribs.value( CSL1( "pc" ) ) );
 		
@@ -265,6 +284,20 @@ bool IDMappingXmlSource::startElement( const QString &namespaceURI
 		}
 		
 		fMappings.insert( hh, pc );
+	}
+	else if( qName == CSL1( "hhcategory" ) )
+	{
+		QString category = attribs.value( CSL1("value") );
+		fHHCategory.insert( fCurrentHHId, category );
+	}
+	else if( qName == CSL1( "pccategory" ) )
+	{
+		QString category = attribs.value( CSL1("value") );
+		
+		QStringList cats = fPCCategories.value( fCurrentPCId );
+		cats << category;
+		
+		fPCCategories.insert( fCurrentPCId, cats );
 	}
 	else if( qName == CSL1( "lastsync" ) )
 	{
