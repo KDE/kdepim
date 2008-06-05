@@ -5,7 +5,9 @@
 
   This file is part of KMail, the KDE mail client.
 
-  (C) 2004 KMail Authors
+  (C) 2004 Till Adam <adam@kde.org>
+           Don Sanders
+           David Faure <dfaure@kde.org>
 
   KMail is free software; you can redistribute it and/or modify it
   under the terms of the GNU General Public License, version 2, as
