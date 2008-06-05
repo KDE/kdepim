@@ -61,6 +61,7 @@
 #include <boost/bind.hpp>
 #include <boost/range.hpp>
 #include <boost/weak_ptr.hpp>
+#include <boost/iterator/filter_iterator.hpp>
 
 #include <deque>
 #include <utility>
@@ -355,15 +356,15 @@ std::vector<Key> KeyCache::findSigners( const VerificationResult & res ) const {
     return findByKeyIDOrFingerprint( fprs );
 }
 
-std::vector<Key> KeyCache::findSubjects( const GpgME::Key & key, Option options ) const {
+std::vector<Key> KeyCache::findSubjects( const GpgME::Key & key, Options options ) const {
     return findSubjects( std::vector<Key>( 1, key ), options );
 }
 
-std::vector<Key> KeyCache::findSubjects( const std::vector<Key> & keys, Option options ) const {
+std::vector<Key> KeyCache::findSubjects( const std::vector<Key> & keys, Options options ) const {
     return findSubjects( keys.begin(), keys.end(), options );
 }
 
-std::vector<Key> KeyCache::findSubjects( std::vector<Key>::const_iterator first, std::vector<Key>::const_iterator last, Option options ) const {
+std::vector<Key> KeyCache::findSubjects( std::vector<Key>::const_iterator first, std::vector<Key>::const_iterator last, Options options ) const {
 
     if ( first == last )
         return std::vector<Key>();
@@ -389,30 +390,42 @@ std::vector<Key> KeyCache::findSubjects( std::vector<Key>::const_iterator first,
 
 static const unsigned int LIKELY_CHAIN_DEPTH = 3;
 
-std::vector<Key> KeyCache::findIssuers( const Key & key, Option options ) const {
+std::vector<Key> KeyCache::findIssuers( const Key & key, Options options ) const {
+
+    if ( key.isNull() )
+        return std::vector<Key>();
+
+    std::vector<Key> result;
+    if ( options & IncludeSubject )
+        result.push_back( key );
+
+    if ( key.isRoot() )
+        return result;
 
     const Key & issuer = findByFingerprint( key.chainID() );
 
     if ( issuer.isNull() )
-        return std::vector<Key>();
+        return result;
 
-    std::vector<Key> result( 1, issuer );
+    result.push_back( issuer );
+
     if ( !( options & RecursiveSearch ) )
         return result;
 
-    do {
+    while ( !result.back().isNull() && !result.back().isRoot() )
         result.push_back( findByFingerprint( result.back().chainID() ) );
-    } while ( !result.back().isNull() );
-    result.pop_back();
+
+    if ( result.back().isNull() )
+        result.pop_back();
 
     return result;
 }
 
-std::vector<Key> KeyCache::findIssuers( const std::vector<Key> & keys, Option options ) const {
+std::vector<Key> KeyCache::findIssuers( const std::vector<Key> & keys, Options options ) const {
     return findIssuers( keys.begin(), keys.end(), options );
 }
 
-std::vector<Key> KeyCache::findIssuers( std::vector<Key>::const_iterator first, std::vector<Key>::const_iterator last, Option options ) const {
+std::vector<Key> KeyCache::findIssuers( std::vector<Key>::const_iterator first, std::vector<Key>::const_iterator last, Options options ) const {
 
     if ( first == last )
         return std::vector<Key>();
@@ -420,7 +433,8 @@ std::vector<Key> KeyCache::findIssuers( std::vector<Key>::const_iterator first, 
     // extract chain-ids, identifying issuers:
     std::vector<const char *> chainIDs;
     chainIDs.reserve( last - first );
-    std::transform( first, last,
+    std::transform( boost::make_filter_iterator( !bind( &Key::isRoot, _1 ), first, last ),
+                    boost::make_filter_iterator( !bind( &Key::isRoot, _1 ), last,  last ),
                     std::back_inserter( chainIDs ),
                     bind( &Key::chainID, _1 ) );
     std::sort( chainIDs.begin(), chainIDs.end(), _detail::ByFingerprint<std::less>() );
@@ -435,10 +449,17 @@ std::vector<Key> KeyCache::findIssuers( std::vector<Key>::const_iterator first, 
                                std::back_inserter( result ),
                                _detail::ByFingerprint<std::less>() );
 
+    if ( options & IncludeSubject ) {
+        const unsigned int rs = result.size();
+        result.insert( result.end(), first, last );
+        std::inplace_merge( result.begin(), result.begin() + rs, result.end(),
+                            _detail::ByFingerprint<std::less>() );
+    }
+
     if ( !( options & RecursiveSearch ) )
         return result;
 
-    const std::vector<Key> l2result = findIssuers( result, options );
+    const std::vector<Key> l2result = findIssuers( result, options & ~IncludeSubject );
 
     const unsigned long result_size = result.size();
     result.insert( result.end(), l2result.begin(), l2result.end() );
