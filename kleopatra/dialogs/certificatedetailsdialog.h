@@ -76,6 +76,8 @@ namespace Dialogs {
         Q_PRIVATE_SLOT( d, void slotSignatureListingDone(GpgME::KeyListResult) )
         Q_PRIVATE_SLOT( d, void slotCertificationSelectionChanged() )
         Q_PRIVATE_SLOT( d, void slotKeysMayHaveChanged() )
+        Q_PRIVATE_SLOT( d, void slotDumpCertificate() )
+        Q_PRIVATE_SLOT( d, void slotDumpCertificateCommandFinished() )
     };
 
 }

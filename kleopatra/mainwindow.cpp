@@ -58,6 +58,7 @@
 #include "commands/signencryptfilescommand.h"
 #include "commands/clearcrlcachecommand.h"
 #include "commands/dumpcrlcachecommand.h"
+#include "commands/dumpcertificatecommand.h"
 #include "commands/importcrlcommand.h"
 #include "commands/changeexpirycommand.h"
 #include "commands/changeownertrustcommand.h"
@@ -238,6 +239,9 @@ public:
     void dumpCrlCache() {
         createAndStart<DumpCrlCacheCommand>();
     }
+    void dumpCertificate() {
+        createAndStart<DumpCertificateCommand>();
+    }
     void importCrlFromFile() {
         createAndStart<ImportCrlCommand>();
     }
@@ -410,6 +414,8 @@ void MainWindow::Private::setupActions() {
           0, q, SLOT(changePassphrase()), QString(), false, true },
         { "certificates_add_userid", i18n("Add User-ID..."), QString(),
           0, q, SLOT(addUserID()), QString(), false, true },
+        { "certificates_dump_certificate", i18n("Dump Certificate"), QString(),
+          0, q, SLOT(dumpCertificate()), QString(), false, true },
           // Tools menu
         { "tools_start_kwatchgnupg", i18n("GnuPG Log Viewer"), QString(),
           "kwatchgnupg", q, SLOT(gnupgLogViewer()), QString(), false, true },
@@ -464,6 +470,7 @@ void MainWindow::Private::setupActions() {
     controller.registerActionForCommand<ChangePassphraseCommand>(   coll->action( "certificates_change_passphrase" ) );
     controller.registerActionForCommand<CertifyCertificateCommand>(    coll->action( "certificates_certify_certificate" ) );
     controller.registerActionForCommand<AddUserIDCommand>(          coll->action( "certificates_add_userid" ) );
+    controller.registerActionForCommand<DumpCertificateCommand>(    coll->action( "certificates_dump_certificate" ) );
     controller.registerActionForCommand<SignEncryptFilesCommand>(   coll->action( "file_sign_encrypt_files" ) );
     controller.registerActionForCommand<DecryptVerifyFilesCommand>( coll->action( "file_decrypt_verify_files" ) );
     controller.registerActionForCommand<ExportCertificateCommand>(  coll->action( "file_export_certificates" ) );

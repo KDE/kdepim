@@ -192,6 +192,7 @@ set( _kleopatra_SRCS
   commands/decryptverifyclipboardcommand.cpp
   commands/clearcrlcachecommand.cpp
   commands/dumpcrlcachecommand.cpp
+  commands/dumpcertificatecommand.cpp
   commands/importcrlcommand.cpp
   commands/changeexpirycommand.cpp
   commands/changeownertrustcommand.cpp

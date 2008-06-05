@@ -279,7 +279,21 @@
       </attribute>
       <layout class="QVBoxLayout" >
        <item>
-        <widget class="KDLogTextWidget" native="1" name="dumpLTW" />
+        <widget class="QLabel" name="label" >
+         <property name="text" >
+          <string>This is a dump of all information the backend has about this certificate:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="KDLogTextWidget" native="1" name="dumpLTW" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="MinimumExpanding" hsizetype="Preferred" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+        </widget>
        </item>
       </layout>
      </widget>

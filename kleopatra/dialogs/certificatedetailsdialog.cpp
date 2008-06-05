@@ -44,8 +44,10 @@
 #include <commands/changeexpirycommand.h>
 #include <commands/adduseridcommand.h>
 #include <commands/certifycertificatecommand.h>
+#include <commands/dumpcertificatecommand.h>
 
 #include <utils/formatting.h>
+#include <utils/gnupg-helper.h>
 
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/cryptobackend.h>
@@ -58,6 +60,7 @@
 #include <KDebug>
 #include <KMessageBox>
 #include <KLocalizedString>
+#include <KGlobalSettings>
 
 #include <QPointer>
 #include <QHeaderView>
@@ -233,6 +236,28 @@ private:
                 q->setKey( KeyCache::instance()->findByFingerprint( fpr ) );
     }
 
+    void slotDumpCertificate() {
+
+        if ( dumpCertificateCommand )
+            return;
+
+        if ( key.protocol() != CMS ) {
+            ui.dumpLTW->clear();
+            return;
+        }
+
+        ui.dumpLTW->setLines( QStringList( i18n("Please wait while generating the dump...") ) );
+
+        dumpCertificateCommand = new DumpCertificateCommand( key );
+        dumpCertificateCommand->setUseDialog( false );
+        QPointer<Command> cmd = dumpCertificateCommand.data();
+        startCommandImplementation( cmd, SLOT(slotDumpCertificateCommandFinished()) );
+    }
+
+    void slotDumpCertificateCommandFinished() {
+        ui.dumpLTW->setLines( dumpCertificateCommand->output() );
+    }
+
 private:
     void updateWidgetVisibility() {
         const bool x509 = key.protocol() == CMS;
@@ -306,8 +331,12 @@ private:
         ui.overviewLB->setText( Formatting::formatOverview( key ) );
     }
 
-    void updateChainView() {
+    void updateChainTab() {
         ui.chainTW->clear();
+
+        if ( key.protocol() != CMS )
+            return;
+
         QTreeWidgetItem * last = 0;
         const std::vector<Key> chain = KeyCache::instance()->findIssuers( key, KeyCache::RecursiveSearch|KeyCache::IncludeSubject );
         if ( chain.empty() )
@@ -330,7 +359,8 @@ private:
 
     void propagateKey() {
         certificationsModel.setKey( key );
-        updateChainView();
+        updateChainTab();
+        slotDumpCertificate();
     }
 
 
@@ -345,6 +375,8 @@ private:
     QPointer<Command> addUserIDCommand;
     QPointer<Command> signCertificateCommand;
 
+    QPointer<DumpCertificateCommand> dumpCertificateCommand;
+
     QPointer<KeyListJob> keyListJob;
 
     struct UI : public Ui_CertificateDetailsDialog {
@@ -354,6 +386,11 @@ private:
             setupUi( qq );
 
             chainTW->header()->setResizeMode( 0, QHeaderView::Stretch );
+
+            dumpLTW->setFont( KGlobalSettings::fixedFont() );
+            dumpLTW->setMinimumVisibleLines( 25 );
+            dumpLTW->setMinimumVisibleColumns( 80 );
+
         }
     } ui;
 };

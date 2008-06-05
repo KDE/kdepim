@@ -74,6 +74,7 @@ private:
     Q_PRIVATE_SLOT( d, void refreshOpenPGPCertificates() )
     Q_PRIVATE_SLOT( d, void clearCrlCache() )
     Q_PRIVATE_SLOT( d, void dumpCrlCache() )
+    Q_PRIVATE_SLOT( d, void dumpCertificate() )
     Q_PRIVATE_SLOT( d, void importCrlFromFile() )
     Q_PRIVATE_SLOT( d, void newCertificate() )
     Q_PRIVATE_SLOT( d, void addUserID() )
