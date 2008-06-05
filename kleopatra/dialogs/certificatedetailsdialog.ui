@@ -249,10 +249,18 @@
       </attribute>
       <layout class="QVBoxLayout" >
        <item>
-        <widget class="QTreeView" name="chainTV" >
+        <widget class="QTreeWidget" name="chainTW" >
          <property name="allColumnsShowFocus" >
           <bool>true</bool>
          </property>
+         <property name="headerHidden" >
+          <bool>true</bool>
+         </property>
+         <column>
+          <property name="text" >
+           <string>1</string>
+          </property>
+         </column>
         </widget>
        </item>
       </layout>
@@ -271,7 +279,7 @@
       </attribute>
       <layout class="QVBoxLayout" >
        <item>
-        <widget class="KDLogTextWidget" native="1" name="widget" />
+        <widget class="KDLogTextWidget" native="1" name="dumpLTW" />
        </item>
       </layout>
      </widget>

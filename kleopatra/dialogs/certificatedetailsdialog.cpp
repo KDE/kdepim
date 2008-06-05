@@ -50,6 +50,7 @@
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/cryptobackend.h>
 #include <kleo/keylistjob.h>
+#include <kleo/dn.h>
 
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>
@@ -301,8 +302,31 @@ private:
         ui.overviewLB->setText( Formatting::formatOverview( key ) );
     }
 
+    void updateChainView() {
+        ui.chainTW->clear();
+        QTreeWidgetItem * last = 0;
+        const std::vector<Key> chain = KeyCache::instance()->findIssuers( key, KeyCache::RecursiveSearch|KeyCache::IncludeSubject );
+        if ( chain.empty() )
+            return;
+        if ( !chain.back().isRoot() ) {
+            last = new QTreeWidgetItem( ui.chainTW );
+            last->setText( 0, i18n("Issuer Certificate Not Found (%1)",
+                                   DN( chain.back().issuerName() ).prettyDN() ) );
+            //last->setSelectable( false );
+            const QBrush & fg = ui.chainTW->palette().brush( QPalette::Disabled, QPalette::WindowText );
+            last->setForeground( 0, fg );
+        }
+        for ( std::vector<Key>::const_reverse_iterator it = chain.rbegin(), end = chain.rend() ; it != end ; ++it ) {
+            last = last ? new QTreeWidgetItem( last ) : new QTreeWidgetItem( ui.chainTW ) ;
+            last->setText( 0, DN( it->userID(0).id() ).prettyDN() );
+            //last->setSelectable( true );
+        }
+        ui.chainTW->expandAll();
+    }
+
     void propagateKey() {
         certificationsModel.setKey( key );
+        updateChainView();
     }
 
 
@@ -324,6 +348,8 @@ private:
             : Ui_CertificateDetailsDialog()
         {
             setupUi( qq );
+
+            chainTW->header()->setResizeMode( 0, QHeaderView::Stretch );
         }
     } ui;
 };
