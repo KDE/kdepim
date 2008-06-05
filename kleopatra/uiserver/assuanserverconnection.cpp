@@ -49,6 +49,7 @@
 #include <utils/log.h>
 #include <utils/exception.h>
 #include <utils/kleo_assert.h>
+#include <utils/getpid.h>
 
 #include <gpgme++/data.h>
 
@@ -108,14 +109,6 @@ namespace {
         QString fileName;
         shared_ptr<QFile> file;
     };
-
-    static inline qint64 mygetpid() {
-#ifdef Q_OS_WIN32
-        return (qint64)_getpid();
-#else
-        return (qint64)getpid();
-#endif
-    }
 
     static void close_all( const std::vector<IOF> & ios ) {
         Q_FOREACH( const IOF & io, ios )
