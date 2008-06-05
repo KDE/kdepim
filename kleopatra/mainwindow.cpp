@@ -109,6 +109,12 @@
 
 #include <vector>
 
+#ifdef Q_OS_WIN32
+static const bool OS_WIN = true;
+#else
+static const bool OS_WIN = false;
+#endif
+
 using namespace Kleo;
 using namespace Kleo::Commands;
 using namespace boost;
@@ -418,7 +424,7 @@ void MainWindow::Private::setupActions() {
           0, q, SLOT(dumpCertificate()), QString(), false, true },
           // Tools menu
         { "tools_start_kwatchgnupg", i18n("GnuPG Log Viewer"), QString(),
-          "kwatchgnupg", q, SLOT(gnupgLogViewer()), QString(), false, true },
+          "kwatchgnupg", q, SLOT(gnupgLogViewer()), QString(), false, !OS_WIN },
 #if 0
         { "tools_start_kgpgconf", i18n("GnuPG Administrative Console"), QString(),
           "kgpgconf", q, SLOT(gnupgLogViewer()), QString(), false, true },
