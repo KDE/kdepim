@@ -319,7 +319,7 @@ void CertificateSelectionDialog::Private::slotDoubleClicked( const QModelIndex &
     assert( model );
     QItemSelectionModel * const sm = view->selectionModel();
     assert( sm );
-    sm->select( idx, QItemSelectionModel::ClearAndSelect );
+    sm->select( idx, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
     QMetaObject::invokeMethod( q, "accept", Qt::QueuedConnection );
 }
 
