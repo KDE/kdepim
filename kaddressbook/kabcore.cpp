@@ -360,7 +360,7 @@ void KABCore::setContactSelected( const QString &uid )
         break;
       }
       //HACK: manual polymorphism
-      if ( res->inherits( "KPIM::ResourceAbc" ) ) {
+      if ( res->inherits( "KPIM::ResourceABC" ) ) {
         KPIM::ResourceABC *resAbc = static_cast<KPIM::ResourceABC *>( res );
 
         QString subresource = resAbc->uidToResourceMap()[ ( *addrIt ).uid() ];
@@ -372,6 +372,22 @@ void KABCore::setContactSelected( const QString &uid )
     }
   }
 
+  bool moreThanOneResource = mAddressBook->resources().count() > 1;
+  if ( !moreThanOneResource && !mAddressBook->resources().isEmpty() ) {
+      KABC::Resource *res = mAddressBook->resources().first();
+      if ( res->inherits( "KPIM::ResourceABC" ) ) {
+        KPIM::ResourceABC *resAbc = static_cast<KPIM::ResourceABC *>( res );
+        const QStringList subresources = resAbc->subresources();
+        int writeables = 0;
+        for ( QStringList::ConstIterator it = subresources.begin(); it != subresources.end(); ++it ) {
+            if ( resAbc->subresourceActive(*it) && resAbc->subresourceWritable(*it) ) {
+                writeables++;
+            }
+        }
+        moreThanOneResource = ( writeables >= 2 );
+      }
+  }
+
   // update the actions
 
   mActionCopy->setEnabled( someSelected );
@@ -380,8 +396,8 @@ void KABCore::setContactSelected( const QString &uid )
   // the "edit" dialog doubles as the details dialog and it knows when the addressee is read-only
   // (### this does not make much sense from the user perspective!)
   mActionEditAddressee->setEnabled( singleSelected );
-  mActionCopyAddresseeTo->setEnabled( someSelected );
-  mActionMoveAddresseeTo->setEnabled( someSelected && writable );
+  mActionCopyAddresseeTo->setEnabled( someSelected && moreThanOneResource );
+  mActionMoveAddresseeTo->setEnabled( someSelected && moreThanOneResource && writable );
   mActionMail->setEnabled( someSelected );
   mActionMailVCard->setEnabled( someSelected );
   mActionChat->setEnabled( singleSelected && mKIMProxy && mKIMProxy->initialize() );
