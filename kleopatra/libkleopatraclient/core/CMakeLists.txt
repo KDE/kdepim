@@ -26,7 +26,7 @@ set_target_properties( kleopatraclientcore
 
 
 if ( WIN32 )
-  target_link_libraries( kleopatraclientcore ${QT_QTCORE_LIBRARY} ${ASSUAN_VANILLA_LIBRARIES} Ws2_32 )
+  target_link_libraries( kleopatraclientcore ${QT_QTCORE_LIBRARY} ${ASSUAN_VANILLA_LIBRARIES} ws2_32 )
 else ( WIN32 )
   target_link_libraries( kleopatraclientcore ${QT_QTCORE_LIBRARY} ${ASSUAN_PTHREAD_LIBRARIES} )
 endif ( WIN32 )
