@@ -41,6 +41,7 @@
 #include <utils/filesystemwatcher.h>
 #include <utils/kdpipeiodevice.h>
 #include <utils/log.h>
+#include <utils/getpid.h>
 
 #include <models/keycache.h>
 
@@ -55,6 +56,7 @@
 #include <KDebug>
 
 #include <QFile>
+#include <QDir>
 
 #include <boost/shared_ptr.hpp>
 
@@ -123,9 +125,10 @@ public:
         if ( dirNative.isEmpty() )
             return;
         const QString dir = QFile::decodeName( dirNative );
-        std::auto_ptr<QFile> logFile( new QFile( dir + "/kleo-log" ) );
+        const QString logFileName = QDir( dir ).absoluteFilePath( QString::fromLatin1( "kleopatra.log.%1" ).arg( mygetpid() ) );
+        std::auto_ptr<QFile> logFile( new QFile( logFileName ) );
         if ( !logFile->open( QIODevice::WriteOnly | QIODevice::Append ) ) {
-            kDebug() << "Could not open file for logging: " << dir + "/kleo-log\nLogging disabled";
+            kDebug() << "Could not open file for logging: " << logFileName << "\nLogging disabled";
             return;
         }
         
