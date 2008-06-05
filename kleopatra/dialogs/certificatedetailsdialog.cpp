@@ -235,7 +235,7 @@ private:
 
 private:
     void updateWidgetVisibility() {
-        //const bool x509 = key.protocol() == CMS;
+        const bool x509 = key.protocol() == CMS;
         const bool pgp = key.protocol() == OpenPGP;
         const bool secret = key.hasSecret();
         const bool sigs = (key.keyListMode() & Signatures);
@@ -256,7 +256,11 @@ private:
         ui.collapseAllCertificationsPB->setVisible( pgp && sigs );
         ui.showCertificationsPB->setVisible( pgp && !sigs );
 
-        // ...
+        // Chain tab
+        ui.tabWidget->setTabEnabled( ui.tabWidget->indexOf( ui.chainTab ), x509 );
+
+        // Dump tab
+        ui.tabWidget->setTabEnabled( ui.tabWidget->indexOf( ui.dumpTab ), x509 );
     }
 
     QModelIndexList selectedCertificationsIndexes() const {
