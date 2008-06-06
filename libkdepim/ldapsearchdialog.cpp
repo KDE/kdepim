@@ -234,9 +234,9 @@ void LDAPSearchDialog::restoreSettings()
       if ( port )
         ldapServer.setPort( port );
 
-      /*QString base = config->readEntry( QString( "SelectedBase%1" ).arg( j ), "" );
+      QString base = config->readEntry( QString( "SelectedBase%1" ).arg( j ), "" );
       if ( !base.isEmpty() )
-        ldapServer.setBase( base );*/
+        ldapServer.setBaseDN( base );
 
       QString bindDN = config->readEntry( QString( "SelectedBind%1" ).arg( j ), "" );
       if ( !bindDN.isEmpty() )
