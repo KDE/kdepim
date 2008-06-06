@@ -246,7 +246,7 @@ QString Formatting::toolTip( const Key & key, int flags ) {
             else if ( key.isDisabled() )
                 result += i18n( "This certificate has been disabled locally." );
             else
-                result += i18n( "This certificate appears to be valid." );
+                result += i18n( "This certificate is currently valid." );
         else
             result += i18n( "The validity of this certificate cannot be checked at the moment." );
     if ( flags == Validity )
