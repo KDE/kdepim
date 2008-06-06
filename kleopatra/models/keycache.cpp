@@ -775,8 +775,8 @@ void KeyCache::RefreshKeysJob::Private::doStart()
 {
     assert( m_jobsPending == 0 );
     m_mergedResult.mergeWith( KeyListResult( startKeyListing( "openpgp", PublicKeys ) ) );
-    m_mergedResult.mergeWith( KeyListResult( startKeyListing( "openpgp", SecretKeys ) ) );
     m_mergedResult.mergeWith( KeyListResult( startKeyListing( "smime", PublicKeys ) ) );
+    m_mergedResult.mergeWith( KeyListResult( startKeyListing( "openpgp", SecretKeys ) ) );
     m_mergedResult.mergeWith( KeyListResult( startKeyListing( "smime", SecretKeys ) ) );
 
     if ( m_jobsPending != 0 )
