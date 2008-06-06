@@ -1,5 +1,5 @@
 /* kldapclient.h - LDAP access
- *      Copyright (C) 2002 Klarälvdalens Datakonsult AB
+ *      Copyright (C) 2002 Klarï¿½vdalens Datakonsult AB
  *
  *      Author: Steffen Hansen <hansen@kde.org>
  *
@@ -33,6 +33,7 @@
 
 #include <kio/job.h>
 #include <kabc/ldif.h>
+#include <kconfig.h>
 
 #include <kdepimmacros.h>
 
