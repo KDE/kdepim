@@ -37,6 +37,7 @@
 #include "ui_certificatedetailsdialog.h"
 
 #include <models/useridlistmodel.h>
+#include <models/subkeylistmodel.h>
 #include <models/keycache.h>
 
 #include <commands/changepassphrasecommand.h>
@@ -94,11 +95,16 @@ public:
         : q( qq ),
           key(),
           certificationsModel(),
+          subkeysModel(),
           ui( q )
     {
         ui.certificationsTV->setModel( &certificationsModel );
         connect( ui.certificationsTV->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
                  q, SLOT(slotCertificationSelectionChanged()) );
+
+        ui.subkeyTV->setModel( &subkeysModel );
+        // no selection (yet)
+
         connect( KeyCache::instance().get(), SIGNAL(keysMayHaveChanged()),
                  q, SLOT(slotKeysMayHaveChanged()) );
     }
@@ -281,6 +287,10 @@ private:
         ui.collapseAllCertificationsPB->setVisible( pgp && sigs );
         ui.showCertificationsPB->setVisible( pgp && !sigs );
 
+        // Technical Details Tab
+        ui.subkeyHLine->setVisible( pgp );
+        ui.subkeyTV->setVisible( pgp );
+
         // Chain tab
         ui.tabWidget->setTabEnabled( ui.tabWidget->indexOf( ui.chainTab ), x509 );
 
@@ -359,6 +369,10 @@ private:
 
     void propagateKey() {
         certificationsModel.setKey( key );
+
+        subkeysModel.setKey( key );
+        ui.subkeyTV->header()->resizeSections( QHeaderView::ResizeToContents );
+
         updateChainTab();
         slotDumpCertificate();
     }
@@ -367,6 +381,7 @@ private:
 private:
     Key key;
     UserIDListModel certificationsModel;
+    SubkeyListModel subkeysModel;
 
     QPointer<Command> changePassphraseCommand;
     QPointer<Command> changeOwnerTrustCommand;
@@ -391,6 +406,7 @@ private:
             dumpLTW->setMinimumVisibleLines( 25 );
             dumpLTW->setMinimumVisibleColumns( 80 );
 
+            subkeyHLine->setTitle( i18nc("@title","Subkeys") );
         }
     } ui;
 };
