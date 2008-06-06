@@ -207,6 +207,8 @@ set( _kleopatra_SRCS
 
   conf/configuredialog.cpp
 
+  #newcertificatewizard/newcertificatewizard.cpp
+
   certificatewizardimpl.cpp
   aboutdata.cpp
   systemtrayicon.cpp
@@ -230,6 +232,10 @@ kde4_add_ui_files( _kleopatra_SRCS
   dialogs/exportsecretkeydialog.ui
   dialogs/adduseriddialog.ui
   dialogs/certificatedetailsdialog.ui
+  newcertificatewizard/chooseprotocolpage.ui
+  newcertificatewizard/enterdetailspage.ui
+  newcertificatewizard/overviewpage.ui
+  newcertificatewizard/resultpage.ui
   )
 kde4_add_kcfg_files( _kleopatra_SRCS
   kcfg/tooltippreferences.kcfgc

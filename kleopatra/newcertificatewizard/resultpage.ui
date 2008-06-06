@@ -1,0 +1,89 @@
+<ui version="4.0" >
+ <class>Kleo::NewCertificateUi::ResultPage</class>
+ <widget class="QWizardPage" name="Kleo::NewCertificateUi::ResultPage" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>690</width>
+    <height>374</height>
+   </rect>
+  </property>
+  <property name="title" >
+   <string comment="@title" >Key Pair Successfully Created</string>
+  </property>
+  <property name="subTitle" >
+   <string>Your new key pair was created successfully. Please find below details on the result and some suggested next steps.</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <item>
+    <widget class="QGroupBox" name="resultGB" >
+     <property name="title" >
+      <string>Result</string>
+     </property>
+     <layout class="QHBoxLayout" name="horizontalLayout_2" >
+      <item>
+       <widget class="QTextBrowser" name="textBrowser" />
+      </item>
+      <item>
+       <widget class="Kleo::DragQueen" name="dragQueen" >
+        <property name="toolTip" >
+         <string>Drag this icon to your mail application's composer to attach the request to a mail.</string>
+        </property>
+        <property name="alignment" >
+         <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="nextStepsGB" >
+     <property name="title" >
+      <string>Next Steps</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2" >
+      <item>
+       <widget class="QPushButton" name="saveRequestToFilePB" >
+        <property name="text" >
+         <string>Save Request To File...</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="uploadToKeyserverPB" >
+        <property name="text" >
+         <string>Upload Certificate To Directory Service...</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="makeBackupPB" >
+        <property name="text" >
+         <string>Make a Backup Of Your Certificate...</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="createRevocationRequestPB" >
+        <property name="text" >
+         <string>Create a Revocation Request...</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Kleo::DragQueen</class>
+   <extends>QLabel</extends>
+   <header>util/dragqueen.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
