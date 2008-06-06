@@ -127,7 +127,7 @@ int main( int argc, char** argv )
 {
   {
       const unsigned int threads = QThreadPool::globalInstance()->maxThreadCount();
-      QThreadPool::globalInstance()->setMaxThreadCount( qMax( 2U, threads ) );
+      QThreadPool::globalInstance()->setMaxThreadCount( qMin( 2U, threads ) );
   }
 
   AboutData aboutData;
