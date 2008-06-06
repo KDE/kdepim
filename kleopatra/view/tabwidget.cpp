@@ -288,8 +288,10 @@ void Page::setHierarchicalModel( AbstractKeyListModel * model ) {
     if ( model == m_hierarchicalModel )
         return;
     m_hierarchicalModel = model;
-    if ( m_isHierarchical )
+    if ( m_isHierarchical ) {
         m_proxy.setSourceModel( model );
+        m_view->expandAll();
+    }
 }
 
 void Page::setStringFilter( const QString & filter ) {
@@ -347,6 +349,8 @@ void Page::setHierarchical( bool on ) {
     const Key currentKey = m_proxy.key( m_view->currentIndex() );
     m_isHierarchical = on;
     m_proxy.setSourceModel( model() );
+    if ( on )
+        m_view->expandAll();
     m_view->selectionModel()->select( itemSelectionFromKeys( selectedKeys, m_proxy ), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows );
     if ( !currentKey.isNull() ) {
         const QModelIndex currentIndex = m_proxy.index( currentKey );
