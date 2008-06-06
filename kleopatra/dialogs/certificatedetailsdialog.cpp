@@ -403,8 +403,8 @@ private:
             chainTW->header()->setResizeMode( 0, QHeaderView::Stretch );
 
             dumpLTW->setFont( KGlobalSettings::fixedFont() );
-            dumpLTW->setMinimumVisibleLines( 25 );
-            dumpLTW->setMinimumVisibleColumns( 80 );
+            dumpLTW->setMinimumVisibleLines( 15 );
+            dumpLTW->setMinimumVisibleColumns( 40 );
 
             subkeyHLine->setTitle( i18nc("@title","Subkeys") );
         }
