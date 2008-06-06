@@ -260,11 +260,15 @@ QString Formatting::toolTip( const Key & key, int flags ) {
             result += format_row( i18n("Issuer"), key.issuerName() );
     }
     if ( flags & UserIDs ) {
-        result += format_row( key.protocol() == CMS
-                              ? i18n("Subject")
-                              : i18n("User-ID"), key.userID( 0 ).id() );
-        for ( unsigned int i = 1, end = key.numUserIDs() ; i < end ; ++i )
-            result += format_row( i18n("a.k.a."), key.userID( i ).id() );
+        const std::vector<UserID> uids = key.userIDs();
+        if ( !uids.empty() )
+            result += format_row( key.protocol() == CMS
+                                  ? i18n("Subject")
+                                  : i18n("User-ID"), uids.front().id() );
+        if ( uids.size() > 1 )
+            for ( std::vector<UserID>::const_iterator it = uids.begin() + 1, end = uids.end() ; it != end ; ++it )
+                if ( !it->isRevoked() && !it->isInvalid() )
+                    result += format_row( i18n("a.k.a."), it->id() );
     }
     if ( flags & ExpiryDates )
         result += format_row( i18n("Validity"),
