@@ -72,6 +72,7 @@ namespace Kleo {
 #include <QMessageBox>
 #include <QTimer>
 #include <QEventLoop>
+#include <QThreadPool>
 
 #include <boost/shared_ptr.hpp>
 
@@ -124,6 +125,11 @@ static void fillKeyCache( KSplashScreen * splash, Kleo::UiServer * server ) {
 
 int main( int argc, char** argv )
 {
+  {
+      const unsigned int threads = QThreadPool::globalInstance()->maxThreadCount();
+      QThreadPool::globalInstance()->setMaxThreadCount( qMin( 2U, threads ) );
+  }
+
   AboutData aboutData;
 
   KCmdLineArgs::init(argc, argv, &aboutData);
