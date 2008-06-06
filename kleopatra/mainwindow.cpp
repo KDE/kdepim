@@ -439,11 +439,11 @@ void MainWindow::Private::setupActions() {
           0, q, SLOT(dumpCrlCache()), QString(), false, true },
         { "crl_import_crl", i18n("Import CRL From File..."), QString(),
           0, q, SLOT(importCrlFromFile()), QString(), false, true },
+        { "configure_backend", i18n("Configure GnuPG Backend..."), QString(),
+          0, q, SLOT(configureBackend()), QString(), false, true },
         // Settings menu
         { "settings_self_test", i18n("Perform Self-Test"), QString(),
           0, q, SLOT(selfTest()), QString(), false, true },
-        { "configure_backend", i18n("Configure GnuPG Backend..."), QString(),
-          0, q, SLOT(configureBackend()), QString(), false, true },
         // Window menu
         // (come from ui.tabWidget)
     };
