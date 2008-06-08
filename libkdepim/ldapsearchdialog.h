@@ -1,5 +1,5 @@
 /* ldapsearchdialogimpl.h - LDAP access
- *      Copyright (C) 2002 Klarälvdalens Datakonsult AB
+ *      Copyright (C) 2002 Klarï¿½vdalens Datakonsult AB
  *
  *      Author: Steffen Hansen <hansen@kde.org>
  *
@@ -17,7 +17,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA
  */
-
+    QString mSearchText;
 #ifndef LDAPSEARCHDIALOG_H
 #define LDAPSEARCHDIALOG_H
 
@@ -25,9 +25,9 @@
 
 #include <ldapclient.h>
 #include <kdialogbase.h>
+#include <klineedit.h>
 
 class KComboBox;
-class KLineEdit;
 
 class QCheckBox;
 class QListView;
@@ -47,6 +47,7 @@ class LDAPSearchDialog : public KDialogBase
 
     void restoreSettings();
 
+    void setSearchText( const QString &text ) { mSearchEdit->setText( text ); }
     QString selectedEMails() const;
   signals:
     void addresseesAdded();
