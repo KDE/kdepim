@@ -23,31 +23,21 @@
 //  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 //
 
+#include "KJotsMain.h"
+#include "aboutdata.h"
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <libkdepim/pimapplication.h>
 #include <kcmdlineargs.h>
 #include <kconfig.h>
-#include <kaboutdata.h>
 #include <klocale.h>
 #include <kglobal.h>
 #include <kconfiggroup.h>
-#include "KJotsMain.h"
-
-
-static const char description[] = I18N_NOOP("KDE note taking utility");
 
 int main( int argc, char **argv )
 {
-    KAboutData aboutData( "kjots", 0, ki18n("KJots"),
-        KDE_VERSION_STRING, ki18n(description), KAboutData::License_GPL,
-        ki18n("(c) 1997-2008, KJots developers"));
-    aboutData.addAuthor(ki18n("Stephen Kelly"), ki18n("Current maintainer"), "steveire@gmail.com");
-    aboutData.addAuthor(ki18n("Pradeepto K. Bhattacharya"), KLocalizedString(), "pradeepto@kde.org");
-    aboutData.addAuthor(ki18n("Jaison Lee"), KLocalizedString(), "lee.jaison@gmail.com");
-    aboutData.addAuthor(ki18n("Aaron J. Seigo"), KLocalizedString(), "aseigo@kde.org");
-    aboutData.addAuthor(ki18n("Stanislav Kljuhhin"), KLocalizedString(), "crz@starman.ee");
-    aboutData.addAuthor(ki18n("Christoph Neerfeld"), ki18n("Original author"), "chris@kde.org");
+    AboutData aboutData;
     KCmdLineArgs::init(argc, argv, &aboutData);
     KPIM::PimApplication::addCmdLineOptions();
 
