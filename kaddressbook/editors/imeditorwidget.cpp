@@ -284,26 +284,16 @@ void IMEditorWidget::slotSetStandard()
 
 void IMEditorWidget::slotUpdateButtons()
 {
-  int num_selected = 0;
-  QTreeWidgetItemIterator it( mWidget->lvAddresses, QTreeWidgetItemIterator::Selected );
-  while ( *it ) {
-    ++num_selected;
-    if ( num_selected > 1 ) {
-      break; //no need to count above 2.
-    }
-
-    ++it;
-  }
-
-  if ( !mReadOnly && num_selected == 1 ) {
+  QList<QTreeWidgetItem*> selectedItems = mWidget->lvAddresses->selectedItems();
+  if ( !mReadOnly && selectedItems.count() == 1 ) {
     mWidget->btnAdd->setEnabled( true );
     mWidget->btnEdit->setEnabled( true );
     mWidget->btnDelete->setEnabled( true );
-    IMAddressLVI *current = static_cast<IMAddressLVI*>( *it );
+    IMAddressLVI *current = static_cast<IMAddressLVI*>( selectedItems.first() );
 
     // Disable "set standard" if already standard
     mWidget->btnSetStandard->setEnabled( !current || !current->preferred() );
-  } else if ( !mReadOnly && num_selected > 1 ) {
+  } else if ( !mReadOnly && selectedItems.count() > 1 ) {
     mWidget->btnAdd->setEnabled( true );
     mWidget->btnEdit->setEnabled( false );
     mWidget->btnDelete->setEnabled( true );
