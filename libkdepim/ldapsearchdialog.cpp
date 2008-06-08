@@ -135,8 +135,6 @@ LDAPSearchDialog::LDAPSearchDialog( QWidget* parent, const char* name )
   mSearchEdit = new KLineEdit( groupBox );
   boxLayout->addWidget( mSearchEdit, 0, 1 );
   label->setBuddy( mSearchEdit );
-  if( !mSearchText.isEmpty() )
-    mSearchEdit->setText( mSearchText );
 
   label = new QLabel( i18n( "in" ), groupBox );
   boxLayout->addWidget( label, 0, 2 );
