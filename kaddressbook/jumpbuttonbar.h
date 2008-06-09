@@ -24,10 +24,9 @@
 #ifndef JUMPBUTTONBAR_H
 #define JUMPBUTTONBAR_H
 
-#include <QWidget>
-#include <QStringList>
-//Added by qt3to4:
 #include <QResizeEvent>
+#include <QStringList>
+#include <QWidget>
 
 class QButtonGroup;
 class QGroupBox;
@@ -67,10 +66,9 @@ class JumpButtonBar : public QWidget
     virtual void resizeEvent( QResizeEvent* );
 
   private:
-    void sortListLocaleAware( QStringList &list );
-
     KAB::Core *mCore;
 
+    QLayout *mLayout;
     QButtonGroup *mButtonGroup;
     QGroupBox *mGroupBox;
     QList<JumpButton*> mButtons;
