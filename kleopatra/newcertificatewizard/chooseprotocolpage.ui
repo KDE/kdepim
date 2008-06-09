@@ -42,5 +42,42 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>pgpCLB</sender>
+   <signal>clicked()</signal>
+   <receiver>Kleo::NewCertificateUi::ChooseProtocolPage</receiver>
+   <slot>slotPgpClicked()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>642</x>
+     <y>65</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>692</x>
+     <y>67</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>x509CLB</sender>
+   <signal>clicked()</signal>
+   <receiver>Kleo::NewCertificateUi::ChooseProtocolPage</receiver>
+   <slot>slotX509Clicked()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>592</x>
+     <y>209</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>688</x>
+     <y>209</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>slotPgpClicked()</slot>
+  <slot>slotX509Clicked()</slot>
+ </slots>
 </ui>

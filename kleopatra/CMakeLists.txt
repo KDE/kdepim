@@ -102,6 +102,7 @@ set( _kleopatra_SRCS
   utils/kdlogtextwidget.cpp
   utils/headerview.cpp
   utils/scrollarea.cpp
+  utils/dragqueen.cpp
 
   utils/hex.cpp
   utils/input.cpp
@@ -207,9 +208,8 @@ set( _kleopatra_SRCS
 
   conf/configuredialog.cpp
 
-  #newcertificatewizard/newcertificatewizard.cpp
+  newcertificatewizard/newcertificatewizard.cpp
 
-  certificatewizardimpl.cpp
   aboutdata.cpp
   systemtrayicon.cpp
   kleopatraapplication.cpp

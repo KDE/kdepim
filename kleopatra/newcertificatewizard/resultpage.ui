@@ -81,7 +81,7 @@
   <customwidget>
    <class>Kleo::DragQueen</class>
    <extends>QLabel</extends>
-   <header>util/dragqueen.h</header>
+   <header>utils/dragqueen.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

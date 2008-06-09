@@ -14,6 +14,15 @@ namespace Kleo {
         ~NewCertificateWizard();
 
     private:
+        enum Pages {
+            ChooseProtocolPageId,
+            EnterDetailsPageId,
+            OverviewPageId,
+            ResultPageId,
+
+            NumPages
+        };
+
         class Private;
         kdtools::pimpl_ptr<Private> d;
     };

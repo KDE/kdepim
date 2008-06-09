@@ -34,7 +34,7 @@
 
 #include "mainwindow.h"
 
-#include "certificatewizardimpl.h"
+#include "newcertificatewizard/newcertificatewizard.h"
 
 #include "models/keylistmodel.h"
 #include "models/keylistsortfilterproxymodel.h"
@@ -495,7 +495,7 @@ void MainWindow::Private::setupActions() {
 }
 
 void MainWindow::Private::newCertificate() {
-    QPointer<CertificateWizardImpl> wiz( new CertificateWizardImpl( q ) );
+    QPointer<NewCertificateWizard> wiz( new NewCertificateWizard( q ) );
     wiz->exec();
     delete wiz;
 }
