@@ -42,6 +42,8 @@
 #include <QApplication>
 #include <QUrl>
 
+#include <algorithm>
+
 using namespace Kleo;
 
 namespace {
