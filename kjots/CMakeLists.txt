@@ -8,6 +8,7 @@ include_directories( ${CMAKE_BINARY_DIR}/libkdepim ${CMAKE_SOURCE_DIR}/libkdepim
 #########################################################################
 
 set(kjots_SRCS
+   aboutdata.cpp
    main.cpp
    KJotsMain.cpp
    kjotsentry.cpp

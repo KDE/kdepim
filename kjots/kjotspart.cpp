@@ -26,24 +26,29 @@
 
 #include "kjotspart.moc"
 #include "kjotscomponent.h"
+#include "aboutdata.h"
 
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kcomponentdata.h>
 #include <kfiledialog.h>
-// #include <kparts/genericfactory.h>
 #include <kstandardaction.h>
 #include <kstandarddirs.h>
 #include <kpluginfactory.h>
 #include <klocale.h>
-#include <kaboutdata.h>
 
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 #include <QtGui/QTextEdit>
 
+const KAboutData &createAboutData()
+{
+    static AboutData aboutData;
+    return aboutData;
+}
+
 K_PLUGIN_FACTORY(KJotsPartFactory, registerPlugin<KJotsPart>();)
-K_EXPORT_PLUGIN(KJotsPartFactory("kjotspart"))
+K_EXPORT_PLUGIN(KJotsPartFactory(createAboutData()))
 
 KJotsPart::KJotsPart( QWidget *parentWidget, QObject *parent, const QVariantList & /*args*/ )
     : KParts::ReadOnlyPart(parent)
@@ -66,22 +71,11 @@ KJotsPart::~KJotsPart()
 	component->queryClose();
 }
 
-
-KAboutData *KJotsPart::createAboutData()
-{
-    // the non-i18n name here must be the same as the directory in
-    // which the part's rc file is installed ('partrcdir' in the
-    // Makefile)
-    KAboutData *aboutData = new KAboutData("kjotspart", 0, ki18n("KJotsPart"), "0.1");
-    aboutData->addAuthor(ki18n("Stephen Kelly"), KLocalizedString(), "steveire@gmail.com");
-    return aboutData;
-}
-
 bool KJotsPart::openFile()
 {
     return false;
 }
-// 
+//
 // bool KJotsPart::saveFile()
 // {
 //     return false;

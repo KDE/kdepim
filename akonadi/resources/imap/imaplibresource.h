@@ -28,7 +28,7 @@ class Imaplib;
 class ImaplibResource : public Akonadi::ResourceBase, public Akonadi::AgentBase::Observer
 {
     Q_OBJECT
-    Q_CLASSINFO(  "D-Bus Interface", "org.kde.Akonadi.Imaplib.Resource" )
+    Q_CLASSINFO( "D-Bus Interface", "org.kde.Akonadi.Imaplib.Resource" )
 
 public:
     ImaplibResource( const QString &id );
@@ -57,17 +57,20 @@ private Q_SLOTS:
     void slotLoginFailed( Imaplib* connection );
     void slotAlert( Imaplib*, const QString& message );
     void slotMessagesInFolder( Imaplib*, const QString&, int );
-    void slotFolderListReceived( const QStringList& list );
+    void slotFolderListReceived( const QStringList& list, const QStringList& );
     void slotUidsAndFlagsReceived( Imaplib*, const QString&, const QStringList& );
     void slotHeadersReceived( Imaplib*,const QString&,const QStringList& );
     void slotMessageReceived( Imaplib*, const QString& mb, int uid, const QString& body );
     void slotSaveDone( int );
     void slotCollectionAdded( bool success );
     void slotCollectionRemoved( bool );
+    void slotIntegrity( const QString& mb, int totalShouldBe,
+                        const QString& uidvalidity, const QString& uidnext );
+    void slotUnseenMessagesInMailbox( Imaplib*, const QString& , int unseen);
 
 private:
     Imaplib* m_imap;
-    Akonadi::Collection m_colAdded;
+    Akonadi::Collection m_collection;
     Akonadi::Item m_itemAdded;
     QHash<QString, QString> m_flagsCache;
     QHash<QString, Akonadi::Item> m_itemCache;

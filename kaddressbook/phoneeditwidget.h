@@ -34,6 +34,7 @@
 
 class QButtonGroup;
 class QCheckBox;
+class QScrollArea;
 class QSignalMapper;
 
 class KLineEdit;
@@ -86,6 +87,44 @@ class PhoneNumberWidget : public QWidget
     KABC::PhoneNumber mNumber;
 };
 
+class PhoneNumberListWidget : public QWidget
+{
+  Q_OBJECT
+
+  public:
+    PhoneNumberListWidget( QWidget *parent = 0 );
+    ~PhoneNumberListWidget();
+
+    void setPhoneNumbers( const KABC::PhoneNumber::List &list );
+    KABC::PhoneNumber::List phoneNumbers() const;
+
+    void setReadOnly( bool readOnly );
+
+    int phoneNumberCount() const;
+
+  signals:
+    void modified();
+
+  public slots:
+    void add();
+    void remove();
+
+  protected slots:
+    void changed();
+    void changed( int pos );
+
+  private:
+    void recreateNumberWidgets();
+
+    KABC::PhoneNumber::List mPhoneNumberList;
+    QList<PhoneNumberWidget*> mWidgets;
+
+    QVBoxLayout *mWidgetLayout;
+
+    bool mReadOnly;
+    QSignalMapper *mMapper;
+};
+
 /**
   Widget for editing phone numbers.
 */
@@ -106,23 +145,16 @@ class PhoneEditWidget : public QWidget
     void modified();
 
   protected slots:
-    void add();
-    void remove();
     void changed();
-    void changed( int pos );
 
   private:
-    void recreateNumberWidgets();
-
-    KABC::PhoneNumber::List mPhoneNumberList;
-    QList<PhoneNumberWidget*> mWidgets;
-
     QPushButton *mAddButton;
     QPushButton *mRemoveButton;
-    QVBoxLayout *mWidgetLayout;
 
     bool mReadOnly;
-    QSignalMapper *mMapper;
+
+    QScrollArea *mListScrollArea;
+    PhoneNumberListWidget *mPhoneNumberListWidget;
 };
 
 /**

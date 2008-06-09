@@ -171,17 +171,17 @@ public:
      */
     void addFlag( const QString& box, int uidmin, int uidmax,
                   const QByteArray& flag );
-    
+
     /**
      * sets the flags to a message or messages. Keep uidmin and uidmax the same
      * if you want it for one message.
      * @param box the mailbox
      * @param uidmin minuid of the message
      * @param uidmax maxuid of the message
-     * @param flag flags to set, make it a space separated list 
+     * @param flag flags to set, make it a space separated list
      */
     void setFlags( const QString& box, int uidmin, int uidmax,
-                  const QByteArray& flag );
+                   const QByteArray& flag );
 
     /**
      * remove a flag from a message or messages. Keep uidmin and uidmax the same
@@ -336,8 +336,10 @@ signals:
     /**
      * This signal is emitted when the server has returned the mailboxlist.
      * this can be requested with getMailBoxList();
+     * @param folders all folders
+     * @param noselectfolders the folders which can not be selected.
      */
-    void currentFolders( const QStringList& );
+    void currentFolders( const QStringList& folders, const QStringList& noselectfolders );
 
     /**
      * This signal is emitted when a mailbox is added

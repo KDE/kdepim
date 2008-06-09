@@ -335,9 +335,10 @@ void Imaplib::getHeaders( const QString& mb, const QStringList& uids )
 
 void Imaplib::getHeaderList( const QString& mb, int start, int end )
 {
-    // kDebug() << start << "-" << end << "for" << mb;
-    if ( !(end>=1) || end < start || !(start>=1) )
+    if ( !( end>=1 ) || end < start || !( start>=1 ) )
         return;
+
+    kDebug() << start << "-" << end << "for" << mb;
 
     // Put this in queue with priority above the checkmail things...
     m_queue.prepend( Queue( Queue::GetHeaderList, mb,
@@ -357,7 +358,7 @@ void Imaplib::getMessage( const QString& mb, int uid )
 
 void Imaplib::checkMail( const QString& box )
 {
-    // kDebug() << box;
+    kDebug() << box;
     const QString box2 = KIMAP::encodeImapFolderName( box );
     m_queue.append( Queue( Queue::CheckMail, box,
                            "STATUS \""+box2+"\" (MESSAGES UNSEEN UIDVALIDITY UIDNEXT)",
@@ -375,7 +376,7 @@ void Imaplib::addFlag( const QString& box, int min, int max,
 }
 
 void Imaplib::setFlags( const QString& box, int min, int max,
-                       const QByteArray& flag )
+                        const QByteArray& flag )
 {
     // kDebug() << box << " - " << min << " - " << max << " - " << flag;
     m_queue.append( Queue( Queue::NoResponse, box,
@@ -521,15 +522,15 @@ void Imaplib::slotParseGetMailBoxList()
         return;
 
     QStringList result;
+    QStringList noselectfolders;
 
     // Microsoft Server returns quotes sometimes:
     // * LIST (\Marked \HasNoChildren) "/" bbullshit
     // * LIST (\Marked \HasNoChildren) "/" "Trash/Deleted Items"
 
-    QRegExp rx1( "LIST \\(.*\\) \".\" (.*)\n" );
+    QRegExp rx1( "LIST \\((.*)\\) \".\" (.*)\n" );
     rx1.setMinimal( true );
 
-    QMap<QString, bool> newList;
     int start = 0;
     while ( start != -1 ) {
         start = rx1.indexIn( all_data, start );
@@ -537,7 +538,8 @@ void Imaplib::slotParseGetMailBoxList()
         if ( start == -1 )
             break;
 
-        QString y = rx1.cap( 1 ).trimmed();
+        QString tags = rx1.cap( 1 ).trimmed();
+        QString y = rx1.cap( 2 ).trimmed();
 
         // Remove them if they are there.... Think MS.
         if ( y.startsWith( '\"' ) && y.endsWith( '\"' ) )
@@ -545,11 +547,14 @@ void Imaplib::slotParseGetMailBoxList()
 
         result.append( KIMAP::decodeImapFolderName( y ) );
 
+        if ( tags.contains( "\\Noselect" ) )
+            noselectfolders.append( KIMAP::decodeImapFolderName( y ) );
+
         ++start;
     }
 
     all_data.clear();
-    emit currentFolders( result );
+    emit currentFolders( result, noselectfolders );
     emit statusReady();
     m_currentQueueItem = Queue();
     slotProcessQueue();
@@ -557,7 +562,7 @@ void Imaplib::slotParseGetMailBoxList()
 
 void Imaplib::slotParseGetRecent()
 {
-    // kDebug();
+    kDebug() << m_received;
 
     QRegExp rx( "SEARCH (.*)a02" );
     if ( rx.indexIn( m_received.trimmed() ) != -1 ) {
@@ -575,6 +580,7 @@ void Imaplib::slotParseGetRecent()
             ++it;
         }
 
+        kDebug() << results;
         emit uidsAndFlagsInFolder( this, m_currentQueueItem.mailbox(), results );
     } else
         emit unseenCount( this, m_currentQueueItem.mailbox(), 0 );
@@ -697,6 +703,7 @@ void Imaplib::slotParseCheckMail()
         return;
     }
 
+    kDebug() << "Emitting integrity";
     emit integrity( mb, totalShouldBe, uidvalidity, uidnext );
     emit statusReady();
     m_currentQueueItem = Queue();
@@ -789,17 +796,22 @@ void Imaplib::slotParseExists()
 
     // Error handling
     if ( m_received.indexOf( "a02 NO" ) != -1 ) {
+        kDebug() << "OOPS, that's not good";
         // if we get here because the queue was delayed, then we
         // need to remove it from the queue to prevent a loop.
-        Queue nextQueueItem = m_queue.first();
-        if ( m_currentQueueItem.mailbox() == nextQueueItem.mailbox() ) {
-            kDebug( ) << "Removing this and next command";
-            m_queue.pop_front();
+        if ( m_queue.count() > 0 ) {
+            Queue nextQueueItem = m_queue.first();
+            if ( m_currentQueueItem.mailbox() == nextQueueItem.mailbox() ) {
+                kDebug( ) << "Removing this and next command";
+                m_queue.pop_front();
+            }
         }
 
         m_checkMailTimer->stop();
 
         emit statusError( i18n( "Failed to select the mailbox" ) );
+        emit uidsAndFlagsInFolder( this, m_currentQueueItem.mailbox(), QStringList() );
+
         m_currentQueueItem = Queue();
         slotProcessQueue();
         return;
@@ -822,19 +834,15 @@ void Imaplib::slotParseExists()
         int amount = rx1.cap( 1 ).toInt();
         kDebug() << "Emitting messagecount";
         emit messageCount( this, m_currentQueueItem.mailbox(), amount );
-
-        /* the resource will request the headers...
         if ( m_currentQueueItem.state() == Queue::SyncMailBox )
             getHeaderList( m_currentMailbox, 1, amount );
         else
             emit integrity( m_currentMailbox, amount, uidvalidity, uidnext );
-            */
     }
 
     // Sync will not emit the unseen count, so do a checkmail after that.
     //if ( m_currentQueueItem.state() == Queue::SyncMailBox )
     //    checkMail( m_currentMailbox );
-
 
     emit statusReady();
     m_currentQueueItem = Queue();
@@ -843,13 +851,15 @@ void Imaplib::slotParseExists()
 
 void Imaplib::slotParseGetHeaderList()
 {
-    // kDebug();
+    kDebug();
 
     static QString all_data;
     all_data.append( m_received );
 
     if ( !endSimpleCommand( all_data ) )
         return;
+
+    kDebug() << "preparing results";
 
     QStringList results;
 
@@ -878,6 +888,8 @@ void Imaplib::slotParseGetHeaderList()
         ++start2;
         ++start;
     }
+
+    kDebug() << "emitting uidsAndFlagsInFolder for " <<  m_currentQueueItem.mailbox() << results.count();
     emit uidsAndFlagsInFolder( this, m_currentQueueItem.mailbox(), results );
 
     all_data.clear();

@@ -29,6 +29,8 @@
 #include <QHBoxLayout>
 #include <QList>
 #include <QPushButton>
+#include <QScrollArea>
+#include <QScrollBar>
 #include <QSignalMapper>
 #include <QString>
 #include <QVBoxLayout>
@@ -164,47 +166,35 @@ void PhoneNumberWidget::setReadOnly( bool readOnly )
   mNumberEdit->setReadOnly( readOnly );
 }
 
-
-PhoneEditWidget::PhoneEditWidget( QWidget *parent, const char *name )
+PhoneNumberListWidget::PhoneNumberListWidget( QWidget *parent )
   : QWidget( parent ), mReadOnly( false )
 {
-  setObjectName( name );
-  QGridLayout *layout = new QGridLayout( this );
-  layout->setSpacing( KDialog::spacingHint() );
-
-  mWidgetLayout = new QVBoxLayout();
-  layout->addLayout( mWidgetLayout, 0, 0, 1, 2 );
-
-  mAddButton = new QPushButton( i18n( "Add" ), this );
-  mAddButton->setMaximumSize( mAddButton->sizeHint() );
-  layout->addWidget( mAddButton, 1, 0, Qt::AlignRight );
-
-  mRemoveButton = new QPushButton( i18n( "Remove" ), this );
-  mRemoveButton->setMaximumSize( mRemoveButton->sizeHint() );
-  layout->addWidget( mRemoveButton, 1, 1 );
+  mWidgetLayout = new QVBoxLayout( this );
 
   mMapper = new QSignalMapper( this );
   connect( mMapper, SIGNAL( mapped( int ) ), SLOT( changed( int ) ) );
 
-  connect( mAddButton, SIGNAL( clicked() ), SLOT( add() ) );
-  connect( mRemoveButton, SIGNAL( clicked() ), SLOT( remove() ) );
+  setPhoneNumbers( KABC::PhoneNumber::List() );
 }
 
-PhoneEditWidget::~PhoneEditWidget()
+PhoneNumberListWidget::~PhoneNumberListWidget()
 {
 }
 
-void PhoneEditWidget::setReadOnly( bool readOnly )
+void PhoneNumberListWidget::setReadOnly( bool readOnly )
 {
   mReadOnly = readOnly;
-  mAddButton->setEnabled( !readOnly );
-  mRemoveButton->setEnabled( !readOnly && mPhoneNumberList.count() > 3 );
-  
+
   foreach ( PhoneNumberWidget *const w, mWidgets )
     w->setReadOnly( readOnly );
 }
 
-void PhoneEditWidget::setPhoneNumbers( const KABC::PhoneNumber::List &list )
+int PhoneNumberListWidget::phoneNumberCount() const
+{
+  return mPhoneNumberList.count();
+}
+
+void PhoneNumberListWidget::setPhoneNumbers( const KABC::PhoneNumber::List &list )
 {
   mPhoneNumberList = list;
 
@@ -221,7 +211,7 @@ void PhoneEditWidget::setPhoneNumbers( const KABC::PhoneNumber::List &list )
   recreateNumberWidgets();
 }
 
-KABC::PhoneNumber::List PhoneEditWidget::phoneNumbers() const
+KABC::PhoneNumber::List PhoneNumberListWidget::phoneNumbers() const
 {
   KABC::PhoneNumber::List list;
 
@@ -233,20 +223,20 @@ KABC::PhoneNumber::List PhoneEditWidget::phoneNumbers() const
   return list;
 }
 
-void PhoneEditWidget::changed()
+void PhoneNumberListWidget::changed()
 {
   if ( !mReadOnly )
     emit modified();
 }
 
-void PhoneEditWidget::add()
+void PhoneNumberListWidget::add()
 {
   mPhoneNumberList.append( KABC::PhoneNumber() );
 
   recreateNumberWidgets();
 }
 
-void PhoneEditWidget::remove()
+void PhoneNumberListWidget::remove()
 {
   mPhoneNumberList.removeLast();
   changed();
@@ -254,7 +244,7 @@ void PhoneEditWidget::remove()
   recreateNumberWidgets();
 }
 
-void PhoneEditWidget::recreateNumberWidgets()
+void PhoneNumberListWidget::recreateNumberWidgets()
 {
   foreach ( QWidget *const w, mWidgets ) {
     mWidgetLayout->removeWidget( w );
@@ -280,10 +270,72 @@ void PhoneEditWidget::recreateNumberWidgets()
   setReadOnly(mReadOnly);
 }
 
-void PhoneEditWidget::changed( int pos )
+void PhoneNumberListWidget::changed( int pos )
 {
   mPhoneNumberList[ pos ] = mWidgets.at( pos )->number();
   changed();
+}
+
+PhoneEditWidget::PhoneEditWidget( QWidget *parent, const char *name )
+  : QWidget( parent ), mReadOnly( false )
+{
+  setObjectName( name );
+  QGridLayout *layout = new QGridLayout( this );
+  layout->setSpacing( KDialog::spacingHint() );
+
+  mListScrollArea = new QScrollArea( this );
+  mPhoneNumberListWidget = new PhoneNumberListWidget;
+  mListScrollArea->setWidget( mPhoneNumberListWidget );
+  mListScrollArea->setWidgetResizable( true );
+
+  // ugly but size policies seem to be messed up dialog (parent) wide
+  const int scrollAreaMinHeight = mPhoneNumberListWidget->sizeHint().height() +
+      mListScrollArea->horizontalScrollBar()->sizeHint().height();
+  mListScrollArea->setMinimumHeight( scrollAreaMinHeight );
+  layout->addWidget( mListScrollArea, 0, 0, 1, 2 );
+
+  mAddButton = new QPushButton( i18n( "Add" ), this );
+  mAddButton->setMaximumSize( mAddButton->sizeHint() );
+  layout->addWidget( mAddButton, 1, 0, Qt::AlignRight );
+
+  mRemoveButton = new QPushButton( i18n( "Remove" ), this );
+  mRemoveButton->setMaximumSize( mRemoveButton->sizeHint() );
+  layout->addWidget( mRemoveButton, 1, 1 );
+
+  connect( mPhoneNumberListWidget, SIGNAL( modified() ), SIGNAL( modified() ) );
+
+  connect( mAddButton, SIGNAL( clicked() ), mPhoneNumberListWidget, SLOT( add() ) );
+  connect( mRemoveButton, SIGNAL( clicked() ), mPhoneNumberListWidget, SLOT( remove() ) );
+  connect( mAddButton, SIGNAL( clicked() ), SLOT( changed() ) );
+  connect( mRemoveButton, SIGNAL( clicked() ), SLOT( changed() ) );
+}
+
+PhoneEditWidget::~PhoneEditWidget()
+{
+}
+
+void PhoneEditWidget::setReadOnly( bool readOnly )
+{
+  mReadOnly = readOnly;
+  mAddButton->setEnabled( !readOnly );
+  mRemoveButton->setEnabled( !readOnly && mPhoneNumberListWidget->phoneNumberCount() > 3 );
+
+  mPhoneNumberListWidget->setReadOnly( readOnly );
+}
+
+void PhoneEditWidget::changed()
+{
+  mRemoveButton->setEnabled( !mReadOnly && mPhoneNumberListWidget->phoneNumberCount() > 3 );
+}
+
+void PhoneEditWidget::setPhoneNumbers( const KABC::PhoneNumber::List &list )
+{
+  mPhoneNumberListWidget->setPhoneNumbers( list );
+}
+
+KABC::PhoneNumber::List PhoneEditWidget::phoneNumbers() const
+{
+  return mPhoneNumberListWidget->phoneNumbers();
 }
 
 ///////////////////////////////////////////

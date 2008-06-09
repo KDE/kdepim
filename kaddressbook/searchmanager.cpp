@@ -53,8 +53,7 @@ void SearchManager::search( const QString &pattern, const KABC::Field::List &fie
   // Extract distribution lists from allContacts
   mDistributionLists.clear();
   KABC::Addressee::List::Iterator rmIt( allContacts.begin() );
-  const KABC::Addressee::List::Iterator rmEndIt( allContacts.end() );
-  while ( rmIt != rmEndIt ) {
+  while ( rmIt != allContacts.constEnd() ) {
     if ( KPIM::DistributionList::isDistributionList( *rmIt ) ) {
       mDistributionLists.append( static_cast<KPIM::DistributionList>( *rmIt ) );
       rmIt = allContacts.erase( rmIt );
@@ -70,7 +69,7 @@ void SearchManager::search( const QString &pattern, const KABC::Field::List &fie
       const Entry::List entries = dl.entries( mAddressBook );
       const Entry::List::ConstIterator end = entries.end();
       for ( Entry::List::ConstIterator it = entries.begin(); it != end; ++it ) {
-        allContacts.append( (*it).addressee ); 
+        allContacts.append( (*it).addressee );
       }
     }
   }
@@ -160,7 +159,7 @@ void SearchManager::reload()
 void KAB::SearchManager::setSelectedDistributionList( const QString &name )
 {
   if ( mSelectedDistributionList == name )
-    return;     
+    return;
   mSelectedDistributionList = name;
   reload();
 }
