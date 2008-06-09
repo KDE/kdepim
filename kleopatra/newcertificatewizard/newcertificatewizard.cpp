@@ -24,27 +24,32 @@ namespace {
         Q_OBJECT
     public:
         explicit ChooseProtocolPage( QWidget * p=0 )
-            : QWizardPage( p ), ui()
+            : QWizardPage( p ),
+              initialized( false ),
+              ui()
         {
             ui.setupUi( this );
+
+            connect( ui.pgpCLB,  SIGNAL(clicked()), wizard(), SLOT(next()), Qt::QueuedConnection );
+            connect( ui.x509CLB, SIGNAL(clicked()), wizard(), SLOT(next()), Qt::QueuedConnection );
+
             registerField( "pgp", ui.pgpCLB );
-            registerField( "x509", ui.x509CLB );
         }
 
-    private Q_SLOTS:
-        void slotPgpClicked() {
-            done();
+        /* reimp */ void initializePage() {
+            if ( !initialized ) {
+                connect( ui.pgpCLB,  SIGNAL(clicked()), wizard(), SLOT(next()), Qt::QueuedConnection );
+                connect( ui.x509CLB, SIGNAL(clicked()), wizard(), SLOT(next()), Qt::QueuedConnection );
+            }
+            initialized = true;
         }
 
-        void slotX509Clicked() {
-            done();
-        }
-
-        void done() {
-            QMetaObject::invokeMethod( wizard(), "next", Qt::QueuedConnection );
+        /* reimp */ bool isComplete() const {
+            return ui.pgpCLB->isChecked() || ui.x509CLB->isChecked() ;
         }
 
     private:
+        bool initialized : 1;
         Ui_ChooseProtocolPage ui;
     };
 
@@ -59,6 +64,14 @@ namespace {
         }
 
         /* reimp */ bool isComplete() const;
+        /* reimp */ void initializePage() {
+            updateForm();
+        }
+        /* reimp */ void cleanupPage() {
+            savedValues.clear();
+            for ( QVector< QPair<QString,QLineEdit*> >::const_iterator it = attributePairList.begin(), end = attributePairList.end() ; it != end ; ++it )
+                savedValues[it->first] = it->second->text().trimmed();
+        }
 
     private:
         void updateForm();
@@ -67,6 +80,7 @@ namespace {
     private:
         QVector< QPair<QString,QLineEdit*> > attributePairList;
         QList<QWidget*> dynamicWidgets;
+        QMap<QString,QString> savedValues;
         Ui_EnterDetailsPage ui;
     };
 
@@ -76,7 +90,8 @@ namespace {
         explicit OverviewPage( QWidget * p=0 )
             : QWizardPage( p ), ui()
         {
-
+            setCommitPage( true );
+            setButtonText( QWizard::CommitButton, i18nc("@action", "Create") );
         }
 
     private:
@@ -214,7 +229,7 @@ void EnterDetailsPage::updateForm() {
         const QString attr = attributeFromKey( key );
         if ( attr.isEmpty() )
             continue;
-        const QString preset = config.readEntry( attr, QString() );
+        const QString preset = savedValues.value( attr, config.readEntry( attr, QString() ) );
         const bool required = key.endsWith( QLatin1Char('!') );
         const QString label = config.readEntry( attr + "_label",
                                                 attributeLabel( attr, required, pgp ) );

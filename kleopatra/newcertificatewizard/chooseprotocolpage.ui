@@ -24,6 +24,12 @@
      <property name="text" >
       <string>Create a personal OpenPGP key pair</string>
      </property>
+     <property name="checkable" >
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive" >
+      <bool>true</bool>
+     </property>
      <property name="description" >
       <string>OpenPGP key pairs are created locally, and certified by your friends and acquaintances. There is no central certification authority; instead, every individual creates a personal Web Of Trust by certifying other user's key pairs with his own certificate.</string>
      </property>
@@ -34,6 +40,12 @@
      <property name="text" >
       <string>Create a personal X.509 key pair and certification request </string>
      </property>
+     <property name="checkable" >
+      <bool>true</bool>
+     </property>
+     <property name="autoExclusive" >
+      <bool>true</bool>
+     </property>
      <property name="description" >
       <string>X.509 key pairs are created locally, but certified centrally by a certification authority (CA). CAs can certify other CAs, creating a central, hierarchical chain of trust.</string>
      </property>
@@ -42,40 +54,7 @@
   </layout>
  </widget>
  <resources/>
- <connections>
-  <connection>
-   <sender>pgpCLB</sender>
-   <signal>clicked()</signal>
-   <receiver>Kleo::NewCertificateUi::ChooseProtocolPage</receiver>
-   <slot>slotPgpClicked()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>642</x>
-     <y>65</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>692</x>
-     <y>67</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>x509CLB</sender>
-   <signal>clicked()</signal>
-   <receiver>Kleo::NewCertificateUi::ChooseProtocolPage</receiver>
-   <slot>slotX509Clicked()</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>592</x>
-     <y>209</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>688</x>
-     <y>209</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
  <slots>
   <slot>slotPgpClicked()</slot>
   <slot>slotX509Clicked()</slot>
