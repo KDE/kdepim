@@ -125,6 +125,14 @@ QString HHRecord::category() const
 	return fCategory;
 }
 
+void HHRecord::setCategory( int id, const QString& category )
+{
+	FUNCTIONSETUP;
+	
+	fCategory = category;
+	fRecord->setCategory( id );
+}
+
 bool HHRecord::isModified() const
 {
 	return fRecord->isModified() || isDeleted();

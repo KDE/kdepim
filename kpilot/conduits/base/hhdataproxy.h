@@ -56,21 +56,22 @@ public:
 	virtual void syncFinished();
 	
 	/**
-	 * Returns the list of category names.
+	 * Sets the category of @param rec to "Unfiled" or whatever is appropriate for
+	 * the conduit to say that the record has no category.
 	 */
-	virtual QStringList categoryNames() const;
+	void clearCategory( HHRecord *rec );
 	
 	/**
-	 * Returns the category id for given category name or 0 if the category does
-	 * not exist.
+	 * Returns true if the the PilotDatabase contains the given category, false
+	 * otherwhise.
 	 */
-	int categoryId( const QString &name ) const;
+	bool containsCategory( const QString& category ) const;
 	
 	/**
-	 * Returns the Category object for the category with given name. If there is 
-	 * no category with given name, the unfiled category will be returned.
+	 * Adds the category to the pilot database. If the category app info block is
+	 * full and doesn't contain the category it returns false. True otherwhise.
 	 */
-	HHCategory* category( const QString &name ) const;
+	bool addGlobalCategory( const QString& category );
 	
 protected:
 	/**

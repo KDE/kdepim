@@ -79,7 +79,7 @@ copyPCCategoryToHH( PCRecord, HHRecord )
     HHDataStore.clearCategory( HHRecord )
   if( PCRecord.categoryCount == 1 )
     // Case 2, 3, 4
-    else if( HHDataStore.containsCategory( PCRecord.category() ) )
+    if( HHDataStore.containsCategory( PCRecord.category() ) )
       // Case 2
       HHDataStore.setCategory( HHRecord, PCRecord.category() )
     else

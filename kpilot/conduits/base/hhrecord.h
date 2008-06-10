@@ -87,6 +87,12 @@ public:
 	 * Returns the category of this record.
 	 */
 	virtual QString category() const;
+	
+	/**
+	 * Sets the category and the id as stored in the appinfo block of the database
+	 * for this record.
+	 */
+	virtual void setCategory( int id, const QString& category );
 
 	/**
 	 * Returns true if the record is modified and/or if it's marked as deleted.

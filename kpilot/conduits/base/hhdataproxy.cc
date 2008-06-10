@@ -55,6 +55,35 @@ void HHDataProxy::syncFinished()
 	}
 }
 
+void HHDataProxy::clearCategory( HHRecord *rec )
+{
+	FUNCTIONSETUP;
+	
+	rec->setCategory( Pilot::Unfiled, CSL1( "Unfiled" ) );
+}
+
+bool HHDataProxy::containsCategory( const QString& category ) const
+{
+	FUNCTIONSETUP;
+	
+	Q_UNUSED( category );
+	
+	// TODO: IMPLEMENT
+	
+	return false;
+}
+	
+bool HHDataProxy::addGlobalCategory( const QString& category )
+{
+	FUNCTIONSETUP;
+	
+	Q_UNUSED( category );
+	
+	// TODO: IMPLEMENT
+	
+	return false;
+}
+
 QString HHDataProxy::generateUniqueId()
 {
 	recordid_t id = 0;
@@ -228,42 +257,4 @@ void HHDataProxy::loadAllRecords()
 		
 		DEBUGKPILOT << "Loaded " << fRecords.count() << " records.";
 	}
-}
-
-QStringList HHDataProxy::categoryNames() const
-{
-	QStringList names;
-	
-	foreach( HHCategory *cat, fCategories )
-	{
-		names.append( cat->name() );
-	}
-		
-	return names;
-}
-
-int HHDataProxy::categoryId( const QString &name ) const
-{
-	foreach( HHCategory *cat, fCategories )
-	{
-		if( name == cat->name() )
-		{
-			return cat->id();
-		}
-	}
-	
-	return 0;
-}
-
-HHCategory* HHDataProxy::category( const QString &name ) const
-{
-	foreach( HHCategory *cat, fCategories )
-	{
-		if( name == cat->name() )
-		{
-			return cat;
-		}
-	}
-	
-	return fUnfiled;
 }
