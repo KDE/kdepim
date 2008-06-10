@@ -72,9 +72,37 @@ bool HHDataProxy::addGlobalCategory( const QString& category )
 {
 	FUNCTIONSETUP;
 	
-	Q_UNUSED( category );
+	if( (unsigned int) category.size() > Pilot::CATEGORY_SIZE )
+	{
+		// Let's not start on this one. It will get truncated and I don't have time
+		// energy to think about what should happen in that case.
+		return false;
+	}
 	
-	// TODO: IMPLEMENT
+	bool canHaveNewCategory = false;
+	unsigned int i = 0;
+	QString cat;
+	
+	while( i < Pilot::CATEGORY_COUNT && !canHaveNewCategory )
+	{
+		cat = fAppInfo->categoryName( i );
+		
+		if( cat.isEmpty() )
+		{
+			canHaveNewCategory = true;
+		}
+		else
+		{
+			// Try the next one.
+			i++;
+		}
+	}
+	
+	if( canHaveNewCategory )
+	{
+		fAppInfo->setCategoryName( i, category );
+		return true;
+	}
 	
 	return false;
 }
