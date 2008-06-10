@@ -62,24 +62,6 @@ public:
 	
 	virtual bool createDataStore();
 	
-	/**
-	 * Sets the given category as the only category to the record and might do
-	 * some internal things needed for category handling in the datastore.
-	 * 
-	 * All other categories that might have been set to this record should be
-	 * removed.
-	 */
-	virtual void setCategory( Record* rec, const QString& category );
-
-	/**
-	 * Adds the given category to the record and might do some internal things
-	 * needed for category handling in the datastore.
-	 * 
-	 * All other categories that might have been set to this record should be
-	 * unchanged.
-	 */
-	virtual void addCategory( Record* rec, const QString& category );
-	
 protected:
 	static const int MD5_DIGEST_LENGTH = 16;
 	static const int MD5_CBLOCK = 64;

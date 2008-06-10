@@ -72,6 +72,18 @@ public:
 	 */
 	bool addGlobalCategory( const QString& category );
 	
+	/**
+	 * Reads the right category id from app info and updates the record
+	 * accordingly. If there is no category id found the category of the record
+	 * remains unchanged.
+	 */
+	/* virtual */ void setCategory( Record* rec, const QString& category );
+
+	/**
+	 * Does nothing because handheld records only can have only one category.
+	 */
+	/* virtual */ void addCategory( Record*, const QString& ) {};
+	
 protected:
 	/**
 	 * Reads all records from the database.

@@ -167,16 +167,6 @@ HHRecord* KeyringHHDataProxy::createHHRecord( PilotRecord *rec )
 	return new KeyringHHRecord( rec, "Unfiled", fDesKey );
 }
 
-void KeyringHHDataProxy::setCategory( Record* rec, const QString& category )
-{
-	//FIXME: Needs implementation
-}
-
-void KeyringHHDataProxy::addCategory( Record* rec, const QString& category )
-{
-	//FIXME: Needs implementation
-}
-
 bool KeyringHHDataProxy::createDataStore()
 {
 	FUNCTIONSETUP;

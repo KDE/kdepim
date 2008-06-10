@@ -79,6 +79,28 @@ bool HHDataProxy::addGlobalCategory( const QString& category )
 	return false;
 }
 
+void HHDataProxy::setCategory( Record* rec, const QString& category )
+{
+	FUNCTIONSETUP;
+	
+	// Get the category id or let findCategory return -1 if it does not exist.
+	int id = fAppInfo->findCategory( category, false );
+	
+	if( id != -1 )
+	{
+		if( HHRecord *hhRec = static_cast<HHRecord*>( rec ) )
+		{
+			// Set the id to 0 to make sure that the database asigns a valid id to the
+			// record.
+			hhRec->setCategory( id, category );
+		}
+		else
+		{
+			DEBUGKPILOT << "Record " << rec->id() << " is not of type HHRecord*.";
+		}
+	}
+}
+
 QString HHDataProxy::generateUniqueId()
 {
 	recordid_t id = 0;
