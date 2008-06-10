@@ -45,6 +45,7 @@ namespace NewCertificateUi {
     class ListWidget : public QWidget {
         Q_OBJECT
         Q_PROPERTY( QStringList items READ items WRITE setItems USER true NOTIFY itemsChanged )
+        Q_PROPERTY( QRegExp regExpFilter READ regExpFilter WRITE setRegExpFilter )
     public:
         explicit ListWidget( QWidget * parent=0 );
         ~ListWidget();

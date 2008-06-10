@@ -196,5 +196,13 @@ void ListWidget::setItems( const QStringList & items ) {
     d->stringListModel.setStringList( items );
 }
 
+QRegExp ListWidget::regExpFilter() const {
+    return d->delegate.regExpFilter();
+}
+
+void ListWidget::setRegExpFilter( const QRegExp & rx ) {
+    d->delegate.setRegExpFilter( rx );
+}
+
 #include "moc_listwidget.cpp"
 #include "listwidget.moc"
