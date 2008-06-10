@@ -1,12 +1,11 @@
 /*
   statusbarprogresswidget.cpp
 
-  This file is part of KMail, the KDE mail client.
-
   (C) 2004 Till Adam <adam@kde.org>
            Don Sanders
            David Faure <dfaure@kde.org>
 
+  Copyright 2004 David Faure <faure@kde.org>
   Includes StatusbarProgressWidget which is based on KIOLittleProgressDlg
   by Matt Koss <koss@miesto.sk>
 

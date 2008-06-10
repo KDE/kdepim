@@ -47,7 +47,6 @@ QString mimeType = "kjots/dropdata";
 
 Bookshelf::Bookshelf ( QWidget *parent ) : QTreeWidget(parent)
 {
-    bookActionCollection = pageActionCollection = 0;
     sortOrder = Qt::DescendingOrder;
 
     setObjectName( "bookshelf" );
@@ -79,26 +78,8 @@ void Bookshelf::DelayedInitialization ( KActionCollection *actionCollection ) {
     action->setText(i18n("Copy Link Address"));
     connect(action, SIGNAL(triggered()), SLOT(copyLinkAddress()));
 
-    pageActionCollection = new KActionCollection(this);
-    bookActionCollection = new KActionCollection(this);
-    multiActionCollection = new KActionCollection(this);
-
-    pageActionCollection->addAction("new_page", actionCollection->action("new_page"));
-    pageActionCollection->addAction("rename_entry", actionCollection->action("rename_entry"));
-    pageActionCollection->addAction("save_to", actionCollection->action("save_to"));
-    pageActionCollection->addAction("copy_link_address", actionCollection->action("copy_link_address"));
-    bookActionCollection->addAction("del_folder", actionCollection->action("del_folder"));
-    pageActionCollection->addAction("del_page", actionCollection->action("del_page"));
-
-    bookActionCollection->addAction("new_page", actionCollection->action("new_page"));
-    bookActionCollection->addAction("rename_entry", actionCollection->action("rename_entry"));
-    bookActionCollection->addAction("save_to", actionCollection->action("save_to"));
-    bookActionCollection->addAction("copy_link_address", actionCollection->action("copy_link_address"));
-    bookActionCollection->addAction("del_folder", actionCollection->action("del_folder"));
-
-    multiActionCollection->addAction("save_to", actionCollection->action("save_to"));
-    multiActionCollection->addAction("del_mult", actionCollection->action("del_mult"));
-
+    // Set up the context menu on the bookshelf.
+    // TODO: Move this to the xml file.
     addAction(actionCollection->action("new_book"));
     addAction(actionCollection->action("new_page"));
     addAction(actionCollection->action("rename_entry"));
@@ -109,9 +90,6 @@ void Bookshelf::DelayedInitialization ( KActionCollection *actionCollection ) {
     addAction(actionCollection->action("del_folder"));
     addAction(actionCollection->action("del_page"));
     addAction(actionCollection->action("del_mult"));
-
-    // Do this now or else the slot will called before DelayedInitialization().
-    connect(this, SIGNAL(itemSelectionChanged()), SLOT(setContextMenuOptions()));
 
     //These need to be connected after books are loaded.
     connect(this, SIGNAL(itemExpanded(QTreeWidgetItem*)), SLOT(itemWasExpanded(QTreeWidgetItem*)));
@@ -467,40 +445,6 @@ void Bookshelf::entryRenamed(QTreeWidgetItem* item, int  /*col*/)
         entry->topLevelBook()->setDirty(true);
         jumpToEntry(entry);
     }
-}
-
-void Bookshelf::setContextMenuOptions()
-{
-    QList<QTreeWidgetItem*> selection = selectedItems();
-    int selectionSize = selection.size();
-
-    // Reset all menu entries
-    foreach ( QAction* action, multiActionCollection->actions() )
-        action->setEnabled(false);
-    foreach ( QAction* action, pageActionCollection->actions() )
-        action->setEnabled(false);
-    foreach ( QAction* action, bookActionCollection->actions() )
-        action->setEnabled(false);
-
-    if ( !selectionSize  ) {
-        // No item is selected
-    } else if ( selectionSize == 1 ) {
-        KJotsEntry *entry = static_cast<KJotsEntry*>(selection.at(0));
-        if ( entry->isBook() ) {
-        foreach ( QAction* action, bookActionCollection->actions() )
-            action->setEnabled(true);
-        } else {
-        foreach ( QAction* action, pageActionCollection->actions() )
-            action->setEnabled(true);
-        }
-    }
-    else if ( selectionSize > 1 ) {
-        foreach ( QAction* action, multiActionCollection->actions() )
-            action->setEnabled(true);
-    }
-
-
-    return;
 }
 
 /*!

@@ -1129,6 +1129,7 @@ void KABCore::initGUI()
 
   mDetailsPage = new QWidget;
   mDetailsLayout->addWidget( mDetailsPage );
+  mDetailsLayout->setStretchFactor( mDetailsPage, 1 );
 
   QHBoxLayout *detailsPageLayout = new QHBoxLayout( mDetailsPage );
   detailsPageLayout->setSpacing( 0 );
@@ -1161,7 +1162,7 @@ void KABCore::createJumpButtonBar()
 {
   mJumpButtonBar = new JumpButtonBar( this, mDetailsWidget );
   mDetailsLayout->addWidget( mJumpButtonBar );
-  mDetailsLayout->setStretchFactor( mJumpButtonBar, 1 );
+  mDetailsLayout->setStretchFactor( mJumpButtonBar, 0 );
 
   connect( mJumpButtonBar, SIGNAL( jumpToLetter( const QString& ) ),
            SLOT( incrementalJumpButtonSearch( const QString& ) ) );
