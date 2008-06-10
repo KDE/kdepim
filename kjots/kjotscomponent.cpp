@@ -84,7 +84,6 @@
 KJotsComponent::KJotsComponent(QWidget* parent, KActionCollection *collection) : QWidget(parent)
 {
     actionCollection = collection;
-    selectionOnlyActions = pageOnlyActions = 0;
     searchDialog = 0;
 
     QDBusConnection dbus = QDBusConnection::sessionBus();
@@ -226,8 +225,10 @@ KJotsComponent::KJotsComponent(QWidget* parent, KActionCollection *collection) :
     action = KStandardAction::cut(editor, SLOT(cut()), actionCollection);
     connect(editor, SIGNAL(copyAvailable(bool)), action, SLOT(setEnabled(bool)));
     action->setEnabled(false);
-    action = KStandardAction::copy(editor, SLOT(copy()), actionCollection);
+
+    action = KStandardAction::copy(this, SLOT(copy()), actionCollection);
     connect(editor, SIGNAL(copyAvailable(bool)), action, SLOT(setEnabled(bool)));
+    connect(browser, SIGNAL(copyAvailable(bool)), action, SLOT(setEnabled(bool)));
     action->setEnabled(false);
 
     action = actionCollection->addAction("copyIntoTitle");
@@ -317,51 +318,31 @@ void KJotsComponent::DelayedInitialization()
     connect(replaceDialog, SIGNAL(optionsChanged()), SLOT(onUpdateReplace()) );
     connect(replaceAllPages, SIGNAL(stateChanged(int)), SLOT(onUpdateReplace()) );
 
-    // Actions that are used only when an entry is selected.
-    selectionOnlyActions = new KActionCollection((QObject*)this);
-    selectionOnlyActions->addAction( "del_folder", actionCollection->action("del_folder") );
-    selectionOnlyActions->addAction( "del_page", actionCollection->action("del_page") );
-    selectionOnlyActions->addAction( "del_mult", actionCollection->action("del_mult") );
-    selectionOnlyActions->addAction( "save_to", actionCollection->action("save_to") );
-    selectionOnlyActions->addAction( "save_to_ascii", actionCollection->action("save_to_ascii") );
-    selectionOnlyActions->addAction( "save_to_html", actionCollection->action("save_to_html") );
-    selectionOnlyActions->addAction( "insert_date", actionCollection->action("insert_date") );
-    selectionOnlyActions->addAction( "rename_entry", actionCollection->action("rename_entry") );
-    selectionOnlyActions->addAction( "manual_save", actionCollection->action("manual_save") );
-    selectionOnlyActions->addAction( "go_next_book", actionCollection->action("go_next_book") );
-    selectionOnlyActions->addAction( "go_next_page", actionCollection->action("go_next_page") );
-    selectionOnlyActions->addAction( "go_prev_book", actionCollection->action("go_prev_book") );
-    selectionOnlyActions->addAction( "go_prev_page", actionCollection->action("go_prev_page") );
-    selectionOnlyActions->addAction( "new_page", actionCollection->action("new_page") );
-    selectionOnlyActions->addAction( KStandardAction::name(KStandardAction::Cut),
-                                     actionCollection->action(KStandardAction::name(KStandardAction::Cut)) );
-    selectionOnlyActions->addAction( KStandardAction::name(KStandardAction::Paste),
-                                     actionCollection->action(KStandardAction::name(KStandardAction::Paste)) );
-    selectionOnlyActions->addAction( KStandardAction::name(KStandardAction::Replace),
-                                     actionCollection->action(KStandardAction::name(KStandardAction::Replace)) );
-    selectionOnlyActions->addAction( KStandardAction::name(KStandardAction::Find),
-                                     actionCollection->action(KStandardAction::name(KStandardAction::Find)) );
-    selectionOnlyActions->addAction( KStandardAction::name(KStandardAction::Print),
-                                     actionCollection->action(KStandardAction::name(KStandardAction::Print)) );
-    selectionOnlyActions->addAction( "change_color", actionCollection->action("change_color") );
+    // Actions for a single item selection.
+    entryActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Find)) );
+    entryActions.insert( actionCollection->action("go_next_book") );
+    entryActions.insert( actionCollection->action("go_prev_book") );
+    entryActions.insert( actionCollection->action("del_folder") );
+    entryActions.insert( actionCollection->action("rename_entry") );
+    entryActions.insert( actionCollection->action("change_color") );
 
     // Actions that are used only when a page is selected.
-    pageOnlyActions = new KActionCollection((QObject*)this);
-    pageOnlyActions->addAction( KStandardAction::name(KStandardAction::Cut),
-                                actionCollection->action(KStandardAction::name(KStandardAction::Cut)) );
-    pageOnlyActions->addAction( KStandardAction::name(KStandardAction::Paste),
-                                actionCollection->action(KStandardAction::name(KStandardAction::Paste)) );
-    pageOnlyActions->addAction( KStandardAction::name(KStandardAction::Replace),
-                                actionCollection->action(KStandardAction::name(KStandardAction::Replace)) );
-    pageOnlyActions->addAction( "del_page", actionCollection->action("del_page") );
-    pageOnlyActions->addAction( "insert_date", actionCollection->action("insert_date") );
-    pageOnlyActions->addAction( "auto_bullet", actionCollection->action("auto_bullet") );
-    pageOnlyActions->addAction( "manage_link", actionCollection->action("manage_link") );
-    pageOnlyActions->addAction( "insert_checkmark", actionCollection->action("insert_checkmark") );
+    pageActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Cut)) );
+    pageActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Paste)) );
+    pageActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Replace)) );
+    pageActions.insert( actionCollection->action("go_next_page") );
+    pageActions.insert( actionCollection->action("go_prev_page") );
+    pageActions.insert( actionCollection->action("del_page") );
+    pageActions.insert( actionCollection->action("insert_date") );
+    pageActions.insert( actionCollection->action("auto_bullet") );
+    pageActions.insert( actionCollection->action("manage_link") );
+    pageActions.insert( actionCollection->action("insert_checkmark") );
 
     // Actions that are used only when a page is selected.
-    bookOnlyActions = new KActionCollection((QObject*)this);
-    bookOnlyActions->addAction( "save_to_book", actionCollection->action("save_to_book") );
+    bookActions.insert( actionCollection->action("save_to_book") );
+
+    // Actions that are used only when multiple items are selected.
+    multiselectionActions.insert( actionCollection->action("del_mult") );
 
     bookshelf->DelayedInitialization(actionCollection);
     editor->DelayedInitialization(actionCollection, bookshelf);
@@ -383,6 +364,10 @@ inline QTextEdit* KJotsComponent::activeEditor() {
     } else {
         return editor;
     }
+}
+
+void KJotsComponent::copy() {
+    activeEditor()->copy();
 }
 
 bool KJotsComponent::createNewBook()
@@ -1229,43 +1214,63 @@ void KJotsComponent::insertDate()
 
 void KJotsComponent::updateMenu()
 {
-    // Sanity check. Too many things call updateMenu().
-    if ( !selectionOnlyActions || !pageOnlyActions ) {
-        return;
-    }
 
     QList<QTreeWidgetItem*> selection = bookshelf->selectedItems();
     int selectionSize = selection.size();
 
     if ( !selectionSize ) {
         // no (meaningful?) selection
-        foreach ( QAction* action, selectionOnlyActions->actions() )
+        foreach ( QAction* action, multiselectionActions )
             action->setEnabled(false);
-        foreach ( QAction* action, pageOnlyActions->actions() )
+        foreach ( QAction* action, entryActions )
             action->setEnabled(false);
-        foreach ( QAction* action, bookOnlyActions->actions() )
+        foreach ( QAction* action, bookActions )
+            action->setEnabled(false);
+        foreach ( QAction* action, pageActions )
             action->setEnabled(false);
         editor->setActionsEnabled( false );
     } else if ( selectionSize > 1 ) {
-        // soon...
-    } else { //selectionSize == 1
-        foreach ( QAction* action, selectionOnlyActions->actions() )
+        foreach ( QAction* action, entryActions )
+            action->setEnabled(false);
+        foreach ( QAction* action, bookActions )
+            action->setEnabled(false);
+        foreach ( QAction* action, pageActions )
+            action->setEnabled(false);
+        foreach ( QAction* action, multiselectionActions )
+            action->setEnabled(true);
+    
+        editor->setActionsEnabled( false );
+    } else {
+
+        foreach ( QAction* action, multiselectionActions )
+            action->setEnabled(false);
+        foreach ( QAction* action, entryActions )
             action->setEnabled(true);
 
         KJotsEntry* entry = static_cast<KJotsEntry*>(selection.at(0));
+
         if ( entry && entry->isBook() ) {
-            foreach ( QAction* action, pageOnlyActions->actions() )
+
+            foreach ( QAction* action, pageActions )
                 action->setEnabled(false);
-            foreach ( QAction* action, bookOnlyActions->actions() )
+            foreach ( QAction* action, bookActions ) {
                 action->setEnabled(true);
+            }
             editor->setActionsEnabled( false );
+
         } else {
-            foreach ( QAction* action, pageOnlyActions->actions() )
-                action->setEnabled(true);
-            foreach ( QAction* action, bookOnlyActions->actions() )
+
+            foreach ( QAction* action, pageActions ) {
+                if (action->objectName() == name(KStandardAction::Cut) ) {
+                    action->setEnabled(activeEditor()->textCursor().hasSelection());
+                } else {
+                    action->setEnabled(true);
+                }
+            }
+            foreach ( QAction* action, bookActions )
                 action->setEnabled(false);
             editor->setActionsEnabled( true );
-            
+
         }
     }
 }

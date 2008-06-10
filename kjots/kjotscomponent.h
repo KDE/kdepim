@@ -94,6 +94,7 @@ class KJotsComponent : public QWidget
         void configure();
         void updateConfiguration();
 
+        void copy();
         void copySelection();
         void insertDate();
         void onPrint();
@@ -135,7 +136,7 @@ private:
         QTimer         *m_autosaveTimer;
 
         KActionMenu *exportMenu, *bookmarkMenu;
-        KActionCollection *selectionOnlyActions, *pageOnlyActions, *bookOnlyActions;
+        QSet<QAction*> entryActions, pageActions, bookActions, multiselectionActions;
         KActionCollection *actionCollection;
 
         

@@ -77,14 +77,10 @@ protected:
     virtual void dragEnterEvent ( QDragEnterEvent * );
     virtual void dragMoveEvent ( QDragMoveEvent * );
 
-    KActionCollection *pageActionCollection;
-    KActionCollection *bookActionCollection;
-    KActionCollection *multiActionCollection;
     Qt::SortOrder sortOrder;
 
 protected slots:
     void entryRenamed(QTreeWidgetItem*, int);
-    void setContextMenuOptions();
     void itemWasExpanded(QTreeWidgetItem*);
     void itemWasCollapsed(QTreeWidgetItem*);
     void copyLinkAddress();
