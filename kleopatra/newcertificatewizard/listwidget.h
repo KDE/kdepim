@@ -5,6 +5,8 @@
 
 #include <utils/pimpl_ptr.h>
 
+class QRegExp;
+
 namespace Kleo {
 namespace NewCertificateUi {
 
@@ -14,6 +16,9 @@ namespace NewCertificateUi {
     public:
         explicit ListWidget( QWidget * parent=0 );
         ~ListWidget();
+
+        void setRegExpFilter( const QRegExp & rx );
+        QRegExp regExpFilter() const;
 
         QStringList items() const;
 

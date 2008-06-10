@@ -6,8 +6,39 @@
 
 #include <QItemSelectionModel>
 #include <QStringListModel>
+#include <QRegExp>
+#include <QRegExpValidator>
+#include <QItemDelegate>
+#include <QLineEdit>
 
 using namespace Kleo::NewCertificateUi;
+
+namespace {
+
+    class ItemDelegate : public QItemDelegate {
+        Q_OBJECT
+    public:
+        explicit ItemDelegate( QObject * p=0 )
+            : QItemDelegate( p ), m_rx() {}
+        explicit ItemDelegate( const QRegExp & rx, QObject * p=0 )
+            : QItemDelegate( p ), m_rx( rx ) {}
+
+        void setRegExpFilter( const QRegExp & rx ) {
+            m_rx = rx;
+        }
+        const QRegExp & regExpFilter() const { return m_rx; }
+
+        /* reimp */ QWidget * createEditor( QWidget * p, const QStyleOptionViewItem & o, const QModelIndex & i ) const {
+            QWidget * w = QItemDelegate::createEditor( p, o, i );
+            if ( !m_rx.isEmpty() )
+                if ( QLineEdit * const le = qobject_cast<QLineEdit*>( w ) )
+                    le->setValidator( new QRegExpValidator( m_rx, le ) );
+            return w;
+        }
+    private:
+        QRegExp m_rx;
+    };
+}
 
 class ListWidget::Private {
     friend class ::Kleo::NewCertificateUi::ListWidget;
@@ -19,6 +50,7 @@ public:
           ui( q )
     {
         ui.listView->setModel( &stringListModel );
+        ui.listView->setItemDelegate( &delegate );
         connect( ui.listView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
                  q, SLOT(slotSelectionChanged()) );
         connect( &stringListModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
@@ -98,7 +130,7 @@ private:
 
 private:
     QStringListModel stringListModel;
-
+    ItemDelegate delegate;
     struct UI : Ui_ListWidget {
         explicit UI( ListWidget * q )
             : Ui_ListWidget()
@@ -131,3 +163,4 @@ void ListWidget::setItems( const QStringList & items ) {
 }
 
 #include "moc_listwidget.cpp"
+#include "listwidget.moc"
