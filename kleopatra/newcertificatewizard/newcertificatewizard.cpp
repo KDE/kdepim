@@ -68,14 +68,13 @@ namespace {
             updateForm();
         }
         /* reimp */ void cleanupPage() {
-            savedValues.clear();
-            for ( QVector< QPair<QString,QLineEdit*> >::const_iterator it = attributePairList.begin(), end = attributePairList.end() ; it != end ; ++it )
-                savedValues[it->first] = it->second->text().trimmed();
+            saveValues();
         }
 
     private:
         void updateForm();
         void clearForm();
+        void saveValues();
 
     private:
         QVector< QPair<QString,QLineEdit*> > attributePairList;
@@ -209,6 +208,11 @@ namespace {
     };
 }
 
+void EnterDetailsPage::saveValues() {
+    for ( QVector< QPair<QString,QLineEdit*> >::const_iterator it = attributePairList.begin(), end = attributePairList.end() ; it != end ; ++it )
+        savedValues[ attributeFromKey(it->first) ] = it->second->text().trimmed();
+}
+
 void EnterDetailsPage::updateForm() {
 
     clearForm();
@@ -229,7 +233,7 @@ void EnterDetailsPage::updateForm() {
         const QString attr = attributeFromKey( key );
         if ( attr.isEmpty() )
             continue;
-        const QString preset = savedValues.value( key, config.readEntry( attr, QString() ) );
+        const QString preset = savedValues.value( attr, config.readEntry( attr, QString() ) );
         const bool required = key.endsWith( QLatin1Char('!') );
         const QString label = config.readEntry( attr + "_label",
                                                 attributeLabel( attr, required, pgp ) );
