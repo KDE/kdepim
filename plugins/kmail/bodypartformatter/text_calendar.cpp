@@ -277,7 +277,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     enum MailType {
       Answer,
       Delegation,
-      Forward
+      Forward,
+      DeclineCounter
     };
 
     bool mail( Incidence* incidence, KMail::Callback& callback, const QString &status,
@@ -301,6 +302,9 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           break;
         case Forward:
           subject = i18n( "Forwarded: %1", summary );
+          break;
+        case DeclineCounter:
+          subject = i18n( "Declined Counter Proposal: %1" ).arg( summary );
           break;
       }
 
@@ -503,6 +507,24 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return true;
     }
 
+    bool handleDeclineCounter( const QString &iCal, KMail::Callback &callback ) const
+    {
+      const QString receiver = callback.receiver();
+      if ( receiver.isEmpty() )
+        return true;
+      Incidence* incidence = icalToString( iCal );
+      if ( callback.askForComment( Attendee::Declined ) ) {
+        bool ok = false;
+        QString comment = KInputDialog::getMultiLineText( i18n("Decline Counter Proposal"),
+            i18n("Comment:"), QString(), &ok );
+        if ( !ok )
+          return true;
+        if ( !comment.isEmpty() )
+          incidence->addComment( comment );
+      }
+      return mail( incidence, callback, "declinecounter", KCal::iTIPDeclineCounter, QString::null, DeclineCounter );
+    }
+
     bool counterProposal( const QString &iCal, KMail::Callback &callback ) const
     {
       const QString receiver = callback.receiver();
@@ -538,6 +560,9 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         result = handleIgnore( iCal, c );
       if ( path == "decline" )
         result = handleInvitation( iCal, Attendee::Declined, c );
+      if ( path == "decline_counter" ) {
+        result = handleDeclineCounter( iCal, c );
+      }
       if ( path == "delegate" )
         result = handleInvitation( iCal, Attendee::Delegated, c );
       if ( path == "forward" ) {
@@ -583,12 +608,16 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           return i18n("Accept incidence");
         if ( path == "accept_conditionally" )
           return i18n( "Accept incidence conditionally" );
+        if ( path == "accept_counter" )
+          return i18n( "Accept counter proposal" );
         if ( path == "counter" )
           return i18n( "Create a counter proposal..." );
         if ( path == "ignore" )
           return i18n( "Throw mail away" );
         if ( path == "decline" )
           return i18n( "Decline incidence" );
+        if ( path == "decline_counter" )
+          return i18n( "Decline counter proposal" );
         if ( path == "check_calendar" )
           return i18n("Check my calendar..." );
         if ( path == "reply" )
