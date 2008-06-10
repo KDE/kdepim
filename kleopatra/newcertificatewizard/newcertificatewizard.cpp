@@ -43,6 +43,8 @@
 
 #include <kleo/dn.h>
 
+#include <gpgme++/global.h>
+
 #include <KConfigGroup>
 #include <KGlobal>
 #include <KLocale>
@@ -51,10 +53,129 @@
 #include <QRegExpValidator>
 #include <QLineEdit>
 
+#include <boost/range.hpp>
+
+#include <algorithm>
+
 using namespace Kleo;
 using namespace Kleo::NewCertificateUi;
+using namespace GpgME;
+using namespace boost;
+
+static const unsigned int key_strengths[] = {
+    1024, 1532, 2048, 3072, 4096,
+};
+static const unsigned int num_key_strengths = sizeof key_strengths / sizeof *key_strengths;
+
+static unsigned int index2strength( unsigned int index ) {
+    if ( index < num_key_strengths )
+        return key_strengths[index];
+    else
+        return 0;
+}
+
+static int strength2index( unsigned int strength ) {
+    const unsigned int * const it = 
+        std::lower_bound( begin( key_strengths ), end( key_strengths ), strength );
+    if ( it == end( key_strengths ) )
+        return key_strengths[num_key_strengths-1];
+    else
+        return *it;
+}
 
 namespace {
+
+    class AdvancedSettingsDialog : public QDialog {
+        Q_OBJECT
+        Q_ENUMS( PublicKeyAlgorithm )
+        Q_PROPERTY( QStringList userIDs READ userIDs WRITE setUserIDs )
+        Q_PROPERTY( QStringList emailAddresses READ emailAddresses WRITE setEmailAddresses )
+        Q_PROPERTY( QStringList dnsNames READ dnsNames WRITE setDnsNames )
+        Q_PROPERTY( QStringList uris READ uris WRITE setUris )
+        Q_PROPERTY( uint keyStrength READ keyStrength WRITE setKeyStrength )
+        Q_PROPERTY( PublicKeyAlgorithm publicKeyAlgorithm READ publicKeyAlgorithm WRITE setPublicKeyAlgorithm )
+        Q_PROPERTY( bool signingAllowed READ signingAllowed WRITE setSigningAllowed )
+        Q_PROPERTY( bool encryptionAllowed READ encryptionAllowed WRITE setEncryptionAllowed )
+        Q_PROPERTY( bool certificationAllowed READ certificationAllowed WRITE setCertificationAllowed )
+        Q_PROPERTY( bool authenticationAllowed READ authenticationAllowed WRITE setAuthenticationAllowed )
+        Q_PROPERTY( QDate expiryDate READ expiryDate WRITE setExpiryDate )
+    public:
+        explicit AdvancedSettingsDialog( QWidget * parent=0 )
+            : QDialog( parent ), ui()
+        {
+            ui.setupUi( this );
+            const QDate today = QDate::currentDate();
+            ui.expiryDE->setMinimumDate( today );
+            ui.expiryDE->setDate( today.addYears( 2 ) );
+        }
+
+        void setProtocol( GpgME::Protocol protocol ) {
+            ui.uidGB->setVisible( protocol == OpenPGP );
+            ui.emailGB->setVisible( protocol == CMS );
+            ui.dnsGB->setVisible( protocol == CMS );
+            ui.uriGB->setVisible( protocol == CMS );
+            if ( protocol == OpenPGP ) {
+                ui.signingCB->setChecked( true );
+                ui.signingCB->setEnabled( false );
+                ui.certificationCB->setChecked( true );
+                ui.certificationCB->setEnabled( false );
+                ui.authenticationCB->setChecked( false );
+                ui.authenticationCB->setEnabled( false );
+            } else {
+                ui.signingCB->setEnabled( true );
+                ui.certificationCB->setEnabled( true );
+                ui.authenticationCB->setEnabled( true );
+            }
+        }
+        
+        void setUserIDs( const QStringList & items ) { ui.uidLW->setItems( items ); }
+        QStringList userIDs() const { return ui.uidLW->items();   }
+
+        void setEmailAddresses( const QStringList & items ) { ui.emailLW->setItems( items ); }
+        QStringList emailAddresses() const { return ui.emailLW->items(); }
+
+        void setDnsNames( const QStringList & items ) { ui.dnsLW->setItems( items ); }
+        QStringList dnsNames() const { return ui.dnsLW->items();   }
+
+        void setUris( const QStringList & items ) { ui.uriLW->setItems( items ); }
+        QStringList uris() const { return ui.uriLW->items();   }
+
+
+        void setKeyStrength( unsigned int strength ) {
+            ui.rsaKeyStrengthCB->setCurrentIndex( strength2index( strength ) );
+        }
+        unsigned int keyStrength() const {
+            return ui.dsaRB->isChecked() ? 1024U : index2strength( ui.rsaKeyStrengthCB->currentIndex() );
+        }
+
+        enum PublicKeyAlgorithm {
+            RSA, DSA,
+            NumPublicKeyAlgorithms
+        };
+        void setPublicKeyAlgorithm( PublicKeyAlgorithm algo ) {
+            ( algo == DSA ? ui.dsaRB : ui.rsaRB )->setChecked( true );
+        }
+        PublicKeyAlgorithm publicKeyAlgorithm() const { return ui.dsaRB->isChecked() ? DSA : RSA ; }
+
+
+        void setSigningAllowed( bool on ) { ui.signingCB->setChecked( on ); }
+        bool signingAllowed() const { return ui.signingCB->isChecked(); }
+
+        void setEncryptionAllowed( bool on ) { ui.encryptionCB->setChecked( on ); }
+        bool encryptionAllowed() const { return ui.encryptionCB->isChecked(); }
+
+        void setCertificationAllowed( bool on ) { ui.certificationCB->setChecked( on ); }
+        bool certificationAllowed() const { return ui.certificationCB->isChecked(); }
+
+        void setAuthenticationAllowed( bool on ) { ui.authenticationCB->setChecked( on ); }
+        bool authenticationAllowed() const { return ui.authenticationCB->isChecked(); }
+
+        void setExpiryDate( const QDate & date ) { ui.expiryDE->setDate( date ); }
+        QDate expiryDate() const { return ui.expiryDE->date(); }
+
+    private:
+        Ui_AdvancedSettingsDialog ui;
+    };
 
     class ChooseProtocolPage : public QWizardPage {
         Q_OBJECT
@@ -322,9 +443,8 @@ bool EnterDetailsPage::isComplete() const {
 }
 
 void EnterDetailsPage::slotAdvancedSettingsClicked() {
-    QDialog dialog;
-    Ui_AdvancedSettingsDialog ui;
-    ui.setupUi( &dialog );
+    AdvancedSettingsDialog dialog;
+    dialog.setProtocol( field("pgp").toBool() ? OpenPGP : CMS );
     dialog.exec();
 }
 
