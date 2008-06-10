@@ -86,6 +86,8 @@ protected:
 	static const int SALT_SIZE = 4;
 	
 	virtual PilotAppInfoBase* readAppInfo();
+	
+	virtual void storeAppInfo();
 
 private: // functions
 	QCA::SecureArray getDigest( const QCA::SecureArray &salt
