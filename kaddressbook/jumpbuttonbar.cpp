@@ -53,13 +53,9 @@ static QSize calculateButtonSize( QWidget *parent )
   QStyleOption opt;
   QFontMetrics fm = parent->fontMetrics();
 
-  QPushButton *button = new QPushButton( "", parent );
-  button->hide();
-
   const QSize buttonSize = parent->style()->sizeFromContents( QStyle::CT_PushButton, &opt,
-                           fm.size( Qt::TextShowMnemonic, " X - X " ).expandedTo( QApplication::globalStrut() ),
-                           button );
-  delete button;
+                                    fm.size( Qt::TextShowMnemonic, " X - X " )
+                                    .expandedTo( QApplication::globalStrut() ) );
 
   return buttonSize;
 }
