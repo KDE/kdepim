@@ -45,7 +45,6 @@ private:
 	bool fDeleted;
 	bool fArchived;
 	QMap<QString, QVariant> fValues;
-	QList<Category> fCategories;
 
 public:
 	TestHHRecord( const QStringList& fields, const QString &id );

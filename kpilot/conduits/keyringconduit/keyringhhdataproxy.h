@@ -56,11 +56,6 @@ public:
 	bool openDatabase( const QString &pass );
 	
 	/**
-	 * Saves the categories after we've synced back to the database.
-	 */
-	virtual void saveCategories();
-	
-	/**
 	 * This function creates a (subclass of) HHRecord for @p rec.
 	 */
 	virtual HHRecord* createHHRecord( PilotRecord *rec );
@@ -90,7 +85,7 @@ protected:
 	static const int MD5_CBLOCK = 64;
 	static const int SALT_SIZE = 4;
 	
-	virtual CategoryAppInfo* readCategoryAppInfo();
+	virtual PilotAppInfoBase* readAppInfo();
 
 private: // functions
 	QCA::SecureArray getDigest( const QCA::SecureArray &salt

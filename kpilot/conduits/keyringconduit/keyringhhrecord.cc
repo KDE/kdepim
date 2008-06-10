@@ -30,8 +30,6 @@
 #include "options.h"
 #include "pilotRecord.h"
 
-#include "category.h"
-
 KeyringHHRecord::KeyringHHRecord( PilotRecord *rec, const QString &category
                                 , const QString &key )
 	: HHRecord( rec, category ), fKey( key )

@@ -27,7 +27,6 @@
 
 #include "hhrecord.h"
 
-#include "category.h"
 #include "options.h"
 #include "pilot.h"
 #include "pilotRecord.h"

@@ -33,7 +33,6 @@
 #include "kpilotSettings.h"
 
 #include "idmapping.h"
-#include "hhcategory.h"
 #include "cudcounter.h"
 #include "dataproxy.h"
 #include "hhdataproxy.h"

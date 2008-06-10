@@ -30,7 +30,6 @@
 #include "kpilot_export.h"
 
 #include "record.h"
-#include "hhcategory.h"
 
 class PilotRecord;
 

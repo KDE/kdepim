@@ -66,6 +66,6 @@ protected:
 	
 	virtual void commitUpdate( Record *rec );
 	
-	virtual CategoryAppInfo* readCategoryAppInfo() { return 0; };
+	virtual PilotAppInfoBase* readAppInfo() { return 0; };
 };
 #endif

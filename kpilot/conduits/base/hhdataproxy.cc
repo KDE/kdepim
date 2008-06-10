@@ -36,10 +36,9 @@
 #include "pilot.h"
 
 #include "hhrecord.h"
-#include "hhcategory.h"
 
 HHDataProxy::HHDataProxy( PilotDatabase *db ) : fDatabase( db )
-	, fLastUsedUniqueId( 0L ), fUnfiled( 0L )
+	, fLastUsedUniqueId( 0L )
 {
 }
 
@@ -51,7 +50,7 @@ void HHDataProxy::syncFinished()
 	{
 		fDatabase->cleanup();
 		fDatabase->resetSyncFlags();
-		saveCategories();
+		//saveCategories(); Make this storeAppInfo()
 	}
 }
 
@@ -173,42 +172,13 @@ bool HHDataProxy::isOpen() const
 	}
 }
 
-void HHDataProxy::loadCategories()
-{
-	FUNCTIONSETUP;
-	
-	if( fDatabase && fDatabase->isOpen() )
-	{
-		CategoryAppInfo *catAppInfo = readCategoryAppInfo();
-		
-		// NOTE: There's also a lastUniqueID in CategoryAppInfo but it isn't clear
-		// to me what it does and how it should be used in the sync proces.
-		
-		for (unsigned int i = 0; i < Pilot::CATEGORY_COUNT; i++)
-		{
-			QString name = Pilot::categoryName( catAppInfo, i );
-			bool renamed = catAppInfo->renamed[i];
-			unsigned char id = catAppInfo->ID[i];
-			
-			HHCategory *cat = new HHCategory( name, renamed, i, id );
-			fCategories.append( cat );
-			
-			if( i == (unsigned int) Pilot::Unfiled )
-			{
-				fUnfiled = cat;
-			}
-		}
-	}
-}
-
 void HHDataProxy::loadAllRecords()
 {
 	FUNCTIONSETUP;
 	
 	if( fDatabase && fDatabase->isOpen() )
 	{
-		// This should initialize fAppInfo.
-		loadCategories();
+		fAppInfo = readAppInfo();
 	
 		int index = 0;
 		
@@ -217,37 +187,20 @@ void HHDataProxy::loadAllRecords()
 		while( pRec )
 		{
 			// Create a record object.
-			Record *rec = createHHRecord( pRec );
+			HHRecord *rec = createHHRecord( pRec );
 			fRecords.insert( rec->id(), rec );
 			
-			HHCategory *cat = fCategories[pRec->category()];
+			QString cat = fAppInfo->categoryName( pRec->category() );
 			
-			if( cat )
+			if( cat.isEmpty() )
 			{
-				// This essentialy doesn't add a category to the record but just the
-				// label for the category which is set in the pilot record.
-				
-				// FIXME: This is defenitly not the way to go.
-				
-				//QStringList categoryNames;
-				//categoryNames.append( cat->name() );
-				
-				//rec->setCategoryNames( categoryNames );
+				// This is strange, should not happen I think. However if it happens
+				// make sure that the record has some reasonable values.
+				rec->setCategory( Pilot::Unfiled, cat );
 			}
 			else
 			{
-				// This shouldn't happen I think....the category id seems to have some
-				// bogus value. So we set it to 0, which is Unfiled normaly.
-				pRec->setCategory( 0 );
-				
-				// FIXME: This is defenitly not the way to go.
-				
-				//but if it does we set the category to Unfiled.
-				//QStringList categoryNames;
-				//categoryNames.append( i18nc( "Category not set for the record"
-				//	, "Unfiled" ) );
-				
-				//rec->setCategoryNames( categoryNames );
+				rec->setCategory( pRec->category(), cat );
 			}
 				
 			// Read the next one.
