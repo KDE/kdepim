@@ -65,11 +65,7 @@ bool HHDataProxy::containsCategory( const QString& category ) const
 {
 	FUNCTIONSETUP;
 	
-	Q_UNUSED( category );
-	
-	// TODO: IMPLEMENT
-	
-	return false;
+	return fAppInfo->findCategory( category, false ) != -1;
 }
 	
 bool HHDataProxy::addGlobalCategory( const QString& category )
