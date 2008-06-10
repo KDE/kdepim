@@ -229,7 +229,7 @@ void EnterDetailsPage::updateForm() {
         const QString attr = attributeFromKey( key );
         if ( attr.isEmpty() )
             continue;
-        const QString preset = savedValues.value( attr, config.readEntry( attr, QString() ) );
+        const QString preset = savedValues.value( key, config.readEntry( attr, QString() ) );
         const bool required = key.endsWith( QLatin1Char('!') );
         const QString label = config.readEntry( attr + "_label",
                                                 attributeLabel( attr, required, pgp ) );
