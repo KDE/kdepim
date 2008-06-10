@@ -580,9 +580,10 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         showCalendar( incidence->dtStart().date() );
         return true;
       }
-      if ( path == "reply" || path == "cancel" ) {
+      if ( path == "reply" || path == "cancel" || path == "accept_counter" ) {
         // These should just be saved with their type as the dir
-        if ( saveFile( "Receiver Not Searched", iCal, path ) ) {
+        const QString p = (path == "accept_counter" ? QString("reply") : path);
+        if ( saveFile( "Receiver Not Searched", iCal, p ) ) {
           if ( c.deleteInvitationAfterReply() )
             ( new KMDeleteMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
           result = true;
