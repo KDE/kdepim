@@ -1,0 +1,314 @@
+<ui version="4.0" >
+ <class>Kleo::NewCertificateUi::AdvancedSettingsDialog</class>
+ <widget class="QDialog" name="Kleo::NewCertificateUi::AdvancedSettingsDialog" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>600</width>
+    <height>646</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Dialog</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout_2" >
+   <item>
+    <widget class="QTabWidget" name="tabWidget" >
+     <widget class="QWidget" name="personalTab" >
+      <property name="geometry" >
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>578</width>
+        <height>549</height>
+       </rect>
+      </property>
+      <attribute name="title" >
+       <string>Personal Details</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_3" >
+       <item rowspan="2" row="2" column="0" >
+        <widget class="QGroupBox" name="emailGB" >
+         <property name="title" >
+          <string>EMail Addresses</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_5" >
+          <item>
+           <widget class="Kleo::NewCertificateUi::ListWidget" native="1" name="emailLW" />
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="2" column="1" >
+        <widget class="QGroupBox" name="dnsGB" >
+         <property name="title" >
+          <string>DNS Names</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_4" >
+          <item>
+           <widget class="Kleo::NewCertificateUi::ListWidget" native="1" name="dnsLW" />
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="3" column="1" >
+        <widget class="QGroupBox" name="uriGB" >
+         <property name="title" >
+          <string>URIs</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_3" >
+          <item>
+           <widget class="Kleo::NewCertificateUi::ListWidget" native="1" name="uriLW" />
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="2" >
+        <widget class="QGroupBox" name="uidGB" >
+         <property name="title" >
+          <string>User-IDs</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_6" >
+          <item>
+           <widget class="Kleo::NewCertificateUi::ListWidget" native="1" name="uidLW" />
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="technicalTab" >
+      <property name="geometry" >
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>578</width>
+        <height>549</height>
+       </rect>
+      </property>
+      <attribute name="title" >
+       <string>Technical Details</string>
+      </attribute>
+      <layout class="QVBoxLayout" name="verticalLayout" >
+       <item>
+        <widget class="QGroupBox" name="groupBox" >
+         <property name="title" >
+          <string>Key Material</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout" >
+          <item row="0" column="0" >
+           <widget class="QRadioButton" name="rsaRB" >
+            <property name="text" >
+             <string>RSA</string>
+            </property>
+            <property name="checked" >
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="1" >
+           <widget class="QComboBox" name="comboBox" >
+            <property name="sizePolicy" >
+             <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
+              <horstretch>0</horstretch>
+              <verstretch>0</verstretch>
+             </sizepolicy>
+            </property>
+            <property name="currentIndex" >
+             <number>2</number>
+            </property>
+            <item>
+             <property name="text" >
+              <string>1024 bits</string>
+             </property>
+            </item>
+            <item>
+             <property name="text" >
+              <string>1536 bits</string>
+             </property>
+            </item>
+            <item>
+             <property name="text" >
+              <string>2048 bits</string>
+             </property>
+            </item>
+            <item>
+             <property name="text" >
+              <string>3072 bits</string>
+             </property>
+            </item>
+            <item>
+             <property name="text" >
+              <string>4096 bits</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+          <item row="1" column="0" >
+           <widget class="QRadioButton" name="dsaRB" >
+            <property name="text" >
+             <string>DSA</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" >
+           <widget class="QLabel" name="label" >
+            <property name="text" >
+             <string>(always 1024 bits)</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="groupBox_2" >
+         <property name="title" >
+          <string>Certificate Usage</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2" >
+          <item row="2" column="0" colspan="2" >
+           <layout class="QHBoxLayout" name="horizontalLayout" >
+            <item>
+             <widget class="QLabel" name="label_2" >
+              <property name="text" >
+               <string>Valid until:</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QDateEdit" name="expiryDE" >
+              <property name="sizePolicy" >
+               <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="calendarPopup" >
+               <bool>true</bool>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </item>
+          <item row="0" column="1" >
+           <widget class="QCheckBox" name="certificationCB" >
+            <property name="text" >
+             <string>Certification</string>
+            </property>
+           </widget>
+          </item>
+          <item row="0" column="0" >
+           <widget class="QCheckBox" name="signingCB" >
+            <property name="text" >
+             <string>Signing</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="0" >
+           <widget class="QCheckBox" name="encryptionCB" >
+            <property name="text" >
+             <string>Encryption</string>
+            </property>
+           </widget>
+          </item>
+          <item row="1" column="1" >
+           <widget class="QCheckBox" name="authenticationCB" >
+            <property name="text" >
+             <string>Authentification</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <spacer name="verticalSpacer" >
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" stdset="0" >
+          <size>
+           <width>20</width>
+           <height>40</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons" >
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Kleo::NewCertificateUi::ListWidget</class>
+   <extends>QWidget</extends>
+   <header>newcertificatewizard/listwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>Kleo::NewCertificateUi::AdvancedSettingsDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>236</x>
+     <y>636</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>Kleo::NewCertificateUi::AdvancedSettingsDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>325</x>
+     <y>636</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rsaRB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>comboBox</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>84</x>
+     <y>112</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>189</x>
+     <y>111</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

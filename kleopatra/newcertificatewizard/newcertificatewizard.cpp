@@ -5,6 +5,8 @@
 #include "ui_overviewpage.h"
 #include "ui_resultpage.h"
 
+#include "ui_advancedsettingsdialog.h"
+
 #include <kleo/dn.h>
 
 #include <KConfigGroup>
@@ -29,10 +31,6 @@ namespace {
               ui()
         {
             ui.setupUi( this );
-
-            connect( ui.pgpCLB,  SIGNAL(clicked()), wizard(), SLOT(next()), Qt::QueuedConnection );
-            connect( ui.x509CLB, SIGNAL(clicked()), wizard(), SLOT(next()), Qt::QueuedConnection );
-
             registerField( "pgp", ui.pgpCLB );
         }
 
@@ -75,6 +73,9 @@ namespace {
         void updateForm();
         void clearForm();
         void saveValues();
+
+    private Q_SLOTS:
+        void slotAdvancedSettingsClicked();
 
     private:
         QVector< QPair<QString,QLineEdit*> > attributePairList;
@@ -282,10 +283,15 @@ static bool requirementsAreMet( const QVector< QPair<QString,QLineEdit*> > & lis
   return true;
 }
 
-namespace {
-    bool EnterDetailsPage::isComplete() const {
-        return requirementsAreMet( attributePairList );
-    }
+bool EnterDetailsPage::isComplete() const {
+    return requirementsAreMet( attributePairList );
+}
+
+void EnterDetailsPage::slotAdvancedSettingsClicked() {
+    QDialog dialog;
+    Ui_AdvancedSettingsDialog ui;
+    ui.setupUi( &dialog );
+    dialog.exec();
 }
 
 #include "moc_newcertificatewizard.cpp"

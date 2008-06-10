@@ -1,6 +1,14 @@
 <ui version="4.0" >
  <class>Kleo::NewCertificateUi::EnterDetailsPage</class>
  <widget class="QWizardPage" name="Kleo::NewCertificateUi::EnterDetailsPage" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>464</width>
+    <height>204</height>
+   </rect>
+  </property>
   <property name="title" >
    <string comment="@title" >Enter Details</string>
   </property>
@@ -48,5 +56,25 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>advancedPB</sender>
+   <signal>clicked()</signal>
+   <receiver>Kleo::NewCertificateUi::EnterDetailsPage</receiver>
+   <slot>slotAdvancedSettingsClicked()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>359</x>
+     <y>173</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>459</x>
+     <y>175</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>slotAdvancedSettingsClicked()</slot>
+ </slots>
 </ui>

@@ -208,6 +208,7 @@ set( _kleopatra_SRCS
 
   conf/configuredialog.cpp
 
+  newcertificatewizard/listwidget.cpp
   newcertificatewizard/newcertificatewizard.cpp
 
   aboutdata.cpp
@@ -222,7 +223,6 @@ if ( KLEO_MODEL_TEST )
 endif ( KLEO_MODEL_TEST )
 
 kde4_add_ui_files( _kleopatra_SRCS
-  certificatewizard.ui
   dialogs/certificationoptionswidget.ui
   dialogs/expirydialog.ui
   dialogs/lookupcertificatesdialog.ui
@@ -232,10 +232,12 @@ kde4_add_ui_files( _kleopatra_SRCS
   dialogs/exportsecretkeydialog.ui
   dialogs/adduseriddialog.ui
   dialogs/certificatedetailsdialog.ui
+  newcertificatewizard/listwidget.ui
   newcertificatewizard/chooseprotocolpage.ui
   newcertificatewizard/enterdetailspage.ui
   newcertificatewizard/overviewpage.ui
   newcertificatewizard/resultpage.ui
+  newcertificatewizard/advancedsettingsdialog.ui
   )
 kde4_add_kcfg_files( _kleopatra_SRCS
   kcfg/tooltippreferences.kcfgc
