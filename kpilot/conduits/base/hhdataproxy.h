@@ -36,7 +36,6 @@ class PilotDatabase;
 class PilotAppInfoBase;
 class PilotRecord;
 class HHRecord;
-class HHCategory;
 
 struct CategoryAppInfo;
 
@@ -56,21 +55,34 @@ public:
 	virtual void syncFinished();
 	
 	/**
-	 * Returns the list of category names.
+	 * Sets the category of @param rec to "Unfiled" or whatever is appropriate for
+	 * the conduit to say that the record has no category.
 	 */
-	virtual QStringList categoryNames() const;
+	void clearCategory( HHRecord *rec );
 	
 	/**
-	 * Returns the category id for given category name or 0 if the category does
-	 * not exist.
+	 * Returns true if the the PilotDatabase contains the given category, false
+	 * otherwhise.
 	 */
-	int categoryId( const QString &name ) const;
+	bool containsCategory( const QString& category ) const;
 	
 	/**
-	 * Returns the Category object for the category with given name. If there is 
-	 * no category with given name, the unfiled category will be returned.
+	 * Adds the category to the pilot database. If the category app info block is
+	 * full and doesn't contain the category it returns false. True otherwhise.
 	 */
-	HHCategory* category( const QString &name ) const;
+	bool addGlobalCategory( const QString& category );
+	
+	/**
+	 * Reads the right category id from app info and updates the record
+	 * accordingly. If there is no category id found the category of the record
+	 * remains unchanged.
+	 */
+	/* virtual */ void setCategory( Record* rec, const QString& category );
+
+	/**
+	 * Does nothing because handheld records only can have only one category.
+	 */
+	/* virtual */ void addCategory( Record*, const QString& ) {};
 	
 protected:
 	/**
@@ -79,22 +91,18 @@ protected:
 	void loadAllRecords();
 	
 	/** These functions must be implemented by the subclassing conduit **/
-	
-	/**
-	 * Reads the categories from the database into fAppInfo.
-	 */
-	void loadCategories();
-	
-	/**
-	 * Saves the categories from fAppInfo back into the database.
-	 */
-	virtual void saveCategories() = 0;
 
 	/**
-	 * This virtual method is used by loadCategories to get the information about
-	 * the categories that are stored in the dataproxy.
+	 * Implementing classes read the appinfo block and return a pointer so that
+	 * category information can be read and altered.
 	 */
-	virtual CategoryAppInfo* readCategoryAppInfo() = 0;
+	virtual PilotAppInfoBase* readAppInfo() = 0;
+	
+	/**
+	 * Implementing classes should pack and store fAppInfo into the database so
+	 * that Category information is stored.
+	 */
+	virtual void storeAppInfo() = 0;
 
 	/**
 	 * This function creates a (subclass of) HHRecord for @p rec.
@@ -125,7 +133,6 @@ protected:
 	PilotDatabase *fDatabase;
 	recordid_t fLastUsedUniqueId;
 	QList<recordid_t> fResettedRecords;
-	HHCategory* fUnfiled;
-	QList<HHCategory*> fCategories;
+	PilotAppInfoBase *fAppInfo;
 };
 #endif

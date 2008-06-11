@@ -36,10 +36,9 @@
 #include "pilot.h"
 
 #include "hhrecord.h"
-#include "hhcategory.h"
 
 HHDataProxy::HHDataProxy( PilotDatabase *db ) : fDatabase( db )
-	, fLastUsedUniqueId( 0L ), fUnfiled( 0L )
+	, fLastUsedUniqueId( 0L )
 {
 }
 
@@ -50,8 +49,83 @@ void HHDataProxy::syncFinished()
 	if( fDatabase && fDatabase->isOpen() )
 	{
 		fDatabase->cleanup();
+		storeAppInfo();
 		fDatabase->resetSyncFlags();
-		saveCategories();
+	}
+}
+
+void HHDataProxy::clearCategory( HHRecord *rec )
+{
+	FUNCTIONSETUP;
+	
+	rec->setCategory( Pilot::Unfiled, CSL1( "Unfiled" ) );
+}
+
+bool HHDataProxy::containsCategory( const QString& category ) const
+{
+	FUNCTIONSETUP;
+	
+	return fAppInfo->findCategory( category, false ) != -1;
+}
+	
+bool HHDataProxy::addGlobalCategory( const QString& category )
+{
+	FUNCTIONSETUP;
+	
+	if( (unsigned int) category.size() > Pilot::CATEGORY_SIZE )
+	{
+		// Let's not start on this one. It will get truncated and I don't have time
+		// energy to think about what should happen in that case.
+		return false;
+	}
+	
+	bool canHaveNewCategory = false;
+	unsigned int i = 0;
+	QString cat;
+	
+	while( i < Pilot::CATEGORY_COUNT && !canHaveNewCategory )
+	{
+		cat = fAppInfo->categoryName( i );
+		
+		if( cat.isEmpty() )
+		{
+			canHaveNewCategory = true;
+		}
+		else
+		{
+			// Try the next one.
+			i++;
+		}
+	}
+	
+	if( canHaveNewCategory )
+	{
+		fAppInfo->setCategoryName( i, category );
+		return true;
+	}
+	
+	return false;
+}
+
+void HHDataProxy::setCategory( Record* rec, const QString& category )
+{
+	FUNCTIONSETUP;
+	
+	// Get the category id or let findCategory return -1 if it does not exist.
+	int id = fAppInfo->findCategory( category, false );
+	
+	if( id != -1 )
+	{
+		if( HHRecord *hhRec = static_cast<HHRecord*>( rec ) )
+		{
+			// Set the id to 0 to make sure that the database asigns a valid id to the
+			// record.
+			hhRec->setCategory( id, category );
+		}
+		else
+		{
+			DEBUGKPILOT << "Record " << rec->id() << " is not of type HHRecord*.";
+		}
 	}
 }
 
@@ -144,42 +218,13 @@ bool HHDataProxy::isOpen() const
 	}
 }
 
-void HHDataProxy::loadCategories()
-{
-	FUNCTIONSETUP;
-	
-	if( fDatabase && fDatabase->isOpen() )
-	{
-		CategoryAppInfo *catAppInfo = readCategoryAppInfo();
-		
-		// NOTE: There's also a lastUniqueID in CategoryAppInfo but it isn't clear
-		// to me what it does and how it should be used in the sync proces.
-		
-		for (unsigned int i = 0; i < Pilot::CATEGORY_COUNT; i++)
-		{
-			QString name = Pilot::categoryName( catAppInfo, i );
-			bool renamed = catAppInfo->renamed[i];
-			unsigned char id = catAppInfo->ID[i];
-			
-			HHCategory *cat = new HHCategory( name, renamed, i, id );
-			fCategories.append( cat );
-			
-			if( i == (unsigned int) Pilot::Unfiled )
-			{
-				fUnfiled = cat;
-			}
-		}
-	}
-}
-
 void HHDataProxy::loadAllRecords()
 {
 	FUNCTIONSETUP;
 	
 	if( fDatabase && fDatabase->isOpen() )
 	{
-		// This should initialize fAppInfo.
-		loadCategories();
+		fAppInfo = readAppInfo();
 	
 		int index = 0;
 		
@@ -188,37 +233,20 @@ void HHDataProxy::loadAllRecords()
 		while( pRec )
 		{
 			// Create a record object.
-			Record *rec = createHHRecord( pRec );
+			HHRecord *rec = createHHRecord( pRec );
 			fRecords.insert( rec->id(), rec );
 			
-			HHCategory *cat = fCategories[pRec->category()];
+			QString cat = fAppInfo->categoryName( pRec->category() );
 			
-			if( cat )
+			if( cat.isEmpty() )
 			{
-				// This essentialy doesn't add a category to the record but just the
-				// label for the category which is set in the pilot record.
-				
-				// FIXME: This is defenitly not the way to go.
-				
-				//QStringList categoryNames;
-				//categoryNames.append( cat->name() );
-				
-				//rec->setCategoryNames( categoryNames );
+				// This is strange, should not happen I think. However if it happens
+				// make sure that the record has some reasonable values.
+				rec->setCategory( Pilot::Unfiled, cat );
 			}
 			else
 			{
-				// This shouldn't happen I think....the category id seems to have some
-				// bogus value. So we set it to 0, which is Unfiled normaly.
-				pRec->setCategory( 0 );
-				
-				// FIXME: This is defenitly not the way to go.
-				
-				//but if it does we set the category to Unfiled.
-				//QStringList categoryNames;
-				//categoryNames.append( i18nc( "Category not set for the record"
-				//	, "Unfiled" ) );
-				
-				//rec->setCategoryNames( categoryNames );
+				rec->setCategory( pRec->category(), cat );
 			}
 				
 			// Read the next one.
@@ -228,42 +256,4 @@ void HHDataProxy::loadAllRecords()
 		
 		DEBUGKPILOT << "Loaded " << fRecords.count() << " records.";
 	}
-}
-
-QStringList HHDataProxy::categoryNames() const
-{
-	QStringList names;
-	
-	foreach( HHCategory *cat, fCategories )
-	{
-		names.append( cat->name() );
-	}
-		
-	return names;
-}
-
-int HHDataProxy::categoryId( const QString &name ) const
-{
-	foreach( HHCategory *cat, fCategories )
-	{
-		if( name == cat->name() )
-		{
-			return cat->id();
-		}
-	}
-	
-	return 0;
-}
-
-HHCategory* HHDataProxy::category( const QString &name ) const
-{
-	foreach( HHCategory *cat, fCategories )
-	{
-		if( name == cat->name() )
-		{
-			return cat;
-		}
-	}
-	
-	return fUnfiled;
 }

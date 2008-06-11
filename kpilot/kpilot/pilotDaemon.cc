@@ -152,10 +152,10 @@ void PilotDaemonTray::setupWidget()
 	// Keep this synchronized with kpilotui.rc and kpilot.cc if at all possible.
 	MI( SyncAction::SyncMode::eHotSync, true );
 	MI( SyncAction::SyncMode::eFullSync, false );
+	MI( SyncAction::SyncMode::eCopyPCToHH, false );
+	MI( SyncAction::SyncMode::eCopyHHToPC, false );
 	MI( SyncAction::SyncMode::eBackup, false );
 	MI( SyncAction::SyncMode::eRestore, false );
-	MI( SyncAction::SyncMode::eCopyHHToPC, false );
-	MI( SyncAction::SyncMode::eCopyPCToHH, false );
 #undef MI
 
 	connect( syncTypeActions, SIGNAL( triggered( QAction* ) ), daemon

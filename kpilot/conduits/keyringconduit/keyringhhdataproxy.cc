@@ -160,39 +160,11 @@ bool KeyringHHDataProxy::openDatabase( const QString &pass )
 	return false;
 }
 
-void KeyringHHDataProxy::saveCategories()
-{
-	FUNCTIONSETUP;
-	
-	/*
-	PilotKeyringInfo * appInfo = dynamic_cast<PilotKeyringInfo*>(fAppInfo);
-	
-	if( fDatabase && fDatabase->isOpen() && appInfo)
-	{
-		QStringList categories = categoryNames();
-		for (unsigned int i = 0; i < Pilot::CATEGORY_COUNT; i++) {
-			appInfo->setCategoryName(i, categories.at(i));
-		}
-		appInfo->writeTo(fDatabase);
-	}
-	*/
-}
-
 HHRecord* KeyringHHDataProxy::createHHRecord( PilotRecord *rec )
 {
 	FUNCTIONSETUP;
 	
 	return new KeyringHHRecord( rec, "Unfiled", fDesKey );
-}
-
-void KeyringHHDataProxy::setCategory( Record* rec, const QString& category )
-{
-	//FIXME: Needs implementation
-}
-
-void KeyringHHDataProxy::addCategory( Record* rec, const QString& category )
-{
-	//FIXME: Needs implementation
 }
 
 bool KeyringHHDataProxy::createDataStore()
@@ -301,14 +273,19 @@ QCA::SecureArray KeyringHHDataProxy::getDigest(
 	return QCA::SecureArray( hash1.final() );
 }
 
-CategoryAppInfo* KeyringHHDataProxy::readCategoryAppInfo()
+PilotAppInfoBase* KeyringHHDataProxy::readAppInfo()
 {
 	if( fDatabase && fDatabase->isOpen() )
 	{
-		PilotKeyringInfo appInfo = PilotKeyringInfo( fDatabase );
+		PilotKeyringInfo* appInfo = new PilotKeyringInfo( fDatabase );
 		
-		return appInfo.categoryInfo();
+		return appInfo;
 	}
 
 	return 0;
+}
+
+void KeyringHHDataProxy::storeAppInfo()
+{
+	// FIXME: Implement
 }

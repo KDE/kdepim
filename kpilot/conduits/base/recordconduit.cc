@@ -33,7 +33,6 @@
 #include "kpilotSettings.h"
 
 #include "idmapping.h"
-#include "hhcategory.h"
 #include "cudcounter.h"
 #include "dataproxy.h"
 #include "hhdataproxy.h"
@@ -1006,13 +1005,6 @@ void RecordConduit::copy( const HHRecord *from, Record *to  )
 	_copy( from, to );
 }
 
-void RecordConduit::copyCategory( const Record *from, HHRecord *to )
-{
-	FUNCTIONSETUP;
-	Q_UNUSED( from );
-	Q_UNUSED( to );
-}
-
 void RecordConduit::copyCategory( const HHRecord *from, Record *to  )
 {
 	FUNCTIONSETUP;
@@ -1050,4 +1042,93 @@ void RecordConduit::copyCategory( const HHRecord *from, Record *to  )
 	// Store the last synced category.
 	fMapping->storeHHCategory( from->id(), from->category() );
 	fMapping->storePCCategories( to->id(), to->categories() ); // might be more then one.
+}
+
+void RecordConduit::copyCategory( const Record *from, HHRecord *to )
+{
+	FUNCTIONSETUP;
+	
+	if( from->categories().size() == 0 )
+	{
+		// Case 1
+		fHHDataProxy->clearCategory( to );
+	}
+	else if( from->categoryCount() == 1 )
+	{
+		// Case 2, 3, 4
+		QString category = from->categories().first();
+		
+		if( fHHDataProxy->containsCategory( category ) )
+		{
+			// Case 2
+			// The category count is one so we can savely use category() on the
+			// pc record in stead of the categoies() method.
+			fHHDataProxy->setCategory( to, category );
+		}
+		else
+		{
+			if( fHHDataProxy->addGlobalCategory( category ) )
+			{
+				// There was still some room left in the app info block, adding the
+				// category to the database succeeded.
+				fHHDataProxy->setCategory( to, category );
+			}
+			else
+			{
+				// Case 4, Ask the use which category to use
+				// TODO: Ask the use if he wants to use one of the other available
+				//       categories. For now we set it to unfiled.
+				fHHDataProxy->clearCategory( to );
+			}
+		}
+	}
+	else
+	{
+		// So... at this point the pc record has more than one category.
+		// Case 5
+		if( !from->categories().contains( to->category() ) )
+		{
+			// The previous category has been removed
+			bool synced = false;
+			QStringListIterator i( from->categories() );
+			QString category;
+
+			while( !synced && i.hasNext() )
+			{
+				// Try each category
+				category = i.next();
+
+				if( fHHDataProxy->containsCategory( category ) )
+				{
+					// Case 2
+					fHHDataProxy->setCategory( to, category );
+					synced = true;
+				}
+			}
+			
+			if( !synced )
+			{
+				// None of the categories set to the pc record are in the datastore
+				// already. So we just try to set the first one and ask the user what to
+				// do if the datastore cannont contain more categories.
+				if( fHHDataProxy->addGlobalCategory( from->categories().first() ) )
+				{
+					// There was still some room left in the app info block, adding the
+					// category to the database succeeded.
+					fHHDataProxy->setCategory( to, from->categories().first() );
+				}
+				else
+				{
+					// Case 4, Ask the use which category to use
+					// TODO: Ask the use if he wants to use one of the other available
+					//       categories. For now we set it to unfiled.
+					fHHDataProxy->clearCategory( to );
+				}
+			}
+		}
+	}
+	
+	fMapping->storePCCategories( from->id(), from->categories() );
+	fMapping->storeHHCategory( to->id(), to->category() );
+	
 }

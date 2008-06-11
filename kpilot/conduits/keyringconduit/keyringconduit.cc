@@ -36,8 +36,6 @@
 #include "pilotDatabase.h"
 #include "pilotRecord.h"
 
-#include "category.h"
-
 #include "keyringhhdataproxy.h"
 #include "keyringhhrecord.h"
 #include "keyringsettings.h"

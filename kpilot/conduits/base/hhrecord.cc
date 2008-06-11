@@ -27,7 +27,6 @@
 
 #include "hhrecord.h"
 
-#include "category.h"
 #include "options.h"
 #include "pilot.h"
 #include "pilotRecord.h"
@@ -123,6 +122,14 @@ QString HHRecord::category() const
 	FUNCTIONSETUP;
 
 	return fCategory;
+}
+
+void HHRecord::setCategory( int id, const QString& category )
+{
+	FUNCTIONSETUP;
+	
+	fCategory = category;
+	fRecord->setCategory( id );
 }
 
 bool HHRecord::isModified() const

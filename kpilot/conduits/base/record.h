@@ -32,8 +32,6 @@
 
 #include "kpilot_export.h"
 
-#include "category.h"
-
 /**
  * If subclassing Record, the only thing that should be reimplemented is the
  * isValid() function. If other methods are reimplemented it's not guaranteed

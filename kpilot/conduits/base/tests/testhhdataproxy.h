@@ -59,6 +59,8 @@ public:
 
 	virtual void addCategory( Record* r, const QString& c ) { Q_UNUSED( r ); Q_UNUSED( c ); };
 	
+	virtual void storeAppInfo() {};
+	
 	QMap<QString, Record*>* records() { return &fRecords; }
 	
 protected:
@@ -66,6 +68,6 @@ protected:
 	
 	virtual void commitUpdate( Record *rec );
 	
-	virtual CategoryAppInfo* readCategoryAppInfo() { return 0; };
+	virtual PilotAppInfoBase* readAppInfo() { return 0; };
 };
 #endif
