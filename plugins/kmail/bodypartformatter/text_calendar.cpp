@@ -532,8 +532,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       if ( receiver.isEmpty() )
         return true;
       saveFile( receiver, iCal, "counter" );
-      if ( callback.deleteInvitationAfterReply() )
-        ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
+      // Don't delete the invitation here in any case, if the counter proposal
+      // is declined you might need it again.
       return true;
     }
 
