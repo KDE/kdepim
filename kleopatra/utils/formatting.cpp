@@ -93,7 +93,7 @@ QString Formatting::prettyNameAndEMail( int proto, const QString & id, const QSt
             else if ( comment.isEmpty() )
                 return QString::fromLatin1( "<%1>" ).arg( email );
             else
-                return QString::fromLatin1( "<%1> (%2)" ).arg( email, comment );
+                return QString::fromLatin1( "(%2) <%1>" ).arg( email, comment );
         if ( email.isEmpty() )
             if ( comment.isEmpty() )
                 return name;
@@ -102,7 +102,7 @@ QString Formatting::prettyNameAndEMail( int proto, const QString & id, const QSt
         if ( comment.isEmpty() )
             return QString::fromLatin1( "%1 <%2>" ).arg( name, email );
         else
-            return QString::fromLatin1( "%1 <%2> (%3)" ).arg( name, email, comment );
+            return QString::fromLatin1( "%1 (%3) <%2>" ).arg( name, email, comment );
     }
 
     if ( proto == CMS ) {
