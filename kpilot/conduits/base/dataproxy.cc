@@ -38,6 +38,11 @@ DataProxy::DataProxy() : fIterator( fRecords )
 DataProxy::~DataProxy()
 {
 	FUNCTIONSETUP;
+	
+	foreach( Record* rec, fRecords.values() )
+	{
+		delete rec;
+	}
 }
 
 QString DataProxy::create( Record *record )
