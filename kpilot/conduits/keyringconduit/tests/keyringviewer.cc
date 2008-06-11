@@ -70,7 +70,7 @@ void KeyringViewer::selectionChanged( const QModelIndex &index )
 		fUi.fAccountList->model() )->record( index );
 
 	fUi.fNameEdit->setText( rec->name() );
-	//fUi.fCategoryEdit->setText( rec->categories().first()->name() );
+	fUi.fCategoryEdit->setText( rec->category() );
 	fUi.fAccountEdit->setText( rec->account() );
 	fUi.fPasswordEdit->setText( rec->password() );
 	fUi.fNotesEdit->setText( rec->notes() );

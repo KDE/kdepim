@@ -49,7 +49,6 @@ public:
 	KeyringHHRecord( PilotRecord *rec, const QString& category, const QString &key );
 	
 	KeyringHHRecord( const QString &name = QString()
-                 , const QString& category = QString()
                  , const QString &account = QString()
                  , const QString &password = QString()
                  , const QString &notes = QString()

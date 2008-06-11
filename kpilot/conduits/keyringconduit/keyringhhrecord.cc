@@ -38,12 +38,11 @@ KeyringHHRecord::KeyringHHRecord( PilotRecord *rec, const QString &category
 }
 
 KeyringHHRecord::KeyringHHRecord( const QString &name
-                                , const QString &category
                                 , const QString &account
                                 , const QString &password
                                 , const QString &notes
                                 , const QString &key )
-	: HHRecord( 0L, category ), fKey( key ), fName( name )
+	: HHRecord( 0L, QString() ), fKey( key ), fName( name )
 {
 	KeyringHHRecordBase data;
 	data.account = account;
