@@ -81,11 +81,12 @@ QString Formatting::prettyName( int proto, const char * id, const char * name_, 
 }
 
 QString Formatting::prettyNameAndEMail( int proto, const char * id, const char * name_, const char * email_, const char * comment_ ) {
+    return prettyNameAndEMail( proto, QString::fromUtf8( id ), QString::fromUtf8( name_ ), QString::fromUtf8( email_ ), QString::fromUtf8( comment_ ) );
+}
+
+QString Formatting::prettyNameAndEMail( int proto, const QString & id, const QString & name, const QString & email, const QString & comment ) {
 
     if ( proto == OpenPGP ) {
-        const QString name = QString::fromUtf8( name_ ).trimmed();
-        const QString email = QString::fromUtf8( email_ ).trimmed();
-        const QString comment = QString::fromUtf8( comment_ ).trimmed();
         if ( name.isEmpty() )
             if ( email.isEmpty() )
                 return QString();

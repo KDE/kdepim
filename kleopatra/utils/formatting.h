@@ -48,6 +48,7 @@ namespace Formatting {
     QString protocolDisplayName( GpgME::Protocol prot );
 
     QString prettyNameAndEMail( int proto, const char * id, const char * name, const char * email, const char * comment );
+    QString prettyNameAndEMail( int proto, const QString & id, const QString & name, const QString & email, const QString & comment );
     QString prettyNameAndEMail( const GpgME::Key & key );
     QString prettyNameAndEMail( const GpgME::UserID & key );
 
