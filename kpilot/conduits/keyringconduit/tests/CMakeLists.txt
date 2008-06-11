@@ -5,6 +5,7 @@ include_directories(
 
 set(tests_SRCS
 	keyringlistmodel.cc
+	passworddialog.cc
 	keyringviewer.cc
 	main.cc
 	../pi-keyring.cc
@@ -14,6 +15,15 @@ set(tests_SRCS
 )
 
 kde4_add_kcfg_files(tests_SRCS ../keyringsettings.kcfgc)
-kde4_add_ui_files(tests_SRCS viewer.ui)
-kde4_add_executable(testje ${tests_SRCS})
-target_link_libraries(testje ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} kpilot kpilot_conduit_base ${QCA2_LIBRARIES})
+kde4_add_ui_files( tests_SRCS 
+	viewer.ui
+	passworddialog.ui
+)
+kde4_add_executable(keyringviewer ${tests_SRCS})
+target_link_libraries(keyringviewer 
+	${QT_QTCORE_LIBRARY}
+	${QT_QTGUI_LIBRARY}
+	${QCA2_LIBRARIES}
+	kpilot
+	kpilot_conduit_base
+)

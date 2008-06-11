@@ -36,6 +36,8 @@ class KeyringListModel : public QAbstractListModel
 public:
 	KeyringListModel( KeyringHHDataProxy *proxy, QObject *parent = 0 );
 	
+	~KeyringListModel();
+	
 	/**
 	 * Returns the number of rows under the given parent.
 	 */

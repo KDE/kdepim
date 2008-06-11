@@ -1,8 +1,8 @@
-#ifndef KEYRINGEDITOR_H
-#define KEYRINGEDITOR_H
-/* keyringeditor.h			KPilot
+#ifndef PASSWORDDIALOG_H
+#define PASSWORDDIALOG_H
+/* passworddialog.h			KPilot
 **
-** Copyright (C) 2007 by Bertjan Broeksema
+** Copyright (C) 2008 by Bertjan Broeksema
 */
 
 /*
@@ -26,27 +26,44 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "ui_viewer.h"
+#include "ui_passworddialog.h"
 
 class KeyringHHDataProxy;
 class KeyringListModel;
 
-class KeyringViewer : public QMainWindow
+class PasswordDialog : public QDialog
 {
 	Q_OBJECT
-
 public:
-	KeyringViewer( QWidget *parent = 0 );
+	
+	enum Mode
+	{
+		New = 0,
+		Normal
+	};
+
+	/**
+	 * Returns the entered password or QString() when canceled. Use mode to
+	 * generate a new password or just to get a password from the user.
+	 */
+	static QString getPassword( QWidget* parent = 0, Mode mode = New );
+
+protected:
+	PasswordDialog( QWidget *parent = 0, Mode mode = New );
 
 private slots:
-	void selectionChanged( const QModelIndex &index );
-	void togglePasswordVisibility();
-	void newDatabase();
-	void openDatabase();
+	/**
+	 * Only accept when the passwords are equal.
+	 */
+	void accept();
+	
+	void checkPasswords();
+	
+	void checkPassword();
 
 private:
-	Ui::MainWindow fUi;
-	KeyringListModel *fModel;
+	Ui::PasswordDialog fUi;
+	Mode fMode;
 };
 
 #endif

@@ -305,8 +305,6 @@ void KeyringHHRecord::pack( const KeyringHHRecordBase &data )
 
 QString KeyringHHRecord::toString() const
 {
-	FUNCTIONSETUP;
-	
 	QString flags( '[' );
 
 	fRecord->isModified() ? flags.append( 'M' ) : flags.append( '-' );

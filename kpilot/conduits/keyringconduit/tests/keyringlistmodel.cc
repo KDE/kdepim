@@ -51,6 +51,14 @@ KeyringListModel::KeyringListModel( KeyringHHDataProxy *proxy, QObject *parent )
 	}
 }
 
+KeyringListModel::~KeyringListModel()
+{
+	if( fProxy )
+	{
+		delete fProxy;
+	}
+}
+
 int KeyringListModel::rowCount( const QModelIndex &parent ) const
 {
 	Q_UNUSED( parent );
