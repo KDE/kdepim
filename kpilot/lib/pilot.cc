@@ -97,6 +97,7 @@ int toPilot( const QString &s, char *buf, int len)
 	memset( buf, 0, len );
 	if (len<1) // short-circuit for bad input
 	{
+		mutex->unlock();
 		return 0;
 	}
 
