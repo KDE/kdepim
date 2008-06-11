@@ -45,6 +45,7 @@ private slots:
 	void togglePasswordVisibility();
 	void newDatabase();
 	void openDatabase();
+	void quit();
 
 private:
 	Ui::MainWindow fUi;

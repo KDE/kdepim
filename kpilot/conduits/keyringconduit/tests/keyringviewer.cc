@@ -40,7 +40,7 @@
 #include "passworddialog.h"
 
 KeyringViewer::KeyringViewer( QWidget *parent )
-	: QMainWindow( parent )
+	: QMainWindow( parent ), fModel( 0L )
 {
 	fUi.setupUi(this);
 	
@@ -62,6 +62,7 @@ KeyringViewer::KeyringViewer( QWidget *parent )
 	// Connect the actions
 	connect( fUi.actionNew, SIGNAL( triggered() ), this, SLOT( newDatabase() ) );
 	connect( fUi.actionOpen, SIGNAL( triggered() ), this, SLOT( openDatabase() ) );
+	connect( fUi.actionExit, SIGNAL( triggered() ), this, SLOT( quit() ) );
 }
 
 KeyringViewer::~KeyringViewer()
@@ -179,4 +180,9 @@ void KeyringViewer::openDatabase()
 	fUi.fAccountList->setEnabled( true );
 	fUi.fCategoryFilter->setEnabled( true );
 	fUi.fPasswordBox->setEnabled( true );
+}
+
+void KeyringViewer::quit()
+{
+	qApp->exit( 0 );
 }

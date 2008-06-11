@@ -190,7 +190,6 @@ p, li { white-space: pre-wrap; }
      <string>&amp;File</string>
     </property>
     <addaction name="actionNew" />
-    <addaction name="actionSave" />
     <addaction name="actionOpen" />
     <addaction name="separator" />
     <addaction name="actionExit" />
@@ -202,14 +201,6 @@ p, li { white-space: pre-wrap; }
     <string>&amp;New</string>
    </property>
   </action>
-  <action name="actionSave" >
-   <property name="enabled" >
-    <bool>false</bool>
-   </property>
-   <property name="text" >
-    <string>&amp;Save</string>
-   </property>
-  </action>
   <action name="actionOpen" >
    <property name="text" >
     <string>&amp;Open</string>
@@ -218,6 +209,9 @@ p, li { white-space: pre-wrap; }
   <action name="actionExit" >
    <property name="text" >
     <string>&amp;Exit</string>
+   </property>
+   <property name="toolTip" >
+    <string>Saves the current open database and closes the application.</string>
    </property>
   </action>
  </widget>
