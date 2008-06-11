@@ -268,8 +268,9 @@ namespace {
         explicit OverviewPage( QWidget * p=0 )
             : QWizardPage( p ), ui()
         {
+            ui.setupUi( this );
             setCommitPage( true );
-            setButtonText( QWizard::CommitButton, i18nc("@action", "Create") );
+            setButtonText( QWizard::CommitButton, i18nc("@action", "Create Key") );
         }
 
     private:
@@ -282,7 +283,7 @@ namespace {
         explicit ResultPage( QWidget * p=0 )
             : QWizardPage( p ), ui()
         {
-
+            ui.setupUi( this );
         }
 
     private:
