@@ -41,7 +41,10 @@
 
 #include "ui_advancedsettingsdialog.h"
 
+#include <utils/formatting.h>
+
 #include <kleo/dn.h>
+#include <kleo/oidmap.h>
 
 #include <gpgme++/global.h>
 
@@ -52,6 +55,7 @@
 
 #include <QRegExpValidator>
 #include <QLineEdit>
+#include <QMetaProperty>
 
 #include <boost/range.hpp>
 
@@ -173,6 +177,9 @@ namespace {
         void setExpiryDate( const QDate & date ) { ui.expiryDE->setDate( date ); }
         QDate expiryDate() const { return ui.expiryDE->date(); }
 
+    Q_SIGNALS:
+        void changed();
+
     private:
         Ui_AdvancedSettingsDialog ui;
     };
@@ -213,7 +220,12 @@ namespace {
             : QWizardPage( p ), dialog( this ), ui()
         {
             ui.setupUi( this );
-            
+            connect( ui.resultLE, SIGNAL(textChanged(QString)),
+                     SIGNAL(completeChanged()) );
+            connect( ui.addEmailToDnCB, SIGNAL(toggled(bool)),
+                     SLOT(slotUpdateResultLabel()) );
+            registerDialogPropertiesAsFields();
+            registerField( "DN", ui.resultLE );
             updateForm();
         }
 
@@ -229,9 +241,18 @@ namespace {
         void updateForm();
         void clearForm();
         void saveValues();
+        void registerDialogPropertiesAsFields();
+
+    private:
+        bool pgp() const { return field("pgp").toBool(); }
+        QString pgpUserID() const;
+        QString cmsDN() const;
 
     private Q_SLOTS:
         void slotAdvancedSettingsClicked();
+        void slotUpdateResultLabel() {
+            ui.resultLE->setText( pgp() ? pgpUserID() : cmsDN() );
+        }
 
     private:
         QVector< QPair<QString,QLineEdit*> > attributePairList;
@@ -341,6 +362,14 @@ static QString attributeFromKey( QString key ) {
   return key.remove( '!' );
 }
 
+static const char * oidForAttributeName( const QString & attr ) {
+  QByteArray attrUtf8 = attr.toUtf8();
+  for ( unsigned int i = 0 ; i < numOidMaps ; ++i )
+    if ( qstricmp( attrUtf8, oidmap[i].name ) == 0 )
+      return oidmap[i].oid;
+  return 0;
+}
+
 namespace {
     class LineEdit : public QWidget {
         Q_OBJECT
@@ -366,6 +395,17 @@ namespace {
     };
 }
 
+void EnterDetailsPage::registerDialogPropertiesAsFields() {
+
+    const QMetaObject * const mo = dialog.metaObject();
+    for ( unsigned int i = mo->propertyOffset(), end = i + mo->propertyCount() ; i != end ; ++i ) {
+        const QMetaProperty mp = mo->property( i );
+        if ( mp.isValid() )
+            registerField( mp.name(), &dialog, mp.name(), SIGNAL(changed()) );
+    }
+
+}
+
 void EnterDetailsPage::saveValues() {
     for ( QVector< QPair<QString,QLineEdit*> >::const_iterator it = attributePairList.begin(), end = attributePairList.end() ; it != end ; ++it )
         savedValues[ attributeFromKey(it->first) ] = it->second->text().trimmed();
@@ -375,13 +415,13 @@ void EnterDetailsPage::updateForm() {
 
     clearForm();
 
+    ui.addEmailToDnCB->hide();
+
     const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
 
-    const bool pgp = field("pgp").toBool();
-
-    QStringList attrOrder = config.readEntry( pgp ? "OpenPGPAttributeOrder" : "DNAttributeOrder", QStringList() );
+    QStringList attrOrder = config.readEntry( pgp() ? "OpenPGPAttributeOrder" : "DNAttributeOrder", QStringList() );
     if ( attrOrder.empty() )
-        if ( pgp )
+        if ( pgp() )
             attrOrder << "NAME!" << "EMAIL!" << "COMMENT";
         else
             attrOrder << "CN!" << "L" << "OU" << "O!" << "C!" << "EMAIL!";
@@ -394,7 +434,7 @@ void EnterDetailsPage::updateForm() {
         const QString preset = savedValues.value( attr, config.readEntry( attr, QString() ) );
         const bool required = key.endsWith( QLatin1Char('!') );
         const QString label = config.readEntry( attr + "_label",
-                                                attributeLabel( attr, required, pgp ) );
+                                                attributeLabel( attr, required, pgp() ) );
 
         LineEdit * const le = new LineEdit( preset, required, ui.formLayout->parentWidget() );
         ui.formLayout->addRow( label, le );
@@ -410,11 +450,45 @@ void EnterDetailsPage::updateForm() {
         attributePairList.append( qMakePair(key, &le->lineEdit) );
 
         connect( &le->lineEdit, SIGNAL(textChanged(QString)),
-                 SIGNAL(completeChanged()) );
+                 SLOT(slotUpdateResultLabel()) );
+
+        if ( attr == "EMAIL" && !pgp() )
+            ui.addEmailToDnCB->show();
 
         dynamicWidgets.push_back( ui.formLayout->labelForField( le ) );
         dynamicWidgets.push_back( le );
     }
+}
+
+QString EnterDetailsPage::cmsDN() const {
+    DN dn;
+    for ( QVector< QPair<QString,QLineEdit*> >::const_iterator it = attributePairList.begin(), end = attributePairList.end() ; it != end ; ++it ) {
+        const QString text = it->second->text().trimmed();
+        if ( text.isEmpty() )
+            continue;
+        QString attr = attributeFromKey( it->first );
+        if ( attr == "EMAIL" && !ui.addEmailToDnCB->isChecked() )
+            continue;
+        if ( const char * const oid = oidForAttributeName( attr ) )
+            attr = QString::fromUtf8( oid );
+        dn.append( DN::Attribute( attr, text ) );
+    }
+    return dn.dn();
+}
+
+QString EnterDetailsPage::pgpUserID() const {
+    QString name, email, comment;
+    for ( QVector< QPair<QString,QLineEdit*> >::const_iterator it = attributePairList.begin(), end = attributePairList.end() ; it != end ; ++it ) {
+        const QString attr = attributeFromKey( it->first );
+        const QString value = it->second->text().trimmed();
+        if ( attr == "NAME" )
+            name = value;
+        else if ( attr == "EMAIL" )
+            email = value;
+        else if ( attr == "COMMENT" )
+            comment = value;
+    }
+    return Formatting::prettyNameAndEMail( OpenPGP, QString(), name, email, comment );
 }
 
 void EnterDetailsPage::clearForm() {
@@ -445,7 +519,7 @@ bool EnterDetailsPage::isComplete() const {
 }
 
 void EnterDetailsPage::slotAdvancedSettingsClicked() {
-    dialog.setProtocol( field("pgp").toBool() ? OpenPGP : CMS );
+    dialog.setProtocol( pgp() ? OpenPGP : CMS );
     dialog.exec();
 }
 

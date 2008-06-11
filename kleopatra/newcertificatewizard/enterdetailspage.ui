@@ -5,7 +5,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>464</width>
+    <width>528</width>
     <height>204</height>
    </rect>
   </property>
@@ -20,9 +20,22 @@
     <layout class="QFormLayout" name="formLayout" />
    </item>
    <item>
-    <widget class="QLabel" name="resultLB" >
+    <widget class="QLineEdit" name="resultLE" >
+     <property name="frame" >
+      <bool>false</bool>
+     </property>
+     <property name="alignment" >
+      <set>Qt::AlignCenter</set>
+     </property>
+     <property name="readOnly" >
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="addEmailToDnCB" >
      <property name="text" >
-      <string/>
+      <string>Add email address to DN (only needed for broken CAs)</string>
      </property>
     </widget>
    </item>
