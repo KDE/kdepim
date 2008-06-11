@@ -64,6 +64,14 @@ KeyringViewer::KeyringViewer( QWidget *parent )
 	connect( fUi.actionOpen, SIGNAL( triggered() ), this, SLOT( openDatabase() ) );
 }
 
+KeyringViewer::~KeyringViewer()
+{
+	if( fModel )
+	{
+		delete fModel;
+	}
+}
+
 void KeyringViewer::selectionChanged( const QModelIndex &index )
 {
 	KeyringHHRecord *rec = static_cast<KeyringListModel*>( 
@@ -104,6 +112,11 @@ void KeyringViewer::newDatabase()
 	if( fileName.isEmpty() )
 	{
 		return;
+	}
+	
+	if( !fileName.endsWith( ".pdb" ) )
+	{
+		fileName.append( ".pdb" );
 	}
 	
 	QString pass = PasswordDialog::getPassword( this, PasswordDialog::New );

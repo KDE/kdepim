@@ -42,9 +42,8 @@ int main(int argc, char **argv)
 	proxy.createDataStore();
 	proxy.openDatabase( pass );
 	*/
-	KeyringViewer *viewer = new KeyringViewer( 0 );
-	viewer->show();
+	KeyringViewer viewer( 0 );
+	viewer.show();
 	
-	//return 0;
 	return app.exec();
 }

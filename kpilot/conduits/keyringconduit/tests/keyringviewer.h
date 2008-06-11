@@ -37,6 +37,8 @@ class KeyringViewer : public QMainWindow
 
 public:
 	KeyringViewer( QWidget *parent = 0 );
+	
+	~KeyringViewer();
 
 private slots:
 	void selectionChanged( const QModelIndex &index );
