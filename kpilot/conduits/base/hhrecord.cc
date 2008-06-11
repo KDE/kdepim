@@ -69,8 +69,6 @@ void HHRecord::setArchived()
 
 const QString HHRecord::id() const
 {
-	FUNCTIONSETUP;
-	
 	return QString::number( fRecord->id() );
 }
 
