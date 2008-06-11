@@ -210,9 +210,10 @@ namespace {
         Q_OBJECT
     public:
         explicit EnterDetailsPage( QWidget * p=0 )
-            : QWizardPage( p ), ui()
+            : QWizardPage( p ), dialog( this ), ui()
         {
             ui.setupUi( this );
+            
             updateForm();
         }
 
@@ -236,6 +237,7 @@ namespace {
         QVector< QPair<QString,QLineEdit*> > attributePairList;
         QList<QWidget*> dynamicWidgets;
         QMap<QString,QString> savedValues;
+        AdvancedSettingsDialog dialog;
         Ui_EnterDetailsPage ui;
     };
 
@@ -443,7 +445,6 @@ bool EnterDetailsPage::isComplete() const {
 }
 
 void EnterDetailsPage::slotAdvancedSettingsClicked() {
-    AdvancedSettingsDialog dialog;
     dialog.setProtocol( field("pgp").toBool() ? OpenPGP : CMS );
     dialog.exec();
 }
