@@ -5,14 +5,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>600</width>
-    <height>646</height>
+    <width>353</width>
+    <height>427</height>
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>Dialog</string>
+   <string>Advanced Settings</string>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout_2" >
+  <layout class="QVBoxLayout" name="verticalLayout_7" >
    <item>
     <widget class="QTabWidget" name="tabWidget" >
      <widget class="QWidget" name="personalTab" >
@@ -20,14 +20,26 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>578</width>
-        <height>549</height>
+        <width>331</width>
+        <height>330</height>
        </rect>
       </property>
       <attribute name="title" >
        <string>Personal Details</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_3" >
+      <layout class="QGridLayout" name="gridLayout" >
+       <item row="0" column="0" colspan="2" >
+        <widget class="QGroupBox" name="uidGB" >
+         <property name="title" >
+          <string>Additional User-IDs</string>
+         </property>
+         <layout class="QVBoxLayout" name="verticalLayout_6" >
+          <item>
+           <widget class="Kleo::NewCertificateUi::ListWidget" native="1" name="uidLW" />
+          </item>
+         </layout>
+        </widget>
+       </item>
        <item rowspan="2" row="2" column="0" >
         <widget class="QGroupBox" name="emailGB" >
          <property name="title" >
@@ -64,18 +76,6 @@
          </layout>
         </widget>
        </item>
-       <item row="1" column="0" colspan="2" >
-        <widget class="QGroupBox" name="uidGB" >
-         <property name="title" >
-          <string>Additional User-IDs</string>
-         </property>
-         <layout class="QVBoxLayout" name="verticalLayout_6" >
-          <item>
-           <widget class="Kleo::NewCertificateUi::ListWidget" native="1" name="uidLW" />
-          </item>
-         </layout>
-        </widget>
-       </item>
       </layout>
      </widget>
      <widget class="QWidget" name="technicalTab" >
@@ -83,21 +83,21 @@
        <rect>
         <x>0</x>
         <y>0</y>
-        <width>578</width>
-        <height>549</height>
+        <width>331</width>
+        <height>330</height>
        </rect>
       </property>
       <attribute name="title" >
        <string>Technical Details</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout" >
+      <layout class="QVBoxLayout" name="verticalLayout_2" >
        <item>
         <widget class="QGroupBox" name="groupBox" >
          <property name="title" >
           <string>Key Material</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout" >
-          <item row="0" column="0" >
+         <layout class="QGridLayout" name="gridLayout_3" >
+          <item row="0" column="0" colspan="3" >
            <widget class="QRadioButton" name="rsaRB" >
             <property name="text" >
              <string>RSA</string>
@@ -107,17 +107,46 @@
             </property>
            </widget>
           </item>
-          <item row="0" column="1" >
-           <widget class="QComboBox" name="rsaKeyStrengthCB" >
-            <property name="sizePolicy" >
-             <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
-              <horstretch>0</horstretch>
-              <verstretch>0</verstretch>
-             </sizepolicy>
+          <item row="0" column="5" >
+           <spacer name="horizontalSpacer" >
+            <property name="orientation" >
+             <enum>Qt::Horizontal</enum>
             </property>
-            <property name="currentIndex" >
-             <number>2</number>
+            <property name="sizeHint" stdset="0" >
+             <size>
+              <width>40</width>
+              <height>20</height>
+             </size>
             </property>
+           </spacer>
+          </item>
+          <item row="1" column="0" colspan="3" >
+           <widget class="QRadioButton" name="dsaRB" >
+            <property name="text" >
+             <string>DSA</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="1" colspan="2" >
+           <widget class="QCheckBox" name="elgCB" >
+            <property name="enabled" >
+             <bool>true</bool>
+            </property>
+            <property name="text" >
+             <string>+ ElGamal</string>
+            </property>
+           </widget>
+          </item>
+          <item row="2" column="3" colspan="2" >
+           <widget class="QComboBox" name="elgKeyStrengthCB" >
+            <property name="enabled" >
+             <bool>false</bool>
+            </property>
+            <item>
+             <property name="text" >
+              <string>backend default</string>
+             </property>
+            </item>
             <item>
              <property name="text" >
               <string>1024 bits</string>
@@ -145,19 +174,77 @@
             </item>
            </widget>
           </item>
-          <item row="1" column="0" >
-           <widget class="QRadioButton" name="dsaRB" >
-            <property name="text" >
-             <string>DSA</string>
-            </property>
+          <item row="0" column="3" colspan="2" >
+           <widget class="QComboBox" name="rsaKeyStrengthCB" >
+            <item>
+             <property name="text" >
+              <string>backend default</string>
+             </property>
+            </item>
+            <item>
+             <property name="text" >
+              <string>1024 bits</string>
+             </property>
+            </item>
+            <item>
+             <property name="text" >
+              <string>1536 bits</string>
+             </property>
+            </item>
+            <item>
+             <property name="text" >
+              <string>2048 bits</string>
+             </property>
+            </item>
+            <item>
+             <property name="text" >
+              <string>3072 bits</string>
+             </property>
+            </item>
+            <item>
+             <property name="text" >
+              <string>4096 bits</string>
+             </property>
+            </item>
            </widget>
           </item>
-          <item row="1" column="1" >
-           <widget class="QLabel" name="label" >
-            <property name="text" >
-             <string>(always 1024 bits)</string>
+          <item row="1" column="3" colspan="2" >
+           <widget class="QComboBox" name="dsaVersionCB" >
+            <property name="enabled" >
+             <bool>false</bool>
             </property>
+            <item>
+             <property name="text" >
+              <string>backend default</string>
+             </property>
+            </item>
+            <item>
+             <property name="text" >
+              <string>v1 (1024 bits)</string>
+             </property>
+            </item>
+            <item>
+             <property name="text" >
+              <string>v2 (2048 bits)</string>
+             </property>
+            </item>
            </widget>
+          </item>
+          <item row="2" column="0" >
+           <spacer name="horizontalSpacer_2" >
+            <property name="orientation" >
+             <enum>Qt::Horizontal</enum>
+            </property>
+            <property name="sizeType" >
+             <enum>QSizePolicy::Fixed</enum>
+            </property>
+            <property name="sizeHint" stdset="0" >
+             <size>
+              <width>10</width>
+              <height>1</height>
+             </size>
+            </property>
+           </spacer>
           </item>
          </layout>
         </widget>
@@ -171,7 +258,7 @@
           <item row="2" column="0" colspan="2" >
            <layout class="QHBoxLayout" name="horizontalLayout" >
             <item>
-             <widget class="QLabel" name="label_2" >
+             <widget class="QCheckBox" name="expiryCB" >
               <property name="text" >
                <string>Valid until:</string>
               </property>
@@ -179,6 +266,9 @@
             </item>
             <item>
              <widget class="QDateEdit" name="expiryDE" >
+              <property name="enabled" >
+               <bool>false</bool>
+              </property>
               <property name="sizePolicy" >
                <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
                 <horstretch>0</horstretch>
@@ -264,6 +354,9 @@
    <extends>QWidget</extends>
    <header>newcertificatewizard/listwidget.h</header>
    <container>1</container>
+   <slots>
+    <signal>itemsChanged()</signal>
+   </slots>
   </customwidget>
  </customwidgets>
  <resources/>
@@ -276,7 +369,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>236</x>
-     <y>636</y>
+     <y>387</y>
     </hint>
     <hint type="destinationlabel" >
      <x>157</x>
@@ -292,7 +385,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>325</x>
-     <y>636</y>
+     <y>387</y>
     </hint>
     <hint type="destinationlabel" >
      <x>286</x>
@@ -316,5 +409,104 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>elgCB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>elgKeyStrengthCB</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>147</x>
+     <y>185</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>291</x>
+     <y>185</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>expiryCB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>expiryDE</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>120</x>
+     <y>328</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>172</x>
+     <y>326</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>dsaRB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>dsaVersionCB</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>131</x>
+     <y>149</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>181</x>
+     <y>139</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>rsaRB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Kleo::NewCertificateUi::AdvancedSettingsDialog</receiver>
+   <slot>slotKeyMaterialSelectionChanged()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>39</x>
+     <y>95</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>5</x>
+     <y>93</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>dsaRB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Kleo::NewCertificateUi::AdvancedSettingsDialog</receiver>
+   <slot>slotKeyMaterialSelectionChanged()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>35</x>
+     <y>133</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>5</x>
+     <y>131</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>elgCB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Kleo::NewCertificateUi::AdvancedSettingsDialog</receiver>
+   <slot>slotKeyMaterialSelectionChanged()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>55</x>
+     <y>169</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>3</x>
+     <y>169</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
+ <slots>
+  <slot>slotKeyMaterialSelectionChanged()</slot>
+ </slots>
 </ui>

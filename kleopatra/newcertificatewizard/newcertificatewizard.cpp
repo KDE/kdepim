@@ -47,6 +47,7 @@
 #include <kleo/oidmap.h>
 
 #include <gpgme++/global.h>
+#include <gpgme.h>
 
 #include <KConfigGroup>
 #include <KGlobal>
@@ -67,7 +68,7 @@ using namespace GpgME;
 using namespace boost;
 
 static const unsigned int key_strengths[] = {
-    1024, 1532, 2048, 3072, 4096,
+    0, 1024, 1532, 2048, 3072, 4096,
 };
 static const unsigned int num_key_strengths = sizeof key_strengths / sizeof *key_strengths;
 
@@ -87,17 +88,63 @@ static int strength2index( unsigned int strength ) {
         return *it;
 }
 
+static unsigned int version2strength( int version ) {
+    if ( version == 0 )
+        return 1024;
+    if ( version == 1 )
+        return 2048;
+    return 0;
+}
+
+static int strength2version( unsigned int strength ) {
+    if ( strength <= 1024 )
+        return 0;
+    if ( strength <= 2048 )
+        return 1;
+    return -1;
+}
+
+enum KeyAlgo { RSA, DSA, ELG };
+
+static bool is_algo( gpgme_pubkey_algo_t algo, KeyAlgo what ) {
+    switch ( algo ) {
+    case GPGME_PK_RSA:
+    case GPGME_PK_RSA_E:
+    case GPGME_PK_RSA_S:
+        return what == RSA;
+    case GPGME_PK_ELG_E:
+    case GPGME_PK_ELG:
+        return what == ELG;
+    case GPGME_PK_DSA:
+        return what == DSA;
+    }
+    return false;
+}
+
+static bool is_rsa( unsigned int algo ) {
+    return is_algo( static_cast<gpgme_pubkey_algo_t>( algo ), RSA );
+}
+
+static bool is_dsa( unsigned int algo ) {
+    return is_algo( static_cast<gpgme_pubkey_algo_t>( algo ), DSA );
+}
+
+static bool is_elg( unsigned int algo ) {
+    return is_algo( static_cast<gpgme_pubkey_algo_t>( algo ), ELG );
+}
+
 namespace {
 
     class AdvancedSettingsDialog : public QDialog {
         Q_OBJECT
-        Q_ENUMS( PublicKeyAlgorithm )
         Q_PROPERTY( QStringList userIDs READ userIDs WRITE setUserIDs )
         Q_PROPERTY( QStringList emailAddresses READ emailAddresses WRITE setEmailAddresses )
         Q_PROPERTY( QStringList dnsNames READ dnsNames WRITE setDnsNames )
         Q_PROPERTY( QStringList uris READ uris WRITE setUris )
         Q_PROPERTY( uint keyStrength READ keyStrength WRITE setKeyStrength )
-        Q_PROPERTY( PublicKeyAlgorithm publicKeyAlgorithm READ publicKeyAlgorithm WRITE setPublicKeyAlgorithm )
+        Q_PROPERTY( uint keyAlgorithm READ keyAlgorithm WRITE setKeyAlgorithm )
+        Q_PROPERTY( uint subkeyStrength READ subkeyStrength WRITE setSubkeyStrength )
+        Q_PROPERTY( uint subkeyAlgorithm READ subkeyAlgorithm WRITE setSubkeyAlgorithm )
         Q_PROPERTY( bool signingAllowed READ signingAllowed WRITE setSigningAllowed )
         Q_PROPERTY( bool encryptionAllowed READ encryptionAllowed WRITE setEncryptionAllowed )
         Q_PROPERTY( bool certificationAllowed READ certificationAllowed WRITE setCertificationAllowed )
@@ -105,7 +152,7 @@ namespace {
         Q_PROPERTY( QDate expiryDate READ expiryDate WRITE setExpiryDate )
     public:
         explicit AdvancedSettingsDialog( QWidget * parent=0 )
-            : QDialog( parent ), ui()
+            : QDialog( parent ), protocol( UnknownProtocol ), ui()
         {
             ui.setupUi( this );
             const QDate today = QDate::currentDate();
@@ -113,25 +160,40 @@ namespace {
             ui.expiryDE->setDate( today.addYears( 2 ) );
         }
 
-        void setProtocol( GpgME::Protocol protocol ) {
+        void setProtocol( GpgME::Protocol proto ) {
+            if ( protocol == proto )
+                return;
+            protocol = proto;
+            updateWidgetVisibility();
+        }
+
+        void updateWidgetVisibility() {
+            // Personal Details Page
             ui.uidGB->setVisible( protocol == OpenPGP );
             ui.emailGB->setVisible( protocol == CMS );
             ui.dnsGB->setVisible( protocol == CMS );
             ui.uriGB->setVisible( protocol == CMS );
-            if ( protocol == OpenPGP ) {
-                ui.signingCB->setChecked( true );
-                ui.signingCB->setEnabled( false );
+            // Technical Details Page
+            ui.dsaRB->setEnabled( protocol == OpenPGP );
+            ui.elgCB->setEnabled( protocol == OpenPGP );
+            if ( protocol == CMS ) {
+                ui.rsaRB->setChecked( true ); // gpgsm can generate only rsa atm
+                ui.elgCB->setChecked( false );
+            }
+            ui.certificationCB->setVisible( protocol == OpenPGP ); // gpgsm limitation?
+            ui.authenticationCB->setVisible( protocol == OpenPGP );
+            if ( protocol == OpenPGP ) { // pgp keys must have certify capability
                 ui.certificationCB->setChecked( true );
                 ui.certificationCB->setEnabled( false );
-                ui.authenticationCB->setChecked( false );
-                ui.authenticationCB->setEnabled( false );
-            } else {
-                ui.signingCB->setEnabled( true );
-                ui.certificationCB->setEnabled( true );
-                ui.authenticationCB->setEnabled( true );
             }
+            if ( protocol == CMS ) {
+                ui.encryptionCB->setEnabled( true );
+            }
+            ui.expiryDE->setVisible( protocol == OpenPGP );
+            ui.expiryCB->setVisible( protocol == OpenPGP );
+            slotKeyMaterialSelectionChanged();
         }
-        
+
         void setUserIDs( const QStringList & items ) { ui.uidLW->setItems( items ); }
         QStringList userIDs() const { return ui.uidLW->items();   }
 
@@ -147,20 +209,37 @@ namespace {
 
         void setKeyStrength( unsigned int strength ) {
             ui.rsaKeyStrengthCB->setCurrentIndex( strength2index( strength ) );
+            ui.elgKeyStrengthCB->setCurrentIndex( strength2version( strength ) );
         }
         unsigned int keyStrength() const {
-            return ui.dsaRB->isChecked() ? 1024U : index2strength( ui.rsaKeyStrengthCB->currentIndex() );
+            return
+                ui.dsaRB->isChecked() ? version2strength( ui.dsaVersionCB->currentIndex() ) :
+                ui.rsaRB->isChecked() ? index2strength( ui.rsaKeyStrengthCB->currentIndex() ) : 0 ;
         }
 
-        enum PublicKeyAlgorithm {
-            RSA, DSA,
-            NumPublicKeyAlgorithms
-        };
-        void setPublicKeyAlgorithm( PublicKeyAlgorithm algo ) {
-            ( algo == DSA ? ui.dsaRB : ui.rsaRB )->setChecked( true );
+        void setKeyAlgorithm( unsigned int algo ) {
+            QRadioButton * const rb =
+                is_rsa( algo ) ? ui.rsaRB :
+                is_dsa( algo ) ? ui.dsaRB : 0 ;
+            if ( rb )
+                rb->setChecked( true );
         }
-        PublicKeyAlgorithm publicKeyAlgorithm() const { return ui.dsaRB->isChecked() ? DSA : RSA ; }
+        unsigned int keyAlgorithm() const {
+            return
+                ui.dsaRB->isChecked() ? GPGME_PK_DSA :
+                ui.rsaRB->isChecked() ? GPGME_PK_RSA :
+                0 ;
+        }
 
+        void setSubkeyAlgorithm( unsigned int algo ) { ui.elgCB->setChecked( is_elg( algo ) ); }
+        unsigned int subkeyAlgorithm() const { return ui.elgCB->isChecked() ? GPGME_PK_ELG : 0 ; }
+
+        void setSubkeyStrength( unsigned int strength ) {
+            ui.elgKeyStrengthCB->setCurrentIndex( strength2index( strength ) );
+        }
+        unsigned int subkeyStrength() const {
+            return index2strength( ui.elgKeyStrengthCB->currentIndex() );
+        }
 
         void setSigningAllowed( bool on ) { ui.signingCB->setChecked( on ); }
         bool signingAllowed() const { return ui.signingCB->isChecked(); }
@@ -180,7 +259,37 @@ namespace {
     Q_SIGNALS:
         void changed();
 
+    private Q_SLOTS:
+        void slotKeyMaterialSelectionChanged() {
+            const unsigned int algo = keyAlgorithm();
+            const unsigned int sk_algo = subkeyAlgorithm();
+            kDebug() << "\n.             algo" << gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>(algo) )
+                     << "\n.          sk_algo" << gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>(sk_algo) )
+                     << "\n.   is_rsa( algo )" << is_rsa( algo )
+                     << "\n.   is_dsa( algo )" << is_dsa( algo )
+                     << "\n.is_elg( sk_algo )" << is_elg( sk_algo );
+            if ( protocol == OpenPGP ) {
+                ui.elgCB->setEnabled( is_dsa( algo ) );
+                if ( is_rsa( algo ) ) {
+                    ui.encryptionCB->setEnabled( true );
+                    ui.encryptionCB->setChecked( true );
+                    ui.signingCB->setEnabled( true );
+                    ui.signingCB->setChecked( true );
+                    ui.authenticationCB->setEnabled( true );
+                } else if ( is_dsa( algo ) ) {
+                    ui.encryptionCB->setEnabled( false );
+                    if ( is_elg( sk_algo ) )
+                        ui.encryptionCB->setChecked( true );
+                    else
+                        ui.encryptionCB->setChecked( false );
+                }
+            } else {
+                assert( is_rsa( keyAlgorithm() ) );
+            }
+        }
+
     private:
+        GpgME::Protocol protocol;
         Ui_AdvancedSettingsDialog ui;
     };
 
