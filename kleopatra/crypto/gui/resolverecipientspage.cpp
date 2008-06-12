@@ -174,11 +174,11 @@ void ResolveRecipientsPage::ListWidget::removeEntry( const QString& id )
     widgets.remove( id );
 }
 
-void ResolveRecipientsPage::ListWidget::showSelectionDialog( const QString& id, bool * canceled )
+void ResolveRecipientsPage::ListWidget::showSelectionDialog( const QString& id )
 {
     if ( !widgets.contains( id ) )
         return;
-    widgets[id]->showSelectionDialog( canceled );
+    widgets[id]->showSelectionDialog();
 }
 
 QStringList ResolveRecipientsPage::ListWidget::selectedEntries() const
@@ -260,25 +260,26 @@ static CertificateSelectionDialog::Option protocol2option( GpgME::Protocol proto
     }
 }
 
-void ResolveRecipientsPage::ItemWidget::showSelectionDialog( bool * canceled )
-{
-    if ( canceled )
-        *canceled = true;
-
-    QPointer<CertificateSelectionDialog> dlg = new CertificateSelectionDialog( this );
+static CertificateSelectionDialog * createCertificateSelectionDialog( QWidget* parent, GpgME::Protocol prot ) {
+    CertificateSelectionDialog * const dlg = new CertificateSelectionDialog( parent );
     const CertificateSelectionDialog::Options options =
         CertificateSelectionDialog::SingleSelection |
-        CertificateSelectionDialog::EncryptOnly     |
-        protocol2option( m_protocol )               ;
+        CertificateSelectionDialog::EncryptOnly |
+        CertificateSelectionDialog::MultiSelection |
+        protocol2option( prot );
     dlg->setOptions( options );
+    return dlg;
+}
+
+void ResolveRecipientsPage::ItemWidget::showSelectionDialog()
+{
+    QPointer<CertificateSelectionDialog> dlg = createCertificateSelectionDialog( this, m_protocol );
 
     if ( dlg->exec() == QDialog::Accepted && dlg /* still with us? */ ) {
         const GpgME::Key cert = dlg->selectedCertificate();
         if ( !cert.isNull() ) {
             addCertificateToComboBox( cert );
             selectCertificateInComboBox( cert );
-            if ( canceled )
-                *canceled = false;
         }
     }
     delete dlg;
@@ -547,16 +548,22 @@ void ResolveRecipientsPage::Private::addRecipient( const Mailbox& mbox )
 
 void ResolveRecipientsPage::Private::addRecipient()
 {
+    QPointer<CertificateSelectionDialog> dlg = createCertificateSelectionDialog( q, q->selectedProtocol() );
+    if ( dlg->exec() != QDialog::Accepted || !dlg /*q already deleted*/ )
+        return;
+    const std::vector<Key> keys = dlg->selectedCertificates();
+
     int i = 0;
-    const QStringList existing = m_listWidget->identifiers();
-    QString rec = i18n( "Recipient" );
-    while ( existing.contains( rec ) )
-        rec = i18nc( "%1 == number", "Recipient (%1)", ++i );
-    addRecipient( rec, rec );
-    bool canceled;
-    m_listWidget->showSelectionDialog( rec, &canceled );
-    if ( canceled )
-        m_listWidget->removeEntry( rec );
+    Q_FOREACH( const Key & key, keys ) {
+        const QStringList existing = m_listWidget->identifiers();
+        QString rec = i18n( "Recipient" );
+        while ( existing.contains( rec ) )
+            rec = i18nc( "%1 == number", "Recipient (%1)", ++i );
+        addRecipient( rec, rec );
+        const std::vector<Key> pgp = key.protocol() == OpenPGP ? std::vector<Key>( 1, key ) : std::vector<Key>();
+        const std::vector<Key> cms = key.protocol() == CMS ? std::vector<Key>( 1, key ) : std::vector<Key>();
+        m_listWidget->setCertificates( rec, pgp, cms );
+    }
     emit q->completeChanged();
 }
 

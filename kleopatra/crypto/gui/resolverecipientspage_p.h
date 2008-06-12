@@ -64,7 +64,7 @@ public:
     KMime::Types::Mailbox mailbox( const QString& id ) const;
     QStringList identifiers() const;
     void setProtocol( GpgME::Protocol prot );
-    void showSelectionDialog( const QString& id, bool * canceled=0 );
+    void showSelectionDialog( const QString& id );
 
     enum Role {
         IdRole = Qt::UserRole
@@ -106,7 +106,7 @@ public:
     bool isSelected() const;
 
 public Q_SLOTS:
-    void showSelectionDialog( bool * canceled=0 );
+    void showSelectionDialog();
 
 Q_SIGNALS:
     void changed();
