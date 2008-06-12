@@ -192,14 +192,17 @@ SummaryPage::SummaryPage( QWidget * parent ) : QWizardPage( parent ), m_complete
     QGridLayout * const layout = new QGridLayout( this );
     QLabel * const uidLabelLabel = new QLabel( i18n( "Signed user IDs:" ) );
     uidLabelLabel->setAlignment( Qt::AlignTop );
-    layout->addWidget( uidLabelLabel, 0, 0 );
-    layout->addWidget( m_userIDsLabel = new QLabel, 0, 1 );
-    layout->addWidget( new QLabel( i18n( "Check level:"  )), 1, 0 );
-    layout->addWidget( m_checkLevelLabel = new QLabel, 1, 1 );
-    layout->addWidget( new QLabel( i18n( "Selected secret certificate:" ) ), 2, 0 );
-    layout->addWidget( m_secretKeyLabel = new QLabel, 2, 1 );
+    layout->addWidget( new QLabel( i18n( "<b>Summary:</b>" ) ), 0, 0, 1, 2 );
+    layout->addWidget( uidLabelLabel, 1, 0 );
+    layout->addWidget( m_userIDsLabel = new QLabel, 1, 1 );
+    layout->addWidget( new QLabel( i18n( "Check level:" ) ), 2, 0 );
+    layout->addWidget( m_checkLevelLabel = new QLabel, 2, 1 );
+    layout->addWidget( new QLabel( i18n( "Selected secret certificate:" ) ), 3, 0 );
+    layout->addWidget( m_secretKeyLabel = new QLabel, 3, 1 );
     m_secretKeyLabel->setTextFormat( Qt::PlainText );
-    layout->addWidget( m_resultLabel = new QLabel, 3, 0, 2, 1 );
+    layout->addWidget( m_resultLabel = new QLabel, 4, 0, 1, 2, Qt::AlignCenter );
+    layout->setRowStretch( 4, 1 );
+    m_resultLabel->setAlignment( Qt::AlignCenter );
 }
 
 bool SummaryPage::isComplete() const {
@@ -237,11 +240,11 @@ void SummaryPage::setComplete( bool complete ) {
 }
 void SummaryPage::setResult( const Error & err ) {
     if ( err && !err.isCanceled() )
-        m_resultLabel->setText( i18n( "<b>Error</b>: %1", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) ) );
+        m_resultLabel->setText( i18n( "The certificate could not be certified. <b>Error</b>: %1", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) ) );
     else if ( err.isCanceled() )
         m_resultLabel->setText( "Certification canceled." );
     else
-        m_resultLabel->setText("Certification finished." );
+        m_resultLabel->setText("Certification successful." );
 }
 
 class CertifyCertificateDialog::Private {

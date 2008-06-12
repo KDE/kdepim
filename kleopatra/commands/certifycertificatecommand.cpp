@@ -35,6 +35,8 @@
 
 #include "command_p.h"
 
+#include "exportopenpgpcertstoservercommand.h"
+
 #include <dialogs/certifycertificatedialog.h>
 
 #include <models/keycache.h>
@@ -205,6 +207,11 @@ void CertifyCertificateCommand::Private::slotDialogRejected() {
 }
 
 void CertifyCertificateCommand::Private::slotResult( const Error & err ) {
+    if ( !err && !err.isCanceled() && dialog && dialog->exportableCertificationSelected() && dialog->sendToServer() ) {
+        ExportOpenPGPCertsToServerCommand * const cmd = new ExportOpenPGPCertsToServerCommand( key() );
+        cmd->start();
+    }
+
     finished();
 }
 

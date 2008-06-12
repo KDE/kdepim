@@ -70,6 +70,13 @@ ExportOpenPGPCertsToServerCommand::ExportOpenPGPCertsToServerCommand( QAbstractI
 
 }
 
+
+ExportOpenPGPCertsToServerCommand::ExportOpenPGPCertsToServerCommand( const Key & key )
+    : GnuPGProcessCommand( key )
+{
+
+}
+
 ExportOpenPGPCertsToServerCommand::~ExportOpenPGPCertsToServerCommand() {}
 
 bool ExportOpenPGPCertsToServerCommand::preStartHook( QWidget * parent ) const {

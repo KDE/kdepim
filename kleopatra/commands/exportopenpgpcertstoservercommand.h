@@ -43,6 +43,8 @@ namespace Commands {
     public:
         explicit ExportOpenPGPCertsToServerCommand( QAbstractItemView * view, KeyListController * parent );
         explicit ExportOpenPGPCertsToServerCommand( KeyListController * parent );
+        explicit ExportOpenPGPCertsToServerCommand( const GpgME::Key & key );
+
         ~ExportOpenPGPCertsToServerCommand();
 
         static Restrictions restrictions() { return MustBeOpenPGP; }
