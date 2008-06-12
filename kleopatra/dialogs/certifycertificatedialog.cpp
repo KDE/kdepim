@@ -109,6 +109,7 @@ SelectUserIDsPage::SelectUserIDsPage( QWidget * parent ) : QWizardPage( parent )
     QVBoxLayout * const layout = new QVBoxLayout ( this );
     QLabel * const label = new QLabel;
     label->setText( i18n( "<b>Step 1:</b> Please select the user IDs you wish to certify." ) );
+    layout->addWidget( label );
     m_listView = new QListView;
     m_listView->setModel( &m_userIDModel );
     connect( &m_userIDModel, SIGNAL(itemChanged(QStandardItem*)), this, SIGNAL(completeChanged()) );
