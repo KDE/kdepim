@@ -249,9 +249,9 @@ void CertificateSelectionDialog::Private::slotReloaded() {
     filterAllowedKeys( keys );
     const std::vector<Key> selected = q->selectedCertificates();
     if ( AbstractKeyListModel * const model = ui.tabWidget.flatModel() )
-        model->addKeys( keys );
+        model->setKeys( keys );
     if ( AbstractKeyListModel * const model = ui.tabWidget.hierarchicalModel() )
-        model->addKeys( keys );
+        model->setKeys( keys );
     q->selectCertificates( selected );
 }
 
