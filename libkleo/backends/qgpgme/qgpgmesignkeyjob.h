@@ -49,6 +49,10 @@ namespace Kleo {
 #endif
   {
     Q_OBJECT
+#ifdef Q_MOC_RUN
+  public Q_SLOTS:
+    void slotFinished();
+#endif
   public:
     explicit QGpgMESignKeyJob( GpgME::Context * context );
     ~QGpgMESignKeyJob();
