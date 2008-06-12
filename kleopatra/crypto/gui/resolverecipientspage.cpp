@@ -68,6 +68,7 @@
 #include <QStringList>
 #include <QVBoxLayout>
 
+#include <boost/bind.hpp>
 #include <boost/shared_ptr.hpp>
 
 #include <cassert>
@@ -384,6 +385,7 @@ public:
     void updateProtocolRBVisibility();
     void protocolSelected( int prot );
     void writeSelectedCertificatesToPreferences();
+    void completeChangedInternal();
 
 private:
     ListWidget* m_listWidget;
@@ -401,6 +403,7 @@ private:
 ResolveRecipientsPage::Private::Private( ResolveRecipientsPage * qq )
     : q( qq ), m_presetProtocol( UnknownProtocol ), m_selectedProtocol( m_presetProtocol ), m_multipleProtocolsAllowed( false ), m_recipientPreferences()
 {
+    connect( q, SIGNAL(completeChanged()), q, SLOT(completeChangedInternal()) );
     q->setTitle( i18n( "<b>Recipients</b>" ) );
     QVBoxLayout* const layout = new QVBoxLayout( q );
     m_listWidget = new ListWidget;
@@ -443,6 +446,17 @@ ResolveRecipientsPage::Private::Private( ResolveRecipientsPage * qq )
 }
 
 ResolveRecipientsPage::Private::~Private() {}
+
+void ResolveRecipientsPage::Private::completeChangedInternal()
+{
+    const bool isComplete = q->isComplete();
+    const std::vector<Key> keys = q->resolvedCertificates();
+    const bool haveSecret = std::find_if( keys.begin(), keys.end(), bind( &Key::hasSecret, _1 ) ) != keys.end();
+    if ( isComplete && !haveSecret )
+        q->setExplanation( i18n( "<b>Warning:</b> None of the selected certificates seems to be your own certificate. You will not be able to decrypt the encrypted data again." ) );
+    else
+        q->setExplanation( QString() );
+}
 
 void ResolveRecipientsPage::Private::updateProtocolRBVisibility()
 {
