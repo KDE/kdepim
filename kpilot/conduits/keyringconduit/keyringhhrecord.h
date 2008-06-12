@@ -88,6 +88,13 @@ public:
 	 * Returns a string representation of the record.
 	 */
 	virtual QString toString() const;
+	
+	/** Methods added for the viewer/editor **/
+	
+	/**
+	 * Marks the record as modified.
+	 */
+	void setModified();
 
 private: // functions
 	/**

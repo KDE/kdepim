@@ -46,11 +46,15 @@ private slots:
 	void togglePasswordVisibility();
 	void newDatabase();
 	void openDatabase();
+	
+	// Slots to deal with changes in the input fields.
+	void nameEditCheck();
 
 private:
 	Ui::MainWindow fUi;
-	KeyringListModel* fModel;
+	KeyringHHDataProxy* fProxy;
 	KeyringHHRecord* fCurrentRecord;
+	KeyringListModel* fModel;
 };
 
 #endif

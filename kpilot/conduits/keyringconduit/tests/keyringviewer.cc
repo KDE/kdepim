@@ -40,7 +40,7 @@
 #include "passworddialog.h"
 
 KeyringViewer::KeyringViewer( QWidget *parent )
-	: QMainWindow( parent ), fModel( 0L )
+	: QMainWindow( parent ), fProxy( 0L ), fCurrentRecord( 0L ), fModel( 0L )
 {
 	fUi.setupUi(this);
 	
@@ -58,6 +58,8 @@ KeyringViewer::KeyringViewer( QWidget *parent )
 		, this, SLOT( selectionChanged( const QModelIndex& ) ) );
 	connect( fUi.fPasswordBox, SIGNAL( clicked() )
 		, this, SLOT( togglePasswordVisibility() ) );
+	connect( fUi.fNameEdit, SIGNAL( editingFinished () )
+		, this, SLOT( nameEditCheck() ) );
 		
 	// Connect the actions
 	connect( fUi.actionNew, SIGNAL( triggered() ), this, SLOT( newDatabase() ) );
@@ -67,6 +69,7 @@ KeyringViewer::KeyringViewer( QWidget *parent )
 
 KeyringViewer::~KeyringViewer()
 {
+	delete fProxy;
 	delete fModel;
 }
 
@@ -125,12 +128,16 @@ void KeyringViewer::newDatabase()
 		return;
 	}
 	
-	KeyringHHDataProxy* proxy = new KeyringHHDataProxy( fileName );
-	proxy->openDatabase( pass );
-	proxy->createDataStore();
-	proxy->openDatabase( pass );
+	// Clean up eventually open database.
+	delete fProxy;
+	delete fModel;
 	
-	fModel = new KeyringListModel( proxy, this );
+	fProxy = new KeyringHHDataProxy( fileName );
+	fProxy->openDatabase( pass );
+	fProxy->createDataStore();
+	fProxy->openDatabase( pass );
+	
+	fModel = new KeyringListModel( fProxy, this );
 	
 	fUi.fAccountList->setModel( fModel );
 	fUi.fAccountList->setEnabled( true );
@@ -167,11 +174,30 @@ void KeyringViewer::openDatabase()
 		return;
 	}
 	
+	delete fProxy;
 	delete fModel;
 	
-	fModel = new KeyringListModel( proxy, this );
+	fProxy = proxy;
+	fModel = new KeyringListModel( fProxy, this );
+	
+	fUi.fCategoryFilter->setEnabled( true );
 	fUi.fAccountList->setModel( fModel );
 	fUi.fAccountList->setEnabled( true );
-	fUi.fCategoryFilter->setEnabled( true );
+	fUi.fNameEdit->setEnabled( true );
 	fUi.fPasswordBox->setEnabled( true );
+}
+
+void KeyringViewer::nameEditCheck()
+{
+	if( !fCurrentRecord ) return;
+	
+	if( fUi.fNameEdit->text() != fCurrentRecord->name() )
+	{
+		QDateTime now = QDateTime::currentDateTime();
+		
+		fCurrentRecord->setName( fUi.fNameEdit->text() );
+		fCurrentRecord->setLastChangedDate( now );
+		fCurrentRecord->setModified();
+		fProxy->saveRecord( fCurrentRecord );
+	}
 }

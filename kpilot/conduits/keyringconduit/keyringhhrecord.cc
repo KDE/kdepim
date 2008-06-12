@@ -121,7 +121,9 @@ QDateTime KeyringHHRecord::lastChangedDate() const
 
 void KeyringHHRecord::setName( const QString &name )
 {
+	KeyringHHRecordBase data = unpack();
 	fName = name;
+	pack( data );
 }
 
 void KeyringHHRecord::setAccount( const QString &account  )
@@ -312,4 +314,9 @@ QString KeyringHHRecord::toString() const
 	flags.append( ']' );
 
 	return id() + CSL1( " - " ) + fName + CSL1( " " ) + flags;
+}
+
+void KeyringHHRecord::setModified()
+{
+	fRecord->setModified();
 }
