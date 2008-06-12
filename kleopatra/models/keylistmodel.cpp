@@ -316,6 +316,7 @@ namespace {
         /* reimp */ QList<QModelIndex> doAddKeys( const std::vector<Key> & keys );
         /* reimp */ void doRemoveKey( const Key & key );
         /* reimp */ void doClear() {
+            mTopLevels.clear();
             mKeysByFingerprint.clear();
             mKeysByExistingParent.clear();
             mKeysByNonExistingParent.clear();
@@ -325,14 +326,14 @@ namespace {
         void addTopLevelKey( const Key & key );
         void addKeyWithParent( const char * issuer_fpr, const Key & key );
         void addKeyWithoutParent( const char * issuer_fpr, const Key & key );
-        
+
     private:
         typedef std::map< std::string, std::vector<Key> > Map;
         std::vector<Key> mKeysByFingerprint; // all keys
         Map mKeysByExistingParent, mKeysByNonExistingParent; // parent->child map
         std::vector<Key> mTopLevels; // all roots + parent-less
     };
-    
+
     static const char * cleanChainID( const Key & key ) {
         if ( key.isRoot() )
             return "";
@@ -407,7 +408,7 @@ void FlatKeyListModel::doRemoveKey( const Key & key ) {
                        key, _detail::ByFingerprint<std::less>() );
     if ( it == mKeysByFingerprint.end() )
         return;
-    
+
     const unsigned int row = std::distance( mKeysByFingerprint.begin(), it );
     beginRemoveRows( QModelIndex(), row, row );
     mKeysByFingerprint.erase( it );
@@ -438,10 +439,10 @@ int HierarchicalKeyListModel::rowCount( const QModelIndex & pidx ) const {
     // toplevel item:
     if ( !pidx.isValid() )
         return mTopLevels.size();
-    
+
     if ( pidx.column() != 0 )
         return 0;
-    
+
     // non-toplevel item - find the number of subjects for this issuer:
     const Key issuer = this->key( pidx );
     const char * const fpr = issuer.primaryFingerprint();
@@ -532,7 +533,7 @@ QModelIndex HierarchicalKeyListModel::doMapFromKey( const Key & key, int col ) c
 	return QModelIndex();
 
     const unsigned int row = std::distance( v->begin(), it );
-    return createIndex( row, col, const_cast<char* /* thanks, Trolls :/ */ >( issuer_fpr ) ); 
+    return createIndex( row, col, const_cast<char* /* thanks, Trolls :/ */ >( issuer_fpr ) );
 }
 
 void HierarchicalKeyListModel::addKeyWithParent( const char * issuer_fpr, const Key & key ) {
@@ -646,7 +647,7 @@ QList<QModelIndex> HierarchicalKeyListModel::doAddKeys( const std::vector<Key> &
     std::set_union( keys.begin(), keys.end(),
                     mKeysByFingerprint.begin(), mKeysByFingerprint.end(),
                     std::back_inserter( merged ), _detail::ByFingerprint<std::less>() );
-    
+
     mKeysByFingerprint = merged;
 
     std::set<Key, _detail::ByFingerprint<std::less> > changedParents;
@@ -657,7 +658,7 @@ QList<QModelIndex> HierarchicalKeyListModel::doAddKeys( const std::vector<Key> &
         const char * const fpr = key.primaryFingerprint();
         if ( !fpr || !*fpr )
             continue;
-        
+
         const bool keyAlreadyExisted = qBinaryFind( oldKeys.begin(), oldKeys.end(), key, _detail::ByFingerprint<std::less>() ) != oldKeys.end();
 
         const Map::iterator it = mKeysByNonExistingParent.find( fpr );
@@ -670,12 +671,12 @@ QList<QModelIndex> HierarchicalKeyListModel::doAddKeys( const std::vector<Key> &
         if ( !keyAlreadyExisted ) {
             std::vector<Key>::iterator last = mTopLevels.begin();
             std::vector<Key>::iterator lastFP = mKeysByFingerprint.begin();
-    
+
             Q_FOREACH( const Key & k, children ) {
                 last = qBinaryFind( last, mTopLevels.end(), k, _detail::ByFingerprint<std::less>() );
                 assert( last != mTopLevels.end() );
                 const int row = std::distance( mTopLevels.begin(), last );
-    
+
                 lastFP = qBinaryFind( lastFP, mKeysByFingerprint.end(), k, _detail::ByFingerprint<std::less>() );
                 assert( lastFP != mKeysByFingerprint.end() );
 
@@ -718,7 +719,7 @@ QList<QModelIndex> HierarchicalKeyListModel::doAddKeys( const std::vector<Key> &
         }
     }
     //emit dataChanged for all parents with new children. This triggers KeyListSortFilterProxyModel to
-    //show a parent node if it just got children matching the proxy's filter 
+    //show a parent node if it just got children matching the proxy's filter
     Q_FOREACH( const Key & i, changedParents ) {
         const QModelIndex idx = index( i );
         if ( idx.isValid() )
@@ -731,7 +732,7 @@ void HierarchicalKeyListModel::doRemoveKey( const Key & key ) {
     const QModelIndex idx = index( key );
     if ( !idx.isValid() )
         return;
-    
+
     const char * const fpr = key.primaryFingerprint();
     //TODO: only removal of leaf nodes is implemented so far
     if ( mKeysByExistingParent.find( fpr ) != mKeysByExistingParent.end() )
@@ -739,7 +740,7 @@ void HierarchicalKeyListModel::doRemoveKey( const Key & key ) {
 
     const std::vector<Key>::iterator it = qBinaryFind( mKeysByFingerprint.begin(), mKeysByFingerprint.end(),
                                                        key, _detail::ByFingerprint<std::less>() );
-    
+
     assert( it != mKeysByFingerprint.end() );
     assert( mKeysByNonExistingParent.find( fpr ) == mKeysByNonExistingParent.end() );
     assert( mKeysByExistingParent.find( fpr ) == mKeysByExistingParent.end() );
@@ -762,7 +763,7 @@ void HierarchicalKeyListModel::doRemoveKey( const Key & key ) {
             if ( nexIt->second.empty() )
                 mKeysByNonExistingParent.erase( nexIt );
         }
-    
+
         const Map::iterator exIt = mKeysByExistingParent.find( issuer_fpr );
         if ( exIt != mKeysByExistingParent.end() ) {
             const std::vector<Key>::iterator eit = qBinaryFind( exIt->second.begin(), exIt->second.end(), key, _detail::ByFingerprint<std::less>() );
