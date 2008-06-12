@@ -30,6 +30,7 @@
 
 class KeyringHHDataProxy;
 class KeyringListModel;
+class KeyringHHRecord;
 
 class KeyringViewer : public QMainWindow
 {
@@ -45,11 +46,11 @@ private slots:
 	void togglePasswordVisibility();
 	void newDatabase();
 	void openDatabase();
-	void quit();
 
 private:
 	Ui::MainWindow fUi;
-	KeyringListModel *fModel;
+	KeyringListModel* fModel;
+	KeyringHHRecord* fCurrentRecord;
 };
 
 #endif

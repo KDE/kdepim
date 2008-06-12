@@ -62,28 +62,25 @@ KeyringViewer::KeyringViewer( QWidget *parent )
 	// Connect the actions
 	connect( fUi.actionNew, SIGNAL( triggered() ), this, SLOT( newDatabase() ) );
 	connect( fUi.actionOpen, SIGNAL( triggered() ), this, SLOT( openDatabase() ) );
-	connect( fUi.actionExit, SIGNAL( triggered() ), this, SLOT( quit() ) );
+	connect( fUi.actionExit, SIGNAL( triggered() ), qApp, SLOT( quit() ) );
 }
 
 KeyringViewer::~KeyringViewer()
 {
-	if( fModel )
-	{
-		delete fModel;
-	}
+	delete fModel;
 }
 
 void KeyringViewer::selectionChanged( const QModelIndex &index )
 {
-	KeyringHHRecord *rec = static_cast<KeyringListModel*>( 
+	fCurrentRecord = static_cast<KeyringListModel*>(
 		fUi.fAccountList->model() )->record( index );
 
-	fUi.fNameEdit->setText( rec->name() );
-	fUi.fCategoryEdit->setText( rec->category() );
-	fUi.fAccountEdit->setText( rec->account() );
-	fUi.fPasswordEdit->setText( rec->password() );
-	fUi.fNotesEdit->setText( rec->notes() );
-	fUi.fDateEdit->setDateTime( rec->lastChangedDate() );
+	fUi.fNameEdit->setText( fCurrentRecord->name() );
+	fUi.fCategoryEdit->setText( fCurrentRecord->category() );
+	fUi.fAccountEdit->setText( fCurrentRecord->account() );
+	fUi.fPasswordEdit->setText( fCurrentRecord->password() );
+	fUi.fNotesEdit->setText( fCurrentRecord->notes() );
+	fUi.fDateEdit->setDateTime( fCurrentRecord->lastChangedDate() );
 	
 	// Don't show the password by default
 	if( fUi.fPasswordEdit->echoMode() == QLineEdit::Normal )
@@ -170,19 +167,11 @@ void KeyringViewer::openDatabase()
 		return;
 	}
 	
-	if( fModel )
-	{
-		delete fModel;
-	}
+	delete fModel;
 	
 	fModel = new KeyringListModel( proxy, this );
 	fUi.fAccountList->setModel( fModel );
 	fUi.fAccountList->setEnabled( true );
 	fUi.fCategoryFilter->setEnabled( true );
 	fUi.fPasswordBox->setEnabled( true );
-}
-
-void KeyringViewer::quit()
-{
-	qApp->exit( 0 );
 }

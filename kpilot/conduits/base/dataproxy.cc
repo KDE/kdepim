@@ -39,10 +39,7 @@ DataProxy::~DataProxy()
 {
 	FUNCTIONSETUP;
 	
-	foreach( Record* rec, fRecords.values() )
-	{
-		delete rec;
-	}
+	qDeleteAll( fRecords );
 }
 
 QString DataProxy::create( Record *record )
