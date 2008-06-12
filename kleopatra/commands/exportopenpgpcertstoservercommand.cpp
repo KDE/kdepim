@@ -83,7 +83,7 @@ bool ExportOpenPGPCertsToServerCommand::preStartHook( QWidget * parent ) const {
                                                        "configuration dialog.</para>"
                                                        "<para>Do you want to continue with <resource>keys.gnupg.net</resource> "
                                                        "as the server to export to?</para>" ),
-                                                 i18n("OpenPGP Certitifcate Export"),
+                                                 i18n("OpenPGP Certificate Export"),
                                                  KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
                                                  QLatin1String( "warn-export-openpgp-missing-keyserver" ) )
              != KMessageBox::Continue )
@@ -92,10 +92,10 @@ bool ExportOpenPGPCertsToServerCommand::preStartHook( QWidget * parent ) const {
                                                i18nc("@info",
                                                      "<para>When OpenPGP certificates have been exported to a public directory server, "
                                                      "it is nearly impossible to remove them again.</para>"
-                                                     "<para>Before exporting your key to a public directory server, make sure that you "
-                                                     "have created a revokation certificate so you can revoke the certificate if needed later.</para>"
+                                                     "<para>Before exporting your certificate to a public directory server, make sure that you "
+                                                     "have created a revocation certificate so you can revoke the certificate if needed later.</para>"
                                                      "<para>Are you sure you want to continue?</para>"),
-                                               i18n("OpenPGP Certitifcate Export"),
+                                               i18n("OpenPGP Certificate Export"),
                                                KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
                                                QLatin1String( "warn-export-openpgp-nonrevocable" ) )
         == KMessageBox::Continue;
