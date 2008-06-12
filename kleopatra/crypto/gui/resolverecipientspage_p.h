@@ -64,7 +64,7 @@ public:
     KMime::Types::Mailbox mailbox( const QString& id ) const;
     QStringList identifiers() const;
     void setProtocol( GpgME::Protocol prot );
-    void showSelectionDialog( const QString& id );
+    void showSelectionDialog( const QString& id, bool * canceled=0 );
 
     enum Role {
         IdRole = Qt::UserRole
@@ -80,14 +80,14 @@ private:
 private Q_SLOTS:
     void onSelectionChange();
 
-private:        
+private:
     QListWidget* m_listWidget;
-        
+
     QHash<QString,ItemWidget*> widgets;
     QHash<QString,QListWidgetItem*> items;
     GpgME::Protocol m_protocol;
 };
-    
+
 class Kleo::Crypto::Gui::ResolveRecipientsPage::ItemWidget : public QWidget {
     Q_OBJECT
 public:
@@ -106,7 +106,7 @@ public:
     bool isSelected() const;
 
 public Q_SLOTS:
-    void showSelectionDialog();
+    void showSelectionDialog( bool * canceled=0 );
 
 Q_SIGNALS:
     void changed();
@@ -117,7 +117,7 @@ private:
     void selectCertificateInComboBox( const GpgME::Key& key );
     void updateVisibility();
 
-private:        
+private:
     QString m_id;
     KMime::Types::Mailbox m_mailbox;
     QLabel* m_nameLabel;
