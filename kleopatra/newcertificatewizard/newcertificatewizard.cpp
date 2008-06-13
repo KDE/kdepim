@@ -169,6 +169,8 @@ namespace {
         FIELD( int, subkeyType )
         FIELD( int, subkeyStrength )
 
+        FIELD( QDate, expiryDate )
+
         FIELD( QStringList, additionalUserIDs )
         FIELD( QStringList, additionalEMailAddresses )
         FIELD( QStringList, dnsNames )
@@ -294,8 +296,8 @@ namespace {
         void setAuthenticationAllowed( bool on ) { ui.authenticationCB->setChecked( on ); }
         bool authenticationAllowed() const { return ui.authenticationCB->isChecked(); }
 
-        void setExpiryDate( const QDate & date ) { ui.expiryDE->setDate( date ); }
-        QDate expiryDate() const { return ui.expiryDE->date(); }
+        void setExpiryDate( const QDate & date ) { if ( date.isValid() ) ui.expiryDE->setDate( date ); else ui.expiryCB->setChecked( false ); }
+        QDate expiryDate() const { return ui.expiryCB->isChecked() ? ui.expiryDE->date() : QDate() ; }
 
     Q_SIGNALS:
         void changed();
@@ -826,29 +828,32 @@ QStringList KeyCreationPage::subkeyUsages() const {
 QString KeyCreationPage::createGnupgKeyParms() const {
     QString result;
     QTextStream s( &result );
-    s     << "<GnupgKeyParms format=\"internal\">"      << endl
+    s     << "<GnupgKeyParms format=\"internal\">"         << endl
           << "key-type:      " << gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>( keyType() ) ) << endl;
     if ( const unsigned int strength = keyStrength() )
-        s << "key-length:    " << strength              << endl;
-    s     << "key-usage:     " << keyUsages().join(" ") << endl;
+        s << "key-length:    " << strength                 << endl;
+    s     << "key-usage:     " << keyUsages().join(" ")    << endl;
     if ( const unsigned int subkey = subkeyType() ) {
         s << "subkey-type:   " << gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>( subkey ) ) << endl;
         if ( const unsigned int strength = subkeyStrength() )
-            s << "subkey-length: " << strength          << endl;
+            s << "subkey-length: " << strength             << endl;
+        s << "subkey-usage:  " << subkeyUsages().join(" ") << endl;
     }
-    s     << "name-email:    " << email()               << endl;
+    if ( pgp() && expiryDate().isValid() )
+        s << "expire-date:   " << expiryDate().toString( Qt::ISODate ) << endl;
+    s     << "name-email:    " << email()                  << endl;
     if ( pgp() )
-        s << "name-real:     " << name()                << endl
-          << "name-comment:  " << comment()             << endl;
+        s << "name-real:     " << name()                   << endl
+          << "name-comment:  " << comment()                << endl;
     else
-        s << "name-dn:       " << dn()                  << endl;
+        s << "name-dn:       " << dn()                     << endl;
     Q_FOREACH( const QString & email, additionalEMailAddresses() )
-        s << "name-email:    " << email                 << endl;
+        s << "name-email:    " << email                    << endl;
     Q_FOREACH( const QString & dns,   dnsNames() )
-        s << "name-dns:      " << dns                   << endl;
+        s << "name-dns:      " << dns                      << endl;
     Q_FOREACH( const QString & uri,   uris() )
-        s << "name-uri:      " << uri                   << endl;
-    s     << "</GnupgKeyParms>"                         << endl;
+        s << "name-uri:      " << uri                      << endl;
+    s     << "</GnupgKeyParms>"                            << endl;
     kDebug() << '\n' << result;
     return result;
 }
