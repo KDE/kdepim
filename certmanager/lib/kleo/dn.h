@@ -87,6 +87,9 @@ namespace Kleo {
 
     const DN & operator=( const DN & other );
 
+    /** @return the value in rfc-2253-escaped form */
+    static QString escape( const QString & value );
+
     /** @return the DN in a reordered form, according to the settings in
 	the [DN] group of the application's config file */
     QString prettyDN() const;
