@@ -34,7 +34,7 @@
 #include <QtCore/QDebug>
 
 KeyringListModel::KeyringListModel( KeyringHHDataProxy *proxy, QObject *parent )
-	: QAbstractListModel( parent ), fProxy ( proxy )
+	: QAbstractListModel( parent )
 {
 	FUNCTIONSETUP;
 	
@@ -47,7 +47,6 @@ KeyringListModel::KeyringListModel( KeyringHHDataProxy *proxy, QObject *parent )
 	{
 		KeyringHHRecord *rec = static_cast<KeyringHHRecord*>( proxy->next() );
 		fRecords.append( rec );
-		qDebug() << "Added: " << rec->name();
 	}
 }
 

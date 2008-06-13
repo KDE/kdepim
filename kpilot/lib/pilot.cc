@@ -50,12 +50,12 @@ static QMutex *mutex = 0L;
 
 QString fromPilot( const char *c, int len )
 {
+	QMutexLocker locker(mutex);
 	// Obviously bogus length
 	if (len<1)
 	{
 		return QString();
 	}
-	mutex->lock();
 	QString str;
 	// See if the C string is short
 	for (int i=0; i<len; ++i)
@@ -69,31 +69,28 @@ QString fromPilot( const char *c, int len )
 	if (str.isEmpty()) {
 		str = codec->toUnicode(c,len);
 	}
-   mutex->unlock();
 	return str;
 }
 
 QString fromPilot( const char *c )
 {
-   mutex->lock();
+	QMutexLocker locker(mutex);
 	QString str = codec->toUnicode(c);
-   mutex->unlock();
 	return str;
 }
 
 QByteArray  toPilot( const QString &s )
 {
-   mutex->lock();
+	QMutexLocker locker(mutex);
 	QByteArray str = codec->fromUnicode(s);
-   mutex->unlock();
 	return str;
 }
 
 int toPilot( const QString &s, char *buf, int len)
 {
 	FUNCTIONSETUPL(4);
+	QMutexLocker locker(mutex);
 	// Clear out the entire buffer
-	mutex->lock();
 	memset( buf, 0, len );
 	if (len<1) // short-circuit for bad input
 	{
@@ -116,7 +113,6 @@ int toPilot( const QString &s, char *buf, int len)
 	}
 	// Get what's left (note no NUL termination)
 	memcpy( buf, cbuf.data(), used );
-	mutex->unlock();
 	return used;
 }
 
@@ -129,7 +125,7 @@ bool setupPilotCodec(const QString &s)
 {
 	FUNCTIONSETUP;
 	mutex = new QMutex();
-	mutex->lock();
+	QMutexLocker locker(mutex);
 	QString encoding(KGlobal::charsets()->encodingForName(s));
 
 	DEBUGKPILOT << "Using codec name" << s;
@@ -143,7 +139,6 @@ bool setupPilotCodec(const QString &s)
 		DEBUGKPILOT << "Got codec" << codec->name().constData();
 	}
 
-	mutex->unlock();
 	return codec;
 }
 
@@ -154,15 +149,14 @@ QString codecName()
 
 QString category(const struct CategoryAppInfo *info, unsigned int i)
 {
+	QMutexLocker locker(mutex);
 	if (!info || (i>=CATEGORY_COUNT))
 	{
 		return QString();
 	}
 
-	mutex->lock();
 	QString str = codec->toUnicode(info->name[i],
                                   MIN(strlen(info->name[i]), CATEGORY_SIZE-1));
-	mutex->unlock();
 	return str;
 }
 

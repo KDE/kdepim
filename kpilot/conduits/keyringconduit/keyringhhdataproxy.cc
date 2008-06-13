@@ -219,11 +219,9 @@ bool KeyringHHDataProxy::createDataStore()
 		// we also add our 5th category by setting the category for this record
 		// to a new one...
 		KeyringHHRecord * fFirstRecord = 
-			new KeyringHHRecord( i18n("KPilot cares"), i18n("KDE"), "",
+			new KeyringHHRecord( i18n("KPilot cares"), CSL1( "Computer" ), "s3cr3tp@55",
 					i18n("Thanks for using KPilot!"), fDesKey);
-		
-		// FIXME: This is deprecated code.
-		//fFirstRecord->setCategoryNames(QStringList() << CSL1("Web"));
+		fFirstRecord->setCategory( 2, "Computer" );
 		
 		fDatabase->writeRecord( fFirstRecord->pilotRecord() );
 		
@@ -248,6 +246,11 @@ bool KeyringHHDataProxy::createDataStore()
 		// There seems to be a database already. But this shouldn't happen i think.
 		return true;
 	}
+}
+
+void KeyringHHDataProxy::saveRecord( HHRecord* rec )
+{
+	commitUpdate( rec );
 }
 
 QCA::SecureArray KeyringHHDataProxy::getDigest(

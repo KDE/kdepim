@@ -49,7 +49,6 @@ public:
 	KeyringHHRecord( PilotRecord *rec, const QString& category, const QString &key );
 	
 	KeyringHHRecord( const QString &name = QString()
-                 , const QString& category = QString()
                  , const QString &account = QString()
                  , const QString &password = QString()
                  , const QString &notes = QString()
@@ -89,6 +88,13 @@ public:
 	 * Returns a string representation of the record.
 	 */
 	virtual QString toString() const;
+	
+	/** Methods added for the viewer/editor **/
+	
+	/**
+	 * Marks the record as modified.
+	 */
+	void setModified();
 
 private: // functions
 	/**

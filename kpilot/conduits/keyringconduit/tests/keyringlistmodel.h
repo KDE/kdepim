@@ -34,7 +34,11 @@ class KeyringHHRecord;
 class KeyringListModel : public QAbstractListModel
 {
 public:
-	KeyringListModel( KeyringHHDataProxy *proxy, QObject *parent = 0 );
+	/**
+	 * KeyringListModel does not take over owner ship of proxy and does not delete
+	 * the proxy or pointers to records when it gets deleted.
+	 */
+	KeyringListModel( KeyringHHDataProxy* proxy, QObject *parent = 0 );
 	
 	/**
 	 * Returns the number of rows under the given parent.
@@ -53,7 +57,6 @@ public:
 	KeyringHHRecord *record( const QModelIndex & index );
 
 private:
-	KeyringHHDataProxy *fProxy;
 	QList<KeyringHHRecord*> fRecords;
 
 };

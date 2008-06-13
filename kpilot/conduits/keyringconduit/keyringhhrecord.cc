@@ -38,12 +38,11 @@ KeyringHHRecord::KeyringHHRecord( PilotRecord *rec, const QString &category
 }
 
 KeyringHHRecord::KeyringHHRecord( const QString &name
-                                , const QString &category
                                 , const QString &account
                                 , const QString &password
                                 , const QString &notes
                                 , const QString &key )
-	: HHRecord( 0L, category ), fKey( key ), fName( name )
+	: HHRecord( 0L, QString() ), fKey( key ), fName( name )
 {
 	KeyringHHRecordBase data;
 	data.account = account;
@@ -122,7 +121,9 @@ QDateTime KeyringHHRecord::lastChangedDate() const
 
 void KeyringHHRecord::setName( const QString &name )
 {
+	KeyringHHRecordBase data = unpack();
 	fName = name;
+	pack( data );
 }
 
 void KeyringHHRecord::setAccount( const QString &account  )
@@ -305,8 +306,6 @@ void KeyringHHRecord::pack( const KeyringHHRecordBase &data )
 
 QString KeyringHHRecord::toString() const
 {
-	FUNCTIONSETUP;
-	
 	QString flags( '[' );
 
 	fRecord->isModified() ? flags.append( 'M' ) : flags.append( '-' );
@@ -315,4 +314,9 @@ QString KeyringHHRecord::toString() const
 	flags.append( ']' );
 
 	return id() + CSL1( " - " ) + fName + CSL1( " " ) + flags;
+}
+
+void KeyringHHRecord::setModified()
+{
+	fRecord->setModified();
 }

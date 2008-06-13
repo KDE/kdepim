@@ -38,6 +38,8 @@ DataProxy::DataProxy() : fIterator( fRecords )
 DataProxy::~DataProxy()
 {
 	FUNCTIONSETUP;
+	
+	qDeleteAll( fRecords );
 }
 
 QString DataProxy::create( Record *record )

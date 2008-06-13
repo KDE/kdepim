@@ -62,6 +62,10 @@ public:
 	
 	virtual bool createDataStore();
 	
+	/** Method(s) added for the viewer **/
+	
+	void saveRecord( HHRecord* rec );
+	
 protected:
 	static const int MD5_DIGEST_LENGTH = 16;
 	static const int MD5_CBLOCK = 64;

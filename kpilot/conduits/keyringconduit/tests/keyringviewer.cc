@@ -26,42 +26,64 @@
 
 #include "keyringviewer.h"
 
+#include <QFileDialog>
+#include <QDir>
+#include <QMessageBox>
+#include <QtDebug>
+
+#include "pilotLocalDatabase.h"
+
+#include "keyringhhdataproxy.h"
 #include "keyringhhrecord.h"
 
 #include "keyringlistmodel.h"
+#include "passworddialog.h"
 
-KeyringViewer::KeyringViewer( QWidget *parent, KeyringHHDataProxy *proxy )
-	: QDialog( parent )
+KeyringViewer::KeyringViewer( QWidget *parent )
+	: QMainWindow( parent ), fProxy( 0L ), fCurrentRecord( 0L ), fModel( 0L )
 {
-	fModel = new KeyringListModel( proxy );
-	
 	fUi.setupUi(this);
+	
+	fUi.fCategoryFilter->setEnabled( false );
+	fUi.fAccountList->setEnabled( false );
 	fUi.fNameEdit->setEnabled( false );
 	fUi.fAccountEdit->setEnabled( false );
 	fUi.fPasswordEdit->setEnabled( false );
+	fUi.fPasswordBox->setEnabled( false );
 	fUi.fCategoryEdit->setEnabled( false );
 	fUi.fDateEdit->setEnabled( false );
 	fUi.fNotesEdit->setEnabled( false );
-	fUi.fAccountList->setModel( fModel );
 	
 	connect( fUi.fAccountList, SIGNAL( clicked( const QModelIndex& ) )
 		, this, SLOT( selectionChanged( const QModelIndex& ) ) );
 	connect( fUi.fPasswordBox, SIGNAL( clicked() )
 		, this, SLOT( togglePasswordVisibility() ) );
-	
+	connect( fUi.fNameEdit, SIGNAL( editingFinished () )
+		, this, SLOT( nameEditCheck() ) );
+		
+	// Connect the actions
+	connect( fUi.actionNew, SIGNAL( triggered() ), this, SLOT( newDatabase() ) );
+	connect( fUi.actionOpen, SIGNAL( triggered() ), this, SLOT( openDatabase() ) );
+	connect( fUi.actionExit, SIGNAL( triggered() ), qApp, SLOT( quit() ) );
+}
+
+KeyringViewer::~KeyringViewer()
+{
+	delete fProxy;
+	delete fModel;
 }
 
 void KeyringViewer::selectionChanged( const QModelIndex &index )
 {
-	KeyringHHRecord *rec = static_cast<KeyringListModel*>( 
+	fCurrentRecord = static_cast<KeyringListModel*>(
 		fUi.fAccountList->model() )->record( index );
 
-	fUi.fNameEdit->setText( rec->name() );
-	//fUi.fCategoryEdit->setText( rec->categories().first()->name() );
-	fUi.fAccountEdit->setText( rec->account() );
-	fUi.fPasswordEdit->setText( rec->password() );
-	fUi.fNotesEdit->setText( rec->notes() );
-	fUi.fDateEdit->setDateTime( rec->lastChangedDate() );
+	fUi.fNameEdit->setText( fCurrentRecord->name() );
+	fUi.fCategoryEdit->setText( fCurrentRecord->category() );
+	fUi.fAccountEdit->setText( fCurrentRecord->account() );
+	fUi.fPasswordEdit->setText( fCurrentRecord->password() );
+	fUi.fNotesEdit->setText( fCurrentRecord->notes() );
+	fUi.fDateEdit->setDateTime( fCurrentRecord->lastChangedDate() );
 	
 	// Don't show the password by default
 	if( fUi.fPasswordEdit->echoMode() == QLineEdit::Normal )
@@ -80,5 +102,102 @@ void KeyringViewer::togglePasswordVisibility()
 	{
 		fUi.fPasswordEdit->setEchoMode( QLineEdit::Password );
 		fUi.fPasswordBox->setCheckState( Qt::Unchecked );
+	}
+}
+
+void KeyringViewer::newDatabase()
+{
+	QString fileName = QFileDialog::getSaveFileName( this,
+		tr("New database"), QDir::home().absolutePath(), "*.pdb" );
+	
+	if( fileName.isEmpty() )
+	{
+		return;
+	}
+	
+	if( !fileName.endsWith( ".pdb" ) )
+	{
+		fileName.append( ".pdb" );
+	}
+	
+	QString pass = PasswordDialog::getPassword( this, PasswordDialog::New );
+	
+	if( pass.isEmpty() )
+	{
+		// Do not try to create a database with an empty password.
+		return;
+	}
+	
+	// Clean up eventually open database.
+	delete fProxy;
+	delete fModel;
+	
+	fProxy = new KeyringHHDataProxy( fileName );
+	fProxy->openDatabase( pass );
+	fProxy->createDataStore();
+	fProxy->openDatabase( pass );
+	
+	fModel = new KeyringListModel( fProxy, this );
+	
+	fUi.fAccountList->setModel( fModel );
+	fUi.fAccountList->setEnabled( true );
+	fUi.fCategoryFilter->setEnabled( true );
+	fUi.fPasswordBox->setEnabled( true );
+}
+
+void KeyringViewer::openDatabase()
+{
+	QString fileName = QFileDialog::getOpenFileName( this,
+		tr("New database"), QDir::home().absolutePath(), "*.pdb" );
+	
+	if( fileName.isEmpty() )
+	{
+		return;
+	}
+	
+	QFile file( fileName );
+	if( !file.exists() )
+	{
+		return;
+	}
+	
+	QString pass = PasswordDialog::getPassword( this, PasswordDialog::Normal );
+	
+	KeyringHHDataProxy* proxy = new KeyringHHDataProxy( fileName );
+	
+	if( !proxy->openDatabase( pass ) )
+	{
+		delete proxy;
+		
+		QMessageBox::critical( this, "Error", "Invalid password, could not open database" );
+		
+		return;
+	}
+	
+	delete fProxy;
+	delete fModel;
+	
+	fProxy = proxy;
+	fModel = new KeyringListModel( fProxy, this );
+	
+	fUi.fCategoryFilter->setEnabled( true );
+	fUi.fAccountList->setModel( fModel );
+	fUi.fAccountList->setEnabled( true );
+	fUi.fNameEdit->setEnabled( true );
+	fUi.fPasswordBox->setEnabled( true );
+}
+
+void KeyringViewer::nameEditCheck()
+{
+	if( !fCurrentRecord ) return;
+	
+	if( fUi.fNameEdit->text() != fCurrentRecord->name() )
+	{
+		QDateTime now = QDateTime::currentDateTime();
+		
+		fCurrentRecord->setName( fUi.fNameEdit->text() );
+		fCurrentRecord->setLastChangedDate( now );
+		fCurrentRecord->setModified();
+		fProxy->saveRecord( fCurrentRecord );
 	}
 }
