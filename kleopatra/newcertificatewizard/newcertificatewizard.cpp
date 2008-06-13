@@ -457,7 +457,8 @@ namespace {
             else
                 job = j;
         }
-        QStringList usages() const;
+        QStringList keyUsages() const;
+        QStringList subkeyUsages() const;
         QString createGnupgKeyParms() const;
 
     private Q_SLOTS:
@@ -798,11 +799,11 @@ void EnterDetailsPage::slotAdvancedSettingsClicked() {
     dialog.exec();
 }
 
-QStringList KeyCreationPage::usages() const {
+QStringList KeyCreationPage::keyUsages() const {
     QStringList usages;
     if ( signingAllowed() )
         usages << "sign";
-    if ( encryptionAllowed() )
+    if ( encryptionAllowed() && !is_dsa( keyType() ) )
         usages << "encrypt";
     if ( 0 ) // not needed in pgp (implied) and not supported in cms
     if ( certificationAllowed() )
@@ -812,27 +813,42 @@ QStringList KeyCreationPage::usages() const {
     return usages;
 }
 
+QStringList KeyCreationPage::subkeyUsages() const {
+    QStringList usages;
+    if ( encryptionAllowed() && is_dsa( keyType() ) ) {
+        assert( subkeyType() );
+        assert( is_elg( subkeyType() ) );
+        usages << "encrypt";
+    }
+    return usages;
+}
+
 QString KeyCreationPage::createGnupgKeyParms() const {
     QString result;
     QTextStream s( &result );
-    s     << "<GnupgKeyParms format=\"internal\">"   << endl
-          << "key-type:     " << gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>( keyType() ) ) << endl;
+    s     << "<GnupgKeyParms format=\"internal\">"      << endl
+          << "key-type:      " << gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>( keyType() ) ) << endl;
     if ( const unsigned int strength = keyStrength() )
-        s << "key-length:   " << strength            << endl;
-    s     << "key-usage:    " << usages().join(" ")  << endl;
-    s     << "name-email:   " << email()             << endl;
+        s << "key-length:    " << strength              << endl;
+    s     << "key-usage:     " << keyUsages().join(" ") << endl;
+    if ( const unsigned int subkey = subkeyType() ) {
+        s << "subkey-type:   " << gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>( subkey ) ) << endl;
+        if ( const unsigned int strength = subkeyStrength() )
+            s << "subkey-length: " << strength          << endl;
+    }
+    s     << "name-email:    " << email()               << endl;
     if ( pgp() )
-        s << "name-real:    " << name()              << endl
-          << "name-comment: " << comment()           << endl;
+        s << "name-real:     " << name()                << endl
+          << "name-comment:  " << comment()             << endl;
     else
-        s << "name-dn:      " << dn()                << endl;
+        s << "name-dn:       " << dn()                  << endl;
     Q_FOREACH( const QString & email, additionalEMailAddresses() )
-        s << "name-email:   " << email               << endl;
+        s << "name-email:    " << email                 << endl;
     Q_FOREACH( const QString & dns,   dnsNames() )
-        s << "name-dns:     " << dns                 << endl;
+        s << "name-dns:      " << dns                   << endl;
     Q_FOREACH( const QString & uri,   uris() )
-        s << "name-uri:     " << uri                 << endl;
-    s     << "</GnupgKeyParms>"                      << endl;
+        s << "name-uri:      " << uri                   << endl;
+    s     << "</GnupgKeyParms>"                         << endl;
     kDebug() << '\n' << result;
     return result;
 }
