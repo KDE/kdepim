@@ -135,6 +135,23 @@ DragQueen::~DragQueen() {
     delete m_data;
 }
 
+void DragQueen::setUrl( const QString & url ) {
+    QMimeData * data = new QMimeData;
+    QList<QUrl> urls;
+    urls.push_back( QUrl( url ) );
+    data->setUrls( urls );
+    setMimeData( data );
+}
+
+QString DragQueen::url() const {
+    if ( !m_data || !m_data->hasUrls() )
+        return QString();
+    const QList<QUrl> urls = m_data->urls();
+    if ( urls.empty() )
+        return QString();
+    return urls.front().toString();
+}
+
 void DragQueen::setMimeData( QMimeData * data ) {
     if ( data == m_data )
         return;

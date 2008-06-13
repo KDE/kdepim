@@ -38,14 +38,20 @@
 #include <QPoint>
 #include <QMimeData>
 
+class QUrl;
+
 namespace Kleo {
 
     class DragQueen : public QLabel {
         Q_OBJECT
+        Q_PROPERTY( QString url READ url WRITE setUrl )
     public:
         explicit DragQueen( QWidget * p=0, Qt::WindowFlags f=0 );
         explicit DragQueen( const QString & text, QWidget * p=0, Qt::WindowFlags f=0 );
         ~DragQueen();
+
+        void setUrl( const QString & url );
+        QString url() const;
 
         void setMimeData( QMimeData * md );
         QMimeData * mimeData() const;
@@ -57,6 +63,7 @@ namespace Kleo {
     private:
         QPointer<QMimeData> m_data;
         QPoint m_dragStartPosition;
+        QString m_dataFormat;
     };
 
 }
