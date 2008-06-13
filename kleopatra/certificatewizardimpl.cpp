@@ -249,9 +249,9 @@ void CertificateWizardImpl::slotGenerateCertificate()
 
 	  if ( const char * oid = oidForAttributeName( attr ) ) {
 		// we need to translate the attribute name for the backend:
-		rdns.push_back( QString::fromUtf8( oid ) + '=' + value );
+              rdns.push_back( QString::fromUtf8( oid ) + '=' + Kleo::DN::escape( value ) );
 	  } else {
-		rdns.push_back( attr + '=' + value );
+              rdns.push_back( attr + '=' + Kleo::DN::escape( value ) );
 	  }
     }
     certParms += rdns.join(",");
