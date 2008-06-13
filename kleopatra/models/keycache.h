@@ -47,6 +47,7 @@ namespace GpgME {
     class DecryptionResult;
     class VerificationResult;
     class KeyListResult;
+    class Subkey;
 }
 
 namespace Kleo {
@@ -97,6 +98,8 @@ namespace Kleo {
         }
         std::vector<GpgME::Key> findByKeyIDOrFingerprint( const std::vector<std::string> & ids ) const;
 
+        std::vector<GpgME::Subkey> findSubkeysByKeyID( const std::vector<std::string> & ids ) const;
+
         std::vector<GpgME::Key> findRecipients( const GpgME::DecryptionResult & result ) const;
         std::vector<GpgME::Key> findSigners( const GpgME::VerificationResult & result ) const;
 
@@ -129,7 +132,7 @@ namespace Kleo {
 
     private:
         class RefreshKeysJob;
-        
+
         class Private;
         kdtools::pimpl_ptr<Private> d;
         Q_PRIVATE_SLOT( d, void refreshJobDone( GpgME::KeyListResult ) )

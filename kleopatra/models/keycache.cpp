@@ -115,9 +115,19 @@ public:
         updateAutoKeyListingTimer();
     }
 
-    template < template <template <typename U> class Op> class Comp >
+    template < template <template <typename U> class Op> class Comp>
     std::vector<Key>::const_iterator find( const std::vector<Key> & keys, const char * key ) const {
         const std::vector<Key>::const_iterator it =
+            std::lower_bound( keys.begin(), keys.end(), key, Comp<std::less>() );
+        if ( it == keys.end() || Comp<std::equal_to>()( *it, key ) )
+            return it;
+        else
+            return keys.end();
+    }
+
+    template < template <template <typename U> class Op> class Comp>
+    std::vector<Subkey>::const_iterator find( const std::vector<Subkey> & keys, const char * key ) const {
+        const std::vector<Subkey>::const_iterator it =
             std::lower_bound( keys.begin(), keys.end(), key, Comp<std::less>() );
         if ( it == keys.end() || Comp<std::equal_to>()( *it, key ) )
             return it;
@@ -134,6 +144,10 @@ public:
     find_email( const char * email ) const {
         return std::equal_range( by.email.begin(), by.email.end(),
                                  email, ByEMail<std::less>() );
+    }
+
+    std::vector<Subkey>::const_iterator find_subkeyid( const char * subkeyid ) const {
+        return find<_detail::ByKeyID>( by.subkeyid, subkeyid );
     }
 
     std::vector<Key>::const_iterator find_keyid( const char * keyid ) const {
@@ -173,6 +187,7 @@ private:
     struct By {
         std::vector<Key> fpr, keyid, shortkeyid, chainid;
         std::vector< std::pair<std::string,Key> > email;
+        std::vector<Subkey> subkeyid;
     } by;
 };
 
@@ -324,14 +339,14 @@ std::vector<Key> KeyCache::findByKeyIDOrFingerprint( const std::vector<std::stri
                                keyids.begin(), keyids.end(),
                                std::back_inserter( result ),
                                _detail::ByFingerprint<std::less>() );
-    if ( result.size() < keyids.size() )
+    if ( result.size() < keyids.size() ) {
         // note that By{Fingerprint,KeyID,ShortKeyID} define the same
         // order for _strings_
         kdtools::set_intersection( d->by.keyid.begin(), d->by.keyid.end(),
                                    keyids.begin(), keyids.end(),
                                    std::back_inserter( result ),
                                    _detail::ByKeyID<std::less>() );
-
+    }
     // duplicates shouldn't happen, but make sure nonetheless:
     std::sort( result.begin(), result.end(), _detail::ByFingerprint<std::less>() );
     result.erase( std::unique( result.begin(), result.end(), _detail::ByFingerprint<std::equal_to>() ), result.end() );
@@ -342,11 +357,35 @@ std::vector<Key> KeyCache::findByKeyIDOrFingerprint( const std::vector<std::stri
     return result;
 }
 
+
+std::vector<Subkey> KeyCache::findSubkeysByKeyID( const std::vector<std::string> & ids ) const {
+    std::vector<std::string> sorted;
+    sorted.reserve( ids.size() );
+    std::remove_copy_if( ids.begin(), ids.end(), std::back_inserter( sorted ),
+                         bind( is_empty(), bind( &std::string::c_str, _1 ) ) );
+
+    std::sort( sorted.begin(), sorted.end(), _detail::ByKeyID<std::less>() );
+
+    std::vector<Subkey> result;
+    kdtools::set_intersection( d->by.subkeyid.begin(), d->by.subkeyid.end(),
+                               sorted.begin(), sorted.end(),
+                               std::back_inserter( result ),
+                               _detail::ByKeyID<std::less>() );
+    return result;
+}
+
 std::vector<Key> KeyCache::findRecipients( const DecryptionResult & res ) const {
     std::vector<std::string> keyids;
     Q_FOREACH( const DecryptionResult::Recipient & r, res.recipients() )
         keyids.push_back( r.keyID() );
-    return findByKeyIDOrFingerprint( keyids );
+    const std::vector<Subkey> subkeys = findSubkeysByKeyID( keyids );
+    std::vector<Key> result;
+    result.reserve( subkeys.size() );
+    std::transform( subkeys.begin(), subkeys.end(), std::back_inserter( result ), bind( &Subkey::parent, _1 ) );
+
+    std::sort( result.begin(), result.end(), _detail::ByFingerprint<std::less>() );
+    result.erase( std::unique( result.begin(), result.end(), _detail::ByFingerprint<std::equal_to>() ), result.end() );
+    return result;
 }
 
 std::vector<Key> KeyCache::findSigners( const VerificationResult & res ) const {
@@ -542,6 +581,17 @@ void KeyCache::remove( const Key & key ) {
             = std::remove_if( begin( range ), end( range ), bind( qstricmp, fpr, bind( &Key::primaryFingerprint, bind( &std::pair<std::string,Key>::second,_1 ) ) ) == 0 );
         d->by.email.erase( it, end( range ) );
     }
+
+    Q_FOREACH( const Subkey & subkey, key.subkeys() ) {
+        if ( const char * keyid = subkey.keyID() ) {
+            const std::pair<std::vector<Subkey>::iterator,std::vector<Subkey>::iterator> range
+                = std::equal_range( d->by.subkeyid.begin(), d->by.subkeyid.end(), keyid,
+                                    _detail::ByKeyID<std::less>() );
+            const std::pair< std::vector<Subkey>::iterator, std::vector<Subkey>::iterator > range2
+                = std::equal_range( begin( range ), end( range ), fpr, _detail::ByKeyID<std::less>() );
+            d->by.subkeyid.erase( begin( range2 ), end( range2 ) );
+        }
+    }
 }
 
 void KeyCache::remove( const std::vector<Key> & keys ) {
@@ -672,11 +722,30 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
                 std::back_inserter( by_shortkeyid ),
                 _detail::ByShortKeyID<std::less>() );
 
+    // 6. build subkey ID index:
+    std::vector<Subkey> subkeys;
+    subkeys.reserve( sorted.size() );
+    Q_FOREACH( const Key & key, sorted )
+        Q_FOREACH( const Subkey & subkey, key.subkeys() )
+            subkeys.push_back( subkey );
+
+    // 6a sort by key id:
+    std::sort( subkeys.begin(), subkeys.end(), _detail::ByKeyID<std::less>() );
+
+    // 6b. insert into subkey ID index:
+    std::vector<Subkey> by_subkeyid;
+    by_email.reserve( subkeys.size() + d->by.subkeyid.size() );
+    std::merge( subkeys.begin(), subkeys.end(),
+                d->by.subkeyid.begin(), d->by.subkeyid.end(),
+                std::back_inserter( by_subkeyid ),
+                _detail::ByKeyID<std::less>() );
+
     // now commit (well, we already removed keys...)
     by_fpr.swap( d->by.fpr );
     by_keyid.swap( d->by.keyid );
     by_shortkeyid.swap( d->by.shortkeyid );
     by_email.swap( d->by.email );
+    by_subkeyid.swap( d->by.subkeyid );
 
     Q_FOREACH( const Key & key, sorted )
         emit added( key );
