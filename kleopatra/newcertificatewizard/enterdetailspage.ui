@@ -1,14 +1,6 @@
 <ui version="4.0" >
  <class>Kleo::NewCertificateUi::EnterDetailsPage</class>
  <widget class="QWizardPage" name="Kleo::NewCertificateUi::EnterDetailsPage" >
-  <property name="geometry" >
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>528</width>
-    <height>204</height>
-   </rect>
-  </property>
   <property name="title" >
    <string comment="@title" >Enter Details</string>
   </property>
@@ -17,7 +9,72 @@
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" >
    <item>
-    <layout class="QFormLayout" name="formLayout" />
+    <layout class="QGridLayout" name="gridLayout" >
+     <item row="0" column="0" >
+      <widget class="QLabel" name="nameLB" >
+       <property name="text" >
+        <string>Real name:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="0" column="1" >
+      <widget class="QLineEdit" name="nameLE" />
+     </item>
+     <item row="0" column="2" >
+      <widget class="QLabel" name="nameRequiredLB" >
+       <property name="text" >
+        <string>(required)</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="0" >
+      <widget class="QLabel" name="emailLB" >
+       <property name="text" >
+        <string>EMail address:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1" >
+      <widget class="QLineEdit" name="emailLE" />
+     </item>
+     <item row="1" column="2" >
+      <widget class="QLabel" name="emailRequiredLB" >
+       <property name="text" >
+        <string>(required)</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="0" >
+      <widget class="QLabel" name="commentLB" >
+       <property name="text" >
+        <string>Comment:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1" >
+      <widget class="QLineEdit" name="commentLE" />
+     </item>
+     <item row="2" column="2" >
+      <widget class="QLabel" name="commentRequiredLB" >
+       <property name="text" >
+        <string>(optional)</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <spacer name="verticalSpacer" >
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeHint" stdset="0" >
+      <size>
+       <width>20</width>
+       <height>40</height>
+      </size>
+     </property>
+    </spacer>
    </item>
    <item>
     <widget class="QLineEdit" name="resultLE" >

@@ -50,6 +50,7 @@ namespace Kleo {
             ChooseProtocolPageId,
             EnterDetailsPageId,
             OverviewPageId,
+            KeyCreationPageId,
             ResultPageId,
 
             NumPages

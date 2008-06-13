@@ -37,6 +37,7 @@
 #include "ui_chooseprotocolpage.h"
 #include "ui_enterdetailspage.h"
 #include "ui_overviewpage.h"
+#include "ui_keycreationpage.h"
 #include "ui_resultpage.h"
 
 #include "ui_advancedsettingsdialog.h"
@@ -45,8 +46,12 @@
 
 #include <kleo/dn.h>
 #include <kleo/oidmap.h>
+#include <kleo/keygenerationjob.h>
+#include <kleo/cryptobackendfactory.h>
+#include <kleo/cryptobackend.h>
 
 #include <gpgme++/global.h>
+#include <gpgme++/keygenerationresult.h>
 #include <gpgme.h>
 
 #include <KConfigGroup>
@@ -135,16 +140,52 @@ static bool is_elg( unsigned int algo ) {
 
 namespace {
 
+    class WizardPage : public QWizardPage {
+        Q_OBJECT
+    public:
+        explicit WizardPage( QWidget * parent=0 )
+            : QWizardPage( parent ) {}
+
+        NewCertificateWizard * wizard() const {
+            assert( static_cast<NewCertificateWizard*>( QWizardPage::wizard() ) == qobject_cast<NewCertificateWizard*>( QWizardPage::wizard() ) );
+            return static_cast<NewCertificateWizard*>( QWizardPage::wizard() );
+        }
+
+#define FIELD(type, name) type name() const { return field( #name ).value<type>(); }
+        FIELD( bool, pgp )
+        FIELD( bool, signingAllowed )
+        FIELD( bool, encryptionAllowed )
+        FIELD( bool, certificationAllowed )
+        FIELD( bool, authenticationAllowed )
+
+        FIELD( QString, name )
+        FIELD( QString, email )
+        FIELD( QString, comment )
+        FIELD( QString, dn )
+
+        FIELD( int, keyType )
+        FIELD( int, keyStrength )
+
+        FIELD( int, subkeyType )
+        FIELD( int, subkeyStrength )
+
+        FIELD( QStringList, additionalUserIDs )
+        FIELD( QStringList, additionalEMailAddresses )
+        FIELD( QStringList, dnsNames )
+        FIELD( QStringList, uris )
+#undef FIELD
+    };
+
     class AdvancedSettingsDialog : public QDialog {
         Q_OBJECT
-        Q_PROPERTY( QStringList userIDs READ userIDs WRITE setUserIDs )
-        Q_PROPERTY( QStringList emailAddresses READ emailAddresses WRITE setEmailAddresses )
+        Q_PROPERTY( QStringList additionalUserIDs READ additionalUserIDs WRITE setAdditionalUserIDs )
+        Q_PROPERTY( QStringList additionalEMailAddresses READ additionalEMailAddresses WRITE setAdditionalEMailAddresses )
         Q_PROPERTY( QStringList dnsNames READ dnsNames WRITE setDnsNames )
         Q_PROPERTY( QStringList uris READ uris WRITE setUris )
         Q_PROPERTY( uint keyStrength READ keyStrength WRITE setKeyStrength )
-        Q_PROPERTY( uint keyAlgorithm READ keyAlgorithm WRITE setKeyAlgorithm )
+        Q_PROPERTY( uint keyType READ keyType WRITE setKeyType )
         Q_PROPERTY( uint subkeyStrength READ subkeyStrength WRITE setSubkeyStrength )
-        Q_PROPERTY( uint subkeyAlgorithm READ subkeyAlgorithm WRITE setSubkeyAlgorithm )
+        Q_PROPERTY( uint subkeyType READ subkeyType WRITE setSubkeyType )
         Q_PROPERTY( bool signingAllowed READ signingAllowed WRITE setSigningAllowed )
         Q_PROPERTY( bool encryptionAllowed READ encryptionAllowed WRITE setEncryptionAllowed )
         Q_PROPERTY( bool certificationAllowed READ certificationAllowed WRITE setCertificationAllowed )
@@ -194,11 +235,11 @@ namespace {
             slotKeyMaterialSelectionChanged();
         }
 
-        void setUserIDs( const QStringList & items ) { ui.uidLW->setItems( items ); }
-        QStringList userIDs() const { return ui.uidLW->items();   }
+        void setAdditionalUserIDs( const QStringList & items ) { ui.uidLW->setItems( items ); }
+        QStringList additionalUserIDs() const { return ui.uidLW->items();   }
 
-        void setEmailAddresses( const QStringList & items ) { ui.emailLW->setItems( items ); }
-        QStringList emailAddresses() const { return ui.emailLW->items(); }
+        void setAdditionalEMailAddresses( const QStringList & items ) { ui.emailLW->setItems( items ); }
+        QStringList additionalEMailAddresses() const { return ui.emailLW->items(); }
 
         void setDnsNames( const QStringList & items ) { ui.dnsLW->setItems( items ); }
         QStringList dnsNames() const { return ui.dnsLW->items();   }
@@ -217,22 +258,22 @@ namespace {
                 ui.rsaRB->isChecked() ? index2strength( ui.rsaKeyStrengthCB->currentIndex() ) : 0 ;
         }
 
-        void setKeyAlgorithm( unsigned int algo ) {
+        void setKeyType( unsigned int algo ) {
             QRadioButton * const rb =
                 is_rsa( algo ) ? ui.rsaRB :
                 is_dsa( algo ) ? ui.dsaRB : 0 ;
             if ( rb )
                 rb->setChecked( true );
         }
-        unsigned int keyAlgorithm() const {
+        unsigned int keyType() const {
             return
                 ui.dsaRB->isChecked() ? GPGME_PK_DSA :
                 ui.rsaRB->isChecked() ? GPGME_PK_RSA :
                 0 ;
         }
 
-        void setSubkeyAlgorithm( unsigned int algo ) { ui.elgCB->setChecked( is_elg( algo ) ); }
-        unsigned int subkeyAlgorithm() const { return ui.elgCB->isChecked() ? GPGME_PK_ELG : 0 ; }
+        void setSubkeyType( unsigned int algo ) { ui.elgCB->setChecked( is_elg( algo ) ); }
+        unsigned int subkeyType() const { return ui.elgCB->isChecked() ? GPGME_PK_ELG : 0 ; }
 
         void setSubkeyStrength( unsigned int strength ) {
             ui.elgKeyStrengthCB->setCurrentIndex( strength2index( strength ) );
@@ -261,13 +302,8 @@ namespace {
 
     private Q_SLOTS:
         void slotKeyMaterialSelectionChanged() {
-            const unsigned int algo = keyAlgorithm();
-            const unsigned int sk_algo = subkeyAlgorithm();
-            kDebug() << "\n.             algo" << gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>(algo) )
-                     << "\n.          sk_algo" << gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>(sk_algo) )
-                     << "\n.   is_rsa( algo )" << is_rsa( algo )
-                     << "\n.   is_dsa( algo )" << is_dsa( algo )
-                     << "\n.is_elg( sk_algo )" << is_elg( sk_algo );
+            const unsigned int algo = keyType();
+            const unsigned int sk_algo = subkeyType();
             if ( protocol == OpenPGP ) {
                 ui.elgCB->setEnabled( is_dsa( algo ) );
                 if ( is_rsa( algo ) ) {
@@ -284,7 +320,7 @@ namespace {
                         ui.encryptionCB->setChecked( false );
                 }
             } else {
-                assert( is_rsa( keyAlgorithm() ) );
+                assert( is_rsa( keyType() ) );
             }
         }
 
@@ -293,11 +329,11 @@ namespace {
         Ui_AdvancedSettingsDialog ui;
     };
 
-    class ChooseProtocolPage : public QWizardPage {
+    class ChooseProtocolPage : public WizardPage {
         Q_OBJECT
     public:
         explicit ChooseProtocolPage( QWidget * p=0 )
-            : QWizardPage( p ),
+            : WizardPage( p ),
               initialized( false ),
               ui()
         {
@@ -322,11 +358,11 @@ namespace {
         Ui_ChooseProtocolPage ui;
     };
 
-    class EnterDetailsPage : public QWizardPage {
+    class EnterDetailsPage : public WizardPage {
         Q_OBJECT
     public:
         explicit EnterDetailsPage( QWidget * p=0 )
-            : QWizardPage( p ), dialog( this ), ui()
+            : WizardPage( p ), dialog( this ), ui()
         {
             ui.setupUi( this );
             connect( ui.resultLE, SIGNAL(textChanged(QString)),
@@ -334,7 +370,10 @@ namespace {
             connect( ui.addEmailToDnCB, SIGNAL(toggled(bool)),
                      SLOT(slotUpdateResultLabel()) );
             registerDialogPropertiesAsFields();
-            registerField( "DN", ui.resultLE );
+            registerField( "dn", ui.resultLE );
+            registerField( "name", ui.nameLE );
+            registerField( "email", ui.emailLE );
+            registerField( "comment", ui.commentLE );
             updateForm();
         }
 
@@ -353,7 +392,6 @@ namespace {
         void registerDialogPropertiesAsFields();
 
     private:
-        bool pgp() const { return field("pgp").toBool(); }
         QString pgpUserID() const;
         QString cmsDN() const;
 
@@ -371,11 +409,11 @@ namespace {
         Ui_EnterDetailsPage ui;
     };
 
-    class OverviewPage : public QWizardPage {
+    class OverviewPage : public WizardPage {
         Q_OBJECT
     public:
         explicit OverviewPage( QWidget * p=0 )
-            : QWizardPage( p ), ui()
+            : WizardPage( p ), ui()
         {
             ui.setupUi( this );
             setCommitPage( true );
@@ -386,13 +424,75 @@ namespace {
         Ui_OverviewPage ui;
     };
 
-    class ResultPage : public QWizardPage {
+    class KeyCreationPage : public WizardPage {
+        Q_OBJECT
+    public:
+        explicit KeyCreationPage( QWidget * p=0 )
+            : WizardPage( p ), ui()
+        {
+            ui.setupUi( this );
+        }
+
+        /* reimp */ bool isComplete() const {
+            return !job;
+        }
+
+        /* reimp */ void initializePage() {
+            startJob();
+        }
+
+    private:
+        void startJob() {
+            const CryptoBackend::Protocol * const proto = CryptoBackendFactory::instance()->protocol( field("pgp").toBool() ? OpenPGP : CMS );
+            if ( !proto )
+                return;
+            KeyGenerationJob * const j = proto->keyGenerationJob();
+            if ( !j )
+                return;
+            connect( j, SIGNAL(result(GpgME::KeyGenerationResult,QByteArray,QString)),
+                     this, SLOT(slotResult(GpgME::KeyGenerationResult,QByteArray,QString)) );
+            if ( const Error err = j->start( createGnupgKeyParms() ) )
+                setField( "error", i18n("Could not start certificate creation: %1",
+                                        QString::fromLocal8Bit( err.asString() ) ) );
+            else
+                job = j;
+        }
+        QStringList usages() const;
+        QString createGnupgKeyParms() const;
+
+    private Q_SLOTS:
+        void slotResult( const GpgME::KeyGenerationResult & result, const QByteArray & request, const QString & auditLog ) {
+            if ( result.error().isCanceled() )
+                setField( "error", i18n("Operation canceled.") );
+            else if ( result.error() )
+                setField( "error", i18n("Could not create certificate: %1",
+                                        QString::fromLocal8Bit( result.error().asString() ) ) );
+            else
+                setField( "result", i18n("Certificate created successfully.\n"
+                                         "Fingerprint: %1", result.fingerprint() ) );
+            job = 0;
+            emit completeChanged();
+        }
+
+    private:
+        QPointer<KeyGenerationJob> job;
+        Ui_KeyCreationPage ui;
+    };
+
+    class ResultPage : public WizardPage {
         Q_OBJECT
     public:
         explicit ResultPage( QWidget * p=0 )
-            : QWizardPage( p ), ui()
+            : WizardPage( p ), ui()
         {
             ui.setupUi( this );
+            registerField( "error",  ui.errorTB,  "plainText" );
+            registerField( "result", ui.resultTB, "plainText" );
+        }
+
+        /* reimp */ void initializePage() {
+            ui.resultTB->setVisible( !ui.resultTB->toPlainText().isEmpty() );
+            ui.errorTB ->setVisible( !ui.errorTB ->toPlainText().isEmpty() );
         }
 
     private:
@@ -416,17 +516,20 @@ private:
         ChooseProtocolPage chooseProtocolPage;
         EnterDetailsPage enterDetailsPage;
         OverviewPage overviewPage;
+        KeyCreationPage keyCreationPage;
         ResultPage resultPage;
 
         explicit Ui( NewCertificateWizard * q )
             : chooseProtocolPage( q ),
               enterDetailsPage( q ),
               overviewPage( q ),
+              keyCreationPage( q ),
               resultPage( q )
         {
             q->setPage( ChooseProtocolPageId, &chooseProtocolPage );
             q->setPage( EnterDetailsPageId,   &enterDetailsPage   );
             q->setPage( OverviewPageId,       &overviewPage       );
+            q->setPage( KeyCreationPageId,    &keyCreationPage    );
             q->setPage( ResultPageId,         &resultPage         );
 
             q->setStartId( ChooseProtocolPageId );
@@ -454,7 +557,7 @@ static QString pgpLabel( const QString & attr ) {
     return QString();
 }
 
-static QString attributeLabel( const QString & attr, bool required, bool pgp ) {
+static QString attributeLabel( const QString & attr, bool pgp ) {
   if ( attr.isEmpty() )
     return QString();
   const QString label = pgp ? pgpLabel( attr ) : Kleo::DNAttributeMapper::instance()->name2label( attr ) ;
@@ -511,7 +614,7 @@ void EnterDetailsPage::registerDialogPropertiesAsFields() {
     for ( unsigned int i = mo->propertyOffset(), end = i + mo->propertyCount() ; i != end ; ++i ) {
         const QMetaProperty mp = mo->property( i );
         if ( mp.isValid() )
-            registerField( mp.name(), &dialog, mp.name(), SIGNAL(changed()) );
+            registerField( mp.name(), &dialog, mp.name(), SIGNAL(accepted()) );
     }
 
 }
@@ -521,11 +624,82 @@ void EnterDetailsPage::saveValues() {
         savedValues[ attributeFromKey(it->first) ] = it->second->text().trimmed();
 }
 
+void EnterDetailsPage::clearForm() {
+    qDeleteAll( dynamicWidgets );
+    dynamicWidgets.clear();
+    attributePairList.clear();
+
+    ui.nameLE->hide();
+    ui.nameLE->clear();
+    ui.nameLB->hide();
+    ui.nameRequiredLB->hide();
+
+    ui.emailLE->hide();
+    ui.emailLE->clear();
+    ui.emailLB->hide();
+    ui.emailRequiredLB->hide();
+
+    ui.commentLE->hide();
+    ui.commentLE->clear();
+    ui.commentLB->hide();
+    ui.commentRequiredLB->hide();
+
+    ui.addEmailToDnCB->hide();
+}
+
+static int row_index_of( QWidget * w, QGridLayout * l ) {
+    const int idx = l->indexOf( w );
+    int r, c, rs, cs;
+    l->getItemPosition( idx, &r, &c, &rs, &cs );
+    return r;
+}
+
+static QLineEdit * adjust_row( QGridLayout * l, int row, const QString & label, const QString & preset, const QString & regex, bool readonly, bool required ) {
+    assert( l );
+    assert( row >= 0 );
+    assert( row < l->rowCount() );
+
+    QLabel * lb = qobject_cast<QLabel*>( l->itemAtPosition( row, 0 )->widget() );
+    assert( lb );
+    QLineEdit * le = qobject_cast<QLineEdit*>( l->itemAtPosition( row, 1 )->widget() );
+    assert( le );
+    QLabel * reqLB = qobject_cast<QLabel*>( l->itemAtPosition( row, 2 )->widget() );
+    assert( reqLB );
+
+    lb->setText( label );
+    le->setText( preset );
+    reqLB->setText( required ? i18n("(required)") : i18n("(optional)") );
+    if ( !required && regex.isEmpty() )
+        delete le->validator();
+    else
+        le->setValidator( new QRegExpValidator( QRegExp( regex.isEmpty() ? QLatin1String( "[^\\s].*" ) : regex ), le ) );
+
+    le->setReadOnly( readonly && le->hasAcceptableInput() );
+
+    lb->show();
+    le->show();
+    reqLB->show();
+
+    return le;
+}
+
+static int add_row( QGridLayout * l, QList<QWidget*> * wl ) {
+    assert( l );
+    assert( wl );
+    const int row = l->rowCount();
+    QWidget *w1, *w2, *w3;
+    l->addWidget( w1 = new QLabel( l->parentWidget() ),    row, 0 );
+    l->addWidget( w2 = new QLineEdit( l->parentWidget() ), row, 1 );
+    l->addWidget( w3 = new QLabel( l->parentWidget() ),    row, 2 );
+    wl->push_back( w1 );
+    wl->push_back( w2 );
+    wl->push_back( w3 );
+    return row;
+}
+
 void EnterDetailsPage::updateForm() {
 
     clearForm();
-
-    ui.addEmailToDnCB->hide();
 
     const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
 
@@ -543,30 +717,35 @@ void EnterDetailsPage::updateForm() {
             continue;
         const QString preset = savedValues.value( attr, config.readEntry( attr, QString() ) );
         const bool required = key.endsWith( QLatin1Char('!') );
+        const bool readonly = config.isEntryImmutable( attr );
         const QString label = config.readEntry( attr + "_label",
-                                                attributeLabel( attr, required, pgp() ) );
+                                                attributeLabel( attr, pgp() ) );
+        const QString regex = config.readEntry( attr + "_regex" );
 
-        LineEdit * const le = new LineEdit( preset, required, ui.formLayout->parentWidget() );
-        ui.formLayout->addRow( label, le );
+        int row;
+        if ( attr == "EMAIL" ) {
+            row = row_index_of( ui.emailLE, ui.gridLayout );
+            if ( !pgp() )
+                ui.addEmailToDnCB->show();
+        } else if ( attr == "NAME" || attr == "CN" ) {
+            if ( pgp() && attr == "CN" || !pgp() && attr == "NAME" )
+                continue;
+            row = row_index_of( ui.nameLE, ui.gridLayout );
+        } else if ( attr == "COMMENT" ) {
+            if ( !pgp() )
+                continue;
+            row = row_index_of( ui.commentLE, ui.gridLayout );
+        } else {
+            row = add_row( ui.gridLayout, &dynamicWidgets );
+        }
+        QLineEdit * le = adjust_row( ui.gridLayout, row, label, preset, regex, readonly, required );
 
-        if ( config.isEntryImmutable( attr ) )
-            le->lineEdit.setEnabled( false );
+        attributePairList.append( qMakePair( key, le ) );
 
-        QString regex = config.readEntry( attr + "_regex" );
-        if ( regex.isEmpty() )
-            regex = "[^\\s].*"; // !empty
-        le->lineEdit.setValidator( new QRegExpValidator( QRegExp( regex ), le ) );
-
-        attributePairList.append( qMakePair(key, &le->lineEdit) );
-
-        connect( &le->lineEdit, SIGNAL(textChanged(QString)),
-                 SLOT(slotUpdateResultLabel()) );
-
-        if ( attr == "EMAIL" && !pgp() )
-            ui.addEmailToDnCB->show();
-
-        dynamicWidgets.push_back( ui.formLayout->labelForField( le ) );
-        dynamicWidgets.push_back( le );
+        // don't connect twice:
+        le->disconnect( this );
+        connect( le, SIGNAL(textChanged(QString)),
+                 this, SLOT(slotUpdateResultLabel()) );
     }
 }
 
@@ -587,24 +766,10 @@ QString EnterDetailsPage::cmsDN() const {
 }
 
 QString EnterDetailsPage::pgpUserID() const {
-    QString name, email, comment;
-    for ( QVector< QPair<QString,QLineEdit*> >::const_iterator it = attributePairList.begin(), end = attributePairList.end() ; it != end ; ++it ) {
-        const QString attr = attributeFromKey( it->first );
-        const QString value = it->second->text().trimmed();
-        if ( attr == "NAME" )
-            name = value;
-        else if ( attr == "EMAIL" )
-            email = value;
-        else if ( attr == "COMMENT" )
-            comment = value;
-    }
-    return Formatting::prettyNameAndEMail( OpenPGP, QString(), name, email, comment );
-}
-
-void EnterDetailsPage::clearForm() {
-    qDeleteAll( dynamicWidgets );
-    dynamicWidgets.clear();
-    attributePairList.clear();
+    return Formatting::prettyNameAndEMail( OpenPGP, QString(),
+                                           ui.nameLE->text().trimmed(),
+                                           ui.emailLE->text().trimmed(),
+                                           ui.commentLE->text().trimmed() );
 }
 
 static bool requirementsAreMet( const QVector< QPair<QString,QLineEdit*> > & list ) {
@@ -631,6 +796,45 @@ bool EnterDetailsPage::isComplete() const {
 void EnterDetailsPage::slotAdvancedSettingsClicked() {
     dialog.setProtocol( pgp() ? OpenPGP : CMS );
     dialog.exec();
+}
+
+QStringList KeyCreationPage::usages() const {
+    QStringList usages;
+    if ( signingAllowed() )
+        usages << "sign";
+    if ( encryptionAllowed() )
+        usages << "encrypt";
+    if ( 0 ) // not needed in pgp (implied) and not supported in cms
+    if ( certificationAllowed() )
+        usages << "certify";
+    if ( authenticationAllowed() )
+        usages << "auth";
+    return usages;
+}
+
+QString KeyCreationPage::createGnupgKeyParms() const {
+    QString result;
+    QTextStream s( &result );
+    s     << "<GnupgKeyParms format=\"internal\">"   << endl
+          << "key-type:     " << gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>( keyType() ) ) << endl;
+    if ( const unsigned int strength = keyStrength() )
+        s << "key-length:   " << strength            << endl;
+    s     << "key-usage:    " << usages().join(" ")  << endl;
+    s     << "name-email:   " << email()             << endl;
+    if ( pgp() )
+        s << "name-real:    " << name()              << endl
+          << "name-comment: " << comment()           << endl;
+    else
+        s << "name-dn:      " << dn()                << endl;
+    Q_FOREACH( const QString & email, additionalEMailAddresses() )
+        s << "name-email:   " << email               << endl;
+    Q_FOREACH( const QString & dns,   dnsNames() )
+        s << "name-dns:     " << dns                 << endl;
+    Q_FOREACH( const QString & uri,   uris() )
+        s << "name-uri:     " << uri                 << endl;
+    s     << "</GnupgKeyParms>"                      << endl;
+    kDebug() << '\n' << result;
+    return result;
 }
 
 #include "moc_newcertificatewizard.cpp"

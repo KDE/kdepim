@@ -1,0 +1,31 @@
+<ui version="4.0" >
+ <class>Kleo::NewCertificateUi::KeyCreationPage</class>
+ <widget class="QWizardPage" name="Kleo::NewCertificateUi::KeyCreationPage" >
+  <property name="title" >
+   <string comment="@title" >Creating Key...</string>
+  </property>
+  <property name="subTitle" >
+   <string>Your key is being created created.</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <property name="sizeConstraint" >
+    <enum>QLayout::SetMinimumSize</enum>
+   </property>
+   <item>
+    <widget class="QLabel" name="label" >
+     <property name="text" >
+      <string>The process of creating a key requires large amounts of random numbers. To foster this process, you can use the entry field below to enter some gibberish. The text itself won't be used at all, only the inter-character timing. You can also move this window around with your mouse, or start some disk-intensive application.</string>
+     </property>
+     <property name="wordWrap" >
+      <bool>true</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPlainTextEdit" name="plainTextEdit" />
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

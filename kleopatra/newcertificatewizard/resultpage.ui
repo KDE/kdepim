@@ -23,7 +23,10 @@
      </property>
      <layout class="QHBoxLayout" name="horizontalLayout_2" >
       <item>
-       <widget class="QTextBrowser" name="textBrowser" />
+       <widget class="QTextBrowser" name="resultTB" />
+      </item>
+      <item>
+       <widget class="QTextBrowser" name="errorTB" />
       </item>
       <item>
        <widget class="Kleo::DragQueen" name="dragQueen" >
