@@ -172,7 +172,7 @@ static QString formatSigningInformation( const Signature & sig, const Key & key 
     if ( haveSigner )
         if ( haveDate )
             return i18nc( "date, key owner, key ID",
-                          "Signed on %1 by %2 (Key ID: %3).", 
+                          "Signed on %1 by %2 (Key ID: %3).",
                           formatDate( dt ),
                           signer,
                           renderFingerprint( key.keyID() ) );
@@ -191,7 +191,7 @@ static QString strikeOut( const QString & str, bool strike ) {
 static QString formatInputOutputLabel( const QString & input, const QString & output, bool inputDeleted, bool outputDeleted ) {
     if ( output.isEmpty() )
         return strikeOut( input, inputDeleted );
-    return i18nc( "Input file --> Output file (rarr is arrow", "%1 &rarr; %2", 
+    return i18nc( "Input file --> Output file (rarr is arrow", "%1 &rarr; %2",
                   strikeOut( input, inputDeleted ),
                   strikeOut( output, outputDeleted ) );
 }
@@ -304,7 +304,7 @@ static QString formatSignature( const Signature & sig, const Key & key ) {
         return QString();
 
     QString text = formatSigningInformation( sig, key ) + "<br/>";
-    
+
     const bool red = sig.summary() & Signature::Red;
     if ( sig.summary() & Signature::Valid )
         return text + formatValidSignatureWithTrustLevel( key ); // ### TODO handle key.isNull()?
@@ -331,7 +331,7 @@ static QString formatVerificationResultDetails( const VerificationResult & res )
     const std::vector<Signature> sigs = res.signatures();
     const std::vector<Key> signers = KeyCache::instance()->findSigners( res );
     QString details;
-    Q_FOREACH ( const Signature & sig, sigs ) 
+    Q_FOREACH ( const Signature & sig, sigs )
         details += formatSignature( sig, DecryptVerifyResult::keyForSignature( sig, signers ) ) + '\n';
     details = details.trimmed();
     details.replace( '\n', "<br/>" );
@@ -343,22 +343,26 @@ static QString formatDecryptionResultDetails( const DecryptionResult & res, cons
     if ( res.isNull() || !res.error() || res.error().isCanceled() )
         return QString();
 
-    if ( recipients.empty() )
+    if ( recipients.empty() && res.numRecipients() > 0 )
         return QString( "<i>" + i18np( "One unknown recipient.", "%1 unknown recipients.", res.numRecipients() ) + "</i>" );
 
     QString details;
-    details += i18np( "Recipients:", "Recipients:", res.numRecipients() );
-    if ( res.numRecipients() == 1 )
-        return details + renderKey( recipients.front() );
+    if ( !recipients.empty() ) {
+        details += i18np( "Recipients:", "Recipients:", res.numRecipients() );
+        if ( res.numRecipients() == 1 )
+            return details + renderKey( recipients.front() );
 
-    details += "<ul>";
-    Q_FOREACH( const Key & key, recipients )
-        details += "<li>" + renderKey( key ) + "</li>";
-    if ( recipients.size() < res.numRecipients() )
-        details += "<li><i>" + i18np( "One unknown recipient", "%1 unknown recipients",
-                                   res.numRecipients() - recipients.size() ) + "</i></li>";
+        details += "<ul>";
+        Q_FOREACH( const Key & key, recipients )
+            details += "<li>" + renderKey( key ) + "</li>";
+        if ( recipients.size() < res.numRecipients() )
+            details += "<li><i>" + i18np( "One unknown recipient", "%1 unknown recipients",
+                                       res.numRecipients() - recipients.size() ) + "</i></li>";
 
-    return details + "</ul>";
+        details += "</ul>";
+    }
+
+    return details;
 }
 
 static QString formatDecryptVerifyResultOverview( const DecryptionResult & dr, const VerificationResult & vr )
@@ -503,7 +507,7 @@ shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromVerifyOpaqueResul
 }
 
 shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromVerifyDetachedResult( const VerificationResult & vr, const QString & auditLog ) {
-    return shared_ptr<DecryptVerifyResult>( new DecryptVerifyResult( 
+    return shared_ptr<DecryptVerifyResult>( new DecryptVerifyResult(
         Verify,
         vr,
         DecryptionResult(),
@@ -547,7 +551,7 @@ QString DecryptVerifyResult::overview() const
         ov = formatDecryptionResultOverview( d->m_decryptionResult );
     else if ( d->isVerifyOnly() )
         ov = formatVerificationResultOverview( d->m_verificationResult );
-    else 
+    else
         ov = formatDecryptVerifyResultOverview( d->m_decryptionResult, d->m_verificationResult );
     return i18nc( "label: result example: foo.sig: Verification failed. ", "%1: %2", d->label(), ov );
 }
@@ -603,7 +607,7 @@ const Key & DecryptVerifyResult::keyForSignature( const Signature & sig, const s
 }
 
 class AbstractDecryptVerifyTask::Private {
-    
+
 };
 
 AbstractDecryptVerifyTask::AbstractDecryptVerifyTask( QObject * parent ) : Task( parent ), d( new Private ) {}
@@ -625,7 +629,7 @@ public:
     }
 
     void emitResult( const shared_ptr<DecryptVerifyResult>& result );
-    
+
     shared_ptr<Input> m_input;
     shared_ptr<Output> m_output;
     const CryptoBackend::Protocol* m_backend;
@@ -686,7 +690,7 @@ void DecryptVerifyTask::setProtocol( Protocol prot )
     kleo_assert( d->m_backend );
 }
 
-void DecryptVerifyTask::autodetectProtocolFromInput() 
+void DecryptVerifyTask::autodetectProtocolFromInput()
 {
     if ( d->m_input )
         setProtocol( findProtocol( d->m_input->classification() ) );
@@ -719,7 +723,7 @@ Protocol DecryptVerifyTask::protocol() const
 
 void DecryptVerifyTask::cancel()
 {
-    
+
 }
 
 void DecryptVerifyTask::doStart()
@@ -750,7 +754,7 @@ public:
     }
 
     void emitResult( const shared_ptr<DecryptVerifyResult>& result );
-    
+
     shared_ptr<Input> m_input;
     shared_ptr<Output> m_output;
     const CryptoBackend::Protocol* m_backend;
@@ -810,7 +814,7 @@ void DecryptTask::setProtocol( Protocol prot )
     kleo_assert( d->m_backend );
 }
 
-void DecryptTask::autodetectProtocolFromInput() 
+void DecryptTask::autodetectProtocolFromInput()
 {
     if ( d->m_input )
         setProtocol( findProtocol( d->m_input->classification() ) );
@@ -844,7 +848,7 @@ Protocol DecryptTask::protocol() const
 
 void DecryptTask::cancel()
 {
-    
+
 }
 
 void DecryptTask::doStart()
@@ -876,7 +880,7 @@ public:
     }
 
     void emitResult( const shared_ptr<DecryptVerifyResult>& result );
-    
+
     shared_ptr<Input> m_input;
     shared_ptr<Output> m_output;
     const CryptoBackend::Protocol* m_backend;
@@ -936,7 +940,7 @@ void VerifyOpaqueTask::setProtocol( Protocol prot )
     kleo_assert( d->m_backend );
 }
 
-void VerifyOpaqueTask::autodetectProtocolFromInput() 
+void VerifyOpaqueTask::autodetectProtocolFromInput()
 {
     if ( d->m_input )
         setProtocol( findProtocol( d->m_input->classification() ) );
@@ -969,7 +973,7 @@ Protocol VerifyOpaqueTask::protocol() const
 
 void VerifyOpaqueTask::cancel()
 {
-    
+
 }
 
 void VerifyOpaqueTask::doStart()
@@ -1001,7 +1005,7 @@ public:
     }
 
     void emitResult( const shared_ptr<DecryptVerifyResult>& result );
-    
+
     shared_ptr<Input> m_input, m_signedData;
     const CryptoBackend::Protocol* m_backend;
     Protocol m_protocol;
@@ -1053,7 +1057,7 @@ void VerifyDetachedTask::setProtocol( Protocol prot )
     kleo_assert( d->m_backend );
 }
 
-void VerifyDetachedTask::autodetectProtocolFromInput() 
+void VerifyDetachedTask::autodetectProtocolFromInput()
 {
     if ( d->m_input )
         setProtocol( findProtocol( d->m_input->classification() ) );
@@ -1087,7 +1091,7 @@ Protocol VerifyDetachedTask::protocol() const
 
 void VerifyDetachedTask::cancel()
 {
-    
+
 }
 
 void VerifyDetachedTask::doStart()
