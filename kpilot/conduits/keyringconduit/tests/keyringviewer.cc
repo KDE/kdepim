@@ -60,6 +60,10 @@ KeyringViewer::KeyringViewer( QWidget *parent )
 		, this, SLOT( togglePasswordVisibility() ) );
 	connect( fUi.fNameEdit, SIGNAL( editingFinished () )
 		, this, SLOT( nameEditCheck() ) );
+	connect( fUi.fAccountEdit, SIGNAL( editingFinished () )
+		, this, SLOT( accountEditCheck() ) );
+	connect( fUi.fPasswordEdit, SIGNAL( editingFinished () )
+		, this, SLOT( passEditCheck() ) );
 		
 	// Connect the actions
 	connect( fUi.actionNew, SIGNAL( triggered() ), this, SLOT( newDatabase() ) );
@@ -142,6 +146,9 @@ void KeyringViewer::newDatabase()
 	fUi.fAccountList->setModel( fModel );
 	fUi.fAccountList->setEnabled( true );
 	fUi.fCategoryFilter->setEnabled( true );
+	fUi.fNameEdit->setEnabled( true );
+	fUi.fAccountEdit->setEnabled( true );
+	fUi.fPasswordEdit->setEnabled( true );
 	fUi.fPasswordBox->setEnabled( true );
 }
 
@@ -184,6 +191,8 @@ void KeyringViewer::openDatabase()
 	fUi.fAccountList->setModel( fModel );
 	fUi.fAccountList->setEnabled( true );
 	fUi.fNameEdit->setEnabled( true );
+	fUi.fAccountEdit->setEnabled( true );
+	fUi.fPasswordEdit->setEnabled( true );
 	fUi.fPasswordBox->setEnabled( true );
 }
 
@@ -196,6 +205,36 @@ void KeyringViewer::nameEditCheck()
 		QDateTime now = QDateTime::currentDateTime();
 		
 		fCurrentRecord->setName( fUi.fNameEdit->text() );
+		fCurrentRecord->setLastChangedDate( now );
+		fCurrentRecord->setModified();
+		fProxy->saveRecord( fCurrentRecord );
+	}
+}
+
+void KeyringViewer::accountEditCheck()
+{
+	if( !fCurrentRecord ) return;
+	
+	if( fUi.fAccountEdit->text() != fCurrentRecord->account() )
+	{
+		QDateTime now = QDateTime::currentDateTime();
+		
+		fCurrentRecord->setAccount( fUi.fAccountEdit->text() );
+		fCurrentRecord->setLastChangedDate( now );
+		fCurrentRecord->setModified();
+		fProxy->saveRecord( fCurrentRecord );
+	}
+}
+
+void KeyringViewer::passEditCheck()
+{
+	if( !fCurrentRecord ) return;
+	
+	if( fUi.fPasswordEdit->text() != fCurrentRecord->password() )
+	{
+		QDateTime now = QDateTime::currentDateTime();
+		
+		fCurrentRecord->setPassword( fUi.fPasswordEdit->text() );
 		fCurrentRecord->setLastChangedDate( now );
 		fCurrentRecord->setModified();
 		fProxy->saveRecord( fCurrentRecord );

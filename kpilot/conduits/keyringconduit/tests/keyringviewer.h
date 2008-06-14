@@ -49,6 +49,8 @@ private slots:
 	
 	// Slots to deal with changes in the input fields.
 	void nameEditCheck();
+	void accountEditCheck();
+	void passEditCheck();
 
 private:
 	Ui::MainWindow fUi;
