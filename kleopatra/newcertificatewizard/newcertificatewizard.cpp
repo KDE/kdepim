@@ -278,7 +278,7 @@ namespace {
         }
 
         void setSubkeyType( unsigned int algo ) { ui.elgCB->setChecked( is_elg( algo ) ); }
-        unsigned int subkeyType() const { return ui.elgCB->isChecked() ? GPGME_PK_ELG : 0 ; }
+        unsigned int subkeyType() const { return ui.elgCB->isChecked() ? GPGME_PK_ELG_E : 0 ; }
 
         void setSubkeyStrength( unsigned int strength ) {
             ui.elgKeyStrengthCB->setCurrentIndex( strength2index( strength ) );
@@ -524,8 +524,17 @@ namespace {
         }
 
         /* reimp */ void initializePage() {
-            ui.resultTB->setVisible( !ui.resultTB->toPlainText().isEmpty() );
-            ui.errorTB ->setVisible( !ui.errorTB ->toPlainText().isEmpty() );
+            const bool error = !ui.errorTB->toPlainText().isEmpty();
+            ui.resultTB                 ->setVisible( !error );
+            ui.errorTB                  ->setVisible(  error );
+            ui.dragQueen                ->setVisible( !error && !pgp() );
+            ui.nextStepsGB              ->setVisible( !error );
+            ui.saveRequestToFilePB      ->setVisible( !pgp() );
+            ui.uploadToKeyserverPB      ->setVisible(  pgp() );
+            ui.makeBackupPB             ->setVisible(  pgp() );
+            ui.createRevocationRequestPB->setVisible(  pgp() && false ); // not implemented
+            ui.sendRequestByEMailPB     ->setVisible( !pgp() );
+            ui.sendCertificateByEMailPB ->setVisible(  pgp() );
         }
 
     private:
@@ -614,31 +623,6 @@ static const char * oidForAttributeName( const QString & attr ) {
     if ( qstricmp( attrUtf8, oidmap[i].name ) == 0 )
       return oidmap[i].oid;
   return 0;
-}
-
-namespace {
-    class LineEdit : public QWidget {
-        Q_OBJECT
-    public:
-        explicit LineEdit( const QString & text, bool required, QWidget * parent )
-            : QWidget( parent ),
-              lineEdit( text, this ),
-              label( required ? i18n("(required)") : i18n("(optional)"), this ),
-              layout( this )
-        {
-            KDAB_SET_OBJECT_NAME( lineEdit );
-            KDAB_SET_OBJECT_NAME( label );
-            KDAB_SET_OBJECT_NAME( layout );
-
-            layout.addWidget( &lineEdit );
-            layout.addWidget( &label );
-        }
-
-    public:
-        QLineEdit lineEdit;
-        QLabel label;
-        QHBoxLayout layout;
-    };
 }
 
 void EnterDetailsPage::registerDialogPropertiesAsFields() {
