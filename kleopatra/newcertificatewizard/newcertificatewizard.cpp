@@ -225,6 +225,9 @@ namespace {
             if ( protocol == CMS ) {
                 ui.rsaRB->setChecked( true ); // gpgsm can generate only rsa atm
                 ui.elgCB->setChecked( false );
+            } else {
+                ui.dsaRB->setChecked( true ); // default for OpenPGP
+                ui.elgCB->setChecked( true );
             }
             ui.certificationCB->setVisible( protocol == OpenPGP ); // gpgsm limitation?
             ui.authenticationCB->setVisible( protocol == OpenPGP );
