@@ -75,7 +75,7 @@ private: // functions
 	QCA::SecureArray getDigest( const QCA::SecureArray &salt
 		, const QCA::SecureArray &pass );
 
-private: // members
+protected: // members
 	PilotRecord *fZeroRecord;
 	QString fDesKey;
 	QString fSaltedHash;

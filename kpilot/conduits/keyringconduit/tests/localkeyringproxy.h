@@ -27,12 +27,20 @@
 
 #include "keyringhhdataproxy.h"
 
+class KeyringHHRecord;
+
 class KPILOT_EXPORT LocalKeyringProxy : public KeyringHHDataProxy
 {
 public:
 	LocalKeyringProxy( const QString& fileName );
 	
 	void saveRecord( HHRecord* rec );
+	
+	void deleteRecord( HHRecord* rec );
+	
+	void addRecord( HHRecord* rec );
+	
+	KeyringHHRecord* createRecord();
 	
 	QStringList categories() const;
 };

@@ -26,6 +26,7 @@
 
 #include "localkeyringproxy.h"
 #include "hhrecord.h"
+#include "keyringhhrecord.h"
 
 LocalKeyringProxy::LocalKeyringProxy( const QString& fileName )
 	: KeyringHHDataProxy( fileName )
@@ -34,7 +35,31 @@ LocalKeyringProxy::LocalKeyringProxy( const QString& fileName )
 	
 void LocalKeyringProxy::saveRecord( HHRecord* rec )
 {
-	commitUpdate( rec );
+	if( rec )
+	{
+		commitUpdate( rec );
+	}
+}
+
+void LocalKeyringProxy::deleteRecord( HHRecord* rec )
+{
+	if( rec )
+	{
+		commitDelete( rec );
+	}
+}
+
+void LocalKeyringProxy::addRecord( HHRecord* rec )
+{
+	if( rec )
+	{
+		commitCreate( rec );
+	}
+}
+
+KeyringHHRecord* LocalKeyringProxy::createRecord()
+{
+	return new KeyringHHRecord( "New record", "", "", "", fDesKey );
 }
 
 QStringList LocalKeyringProxy::categories() const

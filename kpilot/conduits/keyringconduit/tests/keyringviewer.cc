@@ -32,6 +32,7 @@
 #include <QtDebug>
 
 #include "pilotLocalDatabase.h"
+#include "pilotRecord.h"
 
 #include "localkeyringproxy.h"
 #include "keyringhhrecord.h"
@@ -53,6 +54,8 @@ KeyringViewer::KeyringViewer( QWidget *parent )
 	fUi.fCategoryEdit->setEnabled( false );
 	fUi.fDateEdit->setEnabled( false );
 	fUi.fNotesEdit->setEnabled( false );
+	fUi.fDeleteButton->setEnabled( false );
+	fUi.fNewButton->setEnabled( false );
 	
 	connect( fUi.fAccountList, SIGNAL( clicked( const QModelIndex& ) )
 		, this, SLOT( selectionChanged( const QModelIndex& ) ) );
@@ -66,6 +69,10 @@ KeyringViewer::KeyringViewer( QWidget *parent )
 		, this, SLOT( passEditCheck() ) );
 	connect( fUi.fCategoryEdit, SIGNAL( currentIndexChanged( const QString& ) )
 		, this, SLOT( categoryEditCheck( const QString& ) ) );
+	connect( fUi.fDeleteButton, SIGNAL( clicked() )
+		, this, SLOT( deleteRecord() ) );
+	connect( fUi.fNewButton, SIGNAL( clicked() )
+		, this, SLOT( newRecord() ) );
 		
 	// Connect the actions
 	connect( fUi.actionNew, SIGNAL( triggered() ), this, SLOT( newDatabase() ) );
@@ -93,6 +100,8 @@ void KeyringViewer::selectionChanged( const QModelIndex &index )
 		fCurrentRecord->setModified();
 		fProxy->saveRecord( fCurrentRecord );
 	}
+	
+	fUi.fDeleteButton->setEnabled( true );
 	
 	fCurrentRecord = static_cast<KeyringListModel*>(
 		fUi.fAccountList->model() )->record( index );
@@ -170,6 +179,7 @@ void KeyringViewer::newDatabase()
 	fUi.fCategoryEdit->addItems( fProxy->categories() );
 	fUi.fCategoryEdit->setEnabled( true );
 	fUi.fNotesEdit->setEnabled( true );
+	fUi.fNewButton->setEnabled( true );
 }
 
 void KeyringViewer::openDatabase()
@@ -218,6 +228,7 @@ void KeyringViewer::openDatabase()
 	fUi.fCategoryEdit->addItems( fProxy->categories() );
 	fUi.fCategoryEdit->setEnabled( true );
 	fUi.fNotesEdit->setEnabled( true );
+	fUi.fNewButton->setEnabled( true );
 }
 
 void KeyringViewer::nameEditCheck()
@@ -279,4 +290,43 @@ void KeyringViewer::categoryEditCheck( const QString& newCategory )
 		fCurrentRecord->setModified();
 		fProxy->saveRecord( fCurrentRecord );
 	}
+}
+
+void KeyringViewer::deleteRecord()
+{
+	qDebug() << fCurrentRecord;
+	if( !fCurrentRecord ) return;
+	
+	int row = fUi.fAccountList->currentIndex().row();
+	QModelIndex parent =fUi.fAccountList->currentIndex().parent();
+	
+	if( fUi.fAccountList->model()->removeRow( row, parent ) )
+	{
+		fProxy->deleteRecord( fCurrentRecord );
+		fCurrentRecord = 0L;
+		
+		if( fModel->rowCount() > 0 )
+		{
+			selectionChanged( fModel->index( fModel->rowCount() - 1 ) );
+		}
+		else
+		{
+			fUi.fDeleteButton->setEnabled( false );
+		}
+		
+		// Clear the fields.
+		fUi.fNameEdit->setText( QString() );
+		fUi.fCategoryEdit->setCurrentIndex( 0 );
+		fUi.fAccountEdit->setText( QString() );
+		fUi.fPasswordEdit->setText( QString() );
+		fUi.fNotesEdit->setPlainText( QString() );
+		fUi.fDateEdit->setDateTime( QDateTime() );
+	}
+}
+
+void KeyringViewer::newRecord()
+{
+	KeyringHHRecord* rec = fProxy->createRecord();
+	fProxy->addRecord( rec );
+	fModel->addRecord( rec );
 }

@@ -53,7 +53,11 @@ public:
 	
 	QVariant headerData ( int section, Qt::Orientation orientation
 		, int role = Qt::DisplayRole ) const;
-		
+	
+	bool removeRows( int row, int count, const QModelIndex& parent = QModelIndex() );
+	
+	bool addRecord( KeyringHHRecord* record );
+	
 	KeyringHHRecord *record( const QModelIndex & index );
 
 private:

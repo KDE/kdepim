@@ -53,6 +53,10 @@ private slots:
 	void passEditCheck();
 	void categoryEditCheck( const QString& newCategory );
 
+	// Slots to deal with addition and deletion of records.
+	void deleteRecord();
+	void newRecord();
+	
 private:
 	Ui::MainWindow fUi;
 	LocalKeyringProxy* fProxy;

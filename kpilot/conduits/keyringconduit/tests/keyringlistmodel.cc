@@ -88,6 +88,38 @@ QVariant KeyringListModel::headerData( int section, Qt::Orientation orientation
 		return QVariant();
 }
 
+bool KeyringListModel::removeRows( int row, int count, const QModelIndex& parent )
+{
+	if( row >= fRecords.size() )
+	{
+		return false;
+	}
+	
+	if( (row + count) > fRecords.size() )
+	{
+		return false;
+	}
+	
+	beginRemoveRows( parent, row, row + count );
+	fRecords.removeAt( row );
+	endRemoveRows();
+	
+	return true;
+}
+
+bool KeyringListModel::addRecord( KeyringHHRecord* record )
+{
+	if( record )
+	{
+		beginInsertRows ( QModelIndex(), rowCount(), rowCount() + 1 );
+		fRecords.append( record );
+		endInsertRows();
+		return true;
+	}
+	
+	return false;
+}
+
 KeyringHHRecord* KeyringListModel::record( const QModelIndex &index )
 {
 	if( index.row() >= fRecords.size() )
