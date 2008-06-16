@@ -314,6 +314,8 @@ namespace {
             const unsigned int sk_algo = subkeyType();
             if ( protocol == OpenPGP ) {
                 ui.elgCB->setEnabled( is_dsa( algo ) );
+                if ( sender() == ui.dsaRB || sender() == ui.rsaRB )
+                    ui.elgCB->setChecked( is_dsa( algo ) );
                 if ( is_rsa( algo ) ) {
                     ui.encryptionCB->setEnabled( true );
                     ui.encryptionCB->setChecked( true );
