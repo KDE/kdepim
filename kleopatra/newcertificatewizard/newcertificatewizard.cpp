@@ -884,6 +884,8 @@ QString KeyCreationPage::createGnupgKeyParms() const {
         s << "name-dns:      " << dns                      << endl;
     Q_FOREACH( const QString & uri,   uris() )
         s << "name-uri:      " << uri                      << endl;
+    if ( pgp() )
+        s << "%ask-passphrase"                             << endl;
     s     << "</GnupgKeyParms>"                            << endl;
     kDebug() << '\n' << result;
     return result;
