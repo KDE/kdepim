@@ -97,19 +97,21 @@ static int strength2index( unsigned int strength ) {
 }
 
 static unsigned int version2strength( int version ) {
-    if ( version == 0 )
-        return 1024;
     if ( version == 1 )
+        return 1024;
+    if ( version == 2 )
         return 2048;
     return 0;
 }
 
 static int strength2version( unsigned int strength ) {
-    if ( strength <= 1024 )
+    if ( strength == 0 )
         return 0;
-    if ( strength <= 2048 )
+    if ( strength <= 1024 )
         return 1;
-    return -1;
+    if ( strength <= 2048 )
+        return 2;
+    return 0;
 }
 
 enum KeyAlgo { RSA, DSA, ELG };
@@ -258,7 +260,7 @@ namespace {
 
         void setKeyStrength( unsigned int strength ) {
             ui.rsaKeyStrengthCB->setCurrentIndex( strength2index( strength ) );
-            ui.elgKeyStrengthCB->setCurrentIndex( strength2version( strength ) );
+            ui.dsaVersionCB->setCurrentIndex( strength2version( strength ) );
         }
         unsigned int keyStrength() const {
             return
