@@ -206,6 +206,9 @@ namespace {
             const QDate today = QDate::currentDate();
             ui.expiryDE->setMinimumDate( today );
             ui.expiryDE->setDate( today.addYears( 2 ) );
+            ui.emailLW->setDefaultValue( i18n("new email") );
+            ui.dnsLW->setDefaultValue( i18n("new dns name") );
+            ui.uriLW->setDefaultValue( i18n("new uri") );
         }
 
         void setProtocol( GpgME::Protocol proto ) {
@@ -484,11 +487,13 @@ namespace {
                                  QString::fromLocal8Bit( result.error().asString() ) ) );
                 setField( "url", QString() );
                 setField( "result", QString() );
+            } else if ( pgp() ) {
+                setField( "error", QString() );
+                setField( "url", QString() );
+                setField( "result", i18n("Certificate created successfully.\n"
+                                         "Fingerprint: %1", result.fingerprint() ) );
             } else {
-                const QString fileName = pgp()
-                    ? QString::fromLatin1( "pub-%1.asc" ).arg( result.fingerprint() )
-                    : QString::fromLatin1( "request.p10" ) ;
-                QFile file( QDir( tmp.name() ).absoluteFilePath( fileName ) );
+                QFile file( QDir( tmp.name() ).absoluteFilePath( "request.p10" ) );
 
                 if ( !file.open( QIODevice::WriteOnly ) ) {
                     setField( "error", i18n("Could not write output file %1: %2",
@@ -499,11 +504,7 @@ namespace {
                     file.write( request );
                     setField( "error", QString() );
                     setField( "url", QUrl::fromLocalFile( file.fileName() ).toString() );
-                    if ( pgp() )
-                        setField( "result", i18n("Certificate created successfully.\n"
-                                                 "Fingerprint: %1", result.fingerprint() ) );
-                    else
-                        setField( "result", i18n("Certificate created successfully.") );
+                    setField( "result", i18n("Certificate created successfully.") );
                 }
             }
             job = 0;
