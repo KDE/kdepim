@@ -66,7 +66,6 @@ private Q_SLOTS:
     void slotCollectionRemoved( bool );
     void slotIntegrity( const QString& mb, int totalShouldBe,
                         const QString& uidvalidity, const QString& uidnext );
-    void slotUnseenMessagesInMailbox( Imaplib*, const QString& , int unseen);
 
 private:
     Imaplib* m_imap;
@@ -76,6 +75,7 @@ private:
     QHash<QString, Akonadi::Item> m_itemCache;
     QString m_server;
     QString m_username;
+    bool m_incrementalFetch;
     void connections();
     void manualAuth( Imaplib* connection, const QString& username );
     void startConnect();

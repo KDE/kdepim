@@ -43,6 +43,7 @@ typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
 #include <akonadi/cachepolicy.h>
 #include <akonadi/collectionmodifyjob.h>
+#include <akonadi/collectionstatisticsjob.h>
 #include <akonadi/collectionstatistics.h>
 #include <akonadi/monitor.h>
 #include <akonadi/changerecorder.h>
@@ -53,8 +54,7 @@ typedef boost::shared_ptr<KMime::Message> MessagePtr;
 using namespace Akonadi;
 
 ImaplibResource::ImaplibResource( const QString &id )
-        :ResourceBase( id ),
-        m_imap( 0 )
+        :ResourceBase( id ), m_imap( 0 ), m_incrementalFetch( false )
 {
     changeRecorder()->fetchCollection( true );
     new SettingsAdaptor( Settings::self() );
@@ -248,17 +248,24 @@ void ImaplibResource::slotFolderListReceived( const QStringList& list, const QSt
         c.setContentMimeTypes( contentTypes );
         c.setParentRemoteId( findParent( collections, root, path ) );
 
-        if ( noselectfolders.contains( *it ) ) {
-            CachePolicy itemPolicy;
-            itemPolicy.setInheritFromParent( false );
-            itemPolicy.setIntervalCheckTime( -1 );
-            itemPolicy.setSyncOnDemand( false );
-            c.setCachePolicy( itemPolicy );
-            c.addAttribute( new NoSelectAttribute( true ) );
-            kDebug() << ( *it ) << " is a no select folder";
+        CachePolicy itemPolicy;
+        itemPolicy.setInheritFromParent( false );
+        itemPolicy.setIntervalCheckTime( -1 );
+        itemPolicy.setSyncOnDemand( true );
+
+        // If the folder is the Inbox, make some special settings.
+        if ( (*it).compare( QLatin1String("INBOX") , Qt::CaseInsensitive ) == 0 ) {
+            itemPolicy.setIntervalCheckTime( 1 );
+            c.setName( "Inbox" );
         }
 
-        kDebug( ) << "ADDING: " << ( *it );
+        // If this folder is a noselect folder, make some special settings.
+        if ( noselectfolders.contains( *it ) ) {
+            itemPolicy.setSyncOnDemand( false );
+            c.addAttribute( new NoSelectAttribute( true ) );
+        }
+        c.setCachePolicy( itemPolicy );
+
         collections[ *it ] = c;
         ++it;
     }
@@ -272,6 +279,9 @@ void ImaplibResource::retrieveItems( const Akonadi::Collection & col )
 {
     kDebug( ) << col.remoteId();
     m_collection = col;
+
+    // If there is new mail, we get it without giubg through integrity, so the default is true!
+    m_incrementalFetch = true; 
 
     // Prevent fetching items from noselect folders.
     if ( m_collection.hasAttribute( "noselect" ) ) {
@@ -316,8 +326,12 @@ void ImaplibResource::slotUidsAndFlagsReceived( Imaplib*,const QString& mb,const
 
         fetchlist.append( uid );
     }
+    
+    // if we are not fetching the whole folder, we can not do it in batches, so don't set
+    // the totalItems, as that would put it in batch mode. 
+    if ( !m_incrementalFetch ) 
+        setTotalItems( fetchlist.count() );
 
-    setTotalItems( fetchlist.count() );
     m_imap->getHeaders( mb, fetchlist );
 }
 
@@ -353,8 +367,9 @@ void ImaplibResource::slotHeadersReceived( Imaplib*, const QString& mb, const QS
         messages.append( i );
     }
 
-    kDebug() << "calling partlyretrieved with amount: " << messages.count();
-    itemsPartlyRetrieved( messages );
+    kDebug() << "calling partlyretrieved with amount: " << messages.count() << "Incremental?" << m_incrementalFetch;
+
+    m_incrementalFetch ? itemsRetrievedIncremental( messages, Item::List() ) :  itemsPartlyRetrieved( messages );
 }
 
 // ----------------------------------------------------------------------------------
@@ -501,28 +516,36 @@ void ImaplibResource::slotIntegrity( const QString& mb, int totalShouldBe,
         return;
     }
 
+    // See how many messages are in the folder currently 
     qint64 mailsReal = m_collection.statistics().count();
-    if ( mailsReal == -1 ) 
-        mailsReal = 0;
+    if ( mailsReal == -1 ) { 
+        Akonadi::CollectionStatisticsJob *job = new Akonadi::CollectionStatisticsJob( m_collection );
+        if ( job->exec() ) {
+            Akonadi::CollectionStatistics statistics = job->statistics();
+            mailsReal = statistics.count();
+        }
+    }
 
-    kDebug() << "integrity: " << mb << " should be: "
-    << totalShouldBe << " current: " << mailsReal;
+    kDebug() << "integrity: " << mb << " should be: " << totalShouldBe << " current: " << mailsReal;
 
     if ( totalShouldBe > mailsReal ) {
         // The amount on the server is bigger than that we have in the cache
         // that probably means that there is new mail. Fetch missing.
         kDebug() << "Fetch missing: " << totalShouldBe << " But: " << mailsReal;
+        m_incrementalFetch = true;
         m_imap->getHeaderList( mb, mailsReal+1, totalShouldBe );
         return;
     } else if ( totalShouldBe != mailsReal ) {
         // The amount on the server does not match the amount in the cache.
         // that means we need reget the catch completely.
         kDebug() << "O OH: " << totalShouldBe << " But: " << mailsReal;
+        m_incrementalFetch = false; 
         m_imap->getHeaderList( mb, 1, totalShouldBe );
         return;
     } else if ( totalShouldBe == mailsReal && oldUidNext != uidnext.toInt()
                 && oldUidNext != 0 && !uidnext.isEmpty() && !firsttime ) {
         //buggy
+        itemsRetrievalDone();
         return;
 
         // amount is right but uidnext is different.... something happened
@@ -533,13 +556,6 @@ void ImaplibResource::slotIntegrity( const QString& mb, int totalShouldBe,
 
     kDebug() << "All fine, nothing to do";
     itemsRetrievalDone();
-}
-
-void ImaplibResource::slotUnseenMessagesInMailbox( Imaplib*, const QString& , int unseen)
-{
-    kDebug();
-    if ( unseen == 0 )
-        itemsRetrievalDone();
 }
 
 /******************* Private ***********************************************/
@@ -592,9 +608,6 @@ void ImaplibResource::connections()
                                 const QString& ) ),
              SLOT( slotIntegrity( const QString&, int, const QString&,
                                   const QString& ) ) );
-    connect( m_imap,
-             SIGNAL( unseenCount( Imaplib*, const QString&, int ) ),
-             SLOT( slotUnseenMessagesInMailbox( Imaplib*, const QString& , int ) ) );
     /*
     connect( m_imap,
              SIGNAL( loginOk( Imaplib* ) ),

@@ -570,8 +570,6 @@ void Imaplib::slotParseGetRecent()
         QStringList t =
             r.split( ' ' );
 
-        emit unseenCount( this, m_currentQueueItem.mailbox(), t.count() );
-
         QStringList results;
         QStringList::iterator it = t.begin();
         while ( it != t.end() ) {
@@ -583,7 +581,7 @@ void Imaplib::slotParseGetRecent()
         kDebug() << results;
         emit uidsAndFlagsInFolder( this, m_currentQueueItem.mailbox(), results );
     } else
-        emit unseenCount( this, m_currentQueueItem.mailbox(), 0 );
+        emit uidsAndFlagsInFolder( this, m_currentQueueItem.mailbox(), QStringList() );
 
     emit statusReady();
     m_currentQueueItem = Queue();
@@ -679,10 +677,6 @@ void Imaplib::slotParseCheckMail()
             kDebug() << "Emitting messagecount";
             emit messageCount( this, mb, totalShouldBe );
         }
-
-        rx1.setPattern( "[ (]UNSEEN (\\d+)[ )]" );
-        if ( rx1.indexIn( m_received.trimmed() ) != -1 )
-            emit unseenCount( this, mb, rx1.cap( 1 ).toInt() );
 
         rx1.setPattern( "[ (]UIDVALIDITY (\\d+)[ )]" );
         if ( rx1.indexIn( m_received.trimmed() ) != -1 )
@@ -1004,10 +998,16 @@ void Imaplib::slotProcessQueue()
             m_currentQueueItem.state() == Queue::Noop ||
             m_currentQueueItem.state() == Queue::Capability ||
             m_currentQueueItem.state() == Queue::CheckMail ) {
+        
+        // We are rfc-wise not allowed to do the regular checkmail when
+        // the folder is already selected, so intercept that and make it 
+        // a search for unseen in this folder.
         if ( m_currentQueueItem.state() == Queue::CheckMail &&
-                m_currentQueueItem.mailbox() == m_currentMailbox )
+                m_currentQueueItem.mailbox() == m_currentMailbox ) {
+            kDebug() << "Selected folder is currently: " << m_currentMailbox;
             m_currentQueueItem = Queue( Queue::GetRecent, m_currentMailbox,
                                         "UID SEARCH UNSEEN" );
+        }
 
         if ( !m_currentQueueItem.comment().isEmpty() )
             emit status( m_currentQueueItem.comment() );

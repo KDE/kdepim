@@ -42,7 +42,7 @@
 
 #include <iostream>
 
-#define KPILOT_VERSION	"5.0.1 (kermit)"
+#define KPILOT_VERSION	"5.0.2-alpha1 (fjord)"
 
 extern KDE_EXPORT int debug_level;
 
