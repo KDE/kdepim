@@ -505,8 +505,42 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>signingCB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Kleo::NewCertificateUi::AdvancedSettingsDialog</receiver>
+   <slot>slotSigningAllowedToggled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>55</x>
+     <y>250</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>3</x>
+     <y>252</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>encryptionCB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Kleo::NewCertificateUi::AdvancedSettingsDialog</receiver>
+   <slot>slotEncryptionAllowedToggled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>53</x>
+     <y>288</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>3</x>
+     <y>280</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>slotKeyMaterialSelectionChanged()</slot>
+  <slot>slotSigningAllowedToggled(bool)</slot>
+  <slot>slotEncryptionAllowedToggled(bool)</slot>
  </slots>
 </ui>

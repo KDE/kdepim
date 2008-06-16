@@ -339,6 +339,15 @@ namespace {
             }
         }
 
+        void slotSigningAllowedToggled( bool on ) {
+            if ( !on && protocol == CMS && !encryptionAllowed() )
+                setEncryptionAllowed( true );
+        }
+        void slotEncryptionAllowedToggled( bool on ) {
+            if ( !on && protocol == CMS && !signingAllowed() )
+                setSigningAllowed( true );
+        }
+
     private:
         GpgME::Protocol protocol;
         Ui_AdvancedSettingsDialog ui;
