@@ -6,7 +6,7 @@
     <x>0</x>
     <y>0</y>
     <width>690</width>
-    <height>374</height>
+    <height>460</height>
    </rect>
   </property>
   <property name="title" >
@@ -51,6 +51,20 @@
        <widget class="QPushButton" name="saveRequestToFilePB" >
         <property name="text" >
          <string>Save Request To File...</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="sendRequestByEMailPB" >
+        <property name="text" >
+         <string>Send Request By EMail...</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="sendCertificateByEMailPB" >
+        <property name="text" >
+         <string>Send Certificate By EMail...</string>
         </property>
        </widget>
       </item>
