@@ -58,10 +58,13 @@
 #include <KGlobal>
 #include <KLocale>
 #include <KDebug>
+#include <KTempDir>
 
 #include <QRegExpValidator>
 #include <QLineEdit>
 #include <QMetaProperty>
+#include <QDir>
+#include <QFile>
 
 #include <boost/range.hpp>
 
@@ -430,7 +433,9 @@ namespace {
         Q_OBJECT
     public:
         explicit KeyCreationPage( QWidget * p=0 )
-            : WizardPage( p ), ui()
+            : WizardPage( p ),
+              tmp( QDir::temp().absoluteFilePath( "kleo-" ) ),
+              ui()
         {
             ui.setupUi( this );
         }
@@ -465,19 +470,42 @@ namespace {
 
     private Q_SLOTS:
         void slotResult( const GpgME::KeyGenerationResult & result, const QByteArray & request, const QString & auditLog ) {
-            if ( result.error().isCanceled() )
-                setField( "error", i18n("Operation canceled.") );
-            else if ( result.error() )
-                setField( "error", i18n("Could not create certificate: %1",
-                                        QString::fromLocal8Bit( result.error().asString() ) ) );
-            else
-                setField( "result", i18n("Certificate created successfully.\n"
-                                         "Fingerprint: %1", result.fingerprint() ) );
+            if ( result.error().code() ) {
+                setField( "error", result.error().isCanceled()
+                          ? i18n("Operation canceled.")
+                          : i18n("Could not create certificate: %1",
+                                 QString::fromLocal8Bit( result.error().asString() ) ) );
+                setField( "url", QString() );
+                setField( "result", QString() );
+            } else {
+                const QString fileName = pgp()
+                    ? QString::fromLatin1( "pub-%1.asc" ).arg( result.fingerprint() )
+                    : QString::fromLatin1( "request.p10" ) ;
+                QFile file( QDir( tmp.name() ).absoluteFilePath( fileName ) );
+
+                if ( !file.open( QIODevice::WriteOnly ) ) {
+                    setField( "error", i18n("Could not write output file %1: %2",
+                                            file.fileName(), file.errorString() ) );
+                    setField( "url", QString() );
+                    setField( "result", QString() );
+                } else {
+                    file.write( request );
+                    setField( "error", QString() );
+                    setField( "url", QUrl::fromLocalFile( file.fileName() ).toString() );
+                    if ( pgp() )
+                        setField( "result", i18n("Certificate created successfully.\n"
+                                                 "Fingerprint: %1", result.fingerprint() ) );
+                    else
+                        setField( "result", i18n("Certificate created successfully.") );
+                }
+            }
             job = 0;
             emit completeChanged();
+            QMetaObject::invokeMethod( wizard(), "next", Qt::QueuedConnection );
         }
 
     private:
+        KTempDir tmp;
         QPointer<KeyGenerationJob> job;
         Ui_KeyCreationPage ui;
     };
@@ -489,8 +517,10 @@ namespace {
             : WizardPage( p ), ui()
         {
             ui.setupUi( this );
+            ui.dragQueen->setPixmap( KIcon( "kleopatra" ).pixmap( 64, 64 ) );
             registerField( "error",  ui.errorTB,  "plainText" );
             registerField( "result", ui.resultTB, "plainText" );
+            registerField( "url",   ui.dragQueen, "url" );
         }
 
         /* reimp */ void initializePage() {
