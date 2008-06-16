@@ -98,8 +98,10 @@ public:
 private:
     void slotAdd() {
         const int idx = stringListModel.rowCount();
-        if ( stringListModel.insertRows( idx, 1 ) )
+        if ( stringListModel.insertRows( idx, 1 ) ) {
+            stringListModel.setData( stringListModel.index( idx ), defaultValue );
             editRow( idx );
+        }
     }
 
     void slotRemove() {
@@ -165,6 +167,7 @@ private:
 private:
     QStringListModel stringListModel;
     ItemDelegate delegate;
+    QString defaultValue;
     struct UI : Ui_ListWidget {
         explicit UI( ListWidget * q )
             : Ui_ListWidget()
@@ -202,6 +205,14 @@ QRegExp ListWidget::regExpFilter() const {
 
 void ListWidget::setRegExpFilter( const QRegExp & rx ) {
     d->delegate.setRegExpFilter( rx );
+}
+
+QString ListWidget::defaultValue() const {
+    return d->defaultValue;
+}
+
+void ListWidget::setDefaultValue( const QString & df ) {
+    d->defaultValue = df;
 }
 
 #include "moc_listwidget.cpp"

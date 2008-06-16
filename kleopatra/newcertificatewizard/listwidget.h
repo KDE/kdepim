@@ -38,6 +38,8 @@
 #include <utils/pimpl_ptr.h>
 
 class QRegExp;
+class QString;
+class QStringList;
 
 namespace Kleo {
 namespace NewCertificateUi {
@@ -46,9 +48,13 @@ namespace NewCertificateUi {
         Q_OBJECT
         Q_PROPERTY( QStringList items READ items WRITE setItems USER true NOTIFY itemsChanged )
         Q_PROPERTY( QRegExp regExpFilter READ regExpFilter WRITE setRegExpFilter )
+        Q_PROPERTY( QString defaultValue READ defaultValue WRITE setDefaultValue )
     public:
         explicit ListWidget( QWidget * parent=0 );
         ~ListWidget();
+
+        void setDefaultValue( const QString & defaultValue );
+        QString defaultValue() const;
 
         void setRegExpFilter( const QRegExp & rx );
         QRegExp regExpFilter() const;
