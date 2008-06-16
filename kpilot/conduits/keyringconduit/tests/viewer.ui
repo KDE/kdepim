@@ -90,9 +90,6 @@
           <property name="text" >
            <string>Last changed:</string>
           </property>
-          <property name="buddy" >
-           <cstring>fCategoryEdit</cstring>
-          </property>
          </widget>
         </item>
        </layout>
@@ -148,10 +145,14 @@ p, li { white-space: pre-wrap; }
          </layout>
         </item>
         <item>
-         <widget class="QLineEdit" name="fCategoryEdit" />
+         <widget class="QComboBox" name="fCategoryEdit" />
         </item>
         <item>
-         <widget class="QDateEdit" name="fDateEdit" />
+         <widget class="QDateEdit" name="fDateEdit" >
+          <property name="buttonSymbols" >
+           <enum>QAbstractSpinBox::NoButtons</enum>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -164,13 +165,10 @@ p, li { white-space: pre-wrap; }
         <property name="text" >
          <string>Notes:</string>
         </property>
-        <property name="buddy" >
-         <cstring>fNotesEdit</cstring>
-        </property>
        </widget>
       </item>
       <item>
-       <widget class="QTextEdit" name="fNotesEdit" />
+       <widget class="QPlainTextEdit" name="fNotesEdit" />
       </item>
      </layout>
     </item>

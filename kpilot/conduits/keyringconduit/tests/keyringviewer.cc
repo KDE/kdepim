@@ -33,7 +33,7 @@
 
 #include "pilotLocalDatabase.h"
 
-#include "keyringhhdataproxy.h"
+#include "localkeyringproxy.h"
 #include "keyringhhrecord.h"
 
 #include "keyringlistmodel.h"
@@ -64,6 +64,8 @@ KeyringViewer::KeyringViewer( QWidget *parent )
 		, this, SLOT( accountEditCheck() ) );
 	connect( fUi.fPasswordEdit, SIGNAL( editingFinished () )
 		, this, SLOT( passEditCheck() ) );
+	connect( fUi.fCategoryEdit, SIGNAL( currentIndexChanged( const QString& ) )
+		, this, SLOT( categoryEditCheck( const QString& ) ) );
 		
 	// Connect the actions
 	connect( fUi.actionNew, SIGNAL( triggered() ), this, SLOT( newDatabase() ) );
@@ -79,14 +81,28 @@ KeyringViewer::~KeyringViewer()
 
 void KeyringViewer::selectionChanged( const QModelIndex &index )
 {
+	// Do this here because the QPlainTextEdit does not have a signal like
+	// editingFinished, but only a text changed. We don't want to unpack and pack
+	// the record for each character we type, do we?
+	if( fCurrentRecord && fCurrentRecord->notes() != fUi.fNotesEdit->toPlainText() )
+	{
+		QDateTime now = QDateTime::currentDateTime();
+		
+		fCurrentRecord->setNotes( fUi.fNotesEdit->toPlainText() );
+		fCurrentRecord->setLastChangedDate( now );
+		fCurrentRecord->setModified();
+		fProxy->saveRecord( fCurrentRecord );
+	}
+	
 	fCurrentRecord = static_cast<KeyringListModel*>(
 		fUi.fAccountList->model() )->record( index );
 
 	fUi.fNameEdit->setText( fCurrentRecord->name() );
-	fUi.fCategoryEdit->setText( fCurrentRecord->category() );
+	int i = fProxy->categories().indexOf( fCurrentRecord->category() );
+	fUi.fCategoryEdit->setCurrentIndex( i );
 	fUi.fAccountEdit->setText( fCurrentRecord->account() );
 	fUi.fPasswordEdit->setText( fCurrentRecord->password() );
-	fUi.fNotesEdit->setText( fCurrentRecord->notes() );
+	fUi.fNotesEdit->setPlainText( fCurrentRecord->notes() );
 	fUi.fDateEdit->setDateTime( fCurrentRecord->lastChangedDate() );
 	
 	// Don't show the password by default
@@ -136,7 +152,7 @@ void KeyringViewer::newDatabase()
 	delete fProxy;
 	delete fModel;
 	
-	fProxy = new KeyringHHDataProxy( fileName );
+	fProxy = new LocalKeyringProxy( fileName );
 	fProxy->openDatabase( pass );
 	fProxy->createDataStore();
 	fProxy->openDatabase( pass );
@@ -145,11 +161,15 @@ void KeyringViewer::newDatabase()
 	
 	fUi.fAccountList->setModel( fModel );
 	fUi.fAccountList->setEnabled( true );
+	fUi.fCategoryFilter->addItems( fProxy->categories() );
 	fUi.fCategoryFilter->setEnabled( true );
 	fUi.fNameEdit->setEnabled( true );
 	fUi.fAccountEdit->setEnabled( true );
 	fUi.fPasswordEdit->setEnabled( true );
 	fUi.fPasswordBox->setEnabled( true );
+	fUi.fCategoryEdit->addItems( fProxy->categories() );
+	fUi.fCategoryEdit->setEnabled( true );
+	fUi.fNotesEdit->setEnabled( true );
 }
 
 void KeyringViewer::openDatabase()
@@ -170,7 +190,7 @@ void KeyringViewer::openDatabase()
 	
 	QString pass = PasswordDialog::getPassword( this, PasswordDialog::Normal );
 	
-	KeyringHHDataProxy* proxy = new KeyringHHDataProxy( fileName );
+	LocalKeyringProxy* proxy = new LocalKeyringProxy( fileName );
 	
 	if( !proxy->openDatabase( pass ) )
 	{
@@ -187,13 +207,17 @@ void KeyringViewer::openDatabase()
 	fProxy = proxy;
 	fModel = new KeyringListModel( fProxy, this );
 	
-	fUi.fCategoryFilter->setEnabled( true );
 	fUi.fAccountList->setModel( fModel );
 	fUi.fAccountList->setEnabled( true );
+	fUi.fCategoryFilter->addItems( fProxy->categories() );
+	fUi.fCategoryFilter->setEnabled( true );
 	fUi.fNameEdit->setEnabled( true );
 	fUi.fAccountEdit->setEnabled( true );
 	fUi.fPasswordEdit->setEnabled( true );
 	fUi.fPasswordBox->setEnabled( true );
+	fUi.fCategoryEdit->addItems( fProxy->categories() );
+	fUi.fCategoryEdit->setEnabled( true );
+	fUi.fNotesEdit->setEnabled( true );
 }
 
 void KeyringViewer::nameEditCheck()
@@ -235,6 +259,22 @@ void KeyringViewer::passEditCheck()
 		QDateTime now = QDateTime::currentDateTime();
 		
 		fCurrentRecord->setPassword( fUi.fPasswordEdit->text() );
+		fCurrentRecord->setLastChangedDate( now );
+		fCurrentRecord->setModified();
+		fProxy->saveRecord( fCurrentRecord );
+	}
+}
+
+void KeyringViewer::categoryEditCheck( const QString& newCategory )
+{
+	if( !fCurrentRecord ) return;
+	
+	if( newCategory != fCurrentRecord->category() )
+	{
+		QDateTime now = QDateTime::currentDateTime();
+		
+		fProxy->setCategory( fCurrentRecord, newCategory );
+		
 		fCurrentRecord->setLastChangedDate( now );
 		fCurrentRecord->setModified();
 		fProxy->saveRecord( fCurrentRecord );

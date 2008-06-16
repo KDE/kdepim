@@ -1,8 +1,6 @@
-#ifndef KEYRINGEDITOR_H
-#define KEYRINGEDITOR_H
-/* keyringeditor.h			KPilot
+/* localkeyringproxy.cc			KPilot
 **
-** Copyright (C) 2007 by Bertjan Broeksema
+** Copyright (C) 2007 by Bertjan Broeksema <b.broeksema@kdemail.net>
 */
 
 /*
@@ -26,38 +24,31 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "ui_viewer.h"
+#include "localkeyringproxy.h"
+#include "hhrecord.h"
 
-class LocalKeyringProxy;
-class KeyringListModel;
-class KeyringHHRecord;
-
-class KeyringViewer : public QMainWindow
+LocalKeyringProxy::LocalKeyringProxy( const QString& fileName )
+	: KeyringHHDataProxy( fileName )
 {
-	Q_OBJECT
-
-public:
-	KeyringViewer( QWidget *parent = 0 );
+}
 	
-	~KeyringViewer();
+void LocalKeyringProxy::saveRecord( HHRecord* rec )
+{
+	commitUpdate( rec );
+}
 
-private slots:
-	void selectionChanged( const QModelIndex &index );
-	void togglePasswordVisibility();
-	void newDatabase();
-	void openDatabase();
+QStringList LocalKeyringProxy::categories() const
+{
+	QStringList categories;
 	
-	// Slots to deal with changes in the input fields.
-	void nameEditCheck();
-	void accountEditCheck();
-	void passEditCheck();
-	void categoryEditCheck( const QString& newCategory );
-
-private:
-	Ui::MainWindow fUi;
-	LocalKeyringProxy* fProxy;
-	KeyringHHRecord* fCurrentRecord;
-	KeyringListModel* fModel;
-};
-
-#endif
+	for( uint i = 0; i < Pilot::CATEGORY_COUNT; i++ )
+	{
+		QString categorie = fAppInfo->categoryName( i );
+		if( !categorie.isEmpty() )
+		{
+			categories << fAppInfo->categoryName( i );
+		}
+	}
+	
+	return categories;
+}
