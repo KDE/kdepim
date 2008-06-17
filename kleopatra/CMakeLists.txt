@@ -140,6 +140,7 @@ set( _kleopatra_SRCS
   dialogs/exportsecretkeydialog.cpp
   dialogs/adduseriddialog.cpp
   dialogs/certificatedetailsdialog.cpp
+  dialogs/exportcertificatesdialog.cpp
 
   crypto/certificateresolver.cpp
   crypto/task.cpp
@@ -214,7 +215,6 @@ set( _kleopatra_SRCS
   aboutdata.cpp
   systemtrayicon.cpp
   kleopatraapplication.cpp
-  exportcertificatesdialog.cpp
   main.cpp )
 
 if ( KLEO_MODEL_TEST )

@@ -33,9 +33,10 @@
 #include <config-kleopatra.h>
 
 #include "exportcertificatecommand.h"
-#include "exportcertificatesdialog.h"
 
 #include "command_p.h"
+
+#include <dialogs/exportcertificatesdialog.h>
 
 #include <kleo/cryptobackend.h>
 #include <kleo/cryptobackendfactory.h>
@@ -58,9 +59,10 @@
 #include <vector>
 #include <cassert>
 
-using namespace boost;
-using namespace GpgME;
 using namespace Kleo;
+using namespace Kleo::Dialogs;
+using namespace GpgME;
+using namespace boost;
 
 class ExportCertificateCommand::Private : public Command::Private {
     friend class ::ExportCertificateCommand;
