@@ -101,5 +101,110 @@
   </customwidget>
  </customwidgets>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>saveRequestToFilePB</sender>
+   <signal>clicked()</signal>
+   <receiver>Kleo::NewCertificateUi::ResultPage</receiver>
+   <slot>slotSaveRequestToFile()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>34</x>
+     <y>354</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>2</x>
+     <y>348</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sendRequestByEMailPB</sender>
+   <signal>clicked()</signal>
+   <receiver>Kleo::NewCertificateUi::ResultPage</receiver>
+   <slot>slotSendRequestByEMail()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>32</x>
+     <y>390</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>6</x>
+     <y>390</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>sendCertificateByEMailPB</sender>
+   <signal>clicked()</signal>
+   <receiver>Kleo::NewCertificateUi::ResultPage</receiver>
+   <slot>slotSendCertificateByEMail()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>28</x>
+     <y>436</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>4</x>
+     <y>438</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>uploadToKeyserverPB</sender>
+   <signal>clicked()</signal>
+   <receiver>Kleo::NewCertificateUi::ResultPage</receiver>
+   <slot>slotUploadCertificateToDirectoryServer()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>30</x>
+     <y>478</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>2</x>
+     <y>478</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>makeBackupPB</sender>
+   <signal>clicked()</signal>
+   <receiver>Kleo::NewCertificateUi::ResultPage</receiver>
+   <slot>slotBackupCertificate()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>32</x>
+     <y>518</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>4</x>
+     <y>518</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>createRevocationRequestPB</sender>
+   <signal>clicked()</signal>
+   <receiver>Kleo::NewCertificateUi::ResultPage</receiver>
+   <slot>slotCreateRevocationRequest()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>32</x>
+     <y>558</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>2</x>
+     <y>560</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>slotSaveRequestToFile()</slot>
+  <slot>slotSendRequestByEMail()</slot>
+  <slot>slotSendCertificateByEMail()</slot>
+  <slot>slotUploadCertificateToDirectoryServer()</slot>
+  <slot>slotBackupCertificate()</slot>
+  <slot>slotCreateRevocationRequest()</slot>
+ </slots>
 </ui>

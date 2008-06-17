@@ -42,6 +42,11 @@
 
 #include "ui_advancedsettingsdialog.h"
 
+#include <models/keycache.h>
+
+#include <commands/exportsecretkeycommand.h>
+#include <commands/exportopenpgpcertstoservercommand.h>
+
 #include <utils/formatting.h>
 #include <utils/stl_util.h>
 
@@ -60,6 +65,7 @@
 #include <KLocale>
 #include <KDebug>
 #include <KTempDir>
+#include <KMessageBox>
 
 #include <QRegExpValidator>
 #include <QLineEdit>
@@ -67,6 +73,7 @@
 #include <QDir>
 #include <QFile>
 #include <QUrl>
+#include <QFileDialog>
 
 #include <boost/range.hpp>
 
@@ -74,6 +81,7 @@
 
 using namespace Kleo;
 using namespace Kleo::NewCertificateUi;
+using namespace Kleo::Commands;
 using namespace GpgME;
 using namespace boost;
 
@@ -204,6 +212,11 @@ namespace {
         FIELD( QStringList, additionalEMailAddresses )
         FIELD( QStringList, dnsNames )
         FIELD( QStringList, uris )
+
+        FIELD( QString, url )
+        FIELD( QString, error )
+        FIELD( QString, result )
+        FIELD( QString, fingerprint )
 #undef FIELD
     };
 
@@ -493,7 +506,7 @@ namespace {
 
     private:
         void startJob() {
-            const CryptoBackend::Protocol * const proto = CryptoBackendFactory::instance()->protocol( field("pgp").toBool() ? OpenPGP : CMS );
+            const CryptoBackend::Protocol * const proto = CryptoBackendFactory::instance()->protocol( pgp() ? OpenPGP : CMS );
             if ( !proto )
                 return;
             KeyGenerationJob * const j = proto->keyGenerationJob();
@@ -540,6 +553,7 @@ namespace {
                     setField( "result", i18n("Certificate created successfully.") );
                 }
             }
+            setField( "fingerprint", QString::fromLatin1( result.fingerprint() ) );
             job = 0;
             emit completeChanged();
             QMetaObject::invokeMethod( wizard(), "next", Qt::QueuedConnection );
@@ -559,9 +573,13 @@ namespace {
         {
             ui.setupUi( this );
             ui.dragQueen->setPixmap( KIcon( "kleopatra" ).pixmap( 64, 64 ) );
-            registerField( "error",  ui.errorTB,  "plainText" );
-            registerField( "result", ui.resultTB, "plainText" );
-            registerField( "url",   ui.dragQueen, "url" );
+            registerField( "error",  ui.errorTB,   "plainText" );
+            registerField( "result", ui.resultTB,  "plainText" );
+            registerField( "url",    ui.dragQueen, "url" );
+            // hidden field, since QWizard can't deal with non-widget-backed fields...
+            QLineEdit * le = new QLineEdit( this );
+            le->hide();
+            registerField( "fingerprint", le );
         }
 
         /* reimp */ void initializePage() {
@@ -596,6 +614,56 @@ namespace {
 
         /* reimp */ bool isComplete() const {
             return !isError();
+        }
+
+    private:
+        Key key() const {
+            return KeyCache::instance()->findByFingerprint( fingerprint().toLatin1().constData() );
+        }
+
+    private Q_SLOTS:
+        void slotSaveRequestToFile() {
+            QString fileName = QFileDialog::getSaveFileName( this, i18nc("@title", "Save Request") );
+            if ( fileName.isEmpty() )
+                return;
+            if ( !fileName.endsWith( ".p10", Qt::CaseInsensitive ) )
+                fileName += ".p10";
+            QFile src( QUrl( url() ).toLocalFile() );
+            if ( !src.copy( fileName ) )
+                KMessageBox::error( this,
+                                    i18nc("@info",
+                                          "Could not copy temporary file <filename>%1</filename> "
+                                          "to file <filename>%2</filename>: <message>%3</message>",
+                                          src.fileName(), fileName, src.errorString() ),
+                                    i18nc("@title", "Error Saving Request") );
+            else
+                KMessageBox::information( this,
+                                          i18nc("@info",
+                                                "<para>Successfully wrote request to <filename>%1</filename>.</para>"
+                                                "<para>You should now send the request to the Certification Authority (CA).</para>" ),
+                                          i18nc("@title", "Request Saved" ) );
+        }
+
+        void slotSendRequestByEMail() {
+
+        }
+
+        void slotSendCertificateByEMail() {
+
+        }
+
+        void slotUploadCertificateToDirectoryServer() {
+            if ( pgp() )
+                ( new ExportOpenPGPCertsToServerCommand( key() ) )->start();
+        }
+
+        void slotBackupCertificate() {
+            if ( pgp() )
+                ( new ExportSecretKeyCommand( key() ) )->start();
+        }
+
+        void slotCreateRevocationRequest() {
+
         }
 
     private:
@@ -930,7 +998,7 @@ static QString encode_dns( const QString & dns ) {
 }
 
 static QString encode_email( const QString & email ) {
-    const int at = email.findRev( '@' );
+    const int at = email.lastIndexOf( '@' );
     if ( at < 0 )
         return email;
     return email.left( at + 1 ) + encode_dns( email.mid( at + 1 ) );
