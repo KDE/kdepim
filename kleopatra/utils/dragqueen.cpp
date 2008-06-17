@@ -41,6 +41,7 @@
 #include <QVariant>
 #include <QApplication>
 #include <QUrl>
+#include <QStyle>
 
 #include <algorithm>
 
@@ -169,11 +170,23 @@ void DragQueen::mousePressEvent( QMouseEvent * e ) {
     QLabel::mousePressEvent( e );
 }
 
+static QPoint calculate_hot_spot( const QPoint & mouse, const QSize & pix, const QLabel * label ) {
+    const Qt::Alignment align = label->alignment();
+    const int margin = label->margin();
+    const QRect cr = label->contentsRect().adjusted( margin, margin, -margin, -margin );
+    const QRect rect = QStyle::alignedRect( QApplication::layoutDirection(), align, pix, cr );
+    return mouse - rect.topLeft();
+}
+
 void DragQueen::mouseMoveEvent( QMouseEvent * e ) {
     if ( m_data &&
          (e->buttons() & Qt::LeftButton) &&
          ( m_dragStartPosition - e->pos() ).manhattanLength() > QApplication::startDragDistance() ) {
         QDrag * drag = new QDrag( this );
+        if ( const QPixmap * const pix = pixmap() ) {
+            drag->setPixmap( *pix );
+            drag->setHotSpot( calculate_hot_spot( e->pos(), pix->size(), this ) );
+        }
         drag->setMimeData( new MimeDataProxy( m_data ) );
         drag->exec();
     } else {
