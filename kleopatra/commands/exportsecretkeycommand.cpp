@@ -62,6 +62,12 @@ ExportSecretKeyCommand::ExportSecretKeyCommand( QAbstractItemView * v, KeyListCo
 
 }
 
+ExportSecretKeyCommand::ExportSecretKeyCommand( const Key & key )
+    : GnuPGProcessCommand( key )
+{
+
+}
+
 ExportSecretKeyCommand::~ExportSecretKeyCommand() {}
 
 void ExportSecretKeyCommand::setFileName( const QString & fileName ) {

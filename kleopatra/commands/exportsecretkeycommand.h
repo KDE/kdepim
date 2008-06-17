@@ -46,6 +46,7 @@ namespace Commands {
     public:
         explicit ExportSecretKeyCommand( QAbstractItemView * view, KeyListController * parent );
         explicit ExportSecretKeyCommand( KeyListController * parent );
+        explicit ExportSecretKeyCommand( const GpgME::Key & key );
         ~ExportSecretKeyCommand();
 
         void setFileName( const QString & fileName );
