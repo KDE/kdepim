@@ -514,7 +514,7 @@ TabWidget::Private::Private( TabWidget * qq )
           "edit-rename", q, SLOT(slotRenameCurrentTab()), i18n("CTRL+SHIFT+R"), false, false },
         { "window_duplicate_tab", i18n("Duplicate Current Tab"), i18n("Duplicate the current tab"),
           "tab-duplicate", q, SLOT(slotDuplicateCurrentTab()), i18n("CTRL+SHIFT+D"), false, true },
-        { "window_close_tab", i18n("Close Current Tab"), i18n("Close the current tab"),
+        { "window_close_tab", i18n("Close Tab"), i18n("Close this tab"),
           "tab-close", q, SLOT(slotCloseCurrentTab()), i18n("CTRL+SHIFT+W"), false, false }, // ### CTRL-W when available
         { "window_move_tab_left", i18n("Move Tab Left"), QString(),
           0, q, SLOT(slotMoveCurrentTabLeft()), i18n("CTRL+SHIFT+LEFT"), false, false },
