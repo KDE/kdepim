@@ -76,8 +76,9 @@ static KeyListResult do_list_keys( Context * ctx, const QStringList & pats, std:
 
   keys.pop_back();
 
-  return ctx->endKeyListing();
-
+  const KeyListResult result = ctx->endKeyListing();
+  ctx->cancelPendingOperation();
+  return result;
 }
 
 static QGpgMEKeyListJob::result_type list_keys( Context * ctx, QStringList pats, bool secretOnly ) {
