@@ -897,14 +897,15 @@ QString KeyCreationPage::createGnupgKeyParms() const {
     if ( pgp() )
         s << "name-real:     " << name()                   << endl
           << "name-comment:  " << comment()                << endl;
-    else
+    else {
         s << "name-dn:       " << dn()                     << endl;
-    Q_FOREACH( const QString & email, additionalEMailAddresses() )
-        s << "name-email:    " << email                    << endl;
-    Q_FOREACH( const QString & dns,   dnsNames() )
-        s << "name-dns:      " << dns                      << endl;
-    Q_FOREACH( const QString & uri,   uris() )
-        s << "name-uri:      " << uri                      << endl;
+        Q_FOREACH( const QString & email, additionalEMailAddresses() )
+            s << "name-email:    " << email                << endl;
+        Q_FOREACH( const QString & dns,   dnsNames() )
+            s << "name-dns:      " << dns                  << endl;
+        Q_FOREACH( const QString & uri,   uris() )
+            s << "name-uri:      " << uri                  << endl;
+    }
     if ( pgp() )
         s << "%ask-passphrase"                             << endl;
     s     << "</GnupgKeyParms>"                            << endl;
