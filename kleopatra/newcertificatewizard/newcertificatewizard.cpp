@@ -66,6 +66,7 @@
 #include <KDebug>
 #include <KTempDir>
 #include <KMessageBox>
+#include <KToolInvocation>
 
 #include <QRegExpValidator>
 #include <QLineEdit>
@@ -645,7 +646,14 @@ namespace {
         }
 
         void slotSendRequestByEMail() {
-
+            if ( pgp() )
+                return;
+            const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
+            KToolInvocation::invokeMailer( config.readEntry( "CAEmailAddress" ), QString() /*cc*/, QString() /*bcc*/,
+                                           i18n("Please process this certificate."),
+                                           i18n("Please process this certificate and inform the sender about the location to fetch the resulting certificate.\n\nThanks,\n"),
+                                           QString(), // unused
+                                           QStringList( url() ) );
         }
 
         void slotSendCertificateByEMail() {
