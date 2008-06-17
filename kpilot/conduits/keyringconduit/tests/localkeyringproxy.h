@@ -1,10 +1,9 @@
-#ifndef KEYRINGEDITOR_H
-#define KEYRINGEDITOR_H
-/* keyringeditor.h			KPilot
+#ifndef LOCALKEYRINGPROXY_H
+#define LOCALKEYRINGPROXY_H
+/* localkeyringproxy.h			KPilot
 **
-** Copyright (C) 2007 by Bertjan Broeksema
+** Copyright (C) 2007 by Bertjan Broeksema <b.broeksema@kdemail.net>
 */
-
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -26,42 +25,24 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "ui_viewer.h"
+#include "keyringhhdataproxy.h"
 
-class LocalKeyringProxy;
-class KeyringListModel;
 class KeyringHHRecord;
 
-class KeyringViewer : public QMainWindow
+class KPILOT_EXPORT LocalKeyringProxy : public KeyringHHDataProxy
 {
-	Q_OBJECT
-
 public:
-	KeyringViewer( QWidget *parent = 0 );
+	LocalKeyringProxy( const QString& fileName );
 	
-	~KeyringViewer();
-
-private slots:
-	void selectionChanged( const QModelIndex &index );
-	void togglePasswordVisibility();
-	void newDatabase();
-	void openDatabase();
+	void saveRecord( HHRecord* rec );
 	
-	// Slots to deal with changes in the input fields.
-	void nameEditCheck();
-	void accountEditCheck();
-	void passEditCheck();
-	void categoryEditCheck( const QString& newCategory );
-
-	// Slots to deal with addition and deletion of records.
-	void deleteRecord();
-	void newRecord();
+	void deleteRecord( HHRecord* rec );
 	
-private:
-	Ui::MainWindow fUi;
-	LocalKeyringProxy* fProxy;
-	KeyringHHRecord* fCurrentRecord;
-	KeyringListModel* fModel;
+	void addRecord( HHRecord* rec );
+	
+	KeyringHHRecord* createRecord();
+	
+	QStringList categories() const;
 };
 
 #endif

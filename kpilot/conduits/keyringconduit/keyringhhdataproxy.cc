@@ -248,11 +248,6 @@ bool KeyringHHDataProxy::createDataStore()
 	}
 }
 
-void KeyringHHDataProxy::saveRecord( HHRecord* rec )
-{
-	commitUpdate( rec );
-}
-
 QCA::SecureArray KeyringHHDataProxy::getDigest(
 	const QCA::SecureArray &recordZero, const QCA::SecureArray &pass )
 {

@@ -4,6 +4,7 @@ include_directories(
 )
 
 set(tests_SRCS
+	localkeyringproxy.cc
 	keyringlistmodel.cc
 	passworddialog.cc
 	keyringviewer.cc

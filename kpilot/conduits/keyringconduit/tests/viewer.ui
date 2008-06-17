@@ -21,14 +21,51 @@
      <height>576</height>
     </rect>
    </property>
-   <layout class="QGridLayout" >
+   <layout class="QGridLayout" name="gridLayout" >
     <item rowspan="2" row="0" column="0" >
-     <layout class="QVBoxLayout" >
+     <layout class="QVBoxLayout" name="verticalLayout" >
       <item>
        <widget class="QComboBox" name="fCategoryFilter" />
       </item>
       <item>
-       <widget class="QListView" name="fAccountList" />
+       <widget class="QListView" name="fAccountList" >
+        <property name="editTriggers" >
+         <set>QAbstractItemView::NoEditTriggers</set>
+        </property>
+        <property name="showDropIndicator" stdset="0" >
+         <bool>false</bool>
+        </property>
+        <property name="alternatingRowColors" >
+         <bool>true</bool>
+        </property>
+        <property name="selectionMode" >
+         <enum>QAbstractItemView::SingleSelection</enum>
+        </property>
+        <property name="selectionBehavior" >
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+        <property name="selectionRectVisible" >
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="horizontalLayout" >
+        <item>
+         <widget class="QPushButton" name="fDeleteButton" >
+          <property name="text" >
+           <string>Delete Record</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="fNewButton" >
+          <property name="text" >
+           <string>New Record</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
       </item>
      </layout>
     </item>
@@ -90,9 +127,6 @@
           <property name="text" >
            <string>Last changed:</string>
           </property>
-          <property name="buddy" >
-           <cstring>fCategoryEdit</cstring>
-          </property>
          </widget>
         </item>
        </layout>
@@ -148,10 +182,14 @@ p, li { white-space: pre-wrap; }
          </layout>
         </item>
         <item>
-         <widget class="QLineEdit" name="fCategoryEdit" />
+         <widget class="QComboBox" name="fCategoryEdit" />
         </item>
         <item>
-         <widget class="QDateEdit" name="fDateEdit" />
+         <widget class="QDateEdit" name="fDateEdit" >
+          <property name="buttonSymbols" >
+           <enum>QAbstractSpinBox::NoButtons</enum>
+          </property>
+         </widget>
         </item>
        </layout>
       </item>
@@ -164,13 +202,10 @@ p, li { white-space: pre-wrap; }
         <property name="text" >
          <string>Notes:</string>
         </property>
-        <property name="buddy" >
-         <cstring>fNotesEdit</cstring>
-        </property>
        </widget>
       </item>
       <item>
-       <widget class="QTextEdit" name="fNotesEdit" />
+       <widget class="QPlainTextEdit" name="fNotesEdit" />
       </item>
      </layout>
     </item>

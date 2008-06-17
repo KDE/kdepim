@@ -54,6 +54,8 @@ KeyringHHRecord::KeyringHHRecord( const QString &name
 	Pilot::toPilot( QString(""), buf->data, 0 );
 		
 	fRecord = new PilotRecord( buf, 0, 0, 0);
+	fRecord->setCategory( 0 );
+	fCategory = "Unfiled";
 	
 	pack( data );
 }
