@@ -43,6 +43,7 @@
 #include "ui_advancedsettingsdialog.h"
 
 #include <utils/formatting.h>
+#include <utils/stl_util.h>
 
 #include <kleo/dn.h>
 #include <kleo/oidmap.h>
@@ -74,6 +75,10 @@ using namespace Kleo;
 using namespace Kleo::NewCertificateUi;
 using namespace GpgME;
 using namespace boost;
+
+static void set_tab_order( const QList<QWidget*> & wl ) {
+    kdtools::for_each_adjacent_pair( wl, &QWidget::setTabOrder );
+}
 
 static const unsigned int key_strengths[] = {
     0, 1024, 1532, 2048, 3072, 4096,
@@ -744,6 +749,11 @@ void EnterDetailsPage::updateForm() {
         else
             attrOrder << "CN!" << "L" << "OU" << "O!" << "C!" << "EMAIL!";
 
+    QList<QWidget*> widgets;
+    widgets.push_back( ui.nameLE );
+    widgets.push_back( ui.emailLE );
+    widgets.push_back( ui.commentLE );
+
     Q_FOREACH( const QString & rawKey, attrOrder ) {
         const QString key = rawKey.trimmed().toUpper();
         const QString attr = attributeFromKey( key );
@@ -757,6 +767,7 @@ void EnterDetailsPage::updateForm() {
         const QString regex = config.readEntry( attr + "_regex" );
 
         int row;
+        bool known = true;
         if ( attr == "EMAIL" ) {
             row = row_index_of( ui.emailLE, ui.gridLayout );
             if ( !pgp() )
@@ -770,17 +781,27 @@ void EnterDetailsPage::updateForm() {
                 continue;
             row = row_index_of( ui.commentLE, ui.gridLayout );
         } else {
+            known = false;
             row = add_row( ui.gridLayout, &dynamicWidgets );
         }
         QLineEdit * le = adjust_row( ui.gridLayout, row, label, preset, regex, readonly, required );
 
         attributePairList.append( qMakePair( key, le ) );
 
+        if ( !known )
+            widgets.push_back( le );
+
         // don't connect twice:
         le->disconnect( this );
         connect( le, SIGNAL(textChanged(QString)),
                  this, SLOT(slotUpdateResultLabel()) );
     }
+
+    widgets.push_back( ui.resultLE );
+    widgets.push_back( ui.addEmailToDnCB );
+    widgets.push_back( ui.advancedPB );
+
+    set_tab_order( widgets );
 }
 
 QString EnterDetailsPage::cmsDN() const {
