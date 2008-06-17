@@ -1,14 +1,6 @@
 <ui version="4.0" >
  <class>Kleo::NewCertificateUi::ResultPage</class>
  <widget class="QWizardPage" name="Kleo::NewCertificateUi::ResultPage" >
-  <property name="geometry" >
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>690</width>
-    <height>460</height>
-   </rect>
-  </property>
   <property name="title" >
    <string comment="@title" >Key Pair Successfully Created</string>
   </property>
@@ -39,6 +31,13 @@
        </widget>
       </item>
      </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QPushButton" name="restartWizardPB" >
+     <property name="text" >
+      <string>Restart This Wizard (Keeps Your Settings)</string>
+     </property>
     </widget>
    </item>
    <item>

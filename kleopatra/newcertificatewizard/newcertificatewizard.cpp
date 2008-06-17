@@ -152,7 +152,7 @@ namespace {
 
     class WizardPage : public QWizardPage {
         Q_OBJECT
-    public:
+    protected:
         explicit WizardPage( QWidget * parent=0 )
             : QWizardPage( parent ) {}
 
@@ -161,6 +161,24 @@ namespace {
             return static_cast<NewCertificateWizard*>( QWizardPage::wizard() );
         }
 
+        QAbstractButton * button( QWizard::WizardButton button ) const {
+            return QWizardPage::wizard() ? QWizardPage::wizard()->button( button ) : 0 ;
+        }
+
+        bool isButtonVisible( QWizard::WizardButton button ) const {
+            if ( const QAbstractButton * const b = this->button( button ) )
+                return b->isVisible();
+            else
+                return false;
+        }
+        
+    protected Q_SLOTS:
+        void setButtonVisible( QWizard::WizardButton button, bool visible ) {
+            if ( QAbstractButton * const b = this->button( button ) )
+                b->setVisible( visible );
+        }
+
+    protected:
 #define FIELD(type, name) type name() const { return field( #name ).value<type>(); }
         FIELD( bool, pgp )
         FIELD( bool, signingAllowed )
@@ -536,7 +554,7 @@ namespace {
         Q_OBJECT
     public:
         explicit ResultPage( QWidget * p=0 )
-            : WizardPage( p ), ui()
+            : WizardPage( p ), initialized( false ), ui()
         {
             ui.setupUi( this );
             ui.dragQueen->setPixmap( KIcon( "kleopatra" ).pixmap( 64, 64 ) );
@@ -546,10 +564,11 @@ namespace {
         }
 
         /* reimp */ void initializePage() {
-            const bool error = !ui.errorTB->toPlainText().isEmpty();
+            const bool error = isError();
             ui.resultTB                 ->setVisible( !error );
             ui.errorTB                  ->setVisible(  error );
             ui.dragQueen                ->setVisible( !error && !pgp() );
+            ui.restartWizardPB          ->setVisible(  error );
             ui.nextStepsGB              ->setVisible( !error );
             ui.saveRequestToFilePB      ->setVisible( !pgp() );
             ui.uploadToKeyserverPB      ->setVisible(  pgp() );
@@ -557,9 +576,29 @@ namespace {
             ui.createRevocationRequestPB->setVisible(  pgp() && false ); // not implemented
             ui.sendRequestByEMailPB     ->setVisible( !pgp() );
             ui.sendCertificateByEMailPB ->setVisible(  pgp() );
+
+            setButtonVisible( QWizard::CancelButton, error );
+
+            if ( !initialized )
+                connect( ui.restartWizardPB, SIGNAL(clicked()),
+                         wizard(), SLOT(restart()) );
+            initialized = true;
+        }
+
+        /* reimp */ void cleanupPage() {
+            setButtonVisible( QWizard::CancelButton, true );
+        }
+
+        bool isError() const {
+            return !ui.errorTB->toPlainText().isEmpty();
+        }
+
+        /* reimp */ bool isComplete() const {
+            return !isError();
         }
 
     private:
+        bool initialized;
         Ui_ResultPage ui;
     };
 }
@@ -590,6 +629,14 @@ private:
               keyCreationPage( q ),
               resultPage( q )
         {
+            KDAB_SET_OBJECT_NAME( chooseProtocolPage );
+            KDAB_SET_OBJECT_NAME( enterDetailsPage );
+            KDAB_SET_OBJECT_NAME( overviewPage );
+            KDAB_SET_OBJECT_NAME( keyCreationPage );
+            KDAB_SET_OBJECT_NAME( resultPage );
+
+            q->setOptions( DisabledBackButtonOnLastPage );
+
             q->setPage( ChooseProtocolPageId, &chooseProtocolPage );
             q->setPage( EnterDetailsPageId,   &enterDetailsPage   );
             q->setPage( OverviewPageId,       &overviewPage       );
