@@ -1,3 +1,21 @@
+Friday, June 16th 2008
+
+Problems addressed
+--------------------
+ 
+* kolab/issue2506 Typo in the display of a smime signed mail.
+* kolab/issue2512 Kmail: "Subscription" should be renamed in "Serverside subscription"
+* kolab/issue2511 Pressing "New" in the new event attendee view should not continue to create new attendees, if the first example attendee is not changed.
+* kolab/issue2659 Copying and moving contacts with only one resource configured.
+* kolab/issue2741 Button to do an ldap lookup is missing from the address selection dialog
+* kolab/issue2619 Kleopatra: Trying to create a smime key pair with a "+" in the CN, fails without a warning.
+* kolab/issue2568 Button to open certificate manager is missing from encryption key dialog
+
+Merges
+--------
+
+* Enterprise branch is in sync with kdepim 3.5 branch
+
 Friday, May 30th 2008
 
 Problems addressed
