@@ -2,7 +2,7 @@
     keyselectiondialog.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klar‰lvdalens Datakonsult AB
+    Copyright (c) 2004 Klar√§vdalens Datakonsult AB
 
     Based on kpgpui.h
     Copyright (C) 2001,2002 the KPGP authors
@@ -119,12 +119,17 @@ namespace Kleo {
     QStringList smimeFingerprints() const;
 
     bool rememberSelection() const;
+  protected slots:
+    // reimplemented to avoid popping up the help, since we
+    // override the button
+    void slotHelp();
 
     // Could be used by derived classes to insert their own widget
     QVBoxLayout* topLayout() const { return mTopLayout; }
 
   private slots:
     void slotRereadKeys();
+    void slotStartCertificateManager();
     void slotKeyListResult( const GpgME::KeyListResult & );
     void slotSelectionChanged();
     void slotCheckSelection() { slotCheckSelection( 0 ); }
