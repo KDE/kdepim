@@ -44,7 +44,6 @@ KeyringViewer::KeyringViewer( QWidget *parent )
 	: QMainWindow( parent ), fProxy( 0L ), fCurrentRecord( 0L ), fModel( 0L )
 {
 	fUi.setupUi(this);
-	
 	fUi.fCategoryFilter->setEnabled( false );
 	fUi.fAccountList->setEnabled( false );
 	fUi.fNameEdit->setEnabled( false );
@@ -185,7 +184,7 @@ void KeyringViewer::newDatabase()
 void KeyringViewer::openDatabase()
 {
 	QString fileName = QFileDialog::getOpenFileName( this,
-		tr("New database"), QDir::home().absolutePath(), "*.pdb" );
+		tr("Open database"), QDir::home().absolutePath(), "*.pdb" );
 	
 	if( fileName.isEmpty() )
 	{

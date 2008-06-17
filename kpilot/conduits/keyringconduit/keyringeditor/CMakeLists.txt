@@ -20,8 +20,8 @@ kde4_add_ui_files( tests_SRCS
 	viewer.ui
 	passworddialog.ui
 )
-kde4_add_executable(keyringviewer ${tests_SRCS})
-target_link_libraries(keyringviewer 
+kde4_add_executable(keyringeditor ${tests_SRCS})
+target_link_libraries(keyringeditor 
 	${QT_QTCORE_LIBRARY}
 	${QT_QTGUI_LIBRARY}
 	${QCA2_LIBRARIES}
