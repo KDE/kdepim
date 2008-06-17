@@ -66,6 +66,7 @@
 #include <QMetaProperty>
 #include <QDir>
 #include <QFile>
+#include <QUrl>
 
 #include <boost/range.hpp>
 
@@ -924,6 +925,17 @@ QStringList KeyCreationPage::subkeyUsages() const {
     return usages;
 }
 
+static QString encode_dns( const QString & dns ) {
+    return QString::fromLatin1( QUrl::toAce( dns ) );
+}
+
+static QString encode_email( const QString & email ) {
+    const int at = email.findRev( '@' );
+    if ( at < 0 )
+        return email;
+    return email.left( at + 1 ) + encode_dns( email.mid( at + 1 ) );
+}
+
 QString KeyCreationPage::createGnupgKeyParms() const {
     QString result;
     QTextStream s( &result );
@@ -940,16 +952,16 @@ QString KeyCreationPage::createGnupgKeyParms() const {
     }
     if ( pgp() && expiryDate().isValid() )
         s << "expire-date:   " << expiryDate().toString( Qt::ISODate ) << endl;
-    s     << "name-email:    " << email()                  << endl;
+    s     << "name-email:    " << encode_email( email() )  << endl;
     if ( pgp() )
         s << "name-real:     " << name()                   << endl
           << "name-comment:  " << comment()                << endl;
     else {
         s << "name-dn:       " << dn()                     << endl;
         Q_FOREACH( const QString & email, additionalEMailAddresses() )
-            s << "name-email:    " << email                << endl;
+            s << "name-email:    " << encode_email( email )<< endl;
         Q_FOREACH( const QString & dns,   dnsNames() )
-            s << "name-dns:      " << dns                  << endl;
+            s << "name-dns:      " << encode_dns( dns )    << endl;
         Q_FOREACH( const QString & uri,   uris() )
             s << "name-uri:      " << uri                  << endl;
     }
