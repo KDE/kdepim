@@ -1170,7 +1170,7 @@ QString KeyCreationPage::createGnupgKeyParms() const {
     s     << "name-email:    " << encode_email( email() )  << endl;
     if ( pgp() ) {
         s << "name-real:     " << name()                   << endl;
-        if ( comment().isEmpty() )
+        if ( !comment().isEmpty() )
             s << "name-comment:  " << comment()            << endl;
     } else {
         s << "name-dn:       " << dn()                     << endl;
