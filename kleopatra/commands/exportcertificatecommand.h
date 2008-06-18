@@ -41,9 +41,16 @@ namespace Kleo {
     public:
         explicit ExportCertificateCommand( QAbstractItemView * view, KeyListController * parent );
         explicit ExportCertificateCommand( KeyListController * parent );
+        explicit ExportCertificateCommand( const GpgME::Key & key );
         ~ExportCertificateCommand();
 
         /* reimp */ static Restrictions restrictions() { return NeedSelection; }
+
+        void setOpenPGPFileName( const QString & fileName );
+        QString openPGPFileName() const;
+
+        void setX509FileName( const QString & fileName );
+        QString x509FileName() const;
 
     private:
         /* reimp */ void doStart();
