@@ -5,7 +5,7 @@
    <string comment="@title" >Review Certificate Parameters</string>
   </property>
   <property name="subTitle" >
-   <string>Please review the certificate parameters before proceeding to certificate </string>
+   <string>Please review the certificate parameters before proceeding to create the certificate.</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" >
    <item>
