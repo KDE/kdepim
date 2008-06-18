@@ -101,9 +101,19 @@ void ExportCertificatesDialog::Private::fileNamesChanged()
 ExportCertificatesDialog::~ExportCertificatesDialog() {}
 
 
+void ExportCertificatesDialog::setOpenPgpExportFileName( const QString & fileName )
+{
+    d->pgpRequester->setFileName( fileName );
+}
+
 QString ExportCertificatesDialog::openPgpExportFileName() const
 {
     return d->pgpRequester->fileName();
+}
+
+void ExportCertificatesDialog::setCmsExportFileName( const QString & fileName )
+{
+    d->cmsRequester->setFileName( fileName );
 }
 
 QString ExportCertificatesDialog::cmsExportFileName() const

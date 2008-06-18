@@ -47,8 +47,11 @@ namespace Dialogs {
     public:
         explicit ExportCertificatesDialog( QWidget * parent=0, Qt::WFlags f=0 );
         ~ExportCertificatesDialog();
-    
+
+        void setOpenPgpExportFileName( const QString & fileName );
         QString openPgpExportFileName() const;
+
+        void setCmsExportFileName( const QString & fileName );
         QString cmsExportFileName() const;
 
     private:
