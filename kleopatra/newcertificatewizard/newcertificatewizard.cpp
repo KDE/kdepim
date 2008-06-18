@@ -46,6 +46,7 @@
 
 #include <commands/exportsecretkeycommand.h>
 #include <commands/exportopenpgpcertstoservercommand.h>
+#include <commands/exportcertificatecommand.h>
 
 #include <utils/formatting.h>
 #include <utils/stl_util.h>
@@ -158,8 +159,8 @@ static bool is_elg( unsigned int algo ) {
     return is_algo( static_cast<gpgme_pubkey_algo_t>( algo ), ELG );
 }
 
-namespace {
-
+namespace Kleo {
+namespace NewCertificateUi {
     class WizardPage : public QWizardPage {
         Q_OBJECT
     protected:
@@ -181,6 +182,8 @@ namespace {
             else
                 return false;
         }
+
+        QDir tmpDir() const;
         
     protected Q_SLOTS:
         void setButtonVisible( QWizard::WizardButton button, bool visible ) {
@@ -220,6 +223,12 @@ namespace {
         FIELD( QString, fingerprint )
 #undef FIELD
     };
+} // namespace NewCertificateUi
+} // namespace Kleo
+
+using namespace Kleo::NewCertificateUi;
+
+namespace {
 
     class AdvancedSettingsDialog : public QDialog {
         Q_OBJECT
@@ -491,7 +500,6 @@ namespace {
     public:
         explicit KeyCreationPage( QWidget * p=0 )
             : WizardPage( p ),
-              tmp( QDir::temp().absoluteFilePath( "kleo-" ) ),
               ui()
         {
             ui.setupUi( this );
@@ -540,7 +548,7 @@ namespace {
                 setField( "result", i18n("Certificate created successfully.\n"
                                          "Fingerprint: %1", result.fingerprint() ) );
             } else {
-                QFile file( QDir( tmp.name() ).absoluteFilePath( "request.p10" ) );
+                QFile file( tmpDir().absoluteFilePath( "request.p10" ) );
 
                 if ( !file.open( QIODevice::WriteOnly ) ) {
                     setField( "error", i18n("Could not write output file %1: %2",
@@ -561,7 +569,6 @@ namespace {
         }
 
     private:
-        KTempDir tmp;
         QPointer<KeyGenerationJob> job;
         Ui_KeyCreationPage ui;
     };
@@ -649,16 +656,37 @@ namespace {
             if ( pgp() )
                 return;
             const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
-            KToolInvocation::invokeMailer( config.readEntry( "CAEmailAddress" ), QString() /*cc*/, QString() /*bcc*/,
-                                           i18n("Please process this certificate."),
-                                           i18n("Please process this certificate and inform the sender about the location to fetch the resulting certificate.\n\nThanks,\n"),
+            KToolInvocation::invokeMailer( config.readEntry( "CAEmailAddress" ), QString(), QString(), // to, cc, bcc
+                                           i18n("Please process this certificate."), // subject
+                                           i18n("Please process this certificate and inform the sender about the location to fetch the resulting certificate.\n\nThanks,\n"), // body
                                            QString(), // unused
-                                           QStringList( url() ) );
+                                           QStringList( url() ) ); // attachments
         }
 
         void slotSendCertificateByEMail() {
-
+            if ( !pgp() || exportCertificateCommand )
+                return;
+            ExportCertificateCommand * cmd = new ExportCertificateCommand( key() );
+            connect( cmd, SIGNAL(finished()), SLOT(slotSendCertificateByEMailContinuation()) );
+            cmd->setOpenPGPFileName( tmpDir().absoluteFilePath( fingerprint() + ".asc" ) );
+            cmd->start();
+            exportCertificateCommand = cmd;
         }
+
+        void slotSendCertificateByEMailContinuation() {
+            if ( !exportCertificateCommand )
+                return;
+            // ### better error handling?
+            const QString fileName = exportCertificateCommand->openPGPFileName();
+            exportCertificateCommand = 0;
+            if ( fileName.isEmpty() )
+                return;
+            KToolInvocation::invokeMailer( QString(), QString(), QString(), // to, cc, bcc
+                                           i18n("My new OpenPGP certificate"), // subject
+                                           i18n("Please find attached my new OpenPGP certificate."), // body
+                                           QString(), // unused,
+                                           QStringList( fileName ) ); // attachments
+        }            
 
         void slotUploadCertificateToDirectoryServer() {
             if ( pgp() )
@@ -676,22 +704,26 @@ namespace {
 
     private:
         bool initialized;
+        QPointer<ExportCertificateCommand> exportCertificateCommand;
         Ui_ResultPage ui;
     };
 }
 
 class NewCertificateWizard::Private {
     friend class ::Kleo::NewCertificateWizard;
+    friend class ::Kleo::NewCertificateUi::WizardPage;
     NewCertificateWizard * const q;
 public:
     explicit Private( NewCertificateWizard * qq )
         : q( qq ),
+          tmp( QDir::temp().absoluteFilePath( "kleo-" ) ),
           ui( q )
     {
 
     }
 
 private:
+    KTempDir tmp;
     struct Ui {
         ChooseProtocolPage chooseProtocolPage;
         EnterDetailsPage enterDetailsPage;
@@ -769,6 +801,10 @@ static const char * oidForAttributeName( const QString & attr ) {
     if ( qstricmp( attrUtf8, oidmap[i].name ) == 0 )
       return oidmap[i].oid;
   return 0;
+}
+
+QDir WizardPage::tmpDir() const {
+    return wizard() ? QDir( wizard()->d->tmp.name() ) : QDir::home() ;
 }
 
 void EnterDetailsPage::registerDialogPropertiesAsFields() {

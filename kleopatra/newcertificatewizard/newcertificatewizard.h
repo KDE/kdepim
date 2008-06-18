@@ -39,6 +39,10 @@
 
 namespace Kleo {
 
+    namespace NewCertificateUi {
+        class WizardPage;
+    }
+
     class NewCertificateWizard : public QWizard {
         Q_OBJECT
     public:
@@ -58,6 +62,7 @@ namespace Kleo {
 
         class Private;
         kdtools::pimpl_ptr<Private> d;
+        friend class ::Kleo::NewCertificateUi::WizardPage;
     };
 
 }
