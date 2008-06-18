@@ -301,17 +301,13 @@ private:
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
 
         const QString str = QString::fromUtf8( line );
-        QRegExp rx( QLatin1String( "(\\d+)(?:\\s+(.*))" ) );
+        QRegExp rx( QLatin1String( "(?:\\d+)(?:\\s+(.*))?" ) );
         if ( !rx.exactMatch( str ) ) {
             static const QString errorString = i18n("Parse error");
             return assuan_process_done_msg( ctx_, gpg_error( GPG_ERR_ASS_SYNTAX ), errorString );
         }
-        if ( rx.cap( 1 ) != QLatin1String( "0" ) ) {
-            static const QString errorString = i18n("Session association is not supported by this version of Kleopatra");
-            return assuan_process_done_msg( ctx_, gpg_error( GPG_ERR_NOT_IMPLEMENTED ), errorString );
-        }
-        if ( !rx.cap( 2 ).isEmpty() )
-            conn.sessionTitle = rx.cap( 2 );
+        if ( !rx.cap( 1 ).isEmpty() )
+            conn.sessionTitle = rx.cap( 1 );
         return 0;
     }
 
