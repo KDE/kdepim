@@ -1105,6 +1105,8 @@ QString OverviewPage::i18nFormatGnupgKeyParms( bool details ) const {
         s         << Row<        >( i18n("Key Type:"),          gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>( keyType() ) ) );
         if ( const unsigned int strength = keyStrength() )
             s     << Row<unsigned>( i18n("Key Strength:"),      strength );
+        else
+            s     << Row<        >( i18n("Key Strength:"),      i18n("default") );
     }
     if ( details )
         s         << Row<        >( i18n("Key Usage:"),         i18nKeyUsages().join("&nbsp;") );
@@ -1115,6 +1117,8 @@ QString OverviewPage::i18nFormatGnupgKeyParms( bool details ) const {
             s     << Row<        >( i18n("Subkey Type:"),       gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>( subkey ) ) );
             if ( const unsigned int strength = subkeyStrength() )
                 s << Row<unsigned>( i18n("Subkey Strength:"),   strength );
+            else
+                s << Row<        >( i18n("Subkey Strength:"),   i18n("default") );
             s     << Row<        >( i18n("Subkey Usage:"),      i18nSubkeyUsages().join("&nbsp;") );
     }
     if ( pgp() && expiryDate().isValid() )
