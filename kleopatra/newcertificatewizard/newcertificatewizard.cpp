@@ -451,6 +451,7 @@ namespace {
         /* reimp */ bool isComplete() const;
         /* reimp */ void initializePage() {
             updateForm();
+            dialog.setProtocol( pgp() ? OpenPGP : CMS );
         }
         /* reimp */ void cleanupPage() {
             saveValues();
@@ -1024,7 +1025,6 @@ bool EnterDetailsPage::isComplete() const {
 }
 
 void EnterDetailsPage::slotAdvancedSettingsClicked() {
-    dialog.setProtocol( pgp() ? OpenPGP : CMS );
     dialog.exec();
 }
 
