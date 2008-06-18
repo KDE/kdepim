@@ -593,7 +593,11 @@ namespace {
         Q_OBJECT
     public:
         explicit ResultPage( QWidget * p=0 )
-            : WizardPage( p ), initialized( false ), ui()
+            : WizardPage( p ),
+              initialized( false ),
+              successfullyCreatedSigningCertificate( false ),
+              successfullyCreatedEncryptionCertificate( false ),
+              ui()
         {
             ui.setupUi( this );
             ui.dragQueen->setPixmap( KIcon( "kleopatra" ).pixmap( 64, 64 ) );
@@ -619,6 +623,17 @@ namespace {
             ui.createRevocationRequestPB->setVisible(  pgp() && false ); // not implemented
             ui.sendRequestByEMailPB     ->setVisible( !pgp() );
             ui.sendCertificateByEMailPB ->setVisible(  pgp() );
+
+            if ( !error && !pgp() )
+                if ( signingAllowed() && !encryptionAllowed() )
+                    successfullyCreatedSigningCertificate = true;
+                else if ( !signingAllowed() && encryptionAllowed() )
+                    successfullyCreatedEncryptionCertificate = true;
+                else
+                    successfullyCreatedEncryptionCertificate = successfullyCreatedSigningCertificate = true;
+
+            ui.createSigningCertificatePB->setVisible( successfullyCreatedEncryptionCertificate && !successfullyCreatedSigningCertificate );
+            ui.createEncryptionCertificatePB->setVisible( successfullyCreatedSigningCertificate && !successfullyCreatedEncryptionCertificate );
 
             setButtonVisible( QWizard::CancelButton, error );
 
@@ -718,8 +733,42 @@ namespace {
 
         }
 
+        void slotCreateSigningCertificate() {
+            if ( successfullyCreatedSigningCertificate )
+                return;
+            toggleSignEncryptAndRestart();
+        }
+
+        void slotCreateEncryptionCertificate() {
+            if ( successfullyCreatedEncryptionCertificate )
+                return;
+            toggleSignEncryptAndRestart();
+        }
+
     private:
-        bool initialized;
+        void toggleSignEncryptAndRestart() {
+            if ( !wizard() )
+                return;
+            if ( KMessageBox::warningContinueCancel( this,
+                                                     i18nc("@info",
+                                                           "This operation will delete the certification request. "
+                                                           "Please make sure that you have sent or saved it before proceeding." ),
+                                                     i18nc("@title", "Certification Request About To Be Deleted") ) != KMessageBox::Continue )
+                return;
+            const bool sign = signingAllowed();
+            const bool encr = encryptionAllowed();
+            setField( "signingAllowed",    !sign );
+            setField( "encryptionAllowed", !encr );
+            // restart and skip to Overview Page:
+            wizard()->restart();
+            for ( int i = wizard()->currentId() ; i < NewCertificateWizard::OverviewPageId ; ++i )
+                wizard()->next();
+        }
+
+    private:
+        bool initialized : 1;
+        bool successfullyCreatedSigningCertificate : 1;
+        bool successfullyCreatedEncryptionCertificate : 1;
         QPointer<ExportCertificateCommand> exportCertificateCommand;
         Ui_ResultPage ui;
     };

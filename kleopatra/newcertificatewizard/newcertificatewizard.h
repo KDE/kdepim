@@ -49,7 +49,6 @@ namespace Kleo {
         explicit NewCertificateWizard( QWidget * parent=0 );
         ~NewCertificateWizard();
 
-    private:
         enum Pages {
             ChooseProtocolPageId,
             EnterDetailsPageId,
@@ -60,6 +59,7 @@ namespace Kleo {
             NumPages
         };
 
+    private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
         friend class ::Kleo::NewCertificateUi::WizardPage;

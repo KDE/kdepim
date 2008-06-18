@@ -36,7 +36,7 @@
    <item>
     <widget class="QPushButton" name="restartWizardPB" >
      <property name="text" >
-      <string>Restart This Wizard (Keeps Your Settings)</string>
+      <string>Restart This Wizard (Keeps Your Parameters)</string>
      </property>
     </widget>
    </item>
@@ -88,6 +88,20 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QPushButton" name="createSigningCertificatePB" >
+        <property name="text" >
+         <string>Create a Signing Certificate With the Same Parameters</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="createEncryptionCertificatePB" >
+        <property name="text" >
+         <string>Create an Encryption Certificate With the Same Parameters</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>
@@ -110,7 +124,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>34</x>
-     <y>354</y>
+     <y>268</y>
     </hint>
     <hint type="destinationlabel" >
      <x>2</x>
@@ -126,7 +140,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>32</x>
-     <y>390</y>
+     <y>304</y>
     </hint>
     <hint type="destinationlabel" >
      <x>6</x>
@@ -141,8 +155,8 @@
    <slot>slotSendCertificateByEMail()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>28</x>
-     <y>436</y>
+     <x>48</x>
+     <y>406</y>
     </hint>
     <hint type="destinationlabel" >
      <x>4</x>
@@ -157,8 +171,8 @@
    <slot>slotUploadCertificateToDirectoryServer()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>30</x>
-     <y>478</y>
+     <x>50</x>
+     <y>449</y>
     </hint>
     <hint type="destinationlabel" >
      <x>2</x>
@@ -173,8 +187,8 @@
    <slot>slotBackupCertificate()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>32</x>
-     <y>518</y>
+     <x>52</x>
+     <y>363</y>
     </hint>
     <hint type="destinationlabel" >
      <x>4</x>
@@ -190,11 +204,43 @@
    <hints>
     <hint type="sourcelabel" >
      <x>32</x>
-     <y>558</y>
+     <y>472</y>
     </hint>
     <hint type="destinationlabel" >
      <x>2</x>
      <y>560</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>createSigningCertificatePB</sender>
+   <signal>clicked()</signal>
+   <receiver>Kleo::NewCertificateUi::ResultPage</receiver>
+   <slot>slotCreateSigningCertificate()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>33</x>
+     <y>528</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>7</x>
+     <y>510</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>createEncryptionCertificatePB</sender>
+   <signal>clicked()</signal>
+   <receiver>Kleo::NewCertificateUi::ResultPage</receiver>
+   <slot>slotCreateEncryptionCertificate()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>37</x>
+     <y>560</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>5</x>
+     <y>556</y>
     </hint>
    </hints>
   </connection>
@@ -206,5 +252,7 @@
   <slot>slotUploadCertificateToDirectoryServer()</slot>
   <slot>slotBackupCertificate()</slot>
   <slot>slotCreateRevocationRequest()</slot>
+  <slot>slotCreateEncryptionCertificate()</slot>
+  <slot>slotCreateSigningCertificate()</slot>
  </slots>
 </ui>
