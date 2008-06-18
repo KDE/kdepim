@@ -90,6 +90,11 @@ QVariant KeyringListModel::headerData( int section, Qt::Orientation orientation
 
 bool KeyringListModel::removeRows( int row, int count, const QModelIndex& parent )
 {
+	if( row < 0 )
+	{
+		row = 0;
+	}
+	
 	if( row >= fRecords.size() )
 	{
 		return false;

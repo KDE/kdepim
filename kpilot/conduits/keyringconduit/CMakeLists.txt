@@ -4,8 +4,7 @@ include_directories(
 	${QCA2_INCLUDE_DIR}
 )
 
-# Doesn't work, can't link to a plugin.
-add_subdirectory(tests)
+add_subdirectory(keyringeditor)
 
 set(keyring_SRCS
 	pi-keyring.cc
