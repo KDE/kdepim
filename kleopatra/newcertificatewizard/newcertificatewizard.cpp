@@ -491,6 +491,21 @@ namespace {
             setButtonText( QWizard::CommitButton, i18nc("@action", "Create Key") );
         }
 
+        /* reimp */ void initializePage() {
+            slotShowDetails();
+        }
+
+    private Q_SLOTS:
+        void slotShowDetails() {
+            ui.textBrowser->setHtml( i18nFormatGnupgKeyParms( ui.showAllDetailsCB->isChecked() ) );
+        }
+
+    private:
+        QStringList i18nKeyUsages() const;
+        QStringList i18nSubkeyUsages() const;
+        QStringList i18nCombinedKeyUsages() const;
+        QString i18nFormatGnupgKeyParms( bool details ) const;
+
     private:
         Ui_OverviewPage ui;
     };
@@ -1027,6 +1042,20 @@ QStringList KeyCreationPage::keyUsages() const {
     return usages;
 }
 
+QStringList OverviewPage::i18nKeyUsages() const {
+    QStringList usages;
+    if ( signingAllowed() )
+        usages << i18n("Sign");
+    if ( encryptionAllowed() && !is_dsa( keyType() ) )
+        usages << i18n("Encrypt");
+    if ( 0 ) // not needed in pgp (implied) and not supported in cms
+    if ( certificationAllowed() )
+        usages << i18n("Certify");
+    if ( authenticationAllowed() )
+        usages << i18n("Authenticate");
+    return usages;
+}
+
 QStringList KeyCreationPage::subkeyUsages() const {
     QStringList usages;
     if ( encryptionAllowed() && is_dsa( keyType() ) ) {
@@ -1035,6 +1064,76 @@ QStringList KeyCreationPage::subkeyUsages() const {
         usages << "encrypt";
     }
     return usages;
+}
+
+QStringList OverviewPage::i18nSubkeyUsages() const {
+    QStringList usages;
+    if ( encryptionAllowed() && is_dsa( keyType() ) ) {
+        assert( subkeyType() );
+        assert( is_elg( subkeyType() ) );
+        usages << i18n("Encrypt");
+    }
+    return usages;
+}
+
+QStringList OverviewPage::i18nCombinedKeyUsages() const {
+    return i18nSubkeyUsages() + i18nKeyUsages();
+}
+
+namespace {
+    template <typename T=QString>
+    struct Row {
+        QString key;
+        T value;
+
+        Row( const QString & k, const T & v ) : key( k ), value( v ) {}
+    };
+    template <typename T>
+    QTextStream & operator<<( QTextStream & s, const Row<T> & row ) {
+        if ( row.key.isEmpty() )
+            return s;
+        else
+            return s << "<tr><td>" << row.key << "</td><td>" << row.value << "</td></tr>";
+    }
+}
+
+QString OverviewPage::i18nFormatGnupgKeyParms( bool details ) const {
+    QString result;
+    QTextStream s( &result );
+    s             << "<table>";
+    if ( details ) {
+        s         << Row<        >( i18n("Key Type:"),          gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>( keyType() ) ) );
+        if ( const unsigned int strength = keyStrength() )
+            s     << Row<unsigned>( i18n("Key Strength:"),      strength );
+    }
+    if ( details )
+        s         << Row<        >( i18n("Key Usage:"),         i18nKeyUsages().join("&nbsp;") );
+    else
+        s         << Row<        >( i18n("Certificate Usage:"), i18nCombinedKeyUsages().join("&nbsp;") );
+    if ( details )
+        if ( const unsigned int subkey = subkeyType() ) {
+            s     << Row<        >( i18n("Subkey Type:"),       gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>( subkey ) ) );
+            if ( const unsigned int strength = subkeyStrength() )
+                s << Row<unsigned>( i18n("Subkey Strength:"),   strength );
+            s     << Row<        >( i18n("Subkey Usage:"),      i18nSubkeyUsages().join("&nbsp;") );
+    }
+    if ( pgp() && expiryDate().isValid() )
+        s         << Row<        >( i18n("Valid Until:"),       KGlobal::locale()->formatDate( expiryDate() ) );
+    s             << Row<        >( i18n("Email Address:"),     email() );
+    if ( pgp() ) {
+        s         << Row<        >( i18n("Real Name:"),         name() );
+        if ( !comment().isEmpty() )
+            s     << Row<        >( i18n("Comment:"),           comment() );
+    } else {
+        s         << Row<        >( i18n("Subject-DN:"),        dn() );
+        Q_FOREACH( const QString & email, additionalEMailAddresses() )
+            s     << Row<        >( i18n("Add. Email Address:"),email );
+        Q_FOREACH( const QString & dns,   dnsNames() )
+            s     << Row<        >( i18n("DNS Name:"),          dns );
+        Q_FOREACH( const QString & uri,   uris() )
+            s     << Row<        >( i18n("URI:"),               uri );
+    }
+    return result;
 }
 
 static QString encode_dns( const QString & dns ) {
@@ -1051,8 +1150,8 @@ static QString encode_email( const QString & email ) {
 QString KeyCreationPage::createGnupgKeyParms() const {
     QString result;
     QTextStream s( &result );
-    s     << "<GnupgKeyParms format=\"internal\">"         << endl
-          << "key-type:      " << gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>( keyType() ) ) << endl;
+    s     << "<GnupgKeyParms format=\"internal\">"         << endl;
+    s     << "key-type:      " << gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>( keyType() ) ) << endl;
     if ( const unsigned int strength = keyStrength() )
         s << "key-length:    " << strength                 << endl;
     s     << "key-usage:     " << keyUsages().join(" ")    << endl;
@@ -1065,10 +1164,11 @@ QString KeyCreationPage::createGnupgKeyParms() const {
     if ( pgp() && expiryDate().isValid() )
         s << "expire-date:   " << expiryDate().toString( Qt::ISODate ) << endl;
     s     << "name-email:    " << encode_email( email() )  << endl;
-    if ( pgp() )
-        s << "name-real:     " << name()                   << endl
-          << "name-comment:  " << comment()                << endl;
-    else {
+    if ( pgp() ) {
+        s << "name-real:     " << name()                   << endl;
+        if ( comment().isEmpty() )
+            s << "name-comment:  " << comment()            << endl;
+    } else {
         s << "name-dn:       " << dn()                     << endl;
         Q_FOREACH( const QString & email, additionalEMailAddresses() )
             s << "name-email:    " << encode_email( email )<< endl;

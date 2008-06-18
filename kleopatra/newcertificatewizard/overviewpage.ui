@@ -1,14 +1,6 @@
 <ui version="4.0" >
  <class>Kleo::NewCertificateUi::OverviewPage</class>
  <widget class="QWizardPage" name="Kleo::NewCertificateUi::OverviewPage" >
-  <property name="geometry" >
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>692</width>
-    <height>147</height>
-   </rect>
-  </property>
   <property name="title" >
    <string comment="@title" >Review Certificate Parameters</string>
   </property>
@@ -33,5 +25,25 @@
   </layout>
  </widget>
  <resources/>
- <connections/>
+ <connections>
+  <connection>
+   <sender>showAllDetailsCB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Kleo::NewCertificateUi::OverviewPage</receiver>
+   <slot>slotShowDetails()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>145</x>
+     <y>221</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>167</x>
+     <y>241</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>slotShowDetails()</slot>
+ </slots>
 </ui>
