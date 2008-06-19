@@ -311,12 +311,12 @@ CryptoConfigEntryGUI * _create( CryptoConfigModule * m, Kleo::CryptoConfigEntry 
 }
 
 static const struct WidgetsByEntryName {
-    const char * entryName;
+    const char * entryGlob;
     constructor create;
 } widgetsByEntryName[] = {
-    // sort by 'name' !!
-    { "debug-level", &_create<CryptoConfigEntryDebugLevel> },
-    { "keyserver",   &_create<CryptoConfigEntryKeyserver>  },
+    { "*/*/debug-level",   &_create<CryptoConfigEntryDebugLevel> },
+    { "gpg/*/keyserver",   &_create<CryptoConfigEntryKeyserver>  },
+    { "gpgsm/*/keyserver", &_create<CryptoConfigEntryLDAPURL>    },
 };
 static const unsigned int numWidgetsByEntryName = sizeof widgetsByEntryName / sizeof *widgetsByEntryName;
 
@@ -348,9 +348,10 @@ CryptoConfigEntryGUI* Kleo::CryptoConfigEntryGUIFactory::createEntryGUI( CryptoC
 {
     assert( entry );
 
-    // try to lookup by name:
+    // try to lookup by path:
+    const QString path = entry->path();
     for ( unsigned int i = 0 ; i < numWidgetsByEntryName ; ++i )
-        if ( entryName == QLatin1String( widgetsByEntryName[i].entryName ) )
+        if ( QRegExp( QLatin1String( widgetsByEntryName[i].entryGlob ), Qt::CaseSensitive, QRegExp::Wildcard ).exactMatch( path ) )
             return widgetsByEntryName[i].create( module, entry, entryName, glay, widget );
 
     // none found, so look up by type:
@@ -796,14 +797,35 @@ Kleo::CryptoConfigEntryLDAPURL::CryptoConfigEntryLDAPURL(
   connect( mPushButton, SIGNAL( clicked() ), SLOT( slotOpenDialog() ) );
 }
 
+static KUrl::List strings2urls( const QStringList & strs ) {
+    KUrl::List urls;
+    Q_FOREACH( const QString & str, strs )
+        if ( !str.isEmpty() )
+            urls.push_back( KUrl( str ) );
+    return urls;
+}
+
+static QStringList urls2strings( const KUrl::List & urls ) {
+    QStringList result;
+    Q_FOREACH( const KUrl & url, urls )
+        result.push_back( url.url() );
+    return result;
+}
+
 void Kleo::CryptoConfigEntryLDAPURL::doLoad()
 {
-  setURLList( mEntry->urlValueList() );
+  if ( mEntry->argType() == CryptoConfigEntry::ArgType_LDAPURL )
+    setURLList( mEntry->urlValueList() );
+  else
+    setURLList( strings2urls( mEntry->stringValueList() ) );
 }
 
 void Kleo::CryptoConfigEntryLDAPURL::doSave()
 {
-  mEntry->setURLValueList( mURLList );
+  if ( mEntry->argType() == CryptoConfigEntry::ArgType_LDAPURL )
+    mEntry->setURLValueList( mURLList );
+  else
+    mEntry->setStringValueList( urls2strings( mURLList ) );
 }
 
 void Kleo::CryptoConfigEntryLDAPURL::slotOpenDialog()
