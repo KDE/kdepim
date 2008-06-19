@@ -44,7 +44,7 @@ TestRecord::TestRecord( const TestHHRecord *other )
 {
 	fId = other->id();
 	fFields = other->fields();
-	
+	fCategories = other->categories();
 	QStringListIterator it(fFields);
 	
 	while( it.hasNext() )
@@ -94,6 +94,21 @@ const QString TestRecord::id() const
 void TestRecord::setId( const QString &id )
 {
 	fId = id;
+}
+
+int TestRecord::categoryCount() const
+{
+	return fCategories.size();
+}
+
+bool TestRecord::containsCategory( const QString& c ) const
+{
+	return fCategories.contains( c );
+}
+
+QStringList TestRecord::categories() const
+{
+	return fCategories;
 }
 
 QVariant TestRecord::value( const QString &field ) const
@@ -152,6 +167,17 @@ const QStringList TestRecord::fields() const
 TestRecord* TestRecord::duplicate() const
 {
 	return new TestRecord( this );
+}
+
+void TestRecord::setCategory( const QString& c )
+{
+	fCategories.clear();
+	fCategories.append( c );
+}
+
+void TestRecord::addCategory( const QString& c )
+{
+	fCategories.append( c );
 }
 
 bool TestRecord::equal( const Record *rec ) const

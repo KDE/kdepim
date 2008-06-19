@@ -90,8 +90,8 @@ public:
 	
 	virtual bool createDataStore() { return true; }
 	
-	virtual void setCategory( Record* r, const QString& c ) { Q_UNUSED( r ); Q_UNUSED( c ); };
+	virtual void setCategory( Record* r, const QString& c );
 
-	virtual void addCategory( Record* r, const QString& c ) { Q_UNUSED( r ); Q_UNUSED( c ); };
+	virtual void addCategory( Record* r, const QString& c );
 };
 #endif

@@ -87,7 +87,6 @@ void TestDataProxy::loadAllRecords()
 
 void TestDataProxy::commitCreate( Record *rec )
 {
-	Q_UNUSED( rec );
 	fCreateCount += 1;
 	
 	// This is for the delete test.
@@ -102,7 +101,18 @@ void TestDataProxy::commitDelete( Record *rec )
 
 void TestDataProxy::commitUpdate( Record *rec )
 {
-	Q_UNUSED( rec );
 	fUpdateCount += 1;
 	fUpdatedRecord.insert( rec->id(), static_cast<TestRecord*>( rec ) );
+}
+
+void TestDataProxy::setCategory( Record* r, const QString& c )
+{
+	TestRecord* tRec = static_cast<TestRecord*>( r );
+	tRec->setCategory( c );
+}
+
+void TestDataProxy::addCategory( Record* r, const QString& c )
+{
+	TestRecord* tRec = static_cast<TestRecord*>( r );
+	tRec->addCategory( c );
 }
