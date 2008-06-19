@@ -38,6 +38,8 @@
 #include <commands/signclipboardcommand.h>
 #include <commands/decryptverifyclipboardcommand.h>
 
+#include <conf/configuredialog.h>
+
 #include <KIcon>
 #include <KLocale>
 #include <KAboutApplicationDialog>
@@ -135,9 +137,33 @@ private:
         ( new DecryptVerifyClipboardCommand( 0 ) )->start();
     }
 
+    void slotConfigure() {
+        if ( !configureDialog ) {
+            configureDialog = new ConfigureDialog;
+            configureDialog->setAttribute( Qt::WA_DeleteOnClose );
+            connectConfigureDialog();
+        }
+
+        if ( configureDialog->isVisible() )
+            configureDialog->raise();
+        else
+            configureDialog->show();
+    }
+
+private:
+    void connectConfigureDialog() {
+        if ( configureDialog && mainWindow )
+            connect( configureDialog, SIGNAL(configCommitted()), mainWindow, SLOT(slotConfigCommitted()) );
+    }
+    void disconnectConfigureDialog() {
+        if ( configureDialog && mainWindow )
+            disconnect( configureDialog, SIGNAL(configCommitted()), mainWindow, SLOT(slotConfigCommitted()) );
+    }
+
 private:
     QMenu menu;
     QAction openCertificateManagerAction;
+    QAction configureAction;
     QAction aboutAction;
     QAction quitAction;
     QMenu clipboardMenu;
@@ -147,6 +173,7 @@ private:
     QAction decryptVerifyClipboardAction;
 
     QPointer<KAboutApplicationDialog> aboutDialog;
+    QPointer<ConfigureDialog> configureDialog;
 
     QPointer<QWidget> mainWindow;
     QRect previousGeometry;
@@ -156,6 +183,7 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
     : q( qq ),
       menu(),
       openCertificateManagerAction( i18n("&Open Certificate Manager..."), q ),
+      configureAction( i18n("&Configure %1...", KGlobal::mainComponent().aboutData()->programName() ), q ),
       aboutAction( i18n("&About %1...", KGlobal::mainComponent().aboutData()->programName() ), q ),
       quitAction( i18n("&Shutdown Kleopatra"), q ),
       clipboardMenu( i18n("Clipboard" ) ),
@@ -169,6 +197,7 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
 {
     KDAB_SET_OBJECT_NAME( menu );
     KDAB_SET_OBJECT_NAME( openCertificateManagerAction );
+    KDAB_SET_OBJECT_NAME( configureAction );
     KDAB_SET_OBJECT_NAME( aboutAction );
     KDAB_SET_OBJECT_NAME( quitAction );
     KDAB_SET_OBJECT_NAME( clipboardMenu );
@@ -178,6 +207,7 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
     KDAB_SET_OBJECT_NAME( decryptVerifyClipboardAction );
 
     connect( &openCertificateManagerAction, SIGNAL(triggered()), q, SLOT(openOrRaiseMainWindow()) );
+    connect( &configureAction, SIGNAL(triggered()), q, SLOT(slotConfigure()) );
     connect( &aboutAction, SIGNAL(triggered()), q, SLOT(slotAbout()) );
     connect( &quitAction, SIGNAL(triggered()), QCoreApplication::instance(), SLOT(quit()) );
     connect( &encryptClipboardAction, SIGNAL(triggered()), q, SLOT(slotEncryptClipboard()) );
@@ -191,6 +221,7 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
     connect( q, SIGNAL(activated(QSystemTrayIcon::ActivationReason)), q, SLOT(slotActivated(QSystemTrayIcon::ActivationReason)) );
 
     menu.addAction( &openCertificateManagerAction );
+    menu.addAction( &configureAction );
     menu.addAction( &aboutAction );
     menu.addSeparator();
     menu.addMenu( &clipboardMenu );
@@ -219,7 +250,9 @@ SystemTrayIcon::~SystemTrayIcon() {}
 void SystemTrayIcon::setMainWindow( QWidget * mw ) {
     if ( d->mainWindow )
         return;
+    d->disconnectConfigureDialog();
     d->mainWindow = mw;
+    d->connectConfigureDialog();
     mw->installEventFilter( this );
     d->slotEnableDisableActions();
 }
@@ -249,6 +282,7 @@ void SystemTrayIcon::openOrRaiseMainWindow() {
         if ( d->previousGeometry.isValid() )
             d->mainWindow->setGeometry( d->previousGeometry );
         d->mainWindow->installEventFilter( this );
+        d->connectConfigureDialog();
     }
     if ( d->mainWindow->isMinimized() ) {
         KWindowSystem::unminimizeWindow( d->mainWindow->winId());
