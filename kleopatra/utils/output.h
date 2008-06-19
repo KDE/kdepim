@@ -70,6 +70,7 @@ namespace Kleo {
     public:
         virtual ~Output();
 
+        virtual void setLabel( const QString & label ) = 0;
         virtual QString label() const = 0;
         virtual boost::shared_ptr<QIODevice> ioDevice() const = 0;
         virtual bool isFinalized() const = 0;

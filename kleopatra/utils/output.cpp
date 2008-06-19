@@ -107,8 +107,8 @@ namespace {
                 return false;
 #ifdef Q_OS_WIN
             //QTemporaryFile (tested with 4.3.3) creates the file handle as inheritable.
-            //The handle is then inherited by gpgsm, which prevents deletion of the temp file 
-            //in FileOutput::doFinalize() 
+            //The handle is then inherited by gpgsm, which prevents deletion of the temp file
+            //in FileOutput::doFinalize()
             return SetHandleInformation( (HANDLE)_get_osfhandle( handle() ), HANDLE_FLAG_INHERIT, 0 );
 #endif
             return true;
@@ -138,7 +138,8 @@ namespace {
     public:
         OutputImplBase()
             : Output(),
-              m_label(),
+              m_defaultLabel(),
+              m_customLabel(),
               m_isFinalized( false ),
               m_isFinalizing( false ),
               m_cancelPending( false ),
@@ -147,8 +148,9 @@ namespace {
 
         }
 
-        /* reimp */ QString label() const { return m_label; }
-        void setLabel( const QString & l ) { m_label = l; }
+        /* reimp */ QString label() const { return m_customLabel.isEmpty() ? m_defaultLabel : m_customLabel; }
+        /* reimp */ void setLabel( const QString & label ) { m_customLabel = label; }
+        void setDefaultLabel( const QString & l ) { m_defaultLabel = l; }
 
         /* reimp */ bool isFinalized() const { return m_isFinalized; }
         /* reimp */ void finalize() {
@@ -179,7 +181,8 @@ namespace {
         virtual void doFinalize() = 0;
         virtual void doCancel() = 0;
     private:
-        QString m_label;
+        QString m_defaultLabel;
+        QString m_customLabel;
         bool m_isFinalized   : 1;
         bool m_isFinalizing  : 1;
         bool m_cancelPending : 1;
@@ -235,7 +238,7 @@ namespace {
 
 shared_ptr<Output> Output::createFromPipeDevice( assuan_fd_t fd, const QString & label ) {
     shared_ptr<PipeOutput> po( new PipeOutput( fd ) );
-    po->setLabel( label );
+    po->setDefaultLabel( label );
     return po;
 }
 
@@ -253,7 +256,7 @@ PipeOutput::PipeOutput( assuan_fd_t fd )
 
 shared_ptr<Output> Output::createFromFile( const QString & fileName, bool forceOverwrite ) {
     return createFromFile( fileName, shared_ptr<OverwritePolicy>( new OverwritePolicy( 0, forceOverwrite ? OverwritePolicy::Allow : OverwritePolicy::Deny ) ) );
-    
+
 }
 shared_ptr<Output> Output::createFromFile( const QString & fileName, const shared_ptr<OverwritePolicy> & policy ) {
     shared_ptr<FileOutput> fo( new FileOutput( fileName, policy ) );
@@ -281,7 +284,7 @@ bool FileOutput::obtainOverwritePermission() {
                                                                                       "Overwrite?", m_fileName ),
                                                       i18n("Overwrite Existing File?"),
                                                       KStandardGuiItem::overwrite(),
-                                                      KGuiItem( i18n( "Overwrite All" ) ), 
+                                                      KGuiItem( i18n( "Overwrite All" ) ),
                                                       KStandardGuiItem::cancel() );
     if ( sel == KMessageBox::No ) //Overwrite All
         m_policy->setPolicy( OverwritePolicy::Allow );

@@ -60,13 +60,15 @@ namespace {
 
     class InputImplBase : public Input {
     public:
-        InputImplBase() : Input(), m_label() {}
+        InputImplBase() : Input(), m_customLabel(), m_defaultLabel() {}
 
-        /* reimp */ QString label() const { return m_label; }
-        void setLabel( const QString & l ) { m_label = l; }
+        /* reimp */ QString label() const { return m_customLabel.isEmpty() ? m_defaultLabel : m_customLabel; }
+        void setDefaultLabel( const QString & l ) { m_defaultLabel = l; }
+        /* reimp */ void setLabel( const QString & l ) { m_customLabel = l; }
 
     private:
-        QString m_label;
+        QString m_customLabel;
+        QString m_defaultLabel;
     };
 
 
@@ -104,6 +106,7 @@ namespace {
     public:
         explicit ClipboardInput( QClipboard::Mode mode );
 
+        /* reimp */ void setLabel( const QString & label );
         /* reimp */ QString label() const;
         /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_buffer; }
         /* reimp */ unsigned int classification() const;
@@ -119,7 +122,7 @@ namespace {
 
 shared_ptr<Input> Input::createFromPipeDevice( assuan_fd_t fd, const QString & label ) {
     shared_ptr<PipeInput> po( new PipeInput( fd ) );
-    po->setLabel( label );
+    po->setDefaultLabel( label );
     return po;
 }
 
@@ -156,7 +159,7 @@ FileInput::FileInput( const QString & fileName )
       m_io(), m_fileName( fileName )
 {
     shared_ptr<QFile> file( new QFile( fileName ) );
-    
+
     errno = 0;
     if ( !file->open( QIODevice::ReadOnly ) )
         throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
@@ -204,6 +207,10 @@ ClipboardInput::ClipboardInput( QClipboard::Mode mode )
     if ( !m_buffer->open( QIODevice::ReadOnly ) )
         throw Exception( gpg_error( GPG_ERR_EIO ),
                          i18n( "Couldn't open clipboard for reading" ) );
+}
+
+void ClipboardInput::setLabel( const QString & ) {
+    notImplemented();
 }
 
 QString ClipboardInput::label() const {

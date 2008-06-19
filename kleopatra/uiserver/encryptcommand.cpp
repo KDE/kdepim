@@ -38,6 +38,8 @@
 
 #include <utils/kleo_assert.h>
 #include <utils/exception.h>
+#include <utils/input.h>
+#include <utils/output.h>
 
 #include <KLocale>
 
@@ -148,7 +150,7 @@ int EncryptCommand::doStart() {
     }
 
     kleo_assert( d->controller );
-    
+
     QObject::connect( d->controller.get(), SIGNAL(recipientsResolved()), d.get(), SLOT(slotRecipientsResolved()), Qt::QueuedConnection );
     QObject::connect( d->controller.get(), SIGNAL(done()), d.get(), SLOT(slotDone()), Qt::QueuedConnection );
     QObject::connect( d->controller.get(), SIGNAL(error(int,QString)), d.get(), SLOT(slotError(int,QString)), Qt::QueuedConnection );
@@ -166,6 +168,13 @@ void EncryptCommand::Private::slotRecipientsResolved() {
     const shared_ptr<EncryptEMailController> cont( controller );
 
     try {
+        const QString sessionTitle = q->sessionTitle();
+        if ( !sessionTitle.isNull() ) {
+            Q_FOREACH ( const shared_ptr<Input> & i, q->inputs() )
+                i->setLabel( sessionTitle );
+            Q_FOREACH ( const shared_ptr<Output> & i, q->outputs() )
+                i->setLabel( sessionTitle );
+        }
 
         cont->setInputsAndOutputs( q->inputs(), q->outputs() );
         cont->start();

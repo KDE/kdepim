@@ -37,6 +37,8 @@
 #include <crypto/signemailcontroller.h>
 
 #include <utils/exception.h>
+#include <utils/input.h>
+#include <utils/output.h>
 
 #include <KLocale>
 
@@ -56,7 +58,7 @@ public:
 
     }
 
-private:    
+private:
     void checkForErrors() const;
 
 private Q_SLOTS:
@@ -114,7 +116,7 @@ int SignCommand::doStart() {
     QObject::connect( d->controller.get(), SIGNAL(error(int,QString)), d.get(), SLOT(slotError(int,QString)) );
 
     d->controller->startResolveSigners( senders() );
-    
+
     return 0;
 }
 
@@ -123,6 +125,13 @@ void SignCommand::Private::slotSignersResolved() {
     const shared_ptr<SignEMailController> cont( controller );
 
     try {
+        const QString sessionTitle = q->sessionTitle();
+        if ( !sessionTitle.isNull() ) {
+            Q_FOREACH ( const shared_ptr<Input> & i, q->inputs() )
+                i->setLabel( sessionTitle );
+            Q_FOREACH ( const shared_ptr<Output> & i, q->outputs() )
+                i->setLabel( sessionTitle );
+        }
 
         controller->setDetachedSignature( q->hasOption("detached" ) );
         controller->setInputsAndOutputs( q->inputs(), q->outputs() );
