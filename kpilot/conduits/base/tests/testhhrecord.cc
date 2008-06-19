@@ -29,11 +29,17 @@
 #include "testrecord.h"
 
 #include "options.h"
+#include "pilotRecord.h"
 
 TestHHRecord::TestHHRecord( const QStringList& fields, const QString &id )
 	: HHRecord( 0L, CSL1( "Unfiled" ) ), fId( id ), fFields( fields ), fModified( false )
 		, fDeleted( false ), fArchived( false )
 {
+	pi_buffer_t *buf = pi_buffer_new( QString( "" ).size() );
+	Pilot::toPilot( QString(""), buf->data, 0 );
+		
+	fRecord = new PilotRecord( buf, 0, 0, 0);
+	fRecord->setCategory( 0 );
 }
 
 TestHHRecord::TestHHRecord( const TestHHRecord *other )
