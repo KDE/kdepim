@@ -308,7 +308,7 @@ private:
         }
         if ( !rx.cap( 1 ).isEmpty() )
             conn.sessionTitle = rx.cap( 1 );
-        return 0;
+        return assuan_process_done( ctx_, 0 );
     }
 
     static int capabilities_handler( assuan_context_t ctx_, char * line ) {
