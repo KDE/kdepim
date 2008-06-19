@@ -19,6 +19,7 @@ set(kjots_SRCS
    kjotsreplacenextdialog.cpp
    kjotsbrowser.cpp
    kjotslinkdialog.cpp
+   flatcollectionproxymodel.cpp
  )
 
 

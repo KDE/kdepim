@@ -32,6 +32,7 @@
 #include <kdebug.h>
 
 #include "KJotsSettings.h"
+#include "flatcollectionproxymodel.h"
 #include "kjotsentry.h"
 #include "bookshelf.h"
 
@@ -44,7 +45,10 @@ KJotsLinkDialog::KJotsLinkDialog(QWidget *parent, Bookshelf *bookshelf) :
     setModal(true);
     showButtonSeparator(true);
     mBookshelf = bookshelf;
-    QAbstractItemModel* model = mBookshelf->model();
+
+    FlatCollectionProxyModel* proxyModel = new FlatCollectionProxyModel( this );
+    proxyModel->setSourceModel( mBookshelf->model() );
+    proxyModel->setAncestorSeparator( QLatin1String( " / " ) );
 
     QWidget *entries = new QWidget(this);
 
@@ -59,10 +63,10 @@ KJotsLinkDialog::KJotsLinkDialog(QWidget *parent, Bookshelf *bookshelf) :
     linkUrlLineEdit->setClearButtonShown(true);
 
     tree = new QTreeView();
-    tree->setModel(model);
+    tree->setModel(proxyModel);
     tree->expandAll();
     tree->setColumnHidden(1, true);
-    hrefCombo->setModel(mBookshelf->model());
+    hrefCombo->setModel(proxyModel);
     hrefCombo->setView(tree);
 
     QGridLayout* linkLayout = new QGridLayout();
@@ -99,17 +103,29 @@ void KJotsLinkDialog::setLinkText(const QString &linkText)
 void KJotsLinkDialog::setLinkUrl(const QString &linkUrl)
 {
     if (KJotsEntry::isKJotsLink(linkUrl)) {
-        kDebug() << KJotsEntry::idFromLinkUrl(linkUrl);
 
-        KJotsEntry* item = mBookshelf->entryFromId(KJotsEntry::idFromLinkUrl(linkUrl));
+        quint64 id = KJotsEntry::idFromLinkUrl(linkUrl);
+        KJotsEntry* item = mBookshelf->entryFromId(id);
         if ( item ) {
-            QModelIndex index = hrefCombo->model()->index(0,1);
-            index = index.sibling(index.row(), 0);
-            index = index.sibling(index.row() + 1, 0);
-            index = index.sibling(index.row(), 1);
-            index = index.sibling(index.row(), 0);
 
-            hrefCombo->view()->setCurrentIndex(index);
+            QModelIndex index = hrefCombo->model()->index(0,1);
+            if ( hrefCombo->model()->data(index).toULongLong() == id )
+            {
+                hrefCombo->view()->setCurrentIndex(index);
+                hrefCombo->setCurrentIndex( index.row() );
+            } else {
+                while ( index.sibling(index.row() + 1, 1).isValid() )
+                {
+                    index = index.sibling(index.row() + 1, 1);
+
+                    if ( hrefCombo->model()->data(index).toULongLong() == id )
+                    {
+                        hrefCombo->view()->setCurrentIndex(index);
+                        hrefCombo->setCurrentIndex( index.row() );
+                        break;
+                    }
+                }
+            }
         }
         hrefComboRadioButton->setChecked(true);
     } else {
