@@ -38,6 +38,8 @@
 
 #include <kleo/dn.h>
 
+#include <kmime/kmime_header_parsing.h>
+
 #include <gpgme++/key.h>
 #include <gpgme++/importresult.h>
 
@@ -52,6 +54,8 @@
 
 using namespace GpgME;
 using namespace Kleo;
+using namespace KMime::Types;
+using namespace KMime::HeaderParsing;
 
 //
 // Name
@@ -81,7 +85,7 @@ QString Formatting::prettyName( int proto, const char * id, const char * name_, 
 }
 
 QString Formatting::prettyNameAndEMail( int proto, const char * id, const char * name_, const char * email_, const char * comment_ ) {
-    return prettyNameAndEMail( proto, QString::fromUtf8( id ), QString::fromUtf8( name_ ), QString::fromUtf8( email_ ), QString::fromUtf8( comment_ ) );
+    return prettyNameAndEMail( proto, QString::fromUtf8( id ), QString::fromUtf8( name_ ), prettyEMail( email_, id ), QString::fromUtf8( comment_ ) );
 }
 
 QString Formatting::prettyNameAndEMail( int proto, const QString & id, const QString & name, const QString & email, const QString & comment ) {
@@ -116,7 +120,16 @@ QString Formatting::prettyNameAndEMail( int proto, const QString & id, const QSt
 }
 
 QString Formatting::prettyUserID( const UserID & uid ) {
-    return prettyNameAndEMail( uid );
+    if ( uid.parent().protocol() == OpenPGP )
+        return prettyNameAndEMail( uid );
+    const QByteArray id = QByteArray( uid.id() ).trimmed();
+    if ( id.startsWith( '<' ) )
+        return prettyEMail( uid.email(), uid.id() );
+    if ( id.startsWith( '(' ) )
+        // ### parse uri/dns:
+        return QString::fromUtf8( uid.id() );
+    else
+        return DN( uid.id() ).prettyDN();
 }
 
 QString Formatting::prettyKeyID( const char * id ) {
@@ -167,13 +180,11 @@ QString Formatting::prettyEMail( const UserID::Signature & sig ) {
 }
 
 QString Formatting::prettyEMail( const char * email_, const char * id ) {
-    const QString email = QString::fromUtf8( email_ ).trimmed();
-    if ( !email.isEmpty() )
-	if ( email.startsWith( '<' ) && email.endsWith( '>' ) )
-	    return email.mid( 1, email.length() - 2 );
-	else
-	    return email;
-    return DN( id )["EMAIL"].trimmed();
+    Mailbox mailBox;
+    if ( email_ && parseMailbox( email_, email_ + strlen( email_ ), mailBox ) )
+        return mailBox.addrSpec().asPrettyString();
+    else
+        return DN( id )["EMAIL"].trimmed();
 }
 
 //
@@ -265,11 +276,11 @@ QString Formatting::toolTip( const Key & key, int flags ) {
         if ( !uids.empty() )
             result += format_row( key.protocol() == CMS
                                   ? i18n("Subject")
-                                  : i18n("User-ID"), uids.front().id() );
+                                  : i18n("User-ID"), prettyUserID( uids.front() ) );
         if ( uids.size() > 1 )
             for ( std::vector<UserID>::const_iterator it = uids.begin() + 1, end = uids.end() ; it != end ; ++it )
                 if ( !it->isRevoked() && !it->isInvalid() )
-                    result += format_row( i18n("a.k.a."), it->id() );
+                    result += format_row( i18n("a.k.a."), prettyUserID( *it ) );
     }
     if ( flags & ExpiryDates )
         result += format_row( i18n("Validity"),
