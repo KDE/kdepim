@@ -288,14 +288,18 @@ private:
         ui.showCertificationsPB->setVisible( pgp && !sigs );
 
         // Technical Details Tab
-        ui.subkeyHLine->setVisible( pgp );
-        ui.subkeyTV->setVisible( pgp );
+        ui.tabWidget->setTabEnabled( ui.tabWidget->indexOf( ui.detailsTab ), pgp );
 
         // Chain tab
         ui.tabWidget->setTabEnabled( ui.tabWidget->indexOf( ui.chainTab ), x509 );
 
         // Dump tab
         ui.tabWidget->setTabEnabled( ui.tabWidget->indexOf( ui.dumpTab ), x509 );
+
+        // not implemented:
+        ui.revokeCertificatePB->hide();
+        ui.revokeUserIDPB->hide();
+        ui.certificationsActionGB->hide();
     }
 
     QModelIndexList selectedCertificationsIndexes() const {
