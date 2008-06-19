@@ -369,6 +369,9 @@ private:
 
     void propagateKey() {
         certificationsModel.setKey( key );
+        const QModelIndexList uidIndexes = certificationsModel.indexes( key.userIDs() );
+        Q_FOREACH( const QModelIndex & idx, uidIndexes )
+            ui.certificationsTV->setFirstColumnSpanned( idx.row(), idx.parent(), true );
 
         subkeysModel.setKey( key );
         ui.subkeyTV->header()->resizeSections( QHeaderView::ResizeToContents );

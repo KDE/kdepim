@@ -266,31 +266,11 @@ QVariant UserIDListModel::data( const QModelIndex & idx, int role ) const {
 	if ( uid.isNull() )
 	    return QVariant();
 
-	switch ( idx.column() ) {
-
-	case ID:
-	    return QVariant();
-	case PrettyName:
-	    return Formatting::prettyName( uid );
-        case PrettyEMail:
-            return Formatting::prettyEMail( uid );
-	case ValidFrom:
-	case ValidUntil:
-	    return QVariant();
-	case Status:
-	    return Formatting::validityShort( uid );
-#if 0
-	    if ( userID.isRevoked() )
-		return i18n("revoked");
-	    if ( userID.isExpired() )
-		return i18n("expired");
-	    if ( userID.isDisabled() )
-		return i18n("disabled");
-	    if ( userID.isInvalid() )
-		return i18n("invalid");
-	    return i18n("good");
-#endif
-	}
+        if ( idx.column() == 0 )
+            // we assume that the top-level items are spanned
+            return Formatting::prettyUserID( uid );
+        else
+            return QVariant();
 
     } else if ( is_signature_level( idx ) ) {
 
