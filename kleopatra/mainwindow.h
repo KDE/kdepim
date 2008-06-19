@@ -46,6 +46,9 @@ public:
 public Q_SLOTS:
     void importCertificatesFromFile( const QStringList & files );
 
+Q_SIGNALS:
+    void configDialogRequested();
+
 protected:
     void closeEvent( QCloseEvent * e );
     void showEvent( QShowEvent * e );
@@ -82,7 +85,6 @@ private:
     Q_PRIVATE_SLOT( d, void configureBackend() )
     Q_PRIVATE_SLOT( d, void configureToolbars() )
     Q_PRIVATE_SLOT( d, void editKeybindings() )
-    Q_PRIVATE_SLOT( d, void preferences() )
     Q_PRIVATE_SLOT( d, void gnupgLogViewer() )
     Q_PRIVATE_SLOT( d, void gnupgAdministrativeConsole() )
     Q_PRIVATE_SLOT( d, void slotConfigCommitted() )

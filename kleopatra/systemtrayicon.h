@@ -48,6 +48,7 @@ public:
 
 public Q_SLOTS:
     void openOrRaiseMainWindow();
+    void openOrRaiseConfigDialog();
 
 private:
     virtual QWidget * doCreateMainWindow() const = 0;
@@ -56,7 +57,6 @@ private:
 private:
     class Private;
     kdtools::pimpl_ptr<Private> d;
-    Q_PRIVATE_SLOT( d, void slotConfigure() )
     Q_PRIVATE_SLOT( d, void slotAbout() )
     Q_PRIVATE_SLOT( d, void slotActivated( QSystemTrayIcon::ActivationReason ) )
     Q_PRIVATE_SLOT( d, void slotEnableDisableActions() )

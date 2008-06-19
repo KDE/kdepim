@@ -66,8 +66,6 @@
 #include "commands/certifycertificatecommand.h"
 #include "commands/adduseridcommand.h"
 
-#include "conf/configuredialog.h"
-
 #include "utils/detail_p.h"
 #include "utils/gnupg-helper.h"
 #include "utils/stl_util.h"
@@ -99,6 +97,7 @@
 #include <QMenu>
 #include <QTimer>
 #include <QProcess>
+#include <QPointer>
 
 #include <kleo/cryptobackendfactory.h>
 #include <ui/cryptoconfigdialog.h>
@@ -264,7 +263,6 @@ public:
         createAndStart<SelfTestCommand>();
     }
     void configureBackend();
-    void preferences();
 
     void gnupgLogViewer() {
         if( !QProcess::startDetached("kwatchgnupg" ) )
@@ -305,8 +303,6 @@ private:
     Kleo::AbstractKeyListModel * hierarchicalModel;
     Kleo::KeyListController controller;
 
-    QPointer<ConfigureDialog> configureDialog;
-
     struct UI {
 
         TabWidget tabWidget;
@@ -332,7 +328,6 @@ MainWindow::Private::Private( MainWindow * qq )
       flatModel( AbstractKeyListModel::createFlatKeyListModel( q ) ),
       hierarchicalModel( AbstractKeyListModel::createHierarchicalKeyListModel( q ) ),
       controller( q ),
-      configureDialog(),
       ui( q )
 {
     KDAB_SET_OBJECT_NAME( controller );
@@ -460,7 +455,7 @@ void MainWindow::Private::setupActions() {
     KStandardAction::quit( q, SLOT(closeAndQuit()), q->actionCollection() );
     KStandardAction::configureToolbars( q, SLOT(configureToolbars()), q->actionCollection() );
     KStandardAction::keyBindings( q, SLOT(editKeybindings()), q->actionCollection() );
-    KStandardAction::preferences( q, SLOT(preferences()), q->actionCollection() );
+    KStandardAction::preferences( q, SIGNAL(configDialogRequested()), q->actionCollection() );
     q->createStandardStatusBarAction();
     q->setStandardToolBarMenuEnabled( true );
 
@@ -523,19 +518,6 @@ void MainWindow::Private::configureBackend() {
         QDBusConnection::sessionBus().send(message);
 #endif
     }
-}
-
-void MainWindow::Private::preferences() {
-    if ( !configureDialog ) {
-        configureDialog = new ConfigureDialog( q );
-        configureDialog->setAttribute( Qt::WA_DeleteOnClose );
-        connect( configureDialog, SIGNAL(configCommitted()), q, SLOT(slotConfigCommitted()) );
-    }
-
-    if ( configureDialog->isVisible() )
-        configureDialog->raise();
-    else
-        configureDialog->show();
 }
 
 void MainWindow::Private::slotConfigCommitted() {

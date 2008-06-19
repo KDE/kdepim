@@ -137,19 +137,6 @@ private:
         ( new DecryptVerifyClipboardCommand( 0 ) )->start();
     }
 
-    void slotConfigure() {
-        if ( !configureDialog ) {
-            configureDialog = new ConfigureDialog;
-            configureDialog->setAttribute( Qt::WA_DeleteOnClose );
-            connectConfigureDialog();
-        }
-
-        if ( configureDialog->isVisible() )
-            configureDialog->raise();
-        else
-            configureDialog->show();
-    }
-
 private:
     void connectConfigureDialog() {
         if ( configureDialog && mainWindow )
@@ -159,7 +146,14 @@ private:
         if ( configureDialog && mainWindow )
             disconnect( configureDialog, SIGNAL(configCommitted()), mainWindow, SLOT(slotConfigCommitted()) );
     }
-
+    void connectMainWindow() {
+        if ( mainWindow )
+            connect( mainWindow, SIGNAL(configDialogRequested()), q, SLOT(openOrRaiseConfigDialog()) );
+    }
+    void disconnectMainWindow() {
+        if ( mainWindow )
+            connect( mainWindow, SIGNAL(configDialogRequested()), q, SLOT(openOrRaiseConfigDialog()) );
+    }
 private:
     QMenu menu;
     QAction openCertificateManagerAction;
@@ -207,7 +201,7 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
     KDAB_SET_OBJECT_NAME( decryptVerifyClipboardAction );
 
     connect( &openCertificateManagerAction, SIGNAL(triggered()), q, SLOT(openOrRaiseMainWindow()) );
-    connect( &configureAction, SIGNAL(triggered()), q, SLOT(slotConfigure()) );
+    connect( &configureAction, SIGNAL(triggered()), q, SLOT(openOrRaiseConfigDialog()) );
     connect( &aboutAction, SIGNAL(triggered()), q, SLOT(slotAbout()) );
     connect( &quitAction, SIGNAL(triggered()), QCoreApplication::instance(), SLOT(quit()) );
     connect( &encryptClipboardAction, SIGNAL(triggered()), q, SLOT(slotEncryptClipboard()) );
@@ -251,8 +245,10 @@ void SystemTrayIcon::setMainWindow( QWidget * mw ) {
     if ( d->mainWindow )
         return;
     d->disconnectConfigureDialog();
+    d->disconnectMainWindow();
     d->mainWindow = mw;
     d->connectConfigureDialog();
+    d->connectMainWindow();
     mw->installEventFilter( this );
     d->slotEnableDisableActions();
 }
@@ -283,6 +279,7 @@ void SystemTrayIcon::openOrRaiseMainWindow() {
             d->mainWindow->setGeometry( d->previousGeometry );
         d->mainWindow->installEventFilter( this );
         d->connectConfigureDialog();
+        d->connectMainWindow();
     }
     if ( d->mainWindow->isMinimized() ) {
         KWindowSystem::unminimizeWindow( d->mainWindow->winId());
@@ -292,6 +289,19 @@ void SystemTrayIcon::openOrRaiseMainWindow() {
     } else {
         d->mainWindow->show();
     }
+}
+
+void SystemTrayIcon::openOrRaiseConfigDialog() {
+    if ( !d->configureDialog ) {
+        d->configureDialog = new ConfigureDialog;
+        d->configureDialog->setAttribute( Qt::WA_DeleteOnClose );
+        d->connectConfigureDialog();
+    }
+
+    if ( d->configureDialog->isVisible() )
+        d->configureDialog->raise();
+    else
+        d->configureDialog->show();
 }
 
 #include "moc_systemtrayicon.cpp"
