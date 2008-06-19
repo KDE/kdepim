@@ -70,6 +70,7 @@
 #include "utils/gnupg-helper.h"
 #include "utils/stl_util.h"
 #include "utils/action_data.h"
+#include "utils/classify.h"
 
 #include <KActionCollection>
 #include <KLocale>
@@ -593,16 +594,14 @@ static bool can_decode_local_files( const QMimeData * data ) {
 void MainWindow::dragEnterEvent( QDragEnterEvent * e ) {
     kDebug();
 
-    if ( ( e->possibleActions() & Qt::CopyAction ) &&
-         can_decode_local_files( e->mimeData() ) )
+    if ( can_decode_local_files( e->mimeData() ) )
         e->acceptProposedAction();
 }
 
 void MainWindow::dropEvent( QDropEvent * e ) {
     kDebug();
 
-    if ( !( e->possibleActions() & Qt::CopyAction ) ||
-         !can_decode_local_files( e->mimeData() ) )
+    if ( !can_decode_local_files( e->mimeData() ) )
         return;
 
     e->setDropAction( Qt::CopyAction );
