@@ -62,6 +62,7 @@ public:
 
 public Q_SLOTS:
     void openOrRaiseMainWindow();
+    void openOrRaiseConfigDialog();
     void importCertificatesFromFile( const QStringList & files );
 
 private:

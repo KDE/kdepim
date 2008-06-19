@@ -192,6 +192,10 @@ void KleopatraApplication::openOrRaiseMainWindow() {
     d->sysTray.openOrRaiseMainWindow();
 }
 
+void KleopatraApplication::openOrRaiseConfigDialog() {
+    d->sysTray.openOrRaiseConfigDialog();
+}
+
 void KleopatraApplication::importCertificatesFromFile( const QStringList & files ) {
     d->sysTray.openOrRaiseMainWindow();
     if ( !files.empty() )

@@ -70,6 +70,7 @@ namespace Kleo {
     Q_SIGNALS:
         void stopped();
         void startKeyManagerRequested();
+        void startConfigDialogRequested();
 
     private:
         class Private;

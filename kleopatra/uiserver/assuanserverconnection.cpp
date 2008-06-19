@@ -367,6 +367,20 @@ private:
         return assuan_process_done( ctx_, 0 );
     }
 
+    static int start_confdialog_handler( assuan_context_t ctx_, char * line ) {
+        assert( assuan_get_pointer( ctx_ ) );
+        AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
+
+        if ( line && *line ) {
+            static const QString errorString = i18n("START_CONFDIALOG does not take arguments");
+            return assuan_process_done_msg( ctx_, gpg_error( GPG_ERR_ASS_PARAMETER ), errorString );
+        }
+
+        emit conn.q->startConfigDialogRequested();
+
+        return assuan_process_done( ctx_, 0 );
+    }
+
     template <bool in> struct Input_or_Output : mpl::if_c<in,Input,Output> {};
 
     // format: TAG (FD|FD=\d+|FILE=...)
@@ -713,6 +727,8 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
         throw Exception( err, "register \"GETINFO\" handler" );
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "START_KEYMANAGER", start_keymanager_handler ) )
         throw Exception( err, "register \"START_KEYMANAGER\" handler" );
+    if ( const gpg_error_t err = assuan_register_command( ctx.get(), "START_CONFDIALOG", start_confdialog_handler ) )
+        throw Exception( err, "register \"START_CONFDIALOG\" handler" );
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "RECIPIENT", recipient_handler ) )
         throw Exception( err, "register \"RECIPIENT\" handler" );
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "SENDER", sender_handler ) )

@@ -150,6 +150,9 @@ int main( int argc, char** argv )
       QObject::connect( &server, SIGNAL(startKeyManagerRequested()),
                         &app, SLOT(openOrRaiseMainWindow()) );
 
+      QObject::connect( &server, SIGNAL(startConfigDialogRequested()),
+                        &app, SLOT(openOrRaiseConfigDialog()) );
+
 #define REGISTER( Command ) server.registerCommandFactory( boost::shared_ptr<Kleo::AssuanCommandFactory>( new Kleo::GenericAssuanCommandFactory<Kleo::Command> ) )
       REGISTER( DecryptCommand );
       REGISTER( DecryptFilesCommand );
@@ -195,6 +198,8 @@ int main( int argc, char** argv )
       app.setIgnoreNewInstance( true );
       QObject::disconnect( &server, SIGNAL(startKeyManagerRequested()),
                            &app, SLOT(openOrRaiseMainWindow()) );
+      QObject::disconnect( &server, SIGNAL(startConfigDialogRequested()),
+                           &app, SLOT(openOrRaiseConfigDialog()) );
 
       server.stop();
       server.waitForStopped();
