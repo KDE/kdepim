@@ -90,6 +90,8 @@ namespace Kleo {
 
     const char * outputFileExtension( unsigned int classification );
 
+    QString printableClassification( unsigned int classification );
+
 #define make_convenience( What, Mask )                                  \
     inline bool is##What( const QString & filename ) {                  \
         return ( classify( filename ) & Class::Mask ) == Class::What ;  \
