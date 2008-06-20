@@ -831,10 +831,16 @@ static QStringList extractViewGroups( const KConfig * config ) {
     return config ? config->groupList().filter( QRegExp( "^View #\\d+$" ) ) : QStringList() ;
 }
 
+// work around deleteGroup() not deleting groups out of groupList():
+static const bool KCONFIG_DELETEGROUP_BROKEN = true;
+
 void TabWidget::loadViews( const KConfig * config ) {
     if ( config )
-        Q_FOREACH( const QString & group, extractViewGroups( config ) )
-            addView( KConfigGroup( config, group ) );
+        Q_FOREACH( const QString & group, extractViewGroups( config ) ) {
+            const KConfigGroup kcg( config, group );
+            if ( !KCONFIG_DELETEGROUP_BROKEN || kcg.readEntry( "magic", 0U ) == 0xFA1AFE1U )
+                addView( kcg );
+        }
     if ( !count() ) {
         // add default views:
         addView( QString(), "my-certificates" );
@@ -855,6 +861,8 @@ void TabWidget::saveViews( KConfig * config ) const {
                 continue;
             KConfigGroup group( config, QString().sprintf( "View #%u", vg++ ) );
             p->saveTo( group );
+            if ( KCONFIG_DELETEGROUP_BROKEN )
+                group.writeEntry( "magic", 0xFA1AFE1U );
         }
     }
 }
