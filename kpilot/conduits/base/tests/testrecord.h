@@ -38,6 +38,7 @@ class KPILOT_EXPORT TestRecord : public Record {
 private:
 	QString fId;
 	QStringList fFields;
+	QStringList fCategories;
 	bool fModified;
 	bool fDeleted;
 	QMap<QString, QVariant> fValues;
@@ -67,17 +68,21 @@ public:
 	
 	TestRecord* duplicate() const;
 	
+	void setCategory( const QString& c );
+	
+	void addCategory( const QString& c );
+	
 	/** IMPLEMTED VIRTUAL FUNCTIONS FROM BASECLASS **/
 	
 	virtual const QString id() const;
 	
-	virtual int categoryCount() const { return 1; };
-	
-	virtual bool containsCategory( const QString& c ) const { Q_UNUSED(c); return false; };
-
-	virtual QStringList categories() const { return QStringList(); };
-	
 	virtual void setId( const QString &id );
+	
+	virtual int categoryCount() const;
+	
+	virtual bool containsCategory( const QString& c ) const;
+
+	virtual QStringList categories() const;
 
 	virtual bool isModified() const;
 

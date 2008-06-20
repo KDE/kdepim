@@ -66,6 +66,9 @@ class KJotsLinkDialog : public KDialog
      */
     QString linkUrl() const;
 
+    public slots:
+    void trySetEntry(const QString & text);
+
     private:
         QLabel *textLabel;
         KLineEdit *textLineEdit;
