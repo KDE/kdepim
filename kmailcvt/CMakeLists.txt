@@ -31,7 +31,7 @@ qt4_add_dbus_interfaces(kmailcvt_SRCS ${CMAKE_BINARY_DIR}/kmail/org.kde.kmail.km
 
 kde4_add_ui_files(kmailcvt_SRCS kselfilterpagedlg.ui kimportpagedlg.ui)
 
-kde4_add_app_icon(kmailcvt_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/kmailcvt.png")
+kde4_add_app_icon(kmailcvt_SRCS "ox*-app-kmailcvt.png")
 kde4_add_executable(kmailcvt ${kmailcvt_SRCS})
 add_dependencies(kmailcvt kmail_xml)
 
