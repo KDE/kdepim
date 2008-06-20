@@ -15,7 +15,8 @@ kde4_add_library( kleopatraclientcore SHARED
   initialization.cpp
   command.cpp
   selectcertificatecommand.cpp
-  #connection.cpp
+  signencryptfilescommand.cpp
+  decryptverifyfilescommand.cpp
   )
 
 set_target_properties( kleopatraclientcore
@@ -42,6 +43,7 @@ install(
     initialization.h
     command.h
     selectcertificatecommand.h
+    signencryptfilescommand.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/libkleopatraclient/core
   )
 
