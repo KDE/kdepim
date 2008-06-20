@@ -254,6 +254,13 @@ void Bookshelf::remove(QTreeWidgetItem *item)
     }
 
     if ( entry->isBook() ) {
+        // Fix for bug 164480.
+        // Not certain what the problem is here, but if a page is selected and
+        // its parent book is deleted, we get a crash. The workaround is to
+        // select the book before removing it.
+        // Stephen Kelly - 20th June 2008
+        jumpToEntry( entry );
+
         dynamic_cast<KJotsBook*>(entry)->deleteBook();
     }
 
