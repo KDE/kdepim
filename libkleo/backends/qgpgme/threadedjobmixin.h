@@ -33,6 +33,8 @@
 #ifndef __KLEO_THREADEDJOBMIXING_H__
 #define __KLEO_THREADEDJOBMIXING_H__
 
+#include "qgpgmeprogresstokenmapper.h"
+
 #include <KDebug>
 
 #include <QFutureWatcher>
@@ -41,6 +43,7 @@
 #include <QString>
 
 #include <gpgme++/context.h>
+#include <gpgme++/interfaces/progressprovider.h>
 
 #include <boost/bind.hpp>
 #include <boost/tuple/tuple.hpp>
@@ -68,7 +71,7 @@ namespace _detail {
   };
 
   template <typename T_base, typename T_result=boost::tuple<GpgME::Error,QString> >
-  class ThreadedJobMixin : public T_base {
+  class ThreadedJobMixin : public T_base, public GpgME::ProgressProvider {
   public:
     typedef ThreadedJobMixin<T_base, T_result> mixin_type;
     typedef T_result result_type;
@@ -93,6 +96,7 @@ namespace _detail {
     void lateInitialization() {
       assert( m_ctx );
       connect( &m_watcher, SIGNAL(finished()), this, SLOT(slotFinished()) );
+      m_ctx->setProgressProvider( this );
     }
 
     template <typename T_binder>
@@ -116,6 +120,16 @@ namespace _detail {
       if ( m_ctx ) m_ctx->cancelPendingOperation();
     }
     /* reimp */ QString auditLogAsHtml() const { return m_auditLog; }
+    /* reimp */ void showProgress( const char * what, int type, int current, int total ) {
+        // will be called from the thread exec'ing the operation, so
+        // just bounce everything to the owning thread:
+        // ### hope this is thread-safe (meta obj is const, and
+        // ### portEvent is thread-safe, so should be ok)
+        QMetaObject::invokeMethod( this, "progress", Qt::QueuedConnection,
+                                   Q_ARG( QString, QGpgMEProgressTokenMapper::map( what, type ) ),
+                                   Q_ARG( int, current ),
+                                   Q_ARG( int, total ) );
+    } 
   private:
     template <typename T1, typename T2>
     void doEmitResult( const boost::tuple<T1,T2> & tuple ) {
