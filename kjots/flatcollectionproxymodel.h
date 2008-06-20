@@ -46,6 +46,7 @@ class FlatCollectionProxyModel : public QAbstractProxyModel
 
     void setSourceModel ( QAbstractItemModel * sourceModel );
     void setAncestorSeparator( QString s);
+    void setRolesToFlatten( QList< int > roles = QList< int >() << Qt::DisplayRole );
 
     QVariant data( const QModelIndex & index, int role = Qt::DisplayRole ) const;
     int rowCount( const QModelIndex & parent = QModelIndex() ) const;
