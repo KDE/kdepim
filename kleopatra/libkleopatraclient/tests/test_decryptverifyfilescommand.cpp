@@ -8,7 +8,7 @@ using namespace KLEOPATRACLIENT_NAMESPACE;
 
 int main( int argc, char * argv[] ) {
 
-    QCoreApplication app( argc, argv );
+    QApplication app( argc, argv );
 
     DecryptVerifyFilesCommand cmd;
     cmd.setFilePaths( filePathsFromArgs( argc, argv ) );
