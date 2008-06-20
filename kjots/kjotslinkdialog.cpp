@@ -21,6 +21,7 @@
 #include "kjotslinkdialog.h"
 
 #include <QLabel>
+#include <QCompleter>
 #include <QGridLayout>
 #include <QRadioButton>
 
@@ -29,10 +30,10 @@
 #include <KLineEdit>
 #include <KUrl>
 #include <KActionCollection>
-#include <kdebug.h>
 
 #include "KJotsSettings.h"
 #include "flatcollectionproxymodel.h"
+#include "kjotsbookshelfentryvalidator.h"
 #include "kjotsentry.h"
 #include "bookshelf.h"
 
@@ -69,12 +70,21 @@ KJotsLinkDialog::KJotsLinkDialog(QWidget *parent, Bookshelf *bookshelf) :
     hrefCombo->setModel(proxyModel);
     hrefCombo->setView(tree);
 
+    hrefCombo->setEditable(true);
+    QCompleter *completer = new QCompleter(proxyModel, this);
+    completer->setCaseSensitivity(Qt::CaseInsensitive);
+    hrefCombo->setCompleter(completer);
+    KJotsBookshelfEntryValidator* validator = new KJotsBookshelfEntryValidator( proxyModel, this );
+    hrefCombo->setValidator( validator );
+
     QGridLayout* linkLayout = new QGridLayout();
     linkUrlLineEditRadioButton = new QRadioButton(entries);
     hrefComboRadioButton = new QRadioButton(entries);
 
-    connect(linkUrlLineEditRadioButton, SIGNAL(toggled(bool)), linkUrlLineEdit, SLOT(setEnabled(bool)));
-    connect(hrefComboRadioButton, SIGNAL(toggled(bool)), hrefCombo, SLOT(setEnabled(bool)));
+    connect(linkUrlLineEditRadioButton, SIGNAL(toggled(bool)),
+        linkUrlLineEdit, SLOT(setEnabled(bool)));
+    connect(hrefComboRadioButton, SIGNAL(toggled(bool)),
+        hrefCombo, SLOT(setEnabled(bool)));
     hrefCombo->setEnabled(false);
     linkUrlLineEditRadioButton->setChecked(true);
 
@@ -91,6 +101,9 @@ KJotsLinkDialog::KJotsLinkDialog(QWidget *parent, Bookshelf *bookshelf) :
     setMainWidget(entries);
 
     textLineEdit->setFocus();
+
+    connect( hrefCombo, SIGNAL( editTextChanged ( const QString & ) ),
+        this, SLOT( trySetEntry(const QString & ) ) );
 }
 
 void KJotsLinkDialog::setLinkText(const QString &linkText)
@@ -137,6 +150,19 @@ void KJotsLinkDialog::setLinkUrl(const QString &linkUrl)
 QString KJotsLinkDialog::linkText() const
 {
     return textLineEdit->text().trimmed();
+}
+
+void KJotsLinkDialog::trySetEntry(const QString & text)
+{
+    QString t(text);
+    int pos = hrefCombo->lineEdit()->cursorPosition();
+    if ( hrefCombo->validator()->validate(t, pos) == KJotsBookshelfEntryValidator::Acceptable )
+    {
+        int row = hrefCombo->findText( t, Qt::MatchFixedString );
+        QModelIndex index = hrefCombo->model()->index( row, 0 );
+        hrefCombo->view()->setCurrentIndex( index );
+        hrefCombo->setCurrentIndex( row );
+    }
 }
 
 QString KJotsLinkDialog::linkUrl() const

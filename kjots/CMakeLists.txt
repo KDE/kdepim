@@ -20,6 +20,7 @@ set(kjots_SRCS
    kjotsbrowser.cpp
    kjotslinkdialog.cpp
    flatcollectionproxymodel.cpp
+   kjotsbookshelfentryvalidator.cpp
  )
 
 

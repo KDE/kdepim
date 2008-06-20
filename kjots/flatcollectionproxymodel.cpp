@@ -159,7 +159,7 @@ QModelIndex FlatCollectionProxyModel::mapFromSource(const QModelIndex & sourceIn
 
 QVariant FlatCollectionProxyModel::data(const QModelIndex & index, int role) const
 {
-  if ( role == Qt::DisplayRole ) {
+  if (( role == Qt::EditRole ) || ( role == Qt::DisplayRole )) {
     QModelIndex sourceIndex = mapToSource( index );
     QString name = sourceIndex.data( role ).toString();
     sourceIndex = sourceIndex.parent();
