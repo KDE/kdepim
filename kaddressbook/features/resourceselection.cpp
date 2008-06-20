@@ -53,10 +53,10 @@ class AddressBookWrapper : public KABC::AddressBook
     }
 };
 
-class ResourceItem : public QTreeWidgetItem
+class KABCResourceItem : public QTreeWidgetItem
 {
   public:
-    ResourceItem( QTreeWidget *parent, KABC::Resource *resource )
+    KABCResourceItem( QTreeWidget *parent, KABC::Resource *resource )
       : QTreeWidgetItem( parent, QStringList( resource->resourceName() ) ),
         mResource( resource ),
         mIsSubresource( false ), mSubItemsCreated( false ),
@@ -67,7 +67,7 @@ class ResourceItem : public QTreeWidgetItem
       setIcon( 0, KIcon( "x-office-address-book" ) );
     }
 
-    ResourceItem( KABC::ResourceABC *resourceABC, ResourceItem* parent,
+    KABCResourceItem( KABC::ResourceABC *resourceABC, KABCResourceItem* parent,
                   const QString& resourceIdent )
       : QTreeWidgetItem( parent, QStringList( resourceABC->subresourceLabel( resourceIdent ) ) ),
         mResource( resourceABC ),
@@ -80,6 +80,11 @@ class ResourceItem : public QTreeWidgetItem
       setIcon( 0, KIcon( "x-office-address-book" ) );
 
       treeWidget()->setRootIsDecorated( true );
+    }
+
+    ~KABCResourceItem()
+    {
+        qDebug( ) << "Deleting Item";
     }
 
     void createSubresourceItems();
@@ -95,7 +100,7 @@ class ResourceItem : public QTreeWidgetItem
 };
 
 // Comes from korganizer/resourceview.cpp
-void ResourceItem::createSubresourceItems()
+void KABCResourceItem::createSubresourceItems()
 {
   if ( !mIsSubresource && !mSubItemsCreated ) {
     KABC::ResourceABC* res = dynamic_cast<KABC::ResourceABC *>( mResource );
@@ -108,7 +113,7 @@ void ResourceItem::createSubresourceItems()
       // This resource has subresources
       QStringList::ConstIterator it;
       for ( it = subresources.begin(); it != subresources.end(); ++it ) {
-        (void)new ResourceItem( res, this, *it );
+        (void)new KABCResourceItem( res, this, *it );
       }
     }
     mSubItemsCreated = true;
@@ -118,7 +123,7 @@ void ResourceItem::createSubresourceItems()
 }
 
 // TODO: connect this to some signalResourceModified
-// void ResourceItem::setGuiState()
+// void KABCResourceItem::setGuiState()
 // {
 //   if ( mIsSubresource )
 //     setOn( mResource->subresourceActive( mResourceIdentifier ) );
@@ -201,7 +206,7 @@ void ResourceSelection::add()
 
 void ResourceSelection::edit()
 {
-  ResourceItem *item = selectedItem();
+  KABCResourceItem *item = selectedItem();
   if ( !item )
     return;
 
@@ -218,7 +223,7 @@ void ResourceSelection::edit()
 
 void ResourceSelection::remove()
 {
-  ResourceItem *item = selectedItem();
+  KABCResourceItem *item = selectedItem();
   if ( !item )
     return;
 
@@ -239,7 +244,7 @@ void ResourceSelection::remove()
 
 void ResourceSelection::currentChanged( QTreeWidgetItem *item )
 {
-  ResourceItem *resItem = static_cast<ResourceItem*>( item );
+  KABCResourceItem *resItem = static_cast<KABCResourceItem*>( item );
   bool state = (resItem && !resItem->isSubResource() );
 
   mEditButton->setEnabled( state );
@@ -288,7 +293,7 @@ void ResourceSelection::updateView()
   KRES::Manager<KABC::Resource>::Iterator it;
   for ( it = mManager->begin(); it != mManager->end(); ++it ) {
 
-    new ResourceItem( mListView, *it );
+    new KABCResourceItem( mListView, *it );
     KABC::ResourceABC* resource = dynamic_cast<KABC::ResourceABC *>( *it );
     if ( resource ) {
       disconnect( resource, 0, this, 0 );
@@ -308,7 +313,7 @@ void ResourceSelection::updateView()
 
   QTreeWidgetItemIterator iterator( mListView );
   while ( *iterator ) {
-    ResourceItem *item = static_cast< ResourceItem * >( *iterator );
+    KABCResourceItem *item = static_cast< KABCResourceItem * >( *iterator );
     if ( item->resource()->identifier() == mLastResource ) {
       item->setSelected( true );
       break;
@@ -334,8 +339,8 @@ void ResourceSelection::slotSubresourceAdded( KABC::ResourceABC *resource,
     // Not found
     return;
 
-  ResourceItem *item = static_cast<ResourceItem *>( foundItems[0] );
-  (void)new ResourceItem( resource, item, subResource );
+  KABCResourceItem *item = static_cast<KABCResourceItem *>( foundItems[0] );
+  (void)new KABCResourceItem( resource, item, subResource );
 }
 
 // Remove an entry
@@ -349,9 +354,9 @@ void ResourceSelection::slotSubresourceRemoved( KABC::ResourceABC* resource,
   //emitResourcesChanged();
 }
 
-ResourceItem* ResourceSelection::selectedItem() const
+KABCResourceItem* ResourceSelection::selectedItem() const
 {
-  return static_cast<ResourceItem*>( mListView->currentItem() );
+  return static_cast<KABCResourceItem*>( mListView->currentItem() );
 }
 
 void ResourceSelection::initGUI()

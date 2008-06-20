@@ -32,7 +32,7 @@ class QAbstractButton;
 
 namespace KABC { class ResourceABC; }
 
-class ResourceItem;
+class KABCResourceItem;
 
 class ResourceSelection : public KAB::ExtensionWidget
 {
@@ -65,7 +65,7 @@ class ResourceSelection : public KAB::ExtensionWidget
   private:
     void initGUI();
 
-    ResourceItem* selectedItem() const;
+    KABCResourceItem* selectedItem() const;
 
     QTreeWidget *mListView;
     QAbstractButton *mAddButton;
