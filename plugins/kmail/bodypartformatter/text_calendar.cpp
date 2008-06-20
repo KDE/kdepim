@@ -94,6 +94,27 @@ CalendarManager::CalendarManager()
   mCalendar = new CalendarResources( KPIM::KPimPrefs::timeSpec() );
   mCalendar->readConfig();
   mCalendar->load();
+  bool multipleKolabResources = false;
+  CalendarResourceManager *mgr = mCalendar->resourceManager();
+  for ( CalendarResourceManager::ActiveIterator it = mgr->activeBegin(); it != mgr->activeEnd(); ++it ) {
+    if ( (*it)->type() == "imap" || (*it)->type() == "kolab" ) {
+      const QStringList subResources = (*it)->subresources();
+      QSet<QString> prefixSet;
+      for ( QStringList::ConstIterator subIt = subResources.begin(); subIt != subResources.end(); ++subIt ) {
+        if ( !(*subIt).contains( "/.INBOX.directory/" ) )
+          // we don't care about shared folders
+          continue;
+        prefixSet.insert( (*subIt).left( (*subIt).indexOf( "/.INBOX.directory/" ) ) );
+      }
+      if ( prefixSet.count() > 1 )
+        multipleKolabResources = true;
+    }
+  }
+  if ( multipleKolabResources ) {
+    kDebug() << "disabling calendar lookup because multiple active Kolab resources";
+    delete mCalendar;
+    mCalendar = 0;
+  }
 }
 
 CalendarManager::~CalendarManager()
