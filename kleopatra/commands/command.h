@@ -37,9 +37,15 @@
 
 #include <utils/pimpl_ptr.h>
 
+#include <vector>
+
 class QModelIndex;
 template <typename T> class QList;
 class QAbstractItemView;
+
+namespace GpgME {
+    class Key;
+}
 
 namespace Kleo {
 
@@ -50,6 +56,8 @@ namespace Kleo {
     public:
         explicit Command( KeyListController * parent );
         explicit Command( QAbstractItemView * view, KeyListController * parent );
+        explicit Command( const GpgME::Key & key );
+        explicit Command( const std::vector<GpgME::Key> & keys );
         ~Command();
 
         enum Restriction {
@@ -61,8 +69,13 @@ namespace Kleo {
             MustBeOpenPGP      = 16,
             MustBeCMS          = 32,
 
-            AllRestrictions
+            // esoteric:
+            MayOnlyBeSecretKeyIfOwnerTrustIsNotYetUltimate = 64, // for set-owner-trust
+
+            _AllRestrictions_Helper,
+            AllRestrictions = 2*(_AllRestrictions_Helper-1) - 1
         };
+
         Q_DECLARE_FLAGS( Restrictions, Restriction )
 
         static Restrictions restrictions() { return NoRestriction; }
@@ -70,9 +83,14 @@ namespace Kleo {
         void setView( QAbstractItemView * view );
         void setIndex( const QModelIndex & idx );
         void setIndexes( const QList<QModelIndex> & idx );
+        void setKey( const GpgME::Key & key );
+        void setKeys( const std::vector<GpgME::Key> & keys );
 
         void setAutoDelete( bool on );
         bool autoDelete() const;
+
+        void setWarnWhenRunningAtShutdown( bool warn );
+        bool warnWhenRunningAtShutdown() const;
 
     public Q_SLOTS:
         void start();
@@ -97,6 +115,8 @@ namespace Kleo {
     protected:
         explicit Command( Private * pp );
         explicit Command( QAbstractItemView * view, Private * pp );
+        explicit Command( const std::vector<GpgME::Key> & keys, Private * pp );
+        explicit Command( const GpgME::Key & key, Private * pp );
     };
 
 }

@@ -51,6 +51,8 @@ namespace Kleo {
         explicit UiServer( const QString & socket, QObject * parent=0 );
         ~UiServer();
 
+        static void setLogStream( FILE * file );
+
         bool registerCommandFactory( const boost::shared_ptr<AssuanCommandFactory> & cmdFactory );
 
         bool waitForStopped( unsigned int ms=0xFFFFFFFF );
@@ -68,6 +70,7 @@ namespace Kleo {
     Q_SIGNALS:
         void stopped();
         void startKeyManagerRequested();
+        void startConfigDialogRequested();
 
     private:
         class Private;

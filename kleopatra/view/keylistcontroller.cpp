@@ -60,6 +60,7 @@
 #include <cassert>
 
 using namespace Kleo; 
+using namespace Kleo::Commands; 
 using namespace boost;
 using namespace GpgME;
 
@@ -291,6 +292,10 @@ bool KeyListController::hasRunningCommands() const {
     return !d->commands.empty();
 }
 
+bool KeyListController::shutdownWarningRequired() const {
+    return kdtools::any( d->commands, mem_fn( &Command::warnWhenRunningAtShutdown ) );
+}
+
 // slot
 void KeyListController::cancelCommands() {
     std::for_each( d->commands.begin(), d->commands.end(),
@@ -373,6 +378,13 @@ void KeyListController::enableDisableActions( const QItemSelectionModel * sm ) c
             ai.action->setEnabled( ai.restrictions == ( ai.restrictions & restrictionsMask ) );
 }
 
+static bool all_secret_are_not_owner_trust_ultimate( const std::vector<Key> & keys ) {
+    Q_FOREACH( const Key & key, keys )
+        if ( key.hasSecret() && key.ownerTrust() == Key::Ultimate )
+            return false;
+    return true;
+}
+
 Command::Restrictions KeyListController::Private::calculateRestrictionsMask( const QItemSelectionModel * sm ) {
     if ( !sm )
         return 0;
@@ -399,6 +411,9 @@ Command::Restrictions KeyListController::Private::calculateRestrictionsMask( con
         result |= Command::MustBeOpenPGP;
     else if ( kdtools::all( keys.begin(), keys.end(), bind( &Key::protocol, _1 ) == CMS ) )
         result |= Command::MustBeCMS;
+
+    if ( all_secret_are_not_owner_trust_ultimate( keys ) )
+        result |= Command::MayOnlyBeSecretKeyIfOwnerTrustIsNotYetUltimate;
 
     return result;
 }

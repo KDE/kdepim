@@ -61,6 +61,7 @@ namespace Commands {
         Q_PRIVATE_SLOT( d_func(), void slotCMSDownloadResult(GpgME::Error,QByteArray) )
         Q_PRIVATE_SLOT( d_func(), void slotDetailsRequested(GpgME::Key) )
         Q_PRIVATE_SLOT( d_func(), void slotSaveAsRequested(std::vector<GpgME::Key>) )
+        Q_PRIVATE_SLOT( d_func(), void slotDialogRejected() )
     };
 
 }

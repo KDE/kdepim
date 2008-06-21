@@ -49,6 +49,7 @@
 #include <utils/log.h>
 #include <utils/exception.h>
 #include <utils/kleo_assert.h>
+#include <utils/getpid.h>
 
 #include <gpgme++/data.h>
 
@@ -58,19 +59,21 @@
 #include <KWindowSystem>
 
 #include <QSocketNotifier>
-#include <QEventLoop>
+#include <QTimer>
 #include <QVariant>
 #include <QPointer>
 #include <QFileInfo>
 #include <QDebug>
 #include <QStringList>
 #include <QDialog>
+#include <QRegExp>
 
 #include <kleo-assuan.h>
 
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/lexical_cast.hpp>
 #include <boost/bind.hpp>
+#include <boost/mem_fn.hpp>
 #include <boost/mpl/if.hpp>
 
 #include <vector>
@@ -106,14 +109,6 @@ namespace {
         QString fileName;
         shared_ptr<QFile> file;
     };
-
-    static inline qint64 mygetpid() {
-#ifdef Q_OS_WIN32
-        return (qint64)_getpid();
-#else
-        return (qint64)getpid();
-#endif
-    }
 
     static void close_all( const std::vector<IOF> & ios ) {
         Q_FOREACH( const IOF & io, ios )
@@ -238,16 +233,9 @@ public Q_SLOTS:
         }
     }
 
-private:
-    void waitForCryptoCommandsEnabled() {
-        if ( cryptoCommandsEnabled )
-            return;
-        QEventLoop l;
-        loop = &l;
-        l.exec();
-        loop = 0;
-    }
+    int startCommandBottomHalf();
 
+private:
     void nohupDone( AssuanCommand * cmd ) {
         const std::vector< shared_ptr<AssuanCommand> >::iterator it
             = std::find_if( nohupedCommands.begin(), nohupedCommands.end(),
@@ -297,7 +285,7 @@ private:
 
     static int option_handler( assuan_context_t ctx_, const char * key, const char * value ) {
         assert( assuan_get_pointer( ctx_ ) );
-        
+
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
 
         if ( key && key[0] == '-' && key[1] == '-' )
@@ -306,6 +294,34 @@ private:
 
         return 0;
         //return gpg_error( GPG_ERR_UNKNOWN_OPTION );
+    }
+
+    static int session_handler( assuan_context_t ctx_, char * line ) {
+        assert( assuan_get_pointer( ctx_ ) );
+        AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
+
+        const QString str = QString::fromUtf8( line );
+        QRegExp rx( QLatin1String( "(?:\\d+)(?:\\s+(.*))?" ) );
+        if ( !rx.exactMatch( str ) ) {
+            static const QString errorString = i18n("Parse error");
+            return assuan_process_done_msg( ctx_, gpg_error( GPG_ERR_ASS_SYNTAX ), errorString );
+        }
+        if ( !rx.cap( 1 ).isEmpty() )
+            conn.sessionTitle = rx.cap( 1 );
+        return assuan_process_done( ctx_, 0 );
+    }
+
+    static int capabilities_handler( assuan_context_t ctx_, char * line ) {
+        if ( !QByteArray( line ).trimmed().isEmpty() ) {
+            static const QString errorString = i18n("CAPABILITIES doesn't take arguments");
+            return assuan_process_done_msg( ctx_, gpg_error( GPG_ERR_ASS_PARAMETER ), errorString );
+        }
+        static const char capabilities[] =
+            "SENDER=info\n"
+            "RECIPIENT=info\n"
+            "SESSION\n"
+        ;
+        return assuan_process_done( ctx_, assuan_send_data( ctx_, capabilities, sizeof capabilities - 1 ) );
     }
 
     static int getinfo_handler( assuan_context_t ctx_, char * line ) {
@@ -351,6 +367,20 @@ private:
         return assuan_process_done( ctx_, 0 );
     }
 
+    static int start_confdialog_handler( assuan_context_t ctx_, char * line ) {
+        assert( assuan_get_pointer( ctx_ ) );
+        AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx_ ) );
+
+        if ( line && *line ) {
+            static const QString errorString = i18n("START_CONFDIALOG does not take arguments");
+            return assuan_process_done_msg( ctx_, gpg_error( GPG_ERR_ASS_PARAMETER ), errorString );
+        }
+
+        emit conn.q->startConfigDialogRequested();
+
+        return assuan_process_done( ctx_, 0 );
+    }
+
     template <bool in> struct Input_or_Output : mpl::if_c<in,Input,Output> {};
 
     // format: TAG (FD|FD=\d+|FILE=...)
@@ -392,7 +422,7 @@ private:
                 options.erase( "FD" );
 
             } else if ( options.count( "FILE" ) ) {
-                
+
                 if ( options.count( "FD" ) )
                     throw gpg_error( GPG_ERR_CONFLICT );
 
@@ -472,8 +502,23 @@ private:
         }
     }
 
-    template <typename T_memptr>
-    static int recipient_sender_handler( T_memptr mp, assuan_context_t ctx, char * line ) {
+    static bool parse_informative( const char * & begin ) {
+        if ( qstrnicmp( begin, "--info", strlen("--info") ) != 0 )
+            return false;
+        const char * pos = begin + strlen("--info");
+        if ( *pos == '=' )
+            ;
+        else if ( *pos == ' ' || *pos == '\t' )
+            while ( *pos == ' ' || *pos == '\t' )
+                ++pos;
+        else
+            return false;
+        begin = pos;
+        return true;
+    }
+
+    template <typename T_memptr, typename T_memptr2>
+    static int recipient_sender_handler( T_memptr mp, T_memptr2 info, assuan_context_t ctx, char * line ) {
         assert( assuan_get_pointer( ctx ) );
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx ) );
 
@@ -481,6 +526,10 @@ private:
             return assuan_process_done( conn.ctx.get(), gpg_error( GPG_ERR_INV_ARG ) );
         const char * begin     = line;
         const char * const end = begin + qstrlen( line );
+        const bool informative = parse_informative( begin );
+        if ( !(conn.*mp).empty() && informative != (conn.*info) )
+            return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_CONFLICT ),
+                                            i18n("Cannot mix --info with non-info SENDER or RECIPIENT").toUtf8().constData() );
         KMime::Types::Mailbox mb;
         if ( !KMime::HeaderParsing::parseMailbox( begin, end, mb ) )
             return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_INV_ARG ),
@@ -488,16 +537,17 @@ private:
         if ( begin != end )
             return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_INV_ARG ),
                                             i18n("Garbage after valid RFC-2822 mailbox detected").toUtf8().constData() );
+        (conn.*info) = informative;
         (conn.*mp).push_back( mb );
         return assuan_process_done( ctx, 0 );
     }
 
     static int recipient_handler( assuan_context_t ctx, char * line ) {
-        return recipient_sender_handler( &Private::recipients, ctx, line );
+        return recipient_sender_handler( &Private::recipients, &Private::informativeRecipients, ctx, line );
     }
 
     static int sender_handler( assuan_context_t ctx, char * line ) {
-        return recipient_sender_handler( &Private::senders, ctx, line );
+        return recipient_sender_handler( &Private::senders, &Private::informativeSenders, ctx, line );
     }
 
     QByteArray dumpOptions() const {
@@ -557,7 +607,10 @@ private:
     void reset() {
         options.clear();
         senders.clear();
+        informativeSenders = false;
         recipients.clear();
+        informativeRecipients = false;
+        sessionTitle.clear();
         mementos.clear();
         close_all( files );
         files.clear();
@@ -576,7 +629,11 @@ private:
     AssuanContext ctx;
     bool closed                : 1;
     bool cryptoCommandsEnabled : 1;
-    QEventLoop * loop;
+    bool commandWaitingForCryptoCommandsEnabled : 1;
+    bool currentCommandIsNohup : 1;
+    bool informativeSenders;    // address taken, so no : 1
+    bool informativeRecipients; // address taken, so no : 1
+    QString sessionTitle;
     std::vector< shared_ptr<QSocketNotifier> > notifiers;
     std::vector< shared_ptr<AssuanCommandFactory> > factories; // sorted: _detail::ByName<std::less>
     shared_ptr<AssuanCommand> currentCommand;
@@ -593,6 +650,8 @@ void AssuanServerConnection::Private::cleanup() {
     assert( nohupedCommands.empty() );
     reset();
     currentCommand.reset();
+    currentCommandIsNohup = false;
+    commandWaitingForCryptoCommandsEnabled = false;
     notifiers.clear();
     ctx.reset();
     fd = ASSUAN_INVALID_FD;
@@ -603,8 +662,11 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
       q( qq ),
       fd( fd_ ),
       closed( false ),
-      cryptoCommandsEnabled( true ),
-      loop( 0 ),
+      cryptoCommandsEnabled( false ),
+      commandWaitingForCryptoCommandsEnabled( false ),
+      currentCommandIsNohup( false ),
+      informativeSenders( false ),
+      informativeRecipients( false ),
       factories( factories_ )
 {
 #ifdef __GNUC__
@@ -617,7 +679,7 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
     assuan_context_t naked_ctx = 0;
     if ( const gpg_error_t err = assuan_init_socket_server_ext( &naked_ctx, fd, INIT_SOCKET_FLAGS ) )
         throw Exception( err, "assuan_init_socket_server_ext" );
-    
+
     ctx.reset( naked_ctx ); naked_ctx = 0;
 
     // for callbacks, associate the context with this connection:
@@ -625,21 +687,21 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
 
     FILE* const logFile = Log::instance()->logFile();
     assuan_set_log_stream( ctx.get(), logFile ? logFile : stderr );
-    
+
     // register FDs with the event loop:
     assuan_fd_t fds[MAX_ACTIVE_FDS];
     const int numFDs = assuan_get_active_fds( ctx.get(), FOR_READING, fds, MAX_ACTIVE_FDS );
     assert( numFDs != -1 ); // == 1
 
     if ( !numFDs || fds[0] != fd ) {
-        const shared_ptr<QSocketNotifier> sn( new QSocketNotifier( (int)fd, QSocketNotifier::Read ) );
+        const shared_ptr<QSocketNotifier> sn( new QSocketNotifier( (int)fd, QSocketNotifier::Read ), mem_fn( &QObject::deleteLater ) );
         connect( sn.get(), SIGNAL(activated(int)), this, SLOT(slotReadActivity(int)) );
         notifiers.push_back( sn );
     }
 
     notifiers.reserve( notifiers.size() + numFDs );
     for ( int i = 0 ; i < numFDs ; ++i ) {
-        const shared_ptr<QSocketNotifier> sn( new QSocketNotifier( (int)fds[i], QSocketNotifier::Read ) );
+        const shared_ptr<QSocketNotifier> sn( new QSocketNotifier( (int)fds[i], QSocketNotifier::Read ), mem_fn( &QObject::deleteLater ) );
         connect( sn.get(), SIGNAL(activated(int)), this, SLOT(slotReadActivity(int)) );
         notifiers.push_back( sn );
     }
@@ -665,10 +727,16 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
         throw Exception( err, "register \"GETINFO\" handler" );
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "START_KEYMANAGER", start_keymanager_handler ) )
         throw Exception( err, "register \"START_KEYMANAGER\" handler" );
+    if ( const gpg_error_t err = assuan_register_command( ctx.get(), "START_CONFDIALOG", start_confdialog_handler ) )
+        throw Exception( err, "register \"START_CONFDIALOG\" handler" );
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "RECIPIENT", recipient_handler ) )
         throw Exception( err, "register \"RECIPIENT\" handler" );
     if ( const gpg_error_t err = assuan_register_command( ctx.get(), "SENDER", sender_handler ) )
         throw Exception( err, "register \"SENDER\" handler" );
+    if ( const gpg_error_t err = assuan_register_command( ctx.get(), "SESSION", session_handler ) )
+        throw Exception( err, "register \"SESSION\" handler" );
+    if ( const gpg_error_t err = assuan_register_command( ctx.get(), "CAPABILITIES", capabilities_handler ) )
+        throw Exception( err, "register \"CAPABILITIES\" handler" );
 
     assuan_set_hello_line( ctx.get(), "GPG UI server (Kleopatra/" KLEOPATRA_VERSION_STRING ") ready to serve" );
     //assuan_set_hello_line( ctx.get(), GPG UI server (qApp->applicationName() + " v" + kapp->applicationVersion() + "ready to serve" )
@@ -703,8 +771,8 @@ void AssuanServerConnection::enableCryptoCommands( bool on ) {
     if ( on == d->cryptoCommandsEnabled )
         return;
     d->cryptoCommandsEnabled = on;
-    if ( d->loop )
-        d->loop->quit();
+    if ( d->commandWaitingForCryptoCommandsEnabled )
+        QTimer::singleShot( 0, d.get(), SLOT(startCommandBottomHalf()) );
 }
 
 
@@ -771,13 +839,22 @@ Q_SIGNALS:
 
 class AssuanCommand::Private {
 public:
-    Private() : done( false ), nohup( false ) {}
+    Private()
+        : informativeRecipients( false ),
+          informativeSenders( false ),
+          done( false ),
+          nohup( false )
+    {
+
+    }
 
     std::map<std::string,QVariant> options;
     std::vector< shared_ptr<Input> > inputs, messages;
     std::vector< shared_ptr<Output> > outputs;
     std::vector<IOF> files;
     std::vector<KMime::Types::Mailbox> recipients, senders;
+    bool informativeRecipients, informativeSenders;
+    QString sessionTitle;
     QByteArray utf8ErrorKeepAlive;
     AssuanContext ctx;
     bool done;
@@ -884,7 +961,7 @@ QByteArray AssuanCommand::registerMemento( const QByteArray & tag, const shared_
     // oh, hack :(
     assert( assuan_get_pointer( d->ctx.get() ) );
     AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( d->ctx.get() ) );
-    
+
     conn.mementos[tag] = mem;
     return tag;
 }
@@ -893,7 +970,7 @@ void AssuanCommand::removeMemento( const QByteArray & tag ) {
     // oh, hack :(
     assert( assuan_get_pointer( d->ctx.get() ) );
     AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( d->ctx.get() ) );
-    
+
     conn.mementos.erase( tag );
 }
 
@@ -1065,8 +1142,28 @@ void AssuanCommand::done( const GpgME::Error& err ) {
 }
 
 
+void AssuanCommand::setNohup( bool nohup ) {
+    d->nohup = nohup;
+}
+
 bool AssuanCommand::isNohup() const {
     return d->nohup;
+}
+
+bool AssuanCommand::isDone() const {
+    return d->done;
+}
+
+QString AssuanCommand::sessionTitle() const {
+    return d->sessionTitle;
+}
+
+bool AssuanCommand::informativeSenders() const {
+    return d->informativeSenders;
+}
+
+bool AssuanCommand::informativeRecipients() const {
+    return d->informativeRecipients;
 }
 
 const std::vector<KMime::Types::Mailbox> & AssuanCommand::recipients() const {
@@ -1100,6 +1197,9 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
         cmd->d->files.swap( conn.files );       kleo_assert( conn.files.empty() );
         cmd->d->senders.swap( conn.senders );   kleo_assert( conn.senders.empty() );
         cmd->d->recipients.swap( conn.recipients ); kleo_assert( conn.recipients.empty() );
+        cmd->d->informativeRecipients = conn.informativeRecipients;
+        cmd->d->informativeSenders    = conn.informativeSenders;
+        cmd->d->sessionTitle          = conn.sessionTitle;
 
         const std::map<std::string,std::string> cmdline_options = parse_commandline( line );
         for ( std::map<std::string,std::string>::const_iterator it = cmdline_options.begin(), end = cmdline_options.end() ; it != end ; ++it )
@@ -1114,26 +1214,11 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
         }
 
         conn.currentCommand = cmd;
-        conn.waitForCryptoCommandsEnabled();
-        conn.currentCommand.reset();
+        conn.currentCommandIsNohup = nohup;
 
-        if ( const int err = cmd->start() )
-            if ( cmd->d->done )
-                return err;
-            else
-                return assuan_process_done( conn.ctx.get(), err );
+        QTimer::singleShot( 0, &conn, SLOT(startCommandBottomHalf()) );
 
-        if ( cmd->d->done )
-            return 0;
-
-        if ( nohup ) {
-            cmd->d->nohup = true;
-            conn.nohupedCommands.push_back( cmd );
-            return assuan_process_done_msg( conn.ctx.get(), 0, "Command put in the background to continue executing after connection end." );
-        } else {
-            conn.currentCommand = cmd;
-            return 0;
-        }
+        return 0;
 
     } catch ( const Exception & e ) {
         return assuan_process_done_msg( conn.ctx.get(), e.error_code(), e.message() );
@@ -1141,6 +1226,51 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
         return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_UNEXPECTED ), e.what() );
     } catch ( ... ) {
         return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_UNEXPECTED ), i18n("Caught unknown exception") );
+    }
+}
+
+int AssuanServerConnection::Private::startCommandBottomHalf() {
+
+    commandWaitingForCryptoCommandsEnabled = currentCommand && !cryptoCommandsEnabled;
+
+    if ( !cryptoCommandsEnabled )
+        return 0;
+
+    const shared_ptr<AssuanCommand> cmd = currentCommand;
+    if ( !cmd )
+        return 0;
+
+    currentCommand.reset();
+
+    const bool nohup = currentCommandIsNohup;
+    currentCommandIsNohup = false;
+
+    try {
+
+        if ( const int err = cmd->start() )
+            if ( cmd->isDone() )
+                return err;
+            else
+                return assuan_process_done( ctx.get(), err );
+
+        if ( cmd->isDone() )
+            return 0;
+
+        if ( nohup ) {
+            cmd->setNohup( true );
+            nohupedCommands.push_back( cmd );
+            return assuan_process_done_msg( ctx.get(), 0, "Command put in the background to continue executing after connection end." );
+        } else {
+            currentCommand = cmd;
+            return 0;
+        }
+
+    } catch ( const Exception & e ) {
+        return assuan_process_done_msg( ctx.get(), e.error_code(), e.message() );
+    } catch ( const std::exception & e ) {
+        return assuan_process_done_msg( ctx.get(), gpg_error( GPG_ERR_UNEXPECTED ), e.what() );
+    } catch ( ... ) {
+        return assuan_process_done_msg( ctx.get(), gpg_error( GPG_ERR_UNEXPECTED ), i18n("Caught unknown exception") );
     }
 
 }
@@ -1199,7 +1329,7 @@ GpgME::Protocol AssuanCommand::checkProtocol( Mode mode ) const {
     if ( protocolString == QLatin1String( "cms" ) )
         return GpgME::CMS;
     throw Exception( makeError( GPG_ERR_INV_ARG ), i18n( "invalid protocol \"%1\"", protocolString ) );
-}        
+}
 
 void AssuanCommand::doApplyWindowID( QWidget * widget ) const {
     if ( !widget || !hasOption( "window-id" ) )
@@ -1217,7 +1347,7 @@ void AssuanCommand::doApplyWindowID( QWidget * widget ) const {
     }
     if ( QWidget * pw = QWidget::find( wid ) )
         widget->setParent( pw, widget->windowFlags() );
-    else {    	
+    else {
         KWindowSystem::setMainWindow( widget, wid );
     }
 }

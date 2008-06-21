@@ -65,7 +65,7 @@ bool RefreshX509CertsCommand::preStartHook( QWidget * parent ) const {
                                                      "connection, and can take up to an hour or more to complete, depending on "
                                                      "your network connection, and the number of certificates to check.</para> "
                                                      "<para>Are you sure you want to continue?</para>"),
-                                               i18n("X.509 Certitifcate Refresh"),
+                                               i18n("X.509 Certificate Refresh"),
                                                KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
                                                QLatin1String( "warn-refresh-x509-expensive" ) )
         == KMessageBox::Continue;

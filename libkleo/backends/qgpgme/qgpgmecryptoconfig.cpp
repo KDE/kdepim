@@ -251,15 +251,15 @@ void QGpgMECryptoConfigComponent::slotCollectStdOut()
           mGroups.insert( mCurrentGroupName, mCurrentGroup );
         //else
         //  kDebug(5150) <<"Discarding empty group" << mCurrentGroupName;
-        mCurrentGroup = new QGpgMECryptoConfigGroup( lst[0], lst[3], level );
+        mCurrentGroup = new QGpgMECryptoConfigGroup( this, lst[0], lst[3], level );
         mCurrentGroupName = lst[0];
       } else {
         // normal entry
         if ( !mCurrentGroup ) {  // first toplevel entry -> create toplevel group
-          mCurrentGroup = new QGpgMECryptoConfigGroup( "<nogroup>", QString(), 0 );
+          mCurrentGroup = new QGpgMECryptoConfigGroup( this, "<nogroup>", QString(), 0 );
           mCurrentGroupName = "<nogroup>";
         }
-        mCurrentGroup->mEntries.insert( lst[0], new QGpgMECryptoConfigEntry( lst ) );
+        mCurrentGroup->mEntries.insert( lst[0], new QGpgMECryptoConfigEntry( mCurrentGroup, lst ) );
       }
     } else {
       // This happens on lines like
@@ -368,8 +368,9 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
 
 ////
 
-QGpgMECryptoConfigGroup::QGpgMECryptoConfigGroup( const QString & name, const QString& description, int level )
+QGpgMECryptoConfigGroup::QGpgMECryptoConfigGroup( QGpgMECryptoConfigComponent * comp, const QString & name, const QString& description, int level )
   :
+    mComponent( comp ),
     mName( name ),
     mDescription( description ),
     mLevel( static_cast<Kleo::CryptoConfigEntry::Level>( level ) )
@@ -450,7 +451,8 @@ static Kleo::CryptoConfigEntry::ArgType knownArgType( int argType, bool& ok ) {
   }
 }
 
-QGpgMECryptoConfigEntry::QGpgMECryptoConfigEntry( const QStringList& parsedLine )
+QGpgMECryptoConfigEntry::QGpgMECryptoConfigEntry( QGpgMECryptoConfigGroup * group, const QStringList& parsedLine )
+    : mGroup( group )
 {
   // Format: NAME:FLAGS:LEVEL:DESCRIPTION:TYPE:ALT-TYPE:ARGNAME:DEFAULT:ARGDEF:VALUE
   assert( parsedLine.count() >= 10 ); // called checked for it already

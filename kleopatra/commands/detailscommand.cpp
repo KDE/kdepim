@@ -35,29 +35,51 @@
 #include "detailscommand.h"
 #include "command_p.h"
 
-#include "../certificateinfowidgetimpl.h"
-
-#include <KDialog>
-
-#include <QAbstractItemView>
+#include <dialogs/certificatedetailsdialog.h>
 
 #include <cassert>
 
 using namespace Kleo;
-//using namespace Kleo::Commands;
+using namespace Kleo::Commands;
+using namespace Kleo::Dialogs;
 using namespace GpgME;
 
 class DetailsCommand::Private : public Command::Private {
-    friend class ::DetailsCommand;
+    friend class ::Kleo::Commands::DetailsCommand;
     DetailsCommand * q_func() const { return static_cast<DetailsCommand*>( q ); }
 public:
     explicit Private( DetailsCommand * qq, KeyListController * c );
     ~Private();
 
-    void init();
+private:
+    void ensureDialogCreated() {
+        if ( dialog )
+            return;
+
+        CertificateDetailsDialog * dlg = new CertificateDetailsDialog( view() );
+        dlg->setAttribute( Qt::WA_DeleteOnClose );
+        connect( dlg, SIGNAL(rejected()), q, SLOT(slotDialogClosed()) );
+
+        dialog = dlg;
+    }
+
+    void ensureDialogVisible() {
+        ensureDialogCreated();
+        if ( dialog->isVisible() )
+            dialog->raise();
+        else
+            dialog->show();
+    }
+
+    void init() {
+        q->setWarnWhenRunningAtShutdown( false );
+    }
 
 private:
-    Key key;
+    void slotDialogClosed();
+
+private:
+    QPointer<CertificateDetailsDialog> dialog;
 };
 
 DetailsCommand::Private * DetailsCommand::d_func() { return static_cast<Private*>( d.get() ); }
@@ -68,7 +90,7 @@ const DetailsCommand::Private * DetailsCommand::d_func() const { return static_c
 
 DetailsCommand::Private::Private( DetailsCommand * qq, KeyListController * c )
     : Command::Private( qq, c ),
-      key()
+      dialog()
 {
 
 }
@@ -78,52 +100,63 @@ DetailsCommand::Private::~Private() {}
 DetailsCommand::DetailsCommand( KeyListController * p )
     : Command( new Private( this, p ) )
 {
-
+    d->init();
 }
 
 DetailsCommand::DetailsCommand( QAbstractItemView * v, KeyListController * p )
     : Command( v, new Private( this, p ) )
 {
-
+    d->init();
 }
 
 DetailsCommand::DetailsCommand( const Key & key, KeyListController * p )
     : Command( new Private( this, p ) )
 {
     assert( !key.isNull() );
-    d->key = key;
+    d->init();
+    setKey( key );
 }
 
 DetailsCommand::DetailsCommand( const Key & key, QAbstractItemView * v, KeyListController * p )
     : Command( v, new Private( this, p ) )
 {
     assert( !key.isNull() );
-    d->key = key;
+    d->init();
+    setKey( key );
 }
 
 DetailsCommand::~DetailsCommand() {}
 
 void DetailsCommand::doStart() {
+    const std::vector<Key> keys = d->keys();
     Key key;
-    if ( !d->key.isNull() )
-        key = d->key;
-    else if ( d->indexes().size() == 1 )
-        key = d->Command::Private::key();
+    if ( keys.size() == 1 )
+        key = keys.front();
     else
         qWarning( "DetailsCommand::doStart: can only work with one certificate at a time" );
 
-    if ( !key.isNull() ) {
-        KDialog * const dlg = CertificateInfoWidgetImpl::createDialog( key, d->view() );
-        assert( dlg );
-        dlg->setAttribute( Qt::WA_DeleteOnClose );
-        dlg->show();
+    if ( key.isNull() ) {
+        d->finished();
+        return;
     }
 
-    d->finished();
+    d->ensureDialogCreated();
+
+    d->dialog->setKey( key );
+
+    d->ensureDialogVisible();
 }
 
 
-void DetailsCommand::doCancel() {}
+void DetailsCommand::doCancel() {
+    if ( d->dialog )
+        d->dialog->close();
+}
+
+void DetailsCommand::Private::slotDialogClosed() {
+    finished();
+}
+
 
 #undef q_func
 #undef d_func

@@ -1,0 +1,49 @@
+<ui version="4.0" >
+ <class>Kleo::NewCertificateUi::OverviewPage</class>
+ <widget class="QWizardPage" name="Kleo::NewCertificateUi::OverviewPage" >
+  <property name="title" >
+   <string comment="@title" >Review Certificate Parameters</string>
+  </property>
+  <property name="subTitle" >
+   <string>Please review the certificate parameters before proceeding to create the certificate.</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <item>
+    <widget class="QTextBrowser" name="textBrowser" >
+     <property name="openLinks" >
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="showAllDetailsCB" >
+     <property name="text" >
+      <string>Show all details</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>showAllDetailsCB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>Kleo::NewCertificateUi::OverviewPage</receiver>
+   <slot>slotShowDetails()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>145</x>
+     <y>221</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>167</x>
+     <y>241</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>slotShowDetails()</slot>
+ </slots>
+</ui>

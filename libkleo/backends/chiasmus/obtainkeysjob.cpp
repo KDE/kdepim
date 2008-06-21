@@ -115,7 +115,7 @@ void Kleo::ObtainKeysJob::showErrorDialog( QWidget * parent, const QString & cap
     return;
   if ( mError.isCanceled() )
     return;
-  const QString msg = QString::fromUtf8( mError.asString() );
+  const QString msg = QString::fromLocal8Bit( mError.asString() );
   KMessageBox::error( parent, msg, caption );
 }
 

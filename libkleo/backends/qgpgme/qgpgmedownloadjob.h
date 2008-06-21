@@ -2,7 +2,7 @@
     qgpgmedownloadjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -35,19 +35,24 @@
 
 #include "kleo/downloadjob.h"
 
-#include "qgpgmejob.h"
-
-namespace GpgME {
-  class Error;
-  class Context;
-}
+#include "threadedjobmixin.h"
 
 namespace Kleo {
 
-  class QGpgMEDownloadJob : public DownloadJob, private QGpgMEJob {
-    Q_OBJECT QGPGME_JOB
+  class QGpgMEDownloadJob
+#ifdef Q_MOC_RUN
+    : public DownloadJob
+#else
+    : public _detail::ThreadedJobMixin<DownloadJob, boost::tuple<GpgME::Error, QByteArray, QString> >
+#endif
+  {
+    Q_OBJECT
+#ifdef Q_MOC_RUN
+  public Q_SLOTS:
+    void slotFinished();
+#endif
   public:
-    QGpgMEDownloadJob( GpgME::Context * context );
+    explicit QGpgMEDownloadJob( GpgME::Context * context );
     ~QGpgMEDownloadJob();
 
     /*! \reimp from DownloadJob */
@@ -55,14 +60,6 @@ namespace Kleo {
 
     /*! \reimp from DownloadJob */
     GpgME::Error start( const QByteArray & fingerprint, const boost::shared_ptr<QIODevice> & keyData );
-
-  private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-
-  private Q_SLOTS:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, e );
-    }
   };
 
 }

@@ -43,9 +43,10 @@ namespace Commands {
     public:
         explicit ChangeOwnerTrustCommand( QAbstractItemView * view, KeyListController * parent );
         explicit ChangeOwnerTrustCommand( KeyListController * parent );
+        explicit ChangeOwnerTrustCommand( const GpgME::Key & key );
         ~ChangeOwnerTrustCommand();
 
-        /* reimp */ static Restrictions restrictions() { return OnlyOneKey|MustBeOpenPGP; }
+        /* reimp */ static Restrictions restrictions() { return OnlyOneKey|MustBeOpenPGP|MayOnlyBeSecretKeyIfOwnerTrustIsNotYetUltimate; }
 
     private:
         /* reimp */ void doStart();

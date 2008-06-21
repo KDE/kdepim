@@ -80,7 +80,7 @@ bool RefreshOpenPGPCertsCommand::preStartHook( QWidget * parent ) const {
                                                        "configuration dialog.</para>"
                                                        "<para>Do you want to continue with <resource>keys.gnupg.net</resource> "
                                                        "as fallback server?</para>" ),
-                                                 i18n("OpenPGP Certitifcate Refresh"),
+                                                 i18n("OpenPGP Certificate Refresh"),
                                                  KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
                                                  QLatin1String( "warn-refresh-openpgp-missing-keyserver" ) )
              != KMessageBox::Continue )
@@ -93,7 +93,7 @@ bool RefreshOpenPGPCertsCommand::preStartHook( QWidget * parent ) const {
                                                     "connection, and can take up to an hour or more to complete, depending on "
                                                     "your network connection, and the number of certificates to check.</para> "
                                                     "<para>Are you sure you want to continue?</para>"),
-                                               i18n("OpenPGP Certitifcate Refresh"),
+                                               i18n("OpenPGP Certificate Refresh"),
                                                KStandardGuiItem::cont(), KStandardGuiItem::cancel(),
                                                QLatin1String( "warn-refresh-openpgp-expensive" ) )
         == KMessageBox::Continue;

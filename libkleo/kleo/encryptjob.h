@@ -109,7 +109,7 @@ namespace Kleo {
     virtual void setOutputIsBase64Encoded( bool ) = 0;
 
   Q_SIGNALS:
-    void result( const GpgME::EncryptionResult & result, const QByteArray & cipherText );
+    void result( const GpgME::EncryptionResult & result, const QByteArray & cipherText, const QString & auditLogAsHtml=QString() );
   };
 
 }

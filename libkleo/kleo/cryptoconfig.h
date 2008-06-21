@@ -102,6 +102,11 @@ namespace Kleo {
     virtual QString description() const = 0;
 
     /**
+     * @return "component/group/name"
+     */
+    virtual QString path() const = 0;
+
+    /**
      * @return true if the argument is optional
      */
     virtual bool isOptional() const = 0;
@@ -271,6 +276,11 @@ namespace Kleo {
      * @return user-visible description of this group
      */
     virtual QString description() const = 0;
+
+    /**
+     * @return "component/group"
+     */
+    virtual QString path() const = 0;
 
     /**
      * User level

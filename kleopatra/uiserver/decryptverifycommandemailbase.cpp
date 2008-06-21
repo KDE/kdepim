@@ -88,7 +88,7 @@ public Q_SLOTS:
     void verificationResult( const GpgME::VerificationResult & );
     void slotDone() { q->done(); }
     void slotError( int err, const QString & details ) { q->done( err, details ); }
-    
+
 public:
 
 private:
@@ -110,7 +110,15 @@ int DecryptVerifyCommandEMailBase::doStart() {
     d->checkForErrors();
 
     d->controller.reset( new DecryptVerifyEMailController( shared_from_this() ) );
-    
+
+    const QString st = sessionTitle();
+    if ( !st.isNull() ) {
+        Q_FOREACH ( const shared_ptr<Input> & i, inputs() )
+            i->setLabel( st );
+        Q_FOREACH ( const shared_ptr<Output> & i, outputs() )
+            i->setLabel( st );
+    }
+
     d->controller->setOperation( operation() );
     d->controller->setInputs( inputs() );
     d->controller->setSignedData( messages() );
@@ -121,7 +129,7 @@ int DecryptVerifyCommandEMailBase::doStart() {
                       d.get(), SLOT(slotDone()), Qt::QueuedConnection );
     QObject::connect( d->controller.get(), SIGNAL(error(int,QString)),
                       d.get(), SLOT(slotError(int,QString)), Qt::QueuedConnection );
-    QObject::connect( d->controller.get(), SIGNAL(verificationResult(GpgME::VerificationResult)), 
+    QObject::connect( d->controller.get(), SIGNAL(verificationResult(GpgME::VerificationResult)),
                       d.get(), SLOT(verificationResult(GpgME::VerificationResult)), Qt::QueuedConnection );
 
     d->controller->start();
@@ -131,13 +139,15 @@ int DecryptVerifyCommandEMailBase::doStart() {
 
 void DecryptVerifyCommandEMailBase::Private::checkForErrors() const
 {
-    if ( !q->senders().empty() )
+    if ( !q->senders().empty() && !q->informativeSenders() )
         throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ),
-                               i18n("Can't use SENDER") );
+                               i18n("Can't use non-info SENDER") );
 
-    if ( !q->recipients().empty() )
+    if ( !q->recipients().empty() && !q->informativeRecipients() )
         throw Kleo::Exception( q->makeError( GPG_ERR_CONFLICT ),
-                               i18n("Can't use RECIPIENT") );
+                               i18n("Can't use non-info RECIPIENT") );
+
+    // ### use informative recipients and senders
 
     const unsigned int numInputs = q->inputs().size();
     const unsigned int numMessages = q->messages().size();
@@ -179,13 +189,13 @@ void DecryptVerifyCommandEMailBase::Private::checkForErrors() const
                                proto == OpenPGP ? i18n("No backend support for OpenPGP") :
                                proto == CMS     ? i18n("No backend support for S/MIME") : QString() );
 }
-  
+
 void DecryptVerifyCommandEMailBase::doCanceled() {
     if ( d->controller )
         d->controller->cancel();
 }
 
- 
+
 void DecryptVerifyCommandEMailBase::Private::slotProgress( const QString& what, int current, int total )
 {
     // ### FIXME report progress, via sendStatus()
@@ -203,7 +213,7 @@ void DecryptVerifyCommandEMailBase::Private::verificationResult( const Verificat
             q->sendStatusEncoded( "SIGSTATUS",
                                   color + ( ' ' + hexencode( s.toUtf8().constData() ) ) );
         }
-    } catch ( ... ) {}    
+    } catch ( ... ) {}
 }
 
 #include "decryptverifycommandemailbase.moc"

@@ -35,43 +35,43 @@
 #include <klocale.h>
 
 #include <QString>
+#include <QDebug>
 
-#include <assert.h>
-#include <map>
+#include <boost/range.hpp>
+
+#include <cassert>
 
 struct Desc {
   int type; // 0 == fallback
   const char * display; // add %1 for useCur ^ useTot and %1 %2 for useCur == useTot == true
-  bool useCur : 1;
-  bool useTot : 1;
 };
 
 static const struct Desc pk_dsa[] = {
-  { 0, I18N_NOOP("Generating DSA key..."), false, false }
+  { 0, I18N_NOOP("Generating DSA key...") }
 };
 
 static const struct Desc pk_elg[] = {
-  { 0, I18N_NOOP("Generating ElGamal key..."), false, false }
+  { 0, I18N_NOOP("Generating ElGamal key...") }
 };
 
 static const struct Desc primegen[] = {
   // FIXME: add all type's?
-  { 0, I18N_NOOP("Searching for a large prime number..."), false, false }
+  { 0, I18N_NOOP("Searching for a large prime number...") }
 };
 
 static const struct Desc need_entropy[] = {
-  { 0, I18N_NOOP("Waiting for new entropy from random number generator (you might want to exercise the harddisks or move the mouse)..."), false, false }
+  { 0, I18N_NOOP("Waiting for new entropy from random number generator (you might want to exercise the harddisks or move the mouse)...") }
 };
 
 static const struct Desc tick[] = {
-  { 0, I18N_NOOP("Please wait..."), false, false }
+  { 0, I18N_NOOP("Please wait...") }
 };
 
 static const struct Desc starting_agent[] = {
-  { 0, I18N_NOOP("Starting gpg-agent (you should consider starting a global instance instead)..."), false, false }
+  { 0, I18N_NOOP("Starting gpg-agent (you should consider starting a global instance instead)...") }
 };
 
-static const struct {
+static const struct _tokens {
   const char * token;
   const Desc * desc;
   unsigned int numDesc;
@@ -88,68 +88,33 @@ static const struct {
 
 
 
-Kleo::QGpgMEProgressTokenMapper * Kleo::QGpgMEProgressTokenMapper::mSelf = 0;
-
-const Kleo::QGpgMEProgressTokenMapper * Kleo::QGpgMEProgressTokenMapper::instance() {
-  if ( !mSelf )
-    (void) new QGpgMEProgressTokenMapper();
-  return mSelf;
-}
-
-Kleo::QGpgMEProgressTokenMapper::QGpgMEProgressTokenMapper() {
-  mSelf = this;
-}
-
-Kleo::QGpgMEProgressTokenMapper::~QGpgMEProgressTokenMapper() {
-  mSelf = 0;
-}
-
-typedef std::map< QString, std::map<int,Desc> > Map;
-
-static const Map & makeMap() { // return a reference to a static to avoid copying
-  static Map map;
-  for ( unsigned int i = 0 ; i < sizeof tokens / sizeof *tokens ; ++i ) {
-    assert( tokens[i].token );
-    const QString token = QString::fromLatin1( tokens[i].token ).toLower();
-    for ( unsigned int j = 0 ; j < tokens[i].numDesc ; ++j ) {
-      const Desc & desc = tokens[i].desc[j];
-      assert( desc.display );
-      map[ token ][ desc.type ] = desc;
-    }
-  }
-  return map;
-}
-
-QString Kleo::QGpgMEProgressTokenMapper::map( const char * tokenUtf8, int subtoken, int cur, int tot ) const {
+QString Kleo::QGpgMEProgressTokenMapper::map( const char * tokenUtf8, int subtoken ) {
   if ( !tokenUtf8 || !*tokenUtf8 )
     return QString();
 
   if ( qstrcmp( tokenUtf8, "file:" ) == 0 )
     return QString(); // gpgme's job
 
-  return map( QString::fromUtf8( tokenUtf8 ), subtoken, cur, tot );
+  return map( QString::fromUtf8( tokenUtf8 ), subtoken );
 }
 
-QString Kleo::QGpgMEProgressTokenMapper::map( const QString & token, int subtoken, int cur, int tot ) const {
+QString Kleo::QGpgMEProgressTokenMapper::map( const QString & token, int subtoken ) {
   if ( token.startsWith( "file:" ) )
     return QString(); // gpgme's job
 
-  static const Map & tokenMap = makeMap();
+  qDebug() << "QGpgMEProgressTokenMapper::map(" << token << subtoken << ")";
 
-  const Map::const_iterator it1 = tokenMap.find( token.toLower() );
-  if ( it1 == tokenMap.end() )
-    return token;
-  std::map<int,Desc>::const_iterator it2 = it1->second.find( subtoken );
-  if ( it2 == it1->second.end() )
-    it2 = it1->second.find( 0 );
-  if ( it2 == it1->second.end() )
-    return token;
-  const Desc & desc = it2->second;
-  QString result = i18n( desc.display );
-  if ( desc.useCur )
-    result = result.arg( cur );
-  if ( desc.useTot )
-    result = result.arg( tot );
-  return result;
+  for ( const _tokens * it = boost::begin( tokens ), *end = boost::end( tokens ) ; it != end ; ++it )
+    if ( token.compare( QLatin1String( it->token ), Qt::CaseInsensitive ) == 0 )
+      if ( it->desc && it->numDesc ) {
+        for ( unsigned int i = 0, e = it->numDesc ; i != e ; ++i )
+          if ( it->desc[i].type == subtoken )
+            return i18n( it->desc[i].display );
+        return i18n( it->desc[0].display );
+      } else {
+        break;
+      }
+
+  return token;
 }
 

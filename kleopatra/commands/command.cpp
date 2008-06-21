@@ -42,10 +42,12 @@
 #include <QAbstractItemView>
 
 using namespace Kleo;
+using namespace GpgME;
 
 Command::Private::Private( Command * qq, KeyListController * controller )
     : q( qq ),
       autoDelete( true ),
+      warnWhenRunningAtShutdown( true ),
       indexes_(),
       view_(),
       controller_( controller )
@@ -87,6 +89,30 @@ Command::Command( QAbstractItemView * v, Private * pp )
         setView( v );
 }
 
+Command::Command( const Key & key )
+    : QObject( 0 ), d( new Private( this, 0 ) )
+{
+    d->keys_ = std::vector<Key>( 1, key );
+}
+
+Command::Command( const std::vector<Key> & keys )
+    : QObject( 0 ), d( new Private( this, 0 ) )
+{
+    d->keys_ = keys;
+}
+
+Command::Command( const Key & key, Private * pp )
+    : QObject( 0 ), d( pp )
+{
+    d->keys_ = std::vector<Key>( 1, key );
+}
+
+Command::Command( const std::vector<Key> & keys, Private * pp )
+    : QObject( 0 ), d( pp )
+{
+    d->keys_ = keys;
+}
+
 Command::~Command() { kDebug(); }
 
 void Command::setAutoDelete( bool on ) {
@@ -95,6 +121,14 @@ void Command::setAutoDelete( bool on ) {
 
 bool Command::autoDelete() const {
     return d->autoDelete;
+}
+
+void Command::setWarnWhenRunningAtShutdown( bool on ) {
+    d->warnWhenRunningAtShutdown = on;
+}
+
+bool Command::warnWhenRunningAtShutdown() const {
+    return d->warnWhenRunningAtShutdown;
 }
 
 void Command::setView( QAbstractItemView * view ) {
@@ -123,6 +157,16 @@ void Command::setIndex( const QModelIndex & idx ) {
 void Command::setIndexes( const QList<QModelIndex> & idx ) {
     d->indexes_.clear();
     std::copy( idx.begin(), idx.end(), std::back_inserter( d->indexes_ ) );
+}
+
+void Command::setKey( const Key & key ) {
+    d->keys_.clear();
+    if ( !key.isNull() )
+        d->keys_.push_back( key );
+}
+
+void Command::setKeys( const std::vector<Key> & keys ) {
+    d->keys_ = keys;
 }
 
 void Command::start() {

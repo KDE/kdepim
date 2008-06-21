@@ -1,4 +1,4 @@
-include_directories( ${CMAKE_BINARY_DIR}/kleo/backends/chiasmus/ ${GPGME_INCLUDES} ${Boost_INCLUDE_DIR} )
+include_directories( ${CMAKE_BINARY_DIR}/kleo/backends/chiasmus/ ${GPGME_INCLUDES} ${Boost_INCLUDE_DIR}  )
 
 if (ONLY_KLEO)
   add_definitions( -DONLY_KLEO )
@@ -17,7 +17,7 @@ set(libkleo_backend_qgpgme_SRCS
 	backends/qgpgme/gnupgprocessbase.cpp
 	backends/qgpgme/qgpgmeprogresstokenmapper.cpp
 	backends/qgpgme/qgpgmebackend.cpp
-	backends/qgpgme/qgpgmejob.cpp
+        backends/qgpgme/threadedjobmixin.cpp
 	backends/qgpgme/qgpgmekeylistjob.cpp
 	backends/qgpgme/qgpgmekeygenerationjob.cpp
 	backends/qgpgme/qgpgmeimportjob.cpp
@@ -31,6 +31,7 @@ set(libkleo_backend_qgpgme_SRCS
 	backends/qgpgme/qgpgmedecryptjob.cpp
 	backends/qgpgme/qgpgmesignjob.cpp
 	backends/qgpgme/qgpgmesignkeyjob.cpp
+        backends/qgpgme/qgpgmeadduseridjob.cpp
 	backends/qgpgme/qgpgmeverifydetachedjob.cpp
 	backends/qgpgme/qgpgmeverifyopaquejob.cpp
 	backends/qgpgme/qgpgmesignencryptjob.cpp
@@ -142,6 +143,7 @@ install( FILES
 	kleo/decryptverifyjob.h
 	kleo/signencryptjob.h
 	kleo/signkeyjob.h
+        kleo/adduseridjob.h
 	kleo/refreshkeysjob.h
 	kleo/multideletejob.h
 	kleo/hierarchicalkeylistjob.h

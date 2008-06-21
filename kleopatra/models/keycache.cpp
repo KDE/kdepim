@@ -61,6 +61,7 @@
 #include <boost/bind.hpp>
 #include <boost/range.hpp>
 #include <boost/weak_ptr.hpp>
+#include <boost/iterator/filter_iterator.hpp>
 
 #include <deque>
 #include <utility>
@@ -114,9 +115,19 @@ public:
         updateAutoKeyListingTimer();
     }
 
-    template < template <template <typename U> class Op> class Comp >
+    template < template <template <typename U> class Op> class Comp>
     std::vector<Key>::const_iterator find( const std::vector<Key> & keys, const char * key ) const {
         const std::vector<Key>::const_iterator it =
+            std::lower_bound( keys.begin(), keys.end(), key, Comp<std::less>() );
+        if ( it == keys.end() || Comp<std::equal_to>()( *it, key ) )
+            return it;
+        else
+            return keys.end();
+    }
+
+    template < template <template <typename U> class Op> class Comp>
+    std::vector<Subkey>::const_iterator find( const std::vector<Subkey> & keys, const char * key ) const {
+        const std::vector<Subkey>::const_iterator it =
             std::lower_bound( keys.begin(), keys.end(), key, Comp<std::less>() );
         if ( it == keys.end() || Comp<std::equal_to>()( *it, key ) )
             return it;
@@ -133,6 +144,10 @@ public:
     find_email( const char * email ) const {
         return std::equal_range( by.email.begin(), by.email.end(),
                                  email, ByEMail<std::less>() );
+    }
+
+    std::vector<Subkey>::const_iterator find_subkeyid( const char * subkeyid ) const {
+        return find<_detail::ByKeyID>( by.subkeyid, subkeyid );
     }
 
     std::vector<Key>::const_iterator find_keyid( const char * keyid ) const {
@@ -172,6 +187,7 @@ private:
     struct By {
         std::vector<Key> fpr, keyid, shortkeyid, chainid;
         std::vector< std::pair<std::string,Key> > email;
+        std::vector<Subkey> subkeyid;
     } by;
 };
 
@@ -323,14 +339,14 @@ std::vector<Key> KeyCache::findByKeyIDOrFingerprint( const std::vector<std::stri
                                keyids.begin(), keyids.end(),
                                std::back_inserter( result ),
                                _detail::ByFingerprint<std::less>() );
-    if ( result.size() < keyids.size() )
+    if ( result.size() < keyids.size() ) {
         // note that By{Fingerprint,KeyID,ShortKeyID} define the same
         // order for _strings_
         kdtools::set_intersection( d->by.keyid.begin(), d->by.keyid.end(),
                                    keyids.begin(), keyids.end(),
                                    std::back_inserter( result ),
                                    _detail::ByKeyID<std::less>() );
-
+    }
     // duplicates shouldn't happen, but make sure nonetheless:
     std::sort( result.begin(), result.end(), _detail::ByFingerprint<std::less>() );
     result.erase( std::unique( result.begin(), result.end(), _detail::ByFingerprint<std::equal_to>() ), result.end() );
@@ -341,11 +357,35 @@ std::vector<Key> KeyCache::findByKeyIDOrFingerprint( const std::vector<std::stri
     return result;
 }
 
+
+std::vector<Subkey> KeyCache::findSubkeysByKeyID( const std::vector<std::string> & ids ) const {
+    std::vector<std::string> sorted;
+    sorted.reserve( ids.size() );
+    std::remove_copy_if( ids.begin(), ids.end(), std::back_inserter( sorted ),
+                         bind( is_empty(), bind( &std::string::c_str, _1 ) ) );
+
+    std::sort( sorted.begin(), sorted.end(), _detail::ByKeyID<std::less>() );
+
+    std::vector<Subkey> result;
+    kdtools::set_intersection( d->by.subkeyid.begin(), d->by.subkeyid.end(),
+                               sorted.begin(), sorted.end(),
+                               std::back_inserter( result ),
+                               _detail::ByKeyID<std::less>() );
+    return result;
+}
+
 std::vector<Key> KeyCache::findRecipients( const DecryptionResult & res ) const {
     std::vector<std::string> keyids;
     Q_FOREACH( const DecryptionResult::Recipient & r, res.recipients() )
         keyids.push_back( r.keyID() );
-    return findByKeyIDOrFingerprint( keyids );
+    const std::vector<Subkey> subkeys = findSubkeysByKeyID( keyids );
+    std::vector<Key> result;
+    result.reserve( subkeys.size() );
+    std::transform( subkeys.begin(), subkeys.end(), std::back_inserter( result ), bind( &Subkey::parent, _1 ) );
+
+    std::sort( result.begin(), result.end(), _detail::ByFingerprint<std::less>() );
+    result.erase( std::unique( result.begin(), result.end(), _detail::ByFingerprint<std::equal_to>() ), result.end() );
+    return result;
 }
 
 std::vector<Key> KeyCache::findSigners( const VerificationResult & res ) const {
@@ -355,15 +395,15 @@ std::vector<Key> KeyCache::findSigners( const VerificationResult & res ) const {
     return findByKeyIDOrFingerprint( fprs );
 }
 
-std::vector<Key> KeyCache::findSubjects( const GpgME::Key & key, Option options ) const {
+std::vector<Key> KeyCache::findSubjects( const GpgME::Key & key, Options options ) const {
     return findSubjects( std::vector<Key>( 1, key ), options );
 }
 
-std::vector<Key> KeyCache::findSubjects( const std::vector<Key> & keys, Option options ) const {
+std::vector<Key> KeyCache::findSubjects( const std::vector<Key> & keys, Options options ) const {
     return findSubjects( keys.begin(), keys.end(), options );
 }
 
-std::vector<Key> KeyCache::findSubjects( std::vector<Key>::const_iterator first, std::vector<Key>::const_iterator last, Option options ) const {
+std::vector<Key> KeyCache::findSubjects( std::vector<Key>::const_iterator first, std::vector<Key>::const_iterator last, Options options ) const {
 
     if ( first == last )
         return std::vector<Key>();
@@ -389,30 +429,42 @@ std::vector<Key> KeyCache::findSubjects( std::vector<Key>::const_iterator first,
 
 static const unsigned int LIKELY_CHAIN_DEPTH = 3;
 
-std::vector<Key> KeyCache::findIssuers( const Key & key, Option options ) const {
+std::vector<Key> KeyCache::findIssuers( const Key & key, Options options ) const {
+
+    if ( key.isNull() )
+        return std::vector<Key>();
+
+    std::vector<Key> result;
+    if ( options & IncludeSubject )
+        result.push_back( key );
+
+    if ( key.isRoot() )
+        return result;
 
     const Key & issuer = findByFingerprint( key.chainID() );
 
     if ( issuer.isNull() )
-        return std::vector<Key>();
+        return result;
 
-    std::vector<Key> result( 1, issuer );
+    result.push_back( issuer );
+
     if ( !( options & RecursiveSearch ) )
         return result;
 
-    do {
+    while ( !result.back().isNull() && !result.back().isRoot() )
         result.push_back( findByFingerprint( result.back().chainID() ) );
-    } while ( !result.back().isNull() );
-    result.pop_back();
+
+    if ( result.back().isNull() )
+        result.pop_back();
 
     return result;
 }
 
-std::vector<Key> KeyCache::findIssuers( const std::vector<Key> & keys, Option options ) const {
+std::vector<Key> KeyCache::findIssuers( const std::vector<Key> & keys, Options options ) const {
     return findIssuers( keys.begin(), keys.end(), options );
 }
 
-std::vector<Key> KeyCache::findIssuers( std::vector<Key>::const_iterator first, std::vector<Key>::const_iterator last, Option options ) const {
+std::vector<Key> KeyCache::findIssuers( std::vector<Key>::const_iterator first, std::vector<Key>::const_iterator last, Options options ) const {
 
     if ( first == last )
         return std::vector<Key>();
@@ -420,7 +472,8 @@ std::vector<Key> KeyCache::findIssuers( std::vector<Key>::const_iterator first, 
     // extract chain-ids, identifying issuers:
     std::vector<const char *> chainIDs;
     chainIDs.reserve( last - first );
-    std::transform( first, last,
+    std::transform( boost::make_filter_iterator( !bind( &Key::isRoot, _1 ), first, last ),
+                    boost::make_filter_iterator( !bind( &Key::isRoot, _1 ), last,  last ),
                     std::back_inserter( chainIDs ),
                     bind( &Key::chainID, _1 ) );
     std::sort( chainIDs.begin(), chainIDs.end(), _detail::ByFingerprint<std::less>() );
@@ -435,10 +488,17 @@ std::vector<Key> KeyCache::findIssuers( std::vector<Key>::const_iterator first, 
                                std::back_inserter( result ),
                                _detail::ByFingerprint<std::less>() );
 
+    if ( options & IncludeSubject ) {
+        const unsigned int rs = result.size();
+        result.insert( result.end(), first, last );
+        std::inplace_merge( result.begin(), result.begin() + rs, result.end(),
+                            _detail::ByFingerprint<std::less>() );
+    }
+
     if ( !( options & RecursiveSearch ) )
         return result;
 
-    const std::vector<Key> l2result = findIssuers( result, options );
+    const std::vector<Key> l2result = findIssuers( result, options & ~IncludeSubject );
 
     const unsigned long result_size = result.size();
     result.insert( result.end(), l2result.begin(), l2result.end() );
@@ -478,7 +538,7 @@ void KeyCache::remove( const Key & key ) {
         return;
 
     emit aboutToRemove( key );
-    
+
     {
         const std::pair<std::vector<Key>::iterator,std::vector<Key>::iterator> range
             = std::equal_range( d->by.fpr.begin(), d->by.fpr.end(), fpr,
@@ -512,7 +572,7 @@ void KeyCache::remove( const Key & key ) {
             = std::equal_range( begin( range ), end( range ), fpr, _detail::ByFingerprint<std::less>() );
         d->by.chainid.erase( begin( range2 ), end( range2 ) );
     }
-        
+
 
     Q_FOREACH( const std::string & email, emails( key ) ) {
         const std::pair<std::vector<std::pair<std::string,Key> >::iterator,std::vector<std::pair<std::string,Key> >::iterator> range
@@ -520,7 +580,18 @@ void KeyCache::remove( const Key & key ) {
         const std::vector< std::pair<std::string,Key> >::iterator it
             = std::remove_if( begin( range ), end( range ), bind( qstricmp, fpr, bind( &Key::primaryFingerprint, bind( &std::pair<std::string,Key>::second,_1 ) ) ) == 0 );
         d->by.email.erase( it, end( range ) );
-    }                
+    }
+
+    Q_FOREACH( const Subkey & subkey, key.subkeys() ) {
+        if ( const char * keyid = subkey.keyID() ) {
+            const std::pair<std::vector<Subkey>::iterator,std::vector<Subkey>::iterator> range
+                = std::equal_range( d->by.subkeyid.begin(), d->by.subkeyid.end(), keyid,
+                                    _detail::ByKeyID<std::less>() );
+            const std::pair< std::vector<Subkey>::iterator, std::vector<Subkey>::iterator > range2
+                = std::equal_range( begin( range ), end( range ), fpr, _detail::ByKeyID<std::less>() );
+            d->by.subkeyid.erase( begin( range2 ), end( range2 ) );
+        }
+    }
 }
 
 void KeyCache::remove( const std::vector<Key> & keys ) {
@@ -536,7 +607,7 @@ std::vector<GpgME::Key> KeyCache::keys() const
 std::vector<Key> KeyCache::secretKeys() const
 {
     std::vector<Key> keys = this->keys();
-    keys.erase( std::remove_if( keys.begin(), keys.end(), !bind( &Key::hasSecret, _1 ) ) );
+    keys.erase( std::remove_if( keys.begin(), keys.end(), !bind( &Key::hasSecret, _1 ) ), keys.end() );
     return keys;
 }
 
@@ -580,7 +651,7 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
                          bind( is_empty(), bind( &Key::primaryFingerprint, _1 ) ) );
 
     Q_FOREACH( const Key & key, sorted )
-        remove( key ); // this is sub-optimal, but makes implementation from here on much easier 
+        remove( key ); // this is sub-optimal, but makes implementation from here on much easier
 
     // 2. sort by fingerprint:
     std::sort( sorted.begin(), sorted.end(), _detail::ByFingerprint<std::less>() );
@@ -620,7 +691,7 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
 
     // 3.5: stable-sort by chain-id (effectively lexicographically<ByChainID,ByFingerprint>)
     std::stable_sort( sorted.begin(), sorted.end(), _detail::ByChainID<std::less>() );
-    
+
     // 3.5a: insert into chain-id index:
     std::vector<Key> by_chainid;
     by_chainid.reserve( sorted.size() + d->by.chainid.size() );
@@ -651,14 +722,35 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
                 std::back_inserter( by_shortkeyid ),
                 _detail::ByShortKeyID<std::less>() );
 
+    // 6. build subkey ID index:
+    std::vector<Subkey> subkeys;
+    subkeys.reserve( sorted.size() );
+    Q_FOREACH( const Key & key, sorted )
+        Q_FOREACH( const Subkey & subkey, key.subkeys() )
+            subkeys.push_back( subkey );
+
+    // 6a sort by key id:
+    std::sort( subkeys.begin(), subkeys.end(), _detail::ByKeyID<std::less>() );
+
+    // 6b. insert into subkey ID index:
+    std::vector<Subkey> by_subkeyid;
+    by_email.reserve( subkeys.size() + d->by.subkeyid.size() );
+    std::merge( subkeys.begin(), subkeys.end(),
+                d->by.subkeyid.begin(), d->by.subkeyid.end(),
+                std::back_inserter( by_subkeyid ),
+                _detail::ByKeyID<std::less>() );
+
     // now commit (well, we already removed keys...)
     by_fpr.swap( d->by.fpr );
     by_keyid.swap( d->by.keyid );
     by_shortkeyid.swap( d->by.shortkeyid );
     by_email.swap( d->by.email );
+    by_subkeyid.swap( d->by.subkeyid );
 
     Q_FOREACH( const Key & key, sorted )
-        emit added( key ); 
+        emit added( key );
+
+    emit keysMayHaveChanged();
 }
 
 void KeyCache::clear() {
@@ -679,7 +771,7 @@ public:
         PublicKeys,
         SecretKeys
     };
-    
+
     Private( KeyCache * cache, RefreshKeysJob * qq );
     void doStart();
     Error startKeyListing( const char* protocol, KeyType type );
@@ -752,10 +844,10 @@ void KeyCache::RefreshKeysJob::Private::doStart()
 {
     assert( m_jobsPending == 0 );
     m_mergedResult.mergeWith( KeyListResult( startKeyListing( "openpgp", PublicKeys ) ) );
-    m_mergedResult.mergeWith( KeyListResult( startKeyListing( "openpgp", SecretKeys ) ) );
     m_mergedResult.mergeWith( KeyListResult( startKeyListing( "smime", PublicKeys ) ) );
+    m_mergedResult.mergeWith( KeyListResult( startKeyListing( "openpgp", SecretKeys ) ) );
     m_mergedResult.mergeWith( KeyListResult( startKeyListing( "smime", SecretKeys ) ) );
-    
+
     if ( m_jobsPending != 0 )
         return;
 
@@ -810,9 +902,9 @@ Error KeyCache::RefreshKeysJob::Private::startKeyListing( const char* backend, K
     else
         connect( job, SIGNAL(nextKey(GpgME::Key)),
                  q, SLOT(nextSecretKey(GpgME::Key)) );
-    
+
     const Error error = job->start( QStringList(), type == SecretKeys );
-    
+
     if ( !error && !error.isCanceled() )
         ++m_jobsPending;
     return error;

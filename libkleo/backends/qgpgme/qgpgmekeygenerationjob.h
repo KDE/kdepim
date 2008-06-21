@@ -2,7 +2,7 @@
     qgpgmekeygenerationjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -33,43 +33,32 @@
 #ifndef __KLEO_QGPGMEKEYGENERATIONJOB_H__
 #define __KLEO_QGPGMEKEYGENERATIONJOB_H__
 
-#include "kleo/kleo_export.h"
 #include "kleo/keygenerationjob.h"
-#include "qgpgmejob.h"
 
-namespace GpgME {
-  class Error;
-  class Context;
-  class Key;
-  class Data;
-}
+#include "threadedjobmixin.h"
 
-namespace QGpgME {
-  class QByteArrayDataProvider;
-}
+#include <gpgme++/keygenerationresult.h>
 
 namespace Kleo {
 
-  class KLEO_EXPORT QGpgMEKeyGenerationJob : public KeyGenerationJob, private QGpgMEJob {
-    Q_OBJECT QGPGME_JOB
+  class QGpgMEKeyGenerationJob
+#ifdef Q_MOC_RUN
+    : public KeyGenerationJob
+#else
+    : public _detail::ThreadedJobMixin<KeyGenerationJob, boost::tuple<GpgME::KeyGenerationResult,QByteArray,QString> >
+#endif
+  {
+    Q_OBJECT
+#ifdef Q_MOC_RUN
+  private Q_SLOTS:
+    void slotFinished();
+#endif
   public:
-    QGpgMEKeyGenerationJob( GpgME::Context * context );
+    explicit QGpgMEKeyGenerationJob( GpgME::Context * context );
     ~QGpgMEKeyGenerationJob();
-    
+
     /*! \reimp from KeygenerationJob */
     GpgME::Error start( const QString & parameters );
-    
-  private slots:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & error ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, error );
-    }
-
-  private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-
-  private:
-    QGpgME::QByteArrayDataProvider * mPubKeyDataProvider;
-    GpgME::Data * mPubKey;
   };
 
 }

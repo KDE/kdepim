@@ -27,6 +27,7 @@
 #include <QMutex>
 
 #include <QString>
+#include <QStringList>
 #include <QByteArray>
 #include <QVariant>
 
@@ -66,6 +67,7 @@ private:
     struct Inputs {
         Inputs() : parentWId( 0 ) {}
         std::map<std::string,Option> options;
+        QStringList filePaths;
         WId parentWId;
         QByteArray command;
     } inputs;
