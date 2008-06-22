@@ -291,7 +291,7 @@ bool GroupwiseServer::login()
 
   ngwt__PlainText pt;
 
-  pt.username = mUser.toUtf8().data();
+  pt.username = std::string( mUser.toUtf8().constData() );
   pt.password = conv.qStringToString( mPassword );
   loginReq.auth = &pt;
   mSoap->userid = strdup( mUser.toUtf8().data() );
@@ -827,7 +827,7 @@ bool GroupwiseServer::acceptIncidence( KCal::Incidence *incidence )
     gwUID = getFullIDFor( gwRecordIDFromIcal );
   }
   else
-    gwUID = qGwUid.toLatin1().data();
+    gwUID = std::string( qGwUid.toLatin1().constData() );
 
   if ( gwUID.empty() )
   {
