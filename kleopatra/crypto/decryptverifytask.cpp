@@ -435,7 +435,7 @@ static QString formatVerificationResultDetails( const VerificationResult & res, 
     details = details.trimmed();
     details.replace( '\n', "<br/>" );
     if ( info.conflicts() )
-        details += i18n( "<p><b>Sender:</b> %1</p><p><b>Stored:</b> %2</p>", info.informativeSender.prettyAddress(), format( info.signerMailboxes() ).join( i18nc("separator for a list of e-mail addresses", ", " ) ) );
+        details += i18n( "<p>The sender's address %1 is not stored in the certificate. Stored: %2</p>", info.informativeSender.prettyAddress(), format( info.signerMailboxes() ).join( i18nc("separator for a list of e-mail addresses", ", " ) ) );
     return details;
 }
 
