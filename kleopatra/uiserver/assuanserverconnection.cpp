@@ -417,7 +417,7 @@ private:
 #endif
                 }
 
-                io = Input_or_Output<in>::type::createFromPipeDevice( fd, i18n( "Message #%1", (conn.*which).size() ) );
+                io = Input_or_Output<in>::type::createFromPipeDevice( fd, i18n( "Message #%1", (conn.*which).size() + 1 ) );
 
                 options.erase( "FD" );
 
