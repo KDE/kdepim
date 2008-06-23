@@ -68,14 +68,14 @@ using namespace GpgME;
 namespace {
 
     QString formatInputOutputLabel( const QString & input, const QString & output, bool inputDeleted, bool outputDeleted ) {
-        return i18nc( "Input file --> Output file (rarr is arrow", "%1 &rarr; %2", 
+        return i18nc( "Input file --> Output file (rarr is arrow", "%1 &rarr; %2",
                       inputDeleted ? QString("<s>%1</s>").arg( Qt::escape( input ) ) : Qt::escape( input ),
                       outputDeleted ? QString("<s>%1</s>").arg( Qt::escape( output ) ) : Qt::escape( output ) );
     }
 
     class ErrorResult : public Task::Result {
     public:
-        ErrorResult( bool sign, bool encrypt, const Error & err, const QString & errStr, const QString & input, const QString & output, const QString & auditLog ) 
+        ErrorResult( bool sign, bool encrypt, const Error & err, const QString & errStr, const QString & input, const QString & output, const QString & auditLog )
             : Task::Result(), m_sign( sign ), m_encrypt( encrypt ), m_error( err ), m_errString( errStr ), m_inputLabel( input ), m_outputLabel( output ), m_auditLog( auditLog ) {}
 
         /* reimp */ QString overview() const;
@@ -93,7 +93,7 @@ namespace {
         const QString m_outputLabel;
         const QString m_auditLog;
     };
-    
+
     class SignEncryptFilesResult : public Task::Result {
     public:
         SignEncryptFilesResult( const SigningResult & sr, const QString & input, const QString & output, bool inputRemoved, bool outputCreated, const QString & auditLog )
@@ -129,12 +129,12 @@ namespace {
     static QString makeSigningOverview( const Error & err ) {
         if ( err.isCanceled() )
             return i18n("Signing canceled.");
-        
+
         if ( err )
             return i18n("Signing failed." );
         return i18n("Signing succeeded.");
     }
-    
+
     static QString makeResultOverview( const SigningResult & result ) {
         return makeSigningOverview( result.error() );
     }
@@ -142,14 +142,14 @@ namespace {
     static QString makeEncryptionOverview( const Error & err ) {
         if ( err.isCanceled() )
             return i18n("Encryption canceled.");
-        
+
         if ( err )
             return i18n("Encryption failed." );
 
         return i18n("Encryption succeeded.");
     }
 
-    
+
     static QString makeResultOverview( const EncryptionResult & result ) {
         return makeEncryptionOverview( result.error() );
     }
@@ -174,14 +174,14 @@ namespace {
             return Qt::escape( QString::fromLocal8Bit( err.asString() ) );
         return QString();
     }
-    
+
     static QString makeResultDetails( const EncryptionResult & result ) {
         const Error err = result.error();
         if ( err )
             return Qt::escape( QString::fromLocal8Bit( err.asString() ) );
         return i18n(" Encryption succeeded." );
     }
-    
+
 }
 
 
@@ -192,7 +192,7 @@ QString ErrorResult::overview() const {
     const bool canceled = m_error.isCanceled();
     if ( m_sign && m_encrypt )
         return canceled ? i18n( "%1: <b>Sign/encrypt canceled.</b>", label ) : i18n( " %1: Sign/encrypt failed.", label );
-    return i18nc( "label: result. Example: foo -> foo.gpg: Encryption failed.", "%1: <b>%2</b>", label, 
+    return i18nc( "label: result. Example: foo -> foo.gpg: Encryption failed.", "%1: <b>%2</b>", label,
                   m_sign ? makeSigningOverview( m_error ) :makeEncryptionOverview( m_error ) );
 }
 
@@ -228,7 +228,7 @@ private:
     bool encrypt  : 1;
     bool detached : 1;
     bool removeInput : 1;
-    
+
     QPointer<Kleo::Job> job;
     shared_ptr<OverwritePolicy> m_overwritePolicy;
 };
@@ -431,6 +431,7 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & result ) {
             kleo_assert( !result.isNull() );
             output->finalize();
             outputCreated = true;
+            input->finalize();
             if ( removeInput ) {
                 inputRemoved = QFile::remove( inputFileName );
             }
@@ -439,7 +440,7 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & result ) {
             return;
         }
     }
-   
+
     q->emitResult( shared_ptr<Result>( new SignEncryptFilesResult( result, input->label(), output->label(), inputRemoved, outputCreated, auditLog ) ) );
 }
 
@@ -464,7 +465,7 @@ void SignEncryptFilesTask::Private::slotResult( const SigningResult & sresult, c
             return;
         }
     }
-    
+
     q->emitResult( shared_ptr<Result>( new SignEncryptFilesResult( sresult, eresult, input->label(), output->label(), inputRemoved, outputCreated, auditLog ) ) );
 }
 
@@ -511,16 +512,16 @@ int SignEncryptFilesResult::errorCode() const {
 QString SignEncryptFilesResult::errorString() const {
     const bool sign = !m_sresult.isNull();
     const bool encrypt = !m_eresult.isNull();
-    
+
     kleo_assert( sign || encrypt );
 
     if ( sign && encrypt ) {
-        return 
-            m_sresult.error().code() ? makeResultDetails( m_sresult ) : 
+        return
+            m_sresult.error().code() ? makeResultDetails( m_sresult ) :
             m_eresult.error().code() ? makeResultDetails( m_eresult ) :
             QString();
     }
-    
+
     return sign ? makeResultDetails( m_sresult ) : makeResultDetails( m_eresult );
 }
 
