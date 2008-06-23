@@ -164,13 +164,13 @@ void BoxContainerItem::showPassivePopup( QWidget* parent, QList< KornMailSubject
 	QWidget *mainglayout_wid = new QWidget( mainvlayout );
 	QGridLayout *mainglayout = new QGridLayout( mainglayout_wid );
 	
-	QLabel *title = new QLabel( "From", mainglayout_wid );
+	QLabel *title = new QLabel( i18n("From"), mainglayout_wid );
 	mainglayout->addWidget( title, 0, 0 );
 	QFont font = title->font();
 	font.setBold( true );
 	title->setFont( font );
 		
-	title = new QLabel( "Subject", mainglayout_wid );
+	title = new QLabel( i18n("Subject"), mainglayout_wid );
 	mainglayout->addWidget( title, 0, 1 );
 	font = title->font();
 	font.setBold( true );
@@ -179,7 +179,7 @@ void BoxContainerItem::showPassivePopup( QWidget* parent, QList< KornMailSubject
 	//Display only column 3 if 'date' is true.
 	if( date )
 	{
-		title = new QLabel( "Date", mainglayout_wid );
+		title = new QLabel( i18n("Date"), mainglayout_wid );
 		mainglayout->addWidget( title, 0, 2 );
 		font = title->font();
 		font.setBold( true );
