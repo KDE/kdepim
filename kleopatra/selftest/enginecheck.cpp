@@ -107,7 +107,7 @@ namespace {
             } else if ( ei.fileName() && !ei.version() ) {
                 m_error = i18n("not properly installed");
                 m_explaination += i18nc("@info",
-                                        "<para>Backend <command>%1</command> is not installed properly.</para>" );
+                                        "<para>Backend <command>%1</command> is not installed properly.</para>", QFile::decodeName( ei.fileName() ) );
                 m_proposedFix += i18nc( "@info",
                                         "<para>Please check the output of <command>%1 --version</command> manually.</para>",
                                         QFile::decodeName( ei.fileName() ) );
