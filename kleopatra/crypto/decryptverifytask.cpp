@@ -40,6 +40,7 @@
 #include <kleo/verifydetachedjob.h>
 #include <kleo/decryptjob.h>
 #include <kleo/decryptverifyjob.h>
+#include <kleo/dn.h>
 
 #include <models/keycache.h>
 #include <models/predicates.h>
@@ -52,6 +53,8 @@
 #include <utils/stl_util.h>
 #include <utils/kleo_assert.h>
 #include <utils/exception.h>
+
+#include <kmime/kmime_header_parsing.h>
 
 #include <gpgme++/error.h>
 #include <gpgme++/key.h>
@@ -67,22 +70,83 @@
 #include <QByteArray>
 #include <QColor>
 #include <QDateTime>
+#include <QStringList>
 #include <QTextDocument> // Qt::escape
 
 #include <boost/bind.hpp>
 
 #include <algorithm>
+#include <cassert>
 
 using namespace Kleo::Crypto;
 using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
+using namespace KMime::Types;
 
 namespace {
 
 static QString auditLogFromSender( QObject* sender ) {
     const Job * const job = qobject_cast<const Job*>( sender );
     return job ? job->auditLogAsHtml() : QString();
+}
+
+
+static bool addrspec_equal( const AddrSpec & lhs, const AddrSpec & rhs, Qt::CaseSensitivity cs  ) {
+    return lhs.localPart.compare( rhs.localPart, cs ) == 0 && lhs.domain.compare( rhs.domain, Qt::CaseInsensitive ) == 0;
+}
+
+static bool mailbox_equal( const Mailbox & lhs, const Mailbox & rhs, Qt::CaseSensitivity cs ) {
+    return addrspec_equal( lhs.addrSpec(), rhs.addrSpec(), cs );
+}
+
+static std::string stripAngleBrackets( const std::string & str ) {
+    if ( str.empty() )
+        return str;
+    if ( str[0] == '<' && str[str.size()-1] == '>' )
+        return str.substr( 1, str.size() - 2 );
+    return str;
+}
+
+static std::string email( const UserID & uid ) {
+
+    if ( uid.parent().protocol() == OpenPGP )
+        return stripAngleBrackets( uid.email() );
+
+    assert( uid.parent().protocol() == CMS );
+    const std::string id = uid.id();
+    if ( !id.empty() && id[0] == '<' )
+        return stripAngleBrackets( id );
+    return DN( uid.id() )["EMAIL"].trimmed().toUtf8().constData();
+}
+
+static std::vector<Mailbox> extractMailboxes( const Key & key ) {
+    std::vector<Mailbox> res;
+    Q_FOREACH( const UserID & id, key.userIDs() ) {
+        Mailbox mbox;
+        mbox.setAddress( email( id ).c_str() );
+        if ( !mbox.addrSpec().isEmpty() )
+            res.push_back( mbox );
+    }
+    return res;
+}
+
+static std::vector<Mailbox> extractMailboxes( const std::vector<Key> & signers ) {
+    std::vector<Mailbox> res;
+    Q_FOREACH( const Key & i, signers ) {
+        const std::vector<Mailbox> bxs = extractMailboxes( i );
+        res.insert( res.end(), bxs.begin(), bxs.end() );
+    }
+    return res;
+}
+
+static bool keyContainsMailbox( const Key & key, const Mailbox & mbox ) {
+    const std::vector<Mailbox> mbxs = extractMailboxes( key );
+    return std::find_if( mbxs.begin(), mbxs.end(), bind( mailbox_equal, mbox, _1, Qt::CaseInsensitive ) ) != mbxs.end();
+}
+
+static bool keysContainMailbox( const std::vector<Key> & keys, const Mailbox & mbox ) {
+    return std::find_if( keys.begin(), keys.end(), bind( keyContainsMailbox, _1, mbox ) ) != keys.end();
 }
 
 static QString signatureSummaryToString( int summary )
@@ -139,10 +203,14 @@ static QString renderFingerprint( const char * fpr ) {
     return QString( "0x%1" ).arg( QString::fromAscii( fpr ).toUpper() );
 }
 
+static QString renderKeyLink( const QString & fpr, const QString & text ) {
+    return QString::fromLatin1( "<a href=\"key:%1\">%2</a>" ).arg( fpr ).arg( text );
+}
+
 static QString renderKey( const Key & key ) {
     if ( key.isNull() )
         return i18n( "Unknown key" );
-    return QString::fromLatin1( "<a href=\"key:%1\">%2</a>" ).arg( key.primaryFingerprint(), Formatting::prettyName( key ) );
+    return renderKeyLink( key.primaryFingerprint(), Formatting::prettyName( key ) );
 }
 
 static QString renderKeyEMailOnlyNameAsFallback( const Key & key ) {
@@ -150,7 +218,7 @@ static QString renderKeyEMailOnlyNameAsFallback( const Key & key ) {
         return i18n( "Unknown key" );
     const QString email = Formatting::prettyEMail( key );
     const QString user = !email.isNull() ? email : Formatting::prettyName( key );
-    return QString::fromLatin1( "<a href=\"key:%1\">%2</a>" ).arg( key.primaryFingerprint(), user );
+    return renderKeyLink( key.primaryFingerprint(), user );
 }
 
 static QString formatDate( const QDateTime & dt ) {
@@ -237,6 +305,20 @@ static bool IsValid( const Signature & sig ) {
     return sig.summary() & Signature::Valid;
 }
 
+}
+
+class DecryptVerifyResult::SenderInfo {
+public:
+    explicit SenderInfo( const Mailbox & infSender, const std::vector<Key> & signers_ ) : informativeSender( infSender ), signers( signers_ ) {}
+    const Mailbox informativeSender;
+    const std::vector<Key> signers;
+    bool hasInformativeSender() const { return !informativeSender.addrSpec().isEmpty(); }
+    bool conflicts() const { return hasInformativeSender() && !keysContainMailbox( signers, informativeSender ); }
+    std::vector<Mailbox> signerMailboxes() const {return extractMailboxes( signers ); }
+};
+
+namespace {
+
 static Task::Result::VisualCode codeForVerificationResult( const VerificationResult & res )
 {
     if ( res.isNull() )
@@ -253,7 +335,7 @@ static Task::Result::VisualCode codeForVerificationResult( const VerificationRes
     return Task::Result::Warning;
 }
 
-static QString formatVerificationResultOverview( const VerificationResult & res ) {
+static QString formatVerificationResultOverview( const VerificationResult & res, const DecryptVerifyResult::SenderInfo & info ) {
     if ( res.isNull() )
         return QString();
 
@@ -265,7 +347,7 @@ static QString formatVerificationResultOverview( const VerificationResult & res 
         return i18n( "<b>Verification failed: %1.</b>", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) );
 
     const std::vector<Signature> sigs = res.signatures();
-    const std::vector<Key> signers = KeyCache::instance()->findSigners( res );
+    const std::vector<Key> signers = info.signers;
 
     if ( sigs.empty() )
         return i18n( "<b>No signatures found.</b>" );
@@ -278,14 +360,25 @@ static QString formatVerificationResultOverview( const VerificationResult & res 
     if ( warn > 0 )
         return i18np("<b>Not enough information to check signature validity.</b>", "<b>%1 signatures could not be verified.</b>", warn );
 
-    //All good:
+    //Good signature:
+    QString text;
     if ( sigs.size() == 1 ) {
         const Key key = DecryptVerifyResult::keyForSignature( sigs[0], signers );
         if ( key.isNull() )
-            return i18n( "<b>Signature is valid.</b>" );
-        return i18n( "<b>Signed by %1</b>", renderKeyEMailOnlyNameAsFallback( key ) );
+            text = i18n( "<b>Signature is valid.</b>" );
+        else
+            text = i18n( "<b>Signed by %1</b>", renderKeyEMailOnlyNameAsFallback( key ) );
+        if ( info.conflicts() )
+            text += i18n( "<br/><b>Warning:</b> The sender's mail address is not stored in the %1 used for signing.",
+                          key.isNull() ? i18n( "certificate" ) : renderKeyLink( key.primaryFingerprint(), i18n( "certificate" ) ) );
     }
-    return i18np("<b>Valid signature.</b>", "<b>%1 valid signatures.</b>", sigs.size() );
+    else {
+        text = i18np("<b>Valid signature.</b>", "<b>%1 valid signatures.</b>", sigs.size() );
+        if ( info.conflicts() )
+            text += i18n( "<br/><b>Warning:</b> The sender's mail address is not stored in the certificates used for signing." );
+    }
+
+    return text;
 }
 
 static QString formatDecryptionResultOverview( const DecryptionResult & result )
@@ -326,7 +419,13 @@ static QString formatSignature( const Signature & sig, const Key & key ) {
         return text + i18n("Invalid signature by %1: %2", renderKey( key ), signatureSummaryToString( sig.summary() ) );
 }
 
-static QString formatVerificationResultDetails( const VerificationResult & res )
+static QStringList format( const std::vector<Mailbox> & mbxs ) {
+    QStringList res;
+    std::transform( mbxs.begin(), mbxs.end(), std::back_inserter( res ), bind( &Mailbox::prettyAddress, _1 ) );
+    return res;
+}
+
+static QString formatVerificationResultDetails( const VerificationResult & res, const DecryptVerifyResult::SenderInfo & info )
 {
     const std::vector<Signature> sigs = res.signatures();
     const std::vector<Key> signers = KeyCache::instance()->findSigners( res );
@@ -335,6 +434,8 @@ static QString formatVerificationResultDetails( const VerificationResult & res )
         details += formatSignature( sig, DecryptVerifyResult::keyForSignature( sig, signers ) ) + '\n';
     details = details.trimmed();
     details.replace( '\n', "<br/>" );
+    if ( info.conflicts() )
+        details += i18n( "<p><b>Sender:</b> %1</p><p><b>Stored:</b> %2</p>", info.informativeSender.prettyAddress(), format( info.signerMailboxes() ).join( i18nc("separator for a list of e-mail addresses", ", " ) ) );
     return details;
 }
 
@@ -365,22 +466,22 @@ static QString formatDecryptionResultDetails( const DecryptionResult & res, cons
     return details;
 }
 
-static QString formatDecryptVerifyResultOverview( const DecryptionResult & dr, const VerificationResult & vr )
+static QString formatDecryptVerifyResultOverview( const DecryptionResult & dr, const VerificationResult & vr, const  DecryptVerifyResult::SenderInfo & info )
 {
     if ( IsErrorOrCanceled( dr ) )
         return formatDecryptionResultOverview( dr );
-    return formatVerificationResultOverview( vr );
+    return formatVerificationResultOverview( vr, info );
 }
-
 
 static QString formatDecryptVerifyResultDetails( const DecryptionResult & dr,
                                                  const VerificationResult & vr,
-                                                 const std::vector<Key> & recipients )
+                                                 const std::vector<Key> & recipients,
+                                                 const DecryptVerifyResult::SenderInfo & info )
 {
     const QString drDetails = formatDecryptionResultDetails( dr, recipients );
     if ( IsErrorOrCanceled( dr ) )
         return drDetails;
-    return drDetails + ( drDetails.isEmpty() ? "" : "<br/>" ) + formatVerificationResultDetails( vr );
+    return drDetails + ( drDetails.isEmpty() ? "" : "<br/>" ) + formatVerificationResultDetails( vr, info );
 }
 
 } // anon namespace
@@ -397,6 +498,7 @@ public:
              const QString & input,
              const QString & output,
              const QString & auditLog,
+             const Mailbox & informativeSender,
              DecryptVerifyResult* qq ) :
                  q( qq ),
                  m_type( type ),
@@ -407,13 +509,16 @@ public:
                  m_errorString( errString ),
                  m_inputLabel( input ),
                  m_outputLabel( output ),
-                 m_auditLog( auditLog )
+                 m_auditLog( auditLog ),
+                 m_informativeSender( informativeSender )
     {
     }
 
     QString label() const {
         return formatInputOutputLabel( m_inputLabel, m_outputLabel, false, q->hasError() );
     }
+
+    DecryptVerifyResult::SenderInfo makeSenderInfo() const;
 
     bool isDecryptOnly() const { return m_type == Decrypt; }
     bool isVerifyOnly() const { return m_type == Verify; }
@@ -427,7 +532,12 @@ public:
     QString m_inputLabel;
     QString m_outputLabel;
     const QString m_auditLog;
+    const Mailbox m_informativeSender;
 };
+
+DecryptVerifyResult::SenderInfo DecryptVerifyResult::Private::makeSenderInfo() const {
+    return SenderInfo( m_informativeSender, KeyCache::instance()->findSigners( m_verificationResult ) );
+}
 
 shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromDecryptResult( const DecryptionResult & dr, const QByteArray & plaintext, const QString & auditLog ) {
     return shared_ptr<DecryptVerifyResult>( new DecryptVerifyResult(
@@ -439,7 +549,8 @@ shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromDecryptResult( co
         QString(),
         inputLabel(),
         outputLabel(),
-        auditLog ) );
+        auditLog,
+        informativeSender() ) );
 }
 
 shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromDecryptResult( const GpgME::Error & err, const QString& what, const QString & auditLog ) {
@@ -452,7 +563,8 @@ shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromDecryptResult( co
         what,
         inputLabel(),
         outputLabel(),
-        auditLog ) );
+        auditLog,
+        informativeSender() ) );
 }
 
 shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromDecryptVerifyResult( const DecryptionResult & dr, const VerificationResult & vr, const QByteArray & plaintext, const QString & auditLog ) {
@@ -465,7 +577,8 @@ shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromDecryptVerifyResu
         QString(),
         inputLabel(),
         outputLabel(),
-        auditLog ) );
+        auditLog,
+        informativeSender() ) );
 }
 
 shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromDecryptVerifyResult( const GpgME::Error & err, const QString & details, const QString & auditLog ) {
@@ -478,7 +591,8 @@ shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromDecryptVerifyResu
         details,
         inputLabel(),
         outputLabel(),
-        auditLog ) );
+        auditLog,
+        informativeSender() ) );
 }
 
 shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromVerifyOpaqueResult( const VerificationResult & vr, const QByteArray & plaintext, const QString & auditLog ) {
@@ -491,7 +605,8 @@ shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromVerifyOpaqueResul
         QString(),
         inputLabel(),
         outputLabel(),
-        auditLog ) );
+        auditLog,
+        informativeSender() ) );
 }
 shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromVerifyOpaqueResult( const GpgME::Error & err, const QString & details, const QString & auditLog ) {
     return shared_ptr<DecryptVerifyResult>( new DecryptVerifyResult(
@@ -503,7 +618,8 @@ shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromVerifyOpaqueResul
         details,
         inputLabel(),
         outputLabel(),
-        auditLog ) );
+        auditLog,
+        informativeSender() ) );
 }
 
 shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromVerifyDetachedResult( const VerificationResult & vr, const QString & auditLog ) {
@@ -516,7 +632,8 @@ shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromVerifyDetachedRes
         QString(),
         inputLabel(),
         outputLabel(),
-        auditLog ) );
+        auditLog,
+        informativeSender() ) );
 }
 shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromVerifyDetachedResult( const GpgME::Error & err, const QString & details, const QString & auditLog ) {
     return shared_ptr<DecryptVerifyResult>( new DecryptVerifyResult(
@@ -528,7 +645,8 @@ shared_ptr<DecryptVerifyResult> AbstractDecryptVerifyTask::fromVerifyDetachedRes
         details,
         inputLabel(),
         outputLabel(),
-        auditLog ) );
+        auditLog,
+        informativeSender() ) );
 }
 
 DecryptVerifyResult::DecryptVerifyResult( DecryptVerifyOperation type,
@@ -539,8 +657,9 @@ DecryptVerifyResult::DecryptVerifyResult( DecryptVerifyOperation type,
                     const QString & errString,
                     const QString & inputLabel,
                     const QString & outputLabel,
-                    const QString & auditLog )
-    : Task::Result(), d( new Private( type, vr, dr, stuff, errCode, errString, inputLabel, outputLabel, auditLog, this ) )
+                    const QString & auditLog,
+                    const Mailbox & informativeSender )
+    : Task::Result(), d( new Private( type, vr, dr, stuff, errCode, errString, inputLabel, outputLabel, auditLog, informativeSender, this ) )
 {
 }
 
@@ -550,9 +669,9 @@ QString DecryptVerifyResult::overview() const
     if ( d->isDecryptOnly() )
         ov = formatDecryptionResultOverview( d->m_decryptionResult );
     else if ( d->isVerifyOnly() )
-        ov = formatVerificationResultOverview( d->m_verificationResult );
+        ov = formatVerificationResultOverview( d->m_verificationResult, d->makeSenderInfo() );
     else
-        ov = formatDecryptVerifyResultOverview( d->m_decryptionResult, d->m_verificationResult );
+        ov = formatDecryptVerifyResultOverview( d->m_decryptionResult, d->m_verificationResult, d->makeSenderInfo() );
     return i18nc( "label: result example: foo.sig: Verification failed. ", "%1: %2", d->label(), ov );
 }
 
@@ -561,8 +680,8 @@ QString DecryptVerifyResult::details() const
     if ( d->isDecryptOnly() )
         return formatDecryptionResultDetails( d->m_decryptionResult, KeyCache::instance()->findRecipients( d->m_decryptionResult ) );
     if ( d->isVerifyOnly() )
-        return formatVerificationResultDetails( d->m_verificationResult );
-    return formatDecryptVerifyResultDetails( d->m_decryptionResult, d->m_verificationResult, KeyCache::instance()->findRecipients( d->m_decryptionResult ) );
+        return formatVerificationResultDetails( d->m_verificationResult, d->makeSenderInfo() );
+    return formatDecryptVerifyResultDetails( d->m_decryptionResult, d->m_verificationResult, KeyCache::instance()->findRecipients( d->m_decryptionResult ), d->makeSenderInfo() );
 }
 
 bool DecryptVerifyResult::hasError() const
@@ -607,12 +726,24 @@ const Key & DecryptVerifyResult::keyForSignature( const Signature & sig, const s
 }
 
 class AbstractDecryptVerifyTask::Private {
-
+public:
+    Mailbox informativeSender;
 };
+
 
 AbstractDecryptVerifyTask::AbstractDecryptVerifyTask( QObject * parent ) : Task( parent ), d( new Private ) {}
 
 AbstractDecryptVerifyTask::~AbstractDecryptVerifyTask() {}
+
+
+Mailbox AbstractDecryptVerifyTask::informativeSender() const {
+    return d->informativeSender;
+}
+
+
+void AbstractDecryptVerifyTask::setInformativeSender( const Mailbox & sender ) {
+    d->informativeSender = sender;
+}
 
 class DecryptVerifyTask::Private {
     DecryptVerifyTask* const q;

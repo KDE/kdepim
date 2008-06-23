@@ -41,12 +41,15 @@
 #include <crypto/taskcollection.h>
 
 #include <utils/classify.h>
+#include <utils/formatting.h>
 #include <utils/gnupg-helper.h>
 #include <utils/input.h>
 #include <utils/output.h>
 #include <utils/kleo_assert.h>
 
 #include <kleo/cryptobackendfactory.h>
+
+#include <kmime/kmime_header_parsing.h>
 
 #include <KDebug>
 #include <KLocalizedString>
@@ -65,6 +68,7 @@ using namespace GpgME;
 using namespace Kleo;
 using namespace Kleo::Crypto;
 using namespace Kleo::Crypto::Gui;
+using namespace KMime::Types;
 
 class DecryptVerifyEMailController::Private {
     DecryptVerifyEMailController* const q;
@@ -87,7 +91,7 @@ public:
 
     std::vector<shared_ptr<Input> > m_inputs, m_signedDatas;
     std::vector<shared_ptr<Output> > m_outputs;
-        
+
     QPointer<ResultListWidget> m_wizard;
     std::vector<shared_ptr<const DecryptVerifyResult> > m_results;
     std::vector<shared_ptr<AbstractDecryptVerifyTask> > m_runnableTasks, m_completedTasks;
@@ -97,6 +101,7 @@ public:
     DecryptVerifyOperation m_operation;
     Protocol m_protocol;
     VerificationMode m_verificationMode;
+    std::vector<KMime::Types::Mailbox> m_informativeSenders;
 };
 
 DecryptVerifyEMailController::Private::Private( DecryptVerifyEMailController* qq )
@@ -121,7 +126,7 @@ void DecryptVerifyEMailController::Private::slotWizardCanceled()
 
 void DecryptVerifyEMailController::doTaskDone( const Task* task, const shared_ptr<const Task::Result> & result ) {
     assert( task );
-    
+
     // We could just delete the tasks here, but we can't use
     // Qt::QueuedConnection here (we need sender()) and other slots
     // might not yet have executed. Therefore, we push completed tasks
@@ -151,10 +156,10 @@ void DecryptVerifyEMailController::Private::schedule()
         kleo_assert( m_runnableTasks.empty() );
         Q_FOREACH ( const shared_ptr<const DecryptVerifyResult> & i, m_results )
             emit q->verificationResult( i->verificationResult() );
-        // if there is a popup, wait for either the client cancel or the user closing the popup. 
+        // if there is a popup, wait for either the client cancel or the user closing the popup.
         // Otherwise (silent case), finish immediately
         m_operationCompleted = true;
-        if ( m_silent ) 
+        if ( m_silent )
             q->emitDoneOrError();
     }
 }
@@ -181,11 +186,16 @@ std::vector< shared_ptr<AbstractDecryptVerifyTask> > DecryptVerifyEMailControlle
     const uint numInputs = m_inputs.size();
     const uint numMessages = m_signedDatas.size();
     const uint numOutputs = m_outputs.size();
- 
+    const uint numInformativeSenders = m_informativeSenders.size();
+
     // these are duplicated from DecryptVerifyCommandEMailBase::Private::checkForErrors with slightly modified error codes/messages
     if ( !numInputs )
         throw Kleo::Exception( makeGnuPGError( GPG_ERR_CONFLICT ),
                                i18n("At least one input needs to be provided") );
+
+    if ( numInformativeSenders > 0 && numInformativeSenders != numInputs )
+        throw Kleo::Exception( makeGnuPGError( GPG_ERR_CONFLICT ),  //TODO use better error code if possible
+                               i18n("Informative sender/signed data count mismatch") );
 
     if ( numMessages )
         if ( numMessages != numInputs )
@@ -207,16 +217,15 @@ std::vector< shared_ptr<AbstractDecryptVerifyTask> > DecryptVerifyEMailControlle
 
     const CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( m_protocol );
     if ( !backend )
-        throw Kleo::Exception( makeGnuPGError( GPG_ERR_UNSUPPORTED_PROTOCOL ),
-                               m_protocol == OpenPGP ? i18n("No backend support for OpenPGP") :
-                               m_protocol == CMS     ? i18n("No backend support for S/MIME") : QString() );
+        throw Kleo::Exception( makeGnuPGError( GPG_ERR_UNSUPPORTED_PROTOCOL ), i18n("No backend support for %1", Formatting::displayName( m_protocol ) ) );
+
 
 
     if ( m_operation != Decrypt && !m_silent )
         ensureWizardVisible();
 
     std::vector< shared_ptr<AbstractDecryptVerifyTask> > tasks;
-    
+
     for ( unsigned int i = 0 ; i < numInputs ; ++i ) {
         shared_ptr<AbstractDecryptVerifyTask> task;
         switch ( m_operation ) {
@@ -236,6 +245,8 @@ std::vector< shared_ptr<AbstractDecryptVerifyTask> > DecryptVerifyEMailControlle
                     shared_ptr<VerifyDetachedTask> t( new VerifyDetachedTask );
                     t->setInput( m_inputs.at( i ) );
                     t->setSignedData( m_signedDatas.at( i ) );
+                    if ( numInformativeSenders > 0 )
+                        t->setInformativeSender( m_informativeSenders.at( i ) );
                     t->setProtocol( m_protocol );
                     task = t;
                 } else {
@@ -243,6 +254,8 @@ std::vector< shared_ptr<AbstractDecryptVerifyTask> > DecryptVerifyEMailControlle
                     t->setInput( m_inputs.at( i ) );
                     if ( numOutputs )
                         t->setOutput( m_outputs.at( i ) );
+                    if ( numInformativeSenders > 0 )
+                        t->setInformativeSender( m_informativeSenders.at( i ) );
                     t->setProtocol( m_protocol );
                     task = t;
                 }
@@ -254,15 +267,17 @@ std::vector< shared_ptr<AbstractDecryptVerifyTask> > DecryptVerifyEMailControlle
                 t->setInput( m_inputs.at( i ) );
                 assert( numOutputs );
                 t->setOutput( m_outputs.at( i ) );
+                if ( numInformativeSenders > 0 )
+                    t->setInformativeSender( m_informativeSenders.at( i ) );
                 t->setProtocol( m_protocol );
-                task = t;                
+                task = t;
             }
         }
 
         assert( task );
         tasks.push_back( task );
     }
-    
+
     return tasks;
 }
 
@@ -330,6 +345,11 @@ void DecryptVerifyEMailController::setOutputs( const std::vector<shared_ptr<Outp
     d->m_outputs = outputs;
 }
 
+void DecryptVerifyEMailController::setInformativeSenders( const std::vector<KMime::Types::Mailbox> & senders )
+{
+    d->m_informativeSenders = senders;
+}
+
 void DecryptVerifyEMailController::setWizardShown( bool shown )
 {
     d->m_silent = !shown;
@@ -372,7 +392,7 @@ void DecryptVerifyEMailController::Private::cancelAllTasks() {
     // signal emissions.
     m_runnableTasks.clear();
 
-    // a cancel() will result in a call to 
+    // a cancel() will result in a call to
     if ( m_runningTask )
         m_runningTask->cancel();
 }

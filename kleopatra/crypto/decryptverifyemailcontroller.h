@@ -47,6 +47,11 @@
 
 class QFile;
 
+namespace KMime {
+namespace Types {
+    class Mailbox;
+}
+}
 namespace GpgME {
     class VerificationResult;
 }
@@ -66,7 +71,7 @@ class DecryptVerifyEMailController : public Controller {
 public:
     explicit DecryptVerifyEMailController( QObject * parent=0 );
     explicit DecryptVerifyEMailController( const boost::shared_ptr<const ExecutionContext> & cmd, QObject * parent=0 );
- 
+
     ~DecryptVerifyEMailController();
 
     void setInput( const boost::shared_ptr<Input> & input );
@@ -77,6 +82,8 @@ public:
 
     void setOutput( const boost::shared_ptr<Output> & output );
     void setOutputs( const std::vector<boost::shared_ptr<Output> > & outputs );
+
+    void setInformativeSenders( const std::vector<KMime::Types::Mailbox> & senders );
 
     void setWizardShown( bool shown );
 

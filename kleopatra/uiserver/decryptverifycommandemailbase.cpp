@@ -125,6 +125,8 @@ int DecryptVerifyCommandEMailBase::doStart() {
     d->controller->setOutputs( outputs() );
     d->controller->setWizardShown( !hasOption("silent") );
     d->controller->setProtocol( checkProtocol( mode() ) );
+    if ( informativeSenders() )
+        d->controller->setInformativeSenders( senders() );
     QObject::connect( d->controller.get(), SIGNAL(done()),
                       d.get(), SLOT(slotDone()), Qt::QueuedConnection );
     QObject::connect( d->controller.get(), SIGNAL(error(int,QString)),
@@ -152,6 +154,7 @@ void DecryptVerifyCommandEMailBase::Private::checkForErrors() const
     const unsigned int numInputs = q->inputs().size();
     const unsigned int numMessages = q->messages().size();
     const unsigned int numOutputs  = q->outputs().size();
+    const unsigned int numInformativeSenders = q->informativeSenders() ? q->senders().size() : 0;
 
     const DecryptVerifyOperation op = q->operation();;
     const GpgME::Protocol proto = q->checkProtocol( q->mode() );
@@ -164,6 +167,11 @@ void DecryptVerifyCommandEMailBase::Private::checkForErrors() const
     if ( !numInputs )
         throw Kleo::Exception( q->makeError( GPG_ERR_ASS_NO_INPUT ),
                                i18n("At least one INPUT needs to be provided") );
+
+    if ( numInformativeSenders != 0 )
+        if ( numInformativeSenders != numInputs )
+            throw Kleo::Exception( q->makeError( GPG_ERR_ASS_NO_INPUT ),  //TODO use better error code if possible
+                                   i18n("INPUT/SENDER --info count mismatch") );
 
     if ( numMessages )
         if ( numMessages != numInputs )

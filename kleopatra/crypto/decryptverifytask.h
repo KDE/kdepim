@@ -42,6 +42,11 @@
 #include <boost/shared_ptr.hpp>
 
 
+namespace KMime {
+namespace Types {
+    class Mailbox;
+}
+}
 namespace GpgME {
     class DecryptionResult;
     class VerificationResult;
@@ -64,14 +69,17 @@ namespace Crypto {
         explicit AbstractDecryptVerifyTask( QObject* parent = 0 );
         virtual ~AbstractDecryptVerifyTask();
         virtual void autodetectProtocolFromInput() = 0;
-        
+
+        KMime::Types::Mailbox informativeSender() const;
+        void setInformativeSender( const KMime::Types::Mailbox & senders );
+
     Q_SIGNALS:
         void decryptVerifyResult( const boost::shared_ptr<const Kleo::Crypto::DecryptVerifyResult> & );
 
     protected:
         boost::shared_ptr<DecryptVerifyResult> fromDecryptResult( const GpgME::DecryptionResult & dr, const QByteArray & plaintext, const QString & auditLog );
         boost::shared_ptr<DecryptVerifyResult> fromDecryptResult( const GpgME::Error & err, const QString& details, const QString & auditLog  );
-        boost::shared_ptr<DecryptVerifyResult> fromDecryptVerifyResult( const GpgME::DecryptionResult & dr, const GpgME::VerificationResult & vr, const QByteArray & plaintext, const QString & auditLog  );
+        boost::shared_ptr<DecryptVerifyResult> fromDecryptVerifyResult( const GpgME::DecryptionResult & dr, const GpgME::VerificationResult & vr, const QByteArray & plaintext, const QString & auditLog );
         boost::shared_ptr<DecryptVerifyResult> fromDecryptVerifyResult( const GpgME::Error & err, const QString & what, const QString & auditLog  );
         boost::shared_ptr<DecryptVerifyResult> fromVerifyOpaqueResult( const GpgME::VerificationResult & vr, const QByteArray & plaintext, const QString & auditLog  );
         boost::shared_ptr<DecryptVerifyResult> fromVerifyOpaqueResult( const GpgME::Error & err, const QString & details, const QString & auditLog  );
@@ -116,7 +124,7 @@ namespace Crypto {
          kdtools::pimpl_ptr<Private> d;
          Q_PRIVATE_SLOT( d, void slotResult( GpgME::DecryptionResult, QByteArray ) )
     };
-    
+
     class VerifyDetachedTask : public AbstractDecryptVerifyTask {
         Q_OBJECT
     public:
@@ -147,7 +155,7 @@ namespace Crypto {
          kdtools::pimpl_ptr<Private> d;
          Q_PRIVATE_SLOT( d, void slotResult( GpgME::VerificationResult ) )
     };
-    
+
     class VerifyOpaqueTask : public AbstractDecryptVerifyTask {
         Q_OBJECT
     public:
@@ -214,7 +222,8 @@ namespace Crypto {
     class DecryptVerifyResult : public Task::Result {
         friend class ::Kleo::Crypto::AbstractDecryptVerifyTask;
     public:
-        
+        class SenderInfo;
+
         /* reimp */ QString overview() const;
         /* reimp */ QString details() const;
         /* reimp */ bool hasError() const;
@@ -243,7 +252,8 @@ private:
                   const QString & errString,
                   const QString & inputLabel,
                   const QString & outputLabel,
-                  const QString & auditLog );
+                  const QString & auditLog,
+                  const KMime::Types::Mailbox & informativeSender );
 
     private:
         class Private;

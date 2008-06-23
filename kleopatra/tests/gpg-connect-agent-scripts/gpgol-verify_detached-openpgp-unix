@@ -3,5 +3,6 @@
 MESSAGE FD
 /sendfd test.data.sig r
 INPUT FD
+SENDER --info hans@wurst.org
 VERIFY --protocol=OpenPGP
 BYE
