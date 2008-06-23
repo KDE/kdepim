@@ -57,6 +57,7 @@ namespace Kleo {
         static boost::shared_ptr<Input> createFromPipeDevice( assuan_fd_t fd, const QString & label );
         static boost::shared_ptr<Input> createFromFile( const QString & filename, bool dummy=false );
         static boost::shared_ptr<Input> createFromFile( const boost::shared_ptr<QFile> & file );
+        static boost::shared_ptr<Input> createFromDir( const QString & dir );
         static boost::shared_ptr<Input> createFromClipboard();
     };
 }

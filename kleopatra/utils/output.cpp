@@ -348,6 +348,11 @@ shared_ptr<Output> Output::createFromClipboard() {
     return shared_ptr<Output>( new ClipboardOutput( QClipboard::Clipboard ) );
 }
 
+shared_ptr<Output> Output::createFromDir( const QString & path ) {
+    throw Exception( gpg_error( GPG_ERR_EIO ),
+                     i18n( "Directory (\"%1\") as output not supported", path ) );
+}
+
 ClipboardOutput::ClipboardOutput( QClipboard::Mode mode )
     : OutputImplBase(),
       m_mode( mode ),

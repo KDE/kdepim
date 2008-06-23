@@ -432,8 +432,10 @@ private:
                 const QFileInfo fi( filePath );
                 if ( !fi.isAbsolute() )
                     throw Exception( gpg_error( GPG_ERR_INV_ARG ), i18n("Only absolute file paths are allowed") );
-
-                io = Input_or_Output<in>::type::createFromFile( fi.absoluteFilePath(), true );
+                if ( fi.isDir() )
+                    io = Input_or_Output<in>::type::createFromDir( fi.absoluteFilePath() );
+                else
+                    io = Input_or_Output<in>::type::createFromFile( fi.absoluteFilePath(), true );
 
                 options.erase( "FILE" );
 
@@ -483,9 +485,15 @@ private:
             const QFileInfo fi( QFile::decodeName( hexdecode( line ).c_str() ) );
             if ( !fi.isAbsolute() )
                 throw Exception( gpg_error( GPG_ERR_INV_ARG ), i18n("Only absolute file paths are allowed") );
-            if ( fi.exists() && fi.isDir() )
-                throw Exception( gpg_error( GPG_ERR_NOT_IMPLEMENTED ), i18n("Directory traversal is not yet implemented") );
             const QString filePath = fi.absoluteFilePath();
+
+            if ( fi.exists() && fi.isDir() ) {
+                if ( !fi.isReadable() || !fi.isExecutable() )
+                    throw Exception( gpg_error( GPG_ERR_INV_ARG  ), i18n("Could not access directory \"%1\" for reading", filePath ) );
+                conn.dirs.push_back( filePath );
+                return assuan_process_done( conn.ctx.get(), 0 );
+            }
+
             const shared_ptr<QFile> file( new QFile( filePath ) );
             if ( !file->open( QIODevice::ReadOnly ) )
                 throw Exception( gpg_error_from_errno( errno ), i18n("Could not open file \"%1\" for reading", filePath) );
@@ -643,6 +651,7 @@ private:
     std::vector< shared_ptr<Input> > inputs, messages;
     std::vector< shared_ptr<Output> > outputs;
     std::vector<IOF> files;
+    QStringList dirs;
     std::map< QByteArray, shared_ptr<AssuanCommand::Memento> > mementos;
 };
 

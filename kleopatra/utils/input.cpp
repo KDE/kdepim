@@ -49,7 +49,9 @@
 #include <QApplication>
 #include <QByteArray>
 #include <QBuffer>
+#include <QDir>
 #include <QFileInfo>
+#include <QProcess>
 
 #include <errno.h>
 
@@ -83,6 +85,22 @@ namespace {
 
     private:
         shared_ptr<QIODevice> m_io;
+    };
+
+    class DirInput : public InputImplBase {
+    public:
+        explicit DirInput( const QString & path );
+
+        /* reimp */ shared_ptr<QIODevice> ioDevice() const { return m_proc; }
+        /* reimp */ unsigned int classification() const;
+        /* reimp */ unsigned long long size() const { return 0; }
+        /* reimp */ QString label() const {
+            return m_proc ? QFileInfo( m_path ).fileName() : InputImplBase::label();
+        }
+
+    private:
+        QString m_path;
+        shared_ptr<QProcess> m_proc;
     };
 
     class FileInput : public InputImplBase {
@@ -185,6 +203,37 @@ FileInput::FileInput( const shared_ptr<QFile> & file )
 
 unsigned int FileInput::classification() const {
     return classify( m_fileName );
+}
+
+
+shared_ptr<Input> Input::createFromDir( const QString & path ) {
+    return shared_ptr<DirInput>( new DirInput( path ) );
+}
+
+DirInput::DirInput( const QString & path )
+    : InputImplBase(),
+      m_path( path ),
+      m_proc() {
+    if ( !QFileInfo( path ).isDir() )
+        throw Exception( gpg_error( GPG_ERR_EIO ),
+                         i18n( "\"%1\" is not a valid directory", path ) );
+
+    m_proc.reset( new QProcess );
+    QDir parentDir( path );
+    if ( !parentDir.cdUp() )
+        throw Exception( gpg_error( GPG_ERR_EIO ),
+                         i18n( "Could not determine parent directory of \"%1\"", path ) );
+
+    m_proc->setWorkingDirectory( parentDir.absolutePath() );
+    m_proc->start( "zip", QStringList() << "-r" << "-" << QFileInfo( path ).fileName(), QIODevice::ReadOnly );
+    if ( !m_proc->waitForStarted() )
+        throw Exception( gpg_error( GPG_ERR_EIO ),
+                         i18n( "Could not start zip process" ) );
+}
+
+unsigned int DirInput::classification() const {
+    notImplemented();
+    return 0;
 }
 
 shared_ptr<Input> Input::createFromClipboard() {
