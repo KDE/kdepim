@@ -11,6 +11,7 @@ Type=Application
 Hidden=true
 Comment=An application for configuration of devices used by kmobiletools
 Comment[ca]=Una aplicació per a la configuració de dispositius usats pel kmobiletools
+Comment[da]=Et program til konfiguration af enheder, der bruges af KMobileTools
 Comment[de]=Geräte-Einrichtung für die Mobiltelefonverwaltung
 Comment[el]=Μία εφαρμογή για τη ρύθμιση των συσκευών που χρησιμοποιούνται από το kmobiletools
 Comment[es]=Una aplicación para configurar los dispositivos que utiliza kmobiletools

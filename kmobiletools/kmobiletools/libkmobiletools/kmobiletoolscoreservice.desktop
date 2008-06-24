@@ -4,6 +4,7 @@ X-KDE-ServiceType=KMobileTools/CoreService
 X-KDE-Derived=KPluginInfo
 Comment=KMobileTools CoreService
 Comment[ca]=Nucli del servei del KMobileTools
+Comment[da]=KMobileTools kernetjeneste
 Comment[de]=Basisdienst für KMobileTools
 Comment[el]=Υπηρεσία πυρήνα KMobileTools
 Comment[es]=Servicio básico de KMobileTools

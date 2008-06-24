@@ -35,6 +35,7 @@ Name[zh_CN]=应用程序 Octetstream
 Comment=A bodypart formatter plugin for text/x-patch
 Comment[bg]=Редактор с поддръжка на форматиране за текст/x-diff
 Comment[ca]=Un connector formatador del cos per a text/x-patch
+Comment[da]=Et bodypart formaterings-plugin for text/x-patch
 Comment[de]=Ein Inhaltsformatierungs-Modul für text/x-patch
 Comment[el]=Ένα πρόσθετο μορφοποιητή για text/x-patch
 Comment[es]=Un complemento de formato para el cuerpo de text/x-patch

@@ -4,6 +4,7 @@ X-KDE-ServiceType=KMobileTools/Engine
 X-KDE-Derived=KPluginInfo
 Comment=KMobileTools Engine
 Comment[ca]=Motor del KMobileTools
+Comment[da]=KMobileTools-motor
 Comment[de]=KMobileTools-Modul
 Comment[el]=Μηχανή KMobileTools
 Comment[es]=Motor de KMobileTools

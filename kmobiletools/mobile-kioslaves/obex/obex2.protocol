@@ -18,6 +18,7 @@ determineMimetypeFromExtension=true
 
 Description=A kioslave for obex
 Description[ca]=Un 'kioslave' per a l'obex
+Description[da]=En kio-slave til obex
 Description[de]=Ein-/Ausgabemodul für OBEX
 Description[el]=Ένα kioslave για το obex
 Description[es]=Un kioslave para obex

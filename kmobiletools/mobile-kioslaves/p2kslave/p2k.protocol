@@ -18,6 +18,7 @@ determineMimetypeFromExtension=true
 
 Description=A kioslave for p2k Motorola Phones
 Description[ca]=Un 'kioslave' per als telèfons Motorola p2k
+Description[da]=En kio-slave til p2k Motorola-telefoner
 Description[de]=Ein-/Ausgabemodul für p2k-Mobiltelefone von Motorola
 Description[el]=Ένα kioslave για τηλέφωνα Motorola p2k
 Description[es]=Un kioslave para teléfonos p2k de Motorola
