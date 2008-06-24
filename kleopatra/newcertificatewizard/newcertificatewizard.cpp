@@ -612,6 +612,15 @@ namespace {
 
         /* reimp */ void initializePage() {
             const bool error = isError();
+
+            if ( error ) {
+                setTitle( i18nc("@title","Key Creation Failed") );
+                setSubTitle( i18n("Key pair creation failed. Please find details about the failure below.") );
+            } else {
+                setTitle( i18nc("@title","Key Pair Successfully Created") );
+                setSubTitle( i18n("Your new key pair was created successfully. Please find details on the result and some suggested next steps below.") );
+            }
+
             ui.resultTB                 ->setVisible( !error );
             ui.errorTB                  ->setVisible(  error );
             ui.dragQueen                ->setVisible( !error && !pgp() );

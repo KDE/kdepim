@@ -1,11 +1,13 @@
 <ui version="4.0" >
  <class>Kleo::NewCertificateUi::ResultPage</class>
  <widget class="QWizardPage" name="Kleo::NewCertificateUi::ResultPage" >
-  <property name="title" >
-   <string comment="@title" >Key Pair Successfully Created</string>
-  </property>
-  <property name="subTitle" >
-   <string>Your new key pair was created successfully. Please find below details on the result and some suggested next steps.</string>
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>581</width>
+    <height>685</height>
+   </rect>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" >
    <item>
