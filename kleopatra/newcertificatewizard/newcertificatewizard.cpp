@@ -1204,6 +1204,8 @@ QString KeyCreationPage::createGnupgKeyParms() const {
     QString result;
     QTextStream s( &result );
     s     << "<GnupgKeyParms format=\"internal\">"         << endl;
+    if ( pgp() )
+        s << "%ask-passphrase"                             << endl;
     s     << "key-type:      " << gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>( keyType() ) ) << endl;
     if ( const unsigned int strength = keyStrength() )
         s << "key-length:    " << strength                 << endl;
@@ -1230,8 +1232,6 @@ QString KeyCreationPage::createGnupgKeyParms() const {
         Q_FOREACH( const QString & uri,   uris() )
             s << "name-uri:      " << uri                  << endl;
     }
-    if ( pgp() )
-        s << "%ask-passphrase"                             << endl;
     s     << "</GnupgKeyParms>"                            << endl;
     kDebug() << '\n' << result;
     return result;
