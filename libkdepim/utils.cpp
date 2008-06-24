@@ -24,7 +24,7 @@
 
 using namespace KPIM;
 
-#ifdef Q_WS_WIN
+#if 0
 
 #include <windows.h>
 #include <comdef.h> // (bstr_t)

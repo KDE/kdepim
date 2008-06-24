@@ -169,19 +169,6 @@ UniqueAppWatcher::UniqueAppWatcher( UniqueAppHandlerFactoryBase *factory, Plugin
   // The app is running standalone if 1) that name is known to D-Bus
   const QString serviceName = "org.kde." + plugin->objectName();
   d->mRunningStandalone =
-#ifdef Q_WS_WIN
-    /* This is temporary workaround to address the fact that 
-      the "dbus-daemon needs to be killed to start kontact again" on Windows.
-
-      We are checking whethere there are other processes with the same name as plugin->objectName(),
-      because dbus service could stay not unregistered.
-      Another part of this workaround can be found in kdepim/libkdepim/pimapplication_win.cpp.
-
-      Description of the proposed workaround and the recipe is published at
-      http://techbase.kde.org/Projects/PIM/MS_Windows#.22Locked.22_dbus-daemon 
-    */
-    KPIM::Utils::otherProcessesExist( plugin->objectName() ) &&
-#endif
     QDBusConnection::sessionBus().interface()->isServiceRegistered( serviceName );
 
   QString owner = QDBusConnection::sessionBus().interface()->serviceOwner( serviceName );
