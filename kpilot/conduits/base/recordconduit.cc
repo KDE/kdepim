@@ -46,6 +46,7 @@ RecordConduit::RecordConduit( KPilotLink *o, const QVariantList &a
 	, const QString &databaseName, const QString &conduitName ) :
 	ConduitAction( o, conduitName.toLatin1(), a ),
 	fDatabaseName( databaseName ),
+	fMapping( 0L ),
 	fHHDataProxy( 0L ),
 	fBackupDataProxy( 0L ),
 	fPCDataProxy( 0L )
@@ -56,6 +57,7 @@ RecordConduit::RecordConduit( KPilotLink *o, const QVariantList &a
 
 RecordConduit::~RecordConduit()
 {
+	delete fMapping;
 	delete fHHDataProxy;
 	delete fBackupDataProxy;
 	delete fPCDataProxy;
