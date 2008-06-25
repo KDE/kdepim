@@ -48,9 +48,9 @@ using namespace boost;
 QGpgMESignKeyJob::QGpgMESignKeyJob( Context * context )
   : mixin_type( context ),
     m_userIDsToSign(),
+    m_signingKey(),
     m_checkLevel( 0 ),
     m_exportable( false ),
-    m_signingKey(),
     m_nonRevocable( false ),
     m_started( false )
 {
@@ -68,10 +68,12 @@ static QGpgMESignKeyJob::result_type sign_key( Context * ctx, const Key & key, c
   skei->setUserIDsToSign( uids );
   skei->setCheckLevel( checkLevel );
   skei->setSigningOptions( opts );
-  skei->setSigningKey( signer );
 
   std::auto_ptr<EditInteractor> ei( skei );
 
+  if ( !signer.isNull() )
+      if ( const Error err = ctx->addSigningKey( signer ) )
+          return make_tuple( err, QString() );
   const Error err = ctx->edit( key, ei, data );
   const QString log = _detail::audit_log_as_html( ctx );
   return make_tuple( err, log );

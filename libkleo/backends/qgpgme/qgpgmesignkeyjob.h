@@ -77,9 +77,9 @@ namespace Kleo {
 
   private:
       std::vector<unsigned int> m_userIDsToSign;
+      GpgME::Key m_signingKey;
       unsigned int m_checkLevel;
       bool m_exportable;
-      GpgME::Key m_signingKey;
       bool m_nonRevocable;
       bool m_started;
   };
