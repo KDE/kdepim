@@ -5,6 +5,7 @@ include_directories(
 )
 
 add_subdirectory(keyringeditor)
+add_subdirectory(tests)
 
 set(keyring_SRCS
 	pi-keyring.cc
