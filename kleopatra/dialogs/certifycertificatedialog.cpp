@@ -192,16 +192,19 @@ SummaryPage::SummaryPage( QWidget * parent ) : QWizardPage( parent ), m_complete
     QGridLayout * const layout = new QGridLayout( this );
     QLabel * const uidLabelLabel = new QLabel( i18n( "Signed user IDs:" ) );
     uidLabelLabel->setAlignment( Qt::AlignTop );
-    layout->addWidget( new QLabel( i18n( "<b>Summary:</b>" ) ), 0, 0, 1, 2 );
-    layout->addWidget( uidLabelLabel, 1, 0 );
-    layout->addWidget( m_userIDsLabel = new QLabel, 1, 1 );
-    layout->addWidget( new QLabel( i18n( "Check level:" ) ), 2, 0 );
-    layout->addWidget( m_checkLevelLabel = new QLabel, 2, 1 );
-    layout->addWidget( new QLabel( i18n( "Selected secret certificate:" ) ), 3, 0 );
-    layout->addWidget( m_secretKeyLabel = new QLabel, 3, 1 );
+    int row = 0;
+    layout->addWidget( new QLabel( i18n( "<b>Summary:</b>" ) ), row, 0, 1, 2 );
+    layout->addWidget( uidLabelLabel, ++row, 0 );
+    layout->addWidget( m_userIDsLabel = new QLabel, row, 1 );
+#ifdef KLEO_SIGN_KEY_CERTLEVEL_SUPPORT
+    layout->addWidget( new QLabel( i18n( "Check level:" ) ), ++row, 0 );
+    layout->addWidget( m_checkLevelLabel = new QLabel, row, 1 );
+#endif
+    layout->addWidget( new QLabel( i18n( "Selected secret certificate:" ) ), ++row, 0 );
+    layout->addWidget( m_secretKeyLabel = new QLabel, row, 1 );
     m_secretKeyLabel->setTextFormat( Qt::PlainText );
-    layout->addWidget( m_resultLabel = new QLabel, 4, 0, 1, 2, Qt::AlignCenter );
-    layout->setRowStretch( 4, 1 );
+    layout->addWidget( m_resultLabel = new QLabel, ++row, 0, 1, 2, Qt::AlignCenter );
+    layout->setRowStretch( row, 1 );
     m_resultLabel->setAlignment( Qt::AlignCenter );
 }
 
@@ -216,6 +219,7 @@ void SummaryPage::setSummary( const SummaryPage::Summary & sum ) {
         ids += Qt::escape( Formatting::prettyUserID( key.userID( i ) ) );
     m_userIDsLabel->setText( "<qt>" + ids.join( "<br/>" ) + "</qt>" );
     m_secretKeyLabel->setText( sum.secretKey.isNull() ? i18n( "Default certificate" ) : Formatting::prettyNameAndEMail( sum.secretKey ) );
+#ifdef KLEO_SIGN_KEY_CERTLEVEL_SUPPORT
     switch( sum.checkLevel ) {
         case 0:
             m_checkLevelLabel->setText( i18n( "No statement made" ) );
@@ -230,6 +234,7 @@ void SummaryPage::setSummary( const SummaryPage::Summary & sum ) {
             m_checkLevelLabel->setText( i18n( "Thoroughly checked" ) );
             break;
     }
+#endif
 }
 
 void SummaryPage::setComplete( bool complete ) {
@@ -262,8 +267,10 @@ public:
     {
         selectUserIDsPage = new SelectUserIDsPage( q );
         q->addPage( selectUserIDsPage );
-        selectCheckLevelPage = new SelectCheckLevelPage( q );
-        q->addPage( selectCheckLevelPage );
+        //selectCheckLevelPage = new SelectCheckLevelPage( q );
+        //setting the cert level explicitely is not supported by the backend,
+        //thus we omit the page from the UI
+        //q->addPage( selectCheckLevelPage );
         optionsPage = new OptionsPage( q );
         q->addPage( optionsPage );
         summaryPage = new SummaryPage( q );
@@ -284,7 +291,11 @@ public:
         sum.selectedUserIDs = selectUserIDsPage->selectedUserIDs();
         sum.secretKey = optionsPage->selectedSecretKey();
         sum.certificateToCertify = selectUserIDsPage->certificateToCertify();
+        //PENDING
+#ifdef KLEO_SIGN_KEY_CERTLEVEL_SUPPORT
         sum.checkLevel = selectCheckLevelPage->checkLevel();
+#endif
+
         sum.exportable = optionsPage->exportableCertificationSelected();
         sum.sendToServer = optionsPage->sendToServer();
         return sum;
@@ -336,7 +347,11 @@ bool CertifyCertificateDialog::sendToServer() const {
 }
 
 unsigned int CertifyCertificateDialog::selectedCheckLevel() const {
+    //PENDING
+#ifdef KLEO_SIGN_KEY_CERTLEVEL_SUPPORT
     return d->selectCheckLevelPage->checkLevel();
+#endif
+    return 0;
 }
 
 void CertifyCertificateDialog::connectJob( SignKeyJob * job ) {
