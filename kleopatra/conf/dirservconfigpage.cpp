@@ -43,7 +43,7 @@
 #include <kconfig.h>
 #include <knuminput.h>
 #include <kdialog.h>
-#include <kcomponentdata.h> 
+#include <kcomponentdata.h>
 
 #include <QLabel>
 #include <qdatetimeedit.h>
@@ -224,8 +224,9 @@ void DirectoryServicesConfigurationPage::load()
 
   mWidget->clear();
 
+  // gpgsm/Configuration/keyserver is not provided by older gpgconf versions
   if ( ( mX509ServicesEntry = configEntry( s_x509services_new_componentName, s_x509services_new_groupName, s_x509services_new_entryName,
-                                           Kleo::CryptoConfigEntry::ArgType_String, true ) ) )
+                                           Kleo::CryptoConfigEntry::ArgType_String, /*isList=*/true, /*showError=*/false ) ) )
       mWidget->addX509Services( strings2urls( mX509ServicesEntry->stringValueList() ) );
   else if ( ( mX509ServicesEntry = configEntry( s_x509services_componentName, s_x509services_groupName, s_x509services_entryName,
                                                 Kleo::CryptoConfigEntry::ArgType_LDAPURL, true ) ) )
@@ -362,15 +363,19 @@ Kleo::CryptoConfigEntry* DirectoryServicesConfigurationPage::configEntry( const 
                                                                           const char* groupName,
                                                                           const char* entryName,
                                                                           Kleo::CryptoConfigEntry::ArgType argType,
-                                                                          bool isList )
+                                                                          bool isList,
+                                                                          bool showError )
 {
     Kleo::CryptoConfigEntry* entry = mConfig->entry( componentName, groupName, entryName );
+
     if ( !entry ) {
-        KMessageBox::error( this, i18n( "Backend error: gpgconf does not seem to know the entry for %1/%2/%3", componentName, groupName, entryName ) );
+        if ( showError )
+            KMessageBox::error( this, i18n( "Backend error: gpgconf does not seem to know the entry for %1/%2/%3", componentName, groupName, entryName ) );
         return 0;
     }
     if( entry->argType() != argType || entry->isList() != isList ) {
-        KMessageBox::error( this, i18n( "Backend error: gpgconf has wrong type for %1/%2/%3: %4 %5", componentName, groupName, entryName, entry->argType(), entry->isList() ) );
+        if ( showError )
+            KMessageBox::error( this, i18n( "Backend error: gpgconf has wrong type for %1/%2/%3: %4 %5", componentName, groupName, entryName, entry->argType(), entry->isList() ) );
         return 0;
     }
     return entry;

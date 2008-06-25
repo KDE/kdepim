@@ -65,7 +65,8 @@ private:
                                         const char* groupName,
                                         const char* entryName,
                                         Kleo::CryptoConfigEntry::ArgType argType,
-                                        bool isList );
+                                        bool isList,
+                                        bool showError=true );
 
   Kleo::DirectoryServicesWidget* mWidget;
   QTimeEdit* mTimeout;
