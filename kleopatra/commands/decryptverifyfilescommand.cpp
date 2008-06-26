@@ -139,6 +139,16 @@ void DecryptVerifyFilesCommand::setFiles( const QStringList & files ) {
     d->files = files;
 }
 
+void DecryptVerifyFilesCommand::setOperation( DecryptVerifyOperation op ) {
+    try {
+        d->controller.setOperation( op );
+    } catch ( ... ) {}
+}
+
+DecryptVerifyOperation DecryptVerifyFilesCommand::operation() const {
+    return d->controller.operation();
+}
+
 void DecryptVerifyFilesCommand::doStart() {
 
     try {

@@ -37,6 +37,8 @@
 
 #include <crypto/controller.h>
 
+#include <utils/types.h>
+
 class QStringList;
 
 namespace Kleo {
@@ -52,6 +54,9 @@ namespace Commands {
         ~DecryptVerifyFilesCommand();
 
         void setFiles( const QStringList & files );
+
+        void setOperation( DecryptVerifyOperation operation );
+        DecryptVerifyOperation operation() const;
 
     private:
         /* reimp */ void doStart();
