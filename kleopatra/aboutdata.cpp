@@ -49,8 +49,7 @@ struct about_data {
 static const about_data authors[] = {
   { "Marc Mutz", I18N_NOOP("Current Maintainer"), "mutz@kde.org", 0 },
   { "Steffen Hansen", I18N_NOOP("Former Maintainer"), "hansen@kde.org", 0 },
-  { "Kalle Dalheimer", I18N_NOOP("Original Author"), "kalle@kde.org", 0 },
-  { "Jesper Petersen", I18N_NOOP("Original Author"), "blackie@kde.org", 0 },
+  { "Matthias Kalle Dalheimer", I18N_NOOP("Original Author"), "kalle@kde.org", 0 },
 };
 
 
@@ -76,8 +75,7 @@ static const about_data credits[] = {
 AboutData::AboutData()
   : KAboutData( "kleopatra", 0, ki18n("Kleopatra"),
 		kleopatra_version, ki18n(description), License_GPL,
-		ki18n("(c) 2002 Steffen Hansen, Jesper Pedersen,\n"
-		      "Kalle Dalheimer, Klar\xC3\xA4lvdalens Datakonsult AB\n\n"
+		ki18n("(c) 2002 Steffen Hansen, Matthias Kalle Dalheimer, Klar\xC3\xA4lvdalens Datakonsult AB\n"
 		      "(c) 2004, 2007, 2008 Marc Mutz, Klar\xC3\xA4lvdalens Datakonsult AB") )
 {
   using ::authors;
