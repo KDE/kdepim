@@ -46,6 +46,13 @@ namespace Kleo {
         Opaque,
         Detached
     };
+
+    enum Policy {
+        NoPolicy,
+        Allow,
+        Force,
+        Deny
+    };
 }
 
 #endif // __KLEOPATRA_UTILS_TYPES_H__
