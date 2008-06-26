@@ -41,5 +41,5 @@ install(FILES
         kpgpkey.h
         kpgpui.h
         libkpgp_export.h
-        DESTINATION ${INCLUDE_INSTALL_DIR}/kpgp )
+        DESTINATION ${INCLUDE_INSTALL_DIR}/kpgp COMPONENT Devel )
 
