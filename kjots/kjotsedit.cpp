@@ -45,6 +45,7 @@ KJotsEdit::KJotsEdit ( QWidget *parent ) : KRichTextWidget(parent)
     setWordWrapMode(QTextOption::WordWrap);
     setRichTextSupport( FullTextFormattingSupport
             | FullListSupport
+            | SupportAlignment
             | SupportRuleLine
             | SupportFormatPainting );
 }
