@@ -66,10 +66,6 @@
 #include "commands/certifycertificatecommand.h"
 #include "commands/adduseridcommand.h"
 
-#ifdef ONLY_KLEO
-# include "gpg4win/help.h"
-#endif
-
 #include "utils/detail_p.h"
 #include "utils/gnupg-helper.h"
 #include "utils/stl_util.h"
@@ -360,13 +356,6 @@ MainWindow::Private::Private( MainWindow * qq )
     q->setAcceptDrops( true );
 
     q->setAutoSaveSettings();
-
-#ifdef ONLY_KLEO
-    QAction * const helpAction = q->actionCollection()->action( KStandardAction::name( KStandardAction::HelpContents ) );
-    assert( helpAction );
-    helpAction->disconnect();
-    connect( helpAction, SIGNAL(triggered(bool)), q, SLOT(showHandbook()) );
-#endif
 }
 
 MainWindow::Private::~Private() {}
@@ -533,10 +522,6 @@ void MainWindow::Private::configureBackend() {
         QDBusConnection::sessionBus().send(message);
 #endif
     }
-}
-
-void MainWindow::Private::showHandbook() {
-    Kleo::Gpg4Win::showHelp( q, QCoreApplication::applicationName() );
 }
 
 void MainWindow::Private::slotConfigCommitted() {

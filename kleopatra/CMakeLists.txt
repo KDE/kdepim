@@ -176,8 +176,6 @@ set( _kleopatra_SRCS
   crypto/controller.cpp
   crypto/signencryptfilescontroller.cpp
 
-  gpg4win/help.cpp
-
   commands/command.cpp
   commands/gnupgprocesscommand.cpp
   commands/detailscommand.cpp
