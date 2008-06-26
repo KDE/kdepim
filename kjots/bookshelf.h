@@ -76,6 +76,7 @@ protected:
 
     virtual void dragEnterEvent ( QDragEnterEvent * );
     virtual void dragMoveEvent ( QDragMoveEvent * );
+    virtual void contextMenuEvent( QContextMenuEvent* );
 
     Qt::SortOrder sortOrder;
 
@@ -85,6 +86,9 @@ protected slots:
     void itemWasCollapsed(QTreeWidgetItem*);
     void copyLinkAddress();
     void changeColor();
+
+private:
+    KActionCollection* m_actionCollection;
 };
 
 #endif //bookshelf_included

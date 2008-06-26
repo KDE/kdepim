@@ -242,6 +242,7 @@ KJotsComponent::KJotsComponent(QWidget* parent, KActionCollection *collection) :
 
     KStandardAction::find( this, SLOT( onShowSearch() ), actionCollection );
     action = KStandardAction::findNext( this, SLOT( onRepeatSearch() ), actionCollection );
+    action->setEnabled(false);
     KStandardAction::replace( this, SLOT( onShowReplace() ), actionCollection );
 
     action = actionCollection->addAction("rename_entry");
@@ -259,6 +260,11 @@ KJotsComponent::KJotsComponent(QWidget* parent, KActionCollection *collection) :
     action = actionCollection->addAction("change_color");
     action->setIcon(KIcon("format-fill-color"));
     action->setText(i18n("Change Color..."));
+    // connected to protected slot in bookshelf.cpp
+
+    action = actionCollection->addAction("copy_link_address");
+    action->setText(i18n("Copy Link Address"));
+    // connected to protected slot in bookshelf.cpp
 
     KStandardAction::preferences(this, SLOT(configure()), actionCollection);
 
@@ -317,13 +323,27 @@ void KJotsComponent::DelayedInitialization()
     connect(replaceDialog, SIGNAL(optionsChanged()), SLOT(onUpdateReplace()) );
     connect(replaceAllPages, SIGNAL(stateChanged(int)), SLOT(onUpdateReplace()) );
 
+    // Actions are enabled or disabled based on whether the selection is a single page, a single book
+    // multiple selections, or no selection.
+    //
+    // The entryActions are enabled for all single pages and single books, and the multiselectionActions
+    // are enabled when the user has made multiple selections.
+    //
+    // Some actions are in neither (eg, new book) and are available even when there is no selection.
+    //
+    // Some actions are in both, so that they are available for valid selections, but not available
+    // for invalid selections (eg, print/find are disabled when there is no selection)
+
     // Actions for a single item selection.
     entryActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Find)) );
+    entryActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Print)) );
     entryActions.insert( actionCollection->action("go_next_book") );
     entryActions.insert( actionCollection->action("go_prev_book") );
     entryActions.insert( actionCollection->action("del_folder") );
     entryActions.insert( actionCollection->action("rename_entry") );
     entryActions.insert( actionCollection->action("change_color") );
+    entryActions.insert( actionCollection->action("save_to") );
+    entryActions.insert( actionCollection->action("copy_link_address") );
 
     // Actions that are used only when a page is selected.
     pageActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Cut)) );
@@ -337,11 +357,15 @@ void KJotsComponent::DelayedInitialization()
     pageActions.insert( actionCollection->action("manage_link") );
     pageActions.insert( actionCollection->action("insert_checkmark") );
 
-    // Actions that are used only when a page is selected.
+    // Actions that are used only when a book is selected.
     bookActions.insert( actionCollection->action("save_to_book") );
 
-    // Actions that are used only when multiple items are selected.
+    // Actions that are used when multiple items are selected.
+    multiselectionActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Find)) );
+    multiselectionActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Print)));
     multiselectionActions.insert( actionCollection->action("del_mult") );
+    multiselectionActions.insert( actionCollection->action("save_to") );
+    multiselectionActions.insert( actionCollection->action("change_color") );
 
     bookshelf->DelayedInitialization(actionCollection);
     editor->DelayedInitialization(actionCollection, bookshelf);
@@ -355,6 +379,8 @@ void KJotsComponent::DelayedInitialization()
         quint64 currentSelection = KJotsSettings::currentSelection();
         bookshelf->jumpToId(currentSelection);
     }
+
+    updateMenu();
 }
 
 inline QTextEdit* KJotsComponent::activeEditor() {
@@ -575,6 +601,8 @@ void KJotsComponent::onStartSearch()
         }
     }
 
+    actionCollection->action(KStandardAction::name(KStandardAction::FindNext))->setEnabled(true);
+
     onRepeatSearch();
 }
 
@@ -585,14 +613,16 @@ void KJotsComponent::onRepeatSearch()
 {
     if ( search(false) == 0 ) {
         KMessageBox::sorry(0, i18n("<qt>No matches found.</qt>"));
+        actionCollection->action(KStandardAction::name(KStandardAction::FindNext))->setEnabled(false);
     }
 }
 
 /*!
-    Called when user presses Cancel in find dialog. Just a placeholder for now.
+    Called when user presses Cancel in find dialog.
 */
 void KJotsComponent::onEndSearch()
 {
+    actionCollection->action(KStandardAction::name(KStandardAction::FindNext))->setEnabled(false);
 }
 
 /*!

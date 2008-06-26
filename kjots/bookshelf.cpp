@@ -30,6 +30,8 @@
 #include <QClipboard>
 #include <QHeaderView>
 #include <QDragMoveEvent>
+#include <QMenu>
+#include <QContextMenuEvent>
 
 #include <kaction.h>
 #include <kmessagebox.h>
@@ -61,7 +63,6 @@ Bookshelf::Bookshelf ( QWidget *parent ) : QTreeWidget(parent)
     setDragEnabled(true);
     setAcceptDrops(true);
     setDropIndicatorShown(true);
-    setContextMenuPolicy(Qt::ActionsContextMenu);
 
     connect(this, SIGNAL(itemChanged(QTreeWidgetItem*, int)), SLOT(entryRenamed(QTreeWidgetItem*, int)));
 
@@ -70,34 +71,17 @@ Bookshelf::Bookshelf ( QWidget *parent ) : QTreeWidget(parent)
 void Bookshelf::DelayedInitialization ( KActionCollection *actionCollection ) {
     loadBooks();
 
-    QAction *sep = new QAction(this);
-    sep->setSeparator(true);
-
-    QAction *action;
-    action = actionCollection->addAction("copy_link_address");
-    action->setText(i18n("Copy Link Address"));
-    connect(action, SIGNAL(triggered()), SLOT(copyLinkAddress()));
-
-    // Set up the context menu on the bookshelf.
-    // TODO: Move this to the xml file.
-    addAction(actionCollection->action("new_book"));
-    addAction(actionCollection->action("new_page"));
-    addAction(actionCollection->action("rename_entry"));
-    addAction(actionCollection->action("save_to"));
-    addAction(actionCollection->action("copy_link_address"));
-    addAction(actionCollection->action("change_color"));
-    addAction(sep);
-    addAction(actionCollection->action("del_folder"));
-    addAction(actionCollection->action("del_page"));
-    addAction(actionCollection->action("del_mult"));
-
     //These need to be connected after books are loaded.
     connect(this, SIGNAL(itemExpanded(QTreeWidgetItem*)), SLOT(itemWasExpanded(QTreeWidgetItem*)));
     connect(this, SIGNAL(itemCollapsed(QTreeWidgetItem*)), SLOT(itemWasCollapsed(QTreeWidgetItem*)));
 
+    connect(actionCollection->action("copy_link_address"), SIGNAL(triggered()),
+        this, SLOT(copyLinkAddress()));
     connect(actionCollection->action("change_color"), SIGNAL(triggered()),
         this, SLOT(changeColor()));
     connect(header(), SIGNAL(sectionClicked(int)), this, SLOT(onHeaderClick(int)));
+
+    m_actionCollection = actionCollection;
 
     return;
 }
@@ -166,6 +150,41 @@ void Bookshelf::loadBooks ( void )
     setUpdatesEnabled(true);
 
     return;
+}
+
+void Bookshelf::contextMenuEvent( QContextMenuEvent* event)
+{
+    QMenu *popup = new QMenu(this);
+
+    // Set up the context menu on the bookshelf.
+    // TODO: Move this to the xml file.
+    popup->addAction(m_actionCollection->action("new_book"));
+    popup->addAction(m_actionCollection->action("new_page"));
+    popup->addAction(m_actionCollection->action("rename_entry"));
+    popup->addAction(m_actionCollection->action("save_to"));
+    popup->addAction(m_actionCollection->action("copy_link_address"));
+    popup->addAction(m_actionCollection->action("change_color"));
+    popup->addSeparator();
+
+    QList<QTreeWidgetItem*> selection = selectedItems();
+    if ( selection.size() == 1 ) {
+        KJotsEntry* entry = static_cast<KJotsEntry*>(selection.at(0));
+        if ( entry->isBook() ) {
+            popup->addAction(m_actionCollection->action("del_folder"));
+        } else {
+            popup->addAction(m_actionCollection->action("del_folder"));
+            popup->addAction(m_actionCollection->action("del_page"));
+        }
+    } else if ( selection.size() < 1 ) {
+        // No meaningful selection.
+    } else {
+        // Multiple items selected.
+        popup->addAction(m_actionCollection->action("del_mult"));
+    }
+
+    popup->exec( event->globalPos() );
+
+    delete popup;
 }
 
 /*!
