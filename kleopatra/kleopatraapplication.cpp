@@ -49,11 +49,7 @@
 # include <uiserver/uiserver.h>
 #endif
 
-//#include <commands/encryptfilescommand.h>
-//#include <commands/signfilescommand.h>
 #include <commands/signencryptfilescommand.h>
-//#include <commands/decryptfilescommand.h>
-//#include <commands/verifyfilescommand.h>
 #include <commands/decryptverifyfilescommand.h>
 
 #include <KGlobal>
@@ -292,11 +288,17 @@ void KleopatraApplication::importCertificatesFromFile( const QStringList & files
 }
 
 void KleopatraApplication::encryptFiles( const QStringList & files ) {
-    //( new EncryptFilesCommand( files, 0 ) )->start();
+    SignEncryptFilesCommand * const cmd = new SignEncryptFilesCommand( files, 0 );
+    cmd->setEncryptionPolicy( Force );
+    cmd->setSigningPolicy( Allow );
+    cmd->start();
 }
 
 void KleopatraApplication::signFiles( const QStringList & files ) {
-    //( new SignFilesCommand( files, 0 ) )->start();
+    SignEncryptFilesCommand * const cmd = new SignEncryptFilesCommand( files, 0 );
+    cmd->setSigningPolicy( Force );
+    cmd->setEncryptionPolicy( Deny );
+    cmd->start();
 }
 
 void KleopatraApplication::signEncryptFiles( const QStringList & files ) {
