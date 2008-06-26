@@ -64,6 +64,7 @@ public:
 
     void setFiles( const std::vector<boost::shared_ptr<QFile> >& files );
     void setOperation( DecryptVerifyOperation op );
+    DecryptVerifyOperation operation() const;
     void start();
 
 public Q_SLOTS:

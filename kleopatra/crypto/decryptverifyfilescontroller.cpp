@@ -381,6 +381,11 @@ void DecryptVerifyFilesController::setOperation( DecryptVerifyOperation op )
     d->m_operation = op;
 }
 
+DecryptVerifyOperation DecryptVerifyFilesController::operation() const
+{
+    return d->m_operation;
+}
+
 void DecryptVerifyFilesController::Private::cancelAllTasks() {
 
     // we just kill all runnable tasks - this will not result in
