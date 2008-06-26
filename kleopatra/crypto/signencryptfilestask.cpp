@@ -481,6 +481,7 @@ void SignEncryptFilesTask::Private::slotResult( const EncryptionResult & result 
             kleo_assert( !result.isNull() );
             output->finalize();
             outputCreated = true;
+            input->finalize();
             if ( removeInput ) {
                 inputRemoved = QFile::remove( inputFileName );
             }
