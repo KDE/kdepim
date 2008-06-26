@@ -64,6 +64,12 @@ public Q_SLOTS:
     void openOrRaiseMainWindow();
     void openOrRaiseConfigDialog();
     void importCertificatesFromFile( const QStringList & files );
+    void encryptFiles( const QStringList & files );
+    void signFiles( const QStringList & files );
+    void signEncryptFiles( const QStringList & files );
+    void decryptFiles( const QStringList & files );
+    void verifyFiles( const QStringList & files );
+    void decryptVerifyFiles( const QStringList & files );
 
 private:
     class Private;

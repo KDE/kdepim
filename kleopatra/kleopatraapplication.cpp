@@ -49,20 +49,32 @@
 # include <uiserver/uiserver.h>
 #endif
 
+//#include <commands/encryptfilescommand.h>
+//#include <commands/signfilescommand.h>
+#include <commands/signencryptfilescommand.h>
+//#include <commands/decryptfilescommand.h>
+//#include <commands/verifyfilescommand.h>
+#include <commands/decryptverifyfilescommand.h>
+
 #include <KGlobal>
 #include <KIconLoader>
 #include <KLocale>
 #include <KCmdLineOptions>
 #include <KDebug>
+#include <KUrl>
 
 #include <QFile>
 #include <QDir>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/range.hpp>
+#include <boost/bind.hpp>
+#include <boost/mem_fn.hpp>
 
 #include <memory>
 
 using namespace Kleo;
+using namespace Kleo::Commands;
 using namespace boost;
 
 static void add_resources() {
@@ -71,13 +83,34 @@ static void add_resources() {
   KIconLoader::global()->addAppDir( "kdepim" );
 }
 
+static const struct {
+    const char * option;
+    const char * description;
+    char short_option[4];
+} kleo_options[] = {
+    { "daemon",             I18N_NOOP("Run UI server only, hide main window"),  ""  },
+    { "import-certificate", I18N_NOOP("Import certificate file(s)"),            "i" },
+    { "encrypt",            I18N_NOOP("Encrypt file(s)"),                       "e" },
+    { "sign",               I18N_NOOP("Sign file(s)"),                          "s" },
+    { "encrypt-sign",       I18N_NOOP("Encrypt and/or sign file(s)"),           "E" },
+    { "decrypt",            I18N_NOOP("Decrypt file(s)"),                       "d" },
+    { "verify",             I18N_NOOP("Verify file/signature"),                 "V" },
+    { "decrypt-verify",     I18N_NOOP("Decrypt and/or verify files(s)"),        "D" },
+    //{ "show-certificate",   I18N_NOOP("Show Certificate(s) by fingerprint(s)"), ""  },
+};
+    
+
 static KCmdLineOptions make_kleopatra_args() {
     KCmdLineOptions options;
-    options.add("daemon", ki18n("Run UI server only, hide main window"));
-    options.add("import-certificate ", ki18n("Name of certificate file to import"));
 #ifdef HAVE_USABLE_ASSUAN
     options.add("uiserver-socket <argument>", ki18n("Location of the socket the ui server is listening on" ));
 #endif
+    for ( unsigned int i = 0 ; i < sizeof kleo_options / sizeof *kleo_options ; ++i ) {
+        if ( *kleo_options[i].short_option )
+            options.add( kleo_options[i].short_option );
+        options.add( kleo_options[i].option, ki18n( kleo_options[i].description ) );
+    }
+    options.add("+[File]", ki18n("File(s) to process"));
     return options;
 }
 
@@ -162,13 +195,69 @@ KleopatraApplication::~KleopatraApplication() {
     KGlobal::config()->sync();
 }
 
+static QStringList files_from_args( const shared_ptr<const KCmdLineArgs> & args ) {
+    QStringList result;
+    for ( int i = 0, end = args->count() ; i < end ; ++i ) {
+        const KUrl url = args->url(i);
+        if ( url.protocol() == QLatin1String("file") )
+            result.push_back( url.toLocalFile() );
+    }
+    return result;
+}
+
+namespace {
+    typedef void (KleopatraApplication::*Func)( const QStringList & );
+    struct _Funcs {
+        const char * opt;
+        Func func;
+    };
+}
+
 int KleopatraApplication::newInstance() {
-    kDebug() << d->ignoreNewInstance;
+    kDebug() << "ignoreNewInstance =" << d->ignoreNewInstance;
     if ( d->ignoreNewInstance )
         return 0;
-    KCmdLineArgs * const args = KCmdLineArgs::parsedArgs();
-    importCertificatesFromFile( args->getOptionList("import-certificate") );
-    args->clear();
+
+    const shared_ptr<KCmdLineArgs> args( KCmdLineArgs::parsedArgs(), mem_fn( &KCmdLineArgs::clear ) );
+
+    const QStringList files = files_from_args( args );
+
+    static const _Funcs funcs[] = {
+        { "import-certificate", &KleopatraApplication::importCertificatesFromFile },
+        { "encrypt", &KleopatraApplication::encryptFiles               },
+        { "sign", &KleopatraApplication::signFiles                  },
+        { "encrypt-sign", &KleopatraApplication::signEncryptFiles           },
+        { "decrypt", &KleopatraApplication::decryptFiles               },
+        { "verify", &KleopatraApplication::verifyFiles                },
+        { "decrypt-verify", &KleopatraApplication::decryptVerifyFiles         },
+    };
+
+    const _Funcs * const it1 = std::find_if( begin( funcs ), end( funcs ),
+                                             bind( &KCmdLineArgs::isSet, args, bind( &_Funcs::opt, _1 ) ) );
+
+    if ( const Func func = it1 == end( funcs ) ? 0 : it1->func ) {
+        const _Funcs * it2 = std::find_if( it1+1, end( funcs ),
+                                           bind( &KCmdLineArgs::isSet, args, bind( &_Funcs::opt, _1 ) ) );
+        if ( it2 != end( funcs ) ) {
+            kDebug() << "ambiguous command" << it1->opt << "vs." << it2->opt;
+            return 1;
+        }
+        if ( files.empty() ) {
+            kDebug() << it1->opt << "without arguments";
+            return 1;
+        }
+        kDebug() << "found" << it1->opt;
+        (this->*func)( files );
+    } else {
+        if ( files.empty() ) {
+            kDebug() << "openOrRaiseMainWindow";
+            openOrRaiseMainWindow();
+        } else {
+            kDebug() << "files without command"; // possible?
+            return 1;
+        }
+    }
+
     return 0;
 }
 
@@ -197,9 +286,33 @@ void KleopatraApplication::openOrRaiseConfigDialog() {
 }
 
 void KleopatraApplication::importCertificatesFromFile( const QStringList & files ) {
-    d->sysTray.openOrRaiseMainWindow();
+    openOrRaiseMainWindow();
     if ( !files.empty() )
         d->sysTray.mainWindow()->importCertificatesFromFile( files );
+}
+
+void KleopatraApplication::encryptFiles( const QStringList & files ) {
+    //( new EncryptFilesCommand( files, 0 ) )->start();
+}
+
+void KleopatraApplication::signFiles( const QStringList & files ) {
+    //( new SignFilesCommand( files, 0 ) )->start();
+}
+
+void KleopatraApplication::signEncryptFiles( const QStringList & files ) {
+    ( new SignEncryptFilesCommand( files, 0 ) )->start();
+}
+
+void KleopatraApplication::decryptFiles( const QStringList & files ) {
+    //( new DecryptFilesCommand( files, 0 ) )->start();
+}
+
+void KleopatraApplication::verifyFiles( const QStringList & files ) {
+    //( new VerifyFilesCommand( files, 0 ) )->start();
+}
+
+void KleopatraApplication::decryptVerifyFiles( const QStringList & files ) {
+    ( new DecryptVerifyFilesCommand( files, 0 ) )->start();
 }
 
 void KleopatraApplication::setIgnoreNewInstance( bool ignore ) {
