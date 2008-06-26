@@ -91,8 +91,6 @@ public:
     void updateUi();
 
 private:
-
-    Operation operation;
     QButtonGroup* signEncryptGroup;
     QRadioButton* signAndEncryptRB;
     QRadioButton* encryptOnlyRB;
@@ -116,8 +114,8 @@ private:
 };
 
 SignerResolvePage::Private::Private( SignerResolvePage * qq )
-    : q( qq ), operation( SignAndEncrypt ), protocol( GpgME::UnknownProtocol ),
-      signingMutable( true ), encryptionMutable( true ), 
+    : q( qq ), protocol( GpgME::UnknownProtocol ),
+      signingMutable( true ), encryptionMutable( true ),
       signingSelected( false ), encryptionSelected( false ), validator( new ValidatorImpl )
 
 {
@@ -175,7 +173,7 @@ SignerResolvePage::Private::Private( SignerResolvePage * qq )
     signerLayout->addWidget( cmsLabelLabel, 2, 0 );
     cmsLabel = new QLabel;
     signerLayout->addWidget( cmsLabel, 2, 1, 1, 1, Qt::AlignLeft );
-    
+
     selectCertificatesButton = new QPushButton;
     selectCertificatesButton->setText( i18n( "Change Signing Certificates..." ) );
     selectCertificatesButton->setSizePolicy( QSizePolicy::Preferred, QSizePolicy::Fixed );
@@ -188,7 +186,6 @@ SignerResolvePage::Private::Private( SignerResolvePage * qq )
 
     setCertificates( QMap<GpgME::Protocol, GpgME::Key>() );
     updateModeSelectionWidgets();
-    updateUi();
 }
 
 void SignerResolvePage::setValidator( const boost::shared_ptr<SignerResolvePage::Validator>& validator )
@@ -242,6 +239,7 @@ void SignerResolvePage::Private::updateModeSelectionWidgets()
     signAndEncryptRB->setVisible( buttonsVisible );
     signingBox->setVisible( !noSigning );
     encryptBox->setVisible( !noEncryption );
+    updateUi();
 }
 
 void SignerResolvePage::Private::selectCertificates()
@@ -249,11 +247,11 @@ void SignerResolvePage::Private::selectCertificates()
     QPointer<SigningCertificateSelectionDialog> dlg = new SigningCertificateSelectionDialog( q );
     if ( dlg->exec() == QDialog::Accepted && dlg )
     {
-        const QMap<Protocol, Key> certs = dlg->selectedCertificates(); 
+        const QMap<Protocol, Key> certs = dlg->selectedCertificates();
         setCertificates( certs );
         if ( signingPreferences && dlg->rememberAsDefault() ) {
             signingPreferences->setPreferredCertificate( OpenPGP, certs.value( OpenPGP ) );
-            signingPreferences->setPreferredCertificate( CMS, certs.value( CMS ) );    
+            signingPreferences->setPreferredCertificate( CMS, certs.value( CMS ) );
         }
     }
 
@@ -263,16 +261,23 @@ void SignerResolvePage::Private::selectCertificates()
 
 void SignerResolvePage::Private::setOperation( int mode_ )
 {
-    operation = static_cast<SignerResolvePage::Operation>( mode_ );
-    signingBox->setEnabled( operation != EncryptOnly );
-    encryptBox->setEnabled( operation != SignOnly );
+    const Operation op = static_cast<SignerResolvePage::Operation>( mode_ );
+    signingBox->setEnabled( op != EncryptOnly );
+    encryptBox->setEnabled( op != SignOnly );
     updateUi();
 }
 
 
 SignerResolvePage::Operation SignerResolvePage::operation() const
 {
-    return d->operation;
+    const bool encrypt = encryptionSelected();
+    const bool sign = signingSelected();
+    assert( encrypt || sign );
+    if ( !sign )
+        return EncryptOnly;
+    if ( !encrypt )
+        return SignOnly;
+    return SignAndEncrypt;
 }
 
 
@@ -285,7 +290,7 @@ SignerResolvePage::SignerResolvePage( QWidget * parent, Qt::WFlags f )
 
 SignerResolvePage::~SignerResolvePage() {}
 
-void SignerResolvePage::setSignersAndCandidates( const std::vector<KMime::Types::Mailbox> & signers, 
+void SignerResolvePage::setSignersAndCandidates( const std::vector<KMime::Types::Mailbox> & signers,
                                                  const std::vector< std::vector<GpgME::Key> > & keys )
 {
     kleo_assert( signers.empty() || signers.size() == keys.size() );
@@ -294,7 +299,7 @@ void SignerResolvePage::setSignersAndCandidates( const std::vector<KMime::Types:
     {
     case 0:
         d->signerLabel->setText( QString() ); // TODO: use default identity?
-        break;        
+        break;
     case 1:
         d->signerLabel->setText( signers.front().prettyAddress() );
         break;
@@ -386,7 +391,7 @@ void SignerResolvePage::setEncryptionUserMutable( bool ismutable )
     d->encryptionMutable = ismutable;
     d->updateModeSelectionWidgets();
 }
-        
+
 void SignerResolvePage::setSigningUserMutable( bool ismutable )
 {
     d->signingMutable = ismutable;
@@ -415,7 +420,7 @@ void SignerResolvePage::setRemoveUnencryptedFile( bool remove )
 
 void SignerResolvePage::setSigningPreferences( const boost::shared_ptr<SigningPreferences>& prefs )
 {
-    d->signingPreferences = prefs; 
+    d->signingPreferences = prefs;
     QMap<Protocol,Key> map;
     map[OpenPGP] = prefs ? prefs->preferredCertificate( OpenPGP ) : Key();
     map[CMS] = prefs ? prefs->preferredCertificate( CMS ) : Key();
