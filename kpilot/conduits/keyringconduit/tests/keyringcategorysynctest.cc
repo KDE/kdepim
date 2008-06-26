@@ -25,6 +25,7 @@
 */
 
 #include <QtTest>
+#include <QFile>
 
 #include "qtest_kde.h"
 
@@ -38,6 +39,9 @@ class KeyringCategorySyncTest : public QObject
 {
 	Q_OBJECT
 
+public:
+	KeyringCategorySyncTest() : fConduit( 0L ) {};
+
 private: // members
 	TestKeyringConduit *fConduit;	
 	
@@ -45,6 +49,11 @@ private: // members
 	QMap<QString, QString> fTestRecordIds;
 
 private: // methods
+	// General setup. WARNING: Make sure you call this before every test. Trying
+	// to sync twice without reloading is not appreciated by the proxies due to
+	// the nature of their behavior.
+	void init();
+	
 	// Sets up the preconditions for test1.
 	void initTest1();
 	// Sets up the preconditions for test2.
@@ -52,6 +61,15 @@ private: // methods
 
 private slots:
 	void initTestCase();
+	
+	/**
+	 * Preconditions:
+	 * - A category which is not already on the HHDataProxy is added.
+	 *
+	 * Postconditions:
+	 * - After a HHDataProxy::commit() the category should be in the database file.
+	 */
+	void test0();
 	
 	/**
 	 * Preconditions:
@@ -95,16 +113,51 @@ private slots:
  * 3: Phone
  */
 
-void KeyringCategorySyncTest::initTestCase()
+void KeyringCategorySyncTest::test0()
 {
-	Pilot::setupPilotCodec( CSL1( "ISO8859-15" ) );
+	// Let's make sure that the file does not already exists.
+	QFile f( "test.pdb" );
+	if( f.exists() )
+	{
+		f.remove();
+	}
 
-	// NOTE: 2 == eHHOverrides, this is important for the solveConflict() method
-	QVariantList args;
-	args << CSL1( "--hotsync" ) << CSL1( "--conflictResolution 2" );
+	// Let's create a keyring proxy for a local file.
+	TestKeyringProxy* tmp = new TestKeyringProxy( "test.pdb" );
+	tmp->openDatabase( "test" );
+	tmp->createDataStore();
 	
-	fConduit = new TestKeyringConduit( args );
-	fConduit->initDataProxies();
+	// We want of course check HHDataProxy so change the pointer type to be sure
+	// that the HHDataProxy methods, as far as implemented are called.
+	HHDataProxy* proxy = tmp;
+	
+	// It should not have the new category.
+	QVERIFY( !proxy->containsCategory( "NewCategory" ) );
+	
+	// Let's add the new category now.
+	proxy->addGlobalCategory( "NewCategory" );
+	
+	// It now should have the new category.
+	QVERIFY( proxy->containsCategory( "NewCategory" ) );
+	
+	// Let's commit the changes and check if it's still there.
+	proxy->commit();
+	QVERIFY( proxy->containsCategory( "NewCategory" ) );
+	
+	// Now we reload the proxy to see if the changes are actually saved to the
+	// file.
+	delete proxy;
+	
+	// The keyring data proxy needs a pass to open correctly.
+	tmp = new TestKeyringProxy( "test.pdb" );
+	tmp->openDatabase( "test" );
+	
+	proxy = tmp;
+	
+	QVERIFY( proxy->containsCategory( "NewCategory" ) );
+	
+	// And clean up.
+	delete proxy;
 }
 
 void KeyringCategorySyncTest::test1()
@@ -138,10 +191,60 @@ void KeyringCategorySyncTest::test1()
 
 void KeyringCategorySyncTest::test2()
 {
+	// Set up the conduit and the dataproxies.
+	initTest2();
+	
+	// Preconditions:
+	QVERIFY( fConduit->pcProxy()->categories().contains( "NewCategory1" ) );
+	QVERIFY( (uint) fConduit->hhProxy()->categories().size() < Pilot::CATEGORY_COUNT  );
+	
+	QString pcId = fTestRecordIds.value( "test2" );
+	QString hhId = fConduit->mapping()->hhRecordId( pcId );
+	QVERIFY( hhId.isEmpty() );
+	
+	KeyringHHRecord* pcRec = fConduit->pcProxy()->record( pcId );
+	QVERIFY( pcRec );
+	QCOMPARE( pcRec->categories().size(), 1 );
+	QCOMPARE( pcRec->category(), CSL1( "NewCategory1" ) );
+	
+	// Sync
+	fConduit->hotSync();
+	
+	// Postconditions
+	QVERIFY( fConduit->hhProxy()->categories().contains( "NewCategory1" ) );
+	
+	hhId = fConduit->mapping()->hhRecordId( pcId );
+	QVERIFY( !hhId.isEmpty() );
+	
+	KeyringHHRecord *hhRec = fConduit->hhProxy()->record( hhId );
+	QVERIFY( hhRec );
+	QCOMPARE( hhRec->categories().size(), 1 );
+	QCOMPARE( hhRec->category(), CSL1( "NewCategory1" ) );
+}
+
+/* ************************** INIT METHODS ********************************** */
+
+void KeyringCategorySyncTest::initTestCase()
+{
+	Pilot::setupPilotCodec( CSL1( "ISO8859-15" ) );
+}
+
+void KeyringCategorySyncTest::init()
+{
+	delete fConduit;
+
+	// NOTE: 2 == eHHOverrides, this is important for the solveConflict() method
+	QVariantList args;
+	args << CSL1( "--hotsync" ) << CSL1( "--conflictResolution 2" );
+	
+	fConduit = new TestKeyringConduit( args );
+	fConduit->initDataProxies();
 }
 
 void KeyringCategorySyncTest::initTest1()
 {
+	init();
+
 	KeyringHHRecord* rec = fConduit->pcProxy()->createRecord();
 	fConduit->pcProxy()->setCategory( rec, CSL1( "Banking" ) );
 	fConduit->pcProxy()->addRecord( rec );
@@ -151,11 +254,15 @@ void KeyringCategorySyncTest::initTest1()
 
 void KeyringCategorySyncTest::initTest2()
 {
+	init();
+	
 	KeyringHHRecord* rec = fConduit->pcProxy()->createRecord();
-	fConduit->pcProxy()->setCategory( rec, CSL1( "Banking" ) );
+
+	fConduit->pcProxy()->addGlobalCategory( CSL1( "NewCategory1" ) );
+	fConduit->pcProxy()->setCategory( rec, CSL1( "NewCategory1" ) );
 	fConduit->pcProxy()->addRecord( rec );
 	
-	fTestRecordIds.insert( "test1", rec->id() );
+	fTestRecordIds.insert( "test2", rec->id() );
 }
 
 void KeyringCategorySyncTest::cleanupTestCase()

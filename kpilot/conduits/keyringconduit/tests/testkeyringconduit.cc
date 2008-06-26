@@ -39,9 +39,16 @@ void TestKeyringConduit::hotSync()
 {
 	hotOrFullSync();
 	
+	// Make sure that the synced records get stored so that we can examine the
+	// datastores.
 	hhDataProxy->commit();
 	backupDataProxy->commit();
 	pcDataProxy->commit();
+	
+	// And make sure we don't sync the current records next time.
+	hhDataProxy->syncFinished();
+	backupDataProxy->syncFinished();
+	pcDataProxy->syncFinished();
 }
 
 IDMapping* TestKeyringConduit::mapping() const
