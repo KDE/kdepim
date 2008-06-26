@@ -38,6 +38,10 @@ bool TestKeyringConduit::initDataProxies()
 void TestKeyringConduit::hotSync()
 {
 	hotOrFullSync();
+	
+	hhDataProxy->commit();
+	backupDataProxy->commit();
+	pcDataProxy->commit();
 }
 
 IDMapping* TestKeyringConduit::mapping() const

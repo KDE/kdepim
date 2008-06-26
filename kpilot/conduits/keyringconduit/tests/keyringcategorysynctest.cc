@@ -47,6 +47,8 @@ private: // members
 private: // methods
 	// Sets up the preconditions for test1.
 	void initTest1();
+	// Sets up the preconditions for test2.
+	void initTest2();
 
 private slots:
 	void initTestCase();
@@ -64,6 +66,21 @@ private slots:
 	 * - It has the same category as on the pc.
 	 */
 	void test1();
+	
+	/**
+	 * Preconditions:
+	 * - A new record is added on the pc side.
+	 * - There is no mapping yet for the record.
+	 * - It has a category that is not yet available on the handheld
+	 * - The handheld has room for a new category.
+	 *
+	 * Postconditions:
+	 * - There is a mapping for the record.
+	 * - The category of the pc record is added tot the handheld
+	 * - There is a record added to the hh.
+	 * - It has the same category as on the pc.
+	 */
+	void test2();
 	
 	
 	void cleanupTestCase();
@@ -119,11 +136,24 @@ void KeyringCategorySyncTest::test1()
 	QCOMPARE( hhRec->category(), CSL1( "Banking" ) );
 }
 
+void KeyringCategorySyncTest::test2()
+{
+}
+
 void KeyringCategorySyncTest::initTest1()
 {
 	KeyringHHRecord* rec = fConduit->pcProxy()->createRecord();
-	fConduit->pcProxy()->addRecord( rec );
 	fConduit->pcProxy()->setCategory( rec, CSL1( "Banking" ) );
+	fConduit->pcProxy()->addRecord( rec );
+	
+	fTestRecordIds.insert( "test1", rec->id() );
+}
+
+void KeyringCategorySyncTest::initTest2()
+{
+	KeyringHHRecord* rec = fConduit->pcProxy()->createRecord();
+	fConduit->pcProxy()->setCategory( rec, CSL1( "Banking" ) );
+	fConduit->pcProxy()->addRecord( rec );
 	
 	fTestRecordIds.insert( "test1", rec->id() );
 }
