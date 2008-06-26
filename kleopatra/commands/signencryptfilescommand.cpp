@@ -140,6 +140,76 @@ void SignEncryptFilesCommand::setFiles( const QStringList & files ) {
     d->files = files;
 }
 
+void SignEncryptFilesCommand::setSigningPolicy( Policy policy ) {
+    unsigned int mode = d->controller.operationMode();
+    mode &= ~SignEncryptFilesController::SignMask;
+    switch ( policy ) {
+    case NoPolicy:
+    case Allow:
+        mode |= SignEncryptFilesController::SignAllowed ;
+        break;
+    case Deny:
+        mode |= SignEncryptFilesController::SignDisallowed ;
+        break;
+    case Force:
+        mode |= SignEncryptFilesController::SignForced ;
+        break;
+    }
+    try {
+        d->controller.setOperationMode( mode );
+    } catch ( ... ) {}
+}
+
+Policy SignEncryptFilesCommand::signingPolicy() const {
+    const unsigned int mode = d->controller.operationMode();
+    switch ( mode & SignEncryptFilesController::SignMask ) {
+    default:
+        assert( !"This shouldn't happen!" );
+        return NoPolicy;
+    case SignEncryptFilesController::SignAllowed:
+        return Allow;
+    case SignEncryptFilesController::SignForced:
+        return Force;
+    case SignEncryptFilesController::SignDisallowed:
+        return Deny;
+    }
+}
+
+void SignEncryptFilesCommand::setEncryptionPolicy( Policy policy ) {
+    unsigned int mode = d->controller.operationMode();
+    mode &= ~SignEncryptFilesController::EncryptMask;
+    switch ( policy ) {
+    case NoPolicy:
+    case Allow:
+        mode |= SignEncryptFilesController::EncryptAllowed ;
+        break;
+    case Deny:
+        mode |= SignEncryptFilesController::EncryptDisallowed ;
+        break;
+    case Force:
+        mode |= SignEncryptFilesController::EncryptForced ;
+        break;
+    }
+    try {
+        d->controller.setOperationMode( mode );
+    } catch ( ... ) {}
+}
+
+Policy SignEncryptFilesCommand::encryptionPolicy() const {
+    const unsigned int mode = d->controller.operationMode();
+    switch ( mode & SignEncryptFilesController::EncryptMask ) {
+    default:
+        assert( !"This shouldn't happen!" );
+        return NoPolicy;
+    case SignEncryptFilesController::EncryptAllowed:
+        return Allow;
+    case SignEncryptFilesController::EncryptForced:
+        return Force;
+    case SignEncryptFilesController::EncryptDisallowed:
+        return Deny;
+    }
+}
+
 void SignEncryptFilesCommand::doStart() {
 
     try {

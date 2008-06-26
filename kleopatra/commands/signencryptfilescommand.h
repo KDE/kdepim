@@ -37,6 +37,8 @@
 
 #include <crypto/controller.h>
 
+#include <utils/types.h>
+
 class QStringList;
 
 namespace Kleo {
@@ -52,6 +54,12 @@ namespace Commands {
         ~SignEncryptFilesCommand();
 
         void setFiles( const QStringList & files );
+
+        void setSigningPolicy( Policy policy );
+        Policy signingPolicy() const;
+
+        void setEncryptionPolicy( Policy force );
+        Policy encryptionPolicy() const;
 
     private:
         /* reimp */ void doStart();
