@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Service
+Encoding=UTF-8
+X-KDE-ServiceTypes=inode/directory,KonqPopupMenu/Plugin
+Name=Kleopatra Decrypt/Verify All Files In Folder
+Actions=kleodecryptverifyfiles;
+
+[Desktop Action kleodecryptverifyfiles]
+Name=Decrypt/Verify All Files In Folder
+Name[de]=Alle Dateien im Ordner entschlüsseln/verifizieren
+Icon=kleopatra
+Exec=kleopatra --decrypt-verify %F
