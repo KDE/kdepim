@@ -328,7 +328,7 @@ void Task::saveTo( KCal::Todo* task )
   if ( hasDueDate() )
     task->setDtDue( utcToLocal( dueDate() ) );
 
-  if ( !parent().isNull() )
+  if ( !parent().isEmpty() )
     task->setRelatedToUid( parent() );
 
   if ( hasCompletedDate() && task->percentComplete() == 100 )
