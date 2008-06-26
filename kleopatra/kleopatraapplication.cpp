@@ -84,15 +84,17 @@ static const struct {
     const char * description;
     char short_option[4];
 } kleo_options[] = {
-    { "daemon",             I18N_NOOP("Run UI server only, hide main window"),  ""  },
-    { "import-certificate", I18N_NOOP("Import certificate file(s)"),            "i" },
-    { "encrypt",            I18N_NOOP("Encrypt file(s)"),                       "e" },
-    { "sign",               I18N_NOOP("Sign file(s)"),                          "s" },
-    { "encrypt-sign",       I18N_NOOP("Encrypt and/or sign file(s)"),           "E" },
-    { "decrypt",            I18N_NOOP("Decrypt file(s)"),                       "d" },
-    { "verify",             I18N_NOOP("Verify file/signature"),                 "V" },
-    { "decrypt-verify",     I18N_NOOP("Decrypt and/or verify files(s)"),        "D" },
-    //{ "show-certificate",   I18N_NOOP("Show Certificate(s) by fingerprint(s)"), ""  },
+    { "daemon",             I18N_NOOP("Run UI server only, hide main window"),    ""  },
+    { "openpgp",            I18N_NOOP("Use OpenPGP for the following operation"), "p" },
+    { "cms",                I18N_NOOP("Use CMS (X.509, S/MIME) for the following operation"), "c" },
+    { "import-certificate", I18N_NOOP("Import certificate file(s)"),              "i" },
+    { "encrypt",            I18N_NOOP("Encrypt file(s)"),                         "e" },
+    { "sign",               I18N_NOOP("Sign file(s)"),                            "s" },
+    { "encrypt-sign",       I18N_NOOP("Encrypt and/or sign file(s)"),             "E" },
+    { "decrypt",            I18N_NOOP("Decrypt file(s)"),                         "d" },
+    { "verify",             I18N_NOOP("Verify file/signature"),                   "V" },
+    { "decrypt-verify",     I18N_NOOP("Decrypt and/or verify files(s)"),          "D" },
+    //{ "show-certificate",   I18N_NOOP("Show Certificate(s) by fingerprint(s)"),   ""  },
 };
     
 
@@ -202,7 +204,7 @@ static QStringList files_from_args( const shared_ptr<const KCmdLineArgs> & args 
 }
 
 namespace {
-    typedef void (KleopatraApplication::*Func)( const QStringList & );
+    typedef void (KleopatraApplication::*Func)( const QStringList &, GpgME::Protocol );
     struct _Funcs {
         const char * opt;
         Func func;
@@ -217,6 +219,17 @@ int KleopatraApplication::newInstance() {
     const shared_ptr<KCmdLineArgs> args( KCmdLineArgs::parsedArgs(), mem_fn( &KCmdLineArgs::clear ) );
 
     const QStringList files = files_from_args( args );
+
+    const bool openpgp = args->isSet( "openpgp" );
+    const bool cms     = args->isSet( "cms" );
+
+    kDebug( openpgp ) << "found OpenPGP";
+    kDebug( cms )     << "found CMS";
+
+    if ( openpgp && cms ) {
+        kDebug() << "ambigious protocol: --openpgp and --cms";
+        return 1;
+    }
 
     static const _Funcs funcs[] = {
         { "import-certificate", &KleopatraApplication::importCertificatesFromFile },
@@ -243,7 +256,7 @@ int KleopatraApplication::newInstance() {
             return 1;
         }
         kDebug() << "found" << it1->opt;
-        (this->*func)( files );
+        (this->*func)( files, openpgp ? GpgME::OpenPGP : cms ? GpgME::CMS : GpgME::UnknownProtocol );
     } else {
         if ( files.empty() ) {
             kDebug() << "openOrRaiseMainWindow";
@@ -281,44 +294,52 @@ void KleopatraApplication::openOrRaiseConfigDialog() {
     d->sysTray.openOrRaiseConfigDialog();
 }
 
-void KleopatraApplication::importCertificatesFromFile( const QStringList & files ) {
+void KleopatraApplication::importCertificatesFromFile( const QStringList & files, GpgME::Protocol /*proto*/) {
     openOrRaiseMainWindow();
     if ( !files.empty() )
         d->sysTray.mainWindow()->importCertificatesFromFile( files );
 }
 
-void KleopatraApplication::encryptFiles( const QStringList & files ) {
+void KleopatraApplication::encryptFiles( const QStringList & files, GpgME::Protocol proto ) {
     SignEncryptFilesCommand * const cmd = new SignEncryptFilesCommand( files, 0 );
     cmd->setEncryptionPolicy( Force );
     cmd->setSigningPolicy( Allow );
+    if ( proto != GpgME::UnknownProtocol )
+        cmd->setProtocol( proto );
     cmd->start();
 }
 
-void KleopatraApplication::signFiles( const QStringList & files ) {
+void KleopatraApplication::signFiles( const QStringList & files, GpgME::Protocol proto ) {
     SignEncryptFilesCommand * const cmd = new SignEncryptFilesCommand( files, 0 );
     cmd->setSigningPolicy( Force );
     cmd->setEncryptionPolicy( Deny );
+    if ( proto != GpgME::UnknownProtocol )
+        cmd->setProtocol( proto );
     cmd->start();
 }
 
-void KleopatraApplication::signEncryptFiles( const QStringList & files ) {
-    ( new SignEncryptFilesCommand( files, 0 ) )->start();
+void KleopatraApplication::signEncryptFiles( const QStringList & files, GpgME::Protocol proto ) {
+    SignEncryptFilesCommand * const cmd = new SignEncryptFilesCommand( files, 0 );
+    if ( proto != GpgME::UnknownProtocol )
+        cmd->setProtocol( proto );
+    cmd->start();
 }
 
-void KleopatraApplication::decryptFiles( const QStringList & files ) {
+void KleopatraApplication::decryptFiles( const QStringList & files, GpgME::Protocol /*proto*/ ) {
     DecryptVerifyFilesCommand * const cmd = new DecryptVerifyFilesCommand( files, 0 );
     cmd->setOperation( Decrypt );
     cmd->start();
 }
 
-void KleopatraApplication::verifyFiles( const QStringList & files ) {
+void KleopatraApplication::verifyFiles( const QStringList & files, GpgME::Protocol /*proto*/ ) {
     DecryptVerifyFilesCommand * const cmd = new DecryptVerifyFilesCommand( files, 0 );
     cmd->setOperation( Verify );
     cmd->start();
 }
 
-void KleopatraApplication::decryptVerifyFiles( const QStringList & files ) {
-    ( new DecryptVerifyFilesCommand( files, 0 ) )->start();
+void KleopatraApplication::decryptVerifyFiles( const QStringList & files, GpgME::Protocol /*proto*/ ) {
+    DecryptVerifyFilesCommand * const cmd = new DecryptVerifyFilesCommand( files, 0 );
+    cmd->start();
 }
 
 void KleopatraApplication::setIgnoreNewInstance( bool ignore ) {

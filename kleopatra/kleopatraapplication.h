@@ -37,6 +37,8 @@
 
 #include <utils/pimpl_ptr.h>
 
+#include <gpgme++/global.h>
+
 class KCmdLineOptions;
 class MainWindow;
 template <typename T> class SystemTrayIconFor;
@@ -63,13 +65,13 @@ public:
 public Q_SLOTS:
     void openOrRaiseMainWindow();
     void openOrRaiseConfigDialog();
-    void importCertificatesFromFile( const QStringList & files );
-    void encryptFiles( const QStringList & files );
-    void signFiles( const QStringList & files );
-    void signEncryptFiles( const QStringList & files );
-    void decryptFiles( const QStringList & files );
-    void verifyFiles( const QStringList & files );
-    void decryptVerifyFiles( const QStringList & files );
+    void importCertificatesFromFile( const QStringList & files, GpgME::Protocol proto );
+    void encryptFiles( const QStringList & files, GpgME::Protocol proto );
+    void signFiles( const QStringList & files, GpgME::Protocol proto );
+    void signEncryptFiles( const QStringList & files, GpgME::Protocol proto );
+    void decryptFiles( const QStringList & files, GpgME::Protocol proto );
+    void verifyFiles( const QStringList & files, GpgME::Protocol proto );
+    void decryptVerifyFiles( const QStringList & files, GpgME::Protocol proto );
 
 private:
     class Private;
