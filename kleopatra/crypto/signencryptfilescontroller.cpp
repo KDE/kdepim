@@ -79,6 +79,7 @@ private:
 private:
     void ensureWizardCreated();
     void ensureWizardVisible();
+    void updateWizardMode();
     void cancelAllTasks();
     void reportError( int err, const QString & details ) {
         emit q->error( err, details );
@@ -171,8 +172,45 @@ void SignEncryptFilesController::Private::assertValidOperation( unsigned int op 
 void SignEncryptFilesController::setOperationMode( unsigned int mode ) {
     Private::assertValidOperation( mode );
     d->operation = mode;
-    if ( d->wizard )
-        d->wizard->setWindowTitle( d->titleForOperation( d->operation ) );
+    d->updateWizardMode();
+}
+
+void SignEncryptFilesController::Private::updateWizardMode() {
+    if ( !wizard )
+        return;
+    wizard->setWindowTitle( titleForOperation( operation ) );
+    const unsigned int signOp = (operation & SignMask);
+    const unsigned int encrOp = (operation & EncryptMask);
+    switch ( signOp ) {
+    case SignForced:
+    case SignDisallowed:
+        wizard->setSigningSelected( signOp == SignForced );
+        wizard->setSigningUserMutable( false );
+        break;
+    default:
+        assert( !"Shouldn't happen" );
+    case SignAllowed:
+        wizard->setSigningSelected( encrOp == EncryptDisallowed );
+        wizard->setSigningUserMutable( true );
+        break;
+    }
+    switch ( encrOp ) {
+    case EncryptForced:
+    case EncryptDisallowed:
+        wizard->setEncryptionSelected( encrOp == EncryptForced );
+        wizard->setEncryptionUserMutable( false );
+        break;
+    default:
+        assert( !"Shouldn't happen" );
+    case EncryptAllowed:
+        wizard->setEncryptionSelected( true );
+        wizard->setEncryptionUserMutable( true );
+        break;
+    }
+}
+
+unsigned int SignEncryptFilesController::operationMode() const {
+    return d->operation;
 }
 
 void SignEncryptFilesController::setFiles( const QStringList & files ) {
@@ -404,12 +442,13 @@ void SignEncryptFilesController::Private::ensureWizardCreated() {
         return;
 
     std::auto_ptr<SignEncryptFilesWizard> w( new SignEncryptFilesWizard );
-    w->setWindowTitle( titleForOperation( operation ) );
     w->setAttribute( Qt::WA_DeleteOnClose );
 
     connect( w.get(), SIGNAL(operationPrepared()), q, SLOT(slotWizardOperationPrepared()), Qt::QueuedConnection );
     connect( w.get(), SIGNAL(canceled()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
     wizard = w.release();
+
+    updateWizardMode();
 }
 
 void SignEncryptFilesController::Private::ensureWizardVisible() {

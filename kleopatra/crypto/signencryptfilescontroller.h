@@ -72,6 +72,7 @@ namespace Crypto {
             EncryptMask = EncryptAllowed|EncryptForced
         };
         void setOperationMode( unsigned int mode );
+        unsigned int operationMode() const;
 
         void setFiles( const QStringList & files );
 
