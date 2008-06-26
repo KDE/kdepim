@@ -280,7 +280,8 @@ bool DataProxy::commit()
 		}
 	}
 	
-	return true;
+	// Give implementing classes the change to do things if necessary.
+	return _commit();
 }
 
 bool DataProxy::rollback()
@@ -357,7 +358,8 @@ bool DataProxy::rollback()
 		}
 	}
 	
-	return true;
+	// Give implementing classes the change to rollback things if necessary.
+	return _rollback();
 }
 
 QMap<QString,QString> DataProxy::changedIds()

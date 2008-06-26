@@ -112,7 +112,17 @@ protected:
 	/**
 	 * Generates a unique id for a new record.
 	 */
-	 virtual QString generateUniqueId();
+	virtual QString generateUniqueId();
+	
+	/**
+	 * Commits the changes of global added categories to the database.
+	 */
+	virtual bool _commit();
+	
+	/**
+	 * Undo the changes of global added categories to the database.
+	 */
+	virtual bool _rollback();
 	
 	/**
 	 * Commits created record @p rec to the datastore.
@@ -134,5 +144,6 @@ protected:
 	recordid_t fLastUsedUniqueId;
 	QList<recordid_t> fResettedRecords;
 	PilotAppInfoBase *fAppInfo;
+	QMap<uint, QString> fAddedCategories;
 };
 #endif

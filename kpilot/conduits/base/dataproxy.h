@@ -181,6 +181,23 @@ protected: // Functions
 	virtual QString generateUniqueId() = 0;
 	
 	/**
+	 * This can be reimplemented by subclasses to do things after the regular
+	 * commit action. This method is called by commit() after the changes to
+	 * records are committed.
+	 *
+	 * WARNING: Please make sure that you do nothing with records unless:
+	 * a) you know what you are doing.
+	 * b) you *really* have to
+	 */
+	virtual bool _commit() { return true; };
+	
+	/**
+	 * This can be implemented by subclasses to undo things from _commit(). This
+	 * methdo is called by rollback() after the changes to the records are undone.
+	 */
+	bool _rollback() { return true; };
+	
+	/**
 	 * Commits created record @p rec to the datastore. Returns the id that the
 	 * data store created for this record.
 	 */

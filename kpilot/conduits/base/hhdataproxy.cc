@@ -101,6 +101,7 @@ bool HHDataProxy::addGlobalCategory( const QString& category )
 	if( canHaveNewCategory )
 	{
 		fAppInfo->setCategoryName( i, category );
+		fAddedCategories.insert( i, category );
 		return true;
 	}
 	
@@ -144,6 +145,37 @@ QString HHDataProxy::generateUniqueId()
 	}
 	
 	return QString::number( id + 1 );
+}
+
+
+bool HHDataProxy::_commit()
+{
+	FUNCTIONSETUP;
+	
+	fAppInfo->writeTo( fDatabase );
+	
+	return true;
+}
+
+bool HHDataProxy::_rollback()
+{
+	FUNCTIONSETUP;
+	
+	// Roll back the categories.
+	foreach( uint i, fAddedCategories.keys() )
+	{
+		fAppInfo->setCategoryName( i, "" );
+	}
+	
+	fAppInfo->writeTo( fDatabase );
+	
+	// Make sure we can commit them again if we want to.
+	foreach( uint i, fAddedCategories.keys() )
+	{
+		fAppInfo->setCategoryName( i, fAddedCategories.value( i ) );
+	}
+	
+	return true;
 }
 
 void HHDataProxy::commitCreate( Record *rec )

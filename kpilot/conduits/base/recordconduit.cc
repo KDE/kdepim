@@ -494,7 +494,7 @@ void RecordConduit::firstSync()
 				Record *pcRecord = createPCRecord( hhRecord );
 				fPCDataProxy->create( pcRecord );
 				fMapping->map( hhRecord->id(), pcRecord->id() );
-				
+				copyCategory( hhRecord, pcRecord );
 			}
 		}
 	}
@@ -510,8 +510,8 @@ void RecordConduit::firstSync()
 		{
 			HHRecord *hhRecord = createHHRecord( pcRecord );
 			fHHDataProxy->create( hhRecord );
-			
 			fMapping->map( hhRecord->id(), pcRecord->id() );
+			copyCategory( pcRecord, hhRecord );
 		}
 	}
 }
@@ -559,7 +559,7 @@ void RecordConduit::copyHHToPC()
 				Record *pcRecord = createPCRecord( hhRecord );
 				fPCDataProxy->create( pcRecord );
 				fMapping->map( hhRecord->id(), pcRecord->id() );
-				
+				copyCategory( hhRecord, pcRecord );
 			}
 		}
 	}
@@ -638,6 +638,7 @@ void RecordConduit::copyPCToHH()
 				HHRecord *hhRecord = createHHRecord( pcRecord );
 				fHHDataProxy->create( hhRecord );
 				fMapping->map( hhRecord->id(), pcRecord->id() );
+				copyCategory( pcRecord, hhRecord );
 			}
 		}
 	}
@@ -801,6 +802,7 @@ void RecordConduit::syncRecords( Record *pcRecord, HHRecord *backupRecord,
 		pcRecord = createPCRecord( hhRecord );
 		QString id = fPCDataProxy->create( pcRecord );
 		fMapping->map( hhRecord->id(), id );
+		copyCategory( hhRecord, pcRecord );
 		
 		pcRecord->synced();
 		hhRecord->synced();
@@ -820,6 +822,7 @@ void RecordConduit::syncRecords( Record *pcRecord, HHRecord *backupRecord,
 			hhRecord = createHHRecord( pcRecord );
 			QString id = fHHDataProxy->create( hhRecord );
 			fMapping->map( id, pcRecord->id() );
+			copyCategory( pcRecord, hhRecord );
 			
 			pcRecord->synced();
 			hhRecord->synced();
@@ -972,10 +975,12 @@ void RecordConduit::solveConflict( Record *pcRecord, HHRecord *hhRecord )
 		HHRecord *hhRec = createHHRecord( pcRecord );
 		QString id = fHHDataProxy->create( hhRec );
 		fMapping->map( id, pcRecord->id() );
+		copyCategory( pcRecord, hhRecord );
 		
 		Record *pcRec = createPCRecord( hhRecord );
 		id = fPCDataProxy->create( pcRec );
 		fMapping->map( id, pcRecord->id() );
+		copyCategory( hhRecord, pcRecord );
 	}
 	else if( res == ePreviousSyncOverrides )
 	{
