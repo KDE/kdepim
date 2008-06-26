@@ -306,11 +306,15 @@ void KleopatraApplication::signEncryptFiles( const QStringList & files ) {
 }
 
 void KleopatraApplication::decryptFiles( const QStringList & files ) {
-    //( new DecryptFilesCommand( files, 0 ) )->start();
+    DecryptVerifyFilesCommand * const cmd = new DecryptVerifyFilesCommand( files, 0 );
+    cmd->setOperation( Decrypt );
+    cmd->start();
 }
 
 void KleopatraApplication::verifyFiles( const QStringList & files ) {
-    //( new VerifyFilesCommand( files, 0 ) )->start();
+    DecryptVerifyFilesCommand * const cmd = new DecryptVerifyFilesCommand( files, 0 );
+    cmd->setOperation( Verify );
+    cmd->start();
 }
 
 void KleopatraApplication::decryptVerifyFiles( const QStringList & files ) {
