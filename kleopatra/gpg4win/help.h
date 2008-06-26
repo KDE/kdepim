@@ -41,4 +41,4 @@ namespace Gpg4Win {
     void showHelp( QWidget* parent, const QString & application );
 }
 }
-#endif __KLEOPATRA_GPG4WIN_HELP_H__
+#endif // __KLEOPATRA_GPG4WIN_HELP_H__
