@@ -68,7 +68,7 @@ class DecryptVerifyFilesController::Private {
     DecryptVerifyFilesController* const q;
 public:
 
-    static QString heuristicBaseDirectory( const QStringList& fileNames );    
+    static QString heuristicBaseDirectory( const QStringList& fileNames );
     static shared_ptr<AbstractDecryptVerifyTask> taskFromOperationWidget( const DecryptVerifyOperationWidget * w, const shared_ptr<QFile> & file, const QDir & outDir, const shared_ptr<OverwritePolicy> & overwritePolicy );
 
     explicit Private( DecryptVerifyFilesController* qq );
@@ -138,7 +138,7 @@ shared_ptr<AbstractDecryptVerifyTask> DecryptVerifyFilesController::Private::tas
     }
     break;
     }
-    
+
     task->autodetectProtocolFromInput();
     return task;
 }
@@ -163,7 +163,7 @@ void DecryptVerifyFilesController::Private::slotWizardOperationPrepared()
         m_wizard->setTaskCollection( coll );
 
         QTimer::singleShot( 0, q, SLOT( schedule() ) );
-        
+
     } catch ( const Kleo::Exception & e ) {
         reportError( e.error().encodedError(), e.message() );
     } catch ( const std::exception & e ) {
@@ -186,18 +186,17 @@ void DecryptVerifyFilesController::doTaskDone( const Task* task, const shared_pt
 {
     assert( task );
     assert( task == d->m_runningTask.get() );
-    
+
     // We could just delete the tasks here, but we can't use
     // Qt::QueuedConnection here (we need sender()) and other slots
     // might not yet have executed. Therefore, we push completed tasks
     // into a burial container
-    
+
     d->m_completedTasks.push_back( d->m_runningTask );
     d->m_runningTask.reset();
 
-    const shared_ptr<const DecryptVerifyResult> & dvr = boost::dynamic_pointer_cast<const DecryptVerifyResult>( result );
-    assert( dvr );
-    d->m_results.push_back( dvr );
+    if ( const shared_ptr<const DecryptVerifyResult> & dvr = boost::dynamic_pointer_cast<const DecryptVerifyResult>( result ) )
+        d->m_results.push_back( dvr );
 
     QTimer::singleShot( 0, this, SLOT(schedule()) );
 }
@@ -392,7 +391,7 @@ void DecryptVerifyFilesController::Private::cancelAllTasks() {
     // signal emissions.
     m_runnableTasks.clear();
 
-    // a cancel() will result in a call to 
+    // a cancel() will result in a call to
     if ( m_runningTask )
         m_runningTask->cancel();
 }
