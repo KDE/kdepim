@@ -55,18 +55,12 @@ static const about_data authors[] = {
 
 
 static const about_data credits[] = {
-  { I18N_NOOP("Till Adam"),
-    I18N_NOOP("UI Server commands and dialogs"),
-    "adam@kde.org", 0 },
   { I18N_NOOP("David Faure"),
     I18N_NOOP("Backend configuration framework, KIO integration"),
     "faure@kde.org", 0 },
   { I18N_NOOP("Michel Boyer de la Giroday"),
     I18N_NOOP("Key-state dependant colors and fonts in the key list"),
     "michel@klaralvdalens-datakonsult.se", 0 },
-  { I18N_NOOP("Volker Krause"),
-    I18N_NOOP("UI Server dialogs"),
-    "vkrause@kde.org", 0 },
   { I18N_NOOP("Thomas Moenicke"),
     I18N_NOOP("Artwork"),
     "tm@php-qt.org", 0 },
