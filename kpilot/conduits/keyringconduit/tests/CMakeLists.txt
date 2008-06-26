@@ -30,6 +30,7 @@ set( keyring_testlib_SRCS
 	../keyringhhdataproxy.cc
 	../keyringconduit.cc
 	../keyringfactory.cc
+	testkeyringproxy.cc
 	testkeyringconduit.cc
 )
 

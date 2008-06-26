@@ -2,7 +2,7 @@
 
 #include "options.h"
 #include "idmapping.h"
-#include "keyringhhdataproxy.h"
+#include "testkeyringproxy.h"
 
 TestKeyringConduit::TestKeyringConduit( const QVariantList& args )
 	: KeyringConduit( 0, args )
@@ -16,15 +16,15 @@ bool TestKeyringConduit::initDataProxies()
 {
 	fMapping = new IDMapping( "Test User", fConduitName );
 
-	hhDataProxy = new KeyringHHDataProxy( "hhproxy.pdb" );
+	hhDataProxy = new TestKeyringProxy( "hhproxy.pdb" );
 	hhDataProxy->openDatabase( "test" );
 	hhDataProxy->createDataStore();
 	
-	backupDataProxy = new KeyringHHDataProxy( "backupproxy.pdb" );
+	backupDataProxy = new TestKeyringProxy( "backupproxy.pdb" );
 	backupDataProxy->openDatabase( "test" );
 	backupDataProxy->createDataStore();
 	
-	pcDataProxy = new KeyringHHDataProxy( "pcproxy.pdb" );
+	pcDataProxy = new TestKeyringProxy( "pcproxy.pdb" );
 	pcDataProxy->openDatabase( "test" );
 	pcDataProxy->createDataStore();
 	
@@ -45,17 +45,17 @@ IDMapping* TestKeyringConduit::mapping() const
 	return fMapping;
 }
 
-KeyringHHDataProxy* TestKeyringConduit::hhProxy() const
+TestKeyringProxy* TestKeyringConduit::hhProxy() const
 {
 	return hhDataProxy;
 }
 
-KeyringHHDataProxy* TestKeyringConduit::backupProxy() const
+TestKeyringProxy* TestKeyringConduit::backupProxy() const
 {
 	return backupDataProxy;
 }
 
-KeyringHHDataProxy* TestKeyringConduit::pcProxy() const
+TestKeyringProxy* TestKeyringConduit::pcProxy() const
 {
 	return pcDataProxy;
 }

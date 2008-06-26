@@ -1,11 +1,9 @@
-#ifndef TESTKEYRINGCONDUIT_H
-#define TESTKEYRINGCONDUIT_H
-/* keyringconduit.h			KPilot
+#ifndef TESTKEYRINGPROXY_H
+#define TESTKEYRINGPROXY_H
+/* testkeyringproxy.h			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema <b.broeksema@kdemail.net>
-** Copyright (C) 2007 by Jason "vanRijn" Kasper <vr@movingparts.net>
 */
-
 /*
 ** This program is free software; you can redistribute it and/or modify
 ** it under the terms of the GNU Lesser General Public License as published by
@@ -27,40 +25,29 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "keyringconduit.h"
+#include "keyringhhdataproxy.h"
 
-class TestKeyringProxy;
-class IDMapping;
+class KeyringHHRecord;
 
-class KPILOT_EXPORT TestKeyringConduit : public KeyringConduit
+class KPILOT_EXPORT TestKeyringProxy : public KeyringHHDataProxy
 {
-	
 public:
-	TestKeyringConduit( const QVariantList& args );
-	
-	/* virtual */ bool initDataProxies();
+	TestKeyringProxy( const QString& fileName );
 	
 	/**
-	 * Perform a hotsync.
+	 * Returns the record with given Id or 0L if it does not exists.
 	 */
-	void hotSync();
+	KeyringHHRecord* record( const QString& id );
 	
-	IDMapping* mapping() const;
+	void saveRecord( HHRecord* rec );
 	
-	TestKeyringProxy* hhProxy() const;
+	void deleteRecord( HHRecord* rec );
 	
-	TestKeyringProxy* backupProxy() const;
+	void addRecord( HHRecord* rec );
 	
-	TestKeyringProxy* pcProxy() const;
+	KeyringHHRecord* createRecord();
 	
-private:
-	// These are kept for testing, we don't have to delete them at deletion as
-	// they are passed to KeyringConduit::f*Proxy also, so KeyringConduit will
-	// take care of deletion.
-	
-	TestKeyringProxy* hhDataProxy;
-	TestKeyringProxy* backupDataProxy;
-	TestKeyringProxy* pcDataProxy;
+	QStringList categories() const;
 };
 
 #endif

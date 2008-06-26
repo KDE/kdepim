@@ -29,21 +29,54 @@
 #include "qtest_kde.h"
 
 #include "options.h"
-
+#include "idmapping.h"
+#include "keyringhhrecord.h"
 #include "testkeyringconduit.h"
+#include "testkeyringproxy.h"
 
 class KeyringCategorySyncTest : public QObject
 {
 	Q_OBJECT
 
-private:
-	TestKeyringConduit *fConduit;
+private: // members
+	TestKeyringConduit *fConduit;	
+	
+	// key: [testname], value: [record id]
+	QMap<QString, QString> fTestRecordIds;
+
+private: // methods
+	// Sets up the preconditions for test1.
+	void initTest1();
 
 private slots:
 	void initTestCase();
-	void testFail();
+	
+	/**
+	 * Preconditions:
+	 * - A new record is added on the pc side.
+	 * - There is no mapping yet for the record.
+	 * - It has a category
+	 * - That category is available on the hh side.
+	 *
+	 * Postconditions:
+	 * - There is a mapping for the record.
+	 * - There is a record added to the hh.
+	 * - It has the same category as on the pc.
+	 */
+	void test1();
+	
+	
 	void cleanupTestCase();
 };
+
+/**
+ * In a newly created keyring data proxy the following categories are available
+ *
+ * 0: Unfiled
+ * 1: Banking
+ * 2: Computer
+ * 3: Phone
+ */
 
 void KeyringCategorySyncTest::initTestCase()
 {
@@ -57,10 +90,42 @@ void KeyringCategorySyncTest::initTestCase()
 	fConduit->initDataProxies();
 }
 
-void KeyringCategorySyncTest::testFail()
+void KeyringCategorySyncTest::test1()
 {
+	// Set up the conduit and the dataproxies.
+	initTest1();
+	
+	// Preconditions:
+	QString pcId = fTestRecordIds.value( "test1" );
+	KeyringHHRecord* pcRec = fConduit->pcProxy()->record( pcId );
+	
+	QString hhId = fConduit->mapping()->hhRecordId( pcId );
+	QVERIFY( hhId.isEmpty() );
+	
+	QVERIFY( pcRec );
+	QCOMPARE( pcRec->categories().size(), 1 );
+	QCOMPARE( pcRec->category(), CSL1( "Banking" ) );
+	
+	// Sync
 	fConduit->hotSync();
-	//Q_ASSERT( false );
+	
+	// Postconditions
+	hhId = fConduit->mapping()->hhRecordId( pcId );
+	QVERIFY( !hhId.isEmpty() );
+	
+	KeyringHHRecord *hhRec = fConduit->hhProxy()->record( hhId );
+	QVERIFY( hhRec );
+	QCOMPARE( hhRec->categories().size(), 1 );
+	QCOMPARE( hhRec->category(), CSL1( "Banking" ) );
+}
+
+void KeyringCategorySyncTest::initTest1()
+{
+	KeyringHHRecord* rec = fConduit->pcProxy()->createRecord();
+	fConduit->pcProxy()->addRecord( rec );
+	fConduit->pcProxy()->setCategory( rec, CSL1( "Banking" ) );
+	
+	fTestRecordIds.insert( "test1", rec->id() );
 }
 
 void KeyringCategorySyncTest::cleanupTestCase()
