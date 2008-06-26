@@ -39,6 +39,8 @@
 
 #include <utils/types.h>
 
+#include <gpgme++/global.h>
+
 class QStringList;
 
 namespace Kleo {
@@ -60,6 +62,9 @@ namespace Commands {
 
         void setEncryptionPolicy( Policy force );
         Policy encryptionPolicy() const;
+
+        void setProtocol( GpgME::Protocol protocol );
+        GpgME::Protocol protocol() const;
 
     private:
         /* reimp */ void doStart();

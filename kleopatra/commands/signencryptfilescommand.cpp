@@ -210,6 +210,14 @@ Policy SignEncryptFilesCommand::encryptionPolicy() const {
     }
 }
 
+void SignEncryptFilesCommand::setProtocol( GpgME::Protocol proto ) {
+    d->controller.setProtocol( proto );
+}
+
+GpgME::Protocol SignEncryptFilesCommand::protocol() const {
+    return d->controller.protocol();
+}
+
 void SignEncryptFilesCommand::doStart() {
 
     try {
