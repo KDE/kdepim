@@ -1,3 +1,17 @@
+Friday, June 27th 2008
+
+Problems addressed
+--------------------
+* kolab/issue2785 favorite folder: Two creation ways show different names.
+* kolab/issue2790 Strange date/time field in the new todo dialog.
+* kolab/issue2568 Button to open certificate manager is missing from encryption key dialog.
+* kolab/issue1998 An invitation via a server distribution list, cannot be accepted by attendees as they cannot choose one of their own identity.
+* kolab/issue2741 Button to do an ldap lookup is missing from the address selection dialog.
+* kolab/issue2618 Kleopatra: the dump of smime certificates doesn't contain the email addresses.
+* kolab/issue2773 Usability of "Order of Arrival" string?
+* kolab/issue2740 kleopatra shows an error message, if started and the search is on "In External Certificates"
+
+
 Friday, June 16th 2008
 
 Problems addressed
