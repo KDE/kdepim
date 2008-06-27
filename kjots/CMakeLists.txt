@@ -64,8 +64,3 @@ install( FILES kjotspart.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR} )
 install( FILES kjotspartui.rc  DESTINATION ${DATA_INSTALL_DIR}/kjots)
 
 install(TARGETS kjotspart  DESTINATION ${PLUGIN_INSTALL_DIR} )
-
-kde4_install_icons( ${ICON_INSTALL_DIR} )
-
-
-

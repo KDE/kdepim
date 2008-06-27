@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui version="7" name="kjots" >
+<kpartgui version="8" name="kjots" >
  <MenuBar>
 
   <Menu name="file">
@@ -43,8 +43,8 @@
    <Action name="go_next_page"/>
    <Action name="go_prev_page"/>
    <Separator/>
-   <Action name="go_next_book"/>
    <Action name="go_prev_book"/>
+   <Action name="go_next_book"/>
   </Menu>
 
   <Menu name="tools">

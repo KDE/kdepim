@@ -119,14 +119,14 @@ KJotsComponent::KJotsComponent(QWidget* parent, KActionCollection *collection) :
     QAction *action;
     action = actionCollection->addAction( "go_next_book");
     action->setText( i18n("Next Book") );
-    action->setIcon(KIcon("go-next"));
+    action->setIcon(KIcon("go-down"));
     action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_D));
     connect(action, SIGNAL(triggered()), bookshelf, SLOT(nextBook()));
 
 
     action = actionCollection->addAction( "go_prev_book");
     action->setText( i18n("Previous Book") );
-    action->setIcon(KIcon("go-previous"));
+    action->setIcon(KIcon("go-up"));
     action->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_D));
     connect(action, SIGNAL(triggered()), bookshelf, SLOT(prevBook()));
 
@@ -184,7 +184,7 @@ KJotsComponent::KJotsComponent(QWidget* parent, KActionCollection *collection) :
     action = actionCollection->addAction("del_page");
     action->setText(i18n("&Delete Page"));
     action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Delete));
-    action->setIcon(KIcon("edit-delete-shred"));
+    action->setIcon(KIcon("edit-delete-page"));
     connect(action, SIGNAL(triggered()), SLOT(deletePage()));
 
     action = actionCollection->addAction("del_folder");
