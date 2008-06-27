@@ -42,7 +42,7 @@ namespace Kleo {
   namespace QGpgMEProgressTokenMapper {
     QString map( const char * token, int subtoken );
     QString map( const QString & token, int subtoken );
-  };
+  }
 
 }
 
