@@ -54,11 +54,11 @@ private: // methods
 	// the nature of their behavior.
 	void init();
 	
-	// Sets up the preconditions for test1.
+	// Sets up the preconditions for the tests
 	void initTest1();
-	// Sets up the preconditions for test2.
 	void initTest2();
-
+	void initTest3();
+	
 private slots:
 	void initTestCase();
 	
@@ -99,6 +99,20 @@ private slots:
 	 * - It has the same category as on the pc.
 	 */
 	void test2();
+	
+	/**
+	 * Preconditions:
+	 * - A new record is added on the pc side.
+	 * - There is no mapping yet for the record.
+	 * - It has a category that is not yet available on the handheld
+	 * - The handheld has no room for a new category.
+	 *
+	 * Postconditions:
+	 * - There is a mapping for the record.
+	 * - There is a record added to the hh.
+	 * - It has it's category set to unfiled.
+	 */
+	void test3();
 	
 	
 	void cleanupTestCase();
@@ -222,6 +236,41 @@ void KeyringCategorySyncTest::test2()
 	QCOMPARE( hhRec->category(), CSL1( "NewCategory1" ) );
 }
 
+void KeyringCategorySyncTest::test3()
+{
+	// Set up the conduit and the dataproxies.
+	initTest3();
+	
+	// Preconditions:
+	QVERIFY( fConduit->pcProxy()->categories().contains( "NewCategory2" ) );
+	QCOMPARE( (uint) fConduit->hhProxy()->categories().size(), Pilot::CATEGORY_COUNT );
+	
+	QString pcId = fTestRecordIds.value( "test3" );
+	QString hhId = fConduit->mapping()->hhRecordId( pcId );
+	QVERIFY( hhId.isEmpty() );
+	
+	KeyringHHRecord* pcRec = fConduit->pcProxy()->record( pcId );
+	QVERIFY( pcRec );
+	QCOMPARE( pcRec->categories().size(), 1 );
+	QCOMPARE( pcRec->category(), CSL1( "NewCategory2" ) );
+	
+	// Sync
+	fConduit->hotSync();
+	
+	// Postconditions
+	QCOMPARE( (uint) fConduit->hhProxy()->categories().size(), Pilot::CATEGORY_COUNT );
+	// The category should not get added in favor of one of the other categories.
+	QVERIFY( !fConduit->hhProxy()->categories().contains( "NewCategory2" ) );
+	
+	hhId = fConduit->mapping()->hhRecordId( pcId );
+	QVERIFY( !hhId.isEmpty() );
+	
+	KeyringHHRecord *hhRec = fConduit->hhProxy()->record( hhId );
+	QVERIFY( hhRec );
+	QCOMPARE( hhRec->categories().size(), 1 );
+	QCOMPARE( hhRec->category(), CSL1( "Unfiled" ) );
+}
+
 /* ************************** INIT METHODS ********************************** */
 
 void KeyringCategorySyncTest::initTestCase()
@@ -232,6 +281,25 @@ void KeyringCategorySyncTest::initTestCase()
 void KeyringCategorySyncTest::init()
 {
 	delete fConduit;
+
+	// Remove all old files before beginning.
+	QFile f( "hhproxy.pdb" );
+	f.remove();
+	
+	f.setFileName( "hhproxy.pdb~" );
+	f.remove();
+	
+	f.setFileName( "backupproxy.pdb" );
+	f.remove();
+	
+	f.setFileName( "backupproxy.pdb~" );
+	f.remove();
+	
+	f.setFileName( "pcproxy.pdb" );
+	f.remove();
+	
+	f.setFileName( "pcproxy.pdb~" );
+	f.remove();
 
 	// NOTE: 2 == eHHOverrides, this is important for the solveConflict() method
 	QVariantList args;
@@ -263,6 +331,30 @@ void KeyringCategorySyncTest::initTest2()
 	fConduit->pcProxy()->addRecord( rec );
 	
 	fTestRecordIds.insert( "test2", rec->id() );
+}
+
+void KeyringCategorySyncTest::initTest3()
+{
+	init();
+
+	int i = 1;
+	QString category( "OtherCategory" );
+
+	while( (uint) fConduit->hhProxy()->categories().size() < Pilot::CATEGORY_COUNT )
+	{
+		QString c( category );
+		c.append( QString::number( i ) );
+		
+		fConduit->hhProxy()->addGlobalCategory( c );
+		i++;
+	}
+
+	KeyringHHRecord* rec = fConduit->pcProxy()->createRecord();
+	fConduit->pcProxy()->addGlobalCategory( CSL1( "NewCategory2" ) );
+	fConduit->pcProxy()->setCategory( rec, CSL1( "NewCategory2" ) );
+	fConduit->pcProxy()->addRecord( rec );
+	
+	fTestRecordIds.insert( "test3", rec->id() );
 }
 
 void KeyringCategorySyncTest::cleanupTestCase()
