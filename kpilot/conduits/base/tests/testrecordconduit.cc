@@ -47,11 +47,6 @@ TestRecordConduit::TestRecordConduit( const QVariantList &args, bool createRecs 
 	fMapping = new IDMapping( CSL1( "test-user" ), fConduitName );
 }
 
-TestRecordConduit::~TestRecordConduit()
-{
-	delete fMapping;
-}
-
 void TestRecordConduit::loadSettings()
 {
 }

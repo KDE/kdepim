@@ -35,8 +35,6 @@ class KPILOT_EXPORT TestRecordConduit : public RecordConduit {
 public:
 	TestRecordConduit( const QVariantList &args, bool createRecords = false );
 	
-	~TestRecordConduit();
-	
 	virtual void loadSettings();
 	
 	virtual bool initDataProxies();

@@ -77,6 +77,8 @@ public:
 	
 	virtual const QString id() const;
 	
+	virtual void setCategory( int id, const QString& category );
+	
 	virtual void setId( const QString &id );
 
 	virtual bool isModified() const;

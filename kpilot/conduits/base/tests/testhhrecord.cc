@@ -102,7 +102,12 @@ const QString TestHHRecord::id() const
 {
 	return fId;
 }
-	
+
+void TestHHRecord::setCategory( int id, const QString& category )
+{
+	fCategory = category;
+}
+
 void TestHHRecord::setId( const QString &id )
 {
 	fId = id;

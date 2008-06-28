@@ -152,7 +152,10 @@ bool HHDataProxy::_commit()
 {
 	FUNCTIONSETUP;
 	
-	fAppInfo->writeTo( fDatabase );
+	if( fAppInfo )
+	{
+		fAppInfo->writeTo( fDatabase );
+	}
 	
 	return true;
 }
