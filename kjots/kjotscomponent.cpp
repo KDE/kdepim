@@ -405,7 +405,10 @@ bool KJotsComponent::createNewBook()
         bookshelf->setItemExpanded(book, true);
         QTreeWidgetItem *item = static_cast<QTreeWidgetItem*>(book);
         bookshelf->clearSelection();
+
+        // Scroll to newly created page.
         bookshelf->setItemSelected(item->child(0), true);
+        bookshelf->scrollToItem(item->child(0));
         success = true;
     }
 
@@ -487,6 +490,7 @@ void KJotsComponent::newPage()
         KJotsPage *page = book->addPage();
         bookshelf->clearSelection();
         bookshelf->setItemSelected(page, true);
+        bookshelf->scrollToItem(page);
     }
 
 }
