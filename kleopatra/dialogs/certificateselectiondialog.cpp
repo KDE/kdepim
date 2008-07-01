@@ -77,7 +77,9 @@ public:
 
 
 private:
-    void reload();
+    void reload() {
+        ( new ReloadKeysCommand( 0 ) )->start();
+    }
     void create() {
         NewCertificateCommand * cmd = new NewCertificateCommand( 0 );
         if ( ( options & AnyFormat ) != AnyFormat )
@@ -85,10 +87,9 @@ private:
         cmd->start();
     }
     void lookup() {
-        LookupCertificatesCommand * cmd = new LookupCertificatesCommand( 0 );
-        cmd->start();
+        ( new LookupCertificatesCommand( 0 ) )->start();
     }
-    void slotReloaded();
+    void slotKeysMayHaveChanged();
     void slotCurrentViewChanged( QAbstractItemView * newView );
     void slotSelectionChanged();
     void slotDoubleClicked( const QModelIndex & idx );
@@ -151,6 +152,8 @@ private:
             connect( reload,     SIGNAL(clicked()),  q, SLOT(reload()) );
             connect( lookup,     SIGNAL(clicked()),  q, SLOT(lookup()) );
             connect( create,     SIGNAL(clicked()),  q, SLOT(create()) );
+            connect( KeyCache::instance().get(), SIGNAL(keysMayHaveChanged()),
+                     q, SLOT(slotKeysMayHaveChanged()) );
         }
     } ui;
 };
@@ -178,7 +181,7 @@ CertificateSelectionDialog::CertificateSelectionDialog( QWidget * parent, Qt::Wi
     d->ui.tabWidget.loadViews( config.data() );
     const KConfigGroup geometry( config, "Geometry" );
     resize( geometry.readEntry( "size", size() ) );
-    d->slotReloaded();
+    d->slotKeysMayHaveChanged();
 }
 
 CertificateSelectionDialog::~CertificateSelectionDialog() {}
@@ -201,7 +204,7 @@ void CertificateSelectionDialog::setOptions( Options options ) {
 
     d->ui.tabWidget.setMultiSelection( options & MultiSelection );
 
-    d->slotReloaded();
+    d->slotKeysMayHaveChanged();
 }
 
 CertificateSelectionDialog::Options CertificateSelectionDialog::options() const {
@@ -258,13 +261,7 @@ void CertificateSelectionDialog::hideEvent( QHideEvent * e ) {
     QDialog::hideEvent( e );
 }
 
-void CertificateSelectionDialog::Private::reload() {
-    Command * const cmd = new ReloadKeysCommand( 0 );
-    connect( cmd, SIGNAL(finsihed()), q, SLOT(slotReloaded()) );
-    cmd->start();
-}
-
-void CertificateSelectionDialog::Private::slotReloaded() {
+void CertificateSelectionDialog::Private::slotKeysMayHaveChanged() {
     q->setEnabled( true );
     std::vector<Key> keys = (options & SecretKeys) ? KeyCache::instance()->secretKeys() : KeyCache::instance()->keys() ;
     filterAllowedKeys( keys );
