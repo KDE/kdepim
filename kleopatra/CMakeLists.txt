@@ -103,6 +103,7 @@ set( _kleopatra_SRCS
   utils/headerview.cpp
   utils/scrollarea.cpp
   utils/dragqueen.cpp
+  utils/multivalidator.cpp
 
   utils/hex.cpp
   utils/input.cpp
