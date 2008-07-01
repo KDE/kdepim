@@ -1,7 +1,7 @@
 /**
  * utils.cpp
  *
- * Copyright (C)  2007 Laurent Montel <montel@kde.org>
+ * Copyright (C) 2007 Laurent Montel <montel@kde.org>
  * Copyright (C) 2008 Jaroslaw Staniek <js@iidea.pl>
  *
  * This library is free software; you can redistribute it and/or
@@ -24,7 +24,7 @@
 
 using namespace KPIM;
 
-#if 0
+#ifdef Q_WS_WIN
 
 #include <windows.h>
 #include <comdef.h> // (bstr_t)
@@ -33,9 +33,8 @@ using namespace KPIM;
 #include <signal.h>
 #include <unistd.h>
 
-#include <qlist.h>
-
-#include <kdebug.h>
+#include <QtCore/QList>
+#include <QtCore/QtDebug>
 
 static PPERF_OBJECT_TYPE FirstObject( PPERF_DATA_BLOCK PerfData )
 {
@@ -148,7 +147,7 @@ bool Utils::otherProcessesExist( const QString& processName )
   int myPid = getpid();
   foreach ( int pid, pids ) {
     if (myPid != pid) {
-      kDebug() << "Process ID is " << pid;
+//      kDebug() << "Process ID is " << pid;
       return true;
     }
   }
@@ -161,7 +160,7 @@ bool Utils::killProcesses( const QString& processName )
   getProcessesIdForName( processName, pids );
   if ( pids.empty() )
     return true;
-  kWarning() << "Killing process \"" << processName << " (pid=" << pids[0] << ")..";
+  qWarning() << "Killing process \"" << processName << " (pid=" << pids[0] << ")..";
   int overallResult = 0;
   foreach( int pid, pids ) {
     int result = kill( pid, SIGTERM );
@@ -172,6 +171,45 @@ bool Utils::killProcesses( const QString& processName )
       overallResult = result;
   }
   return overallResult == 0;
+}
+
+struct EnumWindowsStruct
+{
+  EnumWindowsStruct() : windowId( 0 ) {}
+  int pid;
+  HWND windowId;
+};
+
+
+BOOL CALLBACK EnumWindowsProc( HWND hwnd, LPARAM lParam )
+
+{
+
+  if ( GetWindowLong( hwnd, GWL_STYLE ) & WS_VISIBLE ) {
+
+    DWORD pidwin;
+
+    GetWindowThreadProcessId(hwnd, &pidwin);
+    if ( pidwin == ((EnumWindowsStruct*)lParam)->pid ) {
+      ((EnumWindowsStruct*)lParam)->windowId = hwnd;
+      return FALSE;
+    }
+  }
+  return TRUE;
+}
+
+void Utils::activateWindowForProcess( const QString& executableName )
+{
+  QList<int> pids;
+  KPIM::Utils::getProcessesIdForName( executableName, pids );
+  if ( pids.isEmpty() )
+    return;
+  EnumWindowsStruct winStruct;
+  winStruct.pid = pids.first();
+  EnumWindows( EnumWindowsProc, (LPARAM)&winStruct );
+  if ( winStruct.windowId == NULL )
+    return;
+  SetForegroundWindow( winStruct.windowId );
 }
 
 #endif // Q_WS_WIN

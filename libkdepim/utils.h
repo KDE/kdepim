@@ -1,7 +1,7 @@
 /**
  * utils.h
  *
- * Copyright (C)  2007  Laurent Montel <montel@kde.org>
+ * Copyright (C) 2007 Laurent Montel <montel@kde.org>
  * Copyright (C) 2008 Jaroslaw Staniek <js@iidea.pl>
  *
  * This library is free software; you can redistribute it and/or
@@ -51,6 +51,12 @@ class KDEPIM_EXPORT Utils
      *         one process failed to terminate.
      */
     static bool killProcesses( const QString& processName );
+
+    /**
+     * Activates window for first found process with executable @a executableName 
+     * (without path and .exe extension)
+     */
+    static void activateWindowForProcess( const QString& executableName );
 #endif
 };
 
