@@ -204,6 +204,7 @@ set( _kleopatra_SRCS
   commands/exportsecretkeycommand.cpp
   commands/exportopenpgpcertstoservercommand.cpp
   commands/adduseridcommand.cpp
+  commands/newcertificatecommand.cpp
   
   ${_kleopatra_uiserver_files}
 
