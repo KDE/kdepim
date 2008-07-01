@@ -159,6 +159,14 @@ static bool is_elg( unsigned int algo ) {
     return is_algo( static_cast<gpgme_pubkey_algo_t>( algo ), ELG );
 }
 
+static void force_set_checked( QAbstractButton * b, bool on ) {
+    // work around Qt bug (tested: 4.1.4, 4.2.3, 4.3.4)
+    const bool autoExclusive = b->autoExclusive();
+    b->setAutoExclusive( false );
+    b->setChecked( b->isEnabled() && on );
+    b->setAutoExclusive( autoExclusive );
+}
+
 namespace Kleo {
 namespace NewCertificateUi {
     class WizardPage : public QWizardPage {
@@ -412,6 +420,23 @@ namespace {
             registerField( "pgp", ui.pgpCLB );
         }
 
+        void setProtocol( Protocol proto ) {
+            if ( proto == OpenPGP )
+                ui.pgpCLB->setChecked( true );
+            else if ( proto == CMS )
+                ui.x509CLB->setChecked( true );
+            else {
+                force_set_checked( ui.pgpCLB,  false );
+                force_set_checked( ui.x509CLB, false );
+            }
+        }
+
+        Protocol protocol() const {
+            return
+                ui.pgpCLB->isChecked()  ? OpenPGP :
+                ui.x509CLB->isChecked() ? CMS : UnknownProtocol ;
+        }
+
         /* reimp */ void initializePage() {
             if ( !initialized ) {
                 connect( ui.pgpCLB,  SIGNAL(clicked()), wizard(), SLOT(next()), Qt::QueuedConnection );
@@ -421,7 +446,7 @@ namespace {
         }
 
         /* reimp */ bool isComplete() const {
-            return ui.pgpCLB->isChecked() || ui.x509CLB->isChecked() ;
+            return protocol() != UnknownProtocol ;
         }
 
     private:
@@ -840,6 +865,15 @@ NewCertificateWizard::NewCertificateWizard( QWidget * p )
 }
 
 NewCertificateWizard::~NewCertificateWizard() {}
+
+void NewCertificateWizard::setProtocol( Protocol proto ) {
+    d->ui.chooseProtocolPage.setProtocol( proto );
+    setStartId( proto == UnknownProtocol ? ChooseProtocolPageId : EnterDetailsPageId );
+}
+
+Protocol NewCertificateWizard::protocol() const {
+    return d->ui.chooseProtocolPage.protocol();
+}
 
 static QString pgpLabel( const QString & attr ) {
     if ( attr == "NAME" )

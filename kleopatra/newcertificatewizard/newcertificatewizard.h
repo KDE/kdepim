@@ -37,6 +37,8 @@
 
 #include <utils/pimpl_ptr.h>
 
+#include <gpgme++/global.h>
+
 namespace Kleo {
 
     namespace NewCertificateUi {
@@ -48,6 +50,9 @@ namespace Kleo {
     public:
         explicit NewCertificateWizard( QWidget * parent=0 );
         ~NewCertificateWizard();
+
+        void setProtocol( GpgME::Protocol protocol );
+        GpgME::Protocol protocol() const;
 
         enum Pages {
             ChooseProtocolPageId,
