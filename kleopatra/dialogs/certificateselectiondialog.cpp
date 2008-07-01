@@ -41,6 +41,8 @@
 #include <models/keycache.h>
 
 #include <commands/reloadkeyscommand.h>
+#include <commands/lookupcertificatescommand.h>
+#include <commands/newcertificatecommand.h>
 
 #include <gpgme++/key.h>
 
@@ -63,6 +65,7 @@
 
 using namespace Kleo;
 using namespace Kleo::Dialogs;
+using namespace Kleo::Commands;
 using namespace boost;
 using namespace GpgME;
 
@@ -75,6 +78,16 @@ public:
 
 private:
     void reload();
+    void create() {
+        NewCertificateCommand * cmd = new NewCertificateCommand( 0 );
+        if ( ( options & AnyFormat ) != AnyFormat )
+            cmd->setProtocol( (options & OpenPGPFormat) ? OpenPGP : CMS );
+        cmd->start();
+    }
+    void lookup() {
+        LookupCertificatesCommand * cmd = new LookupCertificatesCommand( 0 );
+        cmd->start();
+    }
     void slotReloaded();
     void slotCurrentViewChanged( QAbstractItemView * newView );
     void slotSelectionChanged();
@@ -125,11 +138,19 @@ private:
             QPushButton * const ok = buttonBox.addButton( QDialogButtonBox::Ok );
             ok->setEnabled( false );
             QPushButton * const cancel = buttonBox.addButton( QDialogButtonBox::Close );
-            QPushButton * const reload = buttonBox.addButton( i18n("&Reload Certificates"), QDialogButtonBox::ActionRole );
+            QPushButton * const reload = buttonBox.addButton( i18n("Reload"),    QDialogButtonBox::ActionRole );
+            QPushButton * const lookup = buttonBox.addButton( i18n("Lookup..."), QDialogButtonBox::ActionRole );
+            QPushButton * const create = buttonBox.addButton( i18n("New..."),    QDialogButtonBox::ActionRole );
+
+            lookup->setToolTip( i18nc("@info:tooltip","Lookup certificates on server") );
+            reload->setToolTip( i18nc("@info:tooltip","Refresh certificate list") );
+            create->setToolTip( i18nc("@info:tooltip","Create a new certificate") );
 
             connect( &buttonBox, SIGNAL(accepted()), q, SLOT(accept()) );
             connect( &buttonBox, SIGNAL(rejected()), q, SLOT(reject()) );
             connect( reload,     SIGNAL(clicked()),  q, SLOT(reload()) );
+            connect( lookup,     SIGNAL(clicked()),  q, SLOT(lookup()) );
+            connect( create,     SIGNAL(clicked()),  q, SLOT(create()) );
         }
     } ui;
 };
