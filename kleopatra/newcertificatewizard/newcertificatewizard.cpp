@@ -713,7 +713,8 @@ namespace {
                 KMessageBox::information( this,
                                           i18nc("@info",
                                                 "<para>Successfully wrote request to <filename>%1</filename>.</para>"
-                                                "<para>You should now send the request to the Certification Authority (CA).</para>" ),
+                                                "<para>You should now send the request to the Certification Authority (CA).</para>",
+                                                fileName ),
                                           i18nc("@title", "Request Saved" ) );
         }
 
