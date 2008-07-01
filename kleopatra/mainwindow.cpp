@@ -34,8 +34,6 @@
 
 #include "mainwindow.h"
 
-#include "newcertificatewizard/newcertificatewizard.h"
-
 #include "models/keylistmodel.h"
 #include "models/keylistsortfilterproxymodel.h"
 
@@ -65,6 +63,7 @@
 #include "commands/selftestcommand.h"
 #include "commands/certifycertificatecommand.h"
 #include "commands/adduseridcommand.h"
+#include "commands/newcertificatecommand.h"
 
 #include "utils/detail_p.h"
 #include "utils/gnupg-helper.h"
@@ -258,7 +257,9 @@ public:
     void editKeybindings() {
         KShortcutsDialog::configure( q->actionCollection(), KShortcutsEditor::LetterShortcutsAllowed );
     }
-    void newCertificate();
+    void newCertificate() {
+        createAndStart<NewCertificateCommand>();
+    }
 
     void selfTest() {
         createAndStart<SelfTestCommand>();
@@ -491,12 +492,6 @@ void MainWindow::Private::setupActions() {
     controller.enableDisableActions( 0 );
 
     ui.tabWidget.createActions( coll );
-}
-
-void MainWindow::Private::newCertificate() {
-    QPointer<NewCertificateWizard> wiz( new NewCertificateWizard( q ) );
-    wiz->exec();
-    delete wiz;
 }
 
 void MainWindow::Private::configureBackend() {
