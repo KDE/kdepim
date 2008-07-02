@@ -44,9 +44,11 @@ public:
     ~SystemTrayIcon();
 
     void setMainWindow( QWidget * w );
+    QWidget * mainWindow() const;
 
 public Q_SLOTS:
     void openOrRaiseMainWindow();
+    void openOrRaiseConfigDialog();
 
 private:
     virtual QWidget * doCreateMainWindow() const = 0;
@@ -68,6 +70,8 @@ template <typename T_Widget>
 class SystemTrayIconFor : public SystemTrayIcon {
 public:
     explicit SystemTrayIconFor( QObject * parent=0 ) : SystemTrayIcon( parent ) {}
+
+    T_Widget * mainWindow() const { return static_cast<T_Widget*>( SystemTrayIcon::mainWindow() ); }
 
 private:
     /* reimp */ QWidget * doCreateMainWindow() const { return new T_Widget; }

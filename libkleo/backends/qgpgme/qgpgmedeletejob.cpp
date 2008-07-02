@@ -2,7 +2,7 @@
     qgpgmedeletejob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -32,36 +32,32 @@
 
 #include "qgpgmedeletejob.h"
 
-#include <qgpgme/eventloopinteractor.h>
-
 #include <gpgme++/context.h>
+#include <gpgme++/key.h>
 
-#include <assert.h>
+#include <cassert>
 
-Kleo::QGpgMEDeleteJob::QGpgMEDeleteJob( GpgME::Context * context )
-  : DeleteJob( QGpgME::EventLoopInteractor::instance() ),
-    QGpgMEJob( this, context )
+using namespace Kleo;
+using namespace GpgME;
+using namespace boost;
+
+QGpgMEDeleteJob::QGpgMEDeleteJob( Context * context )
+  : mixin_type( context )
 {
-  assert( context );
+  lateInitialization();
 }
 
-Kleo::QGpgMEDeleteJob::~QGpgMEDeleteJob() {
+QGpgMEDeleteJob::~QGpgMEDeleteJob() {}
+
+static QGpgMEDeleteJob::result_type delete_key( Context * ctx, const Key & key, bool allowSecretKeyDeletion ) {
+  const Error err = ctx->deleteKey( key, allowSecretKeyDeletion );
+  const QString log = _detail::audit_log_as_html( ctx );
+  return make_tuple( err, log );
 }
 
-GpgME::Error Kleo::QGpgMEDeleteJob::start( const GpgME::Key & key, bool allowSecretKeyDeletion ) {
-
-  hookupContextToEventLoopInteractor();
-
-  const GpgME::Error err = mCtx->startKeyDeletion( key, allowSecretKeyDeletion );
-
-  if ( err )
-    deleteLater();
-  return err;
-}
-
-void Kleo::QGpgMEDeleteJob::doOperationDoneEvent( const GpgME::Error & error ) {
-  getAuditLog();
-  emit result( error );
+Error QGpgMEDeleteJob::start( const Key & key, bool allowSecretKeyDeletion ) {
+  run( bind( &delete_key, _1, key, allowSecretKeyDeletion ) );
+  return Error();
 }
 
 #include "qgpgmedeletejob.moc"

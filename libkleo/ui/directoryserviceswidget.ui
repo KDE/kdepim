@@ -83,7 +83,7 @@
           <string>Click to remove the currently selected service</string>
          </property>
          <property name="whatsThis" >
-          <string>Click this button to remove the currently selected directory service. The change will only take effect once you acknowledge the mail configuration dialog.</string>
+          <string>Click this button to remove the currently selected directory service. The change will only take effect once you acknowledge the main configuration dialog.</string>
          </property>
          <property name="text" >
           <string>Delete</string>
@@ -115,6 +115,9 @@
    </item>
    <item>
     <widget class="QCheckBox" name="showUserAndPasswordCB" >
+     <property name="whatsThis" >
+      <string>Use this option to switch display of username and password information on or off in the above table.</string>
+     </property>
      <property name="text" >
       <string>Show user and password information</string>
      </property>

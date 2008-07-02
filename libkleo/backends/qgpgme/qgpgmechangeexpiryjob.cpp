@@ -32,49 +32,47 @@
 
 #include "qgpgmechangeexpiryjob.h"
 
-#include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
 
 #include <gpgme++/context.h>
 #include <gpgme++/data.h>
 #include <gpgme++/gpgsetexpirytimeeditinteractor.h>
+#include <gpgme++/key.h>
 
 #include <QDateTime>
 
 #include <cassert>
 #include <memory>
 
-Kleo::QGpgMEChangeExpiryJob::QGpgMEChangeExpiryJob( GpgME::Context * context )
-  : ChangeExpiryJob( QGpgME::EventLoopInteractor::instance() ),
-    QGpgMEJob( this, context )
+using namespace Kleo;
+using namespace GpgME;
+using namespace boost;
+
+QGpgMEChangeExpiryJob::QGpgMEChangeExpiryJob( Context * context )
+  : mixin_type( context )
 {
-  assert( context );
+  lateInitialization();
 }
 
-Kleo::QGpgMEChangeExpiryJob::~QGpgMEChangeExpiryJob() {
-}
+QGpgMEChangeExpiryJob::~QGpgMEChangeExpiryJob() {}
 
-GpgME::Error Kleo::QGpgMEChangeExpiryJob::start( const GpgME::Key & key, const QDateTime & expiry ) {
-  assert( !mOutData );
-
-  createOutData();
-  hookupContextToEventLoopInteractor();
-
-  std::auto_ptr<GpgME::EditInteractor>
+static QGpgMEChangeExpiryJob::result_type change_expiry( Context * ctx, const Key & key, const QDateTime & expiry ) {
+  std::auto_ptr<EditInteractor>
       ei( expiry.isValid()
-          ? new GpgME::GpgSetExpiryTimeEditInteractor( expiry.date().toString( Qt::ISODate ).toStdString() )
-          : new GpgME::GpgSetExpiryTimeEditInteractor() );
+          ? new GpgSetExpiryTimeEditInteractor( expiry.date().toString( Qt::ISODate ).toStdString() )
+          : new GpgSetExpiryTimeEditInteractor() );
 
-  const GpgME::Error err = mCtx->startEditing( key, ei, *mOutData );
-
-  if ( err )
-    deleteLater();
-  return err;
+  QGpgME::QByteArrayDataProvider dp;
+  Data data( &dp );
+  assert( !data.isNull() );
+  const Error err = ctx->edit( key, ei, data );
+  const QString log = _detail::audit_log_as_html( ctx );
+  return make_tuple( err, log );
 }
 
-void Kleo::QGpgMEChangeExpiryJob::doOperationDoneEvent( const GpgME::Error & error ) {
-  getAuditLog();
-  emit result( error );
+Error QGpgMEChangeExpiryJob::start( const Key & key, const QDateTime & expiry ) {
+  run( bind( &change_expiry, _1, key, expiry ) );
+  return Error();
 }
 
 #include "qgpgmechangeexpiryjob.moc"

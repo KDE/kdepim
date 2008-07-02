@@ -38,6 +38,8 @@
 
 #include <kleo/dn.h>
 
+#include <kmime/kmime_header_parsing.h>
+
 #include <gpgme++/key.h>
 #include <gpgme++/importresult.h>
 
@@ -52,6 +54,8 @@
 
 using namespace GpgME;
 using namespace Kleo;
+using namespace KMime::Types;
+using namespace KMime::HeaderParsing;
 
 //
 // Name
@@ -78,6 +82,68 @@ QString Formatting::prettyName( int proto, const char * id, const char * name_, 
     }
 
     return QString();
+}
+
+QString Formatting::prettyNameAndEMail( int proto, const char * id, const char * name_, const char * email_, const char * comment_ ) {
+    return prettyNameAndEMail( proto, QString::fromUtf8( id ), QString::fromUtf8( name_ ), prettyEMail( email_, id ), QString::fromUtf8( comment_ ) );
+}
+
+QString Formatting::prettyNameAndEMail( int proto, const QString & id, const QString & name, const QString & email, const QString & comment ) {
+
+    if ( proto == OpenPGP ) {
+        if ( name.isEmpty() )
+            if ( email.isEmpty() )
+                return QString();
+            else if ( comment.isEmpty() )
+                return QString::fromLatin1( "<%1>" ).arg( email );
+            else
+                return QString::fromLatin1( "(%2) <%1>" ).arg( email, comment );
+        if ( email.isEmpty() )
+            if ( comment.isEmpty() )
+                return name;
+            else
+                return QString::fromLatin1( "%1 (%2)" ).arg( name, comment );
+        if ( comment.isEmpty() )
+            return QString::fromLatin1( "%1 <%2>" ).arg( name, email );
+        else
+            return QString::fromLatin1( "%1 (%3) <%2>" ).arg( name, email, comment );
+    }
+
+    if ( proto == CMS ) {
+        const DN subject( id );
+        const QString cn = subject["CN"].trimmed();
+        if ( cn.isEmpty() )
+            return subject.prettyDN();
+        return cn;
+    }
+    return QString();
+}
+
+QString Formatting::prettyUserID( const UserID & uid ) {
+    if ( uid.parent().protocol() == OpenPGP )
+        return prettyNameAndEMail( uid );
+    const QByteArray id = QByteArray( uid.id() ).trimmed();
+    if ( id.startsWith( '<' ) )
+        return prettyEMail( uid.email(), uid.id() );
+    if ( id.startsWith( '(' ) )
+        // ### parse uri/dns:
+        return QString::fromUtf8( uid.id() );
+    else
+        return DN( uid.id() ).prettyDN();
+}
+
+QString Formatting::prettyKeyID( const char * id ) {
+    if ( !id )
+        return QString();
+    return "0x" + QString::fromLatin1( id ).toUpper();
+}
+
+QString Formatting::prettyNameAndEMail( const UserID & uid ) {
+    return prettyNameAndEMail( uid.parent().protocol(), uid.id(), uid.name(), uid.email(), uid.comment() );
+}
+
+QString Formatting::prettyNameAndEMail( const Key & key ) {
+    return prettyNameAndEMail( key.userID( 0 ) );
 }
 
 QString Formatting::prettyName( const Key & key ) {
@@ -114,13 +180,11 @@ QString Formatting::prettyEMail( const UserID::Signature & sig ) {
 }
 
 QString Formatting::prettyEMail( const char * email_, const char * id ) {
-    const QString email = QString::fromUtf8( email_ ).trimmed();
-    if ( !email.isEmpty() )
-	if ( email.startsWith( '<' ) && email.endsWith( '>' ) )
-	    return email.mid( 1, email.length() - 2 );
-	else
-	    return email;
-    return DN( id )["EMAIL"].trimmed();
+    Mailbox mailBox;
+    if ( email_ && parseMailbox( email_, email_ + strlen( email_ ), mailBox ) )
+        return mailBox.addrSpec().asPrettyString();
+    else
+        return DN( id )["EMAIL"].trimmed();
 }
 
 //
@@ -185,7 +249,7 @@ QString Formatting::toolTip( const Key & key, int flags ) {
     const Subkey subkey = key.subkey( 0 );
 
     QString result;
-    if ( flags & Validity ) 
+    if ( flags & Validity )
         if ( key.protocol() == OpenPGP || ( key.keyListMode() & Validate ) )
             if ( key.isRevoked() )
                 result += make_red( i18n( "This certificate has been revoked." ) );
@@ -194,7 +258,7 @@ QString Formatting::toolTip( const Key & key, int flags ) {
             else if ( key.isDisabled() )
                 result += i18n( "This certificate has been disabled locally." );
             else
-                result += i18n( "This certificate appears to be valid." );
+                result += i18n( "This certificate is currently valid." );
         else
             result += i18n( "The validity of this certificate cannot be checked at the moment." );
     if ( flags == Validity )
@@ -208,11 +272,15 @@ QString Formatting::toolTip( const Key & key, int flags ) {
             result += format_row( i18n("Issuer"), key.issuerName() );
     }
     if ( flags & UserIDs ) {
-        result += format_row( key.protocol() == CMS
-                              ? i18n("Subject")
-                              : i18n("User-ID"), key.userID( 0 ).id() );
-        for ( unsigned int i = 1, end = key.numUserIDs() ; i < end ; ++i )
-            result += format_row( i18n("a.k.a."), key.userID( i ).id() );
+        const std::vector<UserID> uids = key.userIDs();
+        if ( !uids.empty() )
+            result += format_row( key.protocol() == CMS
+                                  ? i18n("Subject")
+                                  : i18n("User-ID"), prettyUserID( uids.front() ) );
+        if ( uids.size() > 1 )
+            for ( std::vector<UserID>::const_iterator it = uids.begin() + 1, end = uids.end() ; it != end ; ++it )
+                if ( !it->isRevoked() && !it->isInvalid() )
+                    result += format_row( i18n("a.k.a."), prettyUserID( *it ) );
     }
     if ( flags & ExpiryDates )
         result += format_row( i18n("Validity"),
@@ -508,3 +576,11 @@ QString Formatting::importMetaData( const Import & import ) {
         : results.join( "\n" );
 }
 
+
+//
+// Overview in CertificateDetailsDialog
+//
+
+QString Formatting::formatOverview( const Key & key ) {
+    return toolTip( key, AllOptions );
+}

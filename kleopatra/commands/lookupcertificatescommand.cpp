@@ -48,6 +48,7 @@
 #include <kleo/keylistjob.h>
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/cryptobackend.h>
+#include <kleo/cryptoconfig.h>
 
 #include <gpgme++/key.h>
 #include <gpgme++/keylistresult.h>
@@ -92,6 +93,9 @@ private:
     void slotCMSDownloadResult( const Error & err, const QByteArray & data );
     void slotDetailsRequested( const Key & key );
     void slotSaveAsRequested( const std::vector<Key> & keys );
+    void slotDialogRejected() {
+        canceled();
+    }
 
 private:
     using ImportCertificatesCommand::Private::showError;
@@ -108,6 +112,7 @@ private:
     void startKeyListJob( GpgME::Protocol proto, const QString & str );
     void startDownloadJob( const Key & key );
     void checkForDownloadFinished();
+    bool checkConfig() const;
 
     QWidget * dialogOrView() const { if ( dialog ) return dialog; else return view(); }
 
@@ -169,6 +174,11 @@ LookupCertificatesCommand::~LookupCertificatesCommand() { kDebug(); }
 
 void LookupCertificatesCommand::doStart() {
 
+    if ( !d->checkConfig() ) {
+        d->finished();
+        return;
+    }
+
     d->createDialog();
     assert( d->dialog );
 
@@ -191,11 +201,16 @@ void LookupCertificatesCommand::Private::createDialog() {
     connect( dialog, SIGNAL(detailsRequested(GpgME::Key)),
              q, SLOT(slotDetailsRequested(GpgME::Key)) );
     connect( dialog, SIGNAL(rejected()),
-             q, SLOT(cancel()) );
+             q, SLOT(slotDialogRejected()) );
 }
 
 void LookupCertificatesCommand::Private::slotSearchTextChanged( const QString & str ) {
-    dialog->setPassive( true );
+    // pressing return might trigger both search and dialog destruction (search focused and default key set)
+    // On Windows, the dialog is then destroyed before this slot is called
+    if ( dialog ) { //thus test
+        dialog->setPassive( true );
+        dialog->setCertificates( std::vector<Key>() );
+    }
 
     startKeyListJob( CMS,     str );
     startKeyListJob( OpenPGP, str );
@@ -283,7 +298,7 @@ namespace {
     template <typename T>
     QStringList filter_and_format_successful_downloads( const T & t ) {
         QStringList result;
-        
+
         return result;
     }
 
@@ -385,6 +400,36 @@ void LookupCertificatesCommand::Private::showError( QWidget * parent, const KeyL
                                             QString::fromLocal8Bit( result.error().asString() ) ) );
 }
 
+static bool haveOpenPGPKeyserverConfigured() {
+    const Kleo::CryptoConfig * const config = Kleo::CryptoBackendFactory::instance()->config();
+    if ( !config )
+        return false;
+    const Kleo::CryptoConfigEntry * const entry = config->entry( "gpg", "Keyserver", "keyserver" );
+    return entry && !entry->stringValue().isEmpty();
+}
+
+
+static bool haveX509DirectoryServerConfigured() {
+    const Kleo::CryptoConfig * const config = Kleo::CryptoBackendFactory::instance()->config();
+    if ( !config )
+        return false;
+    const Kleo::CryptoConfigEntry * const entry = config->entry( "dirmngr", "LDAP", "LDAP Server" );
+    return entry && !entry->urlValueList().empty();
+}
+
+
+bool LookupCertificatesCommand::Private::checkConfig() const {
+    const bool ok = haveOpenPGPKeyserverConfigured() || haveX509DirectoryServerConfigured();
+    if ( !ok )
+        KMessageBox::information( view(), i18nc("@info",
+                                           "<para>You do not have any directory servers configured.</para>"
+                                           "<para>You need to configure at least one directory server to "
+                                           "search on one.</para>"
+                                           "<para>You can configure directory servers here: "
+                                           "<interface>Settings->Configure Kleopatra</interface>.</para>"),
+                                  i18nc("@title", "No Directory Servers Configured") );
+    return ok;
+}
 
 #undef d
 #undef q

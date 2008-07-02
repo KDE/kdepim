@@ -102,12 +102,13 @@ namespace {
                                         "support for this backend.</para>");
                 m_proposedFix += i18nc("@info",
                                        "<para>Replace the <icode>gpgme</icode> library with a version compiled "
-                                       "with <application>%1</application> support.",
+                                       "with <application>%1</application> support.</para>",
                                        engine_name( eng ) );
             } else if ( ei.fileName() && !ei.version() ) {
                 m_error = i18n("not properly installed");
                 m_explaination += i18nc("@info",
-                                        "<para>Backend <command>%1</command> is not installed properly.</para>" );
+                                        "<para>Backend <command>%1</command> is not installed properly.</para>",
+                                        QFile::decodeName( ei.fileName() ) );
                 m_proposedFix += i18nc( "@info",
                                         "<para>Please check the output of <command>%1 --version</command> manually.</para>",
                                         QFile::decodeName( ei.fileName() ) );
@@ -115,7 +116,7 @@ namespace {
                 m_error = i18n("too old");
                 m_explaination += i18nc("@info",
                                         "<para>Backend <command>%1</command> is installed in version %2, "
-                                        "but at least version %3 is required.",
+                                        "but at least version %3 is required.</para>",
                                         QFile::decodeName( ei.fileName() ),
                                         QString::fromUtf8( ei.version() ),
                                         QString::fromUtf8( ei.requiredVersion() ) );
@@ -126,7 +127,7 @@ namespace {
                 m_error = m_explaination = i18n("unknown problem");
                 m_proposedFix += i18nc( "@info",
                                         "<para>Make sure <application>%1</application> is installed and "
-                                        "in <envvar>PATH</envvar>.",
+                                        "in <envar>PATH</envar>.</para>",
                                         engine_name( eng ) );
             }
         }

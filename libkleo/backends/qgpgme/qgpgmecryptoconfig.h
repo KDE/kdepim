@@ -40,6 +40,7 @@
 #include <QStringList>
 #include <QObject>
 #include <QVariant>
+#include <QPointer>
 
 class QGpgMECryptoConfigComponent;
 class QGpgMECryptoConfigEntry;
@@ -111,18 +112,20 @@ private:
 class QGpgMECryptoConfigGroup : public Kleo::CryptoConfigGroup {
 
 public:
-  QGpgMECryptoConfigGroup( const QString & name, const QString& description, int level );
+  QGpgMECryptoConfigGroup( QGpgMECryptoConfigComponent* comp, const QString& name, const QString& description, int level );
   ~QGpgMECryptoConfigGroup();
 
   QString name() const { return mName; }
   QString iconName() const { return QString(); }
   QString description() const { return mDescription; }
+  QString path() const { return mComponent->name() + QLatin1Char( '/' ) + mName ; }
   Kleo::CryptoConfigEntry::Level level() const { return mLevel; }
   QStringList entryList() const;
   Kleo::CryptoConfigEntry* entry( const QString& name ) const;
 
 private:
   friend class QGpgMECryptoConfigComponent; // it adds the entries
+  QPointer<QGpgMECryptoConfigComponent> mComponent;
   QHash<QString,QGpgMECryptoConfigEntry*> mEntries;
   QString mName;
   QString mDescription;
@@ -131,11 +134,12 @@ private:
 
 class QGpgMECryptoConfigEntry : public Kleo::CryptoConfigEntry {
 public:
-  QGpgMECryptoConfigEntry( const QStringList& parsedLine );
+  QGpgMECryptoConfigEntry( QGpgMECryptoConfigGroup * group, const QStringList& parsedLine );
   ~QGpgMECryptoConfigEntry();
 
   QString name() const { return mName; }
   QString description() const { return mDescription; }
+  QString path() const { return mGroup->path() + QLatin1Char( '/' ) + mName ; }
   bool isOptional() const;
   bool isReadOnly() const;
   bool isList() const;
@@ -174,6 +178,7 @@ protected:
   QVariant stringToValue( const QString& value, bool unescape ) const;
   QString toString( bool escape ) const;
 private:
+  QGpgMECryptoConfigGroup * mGroup;
   QString mName;
   QString mDescription;
   QVariant mDefaultValue;

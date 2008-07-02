@@ -71,6 +71,9 @@ namespace KLEOPATRACLIENT_NAMESPACE {
         bool isOptionSet( const char * name ) const;
         bool isOptionCritical( const char * name ) const;
 
+        void setFilePaths( const QStringList & filePaths );
+        QStringList filePaths() const;
+
         QByteArray receivedData() const;
 
         void setCommand( const char * command );

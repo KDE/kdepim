@@ -35,11 +35,12 @@
 
 #include "job.h"
 
+#include <gpgme++/key.h>
+
 #include <vector>
 
 namespace GpgME {
   class Error;
-  class Key;
   class KeyListResult;
 }
 
@@ -88,7 +89,7 @@ namespace Kleo {
 
   Q_SIGNALS:
     void nextKey( const GpgME::Key & key );
-    void result( const GpgME::KeyListResult & result );
+    void result( const GpgME::KeyListResult & result, const std::vector<GpgME::Key> & keys=std::vector<GpgME::Key>(), const QString & auditLogAsHtml=QString() );
   };
 
 }

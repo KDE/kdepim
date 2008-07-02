@@ -101,7 +101,9 @@ namespace {
         char content[28];
         unsigned int classification;
     } content_classifications[] = {
+        { "CERTIFICATE",       Certificate },
         { "MESSAGE",           OpaqueSignature|CipherText },
+        { "PKCS12",            ExportedPSM },
         { "PRIVATE KEY BLOCK", ExportedPSM },
         { "PUBLIC KEY BLOCK",  Certificate },
         { "SIGNATURE",         DetachedSignature },
@@ -154,7 +156,7 @@ unsigned int Kleo::classify( const QString & filename ) {
     if ( !file.open( QIODevice::ReadOnly|QIODevice::Text ) )
         return it->classification;
 
-    const unsigned int contentClassification = classifyContent( file.read( 1024 ) );
+    const unsigned int contentClassification = classifyContent( file.read( 4096 ) );
     if ( contentClassification != defaultClassification )
         return contentClassification;
     else
@@ -165,7 +167,7 @@ unsigned int Kleo::classifyContent( const QByteArray & data ) {
 #ifdef __GNUC__
     assert( __gnu_cxx::is_sorted( begin( content_classifications ), end( content_classifications ), ByContent<std::less>(100) ) );
 #endif
-
+    
     static const char beginString[] = "-----BEGIN ";
     static const QByteArrayMatcher beginMatcher( beginString );
     int pos = beginMatcher.indexIn( data );
@@ -189,6 +191,33 @@ unsigned int Kleo::classifyContent( const QByteArray & data ) {
         return defaultClassification;
     else
         return cit->classification | ( pgp ? OpenPGP : CMS );
+}
+
+QString Kleo::printableClassification( unsigned int classification ) {
+    QStringList parts;
+    if ( classification & CMS )
+        parts.push_back( "CMS" );
+    if ( classification & OpenPGP )
+        parts.push_back( "OpenPGP" );
+    if ( classification & Binary )
+        parts.push_back( "Binary" );
+    if ( classification & Ascii )
+        parts.push_back( "Ascii" );
+    if ( classification & DetachedSignature )
+        parts.push_back( "DetachedSignature" );
+    if ( classification & OpaqueSignature )
+        parts.push_back( "OpaqueSignature" );
+    if ( classification & ClearsignedMessage )
+        parts.push_back( "ClearsignedMessage" );
+    if ( classification & CipherText )
+        parts.push_back( "CipherText" );
+    if ( classification & Certificate )
+        parts.push_back( "Certificate" );
+    if ( classification & ExportedPSM )
+        parts.push_back( "ExportedPSM" );
+    if ( classification & CertificateRequest )
+        parts.push_back( "CertificateRequest" );
+    return parts.join( ", " );
 }
 
 static QString chopped( QString s, unsigned int n ) {

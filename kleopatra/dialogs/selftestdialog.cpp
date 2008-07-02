@@ -39,6 +39,7 @@
 #include <selftest/selftest.h>
 
 #include <QAbstractTableModel>
+#include <QHeaderView>
 
 #include <boost/shared_ptr.hpp>
 
@@ -179,6 +180,11 @@ private:
     }
 
 private:
+    void updateColumnSizes() {
+        ui.resultsTV->header()->resizeSections( QHeaderView::ResizeToContents );
+    }
+
+private:
     QModelIndex selectedRow() const {
         const QItemSelectionModel * const ism = ui.resultsTV->selectionModel();
         if ( !ism )
@@ -233,10 +239,12 @@ void SelfTestDialog::clear() {
 
 void SelfTestDialog::addSelfTest( const shared_ptr<SelfTest> & test ) {
     d->model.append( std::vector< shared_ptr<SelfTest> >( 1, test ) );
+    d->updateColumnSizes();
 }
 
 void SelfTestDialog::addSelfTests( const std::vector< shared_ptr<SelfTest> > & tests ) {
     d->model.append( tests );
+    d->updateColumnSizes();
 }
 
 void SelfTestDialog::setRunAtStartUp( bool on ) {

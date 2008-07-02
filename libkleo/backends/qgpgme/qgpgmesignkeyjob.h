@@ -35,31 +35,53 @@
 
 #include "kleo/signkeyjob.h"
 
-#include "qgpgmejob.h"
+#include "threadedjobmixin.h"
 
-namespace GpgME {
-  class Error;
-  class Context;
-}
+#include <gpgme++/key.h>
 
 namespace Kleo {
 
-  class QGpgMESignKeyJob : public SignKeyJob, private QGpgMEJob {
-    Q_OBJECT QGPGME_JOB
+  class QGpgMESignKeyJob
+#ifdef Q_MOC_RUN
+    : public SignKeyJob
+#else
+    : public _detail::ThreadedJobMixin<SignKeyJob>
+#endif
+  {
+    Q_OBJECT
+#ifdef Q_MOC_RUN
+  public Q_SLOTS:
+    void slotFinished();
+#endif
   public:
-    QGpgMESignKeyJob( GpgME::Context * context );
+    explicit QGpgMESignKeyJob( GpgME::Context * context );
     ~QGpgMESignKeyJob();
 
     /*! \reimp from SignKeyJob */
-    GpgME::Error start( const GpgME::Key & key, SigningOption option );
+    GpgME::Error start( const GpgME::Key & key );
+
+    /*! \reimp from SignKeyJob */
+    void setUserIDsToSign( const std::vector<unsigned int> & idsToSign );
+
+    /*! \reimp from SignKeyJob */
+    void setCheckLevel( unsigned int checkLevel );
+
+    /*! \reimp from SignKeyJob */
+    void setExportable( bool exportable );
+
+    /*! \reimp from SignKeyJob */
+    void setSigningKey( const GpgME::Key & key );
+
+    /*! \reimp from SignKeyJob */
+    void setNonRevocable( bool nonRevocable );
 
   private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-
-  private Q_SLOTS:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, e );
-    }
+      std::vector<unsigned int> m_userIDsToSign;
+      unsigned int m_checkLevel;
+      bool m_exportable;
+      GpgME::Key m_signingKey;
+      bool m_nonRevocable;
+      bool m_started;
   };
 }
 

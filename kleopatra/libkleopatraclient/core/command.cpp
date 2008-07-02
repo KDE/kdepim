@@ -47,9 +47,60 @@
 #include <boost/type_traits/remove_pointer.hpp>
 
 #include <algorithm>
+#include <string>
 
 using namespace KLEOPATRACLIENT_NAMESPACE;
 using namespace boost;
+
+// copied from kleopatra/utils/hex.cpp
+static std::string hexencode( const std::string & in ) {
+    std::string result;
+    result.reserve( 3 * in.size() );
+
+    static const char hex[] = "0123456789ABCDEF";
+
+    for ( std::string::const_iterator it = in.begin(), end = in.end() ; it != end ; ++it )
+        switch ( const unsigned char ch = *it ) {
+        default:
+            if ( ch >= '!' && ch <= '~' || ch > 0xA0 ) {
+                result += ch;
+                break;
+            }
+            // else fall through
+        case ' ':
+            result += '+';
+            break;
+        case '"':
+        case '#':
+        case '$':
+        case '%':
+        case '\'':
+        case '+':
+        case '=':
+            result += '%';
+            result += hex[ (ch & 0xF0) >> 4 ];
+            result += hex[ (ch & 0x0F)      ];
+            break;
+        }
+    
+    return result;
+}
+
+#ifdef UNUSED
+static std::string hexencode( const char * in ) {
+    if ( !in )
+        return std::string();
+    return hexencode( std::string( in ) );
+}
+#endif
+
+static QByteArray hexencode( const QByteArray & in ) {
+    if ( in.isNull() )
+        return QByteArray();
+    const std::string result = hexencode( std::string( in.constData() ) );
+    return QByteArray( result.data(), result.size() );
+}
+// end copied from kleopatra/utils/hex.cpp
 
 Command::Command( QObject * p )
     : QObject( p ), d( new Private( this ) )
@@ -198,6 +249,16 @@ bool Command::isOptionCritical( const char * name ) const {
     return it != d->inputs.options.end() && it->second.isCritical;
 }
 
+void Command::setFilePaths( const QStringList & filePaths ) {
+    const QMutexLocker locker( &d->mutex );
+    d->inputs.filePaths = filePaths;
+}
+
+QStringList Command::filePaths() const {
+    const QMutexLocker locker( &d->mutex );
+    return d->inputs.filePaths;
+}
+
 QByteArray Command::receivedData() const {
     const QMutexLocker locker( &d->mutex );
     return d->outputs.data;
@@ -295,6 +356,10 @@ static int send_option( const AssuanClientContext & ctx, const char * name, cons
         return my_assuan_transact( ctx, QString().sprintf( "OPTION %s", name ).toUtf8().constData() );
 }
 
+static int send_file( const AssuanClientContext & ctx, const QString & file ) {
+    return my_assuan_transact( ctx, QString().sprintf( "FILE %s", hexencode( QFile::encodeName( file ) ).constData() ).toUtf8().constData() );
+}
+
 void Command::Private::run() {
 
     // Take a snapshot of the input data, and clear the output data:
@@ -385,6 +450,13 @@ void Command::Private::run() {
             } else {
                 qDebug() << "Failed to send non-critical option" << it->first.c_str() << ":" << to_error_string( err );
             }
+
+    Q_FOREACH( const QString & filePath, in.filePaths )
+        if ( ( err = send_file( ctx, filePath ) ) ) {
+            out.errorString = tr("Failed to send file path %1: %2")
+                .arg( filePath, to_error_string( err ) );
+            goto leave;
+        }
 
 #if 0
     setup I/O;

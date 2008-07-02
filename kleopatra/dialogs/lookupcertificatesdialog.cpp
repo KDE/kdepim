@@ -212,7 +212,7 @@ void LookupCertificatesDialog::Private::enableDisableWidgets() {
     // enable/disable everything except 'close', based on passive:
     Q_FOREACH( QObject * const o, q->children() )
         if ( QWidget * const w = qobject_cast<QWidget*>( o ) )
-            w->setDisabled( passive && w != ui.closePB() );
+            w->setDisabled( passive && w != ui.closePB() && w != ui.buttonBox );
 
     if ( passive )
         return;
@@ -233,6 +233,7 @@ void LookupCertificatesDialog::Private::enableDisableWidgets() {
     } else {
         ui.importPB()->setEnabled(  selection.size() == 1 );
     }
+    ui.importPB()->setDefault( false ); // otherwise Import becomes default button if enabled and return triggers both a search and accept()
 }
 
 #include "moc_lookupcertificatesdialog.cpp"

@@ -2,7 +2,7 @@
     qgpgmeverifydetachedjob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004,2007,2008 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -32,7 +32,6 @@
 
 #include "qgpgmeverifydetachedjob.h"
 
-#include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
 
 #include <gpgme++/context.h>
@@ -41,71 +40,54 @@
 
 #include <KLocale>
 
-#include <assert.h>
+#include <cassert>
 
-Kleo::QGpgMEVerifyDetachedJob::QGpgMEVerifyDetachedJob( GpgME::Context * context )
-  : VerifyDetachedJob( QGpgME::EventLoopInteractor::instance() ),
-    QGpgMEJob( this, context )
+using namespace Kleo;
+using namespace GpgME;
+using namespace boost;
+
+QGpgMEVerifyDetachedJob::QGpgMEVerifyDetachedJob( Context * context )
+  : mixin_type( context )
 {
-  assert( context );
+  lateInitialization();
 }
 
-Kleo::QGpgMEVerifyDetachedJob::~QGpgMEVerifyDetachedJob() {
+QGpgMEVerifyDetachedJob::~QGpgMEVerifyDetachedJob() {}
+
+static QGpgMEVerifyDetachedJob::result_type verify_detached( Context * ctx, const boost::shared_ptr<QIODevice> & signature, const boost::shared_ptr<QIODevice> & signedData ) {
+  QGpgME::QIODeviceDataProvider sigDP( signature );
+  Data sig( &sigDP );
+
+  QGpgME::QIODeviceDataProvider dataDP( signedData );
+  Data data( &dataDP );
+
+  const VerificationResult res = ctx->verifyDetachedSignature( sig, data );
+  const QString log = _detail::audit_log_as_html( ctx );
+
+  return make_tuple( res, log );
 }
 
-void Kleo::QGpgMEVerifyDetachedJob::setup( const QByteArray & signature, const QByteArray & signedData ) {
-  assert( !mInData );
-  assert( !mOutData );
+static QGpgMEVerifyDetachedJob::result_type verify_detached_qba( Context * ctx, const QByteArray & signature, const QByteArray & signedData ) {
+  QGpgME::QByteArrayDataProvider sigDP( signature );
+  Data sig( &sigDP );
 
-  createInData( signature );
+  QGpgME::QByteArrayDataProvider dataDP( signedData );
+  Data data( &dataDP );
 
-  // two "in" data objects - (mis|re)use the "out" data object for the second...
-  mOutDataDataProvider = new QGpgME::QByteArrayDataProvider( signedData );
-  mOutData = new GpgME::Data( mOutDataDataProvider );
-  assert( !mOutData->isNull() );
+  const VerificationResult res = ctx->verifyDetachedSignature( sig, data );
+  const QString log = _detail::audit_log_as_html( ctx );
+
+  return make_tuple( res, log );
+
 }
 
-GpgME::Error Kleo::QGpgMEVerifyDetachedJob::start( const QByteArray & signature,
-						   const QByteArray & signedData ) {
-  setup( signature, signedData );
-
-  hookupContextToEventLoopInteractor();
-
-  const GpgME::Error err = mCtx->startDetachedSignatureVerification( *mInData, *mOutData );
-
-  if ( err )
-    deleteLater();
-  return err;
+Error QGpgMEVerifyDetachedJob::start( const QByteArray & signature, const QByteArray & signedData ) {
+  run( bind( &verify_detached_qba, _1, signature, signedData ) );
+  return Error();
 }
 
-void Kleo::QGpgMEVerifyDetachedJob::setup( const boost::shared_ptr<QIODevice> & signature, const boost::shared_ptr<QIODevice> & signedData ) {
-    assert( signature );
-    assert( signedData );
-    assert( !mInData );
-    assert( !mOutData );
-
-    createInData( signature );
-    // two "in" data objects - (mis|re)use the "out" data object for the second...
-    createOutData( signedData );
+void QGpgMEVerifyDetachedJob::start( const boost::shared_ptr<QIODevice> & signature, const boost::shared_ptr<QIODevice> & signedData ) {
+  run( bind( &verify_detached, _1, signature, signedData ) );
 }
-
-void Kleo::QGpgMEVerifyDetachedJob::start( const boost::shared_ptr<QIODevice> & signature, const boost::shared_ptr<QIODevice> & signedData ) {
-  setup( signature, signedData );
-
-  hookupContextToEventLoopInteractor();
-
-  if ( const GpgME::Error err = mCtx->startDetachedSignatureVerification( *mInData, *mOutData ) ) {
-      resetQIODeviceDataObjects();
-      doThrow( err, i18n("Can't start detached signature verification") );
-  }
-}
-
-void Kleo::QGpgMEVerifyDetachedJob::doOperationDoneEvent( const GpgME::Error & ) {
-    const GpgME::VerificationResult vr = mCtx->verificationResult();
-    resetQIODeviceDataObjects();
-    getAuditLog();
-    emit result( vr );
-}
-
 
 #include "qgpgmeverifydetachedjob.moc"

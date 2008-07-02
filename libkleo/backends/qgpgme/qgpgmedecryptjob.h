@@ -2,7 +2,7 @@
     qgpgmedecryptjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -35,20 +35,26 @@
 
 #include "kleo/decryptjob.h"
 
-#include "qgpgmejob.h"
+#include "threadedjobmixin.h"
 
-
-namespace GpgME {
-  class Error;
-  class Context;
-}
+#include <gpgme++/decryptionresult.h>
 
 namespace Kleo {
 
-  class QGpgMEDecryptJob : public DecryptJob, private QGpgMEJob {
-    Q_OBJECT QGPGME_JOB
+  class QGpgMEDecryptJob
+#ifdef Q_MOC_RUN
+    : public DecryptJob
+#else
+    : public _detail::ThreadedJobMixin<DecryptJob, boost::tuple<GpgME::DecryptionResult, QByteArray, QString> >
+#endif
+  {
+    Q_OBJECT
+#ifdef Q_MOC_RUN
+  private Q_SLOTS:
+    void slotFinished();
+#endif
   public:
-    QGpgMEDecryptJob( GpgME::Context * context );
+    explicit QGpgMEDecryptJob( GpgME::Context * context );
     ~QGpgMEDecryptJob();
 
     /*! \reimp from DecryptJob */
@@ -56,18 +62,7 @@ namespace Kleo {
 
     /*! \reimp from DecryptJob */
     void start( const boost::shared_ptr<QIODevice> & cipherText, const boost::shared_ptr<QIODevice> & plainText );
-
-  private Q_SLOTS:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, e );
-    }
-
-  private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-    void setup( const QByteArray & cipherText );
-    void setup( const boost::shared_ptr<QIODevice> &, const boost::shared_ptr<QIODevice> & );
   };
 
 }
-
 #endif // __KLEO_QGPGMEDECRYPTJOB_H__

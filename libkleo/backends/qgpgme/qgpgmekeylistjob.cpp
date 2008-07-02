@@ -2,7 +2,7 @@
     qgpgmekeylistjob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -32,8 +32,6 @@
 
 #include "qgpgmekeylistjob.h"
 
-#include <qgpgme/eventloopinteractor.h>
-
 #include <gpgme++/key.h>
 #include <gpgme++/context.h>
 #include <gpgme++/keylistresult.h>
@@ -47,130 +45,104 @@
 
 #include <algorithm>
 
-#include <stdlib.h>
-#include <string.h>
-#include <assert.h>
+#include <cstdlib>
+#include <cstring>
+#include <cassert>
 
-Kleo::QGpgMEKeyListJob::QGpgMEKeyListJob( GpgME::Context * context )
-  : KeyListJob( QGpgME::EventLoopInteractor::instance() ),
-    QGpgMEJob( this, context ),
+using namespace Kleo;
+using namespace GpgME;
+using namespace boost;
+
+QGpgMEKeyListJob::QGpgMEKeyListJob( Context * context )
+  : mixin_type( context ),
     mResult(), mSecretOnly( false )
 {
-  assert( context );
+  lateInitialization();
 }
 
-Kleo::QGpgMEKeyListJob::~QGpgMEKeyListJob() {
-}
+QGpgMEKeyListJob::~QGpgMEKeyListJob() {}
 
-void Kleo::QGpgMEKeyListJob::setup( const QStringList & pats, bool secretOnly ) {
-  assert( !patterns() );
+static KeyListResult do_list_keys( Context * ctx, const QStringList & pats, std::vector<Key> & keys, bool secretOnly ) {
 
-  mSecretOnly = secretOnly;
-  setPatterns( pats );
-}
+  const _detail::PatternConverter pc( pats );
 
-GpgME::Error Kleo::QGpgMEKeyListJob::start( const QStringList & pats, bool secretOnly ) {
-  setup( pats, secretOnly );
+  if ( const Error err = ctx->startKeyListing( pc.patterns(), secretOnly ) )
+    return KeyListResult( 0, err );
 
-  hookupContextToEventLoopInteractor();
-  connect( QGpgME::EventLoopInteractor::instance(),
-	   SIGNAL(nextKeyEventSignal(GpgME::Context*,const GpgME::Key&)),
-	   SLOT(slotNextKeyEvent(GpgME::Context*,const GpgME::Key&)) );
+  Error err;
+  do
+    keys.push_back( ctx->nextKey( err ) );
+  while ( !err );
 
-  // The communication channel between gpgme and gpgsm is limited in
-  // the number of patterns that can be transported, but they won't
-  // say to how much, so we need to find out ourselves if we get a
-  // LINE_TOO_LONG error back...
+  keys.pop_back();
 
-  // We could of course just feed them single patterns, and that would
-  // probably be easier, but the performance penalty would currently
-  // be noticeable.
-
-  while ( const GpgME::Error err = mCtx->startKeyListing( patterns(), mSecretOnly ) ) {
-    if ( err.code() == GPG_ERR_LINE_TOO_LONG ) {
-      setChunkSize( chunkSize()/2 );
-      if ( chunkSize() >= 1 ) {
-	kDebug(5150) <<"QGpgMEKeyListJob::start(): retrying keylisting with chunksize" << chunkSize();
-	continue;
-      }
-    }
-    deleteLater();
-    mResult = GpgME::KeyListResult( 0, err );
-    return err;
-  }
-  mResult = GpgME::KeyListResult( 0 );
-  return GpgME::Error();
-}
-
-GpgME::KeyListResult Kleo::QGpgMEKeyListJob::exec( const QStringList & pats, bool secretOnly, std::vector<GpgME::Key> & keys ) {
-  setup( pats, secretOnly );
-
-  // The communication channel between gpgme and gpgsm is limited in
-  // the number of patterns that can be transported, but they won't
-  // say to how much, so we need to find out ourselves if we get a
-  // LINE_TOO_LONG error back...
-
-  // We could of course just feed them single patterns, and that would
-  // probably be easier, but the performance penalty would currently
-  // be noticeable.
-
-  for (;;) {
-    keys.clear();
-    mResult = attemptSyncKeyListing( keys );
-    if ( !mResult.error() || mResult.error().code() != GPG_ERR_LINE_TOO_LONG )
-      return mResult;
-    // got LINE_TOO_LONG, try a smaller chunksize:
-    setChunkSize( chunkSize()/2 );
-    if ( chunkSize() < 1 )
-      // chunks smaller than one can't be -> return the error.
-      return mResult;
-    kDebug(5150) <<"QGpgMEKeyListJob::exec(): retrying keylisting with chunksize" << chunkSize();
-  }
-  kFatal(5150) <<"QGpgMEKeyListJob::exec(): Oops, this is not supposed to happen!";
-  return GpgME::KeyListResult();
-}
-
-GpgME::KeyListResult Kleo::QGpgMEKeyListJob::attemptSyncKeyListing( std::vector<GpgME::Key> & keys ) {
-  GpgME::KeyListResult result;
-  for ( const char* * chunk = patterns() ; chunk ; chunk = nextChunk() ) {
-
-    if ( const GpgME::Error err = mCtx->startKeyListing( chunk, mSecretOnly ) )
-      return GpgME::KeyListResult( 0, err );
-
-    GpgME::Error err;
-    do
-      keys.push_back( mCtx->nextKey( err ) );
-    while ( !err );
-    keys.pop_back();
-    result.mergeWith( mCtx->endKeyListing() );
-    if ( result.error() )
-      break;
-  }
+  const KeyListResult result = ctx->endKeyListing();
+  ctx->cancelPendingOperation();
   return result;
 }
 
-void Kleo::QGpgMEKeyListJob::slotNextKeyEvent( GpgME::Context * context, const GpgME::Key & key ) {
-  if ( context == mCtx )
+static QGpgMEKeyListJob::result_type list_keys( Context * ctx, QStringList pats, bool secretOnly ) {
+  if ( pats.size() < 2 ) {
+    std::vector<Key> keys;
+    const KeyListResult r = do_list_keys( ctx, pats, keys, secretOnly );
+    return make_tuple( r, keys, QString() );
+  }
+
+  // The communication channel between gpgme and gpgsm is limited in
+  // the number of patterns that can be transported, but they won't
+  // say to how much, so we need to find out ourselves if we get a
+  // LINE_TOO_LONG error back...
+
+  // We could of course just feed them single patterns, and that would
+  // probably be easier, but the performance penalty would currently
+  // be noticeable.
+
+  unsigned int chunkSize = pats.size();
+retry:
+  std::vector<Key> keys;
+  keys.reserve( pats.size() );
+  KeyListResult result;
+  do {
+    const KeyListResult this_result = do_list_keys( ctx, pats.mid( 0, chunkSize ), keys, secretOnly );
+    if ( this_result.error().code() == GPG_ERR_LINE_TOO_LONG ) {
+      // got LINE_TOO_LONG, try a smaller chunksize:
+      chunkSize /= 2;
+      if ( chunkSize < 1 )
+        // chunks smaller than one can't be -> return the error.
+        return make_tuple( this_result, keys, QString() );
+      else
+        goto retry;
+    }
+    // ok, that seemed to work...
+    result.mergeWith( this_result );
+    if ( result.error().code() )
+      break;
+    pats = pats.mid( chunkSize );
+  } while ( !pats.empty() );
+  return make_tuple( result, keys, QString() );
+}
+
+Error QGpgMEKeyListJob::start( const QStringList & patterns, bool secretOnly ) {
+  mSecretOnly = secretOnly;
+  run( bind( &list_keys, _1, patterns, secretOnly ) );
+  return Error();
+}
+
+KeyListResult QGpgMEKeyListJob::exec( const QStringList & patterns, bool secretOnly, std::vector<Key> & keys ) {
+  mSecretOnly = secretOnly;
+  const result_type r = list_keys( context(), patterns, secretOnly );
+  resultHook( r );
+  keys = get<1>( r );
+  return get<0>( r );
+}
+
+void QGpgMEKeyListJob::resultHook( const result_type & tuple ) {
+  mResult = get<0>( tuple );
+  Q_FOREACH( const Key & key, get<1>( tuple ) )
     emit nextKey( key );
 }
 
-void Kleo::QGpgMEKeyListJob::slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & ) {
-  if ( context != mCtx )
-    return;
-  mResult.mergeWith( mCtx->keyListResult() );
-  if ( !mResult.error() )
-    if ( const char* * chunk = nextChunk() ) {
-      if ( const GpgME::Error err = mCtx->startKeyListing( chunk, mSecretOnly ) )
-	mResult.mergeWith( GpgME::KeyListResult( 0, err ) );
-      else
-	return;
-    }
-  emit done();
-  emit result( mResult );
-  deleteLater();
-}
-
-void Kleo::QGpgMEKeyListJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
+void QGpgMEKeyListJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
   if ( !mResult.error() || mResult.error().isCanceled() )
     return;
   const QString msg = i18n( "<qt><p>An error occurred while fetching "

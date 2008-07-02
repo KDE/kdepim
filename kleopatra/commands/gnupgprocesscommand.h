@@ -46,6 +46,7 @@ namespace Commands {
     protected:
         explicit GnuPGProcessCommand( QAbstractItemView * view, KeyListController * parent );
         explicit GnuPGProcessCommand( KeyListController * parent );
+        explicit GnuPGProcessCommand( const GpgME::Key & key );
         ~GnuPGProcessCommand();
 
     private:

@@ -192,7 +192,7 @@ std::vector<GpgME::Key> Kleo::KeyApprovalDialog::senderKeys() const {
 }
 
 std::vector<Kleo::KeyApprovalDialog::Item> Kleo::KeyApprovalDialog::items() const {
-  assert( d->requesters.size() == d->addresses.size() );
+  assert( d->requesters.size() == static_cast<unsigned int>( d->addresses.size() ) );
   assert( d->requesters.size() == d->preferences.size() );
 
   std::vector<Item> result;

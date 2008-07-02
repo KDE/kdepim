@@ -35,31 +35,28 @@
 
 #include "kleo/changeownertrustjob.h"
 
-#include "qgpgmejob.h"
-
-namespace GpgME {
-  class Error;
-  class Context;
-}
+#include "threadedjobmixin.h"
 
 namespace Kleo {
 
-  class QGpgMEChangeOwnerTrustJob : public ChangeOwnerTrustJob, private QGpgMEJob {
-    Q_OBJECT QGPGME_JOB
+  class QGpgMEChangeOwnerTrustJob
+#ifdef Q_MOC_RUN
+    : public ChangeOwnerTrustJob
+#else
+    : public _detail::ThreadedJobMixin<ChangeOwnerTrustJob>
+#endif
+  {
+    Q_OBJECT
+#ifdef Q_MOC_RUN
+  private Q_SLOTS:
+    void slotFinished();
+#endif
   public:
-    QGpgMEChangeOwnerTrustJob( GpgME::Context * context );
+    explicit QGpgMEChangeOwnerTrustJob( GpgME::Context * context );
     ~QGpgMEChangeOwnerTrustJob();
 
     /*! \reimp from ChangeOwnerTrustJob */
     GpgME::Error start( const GpgME::Key & key, GpgME::Key::OwnerTrust trust );
-
-  private:
-    void doOperationDoneEvent( const GpgME::Error & e );
-
-  private Q_SLOTS:
-    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
-      QGpgMEJob::doSlotOperationDoneEvent( context, e );
-    }
   };
 }
 

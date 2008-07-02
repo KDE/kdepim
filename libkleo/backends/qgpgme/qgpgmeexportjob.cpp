@@ -2,7 +2,7 @@
     qgpgmeexportjob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -14,9 +14,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
     In addition, as a special exception, the copyright holders give
     permission to link the code of this program with any edition of
@@ -32,45 +32,43 @@
 
 #include "qgpgmeexportjob.h"
 
-#include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
 
 #include <gpgme++/context.h>
 #include <gpgme++/data.h>
+#include <gpgme++/key.h>
 
 #include <QStringList>
 
-#include <assert.h>
+#include <cassert>
 
-Kleo::QGpgMEExportJob::QGpgMEExportJob( GpgME::Context * context )
-  : ExportJob( QGpgME::EventLoopInteractor::instance() ),
-    QGpgMEJob( this, context )
+using namespace Kleo;
+using namespace GpgME;
+using namespace boost;
+
+QGpgMEExportJob::QGpgMEExportJob( Context * context )
+  : mixin_type( context )
 {
-  assert( context );
+  lateInitialization();
 }
 
-Kleo::QGpgMEExportJob::~QGpgMEExportJob() {
+QGpgMEExportJob::~QGpgMEExportJob() {}
+
+static QGpgMEExportJob::result_type export_qba( Context * ctx, const QStringList & patterns ) {
+
+  const _detail::PatternConverter pc( patterns );
+
+  QGpgME::QByteArrayDataProvider dp;
+  Data data( &dp );
+
+  const Error err = ctx->exportPublicKeys( pc.patterns(), data );
+  const QString log = _detail::audit_log_as_html( ctx );
+  return make_tuple( err, dp.data(), log );
 }
 
-GpgME::Error Kleo::QGpgMEExportJob::start( const QStringList & pats ) {
-  assert( !patterns() );
-  assert( !mOutData );
-
-  createOutData();
-  setPatterns( pats );
-  hookupContextToEventLoopInteractor();
-
-  const GpgME::Error err = mCtx->startPublicKeyExport( patterns(), *mOutData );
-
-  if ( err )
-    deleteLater();
-  return err;
-}
-
-void Kleo::QGpgMEExportJob::doOperationDoneEvent( const GpgME::Error & error ) {
-  const QByteArray data = outData();
-  getAuditLog();
-  emit result( error, data );
+Error QGpgMEExportJob::start( const QStringList & patterns ) {
+  run( bind( &export_qba, _1, patterns ) );
+  return Error();
 }
 
 #include "qgpgmeexportjob.moc"

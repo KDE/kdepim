@@ -56,6 +56,11 @@
 using namespace Kleo;
 using namespace boost;
 
+// static
+void UiServer::setLogStream( FILE * stream ) {
+    assuan_set_assuan_log_stream( stream );
+}
+
 UiServer::Private::Private( UiServer * qq )
     : QTcpServer(),
       q( qq ),
@@ -174,6 +179,8 @@ void UiServer::Private::incomingConnection( int fd ) {
                  this, SLOT(slotConnectionClosed(Kleo::AssuanServerConnection*)) );
         connect( c.get(), SIGNAL(startKeyManagerRequested()),
                  q, SIGNAL(startKeyManagerRequested()), Qt::QueuedConnection );
+        connect( c.get(), SIGNAL(startConfigDialogRequested()),
+                 q, SIGNAL(startConfigDialogRequested()), Qt::QueuedConnection );
         c->enableCryptoCommands( cryptoCommandsEnabled );
         connections.push_back( c );
         qDebug( "UiServer: client connection %p established successfully", c.get() );
