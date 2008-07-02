@@ -49,6 +49,7 @@
 #include <commands/exportcertificatecommand.h>
 
 #include <utils/formatting.h>
+#include <utils/validation.h>
 #include <utils/stl_util.h>
 
 #include <kleo/dn.h>
@@ -962,7 +963,7 @@ static int row_index_of( QWidget * w, QGridLayout * l ) {
     return r;
 }
 
-static QLineEdit * adjust_row( QGridLayout * l, int row, const QString & label, const QString & preset, const QString & regex, bool readonly, bool required ) {
+static QLineEdit * adjust_row( QGridLayout * l, int row, const QString & label, const QString & preset, QValidator * validator, bool readonly, bool required ) {
     assert( l );
     assert( row >= 0 );
     assert( row < l->rowCount() );
@@ -977,10 +978,12 @@ static QLineEdit * adjust_row( QGridLayout * l, int row, const QString & label, 
     lb->setText( label );
     le->setText( preset );
     reqLB->setText( required ? i18n("(required)") : i18n("(optional)") );
-    if ( !required && regex.isEmpty() )
-        delete le->validator();
-    else
-        le->setValidator( new QRegExpValidator( QRegExp( regex.isEmpty() ? QLatin1String( "[^\\s].*" ) : regex ), le ) );
+    delete le->validator();
+    if ( validator ) {
+        if ( !validator->parent() )
+            validator->setParent( le );
+        le->setValidator( validator );
+    }
 
     le->setReadOnly( readonly && le->hasAcceptableInput() );
 
@@ -1037,23 +1040,31 @@ void EnterDetailsPage::updateForm() {
 
         int row;
         bool known = true;
+        QValidator * validator = 0;
         if ( attr == "EMAIL" ) {
             row = row_index_of( ui.emailLE, ui.gridLayout );
+            validator = regex.isEmpty() ? Validation::email() : Validation::email( QRegExp( regex ) ) ;
             if ( !pgp() )
                 ui.addEmailToDnCB->show();
         } else if ( attr == "NAME" || attr == "CN" ) {
             if ( pgp() && attr == "CN" || !pgp() && attr == "NAME" )
                 continue;
+            if ( pgp() )
+                validator = regex.isEmpty() ? Validation::pgpName() : Validation::pgpName( QRegExp( regex ) ) ;
             row = row_index_of( ui.nameLE, ui.gridLayout );
         } else if ( attr == "COMMENT" ) {
             if ( !pgp() )
                 continue;
+            validator = regex.isEmpty() ? Validation::pgpComment() : Validation::pgpComment( QRegExp( regex ) ) ;
             row = row_index_of( ui.commentLE, ui.gridLayout );
         } else {
             known = false;
             row = add_row( ui.gridLayout, &dynamicWidgets );
         }
-        QLineEdit * le = adjust_row( ui.gridLayout, row, label, preset, regex, readonly, required );
+        if ( !validator && !regex.isEmpty() )
+            validator = new QRegExpValidator( QRegExp( regex ), 0 );
+
+        QLineEdit * le = adjust_row( ui.gridLayout, row, label, preset, validator, readonly, required );
 
         attributePairList.append( qMakePair( key, le ) );
 
