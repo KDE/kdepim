@@ -27,7 +27,12 @@ using namespace KPIM;
 #ifdef Q_WS_WIN
 
 #include <windows.h>
-#include <comdef.h> // (bstr_t)
+#ifdef _MSC_VER
+# include <comdef.h> // (bstr_t)
+#else
+// mingw: get patched comutil.h from http://pastebin.ca/raw/1060471 and save to kde4/mingw/include/
+# include <comutil.h> // (bstr_t)
+#endif
 #include <winperf.h>
 #include <psapi.h>
 #include <signal.h>
@@ -80,7 +85,7 @@ static PPERF_COUNTER_BLOCK CounterBlock(PPERF_INSTANCE_DEFINITION PerfInst)
 
 void Utils::getProcessesIdForName( const QString& processName, QList<int>& pids )
 {
-  LPCTSTR pProcessName = (LPCTSTR)processName.utf16();
+  qDebug() << "Utils::getProcessesIdForName" << processName;
   PPERF_OBJECT_TYPE perfObject;
   PPERF_INSTANCE_DEFINITION perfInstance;
   PPERF_COUNTER_DEFINITION perfCounter, curCounter;
@@ -115,19 +120,21 @@ void Utils::getProcessesIdForName( const QString& processName, QList<int>& pids 
     pids.clear();
     perfCounter = FirstCounter( perfObject );
     perfInstance = FirstInstance( perfObject );
-    _bstr_t bstrProcessName,bstrInput;
+    _bstr_t bstrProcessName;
     // retrieve the instances
+    qDebug() << "INSTANCES: " << perfObject->NumInstances;
     for( int instance = 0; instance < perfObject->NumInstances; instance++ ) {
       curCounter = perfCounter;
-      bstrInput = pProcessName;
       bstrProcessName = (wchar_t *)((PBYTE)perfInstance + perfInstance->NameOffset);
-      if (!_wcsicmp((LPCWSTR)bstrProcessName, (LPCWSTR) bstrInput)) {
+      qDebug() << "bstrProcessName: " << QString::fromWCharArray((LPCWSTR)bstrProcessName);
+      if (QString::fromWCharArray((LPCWSTR)bstrProcessName) == processName) {
         // retrieve the counters
         for( uint counter = 0; counter < perfObject->NumCounters; counter++ ) {
           if (curCounter->CounterNameTitleIndex == GETPID_PROC_ID_COUNTER) {
             counterPtr = CounterBlock(perfInstance);
             DWORD *value = (DWORD*)((LPBYTE) counterPtr + curCounter->CounterOffset);
             pids.append( int( *value ) );
+            qDebug() << "found PID: " << int( *value );
             break;
           }
           curCounter = NextCounter( curCounter );
@@ -202,10 +209,19 @@ void Utils::activateWindowForProcess( const QString& executableName )
 {
   QList<int> pids;
   KPIM::Utils::getProcessesIdForName( executableName, pids );
-  if ( pids.isEmpty() )
+  int myPid = getpid();
+  int foundPid = 0;
+  foreach ( int pid, pids ) {
+    if (myPid != pid) {
+      qDebug() << "activateWindowForProcess(): PID to activate:" << pid;
+      foundPid = pid;
+      break;
+    }
+  }
+  if ( foundPid == 0 )
     return;
   EnumWindowsStruct winStruct;
-  winStruct.pid = pids.first();
+  winStruct.pid = foundPid;
   EnumWindows( EnumWindowsProc, (LPARAM)&winStruct );
   if ( winStruct.windowId == NULL )
     return;
