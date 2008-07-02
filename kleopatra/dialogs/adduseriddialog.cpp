@@ -36,10 +36,10 @@
 
 #include "ui_adduseriddialog.h"
 
+#include <utils/validation.h>
+
 #include <QString>
 #include <QStringList>
-#include <QRegExp>
-#include <QRegExpValidator>
 #include <QPushButton>
 
 #include <cassert>
@@ -68,14 +68,9 @@ private:
         {
             setupUi( qq );
 
-            // these are modeled after gnupg/g10/keygen.c:ask_user_id:
-            const QRegExp nameRX( "[^0-9<>][^<>@]{4,}" );
-            const QRegExp emailRX( "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?" );
-            const QRegExp commentRX( "[^()]*" );
-
-            nameLE->setValidator( new QRegExpValidator( nameRX, nameLE ) );
-            emailLE->setValidator( new QRegExpValidator( emailRX, emailLE ) );
-            commentLE->setValidator( new QRegExpValidator( commentRX, commentLE ) );
+            nameLE->setValidator( Validation::pgpName( nameLE ) );
+            emailLE->setValidator( Validation::email( emailLE ) );
+            commentLE->setValidator( Validation::pgpComment( commentLE ) );
         }
 
         QPushButton * okPB() const {

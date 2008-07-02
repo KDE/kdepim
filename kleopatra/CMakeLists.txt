@@ -110,6 +110,7 @@ set( _kleopatra_SRCS
   utils/output.cpp
   utils/exception.cpp
   utils/formatting.cpp
+  utils/validation.cpp
   utils/wsastarter.cpp
   utils/classify.cpp
   utils/iodevicelogger.cpp
