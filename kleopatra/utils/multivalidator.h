@@ -43,8 +43,8 @@ namespace Kleo {
     public:
         explicit MultiValidator( QObject * parent=0 )
             : QValidator( parent ) {}
-        explicit MultiValidator( QValidator * validator, QObject * parent=0 )
-            : QValidator( parent ) { addValidator( validator ); }
+        explicit MultiValidator( QValidator * validator1, QValidator * validator2=0, QObject * parent=0 )
+            : QValidator( parent ) { addValidator( validator1 ); addValidator( validator2 ); }
         explicit MultiValidator( const QList<QValidator*> & validators, QObject * parent=0 )
             : QValidator( parent ) { addValidators( validators ); }
         ~MultiValidator();
