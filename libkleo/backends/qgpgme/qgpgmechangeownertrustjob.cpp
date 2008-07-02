@@ -32,44 +32,47 @@
 
 #include "qgpgmechangeownertrustjob.h"
 
+#include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
 
 #include <gpgme++/context.h>
 #include <gpgme++/data.h>
 #include <gpgme++/gpgsetownertrusteditinteractor.h>
-#include <gpgme++/key.h>
 
 #include <cassert>
 #include <memory>
 
-using namespace Kleo;
 using namespace GpgME;
-using namespace boost;
 
-QGpgMEChangeOwnerTrustJob::QGpgMEChangeOwnerTrustJob( Context * context )
-  : mixin_type( context )
+Kleo::QGpgMEChangeOwnerTrustJob::QGpgMEChangeOwnerTrustJob( Context * context )
+  : ChangeOwnerTrustJob( QGpgME::EventLoopInteractor::instance() ),
+    QGpgMEJob( this, context )
 {
-  lateInitialization();
+  assert( context );
 }
 
-QGpgMEChangeOwnerTrustJob::~QGpgMEChangeOwnerTrustJob() {}
+Kleo::QGpgMEChangeOwnerTrustJob::~QGpgMEChangeOwnerTrustJob() {
+}
 
-static QGpgMEChangeOwnerTrustJob::result_type change_ownertrust( Context * ctx, const Key & key, Key::OwnerTrust trust ) {
+GpgME::Error Kleo::QGpgMEChangeOwnerTrustJob::start( const Key & key, Key::OwnerTrust trust ) {
+  assert( !mOutData );
+
+  createOutData();
+  hookupContextToEventLoopInteractor();
+
   std::auto_ptr<EditInteractor>
       ei( new GpgSetOwnerTrustEditInteractor( trust ) );
 
-  QGpgME::QByteArrayDataProvider dp;
-  Data data( &dp );
-  assert( !data.isNull() );
+  const GpgME::Error err = mCtx->startEditing( key, ei, *mOutData );
 
-  const Error err = ctx->edit( key, ei, data );
-  const QString log = _detail::audit_log_as_html( ctx );
-  return make_tuple( err, log );
+  if ( err )
+    deleteLater();
+  return err;
 }
 
-Error QGpgMEChangeOwnerTrustJob::start( const Key & key, Key::OwnerTrust trust ) {
-  run( bind( &change_ownertrust, _1, key, trust ) );
-  return Error();
+void Kleo::QGpgMEChangeOwnerTrustJob::doOperationDoneEvent( const Error & error ) {
+  getAuditLog();
+  emit result( error );
 }
 
 #include "qgpgmechangeownertrustjob.moc"

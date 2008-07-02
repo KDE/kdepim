@@ -41,6 +41,8 @@
 
 #include <gpgme++/context.h>
 
+#include <qgpgme/eventloopinteractor.h>
+
 #include <QByteArray>
 #include <QStringList>
 
@@ -49,7 +51,7 @@
 #include <assert.h>
 
 Kleo::QGpgMERefreshKeysJob::QGpgMERefreshKeysJob()
-  : RefreshKeysJob( 0 ),
+  : RefreshKeysJob( QGpgME::EventLoopInteractor::instance() ),
     mProcess( 0 ),
     mError( 0 )
 {
@@ -142,18 +144,18 @@ void Kleo::QGpgMERefreshKeysJob::slotStatus( GnuPGProcessBase * proc, const QStr
 
 
     if ( args.size() < 2 ) {
-      kDebug( 5150 ) <<"not recognising ERROR with < 2 args!";
+      kDebug( 5150 ) <<"Kleo::QGpgMERefreshKeysJob::slotStatus() not recognising ERROR with < 2 args!";
       return;
     }
     const int source = (*++it).toInt( &ok );
     if ( !ok ) {
-      kDebug( 5150 ) <<"expected number for first ERROR arg, got something else";
+      kDebug( 5150 ) <<"Kleo::QGpgMERefreshKeysJob::slotStatus() expected number for first ERROR arg, got something else";
       return;
     }
     ok = false;
     const int code = (*++it).toInt( &ok );
     if ( !ok ) {
-      kDebug( 5150 ) <<"expected number for second ERROR arg, got something else";
+      kDebug( 5150 ) <<"Kleo::QGpgMERefreshKeysJob::slotStatus() expected number for second ERROR arg, got something else";
       return;
     }
     mError = GpgME::Error( gpg_err_make( (gpg_err_source_t)source, (gpg_err_code_t)code ) );
@@ -163,29 +165,23 @@ void Kleo::QGpgMERefreshKeysJob::slotStatus( GnuPGProcessBase * proc, const QStr
 
 
     if ( args.size() < 4 ) {
-      kDebug( 5150 ) <<"not recognising PROGRESS with < 4 args!";
+      kDebug( 5150 ) <<"Kleo::QGpgMERefreshKeysJob::slotStatus() not recognising PROGRESS with < 4 args!";
       return;
     }
     const QString what = *++it;
-    ok = false;
-    const int typ = (*++it).toInt( &ok );
-    if ( !ok ) {
-        kDebug( 5150 ) <<"expected number for \"type\", got something else";
-        return;
-    }
-    ok = false;
+    ++it; // don't use "type"...
     const int cur = (*++it).toInt( &ok );
     if ( !ok ) {
-      kDebug( 5150 ) <<"expected number for \"cur\", got something else";
+      kDebug( 5150 ) <<"Kleo::QGpgMERefreshKeysJob::slotStatus() expected number for \"cur\", got something else";
       return;
     }
     ok = false;
     const int total = (*++it).toInt( &ok );
     if ( !ok ) {
-      kDebug( 5150 ) <<"expected number for \"total\", got something else";
+      kDebug( 5150 ) <<"Kleo::QGpgMERefreshKeysJob::slotStatus() expected number for \"total\", got something else";
       return;
     }
-    emit progress( QGpgMEProgressTokenMapper::map( what, typ ), cur, total );
+    emit progress( QGpgMEProgressTokenMapper::instance()->map( what, 0, cur, total ), cur, total );
 
 
   }

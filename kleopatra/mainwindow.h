@@ -46,9 +46,6 @@ public:
 public Q_SLOTS:
     void importCertificatesFromFile( const QStringList & files );
 
-Q_SIGNALS:
-    void configDialogRequested();
-
 protected:
     void closeEvent( QCloseEvent * e );
     void showEvent( QShowEvent * e );
@@ -60,33 +57,27 @@ private:
     kdtools::pimpl_ptr<Private> d;
     Q_PRIVATE_SLOT( d, void changeCertificateExpiry() )
     Q_PRIVATE_SLOT( d, void changeCertificateOwnerTrust() )
-    Q_PRIVATE_SLOT( d, void changePassphrase() )
     Q_PRIVATE_SLOT( d, void closeAndQuit() )
     Q_PRIVATE_SLOT( d, void signEncryptFiles() )
-    Q_PRIVATE_SLOT( d, void certifyCertificate() )
+    Q_PRIVATE_SLOT( d, void signCertificate() )
     Q_PRIVATE_SLOT( d, void decryptVerifyFiles() )
     Q_PRIVATE_SLOT( d, void certificateDetails() )
     Q_PRIVATE_SLOT( d, void deleteCertificates() )
     Q_PRIVATE_SLOT( d, void importCertificatesFromFile() )
     Q_PRIVATE_SLOT( d, void lookupCertificates() )
     Q_PRIVATE_SLOT( d, void exportCertificates() )
-    Q_PRIVATE_SLOT( d, void exportCertificatesToServer() )
-    Q_PRIVATE_SLOT( d, void exportSecretKey() )
     Q_PRIVATE_SLOT( d, void reloadCertificates() )
     Q_PRIVATE_SLOT( d, void refreshX509Certificates() )
     Q_PRIVATE_SLOT( d, void refreshOpenPGPCertificates() )
     Q_PRIVATE_SLOT( d, void clearCrlCache() )
     Q_PRIVATE_SLOT( d, void dumpCrlCache() )
-    Q_PRIVATE_SLOT( d, void dumpCertificate() )
     Q_PRIVATE_SLOT( d, void importCrlFromFile() )
     Q_PRIVATE_SLOT( d, void newCertificate() )
-    Q_PRIVATE_SLOT( d, void addUserID() )
     Q_PRIVATE_SLOT( d, void selfTest() )
     Q_PRIVATE_SLOT( d, void configureBackend() )
     Q_PRIVATE_SLOT( d, void configureToolbars() )
     Q_PRIVATE_SLOT( d, void editKeybindings() )
-    Q_PRIVATE_SLOT( d, void gnupgLogViewer() )
-    Q_PRIVATE_SLOT( d, void gnupgAdministrativeConsole() )
+    Q_PRIVATE_SLOT( d, void preferences() )
     Q_PRIVATE_SLOT( d, void slotConfigCommitted() )
     Q_PRIVATE_SLOT( d, void slotContextMenuRequested(QAbstractItemView*,QPoint) )
 };

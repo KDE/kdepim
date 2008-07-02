@@ -2,7 +2,7 @@
     qgpgmesignencryptjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004,2007,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -33,32 +33,28 @@
 #ifndef __KLEO_QGPGMESIGNENCRYPTJOB_H__
 #define __KLEO_QGPGMESIGNENCRYPTJOB_H__
 
+#include "kleo/kleo_export.h"
 #include "kleo/signencryptjob.h"
-
-#include "threadedjobmixin.h"
+#include "qgpgmejob.h"
 
 #include <gpgme++/signingresult.h>
 #include <gpgme++/encryptionresult.h>
-#include <gpgme++/key.h>
+
 
 #include <utility>
 
+namespace GpgME {
+  class Error;
+  class Context;
+  class Key;
+}
+
 namespace Kleo {
 
-  class QGpgMESignEncryptJob
-#ifdef Q_MOC_RUN
-    : public SignEncryptJob
-#else
-    : public _detail::ThreadedJobMixin<SignEncryptJob, boost::tuple<GpgME::SigningResult, GpgME::EncryptionResult, QByteArray, QString> >
-#endif
-  {
-    Q_OBJECT
-#ifdef Q_MOC_RUN
-  public Q_SLOTS:
-    void slotFinished();
-#endif
+  class KLEO_EXPORT QGpgMESignEncryptJob : public SignEncryptJob, private QGpgMEJob {
+    Q_OBJECT QGPGME_JOB
   public:
-    explicit QGpgMESignEncryptJob( GpgME::Context * context );
+    QGpgMESignEncryptJob( GpgME::Context * context );
     ~QGpgMESignEncryptJob();
 
     /*! \reimp from SignEncryptJob */
@@ -85,9 +81,20 @@ namespace Kleo {
     /*! \reimp from SignEncryptJob */
     void setOutputIsBase64Encoded( bool on );
 
-    /*! \reimp from ThreadedJobMixin */
-    void resultHook( const result_type & r );
+  private Q_SLOTS:
+    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
+      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+    }
 
+  private:
+    void doOperationDoneEvent( const GpgME::Error & e );
+    GpgME::Error setup( const std::vector<GpgME::Key> &,
+                        const std::vector<GpgME::Key> &,
+			const QByteArray &, bool );
+    void setup( const std::vector<GpgME::Key> &,
+                const std::vector<GpgME::Key> &,
+                const boost::shared_ptr<QIODevice> &,
+                const boost::shared_ptr<QIODevice> &, bool );
   private:
     bool mOutputIsBase64Encoded;
     std::pair<GpgME::SigningResult,GpgME::EncryptionResult> mResult;

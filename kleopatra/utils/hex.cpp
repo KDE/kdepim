@@ -39,7 +39,6 @@
 #include <KLocale>
 
 #include <QString>
-#include <QByteArray>
 
 using namespace Kleo;
 
@@ -114,28 +113,3 @@ std::string Kleo::hexencode( const std::string & in ) {
     return result;
 }
 
-std::string Kleo::hexdecode( const char * in ) {
-    if ( !in )
-        return std::string();
-    return hexdecode( std::string( in ) );
-}
-
-std::string Kleo::hexencode( const char * in ) {
-    if ( !in )
-        return std::string();
-    return hexencode( std::string( in ) );
-}
-
-QByteArray Kleo::hexdecode( const QByteArray & in ) {
-    if ( in.isNull() )
-        return QByteArray();
-    const std::string result = hexdecode( std::string( in.constData() ) );
-    return QByteArray( result.data(), result.size() );
-}
-
-QByteArray Kleo::hexencode( const QByteArray & in ) {
-    if ( in.isNull() )
-        return QByteArray();
-    const std::string result = hexencode( std::string( in.constData() ) );
-    return QByteArray( result.data(), result.size() );
-}

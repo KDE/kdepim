@@ -2,7 +2,7 @@
     qgpgmeimportjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -35,30 +35,33 @@
 
 #include "kleo/importjob.h"
 
-#include "threadedjobmixin.h"
+#include "qgpgmejob.h"
 
-#include <gpgme++/importresult.h>
+
+namespace GpgME {
+  class Error;
+  class Context;
+}
 
 namespace Kleo {
 
-  class QGpgMEImportJob
-#ifdef Q_MOC_RUN
-    : public ImportJob
-#else
-    : public _detail::ThreadedJobMixin<ImportJob, boost::tuple<GpgME::ImportResult, QString> >
-#endif
-  {
-    Q_OBJECT
-#ifdef Q_MOC_RUN
-  public Q_SLOTS:
-    void slotFinished();
-#endif
+  class QGpgMEImportJob : public ImportJob, private QGpgMEJob {
+    Q_OBJECT QGPGME_JOB
   public:
-    explicit QGpgMEImportJob( GpgME::Context * context );
+    QGpgMEImportJob( GpgME::Context * context );
     ~QGpgMEImportJob();
 
     /*! \reimp from ImportJob */
     GpgME::Error start( const QByteArray & keyData );
+
+  private Q_SLOTS:
+    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
+      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+    }
+
+  private:
+    void doOperationDoneEvent( const GpgME::Error & e );
+    void setup( const QByteArray & );
   };
 
 }

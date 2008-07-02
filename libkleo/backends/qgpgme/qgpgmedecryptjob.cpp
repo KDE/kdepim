@@ -2,7 +2,7 @@
     qgpgmedecryptjob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -32,66 +32,76 @@
 
 #include "qgpgmedecryptjob.h"
 
+#include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
 
 #include <gpgme++/context.h>
 #include <gpgme++/decryptionresult.h>
 #include <gpgme++/data.h>
 
-#include <QBuffer>
+#include <KLocale>
 
-#include <cassert>
+#include <assert.h>
 
-using namespace Kleo;
-using namespace GpgME;
-using namespace boost;
-
-QGpgMEDecryptJob::QGpgMEDecryptJob( Context * context )
-  : mixin_type( context )
+Kleo::QGpgMEDecryptJob::QGpgMEDecryptJob( GpgME::Context * context )
+  : DecryptJob( QGpgME::EventLoopInteractor::instance() ),
+    QGpgMEJob( this, context )
 {
-  lateInitialization();
+  assert( context );
 }
 
-QGpgMEDecryptJob::~QGpgMEDecryptJob() {}
-
-static QGpgMEDecryptJob::result_type decrypt( Context * ctx, const shared_ptr<QIODevice> & cipherText, const shared_ptr<QIODevice> & plainText ) {
-
-  QGpgME::QIODeviceDataProvider in( cipherText );
-  const Data indata( &in );
-
-  if ( !plainText ) {
-    QGpgME::QByteArrayDataProvider out;
-    Data outdata( &out );
-
-    const DecryptionResult res = ctx->decrypt( indata, outdata );
-    const QString log = _detail::audit_log_as_html( ctx );
-    return make_tuple( res, out.data(), log );
-  } else {
-    QGpgME::QIODeviceDataProvider out( plainText );
-    Data outdata( &out );
-
-    const DecryptionResult res = ctx->decrypt( indata, outdata );
-    const QString log = _detail::audit_log_as_html( ctx );
-    return make_tuple( res, QByteArray(), log );
-  }
-
+Kleo::QGpgMEDecryptJob::~QGpgMEDecryptJob() {
 }
 
-static QGpgMEDecryptJob::result_type decrypt_qba( Context * ctx, const QByteArray & cipherText ) {
-  const shared_ptr<QBuffer> buffer( new QBuffer );
-  buffer->setData( cipherText );
-  if ( !buffer->open( QIODevice::ReadOnly ) )
-    assert( !"This should never happen: QBuffer::open() failed" );
-  return decrypt( ctx, buffer, shared_ptr<QIODevice>() );
+void Kleo::QGpgMEDecryptJob::setup( const QByteArray & cipherText ) {
+  assert( !mInData );
+  assert( !mOutData );
+
+  createInData( cipherText );
+  createOutData();
 }
 
-Error QGpgMEDecryptJob::start( const QByteArray & cipherText ) {
-  run( bind( &decrypt_qba, _1, cipherText ) );
-  return Error();
+GpgME::Error Kleo::QGpgMEDecryptJob::start( const QByteArray & cipherText ) {
+  setup( cipherText );
+
+  hookupContextToEventLoopInteractor();
+
+  const GpgME::Error err = mCtx->startDecryption( *mInData, *mOutData );
+
+  if ( err )
+    deleteLater();
+  return err;
 }
 
-void QGpgMEDecryptJob::start( const shared_ptr<QIODevice> & cipherText, const shared_ptr<QIODevice> & plainText ) {
-  run( bind( &decrypt, _1, cipherText, plainText ) );
+void Kleo::QGpgMEDecryptJob::setup( const boost::shared_ptr<QIODevice> & cipherText, const boost::shared_ptr<QIODevice> & plainText ) {
+    assert( cipherText );
+    assert( !mInData );
+    assert( !mOutData );
+
+    createInData( cipherText );
+    if ( plainText )
+        createOutData( plainText );
+    else
+        createOutData();
+}
+
+void Kleo::QGpgMEDecryptJob::start( const boost::shared_ptr<QIODevice> & cipherText, const boost::shared_ptr<QIODevice> & plainText ) {
+    setup( cipherText, plainText );
+
+    hookupContextToEventLoopInteractor();
+
+    if ( const GpgME::Error err = mCtx->startDecryption( *mInData, *mOutData ) ) {
+        resetQIODeviceDataObjects();
+        doThrow( err, i18n("Can't start decrypt job") );
+    }
+}
+
+void Kleo::QGpgMEDecryptJob::doOperationDoneEvent( const GpgME::Error & ) {
+    const GpgME::DecryptionResult res = mCtx->decryptionResult();
+    const QByteArray plainText = outData();
+    resetQIODeviceDataObjects();
+    getAuditLog();
+    emit result( res, plainText );
 }
 
 #include "qgpgmedecryptjob.moc"

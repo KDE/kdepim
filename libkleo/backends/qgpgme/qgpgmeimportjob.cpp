@@ -2,7 +2,7 @@
     qgpgmeimportjob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -14,9 +14,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     General Public License for more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program; if not, write to the Free Software Foundation, Inc.,
-    51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
     In addition, as a special exception, the copyright holders give
     permission to link the code of this program with any edition of
@@ -32,38 +32,48 @@
 
 #include "qgpgmeimportjob.h"
 
+#include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
 
 #include <gpgme++/context.h>
+#include <gpgme++/importresult.h>
 #include <gpgme++/data.h>
-#include <gpgme++/key.h>
 
-#include <cassert>
+#include <assert.h>
 
-using namespace Kleo;
-using namespace GpgME;
-using namespace boost;
-
-QGpgMEImportJob::QGpgMEImportJob( Context * context )
-  : mixin_type( context )
+Kleo::QGpgMEImportJob::QGpgMEImportJob( GpgME::Context * context )
+  : ImportJob( QGpgME::EventLoopInteractor::instance() ),
+    QGpgMEJob( this, context )
 {
-  lateInitialization();
+  assert( context );
 }
 
-QGpgMEImportJob::~QGpgMEImportJob() {}
-
-static QGpgMEImportJob::result_type import_qba( Context * ctx, const QByteArray & certData ) {
-  QGpgME::QByteArrayDataProvider dp( certData );
-  Data data( &dp );
-
-  const ImportResult res = ctx->importKeys( data );
-  const QString log = _detail::audit_log_as_html( ctx );
-  return make_tuple( res, log );
+Kleo::QGpgMEImportJob::~QGpgMEImportJob() {
 }
 
-Error QGpgMEImportJob::start( const QByteArray & certData ) {
-  run( bind( &import_qba, _1, certData ) );
-  return Error();
+void Kleo::QGpgMEImportJob::setup( const QByteArray & keyData ) {
+  assert( !mInData );
+
+  createInData( keyData );
 }
+
+GpgME::Error Kleo::QGpgMEImportJob::start( const QByteArray & keyData ) {
+  setup( keyData );
+
+  hookupContextToEventLoopInteractor();
+
+  const GpgME::Error err = mCtx->startKeyImport( *mInData );
+
+  if ( err )
+    deleteLater();
+  return err;
+}
+
+void Kleo::QGpgMEImportJob::doOperationDoneEvent( const GpgME::Error & ) {
+  const GpgME::ImportResult res = mCtx->importResult();
+  getAuditLog();
+  emit result( res );
+}
+
 
 #include "qgpgmeimportjob.moc"

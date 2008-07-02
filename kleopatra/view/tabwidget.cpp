@@ -55,6 +55,8 @@
 
 #include <QGridLayout>
 #include <QTimer>
+#include <QResizeEvent>
+#include <QSortFilterProxyModel>
 #include <QTreeView>
 #include <QToolButton>
 #include <QAction>
@@ -62,7 +64,6 @@
 #include <QInputDialog>
 #include <QItemSelectionModel>
 #include <QItemSelection>
-#include <QLayout>
 
 #include <map>
 #include <vector>
@@ -124,12 +125,17 @@ Q_SIGNALS:
     void keyFilterChanged( const boost::shared_ptr<Kleo::KeyFilter> & filter );
     void hierarchicalChanged( bool on );
 
+protected:
+    void resizeEvent( QResizeEvent * e ) {
+        QWidget::resizeEvent( e );
+        m_view->resize( e->size() );
+    }
+
 private:
     void init();
 
 private:
     KeyListSortFilterProxyModel m_proxy;
-    QVBoxLayout * m_layout;
     QTreeView * m_view;
     AbstractKeyListModel * m_flatModel;
     AbstractKeyListModel * m_hierarchicalModel;
@@ -150,7 +156,6 @@ private:
 Page::Page( const Page & other )
     : QWidget( 0 ),
       m_proxy(),
-      m_layout( new QVBoxLayout( this ) ),
       m_view( new QTreeView( this ) ),
       m_flatModel( other.m_flatModel ),
       m_hierarchicalModel( other.m_hierarchicalModel ),
@@ -171,7 +176,6 @@ Page::Page( const Page & other )
 Page::Page( const QString & title, const QString & id, const QString & text, QWidget * parent )
     : QWidget( parent ),
       m_proxy(),
-      m_layout( new QVBoxLayout( this ) ),
       m_view( new QTreeView( this ) ),
       m_flatModel( 0 ),
       m_hierarchicalModel( 0 ),
@@ -198,7 +202,6 @@ static const char COLUMN_SIZES[] = "column-sizes";
 Page::Page( const KConfigGroup & group, QWidget * parent )
     : QWidget( parent ),
       m_proxy(),
-      m_layout( new QVBoxLayout( this ) ),
       m_view( new QTreeView( this ) ),
       m_flatModel( 0 ),
       m_hierarchicalModel( 0 ),
@@ -240,11 +243,7 @@ static void adjust_header( HeaderView * hv ) {
 
 void Page::init() {
     KDAB_SET_OBJECT_NAME( m_proxy );
-    KDAB_SET_OBJECT_NAME( m_layout );
     KDAB_SET_OBJECT_NAME( m_view );
-
-    m_layout->setMargin( 0 );
-    m_layout->addWidget( m_view );
 
     HeaderView * headerView = new HeaderView( Qt::Horizontal );
     KDAB_SET_OBJECT_NAME( headerView );
@@ -288,10 +287,8 @@ void Page::setHierarchicalModel( AbstractKeyListModel * model ) {
     if ( model == m_hierarchicalModel )
         return;
     m_hierarchicalModel = model;
-    if ( m_isHierarchical ) {
+    if ( m_isHierarchical )
         m_proxy.setSourceModel( model );
-        m_view->expandAll();
-    }
 }
 
 void Page::setStringFilter( const QString & filter ) {
@@ -349,8 +346,6 @@ void Page::setHierarchical( bool on ) {
     const Key currentKey = m_proxy.key( m_view->currentIndex() );
     m_isHierarchical = on;
     m_proxy.setSourceModel( model() );
-    if ( on )
-        m_view->expandAll();
     m_view->selectionModel()->select( itemSelectionFromKeys( selectedKeys, m_proxy ), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows );
     if ( !currentKey.isNull() ) {
         const QModelIndex currentIndex = m_proxy.index( currentKey );
@@ -461,7 +456,6 @@ private:
     AbstractKeyListModel * flatModel;
     AbstractKeyListModel * hierarchicalModel;
     KTabWidget tabWidget;
-    QVBoxLayout layout;
     enum {
         Rename,
         Duplicate,
@@ -483,14 +477,9 @@ TabWidget::Private::Private( TabWidget * qq )
     : q( qq ),
       flatModel( 0 ),
       hierarchicalModel( 0 ),
-      tabWidget( q ),
-      layout( q )
+      tabWidget( q )
 {
     KDAB_SET_OBJECT_NAME( tabWidget );
-    KDAB_SET_OBJECT_NAME( layout );
-
-    layout.setMargin( 0 );
-    layout.addWidget( &tabWidget );
 
     tabWidget.setTabBarHidden( true );
     tabWidget.setTabReorderingEnabled( true );
@@ -514,7 +503,7 @@ TabWidget::Private::Private( TabWidget * qq )
           "edit-rename", q, SLOT(slotRenameCurrentTab()), i18n("CTRL+SHIFT+R"), false, false },
         { "window_duplicate_tab", i18n("Duplicate Current Tab"), i18n("Duplicate the current tab"),
           "tab-duplicate", q, SLOT(slotDuplicateCurrentTab()), i18n("CTRL+SHIFT+D"), false, true },
-        { "window_close_tab", i18n("Close Tab"), i18n("Close this tab"),
+        { "window_close_tab", i18n("Close Current Tab"), i18n("Close the current tab"),
           "tab-close", q, SLOT(slotCloseCurrentTab()), i18n("CTRL+SHIFT+W"), false, false }, // ### CTRL-W when available
         { "window_move_tab_left", i18n("Move Tab Left"), QString(),
           0, q, SLOT(slotMoveCurrentTabLeft()), i18n("CTRL+SHIFT+LEFT"), false, false },
@@ -633,7 +622,7 @@ void TabWidget::Private::slotPageHierarchyChanged( bool ) {
 }
 
 void TabWidget::Private::slotNewTab() {
-    q->addView( QString(), "all-certificates" );
+    q->addView( QString(), "my-certificates" );
     tabWidget.setCurrentIndex( tabWidget.count()-1 );
 }
 
@@ -782,6 +771,11 @@ void TabWidget::createActions( KActionCollection * coll ) {
     }
 }
 
+void TabWidget::resizeEvent( QResizeEvent * e ) {
+    QWidget::resizeEvent( e );
+    d->tabWidget.resize( e->size() );
+}
+
 QAbstractItemView * TabWidget::addView( const QString & title, const QString & id, const QString & text ) {
     return d->addView( new Page( title, id, text ) );
 }
@@ -831,16 +825,10 @@ static QStringList extractViewGroups( const KConfig * config ) {
     return config ? config->groupList().filter( QRegExp( "^View #\\d+$" ) ) : QStringList() ;
 }
 
-// work around deleteGroup() not deleting groups out of groupList():
-static const bool KCONFIG_DELETEGROUP_BROKEN = true;
-
 void TabWidget::loadViews( const KConfig * config ) {
     if ( config )
-        Q_FOREACH( const QString & group, extractViewGroups( config ) ) {
-            const KConfigGroup kcg( config, group );
-            if ( !KCONFIG_DELETEGROUP_BROKEN || kcg.readEntry( "magic", 0U ) == 0xFA1AFE1U )
-                addView( kcg );
-        }
+        Q_FOREACH( const QString & group, extractViewGroups( config ) )
+            addView( KConfigGroup( config, group ) );
     if ( !count() ) {
         // add default views:
         addView( QString(), "my-certificates" );
@@ -861,8 +849,6 @@ void TabWidget::saveViews( KConfig * config ) const {
                 continue;
             KConfigGroup group( config, QString().sprintf( "View #%u", vg++ ) );
             p->saveTo( group );
-            if ( KCONFIG_DELETEGROUP_BROKEN )
-                group.writeEntry( "magic", 0xFA1AFE1U );
         }
     }
 }

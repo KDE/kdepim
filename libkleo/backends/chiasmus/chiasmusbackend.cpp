@@ -156,7 +156,6 @@ namespace {
     }
     QString name() const { return kleo_chiasmus_config_entries[mIdx].name; }
     QString description() const { return i18n( kleo_chiasmus_config_entries[mIdx].description ); }
-    QString path() const { return name(); }
     bool isOptional() const { return kleo_chiasmus_config_entries[mIdx].is_optional; }
     bool isReadOnly() const { return false; }
     bool isList() const { return kleo_chiasmus_config_entries[mIdx].is_list; }
@@ -260,7 +259,6 @@ namespace {
     ~ChiasmusGeneralGroup() { clear(); delete mConfigObject; }
     QString name() const { return "General"; }
     QString iconName() const { return "chiasmus_chi"; }
-    QString path() const { return QString(); }
     QString description() const { return i18n( "General" ); }
     Kleo::CryptoConfigEntry::Level level() const { return Kleo::CryptoConfigEntry::Level_Basic; }
     QStringList entryList() const {

@@ -90,7 +90,7 @@ AboutData::AboutData()
 		kleopatra_version, ki18n(description), License_GPL,
 		ki18n("(c) 2002 Steffen Hansen, Jesper Pedersen,\n"
 		      "Kalle Dalheimer, Klar\xC3\xA4lvdalens Datakonsult AB\n\n"
-		      "(c) 2004, 2007, 2008 Marc Mutz, Klar\xC3\xA4lvdalens Datakonsult AB") )
+		      "(c) 2004, 2007 Marc Mutz, Klar\xC3\xA4lvdalens Datakonsult AB") )
 {
   using ::authors;
   using ::credits;

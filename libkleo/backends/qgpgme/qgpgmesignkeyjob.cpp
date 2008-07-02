@@ -32,6 +32,7 @@
 
 #include "qgpgmesignkeyjob.h"
 
+#include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
 
 #include <gpgme++/context.h>
@@ -41,77 +42,34 @@
 #include <cassert>
 #include <memory>
 
-using namespace Kleo;
-using namespace GpgME;
-using namespace boost;
-
-QGpgMESignKeyJob::QGpgMESignKeyJob( Context * context )
-  : mixin_type( context ),
-    m_userIDsToSign(),
-    m_checkLevel( 0 ),
-    m_exportable( false ),
-    m_signingKey(),
-    m_nonRevocable( false ),
-    m_started( false )
+Kleo::QGpgMESignKeyJob::QGpgMESignKeyJob( GpgME::Context * context )
+  : SignKeyJob( QGpgME::EventLoopInteractor::instance() ),
+    QGpgMEJob( this, context )
 {
-  lateInitialization();
+  assert( context );
 }
 
-
-QGpgMESignKeyJob::~QGpgMESignKeyJob() {}
-
-static QGpgMESignKeyJob::result_type sign_key( Context * ctx, const Key & key, const std::vector<unsigned int> & uids, unsigned int checkLevel, const Key & signer, unsigned int opts ) {
-  QGpgME::QByteArrayDataProvider dp;
-  Data data( &dp );
-
-  std::auto_ptr<GpgSignKeyEditInteractor> skei( new GpgSignKeyEditInteractor );
-  skei->setUserIDsToSign( uids );
-  skei->setCheckLevel( checkLevel );
-  skei->setSigningOptions( opts );
-  skei->setSigningKey( signer );
-
-  std::auto_ptr<EditInteractor> ei( skei );
-
-  const Error err = ctx->edit( key, ei, data );
-  const QString log = _detail::audit_log_as_html( ctx );
-  return make_tuple( err, log );
+Kleo::QGpgMESignKeyJob::~QGpgMESignKeyJob() {
 }
 
-Error QGpgMESignKeyJob::start( const Key & key ) {
-  unsigned int opts = 0;
-  if ( m_nonRevocable )
-      opts |= GpgSignKeyEditInteractor::NonRevocable;
-  if ( m_exportable )
-      opts |= GpgSignKeyEditInteractor::Exportable;
-  run( bind( &sign_key, _1, key, m_userIDsToSign, m_checkLevel, m_signingKey, opts ) );
-  m_started = true;
-  return Error();
+GpgME::Error Kleo::QGpgMESignKeyJob::start( const GpgME::Key & key, SigningOption option ) {
+  assert( !mOutData );
+
+  createOutData();
+  hookupContextToEventLoopInteractor();
+
+  std::auto_ptr<GpgME::EditInteractor> ei( new GpgME::GpgSignKeyEditInteractor( option == LocalSignature ? GpgME::GpgSignKeyEditInteractor::LocalSignature : GpgME::GpgSignKeyEditInteractor::ExportableSignature ) );
+
+  const GpgME::Error err = mCtx->startEditing( key, ei, *mOutData );
+
+  if ( err )
+    deleteLater();
+  return err;
 }
 
-void QGpgMESignKeyJob::setUserIDsToSign( const std::vector<unsigned int> & idsToSign ) {
-    assert( !m_started );
-    m_userIDsToSign = idsToSign;
-}
-
-void QGpgMESignKeyJob::setCheckLevel( unsigned int checkLevel ) {
-    assert( !m_started );
-    m_checkLevel = checkLevel;
-}
-
-void QGpgMESignKeyJob::setExportable( bool exportable ) {
-    assert( !m_started );
-    m_exportable = exportable;
-}
-
-void QGpgMESignKeyJob::setSigningKey( const Key & key ) {
-    assert( !m_started );
-    m_signingKey = key;
-}
-
-void QGpgMESignKeyJob::setNonRevocable( bool nonRevocable ) {
-    assert( !m_started );
-    m_nonRevocable = nonRevocable;
+void Kleo::QGpgMESignKeyJob::doOperationDoneEvent( const GpgME::Error & error ) {
+  getAuditLog();
+  emit result( error );
 }
 
 #include "qgpgmesignkeyjob.moc"
-

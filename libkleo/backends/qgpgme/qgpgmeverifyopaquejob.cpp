@@ -2,7 +2,7 @@
     qgpgmeverifyopaquejob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004,2007,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -32,66 +32,77 @@
 
 #include "qgpgmeverifyopaquejob.h"
 
+#include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
 
 #include <gpgme++/context.h>
 #include <gpgme++/verificationresult.h>
 #include <gpgme++/data.h>
 
-#include <QBuffer>
+#include <KLocale>
 
-#include <cassert>
+#include <assert.h>
 
-using namespace Kleo;
-using namespace GpgME;
-using namespace boost;
-
-QGpgMEVerifyOpaqueJob::QGpgMEVerifyOpaqueJob( Context * context )
-  : mixin_type( context )
+Kleo::QGpgMEVerifyOpaqueJob::QGpgMEVerifyOpaqueJob( GpgME::Context * context )
+  : VerifyOpaqueJob( QGpgME::EventLoopInteractor::instance() ),
+    QGpgMEJob( this, context )
 {
-  lateInitialization();
+  assert( context );
 }
 
-QGpgMEVerifyOpaqueJob::~QGpgMEVerifyOpaqueJob() {}
-
-static QGpgMEVerifyOpaqueJob::result_type verify_opaque( Context * ctx, const shared_ptr<QIODevice> & signedData, const shared_ptr<QIODevice> & plainText ) {
-
-  QGpgME::QIODeviceDataProvider in( signedData );
-  const Data indata( &in );
-
-  if ( !plainText ) {
-    QGpgME::QByteArrayDataProvider out;
-    Data outdata( &out );
-
-    const VerificationResult res = ctx->verifyOpaqueSignature( indata, outdata );
-    const QString log = _detail::audit_log_as_html( ctx );
-    return make_tuple( res, out.data(), log );
-  } else {
-    QGpgME::QIODeviceDataProvider out( plainText );
-    Data outdata( &out );
-
-    const VerificationResult res = ctx->verifyOpaqueSignature( indata, outdata );
-    const QString log = _detail::audit_log_as_html( ctx );
-    return make_tuple( res, QByteArray(), log );
-  }
-
+Kleo::QGpgMEVerifyOpaqueJob::~QGpgMEVerifyOpaqueJob() {
 }
 
-static QGpgMEVerifyOpaqueJob::result_type verify_opaque_qba( Context * ctx, const QByteArray & signedData ) {
-  const shared_ptr<QBuffer> buffer( new QBuffer );
-  buffer->setData( signedData );
-  if ( !buffer->open( QIODevice::ReadOnly ) )
-    assert( !"This should never happen: QBuffer::open() failed" );
-  return verify_opaque( ctx, buffer, shared_ptr<QIODevice>() );
+void Kleo::QGpgMEVerifyOpaqueJob::setup( const QByteArray & signedData ) {
+  assert( !mInData );
+  assert( !mOutData );
+
+  createInData( signedData );
+  createOutData();
 }
 
-Error QGpgMEVerifyOpaqueJob::start( const QByteArray & signedData ) {
-  run( bind( &verify_opaque_qba, _1, signedData ) );
-  return Error();
+GpgME::Error Kleo::QGpgMEVerifyOpaqueJob::start( const QByteArray & signedData ) {
+  setup( signedData );
+
+  hookupContextToEventLoopInteractor();
+
+  const GpgME::Error err = mCtx->startOpaqueSignatureVerification( *mInData, *mOutData );
+
+  if ( err )
+    deleteLater();
+  return err;
 }
 
-void QGpgMEVerifyOpaqueJob::start( const shared_ptr<QIODevice> & signedData, const shared_ptr<QIODevice> & plainText ) {
-  run( bind( &verify_opaque, _1, signedData, plainText ) );
+void Kleo::QGpgMEVerifyOpaqueJob::setup( const boost::shared_ptr<QIODevice> & signedData, const boost::shared_ptr<QIODevice> & plainText ) {
+    assert( signedData );
+    assert( !mInData );
+    assert( !mOutData );
+
+    createInData( signedData );
+    if ( plainText )
+        createOutData( plainText );
+    else
+        createOutData();
 }
+
+void Kleo::QGpgMEVerifyOpaqueJob::start( const boost::shared_ptr<QIODevice> & signedData, const boost::shared_ptr<QIODevice> & plainText ) {
+    setup( signedData, plainText );
+
+    hookupContextToEventLoopInteractor();
+
+    if ( const GpgME::Error err = mCtx->startOpaqueSignatureVerification( *mInData, *mOutData ) ) {
+        resetQIODeviceDataObjects();
+        doThrow( err, i18n("Can't start opaque signature verification") );
+    }
+}
+
+void Kleo::QGpgMEVerifyOpaqueJob::doOperationDoneEvent( const GpgME::Error & ) {
+    const GpgME::VerificationResult vr = mCtx->verificationResult();
+    const QByteArray plainText = outData();
+    resetQIODeviceDataObjects();
+    getAuditLog();
+    emit result( vr, plainText );
+}
+
 
 #include "qgpgmeverifyopaquejob.moc"

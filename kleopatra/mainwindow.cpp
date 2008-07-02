@@ -34,7 +34,7 @@
 
 #include "mainwindow.h"
 
-#include "newcertificatewizard/newcertificatewizard.h"
+#include "certificatewizardimpl.h"
 
 #include "models/keylistmodel.h"
 #include "models/keylistsortfilterproxymodel.h"
@@ -44,10 +44,7 @@
 #include "view/keylistcontroller.h"
 
 #include "commands/exportcertificatecommand.h"
-#include "commands/exportopenpgpcertstoservercommand.h"
-#include "commands/exportsecretkeycommand.h"
 #include "commands/importcertificatefromfilecommand.h"
-#include "commands/changepassphrasecommand.h"
 #include "commands/lookupcertificatescommand.h"
 #include "commands/reloadkeyscommand.h"
 #include "commands/refreshx509certscommand.h"
@@ -58,19 +55,18 @@
 #include "commands/signencryptfilescommand.h"
 #include "commands/clearcrlcachecommand.h"
 #include "commands/dumpcrlcachecommand.h"
-#include "commands/dumpcertificatecommand.h"
 #include "commands/importcrlcommand.h"
 #include "commands/changeexpirycommand.h"
 #include "commands/changeownertrustcommand.h"
 #include "commands/selftestcommand.h"
-#include "commands/certifycertificatecommand.h"
-#include "commands/adduseridcommand.h"
+#include "commands/signcertificatecommand.h"
+
+#include "conf/configuredialog.h"
 
 #include "utils/detail_p.h"
 #include "utils/gnupg-helper.h"
 #include "utils/stl_util.h"
 #include "utils/action_data.h"
-#include "utils/classify.h"
 
 #include <KActionCollection>
 #include <KLocale>
@@ -97,8 +93,6 @@
 #include <QCloseEvent>
 #include <QMenu>
 #include <QTimer>
-#include <QProcess>
-#include <QPointer>
 
 #include <kleo/cryptobackendfactory.h>
 #include <ui/cryptoconfigdialog.h>
@@ -108,12 +102,6 @@
 #include <boost/shared_ptr.hpp>
 
 #include <vector>
-
-#ifdef Q_OS_WIN32
-static const bool OS_WIN = true;
-#else
-static const bool OS_WIN = false;
-#endif
 
 using namespace Kleo;
 using namespace Kleo::Commands;
@@ -200,9 +188,7 @@ public:
     void refreshOpenPGPCertificates() {
         createAndStart<RefreshOpenPGPCertsCommand>();
     }
-    void changePassphrase() {
-        createAndStart<ChangePassphraseCommand>();
-    }
+    
     void deleteCertificates() {
         createAndStart<DeleteCertificatesCommand>();
     }
@@ -215,23 +201,14 @@ public:
     void signEncryptFiles() {
         createAndStart<SignEncryptFilesCommand>();
     }
-    void certifyCertificate() {
-        createAndStart<CertifyCertificateCommand>();
-    }
-    void addUserID() {
-        createAndStart<AddUserIDCommand>();
+    void signCertificate() {
+        createAndStart<SignCertificateCommand>();
     }
     void decryptVerifyFiles() {
         createAndStart<DecryptVerifyFilesCommand>();
     }
     void exportCertificates() {
         createAndStart<ExportCertificateCommand>();
-    }
-    void exportCertificatesToServer() {
-        createAndStart<ExportOpenPGPCertsToServerCommand>();
-    }
-    void exportSecretKey() {
-        createAndStart<ExportSecretKeyCommand>();
     }
     void importCertificatesFromFile() {
         createAndStart<ImportCertificateFromFileCommand>();
@@ -244,9 +221,6 @@ public:
     }
     void dumpCrlCache() {
         createAndStart<DumpCrlCacheCommand>();
-    }
-    void dumpCertificate() {
-        createAndStart<DumpCertificateCommand>();
     }
     void importCrlFromFile() {
         createAndStart<ImportCrlCommand>();
@@ -264,20 +238,7 @@ public:
         createAndStart<SelfTestCommand>();
     }
     void configureBackend();
-
-    void gnupgLogViewer() {
-        if( !QProcess::startDetached("kwatchgnupg" ) )
-            KMessageBox::error( q, i18n( "Could not start the GnuPG Log Viewer (kwatchgnupg). "
-                                         "Please check your installation!" ),
-                                i18n( "Error Starting KWatchGnuPG" ) );
-    }
-
-    void gnupgAdministrativeConsole() {
-        if( !QProcess::startDetached("kgpgconf" ) )
-            KMessageBox::error( q, i18n( "Could not start the GnuPG Administrative Console (kgpgconf). "
-                                         "Please check your installation!" ),
-                                i18n( "Error Starting KGpgConf" ) );
-    }
+    void preferences();
 
     void slotConfigCommitted();
     void slotContextMenuRequested( QAbstractItemView *, const QPoint & p ) {
@@ -304,6 +265,8 @@ private:
     Kleo::AbstractKeyListModel * hierarchicalModel;
     Kleo::KeyListController controller;
 
+    QPointer<ConfigureDialog> configureDialog;
+
     struct UI {
 
         TabWidget tabWidget;
@@ -329,6 +292,7 @@ MainWindow::Private::Private( MainWindow * qq )
       flatModel( AbstractKeyListModel::createFlatKeyListModel( q ) ),
       hierarchicalModel( AbstractKeyListModel::createHierarchicalKeyListModel( q ) ),
       controller( q ),
+      configureDialog(),
       ui( q )
 {
     KDAB_SET_OBJECT_NAME( controller );
@@ -384,10 +348,6 @@ void MainWindow::Private::setupActions() {
           "document-new", q, SLOT(newCertificate()), "Ctrl+N", false, true },
         { "file_export_certificates", i18n("Export Certificates..."), QString(),
           "document-export", q, SLOT(exportCertificates()), "Ctrl+E", false, true },
-        { "file_export_certificates_to_server", i18n("Export Certificates to Server..."), QString(),
-          "document-export", q, SLOT(exportCertificatesToServer()), "Ctrl+Shift+E", false, true },
-        { "file_export_secret_keys", i18n("Export Secret Key..."), QString(),
-          "document-export", q, SLOT(exportSecretKey()), QString(), false, true },
         { "file_lookup_certificates", i18n("Lookup Certificates on Server..."), QString(),
           "edit-find", q, SLOT(lookupCertificates()), "Shift+Ctrl+I", false, true },
         { "file_import_certificates", i18n("Import Certificates..."), QString(),
@@ -406,25 +366,13 @@ void MainWindow::Private::setupActions() {
         // Certificate menu
         { "certificates_delete", i18n("Delete" ), QString()/*i18n("Delete selected certificates")*/,
           "edit-delete", q, SLOT(deleteCertificates()), "Delete", false, true },
-        { "certificates_certify_certificate", i18n("Certify Certificate..."), QString(),
-          0, q, SLOT(certifyCertificate()), QString(), false, true },
+          { "certificates_sign_certificate", i18n("Sign Certificate..."), QString(),
+              0, q, SLOT(signCertificate()), QString(), false, true },
         { "certificates_change_expiry", i18n("Change Expiry Date..."), QString(),
           0, q, SLOT(changeCertificateExpiry()), QString(), false, true },
         { "certificates_change_owner_trust", i18n("Change Owner Trust..."), QString(),
-          0, q, SLOT(changeCertificateOwnerTrust()), QString(), false, true },
-        { "certificates_change_passphrase", i18n("Change Passphrase..."), QString(),
-          0, q, SLOT(changePassphrase()), QString(), false, true },
-        { "certificates_add_userid", i18n("Add User-ID..."), QString(),
-          0, q, SLOT(addUserID()), QString(), false, true },
-        { "certificates_dump_certificate", i18n("Dump Certificate"), QString(),
-          0, q, SLOT(dumpCertificate()), QString(), false, true },
+            0, q, SLOT(changeCertificateOwnerTrust()), QString(), false, true },
           // Tools menu
-        { "tools_start_kwatchgnupg", i18n("GnuPG Log Viewer"), QString(),
-          "kwatchgnupg", q, SLOT(gnupgLogViewer()), QString(), false, !OS_WIN },
-#if 0
-        { "tools_start_kgpgconf", i18n("GnuPG Administrative Console"), QString(),
-          "kgpgconf", q, SLOT(gnupgLogViewer()), QString(), false, true },
-#endif
         { "tools_refresh_x509_certificates", i18n("Refresh X.509 Certificates"), QString(),
           "view-refresh", q, SLOT(refreshX509Certificates()), QString(), false, true },
         { "tools_refresh_openpgp_certificates", i18n("Refresh OpenPGP Certificates"), QString(),
@@ -435,11 +383,11 @@ void MainWindow::Private::setupActions() {
           0, q, SLOT(dumpCrlCache()), QString(), false, true },
         { "crl_import_crl", i18n("Import CRL From File..."), QString(),
           0, q, SLOT(importCrlFromFile()), QString(), false, true },
-        { "configure_backend", i18n("Configure GnuPG Backend..."), QString(),
-          0, q, SLOT(configureBackend()), QString(), false, true },
         // Settings menu
         { "settings_self_test", i18n("Perform Self-Test"), QString(),
           0, q, SLOT(selfTest()), QString(), false, true },
+        { "configure_backend", i18n("Configure GnuPG Backend..."), QString(),
+          0, q, SLOT(configureBackend()), QString(), false, true },
         // Window menu
         // (come from ui.tabWidget)
     };
@@ -456,9 +404,7 @@ void MainWindow::Private::setupActions() {
     KStandardAction::quit( q, SLOT(closeAndQuit()), q->actionCollection() );
     KStandardAction::configureToolbars( q, SLOT(configureToolbars()), q->actionCollection() );
     KStandardAction::keyBindings( q, SLOT(editKeybindings()), q->actionCollection() );
-    KStandardAction::preferences( q, SIGNAL(configDialogRequested()), q->actionCollection() );
-    q->createStandardStatusBarAction();
-    q->setStandardToolBarMenuEnabled( true );
+    KStandardAction::preferences( q, SLOT(preferences()), q->actionCollection() );
 
 
     // ### somehow make this better...
@@ -468,16 +414,9 @@ void MainWindow::Private::setupActions() {
     controller.registerActionForCommand<RefreshOpenPGPCertsCommand>( coll->action( "view_redisplay" ) );
     controller.registerActionForCommand<DeleteCertificatesCommand>( coll->action( "certificates_delete" ) );
     controller.registerActionForCommand<ChangeExpiryCommand>(       coll->action( "certificates_change_expiry" ) );
-    controller.registerActionForCommand<ChangeOwnerTrustCommand>(   coll->action( "certificates_change_owner_trust" ) );
-    controller.registerActionForCommand<ChangePassphraseCommand>(   coll->action( "certificates_change_passphrase" ) );
-    controller.registerActionForCommand<CertifyCertificateCommand>(    coll->action( "certificates_certify_certificate" ) );
-    controller.registerActionForCommand<AddUserIDCommand>(          coll->action( "certificates_add_userid" ) );
-    controller.registerActionForCommand<DumpCertificateCommand>(    coll->action( "certificates_dump_certificate" ) );
     controller.registerActionForCommand<SignEncryptFilesCommand>(   coll->action( "file_sign_encrypt_files" ) );
     controller.registerActionForCommand<DecryptVerifyFilesCommand>( coll->action( "file_decrypt_verify_files" ) );
     controller.registerActionForCommand<ExportCertificateCommand>(  coll->action( "file_export_certificates" ) );
-    controller.registerActionForCommand<ExportOpenPGPCertsToServerCommand>( coll->action( "file_export_certificates_to_server" ) );
-    controller.registerActionForCommand<ExportSecretKeyCommand>(    coll->action( "file_export_secret_keys" ) );
     controller.registerActionForCommand<ImportCertificateFromFileCommand>( coll->action( "file_import_certificates" ) );
     controller.registerActionForCommand<LookupCertificatesCommand>( coll->action( "file_lookup_certificates" ) );
     controller.registerActionForCommand<ClearCrlCacheCommand>(      coll->action( "crl_clear_crl_cache" ) );
@@ -491,7 +430,7 @@ void MainWindow::Private::setupActions() {
 }
 
 void MainWindow::Private::newCertificate() {
-    QPointer<NewCertificateWizard> wiz( new NewCertificateWizard( q ) );
+    QPointer<CertificateWizardImpl> wiz( new CertificateWizardImpl( q ) );
     wiz->exec();
     delete wiz;
 }
@@ -521,6 +460,19 @@ void MainWindow::Private::configureBackend() {
     }
 }
 
+void MainWindow::Private::preferences() {
+    if ( !configureDialog ) {
+        configureDialog = new ConfigureDialog( q );
+        configureDialog->setAttribute( Qt::WA_DeleteOnClose );
+        connect( configureDialog, SIGNAL(configCommitted()), q, SLOT(slotConfigCommitted()) );
+    }
+
+    if ( configureDialog->isVisible() )
+        configureDialog->raise();
+    else
+        configureDialog->show();
+}
+
 void MainWindow::Private::slotConfigCommitted() {
     controller.updateConfig();
 }
@@ -530,15 +482,13 @@ void MainWindow::closeEvent( QCloseEvent * e ) {
     // so do not let it touch the event...
     kDebug();
     if ( d->controller.hasRunningCommands() ) {
-        if ( d->controller.shutdownWarningRequired() ) {
-            const int ret = KMessageBox::warningContinueCancel( this, i18n("There are still some background operations ongoing. "
-                                                                           "These will be terminated when closing the window. "
-                                                                           "Proceed?"),
-                                                                i18n("Ongoing Background Tasks") );
-            if ( ret != KMessageBox::Continue ) {
-                e->ignore();
-                return;
-            }
+        const int ret = KMessageBox::warningContinueCancel( this, i18n("There are still some background operations ongoing. "
+                                                                       "These will be terminated when closing the window. "
+                                                                       "Proceed?"),
+                                                            i18n("Ongoing Background Tasks") );
+        if ( ret != KMessageBox::Continue ) {
+            e->ignore();
+            return;
         }
         d->controller.cancelCommands();
         if ( d->controller.hasRunningCommands() ) {
@@ -594,14 +544,16 @@ static bool can_decode_local_files( const QMimeData * data ) {
 void MainWindow::dragEnterEvent( QDragEnterEvent * e ) {
     kDebug();
 
-    if ( can_decode_local_files( e->mimeData() ) )
+    if ( ( e->possibleActions() & Qt::CopyAction ) &&
+         can_decode_local_files( e->mimeData() ) )
         e->acceptProposedAction();
 }
 
 void MainWindow::dropEvent( QDropEvent * e ) {
     kDebug();
 
-    if ( !can_decode_local_files( e->mimeData() ) )
+    if ( !( e->possibleActions() & Qt::CopyAction ) ||
+         !can_decode_local_files( e->mimeData() ) )
         return;
 
     e->setDropAction( Qt::CopyAction );

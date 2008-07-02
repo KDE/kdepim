@@ -43,7 +43,6 @@ namespace Commands {
     public:
         explicit ChangeExpiryCommand( QAbstractItemView * view, KeyListController * parent );
         explicit ChangeExpiryCommand( KeyListController * parent );
-        explicit ChangeExpiryCommand( const GpgME::Key & key );
         ~ChangeExpiryCommand();
 
         /* reimp */ static Restrictions restrictions() { return OnlyOneKey|MustBeOpenPGP|NeedSecretKey; }

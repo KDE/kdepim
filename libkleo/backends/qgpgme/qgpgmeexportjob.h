@@ -2,7 +2,7 @@
     qgpgmeexportjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -35,28 +35,32 @@
 
 #include "kleo/exportjob.h"
 
-#include "threadedjobmixin.h"
+#include "qgpgmejob.h"
+
+
+namespace GpgME {
+  class Error;
+  class Context;
+}
 
 namespace Kleo {
 
-  class QGpgMEExportJob
-#ifdef Q_MOC_RUN
-    : public ExportJob
-#else
-    : public _detail::ThreadedJobMixin<ExportJob, boost::tuple<GpgME::Error, QByteArray, QString> >
-#endif
-  {
-    Q_OBJECT
-#ifdef Q_MOC_RUN
-  public Q_SLOTS:
-    void slotFinished();
-#endif
+  class QGpgMEExportJob : public ExportJob, private QGpgMEJob {
+    Q_OBJECT QGPGME_JOB
   public:
-    explicit QGpgMEExportJob( GpgME::Context * context );
+    QGpgMEExportJob( GpgME::Context * context );
     ~QGpgMEExportJob();
 
     /*! \reimp from ExportJob */
     GpgME::Error start( const QStringList & patterns );
+
+  private slots:
+    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
+      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+    }
+
+  private:
+    void doOperationDoneEvent( const GpgME::Error & e );
   };
 
 }

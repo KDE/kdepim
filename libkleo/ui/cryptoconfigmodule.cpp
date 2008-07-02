@@ -138,6 +138,7 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
 
     // Set a nice startup size
     const int deskHeight = QApplication::desktop()->height();
+    const int deskWidth = QApplication::desktop()->width();
     int dialogHeight;
     if (deskHeight > 1000) // very big desktop ?
       dialogHeight = 800;
@@ -301,7 +302,7 @@ void Kleo::CryptoConfigGroupGUI::defaults()
 
 ////
 
-typedef CryptoConfigEntryGUI * (*constructor)( CryptoConfigModule *, Kleo::CryptoConfigEntry *, const QString &, QGridLayout *, QWidget * );
+typedef CryptoConfigEntryGUI * (*constructor)( CryptoConfigModule *, Kleo::CryptoConfigEntry *, const QString &, QGridLayout *, QWidget * ); 
 
 namespace {
 template <typename T_Widget>
@@ -311,12 +312,12 @@ CryptoConfigEntryGUI * _create( CryptoConfigModule * m, Kleo::CryptoConfigEntry 
 }
 
 static const struct WidgetsByEntryName {
-    const char * entryGlob;
+    const char * entryName;
     constructor create;
 } widgetsByEntryName[] = {
-    { "*/*/debug-level",   &_create<CryptoConfigEntryDebugLevel> },
-    { "gpg/*/keyserver",   &_create<CryptoConfigEntryKeyserver>  },
-    { "gpgsm/*/keyserver", &_create<CryptoConfigEntryLDAPURL>    },
+    // sort by 'name' !!
+    { "debug-level", &_create<CryptoConfigEntryDebugLevel> },
+    { "keyserver",   &_create<CryptoConfigEntryKeyserver>  },
 };
 static const unsigned int numWidgetsByEntryName = sizeof widgetsByEntryName / sizeof *widgetsByEntryName;
 
@@ -348,10 +349,9 @@ CryptoConfigEntryGUI* Kleo::CryptoConfigEntryGUIFactory::createEntryGUI( CryptoC
 {
     assert( entry );
 
-    // try to lookup by path:
-    const QString path = entry->path();
+    // try to lookup by name:
     for ( unsigned int i = 0 ; i < numWidgetsByEntryName ; ++i )
-        if ( QRegExp( QLatin1String( widgetsByEntryName[i].entryGlob ), Qt::CaseSensitive, QRegExp::Wildcard ).exactMatch( path ) )
+        if ( entryName == QLatin1String( widgetsByEntryName[i].entryName ) )
             return widgetsByEntryName[i].create( module, entry, entryName, glay, widget );
 
     // none found, so look up by type:
@@ -624,10 +624,10 @@ Kleo::CryptoConfigEntryURL::CryptoConfigEntryURL(
   Kleo::CryptoConfigEntry* entry, const QString& entryName,
   QGridLayout * glay, QWidget* widget )
     : CryptoConfigEntryGUI( module, entry, entryName ),
-    mLineEdit( 0 )
 #ifndef ONLY_KLEO
-      , mUrlRequester( 0 )
+      mUrlRequester( 0 ),
 #endif
+      mLineEdit( 0 )
 {
   const int row = glay->rowCount();
   QWidget * req;
@@ -780,7 +780,7 @@ Kleo::CryptoConfigEntryLDAPURL::CryptoConfigEntryLDAPURL(
   : CryptoConfigEntryGUI( module, entry, entryName )
 {
   mLabel = new QLabel( widget );
-  mPushButton = new QPushButton( entry->isReadOnly() ? i18n("Show...") : i18n( "Edit..." ), widget );
+  mPushButton = new QPushButton( i18n( "Edit..." ), widget );
 
 
   const int row = glay->rowCount();
@@ -792,40 +792,22 @@ Kleo::CryptoConfigEntryLDAPURL::CryptoConfigEntryLDAPURL(
   hlay->addWidget( mLabel, 1 );
   hlay->addWidget( mPushButton );
 
-  if ( entry->isReadOnly() )
+  if ( entry->isReadOnly() ) {
     mLabel->setEnabled( false );
-  connect( mPushButton, SIGNAL( clicked() ), SLOT( slotOpenDialog() ) );
-}
-
-static KUrl::List strings2urls( const QStringList & strs ) {
-    KUrl::List urls;
-    Q_FOREACH( const QString & str, strs )
-        if ( !str.isEmpty() )
-            urls.push_back( KUrl( str ) );
-    return urls;
-}
-
-static QStringList urls2strings( const KUrl::List & urls ) {
-    QStringList result;
-    Q_FOREACH( const KUrl & url, urls )
-        result.push_back( url.url() );
-    return result;
+    mPushButton->hide();
+  } else {
+    connect( mPushButton, SIGNAL( clicked() ), SLOT( slotOpenDialog() ) );
+  }
 }
 
 void Kleo::CryptoConfigEntryLDAPURL::doLoad()
 {
-  if ( mEntry->argType() == CryptoConfigEntry::ArgType_LDAPURL )
-    setURLList( mEntry->urlValueList() );
-  else
-    setURLList( strings2urls( mEntry->stringValueList() ) );
+  setURLList( mEntry->urlValueList() );
 }
 
 void Kleo::CryptoConfigEntryLDAPURL::doSave()
 {
-  if ( mEntry->argType() == CryptoConfigEntry::ArgType_LDAPURL )
-    mEntry->setURLValueList( mURLList );
-  else
-    mEntry->setStringValueList( urls2strings( mURLList ) );
+  mEntry->setURLValueList( mURLList );
 }
 
 void Kleo::CryptoConfigEntryLDAPURL::slotOpenDialog()
@@ -836,7 +818,6 @@ void Kleo::CryptoConfigEntryLDAPURL::slotOpenDialog()
   dialog.setCaption( i18n( "Configure LDAP Servers" ) );
   dialog.setButtons( KDialog::Default|KDialog::Cancel|KDialog::Ok );
   DirectoryServicesWidget* dirserv = new DirectoryServicesWidget( &dialog );
-  dirserv->setX509ReadOnly( mEntry->isReadOnly() );
   dirserv->setAllowedSchemes( DirectoryServicesWidget::LDAP );
   dirserv->setAllowedProtocols( DirectoryServicesWidget::X509Protocol );
   dirserv->addX509Services( mURLList );
@@ -910,10 +891,9 @@ void Kleo::CryptoConfigEntryKeyserver::slotOpenDialog()
   // I'm a bad boy and I do it all on the stack. Enough classes already :)
   // This is just a simple dialog around the directory-services-widget
   KDialog dialog( mPushButton->parentWidget() );
-  dialog.setCaption( i18n( "Configure Keyservers" ) );
+  dialog.setCaption( i18n( "Configure LDAP Servers" ) );
   dialog.setButtons( KDialog::Default|KDialog::Cancel|KDialog::Ok );
   DirectoryServicesWidget dirserv( &dialog );
-  dirserv.setOpenPGPReadOnly( mEntry->isReadOnly() );
   dirserv.setAllowedSchemes( DirectoryServicesWidget::AllSchemes );
   dirserv.setAllowedProtocols( DirectoryServicesWidget::OpenPGPProtocol );
   dirserv.addOpenPGPServices( string2urls( mLabel->text() ) );

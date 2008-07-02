@@ -2,7 +2,7 @@
     qgpgmeencryptjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004,2007,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -35,27 +35,23 @@
 
 #include "kleo/encryptjob.h"
 
-#include "threadedjobmixin.h"
+#include "qgpgmejob.h"
 
 #include <gpgme++/encryptionresult.h>
-#include <gpgme++/key.h>
+
+
+namespace GpgME {
+  class Error;
+  class Context;
+  class Key;
+}
 
 namespace Kleo {
 
-  class QGpgMEEncryptJob
-#ifdef Q_MOC_RUN
-    : public EncryptJob
-#else
-    : public _detail::ThreadedJobMixin<EncryptJob, boost::tuple<GpgME::EncryptionResult, QByteArray, QString> >
-#endif
-  {
-    Q_OBJECT
-#ifdef Q_MOC_RUN
-  public Q_SLOTS:
-    void slotFinished();
-#endif
+  class QGpgMEEncryptJob : public EncryptJob, private QGpgMEJob {
+    Q_OBJECT QGPGME_JOB
   public:
-    explicit QGpgMEEncryptJob( GpgME::Context * context );
+    QGpgMEEncryptJob( GpgME::Context * context );
     ~QGpgMEEncryptJob();
 
     /*! \reimp from EncryptJob */
@@ -76,11 +72,21 @@ namespace Kleo {
     /*! \reimp from Job */
     void showErrorDialog( QWidget * parent, const QString & caption ) const;
 
-    /*! \reimp from EncryptJob */
+    /*! \reimp from SignEncryptJob */
     void setOutputIsBase64Encoded( bool on );
 
-    /*! \reimp from ThreadedJobMixin */
-    void resultHook( const result_type & r );
+  private Q_SLOTS:
+    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
+      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+    }
+
+
+  private:
+    void doOperationDoneEvent( const GpgME::Error & e );
+    GpgME::Error setup( const std::vector<GpgME::Key> &, const QByteArray &, bool );
+    void setup( const std::vector<GpgME::Key> &,
+                const boost::shared_ptr<QIODevice> &,
+                const boost::shared_ptr<QIODevice> &, bool );
 
   private:
     bool mOutputIsBase64Encoded;

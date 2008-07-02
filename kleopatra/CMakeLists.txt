@@ -2,7 +2,7 @@ project(kleopatra)
 
 include(MacroOptionalAddSubdirectory)
 
-set( kleopatra_version 1.9.3-beta )
+set( kleopatra_version 1.9.1 )
 if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
   if ( NOT KdeSubversion_FOUND )
     find_package( KdeSubversion )
@@ -102,7 +102,6 @@ set( _kleopatra_SRCS
   utils/kdlogtextwidget.cpp
   utils/headerview.cpp
   utils/scrollarea.cpp
-  utils/dragqueen.cpp
 
   utils/hex.cpp
   utils/input.cpp
@@ -136,11 +135,7 @@ set( _kleopatra_SRCS
   dialogs/lookupcertificatesdialog.cpp
   dialogs/ownertrustdialog.cpp
   dialogs/selftestdialog.cpp
-  dialogs/certifycertificatedialog.cpp
-  dialogs/exportsecretkeydialog.cpp
-  dialogs/adduseriddialog.cpp
-  dialogs/certificatedetailsdialog.cpp
-  dialogs/exportcertificatesdialog.cpp
+  dialogs/signcertificatedialog.cpp
 
   crypto/certificateresolver.cpp
   crypto/task.cpp
@@ -194,27 +189,21 @@ set( _kleopatra_SRCS
   commands/decryptverifyclipboardcommand.cpp
   commands/clearcrlcachecommand.cpp
   commands/dumpcrlcachecommand.cpp
-  commands/dumpcertificatecommand.cpp
   commands/importcrlcommand.cpp
   commands/changeexpirycommand.cpp
   commands/changeownertrustcommand.cpp
-  commands/changepassphrasecommand.cpp
-  commands/certifycertificatecommand.cpp
+  commands/signcertificatecommand.cpp
   commands/selftestcommand.cpp
-  commands/exportsecretkeycommand.cpp
-  commands/exportopenpgpcertstoservercommand.cpp
-  commands/adduseridcommand.cpp
   
   ${_kleopatra_uiserver_files}
 
   conf/configuredialog.cpp
 
-  newcertificatewizard/listwidget.cpp
-  newcertificatewizard/newcertificatewizard.cpp
-
+  certificatewizardimpl.cpp
   aboutdata.cpp
   systemtrayicon.cpp
-  kleopatraapplication.cpp
+  exportcertificatesdialog.cpp
+  certificateinfowidgetimpl.cpp
   main.cpp )
 
 if ( KLEO_MODEL_TEST )
@@ -223,22 +212,13 @@ if ( KLEO_MODEL_TEST )
 endif ( KLEO_MODEL_TEST )
 
 kde4_add_ui_files( _kleopatra_SRCS
-  dialogs/certificationoptionswidget.ui
+  certificateinfowidget.ui
+  certificatewizard.ui
   dialogs/expirydialog.ui
   dialogs/lookupcertificatesdialog.ui
   dialogs/ownertrustdialog.ui
-  dialogs/selectchecklevelwidget.ui
   dialogs/selftestdialog.ui
-  dialogs/exportsecretkeydialog.ui
-  dialogs/adduseriddialog.ui
-  dialogs/certificatedetailsdialog.ui
-  newcertificatewizard/listwidget.ui
-  newcertificatewizard/chooseprotocolpage.ui
-  newcertificatewizard/enterdetailspage.ui
-  newcertificatewizard/overviewpage.ui
-  newcertificatewizard/keycreationpage.ui
-  newcertificatewizard/resultpage.ui
-  newcertificatewizard/advancedsettingsdialog.ui
+  dialogs/signcertificatedialog.ui
   )
 kde4_add_kcfg_files( _kleopatra_SRCS
   kcfg/tooltippreferences.kcfgc

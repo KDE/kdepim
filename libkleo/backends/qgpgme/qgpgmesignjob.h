@@ -2,7 +2,7 @@
     qgpgmesignjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004,2007,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004, 2007 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -35,26 +35,21 @@
 
 #include "kleo/signjob.h"
 
-#include "threadedjobmixin.h"
+#include "qgpgmejob.h"
 
 #include <gpgme++/signingresult.h>
-#include <gpgme++/key.h>
 
+
+namespace GpgME {
+  class Error;
+  class Context;
+  class Key;
+}
 
 namespace Kleo {
 
-  class QGpgMESignJob
-#ifdef Q_MOC_RUN
-    : public SignJob
-#else
-    : public _detail::ThreadedJobMixin<SignJob, boost::tuple<GpgME::SigningResult, QByteArray, QString> >
-#endif
-  {
-    Q_OBJECT
-#ifdef Q_MOC_RUN
-  public Q_SLOTS:
-    void slotFinished();
-#endif
+  class QGpgMESignJob : public SignJob, private QGpgMEJob {
+    Q_OBJECT QGPGME_JOB
   public:
     explicit QGpgMESignJob( GpgME::Context * context );
     ~QGpgMESignJob();
@@ -82,8 +77,15 @@ namespace Kleo {
     /*! \reimp from SignJob */
     void setOutputIsBase64Encoded( bool on );
 
-    /*! \reimp from ThreadedJobMixin */
-    void resultHook( const result_type & r );
+  private Q_SLOTS:
+    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
+      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+    }
+
+  private:
+    void doOperationDoneEvent( const GpgME::Error & e );
+    GpgME::Error setup( const std::vector<GpgME::Key> &, const QByteArray &, GpgME::SignatureMode );
+    void setup( const std::vector<GpgME::Key> &, const boost::shared_ptr<QIODevice> &, const boost::shared_ptr<QIODevice> &, GpgME::SignatureMode );
 
   private:
     GpgME::SigningResult mResult;

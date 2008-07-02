@@ -126,20 +126,20 @@ void UserIDListModel::setKey( const Key & key ) {
     emit layoutChanged();
 }
 
-UserID UserIDListModel::userID( const QModelIndex & idx, bool strict ) const {
+UserID UserIDListModel::userID( const QModelIndex & idx ) const {
     if ( is_userid_level( idx ) )
         return d->key.userID( idx.row() );
-    if ( !strict && is_signature_level( idx ) )
+    if ( is_signature_level( idx ) )
 	return d->key.userID( extract_uid_number( idx ) );
     return UserID();
 }
 
-std::vector<UserID> UserIDListModel::userIDs( const QList<QModelIndex> & indexes, bool strict ) const {
+std::vector<UserID> UserIDListModel::userIDs( const QList<QModelIndex> & indexes ) const {
     std::vector<UserID> result;
     result.reserve( indexes.size() );
     std::transform( indexes.begin(), indexes.end(),
                     std::back_inserter( result ),
-                    bind( &UserIDListModel::userID, this, _1, strict ) );
+                    bind( &UserIDListModel::userID, this, _1 ) );
     return result;
 }
 
@@ -209,7 +209,7 @@ int UserIDListModel::rowCount( const QModelIndex & pidx ) const {
     if ( !pidx.isValid() )
 	return d->key.numUserIDs();
     if ( is_userid_level( pidx ) )
-	return d->key.userID( pidx.row() ).numSignatures();
+	return d->key.userID( extract_uid_number( pidx ) ).numSignatures();
     return 0;
 }
 
@@ -219,9 +219,9 @@ QModelIndex UserIDListModel::index( int row, int col, const QModelIndex & pidx )
 
     if ( !pidx.isValid() )
 	if ( static_cast<unsigned>( row ) < d->key.numUserIDs() )
-	    return createIndex( row, col, -1 );
-	else
 	    return QModelIndex();
+	else
+	    return createIndex( row, col, -1 );
 
     if ( !is_userid_level( pidx ) )
 	return QModelIndex();
@@ -245,8 +245,8 @@ QVariant UserIDListModel::headerData( int section, Qt::Orientation o, int role )
         if ( role == Qt::DisplayRole || role == Qt::EditRole || role == Qt::ToolTipRole )
             switch ( section ) {
             case ID:          return i18n( "ID" );
-	    case PrettyName:  return i18n( "Name" );
-	    case PrettyEMail: return i18n( "EMail" );
+	    case PrettyName:  return i18n( "Signer Name" );
+	    case PrettyEMail: return i18n( "Signer EMail" );
             case ValidFrom:   return i18n( "Valid From" );
             case ValidUntil:  return i18n( "Valid Until" );
             case Status:      return i18n( "Status" );
@@ -266,11 +266,29 @@ QVariant UserIDListModel::data( const QModelIndex & idx, int role ) const {
 	if ( uid.isNull() )
 	    return QVariant();
 
-        if ( idx.column() == 0 )
-            // we assume that the top-level items are spanned
-            return Formatting::prettyUserID( uid );
-        else
-            return QVariant();
+	switch ( idx.column() ) {
+
+	case ID:
+	    return QVariant();
+	case PrettyName:
+	    return Formatting::prettyName( uid );
+	case ValidFrom:
+	case ValidUntil:
+	    return QVariant();
+	case Status:
+	    return Formatting::validityShort( uid );
+#if 0
+	    if ( userID.isRevoked() )
+		return i18n("revoked");
+	    if ( userID.isExpired() )
+		return i18n("expired");
+	    if ( userID.isDisabled() )
+		return i18n("disabled");
+	    if ( userID.isInvalid() )
+		return i18n("invalid");
+	    return i18n("good");
+#endif
+	}
 
     } else if ( is_signature_level( idx ) ) {
 
@@ -282,10 +300,6 @@ QVariant UserIDListModel::data( const QModelIndex & idx, int role ) const {
 
 	case ID:
 	    return QString::fromLatin1( signature.signerKeyID() );
-        case PrettyName:
-            return Formatting::prettyName( signature );
-        case PrettyEMail:
-            return Formatting::prettyEMail( signature );
 	case ValidFrom:
 	    if ( role == Qt::EditRole )
 		return Formatting::creationDate( signature );

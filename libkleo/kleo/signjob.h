@@ -107,7 +107,7 @@ namespace Kleo {
     virtual void setOutputIsBase64Encoded( bool ) = 0;
 
   Q_SIGNALS:
-    void result( const GpgME::SigningResult & result, const QByteArray & signature, const QString & auditLogAsHtml=QString() );
+    void result( const GpgME::SigningResult & result, const QByteArray & signature );
   };
 
 }

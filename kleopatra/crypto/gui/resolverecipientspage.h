@@ -48,7 +48,7 @@ namespace GpgME {
 }
 
 namespace KMime {
-namespace Types {
+namespace Types { 
     class Mailbox;
 }
 }
@@ -68,14 +68,14 @@ namespace Gui {
 
         bool isComplete() const;
 
-        /**
-         * The protocol selected by the user (which is chosen by
+        /** 
+         * The protocol selected by the user (which is chosen by 
          * the user in case none was preset)
          */
         GpgME::Protocol selectedProtocol() const;
 
         /**
-         * the protocol set before the dialog is shown. Defaults to
+         * the protocol set before the dialog is shown. Defaults to 
          * GpgME::UnknownProtocol */
         GpgME::Protocol presetProtocol() const;
         void setPresetProtocol( GpgME::Protocol protocol );
@@ -93,7 +93,7 @@ namespace Gui {
          * Defaults to @p false.
          */
         bool recipientsUserMutable() const;
-        void setRecipientsUserMutable( bool isMutable );
+        void setRecipientsUserMutable( bool isMutable ); 
 
         void setAdditionalRecipientsInfo( const std::vector<GpgME::Key> & recipients );
 
@@ -116,7 +116,6 @@ namespace Gui {
         Q_PRIVATE_SLOT( d, void protocolSelected( int ) )
         Q_PRIVATE_SLOT( d, void addRecipient() )
         Q_PRIVATE_SLOT( d, void removeSelectedEntries() )
-        Q_PRIVATE_SLOT( d, void completeChangedInternal() )
         class ListWidget;
         class ItemWidget;
     };

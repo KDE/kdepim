@@ -168,9 +168,9 @@ void DecryptVerifyEMailController::Private::ensureWizardCreated()
     w->setWindowTitle( i18n( "Decrypt/Verify E-Mail" ) );
     w->setAttribute( Qt::WA_DeleteOnClose );
     w->setStandaloneMode( true );
-    const QRect preferredGeometry = EMailOperationsPreferences().decryptVerifyPopupGeometry();
-    if ( preferredGeometry.isValid() )
-        w->setGeometry( preferredGeometry );
+    const QPoint preferredPos = EMailOperationsPreferences().decryptVerifyPopupPosition();
+    if ( !preferredPos.isNull() )
+        w->move( preferredPos );
     connect( w.get(), SIGNAL(destroyed()), q, SLOT(slotWizardCanceled()), Qt::QueuedConnection );
     m_wizard = w.release();
 

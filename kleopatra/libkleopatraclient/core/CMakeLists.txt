@@ -15,8 +15,7 @@ kde4_add_library( kleopatraclientcore SHARED
   initialization.cpp
   command.cpp
   selectcertificatecommand.cpp
-  signencryptfilescommand.cpp
-  decryptverifyfilescommand.cpp
+  #connection.cpp
   )
 
 set_target_properties( kleopatraclientcore
@@ -27,7 +26,7 @@ set_target_properties( kleopatraclientcore
 
 
 if ( WIN32 )
-  target_link_libraries( kleopatraclientcore ${QT_QTCORE_LIBRARY} ${ASSUAN_VANILLA_LIBRARIES} ws2_32 )
+  target_link_libraries( kleopatraclientcore ${QT_QTCORE_LIBRARY} ${ASSUAN_VANILLA_LIBRARIES} Ws2_32 )
 else ( WIN32 )
   target_link_libraries( kleopatraclientcore ${QT_QTCORE_LIBRARY} ${ASSUAN_PTHREAD_LIBRARIES} )
 endif ( WIN32 )
@@ -43,7 +42,6 @@ install(
     initialization.h
     command.h
     selectcertificatecommand.h
-    signencryptfilescommand.h
   DESTINATION ${INCLUDE_INSTALL_DIR}/libkleopatraclient/core
   )
 

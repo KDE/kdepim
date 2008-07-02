@@ -16,9 +16,9 @@
    <whatsthis>Minimize the number of steps when encrypting emails, use preset defaults unless problems occurr</whatsthis>
    <default>false</default>
  </entry>
- <entry name="DecryptVerifyPopupGeometry" key="decrypt-verify-popup-geometry" type="Rect">
-    <label>Decrypt/Verify Popup Geometry</label>
-    <whatsthis>The remembered size and position of the Decrypt/Verify Result Popup used by clients which do not support inline display of D/V results, such as MS Outlook.</whatsthis> 
+ <entry name="DecryptVerifyPopupPosition" key="decrypt-verify-popup-position" type="Point">
+    <label>Decrypt/Verify Popup Position</label>
+    <whatsthis>The remembered position of the Decrypt/Verify Result Popup used by clients which do not support inline display of D/V results, such as MS Outlook.</whatsthis> 
  </entry>
  </group>
 </kcfg>

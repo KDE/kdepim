@@ -48,7 +48,6 @@ namespace Kleo {
         virtual ~Input();
 
         virtual QString label() const = 0;
-        virtual void setLabel( const QString & label ) = 0;
         virtual boost::shared_ptr<QIODevice> ioDevice() const = 0;
         virtual unsigned int classification() const = 0;
         virtual unsigned long long size() const = 0;

@@ -2,7 +2,7 @@
     qgpgmedecryptverifyjob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -14,9 +14,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
     General Public License for more details.
 
-    You should have received a copy of the GNU General Public License along
-    with this program; if not, write to the Free Software Foundation, Inc.,
-    51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
 
     In addition, as a special exception, the copyright holders give
     permission to link the code of this program with any edition of
@@ -32,6 +32,7 @@
 
 #include "qgpgmedecryptverifyjob.h"
 
+#include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
 
 #include <gpgme++/context.h>
@@ -39,66 +40,70 @@
 #include <gpgme++/verificationresult.h>
 #include <gpgme++/data.h>
 
-#include <KDebug>
+#include <KLocale>
 
-#include <QBuffer>
+#include <assert.h>
 
-#include <cassert>
-
-using namespace Kleo;
-using namespace GpgME;
-using namespace boost;
-
-QGpgMEDecryptVerifyJob::QGpgMEDecryptVerifyJob( Context * context )
-  : mixin_type( context )
+Kleo::QGpgMEDecryptVerifyJob::QGpgMEDecryptVerifyJob( GpgME::Context * context )
+  : DecryptVerifyJob( QGpgME::EventLoopInteractor::instance() ),
+    QGpgMEJob( this, context )
 {
-  lateInitialization();
+  assert( context );
 }
 
-QGpgMEDecryptVerifyJob::~QGpgMEDecryptVerifyJob() {}
-
-static QGpgMEDecryptVerifyJob::result_type decrypt_verify( Context * ctx, const shared_ptr<QIODevice> & cipherText, const shared_ptr<QIODevice> & plainText ) {
-
-  kDebug();
-
-  QGpgME::QIODeviceDataProvider in( cipherText );
-  const Data indata( &in );
-
-  if ( !plainText ) {
-    QGpgME::QByteArrayDataProvider out;
-    Data outdata( &out );
-
-    const std::pair<DecryptionResult,VerificationResult> res = ctx->decryptAndVerify( indata, outdata );
-    const QString log = _detail::audit_log_as_html( ctx );
-    kDebug() << "end";
-    return make_tuple( res.first, res.second, out.data(), log );
-  } else {
-    QGpgME::QIODeviceDataProvider out( plainText );
-    Data outdata( &out );
-
-    const std::pair<DecryptionResult,VerificationResult> res = ctx->decryptAndVerify( indata, outdata );
-    const QString log = _detail::audit_log_as_html( ctx );
-    kDebug() << "end";
-    return make_tuple( res.first, res.second, QByteArray(), log );
-  }
-
+Kleo::QGpgMEDecryptVerifyJob::~QGpgMEDecryptVerifyJob() {
 }
 
-static QGpgMEDecryptVerifyJob::result_type decrypt_verify_qba( Context * ctx, const QByteArray & cipherText ) {
-  const shared_ptr<QBuffer> buffer( new QBuffer );
-  buffer->setData( cipherText );
-  if ( !buffer->open( QIODevice::ReadOnly ) )
-    assert( !"This should never happen: QBuffer::open() failed" );
-  return decrypt_verify( ctx, buffer, shared_ptr<QIODevice>() );
+void Kleo::QGpgMEDecryptVerifyJob::setup( const QByteArray & cipherText ) {
+  assert( !mInData );
+  assert( !mOutData );
+
+  createInData( cipherText );
+  createOutData();
 }
 
-Error QGpgMEDecryptVerifyJob::start( const QByteArray & cipherText ) {
-  run( bind( &decrypt_verify_qba, _1, cipherText ) );
-  return Error();
+GpgME::Error Kleo::QGpgMEDecryptVerifyJob::start( const QByteArray & cipherText ) {
+  setup( cipherText );
+
+  hookupContextToEventLoopInteractor();
+
+  const GpgME::Error err = mCtx->startCombinedDecryptionAndVerification( *mInData, *mOutData );
+
+  if ( err )
+    deleteLater();
+  return err;
 }
 
-void QGpgMEDecryptVerifyJob::start( const shared_ptr<QIODevice> & cipherText, const shared_ptr<QIODevice> & plainText ) {
-  run( bind( &decrypt_verify, _1, cipherText, plainText ) );
+void Kleo::QGpgMEDecryptVerifyJob::setup( const boost::shared_ptr<QIODevice> & cipherText, const boost::shared_ptr<QIODevice> & plainText ) {
+    assert( cipherText );
+    assert( !mInData );
+    assert( !mOutData );
+
+    createInData( cipherText );
+    if ( plainText )
+        createOutData( plainText );
+    else
+        createOutData();
+}
+
+void Kleo::QGpgMEDecryptVerifyJob::start( const boost::shared_ptr<QIODevice> & cipherText, const boost::shared_ptr<QIODevice> & plainText ) {
+    setup( cipherText, plainText );
+
+    hookupContextToEventLoopInteractor();
+
+    if ( const GpgME::Error err = mCtx->startCombinedDecryptionAndVerification( *mInData, *mOutData ) ) {
+        resetQIODeviceDataObjects();
+        doThrow( err, i18n("Can't start combined decrypt/verify operation") );
+    }
+}
+
+void Kleo::QGpgMEDecryptVerifyJob::doOperationDoneEvent( const GpgME::Error & ) {
+    const GpgME::DecryptionResult dr = mCtx->decryptionResult();
+    const GpgME::VerificationResult vr = mCtx->verificationResult();
+    const QByteArray plainText = outData();
+    resetQIODeviceDataObjects();
+    getAuditLog();
+    emit result( dr, vr, plainText );
 }
 
 #include "qgpgmedecryptverifyjob.moc"

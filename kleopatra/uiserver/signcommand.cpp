@@ -37,8 +37,6 @@
 #include <crypto/signemailcontroller.h>
 
 #include <utils/exception.h>
-#include <utils/input.h>
-#include <utils/output.h>
 
 #include <KLocale>
 
@@ -58,7 +56,7 @@ public:
 
     }
 
-private:
+private:    
     void checkForErrors() const;
 
 private Q_SLOTS:
@@ -85,9 +83,9 @@ void SignCommand::Private::checkForErrors() const {
         throw Exception( makeError( GPG_ERR_CONFLICT ),
                          i18n( "SIGN is an email mode command, connection seems to be in filemanager mode" ) );
 
-    if ( !q->recipients().empty() && !q->informativeRecipients() )
+    if ( !q->recipients().empty() )
         throw Exception( makeError( GPG_ERR_CONFLICT ),
-                         i18n( "RECIPIENT may not be given prior to SIGN, except with --info" ) );
+                         i18n( "RECIPIENT may not be given prior to SIGN" ) );
 
     if ( q->inputs().empty() )
         throw Exception( makeError( GPG_ERR_ASS_NO_INPUT ),
@@ -116,7 +114,7 @@ int SignCommand::doStart() {
     QObject::connect( d->controller.get(), SIGNAL(error(int,QString)), d.get(), SLOT(slotError(int,QString)) );
 
     d->controller->startResolveSigners( senders() );
-
+    
     return 0;
 }
 
@@ -125,13 +123,6 @@ void SignCommand::Private::slotSignersResolved() {
     const shared_ptr<SignEMailController> cont( controller );
 
     try {
-        const QString sessionTitle = q->sessionTitle();
-        if ( !sessionTitle.isNull() ) {
-            Q_FOREACH ( const shared_ptr<Input> & i, q->inputs() )
-                i->setLabel( sessionTitle );
-            Q_FOREACH ( const shared_ptr<Output> & i, q->outputs() )
-                i->setLabel( sessionTitle );
-        }
 
         controller->setDetachedSignature( q->hasOption("detached" ) );
         controller->setInputsAndOutputs( q->inputs(), q->outputs() );

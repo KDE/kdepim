@@ -37,7 +37,6 @@
 #include "command_p.h"
 
 #include <utils/kdlogtextwidget.h>
-#include <utils/gnupg-helper.h>
 
 #include <KProcess>
 #include <KMessageBox>
@@ -188,7 +187,7 @@ DumpCrlCacheCommand::Private::Private( DumpCrlCacheCommand * qq, KeyListControll
 {
     process.setOutputChannelMode( KProcess::SeparateChannels );
     process.setReadChannel( KProcess::StandardOutput );
-    process << gpgSmPath() << "--call-dirmngr" << "listcrls";
+    process << "gpgsm" << "--call-dirmngr" << "listcrls";
 }
 
 DumpCrlCacheCommand::Private::~Private() {

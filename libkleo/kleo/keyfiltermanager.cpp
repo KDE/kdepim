@@ -68,25 +68,13 @@ namespace {
         /* upgrade to public */ using QAbstractListModel::reset;
     };
 
-    class AllCertificatesKeyFilter : public KeyFilterImplBase {
-    public:
-        AllCertificatesKeyFilter()
-            : KeyFilterImplBase()
-        {
-            mSpecificity = UINT_MAX; // overly high for ordering
-            mName = i18n("All Certificates");
-            mId = "all-certificates";
-            mMatchContexts = Filtering;
-        }
-    };
-
     class MyCertificatesKeyFilter : public KeyFilterImplBase {
     public:
         MyCertificatesKeyFilter()
             : KeyFilterImplBase()
         {
             mHasSecret = Set;
-            mSpecificity = UINT_MAX-1; // overly high for ordering
+            mSpecificity = UINT_MAX; // overly high for ordering
 
             mName = i18n("My Certificates");
             mId = "my-certificates";
@@ -104,7 +92,7 @@ namespace {
             mRevoked = NotSet;
             mValidity = IsAtLeast;
             mValidityReferenceLevel = UserID::Marginal; // Full?
-            mSpecificity = UINT_MAX-2; // overly high for ordering
+            mSpecificity = UINT_MAX-1; // overly high for ordering
 
             mName = i18n("Trusted Certificates");
             mId = "trusted-certificates";
@@ -120,7 +108,7 @@ namespace {
             mHasSecret = NotSet;
             mValidity = IsAtMost;
             mValidityReferenceLevel = UserID::Never;
-            mSpecificity = UINT_MAX-3; // overly high for ordering
+            mSpecificity = UINT_MAX-2; // overly high for ordering
 
             mName = i18n("Other Certificates");
             mId = "other-certificates";
@@ -135,7 +123,6 @@ static std::vector< shared_ptr<KeyFilter> > defaultFilters() {
     result.push_back( shared_ptr<KeyFilter>( new MyCertificatesKeyFilter ) );
     result.push_back( shared_ptr<KeyFilter>( new TrustedCertificatesKeyFilter ) );
     result.push_back( shared_ptr<KeyFilter>( new OtherCertificatesKeyFilter ) );
-    result.push_back( shared_ptr<KeyFilter>( new AllCertificatesKeyFilter ) );
     return result;
 }
 

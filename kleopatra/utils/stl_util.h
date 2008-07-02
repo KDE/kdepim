@@ -111,20 +111,6 @@ namespace kdtools {
 	return true;
     }
 
-    template <typename InputIterator, typename BinaryOperation>
-    BinaryOperation for_each_adjacent_pair( InputIterator first, InputIterator last, BinaryOperation op ) {
-        typedef typename std::iterator_traits<InputIterator>::value_type ValueType;
-        if ( first == last )
-            return op;
-        ValueType value = *first;
-        while ( ++first != last ) {
-            ValueType tmp = *first;
-            op( value, tmp );
-            value = tmp;
-        }
-        return op;
-    }
-
     //@{
     /**
        Versions of std::set_intersection optimized for ForwardIterator's
@@ -264,11 +250,6 @@ namespace kdtools {
     template <typename C, typename P>
     bool all( const C & c, P p ) {
         return all( boost::begin( c ), boost::end( c ), p );
-    }
-
-    template <typename C, typename B>
-    B for_each_adjacent_pair( const C & c, B b ) {
-        return for_each_adjacent_pair( boost::begin( c ), boost::end( c ), b );
     }
 
 }

@@ -2,7 +2,7 @@
     qgpgmedeletejob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -35,32 +35,32 @@
 
 #include "kleo/deletejob.h"
 
-#include "threadedjobmixin.h"
+#include "qgpgmejob.h"
 
 namespace GpgME {
+  class Error;
+  class Context;
   class Key;
 }
 
 namespace Kleo {
 
-  class QGpgMEDeleteJob
-#ifdef Q_MOC_RUN
-    : public DeleteJob
-#else
-    : public _detail::ThreadedJobMixin<DeleteJob>
-#endif
-  {
-    Q_OBJECT
-#ifdef Q_MOC_RUN
-  public Q_SLOTS:
-    void slotFinished();
-#endif
+  class QGpgMEDeleteJob : public DeleteJob, private QGpgMEJob {
+    Q_OBJECT QGPGME_JOB
   public:
-    explicit QGpgMEDeleteJob( GpgME::Context * context );
+    QGpgMEDeleteJob( GpgME::Context * context );
     ~QGpgMEDeleteJob();
 
     /*! \reimp from DeleteJob */
     GpgME::Error start( const GpgME::Key & key, bool allowSecretKeyDeletion );
+
+  private slots:
+    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
+      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+    }
+
+  private:
+    void doOperationDoneEvent( const GpgME::Error & e );
   };
 
 }

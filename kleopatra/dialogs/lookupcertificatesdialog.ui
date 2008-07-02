@@ -5,7 +5,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>553</width>
+    <width>544</width>
     <height>292</height>
    </rect>
   </property>
@@ -113,7 +113,7 @@
      <item rowspan="6" row="2" column="0" colspan="2" >
       <widget class="QTreeView" name="resultTV" >
        <property name="enabled" >
-        <bool>true</bool>
+        <bool>false</bool>
        </property>
        <property name="minimumSize" >
         <size>

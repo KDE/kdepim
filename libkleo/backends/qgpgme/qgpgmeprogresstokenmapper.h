@@ -39,10 +39,18 @@ class QString;
 
 namespace Kleo {
 
-  namespace QGpgMEProgressTokenMapper {
-    QString map( const char * token, int subtoken );
-    QString map( const QString & token, int subtoken );
-  }
+  class QGpgMEProgressTokenMapper {
+    QGpgMEProgressTokenMapper();
+    ~QGpgMEProgressTokenMapper();
+  public:
+    static const QGpgMEProgressTokenMapper * instance();
+
+    QString map( const char * token, int subtoken, int current, int total ) const;
+    QString map( const QString & token, int subtoken, int current, int total ) const;
+
+  private:
+    static QGpgMEProgressTokenMapper * mSelf;
+  };
 
 }
 

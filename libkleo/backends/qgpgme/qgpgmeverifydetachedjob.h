@@ -2,7 +2,7 @@
     qgpgmeverifydetachedjob.h
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004,2007,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -35,26 +35,20 @@
 
 #include "kleo/verifydetachedjob.h"
 
-#include "threadedjobmixin.h"
+#include "qgpgmejob.h"
 
-#include <gpgme++/verificationresult.h>
+
+namespace GpgME {
+  class Error;
+  class Context;
+}
 
 namespace Kleo {
 
-  class QGpgMEVerifyDetachedJob
-#ifdef Q_MOC_RUN
-    : public VerifyDetachedJob
-#else
-    : public _detail::ThreadedJobMixin<VerifyDetachedJob, boost::tuple<GpgME::VerificationResult, QString> >
-#endif
-  {
-    Q_OBJECT
-#ifdef Q_MOC_RUN
-  public Q_SLOTS:
-    void slotFinished();
-#endif
+  class QGpgMEVerifyDetachedJob : public VerifyDetachedJob, private QGpgMEJob {
+    Q_OBJECT QGPGME_JOB
   public:
-    explicit QGpgMEVerifyDetachedJob( GpgME::Context * context );
+    QGpgMEVerifyDetachedJob( GpgME::Context * context );
     ~QGpgMEVerifyDetachedJob();
 
     /*! \reimp from VerifyDetachedJob */
@@ -62,6 +56,16 @@ namespace Kleo {
 
     /*! \reimp from VerifyDetachedJob */
     void start( const boost::shared_ptr<QIODevice> & signature, const boost::shared_ptr<QIODevice> & signedData );
+
+  private Q_SLOTS:
+    void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e ) {
+      QGpgMEJob::doSlotOperationDoneEvent( context, e );
+    }
+
+  private:
+    void doOperationDoneEvent( const GpgME::Error & e );
+    void setup( const QByteArray &, const QByteArray & );
+    void setup( const boost::shared_ptr<QIODevice> &, const boost::shared_ptr<QIODevice> & );
   };
 
 }

@@ -50,7 +50,6 @@
 #include "downloadjob.h"
 #include "deletejob.h"
 #include "refreshkeysjob.h"
-#include "adduseridjob.h"
 #include "specialjob.h"
 
 #include <QCoreApplication>
@@ -97,7 +96,6 @@ make_job_subclass(ChangeOwnerTrustJob)
 make_job_subclass(DownloadJob)
 make_job_subclass(DeleteJob)
 make_job_subclass(RefreshKeysJob)
-make_job_subclass(AddUserIDJob)
 make_job_subclass(SpecialJob)
 
 #undef make_job_subclass
@@ -121,5 +119,4 @@ make_job_subclass(SpecialJob)
 #include "downloadjob.moc"
 #include "deletejob.moc"
 #include "refreshkeysjob.moc"
-#include "adduseridjob.moc"
 #include "specialjob.moc"

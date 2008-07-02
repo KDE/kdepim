@@ -51,19 +51,19 @@ namespace Kleo {
         GpgME::Key key() const;
 
         enum Columns {
+            ID,
             PrettyName,
             PrettyEMail,
             ValidFrom,
             ValidUntil,
             Status,
-            ID,
 
             NumColumns,
             Icon = PrettyName // which column shall the icon be displayed in?
         };
 
-        GpgME::UserID userID( const QModelIndex & idx, bool strict=false ) const;
-        std::vector<GpgME::UserID> userIDs( const QList<QModelIndex> & indexes, bool strict=false ) const;
+        GpgME::UserID userID( const QModelIndex & idx ) const;
+        std::vector<GpgME::UserID> userIDs( const QList<QModelIndex> & indexes ) const;
 
         GpgME::UserID::Signature signature( const QModelIndex & idx ) const;
         std::vector<GpgME::UserID::Signature> signatures( const QList<QModelIndex> & indexes ) const;

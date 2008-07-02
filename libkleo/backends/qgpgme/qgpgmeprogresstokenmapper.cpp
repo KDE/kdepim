@@ -35,43 +35,43 @@
 #include <klocale.h>
 
 #include <QString>
-#include <QDebug>
 
-#include <boost/range.hpp>
-
-#include <cassert>
+#include <assert.h>
+#include <map>
 
 struct Desc {
   int type; // 0 == fallback
   const char * display; // add %1 for useCur ^ useTot and %1 %2 for useCur == useTot == true
+  bool useCur : 1;
+  bool useTot : 1;
 };
 
 static const struct Desc pk_dsa[] = {
-  { 0, I18N_NOOP("Generating DSA key...") }
+  { 0, I18N_NOOP("Generating DSA key..."), false, false }
 };
 
 static const struct Desc pk_elg[] = {
-  { 0, I18N_NOOP("Generating ElGamal key...") }
+  { 0, I18N_NOOP("Generating ElGamal key..."), false, false }
 };
 
 static const struct Desc primegen[] = {
   // FIXME: add all type's?
-  { 0, I18N_NOOP("Searching for a large prime number...") }
+  { 0, I18N_NOOP("Searching for a large prime number..."), false, false }
 };
 
 static const struct Desc need_entropy[] = {
-  { 0, I18N_NOOP("Waiting for new entropy from random number generator (you might want to exercise the harddisks or move the mouse)...") }
+  { 0, I18N_NOOP("Waiting for new entropy from random number generator (you might want to exercise the harddisks or move the mouse)..."), false, false }
 };
 
 static const struct Desc tick[] = {
-  { 0, I18N_NOOP("Please wait...") }
+  { 0, I18N_NOOP("Please wait..."), false, false }
 };
 
 static const struct Desc starting_agent[] = {
-  { 0, I18N_NOOP("Starting gpg-agent (you should consider starting a global instance instead)...") }
+  { 0, I18N_NOOP("Starting gpg-agent (you should consider starting a global instance instead)..."), false, false }
 };
 
-static const struct _tokens {
+static const struct {
   const char * token;
   const Desc * desc;
   unsigned int numDesc;
@@ -88,33 +88,68 @@ static const struct _tokens {
 
 
 
-QString Kleo::QGpgMEProgressTokenMapper::map( const char * tokenUtf8, int subtoken ) {
+Kleo::QGpgMEProgressTokenMapper * Kleo::QGpgMEProgressTokenMapper::mSelf = 0;
+
+const Kleo::QGpgMEProgressTokenMapper * Kleo::QGpgMEProgressTokenMapper::instance() {
+  if ( !mSelf )
+    (void) new QGpgMEProgressTokenMapper();
+  return mSelf;
+}
+
+Kleo::QGpgMEProgressTokenMapper::QGpgMEProgressTokenMapper() {
+  mSelf = this;
+}
+
+Kleo::QGpgMEProgressTokenMapper::~QGpgMEProgressTokenMapper() {
+  mSelf = 0;
+}
+
+typedef std::map< QString, std::map<int,Desc> > Map;
+
+static const Map & makeMap() { // return a reference to a static to avoid copying
+  static Map map;
+  for ( unsigned int i = 0 ; i < sizeof tokens / sizeof *tokens ; ++i ) {
+    assert( tokens[i].token );
+    const QString token = QString::fromLatin1( tokens[i].token ).toLower();
+    for ( unsigned int j = 0 ; j < tokens[i].numDesc ; ++j ) {
+      const Desc & desc = tokens[i].desc[j];
+      assert( desc.display );
+      map[ token ][ desc.type ] = desc;
+    }
+  }
+  return map;
+}
+
+QString Kleo::QGpgMEProgressTokenMapper::map( const char * tokenUtf8, int subtoken, int cur, int tot ) const {
   if ( !tokenUtf8 || !*tokenUtf8 )
     return QString();
 
   if ( qstrcmp( tokenUtf8, "file:" ) == 0 )
     return QString(); // gpgme's job
 
-  return map( QString::fromUtf8( tokenUtf8 ), subtoken );
+  return map( QString::fromUtf8( tokenUtf8 ), subtoken, cur, tot );
 }
 
-QString Kleo::QGpgMEProgressTokenMapper::map( const QString & token, int subtoken ) {
+QString Kleo::QGpgMEProgressTokenMapper::map( const QString & token, int subtoken, int cur, int tot ) const {
   if ( token.startsWith( "file:" ) )
     return QString(); // gpgme's job
 
-  qDebug() << "QGpgMEProgressTokenMapper::map(" << token << subtoken << ")";
+  static const Map & tokenMap = makeMap();
 
-  for ( const _tokens * it = boost::begin( tokens ), *end = boost::end( tokens ) ; it != end ; ++it )
-    if ( token.compare( QLatin1String( it->token ), Qt::CaseInsensitive ) == 0 )
-      if ( it->desc && it->numDesc ) {
-        for ( unsigned int i = 0, e = it->numDesc ; i != e ; ++i )
-          if ( it->desc[i].type == subtoken )
-            return i18n( it->desc[i].display );
-        return i18n( it->desc[0].display );
-      } else {
-        break;
-      }
-
-  return token;
+  const Map::const_iterator it1 = tokenMap.find( token.toLower() );
+  if ( it1 == tokenMap.end() )
+    return token;
+  std::map<int,Desc>::const_iterator it2 = it1->second.find( subtoken );
+  if ( it2 == it1->second.end() )
+    it2 = it1->second.find( 0 );
+  if ( it2 == it1->second.end() )
+    return token;
+  const Desc & desc = it2->second;
+  QString result = i18n( desc.display );
+  if ( desc.useCur )
+    result = result.arg( cur );
+  if ( desc.useTot )
+    result = result.arg( tot );
+  return result;
 }
 

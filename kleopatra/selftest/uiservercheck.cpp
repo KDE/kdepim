@@ -36,8 +36,6 @@
 
 #include "implementation_p.h"
 
-#include <utils/getpid.h>
-
 #include <libkleopatraclient/core/command.h>
 
 #include <QTextDocument> // for Qt::escape
@@ -49,9 +47,27 @@
 
 #include <cassert>
 
+#ifdef Q_OS_WIN32
+# include <process.h>
+#else
+# include <unistd.h>
+#endif
+
 using namespace Kleo;
 using namespace Kleo::_detail;
 using namespace boost;
+
+static inline qint64 mypid() {
+#if QT_VERSION < 0x040400
+# ifdef Q_OS_WIN32
+    return (qint64)_getpid();
+# else
+    return (qint64)getpid();
+# endif
+#else
+    return QCoreApplication::applicationPid();
+#endif
+}
 
 namespace {
 
@@ -83,7 +99,7 @@ namespace {
                 m_proposedFix = i18nc("@info",
                                       "<para>Check that your firewall is not set to block local connections "
                                       "(allow connections to <resource>localhost</resource> or <resource>127.0.0.1</resource>).</para>");
-            } else if ( command.serverPid() != mygetpid() ) {
+            } else if ( command.serverPid() != mypid() ) {
                 m_passed = false;
                 m_error = i18n("multiple instances");
                 m_explaination = i18nc("@info",

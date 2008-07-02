@@ -2,7 +2,7 @@
     qgpgmedownloadjob.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004,2008 Klarälvdalens Datakonsult AB
+    Copyright (c) 2004 Klarälvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -32,6 +32,7 @@
 
 #include "qgpgmedownloadjob.h"
 
+#include <qgpgme/eventloopinteractor.h>
 #include <qgpgme/dataprovider.h>
 
 #include <gpgme++/context.h>
@@ -39,53 +40,59 @@
 
 #include <QStringList>
 
-#include <cassert>
+#include <assert.h>
 
-using namespace Kleo;
-using namespace GpgME;
-using namespace boost;
-
-QGpgMEDownloadJob::QGpgMEDownloadJob( Context * context )
-  : mixin_type( context )
+Kleo::QGpgMEDownloadJob::QGpgMEDownloadJob( GpgME::Context * context )
+  : DownloadJob( QGpgME::EventLoopInteractor::instance() ),
+    QGpgMEJob( this, context )
 {
-  lateInitialization();
+  assert( context );
 }
 
-QGpgMEDownloadJob::~QGpgMEDownloadJob() {}
-
-static QGpgMEDownloadJob::result_type download_qsl( Context * ctx, const QStringList & pats ) {
-  QGpgME::QByteArrayDataProvider dp;
-  Data data( &dp );
-
-  const _detail::PatternConverter pc( pats );
-
-  const Error err= ctx->exportPublicKeys( pc.patterns(), data );
-  const QString log = _detail::audit_log_as_html( ctx );
-  return make_tuple( err, dp.data(), log );
+Kleo::QGpgMEDownloadJob::~QGpgMEDownloadJob() {
 }
 
-static QGpgMEDownloadJob::result_type download( Context * ctx, const QByteArray & fpr, const shared_ptr<QIODevice> & keyData ) {
-  if ( !keyData )
-    return download_qsl( ctx, QStringList( QString::fromUtf8( fpr ) ) );
+GpgME::Error Kleo::QGpgMEDownloadJob::start( const QStringList & pats ) {
+  assert( !patterns() );
+  assert( !mOutData );
 
-  QGpgME::QIODeviceDataProvider dp( keyData );
-  Data data( &dp );
+  createOutData();
+  setPatterns( pats );
+  hookupContextToEventLoopInteractor();
 
-  const _detail::PatternConverter pc( fpr );
+  const GpgME::Error err = mCtx->startPublicKeyExport( patterns(), *mOutData );
 
-  const Error err = ctx->exportPublicKeys( pc.patterns(), data );
-  const QString log = _detail::audit_log_as_html( ctx );
-  return make_tuple( err, QByteArray(), log );
+  if ( err ) {
+    resetQIODeviceDataObjects();
+    deleteLater();
+  }
+  return err;
 }
 
-Error QGpgMEDownloadJob::start( const QStringList & pats ) {
-  run( bind( &download_qsl, _1, pats ) );
-  return Error();
+GpgME::Error Kleo::QGpgMEDownloadJob::start( const QByteArray & fpr, const boost::shared_ptr<QIODevice> & keyData ) {
+  assert( !patterns() );
+  assert( !mOutData );
+
+  if ( keyData )
+      createOutData( keyData );
+  else
+      createOutData();
+  setPatterns( QStringList( QString::fromLatin1( fpr.data() ) ) );
+  hookupContextToEventLoopInteractor();
+
+  const GpgME::Error err = mCtx->startPublicKeyExport( patterns(), *mOutData );
+
+  if ( err ) {
+    resetQIODeviceDataObjects();
+    deleteLater();
+  }
+  return err;
 }
 
-Error QGpgMEDownloadJob::start( const QByteArray & fpr, const boost::shared_ptr<QIODevice> & keyData ) {
-  run( bind( &download, _1, fpr, keyData ) );
-  return Error();
+void Kleo::QGpgMEDownloadJob::doOperationDoneEvent( const GpgME::Error & error ) {
+  const QByteArray data = outData();
+  getAuditLog();
+  emit result( error, data );
 }
 
 #include "qgpgmedownloadjob.moc"

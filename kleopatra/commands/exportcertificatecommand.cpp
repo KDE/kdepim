@@ -33,10 +33,9 @@
 #include <config-kleopatra.h>
 
 #include "exportcertificatecommand.h"
+#include "exportcertificatesdialog.h"
 
 #include "command_p.h"
-
-#include <dialogs/exportcertificatesdialog.h>
 
 #include <kleo/cryptobackend.h>
 #include <kleo/cryptobackendfactory.h>
@@ -59,10 +58,9 @@
 #include <vector>
 #include <cassert>
 
-using namespace Kleo;
-using namespace Kleo::Dialogs;
-using namespace GpgME;
 using namespace boost;
+using namespace GpgME;
+using namespace Kleo;
 
 class ExportCertificateCommand::Private : public Command::Private {
     friend class ::ExportCertificateCommand;
@@ -116,35 +114,7 @@ ExportCertificateCommand::ExportCertificateCommand( QAbstractItemView * v, KeyLi
     
 }
 
-ExportCertificateCommand::ExportCertificateCommand( const Key & key )
-    : Command( key, new Private( this, 0 ) )
-{
-
-}
-
 ExportCertificateCommand::~ExportCertificateCommand() {}
-
-void ExportCertificateCommand::setOpenPGPFileName( const QString & fileName )
-{
-    if ( !d->jobsPending )
-        d->fileNames[OpenPGP] = fileName;
-}
-
-QString ExportCertificateCommand::openPGPFileName() const
-{
-    return d->fileNames[OpenPGP];
-}
-
-void ExportCertificateCommand::setX509FileName( const QString & fileName )
-{
-    if ( !d->jobsPending )
-        d->fileNames[CMS] = fileName;
-}
-
-QString ExportCertificateCommand::x509FileName() const
-{
-    return d->fileNames[CMS];
-}
 
 void ExportCertificateCommand::doStart()
 {
@@ -173,29 +143,19 @@ void ExportCertificateCommand::doStart()
     
 bool ExportCertificateCommand::Private::requestFileNames( GpgME::Protocol protocol )
 {
+    fileNames.clear();
     if ( protocol == UnknownProtocol )
     {
-        if ( !fileNames[OpenPGP].isEmpty() && !fileNames[CMS].isEmpty() )
-            return true;
         const QPointer<ExportCertificatesDialog> dlg( new ExportCertificatesDialog( view() ) );
-        dlg->setOpenPgpExportFileName( fileNames[OpenPGP] );
-        dlg->setCmsExportFileName( fileNames[CMS] );
         const bool accepted = dlg->exec() == QDialog::Accepted && dlg ;
         if ( accepted )
         {
             fileNames[OpenPGP] = dlg->openPgpExportFileName();
             fileNames[CMS] = dlg->cmsExportFileName();
         }
-        else
-        {
-            fileNames.clear();
-        }
         delete dlg;
         return accepted;
     }
-
-    if ( !fileNames[protocol].isEmpty() )
-        return true;
 
     const QString fname = QFileDialog::getSaveFileName( view(), i18n( "Export Certificates" ), QString(), protocol == GpgME::OpenPGP ? i18n( "OpenPGP Certificates (.asc)" ) : i18n( "S/MIME Certificates (.pem)" ) );
     fileNames[protocol] = fname;

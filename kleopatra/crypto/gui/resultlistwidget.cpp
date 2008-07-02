@@ -114,7 +114,7 @@ ResultListWidget::~ResultListWidget()
     if ( !d->m_standaloneMode )
         return;
     EMailOperationsPreferences prefs;
-    prefs.setDecryptVerifyPopupGeometry( geometry() );
+    prefs.setDecryptVerifyPopupPosition( pos() );
     prefs.writeConfig();
 }
 

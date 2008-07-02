@@ -31,7 +31,6 @@
 */
 
 #include "messagebox.h"
-#include "messagebox_p.h"
 
 #include "kleo/job.h"
 
@@ -54,7 +53,6 @@
 #include <qtextstream.h>
 
 using namespace Kleo;
-using namespace Kleo::Private;
 using namespace GpgME;
 
 namespace {
@@ -71,64 +69,71 @@ static KGuiItem KGuiItem_showAuditLog() {
     return KGuiItem( i18n("&Show Audit Log") ); // "view_log"?
 }
 
-} // anon namespace
+class AuditLogViewer : public KDialog {
+    // Q_OBJECT
+public:
+    explicit AuditLogViewer( const QString & log, QWidget * parent=0, Qt::WindowFlags f=0 )
+        : KDialog( parent ),
+          m_textEdit( new QTextEdit( this ) )
+    {
+        setCaption( i18n("View GnuPG Audit Log") );
+        setButtons( Close|User1|User2 );
+        setDefaultButton( Close );
+        setButtonGuiItem( User1, KGuiItem_save() );
+        setButtonGuiItem( User2, KGuiItem_copy() );
+        showButtonSeparator( false );
+        setModal( false );
+        setWindowFlags( f );
+        setMainWidget( m_textEdit );
+        m_textEdit->setObjectName( "m_textEdit" );
+        m_textEdit->setReadOnly( true );
+        setAuditLog( log );
 
-AuditLogViewer::AuditLogViewer( const QString & log, QWidget * parent, Qt::WindowFlags f )
-    : KDialog( parent, f ),
-      m_textEdit( new QTextEdit( this ) )
-{
-    setCaption( i18n("View GnuPG Audit Log") );
-    setButtons( Close|User1|User2 );
-    setDefaultButton( Close );
-    setButtonGuiItem( User1, KGuiItem_save() );
-    setButtonGuiItem( User2, KGuiItem_copy() );
-    showButtonSeparator( false );
-    setModal( false );
-    setMainWidget( m_textEdit );
-    m_textEdit->setObjectName( "m_textEdit" );
-    m_textEdit->setReadOnly( true );
-    setAuditLog( log );
+        connect( this, SIGNAL(user1Clicked()), SLOT(slotUser1()) );
+        connect( this, SIGNAL(user2Clicked()), SLOT(slotUser2()) );
+    }
+    ~AuditLogViewer() {}
 
-    connect( this, SIGNAL(user1Clicked()), SLOT(slotUser1()) );
-    connect( this, SIGNAL(user2Clicked()), SLOT(slotUser2()) );
-}
-
-AuditLogViewer::~AuditLogViewer() {}
-
-void AuditLogViewer::setAuditLog( const QString & log ) {
-    m_textEdit->setHtml( log );
-}
-
-void AuditLogViewer::slotUser1() {
-#ifndef ONLY_KLEO
-    const QString fileName = KFileDialog::getSaveFileName( QString(), QString(),
-                                                           this, i18n("Choose File to Save GnuPG Audit Log to") );
-#else
-    const QString fileName = QFileDialog::getSaveFileName( this, i18n("Choose File to Save GnuPG Audit Log to") );
-#endif
-    if ( fileName.isEmpty() )
-        return;
-
-    KSaveFile file( fileName );
-
-    if ( file.open() ) {
-        QTextStream s( &file );
-        s << m_textEdit->toPlainText() << endl;
-        s.flush();
-        file.finalize();
+    void setAuditLog( const QString & log ) {
+        m_textEdit->setHtml( log );
     }
 
-    if ( const int err = file.error() )
-        KMessageBox::error( this, i18n("Couldn't save to file \"%1\": %2",
-                            file.fileName(), QString::fromLocal8Bit( strerror( err ) ) ),
-                            i18n("File Save Error") );
-}
+private:
+    void slotUser1() {
+#ifndef ONLY_KLEO
+        const QString fileName = KFileDialog::getSaveFileName( QString(), QString(),
+                                                               this, i18n("Choose File to Save GnuPG Audit Log to") );
+#else
+        const QString fileName = QFileDialog::getSaveFileName( this, i18n("Choose File to Save GnuPG Audit Log to") );
+#endif
+        if ( fileName.isEmpty() )
+            return;
 
-void AuditLogViewer::slotUser2() {
-    m_textEdit->selectAll();
-    m_textEdit->copy();
-    m_textEdit->textCursor().clearSelection();
-}
+        KSaveFile file( fileName );
+
+        if ( file.open() ) {
+            QTextStream s( &file );
+            s << m_textEdit->toPlainText() << endl;
+            s.flush();
+            file.finalize();
+        }
+
+        if ( const int err = file.error() )
+            KMessageBox::error( this, i18n("Couldn't save to file \"%1\": %2",
+                                file.fileName(), QString::fromLocal8Bit( strerror( err ) ) ),
+                                i18n("File Save Error") );
+    }
+    void slotUser2() {
+        m_textEdit->selectAll();
+        m_textEdit->copy();
+        m_textEdit->textCursor().clearSelection();
+    }
+
+private:
+    QTextEdit * m_textEdit;
+};
+
+} // anon namespace
 
 // static
 void MessageBox::auditLog( QWidget * parent, const Job * job, const QString & caption ) {
@@ -278,5 +283,3 @@ void MessageBox::make( QWidget * parent, QMessageBox::Icon icon, const QString &
     if ( KDialog::No == KMessageBox::createKMessageBox( dialog, icon, text, QStringList(), QString::null, 0, options ) )
         auditLog( 0, job );
 }
-
-#include "moc_messagebox_p.cpp"

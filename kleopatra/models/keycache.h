@@ -47,7 +47,6 @@ namespace GpgME {
     class DecryptionResult;
     class VerificationResult;
     class KeyListResult;
-    class Subkey;
 }
 
 namespace Kleo {
@@ -98,25 +97,21 @@ namespace Kleo {
         }
         std::vector<GpgME::Key> findByKeyIDOrFingerprint( const std::vector<std::string> & ids ) const;
 
-        std::vector<GpgME::Subkey> findSubkeysByKeyID( const std::vector<std::string> & ids ) const;
-
         std::vector<GpgME::Key> findRecipients( const GpgME::DecryptionResult & result ) const;
         std::vector<GpgME::Key> findSigners( const GpgME::VerificationResult & result ) const;
 
         enum Option {
             NoOption = 0,
-            RecursiveSearch = 1,
-            IncludeSubject = 2
+            RecursiveSearch = 1
         };
-        Q_DECLARE_FLAGS( Options, Option )
 
-        std::vector<GpgME::Key> findSubjects( const GpgME::Key & key, Options option=RecursiveSearch ) const;
-        std::vector<GpgME::Key> findSubjects( const std::vector<GpgME::Key> & keys, Options options=RecursiveSearch ) const;
-        std::vector<GpgME::Key> findSubjects( std::vector<GpgME::Key>::const_iterator first, std::vector<GpgME::Key>::const_iterator last, Options options=RecursiveSearch ) const;
+        std::vector<GpgME::Key> findSubjects( const GpgME::Key & key, Option option=RecursiveSearch ) const;
+        std::vector<GpgME::Key> findSubjects( const std::vector<GpgME::Key> & keys, Option options=RecursiveSearch ) const;
+        std::vector<GpgME::Key> findSubjects( std::vector<GpgME::Key>::const_iterator first, std::vector<GpgME::Key>::const_iterator last, Option options=RecursiveSearch ) const;
 
-        std::vector<GpgME::Key> findIssuers( const GpgME::Key & key, Options options=RecursiveSearch ) const;
-        std::vector<GpgME::Key> findIssuers( const std::vector<GpgME::Key> & keys, Options options=RecursiveSearch ) const;
-        std::vector<GpgME::Key> findIssuers( std::vector<GpgME::Key>::const_iterator first, std::vector<GpgME::Key>::const_iterator last, Options options=RecursiveSearch ) const;
+        std::vector<GpgME::Key> findIssuers( const GpgME::Key & key, Option options=RecursiveSearch ) const;
+        std::vector<GpgME::Key> findIssuers( const std::vector<GpgME::Key> & keys, Option options=RecursiveSearch ) const;
+        std::vector<GpgME::Key> findIssuers( std::vector<GpgME::Key>::const_iterator first, std::vector<GpgME::Key>::const_iterator last, Option options=RecursiveSearch ) const;
 
     public Q_SLOTS:
         void clear();
@@ -124,22 +119,18 @@ namespace Kleo {
         void cancelKeyListing();
 
     Q_SIGNALS:
-        //void changed( const GpgME::Key & key );
+        void changed( const GpgME::Key & key );
         void aboutToRemove( const GpgME::Key & key );
         void added( const GpgME::Key & key );
         void keyListingDone( const GpgME::KeyListResult & result );
-        void keysMayHaveChanged();
 
     private:
         class RefreshKeysJob;
-
+        
         class Private;
         kdtools::pimpl_ptr<Private> d;
         Q_PRIVATE_SLOT( d, void refreshJobDone( GpgME::KeyListResult ) )
     };
-
 }
-
-Q_DECLARE_OPERATORS_FOR_FLAGS( Kleo::KeyCache::Options )
 
 #endif /* __KLEOPATRA_MODELS_KEYCACHE_H__ */

@@ -249,9 +249,9 @@ void CertificateSelectionDialog::Private::slotReloaded() {
     filterAllowedKeys( keys );
     const std::vector<Key> selected = q->selectedCertificates();
     if ( AbstractKeyListModel * const model = ui.tabWidget.flatModel() )
-        model->setKeys( keys );
+        model->addKeys( keys );
     if ( AbstractKeyListModel * const model = ui.tabWidget.hierarchicalModel() )
-        model->setKeys( keys );
+        model->addKeys( keys );
     q->selectCertificates( selected );
 }
 
@@ -319,7 +319,7 @@ void CertificateSelectionDialog::Private::slotDoubleClicked( const QModelIndex &
     assert( model );
     QItemSelectionModel * const sm = view->selectionModel();
     assert( sm );
-    sm->select( idx, QItemSelectionModel::ClearAndSelect|QItemSelectionModel::Rows );
+    sm->select( idx, QItemSelectionModel::ClearAndSelect );
     QMetaObject::invokeMethod( q, "accept", Qt::QueuedConnection );
 }
 

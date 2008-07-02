@@ -115,12 +115,6 @@ ChangeExpiryCommand::ChangeExpiryCommand( QAbstractItemView * v, KeyListControll
     d->init();
 }
 
-ChangeExpiryCommand::ChangeExpiryCommand( const GpgME::Key & key )
-    : Command( key, new Private( this, 0 ) )
-{
-    d->init();
-}
-
 void ChangeExpiryCommand::Private::init() {
 
 }
@@ -173,12 +167,11 @@ void ChangeExpiryCommand::Private::slotDialogRejected() {
 
 void ChangeExpiryCommand::Private::slotResult( const Error & err ) {
     if ( err.isCanceled() )
-        ;
+        finished();
     else if ( err )
         showErrorDialog( err );
     else
         showSuccessDialog();
-    finished();
 }
 
 void ChangeExpiryCommand::doCancel() {

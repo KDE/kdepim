@@ -13,13 +13,10 @@
    <string>Kleopatra Self-Test Results</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout_3" >
-   <property name="sizeConstraint" >
-    <enum>QLayout::SetMinimumSize</enum>
-   </property>
    <item>
     <widget class="QLabel" name="label" >
      <property name="text" >
-      <string comment="@info" >&lt;para>These are the results of the Kleopatra self-test suite. Details are available in tooltips.&lt;/para>&lt;para>Note that all but the first failure might be due to prior tests failing.&lt;/para></string>
+      <string comment="@info" >&lt;para>These are the results of the Kleopatra self-test suite. Details are available in tooltips.&lt;/para>&lt;para>Note that all but the first failure might be consecutive.&lt;/para></string>
      </property>
      <property name="wordWrap" >
       <bool>true</bool>
@@ -35,12 +32,6 @@
       <bool>false</bool>
      </property>
      <widget class="QTreeView" name="resultsTV" >
-      <property name="sizePolicy" >
-       <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-        <horstretch>0</horstretch>
-        <verstretch>1</verstretch>
-       </sizepolicy>
-      </property>
       <property name="minimumSize" >
        <size>
         <width>0</width>
@@ -200,7 +191,7 @@
    <hints>
     <hint type="sourcelabel" >
      <x>354</x>
-     <y>398</y>
+     <y>467</y>
     </hint>
     <hint type="destinationlabel" >
      <x>375</x>

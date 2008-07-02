@@ -100,12 +100,6 @@ GnuPGProcessCommand::GnuPGProcessCommand( QAbstractItemView * v, KeyListControll
     d->init();
 }
 
-GnuPGProcessCommand::GnuPGProcessCommand( const GpgME::Key & key )
-    : Command( key, new Private( this, 0 ) )
-{
-    d->init();
-}
-
 void GnuPGProcessCommand::Private::init() {
     connect( &process, SIGNAL(finished(int,QProcess::ExitStatus)),
              q, SLOT(slotProcessFinished(int,QProcess::ExitStatus)) );

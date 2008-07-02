@@ -60,7 +60,6 @@ namespace Kleo {
     Q_SIGNALS:
         void closed( Kleo::AssuanServerConnection * which );
         void startKeyManagerRequested();
-        void startConfigDialogRequested();
 
     public:
         class Private;

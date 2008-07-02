@@ -40,7 +40,6 @@ namespace GpgME {
 }
 
 namespace Kleo {
-namespace Commands {
 
     class DetailsCommand : public Command {
         Q_OBJECT
@@ -61,10 +60,8 @@ namespace Commands {
         class Private;
         inline Private * d_func();
         inline const Private * d_func() const;
-        Q_PRIVATE_SLOT( d_func(), void slotDialogClosed() )
     };
 
-}
 }
 
 #endif /* __KLEOPATRA_COMMANDS_DETAILSCOMMAND_H__ */

@@ -34,7 +34,7 @@
 
 #include "ui/messagebox.h"
 
-#include <qgpgme/dataprovider.h>
+#include <qgpgme/eventloopinteractor.h>
 
 #include <gpgme++/context.h>
 #include <gpgme++/data.h>
@@ -43,97 +43,136 @@
 
 #include <klocale.h>
 
-#include <QBuffer>
+#include <assert.h>
 
-#include <cassert>
-
-using namespace Kleo;
-using namespace GpgME;
-using namespace boost;
-
-QGpgMESignEncryptJob::QGpgMESignEncryptJob( Context * context )
-  : mixin_type( context ),
+Kleo::QGpgMESignEncryptJob::QGpgMESignEncryptJob( GpgME::Context * context )
+  : SignEncryptJob( QGpgME::EventLoopInteractor::instance() ),
+    QGpgMEJob( this, context ),
     mOutputIsBase64Encoded( false )
 {
-  lateInitialization();
+  assert( context );
 }
 
-QGpgMESignEncryptJob::~QGpgMESignEncryptJob() {}
+Kleo::QGpgMESignEncryptJob::~QGpgMESignEncryptJob() {
+}
 
-void QGpgMESignEncryptJob::setOutputIsBase64Encoded( bool on ) {
+void Kleo::QGpgMESignEncryptJob::setOutputIsBase64Encoded( bool on ) {
   mOutputIsBase64Encoded = on;
 }
 
-static QGpgMESignEncryptJob::result_type sign_encrypt( Context * ctx, const std::vector<Key> & signers, const std::vector<Key> & recipients, const shared_ptr<QIODevice> & plainText, const shared_ptr<QIODevice> & cipherText, bool alwaysTrust, bool outputIsBsse64Encoded ) {
+GpgME::Error Kleo::QGpgMESignEncryptJob::setup( const std::vector<GpgME::Key> & signers,
+                                                const std::vector<GpgME::Key> & recipients,
+						const QByteArray & plainText, bool alwaysTrust ) {
+  assert( !mInData );
+  assert( !mOutData );
 
-  QGpgME::QIODeviceDataProvider in( plainText );
-  const Data indata( &in );
+  createInData( plainText );
+  createOutData();
 
-  const Context::EncryptionFlags eflags =
-    alwaysTrust ? Context::AlwaysTrust : Context::None ;
+  if ( mOutputIsBase64Encoded )
+    mOutData->setEncoding( GpgME::Data::Base64Encoding );
 
-  ctx->clearSigningKeys();
-  Q_FOREACH( const Key & signer, signers )
-    if ( !signer.isNull() )
-      if ( const Error err = ctx->addSigningKey( signer ) )
-        return make_tuple( SigningResult( err ), EncryptionResult(), QByteArray(), QString() );
-
-  if ( !cipherText ) {
-    QGpgME::QByteArrayDataProvider out;
-    Data outdata( &out );
-
-    if ( outputIsBsse64Encoded )
-      outdata.setEncoding( Data::Base64Encoding );
-
-    const std::pair<SigningResult, EncryptionResult> res = ctx->signAndEncrypt( recipients, indata, outdata, eflags );
-    const QString log = _detail::audit_log_as_html( ctx );
-    return make_tuple( res.first, res.second, out.data(), log );
-  } else {
-    QGpgME::QIODeviceDataProvider out( cipherText );
-    Data outdata( &out );
-
-    if ( outputIsBsse64Encoded )
-      outdata.setEncoding( Data::Base64Encoding );
-
-    const std::pair<SigningResult, EncryptionResult> res = ctx->signAndEncrypt( recipients, indata, outdata, eflags );
-    const QString log = _detail::audit_log_as_html( ctx );
-    return make_tuple( res.first, res.second, QByteArray(), log );
+  try {
+      setSigningKeys( signers );
+  } catch ( const GpgME::Exception & e ) {
+      return e.error();
   }
 
+  hookupContextToEventLoopInteractor();
+
+  const GpgME::Context::EncryptionFlags flags =
+    alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None ;
+  return mCtx->startCombinedSigningAndEncryption( recipients, *mInData, *mOutData, flags );
 }
 
-static QGpgMESignEncryptJob::result_type sign_encrypt_qba( Context * ctx, const std::vector<Key> & signers, const std::vector<Key> & recipients, const QByteArray & plainText, bool alwaysTrust, bool outputIsBsse64Encoded ) {
-  const shared_ptr<QBuffer> buffer( new QBuffer );
-  buffer->setData( plainText );
-  if ( !buffer->open( QIODevice::ReadOnly ) )
-    assert( !"This should never happen: QBuffer::open() failed" );
-  return sign_encrypt( ctx, signers, recipients, buffer, shared_ptr<QIODevice>(), alwaysTrust, outputIsBsse64Encoded );
+GpgME::Error Kleo::QGpgMESignEncryptJob::start( const std::vector<GpgME::Key> & signers,
+						const std::vector<GpgME::Key> & recipients,
+						const QByteArray & plainText, bool alwaysTrust ) {
+  const GpgME::Error err = setup( signers, recipients, plainText, alwaysTrust );
+  if ( err )
+    deleteLater();
+  mResult.first = GpgME::SigningResult( err );
+  mResult.second = GpgME::EncryptionResult();
+  return err;
 }
 
-Error QGpgMESignEncryptJob::start( const std::vector<Key> & signers, const std::vector<Key> & recipients, const QByteArray & plainText, bool alwaysTrust ) {
-  run( bind( &sign_encrypt_qba, _1, signers, recipients, plainText, alwaysTrust, mOutputIsBase64Encoded ) );
-  return Error();
+void Kleo::QGpgMESignEncryptJob::setup( const std::vector<GpgME::Key> & signers,
+                                        const std::vector<GpgME::Key> & recipients,
+                                        const boost::shared_ptr<QIODevice> & plainText,
+                                        const boost::shared_ptr<QIODevice> & cipherText, bool alwaysTrust )
+{
+  assert( !mInData );
+  assert( !mOutData );
+
+  createInData( plainText );
+  if ( cipherText )
+      createOutData( cipherText );
+  else
+      createOutData();
+
+  if ( mOutputIsBase64Encoded )
+    mOutData->setEncoding( GpgME::Data::Base64Encoding );
+
+  setSigningKeys( signers );
+  hookupContextToEventLoopInteractor();
+
+  const GpgME::Context::EncryptionFlags flags =
+    alwaysTrust ? GpgME::Context::AlwaysTrust : GpgME::Context::None ;
+  if ( const GpgME::Error err = mCtx->startCombinedSigningAndEncryption( recipients, *mInData, *mOutData, flags ) ) {
+      resetQIODeviceDataObjects();
+      doThrow( err, i18n("Can't start combined sign-encrypt job") );
+  }
 }
 
-void QGpgMESignEncryptJob::start( const std::vector<Key> & signers, const std::vector<Key> & recipients, const shared_ptr<QIODevice> & plainText, const shared_ptr<QIODevice> & cipherText, bool alwaysTrust ) {
-  run( bind( &sign_encrypt, _1, signers, recipients, plainText, cipherText, alwaysTrust, mOutputIsBase64Encoded ) );
+void Kleo::QGpgMESignEncryptJob::start( const std::vector<GpgME::Key> & signers,
+                                        const std::vector<GpgME::Key> & recipients,
+                                        const boost::shared_ptr<QIODevice> & plainText,
+                                        const boost::shared_ptr<QIODevice> & cipherText, bool alwaysTrust )
+{
+    try {
+        setup( signers, recipients, plainText, cipherText, alwaysTrust );
+    } catch ( const GpgME::Exception & e ) {
+        mResult.first = GpgME::SigningResult( e.error() );
+        mResult.second = GpgME::EncryptionResult();
+        resetQIODeviceDataObjects();
+        throw;
+    }
 }
 
-std::pair<SigningResult,EncryptionResult> QGpgMESignEncryptJob::exec( const std::vector<Key> & signers, const std::vector<Key> & recipients, const QByteArray & plainText, bool alwaysTrust, QByteArray & cipherText ) {
-  const result_type r = sign_encrypt_qba( context(), signers, recipients, plainText, alwaysTrust, mOutputIsBase64Encoded );
-  cipherText = get<2>( r );
-  resultHook( r );
+std::pair<GpgME::SigningResult,GpgME::EncryptionResult>
+Kleo::QGpgMESignEncryptJob::exec( const std::vector<GpgME::Key> & signers,
+				  const std::vector<GpgME::Key> & recipients,
+				  const QByteArray & plainText, bool alwaysTrust,
+				  QByteArray & cipherText ) {
+  if ( const GpgME::Error err = setup( signers, recipients, plainText, alwaysTrust ) ) {
+    mResult = std::make_pair( GpgME::SigningResult( err ), GpgME::EncryptionResult() );
+    resetQIODeviceDataObjects();
+    return mResult;
+  }
+
+  waitForFinished();
+
+  cipherText = outData();
+  mResult.first = mCtx->signingResult();
+  mResult.second = mCtx->encryptionResult();
+  resetQIODeviceDataObjects();
+  getAuditLog();
   return mResult;
 }
 
-void QGpgMESignEncryptJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
-    if ( mResult.first.error()  && !mResult.first.error().isCanceled() ||
-         mResult.second.error() && !mResult.second.error().isCanceled() )
-        MessageBox::error( parent, mResult.first, mResult.second, this, caption );
+void Kleo::QGpgMESignEncryptJob::doOperationDoneEvent( const GpgME::Error & ) {
+  mResult.first = mCtx->signingResult();
+  mResult.second = mCtx->encryptionResult();
+  const QByteArray cipherText = outData();
+  resetQIODeviceDataObjects();
+  getAuditLog();
+  emit result( mResult.first, mResult.second, cipherText );
 }
 
-void QGpgMESignEncryptJob::resultHook( const result_type & tuple ) {
-  mResult = std::make_pair( get<0>( tuple ), get<1>( tuple ) );
+void Kleo::QGpgMESignEncryptJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
+    if ( mResult.first.error()  && !mResult.first.error().isCanceled() ||
+         mResult.second.error() && !mResult.second.error().isCanceled() )
+        Kleo::MessageBox::error( parent, mResult.first, mResult.second, this, caption );
 }
 
 #include "qgpgmesignencryptjob.moc"

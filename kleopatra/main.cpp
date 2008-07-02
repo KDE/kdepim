@@ -33,15 +33,21 @@
 #include <config-kleopatra.h>
 
 #include "aboutdata.h"
-#include "kleopatraapplication.h"
+#include "systemtrayicon.h"
 #include "mainwindow.h"
 
 #include <commands/reloadkeyscommand.h>
 #include <commands/selftestcommand.h>
 
+#include "libkleo/kleo/cryptobackendfactory.h"
+
 #include <utils/gnupg-helper.h>
+#include <utils/filesystemwatcher.h>
+#include <utils/kdpipeiodevice.h>
+#include <utils/log.h>
 
 #ifdef HAVE_USABLE_ASSUAN
+# include "kleo-assuan.h"
 # include <uiserver/uiserver.h>
 # include <uiserver/assuancommand.h>
 # include <uiserver/echocommand.h>
@@ -61,21 +67,30 @@ namespace Kleo {
 }
 #endif
 
+#include <models/keycache.h>
+
 #include <kcmdlineargs.h>
 #include <klocale.h>
+#include <kglobal.h>
 #include <kiconloader.h>
 #include <ksplashscreen.h>
+#include <KUniqueApplication>
 #include <KDebug>
 
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
 #include <QTextDocument> // for Qt::escape
+#include <QProcess>
 #include <QStringList>
 #include <QMessageBox>
+#include <QPointer>
 #include <QTimer>
-#include <QEventLoop>
-#include <QThreadPool>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/mem_fn.hpp>
 
+#include <memory>
 #include <cassert>
 
 using namespace boost;
@@ -85,6 +100,20 @@ namespace {
     boost::shared_ptr<T> make_shared_ptr( T * t ) {
         return t ? boost::shared_ptr<T>( t ) : boost::shared_ptr<T>() ;
     }
+}
+
+static QStringList watchList() {
+    const QString home = Kleo::gnupgHomeDirectory();
+    QFileInfo info( home );
+    if ( !info.isDir() )
+        return QStringList();
+    QDir homeDir( home );
+    QStringList fileList = homeDir.entryList( QDir::AllEntries | QDir::NoDotAndDotDot );
+    fileList.removeAll( "dirmngr-cache.d" );
+    QStringList result;
+    Q_FOREACH( const QString& i, fileList )
+        result.push_back( homeDir.absoluteFilePath( i ) );
+    return result;
 }
 
 static bool selfCheck( KSplashScreen & splash ) {
@@ -107,6 +136,49 @@ static bool selfCheck( KSplashScreen & splash ) {
     }
 }
 
+static QString environmentVariable( const QString& var, const QString& defaultValue=QString() )
+{
+    const QStringList env = QProcess::systemEnvironment();
+    Q_FOREACH ( const QString& i, env )
+    {
+        if ( !i.startsWith( var + '=' ) )
+            continue;
+
+        const int equalPos = i.indexOf( '=' );
+        assert( equalPos >= 0 );
+        return i.mid( equalPos + 1 );
+    }
+    return defaultValue;
+}
+
+static void setupLogging()
+{
+    const QString envOptions = environmentVariable( "KLEOPATRA_LOGOPTIONS", "io" );
+    const bool logAll = envOptions.trimmed() == "all";
+    const QStringList options = envOptions.split( ',' );
+        
+    const QString dir = environmentVariable( "KLEOPATRA_LOGDIR" );
+    if ( dir.isEmpty() )
+        return;
+    std::auto_ptr<QFile> logFile( new QFile( dir + "/kleo-log" ) );
+    if ( !logFile->open( QIODevice::WriteOnly | QIODevice::Append ) ) {
+        kDebug() << "Could not open file for logging: " << dir + "/kleo-log\nLogging disabled";
+        return;
+    }
+        
+    Kleo::Log::mutableInstance()->setOutputDirectory( dir );
+    if ( logAll || options.contains( "io" ) )
+        Kleo::Log::mutableInstance()->setIOLoggingEnabled( true );
+    qInstallMsgHandler( Kleo::Log::messageHandler );
+    
+#ifdef HAVE_USABLE_ASSUAN
+    if ( logAll || options.contains( "pipeio" ) )
+        KDPipeIODevice::setDebugLevel( KDPipeIODevice::Debug );
+
+    assuan_set_assuan_log_stream( Kleo::Log::instance()->logFile() );
+#endif
+}
+
 static void fillKeyCache( KSplashScreen * splash, Kleo::UiServer * server ) {
 
   QEventLoop loop;
@@ -125,20 +197,39 @@ static void fillKeyCache( KSplashScreen * splash, Kleo::UiServer * server ) {
 
 int main( int argc, char** argv )
 {
-  {
-      const unsigned int threads = QThreadPool::globalInstance()->maxThreadCount();
-      QThreadPool::globalInstance()->setMaxThreadCount( qMin( 2U, threads ) );
-  }
-
   AboutData aboutData;
 
   KCmdLineArgs::init(argc, argv, &aboutData);
 
-  KCmdLineArgs::addCmdLineOptions( KleopatraApplication::commandLineOptions() );
+  KCmdLineOptions options;
+  options.add("daemon", ki18n("Run UI server only, hide main window"));
+  options.add("import-certificate ", ki18n("Name of certificate file to import"));
+#ifdef HAVE_USABLE_ASSUAN
+  options.add("uiserver-socket <argument>", ki18n("Location of the socket the ui server is listening on" ) );
+#endif
+  
+  KCmdLineArgs::addCmdLineOptions( options );
 
-  KleopatraApplication app;
+  KUniqueApplication app;
 
+  // pin KeyCache to a shared_ptr to define it's minimum lifetime:
+  const boost::shared_ptr<Kleo::KeyCache> keyCache = Kleo::KeyCache::mutableInstance();
+  const boost::shared_ptr<Kleo::Log> log = Kleo::Log::mutableInstance();
+  const boost::shared_ptr<Kleo::FileSystemWatcher> watcher( new Kleo::FileSystemWatcher );
+  
+  watcher->addPaths( watchList() );
+  watcher->setDelay( 1000 );
+  keyCache->addFileSystemWatcher( watcher );
+  setupLogging();
+    
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+
+  KGlobal::locale()->insertCatalog( "libkleopatra" );
+  KIconLoader::global()->addAppDir( "libkleopatra" );
+  KIconLoader::global()->addAppDir( "kdepim" );
+
+  SystemTrayIconFor<MainWindow> sysTray;
+  sysTray.show();
 
   KSplashScreen splash( UserIcon( "kleopatra_splashscreen" ), Qt::WindowStaysOnTopHint );
 
@@ -147,11 +238,10 @@ int main( int argc, char** argv )
   try {
       Kleo::UiServer server( args->getOption("uiserver-socket") );
 
-      QObject::connect( &server, SIGNAL(startKeyManagerRequested()),
-                        &app, SLOT(openOrRaiseMainWindow()) );
+      server.enableCryptoCommands( false );
 
-      QObject::connect( &server, SIGNAL(startConfigDialogRequested()),
-                        &app, SLOT(openOrRaiseConfigDialog()) );
+      QObject::connect( &server, SIGNAL(startKeyManagerRequested()),
+                        &sysTray, SLOT(openOrRaiseMainWindow()) );
 
 #define REGISTER( Command ) server.registerCommandFactory( boost::shared_ptr<Kleo::AssuanCommandFactory>( new Kleo::GenericAssuanCommandFactory<Kleo::Command> ) )
       REGISTER( DecryptCommand );
@@ -171,9 +261,12 @@ int main( int argc, char** argv )
 #undef REGISTER
 
       server.start();
+
+      sysTray.setToolTip( i18n( "Kleopatra UI Server listening on %1", server.socketName() ) );
 #endif
 
       const bool daemon = args->isSet("daemon");
+      const QStringList certificateToImport = args->getOptionList("import-certificate");
 
       if ( !daemon )
           splash.show();
@@ -185,21 +278,22 @@ int main( int argc, char** argv )
       fillKeyCache( &splash, 0 );
 #endif
 
-      app.setIgnoreNewInstance( false );
-
       if ( !daemon ) {
-          app.newInstance();
-          splash.finish( app.mainWindow() );
+          MainWindow* mainWindow = new MainWindow;
+          if ( !certificateToImport.isEmpty() )
+              mainWindow->importCertificatesFromFile( certificateToImport );
+          mainWindow->show();
+          sysTray.setMainWindow( mainWindow );
+          splash.finish( mainWindow );
       }
 
+      args->clear();
+      QApplication::setQuitOnLastWindowClosed( false );
       rc = app.exec();
 
 #ifdef HAVE_USABLE_ASSUAN
-      app.setIgnoreNewInstance( true );
       QObject::disconnect( &server, SIGNAL(startKeyManagerRequested()),
-                           &app, SLOT(openOrRaiseMainWindow()) );
-      QObject::disconnect( &server, SIGNAL(startConfigDialogRequested()),
-                           &app, SLOT(openOrRaiseConfigDialog()) );
+                           &sysTray, SLOT(openOrRaiseMainWindow()) );
 
       server.stop();
       server.waitForStopped();
@@ -210,11 +304,13 @@ int main( int argc, char** argv )
                                      "You can use Kleopatra as a certificate manager, but cryptographic plugins that "
                                      "rely on a GPG UI Server being present might not work correctly, or at all.</qt>",
                                      Qt::escape( QString::fromUtf8( e.what() ) ) ));
-      app.setIgnoreNewInstance( false );
       rc = app.exec();
-      app.setIgnoreNewInstance( true );
   }
 #endif
+
+    // work around kdelibs bug https://bugs.kde.org/show_bug.cgi?id=162514
+    KGlobal::config()->sync();
+  
 
     return rc;
 }

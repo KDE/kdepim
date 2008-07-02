@@ -67,7 +67,7 @@ namespace Kleo {
     virtual GpgME::Error start( const GpgME::Key & key, GpgME::Key::OwnerTrust trust ) = 0;
 
   Q_SIGNALS:
-    void result( const GpgME::Error & result, const QString & auditLogAsHtml=QString() );
+    void result( const GpgME::Error & result );
   };
 
 }

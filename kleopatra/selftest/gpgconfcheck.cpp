@@ -37,12 +37,10 @@
 #include "implementation_p.h"
 
 #include <utils/gnupg-helper.h>
-#include <utils/hex.h>
 
 #include <KLocale>
 
 #include <QProcess>
-#include <QDir>
 
 #include <boost/shared_ptr.hpp>
 
@@ -55,54 +53,18 @@ using namespace boost;
 namespace {
 
     class GpgConfCheck : public SelfTestImplementation {
-        QString m_component;
     public:
-        explicit GpgConfCheck( const char * component )
-            : SelfTestImplementation( i18nc("@title", "%1 Configuration Check", component && *component ? component : "gpgconf" ) ),
-              m_component( component )
+        explicit GpgConfCheck()
+            : SelfTestImplementation( i18nc("@title", "GpgConf Configuration Check") )
         {
             runTest();
         }
 
-        QStringList arguments() const {
-            if ( m_component.isEmpty() )
-                return QStringList() << "--check-config" ;
-            else
-                return QStringList() << "--check-options" << m_component ;
-        }
-
-        bool canRun() const {
-            if ( !m_component.isEmpty() )
-                return true;
-            QProcess gpgconf;
-            gpgconf.setReadChannel( QProcess::StandardOutput );
-            gpgconf.start( gpgConfPath(), QStringList() << "--list-dirs", QIODevice::ReadOnly );
-            gpgconf.waitForFinished();
-            if ( gpgconf.exitStatus() != QProcess::NormalExit || gpgconf.exitCode() != 0 ) {
-                qDebug( "GpgConfCheck: \"gpgconf --list-dirs\" gives error, disabling" );
-                return false;
-            }
-            const QList<QByteArray> lines = gpgconf.readAll().split( '\n' );
-            Q_FOREACH( const QByteArray & line, lines )
-                if ( line.startsWith( "sysconfdir:" ) )
-                    try {
-                        return QDir( QFile::decodeName( hexdecode( line.mid( strlen( "sysconfdir:" ) ) ) ) ).exists( "gpgconf.conf" );
-                    } catch ( ... ) { return false; }
-            qDebug( "GpgConfCheck: \"gpgconf --list-dirs\" has no sysconfdir entry" );
-            return false;
-        }
-
         void runTest() {
-
-            if ( !canRun() ) {
-                m_passed = true;
-                return;
-            }
 
             QProcess process;
             process.setProcessChannelMode( QProcess::MergedChannels );
-
-            process.start( gpgConfPath(), arguments(), QIODevice::ReadOnly );
+            process.start( gpgConfPath(), QStringList() << "--check-config", QIODevice::ReadOnly );
 
             process.waitForFinished();
 
@@ -113,14 +75,15 @@ namespace {
                  process.error()      != QProcess::UnknownError ) {
                 m_passed = false;
                 m_error = i18nc("self-test didn't pass", "Failed");
-                m_explaination =
-                    i18n( "There was an error executing the GnuPG configuration self-check for %2:\n"
-                          "  %1\n"
-                          "You might want to execute \"gpgconf %3\" on the command line.\n",
-                          message, m_component.isEmpty() ? "GnuPG" : m_component, arguments().join(" ") );
-                if ( !output.trimmed().isEmpty() )
-                    m_explaination += '\n' + i18n("Diagnostics:") + '\n' + output ;
-
+                m_explaination = !output.trimmed().isEmpty()
+                    ? i18n( "There was an error executing the GnuPG configuration self-check:\n"
+                            "  %1\n"
+                            "You might want to execute \"gpgconf --check-config\" on the command line.\n"
+                            "\n"
+                            "Diagnostics:", message ) + '\n' + output
+                    : i18n( "There was an error executing \"gpgconf --check-config\":\n"
+                            "  %1\n"
+                            "You might want to execute \"gpgconf --check-config\" on the command line.", message );
                 m_proposedFix = QString();
             } else if ( process.exitCode() ) {
                 m_passed = false;
@@ -143,6 +106,6 @@ namespace {
     };
 }
 
-shared_ptr<SelfTest> Kleo::makeGpgConfCheckConfigurationSelfTest( const char * component ) {
-    return shared_ptr<SelfTest>( new GpgConfCheck( component ) );
+shared_ptr<SelfTest> Kleo::makeGpgConfCheckConfigurationSelfTest() {
+    return shared_ptr<SelfTest>( new GpgConfCheck );
 }

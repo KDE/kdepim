@@ -38,4 +38,3 @@ const char Kleo::CryptoBackend::SMIME[] = "SMIME";
 Kleo::ChangeExpiryJob * Kleo::CryptoBackend::Protocol::changeExpiryJob() const { return 0; }
 Kleo::ChangeOwnerTrustJob * Kleo::CryptoBackend::Protocol::changeOwnerTrustJob() const { return 0; }
 Kleo::SignKeyJob * Kleo::CryptoBackend::Protocol::signKeyJob() const { return 0; }
-Kleo::AddUserIDJob * Kleo::CryptoBackend::Protocol::addUserIDJob() const { return 0; }

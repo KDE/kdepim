@@ -38,8 +38,6 @@
 
 #include <utils/kleo_assert.h>
 #include <utils/exception.h>
-#include <utils/input.h>
-#include <utils/output.h>
 
 #include <KLocale>
 
@@ -88,9 +86,9 @@ void EncryptCommand::Private::checkForErrors() const {
         throw Exception( makeError( GPG_ERR_CONFLICT ),
                          i18n( "ENCRYPT is an email mode command, connection seems to be in filmanager mode" ) );
 
-    if ( !q->senders().empty() && !q->informativeSenders() )
+    if ( !q->senders().empty() )
         throw Exception( makeError( GPG_ERR_CONFLICT ),
-                         i18n( "SENDER may not be given prior to ENCRYPT, except with --info" ) );
+                         i18n( "SENDER may not be given prior to ENCRYPT" ) );
 
     if ( q->inputs().empty() )
         throw Exception( makeError( GPG_ERR_ASS_NO_INPUT ),
@@ -126,9 +124,9 @@ void EncryptCommand::Private::checkForErrors() const {
 
     } else {
 
-        if ( q->recipients().empty() || q->informativeRecipients() )
+        if ( q->recipients().empty() )
             throw Exception( makeError( GPG_ERR_MISSING_VALUE ),
-                             i18n( "No recipients given, or only with --info" ) );
+                             i18n( "No recipients given" ) );
 
     }
 
@@ -150,7 +148,7 @@ int EncryptCommand::doStart() {
     }
 
     kleo_assert( d->controller );
-
+    
     QObject::connect( d->controller.get(), SIGNAL(recipientsResolved()), d.get(), SLOT(slotRecipientsResolved()), Qt::QueuedConnection );
     QObject::connect( d->controller.get(), SIGNAL(done()), d.get(), SLOT(slotDone()), Qt::QueuedConnection );
     QObject::connect( d->controller.get(), SIGNAL(error(int,QString)), d.get(), SLOT(slotError(int,QString)), Qt::QueuedConnection );
@@ -168,13 +166,6 @@ void EncryptCommand::Private::slotRecipientsResolved() {
     const shared_ptr<EncryptEMailController> cont( controller );
 
     try {
-        const QString sessionTitle = q->sessionTitle();
-        if ( !sessionTitle.isNull() ) {
-            Q_FOREACH ( const shared_ptr<Input> & i, q->inputs() )
-                i->setLabel( sessionTitle );
-            Q_FOREACH ( const shared_ptr<Output> & i, q->outputs() )
-                i->setLabel( sessionTitle );
-        }
 
         cont->setInputsAndOutputs( q->inputs(), q->outputs() );
         cont->start();
