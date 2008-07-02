@@ -41,6 +41,8 @@
 #include <QRegExp>
 #include <QUrl>
 
+#include <cassert>
+
 using namespace Kleo;
 
 static const char email_rx[] = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
@@ -58,20 +60,39 @@ namespace {
 
         /* reimp */ State validate( QString & str, int & pos ) const {
             const int atIdx = str.lastIndexOf( '@' );
-            if ( atIdx < 0 )
+            if ( atIdx < 0 || str.endsWith( '@' ) )
                 return QRegExpValidator::validate( str, pos );
 
+            // toAce/fromAce doesn't like intermediate domain names,
+            // so we fix them up with something innocuous to help it
+            // along, and which we strip again afterwards
+
             QString domain = str.mid( atIdx + 1 ).toLower();
-            const bool domainEndsWithDot = domain.endsWith( '.' );
-            if ( domainEndsWithDot )
-                domain.chop( 1 );
+            const int dotIndex = domain.lastIndexOf( '.' );
+            const bool needsOrgAdded = domain.endsWith( '.' );
+            const bool needsDotOrgAdded = !needsOrgAdded && ( dotIndex < 0 || dotIndex == domain.size() - 2 ) ; // yeah, foo.s also disrupts fromAce...
+            if ( needsOrgAdded )
+                domain += "org";
+            if ( needsDotOrgAdded )
+                domain += ".org";
             const QByteArray domainEncoded = QUrl::toAce( domain );
             const QString domainRestored = QUrl::fromAce( domainEncoded );
+            QString encoded = str.left( atIdx ) + '@' + QString::fromLatin1( domainEncoded );
+            if ( needsDotOrgAdded ) {
+                assert( encoded.endsWith( ".org" ) );
+                encoded.chop( 4 );
+            }
+            if ( needsOrgAdded ) {
+                assert( encoded.endsWith( ".org" ) );
+                encoded.chop( 3 ); // '.' was part of domain before
+            }
+            kDebug() << "\n str           :" << str
+                     << "\n domain        :" << domain
+                     << "\n domainEncoded :" << domainEncoded
+                     << "\n domainRestored:" << domainRestored
+                     << "\n encoded       :" << encoded ;
             if ( domain != domainRestored )
                 return Invalid;
-            QString encoded = str.left( atIdx ) + '@' + QString::fromLatin1( domainEncoded );
-            if ( domainEndsWithDot )
-                encoded += '.';
             int dummyPosition = 0;
             return QRegExpValidator::validate( encoded, dummyPosition );
         }
