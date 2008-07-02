@@ -276,6 +276,7 @@ void DeleteCertificatesCommand::doStart() {
                                         keys.size() ),
                                   i18n("Secret Key Deletion") );
         d->finished();
+        return;
     }
 
     const bool hadSecretKeyIssuers = it != keysEnd;
@@ -316,6 +317,7 @@ void DeleteCertificatesCommand::doStart() {
         {
             emit canceled();
             d->finished();
+            return;
         }
 
     std::sort( keys.begin(), keysEnd, _detail::ByFingerprint<std::less>() );
@@ -354,6 +356,7 @@ void DeleteCertificatesCommand::doStart() {
 	 != KMessageBox::Continue ) {
         emit canceled();
         d->finished();
+        return;
     }
 
     assert( !kdtools::any( openpgp.begin(), openpgp.end(), bind( &Key::hasSecret, _1 ) ) );
