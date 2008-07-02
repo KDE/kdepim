@@ -8,7 +8,7 @@ using namespace KLEOPATRACLIENT_NAMESPACE;
 
 int main( int argc, char * argv[] ) {
 
-    QApplication app( argc, argv );
+    QCoreApplication app( argc, argv );
 
     SignEncryptFilesCommand cmd;
     cmd.setFilePaths( filePathsFromArgs( argc, argv ) );
