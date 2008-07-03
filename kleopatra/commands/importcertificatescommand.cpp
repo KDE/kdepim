@@ -175,35 +175,10 @@ ImportCertificatesCommand::ImportCertificatesCommand( QAbstractItemView * v, Key
 
 ImportCertificatesCommand::~ImportCertificatesCommand() {}
 
-#if 1
-static void inject_import_result_proxy_model( QAbstractItemView * qaiv, const ImportResult & res ) {
-
-    if ( !qaiv )
-        return;
-    QAbstractItemModel * m = qaiv->model();
-    assert( m );
-    QAbstractProxyModel * pm = qobject_cast<QAbstractProxyModel*>( m );
-    for ( QAbstractProxyModel * pit = pm ; pit ; pit = qobject_cast<QAbstractProxyModel*>( pit->sourceModel() ) )
-        pm = pit;
-    if ( pm )
-        m = pm->sourceModel();
-    assert( m );
-    assert( !qobject_cast<QAbstractProxyModel*>( m ) );
-    ImportResultProxyModel * const irpm = new ImportResultProxyModel( res, qaiv );
-    irpm->setSourceModel( m );
-    if ( pm )
-        pm->setSourceModel( irpm );
-    else
-        qaiv->setModel( irpm );
-
-}
-#endif
-
 void ImportCertificatesCommand::Private::setImportResultProxyModel( const ImportResult & result, const QString & id ) {
     if ( result.imports().empty() )
         return;
-    q->addTemporaryView( id.isEmpty() ? i18n("Imported Certificates") : i18n( "Imported Certificates from %1", id ) );
-    inject_import_result_proxy_model( view(), result );
+    q->addTemporaryView( id.isEmpty() ? i18n("Imported Certificates") : i18n( "Imported Certificates from %1", id ), new ImportResultProxyModel( result ) );
     if ( QTreeView * const tv = qobject_cast<QTreeView*>( view() ) )
         tv->expandAll();
 }
