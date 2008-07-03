@@ -34,6 +34,8 @@
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 
+#include <process.h>
+
 /*
  Test plan for the various cases of interaction between standalone apps and kontact:
 
@@ -170,6 +172,22 @@ UniqueAppWatcher::UniqueAppWatcher( UniqueAppHandlerFactoryBase *factory, Plugin
   const QString serviceName = "org.kde." + plugin->objectName();
   d->mRunningStandalone =
     QDBusConnection::sessionBus().interface()->isServiceRegistered( serviceName );
+#ifdef Q_WS_WIN
+  if ( d->mRunningStandalone ) {
+    QList<int> pids;
+    KPIM::Utils::getProcessesIdForName( plugin->objectName(), pids );
+    const int mypid = getpid();
+    bool processExits = false;
+    foreach( int pid, pids ) {
+      if ( mypid != pid ) {
+        processExits = true;
+        break;
+      }
+    }
+    if ( !processExits )
+      d->mRunningStandalone = false;
+  }
+#endif
 
   QString owner = QDBusConnection::sessionBus().interface()->serviceOwner( serviceName );
   if ( d->mRunningStandalone && ( owner == QDBusConnection::sessionBus().baseService() ) ) {

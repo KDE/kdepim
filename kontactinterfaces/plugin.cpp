@@ -23,6 +23,8 @@
 #include "plugin.h"
 #include "core.h"
 
+#include <libkdepim/utils.h>
+
 #include <kparts/componentfactory.h>
 #include <kxmlguifactory.h>
 #include <kaboutdata.h>
@@ -266,9 +268,13 @@ void Plugin::slotConfigUpdated()
 
 void Plugin::bringToForeground()
 {
-  if ( !d->executableName.isEmpty() ) {
-    KRun::runCommand( d->executableName, 0 );
-  }
+  if ( d->executableName.isEmpty() )
+    return;
+#ifdef Q_WS_WIN
+  KPIM::Utils::activateWindowForProcess( d->executableName );
+#else
+  KRun::runCommand( d->executableName, 0 );
+#endif
 }
 
 Summary *Plugin::createSummaryWidget( QWidget *parent )
