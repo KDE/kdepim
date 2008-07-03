@@ -50,6 +50,7 @@ namespace GpgME {
 namespace Kleo {
 
     class KeyListController;
+    class AbstractKeyListSortFilterProxyModel;
 
     class Command : public QObject {
         Q_OBJECT
@@ -107,7 +108,7 @@ namespace Kleo {
 	virtual void doCancel() = 0;
 
     protected:
-        void addTemporaryView( const QString & title );
+        void addTemporaryView( const QString & title, AbstractKeyListSortFilterProxyModel * proxy=0 );
 
     protected:
         class Private;
