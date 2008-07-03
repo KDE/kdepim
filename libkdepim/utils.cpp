@@ -27,12 +27,6 @@ using namespace KPIM;
 #ifdef Q_WS_WIN
 
 #include <windows.h>
-#ifdef _MSC_VER
-# include <comdef.h> // (bstr_t)
-#else
-// mingw: get patched comutil.h from http://pastebin.ca/raw/1060471 and save to kde4/mingw/include/
-# include <comutil.h> // (bstr_t)
-#endif
 #include <winperf.h>
 #include <psapi.h>
 #include <signal.h>
@@ -83,6 +77,12 @@ static PPERF_COUNTER_BLOCK CounterBlock(PPERF_INSTANCE_DEFINITION PerfInst)
 #define GETPID_PROCESS_OBJECT_INDEX 230
 #define GETPID_PROC_ID_COUNTER 784
 
+static QString fromWChar(const wchar_t *string, int size = -1)
+{
+  return (sizeof(wchar_t) == sizeof(QChar)) ? QString::fromUtf16((ushort *)string, size)
+    : QString::fromUcs4((uint *)string, size);
+}
+
 void Utils::getProcessesIdForName( const QString& processName, QList<int>& pids )
 {
   qDebug() << "Utils::getProcessesIdForName" << processName;
@@ -120,14 +120,14 @@ void Utils::getProcessesIdForName( const QString& processName, QList<int>& pids 
     pids.clear();
     perfCounter = FirstCounter( perfObject );
     perfInstance = FirstInstance( perfObject );
-    _bstr_t bstrProcessName;
     // retrieve the instances
     qDebug() << "INSTANCES: " << perfObject->NumInstances;
     for( int instance = 0; instance < perfObject->NumInstances; instance++ ) {
       curCounter = perfCounter;
-      bstrProcessName = (wchar_t *)((PBYTE)perfInstance + perfInstance->NameOffset);
-      qDebug() << "bstrProcessName: " << QString::fromWCharArray((LPCWSTR)bstrProcessName);
-      if (QString::fromWCharArray((LPCWSTR)bstrProcessName) == processName) {
+      const QString foundProcessName( 
+        fromWChar( (wchar_t *)( (PBYTE)perfInstance + perfInstance->NameOffset ) ) );
+      qDebug() << "foundProcessName: " << foundProcessName;
+      if ( foundProcessName == processName ) {
         // retrieve the counters
         for( uint counter = 0; counter < perfObject->NumCounters; counter++ ) {
           if (curCounter->CounterNameTitleIndex == GETPID_PROC_ID_COUNTER) {
