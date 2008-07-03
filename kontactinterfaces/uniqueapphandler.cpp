@@ -34,7 +34,9 @@
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 
-#include <process.h>
+#ifdef Q_WS_WIN
+#  include <process.h>
+#endif
 
 /*
  Test plan for the various cases of interaction between standalone apps and kontact:
