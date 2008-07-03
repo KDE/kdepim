@@ -48,6 +48,7 @@ class KConfig;
 namespace Kleo {
 
     class AbstractKeyListModel;
+    class AbstractKeyListSortFilterProxyModel;
     class KeyFilter;
 
     class TabWidget : public QWidget {
@@ -63,7 +64,7 @@ namespace Kleo {
 
         QAbstractItemView * addView( const QString & title=QString(), const QString & keyFilterID=QString(), const QString & searchString=QString() );
         QAbstractItemView * addView( const KConfigGroup & group );
-        QAbstractItemView * addTemporaryView( const QString & title=QString() );
+        QAbstractItemView * addTemporaryView( const QString & title=QString(), AbstractKeyListSortFilterProxyModel * proxy=0 );
 
         void loadViews( const KConfig * cfg );
         void saveViews( KConfig * cfg ) const;

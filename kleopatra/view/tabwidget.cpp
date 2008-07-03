@@ -77,7 +77,7 @@ class Page : public QWidget {
     Q_OBJECT
     Page( const Page & other );
 public:
-    Page( const QString & title, const QString & id, const QString & text, QWidget * parent=0 );
+    Page( const QString & title, const QString & id, const QString & text, AbstractKeyListSortFilterProxyModel * proxy=0, QWidget * parent=0 );
     Page( const KConfigGroup & group, QWidget * parent=0 );
     ~Page();
 
@@ -129,6 +129,7 @@ private:
 
 private:
     KeyListSortFilterProxyModel m_proxy;
+    AbstractKeyListSortFilterProxyModel * m_additionalProxy;
     QVBoxLayout * m_layout;
     QTreeView * m_view;
     AbstractKeyListModel * m_flatModel;
@@ -150,6 +151,7 @@ private:
 Page::Page( const Page & other )
     : QWidget( 0 ),
       m_proxy(),
+      m_additionalProxy( other.m_additionalProxy ? other.m_additionalProxy->clone() : 0 ),
       m_layout( new QVBoxLayout( this ) ),
       m_view( new QTreeView( this ) ),
       m_flatModel( other.m_flatModel ),
@@ -168,9 +170,10 @@ Page::Page( const Page & other )
     init();
 }
 
-Page::Page( const QString & title, const QString & id, const QString & text, QWidget * parent )
+Page::Page( const QString & title, const QString & id, const QString & text, AbstractKeyListSortFilterProxyModel * proxy, QWidget * parent )
     : QWidget( parent ),
       m_proxy(),
+      m_additionalProxy( proxy ),
       m_layout( new QVBoxLayout( this ) ),
       m_view( new QTreeView( this ) ),
       m_flatModel( 0 ),
@@ -198,6 +201,7 @@ static const char COLUMN_SIZES[] = "column-sizes";
 Page::Page( const KConfigGroup & group, QWidget * parent )
     : QWidget( parent ),
       m_proxy(),
+      m_additionalProxy( 0 ),
       m_layout( new QVBoxLayout( this ) ),
       m_view( new QTreeView( this ) ),
       m_flatModel( 0 ),
@@ -242,6 +246,8 @@ void Page::init() {
     KDAB_SET_OBJECT_NAME( m_proxy );
     KDAB_SET_OBJECT_NAME( m_layout );
     KDAB_SET_OBJECT_NAME( m_view );
+    if ( m_additionalProxy && m_additionalProxy->objectName().isEmpty() )
+        KDAB_SET_OBJECT_NAME( m_additionalProxy );
 
     m_layout->setMargin( 0 );
     m_layout->addWidget( m_view );
@@ -258,7 +264,15 @@ void Page::init() {
     m_view->setSortingEnabled( true );
 
     if ( model() )
-        m_proxy.setSourceModel( model() );
+        if ( m_additionalProxy )
+            m_additionalProxy->setSourceModel( model() );
+        else
+            m_proxy.setSourceModel( model() );
+    if ( m_additionalProxy ) {
+        m_proxy.setSourceModel( m_additionalProxy );
+        if ( !m_additionalProxy->parent() )
+            m_additionalProxy->setParent( this );
+    }
     m_proxy.setFilterFixedString( m_stringFilter );
     m_proxy.setKeyFilter( m_keyFilter );
     m_view->setModel( &m_proxy );
@@ -798,8 +812,8 @@ QAbstractItemView * TabWidget::addView( const KConfigGroup & group ) {
     return d->addView( new Page( group ) );
 }
 
-QAbstractItemView * TabWidget::addTemporaryView( const QString & title ) {
-    Page * const page = new Page( title, QString(), QString() );
+QAbstractItemView * TabWidget::addTemporaryView( const QString & title, AbstractKeyListSortFilterProxyModel * proxy ) {
+    Page * const page = new Page( title, QString(), QString(), proxy );
     page->setTemporary( true );
     QAbstractItemView * v = d->addView( page );
     d->tabWidget.setCurrentIndex( d->tabWidget.count()-1 );
