@@ -93,6 +93,7 @@ class KJotsComponent : public QWidget
         void onRenameEntry();
         void configure();
         void updateConfiguration();
+        void bookshelfEditItemFinished( QWidget *, QAbstractItemDelegate::EndEditHint );
 
         void copy();
         void copySelection();
