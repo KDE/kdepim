@@ -1,0 +1,6 @@
+# OPTION mode=filemanager
+/subst
+FILE ${get cwd}/test.data.gpg
+FILE ${get cwd}/test.data.pem
+DECRYPT --nohup
+BYE

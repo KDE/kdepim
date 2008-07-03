@@ -1,0 +1,11 @@
+# OPTION mode=email
+/subst
+/serverpid
+RECIPIENT <foo@bar.com>
+PREP_ENCRYPT
+/open in test.data r
+INPUT FD=$in
+/open out test.data.gpgol-encrypt-openpgp.asc w
+OUTPUT FD=$out
+ENCRYPT
+BYE

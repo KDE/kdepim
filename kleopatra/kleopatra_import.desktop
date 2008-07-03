@@ -1,0 +1,18 @@
+[Desktop Entry]
+Type=Application
+Encoding=UTF-8
+Icon=kleopatra
+Exec=kleopatra --import-certificate %F
+MimeType=application/pkcs7-mime;application/x-x509-ca-cert;application/x-pkcs12;application/pgp-keys;
+Categories=Qt;KDE;Utility;Security;X-KDE-Utilities-PIM;
+
+Name=Kleopatra
+Name[is]=Kleópatra
+Name[mk]=Клеопатра
+Name[ne]=क्लेओपेट्रा
+Name[ta]=க்ளியோபட்ரா
+Name[x-test]=xxKleopatraxx
+Comment=Certificate Manager and Unified Crypto GUI
+NoDisplay=true
+
+X-KDE-StartupNotify=true

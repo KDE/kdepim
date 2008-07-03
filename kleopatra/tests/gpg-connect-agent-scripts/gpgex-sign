@@ -1,0 +1,5 @@
+# OPTION mode=filemanager
+/subst
+FILE ${get cwd}/test.data
+SIGN --nohup
+BYE

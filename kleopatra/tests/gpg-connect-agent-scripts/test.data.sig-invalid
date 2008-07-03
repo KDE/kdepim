@@ -1,0 +1,8 @@
+These scripts are to be executed like this:
+ Windows: gpg-connect-agent -v --no-ext-connect -S path\to\S.uiserver < script
+ Unix:    gpg-connect-agent -v                  -S path/to/S.uiserver < script
+You need a very recent gpg-connect-agent (min. GnuPG 2.0.8-svn4603) for most
+scripts, at least for the gpgex cases.
+
+Scripts assume the contents of ../gnupg_home, so you should point gpg(sm) there,
+by setting GNUPGHOME.

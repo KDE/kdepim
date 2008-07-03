@@ -1,0 +1,9 @@
+# OPTION mode=email
+/subst
+/serverpid
+/open in test.data r
+INPUT FD=$in
+/open out test.data.gpgol-sign_detached-cms.pem w
+OUTPUT FD=$out
+SIGN --detached --protocol=CMS
+BYE
