@@ -276,12 +276,19 @@ void Page::saveTo( KConfigGroup & group ) const {
         group.writeEntry( COLUMN_SIZES, kdtools::copy< QList<int> >( hv->sectionSizes() ) );
 }
 
+static QAbstractProxyModel * find_last_proxy( QAbstractProxyModel * pm ) {
+    assert( pm );
+    while ( QAbstractProxyModel * const sm = qobject_cast<QAbstractProxyModel*>( pm->sourceModel() ) )
+        pm = sm;
+    return pm;
+}
+
 void Page::setFlatModel( AbstractKeyListModel * model ) {
     if ( model == m_flatModel )
         return;
     m_flatModel = model;
     if ( !m_isHierarchical )
-        m_proxy.setSourceModel( model );
+        find_last_proxy( &m_proxy )->setSourceModel( model );
 }
 
 void Page::setHierarchicalModel( AbstractKeyListModel * model ) {
@@ -289,7 +296,7 @@ void Page::setHierarchicalModel( AbstractKeyListModel * model ) {
         return;
     m_hierarchicalModel = model;
     if ( m_isHierarchical ) {
-        m_proxy.setSourceModel( model );
+        find_last_proxy( &m_proxy )->setSourceModel( model );
         m_view->expandAll();
     }
 }
@@ -347,8 +354,9 @@ void Page::setHierarchical( bool on ) {
         return;
     const std::vector<Key> selectedKeys = m_proxy.keys( m_view->selectionModel()->selectedRows() );
     const Key currentKey = m_proxy.key( m_view->currentIndex() );
+
     m_isHierarchical = on;
-    m_proxy.setSourceModel( model() );
+    find_last_proxy( &m_proxy )->setSourceModel( model() );
     if ( on )
         m_view->expandAll();
     m_view->selectionModel()->select( itemSelectionFromKeys( selectedKeys, m_proxy ), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows );
