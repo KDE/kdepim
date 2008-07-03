@@ -230,16 +230,13 @@ void Incidence::saveAttendeeAttribute( QDomElement& element,
 
 void Incidence::saveAttendees( QDomElement& element ) const
 {
-  QList<Attendee>::ConstIterator it = mAttendees.begin();
-  for ( ; it != mAttendees.end(); ++it )
-    saveAttendeeAttribute( element, *it );
+  foreach ( const Attendee& attendee, mAttendees )
+    saveAttendeeAttribute( element, attendee );
 }
 
 void Incidence::saveAttachments( QDomElement& element ) const
 {
-  KCal::Attachment::List::ConstIterator it = mAttachments.begin();
-  for ( ; it != mAttachments.end(); ++it ) {
-    KCal::Attachment *a = (*it);
+  foreach ( KCal::Attachment *a, mAttachments ) {
     if ( a->isUri() ) {
       writeString( element, "link-attachment", a->uri() );
     } else if ( a->isBinary() ) {
@@ -256,8 +253,8 @@ void Incidence::saveRecurrence( QDomElement& element ) const
   if ( !mRecurrence.type.isEmpty() )
     e.setAttribute( "type", mRecurrence.type );
   writeString( e, "interval", QString::number( mRecurrence.interval ) );
-  for( QStringList::ConstIterator it = mRecurrence.days.begin(); it != mRecurrence.days.end(); ++it ) {
-    writeString( e, "day", *it );
+  foreach ( const QString& recurrence, mRecurrence.days ) {
+    writeString( e, "day", recurrence );
   }
   if ( !mRecurrence.dayNumber.isEmpty() )
     writeString( e, "daynumber", mRecurrence.dayNumber );
@@ -270,9 +267,8 @@ void Incidence::saveRecurrence( QDomElement& element ) const
     QDomText t = element.ownerDocument().createTextNode( mRecurrence.range );
     range.appendChild( t );
   }
-  for( QList<QDate>::ConstIterator it = mRecurrence.exclusions.begin();
-       it != mRecurrence.exclusions.end(); ++it ) {
-    writeString( e, "exclusion", dateToString( *it ) );
+  foreach ( const QDate& date, mRecurrence.exclusions ) {
+    writeString( e, "exclusion", dateToString( date ) );
   }
 }
 
@@ -392,19 +388,18 @@ bool Incidence::saveAttributes( QDomElement& element ) const
 
 void Incidence::saveCustomAttributes( QDomElement& element ) const
 {
-  QList<Custom>::ConstIterator it = mCustomList.begin();
-  for ( ; it != mCustomList.end(); ++it ) {
-    QString key = (*it).key;
+  foreach ( const Custom& custom, mCustomList ) {
+    QString key( custom.key );
     Q_ASSERT( !key.isEmpty() );
     if ( key.startsWith( "X-KDE-KolabUnhandled-" ) ) {
       key = key.mid( strlen( "X-KDE-KolabUnhandled-" ) );
-      writeString( element, key, (*it).value );
+      writeString( element, key, custom.value );
     } else {
       // Let's use attributes so that other tag-preserving-code doesn't need sub-elements
       QDomElement e = element.ownerDocument().createElement( "x-custom" );
       element.appendChild( e );
       e.setAttribute( "key", key );
-      e.setAttribute( "value", (*it).value );
+      e.setAttribute( "value", custom.value );
     }
   }
 }
@@ -619,9 +614,7 @@ void Incidence::setFields( const KCal::Incidence* incidence )
 
   // Attendees:
   KCal::Attendee::List attendees = incidence->attendees();
-  KCal::Attendee::List::ConstIterator it;
-  for ( it = attendees.begin(); it != attendees.end(); ++it ) {
-    KCal::Attendee* kcalAttendee = *it;
+  foreach ( KCal::Attendee *kcalAttendee, attendees ) {
     Attendee attendee;
 
     attendee.displayName = kcalAttendee->name();
@@ -642,9 +635,7 @@ void Incidence::setFields( const KCal::Incidence* incidence )
 
   // Attachments
   KCal::Attachment::List attachments = incidence->attachments();
-  KCal::Attachment::List::ConstIterator it2;
-  for ( it2 = attachments.begin(); it2 != attachments.end(); ++it2 ) {
-    KCal::Attachment *a = *it2;
+  foreach ( KCal::Attachment* a, attachments ) {
     mAttachments.push_back( a );
   }
 
@@ -680,9 +671,9 @@ static QBitArray daysListToBitArray( const QStringList& days )
 {
   QBitArray arr( 7 );
   arr.fill( false );
-  for( QStringList::ConstIterator it = days.begin(); it != days.end(); ++it ) {
+  foreach ( const QString& day, days ) {
     for ( uint i = 0; i < 7 ; ++i )
-      if ( *it == s_weekDayName[i] )
+      if ( day == s_weekDayName[i] )
         arr.setBit( i, true );
   }
   return arr;
@@ -718,23 +709,20 @@ void Incidence::saveTo( KCal::Incidence* incidence )
                              + organizer().smtpAddress + '>' );
 
   incidence->clearAttendees();
-  QList<Attendee>::ConstIterator it;
-  for ( it = mAttendees.begin(); it != mAttendees.end(); ++it ) {
-    KCal::Attendee::PartStat status = attendeeStringToStatus( (*it).status );
-    KCal::Attendee::Role role = attendeeStringToRole( (*it).role );
-    KCal::Attendee *a = new KCal::Attendee( (*it).displayName,
-                                            (*it).smtpAddress,
-                                             (*it).requestResponse,
-                                             status, role );
-    a->setDelegate( (*it).delegate );
-    a->setDelegator( (*it).delegator );
+  foreach ( const Attendee& attendee, mAttendees ) {
+    KCal::Attendee::PartStat status = attendeeStringToStatus( attendee.status );
+    KCal::Attendee::Role role = attendeeStringToRole( attendee.role );
+    KCal::Attendee *a = new KCal::Attendee( attendee.displayName,
+                                            attendee.smtpAddress,
+                                            attendee.requestResponse,
+                                            status, role );
+    a->setDelegate( attendee.delegate );
+    a->setDelegator( attendee.delegator );
     incidence->addAttendee( a );
   }
 
   incidence->clearAttachments();
-  KCal::Attachment::List::ConstIterator it2;
-  for ( it2 = mAttachments.begin(); it2 != mAttachments.end(); ++it2 ) {
-    KCal::Attachment *a = (*it2);
+  foreach ( KCal::Attachment *a, mAttachments ) {
     // TODO should we copy?
     incidence->addAttachment( a );
   }
@@ -793,8 +781,8 @@ void Incidence::saveTo( KCal::Incidence* incidence )
     incidence->setSchedulingID( uid() );
   }
 
-  for( QList<Custom>::ConstIterator it = mCustomList.begin(); it != mCustomList.end(); ++it ) {
-    incidence->setNonKDECustomProperty( (*it).key, (*it).value );
+  foreach ( const Custom& custom, mCustomList ) {
+    incidence->setNonKDECustomProperty( custom.key, custom.value );
   }
 
 }
@@ -803,16 +791,16 @@ void Incidence::loadAttachments()
 {
   QStringList attachments;
   if ( mResource->kmailListAttachments( attachments, mSubResource, mSernum ) ) {
-    for ( QStringList::ConstIterator it = attachments.constBegin(); it != attachments.constEnd(); ++it ) {
+    foreach ( const QString& attachment, attachments ) {
       QByteArray data;
       KUrl url;
-      if ( mResource->kmailGetAttachment( url, mSubResource, mSernum, *it ) && !url.isEmpty() ) {
+      if ( mResource->kmailGetAttachment( url, mSubResource, mSernum, attachment ) && !url.isEmpty() ) {
         QFile f( url.path() );
         if ( f.open( QFile::ReadOnly ) ) {
           data = f.readAll();
           QString mimeType = KIO::NetAccess::mimetype( url, 0 );
           KCal::Attachment *a = new KCal::Attachment( data.toBase64().constData(), mimeType );
-          a->setLabel( *it );
+          a->setLabel( attachment );
           mAttachments.append( a );
           f.close();
         }
