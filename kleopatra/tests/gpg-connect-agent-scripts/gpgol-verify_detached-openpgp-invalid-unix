@@ -1,7 +1,0 @@
-# OPTION mode=email
-/sendfd test.data r
-MESSAGE FD
-/sendfd test.data.sig-invalid r
-INPUT FD
-VERIFY --protocol=OpenPGP
-BYE

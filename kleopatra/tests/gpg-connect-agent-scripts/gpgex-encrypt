@@ -1,5 +1,0 @@
-# OPTION mode=filemanager
-/subst
-FILE ${get cwd}/test.data
-ENCRYPT --nohup
-BYE

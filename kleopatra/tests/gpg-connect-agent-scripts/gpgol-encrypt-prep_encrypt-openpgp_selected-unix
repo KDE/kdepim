@@ -1,9 +1,0 @@
-# OPTION mode=email
-RECIPIENT <foo@bar.com>
-PREP_ENCRYPT
-/sendfd test.data r
-INPUT FD
-/sendfd test.data.gpgol-encrypt-openpgp.asc w
-OUTPUT FD
-ENCRYPT --protocol=OpenPGP
-BYE

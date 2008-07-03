@@ -1,8 +1,0 @@
-# MODE filemanager
-# /expect 218104084
-FILE %
-# /expect 218104084
-FILE %d
-# /expect 218104084
-FILE %fg
-BYE

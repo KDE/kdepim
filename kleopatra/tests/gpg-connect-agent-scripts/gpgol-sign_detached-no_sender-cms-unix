@@ -1,7 +1,0 @@
-# OPTION mode=email
-/sendfd test.data r
-INPUT FD
-/sendfd test.data.gpgol-sign_detached-cms.pem w
-OUTPUT FD
-SIGN --detached --protocol=CMS
-BYE

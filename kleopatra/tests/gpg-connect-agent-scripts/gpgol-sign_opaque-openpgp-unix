@@ -1,8 +1,0 @@
-# OPTION mode=email
-SENDER <foo@bar.com>
-/sendfd test.data r
-INPUT FD
-/sendfd test.data.gpgol-sign_opaque-openpgp.asc w
-OUTPUT FD
-SIGN --protocol=OpenPGP
-BYE

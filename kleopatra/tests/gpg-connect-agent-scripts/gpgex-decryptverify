@@ -1,9 +1,0 @@
-# OPTION mode=filemanager
-/subst
-FILE ${get cwd}/test.data.asc
-FILE ${get cwd}/test.data-detached-signature.pem
-FILE ${get cwd}/test.data.sig
-FILE ${get cwd}/test.data.gpg
-FILE ${get cwd}/test.data.pem
-DECRYPT_VERIFY_FILES --nohup
-BYE
