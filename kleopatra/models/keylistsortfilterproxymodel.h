@@ -50,9 +50,13 @@ namespace Kleo {
 
     class AbstractKeyListSortFilterProxyModel : public QSortFilterProxyModel, public KeyListModelInterface {
 	Q_OBJECT
+    protected:
+        AbstractKeyListSortFilterProxyModel( const AbstractKeyListSortFilterProxyModel & );
     public:
 	explicit AbstractKeyListSortFilterProxyModel( QObject * parent=0 );
-	~AbstractKeyListSortFilterProxyModel() = 0;
+	~AbstractKeyListSortFilterProxyModel();
+
+        virtual AbstractKeyListSortFilterProxyModel * clone() const = 0;
 
         /* reimp */ GpgME::Key key( const QModelIndex & idx ) const;
         /* reimp */ std::vector<GpgME::Key> keys( const QList<QModelIndex> & indexes ) const;
@@ -60,16 +64,23 @@ namespace Kleo {
         using QAbstractItemModel::index;
         /* reimp */ QModelIndex index( const GpgME::Key & key ) const;
         /* reimp */ QList<QModelIndex> indexes( const std::vector<GpgME::Key> & keys ) const;
+
+    private:
+        void init();
     };
 
     class KeyListSortFilterProxyModel : public AbstractKeyListSortFilterProxyModel {
 	Q_OBJECT
+    protected:
+        KeyListSortFilterProxyModel( const KeyListSortFilterProxyModel & );
     public:
 	explicit KeyListSortFilterProxyModel( QObject * parent=0 );
 	~KeyListSortFilterProxyModel();
 
 	boost::shared_ptr<const KeyFilter> keyFilter() const;
 	void setKeyFilter( const boost::shared_ptr<const KeyFilter> & kf );
+
+        /* reimp */ KeyListSortFilterProxyModel * clone() const;
 	
     protected:
 	/* reimp */ bool filterAcceptsRow( int source_row, const QModelIndex & source_parent ) const;

@@ -52,6 +52,16 @@ using namespace GpgME;
 AbstractKeyListSortFilterProxyModel::AbstractKeyListSortFilterProxyModel( QObject * p )
     : QSortFilterProxyModel( p ), KeyListModelInterface()
 {
+    init();
+}
+
+AbstractKeyListSortFilterProxyModel::AbstractKeyListSortFilterProxyModel( const AbstractKeyListSortFilterProxyModel & other )
+    : QSortFilterProxyModel(), KeyListModelInterface()
+{
+    init();
+}
+
+void AbstractKeyListSortFilterProxyModel::init() {
     setDynamicSortFilter( true );
     setSortRole( Qt::EditRole );  // EditRole can be expected to be in a less formatted way, better for sorting
     setFilterRole( Qt::DisplayRole );
@@ -119,7 +129,17 @@ KeyListSortFilterProxyModel::KeyListSortFilterProxyModel( QObject * p )
 
 }
 
+KeyListSortFilterProxyModel::KeyListSortFilterProxyModel( const KeyListSortFilterProxyModel & other )
+    : AbstractKeyListSortFilterProxyModel( other ), d( new Private( *other.d ) )
+{
+
+}
+
 KeyListSortFilterProxyModel::~KeyListSortFilterProxyModel() {}
+
+KeyListSortFilterProxyModel * KeyListSortFilterProxyModel::clone() const {
+    return new KeyListSortFilterProxyModel( *this );
+}
 
 shared_ptr<const KeyFilter> KeyListSortFilterProxyModel::keyFilter() const {
     return d->keyFilter;

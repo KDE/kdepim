@@ -74,7 +74,7 @@ namespace {
     class ImportResultProxyModel : public AbstractKeyListSortFilterProxyModel {
         Q_OBJECT
     public:
-        explicit ImportResultProxyModel( const ImportResult & result, QObject * parent )
+        explicit ImportResultProxyModel( const ImportResult & result, QObject * parent=0 )
             : AbstractKeyListSortFilterProxyModel( parent ),
               m_result()
         {
@@ -82,6 +82,11 @@ namespace {
         }
 
         ~ImportResultProxyModel() {}
+
+        /* reimp */ ImportResultProxyModel * clone() const {
+            // compiler-generated copy ctor is fine!
+            return new ImportResultProxyModel( *this );
+        }
 
         void setImportResult( const ImportResult & result ) {
             m_result = result;
@@ -170,6 +175,7 @@ ImportCertificatesCommand::ImportCertificatesCommand( QAbstractItemView * v, Key
 
 ImportCertificatesCommand::~ImportCertificatesCommand() {}
 
+#if 1
 static void inject_import_result_proxy_model( QAbstractItemView * qaiv, const ImportResult & res ) {
 
     if ( !qaiv )
@@ -191,6 +197,7 @@ static void inject_import_result_proxy_model( QAbstractItemView * qaiv, const Im
         qaiv->setModel( irpm );
 
 }
+#endif
 
 void ImportCertificatesCommand::Private::setImportResultProxyModel( const ImportResult & result, const QString & id ) {
     if ( result.imports().empty() )
