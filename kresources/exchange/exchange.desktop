@@ -1,7 +1,6 @@
 [Desktop Entry]
 Type=Service
 X-KDE-Library=resourcecalendarexchange
-Encoding=UTF-8
 X-KDE-ResourceFamily=calendar
 X-KDE-ResourceType=exchange
 ServiceTypes=KResources/Plugin

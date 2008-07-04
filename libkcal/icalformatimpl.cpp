@@ -1036,14 +1036,9 @@ Event *ICalFormatImpl::readEvent( icalcomponent *vevent, icalcomponent *vtimezon
   }
 
   QString msade = event->nonKDECustomProperty("X-MICROSOFT-CDO-ALLDAYEVENT");
-  if (!msade.isNull()) {
+  if (!msade.isEmpty()) {
     bool floats = (msade == QString::fromLatin1("TRUE"));
-//    kdDebug(5800) << "ICALFormat::readEvent(): all day event: " << floats << endl;
     event->setFloats(floats);
-    if (floats) {
-      QDateTime endDate = event->dtEnd();
-      event->setDtEnd(endDate.addDays(-1));
-    }
   }
 
   if ( mCompat ) mCompat->fixEmptySummary( event );
