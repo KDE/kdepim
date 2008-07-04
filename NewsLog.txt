@@ -1,3 +1,16 @@
+Friday, July 4th 2008
+
+Problems addressed
+--------------------
+* kolab/issue2512 Kmail: "Subscription" should be renamed in "Serverside subscription"
+* kolab/issue2741 Button to do an ldap lookup is missing from the address selection dialog.
+* kolab/issue2511 Pressing "New" in the new event attendee view should not continue to create new attendees, if the first example attendee is not changed.
+
+Merges
+------
+
+* Enterprise branch is in sync with kdepim 3.5 branch
+
 Friday, June 27th 2008
 
 Problems addressed
