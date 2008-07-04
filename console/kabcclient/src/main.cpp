@@ -55,18 +55,17 @@ using std::endl;
 
 int main(int argc, char** argv)
 {
-    KAboutData aboutData("kabcclient", 0, ki18n("KABC client"), version,
-                         ki18n("KDE addressbook commandline client"),
-                         KAboutData::License_GPL_V2);
-
-    aboutData.addAuthor(ki18n("Kevin Krammer"), ki18n("Primary Author"), "kevin.krammer@gmx.at");
-
     QString commandName = QFileInfo(QFile::decodeName(argv[0])).fileName();
     if (commandName == "kabc2mutt")
     {
         return handleKABC2Mutt(argc, argv);
     }
 
+    KAboutData aboutData("kabcclient", "kabcclient", ki18n("KABC client"), version,
+                         ki18n("KDE addressbook commandline client"),
+                         KAboutData::License_GPL_V2);
+
+    aboutData.addAuthor(ki18n("Kevin Krammer"), ki18n("Primary Author"), "kevin.krammer@gmx.at");
 
     KCmdLineOptions cmdLineOptions;
 
@@ -420,7 +419,7 @@ bool checkForCodecHelp(KCmdLineArgs* args)
 
 int handleKABC2Mutt(int argc, char** argv)
 {
-    KAboutData aboutData("kabc2mutt", 0, ki18n("kabc2mutt"), version,
+    KAboutData aboutData("kabc2mutt", "kabcclient", ki18n("kabc2mutt"), version,
                          ki18n("kabc - mutt converter"),
                          KAboutData::License_GPL_V2);
 
