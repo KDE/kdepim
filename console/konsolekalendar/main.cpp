@@ -74,7 +74,7 @@ int main( int argc, char *argv[] )
     progName, 0,                 // internal program name
     ki18n( progDisplay ),        // displayable program name.
     progVersion,                 // version string
-    ki18n( progDesc ),           // short porgram description
+    ki18n( progDesc ),           // short program description
     KAboutData::License_GPL,     // license type
     ki18n( "(c) 2002-2007, Tuukka Pasanen and Allen Winter" ),
     ki18n( 0 ),                  // any free form text
