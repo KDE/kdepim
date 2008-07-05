@@ -268,8 +268,9 @@ void Plugin::slotConfigUpdated()
 
 void Plugin::bringToForeground()
 {
-  if ( d->executableName.isEmpty() )
+  if ( d->executableName.isEmpty() ) {
     return;
+  }
 #ifdef Q_WS_WIN
   KPIM::Utils::activateWindowForProcess( d->executableName );
 #else
