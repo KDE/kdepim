@@ -35,6 +35,7 @@ KJotsBookshelfEntryValidator::~KJotsBookshelfEntryValidator()
 
 QValidator::State KJotsBookshelfEntryValidator::validate( QString& input, int& pos ) const
 {
+    Q_UNUSED(pos);
     if (!m_model)
         return Invalid;
     if (input.isEmpty())
@@ -61,5 +62,6 @@ QValidator::State KJotsBookshelfEntryValidator::validate( QString& input, int& p
             return Intermediate;
         }
     }
+    return Invalid;
 }
 
