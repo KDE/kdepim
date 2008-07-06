@@ -7,6 +7,5 @@ Actions=kleodecryptverifyfiles;
 
 [Desktop Action kleodecryptverifyfiles]
 Name=Decrypt/Verify All Files In Folder
-Name[de]=Alle Dateien im Ordner entschlüsseln/verifizieren
 Icon=kleopatra
 Exec=kleopatra --decrypt-verify %F

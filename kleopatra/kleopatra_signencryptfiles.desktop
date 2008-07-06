@@ -9,74 +9,21 @@ Actions=kleoencryptsignfiles;kleoencryptfiles;kleosignfilesopenpgp;kleosignfiles
 
 [Desktop Action kleoencryptsignfiles]
 Name=Encrypt & Sign File
-Name[de]=Datei signieren und verschlüsseln
 Icon=kleopatra
 Exec=kleopatra --sign-encrypt %F
 
 [Desktop Action kleoencryptfiles]
 Name=Encrypt File
-Name[ar]=تشفير ملف
-Name[ca]=Xifra fitxer
-Name[cs]=Zašifrovat soubor
-Name[cy]=Cêl-ysgrifo Ffeil
-Name[da]=Indkod fil
-Name[de]=Datei verschlüsseln
-Name[el]=Κρυπτογράφηση αρχείου
-Name[eo]=Ĉifri dosieron
-Name[es]=Cifrar archivo
-Name[et]=Krüpti fail
-Name[eu]=Fitxategiak Zifratu
-Name[fa]=رمزبندی پرونده
-Name[fi]=Salaa tiedosto
-Name[fr]=Chiffrer le fichier
-Name[ga]=Criptigh Comhad
-Name[gl]=Cifrar o ficheiro
-Name[he]=הצפן קובץ
-Name[hu]=Fájl titkosítása
-Name[is]=Dulrita skrá
-Name[it]=Cifratura file
-Name[ja]=ファイルを暗号化
-Name[kk]=Файлды шифрлау
-Name[km]=អ៊ីនគ្រិប​ឯកសារ
-Name[ko]=파일 암호화
-Name[lt]=Šifruoti failą
-Name[lv]=Šifrēt failu
-Name[mk]=Криптирај датотеки
-Name[nb]=Krypter fil
-Name[nds]=Dateiverslöteln
-Name[ne]=फाइल गुप्तीकरण गर्नुहोस्
-Name[nl]=Bestand versleutelen
-Name[nn]=Krypter fil
-Name[pa]=ਇੰਕਰਿਪਟ ਫਾਇਲ
-Name[pl]=Zaszyfruj plik
-Name[pt]=Cifrar o Ficheiro
-Name[pt_BR]=Criptografar Arquivo
-Name[ro]=Criptează fişierul
-Name[ru]=Зашифровать файл
-Name[sk]=Šifrovať súbor
-Name[sl]=Šifriraj datoteko
-Name[sv]=Kryptera fil
-Name[ta]=சங்கேத கோப்பு
-Name[tg]=Рамзкунонии Файл
-Name[tr]=Dosya Şifrele
-Name[uk]=Зашифрувати файл
-Name[vi]=Mã Hóa Tập Tin
-Name[wa]=Ecripter fitchî
-Name[x-test]=xxEncrypt Filexx
-Name[zh_CN]=加密文件
-Name[zh_TW]=加密檔案
 Icon=kleopatra
 Exec=kleopatra --encrypt %F
 
 [Desktop Action kleosignfilesopenpgp]
 Name=OpenPGP-Sign File
-Name[de]=Datei signieren mit OpenPGP
 Icon=kleopatra
 Exec=kleopatra --openpgp --sign %F
 
 [Desktop Action kleosignfilescms]
 Name=S/MIME-Sign File
-Name[de]=Datei signieren mit S/MIME
 Icon=kleopatra
 Exec=kleopatra --cms --sign %F
 
