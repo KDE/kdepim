@@ -36,7 +36,6 @@
 
 class QTimer;
 class QTextEdit;
-class QLabel;
 class QStackedWidget;
 class QCheckBox;
 

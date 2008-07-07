@@ -25,11 +25,9 @@
 
 class QLabel;
 class QString;
-class QAbstractItemModel;
 class QRadioButton;
 class QTreeView;
 
-class KUrl;
 class KComboBox;
 class KLineEdit;
 

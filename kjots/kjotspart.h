@@ -28,11 +28,8 @@
 #include <kparts/part.h>
 
 class QWidget;
-class QPainter;
-class KUrl;
 class QTextEdit;
 class KAboutData;
-class KAction;
 class KJotsComponent;
 
 /**
