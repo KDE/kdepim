@@ -46,7 +46,14 @@ typedef QMap<QString,LdapAttrValue > LdapAttrMap;
 class LdapServer
 {
   public:
-    LdapServer() : mPort( 389 ) {}
+    LdapServer()
+    : mPort( 389 ),
+      mTimeLimit(0),
+      mSizeLimit(0),
+      mVersion(2),
+      mSecurity(Sec_None),
+      mAuth( LdapServer::Anonymous )
+    {}
 
     enum Security{ Sec_None, TLS, SSL };
     enum Auth{ Anonymous, Simple, SASL };
