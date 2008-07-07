@@ -1,4 +1,4 @@
-<!DOCTYPE UI><UI version="3.2" stdsetdef="1">
+<!DOCTYPE UI><UI version="3.3" stdsetdef="1">
 <class>AddressPickerUI</class>
 <widget class="QWidget">
     <property name="name">
@@ -9,7 +9,7 @@
             <x>0</x>
             <y>0</y>
             <width>591</width>
-            <height>350</height>
+            <height>442</height>
         </rect>
     </property>
     <property name="caption">
@@ -169,17 +169,6 @@
                 </spacer>
             </vbox>
         </widget>
-        <widget class="QPushButton" row="2" column="2">
-            <property name="name">
-                <cstring>mSaveAs</cstring>
-            </property>
-            <property name="enabled">
-                <bool>false</bool>
-            </property>
-            <property name="text">
-                <string>Save as &amp;Distribution List...</string>
-            </property>
-        </widget>
         <widget class="QLabel" row="0" column="2">
             <property name="name">
                 <cstring>textLabel2</cstring>
@@ -300,8 +289,32 @@
                 <bool>true</bool>
             </property>
         </widget>
+        <widget class="QPushButton" row="2" column="2">
+            <property name="name">
+                <cstring>mSaveAs</cstring>
+            </property>
+            <property name="enabled">
+                <bool>false</bool>
+            </property>
+            <property name="text">
+                <string>Save as &amp;Distribution List...</string>
+            </property>
+            <property name="accel">
+                <string>Alt+D</string>
+            </property>
+        </widget>
+        <widget class="QPushButton" row="3" column="0">
+            <property name="name">
+                <cstring>mLdapSearch</cstring>
+            </property>
+            <property name="text">
+                <string>&amp;Search Directory Service</string>
+            </property>
+        </widget>
     </grid>
 </widget>
+<customwidgets>
+</customwidgets>
 <layoutdefaults spacing="6" margin="11"/>
 <includehints>
     <includehint>klistview.h</includehint>

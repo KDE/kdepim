@@ -23,7 +23,7 @@ libkdepim_la_SOURCES = \
   overlaywidget.cpp progressmanager.cpp progressdialog.cpp \
   statusbarprogresswidget.cpp ssllabel.cpp completionordereditor.cpp \
   resourceabc.cpp diffalgo.cpp addresseediffalgo.cpp calendardiffalgo.cpp \
-  htmldiffalgodisplay.cpp broadcaststatus.cpp kresourceprefs.cpp \
+  htmldiffalgodisplay.cpp ldapsearchdialog.cpp broadcaststatus.cpp kresourceprefs.cpp \
   kpixmapregionselectorwidget.cpp kpixmapregionselectordialog.cpp \
   kabcresourcecached.cpp kxface.cpp \
   kaccount.cpp kaddrbook.cpp kfoldertree.cpp kregexp3.cpp \
