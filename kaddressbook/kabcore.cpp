@@ -833,7 +833,8 @@ void KABCore::storeContactIn( const QString &uid, bool copy /*false*/ )
       newAddr.setUid( KApplication::randomString( 10 ) );
       newAddr.setResource( resource );
       addressBook()->insertAddressee( newAddr );
-      if ( !copy ) {
+      const bool inserted = addressBook()->find( newAddr ) != addressBook()->end();
+      if ( !copy && inserted ) {
           KABLock::self( mAddressBook )->lock( addr.resource() );
           addressBook()->removeAddressee( addr );
           KABLock::self( mAddressBook )->unlock( addr.resource() );
