@@ -4,9 +4,25 @@ Encoding=UTF-8
 MimeType=application/pgp;application/pgp-encrypted;application/pgp-signature;application/pkcs7-mime;applicaton/pkcs7-signature;
 X-KDE-ServiceTypes=KonqPopupMenu/Plugin
 Name=Kleopatra Decrypt/Verify Files
+Name[ca]=Desxifrat/verificació de fitxers del Kleopatra
+Name[da]=Kleopatra dekryptér/verificér filer
+Name[et]=Kleopatra failide lahtikrüptimine/kontrollimine
+Name[pt]=Descodificação/Verificação de Ficheiros do Kleopatra
+Name[pt_BR]=Descodificação/Verificação de Ficheiros do Kleopatra
+Name[uk]=Розшифрування/Перевірка файлів у Kleopatra
+Name[zh_CN]=Kleopatra 解密/验证文件
+Name[zh_TW]=Kleopatra 解密/檢查檔案
 Actions=kleodecryptverifyfiles;
 
 [Desktop Action kleodecryptverifyfiles]
 Name=Decrypt/Verify File
+Name[ca]=Desxifrat/verificació de fitxers
+Name[da]=Dekryptér/verificér filer
+Name[et]=Faili lahtikrüptimine/kontrollimine
+Name[pt]=Descodificar/Verificar o Ficheiro
+Name[pt_BR]=Descodificar/Verificar o Ficheiro
+Name[uk]=Розшифрувати/Перевірити файл
+Name[zh_CN]=解密/验证文件
+Name[zh_TW]=解密/檢查檔案
 Icon=kleopatra
 Exec=kleopatra --decrypt-verify %F

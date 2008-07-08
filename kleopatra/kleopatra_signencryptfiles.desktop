@@ -5,25 +5,65 @@ Encoding=UTF-8
 MimeType=application/octet-stream;
 X-KDE-ServiceTypes=KonqPopupMenu/Plugin
 Name=Kleopatra Sign/Encrypt Files
+Name[ca]=Signatura/Xifrat de fitxers del Kleopatra
+Name[da]=Kleopatra signér/kryptér filer
+Name[et]=Kleopatra failide allkirjastamine/krüptimine
+Name[pt]=Assinatura/Encriptação de Ficheiros do Kleopatra
+Name[pt_BR]=Assinatura/Encriptação de Ficheiros do Kleopatra
+Name[uk]=Підписування/Шифрування файлів у Kleopatra
+Name[zh_CN]=Kleopatra 签名/加密文件
+Name[zh_TW]=Kleopatra 簽署/加密檔案
 Actions=kleoencryptsignfiles;kleoencryptfiles;kleosignfilesopenpgp;kleosignfilescms;
 
 [Desktop Action kleoencryptsignfiles]
 Name=Encrypt & Sign File
+Name[ca]=Signatura i xifrat de fitxer
+Name[da]=Kryptér og signér fil
+Name[et]=Faili krüptimine ja allkirjastamine
+Name[pt]=Encriptar & Assinar o Ficheiro
+Name[pt_BR]=Encriptar & Assinar o Ficheiro
+Name[uk]=Зашифрувати і підписати файл
+Name[zh_CN]=加密并签名文件
+Name[zh_TW]=加密與簽署檔案
 Icon=kleopatra
 Exec=kleopatra --sign-encrypt %F
 
 [Desktop Action kleoencryptfiles]
 Name=Encrypt File
+Name[ca]=Xifrat de fitxer
+Name[da]=Kryptér fil
+Name[et]=Faili krüptimine
+Name[pt]=Cifrar o Ficheiro
+Name[pt_BR]=Cifrar o Ficheiro
+Name[uk]=Зашифрувати файл
+Name[zh_CN]=加密文件
+Name[zh_TW]=加密檔案
 Icon=kleopatra
 Exec=kleopatra --encrypt %F
 
 [Desktop Action kleosignfilesopenpgp]
 Name=OpenPGP-Sign File
+Name[ca]=Signatura OpenPGP de fitxer
+Name[da]=OpenPGP-signér fil
+Name[et]=Faili OpenPGP-allkirjastamine
+Name[pt]=Assinar o Ficheiro com o OpenPGP
+Name[pt_BR]=Assinar o Ficheiro com o OpenPGP
+Name[uk]=Підписати файл з OpenPGP
+Name[zh_CN]=OpenPGP 签名文件
+Name[zh_TW]=OpenPGP─簽署檔案
 Icon=kleopatra
 Exec=kleopatra --openpgp --sign %F
 
 [Desktop Action kleosignfilescms]
 Name=S/MIME-Sign File
+Name[ca]=Signatura S/MIME de fitxer
+Name[da]=S/MIME-signér fil
+Name[et]=Faili S/MIME-allkirjastamine
+Name[pt]=Assinar o Ficheiro com o S/MIME
+Name[pt_BR]=Assinar o Ficheiro com o S/MIME
+Name[uk]=Підписати файл з S/MIME
+Name[zh_CN]=S/MIME 签名文件
+Name[zh_TW]=S/MIME─簽署檔案
 Icon=kleopatra
 Exec=kleopatra --cms --sign %F
 

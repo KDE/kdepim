@@ -4,13 +4,37 @@ Encoding=UTF-8
 X-KDE-ServiceTypes=inode/directory,KonqPopupMenu/Plugin
 Actions=kleosignencryptfolder;kleoencryptfolder;
 Name=Kleopatra Sign/Encrypt Folders
+Name[ca]=Signatura/Xifrat de carpetes del Kleopatra
+Name[da]=Kleopatra signér/kryptér mapper
+Name[et]=Kleopatra kataloogide allkirjastamine/krüptimine
+Name[pt]=Assinatura/Encriptação de Pastas do Kleopatra
+Name[pt_BR]=Assinatura/Encriptação de Pastas do Kleopatra
+Name[uk]=Підписування/Шифрування тек у Kleopatra
+Name[zh_CN]=Kleopatra 签名/加密文件夹
+Name[zh_TW]=Kleopatra 簽署/加密資料夾
 
 [Desktop Action kleosignencryptfolder]
 Name=Archive, Sign & Encrypt Folder
+Name[ca]=Arxivat, signatura i xifrat de carpeta
+Name[da]=Arkivér, signér og kryptér mappe
+Name[et]=Kataloogi arhiveerimine, allkirjastamine ja krüptimine
+Name[pt]=Arquivar, Assinar e Encriptar a Pasta
+Name[pt_BR]=Arquivar, Assinar e Encriptar a Pasta
+Name[uk]=Архівувати, підписати і зашифрувати теку
+Name[zh_CN]=归档、签名并加密文件夹
+Name[zh_TW]=歸檔，簽署與加密資料夾
 Icon=kleopatra
 Exec=kleopatra --sign-encrypt %F
 
 [Desktop Action kleoencryptfolder]
 Name=Archive & Encrypt Folder
+Name[ca]=Arxivat i xifrat de carpeta
+Name[da]=Arkivér og kryptér mappe
+Name[et]=Kataloogi arhiveerimine ja krüptimine
+Name[pt]=Arquivar e Cifrar a Pasta
+Name[pt_BR]=Arquivar e Cifrar a Pasta
+Name[uk]=Зробити архів теки і зашифрувати
+Name[zh_CN]=归档并加密文件夹
+Name[zh_TW]=歸檔並加密資料夾
 Icon=kleopatra
 Exec=kleopatra --encrypt %F
