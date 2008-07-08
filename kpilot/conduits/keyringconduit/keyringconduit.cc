@@ -101,6 +101,12 @@ bool KeyringConduit::initDataProxies()
 		WId window(0L);
 	
 		Wallet *wallet = Wallet::openWallet( Wallet::LocalWallet(), window );
+		if ( ! wallet )
+		{
+			WARNINGKPILOT << "Error. Couldn't open wallet!";
+			addSyncLogEntry( i18n( "Error. Couldn't open wallet!" ) );
+			return false;
+		}
 		
 		QString passwordFolder = Wallet::PasswordFolder();
 		if ( wallet->hasFolder( passwordFolder ) )

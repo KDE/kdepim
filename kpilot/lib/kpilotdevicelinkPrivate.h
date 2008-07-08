@@ -204,45 +204,19 @@ private:
 	int fPilotSocket;
 };
 
-/** Class that handles all device communications.  We do this
- in a different thread so that we do not block the main Qt
- Event thread (similar to Swing's AWT event dispatch thread).
+/**
+ * Worker class that handles all device communications.
  */
 
-class DeviceCommThread : public QThread
+class DeviceCommWorker : public QObject
 {
 friend class KPilotDeviceLink;
 
 Q_OBJECT
 
 public:
-	DeviceCommThread(KPilotDeviceLink *d);
-	virtual ~DeviceCommThread();
-
-	virtual void run();
-
-	void stop()
-	{
-		FUNCTIONSETUP;
-		/*
-		 * Set this so we don't start into device connection and then have
-		 * our thread stopped immediately thereafter.
-		 */
-		fDone = true;
-		exit(0);
-	}
-
-protected:
-
-	void close();
-	
-	void reset();
-
-	/**
-	 * Does the low-level opening of the device and handles the
-	 * pilot-link library initialisation.
-	 */
-	bool open(const QString &device = QString::null);
+	DeviceCommWorker(KPilotDeviceLink *d);
+	virtual ~DeviceCommWorker();
 
 protected slots:
 	/**
@@ -256,7 +230,7 @@ protected slots:
 	* device. This indicates the beginning of a hotsync.
 	*/
 	void acceptDevice();
-	
+
 	/**
 	* This slot fires whenever we've been trying to establish a hotsync with
 	* the device for longer than a given amount of time.  When this slot is
@@ -265,24 +239,20 @@ protected slots:
 	void workaroundUSB();
 
 private:
-	volatile bool fDone;
+	void close();
+	void reset();
+
+	/**
+	 * Does the low-level opening of the device and handles the
+	 * pilot-link library initialisation.
+	 */
+	bool open(const QString &device = QString::null);
 
 	KPilotDeviceLink *fHandle;
 	inline KPilotDeviceLink *link()
 	{
-		if (fHandle)
-		{
-			return fHandle;
-		}
-		else
-		{
-			FUNCTIONSETUP;
-			WARNINGKPILOT << "Link asked for, but either I'm "
-				<< "done or I don't have a valid handle.  "
-				<< "Shutting down comm thread.";
-			QThread::exit();
-			return 0;
-		}
+		Q_ASSERT(fHandle);
+		return fHandle;
 	}
 
 	/**
@@ -292,9 +262,14 @@ private:
 	QSocketNotifier *fSocketNotifier;
 	bool fSocketNotifierActive;
 
-	/** Timer used to check for a badly-connected Z31/72 */
+	/**
+	  * Timer used to check for devices which connect to the PC automatically
+	  * without the user initiating a sync. These devices must disconnect and
+	  * then reconnect when the user initiates a sync, so this timer tells us
+	  * when to stop trying to connec to a device that isn't syncing.
+	  */
 	QTimer *fWorkaroundUSBTimer;
-	
+
 	/**
 	 * Pilot-link library handles for the device once it's opened.
 	 */
@@ -319,12 +294,48 @@ private:
 			return i18n(" Check Pilot path and permissions.");
 		}
 	}
-	
+
 	/**
 	* Handle cases where we can't accept or open the device,
 	* and data remains available on the pilot socket.
 	*/
 	int fAcceptedCount;
+
+};
+
+/**
+ * Separate thread that uses our worker to do all device
+ * communications in a different thread so that we do not block the main Qt
+ * Event thread (similar to Swing's AWT event dispatch thread).
+ */
+
+class DeviceCommThread : public QThread
+{
+friend class KPilotDeviceLink;
+
+Q_OBJECT
+
+public:
+	DeviceCommThread(KPilotDeviceLink *d);
+	virtual ~DeviceCommThread();
+
+	virtual void run();
+
+	void stop()
+	{
+		FUNCTIONSETUP;
+		/*
+		 * Set this so we don't start into device connection and then have
+		 * our thread stopped immediately thereafter.
+		 */
+		fDone = true;
+		SLOT(quit());
+	}
+
+private:
+	volatile bool fDone;
+	DeviceCommWorker *fWorker;
+	KPilotDeviceLink *fHandle;
 
 };
 

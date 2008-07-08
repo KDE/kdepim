@@ -73,7 +73,7 @@ enum DeviceCustomEvents {
 class KPILOT_EXPORT KPilotDeviceLink : public KPilotLink
 {
 friend class PilotSerialDatabase;
-friend class DeviceCommThread;
+friend class DeviceCommWorker;
 
 Q_OBJECT
 

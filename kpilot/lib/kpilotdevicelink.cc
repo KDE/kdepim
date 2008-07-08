@@ -79,6 +79,49 @@ DeviceMap *DeviceMap::mThis = 0L;
 DeviceCommThread::DeviceCommThread(KPilotDeviceLink *d) :
 	QThread(),
 	fDone(true),
+   fWorker(NULL),
+   fHandle(d)
+{
+	FUNCTIONSETUP;
+}
+
+
+DeviceCommThread::~DeviceCommThread()
+{
+	FUNCTIONSETUPL(2);
+	KPILOT_DELETE(fWorker);
+}
+
+void DeviceCommThread::run()
+{
+	FUNCTIONSETUP;
+
+	fDone = false;
+
+   fWorker = new DeviceCommWorker(fHandle);
+
+	/*
+	 * Start our thread's event loop.  This is necessary to allow our
+	 * QTimers to function correctly.  Our thread is now stopped by calling
+	 * stop().
+	 */
+	exec();
+
+	/*
+	 * now sleep one last bit to make sure the pthread inside
+	 * pilot-link (potentially, if it's libusb) is done before we exit
+	 */
+	QThread::sleep(1);
+
+	DEBUGKPILOT << ": comm thread now done...";
+}
+
+// End of Comm Thread
+
+
+
+DeviceCommWorker::DeviceCommWorker(KPilotDeviceLink *d) :
+	QObject(),
 	fHandle(d),
 	fOpenTimer(0L),
 	fSocketNotifier(0L),
@@ -117,10 +160,12 @@ DeviceCommThread::DeviceCommThread(KPilotDeviceLink *d) :
 	connect(fWorkaroundUSBTimer, SIGNAL(timeout()), this, SLOT(workaroundUSB()));
 	fWorkaroundUSBTimer->setSingleShot(true);
 	fWorkaroundUSBTimer->setInterval(timeout);
+
+	fOpenTimer->start();
 }
 
 
-DeviceCommThread::~DeviceCommThread()
+DeviceCommWorker::~DeviceCommWorker()
 {
 	FUNCTIONSETUPL(2);
 	close();
@@ -129,7 +174,7 @@ DeviceCommThread::~DeviceCommThread()
 	KPILOT_DELETE(fWorkaroundUSBTimer);
 }
 
-void DeviceCommThread::close()
+void DeviceCommWorker::close()
 {
 	FUNCTIONSETUPL(2);
 
@@ -175,7 +220,7 @@ void DeviceCommThread::close()
 	DeviceMap::self()->unbindDevice(link()->fRealPilotPath);
 }
 
-void DeviceCommThread::reset()
+void DeviceCommWorker::reset()
 {
 	FUNCTIONSETUP;
 
@@ -202,7 +247,7 @@ void DeviceCommThread::reset()
  * to be read from the Palm socket.  If we were unable to create a socket
  * and/or bind to the Palm in this method, we'll start our timer again.
  */
-void DeviceCommThread::openDevice()
+void DeviceCommWorker::openDevice()
 {
 	FUNCTIONSETUPL(2);
 
@@ -222,9 +267,7 @@ void DeviceCommThread::openDevice()
 				i18n("Trying to open device %1...", link()->fPilotPath)));
 	}
 
-	// if we're not supposed to be done, try to open the main pilot
-	// path...
-	if (!fDone && link()->fPilotPath.length() > 0)
+	if (link()->fPilotPath.length() > 0)
 	{
 		DEBUGKPILOT << ": Opening main pilot path: ["
 			<< link()->fPilotPath << "].";
@@ -236,9 +279,7 @@ void DeviceCommThread::openDevice()
 	// string
 	bool tryTemp = !deviceOpened && (link()->fTempDevice.length() > 0) && (link()->fPilotPath != link()->fTempDevice);
 
-	// if we're not supposed to be done, and we should try the temp
-	// device, try the temp device...
-	if (!fDone && tryTemp)
+	if (tryTemp)
 	{
 		DEBUGKPILOT << ": Couldn't open main pilot path. "
 			<< "Now trying temp device: ["
@@ -247,14 +288,14 @@ void DeviceCommThread::openDevice()
 	}
 
 	// if we couldn't connect, try to connect again...
-	if (!fDone && !deviceOpened)
+	if (!deviceOpened)
 	{
 		DEBUGKPILOT << ": Will try again.";
 		fOpenTimer->start();
 	}
 }
 
-bool DeviceCommThread::open(const QString &device)
+bool DeviceCommWorker::open(const QString &device)
 {
 	FUNCTIONSETUPL(2);
 
@@ -356,7 +397,7 @@ bool DeviceCommThread::open(const QString &device)
  * connection, we need to make sure we restart our connection open timer, otherwise
  * it won't be restarted.
  */
-void DeviceCommThread::acceptDevice()
+void DeviceCommWorker::acceptDevice()
 {
 	FUNCTIONSETUP;
 
@@ -516,38 +557,14 @@ void DeviceCommThread::acceptDevice()
 
 }
 
-void DeviceCommThread::workaroundUSB()
+void DeviceCommWorker::workaroundUSB()
 {
 	FUNCTIONSETUP;
 
 	reset();
 }
 
-void DeviceCommThread::run()
-{
-	FUNCTIONSETUP;
-
-	fDone = false;
-
-	fOpenTimer->start();
-
-	/*
-	 * Start our thread's event loop.  This is necessary to allow our
-	 * QTimers to function correctly.  Our thread is now stopped by calling
-	 * stop().
-	 */
-	exec();
-
-	/*
-	 * now sleep one last bit to make sure the pthread inside
-	 * pilot-link (potentially, if it's libusb) is done before we exit
-	 */
-	QThread::sleep(1);
-
-	DEBUGKPILOT << ": comm thread now done...";
-}
-
-// End of Comm Thread
+// End of Worker Thread
 
 
 
@@ -644,8 +661,6 @@ void KPilotDeviceLink::stopCommThread()
 				fDeviceCommThread->wait();
 			}
 		}
-
-		fDeviceCommThread->close();
 
 		KPILOT_DELETE(fDeviceCommThread);
 	}
