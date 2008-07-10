@@ -62,9 +62,7 @@ void KNNntpClient::processJob()
       doFetchSource();
       break;
     default:
-#ifndef NDEBUG
-      qDebug("knode: KNNntpClient::processJob(): mismatched job");
-#endif
+      kDebug(5003) << "mismatched job";
       break;
   }
 }
@@ -109,9 +107,7 @@ void KNNntpClient::doFetchGroups()
     }
     s = strchr(line,' ');
     if(!s) {
-#ifndef NDEBUG
-      qDebug("knode: retrieved broken group-line - ignoring");
-#endif
+      kDebug(5003) << "retrieved broken group-line - ignoring";
     } else {
       s[0] = 0;    // cut string
 
@@ -179,9 +175,7 @@ void KNNntpClient::doFetchGroups()
         s = line;
         while (*s != '\0' && *s != '\t' && *s != ' ') s++;
         if (*s == '\0') {
-#ifndef NDEBUG
-          qDebug("knode: retrieved broken group-description - ignoring");
-#endif
+          kDebug(5003) << "retrieved broken group-description - ignoring";
         } else {
           s[0] = 0;         // terminate groupname
           s++;
@@ -251,9 +245,7 @@ void KNNntpClient::doCheckNewGroups()
     }
     s = strchr(line,' ');
     if(!s) {
-#ifndef NDEBUG
-      qDebug("knode: retrieved broken group-line - ignoring");
-#endif
+      kDebug(5003) << "retrieved broken group-line - ignoring";
     } else {
       s[0] = 0;    // cut string
       name = QString::fromUtf8(line);
@@ -304,9 +296,7 @@ void KNNntpClient::doCheckNewGroups()
         s = desList.first();
         while (*s !=- '\0' && *s != '\t' && *s != ' ') s++;
         if (*s == '\0') {
-#ifndef NDEBUG
-          qDebug("knode: retrieved broken group-description - ignoring");
-#endif
+          kDebug(5003) << "retrieved broken group-description - ignoring";
         } else {
           while (*s == ' ' || *s == '\t') s++;    // go on to the description
           if (target->codecForDescriptions)          // some countries use local 8 bit characters in the tag line
@@ -519,9 +509,7 @@ void KNNntpClient::doPostArticle()
       return;
 
     if (rep==223) {   // 223 n <a> article retrieved - request text separately
-      #ifndef NDEBUG
-      qDebug("knode: STAT successful, we have probably already sent this article.");
-      #endif
+      kDebug(5003) << "STAT successful, we have probably already sent this article.";
       return;       // the article is already on the server, lets put it silently into the send folder
     }
   }
@@ -536,9 +524,8 @@ void KNNntpClient::doPostArticle()
       int end = s.find('>',start);
       art->messageID()->from7BitString(s.mid(start,end-start+1));
       art->assemble();
-      #ifndef NDEBUG
-      qDebug("knode: using the message-id recommended by the server: %s",s.mid(start,end-start+1).data());
-      #endif
+      kDebug(5003) << "using the message-id recommended by the server:"
+                   << s.mid(start,end-start+1).data();
     }
   }
 
@@ -602,9 +589,7 @@ bool KNNntpClient::openConnection()
     return false;
 
   if (rep==500) {
-#ifndef NDEBUG
-    qDebug("knode: \"MODE READER\" command not recognized.");
-#endif
+    kDebug(5003) << "\"MODE READER\" command not recognized.";
   } else
     if ( ( rep < 200 ) || ( rep > 299 ) ) { // RFC977: 2xx - Command ok
       handleErrors();
@@ -639,13 +624,9 @@ bool KNNntpClient::openConnection()
         return false;
 
       if (rep==281) {         // 281 authorization success
-        #ifndef NDEBUG
-        qDebug("knode: Authorization successful");
-        #endif
+        kDebug(5003) << "Authorization successful";
       } else {
-        #ifndef NDEBUG
-        qDebug("knode: Authorization failed");
-        #endif
+        kDebug(5003) << "Authorization failed";
         job->setErrorString(i18n("Authentication failed.\nCheck your username and password.\n\n%1", getCurrentLine()));
         job->setAuthError(true);
         closeConnection();
@@ -653,14 +634,10 @@ bool KNNntpClient::openConnection()
       }
     } else {
       if (rep==281) {         // 281 authorization success
-        #ifndef NDEBUG
-        qDebug("knode: Authorization successful");
-        #endif
+        kDebug(5003) << "Authorization successful";
       } else {
         if ((rep==482)||(rep==500)) {   //482 Authentication rejected
-          #ifndef NDEBUG
-          qDebug("knode: Authorization failed");    // we don't care, the server can refuse the info
-          #endif
+          kDebug(5003) << "Authorization failed";    // we don't care, the server can refuse the info
         } else {
           handleErrors();
           return false;
@@ -718,9 +695,7 @@ bool KNNntpClient::sendCommand(const QByteArray &cmd, int &rep)
     }
 
     if (rep==281) {         // 281 authorization success
-      #ifndef NDEBUG
-      qDebug("knode: Authorization successful");
-      #endif
+      kDebug(5003) << "Authorization successful";
       if (!KNProtocolClient::sendCommand(cmd,rep))    // retry the original command
         return false;
     } else {

@@ -713,7 +713,7 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
 
   // this method is called from the nntp-thread!!!
 #ifndef NDEBUG
-  qDebug("knode: KNGroup::buildThreads() : start = %d  end = %d",start,end);
+  kDebug(5003) << "start =" << start << "end =" << end;
 #endif
 
   //resort old hdrs
@@ -726,7 +726,7 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
         if(ref) {
           // this method is called from the nntp-thread!!!
           #ifndef NDEBUG
-          qDebug("knode: %d: old %d  new %d",art->id(), oldRef, art->idRef());
+          kDebug(5003) << art->id() << ": Old" << oldRef << "New" << art->idRef();
           #endif
           resortCnt++;
           art->setChanged(true);
@@ -853,7 +853,7 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
     if(isLoop) {
       // this method is called from the nntp-thread!!!
       #ifndef NDEBUG
-      qDebug("knode: Sorting : loop in %d",startId);
+      kDebug(5003) << "Sorting : loop in" << startId;
       #endif
       art=at(idx);
       art->setIdRef(0);
@@ -887,9 +887,9 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
 
   // this method is called from the nntp-thread!!!
 #ifndef NDEBUG
-  qDebug("knode: Sorting : %d headers resorted", resortCnt);
-  qDebug("knode: Sorting : %d references of %d found", foundCnt, refCnt);
-  qDebug("knode: Sorting : %d references of %d sorted by subject", bySubCnt, refCnt);
+  kDebug(5003) << "Sorting :" << resortCnt << "headers resorted";
+  kDebug(5003) << "Sorting :" << foundCnt << "references of" << refCnt << "found"; 
+  kDebug(5003) << "Sorting :" << bySubCnt << "references of" << refCnt << "sorted by subject";
 #endif
 }
 
