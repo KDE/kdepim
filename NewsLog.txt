@@ -1,3 +1,18 @@
+Friday, July 11th 2008
+
+Problems addressed
+-------------------
+
+* kolab/issue2522 Pressing ESC while moving a contact, deletes the contact.
+* kolab/issue2607 sync loop after deactivation of autosync.
+* kolab/issue2666 Deactivated calendar resources are reactivated after restart.
+* kolab/issue2816 Mails get lost, if some mails are moved into a subfolder.
+
+Merges
+------
+* Enterprise branch is in sync with kdepim 3.5 branch
+* Bugfixes from enterprise ported to 3.5 branch 
+
 Friday, July 4th 2008
 
 Problems addressed
