@@ -211,12 +211,10 @@ else ( ONLY_KLEO )
 #     macro_optional_add_subdirectory(kmobiletools)
       set(KMOBILETOOLS_SUPPORTED FALSE)
 
-#enable kpilot for 4.2
-#     set(KPILOT_SUPPORTED TRUE)
-#     add_definitions(-DKPILOT_SUPPORTED)
-#     message(STATUS "KPilot support enabled.")
-#     macro_optional_add_subdirectory(kpilot)
-      set(KPILOT_SUPPORTED FALSE)
+     set(KPILOT_SUPPORTED TRUE)
+     add_definitions(-DKPILOT_SUPPORTED)
+     message(STATUS "KPilot support enabled.")
+     macro_optional_add_subdirectory(kpilot)
 
      if(OPENSYNC_FOUND AND GLIB2_FOUND)
        set(KITCHENSYNC_SUPPORTED TRUE)
