@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Comment=This conduit syncs the handheld keyring database with a database stored on the pc.
+Comment[bg]=Синхронизация на адресника на KDE с мобилни устройства
 Comment[ca]=Aquest conducte sincronitza base de dades de l'anell de claus de l'agenda electrònica amb la base de dades emmagatzemada al PC.
 Comment[da]=Denne kanal synkroniserer den håndholdte nøglering, med en database lagret på PC'en.
 Comment[de]=Abgleich der Schlüsselbund-Datenbanken von Taschencomputer und PC.

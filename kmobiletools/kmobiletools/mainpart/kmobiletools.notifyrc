@@ -65,6 +65,7 @@ Action=Sound|Popup|Taskbar
 
 [Event/kmobiletools_sms]
 Name=New SMS Messages
+Name[bg]=Нови SMS съобщения
 Name[ca]=Missatges SMS nous
 Name[da]=Nye SMS-beskeder
 Name[de]=Neue SMS-Nachrichten
@@ -91,6 +92,7 @@ Name[x-test]=xxNew SMS Messagesxx
 Name[zh_CN]=新的短信
 Name[zh_TW]=新簡訊
 Comment=New incoming SMS were found
+Comment[bg]=Има нови SMS съобщения
 Comment[ca]=S'ha trobat un SMS rebut nou
 Comment[da]=Ny indkommende SMS fundet
 Comment[de]=Neue eingehende SMS gefunden
