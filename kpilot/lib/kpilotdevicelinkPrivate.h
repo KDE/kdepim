@@ -329,7 +329,7 @@ public:
 		 * our thread stopped immediately thereafter.
 		 */
 		fDone = true;
-		SLOT(quit());
+		quit();
 	}
 
 private:

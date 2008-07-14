@@ -139,7 +139,7 @@ DeviceCommWorker::DeviceCommWorker(KPilotDeviceLink *d) :
 	 * result of either a failure in opening/binding, or a timeout from our
 	 * USB workaround timer.
 	 */
-	fOpenTimer = new QTimer(this);
+	fOpenTimer = new QTimer();
 	connect(fOpenTimer, SIGNAL(timeout()), this, SLOT(openDevice()));
 	fOpenTimer->setSingleShot(true);
 	fOpenTimer->setInterval(2000);
@@ -156,7 +156,7 @@ DeviceCommWorker::DeviceCommWorker(KPilotDeviceLink *d) :
 		timeout=5000;
 	}
 
-	fWorkaroundUSBTimer = new QTimer(this);
+	fWorkaroundUSBTimer = new QTimer();
 	connect(fWorkaroundUSBTimer, SIGNAL(timeout()), this, SLOT(workaroundUSB()));
 	fWorkaroundUSBTimer->setSingleShot(true);
 	fWorkaroundUSBTimer->setInterval(timeout);
