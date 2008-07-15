@@ -68,7 +68,8 @@ bool KeyringConduit::initDataProxies()
 	FUNCTIONSETUP;
 
 	if(!QCA::isSupported("tripledes-cbc")) {
-		WARNINGKPILOT << "ERROR: tripledes not supported! Unable to continue.";
+		WARNINGKPILOT << "Error: Triple DES not supported! Unable to continue.";
+		addSyncLogEntry(i18n("Error. Triple DES not supported! Unable to continue."));
 		return false;
 	}
 	
