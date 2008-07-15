@@ -72,6 +72,12 @@ bool HHDataProxy::addGlobalCategory( const QString& category )
 {
 	FUNCTIONSETUP;
 	
+	if( fAppInfo->findCategory( category, false ) != -1 )
+	{
+		// The category is already there.
+		return true;
+	}
+	
 	if( (unsigned int) category.size() > Pilot::CATEGORY_SIZE )
 	{
 		// Let's not start on this one. It will get truncated and I don't have time
