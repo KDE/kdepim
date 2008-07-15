@@ -172,6 +172,11 @@ KeyringHHRecordBase KeyringHHRecord::unpack() const
 	// Encrypted data is in fRecord->data()[n..size]
 	QCA::SymmetricKey sKey( QCA::hexToArray( fKey ) );
 	
+	if(!QCA::isSupported("tripledes-cbc")) {
+		WARNINGKPILOT << "ERROR: tripledes not supported! Unable to continue.";
+		return data;
+	}
+
 	QCA::Cipher cipher( "tripledes", QCA::Cipher::ECB
 		, QCA::Cipher::NoPadding , QCA::Decode, sKey );
 	QCA::SecureArray result = cipher.update( encryptedData );
@@ -288,6 +293,11 @@ void KeyringHHRecord::pack( const KeyringHHRecordBase &data )
 	QCA::Initializer init;
 	QCA::SymmetricKey sKey( QCA::hexToArray( fKey ) );
 	
+	if(!QCA::isSupported("tripledes-cbc")) {
+		WARNINGKPILOT << "ERROR: tripledes not supported! Unable to continue."; 
+		return;
+	}
+
 	QCA::Cipher cipher( "tripledes", QCA::Cipher::ECB
 		, QCA::Cipher::NoPadding , QCA::Encode, sKey );
 		

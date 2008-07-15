@@ -66,6 +66,11 @@ void KeyringConduit::loadSettings()
 bool KeyringConduit::initDataProxies()
 {
 	FUNCTIONSETUP;
+
+	if(!QCA::isSupported("tripledes-cbc")) {
+		WARNINGKPILOT << "ERROR: tripledes not supported! Unable to continue.";
+		return false;
+	}
 	
 	KeyringHHDataProxy *hhDataProxy = new KeyringHHDataProxy( fDatabase );
 	
