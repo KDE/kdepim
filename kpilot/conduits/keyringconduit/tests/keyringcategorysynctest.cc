@@ -338,7 +338,7 @@ void KeyringCategorySyncTest::initTest3()
 	init();
 
 	int i = 1;
-	QString category( "OtherCategory" );
+	QString category( "OtherCat" );
 
 	while( (uint) fConduit->hhProxy()->categories().size() < Pilot::CATEGORY_COUNT )
 	{
