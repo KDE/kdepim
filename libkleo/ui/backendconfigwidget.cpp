@@ -312,7 +312,7 @@ void Kleo::BackendConfigWidget::slotConfigureButtonClicked() {
     if ( result == QDialog::Accepted ) {
       // Tell other users of gpgconf (e.g. the s/mime page) that the gpgconf data might have changed
       QDBusMessage message =
-          QDBusMessage::createSignal(QString(), "org.kde.kleo.CryptoConfig", "changed");
+          QDBusMessage::createSignal("/", "org.kde.kleo.CryptoConfig", "changed");
       QDBusConnection::sessionBus().send(message);
       
       // and schedule a rescan, in case the updates make a backend valid
