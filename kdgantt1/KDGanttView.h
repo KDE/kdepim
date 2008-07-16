@@ -121,10 +121,6 @@ public:
     KDGanttView( QWidget* parent = 0, const char* name = 0 );
     ~KDGanttView();
 
-
-    // virtual public methods
-    virtual void show();
-    virtual bool close ( bool alsoDelete );
     // Pass-through methods from QListView
     virtual int addColumn( const QString& label, int width = -1 );
     virtual int addColumn( const QIconSet& iconset, const QString& label, int width = -1 );
@@ -504,6 +500,8 @@ protected:
     virtual void userReadFromElement( QDomElement& element );
     virtual void userWriteToElement( QDomDocument& doc,
                                      QDomElement& parentElement ) const ;
+    virtual void showEvent ( QShowEvent * event );
+    virtual void closeEvent ( QCloseEvent * event );
 
 private slots:
     void updateGanttContent();
