@@ -27,12 +27,22 @@
 
 #include "contactsakonadidataproxy.h"
 
+#include <akonadi/control.h>
+#include <akonadi/collection.h>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
+
 #include "options.h"
 
-ContactsAkonadiDataProxy::ContactsAkonadiDataProxy()
+ContactsAkonadiDataProxy::ContactsAkonadiDataProxy( Entity::Id id ) : fId( id )
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
+	
+	// Lets make sure that Akonadi is started.
+	if ( !Control::start() )
+	{
+		DEBUGKPILOT << "Error: Could not start Akonadi.";
+	}
 }
 
 ContactsAkonadiDataProxy::~ContactsAkonadiDataProxy()
@@ -58,15 +68,25 @@ bool ContactsAkonadiDataProxy::createDataStore()
 bool ContactsAkonadiDataProxy::isOpen() const
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
 	
-	return false;
+	return Control::start();
 }
 
 void ContactsAkonadiDataProxy::loadAllRecords()
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
+	
+	// Fetch all items with full payload from the root collection
+	ItemFetchJob *job = new ItemFetchJob( Collection( 4 ) );
+	job->fetchScope().fetchFullPayload();
+	
+	if ( job->exec() ) {
+		// TODO: Implement
+	}
+	else
+	{
+		DEBUGKPILOT << "Could not load records, is akonadi running?";
+	}
 }
 
 void ContactsAkonadiDataProxy::setCategory( Record* rec, const QString& category )

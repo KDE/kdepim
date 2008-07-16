@@ -27,11 +27,6 @@
 
 #include "contacts.h"
 
-#include <akonadi/control.h>
-#include <akonadi/collection.h>
-#include <akonadi/itemfetchjob.h>
-#include <akonadi/itemfetchscope.h>
-
 #include "options.h"
 
 #include "record.h"
@@ -62,29 +57,15 @@ bool Contacts::initDataProxies()
 		return false;
 	}
 	
-	// Lets make sure that Akonadi is started.
-	if ( !Control::start() )
-	{
-		addSyncLogEntry( i18n( "Error: Could not start Akonadi." ) );
-		return false;
-	}
-	
-	fHHDataProxy = new ContactsHHDataProxy( fDatabase );
-	fBackupDataProxy = new ContactsHHDataProxy( fLocalDatabase );
-	
 	// TODO: Make the collection id configurable. For now we just hardcode the
 	//       collection id. To find out which collection you can sync, use
 	//       akonadiconsole->folder properties->internals.
-	// Fetch all items with full payload from the root collection
-	ItemFetchJob *job = new ItemFetchJob( Collection( 4 ) );
-	job->fetchScope().fetchFullPayload();
 	
-	if ( job->exec() ) {
-		fPCDataProxy = new ContactsAkonadiDataProxy( /* job->items() */ );
-		return true;
-	}
+	fHHDataProxy = new ContactsHHDataProxy( fDatabase );
+	fBackupDataProxy = new ContactsHHDataProxy( fLocalDatabase );
+	fPCDataProxy = new ContactsAkonadiDataProxy( 4 );
 	
-	return false;
+	return true;
 }
 
 bool Contacts::equal( const Record *pcRec, const HHRecord *hhRec ) const

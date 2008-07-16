@@ -29,10 +29,17 @@
 
 #include "dataproxy.h"
 
+#include <akonadi/entity.h>
+
+using namespace Akonadi;
+
 class KPILOT_EXPORT ContactsAkonadiDataProxy : public DataProxy
 {
+private:
+	Entity::Id fId;
+
 public:
-	ContactsAkonadiDataProxy();
+	ContactsAkonadiDataProxy( Entity::Id id );
 	
 	/* virtual */ ~ContactsAkonadiDataProxy();
 
