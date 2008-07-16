@@ -596,7 +596,7 @@ int  KDGanttView::ganttMaximumWidth() const
 
 void KDGanttView::showEvent( QShowEvent * event )
 {
-  if ( e->spontaneous() ) {
+  if ( event->spontaneous() ) {
     KDGanttMinimizeSplitter::showEvent( event );
     return;
   }
