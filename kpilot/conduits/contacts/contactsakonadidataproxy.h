@@ -29,7 +29,7 @@
 
 #include "dataproxy.h"
 
-class KPILOT_EXPORT ContactsAkonadiDataProxy
+class KPILOT_EXPORT ContactsAkonadiDataProxy : public DataProxy
 {
 public:
 	ContactsAkonadiDataProxy();

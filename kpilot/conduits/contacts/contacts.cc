@@ -27,10 +27,20 @@
 
 #include "contacts.h"
 
+#include <akonadi/control.h>
+#include <akonadi/collection.h>
+#include <akonadi/itemfetchjob.h>
+#include <akonadi/itemfetchscope.h>
+
 #include "options.h"
 
 #include "record.h"
 #include "hhrecord.h"
+
+#include "contactshhdataproxy.h"
+#include "contactsakonadidataproxy.h"
+
+using namespace Akonadi;
 
 Contacts::Contacts( KPilotLink *o, const QVariantList &a )
  : RecordConduit( o, a, CSL1( "AddressDB" ), CSL1( "Keyring Conduit" ) )
@@ -45,7 +55,34 @@ void Contacts::loadSettings()
 bool Contacts::initDataProxies()
 {
 	FUNCTIONSETUP;
-	//TODO: IMPLEMENT
+	
+	if( !fDatabase )
+	{
+		addSyncLogEntry( i18n( "Error: Handheld database is not loaded." ) );
+		return false;
+	}
+	
+	// Lets make sure that Akonadi is started.
+	if ( !Control::start() )
+	{
+		addSyncLogEntry( i18n( "Error: Could not start Akonadi." ) );
+		return false;
+	}
+	
+	fHHDataProxy = new ContactsHHDataProxy( fDatabase );
+	
+	// TODO: Make the collection id configurable. For now we just hardcode the
+	//       collection id. To find out which collection you can sync, use
+	//       akonadiconsole->folder properties->internals.
+	// Fetch all items with full payload from the root collection
+	ItemFetchJob *job = new ItemFetchJob( Collection( 4 ) );
+	job->fetchScope().fetchFullPayload();
+	
+	if ( job->exec() ) {
+		fPCDataProxy = new ContactsAkonadiDataProxy( /* job->items() */ );
+		return true;
+	}
+	
 	return false;
 }
 

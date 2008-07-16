@@ -24,6 +24,7 @@ kde4_add_library(kpilot_conduit_contacts SHARED ${contacts_SRCS})
 target_link_libraries(kpilot_conduit_contacts
 	kpilot_conduit_base
 	${QT_LIBRARIES}
+	${KDE4_AKONADI_LIBS}
 )
 
 set_target_properties(kpilot_conduit_contacts PROPERTIES PREFIX "")
