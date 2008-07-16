@@ -594,15 +594,22 @@ int  KDGanttView::ganttMaximumWidth() const
   \sa setUpdateEnabled()
 */
 
-void KDGanttView::show()
+void KDGanttView::showEvent( QShowEvent * event )
 {
+  if ( event->spontaneous() ) {
+    KDGanttMinimizeSplitter::showEvent( event );
+    return;
+  }
+
   myTimeTable->setBlockUpdating( false );
   if (myCanvasView->horizontalScrollBar()->value() > 0 )
     myCanvasView->horizontalScrollBar()->setValue(myCanvasView->horizontalScrollBar()->value()-1  );
   else
     myCanvasView->horizontalScrollBar()->setValue(1 );
   myTimeTable->updateMyContent();
-  QWidget::show();
+
+  KDGanttMinimizeSplitter::showEvent( event );
+
   myCanvasView->setMyContentsHeight( 0 );
   if ( fCenterTimeLineAfterShow ) {
     fCenterTimeLineAfterShow = false;
@@ -616,18 +623,14 @@ void KDGanttView::show()
   \return true, if the widget was closed
 */
 
-bool KDGanttView::close ( bool alsoDelete )
+void KDGanttView::closeEvent( QCloseEvent * event )
 {
   //qDebug() << "close ";
-  if ( closingBlocked )
-    return false;
-  if ( QWidget::close()  )
-  {
-    if ( alsoDelete )
-      deleteLater();
-    return true;
+  if ( closingBlocked ) {
+    event->ignore();
+    return;
   }
-  return false;
+  KDGanttMinimizeSplitter::closeEvent( event );
 }
 
 
