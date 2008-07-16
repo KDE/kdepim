@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Service
+Comment=This conduit syncs the handheld keyring database with a database stored on the pc.
+Name=Contacts
+Implemented=file
+X-KDE-ServiceTypes=KPilotConduit
+X-KDE-Library=kpilot_conduit_contacts
