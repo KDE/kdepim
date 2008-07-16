@@ -43,7 +43,7 @@
 using namespace Akonadi;
 
 Contacts::Contacts( KPilotLink *o, const QVariantList &a )
- : RecordConduit( o, a, CSL1( "AddressDB" ), CSL1( "Keyring Conduit" ) )
+ : RecordConduit( o, a, CSL1( "AddressDB" ), CSL1( "Contacts Conduit" ) )
 {
 }
 
