@@ -70,6 +70,7 @@ bool Contacts::initDataProxies()
 	}
 	
 	fHHDataProxy = new ContactsHHDataProxy( fDatabase );
+	fBackupDataProxy = new ContactsHHDataProxy( fLocalDatabase );
 	
 	// TODO: Make the collection id configurable. For now we just hardcode the
 	//       collection id. To find out which collection you can sync, use
