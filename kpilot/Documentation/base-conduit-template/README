@@ -1,0 +1,6 @@
+This is a template which you can use to create a new conduit based on the base
+conduit framework. To get started follow the following steps:
+
+1. Copy this directory into kpilot/conduits
+2. Rename the directory to your-conduit-name
+3. Add add_subdirectory(your-conduit-name) to kpilot/conduits/CMakeLists.txt

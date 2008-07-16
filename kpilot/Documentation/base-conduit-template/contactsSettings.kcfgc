@@ -1,0 +1,7 @@
+File=contacts.kcfg
+ClassName=ContactsSettings
+Singleton=true
+ItemAccessors=true
+Mutators=true
+GlobalEnums=true
+SetUserTexts=true
