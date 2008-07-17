@@ -38,7 +38,7 @@
 #include "hhrecord.h"
 
 HHDataProxy::HHDataProxy( PilotDatabase *db ) : fDatabase( db )
-	, fLastUsedUniqueId( 0L )
+	, fLastUsedUniqueId( 0L ), fAppInfo( 0L )
 {
 }
 
