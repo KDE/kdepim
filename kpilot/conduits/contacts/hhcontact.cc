@@ -28,10 +28,29 @@
 #include "hhcontact.h"
 
 #include "options.h"
+#include "pilotRecord.h"
+
+#include "akonadicontact.h"
 
 HHContact::HHContact( PilotRecord *rec, const QString& category ) 
 	: HHRecord( rec, category )
 {
+	// TODO: Implement
+}
+
+HHContact::HHContact( const Record* other ) 
+	: HHRecord( 0, CSL1( "Unfiled" ) )
+{
+	// TODO: Implement
+	pi_buffer_t *buf = pi_buffer_new( QString( "" ).size() );
+	Pilot::toPilot( QString(""), buf->data, 0 );
+	fRecord = new PilotRecord( buf, 0, 0, 0);
+}
+
+void HHContact::copyTo( AkonadiContact* to ) const
+{
+	FUNCTIONSETUP;
+	
 	// TODO: Implement
 }
 

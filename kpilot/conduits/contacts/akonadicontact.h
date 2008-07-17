@@ -29,10 +29,18 @@
 
 #include "record.h"
 
+class HHRecord;
+class HHContact;
+
 class AkonadiContact : public Record
 {
 public:
 	AkonadiContact();
+	
+	/**
+	 * Creates an AkonadiContact object which is a copy of @param other.
+	 */
+	AkonadiContact( const HHRecord* other );
 	
 	~AkonadiContact();
 	
@@ -50,6 +58,12 @@ public:
 	 * Returns wether or not the given category is set for this record.
 	 */
 	/* virtual */ bool containsCategory( const QString& category ) const;
+	
+	/**
+	 * Copies the complete content of this record to the HHContact, overwriting all
+	 * values.
+	 */
+	void copyTo( HHContact* to ) const;
 	
 	/**
 	 * Returns whether or not the current record is equal to @p other. Implementing 

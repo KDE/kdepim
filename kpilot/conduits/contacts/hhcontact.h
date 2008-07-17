@@ -29,10 +29,21 @@
 
 #include "hhrecord.h"
 
+class Record;
+class AkonadiContact;
+
 class HHContact : public HHRecord
 {
 public:
-	HHContact( PilotRecord *rec, const QString& category );
+	HHContact( PilotRecord* rec, const QString& category );
+	
+	HHContact( const Record* rec );
+	
+	/**
+	 * Copies the complete content of this record to the AkonadiContact,
+	 * overwriting all values.
+	 */
+	void copyTo( AkonadiContact* to ) const;
 	
 	/**
 	 * Returns whether or not the current record is equal to @p other. Implementing 

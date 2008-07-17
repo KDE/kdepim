@@ -29,7 +29,16 @@
 
 #include "options.h"
 
+#include "hhrecord.h"
+
+#include "hhcontact.h"
+
 AkonadiContact::AkonadiContact()
+{
+	// TODO: Implement
+}
+
+AkonadiContact::AkonadiContact( const HHRecord* other )
 {
 	// TODO: Implement
 }
@@ -57,6 +66,12 @@ bool AkonadiContact::containsCategory( const QString& category ) const
 	FUNCTIONSETUP;
 	// TODO: Implement
 	return false;
+}
+
+void AkonadiContact::copyTo( HHContact* to ) const
+{
+	FUNCTIONSETUP;
+	// TODO: Implement.
 }
 
 bool AkonadiContact::equal( const Record* other ) const

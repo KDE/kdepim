@@ -32,6 +32,8 @@
 #include "record.h"
 #include "hhrecord.h"
 
+#include "akonadicontact.h"
+#include "hhcontact.h"
 #include "contactshhdataproxy.h"
 #include "contactsakonadidataproxy.h"
 
@@ -83,27 +85,31 @@ bool Contacts::equal( const Record *pcRec, const HHRecord *hhRec ) const
 Record* Contacts::createPCRecord( const HHRecord *hhRec )
 {
 	FUNCTIONSETUP;
-	//TODO: IMPLEMENT
-	return 0L;
+	
+	return new AkonadiContact( hhRec );
 }
 
 HHRecord* Contacts::createHHRecord( const Record *pcRec )
 {
 	FUNCTIONSETUP;
-	//TODO: IMPLEMENT
-	return 0L;
+	
+	return new HHContact( pcRec );
 }
 
 void Contacts::_copy( const Record *from, HHRecord *to )
 {
 	FUNCTIONSETUP;
 	
-	//TODO: IMPLEMENT
+	const AkonadiContact* aFrom = static_cast<const AkonadiContact*>( from );
+	HHContact* hhTo = static_cast<HHContact*>( to );
+	aFrom->copyTo( hhTo );
 }
 
 void Contacts::_copy( const HHRecord *from, Record *to  )
 {
 	FUNCTIONSETUP;
 	
-	//TODO: IMPLEMENT
+	const HHContact* hhFrom = static_cast<const HHContact*>( from );
+	AkonadiContact* aTo = static_cast<AkonadiContact*>( to );
+	hhFrom->copyTo( aTo );
 }
