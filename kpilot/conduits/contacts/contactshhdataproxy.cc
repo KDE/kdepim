@@ -27,6 +27,10 @@
 #include "contactshhdataproxy.h"
 
 #include "options.h"
+#include "pilotAddress.h"
+#include "pilotRecord.h"
+
+#include "hhcontact.h"
 
 ContactsHHDataProxy::ContactsHHDataProxy( PilotDatabase *db ) : HHDataProxy( db )
 {
@@ -39,8 +43,19 @@ ContactsHHDataProxy::~ContactsHHDataProxy()
 HHRecord* ContactsHHDataProxy::createHHRecord( PilotRecord *rec )
 {
 	FUNCTIONSETUP;
-	//TODO: IMPLEMENT
-	return 0L;
+	
+	QString category( "Unfiled" );
+	
+	if( fAppInfo )
+	{
+		QString tmp = fAppInfo->categoryName( rec->category() );
+		if( !tmp.isEmpty() )
+		{
+			category = tmp;
+		}
+	}
+	
+	return new HHContact( rec, category );
 }
 
 bool ContactsHHDataProxy::createDataStore()
@@ -53,12 +68,23 @@ bool ContactsHHDataProxy::createDataStore()
 PilotAppInfoBase* ContactsHHDataProxy::readAppInfo()
 {
 	FUNCTIONSETUP;
-	//TODO: IMPLEMENT
-	return 0L;
+	
+	if( fDatabase && fDatabase->isOpen() )
+	{
+		PilotAddressInfo* appInfo = new PilotAddressInfo( fDatabase );
+		
+		return appInfo;
+	}
+
+	return 0;
 }
 
 void ContactsHHDataProxy::storeAppInfo()
 {
 	FUNCTIONSETUP;
-	//TODO: IMPLEMENT
+	
+	if( fDatabase && fDatabase->isOpen() )
+	{
+		fAppInfo->writeTo( fDatabase );
+	}
 }
