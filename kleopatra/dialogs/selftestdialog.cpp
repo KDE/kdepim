@@ -159,6 +159,7 @@ public:
 
         connect( ui.resultsTV->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
                  q, SLOT(slotSelectionChanged()) );
+        ui.proposedCorrectiveActionLB->setTextFormat( Qt::RichText );
     }
 
 private:
