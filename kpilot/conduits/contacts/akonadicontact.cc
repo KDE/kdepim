@@ -33,7 +33,7 @@
 
 #include "hhcontact.h"
 
-AkonadiContact::AkonadiContact()
+AkonadiContact::AkonadiContact( const Item& item )
 {
 	// TODO: Implement
 }
@@ -45,6 +45,12 @@ AkonadiContact::AkonadiContact( const HHRecord* other )
 
 AkonadiContact::~AkonadiContact()
 {
+}
+
+void AkonadiContact::addCategory( const QString& category )
+{
+	FUNCTIONSETUP;
+	// TODO: Implement
 }
 
 QStringList AkonadiContact::categories() const
@@ -88,6 +94,13 @@ const QString AkonadiContact::id() const
 	return QString();
 }
 
+Item AkonadiContact::item() const
+{
+ FUNCTIONSETUP;
+ // TODO: Implement
+ return Item();
+}
+
 bool AkonadiContact::isDeleted() const
 {
 	FUNCTIONSETUP;
@@ -100,6 +113,12 @@ bool AkonadiContact::isModified() const
 	FUNCTIONSETUP;
 	// TODO: Implement
 	return false;
+}
+
+void AkonadiContact::setCategory( const QString& category )
+{
+	FUNCTIONSETUP;
+	// TODO: Implement
 }
 
 void AkonadiContact::setId( const QString &id )

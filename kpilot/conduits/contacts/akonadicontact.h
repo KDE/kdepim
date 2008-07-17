@@ -29,13 +29,17 @@
 
 #include "record.h"
 
+#include <akonadi/item.h>
+
 class HHRecord;
 class HHContact;
+
+using namespace Akonadi;
 
 class AkonadiContact : public Record
 {
 public:
-	AkonadiContact();
+	AkonadiContact( const Item& item );
 	
 	/**
 	 * Creates an AkonadiContact object which is a copy of @param other.
@@ -43,6 +47,14 @@ public:
 	AkonadiContact( const HHRecord* other );
 	
 	~AkonadiContact();
+	
+	/**
+	 * Adds the given category to the record.
+	 *
+	 * All other categories that might have been set to this record remain
+	 * unchanged.
+	 */
+	void addCategory( const QString& category );
 	
 	/**
 	 * Returns the list of categories set for this record.
@@ -79,6 +91,11 @@ public:
 	/* virtual */ const QString id() const;
 	
 	/**
+	 * Returns the Akonadi::Item used to represent this contact.
+	 */
+	Item item() const;
+	
+	/**
 	 * Returns true when this record is marked for deletion.
 	 */
 	/* virtual */ bool isDeleted() const;
@@ -87,6 +104,13 @@ public:
 	 * Returns true if the record is modified and/or if it's marked as deleted.
 	 */
 	/* virtual */ bool isModified() const;
+	
+	/**
+	 * Sets the given category as the only category to the record.
+	 * 
+	 * All other categories that might have been set to this record are removed.
+	 */
+	void setCategory( const QString& category );
 	
 	/**
 	 * Sets the id of this record to @p id;

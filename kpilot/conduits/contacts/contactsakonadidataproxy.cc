@@ -29,10 +29,16 @@
 
 #include <akonadi/control.h>
 #include <akonadi/collection.h>
+#include <akonadi/itemcreatejob.h>
+#include <akonadi/itemmodifyjob.h>
+#include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
+#include <kabc/addressee.h>
 
 #include "options.h"
+
+#include "akonadicontact.h"
 
 ContactsAkonadiDataProxy::ContactsAkonadiDataProxy( Entity::Id id ) : fId( id )
 {
@@ -48,13 +54,15 @@ ContactsAkonadiDataProxy::ContactsAkonadiDataProxy( Entity::Id id ) : fId( id )
 ContactsAkonadiDataProxy::~ContactsAkonadiDataProxy()
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
+	qDeleteAll ( fContacts );
 }
 
 void ContactsAkonadiDataProxy::addCategory( Record* rec, const QString& category )
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
+	
+	AkonadiContact* aRec = static_cast<AkonadiContact*>( rec );
+	aRec->addCategory( category );
 }
 
 bool ContactsAkonadiDataProxy::createDataStore()
@@ -77,11 +85,19 @@ void ContactsAkonadiDataProxy::loadAllRecords()
 	FUNCTIONSETUP;
 	
 	// Fetch all items with full payload from the root collection
-	ItemFetchJob *job = new ItemFetchJob( Collection( 4 ) );
+	ItemFetchJob* job = new ItemFetchJob( Collection( fId ) );
 	job->fetchScope().fetchFullPayload();
 	
 	if ( job->exec() ) {
-		// TODO: Implement
+		Item::List items = job->items();
+		foreach( const Item &item, items )
+		{
+			if( item.hasPayload<KABC::Addressee>() )
+			{
+				AkonadiContact* ac = new AkonadiContact( item );
+				fContacts.append( ac );
+			}
+		}
 	}
 	else
 	{
@@ -92,13 +108,15 @@ void ContactsAkonadiDataProxy::loadAllRecords()
 void ContactsAkonadiDataProxy::setCategory( Record* rec, const QString& category )
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
+	
+	AkonadiContact* aRec = static_cast<AkonadiContact*>( rec );
+	aRec->setCategory( category );
 }
 
 void ContactsAkonadiDataProxy::syncFinished()
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
+	// No special things have to be done I think. (Bertjan Broeksema).
 }
 
 /* Protected methods */
@@ -106,25 +124,71 @@ void ContactsAkonadiDataProxy::syncFinished()
 QString ContactsAkonadiDataProxy::generateUniqueId()
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
 	
-	return QString();
+	quint64 newId = 0;
+	
+	foreach( AkonadiContact* ac, fContacts )
+	{
+		quint64 id = ac->id().toULongLong();
+		if( id > newId )
+		{
+			newId = id;
+		}
+	}
+	
+	return QString::number( newId );
 }
 
 void ContactsAkonadiDataProxy::commitCreate( Record *rec )
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
+	
+	AkonadiContact* aRec = static_cast<AkonadiContact*>( rec );
+	ItemCreateJob* job = new ItemCreateJob( aRec->item(), Collection( fId ) );
+
+	if ( !job->exec() )
+	{
+		// Hmm an error occured
+		DEBUGKPILOT << "Create failed: " << job->errorString();
+	}
+	else
+	{
+		// Update the id of the record.
+		QString id = QString::number( job->item().id() );
+		rec->setId( id );
+	}
 }
 
 void ContactsAkonadiDataProxy::commitUpdate( Record *rec )
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
+	
+	AkonadiContact* aRec = static_cast<AkonadiContact*>( rec );
+	ItemModifyJob* job = new ItemModifyJob( aRec->item() );
+
+	if ( !job->exec() )
+	{
+		// Hmm an error occured
+		DEBUGKPILOT << "Update failed: " << job->errorString();
+	}
+	else
+	{
+		// Update the id of the record.
+		QString id = QString::number( job->item().id() );
+		rec->setId( id );
+	}
 }
 
 void ContactsAkonadiDataProxy::commitDelete( Record *rec )
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
+	
+	AkonadiContact* aRec = static_cast<AkonadiContact*>( rec );
+	ItemDeleteJob *job = new ItemDeleteJob( aRec->item() );
+
+	if ( !job->exec() )
+	{
+		// Hmm an error occured
+		DEBUGKPILOT << "Delete failed: " << job->errorString();
+	}
 }

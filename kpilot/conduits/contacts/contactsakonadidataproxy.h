@@ -31,12 +31,15 @@
 
 #include <akonadi/entity.h>
 
+class AkonadiContact;
+
 using namespace Akonadi;
 
 class KPILOT_EXPORT ContactsAkonadiDataProxy : public DataProxy
 {
 private:
 	Entity::Id fId;
+	QList<AkonadiContact*> fContacts;
 
 public:
 	ContactsAkonadiDataProxy( Entity::Id id );
@@ -91,8 +94,8 @@ protected: // Functions
 	/* virtual */ QString generateUniqueId();
 	
 	/**
-	 * Commits created record @p rec to the datastore. Returns the id that the
-	 * data store created for this record.
+	 * Commits created record @p rec to the datastore. Sets the id that the
+	 * data store created for this record to rec.
 	 */
 	/* virtual */ void commitCreate( Record *rec );
 	
