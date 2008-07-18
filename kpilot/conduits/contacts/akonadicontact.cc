@@ -28,19 +28,21 @@
 #include "akonadicontact.h"
 
 #include "options.h"
-
 #include "hhrecord.h"
 
 #include "hhcontact.h"
 
-AkonadiContact::AkonadiContact( const Item& item )
+AkonadiContact::AkonadiContact( const Akonadi::Item& item ) : fItem( item )
 {
-	// TODO: Implement
+	// ContactsAkonadiDataProxy checks if item has an KABC::Addressee as payload
+	// so we don't check that again here.
 }
 
 AkonadiContact::AkonadiContact( const HHRecord* other )
 {
-	// TODO: Implement
+	const HHContact* hhOther = static_cast<const HHContact*>( other );
+	fItem.setMimeType( "text/directory" );
+	fItem.setPayload<KABC::Addressee>( hhOther->addressee() );
 }
 
 AkonadiContact::~AkonadiContact()
@@ -50,61 +52,75 @@ AkonadiContact::~AkonadiContact()
 void AkonadiContact::addCategory( const QString& category )
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
+	
+	KABC::Addressee a = fItem.payload<KABC::Addressee>();
+	if( !a.hasCategory( category ) )
+	{
+		a.insertCategory( category );
+	}
+	
+	fItem.setPayload<KABC::Addressee>( a );
 }
 
 QStringList AkonadiContact::categories() const
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
-	return QStringList();
+	
+	return fItem.payload<KABC::Addressee>().categories();
 }
 
 int AkonadiContact::categoryCount() const
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
-	return 0;
+	
+	return fItem.payload<KABC::Addressee>().categories().size();
 }
 
 bool AkonadiContact::containsCategory( const QString& category ) const
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
-	return false;
+	
+	return fItem.payload<KABC::Addressee>().hasCategory( category );
 }
 
 void AkonadiContact::copyTo( HHContact* to ) const
 {
 	FUNCTIONSETUP;
-	// TODO: Implement.
+	
+	to->setAddressee( fItem.payload<KABC::Addressee>() );
 }
 
 bool AkonadiContact::equal( const Record* other ) const
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
-	return false;
+	
+	if( !other )
+	{
+		return false;
+	}
+	
+	const HHContact* hhOther =  static_cast<const HHContact*>( other );
+	return hhOther->equal( fItem.payload<KABC::Addressee>() );
 }
 
 const QString AkonadiContact::id() const
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
-	return QString();
+	
+	return QString::number( fItem.id() );
 }
 
-Item AkonadiContact::item() const
+Akonadi::Item AkonadiContact::item() const
 {
  FUNCTIONSETUP;
- // TODO: Implement
- return Item();
+	
+ return fItem;
 }
 
 bool AkonadiContact::isDeleted() const
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
+	// As long as there Is an AkonadiContact object it is not deleted.
 	return false;
 }
 
@@ -112,30 +128,43 @@ bool AkonadiContact::isModified() const
 {
 	FUNCTIONSETUP;
 	// TODO: Implement
+	// Here we need the last synced time stamp and the last modified time stamp of
+	// the item.
 	return false;
 }
 
 void AkonadiContact::setCategory( const QString& category )
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
+	
+	KABC::Addressee a = fItem.payload<KABC::Addressee>();
+	QStringList cats;
+	cats << category;
+	a.setCategories( cats );
+	
+	fItem.setPayload<KABC::Addressee>( a );
 }
 
 void AkonadiContact::setId( const QString &id )
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
+	
+	QString oldId = QString::number( fItem.id() );
+	
+	DEBUGKPILOT << "AkonadiContact::setId() [old,new]: [" << oldId << "," << id << "]";
+	
+	fItem.setId( id.toULongLong() );
 }
 
 void AkonadiContact::synced()
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
+	// Nothing to do here.
 }
 
 QString AkonadiContact::toString() const
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
-	return QString();
+	
+	return fItem.payload<KABC::Addressee>().toString();
 }

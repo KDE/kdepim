@@ -29,6 +29,8 @@
 
 #include "hhrecord.h"
 
+#include <kabc/addressee.h>
+
 class Record;
 class AkonadiContact;
 
@@ -38,6 +40,11 @@ public:
 	HHContact( PilotRecord* rec, const QString& category );
 	
 	HHContact( const Record* rec );
+	
+	/**
+	 * Returns the addressee object represented by this record.
+	 */
+	KABC::Addressee addressee() const;
 	
 	/**
 	 * Copies the complete content of this record to the AkonadiContact,
@@ -52,6 +59,17 @@ public:
 	 * should be true.
 	 */
 	/* virtual */ bool equal( const Record* other ) const;
+	
+	/**
+	 * Returns whether or the addressee represented by this record is equal to
+	 * @p addressee.
+	 */
+	bool equal( const KABC::Addressee& addressee ) const;
+
+	/**
+	 * Sets the addressee object represented by this record.
+	 */
+	void setAddressee( const KABC::Addressee& a ) const;
 
 	/**
 	 * Returns a string representation of the record.

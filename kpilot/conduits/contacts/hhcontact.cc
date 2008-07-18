@@ -47,6 +47,11 @@ HHContact::HHContact( const Record* other )
 	fRecord = new PilotRecord( buf, 0, 0, 0);
 }
 
+KABC::Addressee HHContact::addressee() const
+{
+	return KABC::Addressee();
+}
+
 void HHContact::copyTo( AkonadiContact* to ) const
 {
 	FUNCTIONSETUP;
@@ -59,6 +64,19 @@ bool HHContact::equal( const Record* other ) const
 	FUNCTIONSETUP;
 	// TODO: Implement
 	return false;
+}
+
+bool HHContact::equal( const KABC::Addressee& addressee ) const
+{
+	FUNCTIONSETUP;
+	// TODO: Implement
+	return false;
+}
+
+void HHContact::setAddressee( const KABC::Addressee& a ) const
+{
+	FUNCTIONSETUP;
+	// TODO: Implement
 }
 
 QString HHContact::toString() const

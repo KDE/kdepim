@@ -34,12 +34,13 @@
 class HHRecord;
 class HHContact;
 
-using namespace Akonadi;
-
 class AkonadiContact : public Record
 {
+private:
+	Akonadi::Item fItem;
+
 public:
-	AkonadiContact( const Item& item );
+	AkonadiContact( const Akonadi::Item& item );
 	
 	/**
 	 * Creates an AkonadiContact object which is a copy of @param other.
@@ -93,7 +94,7 @@ public:
 	/**
 	 * Returns the Akonadi::Item used to represent this contact.
 	 */
-	Item item() const;
+	Akonadi::Item item() const;
 	
 	/**
 	 * Returns true when this record is marked for deletion.
