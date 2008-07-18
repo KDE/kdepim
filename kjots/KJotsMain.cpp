@@ -89,13 +89,15 @@ KJotsMain::KJotsMain()
 
     // Main widget
     //
+
+    KStandardAction::quit(this, SLOT(onQuit()), actionCollection());
+
     component = new KJotsComponent(this, actionCollection());
 
     setCentralWidget(component);
 
     setupGUI();
     connect(component, SIGNAL(captionChanged(QString)), SLOT(updateCaption(QString)));
-
 
 }
 
@@ -107,9 +109,10 @@ void KJotsMain::updateCaption(QString caption)
     setCaption(caption);
 }
 
-bool KJotsMain::queryClose()
+void KJotsMain::onQuit()
 {
-    return component->queryClose();
+    component->queryClose();
+    deleteLater();
+    KApplication::kApplication()->quit();
 }
-
 

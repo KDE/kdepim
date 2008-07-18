@@ -98,7 +98,6 @@ class KJotsComponent : public QWidget
         void copySelection();
         void insertDate();
         void onPrint();
-        void onQuit();
         
         void onShowSearch();
         void onUpdateSearch();
