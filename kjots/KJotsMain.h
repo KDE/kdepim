@@ -39,9 +39,7 @@ class KJotsMain : public KXmlGuiWindow
 
     public slots:
         void updateCaption(QString);
-
-    protected:
-        bool queryClose();
+        void onQuit();
 
 private:
     KJotsComponent* component;
