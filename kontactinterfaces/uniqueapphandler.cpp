@@ -180,14 +180,15 @@ UniqueAppWatcher::UniqueAppWatcher( UniqueAppHandlerFactoryBase *factory, Plugin
     KPIM::Utils::getProcessesIdForName( plugin->objectName(), pids );
     const int mypid = getpid();
     bool processExits = false;
-    foreach( int pid, pids ) {
+    foreach ( int pid, pids ) {
       if ( mypid != pid ) {
         processExits = true;
         break;
       }
     }
-    if ( !processExits )
+    if ( !processExits ) {
       d->mRunningStandalone = false;
+    }
   }
 #endif
 
