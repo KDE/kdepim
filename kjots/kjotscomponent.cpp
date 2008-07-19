@@ -997,18 +997,15 @@ void KJotsComponent::saveNative()
 
 void KJotsComponent::saveToFile(KJotsComponent::ExportType type)
 {
-    autoSave();
-
+  autoSave();
     QString title;
     QList<KJotsEntry*> entries = bookshelf->selected();
     Q_ASSERT(entries.size());
-
     if ( entries.size() == 1 ) {
         title = entries[0]->title();
     } else {
         title = i18n("Multiple Selections");
     }
-
     KUrl saveUrl;
     QString encoding;
     if ( type == Native ) {
@@ -1018,15 +1015,18 @@ void KJotsComponent::saveToFile(KJotsComponent::ExportType type)
         KEncodingFileDialog::Result res;
         res = KEncodingFileDialog::getSaveUrlAndEncoding(
             QString("UTF-8"), title + ".html", "*.html|" + i18n("HTML Files"));
+        if ( res.URLs.isEmpty() )
+          return;
         saveUrl = res.URLs[0];
         encoding = res.encoding;
     } else if ( type == Ascii ) {
         KEncodingFileDialog::Result res;
         res = KEncodingFileDialog::getSaveUrlAndEncoding(QString("UTF-8"), title);
+        if ( res.URLs.isEmpty() )
+          return;
         saveUrl = res.URLs[0];
         encoding = res.encoding;
     }
-
     //Create an interim file for us to write to
     std::auto_ptr<KTemporaryFile> interimFile ( new KTemporaryFile );
     interimFile->setAutoRemove(false);
@@ -1107,8 +1107,6 @@ void KJotsComponent::saveToFile(KJotsComponent::ExportType type)
         KJob *job = KIO::move(tempUrl, saveUrl);
         connect( job, SIGNAL( result(KJob*) ), this, SLOT( saveFinished(KJob*) ) );
     }
-
-    return;
 }
 
 void KJotsComponent::saveFinished(KJob *job)
@@ -1286,7 +1284,7 @@ void KJotsComponent::updateMenu()
             action->setEnabled(false);
         foreach ( QAction* action, multiselectionActions )
             action->setEnabled(true);
-    
+
         editor->setActionsEnabled( false );
     } else {
 
