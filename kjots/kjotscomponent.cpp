@@ -152,8 +152,7 @@ KJotsComponent::KJotsComponent(QWidget* parent, KActionCollection *collection) :
     action = actionCollection->addAction("new_book");
     action->setText(i18n("New &Book..."));
     action->setShortcut(QKeySequence(Qt::CTRL + Qt::SHIFT + Qt::Key_N));
-    action->setIcon(KIcon("x-office-address-book"));
-    // should rather be "address-book-new", use that once it exists in Oxygen
+    action->setIcon(KIcon("address-book-new"));
     connect(action, SIGNAL(triggered()), SLOT(createNewBook()));
 
     exportMenu = actionCollection->add<KActionMenu>("save_to");
