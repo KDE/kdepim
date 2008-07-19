@@ -1,5 +1,5 @@
 [Desktop Entry]
-Icon=edit
+Icon=configure
 Type=Service
 X-KDE-ServiceTypes=KCModule
 X-DocPath=kaddressbook/preferences.html
