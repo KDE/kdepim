@@ -204,7 +204,7 @@ class SynchronizeScalixAccount : public KConfigPropagator::Change
     void apply()
     {
       QMessageBox *msg = new QMessageBox( qApp->mainWidget() );
-      msg->setText( "Preparing initial synchronization with Scalix server..." );
+      msg->setText( i18n("Preparing initial synchronization with Scalix server...") );
       msg->show();
       qApp->processEvents();
       sleep( 1 );
