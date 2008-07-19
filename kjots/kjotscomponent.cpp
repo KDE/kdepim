@@ -380,6 +380,9 @@ void KJotsComponent::DelayedInitialization()
         bookshelf->jumpToId(currentSelection);
     }
 
+    connect(bookshelf->itemDelegate(), SIGNAL(closeEditor( QWidget *, QAbstractItemDelegate::EndEditHint )),
+        SLOT(bookshelfEditItemFinished( QWidget *, QAbstractItemDelegate::EndEditHint )));
+
     updateMenu();
 }
 
@@ -389,6 +392,12 @@ inline QTextEdit* KJotsComponent::activeEditor() {
     } else {
         return editor;
     }
+}
+
+void KJotsComponent::bookshelfEditItemFinished( QWidget *, QAbstractItemDelegate::EndEditHint )
+{
+    // Make sure the editor gets focus again after naming a new book/page.
+    activeEditor()->setFocus();
 }
 
 void KJotsComponent::copy() {
@@ -407,8 +416,15 @@ bool KJotsComponent::createNewBook()
         bookshelf->clearSelection();
 
         // Scroll to newly created page.
-        bookshelf->setItemSelected(item->child(0), true);
-        bookshelf->scrollToItem(item->child(0));
+        QTreeWidgetItem* firstPage = item->child(0);
+        bookshelf->setItemSelected(firstPage, true);
+        bookshelf->scrollToItem(firstPage);
+        if ( !KJotsSettings::pageNamePrompt() ) {
+            // Select the title text of first page of the new book for editing
+            bookshelf->setCurrentItem(firstPage);
+            bookshelf->editItem(firstPage);
+        }
+
         success = true;
     }
 
@@ -491,6 +507,11 @@ void KJotsComponent::newPage()
         bookshelf->clearSelection();
         bookshelf->setItemSelected(page, true);
         bookshelf->scrollToItem(page);
+        if ( !KJotsSettings::pageNamePrompt() ) {
+            // Select the title text of first page of the new page for editing
+            bookshelf->setCurrentItem(page);
+            bookshelf->editItem(page);
+        }
     }
 
 }
