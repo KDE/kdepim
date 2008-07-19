@@ -42,7 +42,7 @@ class KJotsBookshelfEntryValidator : public QValidator
       @param parent The parent object.
       @param model The model to use to validate the input.
     */
-    KJotsBookshelfEntryValidator( QAbstractItemModel* model, QObject *parent = 0 );
+    explicit KJotsBookshelfEntryValidator( QAbstractItemModel* model, QObject *parent = 0 );
 
     /**
       Destructor.
