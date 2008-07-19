@@ -149,7 +149,7 @@ install( FILES
 	kleo/hierarchicalkeylistjob.h
 	kleo/keyfilter.h
 	kleo/keyfiltermanager.h
-	DESTINATION ${INCLUDE_INSTALL_DIR}/kleo)
+	DESTINATION ${INCLUDE_INSTALL_DIR}/kleo COMPONENT Devel)
 
 install ( FILES
 	ui/kdhorizontalline.h
@@ -165,6 +165,6 @@ install ( FILES
 	ui/cryptoconfigmodule.h
 	ui/cryptoconfigdialog.h
 	ui/directoryserviceswidget.h
-	DESTINATION ${INCLUDE_INSTALL_DIR}/kleo/ui)
+	DESTINATION ${INCLUDE_INSTALL_DIR}/kleo/ui COMPONENT Devel)
 
 install ( FILES libkleopatrarc.desktop DESTINATION ${CONFIG_INSTALL_DIR} RENAME libkleopatrarc )
