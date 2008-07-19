@@ -1127,7 +1127,7 @@ void KJotsComponent::importBook()
 
     if (!openUrl.isEmpty()) {
         KTemporaryFile file;
-        file.setPrefix(KStandardDirs::locateLocal("data","kjots"));
+        file.setPrefix(KStandardDirs::locateLocal("data","kjots/"));
         file.setSuffix(".book");
         file.setAutoRemove(false);
 
