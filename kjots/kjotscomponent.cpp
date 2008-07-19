@@ -219,7 +219,6 @@ KJotsComponent::KJotsComponent(QWidget* parent, KActionCollection *collection) :
     action->setEnabled(false);
 
     KStandardAction::print(this, SLOT(onPrint()), actionCollection);
-    KStandardAction::quit(this, SLOT(onQuit()), actionCollection);
 
     action = KStandardAction::cut(editor, SLOT(cut()), actionCollection);
     connect(editor, SIGNAL(copyAvailable(bool)), action, SLOT(setEnabled(bool)));
@@ -1254,11 +1253,6 @@ void KJotsComponent::onPrint()
     }
 
     delete printer;
-}
-
-void KJotsComponent::onQuit()
-{
-    close();
 }
 
 void KJotsComponent::insertDate()
