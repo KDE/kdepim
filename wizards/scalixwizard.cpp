@@ -461,7 +461,7 @@ QString ScalixWizard::validate()
        mPasswordEdit->text().isEmpty() )
     return i18n( "Please fill in all fields." );
 
-  return QString::null;
+  return QString();
 }
 
 void ScalixWizard::usrReadConfig()
