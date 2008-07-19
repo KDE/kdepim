@@ -195,7 +195,7 @@ bool KJotsEntry::isKJotsLink(const QString &link)
 
 QString KJotsEntry::kjotsLinkUrl()
 {
-    return kjotsLinkStringPrefix() + id();
+    return kjotsLinkStringPrefix() + QString::number(id());
 }
 
 QString KJotsEntry::kjotsLinkUrlFromId(quint64 id)
