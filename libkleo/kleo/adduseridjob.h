@@ -35,7 +35,7 @@
 
 #include "job.h"
 
-#include <QString>
+#include <QtCore/QString>
 
 namespace GpgME {
     class Error;
