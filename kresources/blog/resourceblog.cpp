@@ -69,10 +69,10 @@ ResourceBlog::~ResourceBlog()
 {
   close();
 
-  if ( mLock ) {
-    delete mLock;
-  }
+  delete mLock;
+
   if ( mPostMap ) {
+    qDeleteAll( *mPostMap );
     delete mPostMap;
   }
 }
@@ -156,23 +156,33 @@ void ResourceBlog::setAPI( const QString &API )
 {
   //TODO: Nasty, can we change KBlog to use a string we can get access to?
   if ( API == "Google Blogger Data" ) {
+    delete ( mBlog );
     mBlog = new KBlog::GData( mUrl, this );
 //  } else if ( API == "LiveJournal" ) {
 //    mBlog = new KBlog::LiveJournal( mUrl, this );
   } else if ( API == "Movable Type" ) {
+    delete ( mBlog );
     mBlog = new KBlog::MovableType( mUrl, this );
   } else if ( API == "MetaWeblog" ) {
+    delete ( mBlog );
     mBlog = new KBlog::MetaWeblog( mUrl, this );
   } else if ( API == "Blogger 1.0" ) {
+    delete ( mBlog );
     mBlog = new KBlog::Blogger1( mUrl, this );
-  } else if ( API == "Movable Type (Wordpress <2.4, Drupal<=5.6 workarounds)" ) {
+  } else if ( API == "Movable Type (Wordpress, Drupal <5.6 workarounds)" ) {
+    delete ( mBlog );
     mBlog = new KBlog::WordpressBuggy( mUrl, this );
   } else {
     kError(5650) << "ResourceBlog::setAPI(): Unrecognised API:" << API;
     return;
   }
-  mBlog->setUsername( mUsername );
-  mBlog->setPassword( mPassword );
+  if ( mBlog ) {
+    mBlog->setUsername( mUsername );
+    mBlog->setPassword( mPassword );
+    if ( !mBlogID.isEmpty() ) {
+      mBlog->setBlogId( mBlogID );
+    }
+  }
 }
 
 QString ResourceBlog::API() const
@@ -189,7 +199,7 @@ QString ResourceBlog::API() const
       if ( qobject_cast<KBlog::MetaWeblog*>( mBlog ) ) {
         if ( qobject_cast<KBlog::MovableType*>( mBlog ) ) {
           if ( qobject_cast<KBlog::WordpressBuggy*>( mBlog ) ) {
-            return "Movable Type (Wordpress <2.4, Drupal<=5.6 workarounds)";
+            return "Movable Type (Wordpress, Drupal <5.6 workarounds)";
           }
           return "Movable Type";
         }
@@ -319,22 +329,18 @@ void ResourceBlog::slotErrorPost( const KBlog::Blog::ErrorType &type,
                               const QString &errorMessage,
                               KBlog::BlogPost *post )
 {
+  Q_UNUSED(post);
   kError(5650) << "ResourceBlog::slotErrorPost()";
   slotError( type, errorMessage );
-  if ( post ) {
-    delete post;
-  }
 }
 
 void ResourceBlog::slotErrorMedia( const KBlog::Blog::ErrorType &type,
                                      const QString &errorMessage,
                                      KBlog::BlogMedia *media )
 {
+  Q_UNUSED(media);
   kError(5650) << "ResourceBlog::slotErrorMedia()";
   slotError( type, errorMessage );
-  if ( media ) {
-    delete media;
-  }
 }
 
 void ResourceBlog::slotSavedPost( KBlog::BlogPost *post )
@@ -360,7 +366,6 @@ void ResourceBlog::slotSavedPost( KBlog::BlogPost *post )
     else {
       clearChange( post->journalId() );
     }
-    delete post;
 
     Incidence::List changes = allChanges();
     if ( changes.begin() == changes.end() ) {
@@ -389,7 +394,6 @@ bool ResourceBlog::doSave( bool syncCache )
   }
 
   if ( !mBlog ) {
-    kError(5650) << "ResourceBlog::addJournal(): Blog not initialised.";
     return false;
   }
 
@@ -400,6 +404,7 @@ bool ResourceBlog::doSave( bool syncCache )
     if ( journal ) {
       KBlog::BlogPost *post = new KBlog::BlogPost( *journal );
       if ( post ) {
+        mPostMap->insert( post->journalId(),post );
         connect ( mBlog, SIGNAL( createdPost( KBlog::BlogPost * ) ),
                   this, SLOT( slotSavedPost( KBlog::BlogPost * ) ) );
         connect ( mBlog, SIGNAL( errorPost( const KBlog::Blog::ErrorType &,
@@ -418,6 +423,7 @@ bool ResourceBlog::doSave( bool syncCache )
     if ( journal ) {
       KBlog::BlogPost *post = new KBlog::BlogPost( *journal );
       if ( post ) {
+        mPostMap->insert( post->journalId(), post );
         connect ( mBlog, SIGNAL( modifiedPost( KBlog::BlogPost * ) ),
                   this, SLOT( slotSavedPost( KBlog::BlogPost * ) ) );
         connect ( mBlog, SIGNAL( errorPost( const KBlog::Blog::ErrorType &,
@@ -436,6 +442,7 @@ bool ResourceBlog::doSave( bool syncCache )
     if ( journal ) {
       KBlog::BlogPost *post = new KBlog::BlogPost( *journal );
       if ( post ) {
+        mPostMap->insert( post->journalId(), post );
         connect ( mBlog, SIGNAL( removedPost( KBlog::BlogPost * ) ),
                   this, SLOT( slotSavedPost( KBlog::BlogPost * ) ) );
         connect ( mBlog, SIGNAL( errorPost( const KBlog::Blog::ErrorType &,
@@ -537,6 +544,7 @@ bool ResourceBlog::listBlogs() {
 void ResourceBlog::setBlog( const QString &id, const QString &name ) {
   mBlogID = id;
   mBlogName = name;
+  mBlog->setBlogId( mBlogID );
 }
 
 QPair<QString, QString> ResourceBlog::blog() const {
