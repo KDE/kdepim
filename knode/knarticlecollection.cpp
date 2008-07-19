@@ -252,9 +252,7 @@ int KNArticleVector::indexForId(int id)
   if(found)
     return mid;
   else {
-    #ifndef NDEBUG
-    qDebug("knode: KNArticleVector::indexForId() : id=%d not found", id);
-    #endif
+    kDebug(5003) << "id" << id << "not found";
     return -1;
   }
 }

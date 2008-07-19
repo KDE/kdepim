@@ -107,9 +107,7 @@ void KNProtocolClient::waitForWork()
       selectRet = KSocks::self()->select(FD_SETSIZE, &fdsR, NULL, &fdsE, &tv);
       if (selectRet == 0) {
         if (holdTime <= 0) {
-#ifndef NDEBUG
-          qDebug("knode: KNProtocolClient::waitForWork(): hold time elapsed, closing connection.");
-#endif
+          kDebug(5003) << "hold time elapsed, closing connection.";
           closeConnection();               // nothing happend...
           holdTime = 1000 * account.hold();
         } else {
@@ -121,9 +119,7 @@ void KNProtocolClient::waitForWork()
         }
       } else {
         if (((selectRet > 0)&&(!FD_ISSET(fdPipeIn,&fdsR)))||(selectRet == -1)) {
-#ifndef NDEBUG
-          qDebug("knode: KNProtocolClient::waitForWork(): connection broken, closing it");
-#endif
+          kDebug(5003) << "connection broken, closing it";
           closeSocket();
         }
       }
@@ -190,9 +186,7 @@ bool KNProtocolClient::openConnection()
 {
   sendSignal(TSconnect);
 
-#ifndef NDEBUG
-  qDebug("knode: KNProtocolClient::openConnection(): opening connection");
-#endif
+  kDebug(5003) << "opening connection";
 
   if (account.server().isEmpty()) {
     job->setErrorString(i18n("Unable to resolve hostname"));
@@ -230,9 +224,7 @@ void KNProtocolClient::closeConnection()
   fd_set fdsW;
   timeval tv;
 
-#ifndef NDEBUG
-  qDebug("knode: KNProtocolClient::closeConnection(): closing connection");
-#endif
+  kDebug(5003) << "closing connection";
 
   FD_ZERO(&fdsW);
   FD_SET(tcpSocket, &fdsW);
@@ -340,9 +332,7 @@ bool KNProtocolClient::getNextLine()
       input = newInput;
       thisLine = input;
       inputEnd = input+div-1;
-#ifndef NDEBUG
-      qDebug("knode: KNProtocolClient::getNextLine(): input buffer enlarged");
-#endif
+      kDebug(5003) << "input buffer enlarged";
     }
     if (!waitForRead())
       return false;
@@ -490,9 +480,7 @@ bool KNProtocolClient::waitForRead()
   }
   if (ret > 0) {
     if (FD_ISSET(fdPipeIn,&fdsR)) {  // stop signal
-#ifndef NDEBUG
-      qDebug("knode: KNProtocolClient::waitForRead(): got stop signal");
-#endif
+      kDebug(5003) << "got stop signal";
       closeConnection();
       return false;
     }
@@ -552,9 +540,7 @@ bool KNProtocolClient::waitForWrite()
   }
   if (ret > 0) {
     if (FD_ISSET(fdPipeIn,&fdsR)) {  // stop signal
-#ifndef NDEBUG
-      qDebug("knode: KNProtocolClient::waitForWrite(): got stop signal");
-#endif
+      kDebug(5003) << "got stop signal";
       closeConnection();
       return false;
     }
