@@ -247,9 +247,9 @@ void SummaryPage::setResult( const Error & err ) {
     if ( err && !err.isCanceled() )
         m_resultLabel->setText( i18n( "The certificate could not be certified. <b>Error</b>: %1", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) ) );
     else if ( err.isCanceled() )
-        m_resultLabel->setText( "Certification canceled." );
+        m_resultLabel->setText( i18n("Certification canceled.") );
     else
-        m_resultLabel->setText("Certification successful." );
+        m_resultLabel->setText(i18n("Certification successful.") );
 }
 
 class CertifyCertificateDialog::Private {
