@@ -77,18 +77,19 @@ void ConfigGuiSynce::initGUI()
   layout->setMargin( KDialog::marginHint() );
 
   mContacts = new QCheckBox( this );
-  mContacts->setText( "Sync Contacts" );
+  mContacts->setText( i18n("Sync Contacts") );
   layout->addWidget( mContacts, 0, 0, 1, 2 );
 
   mTodos = new QCheckBox( this );
-  mTodos->setText( "Sync \'Todo\' items" );
+  mTodos->setText( i18n("Sync \'Todo\' items") );
   layout->addWidget( mTodos, 1, 0, 1, 2 );
 
   mCalendar = new QCheckBox( this );
-  mCalendar->setText( "Sync Calendar" );
+  mCalendar->setText( i18n("Sync Calendar") );
   layout->addWidget( mCalendar, 2, 0, 1, 2 );
 
   layout->addWidget( new QLabel( i18n( "File:" ), this ), 3, 0 );
   mFile = new KLineEdit( this );
   layout->addWidget( mFile, 3, 1 );
 }
+

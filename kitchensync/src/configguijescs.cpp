@@ -94,6 +94,6 @@ void ConfigGuiJescs::initGUI()
   layout->addWidget( mPassword, 2, 1, 1, 2 );
 
   mDelNotify = new QCheckBox( this );
-  mDelNotify->setText( "Notify attendees about event/task deletion" );
+  mDelNotify->setText( i18n("Notify attendees about event/task deletion") );
   layout->addWidget( mDelNotify, 3, 0, 1, 3 );
 }
