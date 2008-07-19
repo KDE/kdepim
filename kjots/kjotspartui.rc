@@ -24,6 +24,11 @@
       <Action name="format_text_foreground_color"/>
       <Action name="format_text_background_color"/>
       <Separator lineSeparator="true"/>
+      <Action name="format_align_left"/>
+      <Action name="format_align_center"/>
+      <Action name="format_align_right"/>
+      <Action name="format_align_justify"/>
+      <Separator lineSeparator="true"/>
       <Action name="format_list_style"/>
       <Action name="format_list_indent_more"/>
       <Action name="format_list_indent_less"/>
@@ -56,7 +61,7 @@
   <Menu name="help"></Menu>
  </MenuBar>
 
- <ToolBar name="mainToolBar" fullWidth="true" noMerge="1">
+ <ToolBar name="mainToolBar" fullWidth="true" noMerge="1" iconText="icononly">
   <text>Main Toobar</text>
   <Separator/>
   <Action name="file_print"/>
@@ -83,6 +88,11 @@
   <Action name="format_painter"/>
 </ToolBar>
 <ToolBar name="formatToolBar" iconText="icononly"><text>Format Toolbar</text>
+    <Separator lineSeparator="true"/>
+    <Action name="format_align_left"/>
+    <Action name="format_align_center"/>
+    <Action name="format_align_right"/>
+    <Action name="format_align_justify"/>
     <Separator lineSeparator="true"/>
     <Action name="format_list_style"/>
     <Action name="format_list_indent_more"/>
