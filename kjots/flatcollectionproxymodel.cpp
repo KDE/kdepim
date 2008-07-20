@@ -73,6 +73,7 @@ class FlatCollectionProxyModel::Private
     }
 
     QString ancestorSeparator;
+    QList< int > flattenRoles;
 
     FlatCollectionProxyModel *q;
 };
@@ -157,9 +158,14 @@ QModelIndex FlatCollectionProxyModel::mapFromSource(const QModelIndex & sourceIn
   return createIndex( row, sourceIndex.column() );
 }
 
+void FlatCollectionProxyModel::setRolesToFlatten( QList< int > roles )
+{
+    d->flattenRoles = roles;
+}
+
 QVariant FlatCollectionProxyModel::data(const QModelIndex & index, int role) const
 {
-  if (( role == Qt::EditRole ) || ( role == Qt::DisplayRole )) {
+  if ( d->flattenRoles.contains( role ) ) {
     QModelIndex sourceIndex = mapToSource( index );
     QString name = sourceIndex.data( role ).toString();
     sourceIndex = sourceIndex.parent();

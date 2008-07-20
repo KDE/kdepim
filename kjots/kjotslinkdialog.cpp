@@ -49,6 +49,7 @@ KJotsLinkDialog::KJotsLinkDialog(QWidget *parent, Bookshelf *bookshelf) :
 
     FlatCollectionProxyModel* proxyModel = new FlatCollectionProxyModel( this );
     proxyModel->setSourceModel( mBookshelf->model() );
+    proxyModel->setRolesToFlatten( QList< int >() << Qt::DisplayRole << Qt::EditRole );
     proxyModel->setAncestorSeparator( QLatin1String( " / " ) );
 
     QWidget *entries = new QWidget(this);
