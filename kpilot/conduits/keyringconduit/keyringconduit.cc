@@ -67,6 +67,7 @@ bool KeyringConduit::initDataProxies()
 {
 	FUNCTIONSETUP;
 
+	QCA::Initializer init;
 	if(!QCA::isSupported("tripledes-cbc")) {
 		WARNINGKPILOT << "Error: Triple DES not supported! Unable to continue.";
 		addSyncLogEntry(i18n("Error. Triple DES not supported! Unable to continue."));
@@ -134,7 +135,6 @@ bool KeyringConduit::initDataProxies()
 	
 	// Now we know that the password is correct we can create and store the
 	// DES-key, which is needed to create records.
-	QCA::Initializer init;
 	QCA::Hash passHash( "md5" );
 	passHash.update( pass.toLatin1() );
 	

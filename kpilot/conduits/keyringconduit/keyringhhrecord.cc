@@ -162,7 +162,7 @@ KeyringHHRecordBase KeyringHHRecord::unpack() const
 	
 	KeyringHHRecordBase data;
 
-	int n = fName.size() + 1; // Stringlengt + zero.
+	int n = fName.size() + 1; // String length + zero.
 	int size = fRecord->size();
 
 	QCA::Initializer init;

@@ -161,6 +161,11 @@ KeyringWidgetSetup::~KeyringWidgetSetup()
 		KIcon(QLatin1String("dialog-error")).pixmap(32));
 	fUi.fWalletErrorIcon->setPixmap(
 		KIcon(QLatin1String("dialog-error")).pixmap(32));
+
+	// the Initializer object sets things up, and
+	// also does cleanup when it goes out of scope
+	QCA::Initializer init;
+
 	// TODO: make sure that we're able to load all required crypto modules.
 	bool haveNecessaryQCAModules = QCA::isSupported("tripledes-cbc");
 
