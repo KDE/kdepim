@@ -44,6 +44,7 @@
 #include <kxmlguifactory.h>
 #include <ksqueezedtextlabel.h>
 
+#include <libkdepim/uistatesaver.h>
 #include "broadcaststatus.h"
 #include "recentaddresses.h"
 using KPIM::BroadcastStatus;
@@ -109,7 +110,9 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
 
   // splitters
   mPrimarySplitter = new QSplitter( Qt::Horizontal, this );
+  mPrimarySplitter->setObjectName( "mPrimarySplitter" );
   mSecondSplitter = new QSplitter( Qt::Vertical, mPrimarySplitter );
+  mSecondSplitter->setObjectName( "mSecondSplitter" );
 
   //article view
   mArticleViewer = new ArticleWidget( mPrimarySplitter, knGlobals.guiClient, actionCollection() );
@@ -945,6 +948,8 @@ void KNMainWidget::readOptions()
 
   resize(787,478);  // default optimized for 800x600
   //applyMainWindowSettings(KGlobal::config(),"mainWindow_options");
+
+  KPIM::UiStateSaver::restoreState( this, KConfigGroup( knGlobals.config(), "UI State" ) );
 }
 
 
@@ -958,6 +963,9 @@ void KNMainWidget::saveOptions()
   c_olView->writeConfig();
   h_drView->writeConfig();
   mArticleViewer->writeConfig();
+
+  KConfigGroup cfg( knGlobals.config(), "UI State" );
+  KPIM::UiStateSaver::saveState( this, cfg );
 }
 
 
