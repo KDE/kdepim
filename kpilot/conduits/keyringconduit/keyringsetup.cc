@@ -29,9 +29,11 @@
 #include "keyringsetup.moc"
 
 #include <QApplication>
+#include <QtCrypto>
 
 #include <kurlrequester.h>
 #include <kaboutdata.h>
+#include <kiconloader.h>
 
 #include "options.h"
 
@@ -141,18 +143,34 @@ KeyringWidgetSetup::~KeyringWidgetSetup()
 	// and don't let him hurt himself
 	if (fWallet)
 	{
-		fUi.fLabelWallet->setVisible(false);
+		fUi.fWalletErrorIcon->setVisible(false);
+		fUi.fWalletErrorMessage->setVisible(false);
 		fUi.fSavePassButton->setEnabled( true );
 		fUi.fPassEdit->setEnabled( true );
 	}
 	else
 	{
 		fUi.fAskPassButton->setChecked( true );
-		fUi.fLabelWallet->setVisible(true);
+		fUi.fWalletErrorIcon->setVisible(true);
+		fUi.fWalletErrorMessage->setVisible(true);
 		fUi.fSavePassButton->setEnabled( false );
 		fUi.fPassEdit->setEnabled( false );
 	}
 
+	fUi.fQCAErrorIcon->setPixmap(
+		KIcon(QLatin1String("dialog-error")).pixmap(32));
+	fUi.fWalletErrorIcon->setPixmap(
+		KIcon(QLatin1String("dialog-error")).pixmap(32));
+	// TODO: make sure that we're able to load all required crypto modules.
+	bool haveNecessaryQCAModules = QCA::isSupported("tripledes-cbc");
+
+	if (!haveNecessaryQCAModules) {
+		fUi.fQCAErrorIcon->setVisible(true);
+		fUi.fQCAErrorMessage->setVisible(true);
+	} else {
+		fUi.fQCAErrorIcon->setVisible(false);
+		fUi.fQCAErrorMessage->setVisible(false);
+	}
 
 	unmodified();
 }

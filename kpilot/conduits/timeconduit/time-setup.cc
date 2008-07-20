@@ -33,6 +33,7 @@
 #include <q3buttongroup.h>
 
 #include <kaboutdata.h>
+#include <kiconloader.h>
 
 #include "time-setup.moc"
 #include "timeConduitSettings.h"
@@ -79,5 +80,7 @@ void TimeWidgetConfig::load()
 	TimeConduitSettings::self()->readConfig();
 
 	fConfigWidget->directionGroup->setButton( TimeConduitSettings::direction() );
+	fConfigWidget->fInfoIcon->setPixmap(
+		KIcon(QLatin1String("dialog-information")).pixmap(32));
 }
 

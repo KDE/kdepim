@@ -5,8 +5,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>466</width>
-    <height>392</height>
+    <width>515</width>
+    <height>463</height>
    </rect>
   </property>
   <layout class="QVBoxLayout" >
@@ -22,24 +22,19 @@
       <number>0</number>
      </property>
      <widget class="QWidget" name="tab" >
+      <property name="geometry" >
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>495</width>
+        <height>417</height>
+       </rect>
+      </property>
       <attribute name="title" >
        <string>Keyring settings</string>
       </attribute>
-      <layout class="QGridLayout" >
-       <item row="0" column="0" >
-        <widget class="QLabel" name="label" >
-         <property name="sizePolicy" >
-          <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
-           <horstretch>0</horstretch>
-           <verstretch>0</verstretch>
-          </sizepolicy>
-         </property>
-         <property name="text" >
-          <string>Local keyring file:</string>
-         </property>
-        </widget>
-       </item>
-       <item row="0" column="1" >
+      <layout class="QVBoxLayout" name="verticalLayout_2" >
+       <item>
         <widget class="KUrlRequester" name="fLocalDatabaseUrl" >
          <property name="toolTip" >
           <string>&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
@@ -55,7 +50,20 @@ p, li { white-space: pre-wrap; }
          </property>
         </widget>
        </item>
-       <item row="1" column="0" colspan="2" >
+       <item>
+        <widget class="QLabel" name="label" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text" >
+          <string>Local keyring file:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
         <widget class="QGroupBox" name="groupBox" >
          <property name="sizePolicy" >
           <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
@@ -66,22 +74,13 @@ p, li { white-space: pre-wrap; }
          <property name="title" >
           <string>Password settings:</string>
          </property>
-         <layout class="QGridLayout" >
-          <item row="0" column="0" >
+         <layout class="QVBoxLayout" name="verticalLayout" >
+          <item>
            <layout class="QHBoxLayout" >
             <property name="spacing" >
              <number>6</number>
             </property>
-            <property name="leftMargin" >
-             <number>0</number>
-            </property>
-            <property name="topMargin" >
-             <number>0</number>
-            </property>
-            <property name="rightMargin" >
-             <number>0</number>
-            </property>
-            <property name="bottomMargin" >
+            <property name="margin" >
              <number>0</number>
             </property>
             <item>
@@ -100,7 +99,7 @@ p, li { white-space: pre-wrap; }
             </item>
            </layout>
           </item>
-          <item row="1" column="0" >
+          <item>
            <widget class="QRadioButton" name="fAskPassButton" >
             <property name="text" >
              <string>Ask for password at each sync</string>
@@ -110,46 +109,102 @@ p, li { white-space: pre-wrap; }
             </property>
            </widget>
           </item>
-          <item row="2" column="0" >
-           <widget class="QLabel" name="fLabelWallet" >
-            <property name="enabled" >
-             <bool>true</bool>
-            </property>
-            <property name="font" >
-             <font>
-              <pointsize>9</pointsize>
-              <italic>true</italic>
-             </font>
-            </property>
-            <property name="text" >
-             <string>Unable to access the KDE system wallet. Unable to load or save your password.</string>
-            </property>
-            <property name="scaledContents" >
-             <bool>false</bool>
-            </property>
-            <property name="wordWrap" >
-             <bool>true</bool>
-            </property>
-            <property name="indent" >
-             <number>16</number>
-            </property>
-           </widget>
+          <item>
+           <layout class="QHBoxLayout" name="horizontalLayout" >
+            <item>
+             <widget class="QLabel" name="fWalletErrorIcon" >
+              <property name="text" >
+               <string>ICON</string>
+              </property>
+              <property name="margin" >
+               <number>5</number>
+              </property>
+              <property name="indent" >
+               <number>5</number>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QLabel" name="fWalletErrorMessage" >
+              <property name="enabled" >
+               <bool>true</bool>
+              </property>
+              <property name="sizePolicy" >
+               <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+              <property name="font" >
+               <font>
+                <pointsize>9</pointsize>
+                <italic>true</italic>
+               </font>
+              </property>
+              <property name="text" >
+               <string>Unable to access the KDE system wallet. Unable to load or save your password.</string>
+              </property>
+              <property name="scaledContents" >
+               <bool>false</bool>
+              </property>
+              <property name="wordWrap" >
+               <bool>true</bool>
+              </property>
+              <property name="indent" >
+               <number>5</number>
+              </property>
+             </widget>
+            </item>
+           </layout>
           </item>
          </layout>
         </widget>
        </item>
-       <item row="2" column="0" colspan="2" >
+       <item>
         <spacer>
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0" >
           <size>
            <width>327</width>
            <height>51</height>
           </size>
          </property>
         </spacer>
+       </item>
+       <item>
+        <layout class="QHBoxLayout" name="horizontalLayout_2" >
+         <item>
+          <widget class="QLabel" name="fQCAErrorIcon" >
+           <property name="text" >
+            <string>ICON</string>
+           </property>
+           <property name="margin" >
+            <number>5</number>
+           </property>
+           <property name="indent" >
+            <number>5</number>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QLabel" name="fQCAErrorMessage" >
+           <property name="sizePolicy" >
+            <sizepolicy vsizetype="Preferred" hsizetype="Expanding" >
+             <horstretch>0</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
+           </property>
+           <property name="text" >
+            <string>Error: Unable to load triple DES QCA2 support.</string>
+           </property>
+           <property name="wordWrap" >
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </item>
       </layout>
      </widget>
