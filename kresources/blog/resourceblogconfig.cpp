@@ -69,7 +69,7 @@ ResourceBlogConfig::ResourceBlogConfig
   mAPI->addItem( "Movable Type" );
   mAPI->addItem( "MetaWeblog" );
   mAPI->addItem( "Blogger 1.0" );
-  mAPI->addItem( "Movable Type (Wordpress <2.4, Drupal<=5.6 workarounds)" );
+  mAPI->addItem( "Movable Type (Wordpress, Drupal <5.6 workarounds)" );
 
   mainLayout->addWidget( label, 4, 0 );
   mainLayout->addWidget( mAPI, 4, 1 );
@@ -99,9 +99,7 @@ ResourceBlogConfig::ResourceBlogConfig
 
 ResourceBlogConfig::~ResourceBlogConfig()
 {
-  if ( mBlog ) {
-    delete (mBlog);
-  }
+  delete ( mBlog );
 }
 
 void ResourceBlogConfig::loadSettings( KRES::Resource *res )
@@ -140,8 +138,8 @@ void ResourceBlogConfig::saveSettings( KRES::Resource *res )
     resource->setDownloadCount( mDownloadCount->text().toInt() );
     QPair<QString, QString> blog = resource->blog();
     if ( !mBlogs->currentText().isEmpty() ) {
-      resource->setBlog( mBlogs->itemData( mBlogs->currentIndex() ).toString(),
-                         mBlogs->currentText() );
+      resource->setBlog(mBlogs->itemData( mBlogs->currentIndex() ).toString(),
+          mBlogs->currentText() );
     }
     mReloadConfig->saveSettings( resource );
     mSaveConfig->saveSettings( resource );
@@ -159,7 +157,7 @@ void ResourceBlogConfig::slotBlogInfoRetrieved(
   foreach ( blog, blogs ) {
     mBlogs->addItem( blog.value( "name" ), blog.value( "id" ) );
   }
-  if ( mBlogs->count() ) {
+  if ( mBlogs->count() > 1 ) {
     mBlogs->setEnabled( true );
   }
 }
@@ -178,7 +176,7 @@ void ResourceBlogConfig::slotBlogAPIChanged( int index )
             const QList<QMap<QString,QString> > & ) ),
             this, SLOT( slotBlogInfoRetrieved(
                         const QList<QMap<QString,QString> > & ) ) );
-  //TODO: Error handling
+  //TODO: Better error handling
   mBlog->listBlogs();
   mBlogs->clear();
   mBlogs->setEnabled( false );
