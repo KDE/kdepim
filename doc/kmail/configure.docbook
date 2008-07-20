@@ -2025,7 +2025,21 @@ In <filename>kmailrc</filename>, scroll down to the heading
 <userinput>disregardUmask=true</userinput>. To reapply the default settings,
 either remove the line or set it to false.
 </para>
+</sect2>
 
+<sect2 id="showuseragent">
+<title>Show User Agent in Fancy Headers</title>
+<para>
+Starting in version 1.9, &kmail; can show the User-Agent or X-Mailer value
+from the message header when using Fancy Headers (see View->Headers menu).
+</para>
+
+<para>
+In <filename>kmailrc</filename>, scroll down to the heading
+<markup>[Reader]</markup> and add the line:
+<userinput>ShowUserAgent=true</userinput>. To reapply the default settings,
+either remove the line or set it to false.
+</para>
 </sect2>
 
 </sect1>
