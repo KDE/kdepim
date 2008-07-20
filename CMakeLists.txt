@@ -241,7 +241,8 @@ else ( ONLY_KLEO )
      message(STATUS "KitchenSync support DISABLED (Windows target).")
   endif(NOT WIN32)
 
-  macro_optional_add_subdirectory(korn)
+#enable korn in 4.2 if there is interest
+# macro_optional_add_subdirectory(korn)
   add_subdirectory(kresources)
   macro_optional_add_subdirectory(ktnef)
   macro_optional_add_subdirectory(kontact)
