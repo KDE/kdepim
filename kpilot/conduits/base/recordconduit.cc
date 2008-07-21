@@ -681,7 +681,7 @@ Record* RecordConduit::findMatch( HHRecord *hhRec )
 	{
 		Record *pcRec = fPCDataProxy->next();
 		
-		if( pcRec->equal( hhRec ) )
+		if( equal( pcRec, hhRec ) )
 		{
 			return pcRec;
 		}

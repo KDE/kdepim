@@ -49,6 +49,12 @@ public:
 	PilotRecord* pilotRecord() const;
 	
 	/**
+	 * Compares @p pcRecord with @p hhRec and returns true if they are considered
+	 * equal.
+	 */
+	virtual bool equal( const HHRecord* other ) const  = 0;
+	
+	/**
 	 * Return wether or not this record is marked for deletion and archiving.
 	 */
 	virtual bool isArchived() const;

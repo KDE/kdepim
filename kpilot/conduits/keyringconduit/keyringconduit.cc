@@ -202,7 +202,7 @@ bool KeyringConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 		return false;
 	}
 	
-	return pcRec->equal( hhRec );
+	return hhRec->equal( static_cast<const HHRecord*>( pcRec )  );
 }
 
 Record* KeyringConduit::createPCRecord( const HHRecord *hhRec )
@@ -230,10 +230,11 @@ void KeyringConduit::_copy( const Record *from, HHRecord *to )
 {
 	FUNCTIONSETUP;
 	
+	const KeyringHHRecord *krFrom = static_cast<const KeyringHHRecord*>( from );
+	
 	// Make sure we don't do unnecessary work.
-	if( !from->equal( to ) )
+	if( !krFrom->equal( to ) )
 	{
-		const KeyringHHRecord *krFrom = static_cast<const KeyringHHRecord*>( from );
 		KeyringHHRecord *krTo = static_cast<KeyringHHRecord*>( to );
 		
 		if( krTo->name() != krFrom->name() )

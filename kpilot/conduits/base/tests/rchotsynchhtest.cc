@@ -261,7 +261,8 @@ void RCHotSyncHHTest::testCase_6_5_1()
 	fConduit->hotSyncTest();
 	
 	Record *syncedPCRec = fConduit->pcDataProxy()->find( CSL1( "pc-1" ) );
-	Record *syncedHHRec = fConduit->hhDataProxy()->find( CSL1( "hh-1" ) );
+	HHRecord *syncedHHRec = static_cast<HHRecord*>(
+		fConduit->hhDataProxy()->find( CSL1( "hh-1" ) ) );
 	
 	// Records should be there.
 	QVERIFY( syncedPCRec );
@@ -269,7 +270,7 @@ void RCHotSyncHHTest::testCase_6_5_1()
 	
 	// Pc and hh record should have the values from the handheld record before 
 	// sync.
-	QVERIFY( syncedPCRec->equal( pcRec ) );
+	QVERIFY( syncedPCRec == pcRec );
 	QVERIFY( syncedHHRec->equal( hhRec ) );
 	
 	// There should be a valid mapping
@@ -296,7 +297,8 @@ void RCHotSyncHHTest::testCase_6_5_2()
 	// Everything is ok, do a hotsync now.
 	fConduit->hotSyncTest();
 	
-	Record *syncedHHRec = fConduit->hhDataProxy()->find( CSL1( "hh-2" ) );
+	HHRecord *syncedHHRec = static_cast<HHRecord*>(
+		fConduit->hhDataProxy()->find( CSL1( "hh-2" ) ) );
 	
 	QString pcRecId = fConduit->mapping()->pcRecordId( CSL1( "hh-2" ) );
 	
@@ -344,7 +346,8 @@ void RCHotSyncHHTest::testCase_6_5_3()
 	
 	// So... did hotsync do what whe expected it to do?
 	Record *syncedPCRec = fConduit->pcDataProxy()->find( CSL1( "pc-2" ) );
-	Record *syncedHHRec = fConduit->hhDataProxy()->find( CSL1( "hh-3" ) );
+	HHRecord *syncedHHRec = static_cast<HHRecord*>(
+		fConduit->hhDataProxy()->find( CSL1( "hh-3" ) ) );
 	
 	// Records should be there.
 	QVERIFY( syncedPCRec );
@@ -438,7 +441,7 @@ void RCHotSyncHHTest::testCase_6_5_5()
 	
 	// Pc and hh record should have the values from the pc record before sync.
 	QVERIFY( fConduit->equal( pcRec, syncedHHRec ) );
-	QVERIFY( syncedPCRec->equal( pcRec ) );
+	QVERIFY( syncedPCRec == pcRec );
 	
 	// Records are in sync so shouldn't be modified anymore after a hotsync.
 	QVERIFY( !syncedPCRec->isModified() );
@@ -480,7 +483,7 @@ void RCHotSyncHHTest::testCase_6_5_6()
 	
 	// Pc and hh record should have the values from the pc record before sync.
 	QVERIFY( fConduit->equal( pcRec, syncedHHRec ) );
-	QVERIFY( syncedPCRec->equal( pcRec ) );
+	QVERIFY( syncedPCRec == pcRec );
 	
 	// Records are in sync so shouldn't be modified anymore after a hotsync.
 	QVERIFY( !syncedPCRec->isModified() );
@@ -553,7 +556,8 @@ void RCHotSyncHHTest::testCase_6_5_9()
 	fConduit->hotSyncTest();
 	
 	Record *syncedPCRec = fConduit->pcDataProxy()->find( CSL1( "pc-8" ) );
-	Record *syncedHHRec = fConduit->hhDataProxy()->find( CSL1( "hh-8" ) );
+	HHRecord *syncedHHRec = static_cast<HHRecord*>(
+		fConduit->hhDataProxy()->find( CSL1( "hh-8" ) ) );
 	
 	// Records should be there.
 	QVERIFY( syncedPCRec );
@@ -642,7 +646,8 @@ void RCHotSyncHHTest::testCase_6_5_11()
 	QVERIFY( !pcRecordId.isNull() );
 	
 	Record *syncedPCRec = fConduit->pcDataProxy()->find( pcRecordId );
-	Record *syncedHHRec = fConduit->hhDataProxy()->find( CSL1( "hh-10" ) );
+	HHRecord *syncedHHRec = static_cast<HHRecord*>(
+		fConduit->hhDataProxy()->find( CSL1( "hh-10" ) ) );
 	
 	QVERIFY( syncedHHRec );
 	QVERIFY( syncedPCRec );
@@ -708,7 +713,8 @@ void RCHotSyncHHTest::testCase_6_5_13()
 	// Everything is ok, do a hotsync now.
 	fConduit->hotSyncTest();
 	
-	Record *syncedHHRec = fConduit->hhDataProxy()->find( CSL1( "hh-12" ) );
+	HHRecord *syncedHHRec = static_cast<HHRecord*>(
+		fConduit->hhDataProxy()->find( CSL1( "hh-12" ) ) );
 	
 	QString pcRecId = fConduit->mapping()->pcRecordId( CSL1( "hh-12" ) );
 	
@@ -753,7 +759,7 @@ void RCHotSyncHHTest::testCase_6_5_14()
 	QVERIFY( syncedPCRec );
 	
 	// Pc shouldn't have changed
-	QVERIFY( syncedPCRec->equal( pcRec ) );
+	QVERIFY( syncedPCRec == pcRec );
 	
 	// Records still shouldn't be modified after a hotsync.
 	QVERIFY( !syncedPCRec->isModified() );
@@ -801,7 +807,7 @@ void RCHotSyncHHTest::testCase_6_5_15()
 	QVERIFY( !syncedHHRec );
 	
 	// Pc shouldn't have changed
-	QVERIFY( syncedPCRec->equal( pcRec ) );
+	QVERIFY( syncedPCRec == pcRec );
 	// Records still shouldn't be modified after a hotsync.
 	QVERIFY( !syncedPCRec->isModified() );
 	
@@ -904,7 +910,7 @@ void RCHotSyncHHTest::testCase_6_5_18()
 	
 	// Verify the startsituation
 	QVERIFY( !pcRec->isModified() );
-	QVERIFY( !pcRec->equal( backupRec ) );
+	QVERIFY( !fConduit->equal( pcRec, backupRec ) );
 	QVERIFY( !hhRec->isModified() );
 	QVERIFY( !backupRec->isModified() );
 	QVERIFY( backupRec->equal( hhRec ) );
@@ -921,14 +927,15 @@ void RCHotSyncHHTest::testCase_6_5_18()
 	QVERIFY( fConduit->mapping()->pcRecordId( CSL1( "hh-16" ) ) == CSL1( "pc-16" ) );
 	
 	Record *syncedPCRec = fConduit->pcDataProxy()->find( CSL1( "pc-16" ) );
-	Record *syncedHHRec = fConduit->hhDataProxy()->find( CSL1( "hh-16" ) );
+	HHRecord *syncedHHRec = static_cast<HHRecord*>(
+		fConduit->hhDataProxy()->find( CSL1( "hh-16" ) ) );
 	
 	// Records should be there
 	QVERIFY( syncedPCRec );
 	QVERIFY( syncedHHRec );
 	
 	// Changes in pc rec should still only be on pc.
-	QVERIFY( pcRec->equal( syncedPCRec ) );
+	QVERIFY( pcRec == syncedPCRec );
 	QVERIFY( hhRec->equal( syncedHHRec ) );
 	
 	delete fConduit;
@@ -946,7 +953,7 @@ void RCHotSyncHHTest::testCase_6_5_19()
 	
 	// Verify the startsituation
 	QVERIFY( !pcRec->isModified() );
-	QVERIFY( pcRec->equal( backupRec ) );
+	QVERIFY( fConduit->equal( pcRec, backupRec ) );
 	QVERIFY( !hhRec->isModified() );
 	QVERIFY( !backupRec->isModified() );
 	QVERIFY( !backupRec->equal( hhRec ) );
@@ -971,7 +978,7 @@ void RCHotSyncHHTest::testCase_6_5_19()
 	QVERIFY( syncedHHRec );
 	
 	// Changes in hh rec should still only be on handheld.
-	QVERIFY( pcRec->equal( syncedPCRec ) );
+	QVERIFY( pcRec == syncedPCRec );
 	QVERIFY( hhRec->equal( syncedHHRec ) );
 	
 	delete fConduit;
@@ -989,7 +996,7 @@ void RCHotSyncHHTest::testCase_6_5_20()
 	
 	// Verify the startsituation
 	QVERIFY( !pcRec->isModified() );
-	QVERIFY( !pcRec->equal( backupRec ) );
+	QVERIFY( !fConduit->equal( pcRec, backupRec ) );
 	QVERIFY( !hhRec->isModified() );
 	QVERIFY( !backupRec->isModified() );
 	QVERIFY( !backupRec->equal( hhRec ) );
@@ -1015,7 +1022,7 @@ void RCHotSyncHHTest::testCase_6_5_20()
 	
 	// Changes in pc rec should still only be on pc and changes in hh rec only on
 	// handheld.
-	QVERIFY( pcRec->equal( syncedPCRec ) );
+	QVERIFY( pcRec == syncedPCRec );
 	QVERIFY( hhRec->equal( syncedHHRec ) );
 	
 	delete fConduit;

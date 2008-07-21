@@ -60,30 +60,23 @@ KeyringHHRecord::KeyringHHRecord( const QString &name
 	pack( data );
 }
 
-bool KeyringHHRecord::equal( const Record* other ) const
+bool KeyringHHRecord::equal( const HHRecord* other ) const
 {
 	FUNCTIONSETUP;
 	
 	// Do not compare last synced date, that's unnecessary.
-	const KeyringHHRecord *krOther = dynamic_cast<const KeyringHHRecord*>( other );
+	const KeyringHHRecord *krOther = static_cast<const KeyringHHRecord*>( other );
 	
-	if( krOther )
-	{
-		bool equal = true;
-		
-		KeyringHHRecordBase data = unpack();
-		
-		equal = equal && ( fName == krOther->name() );
-		equal = equal && ( data.account == krOther->account() );
-		equal = equal && ( data.password == krOther->password() );
-		equal = equal && ( data.notes == krOther->notes() );
-		
-		return equal;
-	}
-	else
-	{
-		return false;
-	}
+	bool equal = true;
+	
+	KeyringHHRecordBase data = unpack();
+	
+	equal = equal && ( fName == krOther->name() );
+	equal = equal && ( data.account == krOther->account() );
+	equal = equal && ( data.password == krOther->password() );
+	equal = equal && ( data.notes == krOther->notes() );
+	
+	return equal;
 }
 
 QString KeyringHHRecord::name() const

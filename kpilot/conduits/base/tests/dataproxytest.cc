@@ -130,7 +130,7 @@ void DataProxyTest::testRemove()
 	
 	QString id1 = fProxy.create( rec1 );
 	
-	QVERIFY( fProxy.find( id1 )->equal( rec1 ) );
+	QVERIFY( rec1 == fProxy.find( id1 ) );
 	
 	fProxy.remove( id1 );
 	
@@ -212,11 +212,11 @@ void DataProxyTest::testIterationModeAll()
 	fProxy.resetIterator();
 	
 	QVERIFY( fProxy.hasNext() );
-	QVERIFY( fProxy.next()->equal( rec1 ) );
+	QVERIFY( fProxy.next() == rec1 );
 	QVERIFY( fProxy.hasNext() );
-	QVERIFY( fProxy.next()->equal( rec2 ) );
+	QVERIFY( fProxy.next() == rec2 );
 	QVERIFY( fProxy.hasNext() );
-	QVERIFY( fProxy.next()->equal( rec3 ) );
+	QVERIFY( fProxy.next() == rec3 );
 	QVERIFY( !fProxy.hasNext() );
 }
 
@@ -249,9 +249,9 @@ void DataProxyTest::testIterationModeModified()
 	fProxy.resetIterator();
 	
 	QVERIFY( fProxy.hasNext() );
-	QVERIFY( fProxy.next()->equal( rec1 ) );
+	QVERIFY( fProxy.next() == rec1 );
 	QVERIFY( fProxy.hasNext() );
-	QVERIFY( fProxy.next()->equal( rec3 ) );
+	QVERIFY( fProxy.next() == rec3 );
 	QVERIFY( !fProxy.hasNext() );
 }
 
@@ -333,18 +333,18 @@ void DataProxyTest::testCommitUpdated()
 	fProxy.commit();
 	
 	QVERIFY( fProxy.updateCount() == 2 );
-	QVERIFY( !fProxy.updatedRecords()->value( rec3->id() )->equal( rec1 ) );
-	QVERIFY( !fProxy.updatedRecords()->value( rec4->id() )->equal( rec2 ) );
-	QVERIFY( fProxy.updatedRecords()->value( rec3->id() )->equal( rec3 ) );
-	QVERIFY( fProxy.updatedRecords()->value( rec4->id() )->equal( rec4 ) );
+	QVERIFY( fProxy.updatedRecords()->value( rec3->id() ) != rec1 );
+	QVERIFY( fProxy.updatedRecords()->value( rec4->id() ) != rec2 );
+	QVERIFY( fProxy.updatedRecords()->value( rec3->id() ) == rec3 );
+	QVERIFY( fProxy.updatedRecords()->value( rec4->id() ) == rec4 );
 	
 	fProxy.rollback();
 	
 	QVERIFY( fProxy.updateCount() == 4 );
-	QVERIFY( fProxy.updatedRecords()->value( rec3->id() )->equal( rec1 ) );
-	QVERIFY( fProxy.updatedRecords()->value( rec4->id() )->equal( rec2 ) );
-	QVERIFY( !fProxy.updatedRecords()->value( rec3->id() )->equal( rec3 ) );
-	QVERIFY( !fProxy.updatedRecords()->value( rec4->id() )->equal( rec4 ) );
+	QVERIFY( fProxy.updatedRecords()->value( rec3->id() ) == rec1 );
+	QVERIFY( fProxy.updatedRecords()->value( rec4->id() ) == rec2 );
+	QVERIFY( fProxy.updatedRecords()->value( rec3->id() ) != rec3 );
+	QVERIFY( fProxy.updatedRecords()->value( rec4->id() ) != rec4 );
 }
 
 void DataProxyTest::testCommitDeleted()
@@ -373,8 +373,8 @@ void DataProxyTest::testCommitDeleted()
 	fProxy.commit();
 	
 	QVERIFY( fProxy.deleteCount() == 2 );
-	QVERIFY( fProxy.deletedRecords()->value( rec1->id() )->equal( rec1 ) );
-	QVERIFY( fProxy.deletedRecords()->value( rec2->id() )->equal( rec2 ) );
+	QVERIFY( fProxy.deletedRecords()->value( rec1->id() ) == rec1 );
+	QVERIFY( fProxy.deletedRecords()->value( rec2->id() ) == rec2 );
 	
 	fProxy.rollback();
 	

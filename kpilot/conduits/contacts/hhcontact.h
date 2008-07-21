@@ -58,7 +58,7 @@ public:
 	 * means that if pcRec->equal( hhRec ) is true, then also hhRec->equal( pcRec )
 	 * should be true.
 	 */
-	/* virtual */ bool equal( const Record* other ) const;
+	/* virtual */ bool equal( const HHRecord* other ) const;
 	
 	/**
 	 * Returns whether or the addressee represented by this record is equal to

@@ -561,8 +561,16 @@ void TestRecordConduit::_copy( const Record *from, HHRecord *to )
 bool TestRecordConduit::equal( const Record *pcRecord, const HHRecord *hhRecord 
 	) const
 {
-	// This is possible because of the implementation of equal in TestRecord.
-	return pcRecord->equal( hhRecord );
+	const TestRecord *pcRec = static_cast<const TestRecord*>( pcRecord );
+	const TestHHRecord *hhRec = static_cast<const TestHHRecord*>( hhRecord );
+	
+	bool allEqual = true;	
+	foreach( const QString& field, pcRec->fields() )
+	{
+		allEqual = allEqual && ( pcRec->value( field ) == hhRec->value( field ) );
+	}
+		
+	return allEqual && (pcRec->fields() == hhRec->fields() );
 }
 
 HHRecord* TestRecordConduit::newHHRecord( Record *pcRecord )

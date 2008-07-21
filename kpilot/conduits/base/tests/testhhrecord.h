@@ -89,6 +89,6 @@ public:
 
 	virtual QString toString() const;
 	
-	virtual bool equal( const Record *other ) const;
+	virtual bool equal( const HHRecord *other ) const;
 };
 #endif

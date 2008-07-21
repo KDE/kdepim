@@ -91,7 +91,5 @@ public:
 	virtual void synced();
 
 	virtual QString toString() const;
-	
-	virtual bool equal( const Record *other ) const;
 };
 #endif

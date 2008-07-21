@@ -105,6 +105,7 @@ const QString TestHHRecord::id() const
 
 void TestHHRecord::setCategory( int id, const QString& category )
 {
+	Q_UNUSED( id );
 	fCategory = category;
 }
 
@@ -172,25 +173,9 @@ TestHHRecord* TestHHRecord::duplicate() const
 	return new TestHHRecord( this );
 }
 
-bool TestHHRecord::equal( const Record *rec ) const
+bool TestHHRecord::equal( const HHRecord *rec ) const
 {
-	if( const TestRecord *other = dynamic_cast<const TestRecord*>( rec ) )
-	{
-		QStringList fields = other->fields();
-		QStringListIterator it(fields);
-		
-		bool allEqual = true;
-		
-		while( it.hasNext() )
-		{
-			QString field = it.next();
-			
-			allEqual = allEqual && ( fValues.value( field ) == other->value( field ) );
-		}
-		
-		return allEqual && (fields == fFields);
-	}
-	else if( const TestHHRecord *other = dynamic_cast<const TestHHRecord*>( rec ) )
+	if( const TestHHRecord *other = dynamic_cast<const TestHHRecord*>( rec ) )
 	{
 		QStringList fields = other->fields();
 		QStringListIterator it(fields);

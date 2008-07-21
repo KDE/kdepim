@@ -79,7 +79,9 @@ bool Contacts::equal( const Record *pcRec, const HHRecord *hhRec ) const
 		return false;
 	}
 	
-	return pcRec->equal( hhRec );
+	// TODO: Implement
+	
+	return false;
 }
 
 Record* Contacts::createPCRecord( const HHRecord *hhRec )

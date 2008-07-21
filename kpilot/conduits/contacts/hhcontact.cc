@@ -59,7 +59,7 @@ void HHContact::copyTo( AkonadiContact* to ) const
 	// TODO: Implement
 }
 
-bool HHContact::equal( const Record* other ) const
+bool HHContact::equal( const HHRecord* other ) const
 {
 	FUNCTIONSETUP;
 	// TODO: Implement
