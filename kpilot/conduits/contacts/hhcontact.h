@@ -37,9 +37,6 @@ class PilotAddress;
 
 class HHContact : public HHRecord
 {
-private:
-	PilotAddress fPilotAddress;
-
 public:
 	HHContact( PilotRecord* rec, const QString& category );
 	
@@ -57,6 +54,11 @@ public:
 	 * Returns the PilotAddress object represented by this record.
 	 */
 	PilotAddress pilotAddress() const;
+
+	/**
+	 * Sets the pilot address represented by this record.
+	 */
+	void setPilotAddress( const PilotAddress& address );
 
 	/**
 	 * Returns a string representation of the record.

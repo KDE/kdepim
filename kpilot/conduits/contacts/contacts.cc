@@ -469,6 +469,8 @@ void Contacts::_copy( const Record *from, HHRecord *to )
 	int categoryForHH = bestMatchedCategory( fromAbEntry.categories()
 		, toPilotAddr.category() );
 	toPilotAddr.setCategory( categoryForHH );
+	
+	hhTo->setPilotAddress( toPilotAddr );
 }
 
 void Contacts::_copy( const HHRecord *from, Record *to  )

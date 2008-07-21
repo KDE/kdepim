@@ -35,13 +35,17 @@
 HHContact::HHContact( PilotRecord *rec, const QString& category ) 
 	: HHRecord( rec, category )
 {
-	// TODO: Implement
 }
 
-HHContact::HHContact()
-	: HHRecord( 0, CSL1( "Unfiled" ) )
+HHContact::HHContact() : HHRecord( 0, CSL1( "Unfiled" ) )
 {
-	// TODO: implement
+	// Create an empty record.
+	pi_buffer_t *buf = pi_buffer_new( QString( "" ).size() );
+	Pilot::toPilot( QString(""), buf->data, 0 );
+		
+	fRecord = new PilotRecord( buf, 0, 0, 0);
+	fRecord->setCategory( Pilot::Unfiled );
+	fCategory = "Unfiled";
 }
 
 bool HHContact::equal( const HHRecord* other ) const
@@ -49,12 +53,20 @@ bool HHContact::equal( const HHRecord* other ) const
 	FUNCTIONSETUP;
 	
 	const HHContact* hrOther = static_cast<const HHContact*>( other );
-	return hrOther->pilotAddress() == fPilotAddress;
+	return hrOther->pilotAddress() == PilotAddress( fRecord );
 }
 
 PilotAddress HHContact::pilotAddress() const
 {
-	return fPilotAddress;
+	return PilotAddress( fRecord );
+}
+
+void HHContact::setPilotAddress( const PilotAddress& address )
+{
+	// Free the old data.
+	delete fRecord;
+	// And set it to the updated address.
+	fRecord = address.pack();
 }
 
 QString HHContact::toString() const
