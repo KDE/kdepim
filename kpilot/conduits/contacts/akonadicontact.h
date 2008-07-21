@@ -30,9 +30,7 @@
 #include "record.h"
 
 #include <akonadi/item.h>
-
-class HHRecord;
-class HHContact;
+#include <kabc/addressee.h>
 
 class AkonadiContact : public Record
 {
@@ -42,10 +40,7 @@ private:
 public:
 	AkonadiContact( const Akonadi::Item& item );
 	
-	/**
-	 * Creates an AkonadiContact object which is a copy of @param other.
-	 */
-	AkonadiContact( const HHRecord* other );
+	AkonadiContact();
 	
 	~AkonadiContact();
 	
@@ -56,6 +51,11 @@ public:
 	 * unchanged.
 	 */
 	void addCategory( const QString& category );
+	
+	/**
+	 * Returns the addressee
+	 */
+	KABC::Addressee addressee() const;
 	
 	/**
 	 * Returns the list of categories set for this record.
@@ -73,20 +73,6 @@ public:
 	/* virtual */ bool containsCategory( const QString& category ) const;
 	
 	/**
-	 * Copies the complete content of this record to the HHContact, overwriting all
-	 * values.
-	 */
-	void copyTo( HHContact* to ) const;
-	
-	/**
-	 * Returns whether or not the current record is equal to @p other. Implementing 
-	 * conduits should add support for both implementing records for this. This
-	 * means that if pcRec->equal( hhRec ) is true, then also hhRec->equal( pcRec )
-	 * should be true.
-	 */
-	/* virtual */ bool equal( const Record* other ) const;
-	
-	/**
 	 * Returns the id of this record.
 	 */
 	/* virtual */ const QString id() const;
@@ -94,7 +80,7 @@ public:
 	/**
 	 * Returns the Akonadi::Item used to represent this contact.
 	 */
-	Akonadi::Item item() const;
+	Akonadi::Item& item();
 	
 	/**
 	 * Returns true when this record is marked for deletion.
@@ -105,6 +91,11 @@ public:
 	 * Returns true if the record is modified and/or if it's marked as deleted.
 	 */
 	/* virtual */ bool isModified() const;
+	
+	/**
+	 * Sets the given addressee as payload of this record.
+	 */
+	void setAddressee( const KABC::Addressee& addressee );
 	
 	/**
 	 * Sets the given category as the only category to the record.

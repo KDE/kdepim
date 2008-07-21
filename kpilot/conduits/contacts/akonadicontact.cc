@@ -38,11 +38,11 @@ AkonadiContact::AkonadiContact( const Akonadi::Item& item ) : fItem( item )
 	// so we don't check that again here.
 }
 
-AkonadiContact::AkonadiContact( const HHRecord* other )
+AkonadiContact::AkonadiContact()
 {
-	const HHContact* hhOther = static_cast<const HHContact*>( other );
+	KABC::Addressee addressee;
 	fItem.setMimeType( "text/directory" );
-	fItem.setPayload<KABC::Addressee>( hhOther->addressee() );
+	fItem.setPayload<KABC::Addressee>( addressee );
 }
 
 AkonadiContact::~AkonadiContact()
@@ -60,6 +60,13 @@ void AkonadiContact::addCategory( const QString& category )
 	}
 	
 	fItem.setPayload<KABC::Addressee>( a );
+}
+
+KABC::Addressee AkonadiContact::addressee() const
+{
+	FUNCTIONSETUP;
+	
+	return fItem.payload<KABC::Addressee>();
 }
 
 QStringList AkonadiContact::categories() const
@@ -83,26 +90,6 @@ bool AkonadiContact::containsCategory( const QString& category ) const
 	return fItem.payload<KABC::Addressee>().hasCategory( category );
 }
 
-void AkonadiContact::copyTo( HHContact* to ) const
-{
-	FUNCTIONSETUP;
-	
-	to->setAddressee( fItem.payload<KABC::Addressee>() );
-}
-
-bool AkonadiContact::equal( const Record* other ) const
-{
-	FUNCTIONSETUP;
-	
-	if( !other )
-	{
-		return false;
-	}
-	
-	const HHContact* hhOther =  static_cast<const HHContact*>( other );
-	return hhOther->equal( fItem.payload<KABC::Addressee>() );
-}
-
 const QString AkonadiContact::id() const
 {
 	FUNCTIONSETUP;
@@ -110,7 +97,7 @@ const QString AkonadiContact::id() const
 	return QString::number( fItem.id() );
 }
 
-Akonadi::Item AkonadiContact::item() const
+Akonadi::Item& AkonadiContact::item()
 {
  FUNCTIONSETUP;
 	
@@ -131,6 +118,13 @@ bool AkonadiContact::isModified() const
 	// Here we need the last synced time stamp and the last modified time stamp of
 	// the item.
 	return false;
+}
+
+void AkonadiContact::setAddressee( const KABC::Addressee& addressee )
+{
+	FUNCTIONSETUP;
+	
+	fItem.setPayload<KABC::Addressee>( addressee );
 }
 
 void AkonadiContact::setCategory( const QString& category )

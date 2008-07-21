@@ -38,45 +38,23 @@ HHContact::HHContact( PilotRecord *rec, const QString& category )
 	// TODO: Implement
 }
 
-HHContact::HHContact( const Record* other ) 
+HHContact::HHContact()
 	: HHRecord( 0, CSL1( "Unfiled" ) )
 {
-	// TODO: Implement
-	pi_buffer_t *buf = pi_buffer_new( QString( "" ).size() );
-	Pilot::toPilot( QString(""), buf->data, 0 );
-	fRecord = new PilotRecord( buf, 0, 0, 0);
-}
-
-KABC::Addressee HHContact::addressee() const
-{
-	return KABC::Addressee();
-}
-
-void HHContact::copyTo( AkonadiContact* to ) const
-{
-	FUNCTIONSETUP;
-	
-	// TODO: Implement
+	// TODO: implement
 }
 
 bool HHContact::equal( const HHRecord* other ) const
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
-	return false;
+	
+	const HHContact* hrOther = static_cast<const HHContact*>( other );
+	return hrOther->pilotAddress() == fPilotAddress;
 }
 
-bool HHContact::equal( const KABC::Addressee& addressee ) const
+PilotAddress HHContact::pilotAddress() const
 {
-	FUNCTIONSETUP;
-	// TODO: Implement
-	return false;
-}
-
-void HHContact::setAddressee( const KABC::Addressee& a ) const
-{
-	FUNCTIONSETUP;
-	// TODO: Implement
+	return fPilotAddress;
 }
 
 QString HHContact::toString() const

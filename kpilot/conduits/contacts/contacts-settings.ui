@@ -11,70 +11,50 @@
    </rect>
   </property>
   <layout class="QGridLayout" >
-   <property name="margin" >
+   <property name="leftMargin" >
     <number>0</number>
    </property>
-   <property name="spacing" >
+   <property name="topMargin" >
+    <number>0</number>
+   </property>
+   <property name="rightMargin" >
+    <number>0</number>
+   </property>
+   <property name="bottomMargin" >
+    <number>0</number>
+   </property>
+   <property name="horizontalSpacing" >
+    <number>6</number>
+   </property>
+   <property name="verticalSpacing" >
     <number>6</number>
    </property>
    <item row="0" column="0" >
     <widget class="QTabWidget" name="tabWidget" >
      <property name="enabled" >
-      <bool>false</bool>
+      <bool>true</bool>
      </property>
      <property name="currentIndex" >
-      <number>0</number>
+      <number>1</number>
      </property>
-     <widget class="QWidget" name="tab_2" >
-      <attribute name="title" >
-       <string>Page</string>
-      </attribute>
-      <layout class="QGridLayout" name="gridLayout_5" >
-       <item row="0" column="0" >
-        <widget class="QLabel" name="label" >
-         <property name="font" >
-          <font>
-           <pointsize>18</pointsize>
-           <weight>75</weight>
-           <bold>true</bold>
-          </font>
-         </property>
-         <property name="text" >
-          <string>WORK IN PROGRESS!</string>
-         </property>
-         <property name="textFormat" >
-          <enum>Qt::RichText</enum>
-         </property>
-         <property name="alignment" >
-          <set>Qt::AlignCenter</set>
-         </property>
-        </widget>
-       </item>
-      </layout>
-     </widget>
      <widget class="QWidget" name="tab" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>585</width>
-        <height>377</height>
-       </rect>
-      </property>
       <attribute name="title" >
        <string>General</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_2" >
+      <layout class="QGridLayout" >
        <item row="0" column="0" >
-        <layout class="QVBoxLayout" name="verticalLayout" >
+        <layout class="QVBoxLayout" >
          <item>
           <widget class="QGroupBox" name="groupBox" >
            <property name="title" >
             <string>Location</string>
            </property>
-           <layout class="QGridLayout" name="gridLayout" >
+           <layout class="QGridLayout" >
             <item row="0" column="0" colspan="2" >
              <widget class="QRadioButton" name="fSyncStdAbook" >
+              <property name="enabled" >
+               <bool>false</bool>
+              </property>
               <property name="whatsThis" >
                <string>&lt;qt>Select this option to synchronize with KDE's standard addressbook (i.e. the addressbook that you edit in KAddressBook, and which you use in KMail)&lt;/qt></string>
               </property>
@@ -117,6 +97,9 @@
          </item>
          <item>
           <widget class="QCheckBox" name="fArchive" >
+           <property name="enabled" >
+            <bool>false</bool>
+           </property>
            <property name="whatsThis" >
             <string>&lt;qt>If you delete an address on your handheld, you can determine if it should be archived on the PC. If you check that and this checkbox, the address will be added to your addressbook, but no longer synchronized with the handheld.&lt;/qt></string>
            </property>
@@ -126,14 +109,34 @@
           </widget>
          </item>
          <item>
-          <spacer name="verticalSpacer" >
+          <widget class="QLabel" name="label_2" >
+           <property name="font" >
+            <font>
+             <pointsize>18</pointsize>
+             <weight>75</weight>
+             <bold>true</bold>
+            </font>
+           </property>
+           <property name="text" >
+            <string>WORK IN PROGRESS!</string>
+           </property>
+           <property name="textFormat" >
+            <enum>Qt::RichText</enum>
+           </property>
+           <property name="alignment" >
+            <set>Qt::AlignCenter</set>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer>
            <property name="orientation" >
             <enum>Qt::Vertical</enum>
            </property>
-           <property name="sizeHint" stdset="0" >
+           <property name="sizeHint" >
             <size>
-             <width>20</width>
-             <height>40</height>
+             <width>569</width>
+             <height>151</height>
             </size>
            </property>
           </spacer>
@@ -143,24 +146,16 @@
       </layout>
      </widget>
      <widget class="QWidget" name="tab" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>585</width>
-        <height>377</height>
-       </rect>
-      </property>
       <attribute name="title" >
        <string>Conflicts</string>
       </attribute>
-      <layout class="QGridLayout" name="gridLayout_4" >
+      <layout class="QGridLayout" >
        <item row="0" column="0" >
         <widget class="QGroupBox" name="groupBox_2" >
          <property name="title" >
           <string>Conflict Resolution</string>
          </property>
-         <layout class="QGridLayout" name="gridLayout_3" >
+         <layout class="QGridLayout" >
           <item row="0" column="0" colspan="2" >
            <widget class="QLabel" name="textLabel1_7" >
             <property name="text" >
@@ -245,14 +240,14 @@
         </widget>
        </item>
        <item row="1" column="0" >
-        <spacer name="spacer6" >
+        <spacer>
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
          </property>
          <property name="sizeType" >
           <enum>QSizePolicy::Expanding</enum>
          </property>
-         <property name="sizeHint" stdset="0" >
+         <property name="sizeHint" >
           <size>
            <width>20</width>
            <height>41</height>
@@ -263,22 +258,26 @@
       </layout>
      </widget>
      <widget class="QWidget" name="tab" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>585</width>
-        <height>377</height>
-       </rect>
-      </property>
       <attribute name="title" >
        <string>Fields</string>
       </attribute>
       <layout class="QGridLayout" >
-       <property name="margin" >
+       <property name="leftMargin" >
         <number>11</number>
        </property>
-       <property name="spacing" >
+       <property name="topMargin" >
+        <number>11</number>
+       </property>
+       <property name="rightMargin" >
+        <number>11</number>
+       </property>
+       <property name="bottomMargin" >
+        <number>11</number>
+       </property>
+       <property name="horizontalSpacing" >
+        <number>6</number>
+       </property>
+       <property name="verticalSpacing" >
         <number>6</number>
        </property>
        <item row="0" column="0" >
@@ -408,14 +407,14 @@
         </widget>
        </item>
        <item row="3" column="0" >
-        <spacer name="Spacer2" >
+        <spacer>
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
          </property>
          <property name="sizeType" >
           <enum>QSizePolicy::Expanding</enum>
          </property>
-         <property name="sizeHint" stdset="0" >
+         <property name="sizeHint" >
           <size>
            <width>0</width>
            <height>20</height>
@@ -426,14 +425,6 @@
       </layout>
      </widget>
      <widget class="QWidget" name="tab" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>585</width>
-        <height>377</height>
-       </rect>
-      </property>
       <attribute name="title" >
        <string>Custom Fields</string>
       </attribute>
@@ -706,14 +697,14 @@
         </widget>
        </item>
        <item row="8" column="1" >
-        <spacer name="spacer5" >
+        <spacer>
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
          </property>
          <property name="sizeType" >
           <enum>QSizePolicy::Expanding</enum>
          </property>
-         <property name="sizeHint" stdset="0" >
+         <property name="sizeHint" >
           <size>
            <width>31</width>
            <height>30</height>
@@ -734,6 +725,7 @@
    <class>KUrlRequester</class>
    <extends>QFrame</extends>
    <header>kurlrequester.h</header>
+   <container>1</container>
   </customwidget>
  </customwidgets>
  <tabstops>
