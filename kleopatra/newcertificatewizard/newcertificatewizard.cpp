@@ -68,7 +68,6 @@
 #include <KDebug>
 #include <KTempDir>
 #include <KMessageBox>
-#include <KToolInvocation>
 
 #include <QRegExpValidator>
 #include <QLineEdit>
@@ -77,6 +76,7 @@
 #include <QFile>
 #include <QUrl>
 #include <QFileDialog>
+#include <QDesktopServices>
 
 #include <boost/range.hpp>
 
@@ -726,11 +726,10 @@ namespace {
             if ( pgp() )
                 return;
             const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
-            KToolInvocation::invokeMailer( config.readEntry( "CAEmailAddress" ), QString(), QString(), // to, cc, bcc
-                                           i18n("Please process this certificate."), // subject
-                                           i18n("Please process this certificate and inform the sender about the location to fetch the resulting certificate.\n\nThanks,\n"), // body
-                                           QString(), // unused
-                                           QStringList( url() ) ); // attachments
+            invokeMailer( config.readEntry( "CAEmailAddress" ), // to
+                          i18n("Please process this certificate."), // subject
+                          i18n("Please process this certificate and inform the sender about the location to fetch the resulting certificate.\n\nThanks,\n"), // body
+                          url() ); // attachment
         }
 
         void slotSendCertificateByEMail() {
@@ -751,12 +750,26 @@ namespace {
             exportCertificateCommand = 0;
             if ( fileName.isEmpty() )
                 return;
-            KToolInvocation::invokeMailer( QString(), QString(), QString(), // to, cc, bcc
-                                           i18n("My new OpenPGP certificate"), // subject
-                                           i18n("Please find attached my new OpenPGP certificate."), // body
-                                           QString(), // unused,
-                                           QStringList( fileName ) ); // attachments
+            invokeMailer( QString(), // to
+                          i18n("My new OpenPGP certificate"), // subject
+                          i18n("Please find attached my new OpenPGP certificate."), // body
+                          fileName );
         }            
+
+        static void invokeMailer( const QString & to, const QString & subject, QString body, const QString & attachment ) {
+            // KToolInvocation::invokeMailer is broken on Windows, and openUrl works fine on Unix, too.
+
+            // RFC 2368 says body's linebreaks need to be encoded as
+            // "%0D%0A", so normalize body to CRLF:
+            body.replace( QLatin1Char( '\n' ), QLatin1String( "\r\n" ) ).remove( QLatin1String( "\r\r" ) );
+
+            QByteArray encoded = "mailto:?to=" + QUrl::toPercentEncoding( to )
+                + "&subject=" + QUrl::toPercentEncoding( subject )
+                + "&body=" + QUrl::toPercentEncoding( body ) ;
+            if ( !attachment.isEmpty() )
+                encoded += "&attach=" + QUrl::toPercentEncoding( QFileInfo( attachment ).absoluteFilePath() );
+            QDesktopServices::openUrl( QUrl::fromEncoded( encoded ) );
+        }
 
         void slotUploadCertificateToDirectoryServer() {
             if ( pgp() )
