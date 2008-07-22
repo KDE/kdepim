@@ -464,6 +464,9 @@ namespace {
             ui.setupUi( this );
             connect( ui.resultLE, SIGNAL(textChanged(QString)),
                      SIGNAL(completeChanged()) );
+            // The email doesn't necessarily show up in ui.resultLE:
+            connect( ui.emailLE, SIGNAL(textChanged(QString)),
+                     SIGNAL(completeChanged()) );
             connect( ui.addEmailToDnCB, SIGNAL(toggled(bool)),
                      SLOT(slotUpdateResultLabel()) );
             registerDialogPropertiesAsFields();
@@ -1072,7 +1075,8 @@ void EnterDetailsPage::updateForm() {
             widgets.push_back( le );
 
         // don't connect twice:
-        le->disconnect( this );
+        disconnect( le, SIGNAL(textChanged(QString)),
+                    this, SLOT(slotUpdateResultLabel()) );
         connect( le, SIGNAL(textChanged(QString)),
                  this, SLOT(slotUpdateResultLabel()) );
     }
