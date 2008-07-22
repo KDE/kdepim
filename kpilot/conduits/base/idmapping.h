@@ -149,6 +149,11 @@ public:
 	void archiveRecord( const QString &hhRecordId );
 
 	/**
+	 * Returns the last time that a sync occurred.
+	 */
+	QDateTime lastSyncedDate() const;
+	
+	/**
 	 * Sets the date/time on which the last sync is executed to @p dateTime.
 	 */
 	void setLastSyncedDate( const QDateTime &dateTime );

@@ -242,6 +242,11 @@ void IDMapping::archiveRecord( const QString &hhRecordId )
 	}
 }
 
+QDateTime IDMapping::lastSyncedDate() const
+{
+	return fSource.lastSyncedDate();
+}
+
 void IDMapping::setLastSyncedDate( const QDateTime &dateTime )
 {
 	FUNCTIONSETUP;
