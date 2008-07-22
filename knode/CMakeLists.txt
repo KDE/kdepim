@@ -80,9 +80,13 @@ kde4_add_kcfg_files(knodecommon_LIB_SRCS settings_base.kcfgc )
 
 kde4_add_library(knodecommon SHARED ${knodecommon_LIB_SRCS})
 
-kdepim4_link_unique_libraries(knodecommon ${KDE4_KMIME_LIBRARY} ${KDE4_KUTILS_LIBRARY} ${KDE4_KHTML_LIBRARY} ${KDE4_KPIMUTILS_LIBRARY} ${KDE4_MAILTRANSPORT_LIBRARY} kpgp kdepim)
+kdepim4_link_unique_libraries(knodecommon ${KDE4_KMIME_LIBRARY} ${KDE4_KUTILS_LIBRARY} ${KDE4_KIO_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_KABC_LIBS} ${KDE4_KHTML_LIBS} ${KDE4_KPIMUTILS_LIBRARY} ${KDE4_MAILTRANSPORT_LIBRARY} kpgp kdepim)
 
-set_target_properties(knodecommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+set_target_properties(knodecommon
+   PROPERTIES VERSION ${GENERIC_LIB_VERSION}
+   SOVERSION ${GENERIC_LIB_SOVERSION}
+   ${KDE4_DISABLE_PROPERTY}LINK_INTERFACE_LIBRARIES "${KDE4_KUTILS_LIBRARY};${KDE4_KIO_LIBS};${KDE4_KDE3SUPPORT_LIBS}"
+)
 install(TARGETS knodecommon  DESTINATION ${LIB_INSTALL_DIR})
 
 
@@ -109,7 +113,7 @@ kde4_add_plugin(knodepart ${knodepart_PART_SRCS})
 
 
 
-kdepim4_link_unique_libraries(knodepart  ${KDE4_KDECORE_LIBS} knodecommon )
+kdepim4_link_unique_libraries(knodepart  ${KDE4_KPARTS_LIBS} knodecommon )
 
 install(TARGETS knodepart  DESTINATION ${PLUGIN_INSTALL_DIR})
 

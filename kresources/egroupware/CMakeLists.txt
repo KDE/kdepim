@@ -54,7 +54,7 @@ kde4_add_kcfg_files(knotes_xmlrpc_LIB_SRCS knotes_egroupwareprefs.kcfgc )
 kde4_add_library(knotes_xmlrpc SHARED ${knotes_xmlrpc_LIB_SRCS})
 set_target_properties(knotes_xmlrpc PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 
-target_link_libraries(knotes_xmlrpc  ${KDE4_KCAL_LIBS} kdepim )
+target_link_libraries(knotes_xmlrpc  ${KDE4_KCAL_LIBS} kdepim ${QT_QT3SUPPORT_LIBRARY})
 
 
 install(TARGETS knotes_xmlrpc  DESTINATION ${LIB_INSTALL_DIR})
