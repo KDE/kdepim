@@ -35,6 +35,8 @@
 
 #include <selftest/selftest.h>
 
+#include <gpgme++/global.h>
+
 #include <QString>
 
 namespace Kleo {
@@ -50,13 +52,18 @@ namespace _detail {
         /* reimp */ QString longError() const { return m_explaination; }
         /* reimp */ QString proposedFix() const { return m_proposedFix; }
 
+        /* reimp */ bool skipped() const { return m_skipped; }
         /* reimp */ bool passed() const { return m_passed; }
+
+    protected:
+        bool ensureEngineVersion( GpgME::Engine, int major, int minor, int patch );
 
     protected:
         const QString m_name;
         QString m_error;
         QString m_explaination;
         QString m_proposedFix;
+        bool m_skipped : 1;
         bool m_passed : 1;
     };
 

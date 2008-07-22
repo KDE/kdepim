@@ -49,9 +49,13 @@ SelfTestImplementation::SelfTestImplementation( const QString & title )
       m_error(),
       m_explaination(),
       m_proposedFix(),
+      m_skipped( false ),
       m_passed( false )
 {
 
 }
 
 SelfTestImplementation::~SelfTestImplementation() {}
+
+// bool SelfTestImplementation::ensureEngineVersion( GpgME::Engine engine, int major, int minor, int patch )
+// in enginecheck.cpp, since it reuses the instrumentation there

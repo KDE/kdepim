@@ -43,11 +43,15 @@
 #include <gpg-error.h>
 
 #include <KLocale>
+#include <KDebug>
 
 #include <QFile>
+#include <QRegExp>
 
 #include <boost/shared_ptr.hpp>
+#include <boost/range.hpp>
 
+#include <algorithm>
 #include <cassert>
 
 using namespace Kleo;
@@ -145,3 +149,69 @@ shared_ptr<SelfTest> Kleo::makeGpgSmEngineCheckSelfTest() {
 shared_ptr<SelfTest> Kleo::makeGpgConfEngineCheckSelfTest() {
     return shared_ptr<SelfTest>( new EngineCheck( GpgME::GpgConfEngine ) );
 }
+
+//
+// SelfTestImplementation (parts)
+//
+
+static bool is_version( const char * actual, int major, int minor, int patch ) {
+    QRegExp rx( "(\\d+)\\.(\\d+)\\.(\\d+)(?:-svn\\d+)?.*" );
+    if ( !rx.exactMatch( QString::fromUtf8( actual ) ) ) {
+        kDebug() << "Can't parse version " << actual;
+        return false;
+    }
+    bool ok;
+    int actual_version[3];
+    for ( int i = 0 ; i < 3 ; ++i ) {
+        ok = false;
+        actual_version[i] = rx.cap( i+1 ).toUInt( &ok );
+        assert( ok );
+    }
+
+    kDebug() << "Parsed" << actual << "as: "
+             << actual_version[0] << '.'
+             << actual_version[1] << '.'
+             << actual_version[2] << '.' ;
+
+    const int required_version[] = { major, minor, patch };
+
+    // return ! ( actual_version < required_version )
+    ok = !std::lexicographical_compare( begin(  actual_version  ), end(  actual_version  ),
+                                        begin( required_version ), end( required_version ) );
+    kDebug( ok )  << QString( "%1.%2.%3" ).arg( major ).arg( minor ).arg( patch ) << "<=" << actual ;
+    kDebug( !ok ) << QString( "%1.%2.%3" ).arg( major ).arg( minor ).arg( patch ) << ">" << actual ;
+    return ok;
+}
+
+bool SelfTestImplementation::ensureEngineVersion( GpgME::Engine engine, int major, int minor, int patch ) {
+    const Error err = GpgME::checkEngine( engine );
+    assert( !err || err.code() == GPG_ERR_INV_ENGINE );
+
+    const EngineInfo ei = GpgME::engineInfo( engine );
+
+    m_skipped = err || !is_version( ei.version(), major, minor, patch );
+
+    if ( !m_skipped )
+        return true;
+
+    if ( !err && ei.version() ) {
+        // properly installed, but too old
+        m_explaination = i18nc( "@info",
+                                "<para><application>%1</application> v%2.%3.%4 is required for this test, but only %5 is installed.</para>",
+                                engine_name( engine ), major, minor, patch, QString::fromUtf8( ei.version() ) );
+        m_proposedFix += i18nc( "@info",
+                                "<para>Install <application>%1</application> version %2 or higher.</para>",
+                                engine_name( engine ), QString::fromLatin1( "%1.%2.%3" ).arg( major ).arg( minor ).arg( patch ) );
+    } else {
+        // not properly installed
+        m_explaination = i18nc( "@info",
+                                "<para><application>%1</application> is required for this test, but does not seem not available.</para>"
+                                "<para>See tests further up for more information.</para>",
+                                engine_name( engine ) );
+        m_proposedFix = i18nc( "@info %1: test name",
+                               "<para>See \"%1\" above.</para>", test_name( engine ) );
+    }
+
+    return false;
+}
+
