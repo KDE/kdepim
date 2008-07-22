@@ -148,7 +148,7 @@ inline KABC::PhoneNumber::Type faxTypeOnPC()
 inline bool _equal(const QString & str1, const QString & str2)
 {
 	return ( str1.isEmpty() && str2.isEmpty() ) || ( str1 == str2 );
-};
+}
 
 const QString appString = CSL1( "KPILOT" ); ///< Identifier for the application
 const QString flagString = CSL1( "Flag" ); ///< Flags: synced or not
