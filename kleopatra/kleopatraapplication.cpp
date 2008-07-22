@@ -93,10 +93,10 @@ static const struct {
     { "encrypt-sign",       I18N_NOOP("Encrypt and/or sign file(s)"),             "E" },
     { "decrypt",            I18N_NOOP("Decrypt file(s)"),                         "d" },
     { "verify",             I18N_NOOP("Verify file/signature"),                   "V" },
-    { "decrypt-verify",     I18N_NOOP("Decrypt and/or verify files(s)"),          "D" },
+    { "decrypt-verify",     I18N_NOOP("Decrypt and/or verify file(s)"),          "D" },
     //{ "show-certificate",   I18N_NOOP("Show Certificate(s) by fingerprint(s)"),   ""  },
 };
-    
+
 
 static KCmdLineOptions make_kleopatra_args() {
     KCmdLineOptions options;
@@ -139,7 +139,7 @@ public:
     void setupKeyCache() {
         keyCache = KeyCache::mutableInstance();
         watcher.reset( new FileSystemWatcher );
-  
+
         watcher->addPaths( gnupgFileWatchList() );
         watcher->setDelay( 1000 );
         keyCache->addFileSystemWatcher( watcher );
@@ -151,7 +151,7 @@ public:
         const QByteArray envOptions = qgetenv( "KLEOPATRA_LOGOPTIONS" );
         const bool logAll = envOptions.trimmed() == "all";
         const QList<QByteArray> options = envOptions.isEmpty() ? default_logging_options() : envOptions.split( ',' ) ;
-        
+
         const QByteArray dirNative = qgetenv( "KLEOPATRA_LOGDIR" );
         if ( dirNative.isEmpty() )
             return;
@@ -162,12 +162,12 @@ public:
             kDebug() << "Could not open file for logging: " << logFileName << "\nLogging disabled";
             return;
         }
-        
+
         log->setOutputDirectory( dir );
         if ( logAll || options.contains( "io" ) )
             log->setIOLoggingEnabled( true );
         qInstallMsgHandler( Log::messageHandler );
-    
+
 #ifdef HAVE_USABLE_ASSUAN
         if ( logAll || options.contains( "pipeio" ) )
             KDPipeIODevice::setDebugLevel( KDPipeIODevice::Debug );
