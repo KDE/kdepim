@@ -12,9 +12,9 @@
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
     GNU General Public License for more details.
 
-    You should have received a copy of the GNU General Public License
-    along with this program; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 
     As a special exception, permission is given to link this program
     with any edition of Qt, and distribute the resulting executable,
@@ -1206,7 +1206,7 @@ void KABCore::initActions()
   connect(mActionMailVCard, SIGNAL(triggered(bool) ), SLOT( mailVCard() ));
 
   action = coll->addAction( "file_new_distributionlist" );
-  action->setIcon( KIcon("kontact_contacts") );
+  action->setIcon( KIcon("preferences-contact-list") );
   action->setText( i18n( "&New Distribution List..." ) );
   connect( action, SIGNAL( triggered(bool) ), SLOT( newDistributionList() ) );
   action->setWhatsThis( i18n( "Create a new distribution list<p>You will be presented with a dialog where you can create a new distribution list.</p>" ) );

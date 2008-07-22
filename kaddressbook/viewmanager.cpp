@@ -504,7 +504,7 @@ void ViewManager::startDrag()
     }
   }
 
-  drag->setPixmap( KIconLoader::global()->loadIcon( "vcard", KIconLoader::Desktop ) );
+  drag->setPixmap( KIconLoader::global()->loadIcon( "view-pim-contacts", KIconLoader::Desktop ) );
   drag->start();
 }
 
