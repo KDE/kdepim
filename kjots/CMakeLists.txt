@@ -60,7 +60,7 @@ kde4_add_plugin(kjotspart ${kjotspart_PART_SRCS} ${kjots_SRCS} )
 
 target_link_libraries(kjotspart ${KDE4_KPARTS_LIBS} kdepim)
 
-install( FILES kjotspart.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR} )
+install( FILES kjotspart.desktop  DESTINATION ${SERVICES_INSTALL_DIR} )
 install( FILES kjotspartui.rc  DESTINATION ${DATA_INSTALL_DIR}/kjots)
 
 install(TARGETS kjotspart  DESTINATION ${PLUGIN_INSTALL_DIR} )
