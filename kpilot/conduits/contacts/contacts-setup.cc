@@ -29,14 +29,17 @@
 
 #include "contacts-setup.h"
 
+#include <akonadi/collectionfilterproxymodel.h>
+#include <akonadi/collectionmodel.h>
+
+#include <kiconloader.h>
 #include <kaboutdata.h>
 
 #include "options.h"
 
 #include "contacts-setup.moc"
 #include "contactsSettings.h"
-
-
+#include "collectioncombobox.h"
 
 static KAboutData *createAbout()
 {
@@ -65,30 +68,30 @@ ContactsWidgetSetup::ContactsWidgetSetup( QWidget *w, const QVariantList & ) :
 	fWidget = new QWidget();
 	fUi.setupUi( fWidget );
 	
-	fConduitName  =i18n("Contacts");
+	setupAkonadiTab();
+	
+	fConduitName = i18n("Contacts");
 	
 	fAbout = createAbout();
 	ConduitConfigBase::addAboutPage( fUi.tabWidget, fAbout );
 
-	/*
-	fWidget=fConfigWidget;
-	fConfigWidget->fAbookFile->setMode(KFile::File);
-#define CM(a,b) connect(fConfigWidget->a,b,this,SLOT(modified()));
-	CM(fSyncDestination,SIGNAL(clicked(int)));
-	CM(fAbookFile,SIGNAL(textChanged(const QString &)));
-	CM(fArchive,SIGNAL(toggled(bool)));
-	CM(fConflictResolution,SIGNAL(activated(int)));
-	CM(fOtherPhone,SIGNAL(activated(int)));
-	CM(fAddress,SIGNAL(activated(int)));
-	CM(fFax,SIGNAL(activated(int)));
-	CM(fCustom0,SIGNAL(activated(int)));
-	CM(fCustom1,SIGNAL(activated(int)));
-	CM(fCustom2,SIGNAL(activated(int)));
-	CM(fCustom3,SIGNAL(activated(int)));
-	CM(fCustomDate, SIGNAL(activated(int)));
-	CM(fCustomDate, SIGNAL(textChanged(const QString&)));
+	connect( fCollections, SIGNAL( selectionChanged( const Akonadi::Collection& ) )
+		,this , SLOT( modified() ) );
+
+#define CM( a, b ) connect( fUi.a, b, this, SLOT( modified() ) );
+	CM( fConflictResolution, SIGNAL( activated( int ) ) );
+	CM( fOtherPhone, SIGNAL( activated( int ) ) );
+	CM( fAddress, SIGNAL( activated( int ) ) );
+	CM( fFax, SIGNAL( activated( int ) ) );
+	CM( fCustom0, SIGNAL( activated( int ) ) );
+	CM( fCustom1, SIGNAL( activated( int ) ) );
+	CM( fCustom2, SIGNAL( activated( int ) ) );
+	CM( fCustom3, SIGNAL( activated( int ) ) );
+	CM( fCustomDate, SIGNAL( activated( int ) ) );
+	CM( fCustomDate, SIGNAL( textChanged( const QString& ) ) );
 #undef CM
-	*/
+
+	ContactsSettings::self()->readConfig();
 }
 
 ContactsWidgetSetup::~ContactsWidgetSetup()
@@ -100,71 +103,85 @@ ContactsWidgetSetup::~ContactsWidgetSetup()
 {
 	FUNCTIONSETUP;
 
-	/*
-	Q3ButtonGroup*grp=fConfigWidget->fSyncDestination;
-	AbbrowserSettings::setAddressbookType(grp->id(grp->selected()));
-	AbbrowserSettings::setFileName(fConfigWidget->fAbookFile->url().url());
-	AbbrowserSettings::setArchiveDeleted(fConfigWidget->fArchive->isChecked());
-
 	// Conflicts page
-	AbbrowserSettings::setConflictResolution(
-		fConfigWidget->fConflictResolution->currentItem()+SyncAction::eCROffset);
+	ContactsSettings::setConflictResolution(
+		fUi.fConflictResolution->currentIndex() + SyncAction::eCROffset );
 
 	// Fields page
-	AbbrowserSettings::setPilotOther(fConfigWidget->fOtherPhone->currentItem());
-	AbbrowserSettings::setPilotStreet(fConfigWidget->fAddress->currentItem());
-	AbbrowserSettings::setPilotFax(fConfigWidget->fFax->currentItem());
+	ContactsSettings::setPilotOther( fUi.fOtherPhone->currentIndex() );
+	ContactsSettings::setPilotStreet( fUi.fAddress->currentIndex() );
+	ContactsSettings::setPilotFax( fUi.fFax->currentIndex() );
 
 	// Custom fields page
-	AbbrowserSettings::setCustom0(fConfigWidget->fCustom0->currentItem());
-	AbbrowserSettings::setCustom1(fConfigWidget->fCustom1->currentItem());
-	AbbrowserSettings::setCustom2(fConfigWidget->fCustom2->currentItem());
-	AbbrowserSettings::setCustom3(fConfigWidget->fCustom3->currentItem());
-	int fmtindex=fConfigWidget->fCustomDate->currentItem();
-	AbbrowserSettings::setCustomDateFormat(
-	  (fmtindex==0)?(QString::null):fConfigWidget->fCustomDate->currentText() );	//krazy:exclude=nullstrassign for old broken gcc
+	ContactsSettings::setCustom0( fUi.fCustom0->currentIndex() );
+	ContactsSettings::setCustom1( fUi.fCustom1->currentIndex() );
+	ContactsSettings::setCustom2( fUi.fCustom2->currentIndex() );
+	ContactsSettings::setCustom3( fUi.fCustom3->currentIndex() );
+	int fmtindex = fUi.fCustomDate->currentIndex();
+	ContactsSettings::setCustomDateFormat(
+	  (fmtindex == 0) ? QString() : fUi.fCustomDate->currentText() );
 
-	AbbrowserSettings::self()->writeConfig();
+	ContactsSettings::self()->writeConfig();
 	unmodified();
-	*/
 }
 
 /* virtual */ void ContactsWidgetSetup::load()
 {
 	FUNCTIONSETUP;
-	/*
-	AbbrowserSettings::self()->readConfig();
-
+	
 	// General page
-	fConfigWidget->fSyncDestination->setButton(AbbrowserSettings::addressbookType());
-	fConfigWidget->fAbookFile->setUrl(AbbrowserSettings::fileName());
-	fConfigWidget->fArchive->setChecked(AbbrowserSettings::archiveDeleted());
+	//fConfigWidget->fArchive->setChecked(AbbrowserSettings::archiveDeleted());
 
 	// Conflicts page
-	fConfigWidget->fConflictResolution->setCurrentItem(
-	  AbbrowserSettings::conflictResolution() - SyncAction::eCROffset );
+	//fUi.fConflictResolution->setCurrentItem(
+	//  ContactsSettings::conflictResolution() - SyncAction::eCROffset );
 
 	// Fields page
-	fConfigWidget->fOtherPhone->setCurrentItem(AbbrowserSettings::pilotOther());
-	fConfigWidget->fAddress->setCurrentItem(AbbrowserSettings::pilotStreet());
-	fConfigWidget->fFax->setCurrentItem(AbbrowserSettings::pilotFax());
+	fUi.fOtherPhone->setCurrentIndex( ContactsSettings::pilotOther() );
+	fUi.fAddress->setCurrentIndex( ContactsSettings::pilotStreet() );
+	fUi.fFax->setCurrentIndex( ContactsSettings::pilotFax() );
 
 	// Custom fields page
-	fConfigWidget->fCustom0->setCurrentItem(AbbrowserSettings::custom0());
-	fConfigWidget->fCustom1->setCurrentItem(AbbrowserSettings::custom1());
-	fConfigWidget->fCustom2->setCurrentItem(AbbrowserSettings::custom2());
-	fConfigWidget->fCustom3->setCurrentItem(AbbrowserSettings::custom3());
-	QString datefmt=AbbrowserSettings::customDateFormat();
-	if (datefmt.isEmpty())
+	fUi.fCustom0->setCurrentIndex( ContactsSettings::custom0() );
+	fUi.fCustom1->setCurrentIndex( ContactsSettings::custom1() );
+	fUi.fCustom2->setCurrentIndex( ContactsSettings::custom2() );
+	fUi.fCustom3->setCurrentIndex( ContactsSettings::custom3() );
+	QString datefmt = ContactsSettings::customDateFormat();
+	
+	// TODO: Make this work.
+	if( datefmt.isEmpty() )
 	{
-		fConfigWidget->fCustomDate->setCurrentItem(0);
+		fUi.fCustomDate->setCurrentIndex( 0 );
 	}
 	else
 	{
-		fConfigWidget->fCustomDate->setCurrentText(datefmt);
+		//fUi.fCustomDate->setCurrentIndex( datefmt );
 	}
-	*/
+
 	unmodified();
+}
+
+void ContactsWidgetSetup::setupAkonadiTab()
+{
+	fCollectionModel = new Akonadi::CollectionModel( this );
+	
+	fCollectionFilterModel = new Akonadi::CollectionFilterProxyModel();
+	fCollectionFilterModel->addMimeTypeFilter( "text/x-vcard" );
+	fCollectionFilterModel->addMimeTypeFilter( "text/directory" );
+	fCollectionFilterModel->addMimeTypeFilter( "text/vcard" );
+	fCollectionFilterModel->setSourceModel( fCollectionModel );
+	
+	fCollectionsLabel = new QLabel( fUi.akonadiTab );
+	fCollectionsLabel->setText( "Akonadi addresbook collection:" );
+	fCollections = new CollectionComboBox( fUi.akonadiTab );
+	fCollections->setModel( fCollectionFilterModel );
+	
+	fUi.fInfoIcon->setPixmap( 
+		KIcon( QLatin1String( "dialog-information" ) ).pixmap( 32 ) );
+	
+	fUi.gridLayout2->addWidget( fCollections );
+	fUi.hboxLayout->addWidget( fCollectionsLabel, 1 );
+	fUi.hboxLayout->addWidget( fCollections, 2 );
 }
 
 /* static */ ConduitConfigBase* ContactsWidgetSetup::create(QWidget *w)

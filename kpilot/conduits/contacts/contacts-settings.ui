@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>593</width>
+    <width>608</width>
     <height>408</height>
    </rect>
   </property>
@@ -23,129 +23,92 @@
    <property name="bottomMargin" >
     <number>0</number>
    </property>
-   <property name="horizontalSpacing" >
-    <number>6</number>
-   </property>
-   <property name="verticalSpacing" >
-    <number>6</number>
-   </property>
    <item row="0" column="0" >
     <widget class="QTabWidget" name="tabWidget" >
      <property name="enabled" >
       <bool>true</bool>
      </property>
      <property name="currentIndex" >
-      <number>1</number>
+      <number>0</number>
      </property>
-     <widget class="QWidget" name="tab" >
+     <widget class="QWidget" name="akonadiTab" >
       <attribute name="title" >
-       <string>General</string>
+       <string>Akonadi</string>
       </attribute>
       <layout class="QGridLayout" >
        <item row="0" column="0" >
-        <layout class="QVBoxLayout" >
+        <layout class="QHBoxLayout" />
+       </item>
+       <item row="1" column="0" >
+        <layout class="QHBoxLayout" >
+         <property name="spacing" >
+          <number>5</number>
+         </property>
+         <property name="leftMargin" >
+          <number>5</number>
+         </property>
+         <property name="topMargin" >
+          <number>0</number>
+         </property>
          <item>
-          <widget class="QGroupBox" name="groupBox" >
-           <property name="title" >
-            <string>Location</string>
-           </property>
-           <layout class="QGridLayout" >
-            <item row="0" column="0" colspan="2" >
-             <widget class="QRadioButton" name="fSyncStdAbook" >
-              <property name="enabled" >
-               <bool>false</bool>
-              </property>
-              <property name="whatsThis" >
-               <string>&lt;qt>Select this option to synchronize with KDE's standard addressbook (i.e. the addressbook that you edit in KAddressBook, and which you use in KMail)&lt;/qt></string>
-              </property>
-              <property name="text" >
-               <string>&amp;Standard addressbook</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0" >
-             <widget class="QRadioButton" name="fSyncFile" >
-              <property name="enabled" >
-               <bool>false</bool>
-              </property>
-              <property name="whatsThis" >
-               <string>&lt;qt>Select this option to use a specific address book file, instead of the standard KDE address book. This file must be in the vCard format (.vcf). Type the location of this file in the edit box or select it clicking the file picker button.&lt;/qt></string>
-              </property>
-              <property name="text" >
-               <string>vCard &amp;file:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="1" >
-             <widget class="KUrlRequester" name="fAbookFile" >
-              <property name="enabled" >
-               <bool>false</bool>
-              </property>
-              <property name="sizePolicy" >
-               <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-              <property name="whatsThis" >
-               <string>&lt;qt>Enter the vCard file name here or select it by clicking the file picker button. vCard is a standard format for exchanging contact information. &lt;/qt></string>
-              </property>
-             </widget>
-            </item>
-           </layout>
-          </widget>
-         </item>
-         <item>
-          <widget class="QCheckBox" name="fArchive" >
-           <property name="enabled" >
-            <bool>false</bool>
-           </property>
-           <property name="whatsThis" >
-            <string>&lt;qt>If you delete an address on your handheld, you can determine if it should be archived on the PC. If you check that and this checkbox, the address will be added to your addressbook, but no longer synchronized with the handheld.&lt;/qt></string>
+          <widget class="QLabel" name="fInfoIcon" >
+           <property name="sizePolicy" >
+            <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+             <horstretch>1</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
            <property name="text" >
-            <string>Store &amp;archived records in the KDE addressbook</string>
-           </property>
-          </widget>
-         </item>
-         <item>
-          <widget class="QLabel" name="label_2" >
-           <property name="font" >
-            <font>
-             <pointsize>18</pointsize>
-             <weight>75</weight>
-             <bold>true</bold>
-            </font>
-           </property>
-           <property name="text" >
-            <string>WORK IN PROGRESS!</string>
-           </property>
-           <property name="textFormat" >
-            <enum>Qt::RichText</enum>
+            <string>ICON</string>
            </property>
            <property name="alignment" >
-            <set>Qt::AlignCenter</set>
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
            </property>
           </widget>
          </item>
          <item>
-          <spacer>
-           <property name="orientation" >
-            <enum>Qt::Vertical</enum>
+          <widget class="QLabel" name="label" >
+           <property name="sizePolicy" >
+            <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+             <horstretch>8</horstretch>
+             <verstretch>0</verstretch>
+            </sizepolicy>
            </property>
-           <property name="sizeHint" >
-            <size>
-             <width>569</width>
-             <height>151</height>
-            </size>
+           <property name="text" >
+            <string>Do not change the collection once you have synced your device with one of the Akonadi Collections. There are currently no advanced checks in the code so prepare for the worst when you decide to do it anyway. We are working on this. Please contact us in #kpilot on irc.freenode.org if you have problems.</string>
            </property>
-          </spacer>
+           <property name="alignment" >
+            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+           </property>
+           <property name="wordWrap" >
+            <bool>true</bool>
+           </property>
+           <property name="margin" >
+            <number>5</number>
+           </property>
+           <property name="indent" >
+            <number>0</number>
+           </property>
+          </widget>
          </item>
         </layout>
        </item>
+       <item row="2" column="0" >
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeHint" >
+          <size>
+           <width>20</width>
+           <height>261</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab" >
+     <widget class="QWidget" name="conflictsTab" >
       <attribute name="title" >
        <string>Conflicts</string>
       </attribute>
@@ -257,7 +220,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab" >
+     <widget class="QWidget" name="fieldsTab" >
       <attribute name="title" >
        <string>Fields</string>
       </attribute>
@@ -424,7 +387,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab" >
+     <widget class="QWidget" name="customFieldsTab" >
       <attribute name="title" >
        <string>Custom Fields</string>
       </attribute>
@@ -720,38 +683,12 @@
  </widget>
  <layoutdefault spacing="6" margin="11" />
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
- <customwidgets>
-  <customwidget>
-   <class>KUrlRequester</class>
-   <extends>QFrame</extends>
-   <header>kurlrequester.h</header>
-   <container>1</container>
-  </customwidget>
- </customwidgets>
  <tabstops>
-  <tabstop>fArchive</tabstop>
   <tabstop>tabWidget</tabstop>
   <tabstop>fOtherPhone</tabstop>
   <tabstop>fAddress</tabstop>
   <tabstop>fFax</tabstop>
  </tabstops>
  <resources/>
- <connections>
-  <connection>
-   <sender>fSyncFile</sender>
-   <signal>toggled(bool)</signal>
-   <receiver>fAbookFile</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>20</x>
-     <y>20</y>
-    </hint>
-   </hints>
-  </connection>
- </connections>
+ <connections/>
 </ui>

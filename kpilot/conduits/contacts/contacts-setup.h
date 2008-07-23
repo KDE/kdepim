@@ -33,7 +33,14 @@
 
 #include "ui_contacts-settings.h"
 
+class CollectionComboBox;
 class KAboutData;
+
+namespace Akonadi {
+	class Collection;
+	class CollectionFilterProxyModel;
+	class CollectionModel;
+}
 
 class ContactsWidgetSetup : public ConduitConfigBase
 {
@@ -44,10 +51,18 @@ public:
 	virtual void load();
 	virtual void commit();
 	static ConduitConfigBase *create(QWidget *);
+
+private:	
+	void setupAkonadiTab();
+
 private:
 	Ui::ContactsWidget fUi;
+	Akonadi::CollectionModel* fCollectionModel;
+	Akonadi::CollectionFilterProxyModel* fCollectionFilterModel;
+	QLabel* fCollectionsLabel;
+	CollectionComboBox *fCollections;
 	KAboutData *fAbout;
-} ;
+};
 
 #endif
 

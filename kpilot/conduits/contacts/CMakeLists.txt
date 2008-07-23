@@ -4,6 +4,7 @@ include_directories(
 )
 
 set(contacts_SRCS
+	collectioncombobox.cc
 	contacts-setup.cc
 	hhcontact.cc
 	akonadicontact.cc
