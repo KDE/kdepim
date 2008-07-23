@@ -278,6 +278,17 @@ class KCAL_RESOURCEBLOG_EXPORT ResourceBlog : public ResourceCached
                            KBlog::BlogPost *post );
 
     /**
+    Prints an error on a XML-RPC failure involving listing posts.
+
+    @param type The type of the error.
+    @param errorMessage The specific cause of the error.
+    @param post The relevant post.
+    */
+    void slotErrorListPosts( const KBlog::Blog::ErrorType &type,
+                             const QString &errorMessage,
+                             KBlog::BlogPost *post );
+
+    /**
     Prints an error on a XML-RPC failure involving media.
 
     @param type The type of the error.
