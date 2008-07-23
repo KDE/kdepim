@@ -40,7 +40,8 @@
 
 #include "akonadicontact.h"
 
-ContactsAkonadiDataProxy::ContactsAkonadiDataProxy( Entity::Id id ) : fId( id )
+ContactsAkonadiDataProxy::ContactsAkonadiDataProxy( Entity::Id id, const QDateTime& dt   )
+	: fId( id ), fLastSyncDateTime( dt )
 {
 	FUNCTIONSETUP;
 	
@@ -94,7 +95,7 @@ void ContactsAkonadiDataProxy::loadAllRecords()
 		{
 			if( item.hasPayload<KABC::Addressee>() )
 			{
-				AkonadiContact* ac = new AkonadiContact( item );
+				AkonadiContact* ac = new AkonadiContact( item, fLastSyncDateTime );
 				fContacts.append( ac );
 			}
 		}

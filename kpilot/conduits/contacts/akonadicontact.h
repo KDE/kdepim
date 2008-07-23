@@ -36,10 +36,19 @@ class AkonadiContact : public Record
 {
 private:
 	Akonadi::Item fItem;
+	QDateTime fLastSyncDateTime;
 
 public:
-	AkonadiContact( const Akonadi::Item& item );
+  /**
+   * Creates a AkonadiContact record from an existing item of the data store.
+   * @p lastSync is needed to determine if the record is changed after the last
+   * @ sync.
+   */
+	AkonadiContact( const Akonadi::Item& item, const QDateTime& lastSync );
 	
+	/**
+	 * Creates a new AkonadiContact record.
+	 */
 	AkonadiContact();
 	
 	~AkonadiContact();

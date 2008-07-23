@@ -32,7 +32,8 @@
 
 #include "hhcontact.h"
 
-AkonadiContact::AkonadiContact( const Akonadi::Item& item ) : fItem( item )
+AkonadiContact::AkonadiContact( const Akonadi::Item& item, const QDateTime& lastSync )
+	: fItem( item ), fLastSyncDateTime( lastSync )
 {
 	// ContactsAkonadiDataProxy checks if item has an KABC::Addressee as payload
 	// so we don't check that again here.
@@ -114,10 +115,13 @@ bool AkonadiContact::isDeleted() const
 bool AkonadiContact::isModified() const
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
-	// Here we need the last synced time stamp and the last modified time stamp of
-	// the item.
-	return false;
+	
+	if( !fLastSyncDateTime.isValid() )
+	{
+		return false;
+	}
+	
+	return fItem.modificationTime() > fLastSyncDateTime;
 }
 
 void AkonadiContact::setAddressee( const KABC::Addressee& addressee )

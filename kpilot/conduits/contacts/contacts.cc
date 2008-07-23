@@ -33,6 +33,7 @@
 
 #include "record.h"
 #include "hhrecord.h"
+#include "idmapping.h"
 
 #include "akonadicontact.h"
 #include "hhcontact.h"
@@ -207,7 +208,7 @@ bool Contacts::initDataProxies()
 	
 	fHHDataProxy = hhDataProxy;
 	fBackupDataProxy = new ContactsHHDataProxy( fLocalDatabase );
-	fPCDataProxy = new ContactsAkonadiDataProxy( 4 );
+	fPCDataProxy = new ContactsAkonadiDataProxy( 4, fMapping->lastSyncedDate() );
 	
 	return true;
 }
