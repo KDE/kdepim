@@ -26,7 +26,7 @@ kde4_add_plugin(kaddrbk_vcard_xxport ${kaddrbk_vcard_xxport_PART_SRCS})
 
 
 
-target_link_libraries(kaddrbk_vcard_xxport kaddressbookprivate kabinterfaces kabcommon ${KDE4_KDECORE_LIBS} ${QGPGME_LIBRARIES} )
+target_link_libraries(kaddrbk_vcard_xxport kaddressbookprivate kabinterfaces kabcommon kdepim ${KDE4_KABC_LIBS} ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES} )
 
 install(TARGETS kaddrbk_vcard_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 endif(QGPGME_FOUND)
@@ -54,7 +54,7 @@ kde4_add_plugin(kaddrbk_bookmark_xxport ${kaddrbk_bookmark_xxport_PART_SRCS})
 
 
 
-target_link_libraries(kaddrbk_bookmark_xxport kaddressbookprivate kabinterfaces kabcommon ${KDE4_KDECORE_LIBS} )
+target_link_libraries(kaddrbk_bookmark_xxport kaddressbookprivate kabinterfaces kabcommon ${KDE4_KABC_LIBS} ${KDE4_KDEUI_LIBS} )
 
 install(TARGETS kaddrbk_bookmark_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 

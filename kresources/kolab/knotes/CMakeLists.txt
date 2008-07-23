@@ -28,7 +28,7 @@ kde4_add_plugin(knotes_kolab ${knotes_kolab_PART_SRCS})
 
 
 
-target_link_libraries(knotes_kolab  ${KDE4_KDECORE_LIBS} knoteskolab )
+target_link_libraries(knotes_kolab  ${KDE4_KDECORE_LIBS} knoteskolab ${QT_QT3SUPPORT_LIBRARY} )
 
 install(TARGETS knotes_kolab  DESTINATION ${PLUGIN_INSTALL_DIR})
 

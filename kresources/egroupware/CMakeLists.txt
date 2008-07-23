@@ -20,7 +20,7 @@ kde4_add_kcfg_files(kabc_xmlrpc_LIB_SRCS kabc_egroupwareprefs.kcfgc )
 
 kde4_add_library(kabc_xmlrpc SHARED ${kabc_xmlrpc_LIB_SRCS})
 
-target_link_libraries(kabc_xmlrpc  ${KDE4_KIO_LIBS} ${KDE4_KABC_LIBS} kdepim kabcommon )
+target_link_libraries(kabc_xmlrpc  ${KDE4_KIO_LIBS} ${KDE4_KABC_LIBS} ${KDE4_KCAL_LIBS} kdepim kabcommon )
 
 set_target_properties(kabc_xmlrpc PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kabc_xmlrpc  DESTINATION ${LIB_INSTALL_DIR})
@@ -37,7 +37,7 @@ kde4_add_kcfg_files(kcal_xmlrpc_LIB_SRCS kcal_egroupwareprefs.kcfgc )
 
 kde4_add_library(kcal_xmlrpc SHARED ${kcal_xmlrpc_LIB_SRCS})
 
-target_link_libraries(kcal_xmlrpc  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim )
+target_link_libraries(kcal_xmlrpc  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim ${QT_QT3SUPPORT_LIBRARY})
 
 set_target_properties(kcal_xmlrpc PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kcal_xmlrpc  DESTINATION ${LIB_INSTALL_DIR})
@@ -72,7 +72,7 @@ set_target_properties(kabc_xmlrpc_plugin PROPERTIES OUTPUT_NAME kabc_xmlrpc)
 endif (NOT MSVC) 
 
 
-target_link_libraries(kabc_xmlrpc_plugin  ${KDE4_KDECORE_LIBS} kabc_xmlrpc)
+target_link_libraries(kabc_xmlrpc_plugin  ${KDE4_KDECORE_LIBS} ${KDE4_KRESOURCES_LIBS} kabc_xmlrpc)
 
 install(TARGETS kabc_xmlrpc_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -89,7 +89,7 @@ set_target_properties(kcal_xmlrpc_plugin PROPERTIES OUTPUT_NAME kcal_xmlrpc)
 endif (NOT MSVC) 
 
 
-target_link_libraries(kcal_xmlrpc_plugin ${KDE4_KDECORE_LIBS} kcal_xmlrpc)
+target_link_libraries(kcal_xmlrpc_plugin ${KDE4_KDECORE_LIBS} kcal_xmlrpc ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KRESOURCES_LIBS})
 
 install(TARGETS kcal_xmlrpc_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -106,7 +106,7 @@ set_target_properties(knotes_xmlrpc_plugin PROPERTIES OUTPUT_NAME knotes_xmlrpc)
 endif (NOT MSVC) 
 
 
-target_link_libraries(knotes_xmlrpc_plugin knotes_xmlrpc ${KDE4_KDECORE_LIBS} knotes_xmlrpc )
+target_link_libraries(knotes_xmlrpc_plugin knotes_xmlrpc ${KDE4_KDECORE_LIBS} ${KDE4_KRESOURCES_LIBS} ${QT_QT3SUPPORT_LIBRARY} knotes_xmlrpc )
 
 install(TARGETS knotes_xmlrpc_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
