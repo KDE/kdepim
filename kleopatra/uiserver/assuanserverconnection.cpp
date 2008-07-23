@@ -37,6 +37,7 @@
 #endif
 
 #include <config-kleopatra.h>
+#include <version-kleopatra.h>
 
 #include "assuanserverconnection.h"
 #include "assuancommand.h"
