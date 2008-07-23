@@ -353,10 +353,8 @@ void ResourceSelection::slotSubresourceRemoved( KPIM::ResourceABC* resource,
                                                 const QString& /*type*/,
                                                 const QString& subResource )
 {
-  kdDebug(5720) << k_funcinfo << resource->resourceName() << " " << subResource << endl;
-  // TODO
-  //delete findItemByIdentifier( resource );
-  //emitResourcesChanged();
+  core()->addressBook()->emitAddressBookChanged();
+  updateView();
 }
 
 ResourceItem* ResourceSelection::selectedItem() const
