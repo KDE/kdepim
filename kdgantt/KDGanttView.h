@@ -411,7 +411,7 @@ private slots:
     void slotSelectionChanged( QListViewItem* item );
     void slotCurrentChanged ( QListViewItem * item );
     void slotItemRenamed ( QListViewItem * item, int col, const QString & text  );
-  void slotMouseButtonPressed (  int button, QListViewItem * item, const QPoint & pos, int c );
+    void slotMouseButtonPressed ( int button, QListViewItem * item, const QPoint & pos, int c );
     void slotmouseButtonClicked ( int button, QListViewItem * item, const QPoint & pos, int c );
     void slotcontextMenuRequested ( QListViewItem * item, const QPoint & pos, int col );
     void slotHeaderSizeChanged();
