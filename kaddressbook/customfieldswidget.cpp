@@ -27,6 +27,7 @@
 #include <qlabel.h>
 #include <qlayout.h>
 #include <qpushbutton.h>
+#include <qvalidator.h>
 #include <qspinbox.h>
 
 #include <kaccelmanager.h>
@@ -53,6 +54,7 @@ AddFieldDialog::AddFieldDialog( QWidget *parent, const char *name )
   layout->addWidget( label, 0, 0 );
 
   mTitle = new KLineEdit( page );
+  mTitle->setValidator( new QRegExpValidator( QRegExp( "([a-zA-Z]|\\d|-)+" ), mTitle ) );
   label->setBuddy( mTitle );
   layout->addWidget( mTitle, 0, 1 );
 
