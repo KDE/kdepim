@@ -5,15 +5,8 @@
 			http://www.kde.org/standards/kcfg/1.0/kcfg.xsd" >
 	<kcfgfile name="kpilot_contactsrc"/> 
 	<group name="General">
-		<entry name="AddressbookType" key="Addressbook type" type="Enum">
-				<choices>
-						<choice name="eAbookResource"/>
-						<choice name="eAbookFile"/>
-				</choices>
-				<default>eAbookFile</default>
-		</entry>
-		<entry name="FileName" type="Path">
-				<default>$HOME/.kde/share/apps/kabc/std.vcf</default>
+		<entry name="AkonadiCollection" type="Int">
+			<default>-1</default>
 		</entry>
 		<entry name="ArchiveDeleted" type="Bool">
 				<default>true</default>

@@ -32,7 +32,7 @@ class CollectionComboBox::Private
 {
   public:
     Private( CollectionComboBox *parent )
-      : mParent( parent )
+      : mParent( parent ), mCurrentId( -1 )
     {
     }
 
@@ -40,7 +40,11 @@ class CollectionComboBox::Private
 
     CollectionComboBox *mParent;
 
+    void checkCurrentSelectedCollection();
+
     QComboBox *mComboBox;
+
+    Entity::Id mCurrentId;
 };
 
 void CollectionComboBox::Private::activated( int index )
@@ -51,6 +55,12 @@ void CollectionComboBox::Private::activated( int index )
   const QModelIndex modelIndex = mComboBox->model()->index( index, 0 );
   if ( modelIndex.isValid() )
     emit mParent->selectionChanged( Collection( modelIndex.data( CollectionModel::CollectionIdRole ).toLongLong() ) );
+}
+
+void CollectionComboBox::Private::checkCurrentSelectedCollection()
+{
+  if( mCurrentId != -1 )
+    mParent->setSelectedCollection( mCurrentId );
 }
 
 CollectionComboBox::CollectionComboBox( QWidget *parent )
@@ -74,6 +84,9 @@ CollectionComboBox::~CollectionComboBox()
 void CollectionComboBox::setModel( QAbstractItemModel *model )
 {
   d->mComboBox->setModel( model );
+
+  connect( model, SIGNAL( rowsInserted( const QModelIndex&, int, int ) )
+    , SLOT( checkCurrentSelectedCollection() ) );
 }
 
 Akonadi::Collection CollectionComboBox::selectedCollection() const
@@ -87,6 +100,20 @@ Akonadi::Collection CollectionComboBox::selectedCollection() const
     return Akonadi::Collection( modelIndex.data( Akonadi::CollectionModel::CollectionIdRole ).toLongLong() );
   else
     return Akonadi::Collection();
+}
+
+void CollectionComboBox::setSelectedCollection( const Entity::Id id )
+{
+  Q_ASSERT_X( d->mComboBox->model() != 0, "CollectionComboBox::setSelectedCollection", "No model set!" );
+
+  d->mCurrentId = id;
+
+  QAbstractItemModel* model = d->mComboBox->model();
+  QModelIndexList result = model->match( model->index( 0, 0 ), CollectionModel::CollectionIdRole, id );
+
+  if( !result.isEmpty() ) {
+    d->mComboBox->setCurrentIndex( result.first().row() );
+  }
 }
 
 #include "collectioncombobox.moc"

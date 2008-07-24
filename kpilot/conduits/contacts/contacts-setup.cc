@@ -61,7 +61,7 @@ static KAboutData *createAbout()
 }
 
 ContactsWidgetSetup::ContactsWidgetSetup( QWidget *w, const QVariantList & ) :
-	ConduitConfigBase( w )
+	ConduitConfigBase( w ), fCollectionModified( false )
 {
 	FUNCTIONSETUP;
 
@@ -75,8 +75,10 @@ ContactsWidgetSetup::ContactsWidgetSetup( QWidget *w, const QVariantList & ) :
 	fAbout = createAbout();
 	ConduitConfigBase::addAboutPage( fUi.tabWidget, fAbout );
 
+	// Do not connect this just to modified(). It is very important that the
+	// collection doesn't get just saved.
 	connect( fCollections, SIGNAL( selectionChanged( const Akonadi::Collection& ) )
-		,this , SLOT( modified() ) );
+		,this , SLOT( collectionModified() ) );
 
 #define CM( a, b ) connect( fUi.a, b, this, SLOT( modified() ) );
 	CM( fConflictResolution, SIGNAL( activated( int ) ) );
@@ -90,8 +92,6 @@ ContactsWidgetSetup::ContactsWidgetSetup( QWidget *w, const QVariantList & ) :
 	CM( fCustomDate, SIGNAL( activated( int ) ) );
 	CM( fCustomDate, SIGNAL( textChanged( const QString& ) ) );
 #undef CM
-
-	ContactsSettings::self()->readConfig();
 }
 
 ContactsWidgetSetup::~ContactsWidgetSetup()
@@ -102,6 +102,13 @@ ContactsWidgetSetup::~ContactsWidgetSetup()
 /* virtual */ void ContactsWidgetSetup::commit()
 {
 	FUNCTIONSETUP;
+
+	// Akonadi page.
+	// *Only* save the collection if the user selected another one.
+	if( fCollectionModified )
+	{
+		ContactsSettings::setAkonadiCollection( fCollections->selectedCollection().id() );
+	}
 
 	// Conflicts page
 	ContactsSettings::setConflictResolution(
@@ -129,6 +136,18 @@ ContactsWidgetSetup::~ContactsWidgetSetup()
 {
 	FUNCTIONSETUP;
 	
+	ContactsSettings::self()->readConfig();
+	
+	if( ContactsSettings::akonadiCollection() != -1 )
+	{
+		fCollections->setSelectedCollection( ContactsSettings::akonadiCollection() );
+	}
+	else
+	{
+		fUi.fWarnIcon1->setVisible( true );
+		fUi.fSelectionWarnLabel->setVisible( true );
+	}
+	
 	// General page
 	//fConfigWidget->fArchive->setChecked(AbbrowserSettings::archiveDeleted());
 
@@ -148,21 +167,37 @@ ContactsWidgetSetup::~ContactsWidgetSetup()
 	fUi.fCustom3->setCurrentIndex( ContactsSettings::custom3() );
 	QString datefmt = ContactsSettings::customDateFormat();
 	
-	// TODO: Make this work.
 	if( datefmt.isEmpty() )
 	{
 		fUi.fCustomDate->setCurrentIndex( 0 );
 	}
 	else
 	{
-		//fUi.fCustomDate->setCurrentIndex( datefmt );
+		QAbstractItemModel* model = fUi.fCustomDate->model();
+		QModelIndexList i = model->match( model->index( 0, 0 ), Qt::DisplayRole
+			, QVariant( datefmt ), Qt::MatchCaseSensitive );
+		fUi.fCustomDate->setCurrentIndex( i.first().row() );
 	}
 
 	unmodified();
 }
 
+void ContactsWidgetSetup::collectionModified()
+{
+	FUNCTIONSETUP;
+	
+	fCollectionModified = true;
+	
+	fUi.fWarnIcon1->setVisible( false );
+	fUi.fSelectionWarnLabel->setVisible( false );
+	
+	modified();
+}
+
 void ContactsWidgetSetup::setupAkonadiTab()
 {
+	FUNCTIONSETUP;
+	
 	fCollectionModel = new Akonadi::CollectionModel( this );
 	
 	fCollectionFilterModel = new Akonadi::CollectionFilterProxyModel();
@@ -176,8 +211,14 @@ void ContactsWidgetSetup::setupAkonadiTab()
 	fCollections = new CollectionComboBox( fUi.akonadiTab );
 	fCollections->setModel( fCollectionFilterModel );
 	
-	fUi.fInfoIcon->setPixmap( 
-		KIcon( QLatin1String( "dialog-information" ) ).pixmap( 32 ) );
+	fUi.fWarnIcon1->setVisible( false );
+	fUi.fSelectionWarnLabel->setVisible( false );
+	
+	
+	fUi.fWarnIcon1->setPixmap( 
+		KIcon( QLatin1String( "dialog-warning" ) ).pixmap( 32 ) );
+	fUi.fWarnIcon2->setPixmap( 
+		KIcon( QLatin1String( "dialog-warning" ) ).pixmap( 32 ) );
 	
 	fUi.gridLayout2->addWidget( fCollections );
 	fUi.hboxLayout->addWidget( fCollectionsLabel, 1 );

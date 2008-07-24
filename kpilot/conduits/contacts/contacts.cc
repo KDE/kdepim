@@ -172,6 +172,8 @@ void Contacts::loadSettings()
 	
 	ContactsSettings::self()->readConfig();
 
+	fAkondiCollection = ContactsSettings::akonadiCollection();
+
 	// Conflict page
 	SyncAction::ConflictResolution res = (SyncAction::ConflictResolution) ContactsSettings::conflictResolution();
 	setConflictResolution( res );
@@ -199,16 +201,18 @@ bool Contacts::initDataProxies()
 		return false;
 	}
 	
-	// TODO: Make the collection id configurable. For now we just hardcode the
-	//       collection id. To find out which collection you can sync, use
-	//       akonadiconsole->folder properties->internals.
+	if( fAkondiCollection == -1 )
+	{
+		addSyncLogEntry( i18n( "Error: No akonadi collection configured." ) );
+		return false;
+	}
 	
 	ContactsHHDataProxy* hhDataProxy = new ContactsHHDataProxy( fDatabase );
 	fAddressInfo = static_cast<PilotAddressInfo*>( hhDataProxy->readAppInfo() );
 	
 	fHHDataProxy = hhDataProxy;
 	fBackupDataProxy = new ContactsHHDataProxy( fLocalDatabase );
-	fPCDataProxy = new ContactsAkonadiDataProxy( 4, fMapping->lastSyncedDate() );
+	fPCDataProxy = new ContactsAkonadiDataProxy( fAkondiCollection, fMapping->lastSyncedDate() );
 	
 	return true;
 }

@@ -52,6 +52,9 @@ public:
 	virtual void commit();
 	static ConduitConfigBase *create(QWidget *);
 
+private slots:
+	void collectionModified();
+
 private:	
 	void setupAkonadiTab();
 
@@ -61,6 +64,7 @@ private:
 	Akonadi::CollectionFilterProxyModel* fCollectionFilterModel;
 	QLabel* fCollectionsLabel;
 	CollectionComboBox *fCollections;
+	bool fCollectionModified;
 	KAboutData *fAbout;
 };
 

@@ -31,21 +31,24 @@
 
 #include <QtCore/QVector>
 
-#include <kabc/addressee.h>
+#include <akonadi/entity.h>
 #include <kabc/phonenumber.h>
 
 class PilotAddress;
 class PilotAddressInfo;
 class Settings;
+
 namespace KABC
 {
 	class Addressee;
+	class Address;
 }
 
 class Contacts : public RecordConduit
 {
 private:
 	Settings* fSettings;
+	Akonadi::Entity::Id fAkondiCollection;
 	PilotAddressInfo* fAddressInfo;
 
 public:
