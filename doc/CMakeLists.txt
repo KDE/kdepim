@@ -28,7 +28,8 @@ if(QGPGME_FOUND)
   add_subdirectory(kmail)
   add_subdirectory(kleopatra)
 endif(QGPGME_FOUND)
-add_subdirectory(korn)
+# disable korn for KDE 4.1
+ #add_subdirectory(korn)
 add_subdirectory(ktnef)
 add_subdirectory(kwatchgnupg)
 
