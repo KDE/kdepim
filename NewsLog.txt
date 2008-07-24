@@ -4,7 +4,6 @@ Problems addressed
 -------------------
 
 kolab/issue2801 Kontact doubles mails if a filter is used and every mail is filtered.
-kolab/issue2632 Todos Drag and Drop a event to the todo component creates a todo with strange header.
 kolab/issue2868 The name of the todo which was created by d'n'd of an event is "BEGIN:VCALENDAR"
 
 Friday, July 11th 2008
