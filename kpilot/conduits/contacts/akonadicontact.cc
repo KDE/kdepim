@@ -93,8 +93,6 @@ bool AkonadiContact::containsCategory( const QString& category ) const
 
 const QString AkonadiContact::id() const
 {
-	FUNCTIONSETUP;
-	
 	return QString::number( fItem.id() );
 }
 
