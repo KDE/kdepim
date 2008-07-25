@@ -47,9 +47,11 @@ namespace Kleo {
         virtual QString proposedFix() const = 0;
 
         virtual bool passed() const = 0;
+        virtual bool skipped() const = 0;
         virtual bool canFixAutomatically() const;
         virtual bool fix();
 
+        bool failed() const { return !skipped() && !passed() ; }
     };
 
 }
