@@ -1,3 +1,11 @@
+Friday, July 25th 2008
+
+Problems addressed
+-------------------
+
+* kolab/issue2866 In the todo summary a todo is shown which was deleted.
+* kolab/issue2867 Todos: Often deleted todos reappear.
+
 Monday, July 22nd 2008
 
 Problems addressed
