@@ -82,6 +82,11 @@ public:
 	bool containsCategory( const QString& category ) const;
 	
 	/**
+	 * Reads all records from the database.
+	 */
+	void loadAllRecords();
+	
+	/**
 	 * Adds the category to the pilot database. If the category app info block is
 	 * full and doesn't contain the category it returns false. True otherwhise.
 	 */
@@ -100,11 +105,6 @@ public:
 	/* virtual */ void addCategory( Record*, const QString& ) {};
 	
 protected:
-	/**
-	 * Reads all records from the database.
-	 */
-	void loadAllRecords();
-	
 	/** These functions must be implemented by the subclassing conduit **/
 
 	/**

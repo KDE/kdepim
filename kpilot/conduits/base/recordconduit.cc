@@ -94,6 +94,7 @@ RecordConduit::~RecordConduit()
 	// opened.
 	bool pcDatabaseOpen = fPCDataProxy->isOpen();
 	
+	// This assumes that the records are loaded.
 	if( !fMapping->isValid( fBackupDataProxy->ids() ) )
 	{
 		addSyncLogEntry( "Invalid record mapping. Doing first sync." );

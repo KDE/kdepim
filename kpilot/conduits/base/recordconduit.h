@@ -66,7 +66,8 @@ protected:
 	virtual void loadSettings() = 0;
 	
 	/**
-	 * Initialize the data proxies data are needed during sync. The following 
+	 * Initialize the data proxies that are needed during sync and makes sure that
+	 * all records are loaded for each data proxy. The following 
 	 * members should be initialized after the call:
 	 * - fLocalDatabase
 	 * - fDatastore
