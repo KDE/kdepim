@@ -67,7 +67,7 @@ set_target_properties(kcal_slox_plugin PROPERTIES OUTPUT_NAME kcal_slox)
 endif (NOT MSVC) 
 
 
-target_link_libraries(kcal_slox_plugin  ${KDE4_KDECORE_LIBS} kcal_slox )
+target_link_libraries(kcal_slox_plugin  ${KDE4_KDECORE_LIBS} ${QT_QT3SUPPORT_LIBRARY} kdepim)
 
 install(TARGETS kcal_slox_plugin DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -85,7 +85,7 @@ endif (NOT MSVC)
 
 
 
-target_link_libraries(kabc_slox_plugin  ${KDE4_KDECORE_LIBS} kabc_slox )
+target_link_libraries(kabc_slox_plugin  ${KDE4_KDECORE_LIBS} kabc_slox ${KDE4_KRESOURCES_LIBS})
 
 install(TARGETS kabc_slox_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 

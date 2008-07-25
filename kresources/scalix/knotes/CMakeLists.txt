@@ -28,7 +28,7 @@ kde4_add_plugin(knotes_scalix ${knotes_scalix_PART_SRCS})
 
 
 
-target_link_libraries(knotes_scalix  ${KDE4_KDECORE_LIBS} knotesscalix )
+target_link_libraries(knotes_scalix  ${KDE4_KDECORE_LIBS} knotesscalix ${KDE4_KCAL_LIBS})
 
 install(TARGETS knotes_scalix  DESTINATION ${PLUGIN_INSTALL_DIR})
 
