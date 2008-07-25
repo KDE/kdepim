@@ -36,6 +36,7 @@ class AkonadiContact : public Record
 {
 private:
 	Akonadi::Item fItem;
+	QString fTempId;
 	QDateTime fLastSyncDateTime;
 
 public:

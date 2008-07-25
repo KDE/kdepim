@@ -93,7 +93,14 @@ bool AkonadiContact::containsCategory( const QString& category ) const
 
 const QString AkonadiContact::id() const
 {
-	return QString::number( fItem.id() );
+	if( fTempId.isEmpty() )
+	{
+		return QString::number( fItem.id() );
+	}
+	else
+	{
+		return fTempId;
+	}
 }
 
 Akonadi::Item& AkonadiContact::item()
@@ -147,9 +154,18 @@ void AkonadiContact::setId( const QString &id )
 	
 	QString oldId = QString::number( fItem.id() );
 	
-	DEBUGKPILOT << "AkonadiContact::setId() [old,new]: [" << oldId << "," << id << "]";
+	// Id's < 0 are temporary id's
+	if( id.toLongLong() < 0 )
+	{
+		fTempId = id;
+	}
+	else
+	{
+		fTempId = QString();
+		fItem.setId( id.toULongLong() );
+	}
 	
-	fItem.setId( id.toULongLong() );
+	DEBUGKPILOT << "AkonadiContact::setId() [old,new]: [" << oldId << "," << this->id() << "]";
 }
 
 void AkonadiContact::synced()
