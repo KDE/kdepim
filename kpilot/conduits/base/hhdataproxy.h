@@ -55,6 +55,21 @@ public:
 	virtual void syncFinished();
 	
 	/**
+	 * Given a list of category names from the PC side @p pcCategories, look for
+	 * the category @em best matching the category @p category in the appinfo
+	 *  block. Here, best is defined as follows:
+	 * - if the name of category @p category is in the list, use it
+	 * - otherwise use the first category from the list that is a valid
+	 *   category on the handheld.
+	 * - use Unfiled if none match.
+	 *
+	 * @return Category that best matches.
+	 * @return Unfiled if no best match.
+	 */
+	QString bestMatchCategory( const QStringList& pcCategories
+	                         , const QString& category ) const;
+	
+	/**
 	 * Sets the category of @param rec to "Unfiled" or whatever is appropriate for
 	 * the conduit to say that the record has no category.
 	 */

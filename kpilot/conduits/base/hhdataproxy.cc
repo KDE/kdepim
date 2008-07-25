@@ -54,6 +54,38 @@ void HHDataProxy::syncFinished()
 	}
 }
 
+QString HHDataProxy::bestMatchCategory( const QStringList& pcCategories
+                                      , const QString& category ) const
+{
+	FUNCTIONSETUP;
+	// No categories in list, must be unfiled
+	if( pcCategories.isEmpty() )
+	{
+		return CSL1( "Unfiled" );
+	}
+
+	// See if the suggested hhcategory is in the list, and if
+	// so that is the best match.
+	if( containsCategory( category ) &&
+		pcCategories.contains( category ) )
+	{
+		return category;
+	}
+
+	// Look for the first category from the list which is available on
+	// the handheld as well.
+	foreach( const QString& pcCategory, pcCategories )
+	{
+		if( containsCategory( pcCategory ) )
+		{
+			return pcCategory;
+		}
+	}
+
+	// didn't find anything. return null
+	return CSL1( "Unfiled" );
+}
+
 void HHDataProxy::clearCategory( HHRecord *rec )
 {
 	FUNCTIONSETUP;
@@ -64,7 +96,7 @@ void HHDataProxy::clearCategory( HHRecord *rec )
 bool HHDataProxy::containsCategory( const QString& category ) const
 {
 	FUNCTIONSETUP;
-	
+	// Do not map unknown to unfiled when looking for category
 	return fAppInfo->findCategory( category, false ) != -1;
 }
 	
