@@ -265,8 +265,6 @@ bool IDMappingXmlSource::startElement( const QString &namespaceURI
 	, const QString &localName, const QString &qName
 	, const QXmlAttributes &attribs )
 {
-	FUNCTIONSETUP;
-	
 	Q_UNUSED(namespaceURI);
 	Q_UNUSED(localName);
 	
