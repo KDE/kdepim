@@ -34,8 +34,8 @@
 #include <akonadi/entity.h>
 #include <kabc/phonenumber.h>
 
+class ContactsHHDataProxy;
 class PilotAddress;
-class PilotAddressInfo;
 class Settings;
 
 namespace KABC
@@ -48,8 +48,8 @@ class Contacts : public RecordConduit
 {
 private:
 	Settings* fSettings;
+	ContactsHHDataProxy* fContactsHHDataProxy;
 	Akonadi::Entity::Id fAkondiCollection;
-	PilotAddressInfo* fAddressInfo;
 
 public:
 	Contacts( KPilotLink *o, const QVariantList &a = QVariantList() );
@@ -101,28 +101,6 @@ public:
 	virtual void test() {}
 
 protected:
-	/**
-	 * Given a list of category names from the KDE side (e.g. attached
-	 * to a PC-based Addressee) @p categorynames , look for the
-	 * category @em best matching the category @p category
-	 * in the appinfo block @p info . Here, best is defined as follows:
-	 * - if the name of category @p category is in the list, use it
-	 * - otherwise use the first category from the list that is a valid
-	 *   category on the handheld.
-	 * - use Pilot::Unfiled if none match.
-	 *
-	 * @return Category index that best matches.
-	 * @return Pilot::Unfiled if no best match.
-	 */
-	unsigned int bestMatchedCategory(const QStringList &categorynames,
-		unsigned int category ) const;
-	
-	/**
-	 * As above, but return the name of the category.
-	 */
-	QString bestMatchedCategoryName( const QStringList &categorynames
-		, unsigned int category ) const;
-	
 	/**
 	 * Returns the address portion of an addressee. Since the HH can only store
 	 * one address, we return the preferred address (if the Addressee @p abEntry
@@ -184,15 +162,6 @@ protected:
 	 * @note @p mappingForOther should come from ContactsSettings::pilotOther()
 	 */
 	void setFieldFromHHOtherPhone( KABC::Addressee &abEntry, const QString &nr );
-
-	/**
-	 * Set the phone numbers from @p list in the handheld entry
-	 * @p a (with info block @p info providing the mapping of category
-	 * names and some other fiddly stuff) as far as possible.
-	 * @em No overflow handling is done at all. If the desktop has
-	 * more than 5 phone entries, the remainder are dropped.
-	 */
-	void setPhoneNumbers( PilotAddress &a, const KABC::PhoneNumber::List &list );
 };
 
 #endif

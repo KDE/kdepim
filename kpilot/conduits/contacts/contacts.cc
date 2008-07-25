@@ -39,6 +39,7 @@
 #include "hhcontact.h"
 #include "contactshhdataproxy.h"
 #include "contactsakonadidataproxy.h"
+#include "pilottophonemap.h"
 
 #include "contactsSettings.h"
 
@@ -138,6 +139,37 @@ private:
 	KABC::PhoneNumber::Type fFaxTypeOnPC;
 };
 
+/* This is partly stolen from the boost libraries, partly from
+*  "Modern C++ design" for doing compile time checks; we need
+*  to make sure that the enum values in KABCSync:: and in the
+*  AbbrowserSettings class are the same so that both interpret
+*  configuration values the same way.
+*/
+template<bool> struct EnumerationMismatch;
+template<> struct EnumerationMismatch<true>{};
+
+#define CHECK_ENUM(a) (void)sizeof(EnumerationMismatch<((int)Settings::a)==((int)ContactsSettings::a)>)
+
+static inline void compile_time_check()
+{
+	// Mappings for other phone
+	CHECK_ENUM(eOtherPhone);
+	CHECK_ENUM(eOtherPhone);
+	CHECK_ENUM(eAssistant);
+	CHECK_ENUM(eBusinessFax);
+	CHECK_ENUM(eCarPhone);
+	CHECK_ENUM(eEmail2);
+	CHECK_ENUM(eHomeFax);
+	CHECK_ENUM(eTelex);
+	CHECK_ENUM(eTTYTTDPhone);
+
+	// Mappings for custom fields
+	CHECK_ENUM(eCustomField);
+	CHECK_ENUM(eCustomBirthdate);
+	CHECK_ENUM(eCustomURL);
+	CHECK_ENUM(eCustomIM);
+}
+
 inline KABC::PhoneNumber::Type faxTypeOnPC()
 {
 	return KABC::PhoneNumber::Fax |
@@ -157,7 +189,7 @@ const QString idString = CSL1( "RecordID" ); ///< Record ID on HH for this addre
 
 Contacts::Contacts( KPilotLink *o, const QVariantList &a )
  : RecordConduit( o, a, CSL1( "AddressDB" ), CSL1( "Contacts Conduit" ) )
- , fSettings( new Settings() ), fAddressInfo( 0L )
+ , fSettings( new Settings() ) , fContactsHHDataProxy( 0L )
 {
 }
 
@@ -207,10 +239,9 @@ bool Contacts::initDataProxies()
 		return false;
 	}
 	
-	ContactsHHDataProxy* hhDataProxy = new ContactsHHDataProxy( fDatabase );
-	fAddressInfo = static_cast<PilotAddressInfo*>( hhDataProxy->readAppInfo() );
+	fContactsHHDataProxy = new ContactsHHDataProxy( fDatabase );
 	
-	fHHDataProxy = hhDataProxy;
+	fHHDataProxy = fContactsHHDataProxy;
 	fBackupDataProxy = new ContactsHHDataProxy( fLocalDatabase );
 	fPCDataProxy = new ContactsAkonadiDataProxy( fAkondiCollection, fMapping->lastSyncedDate() );
 	
@@ -262,10 +293,9 @@ bool Contacts::equal( const Record *pcRec, const HHRecord *hhRec ) const
 
 	// Check that the name of the category of the HH record
 	// is one matching the PC record.
-	QString addressCategoryLabel = fAddressInfo->categoryName( piAddress.category() );
-	QString cat = bestMatchedCategoryName( abEntry.categories(), piAddress.category() );
+	QString cat = fHHDataProxy->bestMatchCategory( pcRec->categories(), hhRec->category() );
 		
-	if( !_equal( cat, addressCategoryLabel ) )
+	if( !_equal( cat, hhRec->category() ) )
 	{
 		DEBUGKPILOT  << "category not equal";
 		return false;
@@ -449,7 +479,7 @@ void Contacts::_copy( const Record *from, HHRecord *to )
 	// now in one fell swoop, set all phone numbers from the Addressee.  Note,
 	// we don't need to differentiate between Fax numbers here--all Fax numbers
 	// (Home Fax or Work Fax or just plain old Fax) will get synced to the Pilot
-	setPhoneNumbers( toPilotAddr, fromAbEntry.phoneNumbers() );
+	fContactsHHDataProxy->setPhoneNumbers( toPilotAddr, fromAbEntry.phoneNumbers() );
 
 	// Other field is an oddball and if the user has more than one field set
 	// as "Other" then only one will be carried over.
@@ -470,10 +500,6 @@ void Contacts::_copy( const Record *from, HHRecord *to )
 		toPilotAddr.setField( hhField
 			, getFieldForHHCustom( customIndex, fromAbEntry ) );
 	}
-
-	int categoryForHH = bestMatchedCategory( fromAbEntry.categories()
-		, toPilotAddr.category() );
-	toPilotAddr.setCategory( categoryForHH );
 	
 	hhTo->setPilotAddress( toPilotAddr );
 }
@@ -577,80 +603,6 @@ void Contacts::_copy( const HHRecord *from, Record *to  )
 }
 
 /** Protected methods **/
-
-unsigned int Contacts::bestMatchedCategory( const QStringList &pccategories,
-	unsigned int hhcategory) const
-{
-	FUNCTIONSETUP;
-	// No categories in list, must be unfiled
-	if( pccategories.size() < 1 )
-	{
-		return Pilot::Unfiled;
-	}
-
-	// See if the suggested hhcategory is in the list, and if
-	// so that is the best match.
-	if( Pilot::validCategory( hhcategory ) &&
-		pccategories.contains( fAddressInfo->categoryName( hhcategory ) ) )
-	{
-		return hhcategory;
-	}
-
-	// Look for the first category from the list which is available on
-	// the handheld as well.
-	for( QStringList::ConstIterator it = pccategories.begin(); it != pccategories.end(); ++it)
-	{
-		// Do not map unknown to unfiled when looking for category
-		int c = fAddressInfo->findCategory( *it, false );
-		if ( c >= 0)
-		{
-			Q_ASSERT(Pilot::validCategory(c));
-			return c;
-		}
-	}
-
-	// didn't find anything. return null
-	return Pilot::Unfiled;
-}
-
-QString Contacts::bestMatchedCategoryName( const QStringList &categorynames
-	, unsigned int category ) const
-{
-	return fAddressInfo->categoryName( bestMatchedCategory( categorynames, category ) );
-}
-
-/**
- * Okay, this is so that we can map the Pilot phone types to Phone Number
- * types. Email addresses are NOT included in this map, and are handled
- * separately (not in PhoneNumber at all). The Pilot has 8 different kinds
- * of phone numbers (which may be *labeled* however you like). These
- * need to be mapped to the things that KABC::PhoneNumber handles.
- *
- * From KABC::PhoneNumber
- *		enum Types { Home = 1, Work = 2, Msg = 4, Pref = 8, Voice = 16, Fax = 32,
- *				Cell = 64, Video = 128, Bbs = 256, Modem = 512, Car = 1024,
- *				Isdn = 2048, Pcs = 4096, Pager = 8192 };
- *
- *
- * From PilotAddress:
- * enum EPhoneType {
- *		eWork=0, eHome, eFax, eOther, eEmail, eMain,
- *		ePager, eMobile
- *		};
- *
- * This array must have as many elements as PilotAddress::PhoneType
- * and its elements must be KABC::PhoneNumber::Types.
- */
-static KABC::PhoneNumber::TypeFlag pilotToPhoneMap[8] = {
-	KABC::PhoneNumber::Work,  // eWork
-	KABC::PhoneNumber::Home,  // eHome,
-	KABC::PhoneNumber::Fax,   // eFax,
-	(KABC::PhoneNumber::TypeFlag)0, // eOther -> wasn't mapped properly,
-	(KABC::PhoneNumber::TypeFlag)0, // eEmail -> shouldn't occur,
-	KABC::PhoneNumber::Home,  // eMain
-	KABC::PhoneNumber::Pager, // ePager,
-	KABC::PhoneNumber::Cell   // eMobile
-};
 
 /** First search for a preferred  address. If we don't have one, search
  *  for home or work as specified in the config dialog. If we don't have
@@ -930,91 +882,4 @@ void Contacts::setFieldFromHHOtherPhone( KABC::Addressee & abEntry
 	phone.setNumber(nr);
 	phone.setType(phoneType); // Double-check in case there was no phonenumber of given type
 	abEntry.insertPhoneNumber(phone);
-}
-
-void Contacts::setPhoneNumbers( PilotAddress &a, const KABC::PhoneNumber::List &list )
-{
-	FUNCTIONSETUP;
-	QString test;
-
-	// clear all phone numbers (not e-mails) first
-	for ( PhoneSlot i = PhoneSlot::begin(); i.isValid() ; ++i )
-	{
-		PilotAddressInfo::EPhoneType ind = a.getPhoneType( i );
-		if (ind != PilotAddressInfo::eEmail)
-		{
-			a.setField(i, QString());
-		}
-	}
-
-	// now iterate through the list and for each PhoneNumber in the list,
-	// iterate through our phone types using our map and set the first one
-	// we find as the type of address for the Pilot
-	for(KABC::PhoneNumber::List::ConstIterator listIter = list.begin();
-		   listIter != list.end(); ++listIter)
-	{
-		KABC::PhoneNumber phone = *listIter;
-
-		PilotAddressInfo::EPhoneType phoneType = PilotAddressInfo::eHome;
-
-		for ( int pilotPhoneType = PilotAddressInfo::eWork;
-			pilotPhoneType <= PilotAddressInfo::eMobile;
-			++pilotPhoneType)
-		{
-			int phoneKey = pilotToPhoneMap[pilotPhoneType];
-			if ( phone.type() & phoneKey)
-			{
-				DEBUGKPILOT << "Found pilot type: ["
-					<< pilotPhoneType << "] ("
-					<< fAddressInfo->phoneLabel( (PilotAddressInfo::EPhoneType)pilotPhoneType)
-					<< ") for PhoneNumber: ["
-					<< phone.number() << ']';
-
-				phoneType = (PilotAddressInfo::EPhoneType) pilotPhoneType;
-				break;
-			}
-		}
-		PhoneSlot fieldSlot =
-			a.setPhoneField(phoneType, phone.number(), PilotAddress::NoFlags);
-
-		// if this is the preferred phone number, then set it as such
-		if (fieldSlot.isValid() && (phone.type() & KABC::PhoneNumber::Pref))
-		{
-			DEBUGKPILOT << "Found preferred PhoneNumber."
-				<< "setting showPhone to index: ["
-				<< fieldSlot << "], PhoneNumber: ["
-				<< phone.number() << ']';
-			a.setShownPhone( fieldSlot );
-		}
-
-		if (!fieldSlot.isValid())
-		{
-			DEBUGKPILOT << "Phone listing overflowed.";
-		}
-	}
-
-	DEBUGKPILOT << "Pilot's showPhone now: [" << a.getShownPhone() << ']';
-
-	// after setting the numbers, make sure that something sensible is set as the
-	// shownPhone on the Pilot if nothing is yet...
-	QString pref = a.getField(a.getShownPhone());
-	if (!a.getShownPhone().isValid() || pref.isEmpty())
-	{
-		DEBUGKPILOT << "Pilot's showPhone: ["
-			<< a.getShownPhone()
-			<< "] not properly set to a default.";
-
-		for (PhoneSlot i = PhoneSlot::begin(); i.isValid(); ++i)
-		{
-			pref = a.getField(i);
-			if (!pref.isEmpty())
-			{
-				a.setShownPhone( i );
-				DEBUGKPILOT << "Pilot's showPhone now: ["
-					<< a.getShownPhone()
-					<< "], and that's final.";
-				break;
-			}
-		}
-	}
 }

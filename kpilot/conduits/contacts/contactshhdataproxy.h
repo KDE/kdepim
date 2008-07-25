@@ -28,6 +28,12 @@
 
 #include "hhdataproxy.h"
 
+#include <kabc/phonenumber.h>
+
+class HHContact;
+class PilotAddress;
+class PilotAddressInfo;
+
 class KPILOT_EXPORT ContactsHHDataProxy : public HHDataProxy {
 
 public:
@@ -55,10 +61,20 @@ public:
 	/* virtual */ PilotAppInfoBase* readAppInfo();
 	
 	/**
+	 * Set the phone numbers from @p list in the handheld entry
+	 * @p contact as far as possible. @em No overflow handling is done at all. If
+	 * the desktop has more than 5 phone entries, the remainder are dropped.
+	 */
+	void setPhoneNumbers( PilotAddress &a, const KABC::PhoneNumber::List &list );
+	
+	/**
 	 * Implementing classes should pack and store fAppInfo into the database so
 	 * that Category information is stored.
 	 */
 	/* virtual */ void storeAppInfo();
+
+private:
+	PilotAddressInfo* fAddressInfo;
 };
 
 #endif
