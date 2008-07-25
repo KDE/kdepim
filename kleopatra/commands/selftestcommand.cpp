@@ -143,7 +143,7 @@ private:
         tests.push_back( makeUiServerConnectivitySelfTest() );
 #endif
 
-        if ( !dialog && kdtools::all( tests, mem_fn( &Kleo::SelfTest::passed ) ) ) {
+        if ( !dialog && kdtools::none_of( tests, mem_fn( &Kleo::SelfTest::failed ) ) ) {
             finished();
             return;
         }
