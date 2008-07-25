@@ -245,6 +245,15 @@ bool Contacts::initDataProxies()
 	fBackupDataProxy = new ContactsHHDataProxy( fLocalDatabase );
 	fPCDataProxy = new ContactsAkonadiDataProxy( fAkondiCollection, fMapping->lastSyncedDate() );
 	
+	// At this point we should be able to read the backup and handheld database.
+	// However, it might be that Akonadi is not started.
+	fHHDataProxy->loadAllRecords();
+	fBackupDataProxy->loadAllRecords();
+	if( fPCDataProxy->isOpen() ) 
+	{
+		fPCDataProxy->loadAllRecords();
+	}
+	
 	return true;
 }
 

@@ -34,6 +34,7 @@
 #include "pilottophonemap.h"
 
 ContactsHHDataProxy::ContactsHHDataProxy( PilotDatabase *db ) : HHDataProxy( db )
+	, fAddressInfo( 0L )
 {
 }
 
@@ -43,8 +44,6 @@ ContactsHHDataProxy::~ContactsHHDataProxy()
 
 HHRecord* ContactsHHDataProxy::createHHRecord( PilotRecord *rec )
 {
-	FUNCTIONSETUP;
-	
 	QString category( "Unfiled" );
 	
 	if( fAppInfo )
@@ -72,9 +71,9 @@ PilotAppInfoBase* ContactsHHDataProxy::readAppInfo()
 	
 	if( fDatabase && fDatabase->isOpen() )
 	{
-		PilotAddressInfo* appInfo = new PilotAddressInfo( fDatabase );
+		fAddressInfo = new PilotAddressInfo( fDatabase );
 		
-		return appInfo;
+		return fAddressInfo;
 	}
 
 	return 0;
@@ -112,6 +111,8 @@ void ContactsHHDataProxy::setPhoneNumbers( PilotAddress &a
 			int phoneKey = pilotToPhoneMap[pilotPhoneType];
 			if ( phone.type() & phoneKey)
 			{
+				DEBUGKPILOT << fAddressInfo;
+			
 				DEBUGKPILOT << "Found pilot type: ["
 					<< pilotPhoneType << "] ("
 					<< fAddressInfo->phoneLabel( (PilotAddressInfo::EPhoneType)pilotPhoneType)

@@ -42,7 +42,6 @@ class KPILOT_EXPORT ContactsAkonadiDataProxy : public DataProxy
 private:
 	Entity::Id fId;
 	QDateTime fLastSyncDateTime;
-	QList<AkonadiContact*> fContacts;
 
 public:
 	ContactsAkonadiDataProxy( Entity::Id id, const QDateTime& lastSynced  );

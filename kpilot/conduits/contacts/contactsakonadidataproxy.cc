@@ -55,7 +55,6 @@ ContactsAkonadiDataProxy::ContactsAkonadiDataProxy( Entity::Id id, const QDateTi
 ContactsAkonadiDataProxy::~ContactsAkonadiDataProxy()
 {
 	FUNCTIONSETUP;
-	qDeleteAll ( fContacts );
 }
 
 void ContactsAkonadiDataProxy::addCategory( Record* rec, const QString& category )
@@ -96,9 +95,13 @@ void ContactsAkonadiDataProxy::loadAllRecords()
 			if( item.hasPayload<KABC::Addressee>() )
 			{
 				AkonadiContact* ac = new AkonadiContact( item, fLastSyncDateTime );
-				fContacts.append( ac );
+				fRecords.insert( ac->id(), ac );
 			}
 		}
+		
+		fCounter.setStartCount( fRecords.size() );
+		
+		DEBUGKPILOT << "Loaded " << fRecords.size() << " records.";
 	}
 	else
 	{
@@ -122,21 +125,13 @@ void ContactsAkonadiDataProxy::syncFinished()
 
 /* Protected methods */
 
+static qint64 newId = -1;
+
 QString ContactsAkonadiDataProxy::generateUniqueId()
 {
 	FUNCTIONSETUP;
 	
-	quint64 newId = 0;
-	
-	foreach( AkonadiContact* ac, fContacts )
-	{
-		quint64 id = ac->id().toULongLong();
-		if( id > newId )
-		{
-			newId = id;
-		}
-	}
-	
+	newId--;
 	return QString::number( newId );
 }
 
