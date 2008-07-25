@@ -78,6 +78,9 @@ RecordConduit::~RecordConduit()
 	bool backupDatabaseOpen = !retrieved;
 	setFirstSync( retrieved );
 	
+	// See 6.2
+	fMapping = new IDMapping( KPilotSettings::userName(), fConduitName );
+	
 	// NOTE: Do not forget that the HHData proxy and the backup proxy must use
 	// the opened databases, maybe we should pass them for clarity to this method.
 	if( !initDataProxies() )
@@ -91,11 +94,9 @@ RecordConduit::~RecordConduit()
 	// opened.
 	bool pcDatabaseOpen = fPCDataProxy->isOpen();
 	
-	// See 6.2
-	fMapping = new IDMapping( KPilotSettings::userName(), fConduitName );
 	if( !fMapping->isValid( fBackupDataProxy->ids() ) )
 	{
-		DEBUGKPILOT << "Invalid record mapping. Doing first sync.";
+		addSyncLogEntry( "Invalid record mapping. Doing first sync." );
 		setFirstSync( true );
 	}
 	
