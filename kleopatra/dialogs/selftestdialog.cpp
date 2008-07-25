@@ -96,11 +96,15 @@ namespace {
                             if ( role == Qt::ToolTipRole )
                                 return m_tests[row]->longError();
                             else
-                                return m_tests[row]->shortError();
+                                return m_tests[row]->skipped()
+                                    ? i18n("Skipped")
+                                    : m_tests[row]->shortError();
                     }
                     break;
                 case Qt::BackgroundRole:
-                    return QColor( m_tests[row]->passed() ? Qt::green : Qt::red );
+                    return QColor( m_tests[row]->skipped() ? Qt::yellow :
+                                   m_tests[row]->passed()  ? Qt::green  :
+                                   Qt::red );
                 }
             return QVariant();
         }
