@@ -58,7 +58,7 @@ SyncProcessManager::SyncProcessManager()
   mPluginEnv = new QSync::PluginEnv;
   result = mPluginEnv->initialize();
   if ( result.isError() ) {
-    KMessageBox::error( 0, i18n( "Error initializing Opensync.\n%1",
+    KMessageBox::error( 0, i18n( "Error initializing OpenSync.\n%1",
                                  result.message() ) );
   } else {
 //       initPlugin( mPluginEnv );
