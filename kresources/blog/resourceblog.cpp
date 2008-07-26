@@ -69,6 +69,8 @@ ResourceBlog::~ResourceBlog()
 {
   close();
 
+  mLock->unlock();
+
   delete mLock;
 
   if ( mPostMap ) {
@@ -101,7 +103,9 @@ void ResourceBlog::readConfig( const KConfigGroup &group )
   mPassword = group.readEntry( "Password" );
   setAPI( group.readEntry( "API" ) );
   mBlogID = group.readEntry( "BlogID" );
-  mBlog->setBlogId( mBlogID );
+  if ( mBlog ) {
+    mBlog->setBlogId( mBlogID );
+  }
   mBlogName = group.readEntry( "BlogName" );
   mDownloadCount = group.readEntry( "DownloadCount" ).toInt();
 
@@ -262,7 +266,7 @@ bool ResourceBlog::doLoad( bool syncCache )
                 const QList<KBlog::BlogPost> & ) ) );
       connect ( mBlog, SIGNAL( errorPost( const KBlog::Blog::ErrorType &,
                 const QString &, KBlog::BlogPost * ) ),
-                this, SLOT( slotErrorPost( const KBlog::Blog::ErrorType &,
+                this, SLOT( slotErrorListPosts( const KBlog::Blog::ErrorType &,
                 const QString &, KBlog::BlogPost * ) ) );
 
       if ( mUseProgressManager ) {
@@ -272,23 +276,23 @@ bool ResourceBlog::doLoad( bool syncCache )
         mProgress->setProgress( 0 );
       }
       mBlog->listRecentPosts( downloadCount() );
-      mLock->unlock();
       return true;
     } else {
       kError(5650) << "cache file is locked - something else must be loading the file";
     }
   }
-  kError(5650) << "Blog not initialised";
+  else {
+    kError(5650) << "Blog not initialised";
+  }
   return false;
 }
 
 void ResourceBlog::slotListedPosts(
     const QList<KBlog::BlogPost> &posts )
 {
-  kDebug(5650);
-  QList<KBlog::BlogPost>::const_iterator i;
-  for (i = posts.constBegin(); i != posts.constEnd(); ++i) {
-    Journal* newJournal = (*i).journal( *mBlog );
+  for ( QList<KBlog::BlogPost>::const_iterator listedPost = posts.constBegin();
+        listedPost != posts.constEnd(); ++listedPost) {
+    Journal* newJournal = (*listedPost).journal( *mBlog );
     if ( newJournal ) {
       Journal* existingJournal = journal( newJournal->uid() );
       if ( existingJournal ) {
@@ -306,12 +310,17 @@ void ResourceBlog::slotListedPosts(
     }
   }
   emit resourceChanged( this );
+
   if ( mProgress ) {
     mProgress->setComplete();
     mProgress = 0;
   }
 
+  saveToCache();
+
   emit resourceLoaded( this );
+
+  mLock->unlock();
 }
 
 void ResourceBlog::slotError( const KBlog::Blog::ErrorType &type,
@@ -334,6 +343,15 @@ void ResourceBlog::slotErrorPost( const KBlog::Blog::ErrorType &type,
   slotError( type, errorMessage );
 }
 
+void ResourceBlog::slotErrorListPosts( const KBlog::Blog::ErrorType &type,
+                              const QString &errorMessage,
+                              KBlog::BlogPost *post )
+{
+  kError(5650) << "ResourceBlog::slotErrorListPosts()";
+  mLock->unlock();
+  slotErrorPost( type, errorMessage, post );
+}
+
 void ResourceBlog::slotErrorMedia( const KBlog::Blog::ErrorType &type,
                                      const QString &errorMessage,
                                      KBlog::BlogMedia *media )
@@ -348,30 +366,34 @@ void ResourceBlog::slotSavedPost( KBlog::BlogPost *post )
   if ( post ) {
     kDebug(5650) << "Post saved with ID" << post->postId();
     if ( post->status() == KBlog::BlogPost::Created ) {
-      mLastKnownPostID = post->postId().toInt();
-      // Instead of modifying the existing we journal we create a new one and
-      // use that instead to make use of the metadata provided in KBlog.
-      Journal* existingJournal = journal( post->journalId() );
-      if ( existingJournal ) {
-        deleteJournal( existingJournal );
-        clearChange( existingJournal );
-        delete existingJournal;
-      }
-      Journal* newJournal = post->journal( *mBlog );
-      if ( newJournal ) {
-        addJournal ( newJournal );
-        clearChange( newJournal );
-      }
+        mLastKnownPostID = post->postId().toInt();
+        // Instead of modifying the existing we journal we create a new one and
+        // use that instead to make use of the metadata provided in KBlog.
+        Journal* existingJournal = journal( post->journalId() );
+        if ( existingJournal ) {
+          deleteJournal( existingJournal );
+          emit resourceChanged( this );
+          clearChange( existingJournal );
+        }
+        Journal* newJournal = post->journal( *mBlog );
+        // Don't add the new Journal if it already exists.
+        if ( newJournal && !journal ( newJournal->uid() ) ) {
+          addJournal ( newJournal );
+          emit resourceChanged( this );
+          clearChange( newJournal );
+        }
     }
     else {
+      if ( post->status() == KBlog::BlogPost::Removed ) {
+        // For some strange reason we get a deadlock after removing posts
+        // unless we manually unlock the mutex.
+        mLock->unlock();
+      }
       clearChange( post->journalId() );
     }
 
-    Incidence::List changes = allChanges();
-    if ( changes.begin() == changes.end() ) {
-      saveToCache();
-      emit resourceSaved( this );
-    }
+    saveToCache();
+    emit resourceSaved( this );
   } else {
     kDebug(5650) << "Post saved was null";
   }
@@ -385,8 +407,6 @@ void ResourceBlog::slotBlogInfoRetrieved(
 
 bool ResourceBlog::doSave( bool syncCache )
 {
-  kDebug(5650);
-
   Q_UNUSED( syncCache );
   if ( readOnly() || !hasChanges() ) {
     emit resourceSaved( this );
@@ -397,9 +417,8 @@ bool ResourceBlog::doSave( bool syncCache )
     return false;
   }
 
-  Incidence::List::Iterator i;
   Incidence::List added = addedIncidences();
-  for ( i = added.begin(); i != added.end(); ++i ) {
+  for ( Incidence::List::Iterator i = added.begin(); i != added.end(); ++i ) {
     Journal* journal = dynamic_cast<Journal*>( *i );
     if ( journal ) {
       KBlog::BlogPost *post = new KBlog::BlogPost( *journal );
@@ -418,7 +437,8 @@ bool ResourceBlog::doSave( bool syncCache )
   }
 
   Incidence::List changed = changedIncidences();
-  for( i = changed.begin(); i != changed.end(); ++i ) {
+  for( Incidence::List::Iterator i = changed.begin();
+       i != changed.end(); ++i ) {
     Journal* journal = dynamic_cast<Journal*>( *i );
     if ( journal ) {
       KBlog::BlogPost *post = new KBlog::BlogPost( *journal );
@@ -437,7 +457,8 @@ bool ResourceBlog::doSave( bool syncCache )
   }
 
   Incidence::List deleted = deletedIncidences();
-  for( i = deleted.begin(); i != deleted.end(); ++i ) {
+  for( Incidence::List::Iterator i = deleted.begin();
+       i != deleted.end(); ++i ) {
     Journal* journal = dynamic_cast<Journal*>( *i );
     if ( journal ) {
       KBlog::BlogPost *post = new KBlog::BlogPost( *journal );
@@ -544,7 +565,9 @@ bool ResourceBlog::listBlogs() {
 void ResourceBlog::setBlog( const QString &id, const QString &name ) {
   mBlogID = id;
   mBlogName = name;
-  mBlog->setBlogId( mBlogID );
+  if ( mBlog ) {
+    mBlog->setBlogId( mBlogID );
+  }
 }
 
 QPair<QString, QString> ResourceBlog::blog() const {
