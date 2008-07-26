@@ -91,7 +91,7 @@ void SyncProcess::reinitEngine()
   Result result = mEngine->initialize();
   if ( result.isError() ) {
     kDebug(5200) <<"SyncProcess::reinitEngine:" << result.message();
-    KMessageBox::error( 0, i18n( "Error initializing Synchoronization Engine for group \"%1\":\n %2",
+    KMessageBox::error( 0, i18n( "Error initializing Synchronization Engine for group \"%1\":\n %2",
                                  mGroup.name(), result.message() ) );
   }
 
