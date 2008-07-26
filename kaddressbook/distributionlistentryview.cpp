@@ -113,7 +113,7 @@ void KAB::DistributionListEntryView::setEntry( const KPIM::DistributionList& lis
 
     QPixmap pixmap;
     if ( m_entry.addressee.photo().data().isNull() )
-      pixmap = KIcon( "personal" ).pixmap( 100, 140 );
+      pixmap = KIcon( "user-identity" ).pixmap( 100, 140 );
     else
       pixmap = QPixmap::fromImage( m_entry.addressee.photo().data() );
     m_imageLabel->setPixmap( pixmap );
