@@ -68,9 +68,9 @@ Attachment::~Attachment()
 KTNEFView::KTNEFView( QWidget *parent )
 	: K3ListView( parent )
 {
-	addColumn(i18n("File Name"));
-	addColumn(i18n("File Type"));
-	addColumn(i18n("Size"));
+	addColumn(i18nc("@title:column name of file", "File Name"));
+	addColumn(i18nc("@title:column mimetype of file", "File Type"));
+	addColumn(i18nc("@title:column size of file in bytes", "Size"));
 	setFrameStyle(QFrame::WinPanel|QFrame::Sunken);
 	setLineWidth(1);
 	setSelectionMode(Q3ListView::Extended);

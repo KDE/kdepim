@@ -16,26 +16,25 @@
  */
 
 #include "attachpropertydialog.h"
+#include "qwmf.h"
+
 #include <ktnef/ktnefattach.h>
 #include <ktnef/ktnefproperty.h>
 #include <ktnef/ktnefpropertyset.h>
 #include <ktnef/ktnefdefs.h>
-#ifdef __GNUC__
-#warning Port me!
-#endif
-//#include "qwmf.h"
 
-#include <QPixmap>
-#include <QTextStream>
 #include <k3listview.h>
-#include <kmimetype.h>
 #include <kdebug.h>
-#include <klocale.h>
-#include <kiconloader.h>
-#include <kmessagebox.h>
 #include <kfiledialog.h>
+#include <kiconloader.h>
+#include <klocale.h>
+#include <kmessagebox.h>
+#include <kmimetype.h>
+
 #include <QBuffer>
 #include <QDataStream>
+#include <QPixmap>
+#include <QTextStream>
 
 using namespace KTnef;
 
@@ -100,18 +99,18 @@ void formatProperties( const QMap<int,KTNEFProperty*>& props, Q3ListView *lv, Q3
 		if ( value.type() == QVariant::List )
 		{
 			newItem->setOpen( true );
-			newItem->setText( 0, newItem->text( 0 ) + " [" + QString::number( value.toList().count() ) + "]" );
+			newItem->setText( 0, newItem->text( 0 ) + " [" + QString::number( value.toList().count() ) + ']' );
 			int i = 0;
 			QList<QVariant> list = value.toList();
 			for ( QList<QVariant>::ConstIterator lit=list.begin(); lit!=list.end(); ++lit, i++ )
-				new Q3ListViewItem( newItem, "[" + QString::number( i ) + "]", KTNEFProperty::formatValue( *lit ) );
+				new Q3ListViewItem( newItem, '[' + QString::number( i ) + ']', KTNEFProperty::formatValue( *lit ) );
 		}
 		else if ( value.type() == QVariant::DateTime )
 			newItem->setText( 1, value.toDateTime().toString() );
 		else
 		{
 			newItem->setText( 1, ( *it )->valueString() );
-			newItem->setText( 2, prefix + "_" + QString::number( it.key() ) );
+			newItem->setText( 2, prefix + '_' + QString::number( it.key() ) );
 		}
 	}
 }

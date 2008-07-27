@@ -203,7 +203,7 @@
           </property>
           <column>
             <property name="text" >
-              <string>Name</string>
+              <string comment="property name">Name</string>
             </property>
             <property name="clickable" >
               <bool>true</bool>
@@ -214,7 +214,7 @@
           </column>
           <column>
             <property name="text" >
-              <string>Value</string>
+              <string comment="property value">Value</string>
             </property>
             <property name="clickable" >
               <bool>true</bool>

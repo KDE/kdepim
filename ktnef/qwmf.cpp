@@ -1,6 +1,6 @@
 /* Windows Meta File Loader/Painter Class Implementation
  *
- * Copyright ( C ) 1998 Stefan Taferner
+ * Copyright ( C ) 1998 Stefan Taferner <taferner@kde.org>
  * Modified 2002 thierry lorthiois
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -17,17 +17,6 @@
  * MA  02110-1301, USA.
  */
 
-#include <math.h>
-#include <assert.h>
-#include <QPixmap>
-#include <QPainter>
-#include <QDataStream>
-#include <QBuffer>
-//Added by qt3to4:
-#include <Q3CString>
-#include <QPolygon>
-#include <kdebug.h>
-
 bool qwmfDebug = false;
 
 #include "qwmf.h"
@@ -36,6 +25,18 @@ bool qwmfDebug = false;
 
 #define QWMF_DEBUG  0
 
+#include <kdebug.h>
+
+#include <Q3CString>
+#include <QBuffer>
+#include <QDataStream>
+#include <QFile>
+#include <QPainter>
+#include <QPixmap>
+#include <QPolygon>
+
+#include <math.h>
+#include <assert.h>
 
 class WmfCmd
 {
@@ -379,7 +380,7 @@ bool QWinMetaFile::paint( const QPaintDevice* aTarget, bool absolute )
             for ( i=0 ; i < cmd->numParm ; i++ ) {
                 param.setNum( cmd->parm[ i ] );
                 str += param;
-                str += " ";
+                str += ' ';
             }
             kDebug() << str;
         }

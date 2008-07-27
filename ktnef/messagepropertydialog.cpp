@@ -28,7 +28,7 @@ using namespace KTnef;
 MessagePropertyDialog::MessagePropertyDialog( QWidget *parent, KTNEFMessage *msg )
 	: KDialog( parent)
 {
-  setCaption( i18n( "Message Properties" ) );
+  setCaption( i18nc( "@title:window", "Message Properties" ) );
   setButtons( KDialog::Close|KDialog::User1 );
   setDefaultButton( KDialog::Close );
   setButtonGuiItem( KDialog::User1,  KStandardGuiItem::save() );
@@ -36,8 +36,8 @@ MessagePropertyDialog::MessagePropertyDialog( QWidget *parent, KTNEFMessage *msg
 	m_message = msg;
 
 	m_listview = new K3ListView( this );
-	m_listview->addColumn( i18n( "Name" ) );
-	m_listview->addColumn( i18n( "Value" ) );
+	m_listview->addColumn( i18nc( "@title:column message property name", "Name" ) );
+	m_listview->addColumn( i18nc( "@title:column message property value", "Value" ) );
 	m_listview->setAllColumnsShowFocus( true );
 	setMainWidget( m_listview );
 
