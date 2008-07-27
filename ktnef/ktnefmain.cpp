@@ -15,31 +15,26 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
-#include <kdebug.h>
+#include "ktnefmain.h"
+#include "attachpropertydialog.h"
+#include "messagepropertydialog.h"
+
 #include <ktnef/ktnefparser.h>
 #include "ktnefview.h"
 #include <ktnef/ktnefattach.h>
 #include <ktnef/ktnefproperty.h>
 #include <ktnef/ktnefmessage.h>
 using namespace KTnef;
-#include "ktnefmain.h"
 
-#include "attachpropertydialog.h"
-#include "messagepropertydialog.h"
-
-#include <QMenu>
-//Added by qt3to4:
-#include <kicon.h>
-#include <QTextStream>
 #include <k3listview.h>
+#include <kdebug.h>
+#include <kicon.h>
+#include <kfiledialog.h>
 #include <klocale.h>
 #include <kapplication.h>
 #include <kactioncollection.h>
 #include <kiconloader.h>
 #include <kstandardshortcut.h>
-#include <QMessageBox>
-#include <kfiledialog.h>
-#include <QDir>
 #include <kglobal.h>
 #include <kstandarddirs.h>
 #include <kaction.h>
@@ -47,6 +42,11 @@ using namespace KTnef;
 #include <kdialog.h>
 #include <ktemporaryfile.h>
 #include <kshortcutsdialog.h>
+
+#include <QMenu>
+#include <QTextStream>
+#include <QMessageBox>
+#include <QDir>
 
 #ifdef KDE_NO_COMPAT
 #undef KDE_NO_COMPAT

@@ -14,8 +14,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef ATTACH_PROPERTY_DIALOG_H_
-#define ATTACH_PROPERTY_DIALOG_H_
+#ifndef ATTACH_PROPERTY_DIALOGBASE_H
+#define ATTACH_PROPERTY_DIALOGBASE_H
 
 #include "ui_attachpropertydialogbase.h"
 #include <qdialog.h>

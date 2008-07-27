@@ -1,6 +1,6 @@
 /* Windows Meta File Loader
  *
- * Copyright ( C ) 1998 Stefan Taferner
+ * Copyright ( C ) 1998 Stefan Taferner <taferner@kde.org>
  * Modified 2002 thierry lorthiois
  *
  * This program is free software; you can redistribute it and/or modify it
@@ -194,9 +194,9 @@ protected:
     void addHandle( WinObjHandle*  );
     void deleteHandle( int );
 
-    /** Convert windows rasterOp in QT rasterOp */
-    Qt::RasterOp winToQtRaster( short parm ) const;
-    Qt::RasterOp winToQtRaster( long parm ) const;
+    /** Convert windows compositionMode in QT compositionMode */
+    QPainter::CompositionMode winToQtRaster( short parm ) const;
+    QPainter::CompositionMode winToQtRaster( long parm ) const;
 
     /** Converts DIB to BMP */
     bool dibToBmp( QImage& bmp, const char* dib, long size);
