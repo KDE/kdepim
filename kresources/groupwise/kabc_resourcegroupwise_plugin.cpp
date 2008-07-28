@@ -2,6 +2,7 @@
     This file is part of kdepim.
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2008 Will Stephenson <wtephenson@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -27,4 +28,14 @@
 
 using namespace KABC;
 
-EXPORT_KRESOURCES_PLUGIN2( ResourceGroupwise, ResourceGroupwiseConfig, "libkcal", "kres_groupwise" )
+class ResourceGroupwiseFactory : public KRES::PluginFactory<ResourceGroupwise, ResourceGroupwiseConfig>
+{
+  public:
+    ResourceGroupwiseFactory()
+      : KRES::PluginFactory<ResourceGroupwise, ResourceGroupwiseConfig>()
+    {
+      KGlobal::locale()->insertCatalog( QLatin1String( "kres_groupwise" ) );
+    }
+};
+
+K_EXPORT_PLUGIN(ResourceGroupwiseFactory)
