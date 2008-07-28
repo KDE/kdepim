@@ -152,8 +152,6 @@ void AkonadiContact::setId( const QString &id )
 {
 	FUNCTIONSETUP;
 	
-	QString oldId = QString::number( fItem.id() );
-	
 	// Id's < 0 are temporary id's
 	if( id.toLongLong() < 0 )
 	{
@@ -164,8 +162,6 @@ void AkonadiContact::setId( const QString &id )
 		fTempId = QString();
 		fItem.setId( id.toULongLong() );
 	}
-	
-	DEBUGKPILOT << "AkonadiContact::setId() [old,new]: [" << oldId << "," << this->id() << "]";
 }
 
 void AkonadiContact::synced()
