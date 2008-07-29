@@ -33,8 +33,9 @@
 #include "hhcontact.h"
 
 AkonadiContact::AkonadiContact( const Akonadi::Item& item, const QDateTime& lastSync )
-	: fItem( item ), fLastSyncDateTime( lastSync )
+	: fItem( item )
 {
+	fLastSyncDateTime = lastSync.toUTC();
 	// ContactsAkonadiDataProxy checks if item has an KABC::Addressee as payload
 	// so we don't check that again here.
 }
@@ -44,6 +45,7 @@ AkonadiContact::AkonadiContact()
 	KABC::Addressee addressee;
 	fItem.setMimeType( "text/directory" );
 	fItem.setPayload<KABC::Addressee>( addressee );
+	fLastSyncDateTime = QDateTime::currentDateTime().toUTC();
 }
 
 AkonadiContact::~AkonadiContact()
