@@ -30,6 +30,6 @@ set(conduit_base_KCFGS
 
 kde4_add_kcfg_files(conduit_base_SRCS ${conduit_base_KCFGS})
 kde4_add_library(kpilot_conduit_base SHARED ${conduit_base_SRCS})
-target_link_libraries(kpilot_conduit_base ${QT_LIBRARIES} kpilot)
+target_link_libraries(kpilot_conduit_base ${KDE4_KDEUI_LIBS} ${QT_QTXML_LIBRARY} kpilot)
 
 install(TARGETS kpilot_conduit_base LIBRARY DESTINATION ${LIB_INSTALL_DIR})
