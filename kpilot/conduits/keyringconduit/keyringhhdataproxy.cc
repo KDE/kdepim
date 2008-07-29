@@ -198,11 +198,7 @@ bool KeyringHHDataProxy::createDataStore()
 		appInfo.setCategoryName( 1, CSL1( "Banking" ) );
 		appInfo.setCategoryName( 2, CSL1( "Computer" ) );
 		appInfo.setCategoryName( 3, CSL1( "Phone" ) );
-		// rather than adding the 5th default category, add our first record
-		// below and set it to this new one.  end result is the same, but this also
-		// makes sure that our HHRecord is able to update the appInfo block when
-		// it sets the categoryName to a new one....
-		// appInfo.setCategoryName( 4, CSL1( "Web" ) );
+		appInfo.setCategoryName( 4, CSL1( "Web" ) );
 		
 		QByteArray saltedHash = QCA::hexToArray( fSaltedHash );
 		
