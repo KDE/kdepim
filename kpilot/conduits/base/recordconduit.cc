@@ -188,10 +188,8 @@ RecordConduit::~RecordConduit()
 	fHHDataProxy->setEndcount();
 	fPCDataProxy->setEndcount();
 
-	addSyncLogEntry(fHHDataProxy->counter()->moo() +'\n');
-	DEBUGKPILOT << fHHDataProxy->counter();
-	addSyncLogEntry(fPCDataProxy->counter()->moo() +'\n');
-	DEBUGKPILOT << fPCDataProxy->counter();
+	addSyncLogEntry( "HH data proxy: " + fHHDataProxy->counter()->moo() +'\n' );
+	addSyncLogEntry( "PC data proxy: " + fPCDataProxy->counter()->moo() +'\n' );
 	
 	fMapping->setLastSyncedDate( QDateTime::currentDateTime() );
 	if( !fMapping->isValid( fHHDataProxy->ids() ) )

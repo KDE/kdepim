@@ -96,6 +96,10 @@ void HHDataProxy::clearCategory( HHRecord *rec )
 bool HHDataProxy::containsCategory( const QString& category ) const
 {
 	FUNCTIONSETUP;
+	
+	DEBUGKPILOT << "HHDataProxy::containsCategory() - fAppInfo: " << fAppInfo
+		<< " category we're trying to find: " << category;
+	
 	// Do not map unknown to unfiled when looking for category
 	return fAppInfo->findCategory( category, false ) != -1;
 }
