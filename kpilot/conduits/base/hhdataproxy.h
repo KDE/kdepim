@@ -94,8 +94,9 @@ public:
 	
 	/**
 	 * Reads the right category id from app info and updates the record
-	 * accordingly. If there is no category id found the category of the record
-	 * remains unchanged.
+	 * accordingly. When the Category is not found, it tries to add the Category
+	 * to the database. If there is no category id found and the Category could
+	 * not be added to the database the category of the record remains unchanged.
 	 */
 	/* virtual */ void setCategory( Record* rec, const QString& category );
 

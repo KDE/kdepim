@@ -154,6 +154,16 @@ void HHDataProxy::setCategory( Record* rec, const QString& category )
 {
 	FUNCTIONSETUP;
 	
+	if( !containsCategory( category ) )
+	{
+		// Let's try to add the category.
+		if( !addGlobalCategory( category ) )
+		{
+			// Well that failed, so we let the record unchanged.
+			return;
+		}
+	}
+	
 	// Get the category id or let findCategory return -1 if it does not exist.
 	int id = fAppInfo->findCategory( category, false );
 	
