@@ -55,6 +55,9 @@ KeyringHHRecord::KeyringHHRecord( const QString &name
 		
 	fRecord = new PilotRecord( buf, 0, 0, 0);
 	fRecord->setCategory( 0 );
+	fRecord->setDeleted( false );
+	fRecord->setSecret( false );
+	fRecord->setArchived( false );
 	fCategory = "Unfiled";
 	
 	pack( data );
@@ -165,7 +168,8 @@ KeyringHHRecordBase KeyringHHRecord::unpack() const
 	// Encrypted data is in fRecord->data()[n..size]
 	QCA::SymmetricKey sKey( QCA::hexToArray( fKey ) );
 	
-	if(!QCA::isSupported("tripledes-cbc")) {
+	if( !QCA::isSupported( "tripledes-ecb" ) )
+	{
 		WARNINGKPILOT << "ERROR: tripledes not supported! Unable to continue.";
 		return data;
 	}
@@ -286,7 +290,8 @@ void KeyringHHRecord::pack( const KeyringHHRecordBase &data )
 	QCA::Initializer init;
 	QCA::SymmetricKey sKey( QCA::hexToArray( fKey ) );
 	
-	if(!QCA::isSupported("tripledes-cbc")) {
+	if( !QCA::isSupported( "tripledes-ecb" ) )
+	{
 		WARNINGKPILOT << "ERROR: tripledes not supported! Unable to continue."; 
 		return;
 	}
