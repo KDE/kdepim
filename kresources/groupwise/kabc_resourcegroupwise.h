@@ -88,7 +88,7 @@ class KABC_GROUPWISE_EXPORT ResourceGroupwise : public ResourceCached
     /**
      * Begin asynchronously fetching the system address book , replacing the cached copy
      */
-    void fetchAddressBooks( BookType booktype );
+    void fetchAddressBooks( const BookType booktype );
     /**
      *  Asynchronously update the system address book
      */
@@ -107,7 +107,12 @@ class KABC_GROUPWISE_EXPORT ResourceGroupwise : public ResourceCached
      * Check if the resource is configured to download the SAB
      */
     bool shouldFetchSystemAddressBook();
-
+    /**
+     * Check if the resource is configured to download personal address
+     * books
+     */
+    bool shouldFetchUserAddressBooks();
+ 
     /**
      * Create a URL for a single addressbook access.
      * To fetch an address book completely, use mode = Fetch
@@ -116,6 +121,12 @@ class KABC_GROUPWISE_EXPORT ResourceGroupwise : public ResourceCached
      */
     KUrl createAccessUrl( BookType bookType, AccessMode mode, unsigned int lastSequenceNumber = 0 );
 
+    /**
+     * Instantiate and connect the resource's progress item with the
+     * given label and completion percent (used when not loading
+     * the SAB, the progress item starts at 50%
+     */
+    void createProgressItem( const QString & message, const int percent = 0 );
 
   private slots:
     /** STATE CHANGING SLOTS **/
@@ -137,10 +148,10 @@ class KABC_GROUPWISE_EXPORT ResourceGroupwise : public ResourceCached
     GroupwiseServer *mServer;
 
     KIO::TransferJob *mJob;
-    KIO::TransferJob *mUpdateJob;
     KPIM::ProgressItem *mProgress;
+    KPIM::ProgressItem *mSABProgress;
+    KPIM::ProgressItem *mUABProgress;
     QByteArray mJobData;
-    bool mUpdateSystemAddressBook;
     ResourceState mState;
 };
 

@@ -78,7 +78,8 @@ void ResourceGroupwise::init()
 {
   mJob = 0;
   mProgress = 0;
-  mUpdateSystemAddressBook = false;
+  mSABProgress = 0;
+  mUABProgress = 0;
   mPrefs = new GroupwisePrefs;
   mState = Start;
   setType( "groupwise" );
@@ -89,9 +90,6 @@ void ResourceGroupwise::initGroupwise()
   mServer = new GroupwiseServer( mPrefs->url(), mPrefs->user(),
                                  mPrefs->password(), KDateTime::Spec::LocalZone(), this );
 
-  // TODO: find out what this was meant to do.  the ReadAddressBooksJob could cause the server to emit this job when its run() ends
-  // connect( mServer, SIGNAL( readAddressBooksFinished() ),
-  //         SLOT( loadFinished() ) );
 }
 
 ResourceGroupwise::~ResourceGroupwise()
@@ -252,6 +250,14 @@ bool ResourceGroupwise::asyncLoad()
 
   loadFromCache();
 
+  if ( !mProgress )
+  {
+    mProgress = KPIM::ProgressManager::instance()->createProgressItem(
+      KPIM::ProgressManager::getUniqueID(), i18n( "Loading GroupWise resource %1" ).arg( resourceName() ), QString::null, true /*CanBeCancelled*/, mPrefs->url().startsWith("https" ) );
+    connect( mProgress, SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
+               SLOT( cancelLoad() ) );
+  }
+
   if ( addressBooks().isEmpty() ) {
     kDebug() << "  Retrieving default addressbook list.";
     retrieveAddressBooks();
@@ -264,7 +270,7 @@ bool ResourceGroupwise::asyncLoad()
     fetchAddressBooks( System );
     return true;
   }
-  else if ( !shouldFetchSystemAddressBook() )
+  else if ( !shouldFetchSystemAddressBook() && shouldFetchUserAddressBooks())
   {
     kDebug() << "  Fetching user addressbook";
     fetchAddressBooks( User );
@@ -278,7 +284,7 @@ bool ResourceGroupwise::asyncLoad()
   return true;
 }
  
-void ResourceGroupwise::fetchAddressBooks( BookType bookType )
+void ResourceGroupwise::fetchAddressBooks( const BookType bookType )
 {
   KUrl url = createAccessUrl( bookType, Fetch );
    kDebug() << k_funcinfo << ( bookType == System ? " System" : " User" ) << " URL: " << url;
@@ -305,18 +311,22 @@ void ResourceGroupwise::fetchAddressBooks( BookType bookType )
   {
     connect( mJob, SIGNAL( result( KIO::Job * ) ),
            SLOT( fetchSABResult( KIO::Job * ) ) );
+    mSABProgress = KPIM::ProgressManager::instance()->createProgressItem(
+        mProgress, KPIM::ProgressManager::getUniqueID(),
+        i18n( "Fetching System Address Book" ), QString::null,
+        false /*CannotBeCancelled*/,
+        mPrefs->url().startsWith("https" ) );
   }
   else
   {
     connect( mJob, SIGNAL( result( KIO::Job * ) ),
            SLOT( fetchUABResult( KIO::Job * ) ) );
+    mUABProgress = KPIM::ProgressManager::instance()->createProgressItem(
+        mProgress, KPIM::ProgressManager::getUniqueID(),
+        i18n( "Fetching User Address Books" ), QString::null,
+        false /*CannotBeCancelled*/,
+        mPrefs->url().startsWith("https" ) );
   }
-
-  mProgress = KPIM::ProgressManager::instance()->createProgressItem(
-      KPIM::ProgressManager::getUniqueID(), ( bookType == System ? i18n("Downloading system addressbook") :  i18n("Downloading user addressbooks") ) );
-  connect( mProgress,
-           SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
-           SLOT( cancelLoad() ) );
 
   return;
 }
@@ -369,8 +379,12 @@ void ResourceGroupwise::fetchSABResult( KIO::Job *job )
     // TODO kill the rest of the load sequence as well
   }
 
+  mJob->disconnect( this );
   mJob = 0;
   mState = SABUptodate;
+  if ( mSABProgress )
+    mSABProgress->setComplete();
+
   // TODO add delta info progress reporting
   // update SAB delta info
   kDebug() << "  fetched whole SAB, now fetching delta info";
@@ -398,30 +412,12 @@ void ResourceGroupwise::fetchUABResult( KIO::Job *job )
     // TODO kill the rest of the load sequence as well
   }
 
+  mJob->disconnect( this );
   mJob = 0;
   mState = Uptodate;
+  if ( mUABProgress )
+    mUABProgress->setComplete();
   loadCompleted();
-}
-
-void ResourceGroupwise::updateSABResult( KIO::Job *job )
-{
-  kDebug();
-
-  mJob = 0;
-  int errorCode = job->error();
-  if ( errorCode != 0 ) {
-    if ( errorCode == KIO::ERR_NO_CONTENT ) // we need to refresh the SAB
-    {
-      kDebug() << "  update SAB failed, fetching all of it again";
-      mPrefs->setLastSequenceNumber( 0 );
-      mPrefs->setFirstSequenceNumber( 0 );
-      fetchAddressBooks( System );
-      return;
-    }
-  }
-  // TODO: update progress info
-  mState = SABUptodate;
-  fetchAddressBooks( User );
 }
 
 void ResourceGroupwise::updateSystemAddressBook()
@@ -439,17 +435,22 @@ void ResourceGroupwise::updateSystemAddressBook()
     writeAddressBooks();
   }
 
-  KUrl url = createAccessUrl( System, Update, mPrefs->lastSequenceNumber() );
+  KUrl url = createAccessUrl( System, Update, /*mPrefs->firstSequenceNumber(),*/ mPrefs->lastSequenceNumber() );
   kDebug() << "  Update URL: " << url;
 
   mJobData.clear();
-
-  mUpdateJob = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
-  connect( mUpdateJob, SIGNAL( result( KIO::Job * ) ),
+  mSABProgress = KPIM::ProgressManager::instance()->createProgressItem(
+      mProgress, KPIM::ProgressManager::getUniqueID(),
+      i18n( "Updating System Address Book" ), QString::null,
+      false /*CannotBeCancelled*/,
+      mPrefs->url().startsWith("https" ) );
+ 
+  mJob = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
+  connect( mJob, SIGNAL( result( KIO::Job * ) ),
            SLOT( updateSABResult( KIO::Job * ) ) );
-  connect( mUpdateJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
+  connect( mJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
            SLOT( slotUpdateJobData( KIO::Job *, const QByteArray & ) ) );
-  connect( mUpdateJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
+  connect( mJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
            SLOT( slotJobPercent( KIO::Job *, unsigned long ) ) );
 
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
@@ -459,6 +460,32 @@ void ResourceGroupwise::updateSystemAddressBook()
            SLOT( cancelLoad() ) );
 
   return;
+}
+
+void ResourceGroupwise::updateSABResult( KIO::Job *job )
+{
+  kDebug() << "ResourceGroupwise::updateSABResult() ";
+
+  mSABProgress->setComplete();
+  mSABProgress = 0;
+  mJob->disconnect( this );
+  mJob = 0;
+
+  int errorCode = job->error();
+  if ( errorCode != 0 ) {
+    if ( errorCode == KIO::ERR_NO_CONTENT ) // we need to refresh the SAB
+    {
+      kDebug() << "  update SAB failed, fetching all of it again";
+      mPrefs->setLastSequenceNumber( 0 );
+      mPrefs->setFirstSequenceNumber( 0 );
+      fetchAddressBooks( System );
+      return;
+    }
+  }
+  mState = SABUptodate;
+
+  if ( shouldFetchUserAddressBooks() )
+    fetchAddressBooks( User );
 }
 
 void ResourceGroupwise::slotReadJobData( KIO::Job *job , const QByteArray &data )
@@ -474,7 +501,7 @@ void ResourceGroupwise::slotReadJobData( KIO::Job *job , const QByteArray &data 
   QTime profile;
   profile.start();
   Addressee::List addressees = conv.parseVCards( data );
-  kDebug() <<"ResourceGroupwise::slotReadJobData() - parsed" << addressees.count() <<" contacts in"  << profile.elapsed() <<"ms, now adding to resource...";
+  kDebug() << "  parsed " << addressees.count() << " contacts in "  << profile.elapsed() << "ms, now adding to resource...";
 
   Addressee::List::ConstIterator it;
   for( it = addressees.begin(); it != addressees.end(); ++it ) {
@@ -547,9 +574,12 @@ void ResourceGroupwise::slotUpdateJobData( KIO::Job *job, const QByteArray &data
 
 void ResourceGroupwise::loadCompleted()
 {
-  if ( mProgress ) 
-    mProgress->setComplete();  //TODO rejig progress reporting
+  kDebug() << "ResourceGroupwise::loadCompleted()";
+  if ( mProgress )
+    mProgress->setComplete();
   mProgress = 0;
+  mSABProgress = 0;
+  mUABProgress = 0;
   mState = Start;
   saveToCache();
   emit loadingFinished( this );
@@ -558,6 +588,7 @@ void ResourceGroupwise::loadCompleted()
 
 void ResourceGroupwise::slotJobPercent( KJob *, unsigned long percent )
 {
+  // TODO: make this act on the correct progress item
   kDebug() <<"ResourceGroupwise::slotJobPercent()" << percent;
   if ( mProgress ) mProgress->setProgress( percent );
 }
@@ -565,12 +596,14 @@ void ResourceGroupwise::slotJobPercent( KJob *, unsigned long percent )
 void ResourceGroupwise::cancelLoad()
 {
   if ( mJob ) {
+    mJob->disconnect( this );
     mJob->kill();
     mJob = 0;
   }
   if ( mProgress ) {
     mProgress->setComplete();
     mProgress = 0;
+    mState = Start;
   }
 }
 
@@ -583,6 +616,12 @@ bool ResourceGroupwise::shouldFetchSystemAddressBook()
 {
   QStringList ids = mPrefs->readAddressBooks();
   return ids.contains( mPrefs->systemAddressBook() );
+}
+
+bool ResourceGroupwise::shouldFetchUserAddressBooks()
+{
+  QStringList ids = mPrefs->readAddressBooks();
+  return ids.count() > 1 || ids.contains( mPrefs->systemAddressBook() );
 }
 
 KUrl ResourceGroupwise::createAccessUrl( BookType bookType, AccessMode mode, unsigned int lastSequenceNumber )
