@@ -97,6 +97,7 @@ class GWSOAP_EXPORT GroupwiseServer : public QObject
   Q_OBJECT
 
   public:
+    bool checkResponse( int result, ngwt__Status *status );
     enum RetractCause { DueToResend, Other };
     GroupwiseServer( const QString &url, const QString &user,
                      const QString &password, const KDateTime::Spec & timeSpec, QObject *parent );
@@ -138,6 +139,12 @@ class GWSOAP_EXPORT GroupwiseServer : public QObject
      */
     bool retractRequest( KCal::Incidence *, RetractCause cause );
 
+    /**
+     * @brief update a todo's completed state.
+     * @param the todo to set the completed state for.
+     */
+    bool setCompleted( KCal::Todo * todo );
+
     bool readCalendarSynchronous( KCal::Calendar *cal );
 
     GroupWise::AddressBook::List addressBookList();
@@ -178,7 +185,6 @@ class GWSOAP_EXPORT GroupwiseServer : public QObject
     QString userEmail() const { return mUserEmail; }
     QString userName() const { return mUserName; }
     QString userUuid() const { return mUserUuid; }
-    bool checkResponse( int result, ngwt__Status *status );
 
   signals:
     void readAddressBookTotalSize( int );
