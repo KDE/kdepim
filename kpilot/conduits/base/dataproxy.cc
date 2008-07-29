@@ -269,7 +269,7 @@ bool DataProxy::commit()
 	}
 	
 	// Commit deleted records
-	DEBUGKPILOT << "Updating: [" << fDeletedRecords.size() << "] records.";
+	DEBUGKPILOT << "Deleting: [" << fDeletedRecords.size() << "] records.";
 	
 	i = QListIterator<Record*>( fDeletedRecords.values() );
 	while( i.hasNext() )
