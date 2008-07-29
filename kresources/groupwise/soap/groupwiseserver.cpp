@@ -48,6 +48,7 @@
 #include "contactconverter.h"
 #include "incidenceconverter.h"
 #include "soapH.h"
+#include "stdsoap2.h"
 #include "soapGroupWiseBindingProxy.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -101,7 +102,7 @@ size_t myReceiveCallback( struct soap *soap, char *s, size_t n )
   return (*it)->gSoapReceiveCallback( soap, s, n );
 }
 
-int GroupwiseServer::gSoapOpen( struct soap *, const char *,
+int GroupwiseServer::gSoapOpen( struct soap *soap, const char *,
   const char *host, int port )
 {
 //  kDebug() <<"GroupwiseServer::gSoapOpen()";
@@ -131,10 +132,12 @@ int GroupwiseServer::gSoapOpen( struct soap *, const char *,
     QString errorMsg;
     kError() <<"gSoapOpen: connect failed" << rc;
     mErrors.append( i18n("Connect failed: %1.", rc ) );
+    soap->error = SOAP_TCP_ERROR;
     if ( rc == -1 ) {
       errorMsg = QString::fromLatin1( strerror( errno ) );
       perror( 0 );
     } else {
+      //set the soap struct's error here!
       if ( rc == -3 ) {
         errorMsg = QString::fromLatin1( "Connection timed out.  Check host and port number" );
       }
@@ -167,16 +170,18 @@ int GroupwiseServer::gSoapClose( struct soap * )
    return SOAP_OK;
 }
 
-int GroupwiseServer::gSoapSendCallback( struct soap *, const char *s, size_t n )
+int GroupwiseServer::gSoapSendCallback( struct soap * soap, const char *s, size_t n )
 {
 //  kDebug() <<"GroupwiseServer::gSoapSendCallback()";
 
   if ( !m_sock ) {
     kError() <<"no open connection";
+    soap->error = SOAP_TCP_ERROR;
     return SOAP_TCP_ERROR;
   }
   if ( !mErrors.isEmpty() ) {
     kError() <<"SSL is in error state.";
+    soap->error = SOAP_SSL_ERROR;
     return SOAP_SSL_ERROR;
   }
 
@@ -196,6 +201,7 @@ int GroupwiseServer::gSoapSendCallback( struct soap *, const char *s, size_t n )
     if ( ret < 0 ) {
       kError() << "Send failed:" << m_sock->errorString()
                << m_sock->state() << m_sock->error();
+      soap->error = SOAP_TCP_ERROR;
       return SOAP_TCP_ERROR;
     }
     n -= ret;
@@ -204,6 +210,7 @@ int GroupwiseServer::gSoapSendCallback( struct soap *, const char *s, size_t n )
   if ( n !=0 ) {
     kError() << "Send failed:" << m_sock->errorString()
              << m_sock->state() << m_sock->error();
+    soap->error = SOAP_TCP_ERROR;
   }
 
   m_sock->flush();
@@ -1025,10 +1032,11 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
   else  // If I am not the organizer restrict my changes to accept or decline requests or task completion
   {
     // find myself as attendee.
+    GWConverter conv( mSoap );
     KCal::Attendee::List attendees = incidence->attendees();
     KCal::Attendee::List::ConstIterator it;
     for( it = attendees.begin(); it != attendees.end(); ++it ) {
-      if ( (*it)->email() == mUserEmail ) {
+      if ( conv.emailsMatch( (*it)->email(), mUserEmail ) ) {
         if ( (*it)->status() == KCal::Attendee::Accepted )
           success &= acceptIncidence( incidence );
         else if ( (*it)->status() == KCal::Attendee::Declined )

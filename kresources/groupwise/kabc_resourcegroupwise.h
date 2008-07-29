@@ -73,7 +73,7 @@ class KABC_GROUPWISE_EXPORT ResourceGroupwise : public ResourceCached
     bool asyncLoad();
     bool save( Ticket * );
     bool asyncSave( Ticket * );
-    enum SABState { Stale, InSync, RefreshNeeded };
+    enum SABState { Error, Stale, InSync, RefreshNeeded };
 
     /**
      * Clears the cached data, in memory and on disk
@@ -157,7 +157,7 @@ class KABC_GROUPWISE_EXPORT ResourceGroupwise : public ResourceCached
     KPIM::ProgressItem *mUABProgress;
     QByteArray mJobData;
     ResourceState mState;
-    int mServerFirstSequence, mServerLastSequence, mServerLastPORebuildTime;
+    unsigned long mServerFirstSequence, mServerLastSequence, mServerLastPORebuildTime;
 
     bool mLimitedMode;
 };

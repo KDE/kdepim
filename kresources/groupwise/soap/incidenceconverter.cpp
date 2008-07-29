@@ -624,25 +624,25 @@ void IncidenceConverter::getAttendees( ngwt__CalendarItem *item, KCal::Incidence
   }
 
   if ( item->distribution && item->distribution->recipients ) {
-    kdDebug() << "-- recipients";
+    kDebug() << "-- recipients";
     std::vector<ngwt__Recipient*> recipients = item->distribution->recipients->recipient;
     std::vector<ngwt__Recipient*>::const_iterator it;
 
     for ( it = recipients.begin(); it != recipients.end(); ++it ) {
-      kDebug() << "---- recipient ";
       ngwt__Recipient *recipient = *it;
+      kDebug() << "---- recipient " << recipient->email->c_str();
       KCal::Attendee *attendee = new KCal::Attendee(
         stringToQString( recipient->displayName ),
         stringToQString( recipient->email ) );
 
       // set our status
-      if ( *(recipient->email) == *(qStringToString( mFromEmail )) )
+      if ( emailsMatch( stringToQString(recipient->email), mFromEmail ) )
         if ( item->status->accepted )
           attendee->setStatus( ( *item->status->accepted ) ? KCal::Attendee::Accepted : KCal::Attendee::NeedsAction );
-        else 
-          kdDebug() << "---- not accepted" << endl;
+        else
+          kDebug() << "---- found ourselves, but not accepted";
       else
-        kdDebug() << "---- '" << recipient->email->c_str() << "' != '" << (qStringToString( mFromEmail ))->c_str() << "'" << endl;
+        kDebug() << "---- '" <<  "' != '" << (qStringToString( mFromEmail ))->c_str() << "'";
 
       incidence->addAttendee( attendee );
     }

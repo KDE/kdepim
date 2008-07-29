@@ -38,13 +38,13 @@
   <entry key="SystemAddressBook" type="String" >
    <label>ID of System Address Book</label>
   </entry>
-  <entry key="LastTimePORebuild" type="Int" >
+  <entry key="LastTimePORebuild" type="ULongLong" >
     <label>Last time the Post Office was rebuilt</label>
   </entry>
-  <entry key="firstSequenceNumber" type="Int" >
+  <entry key="firstSequenceNumber" type="ULongLong" >
     <label>The first sequence number of the GW System Address Book held locally</label>
   </entry>
-  <entry key="lastSequenceNumber" type="Int" >
+  <entry key="lastSequenceNumber" type="ULongLong" >
     <label>The last sequence number of the GW System Address Book held locally</label>
   </entry>
   <entry key="SystemAddressBookWhiteList" type="StringList">
