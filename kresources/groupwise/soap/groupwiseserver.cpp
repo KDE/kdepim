@@ -1017,7 +1017,6 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
           success &= acceptIncidence( incidence );
         else if ( (*it)->status() == KCal::Attendee::Declined )
           success &= declineIncidence( incidence );
-        return success;
         break;
       }
     }
@@ -1028,11 +1027,9 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
       KCal::Todo * todo = static_cast<KCal::Todo *>( incidence );
       success &= setCompleted( todo );
       //assume nothing else to change
-      return true;
     }
-
     // if we are attending, but not the organiser, and we have not accepted or declined, there's nothing else to do.
-    return true;
+    return success;
   }
 
   _ngwm__modifyItemRequest request;
