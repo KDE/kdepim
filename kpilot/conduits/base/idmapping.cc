@@ -45,6 +45,18 @@ bool IDMapping::isValid( const QList<QString>& ids ) const
 	
 	const QMap<QString, QString>* mappings = fSource.constMappings();
 	
+	// If both are empty we have a valid mapping.
+	if( ids.isEmpty() && mappings->isEmpty() )
+	{
+		return true;
+	}
+	
+	// If both have different sizes then the mapping is surely not correct.
+	if( ids.size() != mappings->size() )
+	{
+		return false;
+	}
+	
 	// should be a 1..1 mapping between keys and values
 	bool equalSize = (mappings->uniqueKeys().size() == mappings->size() );
 	

@@ -47,6 +47,7 @@ private slots:
 	void testMap();
 	void testRemove();
 	void testIsValid();
+	void testEmptyMapIsValid();
 	void testRecordId();
 	void testCommitRollBack();
 	void testWeirdCase();
@@ -125,6 +126,13 @@ void IDMappingTest::testIsValid()
 	QVERIFY( mapping.isValid( pcIds ) );
 	QVERIFY( !mapping.isValid( trickyIds ) );
 	QVERIFY( !mapping.isValid( randomIds ) );
+}
+
+void IDMappingTest::testEmptyMapIsValid()
+{
+	IDMapping mapping( fUser, fConduit );
+	QVERIFY( mapping.isValid( QList<QString>() ) );
+	QVERIFY( !mapping.isValid( QList<QString>() << "id-1" ) );
 }
 
 void IDMappingTest::testRecordId()
