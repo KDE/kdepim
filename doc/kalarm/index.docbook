@@ -41,7 +41,7 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2008-04-29</date>
+<date>2008-07-11</date>
 <releaseinfo>2.00.00</releaseinfo>
 
 <abstract>
@@ -81,7 +81,7 @@ command whose output should be displayed. You can also choose the
 color of the alarm message, and whether to play a sound or speak the
 message.</para>
 
-<para>Alarms may also be scheduled from the command line, or via &DCOP;
+<para>Alarms may also be scheduled from the command line, or via D-Bus
 calls from programs.</para>
 
 <para>When an alarm message is due, it is displayed on each &kde;
@@ -1102,12 +1102,6 @@ select a file to play and set volume and repetition options. If you
 hover the mouse over the selector, a tooltip will display the audio file
 currently selected.</para>
 
-<note><para>&kalarm; uses the &arts; sound server for repetition and
-volume control. If &kalarm; has been built without &arts; support,
-repetition and volume options will not be available and a simple sound
-file selector will appear in place of the full Sound File
-dialog.</para></note>
-
 <para>In the Sound File dialog:</para>
 
 <itemizedlist>
@@ -1142,14 +1136,6 @@ in the <guilabel>Fade time</guilabel> field, and adjust the
 <guilabel>Initial volume</guilabel> slider.</para>
 </listitem>
 </itemizedlist>
-
-<note><para>When possible, &kmix; is used to set volumes. This
-ensures that the volume at which the alarm is played is unaffected by
-any changes in the computer's sound level. If &kmix; is not installed,
-the volume is set relative to the sound
-level current at the time the alarm triggers. So in this case, the
-volume at which the alarm is played will vary depending on any changes
-in the computer's sound level.</para></note>
 
 <tip><para>You can use the <guibutton>Try</guibutton> button to test out
 the selected sound levels.</para></tip>
@@ -1323,8 +1309,8 @@ this option inapplicable.</para>
 copy of the email to yourself when the alarm is triggered. The email
 address to which the copy will be sent may be set in the
 <link linkend="preferences-email">Preferences dialog</link>, the
-default being your email address set in the &kde; Control
-Center.</para>
+default being your email address set in the &kde; System
+Settings.</para>
 </listitem>
 </itemizedlist>
 
@@ -2342,9 +2328,9 @@ email alarms:</para>
 address.</para>
 </listitem>
 
-<listitem><para>Select <guilabel>Use address from Control
-Center</guilabel> to use the email address which is configured in the
-&kde; Control Center.</para>
+<listitem><para>Select <guilabel>Use address from System
+Settings</guilabel> to use the email address which is configured in the
+&kde; System Settings.</para>
 </listitem>
 
 <listitem><para>Select <guilabel>Use &kmail; identities</guilabel> to
@@ -2368,9 +2354,9 @@ computer which &kalarm; runs on, you could simply enter your user
 login name here.</para>
 </listitem>
 
-<listitem><para>Select <guilabel>Use address from Control
-Center</guilabel> to use the email address which is configured in the
-&kde; Control Center.</para>
+<listitem><para>Select <guilabel>Use address from System
+Settings</guilabel> to use the email address which is configured in the
+&kde; System Settings.</para>
 </listitem>
 </itemizedlist>
 </listitem>
@@ -3004,21 +2990,18 @@ request the following functions:</para>
 <listitem><para>display the Alarm Edit dialog</para></listitem>
 </itemizedlist>
 
-<para>Each of the above functions is implemented both by a &DCOP; call
-and by the command line. &DCOP; calls should be used in preference if
+<para>Each of the above functions is implemented both by a D-Bus call
+and by the command line. D-Bus calls should be used in preference if
 &kalarm; is already running.</para>
 
-<sect1 id="dcop-interface">
-<title>&DCOP; Interface</title>
+<sect1 id="dbus-interface">
+<title>D-Bus Interface</title>
 
-<para>The &DCOP; calls described in this document are all implemented in
-&kalarm;'s <constant>request</constant> &DCOP; object. The interface is
-defined in the file <filename>kalarmiface.h</filename>.</para>
-
-<note><para>With the introduction of alarm resources in &kalarm;
-version 1.9, the <parameter>calendarFile</parameter> parameter has been
-removed from those &DCOP; calls which used it. The old pre-version 1.2
-&DCOP; interface is no longer supported.</para></note>
+<para>The D-Bus calls described in this document are all implemented
+in &kalarm;'s <constant>/kalarm</constant> D-Bus object path. The
+interface is defined in the files
+<filename>org.kde.kalarm.kalarm.xml</filename> and
+<filename>kalarmiface.h</filename>.</para>
 
 <refentry id="cancelEvent">
 <refmeta>
@@ -3049,7 +3032,7 @@ void cancelEvent(const QString&amp; <replaceable>eventID</replaceable>)
 <refsect1>
 <title>Description</title>
 
-<para><function>cancelEvent()</function> is a &DCOP; call to cancel
+<para><function>cancelEvent()</function> is a D-Bus call to cancel
 the specified alarm. &kalarm; deletes the alarm from the calendar 
 without displaying or executing it.</para>
 
@@ -3085,7 +3068,7 @@ void triggerEvent(const QString&amp; <replaceable>eventID</replaceable>)
 <refsect1>
 <title>Description</title>
 
-<para><function>triggerEvent()</function> is a &DCOP; call to trigger
+<para><function>triggerEvent()</function> is a D-Bus call to trigger
 the immediate display or execution of the specified alarm (regardless
 of what time it is scheduled for). &kalarm; retrieves the alarm from
 the calendar and then displays or executes it.</para>
@@ -3110,41 +3093,42 @@ unchanged.</para>
 <refsynopsisdiv>
 <synopsis>
 bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>,
-                     const QString&amp; <replaceable>dateTime</replaceable>,
+                     const QString&amp; <replaceable>startDateTime</replaceable>,
                      int <replaceable>lateCancel</replaceable>,
-                     int <replaceable>flags</replaceable>, 
+                     unsigned <replaceable>flags</replaceable>, 
                      const QString&amp; <replaceable>bgColor</replaceable>, 
                      const QString&amp; <replaceable>fgColor</replaceable>, 
                      const QString&amp; <replaceable>font</replaceable>, 
-                     const KURL&amp; <replaceable>audioURL</replaceable>, 
-                     int <replaceable>reminder</replaceable>, 
+                     const QString&amp; <replaceable>audioURL</replaceable>, 
+                     int <replaceable>reminderMins</replaceable>, 
                      const QString&amp; <replaceable>recurrence</replaceable>,
                      int <replaceable>subRepeatInterval</replaceable>, 
                      int <replaceable>subRepeatCount</replaceable>)
 </synopsis>
 <synopsis>
 bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, 
-                     const QString&amp; <replaceable>dateTime</replaceable>, 
-                     int <replaceable>lateCancel</replaceable>, int <replaceable>flags</replaceable>, 
+                     const QString&amp; <replaceable>startDateTime</replaceable>, 
+                     int <replaceable>lateCancel</replaceable>,
+                     unsigned <replaceable>flags</replaceable>, 
                      const QString&amp; <replaceable>bgColor</replaceable>, 
                      const QString&amp; <replaceable>fgColor</replaceable>, 
                      const QString&amp; <replaceable>font</replaceable>, 
-                     const KURL&amp; <replaceable>audioURL</replaceable>, 
-                     int <replaceable>reminder</replaceable>, 
+                     const QString&amp; <replaceable>audioURL</replaceable>, 
+                     int <replaceable>reminderMins</replaceable>, 
                      int <replaceable>recurType</replaceable>, 
                      int <replaceable>recurInterval</replaceable>, 
                      int <replaceable>recurCount</replaceable>)
 </synopsis>
 <synopsis>
 bool scheduleMessage(const QString&amp; <replaceable>message</replaceable>, 
-                     const QString&amp; <replaceable>dateTime</replaceable>, 
+                     const QString&amp; <replaceable>startDateTime</replaceable>, 
                      int <replaceable>lateCancel</replaceable>, 
-                     int <replaceable>flags</replaceable>, 
+                     unsigned <replaceable>flags</replaceable>, 
                      const QString&amp; <replaceable>bgColor</replaceable>, 
                      const QString&amp; <replaceable>fgColor</replaceable>, 
                      const QString&amp; <replaceable>font</replaceable>, 
-                     const KURL&amp; <replaceable>audioURL</replaceable>, 
-                     int <replaceable>reminder</replaceable>, 
+                     const QString&amp; <replaceable>audioURL</replaceable>, 
+                     int <replaceable>reminderMins</replaceable>, 
                      int <replaceable>recurType</replaceable>, 
                      int <replaceable>recurInterval</replaceable>, 
                      const QString&amp; <replaceable>endDateTime</replaceable>)
@@ -3164,7 +3148,7 @@ line to execute to generate the message text.</para>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>dateTime</parameter></term>
+<term><parameter>startDateTime</parameter></term>
 <listitem>
 <para>Specifies the scheduled date, or date and time, at which the
 message should be displayed. For a date-only alarm, the string should
@@ -3252,7 +3236,7 @@ played.</para>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>reminder</parameter></term>
+<term><parameter>reminderMins</parameter></term>
 <listitem>
 <para>Specifies the number of minutes in advance of the main alarm
 and of each of its recurrences (if any) at which a reminder alarm
@@ -3282,7 +3266,7 @@ are defined in class <classname>KAlarmIface</classname> in
 <filename>kalarmiface.h</filename>. Monthly recurrences are of the
 day of the month type, and yearly recurrences are of the date in
 the year type, with the date in both cases taken from the
-<parameter>dateTime</parameter> parameter.</para>
+<parameter>startDateTime</parameter> parameter.</para>
 </listitem>
 </varlistentry>
 
@@ -3308,11 +3292,11 @@ repeated. Specify -1 to repeat the alarm indefinitely.</para>
 <term><parameter>endDateTime</parameter></term>
 <listitem>
 <para>Specifies the end date, or date and time, for recurrences of the
-alarm. If <parameter>dateTime</parameter> includes a time, this
-parameter must also include a time; if <parameter>dateTime</parameter>
+alarm. If <parameter>startDateTime</parameter> includes a time, this
+parameter must also include a time; if <parameter>startDateTime</parameter>
 contains only a date, this parameter must also contain only a
 date. It must not contain a time zone specifier; the same time zone as
-for <parameter>dateTime</parameter> is used to interpret this
+for <parameter>startDateTime</parameter> is used to interpret this
 parameter's value.</para>
 </listitem>
 </varlistentry>
@@ -3339,7 +3323,7 @@ including the initial occurrence.</para>
 
 <refsect1 id="scheduleMessage-descrip">
 <title>Description</title>
-<para><function>scheduleMessage()</function> is a &DCOP; call to
+<para><function>scheduleMessage()</function> is a D-Bus call to
 schedule the specified alarm message for display at the specified date
 and time. It has three forms. The most general form allows an
 arbitrary recurrence to be specified &ndash; use this also for
@@ -3368,37 +3352,37 @@ text or image file.</refpurpose>
 </refnamediv>
 <refsynopsisdiv>
 <synopsis>
-bool scheduleFile(const KURL&amp; <replaceable>URL</replaceable>,
-                  const QString&amp; <replaceable>dateTime</replaceable>,
+bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>,
+                  const QString&amp; <replaceable>startDateTime</replaceable>,
                   int <replaceable>lateCancel</replaceable>,
-                  int <replaceable>flags</replaceable>,
+                  unsigned <replaceable>flags</replaceable>,
                   const QString&amp; <replaceable>bgColor</replaceable>,
-                  const KURL&amp; <replaceable>audioURL</replaceable>,
-                  int <replaceable>reminder</replaceable>,
+                  const QString&amp; <replaceable>audioURL</replaceable>,
+                  int <replaceable>reminderMins</replaceable>,
                   const QString&amp; <replaceable>recurrence</replaceable>,
                   int <replaceable>subRepeatInterval</replaceable>, 
                   int <replaceable>subRepeatCount</replaceable>)
 </synopsis>
 <synopsis>
-bool scheduleFile(const KURL&amp; <replaceable>URL</replaceable>,
-                  const QString&amp; <replaceable>dateTime</replaceable>,
+bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>,
+                  const QString&amp; <replaceable>startDateTime</replaceable>,
                   int <replaceable>lateCancel</replaceable>,
-                  int <replaceable>flags</replaceable>,
+                  unsigned <replaceable>flags</replaceable>,
                   const QString&amp; <replaceable>bgColor</replaceable>,
-                  const KURL&amp; <replaceable>audioURL</replaceable>,
-                  int <replaceable>reminder</replaceable>,
+                  const QString&amp; <replaceable>audioURL</replaceable>,
+                  int <replaceable>reminderMins</replaceable>,
                   int <replaceable>recurType</replaceable>,
                   int <replaceable>recurInterval</replaceable>,
                   int <replaceable>recurCount</replaceable>)
 </synopsis>
 <synopsis>
-bool scheduleFile(const KURL&amp; <replaceable>URL</replaceable>,
-                  const QString&amp; <replaceable>dateTime</replaceable>,
+bool scheduleFile(const QString&amp; <replaceable>URL</replaceable>,
+                  const QString&amp; <replaceable>startDateTime</replaceable>,
                   int <replaceable>lateCancel</replaceable>,
-                  int <replaceable>flags</replaceable>,
+                  unsigned <replaceable>flags</replaceable>,
                   const QString&amp; <replaceable>bgColor</replaceable>,
-                  const KURL&amp; <replaceable>audioURL</replaceable>,
-                  int <replaceable>reminder</replaceable>,
+                  const QString&amp; <replaceable>audioURL</replaceable>,
+                  int <replaceable>reminderMins</replaceable>,
                   int <replaceable>recurType</replaceable>,
                   int <replaceable>recurInterval</replaceable>,
                   const QString&amp; <replaceable>endDateTime</replaceable>)
@@ -3416,7 +3400,7 @@ displayed in the message to be scheduled.</para>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>dateTime</parameter></term>
+<term><parameter>startDateTime</parameter></term>
 <listitem>
 <para>Specifies the scheduled date, or date and time, at which the
 message should be displayed. For a date-only alarm, the string should
@@ -3484,7 +3468,7 @@ played.</para>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>reminder</parameter></term>
+<term><parameter>reminderMins</parameter></term>
 <listitem>
 <para>Specifies the number of minutes in advance of the main alarm
 and of each of its recurrences (if any) at which a reminder alarm
@@ -3514,7 +3498,7 @@ are defined in class <classname>KAlarmIface</classname> in
 <filename>kalarmiface.h</filename>. Monthly recurrences are of the
 day of the month type, and yearly recurrences are of the date in
 the year type, with the date in both cases taken from the
-<parameter>dateTime</parameter> parameter.</para>
+<parameter>startDateTime</parameter> parameter.</para>
 </listitem>
 </varlistentry>
 
@@ -3540,11 +3524,11 @@ repeated. Specify -1 to repeat the alarm indefinitely.</para>
 <term><parameter>endDateTime</parameter></term>
 <listitem>
 <para>Specifies the end date, or date and time, for recurrences of the
-alarm. If <parameter>dateTime</parameter> includes a time, this
-parameter must also include a time; if <parameter>dateTime</parameter>
+alarm. If <parameter>startDateTime</parameter> includes a time, this
+parameter must also include a time; if <parameter>startDateTime</parameter>
 contains only a date, this parameter must also contain only a
 date. It must not contain a time zone specifier; the same time zone as
-for <parameter>dateTime</parameter> is used to interpret this
+for <parameter>startDateTime</parameter> is used to interpret this
 parameter's value.</para>
 </listitem>
 </varlistentry>
@@ -3571,7 +3555,7 @@ including the initial occurrence.</para>
 
 <refsect1>
 <title>Description</title>
-<para><function>scheduleFile()</function> is a &DCOP; call to schedule
+<para><function>scheduleFile()</function> is a D-Bus call to schedule
 the specified text or image file for display at the specified date and
 time. Apart from specifying a file path or &URL; and omitting the
 foreground color and font, its usage is identical to
@@ -3593,27 +3577,27 @@ command.</refpurpose>
 <refsynopsisdiv>
 <synopsis>
 bool scheduleCommand(const QString&amp; <replaceable>commandLine</replaceable>,
-                     const QString&amp; <replaceable>dateTime</replaceable>,
+                     const QString&amp; <replaceable>startDateTime</replaceable>,
                      int <replaceable>lateCancel</replaceable>,
-                     int <replaceable>flags</replaceable>,
+                     unsigned <replaceable>flags</replaceable>,
                      const QString&amp; <replaceable>recurrence</replaceable>,
                      int <replaceable>subRepeatInterval</replaceable>, 
                      int <replaceable>subRepeatCount</replaceable>)
 </synopsis>
 <synopsis>
 bool scheduleCommand(const QString&amp; <replaceable>commandLine</replaceable>,
-                     const QString&amp; <replaceable>dateTime</replaceable>,
+                     const QString&amp; <replaceable>startDateTime</replaceable>,
                      int <replaceable>lateCancel</replaceable>,
-                     int <replaceable>flags</replaceable>,
+                     unsigned <replaceable>flags</replaceable>,
                      int <replaceable>recurType</replaceable>,
                      int <replaceable>recurInterval</replaceable>,
                      int <replaceable>recurCount</replaceable>)
 </synopsis>
 <synopsis>
 bool scheduleCommand(const QString&amp; <replaceable>commandLine</replaceable>,
-                     const QString&amp; <replaceable>dateTime</replaceable>,
+                     const QString&amp; <replaceable>startDateTime</replaceable>,
                      int <replaceable>lateCancel</replaceable>,
-                     int <replaceable>flags</replaceable>,
+                     unsigned <replaceable>flags</replaceable>,
                      int <replaceable>recurType</replaceable>,
                      int <replaceable>recurInterval</replaceable>,
                      const QString&amp; <replaceable>endDateTime</replaceable>)
@@ -3632,7 +3616,7 @@ parameter contains a shell command line or a command script.</para>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>dateTime</parameter></term>
+<term><parameter>startDateTime</parameter></term>
 <listitem>
 <para>Specifies the scheduled date, or date and time, at which the
 message should be displayed. For a date-only alarm, the string should
@@ -3697,7 +3681,7 @@ are defined in class <classname>KAlarmIface</classname> in
 <filename>kalarmiface.h</filename>. Monthly recurrences are of the
 day of the month type, and yearly recurrences are of the date in
 the year type, with the date in both cases taken from the
-<parameter>dateTime</parameter> parameter.</para>
+<parameter>startDateTime</parameter> parameter.</para>
 </listitem>
 </varlistentry>
 
@@ -3723,11 +3707,11 @@ repeated. Specify -1 to repeat the alarm indefinitely.</para>
 <term><parameter>endDateTime</parameter></term>
 <listitem>
 <para>Specifies the end date, or date and time, for recurrences of the
-alarm. If <parameter>dateTime</parameter> includes a time, this
-parameter must also include a time; if <parameter>dateTime</parameter>
+alarm. If <parameter>startDateTime</parameter> includes a time, this
+parameter must also include a time; if <parameter>startDateTime</parameter>
 contains only a date, this parameter must also contain only a
 date. It must not contain a time zone specifier; the same time zone as
-for <parameter>dateTime</parameter> is used to interpret this
+for <parameter>startDateTime</parameter> is used to interpret this
 parameter's value.</para>
 </listitem>
 </varlistentry>
@@ -3754,7 +3738,7 @@ including the initial occurrence.</para>
 
 <refsect1>
 <title>Description</title>
-<para><function>scheduleCommand()</function> is a &DCOP; call to
+<para><function>scheduleCommand()</function> is a D-Bus call to
 schedule the specified shell command line, or command script, for
 execution at the specified date and time. Apart from specifying a
 command and omitting the message color, font and audio file
@@ -3780,9 +3764,9 @@ bool scheduleEmail(const QString&amp; <replaceable>fromID</replaceable>,
                    const QString&amp; <replaceable>subject</replaceable>,
                    const QString&amp; <replaceable>message</replaceable>,
                    const QString&amp; <replaceable>attachments</replaceable>,
-                   const QString&amp; <replaceable>dateTime</replaceable>,
+                   const QString&amp; <replaceable>startDateTime</replaceable>,
                    int <replaceable>lateCancel</replaceable>,
-                   int <replaceable>flags</replaceable>,
+                   unsigned <replaceable>flags</replaceable>,
                    const QString&amp; <replaceable>recurrence</replaceable>,
                    int <replaceable>subRepeatInterval</replaceable>, 
                    int <replaceable>subRepeatCount</replaceable>)
@@ -3793,9 +3777,9 @@ bool scheduleEmail(const QString&amp; <replaceable>fromID</replaceable>,
                    const QString&amp; <replaceable>subject</replaceable>,
                    const QString&amp; <replaceable>message</replaceable>,
                    const QString&amp; <replaceable>attachments</replaceable>,
-                   const QString&amp; <replaceable>dateTime</replaceable>,
+                   const QString&amp; <replaceable>startDateTime</replaceable>,
                    int <replaceable>lateCancel</replaceable>,
-                   int <replaceable>flags</replaceable>,
+                   unsigned <replaceable>flags</replaceable>,
                    int <replaceable>recurType</replaceable>,
                    int <replaceable>recurInterval</replaceable>,
                    int <replaceable>recurCount</replaceable>)
@@ -3806,9 +3790,9 @@ bool scheduleEmail(const QString&amp; <replaceable>fromID</replaceable>,
                    const QString&amp; <replaceable>subject</replaceable>,
                    const QString&amp; <replaceable>message</replaceable>,
                    const QString&amp; <replaceable>attachments</replaceable>,
-                   const QString&amp; <replaceable>dateTime</replaceable>,
+                   const QString&amp; <replaceable>startDateTime</replaceable>,
                    int <replaceable>lateCancel</replaceable>, 
-                   nt <replaceable>flags</replaceable>,
+                   unsigned <replaceable>flags</replaceable>,
                    int <replaceable>recurType</replaceable>,
                    int <replaceable>recurInterval</replaceable>,
                    const QString&amp; <replaceable>endTime</replaceable>)
@@ -3857,7 +3841,7 @@ email attachments.</para>
 </varlistentry>
 
 <varlistentry>
-<term><parameter>dateTime</parameter></term>
+<term><parameter>startDateTime</parameter></term>
 <listitem>
 <para>Specifies the scheduled date, or date and time, at which the
 message should be displayed. For a date-only alarm, the string should
@@ -3922,7 +3906,7 @@ are defined in class <classname>KAlarmIface</classname> in
 <filename>kalarmiface.h</filename>. Monthly recurrences are of the
 day of the month type, and yearly recurrences are of the date in
 the year type, with the date in both cases taken from the
-<parameter>dateTime</parameter> parameter.</para>
+<parameter>startDateTime</parameter> parameter.</para>
 </listitem>
 </varlistentry>
 
@@ -3948,11 +3932,11 @@ repeated. Specify -1 to repeat the alarm indefinitely.</para>
 <term><parameter>endDateTime</parameter></term>
 <listitem>
 <para>Specifies the end date, or date and time, for recurrences of the
-alarm. If <parameter>dateTime</parameter> includes a time, this
-parameter must also include a time; if <parameter>dateTime</parameter>
+alarm. If <parameter>startDateTime</parameter> includes a time, this
+parameter must also include a time; if <parameter>startDateTime</parameter>
 contains only a date, this parameter must also contain only a
 date. It must not contain a time zone specifier; the same time zone as
-for <parameter>dateTime</parameter> is used to interpret this
+for <parameter>startDateTime</parameter> is used to interpret this
 parameter's value.</para>
 </listitem>
 </varlistentry>
@@ -3979,7 +3963,7 @@ including the initial occurrence.</para>
 
 <refsect1>
 <title>Description</title>
-<para><function>scheduleEmail()</function> is a &DCOP; call to
+<para><function>scheduleEmail()</function> is a D-Bus call to
 schedule the specified email for sending at the specified date and
 time. Apart from specifying the email header and contents and omitting
 the message color, font and audio file parameters, its usage is
@@ -3989,7 +3973,7 @@ identical to
 </refsect1>
 </refentry>
 
-<refentry id="dcop_edit">
+<refentry id="dbus_edit">
 <refmeta>
 <refentrytitle>edit</refentrytitle>
 </refmeta>
@@ -4026,14 +4010,14 @@ alarm could not be found or is read-only,
 <refsect1>
 <title>Description</title>
 
-<para><function>edit()</function> is a &DCOP; call to display the
+<para><function>edit()</function> is a D-Bus call to display the
 <link linkend="alarm-edit-dlg">Alarm Edit dialog</link> to edit the
 specified alarm.</para>
 
 </refsect1>
 </refentry>
 
-<refentry id="dcop_editnew">
+<refentry id="dbus_editnew">
 <refmeta>
 <refentrytitle>editNew</refentrytitle>
 </refmeta>
@@ -4085,7 +4069,7 @@ has an invalid value, or if no template with the name
 <refsect1>
 <title>Description</title>
 
-<para><function>editNew()</function> is a &DCOP; call to display the
+<para><function>editNew()</function> is a D-Bus call to display the
 <link linkend="alarm-edit-dlg">Alarm Edit dialog</link> to edit a new
 alarm. If an alarm type is specified as a parameter, a blank dialog is
 displayed. Alternatively, if an alarm template name is specified as a
@@ -4103,12 +4087,12 @@ parameter, the dialog is preset with details from the template.</para>
 start up &kalarm; if it is not already running, in order to trigger or
 cancel scheduled alarms, or schedule new alarms. The reason for using
 command line options for this purpose is that if &kalarm; were started
-without any command line parameters and then sent &DCOP; requests, it
+without any command line parameters and then sent D-Bus requests, it
 would start in its default graphical mode, which is clearly undesirable
 for an inter-program request.</para>
 
 <note><para>Programs should first check whether &kalarm; is already
-running; if it is, they should instead use &DCOP; calls to request these
+running; if it is, they should instead use D-Bus calls to request these
 operations.</para></note>
 
 <para>The command line options for scheduling a new alarm are as
@@ -4139,7 +4123,7 @@ information).</para></note>
   <entry><option>--triggerEvent <replaceable>eventID</replaceable></option></entry>
   <entry>Trigger the alarm with the specified event ID. The action
   taken is the same as for the
-  <link linkend="triggerEvent">triggerEvent()</link> &DCOP; call.
+  <link linkend="triggerEvent">triggerEvent()</link> D-Bus call.
   <option>--cancelEvent</option> cannot be specified with this
   option.</entry>
 </row>
@@ -4302,7 +4286,7 @@ Documentation copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 &David.Ja
 <para>Thanks go to the author of the &kde; 1 KAlarm application,
 Stefan Nikolaus <email>stefan.nikolaus@stuco.uni-oldenburg.de</email>,
 who kindly agreed to allow the name &kalarm; to be used by this
-&kde; 2 / &kde; 3 application.
+application, which has been available for &kde; 2 onwards.
 </para>
 
 </chapter>
@@ -4325,21 +4309,15 @@ who kindly agreed to allow the name &kalarm; to be used by this
 <title>Requirements</title>
 
 <para>&kalarm; requires the standard &kde; libraries to be installed
-(the <filename>kdelibs</filename> package). To compile from source,
-you also need the &Qt; and <filename>kdelibs</filename> development
-packages. The X11 development package, if present, is used to improve
-&kalarm;'s ability to function under &kde; without a system
-tray.</para>
+(the <filename>kdelibs</filename> and <filename>kdepimlibs</filename>
+packages), plus the <filename>kdebase/runtime</filename> package. To
+compile from source, you also need the relevant library development
+packages, and the &Qt; development package.</para>
 
 <para>The following optional packages enhance &kalarm; at runtime if
 they are installed:</para>
 
 <itemizedlist>
-<listitem><para>&kmix; (from kdemultimedia package): if installed, it
-allows &kalarm; to set the absolute sound volume when playing audio
-files.</para>
-</listitem>
-
 <listitem><para><application>KTTSD</application> (from
 kdeaccessibility package): if installed and configured, together with
 a compatible speech synthesizer package, it allows &kalarm; to speak
