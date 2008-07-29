@@ -761,7 +761,7 @@ std::string GroupwiseServer::getFullIDFor( const QString & gwRecordIDFromIcal )
   if ( calendarFolderID.empty() )
   {
     kError() <<"couldn't get calendar folder ID in order to accept invitation";
-    return false;
+    return std::string();
   }
 
   // now get the full Item ID of the
@@ -788,7 +788,7 @@ std::string GroupwiseServer::getFullIDFor( const QString & gwRecordIDFromIcal )
   mSoap->header->ngwt__session = mSession;
   int result = soap_call___ngw__getItemsRequest( mSoap, mUrl.toLatin1(), 0,
                                                    &getItemRequest, &getItemResponse );
-  if ( !checkResponse( result, getItemResponse.status ) ) return false;
+  if ( !checkResponse( result, getItemResponse.status ) ) return std::string();
 
   std::vector<class ngwt__Item * > *items = &getItemResponse.items->item;
   if ( items ) {

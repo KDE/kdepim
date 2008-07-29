@@ -419,8 +419,8 @@ bool ResourceGroupwise::updateAddressBooks()
   kDebug() <<"ResourceGroupwise::updateAddressBooks() - Updating address books.";
 
   if ( mDownloadJob ) {
-    kWarning() <<"Download still in progress";
-    return false;
+    kDebug() <<"Download still in progress";
+    return true;
   }
 
   if ( addressBooks().isEmpty() ) {
