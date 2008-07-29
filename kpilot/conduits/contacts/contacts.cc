@@ -195,7 +195,7 @@ Contacts::Contacts( KPilotLink *o, const QVariantList &a )
 
 Contacts::~Contacts()
 {
-	delete fSettings;
+	KPILOT_DELETE( fSettings );
 }
 
 void Contacts::loadSettings()

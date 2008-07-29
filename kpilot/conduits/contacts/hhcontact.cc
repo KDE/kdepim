@@ -64,7 +64,7 @@ PilotAddress HHContact::pilotAddress() const
 void HHContact::setPilotAddress( const PilotAddress& address )
 {
 	// Free the old data.
-	delete fRecord;
+	KPILOT_DELETE( fRecord );
 	// And set it to the updated address.
 	fRecord = address.pack();
 }
