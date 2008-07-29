@@ -131,4 +131,17 @@ public:
 	/* virtual */ QString toString() const;
 };
 
+class DeletedAkonadiContact : public AkonadiContact
+{
+public:
+	DeletedAkonadiContact() : AkonadiContact()
+	{
+	}
+	
+	/* virtual */ bool isDeleted() const { return true; }
+	
+	/* virtual */ bool isModified() const { return true; }
+	
+};
+
 #endif

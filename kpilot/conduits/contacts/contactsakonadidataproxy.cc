@@ -36,12 +36,12 @@
 #include <akonadi/itemfetchscope.h>
 #include <kabc/addressee.h>
 
+#include "akonadicontact.h"
+#include "idmapping.h"
 #include "options.h"
 
-#include "akonadicontact.h"
-
-ContactsAkonadiDataProxy::ContactsAkonadiDataProxy( Entity::Id id, const QDateTime& dt   )
-	: fId( id ), fLastSyncDateTime( dt )
+ContactsAkonadiDataProxy::ContactsAkonadiDataProxy( Entity::Id id, const IDMapping* mapping   )
+	: fId( id ), fMapping( mapping )
 {
 	FUNCTIONSETUP;
 	
@@ -94,12 +94,25 @@ void ContactsAkonadiDataProxy::loadAllRecords()
 		{
 			if( item.hasPayload<KABC::Addressee>() )
 			{
-				AkonadiContact* ac = new AkonadiContact( item, fLastSyncDateTime );
+				AkonadiContact* ac = new AkonadiContact( item, fMapping->lastSyncedDate() );
 				fRecords.insert( ac->id(), ac );
 			}
 		}
 		
 		fCounter.setStartCount( fRecords.size() );
+		
+		// Now add dummy records for deleted records.
+		foreach( const QString& mPcId, fMapping->pcRecordIds() )
+		{
+			if( !fRecords.contains( mPcId ) )
+			{
+				// Well the record with id mPcId doesn't seem to be in the akonadi
+				// resource any more so it is deleted.
+				AkonadiContact* ac = new DeletedAkonadiContact();
+				ac->setId( mPcId );
+				fRecords.insert( mPcId, ac );
+			}
+		}
 		
 		DEBUGKPILOT << "Loaded " << fRecords.size() << " records.";
 	}

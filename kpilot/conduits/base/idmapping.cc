@@ -131,6 +131,13 @@ QString IDMapping::pcRecordId( const QString &id ) const
 	return fSource.constMappings()->value( id );
 }
 
+QStringList IDMapping::pcRecordIds() const
+{
+	FUNCTIONSETUP;
+	
+	return fSource.constMappings()->values();
+}
+
 QString IDMapping::hhRecordId( const QString &id ) const
 {
 	FUNCTIONSETUP;

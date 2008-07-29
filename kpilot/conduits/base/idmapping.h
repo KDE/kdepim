@@ -59,6 +59,11 @@ public:
 	QString pcRecordId( const QString &hhRecordId ) const;
 	
 	/**
+	 * Returns a list of all pc ids that are in the mapping.
+	 */
+	QStringList pcRecordIds() const;
+	
+	/**
 	 * Searches for a mapping which contains @p pcRecordId and returns the id to
 	 * which it is mapped. Returns QString() if no mapping is found.
 	 */
