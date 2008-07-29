@@ -26,6 +26,7 @@ kde4_add_library(kpilot_conduit_keyring SHARED ${keyring_SRCS})
 
 target_link_libraries(kpilot_conduit_keyring
 	kpilot_conduit_base
+	${KDE4_KIO_LIBS}
 	${QT_LIBRARIES}
 	${QCA2_LIBRARIES}
 )

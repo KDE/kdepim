@@ -42,6 +42,7 @@ kde4_add_kcfg_files( keyring_testlib_SRCS ${keyring_KCFGS} )
 kde4_add_library( keyring_testlib SHARED ${keyring_testlib_SRCS} )
 
 target_link_libraries( keyring_testlib
+        ${KDE4_KIO_LIBS}
 	${QT_LIBRARIES}
 	${QCA2_LIBRARIES}
 	kpilot_conduit_base
