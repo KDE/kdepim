@@ -346,7 +346,7 @@ bool IncidenceConverter::convertToCalendarItem( KCal::Incidence* incidence, ngwt
   item->status = 0;
   item->thread = 0;
   item->msgId = 0;
-  //item->messageId = 0;
+  item->messageId = 0;
   item->source = 0;
   item->returnSentItemsId = 0;
   item->delivered = 0;
@@ -614,23 +614,23 @@ void IncidenceConverter::setItemDescription( KCal::Incidence *incidence,
 
 void IncidenceConverter::getAttendees( ngwt__CalendarItem *item, KCal::Incidence *incidence )
 {
-//   kDebug() <<"IncidenceConverter::getAttendees()" << ( item->subject ? item->subject->c_str() :"no subject" );
-
+  kDebug() << ( item->subject ? item->subject->c_str() : "no subject" );
+ 
   if ( item->distribution && item->distribution->from ) {
-/*    kDebug() <<"-- from";*/
+    kDebug() << "-- from";
     KCal::Person organizer( stringToQString( item->distribution->from->displayName ),
                             stringToQString( item->distribution->from->email ) );
     incidence->setOrganizer( organizer );
   }
 
   if ( item->distribution && item->distribution->recipients ) {
-/*    kDebug() <<"-- recipients";*/
+    kdDebug() << "-- recipients";
     std::vector<ngwt__Recipient*> recipients = item->distribution->recipients->recipient;
     std::vector<ngwt__Recipient*>::const_iterator it;
 
     for ( it = recipients.begin(); it != recipients.end(); ++it ) {
-/*      kDebug() <<"---- recipient";
- */   ngwt__Recipient *recipient = *it;
+      kDebug() << "---- recipient ";
+      ngwt__Recipient *recipient = *it;
       KCal::Attendee *attendee = new KCal::Attendee(
         stringToQString( recipient->displayName ),
         stringToQString( recipient->email ) );
@@ -639,6 +639,10 @@ void IncidenceConverter::getAttendees( ngwt__CalendarItem *item, KCal::Incidence
       if ( *(recipient->email) == *(qStringToString( mFromEmail )) )
         if ( item->status->accepted )
           attendee->setStatus( ( *item->status->accepted ) ? KCal::Attendee::Accepted : KCal::Attendee::NeedsAction );
+        else 
+          kdDebug() << "---- not accepted" << endl;
+      else
+        kdDebug() << "---- '" << recipient->email->c_str() << "' != '" << (qStringToString( mFromEmail ))->c_str() << "'" << endl;
 
       incidence->addAttendee( attendee );
     }

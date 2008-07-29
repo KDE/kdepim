@@ -252,7 +252,7 @@ GroupwiseServer::GroupwiseServer( const QString &url, const QString &user,
                                   const QString &password, const KDateTime::Spec & spec, QObject *parent )
   : QObject( parent ),
     mUrl( url ), mUser( user ), mPassword( password ),
-    mSSL( url.left(6)=="https:" ), m_sock( 0 ), mTimeSpec( spec )
+    mSSL( url.left(6)=="https:" ), m_sock( 0 ), mTimeSpec( spec ), mError( 0 )
 {
   setObjectName( "groupwiseserver" );
   mBinding = new GroupWiseBinding;
@@ -732,7 +732,12 @@ bool GroupwiseServer::updateAddressBooks( const QStringList &addrBookIds, const 
   job->setStartSequenceNumber( startSequenceNumber );
 
   job->run();
-
+  if ( job->error() == GroupWise::RefreshNeeded )
+  {
+    mError = 1;
+    mErrors.append(  "The System Address Book must be refreshed" ) ;
+    return false;
+  }
   return true;
 }
 

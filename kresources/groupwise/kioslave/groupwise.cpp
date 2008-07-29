@@ -21,6 +21,8 @@
 
 #include "groupwiseserver.h"
 
+#include <qregexp.h>
+
 #include <kabc/resourcecached.h>
 
 #include <kcal/freebusy.h>
@@ -166,6 +168,12 @@ void Groupwise::getFreeBusy( const KUrl &url )
     QString email = file.left( file.length() - 4 );
     debugMessage( "Email: " + email );
 
+    // Sanitise local Nuernberg email addresses
+    kdDebug() << "Email before sanitizing: " << email << endl;
+    email = email.replace(QRegExp("\\.EMEA5-1\\.EMEA5" ), "" );
+    email = email.replace(QRegExp("\\.Suse.INTERNET" ), "" );
+    kdDebug() << "Email after sanitizing: " << email << endl;
+
     QString u = soapUrl( url );
 
     QString user = url.user();
@@ -192,11 +200,11 @@ void Groupwise::getFreeBusy( const KUrl &url )
       kDebug() <<"Login";
 
       if ( !server.login() ) {
-        errorMessage( i18n("Unable to login: ") + server.error() );
+        errorMessage( i18n("Unable to login: ") + server.errorText() );
       } else {
         kDebug() <<"Read free/busy";
         if ( !server.readFreeBusy( email, start, end, fb ) ) {
-          errorMessage( i18n("Unable to read free/busy data: ") + server.error() );
+          errorMessage( i18n("Unable to read free/busy data: ") + server.errorText() );
         }
         kDebug() <<"Read free/busy";
         server.logout();
@@ -238,11 +246,11 @@ void Groupwise::getCalendar( const KUrl &url )
 
   kDebug() <<"Login";
   if ( !server.login() ) {
-    errorMessage( i18n("Unable to login: ") + server.error() );
+    errorMessage( i18n("Unable to login: ") + server.errorText() );
   } else {
     kDebug() <<"Read calendar";
     if ( !server.readCalendarSynchronous( &calendar ) ) {
-      errorMessage( i18n("Unable to read calendar data: ") + server.error() );
+      errorMessage( i18n("Unable to read calendar data: ") + server.errorText() );
     }
     kDebug() <<"Logout";
     server.logout();
@@ -299,11 +307,11 @@ void Groupwise::getAddressbook( const KUrl &url )
 
     kDebug() <<"Login";
     if ( !server.login() ) {
-      errorMessage( i18n("Unable to login: ") + server.error() );
+      errorMessage( i18n("Unable to login: ") + server.errorText() );
     } else {
       kDebug() <<"Read Addressbook";
       if ( !server.readAddressBooksSynchronous( ids ) ) {
-        errorMessage( i18n("Unable to read addressbook data: ") + server.error() );
+        errorMessage( i18n("Unable to read addressbook data: ") + server.errorText() );
       }
       kDebug() <<"Logout";
       server.logout();
@@ -365,11 +373,11 @@ void Groupwise::updateAddressbook( const KUrl &url )
 
     kDebug() <<"Login";
     if ( !server.login() ) {
-      errorMessage( i18n("Unable to login: ") + server.error() );
+      errorMessage( i18n("Unable to login: ") + server.errorText() );
     } else {
       kDebug() <<"Update Addressbook";
       if ( !server.updateAddressBooks( ids, lastSequenceNumber ) ) {
-        errorMessage( i18n("Unable to update addressbook data: ") + server.error() );
+        error( KIO::ERR_NO_CONTENT, server.errorText() );
       }
       kDebug() <<"Logout";
       server.logout();

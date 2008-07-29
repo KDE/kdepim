@@ -67,6 +67,8 @@ class GroupWiseBinding;
 
 namespace GroupWise {
 
+enum ErrorCode { RefreshNeeded };
+
 class AddressBook
 {
   public:
@@ -103,7 +105,8 @@ class GWSOAP_EXPORT GroupwiseServer : public QObject
                      const QString &password, const KDateTime::Spec & timeSpec, QObject *parent );
     ~GroupwiseServer();
 
-    QString error() const { return mErrors.join( "," ); }
+    int error() const { return mError; }
+    QString errorText() const { return mErrors.join( "," ); }
 
     bool login();
     bool logout();
@@ -237,6 +240,7 @@ class GWSOAP_EXPORT GroupwiseServer : public QObject
     
     QTcpSocket *m_sock;
 
+    int mError;
     QStringList mErrors;
 
     QString mLogFile;
