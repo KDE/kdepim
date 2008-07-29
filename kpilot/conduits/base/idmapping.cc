@@ -48,9 +48,7 @@ bool IDMapping::isValid( const QList<QString>& ids ) const
 	// should be a 1..1 mapping between keys and values
 	bool equalSize = (mappings->uniqueKeys().size() == mappings->size() );
 	
-	DEBUGKPILOT << equalSize << " " << mappings->uniqueKeys().size() << " " << mappings->size();
-	
-	if( equalSize )
+	if( equalSize && !ids.isEmpty() )
 	{
 		bool idsInMapping = true;
 		
