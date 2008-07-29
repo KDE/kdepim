@@ -332,6 +332,7 @@ void Groupwise::slotReadReceiveAddressees( const KABC::Addressee::List addressee
 
 void Groupwise::updateAddressbook( const KUrl &url )
 {
+  kdDebug() << "Groupwise::updateAddressbook() " << url << endl;
   QString u = soapUrl( url );
 
   QString user = url.user();
@@ -343,7 +344,8 @@ void Groupwise::updateAddressbook( const KUrl &url )
 
   QString query = url.query();
 
-  unsigned int lastSequenceNumber = 0;
+  unsigned long lastSequenceNumber = 0;
+  unsigned long lastPORebuildTime = 0;
 
   if ( query.isEmpty() || query == "?" ) {
     errorMessage( i18n("No addressbook IDs given.") );
@@ -359,8 +361,10 @@ void Groupwise::updateAddressbook( const KUrl &url )
       if ( item.count() == 2 && item[ 0 ] == "addressbookid" ) {
         ids.append( item[ 1 ] );
       }
-       if ( item.count() == 2 && item[ 0 ] == "lastSeqNo" )
-        lastSequenceNumber = item[ 1 ].toInt();
+      if ( item.count() == 2 && item[ 0 ] == "lastSeqNo" )
+        lastSequenceNumber = item[ 1 ].toULong();
+      if ( item.count() == 2 && item[ 0 ] == "PORebuildTime" )
+        lastPORebuildTime = item[ 1 ].toULong();
     }
     
     debugMessage( "update IDs: " + ids.join( "," ) );
@@ -371,15 +375,16 @@ void Groupwise::updateAddressbook( const KUrl &url )
     connect( &server, SIGNAL( gotAddressees( const KABC::Addressee::List ) ),
       SLOT( slotReadReceiveAddressees( const KABC::Addressee::List ) ) );
 
-    kDebug() <<"Login";
+    kDebug() << "  Login";
     if ( !server.login() ) {
       errorMessage( i18n("Unable to login: ") + server.errorText() );
     } else {
-      kDebug() <<"Update Addressbook";
-      if ( !server.updateAddressBooks( ids, lastSequenceNumber ) ) {
+      kDebug() << "  Updating Addressbook";
+      if ( !server.updateAddressBooks( ids, lastSequenceNumber + 1, lastPORebuildTime ) )
+      {
         error( KIO::ERR_NO_CONTENT, server.errorText() );
       }
-      kDebug() <<"Logout";
+      kDebug() << "  Logout";
       server.logout();
       finished();
     }

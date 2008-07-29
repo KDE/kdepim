@@ -707,7 +707,7 @@ GroupWise::AddressBook::List GroupwiseServer::addressBookList()
 bool GroupwiseServer::readAddressBooksSynchronous( const QStringList &addrBookIds )
 {
   if ( mSession.empty() ) {
-    kError() <<"GroupwiseServer::readAddressBooks(): no session.";
+    kError();
     return false;
   }
 
@@ -720,7 +720,7 @@ bool GroupwiseServer::readAddressBooksSynchronous( const QStringList &addrBookId
   return true;
 }
 
-bool GroupwiseServer::updateAddressBooks( const QStringList &addrBookIds, const unsigned int startSequenceNumber )
+bool GroupwiseServer::updateAddressBooks( const QStringList &addrBookIds, const unsigned long startSequenceNumber, const unsigned long lastPORebuildTime )
 {
   if ( mSession.empty() ) {
     kError() <<"GroupwiseServer::updateAddressBooks(): no session.";
@@ -730,6 +730,7 @@ bool GroupwiseServer::updateAddressBooks( const QStringList &addrBookIds, const 
   UpdateAddressBooksJob * job = new UpdateAddressBooksJob( this, mSoap, mUrl, mTimeSpec, mSession );
   job->setAddressBookIds( addrBookIds );
   job->setStartSequenceNumber( startSequenceNumber );
+  job->setLastPORebuildTime( lastPORebuildTime );
 
   job->run();
   if ( job->error() == GroupWise::RefreshNeeded )

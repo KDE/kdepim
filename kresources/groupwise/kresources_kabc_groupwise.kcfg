@@ -47,5 +47,9 @@
   <entry key="lastSequenceNumber" type="Int" >
     <label>The last sequence number of the GW System Address Book held locally</label>
   </entry>
+  <entry key="SystemAddressBookWhiteList" type="StringList">
+    <label>Applications which should load the System Address Book</label>
+    <default>kmail,kaddressbook,kontact</default>
+  </entry>
  </group>
 </kcfg>
