@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Comment=This conduit syncs the handheld keyring database with a database stored on the pc.
+Comment[bg]=Синхронизация на адресника на KDE с мобилни устройства
 Comment[ca]=Aquest conducte sincronitza base de dades de l'anell de claus de l'agenda electrònica amb la base de dades emmagatzemada al PC.
 Comment[da]=Denne kanal synkroniserer den håndholdte nøglering, med en database lagret på PC'en.
 Comment[de]=Abgleich der Schlüsselbund-Datenbanken von Taschencomputer und PC.
@@ -18,6 +19,7 @@ Comment[nl]=Dit conduit synchroniseert de sleuteldatabase op de handheld met de 
 Comment[pl]=Ten łącznik synchronizuje zbiór kluczy z bazą danych na komputerze.
 Comment[pt]=Esta conduta sincroniza o porta-chaves do seu dispositivo com uma base de dados guardada no PC.
 Comment[pt_BR]=Esta conduta sincroniza o base de dados do chaveiro com a base de dados armazenada no pc.
+Comment[sl]=Ta veznik usklajuje šop ključev na ročnem računalniku s šopom ključev na običajnem računalniku.
 Comment[sv]=Den här kanalen synkroniserar handdatorns nyckelringsdatabas med en databas lagrad på PC:n.
 Comment[tr]=Bu kanal el bilgisayarınızdaki anahtar çifti veritabanı ile bilgisayarınızdakini eşzamanlar.
 Comment[uk]=Цей акведук синхронізує адресну книгу кишенькового пристрою з адресною книгою KDE.
@@ -42,6 +44,7 @@ Name[nl]=Sleutelbos
 Name[pl]=Zbiór kluczy
 Name[pt]=Porta-chaves
 Name[pt_BR]=Chaveiro
+Name[sl]=Šop ključev
 Name[sv]=Nyckelring
 Name[tr]=Anahtar çifti
 Name[x-test]=xxKeyringxx
