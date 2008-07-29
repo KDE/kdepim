@@ -25,6 +25,7 @@
 */
 
 #include <QtCore/QSet>
+#include <QtCore/QtDebug>
 
 #include "idmapping.h"
 
@@ -38,47 +39,47 @@ IDMapping::IDMapping( const QString &userName, const QString &conduit )
 	fSource.loadMapping();
 }
 
-bool IDMapping::isValid( const QList<QString> &ids ) const
+bool IDMapping::isValid( const QList<QString>& ids ) const
 {
 	FUNCTIONSETUP;
 	
 	const QMap<QString, QString>* mappings = fSource.constMappings();
-	int idsSize = ids.size();
 	
 	// should be a 1..1 mapping between keys and values
-	bool equalSize = (mappings->uniqueKeys().size() == idsSize);
+	bool equalSize = (mappings->uniqueKeys().size() == mappings->size() );
 	
-	if(equalSize)
+	DEBUGKPILOT << equalSize << " " << mappings->uniqueKeys().size() << " " << mappings->size();
+	
+	if( equalSize )
 	{
 		bool idsInMapping = true;
 		
-		QList<QString>::const_iterator i;
-		QList<QString> mIds;
-		
 		// now, check for validity of mappings.  *note* we can stop
 		// looking if we find at least one problem.
-		if( fSource.constMappings()->contains( *ids.constBegin() ) )
+		if( containsHHId( ids.first() ) )
 		{
-			// The ids are hanhdeld ids.
-			mIds = fSource.constMappings()->keys();
-			for( i = mIds.constBegin(); i != mIds.constEnd(); ++i )
+			foreach( const QString& storedId, fSource.constMappings()->keys() )
 			{
-				QString id = *i;
-				idsInMapping = idsInMapping && ids.contains( id );
-				
-				if (!idsInMapping) break;
+				if( !ids.contains( storedId ) )
+				{
+					DEBUGKPILOT << "IDMapping::isValid(): HH Id " << storedId << " is in"
+						<< " mapping but does not seem to occur in the give id list.";
+					qDebug() << ids;
+					return false;
+				}
 			}
 		}
 		else
 		{
 			// The ids are pc ids.
-			mIds = fSource.constMappings()->values();
-			for( i = mIds.constBegin(); i != mIds.constEnd(); ++i )
+			foreach( const QString& storedId, fSource.constMappings()->values() )
 			{
-				QString id = *i;
-				idsInMapping = idsInMapping && ids.contains( id );
-				
-				if (!idsInMapping) break;
+				if( !ids.contains( storedId ) )
+				{
+					DEBUGKPILOT << "IDMapping::isValid(): PC Id " << storedId << " is in"
+						<< " mapping but does not seem to occur in the give id list.";
+					return false;
+				}
 			}
 		}
 		
@@ -89,7 +90,7 @@ bool IDMapping::isValid( const QList<QString> &ids ) const
 			// build a unique list (set) of values and make sure we
 			// have a 1..1 mapping
 			QSet<QString> values = mappings->values().toSet();
-			idsInMapping = (values.size() == idsSize);
+			idsInMapping = (values.size() == mappings->size() );
 			DEBUGKPILOT << "Reverse map integrity: ["
 				<< idsInMapping << "]";
 		}
@@ -107,17 +108,16 @@ void IDMapping::map( const QString &hhRecordId, const QString &pcId )
 	FUNCTIONSETUP;
 	
 	// check to see if we already have a key with this value
-	QString existingHhRecordId = fSource.constMappings()->key(pcId);
+	QString existingHhRecordId = fSource.constMappings()->key( pcId );
 	
 	// if we already have a key for this one and it isn't the hhRecordId
 	// that is being passed in, it's an error
-	if ( ! existingHhRecordId.isEmpty() ) 
+	if( !existingHhRecordId.isEmpty() && existingHhRecordId != hhRecordId )
 	{ 
 		WARNINGKPILOT << "Error.  pcId:[" << pcId 
 			<< "] already mapped to hhRecordId: [" << existingHhRecordId
 			<< "].  Shouldn't have same pcId mapped also to incoming: ["
 			<< hhRecordId << "].  Removing it.";
-		
 		fSource.mappings()->remove( existingHhRecordId );
 	}
 	

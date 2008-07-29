@@ -241,6 +241,8 @@ bool DataProxy::commit()
 	}
 	
 	// Commit updated records.
+	DEBUGKPILOT << "Updating: [" << fOldRecords.size() << "] records.";
+	
 	QListIterator<Record*> i( fOldRecords.values() );
 	while( i.hasNext() )
 	{
@@ -267,6 +269,8 @@ bool DataProxy::commit()
 	}
 	
 	// Commit deleted records
+	DEBUGKPILOT << "Updating: [" << fDeletedRecords.size() << "] records.";
+	
 	i = QListIterator<Record*>( fDeletedRecords.values() );
 	while( i.hasNext() )
 	{

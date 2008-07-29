@@ -332,32 +332,51 @@ bool RecordConduit::checkVolatility()
 void RecordConduit::updateBackupDatabase()
 {
 	FUNCTIONSETUP;
-	
-	int index = 0;
-	PilotRecord *rec = fDatabase->readRecordByIndex( index );
-	QList<recordid_t> addedIds;
-	
-	// Copy all records from the pilot database to the local copy of it.
-	while( rec )
+
+	KPILOT_DELETE(fDatabase);
+	KPILOT_DELETE(fLocalDatabase);
+
+	QString localPathName = PilotLocalDatabase::getDBPath() + fDatabaseName;
+	localPathName.replace(CSL1("DBBackup/"), CSL1("conduits/"));
+	QString dbpath = localPathName + ".pdb";
+
+	QFile dbFile( dbpath );
+	if( dbFile.exists() )
 	{
-		fLocalDatabase->writeRecord( rec );
-		addedIds.append( rec->id() );
-		rec = fDatabase->readRecordByIndex( ++index );
-	}
-	
-	index = 0;
-	rec = fLocalDatabase->readRecordByIndex( index );
-	
-	// Remove all records that are not explicitly added in the previous loop.
-	while( rec )
-	{
-		if( !addedIds.contains( rec->id() ) )
+		if( dbFile.remove() )
 		{
-			fLocalDatabase->deleteRecord( rec->id() );
+			DEBUGKPILOT << "Deleting previous backup succeeded.";
 		}
-		
-		rec = fLocalDatabase->readRecordByIndex( ++index );
+		else
+		{
+			DEBUGKPILOT << "Deleting previous backup failed.";
+		}
 	}
+
+	struct DBInfo dbinfo;
+
+	// TODO Extend findDatabase() with extra overload?
+	if (deviceLink()->findDatabase(Pilot::toPilot( fDatabaseName ), &dbinfo)<0 )
+	{
+		WARNINGKPILOT << "Could not get DBInfo for" << fDatabaseName;
+	}
+
+	dbinfo.flags &= ~dlpDBFlagOpen;
+
+	// As we already retrieved the database once, we don't have to make sure that
+	// the dir does exist.
+	if( !deviceLink()->retrieveDatabase( dbpath, &dbinfo ) )
+	{
+		WARNINGKPILOT << "Could not retrieve database [" << fDatabaseName << "] from the handheld.";
+	}
+	
+	PilotLocalDatabase* localDB = new PilotLocalDatabase( localPathName );
+	if( !localDB || !localDB->isOpen() )
+	{
+		WARNINGKPILOT << "local backup of database" << fDatabaseName << " could not be initialized.";
+	}
+	
+	fLocalDatabase = localDB;
 	fLocalDatabase->cleanup();
 	fLocalDatabase->resetSyncFlags();
 }
