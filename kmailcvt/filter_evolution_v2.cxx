@@ -105,6 +105,7 @@ void FilterEvolution_v2::import(FilterInfo *info)
     }
     info->setCurrent(100);
     info->setOverall(100);
+    delete kfd;
 }
 
 /**

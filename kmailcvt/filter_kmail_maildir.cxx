@@ -87,6 +87,7 @@ void FilterKMail_maildir::import( FilterInfo *info )
     count_duplicates = 0;
     info->setCurrent(100);
     info->setOverall(100);
+    delete kfd;
 }
 
 /**
