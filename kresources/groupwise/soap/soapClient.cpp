@@ -6,7 +6,7 @@
 */
 #include "soapH.h"
 
-SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.3 2005-07-18 16:36:51 GMT")
+SOAP_SOURCE_STAMP("@(#) soapClient.cpp ver 2.7.3 2006-05-18 13:53:46 GMT")
 
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__acceptRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__acceptRequest *ngwm__acceptRequest, _ngwm__acceptResponse *ngwm__acceptResponse)
@@ -459,6 +459,56 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__createItemRequest(struct soap *soap, 
 	return soap_closesock(soap);
 }
 
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__createItemsRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__createItemsRequest *ngwm__createItemsRequest, _ngwm__createItemsResponse *ngwm__createItemsResponse)
+{	struct __ngw__createItemsRequest soap_tmp___ngw__createItemsRequest;
+	if (!soap_endpoint)
+		soap_endpoint = "http://localhost:8080";
+	if (!soap_action)
+		soap_action = "createItemsRequest";
+	soap->encodingStyle = NULL;
+	soap_tmp___ngw__createItemsRequest.ngwm__createItemsRequest = ngwm__createItemsRequest;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize___ngw__createItemsRequest(soap, &soap_tmp___ngw__createItemsRequest);
+	soap_begin_count(soap);
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	soap_envelope_begin_out(soap);
+		soap_putheader(soap);
+		soap_body_begin_out(soap);
+		soap_put___ngw__createItemsRequest(soap, &soap_tmp___ngw__createItemsRequest, "-ngw:createItemsRequest", "");
+		soap_body_end_out(soap);
+		soap_envelope_end_out(soap);
+	}
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put___ngw__createItemsRequest(soap, &soap_tmp___ngw__createItemsRequest, "-ngw:createItemsRequest", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	if (!ngwm__createItemsResponse)
+		return soap_closesock(soap);
+	ngwm__createItemsResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	ngwm__createItemsResponse->soap_get(soap, "ngwm:createItemsResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__createJunkEntryRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__createJunkEntryRequest *ngwm__createJunkEntryRequest, _ngwm__createJunkEntryResponse *ngwm__createJunkEntryResponse)
 {	struct __ngw__createJunkEntryRequest soap_tmp___ngw__createJunkEntryRequest;
 	if (!soap_endpoint)
@@ -747,6 +797,56 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__destroyCursorRequest(struct soap *soa
 	 || soap_body_begin_in(soap))
 		return soap_closesock(soap);
 	ngwm__destroyCursorResponse->soap_get(soap, "ngwm:destroyCursorResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__executeRuleRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__executeRuleRequest *ngwm__executeRuleRequest, _ngwm__executeRuleResponse *ngwm__executeRuleResponse)
+{	struct __ngw__executeRuleRequest soap_tmp___ngw__executeRuleRequest;
+	if (!soap_endpoint)
+		soap_endpoint = "http://localhost:8080";
+	if (!soap_action)
+		soap_action = "executeRuleRequest";
+	soap->encodingStyle = NULL;
+	soap_tmp___ngw__executeRuleRequest.ngwm__executeRuleRequest = ngwm__executeRuleRequest;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize___ngw__executeRuleRequest(soap, &soap_tmp___ngw__executeRuleRequest);
+	soap_begin_count(soap);
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	soap_envelope_begin_out(soap);
+		soap_putheader(soap);
+		soap_body_begin_out(soap);
+		soap_put___ngw__executeRuleRequest(soap, &soap_tmp___ngw__executeRuleRequest, "-ngw:executeRuleRequest", "");
+		soap_body_end_out(soap);
+		soap_envelope_end_out(soap);
+	}
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put___ngw__executeRuleRequest(soap, &soap_tmp___ngw__executeRuleRequest, "-ngw:executeRuleRequest", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	if (!ngwm__executeRuleResponse)
+		return soap_closesock(soap);
+	ngwm__executeRuleResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	ngwm__executeRuleResponse->soap_get(soap, "ngwm:executeRuleResponse", "");
 	if (soap->error)
 	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
 			return soap_recv_fault(soap);
@@ -1109,6 +1209,106 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getDeltaInfoRequest(struct soap *soap
 	return soap_closesock(soap);
 }
 
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getDocumentTypeListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getDocumentTypeListRequest *ngwm__getDocumentTypeListRequest, _ngwm__getDocumentTypeListResponse *ngwm__getDocumentTypeListResponse)
+{	struct __ngw__getDocumentTypeListRequest soap_tmp___ngw__getDocumentTypeListRequest;
+	if (!soap_endpoint)
+		soap_endpoint = "http://localhost:8080";
+	if (!soap_action)
+		soap_action = "getDocumentTypeListRequest";
+	soap->encodingStyle = NULL;
+	soap_tmp___ngw__getDocumentTypeListRequest.ngwm__getDocumentTypeListRequest = ngwm__getDocumentTypeListRequest;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize___ngw__getDocumentTypeListRequest(soap, &soap_tmp___ngw__getDocumentTypeListRequest);
+	soap_begin_count(soap);
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	soap_envelope_begin_out(soap);
+		soap_putheader(soap);
+		soap_body_begin_out(soap);
+		soap_put___ngw__getDocumentTypeListRequest(soap, &soap_tmp___ngw__getDocumentTypeListRequest, "-ngw:getDocumentTypeListRequest", "");
+		soap_body_end_out(soap);
+		soap_envelope_end_out(soap);
+	}
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put___ngw__getDocumentTypeListRequest(soap, &soap_tmp___ngw__getDocumentTypeListRequest, "-ngw:getDocumentTypeListRequest", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	if (!ngwm__getDocumentTypeListResponse)
+		return soap_closesock(soap);
+	ngwm__getDocumentTypeListResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	ngwm__getDocumentTypeListResponse->soap_get(soap, "ngwm:getDocumentTypeListResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getFolderRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getFolderRequest *ngwm__getFolderRequest, _ngwm__getFolderResponse *ngwm__getFolderResponse)
+{	struct __ngw__getFolderRequest soap_tmp___ngw__getFolderRequest;
+	if (!soap_endpoint)
+		soap_endpoint = "http://localhost:8080";
+	if (!soap_action)
+		soap_action = "getFolderRequest";
+	soap->encodingStyle = NULL;
+	soap_tmp___ngw__getFolderRequest.ngwm__getFolderRequest = ngwm__getFolderRequest;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize___ngw__getFolderRequest(soap, &soap_tmp___ngw__getFolderRequest);
+	soap_begin_count(soap);
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	soap_envelope_begin_out(soap);
+		soap_putheader(soap);
+		soap_body_begin_out(soap);
+		soap_put___ngw__getFolderRequest(soap, &soap_tmp___ngw__getFolderRequest, "-ngw:getFolderRequest", "");
+		soap_body_end_out(soap);
+		soap_envelope_end_out(soap);
+	}
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put___ngw__getFolderRequest(soap, &soap_tmp___ngw__getFolderRequest, "-ngw:getFolderRequest", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	if (!ngwm__getFolderResponse)
+		return soap_closesock(soap);
+	ngwm__getFolderResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	ngwm__getFolderResponse->soap_get(soap, "ngwm:getFolderResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getFolderListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getFolderListRequest *ngwm__getFolderListRequest, _ngwm__getFolderListResponse *ngwm__getFolderListResponse)
 {	struct __ngw__getFolderListRequest soap_tmp___ngw__getFolderListRequest;
 	if (!soap_endpoint)
@@ -1409,6 +1609,106 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getJunkMailSettingsRequest(struct soa
 	return soap_closesock(soap);
 }
 
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getLibraryItemRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getLibraryItemRequest *ngwm__getLibraryItemRequest, _ngwm__getLibraryItemResponse *ngwm__getLibraryItemResponse)
+{	struct __ngw__getLibraryItemRequest soap_tmp___ngw__getLibraryItemRequest;
+	if (!soap_endpoint)
+		soap_endpoint = "http://localhost:8080";
+	if (!soap_action)
+		soap_action = "getLibraryItemRequest";
+	soap->encodingStyle = NULL;
+	soap_tmp___ngw__getLibraryItemRequest.ngwm__getLibraryItemRequest = ngwm__getLibraryItemRequest;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize___ngw__getLibraryItemRequest(soap, &soap_tmp___ngw__getLibraryItemRequest);
+	soap_begin_count(soap);
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	soap_envelope_begin_out(soap);
+		soap_putheader(soap);
+		soap_body_begin_out(soap);
+		soap_put___ngw__getLibraryItemRequest(soap, &soap_tmp___ngw__getLibraryItemRequest, "-ngw:getLibraryItemRequest", "");
+		soap_body_end_out(soap);
+		soap_envelope_end_out(soap);
+	}
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put___ngw__getLibraryItemRequest(soap, &soap_tmp___ngw__getLibraryItemRequest, "-ngw:getLibraryItemRequest", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	if (!ngwm__getLibraryItemResponse)
+		return soap_closesock(soap);
+	ngwm__getLibraryItemResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	ngwm__getLibraryItemResponse->soap_get(soap, "ngwm:getLibraryItemResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getLibraryListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getLibraryListRequest *ngwm__getLibraryListRequest, _ngwm__getLibraryListResponse *ngwm__getLibraryListResponse)
+{	struct __ngw__getLibraryListRequest soap_tmp___ngw__getLibraryListRequest;
+	if (!soap_endpoint)
+		soap_endpoint = "http://localhost:8080";
+	if (!soap_action)
+		soap_action = "getLibraryListRequest";
+	soap->encodingStyle = NULL;
+	soap_tmp___ngw__getLibraryListRequest.ngwm__getLibraryListRequest = ngwm__getLibraryListRequest;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize___ngw__getLibraryListRequest(soap, &soap_tmp___ngw__getLibraryListRequest);
+	soap_begin_count(soap);
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	soap_envelope_begin_out(soap);
+		soap_putheader(soap);
+		soap_body_begin_out(soap);
+		soap_put___ngw__getLibraryListRequest(soap, &soap_tmp___ngw__getLibraryListRequest, "-ngw:getLibraryListRequest", "");
+		soap_body_end_out(soap);
+		soap_envelope_end_out(soap);
+	}
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put___ngw__getLibraryListRequest(soap, &soap_tmp___ngw__getLibraryListRequest, "-ngw:getLibraryListRequest", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	if (!ngwm__getLibraryListResponse)
+		return soap_closesock(soap);
+	ngwm__getLibraryListResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	ngwm__getLibraryListResponse->soap_get(soap, "ngwm:getLibraryListResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getQuickMessagesRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getQuickMessagesRequest *ngwm__getQuickMessagesRequest, _ngwm__getQuickMessagesResponse *ngwm__getQuickMessagesResponse)
 {	struct __ngw__getQuickMessagesRequest soap_tmp___ngw__getQuickMessagesRequest;
 	if (!soap_endpoint)
@@ -1559,6 +1859,56 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getProxyListRequest(struct soap *soap
 	return soap_closesock(soap);
 }
 
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getRuleListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getRuleListRequest *ngwm__getRuleListRequest, _ngwm__getRuleListResponse *ngwm__getRuleListResponse)
+{	struct __ngw__getRuleListRequest soap_tmp___ngw__getRuleListRequest;
+	if (!soap_endpoint)
+		soap_endpoint = "http://localhost:8080";
+	if (!soap_action)
+		soap_action = "getRuleListRequest";
+	soap->encodingStyle = NULL;
+	soap_tmp___ngw__getRuleListRequest.ngwm__getRuleListRequest = ngwm__getRuleListRequest;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize___ngw__getRuleListRequest(soap, &soap_tmp___ngw__getRuleListRequest);
+	soap_begin_count(soap);
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	soap_envelope_begin_out(soap);
+		soap_putheader(soap);
+		soap_body_begin_out(soap);
+		soap_put___ngw__getRuleListRequest(soap, &soap_tmp___ngw__getRuleListRequest, "-ngw:getRuleListRequest", "");
+		soap_body_end_out(soap);
+		soap_envelope_end_out(soap);
+	}
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put___ngw__getRuleListRequest(soap, &soap_tmp___ngw__getRuleListRequest, "-ngw:getRuleListRequest", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	if (!ngwm__getRuleListResponse)
+		return soap_closesock(soap);
+	ngwm__getRuleListResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	ngwm__getRuleListResponse->soap_get(soap, "ngwm:getRuleListResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getSettingsRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getSettingsRequest *ngwm__getSettingsRequest, _ngwm__getSettingsResponse *ngwm__getSettingsResponse)
 {	struct __ngw__getSettingsRequest soap_tmp___ngw__getSettingsRequest;
 	if (!soap_endpoint)
@@ -1659,6 +2009,56 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getSignaturesRequest(struct soap *soa
 	return soap_closesock(soap);
 }
 
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getTimestampRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getTimestampRequest *ngwm__getTimestampRequest, _ngwm__getTimestampResponse *ngwm__getTimestampResponse)
+{	struct __ngw__getTimestampRequest soap_tmp___ngw__getTimestampRequest;
+	if (!soap_endpoint)
+		soap_endpoint = "http://localhost:8080";
+	if (!soap_action)
+		soap_action = "getTimestampRequest";
+	soap->encodingStyle = NULL;
+	soap_tmp___ngw__getTimestampRequest.ngwm__getTimestampRequest = ngwm__getTimestampRequest;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize___ngw__getTimestampRequest(soap, &soap_tmp___ngw__getTimestampRequest);
+	soap_begin_count(soap);
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	soap_envelope_begin_out(soap);
+		soap_putheader(soap);
+		soap_body_begin_out(soap);
+		soap_put___ngw__getTimestampRequest(soap, &soap_tmp___ngw__getTimestampRequest, "-ngw:getTimestampRequest", "");
+		soap_body_end_out(soap);
+		soap_envelope_end_out(soap);
+	}
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put___ngw__getTimestampRequest(soap, &soap_tmp___ngw__getTimestampRequest, "-ngw:getTimestampRequest", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	if (!ngwm__getTimestampResponse)
+		return soap_closesock(soap);
+	ngwm__getTimestampResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	ngwm__getTimestampResponse->soap_get(soap, "ngwm:getTimestampResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getTimezoneListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getTimezoneListRequest *ngwm__getTimezoneListRequest, _ngwm__getTimezoneListResponse *ngwm__getTimezoneListResponse)
 {	struct __ngw__getTimezoneListRequest soap_tmp___ngw__getTimezoneListRequest;
 	if (!soap_endpoint)
@@ -1697,6 +2097,56 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getTimezoneListRequest(struct soap *s
 	 || soap_body_begin_in(soap))
 		return soap_closesock(soap);
 	ngwm__getTimezoneListResponse->soap_get(soap, "ngwm:getTimezoneListResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getUserListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getUserListRequest *ngwm__getUserListRequest, _ngwm__getUserListResponse *ngwm__getUserListResponse)
+{	struct __ngw__getUserListRequest soap_tmp___ngw__getUserListRequest;
+	if (!soap_endpoint)
+		soap_endpoint = "http://localhost:8080";
+	if (!soap_action)
+		soap_action = "getUserListRequest";
+	soap->encodingStyle = NULL;
+	soap_tmp___ngw__getUserListRequest.ngwm__getUserListRequest = ngwm__getUserListRequest;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize___ngw__getUserListRequest(soap, &soap_tmp___ngw__getUserListRequest);
+	soap_begin_count(soap);
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	soap_envelope_begin_out(soap);
+		soap_putheader(soap);
+		soap_body_begin_out(soap);
+		soap_put___ngw__getUserListRequest(soap, &soap_tmp___ngw__getUserListRequest, "-ngw:getUserListRequest", "");
+		soap_body_end_out(soap);
+		soap_envelope_end_out(soap);
+	}
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put___ngw__getUserListRequest(soap, &soap_tmp___ngw__getUserListRequest, "-ngw:getUserListRequest", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	if (!ngwm__getUserListResponse)
+		return soap_closesock(soap);
+	ngwm__getUserListResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	ngwm__getUserListResponse->soap_get(soap, "ngwm:getUserListResponse", "");
 	if (soap->error)
 	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
 			return soap_recv_fault(soap);
@@ -2909,6 +3359,56 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__removeProxyAccessRequest(struct soap 
 	return soap_closesock(soap);
 }
 
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__removeProxyUserRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__removeProxyUserRequest *ngwm__removeProxyUserRequest, _ngwm__removeProxyUserResponse *ngwm__removeProxyUserResponse)
+{	struct __ngw__removeProxyUserRequest soap_tmp___ngw__removeProxyUserRequest;
+	if (!soap_endpoint)
+		soap_endpoint = "http://localhost:8080";
+	if (!soap_action)
+		soap_action = "removeProxyUserRequest";
+	soap->encodingStyle = NULL;
+	soap_tmp___ngw__removeProxyUserRequest.ngwm__removeProxyUserRequest = ngwm__removeProxyUserRequest;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize___ngw__removeProxyUserRequest(soap, &soap_tmp___ngw__removeProxyUserRequest);
+	soap_begin_count(soap);
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	soap_envelope_begin_out(soap);
+		soap_putheader(soap);
+		soap_body_begin_out(soap);
+		soap_put___ngw__removeProxyUserRequest(soap, &soap_tmp___ngw__removeProxyUserRequest, "-ngw:removeProxyUserRequest", "");
+		soap_body_end_out(soap);
+		soap_envelope_end_out(soap);
+	}
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put___ngw__removeProxyUserRequest(soap, &soap_tmp___ngw__removeProxyUserRequest, "-ngw:removeProxyUserRequest", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	if (!ngwm__removeProxyUserResponse)
+		return soap_closesock(soap);
+	ngwm__removeProxyUserResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	ngwm__removeProxyUserResponse->soap_get(soap, "ngwm:removeProxyUserResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__removeSignatureRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__removeSignatureRequest *ngwm__removeSignatureRequest, _ngwm__removeSignatureResponse *ngwm__removeSignatureResponse)
 {	struct __ngw__removeSignatureRequest soap_tmp___ngw__removeSignatureRequest;
 	if (!soap_endpoint)
@@ -3109,6 +3609,56 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__sendItemRequest(struct soap *soap, co
 	return soap_closesock(soap);
 }
 
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__setTimestampRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__setTimestampRequest *ngwm__setTimestampRequest, _ngwm__setTimestampResponse *ngwm__setTimestampResponse)
+{	struct __ngw__setTimestampRequest soap_tmp___ngw__setTimestampRequest;
+	if (!soap_endpoint)
+		soap_endpoint = "http://localhost:8080";
+	if (!soap_action)
+		soap_action = "setTimestampRequest";
+	soap->encodingStyle = NULL;
+	soap_tmp___ngw__setTimestampRequest.ngwm__setTimestampRequest = ngwm__setTimestampRequest;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize___ngw__setTimestampRequest(soap, &soap_tmp___ngw__setTimestampRequest);
+	soap_begin_count(soap);
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	soap_envelope_begin_out(soap);
+		soap_putheader(soap);
+		soap_body_begin_out(soap);
+		soap_put___ngw__setTimestampRequest(soap, &soap_tmp___ngw__setTimestampRequest, "-ngw:setTimestampRequest", "");
+		soap_body_end_out(soap);
+		soap_envelope_end_out(soap);
+	}
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put___ngw__setTimestampRequest(soap, &soap_tmp___ngw__setTimestampRequest, "-ngw:setTimestampRequest", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	if (!ngwm__setTimestampResponse)
+		return soap_closesock(soap);
+	ngwm__setTimestampResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	ngwm__setTimestampResponse->soap_get(soap, "ngwm:setTimestampResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__startFreeBusySessionRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__startFreeBusySessionRequest *ngwm__startFreeBusySessionRequest, _ngwm__startFreeBusySessionResponse *ngwm__startFreeBusySessionResponse)
 {	struct __ngw__startFreeBusySessionRequest soap_tmp___ngw__startFreeBusySessionRequest;
 	if (!soap_endpoint)
@@ -3247,6 +3797,56 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__uncompleteRequest(struct soap *soap, 
 	 || soap_body_begin_in(soap))
 		return soap_closesock(soap);
 	ngwm__uncompleteResponse->soap_get(soap, "ngwm:uncompleteResponse", "");
+	if (soap->error)
+	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
+			return soap_recv_fault(soap);
+		return soap_closesock(soap);
+	}
+	if (soap_body_end_in(soap)
+	 || soap_envelope_end_in(soap)
+	 || soap_end_recv(soap))
+		return soap_closesock(soap);
+	return soap_closesock(soap);
+}
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__updateVersionStatusRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__updateVersionStatusRequest *ngwm__updateVersionStatusRequest, _ngwm__updateVersionStatusResponse *ngwm__updateVersionStatusResponse)
+{	struct __ngw__updateVersionStatusRequest soap_tmp___ngw__updateVersionStatusRequest;
+	if (!soap_endpoint)
+		soap_endpoint = "http://localhost:8080";
+	if (!soap_action)
+		soap_action = "updateVersionStatusRequest";
+	soap->encodingStyle = NULL;
+	soap_tmp___ngw__updateVersionStatusRequest.ngwm__updateVersionStatusRequest = ngwm__updateVersionStatusRequest;
+	soap_begin(soap);
+	soap_serializeheader(soap);
+	soap_serialize___ngw__updateVersionStatusRequest(soap, &soap_tmp___ngw__updateVersionStatusRequest);
+	soap_begin_count(soap);
+	if (soap->mode & SOAP_IO_LENGTH)
+	{	soap_envelope_begin_out(soap);
+		soap_putheader(soap);
+		soap_body_begin_out(soap);
+		soap_put___ngw__updateVersionStatusRequest(soap, &soap_tmp___ngw__updateVersionStatusRequest, "-ngw:updateVersionStatusRequest", "");
+		soap_body_end_out(soap);
+		soap_envelope_end_out(soap);
+	}
+	if (soap_connect(soap, soap_endpoint, soap_action)
+	 || soap_envelope_begin_out(soap)
+	 || soap_putheader(soap)
+	 || soap_body_begin_out(soap)
+	 || soap_put___ngw__updateVersionStatusRequest(soap, &soap_tmp___ngw__updateVersionStatusRequest, "-ngw:updateVersionStatusRequest", "")
+	 || soap_body_end_out(soap)
+	 || soap_envelope_end_out(soap)
+	 || soap_end_send(soap))
+		return soap_closesock(soap);
+	if (!ngwm__updateVersionStatusResponse)
+		return soap_closesock(soap);
+	ngwm__updateVersionStatusResponse->soap_default(soap);
+	if (soap_begin_recv(soap)
+	 || soap_envelope_begin_in(soap)
+	 || soap_recv_header(soap)
+	 || soap_body_begin_in(soap))
+		return soap_closesock(soap);
+	ngwm__updateVersionStatusResponse->soap_get(soap, "ngwm:updateVersionStatusResponse", "");
 	if (soap->error)
 	{	if (soap->error == SOAP_TAG_MISMATCH && soap->level == 2)
 			return soap_recv_fault(soap);

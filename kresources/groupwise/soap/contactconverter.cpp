@@ -35,7 +35,7 @@ ngwt__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
 
   ngwt__Contact* contact = soap_new_ngwt__Contact( soap(), -1 );
 
-  // ngwt_Contact
+  // ngwt__Contact
   contact->fullName = 0;
   contact->emailList = 0;
   contact->imList = 0;
@@ -43,9 +43,14 @@ ngwt__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
   contact->officeInfo = 0;
   contact->personalInfo = 0;
   contact->referenceInfo = 0;
-  // ngwt_AddressBookItem
+  // ngwt__AddressBookItem
   contact->uuid = 0;
   contact->comment = 0;
+  contact->sync = 0;
+  contact->domain = 0;
+  contact->postOffice = 0;
+  contact->distinguishedName = 0;
+  contact->userid = 0;
   // ngwt__ContainerItem
   contact->categories = 0;
   contact->created = 0;
@@ -409,7 +414,7 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
   {
     if ( *contact->sync == add )
       addr.insertCustom( "GWRESOURCE", "SYNC", "ADD" );
-    else if ( *contact->sync == _delete )
+    else if ( *contact->sync == delete_ )
       addr.insertCustom( "GWRESOURCE", "SYNC", "DEL" );
     else if ( *contact->sync == update )
       addr.insertCustom( "GWRESOURCE", "SYNC", "UPD" );

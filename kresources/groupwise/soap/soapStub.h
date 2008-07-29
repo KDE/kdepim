@@ -17,213 +17,261 @@
 
 
 #ifndef SOAP_TYPE_ngwt__ItemSourceList
-#define SOAP_TYPE_ngwt__ItemSourceList (296)
+#define SOAP_TYPE_ngwt__ItemSourceList (336)
 /* Bitmask ngwt:ItemSourceList */
 enum ngwt__ItemSourceList {received = 1, sent = 2, draft = 4, personal = 8};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__MessageTypeList
-#define SOAP_TYPE_ngwt__MessageTypeList (297)
+#define SOAP_TYPE_ngwt__MessageTypeList (337)
 /* Bitmask ngwt:MessageTypeList */
 enum ngwt__MessageTypeList {Appointment = 1, CalendarItem = 2, DocumentReference = 4, Mail = 8, Note = 16, PhoneMessage = 32, Task = 64};
 #endif
 
 #ifndef SOAP_TYPE_ngwe__FieldList
-#define SOAP_TYPE_ngwe__FieldList (299)
+#define SOAP_TYPE_ngwe__FieldList (339)
 /* Bitmask ngwe:FieldList */
-enum ngwe__FieldList {AcceptLevel = 1, Attachment = 2, Category = 4, Classification = 8, DueDate = 16, Duration = 32, EmailAddress = 64, ExpirationDate = 128, IMAddress = 256, MessageBody = 512, Name = 1024, PersonalSubject = 2048, PhoneNumber = 4096, Place = 8192, Rights = 16384, Security = 32768, SendPriority = 65536, StartDate = 131072, Subject = 262144, TaskCategory = 524288, TaskPriority = 1048576};
+enum ngwe__FieldList {AcceptLevel = 1, Alarm = 2, AllDayEvent = 4, Attachment = 8, Category = 16, Classification = 32, Contact = 64, DueDate = 128, Duration = 256, EmailAddress = 512, ExpirationDate = 1024, Hidden = 2048, IMAddress = 4096, MessageBody = 8192, Name = 16384, Organization = 32768, Owner = 65536, PersonalSubject = 131072, PhoneNumber = 262144, Place = 524288, PostalAddress = 1048576, RecipientStatus = 2097152, Rights = 4194304, Security = 8388608, SendPriority = 16777216, StartDate = 33554432, Subject = 67108864, TaskCategory = 134217728, TaskPriority = 268435456};
 #endif
 
 #ifndef SOAP_TYPE_ngwe__ItemTypeList
-#define SOAP_TYPE_ngwe__ItemTypeList (300)
+#define SOAP_TYPE_ngwe__ItemTypeList (340)
 /* Bitmask ngwe:ItemTypeList */
-enum ngwe__ItemTypeList {AddressBookItem = 1, Appointment_ = 2, CalendarItem_ = 4, Contact = 8, Group = 16, Mail_ = 32, Note_ = 64, Organization = 128, PhoneMessage_ = 256, Resource = 512, Task_ = 1024};
+enum ngwe__ItemTypeList {AddressBookItem = 1, Appointment_ = 2, CalendarItem_ = 4, Contact_ = 8, Group = 16, Mail_ = 32, Note_ = 64, Organization_ = 128, PhoneMessage_ = 256, Resource = 512, Task_ = 1024, DocumentRef = 2048};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__AcceptLevel
-#define SOAP_TYPE_ngwt__AcceptLevel (301)
+#define SOAP_TYPE_ngwt__AcceptLevel (341)
 /* ngwt:AcceptLevel */
 enum ngwt__AcceptLevel {Free = 0, Tentative = 1, Busy = 2, OutOfOffice = 3};
 #endif
 
+#ifndef SOAP_TYPE_ngwt__AgeAction
+#define SOAP_TYPE_ngwt__AgeAction (342)
+/* ngwt:AgeAction */
+enum ngwt__AgeAction {archive = 0, delete__ = 1, retain = 2};
+#endif
+
+#ifndef SOAP_TYPE_ngwt__AppointmentConflict
+#define SOAP_TYPE_ngwt__AppointmentConflict (343)
+/* ngwt:AppointmentConflict */
+enum ngwt__AppointmentConflict {Yes = 0, No = 1, Ignore = 2};
+#endif
+
 #ifndef SOAP_TYPE_ngwt__CalendarFolderFlags
-#define SOAP_TYPE_ngwt__CalendarFolderFlags (302)
+#define SOAP_TYPE_ngwt__CalendarFolderFlags (344)
 /* ngwt:CalendarFolderFlags */
 enum ngwt__CalendarFolderFlags {ShowInList = 0, DontIncludeContent = 1};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__CategoryType
-#define SOAP_TYPE_ngwt__CategoryType (303)
+#define SOAP_TYPE_ngwt__CategoryType (345)
 /* ngwt:CategoryType */
 enum ngwt__CategoryType {Normal = 0, Personal = 1, FollowUp = 2, Urgent = 3, LowPriority = 4};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ContactType
-#define SOAP_TYPE_ngwt__ContactType (304)
+#define SOAP_TYPE_ngwt__ContactType (346)
 /* ngwt:ContactType */
-enum ngwt__ContactType {Contact_ = 0, Group_ = 1, Resource_ = 2, Organization_ = 3};
+enum ngwt__ContactType {Contact__ = 0, Group_ = 1, Resource_ = 2, Organization__ = 3};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__CursorSeek
-#define SOAP_TYPE_ngwt__CursorSeek (305)
+#define SOAP_TYPE_ngwt__CursorSeek (347)
 /* ngwt:CursorSeek */
 enum ngwt__CursorSeek {current = 0, start = 1, end = 2};
 #endif
 
+#ifndef SOAP_TYPE_ngwt__CustomType
+#define SOAP_TYPE_ngwt__CustomType (348)
+/* ngwt:CustomType */
+enum ngwt__CustomType {String = 0, Numeric = 1, Date = 2, Binary = 3};
+#endif
+
 #ifndef SOAP_TYPE_ngwt__DeltaSyncType
-#define SOAP_TYPE_ngwt__DeltaSyncType (310)
+#define SOAP_TYPE_ngwt__DeltaSyncType (353)
 /* ngwt:DeltaSyncType */
-enum ngwt__DeltaSyncType {add = 0, _delete = 1, update = 2};
+enum ngwt__DeltaSyncType {add = 0, delete_ = 1, update = 2};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__DistributionType
-#define SOAP_TYPE_ngwt__DistributionType (311)
+#define SOAP_TYPE_ngwt__DistributionType (354)
 /* ngwt:DistributionType */
 enum ngwt__DistributionType {TO = 0, CC = 1, BC = 2};
 #endif
 
+#ifndef SOAP_TYPE_ngwt__Execution
+#define SOAP_TYPE_ngwt__Execution (355)
+/* ngwt:Execution */
+enum ngwt__Execution {Startup = 0, Exit = 1, New = 2, FolderOpen = 3, FolderClose = 4, FolderNew = 5, User = 6};
+#endif
+
+#ifndef SOAP_TYPE_ngwt__FilterDate
+#define SOAP_TYPE_ngwt__FilterDate (356)
+/* ngwt:FilterDate */
+enum ngwt__FilterDate {Today = 0, Tomorrow = 1, ThisMonth = 2, ThisWeek = 3, ThisYear = 4, Yesterday = 5};
+#endif
+
 #ifndef SOAP_TYPE_ngwt__FilterOp
-#define SOAP_TYPE_ngwt__FilterOp (312)
+#define SOAP_TYPE_ngwt__FilterOp (357)
 /* ngwt:FilterOp */
 enum ngwt__FilterOp {and_ = 0, or_ = 1, not_ = 2, eq = 3, ne = 4, gt = 5, lt = 6, gte = 7, lte = 8, contains = 9, containsWord = 10, begins = 11, exists = 12, notExist = 13, isOf = 14, isNotOf = 15, fieldEqual = 16, fieldGTE = 17, fieldGT = 18, fieldLTE = 19, fieldLT = 20, fieldNE = 21, fieldDateEqual = 22};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__FolderACLStatus
-#define SOAP_TYPE_ngwt__FolderACLStatus (313)
+#define SOAP_TYPE_ngwt__FolderACLStatus (358)
 /* ngwt:FolderACLStatus */
 enum ngwt__FolderACLStatus {pending = 0, accepted = 1, deleted = 2, opened = 3, owner = 4};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__FolderType
-#define SOAP_TYPE_ngwt__FolderType (314)
+#define SOAP_TYPE_ngwt__FolderType (359)
 /* ngwt:FolderType */
-enum ngwt__FolderType {Mailbox = 0, SentItems = 1, Draft = 2, Trash = 3, Calendar = 4, Contacts = 5, Documents = 6, Checklist = 7, Cabinet = 8, Normal_ = 9, NNTP = 10, IMAP = 11, Query = 12, Root = 13, JunkMail = 14};
+enum ngwt__FolderType {Mailbox = 0, SentItems = 1, Draft = 2, Trash = 3, Calendar = 4, Contacts = 5, Documents = 6, Checklist = 7, Cabinet = 8, Normal_ = 9, NNTPServer = 10, NNTPNewsGroup = 11, IMAP = 12, Query = 13, Root = 14, JunkMail = 15, Notes = 16};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Frequency
-#define SOAP_TYPE_ngwt__Frequency (315)
+#define SOAP_TYPE_ngwt__Frequency (360)
 /* ngwt:Frequency */
 enum ngwt__Frequency {Daily = 0, Weekly = 1, Monthly = 2, Yearly = 3};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ItemClass
-#define SOAP_TYPE_ngwt__ItemClass (318)
+#define SOAP_TYPE_ngwt__ItemClass (363)
 /* ngwt:ItemClass */
 enum ngwt__ItemClass {Public = 0, Private = 1};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ItemOptionsPriority
-#define SOAP_TYPE_ngwt__ItemOptionsPriority (319)
+#define SOAP_TYPE_ngwt__ItemOptionsPriority (364)
 /* ngwt:ItemOptionsPriority */
 enum ngwt__ItemOptionsPriority {High = 0, Standard = 1, Low = 2};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ItemSecurity
-#define SOAP_TYPE_ngwt__ItemSecurity (320)
+#define SOAP_TYPE_ngwt__ItemSecurity (365)
 /* ngwt:ItemSecurity */
 enum ngwt__ItemSecurity {Normal__ = 0, Proprietary = 1, Confidential = 2, Secret = 3, TopSecret = 4, ForYourEyesOnly = 5};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ItemSource
-#define SOAP_TYPE_ngwt__ItemSource (321)
+#define SOAP_TYPE_ngwt__ItemSource (366)
 /* ngwt:ItemSource */
 enum ngwt__ItemSource {received_ = 0, sent_ = 1, draft_ = 2, personal_ = 3};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__JunkHandlingListType
-#define SOAP_TYPE_ngwt__JunkHandlingListType (322)
+#define SOAP_TYPE_ngwt__JunkHandlingListType (367)
 /* ngwt:JunkHandlingListType */
 enum ngwt__JunkHandlingListType {junk = 0, block = 1, trust = 2};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__JunkMatchType
-#define SOAP_TYPE_ngwt__JunkMatchType (323)
+#define SOAP_TYPE_ngwt__JunkMatchType (368)
 /* ngwt:JunkMatchType */
 enum ngwt__JunkMatchType {email = 0, domain = 1};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__LinkType
-#define SOAP_TYPE_ngwt__LinkType (324)
+#define SOAP_TYPE_ngwt__LinkType (369)
 /* ngwt:LinkType */
 enum ngwt__LinkType {forward = 0, reply = 1};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__MessageList
-#define SOAP_TYPE_ngwt__MessageList (325)
+#define SOAP_TYPE_ngwt__MessageList (370)
 /* ngwt:MessageList */
-enum ngwt__MessageList {All = 0, Modified = 1, New = 2};
+enum ngwt__MessageList {All = 0, Modified = 1, New_ = 2};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__MessageType
-#define SOAP_TYPE_ngwt__MessageType (326)
+#define SOAP_TYPE_ngwt__MessageType (371)
 /* ngwt:MessageType */
 enum ngwt__MessageType {Appointment__ = 0, CalendarItem__ = 1, DocumentReference_ = 2, Mail__ = 3, Note__ = 4, PhoneMessage__ = 5, Task__ = 6};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__NotificationType
-#define SOAP_TYPE_ngwt__NotificationType (329)
+#define SOAP_TYPE_ngwt__NotificationType (374)
 /* ngwt:NotificationType */
 enum ngwt__NotificationType {SharedAddressBook = 0, SharedFolder = 1};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__OccurrenceType
-#define SOAP_TYPE_ngwt__OccurrenceType (330)
+#define SOAP_TYPE_ngwt__OccurrenceType (375)
 /* ngwt:OccurrenceType */
 enum ngwt__OccurrenceType {First = 0, Second = 1, Third = 2, Fourth = 3, Fifth = 4, Last = 5};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__PhoneNumberType
-#define SOAP_TYPE_ngwt__PhoneNumberType (331)
+#define SOAP_TYPE_ngwt__PhoneNumberType (376)
 /* ngwt:PhoneNumberType */
 enum ngwt__PhoneNumberType {Fax = 0, Home = 1, Mobile = 2, Office = 3, Pager = 4};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__PostalAddressType
-#define SOAP_TYPE_ngwt__PostalAddressType (332)
+#define SOAP_TYPE_ngwt__PostalAddressType (377)
 /* ngwt:PostalAddressType */
 enum ngwt__PostalAddressType {Home_ = 0, Office_ = 1};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__RecipientType
-#define SOAP_TYPE_ngwt__RecipientType (333)
+#define SOAP_TYPE_ngwt__RecipientType (378)
 /* ngwt:RecipientType */
-enum ngwt__RecipientType {User = 0, Resource__ = 1, PersonalGroup = 2, SystemGroup = 3, PersonalGroupMember = 4, SystemGroupMember = 5};
+enum ngwt__RecipientType {User_ = 0, Resource__ = 1, PersonalGroup = 2, SystemGroup = 3, PersonalGroupMember = 4, SystemGroupMember = 5};
 #endif
 
 #ifndef SOAP_TYPE_ngwt__RetractType
-#define SOAP_TYPE_ngwt__RetractType (334)
+#define SOAP_TYPE_ngwt__RetractType (379)
 /* ngwt:RetractType */
 enum ngwt__RetractType {myMailbox = 0, recipientMailboxes = 1, allMailboxes = 2};
 #endif
 
+#ifndef SOAP_TYPE_ngwt__RuleActionType
+#define SOAP_TYPE_ngwt__RuleActionType (380)
+/* ngwt:RuleActionType */
+enum ngwt__RuleActionType {Accept = 0, Archive = 1, Category_ = 2, Delegate = 3, Delete = 4, Forward = 5, Link = 6, MarkPrivate = 7, MarkRead = 8, MarkUnread = 9, Move = 10, Purge = 11, Reply = 12, Send = 13, StopRules = 14, Unknown = 15};
+#endif
+
 #ifndef SOAP_TYPE_ngwt__StatusTrackingOptions
-#define SOAP_TYPE_ngwt__StatusTrackingOptions (335)
+#define SOAP_TYPE_ngwt__StatusTrackingOptions (381)
 /* ngwt:StatusTrackingOptions */
 enum ngwt__StatusTrackingOptions {None = 0, Delivered = 1, DeliveredAndOpened = 2, All_ = 3};
 #endif
 
+#ifndef SOAP_TYPE_ngwt__VersionEventType
+#define SOAP_TYPE_ngwt__VersionEventType (384)
+/* ngwt:VersionEventType */
+enum ngwt__VersionEventType {archive_ = 0, checkIn = 1, checkOut = 2, copyIn = 3, copyOut = 4, copyVersion = 5, created = 6, deleteVersion = 7, endAccess = 8, resetStatus = 9, restore = 10, retrieve = 11, securityModified = 12, versionDownloaded = 13, viewed = 14, unknown = 15};
+#endif
+
+#ifndef SOAP_TYPE_ngwt__VersionStatus
+#define SOAP_TYPE_ngwt__VersionStatus (385)
+/* ngwt:VersionStatus */
+enum ngwt__VersionStatus {available = 0, checkedOut = 1, inUse = 2, deleted_ = 3, archived = 4, massInUse = 5, unavailable = 6};
+#endif
+
 #ifndef SOAP_TYPE_ngwt__WeekDay
-#define SOAP_TYPE_ngwt__WeekDay (338)
+#define SOAP_TYPE_ngwt__WeekDay (386)
 /* ngwt:WeekDay */
 enum ngwt__WeekDay {Sunday = 0, Monday = 1, Tuesday = 2, Wednesday = 3, Thursday = 4, Friday = 5, Saturday = 6};
 #endif
 
 #ifndef SOAP_TYPE_ngwe__EventType
-#define SOAP_TYPE_ngwe__EventType (339)
+#define SOAP_TYPE_ngwe__EventType (388)
 /* ngwe:EventType */
-enum ngwe__EventType {AddressBookAdd = 0, AddressBookDelete = 1, AddressBookModify = 2, AddressBookItemAdd = 3, AddressBookItemDelete = 4, AddressBookItemModify = 5, FolderAccept = 6, FolderAdd = 7, FolderDelete = 8, FolderItemAdd = 9, FolderItemDelete = 10, FolderItemMove = 11, FolderModify = 12, ItemAccept = 13, ItemArchive = 14, ItemComplete = 15, ItemDecline = 16, ItemDelete = 17, ItemMarkPrivate = 18, ItemMarkRead = 19, ItemMarkUnread = 20, ItemModify = 21, ItemPurge = 22, ItemUnarchive = 23, ItemUndelete = 24, Login = 25, Logout = 26, ProxyAccessAdd = 27, ProxyAccessModify = 28, ProxyAccessDelete = 29, ProxyLogin = 30, SessionTimedOut = 31, TrustedApplicationLogin = 32, ItemMarkUnprivate = 33, ItemUnaccept = 34, ItemUncomplete = 35};
+enum ngwe__EventType {AddressBookAdd = 0, AddressBookDelete = 1, AddressBookModify = 2, AddressBookItemAdd = 3, AddressBookItemDelete = 4, AddressBookItemModify = 5, FolderAccept = 6, FolderAdd = 7, FolderDelete = 8, FolderItemAdd = 9, FolderItemDelete = 10, FolderItemMove = 11, FolderModify = 12, ItemAccept = 13, ItemArchive = 14, ItemComplete = 15, ItemDecline = 16, ItemDelete = 17, ItemMarkPrivate = 18, ItemMarkRead = 19, ItemMarkUnread = 20, ItemModify = 21, ItemPurge = 22, ItemUnarchive = 23, ItemUndelete = 24, Login = 25, Logout = 26, ProxyAccessAdd = 27, ProxyAccessModify = 28, ProxyAccessDelete = 29, ProxyLogin = 30, SessionTimedOut = 31, TrustedApplicationLogin = 32, ItemMarkUnprivate = 33, ItemUnaccept = 34, ItemUncomplete = 35, PersonalGroupItemAdd = 36, PersonalGroupItemDelete = 37};
 #endif
 
 #ifndef SOAP_TYPE_ngwe__Field
-#define SOAP_TYPE_ngwe__Field (340)
+#define SOAP_TYPE_ngwe__Field (389)
 /* ngwe:Field */
-enum ngwe__Field {AcceptLevel_ = 0, Attachment_ = 1, Category_ = 2, Classification_ = 3, DueDate_ = 4, Duration_ = 5, EmailAddress_ = 6, ExpirationDate_ = 7, IMAddress_ = 8, MessageBody_ = 9, Name_ = 10, PersonalSubject_ = 11, PhoneNumber_ = 12, Place_ = 13, Rights_ = 14, Security_ = 15, SendPriority_ = 16, StartDate_ = 17, Subject_ = 18, TaskCategory_ = 19, TaskPriority_ = 20};
+enum ngwe__Field {AcceptLevel_ = 0, Alarm_ = 1, AllDayEvent_ = 2, Attachment_ = 3, Category__ = 4, Classification_ = 5, Contact___ = 6, DueDate_ = 7, Duration_ = 8, EmailAddress_ = 9, ExpirationDate_ = 10, Hidden_ = 11, IMAddress_ = 12, MessageBody_ = 13, Name_ = 14, Organization___ = 15, Owner_ = 16, PersonalSubject_ = 17, PhoneNumber_ = 18, Place_ = 19, PostalAddress_ = 20, RecipientStatus_ = 21, Rights_ = 22, Security_ = 23, SendPriority_ = 24, StartDate_ = 25, Subject_ = 26, TaskCategory_ = 27, TaskPriority_ = 28};
 #endif
 
 #ifndef SOAP_TYPE_ngwe__ItemType
-#define SOAP_TYPE_ngwe__ItemType (341)
+#define SOAP_TYPE_ngwe__ItemType (390)
 /* ngwe:ItemType */
-enum ngwe__ItemType {AddressBookItem_ = 0, Appointment___ = 1, CalendarItem___ = 2, Contact__ = 3, Group__ = 4, Mail___ = 5, Note___ = 6, Organization__ = 7, PhoneMessage___ = 8, Resource___ = 9, Task___ = 10};
+enum ngwe__ItemType {AddressBookItem_ = 0, Appointment___ = 1, CalendarItem___ = 2, Contact____ = 3, Group__ = 4, Mail___ = 5, Note___ = 6, Organization____ = 7, PhoneMessage___ = 8, Resource___ = 9, Task___ = 10, DocumentRef_ = 11};
 #endif
 
 /******************************************************************************\
@@ -233,14 +281,10 @@ enum ngwe__ItemType {AddressBookItem_ = 0, Appointment___ = 1, CalendarItem___ =
 \******************************************************************************/
 
 
-#if 0 /* volatile type: do no redeclare */
-
-#endif
-
 
 
 #ifndef SOAP_TYPE_xsd__base64Binary
-#define SOAP_TYPE_xsd__base64Binary (9)
+#define SOAP_TYPE_xsd__base64Binary (7)
 /* Base64 schema type: */
 class SOAP_CMAC xsd__base64Binary
 {
@@ -252,7 +296,7 @@ public:
 	char *option;	/* optional element of type xsd:string */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 9; } /* = unique id SOAP_TYPE_xsd__base64Binary */
+	virtual int soap_type() const { return 7; } /* = unique id SOAP_TYPE_xsd__base64Binary */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -264,8 +308,12 @@ public:
 };
 #endif
 
+#if 0 /* volatile type: do no redeclare */
+
+#endif
+
 #ifndef SOAP_TYPE_ngwt__AccessControlList
-#define SOAP_TYPE_ngwt__AccessControlList (20)
+#define SOAP_TYPE_ngwt__AccessControlList (19)
 /* ngwt:AccessControlList */
 class SOAP_CMAC ngwt__AccessControlList
 {
@@ -273,7 +321,7 @@ public:
 	std::vector<class ngwt__AccessControlListEntry * >entry;	/* optional element of type ngwt:AccessControlListEntry */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 20; } /* = unique id SOAP_TYPE_ngwt__AccessControlList */
+	virtual int soap_type() const { return 19; } /* = unique id SOAP_TYPE_ngwt__AccessControlList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -286,7 +334,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__AccessMiscRight
-#define SOAP_TYPE_ngwt__AccessMiscRight (21)
+#define SOAP_TYPE_ngwt__AccessMiscRight (20)
 /* ngwt:AccessMiscRight */
 class SOAP_CMAC ngwt__AccessMiscRight
 {
@@ -297,7 +345,7 @@ public:
 	bool *setup;	/* optional element of type xsd:boolean */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 21; } /* = unique id SOAP_TYPE_ngwt__AccessMiscRight */
+	virtual int soap_type() const { return 20; } /* = unique id SOAP_TYPE_ngwt__AccessMiscRight */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -310,7 +358,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__AccessRight
-#define SOAP_TYPE_ngwt__AccessRight (22)
+#define SOAP_TYPE_ngwt__AccessRight (21)
 /* ngwt:AccessRight */
 class SOAP_CMAC ngwt__AccessRight
 {
@@ -319,7 +367,7 @@ public:
 	bool *write;	/* optional element of type xsd:boolean */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 22; } /* = unique id SOAP_TYPE_ngwt__AccessRight */
+	virtual int soap_type() const { return 21; } /* = unique id SOAP_TYPE_ngwt__AccessRight */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -332,7 +380,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__AccessRightChanges
-#define SOAP_TYPE_ngwt__AccessRightChanges (23)
+#define SOAP_TYPE_ngwt__AccessRightChanges (22)
 /* ngwt:AccessRightChanges */
 class SOAP_CMAC ngwt__AccessRightChanges
 {
@@ -342,7 +390,7 @@ public:
 	ngwt__AccessRightEntry *update;	/* optional element of type ngwt:AccessRightEntry */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 23; } /* = unique id SOAP_TYPE_ngwt__AccessRightChanges */
+	virtual int soap_type() const { return 22; } /* = unique id SOAP_TYPE_ngwt__AccessRightChanges */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -355,7 +403,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__AccessRightList
-#define SOAP_TYPE_ngwt__AccessRightList (25)
+#define SOAP_TYPE_ngwt__AccessRightList (24)
 /* ngwt:AccessRightList */
 class SOAP_CMAC ngwt__AccessRightList
 {
@@ -363,7 +411,7 @@ public:
 	std::vector<ngwt__AccessRightEntry * >entry;	/* optional element of type ngwt:AccessRightEntry */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 25; } /* = unique id SOAP_TYPE_ngwt__AccessRightList */
+	virtual int soap_type() const { return 24; } /* = unique id SOAP_TYPE_ngwt__AccessRightList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -376,7 +424,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__AddressBookList
-#define SOAP_TYPE_ngwt__AddressBookList (28)
+#define SOAP_TYPE_ngwt__AddressBookList (27)
 /* ngwt:AddressBookList */
 class SOAP_CMAC ngwt__AddressBookList
 {
@@ -384,7 +432,7 @@ public:
 	std::vector<class ngwt__AddressBook * >book;	/* optional element of type ngwt:AddressBook */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 28; } /* = unique id SOAP_TYPE_ngwt__AddressBookList */
+	virtual int soap_type() const { return 27; } /* = unique id SOAP_TYPE_ngwt__AddressBookList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -397,7 +445,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__AttachmentInfo
-#define SOAP_TYPE_ngwt__AttachmentInfo (32)
+#define SOAP_TYPE_ngwt__AttachmentInfo (31)
 /* ngwt:AttachmentInfo */
 class SOAP_CMAC ngwt__AttachmentInfo
 {
@@ -405,7 +453,7 @@ public:
 	std::vector<class ngwt__AttachmentItemInfo * >attachment;	/* required element of type ngwt:AttachmentItemInfo */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 32; } /* = unique id SOAP_TYPE_ngwt__AttachmentInfo */
+	virtual int soap_type() const { return 31; } /* = unique id SOAP_TYPE_ngwt__AttachmentInfo */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -418,7 +466,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__AttachmentItemInfo
-#define SOAP_TYPE_ngwt__AttachmentItemInfo (33)
+#define SOAP_TYPE_ngwt__AttachmentItemInfo (32)
 /* ngwt:AttachmentItemInfo */
 class SOAP_CMAC ngwt__AttachmentItemInfo
 {
@@ -430,9 +478,10 @@ public:
 	unsigned long *size;	/* optional element of type xsd:unsignedLong */
 	char *date;	/* optional element of type xsd:string */
 	xsd__base64Binary *data;	/* optional element of type xsd:base64Binary */
+	bool *hidden;	/* optional element of type xsd:boolean */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 33; } /* = unique id SOAP_TYPE_ngwt__AttachmentItemInfo */
+	virtual int soap_type() const { return 32; } /* = unique id SOAP_TYPE_ngwt__AttachmentItemInfo */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -445,14 +494,14 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Authentication
-#define SOAP_TYPE_ngwt__Authentication (34)
+#define SOAP_TYPE_ngwt__Authentication (33)
 /* ngwt:Authentication */
 class SOAP_CMAC ngwt__Authentication
 {
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 34; } /* = unique id SOAP_TYPE_ngwt__Authentication */
+	virtual int soap_type() const { return 33; } /* = unique id SOAP_TYPE_ngwt__Authentication */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -465,7 +514,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__CalendarFolderAttribute
-#define SOAP_TYPE_ngwt__CalendarFolderAttribute (36)
+#define SOAP_TYPE_ngwt__CalendarFolderAttribute (35)
 /* ngwt:CalendarFolderAttribute */
 class SOAP_CMAC ngwt__CalendarFolderAttribute
 {
@@ -474,7 +523,7 @@ public:
 	unsigned long *color;	/* optional element of type xsd:unsignedLong */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 36; } /* = unique id SOAP_TYPE_ngwt__CalendarFolderAttribute */
+	virtual int soap_type() const { return 35; } /* = unique id SOAP_TYPE_ngwt__CalendarFolderAttribute */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -487,7 +536,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__CategoryList
-#define SOAP_TYPE_ngwt__CategoryList (39)
+#define SOAP_TYPE_ngwt__CategoryList (38)
 /* ngwt:CategoryList */
 class SOAP_CMAC ngwt__CategoryList
 {
@@ -495,7 +544,7 @@ public:
 	std::vector<class ngwt__Category * >category;	/* optional element of type ngwt:Category */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 39; } /* = unique id SOAP_TYPE_ngwt__CategoryList */
+	virtual int soap_type() const { return 38; } /* = unique id SOAP_TYPE_ngwt__CategoryList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -508,7 +557,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__CategoryRefList
-#define SOAP_TYPE_ngwt__CategoryRefList (40)
+#define SOAP_TYPE_ngwt__CategoryRefList (39)
 /* ngwt:CategoryRefList */
 class SOAP_CMAC ngwt__CategoryRefList
 {
@@ -517,7 +566,7 @@ public:
 	std::string *primary;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 40; } /* = unique id SOAP_TYPE_ngwt__CategoryRefList */
+	virtual int soap_type() const { return 39; } /* = unique id SOAP_TYPE_ngwt__CategoryRefList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -530,7 +579,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Custom
-#define SOAP_TYPE_ngwt__Custom (46)
+#define SOAP_TYPE_ngwt__Custom (45)
 /* ngwt:Custom */
 class SOAP_CMAC ngwt__Custom
 {
@@ -539,9 +588,10 @@ public:
 public:
 	std::string *value;	/* optional element of type xsd:string */
 	bool *locked;	/* optional element of type xsd:boolean */
+	enum ngwt__CustomType *type;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 46; } /* = unique id SOAP_TYPE_ngwt__Custom */
+	virtual int soap_type() const { return 45; } /* = unique id SOAP_TYPE_ngwt__Custom */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -554,7 +604,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__CustomList
-#define SOAP_TYPE_ngwt__CustomList (47)
+#define SOAP_TYPE_ngwt__CustomList (46)
 /* ngwt:CustomList */
 class SOAP_CMAC ngwt__CustomList
 {
@@ -562,7 +612,7 @@ public:
 	std::vector<ngwt__Custom * >custom;	/* optional element of type ngwt:Custom */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 47; } /* = unique id SOAP_TYPE_ngwt__CustomList */
+	virtual int soap_type() const { return 46; } /* = unique id SOAP_TYPE_ngwt__CustomList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -575,7 +625,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__DayOfMonthList
-#define SOAP_TYPE_ngwt__DayOfMonthList (48)
+#define SOAP_TYPE_ngwt__DayOfMonthList (47)
 /* ngwt:DayOfMonthList */
 class SOAP_CMAC ngwt__DayOfMonthList
 {
@@ -583,7 +633,7 @@ public:
 	std::vector<char >day;	/* optional element of type ngwt:DayOfMonth */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 48; } /* = unique id SOAP_TYPE_ngwt__DayOfMonthList */
+	virtual int soap_type() const { return 47; } /* = unique id SOAP_TYPE_ngwt__DayOfMonthList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -595,29 +645,8 @@ public:
 };
 #endif
 
-#ifndef SOAP_TYPE_ngwt__DayOfWeekList
-#define SOAP_TYPE_ngwt__DayOfWeekList (50)
-/* ngwt:DayOfWeekList */
-class SOAP_CMAC ngwt__DayOfWeekList
-{
-public:
-	std::vector<class ngwt__DayOfWeek * >day;	/* optional element of type ngwt:DayOfWeek */
-	struct soap *soap;	/* transient */
-public:
-	virtual int soap_type() const { return 50; } /* = unique id SOAP_TYPE_ngwt__DayOfWeekList */
-	virtual void soap_default(struct soap*);
-	virtual void soap_serialize(struct soap*) const;
-	virtual int soap_put(struct soap*, const char*, const char*) const;
-	virtual int soap_out(struct soap*, const char*, int, const char*) const;
-	virtual void *soap_get(struct soap*, const char*, const char*);
-	virtual void *soap_in(struct soap*, const char*, const char*);
-	         ngwt__DayOfWeekList() { }
-	virtual ~ngwt__DayOfWeekList() { }
-};
-#endif
-
 #ifndef SOAP_TYPE_ngwt__DayOfYearList
-#define SOAP_TYPE_ngwt__DayOfYearList (51)
+#define SOAP_TYPE_ngwt__DayOfYearList (49)
 /* ngwt:DayOfYearList */
 class SOAP_CMAC ngwt__DayOfYearList
 {
@@ -625,7 +654,7 @@ public:
 	std::vector<short >day;	/* optional element of type ngwt:DayOfYear */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 51; } /* = unique id SOAP_TYPE_ngwt__DayOfYearList */
+	virtual int soap_type() const { return 49; } /* = unique id SOAP_TYPE_ngwt__DayOfYearList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -634,6 +663,27 @@ public:
 	virtual void *soap_in(struct soap*, const char*, const char*);
 	         ngwt__DayOfYearList() { }
 	virtual ~ngwt__DayOfYearList() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_ngwt__DayOfYearWeekList
+#define SOAP_TYPE_ngwt__DayOfYearWeekList (51)
+/* ngwt:DayOfYearWeekList */
+class SOAP_CMAC ngwt__DayOfYearWeekList
+{
+public:
+	std::vector<class ngwt__DayOfYearWeek * >day;	/* optional element of type ngwt:DayOfYearWeek */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 51; } /* = unique id SOAP_TYPE_ngwt__DayOfYearWeekList */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         ngwt__DayOfYearWeekList() { }
+	virtual ~ngwt__DayOfYearWeekList() { }
 };
 #endif
 
@@ -670,6 +720,7 @@ public:
 	class ngwt__From *from;	/* optional element of type ngwt:From */
 	std::string *to;	/* optional element of type xsd:string */
 	std::string *cc;	/* optional element of type xsd:string */
+	std::string *bc;	/* optional element of type xsd:string */
 	class ngwt__RecipientList *recipients;	/* optional element of type ngwt:RecipientList */
 	class ngwt__SendOptions *sendoptions;	/* optional element of type ngwt:SendOptions */
 	struct soap *soap;	/* transient */
@@ -686,8 +737,54 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE_ngwt__DocumentType
+#define SOAP_TYPE_ngwt__DocumentType (58)
+/* ngwt:DocumentType */
+class SOAP_CMAC ngwt__DocumentType
+{
+public:
+	std::string name;	/* required element of type xsd:string */
+public:
+	unsigned long *life;	/* optional element of type xsd:unsignedLong */
+	unsigned long *maximumVersions;	/* optional element of type xsd:unsignedLong */
+	enum ngwt__AgeAction *ageAction;	/* optional element of type ngwt:AgeAction */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 58; } /* = unique id SOAP_TYPE_ngwt__DocumentType */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         ngwt__DocumentType() { }
+	virtual ~ngwt__DocumentType() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_ngwt__DocumentTypeList
+#define SOAP_TYPE_ngwt__DocumentTypeList (59)
+/* ngwt:DocumentTypeList */
+class SOAP_CMAC ngwt__DocumentTypeList
+{
+public:
+	std::vector<ngwt__DocumentType * >item;	/* optional element of type ngwt:DocumentType */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 59; } /* = unique id SOAP_TYPE_ngwt__DocumentTypeList */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         ngwt__DocumentTypeList() { }
+	virtual ~ngwt__DocumentTypeList() { }
+};
+#endif
+
 #ifndef SOAP_TYPE_ngwt__EmailAddressList
-#define SOAP_TYPE_ngwt__EmailAddressList (56)
+#define SOAP_TYPE_ngwt__EmailAddressList (60)
 /* ngwt:EmailAddressList */
 class SOAP_CMAC ngwt__EmailAddressList
 {
@@ -696,7 +793,7 @@ public:
 	std::string *primary;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 56; } /* = unique id SOAP_TYPE_ngwt__EmailAddressList */
+	virtual int soap_type() const { return 60; } /* = unique id SOAP_TYPE_ngwt__EmailAddressList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -709,7 +806,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Filter
-#define SOAP_TYPE_ngwt__Filter (57)
+#define SOAP_TYPE_ngwt__Filter (61)
 /* ngwt:Filter */
 class SOAP_CMAC ngwt__Filter
 {
@@ -717,7 +814,7 @@ public:
 	class ngwt__FilterElement *element;	/* optional element of type ngwt:FilterElement */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 57; } /* = unique id SOAP_TYPE_ngwt__Filter */
+	virtual int soap_type() const { return 61; } /* = unique id SOAP_TYPE_ngwt__Filter */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -730,7 +827,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__FilterElement
-#define SOAP_TYPE_ngwt__FilterElement (58)
+#define SOAP_TYPE_ngwt__FilterElement (62)
 /* ngwt:FilterElement */
 class SOAP_CMAC ngwt__FilterElement
 {
@@ -738,7 +835,7 @@ public:
 	enum ngwt__FilterOp op;	/* required element of type ngwt:FilterOp */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 58; } /* = unique id SOAP_TYPE_ngwt__FilterElement */
+	virtual int soap_type() const { return 62; } /* = unique id SOAP_TYPE_ngwt__FilterElement */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -751,7 +848,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__FolderACL
-#define SOAP_TYPE_ngwt__FolderACL (62)
+#define SOAP_TYPE_ngwt__FolderACL (66)
 /* ngwt:FolderACL */
 class SOAP_CMAC ngwt__FolderACL
 {
@@ -759,7 +856,7 @@ public:
 	std::vector<class ngwt__FolderACLEntry * >entry;	/* optional element of type ngwt:FolderACLEntry */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 62; } /* = unique id SOAP_TYPE_ngwt__FolderACL */
+	virtual int soap_type() const { return 66; } /* = unique id SOAP_TYPE_ngwt__FolderACL */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -772,7 +869,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__FolderList
-#define SOAP_TYPE_ngwt__FolderList (64)
+#define SOAP_TYPE_ngwt__FolderList (68)
 /* ngwt:FolderList */
 class SOAP_CMAC ngwt__FolderList
 {
@@ -780,7 +877,7 @@ public:
 	std::vector<class ngwt__Folder * >folder;	/* optional element of type ngwt:Folder */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 64; } /* = unique id SOAP_TYPE_ngwt__FolderList */
+	virtual int soap_type() const { return 68; } /* = unique id SOAP_TYPE_ngwt__FolderList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -793,7 +890,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__FreeBusyBlockList
-#define SOAP_TYPE_ngwt__FreeBusyBlockList (65)
+#define SOAP_TYPE_ngwt__FreeBusyBlockList (69)
 /* ngwt:FreeBusyBlockList */
 class SOAP_CMAC ngwt__FreeBusyBlockList
 {
@@ -801,7 +898,7 @@ public:
 	std::vector<class ngwt__FreeBusyBlock * >block;	/* optional element of type ngwt:FreeBusyBlock */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 65; } /* = unique id SOAP_TYPE_ngwt__FreeBusyBlockList */
+	virtual int soap_type() const { return 69; } /* = unique id SOAP_TYPE_ngwt__FreeBusyBlockList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -814,7 +911,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__FreeBusyBlock
-#define SOAP_TYPE_ngwt__FreeBusyBlock (66)
+#define SOAP_TYPE_ngwt__FreeBusyBlock (70)
 /* ngwt:FreeBusyBlock */
 class SOAP_CMAC ngwt__FreeBusyBlock
 {
@@ -825,7 +922,7 @@ public:
 	std::string *subject;	/* optional element of type xsd:string */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 66; } /* = unique id SOAP_TYPE_ngwt__FreeBusyBlock */
+	virtual int soap_type() const { return 70; } /* = unique id SOAP_TYPE_ngwt__FreeBusyBlock */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -838,7 +935,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__FreeBusyUserList
-#define SOAP_TYPE_ngwt__FreeBusyUserList (68)
+#define SOAP_TYPE_ngwt__FreeBusyUserList (72)
 /* ngwt:FreeBusyUserList */
 class SOAP_CMAC ngwt__FreeBusyUserList
 {
@@ -846,7 +943,7 @@ public:
 	std::vector<class ngwt__NameAndEmail * >user;	/* optional element of type ngwt:NameAndEmail */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 68; } /* = unique id SOAP_TYPE_ngwt__FreeBusyUserList */
+	virtual int soap_type() const { return 72; } /* = unique id SOAP_TYPE_ngwt__FreeBusyUserList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -859,7 +956,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__FreeBusyInfoList
-#define SOAP_TYPE_ngwt__FreeBusyInfoList (69)
+#define SOAP_TYPE_ngwt__FreeBusyInfoList (73)
 /* ngwt:FreeBusyInfoList */
 class SOAP_CMAC ngwt__FreeBusyInfoList
 {
@@ -867,7 +964,7 @@ public:
 	std::vector<class ngwt__FreeBusyInfo * >user;	/* optional element of type ngwt:FreeBusyInfo */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 69; } /* = unique id SOAP_TYPE_ngwt__FreeBusyInfoList */
+	virtual int soap_type() const { return 73; } /* = unique id SOAP_TYPE_ngwt__FreeBusyInfoList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -880,7 +977,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__FreeBusyStats
-#define SOAP_TYPE_ngwt__FreeBusyStats (70)
+#define SOAP_TYPE_ngwt__FreeBusyStats (74)
 /* ngwt:FreeBusyStats */
 class SOAP_CMAC ngwt__FreeBusyStats
 {
@@ -890,7 +987,7 @@ public:
 	int total;	/* required element of type xsd:int */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 70; } /* = unique id SOAP_TYPE_ngwt__FreeBusyStats */
+	virtual int soap_type() const { return 74; } /* = unique id SOAP_TYPE_ngwt__FreeBusyStats */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -903,7 +1000,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__FullName
-#define SOAP_TYPE_ngwt__FullName (72)
+#define SOAP_TYPE_ngwt__FullName (76)
 /* ngwt:FullName */
 class SOAP_CMAC ngwt__FullName
 {
@@ -916,7 +1013,7 @@ public:
 	std::string *nameSuffix;	/* optional element of type xsd:string */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 72; } /* = unique id SOAP_TYPE_ngwt__FullName */
+	virtual int soap_type() const { return 76; } /* = unique id SOAP_TYPE_ngwt__FullName */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -929,7 +1026,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__GroupMember
-#define SOAP_TYPE_ngwt__GroupMember (74)
+#define SOAP_TYPE_ngwt__GroupMember (78)
 /* ngwt:GroupMember */
 class SOAP_CMAC ngwt__GroupMember
 {
@@ -944,7 +1041,7 @@ public:
 	class ngwt__GroupMemberList *members;	/* optional element of type ngwt:GroupMemberList */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 74; } /* = unique id SOAP_TYPE_ngwt__GroupMember */
+	virtual int soap_type() const { return 78; } /* = unique id SOAP_TYPE_ngwt__GroupMember */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -957,7 +1054,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__GroupMemberList
-#define SOAP_TYPE_ngwt__GroupMemberList (75)
+#define SOAP_TYPE_ngwt__GroupMemberList (79)
 /* ngwt:GroupMemberList */
 class SOAP_CMAC ngwt__GroupMemberList
 {
@@ -965,7 +1062,7 @@ public:
 	std::vector<ngwt__GroupMember * >member;	/* optional element of type ngwt:GroupMember */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 75; } /* = unique id SOAP_TYPE_ngwt__GroupMemberList */
+	virtual int soap_type() const { return 79; } /* = unique id SOAP_TYPE_ngwt__GroupMemberList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -978,7 +1075,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Host
-#define SOAP_TYPE_ngwt__Host (76)
+#define SOAP_TYPE_ngwt__Host (80)
 /* ngwt:Host */
 class SOAP_CMAC ngwt__Host
 {
@@ -987,7 +1084,7 @@ public:
 	unsigned long *port;	/* optional element of type xsd:unsignedLong */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 76; } /* = unique id SOAP_TYPE_ngwt__Host */
+	virtual int soap_type() const { return 80; } /* = unique id SOAP_TYPE_ngwt__Host */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1000,7 +1097,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ImAddress
-#define SOAP_TYPE_ngwt__ImAddress (77)
+#define SOAP_TYPE_ngwt__ImAddress (81)
 /* ngwt:ImAddress */
 class SOAP_CMAC ngwt__ImAddress
 {
@@ -1010,7 +1107,7 @@ public:
 	std::string *type;	/* optional element of type xsd:string */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 77; } /* = unique id SOAP_TYPE_ngwt__ImAddress */
+	virtual int soap_type() const { return 81; } /* = unique id SOAP_TYPE_ngwt__ImAddress */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1023,7 +1120,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ImAddressList
-#define SOAP_TYPE_ngwt__ImAddressList (78)
+#define SOAP_TYPE_ngwt__ImAddressList (82)
 /* ngwt:ImAddressList */
 class SOAP_CMAC ngwt__ImAddressList
 {
@@ -1031,7 +1128,7 @@ public:
 	std::vector<ngwt__ImAddress * >im;	/* optional element of type ngwt:ImAddress */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 78; } /* = unique id SOAP_TYPE_ngwt__ImAddressList */
+	virtual int soap_type() const { return 82; } /* = unique id SOAP_TYPE_ngwt__ImAddressList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1044,7 +1141,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Item
-#define SOAP_TYPE_ngwt__Item (79)
+#define SOAP_TYPE_ngwt__Item (83)
 /* ngwt:Item */
 class SOAP_CMAC ngwt__Item
 {
@@ -1056,7 +1153,7 @@ public:
 	class ngwt__ItemChanges *changes;	/* optional element of type ngwt:ItemChanges */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 79; } /* = unique id SOAP_TYPE_ngwt__Item */
+	virtual int soap_type() const { return 83; } /* = unique id SOAP_TYPE_ngwt__Item */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1069,7 +1166,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ItemChanges
-#define SOAP_TYPE_ngwt__ItemChanges (80)
+#define SOAP_TYPE_ngwt__ItemChanges (84)
 /* ngwt:ItemChanges */
 class SOAP_CMAC ngwt__ItemChanges
 {
@@ -1079,7 +1176,7 @@ public:
 	ngwt__Item *update;	/* optional element of type ngwt:Item */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 80; } /* = unique id SOAP_TYPE_ngwt__ItemChanges */
+	virtual int soap_type() const { return 84; } /* = unique id SOAP_TYPE_ngwt__ItemChanges */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1092,7 +1189,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ItemList
-#define SOAP_TYPE_ngwt__ItemList (81)
+#define SOAP_TYPE_ngwt__ItemList (85)
 /* ngwt:ItemList */
 class SOAP_CMAC ngwt__ItemList
 {
@@ -1102,7 +1199,7 @@ public:
 	int *count;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 81; } /* = unique id SOAP_TYPE_ngwt__ItemList */
+	virtual int soap_type() const { return 85; } /* = unique id SOAP_TYPE_ngwt__ItemList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1115,7 +1212,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ItemOptions
-#define SOAP_TYPE_ngwt__ItemOptions (82)
+#define SOAP_TYPE_ngwt__ItemOptions (86)
 /* ngwt:ItemOptions */
 class SOAP_CMAC ngwt__ItemOptions
 {
@@ -1127,7 +1224,7 @@ public:
 	bool *hidden;	/* optional element of type xsd:boolean */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 82; } /* = unique id SOAP_TYPE_ngwt__ItemOptions */
+	virtual int soap_type() const { return 86; } /* = unique id SOAP_TYPE_ngwt__ItemOptions */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1140,7 +1237,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ItemRefList
-#define SOAP_TYPE_ngwt__ItemRefList (84)
+#define SOAP_TYPE_ngwt__ItemRefList (88)
 /* ngwt:ItemRefList */
 class SOAP_CMAC ngwt__ItemRefList
 {
@@ -1148,7 +1245,7 @@ public:
 	std::vector<std::string >item;	/* required element of type ngwt:uid */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 84; } /* = unique id SOAP_TYPE_ngwt__ItemRefList */
+	virtual int soap_type() const { return 88; } /* = unique id SOAP_TYPE_ngwt__ItemRefList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1161,7 +1258,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Items
-#define SOAP_TYPE_ngwt__Items (85)
+#define SOAP_TYPE_ngwt__Items (89)
 /* ngwt:Items */
 class SOAP_CMAC ngwt__Items
 {
@@ -1169,7 +1266,7 @@ public:
 	std::vector<ngwt__Item * >item;	/* optional element of type ngwt:Item */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 85; } /* = unique id SOAP_TYPE_ngwt__Items */
+	virtual int soap_type() const { return 89; } /* = unique id SOAP_TYPE_ngwt__Items */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1182,7 +1279,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ItemStatus
-#define SOAP_TYPE_ngwt__ItemStatus (86)
+#define SOAP_TYPE_ngwt__ItemStatus (90)
 /* ngwt:ItemStatus */
 class SOAP_CMAC ngwt__ItemStatus
 {
@@ -1192,13 +1289,13 @@ public:
 	bool *delegated;	/* optional element of type xsd:boolean */
 	bool *deleted;	/* optional element of type xsd:boolean */
 	bool *forwarded;	/* optional element of type xsd:boolean */
-	bool *hidden;	/* optional element of type xsd:boolean */
+	bool *private_;	/* optional element of type xsd:boolean */
 	bool *opened;	/* optional element of type xsd:boolean */
 	bool *read;	/* optional element of type xsd:boolean */
 	bool *replied;	/* optional element of type xsd:boolean */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 86; } /* = unique id SOAP_TYPE_ngwt__ItemStatus */
+	virtual int soap_type() const { return 90; } /* = unique id SOAP_TYPE_ngwt__ItemStatus */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1211,7 +1308,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__JunkEntry
-#define SOAP_TYPE_ngwt__JunkEntry (87)
+#define SOAP_TYPE_ngwt__JunkEntry (91)
 /* ngwt:JunkEntry */
 class SOAP_CMAC ngwt__JunkEntry
 {
@@ -1227,7 +1324,7 @@ public:
 	char *modified;	/* optional element of type xsd:string */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 87; } /* = unique id SOAP_TYPE_ngwt__JunkEntry */
+	virtual int soap_type() const { return 91; } /* = unique id SOAP_TYPE_ngwt__JunkEntry */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1240,7 +1337,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__JunkHandlingList
-#define SOAP_TYPE_ngwt__JunkHandlingList (88)
+#define SOAP_TYPE_ngwt__JunkHandlingList (92)
 /* ngwt:JunkHandlingList */
 class SOAP_CMAC ngwt__JunkHandlingList
 {
@@ -1248,7 +1345,7 @@ public:
 	std::vector<ngwt__JunkEntry * >entry;	/* optional element of type ngwt:JunkEntry */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 88; } /* = unique id SOAP_TYPE_ngwt__JunkHandlingList */
+	virtual int soap_type() const { return 92; } /* = unique id SOAP_TYPE_ngwt__JunkHandlingList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1260,8 +1357,29 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE_ngwt__LibraryList
+#define SOAP_TYPE_ngwt__LibraryList (94)
+/* ngwt:LibraryList */
+class SOAP_CMAC ngwt__LibraryList
+{
+public:
+	std::vector<class ngwt__Library * >library;	/* optional element of type ngwt:Library */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 94; } /* = unique id SOAP_TYPE_ngwt__LibraryList */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         ngwt__LibraryList() { }
+	virtual ~ngwt__LibraryList() { }
+};
+#endif
+
 #ifndef SOAP_TYPE_ngwt__LinkInfo
-#define SOAP_TYPE_ngwt__LinkInfo (89)
+#define SOAP_TYPE_ngwt__LinkInfo (95)
 /* ngwt:LinkInfo */
 class SOAP_CMAC ngwt__LinkInfo
 {
@@ -1271,7 +1389,7 @@ public:
 	enum ngwt__LinkType type;	/* required element of type ngwt:LinkType */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 89; } /* = unique id SOAP_TYPE_ngwt__LinkInfo */
+	virtual int soap_type() const { return 95; } /* = unique id SOAP_TYPE_ngwt__LinkInfo */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1284,7 +1402,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__MessageBody
-#define SOAP_TYPE_ngwt__MessageBody (91)
+#define SOAP_TYPE_ngwt__MessageBody (97)
 /* ngwt:MessageBody */
 class SOAP_CMAC ngwt__MessageBody
 {
@@ -1292,7 +1410,7 @@ public:
 	std::vector<class ngwt__MessagePart * >part;	/* required element of type ngwt:MessagePart */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 91; } /* = unique id SOAP_TYPE_ngwt__MessageBody */
+	virtual int soap_type() const { return 97; } /* = unique id SOAP_TYPE_ngwt__MessageBody */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1305,7 +1423,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ModifyItem
-#define SOAP_TYPE_ngwt__ModifyItem (93)
+#define SOAP_TYPE_ngwt__ModifyItem (99)
 /* ngwt:ModifyItem */
 class SOAP_CMAC ngwt__ModifyItem
 {
@@ -1316,7 +1434,7 @@ public:
 	ngwt__ItemChanges *updates;	/* required element of type ngwt:ItemChanges */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 93; } /* = unique id SOAP_TYPE_ngwt__ModifyItem */
+	virtual int soap_type() const { return 99; } /* = unique id SOAP_TYPE_ngwt__ModifyItem */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1329,7 +1447,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__MonthList
-#define SOAP_TYPE_ngwt__MonthList (94)
+#define SOAP_TYPE_ngwt__MonthList (100)
 /* ngwt:MonthList */
 class SOAP_CMAC ngwt__MonthList
 {
@@ -1337,7 +1455,7 @@ public:
 	std::vector<unsigned char >month;	/* optional element of type ngwt:Month */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 94; } /* = unique id SOAP_TYPE_ngwt__MonthList */
+	virtual int soap_type() const { return 100; } /* = unique id SOAP_TYPE_ngwt__MonthList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1350,7 +1468,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__NameAndEmail
-#define SOAP_TYPE_ngwt__NameAndEmail (95)
+#define SOAP_TYPE_ngwt__NameAndEmail (101)
 /* ngwt:NameAndEmail */
 class SOAP_CMAC ngwt__NameAndEmail
 {
@@ -1360,7 +1478,7 @@ public:
 	std::string *uuid;	/* optional element of type ngwt:UUID */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 95; } /* = unique id SOAP_TYPE_ngwt__NameAndEmail */
+	virtual int soap_type() const { return 101; } /* = unique id SOAP_TYPE_ngwt__NameAndEmail */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1373,7 +1491,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__OfficeInfo
-#define SOAP_TYPE_ngwt__OfficeInfo (97)
+#define SOAP_TYPE_ngwt__OfficeInfo (103)
 /* ngwt:OfficeInfo */
 class SOAP_CMAC ngwt__OfficeInfo
 {
@@ -1381,10 +1499,10 @@ public:
 	class ngwt__ItemRef *organization;	/* optional element of type ngwt:ItemRef */
 	std::string *department;	/* optional element of type xsd:string */
 	std::string *title;	/* optional element of type xsd:string */
-	std::string *website;	/* optional element of type xsd:anyURI */
+	std::string *website;	/* optional element of type xsd:string */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 97; } /* = unique id SOAP_TYPE_ngwt__OfficeInfo */
+	virtual int soap_type() const { return 103; } /* = unique id SOAP_TYPE_ngwt__OfficeInfo */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1397,16 +1515,16 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__PersonalInfo
-#define SOAP_TYPE_ngwt__PersonalInfo (99)
+#define SOAP_TYPE_ngwt__PersonalInfo (105)
 /* ngwt:PersonalInfo */
 class SOAP_CMAC ngwt__PersonalInfo
 {
 public:
 	std::string *birthday;	/* optional element of type xsd:date */
-	std::string *website;	/* optional element of type xsd:anyURI */
+	std::string *website;	/* optional element of type xsd:string */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 99; } /* = unique id SOAP_TYPE_ngwt__PersonalInfo */
+	virtual int soap_type() const { return 105; } /* = unique id SOAP_TYPE_ngwt__PersonalInfo */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1419,7 +1537,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__PhoneFlags
-#define SOAP_TYPE_ngwt__PhoneFlags (100)
+#define SOAP_TYPE_ngwt__PhoneFlags (106)
 /* ngwt:PhoneFlags */
 class SOAP_CMAC ngwt__PhoneFlags
 {
@@ -1433,7 +1551,7 @@ public:
 	bool *urgent;	/* optional element of type xsd:boolean */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 100; } /* = unique id SOAP_TYPE_ngwt__PhoneFlags */
+	virtual int soap_type() const { return 106; } /* = unique id SOAP_TYPE_ngwt__PhoneFlags */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1446,7 +1564,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__PhoneList
-#define SOAP_TYPE_ngwt__PhoneList (101)
+#define SOAP_TYPE_ngwt__PhoneList (107)
 /* ngwt:PhoneList */
 class SOAP_CMAC ngwt__PhoneList
 {
@@ -1455,7 +1573,7 @@ public:
 	std::string *default_;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 101; } /* = unique id SOAP_TYPE_ngwt__PhoneList */
+	virtual int soap_type() const { return 107; } /* = unique id SOAP_TYPE_ngwt__PhoneList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1468,7 +1586,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__PostalAddress
-#define SOAP_TYPE_ngwt__PostalAddress (105)
+#define SOAP_TYPE_ngwt__PostalAddress (111)
 /* ngwt:PostalAddress */
 class SOAP_CMAC ngwt__PostalAddress
 {
@@ -1483,7 +1601,7 @@ public:
 	enum ngwt__PostalAddressType type;	/* required attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 105; } /* = unique id SOAP_TYPE_ngwt__PostalAddress */
+	virtual int soap_type() const { return 111; } /* = unique id SOAP_TYPE_ngwt__PostalAddress */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1496,7 +1614,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__PostalAddressList
-#define SOAP_TYPE_ngwt__PostalAddressList (106)
+#define SOAP_TYPE_ngwt__PostalAddressList (112)
 /* ngwt:PostalAddressList */
 class SOAP_CMAC ngwt__PostalAddressList
 {
@@ -1504,7 +1622,7 @@ public:
 	std::vector<ngwt__PostalAddress * >address;	/* optional element of type ngwt:PostalAddress */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 106; } /* = unique id SOAP_TYPE_ngwt__PostalAddressList */
+	virtual int soap_type() const { return 112; } /* = unique id SOAP_TYPE_ngwt__PostalAddressList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1517,7 +1635,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ProblemEntry
-#define SOAP_TYPE_ngwt__ProblemEntry (107)
+#define SOAP_TYPE_ngwt__ProblemEntry (113)
 /* ngwt:ProblemEntry */
 class SOAP_CMAC ngwt__ProblemEntry
 {
@@ -1527,7 +1645,7 @@ public:
 	std::string *description;	/* optional element of type xsd:string */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 107; } /* = unique id SOAP_TYPE_ngwt__ProblemEntry */
+	virtual int soap_type() const { return 113; } /* = unique id SOAP_TYPE_ngwt__ProblemEntry */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1540,7 +1658,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ProblemList
-#define SOAP_TYPE_ngwt__ProblemList (108)
+#define SOAP_TYPE_ngwt__ProblemList (114)
 /* ngwt:ProblemList */
 class SOAP_CMAC ngwt__ProblemList
 {
@@ -1548,7 +1666,7 @@ public:
 	std::vector<ngwt__ProblemEntry * >entry;	/* optional element of type ngwt:ProblemEntry */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 108; } /* = unique id SOAP_TYPE_ngwt__ProblemList */
+	virtual int soap_type() const { return 114; } /* = unique id SOAP_TYPE_ngwt__ProblemList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1561,15 +1679,15 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ProxyList
-#define SOAP_TYPE_ngwt__ProxyList (110)
+#define SOAP_TYPE_ngwt__ProxyList (117)
 /* ngwt:ProxyList */
 class SOAP_CMAC ngwt__ProxyList
 {
 public:
-	std::vector<ngwt__NameAndEmail * >proxy;	/* optional element of type ngwt:NameAndEmail */
+	std::vector<class ngwt__ProxyUser * >proxy;	/* optional element of type ngwt:ProxyUser */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 110; } /* = unique id SOAP_TYPE_ngwt__ProxyList */
+	virtual int soap_type() const { return 117; } /* = unique id SOAP_TYPE_ngwt__ProxyList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1582,7 +1700,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Query
-#define SOAP_TYPE_ngwt__Query (111)
+#define SOAP_TYPE_ngwt__Query (118)
 /* ngwt:Query */
 class SOAP_CMAC ngwt__Query
 {
@@ -1591,7 +1709,7 @@ public:
 	ngwt__Filter *filter;	/* required element of type ngwt:Filter */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 111; } /* = unique id SOAP_TYPE_ngwt__Query */
+	virtual int soap_type() const { return 118; } /* = unique id SOAP_TYPE_ngwt__Query */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1604,7 +1722,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__QueryTarget
-#define SOAP_TYPE_ngwt__QueryTarget (113)
+#define SOAP_TYPE_ngwt__QueryTarget (120)
 /* ngwt:QueryTarget */
 class SOAP_CMAC ngwt__QueryTarget
 {
@@ -1613,7 +1731,7 @@ public:
 	std::vector<std::string >container;	/* optional element of type ngwt:uid */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 113; } /* = unique id SOAP_TYPE_ngwt__QueryTarget */
+	virtual int soap_type() const { return 120; } /* = unique id SOAP_TYPE_ngwt__QueryTarget */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1626,7 +1744,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__RecipientList
-#define SOAP_TYPE_ngwt__RecipientList (115)
+#define SOAP_TYPE_ngwt__RecipientList (122)
 /* ngwt:RecipientList */
 class SOAP_CMAC ngwt__RecipientList
 {
@@ -1634,7 +1752,7 @@ public:
 	std::vector<class ngwt__Recipient * >recipient;	/* optional element of type ngwt:Recipient */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 115; } /* = unique id SOAP_TYPE_ngwt__RecipientList */
+	virtual int soap_type() const { return 122; } /* = unique id SOAP_TYPE_ngwt__RecipientList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1647,7 +1765,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__RecipientStatus
-#define SOAP_TYPE_ngwt__RecipientStatus (116)
+#define SOAP_TYPE_ngwt__RecipientStatus (123)
 /* ngwt:RecipientStatus */
 class SOAP_CMAC ngwt__RecipientStatus
 {
@@ -1677,7 +1795,7 @@ public:
 	std::vector<class ngwt__DelegateeStatus * >delegateeStatus;	/* optional element of type ngwt:DelegateeStatus */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 116; } /* = unique id SOAP_TYPE_ngwt__RecipientStatus */
+	virtual int soap_type() const { return 123; } /* = unique id SOAP_TYPE_ngwt__RecipientStatus */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1690,7 +1808,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__RecurrenceDateType
-#define SOAP_TYPE_ngwt__RecurrenceDateType (117)
+#define SOAP_TYPE_ngwt__RecurrenceDateType (124)
 /* ngwt:RecurrenceDateType */
 class SOAP_CMAC ngwt__RecurrenceDateType
 {
@@ -1698,7 +1816,7 @@ public:
 	std::vector<std::string >date;	/* required element of type xsd:date */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 117; } /* = unique id SOAP_TYPE_ngwt__RecurrenceDateType */
+	virtual int soap_type() const { return 124; } /* = unique id SOAP_TYPE_ngwt__RecurrenceDateType */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1711,7 +1829,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__RecurrenceRule
-#define SOAP_TYPE_ngwt__RecurrenceRule (118)
+#define SOAP_TYPE_ngwt__RecurrenceRule (125)
 /* ngwt:RecurrenceRule */
 class SOAP_CMAC ngwt__RecurrenceRule
 {
@@ -1720,12 +1838,13 @@ public:
 	unsigned long *count;	/* optional element of type xsd:unsignedLong */
 	std::string *until;	/* optional element of type xsd:date */
 	unsigned long *interval;	/* optional element of type xsd:unsignedLong */
-	ngwt__DayOfWeekList *byDay;	/* optional element of type ngwt:DayOfWeekList */
+	ngwt__DayOfYearWeekList *byDay;	/* optional element of type ngwt:DayOfYearWeekList */
+	ngwt__DayOfMonthList *byMonthDay;	/* optional element of type ngwt:DayOfMonthList */
 	ngwt__DayOfYearList *byYearDay;	/* optional element of type ngwt:DayOfYearList */
 	ngwt__MonthList *byMonth;	/* optional element of type ngwt:MonthList */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 118; } /* = unique id SOAP_TYPE_ngwt__RecurrenceRule */
+	virtual int soap_type() const { return 125; } /* = unique id SOAP_TYPE_ngwt__RecurrenceRule */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1738,7 +1857,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ReferenceInfo
-#define SOAP_TYPE_ngwt__ReferenceInfo (119)
+#define SOAP_TYPE_ngwt__ReferenceInfo (126)
 /* ngwt:ReferenceInfo */
 class SOAP_CMAC ngwt__ReferenceInfo
 {
@@ -1747,7 +1866,7 @@ public:
 	int *referenceCount;	/* optional element of type xsd:int */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 119; } /* = unique id SOAP_TYPE_ngwt__ReferenceInfo */
+	virtual int soap_type() const { return 126; } /* = unique id SOAP_TYPE_ngwt__ReferenceInfo */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1760,7 +1879,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ReturnNotification
-#define SOAP_TYPE_ngwt__ReturnNotification (121)
+#define SOAP_TYPE_ngwt__ReturnNotification (128)
 /* ngwt:ReturnNotification */
 class SOAP_CMAC ngwt__ReturnNotification
 {
@@ -1772,7 +1891,7 @@ public:
 	ngwt__ReturnNotificationOptions *completed;	/* optional element of type ngwt:ReturnNotificationOptions */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 121; } /* = unique id SOAP_TYPE_ngwt__ReturnNotification */
+	virtual int soap_type() const { return 128; } /* = unique id SOAP_TYPE_ngwt__ReturnNotification */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1785,7 +1904,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ReturnNotificationOptions
-#define SOAP_TYPE_ngwt__ReturnNotificationOptions (122)
+#define SOAP_TYPE_ngwt__ReturnNotificationOptions (129)
 /* ngwt:ReturnNotificationOptions */
 class SOAP_CMAC ngwt__ReturnNotificationOptions
 {
@@ -1794,7 +1913,7 @@ public:
 	bool notify;	/* optional element of type xsd:boolean */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 122; } /* = unique id SOAP_TYPE_ngwt__ReturnNotificationOptions */
+	virtual int soap_type() const { return 129; } /* = unique id SOAP_TYPE_ngwt__ReturnNotificationOptions */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1807,7 +1926,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Rights
-#define SOAP_TYPE_ngwt__Rights (123)
+#define SOAP_TYPE_ngwt__Rights (130)
 /* ngwt:Rights */
 class SOAP_CMAC ngwt__Rights
 {
@@ -1820,7 +1939,7 @@ public:
 	bool *manage;	/* optional element of type xsd:boolean */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 123; } /* = unique id SOAP_TYPE_ngwt__Rights */
+	virtual int soap_type() const { return 130; } /* = unique id SOAP_TYPE_ngwt__Rights */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1832,8 +1951,76 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE_ngwt__RuleAction
+#define SOAP_TYPE_ngwt__RuleAction (132)
+/* ngwt:RuleAction */
+class SOAP_CMAC ngwt__RuleAction
+{
+public:
+	enum ngwt__RuleActionType type;	/* required element of type ngwt:RuleActionType */
+	std::string *container;	/* optional element of type ngwt:uid */
+	class ngwt__Mail *item;	/* optional element of type ngwt:Mail */
+	std::string *message;	/* optional element of type xsd:string */
+	enum ngwt__AcceptLevel *acceptLevel;	/* optional element of type ngwt:AcceptLevel */
+	ngwt__CategoryRefList *categories;	/* optional element of type ngwt:CategoryRefList */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 132; } /* = unique id SOAP_TYPE_ngwt__RuleAction */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         ngwt__RuleAction() { }
+	virtual ~ngwt__RuleAction() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_ngwt__RuleActionList
+#define SOAP_TYPE_ngwt__RuleActionList (133)
+/* ngwt:RuleActionList */
+class SOAP_CMAC ngwt__RuleActionList
+{
+public:
+	std::vector<ngwt__RuleAction * >action;	/* optional element of type ngwt:RuleAction */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 133; } /* = unique id SOAP_TYPE_ngwt__RuleActionList */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         ngwt__RuleActionList() { }
+	virtual ~ngwt__RuleActionList() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_ngwt__RuleList
+#define SOAP_TYPE_ngwt__RuleList (134)
+/* ngwt:RuleList */
+class SOAP_CMAC ngwt__RuleList
+{
+public:
+	std::vector<class ngwt__Rule * >rule;	/* optional element of type ngwt:Rule */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 134; } /* = unique id SOAP_TYPE_ngwt__RuleList */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         ngwt__RuleList() { }
+	virtual ~ngwt__RuleList() { }
+};
+#endif
+
 #ifndef SOAP_TYPE_ngwt__SendOptionsRequestReply
-#define SOAP_TYPE_ngwt__SendOptionsRequestReply (124)
+#define SOAP_TYPE_ngwt__SendOptionsRequestReply (135)
 /* ngwt:SendOptionsRequestReply */
 class SOAP_CMAC ngwt__SendOptionsRequestReply
 {
@@ -1842,7 +2029,7 @@ public:
 	char *byDate;	/* optional element of type xsd:string */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 124; } /* = unique id SOAP_TYPE_ngwt__SendOptionsRequestReply */
+	virtual int soap_type() const { return 135; } /* = unique id SOAP_TYPE_ngwt__SendOptionsRequestReply */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1855,7 +2042,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__SendOptions
-#define SOAP_TYPE_ngwt__SendOptions (125)
+#define SOAP_TYPE_ngwt__SendOptions (136)
 /* ngwt:SendOptions */
 class SOAP_CMAC ngwt__SendOptions
 {
@@ -1867,7 +2054,7 @@ public:
 	bool updateFrequentContacts;	/* optional element of type xsd:boolean */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 125; } /* = unique id SOAP_TYPE_ngwt__SendOptions */
+	virtual int soap_type() const { return 136; } /* = unique id SOAP_TYPE_ngwt__SendOptions */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1880,7 +2067,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Settings
-#define SOAP_TYPE_ngwt__Settings (126)
+#define SOAP_TYPE_ngwt__Settings (137)
 /* ngwt:Settings */
 class SOAP_CMAC ngwt__Settings
 {
@@ -1889,7 +2076,7 @@ public:
 	std::vector<ngwt__Custom * >setting;	/* optional element of type ngwt:Custom */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 126; } /* = unique id SOAP_TYPE_ngwt__Settings */
+	virtual int soap_type() const { return 137; } /* = unique id SOAP_TYPE_ngwt__Settings */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1902,7 +2089,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__SettingsGroup
-#define SOAP_TYPE_ngwt__SettingsGroup (127)
+#define SOAP_TYPE_ngwt__SettingsGroup (138)
 /* ngwt:SettingsGroup */
 class SOAP_CMAC ngwt__SettingsGroup
 {
@@ -1911,7 +2098,7 @@ public:
 	std::string *type;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 127; } /* = unique id SOAP_TYPE_ngwt__SettingsGroup */
+	virtual int soap_type() const { return 138; } /* = unique id SOAP_TYPE_ngwt__SettingsGroup */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1924,7 +2111,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__SettingsList
-#define SOAP_TYPE_ngwt__SettingsList (128)
+#define SOAP_TYPE_ngwt__SettingsList (139)
 /* ngwt:SettingsList */
 class SOAP_CMAC ngwt__SettingsList
 {
@@ -1932,7 +2119,7 @@ public:
 	std::vector<ngwt__Custom * >setting;	/* optional element of type ngwt:Custom */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 128; } /* = unique id SOAP_TYPE_ngwt__SettingsList */
+	virtual int soap_type() const { return 139; } /* = unique id SOAP_TYPE_ngwt__SettingsList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1945,7 +2132,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__SharedFolderNotification
-#define SOAP_TYPE_ngwt__SharedFolderNotification (130)
+#define SOAP_TYPE_ngwt__SharedFolderNotification (141)
 /* ngwt:SharedFolderNotification */
 class SOAP_CMAC ngwt__SharedFolderNotification
 {
@@ -1955,7 +2142,7 @@ public:
 	std::string *description;	/* optional element of type xsd:string */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 130; } /* = unique id SOAP_TYPE_ngwt__SharedFolderNotification */
+	virtual int soap_type() const { return 141; } /* = unique id SOAP_TYPE_ngwt__SharedFolderNotification */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1968,7 +2155,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Signature
-#define SOAP_TYPE_ngwt__Signature (132)
+#define SOAP_TYPE_ngwt__Signature (143)
 /* ngwt:Signature */
 class SOAP_CMAC ngwt__Signature
 {
@@ -1980,7 +2167,7 @@ public:
 	bool global;	/* optional element of type xsd:boolean */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 132; } /* = unique id SOAP_TYPE_ngwt__Signature */
+	virtual int soap_type() const { return 143; } /* = unique id SOAP_TYPE_ngwt__Signature */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -1993,7 +2180,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Signatures
-#define SOAP_TYPE_ngwt__Signatures (133)
+#define SOAP_TYPE_ngwt__Signatures (144)
 /* ngwt:Signatures */
 class SOAP_CMAC ngwt__Signatures
 {
@@ -2001,7 +2188,7 @@ public:
 	std::vector<ngwt__Signature * >signature;	/* optional element of type ngwt:Signature */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 133; } /* = unique id SOAP_TYPE_ngwt__Signatures */
+	virtual int soap_type() const { return 144; } /* = unique id SOAP_TYPE_ngwt__Signatures */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2014,7 +2201,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__SignatureData
-#define SOAP_TYPE_ngwt__SignatureData (134)
+#define SOAP_TYPE_ngwt__SignatureData (145)
 /* ngwt:SignatureData */
 class SOAP_CMAC ngwt__SignatureData
 {
@@ -2023,7 +2210,7 @@ public:
 	xsd__base64Binary *data;	/* optional element of type xsd:base64Binary */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 134; } /* = unique id SOAP_TYPE_ngwt__SignatureData */
+	virtual int soap_type() const { return 145; } /* = unique id SOAP_TYPE_ngwt__SignatureData */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2035,8 +2222,30 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE_ngwt__SMimeOperation
+#define SOAP_TYPE_ngwt__SMimeOperation (146)
+/* ngwt:SMimeOperation */
+class SOAP_CMAC ngwt__SMimeOperation
+{
+public:
+	bool *signed_;	/* optional element of type xsd:boolean */
+	bool *encrypted;	/* optional element of type xsd:boolean */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 146; } /* = unique id SOAP_TYPE_ngwt__SMimeOperation */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         ngwt__SMimeOperation() { }
+	virtual ~ngwt__SMimeOperation() { }
+};
+#endif
+
 #ifndef SOAP_TYPE_ngwt__Status
-#define SOAP_TYPE_ngwt__Status (135)
+#define SOAP_TYPE_ngwt__Status (147)
 /* ngwt:Status */
 class SOAP_CMAC ngwt__Status
 {
@@ -2047,7 +2256,7 @@ public:
 	ngwt__ProblemList *problems;	/* optional element of type ngwt:ProblemList */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 135; } /* = unique id SOAP_TYPE_ngwt__Status */
+	virtual int soap_type() const { return 147; } /* = unique id SOAP_TYPE_ngwt__Status */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2060,7 +2269,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Timezone
-#define SOAP_TYPE_ngwt__Timezone (139)
+#define SOAP_TYPE_ngwt__Timezone (151)
 /* ngwt:Timezone */
 class SOAP_CMAC ngwt__Timezone
 {
@@ -2071,7 +2280,7 @@ public:
 	ngwt__TimezoneComponent *standard;	/* optional element of type ngwt:TimezoneComponent */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 139; } /* = unique id SOAP_TYPE_ngwt__Timezone */
+	virtual int soap_type() const { return 151; } /* = unique id SOAP_TYPE_ngwt__Timezone */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2084,7 +2293,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__TimezoneComponent
-#define SOAP_TYPE_ngwt__TimezoneComponent (140)
+#define SOAP_TYPE_ngwt__TimezoneComponent (152)
 /* ngwt:TimezoneComponent */
 class SOAP_CMAC ngwt__TimezoneComponent
 {
@@ -2093,13 +2302,13 @@ public:
 public:
 	unsigned char *month;	/* optional element of type ngwt:Month */
 	unsigned char *day;	/* optional element of type ngwt:Day */
-	ngwt__DayOfWeek *dayOfWeek;	/* optional element of type ngwt:DayOfWeek */
+	class ngwt__DayOfWeek *dayOfWeek;	/* optional element of type ngwt:DayOfWeek */
 	unsigned char *hour;	/* optional element of type ngwt:Hour */
 	unsigned char *minute;	/* optional element of type ngwt:Minute */
 	int offset;	/* required element of type ngwt:GMTOffset */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 140; } /* = unique id SOAP_TYPE_ngwt__TimezoneComponent */
+	virtual int soap_type() const { return 152; } /* = unique id SOAP_TYPE_ngwt__TimezoneComponent */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2112,7 +2321,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__TimezoneList
-#define SOAP_TYPE_ngwt__TimezoneList (141)
+#define SOAP_TYPE_ngwt__TimezoneList (153)
 /* ngwt:TimezoneList */
 class SOAP_CMAC ngwt__TimezoneList
 {
@@ -2120,7 +2329,7 @@ public:
 	std::vector<ngwt__Timezone * >timezone;	/* optional element of type ngwt:Timezone */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 141; } /* = unique id SOAP_TYPE_ngwt__TimezoneList */
+	virtual int soap_type() const { return 153; } /* = unique id SOAP_TYPE_ngwt__TimezoneList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2133,7 +2342,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__UserInfo
-#define SOAP_TYPE_ngwt__UserInfo (144)
+#define SOAP_TYPE_ngwt__UserInfo (156)
 /* ngwt:UserInfo */
 class SOAP_CMAC ngwt__UserInfo
 {
@@ -2142,9 +2351,11 @@ public:
 public:
 	std::string *email;	/* optional element of type xsd:string */
 	std::string *uuid;	/* optional element of type ngwt:UUID */
+	std::string *userid;	/* optional element of type xsd:string */
+	enum ngwt__RecipientType *recipType;	/* optional element of type ngwt:RecipientType */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 144; } /* = unique id SOAP_TYPE_ngwt__UserInfo */
+	virtual int soap_type() const { return 156; } /* = unique id SOAP_TYPE_ngwt__UserInfo */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2156,8 +2367,29 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE_ngwt__UserList
+#define SOAP_TYPE_ngwt__UserList (157)
+/* ngwt:UserList */
+class SOAP_CMAC ngwt__UserList
+{
+public:
+	std::vector<ngwt__UserInfo * >user;	/* optional element of type ngwt:UserInfo */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 157; } /* = unique id SOAP_TYPE_ngwt__UserList */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         ngwt__UserList() { }
+	virtual ~ngwt__UserList() { }
+};
+#endif
+
 #ifndef SOAP_TYPE__ngwm__acceptRequest
-#define SOAP_TYPE__ngwm__acceptRequest (145)
+#define SOAP_TYPE__ngwm__acceptRequest (160)
 /* ngwm:acceptRequest */
 class SOAP_CMAC _ngwm__acceptRequest
 {
@@ -2165,10 +2397,10 @@ public:
 	ngwt__ItemRefList *items;	/* required element of type ngwt:ItemRefList */
 	std::string *comment;	/* optional element of type xsd:string */
 	enum ngwt__AcceptLevel *acceptLevel;	/* optional element of type ngwt:AcceptLevel */
-	int recurrenceAllInstances;	/* required element of type xsd:int */
+	unsigned long recurrenceAllInstances;	/* optional element of type xsd:unsignedLong */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 145; } /* = unique id SOAP_TYPE__ngwm__acceptRequest */
+	virtual int soap_type() const { return 160; } /* = unique id SOAP_TYPE__ngwm__acceptRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2181,7 +2413,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__acceptResponse
-#define SOAP_TYPE__ngwm__acceptResponse (146)
+#define SOAP_TYPE__ngwm__acceptResponse (161)
 /* ngwm:acceptResponse */
 class SOAP_CMAC _ngwm__acceptResponse
 {
@@ -2189,7 +2421,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 146; } /* = unique id SOAP_TYPE__ngwm__acceptResponse */
+	virtual int soap_type() const { return 161; } /* = unique id SOAP_TYPE__ngwm__acceptResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2202,7 +2434,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__acceptShareRequest
-#define SOAP_TYPE__ngwm__acceptShareRequest (147)
+#define SOAP_TYPE__ngwm__acceptShareRequest (162)
 /* ngwm:acceptShareRequest */
 class SOAP_CMAC _ngwm__acceptShareRequest
 {
@@ -2214,7 +2446,7 @@ public:
 	std::string *ngwt__description;	/* optional element of type xsd:string */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 147; } /* = unique id SOAP_TYPE__ngwm__acceptShareRequest */
+	virtual int soap_type() const { return 162; } /* = unique id SOAP_TYPE__ngwm__acceptShareRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2227,15 +2459,16 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__acceptShareResponse
-#define SOAP_TYPE__ngwm__acceptShareResponse (148)
+#define SOAP_TYPE__ngwm__acceptShareResponse (163)
 /* ngwm:acceptShareResponse */
 class SOAP_CMAC _ngwm__acceptShareResponse
 {
 public:
-	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
+	std::string *id;	/* RPC return element */	/* optional element of type ngwt:uid */
+	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 148; } /* = unique id SOAP_TYPE__ngwm__acceptShareResponse */
+	virtual int soap_type() const { return 163; } /* = unique id SOAP_TYPE__ngwm__acceptShareResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2248,7 +2481,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__addItemRequest
-#define SOAP_TYPE__ngwm__addItemRequest (149)
+#define SOAP_TYPE__ngwm__addItemRequest (164)
 /* ngwm:addItemRequest */
 class SOAP_CMAC _ngwm__addItemRequest
 {
@@ -2258,7 +2491,7 @@ public:
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 149; } /* = unique id SOAP_TYPE__ngwm__addItemRequest */
+	virtual int soap_type() const { return 164; } /* = unique id SOAP_TYPE__ngwm__addItemRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2271,7 +2504,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__addItemResponse
-#define SOAP_TYPE__ngwm__addItemResponse (150)
+#define SOAP_TYPE__ngwm__addItemResponse (165)
 /* ngwm:addItemResponse */
 class SOAP_CMAC _ngwm__addItemResponse
 {
@@ -2279,7 +2512,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 150; } /* = unique id SOAP_TYPE__ngwm__addItemResponse */
+	virtual int soap_type() const { return 165; } /* = unique id SOAP_TYPE__ngwm__addItemResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2292,7 +2525,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__addItemsRequest
-#define SOAP_TYPE__ngwm__addItemsRequest (151)
+#define SOAP_TYPE__ngwm__addItemsRequest (166)
 /* ngwm:addItemsRequest */
 class SOAP_CMAC _ngwm__addItemsRequest
 {
@@ -2302,7 +2535,7 @@ public:
 	ngwt__ItemRefList *items;	/* required element of type ngwt:ItemRefList */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 151; } /* = unique id SOAP_TYPE__ngwm__addItemsRequest */
+	virtual int soap_type() const { return 166; } /* = unique id SOAP_TYPE__ngwm__addItemsRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2315,7 +2548,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__addItemsResponse
-#define SOAP_TYPE__ngwm__addItemsResponse (152)
+#define SOAP_TYPE__ngwm__addItemsResponse (167)
 /* ngwm:addItemsResponse */
 class SOAP_CMAC _ngwm__addItemsResponse
 {
@@ -2323,7 +2556,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 152; } /* = unique id SOAP_TYPE__ngwm__addItemsResponse */
+	virtual int soap_type() const { return 167; } /* = unique id SOAP_TYPE__ngwm__addItemsResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2336,7 +2569,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__addMembersRequest
-#define SOAP_TYPE__ngwm__addMembersRequest (153)
+#define SOAP_TYPE__ngwm__addMembersRequest (168)
 /* ngwm:addMembersRequest */
 class SOAP_CMAC _ngwm__addMembersRequest
 {
@@ -2346,7 +2579,7 @@ public:
 	ngwt__GroupMemberList *members;	/* required element of type ngwt:GroupMemberList */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 153; } /* = unique id SOAP_TYPE__ngwm__addMembersRequest */
+	virtual int soap_type() const { return 168; } /* = unique id SOAP_TYPE__ngwm__addMembersRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2359,7 +2592,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__addMembersResponse
-#define SOAP_TYPE__ngwm__addMembersResponse (154)
+#define SOAP_TYPE__ngwm__addMembersResponse (169)
 /* ngwm:addMembersResponse */
 class SOAP_CMAC _ngwm__addMembersResponse
 {
@@ -2367,7 +2600,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 154; } /* = unique id SOAP_TYPE__ngwm__addMembersResponse */
+	virtual int soap_type() const { return 169; } /* = unique id SOAP_TYPE__ngwm__addMembersResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2380,7 +2613,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__closeFreeBusySessionRequest
-#define SOAP_TYPE__ngwm__closeFreeBusySessionRequest (155)
+#define SOAP_TYPE__ngwm__closeFreeBusySessionRequest (170)
 /* ngwm:closeFreeBusySessionRequest */
 class SOAP_CMAC _ngwm__closeFreeBusySessionRequest
 {
@@ -2388,7 +2621,7 @@ public:
 	int freeBusySessionId;	/* required element of type xsd:int */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 155; } /* = unique id SOAP_TYPE__ngwm__closeFreeBusySessionRequest */
+	virtual int soap_type() const { return 170; } /* = unique id SOAP_TYPE__ngwm__closeFreeBusySessionRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2401,7 +2634,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__closeFreeBusySessionResponse
-#define SOAP_TYPE__ngwm__closeFreeBusySessionResponse (156)
+#define SOAP_TYPE__ngwm__closeFreeBusySessionResponse (171)
 /* ngwm:closeFreeBusySessionResponse */
 class SOAP_CMAC _ngwm__closeFreeBusySessionResponse
 {
@@ -2409,7 +2642,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 156; } /* = unique id SOAP_TYPE__ngwm__closeFreeBusySessionResponse */
+	virtual int soap_type() const { return 171; } /* = unique id SOAP_TYPE__ngwm__closeFreeBusySessionResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2422,7 +2655,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__completeRequest
-#define SOAP_TYPE__ngwm__completeRequest (157)
+#define SOAP_TYPE__ngwm__completeRequest (172)
 /* ngwm:completeRequest */
 class SOAP_CMAC _ngwm__completeRequest
 {
@@ -2430,7 +2663,7 @@ public:
 	ngwt__ItemRefList *items;	/* required element of type ngwt:ItemRefList */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 157; } /* = unique id SOAP_TYPE__ngwm__completeRequest */
+	virtual int soap_type() const { return 172; } /* = unique id SOAP_TYPE__ngwm__completeRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2443,7 +2676,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__completeResponse
-#define SOAP_TYPE__ngwm__completeResponse (158)
+#define SOAP_TYPE__ngwm__completeResponse (173)
 /* ngwm:completeResponse */
 class SOAP_CMAC _ngwm__completeResponse
 {
@@ -2451,7 +2684,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 158; } /* = unique id SOAP_TYPE__ngwm__completeResponse */
+	virtual int soap_type() const { return 173; } /* = unique id SOAP_TYPE__ngwm__completeResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2464,7 +2697,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__createCursorRequest
-#define SOAP_TYPE__ngwm__createCursorRequest (159)
+#define SOAP_TYPE__ngwm__createCursorRequest (174)
 /* ngwm:createCursorRequest */
 class SOAP_CMAC _ngwm__createCursorRequest
 {
@@ -2475,7 +2708,7 @@ public:
 	ngwt__Filter *filter;	/* optional element of type ngwt:Filter */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 159; } /* = unique id SOAP_TYPE__ngwm__createCursorRequest */
+	virtual int soap_type() const { return 174; } /* = unique id SOAP_TYPE__ngwm__createCursorRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2488,7 +2721,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__createCursorResponse
-#define SOAP_TYPE__ngwm__createCursorResponse (160)
+#define SOAP_TYPE__ngwm__createCursorResponse (175)
 /* ngwm:createCursorResponse */
 class SOAP_CMAC _ngwm__createCursorResponse
 {
@@ -2497,7 +2730,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 160; } /* = unique id SOAP_TYPE__ngwm__createCursorResponse */
+	virtual int soap_type() const { return 175; } /* = unique id SOAP_TYPE__ngwm__createCursorResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2510,7 +2743,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__createItemRequest
-#define SOAP_TYPE__ngwm__createItemRequest (161)
+#define SOAP_TYPE__ngwm__createItemRequest (176)
 /* ngwm:createItemRequest */
 class SOAP_CMAC _ngwm__createItemRequest
 {
@@ -2519,7 +2752,7 @@ public:
 	ngwt__SharedFolderNotification *notification;	/* optional element of type ngwt:SharedFolderNotification */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 161; } /* = unique id SOAP_TYPE__ngwm__createItemRequest */
+	virtual int soap_type() const { return 176; } /* = unique id SOAP_TYPE__ngwm__createItemRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2532,16 +2765,16 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__createItemResponse
-#define SOAP_TYPE__ngwm__createItemResponse (162)
+#define SOAP_TYPE__ngwm__createItemResponse (177)
 /* ngwm:createItemResponse */
 class SOAP_CMAC _ngwm__createItemResponse
 {
 public:
-	std::string *id;	/* RPC return element */	/* optional element of type ngwt:uid */
+	std::vector<std::string >id;	/* RPC return element */	/* optional element of type ngwt:uid */
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 162; } /* = unique id SOAP_TYPE__ngwm__createItemResponse */
+	virtual int soap_type() const { return 177; } /* = unique id SOAP_TYPE__ngwm__createItemResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2553,8 +2786,51 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE__ngwm__createItemsRequest
+#define SOAP_TYPE__ngwm__createItemsRequest (178)
+/* ngwm:createItemsRequest */
+class SOAP_CMAC _ngwm__createItemsRequest
+{
+public:
+	std::vector<ngwt__Item * >item;	/* required element of type ngwt:Item */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 178; } /* = unique id SOAP_TYPE__ngwm__createItemsRequest */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__createItemsRequest() { }
+	virtual ~_ngwm__createItemsRequest() { }
+};
+#endif
+
+#ifndef SOAP_TYPE__ngwm__createItemsResponse
+#define SOAP_TYPE__ngwm__createItemsResponse (179)
+/* ngwm:createItemsResponse */
+class SOAP_CMAC _ngwm__createItemsResponse
+{
+public:
+	std::vector<std::string >id;	/* RPC return element */	/* optional element of type ngwt:uid */
+	ngwt__Status *status;	/* required element of type ngwt:Status */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 179; } /* = unique id SOAP_TYPE__ngwm__createItemsResponse */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__createItemsResponse() { }
+	virtual ~_ngwm__createItemsResponse() { }
+};
+#endif
+
 #ifndef SOAP_TYPE__ngwm__createJunkEntryRequest
-#define SOAP_TYPE__ngwm__createJunkEntryRequest (163)
+#define SOAP_TYPE__ngwm__createJunkEntryRequest (180)
 /* ngwm:createJunkEntryRequest */
 class SOAP_CMAC _ngwm__createJunkEntryRequest
 {
@@ -2562,7 +2838,7 @@ public:
 	ngwt__JunkEntry *entry;	/* required element of type ngwt:JunkEntry */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 163; } /* = unique id SOAP_TYPE__ngwm__createJunkEntryRequest */
+	virtual int soap_type() const { return 180; } /* = unique id SOAP_TYPE__ngwm__createJunkEntryRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2575,7 +2851,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__createJunkEntryResponse
-#define SOAP_TYPE__ngwm__createJunkEntryResponse (164)
+#define SOAP_TYPE__ngwm__createJunkEntryResponse (181)
 /* ngwm:createJunkEntryResponse */
 class SOAP_CMAC _ngwm__createJunkEntryResponse
 {
@@ -2584,7 +2860,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 164; } /* = unique id SOAP_TYPE__ngwm__createJunkEntryResponse */
+	virtual int soap_type() const { return 181; } /* = unique id SOAP_TYPE__ngwm__createJunkEntryResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2597,7 +2873,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__createProxyAccessRequest
-#define SOAP_TYPE__ngwm__createProxyAccessRequest (165)
+#define SOAP_TYPE__ngwm__createProxyAccessRequest (182)
 /* ngwm:createProxyAccessRequest */
 class SOAP_CMAC _ngwm__createProxyAccessRequest
 {
@@ -2605,7 +2881,7 @@ public:
 	ngwt__AccessRightEntry *entry;	/* required element of type ngwt:AccessRightEntry */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 165; } /* = unique id SOAP_TYPE__ngwm__createProxyAccessRequest */
+	virtual int soap_type() const { return 182; } /* = unique id SOAP_TYPE__ngwm__createProxyAccessRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2618,7 +2894,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__createProxyAccessResponse
-#define SOAP_TYPE__ngwm__createProxyAccessResponse (166)
+#define SOAP_TYPE__ngwm__createProxyAccessResponse (183)
 /* ngwm:createProxyAccessResponse */
 class SOAP_CMAC _ngwm__createProxyAccessResponse
 {
@@ -2627,7 +2903,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 166; } /* = unique id SOAP_TYPE__ngwm__createProxyAccessResponse */
+	virtual int soap_type() const { return 183; } /* = unique id SOAP_TYPE__ngwm__createProxyAccessResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2640,7 +2916,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__createSignatureRequest
-#define SOAP_TYPE__ngwm__createSignatureRequest (167)
+#define SOAP_TYPE__ngwm__createSignatureRequest (184)
 /* ngwm:createSignatureRequest */
 class SOAP_CMAC _ngwm__createSignatureRequest
 {
@@ -2648,7 +2924,7 @@ public:
 	ngwt__Signature *signature;	/* required element of type ngwt:Signature */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 167; } /* = unique id SOAP_TYPE__ngwm__createSignatureRequest */
+	virtual int soap_type() const { return 184; } /* = unique id SOAP_TYPE__ngwm__createSignatureRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2661,7 +2937,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__createSignatureResponse
-#define SOAP_TYPE__ngwm__createSignatureResponse (168)
+#define SOAP_TYPE__ngwm__createSignatureResponse (185)
 /* ngwm:createSignatureResponse */
 class SOAP_CMAC _ngwm__createSignatureResponse
 {
@@ -2669,7 +2945,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 168; } /* = unique id SOAP_TYPE__ngwm__createSignatureResponse */
+	virtual int soap_type() const { return 185; } /* = unique id SOAP_TYPE__ngwm__createSignatureResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2682,17 +2958,17 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__declineRequest
-#define SOAP_TYPE__ngwm__declineRequest (169)
+#define SOAP_TYPE__ngwm__declineRequest (186)
 /* ngwm:declineRequest */
 class SOAP_CMAC _ngwm__declineRequest
 {
 public:
 	ngwt__ItemRefList *items;	/* required element of type ngwt:ItemRefList */
 	std::string *comment;	/* optional element of type xsd:string */
-	int recurrenceAllInstances;	/* optional element of type xsd:int */
+	unsigned long recurrenceAllInstances;	/* optional element of type xsd:unsignedLong */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 169; } /* = unique id SOAP_TYPE__ngwm__declineRequest */
+	virtual int soap_type() const { return 186; } /* = unique id SOAP_TYPE__ngwm__declineRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2705,7 +2981,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__declineResponse
-#define SOAP_TYPE__ngwm__declineResponse (170)
+#define SOAP_TYPE__ngwm__declineResponse (187)
 /* ngwm:declineResponse */
 class SOAP_CMAC _ngwm__declineResponse
 {
@@ -2713,7 +2989,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 170; } /* = unique id SOAP_TYPE__ngwm__declineResponse */
+	virtual int soap_type() const { return 187; } /* = unique id SOAP_TYPE__ngwm__declineResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2726,7 +3002,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__delegateRequest
-#define SOAP_TYPE__ngwm__delegateRequest (171)
+#define SOAP_TYPE__ngwm__delegateRequest (188)
 /* ngwm:delegateRequest */
 class SOAP_CMAC _ngwm__delegateRequest
 {
@@ -2736,10 +3012,10 @@ public:
 	std::string *commentToOrganizer;	/* optional element of type xsd:string */
 	std::string *commentToDelegatee;	/* optional element of type xsd:string */
 	ngwt__Distribution *distribution;	/* required element of type ngwt:Distribution */
-	int recurrenceAllInstances;	/* optional element of type xsd:int */
+	unsigned long recurrenceAllInstances;	/* optional element of type xsd:unsignedLong */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 171; } /* = unique id SOAP_TYPE__ngwm__delegateRequest */
+	virtual int soap_type() const { return 188; } /* = unique id SOAP_TYPE__ngwm__delegateRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2752,7 +3028,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__delegateResponse
-#define SOAP_TYPE__ngwm__delegateResponse (172)
+#define SOAP_TYPE__ngwm__delegateResponse (189)
 /* ngwm:delegateResponse */
 class SOAP_CMAC _ngwm__delegateResponse
 {
@@ -2760,7 +3036,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 172; } /* = unique id SOAP_TYPE__ngwm__delegateResponse */
+	virtual int soap_type() const { return 189; } /* = unique id SOAP_TYPE__ngwm__delegateResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2773,7 +3049,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__destroyCursorRequest
-#define SOAP_TYPE__ngwm__destroyCursorRequest (173)
+#define SOAP_TYPE__ngwm__destroyCursorRequest (190)
 /* ngwm:destroyCursorRequest */
 class SOAP_CMAC _ngwm__destroyCursorRequest
 {
@@ -2783,7 +3059,7 @@ public:
 	int cursor;	/* required element of type xsd:int */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 173; } /* = unique id SOAP_TYPE__ngwm__destroyCursorRequest */
+	virtual int soap_type() const { return 190; } /* = unique id SOAP_TYPE__ngwm__destroyCursorRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2796,7 +3072,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__destroyCursorResponse
-#define SOAP_TYPE__ngwm__destroyCursorResponse (174)
+#define SOAP_TYPE__ngwm__destroyCursorResponse (191)
 /* ngwm:destroyCursorResponse */
 class SOAP_CMAC _ngwm__destroyCursorResponse
 {
@@ -2804,7 +3080,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 174; } /* = unique id SOAP_TYPE__ngwm__destroyCursorResponse */
+	virtual int soap_type() const { return 191; } /* = unique id SOAP_TYPE__ngwm__destroyCursorResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2816,8 +3092,51 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE__ngwm__executeRuleRequest
+#define SOAP_TYPE__ngwm__executeRuleRequest (192)
+/* ngwm:executeRuleRequest */
+class SOAP_CMAC _ngwm__executeRuleRequest
+{
+public:
+	std::string id;	/* required element of type ngwt:uid */
+public:
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 192; } /* = unique id SOAP_TYPE__ngwm__executeRuleRequest */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__executeRuleRequest() { }
+	virtual ~_ngwm__executeRuleRequest() { }
+};
+#endif
+
+#ifndef SOAP_TYPE__ngwm__executeRuleResponse
+#define SOAP_TYPE__ngwm__executeRuleResponse (193)
+/* ngwm:executeRuleResponse */
+class SOAP_CMAC _ngwm__executeRuleResponse
+{
+public:
+	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 193; } /* = unique id SOAP_TYPE__ngwm__executeRuleResponse */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__executeRuleResponse() { }
+	virtual ~_ngwm__executeRuleResponse() { }
+};
+#endif
+
 #ifndef SOAP_TYPE__ngwm__forwardRequest
-#define SOAP_TYPE__ngwm__forwardRequest (175)
+#define SOAP_TYPE__ngwm__forwardRequest (194)
 /* ngwm:forwardRequest */
 class SOAP_CMAC _ngwm__forwardRequest
 {
@@ -2828,7 +3147,7 @@ public:
 	bool embed;	/* required element of type xsd:boolean */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 175; } /* = unique id SOAP_TYPE__ngwm__forwardRequest */
+	virtual int soap_type() const { return 194; } /* = unique id SOAP_TYPE__ngwm__forwardRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2841,7 +3160,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__forwardResponse
-#define SOAP_TYPE__ngwm__forwardResponse (176)
+#define SOAP_TYPE__ngwm__forwardResponse (195)
 /* ngwm:forwardResponse */
 class SOAP_CMAC _ngwm__forwardResponse
 {
@@ -2850,7 +3169,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 176; } /* = unique id SOAP_TYPE__ngwm__forwardResponse */
+	virtual int soap_type() const { return 195; } /* = unique id SOAP_TYPE__ngwm__forwardResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2863,14 +3182,14 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getAddressBookListRequest
-#define SOAP_TYPE__ngwm__getAddressBookListRequest (177)
+#define SOAP_TYPE__ngwm__getAddressBookListRequest (196)
 /* ngwm:getAddressBookListRequest */
 class SOAP_CMAC _ngwm__getAddressBookListRequest
 {
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 177; } /* = unique id SOAP_TYPE__ngwm__getAddressBookListRequest */
+	virtual int soap_type() const { return 196; } /* = unique id SOAP_TYPE__ngwm__getAddressBookListRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2883,7 +3202,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getAddressBookListResponse
-#define SOAP_TYPE__ngwm__getAddressBookListResponse (178)
+#define SOAP_TYPE__ngwm__getAddressBookListResponse (197)
 /* ngwm:getAddressBookListResponse */
 class SOAP_CMAC _ngwm__getAddressBookListResponse
 {
@@ -2892,7 +3211,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 178; } /* = unique id SOAP_TYPE__ngwm__getAddressBookListResponse */
+	virtual int soap_type() const { return 197; } /* = unique id SOAP_TYPE__ngwm__getAddressBookListResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2905,7 +3224,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getAttachmentRequest
-#define SOAP_TYPE__ngwm__getAttachmentRequest (179)
+#define SOAP_TYPE__ngwm__getAttachmentRequest (198)
 /* ngwm:getAttachmentRequest */
 class SOAP_CMAC _ngwm__getAttachmentRequest
 {
@@ -2916,7 +3235,7 @@ public:
 	int length;	/* required element of type xsd:int */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 179; } /* = unique id SOAP_TYPE__ngwm__getAttachmentRequest */
+	virtual int soap_type() const { return 198; } /* = unique id SOAP_TYPE__ngwm__getAttachmentRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2929,7 +3248,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getAttachmentResponse
-#define SOAP_TYPE__ngwm__getAttachmentResponse (180)
+#define SOAP_TYPE__ngwm__getAttachmentResponse (199)
 /* ngwm:getAttachmentResponse */
 class SOAP_CMAC _ngwm__getAttachmentResponse
 {
@@ -2938,7 +3257,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 180; } /* = unique id SOAP_TYPE__ngwm__getAttachmentResponse */
+	virtual int soap_type() const { return 199; } /* = unique id SOAP_TYPE__ngwm__getAttachmentResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2951,14 +3270,14 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getCategoryListRequest
-#define SOAP_TYPE__ngwm__getCategoryListRequest (181)
+#define SOAP_TYPE__ngwm__getCategoryListRequest (200)
 /* ngwm:getCategoryListRequest */
 class SOAP_CMAC _ngwm__getCategoryListRequest
 {
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 181; } /* = unique id SOAP_TYPE__ngwm__getCategoryListRequest */
+	virtual int soap_type() const { return 200; } /* = unique id SOAP_TYPE__ngwm__getCategoryListRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2971,7 +3290,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getCategoryListResponse
-#define SOAP_TYPE__ngwm__getCategoryListResponse (182)
+#define SOAP_TYPE__ngwm__getCategoryListResponse (201)
 /* ngwm:getCategoryListResponse */
 class SOAP_CMAC _ngwm__getCategoryListResponse
 {
@@ -2980,7 +3299,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 182; } /* = unique id SOAP_TYPE__ngwm__getCategoryListResponse */
+	virtual int soap_type() const { return 201; } /* = unique id SOAP_TYPE__ngwm__getCategoryListResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -2993,14 +3312,14 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getCustomListRequest
-#define SOAP_TYPE__ngwm__getCustomListRequest (183)
+#define SOAP_TYPE__ngwm__getCustomListRequest (202)
 /* ngwm:getCustomListRequest */
 class SOAP_CMAC _ngwm__getCustomListRequest
 {
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 183; } /* = unique id SOAP_TYPE__ngwm__getCustomListRequest */
+	virtual int soap_type() const { return 202; } /* = unique id SOAP_TYPE__ngwm__getCustomListRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3013,7 +3332,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getCustomListResponse
-#define SOAP_TYPE__ngwm__getCustomListResponse (184)
+#define SOAP_TYPE__ngwm__getCustomListResponse (203)
 /* ngwm:getCustomListResponse */
 class SOAP_CMAC _ngwm__getCustomListResponse
 {
@@ -3022,7 +3341,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 184; } /* = unique id SOAP_TYPE__ngwm__getCustomListResponse */
+	virtual int soap_type() const { return 203; } /* = unique id SOAP_TYPE__ngwm__getCustomListResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3035,7 +3354,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getDeltasRequest
-#define SOAP_TYPE__ngwm__getDeltasRequest (185)
+#define SOAP_TYPE__ngwm__getDeltasRequest (204)
 /* ngwm:getDeltasRequest */
 class SOAP_CMAC _ngwm__getDeltasRequest
 {
@@ -3046,7 +3365,7 @@ public:
 	ngwt__DeltaInfo *deltaInfo;	/* required element of type ngwt:DeltaInfo */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 185; } /* = unique id SOAP_TYPE__ngwm__getDeltasRequest */
+	virtual int soap_type() const { return 204; } /* = unique id SOAP_TYPE__ngwm__getDeltasRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3059,7 +3378,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getDeltasResponse
-#define SOAP_TYPE__ngwm__getDeltasResponse (186)
+#define SOAP_TYPE__ngwm__getDeltasResponse (205)
 /* ngwm:getDeltasResponse */
 class SOAP_CMAC _ngwm__getDeltasResponse
 {
@@ -3069,7 +3388,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 186; } /* = unique id SOAP_TYPE__ngwm__getDeltasResponse */
+	virtual int soap_type() const { return 205; } /* = unique id SOAP_TYPE__ngwm__getDeltasResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3082,7 +3401,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getDeltaInfoRequest
-#define SOAP_TYPE__ngwm__getDeltaInfoRequest (187)
+#define SOAP_TYPE__ngwm__getDeltaInfoRequest (206)
 /* ngwm:getDeltaInfoRequest */
 class SOAP_CMAC _ngwm__getDeltaInfoRequest
 {
@@ -3091,7 +3410,7 @@ public:
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 187; } /* = unique id SOAP_TYPE__ngwm__getDeltaInfoRequest */
+	virtual int soap_type() const { return 206; } /* = unique id SOAP_TYPE__ngwm__getDeltaInfoRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3104,7 +3423,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getDeltaInfoResponse
-#define SOAP_TYPE__ngwm__getDeltaInfoResponse (188)
+#define SOAP_TYPE__ngwm__getDeltaInfoResponse (207)
 /* ngwm:getDeltaInfoResponse */
 class SOAP_CMAC _ngwm__getDeltaInfoResponse
 {
@@ -3113,7 +3432,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 188; } /* = unique id SOAP_TYPE__ngwm__getDeltaInfoResponse */
+	virtual int soap_type() const { return 207; } /* = unique id SOAP_TYPE__ngwm__getDeltaInfoResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3125,8 +3444,99 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE__ngwm__getDocumentTypeListRequest
+#define SOAP_TYPE__ngwm__getDocumentTypeListRequest (208)
+/* ngwm:getDocumentTypeListRequest */
+class SOAP_CMAC _ngwm__getDocumentTypeListRequest
+{
+public:
+	std::string library;	/* required element of type ngwt:uid */
+public:
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 208; } /* = unique id SOAP_TYPE__ngwm__getDocumentTypeListRequest */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__getDocumentTypeListRequest() { }
+	virtual ~_ngwm__getDocumentTypeListRequest() { }
+};
+#endif
+
+#ifndef SOAP_TYPE__ngwm__getDocumentTypeListResponse
+#define SOAP_TYPE__ngwm__getDocumentTypeListResponse (209)
+/* ngwm:getDocumentTypeListResponse */
+class SOAP_CMAC _ngwm__getDocumentTypeListResponse
+{
+public:
+	ngwt__DocumentTypeList *items;	/* RPC return element */	/* optional element of type ngwt:DocumentTypeList */
+	ngwt__Status *status;	/* required element of type ngwt:Status */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 209; } /* = unique id SOAP_TYPE__ngwm__getDocumentTypeListResponse */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__getDocumentTypeListResponse() { }
+	virtual ~_ngwm__getDocumentTypeListResponse() { }
+};
+#endif
+
+#ifndef SOAP_TYPE__ngwm__getFolderRequest
+#define SOAP_TYPE__ngwm__getFolderRequest (210)
+/* ngwm:getFolderRequest */
+class SOAP_CMAC _ngwm__getFolderRequest
+{
+public:
+	std::string *id;	/* optional element of type ngwt:uid */
+	enum ngwt__FolderType *folderType;	/* optional element of type ngwt:FolderType */
+	enum ngwt__MessageTypeList *types;	/* optional element of type ngwt:MessageTypeList */
+	enum ngwt__ItemSourceList *source;	/* optional element of type ngwt:ItemSourceList */
+	std::string *view;	/* optional element of type ngwt:View */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 210; } /* = unique id SOAP_TYPE__ngwm__getFolderRequest */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__getFolderRequest() { }
+	virtual ~_ngwm__getFolderRequest() { }
+};
+#endif
+
+#ifndef SOAP_TYPE__ngwm__getFolderResponse
+#define SOAP_TYPE__ngwm__getFolderResponse (211)
+/* ngwm:getFolderResponse */
+class SOAP_CMAC _ngwm__getFolderResponse
+{
+public:
+	ngwt__Folder *folder;	/* RPC return element */	/* optional element of type ngwt:Folder */
+	ngwt__Status *status;	/* required element of type ngwt:Status */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 211; } /* = unique id SOAP_TYPE__ngwm__getFolderResponse */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__getFolderResponse() { }
+	virtual ~_ngwm__getFolderResponse() { }
+};
+#endif
+
 #ifndef SOAP_TYPE__ngwm__getFolderListRequest
-#define SOAP_TYPE__ngwm__getFolderListRequest (189)
+#define SOAP_TYPE__ngwm__getFolderListRequest (212)
 /* ngwm:getFolderListRequest */
 class SOAP_CMAC _ngwm__getFolderListRequest
 {
@@ -3139,7 +3549,7 @@ public:
 	bool nntp;	/* required element of type xsd:boolean */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 189; } /* = unique id SOAP_TYPE__ngwm__getFolderListRequest */
+	virtual int soap_type() const { return 212; } /* = unique id SOAP_TYPE__ngwm__getFolderListRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3152,7 +3562,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getFolderListResponse
-#define SOAP_TYPE__ngwm__getFolderListResponse (190)
+#define SOAP_TYPE__ngwm__getFolderListResponse (213)
 /* ngwm:getFolderListResponse */
 class SOAP_CMAC _ngwm__getFolderListResponse
 {
@@ -3161,7 +3571,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 190; } /* = unique id SOAP_TYPE__ngwm__getFolderListResponse */
+	virtual int soap_type() const { return 213; } /* = unique id SOAP_TYPE__ngwm__getFolderListResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3174,7 +3584,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getFreeBusyRequest
-#define SOAP_TYPE__ngwm__getFreeBusyRequest (191)
+#define SOAP_TYPE__ngwm__getFreeBusyRequest (214)
 /* ngwm:getFreeBusyRequest */
 class SOAP_CMAC _ngwm__getFreeBusyRequest
 {
@@ -3183,7 +3593,7 @@ public:
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 191; } /* = unique id SOAP_TYPE__ngwm__getFreeBusyRequest */
+	virtual int soap_type() const { return 214; } /* = unique id SOAP_TYPE__ngwm__getFreeBusyRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3196,7 +3606,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getFreeBusyResponse
-#define SOAP_TYPE__ngwm__getFreeBusyResponse (192)
+#define SOAP_TYPE__ngwm__getFreeBusyResponse (215)
 /* ngwm:getFreeBusyResponse */
 class SOAP_CMAC _ngwm__getFreeBusyResponse
 {
@@ -3206,7 +3616,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 192; } /* = unique id SOAP_TYPE__ngwm__getFreeBusyResponse */
+	virtual int soap_type() const { return 215; } /* = unique id SOAP_TYPE__ngwm__getFreeBusyResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3219,7 +3629,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getItemRequest
-#define SOAP_TYPE__ngwm__getItemRequest (193)
+#define SOAP_TYPE__ngwm__getItemRequest (216)
 /* ngwm:getItemRequest */
 class SOAP_CMAC _ngwm__getItemRequest
 {
@@ -3229,7 +3639,7 @@ public:
 	std::string *view;	/* optional element of type ngwt:View */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 193; } /* = unique id SOAP_TYPE__ngwm__getItemRequest */
+	virtual int soap_type() const { return 216; } /* = unique id SOAP_TYPE__ngwm__getItemRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3242,7 +3652,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getItemResponse
-#define SOAP_TYPE__ngwm__getItemResponse (194)
+#define SOAP_TYPE__ngwm__getItemResponse (217)
 /* ngwm:getItemResponse */
 class SOAP_CMAC _ngwm__getItemResponse
 {
@@ -3251,7 +3661,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 194; } /* = unique id SOAP_TYPE__ngwm__getItemResponse */
+	virtual int soap_type() const { return 217; } /* = unique id SOAP_TYPE__ngwm__getItemResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3264,7 +3674,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getItemsRequest
-#define SOAP_TYPE__ngwm__getItemsRequest (195)
+#define SOAP_TYPE__ngwm__getItemsRequest (218)
 /* ngwm:getItemsRequest */
 class SOAP_CMAC _ngwm__getItemsRequest
 {
@@ -3276,7 +3686,7 @@ public:
 	int count;	/* required element of type xsd:int */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 195; } /* = unique id SOAP_TYPE__ngwm__getItemsRequest */
+	virtual int soap_type() const { return 218; } /* = unique id SOAP_TYPE__ngwm__getItemsRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3289,7 +3699,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getItemsResponse
-#define SOAP_TYPE__ngwm__getItemsResponse (196)
+#define SOAP_TYPE__ngwm__getItemsResponse (219)
 /* ngwm:getItemsResponse */
 class SOAP_CMAC _ngwm__getItemsResponse
 {
@@ -3298,7 +3708,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 196; } /* = unique id SOAP_TYPE__ngwm__getItemsResponse */
+	virtual int soap_type() const { return 219; } /* = unique id SOAP_TYPE__ngwm__getItemsResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3311,7 +3721,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getJunkEntriesRequest
-#define SOAP_TYPE__ngwm__getJunkEntriesRequest (197)
+#define SOAP_TYPE__ngwm__getJunkEntriesRequest (220)
 /* ngwm:getJunkEntriesRequest */
 class SOAP_CMAC _ngwm__getJunkEntriesRequest
 {
@@ -3319,7 +3729,7 @@ public:
 	enum ngwt__JunkHandlingListType *container;	/* optional element of type ngwt:JunkHandlingListType */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 197; } /* = unique id SOAP_TYPE__ngwm__getJunkEntriesRequest */
+	virtual int soap_type() const { return 220; } /* = unique id SOAP_TYPE__ngwm__getJunkEntriesRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3332,7 +3742,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getJunkEntriesResponse
-#define SOAP_TYPE__ngwm__getJunkEntriesResponse (198)
+#define SOAP_TYPE__ngwm__getJunkEntriesResponse (221)
 /* ngwm:getJunkEntriesResponse */
 class SOAP_CMAC _ngwm__getJunkEntriesResponse
 {
@@ -3343,7 +3753,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 198; } /* = unique id SOAP_TYPE__ngwm__getJunkEntriesResponse */
+	virtual int soap_type() const { return 221; } /* = unique id SOAP_TYPE__ngwm__getJunkEntriesResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3356,14 +3766,14 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getJunkMailSettingsRequest
-#define SOAP_TYPE__ngwm__getJunkMailSettingsRequest (199)
+#define SOAP_TYPE__ngwm__getJunkMailSettingsRequest (222)
 /* ngwm:getJunkMailSettingsRequest */
 class SOAP_CMAC _ngwm__getJunkMailSettingsRequest
 {
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 199; } /* = unique id SOAP_TYPE__ngwm__getJunkMailSettingsRequest */
+	virtual int soap_type() const { return 222; } /* = unique id SOAP_TYPE__ngwm__getJunkMailSettingsRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3376,7 +3786,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getJunkMailSettingsResponse
-#define SOAP_TYPE__ngwm__getJunkMailSettingsResponse (200)
+#define SOAP_TYPE__ngwm__getJunkMailSettingsResponse (223)
 /* ngwm:getJunkMailSettingsResponse */
 class SOAP_CMAC _ngwm__getJunkMailSettingsResponse
 {
@@ -3385,7 +3795,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 200; } /* = unique id SOAP_TYPE__ngwm__getJunkMailSettingsResponse */
+	virtual int soap_type() const { return 223; } /* = unique id SOAP_TYPE__ngwm__getJunkMailSettingsResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3397,8 +3807,96 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE__ngwm__getLibraryItemRequest
+#define SOAP_TYPE__ngwm__getLibraryItemRequest (224)
+/* ngwm:getLibraryItemRequest */
+class SOAP_CMAC _ngwm__getLibraryItemRequest
+{
+public:
+	std::string library;	/* required element of type ngwt:uid */
+public:
+	unsigned long *documentNumber;	/* optional element of type xsd:unsignedLong */
+	std::string *versionNumber;	/* optional element of type xsd:string */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 224; } /* = unique id SOAP_TYPE__ngwm__getLibraryItemRequest */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__getLibraryItemRequest() { }
+	virtual ~_ngwm__getLibraryItemRequest() { }
+};
+#endif
+
+#ifndef SOAP_TYPE__ngwm__getLibraryItemResponse
+#define SOAP_TYPE__ngwm__getLibraryItemResponse (225)
+/* ngwm:getLibraryItemResponse */
+class SOAP_CMAC _ngwm__getLibraryItemResponse
+{
+public:
+	ngwt__Item *item;	/* RPC return element */	/* optional element of type ngwt:Item */
+	ngwt__Status *status;	/* required element of type ngwt:Status */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 225; } /* = unique id SOAP_TYPE__ngwm__getLibraryItemResponse */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__getLibraryItemResponse() { }
+	virtual ~_ngwm__getLibraryItemResponse() { }
+};
+#endif
+
+#ifndef SOAP_TYPE__ngwm__getLibraryListRequest
+#define SOAP_TYPE__ngwm__getLibraryListRequest (226)
+/* ngwm:getLibraryListRequest */
+class SOAP_CMAC _ngwm__getLibraryListRequest
+{
+public:
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 226; } /* = unique id SOAP_TYPE__ngwm__getLibraryListRequest */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__getLibraryListRequest() { }
+	virtual ~_ngwm__getLibraryListRequest() { }
+};
+#endif
+
+#ifndef SOAP_TYPE__ngwm__getLibraryListResponse
+#define SOAP_TYPE__ngwm__getLibraryListResponse (227)
+/* ngwm:getLibraryListResponse */
+class SOAP_CMAC _ngwm__getLibraryListResponse
+{
+public:
+	ngwt__LibraryList *libraries;	/* RPC return element */	/* optional element of type ngwt:LibraryList */
+	ngwt__Status *status;	/* required element of type ngwt:Status */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 227; } /* = unique id SOAP_TYPE__ngwm__getLibraryListResponse */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__getLibraryListResponse() { }
+	virtual ~_ngwm__getLibraryListResponse() { }
+};
+#endif
+
 #ifndef SOAP_TYPE__ngwm__getQuickMessagesRequest
-#define SOAP_TYPE__ngwm__getQuickMessagesRequest (201)
+#define SOAP_TYPE__ngwm__getQuickMessagesRequest (228)
 /* ngwm:getQuickMessagesRequest */
 class SOAP_CMAC _ngwm__getQuickMessagesRequest
 {
@@ -3412,7 +3910,7 @@ public:
 	int count;	/* required element of type xsd:int */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 201; } /* = unique id SOAP_TYPE__ngwm__getQuickMessagesRequest */
+	virtual int soap_type() const { return 228; } /* = unique id SOAP_TYPE__ngwm__getQuickMessagesRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3425,7 +3923,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getQuickMessagesResponse
-#define SOAP_TYPE__ngwm__getQuickMessagesResponse (202)
+#define SOAP_TYPE__ngwm__getQuickMessagesResponse (229)
 /* ngwm:getQuickMessagesResponse */
 class SOAP_CMAC _ngwm__getQuickMessagesResponse
 {
@@ -3435,7 +3933,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 202; } /* = unique id SOAP_TYPE__ngwm__getQuickMessagesResponse */
+	virtual int soap_type() const { return 229; } /* = unique id SOAP_TYPE__ngwm__getQuickMessagesResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3448,14 +3946,14 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getProxyAccessListRequest
-#define SOAP_TYPE__ngwm__getProxyAccessListRequest (203)
+#define SOAP_TYPE__ngwm__getProxyAccessListRequest (230)
 /* ngwm:getProxyAccessListRequest */
 class SOAP_CMAC _ngwm__getProxyAccessListRequest
 {
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 203; } /* = unique id SOAP_TYPE__ngwm__getProxyAccessListRequest */
+	virtual int soap_type() const { return 230; } /* = unique id SOAP_TYPE__ngwm__getProxyAccessListRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3468,7 +3966,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getProxyAccessListResponse
-#define SOAP_TYPE__ngwm__getProxyAccessListResponse (204)
+#define SOAP_TYPE__ngwm__getProxyAccessListResponse (231)
 /* ngwm:getProxyAccessListResponse */
 class SOAP_CMAC _ngwm__getProxyAccessListResponse
 {
@@ -3477,7 +3975,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 204; } /* = unique id SOAP_TYPE__ngwm__getProxyAccessListResponse */
+	virtual int soap_type() const { return 231; } /* = unique id SOAP_TYPE__ngwm__getProxyAccessListResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3490,14 +3988,14 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getProxyListRequest
-#define SOAP_TYPE__ngwm__getProxyListRequest (205)
+#define SOAP_TYPE__ngwm__getProxyListRequest (232)
 /* ngwm:getProxyListRequest */
 class SOAP_CMAC _ngwm__getProxyListRequest
 {
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 205; } /* = unique id SOAP_TYPE__ngwm__getProxyListRequest */
+	virtual int soap_type() const { return 232; } /* = unique id SOAP_TYPE__ngwm__getProxyListRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3510,7 +4008,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getProxyListResponse
-#define SOAP_TYPE__ngwm__getProxyListResponse (206)
+#define SOAP_TYPE__ngwm__getProxyListResponse (233)
 /* ngwm:getProxyListResponse */
 class SOAP_CMAC _ngwm__getProxyListResponse
 {
@@ -3519,7 +4017,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 206; } /* = unique id SOAP_TYPE__ngwm__getProxyListResponse */
+	virtual int soap_type() const { return 233; } /* = unique id SOAP_TYPE__ngwm__getProxyListResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3531,8 +4029,50 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE__ngwm__getRuleListRequest
+#define SOAP_TYPE__ngwm__getRuleListRequest (234)
+/* ngwm:getRuleListRequest */
+class SOAP_CMAC _ngwm__getRuleListRequest
+{
+public:
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 234; } /* = unique id SOAP_TYPE__ngwm__getRuleListRequest */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__getRuleListRequest() { }
+	virtual ~_ngwm__getRuleListRequest() { }
+};
+#endif
+
+#ifndef SOAP_TYPE__ngwm__getRuleListResponse
+#define SOAP_TYPE__ngwm__getRuleListResponse (235)
+/* ngwm:getRuleListResponse */
+class SOAP_CMAC _ngwm__getRuleListResponse
+{
+public:
+	ngwt__RuleList *rules;	/* RPC return element */	/* optional element of type ngwt:RuleList */
+	ngwt__Status *status;	/* required element of type ngwt:Status */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 235; } /* = unique id SOAP_TYPE__ngwm__getRuleListResponse */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__getRuleListResponse() { }
+	virtual ~_ngwm__getRuleListResponse() { }
+};
+#endif
+
 #ifndef SOAP_TYPE__ngwm__getSettingsRequest
-#define SOAP_TYPE__ngwm__getSettingsRequest (207)
+#define SOAP_TYPE__ngwm__getSettingsRequest (236)
 /* ngwm:getSettingsRequest */
 class SOAP_CMAC _ngwm__getSettingsRequest
 {
@@ -3540,7 +4080,7 @@ public:
 	std::string *id;	/* optional element of type xsd:string */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 207; } /* = unique id SOAP_TYPE__ngwm__getSettingsRequest */
+	virtual int soap_type() const { return 236; } /* = unique id SOAP_TYPE__ngwm__getSettingsRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3553,7 +4093,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getSettingsResponse
-#define SOAP_TYPE__ngwm__getSettingsResponse (208)
+#define SOAP_TYPE__ngwm__getSettingsResponse (237)
 /* ngwm:getSettingsResponse */
 class SOAP_CMAC _ngwm__getSettingsResponse
 {
@@ -3562,7 +4102,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 208; } /* = unique id SOAP_TYPE__ngwm__getSettingsResponse */
+	virtual int soap_type() const { return 237; } /* = unique id SOAP_TYPE__ngwm__getSettingsResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3575,7 +4115,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getSignaturesRequest
-#define SOAP_TYPE__ngwm__getSignaturesRequest (209)
+#define SOAP_TYPE__ngwm__getSignaturesRequest (238)
 /* ngwm:getSignaturesRequest */
 class SOAP_CMAC _ngwm__getSignaturesRequest
 {
@@ -3583,7 +4123,7 @@ public:
 	bool global;	/* optional element of type xsd:boolean */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 209; } /* = unique id SOAP_TYPE__ngwm__getSignaturesRequest */
+	virtual int soap_type() const { return 238; } /* = unique id SOAP_TYPE__ngwm__getSignaturesRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3596,7 +4136,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getSignaturesResponse
-#define SOAP_TYPE__ngwm__getSignaturesResponse (210)
+#define SOAP_TYPE__ngwm__getSignaturesResponse (239)
 /* ngwm:getSignaturesResponse */
 class SOAP_CMAC _ngwm__getSignaturesResponse
 {
@@ -3605,7 +4145,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 210; } /* = unique id SOAP_TYPE__ngwm__getSignaturesResponse */
+	virtual int soap_type() const { return 239; } /* = unique id SOAP_TYPE__ngwm__getSignaturesResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3617,15 +4157,61 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE__ngwm__getTimestampRequest
+#define SOAP_TYPE__ngwm__getTimestampRequest (240)
+/* ngwm:getTimestampRequest */
+class SOAP_CMAC _ngwm__getTimestampRequest
+{
+public:
+	bool *backup;	/* optional element of type xsd:boolean */
+	bool *retention;	/* optional element of type xsd:boolean */
+	bool *noop;	/* optional element of type xsd:boolean */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 240; } /* = unique id SOAP_TYPE__ngwm__getTimestampRequest */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__getTimestampRequest() { }
+	virtual ~_ngwm__getTimestampRequest() { }
+};
+#endif
+
+#ifndef SOAP_TYPE__ngwm__getTimestampResponse
+#define SOAP_TYPE__ngwm__getTimestampResponse (241)
+/* ngwm:getTimestampResponse */
+class SOAP_CMAC _ngwm__getTimestampResponse
+{
+public:
+	char *backup;	/* RPC return element */	/* optional element of type xsd:string */
+	char *retention;	/* optional element of type xsd:string */
+	ngwt__Status *status;	/* required element of type ngwt:Status */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 241; } /* = unique id SOAP_TYPE__ngwm__getTimestampResponse */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__getTimestampResponse() { }
+	virtual ~_ngwm__getTimestampResponse() { }
+};
+#endif
+
 #ifndef SOAP_TYPE__ngwm__getTimezoneListRequest
-#define SOAP_TYPE__ngwm__getTimezoneListRequest (211)
+#define SOAP_TYPE__ngwm__getTimezoneListRequest (242)
 /* ngwm:getTimezoneListRequest */
 class SOAP_CMAC _ngwm__getTimezoneListRequest
 {
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 211; } /* = unique id SOAP_TYPE__ngwm__getTimezoneListRequest */
+	virtual int soap_type() const { return 242; } /* = unique id SOAP_TYPE__ngwm__getTimezoneListRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3638,7 +4224,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__getTimezoneListResponse
-#define SOAP_TYPE__ngwm__getTimezoneListResponse (212)
+#define SOAP_TYPE__ngwm__getTimezoneListResponse (243)
 /* ngwm:getTimezoneListResponse */
 class SOAP_CMAC _ngwm__getTimezoneListResponse
 {
@@ -3647,7 +4233,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 212; } /* = unique id SOAP_TYPE__ngwm__getTimezoneListResponse */
+	virtual int soap_type() const { return 243; } /* = unique id SOAP_TYPE__ngwm__getTimezoneListResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3659,8 +4245,52 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE__ngwm__getUserListRequest
+#define SOAP_TYPE__ngwm__getUserListRequest (244)
+/* ngwm:getUserListRequest */
+class SOAP_CMAC _ngwm__getUserListRequest
+{
+public:
+	std::string *name;	/* optional element of type xsd:string */
+	std::string *key;	/* optional element of type xsd:string */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 244; } /* = unique id SOAP_TYPE__ngwm__getUserListRequest */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__getUserListRequest() { }
+	virtual ~_ngwm__getUserListRequest() { }
+};
+#endif
+
+#ifndef SOAP_TYPE__ngwm__getUserListResponse
+#define SOAP_TYPE__ngwm__getUserListResponse (245)
+/* ngwm:getUserListResponse */
+class SOAP_CMAC _ngwm__getUserListResponse
+{
+public:
+	ngwt__UserList *users;	/* RPC return element */	/* optional element of type ngwt:UserList */
+	ngwt__Status *status;	/* required element of type ngwt:Status */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 245; } /* = unique id SOAP_TYPE__ngwm__getUserListResponse */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__getUserListResponse() { }
+	virtual ~_ngwm__getUserListResponse() { }
+};
+#endif
+
 #ifndef SOAP_TYPE__ngwm__loginRequest
-#define SOAP_TYPE__ngwm__loginRequest (213)
+#define SOAP_TYPE__ngwm__loginRequest (246)
 /* ngwm:loginRequest */
 class SOAP_CMAC _ngwm__loginRequest
 {
@@ -3672,7 +4302,7 @@ public:
 	std::string *application;	/* optional element of type xsd:string */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 213; } /* = unique id SOAP_TYPE__ngwm__loginRequest */
+	virtual int soap_type() const { return 246; } /* = unique id SOAP_TYPE__ngwm__loginRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3685,22 +4315,22 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__loginResponse
-#define SOAP_TYPE__ngwm__loginResponse (214)
+#define SOAP_TYPE__ngwm__loginResponse (247)
 /* ngwm:loginResponse */
 class SOAP_CMAC _ngwm__loginResponse
 {
 public:
-	std::string session;	/* RPC return element */	/* required element of type xsd:string */
-public:
+	std::string *session;	/* RPC return element */	/* optional element of type xsd:string */
 	ngwt__UserInfo *userinfo;	/* optional element of type ngwt:UserInfo */
 	ngwt__AccessRightEntry *entry;	/* optional element of type ngwt:AccessRightEntry */
 	std::string *gwVersion;	/* optional element of type xsd:string */
-	ngwt__Host *redirectToHost;	/* optional element of type ngwt:Host */
+	std::string *build;	/* optional element of type xsd:string */
+	std::vector<ngwt__Host * >redirectToHost;	/* optional element of type ngwt:Host */
 	char *serverUTCTime;	/* optional element of type xsd:string */
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 214; } /* = unique id SOAP_TYPE__ngwm__loginResponse */
+	virtual int soap_type() const { return 247; } /* = unique id SOAP_TYPE__ngwm__loginResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3713,14 +4343,14 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__logoutRequest
-#define SOAP_TYPE__ngwm__logoutRequest (215)
+#define SOAP_TYPE__ngwm__logoutRequest (248)
 /* ngwm:logoutRequest */
 class SOAP_CMAC _ngwm__logoutRequest
 {
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 215; } /* = unique id SOAP_TYPE__ngwm__logoutRequest */
+	virtual int soap_type() const { return 248; } /* = unique id SOAP_TYPE__ngwm__logoutRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3733,7 +4363,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__logoutResponse
-#define SOAP_TYPE__ngwm__logoutResponse (216)
+#define SOAP_TYPE__ngwm__logoutResponse (249)
 /* ngwm:logoutResponse */
 class SOAP_CMAC _ngwm__logoutResponse
 {
@@ -3741,7 +4371,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 216; } /* = unique id SOAP_TYPE__ngwm__logoutResponse */
+	virtual int soap_type() const { return 249; } /* = unique id SOAP_TYPE__ngwm__logoutResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3754,7 +4384,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__markPrivateRequest
-#define SOAP_TYPE__ngwm__markPrivateRequest (217)
+#define SOAP_TYPE__ngwm__markPrivateRequest (250)
 /* ngwm:markPrivateRequest */
 class SOAP_CMAC _ngwm__markPrivateRequest
 {
@@ -3762,7 +4392,7 @@ public:
 	ngwt__ItemRefList *items;	/* required element of type ngwt:ItemRefList */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 217; } /* = unique id SOAP_TYPE__ngwm__markPrivateRequest */
+	virtual int soap_type() const { return 250; } /* = unique id SOAP_TYPE__ngwm__markPrivateRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3775,7 +4405,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__markPrivateResponse
-#define SOAP_TYPE__ngwm__markPrivateResponse (218)
+#define SOAP_TYPE__ngwm__markPrivateResponse (251)
 /* ngwm:markPrivateResponse */
 class SOAP_CMAC _ngwm__markPrivateResponse
 {
@@ -3783,7 +4413,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 218; } /* = unique id SOAP_TYPE__ngwm__markPrivateResponse */
+	virtual int soap_type() const { return 251; } /* = unique id SOAP_TYPE__ngwm__markPrivateResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3796,7 +4426,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__markReadRequest
-#define SOAP_TYPE__ngwm__markReadRequest (219)
+#define SOAP_TYPE__ngwm__markReadRequest (252)
 /* ngwm:markReadRequest */
 class SOAP_CMAC _ngwm__markReadRequest
 {
@@ -3804,7 +4434,7 @@ public:
 	ngwt__ItemRefList *items;	/* required element of type ngwt:ItemRefList */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 219; } /* = unique id SOAP_TYPE__ngwm__markReadRequest */
+	virtual int soap_type() const { return 252; } /* = unique id SOAP_TYPE__ngwm__markReadRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3817,7 +4447,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__markReadResponse
-#define SOAP_TYPE__ngwm__markReadResponse (220)
+#define SOAP_TYPE__ngwm__markReadResponse (253)
 /* ngwm:markReadResponse */
 class SOAP_CMAC _ngwm__markReadResponse
 {
@@ -3825,7 +4455,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 220; } /* = unique id SOAP_TYPE__ngwm__markReadResponse */
+	virtual int soap_type() const { return 253; } /* = unique id SOAP_TYPE__ngwm__markReadResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3838,7 +4468,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__markUnPrivateRequest
-#define SOAP_TYPE__ngwm__markUnPrivateRequest (221)
+#define SOAP_TYPE__ngwm__markUnPrivateRequest (254)
 /* ngwm:markUnPrivateRequest */
 class SOAP_CMAC _ngwm__markUnPrivateRequest
 {
@@ -3846,7 +4476,7 @@ public:
 	ngwt__ItemRefList *items;	/* required element of type ngwt:ItemRefList */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 221; } /* = unique id SOAP_TYPE__ngwm__markUnPrivateRequest */
+	virtual int soap_type() const { return 254; } /* = unique id SOAP_TYPE__ngwm__markUnPrivateRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3859,7 +4489,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__markUnPrivateResponse
-#define SOAP_TYPE__ngwm__markUnPrivateResponse (222)
+#define SOAP_TYPE__ngwm__markUnPrivateResponse (255)
 /* ngwm:markUnPrivateResponse */
 class SOAP_CMAC _ngwm__markUnPrivateResponse
 {
@@ -3867,7 +4497,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 222; } /* = unique id SOAP_TYPE__ngwm__markUnPrivateResponse */
+	virtual int soap_type() const { return 255; } /* = unique id SOAP_TYPE__ngwm__markUnPrivateResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3880,7 +4510,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__markUnReadRequest
-#define SOAP_TYPE__ngwm__markUnReadRequest (223)
+#define SOAP_TYPE__ngwm__markUnReadRequest (256)
 /* ngwm:markUnReadRequest */
 class SOAP_CMAC _ngwm__markUnReadRequest
 {
@@ -3888,7 +4518,7 @@ public:
 	ngwt__ItemRefList *items;	/* required element of type ngwt:ItemRefList */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 223; } /* = unique id SOAP_TYPE__ngwm__markUnReadRequest */
+	virtual int soap_type() const { return 256; } /* = unique id SOAP_TYPE__ngwm__markUnReadRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3901,7 +4531,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__markUnReadResponse
-#define SOAP_TYPE__ngwm__markUnReadResponse (224)
+#define SOAP_TYPE__ngwm__markUnReadResponse (257)
 /* ngwm:markUnReadResponse */
 class SOAP_CMAC _ngwm__markUnReadResponse
 {
@@ -3909,7 +4539,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 224; } /* = unique id SOAP_TYPE__ngwm__markUnReadResponse */
+	virtual int soap_type() const { return 257; } /* = unique id SOAP_TYPE__ngwm__markUnReadResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3922,7 +4552,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__modifyItemRequest
-#define SOAP_TYPE__ngwm__modifyItemRequest (225)
+#define SOAP_TYPE__ngwm__modifyItemRequest (258)
 /* ngwm:modifyItemRequest */
 class SOAP_CMAC _ngwm__modifyItemRequest
 {
@@ -3931,9 +4561,10 @@ public:
 public:
 	ngwt__SharedFolderNotification *notification;	/* optional element of type ngwt:SharedFolderNotification */
 	ngwt__ItemChanges *updates;	/* required element of type ngwt:ItemChanges */
+	unsigned long recurrenceAllInstances;	/* optional element of type xsd:unsignedLong */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 225; } /* = unique id SOAP_TYPE__ngwm__modifyItemRequest */
+	virtual int soap_type() const { return 258; } /* = unique id SOAP_TYPE__ngwm__modifyItemRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3946,16 +4577,17 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__modifyItemResponse
-#define SOAP_TYPE__ngwm__modifyItemResponse (226)
+#define SOAP_TYPE__ngwm__modifyItemResponse (259)
 /* ngwm:modifyItemResponse */
 class SOAP_CMAC _ngwm__modifyItemResponse
 {
 public:
 	char *ngwt__modified;	/* RPC return element */	/* optional element of type xsd:string */
+	std::vector<std::string >id;	/* optional element of type ngwt:uid */
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 226; } /* = unique id SOAP_TYPE__ngwm__modifyItemResponse */
+	virtual int soap_type() const { return 259; } /* = unique id SOAP_TYPE__ngwm__modifyItemResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3968,7 +4600,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__modifyItemsRequest
-#define SOAP_TYPE__ngwm__modifyItemsRequest (227)
+#define SOAP_TYPE__ngwm__modifyItemsRequest (260)
 /* ngwm:modifyItemsRequest */
 class SOAP_CMAC _ngwm__modifyItemsRequest
 {
@@ -3976,7 +4608,7 @@ public:
 	std::vector<ngwt__ModifyItem * >item;	/* required element of type ngwt:ModifyItem */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 227; } /* = unique id SOAP_TYPE__ngwm__modifyItemsRequest */
+	virtual int soap_type() const { return 260; } /* = unique id SOAP_TYPE__ngwm__modifyItemsRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -3989,16 +4621,17 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__modifyItemsResponse
-#define SOAP_TYPE__ngwm__modifyItemsResponse (228)
+#define SOAP_TYPE__ngwm__modifyItemsResponse (261)
 /* ngwm:modifyItemsResponse */
 class SOAP_CMAC _ngwm__modifyItemsResponse
 {
 public:
 	std::vector<char * >ngwt__modified;	/* optional element of type xsd:string */
+	std::vector<std::string >id;	/* optional element of type ngwt:uid */
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 228; } /* = unique id SOAP_TYPE__ngwm__modifyItemsResponse */
+	virtual int soap_type() const { return 261; } /* = unique id SOAP_TYPE__ngwm__modifyItemsResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4011,7 +4644,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__modifyJunkEntryRequest
-#define SOAP_TYPE__ngwm__modifyJunkEntryRequest (229)
+#define SOAP_TYPE__ngwm__modifyJunkEntryRequest (262)
 /* ngwm:modifyJunkEntryRequest */
 class SOAP_CMAC _ngwm__modifyJunkEntryRequest
 {
@@ -4019,7 +4652,7 @@ public:
 	ngwt__JunkEntry *entry;	/* required element of type ngwt:JunkEntry */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 229; } /* = unique id SOAP_TYPE__ngwm__modifyJunkEntryRequest */
+	virtual int soap_type() const { return 262; } /* = unique id SOAP_TYPE__ngwm__modifyJunkEntryRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4032,7 +4665,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__modifyJunkEntryResponse
-#define SOAP_TYPE__ngwm__modifyJunkEntryResponse (230)
+#define SOAP_TYPE__ngwm__modifyJunkEntryResponse (263)
 /* ngwm:modifyJunkEntryResponse */
 class SOAP_CMAC _ngwm__modifyJunkEntryResponse
 {
@@ -4040,7 +4673,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 230; } /* = unique id SOAP_TYPE__ngwm__modifyJunkEntryResponse */
+	virtual int soap_type() const { return 263; } /* = unique id SOAP_TYPE__ngwm__modifyJunkEntryResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4053,7 +4686,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__modifyJunkMailSettingsRequest
-#define SOAP_TYPE__ngwm__modifyJunkMailSettingsRequest (231)
+#define SOAP_TYPE__ngwm__modifyJunkMailSettingsRequest (264)
 /* ngwm:modifyJunkMailSettingsRequest */
 class SOAP_CMAC _ngwm__modifyJunkMailSettingsRequest
 {
@@ -4061,7 +4694,7 @@ public:
 	ngwt__SettingsList *settings;	/* required element of type ngwt:SettingsList */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 231; } /* = unique id SOAP_TYPE__ngwm__modifyJunkMailSettingsRequest */
+	virtual int soap_type() const { return 264; } /* = unique id SOAP_TYPE__ngwm__modifyJunkMailSettingsRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4074,7 +4707,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__modifyJunkMailSettingsResponse
-#define SOAP_TYPE__ngwm__modifyJunkMailSettingsResponse (232)
+#define SOAP_TYPE__ngwm__modifyJunkMailSettingsResponse (265)
 /* ngwm:modifyJunkMailSettingsResponse */
 class SOAP_CMAC _ngwm__modifyJunkMailSettingsResponse
 {
@@ -4082,7 +4715,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 232; } /* = unique id SOAP_TYPE__ngwm__modifyJunkMailSettingsResponse */
+	virtual int soap_type() const { return 265; } /* = unique id SOAP_TYPE__ngwm__modifyJunkMailSettingsResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4095,7 +4728,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__modifyPasswordRequest
-#define SOAP_TYPE__ngwm__modifyPasswordRequest (233)
+#define SOAP_TYPE__ngwm__modifyPasswordRequest (266)
 /* ngwm:modifyPasswordRequest */
 class SOAP_CMAC _ngwm__modifyPasswordRequest
 {
@@ -4104,7 +4737,7 @@ public:
 	std::string *_new;	/* optional element of type xsd:string */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 233; } /* = unique id SOAP_TYPE__ngwm__modifyPasswordRequest */
+	virtual int soap_type() const { return 266; } /* = unique id SOAP_TYPE__ngwm__modifyPasswordRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4117,7 +4750,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__modifyPasswordResponse
-#define SOAP_TYPE__ngwm__modifyPasswordResponse (234)
+#define SOAP_TYPE__ngwm__modifyPasswordResponse (267)
 /* ngwm:modifyPasswordResponse */
 class SOAP_CMAC _ngwm__modifyPasswordResponse
 {
@@ -4125,7 +4758,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 234; } /* = unique id SOAP_TYPE__ngwm__modifyPasswordResponse */
+	virtual int soap_type() const { return 267; } /* = unique id SOAP_TYPE__ngwm__modifyPasswordResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4138,7 +4771,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__modifyProxyAccessRequest
-#define SOAP_TYPE__ngwm__modifyProxyAccessRequest (235)
+#define SOAP_TYPE__ngwm__modifyProxyAccessRequest (268)
 /* ngwm:modifyProxyAccessRequest */
 class SOAP_CMAC _ngwm__modifyProxyAccessRequest
 {
@@ -4148,7 +4781,7 @@ public:
 	ngwt__AccessRightChanges *updates;	/* required element of type ngwt:AccessRightChanges */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 235; } /* = unique id SOAP_TYPE__ngwm__modifyProxyAccessRequest */
+	virtual int soap_type() const { return 268; } /* = unique id SOAP_TYPE__ngwm__modifyProxyAccessRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4161,7 +4794,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__modifyProxyAccessResponse
-#define SOAP_TYPE__ngwm__modifyProxyAccessResponse (236)
+#define SOAP_TYPE__ngwm__modifyProxyAccessResponse (269)
 /* ngwm:modifyProxyAccessResponse */
 class SOAP_CMAC _ngwm__modifyProxyAccessResponse
 {
@@ -4169,7 +4802,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 236; } /* = unique id SOAP_TYPE__ngwm__modifyProxyAccessResponse */
+	virtual int soap_type() const { return 269; } /* = unique id SOAP_TYPE__ngwm__modifyProxyAccessResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4182,7 +4815,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__modifySettingsRequest
-#define SOAP_TYPE__ngwm__modifySettingsRequest (237)
+#define SOAP_TYPE__ngwm__modifySettingsRequest (270)
 /* ngwm:modifySettingsRequest */
 class SOAP_CMAC _ngwm__modifySettingsRequest
 {
@@ -4190,7 +4823,7 @@ public:
 	ngwt__SettingsList *settings;	/* required element of type ngwt:SettingsList */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 237; } /* = unique id SOAP_TYPE__ngwm__modifySettingsRequest */
+	virtual int soap_type() const { return 270; } /* = unique id SOAP_TYPE__ngwm__modifySettingsRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4203,7 +4836,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__modifySettingsResponse
-#define SOAP_TYPE__ngwm__modifySettingsResponse (238)
+#define SOAP_TYPE__ngwm__modifySettingsResponse (271)
 /* ngwm:modifySettingsResponse */
 class SOAP_CMAC _ngwm__modifySettingsResponse
 {
@@ -4211,7 +4844,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 238; } /* = unique id SOAP_TYPE__ngwm__modifySettingsResponse */
+	virtual int soap_type() const { return 271; } /* = unique id SOAP_TYPE__ngwm__modifySettingsResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4224,7 +4857,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__modifySignaturesRequest
-#define SOAP_TYPE__ngwm__modifySignaturesRequest (239)
+#define SOAP_TYPE__ngwm__modifySignaturesRequest (272)
 /* ngwm:modifySignaturesRequest */
 class SOAP_CMAC _ngwm__modifySignaturesRequest
 {
@@ -4232,7 +4865,7 @@ public:
 	ngwt__Signatures *updates;	/* required element of type ngwt:Signatures */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 239; } /* = unique id SOAP_TYPE__ngwm__modifySignaturesRequest */
+	virtual int soap_type() const { return 272; } /* = unique id SOAP_TYPE__ngwm__modifySignaturesRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4245,7 +4878,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__modifySignaturesResponse
-#define SOAP_TYPE__ngwm__modifySignaturesResponse (240)
+#define SOAP_TYPE__ngwm__modifySignaturesResponse (273)
 /* ngwm:modifySignaturesResponse */
 class SOAP_CMAC _ngwm__modifySignaturesResponse
 {
@@ -4253,7 +4886,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 240; } /* = unique id SOAP_TYPE__ngwm__modifySignaturesResponse */
+	virtual int soap_type() const { return 273; } /* = unique id SOAP_TYPE__ngwm__modifySignaturesResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4266,7 +4899,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__moveItemRequest
-#define SOAP_TYPE__ngwm__moveItemRequest (241)
+#define SOAP_TYPE__ngwm__moveItemRequest (274)
 /* ngwm:moveItemRequest */
 class SOAP_CMAC _ngwm__moveItemRequest
 {
@@ -4277,7 +4910,7 @@ public:
 	std::string *from;	/* optional element of type ngwt:uid */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 241; } /* = unique id SOAP_TYPE__ngwm__moveItemRequest */
+	virtual int soap_type() const { return 274; } /* = unique id SOAP_TYPE__ngwm__moveItemRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4290,7 +4923,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__moveItemResponse
-#define SOAP_TYPE__ngwm__moveItemResponse (242)
+#define SOAP_TYPE__ngwm__moveItemResponse (275)
 /* ngwm:moveItemResponse */
 class SOAP_CMAC _ngwm__moveItemResponse
 {
@@ -4298,7 +4931,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 242; } /* = unique id SOAP_TYPE__ngwm__moveItemResponse */
+	virtual int soap_type() const { return 275; } /* = unique id SOAP_TYPE__ngwm__moveItemResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4311,7 +4944,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__positionCursorRequest
-#define SOAP_TYPE__ngwm__positionCursorRequest (243)
+#define SOAP_TYPE__ngwm__positionCursorRequest (276)
 /* ngwm:positionCursorRequest */
 class SOAP_CMAC _ngwm__positionCursorRequest
 {
@@ -4323,7 +4956,7 @@ public:
 	int offset;	/* required element of type xsd:int */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 243; } /* = unique id SOAP_TYPE__ngwm__positionCursorRequest */
+	virtual int soap_type() const { return 276; } /* = unique id SOAP_TYPE__ngwm__positionCursorRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4336,7 +4969,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__positionCursorResponse
-#define SOAP_TYPE__ngwm__positionCursorResponse (244)
+#define SOAP_TYPE__ngwm__positionCursorResponse (277)
 /* ngwm:positionCursorResponse */
 class SOAP_CMAC _ngwm__positionCursorResponse
 {
@@ -4344,7 +4977,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 244; } /* = unique id SOAP_TYPE__ngwm__positionCursorResponse */
+	virtual int soap_type() const { return 277; } /* = unique id SOAP_TYPE__ngwm__positionCursorResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4357,14 +4990,14 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__purgeDeletedItemsRequest
-#define SOAP_TYPE__ngwm__purgeDeletedItemsRequest (245)
+#define SOAP_TYPE__ngwm__purgeDeletedItemsRequest (278)
 /* ngwm:purgeDeletedItemsRequest */
 class SOAP_CMAC _ngwm__purgeDeletedItemsRequest
 {
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 245; } /* = unique id SOAP_TYPE__ngwm__purgeDeletedItemsRequest */
+	virtual int soap_type() const { return 278; } /* = unique id SOAP_TYPE__ngwm__purgeDeletedItemsRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4377,7 +5010,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__purgeDeletedItemsResponse
-#define SOAP_TYPE__ngwm__purgeDeletedItemsResponse (246)
+#define SOAP_TYPE__ngwm__purgeDeletedItemsResponse (279)
 /* ngwm:purgeDeletedItemsResponse */
 class SOAP_CMAC _ngwm__purgeDeletedItemsResponse
 {
@@ -4385,7 +5018,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 246; } /* = unique id SOAP_TYPE__ngwm__purgeDeletedItemsResponse */
+	virtual int soap_type() const { return 279; } /* = unique id SOAP_TYPE__ngwm__purgeDeletedItemsResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4398,7 +5031,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__purgeRequest
-#define SOAP_TYPE__ngwm__purgeRequest (247)
+#define SOAP_TYPE__ngwm__purgeRequest (280)
 /* ngwm:purgeRequest */
 class SOAP_CMAC _ngwm__purgeRequest
 {
@@ -4406,7 +5039,7 @@ public:
 	ngwt__ItemRefList *items;	/* required element of type ngwt:ItemRefList */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 247; } /* = unique id SOAP_TYPE__ngwm__purgeRequest */
+	virtual int soap_type() const { return 280; } /* = unique id SOAP_TYPE__ngwm__purgeRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4419,7 +5052,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__purgeResponse
-#define SOAP_TYPE__ngwm__purgeResponse (248)
+#define SOAP_TYPE__ngwm__purgeResponse (281)
 /* ngwm:purgeResponse */
 class SOAP_CMAC _ngwm__purgeResponse
 {
@@ -4427,7 +5060,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 248; } /* = unique id SOAP_TYPE__ngwm__purgeResponse */
+	virtual int soap_type() const { return 281; } /* = unique id SOAP_TYPE__ngwm__purgeResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4440,7 +5073,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__readCursorRequest
-#define SOAP_TYPE__ngwm__readCursorRequest (249)
+#define SOAP_TYPE__ngwm__readCursorRequest (282)
 /* ngwm:readCursorRequest */
 class SOAP_CMAC _ngwm__readCursorRequest
 {
@@ -4453,7 +5086,7 @@ public:
 	int *count;	/* optional element of type xsd:int */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 249; } /* = unique id SOAP_TYPE__ngwm__readCursorRequest */
+	virtual int soap_type() const { return 282; } /* = unique id SOAP_TYPE__ngwm__readCursorRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4466,7 +5099,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__readCursorResponse
-#define SOAP_TYPE__ngwm__readCursorResponse (250)
+#define SOAP_TYPE__ngwm__readCursorResponse (283)
 /* ngwm:readCursorResponse */
 class SOAP_CMAC _ngwm__readCursorResponse
 {
@@ -4475,7 +5108,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 250; } /* = unique id SOAP_TYPE__ngwm__readCursorResponse */
+	virtual int soap_type() const { return 283; } /* = unique id SOAP_TYPE__ngwm__readCursorResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4488,7 +5121,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__removeCustomDefinitionRequest
-#define SOAP_TYPE__ngwm__removeCustomDefinitionRequest (251)
+#define SOAP_TYPE__ngwm__removeCustomDefinitionRequest (284)
 /* ngwm:removeCustomDefinitionRequest */
 class SOAP_CMAC _ngwm__removeCustomDefinitionRequest
 {
@@ -4498,7 +5131,7 @@ public:
 	bool doAsynchronous;	/* required element of type xsd:boolean */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 251; } /* = unique id SOAP_TYPE__ngwm__removeCustomDefinitionRequest */
+	virtual int soap_type() const { return 284; } /* = unique id SOAP_TYPE__ngwm__removeCustomDefinitionRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4511,7 +5144,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__removeCustomDefinitionResponse
-#define SOAP_TYPE__ngwm__removeCustomDefinitionResponse (252)
+#define SOAP_TYPE__ngwm__removeCustomDefinitionResponse (285)
 /* ngwm:removeCustomDefinitionResponse */
 class SOAP_CMAC _ngwm__removeCustomDefinitionResponse
 {
@@ -4519,7 +5152,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 252; } /* = unique id SOAP_TYPE__ngwm__removeCustomDefinitionResponse */
+	virtual int soap_type() const { return 285; } /* = unique id SOAP_TYPE__ngwm__removeCustomDefinitionResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4532,7 +5165,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__removeItemRequest
-#define SOAP_TYPE__ngwm__removeItemRequest (253)
+#define SOAP_TYPE__ngwm__removeItemRequest (286)
 /* ngwm:removeItemRequest */
 class SOAP_CMAC _ngwm__removeItemRequest
 {
@@ -4542,7 +5175,7 @@ public:
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 253; } /* = unique id SOAP_TYPE__ngwm__removeItemRequest */
+	virtual int soap_type() const { return 286; } /* = unique id SOAP_TYPE__ngwm__removeItemRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4555,7 +5188,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__removeItemResponse
-#define SOAP_TYPE__ngwm__removeItemResponse (254)
+#define SOAP_TYPE__ngwm__removeItemResponse (287)
 /* ngwm:removeItemResponse */
 class SOAP_CMAC _ngwm__removeItemResponse
 {
@@ -4563,7 +5196,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 254; } /* = unique id SOAP_TYPE__ngwm__removeItemResponse */
+	virtual int soap_type() const { return 287; } /* = unique id SOAP_TYPE__ngwm__removeItemResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4576,7 +5209,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__removeItemsRequest
-#define SOAP_TYPE__ngwm__removeItemsRequest (255)
+#define SOAP_TYPE__ngwm__removeItemsRequest (288)
 /* ngwm:removeItemsRequest */
 class SOAP_CMAC _ngwm__removeItemsRequest
 {
@@ -4586,7 +5219,7 @@ public:
 	ngwt__ItemRefList *items;	/* required element of type ngwt:ItemRefList */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 255; } /* = unique id SOAP_TYPE__ngwm__removeItemsRequest */
+	virtual int soap_type() const { return 288; } /* = unique id SOAP_TYPE__ngwm__removeItemsRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4599,7 +5232,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__removeItemsResponse
-#define SOAP_TYPE__ngwm__removeItemsResponse (256)
+#define SOAP_TYPE__ngwm__removeItemsResponse (289)
 /* ngwm:removeItemsResponse */
 class SOAP_CMAC _ngwm__removeItemsResponse
 {
@@ -4607,7 +5240,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 256; } /* = unique id SOAP_TYPE__ngwm__removeItemsResponse */
+	virtual int soap_type() const { return 289; } /* = unique id SOAP_TYPE__ngwm__removeItemsResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4620,7 +5253,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__removeJunkEntryRequest
-#define SOAP_TYPE__ngwm__removeJunkEntryRequest (257)
+#define SOAP_TYPE__ngwm__removeJunkEntryRequest (290)
 /* ngwm:removeJunkEntryRequest */
 class SOAP_CMAC _ngwm__removeJunkEntryRequest
 {
@@ -4629,7 +5262,7 @@ public:
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 257; } /* = unique id SOAP_TYPE__ngwm__removeJunkEntryRequest */
+	virtual int soap_type() const { return 290; } /* = unique id SOAP_TYPE__ngwm__removeJunkEntryRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4642,7 +5275,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__removeJunkEntryResponse
-#define SOAP_TYPE__ngwm__removeJunkEntryResponse (258)
+#define SOAP_TYPE__ngwm__removeJunkEntryResponse (291)
 /* ngwm:removeJunkEntryResponse */
 class SOAP_CMAC _ngwm__removeJunkEntryResponse
 {
@@ -4650,7 +5283,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 258; } /* = unique id SOAP_TYPE__ngwm__removeJunkEntryResponse */
+	virtual int soap_type() const { return 291; } /* = unique id SOAP_TYPE__ngwm__removeJunkEntryResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4663,7 +5296,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__removeMembersRequest
-#define SOAP_TYPE__ngwm__removeMembersRequest (259)
+#define SOAP_TYPE__ngwm__removeMembersRequest (292)
 /* ngwm:removeMembersRequest */
 class SOAP_CMAC _ngwm__removeMembersRequest
 {
@@ -4673,7 +5306,7 @@ public:
 	ngwt__GroupMemberList *members;	/* required element of type ngwt:GroupMemberList */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 259; } /* = unique id SOAP_TYPE__ngwm__removeMembersRequest */
+	virtual int soap_type() const { return 292; } /* = unique id SOAP_TYPE__ngwm__removeMembersRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4686,7 +5319,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__removeMembersResponse
-#define SOAP_TYPE__ngwm__removeMembersResponse (260)
+#define SOAP_TYPE__ngwm__removeMembersResponse (293)
 /* ngwm:removeMembersResponse */
 class SOAP_CMAC _ngwm__removeMembersResponse
 {
@@ -4694,7 +5327,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 260; } /* = unique id SOAP_TYPE__ngwm__removeMembersResponse */
+	virtual int soap_type() const { return 293; } /* = unique id SOAP_TYPE__ngwm__removeMembersResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4707,7 +5340,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__removeProxyAccessRequest
-#define SOAP_TYPE__ngwm__removeProxyAccessRequest (261)
+#define SOAP_TYPE__ngwm__removeProxyAccessRequest (294)
 /* ngwm:removeProxyAccessRequest */
 class SOAP_CMAC _ngwm__removeProxyAccessRequest
 {
@@ -4716,7 +5349,7 @@ public:
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 261; } /* = unique id SOAP_TYPE__ngwm__removeProxyAccessRequest */
+	virtual int soap_type() const { return 294; } /* = unique id SOAP_TYPE__ngwm__removeProxyAccessRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4729,7 +5362,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__removeProxyAccessResponse
-#define SOAP_TYPE__ngwm__removeProxyAccessResponse (262)
+#define SOAP_TYPE__ngwm__removeProxyAccessResponse (295)
 /* ngwm:removeProxyAccessResponse */
 class SOAP_CMAC _ngwm__removeProxyAccessResponse
 {
@@ -4737,7 +5370,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 262; } /* = unique id SOAP_TYPE__ngwm__removeProxyAccessResponse */
+	virtual int soap_type() const { return 295; } /* = unique id SOAP_TYPE__ngwm__removeProxyAccessResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4749,8 +5382,51 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE__ngwm__removeProxyUserRequest
+#define SOAP_TYPE__ngwm__removeProxyUserRequest (296)
+/* ngwm:removeProxyUserRequest */
+class SOAP_CMAC _ngwm__removeProxyUserRequest
+{
+public:
+	std::string id;	/* required element of type ngwt:uid */
+public:
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 296; } /* = unique id SOAP_TYPE__ngwm__removeProxyUserRequest */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__removeProxyUserRequest() { }
+	virtual ~_ngwm__removeProxyUserRequest() { }
+};
+#endif
+
+#ifndef SOAP_TYPE__ngwm__removeProxyUserResponse
+#define SOAP_TYPE__ngwm__removeProxyUserResponse (297)
+/* ngwm:removeProxyUserResponse */
+class SOAP_CMAC _ngwm__removeProxyUserResponse
+{
+public:
+	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 297; } /* = unique id SOAP_TYPE__ngwm__removeProxyUserResponse */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__removeProxyUserResponse() { }
+	virtual ~_ngwm__removeProxyUserResponse() { }
+};
+#endif
+
 #ifndef SOAP_TYPE__ngwm__removeSignatureRequest
-#define SOAP_TYPE__ngwm__removeSignatureRequest (263)
+#define SOAP_TYPE__ngwm__removeSignatureRequest (298)
 /* ngwm:removeSignatureRequest */
 class SOAP_CMAC _ngwm__removeSignatureRequest
 {
@@ -4760,7 +5436,7 @@ public:
 	bool global;	/* optional element of type xsd:boolean */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 263; } /* = unique id SOAP_TYPE__ngwm__removeSignatureRequest */
+	virtual int soap_type() const { return 298; } /* = unique id SOAP_TYPE__ngwm__removeSignatureRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4773,7 +5449,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__removeSignatureResponse
-#define SOAP_TYPE__ngwm__removeSignatureResponse (264)
+#define SOAP_TYPE__ngwm__removeSignatureResponse (299)
 /* ngwm:removeSignatureResponse */
 class SOAP_CMAC _ngwm__removeSignatureResponse
 {
@@ -4781,7 +5457,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 264; } /* = unique id SOAP_TYPE__ngwm__removeSignatureResponse */
+	virtual int soap_type() const { return 299; } /* = unique id SOAP_TYPE__ngwm__removeSignatureResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4794,7 +5470,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__replyRequest
-#define SOAP_TYPE__ngwm__replyRequest (265)
+#define SOAP_TYPE__ngwm__replyRequest (300)
 /* ngwm:replyRequest */
 class SOAP_CMAC _ngwm__replyRequest
 {
@@ -4804,7 +5480,7 @@ public:
 	std::string *view;	/* optional element of type ngwt:View */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 265; } /* = unique id SOAP_TYPE__ngwm__replyRequest */
+	virtual int soap_type() const { return 300; } /* = unique id SOAP_TYPE__ngwm__replyRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4817,7 +5493,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__replyResponse
-#define SOAP_TYPE__ngwm__replyResponse (266)
+#define SOAP_TYPE__ngwm__replyResponse (301)
 /* ngwm:replyResponse */
 class SOAP_CMAC _ngwm__replyResponse
 {
@@ -4826,7 +5502,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 266; } /* = unique id SOAP_TYPE__ngwm__replyResponse */
+	virtual int soap_type() const { return 301; } /* = unique id SOAP_TYPE__ngwm__replyResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4839,7 +5515,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__retractRequest
-#define SOAP_TYPE__ngwm__retractRequest (267)
+#define SOAP_TYPE__ngwm__retractRequest (302)
 /* ngwm:retractRequest */
 class SOAP_CMAC _ngwm__retractRequest
 {
@@ -4848,10 +5524,10 @@ public:
 	std::string *comment;	/* optional element of type xsd:string */
 	bool retractingAllInstances;	/* optional element of type xsd:boolean */
 	bool retractCausedByResend;	/* optional element of type xsd:boolean */
-	enum ngwt__RetractType retractType;	/* optional element of type ngwt:RetractType */
+	enum ngwt__RetractType *retractType;	/* optional element of type ngwt:RetractType */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 267; } /* = unique id SOAP_TYPE__ngwm__retractRequest */
+	virtual int soap_type() const { return 302; } /* = unique id SOAP_TYPE__ngwm__retractRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4864,7 +5540,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__retractResponse
-#define SOAP_TYPE__ngwm__retractResponse (268)
+#define SOAP_TYPE__ngwm__retractResponse (303)
 /* ngwm:retractResponse */
 class SOAP_CMAC _ngwm__retractResponse
 {
@@ -4872,7 +5548,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 268; } /* = unique id SOAP_TYPE__ngwm__retractResponse */
+	virtual int soap_type() const { return 303; } /* = unique id SOAP_TYPE__ngwm__retractResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4885,7 +5561,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__sendItemRequest
-#define SOAP_TYPE__ngwm__sendItemRequest (269)
+#define SOAP_TYPE__ngwm__sendItemRequest (304)
 /* ngwm:sendItemRequest */
 class SOAP_CMAC _ngwm__sendItemRequest
 {
@@ -4893,7 +5569,7 @@ public:
 	ngwt__Item *item;	/* required element of type ngwt:Item */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 269; } /* = unique id SOAP_TYPE__ngwm__sendItemRequest */
+	virtual int soap_type() const { return 304; } /* = unique id SOAP_TYPE__ngwm__sendItemRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4906,7 +5582,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__sendItemResponse
-#define SOAP_TYPE__ngwm__sendItemResponse (270)
+#define SOAP_TYPE__ngwm__sendItemResponse (305)
 /* ngwm:sendItemResponse */
 class SOAP_CMAC _ngwm__sendItemResponse
 {
@@ -4915,7 +5591,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 270; } /* = unique id SOAP_TYPE__ngwm__sendItemResponse */
+	virtual int soap_type() const { return 305; } /* = unique id SOAP_TYPE__ngwm__sendItemResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4927,8 +5603,51 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE__ngwm__setTimestampRequest
+#define SOAP_TYPE__ngwm__setTimestampRequest (306)
+/* ngwm:setTimestampRequest */
+class SOAP_CMAC _ngwm__setTimestampRequest
+{
+public:
+	char *backup;	/* optional element of type xsd:string */
+	char *retention;	/* optional element of type xsd:string */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 306; } /* = unique id SOAP_TYPE__ngwm__setTimestampRequest */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__setTimestampRequest() { }
+	virtual ~_ngwm__setTimestampRequest() { }
+};
+#endif
+
+#ifndef SOAP_TYPE__ngwm__setTimestampResponse
+#define SOAP_TYPE__ngwm__setTimestampResponse (307)
+/* ngwm:setTimestampResponse */
+class SOAP_CMAC _ngwm__setTimestampResponse
+{
+public:
+	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 307; } /* = unique id SOAP_TYPE__ngwm__setTimestampResponse */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__setTimestampResponse() { }
+	virtual ~_ngwm__setTimestampResponse() { }
+};
+#endif
+
 #ifndef SOAP_TYPE__ngwm__startFreeBusySessionRequest
-#define SOAP_TYPE__ngwm__startFreeBusySessionRequest (271)
+#define SOAP_TYPE__ngwm__startFreeBusySessionRequest (308)
 /* ngwm:startFreeBusySessionRequest */
 class SOAP_CMAC _ngwm__startFreeBusySessionRequest
 {
@@ -4938,7 +5657,7 @@ public:
 	char *endDate;	/* required element of type xsd:string */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 271; } /* = unique id SOAP_TYPE__ngwm__startFreeBusySessionRequest */
+	virtual int soap_type() const { return 308; } /* = unique id SOAP_TYPE__ngwm__startFreeBusySessionRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4951,16 +5670,16 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__startFreeBusySessionResponse
-#define SOAP_TYPE__ngwm__startFreeBusySessionResponse (272)
+#define SOAP_TYPE__ngwm__startFreeBusySessionResponse (309)
 /* ngwm:startFreeBusySessionResponse */
 class SOAP_CMAC _ngwm__startFreeBusySessionResponse
 {
 public:
-	int freeBusySessionId;	/* RPC return element */	/* required element of type xsd:int */
+	int *freeBusySessionId;	/* RPC return element */	/* optional element of type xsd:int */
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 272; } /* = unique id SOAP_TYPE__ngwm__startFreeBusySessionResponse */
+	virtual int soap_type() const { return 309; } /* = unique id SOAP_TYPE__ngwm__startFreeBusySessionResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4973,7 +5692,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__unacceptRequest
-#define SOAP_TYPE__ngwm__unacceptRequest (273)
+#define SOAP_TYPE__ngwm__unacceptRequest (310)
 /* ngwm:unacceptRequest */
 class SOAP_CMAC _ngwm__unacceptRequest
 {
@@ -4981,7 +5700,7 @@ public:
 	ngwt__ItemRefList *items;	/* required element of type ngwt:ItemRefList */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 273; } /* = unique id SOAP_TYPE__ngwm__unacceptRequest */
+	virtual int soap_type() const { return 310; } /* = unique id SOAP_TYPE__ngwm__unacceptRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -4994,7 +5713,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__unacceptResponse
-#define SOAP_TYPE__ngwm__unacceptResponse (274)
+#define SOAP_TYPE__ngwm__unacceptResponse (311)
 /* ngwm:unacceptResponse */
 class SOAP_CMAC _ngwm__unacceptResponse
 {
@@ -5002,7 +5721,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 274; } /* = unique id SOAP_TYPE__ngwm__unacceptResponse */
+	virtual int soap_type() const { return 311; } /* = unique id SOAP_TYPE__ngwm__unacceptResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5015,7 +5734,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__uncompleteRequest
-#define SOAP_TYPE__ngwm__uncompleteRequest (275)
+#define SOAP_TYPE__ngwm__uncompleteRequest (312)
 /* ngwm:uncompleteRequest */
 class SOAP_CMAC _ngwm__uncompleteRequest
 {
@@ -5023,7 +5742,7 @@ public:
 	ngwt__ItemRefList *items;	/* required element of type ngwt:ItemRefList */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 275; } /* = unique id SOAP_TYPE__ngwm__uncompleteRequest */
+	virtual int soap_type() const { return 312; } /* = unique id SOAP_TYPE__ngwm__uncompleteRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5036,7 +5755,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwm__uncompleteResponse
-#define SOAP_TYPE__ngwm__uncompleteResponse (276)
+#define SOAP_TYPE__ngwm__uncompleteResponse (313)
 /* ngwm:uncompleteResponse */
 class SOAP_CMAC _ngwm__uncompleteResponse
 {
@@ -5044,7 +5763,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 276; } /* = unique id SOAP_TYPE__ngwm__uncompleteResponse */
+	virtual int soap_type() const { return 313; } /* = unique id SOAP_TYPE__ngwm__uncompleteResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5056,8 +5775,54 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE__ngwm__updateVersionStatusRequest
+#define SOAP_TYPE__ngwm__updateVersionStatusRequest (314)
+/* ngwm:updateVersionStatusRequest */
+class SOAP_CMAC _ngwm__updateVersionStatusRequest
+{
+public:
+	std::string id;	/* required element of type ngwt:uid */
+public:
+	enum ngwt__VersionEventType event;	/* required element of type ngwt:VersionEventType */
+	ngwt__SignatureData *part;	/* optional element of type ngwt:SignatureData */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 314; } /* = unique id SOAP_TYPE__ngwm__updateVersionStatusRequest */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__updateVersionStatusRequest() { }
+	virtual ~_ngwm__updateVersionStatusRequest() { }
+};
+#endif
+
+#ifndef SOAP_TYPE__ngwm__updateVersionStatusResponse
+#define SOAP_TYPE__ngwm__updateVersionStatusResponse (315)
+/* ngwm:updateVersionStatusResponse */
+class SOAP_CMAC _ngwm__updateVersionStatusResponse
+{
+public:
+	ngwt__SignatureData *part;	/* RPC return element */	/* optional element of type ngwt:SignatureData */
+	ngwt__Status *status;	/* required element of type ngwt:Status */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 315; } /* = unique id SOAP_TYPE__ngwm__updateVersionStatusResponse */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         _ngwm__updateVersionStatusResponse() { }
+	virtual ~_ngwm__updateVersionStatusResponse() { }
+};
+#endif
+
 #ifndef SOAP_TYPE_ngwe__ContainerList
-#define SOAP_TYPE_ngwe__ContainerList (277)
+#define SOAP_TYPE_ngwe__ContainerList (316)
 /* ngwe:ContainerList */
 class SOAP_CMAC ngwe__ContainerList
 {
@@ -5066,7 +5831,7 @@ public:
 	bool *not_;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 277; } /* = unique id SOAP_TYPE_ngwe__ContainerList */
+	virtual int soap_type() const { return 316; } /* = unique id SOAP_TYPE_ngwe__ContainerList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5079,7 +5844,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwe__Event
-#define SOAP_TYPE_ngwe__Event (278)
+#define SOAP_TYPE_ngwe__Event (317)
 /* ngwe:Event */
 class SOAP_CMAC ngwe__Event
 {
@@ -5091,9 +5856,11 @@ public:
 	std::string *container;	/* optional element of type ngwt:uid */
 	std::string *from;	/* optional element of type ngwt:uid */
 	std::string *key;	/* optional element of type xsd:string */
+	unsigned long *uid;	/* optional element of type xsd:unsignedLong */
+	enum ngwe__ItemType *type;	/* optional element of type ngwe:ItemType */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 278; } /* = unique id SOAP_TYPE_ngwe__Event */
+	virtual int soap_type() const { return 317; } /* = unique id SOAP_TYPE_ngwe__Event */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5106,7 +5873,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwe__EventDefinition
-#define SOAP_TYPE_ngwe__EventDefinition (279)
+#define SOAP_TYPE_ngwe__EventDefinition (318)
 /* ngwe:EventDefinition */
 class SOAP_CMAC ngwe__EventDefinition
 {
@@ -5118,7 +5885,7 @@ public:
 	std::string *subType;	/* optional element of type xsd:string */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 279; } /* = unique id SOAP_TYPE_ngwe__EventDefinition */
+	virtual int soap_type() const { return 318; } /* = unique id SOAP_TYPE_ngwe__EventDefinition */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5131,7 +5898,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwe__EventList
-#define SOAP_TYPE_ngwe__EventList (280)
+#define SOAP_TYPE_ngwe__EventList (319)
 /* ngwe:EventList */
 class SOAP_CMAC ngwe__EventList
 {
@@ -5139,7 +5906,7 @@ public:
 	std::vector<ngwe__Event * >event;	/* optional element of type ngwe:Event */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 280; } /* = unique id SOAP_TYPE_ngwe__EventList */
+	virtual int soap_type() const { return 319; } /* = unique id SOAP_TYPE_ngwe__EventList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5152,7 +5919,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwe__Events
-#define SOAP_TYPE_ngwe__Events (281)
+#define SOAP_TYPE_ngwe__Events (320)
 /* ngwe:Events */
 class SOAP_CMAC ngwe__Events
 {
@@ -5167,7 +5934,7 @@ public:
 	bool *enabled;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 281; } /* = unique id SOAP_TYPE_ngwe__Events */
+	virtual int soap_type() const { return 320; } /* = unique id SOAP_TYPE_ngwe__Events */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5180,7 +5947,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwe__EventsList
-#define SOAP_TYPE_ngwe__EventsList (282)
+#define SOAP_TYPE_ngwe__EventsList (321)
 /* ngwe:EventsList */
 class SOAP_CMAC ngwe__EventsList
 {
@@ -5188,7 +5955,7 @@ public:
 	std::vector<ngwe__Events * >event;	/* optional element of type ngwe:Events */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 282; } /* = unique id SOAP_TYPE_ngwe__EventsList */
+	virtual int soap_type() const { return 321; } /* = unique id SOAP_TYPE_ngwe__EventsList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5201,15 +5968,15 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwe__EventTypeList
-#define SOAP_TYPE_ngwe__EventTypeList (283)
+#define SOAP_TYPE_ngwe__EventTypeList (322)
 /* ngwe:EventTypeList */
 class SOAP_CMAC ngwe__EventTypeList
 {
 public:
-	std::vector<enum ngwe__EventType >event;	/* sequence of 1 to 34 elements */
+	std::vector<enum ngwe__EventType >event;	/* sequence of 1 to 36 elements */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 283; } /* = unique id SOAP_TYPE_ngwe__EventTypeList */
+	virtual int soap_type() const { return 322; } /* = unique id SOAP_TYPE_ngwe__EventTypeList */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5221,8 +5988,31 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE_ngwe__Notify
+#define SOAP_TYPE_ngwe__Notify (323)
+/* ngwe:Notify */
+class SOAP_CMAC ngwe__Notify
+{
+public:
+	std::string userid;	/* required element of type xsd:string */
+	std::string key;	/* required element of type xsd:string */
+public:
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 323; } /* = unique id SOAP_TYPE_ngwe__Notify */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         ngwe__Notify() { }
+	virtual ~ngwe__Notify() { }
+};
+#endif
+
 #ifndef SOAP_TYPE__ngwe__cleanEventConfigurationRequest
-#define SOAP_TYPE__ngwe__cleanEventConfigurationRequest (284)
+#define SOAP_TYPE__ngwe__cleanEventConfigurationRequest (324)
 /* ngwe:cleanEventConfigurationRequest */
 class SOAP_CMAC _ngwe__cleanEventConfigurationRequest
 {
@@ -5230,7 +6020,7 @@ public:
 	bool all;	/* required element of type xsd:boolean */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 284; } /* = unique id SOAP_TYPE__ngwe__cleanEventConfigurationRequest */
+	virtual int soap_type() const { return 324; } /* = unique id SOAP_TYPE__ngwe__cleanEventConfigurationRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5243,7 +6033,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwe__cleanEventConfigurationResponse
-#define SOAP_TYPE__ngwe__cleanEventConfigurationResponse (285)
+#define SOAP_TYPE__ngwe__cleanEventConfigurationResponse (325)
 /* ngwe:cleanEventConfigurationResponse */
 class SOAP_CMAC _ngwe__cleanEventConfigurationResponse
 {
@@ -5251,7 +6041,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 285; } /* = unique id SOAP_TYPE__ngwe__cleanEventConfigurationResponse */
+	virtual int soap_type() const { return 325; } /* = unique id SOAP_TYPE__ngwe__cleanEventConfigurationResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5264,7 +6054,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwe__configureEventsRequest
-#define SOAP_TYPE__ngwe__configureEventsRequest (286)
+#define SOAP_TYPE__ngwe__configureEventsRequest (326)
 /* ngwe:configureEventsRequest */
 class SOAP_CMAC _ngwe__configureEventsRequest
 {
@@ -5272,7 +6062,7 @@ public:
 	ngwe__Events *events;	/* optional element of type ngwe:Events */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 286; } /* = unique id SOAP_TYPE__ngwe__configureEventsRequest */
+	virtual int soap_type() const { return 326; } /* = unique id SOAP_TYPE__ngwe__configureEventsRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5285,7 +6075,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwe__configureEventsResponse
-#define SOAP_TYPE__ngwe__configureEventsResponse (287)
+#define SOAP_TYPE__ngwe__configureEventsResponse (327)
 /* ngwe:configureEventsResponse */
 class SOAP_CMAC _ngwe__configureEventsResponse
 {
@@ -5293,7 +6083,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 287; } /* = unique id SOAP_TYPE__ngwe__configureEventsResponse */
+	virtual int soap_type() const { return 327; } /* = unique id SOAP_TYPE__ngwe__configureEventsResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5306,7 +6096,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwe__getEventConfigurationRequest
-#define SOAP_TYPE__ngwe__getEventConfigurationRequest (288)
+#define SOAP_TYPE__ngwe__getEventConfigurationRequest (328)
 /* ngwe:getEventConfigurationRequest */
 class SOAP_CMAC _ngwe__getEventConfigurationRequest
 {
@@ -5314,7 +6104,7 @@ public:
 	std::string *key;	/* optional element of type xsd:string */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 288; } /* = unique id SOAP_TYPE__ngwe__getEventConfigurationRequest */
+	virtual int soap_type() const { return 328; } /* = unique id SOAP_TYPE__ngwe__getEventConfigurationRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5327,7 +6117,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwe__getEventConfigurationResponse
-#define SOAP_TYPE__ngwe__getEventConfigurationResponse (289)
+#define SOAP_TYPE__ngwe__getEventConfigurationResponse (329)
 /* ngwe:getEventConfigurationResponse */
 class SOAP_CMAC _ngwe__getEventConfigurationResponse
 {
@@ -5336,7 +6126,7 @@ public:
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 289; } /* = unique id SOAP_TYPE__ngwe__getEventConfigurationResponse */
+	virtual int soap_type() const { return 329; } /* = unique id SOAP_TYPE__ngwe__getEventConfigurationResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5349,7 +6139,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwe__getEventsRequest
-#define SOAP_TYPE__ngwe__getEventsRequest (290)
+#define SOAP_TYPE__ngwe__getEventsRequest (330)
 /* ngwe:getEventsRequest */
 class SOAP_CMAC _ngwe__getEventsRequest
 {
@@ -5358,12 +6148,13 @@ public:
 public:
 	char *from;	/* optional element of type xsd:string */
 	char *until;	/* optional element of type xsd:string */
+	unsigned long *uid;	/* optional element of type xsd:unsignedLong */
 	int count;	/* required element of type xsd:int */
 	bool remove;	/* required element of type xsd:boolean */
 	bool notify;	/* required element of type xsd:boolean */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 290; } /* = unique id SOAP_TYPE__ngwe__getEventsRequest */
+	virtual int soap_type() const { return 330; } /* = unique id SOAP_TYPE__ngwe__getEventsRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5376,16 +6167,16 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwe__getEventsResponse
-#define SOAP_TYPE__ngwe__getEventsResponse (291)
+#define SOAP_TYPE__ngwe__getEventsResponse (331)
 /* ngwe:getEventsResponse */
 class SOAP_CMAC _ngwe__getEventsResponse
 {
 public:
-	ngwe__EventList *events;	/* RPC return element */	/* required element of type ngwe:EventList */
+	ngwe__EventList *events;	/* RPC return element */	/* optional element of type ngwe:EventList */
 	ngwt__Status *status;	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 291; } /* = unique id SOAP_TYPE__ngwe__getEventsResponse */
+	virtual int soap_type() const { return 331; } /* = unique id SOAP_TYPE__ngwe__getEventsResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5398,7 +6189,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwe__removeEventConfigurationRequest
-#define SOAP_TYPE__ngwe__removeEventConfigurationRequest (292)
+#define SOAP_TYPE__ngwe__removeEventConfigurationRequest (332)
 /* ngwe:removeEventConfigurationRequest */
 class SOAP_CMAC _ngwe__removeEventConfigurationRequest
 {
@@ -5407,7 +6198,7 @@ public:
 public:
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 292; } /* = unique id SOAP_TYPE__ngwe__removeEventConfigurationRequest */
+	virtual int soap_type() const { return 332; } /* = unique id SOAP_TYPE__ngwe__removeEventConfigurationRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5420,7 +6211,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwe__removeEventConfigurationResponse
-#define SOAP_TYPE__ngwe__removeEventConfigurationResponse (293)
+#define SOAP_TYPE__ngwe__removeEventConfigurationResponse (333)
 /* ngwe:removeEventConfigurationResponse */
 class SOAP_CMAC _ngwe__removeEventConfigurationResponse
 {
@@ -5428,7 +6219,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 293; } /* = unique id SOAP_TYPE__ngwe__removeEventConfigurationResponse */
+	virtual int soap_type() const { return 333; } /* = unique id SOAP_TYPE__ngwe__removeEventConfigurationResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5441,7 +6232,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwe__removeEventsRequest
-#define SOAP_TYPE__ngwe__removeEventsRequest (294)
+#define SOAP_TYPE__ngwe__removeEventsRequest (334)
 /* ngwe:removeEventsRequest */
 class SOAP_CMAC _ngwe__removeEventsRequest
 {
@@ -5452,7 +6243,7 @@ public:
 	char *until;	/* optional element of type xsd:string */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 294; } /* = unique id SOAP_TYPE__ngwe__removeEventsRequest */
+	virtual int soap_type() const { return 334; } /* = unique id SOAP_TYPE__ngwe__removeEventsRequest */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5465,7 +6256,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE__ngwe__removeEventsResponse
-#define SOAP_TYPE__ngwe__removeEventsResponse (295)
+#define SOAP_TYPE__ngwe__removeEventsResponse (335)
 /* ngwe:removeEventsResponse */
 class SOAP_CMAC _ngwe__removeEventsResponse
 {
@@ -5473,7 +6264,7 @@ public:
 	ngwt__Status *status;	/* RPC return element */	/* required element of type ngwt:Status */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 295; } /* = unique id SOAP_TYPE__ngwe__removeEventsResponse */
+	virtual int soap_type() const { return 335; } /* = unique id SOAP_TYPE__ngwe__removeEventsResponse */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5486,14 +6277,14 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__AccessControlListEntry
-#define SOAP_TYPE_ngwt__AccessControlListEntry (19)
+#define SOAP_TYPE_ngwt__AccessControlListEntry (18)
 /* ngwt:AccessControlListEntry */
 class SOAP_CMAC ngwt__AccessControlListEntry : public ngwt__NameAndEmail
 {
 public:
 	ngwt__Rights *rights;	/* required element of type ngwt:Rights */
 public:
-	virtual int soap_type() const { return 19; } /* = unique id SOAP_TYPE_ngwt__AccessControlListEntry */
+	virtual int soap_type() const { return 18; } /* = unique id SOAP_TYPE_ngwt__AccessControlListEntry */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5506,7 +6297,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__AccessRightEntry
-#define SOAP_TYPE_ngwt__AccessRightEntry (24)
+#define SOAP_TYPE_ngwt__AccessRightEntry (23)
 /* ngwt:AccessRightEntry */
 class SOAP_CMAC ngwt__AccessRightEntry : public ngwt__NameAndEmail
 {
@@ -5518,7 +6309,7 @@ public:
 	ngwt__AccessRight *note;	/* optional element of type ngwt:AccessRight */
 	ngwt__AccessRight *task;	/* optional element of type ngwt:AccessRight */
 public:
-	virtual int soap_type() const { return 24; } /* = unique id SOAP_TYPE_ngwt__AccessRightEntry */
+	virtual int soap_type() const { return 23; } /* = unique id SOAP_TYPE_ngwt__AccessRightEntry */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5531,7 +6322,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__AddressBook
-#define SOAP_TYPE_ngwt__AddressBook (26)
+#define SOAP_TYPE_ngwt__AddressBook (25)
 /* ngwt:AddressBook */
 class SOAP_CMAC ngwt__AddressBook : public ngwt__Item
 {
@@ -5540,7 +6331,7 @@ public:
 	bool *isPersonal;	/* optional element of type xsd:boolean */
 	bool *isFrequentContacts;	/* optional element of type xsd:boolean */
 public:
-	virtual int soap_type() const { return 26; } /* = unique id SOAP_TYPE_ngwt__AddressBook */
+	virtual int soap_type() const { return 25; } /* = unique id SOAP_TYPE_ngwt__AddressBook */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5553,7 +6344,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Alarm
-#define SOAP_TYPE_ngwt__Alarm (29)
+#define SOAP_TYPE_ngwt__Alarm (28)
 /* Primitive ngwt:Alarm schema type: */
 class SOAP_CMAC ngwt__Alarm
 {
@@ -5562,7 +6353,7 @@ public:
 	bool *enabled;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 29; } /* = unique id SOAP_TYPE_ngwt__Alarm */
+	virtual int soap_type() const { return 28; } /* = unique id SOAP_TYPE_ngwt__Alarm */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5575,7 +6366,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Category
-#define SOAP_TYPE_ngwt__Category (38)
+#define SOAP_TYPE_ngwt__Category (37)
 /* ngwt:Category */
 class SOAP_CMAC ngwt__Category : public ngwt__Item
 {
@@ -5583,7 +6374,7 @@ public:
 	enum ngwt__CategoryType *type;	/* optional element of type ngwt:CategoryType */
 	unsigned long *color;	/* optional element of type xsd:unsignedLong */
 public:
-	virtual int soap_type() const { return 38; } /* = unique id SOAP_TYPE_ngwt__Category */
+	virtual int soap_type() const { return 37; } /* = unique id SOAP_TYPE_ngwt__Category */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5596,7 +6387,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__CommentStatus
-#define SOAP_TYPE_ngwt__CommentStatus (41)
+#define SOAP_TYPE_ngwt__CommentStatus (40)
 /* Primitive ngwt:CommentStatus schema type: */
 class SOAP_CMAC ngwt__CommentStatus
 {
@@ -5605,7 +6396,7 @@ public:
 	std::string *comment;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 41; } /* = unique id SOAP_TYPE_ngwt__CommentStatus */
+	virtual int soap_type() const { return 40; } /* = unique id SOAP_TYPE_ngwt__CommentStatus */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5618,7 +6409,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ContainerItem
-#define SOAP_TYPE_ngwt__ContainerItem (44)
+#define SOAP_TYPE_ngwt__ContainerItem (43)
 /* ngwt:ContainerItem */
 class SOAP_CMAC ngwt__ContainerItem : public ngwt__Item
 {
@@ -5628,7 +6419,7 @@ public:
 	char *created;	/* optional element of type xsd:string */
 	ngwt__CustomList *customs;	/* optional element of type ngwt:CustomList */
 public:
-	virtual int soap_type() const { return 44; } /* = unique id SOAP_TYPE_ngwt__ContainerItem */
+	virtual int soap_type() const { return 43; } /* = unique id SOAP_TYPE_ngwt__ContainerItem */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5641,7 +6432,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ContainerRef
-#define SOAP_TYPE_ngwt__ContainerRef (45)
+#define SOAP_TYPE_ngwt__ContainerRef (44)
 /* Primitive ngwt:ContainerRef schema type: */
 class SOAP_CMAC ngwt__ContainerRef
 {
@@ -5651,7 +6442,7 @@ public:
 	char *deleted;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 45; } /* = unique id SOAP_TYPE_ngwt__ContainerRef */
+	virtual int soap_type() const { return 44; } /* = unique id SOAP_TYPE_ngwt__ContainerRef */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5706,7 +6497,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__FilterEntry
-#define SOAP_TYPE_ngwt__FilterEntry (59)
+#define SOAP_TYPE_ngwt__FilterEntry (63)
 /* ngwt:FilterEntry */
 class SOAP_CMAC ngwt__FilterEntry : public ngwt__FilterElement
 {
@@ -5714,9 +6505,9 @@ public:
 	std::string *field;	/* optional element of type xsd:string */
 	ngwt__Custom *custom;	/* optional element of type ngwt:Custom */
 	std::string *value;	/* optional element of type xsd:string */
-	std::string *date;	/* optional element of type xsd:string */
+	enum ngwt__FilterDate *date;	/* optional element of type ngwt:FilterDate */
 public:
-	virtual int soap_type() const { return 59; } /* = unique id SOAP_TYPE_ngwt__FilterEntry */
+	virtual int soap_type() const { return 63; } /* = unique id SOAP_TYPE_ngwt__FilterEntry */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5729,14 +6520,14 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__FilterGroup
-#define SOAP_TYPE_ngwt__FilterGroup (60)
+#define SOAP_TYPE_ngwt__FilterGroup (64)
 /* ngwt:FilterGroup */
 class SOAP_CMAC ngwt__FilterGroup : public ngwt__FilterElement
 {
 public:
 	std::vector<ngwt__FilterElement * >element;	/* required element of type ngwt:FilterElement */
 public:
-	virtual int soap_type() const { return 60; } /* = unique id SOAP_TYPE_ngwt__FilterGroup */
+	virtual int soap_type() const { return 64; } /* = unique id SOAP_TYPE_ngwt__FilterGroup */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5749,7 +6540,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Folder
-#define SOAP_TYPE_ngwt__Folder (61)
+#define SOAP_TYPE_ngwt__Folder (65)
 /* ngwt:Folder */
 class SOAP_CMAC ngwt__Folder : public ngwt__Item
 {
@@ -5762,10 +6553,9 @@ public:
 	int *unreadCount;	/* optional element of type xsd:int */
 	unsigned long *sequence;	/* optional element of type xsd:unsignedLong */
 	std::string *settings;	/* optional element of type ngwt:uid */
-	bool *hasSubfolders;	/* optional element of type xsd:boolean */
 	ngwt__CalendarFolderAttribute *calendarAttribute;	/* optional element of type ngwt:CalendarFolderAttribute */
 public:
-	virtual int soap_type() const { return 61; } /* = unique id SOAP_TYPE_ngwt__Folder */
+	virtual int soap_type() const { return 65; } /* = unique id SOAP_TYPE_ngwt__Folder */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5778,14 +6568,14 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__FreeBusyInfo
-#define SOAP_TYPE_ngwt__FreeBusyInfo (67)
+#define SOAP_TYPE_ngwt__FreeBusyInfo (71)
 /* ngwt:FreeBusyInfo */
 class SOAP_CMAC ngwt__FreeBusyInfo : public ngwt__NameAndEmail
 {
 public:
 	ngwt__FreeBusyBlockList *blocks;	/* required element of type ngwt:FreeBusyBlockList */
 public:
-	virtual int soap_type() const { return 67; } /* = unique id SOAP_TYPE_ngwt__FreeBusyInfo */
+	virtual int soap_type() const { return 71; } /* = unique id SOAP_TYPE_ngwt__FreeBusyInfo */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5798,14 +6588,14 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__From
-#define SOAP_TYPE_ngwt__From (71)
+#define SOAP_TYPE_ngwt__From (75)
 /* ngwt:From */
 class SOAP_CMAC ngwt__From : public ngwt__NameAndEmail
 {
 public:
 	std::string *replyTo;	/* optional element of type xsd:string */
 public:
-	virtual int soap_type() const { return 71; } /* = unique id SOAP_TYPE_ngwt__From */
+	virtual int soap_type() const { return 75; } /* = unique id SOAP_TYPE_ngwt__From */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5818,7 +6608,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ItemRef
-#define SOAP_TYPE_ngwt__ItemRef (83)
+#define SOAP_TYPE_ngwt__ItemRef (87)
 /* Primitive ngwt:ItemRef schema type: */
 class SOAP_CMAC ngwt__ItemRef
 {
@@ -5828,7 +6618,7 @@ public:
 	std::string *uid;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 83; } /* = unique id SOAP_TYPE_ngwt__ItemRef */
+	virtual int soap_type() const { return 87; } /* = unique id SOAP_TYPE_ngwt__ItemRef */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5840,8 +6630,30 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE_ngwt__Library
+#define SOAP_TYPE_ngwt__Library (93)
+/* ngwt:Library */
+class SOAP_CMAC ngwt__Library : public ngwt__Item
+{
+public:
+	std::string *description;	/* optional element of type xsd:string */
+	std::string *domain;	/* optional element of type xsd:string */
+	std::string *postOffice;	/* optional element of type xsd:string */
+public:
+	virtual int soap_type() const { return 93; } /* = unique id SOAP_TYPE_ngwt__Library */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         ngwt__Library() { }
+	virtual ~ngwt__Library() { }
+};
+#endif
+
 #ifndef SOAP_TYPE_ngwt__MessagePart
-#define SOAP_TYPE_ngwt__MessagePart (92)
+#define SOAP_TYPE_ngwt__MessagePart (98)
 /* Primitive ngwt:MessagePart schema type: */
 class SOAP_CMAC ngwt__MessagePart
 {
@@ -5851,9 +6663,10 @@ public:
 	std::string *contentId;	/* optional attribute */
 	std::string *contentType;	/* optional attribute */
 	int *length;	/* optional attribute */
+	int *offset;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 92; } /* = unique id SOAP_TYPE_ngwt__MessagePart */
+	virtual int soap_type() const { return 98; } /* = unique id SOAP_TYPE_ngwt__MessagePart */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5866,7 +6679,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__PhoneNumber
-#define SOAP_TYPE_ngwt__PhoneNumber (103)
+#define SOAP_TYPE_ngwt__PhoneNumber (109)
 /* Primitive ngwt:PhoneNumber schema type: */
 class SOAP_CMAC ngwt__PhoneNumber
 {
@@ -5876,7 +6689,7 @@ public:
 	enum ngwt__PhoneNumberType type;	/* required attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 103; } /* = unique id SOAP_TYPE_ngwt__PhoneNumber */
+	virtual int soap_type() const { return 109; } /* = unique id SOAP_TYPE_ngwt__PhoneNumber */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5889,7 +6702,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__PlainText
-#define SOAP_TYPE_ngwt__PlainText (104)
+#define SOAP_TYPE_ngwt__PlainText (110)
 /* ngwt:PlainText */
 class SOAP_CMAC ngwt__PlainText : public ngwt__Authentication
 {
@@ -5898,7 +6711,7 @@ public:
 public:
 	std::string *password;	/* optional element of type xsd:string */
 public:
-	virtual int soap_type() const { return 104; } /* = unique id SOAP_TYPE_ngwt__PlainText */
+	virtual int soap_type() const { return 110; } /* = unique id SOAP_TYPE_ngwt__PlainText */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5911,7 +6724,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Proxy
-#define SOAP_TYPE_ngwt__Proxy (109)
+#define SOAP_TYPE_ngwt__Proxy (115)
 /* ngwt:Proxy */
 class SOAP_CMAC ngwt__Proxy : public ngwt__Authentication
 {
@@ -5921,7 +6734,7 @@ public:
 	std::string *password;	/* optional element of type xsd:string */
 	std::string proxy;	/* required element of type xsd:string */
 public:
-	virtual int soap_type() const { return 109; } /* = unique id SOAP_TYPE_ngwt__Proxy */
+	virtual int soap_type() const { return 115; } /* = unique id SOAP_TYPE_ngwt__Proxy */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5933,8 +6746,28 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE_ngwt__ProxyUser
+#define SOAP_TYPE_ngwt__ProxyUser (116)
+/* ngwt:ProxyUser */
+class SOAP_CMAC ngwt__ProxyUser : public ngwt__NameAndEmail
+{
+public:
+	std::string *id;	/* optional element of type ngwt:uid */
+public:
+	virtual int soap_type() const { return 116; } /* = unique id SOAP_TYPE_ngwt__ProxyUser */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         ngwt__ProxyUser() { }
+	virtual ~ngwt__ProxyUser() { }
+};
+#endif
+
 #ifndef SOAP_TYPE_ngwt__Recipient
-#define SOAP_TYPE_ngwt__Recipient (114)
+#define SOAP_TYPE_ngwt__Recipient (121)
 /* ngwt:Recipient */
 class SOAP_CMAC ngwt__Recipient : public ngwt__NameAndEmail
 {
@@ -5942,8 +6775,9 @@ public:
 	enum ngwt__DistributionType distType;	/* optional element of type ngwt:DistributionType */
 	enum ngwt__RecipientType recipType;	/* optional element of type ngwt:RecipientType */
 	ngwt__RecipientStatus *recipientStatus;	/* optional element of type ngwt:RecipientStatus */
+	enum ngwt__AcceptLevel *acceptLevel;	/* optional element of type ngwt:AcceptLevel */
 public:
-	virtual int soap_type() const { return 114; } /* = unique id SOAP_TYPE_ngwt__Recipient */
+	virtual int soap_type() const { return 121; } /* = unique id SOAP_TYPE_ngwt__Recipient */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5956,14 +6790,14 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__TransferFailedStatus
-#define SOAP_TYPE_ngwt__TransferFailedStatus (142)
+#define SOAP_TYPE_ngwt__TransferFailedStatus (154)
 /* ngwt:TransferFailedStatus */
 class SOAP_CMAC ngwt__TransferFailedStatus : public ngwt__RecipientStatus
 {
 public:
 	std::string *FailureReason;	/* optional attribute */
 public:
-	virtual int soap_type() const { return 142; } /* = unique id SOAP_TYPE_ngwt__TransferFailedStatus */
+	virtual int soap_type() const { return 154; } /* = unique id SOAP_TYPE_ngwt__TransferFailedStatus */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5976,7 +6810,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__TrustedApplication
-#define SOAP_TYPE_ngwt__TrustedApplication (143)
+#define SOAP_TYPE_ngwt__TrustedApplication (155)
 /* ngwt:TrustedApplication */
 class SOAP_CMAC ngwt__TrustedApplication : public ngwt__Authentication
 {
@@ -5985,7 +6819,7 @@ public:
 	std::string name;	/* required element of type xsd:string */
 	std::string key;	/* required element of type xsd:string */
 public:
-	virtual int soap_type() const { return 143; } /* = unique id SOAP_TYPE_ngwt__TrustedApplication */
+	virtual int soap_type() const { return 155; } /* = unique id SOAP_TYPE_ngwt__TrustedApplication */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -5998,7 +6832,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__AddressBookItem
-#define SOAP_TYPE_ngwt__AddressBookItem (27)
+#define SOAP_TYPE_ngwt__AddressBookItem (26)
 /* ngwt:AddressBookItem */
 class SOAP_CMAC ngwt__AddressBookItem : public ngwt__ContainerItem
 {
@@ -6009,8 +6843,9 @@ public:
 	std::string *domain;	/* optional element of type xsd:string */
 	std::string *postOffice;	/* optional element of type xsd:string */
 	std::string *distinguishedName;	/* optional element of type xsd:string */
+	std::string *userid;	/* optional element of type xsd:string */
 public:
-	virtual int soap_type() const { return 27; } /* = unique id SOAP_TYPE_ngwt__AddressBookItem */
+	virtual int soap_type() const { return 26; } /* = unique id SOAP_TYPE_ngwt__AddressBookItem */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -6023,7 +6858,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__AttachmentID
-#define SOAP_TYPE_ngwt__AttachmentID (31)
+#define SOAP_TYPE_ngwt__AttachmentID (30)
 /* Primitive ngwt:AttachmentID schema type: */
 class SOAP_CMAC ngwt__AttachmentID
 {
@@ -6033,7 +6868,7 @@ public:
 	bool *itemReference;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 31; } /* = unique id SOAP_TYPE_ngwt__AttachmentID */
+	virtual int soap_type() const { return 30; } /* = unique id SOAP_TYPE_ngwt__AttachmentID */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -6046,7 +6881,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__BoxEntry
-#define SOAP_TYPE_ngwt__BoxEntry (35)
+#define SOAP_TYPE_ngwt__BoxEntry (34)
 /* ngwt:BoxEntry */
 class SOAP_CMAC ngwt__BoxEntry : public ngwt__ContainerItem
 {
@@ -6054,6 +6889,7 @@ public:
 	ngwt__ItemStatus *status;	/* optional element of type ngwt:ItemStatus */
 	std::string *thread;	/* optional element of type xsd:string */
 	std::string *msgId;	/* optional element of type xsd:string */
+	std::string *messageId;	/* optional element of type xsd:string */
 	enum ngwt__ItemSource *source;	/* optional element of type ngwt:ItemSource */
 	bool *returnSentItemsId;	/* optional element of type xsd:boolean */
 	char *delivered;	/* required element of type xsd:string */
@@ -6061,7 +6897,7 @@ public:
 	enum ngwt__ItemSecurity *security;	/* optional element of type ngwt:ItemSecurity */
 	std::string *comment;	/* optional element of type xsd:string */
 public:
-	virtual int soap_type() const { return 35; } /* = unique id SOAP_TYPE_ngwt__BoxEntry */
+	virtual int soap_type() const { return 34; } /* = unique id SOAP_TYPE_ngwt__BoxEntry */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -6074,7 +6910,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__DayOfWeek
-#define SOAP_TYPE_ngwt__DayOfWeek (49)
+#define SOAP_TYPE_ngwt__DayOfWeek (48)
 /* Primitive ngwt:DayOfWeek schema type: */
 class SOAP_CMAC ngwt__DayOfWeek
 {
@@ -6083,7 +6919,7 @@ public:
 	enum ngwt__OccurrenceType *occurrence;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 49; } /* = unique id SOAP_TYPE_ngwt__DayOfWeek */
+	virtual int soap_type() const { return 48; } /* = unique id SOAP_TYPE_ngwt__DayOfWeek */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -6095,15 +6931,67 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE_ngwt__DayOfYearWeek
+#define SOAP_TYPE_ngwt__DayOfYearWeek (50)
+/* Primitive ngwt:DayOfYearWeek schema type: */
+class SOAP_CMAC ngwt__DayOfYearWeek
+{
+public:
+	enum ngwt__WeekDay __item;
+	short *occurrence;	/* optional attribute */
+	struct soap *soap;	/* transient */
+public:
+	virtual int soap_type() const { return 50; } /* = unique id SOAP_TYPE_ngwt__DayOfYearWeek */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         ngwt__DayOfYearWeek() { }
+	virtual ~ngwt__DayOfYearWeek() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_ngwt__Document
+#define SOAP_TYPE_ngwt__Document (56)
+/* ngwt:Document */
+class SOAP_CMAC ngwt__Document : public ngwt__ContainerItem
+{
+public:
+	std::string *subject;	/* optional element of type xsd:string */
+	ngwt__NameAndEmail *library;	/* optional element of type ngwt:NameAndEmail */
+	unsigned long *documentNumber;	/* optional element of type xsd:unsignedLong */
+	std::string *documentTypeName;	/* optional element of type xsd:string */
+	ngwt__NameAndEmail *author;	/* optional element of type ngwt:NameAndEmail */
+	ngwt__NameAndEmail *creator;	/* optional element of type ngwt:NameAndEmail */
+	unsigned long *officialVersion;	/* optional element of type xsd:unsignedLong */
+	unsigned long *currentVersion;	/* optional element of type xsd:unsignedLong */
+	ngwt__AccessControlList *current;	/* optional element of type ngwt:AccessControlList */
+	ngwt__AccessControlList *official;	/* optional element of type ngwt:AccessControlList */
+	ngwt__AccessControlList *other;	/* optional element of type ngwt:AccessControlList */
+public:
+	virtual int soap_type() const { return 56; } /* = unique id SOAP_TYPE_ngwt__Document */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         ngwt__Document() { }
+	virtual ~ngwt__Document() { }
+};
+#endif
+
 #ifndef SOAP_TYPE_ngwt__FolderACLEntry
-#define SOAP_TYPE_ngwt__FolderACLEntry (63)
+#define SOAP_TYPE_ngwt__FolderACLEntry (67)
 /* ngwt:FolderACLEntry */
 class SOAP_CMAC ngwt__FolderACLEntry : public ngwt__AccessControlListEntry
 {
 public:
 	enum ngwt__FolderACLStatus *status;	/* optional element of type ngwt:FolderACLStatus */
 public:
-	virtual int soap_type() const { return 63; } /* = unique id SOAP_TYPE_ngwt__FolderACLEntry */
+	virtual int soap_type() const { return 67; } /* = unique id SOAP_TYPE_ngwt__FolderACLEntry */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -6116,7 +7004,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__QueryFolder
-#define SOAP_TYPE_ngwt__QueryFolder (112)
+#define SOAP_TYPE_ngwt__QueryFolder (119)
 /* ngwt:QueryFolder */
 class SOAP_CMAC ngwt__QueryFolder : public ngwt__Folder
 {
@@ -6124,7 +7012,7 @@ public:
 	enum ngwt__FolderType *folderType;	/* optional element of type ngwt:FolderType */
 	ngwt__Query *query;	/* optional element of type ngwt:Query */
 public:
-	virtual int soap_type() const { return 112; } /* = unique id SOAP_TYPE_ngwt__QueryFolder */
+	virtual int soap_type() const { return 119; } /* = unique id SOAP_TYPE_ngwt__QueryFolder */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -6136,8 +7024,35 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE_ngwt__Rule
+#define SOAP_TYPE_ngwt__Rule (131)
+/* ngwt:Rule */
+class SOAP_CMAC ngwt__Rule : public ngwt__ContainerItem
+{
+public:
+	enum ngwt__Execution *execution;	/* optional element of type ngwt:Execution */
+	unsigned long sequence;	/* required element of type xsd:unsignedLong */
+	bool enabled;	/* optional element of type xsd:boolean */
+	enum ngwt__MessageTypeList *types;	/* optional element of type ngwt:MessageTypeList */
+	enum ngwt__ItemSourceList *source;	/* optional element of type ngwt:ItemSourceList */
+	enum ngwt__AppointmentConflict conflict;	/* optional element of type ngwt:AppointmentConflict */
+	ngwt__Filter *filter;	/* optional element of type ngwt:Filter */
+	ngwt__RuleActionList *actions;	/* optional element of type ngwt:RuleActionList */
+public:
+	virtual int soap_type() const { return 131; } /* = unique id SOAP_TYPE_ngwt__Rule */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         ngwt__Rule() { }
+	virtual ~ngwt__Rule() { }
+};
+#endif
+
 #ifndef SOAP_TYPE_ngwt__SharedFolder
-#define SOAP_TYPE_ngwt__SharedFolder (129)
+#define SOAP_TYPE_ngwt__SharedFolder (140)
 /* ngwt:SharedFolder */
 class SOAP_CMAC ngwt__SharedFolder : public ngwt__Folder
 {
@@ -6148,7 +7063,7 @@ public:
 	bool *isSharedByMe;	/* optional element of type xsd:boolean */
 	bool *isSharedToMe;	/* optional element of type xsd:boolean */
 public:
-	virtual int soap_type() const { return 129; } /* = unique id SOAP_TYPE_ngwt__SharedFolder */
+	virtual int soap_type() const { return 140; } /* = unique id SOAP_TYPE_ngwt__SharedFolder */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -6161,7 +7076,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__StatusTracking
-#define SOAP_TYPE_ngwt__StatusTracking (136)
+#define SOAP_TYPE_ngwt__StatusTracking (148)
 /* Primitive ngwt:StatusTracking schema type: */
 class SOAP_CMAC ngwt__StatusTracking
 {
@@ -6170,7 +7085,7 @@ public:
 	bool *autoDelete;	/* optional attribute */
 	struct soap *soap;	/* transient */
 public:
-	virtual int soap_type() const { return 136; } /* = unique id SOAP_TYPE_ngwt__StatusTracking */
+	virtual int soap_type() const { return 148; } /* = unique id SOAP_TYPE_ngwt__StatusTracking */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -6183,15 +7098,17 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__SystemFolder
-#define SOAP_TYPE_ngwt__SystemFolder (137)
+#define SOAP_TYPE_ngwt__SystemFolder (149)
 /* ngwt:SystemFolder */
 class SOAP_CMAC ngwt__SystemFolder : public ngwt__Folder
 {
 public:
 	bool *isSystemFolder;	/* optional element of type xsd:boolean */
-	enum ngwt__FolderType folderType;	/* required element of type ngwt:FolderType */
+	enum ngwt__FolderType *folderType;	/* optional element of type ngwt:FolderType */
+	ngwt__FolderACL *acl;	/* optional element of type ngwt:FolderACL */
+	bool *isSharedByMe;	/* optional element of type xsd:boolean */
 public:
-	virtual int soap_type() const { return 137; } /* = unique id SOAP_TYPE_ngwt__SystemFolder */
+	virtual int soap_type() const { return 149; } /* = unique id SOAP_TYPE_ngwt__SystemFolder */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -6203,8 +7120,65 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE_ngwt__Version
+#define SOAP_TYPE_ngwt__Version (158)
+/* ngwt:Version */
+class SOAP_CMAC ngwt__Version : public ngwt__ContainerItem
+{
+public:
+	ngwt__NameAndEmail *library;	/* optional element of type ngwt:NameAndEmail */
+	unsigned long *documentNumber;	/* optional element of type xsd:unsignedLong */
+	ngwt__NameAndEmail *versionCreator;	/* optional element of type ngwt:NameAndEmail */
+	ngwt__NameAndEmail *retrievedBy;	/* optional element of type ngwt:NameAndEmail */
+	char *retrievedDate;	/* optional element of type xsd:string */
+	unsigned long versionNumber;	/* required element of type xsd:unsignedLong */
+	std::string *versionDescription;	/* optional element of type xsd:string */
+	enum ngwt__VersionStatus *versionStatus;	/* optional element of type ngwt:VersionStatus */
+	unsigned long *life;	/* optional element of type xsd:unsignedLong */
+	enum ngwt__AgeAction *ageAction;	/* optional element of type ngwt:AgeAction */
+	unsigned long *fileSize;	/* optional element of type xsd:unsignedLong */
+	std::string *filename;	/* optional element of type xsd:string */
+public:
+	virtual int soap_type() const { return 158; } /* = unique id SOAP_TYPE_ngwt__Version */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         ngwt__Version() { }
+	virtual ~ngwt__Version() { }
+};
+#endif
+
+#ifndef SOAP_TYPE_ngwt__VersionEvent
+#define SOAP_TYPE_ngwt__VersionEvent (159)
+/* ngwt:VersionEvent */
+class SOAP_CMAC ngwt__VersionEvent : public ngwt__ContainerItem
+{
+public:
+	ngwt__NameAndEmail *library;	/* optional element of type ngwt:NameAndEmail */
+	unsigned long documentNumber;	/* required element of type xsd:unsignedLong */
+	unsigned long versionNumber;	/* required element of type xsd:unsignedLong */
+	ngwt__NameAndEmail *creator;	/* optional element of type ngwt:NameAndEmail */
+	enum ngwt__VersionEventType event;	/* required element of type ngwt:VersionEventType */
+	unsigned long *eventNumber;	/* optional element of type xsd:unsignedLong */
+	std::string *filename;	/* optional element of type xsd:string */
+public:
+	virtual int soap_type() const { return 159; } /* = unique id SOAP_TYPE_ngwt__VersionEvent */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         ngwt__VersionEvent() { }
+	virtual ~ngwt__VersionEvent() { }
+};
+#endif
+
 #ifndef SOAP_TYPE_ngwt__Contact
-#define SOAP_TYPE_ngwt__Contact (42)
+#define SOAP_TYPE_ngwt__Contact (41)
 /* ngwt:Contact */
 class SOAP_CMAC ngwt__Contact : public ngwt__AddressBookItem
 {
@@ -6218,7 +7192,7 @@ public:
 	ngwt__PersonalInfo *personalInfo;	/* optional element of type ngwt:PersonalInfo */
 	ngwt__ReferenceInfo *referenceInfo;	/* optional element of type ngwt:ReferenceInfo */
 public:
-	virtual int soap_type() const { return 42; } /* = unique id SOAP_TYPE_ngwt__Contact */
+	virtual int soap_type() const { return 41; } /* = unique id SOAP_TYPE_ngwt__Contact */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -6231,14 +7205,14 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__ContactFolder
-#define SOAP_TYPE_ngwt__ContactFolder (43)
+#define SOAP_TYPE_ngwt__ContactFolder (42)
 /* ngwt:ContactFolder */
 class SOAP_CMAC ngwt__ContactFolder : public ngwt__SystemFolder
 {
 public:
 	std::string *addressBook;	/* optional element of type ngwt:uid */
 public:
-	virtual int soap_type() const { return 43; } /* = unique id SOAP_TYPE_ngwt__ContactFolder */
+	virtual int soap_type() const { return 42; } /* = unique id SOAP_TYPE_ngwt__ContactFolder */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -6251,14 +7225,14 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Group
-#define SOAP_TYPE_ngwt__Group (73)
+#define SOAP_TYPE_ngwt__Group (77)
 /* ngwt:Group */
 class SOAP_CMAC ngwt__Group : public ngwt__AddressBookItem
 {
 public:
 	ngwt__GroupMemberList *members;	/* optional element of type ngwt:GroupMemberList */
 public:
-	virtual int soap_type() const { return 73; } /* = unique id SOAP_TYPE_ngwt__Group */
+	virtual int soap_type() const { return 77; } /* = unique id SOAP_TYPE_ngwt__Group */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -6271,7 +7245,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Mail
-#define SOAP_TYPE_ngwt__Mail (90)
+#define SOAP_TYPE_ngwt__Mail (96)
 /* ngwt:Mail */
 class SOAP_CMAC ngwt__Mail : public ngwt__BoxEntry
 {
@@ -6287,8 +7261,10 @@ public:
 	bool hasAttachment;	/* optional element of type xsd:boolean */
 	int size;	/* optional element of type xsd:int */
 	std::string *subType;	/* optional element of type xsd:string */
+	bool *nntpOrImap;	/* optional element of type xsd:boolean */
+	ngwt__SMimeOperation *smimeType;	/* optional element of type ngwt:SMimeOperation */
 public:
-	virtual int soap_type() const { return 90; } /* = unique id SOAP_TYPE_ngwt__Mail */
+	virtual int soap_type() const { return 96; } /* = unique id SOAP_TYPE_ngwt__Mail */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -6301,7 +7277,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Organization
-#define SOAP_TYPE_ngwt__Organization (98)
+#define SOAP_TYPE_ngwt__Organization (104)
 /* ngwt:Organization */
 class SOAP_CMAC ngwt__Organization : public ngwt__AddressBookItem
 {
@@ -6310,9 +7286,9 @@ public:
 	std::string *phone;	/* optional element of type xsd:string */
 	std::string *fax;	/* optional element of type xsd:string */
 	ngwt__PostalAddress *address;	/* optional element of type ngwt:PostalAddress */
-	std::string *website;	/* optional element of type xsd:anyURI */
+	std::string *website;	/* optional element of type xsd:string */
 public:
-	virtual int soap_type() const { return 98; } /* = unique id SOAP_TYPE_ngwt__Organization */
+	virtual int soap_type() const { return 104; } /* = unique id SOAP_TYPE_ngwt__Organization */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -6325,7 +7301,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Resource
-#define SOAP_TYPE_ngwt__Resource (120)
+#define SOAP_TYPE_ngwt__Resource (127)
 /* ngwt:Resource */
 class SOAP_CMAC ngwt__Resource : public ngwt__AddressBookItem
 {
@@ -6335,7 +7311,7 @@ public:
 	std::string *email;	/* optional element of type xsd:string */
 	ngwt__ItemRef *owner;	/* optional element of type ngwt:ItemRef */
 public:
-	virtual int soap_type() const { return 120; } /* = unique id SOAP_TYPE_ngwt__Resource */
+	virtual int soap_type() const { return 127; } /* = unique id SOAP_TYPE_ngwt__Resource */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -6348,7 +7324,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__CalendarItem
-#define SOAP_TYPE_ngwt__CalendarItem (37)
+#define SOAP_TYPE_ngwt__CalendarItem (36)
 /* ngwt:CalendarItem */
 class SOAP_CMAC ngwt__CalendarItem : public ngwt__Mail
 {
@@ -6359,7 +7335,7 @@ public:
 	unsigned long *recurrenceKey;	/* optional element of type xsd:unsignedLong */
 	std::string *iCalId;	/* optional element of type xsd:string */
 public:
-	virtual int soap_type() const { return 37; } /* = unique id SOAP_TYPE_ngwt__CalendarItem */
+	virtual int soap_type() const { return 36; } /* = unique id SOAP_TYPE_ngwt__CalendarItem */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -6371,8 +7347,39 @@ public:
 };
 #endif
 
+#ifndef SOAP_TYPE_ngwt__DocumentRef
+#define SOAP_TYPE_ngwt__DocumentRef (57)
+/* ngwt:DocumentRef */
+class SOAP_CMAC ngwt__DocumentRef : public ngwt__Mail
+{
+public:
+	ngwt__NameAndEmail *library;	/* optional element of type ngwt:NameAndEmail */
+	unsigned long *documentNumber;	/* optional element of type xsd:unsignedLong */
+	std::string *filename;	/* optional element of type xsd:string */
+	std::string *documentTypeName;	/* optional element of type xsd:string */
+	ngwt__NameAndEmail *author;	/* optional element of type ngwt:NameAndEmail */
+	ngwt__NameAndEmail *creator;	/* optional element of type ngwt:NameAndEmail */
+	unsigned long *officialVersion;	/* optional element of type xsd:unsignedLong */
+	unsigned long *currentVersion;	/* optional element of type xsd:unsignedLong */
+	unsigned long *versionNumber;	/* optional element of type xsd:unsignedLong */
+	char *versionDescription;	/* optional element of type xsd:anyType */
+	unsigned long *fileSize;	/* optional element of type xsd:unsignedLong */
+	ngwt__AccessControlList *acl;	/* optional element of type ngwt:AccessControlList */
+public:
+	virtual int soap_type() const { return 57; } /* = unique id SOAP_TYPE_ngwt__DocumentRef */
+	virtual void soap_default(struct soap*);
+	virtual void soap_serialize(struct soap*) const;
+	virtual int soap_put(struct soap*, const char*, const char*) const;
+	virtual int soap_out(struct soap*, const char*, int, const char*) const;
+	virtual void *soap_get(struct soap*, const char*, const char*);
+	virtual void *soap_in(struct soap*, const char*, const char*);
+	         ngwt__DocumentRef() { }
+	virtual ~ngwt__DocumentRef() { }
+};
+#endif
+
 #ifndef SOAP_TYPE_ngwt__PhoneMessage
-#define SOAP_TYPE_ngwt__PhoneMessage (102)
+#define SOAP_TYPE_ngwt__PhoneMessage (108)
 /* ngwt:PhoneMessage */
 class SOAP_CMAC ngwt__PhoneMessage : public ngwt__Mail
 {
@@ -6382,7 +7389,7 @@ public:
 	std::string *phone;	/* optional element of type xsd:string */
 	ngwt__PhoneFlags *flags;	/* optional element of type ngwt:PhoneFlags */
 public:
-	virtual int soap_type() const { return 102; } /* = unique id SOAP_TYPE_ngwt__PhoneMessage */
+	virtual int soap_type() const { return 108; } /* = unique id SOAP_TYPE_ngwt__PhoneMessage */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -6395,7 +7402,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__SharedNotification
-#define SOAP_TYPE_ngwt__SharedNotification (131)
+#define SOAP_TYPE_ngwt__SharedNotification (142)
 /* ngwt:SharedNotification */
 class SOAP_CMAC ngwt__SharedNotification : public ngwt__Mail
 {
@@ -6404,7 +7411,7 @@ public:
 	std::string *description;	/* optional element of type xsd:string */
 	ngwt__Rights *rights;	/* optional element of type ngwt:Rights */
 public:
-	virtual int soap_type() const { return 131; } /* = unique id SOAP_TYPE_ngwt__SharedNotification */
+	virtual int soap_type() const { return 142; } /* = unique id SOAP_TYPE_ngwt__SharedNotification */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -6417,7 +7424,7 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Appointment
-#define SOAP_TYPE_ngwt__Appointment (30)
+#define SOAP_TYPE_ngwt__Appointment (29)
 /* ngwt:Appointment */
 class SOAP_CMAC ngwt__Appointment : public ngwt__CalendarItem
 {
@@ -6432,7 +7439,7 @@ public:
 	std::string *place;	/* optional element of type xsd:string */
 	ngwt__Timezone *timezone;	/* optional element of type ngwt:Timezone */
 public:
-	virtual int soap_type() const { return 30; } /* = unique id SOAP_TYPE_ngwt__Appointment */
+	virtual int soap_type() const { return 29; } /* = unique id SOAP_TYPE_ngwt__Appointment */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -6445,14 +7452,14 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Note
-#define SOAP_TYPE_ngwt__Note (96)
+#define SOAP_TYPE_ngwt__Note (102)
 /* ngwt:Note */
 class SOAP_CMAC ngwt__Note : public ngwt__CalendarItem
 {
 public:
 	std::string *startDate;	/* optional element of type xsd:date */
 public:
-	virtual int soap_type() const { return 96; } /* = unique id SOAP_TYPE_ngwt__Note */
+	virtual int soap_type() const { return 102; } /* = unique id SOAP_TYPE_ngwt__Note */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -6465,17 +7472,18 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Task
-#define SOAP_TYPE_ngwt__Task (138)
+#define SOAP_TYPE_ngwt__Task (150)
 /* ngwt:Task */
 class SOAP_CMAC ngwt__Task : public ngwt__CalendarItem
 {
 public:
 	std::string *startDate;	/* optional element of type xsd:date */
 	std::string *dueDate;	/* optional element of type xsd:date */
+	std::string *assignedDate;	/* optional element of type xsd:date */
 	std::string *taskPriority;	/* optional element of type xsd:string */
 	bool *completed;	/* optional element of type xsd:boolean */
 public:
-	virtual int soap_type() const { return 138; } /* = unique id SOAP_TYPE_ngwt__Task */
+	virtual int soap_type() const { return 150; } /* = unique id SOAP_TYPE_ngwt__Task */
 	virtual void soap_default(struct soap*);
 	virtual void soap_serialize(struct soap*) const;
 	virtual int soap_put(struct soap*, const char*, const char*) const;
@@ -6488,16 +7496,17 @@ public:
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Header
-#define SOAP_TYPE_SOAP_ENV__Header (523)
+#define SOAP_TYPE_SOAP_ENV__Header (602)
 /* SOAP Header: */
 struct SOAP_ENV__Header
 {
+	bool ngwt__gwTrace;	/* required element of type xsd:boolean */
 	std::string ngwt__session;	/* required element of type xsd:string */
 };
 #endif
 
 #ifndef SOAP_TYPE___ngw__acceptRequest
-#define SOAP_TYPE___ngw__acceptRequest (527)
+#define SOAP_TYPE___ngw__acceptRequest (606)
 /* Operation wrapper: */
 struct __ngw__acceptRequest
 {
@@ -6506,7 +7515,7 @@ struct __ngw__acceptRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__acceptShareRequest
-#define SOAP_TYPE___ngw__acceptShareRequest (531)
+#define SOAP_TYPE___ngw__acceptShareRequest (610)
 /* Operation wrapper: */
 struct __ngw__acceptShareRequest
 {
@@ -6515,7 +7524,7 @@ struct __ngw__acceptShareRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__addItemRequest
-#define SOAP_TYPE___ngw__addItemRequest (535)
+#define SOAP_TYPE___ngw__addItemRequest (614)
 /* Operation wrapper: */
 struct __ngw__addItemRequest
 {
@@ -6524,7 +7533,7 @@ struct __ngw__addItemRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__addItemsRequest
-#define SOAP_TYPE___ngw__addItemsRequest (539)
+#define SOAP_TYPE___ngw__addItemsRequest (618)
 /* Operation wrapper: */
 struct __ngw__addItemsRequest
 {
@@ -6533,7 +7542,7 @@ struct __ngw__addItemsRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__addMembersRequest
-#define SOAP_TYPE___ngw__addMembersRequest (543)
+#define SOAP_TYPE___ngw__addMembersRequest (622)
 /* Operation wrapper: */
 struct __ngw__addMembersRequest
 {
@@ -6542,7 +7551,7 @@ struct __ngw__addMembersRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__closeFreeBusySessionRequest
-#define SOAP_TYPE___ngw__closeFreeBusySessionRequest (547)
+#define SOAP_TYPE___ngw__closeFreeBusySessionRequest (626)
 /* Operation wrapper: */
 struct __ngw__closeFreeBusySessionRequest
 {
@@ -6551,7 +7560,7 @@ struct __ngw__closeFreeBusySessionRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__completeRequest
-#define SOAP_TYPE___ngw__completeRequest (551)
+#define SOAP_TYPE___ngw__completeRequest (630)
 /* Operation wrapper: */
 struct __ngw__completeRequest
 {
@@ -6560,7 +7569,7 @@ struct __ngw__completeRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__createCursorRequest
-#define SOAP_TYPE___ngw__createCursorRequest (555)
+#define SOAP_TYPE___ngw__createCursorRequest (634)
 /* Operation wrapper: */
 struct __ngw__createCursorRequest
 {
@@ -6569,7 +7578,7 @@ struct __ngw__createCursorRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__createItemRequest
-#define SOAP_TYPE___ngw__createItemRequest (559)
+#define SOAP_TYPE___ngw__createItemRequest (638)
 /* Operation wrapper: */
 struct __ngw__createItemRequest
 {
@@ -6577,8 +7586,17 @@ struct __ngw__createItemRequest
 };
 #endif
 
+#ifndef SOAP_TYPE___ngw__createItemsRequest
+#define SOAP_TYPE___ngw__createItemsRequest (642)
+/* Operation wrapper: */
+struct __ngw__createItemsRequest
+{
+	_ngwm__createItemsRequest *ngwm__createItemsRequest;	/* optional element of type ngwm:createItemsRequest */
+};
+#endif
+
 #ifndef SOAP_TYPE___ngw__createJunkEntryRequest
-#define SOAP_TYPE___ngw__createJunkEntryRequest (563)
+#define SOAP_TYPE___ngw__createJunkEntryRequest (646)
 /* Operation wrapper: */
 struct __ngw__createJunkEntryRequest
 {
@@ -6587,7 +7605,7 @@ struct __ngw__createJunkEntryRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__createProxyAccessRequest
-#define SOAP_TYPE___ngw__createProxyAccessRequest (567)
+#define SOAP_TYPE___ngw__createProxyAccessRequest (650)
 /* Operation wrapper: */
 struct __ngw__createProxyAccessRequest
 {
@@ -6596,7 +7614,7 @@ struct __ngw__createProxyAccessRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__createSignatureRequest
-#define SOAP_TYPE___ngw__createSignatureRequest (571)
+#define SOAP_TYPE___ngw__createSignatureRequest (654)
 /* Operation wrapper: */
 struct __ngw__createSignatureRequest
 {
@@ -6605,7 +7623,7 @@ struct __ngw__createSignatureRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__declineRequest
-#define SOAP_TYPE___ngw__declineRequest (575)
+#define SOAP_TYPE___ngw__declineRequest (658)
 /* Operation wrapper: */
 struct __ngw__declineRequest
 {
@@ -6614,7 +7632,7 @@ struct __ngw__declineRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__delegateRequest
-#define SOAP_TYPE___ngw__delegateRequest (579)
+#define SOAP_TYPE___ngw__delegateRequest (662)
 /* Operation wrapper: */
 struct __ngw__delegateRequest
 {
@@ -6623,7 +7641,7 @@ struct __ngw__delegateRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__destroyCursorRequest
-#define SOAP_TYPE___ngw__destroyCursorRequest (583)
+#define SOAP_TYPE___ngw__destroyCursorRequest (666)
 /* Operation wrapper: */
 struct __ngw__destroyCursorRequest
 {
@@ -6631,8 +7649,17 @@ struct __ngw__destroyCursorRequest
 };
 #endif
 
+#ifndef SOAP_TYPE___ngw__executeRuleRequest
+#define SOAP_TYPE___ngw__executeRuleRequest (670)
+/* Operation wrapper: */
+struct __ngw__executeRuleRequest
+{
+	_ngwm__executeRuleRequest *ngwm__executeRuleRequest;	/* optional element of type ngwm:executeRuleRequest */
+};
+#endif
+
 #ifndef SOAP_TYPE___ngw__forwardRequest
-#define SOAP_TYPE___ngw__forwardRequest (587)
+#define SOAP_TYPE___ngw__forwardRequest (674)
 /* Operation wrapper: */
 struct __ngw__forwardRequest
 {
@@ -6641,7 +7668,7 @@ struct __ngw__forwardRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getAddressBookListRequest
-#define SOAP_TYPE___ngw__getAddressBookListRequest (591)
+#define SOAP_TYPE___ngw__getAddressBookListRequest (678)
 /* Operation wrapper: */
 struct __ngw__getAddressBookListRequest
 {
@@ -6650,7 +7677,7 @@ struct __ngw__getAddressBookListRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getAttachmentRequestMessage
-#define SOAP_TYPE___ngw__getAttachmentRequestMessage (595)
+#define SOAP_TYPE___ngw__getAttachmentRequestMessage (682)
 /* Operation wrapper: */
 struct __ngw__getAttachmentRequestMessage
 {
@@ -6659,7 +7686,7 @@ struct __ngw__getAttachmentRequestMessage
 #endif
 
 #ifndef SOAP_TYPE___ngw__getCategoryListRequest
-#define SOAP_TYPE___ngw__getCategoryListRequest (599)
+#define SOAP_TYPE___ngw__getCategoryListRequest (686)
 /* Operation wrapper: */
 struct __ngw__getCategoryListRequest
 {
@@ -6668,7 +7695,7 @@ struct __ngw__getCategoryListRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getCustomListRequest
-#define SOAP_TYPE___ngw__getCustomListRequest (603)
+#define SOAP_TYPE___ngw__getCustomListRequest (690)
 /* Operation wrapper: */
 struct __ngw__getCustomListRequest
 {
@@ -6677,7 +7704,7 @@ struct __ngw__getCustomListRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getDeltasRequest
-#define SOAP_TYPE___ngw__getDeltasRequest (607)
+#define SOAP_TYPE___ngw__getDeltasRequest (694)
 /* Operation wrapper: */
 struct __ngw__getDeltasRequest
 {
@@ -6686,7 +7713,7 @@ struct __ngw__getDeltasRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getDeltaInfoRequest
-#define SOAP_TYPE___ngw__getDeltaInfoRequest (611)
+#define SOAP_TYPE___ngw__getDeltaInfoRequest (698)
 /* Operation wrapper: */
 struct __ngw__getDeltaInfoRequest
 {
@@ -6694,8 +7721,26 @@ struct __ngw__getDeltaInfoRequest
 };
 #endif
 
+#ifndef SOAP_TYPE___ngw__getDocumentTypeListRequest
+#define SOAP_TYPE___ngw__getDocumentTypeListRequest (702)
+/* Operation wrapper: */
+struct __ngw__getDocumentTypeListRequest
+{
+	_ngwm__getDocumentTypeListRequest *ngwm__getDocumentTypeListRequest;	/* optional element of type ngwm:getDocumentTypeListRequest */
+};
+#endif
+
+#ifndef SOAP_TYPE___ngw__getFolderRequest
+#define SOAP_TYPE___ngw__getFolderRequest (706)
+/* Operation wrapper: */
+struct __ngw__getFolderRequest
+{
+	_ngwm__getFolderRequest *ngwm__getFolderRequest;	/* optional element of type ngwm:getFolderRequest */
+};
+#endif
+
 #ifndef SOAP_TYPE___ngw__getFolderListRequest
-#define SOAP_TYPE___ngw__getFolderListRequest (615)
+#define SOAP_TYPE___ngw__getFolderListRequest (710)
 /* Operation wrapper: */
 struct __ngw__getFolderListRequest
 {
@@ -6704,7 +7749,7 @@ struct __ngw__getFolderListRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getFreeBusyRequest
-#define SOAP_TYPE___ngw__getFreeBusyRequest (619)
+#define SOAP_TYPE___ngw__getFreeBusyRequest (714)
 /* Operation wrapper: */
 struct __ngw__getFreeBusyRequest
 {
@@ -6713,7 +7758,7 @@ struct __ngw__getFreeBusyRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getItemRequest
-#define SOAP_TYPE___ngw__getItemRequest (623)
+#define SOAP_TYPE___ngw__getItemRequest (718)
 /* Operation wrapper: */
 struct __ngw__getItemRequest
 {
@@ -6722,7 +7767,7 @@ struct __ngw__getItemRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getItemsRequest
-#define SOAP_TYPE___ngw__getItemsRequest (627)
+#define SOAP_TYPE___ngw__getItemsRequest (722)
 /* Operation wrapper: */
 struct __ngw__getItemsRequest
 {
@@ -6731,7 +7776,7 @@ struct __ngw__getItemsRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getJunkEntriesRequest
-#define SOAP_TYPE___ngw__getJunkEntriesRequest (631)
+#define SOAP_TYPE___ngw__getJunkEntriesRequest (726)
 /* Operation wrapper: */
 struct __ngw__getJunkEntriesRequest
 {
@@ -6740,7 +7785,7 @@ struct __ngw__getJunkEntriesRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getJunkMailSettingsRequest
-#define SOAP_TYPE___ngw__getJunkMailSettingsRequest (635)
+#define SOAP_TYPE___ngw__getJunkMailSettingsRequest (730)
 /* Operation wrapper: */
 struct __ngw__getJunkMailSettingsRequest
 {
@@ -6748,8 +7793,26 @@ struct __ngw__getJunkMailSettingsRequest
 };
 #endif
 
+#ifndef SOAP_TYPE___ngw__getLibraryItemRequest
+#define SOAP_TYPE___ngw__getLibraryItemRequest (734)
+/* Operation wrapper: */
+struct __ngw__getLibraryItemRequest
+{
+	_ngwm__getLibraryItemRequest *ngwm__getLibraryItemRequest;	/* optional element of type ngwm:getLibraryItemRequest */
+};
+#endif
+
+#ifndef SOAP_TYPE___ngw__getLibraryListRequest
+#define SOAP_TYPE___ngw__getLibraryListRequest (738)
+/* Operation wrapper: */
+struct __ngw__getLibraryListRequest
+{
+	_ngwm__getLibraryListRequest *ngwm__getLibraryListRequest;	/* optional element of type ngwm:getLibraryListRequest */
+};
+#endif
+
 #ifndef SOAP_TYPE___ngw__getQuickMessagesRequest
-#define SOAP_TYPE___ngw__getQuickMessagesRequest (639)
+#define SOAP_TYPE___ngw__getQuickMessagesRequest (742)
 /* Operation wrapper: */
 struct __ngw__getQuickMessagesRequest
 {
@@ -6758,7 +7821,7 @@ struct __ngw__getQuickMessagesRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getProxyAccessListRequest
-#define SOAP_TYPE___ngw__getProxyAccessListRequest (643)
+#define SOAP_TYPE___ngw__getProxyAccessListRequest (746)
 /* Operation wrapper: */
 struct __ngw__getProxyAccessListRequest
 {
@@ -6767,7 +7830,7 @@ struct __ngw__getProxyAccessListRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getProxyListRequest
-#define SOAP_TYPE___ngw__getProxyListRequest (647)
+#define SOAP_TYPE___ngw__getProxyListRequest (750)
 /* Operation wrapper: */
 struct __ngw__getProxyListRequest
 {
@@ -6775,8 +7838,17 @@ struct __ngw__getProxyListRequest
 };
 #endif
 
+#ifndef SOAP_TYPE___ngw__getRuleListRequest
+#define SOAP_TYPE___ngw__getRuleListRequest (754)
+/* Operation wrapper: */
+struct __ngw__getRuleListRequest
+{
+	_ngwm__getRuleListRequest *ngwm__getRuleListRequest;	/* optional element of type ngwm:getRuleListRequest */
+};
+#endif
+
 #ifndef SOAP_TYPE___ngw__getSettingsRequest
-#define SOAP_TYPE___ngw__getSettingsRequest (651)
+#define SOAP_TYPE___ngw__getSettingsRequest (758)
 /* Operation wrapper: */
 struct __ngw__getSettingsRequest
 {
@@ -6785,7 +7857,7 @@ struct __ngw__getSettingsRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getSignaturesRequest
-#define SOAP_TYPE___ngw__getSignaturesRequest (655)
+#define SOAP_TYPE___ngw__getSignaturesRequest (762)
 /* Operation wrapper: */
 struct __ngw__getSignaturesRequest
 {
@@ -6793,8 +7865,17 @@ struct __ngw__getSignaturesRequest
 };
 #endif
 
+#ifndef SOAP_TYPE___ngw__getTimestampRequest
+#define SOAP_TYPE___ngw__getTimestampRequest (766)
+/* Operation wrapper: */
+struct __ngw__getTimestampRequest
+{
+	_ngwm__getTimestampRequest *ngwm__getTimestampRequest;	/* optional element of type ngwm:getTimestampRequest */
+};
+#endif
+
 #ifndef SOAP_TYPE___ngw__getTimezoneListRequest
-#define SOAP_TYPE___ngw__getTimezoneListRequest (659)
+#define SOAP_TYPE___ngw__getTimezoneListRequest (770)
 /* Operation wrapper: */
 struct __ngw__getTimezoneListRequest
 {
@@ -6802,8 +7883,17 @@ struct __ngw__getTimezoneListRequest
 };
 #endif
 
+#ifndef SOAP_TYPE___ngw__getUserListRequest
+#define SOAP_TYPE___ngw__getUserListRequest (774)
+/* Operation wrapper: */
+struct __ngw__getUserListRequest
+{
+	_ngwm__getUserListRequest *ngwm__getUserListRequest;	/* optional element of type ngwm:getUserListRequest */
+};
+#endif
+
 #ifndef SOAP_TYPE___ngw__loginRequest
-#define SOAP_TYPE___ngw__loginRequest (663)
+#define SOAP_TYPE___ngw__loginRequest (778)
 /* Operation wrapper: */
 struct __ngw__loginRequest
 {
@@ -6812,7 +7902,7 @@ struct __ngw__loginRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__logoutRequest
-#define SOAP_TYPE___ngw__logoutRequest (667)
+#define SOAP_TYPE___ngw__logoutRequest (782)
 /* Operation wrapper: */
 struct __ngw__logoutRequest
 {
@@ -6821,7 +7911,7 @@ struct __ngw__logoutRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__markPrivateRequest
-#define SOAP_TYPE___ngw__markPrivateRequest (671)
+#define SOAP_TYPE___ngw__markPrivateRequest (786)
 /* Operation wrapper: */
 struct __ngw__markPrivateRequest
 {
@@ -6830,7 +7920,7 @@ struct __ngw__markPrivateRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__markReadRequest
-#define SOAP_TYPE___ngw__markReadRequest (675)
+#define SOAP_TYPE___ngw__markReadRequest (790)
 /* Operation wrapper: */
 struct __ngw__markReadRequest
 {
@@ -6839,7 +7929,7 @@ struct __ngw__markReadRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__markUnPrivateRequest
-#define SOAP_TYPE___ngw__markUnPrivateRequest (679)
+#define SOAP_TYPE___ngw__markUnPrivateRequest (794)
 /* Operation wrapper: */
 struct __ngw__markUnPrivateRequest
 {
@@ -6848,7 +7938,7 @@ struct __ngw__markUnPrivateRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__markUnReadRequest
-#define SOAP_TYPE___ngw__markUnReadRequest (683)
+#define SOAP_TYPE___ngw__markUnReadRequest (798)
 /* Operation wrapper: */
 struct __ngw__markUnReadRequest
 {
@@ -6857,7 +7947,7 @@ struct __ngw__markUnReadRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__modifyItemRequest
-#define SOAP_TYPE___ngw__modifyItemRequest (687)
+#define SOAP_TYPE___ngw__modifyItemRequest (802)
 /* Operation wrapper: */
 struct __ngw__modifyItemRequest
 {
@@ -6866,7 +7956,7 @@ struct __ngw__modifyItemRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__modifyJunkEntryRequest
-#define SOAP_TYPE___ngw__modifyJunkEntryRequest (691)
+#define SOAP_TYPE___ngw__modifyJunkEntryRequest (806)
 /* Operation wrapper: */
 struct __ngw__modifyJunkEntryRequest
 {
@@ -6875,7 +7965,7 @@ struct __ngw__modifyJunkEntryRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__modifyJunkMailSettingsRequest
-#define SOAP_TYPE___ngw__modifyJunkMailSettingsRequest (695)
+#define SOAP_TYPE___ngw__modifyJunkMailSettingsRequest (810)
 /* Operation wrapper: */
 struct __ngw__modifyJunkMailSettingsRequest
 {
@@ -6884,7 +7974,7 @@ struct __ngw__modifyJunkMailSettingsRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__modifyPasswordRequest
-#define SOAP_TYPE___ngw__modifyPasswordRequest (699)
+#define SOAP_TYPE___ngw__modifyPasswordRequest (814)
 /* Operation wrapper: */
 struct __ngw__modifyPasswordRequest
 {
@@ -6893,7 +7983,7 @@ struct __ngw__modifyPasswordRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__modifyProxyAccessRequest
-#define SOAP_TYPE___ngw__modifyProxyAccessRequest (703)
+#define SOAP_TYPE___ngw__modifyProxyAccessRequest (818)
 /* Operation wrapper: */
 struct __ngw__modifyProxyAccessRequest
 {
@@ -6902,7 +7992,7 @@ struct __ngw__modifyProxyAccessRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__modifySettingsRequest
-#define SOAP_TYPE___ngw__modifySettingsRequest (707)
+#define SOAP_TYPE___ngw__modifySettingsRequest (822)
 /* Operation wrapper: */
 struct __ngw__modifySettingsRequest
 {
@@ -6911,7 +8001,7 @@ struct __ngw__modifySettingsRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__modifySignaturesRequest
-#define SOAP_TYPE___ngw__modifySignaturesRequest (711)
+#define SOAP_TYPE___ngw__modifySignaturesRequest (826)
 /* Operation wrapper: */
 struct __ngw__modifySignaturesRequest
 {
@@ -6920,7 +8010,7 @@ struct __ngw__modifySignaturesRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__moveItemRequest
-#define SOAP_TYPE___ngw__moveItemRequest (715)
+#define SOAP_TYPE___ngw__moveItemRequest (830)
 /* Operation wrapper: */
 struct __ngw__moveItemRequest
 {
@@ -6929,7 +8019,7 @@ struct __ngw__moveItemRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__positionCursorRequest
-#define SOAP_TYPE___ngw__positionCursorRequest (719)
+#define SOAP_TYPE___ngw__positionCursorRequest (834)
 /* Operation wrapper: */
 struct __ngw__positionCursorRequest
 {
@@ -6938,7 +8028,7 @@ struct __ngw__positionCursorRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__purgeDeletedItemsRequest
-#define SOAP_TYPE___ngw__purgeDeletedItemsRequest (723)
+#define SOAP_TYPE___ngw__purgeDeletedItemsRequest (838)
 /* Operation wrapper: */
 struct __ngw__purgeDeletedItemsRequest
 {
@@ -6947,7 +8037,7 @@ struct __ngw__purgeDeletedItemsRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__purgeRequest
-#define SOAP_TYPE___ngw__purgeRequest (727)
+#define SOAP_TYPE___ngw__purgeRequest (842)
 /* Operation wrapper: */
 struct __ngw__purgeRequest
 {
@@ -6956,7 +8046,7 @@ struct __ngw__purgeRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__readCursorRequest
-#define SOAP_TYPE___ngw__readCursorRequest (731)
+#define SOAP_TYPE___ngw__readCursorRequest (846)
 /* Operation wrapper: */
 struct __ngw__readCursorRequest
 {
@@ -6965,7 +8055,7 @@ struct __ngw__readCursorRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__removeCustomDefinitionRequest
-#define SOAP_TYPE___ngw__removeCustomDefinitionRequest (735)
+#define SOAP_TYPE___ngw__removeCustomDefinitionRequest (850)
 /* Operation wrapper: */
 struct __ngw__removeCustomDefinitionRequest
 {
@@ -6974,7 +8064,7 @@ struct __ngw__removeCustomDefinitionRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__removeItemRequest
-#define SOAP_TYPE___ngw__removeItemRequest (739)
+#define SOAP_TYPE___ngw__removeItemRequest (854)
 /* Operation wrapper: */
 struct __ngw__removeItemRequest
 {
@@ -6983,7 +8073,7 @@ struct __ngw__removeItemRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__removeItemsRequest
-#define SOAP_TYPE___ngw__removeItemsRequest (743)
+#define SOAP_TYPE___ngw__removeItemsRequest (858)
 /* Operation wrapper: */
 struct __ngw__removeItemsRequest
 {
@@ -6992,7 +8082,7 @@ struct __ngw__removeItemsRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__removeJunkEntryRequest
-#define SOAP_TYPE___ngw__removeJunkEntryRequest (747)
+#define SOAP_TYPE___ngw__removeJunkEntryRequest (862)
 /* Operation wrapper: */
 struct __ngw__removeJunkEntryRequest
 {
@@ -7001,7 +8091,7 @@ struct __ngw__removeJunkEntryRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__removeMembersRequest
-#define SOAP_TYPE___ngw__removeMembersRequest (751)
+#define SOAP_TYPE___ngw__removeMembersRequest (866)
 /* Operation wrapper: */
 struct __ngw__removeMembersRequest
 {
@@ -7010,7 +8100,7 @@ struct __ngw__removeMembersRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__removeProxyAccessRequest
-#define SOAP_TYPE___ngw__removeProxyAccessRequest (755)
+#define SOAP_TYPE___ngw__removeProxyAccessRequest (870)
 /* Operation wrapper: */
 struct __ngw__removeProxyAccessRequest
 {
@@ -7018,8 +8108,17 @@ struct __ngw__removeProxyAccessRequest
 };
 #endif
 
+#ifndef SOAP_TYPE___ngw__removeProxyUserRequest
+#define SOAP_TYPE___ngw__removeProxyUserRequest (874)
+/* Operation wrapper: */
+struct __ngw__removeProxyUserRequest
+{
+	_ngwm__removeProxyUserRequest *ngwm__removeProxyUserRequest;	/* optional element of type ngwm:removeProxyUserRequest */
+};
+#endif
+
 #ifndef SOAP_TYPE___ngw__removeSignatureRequest
-#define SOAP_TYPE___ngw__removeSignatureRequest (759)
+#define SOAP_TYPE___ngw__removeSignatureRequest (878)
 /* Operation wrapper: */
 struct __ngw__removeSignatureRequest
 {
@@ -7028,7 +8127,7 @@ struct __ngw__removeSignatureRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__replyRequest
-#define SOAP_TYPE___ngw__replyRequest (763)
+#define SOAP_TYPE___ngw__replyRequest (882)
 /* Operation wrapper: */
 struct __ngw__replyRequest
 {
@@ -7037,7 +8136,7 @@ struct __ngw__replyRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__retractRequest
-#define SOAP_TYPE___ngw__retractRequest (767)
+#define SOAP_TYPE___ngw__retractRequest (886)
 /* Operation wrapper: */
 struct __ngw__retractRequest
 {
@@ -7046,7 +8145,7 @@ struct __ngw__retractRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__sendItemRequest
-#define SOAP_TYPE___ngw__sendItemRequest (771)
+#define SOAP_TYPE___ngw__sendItemRequest (890)
 /* Operation wrapper: */
 struct __ngw__sendItemRequest
 {
@@ -7054,8 +8153,17 @@ struct __ngw__sendItemRequest
 };
 #endif
 
+#ifndef SOAP_TYPE___ngw__setTimestampRequest
+#define SOAP_TYPE___ngw__setTimestampRequest (894)
+/* Operation wrapper: */
+struct __ngw__setTimestampRequest
+{
+	_ngwm__setTimestampRequest *ngwm__setTimestampRequest;	/* optional element of type ngwm:setTimestampRequest */
+};
+#endif
+
 #ifndef SOAP_TYPE___ngw__startFreeBusySessionRequest
-#define SOAP_TYPE___ngw__startFreeBusySessionRequest (775)
+#define SOAP_TYPE___ngw__startFreeBusySessionRequest (898)
 /* Operation wrapper: */
 struct __ngw__startFreeBusySessionRequest
 {
@@ -7064,7 +8172,7 @@ struct __ngw__startFreeBusySessionRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__unacceptRequest
-#define SOAP_TYPE___ngw__unacceptRequest (779)
+#define SOAP_TYPE___ngw__unacceptRequest (902)
 /* Operation wrapper: */
 struct __ngw__unacceptRequest
 {
@@ -7073,7 +8181,7 @@ struct __ngw__unacceptRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__uncompleteRequest
-#define SOAP_TYPE___ngw__uncompleteRequest (783)
+#define SOAP_TYPE___ngw__uncompleteRequest (906)
 /* Operation wrapper: */
 struct __ngw__uncompleteRequest
 {
@@ -7081,8 +8189,17 @@ struct __ngw__uncompleteRequest
 };
 #endif
 
+#ifndef SOAP_TYPE___ngw__updateVersionStatusRequest
+#define SOAP_TYPE___ngw__updateVersionStatusRequest (910)
+/* Operation wrapper: */
+struct __ngw__updateVersionStatusRequest
+{
+	_ngwm__updateVersionStatusRequest *ngwm__updateVersionStatusRequest;	/* optional element of type ngwm:updateVersionStatusRequest */
+};
+#endif
+
 #ifndef SOAP_TYPE___ngw__cleanEventConfigurationRequest
-#define SOAP_TYPE___ngw__cleanEventConfigurationRequest (787)
+#define SOAP_TYPE___ngw__cleanEventConfigurationRequest (914)
 /* Operation wrapper: */
 struct __ngw__cleanEventConfigurationRequest
 {
@@ -7091,7 +8208,7 @@ struct __ngw__cleanEventConfigurationRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__configureEventsRequest
-#define SOAP_TYPE___ngw__configureEventsRequest (791)
+#define SOAP_TYPE___ngw__configureEventsRequest (918)
 /* Operation wrapper: */
 struct __ngw__configureEventsRequest
 {
@@ -7100,7 +8217,7 @@ struct __ngw__configureEventsRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getEventConfigurationRequest
-#define SOAP_TYPE___ngw__getEventConfigurationRequest (795)
+#define SOAP_TYPE___ngw__getEventConfigurationRequest (922)
 /* Operation wrapper: */
 struct __ngw__getEventConfigurationRequest
 {
@@ -7109,7 +8226,7 @@ struct __ngw__getEventConfigurationRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__getEventsRequest
-#define SOAP_TYPE___ngw__getEventsRequest (799)
+#define SOAP_TYPE___ngw__getEventsRequest (926)
 /* Operation wrapper: */
 struct __ngw__getEventsRequest
 {
@@ -7118,7 +8235,7 @@ struct __ngw__getEventsRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__removeEventConfigurationRequest
-#define SOAP_TYPE___ngw__removeEventConfigurationRequest (803)
+#define SOAP_TYPE___ngw__removeEventConfigurationRequest (930)
 /* Operation wrapper: */
 struct __ngw__removeEventConfigurationRequest
 {
@@ -7127,7 +8244,7 @@ struct __ngw__removeEventConfigurationRequest
 #endif
 
 #ifndef SOAP_TYPE___ngw__removeEventsRequest
-#define SOAP_TYPE___ngw__removeEventsRequest (807)
+#define SOAP_TYPE___ngw__removeEventsRequest (934)
 /* Operation wrapper: */
 struct __ngw__removeEventsRequest
 {
@@ -7136,7 +8253,7 @@ struct __ngw__removeEventsRequest
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Code
-#define SOAP_TYPE_SOAP_ENV__Code (808)
+#define SOAP_TYPE_SOAP_ENV__Code (935)
 /* SOAP Fault Code: */
 struct SOAP_ENV__Code
 {
@@ -7146,7 +8263,7 @@ struct SOAP_ENV__Code
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Detail
-#define SOAP_TYPE_SOAP_ENV__Detail (810)
+#define SOAP_TYPE_SOAP_ENV__Detail (937)
 /* SOAP-ENV:Detail */
 struct SOAP_ENV__Detail
 {
@@ -7157,7 +8274,7 @@ struct SOAP_ENV__Detail
 #endif
 
 #ifndef SOAP_TYPE_SOAP_ENV__Fault
-#define SOAP_TYPE_SOAP_ENV__Fault (813)
+#define SOAP_TYPE_SOAP_ENV__Fault (940)
 /* SOAP Fault: */
 struct SOAP_ENV__Fault
 {
@@ -7196,79 +8313,79 @@ typedef char *_XML;
 typedef char *_QName;
 #endif
 
-#ifndef SOAP_TYPE_xsd__anyURI
-#define SOAP_TYPE_xsd__anyURI (8)
-typedef std::string xsd__anyURI;
-#endif
-
 #ifndef SOAP_TYPE_xsd__date
-#define SOAP_TYPE_xsd__date (15)
+#define SOAP_TYPE_xsd__date (14)
 typedef std::string xsd__date;
 #endif
 
 #ifndef SOAP_TYPE_xsd__decimal
-#define SOAP_TYPE_xsd__decimal (16)
+#define SOAP_TYPE_xsd__decimal (15)
 typedef std::string xsd__decimal;
 #endif
 
 #ifndef SOAP_TYPE_xsd__duration
-#define SOAP_TYPE_xsd__duration (17)
+#define SOAP_TYPE_xsd__duration (16)
 typedef std::string xsd__duration;
 #endif
 
 #ifndef SOAP_TYPE_xsd__language
-#define SOAP_TYPE_xsd__language (18)
+#define SOAP_TYPE_xsd__language (17)
 typedef std::string xsd__language;
 #endif
 
 #ifndef SOAP_TYPE_ngwt__View
-#define SOAP_TYPE_ngwt__View (298)
+#define SOAP_TYPE_ngwt__View (338)
 typedef std::string ngwt__View;
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Day
-#define SOAP_TYPE_ngwt__Day (306)
+#define SOAP_TYPE_ngwt__Day (349)
 typedef unsigned char ngwt__Day;
 #endif
 
 #ifndef SOAP_TYPE_ngwt__DayOfMonth
-#define SOAP_TYPE_ngwt__DayOfMonth (307)
+#define SOAP_TYPE_ngwt__DayOfMonth (350)
 typedef char ngwt__DayOfMonth;
 #endif
 
 #ifndef SOAP_TYPE_ngwt__DayOfYear
-#define SOAP_TYPE_ngwt__DayOfYear (309)
+#define SOAP_TYPE_ngwt__DayOfYear (352)
 typedef short ngwt__DayOfYear;
 #endif
 
 #ifndef SOAP_TYPE_ngwt__GMTOffset
-#define SOAP_TYPE_ngwt__GMTOffset (316)
+#define SOAP_TYPE_ngwt__GMTOffset (361)
 typedef int ngwt__GMTOffset;
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Hour
-#define SOAP_TYPE_ngwt__Hour (317)
+#define SOAP_TYPE_ngwt__Hour (362)
 typedef unsigned char ngwt__Hour;
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Minute
-#define SOAP_TYPE_ngwt__Minute (327)
+#define SOAP_TYPE_ngwt__Minute (372)
 typedef unsigned char ngwt__Minute;
 #endif
 
 #ifndef SOAP_TYPE_ngwt__Month
-#define SOAP_TYPE_ngwt__Month (328)
+#define SOAP_TYPE_ngwt__Month (373)
 typedef unsigned char ngwt__Month;
 #endif
 
 #ifndef SOAP_TYPE_ngwt__uid
-#define SOAP_TYPE_ngwt__uid (336)
+#define SOAP_TYPE_ngwt__uid (382)
 typedef std::string ngwt__uid;
 #endif
 
 #ifndef SOAP_TYPE_ngwt__UUID
-#define SOAP_TYPE_ngwt__UUID (337)
+#define SOAP_TYPE_ngwt__UUID (383)
 typedef std::string ngwt__UUID;
+#endif
+
+#ifndef SOAP_TYPE_ngwt__WeekOfYear
+#define SOAP_TYPE_ngwt__WeekOfYear (387)
+typedef short ngwt__WeekOfYear;
 #endif
 
 
@@ -7278,6 +8395,179 @@ typedef std::string ngwt__UUID;
  *                                                                            *
 \******************************************************************************/
 
+
+/******************************************************************************\
+ *                                                                            *
+ * Service Operations                                                         *
+ *                                                                            *
+\******************************************************************************/
+
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__acceptRequest(struct soap*, _ngwm__acceptRequest *ngwm__acceptRequest, _ngwm__acceptResponse *ngwm__acceptResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__acceptShareRequest(struct soap*, _ngwm__acceptShareRequest *ngwm__acceptShareRequest, _ngwm__acceptShareResponse *ngwm__acceptShareResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__addItemRequest(struct soap*, _ngwm__addItemRequest *ngwm__addItemRequest, _ngwm__addItemResponse *ngwm__addItemResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__addItemsRequest(struct soap*, _ngwm__addItemsRequest *ngwm__addItemsRequest, _ngwm__addItemsResponse *ngwm__addItemsResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__addMembersRequest(struct soap*, _ngwm__addMembersRequest *ngwm__addMembersRequest, _ngwm__addMembersResponse *ngwm__addMembersResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__closeFreeBusySessionRequest(struct soap*, _ngwm__closeFreeBusySessionRequest *ngwm__closeFreeBusySessionRequest, _ngwm__closeFreeBusySessionResponse *ngwm__closeFreeBusySessionResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__completeRequest(struct soap*, _ngwm__completeRequest *ngwm__completeRequest, _ngwm__completeResponse *ngwm__completeResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__createCursorRequest(struct soap*, _ngwm__createCursorRequest *ngwm__createCursorRequest, _ngwm__createCursorResponse *ngwm__createCursorResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__createItemRequest(struct soap*, _ngwm__createItemRequest *ngwm__createItemRequest, _ngwm__createItemResponse *ngwm__createItemResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__createItemsRequest(struct soap*, _ngwm__createItemsRequest *ngwm__createItemsRequest, _ngwm__createItemsResponse *ngwm__createItemsResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__createJunkEntryRequest(struct soap*, _ngwm__createJunkEntryRequest *ngwm__createJunkEntryRequest, _ngwm__createJunkEntryResponse *ngwm__createJunkEntryResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__createProxyAccessRequest(struct soap*, _ngwm__createProxyAccessRequest *ngwm__createProxyAccessRequest, _ngwm__createProxyAccessResponse *ngwm__createProxyAccessResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__createSignatureRequest(struct soap*, _ngwm__createSignatureRequest *ngwm__createSignatureRequest, _ngwm__createSignatureResponse *ngwm__createSignatureResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__declineRequest(struct soap*, _ngwm__declineRequest *ngwm__declineRequest, _ngwm__declineResponse *ngwm__declineResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__delegateRequest(struct soap*, _ngwm__delegateRequest *ngwm__delegateRequest, _ngwm__delegateResponse *ngwm__delegateResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__destroyCursorRequest(struct soap*, _ngwm__destroyCursorRequest *ngwm__destroyCursorRequest, _ngwm__destroyCursorResponse *ngwm__destroyCursorResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__executeRuleRequest(struct soap*, _ngwm__executeRuleRequest *ngwm__executeRuleRequest, _ngwm__executeRuleResponse *ngwm__executeRuleResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__forwardRequest(struct soap*, _ngwm__forwardRequest *ngwm__forwardRequest, _ngwm__forwardResponse *ngwm__forwardResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getAddressBookListRequest(struct soap*, _ngwm__getAddressBookListRequest *ngwm__getAddressBookListRequest, _ngwm__getAddressBookListResponse *ngwm__getAddressBookListResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getAttachmentRequestMessage(struct soap*, _ngwm__getAttachmentRequest *ngwm__getAttachmentRequest, _ngwm__getAttachmentResponse *ngwm__getAttachmentResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getCategoryListRequest(struct soap*, _ngwm__getCategoryListRequest *ngwm__getCategoryListRequest, _ngwm__getCategoryListResponse *ngwm__getCategoryListResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getCustomListRequest(struct soap*, _ngwm__getCustomListRequest *ngwm__getCustomListRequest, _ngwm__getCustomListResponse *ngwm__getCustomListResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getDeltasRequest(struct soap*, _ngwm__getDeltasRequest *ngwm__getDeltasRequest, _ngwm__getDeltasResponse *ngwm__getDeltasResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getDeltaInfoRequest(struct soap*, _ngwm__getDeltaInfoRequest *ngwm__getDeltaInfoRequest, _ngwm__getDeltaInfoResponse *ngwm__getDeltaInfoResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getDocumentTypeListRequest(struct soap*, _ngwm__getDocumentTypeListRequest *ngwm__getDocumentTypeListRequest, _ngwm__getDocumentTypeListResponse *ngwm__getDocumentTypeListResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getFolderRequest(struct soap*, _ngwm__getFolderRequest *ngwm__getFolderRequest, _ngwm__getFolderResponse *ngwm__getFolderResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getFolderListRequest(struct soap*, _ngwm__getFolderListRequest *ngwm__getFolderListRequest, _ngwm__getFolderListResponse *ngwm__getFolderListResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getFreeBusyRequest(struct soap*, _ngwm__getFreeBusyRequest *ngwm__getFreeBusyRequest, _ngwm__getFreeBusyResponse *ngwm__getFreeBusyResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getItemRequest(struct soap*, _ngwm__getItemRequest *ngwm__getItemRequest, _ngwm__getItemResponse *ngwm__getItemResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getItemsRequest(struct soap*, _ngwm__getItemsRequest *ngwm__getItemsRequest, _ngwm__getItemsResponse *ngwm__getItemsResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getJunkEntriesRequest(struct soap*, _ngwm__getJunkEntriesRequest *ngwm__getJunkEntriesRequest, _ngwm__getJunkEntriesResponse *ngwm__getJunkEntriesResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getJunkMailSettingsRequest(struct soap*, _ngwm__getJunkMailSettingsRequest *ngwm__getJunkMailSettingsRequest, _ngwm__getJunkMailSettingsResponse *ngwm__getJunkMailSettingsResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getLibraryItemRequest(struct soap*, _ngwm__getLibraryItemRequest *ngwm__getLibraryItemRequest, _ngwm__getLibraryItemResponse *ngwm__getLibraryItemResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getLibraryListRequest(struct soap*, _ngwm__getLibraryListRequest *ngwm__getLibraryListRequest, _ngwm__getLibraryListResponse *ngwm__getLibraryListResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getQuickMessagesRequest(struct soap*, _ngwm__getQuickMessagesRequest *ngwm__getQuickMessagesRequest, _ngwm__getQuickMessagesResponse *ngwm__getQuickMessagesResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getProxyAccessListRequest(struct soap*, _ngwm__getProxyAccessListRequest *ngwm__getProxyAccessListRequest, _ngwm__getProxyAccessListResponse *ngwm__getProxyAccessListResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getProxyListRequest(struct soap*, _ngwm__getProxyListRequest *ngwm__getProxyListRequest, _ngwm__getProxyListResponse *ngwm__getProxyListResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getRuleListRequest(struct soap*, _ngwm__getRuleListRequest *ngwm__getRuleListRequest, _ngwm__getRuleListResponse *ngwm__getRuleListResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getSettingsRequest(struct soap*, _ngwm__getSettingsRequest *ngwm__getSettingsRequest, _ngwm__getSettingsResponse *ngwm__getSettingsResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getSignaturesRequest(struct soap*, _ngwm__getSignaturesRequest *ngwm__getSignaturesRequest, _ngwm__getSignaturesResponse *ngwm__getSignaturesResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getTimestampRequest(struct soap*, _ngwm__getTimestampRequest *ngwm__getTimestampRequest, _ngwm__getTimestampResponse *ngwm__getTimestampResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getTimezoneListRequest(struct soap*, _ngwm__getTimezoneListRequest *ngwm__getTimezoneListRequest, _ngwm__getTimezoneListResponse *ngwm__getTimezoneListResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getUserListRequest(struct soap*, _ngwm__getUserListRequest *ngwm__getUserListRequest, _ngwm__getUserListResponse *ngwm__getUserListResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__loginRequest(struct soap*, _ngwm__loginRequest *ngwm__loginRequest, _ngwm__loginResponse *ngwm__loginResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__logoutRequest(struct soap*, _ngwm__logoutRequest *ngwm__logoutRequest, _ngwm__logoutResponse *ngwm__logoutResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__markPrivateRequest(struct soap*, _ngwm__markPrivateRequest *ngwm__markPrivateRequest, _ngwm__markPrivateResponse *ngwm__markPrivateResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__markReadRequest(struct soap*, _ngwm__markReadRequest *ngwm__markReadRequest, _ngwm__markReadResponse *ngwm__markReadResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__markUnPrivateRequest(struct soap*, _ngwm__markUnPrivateRequest *ngwm__markUnPrivateRequest, _ngwm__markUnPrivateResponse *ngwm__markUnPrivateResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__markUnReadRequest(struct soap*, _ngwm__markUnReadRequest *ngwm__markUnReadRequest, _ngwm__markUnReadResponse *ngwm__markUnReadResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__modifyItemRequest(struct soap*, _ngwm__modifyItemRequest *ngwm__modifyItemRequest, _ngwm__modifyItemResponse *ngwm__modifyItemResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__modifyJunkEntryRequest(struct soap*, _ngwm__modifyJunkEntryRequest *ngwm__modifyJunkEntryRequest, _ngwm__modifyJunkEntryResponse *ngwm__modifyJunkEntryResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__modifyJunkMailSettingsRequest(struct soap*, _ngwm__modifyJunkMailSettingsRequest *ngwm__modifyJunkMailSettingsRequest, _ngwm__modifyJunkMailSettingsResponse *ngwm__modifyJunkMailSettingsResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__modifyPasswordRequest(struct soap*, _ngwm__modifyPasswordRequest *ngwm__modifyPasswordRequest, _ngwm__modifyPasswordResponse *ngwm__modifyPasswordResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__modifyProxyAccessRequest(struct soap*, _ngwm__modifyProxyAccessRequest *ngwm__modifyProxyAccessRequest, _ngwm__modifyProxyAccessResponse *ngwm__modifyProxyAccessResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__modifySettingsRequest(struct soap*, _ngwm__modifySettingsRequest *ngwm__modifySettingsRequest, _ngwm__modifySettingsResponse *ngwm__modifySettingsResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__modifySignaturesRequest(struct soap*, _ngwm__modifySignaturesRequest *ngwm__modifySignaturesRequest, _ngwm__modifySignaturesResponse *ngwm__modifySignaturesResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__moveItemRequest(struct soap*, _ngwm__moveItemRequest *ngwm__moveItemRequest, _ngwm__moveItemResponse *ngwm__moveItemResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__positionCursorRequest(struct soap*, _ngwm__positionCursorRequest *ngwm__positionCursorRequest, _ngwm__positionCursorResponse *ngwm__positionCursorResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__purgeDeletedItemsRequest(struct soap*, _ngwm__purgeDeletedItemsRequest *ngwm__purgeDeletedItemsRequest, _ngwm__purgeDeletedItemsResponse *ngwm__purgeDeletedItemsResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__purgeRequest(struct soap*, _ngwm__purgeRequest *ngwm__purgeRequest, _ngwm__purgeResponse *ngwm__purgeResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__readCursorRequest(struct soap*, _ngwm__readCursorRequest *ngwm__readCursorRequest, _ngwm__readCursorResponse *ngwm__readCursorResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__removeCustomDefinitionRequest(struct soap*, _ngwm__removeCustomDefinitionRequest *ngwm__removeCustomDefinitionRequest, _ngwm__removeCustomDefinitionResponse *ngwm__removeCustomDefinitionResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__removeItemRequest(struct soap*, _ngwm__removeItemRequest *ngwm__removeItemRequest, _ngwm__removeItemResponse *ngwm__removeItemResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__removeItemsRequest(struct soap*, _ngwm__removeItemsRequest *ngwm__removeItemsRequest, _ngwm__removeItemsResponse *ngwm__removeItemsResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__removeJunkEntryRequest(struct soap*, _ngwm__removeJunkEntryRequest *ngwm__removeJunkEntryRequest, _ngwm__removeJunkEntryResponse *ngwm__removeJunkEntryResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__removeMembersRequest(struct soap*, _ngwm__removeMembersRequest *ngwm__removeMembersRequest, _ngwm__removeMembersResponse *ngwm__removeMembersResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__removeProxyAccessRequest(struct soap*, _ngwm__removeProxyAccessRequest *ngwm__removeProxyAccessRequest, _ngwm__removeProxyAccessResponse *ngwm__removeProxyAccessResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__removeProxyUserRequest(struct soap*, _ngwm__removeProxyUserRequest *ngwm__removeProxyUserRequest, _ngwm__removeProxyUserResponse *ngwm__removeProxyUserResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__removeSignatureRequest(struct soap*, _ngwm__removeSignatureRequest *ngwm__removeSignatureRequest, _ngwm__removeSignatureResponse *ngwm__removeSignatureResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__replyRequest(struct soap*, _ngwm__replyRequest *ngwm__replyRequest, _ngwm__replyResponse *ngwm__replyResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__retractRequest(struct soap*, _ngwm__retractRequest *ngwm__retractRequest, _ngwm__retractResponse *ngwm__retractResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__sendItemRequest(struct soap*, _ngwm__sendItemRequest *ngwm__sendItemRequest, _ngwm__sendItemResponse *ngwm__sendItemResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__setTimestampRequest(struct soap*, _ngwm__setTimestampRequest *ngwm__setTimestampRequest, _ngwm__setTimestampResponse *ngwm__setTimestampResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__startFreeBusySessionRequest(struct soap*, _ngwm__startFreeBusySessionRequest *ngwm__startFreeBusySessionRequest, _ngwm__startFreeBusySessionResponse *ngwm__startFreeBusySessionResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__unacceptRequest(struct soap*, _ngwm__unacceptRequest *ngwm__unacceptRequest, _ngwm__unacceptResponse *ngwm__unacceptResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__uncompleteRequest(struct soap*, _ngwm__uncompleteRequest *ngwm__uncompleteRequest, _ngwm__uncompleteResponse *ngwm__uncompleteResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__updateVersionStatusRequest(struct soap*, _ngwm__updateVersionStatusRequest *ngwm__updateVersionStatusRequest, _ngwm__updateVersionStatusResponse *ngwm__updateVersionStatusResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__cleanEventConfigurationRequest(struct soap*, _ngwe__cleanEventConfigurationRequest *ngwe__cleanEventConfigurationRequest, _ngwe__cleanEventConfigurationResponse *ngwe__cleanEventConfigurationResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__configureEventsRequest(struct soap*, _ngwe__configureEventsRequest *ngwe__configureEventsRequest, _ngwe__configureEventsResponse *ngwe__configureEventsResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getEventConfigurationRequest(struct soap*, _ngwe__getEventConfigurationRequest *ngwe__getEventConfigurationRequest, _ngwe__getEventConfigurationResponse *ngwe__getEventConfigurationResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__getEventsRequest(struct soap*, _ngwe__getEventsRequest *ngwe__getEventsRequest, _ngwe__getEventsResponse *ngwe__getEventsResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__removeEventConfigurationRequest(struct soap*, _ngwe__removeEventConfigurationRequest *ngwe__removeEventConfigurationRequest, _ngwe__removeEventConfigurationResponse *ngwe__removeEventConfigurationResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 __ngw__removeEventsRequest(struct soap*, _ngwe__removeEventsRequest *ngwe__removeEventsRequest, _ngwe__removeEventsResponse *ngwe__removeEventsResponse);
 
 /******************************************************************************\
  *                                                                            *
@@ -7304,6 +8594,8 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__createCursorRequest(struct soap *soap
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__createItemRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__createItemRequest *ngwm__createItemRequest, _ngwm__createItemResponse *ngwm__createItemResponse);
 
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__createItemsRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__createItemsRequest *ngwm__createItemsRequest, _ngwm__createItemsResponse *ngwm__createItemsResponse);
+
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__createJunkEntryRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__createJunkEntryRequest *ngwm__createJunkEntryRequest, _ngwm__createJunkEntryResponse *ngwm__createJunkEntryResponse);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__createProxyAccessRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__createProxyAccessRequest *ngwm__createProxyAccessRequest, _ngwm__createProxyAccessResponse *ngwm__createProxyAccessResponse);
@@ -7315,6 +8607,8 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__declineRequest(struct soap *soap, con
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__delegateRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__delegateRequest *ngwm__delegateRequest, _ngwm__delegateResponse *ngwm__delegateResponse);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__destroyCursorRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__destroyCursorRequest *ngwm__destroyCursorRequest, _ngwm__destroyCursorResponse *ngwm__destroyCursorResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__executeRuleRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__executeRuleRequest *ngwm__executeRuleRequest, _ngwm__executeRuleResponse *ngwm__executeRuleResponse);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__forwardRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__forwardRequest *ngwm__forwardRequest, _ngwm__forwardResponse *ngwm__forwardResponse);
 
@@ -7330,6 +8624,10 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getDeltasRequest(struct soap *soap, c
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getDeltaInfoRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getDeltaInfoRequest *ngwm__getDeltaInfoRequest, _ngwm__getDeltaInfoResponse *ngwm__getDeltaInfoResponse);
 
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getDocumentTypeListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getDocumentTypeListRequest *ngwm__getDocumentTypeListRequest, _ngwm__getDocumentTypeListResponse *ngwm__getDocumentTypeListResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getFolderRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getFolderRequest *ngwm__getFolderRequest, _ngwm__getFolderResponse *ngwm__getFolderResponse);
+
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getFolderListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getFolderListRequest *ngwm__getFolderListRequest, _ngwm__getFolderListResponse *ngwm__getFolderListResponse);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getFreeBusyRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getFreeBusyRequest *ngwm__getFreeBusyRequest, _ngwm__getFreeBusyResponse *ngwm__getFreeBusyResponse);
@@ -7342,17 +8640,27 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getJunkEntriesRequest(struct soap *so
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getJunkMailSettingsRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getJunkMailSettingsRequest *ngwm__getJunkMailSettingsRequest, _ngwm__getJunkMailSettingsResponse *ngwm__getJunkMailSettingsResponse);
 
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getLibraryItemRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getLibraryItemRequest *ngwm__getLibraryItemRequest, _ngwm__getLibraryItemResponse *ngwm__getLibraryItemResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getLibraryListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getLibraryListRequest *ngwm__getLibraryListRequest, _ngwm__getLibraryListResponse *ngwm__getLibraryListResponse);
+
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getQuickMessagesRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getQuickMessagesRequest *ngwm__getQuickMessagesRequest, _ngwm__getQuickMessagesResponse *ngwm__getQuickMessagesResponse);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getProxyAccessListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getProxyAccessListRequest *ngwm__getProxyAccessListRequest, _ngwm__getProxyAccessListResponse *ngwm__getProxyAccessListResponse);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getProxyListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getProxyListRequest *ngwm__getProxyListRequest, _ngwm__getProxyListResponse *ngwm__getProxyListResponse);
 
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getRuleListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getRuleListRequest *ngwm__getRuleListRequest, _ngwm__getRuleListResponse *ngwm__getRuleListResponse);
+
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getSettingsRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getSettingsRequest *ngwm__getSettingsRequest, _ngwm__getSettingsResponse *ngwm__getSettingsResponse);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getSignaturesRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getSignaturesRequest *ngwm__getSignaturesRequest, _ngwm__getSignaturesResponse *ngwm__getSignaturesResponse);
 
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getTimestampRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getTimestampRequest *ngwm__getTimestampRequest, _ngwm__getTimestampResponse *ngwm__getTimestampResponse);
+
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getTimezoneListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getTimezoneListRequest *ngwm__getTimezoneListRequest, _ngwm__getTimezoneListResponse *ngwm__getTimezoneListResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getUserListRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__getUserListRequest *ngwm__getUserListRequest, _ngwm__getUserListResponse *ngwm__getUserListResponse);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__loginRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__loginRequest *ngwm__loginRequest, _ngwm__loginResponse *ngwm__loginResponse);
 
@@ -7402,6 +8710,8 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__removeMembersRequest(struct soap *soa
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__removeProxyAccessRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__removeProxyAccessRequest *ngwm__removeProxyAccessRequest, _ngwm__removeProxyAccessResponse *ngwm__removeProxyAccessResponse);
 
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__removeProxyUserRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__removeProxyUserRequest *ngwm__removeProxyUserRequest, _ngwm__removeProxyUserResponse *ngwm__removeProxyUserResponse);
+
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__removeSignatureRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__removeSignatureRequest *ngwm__removeSignatureRequest, _ngwm__removeSignatureResponse *ngwm__removeSignatureResponse);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__replyRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__replyRequest *ngwm__replyRequest, _ngwm__replyResponse *ngwm__replyResponse);
@@ -7410,11 +8720,15 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__retractRequest(struct soap *soap, con
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__sendItemRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__sendItemRequest *ngwm__sendItemRequest, _ngwm__sendItemResponse *ngwm__sendItemResponse);
 
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__setTimestampRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__setTimestampRequest *ngwm__setTimestampRequest, _ngwm__setTimestampResponse *ngwm__setTimestampResponse);
+
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__startFreeBusySessionRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__startFreeBusySessionRequest *ngwm__startFreeBusySessionRequest, _ngwm__startFreeBusySessionResponse *ngwm__startFreeBusySessionResponse);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__unacceptRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__unacceptRequest *ngwm__unacceptRequest, _ngwm__unacceptResponse *ngwm__unacceptResponse);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__uncompleteRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__uncompleteRequest *ngwm__uncompleteRequest, _ngwm__uncompleteResponse *ngwm__uncompleteResponse);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__updateVersionStatusRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwm__updateVersionStatusRequest *ngwm__updateVersionStatusRequest, _ngwm__updateVersionStatusResponse *ngwm__updateVersionStatusResponse);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__cleanEventConfigurationRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwe__cleanEventConfigurationRequest *ngwe__cleanEventConfigurationRequest, _ngwe__cleanEventConfigurationResponse *ngwe__cleanEventConfigurationResponse);
 
@@ -7427,6 +8741,182 @@ SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__getEventsRequest(struct soap *soap, c
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__removeEventConfigurationRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwe__removeEventConfigurationRequest *ngwe__removeEventConfigurationRequest, _ngwe__removeEventConfigurationResponse *ngwe__removeEventConfigurationResponse);
 
 SOAP_FMAC5 int SOAP_FMAC6 soap_call___ngw__removeEventsRequest(struct soap *soap, const char *soap_endpoint, const char *soap_action, _ngwe__removeEventsRequest *ngwe__removeEventsRequest, _ngwe__removeEventsResponse *ngwe__removeEventsResponse);
+
+/******************************************************************************\
+ *                                                                            *
+ * Skeletons                                                                  *
+ *                                                                            *
+\******************************************************************************/
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve_request(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__acceptRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__acceptShareRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__addItemRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__addItemsRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__addMembersRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__closeFreeBusySessionRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__completeRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__createCursorRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__createItemRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__createItemsRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__createJunkEntryRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__createProxyAccessRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__createSignatureRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__declineRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__delegateRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__destroyCursorRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__executeRuleRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__forwardRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getAddressBookListRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getAttachmentRequestMessage(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getCategoryListRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getCustomListRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getDeltasRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getDeltaInfoRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getDocumentTypeListRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getFolderRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getFolderListRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getFreeBusyRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getItemRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getItemsRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getJunkEntriesRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getJunkMailSettingsRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getLibraryItemRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getLibraryListRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getQuickMessagesRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getProxyAccessListRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getProxyListRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getRuleListRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getSettingsRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getSignaturesRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getTimestampRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getTimezoneListRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getUserListRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__loginRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__logoutRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__markPrivateRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__markReadRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__markUnPrivateRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__markUnReadRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__modifyItemRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__modifyJunkEntryRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__modifyJunkMailSettingsRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__modifyPasswordRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__modifyProxyAccessRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__modifySettingsRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__modifySignaturesRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__moveItemRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__positionCursorRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__purgeDeletedItemsRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__purgeRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__readCursorRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__removeCustomDefinitionRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__removeItemRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__removeItemsRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__removeJunkEntryRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__removeMembersRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__removeProxyAccessRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__removeProxyUserRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__removeSignatureRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__replyRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__retractRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__sendItemRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__setTimestampRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__startFreeBusySessionRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__unacceptRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__uncompleteRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__updateVersionStatusRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__cleanEventConfigurationRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__configureEventsRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getEventConfigurationRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__getEventsRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__removeEventConfigurationRequest(struct soap*);
+
+SOAP_FMAC5 int SOAP_FMAC6 soap_serve___ngw__removeEventsRequest(struct soap*);
 
 #endif
 

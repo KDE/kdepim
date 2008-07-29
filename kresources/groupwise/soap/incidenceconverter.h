@@ -61,7 +61,7 @@ class IncidenceConverter : public GWConverter
     void setRecurrence( KCal::Incidence *, ngwt__CalendarItem * );
 
     // used for converting weekly recurrences from GW
-    QBitArray getDayBitArray( ngwt__DayOfWeekList * );
+//     QBitArray getDayBitArray( ngwt__DayOfWeekList * );
 
     ngwt__Recipient *createRecipient( const QString &name,
       const QString &email, const QString &uuid = QString() );

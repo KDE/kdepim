@@ -128,9 +128,18 @@ int GroupwiseServer::gSoapOpen( struct soap *, const char *,
   //TODO: handle errors async
   m_sock->connectToHost( host, port );
   if ( rc != 0 ) {
+    QString errorMsg;
     kError() <<"gSoapOpen: connect failed" << rc;
     mErrors.append( i18n("Connect failed: %1.", rc ) );
-    if ( rc == -1 ) perror( 0 );
+    if ( rc == -1 ) {
+      errorMsg = QString::fromLatin1( strerror( errno ) );
+      perror( 0 );
+    } else {
+      if ( rc == -3 ) {
+        errorMsg = QString::fromLatin1( "Connection timed out.  Check host and port number" );
+      }
+    }
+    mErrors.append( i18n("Connect failed: %1.").arg( errorMsg ) );
     return SOAP_INVALID_SOCKET;
   }
   //m_sock->enableRead( true );
@@ -312,7 +321,7 @@ bool GroupwiseServer::login()
 
   if ( !checkResponse( result, loginResp.status ) ) return false;
 
-  mSession = loginResp.session;
+  mSession = *(loginResp.session);
 
   if ( mSession.size() == 0 ) // workaround broken loginResponse error reporting
   {
@@ -333,6 +342,7 @@ bool GroupwiseServer::login()
     mUserName = conv.stringToQString( userinfo->name );
     if ( userinfo->email ) mUserEmail = conv.stringToQString( userinfo->email );
     if ( userinfo->uuid ) mUserUuid = conv.stringToQString( userinfo->uuid );
+    // can also get userid here in GW7 (userinfo->userid)
   }
 
   kDebug() << "USER: name:" << mUserName << "email:" << mUserEmail <<
@@ -748,7 +758,7 @@ std::string GroupwiseServer::getFullIDFor( const QString & gwRecordIDFromIcal )
       std::vector<class ngwt__Folder * >::const_iterator it;
       for ( it = folders->begin(); it != folders->end(); ++it ) {
         ngwt__SystemFolder * fld = dynamic_cast<ngwt__SystemFolder *>( *it );
-        if ( fld && fld->folderType == Calendar ) {
+        if ( fld && *(fld->folderType) == Calendar ) {
           if ( !fld->id ) {
             kError() <<"No folder id";
           } else {
@@ -1043,6 +1053,7 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
   request.updates->_delete = 0;
   request.updates->update = item;
   request.notification = 0;
+  request.recurrenceAllInstances = 0;
   _ngwm__modifyItemResponse response;
   mSoap->header->ngwt__session = mSession;
 
@@ -1170,10 +1181,13 @@ bool GroupwiseServer::retractRequest( KCal::Incidence *incidence, RetractCause c
   request.retractingAllInstances = (bool*)soap_malloc( mSoap, 1 );
   request.retractCausedByResend = ( cause == DueToResend );
   request.retractingAllInstances = true;
-  request.retractType = allMailboxes;
+  ngwt__RetractType * rt = new ngwt__RetractType;
+  *rt = allMailboxes;
+  request.retractType = rt;
 
   int result = soap_call___ngw__retractRequest( mSoap, mUrl.toLatin1(), 0,
                                                     &request, &response );
+  delete rt;
   return checkResponse( result, response.status );
 }
 
@@ -1192,6 +1206,7 @@ bool GroupwiseServer::insertAddressee( const QString &addrBookId, KABC::Addresse
 
   _ngwm__createItemRequest request;
   request.item = contact;
+  request.notification = 0;
 
   _ngwm__createItemResponse response;
   mSoap->header->ngwt__session = mSession;
@@ -1201,7 +1216,7 @@ bool GroupwiseServer::insertAddressee( const QString &addrBookId, KABC::Addresse
                                                    &request, &response );
   if ( !checkResponse( result, response.status ) ) return false;
 
-  addr.insertCustom( "GWRESOURCE", "UID", QString::fromUtf8( response.id->c_str() ) );
+  addr.insertCustom( "GWRESOURCE", "UID", QString::fromUtf8( response.id.front().c_str() ) );
   addr.setChanged( false );
 
   return true;
@@ -1229,6 +1244,7 @@ bool GroupwiseServer::changeAddressee( const KABC::Addressee &addr )
   request.updates->_delete = 0;
   request.updates->update = contact;
   request.notification = 0;
+  request.recurrenceAllInstances = 0;
 
   _ngwm__modifyItemResponse response;
   mSoap->header->ngwt__session = mSession;
@@ -1319,7 +1335,7 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
     mUrl.toLatin1(), NULL, &startSessionRequest, &startSessionResponse );
   if ( !checkResponse( result, startSessionResponse.status ) ) return false;
 
-  int fbSessionId = startSessionResponse.freeBusySessionId;
+  int fbSessionId = *startSessionResponse.freeBusySessionId;
 
   kDebug() <<"Free/Busy session ID:" << fbSessionId;
 
@@ -1368,7 +1384,7 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
             KDateTime blockEnd = conv.charToKDateTime( (*it2)->endDate, mTimeSpec );
             ngwt__AcceptLevel acceptLevel = *(*it2)->acceptLevel;
 
-            /* we need to support these as people use it for checking others' calendars */
+            /* TODO: show Free/Busy subject in diagram - we need to support these as people use it for checking others' calendars */ 
 /*            if ( (*it2)->subject )
               std::string subject = *(*it2)->subject;*/
   //          kDebug() <<"BLOCK Subject:" << subject.c_str();

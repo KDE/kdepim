@@ -190,8 +190,8 @@ void ResourceGroupwise::retrieveAddressBooks()
 
     GroupWise::AddressBook::List::ConstIterator it;
     for( it = mAddressBooks.begin(); it != mAddressBooks.end(); ++it ) {
+      reads.append( (*it).id );
       if ( (*it).isPersonal ) {
-        reads.append( (*it).id );
         if ( write.isEmpty() ) write = (*it).id;
       }
       else
@@ -391,6 +391,7 @@ void ResourceGroupwise::slotFetchJobResult( KJob *job )
         mPrefs->setLastSequenceNumber( deltaInfo.lastSequence );
         mPrefs->writeConfig();
         emit loadingFinished( this );
+        addressBook()->emitAddressBookChanged();
       }
     }
   }
@@ -407,7 +408,7 @@ void ResourceGroupwise::slotUpdateJobResult( KJob *job )
   saveToCache();
 
   emit loadingFinished( this );
-
+  addressBook()->emitAddressBookChanged();
   mDownloadJob = 0;
   if ( mProgress ) mProgress->setComplete();
   mProgress = 0;
