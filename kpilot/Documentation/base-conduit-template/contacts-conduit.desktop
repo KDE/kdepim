@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Comment=This conduit syncs the handheld address book with a database stored on the pc.
+Comment[uk]=Цей акведук синхронізує адресну книгу кишенькового пристрою з базою даних, що зберігається на комп’ютері.
 Name=Contacts
 Name[af]=Kontakte
 Name[be]=Кантакты
