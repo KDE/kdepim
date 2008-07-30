@@ -1,0 +1,23 @@
+include_directories(
+	${CMAKE_CURRENT_SOURCE_DIR}/../base
+	${CMAKE_CURRENT_BINARY_DIR}
+)
+
+set(akonadibase_SRCS
+	collectioncombobox.cc
+	akonadirecord.cc
+	akonadidataproxy.cc
+	akonadisetupwidget.cc
+)
+
+kde4_add_ui_files(akonadibase_SRCS akonadi-setup-widget.ui)
+
+kde4_add_library(kpilot_akonadibase SHARED ${akonadibase_SRCS})
+
+target_link_libraries(kpilot_akonadibase
+	kpilot_conduit_base
+	${QT_LIBRARIES}
+	${KDE4_AKONADI_LIBS}
+)
+
+install(TARGETS kpilot_akonadibase LIBRARY DESTINATION ${LIB_INSTALL_DIR})

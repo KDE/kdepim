@@ -6,6 +6,7 @@ include_directories(
 
 link_libraries( ${QT_QT3SUPPORT_LIBRARY} )
 
+add_subdirectory(akonadibase)
 add_subdirectory(base)
 add_subdirectory(contacts)
 add_subdirectory(memofileconduit)
