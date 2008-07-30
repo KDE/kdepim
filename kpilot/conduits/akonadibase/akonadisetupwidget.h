@@ -34,7 +34,7 @@
 namespace Akonadi
 {
 	class Collection;
-};
+}
 
 class AkonadiSetupWidgetPrivate;
 
