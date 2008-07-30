@@ -83,6 +83,8 @@ void Creator::create( const KODE::Class::List &list )
   printer.setCreationWarning( true );
   printer.setGenerator( QLatin1String( "kwsdl_compiler" ) );
   printer.setSourceFile( Settings::self()->wsdlFileName() );
+  printer.setExportMacro( Settings::self()->exportMacro() );
+  printer.setExportMacroHeader( Settings::self()->exportMacroHeader() );
 
   KODE::Class::List classes = sortByBaseClass( list );
 

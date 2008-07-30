@@ -171,3 +171,25 @@ Settings::Transport Settings::transport() const
 {
   return mTransport;
 }
+
+void Settings::setExportMacro( const QString &exportMacro )
+{
+  mExportMacro = exportMacro;
+}
+
+QString Settings::exportMacro() const
+{
+  return mExportMacro;
+}
+
+void Settings::setExportMacroHeader( const QString &exportMacroHeader )
+{
+  mExportMacroHeader = exportMacroHeader;
+}
+
+QString Settings::exportMacroHeader() const
+{
+  return mExportMacroHeader;
+}
+
+

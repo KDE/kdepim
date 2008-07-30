@@ -60,6 +60,12 @@ class Settings
     void setTransport( Transport transport );
     Transport transport() const;
 
+    void setExportMacro( const QString &exportMacro );
+    QString exportMacro() const;
+
+    void setExportMacroHeader( const QString &exportMacroHeader );
+    QString exportMacroHeader() const;
+
   private:
     Settings();
 
@@ -68,6 +74,8 @@ class Settings
     QString mWsdlUrl;
     QString mOutputFileName;
     QString mOutputDirectory;
+    QString mExportMacro;
+    QString mExportMacroHeader;
     NSMapping mNamespaceMapping;
     Transport mTransport;
 };

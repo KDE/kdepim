@@ -52,6 +52,8 @@ int main( int argc, char **argv )
   options.add("configfile <file>", ki18n( "Configuration file" ), "kwsdl.cfg");
   options.add("d");
   options.add("outputDirectory <dir>", ki18n( "Directory to generate files in" ), ".");
+  options.add("export-macro <macro-name>", ki18n("Symbol visibility export macro"));
+  options.add("export-macro-header <header-file>", ki18n("Header file for symbol visibility export macro"));
   options.add("+wsdl", ki18n( "WSDL file" ));
   KCmdLineArgs::addCmdLineOptions( options );
 
@@ -70,6 +72,11 @@ int main( int argc, char **argv )
 
   if ( args->isSet( "outputDirectory" ) )
     Settings::self()->setOutputDirectory( args->getOption( "outputDirectory" ) );
+
+  if ( args->isSet( "export-macro" ) && args->isSet( "export-macro-header" ) ) {
+    Settings::self()->setExportMacro( args->getOption( "export-macro" ) );
+    Settings::self()->setExportMacroHeader( args->getOption( "export-macro-header" ) );
+  }
 
   if ( args->count() == 1 )
     Settings::self()->setWsdlUrl( args->url( 0 ).path() );
