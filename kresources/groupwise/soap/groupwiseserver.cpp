@@ -43,11 +43,11 @@
 #include <QFile>
 //Added by qt3to4:
 #include <QByteArray>
-#include <QSslSocket>
 
 #include "contactconverter.h"
 #include "incidenceconverter.h"
 #include "soapH.h"
+#include "stdsoap2.h"
 #include "soapGroupWiseBindingProxy.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -63,7 +63,7 @@ int myOpen( struct soap *soap, const char *endpoint, const char *host, int port 
   QMap<struct soap *,GroupwiseServer *>::ConstIterator it;
   it = mServerMap.find( soap );
   if ( it == mServerMap.end() ) {
-    soap->error = SOAP_FAULT;
+    soap->error = SOAP_FATAL_ERROR;
     return SOAP_INVALID_SOCKET;
   }
 
@@ -74,7 +74,10 @@ int myClose( struct soap *soap )
 {
   QMap<struct soap *,GroupwiseServer *>::ConstIterator it;
   it = mServerMap.find( soap );
-  if ( it == mServerMap.end() ) return SOAP_FAULT;
+  if ( it == mServerMap.end() ) {
+    soap->error = SOAP_FATAL_ERROR;
+    return SOAP_FATAL_ERROR;
+  }
 
   return (*it)->gSoapClose( soap );
 }
@@ -101,52 +104,62 @@ size_t myReceiveCallback( struct soap *soap, char *s, size_t n )
   return (*it)->gSoapReceiveCallback( soap, s, n );
 }
 
-int GroupwiseServer::gSoapOpen( struct soap *, const char *,
+int GroupwiseServer::gSoapOpen( struct soap *soap, const char *,
   const char *host, int port )
 {
-//  kDebug() <<"GroupwiseServer::gSoapOpen()";
+  kDebug() <<"GroupwiseServer::gSoapOpen()";
 
   if ( m_sock ) {
     kError() <<"m_sock non-null:" << (void*)m_sock;
     delete m_sock;
   }
 
-  if ( mSSL ) {
-//    kDebug() <<"Creating KSSLSocket()";
-    m_sock = new QSslSocket();
-    connect( m_sock, SIGNAL( sslErrors(const QList<QSslError> &) ), SLOT( slotSslErrors(const QList<QSslError> &) ) );
-  } else {
-    m_sock = new QTcpSocket();
-  }
+  m_sock = new KTcpSocket();
+  connect( m_sock, SIGNAL(error(KTcpSocket::Error)), this, SLOT( slotSocketError(  KTcpSocket::Error ) ) );
+  connect( m_sock, SIGNAL( sslErrors(const QList<KSslError> &) ), SLOT( slotSslErrors(const QList<KSslError> &) ) );
   mErrors.clear();
 
   m_sock->reset();
   //m_sock->setBlockingMode( false );
   //m_sock->setSocketFlags( KExtendedSocket::inetSocket );
 
-  int rc = 0;
   //TODO: handle errors async
-  m_sock->connectToHost( host, port );
-  if ( rc != 0 ) {
-    kError() <<"gSoapOpen: connect failed" << rc;
-    mErrors.append( i18n("Connect failed: %1.", rc ) );
-    if ( rc == -1 ) perror( 0 );
+  if ( mSSL ) {
+    m_sock->connectToHostEncrypted( host, port );
+    m_sock->waitForEncrypted( 30000 );
+  } else {
+    m_sock->connectToHost( host, port );
+  }
+  if ( m_sock->state() == KTcpSocket::UnconnectedState ) {
+    QList< KSslError > sslErrors = m_sock->sslErrors();
+    if ( !sslErrors.isEmpty() ) {
+      // ignore untrusted certs for now, we can't handle it async
+      bool untrusted = false;
+      foreach( KSslError err, sslErrors ) {
+        if ( err.error() == KSslError::UntrustedCertificate ) {
+          untrusted = true;
+          break;
+        }
+      }
+      if ( untrusted ) {
+        kDebug() << "ignoring untrusted cert!";
+        mErrors.clear();
+      } else {
+        soap->error = SOAP_SSL_ERROR;
+      }
+    } else {
+      soap->error = SOAP_TCP_ERROR;
+    }
     return SOAP_INVALID_SOCKET;
   }
-  //m_sock->enableRead( true );
-  //m_sock->enableWrite( true );
 
-  // hopefully never really used by SOAP
-#if 0
-  return m_sock->fd();
-#else
+  // return a fake fd because the real fd would be useless when using SSL
   return 0;
-#endif
 }
 
 int GroupwiseServer::gSoapClose( struct soap * )
 {
-//  kDebug() <<"GroupwiseServer::gSoapClose()";
+  kDebug() <<"GroupwiseServer::gSoapClose()";
 
   delete m_sock;
   m_sock = 0;
@@ -158,16 +171,23 @@ int GroupwiseServer::gSoapClose( struct soap * )
    return SOAP_OK;
 }
 
-int GroupwiseServer::gSoapSendCallback( struct soap *, const char *s, size_t n )
+int GroupwiseServer::gSoapSendCallback( struct soap * soap, const char *s, size_t n )
 {
-//  kDebug() <<"GroupwiseServer::gSoapSendCallback()";
+  kDebug() <<"GroupwiseServer::gSoapSendCallback()";
 
   if ( !m_sock ) {
-    kError() <<"no open connection";
+    kError() << "no socket!";
+    return SOAP_TCP_ERROR;
+  }
+
+  if ( m_sock->state() != KTcpSocket::ConnectedState ) {
+    kError() << "no open connection";
+    soap->error = SOAP_TCP_ERROR;
     return SOAP_TCP_ERROR;
   }
   if ( !mErrors.isEmpty() ) {
     kError() <<"SSL is in error state.";
+    soap->error = SOAP_SSL_ERROR;
     return SOAP_SSL_ERROR;
   }
 
@@ -187,6 +207,7 @@ int GroupwiseServer::gSoapSendCallback( struct soap *, const char *s, size_t n )
     if ( ret < 0 ) {
       kError() << "Send failed:" << m_sock->errorString()
                << m_sock->state() << m_sock->error();
+      soap->error = SOAP_TCP_ERROR;
       return SOAP_TCP_ERROR;
     }
     n -= ret;
@@ -195,8 +216,10 @@ int GroupwiseServer::gSoapSendCallback( struct soap *, const char *s, size_t n )
   if ( n !=0 ) {
     kError() << "Send failed:" << m_sock->errorString()
              << m_sock->state() << m_sock->error();
+    soap->error = SOAP_TCP_ERROR;
   }
 
+  m_sock->waitForBytesWritten(30000);
   m_sock->flush();
 
   return SOAP_OK;
@@ -205,20 +228,22 @@ int GroupwiseServer::gSoapSendCallback( struct soap *, const char *s, size_t n )
 size_t GroupwiseServer::gSoapReceiveCallback( struct soap *soap, char *s,
   size_t n )
 {
-//  kDebug() <<"GroupwiseServer::gSoapReceiveCallback()";
+  kDebug();
 
-  if ( !m_sock ) {
-    kError() <<"no open connection";
-    soap->error = SOAP_FAULT;
-    return 0;
+  if ( m_sock->state() != KTcpSocket::ConnectedState ) {
+    if ( !m_sock->sslErrors().isEmpty() ) {
+      kError() <<"SSL is in error state.";
+      soap->error = SOAP_SSL_ERROR;
+      return 0;
+    } else {
+      kError() <<"no open connection";
+      soap->error = SOAP_TCP_ERROR;
+      return 0;
+    }
   }
-  if ( !mErrors.isEmpty() ) {
-    kError() <<"SSL is in error state.";
-    soap->error = SOAP_SSL_ERROR;
-    return 0;
-  }
-
 //   m_sock->open();
+  // make it synchronous
+  m_sock->waitForReadyRead();
   long ret = m_sock->read( s, n );
   if ( ret < 0 ) {
     kError() << "Receive failed:" << m_sock->errorString()
@@ -231,7 +256,7 @@ size_t GroupwiseServer::gSoapReceiveCallback( struct soap *soap, char *s,
       p[ret]='\0';
       qDebug("%s", p );
       qDebug("\n*************************");
-      qDebug("kioReceiveCallback return %ld", ret);
+      qDebug("gSoapReceiveCallback returning %ld bytes read.", ret);
     }
     log( "RECV", s, ret );
   }
@@ -243,7 +268,7 @@ GroupwiseServer::GroupwiseServer( const QString &url, const QString &user,
                                   const QString &password, const KDateTime::Spec & spec, QObject *parent )
   : QObject( parent ),
     mUrl( url ), mUser( user ), mPassword( password ),
-    mSSL( url.left(6)=="https:" ), m_sock( 0 ), mTimeSpec( spec )
+    mSSL( url.left(6)=="https:" ), m_sock( 0 ), mTimeSpec( spec ), mError( 0 )
 {
   setObjectName( "groupwiseserver" );
   mBinding = new GroupWiseBinding;
@@ -312,7 +337,7 @@ bool GroupwiseServer::login()
 
   if ( !checkResponse( result, loginResp.status ) ) return false;
 
-  mSession = loginResp.session;
+  mSession = *(loginResp.session);
 
   if ( mSession.size() == 0 ) // workaround broken loginResponse error reporting
   {
@@ -333,6 +358,7 @@ bool GroupwiseServer::login()
     mUserName = conv.stringToQString( userinfo->name );
     if ( userinfo->email ) mUserEmail = conv.stringToQString( userinfo->email );
     if ( userinfo->uuid ) mUserUuid = conv.stringToQString( userinfo->uuid );
+    // can also get userid here in GW7 (userinfo->userid)
   }
 
   kDebug() << "USER: name:" << mUserName << "email:" << mUserEmail <<
@@ -697,7 +723,7 @@ GroupWise::AddressBook::List GroupwiseServer::addressBookList()
 bool GroupwiseServer::readAddressBooksSynchronous( const QStringList &addrBookIds )
 {
   if ( mSession.empty() ) {
-    kError() <<"GroupwiseServer::readAddressBooks(): no session.";
+    kError();
     return false;
   }
 
@@ -710,7 +736,7 @@ bool GroupwiseServer::readAddressBooksSynchronous( const QStringList &addrBookId
   return true;
 }
 
-bool GroupwiseServer::updateAddressBooks( const QStringList &addrBookIds, const unsigned int startSequenceNumber )
+bool GroupwiseServer::updateAddressBooks( const QStringList &addrBookIds, const unsigned long startSequenceNumber, const unsigned long lastPORebuildTime )
 {
   if ( mSession.empty() ) {
     kError() <<"GroupwiseServer::updateAddressBooks(): no session.";
@@ -720,9 +746,15 @@ bool GroupwiseServer::updateAddressBooks( const QStringList &addrBookIds, const 
   UpdateAddressBooksJob * job = new UpdateAddressBooksJob( this, mSoap, mUrl, mTimeSpec, mSession );
   job->setAddressBookIds( addrBookIds );
   job->setStartSequenceNumber( startSequenceNumber );
+  job->setLastPORebuildTime( lastPORebuildTime );
 
   job->run();
-
+  if ( job->error() == GroupWise::RefreshNeeded )
+  {
+    mError = 1;
+    mErrors.append(  "The System Address Book must be refreshed" ) ;
+    return false;
+  }
   return true;
 }
 
@@ -748,19 +780,20 @@ std::string GroupwiseServer::getFullIDFor( const QString & gwRecordIDFromIcal )
       std::vector<class ngwt__Folder * >::const_iterator it;
       for ( it = folders->begin(); it != folders->end(); ++it ) {
         ngwt__SystemFolder * fld = dynamic_cast<ngwt__SystemFolder *>( *it );
-        if ( fld && fld->folderType == Calendar )
+        if ( fld && *(fld->folderType) == Calendar ) {
           if ( !fld->id ) {
             kError() <<"No folder id";
           } else {
             calendarFolderID = *fld->id;
           }
+        }
       }
     }
   }
   if ( calendarFolderID.empty() )
   {
     kError() <<"couldn't get calendar folder ID in order to accept invitation";
-    return false;
+    return std::string();
   }
 
   // now get the full Item ID of the
@@ -787,7 +820,7 @@ std::string GroupwiseServer::getFullIDFor( const QString & gwRecordIDFromIcal )
   mSoap->header->ngwt__session = mSession;
   int result = soap_call___ngw__getItemsRequest( mSoap, mUrl.toLatin1(), 0,
                                                    &getItemRequest, &getItemResponse );
-  if ( !checkResponse( result, getItemResponse.status ) ) return false;
+  if ( !checkResponse( result, getItemResponse.status ) ) return std::string();
 
   std::vector<class ngwt__Item * > *items = &getItemResponse.items->item;
   if ( items ) {
@@ -967,6 +1000,28 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
 
   kDebug() <<"GroupwiseServer::changeIncidence()" << incidence->summary();
 
+  bool success = true;
+  bool todoCompletionChanged = false;
+
+  IncidenceConverter converter( mTimeSpec, mSoap );
+  converter.setFrom( mUserName, mUserEmail, mUserUuid );
+
+  incidence->setCustomProperty( "GWRESOURCE", "CONTAINER",
+                                converter.stringToQString( mCalendarFolder ) );
+
+  ngwt__Item *item;
+  if ( incidence->type() == "Event" ) {
+    item = converter.convertToAppointment( static_cast<KCal::Event *>( incidence ) );
+  } else if ( incidence->type() == "Todo" ) {
+    item = converter.convertToTask( static_cast<KCal::Todo *>( incidence ) );
+  } else if ( incidence->type() == "Journal" ) {
+    item = converter.convertToNote( static_cast<KCal::Journal *>( incidence ) );;
+  } else {
+    kError() << "KCal::GroupwiseServer::changeIncidence(): Unknown type: "
+        << incidence->type();
+    return false;
+  }
+
   if ( iAmTheOrganizer( incidence ) )
   {
     if ( incidence->attendeeCount() > 0 ) {
@@ -983,41 +1038,31 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
       return true;
     }
   }
-  else  // If I am not the organizer restrict my changes to accept or decline requests.
+  else  // If I am not the organizer restrict my changes to accept or decline requests or task completion
   {
     // find myself as attendee.
+    GWConverter conv( mSoap );
     KCal::Attendee::List attendees = incidence->attendees();
     KCal::Attendee::List::ConstIterator it;
     for( it = attendees.begin(); it != attendees.end(); ++it ) {
-      if ( (*it)->email() == mUserEmail ) {
+      if ( conv.emailsMatch( (*it)->email(), mUserEmail ) ) {
         if ( (*it)->status() == KCal::Attendee::Accepted )
-          return acceptIncidence( incidence );
+          success &= acceptIncidence( incidence );
         else if ( (*it)->status() == KCal::Attendee::Declined )
-          return declineIncidence( incidence );
+          success &= declineIncidence( incidence );
         break;
       }
     }
+
+      // task completion
+    if ( incidence->type() == "Todo" )
+    {
+      KCal::Todo * todo = static_cast<KCal::Todo *>( incidence );
+      success &= setCompleted( todo );
+      //assume nothing else to change
+    }
     // if we are attending, but not the organiser, and we have not accepted or declined, there's nothing else to do.
-    return true;
-  }
-
-  IncidenceConverter converter( mTimeSpec, mSoap );
-  converter.setFrom( mUserName, mUserEmail, mUserUuid );
-
-  incidence->setCustomProperty( "GWRESOURCE", "CONTAINER",
-                                converter.stringToQString( mCalendarFolder ) );
-
-  ngwt__Item *item;
-  if ( incidence->type() == "Event" ) {
-    item = converter.convertToAppointment( static_cast<KCal::Event *>( incidence ) );
-  } else if ( incidence->type() == "Todo" ) {
-    item = converter.convertToTask( static_cast<KCal::Todo *>( incidence ) );
-  } else if ( incidence->type() == "Journal" ) {
-    item = converter.convertToNote( static_cast<KCal::Journal *>( incidence ) );;
-  } else {
-    kError() <<"KCal::GroupwiseServer::changeIncidence(): Unknown type:"
-              << incidence->type();
-    return false;
+    return success;
   }
 
   _ngwm__modifyItemRequest request;
@@ -1031,12 +1076,23 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
   request.updates->_delete = 0;
   request.updates->update = item;
   request.notification = 0;
+  request.recurrenceAllInstances = 0;
   _ngwm__modifyItemResponse response;
   mSoap->header->ngwt__session = mSession;
 
   int result = soap_call___ngw__modifyItemRequest( mSoap, mUrl.toLatin1(), 0,
                                                     &request, &response );
-  return checkResponse( result, response.status );
+
+  success &= checkResponse( result, response.status );
+
+  // task completion after modify
+  if ( incidence->type() == "Todo" )
+  {
+    KCal::Todo * todo = static_cast<KCal::Todo *>( incidence );
+    success &= setCompleted( todo );
+  }
+
+  return success;
 }
 
 bool GroupwiseServer::checkResponse( int result, ngwt__Status *status )
@@ -1119,18 +1175,42 @@ bool GroupwiseServer::retractRequest( KCal::Incidence *incidence, RetractCause c
 
   kDebug() <<"GroupwiseServer::retractRequest():" << incidence->summary();
 
+  IncidenceConverter converter( mTimeSpec, mSoap );
+  converter.setFrom( mUserName, mUserEmail, mUserUuid );
+
+  incidence->setCustomProperty( "GWRESOURCE", "CONTAINER",
+      converter.stringToQString( mCalendarFolder ) );
+
+  ngwt__Item *item;
+  if ( incidence->type() == "Event" ) {
+    item = converter.convertToAppointment( static_cast<KCal::Event *>( incidence ) );
+  } else if ( incidence->type() == "Todo" ) {
+    item = converter.convertToTask( static_cast<KCal::Todo *>( incidence ) );
+  } else if ( incidence->type() == "Journal" ) {
+    item = converter.convertToNote( static_cast<KCal::Journal *>( incidence ) );;
+  } else {
+    kError() << "KCal::GroupwiseServer::addIncidence(): Unknown type: "
+              << incidence->type();
+    return false;
+  }
+
   _ngwm__retractRequest request;
   _ngwm__retractResponse response;
   mSoap->header->ngwt__session = mSession;
+  request.items = soap_new_ngwt__ItemRefList( mSoap, 1 );
+  request.items->item.push_back( *( item->id ) );
   request.comment = 0;
   request.retractCausedByResend = (bool*)soap_malloc( mSoap, 1 );
   request.retractingAllInstances = (bool*)soap_malloc( mSoap, 1 );
   request.retractCausedByResend = ( cause == DueToResend );
   request.retractingAllInstances = true;
-  request.retractType = allMailboxes;
+  ngwt__RetractType * rt = new ngwt__RetractType;
+  *rt = allMailboxes;
+  request.retractType = rt;
 
   int result = soap_call___ngw__retractRequest( mSoap, mUrl.toLatin1(), 0,
                                                     &request, &response );
+  delete rt;
   return checkResponse( result, response.status );
 }
 
@@ -1149,6 +1229,7 @@ bool GroupwiseServer::insertAddressee( const QString &addrBookId, KABC::Addresse
 
   _ngwm__createItemRequest request;
   request.item = contact;
+  request.notification = 0;
 
   _ngwm__createItemResponse response;
   mSoap->header->ngwt__session = mSession;
@@ -1158,7 +1239,7 @@ bool GroupwiseServer::insertAddressee( const QString &addrBookId, KABC::Addresse
                                                    &request, &response );
   if ( !checkResponse( result, response.status ) ) return false;
 
-  addr.insertCustom( "GWRESOURCE", "UID", QString::fromUtf8( response.id->c_str() ) );
+  addr.insertCustom( "GWRESOURCE", "UID", QString::fromUtf8( response.id.front().c_str() ) );
   addr.setChanged( false );
 
   return true;
@@ -1186,6 +1267,7 @@ bool GroupwiseServer::changeAddressee( const KABC::Addressee &addr )
   request.updates->_delete = 0;
   request.updates->update = contact;
   request.notification = 0;
+  request.recurrenceAllInstances = 0;
 
   _ngwm__modifyItemResponse response;
   mSoap->header->ngwt__session = mSession;
@@ -1276,7 +1358,7 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
     mUrl.toLatin1(), NULL, &startSessionRequest, &startSessionResponse );
   if ( !checkResponse( result, startSessionResponse.status ) ) return false;
 
-  int fbSessionId = startSessionResponse.freeBusySessionId;
+  int fbSessionId = *startSessionResponse.freeBusySessionId;
 
   kDebug() <<"Free/Busy session ID:" << fbSessionId;
 
@@ -1325,7 +1407,7 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
             KDateTime blockEnd = conv.charToKDateTime( (*it2)->endDate, mTimeSpec );
             ngwt__AcceptLevel acceptLevel = *(*it2)->acceptLevel;
 
-            /* we need to support these as people use it for checking others' calendars */
+            /* TODO: show Free/Busy subject in diagram - we need to support these as people use it for checking others' calendars */ 
 /*            if ( (*it2)->subject )
               std::string subject = *(*it2)->subject;*/
   //          kDebug() <<"BLOCK Subject:" << subject.c_str();
@@ -1354,14 +1436,22 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
   return true;
 }
 
-void GroupwiseServer::slotSslErrors(const QList<QSslError> & errors)
+void GroupwiseServer::slotSslErrors(const QList<KSslError> & errors)
 {
-  kDebug() <<"********************** SSL ERROR";
-  mErrors.append( i18n("SSL Error") );
 
-  foreach( QSslError err, errors ) {
+  bool untrusted = false;
+  foreach( KSslError err, errors ) {
+    // ignore untrusted certs for now, we can't handle it async
+    if ( err.error() == KSslError::UntrustedCertificate ) {
+      untrusted = true;
+      mErrors.clear();
+      m_sock->ignoreSslErrors();
+      break;
+    }
     mErrors.append( err.errorString() );
   }
+  if ( !mErrors.isEmpty() )
+    kDebug() << "********************** SSL ERRORS: " << mErrors;
 }
 
 void GroupwiseServer::emitReadAddressBookTotalSize( int s )
@@ -1517,6 +1607,57 @@ bool GroupwiseServer::modifyUserSettings( QMap<QString, QString> & settings  )
 bool GroupwiseServer::iAmTheOrganizer( KCal::Incidence * incidence )
 {
   return ( incidence->organizer().email() == mUserEmail );
+}
+
+bool GroupwiseServer::setCompleted( KCal::Todo * todo )
+{
+  if ( todo )
+  {
+    GWConverter conv( mSoap );
+    QString id = todo->customProperty( "GWRESOURCE", "UID" );
+    ngwt__ItemRefList * items = soap_new_ngwt__ItemRefList( mSoap, 1 );
+    items->item.push_back( *( conv.qStringToString( id ) ) );
+    if ( todo->isCompleted() )
+    {
+      _ngwm__completeRequest request;
+      _ngwm__completeResponse response;
+      mSoap->header->ngwt__session = mSession;
+      request.items = items;
+      int result = soap_call___ngw__completeRequest( mSoap, mUrl.toLatin1(), 0,
+          &request, &response );
+      return checkResponse( result, response.status );
+    }
+    else
+    {
+      _ngwm__uncompleteRequest request;
+      _ngwm__uncompleteResponse response;
+      mSoap->header->ngwt__session = mSession;
+      request.items = items;
+      int result = soap_call___ngw__uncompleteRequest( mSoap, mUrl.toLatin1(), 0,
+          &request, &response );
+      return checkResponse( result, response.status );
+    }
+  }
+  return false;
+}
+
+void GroupwiseServer::slotSocketError(KTcpSocket::Error error)
+{
+  if ( error == KTcpSocket::UnknownError ) // probably an ssl error
+    return;
+
+  QString errorMsg = QString::fromLatin1( "Unhandled error type: %1" ).arg( error );
+  kError() << "slotSocketError: connect failed " << error;
+  if ( error == KTcpSocket::ConnectionRefusedError ) {
+    errorMsg = QString::fromLatin1( "Connection refused.  Check host and port number" );
+  }
+  if ( error == KTcpSocket::SocketTimeoutError ) {
+    errorMsg = QString::fromLatin1( "Connection timed out.  Check port number" );
+  }
+  if ( error == KTcpSocket::HostNotFoundError ) {
+    errorMsg = QString::fromLatin1( "Host not found. Check your configuration" );
+  }
+  mErrors.append( i18n("Connect failed: %1.").arg( errorMsg ) );
 }
 
 #include "groupwiseserver.moc"

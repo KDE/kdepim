@@ -7,7 +7,7 @@
 
 #include "soapH.h"
 
-SOAP_SOURCE_STAMP("@(#) soapC.cpp ver 2.7.3 2005-07-18 16:36:51 GMT")
+SOAP_SOURCE_STAMP("@(#) soapC.cpp ver 2.7.3 2006-05-18 13:53:47 GMT")
 
 
 #ifndef WITH_NOGLOBAL
@@ -128,6 +128,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_ngwt__DayOfMonth(soap, NULL, NULL, "ngwt:DayOfMonth");
 	case SOAP_TYPE_byte:
 		return soap_in_byte(soap, NULL, NULL, "xsd:byte");
+	case SOAP_TYPE_ngwt__WeekOfYear:
+		return soap_in_ngwt__WeekOfYear(soap, NULL, NULL, "ngwt:WeekOfYear");
 	case SOAP_TYPE_ngwt__DayOfYear:
 		return soap_in_ngwt__DayOfYear(soap, NULL, NULL, "ngwt:DayOfYear");
 	case SOAP_TYPE_short:
@@ -162,8 +164,14 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_ngwe__EventType(soap, NULL, NULL, "ngwe:EventType");
 	case SOAP_TYPE_ngwt__WeekDay:
 		return soap_in_ngwt__WeekDay(soap, NULL, NULL, "ngwt:WeekDay");
+	case SOAP_TYPE_ngwt__VersionStatus:
+		return soap_in_ngwt__VersionStatus(soap, NULL, NULL, "ngwt:VersionStatus");
+	case SOAP_TYPE_ngwt__VersionEventType:
+		return soap_in_ngwt__VersionEventType(soap, NULL, NULL, "ngwt:VersionEventType");
 	case SOAP_TYPE_ngwt__StatusTrackingOptions:
 		return soap_in_ngwt__StatusTrackingOptions(soap, NULL, NULL, "ngwt:StatusTrackingOptions");
+	case SOAP_TYPE_ngwt__RuleActionType:
+		return soap_in_ngwt__RuleActionType(soap, NULL, NULL, "ngwt:RuleActionType");
 	case SOAP_TYPE_ngwt__RetractType:
 		return soap_in_ngwt__RetractType(soap, NULL, NULL, "ngwt:RetractType");
 	case SOAP_TYPE_ngwt__RecipientType:
@@ -202,10 +210,16 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_ngwt__FolderACLStatus(soap, NULL, NULL, "ngwt:FolderACLStatus");
 	case SOAP_TYPE_ngwt__FilterOp:
 		return soap_in_ngwt__FilterOp(soap, NULL, NULL, "ngwt:FilterOp");
+	case SOAP_TYPE_ngwt__FilterDate:
+		return soap_in_ngwt__FilterDate(soap, NULL, NULL, "ngwt:FilterDate");
+	case SOAP_TYPE_ngwt__Execution:
+		return soap_in_ngwt__Execution(soap, NULL, NULL, "ngwt:Execution");
 	case SOAP_TYPE_ngwt__DistributionType:
 		return soap_in_ngwt__DistributionType(soap, NULL, NULL, "ngwt:DistributionType");
 	case SOAP_TYPE_ngwt__DeltaSyncType:
 		return soap_in_ngwt__DeltaSyncType(soap, NULL, NULL, "ngwt:DeltaSyncType");
+	case SOAP_TYPE_ngwt__CustomType:
+		return soap_in_ngwt__CustomType(soap, NULL, NULL, "ngwt:CustomType");
 	case SOAP_TYPE_ngwt__CursorSeek:
 		return soap_in_ngwt__CursorSeek(soap, NULL, NULL, "ngwt:CursorSeek");
 	case SOAP_TYPE_ngwt__ContactType:
@@ -214,6 +228,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_ngwt__CategoryType(soap, NULL, NULL, "ngwt:CategoryType");
 	case SOAP_TYPE_ngwt__CalendarFolderFlags:
 		return soap_in_ngwt__CalendarFolderFlags(soap, NULL, NULL, "ngwt:CalendarFolderFlags");
+	case SOAP_TYPE_ngwt__AppointmentConflict:
+		return soap_in_ngwt__AppointmentConflict(soap, NULL, NULL, "ngwt:AppointmentConflict");
+	case SOAP_TYPE_ngwt__AgeAction:
+		return soap_in_ngwt__AgeAction(soap, NULL, NULL, "ngwt:AgeAction");
 	case SOAP_TYPE_ngwt__AcceptLevel:
 		return soap_in_ngwt__AcceptLevel(soap, NULL, NULL, "ngwt:AcceptLevel");
 	case SOAP_TYPE_ngwe__ItemTypeList:
@@ -254,6 +272,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in__ngwe__cleanEventConfigurationResponse(soap, NULL, NULL, "ngwe:cleanEventConfigurationResponse");
 	case SOAP_TYPE__ngwe__cleanEventConfigurationRequest:
 		return soap_in__ngwe__cleanEventConfigurationRequest(soap, NULL, NULL, "ngwe:cleanEventConfigurationRequest");
+	case SOAP_TYPE_ngwe__Notify:
+		return soap_in_ngwe__Notify(soap, NULL, NULL, "ngwe:Notify");
 	case SOAP_TYPE_ngwe__EventTypeList:
 		return soap_in_ngwe__EventTypeList(soap, NULL, NULL, "ngwe:EventTypeList");
 	case SOAP_TYPE_ngwe__EventsList:
@@ -268,6 +288,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_ngwe__Event(soap, NULL, NULL, "ngwe:Event");
 	case SOAP_TYPE_ngwe__ContainerList:
 		return soap_in_ngwe__ContainerList(soap, NULL, NULL, "ngwe:ContainerList");
+	case SOAP_TYPE__ngwm__updateVersionStatusResponse:
+		return soap_in__ngwm__updateVersionStatusResponse(soap, NULL, NULL, "ngwm:updateVersionStatusResponse");
+	case SOAP_TYPE__ngwm__updateVersionStatusRequest:
+		return soap_in__ngwm__updateVersionStatusRequest(soap, NULL, NULL, "ngwm:updateVersionStatusRequest");
 	case SOAP_TYPE__ngwm__uncompleteResponse:
 		return soap_in__ngwm__uncompleteResponse(soap, NULL, NULL, "ngwm:uncompleteResponse");
 	case SOAP_TYPE__ngwm__uncompleteRequest:
@@ -280,6 +304,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in__ngwm__startFreeBusySessionResponse(soap, NULL, NULL, "ngwm:startFreeBusySessionResponse");
 	case SOAP_TYPE__ngwm__startFreeBusySessionRequest:
 		return soap_in__ngwm__startFreeBusySessionRequest(soap, NULL, NULL, "ngwm:startFreeBusySessionRequest");
+	case SOAP_TYPE__ngwm__setTimestampResponse:
+		return soap_in__ngwm__setTimestampResponse(soap, NULL, NULL, "ngwm:setTimestampResponse");
+	case SOAP_TYPE__ngwm__setTimestampRequest:
+		return soap_in__ngwm__setTimestampRequest(soap, NULL, NULL, "ngwm:setTimestampRequest");
 	case SOAP_TYPE__ngwm__sendItemResponse:
 		return soap_in__ngwm__sendItemResponse(soap, NULL, NULL, "ngwm:sendItemResponse");
 	case SOAP_TYPE__ngwm__sendItemRequest:
@@ -296,6 +324,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in__ngwm__removeSignatureResponse(soap, NULL, NULL, "ngwm:removeSignatureResponse");
 	case SOAP_TYPE__ngwm__removeSignatureRequest:
 		return soap_in__ngwm__removeSignatureRequest(soap, NULL, NULL, "ngwm:removeSignatureRequest");
+	case SOAP_TYPE__ngwm__removeProxyUserResponse:
+		return soap_in__ngwm__removeProxyUserResponse(soap, NULL, NULL, "ngwm:removeProxyUserResponse");
+	case SOAP_TYPE__ngwm__removeProxyUserRequest:
+		return soap_in__ngwm__removeProxyUserRequest(soap, NULL, NULL, "ngwm:removeProxyUserRequest");
 	case SOAP_TYPE__ngwm__removeProxyAccessResponse:
 		return soap_in__ngwm__removeProxyAccessResponse(soap, NULL, NULL, "ngwm:removeProxyAccessResponse");
 	case SOAP_TYPE__ngwm__removeProxyAccessRequest:
@@ -396,10 +428,18 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in__ngwm__loginResponse(soap, NULL, NULL, "ngwm:loginResponse");
 	case SOAP_TYPE__ngwm__loginRequest:
 		return soap_in__ngwm__loginRequest(soap, NULL, NULL, "ngwm:loginRequest");
+	case SOAP_TYPE__ngwm__getUserListResponse:
+		return soap_in__ngwm__getUserListResponse(soap, NULL, NULL, "ngwm:getUserListResponse");
+	case SOAP_TYPE__ngwm__getUserListRequest:
+		return soap_in__ngwm__getUserListRequest(soap, NULL, NULL, "ngwm:getUserListRequest");
 	case SOAP_TYPE__ngwm__getTimezoneListResponse:
 		return soap_in__ngwm__getTimezoneListResponse(soap, NULL, NULL, "ngwm:getTimezoneListResponse");
 	case SOAP_TYPE__ngwm__getTimezoneListRequest:
 		return soap_in__ngwm__getTimezoneListRequest(soap, NULL, NULL, "ngwm:getTimezoneListRequest");
+	case SOAP_TYPE__ngwm__getTimestampResponse:
+		return soap_in__ngwm__getTimestampResponse(soap, NULL, NULL, "ngwm:getTimestampResponse");
+	case SOAP_TYPE__ngwm__getTimestampRequest:
+		return soap_in__ngwm__getTimestampRequest(soap, NULL, NULL, "ngwm:getTimestampRequest");
 	case SOAP_TYPE__ngwm__getSignaturesResponse:
 		return soap_in__ngwm__getSignaturesResponse(soap, NULL, NULL, "ngwm:getSignaturesResponse");
 	case SOAP_TYPE__ngwm__getSignaturesRequest:
@@ -408,6 +448,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in__ngwm__getSettingsResponse(soap, NULL, NULL, "ngwm:getSettingsResponse");
 	case SOAP_TYPE__ngwm__getSettingsRequest:
 		return soap_in__ngwm__getSettingsRequest(soap, NULL, NULL, "ngwm:getSettingsRequest");
+	case SOAP_TYPE__ngwm__getRuleListResponse:
+		return soap_in__ngwm__getRuleListResponse(soap, NULL, NULL, "ngwm:getRuleListResponse");
+	case SOAP_TYPE__ngwm__getRuleListRequest:
+		return soap_in__ngwm__getRuleListRequest(soap, NULL, NULL, "ngwm:getRuleListRequest");
 	case SOAP_TYPE__ngwm__getProxyListResponse:
 		return soap_in__ngwm__getProxyListResponse(soap, NULL, NULL, "ngwm:getProxyListResponse");
 	case SOAP_TYPE__ngwm__getProxyListRequest:
@@ -420,6 +464,14 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in__ngwm__getQuickMessagesResponse(soap, NULL, NULL, "ngwm:getQuickMessagesResponse");
 	case SOAP_TYPE__ngwm__getQuickMessagesRequest:
 		return soap_in__ngwm__getQuickMessagesRequest(soap, NULL, NULL, "ngwm:getQuickMessagesRequest");
+	case SOAP_TYPE__ngwm__getLibraryListResponse:
+		return soap_in__ngwm__getLibraryListResponse(soap, NULL, NULL, "ngwm:getLibraryListResponse");
+	case SOAP_TYPE__ngwm__getLibraryListRequest:
+		return soap_in__ngwm__getLibraryListRequest(soap, NULL, NULL, "ngwm:getLibraryListRequest");
+	case SOAP_TYPE__ngwm__getLibraryItemResponse:
+		return soap_in__ngwm__getLibraryItemResponse(soap, NULL, NULL, "ngwm:getLibraryItemResponse");
+	case SOAP_TYPE__ngwm__getLibraryItemRequest:
+		return soap_in__ngwm__getLibraryItemRequest(soap, NULL, NULL, "ngwm:getLibraryItemRequest");
 	case SOAP_TYPE__ngwm__getJunkMailSettingsResponse:
 		return soap_in__ngwm__getJunkMailSettingsResponse(soap, NULL, NULL, "ngwm:getJunkMailSettingsResponse");
 	case SOAP_TYPE__ngwm__getJunkMailSettingsRequest:
@@ -444,6 +496,14 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in__ngwm__getFolderListResponse(soap, NULL, NULL, "ngwm:getFolderListResponse");
 	case SOAP_TYPE__ngwm__getFolderListRequest:
 		return soap_in__ngwm__getFolderListRequest(soap, NULL, NULL, "ngwm:getFolderListRequest");
+	case SOAP_TYPE__ngwm__getFolderResponse:
+		return soap_in__ngwm__getFolderResponse(soap, NULL, NULL, "ngwm:getFolderResponse");
+	case SOAP_TYPE__ngwm__getFolderRequest:
+		return soap_in__ngwm__getFolderRequest(soap, NULL, NULL, "ngwm:getFolderRequest");
+	case SOAP_TYPE__ngwm__getDocumentTypeListResponse:
+		return soap_in__ngwm__getDocumentTypeListResponse(soap, NULL, NULL, "ngwm:getDocumentTypeListResponse");
+	case SOAP_TYPE__ngwm__getDocumentTypeListRequest:
+		return soap_in__ngwm__getDocumentTypeListRequest(soap, NULL, NULL, "ngwm:getDocumentTypeListRequest");
 	case SOAP_TYPE__ngwm__getDeltaInfoResponse:
 		return soap_in__ngwm__getDeltaInfoResponse(soap, NULL, NULL, "ngwm:getDeltaInfoResponse");
 	case SOAP_TYPE__ngwm__getDeltaInfoRequest:
@@ -472,6 +532,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in__ngwm__forwardResponse(soap, NULL, NULL, "ngwm:forwardResponse");
 	case SOAP_TYPE__ngwm__forwardRequest:
 		return soap_in__ngwm__forwardRequest(soap, NULL, NULL, "ngwm:forwardRequest");
+	case SOAP_TYPE__ngwm__executeRuleResponse:
+		return soap_in__ngwm__executeRuleResponse(soap, NULL, NULL, "ngwm:executeRuleResponse");
+	case SOAP_TYPE__ngwm__executeRuleRequest:
+		return soap_in__ngwm__executeRuleRequest(soap, NULL, NULL, "ngwm:executeRuleRequest");
 	case SOAP_TYPE__ngwm__destroyCursorResponse:
 		return soap_in__ngwm__destroyCursorResponse(soap, NULL, NULL, "ngwm:destroyCursorResponse");
 	case SOAP_TYPE__ngwm__destroyCursorRequest:
@@ -496,6 +560,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in__ngwm__createJunkEntryResponse(soap, NULL, NULL, "ngwm:createJunkEntryResponse");
 	case SOAP_TYPE__ngwm__createJunkEntryRequest:
 		return soap_in__ngwm__createJunkEntryRequest(soap, NULL, NULL, "ngwm:createJunkEntryRequest");
+	case SOAP_TYPE__ngwm__createItemsResponse:
+		return soap_in__ngwm__createItemsResponse(soap, NULL, NULL, "ngwm:createItemsResponse");
+	case SOAP_TYPE__ngwm__createItemsRequest:
+		return soap_in__ngwm__createItemsRequest(soap, NULL, NULL, "ngwm:createItemsRequest");
 	case SOAP_TYPE__ngwm__createItemResponse:
 		return soap_in__ngwm__createItemResponse(soap, NULL, NULL, "ngwm:createItemResponse");
 	case SOAP_TYPE__ngwm__createItemRequest:
@@ -532,6 +600,12 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in__ngwm__acceptResponse(soap, NULL, NULL, "ngwm:acceptResponse");
 	case SOAP_TYPE__ngwm__acceptRequest:
 		return soap_in__ngwm__acceptRequest(soap, NULL, NULL, "ngwm:acceptRequest");
+	case SOAP_TYPE_ngwt__VersionEvent:
+		return soap_in_ngwt__VersionEvent(soap, NULL, NULL, "ngwt:VersionEvent");
+	case SOAP_TYPE_ngwt__Version:
+		return soap_in_ngwt__Version(soap, NULL, NULL, "ngwt:Version");
+	case SOAP_TYPE_ngwt__UserList:
+		return soap_in_ngwt__UserList(soap, NULL, NULL, "ngwt:UserList");
 	case SOAP_TYPE_ngwt__UserInfo:
 		return soap_in_ngwt__UserInfo(soap, NULL, NULL, "ngwt:UserInfo");
 	case SOAP_TYPE_ngwt__TrustedApplication:
@@ -552,6 +626,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_ngwt__StatusTracking(soap, NULL, NULL, "ngwt:StatusTracking");
 	case SOAP_TYPE_ngwt__Status:
 		return soap_in_ngwt__Status(soap, NULL, NULL, "ngwt:Status");
+	case SOAP_TYPE_ngwt__SMimeOperation:
+		return soap_in_ngwt__SMimeOperation(soap, NULL, NULL, "ngwt:SMimeOperation");
 	case SOAP_TYPE_ngwt__SignatureData:
 		return soap_in_ngwt__SignatureData(soap, NULL, NULL, "ngwt:SignatureData");
 	case SOAP_TYPE_ngwt__Signatures:
@@ -574,6 +650,14 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_ngwt__SendOptions(soap, NULL, NULL, "ngwt:SendOptions");
 	case SOAP_TYPE_ngwt__SendOptionsRequestReply:
 		return soap_in_ngwt__SendOptionsRequestReply(soap, NULL, NULL, "ngwt:SendOptionsRequestReply");
+	case SOAP_TYPE_ngwt__RuleList:
+		return soap_in_ngwt__RuleList(soap, NULL, NULL, "ngwt:RuleList");
+	case SOAP_TYPE_ngwt__RuleActionList:
+		return soap_in_ngwt__RuleActionList(soap, NULL, NULL, "ngwt:RuleActionList");
+	case SOAP_TYPE_ngwt__RuleAction:
+		return soap_in_ngwt__RuleAction(soap, NULL, NULL, "ngwt:RuleAction");
+	case SOAP_TYPE_ngwt__Rule:
+		return soap_in_ngwt__Rule(soap, NULL, NULL, "ngwt:Rule");
 	case SOAP_TYPE_ngwt__Rights:
 		return soap_in_ngwt__Rights(soap, NULL, NULL, "ngwt:Rights");
 	case SOAP_TYPE_ngwt__ReturnNotificationOptions:
@@ -602,6 +686,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_ngwt__Query(soap, NULL, NULL, "ngwt:Query");
 	case SOAP_TYPE_ngwt__ProxyList:
 		return soap_in_ngwt__ProxyList(soap, NULL, NULL, "ngwt:ProxyList");
+	case SOAP_TYPE_ngwt__ProxyUser:
+		return soap_in_ngwt__ProxyUser(soap, NULL, NULL, "ngwt:ProxyUser");
 	case SOAP_TYPE_ngwt__Proxy:
 		return soap_in_ngwt__Proxy(soap, NULL, NULL, "ngwt:Proxy");
 	case SOAP_TYPE_ngwt__ProblemList:
@@ -644,6 +730,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_ngwt__Mail(soap, NULL, NULL, "ngwt:Mail");
 	case SOAP_TYPE_ngwt__LinkInfo:
 		return soap_in_ngwt__LinkInfo(soap, NULL, NULL, "ngwt:LinkInfo");
+	case SOAP_TYPE_ngwt__LibraryList:
+		return soap_in_ngwt__LibraryList(soap, NULL, NULL, "ngwt:LibraryList");
+	case SOAP_TYPE_ngwt__Library:
+		return soap_in_ngwt__Library(soap, NULL, NULL, "ngwt:Library");
 	case SOAP_TYPE_ngwt__JunkHandlingList:
 		return soap_in_ngwt__JunkHandlingList(soap, NULL, NULL, "ngwt:JunkHandlingList");
 	case SOAP_TYPE_ngwt__JunkEntry:
@@ -710,6 +800,14 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_ngwt__Filter(soap, NULL, NULL, "ngwt:Filter");
 	case SOAP_TYPE_ngwt__EmailAddressList:
 		return soap_in_ngwt__EmailAddressList(soap, NULL, NULL, "ngwt:EmailAddressList");
+	case SOAP_TYPE_ngwt__DocumentTypeList:
+		return soap_in_ngwt__DocumentTypeList(soap, NULL, NULL, "ngwt:DocumentTypeList");
+	case SOAP_TYPE_ngwt__DocumentType:
+		return soap_in_ngwt__DocumentType(soap, NULL, NULL, "ngwt:DocumentType");
+	case SOAP_TYPE_ngwt__DocumentRef:
+		return soap_in_ngwt__DocumentRef(soap, NULL, NULL, "ngwt:DocumentRef");
+	case SOAP_TYPE_ngwt__Document:
+		return soap_in_ngwt__Document(soap, NULL, NULL, "ngwt:Document");
 	case SOAP_TYPE_ngwt__Distribution:
 		return soap_in_ngwt__Distribution(soap, NULL, NULL, "ngwt:Distribution");
 	case SOAP_TYPE_ngwt__DeltaInfo:
@@ -718,10 +816,12 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_ngwt__DelegateeStatus(soap, NULL, NULL, "ngwt:DelegateeStatus");
 	case SOAP_TYPE_ngwt__DelegatedStatus:
 		return soap_in_ngwt__DelegatedStatus(soap, NULL, NULL, "ngwt:DelegatedStatus");
+	case SOAP_TYPE_ngwt__DayOfYearWeekList:
+		return soap_in_ngwt__DayOfYearWeekList(soap, NULL, NULL, "ngwt:DayOfYearWeekList");
+	case SOAP_TYPE_ngwt__DayOfYearWeek:
+		return soap_in_ngwt__DayOfYearWeek(soap, NULL, NULL, "ngwt:DayOfYearWeek");
 	case SOAP_TYPE_ngwt__DayOfYearList:
 		return soap_in_ngwt__DayOfYearList(soap, NULL, NULL, "ngwt:DayOfYearList");
-	case SOAP_TYPE_ngwt__DayOfWeekList:
-		return soap_in_ngwt__DayOfWeekList(soap, NULL, NULL, "ngwt:DayOfWeekList");
 	case SOAP_TYPE_ngwt__DayOfWeek:
 		return soap_in_ngwt__DayOfWeek(soap, NULL, NULL, "ngwt:DayOfWeek");
 	case SOAP_TYPE_ngwt__DayOfMonthList:
@@ -792,12 +892,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_xsd__decimal(soap, NULL, NULL, "xsd:decimal");
 	case SOAP_TYPE_xsd__date:
 		return soap_in_xsd__date(soap, NULL, NULL, "xsd:date");
-	case SOAP_TYPE_xsd__base64Binary:
-		return soap_in_xsd__base64Binary(soap, NULL, NULL, "xsd:base64Binary");
-	case SOAP_TYPE_xsd__anyURI:
-		return soap_in_xsd__anyURI(soap, NULL, NULL, "xsd:anyURI");
 	case SOAP_TYPE_std__string:
 		return soap_in_std__string(soap, NULL, NULL, "xsd:string");
+	case SOAP_TYPE_xsd__base64Binary:
+		return soap_in_xsd__base64Binary(soap, NULL, NULL, "xsd:base64Binary");
 	case SOAP_TYPE_PointerTo_ngwe__removeEventsResponse:
 		return soap_in_PointerTo_ngwe__removeEventsResponse(soap, NULL, NULL, "ngwe:removeEventsResponse");
 	case SOAP_TYPE_PointerTo_ngwe__removeEventsRequest:
@@ -822,6 +920,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTo_ngwe__cleanEventConfigurationResponse(soap, NULL, NULL, "ngwe:cleanEventConfigurationResponse");
 	case SOAP_TYPE_PointerTo_ngwe__cleanEventConfigurationRequest:
 		return soap_in_PointerTo_ngwe__cleanEventConfigurationRequest(soap, NULL, NULL, "ngwe:cleanEventConfigurationRequest");
+	case SOAP_TYPE_PointerTo_ngwm__updateVersionStatusResponse:
+		return soap_in_PointerTo_ngwm__updateVersionStatusResponse(soap, NULL, NULL, "ngwm:updateVersionStatusResponse");
+	case SOAP_TYPE_PointerTo_ngwm__updateVersionStatusRequest:
+		return soap_in_PointerTo_ngwm__updateVersionStatusRequest(soap, NULL, NULL, "ngwm:updateVersionStatusRequest");
 	case SOAP_TYPE_PointerTo_ngwm__uncompleteResponse:
 		return soap_in_PointerTo_ngwm__uncompleteResponse(soap, NULL, NULL, "ngwm:uncompleteResponse");
 	case SOAP_TYPE_PointerTo_ngwm__uncompleteRequest:
@@ -834,6 +936,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTo_ngwm__startFreeBusySessionResponse(soap, NULL, NULL, "ngwm:startFreeBusySessionResponse");
 	case SOAP_TYPE_PointerTo_ngwm__startFreeBusySessionRequest:
 		return soap_in_PointerTo_ngwm__startFreeBusySessionRequest(soap, NULL, NULL, "ngwm:startFreeBusySessionRequest");
+	case SOAP_TYPE_PointerTo_ngwm__setTimestampResponse:
+		return soap_in_PointerTo_ngwm__setTimestampResponse(soap, NULL, NULL, "ngwm:setTimestampResponse");
+	case SOAP_TYPE_PointerTo_ngwm__setTimestampRequest:
+		return soap_in_PointerTo_ngwm__setTimestampRequest(soap, NULL, NULL, "ngwm:setTimestampRequest");
 	case SOAP_TYPE_PointerTo_ngwm__sendItemResponse:
 		return soap_in_PointerTo_ngwm__sendItemResponse(soap, NULL, NULL, "ngwm:sendItemResponse");
 	case SOAP_TYPE_PointerTo_ngwm__sendItemRequest:
@@ -850,6 +956,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTo_ngwm__removeSignatureResponse(soap, NULL, NULL, "ngwm:removeSignatureResponse");
 	case SOAP_TYPE_PointerTo_ngwm__removeSignatureRequest:
 		return soap_in_PointerTo_ngwm__removeSignatureRequest(soap, NULL, NULL, "ngwm:removeSignatureRequest");
+	case SOAP_TYPE_PointerTo_ngwm__removeProxyUserResponse:
+		return soap_in_PointerTo_ngwm__removeProxyUserResponse(soap, NULL, NULL, "ngwm:removeProxyUserResponse");
+	case SOAP_TYPE_PointerTo_ngwm__removeProxyUserRequest:
+		return soap_in_PointerTo_ngwm__removeProxyUserRequest(soap, NULL, NULL, "ngwm:removeProxyUserRequest");
 	case SOAP_TYPE_PointerTo_ngwm__removeProxyAccessResponse:
 		return soap_in_PointerTo_ngwm__removeProxyAccessResponse(soap, NULL, NULL, "ngwm:removeProxyAccessResponse");
 	case SOAP_TYPE_PointerTo_ngwm__removeProxyAccessRequest:
@@ -946,10 +1056,18 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTo_ngwm__loginResponse(soap, NULL, NULL, "ngwm:loginResponse");
 	case SOAP_TYPE_PointerTo_ngwm__loginRequest:
 		return soap_in_PointerTo_ngwm__loginRequest(soap, NULL, NULL, "ngwm:loginRequest");
+	case SOAP_TYPE_PointerTo_ngwm__getUserListResponse:
+		return soap_in_PointerTo_ngwm__getUserListResponse(soap, NULL, NULL, "ngwm:getUserListResponse");
+	case SOAP_TYPE_PointerTo_ngwm__getUserListRequest:
+		return soap_in_PointerTo_ngwm__getUserListRequest(soap, NULL, NULL, "ngwm:getUserListRequest");
 	case SOAP_TYPE_PointerTo_ngwm__getTimezoneListResponse:
 		return soap_in_PointerTo_ngwm__getTimezoneListResponse(soap, NULL, NULL, "ngwm:getTimezoneListResponse");
 	case SOAP_TYPE_PointerTo_ngwm__getTimezoneListRequest:
 		return soap_in_PointerTo_ngwm__getTimezoneListRequest(soap, NULL, NULL, "ngwm:getTimezoneListRequest");
+	case SOAP_TYPE_PointerTo_ngwm__getTimestampResponse:
+		return soap_in_PointerTo_ngwm__getTimestampResponse(soap, NULL, NULL, "ngwm:getTimestampResponse");
+	case SOAP_TYPE_PointerTo_ngwm__getTimestampRequest:
+		return soap_in_PointerTo_ngwm__getTimestampRequest(soap, NULL, NULL, "ngwm:getTimestampRequest");
 	case SOAP_TYPE_PointerTo_ngwm__getSignaturesResponse:
 		return soap_in_PointerTo_ngwm__getSignaturesResponse(soap, NULL, NULL, "ngwm:getSignaturesResponse");
 	case SOAP_TYPE_PointerTo_ngwm__getSignaturesRequest:
@@ -958,6 +1076,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTo_ngwm__getSettingsResponse(soap, NULL, NULL, "ngwm:getSettingsResponse");
 	case SOAP_TYPE_PointerTo_ngwm__getSettingsRequest:
 		return soap_in_PointerTo_ngwm__getSettingsRequest(soap, NULL, NULL, "ngwm:getSettingsRequest");
+	case SOAP_TYPE_PointerTo_ngwm__getRuleListResponse:
+		return soap_in_PointerTo_ngwm__getRuleListResponse(soap, NULL, NULL, "ngwm:getRuleListResponse");
+	case SOAP_TYPE_PointerTo_ngwm__getRuleListRequest:
+		return soap_in_PointerTo_ngwm__getRuleListRequest(soap, NULL, NULL, "ngwm:getRuleListRequest");
 	case SOAP_TYPE_PointerTo_ngwm__getProxyListResponse:
 		return soap_in_PointerTo_ngwm__getProxyListResponse(soap, NULL, NULL, "ngwm:getProxyListResponse");
 	case SOAP_TYPE_PointerTo_ngwm__getProxyListRequest:
@@ -970,6 +1092,14 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTo_ngwm__getQuickMessagesResponse(soap, NULL, NULL, "ngwm:getQuickMessagesResponse");
 	case SOAP_TYPE_PointerTo_ngwm__getQuickMessagesRequest:
 		return soap_in_PointerTo_ngwm__getQuickMessagesRequest(soap, NULL, NULL, "ngwm:getQuickMessagesRequest");
+	case SOAP_TYPE_PointerTo_ngwm__getLibraryListResponse:
+		return soap_in_PointerTo_ngwm__getLibraryListResponse(soap, NULL, NULL, "ngwm:getLibraryListResponse");
+	case SOAP_TYPE_PointerTo_ngwm__getLibraryListRequest:
+		return soap_in_PointerTo_ngwm__getLibraryListRequest(soap, NULL, NULL, "ngwm:getLibraryListRequest");
+	case SOAP_TYPE_PointerTo_ngwm__getLibraryItemResponse:
+		return soap_in_PointerTo_ngwm__getLibraryItemResponse(soap, NULL, NULL, "ngwm:getLibraryItemResponse");
+	case SOAP_TYPE_PointerTo_ngwm__getLibraryItemRequest:
+		return soap_in_PointerTo_ngwm__getLibraryItemRequest(soap, NULL, NULL, "ngwm:getLibraryItemRequest");
 	case SOAP_TYPE_PointerTo_ngwm__getJunkMailSettingsResponse:
 		return soap_in_PointerTo_ngwm__getJunkMailSettingsResponse(soap, NULL, NULL, "ngwm:getJunkMailSettingsResponse");
 	case SOAP_TYPE_PointerTo_ngwm__getJunkMailSettingsRequest:
@@ -994,6 +1124,14 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTo_ngwm__getFolderListResponse(soap, NULL, NULL, "ngwm:getFolderListResponse");
 	case SOAP_TYPE_PointerTo_ngwm__getFolderListRequest:
 		return soap_in_PointerTo_ngwm__getFolderListRequest(soap, NULL, NULL, "ngwm:getFolderListRequest");
+	case SOAP_TYPE_PointerTo_ngwm__getFolderResponse:
+		return soap_in_PointerTo_ngwm__getFolderResponse(soap, NULL, NULL, "ngwm:getFolderResponse");
+	case SOAP_TYPE_PointerTo_ngwm__getFolderRequest:
+		return soap_in_PointerTo_ngwm__getFolderRequest(soap, NULL, NULL, "ngwm:getFolderRequest");
+	case SOAP_TYPE_PointerTo_ngwm__getDocumentTypeListResponse:
+		return soap_in_PointerTo_ngwm__getDocumentTypeListResponse(soap, NULL, NULL, "ngwm:getDocumentTypeListResponse");
+	case SOAP_TYPE_PointerTo_ngwm__getDocumentTypeListRequest:
+		return soap_in_PointerTo_ngwm__getDocumentTypeListRequest(soap, NULL, NULL, "ngwm:getDocumentTypeListRequest");
 	case SOAP_TYPE_PointerTo_ngwm__getDeltaInfoResponse:
 		return soap_in_PointerTo_ngwm__getDeltaInfoResponse(soap, NULL, NULL, "ngwm:getDeltaInfoResponse");
 	case SOAP_TYPE_PointerTo_ngwm__getDeltaInfoRequest:
@@ -1022,6 +1160,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTo_ngwm__forwardResponse(soap, NULL, NULL, "ngwm:forwardResponse");
 	case SOAP_TYPE_PointerTo_ngwm__forwardRequest:
 		return soap_in_PointerTo_ngwm__forwardRequest(soap, NULL, NULL, "ngwm:forwardRequest");
+	case SOAP_TYPE_PointerTo_ngwm__executeRuleResponse:
+		return soap_in_PointerTo_ngwm__executeRuleResponse(soap, NULL, NULL, "ngwm:executeRuleResponse");
+	case SOAP_TYPE_PointerTo_ngwm__executeRuleRequest:
+		return soap_in_PointerTo_ngwm__executeRuleRequest(soap, NULL, NULL, "ngwm:executeRuleRequest");
 	case SOAP_TYPE_PointerTo_ngwm__destroyCursorResponse:
 		return soap_in_PointerTo_ngwm__destroyCursorResponse(soap, NULL, NULL, "ngwm:destroyCursorResponse");
 	case SOAP_TYPE_PointerTo_ngwm__destroyCursorRequest:
@@ -1046,6 +1188,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTo_ngwm__createJunkEntryResponse(soap, NULL, NULL, "ngwm:createJunkEntryResponse");
 	case SOAP_TYPE_PointerTo_ngwm__createJunkEntryRequest:
 		return soap_in_PointerTo_ngwm__createJunkEntryRequest(soap, NULL, NULL, "ngwm:createJunkEntryRequest");
+	case SOAP_TYPE_PointerTo_ngwm__createItemsResponse:
+		return soap_in_PointerTo_ngwm__createItemsResponse(soap, NULL, NULL, "ngwm:createItemsResponse");
+	case SOAP_TYPE_PointerTo_ngwm__createItemsRequest:
+		return soap_in_PointerTo_ngwm__createItemsRequest(soap, NULL, NULL, "ngwm:createItemsRequest");
 	case SOAP_TYPE_PointerTo_ngwm__createItemResponse:
 		return soap_in_PointerTo_ngwm__createItemResponse(soap, NULL, NULL, "ngwm:createItemResponse");
 	case SOAP_TYPE_PointerTo_ngwm__createItemRequest:
@@ -1090,6 +1236,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTongwt__RecurrenceRule(soap, NULL, NULL, "ngwt:RecurrenceRule");
 	case SOAP_TYPE_PointerTongwt__RecurrenceDateType:
 		return soap_in_PointerTongwt__RecurrenceDateType(soap, NULL, NULL, "ngwt:RecurrenceDateType");
+	case SOAP_TYPE_PointerTongwt__SMimeOperation:
+		return soap_in_PointerTongwt__SMimeOperation(soap, NULL, NULL, "ngwt:SMimeOperation");
 	case SOAP_TYPE_PointerTongwt__LinkInfo:
 		return soap_in_PointerTongwt__LinkInfo(soap, NULL, NULL, "ngwt:LinkInfo");
 	case SOAP_TYPE_PointerTongwt__ItemOptions:
@@ -1114,14 +1262,22 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTongwt__EmailAddressList(soap, NULL, NULL, "ngwt:EmailAddressList");
 	case SOAP_TYPE_PointerTongwt__FullName:
 		return soap_in_PointerTongwt__FullName(soap, NULL, NULL, "ngwt:FullName");
+	case SOAP_TYPE_PointerTongwt__VersionStatus:
+		return soap_in_PointerTongwt__VersionStatus(soap, NULL, NULL, "ngwt:VersionStatus");
 	case SOAP_TYPE_PointerTongwt__FolderACL:
 		return soap_in_PointerTongwt__FolderACL(soap, NULL, NULL, "ngwt:FolderACL");
+	case SOAP_TYPE_PointerTongwt__RuleActionList:
+		return soap_in_PointerTongwt__RuleActionList(soap, NULL, NULL, "ngwt:RuleActionList");
+	case SOAP_TYPE_PointerTongwt__Execution:
+		return soap_in_PointerTongwt__Execution(soap, NULL, NULL, "ngwt:Execution");
 	case SOAP_TYPE_PointerTongwt__Query:
 		return soap_in_PointerTongwt__Query(soap, NULL, NULL, "ngwt:Query");
-	case SOAP_TYPE_PointerTongwt__FolderType:
-		return soap_in_PointerTongwt__FolderType(soap, NULL, NULL, "ngwt:FolderType");
 	case SOAP_TYPE_PointerTongwt__FolderACLStatus:
 		return soap_in_PointerTongwt__FolderACLStatus(soap, NULL, NULL, "ngwt:FolderACLStatus");
+	case SOAP_TYPE_PointerTongwt__AccessControlList:
+		return soap_in_PointerTongwt__AccessControlList(soap, NULL, NULL, "ngwt:AccessControlList");
+	case SOAP_TYPE_PointerTongwt__WeekOfYear:
+		return soap_in_PointerTongwt__WeekOfYear(soap, NULL, NULL, "ngwt:WeekOfYear");
 	case SOAP_TYPE_PointerTongwt__OccurrenceType:
 		return soap_in_PointerTongwt__OccurrenceType(soap, NULL, NULL, "ngwt:OccurrenceType");
 	case SOAP_TYPE_PointerTongwt__ItemSecurity:
@@ -1140,8 +1296,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTongwt__FreeBusyBlockList(soap, NULL, NULL, "ngwt:FreeBusyBlockList");
 	case SOAP_TYPE_PointerTongwt__CalendarFolderAttribute:
 		return soap_in_PointerTongwt__CalendarFolderAttribute(soap, NULL, NULL, "ngwt:CalendarFolderAttribute");
-	case SOAP_TYPE_PointerTongwt__CategoryRefList:
-		return soap_in_PointerTongwt__CategoryRefList(soap, NULL, NULL, "ngwt:CategoryRefList");
+	case SOAP_TYPE_PointerTongwt__FilterDate:
+		return soap_in_PointerTongwt__FilterDate(soap, NULL, NULL, "ngwt:FilterDate");
 	case SOAP_TYPE_PointerTongwt__ContainerRef:
 		return soap_in_PointerTongwt__ContainerRef(soap, NULL, NULL, "ngwt:ContainerRef");
 	case SOAP_TYPE_PointerTongwt__CategoryType:
@@ -1170,10 +1326,14 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTongwe__ItemTypeList(soap, NULL, NULL, "ngwe:ItemTypeList");
 	case SOAP_TYPE_PointerTongwe__EventTypeList:
 		return soap_in_PointerTongwe__EventTypeList(soap, NULL, NULL, "ngwe:EventTypeList");
+	case SOAP_TYPE_PointerTongwe__ItemType:
+		return soap_in_PointerTongwe__ItemType(soap, NULL, NULL, "ngwe:ItemType");
 	case SOAP_TYPE_PointerTongwe__FieldList:
 		return soap_in_PointerTongwe__FieldList(soap, NULL, NULL, "ngwe:FieldList");
 	case SOAP_TYPE_PointerTongwt__FreeBusyUserList:
 		return soap_in_PointerTongwt__FreeBusyUserList(soap, NULL, NULL, "ngwt:FreeBusyUserList");
+	case SOAP_TYPE_PointerTongwt__RetractType:
+		return soap_in_PointerTongwt__RetractType(soap, NULL, NULL, "ngwt:RetractType");
 	case SOAP_TYPE_PointerTongwt__ItemList:
 		return soap_in_PointerTongwt__ItemList(soap, NULL, NULL, "ngwt:ItemList");
 	case SOAP_TYPE_PointerTongwt__CursorSeek:
@@ -1184,24 +1344,24 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTongwt__ModifyItem(soap, NULL, NULL, "ngwt:ModifyItem");
 	case SOAP_TYPE_PointerTongwt__Host:
 		return soap_in_PointerTongwt__Host(soap, NULL, NULL, "ngwt:Host");
-	case SOAP_TYPE_PointerTongwt__UserInfo:
-		return soap_in_PointerTongwt__UserInfo(soap, NULL, NULL, "ngwt:UserInfo");
 	case SOAP_TYPE_PointerTongwt__Authentication:
 		return soap_in_PointerTongwt__Authentication(soap, NULL, NULL, "ngwt:Authentication");
+	case SOAP_TYPE_PointerTongwt__UserList:
+		return soap_in_PointerTongwt__UserList(soap, NULL, NULL, "ngwt:UserList");
 	case SOAP_TYPE_PointerTongwt__TimezoneList:
 		return soap_in_PointerTongwt__TimezoneList(soap, NULL, NULL, "ngwt:TimezoneList");
 	case SOAP_TYPE_PointerTongwt__Signatures:
 		return soap_in_PointerTongwt__Signatures(soap, NULL, NULL, "ngwt:Signatures");
 	case SOAP_TYPE_PointerTongwt__Settings:
 		return soap_in_PointerTongwt__Settings(soap, NULL, NULL, "ngwt:Settings");
+	case SOAP_TYPE_PointerTongwt__RuleList:
+		return soap_in_PointerTongwt__RuleList(soap, NULL, NULL, "ngwt:RuleList");
 	case SOAP_TYPE_PointerTongwt__ProxyList:
 		return soap_in_PointerTongwt__ProxyList(soap, NULL, NULL, "ngwt:ProxyList");
 	case SOAP_TYPE_PointerTongwt__AccessRightList:
 		return soap_in_PointerTongwt__AccessRightList(soap, NULL, NULL, "ngwt:AccessRightList");
-	case SOAP_TYPE_PointerTongwt__ItemSourceList:
-		return soap_in_PointerTongwt__ItemSourceList(soap, NULL, NULL, "ngwt:ItemSourceList");
-	case SOAP_TYPE_PointerTongwt__MessageTypeList:
-		return soap_in_PointerTongwt__MessageTypeList(soap, NULL, NULL, "ngwt:MessageTypeList");
+	case SOAP_TYPE_PointerTongwt__LibraryList:
+		return soap_in_PointerTongwt__LibraryList(soap, NULL, NULL, "ngwt:LibraryList");
 	case SOAP_TYPE_PointerTongwt__SettingsList:
 		return soap_in_PointerTongwt__SettingsList(soap, NULL, NULL, "ngwt:SettingsList");
 	case SOAP_TYPE_PointerTongwt__JunkHandlingList:
@@ -1212,6 +1372,14 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTongwt__FreeBusyStats(soap, NULL, NULL, "ngwt:FreeBusyStats");
 	case SOAP_TYPE_PointerTongwt__FolderList:
 		return soap_in_PointerTongwt__FolderList(soap, NULL, NULL, "ngwt:FolderList");
+	case SOAP_TYPE_PointerTongwt__ItemSourceList:
+		return soap_in_PointerTongwt__ItemSourceList(soap, NULL, NULL, "ngwt:ItemSourceList");
+	case SOAP_TYPE_PointerTongwt__MessageTypeList:
+		return soap_in_PointerTongwt__MessageTypeList(soap, NULL, NULL, "ngwt:MessageTypeList");
+	case SOAP_TYPE_PointerTongwt__FolderType:
+		return soap_in_PointerTongwt__FolderType(soap, NULL, NULL, "ngwt:FolderType");
+	case SOAP_TYPE_PointerTongwt__DocumentTypeList:
+		return soap_in_PointerTongwt__DocumentTypeList(soap, NULL, NULL, "ngwt:DocumentTypeList");
 	case SOAP_TYPE_PointerTongwt__Items:
 		return soap_in_PointerTongwt__Items(soap, NULL, NULL, "ngwt:Items");
 	case SOAP_TYPE_PointerTongwt__DeltaInfo:
@@ -1230,12 +1398,18 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTongwt__Status(soap, NULL, NULL, "ngwt:Status");
 	case SOAP_TYPE_PointerTongwt__ItemRefList:
 		return soap_in_PointerTongwt__ItemRefList(soap, NULL, NULL, "ngwt:ItemRefList");
+	case SOAP_TYPE_PointerTongwt__UserInfo:
+		return soap_in_PointerTongwt__UserInfo(soap, NULL, NULL, "ngwt:UserInfo");
+	case SOAP_TYPE_PointerTongwt__RecipientType:
+		return soap_in_PointerTongwt__RecipientType(soap, NULL, NULL, "ngwt:RecipientType");
 	case SOAP_TYPE_PointerTongwt__Timezone:
 		return soap_in_PointerTongwt__Timezone(soap, NULL, NULL, "ngwt:Timezone");
 	case SOAP_TYPE_PointerTongwt__Minute:
 		return soap_in_PointerTongwt__Minute(soap, NULL, NULL, "ngwt:Minute");
 	case SOAP_TYPE_PointerTongwt__Hour:
 		return soap_in_PointerTongwt__Hour(soap, NULL, NULL, "ngwt:Hour");
+	case SOAP_TYPE_PointerTongwt__DayOfWeek:
+		return soap_in_PointerTongwt__DayOfWeek(soap, NULL, NULL, "ngwt:DayOfWeek");
 	case SOAP_TYPE_PointerTongwt__Day:
 		return soap_in_PointerTongwt__Day(soap, NULL, NULL, "ngwt:Day");
 	case SOAP_TYPE_PointerTongwt__Month:
@@ -1256,14 +1430,24 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTongwt__StatusTracking(soap, NULL, NULL, "ngwt:StatusTracking");
 	case SOAP_TYPE_PointerTongwt__SendOptionsRequestReply:
 		return soap_in_PointerTongwt__SendOptionsRequestReply(soap, NULL, NULL, "ngwt:SendOptionsRequestReply");
+	case SOAP_TYPE_PointerTongwt__Rule:
+		return soap_in_PointerTongwt__Rule(soap, NULL, NULL, "ngwt:Rule");
+	case SOAP_TYPE_PointerTongwt__RuleAction:
+		return soap_in_PointerTongwt__RuleAction(soap, NULL, NULL, "ngwt:RuleAction");
+	case SOAP_TYPE_PointerTongwt__CategoryRefList:
+		return soap_in_PointerTongwt__CategoryRefList(soap, NULL, NULL, "ngwt:CategoryRefList");
+	case SOAP_TYPE_PointerTongwt__Mail:
+		return soap_in_PointerTongwt__Mail(soap, NULL, NULL, "ngwt:Mail");
 	case SOAP_TYPE_PointerTongwt__ReturnNotificationOptions:
 		return soap_in_PointerTongwt__ReturnNotificationOptions(soap, NULL, NULL, "ngwt:ReturnNotificationOptions");
 	case SOAP_TYPE_PointerTongwt__MonthList:
 		return soap_in_PointerTongwt__MonthList(soap, NULL, NULL, "ngwt:MonthList");
 	case SOAP_TYPE_PointerTongwt__DayOfYearList:
 		return soap_in_PointerTongwt__DayOfYearList(soap, NULL, NULL, "ngwt:DayOfYearList");
-	case SOAP_TYPE_PointerTongwt__DayOfWeekList:
-		return soap_in_PointerTongwt__DayOfWeekList(soap, NULL, NULL, "ngwt:DayOfWeekList");
+	case SOAP_TYPE_PointerTongwt__DayOfMonthList:
+		return soap_in_PointerTongwt__DayOfMonthList(soap, NULL, NULL, "ngwt:DayOfMonthList");
+	case SOAP_TYPE_PointerTongwt__DayOfYearWeekList:
+		return soap_in_PointerTongwt__DayOfYearWeekList(soap, NULL, NULL, "ngwt:DayOfYearWeekList");
 	case SOAP_TYPE_PointerTongwt__Frequency:
 		return soap_in_PointerTongwt__Frequency(soap, NULL, NULL, "ngwt:Frequency");
 	case SOAP_TYPE_PointerTongwt__DelegateeStatus:
@@ -1280,6 +1464,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTongwt__Filter(soap, NULL, NULL, "ngwt:Filter");
 	case SOAP_TYPE_PointerTongwt__QueryTarget:
 		return soap_in_PointerTongwt__QueryTarget(soap, NULL, NULL, "ngwt:QueryTarget");
+	case SOAP_TYPE_PointerTongwt__ProxyUser:
+		return soap_in_PointerTongwt__ProxyUser(soap, NULL, NULL, "ngwt:ProxyUser");
 	case SOAP_TYPE_PointerTongwt__ProblemEntry:
 		return soap_in_PointerTongwt__ProblemEntry(soap, NULL, NULL, "ngwt:ProblemEntry");
 	case SOAP_TYPE_PointerTongwt__PostalAddress:
@@ -1288,8 +1474,6 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTongwt__PhoneNumber(soap, NULL, NULL, "ngwt:PhoneNumber");
 	case SOAP_TYPE_PointerToxsd__date:
 		return soap_in_PointerToxsd__date(soap, NULL, NULL, "xsd:date");
-	case SOAP_TYPE_PointerToxsd__anyURI:
-		return soap_in_PointerToxsd__anyURI(soap, NULL, NULL, "xsd:anyURI");
 	case SOAP_TYPE_PointerTongwt__ItemRef:
 		return soap_in_PointerTongwt__ItemRef(soap, NULL, NULL, "ngwt:ItemRef");
 	case SOAP_TYPE_PointerTongwt__UUID:
@@ -1298,6 +1482,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTongwt__SharedFolderNotification(soap, NULL, NULL, "ngwt:SharedFolderNotification");
 	case SOAP_TYPE_PointerTongwt__MessagePart:
 		return soap_in_PointerTongwt__MessagePart(soap, NULL, NULL, "ngwt:MessagePart");
+	case SOAP_TYPE_PointerTongwt__Library:
+		return soap_in_PointerTongwt__Library(soap, NULL, NULL, "ngwt:Library");
 	case SOAP_TYPE_PointerTongwt__JunkEntry:
 		return soap_in_PointerTongwt__JunkEntry(soap, NULL, NULL, "ngwt:JunkEntry");
 	case SOAP_TYPE_PointerTongwt__JunkHandlingListType:
@@ -1326,6 +1512,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTongwt__FolderACLEntry(soap, NULL, NULL, "ngwt:FolderACLEntry");
 	case SOAP_TYPE_PointerTongwt__FilterElement:
 		return soap_in_PointerTongwt__FilterElement(soap, NULL, NULL, "ngwt:FilterElement");
+	case SOAP_TYPE_PointerTongwt__DocumentType:
+		return soap_in_PointerTongwt__DocumentType(soap, NULL, NULL, "ngwt:DocumentType");
+	case SOAP_TYPE_PointerTongwt__AgeAction:
+		return soap_in_PointerTongwt__AgeAction(soap, NULL, NULL, "ngwt:AgeAction");
 	case SOAP_TYPE_PointerTongwt__SendOptions:
 		return soap_in_PointerTongwt__SendOptions(soap, NULL, NULL, "ngwt:SendOptions");
 	case SOAP_TYPE_PointerTongwt__RecipientList:
@@ -1334,10 +1524,12 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		return soap_in_PointerTongwt__From(soap, NULL, NULL, "ngwt:From");
 	case SOAP_TYPE_PointerToint:
 		return soap_in_PointerToint(soap, NULL, NULL, "xsd:int");
-	case SOAP_TYPE_PointerTongwt__DayOfWeek:
-		return soap_in_PointerTongwt__DayOfWeek(soap, NULL, NULL, "ngwt:DayOfWeek");
+	case SOAP_TYPE_PointerTongwt__DayOfYearWeek:
+		return soap_in_PointerTongwt__DayOfYearWeek(soap, NULL, NULL, "ngwt:DayOfYearWeek");
 	case SOAP_TYPE_PointerTongwt__Custom:
 		return soap_in_PointerTongwt__Custom(soap, NULL, NULL, "ngwt:Custom");
+	case SOAP_TYPE_PointerTongwt__CustomType:
+		return soap_in_PointerTongwt__CustomType(soap, NULL, NULL, "ngwt:CustomType");
 	case SOAP_TYPE_PointerTongwt__uid:
 		return soap_in_PointerTongwt__uid(soap, NULL, NULL, "ngwt:uid");
 	case SOAP_TYPE_PointerTongwt__Category:
@@ -1383,6 +1575,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		if (!soap_match_tag(soap, t, "xsd:byte"))
 		{	*type = SOAP_TYPE_byte;
 			return soap_in_byte(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwt:WeekOfYear"))
+		{	*type = SOAP_TYPE_ngwt__WeekOfYear;
+			return soap_in_ngwt__WeekOfYear(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "ngwt:DayOfYear"))
 		{	*type = SOAP_TYPE_ngwt__DayOfYear;
@@ -1452,9 +1648,21 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		{	*type = SOAP_TYPE_ngwt__WeekDay;
 			return soap_in_ngwt__WeekDay(soap, NULL, NULL, NULL);
 		}
+		if (!soap_match_tag(soap, t, "ngwt:VersionStatus"))
+		{	*type = SOAP_TYPE_ngwt__VersionStatus;
+			return soap_in_ngwt__VersionStatus(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwt:VersionEventType"))
+		{	*type = SOAP_TYPE_ngwt__VersionEventType;
+			return soap_in_ngwt__VersionEventType(soap, NULL, NULL, NULL);
+		}
 		if (!soap_match_tag(soap, t, "ngwt:StatusTrackingOptions"))
 		{	*type = SOAP_TYPE_ngwt__StatusTrackingOptions;
 			return soap_in_ngwt__StatusTrackingOptions(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwt:RuleActionType"))
+		{	*type = SOAP_TYPE_ngwt__RuleActionType;
+			return soap_in_ngwt__RuleActionType(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "ngwt:RetractType"))
 		{	*type = SOAP_TYPE_ngwt__RetractType;
@@ -1532,6 +1740,14 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		{	*type = SOAP_TYPE_ngwt__FilterOp;
 			return soap_in_ngwt__FilterOp(soap, NULL, NULL, NULL);
 		}
+		if (!soap_match_tag(soap, t, "ngwt:FilterDate"))
+		{	*type = SOAP_TYPE_ngwt__FilterDate;
+			return soap_in_ngwt__FilterDate(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwt:Execution"))
+		{	*type = SOAP_TYPE_ngwt__Execution;
+			return soap_in_ngwt__Execution(soap, NULL, NULL, NULL);
+		}
 		if (!soap_match_tag(soap, t, "ngwt:DistributionType"))
 		{	*type = SOAP_TYPE_ngwt__DistributionType;
 			return soap_in_ngwt__DistributionType(soap, NULL, NULL, NULL);
@@ -1539,6 +1755,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		if (!soap_match_tag(soap, t, "ngwt:DeltaSyncType"))
 		{	*type = SOAP_TYPE_ngwt__DeltaSyncType;
 			return soap_in_ngwt__DeltaSyncType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwt:CustomType"))
+		{	*type = SOAP_TYPE_ngwt__CustomType;
+			return soap_in_ngwt__CustomType(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "ngwt:CursorSeek"))
 		{	*type = SOAP_TYPE_ngwt__CursorSeek;
@@ -1555,6 +1775,14 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		if (!soap_match_tag(soap, t, "ngwt:CalendarFolderFlags"))
 		{	*type = SOAP_TYPE_ngwt__CalendarFolderFlags;
 			return soap_in_ngwt__CalendarFolderFlags(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwt:AppointmentConflict"))
+		{	*type = SOAP_TYPE_ngwt__AppointmentConflict;
+			return soap_in_ngwt__AppointmentConflict(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwt:AgeAction"))
+		{	*type = SOAP_TYPE_ngwt__AgeAction;
+			return soap_in_ngwt__AgeAction(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "ngwt:AcceptLevel"))
 		{	*type = SOAP_TYPE_ngwt__AcceptLevel;
@@ -1636,6 +1864,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		{	*type = SOAP_TYPE__ngwe__cleanEventConfigurationRequest;
 			return soap_in__ngwe__cleanEventConfigurationRequest(soap, NULL, NULL, NULL);
 		}
+		if (!soap_match_tag(soap, t, "ngwe:Notify"))
+		{	*type = SOAP_TYPE_ngwe__Notify;
+			return soap_in_ngwe__Notify(soap, NULL, NULL, NULL);
+		}
 		if (!soap_match_tag(soap, t, "ngwe:EventTypeList"))
 		{	*type = SOAP_TYPE_ngwe__EventTypeList;
 			return soap_in_ngwe__EventTypeList(soap, NULL, NULL, NULL);
@@ -1664,6 +1896,14 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		{	*type = SOAP_TYPE_ngwe__ContainerList;
 			return soap_in_ngwe__ContainerList(soap, NULL, NULL, NULL);
 		}
+		if (!soap_match_tag(soap, t, "ngwm:updateVersionStatusResponse"))
+		{	*type = SOAP_TYPE__ngwm__updateVersionStatusResponse;
+			return soap_in__ngwm__updateVersionStatusResponse(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwm:updateVersionStatusRequest"))
+		{	*type = SOAP_TYPE__ngwm__updateVersionStatusRequest;
+			return soap_in__ngwm__updateVersionStatusRequest(soap, NULL, NULL, NULL);
+		}
 		if (!soap_match_tag(soap, t, "ngwm:uncompleteResponse"))
 		{	*type = SOAP_TYPE__ngwm__uncompleteResponse;
 			return soap_in__ngwm__uncompleteResponse(soap, NULL, NULL, NULL);
@@ -1687,6 +1927,14 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		if (!soap_match_tag(soap, t, "ngwm:startFreeBusySessionRequest"))
 		{	*type = SOAP_TYPE__ngwm__startFreeBusySessionRequest;
 			return soap_in__ngwm__startFreeBusySessionRequest(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwm:setTimestampResponse"))
+		{	*type = SOAP_TYPE__ngwm__setTimestampResponse;
+			return soap_in__ngwm__setTimestampResponse(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwm:setTimestampRequest"))
+		{	*type = SOAP_TYPE__ngwm__setTimestampRequest;
+			return soap_in__ngwm__setTimestampRequest(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "ngwm:sendItemResponse"))
 		{	*type = SOAP_TYPE__ngwm__sendItemResponse;
@@ -1719,6 +1967,14 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		if (!soap_match_tag(soap, t, "ngwm:removeSignatureRequest"))
 		{	*type = SOAP_TYPE__ngwm__removeSignatureRequest;
 			return soap_in__ngwm__removeSignatureRequest(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwm:removeProxyUserResponse"))
+		{	*type = SOAP_TYPE__ngwm__removeProxyUserResponse;
+			return soap_in__ngwm__removeProxyUserResponse(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwm:removeProxyUserRequest"))
+		{	*type = SOAP_TYPE__ngwm__removeProxyUserRequest;
+			return soap_in__ngwm__removeProxyUserRequest(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "ngwm:removeProxyAccessResponse"))
 		{	*type = SOAP_TYPE__ngwm__removeProxyAccessResponse;
@@ -1920,6 +2176,14 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		{	*type = SOAP_TYPE__ngwm__loginRequest;
 			return soap_in__ngwm__loginRequest(soap, NULL, NULL, NULL);
 		}
+		if (!soap_match_tag(soap, t, "ngwm:getUserListResponse"))
+		{	*type = SOAP_TYPE__ngwm__getUserListResponse;
+			return soap_in__ngwm__getUserListResponse(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwm:getUserListRequest"))
+		{	*type = SOAP_TYPE__ngwm__getUserListRequest;
+			return soap_in__ngwm__getUserListRequest(soap, NULL, NULL, NULL);
+		}
 		if (!soap_match_tag(soap, t, "ngwm:getTimezoneListResponse"))
 		{	*type = SOAP_TYPE__ngwm__getTimezoneListResponse;
 			return soap_in__ngwm__getTimezoneListResponse(soap, NULL, NULL, NULL);
@@ -1927,6 +2191,14 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		if (!soap_match_tag(soap, t, "ngwm:getTimezoneListRequest"))
 		{	*type = SOAP_TYPE__ngwm__getTimezoneListRequest;
 			return soap_in__ngwm__getTimezoneListRequest(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwm:getTimestampResponse"))
+		{	*type = SOAP_TYPE__ngwm__getTimestampResponse;
+			return soap_in__ngwm__getTimestampResponse(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwm:getTimestampRequest"))
+		{	*type = SOAP_TYPE__ngwm__getTimestampRequest;
+			return soap_in__ngwm__getTimestampRequest(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "ngwm:getSignaturesResponse"))
 		{	*type = SOAP_TYPE__ngwm__getSignaturesResponse;
@@ -1943,6 +2215,14 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		if (!soap_match_tag(soap, t, "ngwm:getSettingsRequest"))
 		{	*type = SOAP_TYPE__ngwm__getSettingsRequest;
 			return soap_in__ngwm__getSettingsRequest(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwm:getRuleListResponse"))
+		{	*type = SOAP_TYPE__ngwm__getRuleListResponse;
+			return soap_in__ngwm__getRuleListResponse(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwm:getRuleListRequest"))
+		{	*type = SOAP_TYPE__ngwm__getRuleListRequest;
+			return soap_in__ngwm__getRuleListRequest(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "ngwm:getProxyListResponse"))
 		{	*type = SOAP_TYPE__ngwm__getProxyListResponse;
@@ -1967,6 +2247,22 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		if (!soap_match_tag(soap, t, "ngwm:getQuickMessagesRequest"))
 		{	*type = SOAP_TYPE__ngwm__getQuickMessagesRequest;
 			return soap_in__ngwm__getQuickMessagesRequest(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwm:getLibraryListResponse"))
+		{	*type = SOAP_TYPE__ngwm__getLibraryListResponse;
+			return soap_in__ngwm__getLibraryListResponse(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwm:getLibraryListRequest"))
+		{	*type = SOAP_TYPE__ngwm__getLibraryListRequest;
+			return soap_in__ngwm__getLibraryListRequest(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwm:getLibraryItemResponse"))
+		{	*type = SOAP_TYPE__ngwm__getLibraryItemResponse;
+			return soap_in__ngwm__getLibraryItemResponse(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwm:getLibraryItemRequest"))
+		{	*type = SOAP_TYPE__ngwm__getLibraryItemRequest;
+			return soap_in__ngwm__getLibraryItemRequest(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "ngwm:getJunkMailSettingsResponse"))
 		{	*type = SOAP_TYPE__ngwm__getJunkMailSettingsResponse;
@@ -2015,6 +2311,22 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		if (!soap_match_tag(soap, t, "ngwm:getFolderListRequest"))
 		{	*type = SOAP_TYPE__ngwm__getFolderListRequest;
 			return soap_in__ngwm__getFolderListRequest(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwm:getFolderResponse"))
+		{	*type = SOAP_TYPE__ngwm__getFolderResponse;
+			return soap_in__ngwm__getFolderResponse(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwm:getFolderRequest"))
+		{	*type = SOAP_TYPE__ngwm__getFolderRequest;
+			return soap_in__ngwm__getFolderRequest(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwm:getDocumentTypeListResponse"))
+		{	*type = SOAP_TYPE__ngwm__getDocumentTypeListResponse;
+			return soap_in__ngwm__getDocumentTypeListResponse(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwm:getDocumentTypeListRequest"))
+		{	*type = SOAP_TYPE__ngwm__getDocumentTypeListRequest;
+			return soap_in__ngwm__getDocumentTypeListRequest(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "ngwm:getDeltaInfoResponse"))
 		{	*type = SOAP_TYPE__ngwm__getDeltaInfoResponse;
@@ -2072,6 +2384,14 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		{	*type = SOAP_TYPE__ngwm__forwardRequest;
 			return soap_in__ngwm__forwardRequest(soap, NULL, NULL, NULL);
 		}
+		if (!soap_match_tag(soap, t, "ngwm:executeRuleResponse"))
+		{	*type = SOAP_TYPE__ngwm__executeRuleResponse;
+			return soap_in__ngwm__executeRuleResponse(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwm:executeRuleRequest"))
+		{	*type = SOAP_TYPE__ngwm__executeRuleRequest;
+			return soap_in__ngwm__executeRuleRequest(soap, NULL, NULL, NULL);
+		}
 		if (!soap_match_tag(soap, t, "ngwm:destroyCursorResponse"))
 		{	*type = SOAP_TYPE__ngwm__destroyCursorResponse;
 			return soap_in__ngwm__destroyCursorResponse(soap, NULL, NULL, NULL);
@@ -2119,6 +2439,14 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		if (!soap_match_tag(soap, t, "ngwm:createJunkEntryRequest"))
 		{	*type = SOAP_TYPE__ngwm__createJunkEntryRequest;
 			return soap_in__ngwm__createJunkEntryRequest(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwm:createItemsResponse"))
+		{	*type = SOAP_TYPE__ngwm__createItemsResponse;
+			return soap_in__ngwm__createItemsResponse(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwm:createItemsRequest"))
+		{	*type = SOAP_TYPE__ngwm__createItemsRequest;
+			return soap_in__ngwm__createItemsRequest(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "ngwm:createItemResponse"))
 		{	*type = SOAP_TYPE__ngwm__createItemResponse;
@@ -2192,6 +2520,18 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		{	*type = SOAP_TYPE__ngwm__acceptRequest;
 			return soap_in__ngwm__acceptRequest(soap, NULL, NULL, NULL);
 		}
+		if (!soap_match_tag(soap, t, "ngwt:VersionEvent"))
+		{	*type = SOAP_TYPE_ngwt__VersionEvent;
+			return soap_in_ngwt__VersionEvent(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwt:Version"))
+		{	*type = SOAP_TYPE_ngwt__Version;
+			return soap_in_ngwt__Version(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwt:UserList"))
+		{	*type = SOAP_TYPE_ngwt__UserList;
+			return soap_in_ngwt__UserList(soap, NULL, NULL, NULL);
+		}
 		if (!soap_match_tag(soap, t, "ngwt:UserInfo"))
 		{	*type = SOAP_TYPE_ngwt__UserInfo;
 			return soap_in_ngwt__UserInfo(soap, NULL, NULL, NULL);
@@ -2231,6 +2571,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		if (!soap_match_tag(soap, t, "ngwt:Status"))
 		{	*type = SOAP_TYPE_ngwt__Status;
 			return soap_in_ngwt__Status(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwt:SMimeOperation"))
+		{	*type = SOAP_TYPE_ngwt__SMimeOperation;
+			return soap_in_ngwt__SMimeOperation(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "ngwt:SignatureData"))
 		{	*type = SOAP_TYPE_ngwt__SignatureData;
@@ -2275,6 +2619,22 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		if (!soap_match_tag(soap, t, "ngwt:SendOptionsRequestReply"))
 		{	*type = SOAP_TYPE_ngwt__SendOptionsRequestReply;
 			return soap_in_ngwt__SendOptionsRequestReply(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwt:RuleList"))
+		{	*type = SOAP_TYPE_ngwt__RuleList;
+			return soap_in_ngwt__RuleList(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwt:RuleActionList"))
+		{	*type = SOAP_TYPE_ngwt__RuleActionList;
+			return soap_in_ngwt__RuleActionList(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwt:RuleAction"))
+		{	*type = SOAP_TYPE_ngwt__RuleAction;
+			return soap_in_ngwt__RuleAction(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwt:Rule"))
+		{	*type = SOAP_TYPE_ngwt__Rule;
+			return soap_in_ngwt__Rule(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "ngwt:Rights"))
 		{	*type = SOAP_TYPE_ngwt__Rights;
@@ -2331,6 +2691,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		if (!soap_match_tag(soap, t, "ngwt:ProxyList"))
 		{	*type = SOAP_TYPE_ngwt__ProxyList;
 			return soap_in_ngwt__ProxyList(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwt:ProxyUser"))
+		{	*type = SOAP_TYPE_ngwt__ProxyUser;
+			return soap_in_ngwt__ProxyUser(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "ngwt:Proxy"))
 		{	*type = SOAP_TYPE_ngwt__Proxy;
@@ -2415,6 +2779,14 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		if (!soap_match_tag(soap, t, "ngwt:LinkInfo"))
 		{	*type = SOAP_TYPE_ngwt__LinkInfo;
 			return soap_in_ngwt__LinkInfo(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwt:LibraryList"))
+		{	*type = SOAP_TYPE_ngwt__LibraryList;
+			return soap_in_ngwt__LibraryList(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwt:Library"))
+		{	*type = SOAP_TYPE_ngwt__Library;
+			return soap_in_ngwt__Library(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "ngwt:JunkHandlingList"))
 		{	*type = SOAP_TYPE_ngwt__JunkHandlingList;
@@ -2548,6 +2920,22 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		{	*type = SOAP_TYPE_ngwt__EmailAddressList;
 			return soap_in_ngwt__EmailAddressList(soap, NULL, NULL, NULL);
 		}
+		if (!soap_match_tag(soap, t, "ngwt:DocumentTypeList"))
+		{	*type = SOAP_TYPE_ngwt__DocumentTypeList;
+			return soap_in_ngwt__DocumentTypeList(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwt:DocumentType"))
+		{	*type = SOAP_TYPE_ngwt__DocumentType;
+			return soap_in_ngwt__DocumentType(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwt:DocumentRef"))
+		{	*type = SOAP_TYPE_ngwt__DocumentRef;
+			return soap_in_ngwt__DocumentRef(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwt:Document"))
+		{	*type = SOAP_TYPE_ngwt__Document;
+			return soap_in_ngwt__Document(soap, NULL, NULL, NULL);
+		}
 		if (!soap_match_tag(soap, t, "ngwt:Distribution"))
 		{	*type = SOAP_TYPE_ngwt__Distribution;
 			return soap_in_ngwt__Distribution(soap, NULL, NULL, NULL);
@@ -2564,13 +2952,17 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		{	*type = SOAP_TYPE_ngwt__DelegatedStatus;
 			return soap_in_ngwt__DelegatedStatus(soap, NULL, NULL, NULL);
 		}
+		if (!soap_match_tag(soap, t, "ngwt:DayOfYearWeekList"))
+		{	*type = SOAP_TYPE_ngwt__DayOfYearWeekList;
+			return soap_in_ngwt__DayOfYearWeekList(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "ngwt:DayOfYearWeek"))
+		{	*type = SOAP_TYPE_ngwt__DayOfYearWeek;
+			return soap_in_ngwt__DayOfYearWeek(soap, NULL, NULL, NULL);
+		}
 		if (!soap_match_tag(soap, t, "ngwt:DayOfYearList"))
 		{	*type = SOAP_TYPE_ngwt__DayOfYearList;
 			return soap_in_ngwt__DayOfYearList(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "ngwt:DayOfWeekList"))
-		{	*type = SOAP_TYPE_ngwt__DayOfWeekList;
-			return soap_in_ngwt__DayOfWeekList(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "ngwt:DayOfWeek"))
 		{	*type = SOAP_TYPE_ngwt__DayOfWeek;
@@ -2712,17 +3104,13 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_getelement(struct soap *soap, int *type)
 		{	*type = SOAP_TYPE_xsd__date;
 			return soap_in_xsd__date(soap, NULL, NULL, NULL);
 		}
-		if (!soap_match_tag(soap, t, "xsd:base64Binary"))
-		{	*type = SOAP_TYPE_xsd__base64Binary;
-			return soap_in_xsd__base64Binary(soap, NULL, NULL, NULL);
-		}
-		if (!soap_match_tag(soap, t, "xsd:anyURI"))
-		{	*type = SOAP_TYPE_xsd__anyURI;
-			return soap_in_xsd__anyURI(soap, NULL, NULL, NULL);
-		}
 		if (!soap_match_tag(soap, t, "xsd:string"))
 		{	*type = SOAP_TYPE_std__string;
 			return soap_in_std__string(soap, NULL, NULL, NULL);
+		}
+		if (!soap_match_tag(soap, t, "xsd:base64Binary"))
+		{	*type = SOAP_TYPE_xsd__base64Binary;
+			return soap_in_xsd__base64Binary(soap, NULL, NULL, NULL);
 		}
 		if (!soap_match_tag(soap, t, "QName"))
 		{	char **s;
@@ -2794,6 +3182,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_ngwt__DayOfMonth(soap, tag, id, (const char *)ptr, "ngwt:DayOfMonth");
 	case SOAP_TYPE_byte:
 		return soap_out_byte(soap, tag, id, (const char *)ptr, "xsd:byte");
+	case SOAP_TYPE_ngwt__WeekOfYear:
+		return soap_out_ngwt__WeekOfYear(soap, tag, id, (const short *)ptr, "ngwt:WeekOfYear");
 	case SOAP_TYPE_ngwt__DayOfYear:
 		return soap_out_ngwt__DayOfYear(soap, tag, id, (const short *)ptr, "ngwt:DayOfYear");
 	case SOAP_TYPE_short:
@@ -2828,8 +3218,14 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_ngwe__EventType(soap, tag, id, (const enum ngwe__EventType *)ptr, "ngwe:EventType");
 	case SOAP_TYPE_ngwt__WeekDay:
 		return soap_out_ngwt__WeekDay(soap, tag, id, (const enum ngwt__WeekDay *)ptr, "ngwt:WeekDay");
+	case SOAP_TYPE_ngwt__VersionStatus:
+		return soap_out_ngwt__VersionStatus(soap, tag, id, (const enum ngwt__VersionStatus *)ptr, "ngwt:VersionStatus");
+	case SOAP_TYPE_ngwt__VersionEventType:
+		return soap_out_ngwt__VersionEventType(soap, tag, id, (const enum ngwt__VersionEventType *)ptr, "ngwt:VersionEventType");
 	case SOAP_TYPE_ngwt__StatusTrackingOptions:
 		return soap_out_ngwt__StatusTrackingOptions(soap, tag, id, (const enum ngwt__StatusTrackingOptions *)ptr, "ngwt:StatusTrackingOptions");
+	case SOAP_TYPE_ngwt__RuleActionType:
+		return soap_out_ngwt__RuleActionType(soap, tag, id, (const enum ngwt__RuleActionType *)ptr, "ngwt:RuleActionType");
 	case SOAP_TYPE_ngwt__RetractType:
 		return soap_out_ngwt__RetractType(soap, tag, id, (const enum ngwt__RetractType *)ptr, "ngwt:RetractType");
 	case SOAP_TYPE_ngwt__RecipientType:
@@ -2868,10 +3264,16 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_ngwt__FolderACLStatus(soap, tag, id, (const enum ngwt__FolderACLStatus *)ptr, "ngwt:FolderACLStatus");
 	case SOAP_TYPE_ngwt__FilterOp:
 		return soap_out_ngwt__FilterOp(soap, tag, id, (const enum ngwt__FilterOp *)ptr, "ngwt:FilterOp");
+	case SOAP_TYPE_ngwt__FilterDate:
+		return soap_out_ngwt__FilterDate(soap, tag, id, (const enum ngwt__FilterDate *)ptr, "ngwt:FilterDate");
+	case SOAP_TYPE_ngwt__Execution:
+		return soap_out_ngwt__Execution(soap, tag, id, (const enum ngwt__Execution *)ptr, "ngwt:Execution");
 	case SOAP_TYPE_ngwt__DistributionType:
 		return soap_out_ngwt__DistributionType(soap, tag, id, (const enum ngwt__DistributionType *)ptr, "ngwt:DistributionType");
 	case SOAP_TYPE_ngwt__DeltaSyncType:
 		return soap_out_ngwt__DeltaSyncType(soap, tag, id, (const enum ngwt__DeltaSyncType *)ptr, "ngwt:DeltaSyncType");
+	case SOAP_TYPE_ngwt__CustomType:
+		return soap_out_ngwt__CustomType(soap, tag, id, (const enum ngwt__CustomType *)ptr, "ngwt:CustomType");
 	case SOAP_TYPE_ngwt__CursorSeek:
 		return soap_out_ngwt__CursorSeek(soap, tag, id, (const enum ngwt__CursorSeek *)ptr, "ngwt:CursorSeek");
 	case SOAP_TYPE_ngwt__ContactType:
@@ -2880,6 +3282,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_ngwt__CategoryType(soap, tag, id, (const enum ngwt__CategoryType *)ptr, "ngwt:CategoryType");
 	case SOAP_TYPE_ngwt__CalendarFolderFlags:
 		return soap_out_ngwt__CalendarFolderFlags(soap, tag, id, (const enum ngwt__CalendarFolderFlags *)ptr, "ngwt:CalendarFolderFlags");
+	case SOAP_TYPE_ngwt__AppointmentConflict:
+		return soap_out_ngwt__AppointmentConflict(soap, tag, id, (const enum ngwt__AppointmentConflict *)ptr, "ngwt:AppointmentConflict");
+	case SOAP_TYPE_ngwt__AgeAction:
+		return soap_out_ngwt__AgeAction(soap, tag, id, (const enum ngwt__AgeAction *)ptr, "ngwt:AgeAction");
 	case SOAP_TYPE_ngwt__AcceptLevel:
 		return soap_out_ngwt__AcceptLevel(soap, tag, id, (const enum ngwt__AcceptLevel *)ptr, "ngwt:AcceptLevel");
 	case SOAP_TYPE_ngwe__ItemTypeList:
@@ -2920,6 +3326,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return ((_ngwe__cleanEventConfigurationResponse *)ptr)->soap_out(soap, "ngwe:cleanEventConfigurationResponse", id, NULL);
 	case SOAP_TYPE__ngwe__cleanEventConfigurationRequest:
 		return ((_ngwe__cleanEventConfigurationRequest *)ptr)->soap_out(soap, "ngwe:cleanEventConfigurationRequest", id, NULL);
+	case SOAP_TYPE_ngwe__Notify:
+		return ((ngwe__Notify *)ptr)->soap_out(soap, tag, id, "ngwe:Notify");
 	case SOAP_TYPE_ngwe__EventTypeList:
 		return ((ngwe__EventTypeList *)ptr)->soap_out(soap, tag, id, "ngwe:EventTypeList");
 	case SOAP_TYPE_ngwe__EventsList:
@@ -2934,6 +3342,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return ((ngwe__Event *)ptr)->soap_out(soap, tag, id, "ngwe:Event");
 	case SOAP_TYPE_ngwe__ContainerList:
 		return ((ngwe__ContainerList *)ptr)->soap_out(soap, tag, id, "ngwe:ContainerList");
+	case SOAP_TYPE__ngwm__updateVersionStatusResponse:
+		return ((_ngwm__updateVersionStatusResponse *)ptr)->soap_out(soap, "ngwm:updateVersionStatusResponse", id, NULL);
+	case SOAP_TYPE__ngwm__updateVersionStatusRequest:
+		return ((_ngwm__updateVersionStatusRequest *)ptr)->soap_out(soap, "ngwm:updateVersionStatusRequest", id, NULL);
 	case SOAP_TYPE__ngwm__uncompleteResponse:
 		return ((_ngwm__uncompleteResponse *)ptr)->soap_out(soap, "ngwm:uncompleteResponse", id, NULL);
 	case SOAP_TYPE__ngwm__uncompleteRequest:
@@ -2946,6 +3358,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return ((_ngwm__startFreeBusySessionResponse *)ptr)->soap_out(soap, "ngwm:startFreeBusySessionResponse", id, NULL);
 	case SOAP_TYPE__ngwm__startFreeBusySessionRequest:
 		return ((_ngwm__startFreeBusySessionRequest *)ptr)->soap_out(soap, "ngwm:startFreeBusySessionRequest", id, NULL);
+	case SOAP_TYPE__ngwm__setTimestampResponse:
+		return ((_ngwm__setTimestampResponse *)ptr)->soap_out(soap, "ngwm:setTimestampResponse", id, NULL);
+	case SOAP_TYPE__ngwm__setTimestampRequest:
+		return ((_ngwm__setTimestampRequest *)ptr)->soap_out(soap, "ngwm:setTimestampRequest", id, NULL);
 	case SOAP_TYPE__ngwm__sendItemResponse:
 		return ((_ngwm__sendItemResponse *)ptr)->soap_out(soap, "ngwm:sendItemResponse", id, NULL);
 	case SOAP_TYPE__ngwm__sendItemRequest:
@@ -2962,6 +3378,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return ((_ngwm__removeSignatureResponse *)ptr)->soap_out(soap, "ngwm:removeSignatureResponse", id, NULL);
 	case SOAP_TYPE__ngwm__removeSignatureRequest:
 		return ((_ngwm__removeSignatureRequest *)ptr)->soap_out(soap, "ngwm:removeSignatureRequest", id, NULL);
+	case SOAP_TYPE__ngwm__removeProxyUserResponse:
+		return ((_ngwm__removeProxyUserResponse *)ptr)->soap_out(soap, "ngwm:removeProxyUserResponse", id, NULL);
+	case SOAP_TYPE__ngwm__removeProxyUserRequest:
+		return ((_ngwm__removeProxyUserRequest *)ptr)->soap_out(soap, "ngwm:removeProxyUserRequest", id, NULL);
 	case SOAP_TYPE__ngwm__removeProxyAccessResponse:
 		return ((_ngwm__removeProxyAccessResponse *)ptr)->soap_out(soap, "ngwm:removeProxyAccessResponse", id, NULL);
 	case SOAP_TYPE__ngwm__removeProxyAccessRequest:
@@ -3062,10 +3482,18 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return ((_ngwm__loginResponse *)ptr)->soap_out(soap, "ngwm:loginResponse", id, NULL);
 	case SOAP_TYPE__ngwm__loginRequest:
 		return ((_ngwm__loginRequest *)ptr)->soap_out(soap, "ngwm:loginRequest", id, NULL);
+	case SOAP_TYPE__ngwm__getUserListResponse:
+		return ((_ngwm__getUserListResponse *)ptr)->soap_out(soap, "ngwm:getUserListResponse", id, NULL);
+	case SOAP_TYPE__ngwm__getUserListRequest:
+		return ((_ngwm__getUserListRequest *)ptr)->soap_out(soap, "ngwm:getUserListRequest", id, NULL);
 	case SOAP_TYPE__ngwm__getTimezoneListResponse:
 		return ((_ngwm__getTimezoneListResponse *)ptr)->soap_out(soap, "ngwm:getTimezoneListResponse", id, NULL);
 	case SOAP_TYPE__ngwm__getTimezoneListRequest:
 		return ((_ngwm__getTimezoneListRequest *)ptr)->soap_out(soap, "ngwm:getTimezoneListRequest", id, NULL);
+	case SOAP_TYPE__ngwm__getTimestampResponse:
+		return ((_ngwm__getTimestampResponse *)ptr)->soap_out(soap, "ngwm:getTimestampResponse", id, NULL);
+	case SOAP_TYPE__ngwm__getTimestampRequest:
+		return ((_ngwm__getTimestampRequest *)ptr)->soap_out(soap, "ngwm:getTimestampRequest", id, NULL);
 	case SOAP_TYPE__ngwm__getSignaturesResponse:
 		return ((_ngwm__getSignaturesResponse *)ptr)->soap_out(soap, "ngwm:getSignaturesResponse", id, NULL);
 	case SOAP_TYPE__ngwm__getSignaturesRequest:
@@ -3074,6 +3502,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return ((_ngwm__getSettingsResponse *)ptr)->soap_out(soap, "ngwm:getSettingsResponse", id, NULL);
 	case SOAP_TYPE__ngwm__getSettingsRequest:
 		return ((_ngwm__getSettingsRequest *)ptr)->soap_out(soap, "ngwm:getSettingsRequest", id, NULL);
+	case SOAP_TYPE__ngwm__getRuleListResponse:
+		return ((_ngwm__getRuleListResponse *)ptr)->soap_out(soap, "ngwm:getRuleListResponse", id, NULL);
+	case SOAP_TYPE__ngwm__getRuleListRequest:
+		return ((_ngwm__getRuleListRequest *)ptr)->soap_out(soap, "ngwm:getRuleListRequest", id, NULL);
 	case SOAP_TYPE__ngwm__getProxyListResponse:
 		return ((_ngwm__getProxyListResponse *)ptr)->soap_out(soap, "ngwm:getProxyListResponse", id, NULL);
 	case SOAP_TYPE__ngwm__getProxyListRequest:
@@ -3086,6 +3518,14 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return ((_ngwm__getQuickMessagesResponse *)ptr)->soap_out(soap, "ngwm:getQuickMessagesResponse", id, NULL);
 	case SOAP_TYPE__ngwm__getQuickMessagesRequest:
 		return ((_ngwm__getQuickMessagesRequest *)ptr)->soap_out(soap, "ngwm:getQuickMessagesRequest", id, NULL);
+	case SOAP_TYPE__ngwm__getLibraryListResponse:
+		return ((_ngwm__getLibraryListResponse *)ptr)->soap_out(soap, "ngwm:getLibraryListResponse", id, NULL);
+	case SOAP_TYPE__ngwm__getLibraryListRequest:
+		return ((_ngwm__getLibraryListRequest *)ptr)->soap_out(soap, "ngwm:getLibraryListRequest", id, NULL);
+	case SOAP_TYPE__ngwm__getLibraryItemResponse:
+		return ((_ngwm__getLibraryItemResponse *)ptr)->soap_out(soap, "ngwm:getLibraryItemResponse", id, NULL);
+	case SOAP_TYPE__ngwm__getLibraryItemRequest:
+		return ((_ngwm__getLibraryItemRequest *)ptr)->soap_out(soap, "ngwm:getLibraryItemRequest", id, NULL);
 	case SOAP_TYPE__ngwm__getJunkMailSettingsResponse:
 		return ((_ngwm__getJunkMailSettingsResponse *)ptr)->soap_out(soap, "ngwm:getJunkMailSettingsResponse", id, NULL);
 	case SOAP_TYPE__ngwm__getJunkMailSettingsRequest:
@@ -3110,6 +3550,14 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return ((_ngwm__getFolderListResponse *)ptr)->soap_out(soap, "ngwm:getFolderListResponse", id, NULL);
 	case SOAP_TYPE__ngwm__getFolderListRequest:
 		return ((_ngwm__getFolderListRequest *)ptr)->soap_out(soap, "ngwm:getFolderListRequest", id, NULL);
+	case SOAP_TYPE__ngwm__getFolderResponse:
+		return ((_ngwm__getFolderResponse *)ptr)->soap_out(soap, "ngwm:getFolderResponse", id, NULL);
+	case SOAP_TYPE__ngwm__getFolderRequest:
+		return ((_ngwm__getFolderRequest *)ptr)->soap_out(soap, "ngwm:getFolderRequest", id, NULL);
+	case SOAP_TYPE__ngwm__getDocumentTypeListResponse:
+		return ((_ngwm__getDocumentTypeListResponse *)ptr)->soap_out(soap, "ngwm:getDocumentTypeListResponse", id, NULL);
+	case SOAP_TYPE__ngwm__getDocumentTypeListRequest:
+		return ((_ngwm__getDocumentTypeListRequest *)ptr)->soap_out(soap, "ngwm:getDocumentTypeListRequest", id, NULL);
 	case SOAP_TYPE__ngwm__getDeltaInfoResponse:
 		return ((_ngwm__getDeltaInfoResponse *)ptr)->soap_out(soap, "ngwm:getDeltaInfoResponse", id, NULL);
 	case SOAP_TYPE__ngwm__getDeltaInfoRequest:
@@ -3138,6 +3586,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return ((_ngwm__forwardResponse *)ptr)->soap_out(soap, "ngwm:forwardResponse", id, NULL);
 	case SOAP_TYPE__ngwm__forwardRequest:
 		return ((_ngwm__forwardRequest *)ptr)->soap_out(soap, "ngwm:forwardRequest", id, NULL);
+	case SOAP_TYPE__ngwm__executeRuleResponse:
+		return ((_ngwm__executeRuleResponse *)ptr)->soap_out(soap, "ngwm:executeRuleResponse", id, NULL);
+	case SOAP_TYPE__ngwm__executeRuleRequest:
+		return ((_ngwm__executeRuleRequest *)ptr)->soap_out(soap, "ngwm:executeRuleRequest", id, NULL);
 	case SOAP_TYPE__ngwm__destroyCursorResponse:
 		return ((_ngwm__destroyCursorResponse *)ptr)->soap_out(soap, "ngwm:destroyCursorResponse", id, NULL);
 	case SOAP_TYPE__ngwm__destroyCursorRequest:
@@ -3162,6 +3614,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return ((_ngwm__createJunkEntryResponse *)ptr)->soap_out(soap, "ngwm:createJunkEntryResponse", id, NULL);
 	case SOAP_TYPE__ngwm__createJunkEntryRequest:
 		return ((_ngwm__createJunkEntryRequest *)ptr)->soap_out(soap, "ngwm:createJunkEntryRequest", id, NULL);
+	case SOAP_TYPE__ngwm__createItemsResponse:
+		return ((_ngwm__createItemsResponse *)ptr)->soap_out(soap, "ngwm:createItemsResponse", id, NULL);
+	case SOAP_TYPE__ngwm__createItemsRequest:
+		return ((_ngwm__createItemsRequest *)ptr)->soap_out(soap, "ngwm:createItemsRequest", id, NULL);
 	case SOAP_TYPE__ngwm__createItemResponse:
 		return ((_ngwm__createItemResponse *)ptr)->soap_out(soap, "ngwm:createItemResponse", id, NULL);
 	case SOAP_TYPE__ngwm__createItemRequest:
@@ -3198,6 +3654,12 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return ((_ngwm__acceptResponse *)ptr)->soap_out(soap, "ngwm:acceptResponse", id, NULL);
 	case SOAP_TYPE__ngwm__acceptRequest:
 		return ((_ngwm__acceptRequest *)ptr)->soap_out(soap, "ngwm:acceptRequest", id, NULL);
+	case SOAP_TYPE_ngwt__VersionEvent:
+		return ((ngwt__VersionEvent *)ptr)->soap_out(soap, tag, id, "ngwt:VersionEvent");
+	case SOAP_TYPE_ngwt__Version:
+		return ((ngwt__Version *)ptr)->soap_out(soap, tag, id, "ngwt:Version");
+	case SOAP_TYPE_ngwt__UserList:
+		return ((ngwt__UserList *)ptr)->soap_out(soap, tag, id, "ngwt:UserList");
 	case SOAP_TYPE_ngwt__UserInfo:
 		return ((ngwt__UserInfo *)ptr)->soap_out(soap, tag, id, "ngwt:UserInfo");
 	case SOAP_TYPE_ngwt__TrustedApplication:
@@ -3218,6 +3680,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return ((ngwt__StatusTracking *)ptr)->soap_out(soap, tag, id, "ngwt:StatusTracking");
 	case SOAP_TYPE_ngwt__Status:
 		return ((ngwt__Status *)ptr)->soap_out(soap, tag, id, "ngwt:Status");
+	case SOAP_TYPE_ngwt__SMimeOperation:
+		return ((ngwt__SMimeOperation *)ptr)->soap_out(soap, tag, id, "ngwt:SMimeOperation");
 	case SOAP_TYPE_ngwt__SignatureData:
 		return ((ngwt__SignatureData *)ptr)->soap_out(soap, tag, id, "ngwt:SignatureData");
 	case SOAP_TYPE_ngwt__Signatures:
@@ -3240,6 +3704,14 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return ((ngwt__SendOptions *)ptr)->soap_out(soap, tag, id, "ngwt:SendOptions");
 	case SOAP_TYPE_ngwt__SendOptionsRequestReply:
 		return ((ngwt__SendOptionsRequestReply *)ptr)->soap_out(soap, tag, id, "ngwt:SendOptionsRequestReply");
+	case SOAP_TYPE_ngwt__RuleList:
+		return ((ngwt__RuleList *)ptr)->soap_out(soap, tag, id, "ngwt:RuleList");
+	case SOAP_TYPE_ngwt__RuleActionList:
+		return ((ngwt__RuleActionList *)ptr)->soap_out(soap, tag, id, "ngwt:RuleActionList");
+	case SOAP_TYPE_ngwt__RuleAction:
+		return ((ngwt__RuleAction *)ptr)->soap_out(soap, tag, id, "ngwt:RuleAction");
+	case SOAP_TYPE_ngwt__Rule:
+		return ((ngwt__Rule *)ptr)->soap_out(soap, tag, id, "ngwt:Rule");
 	case SOAP_TYPE_ngwt__Rights:
 		return ((ngwt__Rights *)ptr)->soap_out(soap, tag, id, "ngwt:Rights");
 	case SOAP_TYPE_ngwt__ReturnNotificationOptions:
@@ -3268,6 +3740,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return ((ngwt__Query *)ptr)->soap_out(soap, tag, id, "ngwt:Query");
 	case SOAP_TYPE_ngwt__ProxyList:
 		return ((ngwt__ProxyList *)ptr)->soap_out(soap, tag, id, "ngwt:ProxyList");
+	case SOAP_TYPE_ngwt__ProxyUser:
+		return ((ngwt__ProxyUser *)ptr)->soap_out(soap, tag, id, "ngwt:ProxyUser");
 	case SOAP_TYPE_ngwt__Proxy:
 		return ((ngwt__Proxy *)ptr)->soap_out(soap, tag, id, "ngwt:Proxy");
 	case SOAP_TYPE_ngwt__ProblemList:
@@ -3310,6 +3784,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return ((ngwt__Mail *)ptr)->soap_out(soap, tag, id, "ngwt:Mail");
 	case SOAP_TYPE_ngwt__LinkInfo:
 		return ((ngwt__LinkInfo *)ptr)->soap_out(soap, tag, id, "ngwt:LinkInfo");
+	case SOAP_TYPE_ngwt__LibraryList:
+		return ((ngwt__LibraryList *)ptr)->soap_out(soap, tag, id, "ngwt:LibraryList");
+	case SOAP_TYPE_ngwt__Library:
+		return ((ngwt__Library *)ptr)->soap_out(soap, tag, id, "ngwt:Library");
 	case SOAP_TYPE_ngwt__JunkHandlingList:
 		return ((ngwt__JunkHandlingList *)ptr)->soap_out(soap, tag, id, "ngwt:JunkHandlingList");
 	case SOAP_TYPE_ngwt__JunkEntry:
@@ -3376,6 +3854,14 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return ((ngwt__Filter *)ptr)->soap_out(soap, tag, id, "ngwt:Filter");
 	case SOAP_TYPE_ngwt__EmailAddressList:
 		return ((ngwt__EmailAddressList *)ptr)->soap_out(soap, tag, id, "ngwt:EmailAddressList");
+	case SOAP_TYPE_ngwt__DocumentTypeList:
+		return ((ngwt__DocumentTypeList *)ptr)->soap_out(soap, tag, id, "ngwt:DocumentTypeList");
+	case SOAP_TYPE_ngwt__DocumentType:
+		return ((ngwt__DocumentType *)ptr)->soap_out(soap, tag, id, "ngwt:DocumentType");
+	case SOAP_TYPE_ngwt__DocumentRef:
+		return ((ngwt__DocumentRef *)ptr)->soap_out(soap, tag, id, "ngwt:DocumentRef");
+	case SOAP_TYPE_ngwt__Document:
+		return ((ngwt__Document *)ptr)->soap_out(soap, tag, id, "ngwt:Document");
 	case SOAP_TYPE_ngwt__Distribution:
 		return ((ngwt__Distribution *)ptr)->soap_out(soap, tag, id, "ngwt:Distribution");
 	case SOAP_TYPE_ngwt__DeltaInfo:
@@ -3384,10 +3870,12 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return ((ngwt__DelegateeStatus *)ptr)->soap_out(soap, tag, id, "ngwt:DelegateeStatus");
 	case SOAP_TYPE_ngwt__DelegatedStatus:
 		return ((ngwt__DelegatedStatus *)ptr)->soap_out(soap, tag, id, "ngwt:DelegatedStatus");
+	case SOAP_TYPE_ngwt__DayOfYearWeekList:
+		return ((ngwt__DayOfYearWeekList *)ptr)->soap_out(soap, tag, id, "ngwt:DayOfYearWeekList");
+	case SOAP_TYPE_ngwt__DayOfYearWeek:
+		return ((ngwt__DayOfYearWeek *)ptr)->soap_out(soap, tag, id, "ngwt:DayOfYearWeek");
 	case SOAP_TYPE_ngwt__DayOfYearList:
 		return ((ngwt__DayOfYearList *)ptr)->soap_out(soap, tag, id, "ngwt:DayOfYearList");
-	case SOAP_TYPE_ngwt__DayOfWeekList:
-		return ((ngwt__DayOfWeekList *)ptr)->soap_out(soap, tag, id, "ngwt:DayOfWeekList");
 	case SOAP_TYPE_ngwt__DayOfWeek:
 		return ((ngwt__DayOfWeek *)ptr)->soap_out(soap, tag, id, "ngwt:DayOfWeek");
 	case SOAP_TYPE_ngwt__DayOfMonthList:
@@ -3458,12 +3946,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_xsd__decimal(soap, tag, id, (const std::string *)ptr, "xsd:decimal");
 	case SOAP_TYPE_xsd__date:
 		return soap_out_xsd__date(soap, tag, id, (const std::string *)ptr, "xsd:date");
-	case SOAP_TYPE_xsd__base64Binary:
-		return ((xsd__base64Binary *)ptr)->soap_out(soap, tag, id, "xsd:base64Binary");
-	case SOAP_TYPE_xsd__anyURI:
-		return soap_out_xsd__anyURI(soap, tag, id, (const std::string *)ptr, "xsd:anyURI");
 	case SOAP_TYPE_std__string:
 		return soap_out_std__string(soap, tag, id, (const std::string *)ptr, "xsd:string");
+	case SOAP_TYPE_xsd__base64Binary:
+		return ((xsd__base64Binary *)ptr)->soap_out(soap, tag, id, "xsd:base64Binary");
 	case SOAP_TYPE_PointerTo_ngwe__removeEventsResponse:
 		return soap_out_PointerTo_ngwe__removeEventsResponse(soap, tag, id, (_ngwe__removeEventsResponse *const*)ptr, "ngwe:removeEventsResponse");
 	case SOAP_TYPE_PointerTo_ngwe__removeEventsRequest:
@@ -3488,6 +3974,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTo_ngwe__cleanEventConfigurationResponse(soap, tag, id, (_ngwe__cleanEventConfigurationResponse *const*)ptr, "ngwe:cleanEventConfigurationResponse");
 	case SOAP_TYPE_PointerTo_ngwe__cleanEventConfigurationRequest:
 		return soap_out_PointerTo_ngwe__cleanEventConfigurationRequest(soap, tag, id, (_ngwe__cleanEventConfigurationRequest *const*)ptr, "ngwe:cleanEventConfigurationRequest");
+	case SOAP_TYPE_PointerTo_ngwm__updateVersionStatusResponse:
+		return soap_out_PointerTo_ngwm__updateVersionStatusResponse(soap, tag, id, (_ngwm__updateVersionStatusResponse *const*)ptr, "ngwm:updateVersionStatusResponse");
+	case SOAP_TYPE_PointerTo_ngwm__updateVersionStatusRequest:
+		return soap_out_PointerTo_ngwm__updateVersionStatusRequest(soap, tag, id, (_ngwm__updateVersionStatusRequest *const*)ptr, "ngwm:updateVersionStatusRequest");
 	case SOAP_TYPE_PointerTo_ngwm__uncompleteResponse:
 		return soap_out_PointerTo_ngwm__uncompleteResponse(soap, tag, id, (_ngwm__uncompleteResponse *const*)ptr, "ngwm:uncompleteResponse");
 	case SOAP_TYPE_PointerTo_ngwm__uncompleteRequest:
@@ -3500,6 +3990,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTo_ngwm__startFreeBusySessionResponse(soap, tag, id, (_ngwm__startFreeBusySessionResponse *const*)ptr, "ngwm:startFreeBusySessionResponse");
 	case SOAP_TYPE_PointerTo_ngwm__startFreeBusySessionRequest:
 		return soap_out_PointerTo_ngwm__startFreeBusySessionRequest(soap, tag, id, (_ngwm__startFreeBusySessionRequest *const*)ptr, "ngwm:startFreeBusySessionRequest");
+	case SOAP_TYPE_PointerTo_ngwm__setTimestampResponse:
+		return soap_out_PointerTo_ngwm__setTimestampResponse(soap, tag, id, (_ngwm__setTimestampResponse *const*)ptr, "ngwm:setTimestampResponse");
+	case SOAP_TYPE_PointerTo_ngwm__setTimestampRequest:
+		return soap_out_PointerTo_ngwm__setTimestampRequest(soap, tag, id, (_ngwm__setTimestampRequest *const*)ptr, "ngwm:setTimestampRequest");
 	case SOAP_TYPE_PointerTo_ngwm__sendItemResponse:
 		return soap_out_PointerTo_ngwm__sendItemResponse(soap, tag, id, (_ngwm__sendItemResponse *const*)ptr, "ngwm:sendItemResponse");
 	case SOAP_TYPE_PointerTo_ngwm__sendItemRequest:
@@ -3516,6 +4010,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTo_ngwm__removeSignatureResponse(soap, tag, id, (_ngwm__removeSignatureResponse *const*)ptr, "ngwm:removeSignatureResponse");
 	case SOAP_TYPE_PointerTo_ngwm__removeSignatureRequest:
 		return soap_out_PointerTo_ngwm__removeSignatureRequest(soap, tag, id, (_ngwm__removeSignatureRequest *const*)ptr, "ngwm:removeSignatureRequest");
+	case SOAP_TYPE_PointerTo_ngwm__removeProxyUserResponse:
+		return soap_out_PointerTo_ngwm__removeProxyUserResponse(soap, tag, id, (_ngwm__removeProxyUserResponse *const*)ptr, "ngwm:removeProxyUserResponse");
+	case SOAP_TYPE_PointerTo_ngwm__removeProxyUserRequest:
+		return soap_out_PointerTo_ngwm__removeProxyUserRequest(soap, tag, id, (_ngwm__removeProxyUserRequest *const*)ptr, "ngwm:removeProxyUserRequest");
 	case SOAP_TYPE_PointerTo_ngwm__removeProxyAccessResponse:
 		return soap_out_PointerTo_ngwm__removeProxyAccessResponse(soap, tag, id, (_ngwm__removeProxyAccessResponse *const*)ptr, "ngwm:removeProxyAccessResponse");
 	case SOAP_TYPE_PointerTo_ngwm__removeProxyAccessRequest:
@@ -3612,10 +4110,18 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTo_ngwm__loginResponse(soap, tag, id, (_ngwm__loginResponse *const*)ptr, "ngwm:loginResponse");
 	case SOAP_TYPE_PointerTo_ngwm__loginRequest:
 		return soap_out_PointerTo_ngwm__loginRequest(soap, tag, id, (_ngwm__loginRequest *const*)ptr, "ngwm:loginRequest");
+	case SOAP_TYPE_PointerTo_ngwm__getUserListResponse:
+		return soap_out_PointerTo_ngwm__getUserListResponse(soap, tag, id, (_ngwm__getUserListResponse *const*)ptr, "ngwm:getUserListResponse");
+	case SOAP_TYPE_PointerTo_ngwm__getUserListRequest:
+		return soap_out_PointerTo_ngwm__getUserListRequest(soap, tag, id, (_ngwm__getUserListRequest *const*)ptr, "ngwm:getUserListRequest");
 	case SOAP_TYPE_PointerTo_ngwm__getTimezoneListResponse:
 		return soap_out_PointerTo_ngwm__getTimezoneListResponse(soap, tag, id, (_ngwm__getTimezoneListResponse *const*)ptr, "ngwm:getTimezoneListResponse");
 	case SOAP_TYPE_PointerTo_ngwm__getTimezoneListRequest:
 		return soap_out_PointerTo_ngwm__getTimezoneListRequest(soap, tag, id, (_ngwm__getTimezoneListRequest *const*)ptr, "ngwm:getTimezoneListRequest");
+	case SOAP_TYPE_PointerTo_ngwm__getTimestampResponse:
+		return soap_out_PointerTo_ngwm__getTimestampResponse(soap, tag, id, (_ngwm__getTimestampResponse *const*)ptr, "ngwm:getTimestampResponse");
+	case SOAP_TYPE_PointerTo_ngwm__getTimestampRequest:
+		return soap_out_PointerTo_ngwm__getTimestampRequest(soap, tag, id, (_ngwm__getTimestampRequest *const*)ptr, "ngwm:getTimestampRequest");
 	case SOAP_TYPE_PointerTo_ngwm__getSignaturesResponse:
 		return soap_out_PointerTo_ngwm__getSignaturesResponse(soap, tag, id, (_ngwm__getSignaturesResponse *const*)ptr, "ngwm:getSignaturesResponse");
 	case SOAP_TYPE_PointerTo_ngwm__getSignaturesRequest:
@@ -3624,6 +4130,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTo_ngwm__getSettingsResponse(soap, tag, id, (_ngwm__getSettingsResponse *const*)ptr, "ngwm:getSettingsResponse");
 	case SOAP_TYPE_PointerTo_ngwm__getSettingsRequest:
 		return soap_out_PointerTo_ngwm__getSettingsRequest(soap, tag, id, (_ngwm__getSettingsRequest *const*)ptr, "ngwm:getSettingsRequest");
+	case SOAP_TYPE_PointerTo_ngwm__getRuleListResponse:
+		return soap_out_PointerTo_ngwm__getRuleListResponse(soap, tag, id, (_ngwm__getRuleListResponse *const*)ptr, "ngwm:getRuleListResponse");
+	case SOAP_TYPE_PointerTo_ngwm__getRuleListRequest:
+		return soap_out_PointerTo_ngwm__getRuleListRequest(soap, tag, id, (_ngwm__getRuleListRequest *const*)ptr, "ngwm:getRuleListRequest");
 	case SOAP_TYPE_PointerTo_ngwm__getProxyListResponse:
 		return soap_out_PointerTo_ngwm__getProxyListResponse(soap, tag, id, (_ngwm__getProxyListResponse *const*)ptr, "ngwm:getProxyListResponse");
 	case SOAP_TYPE_PointerTo_ngwm__getProxyListRequest:
@@ -3636,6 +4146,14 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTo_ngwm__getQuickMessagesResponse(soap, tag, id, (_ngwm__getQuickMessagesResponse *const*)ptr, "ngwm:getQuickMessagesResponse");
 	case SOAP_TYPE_PointerTo_ngwm__getQuickMessagesRequest:
 		return soap_out_PointerTo_ngwm__getQuickMessagesRequest(soap, tag, id, (_ngwm__getQuickMessagesRequest *const*)ptr, "ngwm:getQuickMessagesRequest");
+	case SOAP_TYPE_PointerTo_ngwm__getLibraryListResponse:
+		return soap_out_PointerTo_ngwm__getLibraryListResponse(soap, tag, id, (_ngwm__getLibraryListResponse *const*)ptr, "ngwm:getLibraryListResponse");
+	case SOAP_TYPE_PointerTo_ngwm__getLibraryListRequest:
+		return soap_out_PointerTo_ngwm__getLibraryListRequest(soap, tag, id, (_ngwm__getLibraryListRequest *const*)ptr, "ngwm:getLibraryListRequest");
+	case SOAP_TYPE_PointerTo_ngwm__getLibraryItemResponse:
+		return soap_out_PointerTo_ngwm__getLibraryItemResponse(soap, tag, id, (_ngwm__getLibraryItemResponse *const*)ptr, "ngwm:getLibraryItemResponse");
+	case SOAP_TYPE_PointerTo_ngwm__getLibraryItemRequest:
+		return soap_out_PointerTo_ngwm__getLibraryItemRequest(soap, tag, id, (_ngwm__getLibraryItemRequest *const*)ptr, "ngwm:getLibraryItemRequest");
 	case SOAP_TYPE_PointerTo_ngwm__getJunkMailSettingsResponse:
 		return soap_out_PointerTo_ngwm__getJunkMailSettingsResponse(soap, tag, id, (_ngwm__getJunkMailSettingsResponse *const*)ptr, "ngwm:getJunkMailSettingsResponse");
 	case SOAP_TYPE_PointerTo_ngwm__getJunkMailSettingsRequest:
@@ -3660,6 +4178,14 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTo_ngwm__getFolderListResponse(soap, tag, id, (_ngwm__getFolderListResponse *const*)ptr, "ngwm:getFolderListResponse");
 	case SOAP_TYPE_PointerTo_ngwm__getFolderListRequest:
 		return soap_out_PointerTo_ngwm__getFolderListRequest(soap, tag, id, (_ngwm__getFolderListRequest *const*)ptr, "ngwm:getFolderListRequest");
+	case SOAP_TYPE_PointerTo_ngwm__getFolderResponse:
+		return soap_out_PointerTo_ngwm__getFolderResponse(soap, tag, id, (_ngwm__getFolderResponse *const*)ptr, "ngwm:getFolderResponse");
+	case SOAP_TYPE_PointerTo_ngwm__getFolderRequest:
+		return soap_out_PointerTo_ngwm__getFolderRequest(soap, tag, id, (_ngwm__getFolderRequest *const*)ptr, "ngwm:getFolderRequest");
+	case SOAP_TYPE_PointerTo_ngwm__getDocumentTypeListResponse:
+		return soap_out_PointerTo_ngwm__getDocumentTypeListResponse(soap, tag, id, (_ngwm__getDocumentTypeListResponse *const*)ptr, "ngwm:getDocumentTypeListResponse");
+	case SOAP_TYPE_PointerTo_ngwm__getDocumentTypeListRequest:
+		return soap_out_PointerTo_ngwm__getDocumentTypeListRequest(soap, tag, id, (_ngwm__getDocumentTypeListRequest *const*)ptr, "ngwm:getDocumentTypeListRequest");
 	case SOAP_TYPE_PointerTo_ngwm__getDeltaInfoResponse:
 		return soap_out_PointerTo_ngwm__getDeltaInfoResponse(soap, tag, id, (_ngwm__getDeltaInfoResponse *const*)ptr, "ngwm:getDeltaInfoResponse");
 	case SOAP_TYPE_PointerTo_ngwm__getDeltaInfoRequest:
@@ -3688,6 +4214,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTo_ngwm__forwardResponse(soap, tag, id, (_ngwm__forwardResponse *const*)ptr, "ngwm:forwardResponse");
 	case SOAP_TYPE_PointerTo_ngwm__forwardRequest:
 		return soap_out_PointerTo_ngwm__forwardRequest(soap, tag, id, (_ngwm__forwardRequest *const*)ptr, "ngwm:forwardRequest");
+	case SOAP_TYPE_PointerTo_ngwm__executeRuleResponse:
+		return soap_out_PointerTo_ngwm__executeRuleResponse(soap, tag, id, (_ngwm__executeRuleResponse *const*)ptr, "ngwm:executeRuleResponse");
+	case SOAP_TYPE_PointerTo_ngwm__executeRuleRequest:
+		return soap_out_PointerTo_ngwm__executeRuleRequest(soap, tag, id, (_ngwm__executeRuleRequest *const*)ptr, "ngwm:executeRuleRequest");
 	case SOAP_TYPE_PointerTo_ngwm__destroyCursorResponse:
 		return soap_out_PointerTo_ngwm__destroyCursorResponse(soap, tag, id, (_ngwm__destroyCursorResponse *const*)ptr, "ngwm:destroyCursorResponse");
 	case SOAP_TYPE_PointerTo_ngwm__destroyCursorRequest:
@@ -3712,6 +4242,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTo_ngwm__createJunkEntryResponse(soap, tag, id, (_ngwm__createJunkEntryResponse *const*)ptr, "ngwm:createJunkEntryResponse");
 	case SOAP_TYPE_PointerTo_ngwm__createJunkEntryRequest:
 		return soap_out_PointerTo_ngwm__createJunkEntryRequest(soap, tag, id, (_ngwm__createJunkEntryRequest *const*)ptr, "ngwm:createJunkEntryRequest");
+	case SOAP_TYPE_PointerTo_ngwm__createItemsResponse:
+		return soap_out_PointerTo_ngwm__createItemsResponse(soap, tag, id, (_ngwm__createItemsResponse *const*)ptr, "ngwm:createItemsResponse");
+	case SOAP_TYPE_PointerTo_ngwm__createItemsRequest:
+		return soap_out_PointerTo_ngwm__createItemsRequest(soap, tag, id, (_ngwm__createItemsRequest *const*)ptr, "ngwm:createItemsRequest");
 	case SOAP_TYPE_PointerTo_ngwm__createItemResponse:
 		return soap_out_PointerTo_ngwm__createItemResponse(soap, tag, id, (_ngwm__createItemResponse *const*)ptr, "ngwm:createItemResponse");
 	case SOAP_TYPE_PointerTo_ngwm__createItemRequest:
@@ -3756,6 +4290,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTongwt__RecurrenceRule(soap, tag, id, (ngwt__RecurrenceRule *const*)ptr, "ngwt:RecurrenceRule");
 	case SOAP_TYPE_PointerTongwt__RecurrenceDateType:
 		return soap_out_PointerTongwt__RecurrenceDateType(soap, tag, id, (ngwt__RecurrenceDateType *const*)ptr, "ngwt:RecurrenceDateType");
+	case SOAP_TYPE_PointerTongwt__SMimeOperation:
+		return soap_out_PointerTongwt__SMimeOperation(soap, tag, id, (ngwt__SMimeOperation *const*)ptr, "ngwt:SMimeOperation");
 	case SOAP_TYPE_PointerTongwt__LinkInfo:
 		return soap_out_PointerTongwt__LinkInfo(soap, tag, id, (ngwt__LinkInfo *const*)ptr, "ngwt:LinkInfo");
 	case SOAP_TYPE_PointerTongwt__ItemOptions:
@@ -3780,14 +4316,22 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTongwt__EmailAddressList(soap, tag, id, (ngwt__EmailAddressList *const*)ptr, "ngwt:EmailAddressList");
 	case SOAP_TYPE_PointerTongwt__FullName:
 		return soap_out_PointerTongwt__FullName(soap, tag, id, (ngwt__FullName *const*)ptr, "ngwt:FullName");
+	case SOAP_TYPE_PointerTongwt__VersionStatus:
+		return soap_out_PointerTongwt__VersionStatus(soap, tag, id, (enum ngwt__VersionStatus *const*)ptr, "ngwt:VersionStatus");
 	case SOAP_TYPE_PointerTongwt__FolderACL:
 		return soap_out_PointerTongwt__FolderACL(soap, tag, id, (ngwt__FolderACL *const*)ptr, "ngwt:FolderACL");
+	case SOAP_TYPE_PointerTongwt__RuleActionList:
+		return soap_out_PointerTongwt__RuleActionList(soap, tag, id, (ngwt__RuleActionList *const*)ptr, "ngwt:RuleActionList");
+	case SOAP_TYPE_PointerTongwt__Execution:
+		return soap_out_PointerTongwt__Execution(soap, tag, id, (enum ngwt__Execution *const*)ptr, "ngwt:Execution");
 	case SOAP_TYPE_PointerTongwt__Query:
 		return soap_out_PointerTongwt__Query(soap, tag, id, (ngwt__Query *const*)ptr, "ngwt:Query");
-	case SOAP_TYPE_PointerTongwt__FolderType:
-		return soap_out_PointerTongwt__FolderType(soap, tag, id, (enum ngwt__FolderType *const*)ptr, "ngwt:FolderType");
 	case SOAP_TYPE_PointerTongwt__FolderACLStatus:
 		return soap_out_PointerTongwt__FolderACLStatus(soap, tag, id, (enum ngwt__FolderACLStatus *const*)ptr, "ngwt:FolderACLStatus");
+	case SOAP_TYPE_PointerTongwt__AccessControlList:
+		return soap_out_PointerTongwt__AccessControlList(soap, tag, id, (ngwt__AccessControlList *const*)ptr, "ngwt:AccessControlList");
+	case SOAP_TYPE_PointerTongwt__WeekOfYear:
+		return soap_out_PointerTongwt__WeekOfYear(soap, tag, id, (short *const*)ptr, "ngwt:WeekOfYear");
 	case SOAP_TYPE_PointerTongwt__OccurrenceType:
 		return soap_out_PointerTongwt__OccurrenceType(soap, tag, id, (enum ngwt__OccurrenceType *const*)ptr, "ngwt:OccurrenceType");
 	case SOAP_TYPE_PointerTongwt__ItemSecurity:
@@ -3806,8 +4350,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTongwt__FreeBusyBlockList(soap, tag, id, (ngwt__FreeBusyBlockList *const*)ptr, "ngwt:FreeBusyBlockList");
 	case SOAP_TYPE_PointerTongwt__CalendarFolderAttribute:
 		return soap_out_PointerTongwt__CalendarFolderAttribute(soap, tag, id, (ngwt__CalendarFolderAttribute *const*)ptr, "ngwt:CalendarFolderAttribute");
-	case SOAP_TYPE_PointerTongwt__CategoryRefList:
-		return soap_out_PointerTongwt__CategoryRefList(soap, tag, id, (ngwt__CategoryRefList *const*)ptr, "ngwt:CategoryRefList");
+	case SOAP_TYPE_PointerTongwt__FilterDate:
+		return soap_out_PointerTongwt__FilterDate(soap, tag, id, (enum ngwt__FilterDate *const*)ptr, "ngwt:FilterDate");
 	case SOAP_TYPE_PointerTongwt__ContainerRef:
 		return soap_out_PointerTongwt__ContainerRef(soap, tag, id, (ngwt__ContainerRef *const*)ptr, "ngwt:ContainerRef");
 	case SOAP_TYPE_PointerTongwt__CategoryType:
@@ -3836,10 +4380,14 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTongwe__ItemTypeList(soap, tag, id, (enum ngwe__ItemTypeList *const*)ptr, "ngwe:ItemTypeList");
 	case SOAP_TYPE_PointerTongwe__EventTypeList:
 		return soap_out_PointerTongwe__EventTypeList(soap, tag, id, (ngwe__EventTypeList *const*)ptr, "ngwe:EventTypeList");
+	case SOAP_TYPE_PointerTongwe__ItemType:
+		return soap_out_PointerTongwe__ItemType(soap, tag, id, (enum ngwe__ItemType *const*)ptr, "ngwe:ItemType");
 	case SOAP_TYPE_PointerTongwe__FieldList:
 		return soap_out_PointerTongwe__FieldList(soap, tag, id, (enum ngwe__FieldList *const*)ptr, "ngwe:FieldList");
 	case SOAP_TYPE_PointerTongwt__FreeBusyUserList:
 		return soap_out_PointerTongwt__FreeBusyUserList(soap, tag, id, (ngwt__FreeBusyUserList *const*)ptr, "ngwt:FreeBusyUserList");
+	case SOAP_TYPE_PointerTongwt__RetractType:
+		return soap_out_PointerTongwt__RetractType(soap, tag, id, (enum ngwt__RetractType *const*)ptr, "ngwt:RetractType");
 	case SOAP_TYPE_PointerTongwt__ItemList:
 		return soap_out_PointerTongwt__ItemList(soap, tag, id, (ngwt__ItemList *const*)ptr, "ngwt:ItemList");
 	case SOAP_TYPE_PointerTongwt__CursorSeek:
@@ -3850,24 +4398,24 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTongwt__ModifyItem(soap, tag, id, (ngwt__ModifyItem *const*)ptr, "ngwt:ModifyItem");
 	case SOAP_TYPE_PointerTongwt__Host:
 		return soap_out_PointerTongwt__Host(soap, tag, id, (ngwt__Host *const*)ptr, "ngwt:Host");
-	case SOAP_TYPE_PointerTongwt__UserInfo:
-		return soap_out_PointerTongwt__UserInfo(soap, tag, id, (ngwt__UserInfo *const*)ptr, "ngwt:UserInfo");
 	case SOAP_TYPE_PointerTongwt__Authentication:
 		return soap_out_PointerTongwt__Authentication(soap, tag, id, (ngwt__Authentication *const*)ptr, "ngwt:Authentication");
+	case SOAP_TYPE_PointerTongwt__UserList:
+		return soap_out_PointerTongwt__UserList(soap, tag, id, (ngwt__UserList *const*)ptr, "ngwt:UserList");
 	case SOAP_TYPE_PointerTongwt__TimezoneList:
 		return soap_out_PointerTongwt__TimezoneList(soap, tag, id, (ngwt__TimezoneList *const*)ptr, "ngwt:TimezoneList");
 	case SOAP_TYPE_PointerTongwt__Signatures:
 		return soap_out_PointerTongwt__Signatures(soap, tag, id, (ngwt__Signatures *const*)ptr, "ngwt:Signatures");
 	case SOAP_TYPE_PointerTongwt__Settings:
 		return soap_out_PointerTongwt__Settings(soap, tag, id, (ngwt__Settings *const*)ptr, "ngwt:Settings");
+	case SOAP_TYPE_PointerTongwt__RuleList:
+		return soap_out_PointerTongwt__RuleList(soap, tag, id, (ngwt__RuleList *const*)ptr, "ngwt:RuleList");
 	case SOAP_TYPE_PointerTongwt__ProxyList:
 		return soap_out_PointerTongwt__ProxyList(soap, tag, id, (ngwt__ProxyList *const*)ptr, "ngwt:ProxyList");
 	case SOAP_TYPE_PointerTongwt__AccessRightList:
 		return soap_out_PointerTongwt__AccessRightList(soap, tag, id, (ngwt__AccessRightList *const*)ptr, "ngwt:AccessRightList");
-	case SOAP_TYPE_PointerTongwt__ItemSourceList:
-		return soap_out_PointerTongwt__ItemSourceList(soap, tag, id, (enum ngwt__ItemSourceList *const*)ptr, "ngwt:ItemSourceList");
-	case SOAP_TYPE_PointerTongwt__MessageTypeList:
-		return soap_out_PointerTongwt__MessageTypeList(soap, tag, id, (enum ngwt__MessageTypeList *const*)ptr, "ngwt:MessageTypeList");
+	case SOAP_TYPE_PointerTongwt__LibraryList:
+		return soap_out_PointerTongwt__LibraryList(soap, tag, id, (ngwt__LibraryList *const*)ptr, "ngwt:LibraryList");
 	case SOAP_TYPE_PointerTongwt__SettingsList:
 		return soap_out_PointerTongwt__SettingsList(soap, tag, id, (ngwt__SettingsList *const*)ptr, "ngwt:SettingsList");
 	case SOAP_TYPE_PointerTongwt__JunkHandlingList:
@@ -3878,6 +4426,14 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTongwt__FreeBusyStats(soap, tag, id, (ngwt__FreeBusyStats *const*)ptr, "ngwt:FreeBusyStats");
 	case SOAP_TYPE_PointerTongwt__FolderList:
 		return soap_out_PointerTongwt__FolderList(soap, tag, id, (ngwt__FolderList *const*)ptr, "ngwt:FolderList");
+	case SOAP_TYPE_PointerTongwt__ItemSourceList:
+		return soap_out_PointerTongwt__ItemSourceList(soap, tag, id, (enum ngwt__ItemSourceList *const*)ptr, "ngwt:ItemSourceList");
+	case SOAP_TYPE_PointerTongwt__MessageTypeList:
+		return soap_out_PointerTongwt__MessageTypeList(soap, tag, id, (enum ngwt__MessageTypeList *const*)ptr, "ngwt:MessageTypeList");
+	case SOAP_TYPE_PointerTongwt__FolderType:
+		return soap_out_PointerTongwt__FolderType(soap, tag, id, (enum ngwt__FolderType *const*)ptr, "ngwt:FolderType");
+	case SOAP_TYPE_PointerTongwt__DocumentTypeList:
+		return soap_out_PointerTongwt__DocumentTypeList(soap, tag, id, (ngwt__DocumentTypeList *const*)ptr, "ngwt:DocumentTypeList");
 	case SOAP_TYPE_PointerTongwt__Items:
 		return soap_out_PointerTongwt__Items(soap, tag, id, (ngwt__Items *const*)ptr, "ngwt:Items");
 	case SOAP_TYPE_PointerTongwt__DeltaInfo:
@@ -3896,12 +4452,18 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTongwt__Status(soap, tag, id, (ngwt__Status *const*)ptr, "ngwt:Status");
 	case SOAP_TYPE_PointerTongwt__ItemRefList:
 		return soap_out_PointerTongwt__ItemRefList(soap, tag, id, (ngwt__ItemRefList *const*)ptr, "ngwt:ItemRefList");
+	case SOAP_TYPE_PointerTongwt__UserInfo:
+		return soap_out_PointerTongwt__UserInfo(soap, tag, id, (ngwt__UserInfo *const*)ptr, "ngwt:UserInfo");
+	case SOAP_TYPE_PointerTongwt__RecipientType:
+		return soap_out_PointerTongwt__RecipientType(soap, tag, id, (enum ngwt__RecipientType *const*)ptr, "ngwt:RecipientType");
 	case SOAP_TYPE_PointerTongwt__Timezone:
 		return soap_out_PointerTongwt__Timezone(soap, tag, id, (ngwt__Timezone *const*)ptr, "ngwt:Timezone");
 	case SOAP_TYPE_PointerTongwt__Minute:
 		return soap_out_PointerTongwt__Minute(soap, tag, id, (unsigned char *const*)ptr, "ngwt:Minute");
 	case SOAP_TYPE_PointerTongwt__Hour:
 		return soap_out_PointerTongwt__Hour(soap, tag, id, (unsigned char *const*)ptr, "ngwt:Hour");
+	case SOAP_TYPE_PointerTongwt__DayOfWeek:
+		return soap_out_PointerTongwt__DayOfWeek(soap, tag, id, (ngwt__DayOfWeek *const*)ptr, "ngwt:DayOfWeek");
 	case SOAP_TYPE_PointerTongwt__Day:
 		return soap_out_PointerTongwt__Day(soap, tag, id, (unsigned char *const*)ptr, "ngwt:Day");
 	case SOAP_TYPE_PointerTongwt__Month:
@@ -3922,14 +4484,24 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTongwt__StatusTracking(soap, tag, id, (ngwt__StatusTracking *const*)ptr, "ngwt:StatusTracking");
 	case SOAP_TYPE_PointerTongwt__SendOptionsRequestReply:
 		return soap_out_PointerTongwt__SendOptionsRequestReply(soap, tag, id, (ngwt__SendOptionsRequestReply *const*)ptr, "ngwt:SendOptionsRequestReply");
+	case SOAP_TYPE_PointerTongwt__Rule:
+		return soap_out_PointerTongwt__Rule(soap, tag, id, (ngwt__Rule *const*)ptr, "ngwt:Rule");
+	case SOAP_TYPE_PointerTongwt__RuleAction:
+		return soap_out_PointerTongwt__RuleAction(soap, tag, id, (ngwt__RuleAction *const*)ptr, "ngwt:RuleAction");
+	case SOAP_TYPE_PointerTongwt__CategoryRefList:
+		return soap_out_PointerTongwt__CategoryRefList(soap, tag, id, (ngwt__CategoryRefList *const*)ptr, "ngwt:CategoryRefList");
+	case SOAP_TYPE_PointerTongwt__Mail:
+		return soap_out_PointerTongwt__Mail(soap, tag, id, (ngwt__Mail *const*)ptr, "ngwt:Mail");
 	case SOAP_TYPE_PointerTongwt__ReturnNotificationOptions:
 		return soap_out_PointerTongwt__ReturnNotificationOptions(soap, tag, id, (ngwt__ReturnNotificationOptions *const*)ptr, "ngwt:ReturnNotificationOptions");
 	case SOAP_TYPE_PointerTongwt__MonthList:
 		return soap_out_PointerTongwt__MonthList(soap, tag, id, (ngwt__MonthList *const*)ptr, "ngwt:MonthList");
 	case SOAP_TYPE_PointerTongwt__DayOfYearList:
 		return soap_out_PointerTongwt__DayOfYearList(soap, tag, id, (ngwt__DayOfYearList *const*)ptr, "ngwt:DayOfYearList");
-	case SOAP_TYPE_PointerTongwt__DayOfWeekList:
-		return soap_out_PointerTongwt__DayOfWeekList(soap, tag, id, (ngwt__DayOfWeekList *const*)ptr, "ngwt:DayOfWeekList");
+	case SOAP_TYPE_PointerTongwt__DayOfMonthList:
+		return soap_out_PointerTongwt__DayOfMonthList(soap, tag, id, (ngwt__DayOfMonthList *const*)ptr, "ngwt:DayOfMonthList");
+	case SOAP_TYPE_PointerTongwt__DayOfYearWeekList:
+		return soap_out_PointerTongwt__DayOfYearWeekList(soap, tag, id, (ngwt__DayOfYearWeekList *const*)ptr, "ngwt:DayOfYearWeekList");
 	case SOAP_TYPE_PointerTongwt__Frequency:
 		return soap_out_PointerTongwt__Frequency(soap, tag, id, (enum ngwt__Frequency *const*)ptr, "ngwt:Frequency");
 	case SOAP_TYPE_PointerTongwt__DelegateeStatus:
@@ -3946,6 +4518,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTongwt__Filter(soap, tag, id, (ngwt__Filter *const*)ptr, "ngwt:Filter");
 	case SOAP_TYPE_PointerTongwt__QueryTarget:
 		return soap_out_PointerTongwt__QueryTarget(soap, tag, id, (ngwt__QueryTarget *const*)ptr, "ngwt:QueryTarget");
+	case SOAP_TYPE_PointerTongwt__ProxyUser:
+		return soap_out_PointerTongwt__ProxyUser(soap, tag, id, (ngwt__ProxyUser *const*)ptr, "ngwt:ProxyUser");
 	case SOAP_TYPE_PointerTongwt__ProblemEntry:
 		return soap_out_PointerTongwt__ProblemEntry(soap, tag, id, (ngwt__ProblemEntry *const*)ptr, "ngwt:ProblemEntry");
 	case SOAP_TYPE_PointerTongwt__PostalAddress:
@@ -3954,8 +4528,6 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTongwt__PhoneNumber(soap, tag, id, (ngwt__PhoneNumber *const*)ptr, "ngwt:PhoneNumber");
 	case SOAP_TYPE_PointerToxsd__date:
 		return soap_out_PointerToxsd__date(soap, tag, id, (std::string *const*)ptr, "xsd:date");
-	case SOAP_TYPE_PointerToxsd__anyURI:
-		return soap_out_PointerToxsd__anyURI(soap, tag, id, (std::string *const*)ptr, "xsd:anyURI");
 	case SOAP_TYPE_PointerTongwt__ItemRef:
 		return soap_out_PointerTongwt__ItemRef(soap, tag, id, (ngwt__ItemRef *const*)ptr, "ngwt:ItemRef");
 	case SOAP_TYPE_PointerTongwt__UUID:
@@ -3964,6 +4536,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTongwt__SharedFolderNotification(soap, tag, id, (ngwt__SharedFolderNotification *const*)ptr, "ngwt:SharedFolderNotification");
 	case SOAP_TYPE_PointerTongwt__MessagePart:
 		return soap_out_PointerTongwt__MessagePart(soap, tag, id, (ngwt__MessagePart *const*)ptr, "ngwt:MessagePart");
+	case SOAP_TYPE_PointerTongwt__Library:
+		return soap_out_PointerTongwt__Library(soap, tag, id, (ngwt__Library *const*)ptr, "ngwt:Library");
 	case SOAP_TYPE_PointerTongwt__JunkEntry:
 		return soap_out_PointerTongwt__JunkEntry(soap, tag, id, (ngwt__JunkEntry *const*)ptr, "ngwt:JunkEntry");
 	case SOAP_TYPE_PointerTongwt__JunkHandlingListType:
@@ -3992,6 +4566,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTongwt__FolderACLEntry(soap, tag, id, (ngwt__FolderACLEntry *const*)ptr, "ngwt:FolderACLEntry");
 	case SOAP_TYPE_PointerTongwt__FilterElement:
 		return soap_out_PointerTongwt__FilterElement(soap, tag, id, (ngwt__FilterElement *const*)ptr, "ngwt:FilterElement");
+	case SOAP_TYPE_PointerTongwt__DocumentType:
+		return soap_out_PointerTongwt__DocumentType(soap, tag, id, (ngwt__DocumentType *const*)ptr, "ngwt:DocumentType");
+	case SOAP_TYPE_PointerTongwt__AgeAction:
+		return soap_out_PointerTongwt__AgeAction(soap, tag, id, (enum ngwt__AgeAction *const*)ptr, "ngwt:AgeAction");
 	case SOAP_TYPE_PointerTongwt__SendOptions:
 		return soap_out_PointerTongwt__SendOptions(soap, tag, id, (ngwt__SendOptions *const*)ptr, "ngwt:SendOptions");
 	case SOAP_TYPE_PointerTongwt__RecipientList:
@@ -4000,10 +4578,12 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_putelement(struct soap *soap, const void *ptr, co
 		return soap_out_PointerTongwt__From(soap, tag, id, (ngwt__From *const*)ptr, "ngwt:From");
 	case SOAP_TYPE_PointerToint:
 		return soap_out_PointerToint(soap, tag, id, (int *const*)ptr, "xsd:int");
-	case SOAP_TYPE_PointerTongwt__DayOfWeek:
-		return soap_out_PointerTongwt__DayOfWeek(soap, tag, id, (ngwt__DayOfWeek *const*)ptr, "ngwt:DayOfWeek");
+	case SOAP_TYPE_PointerTongwt__DayOfYearWeek:
+		return soap_out_PointerTongwt__DayOfYearWeek(soap, tag, id, (ngwt__DayOfYearWeek *const*)ptr, "ngwt:DayOfYearWeek");
 	case SOAP_TYPE_PointerTongwt__Custom:
 		return soap_out_PointerTongwt__Custom(soap, tag, id, (ngwt__Custom *const*)ptr, "ngwt:Custom");
+	case SOAP_TYPE_PointerTongwt__CustomType:
+		return soap_out_PointerTongwt__CustomType(soap, tag, id, (enum ngwt__CustomType *const*)ptr, "ngwt:CustomType");
 	case SOAP_TYPE_PointerTongwt__uid:
 		return soap_out_PointerTongwt__uid(soap, tag, id, (std::string *const*)ptr, "ngwt:uid");
 	case SOAP_TYPE_PointerTongwt__Category:
@@ -4088,6 +4668,9 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE__ngwe__cleanEventConfigurationRequest:
 		((_ngwe__cleanEventConfigurationRequest *)ptr)->soap_serialize(soap);
 		break;
+	case SOAP_TYPE_ngwe__Notify:
+		((ngwe__Notify *)ptr)->soap_serialize(soap);
+		break;
 	case SOAP_TYPE_ngwe__EventTypeList:
 		((ngwe__EventTypeList *)ptr)->soap_serialize(soap);
 		break;
@@ -4109,6 +4692,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_ngwe__ContainerList:
 		((ngwe__ContainerList *)ptr)->soap_serialize(soap);
 		break;
+	case SOAP_TYPE__ngwm__updateVersionStatusResponse:
+		((_ngwm__updateVersionStatusResponse *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE__ngwm__updateVersionStatusRequest:
+		((_ngwm__updateVersionStatusRequest *)ptr)->soap_serialize(soap);
+		break;
 	case SOAP_TYPE__ngwm__uncompleteResponse:
 		((_ngwm__uncompleteResponse *)ptr)->soap_serialize(soap);
 		break;
@@ -4126,6 +4715,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE__ngwm__startFreeBusySessionRequest:
 		((_ngwm__startFreeBusySessionRequest *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE__ngwm__setTimestampResponse:
+		((_ngwm__setTimestampResponse *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE__ngwm__setTimestampRequest:
+		((_ngwm__setTimestampRequest *)ptr)->soap_serialize(soap);
 		break;
 	case SOAP_TYPE__ngwm__sendItemResponse:
 		((_ngwm__sendItemResponse *)ptr)->soap_serialize(soap);
@@ -4150,6 +4745,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE__ngwm__removeSignatureRequest:
 		((_ngwm__removeSignatureRequest *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE__ngwm__removeProxyUserResponse:
+		((_ngwm__removeProxyUserResponse *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE__ngwm__removeProxyUserRequest:
+		((_ngwm__removeProxyUserRequest *)ptr)->soap_serialize(soap);
 		break;
 	case SOAP_TYPE__ngwm__removeProxyAccessResponse:
 		((_ngwm__removeProxyAccessResponse *)ptr)->soap_serialize(soap);
@@ -4301,11 +4902,23 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE__ngwm__loginRequest:
 		((_ngwm__loginRequest *)ptr)->soap_serialize(soap);
 		break;
+	case SOAP_TYPE__ngwm__getUserListResponse:
+		((_ngwm__getUserListResponse *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE__ngwm__getUserListRequest:
+		((_ngwm__getUserListRequest *)ptr)->soap_serialize(soap);
+		break;
 	case SOAP_TYPE__ngwm__getTimezoneListResponse:
 		((_ngwm__getTimezoneListResponse *)ptr)->soap_serialize(soap);
 		break;
 	case SOAP_TYPE__ngwm__getTimezoneListRequest:
 		((_ngwm__getTimezoneListRequest *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE__ngwm__getTimestampResponse:
+		((_ngwm__getTimestampResponse *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE__ngwm__getTimestampRequest:
+		((_ngwm__getTimestampRequest *)ptr)->soap_serialize(soap);
 		break;
 	case SOAP_TYPE__ngwm__getSignaturesResponse:
 		((_ngwm__getSignaturesResponse *)ptr)->soap_serialize(soap);
@@ -4318,6 +4931,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE__ngwm__getSettingsRequest:
 		((_ngwm__getSettingsRequest *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE__ngwm__getRuleListResponse:
+		((_ngwm__getRuleListResponse *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE__ngwm__getRuleListRequest:
+		((_ngwm__getRuleListRequest *)ptr)->soap_serialize(soap);
 		break;
 	case SOAP_TYPE__ngwm__getProxyListResponse:
 		((_ngwm__getProxyListResponse *)ptr)->soap_serialize(soap);
@@ -4336,6 +4955,18 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE__ngwm__getQuickMessagesRequest:
 		((_ngwm__getQuickMessagesRequest *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE__ngwm__getLibraryListResponse:
+		((_ngwm__getLibraryListResponse *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE__ngwm__getLibraryListRequest:
+		((_ngwm__getLibraryListRequest *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE__ngwm__getLibraryItemResponse:
+		((_ngwm__getLibraryItemResponse *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE__ngwm__getLibraryItemRequest:
+		((_ngwm__getLibraryItemRequest *)ptr)->soap_serialize(soap);
 		break;
 	case SOAP_TYPE__ngwm__getJunkMailSettingsResponse:
 		((_ngwm__getJunkMailSettingsResponse *)ptr)->soap_serialize(soap);
@@ -4372,6 +5003,18 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE__ngwm__getFolderListRequest:
 		((_ngwm__getFolderListRequest *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE__ngwm__getFolderResponse:
+		((_ngwm__getFolderResponse *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE__ngwm__getFolderRequest:
+		((_ngwm__getFolderRequest *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE__ngwm__getDocumentTypeListResponse:
+		((_ngwm__getDocumentTypeListResponse *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE__ngwm__getDocumentTypeListRequest:
+		((_ngwm__getDocumentTypeListRequest *)ptr)->soap_serialize(soap);
 		break;
 	case SOAP_TYPE__ngwm__getDeltaInfoResponse:
 		((_ngwm__getDeltaInfoResponse *)ptr)->soap_serialize(soap);
@@ -4415,6 +5058,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE__ngwm__forwardRequest:
 		((_ngwm__forwardRequest *)ptr)->soap_serialize(soap);
 		break;
+	case SOAP_TYPE__ngwm__executeRuleResponse:
+		((_ngwm__executeRuleResponse *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE__ngwm__executeRuleRequest:
+		((_ngwm__executeRuleRequest *)ptr)->soap_serialize(soap);
+		break;
 	case SOAP_TYPE__ngwm__destroyCursorResponse:
 		((_ngwm__destroyCursorResponse *)ptr)->soap_serialize(soap);
 		break;
@@ -4450,6 +5099,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE__ngwm__createJunkEntryRequest:
 		((_ngwm__createJunkEntryRequest *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE__ngwm__createItemsResponse:
+		((_ngwm__createItemsResponse *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE__ngwm__createItemsRequest:
+		((_ngwm__createItemsRequest *)ptr)->soap_serialize(soap);
 		break;
 	case SOAP_TYPE__ngwm__createItemResponse:
 		((_ngwm__createItemResponse *)ptr)->soap_serialize(soap);
@@ -4505,6 +5160,15 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE__ngwm__acceptRequest:
 		((_ngwm__acceptRequest *)ptr)->soap_serialize(soap);
 		break;
+	case SOAP_TYPE_ngwt__VersionEvent:
+		((ngwt__VersionEvent *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE_ngwt__Version:
+		((ngwt__Version *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE_ngwt__UserList:
+		((ngwt__UserList *)ptr)->soap_serialize(soap);
+		break;
 	case SOAP_TYPE_ngwt__UserInfo:
 		((ngwt__UserInfo *)ptr)->soap_serialize(soap);
 		break;
@@ -4534,6 +5198,9 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE_ngwt__Status:
 		((ngwt__Status *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE_ngwt__SMimeOperation:
+		((ngwt__SMimeOperation *)ptr)->soap_serialize(soap);
 		break;
 	case SOAP_TYPE_ngwt__SignatureData:
 		((ngwt__SignatureData *)ptr)->soap_serialize(soap);
@@ -4567,6 +5234,18 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE_ngwt__SendOptionsRequestReply:
 		((ngwt__SendOptionsRequestReply *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE_ngwt__RuleList:
+		((ngwt__RuleList *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE_ngwt__RuleActionList:
+		((ngwt__RuleActionList *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE_ngwt__RuleAction:
+		((ngwt__RuleAction *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE_ngwt__Rule:
+		((ngwt__Rule *)ptr)->soap_serialize(soap);
 		break;
 	case SOAP_TYPE_ngwt__Rights:
 		((ngwt__Rights *)ptr)->soap_serialize(soap);
@@ -4609,6 +5288,9 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE_ngwt__ProxyList:
 		((ngwt__ProxyList *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE_ngwt__ProxyUser:
+		((ngwt__ProxyUser *)ptr)->soap_serialize(soap);
 		break;
 	case SOAP_TYPE_ngwt__Proxy:
 		((ngwt__Proxy *)ptr)->soap_serialize(soap);
@@ -4672,6 +5354,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE_ngwt__LinkInfo:
 		((ngwt__LinkInfo *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE_ngwt__LibraryList:
+		((ngwt__LibraryList *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE_ngwt__Library:
+		((ngwt__Library *)ptr)->soap_serialize(soap);
 		break;
 	case SOAP_TYPE_ngwt__JunkHandlingList:
 		((ngwt__JunkHandlingList *)ptr)->soap_serialize(soap);
@@ -4772,6 +5460,18 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_ngwt__EmailAddressList:
 		((ngwt__EmailAddressList *)ptr)->soap_serialize(soap);
 		break;
+	case SOAP_TYPE_ngwt__DocumentTypeList:
+		((ngwt__DocumentTypeList *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE_ngwt__DocumentType:
+		((ngwt__DocumentType *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE_ngwt__DocumentRef:
+		((ngwt__DocumentRef *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE_ngwt__Document:
+		((ngwt__Document *)ptr)->soap_serialize(soap);
+		break;
 	case SOAP_TYPE_ngwt__Distribution:
 		((ngwt__Distribution *)ptr)->soap_serialize(soap);
 		break;
@@ -4784,11 +5484,14 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_ngwt__DelegatedStatus:
 		((ngwt__DelegatedStatus *)ptr)->soap_serialize(soap);
 		break;
+	case SOAP_TYPE_ngwt__DayOfYearWeekList:
+		((ngwt__DayOfYearWeekList *)ptr)->soap_serialize(soap);
+		break;
+	case SOAP_TYPE_ngwt__DayOfYearWeek:
+		((ngwt__DayOfYearWeek *)ptr)->soap_serialize(soap);
+		break;
 	case SOAP_TYPE_ngwt__DayOfYearList:
 		((ngwt__DayOfYearList *)ptr)->soap_serialize(soap);
-		break;
-	case SOAP_TYPE_ngwt__DayOfWeekList:
-		((ngwt__DayOfWeekList *)ptr)->soap_serialize(soap);
 		break;
 	case SOAP_TYPE_ngwt__DayOfWeek:
 		((ngwt__DayOfWeek *)ptr)->soap_serialize(soap);
@@ -4895,14 +5598,11 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_xsd__date:
 		soap_serialize_xsd__date(soap, (const std::string *)ptr);
 		break;
-	case SOAP_TYPE_xsd__base64Binary:
-		((xsd__base64Binary *)ptr)->soap_serialize(soap);
-		break;
-	case SOAP_TYPE_xsd__anyURI:
-		soap_serialize_xsd__anyURI(soap, (const std::string *)ptr);
-		break;
 	case SOAP_TYPE_std__string:
 		soap_serialize_std__string(soap, (const std::string *)ptr);
+		break;
+	case SOAP_TYPE_xsd__base64Binary:
+		((xsd__base64Binary *)ptr)->soap_serialize(soap);
 		break;
 	case SOAP_TYPE___ngw__removeEventsRequest:
 		soap_serialize___ngw__removeEventsRequest(soap, (const struct __ngw__removeEventsRequest *)ptr);
@@ -4922,6 +5622,9 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE___ngw__cleanEventConfigurationRequest:
 		soap_serialize___ngw__cleanEventConfigurationRequest(soap, (const struct __ngw__cleanEventConfigurationRequest *)ptr);
 		break;
+	case SOAP_TYPE___ngw__updateVersionStatusRequest:
+		soap_serialize___ngw__updateVersionStatusRequest(soap, (const struct __ngw__updateVersionStatusRequest *)ptr);
+		break;
 	case SOAP_TYPE___ngw__uncompleteRequest:
 		soap_serialize___ngw__uncompleteRequest(soap, (const struct __ngw__uncompleteRequest *)ptr);
 		break;
@@ -4930,6 +5633,9 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE___ngw__startFreeBusySessionRequest:
 		soap_serialize___ngw__startFreeBusySessionRequest(soap, (const struct __ngw__startFreeBusySessionRequest *)ptr);
+		break;
+	case SOAP_TYPE___ngw__setTimestampRequest:
+		soap_serialize___ngw__setTimestampRequest(soap, (const struct __ngw__setTimestampRequest *)ptr);
 		break;
 	case SOAP_TYPE___ngw__sendItemRequest:
 		soap_serialize___ngw__sendItemRequest(soap, (const struct __ngw__sendItemRequest *)ptr);
@@ -4942,6 +5648,9 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE___ngw__removeSignatureRequest:
 		soap_serialize___ngw__removeSignatureRequest(soap, (const struct __ngw__removeSignatureRequest *)ptr);
+		break;
+	case SOAP_TYPE___ngw__removeProxyUserRequest:
+		soap_serialize___ngw__removeProxyUserRequest(soap, (const struct __ngw__removeProxyUserRequest *)ptr);
 		break;
 	case SOAP_TYPE___ngw__removeProxyAccessRequest:
 		soap_serialize___ngw__removeProxyAccessRequest(soap, (const struct __ngw__removeProxyAccessRequest *)ptr);
@@ -5015,14 +5724,23 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE___ngw__loginRequest:
 		soap_serialize___ngw__loginRequest(soap, (const struct __ngw__loginRequest *)ptr);
 		break;
+	case SOAP_TYPE___ngw__getUserListRequest:
+		soap_serialize___ngw__getUserListRequest(soap, (const struct __ngw__getUserListRequest *)ptr);
+		break;
 	case SOAP_TYPE___ngw__getTimezoneListRequest:
 		soap_serialize___ngw__getTimezoneListRequest(soap, (const struct __ngw__getTimezoneListRequest *)ptr);
+		break;
+	case SOAP_TYPE___ngw__getTimestampRequest:
+		soap_serialize___ngw__getTimestampRequest(soap, (const struct __ngw__getTimestampRequest *)ptr);
 		break;
 	case SOAP_TYPE___ngw__getSignaturesRequest:
 		soap_serialize___ngw__getSignaturesRequest(soap, (const struct __ngw__getSignaturesRequest *)ptr);
 		break;
 	case SOAP_TYPE___ngw__getSettingsRequest:
 		soap_serialize___ngw__getSettingsRequest(soap, (const struct __ngw__getSettingsRequest *)ptr);
+		break;
+	case SOAP_TYPE___ngw__getRuleListRequest:
+		soap_serialize___ngw__getRuleListRequest(soap, (const struct __ngw__getRuleListRequest *)ptr);
 		break;
 	case SOAP_TYPE___ngw__getProxyListRequest:
 		soap_serialize___ngw__getProxyListRequest(soap, (const struct __ngw__getProxyListRequest *)ptr);
@@ -5032,6 +5750,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE___ngw__getQuickMessagesRequest:
 		soap_serialize___ngw__getQuickMessagesRequest(soap, (const struct __ngw__getQuickMessagesRequest *)ptr);
+		break;
+	case SOAP_TYPE___ngw__getLibraryListRequest:
+		soap_serialize___ngw__getLibraryListRequest(soap, (const struct __ngw__getLibraryListRequest *)ptr);
+		break;
+	case SOAP_TYPE___ngw__getLibraryItemRequest:
+		soap_serialize___ngw__getLibraryItemRequest(soap, (const struct __ngw__getLibraryItemRequest *)ptr);
 		break;
 	case SOAP_TYPE___ngw__getJunkMailSettingsRequest:
 		soap_serialize___ngw__getJunkMailSettingsRequest(soap, (const struct __ngw__getJunkMailSettingsRequest *)ptr);
@@ -5050,6 +5774,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE___ngw__getFolderListRequest:
 		soap_serialize___ngw__getFolderListRequest(soap, (const struct __ngw__getFolderListRequest *)ptr);
+		break;
+	case SOAP_TYPE___ngw__getFolderRequest:
+		soap_serialize___ngw__getFolderRequest(soap, (const struct __ngw__getFolderRequest *)ptr);
+		break;
+	case SOAP_TYPE___ngw__getDocumentTypeListRequest:
+		soap_serialize___ngw__getDocumentTypeListRequest(soap, (const struct __ngw__getDocumentTypeListRequest *)ptr);
 		break;
 	case SOAP_TYPE___ngw__getDeltaInfoRequest:
 		soap_serialize___ngw__getDeltaInfoRequest(soap, (const struct __ngw__getDeltaInfoRequest *)ptr);
@@ -5072,6 +5802,9 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE___ngw__forwardRequest:
 		soap_serialize___ngw__forwardRequest(soap, (const struct __ngw__forwardRequest *)ptr);
 		break;
+	case SOAP_TYPE___ngw__executeRuleRequest:
+		soap_serialize___ngw__executeRuleRequest(soap, (const struct __ngw__executeRuleRequest *)ptr);
+		break;
 	case SOAP_TYPE___ngw__destroyCursorRequest:
 		soap_serialize___ngw__destroyCursorRequest(soap, (const struct __ngw__destroyCursorRequest *)ptr);
 		break;
@@ -5089,6 +5822,9 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE___ngw__createJunkEntryRequest:
 		soap_serialize___ngw__createJunkEntryRequest(soap, (const struct __ngw__createJunkEntryRequest *)ptr);
+		break;
+	case SOAP_TYPE___ngw__createItemsRequest:
+		soap_serialize___ngw__createItemsRequest(soap, (const struct __ngw__createItemsRequest *)ptr);
 		break;
 	case SOAP_TYPE___ngw__createItemRequest:
 		soap_serialize___ngw__createItemRequest(soap, (const struct __ngw__createItemRequest *)ptr);
@@ -5153,6 +5889,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_PointerTo_ngwe__cleanEventConfigurationRequest:
 		soap_serialize_PointerTo_ngwe__cleanEventConfigurationRequest(soap, (_ngwe__cleanEventConfigurationRequest *const*)ptr);
 		break;
+	case SOAP_TYPE_PointerTo_ngwm__updateVersionStatusResponse:
+		soap_serialize_PointerTo_ngwm__updateVersionStatusResponse(soap, (_ngwm__updateVersionStatusResponse *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_ngwm__updateVersionStatusRequest:
+		soap_serialize_PointerTo_ngwm__updateVersionStatusRequest(soap, (_ngwm__updateVersionStatusRequest *const*)ptr);
+		break;
 	case SOAP_TYPE_PointerTo_ngwm__uncompleteResponse:
 		soap_serialize_PointerTo_ngwm__uncompleteResponse(soap, (_ngwm__uncompleteResponse *const*)ptr);
 		break;
@@ -5170,6 +5912,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE_PointerTo_ngwm__startFreeBusySessionRequest:
 		soap_serialize_PointerTo_ngwm__startFreeBusySessionRequest(soap, (_ngwm__startFreeBusySessionRequest *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_ngwm__setTimestampResponse:
+		soap_serialize_PointerTo_ngwm__setTimestampResponse(soap, (_ngwm__setTimestampResponse *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_ngwm__setTimestampRequest:
+		soap_serialize_PointerTo_ngwm__setTimestampRequest(soap, (_ngwm__setTimestampRequest *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTo_ngwm__sendItemResponse:
 		soap_serialize_PointerTo_ngwm__sendItemResponse(soap, (_ngwm__sendItemResponse *const*)ptr);
@@ -5194,6 +5942,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE_PointerTo_ngwm__removeSignatureRequest:
 		soap_serialize_PointerTo_ngwm__removeSignatureRequest(soap, (_ngwm__removeSignatureRequest *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_ngwm__removeProxyUserResponse:
+		soap_serialize_PointerTo_ngwm__removeProxyUserResponse(soap, (_ngwm__removeProxyUserResponse *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_ngwm__removeProxyUserRequest:
+		soap_serialize_PointerTo_ngwm__removeProxyUserRequest(soap, (_ngwm__removeProxyUserRequest *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTo_ngwm__removeProxyAccessResponse:
 		soap_serialize_PointerTo_ngwm__removeProxyAccessResponse(soap, (_ngwm__removeProxyAccessResponse *const*)ptr);
@@ -5339,11 +6093,23 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_PointerTo_ngwm__loginRequest:
 		soap_serialize_PointerTo_ngwm__loginRequest(soap, (_ngwm__loginRequest *const*)ptr);
 		break;
+	case SOAP_TYPE_PointerTo_ngwm__getUserListResponse:
+		soap_serialize_PointerTo_ngwm__getUserListResponse(soap, (_ngwm__getUserListResponse *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_ngwm__getUserListRequest:
+		soap_serialize_PointerTo_ngwm__getUserListRequest(soap, (_ngwm__getUserListRequest *const*)ptr);
+		break;
 	case SOAP_TYPE_PointerTo_ngwm__getTimezoneListResponse:
 		soap_serialize_PointerTo_ngwm__getTimezoneListResponse(soap, (_ngwm__getTimezoneListResponse *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTo_ngwm__getTimezoneListRequest:
 		soap_serialize_PointerTo_ngwm__getTimezoneListRequest(soap, (_ngwm__getTimezoneListRequest *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_ngwm__getTimestampResponse:
+		soap_serialize_PointerTo_ngwm__getTimestampResponse(soap, (_ngwm__getTimestampResponse *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_ngwm__getTimestampRequest:
+		soap_serialize_PointerTo_ngwm__getTimestampRequest(soap, (_ngwm__getTimestampRequest *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTo_ngwm__getSignaturesResponse:
 		soap_serialize_PointerTo_ngwm__getSignaturesResponse(soap, (_ngwm__getSignaturesResponse *const*)ptr);
@@ -5356,6 +6122,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE_PointerTo_ngwm__getSettingsRequest:
 		soap_serialize_PointerTo_ngwm__getSettingsRequest(soap, (_ngwm__getSettingsRequest *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_ngwm__getRuleListResponse:
+		soap_serialize_PointerTo_ngwm__getRuleListResponse(soap, (_ngwm__getRuleListResponse *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_ngwm__getRuleListRequest:
+		soap_serialize_PointerTo_ngwm__getRuleListRequest(soap, (_ngwm__getRuleListRequest *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTo_ngwm__getProxyListResponse:
 		soap_serialize_PointerTo_ngwm__getProxyListResponse(soap, (_ngwm__getProxyListResponse *const*)ptr);
@@ -5374,6 +6146,18 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE_PointerTo_ngwm__getQuickMessagesRequest:
 		soap_serialize_PointerTo_ngwm__getQuickMessagesRequest(soap, (_ngwm__getQuickMessagesRequest *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_ngwm__getLibraryListResponse:
+		soap_serialize_PointerTo_ngwm__getLibraryListResponse(soap, (_ngwm__getLibraryListResponse *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_ngwm__getLibraryListRequest:
+		soap_serialize_PointerTo_ngwm__getLibraryListRequest(soap, (_ngwm__getLibraryListRequest *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_ngwm__getLibraryItemResponse:
+		soap_serialize_PointerTo_ngwm__getLibraryItemResponse(soap, (_ngwm__getLibraryItemResponse *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_ngwm__getLibraryItemRequest:
+		soap_serialize_PointerTo_ngwm__getLibraryItemRequest(soap, (_ngwm__getLibraryItemRequest *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTo_ngwm__getJunkMailSettingsResponse:
 		soap_serialize_PointerTo_ngwm__getJunkMailSettingsResponse(soap, (_ngwm__getJunkMailSettingsResponse *const*)ptr);
@@ -5410,6 +6194,18 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE_PointerTo_ngwm__getFolderListRequest:
 		soap_serialize_PointerTo_ngwm__getFolderListRequest(soap, (_ngwm__getFolderListRequest *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_ngwm__getFolderResponse:
+		soap_serialize_PointerTo_ngwm__getFolderResponse(soap, (_ngwm__getFolderResponse *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_ngwm__getFolderRequest:
+		soap_serialize_PointerTo_ngwm__getFolderRequest(soap, (_ngwm__getFolderRequest *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_ngwm__getDocumentTypeListResponse:
+		soap_serialize_PointerTo_ngwm__getDocumentTypeListResponse(soap, (_ngwm__getDocumentTypeListResponse *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_ngwm__getDocumentTypeListRequest:
+		soap_serialize_PointerTo_ngwm__getDocumentTypeListRequest(soap, (_ngwm__getDocumentTypeListRequest *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTo_ngwm__getDeltaInfoResponse:
 		soap_serialize_PointerTo_ngwm__getDeltaInfoResponse(soap, (_ngwm__getDeltaInfoResponse *const*)ptr);
@@ -5453,6 +6249,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_PointerTo_ngwm__forwardRequest:
 		soap_serialize_PointerTo_ngwm__forwardRequest(soap, (_ngwm__forwardRequest *const*)ptr);
 		break;
+	case SOAP_TYPE_PointerTo_ngwm__executeRuleResponse:
+		soap_serialize_PointerTo_ngwm__executeRuleResponse(soap, (_ngwm__executeRuleResponse *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_ngwm__executeRuleRequest:
+		soap_serialize_PointerTo_ngwm__executeRuleRequest(soap, (_ngwm__executeRuleRequest *const*)ptr);
+		break;
 	case SOAP_TYPE_PointerTo_ngwm__destroyCursorResponse:
 		soap_serialize_PointerTo_ngwm__destroyCursorResponse(soap, (_ngwm__destroyCursorResponse *const*)ptr);
 		break;
@@ -5488,6 +6290,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE_PointerTo_ngwm__createJunkEntryRequest:
 		soap_serialize_PointerTo_ngwm__createJunkEntryRequest(soap, (_ngwm__createJunkEntryRequest *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_ngwm__createItemsResponse:
+		soap_serialize_PointerTo_ngwm__createItemsResponse(soap, (_ngwm__createItemsResponse *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTo_ngwm__createItemsRequest:
+		soap_serialize_PointerTo_ngwm__createItemsRequest(soap, (_ngwm__createItemsRequest *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTo_ngwm__createItemResponse:
 		soap_serialize_PointerTo_ngwm__createItemResponse(soap, (_ngwm__createItemResponse *const*)ptr);
@@ -5555,6 +6363,9 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_PointerTongwt__RecurrenceDateType:
 		soap_serialize_PointerTongwt__RecurrenceDateType(soap, (ngwt__RecurrenceDateType *const*)ptr);
 		break;
+	case SOAP_TYPE_PointerTongwt__SMimeOperation:
+		soap_serialize_PointerTongwt__SMimeOperation(soap, (ngwt__SMimeOperation *const*)ptr);
+		break;
 	case SOAP_TYPE_PointerTongwt__LinkInfo:
 		soap_serialize_PointerTongwt__LinkInfo(soap, (ngwt__LinkInfo *const*)ptr);
 		break;
@@ -5591,17 +6402,29 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_PointerTongwt__FullName:
 		soap_serialize_PointerTongwt__FullName(soap, (ngwt__FullName *const*)ptr);
 		break;
+	case SOAP_TYPE_PointerTongwt__VersionStatus:
+		soap_serialize_PointerTongwt__VersionStatus(soap, (enum ngwt__VersionStatus *const*)ptr);
+		break;
 	case SOAP_TYPE_PointerTongwt__FolderACL:
 		soap_serialize_PointerTongwt__FolderACL(soap, (ngwt__FolderACL *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTongwt__RuleActionList:
+		soap_serialize_PointerTongwt__RuleActionList(soap, (ngwt__RuleActionList *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTongwt__Execution:
+		soap_serialize_PointerTongwt__Execution(soap, (enum ngwt__Execution *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTongwt__Query:
 		soap_serialize_PointerTongwt__Query(soap, (ngwt__Query *const*)ptr);
 		break;
-	case SOAP_TYPE_PointerTongwt__FolderType:
-		soap_serialize_PointerTongwt__FolderType(soap, (enum ngwt__FolderType *const*)ptr);
-		break;
 	case SOAP_TYPE_PointerTongwt__FolderACLStatus:
 		soap_serialize_PointerTongwt__FolderACLStatus(soap, (enum ngwt__FolderACLStatus *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTongwt__AccessControlList:
+		soap_serialize_PointerTongwt__AccessControlList(soap, (ngwt__AccessControlList *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTongwt__WeekOfYear:
+		soap_serialize_PointerTongwt__WeekOfYear(soap, (short *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTongwt__OccurrenceType:
 		soap_serialize_PointerTongwt__OccurrenceType(soap, (enum ngwt__OccurrenceType *const*)ptr);
@@ -5630,8 +6453,8 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_PointerTongwt__CalendarFolderAttribute:
 		soap_serialize_PointerTongwt__CalendarFolderAttribute(soap, (ngwt__CalendarFolderAttribute *const*)ptr);
 		break;
-	case SOAP_TYPE_PointerTongwt__CategoryRefList:
-		soap_serialize_PointerTongwt__CategoryRefList(soap, (ngwt__CategoryRefList *const*)ptr);
+	case SOAP_TYPE_PointerTongwt__FilterDate:
+		soap_serialize_PointerTongwt__FilterDate(soap, (enum ngwt__FilterDate *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTongwt__ContainerRef:
 		soap_serialize_PointerTongwt__ContainerRef(soap, (ngwt__ContainerRef *const*)ptr);
@@ -5675,11 +6498,17 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_PointerTongwe__EventTypeList:
 		soap_serialize_PointerTongwe__EventTypeList(soap, (ngwe__EventTypeList *const*)ptr);
 		break;
+	case SOAP_TYPE_PointerTongwe__ItemType:
+		soap_serialize_PointerTongwe__ItemType(soap, (enum ngwe__ItemType *const*)ptr);
+		break;
 	case SOAP_TYPE_PointerTongwe__FieldList:
 		soap_serialize_PointerTongwe__FieldList(soap, (enum ngwe__FieldList *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTongwt__FreeBusyUserList:
 		soap_serialize_PointerTongwt__FreeBusyUserList(soap, (ngwt__FreeBusyUserList *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTongwt__RetractType:
+		soap_serialize_PointerTongwt__RetractType(soap, (enum ngwt__RetractType *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTongwt__ItemList:
 		soap_serialize_PointerTongwt__ItemList(soap, (ngwt__ItemList *const*)ptr);
@@ -5696,11 +6525,11 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_PointerTongwt__Host:
 		soap_serialize_PointerTongwt__Host(soap, (ngwt__Host *const*)ptr);
 		break;
-	case SOAP_TYPE_PointerTongwt__UserInfo:
-		soap_serialize_PointerTongwt__UserInfo(soap, (ngwt__UserInfo *const*)ptr);
-		break;
 	case SOAP_TYPE_PointerTongwt__Authentication:
 		soap_serialize_PointerTongwt__Authentication(soap, (ngwt__Authentication *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTongwt__UserList:
+		soap_serialize_PointerTongwt__UserList(soap, (ngwt__UserList *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTongwt__TimezoneList:
 		soap_serialize_PointerTongwt__TimezoneList(soap, (ngwt__TimezoneList *const*)ptr);
@@ -5711,17 +6540,17 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_PointerTongwt__Settings:
 		soap_serialize_PointerTongwt__Settings(soap, (ngwt__Settings *const*)ptr);
 		break;
+	case SOAP_TYPE_PointerTongwt__RuleList:
+		soap_serialize_PointerTongwt__RuleList(soap, (ngwt__RuleList *const*)ptr);
+		break;
 	case SOAP_TYPE_PointerTongwt__ProxyList:
 		soap_serialize_PointerTongwt__ProxyList(soap, (ngwt__ProxyList *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTongwt__AccessRightList:
 		soap_serialize_PointerTongwt__AccessRightList(soap, (ngwt__AccessRightList *const*)ptr);
 		break;
-	case SOAP_TYPE_PointerTongwt__ItemSourceList:
-		soap_serialize_PointerTongwt__ItemSourceList(soap, (enum ngwt__ItemSourceList *const*)ptr);
-		break;
-	case SOAP_TYPE_PointerTongwt__MessageTypeList:
-		soap_serialize_PointerTongwt__MessageTypeList(soap, (enum ngwt__MessageTypeList *const*)ptr);
+	case SOAP_TYPE_PointerTongwt__LibraryList:
+		soap_serialize_PointerTongwt__LibraryList(soap, (ngwt__LibraryList *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTongwt__SettingsList:
 		soap_serialize_PointerTongwt__SettingsList(soap, (ngwt__SettingsList *const*)ptr);
@@ -5737,6 +6566,18 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE_PointerTongwt__FolderList:
 		soap_serialize_PointerTongwt__FolderList(soap, (ngwt__FolderList *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTongwt__ItemSourceList:
+		soap_serialize_PointerTongwt__ItemSourceList(soap, (enum ngwt__ItemSourceList *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTongwt__MessageTypeList:
+		soap_serialize_PointerTongwt__MessageTypeList(soap, (enum ngwt__MessageTypeList *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTongwt__FolderType:
+		soap_serialize_PointerTongwt__FolderType(soap, (enum ngwt__FolderType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTongwt__DocumentTypeList:
+		soap_serialize_PointerTongwt__DocumentTypeList(soap, (ngwt__DocumentTypeList *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTongwt__Items:
 		soap_serialize_PointerTongwt__Items(soap, (ngwt__Items *const*)ptr);
@@ -5765,6 +6606,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_PointerTongwt__ItemRefList:
 		soap_serialize_PointerTongwt__ItemRefList(soap, (ngwt__ItemRefList *const*)ptr);
 		break;
+	case SOAP_TYPE_PointerTongwt__UserInfo:
+		soap_serialize_PointerTongwt__UserInfo(soap, (ngwt__UserInfo *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTongwt__RecipientType:
+		soap_serialize_PointerTongwt__RecipientType(soap, (enum ngwt__RecipientType *const*)ptr);
+		break;
 	case SOAP_TYPE_PointerTongwt__Timezone:
 		soap_serialize_PointerTongwt__Timezone(soap, (ngwt__Timezone *const*)ptr);
 		break;
@@ -5773,6 +6620,9 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE_PointerTongwt__Hour:
 		soap_serialize_PointerTongwt__Hour(soap, (unsigned char *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTongwt__DayOfWeek:
+		soap_serialize_PointerTongwt__DayOfWeek(soap, (ngwt__DayOfWeek *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTongwt__Day:
 		soap_serialize_PointerTongwt__Day(soap, (unsigned char *const*)ptr);
@@ -5804,6 +6654,18 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_PointerTongwt__SendOptionsRequestReply:
 		soap_serialize_PointerTongwt__SendOptionsRequestReply(soap, (ngwt__SendOptionsRequestReply *const*)ptr);
 		break;
+	case SOAP_TYPE_PointerTongwt__Rule:
+		soap_serialize_PointerTongwt__Rule(soap, (ngwt__Rule *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTongwt__RuleAction:
+		soap_serialize_PointerTongwt__RuleAction(soap, (ngwt__RuleAction *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTongwt__CategoryRefList:
+		soap_serialize_PointerTongwt__CategoryRefList(soap, (ngwt__CategoryRefList *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTongwt__Mail:
+		soap_serialize_PointerTongwt__Mail(soap, (ngwt__Mail *const*)ptr);
+		break;
 	case SOAP_TYPE_PointerTongwt__ReturnNotificationOptions:
 		soap_serialize_PointerTongwt__ReturnNotificationOptions(soap, (ngwt__ReturnNotificationOptions *const*)ptr);
 		break;
@@ -5813,8 +6675,11 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_PointerTongwt__DayOfYearList:
 		soap_serialize_PointerTongwt__DayOfYearList(soap, (ngwt__DayOfYearList *const*)ptr);
 		break;
-	case SOAP_TYPE_PointerTongwt__DayOfWeekList:
-		soap_serialize_PointerTongwt__DayOfWeekList(soap, (ngwt__DayOfWeekList *const*)ptr);
+	case SOAP_TYPE_PointerTongwt__DayOfMonthList:
+		soap_serialize_PointerTongwt__DayOfMonthList(soap, (ngwt__DayOfMonthList *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTongwt__DayOfYearWeekList:
+		soap_serialize_PointerTongwt__DayOfYearWeekList(soap, (ngwt__DayOfYearWeekList *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTongwt__Frequency:
 		soap_serialize_PointerTongwt__Frequency(soap, (enum ngwt__Frequency *const*)ptr);
@@ -5840,6 +6705,9 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_PointerTongwt__QueryTarget:
 		soap_serialize_PointerTongwt__QueryTarget(soap, (ngwt__QueryTarget *const*)ptr);
 		break;
+	case SOAP_TYPE_PointerTongwt__ProxyUser:
+		soap_serialize_PointerTongwt__ProxyUser(soap, (ngwt__ProxyUser *const*)ptr);
+		break;
 	case SOAP_TYPE_PointerTongwt__ProblemEntry:
 		soap_serialize_PointerTongwt__ProblemEntry(soap, (ngwt__ProblemEntry *const*)ptr);
 		break;
@@ -5852,9 +6720,6 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_PointerToxsd__date:
 		soap_serialize_PointerToxsd__date(soap, (std::string *const*)ptr);
 		break;
-	case SOAP_TYPE_PointerToxsd__anyURI:
-		soap_serialize_PointerToxsd__anyURI(soap, (std::string *const*)ptr);
-		break;
 	case SOAP_TYPE_PointerTongwt__ItemRef:
 		soap_serialize_PointerTongwt__ItemRef(soap, (ngwt__ItemRef *const*)ptr);
 		break;
@@ -5866,6 +6731,9 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 		break;
 	case SOAP_TYPE_PointerTongwt__MessagePart:
 		soap_serialize_PointerTongwt__MessagePart(soap, (ngwt__MessagePart *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTongwt__Library:
+		soap_serialize_PointerTongwt__Library(soap, (ngwt__Library *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTongwt__JunkEntry:
 		soap_serialize_PointerTongwt__JunkEntry(soap, (ngwt__JunkEntry *const*)ptr);
@@ -5909,6 +6777,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_PointerTongwt__FilterElement:
 		soap_serialize_PointerTongwt__FilterElement(soap, (ngwt__FilterElement *const*)ptr);
 		break;
+	case SOAP_TYPE_PointerTongwt__DocumentType:
+		soap_serialize_PointerTongwt__DocumentType(soap, (ngwt__DocumentType *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTongwt__AgeAction:
+		soap_serialize_PointerTongwt__AgeAction(soap, (enum ngwt__AgeAction *const*)ptr);
+		break;
 	case SOAP_TYPE_PointerTongwt__SendOptions:
 		soap_serialize_PointerTongwt__SendOptions(soap, (ngwt__SendOptions *const*)ptr);
 		break;
@@ -5921,11 +6795,14 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_markelement(struct soap *soap, const void *ptr, 
 	case SOAP_TYPE_PointerToint:
 		soap_serialize_PointerToint(soap, (int *const*)ptr);
 		break;
-	case SOAP_TYPE_PointerTongwt__DayOfWeek:
-		soap_serialize_PointerTongwt__DayOfWeek(soap, (ngwt__DayOfWeek *const*)ptr);
+	case SOAP_TYPE_PointerTongwt__DayOfYearWeek:
+		soap_serialize_PointerTongwt__DayOfYearWeek(soap, (ngwt__DayOfYearWeek *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTongwt__Custom:
 		soap_serialize_PointerTongwt__Custom(soap, (ngwt__Custom *const*)ptr);
+		break;
+	case SOAP_TYPE_PointerTongwt__CustomType:
+		soap_serialize_PointerTongwt__CustomType(soap, (enum ngwt__CustomType *const*)ptr);
 		break;
 	case SOAP_TYPE_PointerTongwt__uid:
 		soap_serialize_PointerTongwt__uid(soap, (std::string *const*)ptr);
@@ -5977,10 +6854,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 {
 	switch (t)
 	{
-	case SOAP_TYPE_std__string:
-		return (void*)soap_instantiate_std__string(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_xsd__base64Binary:
 		return (void*)soap_instantiate_xsd__base64Binary(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_std__string:
+		return (void*)soap_instantiate_std__string(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__AccessControlList:
 		return (void*)soap_instantiate_ngwt__AccessControlList(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__AccessMiscRight:
@@ -6011,14 +6888,18 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate_ngwt__CustomList(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__DayOfMonthList:
 		return (void*)soap_instantiate_ngwt__DayOfMonthList(soap, -1, type, arrayType, n);
-	case SOAP_TYPE_ngwt__DayOfWeekList:
-		return (void*)soap_instantiate_ngwt__DayOfWeekList(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__DayOfYearList:
 		return (void*)soap_instantiate_ngwt__DayOfYearList(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_ngwt__DayOfYearWeekList:
+		return (void*)soap_instantiate_ngwt__DayOfYearWeekList(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__DeltaInfo:
 		return (void*)soap_instantiate_ngwt__DeltaInfo(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__Distribution:
 		return (void*)soap_instantiate_ngwt__Distribution(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_ngwt__DocumentType:
+		return (void*)soap_instantiate_ngwt__DocumentType(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_ngwt__DocumentTypeList:
+		return (void*)soap_instantiate_ngwt__DocumentTypeList(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__EmailAddressList:
 		return (void*)soap_instantiate_ngwt__EmailAddressList(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__Filter:
@@ -6069,6 +6950,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate_ngwt__JunkEntry(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__JunkHandlingList:
 		return (void*)soap_instantiate_ngwt__JunkHandlingList(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_ngwt__LibraryList:
+		return (void*)soap_instantiate_ngwt__LibraryList(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__LinkInfo:
 		return (void*)soap_instantiate_ngwt__LinkInfo(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__MessageBody:
@@ -6117,6 +7000,12 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate_ngwt__ReturnNotificationOptions(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__Rights:
 		return (void*)soap_instantiate_ngwt__Rights(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_ngwt__RuleAction:
+		return (void*)soap_instantiate_ngwt__RuleAction(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_ngwt__RuleActionList:
+		return (void*)soap_instantiate_ngwt__RuleActionList(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_ngwt__RuleList:
+		return (void*)soap_instantiate_ngwt__RuleList(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__SendOptionsRequestReply:
 		return (void*)soap_instantiate_ngwt__SendOptionsRequestReply(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__SendOptions:
@@ -6135,6 +7024,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate_ngwt__Signatures(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__SignatureData:
 		return (void*)soap_instantiate_ngwt__SignatureData(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_ngwt__SMimeOperation:
+		return (void*)soap_instantiate_ngwt__SMimeOperation(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__Status:
 		return (void*)soap_instantiate_ngwt__Status(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__Timezone:
@@ -6145,6 +7036,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate_ngwt__TimezoneList(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__UserInfo:
 		return (void*)soap_instantiate_ngwt__UserInfo(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_ngwt__UserList:
+		return (void*)soap_instantiate_ngwt__UserList(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__acceptRequest:
 		return (void*)soap_instantiate__ngwm__acceptRequest(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__acceptResponse:
@@ -6181,6 +7074,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate__ngwm__createItemRequest(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__createItemResponse:
 		return (void*)soap_instantiate__ngwm__createItemResponse(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__createItemsRequest:
+		return (void*)soap_instantiate__ngwm__createItemsRequest(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__createItemsResponse:
+		return (void*)soap_instantiate__ngwm__createItemsResponse(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__createJunkEntryRequest:
 		return (void*)soap_instantiate__ngwm__createJunkEntryRequest(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__createJunkEntryResponse:
@@ -6205,6 +7102,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate__ngwm__destroyCursorRequest(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__destroyCursorResponse:
 		return (void*)soap_instantiate__ngwm__destroyCursorResponse(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__executeRuleRequest:
+		return (void*)soap_instantiate__ngwm__executeRuleRequest(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__executeRuleResponse:
+		return (void*)soap_instantiate__ngwm__executeRuleResponse(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__forwardRequest:
 		return (void*)soap_instantiate__ngwm__forwardRequest(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__forwardResponse:
@@ -6233,6 +7134,14 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate__ngwm__getDeltaInfoRequest(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__getDeltaInfoResponse:
 		return (void*)soap_instantiate__ngwm__getDeltaInfoResponse(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__getDocumentTypeListRequest:
+		return (void*)soap_instantiate__ngwm__getDocumentTypeListRequest(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__getDocumentTypeListResponse:
+		return (void*)soap_instantiate__ngwm__getDocumentTypeListResponse(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__getFolderRequest:
+		return (void*)soap_instantiate__ngwm__getFolderRequest(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__getFolderResponse:
+		return (void*)soap_instantiate__ngwm__getFolderResponse(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__getFolderListRequest:
 		return (void*)soap_instantiate__ngwm__getFolderListRequest(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__getFolderListResponse:
@@ -6257,6 +7166,14 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate__ngwm__getJunkMailSettingsRequest(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__getJunkMailSettingsResponse:
 		return (void*)soap_instantiate__ngwm__getJunkMailSettingsResponse(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__getLibraryItemRequest:
+		return (void*)soap_instantiate__ngwm__getLibraryItemRequest(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__getLibraryItemResponse:
+		return (void*)soap_instantiate__ngwm__getLibraryItemResponse(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__getLibraryListRequest:
+		return (void*)soap_instantiate__ngwm__getLibraryListRequest(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__getLibraryListResponse:
+		return (void*)soap_instantiate__ngwm__getLibraryListResponse(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__getQuickMessagesRequest:
 		return (void*)soap_instantiate__ngwm__getQuickMessagesRequest(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__getQuickMessagesResponse:
@@ -6269,6 +7186,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate__ngwm__getProxyListRequest(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__getProxyListResponse:
 		return (void*)soap_instantiate__ngwm__getProxyListResponse(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__getRuleListRequest:
+		return (void*)soap_instantiate__ngwm__getRuleListRequest(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__getRuleListResponse:
+		return (void*)soap_instantiate__ngwm__getRuleListResponse(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__getSettingsRequest:
 		return (void*)soap_instantiate__ngwm__getSettingsRequest(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__getSettingsResponse:
@@ -6277,10 +7198,18 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate__ngwm__getSignaturesRequest(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__getSignaturesResponse:
 		return (void*)soap_instantiate__ngwm__getSignaturesResponse(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__getTimestampRequest:
+		return (void*)soap_instantiate__ngwm__getTimestampRequest(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__getTimestampResponse:
+		return (void*)soap_instantiate__ngwm__getTimestampResponse(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__getTimezoneListRequest:
 		return (void*)soap_instantiate__ngwm__getTimezoneListRequest(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__getTimezoneListResponse:
 		return (void*)soap_instantiate__ngwm__getTimezoneListResponse(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__getUserListRequest:
+		return (void*)soap_instantiate__ngwm__getUserListRequest(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__getUserListResponse:
+		return (void*)soap_instantiate__ngwm__getUserListResponse(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__loginRequest:
 		return (void*)soap_instantiate__ngwm__loginRequest(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__loginResponse:
@@ -6381,6 +7310,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate__ngwm__removeProxyAccessRequest(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__removeProxyAccessResponse:
 		return (void*)soap_instantiate__ngwm__removeProxyAccessResponse(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__removeProxyUserRequest:
+		return (void*)soap_instantiate__ngwm__removeProxyUserRequest(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__removeProxyUserResponse:
+		return (void*)soap_instantiate__ngwm__removeProxyUserResponse(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__removeSignatureRequest:
 		return (void*)soap_instantiate__ngwm__removeSignatureRequest(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__removeSignatureResponse:
@@ -6397,6 +7330,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate__ngwm__sendItemRequest(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__sendItemResponse:
 		return (void*)soap_instantiate__ngwm__sendItemResponse(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__setTimestampRequest:
+		return (void*)soap_instantiate__ngwm__setTimestampRequest(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__setTimestampResponse:
+		return (void*)soap_instantiate__ngwm__setTimestampResponse(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__startFreeBusySessionRequest:
 		return (void*)soap_instantiate__ngwm__startFreeBusySessionRequest(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__startFreeBusySessionResponse:
@@ -6409,6 +7346,10 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate__ngwm__uncompleteRequest(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwm__uncompleteResponse:
 		return (void*)soap_instantiate__ngwm__uncompleteResponse(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__updateVersionStatusRequest:
+		return (void*)soap_instantiate__ngwm__updateVersionStatusRequest(soap, -1, type, arrayType, n);
+	case SOAP_TYPE__ngwm__updateVersionStatusResponse:
+		return (void*)soap_instantiate__ngwm__updateVersionStatusResponse(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwe__ContainerList:
 		return (void*)soap_instantiate_ngwe__ContainerList(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwe__Event:
@@ -6423,6 +7364,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate_ngwe__EventsList(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwe__EventTypeList:
 		return (void*)soap_instantiate_ngwe__EventTypeList(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_ngwe__Notify:
+		return (void*)soap_instantiate_ngwe__Notify(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwe__cleanEventConfigurationRequest:
 		return (void*)soap_instantiate__ngwe__cleanEventConfigurationRequest(soap, -1, type, arrayType, n);
 	case SOAP_TYPE__ngwe__cleanEventConfigurationResponse:
@@ -6479,6 +7422,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate_ngwt__From(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__ItemRef:
 		return (void*)soap_instantiate_ngwt__ItemRef(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_ngwt__Library:
+		return (void*)soap_instantiate_ngwt__Library(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__MessagePart:
 		return (void*)soap_instantiate_ngwt__MessagePart(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__PhoneNumber:
@@ -6487,6 +7432,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate_ngwt__PlainText(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__Proxy:
 		return (void*)soap_instantiate_ngwt__Proxy(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_ngwt__ProxyUser:
+		return (void*)soap_instantiate_ngwt__ProxyUser(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__Recipient:
 		return (void*)soap_instantiate_ngwt__Recipient(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__TransferFailedStatus:
@@ -6501,16 +7448,26 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate_ngwt__BoxEntry(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__DayOfWeek:
 		return (void*)soap_instantiate_ngwt__DayOfWeek(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_ngwt__DayOfYearWeek:
+		return (void*)soap_instantiate_ngwt__DayOfYearWeek(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_ngwt__Document:
+		return (void*)soap_instantiate_ngwt__Document(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__FolderACLEntry:
 		return (void*)soap_instantiate_ngwt__FolderACLEntry(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__QueryFolder:
 		return (void*)soap_instantiate_ngwt__QueryFolder(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_ngwt__Rule:
+		return (void*)soap_instantiate_ngwt__Rule(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__SharedFolder:
 		return (void*)soap_instantiate_ngwt__SharedFolder(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__StatusTracking:
 		return (void*)soap_instantiate_ngwt__StatusTracking(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__SystemFolder:
 		return (void*)soap_instantiate_ngwt__SystemFolder(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_ngwt__Version:
+		return (void*)soap_instantiate_ngwt__Version(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_ngwt__VersionEvent:
+		return (void*)soap_instantiate_ngwt__VersionEvent(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__Contact:
 		return (void*)soap_instantiate_ngwt__Contact(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__ContactFolder:
@@ -6525,6 +7482,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate_ngwt__Resource(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__CalendarItem:
 		return (void*)soap_instantiate_ngwt__CalendarItem(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_ngwt__DocumentRef:
+		return (void*)soap_instantiate_ngwt__DocumentRef(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__PhoneMessage:
 		return (void*)soap_instantiate_ngwt__PhoneMessage(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_ngwt__SharedNotification:
@@ -6537,8 +7496,6 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate_ngwt__Task(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_SOAP_ENV__Header:
 		return (void*)soap_instantiate_SOAP_ENV__Header(soap, -1, type, arrayType, n);
-	case SOAP_TYPE_xsd__anyURI:
-		return (void*)soap_instantiate_xsd__anyURI(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_xsd__date:
 		return (void*)soap_instantiate_xsd__date(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_xsd__decimal:
@@ -6567,18 +7524,28 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate_std__vectorTemplateOfstring(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ModifyItem:
 		return (void*)soap_instantiate_std__vectorTemplateOfPointerTongwt__ModifyItem(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Host:
+		return (void*)soap_instantiate_std__vectorTemplateOfPointerTongwt__Host(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__UserInfo:
+		return (void*)soap_instantiate_std__vectorTemplateOfPointerTongwt__UserInfo(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Timezone:
 		return (void*)soap_instantiate_std__vectorTemplateOfPointerTongwt__Timezone(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Signature:
 		return (void*)soap_instantiate_std__vectorTemplateOfPointerTongwt__Signature(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__SettingsGroup:
 		return (void*)soap_instantiate_std__vectorTemplateOfPointerTongwt__SettingsGroup(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Rule:
+		return (void*)soap_instantiate_std__vectorTemplateOfPointerTongwt__Rule(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__RuleAction:
+		return (void*)soap_instantiate_std__vectorTemplateOfPointerTongwt__RuleAction(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_std__vectorTemplateOfxsd__date:
 		return (void*)soap_instantiate_std__vectorTemplateOfxsd__date(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DelegateeStatus:
 		return (void*)soap_instantiate_std__vectorTemplateOfPointerTongwt__DelegateeStatus(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Recipient:
 		return (void*)soap_instantiate_std__vectorTemplateOfPointerTongwt__Recipient(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ProxyUser:
+		return (void*)soap_instantiate_std__vectorTemplateOfPointerTongwt__ProxyUser(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ProblemEntry:
 		return (void*)soap_instantiate_std__vectorTemplateOfPointerTongwt__ProblemEntry(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__PostalAddress:
@@ -6589,6 +7556,8 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate_std__vectorTemplateOfngwt__Month(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__MessagePart:
 		return (void*)soap_instantiate_std__vectorTemplateOfPointerTongwt__MessagePart(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Library:
+		return (void*)soap_instantiate_std__vectorTemplateOfPointerTongwt__Library(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__JunkEntry:
 		return (void*)soap_instantiate_std__vectorTemplateOfPointerTongwt__JunkEntry(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Item:
@@ -6609,10 +7578,12 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 		return (void*)soap_instantiate_std__vectorTemplateOfPointerTongwt__FolderACLEntry(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_std__vectorTemplateOfstd__string:
 		return (void*)soap_instantiate_std__vectorTemplateOfstd__string(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DocumentType:
+		return (void*)soap_instantiate_std__vectorTemplateOfPointerTongwt__DocumentType(soap, -1, type, arrayType, n);
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DayOfYearWeek:
+		return (void*)soap_instantiate_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_std__vectorTemplateOfngwt__DayOfYear:
 		return (void*)soap_instantiate_std__vectorTemplateOfngwt__DayOfYear(soap, -1, type, arrayType, n);
-	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DayOfWeek:
-		return (void*)soap_instantiate_std__vectorTemplateOfPointerTongwt__DayOfWeek(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_std__vectorTemplateOfngwt__DayOfMonth:
 		return (void*)soap_instantiate_std__vectorTemplateOfngwt__DayOfMonth(soap, -1, type, arrayType, n);
 	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Custom:
@@ -6638,17 +7609,17 @@ SOAP_FMAC3 void * SOAP_FMAC4 soap_instantiate(struct soap *soap, int t, const ch
 SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 {	switch (p->type)
 	{
-	case SOAP_TYPE_std__string:
-		if (p->size < 0)
-			delete (std::string*)p->ptr;
-		else
-			delete[] (std::string*)p->ptr;
-		break;
 	case SOAP_TYPE_xsd__base64Binary:
 		if (p->size < 0)
 			delete (xsd__base64Binary*)p->ptr;
 		else
 			delete[] (xsd__base64Binary*)p->ptr;
+		break;
+	case SOAP_TYPE_std__string:
+		if (p->size < 0)
+			delete (std::string*)p->ptr;
+		else
+			delete[] (std::string*)p->ptr;
 		break;
 	case SOAP_TYPE_ngwt__AccessControlList:
 		if (p->size < 0)
@@ -6740,17 +7711,17 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 		else
 			delete[] (ngwt__DayOfMonthList*)p->ptr;
 		break;
-	case SOAP_TYPE_ngwt__DayOfWeekList:
-		if (p->size < 0)
-			delete (ngwt__DayOfWeekList*)p->ptr;
-		else
-			delete[] (ngwt__DayOfWeekList*)p->ptr;
-		break;
 	case SOAP_TYPE_ngwt__DayOfYearList:
 		if (p->size < 0)
 			delete (ngwt__DayOfYearList*)p->ptr;
 		else
 			delete[] (ngwt__DayOfYearList*)p->ptr;
+		break;
+	case SOAP_TYPE_ngwt__DayOfYearWeekList:
+		if (p->size < 0)
+			delete (ngwt__DayOfYearWeekList*)p->ptr;
+		else
+			delete[] (ngwt__DayOfYearWeekList*)p->ptr;
 		break;
 	case SOAP_TYPE_ngwt__DeltaInfo:
 		if (p->size < 0)
@@ -6763,6 +7734,18 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 			delete (ngwt__Distribution*)p->ptr;
 		else
 			delete[] (ngwt__Distribution*)p->ptr;
+		break;
+	case SOAP_TYPE_ngwt__DocumentType:
+		if (p->size < 0)
+			delete (ngwt__DocumentType*)p->ptr;
+		else
+			delete[] (ngwt__DocumentType*)p->ptr;
+		break;
+	case SOAP_TYPE_ngwt__DocumentTypeList:
+		if (p->size < 0)
+			delete (ngwt__DocumentTypeList*)p->ptr;
+		else
+			delete[] (ngwt__DocumentTypeList*)p->ptr;
 		break;
 	case SOAP_TYPE_ngwt__EmailAddressList:
 		if (p->size < 0)
@@ -6914,6 +7897,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 		else
 			delete[] (ngwt__JunkHandlingList*)p->ptr;
 		break;
+	case SOAP_TYPE_ngwt__LibraryList:
+		if (p->size < 0)
+			delete (ngwt__LibraryList*)p->ptr;
+		else
+			delete[] (ngwt__LibraryList*)p->ptr;
+		break;
 	case SOAP_TYPE_ngwt__LinkInfo:
 		if (p->size < 0)
 			delete (ngwt__LinkInfo*)p->ptr;
@@ -7058,6 +8047,24 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 		else
 			delete[] (ngwt__Rights*)p->ptr;
 		break;
+	case SOAP_TYPE_ngwt__RuleAction:
+		if (p->size < 0)
+			delete (ngwt__RuleAction*)p->ptr;
+		else
+			delete[] (ngwt__RuleAction*)p->ptr;
+		break;
+	case SOAP_TYPE_ngwt__RuleActionList:
+		if (p->size < 0)
+			delete (ngwt__RuleActionList*)p->ptr;
+		else
+			delete[] (ngwt__RuleActionList*)p->ptr;
+		break;
+	case SOAP_TYPE_ngwt__RuleList:
+		if (p->size < 0)
+			delete (ngwt__RuleList*)p->ptr;
+		else
+			delete[] (ngwt__RuleList*)p->ptr;
+		break;
 	case SOAP_TYPE_ngwt__SendOptionsRequestReply:
 		if (p->size < 0)
 			delete (ngwt__SendOptionsRequestReply*)p->ptr;
@@ -7112,6 +8119,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 		else
 			delete[] (ngwt__SignatureData*)p->ptr;
 		break;
+	case SOAP_TYPE_ngwt__SMimeOperation:
+		if (p->size < 0)
+			delete (ngwt__SMimeOperation*)p->ptr;
+		else
+			delete[] (ngwt__SMimeOperation*)p->ptr;
+		break;
 	case SOAP_TYPE_ngwt__Status:
 		if (p->size < 0)
 			delete (ngwt__Status*)p->ptr;
@@ -7141,6 +8154,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 			delete (ngwt__UserInfo*)p->ptr;
 		else
 			delete[] (ngwt__UserInfo*)p->ptr;
+		break;
+	case SOAP_TYPE_ngwt__UserList:
+		if (p->size < 0)
+			delete (ngwt__UserList*)p->ptr;
+		else
+			delete[] (ngwt__UserList*)p->ptr;
 		break;
 	case SOAP_TYPE__ngwm__acceptRequest:
 		if (p->size < 0)
@@ -7250,6 +8269,18 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 		else
 			delete[] (_ngwm__createItemResponse*)p->ptr;
 		break;
+	case SOAP_TYPE__ngwm__createItemsRequest:
+		if (p->size < 0)
+			delete (_ngwm__createItemsRequest*)p->ptr;
+		else
+			delete[] (_ngwm__createItemsRequest*)p->ptr;
+		break;
+	case SOAP_TYPE__ngwm__createItemsResponse:
+		if (p->size < 0)
+			delete (_ngwm__createItemsResponse*)p->ptr;
+		else
+			delete[] (_ngwm__createItemsResponse*)p->ptr;
+		break;
 	case SOAP_TYPE__ngwm__createJunkEntryRequest:
 		if (p->size < 0)
 			delete (_ngwm__createJunkEntryRequest*)p->ptr;
@@ -7321,6 +8352,18 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 			delete (_ngwm__destroyCursorResponse*)p->ptr;
 		else
 			delete[] (_ngwm__destroyCursorResponse*)p->ptr;
+		break;
+	case SOAP_TYPE__ngwm__executeRuleRequest:
+		if (p->size < 0)
+			delete (_ngwm__executeRuleRequest*)p->ptr;
+		else
+			delete[] (_ngwm__executeRuleRequest*)p->ptr;
+		break;
+	case SOAP_TYPE__ngwm__executeRuleResponse:
+		if (p->size < 0)
+			delete (_ngwm__executeRuleResponse*)p->ptr;
+		else
+			delete[] (_ngwm__executeRuleResponse*)p->ptr;
 		break;
 	case SOAP_TYPE__ngwm__forwardRequest:
 		if (p->size < 0)
@@ -7406,6 +8449,30 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 		else
 			delete[] (_ngwm__getDeltaInfoResponse*)p->ptr;
 		break;
+	case SOAP_TYPE__ngwm__getDocumentTypeListRequest:
+		if (p->size < 0)
+			delete (_ngwm__getDocumentTypeListRequest*)p->ptr;
+		else
+			delete[] (_ngwm__getDocumentTypeListRequest*)p->ptr;
+		break;
+	case SOAP_TYPE__ngwm__getDocumentTypeListResponse:
+		if (p->size < 0)
+			delete (_ngwm__getDocumentTypeListResponse*)p->ptr;
+		else
+			delete[] (_ngwm__getDocumentTypeListResponse*)p->ptr;
+		break;
+	case SOAP_TYPE__ngwm__getFolderRequest:
+		if (p->size < 0)
+			delete (_ngwm__getFolderRequest*)p->ptr;
+		else
+			delete[] (_ngwm__getFolderRequest*)p->ptr;
+		break;
+	case SOAP_TYPE__ngwm__getFolderResponse:
+		if (p->size < 0)
+			delete (_ngwm__getFolderResponse*)p->ptr;
+		else
+			delete[] (_ngwm__getFolderResponse*)p->ptr;
+		break;
 	case SOAP_TYPE__ngwm__getFolderListRequest:
 		if (p->size < 0)
 			delete (_ngwm__getFolderListRequest*)p->ptr;
@@ -7478,6 +8545,30 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 		else
 			delete[] (_ngwm__getJunkMailSettingsResponse*)p->ptr;
 		break;
+	case SOAP_TYPE__ngwm__getLibraryItemRequest:
+		if (p->size < 0)
+			delete (_ngwm__getLibraryItemRequest*)p->ptr;
+		else
+			delete[] (_ngwm__getLibraryItemRequest*)p->ptr;
+		break;
+	case SOAP_TYPE__ngwm__getLibraryItemResponse:
+		if (p->size < 0)
+			delete (_ngwm__getLibraryItemResponse*)p->ptr;
+		else
+			delete[] (_ngwm__getLibraryItemResponse*)p->ptr;
+		break;
+	case SOAP_TYPE__ngwm__getLibraryListRequest:
+		if (p->size < 0)
+			delete (_ngwm__getLibraryListRequest*)p->ptr;
+		else
+			delete[] (_ngwm__getLibraryListRequest*)p->ptr;
+		break;
+	case SOAP_TYPE__ngwm__getLibraryListResponse:
+		if (p->size < 0)
+			delete (_ngwm__getLibraryListResponse*)p->ptr;
+		else
+			delete[] (_ngwm__getLibraryListResponse*)p->ptr;
+		break;
 	case SOAP_TYPE__ngwm__getQuickMessagesRequest:
 		if (p->size < 0)
 			delete (_ngwm__getQuickMessagesRequest*)p->ptr;
@@ -7514,6 +8605,18 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 		else
 			delete[] (_ngwm__getProxyListResponse*)p->ptr;
 		break;
+	case SOAP_TYPE__ngwm__getRuleListRequest:
+		if (p->size < 0)
+			delete (_ngwm__getRuleListRequest*)p->ptr;
+		else
+			delete[] (_ngwm__getRuleListRequest*)p->ptr;
+		break;
+	case SOAP_TYPE__ngwm__getRuleListResponse:
+		if (p->size < 0)
+			delete (_ngwm__getRuleListResponse*)p->ptr;
+		else
+			delete[] (_ngwm__getRuleListResponse*)p->ptr;
+		break;
 	case SOAP_TYPE__ngwm__getSettingsRequest:
 		if (p->size < 0)
 			delete (_ngwm__getSettingsRequest*)p->ptr;
@@ -7538,6 +8641,18 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 		else
 			delete[] (_ngwm__getSignaturesResponse*)p->ptr;
 		break;
+	case SOAP_TYPE__ngwm__getTimestampRequest:
+		if (p->size < 0)
+			delete (_ngwm__getTimestampRequest*)p->ptr;
+		else
+			delete[] (_ngwm__getTimestampRequest*)p->ptr;
+		break;
+	case SOAP_TYPE__ngwm__getTimestampResponse:
+		if (p->size < 0)
+			delete (_ngwm__getTimestampResponse*)p->ptr;
+		else
+			delete[] (_ngwm__getTimestampResponse*)p->ptr;
+		break;
 	case SOAP_TYPE__ngwm__getTimezoneListRequest:
 		if (p->size < 0)
 			delete (_ngwm__getTimezoneListRequest*)p->ptr;
@@ -7549,6 +8664,18 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 			delete (_ngwm__getTimezoneListResponse*)p->ptr;
 		else
 			delete[] (_ngwm__getTimezoneListResponse*)p->ptr;
+		break;
+	case SOAP_TYPE__ngwm__getUserListRequest:
+		if (p->size < 0)
+			delete (_ngwm__getUserListRequest*)p->ptr;
+		else
+			delete[] (_ngwm__getUserListRequest*)p->ptr;
+		break;
+	case SOAP_TYPE__ngwm__getUserListResponse:
+		if (p->size < 0)
+			delete (_ngwm__getUserListResponse*)p->ptr;
+		else
+			delete[] (_ngwm__getUserListResponse*)p->ptr;
 		break;
 	case SOAP_TYPE__ngwm__loginRequest:
 		if (p->size < 0)
@@ -7850,6 +8977,18 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 		else
 			delete[] (_ngwm__removeProxyAccessResponse*)p->ptr;
 		break;
+	case SOAP_TYPE__ngwm__removeProxyUserRequest:
+		if (p->size < 0)
+			delete (_ngwm__removeProxyUserRequest*)p->ptr;
+		else
+			delete[] (_ngwm__removeProxyUserRequest*)p->ptr;
+		break;
+	case SOAP_TYPE__ngwm__removeProxyUserResponse:
+		if (p->size < 0)
+			delete (_ngwm__removeProxyUserResponse*)p->ptr;
+		else
+			delete[] (_ngwm__removeProxyUserResponse*)p->ptr;
+		break;
 	case SOAP_TYPE__ngwm__removeSignatureRequest:
 		if (p->size < 0)
 			delete (_ngwm__removeSignatureRequest*)p->ptr;
@@ -7898,6 +9037,18 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 		else
 			delete[] (_ngwm__sendItemResponse*)p->ptr;
 		break;
+	case SOAP_TYPE__ngwm__setTimestampRequest:
+		if (p->size < 0)
+			delete (_ngwm__setTimestampRequest*)p->ptr;
+		else
+			delete[] (_ngwm__setTimestampRequest*)p->ptr;
+		break;
+	case SOAP_TYPE__ngwm__setTimestampResponse:
+		if (p->size < 0)
+			delete (_ngwm__setTimestampResponse*)p->ptr;
+		else
+			delete[] (_ngwm__setTimestampResponse*)p->ptr;
+		break;
 	case SOAP_TYPE__ngwm__startFreeBusySessionRequest:
 		if (p->size < 0)
 			delete (_ngwm__startFreeBusySessionRequest*)p->ptr;
@@ -7933,6 +9084,18 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 			delete (_ngwm__uncompleteResponse*)p->ptr;
 		else
 			delete[] (_ngwm__uncompleteResponse*)p->ptr;
+		break;
+	case SOAP_TYPE__ngwm__updateVersionStatusRequest:
+		if (p->size < 0)
+			delete (_ngwm__updateVersionStatusRequest*)p->ptr;
+		else
+			delete[] (_ngwm__updateVersionStatusRequest*)p->ptr;
+		break;
+	case SOAP_TYPE__ngwm__updateVersionStatusResponse:
+		if (p->size < 0)
+			delete (_ngwm__updateVersionStatusResponse*)p->ptr;
+		else
+			delete[] (_ngwm__updateVersionStatusResponse*)p->ptr;
 		break;
 	case SOAP_TYPE_ngwe__ContainerList:
 		if (p->size < 0)
@@ -7975,6 +9138,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 			delete (ngwe__EventTypeList*)p->ptr;
 		else
 			delete[] (ngwe__EventTypeList*)p->ptr;
+		break;
+	case SOAP_TYPE_ngwe__Notify:
+		if (p->size < 0)
+			delete (ngwe__Notify*)p->ptr;
+		else
+			delete[] (ngwe__Notify*)p->ptr;
 		break;
 	case SOAP_TYPE__ngwe__cleanEventConfigurationRequest:
 		if (p->size < 0)
@@ -8144,6 +9313,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 		else
 			delete[] (ngwt__ItemRef*)p->ptr;
 		break;
+	case SOAP_TYPE_ngwt__Library:
+		if (p->size < 0)
+			delete (ngwt__Library*)p->ptr;
+		else
+			delete[] (ngwt__Library*)p->ptr;
+		break;
 	case SOAP_TYPE_ngwt__MessagePart:
 		if (p->size < 0)
 			delete (ngwt__MessagePart*)p->ptr;
@@ -8167,6 +9342,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 			delete (ngwt__Proxy*)p->ptr;
 		else
 			delete[] (ngwt__Proxy*)p->ptr;
+		break;
+	case SOAP_TYPE_ngwt__ProxyUser:
+		if (p->size < 0)
+			delete (ngwt__ProxyUser*)p->ptr;
+		else
+			delete[] (ngwt__ProxyUser*)p->ptr;
 		break;
 	case SOAP_TYPE_ngwt__Recipient:
 		if (p->size < 0)
@@ -8210,6 +9391,18 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 		else
 			delete[] (ngwt__DayOfWeek*)p->ptr;
 		break;
+	case SOAP_TYPE_ngwt__DayOfYearWeek:
+		if (p->size < 0)
+			delete (ngwt__DayOfYearWeek*)p->ptr;
+		else
+			delete[] (ngwt__DayOfYearWeek*)p->ptr;
+		break;
+	case SOAP_TYPE_ngwt__Document:
+		if (p->size < 0)
+			delete (ngwt__Document*)p->ptr;
+		else
+			delete[] (ngwt__Document*)p->ptr;
+		break;
 	case SOAP_TYPE_ngwt__FolderACLEntry:
 		if (p->size < 0)
 			delete (ngwt__FolderACLEntry*)p->ptr;
@@ -8221,6 +9414,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 			delete (ngwt__QueryFolder*)p->ptr;
 		else
 			delete[] (ngwt__QueryFolder*)p->ptr;
+		break;
+	case SOAP_TYPE_ngwt__Rule:
+		if (p->size < 0)
+			delete (ngwt__Rule*)p->ptr;
+		else
+			delete[] (ngwt__Rule*)p->ptr;
 		break;
 	case SOAP_TYPE_ngwt__SharedFolder:
 		if (p->size < 0)
@@ -8239,6 +9438,18 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 			delete (ngwt__SystemFolder*)p->ptr;
 		else
 			delete[] (ngwt__SystemFolder*)p->ptr;
+		break;
+	case SOAP_TYPE_ngwt__Version:
+		if (p->size < 0)
+			delete (ngwt__Version*)p->ptr;
+		else
+			delete[] (ngwt__Version*)p->ptr;
+		break;
+	case SOAP_TYPE_ngwt__VersionEvent:
+		if (p->size < 0)
+			delete (ngwt__VersionEvent*)p->ptr;
+		else
+			delete[] (ngwt__VersionEvent*)p->ptr;
 		break;
 	case SOAP_TYPE_ngwt__Contact:
 		if (p->size < 0)
@@ -8282,6 +9493,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 		else
 			delete[] (ngwt__CalendarItem*)p->ptr;
 		break;
+	case SOAP_TYPE_ngwt__DocumentRef:
+		if (p->size < 0)
+			delete (ngwt__DocumentRef*)p->ptr;
+		else
+			delete[] (ngwt__DocumentRef*)p->ptr;
+		break;
 	case SOAP_TYPE_ngwt__PhoneMessage:
 		if (p->size < 0)
 			delete (ngwt__PhoneMessage*)p->ptr;
@@ -8317,12 +9534,6 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 			delete (struct SOAP_ENV__Header*)p->ptr;
 		else
 			delete[] (struct SOAP_ENV__Header*)p->ptr;
-		break;
-	case SOAP_TYPE_xsd__anyURI:
-		if (p->size < 0)
-			delete (std::string*)p->ptr;
-		else
-			delete[] (std::string*)p->ptr;
 		break;
 	case SOAP_TYPE_xsd__date:
 		if (p->size < 0)
@@ -8408,6 +9619,18 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 		else
 			delete[] (std::vector<ngwt__ModifyItem * >*)p->ptr;
 		break;
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Host:
+		if (p->size < 0)
+			delete (std::vector<ngwt__Host * >*)p->ptr;
+		else
+			delete[] (std::vector<ngwt__Host * >*)p->ptr;
+		break;
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__UserInfo:
+		if (p->size < 0)
+			delete (std::vector<ngwt__UserInfo * >*)p->ptr;
+		else
+			delete[] (std::vector<ngwt__UserInfo * >*)p->ptr;
+		break;
 	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Timezone:
 		if (p->size < 0)
 			delete (std::vector<ngwt__Timezone * >*)p->ptr;
@@ -8426,6 +9649,18 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 		else
 			delete[] (std::vector<ngwt__SettingsGroup * >*)p->ptr;
 		break;
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Rule:
+		if (p->size < 0)
+			delete (std::vector<ngwt__Rule * >*)p->ptr;
+		else
+			delete[] (std::vector<ngwt__Rule * >*)p->ptr;
+		break;
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__RuleAction:
+		if (p->size < 0)
+			delete (std::vector<ngwt__RuleAction * >*)p->ptr;
+		else
+			delete[] (std::vector<ngwt__RuleAction * >*)p->ptr;
+		break;
 	case SOAP_TYPE_std__vectorTemplateOfxsd__date:
 		if (p->size < 0)
 			delete (std::vector<std::string >*)p->ptr;
@@ -8443,6 +9678,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 			delete (std::vector<ngwt__Recipient * >*)p->ptr;
 		else
 			delete[] (std::vector<ngwt__Recipient * >*)p->ptr;
+		break;
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ProxyUser:
+		if (p->size < 0)
+			delete (std::vector<ngwt__ProxyUser * >*)p->ptr;
+		else
+			delete[] (std::vector<ngwt__ProxyUser * >*)p->ptr;
 		break;
 	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ProblemEntry:
 		if (p->size < 0)
@@ -8473,6 +9714,12 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 			delete (std::vector<ngwt__MessagePart * >*)p->ptr;
 		else
 			delete[] (std::vector<ngwt__MessagePart * >*)p->ptr;
+		break;
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Library:
+		if (p->size < 0)
+			delete (std::vector<ngwt__Library * >*)p->ptr;
+		else
+			delete[] (std::vector<ngwt__Library * >*)p->ptr;
 		break;
 	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__JunkEntry:
 		if (p->size < 0)
@@ -8534,17 +9781,23 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_fdelete(struct soap_clist *p)
 		else
 			delete[] (std::vector<std::string >*)p->ptr;
 		break;
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DocumentType:
+		if (p->size < 0)
+			delete (std::vector<ngwt__DocumentType * >*)p->ptr;
+		else
+			delete[] (std::vector<ngwt__DocumentType * >*)p->ptr;
+		break;
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DayOfYearWeek:
+		if (p->size < 0)
+			delete (std::vector<ngwt__DayOfYearWeek * >*)p->ptr;
+		else
+			delete[] (std::vector<ngwt__DayOfYearWeek * >*)p->ptr;
+		break;
 	case SOAP_TYPE_std__vectorTemplateOfngwt__DayOfYear:
 		if (p->size < 0)
 			delete (std::vector<short >*)p->ptr;
 		else
 			delete[] (std::vector<short >*)p->ptr;
-		break;
-	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DayOfWeek:
-		if (p->size < 0)
-			delete (std::vector<ngwt__DayOfWeek * >*)p->ptr;
-		else
-			delete[] (std::vector<ngwt__DayOfWeek * >*)p->ptr;
 		break;
 	case SOAP_TYPE_std__vectorTemplateOfngwt__DayOfMonth:
 		if (p->size < 0)
@@ -8642,6 +9895,14 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_container_insert(struct soap *soap, int st, int 
 		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Container insert type=%d in %d location=%p object=%p\n", st, tt, p, q));
 		((std::vector<ngwt__ModifyItem * >*)p)->insert(((std::vector<ngwt__ModifyItem * >*)p)->end(), *(ngwt__ModifyItem **)q);
 		break;
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Host:
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Container insert type=%d in %d location=%p object=%p\n", st, tt, p, q));
+		((std::vector<ngwt__Host * >*)p)->insert(((std::vector<ngwt__Host * >*)p)->end(), *(ngwt__Host **)q);
+		break;
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__UserInfo:
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Container insert type=%d in %d location=%p object=%p\n", st, tt, p, q));
+		((std::vector<ngwt__UserInfo * >*)p)->insert(((std::vector<ngwt__UserInfo * >*)p)->end(), *(ngwt__UserInfo **)q);
+		break;
 	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Timezone:
 		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Container insert type=%d in %d location=%p object=%p\n", st, tt, p, q));
 		((std::vector<ngwt__Timezone * >*)p)->insert(((std::vector<ngwt__Timezone * >*)p)->end(), *(ngwt__Timezone **)q);
@@ -8654,6 +9915,14 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_container_insert(struct soap *soap, int st, int 
 		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Container insert type=%d in %d location=%p object=%p\n", st, tt, p, q));
 		((std::vector<ngwt__SettingsGroup * >*)p)->insert(((std::vector<ngwt__SettingsGroup * >*)p)->end(), *(ngwt__SettingsGroup **)q);
 		break;
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Rule:
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Container insert type=%d in %d location=%p object=%p\n", st, tt, p, q));
+		((std::vector<ngwt__Rule * >*)p)->insert(((std::vector<ngwt__Rule * >*)p)->end(), *(ngwt__Rule **)q);
+		break;
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__RuleAction:
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Container insert type=%d in %d location=%p object=%p\n", st, tt, p, q));
+		((std::vector<ngwt__RuleAction * >*)p)->insert(((std::vector<ngwt__RuleAction * >*)p)->end(), *(ngwt__RuleAction **)q);
+		break;
 	case SOAP_TYPE_std__vectorTemplateOfxsd__date:
 		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Container insert type=%d in %d location=%p object=%p\n", st, tt, p, q));
 		((std::vector<std::string >*)p)->insert(((std::vector<std::string >*)p)->end(), *(std::string *)q);
@@ -8665,6 +9934,10 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_container_insert(struct soap *soap, int st, int 
 	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Recipient:
 		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Container insert type=%d in %d location=%p object=%p\n", st, tt, p, q));
 		((std::vector<ngwt__Recipient * >*)p)->insert(((std::vector<ngwt__Recipient * >*)p)->end(), *(ngwt__Recipient **)q);
+		break;
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ProxyUser:
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Container insert type=%d in %d location=%p object=%p\n", st, tt, p, q));
+		((std::vector<ngwt__ProxyUser * >*)p)->insert(((std::vector<ngwt__ProxyUser * >*)p)->end(), *(ngwt__ProxyUser **)q);
 		break;
 	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ProblemEntry:
 		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Container insert type=%d in %d location=%p object=%p\n", st, tt, p, q));
@@ -8685,6 +9958,10 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_container_insert(struct soap *soap, int st, int 
 	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__MessagePart:
 		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Container insert type=%d in %d location=%p object=%p\n", st, tt, p, q));
 		((std::vector<ngwt__MessagePart * >*)p)->insert(((std::vector<ngwt__MessagePart * >*)p)->end(), *(ngwt__MessagePart **)q);
+		break;
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Library:
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Container insert type=%d in %d location=%p object=%p\n", st, tt, p, q));
+		((std::vector<ngwt__Library * >*)p)->insert(((std::vector<ngwt__Library * >*)p)->end(), *(ngwt__Library **)q);
 		break;
 	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__JunkEntry:
 		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Container insert type=%d in %d location=%p object=%p\n", st, tt, p, q));
@@ -8726,13 +10003,17 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_container_insert(struct soap *soap, int st, int 
 		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Container insert type=%d in %d location=%p object=%p\n", st, tt, p, q));
 		((std::vector<std::string >*)p)->insert(((std::vector<std::string >*)p)->end(), *(std::string *)q);
 		break;
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DocumentType:
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Container insert type=%d in %d location=%p object=%p\n", st, tt, p, q));
+		((std::vector<ngwt__DocumentType * >*)p)->insert(((std::vector<ngwt__DocumentType * >*)p)->end(), *(ngwt__DocumentType **)q);
+		break;
+	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DayOfYearWeek:
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Container insert type=%d in %d location=%p object=%p\n", st, tt, p, q));
+		((std::vector<ngwt__DayOfYearWeek * >*)p)->insert(((std::vector<ngwt__DayOfYearWeek * >*)p)->end(), *(ngwt__DayOfYearWeek **)q);
+		break;
 	case SOAP_TYPE_std__vectorTemplateOfngwt__DayOfYear:
 		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Container insert type=%d in %d location=%p object=%p\n", st, tt, p, q));
 		((std::vector<short >*)p)->insert(((std::vector<short >*)p)->end(), *(short *)q);
-		break;
-	case SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DayOfWeek:
-		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Container insert type=%d in %d location=%p object=%p\n", st, tt, p, q));
-		((std::vector<ngwt__DayOfWeek * >*)p)->insert(((std::vector<ngwt__DayOfWeek * >*)p)->end(), *(ngwt__DayOfWeek **)q);
 		break;
 	case SOAP_TYPE_std__vectorTemplateOfngwt__DayOfMonth:
 		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Container insert type=%d in %d location=%p object=%p\n", st, tt, p, q));
@@ -8837,6 +10118,35 @@ SOAP_FMAC3 char * SOAP_FMAC4 soap_get_byte(struct soap *soap, char *p, const cha
 SOAP_FMAC3 char * SOAP_FMAC4 soap_in_byte(struct soap *soap, const char *tag, char *a, const char *type)
 {
 	return soap_inbyte(soap, tag, a, type, SOAP_TYPE_byte);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__WeekOfYear(struct soap *soap, short *a)
+{	soap_default_short(soap, a);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__WeekOfYear(struct soap *soap, const short *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ngwt__WeekOfYear);
+	if (soap_out_ngwt__WeekOfYear(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__WeekOfYear(struct soap *soap, const char *tag, int id, const short *a, const char *type)
+{
+	return soap_outshort(soap, tag, id, a, type, SOAP_TYPE_ngwt__WeekOfYear);
+}
+
+SOAP_FMAC3 short * SOAP_FMAC4 soap_get_ngwt__WeekOfYear(struct soap *soap, short *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__WeekOfYear(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 short * SOAP_FMAC4 soap_in_ngwt__WeekOfYear(struct soap *soap, const char *tag, short *a, const char *type)
+{
+	return soap_inshort(soap, tag, a, type, SOAP_TYPE_ngwt__WeekOfYear);
 }
 
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__DayOfYear(struct soap *soap, short *a)
@@ -9329,14 +10639,15 @@ static const struct soap_code_map soap_codes_ngwe__ItemType[] =
 {	{ (long)AddressBookItem_, "AddressBookItem" },
 	{ (long)Appointment___, "Appointment" },
 	{ (long)CalendarItem___, "CalendarItem" },
-	{ (long)Contact__, "Contact" },
+	{ (long)Contact____, "Contact" },
 	{ (long)Group__, "Group" },
 	{ (long)Mail___, "Mail" },
 	{ (long)Note___, "Note" },
-	{ (long)Organization__, "Organization" },
+	{ (long)Organization____, "Organization" },
 	{ (long)PhoneMessage___, "PhoneMessage" },
 	{ (long)Resource___, "Resource" },
 	{ (long)Task___, "Task" },
+	{ (long)DocumentRef_, "DocumentRef" },
 	{ 0, NULL }
 };
 
@@ -9420,19 +10731,27 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwe__Field(struct soap *soap, const enum ngw
 
 static const struct soap_code_map soap_codes_ngwe__Field[] =
 {	{ (long)AcceptLevel_, "AcceptLevel" },
+	{ (long)Alarm_, "Alarm" },
+	{ (long)AllDayEvent_, "AllDayEvent" },
 	{ (long)Attachment_, "Attachment" },
-	{ (long)Category_, "Category" },
+	{ (long)Category__, "Category" },
 	{ (long)Classification_, "Classification" },
+	{ (long)Contact___, "Contact" },
 	{ (long)DueDate_, "DueDate" },
 	{ (long)Duration_, "Duration" },
 	{ (long)EmailAddress_, "EmailAddress" },
 	{ (long)ExpirationDate_, "ExpirationDate" },
+	{ (long)Hidden_, "Hidden" },
 	{ (long)IMAddress_, "IMAddress" },
 	{ (long)MessageBody_, "MessageBody" },
 	{ (long)Name_, "Name" },
+	{ (long)Organization___, "Organization" },
+	{ (long)Owner_, "Owner" },
 	{ (long)PersonalSubject_, "PersonalSubject" },
 	{ (long)PhoneNumber_, "PhoneNumber" },
 	{ (long)Place_, "Place" },
+	{ (long)PostalAddress_, "PostalAddress" },
+	{ (long)RecipientStatus_, "RecipientStatus" },
 	{ (long)Rights_, "Rights" },
 	{ (long)Security_, "Security" },
 	{ (long)SendPriority_, "SendPriority" },
@@ -9558,6 +10877,8 @@ static const struct soap_code_map soap_codes_ngwe__EventType[] =
 	{ (long)ItemMarkUnprivate, "ItemMarkUnprivate" },
 	{ (long)ItemUnaccept, "ItemUnaccept" },
 	{ (long)ItemUncomplete, "ItemUncomplete" },
+	{ (long)PersonalGroupItemAdd, "PersonalGroupItemAdd" },
+	{ (long)PersonalGroupItemDelete, "PersonalGroupItemDelete" },
 	{ 0, NULL }
 };
 
@@ -9710,6 +11031,193 @@ SOAP_FMAC3 enum ngwt__WeekDay * SOAP_FMAC4 soap_in_ngwt__WeekDay(struct soap *so
 	return a;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__VersionStatus(struct soap *soap, enum ngwt__VersionStatus *a)
+{
+(void)soap; /* appease -Wall -Werror */
+#ifdef SOAP_DEFAULT_ngwt__VersionStatus
+	*a = SOAP_DEFAULT_ngwt__VersionStatus;
+#else
+	*a = (enum ngwt__VersionStatus)0;
+#endif
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__VersionStatus(struct soap *soap, const enum ngwt__VersionStatus *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ngwt__VersionStatus);
+	if (soap_out_ngwt__VersionStatus(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+static const struct soap_code_map soap_codes_ngwt__VersionStatus[] =
+{	{ (long)available, "available" },
+	{ (long)checkedOut, "checkedOut" },
+	{ (long)inUse, "inUse" },
+	{ (long)deleted_, "deleted" },
+	{ (long)archived, "archived" },
+	{ (long)massInUse, "massInUse" },
+	{ (long)unavailable, "unavailable" },
+	{ 0, NULL }
+};
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_ngwt__VersionStatus2s(struct soap *soap, enum ngwt__VersionStatus n)
+{	const char *s = soap_str_code(soap_codes_ngwt__VersionStatus, (long)n);
+	if (s)
+		return s;
+	return soap_long2s(soap, (long)n);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__VersionStatus(struct soap *soap, const char *tag, int id, const enum ngwt__VersionStatus *a, const char *type)
+{	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__VersionStatus), type);
+	soap_send(soap, soap_ngwt__VersionStatus2s(soap, *a));
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 enum ngwt__VersionStatus * SOAP_FMAC4 soap_get_ngwt__VersionStatus(struct soap *soap, enum ngwt__VersionStatus *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__VersionStatus(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__VersionStatus(struct soap *soap, const char *s, enum ngwt__VersionStatus *a)
+{
+	const struct soap_code_map *map;
+	if (!s)
+		return SOAP_OK;
+	map = soap_code(soap_codes_ngwt__VersionStatus, s);
+	if (map)
+		*a = (enum ngwt__VersionStatus)map->code;
+	else
+	{	long n;
+		if (soap_s2long(soap, s, &n))
+			return soap->error;
+		*a = (enum ngwt__VersionStatus)n;
+	}
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 enum ngwt__VersionStatus * SOAP_FMAC4 soap_in_ngwt__VersionStatus(struct soap *soap, const char *tag, enum ngwt__VersionStatus *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	if (*soap->type && soap_match_tag(soap, soap->type, type))
+	{	soap->error = SOAP_TYPE;
+		return NULL;
+	}
+	a = (enum ngwt__VersionStatus *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__VersionStatus, sizeof(enum ngwt__VersionStatus), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	if (soap->body && !*soap->href)
+	{	if (!a || soap_s2ngwt__VersionStatus(soap, soap_value(soap), a) || soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (enum ngwt__VersionStatus *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__VersionStatus, 0, sizeof(enum ngwt__VersionStatus), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__VersionEventType(struct soap *soap, enum ngwt__VersionEventType *a)
+{
+(void)soap; /* appease -Wall -Werror */
+#ifdef SOAP_DEFAULT_ngwt__VersionEventType
+	*a = SOAP_DEFAULT_ngwt__VersionEventType;
+#else
+	*a = (enum ngwt__VersionEventType)0;
+#endif
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__VersionEventType(struct soap *soap, const enum ngwt__VersionEventType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ngwt__VersionEventType);
+	if (soap_out_ngwt__VersionEventType(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+static const struct soap_code_map soap_codes_ngwt__VersionEventType[] =
+{	{ (long)archive_, "archive" },
+	{ (long)checkIn, "checkIn" },
+	{ (long)checkOut, "checkOut" },
+	{ (long)copyIn, "copyIn" },
+	{ (long)copyOut, "copyOut" },
+	{ (long)copyVersion, "copyVersion" },
+	{ (long)created, "created" },
+	{ (long)deleteVersion, "deleteVersion" },
+	{ (long)endAccess, "endAccess" },
+	{ (long)resetStatus, "resetStatus" },
+	{ (long)restore, "restore" },
+	{ (long)retrieve, "retrieve" },
+	{ (long)securityModified, "securityModified" },
+	{ (long)versionDownloaded, "versionDownloaded" },
+	{ (long)viewed, "viewed" },
+	{ (long)unknown, "unknown" },
+	{ 0, NULL }
+};
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_ngwt__VersionEventType2s(struct soap *soap, enum ngwt__VersionEventType n)
+{	const char *s = soap_str_code(soap_codes_ngwt__VersionEventType, (long)n);
+	if (s)
+		return s;
+	return soap_long2s(soap, (long)n);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__VersionEventType(struct soap *soap, const char *tag, int id, const enum ngwt__VersionEventType *a, const char *type)
+{	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__VersionEventType), type);
+	soap_send(soap, soap_ngwt__VersionEventType2s(soap, *a));
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 enum ngwt__VersionEventType * SOAP_FMAC4 soap_get_ngwt__VersionEventType(struct soap *soap, enum ngwt__VersionEventType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__VersionEventType(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__VersionEventType(struct soap *soap, const char *s, enum ngwt__VersionEventType *a)
+{
+	const struct soap_code_map *map;
+	if (!s)
+		return SOAP_OK;
+	map = soap_code(soap_codes_ngwt__VersionEventType, s);
+	if (map)
+		*a = (enum ngwt__VersionEventType)map->code;
+	else
+	{	long n;
+		if (soap_s2long(soap, s, &n))
+			return soap->error;
+		*a = (enum ngwt__VersionEventType)n;
+	}
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 enum ngwt__VersionEventType * SOAP_FMAC4 soap_in_ngwt__VersionEventType(struct soap *soap, const char *tag, enum ngwt__VersionEventType *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	if (*soap->type && soap_match_tag(soap, soap->type, type))
+	{	soap->error = SOAP_TYPE;
+		return NULL;
+	}
+	a = (enum ngwt__VersionEventType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__VersionEventType, sizeof(enum ngwt__VersionEventType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	if (soap->body && !*soap->href)
+	{	if (!a || soap_s2ngwt__VersionEventType(soap, soap_value(soap), a) || soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (enum ngwt__VersionEventType *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__VersionEventType, 0, sizeof(enum ngwt__VersionEventType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__StatusTrackingOptions(struct soap *soap, enum ngwt__StatusTrackingOptions *a)
 {
 (void)soap; /* appease -Wall -Werror */
@@ -9790,6 +11298,104 @@ SOAP_FMAC3 enum ngwt__StatusTrackingOptions * SOAP_FMAC4 soap_in_ngwt__StatusTra
 	}
 	else
 	{	a = (enum ngwt__StatusTrackingOptions *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__StatusTrackingOptions, 0, sizeof(enum ngwt__StatusTrackingOptions), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__RuleActionType(struct soap *soap, enum ngwt__RuleActionType *a)
+{
+(void)soap; /* appease -Wall -Werror */
+#ifdef SOAP_DEFAULT_ngwt__RuleActionType
+	*a = SOAP_DEFAULT_ngwt__RuleActionType;
+#else
+	*a = (enum ngwt__RuleActionType)0;
+#endif
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__RuleActionType(struct soap *soap, const enum ngwt__RuleActionType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ngwt__RuleActionType);
+	if (soap_out_ngwt__RuleActionType(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+static const struct soap_code_map soap_codes_ngwt__RuleActionType[] =
+{	{ (long)Accept, "Accept" },
+	{ (long)Archive, "Archive" },
+	{ (long)Category_, "Category" },
+	{ (long)Delegate, "Delegate" },
+	{ (long)Delete, "Delete" },
+	{ (long)Forward, "Forward" },
+	{ (long)Link, "Link" },
+	{ (long)MarkPrivate, "MarkPrivate" },
+	{ (long)MarkRead, "MarkRead" },
+	{ (long)MarkUnread, "MarkUnread" },
+	{ (long)Move, "Move" },
+	{ (long)Purge, "Purge" },
+	{ (long)Reply, "Reply" },
+	{ (long)Send, "Send" },
+	{ (long)StopRules, "StopRules" },
+	{ (long)Unknown, "Unknown" },
+	{ 0, NULL }
+};
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_ngwt__RuleActionType2s(struct soap *soap, enum ngwt__RuleActionType n)
+{	const char *s = soap_str_code(soap_codes_ngwt__RuleActionType, (long)n);
+	if (s)
+		return s;
+	return soap_long2s(soap, (long)n);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__RuleActionType(struct soap *soap, const char *tag, int id, const enum ngwt__RuleActionType *a, const char *type)
+{	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__RuleActionType), type);
+	soap_send(soap, soap_ngwt__RuleActionType2s(soap, *a));
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 enum ngwt__RuleActionType * SOAP_FMAC4 soap_get_ngwt__RuleActionType(struct soap *soap, enum ngwt__RuleActionType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__RuleActionType(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__RuleActionType(struct soap *soap, const char *s, enum ngwt__RuleActionType *a)
+{
+	const struct soap_code_map *map;
+	if (!s)
+		return SOAP_OK;
+	map = soap_code(soap_codes_ngwt__RuleActionType, s);
+	if (map)
+		*a = (enum ngwt__RuleActionType)map->code;
+	else
+	{	long n;
+		if (soap_s2long(soap, s, &n))
+			return soap->error;
+		*a = (enum ngwt__RuleActionType)n;
+	}
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 enum ngwt__RuleActionType * SOAP_FMAC4 soap_in_ngwt__RuleActionType(struct soap *soap, const char *tag, enum ngwt__RuleActionType *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	if (*soap->type && soap_match_tag(soap, soap->type, type))
+	{	soap->error = SOAP_TYPE;
+		return NULL;
+	}
+	a = (enum ngwt__RuleActionType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__RuleActionType, sizeof(enum ngwt__RuleActionType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	if (soap->body && !*soap->href)
+	{	if (!a || soap_s2ngwt__RuleActionType(soap, soap_value(soap), a) || soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (enum ngwt__RuleActionType *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__RuleActionType, 0, sizeof(enum ngwt__RuleActionType), 0, NULL);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}
@@ -9900,7 +11506,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__RecipientType(struct soap *soap, const 
 }
 
 static const struct soap_code_map soap_codes_ngwt__RecipientType[] =
-{	{ (long)User, "User" },
+{	{ (long)User_, "User" },
 	{ (long)Resource__, "Resource" },
 	{ (long)PersonalGroup, "PersonalGroup" },
 	{ (long)SystemGroup, "SystemGroup" },
@@ -10424,7 +12030,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__MessageList(struct soap *soap, const en
 static const struct soap_code_map soap_codes_ngwt__MessageList[] =
 {	{ (long)All, "All" },
 	{ (long)Modified, "Modified" },
-	{ (long)New, "New" },
+	{ (long)New_, "New" },
 	{ 0, NULL }
 };
 
@@ -11201,11 +12807,13 @@ static const struct soap_code_map soap_codes_ngwt__FolderType[] =
 	{ (long)Checklist, "Checklist" },
 	{ (long)Cabinet, "Cabinet" },
 	{ (long)Normal_, "Normal" },
-	{ (long)NNTP, "NNTP" },
+	{ (long)NNTPServer, "NNTPServer" },
+	{ (long)NNTPNewsGroup, "NNTPNewsGroup" },
 	{ (long)IMAP, "IMAP" },
 	{ (long)Query, "Query" },
 	{ (long)Root, "Root" },
 	{ (long)JunkMail, "JunkMail" },
+	{ (long)Notes, "Notes" },
 	{ 0, NULL }
 };
 
@@ -11461,6 +13069,183 @@ SOAP_FMAC3 enum ngwt__FilterOp * SOAP_FMAC4 soap_in_ngwt__FilterOp(struct soap *
 	return a;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__FilterDate(struct soap *soap, enum ngwt__FilterDate *a)
+{
+(void)soap; /* appease -Wall -Werror */
+#ifdef SOAP_DEFAULT_ngwt__FilterDate
+	*a = SOAP_DEFAULT_ngwt__FilterDate;
+#else
+	*a = (enum ngwt__FilterDate)0;
+#endif
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__FilterDate(struct soap *soap, const enum ngwt__FilterDate *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ngwt__FilterDate);
+	if (soap_out_ngwt__FilterDate(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+static const struct soap_code_map soap_codes_ngwt__FilterDate[] =
+{	{ (long)Today, "Today" },
+	{ (long)Tomorrow, "Tomorrow" },
+	{ (long)ThisMonth, "ThisMonth" },
+	{ (long)ThisWeek, "ThisWeek" },
+	{ (long)ThisYear, "ThisYear" },
+	{ (long)Yesterday, "Yesterday" },
+	{ 0, NULL }
+};
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_ngwt__FilterDate2s(struct soap *soap, enum ngwt__FilterDate n)
+{	const char *s = soap_str_code(soap_codes_ngwt__FilterDate, (long)n);
+	if (s)
+		return s;
+	return soap_long2s(soap, (long)n);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__FilterDate(struct soap *soap, const char *tag, int id, const enum ngwt__FilterDate *a, const char *type)
+{	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__FilterDate), type);
+	soap_send(soap, soap_ngwt__FilterDate2s(soap, *a));
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 enum ngwt__FilterDate * SOAP_FMAC4 soap_get_ngwt__FilterDate(struct soap *soap, enum ngwt__FilterDate *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__FilterDate(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__FilterDate(struct soap *soap, const char *s, enum ngwt__FilterDate *a)
+{
+	const struct soap_code_map *map;
+	if (!s)
+		return SOAP_OK;
+	map = soap_code(soap_codes_ngwt__FilterDate, s);
+	if (map)
+		*a = (enum ngwt__FilterDate)map->code;
+	else
+	{	long n;
+		if (soap_s2long(soap, s, &n))
+			return soap->error;
+		*a = (enum ngwt__FilterDate)n;
+	}
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 enum ngwt__FilterDate * SOAP_FMAC4 soap_in_ngwt__FilterDate(struct soap *soap, const char *tag, enum ngwt__FilterDate *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	if (*soap->type && soap_match_tag(soap, soap->type, type))
+	{	soap->error = SOAP_TYPE;
+		return NULL;
+	}
+	a = (enum ngwt__FilterDate *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__FilterDate, sizeof(enum ngwt__FilterDate), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	if (soap->body && !*soap->href)
+	{	if (!a || soap_s2ngwt__FilterDate(soap, soap_value(soap), a) || soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (enum ngwt__FilterDate *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__FilterDate, 0, sizeof(enum ngwt__FilterDate), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__Execution(struct soap *soap, enum ngwt__Execution *a)
+{
+(void)soap; /* appease -Wall -Werror */
+#ifdef SOAP_DEFAULT_ngwt__Execution
+	*a = SOAP_DEFAULT_ngwt__Execution;
+#else
+	*a = (enum ngwt__Execution)0;
+#endif
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__Execution(struct soap *soap, const enum ngwt__Execution *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ngwt__Execution);
+	if (soap_out_ngwt__Execution(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+static const struct soap_code_map soap_codes_ngwt__Execution[] =
+{	{ (long)Startup, "Startup" },
+	{ (long)Exit, "Exit" },
+	{ (long)New, "New" },
+	{ (long)FolderOpen, "FolderOpen" },
+	{ (long)FolderClose, "FolderClose" },
+	{ (long)FolderNew, "FolderNew" },
+	{ (long)User, "User" },
+	{ 0, NULL }
+};
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_ngwt__Execution2s(struct soap *soap, enum ngwt__Execution n)
+{	const char *s = soap_str_code(soap_codes_ngwt__Execution, (long)n);
+	if (s)
+		return s;
+	return soap_long2s(soap, (long)n);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Execution(struct soap *soap, const char *tag, int id, const enum ngwt__Execution *a, const char *type)
+{	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__Execution), type);
+	soap_send(soap, soap_ngwt__Execution2s(soap, *a));
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 enum ngwt__Execution * SOAP_FMAC4 soap_get_ngwt__Execution(struct soap *soap, enum ngwt__Execution *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__Execution(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__Execution(struct soap *soap, const char *s, enum ngwt__Execution *a)
+{
+	const struct soap_code_map *map;
+	if (!s)
+		return SOAP_OK;
+	map = soap_code(soap_codes_ngwt__Execution, s);
+	if (map)
+		*a = (enum ngwt__Execution)map->code;
+	else
+	{	long n;
+		if (soap_s2long(soap, s, &n))
+			return soap->error;
+		*a = (enum ngwt__Execution)n;
+	}
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 enum ngwt__Execution * SOAP_FMAC4 soap_in_ngwt__Execution(struct soap *soap, const char *tag, enum ngwt__Execution *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	if (*soap->type && soap_match_tag(soap, soap->type, type))
+	{	soap->error = SOAP_TYPE;
+		return NULL;
+	}
+	a = (enum ngwt__Execution *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__Execution, sizeof(enum ngwt__Execution), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	if (soap->body && !*soap->href)
+	{	if (!a || soap_s2ngwt__Execution(soap, soap_value(soap), a) || soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (enum ngwt__Execution *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__Execution, 0, sizeof(enum ngwt__Execution), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__DistributionType(struct soap *soap, enum ngwt__DistributionType *a)
 {
 (void)soap; /* appease -Wall -Werror */
@@ -11566,7 +13351,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__DeltaSyncType(struct soap *soap, const 
 
 static const struct soap_code_map soap_codes_ngwt__DeltaSyncType[] =
 {	{ (long)add, "add" },
-	{ (long)_delete, "delete" },
+	{ (long)delete_, "delete" },
 	{ (long)update, "update" },
 	{ 0, NULL }
 };
@@ -11625,6 +13410,92 @@ SOAP_FMAC3 enum ngwt__DeltaSyncType * SOAP_FMAC4 soap_in_ngwt__DeltaSyncType(str
 	}
 	else
 	{	a = (enum ngwt__DeltaSyncType *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__DeltaSyncType, 0, sizeof(enum ngwt__DeltaSyncType), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__CustomType(struct soap *soap, enum ngwt__CustomType *a)
+{
+(void)soap; /* appease -Wall -Werror */
+#ifdef SOAP_DEFAULT_ngwt__CustomType
+	*a = SOAP_DEFAULT_ngwt__CustomType;
+#else
+	*a = (enum ngwt__CustomType)0;
+#endif
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__CustomType(struct soap *soap, const enum ngwt__CustomType *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ngwt__CustomType);
+	if (soap_out_ngwt__CustomType(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+static const struct soap_code_map soap_codes_ngwt__CustomType[] =
+{	{ (long)String, "String" },
+	{ (long)Numeric, "Numeric" },
+	{ (long)Date, "Date" },
+	{ (long)Binary, "Binary" },
+	{ 0, NULL }
+};
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_ngwt__CustomType2s(struct soap *soap, enum ngwt__CustomType n)
+{	const char *s = soap_str_code(soap_codes_ngwt__CustomType, (long)n);
+	if (s)
+		return s;
+	return soap_long2s(soap, (long)n);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__CustomType(struct soap *soap, const char *tag, int id, const enum ngwt__CustomType *a, const char *type)
+{	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__CustomType), type);
+	soap_send(soap, soap_ngwt__CustomType2s(soap, *a));
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 enum ngwt__CustomType * SOAP_FMAC4 soap_get_ngwt__CustomType(struct soap *soap, enum ngwt__CustomType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__CustomType(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__CustomType(struct soap *soap, const char *s, enum ngwt__CustomType *a)
+{
+	const struct soap_code_map *map;
+	if (!s)
+		return SOAP_OK;
+	map = soap_code(soap_codes_ngwt__CustomType, s);
+	if (map)
+		*a = (enum ngwt__CustomType)map->code;
+	else
+	{	long n;
+		if (soap_s2long(soap, s, &n))
+			return soap->error;
+		*a = (enum ngwt__CustomType)n;
+	}
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 enum ngwt__CustomType * SOAP_FMAC4 soap_in_ngwt__CustomType(struct soap *soap, const char *tag, enum ngwt__CustomType *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	if (*soap->type && soap_match_tag(soap, soap->type, type))
+	{	soap->error = SOAP_TYPE;
+		return NULL;
+	}
+	a = (enum ngwt__CustomType *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__CustomType, sizeof(enum ngwt__CustomType), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	if (soap->body && !*soap->href)
+	{	if (!a || soap_s2ngwt__CustomType(soap, soap_value(soap), a) || soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (enum ngwt__CustomType *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__CustomType, 0, sizeof(enum ngwt__CustomType), 0, NULL);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}
@@ -11735,10 +13606,10 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__ContactType(struct soap *soap, const en
 }
 
 static const struct soap_code_map soap_codes_ngwt__ContactType[] =
-{	{ (long)Contact_, "Contact" },
+{	{ (long)Contact__, "Contact" },
 	{ (long)Group_, "Group" },
 	{ (long)Resource_, "Resource" },
-	{ (long)Organization_, "Organization" },
+	{ (long)Organization__, "Organization" },
 	{ 0, NULL }
 };
 
@@ -11765,9 +13636,11 @@ SOAP_FMAC3 enum ngwt__ContactType * SOAP_FMAC4 soap_get_ngwt__ContactType(struct
 SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__ContactType(struct soap *soap, const char *s, enum ngwt__ContactType *a)
 {
 	const struct soap_code_map *map;
+	char *t;
 	if (!s)
 		return SOAP_OK;
-	map = soap_code(soap_codes_ngwt__ContactType, s);
+	soap_s2QName(soap, s, &t);
+	map = soap_code(soap_codes_ngwt__ContactType, t);
 	if (map)
 		*a = (enum ngwt__ContactType)map->code;
 	else
@@ -11973,6 +13846,176 @@ SOAP_FMAC3 enum ngwt__CalendarFolderFlags * SOAP_FMAC4 soap_in_ngwt__CalendarFol
 	return a;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__AppointmentConflict(struct soap *soap, enum ngwt__AppointmentConflict *a)
+{
+(void)soap; /* appease -Wall -Werror */
+#ifdef SOAP_DEFAULT_ngwt__AppointmentConflict
+	*a = SOAP_DEFAULT_ngwt__AppointmentConflict;
+#else
+	*a = (enum ngwt__AppointmentConflict)0;
+#endif
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__AppointmentConflict(struct soap *soap, const enum ngwt__AppointmentConflict *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ngwt__AppointmentConflict);
+	if (soap_out_ngwt__AppointmentConflict(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+static const struct soap_code_map soap_codes_ngwt__AppointmentConflict[] =
+{	{ (long)Yes, "Yes" },
+	{ (long)No, "No" },
+	{ (long)Ignore, "Ignore" },
+	{ 0, NULL }
+};
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_ngwt__AppointmentConflict2s(struct soap *soap, enum ngwt__AppointmentConflict n)
+{	const char *s = soap_str_code(soap_codes_ngwt__AppointmentConflict, (long)n);
+	if (s)
+		return s;
+	return soap_long2s(soap, (long)n);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__AppointmentConflict(struct soap *soap, const char *tag, int id, const enum ngwt__AppointmentConflict *a, const char *type)
+{	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__AppointmentConflict), type);
+	soap_send(soap, soap_ngwt__AppointmentConflict2s(soap, *a));
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 enum ngwt__AppointmentConflict * SOAP_FMAC4 soap_get_ngwt__AppointmentConflict(struct soap *soap, enum ngwt__AppointmentConflict *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__AppointmentConflict(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__AppointmentConflict(struct soap *soap, const char *s, enum ngwt__AppointmentConflict *a)
+{
+	const struct soap_code_map *map;
+	if (!s)
+		return SOAP_OK;
+	map = soap_code(soap_codes_ngwt__AppointmentConflict, s);
+	if (map)
+		*a = (enum ngwt__AppointmentConflict)map->code;
+	else
+	{	long n;
+		if (soap_s2long(soap, s, &n))
+			return soap->error;
+		*a = (enum ngwt__AppointmentConflict)n;
+	}
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 enum ngwt__AppointmentConflict * SOAP_FMAC4 soap_in_ngwt__AppointmentConflict(struct soap *soap, const char *tag, enum ngwt__AppointmentConflict *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	if (*soap->type && soap_match_tag(soap, soap->type, type))
+	{	soap->error = SOAP_TYPE;
+		return NULL;
+	}
+	a = (enum ngwt__AppointmentConflict *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__AppointmentConflict, sizeof(enum ngwt__AppointmentConflict), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	if (soap->body && !*soap->href)
+	{	if (!a || soap_s2ngwt__AppointmentConflict(soap, soap_value(soap), a) || soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (enum ngwt__AppointmentConflict *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__AppointmentConflict, 0, sizeof(enum ngwt__AppointmentConflict), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__AgeAction(struct soap *soap, enum ngwt__AgeAction *a)
+{
+(void)soap; /* appease -Wall -Werror */
+#ifdef SOAP_DEFAULT_ngwt__AgeAction
+	*a = SOAP_DEFAULT_ngwt__AgeAction;
+#else
+	*a = (enum ngwt__AgeAction)0;
+#endif
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwt__AgeAction(struct soap *soap, const enum ngwt__AgeAction *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_ngwt__AgeAction);
+	if (soap_out_ngwt__AgeAction(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+static const struct soap_code_map soap_codes_ngwt__AgeAction[] =
+{	{ (long)archive, "archive" },
+	{ (long)delete__, "delete" },
+	{ (long)retain, "retain" },
+	{ 0, NULL }
+};
+
+SOAP_FMAC3S const char* SOAP_FMAC4S soap_ngwt__AgeAction2s(struct soap *soap, enum ngwt__AgeAction n)
+{	const char *s = soap_str_code(soap_codes_ngwt__AgeAction, (long)n);
+	if (s)
+		return s;
+	return soap_long2s(soap, (long)n);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__AgeAction(struct soap *soap, const char *tag, int id, const enum ngwt__AgeAction *a, const char *type)
+{	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__AgeAction), type);
+	soap_send(soap, soap_ngwt__AgeAction2s(soap, *a));
+	return soap_element_end_out(soap, tag);
+}
+
+SOAP_FMAC3 enum ngwt__AgeAction * SOAP_FMAC4 soap_get_ngwt__AgeAction(struct soap *soap, enum ngwt__AgeAction *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__AgeAction(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3S int SOAP_FMAC4S soap_s2ngwt__AgeAction(struct soap *soap, const char *s, enum ngwt__AgeAction *a)
+{
+	const struct soap_code_map *map;
+	if (!s)
+		return SOAP_OK;
+	map = soap_code(soap_codes_ngwt__AgeAction, s);
+	if (map)
+		*a = (enum ngwt__AgeAction)map->code;
+	else
+	{	long n;
+		if (soap_s2long(soap, s, &n))
+			return soap->error;
+		*a = (enum ngwt__AgeAction)n;
+	}
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 enum ngwt__AgeAction * SOAP_FMAC4 soap_in_ngwt__AgeAction(struct soap *soap, const char *tag, enum ngwt__AgeAction *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	if (*soap->type && soap_match_tag(soap, soap->type, type))
+	{	soap->error = SOAP_TYPE;
+		return NULL;
+	}
+	a = (enum ngwt__AgeAction *)soap_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__AgeAction, sizeof(enum ngwt__AgeAction), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	if (soap->body && !*soap->href)
+	{	if (!a || soap_s2ngwt__AgeAction(soap, soap_value(soap), a) || soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (enum ngwt__AgeAction *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__AgeAction, 0, sizeof(enum ngwt__AgeAction), 0, NULL);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_ngwt__AcceptLevel(struct soap *soap, enum ngwt__AcceptLevel *a)
 {
 (void)soap; /* appease -Wall -Werror */
@@ -12081,14 +14124,15 @@ static const struct soap_code_map soap_codes_ngwe__ItemTypeList[] =
 {	{ (long)AddressBookItem, "AddressBookItem" },
 	{ (long)Appointment_, "Appointment" },
 	{ (long)CalendarItem_, "CalendarItem" },
-	{ (long)Contact, "Contact" },
+	{ (long)Contact_, "Contact" },
 	{ (long)Group, "Group" },
 	{ (long)Mail_, "Mail" },
 	{ (long)Note_, "Note" },
-	{ (long)Organization, "Organization" },
+	{ (long)Organization_, "Organization" },
 	{ (long)PhoneMessage_, "PhoneMessage" },
 	{ (long)Resource, "Resource" },
 	{ (long)Task_, "Task" },
+	{ (long)DocumentRef, "DocumentRef" },
 	{ 0, NULL }
 };
 
@@ -12109,6 +14153,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwe__ItemTypeList(struct soap *soap, const c
 			case 256: soap_send(soap, "PhoneMessage "); break;
 			case 512: soap_send(soap, "Resource "); break;
 			case 1024: soap_send(soap, "Task "); break;
+			case 2048: soap_send(soap, "DocumentRef "); break;
 		}
 	return soap_element_end_out(soap, tag);
 }
@@ -12143,7 +14188,7 @@ SOAP_FMAC3 enum ngwe__ItemTypeList * SOAP_FMAC4 soap_in_ngwe__ItemTypeList(struc
 			else if (!strcmp(s, "CalendarItem"))
 				i |= (LONG64)CalendarItem_;
 			else if (!strcmp(s, "Contact"))
-				i |= (LONG64)Contact;
+				i |= (LONG64)Contact_;
 			else if (!strcmp(s, "Group"))
 				i |= (LONG64)Group;
 			else if (!strcmp(s, "Mail"))
@@ -12151,13 +14196,15 @@ SOAP_FMAC3 enum ngwe__ItemTypeList * SOAP_FMAC4 soap_in_ngwe__ItemTypeList(struc
 			else if (!strcmp(s, "Note"))
 				i |= (LONG64)Note_;
 			else if (!strcmp(s, "Organization"))
-				i |= (LONG64)Organization;
+				i |= (LONG64)Organization_;
 			else if (!strcmp(s, "PhoneMessage"))
 				i |= (LONG64)PhoneMessage_;
 			else if (!strcmp(s, "Resource"))
 				i |= (LONG64)Resource;
 			else if (!strcmp(s, "Task"))
 				i |= (LONG64)Task_;
+			else if (!strcmp(s, "DocumentRef"))
+				i |= (LONG64)DocumentRef;
 			else 
 			{	soap->error = SOAP_TYPE;
 				return NULL;
@@ -12194,19 +14241,27 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_put_ngwe__FieldList(struct soap *soap, const enum
 
 static const struct soap_code_map soap_codes_ngwe__FieldList[] =
 {	{ (long)AcceptLevel, "AcceptLevel" },
+	{ (long)Alarm, "Alarm" },
+	{ (long)AllDayEvent, "AllDayEvent" },
 	{ (long)Attachment, "Attachment" },
 	{ (long)Category, "Category" },
 	{ (long)Classification, "Classification" },
+	{ (long)Contact, "Contact" },
 	{ (long)DueDate, "DueDate" },
 	{ (long)Duration, "Duration" },
 	{ (long)EmailAddress, "EmailAddress" },
 	{ (long)ExpirationDate, "ExpirationDate" },
+	{ (long)Hidden, "Hidden" },
 	{ (long)IMAddress, "IMAddress" },
 	{ (long)MessageBody, "MessageBody" },
 	{ (long)Name, "Name" },
+	{ (long)Organization, "Organization" },
+	{ (long)Owner, "Owner" },
 	{ (long)PersonalSubject, "PersonalSubject" },
 	{ (long)PhoneNumber, "PhoneNumber" },
 	{ (long)Place, "Place" },
+	{ (long)PostalAddress, "PostalAddress" },
+	{ (long)RecipientStatus, "RecipientStatus" },
 	{ (long)Rights, "Rights" },
 	{ (long)Security, "Security" },
 	{ (long)SendPriority, "SendPriority" },
@@ -12224,26 +14279,34 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwe__FieldList(struct soap *soap, const char
 		switch ((long)*a & i)
 		{
 			case 1: soap_send(soap, "AcceptLevel "); break;
-			case 2: soap_send(soap, "Attachment "); break;
-			case 4: soap_send(soap, "Category "); break;
-			case 8: soap_send(soap, "Classification "); break;
-			case 16: soap_send(soap, "DueDate "); break;
-			case 32: soap_send(soap, "Duration "); break;
-			case 64: soap_send(soap, "EmailAddress "); break;
-			case 128: soap_send(soap, "ExpirationDate "); break;
-			case 256: soap_send(soap, "IMAddress "); break;
-			case 512: soap_send(soap, "MessageBody "); break;
-			case 1024: soap_send(soap, "Name "); break;
-			case 2048: soap_send(soap, "PersonalSubject "); break;
-			case 4096: soap_send(soap, "PhoneNumber "); break;
-			case 8192: soap_send(soap, "Place "); break;
-			case 16384: soap_send(soap, "Rights "); break;
-			case 32768: soap_send(soap, "Security "); break;
-			case 65536: soap_send(soap, "SendPriority "); break;
-			case 131072: soap_send(soap, "StartDate "); break;
-			case 262144: soap_send(soap, "Subject "); break;
-			case 524288: soap_send(soap, "TaskCategory "); break;
-			case 1048576: soap_send(soap, "TaskPriority "); break;
+			case 2: soap_send(soap, "Alarm "); break;
+			case 4: soap_send(soap, "AllDayEvent "); break;
+			case 8: soap_send(soap, "Attachment "); break;
+			case 16: soap_send(soap, "Category "); break;
+			case 32: soap_send(soap, "Classification "); break;
+			case 64: soap_send(soap, "Contact "); break;
+			case 128: soap_send(soap, "DueDate "); break;
+			case 256: soap_send(soap, "Duration "); break;
+			case 512: soap_send(soap, "EmailAddress "); break;
+			case 1024: soap_send(soap, "ExpirationDate "); break;
+			case 2048: soap_send(soap, "Hidden "); break;
+			case 4096: soap_send(soap, "IMAddress "); break;
+			case 8192: soap_send(soap, "MessageBody "); break;
+			case 16384: soap_send(soap, "Name "); break;
+			case 32768: soap_send(soap, "Organization "); break;
+			case 65536: soap_send(soap, "Owner "); break;
+			case 131072: soap_send(soap, "PersonalSubject "); break;
+			case 262144: soap_send(soap, "PhoneNumber "); break;
+			case 524288: soap_send(soap, "Place "); break;
+			case 1048576: soap_send(soap, "PostalAddress "); break;
+			case 2097152: soap_send(soap, "RecipientStatus "); break;
+			case 4194304: soap_send(soap, "Rights "); break;
+			case 8388608: soap_send(soap, "Security "); break;
+			case 16777216: soap_send(soap, "SendPriority "); break;
+			case 33554432: soap_send(soap, "StartDate "); break;
+			case 67108864: soap_send(soap, "Subject "); break;
+			case 134217728: soap_send(soap, "TaskCategory "); break;
+			case 268435456: soap_send(soap, "TaskPriority "); break;
 		}
 	return soap_element_end_out(soap, tag);
 }
@@ -12273,12 +14336,18 @@ SOAP_FMAC3 enum ngwe__FieldList * SOAP_FMAC4 soap_in_ngwe__FieldList(struct soap
 		while (*(s = soap_token(soap)))
 			if (!strcmp(s, "AcceptLevel"))
 				i |= (LONG64)AcceptLevel;
+			else if (!strcmp(s, "Alarm"))
+				i |= (LONG64)Alarm;
+			else if (!strcmp(s, "AllDayEvent"))
+				i |= (LONG64)AllDayEvent;
 			else if (!strcmp(s, "Attachment"))
 				i |= (LONG64)Attachment;
 			else if (!strcmp(s, "Category"))
 				i |= (LONG64)Category;
 			else if (!strcmp(s, "Classification"))
 				i |= (LONG64)Classification;
+			else if (!strcmp(s, "Contact"))
+				i |= (LONG64)Contact;
 			else if (!strcmp(s, "DueDate"))
 				i |= (LONG64)DueDate;
 			else if (!strcmp(s, "Duration"))
@@ -12287,18 +14356,28 @@ SOAP_FMAC3 enum ngwe__FieldList * SOAP_FMAC4 soap_in_ngwe__FieldList(struct soap
 				i |= (LONG64)EmailAddress;
 			else if (!strcmp(s, "ExpirationDate"))
 				i |= (LONG64)ExpirationDate;
+			else if (!strcmp(s, "Hidden"))
+				i |= (LONG64)Hidden;
 			else if (!strcmp(s, "IMAddress"))
 				i |= (LONG64)IMAddress;
 			else if (!strcmp(s, "MessageBody"))
 				i |= (LONG64)MessageBody;
 			else if (!strcmp(s, "Name"))
 				i |= (LONG64)Name;
+			else if (!strcmp(s, "Organization"))
+				i |= (LONG64)Organization;
+			else if (!strcmp(s, "Owner"))
+				i |= (LONG64)Owner;
 			else if (!strcmp(s, "PersonalSubject"))
 				i |= (LONG64)PersonalSubject;
 			else if (!strcmp(s, "PhoneNumber"))
 				i |= (LONG64)PhoneNumber;
 			else if (!strcmp(s, "Place"))
 				i |= (LONG64)Place;
+			else if (!strcmp(s, "PostalAddress"))
+				i |= (LONG64)PostalAddress;
+			else if (!strcmp(s, "RecipientStatus"))
+				i |= (LONG64)RecipientStatus;
 			else if (!strcmp(s, "Rights"))
 				i |= (LONG64)Rights;
 			else if (!strcmp(s, "Security"))
@@ -13456,7 +15535,7 @@ SOAP_FMAC3 _ngwe__getEventsResponse * SOAP_FMAC4 soap_in__ngwe__getEventsRespons
 			if (soap->error)
 				return NULL;
 		}
-		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_events1 || soap_flag_status1))
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_status1))
 		{	soap->error = SOAP_OCCURS;
 			return NULL;
 		}
@@ -13517,6 +15596,8 @@ void _ngwe__getEventsRequest::soap_serialize(struct soap *soap) const
 	soap_serialize_string(soap, &((_ngwe__getEventsRequest*)this)->from);
 	soap_embedded(soap, &((_ngwe__getEventsRequest*)this)->until, SOAP_TYPE_string);
 	soap_serialize_string(soap, &((_ngwe__getEventsRequest*)this)->until);
+	soap_embedded(soap, &((_ngwe__getEventsRequest*)this)->uid, SOAP_TYPE_PointerTounsignedLong);
+	soap_serialize_PointerTounsignedLong(soap, &((_ngwe__getEventsRequest*)this)->uid);
 	soap_embedded(soap, &((_ngwe__getEventsRequest*)this)->count, SOAP_TYPE_int);
 	soap_embedded(soap, &((_ngwe__getEventsRequest*)this)->remove, SOAP_TYPE_bool);
 	soap_embedded(soap, &((_ngwe__getEventsRequest*)this)->notify, SOAP_TYPE_bool);
@@ -13529,6 +15610,7 @@ void _ngwe__getEventsRequest::soap_default(struct soap *soap)
 	soap_default_std__string(soap, &((_ngwe__getEventsRequest*)this)->key);
 	soap_default_string(soap, &((_ngwe__getEventsRequest*)this)->from);
 	soap_default_string(soap, &((_ngwe__getEventsRequest*)this)->until);
+	((_ngwe__getEventsRequest*)this)->uid = NULL;
 	((_ngwe__getEventsRequest*)this)->count = -1;
 	((_ngwe__getEventsRequest*)this)->remove = (bool)0;
 	((_ngwe__getEventsRequest*)this)->notify = (bool)0;
@@ -13554,6 +15636,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwe__getEventsRequest(struct soap *soap, co
 	soap_out_std__string(soap, "ngwe:key", -1, &(((_ngwe__getEventsRequest*)a)->key), "");
 	soap_out_string(soap, "ngwe:from", -1, &(((_ngwe__getEventsRequest*)a)->from), "");
 	soap_out_string(soap, "ngwe:until", -1, &(((_ngwe__getEventsRequest*)a)->until), "");
+	soap_out_PointerTounsignedLong(soap, "ngwe:uid", -1, &(((_ngwe__getEventsRequest*)a)->uid), "");
 	soap_out_int(soap, "ngwe:count", -1, &(((_ngwe__getEventsRequest*)a)->count), "");
 	soap_out_bool(soap, "ngwe:remove", -1, &(((_ngwe__getEventsRequest*)a)->remove), "");
 	soap_out_bool(soap, "ngwe:notify", -1, &(((_ngwe__getEventsRequest*)a)->notify), "");
@@ -13593,7 +15676,7 @@ SOAP_FMAC3 _ngwe__getEventsRequest * SOAP_FMAC4 soap_in__ngwe__getEventsRequest(
 			return (_ngwe__getEventsRequest *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_key1 = 1, soap_flag_from1 = 1, soap_flag_until1 = 1, soap_flag_count1 = 1, soap_flag_remove1 = 1, soap_flag_notify1 = 1;
+	short soap_flag_key1 = 1, soap_flag_from1 = 1, soap_flag_until1 = 1, soap_flag_uid1 = 1, soap_flag_count1 = 1, soap_flag_remove1 = 1, soap_flag_notify1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -13611,6 +15694,11 @@ SOAP_FMAC3 _ngwe__getEventsRequest * SOAP_FMAC4 soap_in__ngwe__getEventsRequest(
 			if (soap_flag_until1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_string(soap, "ngwe:until", &(((_ngwe__getEventsRequest*)a)->until), ""))
 				{	soap_flag_until1 = 0;
+					continue;
+				}
+			if (soap_flag_uid1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTounsignedLong(soap, "ngwe:uid", &(((_ngwe__getEventsRequest*)a)->uid), ""))
+				{	soap_flag_uid1 = 0;
 					continue;
 				}
 			if (soap_flag_count1 && soap->error == SOAP_TAG_MISMATCH)
@@ -14512,6 +16600,153 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwe__cleanEventConfigurationRequest(struc
 	*(_ngwe__cleanEventConfigurationRequest*)p = *(_ngwe__cleanEventConfigurationRequest*)q;
 }
 
+void ngwe__Notify::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((ngwe__Notify*)this)->userid, SOAP_TYPE_std__string);
+	soap_serialize_std__string(soap, &((ngwe__Notify*)this)->userid);
+	soap_embedded(soap, &((ngwe__Notify*)this)->key, SOAP_TYPE_std__string);
+	soap_serialize_std__string(soap, &((ngwe__Notify*)this)->key);
+	/* transient soap skipped */
+}
+
+void ngwe__Notify::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	soap_default_std__string(soap, &((ngwe__Notify*)this)->userid);
+	soap_default_std__string(soap, &((ngwe__Notify*)this)->key);
+	/* transient soap skipped */
+}
+
+int ngwe__Notify::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE_ngwe__Notify);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int ngwe__Notify::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out_ngwe__Notify(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwe__Notify(struct soap *soap, const char *tag, int id, const ngwe__Notify *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwe__Notify), type);
+	soap_out_std__string(soap, "ngwe:userid", -1, &(((ngwe__Notify*)a)->userid), "");
+	soap_out_std__string(soap, "ngwe:key", -1, &(((ngwe__Notify*)a)->key), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *ngwe__Notify::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get_ngwe__Notify(soap, this, tag, type);
+}
+
+SOAP_FMAC3 ngwe__Notify * SOAP_FMAC4 soap_get_ngwe__Notify(struct soap *soap, ngwe__Notify *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwe__Notify(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *ngwe__Notify::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in_ngwe__Notify(soap, tag, this, type);
+}
+
+SOAP_FMAC3 ngwe__Notify * SOAP_FMAC4 soap_in_ngwe__Notify(struct soap *soap, const char *tag, ngwe__Notify *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (ngwe__Notify *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE_ngwe__Notify, sizeof(ngwe__Notify), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE_ngwe__Notify)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (ngwe__Notify *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_userid1 = 1, soap_flag_key1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_userid1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_std__string(soap, "ngwe:userid", &(((ngwe__Notify*)a)->userid), ""))
+				{	soap_flag_userid1 = 0;
+					continue;
+				}
+			if (soap_flag_key1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_std__string(soap, "ngwe:key", &(((ngwe__Notify*)a)->key), ""))
+				{	soap_flag_key1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_userid1 || soap_flag_key1))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (ngwe__Notify *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwe__Notify, 0, sizeof(ngwe__Notify), 0, soap_copy_ngwe__Notify);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 ngwe__Notify * SOAP_FMAC6 soap_new_ngwe__Notify(struct soap *soap, int n)
+{	return soap_instantiate_ngwe__Notify(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwe__Notify(struct soap *soap, ngwe__Notify *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 ngwe__Notify * SOAP_FMAC6 soap_instantiate_ngwe__Notify(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ngwe__Notify(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ngwe__Notify, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new ngwe__Notify;
+		if (size)
+			*size = sizeof(ngwe__Notify);
+		((ngwe__Notify*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new ngwe__Notify[n];
+		if (size)
+			*size = n * sizeof(ngwe__Notify);
+		for (int i = 0; i < n; i++)
+			((ngwe__Notify*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (ngwe__Notify*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwe__Notify(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwe__Notify %p -> %p\n", q, p));
+	*(ngwe__Notify*)p = *(ngwe__Notify*)q;
+}
+
 void ngwe__EventTypeList::soap_serialize(struct soap *soap) const
 {
 	(void)soap; /* appease -Wall -Werror */
@@ -14594,7 +16829,7 @@ SOAP_FMAC3 ngwe__EventTypeList * SOAP_FMAC4 soap_in_ngwe__EventTypeList(struct s
 			if (soap->error)
 				return NULL;
 		}
-		if ((soap->mode & SOAP_XML_STRICT) && (((ngwe__EventTypeList*)a)->event.size() > 34))
+		if ((soap->mode & SOAP_XML_STRICT) && (((ngwe__EventTypeList*)a)->event.size() > 36))
 		{	soap->error = SOAP_OCCURS;
 			return NULL;
 		}
@@ -15291,6 +17526,10 @@ void ngwe__Event::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTongwt__uid(soap, &((ngwe__Event*)this)->from);
 	soap_embedded(soap, &((ngwe__Event*)this)->key, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwe__Event*)this)->key);
+	soap_embedded(soap, &((ngwe__Event*)this)->uid, SOAP_TYPE_PointerTounsignedLong);
+	soap_serialize_PointerTounsignedLong(soap, &((ngwe__Event*)this)->uid);
+	soap_embedded(soap, &((ngwe__Event*)this)->type, SOAP_TYPE_PointerTongwe__ItemType);
+	soap_serialize_PointerTongwe__ItemType(soap, &((ngwe__Event*)this)->type);
 	/* transient soap skipped */
 }
 
@@ -15304,6 +17543,8 @@ void ngwe__Event::soap_default(struct soap *soap)
 	((ngwe__Event*)this)->container = NULL;
 	((ngwe__Event*)this)->from = NULL;
 	((ngwe__Event*)this)->key = NULL;
+	((ngwe__Event*)this)->uid = NULL;
+	((ngwe__Event*)this)->type = NULL;
 	/* transient soap skipped */
 }
 
@@ -15330,6 +17571,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwe__Event(struct soap *soap, const char *ta
 	soap_out_PointerTongwt__uid(soap, "ngwe:container", -1, &(((ngwe__Event*)a)->container), "");
 	soap_out_PointerTongwt__uid(soap, "ngwe:from", -1, &(((ngwe__Event*)a)->from), "");
 	soap_out_PointerTostd__string(soap, "ngwe:key", -1, &(((ngwe__Event*)a)->key), "");
+	soap_out_PointerTounsignedLong(soap, "ngwe:uid", -1, &(((ngwe__Event*)a)->uid), "");
+	soap_out_PointerTongwe__ItemType(soap, "ngwe:type", -1, &(((ngwe__Event*)a)->type), "");
 	/* transient soap skipped */
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
@@ -15366,7 +17609,7 @@ SOAP_FMAC3 ngwe__Event * SOAP_FMAC4 soap_in_ngwe__Event(struct soap *soap, const
 			return (ngwe__Event *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_event1 = 1, soap_flag_id1 = 1, soap_flag_timeStamp1 = 1, soap_flag_field1 = 1, soap_flag_container1 = 1, soap_flag_from1 = 1, soap_flag_key1 = 1;
+	short soap_flag_event1 = 1, soap_flag_id1 = 1, soap_flag_timeStamp1 = 1, soap_flag_field1 = 1, soap_flag_container1 = 1, soap_flag_from1 = 1, soap_flag_key1 = 1, soap_flag_uid1 = 1, soap_flag_type1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -15404,6 +17647,16 @@ SOAP_FMAC3 ngwe__Event * SOAP_FMAC4 soap_in_ngwe__Event(struct soap *soap, const
 			if (soap_flag_key1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwe:key", &(((ngwe__Event*)a)->key), ""))
 				{	soap_flag_key1 = 0;
+					continue;
+				}
+			if (soap_flag_uid1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTounsignedLong(soap, "ngwe:uid", &(((ngwe__Event*)a)->uid), ""))
+				{	soap_flag_uid1 = 0;
+					continue;
+				}
+			if (soap_flag_type1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwe__ItemType(soap, "ngwe:type", &(((ngwe__Event*)a)->type), ""))
+				{	soap_flag_type1 = 0;
 					continue;
 				}
 			/* transient soap skipped */
@@ -15607,6 +17860,308 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwe__ContainerList(struct soap *soap, int 
 {
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwe__ContainerList %p -> %p\n", q, p));
 	*(ngwe__ContainerList*)p = *(ngwe__ContainerList*)q;
+}
+
+void _ngwm__updateVersionStatusResponse::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((_ngwm__updateVersionStatusResponse*)this)->part, SOAP_TYPE_PointerTongwt__SignatureData);
+	soap_serialize_PointerTongwt__SignatureData(soap, &((_ngwm__updateVersionStatusResponse*)this)->part);
+	soap_embedded(soap, &((_ngwm__updateVersionStatusResponse*)this)->status, SOAP_TYPE_PointerTongwt__Status);
+	soap_serialize_PointerTongwt__Status(soap, &((_ngwm__updateVersionStatusResponse*)this)->status);
+	/* transient soap skipped */
+}
+
+void _ngwm__updateVersionStatusResponse::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	((_ngwm__updateVersionStatusResponse*)this)->part = NULL;
+	((_ngwm__updateVersionStatusResponse*)this)->status = NULL;
+	/* transient soap skipped */
+}
+
+int _ngwm__updateVersionStatusResponse::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__updateVersionStatusResponse);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__updateVersionStatusResponse::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__updateVersionStatusResponse(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__updateVersionStatusResponse(struct soap *soap, const char *tag, int id, const _ngwm__updateVersionStatusResponse *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__updateVersionStatusResponse), type);
+	soap_out_PointerTongwt__SignatureData(soap, "ngwm:part", -1, &(((_ngwm__updateVersionStatusResponse*)a)->part), "");
+	soap_out_PointerTongwt__Status(soap, "ngwm:status", -1, &(((_ngwm__updateVersionStatusResponse*)a)->status), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__updateVersionStatusResponse::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__updateVersionStatusResponse(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__updateVersionStatusResponse * SOAP_FMAC4 soap_get__ngwm__updateVersionStatusResponse(struct soap *soap, _ngwm__updateVersionStatusResponse *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__updateVersionStatusResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__updateVersionStatusResponse::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__updateVersionStatusResponse(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__updateVersionStatusResponse * SOAP_FMAC4 soap_in__ngwm__updateVersionStatusResponse(struct soap *soap, const char *tag, _ngwm__updateVersionStatusResponse *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__updateVersionStatusResponse *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__updateVersionStatusResponse, sizeof(_ngwm__updateVersionStatusResponse), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__updateVersionStatusResponse)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__updateVersionStatusResponse *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_part1 = 1, soap_flag_status1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_part1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__SignatureData(soap, "ngwm:part", &(((_ngwm__updateVersionStatusResponse*)a)->part), "ngwt:SignatureData"))
+				{	soap_flag_part1 = 0;
+					continue;
+				}
+			if (soap_flag_status1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__Status(soap, "ngwm:status", &(((_ngwm__updateVersionStatusResponse*)a)->status), "ngwt:Status"))
+				{	soap_flag_status1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_status1))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__updateVersionStatusResponse *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__updateVersionStatusResponse, 0, sizeof(_ngwm__updateVersionStatusResponse), 0, soap_copy__ngwm__updateVersionStatusResponse);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__updateVersionStatusResponse * SOAP_FMAC6 soap_new__ngwm__updateVersionStatusResponse(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__updateVersionStatusResponse(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__updateVersionStatusResponse(struct soap *soap, _ngwm__updateVersionStatusResponse *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__updateVersionStatusResponse * SOAP_FMAC6 soap_instantiate__ngwm__updateVersionStatusResponse(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__updateVersionStatusResponse(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__updateVersionStatusResponse, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__updateVersionStatusResponse;
+		if (size)
+			*size = sizeof(_ngwm__updateVersionStatusResponse);
+		((_ngwm__updateVersionStatusResponse*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__updateVersionStatusResponse[n];
+		if (size)
+			*size = n * sizeof(_ngwm__updateVersionStatusResponse);
+		for (int i = 0; i < n; i++)
+			((_ngwm__updateVersionStatusResponse*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__updateVersionStatusResponse*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__updateVersionStatusResponse(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__updateVersionStatusResponse %p -> %p\n", q, p));
+	*(_ngwm__updateVersionStatusResponse*)p = *(_ngwm__updateVersionStatusResponse*)q;
+}
+
+void _ngwm__updateVersionStatusRequest::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((_ngwm__updateVersionStatusRequest*)this)->id, SOAP_TYPE_ngwt__uid);
+	soap_serialize_ngwt__uid(soap, &((_ngwm__updateVersionStatusRequest*)this)->id);
+	soap_embedded(soap, &((_ngwm__updateVersionStatusRequest*)this)->event, SOAP_TYPE_ngwt__VersionEventType);
+	soap_embedded(soap, &((_ngwm__updateVersionStatusRequest*)this)->part, SOAP_TYPE_PointerTongwt__SignatureData);
+	soap_serialize_PointerTongwt__SignatureData(soap, &((_ngwm__updateVersionStatusRequest*)this)->part);
+	/* transient soap skipped */
+}
+
+void _ngwm__updateVersionStatusRequest::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	soap_default_ngwt__uid(soap, &((_ngwm__updateVersionStatusRequest*)this)->id);
+	soap_default_ngwt__VersionEventType(soap, &((_ngwm__updateVersionStatusRequest*)this)->event);
+	((_ngwm__updateVersionStatusRequest*)this)->part = NULL;
+	/* transient soap skipped */
+}
+
+int _ngwm__updateVersionStatusRequest::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__updateVersionStatusRequest);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__updateVersionStatusRequest::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__updateVersionStatusRequest(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__updateVersionStatusRequest(struct soap *soap, const char *tag, int id, const _ngwm__updateVersionStatusRequest *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__updateVersionStatusRequest), type);
+	soap_out_ngwt__uid(soap, "ngwm:id", -1, &(((_ngwm__updateVersionStatusRequest*)a)->id), "");
+	soap_out_ngwt__VersionEventType(soap, "ngwm:event", -1, &(((_ngwm__updateVersionStatusRequest*)a)->event), "");
+	soap_out_PointerTongwt__SignatureData(soap, "ngwm:part", -1, &(((_ngwm__updateVersionStatusRequest*)a)->part), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__updateVersionStatusRequest::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__updateVersionStatusRequest(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__updateVersionStatusRequest * SOAP_FMAC4 soap_get__ngwm__updateVersionStatusRequest(struct soap *soap, _ngwm__updateVersionStatusRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__updateVersionStatusRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__updateVersionStatusRequest::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__updateVersionStatusRequest(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__updateVersionStatusRequest * SOAP_FMAC4 soap_in__ngwm__updateVersionStatusRequest(struct soap *soap, const char *tag, _ngwm__updateVersionStatusRequest *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__updateVersionStatusRequest *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__updateVersionStatusRequest, sizeof(_ngwm__updateVersionStatusRequest), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__updateVersionStatusRequest)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__updateVersionStatusRequest *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_id1 = 1, soap_flag_event1 = 1, soap_flag_part1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_id1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_ngwt__uid(soap, "ngwm:id", &(((_ngwm__updateVersionStatusRequest*)a)->id), "ngwt:uid"))
+				{	soap_flag_id1 = 0;
+					continue;
+				}
+			if (soap_flag_event1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_ngwt__VersionEventType(soap, "ngwm:event", &(((_ngwm__updateVersionStatusRequest*)a)->event), ""))
+				{	soap_flag_event1 = 0;
+					continue;
+				}
+			if (soap_flag_part1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__SignatureData(soap, "ngwm:part", &(((_ngwm__updateVersionStatusRequest*)a)->part), "ngwt:SignatureData"))
+				{	soap_flag_part1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_id1 || soap_flag_event1))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__updateVersionStatusRequest *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__updateVersionStatusRequest, 0, sizeof(_ngwm__updateVersionStatusRequest), 0, soap_copy__ngwm__updateVersionStatusRequest);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__updateVersionStatusRequest * SOAP_FMAC6 soap_new__ngwm__updateVersionStatusRequest(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__updateVersionStatusRequest(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__updateVersionStatusRequest(struct soap *soap, _ngwm__updateVersionStatusRequest *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__updateVersionStatusRequest * SOAP_FMAC6 soap_instantiate__ngwm__updateVersionStatusRequest(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__updateVersionStatusRequest(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__updateVersionStatusRequest, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__updateVersionStatusRequest;
+		if (size)
+			*size = sizeof(_ngwm__updateVersionStatusRequest);
+		((_ngwm__updateVersionStatusRequest*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__updateVersionStatusRequest[n];
+		if (size)
+			*size = n * sizeof(_ngwm__updateVersionStatusRequest);
+		for (int i = 0; i < n; i++)
+			((_ngwm__updateVersionStatusRequest*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__updateVersionStatusRequest*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__updateVersionStatusRequest(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__updateVersionStatusRequest %p -> %p\n", q, p));
+	*(_ngwm__updateVersionStatusRequest*)p = *(_ngwm__updateVersionStatusRequest*)q;
 }
 
 void _ngwm__uncompleteResponse::soap_serialize(struct soap *soap) const
@@ -16164,7 +18719,8 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__unacceptRequest(struct soap *soap, i
 void _ngwm__startFreeBusySessionResponse::soap_serialize(struct soap *soap) const
 {
 	(void)soap; /* appease -Wall -Werror */
-	soap_embedded(soap, &((_ngwm__startFreeBusySessionResponse*)this)->freeBusySessionId, SOAP_TYPE_int);
+	soap_embedded(soap, &((_ngwm__startFreeBusySessionResponse*)this)->freeBusySessionId, SOAP_TYPE_PointerToint);
+	soap_serialize_PointerToint(soap, &((_ngwm__startFreeBusySessionResponse*)this)->freeBusySessionId);
 	soap_embedded(soap, &((_ngwm__startFreeBusySessionResponse*)this)->status, SOAP_TYPE_PointerTongwt__Status);
 	soap_serialize_PointerTongwt__Status(soap, &((_ngwm__startFreeBusySessionResponse*)this)->status);
 	/* transient soap skipped */
@@ -16173,7 +18729,7 @@ void _ngwm__startFreeBusySessionResponse::soap_serialize(struct soap *soap) cons
 void _ngwm__startFreeBusySessionResponse::soap_default(struct soap *soap)
 {
 	this->soap = soap;
-	soap_default_int(soap, &((_ngwm__startFreeBusySessionResponse*)this)->freeBusySessionId);
+	((_ngwm__startFreeBusySessionResponse*)this)->freeBusySessionId = NULL;
 	((_ngwm__startFreeBusySessionResponse*)this)->status = NULL;
 	/* transient soap skipped */
 }
@@ -16194,7 +18750,7 @@ int _ngwm__startFreeBusySessionResponse::soap_out(struct soap *soap, const char 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__startFreeBusySessionResponse(struct soap *soap, const char *tag, int id, const _ngwm__startFreeBusySessionResponse *a, const char *type)
 {
 	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__startFreeBusySessionResponse), type);
-	soap_out_int(soap, "ngwm:freeBusySessionId", -1, &(((_ngwm__startFreeBusySessionResponse*)a)->freeBusySessionId), "");
+	soap_out_PointerToint(soap, "ngwm:freeBusySessionId", -1, &(((_ngwm__startFreeBusySessionResponse*)a)->freeBusySessionId), "");
 	soap_out_PointerTongwt__Status(soap, "ngwm:status", -1, &(((_ngwm__startFreeBusySessionResponse*)a)->status), "");
 	/* transient soap skipped */
 	soap_element_end_out(soap, tag);
@@ -16238,7 +18794,7 @@ SOAP_FMAC3 _ngwm__startFreeBusySessionResponse * SOAP_FMAC4 soap_in__ngwm__start
 		for (;;)
 		{	soap->error = SOAP_TAG_MISMATCH;
 			if (soap_flag_freeBusySessionId1 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_int(soap, "ngwm:freeBusySessionId", &(((_ngwm__startFreeBusySessionResponse*)a)->freeBusySessionId), ""))
+				if (soap_in_PointerToint(soap, "ngwm:freeBusySessionId", &(((_ngwm__startFreeBusySessionResponse*)a)->freeBusySessionId), ""))
 				{	soap_flag_freeBusySessionId1 = 0;
 					continue;
 				}
@@ -16255,7 +18811,7 @@ SOAP_FMAC3 _ngwm__startFreeBusySessionResponse * SOAP_FMAC4 soap_in__ngwm__start
 			if (soap->error)
 				return NULL;
 		}
-		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_freeBusySessionId1 || soap_flag_status1))
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_status1))
 		{	soap->error = SOAP_OCCURS;
 			return NULL;
 		}
@@ -16461,6 +19017,287 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__startFreeBusySessionRequest(struct s
 {
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__startFreeBusySessionRequest %p -> %p\n", q, p));
 	*(_ngwm__startFreeBusySessionRequest*)p = *(_ngwm__startFreeBusySessionRequest*)q;
+}
+
+void _ngwm__setTimestampResponse::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((_ngwm__setTimestampResponse*)this)->status, SOAP_TYPE_PointerTongwt__Status);
+	soap_serialize_PointerTongwt__Status(soap, &((_ngwm__setTimestampResponse*)this)->status);
+	/* transient soap skipped */
+}
+
+void _ngwm__setTimestampResponse::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	((_ngwm__setTimestampResponse*)this)->status = NULL;
+	/* transient soap skipped */
+}
+
+int _ngwm__setTimestampResponse::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__setTimestampResponse);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__setTimestampResponse::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__setTimestampResponse(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__setTimestampResponse(struct soap *soap, const char *tag, int id, const _ngwm__setTimestampResponse *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__setTimestampResponse), type);
+	soap_out_PointerTongwt__Status(soap, "ngwm:status", -1, &(((_ngwm__setTimestampResponse*)a)->status), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__setTimestampResponse::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__setTimestampResponse(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__setTimestampResponse * SOAP_FMAC4 soap_get__ngwm__setTimestampResponse(struct soap *soap, _ngwm__setTimestampResponse *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__setTimestampResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__setTimestampResponse::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__setTimestampResponse(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__setTimestampResponse * SOAP_FMAC4 soap_in__ngwm__setTimestampResponse(struct soap *soap, const char *tag, _ngwm__setTimestampResponse *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__setTimestampResponse *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__setTimestampResponse, sizeof(_ngwm__setTimestampResponse), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__setTimestampResponse)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__setTimestampResponse *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_status1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_status1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__Status(soap, "ngwm:status", &(((_ngwm__setTimestampResponse*)a)->status), "ngwt:Status"))
+				{	soap_flag_status1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_status1))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__setTimestampResponse *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__setTimestampResponse, 0, sizeof(_ngwm__setTimestampResponse), 0, soap_copy__ngwm__setTimestampResponse);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__setTimestampResponse * SOAP_FMAC6 soap_new__ngwm__setTimestampResponse(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__setTimestampResponse(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__setTimestampResponse(struct soap *soap, _ngwm__setTimestampResponse *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__setTimestampResponse * SOAP_FMAC6 soap_instantiate__ngwm__setTimestampResponse(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__setTimestampResponse(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__setTimestampResponse, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__setTimestampResponse;
+		if (size)
+			*size = sizeof(_ngwm__setTimestampResponse);
+		((_ngwm__setTimestampResponse*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__setTimestampResponse[n];
+		if (size)
+			*size = n * sizeof(_ngwm__setTimestampResponse);
+		for (int i = 0; i < n; i++)
+			((_ngwm__setTimestampResponse*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__setTimestampResponse*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__setTimestampResponse(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__setTimestampResponse %p -> %p\n", q, p));
+	*(_ngwm__setTimestampResponse*)p = *(_ngwm__setTimestampResponse*)q;
+}
+
+void _ngwm__setTimestampRequest::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((_ngwm__setTimestampRequest*)this)->backup, SOAP_TYPE_string);
+	soap_serialize_string(soap, &((_ngwm__setTimestampRequest*)this)->backup);
+	soap_embedded(soap, &((_ngwm__setTimestampRequest*)this)->retention, SOAP_TYPE_string);
+	soap_serialize_string(soap, &((_ngwm__setTimestampRequest*)this)->retention);
+	/* transient soap skipped */
+}
+
+void _ngwm__setTimestampRequest::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	soap_default_string(soap, &((_ngwm__setTimestampRequest*)this)->backup);
+	soap_default_string(soap, &((_ngwm__setTimestampRequest*)this)->retention);
+	/* transient soap skipped */
+}
+
+int _ngwm__setTimestampRequest::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__setTimestampRequest);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__setTimestampRequest::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__setTimestampRequest(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__setTimestampRequest(struct soap *soap, const char *tag, int id, const _ngwm__setTimestampRequest *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__setTimestampRequest), type);
+	soap_out_string(soap, "ngwm:backup", -1, &(((_ngwm__setTimestampRequest*)a)->backup), "");
+	soap_out_string(soap, "ngwm:retention", -1, &(((_ngwm__setTimestampRequest*)a)->retention), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__setTimestampRequest::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__setTimestampRequest(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__setTimestampRequest * SOAP_FMAC4 soap_get__ngwm__setTimestampRequest(struct soap *soap, _ngwm__setTimestampRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__setTimestampRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__setTimestampRequest::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__setTimestampRequest(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__setTimestampRequest * SOAP_FMAC4 soap_in__ngwm__setTimestampRequest(struct soap *soap, const char *tag, _ngwm__setTimestampRequest *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__setTimestampRequest *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__setTimestampRequest, sizeof(_ngwm__setTimestampRequest), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__setTimestampRequest)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__setTimestampRequest *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_backup1 = 1, soap_flag_retention1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_backup1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ngwm:backup", &(((_ngwm__setTimestampRequest*)a)->backup), ""))
+				{	soap_flag_backup1 = 0;
+					continue;
+				}
+			if (soap_flag_retention1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ngwm:retention", &(((_ngwm__setTimestampRequest*)a)->retention), ""))
+				{	soap_flag_retention1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__setTimestampRequest *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__setTimestampRequest, 0, sizeof(_ngwm__setTimestampRequest), 0, soap_copy__ngwm__setTimestampRequest);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__setTimestampRequest * SOAP_FMAC6 soap_new__ngwm__setTimestampRequest(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__setTimestampRequest(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__setTimestampRequest(struct soap *soap, _ngwm__setTimestampRequest *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__setTimestampRequest * SOAP_FMAC6 soap_instantiate__ngwm__setTimestampRequest(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__setTimestampRequest(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__setTimestampRequest, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__setTimestampRequest;
+		if (size)
+			*size = sizeof(_ngwm__setTimestampRequest);
+		((_ngwm__setTimestampRequest*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__setTimestampRequest[n];
+		if (size)
+			*size = n * sizeof(_ngwm__setTimestampRequest);
+		for (int i = 0; i < n; i++)
+			((_ngwm__setTimestampRequest*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__setTimestampRequest*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__setTimestampRequest(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__setTimestampRequest %p -> %p\n", q, p));
+	*(_ngwm__setTimestampRequest*)p = *(_ngwm__setTimestampRequest*)q;
 }
 
 void _ngwm__sendItemResponse::soap_serialize(struct soap *soap) const
@@ -16892,7 +19729,8 @@ void _ngwm__retractRequest::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((_ngwm__retractRequest*)this)->comment);
 	soap_embedded(soap, &((_ngwm__retractRequest*)this)->retractingAllInstances, SOAP_TYPE_bool);
 	soap_embedded(soap, &((_ngwm__retractRequest*)this)->retractCausedByResend, SOAP_TYPE_bool);
-	soap_embedded(soap, &((_ngwm__retractRequest*)this)->retractType, SOAP_TYPE_ngwt__RetractType);
+	soap_embedded(soap, &((_ngwm__retractRequest*)this)->retractType, SOAP_TYPE_PointerTongwt__RetractType);
+	soap_serialize_PointerTongwt__RetractType(soap, &((_ngwm__retractRequest*)this)->retractType);
 	/* transient soap skipped */
 }
 
@@ -16903,7 +19741,7 @@ void _ngwm__retractRequest::soap_default(struct soap *soap)
 	((_ngwm__retractRequest*)this)->comment = NULL;
 	((_ngwm__retractRequest*)this)->retractingAllInstances = (bool)0;
 	((_ngwm__retractRequest*)this)->retractCausedByResend = (bool)0;
-	((_ngwm__retractRequest*)this)->retractType = (enum ngwt__RetractType)1;
+	((_ngwm__retractRequest*)this)->retractType = NULL;
 	/* transient soap skipped */
 }
 
@@ -16927,7 +19765,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__retractRequest(struct soap *soap, cons
 	soap_out_PointerTostd__string(soap, "ngwm:comment", -1, &(((_ngwm__retractRequest*)a)->comment), "");
 	soap_out_bool(soap, "ngwm:retractingAllInstances", -1, &(((_ngwm__retractRequest*)a)->retractingAllInstances), "");
 	soap_out_bool(soap, "ngwm:retractCausedByResend", -1, &(((_ngwm__retractRequest*)a)->retractCausedByResend), "");
-	soap_out_ngwt__RetractType(soap, "ngwm:retractType", -1, &(((_ngwm__retractRequest*)a)->retractType), "");
+	soap_out_PointerTongwt__RetractType(soap, "ngwm:retractType", -1, &(((_ngwm__retractRequest*)a)->retractType), "");
 	/* transient soap skipped */
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
@@ -16990,7 +19828,7 @@ SOAP_FMAC3 _ngwm__retractRequest * SOAP_FMAC4 soap_in__ngwm__retractRequest(stru
 					continue;
 				}
 			if (soap_flag_retractType1 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_ngwt__RetractType(soap, "ngwm:retractType", &(((_ngwm__retractRequest*)a)->retractType), ""))
+				if (soap_in_PointerTongwt__RetractType(soap, "ngwm:retractType", &(((_ngwm__retractRequest*)a)->retractType), ""))
 				{	soap_flag_retractType1 = 0;
 					continue;
 				}
@@ -17635,6 +20473,282 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__removeSignatureRequest(struct soap *
 {
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__removeSignatureRequest %p -> %p\n", q, p));
 	*(_ngwm__removeSignatureRequest*)p = *(_ngwm__removeSignatureRequest*)q;
+}
+
+void _ngwm__removeProxyUserResponse::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((_ngwm__removeProxyUserResponse*)this)->status, SOAP_TYPE_PointerTongwt__Status);
+	soap_serialize_PointerTongwt__Status(soap, &((_ngwm__removeProxyUserResponse*)this)->status);
+	/* transient soap skipped */
+}
+
+void _ngwm__removeProxyUserResponse::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	((_ngwm__removeProxyUserResponse*)this)->status = NULL;
+	/* transient soap skipped */
+}
+
+int _ngwm__removeProxyUserResponse::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__removeProxyUserResponse);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__removeProxyUserResponse::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__removeProxyUserResponse(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__removeProxyUserResponse(struct soap *soap, const char *tag, int id, const _ngwm__removeProxyUserResponse *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__removeProxyUserResponse), type);
+	soap_out_PointerTongwt__Status(soap, "ngwm:status", -1, &(((_ngwm__removeProxyUserResponse*)a)->status), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__removeProxyUserResponse::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__removeProxyUserResponse(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__removeProxyUserResponse * SOAP_FMAC4 soap_get__ngwm__removeProxyUserResponse(struct soap *soap, _ngwm__removeProxyUserResponse *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__removeProxyUserResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__removeProxyUserResponse::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__removeProxyUserResponse(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__removeProxyUserResponse * SOAP_FMAC4 soap_in__ngwm__removeProxyUserResponse(struct soap *soap, const char *tag, _ngwm__removeProxyUserResponse *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__removeProxyUserResponse *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__removeProxyUserResponse, sizeof(_ngwm__removeProxyUserResponse), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__removeProxyUserResponse)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__removeProxyUserResponse *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_status1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_status1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__Status(soap, "ngwm:status", &(((_ngwm__removeProxyUserResponse*)a)->status), "ngwt:Status"))
+				{	soap_flag_status1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_status1))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__removeProxyUserResponse *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__removeProxyUserResponse, 0, sizeof(_ngwm__removeProxyUserResponse), 0, soap_copy__ngwm__removeProxyUserResponse);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__removeProxyUserResponse * SOAP_FMAC6 soap_new__ngwm__removeProxyUserResponse(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__removeProxyUserResponse(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__removeProxyUserResponse(struct soap *soap, _ngwm__removeProxyUserResponse *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__removeProxyUserResponse * SOAP_FMAC6 soap_instantiate__ngwm__removeProxyUserResponse(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__removeProxyUserResponse(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__removeProxyUserResponse, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__removeProxyUserResponse;
+		if (size)
+			*size = sizeof(_ngwm__removeProxyUserResponse);
+		((_ngwm__removeProxyUserResponse*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__removeProxyUserResponse[n];
+		if (size)
+			*size = n * sizeof(_ngwm__removeProxyUserResponse);
+		for (int i = 0; i < n; i++)
+			((_ngwm__removeProxyUserResponse*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__removeProxyUserResponse*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__removeProxyUserResponse(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__removeProxyUserResponse %p -> %p\n", q, p));
+	*(_ngwm__removeProxyUserResponse*)p = *(_ngwm__removeProxyUserResponse*)q;
+}
+
+void _ngwm__removeProxyUserRequest::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((_ngwm__removeProxyUserRequest*)this)->id, SOAP_TYPE_ngwt__uid);
+	soap_serialize_ngwt__uid(soap, &((_ngwm__removeProxyUserRequest*)this)->id);
+	/* transient soap skipped */
+}
+
+void _ngwm__removeProxyUserRequest::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	soap_default_ngwt__uid(soap, &((_ngwm__removeProxyUserRequest*)this)->id);
+	/* transient soap skipped */
+}
+
+int _ngwm__removeProxyUserRequest::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__removeProxyUserRequest);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__removeProxyUserRequest::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__removeProxyUserRequest(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__removeProxyUserRequest(struct soap *soap, const char *tag, int id, const _ngwm__removeProxyUserRequest *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__removeProxyUserRequest), type);
+	soap_out_ngwt__uid(soap, "ngwm:id", -1, &(((_ngwm__removeProxyUserRequest*)a)->id), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__removeProxyUserRequest::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__removeProxyUserRequest(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__removeProxyUserRequest * SOAP_FMAC4 soap_get__ngwm__removeProxyUserRequest(struct soap *soap, _ngwm__removeProxyUserRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__removeProxyUserRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__removeProxyUserRequest::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__removeProxyUserRequest(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__removeProxyUserRequest * SOAP_FMAC4 soap_in__ngwm__removeProxyUserRequest(struct soap *soap, const char *tag, _ngwm__removeProxyUserRequest *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__removeProxyUserRequest *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__removeProxyUserRequest, sizeof(_ngwm__removeProxyUserRequest), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__removeProxyUserRequest)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__removeProxyUserRequest *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_id1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_id1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_ngwt__uid(soap, "ngwm:id", &(((_ngwm__removeProxyUserRequest*)a)->id), "ngwt:uid"))
+				{	soap_flag_id1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_id1))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__removeProxyUserRequest *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__removeProxyUserRequest, 0, sizeof(_ngwm__removeProxyUserRequest), 0, soap_copy__ngwm__removeProxyUserRequest);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__removeProxyUserRequest * SOAP_FMAC6 soap_new__ngwm__removeProxyUserRequest(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__removeProxyUserRequest(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__removeProxyUserRequest(struct soap *soap, _ngwm__removeProxyUserRequest *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__removeProxyUserRequest * SOAP_FMAC6 soap_instantiate__ngwm__removeProxyUserRequest(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__removeProxyUserRequest(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__removeProxyUserRequest, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__removeProxyUserRequest;
+		if (size)
+			*size = sizeof(_ngwm__removeProxyUserRequest);
+		((_ngwm__removeProxyUserRequest*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__removeProxyUserRequest[n];
+		if (size)
+			*size = n * sizeof(_ngwm__removeProxyUserRequest);
+		for (int i = 0; i < n; i++)
+			((_ngwm__removeProxyUserRequest*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__removeProxyUserRequest*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__removeProxyUserRequest(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__removeProxyUserRequest %p -> %p\n", q, p));
+	*(_ngwm__removeProxyUserRequest*)p = *(_ngwm__removeProxyUserRequest*)q;
 }
 
 void _ngwm__removeProxyAccessResponse::soap_serialize(struct soap *soap) const
@@ -22457,6 +25571,7 @@ void _ngwm__modifyItemsResponse::soap_serialize(struct soap *soap) const
 {
 	(void)soap; /* appease -Wall -Werror */
 	soap_serialize_std__vectorTemplateOfstring(soap, &((_ngwm__modifyItemsResponse*)this)->ngwt__modified);
+	soap_serialize_std__vectorTemplateOfngwt__uid(soap, &((_ngwm__modifyItemsResponse*)this)->id);
 	soap_embedded(soap, &((_ngwm__modifyItemsResponse*)this)->status, SOAP_TYPE_PointerTongwt__Status);
 	soap_serialize_PointerTongwt__Status(soap, &((_ngwm__modifyItemsResponse*)this)->status);
 	/* transient soap skipped */
@@ -22466,6 +25581,7 @@ void _ngwm__modifyItemsResponse::soap_default(struct soap *soap)
 {
 	this->soap = soap;
 	soap_default_std__vectorTemplateOfstring(soap, &((_ngwm__modifyItemsResponse*)this)->ngwt__modified);
+	soap_default_std__vectorTemplateOfngwt__uid(soap, &((_ngwm__modifyItemsResponse*)this)->id);
 	((_ngwm__modifyItemsResponse*)this)->status = NULL;
 	/* transient soap skipped */
 }
@@ -22487,6 +25603,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__modifyItemsResponse(struct soap *soap,
 {
 	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__modifyItemsResponse), type);
 	soap_out_std__vectorTemplateOfstring(soap, "ngwt:modified", -1, &(((_ngwm__modifyItemsResponse*)a)->ngwt__modified), "");
+	soap_out_std__vectorTemplateOfngwt__uid(soap, "ngwm:id", -1, &(((_ngwm__modifyItemsResponse*)a)->id), "");
 	soap_out_PointerTongwt__Status(soap, "ngwm:status", -1, &(((_ngwm__modifyItemsResponse*)a)->status), "");
 	/* transient soap skipped */
 	soap_element_end_out(soap, tag);
@@ -22531,6 +25648,9 @@ SOAP_FMAC3 _ngwm__modifyItemsResponse * SOAP_FMAC4 soap_in__ngwm__modifyItemsRes
 		{	soap->error = SOAP_TAG_MISMATCH;
 			if (soap->error == SOAP_TAG_MISMATCH)
 				if (soap_in_std__vectorTemplateOfstring(soap, "ngwt:modified", &(((_ngwm__modifyItemsResponse*)a)->ngwt__modified), ""))
+					continue;
+			if (soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_std__vectorTemplateOfngwt__uid(soap, "ngwm:id", &(((_ngwm__modifyItemsResponse*)a)->id), "ngwt:uid"))
 					continue;
 			if (soap_flag_status1 && soap->error == SOAP_TAG_MISMATCH)
 				if (soap_in_PointerTongwt__Status(soap, "ngwm:status", &(((_ngwm__modifyItemsResponse*)a)->status), "ngwt:Status"))
@@ -22732,6 +25852,7 @@ void _ngwm__modifyItemResponse::soap_serialize(struct soap *soap) const
 	(void)soap; /* appease -Wall -Werror */
 	soap_embedded(soap, &((_ngwm__modifyItemResponse*)this)->ngwt__modified, SOAP_TYPE_string);
 	soap_serialize_string(soap, &((_ngwm__modifyItemResponse*)this)->ngwt__modified);
+	soap_serialize_std__vectorTemplateOfngwt__uid(soap, &((_ngwm__modifyItemResponse*)this)->id);
 	soap_embedded(soap, &((_ngwm__modifyItemResponse*)this)->status, SOAP_TYPE_PointerTongwt__Status);
 	soap_serialize_PointerTongwt__Status(soap, &((_ngwm__modifyItemResponse*)this)->status);
 	/* transient soap skipped */
@@ -22741,6 +25862,7 @@ void _ngwm__modifyItemResponse::soap_default(struct soap *soap)
 {
 	this->soap = soap;
 	soap_default_string(soap, &((_ngwm__modifyItemResponse*)this)->ngwt__modified);
+	soap_default_std__vectorTemplateOfngwt__uid(soap, &((_ngwm__modifyItemResponse*)this)->id);
 	((_ngwm__modifyItemResponse*)this)->status = NULL;
 	/* transient soap skipped */
 }
@@ -22762,6 +25884,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__modifyItemResponse(struct soap *soap, 
 {
 	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__modifyItemResponse), type);
 	soap_out_string(soap, "ngwt:modified", -1, &(((_ngwm__modifyItemResponse*)a)->ngwt__modified), "");
+	soap_out_std__vectorTemplateOfngwt__uid(soap, "ngwm:id", -1, &(((_ngwm__modifyItemResponse*)a)->id), "");
 	soap_out_PointerTongwt__Status(soap, "ngwm:status", -1, &(((_ngwm__modifyItemResponse*)a)->status), "");
 	/* transient soap skipped */
 	soap_element_end_out(soap, tag);
@@ -22809,6 +25932,9 @@ SOAP_FMAC3 _ngwm__modifyItemResponse * SOAP_FMAC4 soap_in__ngwm__modifyItemRespo
 				{	soap_flag_ngwt__modified1 = 0;
 					continue;
 				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_std__vectorTemplateOfngwt__uid(soap, "ngwm:id", &(((_ngwm__modifyItemResponse*)a)->id), "ngwt:uid"))
+					continue;
 			if (soap_flag_status1 && soap->error == SOAP_TAG_MISMATCH)
 				if (soap_in_PointerTongwt__Status(soap, "ngwm:status", &(((_ngwm__modifyItemResponse*)a)->status), "ngwt:Status"))
 				{	soap_flag_status1 = 0;
@@ -22883,6 +26009,7 @@ void _ngwm__modifyItemRequest::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTongwt__SharedFolderNotification(soap, &((_ngwm__modifyItemRequest*)this)->notification);
 	soap_embedded(soap, &((_ngwm__modifyItemRequest*)this)->updates, SOAP_TYPE_PointerTongwt__ItemChanges);
 	soap_serialize_PointerTongwt__ItemChanges(soap, &((_ngwm__modifyItemRequest*)this)->updates);
+	soap_embedded(soap, &((_ngwm__modifyItemRequest*)this)->recurrenceAllInstances, SOAP_TYPE_unsignedLong);
 	/* transient soap skipped */
 }
 
@@ -22892,6 +26019,7 @@ void _ngwm__modifyItemRequest::soap_default(struct soap *soap)
 	soap_default_ngwt__uid(soap, &((_ngwm__modifyItemRequest*)this)->id);
 	((_ngwm__modifyItemRequest*)this)->notification = NULL;
 	((_ngwm__modifyItemRequest*)this)->updates = NULL;
+	((_ngwm__modifyItemRequest*)this)->recurrenceAllInstances = 0;
 	/* transient soap skipped */
 }
 
@@ -22914,6 +26042,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__modifyItemRequest(struct soap *soap, c
 	soap_out_ngwt__uid(soap, "ngwm:id", -1, &(((_ngwm__modifyItemRequest*)a)->id), "");
 	soap_out_PointerTongwt__SharedFolderNotification(soap, "ngwm:notification", -1, &(((_ngwm__modifyItemRequest*)a)->notification), "");
 	soap_out_PointerTongwt__ItemChanges(soap, "ngwm:updates", -1, &(((_ngwm__modifyItemRequest*)a)->updates), "");
+	soap_out_unsignedLong(soap, "ngwm:recurrenceAllInstances", -1, &(((_ngwm__modifyItemRequest*)a)->recurrenceAllInstances), "");
 	/* transient soap skipped */
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
@@ -22950,7 +26079,7 @@ SOAP_FMAC3 _ngwm__modifyItemRequest * SOAP_FMAC4 soap_in__ngwm__modifyItemReques
 			return (_ngwm__modifyItemRequest *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id1 = 1, soap_flag_notification1 = 1, soap_flag_updates1 = 1;
+	short soap_flag_id1 = 1, soap_flag_notification1 = 1, soap_flag_updates1 = 1, soap_flag_recurrenceAllInstances1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -22968,6 +26097,11 @@ SOAP_FMAC3 _ngwm__modifyItemRequest * SOAP_FMAC4 soap_in__ngwm__modifyItemReques
 			if (soap_flag_updates1 && soap->error == SOAP_TAG_MISMATCH)
 				if (soap_in_PointerTongwt__ItemChanges(soap, "ngwm:updates", &(((_ngwm__modifyItemRequest*)a)->updates), "ngwt:ItemChanges"))
 				{	soap_flag_updates1 = 0;
+					continue;
+				}
+			if (soap_flag_recurrenceAllInstances1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_unsignedLong(soap, "ngwm:recurrenceAllInstances", &(((_ngwm__modifyItemRequest*)a)->recurrenceAllInstances), ""))
+				{	soap_flag_recurrenceAllInstances1 = 0;
 					continue;
 				}
 			/* transient soap skipped */
@@ -24399,16 +27533,17 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__logoutRequest(struct soap *soap, int
 void _ngwm__loginResponse::soap_serialize(struct soap *soap) const
 {
 	(void)soap; /* appease -Wall -Werror */
-	soap_embedded(soap, &((_ngwm__loginResponse*)this)->session, SOAP_TYPE_std__string);
-	soap_serialize_std__string(soap, &((_ngwm__loginResponse*)this)->session);
+	soap_embedded(soap, &((_ngwm__loginResponse*)this)->session, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((_ngwm__loginResponse*)this)->session);
 	soap_embedded(soap, &((_ngwm__loginResponse*)this)->userinfo, SOAP_TYPE_PointerTongwt__UserInfo);
 	soap_serialize_PointerTongwt__UserInfo(soap, &((_ngwm__loginResponse*)this)->userinfo);
 	soap_embedded(soap, &((_ngwm__loginResponse*)this)->entry, SOAP_TYPE_PointerTongwt__AccessRightEntry);
 	soap_serialize_PointerTongwt__AccessRightEntry(soap, &((_ngwm__loginResponse*)this)->entry);
 	soap_embedded(soap, &((_ngwm__loginResponse*)this)->gwVersion, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((_ngwm__loginResponse*)this)->gwVersion);
-	soap_embedded(soap, &((_ngwm__loginResponse*)this)->redirectToHost, SOAP_TYPE_PointerTongwt__Host);
-	soap_serialize_PointerTongwt__Host(soap, &((_ngwm__loginResponse*)this)->redirectToHost);
+	soap_embedded(soap, &((_ngwm__loginResponse*)this)->build, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((_ngwm__loginResponse*)this)->build);
+	soap_serialize_std__vectorTemplateOfPointerTongwt__Host(soap, &((_ngwm__loginResponse*)this)->redirectToHost);
 	soap_embedded(soap, &((_ngwm__loginResponse*)this)->serverUTCTime, SOAP_TYPE_string);
 	soap_serialize_string(soap, &((_ngwm__loginResponse*)this)->serverUTCTime);
 	soap_embedded(soap, &((_ngwm__loginResponse*)this)->status, SOAP_TYPE_PointerTongwt__Status);
@@ -24419,11 +27554,12 @@ void _ngwm__loginResponse::soap_serialize(struct soap *soap) const
 void _ngwm__loginResponse::soap_default(struct soap *soap)
 {
 	this->soap = soap;
-	soap_default_std__string(soap, &((_ngwm__loginResponse*)this)->session);
+	((_ngwm__loginResponse*)this)->session = NULL;
 	((_ngwm__loginResponse*)this)->userinfo = NULL;
 	((_ngwm__loginResponse*)this)->entry = NULL;
 	((_ngwm__loginResponse*)this)->gwVersion = NULL;
-	((_ngwm__loginResponse*)this)->redirectToHost = NULL;
+	((_ngwm__loginResponse*)this)->build = NULL;
+	soap_default_std__vectorTemplateOfPointerTongwt__Host(soap, &((_ngwm__loginResponse*)this)->redirectToHost);
 	soap_default_string(soap, &((_ngwm__loginResponse*)this)->serverUTCTime);
 	((_ngwm__loginResponse*)this)->status = NULL;
 	/* transient soap skipped */
@@ -24445,11 +27581,12 @@ int _ngwm__loginResponse::soap_out(struct soap *soap, const char *tag, int id, c
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__loginResponse(struct soap *soap, const char *tag, int id, const _ngwm__loginResponse *a, const char *type)
 {
 	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__loginResponse), type);
-	soap_out_std__string(soap, "ngwm:session", -1, &(((_ngwm__loginResponse*)a)->session), "");
+	soap_out_PointerTostd__string(soap, "ngwm:session", -1, &(((_ngwm__loginResponse*)a)->session), "");
 	soap_out_PointerTongwt__UserInfo(soap, "ngwm:userinfo", -1, &(((_ngwm__loginResponse*)a)->userinfo), "");
 	soap_out_PointerTongwt__AccessRightEntry(soap, "ngwm:entry", -1, &(((_ngwm__loginResponse*)a)->entry), "");
 	soap_out_PointerTostd__string(soap, "ngwm:gwVersion", -1, &(((_ngwm__loginResponse*)a)->gwVersion), "");
-	soap_out_PointerTongwt__Host(soap, "ngwm:redirectToHost", -1, &(((_ngwm__loginResponse*)a)->redirectToHost), "");
+	soap_out_PointerTostd__string(soap, "ngwm:build", -1, &(((_ngwm__loginResponse*)a)->build), "");
+	soap_out_std__vectorTemplateOfPointerTongwt__Host(soap, "ngwm:redirectToHost", -1, &(((_ngwm__loginResponse*)a)->redirectToHost), "");
 	soap_out_string(soap, "ngwm:serverUTCTime", -1, &(((_ngwm__loginResponse*)a)->serverUTCTime), "");
 	soap_out_PointerTongwt__Status(soap, "ngwm:status", -1, &(((_ngwm__loginResponse*)a)->status), "");
 	/* transient soap skipped */
@@ -24488,13 +27625,13 @@ SOAP_FMAC3 _ngwm__loginResponse * SOAP_FMAC4 soap_in__ngwm__loginResponse(struct
 			return (_ngwm__loginResponse *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_session1 = 1, soap_flag_userinfo1 = 1, soap_flag_entry1 = 1, soap_flag_gwVersion1 = 1, soap_flag_redirectToHost1 = 1, soap_flag_serverUTCTime1 = 1, soap_flag_status1 = 1;
+	short soap_flag_session1 = 1, soap_flag_userinfo1 = 1, soap_flag_entry1 = 1, soap_flag_gwVersion1 = 1, soap_flag_build1 = 1, soap_flag_serverUTCTime1 = 1, soap_flag_status1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
 		{	soap->error = SOAP_TAG_MISMATCH;
 			if (soap_flag_session1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_std__string(soap, "ngwm:session", &(((_ngwm__loginResponse*)a)->session), ""))
+				if (soap_in_PointerTostd__string(soap, "ngwm:session", &(((_ngwm__loginResponse*)a)->session), ""))
 				{	soap_flag_session1 = 0;
 					continue;
 				}
@@ -24513,11 +27650,14 @@ SOAP_FMAC3 _ngwm__loginResponse * SOAP_FMAC4 soap_in__ngwm__loginResponse(struct
 				{	soap_flag_gwVersion1 = 0;
 					continue;
 				}
-			if (soap_flag_redirectToHost1 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTongwt__Host(soap, "ngwm:redirectToHost", &(((_ngwm__loginResponse*)a)->redirectToHost), "ngwt:Host"))
-				{	soap_flag_redirectToHost1 = 0;
+			if (soap_flag_build1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwm:build", &(((_ngwm__loginResponse*)a)->build), ""))
+				{	soap_flag_build1 = 0;
 					continue;
 				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_std__vectorTemplateOfPointerTongwt__Host(soap, "ngwm:redirectToHost", &(((_ngwm__loginResponse*)a)->redirectToHost), "ngwt:Host"))
+					continue;
 			if (soap_flag_serverUTCTime1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_string(soap, "ngwm:serverUTCTime", &(((_ngwm__loginResponse*)a)->serverUTCTime), ""))
 				{	soap_flag_serverUTCTime1 = 0;
@@ -24536,7 +27676,7 @@ SOAP_FMAC3 _ngwm__loginResponse * SOAP_FMAC4 soap_in__ngwm__loginResponse(struct
 			if (soap->error)
 				return NULL;
 		}
-		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_session1 || soap_flag_status1))
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_status1))
 		{	soap->error = SOAP_OCCURS;
 			return NULL;
 		}
@@ -24751,6 +27891,296 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__loginRequest(struct soap *soap, int 
 {
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__loginRequest %p -> %p\n", q, p));
 	*(_ngwm__loginRequest*)p = *(_ngwm__loginRequest*)q;
+}
+
+void _ngwm__getUserListResponse::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((_ngwm__getUserListResponse*)this)->users, SOAP_TYPE_PointerTongwt__UserList);
+	soap_serialize_PointerTongwt__UserList(soap, &((_ngwm__getUserListResponse*)this)->users);
+	soap_embedded(soap, &((_ngwm__getUserListResponse*)this)->status, SOAP_TYPE_PointerTongwt__Status);
+	soap_serialize_PointerTongwt__Status(soap, &((_ngwm__getUserListResponse*)this)->status);
+	/* transient soap skipped */
+}
+
+void _ngwm__getUserListResponse::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	((_ngwm__getUserListResponse*)this)->users = NULL;
+	((_ngwm__getUserListResponse*)this)->status = NULL;
+	/* transient soap skipped */
+}
+
+int _ngwm__getUserListResponse::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__getUserListResponse);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__getUserListResponse::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__getUserListResponse(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getUserListResponse(struct soap *soap, const char *tag, int id, const _ngwm__getUserListResponse *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__getUserListResponse), type);
+	soap_out_PointerTongwt__UserList(soap, "ngwm:users", -1, &(((_ngwm__getUserListResponse*)a)->users), "");
+	soap_out_PointerTongwt__Status(soap, "ngwm:status", -1, &(((_ngwm__getUserListResponse*)a)->status), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__getUserListResponse::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__getUserListResponse(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__getUserListResponse * SOAP_FMAC4 soap_get__ngwm__getUserListResponse(struct soap *soap, _ngwm__getUserListResponse *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__getUserListResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__getUserListResponse::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__getUserListResponse(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__getUserListResponse * SOAP_FMAC4 soap_in__ngwm__getUserListResponse(struct soap *soap, const char *tag, _ngwm__getUserListResponse *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__getUserListResponse *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__getUserListResponse, sizeof(_ngwm__getUserListResponse), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__getUserListResponse)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__getUserListResponse *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_users1 = 1, soap_flag_status1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_users1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__UserList(soap, "ngwm:users", &(((_ngwm__getUserListResponse*)a)->users), "ngwt:UserList"))
+				{	soap_flag_users1 = 0;
+					continue;
+				}
+			if (soap_flag_status1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__Status(soap, "ngwm:status", &(((_ngwm__getUserListResponse*)a)->status), "ngwt:Status"))
+				{	soap_flag_status1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_status1))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getUserListResponse *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getUserListResponse, 0, sizeof(_ngwm__getUserListResponse), 0, soap_copy__ngwm__getUserListResponse);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__getUserListResponse * SOAP_FMAC6 soap_new__ngwm__getUserListResponse(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__getUserListResponse(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getUserListResponse(struct soap *soap, _ngwm__getUserListResponse *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__getUserListResponse * SOAP_FMAC6 soap_instantiate__ngwm__getUserListResponse(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__getUserListResponse(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__getUserListResponse, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__getUserListResponse;
+		if (size)
+			*size = sizeof(_ngwm__getUserListResponse);
+		((_ngwm__getUserListResponse*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__getUserListResponse[n];
+		if (size)
+			*size = n * sizeof(_ngwm__getUserListResponse);
+		for (int i = 0; i < n; i++)
+			((_ngwm__getUserListResponse*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__getUserListResponse*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getUserListResponse(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__getUserListResponse %p -> %p\n", q, p));
+	*(_ngwm__getUserListResponse*)p = *(_ngwm__getUserListResponse*)q;
+}
+
+void _ngwm__getUserListRequest::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((_ngwm__getUserListRequest*)this)->name, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((_ngwm__getUserListRequest*)this)->name);
+	soap_embedded(soap, &((_ngwm__getUserListRequest*)this)->key, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((_ngwm__getUserListRequest*)this)->key);
+	/* transient soap skipped */
+}
+
+void _ngwm__getUserListRequest::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	((_ngwm__getUserListRequest*)this)->name = NULL;
+	((_ngwm__getUserListRequest*)this)->key = NULL;
+	/* transient soap skipped */
+}
+
+int _ngwm__getUserListRequest::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__getUserListRequest);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__getUserListRequest::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__getUserListRequest(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getUserListRequest(struct soap *soap, const char *tag, int id, const _ngwm__getUserListRequest *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__getUserListRequest), type);
+	soap_out_PointerTostd__string(soap, "ngwm:name", -1, &(((_ngwm__getUserListRequest*)a)->name), "");
+	soap_out_PointerTostd__string(soap, "ngwm:key", -1, &(((_ngwm__getUserListRequest*)a)->key), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__getUserListRequest::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__getUserListRequest(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__getUserListRequest * SOAP_FMAC4 soap_get__ngwm__getUserListRequest(struct soap *soap, _ngwm__getUserListRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__getUserListRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__getUserListRequest::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__getUserListRequest(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__getUserListRequest * SOAP_FMAC4 soap_in__ngwm__getUserListRequest(struct soap *soap, const char *tag, _ngwm__getUserListRequest *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__getUserListRequest *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__getUserListRequest, sizeof(_ngwm__getUserListRequest), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__getUserListRequest)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__getUserListRequest *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_name1 = 1, soap_flag_key1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_name1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwm:name", &(((_ngwm__getUserListRequest*)a)->name), ""))
+				{	soap_flag_name1 = 0;
+					continue;
+				}
+			if (soap_flag_key1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwm:key", &(((_ngwm__getUserListRequest*)a)->key), ""))
+				{	soap_flag_key1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getUserListRequest *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getUserListRequest, 0, sizeof(_ngwm__getUserListRequest), 0, soap_copy__ngwm__getUserListRequest);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__getUserListRequest * SOAP_FMAC6 soap_new__ngwm__getUserListRequest(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__getUserListRequest(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getUserListRequest(struct soap *soap, _ngwm__getUserListRequest *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__getUserListRequest * SOAP_FMAC6 soap_instantiate__ngwm__getUserListRequest(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__getUserListRequest(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__getUserListRequest, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__getUserListRequest;
+		if (size)
+			*size = sizeof(_ngwm__getUserListRequest);
+		((_ngwm__getUserListRequest*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__getUserListRequest[n];
+		if (size)
+			*size = n * sizeof(_ngwm__getUserListRequest);
+		for (int i = 0; i < n; i++)
+			((_ngwm__getUserListRequest*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__getUserListRequest*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getUserListRequest(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__getUserListRequest %p -> %p\n", q, p));
+	*(_ngwm__getUserListRequest*)p = *(_ngwm__getUserListRequest*)q;
 }
 
 void _ngwm__getTimezoneListResponse::soap_serialize(struct soap *soap) const
@@ -25022,6 +28452,314 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getTimezoneListRequest(struct soap *
 {
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__getTimezoneListRequest %p -> %p\n", q, p));
 	*(_ngwm__getTimezoneListRequest*)p = *(_ngwm__getTimezoneListRequest*)q;
+}
+
+void _ngwm__getTimestampResponse::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((_ngwm__getTimestampResponse*)this)->backup, SOAP_TYPE_string);
+	soap_serialize_string(soap, &((_ngwm__getTimestampResponse*)this)->backup);
+	soap_embedded(soap, &((_ngwm__getTimestampResponse*)this)->retention, SOAP_TYPE_string);
+	soap_serialize_string(soap, &((_ngwm__getTimestampResponse*)this)->retention);
+	soap_embedded(soap, &((_ngwm__getTimestampResponse*)this)->status, SOAP_TYPE_PointerTongwt__Status);
+	soap_serialize_PointerTongwt__Status(soap, &((_ngwm__getTimestampResponse*)this)->status);
+	/* transient soap skipped */
+}
+
+void _ngwm__getTimestampResponse::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	soap_default_string(soap, &((_ngwm__getTimestampResponse*)this)->backup);
+	soap_default_string(soap, &((_ngwm__getTimestampResponse*)this)->retention);
+	((_ngwm__getTimestampResponse*)this)->status = NULL;
+	/* transient soap skipped */
+}
+
+int _ngwm__getTimestampResponse::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__getTimestampResponse);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__getTimestampResponse::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__getTimestampResponse(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getTimestampResponse(struct soap *soap, const char *tag, int id, const _ngwm__getTimestampResponse *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__getTimestampResponse), type);
+	soap_out_string(soap, "ngwm:backup", -1, &(((_ngwm__getTimestampResponse*)a)->backup), "");
+	soap_out_string(soap, "ngwm:retention", -1, &(((_ngwm__getTimestampResponse*)a)->retention), "");
+	soap_out_PointerTongwt__Status(soap, "ngwm:status", -1, &(((_ngwm__getTimestampResponse*)a)->status), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__getTimestampResponse::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__getTimestampResponse(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__getTimestampResponse * SOAP_FMAC4 soap_get__ngwm__getTimestampResponse(struct soap *soap, _ngwm__getTimestampResponse *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__getTimestampResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__getTimestampResponse::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__getTimestampResponse(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__getTimestampResponse * SOAP_FMAC4 soap_in__ngwm__getTimestampResponse(struct soap *soap, const char *tag, _ngwm__getTimestampResponse *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__getTimestampResponse *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__getTimestampResponse, sizeof(_ngwm__getTimestampResponse), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__getTimestampResponse)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__getTimestampResponse *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_backup1 = 1, soap_flag_retention1 = 1, soap_flag_status1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_backup1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ngwm:backup", &(((_ngwm__getTimestampResponse*)a)->backup), ""))
+				{	soap_flag_backup1 = 0;
+					continue;
+				}
+			if (soap_flag_retention1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ngwm:retention", &(((_ngwm__getTimestampResponse*)a)->retention), ""))
+				{	soap_flag_retention1 = 0;
+					continue;
+				}
+			if (soap_flag_status1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__Status(soap, "ngwm:status", &(((_ngwm__getTimestampResponse*)a)->status), "ngwt:Status"))
+				{	soap_flag_status1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_status1))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getTimestampResponse *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getTimestampResponse, 0, sizeof(_ngwm__getTimestampResponse), 0, soap_copy__ngwm__getTimestampResponse);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__getTimestampResponse * SOAP_FMAC6 soap_new__ngwm__getTimestampResponse(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__getTimestampResponse(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getTimestampResponse(struct soap *soap, _ngwm__getTimestampResponse *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__getTimestampResponse * SOAP_FMAC6 soap_instantiate__ngwm__getTimestampResponse(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__getTimestampResponse(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__getTimestampResponse, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__getTimestampResponse;
+		if (size)
+			*size = sizeof(_ngwm__getTimestampResponse);
+		((_ngwm__getTimestampResponse*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__getTimestampResponse[n];
+		if (size)
+			*size = n * sizeof(_ngwm__getTimestampResponse);
+		for (int i = 0; i < n; i++)
+			((_ngwm__getTimestampResponse*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__getTimestampResponse*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getTimestampResponse(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__getTimestampResponse %p -> %p\n", q, p));
+	*(_ngwm__getTimestampResponse*)p = *(_ngwm__getTimestampResponse*)q;
+}
+
+void _ngwm__getTimestampRequest::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((_ngwm__getTimestampRequest*)this)->backup, SOAP_TYPE_PointerTobool);
+	soap_serialize_PointerTobool(soap, &((_ngwm__getTimestampRequest*)this)->backup);
+	soap_embedded(soap, &((_ngwm__getTimestampRequest*)this)->retention, SOAP_TYPE_PointerTobool);
+	soap_serialize_PointerTobool(soap, &((_ngwm__getTimestampRequest*)this)->retention);
+	soap_embedded(soap, &((_ngwm__getTimestampRequest*)this)->noop, SOAP_TYPE_PointerTobool);
+	soap_serialize_PointerTobool(soap, &((_ngwm__getTimestampRequest*)this)->noop);
+	/* transient soap skipped */
+}
+
+void _ngwm__getTimestampRequest::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	((_ngwm__getTimestampRequest*)this)->backup = NULL;
+	((_ngwm__getTimestampRequest*)this)->retention = NULL;
+	((_ngwm__getTimestampRequest*)this)->noop = NULL;
+	/* transient soap skipped */
+}
+
+int _ngwm__getTimestampRequest::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__getTimestampRequest);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__getTimestampRequest::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__getTimestampRequest(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getTimestampRequest(struct soap *soap, const char *tag, int id, const _ngwm__getTimestampRequest *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__getTimestampRequest), type);
+	soap_out_PointerTobool(soap, "ngwm:backup", -1, &(((_ngwm__getTimestampRequest*)a)->backup), "");
+	soap_out_PointerTobool(soap, "ngwm:retention", -1, &(((_ngwm__getTimestampRequest*)a)->retention), "");
+	soap_out_PointerTobool(soap, "ngwm:noop", -1, &(((_ngwm__getTimestampRequest*)a)->noop), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__getTimestampRequest::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__getTimestampRequest(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__getTimestampRequest * SOAP_FMAC4 soap_get__ngwm__getTimestampRequest(struct soap *soap, _ngwm__getTimestampRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__getTimestampRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__getTimestampRequest::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__getTimestampRequest(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__getTimestampRequest * SOAP_FMAC4 soap_in__ngwm__getTimestampRequest(struct soap *soap, const char *tag, _ngwm__getTimestampRequest *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__getTimestampRequest *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__getTimestampRequest, sizeof(_ngwm__getTimestampRequest), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__getTimestampRequest)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__getTimestampRequest *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_backup1 = 1, soap_flag_retention1 = 1, soap_flag_noop1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_backup1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTobool(soap, "ngwm:backup", &(((_ngwm__getTimestampRequest*)a)->backup), ""))
+				{	soap_flag_backup1 = 0;
+					continue;
+				}
+			if (soap_flag_retention1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTobool(soap, "ngwm:retention", &(((_ngwm__getTimestampRequest*)a)->retention), ""))
+				{	soap_flag_retention1 = 0;
+					continue;
+				}
+			if (soap_flag_noop1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTobool(soap, "ngwm:noop", &(((_ngwm__getTimestampRequest*)a)->noop), ""))
+				{	soap_flag_noop1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getTimestampRequest *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getTimestampRequest, 0, sizeof(_ngwm__getTimestampRequest), 0, soap_copy__ngwm__getTimestampRequest);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__getTimestampRequest * SOAP_FMAC6 soap_new__ngwm__getTimestampRequest(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__getTimestampRequest(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getTimestampRequest(struct soap *soap, _ngwm__getTimestampRequest *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__getTimestampRequest * SOAP_FMAC6 soap_instantiate__ngwm__getTimestampRequest(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__getTimestampRequest(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__getTimestampRequest, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__getTimestampRequest;
+		if (size)
+			*size = sizeof(_ngwm__getTimestampRequest);
+		((_ngwm__getTimestampRequest*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__getTimestampRequest[n];
+		if (size)
+			*size = n * sizeof(_ngwm__getTimestampRequest);
+		for (int i = 0; i < n; i++)
+			((_ngwm__getTimestampRequest*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__getTimestampRequest*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getTimestampRequest(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__getTimestampRequest %p -> %p\n", q, p));
+	*(_ngwm__getTimestampRequest*)p = *(_ngwm__getTimestampRequest*)q;
 }
 
 void _ngwm__getSignaturesResponse::soap_serialize(struct soap *soap) const
@@ -25583,6 +29321,277 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getSettingsRequest(struct soap *soap
 {
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__getSettingsRequest %p -> %p\n", q, p));
 	*(_ngwm__getSettingsRequest*)p = *(_ngwm__getSettingsRequest*)q;
+}
+
+void _ngwm__getRuleListResponse::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((_ngwm__getRuleListResponse*)this)->rules, SOAP_TYPE_PointerTongwt__RuleList);
+	soap_serialize_PointerTongwt__RuleList(soap, &((_ngwm__getRuleListResponse*)this)->rules);
+	soap_embedded(soap, &((_ngwm__getRuleListResponse*)this)->status, SOAP_TYPE_PointerTongwt__Status);
+	soap_serialize_PointerTongwt__Status(soap, &((_ngwm__getRuleListResponse*)this)->status);
+	/* transient soap skipped */
+}
+
+void _ngwm__getRuleListResponse::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	((_ngwm__getRuleListResponse*)this)->rules = NULL;
+	((_ngwm__getRuleListResponse*)this)->status = NULL;
+	/* transient soap skipped */
+}
+
+int _ngwm__getRuleListResponse::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__getRuleListResponse);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__getRuleListResponse::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__getRuleListResponse(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getRuleListResponse(struct soap *soap, const char *tag, int id, const _ngwm__getRuleListResponse *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__getRuleListResponse), type);
+	soap_out_PointerTongwt__RuleList(soap, "ngwm:rules", -1, &(((_ngwm__getRuleListResponse*)a)->rules), "");
+	soap_out_PointerTongwt__Status(soap, "ngwm:status", -1, &(((_ngwm__getRuleListResponse*)a)->status), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__getRuleListResponse::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__getRuleListResponse(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__getRuleListResponse * SOAP_FMAC4 soap_get__ngwm__getRuleListResponse(struct soap *soap, _ngwm__getRuleListResponse *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__getRuleListResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__getRuleListResponse::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__getRuleListResponse(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__getRuleListResponse * SOAP_FMAC4 soap_in__ngwm__getRuleListResponse(struct soap *soap, const char *tag, _ngwm__getRuleListResponse *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__getRuleListResponse *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__getRuleListResponse, sizeof(_ngwm__getRuleListResponse), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__getRuleListResponse)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__getRuleListResponse *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_rules1 = 1, soap_flag_status1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_rules1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__RuleList(soap, "ngwm:rules", &(((_ngwm__getRuleListResponse*)a)->rules), "ngwt:RuleList"))
+				{	soap_flag_rules1 = 0;
+					continue;
+				}
+			if (soap_flag_status1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__Status(soap, "ngwm:status", &(((_ngwm__getRuleListResponse*)a)->status), "ngwt:Status"))
+				{	soap_flag_status1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_status1))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getRuleListResponse *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getRuleListResponse, 0, sizeof(_ngwm__getRuleListResponse), 0, soap_copy__ngwm__getRuleListResponse);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__getRuleListResponse * SOAP_FMAC6 soap_new__ngwm__getRuleListResponse(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__getRuleListResponse(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getRuleListResponse(struct soap *soap, _ngwm__getRuleListResponse *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__getRuleListResponse * SOAP_FMAC6 soap_instantiate__ngwm__getRuleListResponse(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__getRuleListResponse(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__getRuleListResponse, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__getRuleListResponse;
+		if (size)
+			*size = sizeof(_ngwm__getRuleListResponse);
+		((_ngwm__getRuleListResponse*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__getRuleListResponse[n];
+		if (size)
+			*size = n * sizeof(_ngwm__getRuleListResponse);
+		for (int i = 0; i < n; i++)
+			((_ngwm__getRuleListResponse*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__getRuleListResponse*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getRuleListResponse(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__getRuleListResponse %p -> %p\n", q, p));
+	*(_ngwm__getRuleListResponse*)p = *(_ngwm__getRuleListResponse*)q;
+}
+
+void _ngwm__getRuleListRequest::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	/* transient soap skipped */
+}
+
+void _ngwm__getRuleListRequest::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	/* transient soap skipped */
+}
+
+int _ngwm__getRuleListRequest::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__getRuleListRequest);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__getRuleListRequest::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__getRuleListRequest(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getRuleListRequest(struct soap *soap, const char *tag, int id, const _ngwm__getRuleListRequest *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__getRuleListRequest), type);
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__getRuleListRequest::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__getRuleListRequest(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__getRuleListRequest * SOAP_FMAC4 soap_get__ngwm__getRuleListRequest(struct soap *soap, _ngwm__getRuleListRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__getRuleListRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__getRuleListRequest::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__getRuleListRequest(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__getRuleListRequest * SOAP_FMAC4 soap_in__ngwm__getRuleListRequest(struct soap *soap, const char *tag, _ngwm__getRuleListRequest *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__getRuleListRequest *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__getRuleListRequest, sizeof(_ngwm__getRuleListRequest), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__getRuleListRequest)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__getRuleListRequest *)a->soap_in(soap, tag, type);
+		}
+	};
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getRuleListRequest *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getRuleListRequest, 0, sizeof(_ngwm__getRuleListRequest), 0, soap_copy__ngwm__getRuleListRequest);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__getRuleListRequest * SOAP_FMAC6 soap_new__ngwm__getRuleListRequest(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__getRuleListRequest(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getRuleListRequest(struct soap *soap, _ngwm__getRuleListRequest *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__getRuleListRequest * SOAP_FMAC6 soap_instantiate__ngwm__getRuleListRequest(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__getRuleListRequest(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__getRuleListRequest, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__getRuleListRequest;
+		if (size)
+			*size = sizeof(_ngwm__getRuleListRequest);
+		((_ngwm__getRuleListRequest*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__getRuleListRequest[n];
+		if (size)
+			*size = n * sizeof(_ngwm__getRuleListRequest);
+		for (int i = 0; i < n; i++)
+			((_ngwm__getRuleListRequest*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__getRuleListRequest*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getRuleListRequest(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__getRuleListRequest %p -> %p\n", q, p));
+	*(_ngwm__getRuleListRequest*)p = *(_ngwm__getRuleListRequest*)q;
 }
 
 void _ngwm__getProxyListResponse::soap_serialize(struct soap *soap) const
@@ -26471,6 +30480,580 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getQuickMessagesRequest(struct soap 
 {
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__getQuickMessagesRequest %p -> %p\n", q, p));
 	*(_ngwm__getQuickMessagesRequest*)p = *(_ngwm__getQuickMessagesRequest*)q;
+}
+
+void _ngwm__getLibraryListResponse::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((_ngwm__getLibraryListResponse*)this)->libraries, SOAP_TYPE_PointerTongwt__LibraryList);
+	soap_serialize_PointerTongwt__LibraryList(soap, &((_ngwm__getLibraryListResponse*)this)->libraries);
+	soap_embedded(soap, &((_ngwm__getLibraryListResponse*)this)->status, SOAP_TYPE_PointerTongwt__Status);
+	soap_serialize_PointerTongwt__Status(soap, &((_ngwm__getLibraryListResponse*)this)->status);
+	/* transient soap skipped */
+}
+
+void _ngwm__getLibraryListResponse::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	((_ngwm__getLibraryListResponse*)this)->libraries = NULL;
+	((_ngwm__getLibraryListResponse*)this)->status = NULL;
+	/* transient soap skipped */
+}
+
+int _ngwm__getLibraryListResponse::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__getLibraryListResponse);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__getLibraryListResponse::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__getLibraryListResponse(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getLibraryListResponse(struct soap *soap, const char *tag, int id, const _ngwm__getLibraryListResponse *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__getLibraryListResponse), type);
+	soap_out_PointerTongwt__LibraryList(soap, "ngwm:libraries", -1, &(((_ngwm__getLibraryListResponse*)a)->libraries), "");
+	soap_out_PointerTongwt__Status(soap, "ngwm:status", -1, &(((_ngwm__getLibraryListResponse*)a)->status), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__getLibraryListResponse::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__getLibraryListResponse(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__getLibraryListResponse * SOAP_FMAC4 soap_get__ngwm__getLibraryListResponse(struct soap *soap, _ngwm__getLibraryListResponse *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__getLibraryListResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__getLibraryListResponse::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__getLibraryListResponse(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__getLibraryListResponse * SOAP_FMAC4 soap_in__ngwm__getLibraryListResponse(struct soap *soap, const char *tag, _ngwm__getLibraryListResponse *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__getLibraryListResponse *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__getLibraryListResponse, sizeof(_ngwm__getLibraryListResponse), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__getLibraryListResponse)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__getLibraryListResponse *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_libraries1 = 1, soap_flag_status1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_libraries1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__LibraryList(soap, "ngwm:libraries", &(((_ngwm__getLibraryListResponse*)a)->libraries), "ngwt:LibraryList"))
+				{	soap_flag_libraries1 = 0;
+					continue;
+				}
+			if (soap_flag_status1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__Status(soap, "ngwm:status", &(((_ngwm__getLibraryListResponse*)a)->status), "ngwt:Status"))
+				{	soap_flag_status1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_status1))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getLibraryListResponse *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getLibraryListResponse, 0, sizeof(_ngwm__getLibraryListResponse), 0, soap_copy__ngwm__getLibraryListResponse);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__getLibraryListResponse * SOAP_FMAC6 soap_new__ngwm__getLibraryListResponse(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__getLibraryListResponse(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getLibraryListResponse(struct soap *soap, _ngwm__getLibraryListResponse *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__getLibraryListResponse * SOAP_FMAC6 soap_instantiate__ngwm__getLibraryListResponse(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__getLibraryListResponse(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__getLibraryListResponse, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__getLibraryListResponse;
+		if (size)
+			*size = sizeof(_ngwm__getLibraryListResponse);
+		((_ngwm__getLibraryListResponse*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__getLibraryListResponse[n];
+		if (size)
+			*size = n * sizeof(_ngwm__getLibraryListResponse);
+		for (int i = 0; i < n; i++)
+			((_ngwm__getLibraryListResponse*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__getLibraryListResponse*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getLibraryListResponse(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__getLibraryListResponse %p -> %p\n", q, p));
+	*(_ngwm__getLibraryListResponse*)p = *(_ngwm__getLibraryListResponse*)q;
+}
+
+void _ngwm__getLibraryListRequest::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	/* transient soap skipped */
+}
+
+void _ngwm__getLibraryListRequest::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	/* transient soap skipped */
+}
+
+int _ngwm__getLibraryListRequest::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__getLibraryListRequest);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__getLibraryListRequest::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__getLibraryListRequest(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getLibraryListRequest(struct soap *soap, const char *tag, int id, const _ngwm__getLibraryListRequest *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__getLibraryListRequest), type);
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__getLibraryListRequest::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__getLibraryListRequest(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__getLibraryListRequest * SOAP_FMAC4 soap_get__ngwm__getLibraryListRequest(struct soap *soap, _ngwm__getLibraryListRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__getLibraryListRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__getLibraryListRequest::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__getLibraryListRequest(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__getLibraryListRequest * SOAP_FMAC4 soap_in__ngwm__getLibraryListRequest(struct soap *soap, const char *tag, _ngwm__getLibraryListRequest *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__getLibraryListRequest *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__getLibraryListRequest, sizeof(_ngwm__getLibraryListRequest), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__getLibraryListRequest)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__getLibraryListRequest *)a->soap_in(soap, tag, type);
+		}
+	};
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getLibraryListRequest *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getLibraryListRequest, 0, sizeof(_ngwm__getLibraryListRequest), 0, soap_copy__ngwm__getLibraryListRequest);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__getLibraryListRequest * SOAP_FMAC6 soap_new__ngwm__getLibraryListRequest(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__getLibraryListRequest(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getLibraryListRequest(struct soap *soap, _ngwm__getLibraryListRequest *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__getLibraryListRequest * SOAP_FMAC6 soap_instantiate__ngwm__getLibraryListRequest(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__getLibraryListRequest(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__getLibraryListRequest, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__getLibraryListRequest;
+		if (size)
+			*size = sizeof(_ngwm__getLibraryListRequest);
+		((_ngwm__getLibraryListRequest*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__getLibraryListRequest[n];
+		if (size)
+			*size = n * sizeof(_ngwm__getLibraryListRequest);
+		for (int i = 0; i < n; i++)
+			((_ngwm__getLibraryListRequest*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__getLibraryListRequest*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getLibraryListRequest(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__getLibraryListRequest %p -> %p\n", q, p));
+	*(_ngwm__getLibraryListRequest*)p = *(_ngwm__getLibraryListRequest*)q;
+}
+
+void _ngwm__getLibraryItemResponse::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((_ngwm__getLibraryItemResponse*)this)->item, SOAP_TYPE_PointerTongwt__Item);
+	soap_serialize_PointerTongwt__Item(soap, &((_ngwm__getLibraryItemResponse*)this)->item);
+	soap_embedded(soap, &((_ngwm__getLibraryItemResponse*)this)->status, SOAP_TYPE_PointerTongwt__Status);
+	soap_serialize_PointerTongwt__Status(soap, &((_ngwm__getLibraryItemResponse*)this)->status);
+	/* transient soap skipped */
+}
+
+void _ngwm__getLibraryItemResponse::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	((_ngwm__getLibraryItemResponse*)this)->item = NULL;
+	((_ngwm__getLibraryItemResponse*)this)->status = NULL;
+	/* transient soap skipped */
+}
+
+int _ngwm__getLibraryItemResponse::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__getLibraryItemResponse);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__getLibraryItemResponse::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__getLibraryItemResponse(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getLibraryItemResponse(struct soap *soap, const char *tag, int id, const _ngwm__getLibraryItemResponse *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__getLibraryItemResponse), type);
+	soap_out_PointerTongwt__Item(soap, "ngwm:item", -1, &(((_ngwm__getLibraryItemResponse*)a)->item), "");
+	soap_out_PointerTongwt__Status(soap, "ngwm:status", -1, &(((_ngwm__getLibraryItemResponse*)a)->status), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__getLibraryItemResponse::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__getLibraryItemResponse(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__getLibraryItemResponse * SOAP_FMAC4 soap_get__ngwm__getLibraryItemResponse(struct soap *soap, _ngwm__getLibraryItemResponse *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__getLibraryItemResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__getLibraryItemResponse::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__getLibraryItemResponse(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__getLibraryItemResponse * SOAP_FMAC4 soap_in__ngwm__getLibraryItemResponse(struct soap *soap, const char *tag, _ngwm__getLibraryItemResponse *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__getLibraryItemResponse *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__getLibraryItemResponse, sizeof(_ngwm__getLibraryItemResponse), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__getLibraryItemResponse)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__getLibraryItemResponse *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_item1 = 1, soap_flag_status1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_item1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__Item(soap, "ngwm:item", &(((_ngwm__getLibraryItemResponse*)a)->item), "ngwt:Item"))
+				{	soap_flag_item1 = 0;
+					continue;
+				}
+			if (soap_flag_status1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__Status(soap, "ngwm:status", &(((_ngwm__getLibraryItemResponse*)a)->status), "ngwt:Status"))
+				{	soap_flag_status1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_status1))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getLibraryItemResponse *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getLibraryItemResponse, 0, sizeof(_ngwm__getLibraryItemResponse), 0, soap_copy__ngwm__getLibraryItemResponse);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__getLibraryItemResponse * SOAP_FMAC6 soap_new__ngwm__getLibraryItemResponse(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__getLibraryItemResponse(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getLibraryItemResponse(struct soap *soap, _ngwm__getLibraryItemResponse *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__getLibraryItemResponse * SOAP_FMAC6 soap_instantiate__ngwm__getLibraryItemResponse(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__getLibraryItemResponse(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__getLibraryItemResponse, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__getLibraryItemResponse;
+		if (size)
+			*size = sizeof(_ngwm__getLibraryItemResponse);
+		((_ngwm__getLibraryItemResponse*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__getLibraryItemResponse[n];
+		if (size)
+			*size = n * sizeof(_ngwm__getLibraryItemResponse);
+		for (int i = 0; i < n; i++)
+			((_ngwm__getLibraryItemResponse*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__getLibraryItemResponse*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getLibraryItemResponse(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__getLibraryItemResponse %p -> %p\n", q, p));
+	*(_ngwm__getLibraryItemResponse*)p = *(_ngwm__getLibraryItemResponse*)q;
+}
+
+void _ngwm__getLibraryItemRequest::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((_ngwm__getLibraryItemRequest*)this)->library, SOAP_TYPE_ngwt__uid);
+	soap_serialize_ngwt__uid(soap, &((_ngwm__getLibraryItemRequest*)this)->library);
+	soap_embedded(soap, &((_ngwm__getLibraryItemRequest*)this)->documentNumber, SOAP_TYPE_PointerTounsignedLong);
+	soap_serialize_PointerTounsignedLong(soap, &((_ngwm__getLibraryItemRequest*)this)->documentNumber);
+	soap_embedded(soap, &((_ngwm__getLibraryItemRequest*)this)->versionNumber, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((_ngwm__getLibraryItemRequest*)this)->versionNumber);
+	/* transient soap skipped */
+}
+
+void _ngwm__getLibraryItemRequest::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	soap_default_ngwt__uid(soap, &((_ngwm__getLibraryItemRequest*)this)->library);
+	((_ngwm__getLibraryItemRequest*)this)->documentNumber = NULL;
+	((_ngwm__getLibraryItemRequest*)this)->versionNumber = NULL;
+	/* transient soap skipped */
+}
+
+int _ngwm__getLibraryItemRequest::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__getLibraryItemRequest);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__getLibraryItemRequest::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__getLibraryItemRequest(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getLibraryItemRequest(struct soap *soap, const char *tag, int id, const _ngwm__getLibraryItemRequest *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__getLibraryItemRequest), type);
+	soap_out_ngwt__uid(soap, "ngwm:library", -1, &(((_ngwm__getLibraryItemRequest*)a)->library), "");
+	soap_out_PointerTounsignedLong(soap, "ngwm:documentNumber", -1, &(((_ngwm__getLibraryItemRequest*)a)->documentNumber), "");
+	soap_out_PointerTostd__string(soap, "ngwm:versionNumber", -1, &(((_ngwm__getLibraryItemRequest*)a)->versionNumber), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__getLibraryItemRequest::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__getLibraryItemRequest(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__getLibraryItemRequest * SOAP_FMAC4 soap_get__ngwm__getLibraryItemRequest(struct soap *soap, _ngwm__getLibraryItemRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__getLibraryItemRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__getLibraryItemRequest::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__getLibraryItemRequest(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__getLibraryItemRequest * SOAP_FMAC4 soap_in__ngwm__getLibraryItemRequest(struct soap *soap, const char *tag, _ngwm__getLibraryItemRequest *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__getLibraryItemRequest *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__getLibraryItemRequest, sizeof(_ngwm__getLibraryItemRequest), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__getLibraryItemRequest)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__getLibraryItemRequest *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_library1 = 1, soap_flag_documentNumber1 = 1, soap_flag_versionNumber1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_library1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_ngwt__uid(soap, "ngwm:library", &(((_ngwm__getLibraryItemRequest*)a)->library), "ngwt:uid"))
+				{	soap_flag_library1 = 0;
+					continue;
+				}
+			if (soap_flag_documentNumber1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTounsignedLong(soap, "ngwm:documentNumber", &(((_ngwm__getLibraryItemRequest*)a)->documentNumber), ""))
+				{	soap_flag_documentNumber1 = 0;
+					continue;
+				}
+			if (soap_flag_versionNumber1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwm:versionNumber", &(((_ngwm__getLibraryItemRequest*)a)->versionNumber), ""))
+				{	soap_flag_versionNumber1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_library1))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getLibraryItemRequest *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getLibraryItemRequest, 0, sizeof(_ngwm__getLibraryItemRequest), 0, soap_copy__ngwm__getLibraryItemRequest);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__getLibraryItemRequest * SOAP_FMAC6 soap_new__ngwm__getLibraryItemRequest(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__getLibraryItemRequest(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getLibraryItemRequest(struct soap *soap, _ngwm__getLibraryItemRequest *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__getLibraryItemRequest * SOAP_FMAC6 soap_instantiate__ngwm__getLibraryItemRequest(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__getLibraryItemRequest(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__getLibraryItemRequest, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__getLibraryItemRequest;
+		if (size)
+			*size = sizeof(_ngwm__getLibraryItemRequest);
+		((_ngwm__getLibraryItemRequest*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__getLibraryItemRequest[n];
+		if (size)
+			*size = n * sizeof(_ngwm__getLibraryItemRequest);
+		for (int i = 0; i < n; i++)
+			((_ngwm__getLibraryItemRequest*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__getLibraryItemRequest*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getLibraryItemRequest(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__getLibraryItemRequest %p -> %p\n", q, p));
+	*(_ngwm__getLibraryItemRequest*)p = *(_ngwm__getLibraryItemRequest*)q;
 }
 
 void _ngwm__getJunkMailSettingsResponse::soap_serialize(struct soap *soap) const
@@ -28263,6 +32846,608 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getFolderListRequest(struct soap *so
 {
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__getFolderListRequest %p -> %p\n", q, p));
 	*(_ngwm__getFolderListRequest*)p = *(_ngwm__getFolderListRequest*)q;
+}
+
+void _ngwm__getFolderResponse::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((_ngwm__getFolderResponse*)this)->folder, SOAP_TYPE_PointerTongwt__Folder);
+	soap_serialize_PointerTongwt__Folder(soap, &((_ngwm__getFolderResponse*)this)->folder);
+	soap_embedded(soap, &((_ngwm__getFolderResponse*)this)->status, SOAP_TYPE_PointerTongwt__Status);
+	soap_serialize_PointerTongwt__Status(soap, &((_ngwm__getFolderResponse*)this)->status);
+	/* transient soap skipped */
+}
+
+void _ngwm__getFolderResponse::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	((_ngwm__getFolderResponse*)this)->folder = NULL;
+	((_ngwm__getFolderResponse*)this)->status = NULL;
+	/* transient soap skipped */
+}
+
+int _ngwm__getFolderResponse::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__getFolderResponse);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__getFolderResponse::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__getFolderResponse(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getFolderResponse(struct soap *soap, const char *tag, int id, const _ngwm__getFolderResponse *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__getFolderResponse), type);
+	soap_out_PointerTongwt__Folder(soap, "ngwm:folder", -1, &(((_ngwm__getFolderResponse*)a)->folder), "");
+	soap_out_PointerTongwt__Status(soap, "ngwm:status", -1, &(((_ngwm__getFolderResponse*)a)->status), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__getFolderResponse::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__getFolderResponse(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__getFolderResponse * SOAP_FMAC4 soap_get__ngwm__getFolderResponse(struct soap *soap, _ngwm__getFolderResponse *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__getFolderResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__getFolderResponse::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__getFolderResponse(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__getFolderResponse * SOAP_FMAC4 soap_in__ngwm__getFolderResponse(struct soap *soap, const char *tag, _ngwm__getFolderResponse *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__getFolderResponse *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__getFolderResponse, sizeof(_ngwm__getFolderResponse), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__getFolderResponse)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__getFolderResponse *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_folder1 = 1, soap_flag_status1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_folder1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__Folder(soap, "ngwm:folder", &(((_ngwm__getFolderResponse*)a)->folder), "ngwt:Folder"))
+				{	soap_flag_folder1 = 0;
+					continue;
+				}
+			if (soap_flag_status1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__Status(soap, "ngwm:status", &(((_ngwm__getFolderResponse*)a)->status), "ngwt:Status"))
+				{	soap_flag_status1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_status1))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getFolderResponse *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getFolderResponse, 0, sizeof(_ngwm__getFolderResponse), 0, soap_copy__ngwm__getFolderResponse);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__getFolderResponse * SOAP_FMAC6 soap_new__ngwm__getFolderResponse(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__getFolderResponse(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getFolderResponse(struct soap *soap, _ngwm__getFolderResponse *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__getFolderResponse * SOAP_FMAC6 soap_instantiate__ngwm__getFolderResponse(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__getFolderResponse(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__getFolderResponse, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__getFolderResponse;
+		if (size)
+			*size = sizeof(_ngwm__getFolderResponse);
+		((_ngwm__getFolderResponse*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__getFolderResponse[n];
+		if (size)
+			*size = n * sizeof(_ngwm__getFolderResponse);
+		for (int i = 0; i < n; i++)
+			((_ngwm__getFolderResponse*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__getFolderResponse*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getFolderResponse(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__getFolderResponse %p -> %p\n", q, p));
+	*(_ngwm__getFolderResponse*)p = *(_ngwm__getFolderResponse*)q;
+}
+
+void _ngwm__getFolderRequest::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((_ngwm__getFolderRequest*)this)->id, SOAP_TYPE_PointerTongwt__uid);
+	soap_serialize_PointerTongwt__uid(soap, &((_ngwm__getFolderRequest*)this)->id);
+	soap_embedded(soap, &((_ngwm__getFolderRequest*)this)->folderType, SOAP_TYPE_PointerTongwt__FolderType);
+	soap_serialize_PointerTongwt__FolderType(soap, &((_ngwm__getFolderRequest*)this)->folderType);
+	soap_embedded(soap, &((_ngwm__getFolderRequest*)this)->types, SOAP_TYPE_PointerTongwt__MessageTypeList);
+	soap_serialize_PointerTongwt__MessageTypeList(soap, &((_ngwm__getFolderRequest*)this)->types);
+	soap_embedded(soap, &((_ngwm__getFolderRequest*)this)->source, SOAP_TYPE_PointerTongwt__ItemSourceList);
+	soap_serialize_PointerTongwt__ItemSourceList(soap, &((_ngwm__getFolderRequest*)this)->source);
+	soap_embedded(soap, &((_ngwm__getFolderRequest*)this)->view, SOAP_TYPE_PointerTongwt__View);
+	soap_serialize_PointerTongwt__View(soap, &((_ngwm__getFolderRequest*)this)->view);
+	/* transient soap skipped */
+}
+
+void _ngwm__getFolderRequest::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	((_ngwm__getFolderRequest*)this)->id = NULL;
+	((_ngwm__getFolderRequest*)this)->folderType = NULL;
+	((_ngwm__getFolderRequest*)this)->types = NULL;
+	((_ngwm__getFolderRequest*)this)->source = NULL;
+	((_ngwm__getFolderRequest*)this)->view = NULL;
+	/* transient soap skipped */
+}
+
+int _ngwm__getFolderRequest::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__getFolderRequest);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__getFolderRequest::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__getFolderRequest(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getFolderRequest(struct soap *soap, const char *tag, int id, const _ngwm__getFolderRequest *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__getFolderRequest), type);
+	soap_out_PointerTongwt__uid(soap, "ngwm:id", -1, &(((_ngwm__getFolderRequest*)a)->id), "");
+	soap_out_PointerTongwt__FolderType(soap, "ngwm:folderType", -1, &(((_ngwm__getFolderRequest*)a)->folderType), "");
+	soap_out_PointerTongwt__MessageTypeList(soap, "ngwm:types", -1, &(((_ngwm__getFolderRequest*)a)->types), "");
+	soap_out_PointerTongwt__ItemSourceList(soap, "ngwm:source", -1, &(((_ngwm__getFolderRequest*)a)->source), "");
+	soap_out_PointerTongwt__View(soap, "ngwm:view", -1, &(((_ngwm__getFolderRequest*)a)->view), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__getFolderRequest::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__getFolderRequest(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__getFolderRequest * SOAP_FMAC4 soap_get__ngwm__getFolderRequest(struct soap *soap, _ngwm__getFolderRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__getFolderRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__getFolderRequest::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__getFolderRequest(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__getFolderRequest * SOAP_FMAC4 soap_in__ngwm__getFolderRequest(struct soap *soap, const char *tag, _ngwm__getFolderRequest *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__getFolderRequest *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__getFolderRequest, sizeof(_ngwm__getFolderRequest), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__getFolderRequest)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__getFolderRequest *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_id1 = 1, soap_flag_folderType1 = 1, soap_flag_types1 = 1, soap_flag_source1 = 1, soap_flag_view1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_id1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTongwt__uid(soap, "ngwm:id", &(((_ngwm__getFolderRequest*)a)->id), "ngwt:uid"))
+				{	soap_flag_id1 = 0;
+					continue;
+				}
+			if (soap_flag_folderType1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__FolderType(soap, "ngwm:folderType", &(((_ngwm__getFolderRequest*)a)->folderType), ""))
+				{	soap_flag_folderType1 = 0;
+					continue;
+				}
+			if (soap_flag_types1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__MessageTypeList(soap, "ngwm:types", &(((_ngwm__getFolderRequest*)a)->types), ""))
+				{	soap_flag_types1 = 0;
+					continue;
+				}
+			if (soap_flag_source1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__ItemSourceList(soap, "ngwm:source", &(((_ngwm__getFolderRequest*)a)->source), ""))
+				{	soap_flag_source1 = 0;
+					continue;
+				}
+			if (soap_flag_view1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTongwt__View(soap, "ngwm:view", &(((_ngwm__getFolderRequest*)a)->view), "ngwt:View"))
+				{	soap_flag_view1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getFolderRequest *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getFolderRequest, 0, sizeof(_ngwm__getFolderRequest), 0, soap_copy__ngwm__getFolderRequest);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__getFolderRequest * SOAP_FMAC6 soap_new__ngwm__getFolderRequest(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__getFolderRequest(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getFolderRequest(struct soap *soap, _ngwm__getFolderRequest *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__getFolderRequest * SOAP_FMAC6 soap_instantiate__ngwm__getFolderRequest(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__getFolderRequest(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__getFolderRequest, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__getFolderRequest;
+		if (size)
+			*size = sizeof(_ngwm__getFolderRequest);
+		((_ngwm__getFolderRequest*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__getFolderRequest[n];
+		if (size)
+			*size = n * sizeof(_ngwm__getFolderRequest);
+		for (int i = 0; i < n; i++)
+			((_ngwm__getFolderRequest*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__getFolderRequest*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getFolderRequest(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__getFolderRequest %p -> %p\n", q, p));
+	*(_ngwm__getFolderRequest*)p = *(_ngwm__getFolderRequest*)q;
+}
+
+void _ngwm__getDocumentTypeListResponse::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((_ngwm__getDocumentTypeListResponse*)this)->items, SOAP_TYPE_PointerTongwt__DocumentTypeList);
+	soap_serialize_PointerTongwt__DocumentTypeList(soap, &((_ngwm__getDocumentTypeListResponse*)this)->items);
+	soap_embedded(soap, &((_ngwm__getDocumentTypeListResponse*)this)->status, SOAP_TYPE_PointerTongwt__Status);
+	soap_serialize_PointerTongwt__Status(soap, &((_ngwm__getDocumentTypeListResponse*)this)->status);
+	/* transient soap skipped */
+}
+
+void _ngwm__getDocumentTypeListResponse::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	((_ngwm__getDocumentTypeListResponse*)this)->items = NULL;
+	((_ngwm__getDocumentTypeListResponse*)this)->status = NULL;
+	/* transient soap skipped */
+}
+
+int _ngwm__getDocumentTypeListResponse::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__getDocumentTypeListResponse);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__getDocumentTypeListResponse::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__getDocumentTypeListResponse(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getDocumentTypeListResponse(struct soap *soap, const char *tag, int id, const _ngwm__getDocumentTypeListResponse *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__getDocumentTypeListResponse), type);
+	soap_out_PointerTongwt__DocumentTypeList(soap, "ngwm:items", -1, &(((_ngwm__getDocumentTypeListResponse*)a)->items), "");
+	soap_out_PointerTongwt__Status(soap, "ngwm:status", -1, &(((_ngwm__getDocumentTypeListResponse*)a)->status), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__getDocumentTypeListResponse::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__getDocumentTypeListResponse(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__getDocumentTypeListResponse * SOAP_FMAC4 soap_get__ngwm__getDocumentTypeListResponse(struct soap *soap, _ngwm__getDocumentTypeListResponse *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__getDocumentTypeListResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__getDocumentTypeListResponse::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__getDocumentTypeListResponse(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__getDocumentTypeListResponse * SOAP_FMAC4 soap_in__ngwm__getDocumentTypeListResponse(struct soap *soap, const char *tag, _ngwm__getDocumentTypeListResponse *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__getDocumentTypeListResponse *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__getDocumentTypeListResponse, sizeof(_ngwm__getDocumentTypeListResponse), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__getDocumentTypeListResponse)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__getDocumentTypeListResponse *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_items1 = 1, soap_flag_status1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_items1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__DocumentTypeList(soap, "ngwm:items", &(((_ngwm__getDocumentTypeListResponse*)a)->items), "ngwt:DocumentTypeList"))
+				{	soap_flag_items1 = 0;
+					continue;
+				}
+			if (soap_flag_status1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__Status(soap, "ngwm:status", &(((_ngwm__getDocumentTypeListResponse*)a)->status), "ngwt:Status"))
+				{	soap_flag_status1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_status1))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getDocumentTypeListResponse *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getDocumentTypeListResponse, 0, sizeof(_ngwm__getDocumentTypeListResponse), 0, soap_copy__ngwm__getDocumentTypeListResponse);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__getDocumentTypeListResponse * SOAP_FMAC6 soap_new__ngwm__getDocumentTypeListResponse(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__getDocumentTypeListResponse(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getDocumentTypeListResponse(struct soap *soap, _ngwm__getDocumentTypeListResponse *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__getDocumentTypeListResponse * SOAP_FMAC6 soap_instantiate__ngwm__getDocumentTypeListResponse(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__getDocumentTypeListResponse(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__getDocumentTypeListResponse, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__getDocumentTypeListResponse;
+		if (size)
+			*size = sizeof(_ngwm__getDocumentTypeListResponse);
+		((_ngwm__getDocumentTypeListResponse*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__getDocumentTypeListResponse[n];
+		if (size)
+			*size = n * sizeof(_ngwm__getDocumentTypeListResponse);
+		for (int i = 0; i < n; i++)
+			((_ngwm__getDocumentTypeListResponse*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__getDocumentTypeListResponse*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getDocumentTypeListResponse(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__getDocumentTypeListResponse %p -> %p\n", q, p));
+	*(_ngwm__getDocumentTypeListResponse*)p = *(_ngwm__getDocumentTypeListResponse*)q;
+}
+
+void _ngwm__getDocumentTypeListRequest::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((_ngwm__getDocumentTypeListRequest*)this)->library, SOAP_TYPE_ngwt__uid);
+	soap_serialize_ngwt__uid(soap, &((_ngwm__getDocumentTypeListRequest*)this)->library);
+	/* transient soap skipped */
+}
+
+void _ngwm__getDocumentTypeListRequest::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	soap_default_ngwt__uid(soap, &((_ngwm__getDocumentTypeListRequest*)this)->library);
+	/* transient soap skipped */
+}
+
+int _ngwm__getDocumentTypeListRequest::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__getDocumentTypeListRequest);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__getDocumentTypeListRequest::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__getDocumentTypeListRequest(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__getDocumentTypeListRequest(struct soap *soap, const char *tag, int id, const _ngwm__getDocumentTypeListRequest *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__getDocumentTypeListRequest), type);
+	soap_out_ngwt__uid(soap, "ngwm:library", -1, &(((_ngwm__getDocumentTypeListRequest*)a)->library), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__getDocumentTypeListRequest::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__getDocumentTypeListRequest(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__getDocumentTypeListRequest * SOAP_FMAC4 soap_get__ngwm__getDocumentTypeListRequest(struct soap *soap, _ngwm__getDocumentTypeListRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__getDocumentTypeListRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__getDocumentTypeListRequest::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__getDocumentTypeListRequest(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__getDocumentTypeListRequest * SOAP_FMAC4 soap_in__ngwm__getDocumentTypeListRequest(struct soap *soap, const char *tag, _ngwm__getDocumentTypeListRequest *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__getDocumentTypeListRequest *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__getDocumentTypeListRequest, sizeof(_ngwm__getDocumentTypeListRequest), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__getDocumentTypeListRequest)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__getDocumentTypeListRequest *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_library1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_library1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_ngwt__uid(soap, "ngwm:library", &(((_ngwm__getDocumentTypeListRequest*)a)->library), "ngwt:uid"))
+				{	soap_flag_library1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_library1))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getDocumentTypeListRequest *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getDocumentTypeListRequest, 0, sizeof(_ngwm__getDocumentTypeListRequest), 0, soap_copy__ngwm__getDocumentTypeListRequest);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__getDocumentTypeListRequest * SOAP_FMAC6 soap_new__ngwm__getDocumentTypeListRequest(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__getDocumentTypeListRequest(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__getDocumentTypeListRequest(struct soap *soap, _ngwm__getDocumentTypeListRequest *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__getDocumentTypeListRequest * SOAP_FMAC6 soap_instantiate__ngwm__getDocumentTypeListRequest(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__getDocumentTypeListRequest(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__getDocumentTypeListRequest, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__getDocumentTypeListRequest;
+		if (size)
+			*size = sizeof(_ngwm__getDocumentTypeListRequest);
+		((_ngwm__getDocumentTypeListRequest*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__getDocumentTypeListRequest[n];
+		if (size)
+			*size = n * sizeof(_ngwm__getDocumentTypeListRequest);
+		for (int i = 0; i < n; i++)
+			((_ngwm__getDocumentTypeListRequest*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__getDocumentTypeListRequest*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__getDocumentTypeListRequest(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__getDocumentTypeListRequest %p -> %p\n", q, p));
+	*(_ngwm__getDocumentTypeListRequest*)p = *(_ngwm__getDocumentTypeListRequest*)q;
 }
 
 void _ngwm__getDeltaInfoResponse::soap_serialize(struct soap *soap) const
@@ -30278,6 +35463,282 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__forwardRequest(struct soap *soap, in
 	*(_ngwm__forwardRequest*)p = *(_ngwm__forwardRequest*)q;
 }
 
+void _ngwm__executeRuleResponse::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((_ngwm__executeRuleResponse*)this)->status, SOAP_TYPE_PointerTongwt__Status);
+	soap_serialize_PointerTongwt__Status(soap, &((_ngwm__executeRuleResponse*)this)->status);
+	/* transient soap skipped */
+}
+
+void _ngwm__executeRuleResponse::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	((_ngwm__executeRuleResponse*)this)->status = NULL;
+	/* transient soap skipped */
+}
+
+int _ngwm__executeRuleResponse::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__executeRuleResponse);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__executeRuleResponse::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__executeRuleResponse(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__executeRuleResponse(struct soap *soap, const char *tag, int id, const _ngwm__executeRuleResponse *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__executeRuleResponse), type);
+	soap_out_PointerTongwt__Status(soap, "ngwm:status", -1, &(((_ngwm__executeRuleResponse*)a)->status), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__executeRuleResponse::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__executeRuleResponse(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__executeRuleResponse * SOAP_FMAC4 soap_get__ngwm__executeRuleResponse(struct soap *soap, _ngwm__executeRuleResponse *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__executeRuleResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__executeRuleResponse::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__executeRuleResponse(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__executeRuleResponse * SOAP_FMAC4 soap_in__ngwm__executeRuleResponse(struct soap *soap, const char *tag, _ngwm__executeRuleResponse *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__executeRuleResponse *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__executeRuleResponse, sizeof(_ngwm__executeRuleResponse), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__executeRuleResponse)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__executeRuleResponse *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_status1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_status1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__Status(soap, "ngwm:status", &(((_ngwm__executeRuleResponse*)a)->status), "ngwt:Status"))
+				{	soap_flag_status1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_status1))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__executeRuleResponse *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__executeRuleResponse, 0, sizeof(_ngwm__executeRuleResponse), 0, soap_copy__ngwm__executeRuleResponse);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__executeRuleResponse * SOAP_FMAC6 soap_new__ngwm__executeRuleResponse(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__executeRuleResponse(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__executeRuleResponse(struct soap *soap, _ngwm__executeRuleResponse *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__executeRuleResponse * SOAP_FMAC6 soap_instantiate__ngwm__executeRuleResponse(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__executeRuleResponse(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__executeRuleResponse, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__executeRuleResponse;
+		if (size)
+			*size = sizeof(_ngwm__executeRuleResponse);
+		((_ngwm__executeRuleResponse*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__executeRuleResponse[n];
+		if (size)
+			*size = n * sizeof(_ngwm__executeRuleResponse);
+		for (int i = 0; i < n; i++)
+			((_ngwm__executeRuleResponse*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__executeRuleResponse*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__executeRuleResponse(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__executeRuleResponse %p -> %p\n", q, p));
+	*(_ngwm__executeRuleResponse*)p = *(_ngwm__executeRuleResponse*)q;
+}
+
+void _ngwm__executeRuleRequest::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((_ngwm__executeRuleRequest*)this)->id, SOAP_TYPE_ngwt__uid);
+	soap_serialize_ngwt__uid(soap, &((_ngwm__executeRuleRequest*)this)->id);
+	/* transient soap skipped */
+}
+
+void _ngwm__executeRuleRequest::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	soap_default_ngwt__uid(soap, &((_ngwm__executeRuleRequest*)this)->id);
+	/* transient soap skipped */
+}
+
+int _ngwm__executeRuleRequest::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__executeRuleRequest);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__executeRuleRequest::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__executeRuleRequest(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__executeRuleRequest(struct soap *soap, const char *tag, int id, const _ngwm__executeRuleRequest *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__executeRuleRequest), type);
+	soap_out_ngwt__uid(soap, "ngwm:id", -1, &(((_ngwm__executeRuleRequest*)a)->id), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__executeRuleRequest::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__executeRuleRequest(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__executeRuleRequest * SOAP_FMAC4 soap_get__ngwm__executeRuleRequest(struct soap *soap, _ngwm__executeRuleRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__executeRuleRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__executeRuleRequest::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__executeRuleRequest(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__executeRuleRequest * SOAP_FMAC4 soap_in__ngwm__executeRuleRequest(struct soap *soap, const char *tag, _ngwm__executeRuleRequest *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__executeRuleRequest *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__executeRuleRequest, sizeof(_ngwm__executeRuleRequest), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__executeRuleRequest)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__executeRuleRequest *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_id1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_id1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_ngwt__uid(soap, "ngwm:id", &(((_ngwm__executeRuleRequest*)a)->id), "ngwt:uid"))
+				{	soap_flag_id1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_id1))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__executeRuleRequest *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__executeRuleRequest, 0, sizeof(_ngwm__executeRuleRequest), 0, soap_copy__ngwm__executeRuleRequest);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__executeRuleRequest * SOAP_FMAC6 soap_new__ngwm__executeRuleRequest(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__executeRuleRequest(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__executeRuleRequest(struct soap *soap, _ngwm__executeRuleRequest *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__executeRuleRequest * SOAP_FMAC6 soap_instantiate__ngwm__executeRuleRequest(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__executeRuleRequest(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__executeRuleRequest, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__executeRuleRequest;
+		if (size)
+			*size = sizeof(_ngwm__executeRuleRequest);
+		((_ngwm__executeRuleRequest*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__executeRuleRequest[n];
+		if (size)
+			*size = n * sizeof(_ngwm__executeRuleRequest);
+		for (int i = 0; i < n; i++)
+			((_ngwm__executeRuleRequest*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__executeRuleRequest*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__executeRuleRequest(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__executeRuleRequest %p -> %p\n", q, p));
+	*(_ngwm__executeRuleRequest*)p = *(_ngwm__executeRuleRequest*)q;
+}
+
 void _ngwm__destroyCursorResponse::soap_serialize(struct soap *soap) const
 {
 	(void)soap; /* appease -Wall -Werror */
@@ -30711,7 +36172,7 @@ void _ngwm__delegateRequest::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((_ngwm__delegateRequest*)this)->commentToDelegatee);
 	soap_embedded(soap, &((_ngwm__delegateRequest*)this)->distribution, SOAP_TYPE_PointerTongwt__Distribution);
 	soap_serialize_PointerTongwt__Distribution(soap, &((_ngwm__delegateRequest*)this)->distribution);
-	soap_embedded(soap, &((_ngwm__delegateRequest*)this)->recurrenceAllInstances, SOAP_TYPE_int);
+	soap_embedded(soap, &((_ngwm__delegateRequest*)this)->recurrenceAllInstances, SOAP_TYPE_unsignedLong);
 	/* transient soap skipped */
 }
 
@@ -30746,7 +36207,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__delegateRequest(struct soap *soap, con
 	soap_out_PointerTostd__string(soap, "ngwm:commentToOrganizer", -1, &(((_ngwm__delegateRequest*)a)->commentToOrganizer), "");
 	soap_out_PointerTostd__string(soap, "ngwm:commentToDelegatee", -1, &(((_ngwm__delegateRequest*)a)->commentToDelegatee), "");
 	soap_out_PointerTongwt__Distribution(soap, "ngwm:distribution", -1, &(((_ngwm__delegateRequest*)a)->distribution), "");
-	soap_out_int(soap, "ngwm:recurrenceAllInstances", -1, &(((_ngwm__delegateRequest*)a)->recurrenceAllInstances), "");
+	soap_out_unsignedLong(soap, "ngwm:recurrenceAllInstances", -1, &(((_ngwm__delegateRequest*)a)->recurrenceAllInstances), "");
 	/* transient soap skipped */
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
@@ -30809,7 +36270,7 @@ SOAP_FMAC3 _ngwm__delegateRequest * SOAP_FMAC4 soap_in__ngwm__delegateRequest(st
 					continue;
 				}
 			if (soap_flag_recurrenceAllInstances1 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_int(soap, "ngwm:recurrenceAllInstances", &(((_ngwm__delegateRequest*)a)->recurrenceAllInstances), ""))
+				if (soap_in_unsignedLong(soap, "ngwm:recurrenceAllInstances", &(((_ngwm__delegateRequest*)a)->recurrenceAllInstances), ""))
 				{	soap_flag_recurrenceAllInstances1 = 0;
 					continue;
 				}
@@ -31018,7 +36479,7 @@ void _ngwm__declineRequest::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTongwt__ItemRefList(soap, &((_ngwm__declineRequest*)this)->items);
 	soap_embedded(soap, &((_ngwm__declineRequest*)this)->comment, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((_ngwm__declineRequest*)this)->comment);
-	soap_embedded(soap, &((_ngwm__declineRequest*)this)->recurrenceAllInstances, SOAP_TYPE_int);
+	soap_embedded(soap, &((_ngwm__declineRequest*)this)->recurrenceAllInstances, SOAP_TYPE_unsignedLong);
 	/* transient soap skipped */
 }
 
@@ -31049,7 +36510,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__declineRequest(struct soap *soap, cons
 	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__declineRequest), type);
 	soap_out_PointerTongwt__ItemRefList(soap, "ngwm:items", -1, &(((_ngwm__declineRequest*)a)->items), "");
 	soap_out_PointerTostd__string(soap, "ngwm:comment", -1, &(((_ngwm__declineRequest*)a)->comment), "");
-	soap_out_int(soap, "ngwm:recurrenceAllInstances", -1, &(((_ngwm__declineRequest*)a)->recurrenceAllInstances), "");
+	soap_out_unsignedLong(soap, "ngwm:recurrenceAllInstances", -1, &(((_ngwm__declineRequest*)a)->recurrenceAllInstances), "");
 	/* transient soap skipped */
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
@@ -31102,7 +36563,7 @@ SOAP_FMAC3 _ngwm__declineRequest * SOAP_FMAC4 soap_in__ngwm__declineRequest(stru
 					continue;
 				}
 			if (soap_flag_recurrenceAllInstances1 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_int(soap, "ngwm:recurrenceAllInstances", &(((_ngwm__declineRequest*)a)->recurrenceAllInstances), ""))
+				if (soap_in_unsignedLong(soap, "ngwm:recurrenceAllInstances", &(((_ngwm__declineRequest*)a)->recurrenceAllInstances), ""))
 				{	soap_flag_recurrenceAllInstances1 = 0;
 					continue;
 				}
@@ -32012,11 +37473,284 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__createJunkEntryRequest(struct soap *
 	*(_ngwm__createJunkEntryRequest*)p = *(_ngwm__createJunkEntryRequest*)q;
 }
 
+void _ngwm__createItemsResponse::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_serialize_std__vectorTemplateOfngwt__uid(soap, &((_ngwm__createItemsResponse*)this)->id);
+	soap_embedded(soap, &((_ngwm__createItemsResponse*)this)->status, SOAP_TYPE_PointerTongwt__Status);
+	soap_serialize_PointerTongwt__Status(soap, &((_ngwm__createItemsResponse*)this)->status);
+	/* transient soap skipped */
+}
+
+void _ngwm__createItemsResponse::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	soap_default_std__vectorTemplateOfngwt__uid(soap, &((_ngwm__createItemsResponse*)this)->id);
+	((_ngwm__createItemsResponse*)this)->status = NULL;
+	/* transient soap skipped */
+}
+
+int _ngwm__createItemsResponse::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__createItemsResponse);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__createItemsResponse::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__createItemsResponse(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__createItemsResponse(struct soap *soap, const char *tag, int id, const _ngwm__createItemsResponse *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__createItemsResponse), type);
+	soap_out_std__vectorTemplateOfngwt__uid(soap, "ngwm:id", -1, &(((_ngwm__createItemsResponse*)a)->id), "");
+	soap_out_PointerTongwt__Status(soap, "ngwm:status", -1, &(((_ngwm__createItemsResponse*)a)->status), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__createItemsResponse::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__createItemsResponse(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__createItemsResponse * SOAP_FMAC4 soap_get__ngwm__createItemsResponse(struct soap *soap, _ngwm__createItemsResponse *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__createItemsResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__createItemsResponse::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__createItemsResponse(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__createItemsResponse * SOAP_FMAC4 soap_in__ngwm__createItemsResponse(struct soap *soap, const char *tag, _ngwm__createItemsResponse *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__createItemsResponse *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__createItemsResponse, sizeof(_ngwm__createItemsResponse), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__createItemsResponse)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__createItemsResponse *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_status1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_std__vectorTemplateOfngwt__uid(soap, "ngwm:id", &(((_ngwm__createItemsResponse*)a)->id), "ngwt:uid"))
+					continue;
+			if (soap_flag_status1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__Status(soap, "ngwm:status", &(((_ngwm__createItemsResponse*)a)->status), "ngwt:Status"))
+				{	soap_flag_status1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_status1))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__createItemsResponse *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__createItemsResponse, 0, sizeof(_ngwm__createItemsResponse), 0, soap_copy__ngwm__createItemsResponse);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__createItemsResponse * SOAP_FMAC6 soap_new__ngwm__createItemsResponse(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__createItemsResponse(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__createItemsResponse(struct soap *soap, _ngwm__createItemsResponse *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__createItemsResponse * SOAP_FMAC6 soap_instantiate__ngwm__createItemsResponse(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__createItemsResponse(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__createItemsResponse, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__createItemsResponse;
+		if (size)
+			*size = sizeof(_ngwm__createItemsResponse);
+		((_ngwm__createItemsResponse*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__createItemsResponse[n];
+		if (size)
+			*size = n * sizeof(_ngwm__createItemsResponse);
+		for (int i = 0; i < n; i++)
+			((_ngwm__createItemsResponse*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__createItemsResponse*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__createItemsResponse(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__createItemsResponse %p -> %p\n", q, p));
+	*(_ngwm__createItemsResponse*)p = *(_ngwm__createItemsResponse*)q;
+}
+
+void _ngwm__createItemsRequest::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_serialize_std__vectorTemplateOfPointerTongwt__Item(soap, &((_ngwm__createItemsRequest*)this)->item);
+	/* transient soap skipped */
+}
+
+void _ngwm__createItemsRequest::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	soap_default_std__vectorTemplateOfPointerTongwt__Item(soap, &((_ngwm__createItemsRequest*)this)->item);
+	/* transient soap skipped */
+}
+
+int _ngwm__createItemsRequest::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE__ngwm__createItemsRequest);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int _ngwm__createItemsRequest::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out__ngwm__createItemsRequest(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__createItemsRequest(struct soap *soap, const char *tag, int id, const _ngwm__createItemsRequest *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__createItemsRequest), type);
+	soap_out_std__vectorTemplateOfPointerTongwt__Item(soap, "ngwm:item", -1, &(((_ngwm__createItemsRequest*)a)->item), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *_ngwm__createItemsRequest::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get__ngwm__createItemsRequest(soap, this, tag, type);
+}
+
+SOAP_FMAC3 _ngwm__createItemsRequest * SOAP_FMAC4 soap_get__ngwm__createItemsRequest(struct soap *soap, _ngwm__createItemsRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in__ngwm__createItemsRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *_ngwm__createItemsRequest::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in__ngwm__createItemsRequest(soap, tag, this, type);
+}
+
+SOAP_FMAC3 _ngwm__createItemsRequest * SOAP_FMAC4 soap_in__ngwm__createItemsRequest(struct soap *soap, const char *tag, _ngwm__createItemsRequest *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (_ngwm__createItemsRequest *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE__ngwm__createItemsRequest, sizeof(_ngwm__createItemsRequest), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE__ngwm__createItemsRequest)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (_ngwm__createItemsRequest *)a->soap_in(soap, tag, type);
+		}
+	};
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_std__vectorTemplateOfPointerTongwt__Item(soap, "ngwm:item", &(((_ngwm__createItemsRequest*)a)->item), "ngwt:Item"))
+					continue;
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__createItemsRequest *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__createItemsRequest, 0, sizeof(_ngwm__createItemsRequest), 0, soap_copy__ngwm__createItemsRequest);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 _ngwm__createItemsRequest * SOAP_FMAC6 soap_new__ngwm__createItemsRequest(struct soap *soap, int n)
+{	return soap_instantiate__ngwm__createItemsRequest(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete__ngwm__createItemsRequest(struct soap *soap, _ngwm__createItemsRequest *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 _ngwm__createItemsRequest * SOAP_FMAC6 soap_instantiate__ngwm__createItemsRequest(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate__ngwm__createItemsRequest(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE__ngwm__createItemsRequest, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new _ngwm__createItemsRequest;
+		if (size)
+			*size = sizeof(_ngwm__createItemsRequest);
+		((_ngwm__createItemsRequest*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new _ngwm__createItemsRequest[n];
+		if (size)
+			*size = n * sizeof(_ngwm__createItemsRequest);
+		for (int i = 0; i < n; i++)
+			((_ngwm__createItemsRequest*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (_ngwm__createItemsRequest*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__createItemsRequest(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying _ngwm__createItemsRequest %p -> %p\n", q, p));
+	*(_ngwm__createItemsRequest*)p = *(_ngwm__createItemsRequest*)q;
+}
+
 void _ngwm__createItemResponse::soap_serialize(struct soap *soap) const
 {
 	(void)soap; /* appease -Wall -Werror */
-	soap_embedded(soap, &((_ngwm__createItemResponse*)this)->id, SOAP_TYPE_PointerTongwt__uid);
-	soap_serialize_PointerTongwt__uid(soap, &((_ngwm__createItemResponse*)this)->id);
+	soap_serialize_std__vectorTemplateOfngwt__uid(soap, &((_ngwm__createItemResponse*)this)->id);
 	soap_embedded(soap, &((_ngwm__createItemResponse*)this)->status, SOAP_TYPE_PointerTongwt__Status);
 	soap_serialize_PointerTongwt__Status(soap, &((_ngwm__createItemResponse*)this)->status);
 	/* transient soap skipped */
@@ -32025,7 +37759,7 @@ void _ngwm__createItemResponse::soap_serialize(struct soap *soap) const
 void _ngwm__createItemResponse::soap_default(struct soap *soap)
 {
 	this->soap = soap;
-	((_ngwm__createItemResponse*)this)->id = NULL;
+	soap_default_std__vectorTemplateOfngwt__uid(soap, &((_ngwm__createItemResponse*)this)->id);
 	((_ngwm__createItemResponse*)this)->status = NULL;
 	/* transient soap skipped */
 }
@@ -32046,7 +37780,7 @@ int _ngwm__createItemResponse::soap_out(struct soap *soap, const char *tag, int 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__createItemResponse(struct soap *soap, const char *tag, int id, const _ngwm__createItemResponse *a, const char *type)
 {
 	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__createItemResponse), type);
-	soap_out_PointerTongwt__uid(soap, "ngwm:id", -1, &(((_ngwm__createItemResponse*)a)->id), "");
+	soap_out_std__vectorTemplateOfngwt__uid(soap, "ngwm:id", -1, &(((_ngwm__createItemResponse*)a)->id), "");
 	soap_out_PointerTongwt__Status(soap, "ngwm:status", -1, &(((_ngwm__createItemResponse*)a)->status), "");
 	/* transient soap skipped */
 	soap_element_end_out(soap, tag);
@@ -32084,16 +37818,14 @@ SOAP_FMAC3 _ngwm__createItemResponse * SOAP_FMAC4 soap_in__ngwm__createItemRespo
 			return (_ngwm__createItemResponse *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id1 = 1, soap_flag_status1 = 1;
+	short soap_flag_status1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
 		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap_flag_id1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_PointerTongwt__uid(soap, "ngwm:id", &(((_ngwm__createItemResponse*)a)->id), "ngwt:uid"))
-				{	soap_flag_id1 = 0;
+			if (soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_std__vectorTemplateOfngwt__uid(soap, "ngwm:id", &(((_ngwm__createItemResponse*)a)->id), "ngwt:uid"))
 					continue;
-				}
 			if (soap_flag_status1 && soap->error == SOAP_TAG_MISMATCH)
 				if (soap_in_PointerTongwt__Status(soap, "ngwm:status", &(((_ngwm__createItemResponse*)a)->status), "ngwt:Status"))
 				{	soap_flag_status1 = 0;
@@ -34018,6 +39750,8 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__addItemRequest(struct soap *soap, in
 void _ngwm__acceptShareResponse::soap_serialize(struct soap *soap) const
 {
 	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((_ngwm__acceptShareResponse*)this)->id, SOAP_TYPE_PointerTongwt__uid);
+	soap_serialize_PointerTongwt__uid(soap, &((_ngwm__acceptShareResponse*)this)->id);
 	soap_embedded(soap, &((_ngwm__acceptShareResponse*)this)->status, SOAP_TYPE_PointerTongwt__Status);
 	soap_serialize_PointerTongwt__Status(soap, &((_ngwm__acceptShareResponse*)this)->status);
 	/* transient soap skipped */
@@ -34026,6 +39760,7 @@ void _ngwm__acceptShareResponse::soap_serialize(struct soap *soap) const
 void _ngwm__acceptShareResponse::soap_default(struct soap *soap)
 {
 	this->soap = soap;
+	((_ngwm__acceptShareResponse*)this)->id = NULL;
 	((_ngwm__acceptShareResponse*)this)->status = NULL;
 	/* transient soap skipped */
 }
@@ -34046,6 +39781,7 @@ int _ngwm__acceptShareResponse::soap_out(struct soap *soap, const char *tag, int
 SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__acceptShareResponse(struct soap *soap, const char *tag, int id, const _ngwm__acceptShareResponse *a, const char *type)
 {
 	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE__ngwm__acceptShareResponse), type);
+	soap_out_PointerTongwt__uid(soap, "ngwm:id", -1, &(((_ngwm__acceptShareResponse*)a)->id), "");
 	soap_out_PointerTongwt__Status(soap, "ngwm:status", -1, &(((_ngwm__acceptShareResponse*)a)->status), "");
 	/* transient soap skipped */
 	soap_element_end_out(soap, tag);
@@ -34083,11 +39819,16 @@ SOAP_FMAC3 _ngwm__acceptShareResponse * SOAP_FMAC4 soap_in__ngwm__acceptShareRes
 			return (_ngwm__acceptShareResponse *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_status1 = 1;
+	short soap_flag_id1 = 1, soap_flag_status1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
 		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_id1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTongwt__uid(soap, "ngwm:id", &(((_ngwm__acceptShareResponse*)a)->id), "ngwt:uid"))
+				{	soap_flag_id1 = 0;
+					continue;
+				}
 			if (soap_flag_status1 && soap->error == SOAP_TAG_MISMATCH)
 				if (soap_in_PointerTongwt__Status(soap, "ngwm:status", &(((_ngwm__acceptShareResponse*)a)->status), "ngwt:Status"))
 				{	soap_flag_status1 = 0;
@@ -34465,7 +40206,7 @@ void _ngwm__acceptRequest::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((_ngwm__acceptRequest*)this)->comment);
 	soap_embedded(soap, &((_ngwm__acceptRequest*)this)->acceptLevel, SOAP_TYPE_PointerTongwt__AcceptLevel);
 	soap_serialize_PointerTongwt__AcceptLevel(soap, &((_ngwm__acceptRequest*)this)->acceptLevel);
-	soap_embedded(soap, &((_ngwm__acceptRequest*)this)->recurrenceAllInstances, SOAP_TYPE_int);
+	soap_embedded(soap, &((_ngwm__acceptRequest*)this)->recurrenceAllInstances, SOAP_TYPE_unsignedLong);
 	/* transient soap skipped */
 }
 
@@ -34475,7 +40216,7 @@ void _ngwm__acceptRequest::soap_default(struct soap *soap)
 	((_ngwm__acceptRequest*)this)->items = NULL;
 	((_ngwm__acceptRequest*)this)->comment = NULL;
 	((_ngwm__acceptRequest*)this)->acceptLevel = NULL;
-	soap_default_int(soap, &((_ngwm__acceptRequest*)this)->recurrenceAllInstances);
+	((_ngwm__acceptRequest*)this)->recurrenceAllInstances = 0;
 	/* transient soap skipped */
 }
 
@@ -34498,7 +40239,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out__ngwm__acceptRequest(struct soap *soap, const
 	soap_out_PointerTongwt__ItemRefList(soap, "ngwm:items", -1, &(((_ngwm__acceptRequest*)a)->items), "");
 	soap_out_PointerTostd__string(soap, "ngwm:comment", -1, &(((_ngwm__acceptRequest*)a)->comment), "");
 	soap_out_PointerTongwt__AcceptLevel(soap, "ngwm:acceptLevel", -1, &(((_ngwm__acceptRequest*)a)->acceptLevel), "");
-	soap_out_int(soap, "ngwm:recurrenceAllInstances", -1, &(((_ngwm__acceptRequest*)a)->recurrenceAllInstances), "");
+	soap_out_unsignedLong(soap, "ngwm:recurrenceAllInstances", -1, &(((_ngwm__acceptRequest*)a)->recurrenceAllInstances), "");
 	/* transient soap skipped */
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
@@ -34556,7 +40297,7 @@ SOAP_FMAC3 _ngwm__acceptRequest * SOAP_FMAC4 soap_in__ngwm__acceptRequest(struct
 					continue;
 				}
 			if (soap_flag_recurrenceAllInstances1 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_int(soap, "ngwm:recurrenceAllInstances", &(((_ngwm__acceptRequest*)a)->recurrenceAllInstances), ""))
+				if (soap_in_unsignedLong(soap, "ngwm:recurrenceAllInstances", &(((_ngwm__acceptRequest*)a)->recurrenceAllInstances), ""))
 				{	soap_flag_recurrenceAllInstances1 = 0;
 					continue;
 				}
@@ -34568,7 +40309,7 @@ SOAP_FMAC3 _ngwm__acceptRequest * SOAP_FMAC4 soap_in__ngwm__acceptRequest(struct
 			if (soap->error)
 				return NULL;
 		}
-		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_items1 || soap_flag_recurrenceAllInstances1))
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_items1))
 		{	soap->error = SOAP_OCCURS;
 			return NULL;
 		}
@@ -34620,6 +40361,717 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy__ngwm__acceptRequest(struct soap *soap, int
 	*(_ngwm__acceptRequest*)p = *(_ngwm__acceptRequest*)q;
 }
 
+void ngwt__VersionEvent::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((ngwt__VersionEvent*)this)->library, SOAP_TYPE_PointerTongwt__NameAndEmail);
+	soap_serialize_PointerTongwt__NameAndEmail(soap, &((ngwt__VersionEvent*)this)->library);
+	soap_embedded(soap, &((ngwt__VersionEvent*)this)->documentNumber, SOAP_TYPE_unsignedLong);
+	soap_embedded(soap, &((ngwt__VersionEvent*)this)->versionNumber, SOAP_TYPE_unsignedLong);
+	soap_embedded(soap, &((ngwt__VersionEvent*)this)->creator, SOAP_TYPE_PointerTongwt__NameAndEmail);
+	soap_serialize_PointerTongwt__NameAndEmail(soap, &((ngwt__VersionEvent*)this)->creator);
+	soap_embedded(soap, &((ngwt__VersionEvent*)this)->event, SOAP_TYPE_ngwt__VersionEventType);
+	soap_embedded(soap, &((ngwt__VersionEvent*)this)->eventNumber, SOAP_TYPE_PointerTounsignedLong);
+	soap_serialize_PointerTounsignedLong(soap, &((ngwt__VersionEvent*)this)->eventNumber);
+	soap_embedded(soap, &((ngwt__VersionEvent*)this)->filename, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__VersionEvent*)this)->filename);
+	soap_serialize_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, &((ngwt__ContainerItem*)this)->container);
+	soap_embedded(soap, &((ngwt__ContainerItem*)this)->categories, SOAP_TYPE_PointerTongwt__CategoryRefList);
+	soap_serialize_PointerTongwt__CategoryRefList(soap, &((ngwt__ContainerItem*)this)->categories);
+	soap_embedded(soap, &((ngwt__ContainerItem*)this)->created, SOAP_TYPE_string);
+	soap_serialize_string(soap, &((ngwt__ContainerItem*)this)->created);
+	soap_embedded(soap, &((ngwt__ContainerItem*)this)->customs, SOAP_TYPE_PointerTongwt__CustomList);
+	soap_serialize_PointerTongwt__CustomList(soap, &((ngwt__ContainerItem*)this)->customs);
+	soap_embedded(soap, &((ngwt__Item*)this)->id, SOAP_TYPE_PointerTongwt__uid);
+	soap_serialize_PointerTongwt__uid(soap, &((ngwt__Item*)this)->id);
+	soap_embedded(soap, &((ngwt__Item*)this)->name, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__Item*)this)->name);
+	soap_embedded(soap, &((ngwt__Item*)this)->version, SOAP_TYPE_PointerTounsignedLong);
+	soap_serialize_PointerTounsignedLong(soap, &((ngwt__Item*)this)->version);
+	soap_embedded(soap, &((ngwt__Item*)this)->modified, SOAP_TYPE_string);
+	soap_serialize_string(soap, &((ngwt__Item*)this)->modified);
+	soap_embedded(soap, &((ngwt__Item*)this)->changes, SOAP_TYPE_PointerTongwt__ItemChanges);
+	soap_serialize_PointerTongwt__ItemChanges(soap, &((ngwt__Item*)this)->changes);
+	/* transient soap skipped */
+}
+
+void ngwt__VersionEvent::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	((ngwt__VersionEvent*)this)->library = NULL;
+	soap_default_unsignedLong(soap, &((ngwt__VersionEvent*)this)->documentNumber);
+	soap_default_unsignedLong(soap, &((ngwt__VersionEvent*)this)->versionNumber);
+	((ngwt__VersionEvent*)this)->creator = NULL;
+	soap_default_ngwt__VersionEventType(soap, &((ngwt__VersionEvent*)this)->event);
+	((ngwt__VersionEvent*)this)->eventNumber = NULL;
+	((ngwt__VersionEvent*)this)->filename = NULL;
+	soap_default_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, &((ngwt__ContainerItem*)this)->container);
+	((ngwt__ContainerItem*)this)->categories = NULL;
+	soap_default_string(soap, &((ngwt__ContainerItem*)this)->created);
+	((ngwt__ContainerItem*)this)->customs = NULL;
+	((ngwt__Item*)this)->id = NULL;
+	((ngwt__Item*)this)->name = NULL;
+	((ngwt__Item*)this)->version = NULL;
+	soap_default_string(soap, &((ngwt__Item*)this)->modified);
+	((ngwt__Item*)this)->changes = NULL;
+	/* transient soap skipped */
+}
+
+int ngwt__VersionEvent::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE_ngwt__VersionEvent);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int ngwt__VersionEvent::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out_ngwt__VersionEvent(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__VersionEvent(struct soap *soap, const char *tag, int id, const ngwt__VersionEvent *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__VersionEvent), "ngwt:VersionEvent");
+	soap_out_PointerTongwt__uid(soap, "ngwt:id", -1, &(((ngwt__Item*)a)->id), "");
+	soap_out_PointerTostd__string(soap, "ngwt:name", -1, &(((ngwt__Item*)a)->name), "");
+	soap_out_PointerTounsignedLong(soap, "ngwt:version", -1, &(((ngwt__Item*)a)->version), "");
+	soap_out_string(soap, "ngwt:modified", -1, &(((ngwt__Item*)a)->modified), "");
+	soap_out_PointerTongwt__ItemChanges(soap, "ngwt:changes", -1, &(((ngwt__Item*)a)->changes), "");
+	/* transient soap skipped */
+	soap_out_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, "ngwt:container", -1, &(((ngwt__ContainerItem*)a)->container), "");
+	soap_out_PointerTongwt__CategoryRefList(soap, "ngwt:categories", -1, &(((ngwt__ContainerItem*)a)->categories), "");
+	soap_out_string(soap, "ngwt:created", -1, &(((ngwt__ContainerItem*)a)->created), "");
+	soap_out_PointerTongwt__CustomList(soap, "ngwt:customs", -1, &(((ngwt__ContainerItem*)a)->customs), "");
+	soap_out_PointerTongwt__NameAndEmail(soap, "ngwt:library", -1, &(((ngwt__VersionEvent*)a)->library), "");
+	soap_out_unsignedLong(soap, "ngwt:documentNumber", -1, &(((ngwt__VersionEvent*)a)->documentNumber), "");
+	soap_out_unsignedLong(soap, "ngwt:versionNumber", -1, &(((ngwt__VersionEvent*)a)->versionNumber), "");
+	soap_out_PointerTongwt__NameAndEmail(soap, "ngwt:creator", -1, &(((ngwt__VersionEvent*)a)->creator), "");
+	soap_out_ngwt__VersionEventType(soap, "ngwt:event", -1, &(((ngwt__VersionEvent*)a)->event), "");
+	soap_out_PointerTounsignedLong(soap, "ngwt:eventNumber", -1, &(((ngwt__VersionEvent*)a)->eventNumber), "");
+	soap_out_PointerTostd__string(soap, "ngwt:filename", -1, &(((ngwt__VersionEvent*)a)->filename), "");
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *ngwt__VersionEvent::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get_ngwt__VersionEvent(soap, this, tag, type);
+}
+
+SOAP_FMAC3 ngwt__VersionEvent * SOAP_FMAC4 soap_get_ngwt__VersionEvent(struct soap *soap, ngwt__VersionEvent *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__VersionEvent(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *ngwt__VersionEvent::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in_ngwt__VersionEvent(soap, tag, this, type);
+}
+
+SOAP_FMAC3 ngwt__VersionEvent * SOAP_FMAC4 soap_in_ngwt__VersionEvent(struct soap *soap, const char *tag, ngwt__VersionEvent *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (ngwt__VersionEvent *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__VersionEvent, sizeof(ngwt__VersionEvent), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE_ngwt__VersionEvent)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (ngwt__VersionEvent *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_id3 = 1, soap_flag_name3 = 1, soap_flag_version3 = 1, soap_flag_modified3 = 1, soap_flag_changes3 = 1, soap_flag_categories2 = 1, soap_flag_created2 = 1, soap_flag_customs2 = 1, soap_flag_library1 = 1, soap_flag_documentNumber1 = 1, soap_flag_versionNumber1 = 1, soap_flag_creator1 = 1, soap_flag_event1 = 1, soap_flag_eventNumber1 = 1, soap_flag_filename1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_id3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTongwt__uid(soap, "ngwt:id", &(((ngwt__Item*)a)->id), "ngwt:uid"))
+				{	soap_flag_id3 = 0;
+					continue;
+				}
+			if (soap_flag_name3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:name", &(((ngwt__Item*)a)->name), ""))
+				{	soap_flag_name3 = 0;
+					continue;
+				}
+			if (soap_flag_version3 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTounsignedLong(soap, "ngwt:version", &(((ngwt__Item*)a)->version), ""))
+				{	soap_flag_version3 = 0;
+					continue;
+				}
+			if (soap_flag_modified3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ngwt:modified", &(((ngwt__Item*)a)->modified), ""))
+				{	soap_flag_modified3 = 0;
+					continue;
+				}
+			if (soap_flag_changes3 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__ItemChanges(soap, "ngwt:changes", &(((ngwt__Item*)a)->changes), "ngwt:ItemChanges"))
+				{	soap_flag_changes3 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, "ngwt:container", &(((ngwt__ContainerItem*)a)->container), "ngwt:ContainerRef"))
+					continue;
+			if (soap_flag_categories2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__CategoryRefList(soap, "ngwt:categories", &(((ngwt__ContainerItem*)a)->categories), "ngwt:CategoryRefList"))
+				{	soap_flag_categories2 = 0;
+					continue;
+				}
+			if (soap_flag_created2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ngwt:created", &(((ngwt__ContainerItem*)a)->created), ""))
+				{	soap_flag_created2 = 0;
+					continue;
+				}
+			if (soap_flag_customs2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__CustomList(soap, "ngwt:customs", &(((ngwt__ContainerItem*)a)->customs), "ngwt:CustomList"))
+				{	soap_flag_customs2 = 0;
+					continue;
+				}
+			if (soap_flag_library1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__NameAndEmail(soap, "ngwt:library", &(((ngwt__VersionEvent*)a)->library), "ngwt:NameAndEmail"))
+				{	soap_flag_library1 = 0;
+					continue;
+				}
+			if (soap_flag_documentNumber1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_unsignedLong(soap, "ngwt:documentNumber", &(((ngwt__VersionEvent*)a)->documentNumber), ""))
+				{	soap_flag_documentNumber1 = 0;
+					continue;
+				}
+			if (soap_flag_versionNumber1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_unsignedLong(soap, "ngwt:versionNumber", &(((ngwt__VersionEvent*)a)->versionNumber), ""))
+				{	soap_flag_versionNumber1 = 0;
+					continue;
+				}
+			if (soap_flag_creator1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__NameAndEmail(soap, "ngwt:creator", &(((ngwt__VersionEvent*)a)->creator), "ngwt:NameAndEmail"))
+				{	soap_flag_creator1 = 0;
+					continue;
+				}
+			if (soap_flag_event1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_ngwt__VersionEventType(soap, "ngwt:event", &(((ngwt__VersionEvent*)a)->event), ""))
+				{	soap_flag_event1 = 0;
+					continue;
+				}
+			if (soap_flag_eventNumber1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTounsignedLong(soap, "ngwt:eventNumber", &(((ngwt__VersionEvent*)a)->eventNumber), ""))
+				{	soap_flag_eventNumber1 = 0;
+					continue;
+				}
+			if (soap_flag_filename1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:filename", &(((ngwt__VersionEvent*)a)->filename), ""))
+				{	soap_flag_filename1 = 0;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_documentNumber1 || soap_flag_versionNumber1 || soap_flag_event1))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__VersionEvent *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__VersionEvent, 0, sizeof(ngwt__VersionEvent), 0, soap_copy_ngwt__VersionEvent);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 ngwt__VersionEvent * SOAP_FMAC6 soap_new_ngwt__VersionEvent(struct soap *soap, int n)
+{	return soap_instantiate_ngwt__VersionEvent(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__VersionEvent(struct soap *soap, ngwt__VersionEvent *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 ngwt__VersionEvent * SOAP_FMAC6 soap_instantiate_ngwt__VersionEvent(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ngwt__VersionEvent(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ngwt__VersionEvent, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new ngwt__VersionEvent;
+		if (size)
+			*size = sizeof(ngwt__VersionEvent);
+		((ngwt__VersionEvent*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new ngwt__VersionEvent[n];
+		if (size)
+			*size = n * sizeof(ngwt__VersionEvent);
+		for (int i = 0; i < n; i++)
+			((ngwt__VersionEvent*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (ngwt__VersionEvent*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__VersionEvent(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwt__VersionEvent %p -> %p\n", q, p));
+	*(ngwt__VersionEvent*)p = *(ngwt__VersionEvent*)q;
+}
+
+void ngwt__Version::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((ngwt__Version*)this)->library, SOAP_TYPE_PointerTongwt__NameAndEmail);
+	soap_serialize_PointerTongwt__NameAndEmail(soap, &((ngwt__Version*)this)->library);
+	soap_embedded(soap, &((ngwt__Version*)this)->documentNumber, SOAP_TYPE_PointerTounsignedLong);
+	soap_serialize_PointerTounsignedLong(soap, &((ngwt__Version*)this)->documentNumber);
+	soap_embedded(soap, &((ngwt__Version*)this)->versionCreator, SOAP_TYPE_PointerTongwt__NameAndEmail);
+	soap_serialize_PointerTongwt__NameAndEmail(soap, &((ngwt__Version*)this)->versionCreator);
+	soap_embedded(soap, &((ngwt__Version*)this)->retrievedBy, SOAP_TYPE_PointerTongwt__NameAndEmail);
+	soap_serialize_PointerTongwt__NameAndEmail(soap, &((ngwt__Version*)this)->retrievedBy);
+	soap_embedded(soap, &((ngwt__Version*)this)->retrievedDate, SOAP_TYPE_string);
+	soap_serialize_string(soap, &((ngwt__Version*)this)->retrievedDate);
+	soap_embedded(soap, &((ngwt__Version*)this)->versionNumber, SOAP_TYPE_unsignedLong);
+	soap_embedded(soap, &((ngwt__Version*)this)->versionDescription, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__Version*)this)->versionDescription);
+	soap_embedded(soap, &((ngwt__Version*)this)->versionStatus, SOAP_TYPE_PointerTongwt__VersionStatus);
+	soap_serialize_PointerTongwt__VersionStatus(soap, &((ngwt__Version*)this)->versionStatus);
+	soap_embedded(soap, &((ngwt__Version*)this)->life, SOAP_TYPE_PointerTounsignedLong);
+	soap_serialize_PointerTounsignedLong(soap, &((ngwt__Version*)this)->life);
+	soap_embedded(soap, &((ngwt__Version*)this)->ageAction, SOAP_TYPE_PointerTongwt__AgeAction);
+	soap_serialize_PointerTongwt__AgeAction(soap, &((ngwt__Version*)this)->ageAction);
+	soap_embedded(soap, &((ngwt__Version*)this)->fileSize, SOAP_TYPE_PointerTounsignedLong);
+	soap_serialize_PointerTounsignedLong(soap, &((ngwt__Version*)this)->fileSize);
+	soap_embedded(soap, &((ngwt__Version*)this)->filename, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__Version*)this)->filename);
+	soap_serialize_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, &((ngwt__ContainerItem*)this)->container);
+	soap_embedded(soap, &((ngwt__ContainerItem*)this)->categories, SOAP_TYPE_PointerTongwt__CategoryRefList);
+	soap_serialize_PointerTongwt__CategoryRefList(soap, &((ngwt__ContainerItem*)this)->categories);
+	soap_embedded(soap, &((ngwt__ContainerItem*)this)->created, SOAP_TYPE_string);
+	soap_serialize_string(soap, &((ngwt__ContainerItem*)this)->created);
+	soap_embedded(soap, &((ngwt__ContainerItem*)this)->customs, SOAP_TYPE_PointerTongwt__CustomList);
+	soap_serialize_PointerTongwt__CustomList(soap, &((ngwt__ContainerItem*)this)->customs);
+	soap_embedded(soap, &((ngwt__Item*)this)->id, SOAP_TYPE_PointerTongwt__uid);
+	soap_serialize_PointerTongwt__uid(soap, &((ngwt__Item*)this)->id);
+	soap_embedded(soap, &((ngwt__Item*)this)->name, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__Item*)this)->name);
+	soap_embedded(soap, &((ngwt__Item*)this)->version, SOAP_TYPE_PointerTounsignedLong);
+	soap_serialize_PointerTounsignedLong(soap, &((ngwt__Item*)this)->version);
+	soap_embedded(soap, &((ngwt__Item*)this)->modified, SOAP_TYPE_string);
+	soap_serialize_string(soap, &((ngwt__Item*)this)->modified);
+	soap_embedded(soap, &((ngwt__Item*)this)->changes, SOAP_TYPE_PointerTongwt__ItemChanges);
+	soap_serialize_PointerTongwt__ItemChanges(soap, &((ngwt__Item*)this)->changes);
+	/* transient soap skipped */
+}
+
+void ngwt__Version::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	((ngwt__Version*)this)->library = NULL;
+	((ngwt__Version*)this)->documentNumber = NULL;
+	((ngwt__Version*)this)->versionCreator = NULL;
+	((ngwt__Version*)this)->retrievedBy = NULL;
+	soap_default_string(soap, &((ngwt__Version*)this)->retrievedDate);
+	soap_default_unsignedLong(soap, &((ngwt__Version*)this)->versionNumber);
+	((ngwt__Version*)this)->versionDescription = NULL;
+	((ngwt__Version*)this)->versionStatus = NULL;
+	((ngwt__Version*)this)->life = NULL;
+	((ngwt__Version*)this)->ageAction = NULL;
+	((ngwt__Version*)this)->fileSize = NULL;
+	((ngwt__Version*)this)->filename = NULL;
+	soap_default_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, &((ngwt__ContainerItem*)this)->container);
+	((ngwt__ContainerItem*)this)->categories = NULL;
+	soap_default_string(soap, &((ngwt__ContainerItem*)this)->created);
+	((ngwt__ContainerItem*)this)->customs = NULL;
+	((ngwt__Item*)this)->id = NULL;
+	((ngwt__Item*)this)->name = NULL;
+	((ngwt__Item*)this)->version = NULL;
+	soap_default_string(soap, &((ngwt__Item*)this)->modified);
+	((ngwt__Item*)this)->changes = NULL;
+	/* transient soap skipped */
+}
+
+int ngwt__Version::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE_ngwt__Version);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int ngwt__Version::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out_ngwt__Version(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Version(struct soap *soap, const char *tag, int id, const ngwt__Version *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__Version), "ngwt:Version");
+	soap_out_PointerTongwt__uid(soap, "ngwt:id", -1, &(((ngwt__Item*)a)->id), "");
+	soap_out_PointerTostd__string(soap, "ngwt:name", -1, &(((ngwt__Item*)a)->name), "");
+	soap_out_PointerTounsignedLong(soap, "ngwt:version", -1, &(((ngwt__Item*)a)->version), "");
+	soap_out_string(soap, "ngwt:modified", -1, &(((ngwt__Item*)a)->modified), "");
+	soap_out_PointerTongwt__ItemChanges(soap, "ngwt:changes", -1, &(((ngwt__Item*)a)->changes), "");
+	/* transient soap skipped */
+	soap_out_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, "ngwt:container", -1, &(((ngwt__ContainerItem*)a)->container), "");
+	soap_out_PointerTongwt__CategoryRefList(soap, "ngwt:categories", -1, &(((ngwt__ContainerItem*)a)->categories), "");
+	soap_out_string(soap, "ngwt:created", -1, &(((ngwt__ContainerItem*)a)->created), "");
+	soap_out_PointerTongwt__CustomList(soap, "ngwt:customs", -1, &(((ngwt__ContainerItem*)a)->customs), "");
+	soap_out_PointerTongwt__NameAndEmail(soap, "ngwt:library", -1, &(((ngwt__Version*)a)->library), "");
+	soap_out_PointerTounsignedLong(soap, "ngwt:documentNumber", -1, &(((ngwt__Version*)a)->documentNumber), "");
+	soap_out_PointerTongwt__NameAndEmail(soap, "ngwt:versionCreator", -1, &(((ngwt__Version*)a)->versionCreator), "");
+	soap_out_PointerTongwt__NameAndEmail(soap, "ngwt:retrievedBy", -1, &(((ngwt__Version*)a)->retrievedBy), "");
+	soap_out_string(soap, "ngwt:retrievedDate", -1, &(((ngwt__Version*)a)->retrievedDate), "");
+	soap_out_unsignedLong(soap, "ngwt:versionNumber", -1, &(((ngwt__Version*)a)->versionNumber), "");
+	soap_out_PointerTostd__string(soap, "ngwt:versionDescription", -1, &(((ngwt__Version*)a)->versionDescription), "");
+	soap_out_PointerTongwt__VersionStatus(soap, "ngwt:versionStatus", -1, &(((ngwt__Version*)a)->versionStatus), "");
+	soap_out_PointerTounsignedLong(soap, "ngwt:life", -1, &(((ngwt__Version*)a)->life), "");
+	soap_out_PointerTongwt__AgeAction(soap, "ngwt:ageAction", -1, &(((ngwt__Version*)a)->ageAction), "");
+	soap_out_PointerTounsignedLong(soap, "ngwt:fileSize", -1, &(((ngwt__Version*)a)->fileSize), "");
+	soap_out_PointerTostd__string(soap, "ngwt:filename", -1, &(((ngwt__Version*)a)->filename), "");
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *ngwt__Version::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get_ngwt__Version(soap, this, tag, type);
+}
+
+SOAP_FMAC3 ngwt__Version * SOAP_FMAC4 soap_get_ngwt__Version(struct soap *soap, ngwt__Version *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__Version(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *ngwt__Version::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in_ngwt__Version(soap, tag, this, type);
+}
+
+SOAP_FMAC3 ngwt__Version * SOAP_FMAC4 soap_in_ngwt__Version(struct soap *soap, const char *tag, ngwt__Version *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (ngwt__Version *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__Version, sizeof(ngwt__Version), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE_ngwt__Version)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (ngwt__Version *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_id3 = 1, soap_flag_name3 = 1, soap_flag_version3 = 1, soap_flag_modified3 = 1, soap_flag_changes3 = 1, soap_flag_categories2 = 1, soap_flag_created2 = 1, soap_flag_customs2 = 1, soap_flag_library1 = 1, soap_flag_documentNumber1 = 1, soap_flag_versionCreator1 = 1, soap_flag_retrievedBy1 = 1, soap_flag_retrievedDate1 = 1, soap_flag_versionNumber1 = 1, soap_flag_versionDescription1 = 1, soap_flag_versionStatus1 = 1, soap_flag_life1 = 1, soap_flag_ageAction1 = 1, soap_flag_fileSize1 = 1, soap_flag_filename1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_id3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTongwt__uid(soap, "ngwt:id", &(((ngwt__Item*)a)->id), "ngwt:uid"))
+				{	soap_flag_id3 = 0;
+					continue;
+				}
+			if (soap_flag_name3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:name", &(((ngwt__Item*)a)->name), ""))
+				{	soap_flag_name3 = 0;
+					continue;
+				}
+			if (soap_flag_version3 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTounsignedLong(soap, "ngwt:version", &(((ngwt__Item*)a)->version), ""))
+				{	soap_flag_version3 = 0;
+					continue;
+				}
+			if (soap_flag_modified3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ngwt:modified", &(((ngwt__Item*)a)->modified), ""))
+				{	soap_flag_modified3 = 0;
+					continue;
+				}
+			if (soap_flag_changes3 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__ItemChanges(soap, "ngwt:changes", &(((ngwt__Item*)a)->changes), "ngwt:ItemChanges"))
+				{	soap_flag_changes3 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, "ngwt:container", &(((ngwt__ContainerItem*)a)->container), "ngwt:ContainerRef"))
+					continue;
+			if (soap_flag_categories2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__CategoryRefList(soap, "ngwt:categories", &(((ngwt__ContainerItem*)a)->categories), "ngwt:CategoryRefList"))
+				{	soap_flag_categories2 = 0;
+					continue;
+				}
+			if (soap_flag_created2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ngwt:created", &(((ngwt__ContainerItem*)a)->created), ""))
+				{	soap_flag_created2 = 0;
+					continue;
+				}
+			if (soap_flag_customs2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__CustomList(soap, "ngwt:customs", &(((ngwt__ContainerItem*)a)->customs), "ngwt:CustomList"))
+				{	soap_flag_customs2 = 0;
+					continue;
+				}
+			if (soap_flag_library1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__NameAndEmail(soap, "ngwt:library", &(((ngwt__Version*)a)->library), "ngwt:NameAndEmail"))
+				{	soap_flag_library1 = 0;
+					continue;
+				}
+			if (soap_flag_documentNumber1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTounsignedLong(soap, "ngwt:documentNumber", &(((ngwt__Version*)a)->documentNumber), ""))
+				{	soap_flag_documentNumber1 = 0;
+					continue;
+				}
+			if (soap_flag_versionCreator1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__NameAndEmail(soap, "ngwt:versionCreator", &(((ngwt__Version*)a)->versionCreator), "ngwt:NameAndEmail"))
+				{	soap_flag_versionCreator1 = 0;
+					continue;
+				}
+			if (soap_flag_retrievedBy1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__NameAndEmail(soap, "ngwt:retrievedBy", &(((ngwt__Version*)a)->retrievedBy), "ngwt:NameAndEmail"))
+				{	soap_flag_retrievedBy1 = 0;
+					continue;
+				}
+			if (soap_flag_retrievedDate1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ngwt:retrievedDate", &(((ngwt__Version*)a)->retrievedDate), ""))
+				{	soap_flag_retrievedDate1 = 0;
+					continue;
+				}
+			if (soap_flag_versionNumber1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_unsignedLong(soap, "ngwt:versionNumber", &(((ngwt__Version*)a)->versionNumber), ""))
+				{	soap_flag_versionNumber1 = 0;
+					continue;
+				}
+			if (soap_flag_versionDescription1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:versionDescription", &(((ngwt__Version*)a)->versionDescription), ""))
+				{	soap_flag_versionDescription1 = 0;
+					continue;
+				}
+			if (soap_flag_versionStatus1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__VersionStatus(soap, "ngwt:versionStatus", &(((ngwt__Version*)a)->versionStatus), ""))
+				{	soap_flag_versionStatus1 = 0;
+					continue;
+				}
+			if (soap_flag_life1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTounsignedLong(soap, "ngwt:life", &(((ngwt__Version*)a)->life), ""))
+				{	soap_flag_life1 = 0;
+					continue;
+				}
+			if (soap_flag_ageAction1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__AgeAction(soap, "ngwt:ageAction", &(((ngwt__Version*)a)->ageAction), ""))
+				{	soap_flag_ageAction1 = 0;
+					continue;
+				}
+			if (soap_flag_fileSize1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTounsignedLong(soap, "ngwt:fileSize", &(((ngwt__Version*)a)->fileSize), ""))
+				{	soap_flag_fileSize1 = 0;
+					continue;
+				}
+			if (soap_flag_filename1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:filename", &(((ngwt__Version*)a)->filename), ""))
+				{	soap_flag_filename1 = 0;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_versionNumber1))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__Version *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__Version, 0, sizeof(ngwt__Version), 0, soap_copy_ngwt__Version);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 ngwt__Version * SOAP_FMAC6 soap_new_ngwt__Version(struct soap *soap, int n)
+{	return soap_instantiate_ngwt__Version(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__Version(struct soap *soap, ngwt__Version *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 ngwt__Version * SOAP_FMAC6 soap_instantiate_ngwt__Version(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ngwt__Version(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ngwt__Version, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new ngwt__Version;
+		if (size)
+			*size = sizeof(ngwt__Version);
+		((ngwt__Version*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new ngwt__Version[n];
+		if (size)
+			*size = n * sizeof(ngwt__Version);
+		for (int i = 0; i < n; i++)
+			((ngwt__Version*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (ngwt__Version*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Version(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwt__Version %p -> %p\n", q, p));
+	*(ngwt__Version*)p = *(ngwt__Version*)q;
+}
+
+void ngwt__UserList::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_serialize_std__vectorTemplateOfPointerTongwt__UserInfo(soap, &((ngwt__UserList*)this)->user);
+	/* transient soap skipped */
+}
+
+void ngwt__UserList::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	soap_default_std__vectorTemplateOfPointerTongwt__UserInfo(soap, &((ngwt__UserList*)this)->user);
+	/* transient soap skipped */
+}
+
+int ngwt__UserList::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE_ngwt__UserList);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int ngwt__UserList::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out_ngwt__UserList(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__UserList(struct soap *soap, const char *tag, int id, const ngwt__UserList *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__UserList), type);
+	soap_out_std__vectorTemplateOfPointerTongwt__UserInfo(soap, "ngwt:user", -1, &(((ngwt__UserList*)a)->user), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *ngwt__UserList::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get_ngwt__UserList(soap, this, tag, type);
+}
+
+SOAP_FMAC3 ngwt__UserList * SOAP_FMAC4 soap_get_ngwt__UserList(struct soap *soap, ngwt__UserList *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__UserList(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *ngwt__UserList::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in_ngwt__UserList(soap, tag, this, type);
+}
+
+SOAP_FMAC3 ngwt__UserList * SOAP_FMAC4 soap_in_ngwt__UserList(struct soap *soap, const char *tag, ngwt__UserList *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (ngwt__UserList *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__UserList, sizeof(ngwt__UserList), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE_ngwt__UserList)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (ngwt__UserList *)a->soap_in(soap, tag, type);
+		}
+	};
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_std__vectorTemplateOfPointerTongwt__UserInfo(soap, "ngwt:user", &(((ngwt__UserList*)a)->user), "ngwt:UserInfo"))
+					continue;
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__UserList *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__UserList, 0, sizeof(ngwt__UserList), 0, soap_copy_ngwt__UserList);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 ngwt__UserList * SOAP_FMAC6 soap_new_ngwt__UserList(struct soap *soap, int n)
+{	return soap_instantiate_ngwt__UserList(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__UserList(struct soap *soap, ngwt__UserList *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 ngwt__UserList * SOAP_FMAC6 soap_instantiate_ngwt__UserList(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ngwt__UserList(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ngwt__UserList, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new ngwt__UserList;
+		if (size)
+			*size = sizeof(ngwt__UserList);
+		((ngwt__UserList*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new ngwt__UserList[n];
+		if (size)
+			*size = n * sizeof(ngwt__UserList);
+		for (int i = 0; i < n; i++)
+			((ngwt__UserList*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (ngwt__UserList*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__UserList(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwt__UserList %p -> %p\n", q, p));
+	*(ngwt__UserList*)p = *(ngwt__UserList*)q;
+}
+
 void ngwt__UserInfo::soap_serialize(struct soap *soap) const
 {
 	(void)soap; /* appease -Wall -Werror */
@@ -34629,6 +41081,10 @@ void ngwt__UserInfo::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((ngwt__UserInfo*)this)->email);
 	soap_embedded(soap, &((ngwt__UserInfo*)this)->uuid, SOAP_TYPE_PointerTongwt__UUID);
 	soap_serialize_PointerTongwt__UUID(soap, &((ngwt__UserInfo*)this)->uuid);
+	soap_embedded(soap, &((ngwt__UserInfo*)this)->userid, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__UserInfo*)this)->userid);
+	soap_embedded(soap, &((ngwt__UserInfo*)this)->recipType, SOAP_TYPE_PointerTongwt__RecipientType);
+	soap_serialize_PointerTongwt__RecipientType(soap, &((ngwt__UserInfo*)this)->recipType);
 	/* transient soap skipped */
 }
 
@@ -34638,6 +41094,8 @@ void ngwt__UserInfo::soap_default(struct soap *soap)
 	soap_default_std__string(soap, &((ngwt__UserInfo*)this)->name);
 	((ngwt__UserInfo*)this)->email = NULL;
 	((ngwt__UserInfo*)this)->uuid = NULL;
+	((ngwt__UserInfo*)this)->userid = NULL;
+	((ngwt__UserInfo*)this)->recipType = NULL;
 	/* transient soap skipped */
 }
 
@@ -34660,6 +41118,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__UserInfo(struct soap *soap, const char 
 	soap_out_std__string(soap, "ngwt:name", -1, &(((ngwt__UserInfo*)a)->name), "");
 	soap_out_PointerTostd__string(soap, "ngwt:email", -1, &(((ngwt__UserInfo*)a)->email), "");
 	soap_out_PointerTongwt__UUID(soap, "ngwt:uuid", -1, &(((ngwt__UserInfo*)a)->uuid), "");
+	soap_out_PointerTostd__string(soap, "ngwt:userid", -1, &(((ngwt__UserInfo*)a)->userid), "");
+	soap_out_PointerTongwt__RecipientType(soap, "ngwt:recipType", -1, &(((ngwt__UserInfo*)a)->recipType), "");
 	/* transient soap skipped */
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
@@ -34696,7 +41156,7 @@ SOAP_FMAC3 ngwt__UserInfo * SOAP_FMAC4 soap_in_ngwt__UserInfo(struct soap *soap,
 			return (ngwt__UserInfo *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_name1 = 1, soap_flag_email1 = 1, soap_flag_uuid1 = 1;
+	short soap_flag_name1 = 1, soap_flag_email1 = 1, soap_flag_uuid1 = 1, soap_flag_userid1 = 1, soap_flag_recipType1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -34714,6 +41174,16 @@ SOAP_FMAC3 ngwt__UserInfo * SOAP_FMAC4 soap_in_ngwt__UserInfo(struct soap *soap,
 			if (soap_flag_uuid1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTongwt__UUID(soap, "ngwt:uuid", &(((ngwt__UserInfo*)a)->uuid), "ngwt:UUID"))
 				{	soap_flag_uuid1 = 0;
+					continue;
+				}
+			if (soap_flag_userid1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:userid", &(((ngwt__UserInfo*)a)->userid), ""))
+				{	soap_flag_userid1 = 0;
+					continue;
+				}
+			if (soap_flag_recipType1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__RecipientType(soap, "ngwt:recipType", &(((ngwt__UserInfo*)a)->recipType), ""))
+				{	soap_flag_recipType1 = 0;
 					continue;
 				}
 			/* transient soap skipped */
@@ -35768,6 +42238,8 @@ void ngwt__Task::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerToxsd__date(soap, &((ngwt__Task*)this)->startDate);
 	soap_embedded(soap, &((ngwt__Task*)this)->dueDate, SOAP_TYPE_PointerToxsd__date);
 	soap_serialize_PointerToxsd__date(soap, &((ngwt__Task*)this)->dueDate);
+	soap_embedded(soap, &((ngwt__Task*)this)->assignedDate, SOAP_TYPE_PointerToxsd__date);
+	soap_serialize_PointerToxsd__date(soap, &((ngwt__Task*)this)->assignedDate);
 	soap_embedded(soap, &((ngwt__Task*)this)->taskPriority, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__Task*)this)->taskPriority);
 	soap_embedded(soap, &((ngwt__Task*)this)->completed, SOAP_TYPE_PointerTobool);
@@ -35802,12 +42274,18 @@ void ngwt__Task::soap_serialize(struct soap *soap) const
 	soap_embedded(soap, &((ngwt__Mail*)this)->size, SOAP_TYPE_int);
 	soap_embedded(soap, &((ngwt__Mail*)this)->subType, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__Mail*)this)->subType);
+	soap_embedded(soap, &((ngwt__Mail*)this)->nntpOrImap, SOAP_TYPE_PointerTobool);
+	soap_serialize_PointerTobool(soap, &((ngwt__Mail*)this)->nntpOrImap);
+	soap_embedded(soap, &((ngwt__Mail*)this)->smimeType, SOAP_TYPE_PointerTongwt__SMimeOperation);
+	soap_serialize_PointerTongwt__SMimeOperation(soap, &((ngwt__Mail*)this)->smimeType);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->status, SOAP_TYPE_PointerTongwt__ItemStatus);
 	soap_serialize_PointerTongwt__ItemStatus(soap, &((ngwt__BoxEntry*)this)->status);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->thread, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->thread);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->msgId, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->msgId);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->messageId, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->messageId);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->source, SOAP_TYPE_PointerTongwt__ItemSource);
 	soap_serialize_PointerTongwt__ItemSource(soap, &((ngwt__BoxEntry*)this)->source);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->returnSentItemsId, SOAP_TYPE_PointerTobool);
@@ -35845,6 +42323,7 @@ void ngwt__Task::soap_default(struct soap *soap)
 	this->soap = soap;
 	((ngwt__Task*)this)->startDate = NULL;
 	((ngwt__Task*)this)->dueDate = NULL;
+	((ngwt__Task*)this)->assignedDate = NULL;
 	((ngwt__Task*)this)->taskPriority = NULL;
 	((ngwt__Task*)this)->completed = NULL;
 	((ngwt__CalendarItem*)this)->rdate = NULL;
@@ -35863,9 +42342,12 @@ void ngwt__Task::soap_default(struct soap *soap)
 	((ngwt__Mail*)this)->hasAttachment = (bool)0;
 	((ngwt__Mail*)this)->size = 0;
 	((ngwt__Mail*)this)->subType = NULL;
+	((ngwt__Mail*)this)->nntpOrImap = NULL;
+	((ngwt__Mail*)this)->smimeType = NULL;
 	((ngwt__BoxEntry*)this)->status = NULL;
 	((ngwt__BoxEntry*)this)->thread = NULL;
 	((ngwt__BoxEntry*)this)->msgId = NULL;
+	((ngwt__BoxEntry*)this)->messageId = NULL;
 	((ngwt__BoxEntry*)this)->source = NULL;
 	((ngwt__BoxEntry*)this)->returnSentItemsId = NULL;
 	soap_default_string(soap, &((ngwt__BoxEntry*)this)->delivered);
@@ -35913,6 +42395,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Task(struct soap *soap, const char *tag
 	soap_out_PointerTongwt__ItemStatus(soap, "ngwt:status", -1, &(((ngwt__BoxEntry*)a)->status), "");
 	soap_out_PointerTostd__string(soap, "ngwt:thread", -1, &(((ngwt__BoxEntry*)a)->thread), "");
 	soap_out_PointerTostd__string(soap, "ngwt:msgId", -1, &(((ngwt__BoxEntry*)a)->msgId), "");
+	soap_out_PointerTostd__string(soap, "ngwt:messageId", -1, &(((ngwt__BoxEntry*)a)->messageId), "");
 	soap_out_PointerTongwt__ItemSource(soap, "ngwt:source", -1, &(((ngwt__BoxEntry*)a)->source), "");
 	soap_out_PointerTobool(soap, "ngwt:returnSentItemsId", -1, &(((ngwt__BoxEntry*)a)->returnSentItemsId), "");
 	soap_out_string(soap, "ngwt:delivered", -1, &(((ngwt__BoxEntry*)a)->delivered), "");
@@ -35930,6 +42413,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Task(struct soap *soap, const char *tag
 	soap_out_bool(soap, "ngwt:hasAttachment", -1, &(((ngwt__Mail*)a)->hasAttachment), "");
 	soap_out_int(soap, "ngwt:size", -1, &(((ngwt__Mail*)a)->size), "");
 	soap_out_PointerTostd__string(soap, "ngwt:subType", -1, &(((ngwt__Mail*)a)->subType), "");
+	soap_out_PointerTobool(soap, "ngwt:nntpOrImap", -1, &(((ngwt__Mail*)a)->nntpOrImap), "");
+	soap_out_PointerTongwt__SMimeOperation(soap, "ngwt:smimeType", -1, &(((ngwt__Mail*)a)->smimeType), "");
 	soap_out_PointerTongwt__RecurrenceDateType(soap, "ngwt:rdate", -1, &(((ngwt__CalendarItem*)a)->rdate), "");
 	soap_out_PointerTongwt__RecurrenceRule(soap, "ngwt:rrule", -1, &(((ngwt__CalendarItem*)a)->rrule), "");
 	soap_out_PointerTongwt__RecurrenceDateType(soap, "ngwt:exdate", -1, &(((ngwt__CalendarItem*)a)->exdate), "");
@@ -35937,6 +42422,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Task(struct soap *soap, const char *tag
 	soap_out_PointerTostd__string(soap, "ngwt:iCalId", -1, &(((ngwt__CalendarItem*)a)->iCalId), "");
 	soap_out_PointerToxsd__date(soap, "ngwt:startDate", -1, &(((ngwt__Task*)a)->startDate), "");
 	soap_out_PointerToxsd__date(soap, "ngwt:dueDate", -1, &(((ngwt__Task*)a)->dueDate), "");
+	soap_out_PointerToxsd__date(soap, "ngwt:assignedDate", -1, &(((ngwt__Task*)a)->assignedDate), "");
 	soap_out_PointerTostd__string(soap, "ngwt:taskPriority", -1, &(((ngwt__Task*)a)->taskPriority), "");
 	soap_out_PointerTobool(soap, "ngwt:completed", -1, &(((ngwt__Task*)a)->completed), "");
 	soap_element_end_out(soap, tag);
@@ -35974,7 +42460,7 @@ SOAP_FMAC3 ngwt__Task * SOAP_FMAC4 soap_in_ngwt__Task(struct soap *soap, const c
 			return (ngwt__Task *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id6 = 1, soap_flag_name6 = 1, soap_flag_version6 = 1, soap_flag_modified6 = 1, soap_flag_changes6 = 1, soap_flag_categories5 = 1, soap_flag_created5 = 1, soap_flag_customs5 = 1, soap_flag_status4 = 1, soap_flag_thread4 = 1, soap_flag_msgId4 = 1, soap_flag_source4 = 1, soap_flag_returnSentItemsId4 = 1, soap_flag_delivered4 = 1, soap_flag_class_4 = 1, soap_flag_security4 = 1, soap_flag_comment4 = 1, soap_flag_subject3 = 1, soap_flag_originalSubject3 = 1, soap_flag_subjectPrefix3 = 1, soap_flag_distribution3 = 1, soap_flag_message3 = 1, soap_flag_attachments3 = 1, soap_flag_options3 = 1, soap_flag_link3 = 1, soap_flag_hasAttachment3 = 1, soap_flag_size3 = 1, soap_flag_subType3 = 1, soap_flag_rdate2 = 1, soap_flag_rrule2 = 1, soap_flag_exdate2 = 1, soap_flag_recurrenceKey2 = 1, soap_flag_iCalId2 = 1, soap_flag_startDate1 = 1, soap_flag_dueDate1 = 1, soap_flag_taskPriority1 = 1, soap_flag_completed1 = 1;
+	short soap_flag_id6 = 1, soap_flag_name6 = 1, soap_flag_version6 = 1, soap_flag_modified6 = 1, soap_flag_changes6 = 1, soap_flag_categories5 = 1, soap_flag_created5 = 1, soap_flag_customs5 = 1, soap_flag_status4 = 1, soap_flag_thread4 = 1, soap_flag_msgId4 = 1, soap_flag_messageId4 = 1, soap_flag_source4 = 1, soap_flag_returnSentItemsId4 = 1, soap_flag_delivered4 = 1, soap_flag_class_4 = 1, soap_flag_security4 = 1, soap_flag_comment4 = 1, soap_flag_subject3 = 1, soap_flag_originalSubject3 = 1, soap_flag_subjectPrefix3 = 1, soap_flag_distribution3 = 1, soap_flag_message3 = 1, soap_flag_attachments3 = 1, soap_flag_options3 = 1, soap_flag_link3 = 1, soap_flag_hasAttachment3 = 1, soap_flag_size3 = 1, soap_flag_subType3 = 1, soap_flag_nntpOrImap3 = 1, soap_flag_smimeType3 = 1, soap_flag_rdate2 = 1, soap_flag_rrule2 = 1, soap_flag_exdate2 = 1, soap_flag_recurrenceKey2 = 1, soap_flag_iCalId2 = 1, soap_flag_startDate1 = 1, soap_flag_dueDate1 = 1, soap_flag_assignedDate1 = 1, soap_flag_taskPriority1 = 1, soap_flag_completed1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -36036,6 +42522,11 @@ SOAP_FMAC3 ngwt__Task * SOAP_FMAC4 soap_in_ngwt__Task(struct soap *soap, const c
 			if (soap_flag_msgId4 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:msgId", &(((ngwt__BoxEntry*)a)->msgId), ""))
 				{	soap_flag_msgId4 = 0;
+					continue;
+				}
+			if (soap_flag_messageId4 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:messageId", &(((ngwt__BoxEntry*)a)->messageId), ""))
+				{	soap_flag_messageId4 = 0;
 					continue;
 				}
 			if (soap_flag_source4 && soap->error == SOAP_TAG_MISMATCH)
@@ -36123,6 +42614,16 @@ SOAP_FMAC3 ngwt__Task * SOAP_FMAC4 soap_in_ngwt__Task(struct soap *soap, const c
 				{	soap_flag_subType3 = 0;
 					continue;
 				}
+			if (soap_flag_nntpOrImap3 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTobool(soap, "ngwt:nntpOrImap", &(((ngwt__Mail*)a)->nntpOrImap), ""))
+				{	soap_flag_nntpOrImap3 = 0;
+					continue;
+				}
+			if (soap_flag_smimeType3 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__SMimeOperation(soap, "ngwt:smimeType", &(((ngwt__Mail*)a)->smimeType), "ngwt:SMimeOperation"))
+				{	soap_flag_smimeType3 = 0;
+					continue;
+				}
 			if (soap_flag_rdate2 && soap->error == SOAP_TAG_MISMATCH)
 				if (soap_in_PointerTongwt__RecurrenceDateType(soap, "ngwt:rdate", &(((ngwt__CalendarItem*)a)->rdate), "ngwt:RecurrenceDateType"))
 				{	soap_flag_rdate2 = 0;
@@ -36156,6 +42657,11 @@ SOAP_FMAC3 ngwt__Task * SOAP_FMAC4 soap_in_ngwt__Task(struct soap *soap, const c
 			if (soap_flag_dueDate1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerToxsd__date(soap, "ngwt:dueDate", &(((ngwt__Task*)a)->dueDate), "xsd:date"))
 				{	soap_flag_dueDate1 = 0;
+					continue;
+				}
+			if (soap_flag_assignedDate1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerToxsd__date(soap, "ngwt:assignedDate", &(((ngwt__Task*)a)->assignedDate), "xsd:date"))
+				{	soap_flag_assignedDate1 = 0;
 					continue;
 				}
 			if (soap_flag_taskPriority1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
@@ -36232,7 +42738,12 @@ void ngwt__SystemFolder::soap_serialize(struct soap *soap) const
 	(void)soap; /* appease -Wall -Werror */
 	soap_embedded(soap, &((ngwt__SystemFolder*)this)->isSystemFolder, SOAP_TYPE_PointerTobool);
 	soap_serialize_PointerTobool(soap, &((ngwt__SystemFolder*)this)->isSystemFolder);
-	soap_embedded(soap, &((ngwt__SystemFolder*)this)->folderType, SOAP_TYPE_ngwt__FolderType);
+	soap_embedded(soap, &((ngwt__SystemFolder*)this)->folderType, SOAP_TYPE_PointerTongwt__FolderType);
+	soap_serialize_PointerTongwt__FolderType(soap, &((ngwt__SystemFolder*)this)->folderType);
+	soap_embedded(soap, &((ngwt__SystemFolder*)this)->acl, SOAP_TYPE_PointerTongwt__FolderACL);
+	soap_serialize_PointerTongwt__FolderACL(soap, &((ngwt__SystemFolder*)this)->acl);
+	soap_embedded(soap, &((ngwt__SystemFolder*)this)->isSharedByMe, SOAP_TYPE_PointerTobool);
+	soap_serialize_PointerTobool(soap, &((ngwt__SystemFolder*)this)->isSharedByMe);
 	soap_embedded(soap, &((ngwt__Folder*)this)->parent, SOAP_TYPE_ngwt__uid);
 	soap_serialize_ngwt__uid(soap, &((ngwt__Folder*)this)->parent);
 	soap_embedded(soap, &((ngwt__Folder*)this)->description, SOAP_TYPE_PointerTostd__string);
@@ -36247,8 +42758,6 @@ void ngwt__SystemFolder::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTounsignedLong(soap, &((ngwt__Folder*)this)->sequence);
 	soap_embedded(soap, &((ngwt__Folder*)this)->settings, SOAP_TYPE_PointerTongwt__uid);
 	soap_serialize_PointerTongwt__uid(soap, &((ngwt__Folder*)this)->settings);
-	soap_embedded(soap, &((ngwt__Folder*)this)->hasSubfolders, SOAP_TYPE_PointerTobool);
-	soap_serialize_PointerTobool(soap, &((ngwt__Folder*)this)->hasSubfolders);
 	soap_embedded(soap, &((ngwt__Folder*)this)->calendarAttribute, SOAP_TYPE_PointerTongwt__CalendarFolderAttribute);
 	soap_serialize_PointerTongwt__CalendarFolderAttribute(soap, &((ngwt__Folder*)this)->calendarAttribute);
 	soap_embedded(soap, &((ngwt__Item*)this)->id, SOAP_TYPE_PointerTongwt__uid);
@@ -36268,7 +42777,9 @@ void ngwt__SystemFolder::soap_default(struct soap *soap)
 {
 	this->soap = soap;
 	((ngwt__SystemFolder*)this)->isSystemFolder = NULL;
-	soap_default_ngwt__FolderType(soap, &((ngwt__SystemFolder*)this)->folderType);
+	((ngwt__SystemFolder*)this)->folderType = NULL;
+	((ngwt__SystemFolder*)this)->acl = NULL;
+	((ngwt__SystemFolder*)this)->isSharedByMe = NULL;
 	soap_default_ngwt__uid(soap, &((ngwt__Folder*)this)->parent);
 	((ngwt__Folder*)this)->description = NULL;
 	((ngwt__Folder*)this)->count = NULL;
@@ -36276,7 +42787,6 @@ void ngwt__SystemFolder::soap_default(struct soap *soap)
 	((ngwt__Folder*)this)->unreadCount = NULL;
 	((ngwt__Folder*)this)->sequence = NULL;
 	((ngwt__Folder*)this)->settings = NULL;
-	((ngwt__Folder*)this)->hasSubfolders = NULL;
 	((ngwt__Folder*)this)->calendarAttribute = NULL;
 	((ngwt__Item*)this)->id = NULL;
 	((ngwt__Item*)this)->name = NULL;
@@ -36315,10 +42825,11 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__SystemFolder(struct soap *soap, const c
 	soap_out_PointerToint(soap, "ngwt:unreadCount", -1, &(((ngwt__Folder*)a)->unreadCount), "");
 	soap_out_PointerTounsignedLong(soap, "ngwt:sequence", -1, &(((ngwt__Folder*)a)->sequence), "");
 	soap_out_PointerTongwt__uid(soap, "ngwt:settings", -1, &(((ngwt__Folder*)a)->settings), "");
-	soap_out_PointerTobool(soap, "ngwt:hasSubfolders", -1, &(((ngwt__Folder*)a)->hasSubfolders), "");
 	soap_out_PointerTongwt__CalendarFolderAttribute(soap, "ngwt:calendarAttribute", -1, &(((ngwt__Folder*)a)->calendarAttribute), "");
 	soap_out_PointerTobool(soap, "ngwt:isSystemFolder", -1, &(((ngwt__SystemFolder*)a)->isSystemFolder), "");
-	soap_out_ngwt__FolderType(soap, "ngwt:folderType", -1, &(((ngwt__SystemFolder*)a)->folderType), "");
+	soap_out_PointerTongwt__FolderType(soap, "ngwt:folderType", -1, &(((ngwt__SystemFolder*)a)->folderType), "");
+	soap_out_PointerTongwt__FolderACL(soap, "ngwt:acl", -1, &(((ngwt__SystemFolder*)a)->acl), "");
+	soap_out_PointerTobool(soap, "ngwt:isSharedByMe", -1, &(((ngwt__SystemFolder*)a)->isSharedByMe), "");
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
 }
@@ -36354,7 +42865,7 @@ SOAP_FMAC3 ngwt__SystemFolder * SOAP_FMAC4 soap_in_ngwt__SystemFolder(struct soa
 			return (ngwt__SystemFolder *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id3 = 1, soap_flag_name3 = 1, soap_flag_version3 = 1, soap_flag_modified3 = 1, soap_flag_changes3 = 1, soap_flag_parent2 = 1, soap_flag_description2 = 1, soap_flag_count2 = 1, soap_flag_hasUnread2 = 1, soap_flag_unreadCount2 = 1, soap_flag_sequence2 = 1, soap_flag_settings2 = 1, soap_flag_hasSubfolders2 = 1, soap_flag_calendarAttribute2 = 1, soap_flag_isSystemFolder1 = 1, soap_flag_folderType1 = 1;
+	short soap_flag_id3 = 1, soap_flag_name3 = 1, soap_flag_version3 = 1, soap_flag_modified3 = 1, soap_flag_changes3 = 1, soap_flag_parent2 = 1, soap_flag_description2 = 1, soap_flag_count2 = 1, soap_flag_hasUnread2 = 1, soap_flag_unreadCount2 = 1, soap_flag_sequence2 = 1, soap_flag_settings2 = 1, soap_flag_calendarAttribute2 = 1, soap_flag_isSystemFolder1 = 1, soap_flag_folderType1 = 1, soap_flag_acl1 = 1, soap_flag_isSharedByMe1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -36420,11 +42931,6 @@ SOAP_FMAC3 ngwt__SystemFolder * SOAP_FMAC4 soap_in_ngwt__SystemFolder(struct soa
 				{	soap_flag_settings2 = 0;
 					continue;
 				}
-			if (soap_flag_hasSubfolders2 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTobool(soap, "ngwt:hasSubfolders", &(((ngwt__Folder*)a)->hasSubfolders), ""))
-				{	soap_flag_hasSubfolders2 = 0;
-					continue;
-				}
 			if (soap_flag_calendarAttribute2 && soap->error == SOAP_TAG_MISMATCH)
 				if (soap_in_PointerTongwt__CalendarFolderAttribute(soap, "ngwt:calendarAttribute", &(((ngwt__Folder*)a)->calendarAttribute), "ngwt:CalendarFolderAttribute"))
 				{	soap_flag_calendarAttribute2 = 0;
@@ -36436,8 +42942,18 @@ SOAP_FMAC3 ngwt__SystemFolder * SOAP_FMAC4 soap_in_ngwt__SystemFolder(struct soa
 					continue;
 				}
 			if (soap_flag_folderType1 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_ngwt__FolderType(soap, "ngwt:folderType", &(((ngwt__SystemFolder*)a)->folderType), ""))
+				if (soap_in_PointerTongwt__FolderType(soap, "ngwt:folderType", &(((ngwt__SystemFolder*)a)->folderType), ""))
 				{	soap_flag_folderType1 = 0;
+					continue;
+				}
+			if (soap_flag_acl1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__FolderACL(soap, "ngwt:acl", &(((ngwt__SystemFolder*)a)->acl), "ngwt:FolderACL"))
+				{	soap_flag_acl1 = 0;
+					continue;
+				}
+			if (soap_flag_isSharedByMe1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTobool(soap, "ngwt:isSharedByMe", &(((ngwt__SystemFolder*)a)->isSharedByMe), ""))
+				{	soap_flag_isSharedByMe1 = 0;
 					continue;
 				}
 			if (soap->error == SOAP_TAG_MISMATCH)
@@ -36447,7 +42963,7 @@ SOAP_FMAC3 ngwt__SystemFolder * SOAP_FMAC4 soap_in_ngwt__SystemFolder(struct soa
 			if (soap->error)
 				return NULL;
 		}
-		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_parent2 || soap_flag_folderType1))
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_parent2))
 		{	soap->error = SOAP_OCCURS;
 			return NULL;
 		}
@@ -36797,6 +43313,149 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Status(struct soap *soap, int st, int
 {
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwt__Status %p -> %p\n", q, p));
 	*(ngwt__Status*)p = *(ngwt__Status*)q;
+}
+
+void ngwt__SMimeOperation::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((ngwt__SMimeOperation*)this)->signed_, SOAP_TYPE_PointerTobool);
+	soap_serialize_PointerTobool(soap, &((ngwt__SMimeOperation*)this)->signed_);
+	soap_embedded(soap, &((ngwt__SMimeOperation*)this)->encrypted, SOAP_TYPE_PointerTobool);
+	soap_serialize_PointerTobool(soap, &((ngwt__SMimeOperation*)this)->encrypted);
+	/* transient soap skipped */
+}
+
+void ngwt__SMimeOperation::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	((ngwt__SMimeOperation*)this)->signed_ = NULL;
+	((ngwt__SMimeOperation*)this)->encrypted = NULL;
+	/* transient soap skipped */
+}
+
+int ngwt__SMimeOperation::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE_ngwt__SMimeOperation);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int ngwt__SMimeOperation::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out_ngwt__SMimeOperation(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__SMimeOperation(struct soap *soap, const char *tag, int id, const ngwt__SMimeOperation *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__SMimeOperation), type);
+	soap_out_PointerTobool(soap, "ngwt:signed", -1, &(((ngwt__SMimeOperation*)a)->signed_), "");
+	soap_out_PointerTobool(soap, "ngwt:encrypted", -1, &(((ngwt__SMimeOperation*)a)->encrypted), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *ngwt__SMimeOperation::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get_ngwt__SMimeOperation(soap, this, tag, type);
+}
+
+SOAP_FMAC3 ngwt__SMimeOperation * SOAP_FMAC4 soap_get_ngwt__SMimeOperation(struct soap *soap, ngwt__SMimeOperation *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__SMimeOperation(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *ngwt__SMimeOperation::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in_ngwt__SMimeOperation(soap, tag, this, type);
+}
+
+SOAP_FMAC3 ngwt__SMimeOperation * SOAP_FMAC4 soap_in_ngwt__SMimeOperation(struct soap *soap, const char *tag, ngwt__SMimeOperation *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (ngwt__SMimeOperation *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__SMimeOperation, sizeof(ngwt__SMimeOperation), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE_ngwt__SMimeOperation)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (ngwt__SMimeOperation *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_signed_1 = 1, soap_flag_encrypted1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_signed_1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTobool(soap, "ngwt:signed", &(((ngwt__SMimeOperation*)a)->signed_), ""))
+				{	soap_flag_signed_1 = 0;
+					continue;
+				}
+			if (soap_flag_encrypted1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTobool(soap, "ngwt:encrypted", &(((ngwt__SMimeOperation*)a)->encrypted), ""))
+				{	soap_flag_encrypted1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__SMimeOperation *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__SMimeOperation, 0, sizeof(ngwt__SMimeOperation), 0, soap_copy_ngwt__SMimeOperation);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 ngwt__SMimeOperation * SOAP_FMAC6 soap_new_ngwt__SMimeOperation(struct soap *soap, int n)
+{	return soap_instantiate_ngwt__SMimeOperation(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__SMimeOperation(struct soap *soap, ngwt__SMimeOperation *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 ngwt__SMimeOperation * SOAP_FMAC6 soap_instantiate_ngwt__SMimeOperation(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ngwt__SMimeOperation(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ngwt__SMimeOperation, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new ngwt__SMimeOperation;
+		if (size)
+			*size = sizeof(ngwt__SMimeOperation);
+		((ngwt__SMimeOperation*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new ngwt__SMimeOperation[n];
+		if (size)
+			*size = n * sizeof(ngwt__SMimeOperation);
+		for (int i = 0; i < n; i++)
+			((ngwt__SMimeOperation*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (ngwt__SMimeOperation*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__SMimeOperation(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwt__SMimeOperation %p -> %p\n", q, p));
+	*(ngwt__SMimeOperation*)p = *(ngwt__SMimeOperation*)q;
 }
 
 void ngwt__SignatureData::soap_serialize(struct soap *soap) const
@@ -37268,12 +43927,18 @@ void ngwt__SharedNotification::soap_serialize(struct soap *soap) const
 	soap_embedded(soap, &((ngwt__Mail*)this)->size, SOAP_TYPE_int);
 	soap_embedded(soap, &((ngwt__Mail*)this)->subType, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__Mail*)this)->subType);
+	soap_embedded(soap, &((ngwt__Mail*)this)->nntpOrImap, SOAP_TYPE_PointerTobool);
+	soap_serialize_PointerTobool(soap, &((ngwt__Mail*)this)->nntpOrImap);
+	soap_embedded(soap, &((ngwt__Mail*)this)->smimeType, SOAP_TYPE_PointerTongwt__SMimeOperation);
+	soap_serialize_PointerTongwt__SMimeOperation(soap, &((ngwt__Mail*)this)->smimeType);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->status, SOAP_TYPE_PointerTongwt__ItemStatus);
 	soap_serialize_PointerTongwt__ItemStatus(soap, &((ngwt__BoxEntry*)this)->status);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->thread, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->thread);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->msgId, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->msgId);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->messageId, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->messageId);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->source, SOAP_TYPE_PointerTongwt__ItemSource);
 	soap_serialize_PointerTongwt__ItemSource(soap, &((ngwt__BoxEntry*)this)->source);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->returnSentItemsId, SOAP_TYPE_PointerTobool);
@@ -37323,9 +43988,12 @@ void ngwt__SharedNotification::soap_default(struct soap *soap)
 	((ngwt__Mail*)this)->hasAttachment = (bool)0;
 	((ngwt__Mail*)this)->size = 0;
 	((ngwt__Mail*)this)->subType = NULL;
+	((ngwt__Mail*)this)->nntpOrImap = NULL;
+	((ngwt__Mail*)this)->smimeType = NULL;
 	((ngwt__BoxEntry*)this)->status = NULL;
 	((ngwt__BoxEntry*)this)->thread = NULL;
 	((ngwt__BoxEntry*)this)->msgId = NULL;
+	((ngwt__BoxEntry*)this)->messageId = NULL;
 	((ngwt__BoxEntry*)this)->source = NULL;
 	((ngwt__BoxEntry*)this)->returnSentItemsId = NULL;
 	soap_default_string(soap, &((ngwt__BoxEntry*)this)->delivered);
@@ -37373,6 +44041,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__SharedNotification(struct soap *soap, c
 	soap_out_PointerTongwt__ItemStatus(soap, "ngwt:status", -1, &(((ngwt__BoxEntry*)a)->status), "");
 	soap_out_PointerTostd__string(soap, "ngwt:thread", -1, &(((ngwt__BoxEntry*)a)->thread), "");
 	soap_out_PointerTostd__string(soap, "ngwt:msgId", -1, &(((ngwt__BoxEntry*)a)->msgId), "");
+	soap_out_PointerTostd__string(soap, "ngwt:messageId", -1, &(((ngwt__BoxEntry*)a)->messageId), "");
 	soap_out_PointerTongwt__ItemSource(soap, "ngwt:source", -1, &(((ngwt__BoxEntry*)a)->source), "");
 	soap_out_PointerTobool(soap, "ngwt:returnSentItemsId", -1, &(((ngwt__BoxEntry*)a)->returnSentItemsId), "");
 	soap_out_string(soap, "ngwt:delivered", -1, &(((ngwt__BoxEntry*)a)->delivered), "");
@@ -37390,6 +44059,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__SharedNotification(struct soap *soap, c
 	soap_out_bool(soap, "ngwt:hasAttachment", -1, &(((ngwt__Mail*)a)->hasAttachment), "");
 	soap_out_int(soap, "ngwt:size", -1, &(((ngwt__Mail*)a)->size), "");
 	soap_out_PointerTostd__string(soap, "ngwt:subType", -1, &(((ngwt__Mail*)a)->subType), "");
+	soap_out_PointerTobool(soap, "ngwt:nntpOrImap", -1, &(((ngwt__Mail*)a)->nntpOrImap), "");
+	soap_out_PointerTongwt__SMimeOperation(soap, "ngwt:smimeType", -1, &(((ngwt__Mail*)a)->smimeType), "");
 	soap_out_ngwt__NotificationType(soap, "ngwt:notification", -1, &(((ngwt__SharedNotification*)a)->notification), "");
 	soap_out_PointerTostd__string(soap, "ngwt:description", -1, &(((ngwt__SharedNotification*)a)->description), "");
 	soap_out_PointerTongwt__Rights(soap, "ngwt:rights", -1, &(((ngwt__SharedNotification*)a)->rights), "");
@@ -37428,7 +44099,7 @@ SOAP_FMAC3 ngwt__SharedNotification * SOAP_FMAC4 soap_in_ngwt__SharedNotificatio
 			return (ngwt__SharedNotification *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id5 = 1, soap_flag_name5 = 1, soap_flag_version5 = 1, soap_flag_modified5 = 1, soap_flag_changes5 = 1, soap_flag_categories4 = 1, soap_flag_created4 = 1, soap_flag_customs4 = 1, soap_flag_status3 = 1, soap_flag_thread3 = 1, soap_flag_msgId3 = 1, soap_flag_source3 = 1, soap_flag_returnSentItemsId3 = 1, soap_flag_delivered3 = 1, soap_flag_class_3 = 1, soap_flag_security3 = 1, soap_flag_comment3 = 1, soap_flag_subject2 = 1, soap_flag_originalSubject2 = 1, soap_flag_subjectPrefix2 = 1, soap_flag_distribution2 = 1, soap_flag_message2 = 1, soap_flag_attachments2 = 1, soap_flag_options2 = 1, soap_flag_link2 = 1, soap_flag_hasAttachment2 = 1, soap_flag_size2 = 1, soap_flag_subType2 = 1, soap_flag_notification1 = 1, soap_flag_description1 = 1, soap_flag_rights1 = 1;
+	short soap_flag_id5 = 1, soap_flag_name5 = 1, soap_flag_version5 = 1, soap_flag_modified5 = 1, soap_flag_changes5 = 1, soap_flag_categories4 = 1, soap_flag_created4 = 1, soap_flag_customs4 = 1, soap_flag_status3 = 1, soap_flag_thread3 = 1, soap_flag_msgId3 = 1, soap_flag_messageId3 = 1, soap_flag_source3 = 1, soap_flag_returnSentItemsId3 = 1, soap_flag_delivered3 = 1, soap_flag_class_3 = 1, soap_flag_security3 = 1, soap_flag_comment3 = 1, soap_flag_subject2 = 1, soap_flag_originalSubject2 = 1, soap_flag_subjectPrefix2 = 1, soap_flag_distribution2 = 1, soap_flag_message2 = 1, soap_flag_attachments2 = 1, soap_flag_options2 = 1, soap_flag_link2 = 1, soap_flag_hasAttachment2 = 1, soap_flag_size2 = 1, soap_flag_subType2 = 1, soap_flag_nntpOrImap2 = 1, soap_flag_smimeType2 = 1, soap_flag_notification1 = 1, soap_flag_description1 = 1, soap_flag_rights1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -37490,6 +44161,11 @@ SOAP_FMAC3 ngwt__SharedNotification * SOAP_FMAC4 soap_in_ngwt__SharedNotificatio
 			if (soap_flag_msgId3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:msgId", &(((ngwt__BoxEntry*)a)->msgId), ""))
 				{	soap_flag_msgId3 = 0;
+					continue;
+				}
+			if (soap_flag_messageId3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:messageId", &(((ngwt__BoxEntry*)a)->messageId), ""))
+				{	soap_flag_messageId3 = 0;
 					continue;
 				}
 			if (soap_flag_source3 && soap->error == SOAP_TAG_MISMATCH)
@@ -37575,6 +44251,16 @@ SOAP_FMAC3 ngwt__SharedNotification * SOAP_FMAC4 soap_in_ngwt__SharedNotificatio
 			if (soap_flag_subType2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:subType", &(((ngwt__Mail*)a)->subType), ""))
 				{	soap_flag_subType2 = 0;
+					continue;
+				}
+			if (soap_flag_nntpOrImap2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTobool(soap, "ngwt:nntpOrImap", &(((ngwt__Mail*)a)->nntpOrImap), ""))
+				{	soap_flag_nntpOrImap2 = 0;
+					continue;
+				}
+			if (soap_flag_smimeType2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__SMimeOperation(soap, "ngwt:smimeType", &(((ngwt__Mail*)a)->smimeType), "ngwt:SMimeOperation"))
+				{	soap_flag_smimeType2 = 0;
 					continue;
 				}
 			if (soap_flag_notification1 && soap->error == SOAP_TAG_MISMATCH)
@@ -37830,8 +44516,6 @@ void ngwt__SharedFolder::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTounsignedLong(soap, &((ngwt__Folder*)this)->sequence);
 	soap_embedded(soap, &((ngwt__Folder*)this)->settings, SOAP_TYPE_PointerTongwt__uid);
 	soap_serialize_PointerTongwt__uid(soap, &((ngwt__Folder*)this)->settings);
-	soap_embedded(soap, &((ngwt__Folder*)this)->hasSubfolders, SOAP_TYPE_PointerTobool);
-	soap_serialize_PointerTobool(soap, &((ngwt__Folder*)this)->hasSubfolders);
 	soap_embedded(soap, &((ngwt__Folder*)this)->calendarAttribute, SOAP_TYPE_PointerTongwt__CalendarFolderAttribute);
 	soap_serialize_PointerTongwt__CalendarFolderAttribute(soap, &((ngwt__Folder*)this)->calendarAttribute);
 	soap_embedded(soap, &((ngwt__Item*)this)->id, SOAP_TYPE_PointerTongwt__uid);
@@ -37862,7 +44546,6 @@ void ngwt__SharedFolder::soap_default(struct soap *soap)
 	((ngwt__Folder*)this)->unreadCount = NULL;
 	((ngwt__Folder*)this)->sequence = NULL;
 	((ngwt__Folder*)this)->settings = NULL;
-	((ngwt__Folder*)this)->hasSubfolders = NULL;
 	((ngwt__Folder*)this)->calendarAttribute = NULL;
 	((ngwt__Item*)this)->id = NULL;
 	((ngwt__Item*)this)->name = NULL;
@@ -37901,7 +44584,6 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__SharedFolder(struct soap *soap, const c
 	soap_out_PointerToint(soap, "ngwt:unreadCount", -1, &(((ngwt__Folder*)a)->unreadCount), "");
 	soap_out_PointerTounsignedLong(soap, "ngwt:sequence", -1, &(((ngwt__Folder*)a)->sequence), "");
 	soap_out_PointerTongwt__uid(soap, "ngwt:settings", -1, &(((ngwt__Folder*)a)->settings), "");
-	soap_out_PointerTobool(soap, "ngwt:hasSubfolders", -1, &(((ngwt__Folder*)a)->hasSubfolders), "");
 	soap_out_PointerTongwt__CalendarFolderAttribute(soap, "ngwt:calendarAttribute", -1, &(((ngwt__Folder*)a)->calendarAttribute), "");
 	soap_out_PointerTongwt__Rights(soap, "ngwt:rights", -1, &(((ngwt__SharedFolder*)a)->rights), "");
 	soap_out_PointerTongwt__FolderACL(soap, "ngwt:acl", -1, &(((ngwt__SharedFolder*)a)->acl), "");
@@ -37943,7 +44625,7 @@ SOAP_FMAC3 ngwt__SharedFolder * SOAP_FMAC4 soap_in_ngwt__SharedFolder(struct soa
 			return (ngwt__SharedFolder *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id3 = 1, soap_flag_name3 = 1, soap_flag_version3 = 1, soap_flag_modified3 = 1, soap_flag_changes3 = 1, soap_flag_parent2 = 1, soap_flag_description2 = 1, soap_flag_count2 = 1, soap_flag_hasUnread2 = 1, soap_flag_unreadCount2 = 1, soap_flag_sequence2 = 1, soap_flag_settings2 = 1, soap_flag_hasSubfolders2 = 1, soap_flag_calendarAttribute2 = 1, soap_flag_rights1 = 1, soap_flag_acl1 = 1, soap_flag_owner1 = 1, soap_flag_isSharedByMe1 = 1, soap_flag_isSharedToMe1 = 1;
+	short soap_flag_id3 = 1, soap_flag_name3 = 1, soap_flag_version3 = 1, soap_flag_modified3 = 1, soap_flag_changes3 = 1, soap_flag_parent2 = 1, soap_flag_description2 = 1, soap_flag_count2 = 1, soap_flag_hasUnread2 = 1, soap_flag_unreadCount2 = 1, soap_flag_sequence2 = 1, soap_flag_settings2 = 1, soap_flag_calendarAttribute2 = 1, soap_flag_rights1 = 1, soap_flag_acl1 = 1, soap_flag_owner1 = 1, soap_flag_isSharedByMe1 = 1, soap_flag_isSharedToMe1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -38007,11 +44689,6 @@ SOAP_FMAC3 ngwt__SharedFolder * SOAP_FMAC4 soap_in_ngwt__SharedFolder(struct soa
 			if (soap_flag_settings2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTongwt__uid(soap, "ngwt:settings", &(((ngwt__Folder*)a)->settings), "ngwt:uid"))
 				{	soap_flag_settings2 = 0;
-					continue;
-				}
-			if (soap_flag_hasSubfolders2 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTobool(soap, "ngwt:hasSubfolders", &(((ngwt__Folder*)a)->hasSubfolders), ""))
-				{	soap_flag_hasSubfolders2 = 0;
 					continue;
 				}
 			if (soap_flag_calendarAttribute2 && soap->error == SOAP_TAG_MISMATCH)
@@ -38829,6 +45506,724 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__SendOptionsRequestReply(struct soap *
 	*(ngwt__SendOptionsRequestReply*)p = *(ngwt__SendOptionsRequestReply*)q;
 }
 
+void ngwt__RuleList::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_serialize_std__vectorTemplateOfPointerTongwt__Rule(soap, &((ngwt__RuleList*)this)->rule);
+	/* transient soap skipped */
+}
+
+void ngwt__RuleList::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	soap_default_std__vectorTemplateOfPointerTongwt__Rule(soap, &((ngwt__RuleList*)this)->rule);
+	/* transient soap skipped */
+}
+
+int ngwt__RuleList::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE_ngwt__RuleList);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int ngwt__RuleList::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out_ngwt__RuleList(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__RuleList(struct soap *soap, const char *tag, int id, const ngwt__RuleList *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__RuleList), type);
+	soap_out_std__vectorTemplateOfPointerTongwt__Rule(soap, "ngwt:rule", -1, &(((ngwt__RuleList*)a)->rule), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *ngwt__RuleList::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get_ngwt__RuleList(soap, this, tag, type);
+}
+
+SOAP_FMAC3 ngwt__RuleList * SOAP_FMAC4 soap_get_ngwt__RuleList(struct soap *soap, ngwt__RuleList *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__RuleList(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *ngwt__RuleList::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in_ngwt__RuleList(soap, tag, this, type);
+}
+
+SOAP_FMAC3 ngwt__RuleList * SOAP_FMAC4 soap_in_ngwt__RuleList(struct soap *soap, const char *tag, ngwt__RuleList *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (ngwt__RuleList *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__RuleList, sizeof(ngwt__RuleList), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE_ngwt__RuleList)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (ngwt__RuleList *)a->soap_in(soap, tag, type);
+		}
+	};
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_std__vectorTemplateOfPointerTongwt__Rule(soap, "ngwt:rule", &(((ngwt__RuleList*)a)->rule), "ngwt:Rule"))
+					continue;
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__RuleList *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__RuleList, 0, sizeof(ngwt__RuleList), 0, soap_copy_ngwt__RuleList);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 ngwt__RuleList * SOAP_FMAC6 soap_new_ngwt__RuleList(struct soap *soap, int n)
+{	return soap_instantiate_ngwt__RuleList(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__RuleList(struct soap *soap, ngwt__RuleList *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 ngwt__RuleList * SOAP_FMAC6 soap_instantiate_ngwt__RuleList(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ngwt__RuleList(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ngwt__RuleList, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new ngwt__RuleList;
+		if (size)
+			*size = sizeof(ngwt__RuleList);
+		((ngwt__RuleList*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new ngwt__RuleList[n];
+		if (size)
+			*size = n * sizeof(ngwt__RuleList);
+		for (int i = 0; i < n; i++)
+			((ngwt__RuleList*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (ngwt__RuleList*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__RuleList(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwt__RuleList %p -> %p\n", q, p));
+	*(ngwt__RuleList*)p = *(ngwt__RuleList*)q;
+}
+
+void ngwt__RuleActionList::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_serialize_std__vectorTemplateOfPointerTongwt__RuleAction(soap, &((ngwt__RuleActionList*)this)->action);
+	/* transient soap skipped */
+}
+
+void ngwt__RuleActionList::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	soap_default_std__vectorTemplateOfPointerTongwt__RuleAction(soap, &((ngwt__RuleActionList*)this)->action);
+	/* transient soap skipped */
+}
+
+int ngwt__RuleActionList::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE_ngwt__RuleActionList);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int ngwt__RuleActionList::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out_ngwt__RuleActionList(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__RuleActionList(struct soap *soap, const char *tag, int id, const ngwt__RuleActionList *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__RuleActionList), type);
+	soap_out_std__vectorTemplateOfPointerTongwt__RuleAction(soap, "ngwt:action", -1, &(((ngwt__RuleActionList*)a)->action), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *ngwt__RuleActionList::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get_ngwt__RuleActionList(soap, this, tag, type);
+}
+
+SOAP_FMAC3 ngwt__RuleActionList * SOAP_FMAC4 soap_get_ngwt__RuleActionList(struct soap *soap, ngwt__RuleActionList *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__RuleActionList(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *ngwt__RuleActionList::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in_ngwt__RuleActionList(soap, tag, this, type);
+}
+
+SOAP_FMAC3 ngwt__RuleActionList * SOAP_FMAC4 soap_in_ngwt__RuleActionList(struct soap *soap, const char *tag, ngwt__RuleActionList *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (ngwt__RuleActionList *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__RuleActionList, sizeof(ngwt__RuleActionList), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE_ngwt__RuleActionList)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (ngwt__RuleActionList *)a->soap_in(soap, tag, type);
+		}
+	};
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_std__vectorTemplateOfPointerTongwt__RuleAction(soap, "ngwt:action", &(((ngwt__RuleActionList*)a)->action), "ngwt:RuleAction"))
+					continue;
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__RuleActionList *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__RuleActionList, 0, sizeof(ngwt__RuleActionList), 0, soap_copy_ngwt__RuleActionList);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 ngwt__RuleActionList * SOAP_FMAC6 soap_new_ngwt__RuleActionList(struct soap *soap, int n)
+{	return soap_instantiate_ngwt__RuleActionList(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__RuleActionList(struct soap *soap, ngwt__RuleActionList *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 ngwt__RuleActionList * SOAP_FMAC6 soap_instantiate_ngwt__RuleActionList(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ngwt__RuleActionList(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ngwt__RuleActionList, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new ngwt__RuleActionList;
+		if (size)
+			*size = sizeof(ngwt__RuleActionList);
+		((ngwt__RuleActionList*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new ngwt__RuleActionList[n];
+		if (size)
+			*size = n * sizeof(ngwt__RuleActionList);
+		for (int i = 0; i < n; i++)
+			((ngwt__RuleActionList*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (ngwt__RuleActionList*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__RuleActionList(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwt__RuleActionList %p -> %p\n", q, p));
+	*(ngwt__RuleActionList*)p = *(ngwt__RuleActionList*)q;
+}
+
+void ngwt__RuleAction::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((ngwt__RuleAction*)this)->type, SOAP_TYPE_ngwt__RuleActionType);
+	soap_embedded(soap, &((ngwt__RuleAction*)this)->container, SOAP_TYPE_PointerTongwt__uid);
+	soap_serialize_PointerTongwt__uid(soap, &((ngwt__RuleAction*)this)->container);
+	soap_embedded(soap, &((ngwt__RuleAction*)this)->item, SOAP_TYPE_PointerTongwt__Mail);
+	soap_serialize_PointerTongwt__Mail(soap, &((ngwt__RuleAction*)this)->item);
+	soap_embedded(soap, &((ngwt__RuleAction*)this)->message, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__RuleAction*)this)->message);
+	soap_embedded(soap, &((ngwt__RuleAction*)this)->acceptLevel, SOAP_TYPE_PointerTongwt__AcceptLevel);
+	soap_serialize_PointerTongwt__AcceptLevel(soap, &((ngwt__RuleAction*)this)->acceptLevel);
+	soap_embedded(soap, &((ngwt__RuleAction*)this)->categories, SOAP_TYPE_PointerTongwt__CategoryRefList);
+	soap_serialize_PointerTongwt__CategoryRefList(soap, &((ngwt__RuleAction*)this)->categories);
+	/* transient soap skipped */
+}
+
+void ngwt__RuleAction::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	soap_default_ngwt__RuleActionType(soap, &((ngwt__RuleAction*)this)->type);
+	((ngwt__RuleAction*)this)->container = NULL;
+	((ngwt__RuleAction*)this)->item = NULL;
+	((ngwt__RuleAction*)this)->message = NULL;
+	((ngwt__RuleAction*)this)->acceptLevel = NULL;
+	((ngwt__RuleAction*)this)->categories = NULL;
+	/* transient soap skipped */
+}
+
+int ngwt__RuleAction::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE_ngwt__RuleAction);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int ngwt__RuleAction::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out_ngwt__RuleAction(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__RuleAction(struct soap *soap, const char *tag, int id, const ngwt__RuleAction *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__RuleAction), type);
+	soap_out_ngwt__RuleActionType(soap, "ngwt:type", -1, &(((ngwt__RuleAction*)a)->type), "");
+	soap_out_PointerTongwt__uid(soap, "ngwt:container", -1, &(((ngwt__RuleAction*)a)->container), "");
+	soap_out_PointerTongwt__Mail(soap, "ngwt:item", -1, &(((ngwt__RuleAction*)a)->item), "");
+	soap_out_PointerTostd__string(soap, "ngwt:message", -1, &(((ngwt__RuleAction*)a)->message), "");
+	soap_out_PointerTongwt__AcceptLevel(soap, "ngwt:acceptLevel", -1, &(((ngwt__RuleAction*)a)->acceptLevel), "");
+	soap_out_PointerTongwt__CategoryRefList(soap, "ngwt:categories", -1, &(((ngwt__RuleAction*)a)->categories), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *ngwt__RuleAction::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get_ngwt__RuleAction(soap, this, tag, type);
+}
+
+SOAP_FMAC3 ngwt__RuleAction * SOAP_FMAC4 soap_get_ngwt__RuleAction(struct soap *soap, ngwt__RuleAction *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__RuleAction(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *ngwt__RuleAction::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in_ngwt__RuleAction(soap, tag, this, type);
+}
+
+SOAP_FMAC3 ngwt__RuleAction * SOAP_FMAC4 soap_in_ngwt__RuleAction(struct soap *soap, const char *tag, ngwt__RuleAction *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (ngwt__RuleAction *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__RuleAction, sizeof(ngwt__RuleAction), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE_ngwt__RuleAction)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (ngwt__RuleAction *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_type1 = 1, soap_flag_container1 = 1, soap_flag_item1 = 1, soap_flag_message1 = 1, soap_flag_acceptLevel1 = 1, soap_flag_categories1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_type1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_ngwt__RuleActionType(soap, "ngwt:type", &(((ngwt__RuleAction*)a)->type), ""))
+				{	soap_flag_type1 = 0;
+					continue;
+				}
+			if (soap_flag_container1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTongwt__uid(soap, "ngwt:container", &(((ngwt__RuleAction*)a)->container), "ngwt:uid"))
+				{	soap_flag_container1 = 0;
+					continue;
+				}
+			if (soap_flag_item1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__Mail(soap, "ngwt:item", &(((ngwt__RuleAction*)a)->item), "ngwt:Mail"))
+				{	soap_flag_item1 = 0;
+					continue;
+				}
+			if (soap_flag_message1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:message", &(((ngwt__RuleAction*)a)->message), ""))
+				{	soap_flag_message1 = 0;
+					continue;
+				}
+			if (soap_flag_acceptLevel1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__AcceptLevel(soap, "ngwt:acceptLevel", &(((ngwt__RuleAction*)a)->acceptLevel), ""))
+				{	soap_flag_acceptLevel1 = 0;
+					continue;
+				}
+			if (soap_flag_categories1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__CategoryRefList(soap, "ngwt:categories", &(((ngwt__RuleAction*)a)->categories), "ngwt:CategoryRefList"))
+				{	soap_flag_categories1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_type1))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__RuleAction *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__RuleAction, 0, sizeof(ngwt__RuleAction), 0, soap_copy_ngwt__RuleAction);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 ngwt__RuleAction * SOAP_FMAC6 soap_new_ngwt__RuleAction(struct soap *soap, int n)
+{	return soap_instantiate_ngwt__RuleAction(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__RuleAction(struct soap *soap, ngwt__RuleAction *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 ngwt__RuleAction * SOAP_FMAC6 soap_instantiate_ngwt__RuleAction(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ngwt__RuleAction(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ngwt__RuleAction, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new ngwt__RuleAction;
+		if (size)
+			*size = sizeof(ngwt__RuleAction);
+		((ngwt__RuleAction*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new ngwt__RuleAction[n];
+		if (size)
+			*size = n * sizeof(ngwt__RuleAction);
+		for (int i = 0; i < n; i++)
+			((ngwt__RuleAction*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (ngwt__RuleAction*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__RuleAction(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwt__RuleAction %p -> %p\n", q, p));
+	*(ngwt__RuleAction*)p = *(ngwt__RuleAction*)q;
+}
+
+void ngwt__Rule::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((ngwt__Rule*)this)->execution, SOAP_TYPE_PointerTongwt__Execution);
+	soap_serialize_PointerTongwt__Execution(soap, &((ngwt__Rule*)this)->execution);
+	soap_embedded(soap, &((ngwt__Rule*)this)->sequence, SOAP_TYPE_unsignedLong);
+	soap_embedded(soap, &((ngwt__Rule*)this)->enabled, SOAP_TYPE_bool);
+	soap_embedded(soap, &((ngwt__Rule*)this)->types, SOAP_TYPE_PointerTongwt__MessageTypeList);
+	soap_serialize_PointerTongwt__MessageTypeList(soap, &((ngwt__Rule*)this)->types);
+	soap_embedded(soap, &((ngwt__Rule*)this)->source, SOAP_TYPE_PointerTongwt__ItemSourceList);
+	soap_serialize_PointerTongwt__ItemSourceList(soap, &((ngwt__Rule*)this)->source);
+	soap_embedded(soap, &((ngwt__Rule*)this)->conflict, SOAP_TYPE_ngwt__AppointmentConflict);
+	soap_embedded(soap, &((ngwt__Rule*)this)->filter, SOAP_TYPE_PointerTongwt__Filter);
+	soap_serialize_PointerTongwt__Filter(soap, &((ngwt__Rule*)this)->filter);
+	soap_embedded(soap, &((ngwt__Rule*)this)->actions, SOAP_TYPE_PointerTongwt__RuleActionList);
+	soap_serialize_PointerTongwt__RuleActionList(soap, &((ngwt__Rule*)this)->actions);
+	soap_serialize_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, &((ngwt__ContainerItem*)this)->container);
+	soap_embedded(soap, &((ngwt__ContainerItem*)this)->categories, SOAP_TYPE_PointerTongwt__CategoryRefList);
+	soap_serialize_PointerTongwt__CategoryRefList(soap, &((ngwt__ContainerItem*)this)->categories);
+	soap_embedded(soap, &((ngwt__ContainerItem*)this)->created, SOAP_TYPE_string);
+	soap_serialize_string(soap, &((ngwt__ContainerItem*)this)->created);
+	soap_embedded(soap, &((ngwt__ContainerItem*)this)->customs, SOAP_TYPE_PointerTongwt__CustomList);
+	soap_serialize_PointerTongwt__CustomList(soap, &((ngwt__ContainerItem*)this)->customs);
+	soap_embedded(soap, &((ngwt__Item*)this)->id, SOAP_TYPE_PointerTongwt__uid);
+	soap_serialize_PointerTongwt__uid(soap, &((ngwt__Item*)this)->id);
+	soap_embedded(soap, &((ngwt__Item*)this)->name, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__Item*)this)->name);
+	soap_embedded(soap, &((ngwt__Item*)this)->version, SOAP_TYPE_PointerTounsignedLong);
+	soap_serialize_PointerTounsignedLong(soap, &((ngwt__Item*)this)->version);
+	soap_embedded(soap, &((ngwt__Item*)this)->modified, SOAP_TYPE_string);
+	soap_serialize_string(soap, &((ngwt__Item*)this)->modified);
+	soap_embedded(soap, &((ngwt__Item*)this)->changes, SOAP_TYPE_PointerTongwt__ItemChanges);
+	soap_serialize_PointerTongwt__ItemChanges(soap, &((ngwt__Item*)this)->changes);
+	/* transient soap skipped */
+}
+
+void ngwt__Rule::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	((ngwt__Rule*)this)->execution = NULL;
+	soap_default_unsignedLong(soap, &((ngwt__Rule*)this)->sequence);
+	((ngwt__Rule*)this)->enabled = (bool)0;
+	((ngwt__Rule*)this)->types = NULL;
+	((ngwt__Rule*)this)->source = NULL;
+	((ngwt__Rule*)this)->conflict = (enum ngwt__AppointmentConflict)2;
+	((ngwt__Rule*)this)->filter = NULL;
+	((ngwt__Rule*)this)->actions = NULL;
+	soap_default_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, &((ngwt__ContainerItem*)this)->container);
+	((ngwt__ContainerItem*)this)->categories = NULL;
+	soap_default_string(soap, &((ngwt__ContainerItem*)this)->created);
+	((ngwt__ContainerItem*)this)->customs = NULL;
+	((ngwt__Item*)this)->id = NULL;
+	((ngwt__Item*)this)->name = NULL;
+	((ngwt__Item*)this)->version = NULL;
+	soap_default_string(soap, &((ngwt__Item*)this)->modified);
+	((ngwt__Item*)this)->changes = NULL;
+	/* transient soap skipped */
+}
+
+int ngwt__Rule::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE_ngwt__Rule);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int ngwt__Rule::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out_ngwt__Rule(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Rule(struct soap *soap, const char *tag, int id, const ngwt__Rule *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__Rule), "ngwt:Rule");
+	soap_out_PointerTongwt__uid(soap, "ngwt:id", -1, &(((ngwt__Item*)a)->id), "");
+	soap_out_PointerTostd__string(soap, "ngwt:name", -1, &(((ngwt__Item*)a)->name), "");
+	soap_out_PointerTounsignedLong(soap, "ngwt:version", -1, &(((ngwt__Item*)a)->version), "");
+	soap_out_string(soap, "ngwt:modified", -1, &(((ngwt__Item*)a)->modified), "");
+	soap_out_PointerTongwt__ItemChanges(soap, "ngwt:changes", -1, &(((ngwt__Item*)a)->changes), "");
+	/* transient soap skipped */
+	soap_out_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, "ngwt:container", -1, &(((ngwt__ContainerItem*)a)->container), "");
+	soap_out_PointerTongwt__CategoryRefList(soap, "ngwt:categories", -1, &(((ngwt__ContainerItem*)a)->categories), "");
+	soap_out_string(soap, "ngwt:created", -1, &(((ngwt__ContainerItem*)a)->created), "");
+	soap_out_PointerTongwt__CustomList(soap, "ngwt:customs", -1, &(((ngwt__ContainerItem*)a)->customs), "");
+	soap_out_PointerTongwt__Execution(soap, "ngwt:execution", -1, &(((ngwt__Rule*)a)->execution), "");
+	soap_out_unsignedLong(soap, "ngwt:sequence", -1, &(((ngwt__Rule*)a)->sequence), "");
+	soap_out_bool(soap, "ngwt:enabled", -1, &(((ngwt__Rule*)a)->enabled), "");
+	soap_out_PointerTongwt__MessageTypeList(soap, "ngwt:types", -1, &(((ngwt__Rule*)a)->types), "");
+	soap_out_PointerTongwt__ItemSourceList(soap, "ngwt:source", -1, &(((ngwt__Rule*)a)->source), "");
+	soap_out_ngwt__AppointmentConflict(soap, "ngwt:conflict", -1, &(((ngwt__Rule*)a)->conflict), "");
+	soap_out_PointerTongwt__Filter(soap, "ngwt:filter", -1, &(((ngwt__Rule*)a)->filter), "");
+	soap_out_PointerTongwt__RuleActionList(soap, "ngwt:actions", -1, &(((ngwt__Rule*)a)->actions), "");
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *ngwt__Rule::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get_ngwt__Rule(soap, this, tag, type);
+}
+
+SOAP_FMAC3 ngwt__Rule * SOAP_FMAC4 soap_get_ngwt__Rule(struct soap *soap, ngwt__Rule *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__Rule(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *ngwt__Rule::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in_ngwt__Rule(soap, tag, this, type);
+}
+
+SOAP_FMAC3 ngwt__Rule * SOAP_FMAC4 soap_in_ngwt__Rule(struct soap *soap, const char *tag, ngwt__Rule *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (ngwt__Rule *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__Rule, sizeof(ngwt__Rule), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE_ngwt__Rule)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (ngwt__Rule *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_id3 = 1, soap_flag_name3 = 1, soap_flag_version3 = 1, soap_flag_modified3 = 1, soap_flag_changes3 = 1, soap_flag_categories2 = 1, soap_flag_created2 = 1, soap_flag_customs2 = 1, soap_flag_execution1 = 1, soap_flag_sequence1 = 1, soap_flag_enabled1 = 1, soap_flag_types1 = 1, soap_flag_source1 = 1, soap_flag_conflict1 = 1, soap_flag_filter1 = 1, soap_flag_actions1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_id3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTongwt__uid(soap, "ngwt:id", &(((ngwt__Item*)a)->id), "ngwt:uid"))
+				{	soap_flag_id3 = 0;
+					continue;
+				}
+			if (soap_flag_name3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:name", &(((ngwt__Item*)a)->name), ""))
+				{	soap_flag_name3 = 0;
+					continue;
+				}
+			if (soap_flag_version3 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTounsignedLong(soap, "ngwt:version", &(((ngwt__Item*)a)->version), ""))
+				{	soap_flag_version3 = 0;
+					continue;
+				}
+			if (soap_flag_modified3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ngwt:modified", &(((ngwt__Item*)a)->modified), ""))
+				{	soap_flag_modified3 = 0;
+					continue;
+				}
+			if (soap_flag_changes3 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__ItemChanges(soap, "ngwt:changes", &(((ngwt__Item*)a)->changes), "ngwt:ItemChanges"))
+				{	soap_flag_changes3 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, "ngwt:container", &(((ngwt__ContainerItem*)a)->container), "ngwt:ContainerRef"))
+					continue;
+			if (soap_flag_categories2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__CategoryRefList(soap, "ngwt:categories", &(((ngwt__ContainerItem*)a)->categories), "ngwt:CategoryRefList"))
+				{	soap_flag_categories2 = 0;
+					continue;
+				}
+			if (soap_flag_created2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ngwt:created", &(((ngwt__ContainerItem*)a)->created), ""))
+				{	soap_flag_created2 = 0;
+					continue;
+				}
+			if (soap_flag_customs2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__CustomList(soap, "ngwt:customs", &(((ngwt__ContainerItem*)a)->customs), "ngwt:CustomList"))
+				{	soap_flag_customs2 = 0;
+					continue;
+				}
+			if (soap_flag_execution1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__Execution(soap, "ngwt:execution", &(((ngwt__Rule*)a)->execution), ""))
+				{	soap_flag_execution1 = 0;
+					continue;
+				}
+			if (soap_flag_sequence1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_unsignedLong(soap, "ngwt:sequence", &(((ngwt__Rule*)a)->sequence), ""))
+				{	soap_flag_sequence1 = 0;
+					continue;
+				}
+			if (soap_flag_enabled1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_bool(soap, "ngwt:enabled", &(((ngwt__Rule*)a)->enabled), ""))
+				{	soap_flag_enabled1 = 0;
+					continue;
+				}
+			if (soap_flag_types1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__MessageTypeList(soap, "ngwt:types", &(((ngwt__Rule*)a)->types), ""))
+				{	soap_flag_types1 = 0;
+					continue;
+				}
+			if (soap_flag_source1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__ItemSourceList(soap, "ngwt:source", &(((ngwt__Rule*)a)->source), ""))
+				{	soap_flag_source1 = 0;
+					continue;
+				}
+			if (soap_flag_conflict1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_ngwt__AppointmentConflict(soap, "ngwt:conflict", &(((ngwt__Rule*)a)->conflict), ""))
+				{	soap_flag_conflict1 = 0;
+					continue;
+				}
+			if (soap_flag_filter1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__Filter(soap, "ngwt:filter", &(((ngwt__Rule*)a)->filter), "ngwt:Filter"))
+				{	soap_flag_filter1 = 0;
+					continue;
+				}
+			if (soap_flag_actions1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__RuleActionList(soap, "ngwt:actions", &(((ngwt__Rule*)a)->actions), "ngwt:RuleActionList"))
+				{	soap_flag_actions1 = 0;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_sequence1))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__Rule *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__Rule, 0, sizeof(ngwt__Rule), 0, soap_copy_ngwt__Rule);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 ngwt__Rule * SOAP_FMAC6 soap_new_ngwt__Rule(struct soap *soap, int n)
+{	return soap_instantiate_ngwt__Rule(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__Rule(struct soap *soap, ngwt__Rule *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 ngwt__Rule * SOAP_FMAC6 soap_instantiate_ngwt__Rule(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ngwt__Rule(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ngwt__Rule, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new ngwt__Rule;
+		if (size)
+			*size = sizeof(ngwt__Rule);
+		((ngwt__Rule*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new ngwt__Rule[n];
+		if (size)
+			*size = n * sizeof(ngwt__Rule);
+		for (int i = 0; i < n; i++)
+			((ngwt__Rule*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (ngwt__Rule*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Rule(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwt__Rule %p -> %p\n", q, p));
+	*(ngwt__Rule*)p = *(ngwt__Rule*)q;
+}
+
 void ngwt__Rights::soap_serialize(struct soap *soap) const
 {
 	(void)soap; /* appease -Wall -Werror */
@@ -39342,6 +46737,8 @@ void ngwt__Resource::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((ngwt__AddressBookItem*)this)->postOffice);
 	soap_embedded(soap, &((ngwt__AddressBookItem*)this)->distinguishedName, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__AddressBookItem*)this)->distinguishedName);
+	soap_embedded(soap, &((ngwt__AddressBookItem*)this)->userid, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__AddressBookItem*)this)->userid);
 	soap_serialize_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, &((ngwt__ContainerItem*)this)->container);
 	soap_embedded(soap, &((ngwt__ContainerItem*)this)->categories, SOAP_TYPE_PointerTongwt__CategoryRefList);
 	soap_serialize_PointerTongwt__CategoryRefList(soap, &((ngwt__ContainerItem*)this)->categories);
@@ -39375,6 +46772,7 @@ void ngwt__Resource::soap_default(struct soap *soap)
 	((ngwt__AddressBookItem*)this)->domain = NULL;
 	((ngwt__AddressBookItem*)this)->postOffice = NULL;
 	((ngwt__AddressBookItem*)this)->distinguishedName = NULL;
+	((ngwt__AddressBookItem*)this)->userid = NULL;
 	soap_default_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, &((ngwt__ContainerItem*)this)->container);
 	((ngwt__ContainerItem*)this)->categories = NULL;
 	soap_default_string(soap, &((ngwt__ContainerItem*)this)->created);
@@ -39419,6 +46817,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Resource(struct soap *soap, const char 
 	soap_out_PointerTostd__string(soap, "ngwt:domain", -1, &(((ngwt__AddressBookItem*)a)->domain), "");
 	soap_out_PointerTostd__string(soap, "ngwt:postOffice", -1, &(((ngwt__AddressBookItem*)a)->postOffice), "");
 	soap_out_PointerTostd__string(soap, "ngwt:distinguishedName", -1, &(((ngwt__AddressBookItem*)a)->distinguishedName), "");
+	soap_out_PointerTostd__string(soap, "ngwt:userid", -1, &(((ngwt__AddressBookItem*)a)->userid), "");
 	soap_out_PointerTostd__string(soap, "ngwt:phone", -1, &(((ngwt__Resource*)a)->phone), "");
 	soap_out_PointerTostd__string(soap, "ngwt:resourceType", -1, &(((ngwt__Resource*)a)->resourceType), "");
 	soap_out_PointerTostd__string(soap, "ngwt:email", -1, &(((ngwt__Resource*)a)->email), "");
@@ -39458,7 +46857,7 @@ SOAP_FMAC3 ngwt__Resource * SOAP_FMAC4 soap_in_ngwt__Resource(struct soap *soap,
 			return (ngwt__Resource *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id4 = 1, soap_flag_name4 = 1, soap_flag_version4 = 1, soap_flag_modified4 = 1, soap_flag_changes4 = 1, soap_flag_categories3 = 1, soap_flag_created3 = 1, soap_flag_customs3 = 1, soap_flag_uuid2 = 1, soap_flag_comment2 = 1, soap_flag_sync2 = 1, soap_flag_domain2 = 1, soap_flag_postOffice2 = 1, soap_flag_distinguishedName2 = 1, soap_flag_phone1 = 1, soap_flag_resourceType1 = 1, soap_flag_email1 = 1, soap_flag_owner1 = 1;
+	short soap_flag_id4 = 1, soap_flag_name4 = 1, soap_flag_version4 = 1, soap_flag_modified4 = 1, soap_flag_changes4 = 1, soap_flag_categories3 = 1, soap_flag_created3 = 1, soap_flag_customs3 = 1, soap_flag_uuid2 = 1, soap_flag_comment2 = 1, soap_flag_sync2 = 1, soap_flag_domain2 = 1, soap_flag_postOffice2 = 1, soap_flag_distinguishedName2 = 1, soap_flag_userid2 = 1, soap_flag_phone1 = 1, soap_flag_resourceType1 = 1, soap_flag_email1 = 1, soap_flag_owner1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -39535,6 +46934,11 @@ SOAP_FMAC3 ngwt__Resource * SOAP_FMAC4 soap_in_ngwt__Resource(struct soap *soap,
 			if (soap_flag_distinguishedName2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:distinguishedName", &(((ngwt__AddressBookItem*)a)->distinguishedName), ""))
 				{	soap_flag_distinguishedName2 = 0;
+					continue;
+				}
+			if (soap_flag_userid2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:userid", &(((ngwt__AddressBookItem*)a)->userid), ""))
+				{	soap_flag_userid2 = 0;
 					continue;
 				}
 			if (soap_flag_phone1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
@@ -39766,8 +47170,10 @@ void ngwt__RecurrenceRule::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerToxsd__date(soap, &((ngwt__RecurrenceRule*)this)->until);
 	soap_embedded(soap, &((ngwt__RecurrenceRule*)this)->interval, SOAP_TYPE_PointerTounsignedLong);
 	soap_serialize_PointerTounsignedLong(soap, &((ngwt__RecurrenceRule*)this)->interval);
-	soap_embedded(soap, &((ngwt__RecurrenceRule*)this)->byDay, SOAP_TYPE_PointerTongwt__DayOfWeekList);
-	soap_serialize_PointerTongwt__DayOfWeekList(soap, &((ngwt__RecurrenceRule*)this)->byDay);
+	soap_embedded(soap, &((ngwt__RecurrenceRule*)this)->byDay, SOAP_TYPE_PointerTongwt__DayOfYearWeekList);
+	soap_serialize_PointerTongwt__DayOfYearWeekList(soap, &((ngwt__RecurrenceRule*)this)->byDay);
+	soap_embedded(soap, &((ngwt__RecurrenceRule*)this)->byMonthDay, SOAP_TYPE_PointerTongwt__DayOfMonthList);
+	soap_serialize_PointerTongwt__DayOfMonthList(soap, &((ngwt__RecurrenceRule*)this)->byMonthDay);
 	soap_embedded(soap, &((ngwt__RecurrenceRule*)this)->byYearDay, SOAP_TYPE_PointerTongwt__DayOfYearList);
 	soap_serialize_PointerTongwt__DayOfYearList(soap, &((ngwt__RecurrenceRule*)this)->byYearDay);
 	soap_embedded(soap, &((ngwt__RecurrenceRule*)this)->byMonth, SOAP_TYPE_PointerTongwt__MonthList);
@@ -39783,6 +47189,7 @@ void ngwt__RecurrenceRule::soap_default(struct soap *soap)
 	((ngwt__RecurrenceRule*)this)->until = NULL;
 	((ngwt__RecurrenceRule*)this)->interval = NULL;
 	((ngwt__RecurrenceRule*)this)->byDay = NULL;
+	((ngwt__RecurrenceRule*)this)->byMonthDay = NULL;
 	((ngwt__RecurrenceRule*)this)->byYearDay = NULL;
 	((ngwt__RecurrenceRule*)this)->byMonth = NULL;
 	/* transient soap skipped */
@@ -39808,7 +47215,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__RecurrenceRule(struct soap *soap, const
 	soap_out_PointerTounsignedLong(soap, "ngwt:count", -1, &(((ngwt__RecurrenceRule*)a)->count), "");
 	soap_out_PointerToxsd__date(soap, "ngwt:until", -1, &(((ngwt__RecurrenceRule*)a)->until), "");
 	soap_out_PointerTounsignedLong(soap, "ngwt:interval", -1, &(((ngwt__RecurrenceRule*)a)->interval), "");
-	soap_out_PointerTongwt__DayOfWeekList(soap, "ngwt:byDay", -1, &(((ngwt__RecurrenceRule*)a)->byDay), "");
+	soap_out_PointerTongwt__DayOfYearWeekList(soap, "ngwt:byDay", -1, &(((ngwt__RecurrenceRule*)a)->byDay), "");
+	soap_out_PointerTongwt__DayOfMonthList(soap, "ngwt:byMonthDay", -1, &(((ngwt__RecurrenceRule*)a)->byMonthDay), "");
 	soap_out_PointerTongwt__DayOfYearList(soap, "ngwt:byYearDay", -1, &(((ngwt__RecurrenceRule*)a)->byYearDay), "");
 	soap_out_PointerTongwt__MonthList(soap, "ngwt:byMonth", -1, &(((ngwt__RecurrenceRule*)a)->byMonth), "");
 	/* transient soap skipped */
@@ -39847,7 +47255,7 @@ SOAP_FMAC3 ngwt__RecurrenceRule * SOAP_FMAC4 soap_in_ngwt__RecurrenceRule(struct
 			return (ngwt__RecurrenceRule *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_frequency1 = 1, soap_flag_count1 = 1, soap_flag_until1 = 1, soap_flag_interval1 = 1, soap_flag_byDay1 = 1, soap_flag_byYearDay1 = 1, soap_flag_byMonth1 = 1;
+	short soap_flag_frequency1 = 1, soap_flag_count1 = 1, soap_flag_until1 = 1, soap_flag_interval1 = 1, soap_flag_byDay1 = 1, soap_flag_byMonthDay1 = 1, soap_flag_byYearDay1 = 1, soap_flag_byMonth1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -39873,8 +47281,13 @@ SOAP_FMAC3 ngwt__RecurrenceRule * SOAP_FMAC4 soap_in_ngwt__RecurrenceRule(struct
 					continue;
 				}
 			if (soap_flag_byDay1 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTongwt__DayOfWeekList(soap, "ngwt:byDay", &(((ngwt__RecurrenceRule*)a)->byDay), "ngwt:DayOfWeekList"))
+				if (soap_in_PointerTongwt__DayOfYearWeekList(soap, "ngwt:byDay", &(((ngwt__RecurrenceRule*)a)->byDay), "ngwt:DayOfYearWeekList"))
 				{	soap_flag_byDay1 = 0;
+					continue;
+				}
+			if (soap_flag_byMonthDay1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__DayOfMonthList(soap, "ngwt:byMonthDay", &(((ngwt__RecurrenceRule*)a)->byMonthDay), "ngwt:DayOfMonthList"))
+				{	soap_flag_byMonthDay1 = 0;
 					continue;
 				}
 			if (soap_flag_byYearDay1 && soap->error == SOAP_TAG_MISMATCH)
@@ -40575,6 +47988,8 @@ void ngwt__Recipient::soap_serialize(struct soap *soap) const
 	soap_embedded(soap, &((ngwt__Recipient*)this)->recipType, SOAP_TYPE_ngwt__RecipientType);
 	soap_embedded(soap, &((ngwt__Recipient*)this)->recipientStatus, SOAP_TYPE_PointerTongwt__RecipientStatus);
 	soap_serialize_PointerTongwt__RecipientStatus(soap, &((ngwt__Recipient*)this)->recipientStatus);
+	soap_embedded(soap, &((ngwt__Recipient*)this)->acceptLevel, SOAP_TYPE_PointerTongwt__AcceptLevel);
+	soap_serialize_PointerTongwt__AcceptLevel(soap, &((ngwt__Recipient*)this)->acceptLevel);
 	soap_embedded(soap, &((ngwt__NameAndEmail*)this)->displayName, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__NameAndEmail*)this)->displayName);
 	soap_embedded(soap, &((ngwt__NameAndEmail*)this)->email, SOAP_TYPE_PointerTostd__string);
@@ -40590,6 +48005,7 @@ void ngwt__Recipient::soap_default(struct soap *soap)
 	((ngwt__Recipient*)this)->distType = (enum ngwt__DistributionType)0;
 	((ngwt__Recipient*)this)->recipType = (enum ngwt__RecipientType)0;
 	((ngwt__Recipient*)this)->recipientStatus = NULL;
+	((ngwt__Recipient*)this)->acceptLevel = NULL;
 	((ngwt__NameAndEmail*)this)->displayName = NULL;
 	((ngwt__NameAndEmail*)this)->email = NULL;
 	((ngwt__NameAndEmail*)this)->uuid = NULL;
@@ -40619,6 +48035,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Recipient(struct soap *soap, const char
 	soap_out_ngwt__DistributionType(soap, "ngwt:distType", -1, &(((ngwt__Recipient*)a)->distType), "");
 	soap_out_ngwt__RecipientType(soap, "ngwt:recipType", -1, &(((ngwt__Recipient*)a)->recipType), "");
 	soap_out_PointerTongwt__RecipientStatus(soap, "ngwt:recipientStatus", -1, &(((ngwt__Recipient*)a)->recipientStatus), "");
+	soap_out_PointerTongwt__AcceptLevel(soap, "ngwt:acceptLevel", -1, &(((ngwt__Recipient*)a)->acceptLevel), "");
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
 }
@@ -40654,7 +48071,7 @@ SOAP_FMAC3 ngwt__Recipient * SOAP_FMAC4 soap_in_ngwt__Recipient(struct soap *soa
 			return (ngwt__Recipient *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_displayName2 = 1, soap_flag_email2 = 1, soap_flag_uuid2 = 1, soap_flag_distType1 = 1, soap_flag_recipType1 = 1, soap_flag_recipientStatus1 = 1;
+	short soap_flag_displayName2 = 1, soap_flag_email2 = 1, soap_flag_uuid2 = 1, soap_flag_distType1 = 1, soap_flag_recipType1 = 1, soap_flag_recipientStatus1 = 1, soap_flag_acceptLevel1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -40688,6 +48105,11 @@ SOAP_FMAC3 ngwt__Recipient * SOAP_FMAC4 soap_in_ngwt__Recipient(struct soap *soa
 			if (soap_flag_recipientStatus1 && soap->error == SOAP_TAG_MISMATCH)
 				if (soap_in_PointerTongwt__RecipientStatus(soap, "ngwt:recipientStatus", &(((ngwt__Recipient*)a)->recipientStatus), "ngwt:RecipientStatus"))
 				{	soap_flag_recipientStatus1 = 0;
+					continue;
+				}
+			if (soap_flag_acceptLevel1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__AcceptLevel(soap, "ngwt:acceptLevel", &(((ngwt__Recipient*)a)->acceptLevel), ""))
+				{	soap_flag_acceptLevel1 = 0;
 					continue;
 				}
 			if (soap->error == SOAP_TAG_MISMATCH)
@@ -40906,8 +48328,6 @@ void ngwt__QueryFolder::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTounsignedLong(soap, &((ngwt__Folder*)this)->sequence);
 	soap_embedded(soap, &((ngwt__Folder*)this)->settings, SOAP_TYPE_PointerTongwt__uid);
 	soap_serialize_PointerTongwt__uid(soap, &((ngwt__Folder*)this)->settings);
-	soap_embedded(soap, &((ngwt__Folder*)this)->hasSubfolders, SOAP_TYPE_PointerTobool);
-	soap_serialize_PointerTobool(soap, &((ngwt__Folder*)this)->hasSubfolders);
 	soap_embedded(soap, &((ngwt__Folder*)this)->calendarAttribute, SOAP_TYPE_PointerTongwt__CalendarFolderAttribute);
 	soap_serialize_PointerTongwt__CalendarFolderAttribute(soap, &((ngwt__Folder*)this)->calendarAttribute);
 	soap_embedded(soap, &((ngwt__Item*)this)->id, SOAP_TYPE_PointerTongwt__uid);
@@ -40935,7 +48355,6 @@ void ngwt__QueryFolder::soap_default(struct soap *soap)
 	((ngwt__Folder*)this)->unreadCount = NULL;
 	((ngwt__Folder*)this)->sequence = NULL;
 	((ngwt__Folder*)this)->settings = NULL;
-	((ngwt__Folder*)this)->hasSubfolders = NULL;
 	((ngwt__Folder*)this)->calendarAttribute = NULL;
 	((ngwt__Item*)this)->id = NULL;
 	((ngwt__Item*)this)->name = NULL;
@@ -40974,7 +48393,6 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__QueryFolder(struct soap *soap, const ch
 	soap_out_PointerToint(soap, "ngwt:unreadCount", -1, &(((ngwt__Folder*)a)->unreadCount), "");
 	soap_out_PointerTounsignedLong(soap, "ngwt:sequence", -1, &(((ngwt__Folder*)a)->sequence), "");
 	soap_out_PointerTongwt__uid(soap, "ngwt:settings", -1, &(((ngwt__Folder*)a)->settings), "");
-	soap_out_PointerTobool(soap, "ngwt:hasSubfolders", -1, &(((ngwt__Folder*)a)->hasSubfolders), "");
 	soap_out_PointerTongwt__CalendarFolderAttribute(soap, "ngwt:calendarAttribute", -1, &(((ngwt__Folder*)a)->calendarAttribute), "");
 	soap_out_PointerTongwt__FolderType(soap, "ngwt:folderType", -1, &(((ngwt__QueryFolder*)a)->folderType), "");
 	soap_out_PointerTongwt__Query(soap, "ngwt:query", -1, &(((ngwt__QueryFolder*)a)->query), "");
@@ -41013,7 +48431,7 @@ SOAP_FMAC3 ngwt__QueryFolder * SOAP_FMAC4 soap_in_ngwt__QueryFolder(struct soap 
 			return (ngwt__QueryFolder *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id3 = 1, soap_flag_name3 = 1, soap_flag_version3 = 1, soap_flag_modified3 = 1, soap_flag_changes3 = 1, soap_flag_parent2 = 1, soap_flag_description2 = 1, soap_flag_count2 = 1, soap_flag_hasUnread2 = 1, soap_flag_unreadCount2 = 1, soap_flag_sequence2 = 1, soap_flag_settings2 = 1, soap_flag_hasSubfolders2 = 1, soap_flag_calendarAttribute2 = 1, soap_flag_folderType1 = 1, soap_flag_query1 = 1;
+	short soap_flag_id3 = 1, soap_flag_name3 = 1, soap_flag_version3 = 1, soap_flag_modified3 = 1, soap_flag_changes3 = 1, soap_flag_parent2 = 1, soap_flag_description2 = 1, soap_flag_count2 = 1, soap_flag_hasUnread2 = 1, soap_flag_unreadCount2 = 1, soap_flag_sequence2 = 1, soap_flag_settings2 = 1, soap_flag_calendarAttribute2 = 1, soap_flag_folderType1 = 1, soap_flag_query1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -41077,11 +48495,6 @@ SOAP_FMAC3 ngwt__QueryFolder * SOAP_FMAC4 soap_in_ngwt__QueryFolder(struct soap 
 			if (soap_flag_settings2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTongwt__uid(soap, "ngwt:settings", &(((ngwt__Folder*)a)->settings), "ngwt:uid"))
 				{	soap_flag_settings2 = 0;
-					continue;
-				}
-			if (soap_flag_hasSubfolders2 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTobool(soap, "ngwt:hasSubfolders", &(((ngwt__Folder*)a)->hasSubfolders), ""))
-				{	soap_flag_hasSubfolders2 = 0;
 					continue;
 				}
 			if (soap_flag_calendarAttribute2 && soap->error == SOAP_TAG_MISMATCH)
@@ -41308,14 +48721,14 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Query(struct soap *soap, int st, int 
 void ngwt__ProxyList::soap_serialize(struct soap *soap) const
 {
 	(void)soap; /* appease -Wall -Werror */
-	soap_serialize_std__vectorTemplateOfPointerTongwt__NameAndEmail(soap, &((ngwt__ProxyList*)this)->proxy);
+	soap_serialize_std__vectorTemplateOfPointerTongwt__ProxyUser(soap, &((ngwt__ProxyList*)this)->proxy);
 	/* transient soap skipped */
 }
 
 void ngwt__ProxyList::soap_default(struct soap *soap)
 {
 	this->soap = soap;
-	soap_default_std__vectorTemplateOfPointerTongwt__NameAndEmail(soap, &((ngwt__ProxyList*)this)->proxy);
+	soap_default_std__vectorTemplateOfPointerTongwt__ProxyUser(soap, &((ngwt__ProxyList*)this)->proxy);
 	/* transient soap skipped */
 }
 
@@ -41335,7 +48748,7 @@ int ngwt__ProxyList::soap_out(struct soap *soap, const char *tag, int id, const 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__ProxyList(struct soap *soap, const char *tag, int id, const ngwt__ProxyList *a, const char *type)
 {
 	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__ProxyList), type);
-	soap_out_std__vectorTemplateOfPointerTongwt__NameAndEmail(soap, "ngwt:proxy", -1, &(((ngwt__ProxyList*)a)->proxy), "");
+	soap_out_std__vectorTemplateOfPointerTongwt__ProxyUser(soap, "ngwt:proxy", -1, &(((ngwt__ProxyList*)a)->proxy), "");
 	/* transient soap skipped */
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
@@ -41377,7 +48790,7 @@ SOAP_FMAC3 ngwt__ProxyList * SOAP_FMAC4 soap_in_ngwt__ProxyList(struct soap *soa
 		for (;;)
 		{	soap->error = SOAP_TAG_MISMATCH;
 			if (soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_std__vectorTemplateOfPointerTongwt__NameAndEmail(soap, "ngwt:proxy", &(((ngwt__ProxyList*)a)->proxy), "ngwt:NameAndEmail"))
+				if (soap_in_std__vectorTemplateOfPointerTongwt__ProxyUser(soap, "ngwt:proxy", &(((ngwt__ProxyList*)a)->proxy), "ngwt:ProxyUser"))
 					continue;
 			/* transient soap skipped */
 			if (soap->error == SOAP_TAG_MISMATCH)
@@ -41433,6 +48846,167 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__ProxyList(struct soap *soap, int st, 
 {
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwt__ProxyList %p -> %p\n", q, p));
 	*(ngwt__ProxyList*)p = *(ngwt__ProxyList*)q;
+}
+
+void ngwt__ProxyUser::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((ngwt__ProxyUser*)this)->id, SOAP_TYPE_PointerTongwt__uid);
+	soap_serialize_PointerTongwt__uid(soap, &((ngwt__ProxyUser*)this)->id);
+	soap_embedded(soap, &((ngwt__NameAndEmail*)this)->displayName, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__NameAndEmail*)this)->displayName);
+	soap_embedded(soap, &((ngwt__NameAndEmail*)this)->email, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__NameAndEmail*)this)->email);
+	soap_embedded(soap, &((ngwt__NameAndEmail*)this)->uuid, SOAP_TYPE_PointerTongwt__UUID);
+	soap_serialize_PointerTongwt__UUID(soap, &((ngwt__NameAndEmail*)this)->uuid);
+	/* transient soap skipped */
+}
+
+void ngwt__ProxyUser::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	((ngwt__ProxyUser*)this)->id = NULL;
+	((ngwt__NameAndEmail*)this)->displayName = NULL;
+	((ngwt__NameAndEmail*)this)->email = NULL;
+	((ngwt__NameAndEmail*)this)->uuid = NULL;
+	/* transient soap skipped */
+}
+
+int ngwt__ProxyUser::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE_ngwt__ProxyUser);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int ngwt__ProxyUser::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out_ngwt__ProxyUser(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__ProxyUser(struct soap *soap, const char *tag, int id, const ngwt__ProxyUser *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__ProxyUser), "ngwt:ProxyUser");
+	soap_out_PointerTostd__string(soap, "ngwt:displayName", -1, &(((ngwt__NameAndEmail*)a)->displayName), "");
+	soap_out_PointerTostd__string(soap, "ngwt:email", -1, &(((ngwt__NameAndEmail*)a)->email), "");
+	soap_out_PointerTongwt__UUID(soap, "ngwt:uuid", -1, &(((ngwt__NameAndEmail*)a)->uuid), "");
+	/* transient soap skipped */
+	soap_out_PointerTongwt__uid(soap, "ngwt:id", -1, &(((ngwt__ProxyUser*)a)->id), "");
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *ngwt__ProxyUser::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get_ngwt__ProxyUser(soap, this, tag, type);
+}
+
+SOAP_FMAC3 ngwt__ProxyUser * SOAP_FMAC4 soap_get_ngwt__ProxyUser(struct soap *soap, ngwt__ProxyUser *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__ProxyUser(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *ngwt__ProxyUser::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in_ngwt__ProxyUser(soap, tag, this, type);
+}
+
+SOAP_FMAC3 ngwt__ProxyUser * SOAP_FMAC4 soap_in_ngwt__ProxyUser(struct soap *soap, const char *tag, ngwt__ProxyUser *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (ngwt__ProxyUser *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__ProxyUser, sizeof(ngwt__ProxyUser), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE_ngwt__ProxyUser)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (ngwt__ProxyUser *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_displayName2 = 1, soap_flag_email2 = 1, soap_flag_uuid2 = 1, soap_flag_id1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_displayName2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:displayName", &(((ngwt__NameAndEmail*)a)->displayName), ""))
+				{	soap_flag_displayName2 = 0;
+					continue;
+				}
+			if (soap_flag_email2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:email", &(((ngwt__NameAndEmail*)a)->email), ""))
+				{	soap_flag_email2 = 0;
+					continue;
+				}
+			if (soap_flag_uuid2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTongwt__UUID(soap, "ngwt:uuid", &(((ngwt__NameAndEmail*)a)->uuid), "ngwt:UUID"))
+				{	soap_flag_uuid2 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap_flag_id1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTongwt__uid(soap, "ngwt:id", &(((ngwt__ProxyUser*)a)->id), "ngwt:uid"))
+				{	soap_flag_id1 = 0;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__ProxyUser *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__ProxyUser, 0, sizeof(ngwt__ProxyUser), 0, soap_copy_ngwt__ProxyUser);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 ngwt__ProxyUser * SOAP_FMAC6 soap_new_ngwt__ProxyUser(struct soap *soap, int n)
+{	return soap_instantiate_ngwt__ProxyUser(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__ProxyUser(struct soap *soap, ngwt__ProxyUser *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 ngwt__ProxyUser * SOAP_FMAC6 soap_instantiate_ngwt__ProxyUser(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ngwt__ProxyUser(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ngwt__ProxyUser, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new ngwt__ProxyUser;
+		if (size)
+			*size = sizeof(ngwt__ProxyUser);
+		((ngwt__ProxyUser*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new ngwt__ProxyUser[n];
+		if (size)
+			*size = n * sizeof(ngwt__ProxyUser);
+		for (int i = 0; i < n; i++)
+			((ngwt__ProxyUser*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (ngwt__ProxyUser*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__ProxyUser(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwt__ProxyUser %p -> %p\n", q, p));
+	*(ngwt__ProxyUser*)p = *(ngwt__ProxyUser*)q;
 }
 
 void ngwt__Proxy::soap_serialize(struct soap *soap) const
@@ -42483,12 +50057,18 @@ void ngwt__PhoneMessage::soap_serialize(struct soap *soap) const
 	soap_embedded(soap, &((ngwt__Mail*)this)->size, SOAP_TYPE_int);
 	soap_embedded(soap, &((ngwt__Mail*)this)->subType, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__Mail*)this)->subType);
+	soap_embedded(soap, &((ngwt__Mail*)this)->nntpOrImap, SOAP_TYPE_PointerTobool);
+	soap_serialize_PointerTobool(soap, &((ngwt__Mail*)this)->nntpOrImap);
+	soap_embedded(soap, &((ngwt__Mail*)this)->smimeType, SOAP_TYPE_PointerTongwt__SMimeOperation);
+	soap_serialize_PointerTongwt__SMimeOperation(soap, &((ngwt__Mail*)this)->smimeType);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->status, SOAP_TYPE_PointerTongwt__ItemStatus);
 	soap_serialize_PointerTongwt__ItemStatus(soap, &((ngwt__BoxEntry*)this)->status);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->thread, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->thread);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->msgId, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->msgId);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->messageId, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->messageId);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->source, SOAP_TYPE_PointerTongwt__ItemSource);
 	soap_serialize_PointerTongwt__ItemSource(soap, &((ngwt__BoxEntry*)this)->source);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->returnSentItemsId, SOAP_TYPE_PointerTobool);
@@ -42539,9 +50119,12 @@ void ngwt__PhoneMessage::soap_default(struct soap *soap)
 	((ngwt__Mail*)this)->hasAttachment = (bool)0;
 	((ngwt__Mail*)this)->size = 0;
 	((ngwt__Mail*)this)->subType = NULL;
+	((ngwt__Mail*)this)->nntpOrImap = NULL;
+	((ngwt__Mail*)this)->smimeType = NULL;
 	((ngwt__BoxEntry*)this)->status = NULL;
 	((ngwt__BoxEntry*)this)->thread = NULL;
 	((ngwt__BoxEntry*)this)->msgId = NULL;
+	((ngwt__BoxEntry*)this)->messageId = NULL;
 	((ngwt__BoxEntry*)this)->source = NULL;
 	((ngwt__BoxEntry*)this)->returnSentItemsId = NULL;
 	soap_default_string(soap, &((ngwt__BoxEntry*)this)->delivered);
@@ -42589,6 +50172,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__PhoneMessage(struct soap *soap, const c
 	soap_out_PointerTongwt__ItemStatus(soap, "ngwt:status", -1, &(((ngwt__BoxEntry*)a)->status), "");
 	soap_out_PointerTostd__string(soap, "ngwt:thread", -1, &(((ngwt__BoxEntry*)a)->thread), "");
 	soap_out_PointerTostd__string(soap, "ngwt:msgId", -1, &(((ngwt__BoxEntry*)a)->msgId), "");
+	soap_out_PointerTostd__string(soap, "ngwt:messageId", -1, &(((ngwt__BoxEntry*)a)->messageId), "");
 	soap_out_PointerTongwt__ItemSource(soap, "ngwt:source", -1, &(((ngwt__BoxEntry*)a)->source), "");
 	soap_out_PointerTobool(soap, "ngwt:returnSentItemsId", -1, &(((ngwt__BoxEntry*)a)->returnSentItemsId), "");
 	soap_out_string(soap, "ngwt:delivered", -1, &(((ngwt__BoxEntry*)a)->delivered), "");
@@ -42606,6 +50190,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__PhoneMessage(struct soap *soap, const c
 	soap_out_bool(soap, "ngwt:hasAttachment", -1, &(((ngwt__Mail*)a)->hasAttachment), "");
 	soap_out_int(soap, "ngwt:size", -1, &(((ngwt__Mail*)a)->size), "");
 	soap_out_PointerTostd__string(soap, "ngwt:subType", -1, &(((ngwt__Mail*)a)->subType), "");
+	soap_out_PointerTobool(soap, "ngwt:nntpOrImap", -1, &(((ngwt__Mail*)a)->nntpOrImap), "");
+	soap_out_PointerTongwt__SMimeOperation(soap, "ngwt:smimeType", -1, &(((ngwt__Mail*)a)->smimeType), "");
 	soap_out_PointerTostd__string(soap, "ngwt:caller", -1, &(((ngwt__PhoneMessage*)a)->caller), "");
 	soap_out_PointerTostd__string(soap, "ngwt:company", -1, &(((ngwt__PhoneMessage*)a)->company), "");
 	soap_out_PointerTostd__string(soap, "ngwt:phone", -1, &(((ngwt__PhoneMessage*)a)->phone), "");
@@ -42645,7 +50231,7 @@ SOAP_FMAC3 ngwt__PhoneMessage * SOAP_FMAC4 soap_in_ngwt__PhoneMessage(struct soa
 			return (ngwt__PhoneMessage *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id5 = 1, soap_flag_name5 = 1, soap_flag_version5 = 1, soap_flag_modified5 = 1, soap_flag_changes5 = 1, soap_flag_categories4 = 1, soap_flag_created4 = 1, soap_flag_customs4 = 1, soap_flag_status3 = 1, soap_flag_thread3 = 1, soap_flag_msgId3 = 1, soap_flag_source3 = 1, soap_flag_returnSentItemsId3 = 1, soap_flag_delivered3 = 1, soap_flag_class_3 = 1, soap_flag_security3 = 1, soap_flag_comment3 = 1, soap_flag_subject2 = 1, soap_flag_originalSubject2 = 1, soap_flag_subjectPrefix2 = 1, soap_flag_distribution2 = 1, soap_flag_message2 = 1, soap_flag_attachments2 = 1, soap_flag_options2 = 1, soap_flag_link2 = 1, soap_flag_hasAttachment2 = 1, soap_flag_size2 = 1, soap_flag_subType2 = 1, soap_flag_caller1 = 1, soap_flag_company1 = 1, soap_flag_phone1 = 1, soap_flag_flags1 = 1;
+	short soap_flag_id5 = 1, soap_flag_name5 = 1, soap_flag_version5 = 1, soap_flag_modified5 = 1, soap_flag_changes5 = 1, soap_flag_categories4 = 1, soap_flag_created4 = 1, soap_flag_customs4 = 1, soap_flag_status3 = 1, soap_flag_thread3 = 1, soap_flag_msgId3 = 1, soap_flag_messageId3 = 1, soap_flag_source3 = 1, soap_flag_returnSentItemsId3 = 1, soap_flag_delivered3 = 1, soap_flag_class_3 = 1, soap_flag_security3 = 1, soap_flag_comment3 = 1, soap_flag_subject2 = 1, soap_flag_originalSubject2 = 1, soap_flag_subjectPrefix2 = 1, soap_flag_distribution2 = 1, soap_flag_message2 = 1, soap_flag_attachments2 = 1, soap_flag_options2 = 1, soap_flag_link2 = 1, soap_flag_hasAttachment2 = 1, soap_flag_size2 = 1, soap_flag_subType2 = 1, soap_flag_nntpOrImap2 = 1, soap_flag_smimeType2 = 1, soap_flag_caller1 = 1, soap_flag_company1 = 1, soap_flag_phone1 = 1, soap_flag_flags1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -42707,6 +50293,11 @@ SOAP_FMAC3 ngwt__PhoneMessage * SOAP_FMAC4 soap_in_ngwt__PhoneMessage(struct soa
 			if (soap_flag_msgId3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:msgId", &(((ngwt__BoxEntry*)a)->msgId), ""))
 				{	soap_flag_msgId3 = 0;
+					continue;
+				}
+			if (soap_flag_messageId3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:messageId", &(((ngwt__BoxEntry*)a)->messageId), ""))
+				{	soap_flag_messageId3 = 0;
 					continue;
 				}
 			if (soap_flag_source3 && soap->error == SOAP_TAG_MISMATCH)
@@ -42792,6 +50383,16 @@ SOAP_FMAC3 ngwt__PhoneMessage * SOAP_FMAC4 soap_in_ngwt__PhoneMessage(struct soa
 			if (soap_flag_subType2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:subType", &(((ngwt__Mail*)a)->subType), ""))
 				{	soap_flag_subType2 = 0;
+					continue;
+				}
+			if (soap_flag_nntpOrImap2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTobool(soap, "ngwt:nntpOrImap", &(((ngwt__Mail*)a)->nntpOrImap), ""))
+				{	soap_flag_nntpOrImap2 = 0;
+					continue;
+				}
+			if (soap_flag_smimeType2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__SMimeOperation(soap, "ngwt:smimeType", &(((ngwt__Mail*)a)->smimeType), "ngwt:SMimeOperation"))
+				{	soap_flag_smimeType2 = 0;
 					continue;
 				}
 			if (soap_flag_caller1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
@@ -43214,8 +50815,8 @@ void ngwt__PersonalInfo::soap_serialize(struct soap *soap) const
 	(void)soap; /* appease -Wall -Werror */
 	soap_embedded(soap, &((ngwt__PersonalInfo*)this)->birthday, SOAP_TYPE_PointerToxsd__date);
 	soap_serialize_PointerToxsd__date(soap, &((ngwt__PersonalInfo*)this)->birthday);
-	soap_embedded(soap, &((ngwt__PersonalInfo*)this)->website, SOAP_TYPE_PointerToxsd__anyURI);
-	soap_serialize_PointerToxsd__anyURI(soap, &((ngwt__PersonalInfo*)this)->website);
+	soap_embedded(soap, &((ngwt__PersonalInfo*)this)->website, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__PersonalInfo*)this)->website);
 	/* transient soap skipped */
 }
 
@@ -43244,7 +50845,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__PersonalInfo(struct soap *soap, const c
 {
 	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__PersonalInfo), type);
 	soap_out_PointerToxsd__date(soap, "ngwt:birthday", -1, &(((ngwt__PersonalInfo*)a)->birthday), "");
-	soap_out_PointerToxsd__anyURI(soap, "ngwt:website", -1, &(((ngwt__PersonalInfo*)a)->website), "");
+	soap_out_PointerTostd__string(soap, "ngwt:website", -1, &(((ngwt__PersonalInfo*)a)->website), "");
 	/* transient soap skipped */
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
@@ -43292,7 +50893,7 @@ SOAP_FMAC3 ngwt__PersonalInfo * SOAP_FMAC4 soap_in_ngwt__PersonalInfo(struct soa
 					continue;
 				}
 			if (soap_flag_website1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_PointerToxsd__anyURI(soap, "ngwt:website", &(((ngwt__PersonalInfo*)a)->website), "xsd:anyURI"))
+				if (soap_in_PointerTostd__string(soap, "ngwt:website", &(((ngwt__PersonalInfo*)a)->website), ""))
 				{	soap_flag_website1 = 0;
 					continue;
 				}
@@ -43363,8 +50964,8 @@ void ngwt__Organization::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((ngwt__Organization*)this)->fax);
 	soap_embedded(soap, &((ngwt__Organization*)this)->address, SOAP_TYPE_PointerTongwt__PostalAddress);
 	soap_serialize_PointerTongwt__PostalAddress(soap, &((ngwt__Organization*)this)->address);
-	soap_embedded(soap, &((ngwt__Organization*)this)->website, SOAP_TYPE_PointerToxsd__anyURI);
-	soap_serialize_PointerToxsd__anyURI(soap, &((ngwt__Organization*)this)->website);
+	soap_embedded(soap, &((ngwt__Organization*)this)->website, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__Organization*)this)->website);
 	soap_embedded(soap, &((ngwt__AddressBookItem*)this)->uuid, SOAP_TYPE_PointerTongwt__UUID);
 	soap_serialize_PointerTongwt__UUID(soap, &((ngwt__AddressBookItem*)this)->uuid);
 	soap_embedded(soap, &((ngwt__AddressBookItem*)this)->comment, SOAP_TYPE_PointerTostd__string);
@@ -43377,6 +50978,8 @@ void ngwt__Organization::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((ngwt__AddressBookItem*)this)->postOffice);
 	soap_embedded(soap, &((ngwt__AddressBookItem*)this)->distinguishedName, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__AddressBookItem*)this)->distinguishedName);
+	soap_embedded(soap, &((ngwt__AddressBookItem*)this)->userid, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__AddressBookItem*)this)->userid);
 	soap_serialize_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, &((ngwt__ContainerItem*)this)->container);
 	soap_embedded(soap, &((ngwt__ContainerItem*)this)->categories, SOAP_TYPE_PointerTongwt__CategoryRefList);
 	soap_serialize_PointerTongwt__CategoryRefList(soap, &((ngwt__ContainerItem*)this)->categories);
@@ -43411,6 +51014,7 @@ void ngwt__Organization::soap_default(struct soap *soap)
 	((ngwt__AddressBookItem*)this)->domain = NULL;
 	((ngwt__AddressBookItem*)this)->postOffice = NULL;
 	((ngwt__AddressBookItem*)this)->distinguishedName = NULL;
+	((ngwt__AddressBookItem*)this)->userid = NULL;
 	soap_default_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, &((ngwt__ContainerItem*)this)->container);
 	((ngwt__ContainerItem*)this)->categories = NULL;
 	soap_default_string(soap, &((ngwt__ContainerItem*)this)->created);
@@ -43455,11 +51059,12 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Organization(struct soap *soap, const c
 	soap_out_PointerTostd__string(soap, "ngwt:domain", -1, &(((ngwt__AddressBookItem*)a)->domain), "");
 	soap_out_PointerTostd__string(soap, "ngwt:postOffice", -1, &(((ngwt__AddressBookItem*)a)->postOffice), "");
 	soap_out_PointerTostd__string(soap, "ngwt:distinguishedName", -1, &(((ngwt__AddressBookItem*)a)->distinguishedName), "");
+	soap_out_PointerTostd__string(soap, "ngwt:userid", -1, &(((ngwt__AddressBookItem*)a)->userid), "");
 	soap_out_PointerTongwt__ItemRef(soap, "ngwt:contact", -1, &(((ngwt__Organization*)a)->contact), "");
 	soap_out_PointerTostd__string(soap, "ngwt:phone", -1, &(((ngwt__Organization*)a)->phone), "");
 	soap_out_PointerTostd__string(soap, "ngwt:fax", -1, &(((ngwt__Organization*)a)->fax), "");
 	soap_out_PointerTongwt__PostalAddress(soap, "ngwt:address", -1, &(((ngwt__Organization*)a)->address), "");
-	soap_out_PointerToxsd__anyURI(soap, "ngwt:website", -1, &(((ngwt__Organization*)a)->website), "");
+	soap_out_PointerTostd__string(soap, "ngwt:website", -1, &(((ngwt__Organization*)a)->website), "");
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
 }
@@ -43495,7 +51100,7 @@ SOAP_FMAC3 ngwt__Organization * SOAP_FMAC4 soap_in_ngwt__Organization(struct soa
 			return (ngwt__Organization *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id4 = 1, soap_flag_name4 = 1, soap_flag_version4 = 1, soap_flag_modified4 = 1, soap_flag_changes4 = 1, soap_flag_categories3 = 1, soap_flag_created3 = 1, soap_flag_customs3 = 1, soap_flag_uuid2 = 1, soap_flag_comment2 = 1, soap_flag_sync2 = 1, soap_flag_domain2 = 1, soap_flag_postOffice2 = 1, soap_flag_distinguishedName2 = 1, soap_flag_contact1 = 1, soap_flag_phone1 = 1, soap_flag_fax1 = 1, soap_flag_address1 = 1, soap_flag_website1 = 1;
+	short soap_flag_id4 = 1, soap_flag_name4 = 1, soap_flag_version4 = 1, soap_flag_modified4 = 1, soap_flag_changes4 = 1, soap_flag_categories3 = 1, soap_flag_created3 = 1, soap_flag_customs3 = 1, soap_flag_uuid2 = 1, soap_flag_comment2 = 1, soap_flag_sync2 = 1, soap_flag_domain2 = 1, soap_flag_postOffice2 = 1, soap_flag_distinguishedName2 = 1, soap_flag_userid2 = 1, soap_flag_contact1 = 1, soap_flag_phone1 = 1, soap_flag_fax1 = 1, soap_flag_address1 = 1, soap_flag_website1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -43574,6 +51179,11 @@ SOAP_FMAC3 ngwt__Organization * SOAP_FMAC4 soap_in_ngwt__Organization(struct soa
 				{	soap_flag_distinguishedName2 = 0;
 					continue;
 				}
+			if (soap_flag_userid2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:userid", &(((ngwt__AddressBookItem*)a)->userid), ""))
+				{	soap_flag_userid2 = 0;
+					continue;
+				}
 			if (soap_flag_contact1 && soap->error == SOAP_TAG_MISMATCH)
 				if (soap_in_PointerTongwt__ItemRef(soap, "ngwt:contact", &(((ngwt__Organization*)a)->contact), "ngwt:ItemRef"))
 				{	soap_flag_contact1 = 0;
@@ -43595,7 +51205,7 @@ SOAP_FMAC3 ngwt__Organization * SOAP_FMAC4 soap_in_ngwt__Organization(struct soa
 					continue;
 				}
 			if (soap_flag_website1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_PointerToxsd__anyURI(soap, "ngwt:website", &(((ngwt__Organization*)a)->website), "xsd:anyURI"))
+				if (soap_in_PointerTostd__string(soap, "ngwt:website", &(((ngwt__Organization*)a)->website), ""))
 				{	soap_flag_website1 = 0;
 					continue;
 				}
@@ -43663,8 +51273,8 @@ void ngwt__OfficeInfo::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((ngwt__OfficeInfo*)this)->department);
 	soap_embedded(soap, &((ngwt__OfficeInfo*)this)->title, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__OfficeInfo*)this)->title);
-	soap_embedded(soap, &((ngwt__OfficeInfo*)this)->website, SOAP_TYPE_PointerToxsd__anyURI);
-	soap_serialize_PointerToxsd__anyURI(soap, &((ngwt__OfficeInfo*)this)->website);
+	soap_embedded(soap, &((ngwt__OfficeInfo*)this)->website, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__OfficeInfo*)this)->website);
 	/* transient soap skipped */
 }
 
@@ -43697,7 +51307,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__OfficeInfo(struct soap *soap, const cha
 	soap_out_PointerTongwt__ItemRef(soap, "ngwt:organization", -1, &(((ngwt__OfficeInfo*)a)->organization), "");
 	soap_out_PointerTostd__string(soap, "ngwt:department", -1, &(((ngwt__OfficeInfo*)a)->department), "");
 	soap_out_PointerTostd__string(soap, "ngwt:title", -1, &(((ngwt__OfficeInfo*)a)->title), "");
-	soap_out_PointerToxsd__anyURI(soap, "ngwt:website", -1, &(((ngwt__OfficeInfo*)a)->website), "");
+	soap_out_PointerTostd__string(soap, "ngwt:website", -1, &(((ngwt__OfficeInfo*)a)->website), "");
 	/* transient soap skipped */
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
@@ -43755,7 +51365,7 @@ SOAP_FMAC3 ngwt__OfficeInfo * SOAP_FMAC4 soap_in_ngwt__OfficeInfo(struct soap *s
 					continue;
 				}
 			if (soap_flag_website1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_PointerToxsd__anyURI(soap, "ngwt:website", &(((ngwt__OfficeInfo*)a)->website), "xsd:anyURI"))
+				if (soap_in_PointerTostd__string(soap, "ngwt:website", &(((ngwt__OfficeInfo*)a)->website), ""))
 				{	soap_flag_website1 = 0;
 					continue;
 				}
@@ -43850,12 +51460,18 @@ void ngwt__Note::soap_serialize(struct soap *soap) const
 	soap_embedded(soap, &((ngwt__Mail*)this)->size, SOAP_TYPE_int);
 	soap_embedded(soap, &((ngwt__Mail*)this)->subType, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__Mail*)this)->subType);
+	soap_embedded(soap, &((ngwt__Mail*)this)->nntpOrImap, SOAP_TYPE_PointerTobool);
+	soap_serialize_PointerTobool(soap, &((ngwt__Mail*)this)->nntpOrImap);
+	soap_embedded(soap, &((ngwt__Mail*)this)->smimeType, SOAP_TYPE_PointerTongwt__SMimeOperation);
+	soap_serialize_PointerTongwt__SMimeOperation(soap, &((ngwt__Mail*)this)->smimeType);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->status, SOAP_TYPE_PointerTongwt__ItemStatus);
 	soap_serialize_PointerTongwt__ItemStatus(soap, &((ngwt__BoxEntry*)this)->status);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->thread, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->thread);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->msgId, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->msgId);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->messageId, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->messageId);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->source, SOAP_TYPE_PointerTongwt__ItemSource);
 	soap_serialize_PointerTongwt__ItemSource(soap, &((ngwt__BoxEntry*)this)->source);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->returnSentItemsId, SOAP_TYPE_PointerTobool);
@@ -43908,9 +51524,12 @@ void ngwt__Note::soap_default(struct soap *soap)
 	((ngwt__Mail*)this)->hasAttachment = (bool)0;
 	((ngwt__Mail*)this)->size = 0;
 	((ngwt__Mail*)this)->subType = NULL;
+	((ngwt__Mail*)this)->nntpOrImap = NULL;
+	((ngwt__Mail*)this)->smimeType = NULL;
 	((ngwt__BoxEntry*)this)->status = NULL;
 	((ngwt__BoxEntry*)this)->thread = NULL;
 	((ngwt__BoxEntry*)this)->msgId = NULL;
+	((ngwt__BoxEntry*)this)->messageId = NULL;
 	((ngwt__BoxEntry*)this)->source = NULL;
 	((ngwt__BoxEntry*)this)->returnSentItemsId = NULL;
 	soap_default_string(soap, &((ngwt__BoxEntry*)this)->delivered);
@@ -43958,6 +51577,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Note(struct soap *soap, const char *tag
 	soap_out_PointerTongwt__ItemStatus(soap, "ngwt:status", -1, &(((ngwt__BoxEntry*)a)->status), "");
 	soap_out_PointerTostd__string(soap, "ngwt:thread", -1, &(((ngwt__BoxEntry*)a)->thread), "");
 	soap_out_PointerTostd__string(soap, "ngwt:msgId", -1, &(((ngwt__BoxEntry*)a)->msgId), "");
+	soap_out_PointerTostd__string(soap, "ngwt:messageId", -1, &(((ngwt__BoxEntry*)a)->messageId), "");
 	soap_out_PointerTongwt__ItemSource(soap, "ngwt:source", -1, &(((ngwt__BoxEntry*)a)->source), "");
 	soap_out_PointerTobool(soap, "ngwt:returnSentItemsId", -1, &(((ngwt__BoxEntry*)a)->returnSentItemsId), "");
 	soap_out_string(soap, "ngwt:delivered", -1, &(((ngwt__BoxEntry*)a)->delivered), "");
@@ -43975,6 +51595,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Note(struct soap *soap, const char *tag
 	soap_out_bool(soap, "ngwt:hasAttachment", -1, &(((ngwt__Mail*)a)->hasAttachment), "");
 	soap_out_int(soap, "ngwt:size", -1, &(((ngwt__Mail*)a)->size), "");
 	soap_out_PointerTostd__string(soap, "ngwt:subType", -1, &(((ngwt__Mail*)a)->subType), "");
+	soap_out_PointerTobool(soap, "ngwt:nntpOrImap", -1, &(((ngwt__Mail*)a)->nntpOrImap), "");
+	soap_out_PointerTongwt__SMimeOperation(soap, "ngwt:smimeType", -1, &(((ngwt__Mail*)a)->smimeType), "");
 	soap_out_PointerTongwt__RecurrenceDateType(soap, "ngwt:rdate", -1, &(((ngwt__CalendarItem*)a)->rdate), "");
 	soap_out_PointerTongwt__RecurrenceRule(soap, "ngwt:rrule", -1, &(((ngwt__CalendarItem*)a)->rrule), "");
 	soap_out_PointerTongwt__RecurrenceDateType(soap, "ngwt:exdate", -1, &(((ngwt__CalendarItem*)a)->exdate), "");
@@ -44016,7 +51638,7 @@ SOAP_FMAC3 ngwt__Note * SOAP_FMAC4 soap_in_ngwt__Note(struct soap *soap, const c
 			return (ngwt__Note *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id6 = 1, soap_flag_name6 = 1, soap_flag_version6 = 1, soap_flag_modified6 = 1, soap_flag_changes6 = 1, soap_flag_categories5 = 1, soap_flag_created5 = 1, soap_flag_customs5 = 1, soap_flag_status4 = 1, soap_flag_thread4 = 1, soap_flag_msgId4 = 1, soap_flag_source4 = 1, soap_flag_returnSentItemsId4 = 1, soap_flag_delivered4 = 1, soap_flag_class_4 = 1, soap_flag_security4 = 1, soap_flag_comment4 = 1, soap_flag_subject3 = 1, soap_flag_originalSubject3 = 1, soap_flag_subjectPrefix3 = 1, soap_flag_distribution3 = 1, soap_flag_message3 = 1, soap_flag_attachments3 = 1, soap_flag_options3 = 1, soap_flag_link3 = 1, soap_flag_hasAttachment3 = 1, soap_flag_size3 = 1, soap_flag_subType3 = 1, soap_flag_rdate2 = 1, soap_flag_rrule2 = 1, soap_flag_exdate2 = 1, soap_flag_recurrenceKey2 = 1, soap_flag_iCalId2 = 1, soap_flag_startDate1 = 1;
+	short soap_flag_id6 = 1, soap_flag_name6 = 1, soap_flag_version6 = 1, soap_flag_modified6 = 1, soap_flag_changes6 = 1, soap_flag_categories5 = 1, soap_flag_created5 = 1, soap_flag_customs5 = 1, soap_flag_status4 = 1, soap_flag_thread4 = 1, soap_flag_msgId4 = 1, soap_flag_messageId4 = 1, soap_flag_source4 = 1, soap_flag_returnSentItemsId4 = 1, soap_flag_delivered4 = 1, soap_flag_class_4 = 1, soap_flag_security4 = 1, soap_flag_comment4 = 1, soap_flag_subject3 = 1, soap_flag_originalSubject3 = 1, soap_flag_subjectPrefix3 = 1, soap_flag_distribution3 = 1, soap_flag_message3 = 1, soap_flag_attachments3 = 1, soap_flag_options3 = 1, soap_flag_link3 = 1, soap_flag_hasAttachment3 = 1, soap_flag_size3 = 1, soap_flag_subType3 = 1, soap_flag_nntpOrImap3 = 1, soap_flag_smimeType3 = 1, soap_flag_rdate2 = 1, soap_flag_rrule2 = 1, soap_flag_exdate2 = 1, soap_flag_recurrenceKey2 = 1, soap_flag_iCalId2 = 1, soap_flag_startDate1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -44078,6 +51700,11 @@ SOAP_FMAC3 ngwt__Note * SOAP_FMAC4 soap_in_ngwt__Note(struct soap *soap, const c
 			if (soap_flag_msgId4 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:msgId", &(((ngwt__BoxEntry*)a)->msgId), ""))
 				{	soap_flag_msgId4 = 0;
+					continue;
+				}
+			if (soap_flag_messageId4 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:messageId", &(((ngwt__BoxEntry*)a)->messageId), ""))
+				{	soap_flag_messageId4 = 0;
 					continue;
 				}
 			if (soap_flag_source4 && soap->error == SOAP_TAG_MISMATCH)
@@ -44163,6 +51790,16 @@ SOAP_FMAC3 ngwt__Note * SOAP_FMAC4 soap_in_ngwt__Note(struct soap *soap, const c
 			if (soap_flag_subType3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:subType", &(((ngwt__Mail*)a)->subType), ""))
 				{	soap_flag_subType3 = 0;
+					continue;
+				}
+			if (soap_flag_nntpOrImap3 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTobool(soap, "ngwt:nntpOrImap", &(((ngwt__Mail*)a)->nntpOrImap), ""))
+				{	soap_flag_nntpOrImap3 = 0;
+					continue;
+				}
+			if (soap_flag_smimeType3 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__SMimeOperation(soap, "ngwt:smimeType", &(((ngwt__Mail*)a)->smimeType), "ngwt:SMimeOperation"))
+				{	soap_flag_smimeType3 = 0;
 					continue;
 				}
 			if (soap_flag_rdate2 && soap->error == SOAP_TAG_MISMATCH)
@@ -44454,6 +52091,24 @@ SOAP_FMAC5 ngwt__NameAndEmail * SOAP_FMAC6 soap_instantiate_ngwt__NameAndEmail(s
 		}
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
 		return (ngwt__From*)cp->ptr;
+	}
+	if (type && !soap_match_tag(soap, type, "ngwt:ProxyUser"))
+	{	cp->type = SOAP_TYPE_ngwt__ProxyUser;
+		if (n < 0)
+		{	cp->ptr = (void*)new ngwt__ProxyUser;
+			if (size)
+				*size = sizeof(ngwt__ProxyUser);
+			((ngwt__ProxyUser*)cp->ptr)->soap = soap;
+		}
+		else
+		{	cp->ptr = (void*)new ngwt__ProxyUser[n];
+			if (size)
+				*size = n * sizeof(ngwt__ProxyUser);
+			for (int i = 0; i < n; i++)
+				((ngwt__ProxyUser*)cp->ptr)[i].soap = soap;
+		}
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+		return (ngwt__ProxyUser*)cp->ptr;
 	}
 	if (type && !soap_match_tag(soap, type, "ngwt:Recipient"))
 	{	cp->type = SOAP_TYPE_ngwt__Recipient;
@@ -44816,6 +52471,7 @@ void ngwt__MessagePart::soap_default(struct soap *soap)
 	((ngwt__MessagePart*)this)->contentId = NULL;
 	((ngwt__MessagePart*)this)->contentType = NULL;
 	((ngwt__MessagePart*)this)->length = NULL;
+	((ngwt__MessagePart*)this)->offset = NULL;
 	/* transient soap skipped */
 }
 
@@ -44842,6 +52498,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__MessagePart(struct soap *soap, const ch
 		soap_set_attr(soap, "contentType", ((ngwt__MessagePart *)a)->contentType->c_str());
 	if (((ngwt__MessagePart *)a)->length)
 		soap_set_attr(soap, "length", soap_int2s(soap, *((ngwt__MessagePart *)a)->length));
+	if (((ngwt__MessagePart *)a)->offset)
+		soap_set_attr(soap, "offset", soap_int2s(soap, *((ngwt__MessagePart *)a)->offset));
 	(((ngwt__MessagePart*)a)->__item).soap_out(soap, tag, id, "");
 	return SOAP_OK;
 }
@@ -44928,6 +52586,16 @@ SOAP_FMAC3 ngwt__MessagePart * SOAP_FMAC4 soap_in_ngwt__MessagePart(struct soap 
 				return NULL;
 			}
 	if (soap_s2int(soap, t, ((ngwt__MessagePart *)a)->length))
+		return NULL;
+		}
+	}
+	{	const char *t = soap_attr_value(soap, "offset", 0);
+		if (t)
+		{	if (!(((ngwt__MessagePart *)a)->offset = (int *)soap_malloc(soap, sizeof(int))))
+			{	soap->error = SOAP_EOM;
+				return NULL;
+			}
+	if (soap_s2int(soap, t, ((ngwt__MessagePart *)a)->offset))
 		return NULL;
 		}
 	}
@@ -45126,12 +52794,18 @@ void ngwt__Mail::soap_serialize(struct soap *soap) const
 	soap_embedded(soap, &((ngwt__Mail*)this)->size, SOAP_TYPE_int);
 	soap_embedded(soap, &((ngwt__Mail*)this)->subType, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__Mail*)this)->subType);
+	soap_embedded(soap, &((ngwt__Mail*)this)->nntpOrImap, SOAP_TYPE_PointerTobool);
+	soap_serialize_PointerTobool(soap, &((ngwt__Mail*)this)->nntpOrImap);
+	soap_embedded(soap, &((ngwt__Mail*)this)->smimeType, SOAP_TYPE_PointerTongwt__SMimeOperation);
+	soap_serialize_PointerTongwt__SMimeOperation(soap, &((ngwt__Mail*)this)->smimeType);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->status, SOAP_TYPE_PointerTongwt__ItemStatus);
 	soap_serialize_PointerTongwt__ItemStatus(soap, &((ngwt__BoxEntry*)this)->status);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->thread, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->thread);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->msgId, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->msgId);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->messageId, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->messageId);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->source, SOAP_TYPE_PointerTongwt__ItemSource);
 	soap_serialize_PointerTongwt__ItemSource(soap, &((ngwt__BoxEntry*)this)->source);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->returnSentItemsId, SOAP_TYPE_PointerTobool);
@@ -45178,9 +52852,12 @@ void ngwt__Mail::soap_default(struct soap *soap)
 	((ngwt__Mail*)this)->hasAttachment = (bool)0;
 	((ngwt__Mail*)this)->size = 0;
 	((ngwt__Mail*)this)->subType = NULL;
+	((ngwt__Mail*)this)->nntpOrImap = NULL;
+	((ngwt__Mail*)this)->smimeType = NULL;
 	((ngwt__BoxEntry*)this)->status = NULL;
 	((ngwt__BoxEntry*)this)->thread = NULL;
 	((ngwt__BoxEntry*)this)->msgId = NULL;
+	((ngwt__BoxEntry*)this)->messageId = NULL;
 	((ngwt__BoxEntry*)this)->source = NULL;
 	((ngwt__BoxEntry*)this)->returnSentItemsId = NULL;
 	soap_default_string(soap, &((ngwt__BoxEntry*)this)->delivered);
@@ -45228,6 +52905,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Mail(struct soap *soap, const char *tag
 	soap_out_PointerTongwt__ItemStatus(soap, "ngwt:status", -1, &(((ngwt__BoxEntry*)a)->status), "");
 	soap_out_PointerTostd__string(soap, "ngwt:thread", -1, &(((ngwt__BoxEntry*)a)->thread), "");
 	soap_out_PointerTostd__string(soap, "ngwt:msgId", -1, &(((ngwt__BoxEntry*)a)->msgId), "");
+	soap_out_PointerTostd__string(soap, "ngwt:messageId", -1, &(((ngwt__BoxEntry*)a)->messageId), "");
 	soap_out_PointerTongwt__ItemSource(soap, "ngwt:source", -1, &(((ngwt__BoxEntry*)a)->source), "");
 	soap_out_PointerTobool(soap, "ngwt:returnSentItemsId", -1, &(((ngwt__BoxEntry*)a)->returnSentItemsId), "");
 	soap_out_string(soap, "ngwt:delivered", -1, &(((ngwt__BoxEntry*)a)->delivered), "");
@@ -45245,6 +52923,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Mail(struct soap *soap, const char *tag
 	soap_out_bool(soap, "ngwt:hasAttachment", -1, &(((ngwt__Mail*)a)->hasAttachment), "");
 	soap_out_int(soap, "ngwt:size", -1, &(((ngwt__Mail*)a)->size), "");
 	soap_out_PointerTostd__string(soap, "ngwt:subType", -1, &(((ngwt__Mail*)a)->subType), "");
+	soap_out_PointerTobool(soap, "ngwt:nntpOrImap", -1, &(((ngwt__Mail*)a)->nntpOrImap), "");
+	soap_out_PointerTongwt__SMimeOperation(soap, "ngwt:smimeType", -1, &(((ngwt__Mail*)a)->smimeType), "");
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
 }
@@ -45280,7 +52960,7 @@ SOAP_FMAC3 ngwt__Mail * SOAP_FMAC4 soap_in_ngwt__Mail(struct soap *soap, const c
 			return (ngwt__Mail *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id4 = 1, soap_flag_name4 = 1, soap_flag_version4 = 1, soap_flag_modified4 = 1, soap_flag_changes4 = 1, soap_flag_categories3 = 1, soap_flag_created3 = 1, soap_flag_customs3 = 1, soap_flag_status2 = 1, soap_flag_thread2 = 1, soap_flag_msgId2 = 1, soap_flag_source2 = 1, soap_flag_returnSentItemsId2 = 1, soap_flag_delivered2 = 1, soap_flag_class_2 = 1, soap_flag_security2 = 1, soap_flag_comment2 = 1, soap_flag_subject1 = 1, soap_flag_originalSubject1 = 1, soap_flag_subjectPrefix1 = 1, soap_flag_distribution1 = 1, soap_flag_message1 = 1, soap_flag_attachments1 = 1, soap_flag_options1 = 1, soap_flag_link1 = 1, soap_flag_hasAttachment1 = 1, soap_flag_size1 = 1, soap_flag_subType1 = 1;
+	short soap_flag_id4 = 1, soap_flag_name4 = 1, soap_flag_version4 = 1, soap_flag_modified4 = 1, soap_flag_changes4 = 1, soap_flag_categories3 = 1, soap_flag_created3 = 1, soap_flag_customs3 = 1, soap_flag_status2 = 1, soap_flag_thread2 = 1, soap_flag_msgId2 = 1, soap_flag_messageId2 = 1, soap_flag_source2 = 1, soap_flag_returnSentItemsId2 = 1, soap_flag_delivered2 = 1, soap_flag_class_2 = 1, soap_flag_security2 = 1, soap_flag_comment2 = 1, soap_flag_subject1 = 1, soap_flag_originalSubject1 = 1, soap_flag_subjectPrefix1 = 1, soap_flag_distribution1 = 1, soap_flag_message1 = 1, soap_flag_attachments1 = 1, soap_flag_options1 = 1, soap_flag_link1 = 1, soap_flag_hasAttachment1 = 1, soap_flag_size1 = 1, soap_flag_subType1 = 1, soap_flag_nntpOrImap1 = 1, soap_flag_smimeType1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -45342,6 +53022,11 @@ SOAP_FMAC3 ngwt__Mail * SOAP_FMAC4 soap_in_ngwt__Mail(struct soap *soap, const c
 			if (soap_flag_msgId2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:msgId", &(((ngwt__BoxEntry*)a)->msgId), ""))
 				{	soap_flag_msgId2 = 0;
+					continue;
+				}
+			if (soap_flag_messageId2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:messageId", &(((ngwt__BoxEntry*)a)->messageId), ""))
+				{	soap_flag_messageId2 = 0;
 					continue;
 				}
 			if (soap_flag_source2 && soap->error == SOAP_TAG_MISMATCH)
@@ -45429,6 +53114,16 @@ SOAP_FMAC3 ngwt__Mail * SOAP_FMAC4 soap_in_ngwt__Mail(struct soap *soap, const c
 				{	soap_flag_subType1 = 0;
 					continue;
 				}
+			if (soap_flag_nntpOrImap1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTobool(soap, "ngwt:nntpOrImap", &(((ngwt__Mail*)a)->nntpOrImap), ""))
+				{	soap_flag_nntpOrImap1 = 0;
+					continue;
+				}
+			if (soap_flag_smimeType1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__SMimeOperation(soap, "ngwt:smimeType", &(((ngwt__Mail*)a)->smimeType), "ngwt:SMimeOperation"))
+				{	soap_flag_smimeType1 = 0;
+					continue;
+				}
 			if (soap->error == SOAP_TAG_MISMATCH)
 				soap->error = soap_ignore_element(soap);
 			if (soap->error == SOAP_NO_TAG)
@@ -45482,6 +53177,24 @@ SOAP_FMAC5 ngwt__Mail * SOAP_FMAC6 soap_instantiate_ngwt__Mail(struct soap *soap
 		}
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
 		return (ngwt__CalendarItem*)cp->ptr;
+	}
+	if (type && !soap_match_tag(soap, type, "ngwt:DocumentRef"))
+	{	cp->type = SOAP_TYPE_ngwt__DocumentRef;
+		if (n < 0)
+		{	cp->ptr = (void*)new ngwt__DocumentRef;
+			if (size)
+				*size = sizeof(ngwt__DocumentRef);
+			((ngwt__DocumentRef*)cp->ptr)->soap = soap;
+		}
+		else
+		{	cp->ptr = (void*)new ngwt__DocumentRef[n];
+			if (size)
+				*size = n * sizeof(ngwt__DocumentRef);
+			for (int i = 0; i < n; i++)
+				((ngwt__DocumentRef*)cp->ptr)[i].soap = soap;
+		}
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+		return (ngwt__DocumentRef*)cp->ptr;
 	}
 	if (type && !soap_match_tag(soap, type, "ngwt:PhoneMessage"))
 	{	cp->type = SOAP_TYPE_ngwt__PhoneMessage;
@@ -45740,6 +53453,333 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__LinkInfo(struct soap *soap, int st, i
 {
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwt__LinkInfo %p -> %p\n", q, p));
 	*(ngwt__LinkInfo*)p = *(ngwt__LinkInfo*)q;
+}
+
+void ngwt__LibraryList::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_serialize_std__vectorTemplateOfPointerTongwt__Library(soap, &((ngwt__LibraryList*)this)->library);
+	/* transient soap skipped */
+}
+
+void ngwt__LibraryList::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	soap_default_std__vectorTemplateOfPointerTongwt__Library(soap, &((ngwt__LibraryList*)this)->library);
+	/* transient soap skipped */
+}
+
+int ngwt__LibraryList::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE_ngwt__LibraryList);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int ngwt__LibraryList::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out_ngwt__LibraryList(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__LibraryList(struct soap *soap, const char *tag, int id, const ngwt__LibraryList *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__LibraryList), type);
+	soap_out_std__vectorTemplateOfPointerTongwt__Library(soap, "ngwt:library", -1, &(((ngwt__LibraryList*)a)->library), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *ngwt__LibraryList::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get_ngwt__LibraryList(soap, this, tag, type);
+}
+
+SOAP_FMAC3 ngwt__LibraryList * SOAP_FMAC4 soap_get_ngwt__LibraryList(struct soap *soap, ngwt__LibraryList *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__LibraryList(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *ngwt__LibraryList::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in_ngwt__LibraryList(soap, tag, this, type);
+}
+
+SOAP_FMAC3 ngwt__LibraryList * SOAP_FMAC4 soap_in_ngwt__LibraryList(struct soap *soap, const char *tag, ngwt__LibraryList *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (ngwt__LibraryList *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__LibraryList, sizeof(ngwt__LibraryList), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE_ngwt__LibraryList)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (ngwt__LibraryList *)a->soap_in(soap, tag, type);
+		}
+	};
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_std__vectorTemplateOfPointerTongwt__Library(soap, "ngwt:library", &(((ngwt__LibraryList*)a)->library), "ngwt:Library"))
+					continue;
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__LibraryList *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__LibraryList, 0, sizeof(ngwt__LibraryList), 0, soap_copy_ngwt__LibraryList);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 ngwt__LibraryList * SOAP_FMAC6 soap_new_ngwt__LibraryList(struct soap *soap, int n)
+{	return soap_instantiate_ngwt__LibraryList(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__LibraryList(struct soap *soap, ngwt__LibraryList *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 ngwt__LibraryList * SOAP_FMAC6 soap_instantiate_ngwt__LibraryList(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ngwt__LibraryList(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ngwt__LibraryList, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new ngwt__LibraryList;
+		if (size)
+			*size = sizeof(ngwt__LibraryList);
+		((ngwt__LibraryList*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new ngwt__LibraryList[n];
+		if (size)
+			*size = n * sizeof(ngwt__LibraryList);
+		for (int i = 0; i < n; i++)
+			((ngwt__LibraryList*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (ngwt__LibraryList*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__LibraryList(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwt__LibraryList %p -> %p\n", q, p));
+	*(ngwt__LibraryList*)p = *(ngwt__LibraryList*)q;
+}
+
+void ngwt__Library::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((ngwt__Library*)this)->description, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__Library*)this)->description);
+	soap_embedded(soap, &((ngwt__Library*)this)->domain, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__Library*)this)->domain);
+	soap_embedded(soap, &((ngwt__Library*)this)->postOffice, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__Library*)this)->postOffice);
+	soap_embedded(soap, &((ngwt__Item*)this)->id, SOAP_TYPE_PointerTongwt__uid);
+	soap_serialize_PointerTongwt__uid(soap, &((ngwt__Item*)this)->id);
+	soap_embedded(soap, &((ngwt__Item*)this)->name, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__Item*)this)->name);
+	soap_embedded(soap, &((ngwt__Item*)this)->version, SOAP_TYPE_PointerTounsignedLong);
+	soap_serialize_PointerTounsignedLong(soap, &((ngwt__Item*)this)->version);
+	soap_embedded(soap, &((ngwt__Item*)this)->modified, SOAP_TYPE_string);
+	soap_serialize_string(soap, &((ngwt__Item*)this)->modified);
+	soap_embedded(soap, &((ngwt__Item*)this)->changes, SOAP_TYPE_PointerTongwt__ItemChanges);
+	soap_serialize_PointerTongwt__ItemChanges(soap, &((ngwt__Item*)this)->changes);
+	/* transient soap skipped */
+}
+
+void ngwt__Library::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	((ngwt__Library*)this)->description = NULL;
+	((ngwt__Library*)this)->domain = NULL;
+	((ngwt__Library*)this)->postOffice = NULL;
+	((ngwt__Item*)this)->id = NULL;
+	((ngwt__Item*)this)->name = NULL;
+	((ngwt__Item*)this)->version = NULL;
+	soap_default_string(soap, &((ngwt__Item*)this)->modified);
+	((ngwt__Item*)this)->changes = NULL;
+	/* transient soap skipped */
+}
+
+int ngwt__Library::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE_ngwt__Library);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int ngwt__Library::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out_ngwt__Library(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Library(struct soap *soap, const char *tag, int id, const ngwt__Library *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__Library), "ngwt:Library");
+	soap_out_PointerTongwt__uid(soap, "ngwt:id", -1, &(((ngwt__Item*)a)->id), "");
+	soap_out_PointerTostd__string(soap, "ngwt:name", -1, &(((ngwt__Item*)a)->name), "");
+	soap_out_PointerTounsignedLong(soap, "ngwt:version", -1, &(((ngwt__Item*)a)->version), "");
+	soap_out_string(soap, "ngwt:modified", -1, &(((ngwt__Item*)a)->modified), "");
+	soap_out_PointerTongwt__ItemChanges(soap, "ngwt:changes", -1, &(((ngwt__Item*)a)->changes), "");
+	/* transient soap skipped */
+	soap_out_PointerTostd__string(soap, "ngwt:description", -1, &(((ngwt__Library*)a)->description), "");
+	soap_out_PointerTostd__string(soap, "ngwt:domain", -1, &(((ngwt__Library*)a)->domain), "");
+	soap_out_PointerTostd__string(soap, "ngwt:postOffice", -1, &(((ngwt__Library*)a)->postOffice), "");
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *ngwt__Library::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get_ngwt__Library(soap, this, tag, type);
+}
+
+SOAP_FMAC3 ngwt__Library * SOAP_FMAC4 soap_get_ngwt__Library(struct soap *soap, ngwt__Library *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__Library(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *ngwt__Library::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in_ngwt__Library(soap, tag, this, type);
+}
+
+SOAP_FMAC3 ngwt__Library * SOAP_FMAC4 soap_in_ngwt__Library(struct soap *soap, const char *tag, ngwt__Library *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (ngwt__Library *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__Library, sizeof(ngwt__Library), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE_ngwt__Library)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (ngwt__Library *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_id2 = 1, soap_flag_name2 = 1, soap_flag_version2 = 1, soap_flag_modified2 = 1, soap_flag_changes2 = 1, soap_flag_description1 = 1, soap_flag_domain1 = 1, soap_flag_postOffice1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_id2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTongwt__uid(soap, "ngwt:id", &(((ngwt__Item*)a)->id), "ngwt:uid"))
+				{	soap_flag_id2 = 0;
+					continue;
+				}
+			if (soap_flag_name2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:name", &(((ngwt__Item*)a)->name), ""))
+				{	soap_flag_name2 = 0;
+					continue;
+				}
+			if (soap_flag_version2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTounsignedLong(soap, "ngwt:version", &(((ngwt__Item*)a)->version), ""))
+				{	soap_flag_version2 = 0;
+					continue;
+				}
+			if (soap_flag_modified2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ngwt:modified", &(((ngwt__Item*)a)->modified), ""))
+				{	soap_flag_modified2 = 0;
+					continue;
+				}
+			if (soap_flag_changes2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__ItemChanges(soap, "ngwt:changes", &(((ngwt__Item*)a)->changes), "ngwt:ItemChanges"))
+				{	soap_flag_changes2 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap_flag_description1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:description", &(((ngwt__Library*)a)->description), ""))
+				{	soap_flag_description1 = 0;
+					continue;
+				}
+			if (soap_flag_domain1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:domain", &(((ngwt__Library*)a)->domain), ""))
+				{	soap_flag_domain1 = 0;
+					continue;
+				}
+			if (soap_flag_postOffice1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:postOffice", &(((ngwt__Library*)a)->postOffice), ""))
+				{	soap_flag_postOffice1 = 0;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__Library *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__Library, 0, sizeof(ngwt__Library), 0, soap_copy_ngwt__Library);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 ngwt__Library * SOAP_FMAC6 soap_new_ngwt__Library(struct soap *soap, int n)
+{	return soap_instantiate_ngwt__Library(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__Library(struct soap *soap, ngwt__Library *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 ngwt__Library * SOAP_FMAC6 soap_instantiate_ngwt__Library(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ngwt__Library(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ngwt__Library, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new ngwt__Library;
+		if (size)
+			*size = sizeof(ngwt__Library);
+		((ngwt__Library*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new ngwt__Library[n];
+		if (size)
+			*size = n * sizeof(ngwt__Library);
+		for (int i = 0; i < n; i++)
+			((ngwt__Library*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (ngwt__Library*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Library(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwt__Library %p -> %p\n", q, p));
+	*(ngwt__Library*)p = *(ngwt__Library*)q;
 }
 
 void ngwt__JunkHandlingList::soap_serialize(struct soap *soap) const
@@ -46085,8 +54125,8 @@ void ngwt__ItemStatus::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTobool(soap, &((ngwt__ItemStatus*)this)->deleted);
 	soap_embedded(soap, &((ngwt__ItemStatus*)this)->forwarded, SOAP_TYPE_PointerTobool);
 	soap_serialize_PointerTobool(soap, &((ngwt__ItemStatus*)this)->forwarded);
-	soap_embedded(soap, &((ngwt__ItemStatus*)this)->hidden, SOAP_TYPE_PointerTobool);
-	soap_serialize_PointerTobool(soap, &((ngwt__ItemStatus*)this)->hidden);
+	soap_embedded(soap, &((ngwt__ItemStatus*)this)->private_, SOAP_TYPE_PointerTobool);
+	soap_serialize_PointerTobool(soap, &((ngwt__ItemStatus*)this)->private_);
 	soap_embedded(soap, &((ngwt__ItemStatus*)this)->opened, SOAP_TYPE_PointerTobool);
 	soap_serialize_PointerTobool(soap, &((ngwt__ItemStatus*)this)->opened);
 	soap_embedded(soap, &((ngwt__ItemStatus*)this)->read, SOAP_TYPE_PointerTobool);
@@ -46104,7 +54144,7 @@ void ngwt__ItemStatus::soap_default(struct soap *soap)
 	((ngwt__ItemStatus*)this)->delegated = NULL;
 	((ngwt__ItemStatus*)this)->deleted = NULL;
 	((ngwt__ItemStatus*)this)->forwarded = NULL;
-	((ngwt__ItemStatus*)this)->hidden = NULL;
+	((ngwt__ItemStatus*)this)->private_ = NULL;
 	((ngwt__ItemStatus*)this)->opened = NULL;
 	((ngwt__ItemStatus*)this)->read = NULL;
 	((ngwt__ItemStatus*)this)->replied = NULL;
@@ -46132,7 +54172,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__ItemStatus(struct soap *soap, const cha
 	soap_out_PointerTobool(soap, "ngwt:delegated", -1, &(((ngwt__ItemStatus*)a)->delegated), "");
 	soap_out_PointerTobool(soap, "ngwt:deleted", -1, &(((ngwt__ItemStatus*)a)->deleted), "");
 	soap_out_PointerTobool(soap, "ngwt:forwarded", -1, &(((ngwt__ItemStatus*)a)->forwarded), "");
-	soap_out_PointerTobool(soap, "ngwt:hidden", -1, &(((ngwt__ItemStatus*)a)->hidden), "");
+	soap_out_PointerTobool(soap, "ngwt:private", -1, &(((ngwt__ItemStatus*)a)->private_), "");
 	soap_out_PointerTobool(soap, "ngwt:opened", -1, &(((ngwt__ItemStatus*)a)->opened), "");
 	soap_out_PointerTobool(soap, "ngwt:read", -1, &(((ngwt__ItemStatus*)a)->read), "");
 	soap_out_PointerTobool(soap, "ngwt:replied", -1, &(((ngwt__ItemStatus*)a)->replied), "");
@@ -46172,7 +54212,7 @@ SOAP_FMAC3 ngwt__ItemStatus * SOAP_FMAC4 soap_in_ngwt__ItemStatus(struct soap *s
 			return (ngwt__ItemStatus *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_accepted1 = 1, soap_flag_completed1 = 1, soap_flag_delegated1 = 1, soap_flag_deleted1 = 1, soap_flag_forwarded1 = 1, soap_flag_hidden1 = 1, soap_flag_opened1 = 1, soap_flag_read1 = 1, soap_flag_replied1 = 1;
+	short soap_flag_accepted1 = 1, soap_flag_completed1 = 1, soap_flag_delegated1 = 1, soap_flag_deleted1 = 1, soap_flag_forwarded1 = 1, soap_flag_private_1 = 1, soap_flag_opened1 = 1, soap_flag_read1 = 1, soap_flag_replied1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -46202,9 +54242,9 @@ SOAP_FMAC3 ngwt__ItemStatus * SOAP_FMAC4 soap_in_ngwt__ItemStatus(struct soap *s
 				{	soap_flag_forwarded1 = 0;
 					continue;
 				}
-			if (soap_flag_hidden1 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTobool(soap, "ngwt:hidden", &(((ngwt__ItemStatus*)a)->hidden), ""))
-				{	soap_flag_hidden1 = 0;
+			if (soap_flag_private_1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTobool(soap, "ngwt:private", &(((ngwt__ItemStatus*)a)->private_), ""))
+				{	soap_flag_private_1 = 0;
 					continue;
 				}
 			if (soap_flag_opened1 && soap->error == SOAP_TAG_MISMATCH)
@@ -47358,6 +55398,24 @@ SOAP_FMAC5 ngwt__Item * SOAP_FMAC6 soap_instantiate_ngwt__Item(struct soap *soap
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
 		return (ngwt__Folder*)cp->ptr;
 	}
+	if (type && !soap_match_tag(soap, type, "ngwt:Library"))
+	{	cp->type = SOAP_TYPE_ngwt__Library;
+		if (n < 0)
+		{	cp->ptr = (void*)new ngwt__Library;
+			if (size)
+				*size = sizeof(ngwt__Library);
+			((ngwt__Library*)cp->ptr)->soap = soap;
+		}
+		else
+		{	cp->ptr = (void*)new ngwt__Library[n];
+			if (size)
+				*size = n * sizeof(ngwt__Library);
+			for (int i = 0; i < n; i++)
+				((ngwt__Library*)cp->ptr)[i].soap = soap;
+		}
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+		return (ngwt__Library*)cp->ptr;
+	}
 	if (type && !soap_match_tag(soap, type, "ngwt:AddressBookItem"))
 	{	cp->type = SOAP_TYPE_ngwt__AddressBookItem;
 		if (n < 0)
@@ -47394,6 +55452,24 @@ SOAP_FMAC5 ngwt__Item * SOAP_FMAC6 soap_instantiate_ngwt__Item(struct soap *soap
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
 		return (ngwt__BoxEntry*)cp->ptr;
 	}
+	if (type && !soap_match_tag(soap, type, "ngwt:Document"))
+	{	cp->type = SOAP_TYPE_ngwt__Document;
+		if (n < 0)
+		{	cp->ptr = (void*)new ngwt__Document;
+			if (size)
+				*size = sizeof(ngwt__Document);
+			((ngwt__Document*)cp->ptr)->soap = soap;
+		}
+		else
+		{	cp->ptr = (void*)new ngwt__Document[n];
+			if (size)
+				*size = n * sizeof(ngwt__Document);
+			for (int i = 0; i < n; i++)
+				((ngwt__Document*)cp->ptr)[i].soap = soap;
+		}
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+		return (ngwt__Document*)cp->ptr;
+	}
 	if (type && !soap_match_tag(soap, type, "ngwt:QueryFolder"))
 	{	cp->type = SOAP_TYPE_ngwt__QueryFolder;
 		if (n < 0)
@@ -47411,6 +55487,24 @@ SOAP_FMAC5 ngwt__Item * SOAP_FMAC6 soap_instantiate_ngwt__Item(struct soap *soap
 		}
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
 		return (ngwt__QueryFolder*)cp->ptr;
+	}
+	if (type && !soap_match_tag(soap, type, "ngwt:Rule"))
+	{	cp->type = SOAP_TYPE_ngwt__Rule;
+		if (n < 0)
+		{	cp->ptr = (void*)new ngwt__Rule;
+			if (size)
+				*size = sizeof(ngwt__Rule);
+			((ngwt__Rule*)cp->ptr)->soap = soap;
+		}
+		else
+		{	cp->ptr = (void*)new ngwt__Rule[n];
+			if (size)
+				*size = n * sizeof(ngwt__Rule);
+			for (int i = 0; i < n; i++)
+				((ngwt__Rule*)cp->ptr)[i].soap = soap;
+		}
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+		return (ngwt__Rule*)cp->ptr;
 	}
 	if (type && !soap_match_tag(soap, type, "ngwt:SharedFolder"))
 	{	cp->type = SOAP_TYPE_ngwt__SharedFolder;
@@ -47447,6 +55541,42 @@ SOAP_FMAC5 ngwt__Item * SOAP_FMAC6 soap_instantiate_ngwt__Item(struct soap *soap
 		}
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
 		return (ngwt__SystemFolder*)cp->ptr;
+	}
+	if (type && !soap_match_tag(soap, type, "ngwt:Version"))
+	{	cp->type = SOAP_TYPE_ngwt__Version;
+		if (n < 0)
+		{	cp->ptr = (void*)new ngwt__Version;
+			if (size)
+				*size = sizeof(ngwt__Version);
+			((ngwt__Version*)cp->ptr)->soap = soap;
+		}
+		else
+		{	cp->ptr = (void*)new ngwt__Version[n];
+			if (size)
+				*size = n * sizeof(ngwt__Version);
+			for (int i = 0; i < n; i++)
+				((ngwt__Version*)cp->ptr)[i].soap = soap;
+		}
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+		return (ngwt__Version*)cp->ptr;
+	}
+	if (type && !soap_match_tag(soap, type, "ngwt:VersionEvent"))
+	{	cp->type = SOAP_TYPE_ngwt__VersionEvent;
+		if (n < 0)
+		{	cp->ptr = (void*)new ngwt__VersionEvent;
+			if (size)
+				*size = sizeof(ngwt__VersionEvent);
+			((ngwt__VersionEvent*)cp->ptr)->soap = soap;
+		}
+		else
+		{	cp->ptr = (void*)new ngwt__VersionEvent[n];
+			if (size)
+				*size = n * sizeof(ngwt__VersionEvent);
+			for (int i = 0; i < n; i++)
+				((ngwt__VersionEvent*)cp->ptr)[i].soap = soap;
+		}
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+		return (ngwt__VersionEvent*)cp->ptr;
 	}
 	if (type && !soap_match_tag(soap, type, "ngwt:Contact"))
 	{	cp->type = SOAP_TYPE_ngwt__Contact;
@@ -47573,6 +55703,24 @@ SOAP_FMAC5 ngwt__Item * SOAP_FMAC6 soap_instantiate_ngwt__Item(struct soap *soap
 		}
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
 		return (ngwt__CalendarItem*)cp->ptr;
+	}
+	if (type && !soap_match_tag(soap, type, "ngwt:DocumentRef"))
+	{	cp->type = SOAP_TYPE_ngwt__DocumentRef;
+		if (n < 0)
+		{	cp->ptr = (void*)new ngwt__DocumentRef;
+			if (size)
+				*size = sizeof(ngwt__DocumentRef);
+			((ngwt__DocumentRef*)cp->ptr)->soap = soap;
+		}
+		else
+		{	cp->ptr = (void*)new ngwt__DocumentRef[n];
+			if (size)
+				*size = n * sizeof(ngwt__DocumentRef);
+			for (int i = 0; i < n; i++)
+				((ngwt__DocumentRef*)cp->ptr)[i].soap = soap;
+		}
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+		return (ngwt__DocumentRef*)cp->ptr;
 	}
 	if (type && !soap_match_tag(soap, type, "ngwt:PhoneMessage"))
 	{	cp->type = SOAP_TYPE_ngwt__PhoneMessage;
@@ -48440,6 +56588,8 @@ void ngwt__Group::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((ngwt__AddressBookItem*)this)->postOffice);
 	soap_embedded(soap, &((ngwt__AddressBookItem*)this)->distinguishedName, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__AddressBookItem*)this)->distinguishedName);
+	soap_embedded(soap, &((ngwt__AddressBookItem*)this)->userid, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__AddressBookItem*)this)->userid);
 	soap_serialize_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, &((ngwt__ContainerItem*)this)->container);
 	soap_embedded(soap, &((ngwt__ContainerItem*)this)->categories, SOAP_TYPE_PointerTongwt__CategoryRefList);
 	soap_serialize_PointerTongwt__CategoryRefList(soap, &((ngwt__ContainerItem*)this)->categories);
@@ -48470,6 +56620,7 @@ void ngwt__Group::soap_default(struct soap *soap)
 	((ngwt__AddressBookItem*)this)->domain = NULL;
 	((ngwt__AddressBookItem*)this)->postOffice = NULL;
 	((ngwt__AddressBookItem*)this)->distinguishedName = NULL;
+	((ngwt__AddressBookItem*)this)->userid = NULL;
 	soap_default_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, &((ngwt__ContainerItem*)this)->container);
 	((ngwt__ContainerItem*)this)->categories = NULL;
 	soap_default_string(soap, &((ngwt__ContainerItem*)this)->created);
@@ -48514,6 +56665,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Group(struct soap *soap, const char *ta
 	soap_out_PointerTostd__string(soap, "ngwt:domain", -1, &(((ngwt__AddressBookItem*)a)->domain), "");
 	soap_out_PointerTostd__string(soap, "ngwt:postOffice", -1, &(((ngwt__AddressBookItem*)a)->postOffice), "");
 	soap_out_PointerTostd__string(soap, "ngwt:distinguishedName", -1, &(((ngwt__AddressBookItem*)a)->distinguishedName), "");
+	soap_out_PointerTostd__string(soap, "ngwt:userid", -1, &(((ngwt__AddressBookItem*)a)->userid), "");
 	soap_out_PointerTongwt__GroupMemberList(soap, "ngwt:members", -1, &(((ngwt__Group*)a)->members), "");
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
@@ -48550,7 +56702,7 @@ SOAP_FMAC3 ngwt__Group * SOAP_FMAC4 soap_in_ngwt__Group(struct soap *soap, const
 			return (ngwt__Group *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id4 = 1, soap_flag_name4 = 1, soap_flag_version4 = 1, soap_flag_modified4 = 1, soap_flag_changes4 = 1, soap_flag_categories3 = 1, soap_flag_created3 = 1, soap_flag_customs3 = 1, soap_flag_uuid2 = 1, soap_flag_comment2 = 1, soap_flag_sync2 = 1, soap_flag_domain2 = 1, soap_flag_postOffice2 = 1, soap_flag_distinguishedName2 = 1, soap_flag_members1 = 1;
+	short soap_flag_id4 = 1, soap_flag_name4 = 1, soap_flag_version4 = 1, soap_flag_modified4 = 1, soap_flag_changes4 = 1, soap_flag_categories3 = 1, soap_flag_created3 = 1, soap_flag_customs3 = 1, soap_flag_uuid2 = 1, soap_flag_comment2 = 1, soap_flag_sync2 = 1, soap_flag_domain2 = 1, soap_flag_postOffice2 = 1, soap_flag_distinguishedName2 = 1, soap_flag_userid2 = 1, soap_flag_members1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -48627,6 +56779,11 @@ SOAP_FMAC3 ngwt__Group * SOAP_FMAC4 soap_in_ngwt__Group(struct soap *soap, const
 			if (soap_flag_distinguishedName2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:distinguishedName", &(((ngwt__AddressBookItem*)a)->distinguishedName), ""))
 				{	soap_flag_distinguishedName2 = 0;
+					continue;
+				}
+			if (soap_flag_userid2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:userid", &(((ngwt__AddressBookItem*)a)->userid), ""))
+				{	soap_flag_userid2 = 0;
 					continue;
 				}
 			if (soap_flag_members1 && soap->error == SOAP_TAG_MISMATCH)
@@ -50353,8 +58510,6 @@ void ngwt__Folder::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTounsignedLong(soap, &((ngwt__Folder*)this)->sequence);
 	soap_embedded(soap, &((ngwt__Folder*)this)->settings, SOAP_TYPE_PointerTongwt__uid);
 	soap_serialize_PointerTongwt__uid(soap, &((ngwt__Folder*)this)->settings);
-	soap_embedded(soap, &((ngwt__Folder*)this)->hasSubfolders, SOAP_TYPE_PointerTobool);
-	soap_serialize_PointerTobool(soap, &((ngwt__Folder*)this)->hasSubfolders);
 	soap_embedded(soap, &((ngwt__Folder*)this)->calendarAttribute, SOAP_TYPE_PointerTongwt__CalendarFolderAttribute);
 	soap_serialize_PointerTongwt__CalendarFolderAttribute(soap, &((ngwt__Folder*)this)->calendarAttribute);
 	soap_embedded(soap, &((ngwt__Item*)this)->id, SOAP_TYPE_PointerTongwt__uid);
@@ -50380,7 +58535,6 @@ void ngwt__Folder::soap_default(struct soap *soap)
 	((ngwt__Folder*)this)->unreadCount = NULL;
 	((ngwt__Folder*)this)->sequence = NULL;
 	((ngwt__Folder*)this)->settings = NULL;
-	((ngwt__Folder*)this)->hasSubfolders = NULL;
 	((ngwt__Folder*)this)->calendarAttribute = NULL;
 	((ngwt__Item*)this)->id = NULL;
 	((ngwt__Item*)this)->name = NULL;
@@ -50419,7 +58573,6 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Folder(struct soap *soap, const char *t
 	soap_out_PointerToint(soap, "ngwt:unreadCount", -1, &(((ngwt__Folder*)a)->unreadCount), "");
 	soap_out_PointerTounsignedLong(soap, "ngwt:sequence", -1, &(((ngwt__Folder*)a)->sequence), "");
 	soap_out_PointerTongwt__uid(soap, "ngwt:settings", -1, &(((ngwt__Folder*)a)->settings), "");
-	soap_out_PointerTobool(soap, "ngwt:hasSubfolders", -1, &(((ngwt__Folder*)a)->hasSubfolders), "");
 	soap_out_PointerTongwt__CalendarFolderAttribute(soap, "ngwt:calendarAttribute", -1, &(((ngwt__Folder*)a)->calendarAttribute), "");
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
@@ -50456,7 +58609,7 @@ SOAP_FMAC3 ngwt__Folder * SOAP_FMAC4 soap_in_ngwt__Folder(struct soap *soap, con
 			return (ngwt__Folder *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id2 = 1, soap_flag_name2 = 1, soap_flag_version2 = 1, soap_flag_modified2 = 1, soap_flag_changes2 = 1, soap_flag_parent1 = 1, soap_flag_description1 = 1, soap_flag_count1 = 1, soap_flag_hasUnread1 = 1, soap_flag_unreadCount1 = 1, soap_flag_sequence1 = 1, soap_flag_settings1 = 1, soap_flag_hasSubfolders1 = 1, soap_flag_calendarAttribute1 = 1;
+	short soap_flag_id2 = 1, soap_flag_name2 = 1, soap_flag_version2 = 1, soap_flag_modified2 = 1, soap_flag_changes2 = 1, soap_flag_parent1 = 1, soap_flag_description1 = 1, soap_flag_count1 = 1, soap_flag_hasUnread1 = 1, soap_flag_unreadCount1 = 1, soap_flag_sequence1 = 1, soap_flag_settings1 = 1, soap_flag_calendarAttribute1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -50520,11 +58673,6 @@ SOAP_FMAC3 ngwt__Folder * SOAP_FMAC4 soap_in_ngwt__Folder(struct soap *soap, con
 			if (soap_flag_settings1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTongwt__uid(soap, "ngwt:settings", &(((ngwt__Folder*)a)->settings), "ngwt:uid"))
 				{	soap_flag_settings1 = 0;
-					continue;
-				}
-			if (soap_flag_hasSubfolders1 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTobool(soap, "ngwt:hasSubfolders", &(((ngwt__Folder*)a)->hasSubfolders), ""))
-				{	soap_flag_hasSubfolders1 = 0;
 					continue;
 				}
 			if (soap_flag_calendarAttribute1 && soap->error == SOAP_TAG_MISMATCH)
@@ -50815,8 +58963,8 @@ void ngwt__FilterEntry::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTongwt__Custom(soap, &((ngwt__FilterEntry*)this)->custom);
 	soap_embedded(soap, &((ngwt__FilterEntry*)this)->value, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__FilterEntry*)this)->value);
-	soap_embedded(soap, &((ngwt__FilterEntry*)this)->date, SOAP_TYPE_PointerTostd__string);
-	soap_serialize_PointerTostd__string(soap, &((ngwt__FilterEntry*)this)->date);
+	soap_embedded(soap, &((ngwt__FilterEntry*)this)->date, SOAP_TYPE_PointerTongwt__FilterDate);
+	soap_serialize_PointerTongwt__FilterDate(soap, &((ngwt__FilterEntry*)this)->date);
 	soap_embedded(soap, &((ngwt__FilterElement*)this)->op, SOAP_TYPE_ngwt__FilterOp);
 	/* transient soap skipped */
 }
@@ -50853,7 +59001,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__FilterEntry(struct soap *soap, const ch
 	soap_out_PointerTostd__string(soap, "ngwt:field", -1, &(((ngwt__FilterEntry*)a)->field), "");
 	soap_out_PointerTongwt__Custom(soap, "ngwt:custom", -1, &(((ngwt__FilterEntry*)a)->custom), "");
 	soap_out_PointerTostd__string(soap, "ngwt:value", -1, &(((ngwt__FilterEntry*)a)->value), "");
-	soap_out_PointerTostd__string(soap, "ngwt:date", -1, &(((ngwt__FilterEntry*)a)->date), "");
+	soap_out_PointerTongwt__FilterDate(soap, "ngwt:date", -1, &(((ngwt__FilterEntry*)a)->date), "");
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
 }
@@ -50915,8 +59063,8 @@ SOAP_FMAC3 ngwt__FilterEntry * SOAP_FMAC4 soap_in_ngwt__FilterEntry(struct soap 
 				{	soap_flag_value1 = 0;
 					continue;
 				}
-			if (soap_flag_date1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
-				if (soap_in_PointerTostd__string(soap, "ngwt:date", &(((ngwt__FilterEntry*)a)->date), ""))
+			if (soap_flag_date1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__FilterDate(soap, "ngwt:date", &(((ngwt__FilterEntry*)a)->date), ""))
 				{	soap_flag_date1 = 0;
 					continue;
 				}
@@ -51434,6 +59582,1121 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__EmailAddressList(struct soap *soap, i
 	*(ngwt__EmailAddressList*)p = *(ngwt__EmailAddressList*)q;
 }
 
+void ngwt__DocumentTypeList::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_serialize_std__vectorTemplateOfPointerTongwt__DocumentType(soap, &((ngwt__DocumentTypeList*)this)->item);
+	/* transient soap skipped */
+}
+
+void ngwt__DocumentTypeList::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	soap_default_std__vectorTemplateOfPointerTongwt__DocumentType(soap, &((ngwt__DocumentTypeList*)this)->item);
+	/* transient soap skipped */
+}
+
+int ngwt__DocumentTypeList::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE_ngwt__DocumentTypeList);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int ngwt__DocumentTypeList::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out_ngwt__DocumentTypeList(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__DocumentTypeList(struct soap *soap, const char *tag, int id, const ngwt__DocumentTypeList *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__DocumentTypeList), type);
+	soap_out_std__vectorTemplateOfPointerTongwt__DocumentType(soap, "ngwt:item", -1, &(((ngwt__DocumentTypeList*)a)->item), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *ngwt__DocumentTypeList::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get_ngwt__DocumentTypeList(soap, this, tag, type);
+}
+
+SOAP_FMAC3 ngwt__DocumentTypeList * SOAP_FMAC4 soap_get_ngwt__DocumentTypeList(struct soap *soap, ngwt__DocumentTypeList *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__DocumentTypeList(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *ngwt__DocumentTypeList::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in_ngwt__DocumentTypeList(soap, tag, this, type);
+}
+
+SOAP_FMAC3 ngwt__DocumentTypeList * SOAP_FMAC4 soap_in_ngwt__DocumentTypeList(struct soap *soap, const char *tag, ngwt__DocumentTypeList *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (ngwt__DocumentTypeList *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__DocumentTypeList, sizeof(ngwt__DocumentTypeList), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE_ngwt__DocumentTypeList)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (ngwt__DocumentTypeList *)a->soap_in(soap, tag, type);
+		}
+	};
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_std__vectorTemplateOfPointerTongwt__DocumentType(soap, "ngwt:item", &(((ngwt__DocumentTypeList*)a)->item), "ngwt:DocumentType"))
+					continue;
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__DocumentTypeList *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__DocumentTypeList, 0, sizeof(ngwt__DocumentTypeList), 0, soap_copy_ngwt__DocumentTypeList);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 ngwt__DocumentTypeList * SOAP_FMAC6 soap_new_ngwt__DocumentTypeList(struct soap *soap, int n)
+{	return soap_instantiate_ngwt__DocumentTypeList(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__DocumentTypeList(struct soap *soap, ngwt__DocumentTypeList *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 ngwt__DocumentTypeList * SOAP_FMAC6 soap_instantiate_ngwt__DocumentTypeList(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ngwt__DocumentTypeList(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ngwt__DocumentTypeList, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new ngwt__DocumentTypeList;
+		if (size)
+			*size = sizeof(ngwt__DocumentTypeList);
+		((ngwt__DocumentTypeList*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new ngwt__DocumentTypeList[n];
+		if (size)
+			*size = n * sizeof(ngwt__DocumentTypeList);
+		for (int i = 0; i < n; i++)
+			((ngwt__DocumentTypeList*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (ngwt__DocumentTypeList*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__DocumentTypeList(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwt__DocumentTypeList %p -> %p\n", q, p));
+	*(ngwt__DocumentTypeList*)p = *(ngwt__DocumentTypeList*)q;
+}
+
+void ngwt__DocumentType::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((ngwt__DocumentType*)this)->name, SOAP_TYPE_std__string);
+	soap_serialize_std__string(soap, &((ngwt__DocumentType*)this)->name);
+	soap_embedded(soap, &((ngwt__DocumentType*)this)->life, SOAP_TYPE_PointerTounsignedLong);
+	soap_serialize_PointerTounsignedLong(soap, &((ngwt__DocumentType*)this)->life);
+	soap_embedded(soap, &((ngwt__DocumentType*)this)->maximumVersions, SOAP_TYPE_PointerTounsignedLong);
+	soap_serialize_PointerTounsignedLong(soap, &((ngwt__DocumentType*)this)->maximumVersions);
+	soap_embedded(soap, &((ngwt__DocumentType*)this)->ageAction, SOAP_TYPE_PointerTongwt__AgeAction);
+	soap_serialize_PointerTongwt__AgeAction(soap, &((ngwt__DocumentType*)this)->ageAction);
+	/* transient soap skipped */
+}
+
+void ngwt__DocumentType::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	soap_default_std__string(soap, &((ngwt__DocumentType*)this)->name);
+	((ngwt__DocumentType*)this)->life = NULL;
+	((ngwt__DocumentType*)this)->maximumVersions = NULL;
+	((ngwt__DocumentType*)this)->ageAction = NULL;
+	/* transient soap skipped */
+}
+
+int ngwt__DocumentType::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE_ngwt__DocumentType);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int ngwt__DocumentType::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out_ngwt__DocumentType(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__DocumentType(struct soap *soap, const char *tag, int id, const ngwt__DocumentType *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__DocumentType), type);
+	soap_out_std__string(soap, "ngwt:name", -1, &(((ngwt__DocumentType*)a)->name), "");
+	soap_out_PointerTounsignedLong(soap, "ngwt:life", -1, &(((ngwt__DocumentType*)a)->life), "");
+	soap_out_PointerTounsignedLong(soap, "ngwt:maximumVersions", -1, &(((ngwt__DocumentType*)a)->maximumVersions), "");
+	soap_out_PointerTongwt__AgeAction(soap, "ngwt:ageAction", -1, &(((ngwt__DocumentType*)a)->ageAction), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *ngwt__DocumentType::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get_ngwt__DocumentType(soap, this, tag, type);
+}
+
+SOAP_FMAC3 ngwt__DocumentType * SOAP_FMAC4 soap_get_ngwt__DocumentType(struct soap *soap, ngwt__DocumentType *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__DocumentType(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *ngwt__DocumentType::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in_ngwt__DocumentType(soap, tag, this, type);
+}
+
+SOAP_FMAC3 ngwt__DocumentType * SOAP_FMAC4 soap_in_ngwt__DocumentType(struct soap *soap, const char *tag, ngwt__DocumentType *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (ngwt__DocumentType *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__DocumentType, sizeof(ngwt__DocumentType), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE_ngwt__DocumentType)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (ngwt__DocumentType *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_name1 = 1, soap_flag_life1 = 1, soap_flag_maximumVersions1 = 1, soap_flag_ageAction1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_name1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_std__string(soap, "ngwt:name", &(((ngwt__DocumentType*)a)->name), ""))
+				{	soap_flag_name1 = 0;
+					continue;
+				}
+			if (soap_flag_life1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTounsignedLong(soap, "ngwt:life", &(((ngwt__DocumentType*)a)->life), ""))
+				{	soap_flag_life1 = 0;
+					continue;
+				}
+			if (soap_flag_maximumVersions1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTounsignedLong(soap, "ngwt:maximumVersions", &(((ngwt__DocumentType*)a)->maximumVersions), ""))
+				{	soap_flag_maximumVersions1 = 0;
+					continue;
+				}
+			if (soap_flag_ageAction1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__AgeAction(soap, "ngwt:ageAction", &(((ngwt__DocumentType*)a)->ageAction), ""))
+				{	soap_flag_ageAction1 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_name1))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__DocumentType *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__DocumentType, 0, sizeof(ngwt__DocumentType), 0, soap_copy_ngwt__DocumentType);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 ngwt__DocumentType * SOAP_FMAC6 soap_new_ngwt__DocumentType(struct soap *soap, int n)
+{	return soap_instantiate_ngwt__DocumentType(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__DocumentType(struct soap *soap, ngwt__DocumentType *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 ngwt__DocumentType * SOAP_FMAC6 soap_instantiate_ngwt__DocumentType(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ngwt__DocumentType(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ngwt__DocumentType, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new ngwt__DocumentType;
+		if (size)
+			*size = sizeof(ngwt__DocumentType);
+		((ngwt__DocumentType*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new ngwt__DocumentType[n];
+		if (size)
+			*size = n * sizeof(ngwt__DocumentType);
+		for (int i = 0; i < n; i++)
+			((ngwt__DocumentType*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (ngwt__DocumentType*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__DocumentType(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwt__DocumentType %p -> %p\n", q, p));
+	*(ngwt__DocumentType*)p = *(ngwt__DocumentType*)q;
+}
+
+void ngwt__DocumentRef::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((ngwt__DocumentRef*)this)->library, SOAP_TYPE_PointerTongwt__NameAndEmail);
+	soap_serialize_PointerTongwt__NameAndEmail(soap, &((ngwt__DocumentRef*)this)->library);
+	soap_embedded(soap, &((ngwt__DocumentRef*)this)->documentNumber, SOAP_TYPE_PointerTounsignedLong);
+	soap_serialize_PointerTounsignedLong(soap, &((ngwt__DocumentRef*)this)->documentNumber);
+	soap_embedded(soap, &((ngwt__DocumentRef*)this)->filename, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__DocumentRef*)this)->filename);
+	soap_embedded(soap, &((ngwt__DocumentRef*)this)->documentTypeName, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__DocumentRef*)this)->documentTypeName);
+	soap_embedded(soap, &((ngwt__DocumentRef*)this)->author, SOAP_TYPE_PointerTongwt__NameAndEmail);
+	soap_serialize_PointerTongwt__NameAndEmail(soap, &((ngwt__DocumentRef*)this)->author);
+	soap_embedded(soap, &((ngwt__DocumentRef*)this)->creator, SOAP_TYPE_PointerTongwt__NameAndEmail);
+	soap_serialize_PointerTongwt__NameAndEmail(soap, &((ngwt__DocumentRef*)this)->creator);
+	soap_embedded(soap, &((ngwt__DocumentRef*)this)->officialVersion, SOAP_TYPE_PointerTounsignedLong);
+	soap_serialize_PointerTounsignedLong(soap, &((ngwt__DocumentRef*)this)->officialVersion);
+	soap_embedded(soap, &((ngwt__DocumentRef*)this)->currentVersion, SOAP_TYPE_PointerTounsignedLong);
+	soap_serialize_PointerTounsignedLong(soap, &((ngwt__DocumentRef*)this)->currentVersion);
+	soap_embedded(soap, &((ngwt__DocumentRef*)this)->versionNumber, SOAP_TYPE_PointerTounsignedLong);
+	soap_serialize_PointerTounsignedLong(soap, &((ngwt__DocumentRef*)this)->versionNumber);
+	soap_embedded(soap, &((ngwt__DocumentRef*)this)->fileSize, SOAP_TYPE_PointerTounsignedLong);
+	soap_serialize_PointerTounsignedLong(soap, &((ngwt__DocumentRef*)this)->fileSize);
+	soap_embedded(soap, &((ngwt__DocumentRef*)this)->acl, SOAP_TYPE_PointerTongwt__AccessControlList);
+	soap_serialize_PointerTongwt__AccessControlList(soap, &((ngwt__DocumentRef*)this)->acl);
+	soap_embedded(soap, &((ngwt__Mail*)this)->subject, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__Mail*)this)->subject);
+	soap_embedded(soap, &((ngwt__Mail*)this)->originalSubject, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__Mail*)this)->originalSubject);
+	soap_embedded(soap, &((ngwt__Mail*)this)->subjectPrefix, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__Mail*)this)->subjectPrefix);
+	soap_embedded(soap, &((ngwt__Mail*)this)->distribution, SOAP_TYPE_PointerTongwt__Distribution);
+	soap_serialize_PointerTongwt__Distribution(soap, &((ngwt__Mail*)this)->distribution);
+	soap_embedded(soap, &((ngwt__Mail*)this)->message, SOAP_TYPE_PointerTongwt__MessageBody);
+	soap_serialize_PointerTongwt__MessageBody(soap, &((ngwt__Mail*)this)->message);
+	soap_embedded(soap, &((ngwt__Mail*)this)->attachments, SOAP_TYPE_PointerTongwt__AttachmentInfo);
+	soap_serialize_PointerTongwt__AttachmentInfo(soap, &((ngwt__Mail*)this)->attachments);
+	soap_embedded(soap, &((ngwt__Mail*)this)->options, SOAP_TYPE_PointerTongwt__ItemOptions);
+	soap_serialize_PointerTongwt__ItemOptions(soap, &((ngwt__Mail*)this)->options);
+	soap_embedded(soap, &((ngwt__Mail*)this)->link, SOAP_TYPE_PointerTongwt__LinkInfo);
+	soap_serialize_PointerTongwt__LinkInfo(soap, &((ngwt__Mail*)this)->link);
+	soap_embedded(soap, &((ngwt__Mail*)this)->hasAttachment, SOAP_TYPE_bool);
+	soap_embedded(soap, &((ngwt__Mail*)this)->size, SOAP_TYPE_int);
+	soap_embedded(soap, &((ngwt__Mail*)this)->subType, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__Mail*)this)->subType);
+	soap_embedded(soap, &((ngwt__Mail*)this)->nntpOrImap, SOAP_TYPE_PointerTobool);
+	soap_serialize_PointerTobool(soap, &((ngwt__Mail*)this)->nntpOrImap);
+	soap_embedded(soap, &((ngwt__Mail*)this)->smimeType, SOAP_TYPE_PointerTongwt__SMimeOperation);
+	soap_serialize_PointerTongwt__SMimeOperation(soap, &((ngwt__Mail*)this)->smimeType);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->status, SOAP_TYPE_PointerTongwt__ItemStatus);
+	soap_serialize_PointerTongwt__ItemStatus(soap, &((ngwt__BoxEntry*)this)->status);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->thread, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->thread);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->msgId, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->msgId);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->messageId, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->messageId);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->source, SOAP_TYPE_PointerTongwt__ItemSource);
+	soap_serialize_PointerTongwt__ItemSource(soap, &((ngwt__BoxEntry*)this)->source);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->returnSentItemsId, SOAP_TYPE_PointerTobool);
+	soap_serialize_PointerTobool(soap, &((ngwt__BoxEntry*)this)->returnSentItemsId);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->delivered, SOAP_TYPE_string);
+	soap_serialize_string(soap, &((ngwt__BoxEntry*)this)->delivered);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->class_, SOAP_TYPE_PointerTongwt__ItemClass);
+	soap_serialize_PointerTongwt__ItemClass(soap, &((ngwt__BoxEntry*)this)->class_);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->security, SOAP_TYPE_PointerTongwt__ItemSecurity);
+	soap_serialize_PointerTongwt__ItemSecurity(soap, &((ngwt__BoxEntry*)this)->security);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->comment, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->comment);
+	soap_serialize_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, &((ngwt__ContainerItem*)this)->container);
+	soap_embedded(soap, &((ngwt__ContainerItem*)this)->categories, SOAP_TYPE_PointerTongwt__CategoryRefList);
+	soap_serialize_PointerTongwt__CategoryRefList(soap, &((ngwt__ContainerItem*)this)->categories);
+	soap_embedded(soap, &((ngwt__ContainerItem*)this)->created, SOAP_TYPE_string);
+	soap_serialize_string(soap, &((ngwt__ContainerItem*)this)->created);
+	soap_embedded(soap, &((ngwt__ContainerItem*)this)->customs, SOAP_TYPE_PointerTongwt__CustomList);
+	soap_serialize_PointerTongwt__CustomList(soap, &((ngwt__ContainerItem*)this)->customs);
+	soap_embedded(soap, &((ngwt__Item*)this)->id, SOAP_TYPE_PointerTongwt__uid);
+	soap_serialize_PointerTongwt__uid(soap, &((ngwt__Item*)this)->id);
+	soap_embedded(soap, &((ngwt__Item*)this)->name, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__Item*)this)->name);
+	soap_embedded(soap, &((ngwt__Item*)this)->version, SOAP_TYPE_PointerTounsignedLong);
+	soap_serialize_PointerTounsignedLong(soap, &((ngwt__Item*)this)->version);
+	soap_embedded(soap, &((ngwt__Item*)this)->modified, SOAP_TYPE_string);
+	soap_serialize_string(soap, &((ngwt__Item*)this)->modified);
+	soap_embedded(soap, &((ngwt__Item*)this)->changes, SOAP_TYPE_PointerTongwt__ItemChanges);
+	soap_serialize_PointerTongwt__ItemChanges(soap, &((ngwt__Item*)this)->changes);
+	/* transient soap skipped */
+}
+
+void ngwt__DocumentRef::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	((ngwt__DocumentRef*)this)->library = NULL;
+	((ngwt__DocumentRef*)this)->documentNumber = NULL;
+	((ngwt__DocumentRef*)this)->filename = NULL;
+	((ngwt__DocumentRef*)this)->documentTypeName = NULL;
+	((ngwt__DocumentRef*)this)->author = NULL;
+	((ngwt__DocumentRef*)this)->creator = NULL;
+	((ngwt__DocumentRef*)this)->officialVersion = NULL;
+	((ngwt__DocumentRef*)this)->currentVersion = NULL;
+	((ngwt__DocumentRef*)this)->versionNumber = NULL;
+	((ngwt__DocumentRef*)this)->versionDescription = NULL;
+	((ngwt__DocumentRef*)this)->fileSize = NULL;
+	((ngwt__DocumentRef*)this)->acl = NULL;
+	((ngwt__Mail*)this)->subject = NULL;
+	((ngwt__Mail*)this)->originalSubject = NULL;
+	((ngwt__Mail*)this)->subjectPrefix = NULL;
+	((ngwt__Mail*)this)->distribution = NULL;
+	((ngwt__Mail*)this)->message = NULL;
+	((ngwt__Mail*)this)->attachments = NULL;
+	((ngwt__Mail*)this)->options = NULL;
+	((ngwt__Mail*)this)->link = NULL;
+	((ngwt__Mail*)this)->hasAttachment = (bool)0;
+	((ngwt__Mail*)this)->size = 0;
+	((ngwt__Mail*)this)->subType = NULL;
+	((ngwt__Mail*)this)->nntpOrImap = NULL;
+	((ngwt__Mail*)this)->smimeType = NULL;
+	((ngwt__BoxEntry*)this)->status = NULL;
+	((ngwt__BoxEntry*)this)->thread = NULL;
+	((ngwt__BoxEntry*)this)->msgId = NULL;
+	((ngwt__BoxEntry*)this)->messageId = NULL;
+	((ngwt__BoxEntry*)this)->source = NULL;
+	((ngwt__BoxEntry*)this)->returnSentItemsId = NULL;
+	soap_default_string(soap, &((ngwt__BoxEntry*)this)->delivered);
+	((ngwt__BoxEntry*)this)->class_ = NULL;
+	((ngwt__BoxEntry*)this)->security = NULL;
+	((ngwt__BoxEntry*)this)->comment = NULL;
+	soap_default_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, &((ngwt__ContainerItem*)this)->container);
+	((ngwt__ContainerItem*)this)->categories = NULL;
+	soap_default_string(soap, &((ngwt__ContainerItem*)this)->created);
+	((ngwt__ContainerItem*)this)->customs = NULL;
+	((ngwt__Item*)this)->id = NULL;
+	((ngwt__Item*)this)->name = NULL;
+	((ngwt__Item*)this)->version = NULL;
+	soap_default_string(soap, &((ngwt__Item*)this)->modified);
+	((ngwt__Item*)this)->changes = NULL;
+	/* transient soap skipped */
+}
+
+int ngwt__DocumentRef::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE_ngwt__DocumentRef);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int ngwt__DocumentRef::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out_ngwt__DocumentRef(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__DocumentRef(struct soap *soap, const char *tag, int id, const ngwt__DocumentRef *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__DocumentRef), "ngwt:DocumentRef");
+	soap_out_PointerTongwt__uid(soap, "ngwt:id", -1, &(((ngwt__Item*)a)->id), "");
+	soap_out_PointerTostd__string(soap, "ngwt:name", -1, &(((ngwt__Item*)a)->name), "");
+	soap_out_PointerTounsignedLong(soap, "ngwt:version", -1, &(((ngwt__Item*)a)->version), "");
+	soap_out_string(soap, "ngwt:modified", -1, &(((ngwt__Item*)a)->modified), "");
+	soap_out_PointerTongwt__ItemChanges(soap, "ngwt:changes", -1, &(((ngwt__Item*)a)->changes), "");
+	/* transient soap skipped */
+	soap_out_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, "ngwt:container", -1, &(((ngwt__ContainerItem*)a)->container), "");
+	soap_out_PointerTongwt__CategoryRefList(soap, "ngwt:categories", -1, &(((ngwt__ContainerItem*)a)->categories), "");
+	soap_out_string(soap, "ngwt:created", -1, &(((ngwt__ContainerItem*)a)->created), "");
+	soap_out_PointerTongwt__CustomList(soap, "ngwt:customs", -1, &(((ngwt__ContainerItem*)a)->customs), "");
+	soap_out_PointerTongwt__ItemStatus(soap, "ngwt:status", -1, &(((ngwt__BoxEntry*)a)->status), "");
+	soap_out_PointerTostd__string(soap, "ngwt:thread", -1, &(((ngwt__BoxEntry*)a)->thread), "");
+	soap_out_PointerTostd__string(soap, "ngwt:msgId", -1, &(((ngwt__BoxEntry*)a)->msgId), "");
+	soap_out_PointerTostd__string(soap, "ngwt:messageId", -1, &(((ngwt__BoxEntry*)a)->messageId), "");
+	soap_out_PointerTongwt__ItemSource(soap, "ngwt:source", -1, &(((ngwt__BoxEntry*)a)->source), "");
+	soap_out_PointerTobool(soap, "ngwt:returnSentItemsId", -1, &(((ngwt__BoxEntry*)a)->returnSentItemsId), "");
+	soap_out_string(soap, "ngwt:delivered", -1, &(((ngwt__BoxEntry*)a)->delivered), "");
+	soap_out_PointerTongwt__ItemClass(soap, "ngwt:class", -1, &(((ngwt__BoxEntry*)a)->class_), "");
+	soap_out_PointerTongwt__ItemSecurity(soap, "ngwt:security", -1, &(((ngwt__BoxEntry*)a)->security), "");
+	soap_out_PointerTostd__string(soap, "ngwt:comment", -1, &(((ngwt__BoxEntry*)a)->comment), "");
+	soap_out_PointerTostd__string(soap, "ngwt:subject", -1, &(((ngwt__Mail*)a)->subject), "");
+	soap_out_PointerTostd__string(soap, "ngwt:originalSubject", -1, &(((ngwt__Mail*)a)->originalSubject), "");
+	soap_out_PointerTostd__string(soap, "ngwt:subjectPrefix", -1, &(((ngwt__Mail*)a)->subjectPrefix), "");
+	soap_out_PointerTongwt__Distribution(soap, "ngwt:distribution", -1, &(((ngwt__Mail*)a)->distribution), "");
+	soap_out_PointerTongwt__MessageBody(soap, "ngwt:message", -1, &(((ngwt__Mail*)a)->message), "");
+	soap_out_PointerTongwt__AttachmentInfo(soap, "ngwt:attachments", -1, &(((ngwt__Mail*)a)->attachments), "");
+	soap_out_PointerTongwt__ItemOptions(soap, "ngwt:options", -1, &(((ngwt__Mail*)a)->options), "");
+	soap_out_PointerTongwt__LinkInfo(soap, "ngwt:link", -1, &(((ngwt__Mail*)a)->link), "");
+	soap_out_bool(soap, "ngwt:hasAttachment", -1, &(((ngwt__Mail*)a)->hasAttachment), "");
+	soap_out_int(soap, "ngwt:size", -1, &(((ngwt__Mail*)a)->size), "");
+	soap_out_PointerTostd__string(soap, "ngwt:subType", -1, &(((ngwt__Mail*)a)->subType), "");
+	soap_out_PointerTobool(soap, "ngwt:nntpOrImap", -1, &(((ngwt__Mail*)a)->nntpOrImap), "");
+	soap_out_PointerTongwt__SMimeOperation(soap, "ngwt:smimeType", -1, &(((ngwt__Mail*)a)->smimeType), "");
+	soap_out_PointerTongwt__NameAndEmail(soap, "ngwt:library", -1, &(((ngwt__DocumentRef*)a)->library), "");
+	soap_out_PointerTounsignedLong(soap, "ngwt:documentNumber", -1, &(((ngwt__DocumentRef*)a)->documentNumber), "");
+	soap_out_PointerTostd__string(soap, "ngwt:filename", -1, &(((ngwt__DocumentRef*)a)->filename), "");
+	soap_out_PointerTostd__string(soap, "ngwt:documentTypeName", -1, &(((ngwt__DocumentRef*)a)->documentTypeName), "");
+	soap_out_PointerTongwt__NameAndEmail(soap, "ngwt:author", -1, &(((ngwt__DocumentRef*)a)->author), "");
+	soap_out_PointerTongwt__NameAndEmail(soap, "ngwt:creator", -1, &(((ngwt__DocumentRef*)a)->creator), "");
+	soap_out_PointerTounsignedLong(soap, "ngwt:officialVersion", -1, &(((ngwt__DocumentRef*)a)->officialVersion), "");
+	soap_out_PointerTounsignedLong(soap, "ngwt:currentVersion", -1, &(((ngwt__DocumentRef*)a)->currentVersion), "");
+	soap_out_PointerTounsignedLong(soap, "ngwt:versionNumber", -1, &(((ngwt__DocumentRef*)a)->versionNumber), "");
+	soap_outliteral(soap, "ngwt:versionDescription", &(((ngwt__DocumentRef*)a)->versionDescription));
+	soap_out_PointerTounsignedLong(soap, "ngwt:fileSize", -1, &(((ngwt__DocumentRef*)a)->fileSize), "");
+	soap_out_PointerTongwt__AccessControlList(soap, "ngwt:acl", -1, &(((ngwt__DocumentRef*)a)->acl), "");
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *ngwt__DocumentRef::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get_ngwt__DocumentRef(soap, this, tag, type);
+}
+
+SOAP_FMAC3 ngwt__DocumentRef * SOAP_FMAC4 soap_get_ngwt__DocumentRef(struct soap *soap, ngwt__DocumentRef *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__DocumentRef(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *ngwt__DocumentRef::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in_ngwt__DocumentRef(soap, tag, this, type);
+}
+
+SOAP_FMAC3 ngwt__DocumentRef * SOAP_FMAC4 soap_in_ngwt__DocumentRef(struct soap *soap, const char *tag, ngwt__DocumentRef *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (ngwt__DocumentRef *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__DocumentRef, sizeof(ngwt__DocumentRef), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE_ngwt__DocumentRef)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (ngwt__DocumentRef *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_id5 = 1, soap_flag_name5 = 1, soap_flag_version5 = 1, soap_flag_modified5 = 1, soap_flag_changes5 = 1, soap_flag_categories4 = 1, soap_flag_created4 = 1, soap_flag_customs4 = 1, soap_flag_status3 = 1, soap_flag_thread3 = 1, soap_flag_msgId3 = 1, soap_flag_messageId3 = 1, soap_flag_source3 = 1, soap_flag_returnSentItemsId3 = 1, soap_flag_delivered3 = 1, soap_flag_class_3 = 1, soap_flag_security3 = 1, soap_flag_comment3 = 1, soap_flag_subject2 = 1, soap_flag_originalSubject2 = 1, soap_flag_subjectPrefix2 = 1, soap_flag_distribution2 = 1, soap_flag_message2 = 1, soap_flag_attachments2 = 1, soap_flag_options2 = 1, soap_flag_link2 = 1, soap_flag_hasAttachment2 = 1, soap_flag_size2 = 1, soap_flag_subType2 = 1, soap_flag_nntpOrImap2 = 1, soap_flag_smimeType2 = 1, soap_flag_library1 = 1, soap_flag_documentNumber1 = 1, soap_flag_filename1 = 1, soap_flag_documentTypeName1 = 1, soap_flag_author1 = 1, soap_flag_creator1 = 1, soap_flag_officialVersion1 = 1, soap_flag_currentVersion1 = 1, soap_flag_versionNumber1 = 1, soap_flag_versionDescription1 = 1, soap_flag_fileSize1 = 1, soap_flag_acl1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_id5 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTongwt__uid(soap, "ngwt:id", &(((ngwt__Item*)a)->id), "ngwt:uid"))
+				{	soap_flag_id5 = 0;
+					continue;
+				}
+			if (soap_flag_name5 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:name", &(((ngwt__Item*)a)->name), ""))
+				{	soap_flag_name5 = 0;
+					continue;
+				}
+			if (soap_flag_version5 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTounsignedLong(soap, "ngwt:version", &(((ngwt__Item*)a)->version), ""))
+				{	soap_flag_version5 = 0;
+					continue;
+				}
+			if (soap_flag_modified5 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ngwt:modified", &(((ngwt__Item*)a)->modified), ""))
+				{	soap_flag_modified5 = 0;
+					continue;
+				}
+			if (soap_flag_changes5 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__ItemChanges(soap, "ngwt:changes", &(((ngwt__Item*)a)->changes), "ngwt:ItemChanges"))
+				{	soap_flag_changes5 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, "ngwt:container", &(((ngwt__ContainerItem*)a)->container), "ngwt:ContainerRef"))
+					continue;
+			if (soap_flag_categories4 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__CategoryRefList(soap, "ngwt:categories", &(((ngwt__ContainerItem*)a)->categories), "ngwt:CategoryRefList"))
+				{	soap_flag_categories4 = 0;
+					continue;
+				}
+			if (soap_flag_created4 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ngwt:created", &(((ngwt__ContainerItem*)a)->created), ""))
+				{	soap_flag_created4 = 0;
+					continue;
+				}
+			if (soap_flag_customs4 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__CustomList(soap, "ngwt:customs", &(((ngwt__ContainerItem*)a)->customs), "ngwt:CustomList"))
+				{	soap_flag_customs4 = 0;
+					continue;
+				}
+			if (soap_flag_status3 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__ItemStatus(soap, "ngwt:status", &(((ngwt__BoxEntry*)a)->status), "ngwt:ItemStatus"))
+				{	soap_flag_status3 = 0;
+					continue;
+				}
+			if (soap_flag_thread3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:thread", &(((ngwt__BoxEntry*)a)->thread), ""))
+				{	soap_flag_thread3 = 0;
+					continue;
+				}
+			if (soap_flag_msgId3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:msgId", &(((ngwt__BoxEntry*)a)->msgId), ""))
+				{	soap_flag_msgId3 = 0;
+					continue;
+				}
+			if (soap_flag_messageId3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:messageId", &(((ngwt__BoxEntry*)a)->messageId), ""))
+				{	soap_flag_messageId3 = 0;
+					continue;
+				}
+			if (soap_flag_source3 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__ItemSource(soap, "ngwt:source", &(((ngwt__BoxEntry*)a)->source), ""))
+				{	soap_flag_source3 = 0;
+					continue;
+				}
+			if (soap_flag_returnSentItemsId3 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTobool(soap, "ngwt:returnSentItemsId", &(((ngwt__BoxEntry*)a)->returnSentItemsId), ""))
+				{	soap_flag_returnSentItemsId3 = 0;
+					continue;
+				}
+			if (soap_flag_delivered3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ngwt:delivered", &(((ngwt__BoxEntry*)a)->delivered), ""))
+				{	soap_flag_delivered3 = 0;
+					continue;
+				}
+			if (soap_flag_class_3 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__ItemClass(soap, "ngwt:class", &(((ngwt__BoxEntry*)a)->class_), ""))
+				{	soap_flag_class_3 = 0;
+					continue;
+				}
+			if (soap_flag_security3 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__ItemSecurity(soap, "ngwt:security", &(((ngwt__BoxEntry*)a)->security), ""))
+				{	soap_flag_security3 = 0;
+					continue;
+				}
+			if (soap_flag_comment3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:comment", &(((ngwt__BoxEntry*)a)->comment), ""))
+				{	soap_flag_comment3 = 0;
+					continue;
+				}
+			if (soap_flag_subject2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:subject", &(((ngwt__Mail*)a)->subject), ""))
+				{	soap_flag_subject2 = 0;
+					continue;
+				}
+			if (soap_flag_originalSubject2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:originalSubject", &(((ngwt__Mail*)a)->originalSubject), ""))
+				{	soap_flag_originalSubject2 = 0;
+					continue;
+				}
+			if (soap_flag_subjectPrefix2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:subjectPrefix", &(((ngwt__Mail*)a)->subjectPrefix), ""))
+				{	soap_flag_subjectPrefix2 = 0;
+					continue;
+				}
+			if (soap_flag_distribution2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__Distribution(soap, "ngwt:distribution", &(((ngwt__Mail*)a)->distribution), "ngwt:Distribution"))
+				{	soap_flag_distribution2 = 0;
+					continue;
+				}
+			if (soap_flag_message2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__MessageBody(soap, "ngwt:message", &(((ngwt__Mail*)a)->message), "ngwt:MessageBody"))
+				{	soap_flag_message2 = 0;
+					continue;
+				}
+			if (soap_flag_attachments2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__AttachmentInfo(soap, "ngwt:attachments", &(((ngwt__Mail*)a)->attachments), "ngwt:AttachmentInfo"))
+				{	soap_flag_attachments2 = 0;
+					continue;
+				}
+			if (soap_flag_options2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__ItemOptions(soap, "ngwt:options", &(((ngwt__Mail*)a)->options), "ngwt:ItemOptions"))
+				{	soap_flag_options2 = 0;
+					continue;
+				}
+			if (soap_flag_link2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__LinkInfo(soap, "ngwt:link", &(((ngwt__Mail*)a)->link), "ngwt:LinkInfo"))
+				{	soap_flag_link2 = 0;
+					continue;
+				}
+			if (soap_flag_hasAttachment2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_bool(soap, "ngwt:hasAttachment", &(((ngwt__Mail*)a)->hasAttachment), ""))
+				{	soap_flag_hasAttachment2 = 0;
+					continue;
+				}
+			if (soap_flag_size2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_int(soap, "ngwt:size", &(((ngwt__Mail*)a)->size), ""))
+				{	soap_flag_size2 = 0;
+					continue;
+				}
+			if (soap_flag_subType2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:subType", &(((ngwt__Mail*)a)->subType), ""))
+				{	soap_flag_subType2 = 0;
+					continue;
+				}
+			if (soap_flag_nntpOrImap2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTobool(soap, "ngwt:nntpOrImap", &(((ngwt__Mail*)a)->nntpOrImap), ""))
+				{	soap_flag_nntpOrImap2 = 0;
+					continue;
+				}
+			if (soap_flag_smimeType2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__SMimeOperation(soap, "ngwt:smimeType", &(((ngwt__Mail*)a)->smimeType), "ngwt:SMimeOperation"))
+				{	soap_flag_smimeType2 = 0;
+					continue;
+				}
+			if (soap_flag_library1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__NameAndEmail(soap, "ngwt:library", &(((ngwt__DocumentRef*)a)->library), "ngwt:NameAndEmail"))
+				{	soap_flag_library1 = 0;
+					continue;
+				}
+			if (soap_flag_documentNumber1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTounsignedLong(soap, "ngwt:documentNumber", &(((ngwt__DocumentRef*)a)->documentNumber), ""))
+				{	soap_flag_documentNumber1 = 0;
+					continue;
+				}
+			if (soap_flag_filename1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:filename", &(((ngwt__DocumentRef*)a)->filename), ""))
+				{	soap_flag_filename1 = 0;
+					continue;
+				}
+			if (soap_flag_documentTypeName1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:documentTypeName", &(((ngwt__DocumentRef*)a)->documentTypeName), ""))
+				{	soap_flag_documentTypeName1 = 0;
+					continue;
+				}
+			if (soap_flag_author1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__NameAndEmail(soap, "ngwt:author", &(((ngwt__DocumentRef*)a)->author), "ngwt:NameAndEmail"))
+				{	soap_flag_author1 = 0;
+					continue;
+				}
+			if (soap_flag_creator1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__NameAndEmail(soap, "ngwt:creator", &(((ngwt__DocumentRef*)a)->creator), "ngwt:NameAndEmail"))
+				{	soap_flag_creator1 = 0;
+					continue;
+				}
+			if (soap_flag_officialVersion1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTounsignedLong(soap, "ngwt:officialVersion", &(((ngwt__DocumentRef*)a)->officialVersion), ""))
+				{	soap_flag_officialVersion1 = 0;
+					continue;
+				}
+			if (soap_flag_currentVersion1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTounsignedLong(soap, "ngwt:currentVersion", &(((ngwt__DocumentRef*)a)->currentVersion), ""))
+				{	soap_flag_currentVersion1 = 0;
+					continue;
+				}
+			if (soap_flag_versionNumber1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTounsignedLong(soap, "ngwt:versionNumber", &(((ngwt__DocumentRef*)a)->versionNumber), ""))
+				{	soap_flag_versionNumber1 = 0;
+					continue;
+				}
+			if (soap_flag_versionDescription1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_inliteral(soap, "ngwt:versionDescription", &(((ngwt__DocumentRef*)a)->versionDescription)))
+				{	soap_flag_versionDescription1 = 0;
+					continue;
+				}
+			if (soap_flag_fileSize1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTounsignedLong(soap, "ngwt:fileSize", &(((ngwt__DocumentRef*)a)->fileSize), ""))
+				{	soap_flag_fileSize1 = 0;
+					continue;
+				}
+			if (soap_flag_acl1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__AccessControlList(soap, "ngwt:acl", &(((ngwt__DocumentRef*)a)->acl), "ngwt:AccessControlList"))
+				{	soap_flag_acl1 = 0;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_delivered3))
+		{	soap->error = SOAP_OCCURS;
+			return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__DocumentRef *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__DocumentRef, 0, sizeof(ngwt__DocumentRef), 0, soap_copy_ngwt__DocumentRef);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 ngwt__DocumentRef * SOAP_FMAC6 soap_new_ngwt__DocumentRef(struct soap *soap, int n)
+{	return soap_instantiate_ngwt__DocumentRef(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__DocumentRef(struct soap *soap, ngwt__DocumentRef *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 ngwt__DocumentRef * SOAP_FMAC6 soap_instantiate_ngwt__DocumentRef(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ngwt__DocumentRef(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ngwt__DocumentRef, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new ngwt__DocumentRef;
+		if (size)
+			*size = sizeof(ngwt__DocumentRef);
+		((ngwt__DocumentRef*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new ngwt__DocumentRef[n];
+		if (size)
+			*size = n * sizeof(ngwt__DocumentRef);
+		for (int i = 0; i < n; i++)
+			((ngwt__DocumentRef*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (ngwt__DocumentRef*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__DocumentRef(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwt__DocumentRef %p -> %p\n", q, p));
+	*(ngwt__DocumentRef*)p = *(ngwt__DocumentRef*)q;
+}
+
+void ngwt__Document::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((ngwt__Document*)this)->subject, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__Document*)this)->subject);
+	soap_embedded(soap, &((ngwt__Document*)this)->library, SOAP_TYPE_PointerTongwt__NameAndEmail);
+	soap_serialize_PointerTongwt__NameAndEmail(soap, &((ngwt__Document*)this)->library);
+	soap_embedded(soap, &((ngwt__Document*)this)->documentNumber, SOAP_TYPE_PointerTounsignedLong);
+	soap_serialize_PointerTounsignedLong(soap, &((ngwt__Document*)this)->documentNumber);
+	soap_embedded(soap, &((ngwt__Document*)this)->documentTypeName, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__Document*)this)->documentTypeName);
+	soap_embedded(soap, &((ngwt__Document*)this)->author, SOAP_TYPE_PointerTongwt__NameAndEmail);
+	soap_serialize_PointerTongwt__NameAndEmail(soap, &((ngwt__Document*)this)->author);
+	soap_embedded(soap, &((ngwt__Document*)this)->creator, SOAP_TYPE_PointerTongwt__NameAndEmail);
+	soap_serialize_PointerTongwt__NameAndEmail(soap, &((ngwt__Document*)this)->creator);
+	soap_embedded(soap, &((ngwt__Document*)this)->officialVersion, SOAP_TYPE_PointerTounsignedLong);
+	soap_serialize_PointerTounsignedLong(soap, &((ngwt__Document*)this)->officialVersion);
+	soap_embedded(soap, &((ngwt__Document*)this)->currentVersion, SOAP_TYPE_PointerTounsignedLong);
+	soap_serialize_PointerTounsignedLong(soap, &((ngwt__Document*)this)->currentVersion);
+	soap_embedded(soap, &((ngwt__Document*)this)->current, SOAP_TYPE_PointerTongwt__AccessControlList);
+	soap_serialize_PointerTongwt__AccessControlList(soap, &((ngwt__Document*)this)->current);
+	soap_embedded(soap, &((ngwt__Document*)this)->official, SOAP_TYPE_PointerTongwt__AccessControlList);
+	soap_serialize_PointerTongwt__AccessControlList(soap, &((ngwt__Document*)this)->official);
+	soap_embedded(soap, &((ngwt__Document*)this)->other, SOAP_TYPE_PointerTongwt__AccessControlList);
+	soap_serialize_PointerTongwt__AccessControlList(soap, &((ngwt__Document*)this)->other);
+	soap_serialize_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, &((ngwt__ContainerItem*)this)->container);
+	soap_embedded(soap, &((ngwt__ContainerItem*)this)->categories, SOAP_TYPE_PointerTongwt__CategoryRefList);
+	soap_serialize_PointerTongwt__CategoryRefList(soap, &((ngwt__ContainerItem*)this)->categories);
+	soap_embedded(soap, &((ngwt__ContainerItem*)this)->created, SOAP_TYPE_string);
+	soap_serialize_string(soap, &((ngwt__ContainerItem*)this)->created);
+	soap_embedded(soap, &((ngwt__ContainerItem*)this)->customs, SOAP_TYPE_PointerTongwt__CustomList);
+	soap_serialize_PointerTongwt__CustomList(soap, &((ngwt__ContainerItem*)this)->customs);
+	soap_embedded(soap, &((ngwt__Item*)this)->id, SOAP_TYPE_PointerTongwt__uid);
+	soap_serialize_PointerTongwt__uid(soap, &((ngwt__Item*)this)->id);
+	soap_embedded(soap, &((ngwt__Item*)this)->name, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__Item*)this)->name);
+	soap_embedded(soap, &((ngwt__Item*)this)->version, SOAP_TYPE_PointerTounsignedLong);
+	soap_serialize_PointerTounsignedLong(soap, &((ngwt__Item*)this)->version);
+	soap_embedded(soap, &((ngwt__Item*)this)->modified, SOAP_TYPE_string);
+	soap_serialize_string(soap, &((ngwt__Item*)this)->modified);
+	soap_embedded(soap, &((ngwt__Item*)this)->changes, SOAP_TYPE_PointerTongwt__ItemChanges);
+	soap_serialize_PointerTongwt__ItemChanges(soap, &((ngwt__Item*)this)->changes);
+	/* transient soap skipped */
+}
+
+void ngwt__Document::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	((ngwt__Document*)this)->subject = NULL;
+	((ngwt__Document*)this)->library = NULL;
+	((ngwt__Document*)this)->documentNumber = NULL;
+	((ngwt__Document*)this)->documentTypeName = NULL;
+	((ngwt__Document*)this)->author = NULL;
+	((ngwt__Document*)this)->creator = NULL;
+	((ngwt__Document*)this)->officialVersion = NULL;
+	((ngwt__Document*)this)->currentVersion = NULL;
+	((ngwt__Document*)this)->current = NULL;
+	((ngwt__Document*)this)->official = NULL;
+	((ngwt__Document*)this)->other = NULL;
+	soap_default_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, &((ngwt__ContainerItem*)this)->container);
+	((ngwt__ContainerItem*)this)->categories = NULL;
+	soap_default_string(soap, &((ngwt__ContainerItem*)this)->created);
+	((ngwt__ContainerItem*)this)->customs = NULL;
+	((ngwt__Item*)this)->id = NULL;
+	((ngwt__Item*)this)->name = NULL;
+	((ngwt__Item*)this)->version = NULL;
+	soap_default_string(soap, &((ngwt__Item*)this)->modified);
+	((ngwt__Item*)this)->changes = NULL;
+	/* transient soap skipped */
+}
+
+int ngwt__Document::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE_ngwt__Document);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int ngwt__Document::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out_ngwt__Document(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Document(struct soap *soap, const char *tag, int id, const ngwt__Document *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__Document), "ngwt:Document");
+	soap_out_PointerTongwt__uid(soap, "ngwt:id", -1, &(((ngwt__Item*)a)->id), "");
+	soap_out_PointerTostd__string(soap, "ngwt:name", -1, &(((ngwt__Item*)a)->name), "");
+	soap_out_PointerTounsignedLong(soap, "ngwt:version", -1, &(((ngwt__Item*)a)->version), "");
+	soap_out_string(soap, "ngwt:modified", -1, &(((ngwt__Item*)a)->modified), "");
+	soap_out_PointerTongwt__ItemChanges(soap, "ngwt:changes", -1, &(((ngwt__Item*)a)->changes), "");
+	/* transient soap skipped */
+	soap_out_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, "ngwt:container", -1, &(((ngwt__ContainerItem*)a)->container), "");
+	soap_out_PointerTongwt__CategoryRefList(soap, "ngwt:categories", -1, &(((ngwt__ContainerItem*)a)->categories), "");
+	soap_out_string(soap, "ngwt:created", -1, &(((ngwt__ContainerItem*)a)->created), "");
+	soap_out_PointerTongwt__CustomList(soap, "ngwt:customs", -1, &(((ngwt__ContainerItem*)a)->customs), "");
+	soap_out_PointerTostd__string(soap, "ngwt:subject", -1, &(((ngwt__Document*)a)->subject), "");
+	soap_out_PointerTongwt__NameAndEmail(soap, "ngwt:library", -1, &(((ngwt__Document*)a)->library), "");
+	soap_out_PointerTounsignedLong(soap, "ngwt:documentNumber", -1, &(((ngwt__Document*)a)->documentNumber), "");
+	soap_out_PointerTostd__string(soap, "ngwt:documentTypeName", -1, &(((ngwt__Document*)a)->documentTypeName), "");
+	soap_out_PointerTongwt__NameAndEmail(soap, "ngwt:author", -1, &(((ngwt__Document*)a)->author), "");
+	soap_out_PointerTongwt__NameAndEmail(soap, "ngwt:creator", -1, &(((ngwt__Document*)a)->creator), "");
+	soap_out_PointerTounsignedLong(soap, "ngwt:officialVersion", -1, &(((ngwt__Document*)a)->officialVersion), "");
+	soap_out_PointerTounsignedLong(soap, "ngwt:currentVersion", -1, &(((ngwt__Document*)a)->currentVersion), "");
+	soap_out_PointerTongwt__AccessControlList(soap, "ngwt:current", -1, &(((ngwt__Document*)a)->current), "");
+	soap_out_PointerTongwt__AccessControlList(soap, "ngwt:official", -1, &(((ngwt__Document*)a)->official), "");
+	soap_out_PointerTongwt__AccessControlList(soap, "ngwt:other", -1, &(((ngwt__Document*)a)->other), "");
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *ngwt__Document::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get_ngwt__Document(soap, this, tag, type);
+}
+
+SOAP_FMAC3 ngwt__Document * SOAP_FMAC4 soap_get_ngwt__Document(struct soap *soap, ngwt__Document *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__Document(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *ngwt__Document::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in_ngwt__Document(soap, tag, this, type);
+}
+
+SOAP_FMAC3 ngwt__Document * SOAP_FMAC4 soap_in_ngwt__Document(struct soap *soap, const char *tag, ngwt__Document *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (ngwt__Document *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__Document, sizeof(ngwt__Document), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE_ngwt__Document)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (ngwt__Document *)a->soap_in(soap, tag, type);
+		}
+	}
+	short soap_flag_id3 = 1, soap_flag_name3 = 1, soap_flag_version3 = 1, soap_flag_modified3 = 1, soap_flag_changes3 = 1, soap_flag_categories2 = 1, soap_flag_created2 = 1, soap_flag_customs2 = 1, soap_flag_subject1 = 1, soap_flag_library1 = 1, soap_flag_documentNumber1 = 1, soap_flag_documentTypeName1 = 1, soap_flag_author1 = 1, soap_flag_creator1 = 1, soap_flag_officialVersion1 = 1, soap_flag_currentVersion1 = 1, soap_flag_current1 = 1, soap_flag_official1 = 1, soap_flag_other1 = 1;
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_id3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTongwt__uid(soap, "ngwt:id", &(((ngwt__Item*)a)->id), "ngwt:uid"))
+				{	soap_flag_id3 = 0;
+					continue;
+				}
+			if (soap_flag_name3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:name", &(((ngwt__Item*)a)->name), ""))
+				{	soap_flag_name3 = 0;
+					continue;
+				}
+			if (soap_flag_version3 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTounsignedLong(soap, "ngwt:version", &(((ngwt__Item*)a)->version), ""))
+				{	soap_flag_version3 = 0;
+					continue;
+				}
+			if (soap_flag_modified3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ngwt:modified", &(((ngwt__Item*)a)->modified), ""))
+				{	soap_flag_modified3 = 0;
+					continue;
+				}
+			if (soap_flag_changes3 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__ItemChanges(soap, "ngwt:changes", &(((ngwt__Item*)a)->changes), "ngwt:ItemChanges"))
+				{	soap_flag_changes3 = 0;
+					continue;
+				}
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, "ngwt:container", &(((ngwt__ContainerItem*)a)->container), "ngwt:ContainerRef"))
+					continue;
+			if (soap_flag_categories2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__CategoryRefList(soap, "ngwt:categories", &(((ngwt__ContainerItem*)a)->categories), "ngwt:CategoryRefList"))
+				{	soap_flag_categories2 = 0;
+					continue;
+				}
+			if (soap_flag_created2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_string(soap, "ngwt:created", &(((ngwt__ContainerItem*)a)->created), ""))
+				{	soap_flag_created2 = 0;
+					continue;
+				}
+			if (soap_flag_customs2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__CustomList(soap, "ngwt:customs", &(((ngwt__ContainerItem*)a)->customs), "ngwt:CustomList"))
+				{	soap_flag_customs2 = 0;
+					continue;
+				}
+			if (soap_flag_subject1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:subject", &(((ngwt__Document*)a)->subject), ""))
+				{	soap_flag_subject1 = 0;
+					continue;
+				}
+			if (soap_flag_library1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__NameAndEmail(soap, "ngwt:library", &(((ngwt__Document*)a)->library), "ngwt:NameAndEmail"))
+				{	soap_flag_library1 = 0;
+					continue;
+				}
+			if (soap_flag_documentNumber1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTounsignedLong(soap, "ngwt:documentNumber", &(((ngwt__Document*)a)->documentNumber), ""))
+				{	soap_flag_documentNumber1 = 0;
+					continue;
+				}
+			if (soap_flag_documentTypeName1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:documentTypeName", &(((ngwt__Document*)a)->documentTypeName), ""))
+				{	soap_flag_documentTypeName1 = 0;
+					continue;
+				}
+			if (soap_flag_author1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__NameAndEmail(soap, "ngwt:author", &(((ngwt__Document*)a)->author), "ngwt:NameAndEmail"))
+				{	soap_flag_author1 = 0;
+					continue;
+				}
+			if (soap_flag_creator1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__NameAndEmail(soap, "ngwt:creator", &(((ngwt__Document*)a)->creator), "ngwt:NameAndEmail"))
+				{	soap_flag_creator1 = 0;
+					continue;
+				}
+			if (soap_flag_officialVersion1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTounsignedLong(soap, "ngwt:officialVersion", &(((ngwt__Document*)a)->officialVersion), ""))
+				{	soap_flag_officialVersion1 = 0;
+					continue;
+				}
+			if (soap_flag_currentVersion1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTounsignedLong(soap, "ngwt:currentVersion", &(((ngwt__Document*)a)->currentVersion), ""))
+				{	soap_flag_currentVersion1 = 0;
+					continue;
+				}
+			if (soap_flag_current1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__AccessControlList(soap, "ngwt:current", &(((ngwt__Document*)a)->current), "ngwt:AccessControlList"))
+				{	soap_flag_current1 = 0;
+					continue;
+				}
+			if (soap_flag_official1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__AccessControlList(soap, "ngwt:official", &(((ngwt__Document*)a)->official), "ngwt:AccessControlList"))
+				{	soap_flag_official1 = 0;
+					continue;
+				}
+			if (soap_flag_other1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__AccessControlList(soap, "ngwt:other", &(((ngwt__Document*)a)->other), "ngwt:AccessControlList"))
+				{	soap_flag_other1 = 0;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__Document *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__Document, 0, sizeof(ngwt__Document), 0, soap_copy_ngwt__Document);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 ngwt__Document * SOAP_FMAC6 soap_new_ngwt__Document(struct soap *soap, int n)
+{	return soap_instantiate_ngwt__Document(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__Document(struct soap *soap, ngwt__Document *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 ngwt__Document * SOAP_FMAC6 soap_instantiate_ngwt__Document(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ngwt__Document(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ngwt__Document, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new ngwt__Document;
+		if (size)
+			*size = sizeof(ngwt__Document);
+		((ngwt__Document*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new ngwt__Document[n];
+		if (size)
+			*size = n * sizeof(ngwt__Document);
+		for (int i = 0; i < n; i++)
+			((ngwt__Document*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (ngwt__Document*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__Document(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwt__Document %p -> %p\n", q, p));
+	*(ngwt__Document*)p = *(ngwt__Document*)q;
+}
+
 void ngwt__Distribution::soap_serialize(struct soap *soap) const
 {
 	(void)soap; /* appease -Wall -Werror */
@@ -51443,6 +60706,8 @@ void ngwt__Distribution::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((ngwt__Distribution*)this)->to);
 	soap_embedded(soap, &((ngwt__Distribution*)this)->cc, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__Distribution*)this)->cc);
+	soap_embedded(soap, &((ngwt__Distribution*)this)->bc, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__Distribution*)this)->bc);
 	soap_embedded(soap, &((ngwt__Distribution*)this)->recipients, SOAP_TYPE_PointerTongwt__RecipientList);
 	soap_serialize_PointerTongwt__RecipientList(soap, &((ngwt__Distribution*)this)->recipients);
 	soap_embedded(soap, &((ngwt__Distribution*)this)->sendoptions, SOAP_TYPE_PointerTongwt__SendOptions);
@@ -51456,6 +60721,7 @@ void ngwt__Distribution::soap_default(struct soap *soap)
 	((ngwt__Distribution*)this)->from = NULL;
 	((ngwt__Distribution*)this)->to = NULL;
 	((ngwt__Distribution*)this)->cc = NULL;
+	((ngwt__Distribution*)this)->bc = NULL;
 	((ngwt__Distribution*)this)->recipients = NULL;
 	((ngwt__Distribution*)this)->sendoptions = NULL;
 	/* transient soap skipped */
@@ -51480,6 +60746,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Distribution(struct soap *soap, const c
 	soap_out_PointerTongwt__From(soap, "ngwt:from", -1, &(((ngwt__Distribution*)a)->from), "");
 	soap_out_PointerTostd__string(soap, "ngwt:to", -1, &(((ngwt__Distribution*)a)->to), "");
 	soap_out_PointerTostd__string(soap, "ngwt:cc", -1, &(((ngwt__Distribution*)a)->cc), "");
+	soap_out_PointerTostd__string(soap, "ngwt:bc", -1, &(((ngwt__Distribution*)a)->bc), "");
 	soap_out_PointerTongwt__RecipientList(soap, "ngwt:recipients", -1, &(((ngwt__Distribution*)a)->recipients), "");
 	soap_out_PointerTongwt__SendOptions(soap, "ngwt:sendoptions", -1, &(((ngwt__Distribution*)a)->sendoptions), "");
 	/* transient soap skipped */
@@ -51518,7 +60785,7 @@ SOAP_FMAC3 ngwt__Distribution * SOAP_FMAC4 soap_in_ngwt__Distribution(struct soa
 			return (ngwt__Distribution *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_from1 = 1, soap_flag_to1 = 1, soap_flag_cc1 = 1, soap_flag_recipients1 = 1, soap_flag_sendoptions1 = 1;
+	short soap_flag_from1 = 1, soap_flag_to1 = 1, soap_flag_cc1 = 1, soap_flag_bc1 = 1, soap_flag_recipients1 = 1, soap_flag_sendoptions1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -51536,6 +60803,11 @@ SOAP_FMAC3 ngwt__Distribution * SOAP_FMAC4 soap_in_ngwt__Distribution(struct soa
 			if (soap_flag_cc1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:cc", &(((ngwt__Distribution*)a)->cc), ""))
 				{	soap_flag_cc1 = 0;
+					continue;
+				}
+			if (soap_flag_bc1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:bc", &(((ngwt__Distribution*)a)->bc), ""))
+				{	soap_flag_bc1 = 0;
 					continue;
 				}
 			if (soap_flag_recipients1 && soap->error == SOAP_TAG_MISMATCH)
@@ -52239,6 +61511,254 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__DelegatedStatus(struct soap *soap, in
 	*(ngwt__DelegatedStatus*)p = *(ngwt__DelegatedStatus*)q;
 }
 
+void ngwt__DayOfYearWeekList::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_serialize_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(soap, &((ngwt__DayOfYearWeekList*)this)->day);
+	/* transient soap skipped */
+}
+
+void ngwt__DayOfYearWeekList::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	soap_default_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(soap, &((ngwt__DayOfYearWeekList*)this)->day);
+	/* transient soap skipped */
+}
+
+int ngwt__DayOfYearWeekList::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE_ngwt__DayOfYearWeekList);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int ngwt__DayOfYearWeekList::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out_ngwt__DayOfYearWeekList(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__DayOfYearWeekList(struct soap *soap, const char *tag, int id, const ngwt__DayOfYearWeekList *a, const char *type)
+{
+	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__DayOfYearWeekList), type);
+	soap_out_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(soap, "ngwt:day", -1, &(((ngwt__DayOfYearWeekList*)a)->day), "");
+	/* transient soap skipped */
+	soap_element_end_out(soap, tag);
+	return SOAP_OK;
+}
+
+void *ngwt__DayOfYearWeekList::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get_ngwt__DayOfYearWeekList(soap, this, tag, type);
+}
+
+SOAP_FMAC3 ngwt__DayOfYearWeekList * SOAP_FMAC4 soap_get_ngwt__DayOfYearWeekList(struct soap *soap, ngwt__DayOfYearWeekList *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__DayOfYearWeekList(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *ngwt__DayOfYearWeekList::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in_ngwt__DayOfYearWeekList(soap, tag, this, type);
+}
+
+SOAP_FMAC3 ngwt__DayOfYearWeekList * SOAP_FMAC4 soap_in_ngwt__DayOfYearWeekList(struct soap *soap, const char *tag, ngwt__DayOfYearWeekList *a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 0))
+		return NULL;
+	a = (ngwt__DayOfYearWeekList *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__DayOfYearWeekList, sizeof(ngwt__DayOfYearWeekList), soap->type, soap->arrayType);
+	if (!a)
+		return NULL;
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE_ngwt__DayOfYearWeekList)
+		{	soap_revert(soap);
+			*soap->id = '\0';
+			return (ngwt__DayOfYearWeekList *)a->soap_in(soap, tag, type);
+		}
+	};
+	if (soap->body && !*soap->href)
+	{
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(soap, "ngwt:day", &(((ngwt__DayOfYearWeekList*)a)->day), "ngwt:DayOfYearWeek"))
+					continue;
+			/* transient soap skipped */
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+		if (soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__DayOfYearWeekList *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__DayOfYearWeekList, 0, sizeof(ngwt__DayOfYearWeekList), 0, soap_copy_ngwt__DayOfYearWeekList);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC5 ngwt__DayOfYearWeekList * SOAP_FMAC6 soap_new_ngwt__DayOfYearWeekList(struct soap *soap, int n)
+{	return soap_instantiate_ngwt__DayOfYearWeekList(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__DayOfYearWeekList(struct soap *soap, ngwt__DayOfYearWeekList *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 ngwt__DayOfYearWeekList * SOAP_FMAC6 soap_instantiate_ngwt__DayOfYearWeekList(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ngwt__DayOfYearWeekList(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ngwt__DayOfYearWeekList, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new ngwt__DayOfYearWeekList;
+		if (size)
+			*size = sizeof(ngwt__DayOfYearWeekList);
+		((ngwt__DayOfYearWeekList*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new ngwt__DayOfYearWeekList[n];
+		if (size)
+			*size = n * sizeof(ngwt__DayOfYearWeekList);
+		for (int i = 0; i < n; i++)
+			((ngwt__DayOfYearWeekList*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (ngwt__DayOfYearWeekList*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__DayOfYearWeekList(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwt__DayOfYearWeekList %p -> %p\n", q, p));
+	*(ngwt__DayOfYearWeekList*)p = *(ngwt__DayOfYearWeekList*)q;
+}
+
+void ngwt__DayOfYearWeek::soap_serialize(struct soap *soap) const
+{
+	(void)soap; /* appease -Wall -Werror */
+	soap_embedded(soap, &((ngwt__DayOfYearWeek*)this)->__item, SOAP_TYPE_ngwt__WeekDay);
+	/* transient soap skipped */
+}
+
+void ngwt__DayOfYearWeek::soap_default(struct soap *soap)
+{
+	this->soap = soap;
+	soap_default_ngwt__WeekDay(soap, &((ngwt__DayOfYearWeek*)this)->__item);
+	((ngwt__DayOfYearWeek*)this)->occurrence = NULL;
+	/* transient soap skipped */
+}
+
+int ngwt__DayOfYearWeek::soap_put(struct soap *soap, const char *tag, const  char *type) const
+{
+	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE_ngwt__DayOfYearWeek);
+	if (this->soap_out(soap, tag, id, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+int ngwt__DayOfYearWeek::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
+{
+	return soap_out_ngwt__DayOfYearWeek(soap, tag, id, this, type);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__DayOfYearWeek(struct soap *soap, const char *tag, int id, const ngwt__DayOfYearWeek *a, const char *type)
+{
+	if (((ngwt__DayOfYearWeek *)a)->occurrence)
+		soap_set_attr(soap, "occurrence", soap_short2s(soap, *((ngwt__DayOfYearWeek *)a)->occurrence));
+	soap_out_ngwt__WeekDay(soap, tag, id, &(((ngwt__DayOfYearWeek*)a)->__item), "");
+	return SOAP_OK;
+}
+
+void *ngwt__DayOfYearWeek::soap_get(struct soap *soap, const char *tag, const char *type)
+{
+	return soap_get_ngwt__DayOfYearWeek(soap, this, tag, type);
+}
+
+SOAP_FMAC3 ngwt__DayOfYearWeek * SOAP_FMAC4 soap_get_ngwt__DayOfYearWeek(struct soap *soap, ngwt__DayOfYearWeek *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_ngwt__DayOfYearWeek(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+void *ngwt__DayOfYearWeek::soap_in(struct soap *soap, const char *tag, const char *type)
+{	return soap_in_ngwt__DayOfYearWeek(soap, tag, this, type);
+}
+
+SOAP_FMAC3 ngwt__DayOfYearWeek * SOAP_FMAC4 soap_in_ngwt__DayOfYearWeek(struct soap *soap, const char *tag, ngwt__DayOfYearWeek *a, const char *type)
+{
+	if (soap_peek_element(soap))
+		return NULL;
+	if (!(a = (ngwt__DayOfYearWeek *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__DayOfYearWeek, sizeof(ngwt__DayOfYearWeek), soap->type, soap->arrayType)))
+	{	soap->error = SOAP_TAG_MISMATCH;
+		return NULL;
+	}
+	*soap->id = '\0';
+	if (soap->alloced)
+	{	a->soap_default(soap);
+		if (soap->clist->type != SOAP_TYPE_ngwt__DayOfYearWeek)
+			return (ngwt__DayOfYearWeek *)a->soap_in(soap, tag, type);
+	}
+	{	const char *t = soap_attr_value(soap, "occurrence", 0);
+		if (t)
+		{	if (!(((ngwt__DayOfYearWeek *)a)->occurrence = (short *)soap_malloc(soap, sizeof(short))))
+			{	soap->error = SOAP_EOM;
+				return NULL;
+			}
+	if (soap_s2short(soap, t, ((ngwt__DayOfYearWeek *)a)->occurrence))
+		return NULL;
+		}
+	}
+	if (!soap_in_ngwt__WeekDay(soap, tag, &(((ngwt__DayOfYearWeek*)a)->__item), "ngwt:DayOfYearWeek"))
+		return NULL;
+	return a;
+}
+
+SOAP_FMAC5 ngwt__DayOfYearWeek * SOAP_FMAC6 soap_new_ngwt__DayOfYearWeek(struct soap *soap, int n)
+{	return soap_instantiate_ngwt__DayOfYearWeek(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__DayOfYearWeek(struct soap *soap, ngwt__DayOfYearWeek *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 ngwt__DayOfYearWeek * SOAP_FMAC6 soap_instantiate_ngwt__DayOfYearWeek(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ngwt__DayOfYearWeek(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ngwt__DayOfYearWeek, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new ngwt__DayOfYearWeek;
+		if (size)
+			*size = sizeof(ngwt__DayOfYearWeek);
+		((ngwt__DayOfYearWeek*)cp->ptr)->soap = soap;
+	}
+	else
+	{	cp->ptr = (void*)new ngwt__DayOfYearWeek[n];
+		if (size)
+			*size = n * sizeof(ngwt__DayOfYearWeek);
+		for (int i = 0; i < n; i++)
+			((ngwt__DayOfYearWeek*)cp->ptr)[i].soap = soap;
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (ngwt__DayOfYearWeek*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__DayOfYearWeek(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwt__DayOfYearWeek %p -> %p\n", q, p));
+	*(ngwt__DayOfYearWeek*)p = *(ngwt__DayOfYearWeek*)q;
+}
+
 void ngwt__DayOfYearList::soap_serialize(struct soap *soap) const
 {
 	(void)soap; /* appease -Wall -Werror */
@@ -52367,136 +61887,6 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__DayOfYearList(struct soap *soap, int 
 {
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwt__DayOfYearList %p -> %p\n", q, p));
 	*(ngwt__DayOfYearList*)p = *(ngwt__DayOfYearList*)q;
-}
-
-void ngwt__DayOfWeekList::soap_serialize(struct soap *soap) const
-{
-	(void)soap; /* appease -Wall -Werror */
-	soap_serialize_std__vectorTemplateOfPointerTongwt__DayOfWeek(soap, &((ngwt__DayOfWeekList*)this)->day);
-	/* transient soap skipped */
-}
-
-void ngwt__DayOfWeekList::soap_default(struct soap *soap)
-{
-	this->soap = soap;
-	soap_default_std__vectorTemplateOfPointerTongwt__DayOfWeek(soap, &((ngwt__DayOfWeekList*)this)->day);
-	/* transient soap skipped */
-}
-
-int ngwt__DayOfWeekList::soap_put(struct soap *soap, const char *tag, const  char *type) const
-{
-	register int id = soap_embed(soap, (void*)this, NULL, 0, tag, SOAP_TYPE_ngwt__DayOfWeekList);
-	if (this->soap_out(soap, tag, id, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-int ngwt__DayOfWeekList::soap_out(struct soap *soap, const char *tag, int id, const char *type) const
-{
-	return soap_out_ngwt__DayOfWeekList(soap, tag, id, this, type);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__DayOfWeekList(struct soap *soap, const char *tag, int id, const ngwt__DayOfWeekList *a, const char *type)
-{
-	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__DayOfWeekList), type);
-	soap_out_std__vectorTemplateOfPointerTongwt__DayOfWeek(soap, "ngwt:day", -1, &(((ngwt__DayOfWeekList*)a)->day), "");
-	/* transient soap skipped */
-	soap_element_end_out(soap, tag);
-	return SOAP_OK;
-}
-
-void *ngwt__DayOfWeekList::soap_get(struct soap *soap, const char *tag, const char *type)
-{
-	return soap_get_ngwt__DayOfWeekList(soap, this, tag, type);
-}
-
-SOAP_FMAC3 ngwt__DayOfWeekList * SOAP_FMAC4 soap_get_ngwt__DayOfWeekList(struct soap *soap, ngwt__DayOfWeekList *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_ngwt__DayOfWeekList(soap, tag, p, type)))
-		soap_getindependent(soap);
-	return p;
-}
-
-void *ngwt__DayOfWeekList::soap_in(struct soap *soap, const char *tag, const char *type)
-{	return soap_in_ngwt__DayOfWeekList(soap, tag, this, type);
-}
-
-SOAP_FMAC3 ngwt__DayOfWeekList * SOAP_FMAC4 soap_in_ngwt__DayOfWeekList(struct soap *soap, const char *tag, ngwt__DayOfWeekList *a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 0))
-		return NULL;
-	a = (ngwt__DayOfWeekList *)soap_class_id_enter(soap, soap->id, a, SOAP_TYPE_ngwt__DayOfWeekList, sizeof(ngwt__DayOfWeekList), soap->type, soap->arrayType);
-	if (!a)
-		return NULL;
-	if (soap->alloced)
-	{	a->soap_default(soap);
-		if (soap->clist->type != SOAP_TYPE_ngwt__DayOfWeekList)
-		{	soap_revert(soap);
-			*soap->id = '\0';
-			return (ngwt__DayOfWeekList *)a->soap_in(soap, tag, type);
-		}
-	};
-	if (soap->body && !*soap->href)
-	{
-		for (;;)
-		{	soap->error = SOAP_TAG_MISMATCH;
-			if (soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_std__vectorTemplateOfPointerTongwt__DayOfWeek(soap, "ngwt:day", &(((ngwt__DayOfWeekList*)a)->day), "ngwt:DayOfWeek"))
-					continue;
-			/* transient soap skipped */
-			if (soap->error == SOAP_TAG_MISMATCH)
-				soap->error = soap_ignore_element(soap);
-			if (soap->error == SOAP_NO_TAG)
-				break;
-			if (soap->error)
-				return NULL;
-		}
-		if (soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	else
-	{	a = (ngwt__DayOfWeekList *)soap_id_forward(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__DayOfWeekList, 0, sizeof(ngwt__DayOfWeekList), 0, soap_copy_ngwt__DayOfWeekList);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC5 ngwt__DayOfWeekList * SOAP_FMAC6 soap_new_ngwt__DayOfWeekList(struct soap *soap, int n)
-{	return soap_instantiate_ngwt__DayOfWeekList(soap, n, NULL, NULL, NULL);
-}
-
-SOAP_FMAC5 void SOAP_FMAC6 soap_delete_ngwt__DayOfWeekList(struct soap *soap, ngwt__DayOfWeekList *p)
-{	soap_delete(soap, p);
-}
-
-SOAP_FMAC5 ngwt__DayOfWeekList * SOAP_FMAC6 soap_instantiate_ngwt__DayOfWeekList(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
-{
-	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_ngwt__DayOfWeekList(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
-	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_ngwt__DayOfWeekList, n, soap_fdelete);
-	if (!cp)
-		return NULL;
-	if (n < 0)
-	{	cp->ptr = (void*)new ngwt__DayOfWeekList;
-		if (size)
-			*size = sizeof(ngwt__DayOfWeekList);
-		((ngwt__DayOfWeekList*)cp->ptr)->soap = soap;
-	}
-	else
-	{	cp->ptr = (void*)new ngwt__DayOfWeekList[n];
-		if (size)
-			*size = n * sizeof(ngwt__DayOfWeekList);
-		for (int i = 0; i < n; i++)
-			((ngwt__DayOfWeekList*)cp->ptr)[i].soap = soap;
-	}
-		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
-	return (ngwt__DayOfWeekList*)cp->ptr;
-}
-
-SOAP_FMAC5 void SOAP_FMAC6 soap_copy_ngwt__DayOfWeekList(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
-{
-	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying ngwt__DayOfWeekList %p -> %p\n", q, p));
-	*(ngwt__DayOfWeekList*)p = *(ngwt__DayOfWeekList*)q;
 }
 
 void ngwt__DayOfWeek::soap_serialize(struct soap *soap) const
@@ -52895,6 +62285,7 @@ void ngwt__Custom::soap_default(struct soap *soap)
 	soap_default_std__string(soap, &((ngwt__Custom*)this)->field);
 	((ngwt__Custom*)this)->value = NULL;
 	((ngwt__Custom*)this)->locked = NULL;
+	((ngwt__Custom*)this)->type = NULL;
 	/* transient soap skipped */
 }
 
@@ -52913,6 +62304,8 @@ int ngwt__Custom::soap_out(struct soap *soap, const char *tag, int id, const cha
 
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Custom(struct soap *soap, const char *tag, int id, const ngwt__Custom *a, const char *type)
 {
+	if (((ngwt__Custom *)a)->type)
+		soap_set_attr(soap, "type", soap_ngwt__CustomType2s(soap, *((ngwt__Custom *)a)->type));
 	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_ngwt__Custom), type);
 	soap_out_std__string(soap, "ngwt:field", -1, &(((ngwt__Custom*)a)->field), "");
 	soap_out_PointerTostd__string(soap, "ngwt:value", -1, &(((ngwt__Custom*)a)->value), "");
@@ -52951,6 +62344,16 @@ SOAP_FMAC3 ngwt__Custom * SOAP_FMAC4 soap_in_ngwt__Custom(struct soap *soap, con
 		{	soap_revert(soap);
 			*soap->id = '\0';
 			return (ngwt__Custom *)a->soap_in(soap, tag, type);
+		}
+	}
+	{	const char *t = soap_attr_value(soap, "type", 0);
+		if (t)
+		{	if (!(((ngwt__Custom *)a)->type = (enum ngwt__CustomType *)soap_malloc(soap, sizeof(enum ngwt__CustomType))))
+			{	soap->error = SOAP_EOM;
+				return NULL;
+			}
+	if (soap_s2ngwt__CustomType(soap, t, ((ngwt__Custom *)a)->type))
+		return NULL;
 		}
 	}
 	short soap_flag_field1 = 1, soap_flag_value1 = 1, soap_flag_locked1 = 1;
@@ -53360,6 +62763,78 @@ SOAP_FMAC5 ngwt__ContainerItem * SOAP_FMAC6 soap_instantiate_ngwt__ContainerItem
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
 		return (ngwt__BoxEntry*)cp->ptr;
 	}
+	if (type && !soap_match_tag(soap, type, "ngwt:Document"))
+	{	cp->type = SOAP_TYPE_ngwt__Document;
+		if (n < 0)
+		{	cp->ptr = (void*)new ngwt__Document;
+			if (size)
+				*size = sizeof(ngwt__Document);
+			((ngwt__Document*)cp->ptr)->soap = soap;
+		}
+		else
+		{	cp->ptr = (void*)new ngwt__Document[n];
+			if (size)
+				*size = n * sizeof(ngwt__Document);
+			for (int i = 0; i < n; i++)
+				((ngwt__Document*)cp->ptr)[i].soap = soap;
+		}
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+		return (ngwt__Document*)cp->ptr;
+	}
+	if (type && !soap_match_tag(soap, type, "ngwt:Rule"))
+	{	cp->type = SOAP_TYPE_ngwt__Rule;
+		if (n < 0)
+		{	cp->ptr = (void*)new ngwt__Rule;
+			if (size)
+				*size = sizeof(ngwt__Rule);
+			((ngwt__Rule*)cp->ptr)->soap = soap;
+		}
+		else
+		{	cp->ptr = (void*)new ngwt__Rule[n];
+			if (size)
+				*size = n * sizeof(ngwt__Rule);
+			for (int i = 0; i < n; i++)
+				((ngwt__Rule*)cp->ptr)[i].soap = soap;
+		}
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+		return (ngwt__Rule*)cp->ptr;
+	}
+	if (type && !soap_match_tag(soap, type, "ngwt:Version"))
+	{	cp->type = SOAP_TYPE_ngwt__Version;
+		if (n < 0)
+		{	cp->ptr = (void*)new ngwt__Version;
+			if (size)
+				*size = sizeof(ngwt__Version);
+			((ngwt__Version*)cp->ptr)->soap = soap;
+		}
+		else
+		{	cp->ptr = (void*)new ngwt__Version[n];
+			if (size)
+				*size = n * sizeof(ngwt__Version);
+			for (int i = 0; i < n; i++)
+				((ngwt__Version*)cp->ptr)[i].soap = soap;
+		}
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+		return (ngwt__Version*)cp->ptr;
+	}
+	if (type && !soap_match_tag(soap, type, "ngwt:VersionEvent"))
+	{	cp->type = SOAP_TYPE_ngwt__VersionEvent;
+		if (n < 0)
+		{	cp->ptr = (void*)new ngwt__VersionEvent;
+			if (size)
+				*size = sizeof(ngwt__VersionEvent);
+			((ngwt__VersionEvent*)cp->ptr)->soap = soap;
+		}
+		else
+		{	cp->ptr = (void*)new ngwt__VersionEvent[n];
+			if (size)
+				*size = n * sizeof(ngwt__VersionEvent);
+			for (int i = 0; i < n; i++)
+				((ngwt__VersionEvent*)cp->ptr)[i].soap = soap;
+		}
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+		return (ngwt__VersionEvent*)cp->ptr;
+	}
 	if (type && !soap_match_tag(soap, type, "ngwt:Contact"))
 	{	cp->type = SOAP_TYPE_ngwt__Contact;
 		if (n < 0)
@@ -53467,6 +62942,24 @@ SOAP_FMAC5 ngwt__ContainerItem * SOAP_FMAC6 soap_instantiate_ngwt__ContainerItem
 		}
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
 		return (ngwt__CalendarItem*)cp->ptr;
+	}
+	if (type && !soap_match_tag(soap, type, "ngwt:DocumentRef"))
+	{	cp->type = SOAP_TYPE_ngwt__DocumentRef;
+		if (n < 0)
+		{	cp->ptr = (void*)new ngwt__DocumentRef;
+			if (size)
+				*size = sizeof(ngwt__DocumentRef);
+			((ngwt__DocumentRef*)cp->ptr)->soap = soap;
+		}
+		else
+		{	cp->ptr = (void*)new ngwt__DocumentRef[n];
+			if (size)
+				*size = n * sizeof(ngwt__DocumentRef);
+			for (int i = 0; i < n; i++)
+				((ngwt__DocumentRef*)cp->ptr)[i].soap = soap;
+		}
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+		return (ngwt__DocumentRef*)cp->ptr;
 	}
 	if (type && !soap_match_tag(soap, type, "ngwt:PhoneMessage"))
 	{	cp->type = SOAP_TYPE_ngwt__PhoneMessage;
@@ -53588,7 +63081,12 @@ void ngwt__ContactFolder::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTongwt__uid(soap, &((ngwt__ContactFolder*)this)->addressBook);
 	soap_embedded(soap, &((ngwt__SystemFolder*)this)->isSystemFolder, SOAP_TYPE_PointerTobool);
 	soap_serialize_PointerTobool(soap, &((ngwt__SystemFolder*)this)->isSystemFolder);
-	soap_embedded(soap, &((ngwt__SystemFolder*)this)->folderType, SOAP_TYPE_ngwt__FolderType);
+	soap_embedded(soap, &((ngwt__SystemFolder*)this)->folderType, SOAP_TYPE_PointerTongwt__FolderType);
+	soap_serialize_PointerTongwt__FolderType(soap, &((ngwt__SystemFolder*)this)->folderType);
+	soap_embedded(soap, &((ngwt__SystemFolder*)this)->acl, SOAP_TYPE_PointerTongwt__FolderACL);
+	soap_serialize_PointerTongwt__FolderACL(soap, &((ngwt__SystemFolder*)this)->acl);
+	soap_embedded(soap, &((ngwt__SystemFolder*)this)->isSharedByMe, SOAP_TYPE_PointerTobool);
+	soap_serialize_PointerTobool(soap, &((ngwt__SystemFolder*)this)->isSharedByMe);
 	soap_embedded(soap, &((ngwt__Folder*)this)->parent, SOAP_TYPE_ngwt__uid);
 	soap_serialize_ngwt__uid(soap, &((ngwt__Folder*)this)->parent);
 	soap_embedded(soap, &((ngwt__Folder*)this)->description, SOAP_TYPE_PointerTostd__string);
@@ -53603,8 +63101,6 @@ void ngwt__ContactFolder::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTounsignedLong(soap, &((ngwt__Folder*)this)->sequence);
 	soap_embedded(soap, &((ngwt__Folder*)this)->settings, SOAP_TYPE_PointerTongwt__uid);
 	soap_serialize_PointerTongwt__uid(soap, &((ngwt__Folder*)this)->settings);
-	soap_embedded(soap, &((ngwt__Folder*)this)->hasSubfolders, SOAP_TYPE_PointerTobool);
-	soap_serialize_PointerTobool(soap, &((ngwt__Folder*)this)->hasSubfolders);
 	soap_embedded(soap, &((ngwt__Folder*)this)->calendarAttribute, SOAP_TYPE_PointerTongwt__CalendarFolderAttribute);
 	soap_serialize_PointerTongwt__CalendarFolderAttribute(soap, &((ngwt__Folder*)this)->calendarAttribute);
 	soap_embedded(soap, &((ngwt__Item*)this)->id, SOAP_TYPE_PointerTongwt__uid);
@@ -53625,7 +63121,9 @@ void ngwt__ContactFolder::soap_default(struct soap *soap)
 	this->soap = soap;
 	((ngwt__ContactFolder*)this)->addressBook = NULL;
 	((ngwt__SystemFolder*)this)->isSystemFolder = NULL;
-	soap_default_ngwt__FolderType(soap, &((ngwt__SystemFolder*)this)->folderType);
+	((ngwt__SystemFolder*)this)->folderType = NULL;
+	((ngwt__SystemFolder*)this)->acl = NULL;
+	((ngwt__SystemFolder*)this)->isSharedByMe = NULL;
 	soap_default_ngwt__uid(soap, &((ngwt__Folder*)this)->parent);
 	((ngwt__Folder*)this)->description = NULL;
 	((ngwt__Folder*)this)->count = NULL;
@@ -53633,7 +63131,6 @@ void ngwt__ContactFolder::soap_default(struct soap *soap)
 	((ngwt__Folder*)this)->unreadCount = NULL;
 	((ngwt__Folder*)this)->sequence = NULL;
 	((ngwt__Folder*)this)->settings = NULL;
-	((ngwt__Folder*)this)->hasSubfolders = NULL;
 	((ngwt__Folder*)this)->calendarAttribute = NULL;
 	((ngwt__Item*)this)->id = NULL;
 	((ngwt__Item*)this)->name = NULL;
@@ -53672,10 +63169,11 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__ContactFolder(struct soap *soap, const 
 	soap_out_PointerToint(soap, "ngwt:unreadCount", -1, &(((ngwt__Folder*)a)->unreadCount), "");
 	soap_out_PointerTounsignedLong(soap, "ngwt:sequence", -1, &(((ngwt__Folder*)a)->sequence), "");
 	soap_out_PointerTongwt__uid(soap, "ngwt:settings", -1, &(((ngwt__Folder*)a)->settings), "");
-	soap_out_PointerTobool(soap, "ngwt:hasSubfolders", -1, &(((ngwt__Folder*)a)->hasSubfolders), "");
 	soap_out_PointerTongwt__CalendarFolderAttribute(soap, "ngwt:calendarAttribute", -1, &(((ngwt__Folder*)a)->calendarAttribute), "");
 	soap_out_PointerTobool(soap, "ngwt:isSystemFolder", -1, &(((ngwt__SystemFolder*)a)->isSystemFolder), "");
-	soap_out_ngwt__FolderType(soap, "ngwt:folderType", -1, &(((ngwt__SystemFolder*)a)->folderType), "");
+	soap_out_PointerTongwt__FolderType(soap, "ngwt:folderType", -1, &(((ngwt__SystemFolder*)a)->folderType), "");
+	soap_out_PointerTongwt__FolderACL(soap, "ngwt:acl", -1, &(((ngwt__SystemFolder*)a)->acl), "");
+	soap_out_PointerTobool(soap, "ngwt:isSharedByMe", -1, &(((ngwt__SystemFolder*)a)->isSharedByMe), "");
 	soap_out_PointerTongwt__uid(soap, "ngwt:addressBook", -1, &(((ngwt__ContactFolder*)a)->addressBook), "");
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
@@ -53712,7 +63210,7 @@ SOAP_FMAC3 ngwt__ContactFolder * SOAP_FMAC4 soap_in_ngwt__ContactFolder(struct s
 			return (ngwt__ContactFolder *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id4 = 1, soap_flag_name4 = 1, soap_flag_version4 = 1, soap_flag_modified4 = 1, soap_flag_changes4 = 1, soap_flag_parent3 = 1, soap_flag_description3 = 1, soap_flag_count3 = 1, soap_flag_hasUnread3 = 1, soap_flag_unreadCount3 = 1, soap_flag_sequence3 = 1, soap_flag_settings3 = 1, soap_flag_hasSubfolders3 = 1, soap_flag_calendarAttribute3 = 1, soap_flag_isSystemFolder2 = 1, soap_flag_folderType2 = 1, soap_flag_addressBook1 = 1;
+	short soap_flag_id4 = 1, soap_flag_name4 = 1, soap_flag_version4 = 1, soap_flag_modified4 = 1, soap_flag_changes4 = 1, soap_flag_parent3 = 1, soap_flag_description3 = 1, soap_flag_count3 = 1, soap_flag_hasUnread3 = 1, soap_flag_unreadCount3 = 1, soap_flag_sequence3 = 1, soap_flag_settings3 = 1, soap_flag_calendarAttribute3 = 1, soap_flag_isSystemFolder2 = 1, soap_flag_folderType2 = 1, soap_flag_acl2 = 1, soap_flag_isSharedByMe2 = 1, soap_flag_addressBook1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -53778,11 +63276,6 @@ SOAP_FMAC3 ngwt__ContactFolder * SOAP_FMAC4 soap_in_ngwt__ContactFolder(struct s
 				{	soap_flag_settings3 = 0;
 					continue;
 				}
-			if (soap_flag_hasSubfolders3 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_PointerTobool(soap, "ngwt:hasSubfolders", &(((ngwt__Folder*)a)->hasSubfolders), ""))
-				{	soap_flag_hasSubfolders3 = 0;
-					continue;
-				}
 			if (soap_flag_calendarAttribute3 && soap->error == SOAP_TAG_MISMATCH)
 				if (soap_in_PointerTongwt__CalendarFolderAttribute(soap, "ngwt:calendarAttribute", &(((ngwt__Folder*)a)->calendarAttribute), "ngwt:CalendarFolderAttribute"))
 				{	soap_flag_calendarAttribute3 = 0;
@@ -53794,8 +63287,18 @@ SOAP_FMAC3 ngwt__ContactFolder * SOAP_FMAC4 soap_in_ngwt__ContactFolder(struct s
 					continue;
 				}
 			if (soap_flag_folderType2 && soap->error == SOAP_TAG_MISMATCH)
-				if (soap_in_ngwt__FolderType(soap, "ngwt:folderType", &(((ngwt__SystemFolder*)a)->folderType), ""))
+				if (soap_in_PointerTongwt__FolderType(soap, "ngwt:folderType", &(((ngwt__SystemFolder*)a)->folderType), ""))
 				{	soap_flag_folderType2 = 0;
+					continue;
+				}
+			if (soap_flag_acl2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__FolderACL(soap, "ngwt:acl", &(((ngwt__SystemFolder*)a)->acl), "ngwt:FolderACL"))
+				{	soap_flag_acl2 = 0;
+					continue;
+				}
+			if (soap_flag_isSharedByMe2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTobool(soap, "ngwt:isSharedByMe", &(((ngwt__SystemFolder*)a)->isSharedByMe), ""))
+				{	soap_flag_isSharedByMe2 = 0;
 					continue;
 				}
 			if (soap_flag_addressBook1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
@@ -53810,7 +63313,7 @@ SOAP_FMAC3 ngwt__ContactFolder * SOAP_FMAC4 soap_in_ngwt__ContactFolder(struct s
 			if (soap->error)
 				return NULL;
 		}
-		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_parent3 || soap_flag_folderType2))
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_parent3))
 		{	soap->error = SOAP_OCCURS;
 			return NULL;
 		}
@@ -53893,6 +63396,8 @@ void ngwt__Contact::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((ngwt__AddressBookItem*)this)->postOffice);
 	soap_embedded(soap, &((ngwt__AddressBookItem*)this)->distinguishedName, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__AddressBookItem*)this)->distinguishedName);
+	soap_embedded(soap, &((ngwt__AddressBookItem*)this)->userid, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__AddressBookItem*)this)->userid);
 	soap_serialize_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, &((ngwt__ContainerItem*)this)->container);
 	soap_embedded(soap, &((ngwt__ContainerItem*)this)->categories, SOAP_TYPE_PointerTongwt__CategoryRefList);
 	soap_serialize_PointerTongwt__CategoryRefList(soap, &((ngwt__ContainerItem*)this)->categories);
@@ -53930,6 +63435,7 @@ void ngwt__Contact::soap_default(struct soap *soap)
 	((ngwt__AddressBookItem*)this)->domain = NULL;
 	((ngwt__AddressBookItem*)this)->postOffice = NULL;
 	((ngwt__AddressBookItem*)this)->distinguishedName = NULL;
+	((ngwt__AddressBookItem*)this)->userid = NULL;
 	soap_default_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, &((ngwt__ContainerItem*)this)->container);
 	((ngwt__ContainerItem*)this)->categories = NULL;
 	soap_default_string(soap, &((ngwt__ContainerItem*)this)->created);
@@ -53974,6 +63480,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Contact(struct soap *soap, const char *
 	soap_out_PointerTostd__string(soap, "ngwt:domain", -1, &(((ngwt__AddressBookItem*)a)->domain), "");
 	soap_out_PointerTostd__string(soap, "ngwt:postOffice", -1, &(((ngwt__AddressBookItem*)a)->postOffice), "");
 	soap_out_PointerTostd__string(soap, "ngwt:distinguishedName", -1, &(((ngwt__AddressBookItem*)a)->distinguishedName), "");
+	soap_out_PointerTostd__string(soap, "ngwt:userid", -1, &(((ngwt__AddressBookItem*)a)->userid), "");
 	soap_out_PointerTongwt__FullName(soap, "ngwt:fullName", -1, &(((ngwt__Contact*)a)->fullName), "");
 	soap_out_PointerTongwt__EmailAddressList(soap, "ngwt:emailList", -1, &(((ngwt__Contact*)a)->emailList), "");
 	soap_out_PointerTongwt__ImAddressList(soap, "ngwt:imList", -1, &(((ngwt__Contact*)a)->imList), "");
@@ -54017,7 +63524,7 @@ SOAP_FMAC3 ngwt__Contact * SOAP_FMAC4 soap_in_ngwt__Contact(struct soap *soap, c
 			return (ngwt__Contact *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id4 = 1, soap_flag_name4 = 1, soap_flag_version4 = 1, soap_flag_modified4 = 1, soap_flag_changes4 = 1, soap_flag_categories3 = 1, soap_flag_created3 = 1, soap_flag_customs3 = 1, soap_flag_uuid2 = 1, soap_flag_comment2 = 1, soap_flag_sync2 = 1, soap_flag_domain2 = 1, soap_flag_postOffice2 = 1, soap_flag_distinguishedName2 = 1, soap_flag_fullName1 = 1, soap_flag_emailList1 = 1, soap_flag_imList1 = 1, soap_flag_phoneList1 = 1, soap_flag_addressList1 = 1, soap_flag_officeInfo1 = 1, soap_flag_personalInfo1 = 1, soap_flag_referenceInfo1 = 1;
+	short soap_flag_id4 = 1, soap_flag_name4 = 1, soap_flag_version4 = 1, soap_flag_modified4 = 1, soap_flag_changes4 = 1, soap_flag_categories3 = 1, soap_flag_created3 = 1, soap_flag_customs3 = 1, soap_flag_uuid2 = 1, soap_flag_comment2 = 1, soap_flag_sync2 = 1, soap_flag_domain2 = 1, soap_flag_postOffice2 = 1, soap_flag_distinguishedName2 = 1, soap_flag_userid2 = 1, soap_flag_fullName1 = 1, soap_flag_emailList1 = 1, soap_flag_imList1 = 1, soap_flag_phoneList1 = 1, soap_flag_addressList1 = 1, soap_flag_officeInfo1 = 1, soap_flag_personalInfo1 = 1, soap_flag_referenceInfo1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -54094,6 +63601,11 @@ SOAP_FMAC3 ngwt__Contact * SOAP_FMAC4 soap_in_ngwt__Contact(struct soap *soap, c
 			if (soap_flag_distinguishedName2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:distinguishedName", &(((ngwt__AddressBookItem*)a)->distinguishedName), ""))
 				{	soap_flag_distinguishedName2 = 0;
+					continue;
+				}
+			if (soap_flag_userid2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:userid", &(((ngwt__AddressBookItem*)a)->userid), ""))
+				{	soap_flag_userid2 = 0;
 					continue;
 				}
 			if (soap_flag_fullName1 && soap->error == SOAP_TAG_MISMATCH)
@@ -54814,12 +64326,18 @@ void ngwt__CalendarItem::soap_serialize(struct soap *soap) const
 	soap_embedded(soap, &((ngwt__Mail*)this)->size, SOAP_TYPE_int);
 	soap_embedded(soap, &((ngwt__Mail*)this)->subType, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__Mail*)this)->subType);
+	soap_embedded(soap, &((ngwt__Mail*)this)->nntpOrImap, SOAP_TYPE_PointerTobool);
+	soap_serialize_PointerTobool(soap, &((ngwt__Mail*)this)->nntpOrImap);
+	soap_embedded(soap, &((ngwt__Mail*)this)->smimeType, SOAP_TYPE_PointerTongwt__SMimeOperation);
+	soap_serialize_PointerTongwt__SMimeOperation(soap, &((ngwt__Mail*)this)->smimeType);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->status, SOAP_TYPE_PointerTongwt__ItemStatus);
 	soap_serialize_PointerTongwt__ItemStatus(soap, &((ngwt__BoxEntry*)this)->status);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->thread, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->thread);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->msgId, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->msgId);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->messageId, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->messageId);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->source, SOAP_TYPE_PointerTongwt__ItemSource);
 	soap_serialize_PointerTongwt__ItemSource(soap, &((ngwt__BoxEntry*)this)->source);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->returnSentItemsId, SOAP_TYPE_PointerTobool);
@@ -54871,9 +64389,12 @@ void ngwt__CalendarItem::soap_default(struct soap *soap)
 	((ngwt__Mail*)this)->hasAttachment = (bool)0;
 	((ngwt__Mail*)this)->size = 0;
 	((ngwt__Mail*)this)->subType = NULL;
+	((ngwt__Mail*)this)->nntpOrImap = NULL;
+	((ngwt__Mail*)this)->smimeType = NULL;
 	((ngwt__BoxEntry*)this)->status = NULL;
 	((ngwt__BoxEntry*)this)->thread = NULL;
 	((ngwt__BoxEntry*)this)->msgId = NULL;
+	((ngwt__BoxEntry*)this)->messageId = NULL;
 	((ngwt__BoxEntry*)this)->source = NULL;
 	((ngwt__BoxEntry*)this)->returnSentItemsId = NULL;
 	soap_default_string(soap, &((ngwt__BoxEntry*)this)->delivered);
@@ -54921,6 +64442,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__CalendarItem(struct soap *soap, const c
 	soap_out_PointerTongwt__ItemStatus(soap, "ngwt:status", -1, &(((ngwt__BoxEntry*)a)->status), "");
 	soap_out_PointerTostd__string(soap, "ngwt:thread", -1, &(((ngwt__BoxEntry*)a)->thread), "");
 	soap_out_PointerTostd__string(soap, "ngwt:msgId", -1, &(((ngwt__BoxEntry*)a)->msgId), "");
+	soap_out_PointerTostd__string(soap, "ngwt:messageId", -1, &(((ngwt__BoxEntry*)a)->messageId), "");
 	soap_out_PointerTongwt__ItemSource(soap, "ngwt:source", -1, &(((ngwt__BoxEntry*)a)->source), "");
 	soap_out_PointerTobool(soap, "ngwt:returnSentItemsId", -1, &(((ngwt__BoxEntry*)a)->returnSentItemsId), "");
 	soap_out_string(soap, "ngwt:delivered", -1, &(((ngwt__BoxEntry*)a)->delivered), "");
@@ -54938,6 +64460,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__CalendarItem(struct soap *soap, const c
 	soap_out_bool(soap, "ngwt:hasAttachment", -1, &(((ngwt__Mail*)a)->hasAttachment), "");
 	soap_out_int(soap, "ngwt:size", -1, &(((ngwt__Mail*)a)->size), "");
 	soap_out_PointerTostd__string(soap, "ngwt:subType", -1, &(((ngwt__Mail*)a)->subType), "");
+	soap_out_PointerTobool(soap, "ngwt:nntpOrImap", -1, &(((ngwt__Mail*)a)->nntpOrImap), "");
+	soap_out_PointerTongwt__SMimeOperation(soap, "ngwt:smimeType", -1, &(((ngwt__Mail*)a)->smimeType), "");
 	soap_out_PointerTongwt__RecurrenceDateType(soap, "ngwt:rdate", -1, &(((ngwt__CalendarItem*)a)->rdate), "");
 	soap_out_PointerTongwt__RecurrenceRule(soap, "ngwt:rrule", -1, &(((ngwt__CalendarItem*)a)->rrule), "");
 	soap_out_PointerTongwt__RecurrenceDateType(soap, "ngwt:exdate", -1, &(((ngwt__CalendarItem*)a)->exdate), "");
@@ -54978,7 +64502,7 @@ SOAP_FMAC3 ngwt__CalendarItem * SOAP_FMAC4 soap_in_ngwt__CalendarItem(struct soa
 			return (ngwt__CalendarItem *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id5 = 1, soap_flag_name5 = 1, soap_flag_version5 = 1, soap_flag_modified5 = 1, soap_flag_changes5 = 1, soap_flag_categories4 = 1, soap_flag_created4 = 1, soap_flag_customs4 = 1, soap_flag_status3 = 1, soap_flag_thread3 = 1, soap_flag_msgId3 = 1, soap_flag_source3 = 1, soap_flag_returnSentItemsId3 = 1, soap_flag_delivered3 = 1, soap_flag_class_3 = 1, soap_flag_security3 = 1, soap_flag_comment3 = 1, soap_flag_subject2 = 1, soap_flag_originalSubject2 = 1, soap_flag_subjectPrefix2 = 1, soap_flag_distribution2 = 1, soap_flag_message2 = 1, soap_flag_attachments2 = 1, soap_flag_options2 = 1, soap_flag_link2 = 1, soap_flag_hasAttachment2 = 1, soap_flag_size2 = 1, soap_flag_subType2 = 1, soap_flag_rdate1 = 1, soap_flag_rrule1 = 1, soap_flag_exdate1 = 1, soap_flag_recurrenceKey1 = 1, soap_flag_iCalId1 = 1;
+	short soap_flag_id5 = 1, soap_flag_name5 = 1, soap_flag_version5 = 1, soap_flag_modified5 = 1, soap_flag_changes5 = 1, soap_flag_categories4 = 1, soap_flag_created4 = 1, soap_flag_customs4 = 1, soap_flag_status3 = 1, soap_flag_thread3 = 1, soap_flag_msgId3 = 1, soap_flag_messageId3 = 1, soap_flag_source3 = 1, soap_flag_returnSentItemsId3 = 1, soap_flag_delivered3 = 1, soap_flag_class_3 = 1, soap_flag_security3 = 1, soap_flag_comment3 = 1, soap_flag_subject2 = 1, soap_flag_originalSubject2 = 1, soap_flag_subjectPrefix2 = 1, soap_flag_distribution2 = 1, soap_flag_message2 = 1, soap_flag_attachments2 = 1, soap_flag_options2 = 1, soap_flag_link2 = 1, soap_flag_hasAttachment2 = 1, soap_flag_size2 = 1, soap_flag_subType2 = 1, soap_flag_nntpOrImap2 = 1, soap_flag_smimeType2 = 1, soap_flag_rdate1 = 1, soap_flag_rrule1 = 1, soap_flag_exdate1 = 1, soap_flag_recurrenceKey1 = 1, soap_flag_iCalId1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -55040,6 +64564,11 @@ SOAP_FMAC3 ngwt__CalendarItem * SOAP_FMAC4 soap_in_ngwt__CalendarItem(struct soa
 			if (soap_flag_msgId3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:msgId", &(((ngwt__BoxEntry*)a)->msgId), ""))
 				{	soap_flag_msgId3 = 0;
+					continue;
+				}
+			if (soap_flag_messageId3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:messageId", &(((ngwt__BoxEntry*)a)->messageId), ""))
+				{	soap_flag_messageId3 = 0;
 					continue;
 				}
 			if (soap_flag_source3 && soap->error == SOAP_TAG_MISMATCH)
@@ -55125,6 +64654,16 @@ SOAP_FMAC3 ngwt__CalendarItem * SOAP_FMAC4 soap_in_ngwt__CalendarItem(struct soa
 			if (soap_flag_subType2 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:subType", &(((ngwt__Mail*)a)->subType), ""))
 				{	soap_flag_subType2 = 0;
+					continue;
+				}
+			if (soap_flag_nntpOrImap2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTobool(soap, "ngwt:nntpOrImap", &(((ngwt__Mail*)a)->nntpOrImap), ""))
+				{	soap_flag_nntpOrImap2 = 0;
+					continue;
+				}
+			if (soap_flag_smimeType2 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__SMimeOperation(soap, "ngwt:smimeType", &(((ngwt__Mail*)a)->smimeType), "ngwt:SMimeOperation"))
+				{	soap_flag_smimeType2 = 0;
 					continue;
 				}
 			if (soap_flag_rdate1 && soap->error == SOAP_TAG_MISMATCH)
@@ -55418,6 +64957,8 @@ void ngwt__BoxEntry::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->thread);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->msgId, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->msgId);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->messageId, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->messageId);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->source, SOAP_TYPE_PointerTongwt__ItemSource);
 	soap_serialize_PointerTongwt__ItemSource(soap, &((ngwt__BoxEntry*)this)->source);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->returnSentItemsId, SOAP_TYPE_PointerTobool);
@@ -55456,6 +64997,7 @@ void ngwt__BoxEntry::soap_default(struct soap *soap)
 	((ngwt__BoxEntry*)this)->status = NULL;
 	((ngwt__BoxEntry*)this)->thread = NULL;
 	((ngwt__BoxEntry*)this)->msgId = NULL;
+	((ngwt__BoxEntry*)this)->messageId = NULL;
 	((ngwt__BoxEntry*)this)->source = NULL;
 	((ngwt__BoxEntry*)this)->returnSentItemsId = NULL;
 	soap_default_string(soap, &((ngwt__BoxEntry*)this)->delivered);
@@ -55503,6 +65045,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__BoxEntry(struct soap *soap, const char 
 	soap_out_PointerTongwt__ItemStatus(soap, "ngwt:status", -1, &(((ngwt__BoxEntry*)a)->status), "");
 	soap_out_PointerTostd__string(soap, "ngwt:thread", -1, &(((ngwt__BoxEntry*)a)->thread), "");
 	soap_out_PointerTostd__string(soap, "ngwt:msgId", -1, &(((ngwt__BoxEntry*)a)->msgId), "");
+	soap_out_PointerTostd__string(soap, "ngwt:messageId", -1, &(((ngwt__BoxEntry*)a)->messageId), "");
 	soap_out_PointerTongwt__ItemSource(soap, "ngwt:source", -1, &(((ngwt__BoxEntry*)a)->source), "");
 	soap_out_PointerTobool(soap, "ngwt:returnSentItemsId", -1, &(((ngwt__BoxEntry*)a)->returnSentItemsId), "");
 	soap_out_string(soap, "ngwt:delivered", -1, &(((ngwt__BoxEntry*)a)->delivered), "");
@@ -55544,7 +65087,7 @@ SOAP_FMAC3 ngwt__BoxEntry * SOAP_FMAC4 soap_in_ngwt__BoxEntry(struct soap *soap,
 			return (ngwt__BoxEntry *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id3 = 1, soap_flag_name3 = 1, soap_flag_version3 = 1, soap_flag_modified3 = 1, soap_flag_changes3 = 1, soap_flag_categories2 = 1, soap_flag_created2 = 1, soap_flag_customs2 = 1, soap_flag_status1 = 1, soap_flag_thread1 = 1, soap_flag_msgId1 = 1, soap_flag_source1 = 1, soap_flag_returnSentItemsId1 = 1, soap_flag_delivered1 = 1, soap_flag_class_1 = 1, soap_flag_security1 = 1, soap_flag_comment1 = 1;
+	short soap_flag_id3 = 1, soap_flag_name3 = 1, soap_flag_version3 = 1, soap_flag_modified3 = 1, soap_flag_changes3 = 1, soap_flag_categories2 = 1, soap_flag_created2 = 1, soap_flag_customs2 = 1, soap_flag_status1 = 1, soap_flag_thread1 = 1, soap_flag_msgId1 = 1, soap_flag_messageId1 = 1, soap_flag_source1 = 1, soap_flag_returnSentItemsId1 = 1, soap_flag_delivered1 = 1, soap_flag_class_1 = 1, soap_flag_security1 = 1, soap_flag_comment1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -55606,6 +65149,11 @@ SOAP_FMAC3 ngwt__BoxEntry * SOAP_FMAC4 soap_in_ngwt__BoxEntry(struct soap *soap,
 			if (soap_flag_msgId1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:msgId", &(((ngwt__BoxEntry*)a)->msgId), ""))
 				{	soap_flag_msgId1 = 0;
+					continue;
+				}
+			if (soap_flag_messageId1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:messageId", &(((ngwt__BoxEntry*)a)->messageId), ""))
+				{	soap_flag_messageId1 = 0;
 					continue;
 				}
 			if (soap_flag_source1 && soap->error == SOAP_TAG_MISMATCH)
@@ -55709,6 +65257,24 @@ SOAP_FMAC5 ngwt__BoxEntry * SOAP_FMAC6 soap_instantiate_ngwt__BoxEntry(struct so
 		}
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
 		return (ngwt__CalendarItem*)cp->ptr;
+	}
+	if (type && !soap_match_tag(soap, type, "ngwt:DocumentRef"))
+	{	cp->type = SOAP_TYPE_ngwt__DocumentRef;
+		if (n < 0)
+		{	cp->ptr = (void*)new ngwt__DocumentRef;
+			if (size)
+				*size = sizeof(ngwt__DocumentRef);
+			((ngwt__DocumentRef*)cp->ptr)->soap = soap;
+		}
+		else
+		{	cp->ptr = (void*)new ngwt__DocumentRef[n];
+			if (size)
+				*size = n * sizeof(ngwt__DocumentRef);
+			for (int i = 0; i < n; i++)
+				((ngwt__DocumentRef*)cp->ptr)[i].soap = soap;
+		}
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+		return (ngwt__DocumentRef*)cp->ptr;
 	}
 	if (type && !soap_match_tag(soap, type, "ngwt:PhoneMessage"))
 	{	cp->type = SOAP_TYPE_ngwt__PhoneMessage;
@@ -56018,6 +65584,8 @@ void ngwt__AttachmentItemInfo::soap_serialize(struct soap *soap) const
 	soap_serialize_string(soap, &((ngwt__AttachmentItemInfo*)this)->date);
 	soap_embedded(soap, &((ngwt__AttachmentItemInfo*)this)->data, SOAP_TYPE_PointerToxsd__base64Binary);
 	soap_serialize_PointerToxsd__base64Binary(soap, &((ngwt__AttachmentItemInfo*)this)->data);
+	soap_embedded(soap, &((ngwt__AttachmentItemInfo*)this)->hidden, SOAP_TYPE_PointerTobool);
+	soap_serialize_PointerTobool(soap, &((ngwt__AttachmentItemInfo*)this)->hidden);
 	/* transient soap skipped */
 }
 
@@ -56031,6 +65599,7 @@ void ngwt__AttachmentItemInfo::soap_default(struct soap *soap)
 	((ngwt__AttachmentItemInfo*)this)->size = NULL;
 	soap_default_string(soap, &((ngwt__AttachmentItemInfo*)this)->date);
 	((ngwt__AttachmentItemInfo*)this)->data = NULL;
+	((ngwt__AttachmentItemInfo*)this)->hidden = NULL;
 	/* transient soap skipped */
 }
 
@@ -56057,6 +65626,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__AttachmentItemInfo(struct soap *soap, c
 	soap_out_PointerTounsignedLong(soap, "ngwt:size", -1, &(((ngwt__AttachmentItemInfo*)a)->size), "");
 	soap_out_string(soap, "ngwt:date", -1, &(((ngwt__AttachmentItemInfo*)a)->date), "");
 	soap_out_PointerToxsd__base64Binary(soap, "ngwt:data", -1, &(((ngwt__AttachmentItemInfo*)a)->data), "");
+	soap_out_PointerTobool(soap, "ngwt:hidden", -1, &(((ngwt__AttachmentItemInfo*)a)->hidden), "");
 	/* transient soap skipped */
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
@@ -56093,7 +65663,7 @@ SOAP_FMAC3 ngwt__AttachmentItemInfo * SOAP_FMAC4 soap_in_ngwt__AttachmentItemInf
 			return (ngwt__AttachmentItemInfo *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id1 = 1, soap_flag_name1 = 1, soap_flag_contentId1 = 1, soap_flag_contentType1 = 1, soap_flag_size1 = 1, soap_flag_date1 = 1, soap_flag_data1 = 1;
+	short soap_flag_id1 = 1, soap_flag_name1 = 1, soap_flag_contentId1 = 1, soap_flag_contentType1 = 1, soap_flag_size1 = 1, soap_flag_date1 = 1, soap_flag_data1 = 1, soap_flag_hidden1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -56131,6 +65701,11 @@ SOAP_FMAC3 ngwt__AttachmentItemInfo * SOAP_FMAC4 soap_in_ngwt__AttachmentItemInf
 			if (soap_flag_data1 && soap->error == SOAP_TAG_MISMATCH)
 				if (soap_in_PointerToxsd__base64Binary(soap, "ngwt:data", &(((ngwt__AttachmentItemInfo*)a)->data), "xsd:base64Binary"))
 				{	soap_flag_data1 = 0;
+					continue;
+				}
+			if (soap_flag_hidden1 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTobool(soap, "ngwt:hidden", &(((ngwt__AttachmentItemInfo*)a)->hidden), ""))
+				{	soap_flag_hidden1 = 0;
 					continue;
 				}
 			/* transient soap skipped */
@@ -56489,12 +66064,18 @@ void ngwt__Appointment::soap_serialize(struct soap *soap) const
 	soap_embedded(soap, &((ngwt__Mail*)this)->size, SOAP_TYPE_int);
 	soap_embedded(soap, &((ngwt__Mail*)this)->subType, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__Mail*)this)->subType);
+	soap_embedded(soap, &((ngwt__Mail*)this)->nntpOrImap, SOAP_TYPE_PointerTobool);
+	soap_serialize_PointerTobool(soap, &((ngwt__Mail*)this)->nntpOrImap);
+	soap_embedded(soap, &((ngwt__Mail*)this)->smimeType, SOAP_TYPE_PointerTongwt__SMimeOperation);
+	soap_serialize_PointerTongwt__SMimeOperation(soap, &((ngwt__Mail*)this)->smimeType);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->status, SOAP_TYPE_PointerTongwt__ItemStatus);
 	soap_serialize_PointerTongwt__ItemStatus(soap, &((ngwt__BoxEntry*)this)->status);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->thread, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->thread);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->msgId, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->msgId);
+	soap_embedded(soap, &((ngwt__BoxEntry*)this)->messageId, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__BoxEntry*)this)->messageId);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->source, SOAP_TYPE_PointerTongwt__ItemSource);
 	soap_serialize_PointerTongwt__ItemSource(soap, &((ngwt__BoxEntry*)this)->source);
 	soap_embedded(soap, &((ngwt__BoxEntry*)this)->returnSentItemsId, SOAP_TYPE_PointerTobool);
@@ -56555,9 +66136,12 @@ void ngwt__Appointment::soap_default(struct soap *soap)
 	((ngwt__Mail*)this)->hasAttachment = (bool)0;
 	((ngwt__Mail*)this)->size = 0;
 	((ngwt__Mail*)this)->subType = NULL;
+	((ngwt__Mail*)this)->nntpOrImap = NULL;
+	((ngwt__Mail*)this)->smimeType = NULL;
 	((ngwt__BoxEntry*)this)->status = NULL;
 	((ngwt__BoxEntry*)this)->thread = NULL;
 	((ngwt__BoxEntry*)this)->msgId = NULL;
+	((ngwt__BoxEntry*)this)->messageId = NULL;
 	((ngwt__BoxEntry*)this)->source = NULL;
 	((ngwt__BoxEntry*)this)->returnSentItemsId = NULL;
 	soap_default_string(soap, &((ngwt__BoxEntry*)this)->delivered);
@@ -56605,6 +66189,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Appointment(struct soap *soap, const ch
 	soap_out_PointerTongwt__ItemStatus(soap, "ngwt:status", -1, &(((ngwt__BoxEntry*)a)->status), "");
 	soap_out_PointerTostd__string(soap, "ngwt:thread", -1, &(((ngwt__BoxEntry*)a)->thread), "");
 	soap_out_PointerTostd__string(soap, "ngwt:msgId", -1, &(((ngwt__BoxEntry*)a)->msgId), "");
+	soap_out_PointerTostd__string(soap, "ngwt:messageId", -1, &(((ngwt__BoxEntry*)a)->messageId), "");
 	soap_out_PointerTongwt__ItemSource(soap, "ngwt:source", -1, &(((ngwt__BoxEntry*)a)->source), "");
 	soap_out_PointerTobool(soap, "ngwt:returnSentItemsId", -1, &(((ngwt__BoxEntry*)a)->returnSentItemsId), "");
 	soap_out_string(soap, "ngwt:delivered", -1, &(((ngwt__BoxEntry*)a)->delivered), "");
@@ -56622,6 +66207,8 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__Appointment(struct soap *soap, const ch
 	soap_out_bool(soap, "ngwt:hasAttachment", -1, &(((ngwt__Mail*)a)->hasAttachment), "");
 	soap_out_int(soap, "ngwt:size", -1, &(((ngwt__Mail*)a)->size), "");
 	soap_out_PointerTostd__string(soap, "ngwt:subType", -1, &(((ngwt__Mail*)a)->subType), "");
+	soap_out_PointerTobool(soap, "ngwt:nntpOrImap", -1, &(((ngwt__Mail*)a)->nntpOrImap), "");
+	soap_out_PointerTongwt__SMimeOperation(soap, "ngwt:smimeType", -1, &(((ngwt__Mail*)a)->smimeType), "");
 	soap_out_PointerTongwt__RecurrenceDateType(soap, "ngwt:rdate", -1, &(((ngwt__CalendarItem*)a)->rdate), "");
 	soap_out_PointerTongwt__RecurrenceRule(soap, "ngwt:rrule", -1, &(((ngwt__CalendarItem*)a)->rrule), "");
 	soap_out_PointerTongwt__RecurrenceDateType(soap, "ngwt:exdate", -1, &(((ngwt__CalendarItem*)a)->exdate), "");
@@ -56671,7 +66258,7 @@ SOAP_FMAC3 ngwt__Appointment * SOAP_FMAC4 soap_in_ngwt__Appointment(struct soap 
 			return (ngwt__Appointment *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id6 = 1, soap_flag_name6 = 1, soap_flag_version6 = 1, soap_flag_modified6 = 1, soap_flag_changes6 = 1, soap_flag_categories5 = 1, soap_flag_created5 = 1, soap_flag_customs5 = 1, soap_flag_status4 = 1, soap_flag_thread4 = 1, soap_flag_msgId4 = 1, soap_flag_source4 = 1, soap_flag_returnSentItemsId4 = 1, soap_flag_delivered4 = 1, soap_flag_class_4 = 1, soap_flag_security4 = 1, soap_flag_comment4 = 1, soap_flag_subject3 = 1, soap_flag_originalSubject3 = 1, soap_flag_subjectPrefix3 = 1, soap_flag_distribution3 = 1, soap_flag_message3 = 1, soap_flag_attachments3 = 1, soap_flag_options3 = 1, soap_flag_link3 = 1, soap_flag_hasAttachment3 = 1, soap_flag_size3 = 1, soap_flag_subType3 = 1, soap_flag_rdate2 = 1, soap_flag_rrule2 = 1, soap_flag_exdate2 = 1, soap_flag_recurrenceKey2 = 1, soap_flag_iCalId2 = 1, soap_flag_startDate1 = 1, soap_flag_endDate1 = 1, soap_flag_startDay1 = 1, soap_flag_endDay1 = 1, soap_flag_acceptLevel1 = 1, soap_flag_alarm1 = 1, soap_flag_allDayEvent1 = 1, soap_flag_place1 = 1, soap_flag_timezone1 = 1;
+	short soap_flag_id6 = 1, soap_flag_name6 = 1, soap_flag_version6 = 1, soap_flag_modified6 = 1, soap_flag_changes6 = 1, soap_flag_categories5 = 1, soap_flag_created5 = 1, soap_flag_customs5 = 1, soap_flag_status4 = 1, soap_flag_thread4 = 1, soap_flag_msgId4 = 1, soap_flag_messageId4 = 1, soap_flag_source4 = 1, soap_flag_returnSentItemsId4 = 1, soap_flag_delivered4 = 1, soap_flag_class_4 = 1, soap_flag_security4 = 1, soap_flag_comment4 = 1, soap_flag_subject3 = 1, soap_flag_originalSubject3 = 1, soap_flag_subjectPrefix3 = 1, soap_flag_distribution3 = 1, soap_flag_message3 = 1, soap_flag_attachments3 = 1, soap_flag_options3 = 1, soap_flag_link3 = 1, soap_flag_hasAttachment3 = 1, soap_flag_size3 = 1, soap_flag_subType3 = 1, soap_flag_nntpOrImap3 = 1, soap_flag_smimeType3 = 1, soap_flag_rdate2 = 1, soap_flag_rrule2 = 1, soap_flag_exdate2 = 1, soap_flag_recurrenceKey2 = 1, soap_flag_iCalId2 = 1, soap_flag_startDate1 = 1, soap_flag_endDate1 = 1, soap_flag_startDay1 = 1, soap_flag_endDay1 = 1, soap_flag_acceptLevel1 = 1, soap_flag_alarm1 = 1, soap_flag_allDayEvent1 = 1, soap_flag_place1 = 1, soap_flag_timezone1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -56733,6 +66320,11 @@ SOAP_FMAC3 ngwt__Appointment * SOAP_FMAC4 soap_in_ngwt__Appointment(struct soap 
 			if (soap_flag_msgId4 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:msgId", &(((ngwt__BoxEntry*)a)->msgId), ""))
 				{	soap_flag_msgId4 = 0;
+					continue;
+				}
+			if (soap_flag_messageId4 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:messageId", &(((ngwt__BoxEntry*)a)->messageId), ""))
+				{	soap_flag_messageId4 = 0;
 					continue;
 				}
 			if (soap_flag_source4 && soap->error == SOAP_TAG_MISMATCH)
@@ -56818,6 +66410,16 @@ SOAP_FMAC3 ngwt__Appointment * SOAP_FMAC4 soap_in_ngwt__Appointment(struct soap 
 			if (soap_flag_subType3 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:subType", &(((ngwt__Mail*)a)->subType), ""))
 				{	soap_flag_subType3 = 0;
+					continue;
+				}
+			if (soap_flag_nntpOrImap3 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTobool(soap, "ngwt:nntpOrImap", &(((ngwt__Mail*)a)->nntpOrImap), ""))
+				{	soap_flag_nntpOrImap3 = 0;
+					continue;
+				}
+			if (soap_flag_smimeType3 && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTongwt__SMimeOperation(soap, "ngwt:smimeType", &(((ngwt__Mail*)a)->smimeType), "ngwt:SMimeOperation"))
+				{	soap_flag_smimeType3 = 0;
 					continue;
 				}
 			if (soap_flag_rdate2 && soap->error == SOAP_TAG_MISMATCH)
@@ -57212,6 +66814,8 @@ void ngwt__AddressBookItem::soap_serialize(struct soap *soap) const
 	soap_serialize_PointerTostd__string(soap, &((ngwt__AddressBookItem*)this)->postOffice);
 	soap_embedded(soap, &((ngwt__AddressBookItem*)this)->distinguishedName, SOAP_TYPE_PointerTostd__string);
 	soap_serialize_PointerTostd__string(soap, &((ngwt__AddressBookItem*)this)->distinguishedName);
+	soap_embedded(soap, &((ngwt__AddressBookItem*)this)->userid, SOAP_TYPE_PointerTostd__string);
+	soap_serialize_PointerTostd__string(soap, &((ngwt__AddressBookItem*)this)->userid);
 	soap_serialize_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, &((ngwt__ContainerItem*)this)->container);
 	soap_embedded(soap, &((ngwt__ContainerItem*)this)->categories, SOAP_TYPE_PointerTongwt__CategoryRefList);
 	soap_serialize_PointerTongwt__CategoryRefList(soap, &((ngwt__ContainerItem*)this)->categories);
@@ -57241,6 +66845,7 @@ void ngwt__AddressBookItem::soap_default(struct soap *soap)
 	((ngwt__AddressBookItem*)this)->domain = NULL;
 	((ngwt__AddressBookItem*)this)->postOffice = NULL;
 	((ngwt__AddressBookItem*)this)->distinguishedName = NULL;
+	((ngwt__AddressBookItem*)this)->userid = NULL;
 	soap_default_std__vectorTemplateOfPointerTongwt__ContainerRef(soap, &((ngwt__ContainerItem*)this)->container);
 	((ngwt__ContainerItem*)this)->categories = NULL;
 	soap_default_string(soap, &((ngwt__ContainerItem*)this)->created);
@@ -57285,6 +66890,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_out_ngwt__AddressBookItem(struct soap *soap, cons
 	soap_out_PointerTostd__string(soap, "ngwt:domain", -1, &(((ngwt__AddressBookItem*)a)->domain), "");
 	soap_out_PointerTostd__string(soap, "ngwt:postOffice", -1, &(((ngwt__AddressBookItem*)a)->postOffice), "");
 	soap_out_PointerTostd__string(soap, "ngwt:distinguishedName", -1, &(((ngwt__AddressBookItem*)a)->distinguishedName), "");
+	soap_out_PointerTostd__string(soap, "ngwt:userid", -1, &(((ngwt__AddressBookItem*)a)->userid), "");
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
 }
@@ -57320,7 +66926,7 @@ SOAP_FMAC3 ngwt__AddressBookItem * SOAP_FMAC4 soap_in_ngwt__AddressBookItem(stru
 			return (ngwt__AddressBookItem *)a->soap_in(soap, tag, type);
 		}
 	}
-	short soap_flag_id3 = 1, soap_flag_name3 = 1, soap_flag_version3 = 1, soap_flag_modified3 = 1, soap_flag_changes3 = 1, soap_flag_categories2 = 1, soap_flag_created2 = 1, soap_flag_customs2 = 1, soap_flag_uuid1 = 1, soap_flag_comment1 = 1, soap_flag_sync1 = 1, soap_flag_domain1 = 1, soap_flag_postOffice1 = 1, soap_flag_distinguishedName1 = 1;
+	short soap_flag_id3 = 1, soap_flag_name3 = 1, soap_flag_version3 = 1, soap_flag_modified3 = 1, soap_flag_changes3 = 1, soap_flag_categories2 = 1, soap_flag_created2 = 1, soap_flag_customs2 = 1, soap_flag_uuid1 = 1, soap_flag_comment1 = 1, soap_flag_sync1 = 1, soap_flag_domain1 = 1, soap_flag_postOffice1 = 1, soap_flag_distinguishedName1 = 1, soap_flag_userid1 = 1;
 	if (soap->body && !*soap->href)
 	{
 		for (;;)
@@ -57397,6 +67003,11 @@ SOAP_FMAC3 ngwt__AddressBookItem * SOAP_FMAC4 soap_in_ngwt__AddressBookItem(stru
 			if (soap_flag_distinguishedName1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_PointerTostd__string(soap, "ngwt:distinguishedName", &(((ngwt__AddressBookItem*)a)->distinguishedName), ""))
 				{	soap_flag_distinguishedName1 = 0;
+					continue;
+				}
+			if (soap_flag_userid1 && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
+				if (soap_in_PointerTostd__string(soap, "ngwt:userid", &(((ngwt__AddressBookItem*)a)->userid), ""))
+				{	soap_flag_userid1 = 0;
 					continue;
 				}
 			if (soap->error == SOAP_TAG_MISMATCH)
@@ -59195,6 +68806,97 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy_xsd__date(struct soap *soap, int st, int tt
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying std::string %p -> %p\n", q, p));
 	*(std::string*)p = *(std::string*)q;
 }
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__string(struct soap *soap, const std::string *p)
+{ }
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__string(struct soap *soap, std::string *p)
+{
+(void)soap; /* appease -Wall -Werror */
+	p->erase();
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_std__string(struct soap *soap, const std::string *a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_std__string);
+	if (soap_out_std__string(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_std__string(struct soap *soap, const char *tag, int id, const std::string *s, const char *type)
+{
+	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, s, SOAP_TYPE_std__string), type) || soap_string_out(soap, s->c_str(), 0) || soap_element_end_out(soap, tag))
+		return soap->error;
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 std::string * SOAP_FMAC4 soap_get_std__string(struct soap *soap, std::string *p, const char *tag, const char *type)
+{
+	if ((p = soap_in_std__string(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC1 std::string * SOAP_FMAC2 soap_in_std__string(struct soap *soap, const char *tag, std::string *s, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!s)
+		s = soap_new_std__string(soap, -1);
+	if (soap->null)
+		if (s)
+			s->erase();
+	if (*soap->type && soap_match_tag(soap, soap->type, type))
+	{	soap->error = SOAP_TYPE;
+		return NULL;
+	}
+	if (soap->body && !*soap->href)
+	{	char *t;
+		s = (std::string*)soap_class_id_enter(soap, soap->id, s, SOAP_TYPE_std__string, sizeof(std::string), soap->type, soap->arrayType);
+		if (s)
+			if ((t = soap_string_in(soap, 1, 0, -1)))
+				s->assign(t);
+			else
+				return NULL;
+	}
+	else
+		s = (std::string*)soap_id_forward(soap, soap->href, soap_class_id_enter(soap, soap->id, s, SOAP_TYPE_std__string, sizeof(std::string), soap->type, soap->arrayType), SOAP_TYPE_std__string, 0, sizeof(std::string), 0, soap_copy_std__string);
+	if (soap->body && soap_element_end_in(soap, tag))
+		return NULL;
+	return s;
+}
+
+SOAP_FMAC5 std::string * SOAP_FMAC6 soap_new_std__string(struct soap *soap, int n)
+{	return soap_instantiate_std__string(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__string(struct soap *soap, std::string *p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 std::string * SOAP_FMAC6 soap_instantiate_std__string(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_std__string(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_std__string, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new std::string;
+		if (size)
+			*size = sizeof(std::string);
+	}
+	else
+	{	cp->ptr = (void*)new std::string[n];
+		if (size)
+			*size = n * sizeof(std::string);
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (std::string*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__string(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying std::string %p -> %p\n", q, p));
+	*(std::string*)p = *(std::string*)q;
+}
 
 void xsd__base64Binary::soap_serialize(struct soap *soap) const
 {
@@ -59310,189 +69012,6 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy_xsd__base64Binary(struct soap *soap, int st
 {
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying xsd__base64Binary %p -> %p\n", q, p));
 	*(xsd__base64Binary*)p = *(xsd__base64Binary*)q;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_xsd__anyURI(struct soap *soap, std::string const*a)
-{	soap_serialize_std__string(soap, a);
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_xsd__anyURI(struct soap *soap, std::string *a)
-{	soap_default_std__string(soap, a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_xsd__anyURI(struct soap *soap, const std::string *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_xsd__anyURI);
-	if (soap_out_xsd__anyURI(soap, tag, id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_xsd__anyURI(struct soap *soap, const char *tag, int id, const std::string *s, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, s, SOAP_TYPE_xsd__anyURI), type) || soap_string_out(soap, s->c_str(), 0) || soap_element_end_out(soap, tag))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 std::string * SOAP_FMAC4 soap_get_xsd__anyURI(struct soap *soap, std::string *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_xsd__anyURI(soap, tag, p, type)))
-		soap_getindependent(soap);
-	return p;
-}
-
-SOAP_FMAC1 std::string * SOAP_FMAC2 soap_in_xsd__anyURI(struct soap *soap, const char *tag, std::string *s, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1))
-		return NULL;
-	if (!s)
-		s = soap_new_std__string(soap, -1);
-	if (soap->null)
-		if (s)
-			s->erase();
-	if (*soap->type && soap_match_tag(soap, soap->type, type))
-	{	soap->error = SOAP_TYPE;
-		return NULL;
-	}
-	if (soap->body && !*soap->href)
-	{	char *t;
-		s = (std::string*)soap_class_id_enter(soap, soap->id, s, SOAP_TYPE_xsd__anyURI, sizeof(std::string), soap->type, soap->arrayType);
-		if (s)
-			if ((t = soap_string_in(soap, 1, 0, -1)))
-				s->assign(t);
-			else
-				return NULL;
-	}
-	else
-		s = (std::string*)soap_id_forward(soap, soap->href, soap_class_id_enter(soap, soap->id, s, SOAP_TYPE_xsd__anyURI, sizeof(std::string), soap->type, soap->arrayType), SOAP_TYPE_xsd__anyURI, 0, sizeof(std::string), 0, soap_copy_xsd__anyURI);
-	if (soap->body && soap_element_end_in(soap, tag))
-		return NULL;
-	return s;
-}
-
-SOAP_FMAC5 std::string * SOAP_FMAC6 soap_new_xsd__anyURI(struct soap *soap, int n)
-{	return soap_instantiate_xsd__anyURI(soap, n, NULL, NULL, NULL);
-}
-
-SOAP_FMAC5 void SOAP_FMAC6 soap_delete_xsd__anyURI(struct soap *soap, std::string *p)
-{	soap_delete(soap, p);
-}
-
-SOAP_FMAC5 std::string * SOAP_FMAC6 soap_instantiate_xsd__anyURI(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
-{
-	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_xsd__anyURI(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
-	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_xsd__anyURI, n, soap_fdelete);
-	if (!cp)
-		return NULL;
-	if (n < 0)
-	{	cp->ptr = (void*)new std::string;
-		if (size)
-			*size = sizeof(std::string);
-	}
-	else
-	{	cp->ptr = (void*)new std::string[n];
-		if (size)
-			*size = n * sizeof(std::string);
-	}
-		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
-	return (std::string*)cp->ptr;
-}
-
-SOAP_FMAC5 void SOAP_FMAC6 soap_copy_xsd__anyURI(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
-{
-	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying std::string %p -> %p\n", q, p));
-	*(std::string*)p = *(std::string*)q;
-}
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__string(struct soap *soap, const std::string *p)
-{ }
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__string(struct soap *soap, std::string *p)
-{
-(void)soap; /* appease -Wall -Werror */
-	p->erase();
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_std__string(struct soap *soap, const std::string *a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_std__string);
-	if (soap_out_std__string(soap, tag, id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_std__string(struct soap *soap, const char *tag, int id, const std::string *s, const char *type)
-{
-	if (soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, s, SOAP_TYPE_std__string), type) || soap_string_out(soap, s->c_str(), 0) || soap_element_end_out(soap, tag))
-		return soap->error;
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 std::string * SOAP_FMAC4 soap_get_std__string(struct soap *soap, std::string *p, const char *tag, const char *type)
-{
-	if ((p = soap_in_std__string(soap, tag, p, type)))
-		soap_getindependent(soap);
-	return p;
-}
-
-SOAP_FMAC1 std::string * SOAP_FMAC2 soap_in_std__string(struct soap *soap, const char *tag, std::string *s, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1))
-		return NULL;
-	if (!s)
-		s = soap_new_std__string(soap, -1);
-	if (soap->null)
-		if (s)
-			s->erase();
-	if (*soap->type && soap_match_tag(soap, soap->type, type))
-	{	soap->error = SOAP_TYPE;
-		return NULL;
-	}
-	if (soap->body && !*soap->href)
-	{	char *t;
-		s = (std::string*)soap_class_id_enter(soap, soap->id, s, SOAP_TYPE_std__string, sizeof(std::string), soap->type, soap->arrayType);
-		if (s)
-			if ((t = soap_string_in(soap, 1, 0, -1)))
-				s->assign(t);
-			else
-				return NULL;
-	}
-	else
-		s = (std::string*)soap_id_forward(soap, soap->href, soap_class_id_enter(soap, soap->id, s, SOAP_TYPE_std__string, sizeof(std::string), soap->type, soap->arrayType), SOAP_TYPE_std__string, 0, sizeof(std::string), 0, soap_copy_std__string);
-	if (soap->body && soap_element_end_in(soap, tag))
-		return NULL;
-	return s;
-}
-
-SOAP_FMAC5 std::string * SOAP_FMAC6 soap_new_std__string(struct soap *soap, int n)
-{	return soap_instantiate_std__string(soap, n, NULL, NULL, NULL);
-}
-
-SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__string(struct soap *soap, std::string *p)
-{	soap_delete(soap, p);
-}
-
-SOAP_FMAC5 std::string * SOAP_FMAC6 soap_instantiate_std__string(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
-{
-	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_std__string(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
-	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_std__string, n, soap_fdelete);
-	if (!cp)
-		return NULL;
-	if (n < 0)
-	{	cp->ptr = (void*)new std::string;
-		if (size)
-			*size = sizeof(std::string);
-	}
-	else
-	{	cp->ptr = (void*)new std::string[n];
-		if (size)
-			*size = n * sizeof(std::string);
-	}
-		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
-	return (std::string*)cp->ptr;
-}
-
-SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__string(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
-{
-	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying std::string %p -> %p\n", q, p));
-	*(std::string*)p = *(std::string*)q;
 }
 
 #ifndef WITH_NOGLOBAL
@@ -60173,6 +69692,64 @@ SOAP_FMAC3 struct __ngw__cleanEventConfigurationRequest * SOAP_FMAC4 soap_in___n
 	return a;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__updateVersionStatusRequest(struct soap *soap, const struct __ngw__updateVersionStatusRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_embedded(soap, &a->ngwm__updateVersionStatusRequest, SOAP_TYPE_PointerTo_ngwm__updateVersionStatusRequest);
+	soap_serialize_PointerTo_ngwm__updateVersionStatusRequest(soap, &a->ngwm__updateVersionStatusRequest);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__updateVersionStatusRequest(struct soap *soap, struct __ngw__updateVersionStatusRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->ngwm__updateVersionStatusRequest = NULL;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__updateVersionStatusRequest(struct soap *soap, const struct __ngw__updateVersionStatusRequest *a, const char *tag, const char *type)
+{
+	register int id = 0;
+	if (soap_out___ngw__updateVersionStatusRequest(soap, tag, id, a, type))
+		return soap->error;
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__updateVersionStatusRequest(struct soap *soap, const char *tag, int id, const struct __ngw__updateVersionStatusRequest *a, const char *type)
+{
+	soap_out_PointerTo_ngwm__updateVersionStatusRequest(soap, "ngwm:updateVersionStatusRequest", -1, &a->ngwm__updateVersionStatusRequest, "");
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ngw__updateVersionStatusRequest * SOAP_FMAC4 soap_get___ngw__updateVersionStatusRequest(struct soap *soap, struct __ngw__updateVersionStatusRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in___ngw__updateVersionStatusRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 struct __ngw__updateVersionStatusRequest * SOAP_FMAC4 soap_in___ngw__updateVersionStatusRequest(struct soap *soap, const char *tag, struct __ngw__updateVersionStatusRequest *a, const char *type)
+{
+	short soap_flag_ngwm__updateVersionStatusRequest = 1;
+	a = (struct __ngw__updateVersionStatusRequest *)soap_id_enter(soap, soap->id, a, SOAP_TYPE___ngw__updateVersionStatusRequest, sizeof(struct __ngw__updateVersionStatusRequest), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default___ngw__updateVersionStatusRequest(soap, a);
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_ngwm__updateVersionStatusRequest && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_ngwm__updateVersionStatusRequest(soap, "ngwm:updateVersionStatusRequest", &a->ngwm__updateVersionStatusRequest, ""))
+				{	soap_flag_ngwm__updateVersionStatusRequest = 0;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+	return a;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__uncompleteRequest(struct soap *soap, const struct __ngw__uncompleteRequest *a)
 {
 	(void)soap; (void)a; /* appease -Wall -Werror */
@@ -60335,6 +69912,64 @@ SOAP_FMAC3 struct __ngw__startFreeBusySessionRequest * SOAP_FMAC4 soap_in___ngw_
 			if (soap_flag_ngwm__startFreeBusySessionRequest && soap->error == SOAP_TAG_MISMATCH)
 				if (soap_in_PointerTo_ngwm__startFreeBusySessionRequest(soap, "ngwm:startFreeBusySessionRequest", &a->ngwm__startFreeBusySessionRequest, ""))
 				{	soap_flag_ngwm__startFreeBusySessionRequest = 0;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__setTimestampRequest(struct soap *soap, const struct __ngw__setTimestampRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_embedded(soap, &a->ngwm__setTimestampRequest, SOAP_TYPE_PointerTo_ngwm__setTimestampRequest);
+	soap_serialize_PointerTo_ngwm__setTimestampRequest(soap, &a->ngwm__setTimestampRequest);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__setTimestampRequest(struct soap *soap, struct __ngw__setTimestampRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->ngwm__setTimestampRequest = NULL;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__setTimestampRequest(struct soap *soap, const struct __ngw__setTimestampRequest *a, const char *tag, const char *type)
+{
+	register int id = 0;
+	if (soap_out___ngw__setTimestampRequest(soap, tag, id, a, type))
+		return soap->error;
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__setTimestampRequest(struct soap *soap, const char *tag, int id, const struct __ngw__setTimestampRequest *a, const char *type)
+{
+	soap_out_PointerTo_ngwm__setTimestampRequest(soap, "ngwm:setTimestampRequest", -1, &a->ngwm__setTimestampRequest, "");
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ngw__setTimestampRequest * SOAP_FMAC4 soap_get___ngw__setTimestampRequest(struct soap *soap, struct __ngw__setTimestampRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in___ngw__setTimestampRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 struct __ngw__setTimestampRequest * SOAP_FMAC4 soap_in___ngw__setTimestampRequest(struct soap *soap, const char *tag, struct __ngw__setTimestampRequest *a, const char *type)
+{
+	short soap_flag_ngwm__setTimestampRequest = 1;
+	a = (struct __ngw__setTimestampRequest *)soap_id_enter(soap, soap->id, a, SOAP_TYPE___ngw__setTimestampRequest, sizeof(struct __ngw__setTimestampRequest), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default___ngw__setTimestampRequest(soap, a);
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_ngwm__setTimestampRequest && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_ngwm__setTimestampRequest(soap, "ngwm:setTimestampRequest", &a->ngwm__setTimestampRequest, ""))
+				{	soap_flag_ngwm__setTimestampRequest = 0;
 					continue;
 				}
 			if (soap->error == SOAP_TAG_MISMATCH)
@@ -60567,6 +70202,64 @@ SOAP_FMAC3 struct __ngw__removeSignatureRequest * SOAP_FMAC4 soap_in___ngw__remo
 			if (soap_flag_ngwm__removeSignatureRequest && soap->error == SOAP_TAG_MISMATCH)
 				if (soap_in_PointerTo_ngwm__removeSignatureRequest(soap, "ngwm:removeSignatureRequest", &a->ngwm__removeSignatureRequest, ""))
 				{	soap_flag_ngwm__removeSignatureRequest = 0;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__removeProxyUserRequest(struct soap *soap, const struct __ngw__removeProxyUserRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_embedded(soap, &a->ngwm__removeProxyUserRequest, SOAP_TYPE_PointerTo_ngwm__removeProxyUserRequest);
+	soap_serialize_PointerTo_ngwm__removeProxyUserRequest(soap, &a->ngwm__removeProxyUserRequest);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__removeProxyUserRequest(struct soap *soap, struct __ngw__removeProxyUserRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->ngwm__removeProxyUserRequest = NULL;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__removeProxyUserRequest(struct soap *soap, const struct __ngw__removeProxyUserRequest *a, const char *tag, const char *type)
+{
+	register int id = 0;
+	if (soap_out___ngw__removeProxyUserRequest(soap, tag, id, a, type))
+		return soap->error;
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__removeProxyUserRequest(struct soap *soap, const char *tag, int id, const struct __ngw__removeProxyUserRequest *a, const char *type)
+{
+	soap_out_PointerTo_ngwm__removeProxyUserRequest(soap, "ngwm:removeProxyUserRequest", -1, &a->ngwm__removeProxyUserRequest, "");
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ngw__removeProxyUserRequest * SOAP_FMAC4 soap_get___ngw__removeProxyUserRequest(struct soap *soap, struct __ngw__removeProxyUserRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in___ngw__removeProxyUserRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 struct __ngw__removeProxyUserRequest * SOAP_FMAC4 soap_in___ngw__removeProxyUserRequest(struct soap *soap, const char *tag, struct __ngw__removeProxyUserRequest *a, const char *type)
+{
+	short soap_flag_ngwm__removeProxyUserRequest = 1;
+	a = (struct __ngw__removeProxyUserRequest *)soap_id_enter(soap, soap->id, a, SOAP_TYPE___ngw__removeProxyUserRequest, sizeof(struct __ngw__removeProxyUserRequest), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default___ngw__removeProxyUserRequest(soap, a);
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_ngwm__removeProxyUserRequest && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_ngwm__removeProxyUserRequest(soap, "ngwm:removeProxyUserRequest", &a->ngwm__removeProxyUserRequest, ""))
+				{	soap_flag_ngwm__removeProxyUserRequest = 0;
 					continue;
 				}
 			if (soap->error == SOAP_TAG_MISMATCH)
@@ -61971,6 +71664,64 @@ SOAP_FMAC3 struct __ngw__loginRequest * SOAP_FMAC4 soap_in___ngw__loginRequest(s
 	return a;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getUserListRequest(struct soap *soap, const struct __ngw__getUserListRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_embedded(soap, &a->ngwm__getUserListRequest, SOAP_TYPE_PointerTo_ngwm__getUserListRequest);
+	soap_serialize_PointerTo_ngwm__getUserListRequest(soap, &a->ngwm__getUserListRequest);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getUserListRequest(struct soap *soap, struct __ngw__getUserListRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->ngwm__getUserListRequest = NULL;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__getUserListRequest(struct soap *soap, const struct __ngw__getUserListRequest *a, const char *tag, const char *type)
+{
+	register int id = 0;
+	if (soap_out___ngw__getUserListRequest(soap, tag, id, a, type))
+		return soap->error;
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__getUserListRequest(struct soap *soap, const char *tag, int id, const struct __ngw__getUserListRequest *a, const char *type)
+{
+	soap_out_PointerTo_ngwm__getUserListRequest(soap, "ngwm:getUserListRequest", -1, &a->ngwm__getUserListRequest, "");
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ngw__getUserListRequest * SOAP_FMAC4 soap_get___ngw__getUserListRequest(struct soap *soap, struct __ngw__getUserListRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in___ngw__getUserListRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 struct __ngw__getUserListRequest * SOAP_FMAC4 soap_in___ngw__getUserListRequest(struct soap *soap, const char *tag, struct __ngw__getUserListRequest *a, const char *type)
+{
+	short soap_flag_ngwm__getUserListRequest = 1;
+	a = (struct __ngw__getUserListRequest *)soap_id_enter(soap, soap->id, a, SOAP_TYPE___ngw__getUserListRequest, sizeof(struct __ngw__getUserListRequest), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default___ngw__getUserListRequest(soap, a);
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_ngwm__getUserListRequest && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_ngwm__getUserListRequest(soap, "ngwm:getUserListRequest", &a->ngwm__getUserListRequest, ""))
+				{	soap_flag_ngwm__getUserListRequest = 0;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+	return a;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getTimezoneListRequest(struct soap *soap, const struct __ngw__getTimezoneListRequest *a)
 {
 	(void)soap; (void)a; /* appease -Wall -Werror */
@@ -62017,6 +71768,64 @@ SOAP_FMAC3 struct __ngw__getTimezoneListRequest * SOAP_FMAC4 soap_in___ngw__getT
 			if (soap_flag_ngwm__getTimezoneListRequest && soap->error == SOAP_TAG_MISMATCH)
 				if (soap_in_PointerTo_ngwm__getTimezoneListRequest(soap, "ngwm:getTimezoneListRequest", &a->ngwm__getTimezoneListRequest, ""))
 				{	soap_flag_ngwm__getTimezoneListRequest = 0;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getTimestampRequest(struct soap *soap, const struct __ngw__getTimestampRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_embedded(soap, &a->ngwm__getTimestampRequest, SOAP_TYPE_PointerTo_ngwm__getTimestampRequest);
+	soap_serialize_PointerTo_ngwm__getTimestampRequest(soap, &a->ngwm__getTimestampRequest);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getTimestampRequest(struct soap *soap, struct __ngw__getTimestampRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->ngwm__getTimestampRequest = NULL;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__getTimestampRequest(struct soap *soap, const struct __ngw__getTimestampRequest *a, const char *tag, const char *type)
+{
+	register int id = 0;
+	if (soap_out___ngw__getTimestampRequest(soap, tag, id, a, type))
+		return soap->error;
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__getTimestampRequest(struct soap *soap, const char *tag, int id, const struct __ngw__getTimestampRequest *a, const char *type)
+{
+	soap_out_PointerTo_ngwm__getTimestampRequest(soap, "ngwm:getTimestampRequest", -1, &a->ngwm__getTimestampRequest, "");
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ngw__getTimestampRequest * SOAP_FMAC4 soap_get___ngw__getTimestampRequest(struct soap *soap, struct __ngw__getTimestampRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in___ngw__getTimestampRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 struct __ngw__getTimestampRequest * SOAP_FMAC4 soap_in___ngw__getTimestampRequest(struct soap *soap, const char *tag, struct __ngw__getTimestampRequest *a, const char *type)
+{
+	short soap_flag_ngwm__getTimestampRequest = 1;
+	a = (struct __ngw__getTimestampRequest *)soap_id_enter(soap, soap->id, a, SOAP_TYPE___ngw__getTimestampRequest, sizeof(struct __ngw__getTimestampRequest), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default___ngw__getTimestampRequest(soap, a);
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_ngwm__getTimestampRequest && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_ngwm__getTimestampRequest(soap, "ngwm:getTimestampRequest", &a->ngwm__getTimestampRequest, ""))
+				{	soap_flag_ngwm__getTimestampRequest = 0;
 					continue;
 				}
 			if (soap->error == SOAP_TAG_MISMATCH)
@@ -62133,6 +71942,64 @@ SOAP_FMAC3 struct __ngw__getSettingsRequest * SOAP_FMAC4 soap_in___ngw__getSetti
 			if (soap_flag_ngwm__getSettingsRequest && soap->error == SOAP_TAG_MISMATCH)
 				if (soap_in_PointerTo_ngwm__getSettingsRequest(soap, "ngwm:getSettingsRequest", &a->ngwm__getSettingsRequest, ""))
 				{	soap_flag_ngwm__getSettingsRequest = 0;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getRuleListRequest(struct soap *soap, const struct __ngw__getRuleListRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_embedded(soap, &a->ngwm__getRuleListRequest, SOAP_TYPE_PointerTo_ngwm__getRuleListRequest);
+	soap_serialize_PointerTo_ngwm__getRuleListRequest(soap, &a->ngwm__getRuleListRequest);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getRuleListRequest(struct soap *soap, struct __ngw__getRuleListRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->ngwm__getRuleListRequest = NULL;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__getRuleListRequest(struct soap *soap, const struct __ngw__getRuleListRequest *a, const char *tag, const char *type)
+{
+	register int id = 0;
+	if (soap_out___ngw__getRuleListRequest(soap, tag, id, a, type))
+		return soap->error;
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__getRuleListRequest(struct soap *soap, const char *tag, int id, const struct __ngw__getRuleListRequest *a, const char *type)
+{
+	soap_out_PointerTo_ngwm__getRuleListRequest(soap, "ngwm:getRuleListRequest", -1, &a->ngwm__getRuleListRequest, "");
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ngw__getRuleListRequest * SOAP_FMAC4 soap_get___ngw__getRuleListRequest(struct soap *soap, struct __ngw__getRuleListRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in___ngw__getRuleListRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 struct __ngw__getRuleListRequest * SOAP_FMAC4 soap_in___ngw__getRuleListRequest(struct soap *soap, const char *tag, struct __ngw__getRuleListRequest *a, const char *type)
+{
+	short soap_flag_ngwm__getRuleListRequest = 1;
+	a = (struct __ngw__getRuleListRequest *)soap_id_enter(soap, soap->id, a, SOAP_TYPE___ngw__getRuleListRequest, sizeof(struct __ngw__getRuleListRequest), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default___ngw__getRuleListRequest(soap, a);
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_ngwm__getRuleListRequest && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_ngwm__getRuleListRequest(soap, "ngwm:getRuleListRequest", &a->ngwm__getRuleListRequest, ""))
+				{	soap_flag_ngwm__getRuleListRequest = 0;
 					continue;
 				}
 			if (soap->error == SOAP_TAG_MISMATCH)
@@ -62307,6 +72174,122 @@ SOAP_FMAC3 struct __ngw__getQuickMessagesRequest * SOAP_FMAC4 soap_in___ngw__get
 			if (soap_flag_ngwm__getQuickMessagesRequest && soap->error == SOAP_TAG_MISMATCH)
 				if (soap_in_PointerTo_ngwm__getQuickMessagesRequest(soap, "ngwm:getQuickMessagesRequest", &a->ngwm__getQuickMessagesRequest, ""))
 				{	soap_flag_ngwm__getQuickMessagesRequest = 0;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getLibraryListRequest(struct soap *soap, const struct __ngw__getLibraryListRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_embedded(soap, &a->ngwm__getLibraryListRequest, SOAP_TYPE_PointerTo_ngwm__getLibraryListRequest);
+	soap_serialize_PointerTo_ngwm__getLibraryListRequest(soap, &a->ngwm__getLibraryListRequest);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getLibraryListRequest(struct soap *soap, struct __ngw__getLibraryListRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->ngwm__getLibraryListRequest = NULL;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__getLibraryListRequest(struct soap *soap, const struct __ngw__getLibraryListRequest *a, const char *tag, const char *type)
+{
+	register int id = 0;
+	if (soap_out___ngw__getLibraryListRequest(soap, tag, id, a, type))
+		return soap->error;
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__getLibraryListRequest(struct soap *soap, const char *tag, int id, const struct __ngw__getLibraryListRequest *a, const char *type)
+{
+	soap_out_PointerTo_ngwm__getLibraryListRequest(soap, "ngwm:getLibraryListRequest", -1, &a->ngwm__getLibraryListRequest, "");
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ngw__getLibraryListRequest * SOAP_FMAC4 soap_get___ngw__getLibraryListRequest(struct soap *soap, struct __ngw__getLibraryListRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in___ngw__getLibraryListRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 struct __ngw__getLibraryListRequest * SOAP_FMAC4 soap_in___ngw__getLibraryListRequest(struct soap *soap, const char *tag, struct __ngw__getLibraryListRequest *a, const char *type)
+{
+	short soap_flag_ngwm__getLibraryListRequest = 1;
+	a = (struct __ngw__getLibraryListRequest *)soap_id_enter(soap, soap->id, a, SOAP_TYPE___ngw__getLibraryListRequest, sizeof(struct __ngw__getLibraryListRequest), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default___ngw__getLibraryListRequest(soap, a);
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_ngwm__getLibraryListRequest && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_ngwm__getLibraryListRequest(soap, "ngwm:getLibraryListRequest", &a->ngwm__getLibraryListRequest, ""))
+				{	soap_flag_ngwm__getLibraryListRequest = 0;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getLibraryItemRequest(struct soap *soap, const struct __ngw__getLibraryItemRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_embedded(soap, &a->ngwm__getLibraryItemRequest, SOAP_TYPE_PointerTo_ngwm__getLibraryItemRequest);
+	soap_serialize_PointerTo_ngwm__getLibraryItemRequest(soap, &a->ngwm__getLibraryItemRequest);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getLibraryItemRequest(struct soap *soap, struct __ngw__getLibraryItemRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->ngwm__getLibraryItemRequest = NULL;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__getLibraryItemRequest(struct soap *soap, const struct __ngw__getLibraryItemRequest *a, const char *tag, const char *type)
+{
+	register int id = 0;
+	if (soap_out___ngw__getLibraryItemRequest(soap, tag, id, a, type))
+		return soap->error;
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__getLibraryItemRequest(struct soap *soap, const char *tag, int id, const struct __ngw__getLibraryItemRequest *a, const char *type)
+{
+	soap_out_PointerTo_ngwm__getLibraryItemRequest(soap, "ngwm:getLibraryItemRequest", -1, &a->ngwm__getLibraryItemRequest, "");
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ngw__getLibraryItemRequest * SOAP_FMAC4 soap_get___ngw__getLibraryItemRequest(struct soap *soap, struct __ngw__getLibraryItemRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in___ngw__getLibraryItemRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 struct __ngw__getLibraryItemRequest * SOAP_FMAC4 soap_in___ngw__getLibraryItemRequest(struct soap *soap, const char *tag, struct __ngw__getLibraryItemRequest *a, const char *type)
+{
+	short soap_flag_ngwm__getLibraryItemRequest = 1;
+	a = (struct __ngw__getLibraryItemRequest *)soap_id_enter(soap, soap->id, a, SOAP_TYPE___ngw__getLibraryItemRequest, sizeof(struct __ngw__getLibraryItemRequest), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default___ngw__getLibraryItemRequest(soap, a);
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_ngwm__getLibraryItemRequest && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_ngwm__getLibraryItemRequest(soap, "ngwm:getLibraryItemRequest", &a->ngwm__getLibraryItemRequest, ""))
+				{	soap_flag_ngwm__getLibraryItemRequest = 0;
 					continue;
 				}
 			if (soap->error == SOAP_TAG_MISMATCH)
@@ -62655,6 +72638,122 @@ SOAP_FMAC3 struct __ngw__getFolderListRequest * SOAP_FMAC4 soap_in___ngw__getFol
 			if (soap_flag_ngwm__getFolderListRequest && soap->error == SOAP_TAG_MISMATCH)
 				if (soap_in_PointerTo_ngwm__getFolderListRequest(soap, "ngwm:getFolderListRequest", &a->ngwm__getFolderListRequest, ""))
 				{	soap_flag_ngwm__getFolderListRequest = 0;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getFolderRequest(struct soap *soap, const struct __ngw__getFolderRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_embedded(soap, &a->ngwm__getFolderRequest, SOAP_TYPE_PointerTo_ngwm__getFolderRequest);
+	soap_serialize_PointerTo_ngwm__getFolderRequest(soap, &a->ngwm__getFolderRequest);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getFolderRequest(struct soap *soap, struct __ngw__getFolderRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->ngwm__getFolderRequest = NULL;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__getFolderRequest(struct soap *soap, const struct __ngw__getFolderRequest *a, const char *tag, const char *type)
+{
+	register int id = 0;
+	if (soap_out___ngw__getFolderRequest(soap, tag, id, a, type))
+		return soap->error;
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__getFolderRequest(struct soap *soap, const char *tag, int id, const struct __ngw__getFolderRequest *a, const char *type)
+{
+	soap_out_PointerTo_ngwm__getFolderRequest(soap, "ngwm:getFolderRequest", -1, &a->ngwm__getFolderRequest, "");
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ngw__getFolderRequest * SOAP_FMAC4 soap_get___ngw__getFolderRequest(struct soap *soap, struct __ngw__getFolderRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in___ngw__getFolderRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 struct __ngw__getFolderRequest * SOAP_FMAC4 soap_in___ngw__getFolderRequest(struct soap *soap, const char *tag, struct __ngw__getFolderRequest *a, const char *type)
+{
+	short soap_flag_ngwm__getFolderRequest = 1;
+	a = (struct __ngw__getFolderRequest *)soap_id_enter(soap, soap->id, a, SOAP_TYPE___ngw__getFolderRequest, sizeof(struct __ngw__getFolderRequest), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default___ngw__getFolderRequest(soap, a);
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_ngwm__getFolderRequest && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_ngwm__getFolderRequest(soap, "ngwm:getFolderRequest", &a->ngwm__getFolderRequest, ""))
+				{	soap_flag_ngwm__getFolderRequest = 0;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__getDocumentTypeListRequest(struct soap *soap, const struct __ngw__getDocumentTypeListRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_embedded(soap, &a->ngwm__getDocumentTypeListRequest, SOAP_TYPE_PointerTo_ngwm__getDocumentTypeListRequest);
+	soap_serialize_PointerTo_ngwm__getDocumentTypeListRequest(soap, &a->ngwm__getDocumentTypeListRequest);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__getDocumentTypeListRequest(struct soap *soap, struct __ngw__getDocumentTypeListRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->ngwm__getDocumentTypeListRequest = NULL;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__getDocumentTypeListRequest(struct soap *soap, const struct __ngw__getDocumentTypeListRequest *a, const char *tag, const char *type)
+{
+	register int id = 0;
+	if (soap_out___ngw__getDocumentTypeListRequest(soap, tag, id, a, type))
+		return soap->error;
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__getDocumentTypeListRequest(struct soap *soap, const char *tag, int id, const struct __ngw__getDocumentTypeListRequest *a, const char *type)
+{
+	soap_out_PointerTo_ngwm__getDocumentTypeListRequest(soap, "ngwm:getDocumentTypeListRequest", -1, &a->ngwm__getDocumentTypeListRequest, "");
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ngw__getDocumentTypeListRequest * SOAP_FMAC4 soap_get___ngw__getDocumentTypeListRequest(struct soap *soap, struct __ngw__getDocumentTypeListRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in___ngw__getDocumentTypeListRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 struct __ngw__getDocumentTypeListRequest * SOAP_FMAC4 soap_in___ngw__getDocumentTypeListRequest(struct soap *soap, const char *tag, struct __ngw__getDocumentTypeListRequest *a, const char *type)
+{
+	short soap_flag_ngwm__getDocumentTypeListRequest = 1;
+	a = (struct __ngw__getDocumentTypeListRequest *)soap_id_enter(soap, soap->id, a, SOAP_TYPE___ngw__getDocumentTypeListRequest, sizeof(struct __ngw__getDocumentTypeListRequest), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default___ngw__getDocumentTypeListRequest(soap, a);
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_ngwm__getDocumentTypeListRequest && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_ngwm__getDocumentTypeListRequest(soap, "ngwm:getDocumentTypeListRequest", &a->ngwm__getDocumentTypeListRequest, ""))
+				{	soap_flag_ngwm__getDocumentTypeListRequest = 0;
 					continue;
 				}
 			if (soap->error == SOAP_TAG_MISMATCH)
@@ -63073,6 +73172,64 @@ SOAP_FMAC3 struct __ngw__forwardRequest * SOAP_FMAC4 soap_in___ngw__forwardReque
 	return a;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__executeRuleRequest(struct soap *soap, const struct __ngw__executeRuleRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_embedded(soap, &a->ngwm__executeRuleRequest, SOAP_TYPE_PointerTo_ngwm__executeRuleRequest);
+	soap_serialize_PointerTo_ngwm__executeRuleRequest(soap, &a->ngwm__executeRuleRequest);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__executeRuleRequest(struct soap *soap, struct __ngw__executeRuleRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->ngwm__executeRuleRequest = NULL;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__executeRuleRequest(struct soap *soap, const struct __ngw__executeRuleRequest *a, const char *tag, const char *type)
+{
+	register int id = 0;
+	if (soap_out___ngw__executeRuleRequest(soap, tag, id, a, type))
+		return soap->error;
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__executeRuleRequest(struct soap *soap, const char *tag, int id, const struct __ngw__executeRuleRequest *a, const char *type)
+{
+	soap_out_PointerTo_ngwm__executeRuleRequest(soap, "ngwm:executeRuleRequest", -1, &a->ngwm__executeRuleRequest, "");
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ngw__executeRuleRequest * SOAP_FMAC4 soap_get___ngw__executeRuleRequest(struct soap *soap, struct __ngw__executeRuleRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in___ngw__executeRuleRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 struct __ngw__executeRuleRequest * SOAP_FMAC4 soap_in___ngw__executeRuleRequest(struct soap *soap, const char *tag, struct __ngw__executeRuleRequest *a, const char *type)
+{
+	short soap_flag_ngwm__executeRuleRequest = 1;
+	a = (struct __ngw__executeRuleRequest *)soap_id_enter(soap, soap->id, a, SOAP_TYPE___ngw__executeRuleRequest, sizeof(struct __ngw__executeRuleRequest), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default___ngw__executeRuleRequest(soap, a);
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_ngwm__executeRuleRequest && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_ngwm__executeRuleRequest(soap, "ngwm:executeRuleRequest", &a->ngwm__executeRuleRequest, ""))
+				{	soap_flag_ngwm__executeRuleRequest = 0;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+	return a;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__destroyCursorRequest(struct soap *soap, const struct __ngw__destroyCursorRequest *a)
 {
 	(void)soap; (void)a; /* appease -Wall -Werror */
@@ -63409,6 +73566,64 @@ SOAP_FMAC3 struct __ngw__createJunkEntryRequest * SOAP_FMAC4 soap_in___ngw__crea
 			if (soap_flag_ngwm__createJunkEntryRequest && soap->error == SOAP_TAG_MISMATCH)
 				if (soap_in_PointerTo_ngwm__createJunkEntryRequest(soap, "ngwm:createJunkEntryRequest", &a->ngwm__createJunkEntryRequest, ""))
 				{	soap_flag_ngwm__createJunkEntryRequest = 0;
+					continue;
+				}
+			if (soap->error == SOAP_TAG_MISMATCH)
+				soap->error = soap_ignore_element(soap);
+			if (soap->error == SOAP_NO_TAG)
+				break;
+			if (soap->error)
+				return NULL;
+		}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize___ngw__createItemsRequest(struct soap *soap, const struct __ngw__createItemsRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_embedded(soap, &a->ngwm__createItemsRequest, SOAP_TYPE_PointerTo_ngwm__createItemsRequest);
+	soap_serialize_PointerTo_ngwm__createItemsRequest(soap, &a->ngwm__createItemsRequest);
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default___ngw__createItemsRequest(struct soap *soap, struct __ngw__createItemsRequest *a)
+{
+	(void)soap; (void)a; /* appease -Wall -Werror */
+	a->ngwm__createItemsRequest = NULL;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put___ngw__createItemsRequest(struct soap *soap, const struct __ngw__createItemsRequest *a, const char *tag, const char *type)
+{
+	register int id = 0;
+	if (soap_out___ngw__createItemsRequest(soap, tag, id, a, type))
+		return soap->error;
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out___ngw__createItemsRequest(struct soap *soap, const char *tag, int id, const struct __ngw__createItemsRequest *a, const char *type)
+{
+	soap_out_PointerTo_ngwm__createItemsRequest(soap, "ngwm:createItemsRequest", -1, &a->ngwm__createItemsRequest, "");
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 struct __ngw__createItemsRequest * SOAP_FMAC4 soap_get___ngw__createItemsRequest(struct soap *soap, struct __ngw__createItemsRequest *p, const char *tag, const char *type)
+{
+	if ((p = soap_in___ngw__createItemsRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 struct __ngw__createItemsRequest * SOAP_FMAC4 soap_in___ngw__createItemsRequest(struct soap *soap, const char *tag, struct __ngw__createItemsRequest *a, const char *type)
+{
+	short soap_flag_ngwm__createItemsRequest = 1;
+	a = (struct __ngw__createItemsRequest *)soap_id_enter(soap, soap->id, a, SOAP_TYPE___ngw__createItemsRequest, sizeof(struct __ngw__createItemsRequest), 0, NULL, NULL, NULL);
+	if (!a)
+		return NULL;
+	soap_default___ngw__createItemsRequest(soap, a);
+		for (;;)
+		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_ngwm__createItemsRequest && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_PointerTo_ngwm__createItemsRequest(soap, "ngwm:createItemsRequest", &a->ngwm__createItemsRequest, ""))
+				{	soap_flag_ngwm__createItemsRequest = 0;
 					continue;
 				}
 			if (soap->error == SOAP_TAG_MISMATCH)
@@ -63948,6 +74163,7 @@ SOAP_FMAC3 struct __ngw__acceptRequest * SOAP_FMAC4 soap_in___ngw__acceptRequest
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_SOAP_ENV__Header(struct soap *soap, const struct SOAP_ENV__Header *a)
 {
 	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_embedded(soap, &a->ngwt__gwTrace, SOAP_TYPE_bool);
 	soap_embedded(soap, &a->ngwt__session, SOAP_TYPE_std__string);
 	soap_serialize_std__string(soap, &a->ngwt__session);
 }
@@ -63955,6 +74171,7 @@ SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_SOAP_ENV__Header(struct soap *soap, co
 SOAP_FMAC3 void SOAP_FMAC4 soap_default_SOAP_ENV__Header(struct soap *soap, struct SOAP_ENV__Header *a)
 {
 	(void)soap; (void)a; /* appease -Wall -Werror */
+	soap_default_bool(soap, &a->ngwt__gwTrace);
 	soap_default_std__string(soap, &a->ngwt__session);
 }
 
@@ -63969,6 +74186,7 @@ SOAP_FMAC3 int SOAP_FMAC4 soap_put_SOAP_ENV__Header(struct soap *soap, const str
 SOAP_FMAC3 int SOAP_FMAC4 soap_out_SOAP_ENV__Header(struct soap *soap, const char *tag, int id, const struct SOAP_ENV__Header *a, const char *type)
 {
 	soap_element_begin_out(soap, tag, soap_embedded_id(soap, id, a, SOAP_TYPE_SOAP_ENV__Header), type);
+	soap_out_bool(soap, "ngwt:gwTrace", -1, &a->ngwt__gwTrace, "");
 	soap_out_std__string(soap, "ngwt:session", -1, &a->ngwt__session, "");
 	soap_element_end_out(soap, tag);
 	return SOAP_OK;
@@ -63983,7 +74201,7 @@ SOAP_FMAC3 struct SOAP_ENV__Header * SOAP_FMAC4 soap_get_SOAP_ENV__Header(struct
 
 SOAP_FMAC3 struct SOAP_ENV__Header * SOAP_FMAC4 soap_in_SOAP_ENV__Header(struct soap *soap, const char *tag, struct SOAP_ENV__Header *a, const char *type)
 {
-	short soap_flag_ngwt__session = 1;
+	short soap_flag_ngwt__gwTrace = 1, soap_flag_ngwt__session = 1;
 	if (soap_element_begin_in(soap, tag, 0))
 		return NULL;
 	if (*soap->type && soap_match_tag(soap, soap->type, type))
@@ -63998,6 +74216,11 @@ SOAP_FMAC3 struct SOAP_ENV__Header * SOAP_FMAC4 soap_in_SOAP_ENV__Header(struct 
 	{
 		for (;;)
 		{	soap->error = SOAP_TAG_MISMATCH;
+			if (soap_flag_ngwt__gwTrace && soap->error == SOAP_TAG_MISMATCH)
+				if (soap_in_bool(soap, "ngwt:gwTrace", &a->ngwt__gwTrace, ""))
+				{	soap_flag_ngwt__gwTrace = 0;
+					continue;
+				}
 			if (soap_flag_ngwt__session && (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG))
 				if (soap_in_std__string(soap, "ngwt:session", &a->ngwt__session, ""))
 				{	soap_flag_ngwt__session = 0;
@@ -64010,7 +74233,7 @@ SOAP_FMAC3 struct SOAP_ENV__Header * SOAP_FMAC4 soap_in_SOAP_ENV__Header(struct 
 			if (soap->error)
 				return NULL;
 		}
-		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_ngwt__session))
+		if ((soap->mode & SOAP_XML_STRICT) && (soap_flag_ngwt__gwTrace || soap_flag_ngwt__session))
 		{	soap->error = SOAP_OCCURS;
 			return NULL;
 		}
@@ -64805,6 +75028,112 @@ SOAP_FMAC3 _ngwe__cleanEventConfigurationRequest ** SOAP_FMAC4 soap_in_PointerTo
 	return a;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__updateVersionStatusResponse(struct soap *soap, _ngwm__updateVersionStatusResponse *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__updateVersionStatusResponse))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__updateVersionStatusResponse(struct soap *soap, _ngwm__updateVersionStatusResponse *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__updateVersionStatusResponse);
+	if (soap_out_PointerTo_ngwm__updateVersionStatusResponse(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__updateVersionStatusResponse(struct soap *soap, const char *tag, int id, _ngwm__updateVersionStatusResponse *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__updateVersionStatusResponse);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__updateVersionStatusResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__updateVersionStatusResponse(struct soap *soap, _ngwm__updateVersionStatusResponse **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__updateVersionStatusResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__updateVersionStatusResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__updateVersionStatusResponse(struct soap *soap, const char *tag, _ngwm__updateVersionStatusResponse **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__updateVersionStatusResponse **)soap_malloc(soap, sizeof(_ngwm__updateVersionStatusResponse *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__updateVersionStatusResponse *)soap_instantiate__ngwm__updateVersionStatusResponse(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__updateVersionStatusResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__updateVersionStatusResponse, sizeof(_ngwm__updateVersionStatusResponse), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__updateVersionStatusRequest(struct soap *soap, _ngwm__updateVersionStatusRequest *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__updateVersionStatusRequest))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__updateVersionStatusRequest(struct soap *soap, _ngwm__updateVersionStatusRequest *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__updateVersionStatusRequest);
+	if (soap_out_PointerTo_ngwm__updateVersionStatusRequest(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__updateVersionStatusRequest(struct soap *soap, const char *tag, int id, _ngwm__updateVersionStatusRequest *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__updateVersionStatusRequest);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__updateVersionStatusRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__updateVersionStatusRequest(struct soap *soap, _ngwm__updateVersionStatusRequest **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__updateVersionStatusRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__updateVersionStatusRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__updateVersionStatusRequest(struct soap *soap, const char *tag, _ngwm__updateVersionStatusRequest **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__updateVersionStatusRequest **)soap_malloc(soap, sizeof(_ngwm__updateVersionStatusRequest *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__updateVersionStatusRequest *)soap_instantiate__ngwm__updateVersionStatusRequest(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__updateVersionStatusRequest **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__updateVersionStatusRequest, sizeof(_ngwm__updateVersionStatusRequest), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__uncompleteResponse(struct soap *soap, _ngwm__uncompleteResponse *const*a)
 {
 	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__uncompleteResponse))
@@ -65117,6 +75446,112 @@ SOAP_FMAC3 _ngwm__startFreeBusySessionRequest ** SOAP_FMAC4 soap_in_PointerTo_ng
 	}
 	else
 	{	a = (_ngwm__startFreeBusySessionRequest **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__startFreeBusySessionRequest, sizeof(_ngwm__startFreeBusySessionRequest), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__setTimestampResponse(struct soap *soap, _ngwm__setTimestampResponse *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__setTimestampResponse))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__setTimestampResponse(struct soap *soap, _ngwm__setTimestampResponse *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__setTimestampResponse);
+	if (soap_out_PointerTo_ngwm__setTimestampResponse(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__setTimestampResponse(struct soap *soap, const char *tag, int id, _ngwm__setTimestampResponse *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__setTimestampResponse);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__setTimestampResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__setTimestampResponse(struct soap *soap, _ngwm__setTimestampResponse **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__setTimestampResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__setTimestampResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__setTimestampResponse(struct soap *soap, const char *tag, _ngwm__setTimestampResponse **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__setTimestampResponse **)soap_malloc(soap, sizeof(_ngwm__setTimestampResponse *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__setTimestampResponse *)soap_instantiate__ngwm__setTimestampResponse(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__setTimestampResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__setTimestampResponse, sizeof(_ngwm__setTimestampResponse), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__setTimestampRequest(struct soap *soap, _ngwm__setTimestampRequest *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__setTimestampRequest))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__setTimestampRequest(struct soap *soap, _ngwm__setTimestampRequest *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__setTimestampRequest);
+	if (soap_out_PointerTo_ngwm__setTimestampRequest(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__setTimestampRequest(struct soap *soap, const char *tag, int id, _ngwm__setTimestampRequest *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__setTimestampRequest);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__setTimestampRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__setTimestampRequest(struct soap *soap, _ngwm__setTimestampRequest **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__setTimestampRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__setTimestampRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__setTimestampRequest(struct soap *soap, const char *tag, _ngwm__setTimestampRequest **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__setTimestampRequest **)soap_malloc(soap, sizeof(_ngwm__setTimestampRequest *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__setTimestampRequest *)soap_instantiate__ngwm__setTimestampRequest(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__setTimestampRequest **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__setTimestampRequest, sizeof(_ngwm__setTimestampRequest), 0);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}
@@ -65541,6 +75976,112 @@ SOAP_FMAC3 _ngwm__removeSignatureRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__r
 	}
 	else
 	{	a = (_ngwm__removeSignatureRequest **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__removeSignatureRequest, sizeof(_ngwm__removeSignatureRequest), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__removeProxyUserResponse(struct soap *soap, _ngwm__removeProxyUserResponse *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__removeProxyUserResponse))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__removeProxyUserResponse(struct soap *soap, _ngwm__removeProxyUserResponse *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__removeProxyUserResponse);
+	if (soap_out_PointerTo_ngwm__removeProxyUserResponse(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__removeProxyUserResponse(struct soap *soap, const char *tag, int id, _ngwm__removeProxyUserResponse *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__removeProxyUserResponse);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__removeProxyUserResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__removeProxyUserResponse(struct soap *soap, _ngwm__removeProxyUserResponse **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__removeProxyUserResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__removeProxyUserResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__removeProxyUserResponse(struct soap *soap, const char *tag, _ngwm__removeProxyUserResponse **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__removeProxyUserResponse **)soap_malloc(soap, sizeof(_ngwm__removeProxyUserResponse *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__removeProxyUserResponse *)soap_instantiate__ngwm__removeProxyUserResponse(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__removeProxyUserResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__removeProxyUserResponse, sizeof(_ngwm__removeProxyUserResponse), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__removeProxyUserRequest(struct soap *soap, _ngwm__removeProxyUserRequest *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__removeProxyUserRequest))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__removeProxyUserRequest(struct soap *soap, _ngwm__removeProxyUserRequest *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__removeProxyUserRequest);
+	if (soap_out_PointerTo_ngwm__removeProxyUserRequest(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__removeProxyUserRequest(struct soap *soap, const char *tag, int id, _ngwm__removeProxyUserRequest *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__removeProxyUserRequest);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__removeProxyUserRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__removeProxyUserRequest(struct soap *soap, _ngwm__removeProxyUserRequest **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__removeProxyUserRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__removeProxyUserRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__removeProxyUserRequest(struct soap *soap, const char *tag, _ngwm__removeProxyUserRequest **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__removeProxyUserRequest **)soap_malloc(soap, sizeof(_ngwm__removeProxyUserRequest *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__removeProxyUserRequest *)soap_instantiate__ngwm__removeProxyUserRequest(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__removeProxyUserRequest **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__removeProxyUserRequest, sizeof(_ngwm__removeProxyUserRequest), 0);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}
@@ -68091,6 +78632,112 @@ SOAP_FMAC3 _ngwm__loginRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__loginReques
 	return a;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getUserListResponse(struct soap *soap, _ngwm__getUserListResponse *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__getUserListResponse))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getUserListResponse(struct soap *soap, _ngwm__getUserListResponse *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__getUserListResponse);
+	if (soap_out_PointerTo_ngwm__getUserListResponse(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getUserListResponse(struct soap *soap, const char *tag, int id, _ngwm__getUserListResponse *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__getUserListResponse);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__getUserListResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getUserListResponse(struct soap *soap, _ngwm__getUserListResponse **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__getUserListResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__getUserListResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getUserListResponse(struct soap *soap, const char *tag, _ngwm__getUserListResponse **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__getUserListResponse **)soap_malloc(soap, sizeof(_ngwm__getUserListResponse *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__getUserListResponse *)soap_instantiate__ngwm__getUserListResponse(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getUserListResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getUserListResponse, sizeof(_ngwm__getUserListResponse), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getUserListRequest(struct soap *soap, _ngwm__getUserListRequest *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__getUserListRequest))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getUserListRequest(struct soap *soap, _ngwm__getUserListRequest *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__getUserListRequest);
+	if (soap_out_PointerTo_ngwm__getUserListRequest(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getUserListRequest(struct soap *soap, const char *tag, int id, _ngwm__getUserListRequest *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__getUserListRequest);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__getUserListRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getUserListRequest(struct soap *soap, _ngwm__getUserListRequest **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__getUserListRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__getUserListRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getUserListRequest(struct soap *soap, const char *tag, _ngwm__getUserListRequest **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__getUserListRequest **)soap_malloc(soap, sizeof(_ngwm__getUserListRequest *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__getUserListRequest *)soap_instantiate__ngwm__getUserListRequest(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getUserListRequest **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getUserListRequest, sizeof(_ngwm__getUserListRequest), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getTimezoneListResponse(struct soap *soap, _ngwm__getTimezoneListResponse *const*a)
 {
 	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__getTimezoneListResponse))
@@ -68191,6 +78838,112 @@ SOAP_FMAC3 _ngwm__getTimezoneListRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__g
 	}
 	else
 	{	a = (_ngwm__getTimezoneListRequest **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getTimezoneListRequest, sizeof(_ngwm__getTimezoneListRequest), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getTimestampResponse(struct soap *soap, _ngwm__getTimestampResponse *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__getTimestampResponse))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getTimestampResponse(struct soap *soap, _ngwm__getTimestampResponse *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__getTimestampResponse);
+	if (soap_out_PointerTo_ngwm__getTimestampResponse(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getTimestampResponse(struct soap *soap, const char *tag, int id, _ngwm__getTimestampResponse *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__getTimestampResponse);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__getTimestampResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getTimestampResponse(struct soap *soap, _ngwm__getTimestampResponse **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__getTimestampResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__getTimestampResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getTimestampResponse(struct soap *soap, const char *tag, _ngwm__getTimestampResponse **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__getTimestampResponse **)soap_malloc(soap, sizeof(_ngwm__getTimestampResponse *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__getTimestampResponse *)soap_instantiate__ngwm__getTimestampResponse(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getTimestampResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getTimestampResponse, sizeof(_ngwm__getTimestampResponse), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getTimestampRequest(struct soap *soap, _ngwm__getTimestampRequest *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__getTimestampRequest))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getTimestampRequest(struct soap *soap, _ngwm__getTimestampRequest *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__getTimestampRequest);
+	if (soap_out_PointerTo_ngwm__getTimestampRequest(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getTimestampRequest(struct soap *soap, const char *tag, int id, _ngwm__getTimestampRequest *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__getTimestampRequest);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__getTimestampRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getTimestampRequest(struct soap *soap, _ngwm__getTimestampRequest **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__getTimestampRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__getTimestampRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getTimestampRequest(struct soap *soap, const char *tag, _ngwm__getTimestampRequest **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__getTimestampRequest **)soap_malloc(soap, sizeof(_ngwm__getTimestampRequest *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__getTimestampRequest *)soap_instantiate__ngwm__getTimestampRequest(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getTimestampRequest **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getTimestampRequest, sizeof(_ngwm__getTimestampRequest), 0);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}
@@ -68403,6 +79156,112 @@ SOAP_FMAC3 _ngwm__getSettingsRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getSe
 	}
 	else
 	{	a = (_ngwm__getSettingsRequest **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getSettingsRequest, sizeof(_ngwm__getSettingsRequest), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getRuleListResponse(struct soap *soap, _ngwm__getRuleListResponse *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__getRuleListResponse))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getRuleListResponse(struct soap *soap, _ngwm__getRuleListResponse *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__getRuleListResponse);
+	if (soap_out_PointerTo_ngwm__getRuleListResponse(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getRuleListResponse(struct soap *soap, const char *tag, int id, _ngwm__getRuleListResponse *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__getRuleListResponse);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__getRuleListResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getRuleListResponse(struct soap *soap, _ngwm__getRuleListResponse **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__getRuleListResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__getRuleListResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getRuleListResponse(struct soap *soap, const char *tag, _ngwm__getRuleListResponse **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__getRuleListResponse **)soap_malloc(soap, sizeof(_ngwm__getRuleListResponse *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__getRuleListResponse *)soap_instantiate__ngwm__getRuleListResponse(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getRuleListResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getRuleListResponse, sizeof(_ngwm__getRuleListResponse), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getRuleListRequest(struct soap *soap, _ngwm__getRuleListRequest *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__getRuleListRequest))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getRuleListRequest(struct soap *soap, _ngwm__getRuleListRequest *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__getRuleListRequest);
+	if (soap_out_PointerTo_ngwm__getRuleListRequest(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getRuleListRequest(struct soap *soap, const char *tag, int id, _ngwm__getRuleListRequest *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__getRuleListRequest);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__getRuleListRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getRuleListRequest(struct soap *soap, _ngwm__getRuleListRequest **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__getRuleListRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__getRuleListRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getRuleListRequest(struct soap *soap, const char *tag, _ngwm__getRuleListRequest **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__getRuleListRequest **)soap_malloc(soap, sizeof(_ngwm__getRuleListRequest *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__getRuleListRequest *)soap_instantiate__ngwm__getRuleListRequest(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getRuleListRequest **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getRuleListRequest, sizeof(_ngwm__getRuleListRequest), 0);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}
@@ -68721,6 +79580,218 @@ SOAP_FMAC3 _ngwm__getQuickMessagesRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__
 	}
 	else
 	{	a = (_ngwm__getQuickMessagesRequest **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getQuickMessagesRequest, sizeof(_ngwm__getQuickMessagesRequest), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getLibraryListResponse(struct soap *soap, _ngwm__getLibraryListResponse *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__getLibraryListResponse))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getLibraryListResponse(struct soap *soap, _ngwm__getLibraryListResponse *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__getLibraryListResponse);
+	if (soap_out_PointerTo_ngwm__getLibraryListResponse(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getLibraryListResponse(struct soap *soap, const char *tag, int id, _ngwm__getLibraryListResponse *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__getLibraryListResponse);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__getLibraryListResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getLibraryListResponse(struct soap *soap, _ngwm__getLibraryListResponse **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__getLibraryListResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__getLibraryListResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getLibraryListResponse(struct soap *soap, const char *tag, _ngwm__getLibraryListResponse **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__getLibraryListResponse **)soap_malloc(soap, sizeof(_ngwm__getLibraryListResponse *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__getLibraryListResponse *)soap_instantiate__ngwm__getLibraryListResponse(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getLibraryListResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getLibraryListResponse, sizeof(_ngwm__getLibraryListResponse), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getLibraryListRequest(struct soap *soap, _ngwm__getLibraryListRequest *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__getLibraryListRequest))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getLibraryListRequest(struct soap *soap, _ngwm__getLibraryListRequest *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__getLibraryListRequest);
+	if (soap_out_PointerTo_ngwm__getLibraryListRequest(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getLibraryListRequest(struct soap *soap, const char *tag, int id, _ngwm__getLibraryListRequest *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__getLibraryListRequest);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__getLibraryListRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getLibraryListRequest(struct soap *soap, _ngwm__getLibraryListRequest **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__getLibraryListRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__getLibraryListRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getLibraryListRequest(struct soap *soap, const char *tag, _ngwm__getLibraryListRequest **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__getLibraryListRequest **)soap_malloc(soap, sizeof(_ngwm__getLibraryListRequest *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__getLibraryListRequest *)soap_instantiate__ngwm__getLibraryListRequest(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getLibraryListRequest **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getLibraryListRequest, sizeof(_ngwm__getLibraryListRequest), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getLibraryItemResponse(struct soap *soap, _ngwm__getLibraryItemResponse *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__getLibraryItemResponse))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getLibraryItemResponse(struct soap *soap, _ngwm__getLibraryItemResponse *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__getLibraryItemResponse);
+	if (soap_out_PointerTo_ngwm__getLibraryItemResponse(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getLibraryItemResponse(struct soap *soap, const char *tag, int id, _ngwm__getLibraryItemResponse *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__getLibraryItemResponse);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__getLibraryItemResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getLibraryItemResponse(struct soap *soap, _ngwm__getLibraryItemResponse **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__getLibraryItemResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__getLibraryItemResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getLibraryItemResponse(struct soap *soap, const char *tag, _ngwm__getLibraryItemResponse **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__getLibraryItemResponse **)soap_malloc(soap, sizeof(_ngwm__getLibraryItemResponse *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__getLibraryItemResponse *)soap_instantiate__ngwm__getLibraryItemResponse(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getLibraryItemResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getLibraryItemResponse, sizeof(_ngwm__getLibraryItemResponse), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getLibraryItemRequest(struct soap *soap, _ngwm__getLibraryItemRequest *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__getLibraryItemRequest))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getLibraryItemRequest(struct soap *soap, _ngwm__getLibraryItemRequest *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__getLibraryItemRequest);
+	if (soap_out_PointerTo_ngwm__getLibraryItemRequest(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getLibraryItemRequest(struct soap *soap, const char *tag, int id, _ngwm__getLibraryItemRequest *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__getLibraryItemRequest);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__getLibraryItemRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getLibraryItemRequest(struct soap *soap, _ngwm__getLibraryItemRequest **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__getLibraryItemRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__getLibraryItemRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getLibraryItemRequest(struct soap *soap, const char *tag, _ngwm__getLibraryItemRequest **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__getLibraryItemRequest **)soap_malloc(soap, sizeof(_ngwm__getLibraryItemRequest *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__getLibraryItemRequest *)soap_instantiate__ngwm__getLibraryItemRequest(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getLibraryItemRequest **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getLibraryItemRequest, sizeof(_ngwm__getLibraryItemRequest), 0);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}
@@ -69357,6 +80428,218 @@ SOAP_FMAC3 _ngwm__getFolderListRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__get
 	}
 	else
 	{	a = (_ngwm__getFolderListRequest **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getFolderListRequest, sizeof(_ngwm__getFolderListRequest), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getFolderResponse(struct soap *soap, _ngwm__getFolderResponse *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__getFolderResponse))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getFolderResponse(struct soap *soap, _ngwm__getFolderResponse *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__getFolderResponse);
+	if (soap_out_PointerTo_ngwm__getFolderResponse(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getFolderResponse(struct soap *soap, const char *tag, int id, _ngwm__getFolderResponse *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__getFolderResponse);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__getFolderResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getFolderResponse(struct soap *soap, _ngwm__getFolderResponse **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__getFolderResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__getFolderResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getFolderResponse(struct soap *soap, const char *tag, _ngwm__getFolderResponse **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__getFolderResponse **)soap_malloc(soap, sizeof(_ngwm__getFolderResponse *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__getFolderResponse *)soap_instantiate__ngwm__getFolderResponse(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getFolderResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getFolderResponse, sizeof(_ngwm__getFolderResponse), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getFolderRequest(struct soap *soap, _ngwm__getFolderRequest *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__getFolderRequest))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getFolderRequest(struct soap *soap, _ngwm__getFolderRequest *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__getFolderRequest);
+	if (soap_out_PointerTo_ngwm__getFolderRequest(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getFolderRequest(struct soap *soap, const char *tag, int id, _ngwm__getFolderRequest *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__getFolderRequest);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__getFolderRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getFolderRequest(struct soap *soap, _ngwm__getFolderRequest **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__getFolderRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__getFolderRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getFolderRequest(struct soap *soap, const char *tag, _ngwm__getFolderRequest **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__getFolderRequest **)soap_malloc(soap, sizeof(_ngwm__getFolderRequest *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__getFolderRequest *)soap_instantiate__ngwm__getFolderRequest(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getFolderRequest **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getFolderRequest, sizeof(_ngwm__getFolderRequest), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getDocumentTypeListResponse(struct soap *soap, _ngwm__getDocumentTypeListResponse *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__getDocumentTypeListResponse))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getDocumentTypeListResponse(struct soap *soap, _ngwm__getDocumentTypeListResponse *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__getDocumentTypeListResponse);
+	if (soap_out_PointerTo_ngwm__getDocumentTypeListResponse(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getDocumentTypeListResponse(struct soap *soap, const char *tag, int id, _ngwm__getDocumentTypeListResponse *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__getDocumentTypeListResponse);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__getDocumentTypeListResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getDocumentTypeListResponse(struct soap *soap, _ngwm__getDocumentTypeListResponse **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__getDocumentTypeListResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__getDocumentTypeListResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getDocumentTypeListResponse(struct soap *soap, const char *tag, _ngwm__getDocumentTypeListResponse **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__getDocumentTypeListResponse **)soap_malloc(soap, sizeof(_ngwm__getDocumentTypeListResponse *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__getDocumentTypeListResponse *)soap_instantiate__ngwm__getDocumentTypeListResponse(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getDocumentTypeListResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getDocumentTypeListResponse, sizeof(_ngwm__getDocumentTypeListResponse), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__getDocumentTypeListRequest(struct soap *soap, _ngwm__getDocumentTypeListRequest *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__getDocumentTypeListRequest))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__getDocumentTypeListRequest(struct soap *soap, _ngwm__getDocumentTypeListRequest *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__getDocumentTypeListRequest);
+	if (soap_out_PointerTo_ngwm__getDocumentTypeListRequest(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__getDocumentTypeListRequest(struct soap *soap, const char *tag, int id, _ngwm__getDocumentTypeListRequest *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__getDocumentTypeListRequest);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__getDocumentTypeListRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__getDocumentTypeListRequest(struct soap *soap, _ngwm__getDocumentTypeListRequest **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__getDocumentTypeListRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__getDocumentTypeListRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__getDocumentTypeListRequest(struct soap *soap, const char *tag, _ngwm__getDocumentTypeListRequest **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__getDocumentTypeListRequest **)soap_malloc(soap, sizeof(_ngwm__getDocumentTypeListRequest *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__getDocumentTypeListRequest *)soap_instantiate__ngwm__getDocumentTypeListRequest(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__getDocumentTypeListRequest **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__getDocumentTypeListRequest, sizeof(_ngwm__getDocumentTypeListRequest), 0);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}
@@ -70105,6 +81388,112 @@ SOAP_FMAC3 _ngwm__forwardRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__forwardRe
 	return a;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__executeRuleResponse(struct soap *soap, _ngwm__executeRuleResponse *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__executeRuleResponse))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__executeRuleResponse(struct soap *soap, _ngwm__executeRuleResponse *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__executeRuleResponse);
+	if (soap_out_PointerTo_ngwm__executeRuleResponse(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__executeRuleResponse(struct soap *soap, const char *tag, int id, _ngwm__executeRuleResponse *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__executeRuleResponse);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__executeRuleResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__executeRuleResponse(struct soap *soap, _ngwm__executeRuleResponse **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__executeRuleResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__executeRuleResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__executeRuleResponse(struct soap *soap, const char *tag, _ngwm__executeRuleResponse **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__executeRuleResponse **)soap_malloc(soap, sizeof(_ngwm__executeRuleResponse *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__executeRuleResponse *)soap_instantiate__ngwm__executeRuleResponse(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__executeRuleResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__executeRuleResponse, sizeof(_ngwm__executeRuleResponse), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__executeRuleRequest(struct soap *soap, _ngwm__executeRuleRequest *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__executeRuleRequest))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__executeRuleRequest(struct soap *soap, _ngwm__executeRuleRequest *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__executeRuleRequest);
+	if (soap_out_PointerTo_ngwm__executeRuleRequest(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__executeRuleRequest(struct soap *soap, const char *tag, int id, _ngwm__executeRuleRequest *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__executeRuleRequest);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__executeRuleRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__executeRuleRequest(struct soap *soap, _ngwm__executeRuleRequest **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__executeRuleRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__executeRuleRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__executeRuleRequest(struct soap *soap, const char *tag, _ngwm__executeRuleRequest **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__executeRuleRequest **)soap_malloc(soap, sizeof(_ngwm__executeRuleRequest *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__executeRuleRequest *)soap_instantiate__ngwm__executeRuleRequest(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__executeRuleRequest **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__executeRuleRequest, sizeof(_ngwm__executeRuleRequest), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__destroyCursorResponse(struct soap *soap, _ngwm__destroyCursorResponse *const*a)
 {
 	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__destroyCursorResponse))
@@ -70735,6 +82124,112 @@ SOAP_FMAC3 _ngwm__createJunkEntryRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__c
 	}
 	else
 	{	a = (_ngwm__createJunkEntryRequest **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__createJunkEntryRequest, sizeof(_ngwm__createJunkEntryRequest), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__createItemsResponse(struct soap *soap, _ngwm__createItemsResponse *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__createItemsResponse))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__createItemsResponse(struct soap *soap, _ngwm__createItemsResponse *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__createItemsResponse);
+	if (soap_out_PointerTo_ngwm__createItemsResponse(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__createItemsResponse(struct soap *soap, const char *tag, int id, _ngwm__createItemsResponse *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__createItemsResponse);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__createItemsResponse ** SOAP_FMAC4 soap_get_PointerTo_ngwm__createItemsResponse(struct soap *soap, _ngwm__createItemsResponse **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__createItemsResponse(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__createItemsResponse ** SOAP_FMAC4 soap_in_PointerTo_ngwm__createItemsResponse(struct soap *soap, const char *tag, _ngwm__createItemsResponse **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__createItemsResponse **)soap_malloc(soap, sizeof(_ngwm__createItemsResponse *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__createItemsResponse *)soap_instantiate__ngwm__createItemsResponse(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__createItemsResponse **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__createItemsResponse, sizeof(_ngwm__createItemsResponse), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTo_ngwm__createItemsRequest(struct soap *soap, _ngwm__createItemsRequest *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE__ngwm__createItemsRequest))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTo_ngwm__createItemsRequest(struct soap *soap, _ngwm__createItemsRequest *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTo_ngwm__createItemsRequest);
+	if (soap_out_PointerTo_ngwm__createItemsRequest(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTo_ngwm__createItemsRequest(struct soap *soap, const char *tag, int id, _ngwm__createItemsRequest *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE__ngwm__createItemsRequest);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 _ngwm__createItemsRequest ** SOAP_FMAC4 soap_get_PointerTo_ngwm__createItemsRequest(struct soap *soap, _ngwm__createItemsRequest **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTo_ngwm__createItemsRequest(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 _ngwm__createItemsRequest ** SOAP_FMAC4 soap_in_PointerTo_ngwm__createItemsRequest(struct soap *soap, const char *tag, _ngwm__createItemsRequest **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (_ngwm__createItemsRequest **)soap_malloc(soap, sizeof(_ngwm__createItemsRequest *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (_ngwm__createItemsRequest *)soap_instantiate__ngwm__createItemsRequest(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (_ngwm__createItemsRequest **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE__ngwm__createItemsRequest, sizeof(_ngwm__createItemsRequest), 0);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}
@@ -71907,6 +83402,59 @@ SOAP_FMAC3 ngwt__RecurrenceDateType ** SOAP_FMAC4 soap_in_PointerTongwt__Recurre
 	return a;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__SMimeOperation(struct soap *soap, ngwt__SMimeOperation *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__SMimeOperation))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__SMimeOperation(struct soap *soap, ngwt__SMimeOperation *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__SMimeOperation);
+	if (soap_out_PointerTongwt__SMimeOperation(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__SMimeOperation(struct soap *soap, const char *tag, int id, ngwt__SMimeOperation *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__SMimeOperation);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 ngwt__SMimeOperation ** SOAP_FMAC4 soap_get_PointerTongwt__SMimeOperation(struct soap *soap, ngwt__SMimeOperation **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__SMimeOperation(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 ngwt__SMimeOperation ** SOAP_FMAC4 soap_in_PointerTongwt__SMimeOperation(struct soap *soap, const char *tag, ngwt__SMimeOperation **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (ngwt__SMimeOperation **)soap_malloc(soap, sizeof(ngwt__SMimeOperation *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (ngwt__SMimeOperation *)soap_instantiate_ngwt__SMimeOperation(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__SMimeOperation **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__SMimeOperation, sizeof(ngwt__SMimeOperation), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__LinkInfo(struct soap *soap, ngwt__LinkInfo *const*a)
 {
 	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__LinkInfo))
@@ -72543,6 +84091,55 @@ SOAP_FMAC3 ngwt__FullName ** SOAP_FMAC4 soap_in_PointerTongwt__FullName(struct s
 	return a;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__VersionStatus(struct soap *soap, enum ngwt__VersionStatus *const*a)
+{
+	soap_reference(soap, *a, SOAP_TYPE_ngwt__VersionStatus);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__VersionStatus(struct soap *soap, enum ngwt__VersionStatus *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__VersionStatus);
+	if (soap_out_PointerTongwt__VersionStatus(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__VersionStatus(struct soap *soap, const char *tag, int id, enum ngwt__VersionStatus *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__VersionStatus);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ngwt__VersionStatus(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 enum ngwt__VersionStatus ** SOAP_FMAC4 soap_get_PointerTongwt__VersionStatus(struct soap *soap, enum ngwt__VersionStatus **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__VersionStatus(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 enum ngwt__VersionStatus ** SOAP_FMAC4 soap_in_PointerTongwt__VersionStatus(struct soap *soap, const char *tag, enum ngwt__VersionStatus **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (enum ngwt__VersionStatus **)soap_malloc(soap, sizeof(enum ngwt__VersionStatus *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ngwt__VersionStatus(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (enum ngwt__VersionStatus **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__VersionStatus, sizeof(enum ngwt__VersionStatus), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__FolderACL(struct soap *soap, ngwt__FolderACL *const*a)
 {
 	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__FolderACL))
@@ -72590,6 +84187,108 @@ SOAP_FMAC3 ngwt__FolderACL ** SOAP_FMAC4 soap_in_PointerTongwt__FolderACL(struct
 	}
 	else
 	{	a = (ngwt__FolderACL **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__FolderACL, sizeof(ngwt__FolderACL), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__RuleActionList(struct soap *soap, ngwt__RuleActionList *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__RuleActionList))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__RuleActionList(struct soap *soap, ngwt__RuleActionList *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__RuleActionList);
+	if (soap_out_PointerTongwt__RuleActionList(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__RuleActionList(struct soap *soap, const char *tag, int id, ngwt__RuleActionList *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__RuleActionList);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 ngwt__RuleActionList ** SOAP_FMAC4 soap_get_PointerTongwt__RuleActionList(struct soap *soap, ngwt__RuleActionList **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__RuleActionList(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 ngwt__RuleActionList ** SOAP_FMAC4 soap_in_PointerTongwt__RuleActionList(struct soap *soap, const char *tag, ngwt__RuleActionList **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (ngwt__RuleActionList **)soap_malloc(soap, sizeof(ngwt__RuleActionList *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (ngwt__RuleActionList *)soap_instantiate_ngwt__RuleActionList(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__RuleActionList **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__RuleActionList, sizeof(ngwt__RuleActionList), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Execution(struct soap *soap, enum ngwt__Execution *const*a)
+{
+	soap_reference(soap, *a, SOAP_TYPE_ngwt__Execution);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Execution(struct soap *soap, enum ngwt__Execution *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__Execution);
+	if (soap_out_PointerTongwt__Execution(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__Execution(struct soap *soap, const char *tag, int id, enum ngwt__Execution *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__Execution);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ngwt__Execution(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 enum ngwt__Execution ** SOAP_FMAC4 soap_get_PointerTongwt__Execution(struct soap *soap, enum ngwt__Execution **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__Execution(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 enum ngwt__Execution ** SOAP_FMAC4 soap_in_PointerTongwt__Execution(struct soap *soap, const char *tag, enum ngwt__Execution **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (enum ngwt__Execution **)soap_malloc(soap, sizeof(enum ngwt__Execution *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ngwt__Execution(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (enum ngwt__Execution **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__Execution, sizeof(enum ngwt__Execution), 0);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}
@@ -72649,55 +84348,6 @@ SOAP_FMAC3 ngwt__Query ** SOAP_FMAC4 soap_in_PointerTongwt__Query(struct soap *s
 	return a;
 }
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__FolderType(struct soap *soap, enum ngwt__FolderType *const*a)
-{
-	soap_reference(soap, *a, SOAP_TYPE_ngwt__FolderType);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__FolderType(struct soap *soap, enum ngwt__FolderType *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__FolderType);
-	if (soap_out_PointerTongwt__FolderType(soap, tag, id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__FolderType(struct soap *soap, const char *tag, int id, enum ngwt__FolderType *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__FolderType);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ngwt__FolderType(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 enum ngwt__FolderType ** SOAP_FMAC4 soap_get_PointerTongwt__FolderType(struct soap *soap, enum ngwt__FolderType **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTongwt__FolderType(soap, tag, p, type)))
-		soap_getindependent(soap);
-	return p;
-}
-
-SOAP_FMAC3 enum ngwt__FolderType ** SOAP_FMAC4 soap_in_PointerTongwt__FolderType(struct soap *soap, const char *tag, enum ngwt__FolderType **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1))
-		return NULL;
-	if (!a)
-		if (!(a = (enum ngwt__FolderType **)soap_malloc(soap, sizeof(enum ngwt__FolderType *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ngwt__FolderType(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (enum ngwt__FolderType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__FolderType, sizeof(enum ngwt__FolderType), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__FolderACLStatus(struct soap *soap, enum ngwt__FolderACLStatus *const*a)
 {
 	soap_reference(soap, *a, SOAP_TYPE_ngwt__FolderACLStatus);
@@ -72741,6 +84391,108 @@ SOAP_FMAC3 enum ngwt__FolderACLStatus ** SOAP_FMAC4 soap_in_PointerTongwt__Folde
 	}
 	else
 	{	a = (enum ngwt__FolderACLStatus **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__FolderACLStatus, sizeof(enum ngwt__FolderACLStatus), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__AccessControlList(struct soap *soap, ngwt__AccessControlList *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__AccessControlList))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__AccessControlList(struct soap *soap, ngwt__AccessControlList *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__AccessControlList);
+	if (soap_out_PointerTongwt__AccessControlList(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__AccessControlList(struct soap *soap, const char *tag, int id, ngwt__AccessControlList *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__AccessControlList);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 ngwt__AccessControlList ** SOAP_FMAC4 soap_get_PointerTongwt__AccessControlList(struct soap *soap, ngwt__AccessControlList **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__AccessControlList(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 ngwt__AccessControlList ** SOAP_FMAC4 soap_in_PointerTongwt__AccessControlList(struct soap *soap, const char *tag, ngwt__AccessControlList **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (ngwt__AccessControlList **)soap_malloc(soap, sizeof(ngwt__AccessControlList *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (ngwt__AccessControlList *)soap_instantiate_ngwt__AccessControlList(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__AccessControlList **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__AccessControlList, sizeof(ngwt__AccessControlList), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__WeekOfYear(struct soap *soap, short *const*a)
+{
+	soap_reference(soap, *a, SOAP_TYPE_ngwt__WeekOfYear);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__WeekOfYear(struct soap *soap, short *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__WeekOfYear);
+	if (soap_out_PointerTongwt__WeekOfYear(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__WeekOfYear(struct soap *soap, const char *tag, int id, short *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__WeekOfYear);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ngwt__WeekOfYear(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 short ** SOAP_FMAC4 soap_get_PointerTongwt__WeekOfYear(struct soap *soap, short **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__WeekOfYear(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 short ** SOAP_FMAC4 soap_in_PointerTongwt__WeekOfYear(struct soap *soap, const char *tag, short **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (short **)soap_malloc(soap, sizeof(short *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ngwt__WeekOfYear(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (short **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__WeekOfYear, sizeof(short), 0);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}
@@ -73204,53 +84956,49 @@ SOAP_FMAC3 ngwt__CalendarFolderAttribute ** SOAP_FMAC4 soap_in_PointerTongwt__Ca
 	return a;
 }
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__CategoryRefList(struct soap *soap, ngwt__CategoryRefList *const*a)
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__FilterDate(struct soap *soap, enum ngwt__FilterDate *const*a)
 {
-	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__CategoryRefList))
-		(*a)->soap_serialize(soap);
+	soap_reference(soap, *a, SOAP_TYPE_ngwt__FilterDate);
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__CategoryRefList(struct soap *soap, ngwt__CategoryRefList *const*a, const char *tag, const char *type)
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__FilterDate(struct soap *soap, enum ngwt__FilterDate *const*a, const char *tag, const char *type)
 {
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__CategoryRefList);
-	if (soap_out_PointerTongwt__CategoryRefList(soap, tag, id, a, type))
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__FilterDate);
+	if (soap_out_PointerTongwt__FilterDate(soap, tag, id, a, type))
 		return soap->error;
 	return soap_putindependent(soap);
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__CategoryRefList(struct soap *soap, const char *tag, int id, ngwt__CategoryRefList *const*a, const char *type)
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__FilterDate(struct soap *soap, const char *tag, int id, enum ngwt__FilterDate *const*a, const char *type)
 {
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__CategoryRefList);
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__FilterDate);
 	if (id < 0)
 		return soap->error;
-	return (*a)->soap_out(soap, tag, id, type);
+	return soap_out_ngwt__FilterDate(soap, tag, id, *a, type);
 }
 
-SOAP_FMAC3 ngwt__CategoryRefList ** SOAP_FMAC4 soap_get_PointerTongwt__CategoryRefList(struct soap *soap, ngwt__CategoryRefList **p, const char *tag, const char *type)
+SOAP_FMAC3 enum ngwt__FilterDate ** SOAP_FMAC4 soap_get_PointerTongwt__FilterDate(struct soap *soap, enum ngwt__FilterDate **p, const char *tag, const char *type)
 {
-	if ((p = soap_in_PointerTongwt__CategoryRefList(soap, tag, p, type)))
+	if ((p = soap_in_PointerTongwt__FilterDate(soap, tag, p, type)))
 		soap_getindependent(soap);
 	return p;
 }
 
-SOAP_FMAC3 ngwt__CategoryRefList ** SOAP_FMAC4 soap_in_PointerTongwt__CategoryRefList(struct soap *soap, const char *tag, ngwt__CategoryRefList **a, const char *type)
+SOAP_FMAC3 enum ngwt__FilterDate ** SOAP_FMAC4 soap_in_PointerTongwt__FilterDate(struct soap *soap, const char *tag, enum ngwt__FilterDate **a, const char *type)
 {
 	if (soap_element_begin_in(soap, tag, 1))
 		return NULL;
 	if (!a)
-		if (!(a = (ngwt__CategoryRefList **)soap_malloc(soap, sizeof(ngwt__CategoryRefList *))))
+		if (!(a = (enum ngwt__FilterDate **)soap_malloc(soap, sizeof(enum ngwt__FilterDate *))))
 			return NULL;
 	*a = NULL;
 	if (!soap->null && *soap->href != '#')
 	{	soap_revert(soap);
-		if (!(*a = (ngwt__CategoryRefList *)soap_instantiate_ngwt__CategoryRefList(soap, -1, soap->type, soap->arrayType, NULL)))
-			return NULL;
-		(*a)->soap_default(soap);
-		if (!(*a)->soap_in(soap, tag, NULL))
+		if (!(*a = soap_in_ngwt__FilterDate(soap, tag, *a, type)))
 			return NULL;
 	}
 	else
-	{	a = (ngwt__CategoryRefList **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__CategoryRefList, sizeof(ngwt__CategoryRefList), 0);
+	{	a = (enum ngwt__FilterDate **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__FilterDate, sizeof(enum ngwt__FilterDate), 0);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}
@@ -73988,6 +85736,55 @@ SOAP_FMAC3 ngwe__EventTypeList ** SOAP_FMAC4 soap_in_PointerTongwe__EventTypeLis
 	return a;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwe__ItemType(struct soap *soap, enum ngwe__ItemType *const*a)
+{
+	soap_reference(soap, *a, SOAP_TYPE_ngwe__ItemType);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwe__ItemType(struct soap *soap, enum ngwe__ItemType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwe__ItemType);
+	if (soap_out_PointerTongwe__ItemType(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwe__ItemType(struct soap *soap, const char *tag, int id, enum ngwe__ItemType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwe__ItemType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ngwe__ItemType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 enum ngwe__ItemType ** SOAP_FMAC4 soap_get_PointerTongwe__ItemType(struct soap *soap, enum ngwe__ItemType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwe__ItemType(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 enum ngwe__ItemType ** SOAP_FMAC4 soap_in_PointerTongwe__ItemType(struct soap *soap, const char *tag, enum ngwe__ItemType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (enum ngwe__ItemType **)soap_malloc(soap, sizeof(enum ngwe__ItemType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ngwe__ItemType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (enum ngwe__ItemType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwe__ItemType, sizeof(enum ngwe__ItemType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwe__FieldList(struct soap *soap, enum ngwe__FieldList *const*a)
 {
 	soap_reference(soap, *a, SOAP_TYPE_ngwe__FieldList);
@@ -74084,6 +85881,55 @@ SOAP_FMAC3 ngwt__FreeBusyUserList ** SOAP_FMAC4 soap_in_PointerTongwt__FreeBusyU
 	}
 	else
 	{	a = (ngwt__FreeBusyUserList **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__FreeBusyUserList, sizeof(ngwt__FreeBusyUserList), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__RetractType(struct soap *soap, enum ngwt__RetractType *const*a)
+{
+	soap_reference(soap, *a, SOAP_TYPE_ngwt__RetractType);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__RetractType(struct soap *soap, enum ngwt__RetractType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__RetractType);
+	if (soap_out_PointerTongwt__RetractType(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__RetractType(struct soap *soap, const char *tag, int id, enum ngwt__RetractType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__RetractType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ngwt__RetractType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 enum ngwt__RetractType ** SOAP_FMAC4 soap_get_PointerTongwt__RetractType(struct soap *soap, enum ngwt__RetractType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__RetractType(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 enum ngwt__RetractType ** SOAP_FMAC4 soap_in_PointerTongwt__RetractType(struct soap *soap, const char *tag, enum ngwt__RetractType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (enum ngwt__RetractType **)soap_malloc(soap, sizeof(enum ngwt__RetractType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ngwt__RetractType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (enum ngwt__RetractType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__RetractType, sizeof(enum ngwt__RetractType), 0);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}
@@ -74351,59 +86197,6 @@ SOAP_FMAC3 ngwt__Host ** SOAP_FMAC4 soap_in_PointerTongwt__Host(struct soap *soa
 	return a;
 }
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__UserInfo(struct soap *soap, ngwt__UserInfo *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__UserInfo))
-		(*a)->soap_serialize(soap);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__UserInfo(struct soap *soap, ngwt__UserInfo *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__UserInfo);
-	if (soap_out_PointerTongwt__UserInfo(soap, tag, id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__UserInfo(struct soap *soap, const char *tag, int id, ngwt__UserInfo *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__UserInfo);
-	if (id < 0)
-		return soap->error;
-	return (*a)->soap_out(soap, tag, id, type);
-}
-
-SOAP_FMAC3 ngwt__UserInfo ** SOAP_FMAC4 soap_get_PointerTongwt__UserInfo(struct soap *soap, ngwt__UserInfo **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTongwt__UserInfo(soap, tag, p, type)))
-		soap_getindependent(soap);
-	return p;
-}
-
-SOAP_FMAC3 ngwt__UserInfo ** SOAP_FMAC4 soap_in_PointerTongwt__UserInfo(struct soap *soap, const char *tag, ngwt__UserInfo **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1))
-		return NULL;
-	if (!a)
-		if (!(a = (ngwt__UserInfo **)soap_malloc(soap, sizeof(ngwt__UserInfo *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = (ngwt__UserInfo *)soap_instantiate_ngwt__UserInfo(soap, -1, soap->type, soap->arrayType, NULL)))
-			return NULL;
-		(*a)->soap_default(soap);
-		if (!(*a)->soap_in(soap, tag, NULL))
-			return NULL;
-	}
-	else
-	{	a = (ngwt__UserInfo **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__UserInfo, sizeof(ngwt__UserInfo), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Authentication(struct soap *soap, ngwt__Authentication *const*a)
 {
 	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__Authentication))
@@ -74451,6 +86244,59 @@ SOAP_FMAC3 ngwt__Authentication ** SOAP_FMAC4 soap_in_PointerTongwt__Authenticat
 	}
 	else
 	{	a = (ngwt__Authentication **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__Authentication, sizeof(ngwt__Authentication), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__UserList(struct soap *soap, ngwt__UserList *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__UserList))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__UserList(struct soap *soap, ngwt__UserList *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__UserList);
+	if (soap_out_PointerTongwt__UserList(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__UserList(struct soap *soap, const char *tag, int id, ngwt__UserList *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__UserList);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 ngwt__UserList ** SOAP_FMAC4 soap_get_PointerTongwt__UserList(struct soap *soap, ngwt__UserList **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__UserList(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 ngwt__UserList ** SOAP_FMAC4 soap_in_PointerTongwt__UserList(struct soap *soap, const char *tag, ngwt__UserList **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (ngwt__UserList **)soap_malloc(soap, sizeof(ngwt__UserList *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (ngwt__UserList *)soap_instantiate_ngwt__UserList(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__UserList **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__UserList, sizeof(ngwt__UserList), 0);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}
@@ -74616,6 +86462,59 @@ SOAP_FMAC3 ngwt__Settings ** SOAP_FMAC4 soap_in_PointerTongwt__Settings(struct s
 	return a;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__RuleList(struct soap *soap, ngwt__RuleList *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__RuleList))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__RuleList(struct soap *soap, ngwt__RuleList *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__RuleList);
+	if (soap_out_PointerTongwt__RuleList(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__RuleList(struct soap *soap, const char *tag, int id, ngwt__RuleList *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__RuleList);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 ngwt__RuleList ** SOAP_FMAC4 soap_get_PointerTongwt__RuleList(struct soap *soap, ngwt__RuleList **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__RuleList(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 ngwt__RuleList ** SOAP_FMAC4 soap_in_PointerTongwt__RuleList(struct soap *soap, const char *tag, ngwt__RuleList **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (ngwt__RuleList **)soap_malloc(soap, sizeof(ngwt__RuleList *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (ngwt__RuleList *)soap_instantiate_ngwt__RuleList(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__RuleList **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__RuleList, sizeof(ngwt__RuleList), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ProxyList(struct soap *soap, ngwt__ProxyList *const*a)
 {
 	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__ProxyList))
@@ -74722,98 +86621,53 @@ SOAP_FMAC3 ngwt__AccessRightList ** SOAP_FMAC4 soap_in_PointerTongwt__AccessRigh
 	return a;
 }
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ItemSourceList(struct soap *soap, enum ngwt__ItemSourceList *const*a)
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__LibraryList(struct soap *soap, ngwt__LibraryList *const*a)
 {
-	soap_reference(soap, *a, SOAP_TYPE_ngwt__ItemSourceList);
+	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__LibraryList))
+		(*a)->soap_serialize(soap);
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ItemSourceList(struct soap *soap, enum ngwt__ItemSourceList *const*a, const char *tag, const char *type)
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__LibraryList(struct soap *soap, ngwt__LibraryList *const*a, const char *tag, const char *type)
 {
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__ItemSourceList);
-	if (soap_out_PointerTongwt__ItemSourceList(soap, tag, id, a, type))
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__LibraryList);
+	if (soap_out_PointerTongwt__LibraryList(soap, tag, id, a, type))
 		return soap->error;
 	return soap_putindependent(soap);
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__ItemSourceList(struct soap *soap, const char *tag, int id, enum ngwt__ItemSourceList *const*a, const char *type)
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__LibraryList(struct soap *soap, const char *tag, int id, ngwt__LibraryList *const*a, const char *type)
 {
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__ItemSourceList);
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__LibraryList);
 	if (id < 0)
 		return soap->error;
-	return soap_out_ngwt__ItemSourceList(soap, tag, id, *a, type);
+	return (*a)->soap_out(soap, tag, id, type);
 }
 
-SOAP_FMAC3 enum ngwt__ItemSourceList ** SOAP_FMAC4 soap_get_PointerTongwt__ItemSourceList(struct soap *soap, enum ngwt__ItemSourceList **p, const char *tag, const char *type)
+SOAP_FMAC3 ngwt__LibraryList ** SOAP_FMAC4 soap_get_PointerTongwt__LibraryList(struct soap *soap, ngwt__LibraryList **p, const char *tag, const char *type)
 {
-	if ((p = soap_in_PointerTongwt__ItemSourceList(soap, tag, p, type)))
+	if ((p = soap_in_PointerTongwt__LibraryList(soap, tag, p, type)))
 		soap_getindependent(soap);
 	return p;
 }
 
-SOAP_FMAC3 enum ngwt__ItemSourceList ** SOAP_FMAC4 soap_in_PointerTongwt__ItemSourceList(struct soap *soap, const char *tag, enum ngwt__ItemSourceList **a, const char *type)
+SOAP_FMAC3 ngwt__LibraryList ** SOAP_FMAC4 soap_in_PointerTongwt__LibraryList(struct soap *soap, const char *tag, ngwt__LibraryList **a, const char *type)
 {
 	if (soap_element_begin_in(soap, tag, 1))
 		return NULL;
 	if (!a)
-		if (!(a = (enum ngwt__ItemSourceList **)soap_malloc(soap, sizeof(enum ngwt__ItemSourceList *))))
+		if (!(a = (ngwt__LibraryList **)soap_malloc(soap, sizeof(ngwt__LibraryList *))))
 			return NULL;
 	*a = NULL;
 	if (!soap->null && *soap->href != '#')
 	{	soap_revert(soap);
-		if (!(*a = soap_in_ngwt__ItemSourceList(soap, tag, *a, type)))
+		if (!(*a = (ngwt__LibraryList *)soap_instantiate_ngwt__LibraryList(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
 			return NULL;
 	}
 	else
-	{	a = (enum ngwt__ItemSourceList **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__ItemSourceList, sizeof(enum ngwt__ItemSourceList), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__MessageTypeList(struct soap *soap, enum ngwt__MessageTypeList *const*a)
-{
-	soap_reference(soap, *a, SOAP_TYPE_ngwt__MessageTypeList);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__MessageTypeList(struct soap *soap, enum ngwt__MessageTypeList *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__MessageTypeList);
-	if (soap_out_PointerTongwt__MessageTypeList(soap, tag, id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__MessageTypeList(struct soap *soap, const char *tag, int id, enum ngwt__MessageTypeList *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__MessageTypeList);
-	if (id < 0)
-		return soap->error;
-	return soap_out_ngwt__MessageTypeList(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 enum ngwt__MessageTypeList ** SOAP_FMAC4 soap_get_PointerTongwt__MessageTypeList(struct soap *soap, enum ngwt__MessageTypeList **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerTongwt__MessageTypeList(soap, tag, p, type)))
-		soap_getindependent(soap);
-	return p;
-}
-
-SOAP_FMAC3 enum ngwt__MessageTypeList ** SOAP_FMAC4 soap_in_PointerTongwt__MessageTypeList(struct soap *soap, const char *tag, enum ngwt__MessageTypeList **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1))
-		return NULL;
-	if (!a)
-		if (!(a = (enum ngwt__MessageTypeList **)soap_malloc(soap, sizeof(enum ngwt__MessageTypeList *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_ngwt__MessageTypeList(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (enum ngwt__MessageTypeList **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__MessageTypeList, sizeof(enum ngwt__MessageTypeList), 0);
+	{	a = (ngwt__LibraryList **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__LibraryList, sizeof(ngwt__LibraryList), 0);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}
@@ -75079,6 +86933,206 @@ SOAP_FMAC3 ngwt__FolderList ** SOAP_FMAC4 soap_in_PointerTongwt__FolderList(stru
 	}
 	else
 	{	a = (ngwt__FolderList **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__FolderList, sizeof(ngwt__FolderList), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ItemSourceList(struct soap *soap, enum ngwt__ItemSourceList *const*a)
+{
+	soap_reference(soap, *a, SOAP_TYPE_ngwt__ItemSourceList);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ItemSourceList(struct soap *soap, enum ngwt__ItemSourceList *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__ItemSourceList);
+	if (soap_out_PointerTongwt__ItemSourceList(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__ItemSourceList(struct soap *soap, const char *tag, int id, enum ngwt__ItemSourceList *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__ItemSourceList);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ngwt__ItemSourceList(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 enum ngwt__ItemSourceList ** SOAP_FMAC4 soap_get_PointerTongwt__ItemSourceList(struct soap *soap, enum ngwt__ItemSourceList **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__ItemSourceList(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 enum ngwt__ItemSourceList ** SOAP_FMAC4 soap_in_PointerTongwt__ItemSourceList(struct soap *soap, const char *tag, enum ngwt__ItemSourceList **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (enum ngwt__ItemSourceList **)soap_malloc(soap, sizeof(enum ngwt__ItemSourceList *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ngwt__ItemSourceList(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (enum ngwt__ItemSourceList **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__ItemSourceList, sizeof(enum ngwt__ItemSourceList), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__MessageTypeList(struct soap *soap, enum ngwt__MessageTypeList *const*a)
+{
+	soap_reference(soap, *a, SOAP_TYPE_ngwt__MessageTypeList);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__MessageTypeList(struct soap *soap, enum ngwt__MessageTypeList *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__MessageTypeList);
+	if (soap_out_PointerTongwt__MessageTypeList(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__MessageTypeList(struct soap *soap, const char *tag, int id, enum ngwt__MessageTypeList *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__MessageTypeList);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ngwt__MessageTypeList(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 enum ngwt__MessageTypeList ** SOAP_FMAC4 soap_get_PointerTongwt__MessageTypeList(struct soap *soap, enum ngwt__MessageTypeList **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__MessageTypeList(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 enum ngwt__MessageTypeList ** SOAP_FMAC4 soap_in_PointerTongwt__MessageTypeList(struct soap *soap, const char *tag, enum ngwt__MessageTypeList **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (enum ngwt__MessageTypeList **)soap_malloc(soap, sizeof(enum ngwt__MessageTypeList *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ngwt__MessageTypeList(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (enum ngwt__MessageTypeList **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__MessageTypeList, sizeof(enum ngwt__MessageTypeList), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__FolderType(struct soap *soap, enum ngwt__FolderType *const*a)
+{
+	soap_reference(soap, *a, SOAP_TYPE_ngwt__FolderType);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__FolderType(struct soap *soap, enum ngwt__FolderType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__FolderType);
+	if (soap_out_PointerTongwt__FolderType(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__FolderType(struct soap *soap, const char *tag, int id, enum ngwt__FolderType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__FolderType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ngwt__FolderType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 enum ngwt__FolderType ** SOAP_FMAC4 soap_get_PointerTongwt__FolderType(struct soap *soap, enum ngwt__FolderType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__FolderType(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 enum ngwt__FolderType ** SOAP_FMAC4 soap_in_PointerTongwt__FolderType(struct soap *soap, const char *tag, enum ngwt__FolderType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (enum ngwt__FolderType **)soap_malloc(soap, sizeof(enum ngwt__FolderType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ngwt__FolderType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (enum ngwt__FolderType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__FolderType, sizeof(enum ngwt__FolderType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__DocumentTypeList(struct soap *soap, ngwt__DocumentTypeList *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__DocumentTypeList))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__DocumentTypeList(struct soap *soap, ngwt__DocumentTypeList *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__DocumentTypeList);
+	if (soap_out_PointerTongwt__DocumentTypeList(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__DocumentTypeList(struct soap *soap, const char *tag, int id, ngwt__DocumentTypeList *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__DocumentTypeList);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 ngwt__DocumentTypeList ** SOAP_FMAC4 soap_get_PointerTongwt__DocumentTypeList(struct soap *soap, ngwt__DocumentTypeList **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__DocumentTypeList(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 ngwt__DocumentTypeList ** SOAP_FMAC4 soap_in_PointerTongwt__DocumentTypeList(struct soap *soap, const char *tag, ngwt__DocumentTypeList **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (ngwt__DocumentTypeList **)soap_malloc(soap, sizeof(ngwt__DocumentTypeList *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (ngwt__DocumentTypeList *)soap_instantiate_ngwt__DocumentTypeList(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__DocumentTypeList **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__DocumentTypeList, sizeof(ngwt__DocumentTypeList), 0);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}
@@ -75559,6 +87613,108 @@ SOAP_FMAC3 ngwt__ItemRefList ** SOAP_FMAC4 soap_in_PointerTongwt__ItemRefList(st
 	return a;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__UserInfo(struct soap *soap, ngwt__UserInfo *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__UserInfo))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__UserInfo(struct soap *soap, ngwt__UserInfo *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__UserInfo);
+	if (soap_out_PointerTongwt__UserInfo(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__UserInfo(struct soap *soap, const char *tag, int id, ngwt__UserInfo *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__UserInfo);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 ngwt__UserInfo ** SOAP_FMAC4 soap_get_PointerTongwt__UserInfo(struct soap *soap, ngwt__UserInfo **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__UserInfo(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 ngwt__UserInfo ** SOAP_FMAC4 soap_in_PointerTongwt__UserInfo(struct soap *soap, const char *tag, ngwt__UserInfo **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (ngwt__UserInfo **)soap_malloc(soap, sizeof(ngwt__UserInfo *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (ngwt__UserInfo *)soap_instantiate_ngwt__UserInfo(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__UserInfo **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__UserInfo, sizeof(ngwt__UserInfo), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__RecipientType(struct soap *soap, enum ngwt__RecipientType *const*a)
+{
+	soap_reference(soap, *a, SOAP_TYPE_ngwt__RecipientType);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__RecipientType(struct soap *soap, enum ngwt__RecipientType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__RecipientType);
+	if (soap_out_PointerTongwt__RecipientType(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__RecipientType(struct soap *soap, const char *tag, int id, enum ngwt__RecipientType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__RecipientType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ngwt__RecipientType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 enum ngwt__RecipientType ** SOAP_FMAC4 soap_get_PointerTongwt__RecipientType(struct soap *soap, enum ngwt__RecipientType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__RecipientType(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 enum ngwt__RecipientType ** SOAP_FMAC4 soap_in_PointerTongwt__RecipientType(struct soap *soap, const char *tag, enum ngwt__RecipientType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (enum ngwt__RecipientType **)soap_malloc(soap, sizeof(enum ngwt__RecipientType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ngwt__RecipientType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (enum ngwt__RecipientType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__RecipientType, sizeof(enum ngwt__RecipientType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Timezone(struct soap *soap, ngwt__Timezone *const*a)
 {
 	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__Timezone))
@@ -75704,6 +87860,59 @@ SOAP_FMAC3 unsigned char ** SOAP_FMAC4 soap_in_PointerTongwt__Hour(struct soap *
 	}
 	else
 	{	a = (unsigned char **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__Hour, sizeof(unsigned char), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__DayOfWeek(struct soap *soap, ngwt__DayOfWeek *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__DayOfWeek))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__DayOfWeek(struct soap *soap, ngwt__DayOfWeek *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__DayOfWeek);
+	if (soap_out_PointerTongwt__DayOfWeek(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__DayOfWeek(struct soap *soap, const char *tag, int id, ngwt__DayOfWeek *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__DayOfWeek);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 ngwt__DayOfWeek ** SOAP_FMAC4 soap_get_PointerTongwt__DayOfWeek(struct soap *soap, ngwt__DayOfWeek **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__DayOfWeek(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 ngwt__DayOfWeek ** SOAP_FMAC4 soap_in_PointerTongwt__DayOfWeek(struct soap *soap, const char *tag, ngwt__DayOfWeek **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (ngwt__DayOfWeek **)soap_malloc(soap, sizeof(ngwt__DayOfWeek *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (ngwt__DayOfWeek *)soap_instantiate_ngwt__DayOfWeek(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__DayOfWeek **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__DayOfWeek, sizeof(ngwt__DayOfWeek), 0);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}
@@ -76232,6 +88441,218 @@ SOAP_FMAC3 ngwt__SendOptionsRequestReply ** SOAP_FMAC4 soap_in_PointerTongwt__Se
 	return a;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Rule(struct soap *soap, ngwt__Rule *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__Rule))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Rule(struct soap *soap, ngwt__Rule *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__Rule);
+	if (soap_out_PointerTongwt__Rule(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__Rule(struct soap *soap, const char *tag, int id, ngwt__Rule *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__Rule);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 ngwt__Rule ** SOAP_FMAC4 soap_get_PointerTongwt__Rule(struct soap *soap, ngwt__Rule **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__Rule(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 ngwt__Rule ** SOAP_FMAC4 soap_in_PointerTongwt__Rule(struct soap *soap, const char *tag, ngwt__Rule **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (ngwt__Rule **)soap_malloc(soap, sizeof(ngwt__Rule *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (ngwt__Rule *)soap_instantiate_ngwt__Rule(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__Rule **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__Rule, sizeof(ngwt__Rule), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__RuleAction(struct soap *soap, ngwt__RuleAction *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__RuleAction))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__RuleAction(struct soap *soap, ngwt__RuleAction *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__RuleAction);
+	if (soap_out_PointerTongwt__RuleAction(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__RuleAction(struct soap *soap, const char *tag, int id, ngwt__RuleAction *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__RuleAction);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 ngwt__RuleAction ** SOAP_FMAC4 soap_get_PointerTongwt__RuleAction(struct soap *soap, ngwt__RuleAction **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__RuleAction(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 ngwt__RuleAction ** SOAP_FMAC4 soap_in_PointerTongwt__RuleAction(struct soap *soap, const char *tag, ngwt__RuleAction **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (ngwt__RuleAction **)soap_malloc(soap, sizeof(ngwt__RuleAction *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (ngwt__RuleAction *)soap_instantiate_ngwt__RuleAction(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__RuleAction **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__RuleAction, sizeof(ngwt__RuleAction), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__CategoryRefList(struct soap *soap, ngwt__CategoryRefList *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__CategoryRefList))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__CategoryRefList(struct soap *soap, ngwt__CategoryRefList *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__CategoryRefList);
+	if (soap_out_PointerTongwt__CategoryRefList(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__CategoryRefList(struct soap *soap, const char *tag, int id, ngwt__CategoryRefList *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__CategoryRefList);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 ngwt__CategoryRefList ** SOAP_FMAC4 soap_get_PointerTongwt__CategoryRefList(struct soap *soap, ngwt__CategoryRefList **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__CategoryRefList(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 ngwt__CategoryRefList ** SOAP_FMAC4 soap_in_PointerTongwt__CategoryRefList(struct soap *soap, const char *tag, ngwt__CategoryRefList **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (ngwt__CategoryRefList **)soap_malloc(soap, sizeof(ngwt__CategoryRefList *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (ngwt__CategoryRefList *)soap_instantiate_ngwt__CategoryRefList(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__CategoryRefList **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__CategoryRefList, sizeof(ngwt__CategoryRefList), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Mail(struct soap *soap, ngwt__Mail *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__Mail))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Mail(struct soap *soap, ngwt__Mail *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__Mail);
+	if (soap_out_PointerTongwt__Mail(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__Mail(struct soap *soap, const char *tag, int id, ngwt__Mail *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__Mail);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 ngwt__Mail ** SOAP_FMAC4 soap_get_PointerTongwt__Mail(struct soap *soap, ngwt__Mail **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__Mail(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 ngwt__Mail ** SOAP_FMAC4 soap_in_PointerTongwt__Mail(struct soap *soap, const char *tag, ngwt__Mail **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (ngwt__Mail **)soap_malloc(soap, sizeof(ngwt__Mail *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (ngwt__Mail *)soap_instantiate_ngwt__Mail(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__Mail **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__Mail, sizeof(ngwt__Mail), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ReturnNotificationOptions(struct soap *soap, ngwt__ReturnNotificationOptions *const*a)
 {
 	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__ReturnNotificationOptions))
@@ -76391,53 +88812,106 @@ SOAP_FMAC3 ngwt__DayOfYearList ** SOAP_FMAC4 soap_in_PointerTongwt__DayOfYearLis
 	return a;
 }
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__DayOfWeekList(struct soap *soap, ngwt__DayOfWeekList *const*a)
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__DayOfMonthList(struct soap *soap, ngwt__DayOfMonthList *const*a)
 {
-	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__DayOfWeekList))
+	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__DayOfMonthList))
 		(*a)->soap_serialize(soap);
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__DayOfWeekList(struct soap *soap, ngwt__DayOfWeekList *const*a, const char *tag, const char *type)
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__DayOfMonthList(struct soap *soap, ngwt__DayOfMonthList *const*a, const char *tag, const char *type)
 {
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__DayOfWeekList);
-	if (soap_out_PointerTongwt__DayOfWeekList(soap, tag, id, a, type))
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__DayOfMonthList);
+	if (soap_out_PointerTongwt__DayOfMonthList(soap, tag, id, a, type))
 		return soap->error;
 	return soap_putindependent(soap);
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__DayOfWeekList(struct soap *soap, const char *tag, int id, ngwt__DayOfWeekList *const*a, const char *type)
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__DayOfMonthList(struct soap *soap, const char *tag, int id, ngwt__DayOfMonthList *const*a, const char *type)
 {
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__DayOfWeekList);
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__DayOfMonthList);
 	if (id < 0)
 		return soap->error;
 	return (*a)->soap_out(soap, tag, id, type);
 }
 
-SOAP_FMAC3 ngwt__DayOfWeekList ** SOAP_FMAC4 soap_get_PointerTongwt__DayOfWeekList(struct soap *soap, ngwt__DayOfWeekList **p, const char *tag, const char *type)
+SOAP_FMAC3 ngwt__DayOfMonthList ** SOAP_FMAC4 soap_get_PointerTongwt__DayOfMonthList(struct soap *soap, ngwt__DayOfMonthList **p, const char *tag, const char *type)
 {
-	if ((p = soap_in_PointerTongwt__DayOfWeekList(soap, tag, p, type)))
+	if ((p = soap_in_PointerTongwt__DayOfMonthList(soap, tag, p, type)))
 		soap_getindependent(soap);
 	return p;
 }
 
-SOAP_FMAC3 ngwt__DayOfWeekList ** SOAP_FMAC4 soap_in_PointerTongwt__DayOfWeekList(struct soap *soap, const char *tag, ngwt__DayOfWeekList **a, const char *type)
+SOAP_FMAC3 ngwt__DayOfMonthList ** SOAP_FMAC4 soap_in_PointerTongwt__DayOfMonthList(struct soap *soap, const char *tag, ngwt__DayOfMonthList **a, const char *type)
 {
 	if (soap_element_begin_in(soap, tag, 1))
 		return NULL;
 	if (!a)
-		if (!(a = (ngwt__DayOfWeekList **)soap_malloc(soap, sizeof(ngwt__DayOfWeekList *))))
+		if (!(a = (ngwt__DayOfMonthList **)soap_malloc(soap, sizeof(ngwt__DayOfMonthList *))))
 			return NULL;
 	*a = NULL;
 	if (!soap->null && *soap->href != '#')
 	{	soap_revert(soap);
-		if (!(*a = (ngwt__DayOfWeekList *)soap_instantiate_ngwt__DayOfWeekList(soap, -1, soap->type, soap->arrayType, NULL)))
+		if (!(*a = (ngwt__DayOfMonthList *)soap_instantiate_ngwt__DayOfMonthList(soap, -1, soap->type, soap->arrayType, NULL)))
 			return NULL;
 		(*a)->soap_default(soap);
 		if (!(*a)->soap_in(soap, tag, NULL))
 			return NULL;
 	}
 	else
-	{	a = (ngwt__DayOfWeekList **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__DayOfWeekList, sizeof(ngwt__DayOfWeekList), 0);
+	{	a = (ngwt__DayOfMonthList **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__DayOfMonthList, sizeof(ngwt__DayOfMonthList), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__DayOfYearWeekList(struct soap *soap, ngwt__DayOfYearWeekList *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__DayOfYearWeekList))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__DayOfYearWeekList(struct soap *soap, ngwt__DayOfYearWeekList *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__DayOfYearWeekList);
+	if (soap_out_PointerTongwt__DayOfYearWeekList(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__DayOfYearWeekList(struct soap *soap, const char *tag, int id, ngwt__DayOfYearWeekList *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__DayOfYearWeekList);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 ngwt__DayOfYearWeekList ** SOAP_FMAC4 soap_get_PointerTongwt__DayOfYearWeekList(struct soap *soap, ngwt__DayOfYearWeekList **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__DayOfYearWeekList(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 ngwt__DayOfYearWeekList ** SOAP_FMAC4 soap_in_PointerTongwt__DayOfYearWeekList(struct soap *soap, const char *tag, ngwt__DayOfYearWeekList **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (ngwt__DayOfYearWeekList **)soap_malloc(soap, sizeof(ngwt__DayOfYearWeekList *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (ngwt__DayOfYearWeekList *)soap_instantiate_ngwt__DayOfYearWeekList(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__DayOfYearWeekList **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__DayOfYearWeekList, sizeof(ngwt__DayOfYearWeekList), 0);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}
@@ -76864,6 +89338,59 @@ SOAP_FMAC3 ngwt__QueryTarget ** SOAP_FMAC4 soap_in_PointerTongwt__QueryTarget(st
 	return a;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ProxyUser(struct soap *soap, ngwt__ProxyUser *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__ProxyUser))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__ProxyUser(struct soap *soap, ngwt__ProxyUser *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__ProxyUser);
+	if (soap_out_PointerTongwt__ProxyUser(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__ProxyUser(struct soap *soap, const char *tag, int id, ngwt__ProxyUser *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__ProxyUser);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 ngwt__ProxyUser ** SOAP_FMAC4 soap_get_PointerTongwt__ProxyUser(struct soap *soap, ngwt__ProxyUser **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__ProxyUser(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 ngwt__ProxyUser ** SOAP_FMAC4 soap_in_PointerTongwt__ProxyUser(struct soap *soap, const char *tag, ngwt__ProxyUser **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (ngwt__ProxyUser **)soap_malloc(soap, sizeof(ngwt__ProxyUser *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (ngwt__ProxyUser *)soap_instantiate_ngwt__ProxyUser(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__ProxyUser **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__ProxyUser, sizeof(ngwt__ProxyUser), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ProblemEntry(struct soap *soap, ngwt__ProblemEntry *const*a)
 {
 	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__ProblemEntry))
@@ -77073,56 +89600,6 @@ SOAP_FMAC3 std::string ** SOAP_FMAC4 soap_in_PointerToxsd__date(struct soap *soa
 	return a;
 }
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerToxsd__anyURI(struct soap *soap, std::string *const*a)
-{
-	if (!soap_reference(soap, *a, SOAP_TYPE_xsd__anyURI))
-		soap_serialize_xsd__anyURI(soap, *a);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerToxsd__anyURI(struct soap *soap, std::string *const*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerToxsd__anyURI);
-	if (soap_out_PointerToxsd__anyURI(soap, tag, id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerToxsd__anyURI(struct soap *soap, const char *tag, int id, std::string *const*a, const char *type)
-{
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_xsd__anyURI);
-	if (id < 0)
-		return soap->error;
-	return soap_out_xsd__anyURI(soap, tag, id, *a, type);
-}
-
-SOAP_FMAC3 std::string ** SOAP_FMAC4 soap_get_PointerToxsd__anyURI(struct soap *soap, std::string **p, const char *tag, const char *type)
-{
-	if ((p = soap_in_PointerToxsd__anyURI(soap, tag, p, type)))
-		soap_getindependent(soap);
-	return p;
-}
-
-SOAP_FMAC3 std::string ** SOAP_FMAC4 soap_in_PointerToxsd__anyURI(struct soap *soap, const char *tag, std::string **a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1))
-		return NULL;
-	if (!a)
-		if (!(a = (std::string **)soap_malloc(soap, sizeof(std::string *))))
-			return NULL;
-	*a = NULL;
-	if (!soap->null && *soap->href != '#')
-	{	soap_revert(soap);
-		if (!(*a = soap_in_xsd__anyURI(soap, tag, *a, type)))
-			return NULL;
-	}
-	else
-	{	a = (std::string **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_xsd__anyURI, sizeof(std::string), 0);
-		if (soap->body && soap_element_end_in(soap, tag))
-			return NULL;
-	}
-	return a;
-}
-
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__ItemRef(struct soap *soap, ngwt__ItemRef *const*a)
 {
 	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__ItemRef))
@@ -77326,6 +89803,59 @@ SOAP_FMAC3 ngwt__MessagePart ** SOAP_FMAC4 soap_in_PointerTongwt__MessagePart(st
 	}
 	else
 	{	a = (ngwt__MessagePart **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__MessagePart, sizeof(ngwt__MessagePart), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__Library(struct soap *soap, ngwt__Library *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__Library))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__Library(struct soap *soap, ngwt__Library *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__Library);
+	if (soap_out_PointerTongwt__Library(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__Library(struct soap *soap, const char *tag, int id, ngwt__Library *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__Library);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 ngwt__Library ** SOAP_FMAC4 soap_get_PointerTongwt__Library(struct soap *soap, ngwt__Library **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__Library(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 ngwt__Library ** SOAP_FMAC4 soap_in_PointerTongwt__Library(struct soap *soap, const char *tag, ngwt__Library **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (ngwt__Library **)soap_malloc(soap, sizeof(ngwt__Library *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (ngwt__Library *)soap_instantiate_ngwt__Library(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__Library **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__Library, sizeof(ngwt__Library), 0);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}
@@ -78066,6 +90596,108 @@ SOAP_FMAC3 ngwt__FilterElement ** SOAP_FMAC4 soap_in_PointerTongwt__FilterElemen
 	return a;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__DocumentType(struct soap *soap, ngwt__DocumentType *const*a)
+{
+	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__DocumentType))
+		(*a)->soap_serialize(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__DocumentType(struct soap *soap, ngwt__DocumentType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__DocumentType);
+	if (soap_out_PointerTongwt__DocumentType(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__DocumentType(struct soap *soap, const char *tag, int id, ngwt__DocumentType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__DocumentType);
+	if (id < 0)
+		return soap->error;
+	return (*a)->soap_out(soap, tag, id, type);
+}
+
+SOAP_FMAC3 ngwt__DocumentType ** SOAP_FMAC4 soap_get_PointerTongwt__DocumentType(struct soap *soap, ngwt__DocumentType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__DocumentType(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 ngwt__DocumentType ** SOAP_FMAC4 soap_in_PointerTongwt__DocumentType(struct soap *soap, const char *tag, ngwt__DocumentType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (ngwt__DocumentType **)soap_malloc(soap, sizeof(ngwt__DocumentType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = (ngwt__DocumentType *)soap_instantiate_ngwt__DocumentType(soap, -1, soap->type, soap->arrayType, NULL)))
+			return NULL;
+		(*a)->soap_default(soap);
+		if (!(*a)->soap_in(soap, tag, NULL))
+			return NULL;
+	}
+	else
+	{	a = (ngwt__DocumentType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__DocumentType, sizeof(ngwt__DocumentType), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__AgeAction(struct soap *soap, enum ngwt__AgeAction *const*a)
+{
+	soap_reference(soap, *a, SOAP_TYPE_ngwt__AgeAction);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__AgeAction(struct soap *soap, enum ngwt__AgeAction *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__AgeAction);
+	if (soap_out_PointerTongwt__AgeAction(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__AgeAction(struct soap *soap, const char *tag, int id, enum ngwt__AgeAction *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__AgeAction);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ngwt__AgeAction(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 enum ngwt__AgeAction ** SOAP_FMAC4 soap_get_PointerTongwt__AgeAction(struct soap *soap, enum ngwt__AgeAction **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__AgeAction(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 enum ngwt__AgeAction ** SOAP_FMAC4 soap_in_PointerTongwt__AgeAction(struct soap *soap, const char *tag, enum ngwt__AgeAction **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (enum ngwt__AgeAction **)soap_malloc(soap, sizeof(enum ngwt__AgeAction *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ngwt__AgeAction(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (enum ngwt__AgeAction **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__AgeAction, sizeof(enum ngwt__AgeAction), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__SendOptions(struct soap *soap, ngwt__SendOptions *const*a)
 {
 	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__SendOptions))
@@ -78274,53 +90906,53 @@ SOAP_FMAC3 int ** SOAP_FMAC4 soap_in_PointerToint(struct soap *soap, const char 
 	return a;
 }
 
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__DayOfWeek(struct soap *soap, ngwt__DayOfWeek *const*a)
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__DayOfYearWeek(struct soap *soap, ngwt__DayOfYearWeek *const*a)
 {
-	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__DayOfWeek))
+	if (!soap_reference(soap, *a, SOAP_TYPE_ngwt__DayOfYearWeek))
 		(*a)->soap_serialize(soap);
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__DayOfWeek(struct soap *soap, ngwt__DayOfWeek *const*a, const char *tag, const char *type)
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__DayOfYearWeek(struct soap *soap, ngwt__DayOfYearWeek *const*a, const char *tag, const char *type)
 {
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__DayOfWeek);
-	if (soap_out_PointerTongwt__DayOfWeek(soap, tag, id, a, type))
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__DayOfYearWeek);
+	if (soap_out_PointerTongwt__DayOfYearWeek(soap, tag, id, a, type))
 		return soap->error;
 	return soap_putindependent(soap);
 }
 
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__DayOfWeek(struct soap *soap, const char *tag, int id, ngwt__DayOfWeek *const*a, const char *type)
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__DayOfYearWeek(struct soap *soap, const char *tag, int id, ngwt__DayOfYearWeek *const*a, const char *type)
 {
-	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__DayOfWeek);
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__DayOfYearWeek);
 	if (id < 0)
 		return soap->error;
 	return (*a)->soap_out(soap, tag, id, type);
 }
 
-SOAP_FMAC3 ngwt__DayOfWeek ** SOAP_FMAC4 soap_get_PointerTongwt__DayOfWeek(struct soap *soap, ngwt__DayOfWeek **p, const char *tag, const char *type)
+SOAP_FMAC3 ngwt__DayOfYearWeek ** SOAP_FMAC4 soap_get_PointerTongwt__DayOfYearWeek(struct soap *soap, ngwt__DayOfYearWeek **p, const char *tag, const char *type)
 {
-	if ((p = soap_in_PointerTongwt__DayOfWeek(soap, tag, p, type)))
+	if ((p = soap_in_PointerTongwt__DayOfYearWeek(soap, tag, p, type)))
 		soap_getindependent(soap);
 	return p;
 }
 
-SOAP_FMAC3 ngwt__DayOfWeek ** SOAP_FMAC4 soap_in_PointerTongwt__DayOfWeek(struct soap *soap, const char *tag, ngwt__DayOfWeek **a, const char *type)
+SOAP_FMAC3 ngwt__DayOfYearWeek ** SOAP_FMAC4 soap_in_PointerTongwt__DayOfYearWeek(struct soap *soap, const char *tag, ngwt__DayOfYearWeek **a, const char *type)
 {
 	if (soap_element_begin_in(soap, tag, 1))
 		return NULL;
 	if (!a)
-		if (!(a = (ngwt__DayOfWeek **)soap_malloc(soap, sizeof(ngwt__DayOfWeek *))))
+		if (!(a = (ngwt__DayOfYearWeek **)soap_malloc(soap, sizeof(ngwt__DayOfYearWeek *))))
 			return NULL;
 	*a = NULL;
 	if (!soap->null && *soap->href != '#')
 	{	soap_revert(soap);
-		if (!(*a = (ngwt__DayOfWeek *)soap_instantiate_ngwt__DayOfWeek(soap, -1, soap->type, soap->arrayType, NULL)))
+		if (!(*a = (ngwt__DayOfYearWeek *)soap_instantiate_ngwt__DayOfYearWeek(soap, -1, soap->type, soap->arrayType, NULL)))
 			return NULL;
 		(*a)->soap_default(soap);
 		if (!(*a)->soap_in(soap, tag, NULL))
 			return NULL;
 	}
 	else
-	{	a = (ngwt__DayOfWeek **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__DayOfWeek, sizeof(ngwt__DayOfWeek), 0);
+	{	a = (ngwt__DayOfYearWeek **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__DayOfYearWeek, sizeof(ngwt__DayOfYearWeek), 0);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}
@@ -78374,6 +91006,55 @@ SOAP_FMAC3 ngwt__Custom ** SOAP_FMAC4 soap_in_PointerTongwt__Custom(struct soap 
 	}
 	else
 	{	a = (ngwt__Custom **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__Custom, sizeof(ngwt__Custom), 0);
+		if (soap->body && soap_element_end_in(soap, tag))
+			return NULL;
+	}
+	return a;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_PointerTongwt__CustomType(struct soap *soap, enum ngwt__CustomType *const*a)
+{
+	soap_reference(soap, *a, SOAP_TYPE_ngwt__CustomType);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_PointerTongwt__CustomType(struct soap *soap, enum ngwt__CustomType *const*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_PointerTongwt__CustomType);
+	if (soap_out_PointerTongwt__CustomType(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_PointerTongwt__CustomType(struct soap *soap, const char *tag, int id, enum ngwt__CustomType *const*a, const char *type)
+{
+	id = soap_element_id(soap, tag, id, *a, NULL, 0, type, SOAP_TYPE_ngwt__CustomType);
+	if (id < 0)
+		return soap->error;
+	return soap_out_ngwt__CustomType(soap, tag, id, *a, type);
+}
+
+SOAP_FMAC3 enum ngwt__CustomType ** SOAP_FMAC4 soap_get_PointerTongwt__CustomType(struct soap *soap, enum ngwt__CustomType **p, const char *tag, const char *type)
+{
+	if ((p = soap_in_PointerTongwt__CustomType(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 enum ngwt__CustomType ** SOAP_FMAC4 soap_in_PointerTongwt__CustomType(struct soap *soap, const char *tag, enum ngwt__CustomType **a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a)
+		if (!(a = (enum ngwt__CustomType **)soap_malloc(soap, sizeof(enum ngwt__CustomType *))))
+			return NULL;
+	*a = NULL;
+	if (!soap->null && *soap->href != '#')
+	{	soap_revert(soap);
+		if (!(*a = soap_in_ngwt__CustomType(soap, tag, *a, type)))
+			return NULL;
+	}
+	else
+	{	a = (enum ngwt__CustomType **)soap_id_lookup(soap, soap->href, (void**)a, SOAP_TYPE_ngwt__CustomType, sizeof(enum ngwt__CustomType), 0);
 		if (soap->body && soap_element_end_in(soap, tag))
 			return NULL;
 	}
@@ -79776,6 +92457,208 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__ModifyI
 	*(std::vector<ngwt__ModifyItem * >*)p = *(std::vector<ngwt__ModifyItem * >*)q;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__Host(struct soap *soap, const std::vector<ngwt__Host * >*a)
+{
+	for (std::vector<ngwt__Host * >::const_iterator i = a->begin(); i != a->end(); ++i)
+		soap_serialize_PointerTongwt__Host(soap, &(*i));
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__Host(struct soap *soap, std::vector<ngwt__Host * >*p)
+{
+	p->clear();
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_std__vectorTemplateOfPointerTongwt__Host(struct soap *soap, const std::vector<ngwt__Host * >*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Host);
+	if (soap_out_std__vectorTemplateOfPointerTongwt__Host(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_std__vectorTemplateOfPointerTongwt__Host(struct soap *soap, const char *tag, int id, const std::vector<ngwt__Host * >*a, const char *type)
+{
+	for (std::vector<ngwt__Host * >::const_iterator i = a->begin(); i != a->end(); ++i)
+	{
+		if (soap_out_PointerTongwt__Host(soap, tag, id, &(*i), ""))
+			return soap->error;
+	}
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 std::vector<ngwt__Host * >* SOAP_FMAC4 soap_get_std__vectorTemplateOfPointerTongwt__Host(struct soap *soap, std::vector<ngwt__Host * >*p, const char *tag, const char *type)
+{
+	if ((p = soap_in_std__vectorTemplateOfPointerTongwt__Host(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 std::vector<ngwt__Host * >* SOAP_FMAC4 soap_in_std__vectorTemplateOfPointerTongwt__Host(struct soap *soap, const char *tag, std::vector<ngwt__Host * >*a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a && !(a = soap_new_std__vectorTemplateOfPointerTongwt__Host(soap, -1)))
+		return NULL;
+	ngwt__Host *n;
+	ngwt__Host **p;
+	do
+	{	soap_revert(soap);
+		if (*soap->id || *soap->href)
+		{	if (!soap_container_id_forward(soap, *soap->id?soap->id:soap->href, a, SOAP_TYPE_ngwt__Host, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Host, sizeof(ngwt__Host), 1))
+				break;
+			if (!(p = soap_in_PointerTongwt__Host(soap, tag, NULL, "ngwt:Host")))
+				break;
+		}
+		else
+		{	n = NULL;
+			if (!soap_in_PointerTongwt__Host(soap, tag, &n, "ngwt:Host"))
+				break;
+			a->insert(a->end(), n);
+		}
+	}
+	while (!soap_element_begin_in(soap, tag, 1));
+	if (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG)
+	{	soap->error = SOAP_OK;
+		return a;
+	}
+	return NULL;
+}
+
+SOAP_FMAC5 std::vector<ngwt__Host * > * SOAP_FMAC6 soap_new_std__vectorTemplateOfPointerTongwt__Host(struct soap *soap, int n)
+{	return soap_instantiate_std__vectorTemplateOfPointerTongwt__Host(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfPointerTongwt__Host(struct soap *soap, std::vector<ngwt__Host * >*p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 std::vector<ngwt__Host * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfPointerTongwt__Host(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_std__vectorTemplateOfPointerTongwt__Host(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Host, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new std::vector<ngwt__Host * >;
+		if (size)
+			*size = sizeof(std::vector<ngwt__Host * >);
+	}
+	else
+	{	cp->ptr = (void*)new std::vector<ngwt__Host * >[n];
+		if (size)
+			*size = n * sizeof(std::vector<ngwt__Host * >);
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (std::vector<ngwt__Host * >*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__Host(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying std::vector<ngwt__Host * > %p -> %p\n", q, p));
+	*(std::vector<ngwt__Host * >*)p = *(std::vector<ngwt__Host * >*)q;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__UserInfo(struct soap *soap, const std::vector<ngwt__UserInfo * >*a)
+{
+	for (std::vector<ngwt__UserInfo * >::const_iterator i = a->begin(); i != a->end(); ++i)
+		soap_serialize_PointerTongwt__UserInfo(soap, &(*i));
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__UserInfo(struct soap *soap, std::vector<ngwt__UserInfo * >*p)
+{
+	p->clear();
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_std__vectorTemplateOfPointerTongwt__UserInfo(struct soap *soap, const std::vector<ngwt__UserInfo * >*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__UserInfo);
+	if (soap_out_std__vectorTemplateOfPointerTongwt__UserInfo(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_std__vectorTemplateOfPointerTongwt__UserInfo(struct soap *soap, const char *tag, int id, const std::vector<ngwt__UserInfo * >*a, const char *type)
+{
+	for (std::vector<ngwt__UserInfo * >::const_iterator i = a->begin(); i != a->end(); ++i)
+	{
+		if (soap_out_PointerTongwt__UserInfo(soap, tag, id, &(*i), ""))
+			return soap->error;
+	}
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 std::vector<ngwt__UserInfo * >* SOAP_FMAC4 soap_get_std__vectorTemplateOfPointerTongwt__UserInfo(struct soap *soap, std::vector<ngwt__UserInfo * >*p, const char *tag, const char *type)
+{
+	if ((p = soap_in_std__vectorTemplateOfPointerTongwt__UserInfo(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 std::vector<ngwt__UserInfo * >* SOAP_FMAC4 soap_in_std__vectorTemplateOfPointerTongwt__UserInfo(struct soap *soap, const char *tag, std::vector<ngwt__UserInfo * >*a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a && !(a = soap_new_std__vectorTemplateOfPointerTongwt__UserInfo(soap, -1)))
+		return NULL;
+	ngwt__UserInfo *n;
+	ngwt__UserInfo **p;
+	do
+	{	soap_revert(soap);
+		if (*soap->id || *soap->href)
+		{	if (!soap_container_id_forward(soap, *soap->id?soap->id:soap->href, a, SOAP_TYPE_ngwt__UserInfo, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__UserInfo, sizeof(ngwt__UserInfo), 1))
+				break;
+			if (!(p = soap_in_PointerTongwt__UserInfo(soap, tag, NULL, "ngwt:UserInfo")))
+				break;
+		}
+		else
+		{	n = NULL;
+			if (!soap_in_PointerTongwt__UserInfo(soap, tag, &n, "ngwt:UserInfo"))
+				break;
+			a->insert(a->end(), n);
+		}
+	}
+	while (!soap_element_begin_in(soap, tag, 1));
+	if (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG)
+	{	soap->error = SOAP_OK;
+		return a;
+	}
+	return NULL;
+}
+
+SOAP_FMAC5 std::vector<ngwt__UserInfo * > * SOAP_FMAC6 soap_new_std__vectorTemplateOfPointerTongwt__UserInfo(struct soap *soap, int n)
+{	return soap_instantiate_std__vectorTemplateOfPointerTongwt__UserInfo(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfPointerTongwt__UserInfo(struct soap *soap, std::vector<ngwt__UserInfo * >*p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 std::vector<ngwt__UserInfo * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfPointerTongwt__UserInfo(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_std__vectorTemplateOfPointerTongwt__UserInfo(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__UserInfo, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new std::vector<ngwt__UserInfo * >;
+		if (size)
+			*size = sizeof(std::vector<ngwt__UserInfo * >);
+	}
+	else
+	{	cp->ptr = (void*)new std::vector<ngwt__UserInfo * >[n];
+		if (size)
+			*size = n * sizeof(std::vector<ngwt__UserInfo * >);
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (std::vector<ngwt__UserInfo * >*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__UserInfo(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying std::vector<ngwt__UserInfo * > %p -> %p\n", q, p));
+	*(std::vector<ngwt__UserInfo * >*)p = *(std::vector<ngwt__UserInfo * >*)q;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__Timezone(struct soap *soap, const std::vector<ngwt__Timezone * >*a)
 {
 	for (std::vector<ngwt__Timezone * >::const_iterator i = a->begin(); i != a->end(); ++i)
@@ -80079,6 +92962,208 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__Setting
 	*(std::vector<ngwt__SettingsGroup * >*)p = *(std::vector<ngwt__SettingsGroup * >*)q;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__Rule(struct soap *soap, const std::vector<ngwt__Rule * >*a)
+{
+	for (std::vector<ngwt__Rule * >::const_iterator i = a->begin(); i != a->end(); ++i)
+		soap_serialize_PointerTongwt__Rule(soap, &(*i));
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__Rule(struct soap *soap, std::vector<ngwt__Rule * >*p)
+{
+	p->clear();
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_std__vectorTemplateOfPointerTongwt__Rule(struct soap *soap, const std::vector<ngwt__Rule * >*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Rule);
+	if (soap_out_std__vectorTemplateOfPointerTongwt__Rule(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_std__vectorTemplateOfPointerTongwt__Rule(struct soap *soap, const char *tag, int id, const std::vector<ngwt__Rule * >*a, const char *type)
+{
+	for (std::vector<ngwt__Rule * >::const_iterator i = a->begin(); i != a->end(); ++i)
+	{
+		if (soap_out_PointerTongwt__Rule(soap, tag, id, &(*i), ""))
+			return soap->error;
+	}
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 std::vector<ngwt__Rule * >* SOAP_FMAC4 soap_get_std__vectorTemplateOfPointerTongwt__Rule(struct soap *soap, std::vector<ngwt__Rule * >*p, const char *tag, const char *type)
+{
+	if ((p = soap_in_std__vectorTemplateOfPointerTongwt__Rule(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 std::vector<ngwt__Rule * >* SOAP_FMAC4 soap_in_std__vectorTemplateOfPointerTongwt__Rule(struct soap *soap, const char *tag, std::vector<ngwt__Rule * >*a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a && !(a = soap_new_std__vectorTemplateOfPointerTongwt__Rule(soap, -1)))
+		return NULL;
+	ngwt__Rule *n;
+	ngwt__Rule **p;
+	do
+	{	soap_revert(soap);
+		if (*soap->id || *soap->href)
+		{	if (!soap_container_id_forward(soap, *soap->id?soap->id:soap->href, a, SOAP_TYPE_ngwt__Rule, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Rule, sizeof(ngwt__Rule), 1))
+				break;
+			if (!(p = soap_in_PointerTongwt__Rule(soap, tag, NULL, "ngwt:Rule")))
+				break;
+		}
+		else
+		{	n = NULL;
+			if (!soap_in_PointerTongwt__Rule(soap, tag, &n, "ngwt:Rule"))
+				break;
+			a->insert(a->end(), n);
+		}
+	}
+	while (!soap_element_begin_in(soap, tag, 1));
+	if (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG)
+	{	soap->error = SOAP_OK;
+		return a;
+	}
+	return NULL;
+}
+
+SOAP_FMAC5 std::vector<ngwt__Rule * > * SOAP_FMAC6 soap_new_std__vectorTemplateOfPointerTongwt__Rule(struct soap *soap, int n)
+{	return soap_instantiate_std__vectorTemplateOfPointerTongwt__Rule(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfPointerTongwt__Rule(struct soap *soap, std::vector<ngwt__Rule * >*p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 std::vector<ngwt__Rule * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfPointerTongwt__Rule(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_std__vectorTemplateOfPointerTongwt__Rule(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Rule, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new std::vector<ngwt__Rule * >;
+		if (size)
+			*size = sizeof(std::vector<ngwt__Rule * >);
+	}
+	else
+	{	cp->ptr = (void*)new std::vector<ngwt__Rule * >[n];
+		if (size)
+			*size = n * sizeof(std::vector<ngwt__Rule * >);
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (std::vector<ngwt__Rule * >*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__Rule(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying std::vector<ngwt__Rule * > %p -> %p\n", q, p));
+	*(std::vector<ngwt__Rule * >*)p = *(std::vector<ngwt__Rule * >*)q;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__RuleAction(struct soap *soap, const std::vector<ngwt__RuleAction * >*a)
+{
+	for (std::vector<ngwt__RuleAction * >::const_iterator i = a->begin(); i != a->end(); ++i)
+		soap_serialize_PointerTongwt__RuleAction(soap, &(*i));
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__RuleAction(struct soap *soap, std::vector<ngwt__RuleAction * >*p)
+{
+	p->clear();
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_std__vectorTemplateOfPointerTongwt__RuleAction(struct soap *soap, const std::vector<ngwt__RuleAction * >*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__RuleAction);
+	if (soap_out_std__vectorTemplateOfPointerTongwt__RuleAction(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_std__vectorTemplateOfPointerTongwt__RuleAction(struct soap *soap, const char *tag, int id, const std::vector<ngwt__RuleAction * >*a, const char *type)
+{
+	for (std::vector<ngwt__RuleAction * >::const_iterator i = a->begin(); i != a->end(); ++i)
+	{
+		if (soap_out_PointerTongwt__RuleAction(soap, tag, id, &(*i), ""))
+			return soap->error;
+	}
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 std::vector<ngwt__RuleAction * >* SOAP_FMAC4 soap_get_std__vectorTemplateOfPointerTongwt__RuleAction(struct soap *soap, std::vector<ngwt__RuleAction * >*p, const char *tag, const char *type)
+{
+	if ((p = soap_in_std__vectorTemplateOfPointerTongwt__RuleAction(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 std::vector<ngwt__RuleAction * >* SOAP_FMAC4 soap_in_std__vectorTemplateOfPointerTongwt__RuleAction(struct soap *soap, const char *tag, std::vector<ngwt__RuleAction * >*a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a && !(a = soap_new_std__vectorTemplateOfPointerTongwt__RuleAction(soap, -1)))
+		return NULL;
+	ngwt__RuleAction *n;
+	ngwt__RuleAction **p;
+	do
+	{	soap_revert(soap);
+		if (*soap->id || *soap->href)
+		{	if (!soap_container_id_forward(soap, *soap->id?soap->id:soap->href, a, SOAP_TYPE_ngwt__RuleAction, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__RuleAction, sizeof(ngwt__RuleAction), 1))
+				break;
+			if (!(p = soap_in_PointerTongwt__RuleAction(soap, tag, NULL, "ngwt:RuleAction")))
+				break;
+		}
+		else
+		{	n = NULL;
+			if (!soap_in_PointerTongwt__RuleAction(soap, tag, &n, "ngwt:RuleAction"))
+				break;
+			a->insert(a->end(), n);
+		}
+	}
+	while (!soap_element_begin_in(soap, tag, 1));
+	if (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG)
+	{	soap->error = SOAP_OK;
+		return a;
+	}
+	return NULL;
+}
+
+SOAP_FMAC5 std::vector<ngwt__RuleAction * > * SOAP_FMAC6 soap_new_std__vectorTemplateOfPointerTongwt__RuleAction(struct soap *soap, int n)
+{	return soap_instantiate_std__vectorTemplateOfPointerTongwt__RuleAction(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfPointerTongwt__RuleAction(struct soap *soap, std::vector<ngwt__RuleAction * >*p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 std::vector<ngwt__RuleAction * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfPointerTongwt__RuleAction(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_std__vectorTemplateOfPointerTongwt__RuleAction(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__RuleAction, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new std::vector<ngwt__RuleAction * >;
+		if (size)
+			*size = sizeof(std::vector<ngwt__RuleAction * >);
+	}
+	else
+	{	cp->ptr = (void*)new std::vector<ngwt__RuleAction * >[n];
+		if (size)
+			*size = n * sizeof(std::vector<ngwt__RuleAction * >);
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (std::vector<ngwt__RuleAction * >*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__RuleAction(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying std::vector<ngwt__RuleAction * > %p -> %p\n", q, p));
+	*(std::vector<ngwt__RuleAction * >*)p = *(std::vector<ngwt__RuleAction * >*)q;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfxsd__date(struct soap *soap, const std::vector<std::string >*a)
 {
 	for (std::vector<std::string >::const_iterator i = a->begin(); i != a->end(); ++i)
@@ -80380,6 +93465,107 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__Recipie
 {
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying std::vector<ngwt__Recipient * > %p -> %p\n", q, p));
 	*(std::vector<ngwt__Recipient * >*)p = *(std::vector<ngwt__Recipient * >*)q;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__ProxyUser(struct soap *soap, const std::vector<ngwt__ProxyUser * >*a)
+{
+	for (std::vector<ngwt__ProxyUser * >::const_iterator i = a->begin(); i != a->end(); ++i)
+		soap_serialize_PointerTongwt__ProxyUser(soap, &(*i));
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__ProxyUser(struct soap *soap, std::vector<ngwt__ProxyUser * >*p)
+{
+	p->clear();
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_std__vectorTemplateOfPointerTongwt__ProxyUser(struct soap *soap, const std::vector<ngwt__ProxyUser * >*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ProxyUser);
+	if (soap_out_std__vectorTemplateOfPointerTongwt__ProxyUser(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_std__vectorTemplateOfPointerTongwt__ProxyUser(struct soap *soap, const char *tag, int id, const std::vector<ngwt__ProxyUser * >*a, const char *type)
+{
+	for (std::vector<ngwt__ProxyUser * >::const_iterator i = a->begin(); i != a->end(); ++i)
+	{
+		if (soap_out_PointerTongwt__ProxyUser(soap, tag, id, &(*i), ""))
+			return soap->error;
+	}
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 std::vector<ngwt__ProxyUser * >* SOAP_FMAC4 soap_get_std__vectorTemplateOfPointerTongwt__ProxyUser(struct soap *soap, std::vector<ngwt__ProxyUser * >*p, const char *tag, const char *type)
+{
+	if ((p = soap_in_std__vectorTemplateOfPointerTongwt__ProxyUser(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 std::vector<ngwt__ProxyUser * >* SOAP_FMAC4 soap_in_std__vectorTemplateOfPointerTongwt__ProxyUser(struct soap *soap, const char *tag, std::vector<ngwt__ProxyUser * >*a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a && !(a = soap_new_std__vectorTemplateOfPointerTongwt__ProxyUser(soap, -1)))
+		return NULL;
+	ngwt__ProxyUser *n;
+	ngwt__ProxyUser **p;
+	do
+	{	soap_revert(soap);
+		if (*soap->id || *soap->href)
+		{	if (!soap_container_id_forward(soap, *soap->id?soap->id:soap->href, a, SOAP_TYPE_ngwt__ProxyUser, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ProxyUser, sizeof(ngwt__ProxyUser), 1))
+				break;
+			if (!(p = soap_in_PointerTongwt__ProxyUser(soap, tag, NULL, "ngwt:ProxyUser")))
+				break;
+		}
+		else
+		{	n = NULL;
+			if (!soap_in_PointerTongwt__ProxyUser(soap, tag, &n, "ngwt:ProxyUser"))
+				break;
+			a->insert(a->end(), n);
+		}
+	}
+	while (!soap_element_begin_in(soap, tag, 1));
+	if (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG)
+	{	soap->error = SOAP_OK;
+		return a;
+	}
+	return NULL;
+}
+
+SOAP_FMAC5 std::vector<ngwt__ProxyUser * > * SOAP_FMAC6 soap_new_std__vectorTemplateOfPointerTongwt__ProxyUser(struct soap *soap, int n)
+{	return soap_instantiate_std__vectorTemplateOfPointerTongwt__ProxyUser(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfPointerTongwt__ProxyUser(struct soap *soap, std::vector<ngwt__ProxyUser * >*p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 std::vector<ngwt__ProxyUser * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfPointerTongwt__ProxyUser(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_std__vectorTemplateOfPointerTongwt__ProxyUser(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__ProxyUser, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new std::vector<ngwt__ProxyUser * >;
+		if (size)
+			*size = sizeof(std::vector<ngwt__ProxyUser * >);
+	}
+	else
+	{	cp->ptr = (void*)new std::vector<ngwt__ProxyUser * >[n];
+		if (size)
+			*size = n * sizeof(std::vector<ngwt__ProxyUser * >);
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (std::vector<ngwt__ProxyUser * >*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__ProxyUser(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying std::vector<ngwt__ProxyUser * > %p -> %p\n", q, p));
+	*(std::vector<ngwt__ProxyUser * >*)p = *(std::vector<ngwt__ProxyUser * >*)q;
 }
 
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__ProblemEntry(struct soap *soap, const std::vector<ngwt__ProblemEntry * >*a)
@@ -80883,6 +94069,107 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__Message
 {
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying std::vector<ngwt__MessagePart * > %p -> %p\n", q, p));
 	*(std::vector<ngwt__MessagePart * >*)p = *(std::vector<ngwt__MessagePart * >*)q;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__Library(struct soap *soap, const std::vector<ngwt__Library * >*a)
+{
+	for (std::vector<ngwt__Library * >::const_iterator i = a->begin(); i != a->end(); ++i)
+		soap_serialize_PointerTongwt__Library(soap, &(*i));
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__Library(struct soap *soap, std::vector<ngwt__Library * >*p)
+{
+	p->clear();
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_std__vectorTemplateOfPointerTongwt__Library(struct soap *soap, const std::vector<ngwt__Library * >*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Library);
+	if (soap_out_std__vectorTemplateOfPointerTongwt__Library(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_std__vectorTemplateOfPointerTongwt__Library(struct soap *soap, const char *tag, int id, const std::vector<ngwt__Library * >*a, const char *type)
+{
+	for (std::vector<ngwt__Library * >::const_iterator i = a->begin(); i != a->end(); ++i)
+	{
+		if (soap_out_PointerTongwt__Library(soap, tag, id, &(*i), ""))
+			return soap->error;
+	}
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 std::vector<ngwt__Library * >* SOAP_FMAC4 soap_get_std__vectorTemplateOfPointerTongwt__Library(struct soap *soap, std::vector<ngwt__Library * >*p, const char *tag, const char *type)
+{
+	if ((p = soap_in_std__vectorTemplateOfPointerTongwt__Library(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 std::vector<ngwt__Library * >* SOAP_FMAC4 soap_in_std__vectorTemplateOfPointerTongwt__Library(struct soap *soap, const char *tag, std::vector<ngwt__Library * >*a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a && !(a = soap_new_std__vectorTemplateOfPointerTongwt__Library(soap, -1)))
+		return NULL;
+	ngwt__Library *n;
+	ngwt__Library **p;
+	do
+	{	soap_revert(soap);
+		if (*soap->id || *soap->href)
+		{	if (!soap_container_id_forward(soap, *soap->id?soap->id:soap->href, a, SOAP_TYPE_ngwt__Library, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Library, sizeof(ngwt__Library), 1))
+				break;
+			if (!(p = soap_in_PointerTongwt__Library(soap, tag, NULL, "ngwt:Library")))
+				break;
+		}
+		else
+		{	n = NULL;
+			if (!soap_in_PointerTongwt__Library(soap, tag, &n, "ngwt:Library"))
+				break;
+			a->insert(a->end(), n);
+		}
+	}
+	while (!soap_element_begin_in(soap, tag, 1));
+	if (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG)
+	{	soap->error = SOAP_OK;
+		return a;
+	}
+	return NULL;
+}
+
+SOAP_FMAC5 std::vector<ngwt__Library * > * SOAP_FMAC6 soap_new_std__vectorTemplateOfPointerTongwt__Library(struct soap *soap, int n)
+{	return soap_instantiate_std__vectorTemplateOfPointerTongwt__Library(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfPointerTongwt__Library(struct soap *soap, std::vector<ngwt__Library * >*p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 std::vector<ngwt__Library * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfPointerTongwt__Library(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_std__vectorTemplateOfPointerTongwt__Library(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__Library, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new std::vector<ngwt__Library * >;
+		if (size)
+			*size = sizeof(std::vector<ngwt__Library * >);
+	}
+	else
+	{	cp->ptr = (void*)new std::vector<ngwt__Library * >[n];
+		if (size)
+			*size = n * sizeof(std::vector<ngwt__Library * >);
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (std::vector<ngwt__Library * >*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__Library(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying std::vector<ngwt__Library * > %p -> %p\n", q, p));
+	*(std::vector<ngwt__Library * >*)p = *(std::vector<ngwt__Library * >*)q;
 }
 
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__JunkEntry(struct soap *soap, const std::vector<ngwt__JunkEntry * >*a)
@@ -81895,6 +95182,208 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfstd__string(struct soa
 	*(std::vector<std::string >*)p = *(std::vector<std::string >*)q;
 }
 
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__DocumentType(struct soap *soap, const std::vector<ngwt__DocumentType * >*a)
+{
+	for (std::vector<ngwt__DocumentType * >::const_iterator i = a->begin(); i != a->end(); ++i)
+		soap_serialize_PointerTongwt__DocumentType(soap, &(*i));
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__DocumentType(struct soap *soap, std::vector<ngwt__DocumentType * >*p)
+{
+	p->clear();
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_std__vectorTemplateOfPointerTongwt__DocumentType(struct soap *soap, const std::vector<ngwt__DocumentType * >*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DocumentType);
+	if (soap_out_std__vectorTemplateOfPointerTongwt__DocumentType(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_std__vectorTemplateOfPointerTongwt__DocumentType(struct soap *soap, const char *tag, int id, const std::vector<ngwt__DocumentType * >*a, const char *type)
+{
+	for (std::vector<ngwt__DocumentType * >::const_iterator i = a->begin(); i != a->end(); ++i)
+	{
+		if (soap_out_PointerTongwt__DocumentType(soap, tag, id, &(*i), ""))
+			return soap->error;
+	}
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 std::vector<ngwt__DocumentType * >* SOAP_FMAC4 soap_get_std__vectorTemplateOfPointerTongwt__DocumentType(struct soap *soap, std::vector<ngwt__DocumentType * >*p, const char *tag, const char *type)
+{
+	if ((p = soap_in_std__vectorTemplateOfPointerTongwt__DocumentType(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 std::vector<ngwt__DocumentType * >* SOAP_FMAC4 soap_in_std__vectorTemplateOfPointerTongwt__DocumentType(struct soap *soap, const char *tag, std::vector<ngwt__DocumentType * >*a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a && !(a = soap_new_std__vectorTemplateOfPointerTongwt__DocumentType(soap, -1)))
+		return NULL;
+	ngwt__DocumentType *n;
+	ngwt__DocumentType **p;
+	do
+	{	soap_revert(soap);
+		if (*soap->id || *soap->href)
+		{	if (!soap_container_id_forward(soap, *soap->id?soap->id:soap->href, a, SOAP_TYPE_ngwt__DocumentType, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DocumentType, sizeof(ngwt__DocumentType), 1))
+				break;
+			if (!(p = soap_in_PointerTongwt__DocumentType(soap, tag, NULL, "ngwt:DocumentType")))
+				break;
+		}
+		else
+		{	n = NULL;
+			if (!soap_in_PointerTongwt__DocumentType(soap, tag, &n, "ngwt:DocumentType"))
+				break;
+			a->insert(a->end(), n);
+		}
+	}
+	while (!soap_element_begin_in(soap, tag, 1));
+	if (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG)
+	{	soap->error = SOAP_OK;
+		return a;
+	}
+	return NULL;
+}
+
+SOAP_FMAC5 std::vector<ngwt__DocumentType * > * SOAP_FMAC6 soap_new_std__vectorTemplateOfPointerTongwt__DocumentType(struct soap *soap, int n)
+{	return soap_instantiate_std__vectorTemplateOfPointerTongwt__DocumentType(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfPointerTongwt__DocumentType(struct soap *soap, std::vector<ngwt__DocumentType * >*p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 std::vector<ngwt__DocumentType * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfPointerTongwt__DocumentType(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_std__vectorTemplateOfPointerTongwt__DocumentType(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DocumentType, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new std::vector<ngwt__DocumentType * >;
+		if (size)
+			*size = sizeof(std::vector<ngwt__DocumentType * >);
+	}
+	else
+	{	cp->ptr = (void*)new std::vector<ngwt__DocumentType * >[n];
+		if (size)
+			*size = n * sizeof(std::vector<ngwt__DocumentType * >);
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (std::vector<ngwt__DocumentType * >*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__DocumentType(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying std::vector<ngwt__DocumentType * > %p -> %p\n", q, p));
+	*(std::vector<ngwt__DocumentType * >*)p = *(std::vector<ngwt__DocumentType * >*)q;
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(struct soap *soap, const std::vector<ngwt__DayOfYearWeek * >*a)
+{
+	for (std::vector<ngwt__DayOfYearWeek * >::const_iterator i = a->begin(); i != a->end(); ++i)
+		soap_serialize_PointerTongwt__DayOfYearWeek(soap, &(*i));
+}
+
+SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(struct soap *soap, std::vector<ngwt__DayOfYearWeek * >*p)
+{
+	p->clear();
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_put_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(struct soap *soap, const std::vector<ngwt__DayOfYearWeek * >*a, const char *tag, const char *type)
+{
+	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DayOfYearWeek);
+	if (soap_out_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(soap, tag, id, a, type))
+		return soap->error;
+	return soap_putindependent(soap);
+}
+
+SOAP_FMAC3 int SOAP_FMAC4 soap_out_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(struct soap *soap, const char *tag, int id, const std::vector<ngwt__DayOfYearWeek * >*a, const char *type)
+{
+	for (std::vector<ngwt__DayOfYearWeek * >::const_iterator i = a->begin(); i != a->end(); ++i)
+	{
+		if (soap_out_PointerTongwt__DayOfYearWeek(soap, tag, id, &(*i), ""))
+			return soap->error;
+	}
+	return SOAP_OK;
+}
+
+SOAP_FMAC3 std::vector<ngwt__DayOfYearWeek * >* SOAP_FMAC4 soap_get_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(struct soap *soap, std::vector<ngwt__DayOfYearWeek * >*p, const char *tag, const char *type)
+{
+	if ((p = soap_in_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(soap, tag, p, type)))
+		soap_getindependent(soap);
+	return p;
+}
+
+SOAP_FMAC3 std::vector<ngwt__DayOfYearWeek * >* SOAP_FMAC4 soap_in_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(struct soap *soap, const char *tag, std::vector<ngwt__DayOfYearWeek * >*a, const char *type)
+{
+	if (soap_element_begin_in(soap, tag, 1))
+		return NULL;
+	if (!a && !(a = soap_new_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(soap, -1)))
+		return NULL;
+	ngwt__DayOfYearWeek *n;
+	ngwt__DayOfYearWeek **p;
+	do
+	{	soap_revert(soap);
+		if (*soap->id || *soap->href)
+		{	if (!soap_container_id_forward(soap, *soap->id?soap->id:soap->href, a, SOAP_TYPE_ngwt__DayOfYearWeek, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DayOfYearWeek, sizeof(ngwt__DayOfYearWeek), 1))
+				break;
+			if (!(p = soap_in_PointerTongwt__DayOfYearWeek(soap, tag, NULL, "ngwt:DayOfYearWeek")))
+				break;
+		}
+		else
+		{	n = NULL;
+			if (!soap_in_PointerTongwt__DayOfYearWeek(soap, tag, &n, "ngwt:DayOfYearWeek"))
+				break;
+			a->insert(a->end(), n);
+		}
+	}
+	while (!soap_element_begin_in(soap, tag, 1));
+	if (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG)
+	{	soap->error = SOAP_OK;
+		return a;
+	}
+	return NULL;
+}
+
+SOAP_FMAC5 std::vector<ngwt__DayOfYearWeek * > * SOAP_FMAC6 soap_new_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(struct soap *soap, int n)
+{	return soap_instantiate_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(soap, n, NULL, NULL, NULL);
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(struct soap *soap, std::vector<ngwt__DayOfYearWeek * >*p)
+{	soap_delete(soap, p);
+}
+
+SOAP_FMAC5 std::vector<ngwt__DayOfYearWeek * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
+	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DayOfYearWeek, n, soap_fdelete);
+	if (!cp)
+		return NULL;
+	if (n < 0)
+	{	cp->ptr = (void*)new std::vector<ngwt__DayOfYearWeek * >;
+		if (size)
+			*size = sizeof(std::vector<ngwt__DayOfYearWeek * >);
+	}
+	else
+	{	cp->ptr = (void*)new std::vector<ngwt__DayOfYearWeek * >[n];
+		if (size)
+			*size = n * sizeof(std::vector<ngwt__DayOfYearWeek * >);
+	}
+		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
+	return (std::vector<ngwt__DayOfYearWeek * >*)cp->ptr;
+}
+
+SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__DayOfYearWeek(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
+{
+	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying std::vector<ngwt__DayOfYearWeek * > %p -> %p\n", q, p));
+	*(std::vector<ngwt__DayOfYearWeek * >*)p = *(std::vector<ngwt__DayOfYearWeek * >*)q;
+}
+
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfngwt__DayOfYear(struct soap *soap, const std::vector<short >*a)
 {
 }
@@ -81992,107 +95481,6 @@ SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfngwt__DayOfYear(struct
 {
 	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying std::vector<short > %p -> %p\n", q, p));
 	*(std::vector<short >*)p = *(std::vector<short >*)q;
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfPointerTongwt__DayOfWeek(struct soap *soap, const std::vector<ngwt__DayOfWeek * >*a)
-{
-	for (std::vector<ngwt__DayOfWeek * >::const_iterator i = a->begin(); i != a->end(); ++i)
-		soap_serialize_PointerTongwt__DayOfWeek(soap, &(*i));
-}
-
-SOAP_FMAC3 void SOAP_FMAC4 soap_default_std__vectorTemplateOfPointerTongwt__DayOfWeek(struct soap *soap, std::vector<ngwt__DayOfWeek * >*p)
-{
-	p->clear();
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_put_std__vectorTemplateOfPointerTongwt__DayOfWeek(struct soap *soap, const std::vector<ngwt__DayOfWeek * >*a, const char *tag, const char *type)
-{
-	register int id = soap_embed(soap, (void*)a, NULL, 0, tag, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DayOfWeek);
-	if (soap_out_std__vectorTemplateOfPointerTongwt__DayOfWeek(soap, tag, id, a, type))
-		return soap->error;
-	return soap_putindependent(soap);
-}
-
-SOAP_FMAC3 int SOAP_FMAC4 soap_out_std__vectorTemplateOfPointerTongwt__DayOfWeek(struct soap *soap, const char *tag, int id, const std::vector<ngwt__DayOfWeek * >*a, const char *type)
-{
-	for (std::vector<ngwt__DayOfWeek * >::const_iterator i = a->begin(); i != a->end(); ++i)
-	{
-		if (soap_out_PointerTongwt__DayOfWeek(soap, tag, id, &(*i), ""))
-			return soap->error;
-	}
-	return SOAP_OK;
-}
-
-SOAP_FMAC3 std::vector<ngwt__DayOfWeek * >* SOAP_FMAC4 soap_get_std__vectorTemplateOfPointerTongwt__DayOfWeek(struct soap *soap, std::vector<ngwt__DayOfWeek * >*p, const char *tag, const char *type)
-{
-	if ((p = soap_in_std__vectorTemplateOfPointerTongwt__DayOfWeek(soap, tag, p, type)))
-		soap_getindependent(soap);
-	return p;
-}
-
-SOAP_FMAC3 std::vector<ngwt__DayOfWeek * >* SOAP_FMAC4 soap_in_std__vectorTemplateOfPointerTongwt__DayOfWeek(struct soap *soap, const char *tag, std::vector<ngwt__DayOfWeek * >*a, const char *type)
-{
-	if (soap_element_begin_in(soap, tag, 1))
-		return NULL;
-	if (!a && !(a = soap_new_std__vectorTemplateOfPointerTongwt__DayOfWeek(soap, -1)))
-		return NULL;
-	ngwt__DayOfWeek *n;
-	ngwt__DayOfWeek **p;
-	do
-	{	soap_revert(soap);
-		if (*soap->id || *soap->href)
-		{	if (!soap_container_id_forward(soap, *soap->id?soap->id:soap->href, a, SOAP_TYPE_ngwt__DayOfWeek, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DayOfWeek, sizeof(ngwt__DayOfWeek), 1))
-				break;
-			if (!(p = soap_in_PointerTongwt__DayOfWeek(soap, tag, NULL, "ngwt:DayOfWeek")))
-				break;
-		}
-		else
-		{	n = NULL;
-			if (!soap_in_PointerTongwt__DayOfWeek(soap, tag, &n, "ngwt:DayOfWeek"))
-				break;
-			a->insert(a->end(), n);
-		}
-	}
-	while (!soap_element_begin_in(soap, tag, 1));
-	if (soap->error == SOAP_TAG_MISMATCH || soap->error == SOAP_NO_TAG)
-	{	soap->error = SOAP_OK;
-		return a;
-	}
-	return NULL;
-}
-
-SOAP_FMAC5 std::vector<ngwt__DayOfWeek * > * SOAP_FMAC6 soap_new_std__vectorTemplateOfPointerTongwt__DayOfWeek(struct soap *soap, int n)
-{	return soap_instantiate_std__vectorTemplateOfPointerTongwt__DayOfWeek(soap, n, NULL, NULL, NULL);
-}
-
-SOAP_FMAC5 void SOAP_FMAC6 soap_delete_std__vectorTemplateOfPointerTongwt__DayOfWeek(struct soap *soap, std::vector<ngwt__DayOfWeek * >*p)
-{	soap_delete(soap, p);
-}
-
-SOAP_FMAC5 std::vector<ngwt__DayOfWeek * > * SOAP_FMAC6 soap_instantiate_std__vectorTemplateOfPointerTongwt__DayOfWeek(struct soap *soap, int n, const char *type, const char *arrayType, size_t *size)
-{
-	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "soap_instantiate_std__vectorTemplateOfPointerTongwt__DayOfWeek(%d, %s, %s)\n", n, type?type:"", arrayType?arrayType:""));
-	struct soap_clist *cp = soap_link(soap, NULL, SOAP_TYPE_std__vectorTemplateOfPointerTongwt__DayOfWeek, n, soap_fdelete);
-	if (!cp)
-		return NULL;
-	if (n < 0)
-	{	cp->ptr = (void*)new std::vector<ngwt__DayOfWeek * >;
-		if (size)
-			*size = sizeof(std::vector<ngwt__DayOfWeek * >);
-	}
-	else
-	{	cp->ptr = (void*)new std::vector<ngwt__DayOfWeek * >[n];
-		if (size)
-			*size = n * sizeof(std::vector<ngwt__DayOfWeek * >);
-	}
-		DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Instantiated location=%p\n", cp->ptr));
-	return (std::vector<ngwt__DayOfWeek * >*)cp->ptr;
-}
-
-SOAP_FMAC5 void SOAP_FMAC6 soap_copy_std__vectorTemplateOfPointerTongwt__DayOfWeek(struct soap *soap, int st, int tt, void *p, const void *q, size_t n)
-{
-	DBGLOG(TEST, SOAP_MESSAGE(fdebug, "Copying std::vector<ngwt__DayOfWeek * > %p -> %p\n", q, p));
-	*(std::vector<ngwt__DayOfWeek * >*)p = *(std::vector<ngwt__DayOfWeek * >*)q;
 }
 
 SOAP_FMAC3 void SOAP_FMAC4 soap_serialize_std__vectorTemplateOfngwt__DayOfMonth(struct soap *soap, const std::vector<char >*a)

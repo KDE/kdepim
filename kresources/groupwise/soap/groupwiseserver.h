@@ -21,6 +21,7 @@
 #ifndef GROUPWISESERVER_H
 #define GROUPWISESERVER_H
 
+#include "ktcpsocket.h"
 #include <kdemacros.h>
 #include <kio/job.h>
 #include <kio/jobclasses.h>
@@ -30,15 +31,13 @@
 #include <QObject>
 #include <QString>
 #include <QThread>
-#include <QSslError>
-
 
 #include <string>
 
 #include <kabc/addressee.h>
 #include <kcal/freebusy.h>
 
-#include "groupwise_export.h"
+#include "../groupwise_export.h"
 #include "gwjobs.h"
 
 namespace KABC {
@@ -53,7 +52,7 @@ class ResourceCached;
 
 class ngwt__Settings;
 
-class QTcpSocket;
+class KTcpSocket;
 
 struct soap;
 
@@ -66,6 +65,8 @@ class ngwt__Status;
 class GroupWiseBinding;
 
 namespace GroupWise {
+
+enum ErrorCode { NoError, RefreshNeeded };
 
 class AddressBook
 {
@@ -97,12 +98,14 @@ class GWSOAP_EXPORT GroupwiseServer : public QObject
   Q_OBJECT
 
   public:
+    bool checkResponse( int result, ngwt__Status *status );
     enum RetractCause { DueToResend, Other };
     GroupwiseServer( const QString &url, const QString &user,
                      const QString &password, const KDateTime::Spec & timeSpec, QObject *parent );
     ~GroupwiseServer();
 
-    QString error() const { return mErrors.join( "," ); }
+    int error() const { return mError; }
+    QString errorText() const { return mErrors.join( "," ); }
 
     bool login();
     bool logout();
@@ -138,13 +141,19 @@ class GWSOAP_EXPORT GroupwiseServer : public QObject
      */
     bool retractRequest( KCal::Incidence *, RetractCause cause );
 
+    /**
+     * @brief update a todo's completed state.
+     * @param the todo to set the completed state for.
+     */
+    bool setCompleted( KCal::Todo * todo );
+
     bool readCalendarSynchronous( KCal::Calendar *cal );
 
     GroupWise::AddressBook::List addressBookList();
 
     bool readAddressBooksSynchronous( const QStringList &addrBookIds );
     bool updateAddressBooks( const QStringList &addrBookIds,
-      const unsigned int startSequenceNumber );
+    const unsigned long startSequenceNumber, const unsigned long lastPORebuildTime );
 
     bool insertAddressee( const QString &addrBookId, KABC::Addressee& );
     bool changeAddressee( const KABC::Addressee& );
@@ -178,7 +187,6 @@ class GWSOAP_EXPORT GroupwiseServer : public QObject
     QString userEmail() const { return mUserEmail; }
     QString userName() const { return mUserName; }
     QString userUuid() const { return mUserUuid; }
-    bool checkResponse( int result, ngwt__Status *status );
 
   signals:
     void readAddressBookTotalSize( int );
@@ -209,7 +217,8 @@ class GWSOAP_EXPORT GroupwiseServer : public QObject
     void log( const QString &prefix, const char *s, size_t n );
 
   protected slots:
-    void slotSslErrors(const QList<QSslError> &);
+    void slotSocketError(KTcpSocket::Error);
+    void slotSslErrors(const QList<KSslError> &);
 
   private:
     QString mUrl;
@@ -229,8 +238,9 @@ class GWSOAP_EXPORT GroupwiseServer : public QObject
     struct soap *mSoap;
     GroupWiseBinding *mBinding;
     
-    QTcpSocket *m_sock;
+    KTcpSocket *m_sock;
 
+    int mError;
     QStringList mErrors;
 
     QString mLogFile;

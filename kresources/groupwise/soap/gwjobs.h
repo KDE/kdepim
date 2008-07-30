@@ -47,12 +47,14 @@ class GWJob
 {
   public:
     GWJob( GroupwiseServer *server, struct soap *soap, const QString &url, const KDateTime::Spec & spec, const std::string &session );
+    int error() const { return mError; }
   protected:
     GroupwiseServer *mServer;
     struct soap *mSoap;
     QString mUrl;
     const std::string mSession;
     KDateTime::Spec mTimeSpec;
+    int mError;
 };
 
 class ReadAddressBooksJob : public GWJob
@@ -108,10 +110,14 @@ class UpdateAddressBooksJob : public GWJob
     void setAddressBookIds( const QStringList& );
 
     /**
-     * set the sequence number to start reading deltas from (usually the last sequenec number
-     * we have in the local copy of the System Address Book).
-     */
-    void setStartSequenceNumber( const int startSeqNo );
+    * set the sequence number to start reading deltas from (usually the last sequenec number
+    * we have in the local copy of the System Address Book).
+    */
+    void setStartSequenceNumber( const unsigned long startSeqNo );
+    /**
+    * set the time of the last server (PO) rebuild
+    */
+    void setLastPORebuildTime( const unsigned long lastPORebuildTime);
 
     void run();
   protected:
@@ -121,7 +127,8 @@ class UpdateAddressBooksJob : public GWJob
     QStringList mAddressBookIds;
     KABC::Resource *mResource;
     int mProgress;
-    int mStartSequenceNumber; // first and last sequence numbers define the current state of the system addressbook
+    unsigned long mLastPORebuildTime;
+    unsigned long mStartSequenceNumber; // first and last sequence numbers define the current state of the system addressbook
                               // and are used to determine which deltas to download
 };
 

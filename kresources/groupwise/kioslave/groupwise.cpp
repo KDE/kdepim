@@ -21,6 +21,8 @@
 
 #include "groupwiseserver.h"
 
+#include <qregexp.h>
+
 #include <kabc/resourcecached.h>
 
 #include <kcal/freebusy.h>
@@ -116,7 +118,7 @@ void Groupwise::get( const KUrl &url )
       getAddressbook( url );
   } else {
     QString error = i18n("Unknown path. Known paths are '/freebusy/', "
-      "'/calendar/' and '/addressbook/'.");
+        "'/calendar/' and '/addressbook/'.") + QString(" path was %1" ).arg( url.url() );
     errorMessage( error );
   }
   
@@ -136,8 +138,7 @@ QString Groupwise::soapUrl( const KUrl &url )
   if ( url.port() ) 
     u += QString::number( url.port() );
   else {
-    if ( useSsl ) u += "8201";
-    else u += "7181";
+    u += "7191";
   }
 
   // check for a soap path in the URL
@@ -167,6 +168,12 @@ void Groupwise::getFreeBusy( const KUrl &url )
     QString email = file.left( file.length() - 4 );
     debugMessage( "Email: " + email );
 
+    // Sanitise local Nuernberg email addresses
+    kdDebug() << "Email before sanitizing: " << email << endl;
+    email = email.replace(QRegExp("\\.EMEA5-1\\.EMEA5" ), "" );
+    email = email.replace(QRegExp("\\.Suse.INTERNET" ), "" );
+    kdDebug() << "Email after sanitizing: " << email << endl;
+
     QString u = soapUrl( url );
 
     QString user = url.user();
@@ -193,11 +200,11 @@ void Groupwise::getFreeBusy( const KUrl &url )
       kDebug() <<"Login";
 
       if ( !server.login() ) {
-        errorMessage( i18n("Unable to login: ") + server.error() );
+        errorMessage( i18n("Unable to login: ") + server.errorText() );
       } else {
         kDebug() <<"Read free/busy";
         if ( !server.readFreeBusy( email, start, end, fb ) ) {
-          errorMessage( i18n("Unable to read free/busy data: ") + server.error() );
+          errorMessage( i18n("Unable to read free/busy data: ") + server.errorText() );
         }
         kDebug() <<"Read free/busy";
         server.logout();
@@ -239,11 +246,11 @@ void Groupwise::getCalendar( const KUrl &url )
 
   kDebug() <<"Login";
   if ( !server.login() ) {
-    errorMessage( i18n("Unable to login: ") + server.error() );
+    errorMessage( i18n("Unable to login: ") + server.errorText() );
   } else {
     kDebug() <<"Read calendar";
     if ( !server.readCalendarSynchronous( &calendar ) ) {
-      errorMessage( i18n("Unable to read calendar data: ") + server.error() );
+      errorMessage( i18n("Unable to read calendar data: ") + server.errorText() );
     }
     kDebug() <<"Logout";
     server.logout();
@@ -300,11 +307,11 @@ void Groupwise::getAddressbook( const KUrl &url )
 
     kDebug() <<"Login";
     if ( !server.login() ) {
-      errorMessage( i18n("Unable to login: ") + server.error() );
+      errorMessage( i18n("Unable to login: ") + server.errorText() );
     } else {
       kDebug() <<"Read Addressbook";
       if ( !server.readAddressBooksSynchronous( ids ) ) {
-        errorMessage( i18n("Unable to read addressbook data: ") + server.error() );
+        errorMessage( i18n("Unable to read addressbook data: ") + server.errorText() );
       }
       kDebug() <<"Logout";
       server.logout();
@@ -325,6 +332,7 @@ void Groupwise::slotReadReceiveAddressees( const KABC::Addressee::List addressee
 
 void Groupwise::updateAddressbook( const KUrl &url )
 {
+  kdDebug() << "Groupwise::updateAddressbook() " << url << endl;
   QString u = soapUrl( url );
 
   QString user = url.user();
@@ -336,7 +344,8 @@ void Groupwise::updateAddressbook( const KUrl &url )
 
   QString query = url.query();
 
-  unsigned int lastSequenceNumber = 0;
+  unsigned long lastSequenceNumber = 0;
+  unsigned long lastPORebuildTime = 0;
 
   if ( query.isEmpty() || query == "?" ) {
     errorMessage( i18n("No addressbook IDs given.") );
@@ -352,8 +361,10 @@ void Groupwise::updateAddressbook( const KUrl &url )
       if ( item.count() == 2 && item[ 0 ] == "addressbookid" ) {
         ids.append( item[ 1 ] );
       }
-       if ( item.count() == 2 && item[ 0 ] == "lastSeqNo" )
-        lastSequenceNumber = item[ 1 ].toInt();
+      if ( item.count() == 2 && item[ 0 ] == "lastSeqNo" )
+        lastSequenceNumber = item[ 1 ].toULong();
+      if ( item.count() == 2 && item[ 0 ] == "PORebuildTime" )
+        lastPORebuildTime = item[ 1 ].toULong();
     }
     
     debugMessage( "update IDs: " + ids.join( "," ) );
@@ -364,15 +375,16 @@ void Groupwise::updateAddressbook( const KUrl &url )
     connect( &server, SIGNAL( gotAddressees( const KABC::Addressee::List ) ),
       SLOT( slotReadReceiveAddressees( const KABC::Addressee::List ) ) );
 
-    kDebug() <<"Login";
+    kDebug() << "  Login";
     if ( !server.login() ) {
-      errorMessage( i18n("Unable to login: ") + server.error() );
+      errorMessage( i18n("Unable to login: ") + server.errorText() );
     } else {
-      kDebug() <<"Update Addressbook";
-      if ( !server.updateAddressBooks( ids, lastSequenceNumber ) ) {
-        errorMessage( i18n("Unable to update addressbook data: ") + server.error() );
+      kDebug() << "  Updating Addressbook";
+      if ( !server.updateAddressBooks( ids, lastSequenceNumber + 1, lastPORebuildTime ) )
+      {
+        error( KIO::ERR_NO_CONTENT, server.errorText() );
       }
-      kDebug() <<"Logout";
+      kDebug() << "  Logout";
       server.logout();
       finished();
     }

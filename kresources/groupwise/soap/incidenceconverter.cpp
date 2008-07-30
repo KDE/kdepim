@@ -65,22 +65,24 @@ KCal::Event* IncidenceConverter::convertFromAppointment( ngwt__Appointment* appo
     event->setAllDay( true );
 
     if ( appointment->startDay != 0 )
-      event->setDtStart( KDateTime::fromString( QString::fromUtf8( appointment->startDay->c_str() ), KDateTime::ISODate ) );
+      event->setDtStart( stringToKDateTime( appointment->startDay ).addDays( 1 ) );
 
     if ( appointment->endDay != 0 )
-//TODO: Use KDateTime::fromString()?
-      event->setDtEnd( KDateTime( KDateTime::fromString( QString::fromUtf8( appointment->endDay->c_str() ), KDateTime::ISODate ) ).addDays( -1 ) );
+      //TODO: Use KDateTime::fromString()?
+      event->setDtEnd( stringToKDateTime( appointment->endDay) );
     kDebug() <<" all day event.";
   }
   else
   {
     event->setAllDay( false );
 
-    if ( appointment->startDate != 0 )
+    if ( appointment->startDate != 0 ) {
       event->setDtStart( charToKDateTime( appointment->startDate, mTimeSpec ) );
+    }
 
-    if ( appointment->endDate != 0 )
+    if ( appointment->endDate != 0 ) {
       event->setDtEnd( charToKDateTime( appointment->endDate, mTimeSpec ) );
+    }
   }
 
   kDebug() <<"start date:" << event->dtStart();
@@ -131,15 +133,29 @@ ngwt__Appointment* IncidenceConverter::convertToAppointment( KCal::Event* event 
       () ) {
     bool *allDayEvent = (bool*)soap_malloc( soap(), 1 );
     (*allDayEvent ) = true;
-
     appointment->allDayEvent = allDayEvent;
 
-    if ( event->dtStart().isValid() )
-//      appointment->startDate = qDateToChar( event->dtStart().date() );
-      appointment->startDay = qDateToString( event->dtStart().date() );
-    if ( event->hasEndDate() )
-//      appointment->endDate = qDateToChar( event->dtEnd().date() );
-      appointment->endDay = qDateToString( event->dtEnd().date() );
+    if ( event->dtStart().isValid() ) {
+/*      kDebug() << " convertToAppointment() raw start date: " << event->dtStart().toString();*/
+      KDateTime start = event->dtStart();
+      start.setTime( QTime( 0, 0, 0 ) );
+      appointment->startDate = kDateTimeToChar( start, mTimeSpec );
+      //appointment->startDay = qDateToString( event->dtStart().date()/*.addDays( -1 )*/ );  
+/*      kDebug() << "   converted start date: " << appointment->startDate;*/
+    }
+    else
+      kDebug() << "   event start date not valid ";
+    if ( event->hasEndDate() ) {
+//       kDebug() << " convertToAppointment() raw end date: " << event->dtEnd().toString();
+      KDateTime end = event->dtEnd();
+      end = end.addDays( 1 );
+      end.setTime( QTime( 0, 0, 0 ) );
+      appointment->endDate = kDateTimeToChar( end, mTimeSpec );
+      //appointment->endDay = qDateToString( event->dtEnd().date() );
+//       kDebug() << "   converted end date:" << appointment->endDate;
+    }
+    else
+      kDebug() << "   event end date not valid ";
   } else {
     appointment->allDayEvent = 0;
 
@@ -211,8 +227,8 @@ KCal::Todo* IncidenceConverter::convertFromTask( ngwt__Task* task )
     todo->setPriority( p );
   }
 
-  if ( task->completed && (*task->completed) == true )
-    todo->setCompleted( true );
+  if ( task->completed )
+    todo->setCompleted( *task->completed );
 
   todo->setLocation( i18n( "Novell GroupWise does not support locations for to-dos." ) );
   return todo;
@@ -225,6 +241,7 @@ ngwt__Task* IncidenceConverter::convertToTask( KCal::Todo* todo )
   ngwt__Task* task = soap_new_ngwt__Task( soap(), -1 );
   task->startDate = 0;
   task->dueDate = 0;
+  task->assignedDate = 0;
   task->taskPriority = 0;
   task->completed = 0;
 
@@ -255,17 +272,20 @@ ngwt__Task* IncidenceConverter::convertToTask( KCal::Todo* todo )
 
 KCal::Journal* IncidenceConverter::convertFromNote( ngwt__Note* note)
 {
+  kDebug();
   if ( !note )
     return 0;
 
   KCal::Journal *journal = new KCal::Journal();
 
   if ( !convertFromCalendarItem( note, journal ) ) {
+    kDebug() << "Couldn't convert Note to Journal!";
     delete journal;
     return 0;
   }
 
   if ( note->startDate ) {
+    kDebug() << "Journal start date is: " << note->startDate->c_str();
     journal->setDtStart( stringToKDateTime( note->startDate, mTimeSpec ) );
   }
 
@@ -320,11 +340,13 @@ bool IncidenceConverter::convertToCalendarItem( KCal::Incidence* incidence, ngwt
   item->hasAttachment = false;
   item->size = 0;
   item->subType = 0;
+  item->nntpOrImap = 0;
+  item->smimeType = 0;
   // ngwt__BoxEntry
   item->status = 0;
   item->thread = 0;
   item->msgId = 0;
-  //item->messageId = 0;
+  item->messageId = 0;
   item->source = 0;
   item->returnSentItemsId = 0;
   item->delivered = 0;
@@ -460,6 +482,7 @@ void IncidenceConverter::setAttendees( KCal::Incidence *incidence,
   }
   item->distribution->to = qStringToString( to );
   item->distribution->cc = 0;
+  item->distribution->bc = 0;
 }
 
 ngwt__Recipient *IncidenceConverter::createRecipient( const QString &name,
@@ -483,7 +506,8 @@ ngwt__Recipient *IncidenceConverter::createRecipient( const QString &name,
     recipient->email = 0;
   }
   recipient->distType = TO;
-  recipient->recipType = User;
+  recipient->recipType = User_;
+  recipient->acceptLevel = 0;
   return recipient;
 }
 
@@ -498,11 +522,15 @@ bool IncidenceConverter::convertFromCalendarItem( ngwt__CalendarItem* item,
 
   kDebug() <<"SUMMARY:" << incidence->summary();
 
-  if ( item->created )
+  if ( item->created ) {
+    kDebug() << "item created at " << item->created;
     incidence->setCreated( charToKDateTime( item->created, mTimeSpec ) );
+  }
 
-  if ( item->modified != 0 )
+  if ( item->modified != 0 ) {
+    kDebug() << "item modified at " << item->modified;
     incidence->setLastModified( charToKDateTime( item->modified, mTimeSpec ) );
+  }
 
   getItemDescription( item, incidence );
   getAttendees( item, incidence );
@@ -576,7 +604,7 @@ void IncidenceConverter::setItemDescription( KCal::Incidence *incidence,
     part->contentType = str;
 
     part->length = 0; // this is optional and sending the actual length of the source string truncates the data.
-
+    part->offset = 0; // optional
     message->part.push_back( part );
 
     item->message = message;
@@ -586,31 +614,35 @@ void IncidenceConverter::setItemDescription( KCal::Incidence *incidence,
 
 void IncidenceConverter::getAttendees( ngwt__CalendarItem *item, KCal::Incidence *incidence )
 {
-//   kDebug() <<"IncidenceConverter::getAttendees()" << ( item->subject ? item->subject->c_str() :"no subject" );
-
+  kDebug() << ( item->subject ? item->subject->c_str() : "no subject" );
+ 
   if ( item->distribution && item->distribution->from ) {
-/*    kDebug() <<"-- from";*/
+    kDebug() << "-- from";
     KCal::Person organizer( stringToQString( item->distribution->from->displayName ),
                             stringToQString( item->distribution->from->email ) );
     incidence->setOrganizer( organizer );
   }
 
   if ( item->distribution && item->distribution->recipients ) {
-/*    kDebug() <<"-- recipients";*/
+    kDebug() << "-- recipients";
     std::vector<ngwt__Recipient*> recipients = item->distribution->recipients->recipient;
     std::vector<ngwt__Recipient*>::const_iterator it;
 
     for ( it = recipients.begin(); it != recipients.end(); ++it ) {
-/*      kDebug() <<"---- recipient";
- */   ngwt__Recipient *recipient = *it;
+      ngwt__Recipient *recipient = *it;
+      kDebug() << "---- recipient " << recipient->email->c_str();
       KCal::Attendee *attendee = new KCal::Attendee(
         stringToQString( recipient->displayName ),
         stringToQString( recipient->email ) );
 
       // set our status
-      if ( *(recipient->email) == *(qStringToString( mFromEmail )) )
+      if ( emailsMatch( stringToQString(recipient->email), mFromEmail ) )
         if ( item->status->accepted )
           attendee->setStatus( ( *item->status->accepted ) ? KCal::Attendee::Accepted : KCal::Attendee::NeedsAction );
+        else
+          kDebug() << "---- found ourselves, but not accepted";
+      else
+        kDebug() << "---- '" <<  "' != '" << (qStringToString( mFromEmail ))->c_str() << "'";
 
       incidence->addAttendee( attendee );
     }
@@ -620,7 +652,7 @@ void IncidenceConverter::getAttendees( ngwt__CalendarItem *item, KCal::Incidence
 void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__CalendarItem * item )
 {
   kDebug() ;
-  ngwt__Frequency * freq;
+  ngwt__Frequency * freq = 0;
   const KCal::Recurrence * recur = incidence->recurrence();
 
   if ( incidence->recurs() )
@@ -632,6 +664,7 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
     item->rrule->interval = 0; //
     item->rrule->byDay = 0;
     item->rrule->byYearDay = 0;
+    item->rrule->byMonthDay = 0;
     item->rrule->byMonth = 0;
     freq = (ngwt__Frequency *)soap_malloc( soap(), sizeof( ngwt__Frequency ) );
     // interval
@@ -681,16 +714,17 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
   else if ( incidence->recurrenceType() == KCal::Recurrence::rWeekly )
   {
     kDebug() <<"incidence recurs weekly";
+#if 1 //trying out byDay recurrence
     *freq = Weekly;
     item->rrule->frequency = freq;
     // now change the bitArray of the days of the week that it recurs on to a ngwt__DayOfWeekList *
     QBitArray ba = recur->days();
-    ngwt__DayOfWeekList * weeklyDays = soap_new_ngwt__DayOfWeekList( soap(), -1 );
+    ngwt__DayOfYearWeekList * weeklyDays = soap_new_ngwt__DayOfYearWeekList( soap(), -1 );
     for ( int i = 0; i < 7; ++i )
     {
       if ( ba[i] )
       {
-        ngwt__DayOfWeek * day = soap_new_ngwt__DayOfWeek( soap(), -1 );
+        ngwt__DayOfYearWeek * day = soap_new_ngwt__DayOfYearWeek( soap(), -1 );
         day->occurrence = 0;
         switch( i )
         {
@@ -721,6 +755,7 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
     }
     // add the list of days to the recurrence rule
     item->rrule->byDay = weeklyDays;
+#endif
   }
   else if ( incidence->recurrenceType() == KCal::Recurrence::rMonthlyDay )
   {

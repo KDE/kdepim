@@ -35,7 +35,7 @@ ngwt__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
 
   ngwt__Contact* contact = soap_new_ngwt__Contact( soap(), -1 );
 
-  // ngwt_Contact
+  // ngwt__Contact
   contact->fullName = 0;
   contact->emailList = 0;
   contact->imList = 0;
@@ -43,9 +43,14 @@ ngwt__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
   contact->officeInfo = 0;
   contact->personalInfo = 0;
   contact->referenceInfo = 0;
-  // ngwt_AddressBookItem
+  // ngwt__AddressBookItem
   contact->uuid = 0;
   contact->comment = 0;
+  contact->sync = 0;
+  contact->domain = 0;
+  contact->postOffice = 0;
+  contact->distinguishedName = 0;
+  contact->userid = 0;
   // ngwt__ContainerItem
   contact->categories = 0;
   contact->created = 0;
@@ -210,7 +215,6 @@ ngwt__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
 
 KABC::Addressee ContactConverter::convertFromAddressBookItem( ngwt__AddressBookItem * addrBkItem )
 {
-  kDebug() <<"ContactConverter::convertFromAddressBookItem()";
   KABC::Addressee addr;
   if ( !addrBkItem )
   {
@@ -229,7 +233,6 @@ KABC::Addressee ContactConverter::convertFromAddressBookItem( ngwt__AddressBookI
 
 KABC::Addressee ContactConverter::convertFromResource( ngwt__Resource* resource )
 {
-  kDebug() <<"ContactConverter::convertFromResource()";
   KABC::Addressee addr = convertFromAddressBookItem( resource );
   if ( !resource )
   {
@@ -249,11 +252,10 @@ KABC::Addressee ContactConverter::convertFromResource( ngwt__Resource* resource 
 
 KABC::Addressee ContactConverter::convertFromGroup( ngwt__Group* group)
 {
-  kDebug() <<"ContactConverter::convertFromGroup()";
   KABC::Addressee addr = convertFromAddressBookItem( group );
   if ( !group )
   {
-    kDebug() <<"Null Resource, bailing out!";
+    kDebug() <<"Null Group, bailing out!";
     return addr;
   }
   addr.insertCategory( i18n( "Group" ) );
@@ -262,8 +264,6 @@ KABC::Addressee ContactConverter::convertFromGroup( ngwt__Group* group)
 
 KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
 {
-  kDebug() <<"ContactConverter::convertFromContact()";
-
   KABC::Addressee addr = convertFromAddressBookItem( contact );
 
   if ( !contact )
@@ -409,7 +409,7 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
   {
     if ( *contact->sync == add )
       addr.insertCustom( "GWRESOURCE", "SYNC", "ADD" );
-    else if ( *contact->sync == _delete )
+    else if ( *contact->sync == delete_ )
       addr.insertCustom( "GWRESOURCE", "SYNC", "DEL" );
     else if ( *contact->sync == update )
       addr.insertCustom( "GWRESOURCE", "SYNC", "UPD" );

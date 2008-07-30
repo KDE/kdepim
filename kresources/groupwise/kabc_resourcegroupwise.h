@@ -73,35 +73,93 @@ class KABC_GROUPWISE_EXPORT ResourceGroupwise : public ResourceCached
     bool asyncLoad();
     bool save( Ticket * );
     bool asyncSave( Ticket * );
-    bool updateAddressBooks();
+    enum SABState { Error, Stale, InSync, RefreshNeeded };
 
     /**
      * Clears the cached data, in memory and on disk
      */
     void clearCache();
   protected:
+    enum ResourceState { Start, FetchingSAB, SABUptodate, FetchingUAB, Uptodate };
+    enum BookType { System, User };
+    enum AccessMode { Fetch, Update };
     void init();
     void initGroupwise();
+    /* STATE CHANGING METHODS */
+    /**
+     * Begin asynchronously fetching the system address book , replacing the cached copy
+     */
+    void fetchAddressBooks( const BookType booktype );
+    /**
+     *  Asynchronously update the system address book
+     */
+    void updateSystemAddressBook();
+    /**
+     * Wrap up the load sequence
+     */
+    void loadCompleted();
+
+    /** HELPER METHODS **/
+    /**
+     * Check to see if a local download of the SAB already exists
+     */
+    SABState systemAddressBookState();
+    /**
+     * Check if the resource is configured to download the SAB
+     */
+    bool shouldFetchSystemAddressBook();
+    /**
+     * Check if the resource is configured to download personal address
+     * books
+     */
+    bool shouldFetchUserAddressBooks();
+ 
+    /**
+     * Create a URL for a single addressbook access.
+     * To fetch an address book completely, use mode = Fetch
+     * To just update an addressbook, use mode = Update and give the last sequence number already held
+     * If Update is given without a sequence number, the mode falls back to Fetch
+     */
+    KUrl createAccessUrl( BookType bookType, AccessMode mode, unsigned long lastSequenceNumber = 0, unsigned long lastPORebuildTime = 0 );
+
+    /**
+     * Persist the last known delta info.  Call after the SAB is up to date.
+     */
+    void storeDeltaInfo();
+
+    /**
+     * Check if the application which has loaded this resource is whitelisted
+     * to load the System Address Book (time-consuming)
+     */
+    bool appIsWhiteListedForSAB();
 
   private slots:
-    void slotFetchJobResult( KJob * );
-    void slotUpdateJobResult( KJob * );
+    /** STATE CHANGING SLOTS **/
+    void fetchSABResult( KJob * );
+    void fetchUABResult( KJob * );
+    void updateSABResult( KJob * );
+    /** DATA PROCESSING SLOTS **/
     void slotReadJobData( KIO::Job *, const QByteArray & );
     void slotUpdateJobData( KIO::Job *, const QByteArray & );
+    /** HELPER SLOT **/
     void slotJobPercent( KJob *job, unsigned long percent );
-
+    void slotJobFinished( KJob * job );
     void cancelLoad();
-
   private:
     GroupwisePrefs *mPrefs;
     GroupWise::AddressBook::List mAddressBooks;
 
     GroupwiseServer *mServer;
 
-    KIO::TransferJob *mDownloadJob;
+    KIO::TransferJob *mJob;
     KPIM::ProgressItem *mProgress;
+    KPIM::ProgressItem *mSABProgress;
+    KPIM::ProgressItem *mUABProgress;
     QByteArray mJobData;
-    bool mUpdateSystemAddressBook;
+    ResourceState mState;
+    unsigned long mServerFirstSequence, mServerLastSequence, mServerLastPORebuildTime;
+
+    bool mLimitedMode;
 };
 
 }
