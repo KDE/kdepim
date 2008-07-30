@@ -68,6 +68,8 @@ int main( int argc, char **argv )
   options.add("custom-parser", ki18n("Generate parser customized for schema"));
   options.add("xsd", ki18n("Schema is XML Schema"));
   options.add("rng", ki18n("Schema is RelaxNG"));
+  options.add("export-macro <macro-name>", ki18n("Symbol visibility export macro"));
+  options.add("export-macro-header <header-file>", ki18n("Header file for symbol visibility export macro"));
   KCmdLineArgs::addCmdLineOptions( options );
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
@@ -200,6 +202,9 @@ int main( int argc, char **argv )
   printer.setGenerator( aboutData.appName() );
   printer.setOutputDirectory( baseDir );
   printer.setSourceFile( args->url( 0 ).fileName() );
+  printer.setExportMacro( args->getOption( "export-macro" ) );
+  printer.setExportMacroHeader( args->getOption( "export-macro-header" ) );
+
 
   c.printFiles( printer );
 
