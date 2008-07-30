@@ -28,23 +28,29 @@
 
 #include "pi-macros.h"
 
-#include "idmappingxmlsource.h"
+#include <QtCore/QDateTime>
+#include <QtCore/QFile>
+#include <QtCore/QMap>
+#include <QtCore/QString>
 
-#include <QDateTime>
-#include <QString>
-#include <QMap>
-#include <QFile>
+#include "options.h"
 
-class KPILOT_EXPORT IDMapping {
-private:
-	QString fConduitName;
-	IDMappingXmlSource fSource;
+class IDMappingPrivate;
 
+class KPILOT_EXPORT IDMapping
+{
 public:
 	/**
 	 * Creates a new mapping object for given user and conduit.
 	 */
 	IDMapping( const QString &userName, const QString &conduit );
+	
+	/**
+	 * Copy constructor.
+	 */
+	IDMapping( const IDMapping& other );
+	
+	~IDMapping();
 
 	/**
 	 * Deletes any mapping that exists for @p hhRecordId and @p pcRecordId and 
@@ -177,5 +183,8 @@ public:
 	 * Tries to undo the changes in persistent storage.
 	 */
 	bool rollback();
+
+private:
+	QSharedDataPointer<IDMappingPrivate> d;
 };
 #endif
