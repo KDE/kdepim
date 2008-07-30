@@ -99,8 +99,6 @@ void ContactsAkonadiDataProxy::loadAllRecords()
 			}
 		}
 		
-		fCounter.setStartCount( fRecords.size() );
-		
 		// Now add dummy records for deleted records.
 		foreach( const QString& mPcId, fMapping->pcRecordIds() )
 		{
@@ -113,6 +111,8 @@ void ContactsAkonadiDataProxy::loadAllRecords()
 				fRecords.insert( mPcId, ac );
 			}
 		}
+		
+		fCounter.setStartCount( fRecords.size() );
 		
 		DEBUGKPILOT << "Loaded " << fRecords.size() << " records.";
 	}
