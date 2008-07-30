@@ -11257,7 +11257,7 @@ soap_envelope_begin_out(struct soap *soap)
     else if (soap->version == 2)
       s = "application/soap+xml; charset=utf-8";
     else
-      s = "application/xml; charset=utf-8";
+      s = "text/xml; charset=utf-8";
     sprintf(soap->tmpbuf, "--%s\r\nContent-Type: %s\r\nContent-Transfer-Encoding: binary\r\nContent-ID: %s\r\n\r\n", soap->mime.boundary, s, soap->mime.start);
     n = strlen(soap->tmpbuf);
     if (soap_send_raw(soap, soap->tmpbuf, n))
@@ -11751,7 +11751,7 @@ soap_puthttphdr(struct soap *soap, int status, size_t count)
   else if (soap->version == 2)
     s = "application/soap+xml; charset=utf-8";
   else
-    s = "application/xml; charset=utf-8";
+    s = "text/xml; charset=utf-8";
 #ifndef WITH_LEANER
   if (soap->mode & (SOAP_ENC_DIME | SOAP_ENC_MTOM))
   { if (soap->mode & SOAP_ENC_MTOM)
