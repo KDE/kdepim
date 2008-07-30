@@ -268,7 +268,7 @@ class GroupwisePropagator : public KConfigPropagator
 
 GroupwiseWizard::GroupwiseWizard() : KConfigWizard( new GroupwisePropagator )
 {
-  QFrame *page = createWizardPage( i18n("Novell GroupWise") );
+  QWidget *page = createWizardPage( i18n("Novell GroupWise") );
 
   QGridLayout *topLayout = new QGridLayout;
   topLayout->setSpacing( spacingHint() );
@@ -286,7 +286,7 @@ GroupwiseWizard::GroupwiseWizard() : KConfigWizard( new GroupwisePropagator )
 
   label = new QLabel( i18n("Port:"));
   topLayout->addWidget( label, 2, 0 );
-  mPortEdit = new QSpinBox( 1, 65536, 1);
+  mPortEdit = new QSpinBox( 1, 65536, 1, this );
   topLayout->addWidget( mPortEdit, 2, 1 );
 
   label = new QLabel( i18n("User name:") );
@@ -365,7 +365,7 @@ QString GroupwiseWizard::validate()
     return i18n( "Please fill in all fields." );
 
   if ( mEmailBox->isChecked() ) {
-    if( !KPIM::isValidSimpleEmailAddress( mEmailEdit->text() ) )
+    if( !KPIMUtils::isValidAddress( mEmailEdit->text() ) )
       return i18n("Invalid email address entered.");
     if( mFullNameEdit->text().isEmpty() )
       return i18n( "Please fill in all fields." );
