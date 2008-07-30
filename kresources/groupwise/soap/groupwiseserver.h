@@ -21,7 +21,7 @@
 #ifndef GROUPWISESERVER_H
 #define GROUPWISESERVER_H
 
-#include <ktcpsocket.h>
+#include "ktcpsocket.h"
 #include <kdemacros.h>
 #include <kio/job.h>
 #include <kio/jobclasses.h>
