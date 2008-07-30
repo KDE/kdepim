@@ -43,7 +43,6 @@
 #include <QFile>
 //Added by qt3to4:
 #include <QByteArray>
-#include <QSslSocket>
 
 #include "contactconverter.h"
 #include "incidenceconverter.h"
@@ -64,7 +63,7 @@ int myOpen( struct soap *soap, const char *endpoint, const char *host, int port 
   QMap<struct soap *,GroupwiseServer *>::ConstIterator it;
   it = mServerMap.find( soap );
   if ( it == mServerMap.end() ) {
-    soap->error = SOAP_FAULT;
+    soap->error = SOAP_FATAL_ERROR;
     return SOAP_INVALID_SOCKET;
   }
 
@@ -75,7 +74,10 @@ int myClose( struct soap *soap )
 {
   QMap<struct soap *,GroupwiseServer *>::ConstIterator it;
   it = mServerMap.find( soap );
-  if ( it == mServerMap.end() ) return SOAP_FAULT;
+  if ( it == mServerMap.end() ) {
+    soap->error = SOAP_FATAL_ERROR;
+    return SOAP_FATAL_ERROR;
+  }
 
   return (*it)->gSoapClose( soap );
 }
@@ -105,60 +107,59 @@ size_t myReceiveCallback( struct soap *soap, char *s, size_t n )
 int GroupwiseServer::gSoapOpen( struct soap *soap, const char *,
   const char *host, int port )
 {
-//  kDebug() <<"GroupwiseServer::gSoapOpen()";
+  kDebug() <<"GroupwiseServer::gSoapOpen()";
 
   if ( m_sock ) {
     kError() <<"m_sock non-null:" << (void*)m_sock;
     delete m_sock;
   }
 
-  if ( mSSL ) {
-//    kDebug() <<"Creating KSSLSocket()";
-    m_sock = new QSslSocket();
-    connect( m_sock, SIGNAL( sslErrors(const QList<QSslError> &) ), SLOT( slotSslErrors(const QList<QSslError> &) ) );
-  } else {
-    m_sock = new QTcpSocket();
-  }
+  m_sock = new KTcpSocket();
+  connect( m_sock, SIGNAL(error(KTcpSocket::Error)), this, SLOT( slotSocketError(  KTcpSocket::Error ) ) );
+  connect( m_sock, SIGNAL( sslErrors(const QList<QSslError> &) ), SLOT( slotSslErrors(const QList<QSslError> &) ) );
   mErrors.clear();
 
   m_sock->reset();
   //m_sock->setBlockingMode( false );
   //m_sock->setSocketFlags( KExtendedSocket::inetSocket );
 
-  int rc = 0;
   //TODO: handle errors async
-  m_sock->connectToHost( host, port );
-  if ( rc != 0 ) {
-    QString errorMsg;
-    kError() <<"gSoapOpen: connect failed" << rc;
-    mErrors.append( i18n("Connect failed: %1.", rc ) );
-    soap->error = SOAP_TCP_ERROR;
-    if ( rc == -1 ) {
-      errorMsg = QString::fromLatin1( strerror( errno ) );
-      perror( 0 );
-    } else {
-      //set the soap struct's error here!
-      if ( rc == -3 ) {
-        errorMsg = QString::fromLatin1( "Connection timed out.  Check host and port number" );
+  if ( mSSL ) {
+    m_sock->connectToHostEncrypted( host, port );
+    m_sock->waitForEncrypted( 30000 );
+  } else {
+    m_sock->connectToHost( host, port );
+  }
+  if ( m_sock->state() == KTcpSocket::UnconnectedState ) {
+    QList< KSslError > sslErrors = m_sock->sslErrors();
+    if ( !sslErrors.isEmpty() ) {
+      // ignore untrusted certs for now, we can't handle it async
+      bool untrusted = false;
+      foreach( KSslError err, sslErrors ) {
+        if ( err.error() == KSslError::UntrustedCertificate ) {
+          untrusted = true;
+          break;
+        }
       }
+      if ( untrusted ) {
+        kDebug() << "ignoring untrusted cert!";
+        mErrors.clear();
+      } else {
+        soap->error = SOAP_SSL_ERROR;
+      }
+    } else {
+      soap->error = SOAP_TCP_ERROR;
     }
-    mErrors.append( i18n("Connect failed: %1.").arg( errorMsg ) );
     return SOAP_INVALID_SOCKET;
   }
-  //m_sock->enableRead( true );
-  //m_sock->enableWrite( true );
 
-  // hopefully never really used by SOAP
-#if 0
-  return m_sock->fd();
-#else
+  // return a fake fd because the real fd would be useless when using SSL
   return 0;
-#endif
 }
 
 int GroupwiseServer::gSoapClose( struct soap * )
 {
-//  kDebug() <<"GroupwiseServer::gSoapClose()";
+  kDebug() <<"GroupwiseServer::gSoapClose()";
 
   delete m_sock;
   m_sock = 0;
@@ -172,9 +173,9 @@ int GroupwiseServer::gSoapClose( struct soap * )
 
 int GroupwiseServer::gSoapSendCallback( struct soap * soap, const char *s, size_t n )
 {
-//  kDebug() <<"GroupwiseServer::gSoapSendCallback()";
+  kDebug() <<"GroupwiseServer::gSoapSendCallback()";
 
-  if ( !m_sock ) {
+  if ( m_sock->state() != KTcpSocket::ConnectedState ) {
     kError() <<"no open connection";
     soap->error = SOAP_TCP_ERROR;
     return SOAP_TCP_ERROR;
@@ -247,7 +248,7 @@ size_t GroupwiseServer::gSoapReceiveCallback( struct soap *soap, char *s,
       p[ret]='\0';
       qDebug("%s", p );
       qDebug("\n*************************");
-      qDebug("kioReceiveCallback return %ld", ret);
+      qDebug("gSoapReceiveCallback return %ld", ret);
     }
     log( "RECV", s, ret );
   }
@@ -1429,12 +1430,20 @@ bool GroupwiseServer::readFreeBusy( const QString &email,
 
 void GroupwiseServer::slotSslErrors(const QList<QSslError> & errors)
 {
-  kDebug() <<"********************** SSL ERROR";
-  mErrors.append( i18n("SSL Error") );
 
+  bool untrusted = false;
   foreach( QSslError err, errors ) {
+    // ignore untrusted certs for now, we can't handle it async
+    if ( err.error() == QSslError::CertificateUntrusted ) {
+      untrusted = true;
+      mErrors.clear();
+      m_sock->ignoreSslErrors();
+      break;
+    }
     mErrors.append( err.errorString() );
   }
+  if ( !mErrors.isEmpty() )
+    kDebug() << "********************** SSL ERRORS: " << mErrors;
 }
 
 void GroupwiseServer::emitReadAddressBookTotalSize( int s )
@@ -1622,6 +1631,25 @@ bool GroupwiseServer::setCompleted( KCal::Todo * todo )
     }
   }
   return false;
+}
+
+void GroupwiseServer::slotSocketError(KTcpSocket::Error error)
+{
+  if ( error == KTcpSocket::UnknownError ) // probably an ssl error
+    return;
+
+  QString errorMsg = QString::fromLatin1( "Unhandled error type: %1" ).arg( error );
+  kError() << "slotSocketError: connect failed " << error;
+  if ( error == KTcpSocket::ConnectionRefusedError ) {
+    errorMsg = QString::fromLatin1( "Connection refused.  Check host and port number" );
+  }
+  if ( error == KTcpSocket::SocketTimeoutError ) {
+    errorMsg = QString::fromLatin1( "Connection timed out.  Check port number" );
+  }
+  if ( error == KTcpSocket::HostNotFoundError ) {
+    errorMsg = QString::fromLatin1( "Host not found. Check your configuration" );
+  }
+  mErrors.append( i18n("Connect failed: %1.").arg( errorMsg ) );
 }
 
 #include "groupwiseserver.moc"
