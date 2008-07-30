@@ -21,18 +21,18 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QCheckBox>
-#include <qdatetimeedit.h>
-#include <QDateEdit>
-#include <QTimeEdit>
-#include <QFrame>
-#include <QLabel>
-#include <QPushButton>
-#include <QSpinBox>
-//Added by qt3to4:
-#include <QGridLayout>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
+#include <QtGui/QCheckBox>
+#include <QtGui/QDateEdit>
+#include <QtGui/QDateTimeEdit>
+#include <QtGui/QFrame>
+#include <QtGui/QGridLayout>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QPushButton>
+#include <QtGui/QRegExpValidator>
+#include <QtGui/QSpinBox>
+#include <QtGui/QTimeEdit>
+#include <QtGui/QVBoxLayout>
 
 #include <kacceleratormanager.h>
 #include <kcombobox.h>
@@ -44,7 +44,6 @@
 #include "kabprefs.h"
 
 #include "customfieldswidget.h"
-
 
 AddFieldDialog::AddFieldDialog( QWidget *parent )
   : KDialog( parent )
@@ -66,6 +65,7 @@ AddFieldDialog::AddFieldDialog( QWidget *parent )
   layout->addWidget( label, 0, 0 );
 
   mTitle = new KLineEdit( page );
+  mTitle->setValidator( new QRegExpValidator( QRegExp( "[a-zA-Z\\d-]+" ), mTitle ) );
   label->setBuddy( mTitle );
   layout->addWidget( mTitle, 0, 1 );
 
