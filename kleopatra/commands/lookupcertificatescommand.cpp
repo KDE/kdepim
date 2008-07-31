@@ -413,8 +413,11 @@ static bool haveX509DirectoryServerConfigured() {
     const Kleo::CryptoConfig * const config = Kleo::CryptoBackendFactory::instance()->config();
     if ( !config )
         return false;
-    const Kleo::CryptoConfigEntry * const entry = config->entry( "dirmngr", "LDAP", "LDAP Server" );
-    return entry && !entry->urlValueList().empty();
+    const Kleo::CryptoConfigEntry * entry = config->entry( "dirmngr", "LDAP", "LDAP Server" );
+    bool entriesExist = entry && !entry->urlValueList().empty();
+    entry = config->entry( "gpgsm", "Configuration", "keyserver" );
+    entriesExist |= entry && !entry->stringValueList().empty();
+    return entriesExist;
 }
 
 
