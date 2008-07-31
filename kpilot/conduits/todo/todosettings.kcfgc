@@ -1,0 +1,7 @@
+File=todosettings.kcfg
+ClassName=TodoSettings
+Singleton=true
+ItemAccessors=true
+Mutators=true
+GlobalEnums=true
+SetUserTexts=true

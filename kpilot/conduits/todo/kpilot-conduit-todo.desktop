@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+Comment=This conduit syncs the handheld todo database with an Akonadi Todo Collection.
+Name=To-do
+
+Implemented=file
+X-KDE-ServiceTypes=KPilotConduit
+X-KDE-Library=kpilot_conduit_todo2

@@ -10,6 +10,7 @@ add_subdirectory(akonadibase)
 add_subdirectory(base)
 add_subdirectory(contacts)
 add_subdirectory(memofileconduit)
+add_subdirectory(todo)
 
 IF (QCA2_FOUND)
 	add_subdirectory(keyringconduit)
