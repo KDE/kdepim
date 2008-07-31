@@ -304,7 +304,7 @@ GroupwiseWizard::GroupwiseWizard() : KConfigWizard( new GroupwisePropagator )
   topLayout->addWidget( mSavePasswordCheck, 5, 0, 1, 2 );
 
   mSecureCheck = new QCheckBox( i18n("Encrypt communication with server"));
-  topLayout->addWidget( mSecureCheck, 5, 0, 1, 2 );
+  topLayout->addWidget( mSecureCheck, 5, 0, 2, 2 );
 
   topLayout->setRowStretch( 6, 1 );
 
@@ -319,13 +319,8 @@ GroupwiseWizard::GroupwiseWizard() : KConfigWizard( new GroupwisePropagator )
   mEmailBox->setCheckable( true );
   topLayout->addWidget( mEmailBox, 0, 0 );
 
-  mEmailWidget = new QWidget( mEmailBox );
-  connect( mEmailBox, SIGNAL( toggled( bool ) ), mEmailWidget,
-    SLOT( setEnabled( bool ) ) );
-
   QGridLayout *accountLayout= new QGridLayout;
   accountLayout->setSpacing( spacingHint() );
-  mEmailWidget->setLayout(accountLayout);
 
   label = new QLabel( i18n("Email address:"));
   accountLayout->addWidget( label, 0, 0 );
@@ -341,8 +336,10 @@ GroupwiseWizard::GroupwiseWizard() : KConfigWizard( new GroupwisePropagator )
 
   accountLayout->setRowStretch( 2, 1 );
 
-  connect( this, SIGNAL( currentPageChanged( QWidget * ) ),
-    SLOT( slotAboutToShowPage( QWidget * ) ) );
+  mEmailBox->setLayout(accountLayout);
+
+  connect( this, SIGNAL( currentPageChanged( KPageWidgetItem *, KPageWidgetItem * ) ),
+    SLOT( slotAboutToShowPage( KPageWidgetItem *, KPageWidgetItem * ) ) );
 
 
   setupRulesPage();
@@ -365,7 +362,7 @@ QString GroupwiseWizard::validate()
     return i18n( "Please fill in all fields." );
 
   if ( mEmailBox->isChecked() ) {
-    if( !KPIMUtils::isValidAddress( mEmailEdit->text() ) )
+    if( !KPIMUtils::isValidSimpleAddress( mEmailEdit->text() ) )
       return i18n("Invalid email address entered.");
     if( mFullNameEdit->text().isEmpty() )
       return i18n( "Please fill in all fields." );
@@ -402,9 +399,9 @@ void GroupwiseWizard::usrWriteConfig()
   GroupwiseConfig::setCreateEmailAccount( mEmailBox->isChecked() );
 }
 
-void GroupwiseWizard::slotAboutToShowPage( QWidget *page )
+void GroupwiseWizard::slotAboutToShowPage( KPageWidgetItem * page, KPageWidgetItem * )
 {
-  if ( page == mEmailPage ) {
+  if ( page->widget() == mEmailPage ) {
     if ( mEmailEdit->text().isEmpty() ) {
       QString host = GroupwiseConfig::host();
       int pos = host.lastIndexOf( "." );
