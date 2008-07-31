@@ -29,37 +29,51 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include <akonadi/collection.h>
+#include <akonadi/item.h>
+
+#include "options.h"
 #include "ui_akonadi-setup-widget.h"
 
-namespace Akonadi
-{
-	class Collection;
-}
-
-class AkonadiSetupWidgetPrivate;
-
-class AkonadiSetupWidget : public QWidget
+class KPILOT_EXPORT AkonadiSetupWidget : public QWidget
 {
 Q_OBJECT
 
 public:
-	AkonadiSetupWidget( const QStringList& mimeTypes, qint64 initialId );
-	
+	AkonadiSetupWidget( QWidget* parent = 0 );
+
 	~AkonadiSetupWidget();
 
-	qint64 currentCollectionId() const;
+	/**
+	 * Returns the current selected collection.
+	 */
+	Akonadi::Item::Id collection() const;
 
 	/**
-	 * Returns true when the collection is changed by selecting another collection
-	 * from the combobox.
+	 * Returns true when the user selected a collection using the combobox.
 	 */
-	bool collectionChanged() const;
+	bool modified() const;
+	
+	/**
+	 * Sets the current selected collection, but doesn't change the status.
+	 */
+	void setCollection( Akonadi::Item::Id id );
+
+	/**
+	 * Sets the mimetypes for the collections combobox. Only collections which
+	 * have one of the mimetypes set, will be shown.
+	 */
+	void setMimeTypes( const QStringList& mimeTypes );
+
+signals:
+	void collectionChanged();
 
 private slots:
 	void changeCollection( const Akonadi::Collection& collection );
 
 private:
-	QSharedDataPointer<AkonadiSetupWidgetPrivate> d;
+	class Private;
+	Private* d;
 };
 
 #endif

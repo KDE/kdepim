@@ -35,10 +35,10 @@
 #include "collectioncombobox.h"
 #include "options.h"
 
-class AkonadiSetupWidgetPrivate : public QSharedData
+class AkonadiSetupWidget::Private
 {
 public:
-	AkonadiSetupWidgetPrivate() : fCollectionFilterModel( 0L ), fCollections( 0L )
+	Private() : fCollectionFilterModel( 0L ), fCollections( 0L )
 	{
 	}
 	
@@ -48,8 +48,8 @@ public:
 	bool fCollectionModified;
 };
 
-AkonadiSetupWidget::AkonadiSetupWidget( const QStringList& mimeTypes, qint64 initialId )
-	: d( new AkonadiSetupWidgetPrivate )
+AkonadiSetupWidget::AkonadiSetupWidget( QWidget* parent )
+	: QWidget( parent ), d( new AkonadiSetupWidget::Private )
 {
 	FUNCTIONSETUP;
 	
@@ -58,11 +58,6 @@ AkonadiSetupWidget::AkonadiSetupWidget( const QStringList& mimeTypes, qint64 ini
 	Akonadi::CollectionModel* collectionModel = new Akonadi::CollectionModel( this );
 	
 	d->fCollectionFilterModel = new Akonadi::CollectionFilterProxyModel();
-	foreach( const QString& mimeType, mimeTypes )
-	{
-		d->fCollectionFilterModel->addMimeTypeFilter( mimeType );
-	}
-	
 	d->fCollectionFilterModel->setSourceModel( collectionModel );
 	
 	QLabel* collectionsLabel = new QLabel( this );
@@ -70,7 +65,6 @@ AkonadiSetupWidget::AkonadiSetupWidget( const QStringList& mimeTypes, qint64 ini
 	
 	d->fCollections = new CollectionComboBox( this );
 	d->fCollections->setModel( d->fCollectionFilterModel );
-	d->fCollections->setSelectedCollection( initialId );
 	
 	connect( d->fCollections, SIGNAL( selectionChanged( const Akonadi::Collection& ) )
 			,this , SLOT( changeCollection( const Akonadi::Collection& ) ) );
@@ -86,16 +80,7 @@ AkonadiSetupWidget::AkonadiSetupWidget( const QStringList& mimeTypes, qint64 ini
 
 AkonadiSetupWidget::~AkonadiSetupWidget()
 {
-}
-
-qint64 AkonadiSetupWidget::currentCollectionId() const
-{
-	return d->fCollections->selectedCollection().id();
-}
-
-bool AkonadiSetupWidget::collectionChanged() const
-{
-	return d->fCollectionModified;
+	KPILOT_DELETE( d );
 }
 
 void AkonadiSetupWidget::changeCollection( const Akonadi::Collection& col )
@@ -111,3 +96,35 @@ void AkonadiSetupWidget::changeCollection( const Akonadi::Collection& col )
 		emit collectionChanged();
 	}
 }
+
+Akonadi::Item::Id AkonadiSetupWidget::collection() const
+{
+	return d->fCollections->selectedCollection().id();
+}
+
+void AkonadiSetupWidget::setCollection( Akonadi::Item::Id id )
+{
+	FUNCTIONSETUP;
+	
+	if( id >= 0 )
+	{
+		d->fUi.fWarnIcon1->setVisible( false );
+		d->fUi.fSelectionWarnLabel->setVisible( false );
+		d->fCollections->setSelectedCollection( id );
+	}
+}
+
+bool AkonadiSetupWidget::modified() const
+{
+	return d->fCollectionModified;
+}
+
+void AkonadiSetupWidget::setMimeTypes( const QStringList& mimeTypes )
+{
+	d->fCollectionFilterModel->clearFilters();
+	foreach( const QString& mimeType, mimeTypes )
+	{
+		d->fCollectionFilterModel->addMimeTypeFilter( mimeType );
+	}
+}
+
