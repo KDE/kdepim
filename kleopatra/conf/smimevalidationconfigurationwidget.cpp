@@ -130,7 +130,7 @@ static void disableDirmngrWidget( QWidget* w ) {
 static void initializeDirmngrCheckbox( QCheckBox* cb, CryptoConfigEntry* entry ) {
     if ( entry )
         cb->setChecked( entry->boolValue() );
-    else
+    if ( !entry || entry->isReadOnly() )
         disableDirmngrWidget( cb );
 }
 
