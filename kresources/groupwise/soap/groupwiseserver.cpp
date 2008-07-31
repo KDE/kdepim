@@ -107,7 +107,7 @@ size_t myReceiveCallback( struct soap *soap, char *s, size_t n )
 int GroupwiseServer::gSoapOpen( struct soap *soap, const char *,
   const char *host, int port )
 {
-  kDebug() <<"GroupwiseServer::gSoapOpen()";
+  //kDebug();
 
   if ( m_sock ) {
     kError() <<"m_sock non-null:" << (void*)m_sock;
@@ -173,7 +173,7 @@ int GroupwiseServer::gSoapClose( struct soap * )
 
 int GroupwiseServer::gSoapSendCallback( struct soap * soap, const char *s, size_t n )
 {
-  kDebug() <<"GroupwiseServer::gSoapSendCallback()";
+  //kDebug();
 
   if ( !m_sock ) {
     kError() << "no socket!";
@@ -276,7 +276,7 @@ GroupwiseServer::GroupwiseServer( const QString &url, const QString &user,
 
   kDebug() <<"GroupwiseServer(): URL:" << url;
 
-  soap_init( mSoap );
+  soap_init2( mSoap, SOAP_IO_KEEPALIVE, SOAP_IO_KEEPALIVE );
 
 #if 1
   // disable this block to use native gSOAP network functions
