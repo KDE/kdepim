@@ -122,8 +122,8 @@ void OverViewPage::showWizardGroupwise()
 #ifdef __GNUC__
 #warning Re-enable me as soon as we have the new GroupWise resource!
 #endif
-//  GroupwiseWizard wizard;
-//  wizard.exec();
+  GroupwiseWizard wizard;
+  wizard.exec();
 }
 
 #include "overviewpage.moc"
