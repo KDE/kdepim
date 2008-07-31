@@ -38,7 +38,7 @@ kde4_add_plugin(kcal_kolab ${kcal_kolab_PART_SRCS})
 
 
 
-target_link_libraries(kcal_kolab  ${KDE4_KDECORE_LIBS} kcalkolab )
+target_link_libraries(kcal_kolab  ${KDE4_KDECORE_LIBS} ${KDE4_KRESOURCES_LIBS} kcalkolab )
 
 install(TARGETS kcal_kolab  DESTINATION ${PLUGIN_INSTALL_DIR})
 

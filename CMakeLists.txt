@@ -53,7 +53,6 @@ macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.or
 if ( ONLY_KLEO )
   find_package(QGpgme REQUIRED)
 
-  add_definitions (-D_FILE_OFFSET_BITS=64 -D_LARGE_FILES) # for off_t
   add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS} -DHAVE_CONFIG_H=1)
 
   include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${QT_QTDBUS_INCLUDE_DIR} )
@@ -98,7 +97,6 @@ else ( ONLY_KLEO )
   find_program(XSLTPROC_EXECUTABLE xsltproc)
   macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "The command line XSLT processor from libxslt" "http://xmlsoft.org/XSLT/" FALSE "" "Needed for building Akonadi resources. Recommended.")
 
-  add_definitions (-D_FILE_OFFSET_BITS=64 -D_LARGE_FILES) # for off_t
   add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 
   include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDEPIMLIBS_INCLUDE_DIR} ${KDE4_INCLUDES} ${QT_QTDBUS_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/libkdepim/)
