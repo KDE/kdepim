@@ -1,0 +1,301 @@
+<ui version="4.0" >
+ <class>tab1</class>
+ <widget class="QWidget" name="tab1" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>492</width>
+    <height>299</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <item>
+    <layout class="QGridLayout" name="layout" >
+     <item row="0" column="1" >
+      <widget class="QPushButton" name="mNameButton" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="toolTip" >
+        <string>Edit the contact's name</string>
+       </property>
+       <property name="text" >
+        <string>Edit Name...</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1" >
+      <widget class="QLabel" name="mRoleLabel" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="text" >
+        <string>&amp;Role:</string>
+       </property>
+       <property name="buddy" >
+        <cstring>mRoleEdit</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="2" >
+      <widget class="KLineEdit" name="mRoleEdit" />
+     </item>
+     <item row="2" column="1" >
+      <widget class="QLabel" name="mOrgLabel" >
+       <property name="text" >
+        <string>&amp;Organization</string>
+       </property>
+       <property name="buddy" >
+        <cstring>mOrgEdit</cstring>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="2" >
+      <widget class="KLineEdit" name="mOrgEdit" />
+     </item>
+     <item row="3" column="1" >
+      <widget class="QLabel" name="label_5" >
+       <property name="text" >
+        <string>Formatted name:</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="2" >
+      <widget class="KSqueezedTextLabel" name="mFormattedNameLabel" />
+     </item>
+     <item row="1" column="0" >
+      <widget class="QLabel" name="mUserLabel" >
+       <property name="maximumSize" >
+        <size>
+         <width>30</width>
+         <height>30</height>
+        </size>
+       </property>
+       <property name="text" >
+        <string>Name</string>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="0" colspan="3" >
+      <widget class="KSeparator" name="kseparator" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item rowspan="5" row="5" column="1" colspan="2" >
+      <widget class="AddressEditWidget" native="1" name="mAddressEditWidget" />
+     </item>
+     <item row="1" column="3" >
+      <widget class="QLabel" name="mPhoneLabel" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="maximumSize" >
+        <size>
+         <width>30</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text" >
+        <string>Phone</string>
+       </property>
+      </widget>
+     </item>
+     <item rowspan="4" row="0" column="4" colspan="2" >
+      <widget class="PhoneEditWidget" native="1" name="mPhoneEditWidget" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+         <horstretch>2</horstretch>
+         <verstretch>2</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="minimumSize" >
+        <size>
+         <width>100</width>
+         <height>0</height>
+        </size>
+       </property>
+      </widget>
+     </item>
+     <item row="4" column="3" colspan="3" >
+      <widget class="KSeparator" name="kseparator_5" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Fixed" hsizetype="Minimum" >
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="3" >
+      <widget class="QLabel" name="mEmailLabel" >
+       <property name="maximumSize" >
+        <size>
+         <width>30</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text" >
+        <string>Email</string>
+       </property>
+      </widget>
+     </item>
+     <item row="5" column="4" colspan="2" >
+      <widget class="EmailEditWidget" native="1" name="mEmailWidget" />
+     </item>
+     <item row="6" column="3" colspan="3" >
+      <widget class="KSeparator" name="kseparator_3" />
+     </item>
+     <item row="11" column="2" colspan="3" >
+      <widget class="KLineEdit" name="mCategoryEdit" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+         <horstretch>2</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="0" colspan="2" >
+      <widget class="QPushButton" name="mCategoryButton" >
+       <property name="text" >
+        <string>Select Categories...</string>
+       </property>
+      </widget>
+     </item>
+     <item row="11" column="5" >
+      <widget class="SecrecyWidget" name="mSecrecyWidget" />
+     </item>
+     <item row="10" column="0" colspan="6" >
+      <widget class="KSeparator" name="kseparator_2" />
+     </item>
+     <item row="0" column="2" >
+      <widget class="KLineEdit" name="mNameEdit" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+         <horstretch>1</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+      </widget>
+     </item>
+     <item row="6" column="0" >
+      <widget class="QLabel" name="mAddressLabel" >
+       <property name="maximumSize" >
+        <size>
+         <width>30</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text" >
+        <string>Address</string>
+       </property>
+      </widget>
+     </item>
+     <item rowspan="3" row="7" column="4" colspan="2" >
+      <layout class="QGridLayout" name="mInetLayout" >
+       <item row="0" column="0" >
+        <widget class="QLabel" name="mURLLabel" >
+         <property name="text" >
+          <string>Home&amp;page:</string>
+         </property>
+         <property name="buddy" >
+          <cstring>mURLEdit</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="1" >
+        <widget class="KLineEdit" name="mURLEdit" />
+       </item>
+       <item row="1" column="0" >
+        <widget class="QLabel" name="mBlogLabel" >
+         <property name="text" >
+          <string>&amp;Blog feed:</string>
+         </property>
+         <property name="buddy" >
+          <cstring>mBlogEdit</cstring>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1" >
+        <widget class="KLineEdit" name="mBlogEdit" />
+       </item>
+      </layout>
+     </item>
+     <item row="7" column="3" >
+      <widget class="QLabel" name="mInternetLabel" >
+       <property name="maximumSize" >
+        <size>
+         <width>30</width>
+         <height>16777215</height>
+        </size>
+       </property>
+       <property name="text" >
+        <string>INet</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KSeparator</class>
+   <extends>QFrame</extends>
+   <header>kseparator.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KSqueezedTextLabel</class>
+   <extends>QLabel</extends>
+   <header>ksqueezedtextlabel.h</header>
+  </customwidget>
+  <customwidget>
+   <class>AddressEditWidget</class>
+   <extends>QWidget</extends>
+   <header>addresseditwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>PhoneEditWidget</class>
+   <extends>QWidget</extends>
+   <header>phoneeditwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>EmailEditWidget</class>
+   <extends>QWidget</extends>
+   <header>emaileditwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SecrecyWidget</class>
+   <extends>KComboBox</extends>
+   <header>secrecywidget.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

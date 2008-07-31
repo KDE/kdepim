@@ -31,6 +31,8 @@
 #include "addresseeeditorbase.h"
 #include "contacteditorwidgetmanager.h"
 #include "extensionwidget.h"
+#include "ui_addresseditgeneraltab.h"
+#include "ui_addresseditdetailstab.h"
 
 class QTabWidget;
 class QTextEdit;
@@ -124,34 +126,12 @@ class AddresseeEditorWidget : public AddresseeEditorBase
     QTabWidget *mTabWidget;
 
     // Tab1
-    KLineEdit *mNameEdit;
-    KLineEdit *mRoleEdit;
-    KLineEdit *mOrgEdit;
-    KSqueezedTextLabel *mFormattedNameLabel;
-    AddressEditWidget *mAddressEditWidget;
-    EmailEditWidget *mEmailWidget;
+    Ui::tab1 tab1;
     IMEditWidget *mIMWidget;
-    PhoneEditWidget *mPhoneEditWidget;
-    KLineEdit *mURLEdit;
-    KLineEdit *mBlogEdit;
-//    KLineEdit *mIMAddressEdit;
-    QPushButton *mCategoryButton;
-    KLineEdit *mCategoryEdit;
-    SecrecyWidget *mSecrecyWidget;
     KSqueezedTextLabel *mNameLabel;
 
     // Tab2
-    KLineEdit *mDepartmentEdit;
-    KLineEdit *mOfficeEdit;
-    KLineEdit *mProfessionEdit;
-    KLineEdit *mTitleEdit;
-    KPIM::AddresseeLineEdit *mManagerEdit;
-    KPIM::AddresseeLineEdit *mAssistantEdit;
-    KLineEdit *mNicknameEdit;
-    KPIM::AddresseeLineEdit *mSpouseEdit;
-    KPIM::KDateEdit *mBirthdayPicker;
-    KPIM::KDateEdit *mAnniversaryPicker;
-    QTextEdit *mNoteEdit;
+    Ui::tab2 tab2;
 
     QHash<QString, ContactEditorTabPage*> mTabPages;
 };

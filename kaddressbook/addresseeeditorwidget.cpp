@@ -142,307 +142,146 @@ void AddresseeEditorWidget::initGUI()
 void AddresseeEditorWidget::setupTab1()
 {
   // This is the General tab
-  QWidget *tab1 = new QWidget( mTabWidget );
-
-  QGridLayout *layout = new QGridLayout( tab1 );
-  layout->setMargin( KDialog::marginHint() );
-  layout->setSpacing( KDialog::spacingHint() );
-
-  QLabel *label;
-  KSeparator* bar;
-  QPushButton *button;
+  QWidget *page = new QWidget( mTabWidget );
+  tab1.setupUi( page );
+  //tab1.setMainWidget( page );
 
   //////////////////////////////////
   // Upper left group (person info)
 
   // Person icon
-  label = new QLabel( tab1 );
-  label->setPixmap( KIconLoader::global()->loadIcon( "user-identity", KIconLoader::Desktop,
+  tab1.mUserLabel->setPixmap( KIconLoader::global()->loadIcon( "user-identity", KIconLoader::Desktop,
                                                       KIconLoader::SizeMedium ) );
-  layout->addWidget( label, 0, 0, 2, 1);
 
   // First name
-  button = new QPushButton( i18n( "Edit Name..." ), tab1 );
-  button->setToolTip( i18n( "Edit the contact's name" ) );
-  mNameEdit = new KLineEdit( tab1 );
-  connect( mNameEdit, SIGNAL( textChanged( const QString& ) ),
+  connect( tab1.mNameEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( nameTextChanged( const QString& ) ) );
-  connect( button, SIGNAL( clicked() ), SLOT( nameButtonClicked() ) );
-  mNameLabel = new KSqueezedTextLabel( tab1 );
+  connect( tab1.mNameButton, SIGNAL( clicked() ), SLOT( nameButtonClicked() ) );
+  mNameLabel = new KSqueezedTextLabel( page );
 
   if ( KABPrefs::instance()->automaticNameParsing() ) {
     mNameLabel->hide();
-    mNameEdit->show();
+    tab1.mNameEdit->show();
   } else {
-    mNameEdit->hide();
+    tab1.mNameEdit->hide();
     mNameLabel->show();
   }
 
-  layout->addWidget( button, 0, 1 );
-  layout->addWidget( mNameEdit, 0, 2 );
-  layout->addWidget( mNameLabel, 0, 2 );
-  label = new QLabel( i18nc( "<roleLabel>:", "%1:", KABC::Addressee::roleLabel() ), tab1 );
-  mRoleEdit = new KLineEdit( tab1 );
-  connect( mRoleEdit, SIGNAL( textChanged( const QString& ) ),
+  tab1.layout->addWidget( mNameLabel, 0, 2 );
+  tab1.mRoleLabel->setText( i18nc( "<roleLabel>:", "%1:", KABC::Addressee::roleLabel() ) );
+  connect( tab1.mRoleEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
-  label->setBuddy( mRoleEdit );
-  layout->addWidget( label, 1, 1 );
-  layout->addWidget( mRoleEdit, 1, 2 );
 
   // Organization
-  label = new QLabel( i18nc( "<organizationLabel>:", "%1:", KABC::Addressee::organizationLabel() ), tab1 );
-  mOrgEdit = new KLineEdit( tab1 );
-  label->setBuddy( mOrgEdit );
-  connect( mOrgEdit, SIGNAL( textChanged( const QString& ) ),
+  tab1.mOrgLabel->setText( i18nc( "<organizationLabel>:", "%1:", KABC::Addressee::organizationLabel() ) );
+  connect( tab1.mOrgEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( organizationTextChanged( const QString& ) ) );
-  layout->addWidget( label, 2, 1 );
-  layout->addWidget( mOrgEdit, 2, 2 );
-
-  // File as (formatted name)
-  label = new QLabel( i18n( "Formatted name:" ), tab1 );
-  mFormattedNameLabel = new KSqueezedTextLabel( tab1 );
-  layout->addWidget( label, 3, 1 );
-  layout->addWidget( mFormattedNameLabel, 3, 2 );
-
-  // Left hand separator. This separator doesn't go all the way
-  // across so the dialog still flows from top to bottom
-  bar = new KSeparator( Qt::Horizontal, tab1 );
-  layout->addWidget( bar, 4, 0, 1, 3 );
 
   //////////////////////////////////////
   // Phone numbers (upper right)
-  label = new QLabel( tab1 );
-  label->setPixmap( KIconLoader::global()->loadIcon( "x-office-contact",
+  tab1.mPhoneLabel->setPixmap( KIconLoader::global()->loadIcon( "x-office-contact",
                     KIconLoader::Desktop, KIconLoader::SizeMedium ) );
-  layout->addWidget( label, 0, 3, 2, 1 );
 
-  mPhoneEditWidget = new PhoneEditWidget( tab1 );
-  connect( mPhoneEditWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
-  layout->addWidget( mPhoneEditWidget, 0, 4, 4, 3 );
-
-  bar = new KSeparator( Qt::Horizontal, tab1 );
-  layout->addWidget( bar, 4, 3, 1, 4 );
+  connect( tab1.mPhoneEditWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
 
   //////////////////////////////////////
   // Addresses (lower left)
-  label = new QLabel( tab1 );
-  label->setPixmap( KIconLoader::global()->loadIcon( "go-home", KIconLoader::Desktop,
+  tab1.mAddressLabel->setPixmap( KIconLoader::global()->loadIcon( "go-home", KIconLoader::Desktop,
                                                      KIconLoader::SizeMedium ) );
-  layout->addWidget( label, 5, 0, 2, 1);
 
-  mAddressEditWidget = new AddressEditWidget( tab1 );
-  connect( mAddressEditWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
-  layout->addWidget( mAddressEditWidget, 5, 1, 6, 2 );
+  connect( tab1.mAddressEditWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
 
   //////////////////////////////////////
   // Email / Web (lower right)
-  label = new QLabel( tab1 );
-  label->setPixmap( KIconLoader::global()->loadIcon( "mail-message", KIconLoader::Desktop,
+  tab1.mEmailLabel->setPixmap( KIconLoader::global()->loadIcon( "mail-message", KIconLoader::Desktop,
                                                      KIconLoader::SizeMedium ) );
-  layout->addWidget( label, 5, 3, 2, 1);
 
-  mEmailWidget = new EmailEditWidget( tab1 );
-  connect( mEmailWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
-  layout->addWidget( mEmailWidget, 5, 4, 2, 3 );
+  tab1.mEmailWidget = new EmailEditWidget( page );
+  connect( tab1.mEmailWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
+  tab1.layout->addWidget( tab1.mEmailWidget, 5, 4, 1, 2 );
 
   // add the separator
-  bar = new KSeparator( Qt::Horizontal, tab1 );
-  layout->addWidget( bar, 7, 3, 1, 4 );
 
-  label = new QLabel( tab1 );
-  label->setPixmap( KIconLoader::global()->loadIcon( "internet-web-browser", KIconLoader::Desktop,
+  tab1.mInternetLabel->setPixmap( KIconLoader::global()->loadIcon( "internet-web-browser", KIconLoader::Desktop,
                                                      KIconLoader::SizeMedium ) );
-  layout->addWidget( label, 9, 3, 1, 2, Qt::AlignTop );
 
-  QGridLayout *gridLayout = new QGridLayout;
-  gridLayout->setSpacing( 7 );
-  gridLayout->setMargin( 11 );
+  tab1.mURLLabel->setText( i18nc( "<urlLabel>:", "%1:", KABC::Addressee::urlLabel() ) );
 
-  label = new QLabel( i18nc( "<urlLabel>:", "%1:", KABC::Addressee::urlLabel() ), tab1 );
-
-  mURLEdit = new KLineEdit( tab1 );
-  connect( mURLEdit, SIGNAL( textChanged( const QString& ) ),
+  connect( tab1.mURLEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
-  label->setBuddy( mURLEdit );
-  gridLayout->addWidget( label, 0, 0 );
-  gridLayout->addWidget( mURLEdit, 0, 1 );
 
-  label = new QLabel( i18n( "Blog feed:" ), tab1 );
-  mBlogEdit = new KLineEdit( tab1 );
-  gridLayout->addWidget( label, 1, 0 );
-  gridLayout->addWidget( mBlogEdit, 1, 1 );
-  connect( mBlogEdit, SIGNAL( textChanged( const QString & ) ),
+  connect( tab1.mBlogEdit, SIGNAL( textChanged( const QString & ) ),
            SLOT( textChanged( const QString & ) ) );
-  label->setBuddy( mBlogEdit );
 
-  mIMWidget = new IMEditWidget( tab1, mAddressee, gridLayout );
+  mIMWidget = new IMEditWidget( page, mAddressee, tab1.mInetLayout );
   connect( mIMWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
-  layout->addLayout( gridLayout, 8, 4, 3, 3 );
-
-  layout->addItem( new QSpacerItem( 50, 0 ), 0, 6 );
-
-  bar = new KSeparator( Qt::Horizontal, tab1 );
-  layout->addWidget( bar, 11, 0, 1, 7 );
-
-  ///////////////////////////////////////
-  KHBox *categoryBox = new KHBox( tab1 );
-  categoryBox->setSpacing( KDialog::spacingHint() );
+  tab1.layout->addWidget( mIMWidget, 7, 4, 3, 2 );
 
   // Categories
-  mCategoryButton = new QPushButton( i18n( "Select Categories..." ), categoryBox );
-  connect( mCategoryButton, SIGNAL( clicked() ), SLOT( selectCategories() ) );
+  connect( tab1.mCategoryButton, SIGNAL( clicked() ), SLOT( selectCategories() ) );
 
-  mCategoryEdit = new KLineEdit( categoryBox );
-  mCategoryEdit->setReadOnly( true );
-  connect( mCategoryEdit, SIGNAL( textChanged( const QString& ) ),
+  connect( tab1.mCategoryEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
 
-  mSecrecyWidget = new SecrecyWidget( categoryBox );
-  connect( mSecrecyWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
-
-  layout->addWidget( categoryBox, 12, 0, 1, 7 );
+  connect( tab1.mSecrecyWidget, SIGNAL( changed() ), SLOT( emitModified() ) );
 
   // Build the layout and add to the tab widget
-  layout->activate(); // required
+  //layout->activate(); // required
 
-  mTabWidget->addTab( tab1, i18n( "&General" ) );
+  mTabWidget->addTab( page, i18n( "&General" ) );
 }
 
 void AddresseeEditorWidget::setupTab2()
 {
   // This is the Details tab
-  QWidget *tab2 = new QWidget( mTabWidget );
-
-  QGridLayout *layout = new QGridLayout( tab2 );
-  layout->setMargin( KDialog::marginHint() );
-  layout->setSpacing( KDialog::spacingHint() );
-
-  QLabel *label;
-  KSeparator* bar;
+  QWidget *page = new QWidget( mTabWidget );
+  tab2.setupUi( page );
 
   ///////////////////////
   // Office info
 
   // Department
-  label = new QLabel( tab2 );
-  label->setPixmap( KIconLoader::global()->loadIcon( "folder", KIconLoader::Desktop,
+  tab2.mDepartmentIcon->setPixmap( KIconLoader::global()->loadIcon( "folder", KIconLoader::Desktop,
                                                      KIconLoader::SizeMedium ) );
-  layout->addWidget( label, 0, 0, 2, 1 );
-
-  label = new QLabel( i18n( "Department:" ), tab2 );
-  layout->addWidget( label, 0, 1 );
-  mDepartmentEdit = new KLineEdit( tab2 );
-  connect( mDepartmentEdit, SIGNAL( textChanged( const QString& ) ),
+  connect( tab2.mDepartmentEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
-  label->setBuddy( mDepartmentEdit );
-  layout->addWidget( mDepartmentEdit, 0, 2 );
-
-  label = new QLabel( i18n( "Office:" ), tab2 );
-  layout->addWidget( label, 1, 1 );
-  mOfficeEdit = new KLineEdit( tab2 );
-  connect( mOfficeEdit, SIGNAL( textChanged( const QString& ) ),
+  connect( tab2.mOfficeEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
-  label->setBuddy( mOfficeEdit );
-  layout->addWidget( mOfficeEdit, 1, 2 );
-
-  label = new QLabel( i18n( "Profession:" ), tab2 );
-  layout->addWidget( label, 2, 1 );
-  mProfessionEdit = new KLineEdit( tab2 );
-  connect( mProfessionEdit, SIGNAL( textChanged( const QString& ) ),
+  connect( tab2.mProfessionEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
-  label->setBuddy( mProfessionEdit );
-  layout->addWidget( mProfessionEdit, 2, 2 );
-
-  label = new QLabel( i18n( "Manager\'s name:" ), tab2 );
-  layout->addWidget( label, 0, 3 );
-  mManagerEdit = new KPIM::AddresseeLineEdit( tab2 );
-  connect( mManagerEdit, SIGNAL( textChanged( const QString& ) ),
+  connect( tab2.mManagerEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
-  label->setBuddy( mManagerEdit );
-  layout->addWidget( mManagerEdit, 0, 4, 1, 2 );
-
-  label = new QLabel( i18n( "Assistant's name:" ), tab2 );
-  layout->addWidget( label, 1, 3 );
-  mAssistantEdit = new KPIM::AddresseeLineEdit( tab2 );
-  connect( mAssistantEdit, SIGNAL( textChanged( const QString& ) ),
+  connect( tab2.mAssistantEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
-  label->setBuddy( mAssistantEdit );
-  layout->addWidget( mAssistantEdit, 1, 4, 1, 2 );
-
-  label = new QLabel( i18nc( "<titleLabel>:", "%1:", KABC::Addressee::titleLabel() ), tab2 );
-  layout->addWidget( label, 2, 3 );
-  mTitleEdit = new KLineEdit( tab2 );
-  connect( mTitleEdit, SIGNAL( textChanged( const QString& ) ),
+  tab2.mTitleLabel->setText( i18nc( "<titleLabel>:", "%1:", KABC::Addressee::titleLabel() ) );
+  connect( tab2.mTitleEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
-  label->setBuddy( mTitleEdit );
-  layout->addWidget( mTitleEdit, 2, 4, 1, 2 );
-
-  bar = new KSeparator( Qt::Horizontal, tab2 );
-  layout->addWidget( bar, 3, 0, 1, 6 );
 
   /////////////////////////////////////////////////
   // Personal info
 
-  label = new QLabel( tab2 );
-  label->setPixmap( KIconLoader::global()->loadIcon( "user-identity", KIconLoader::Desktop,
+  tab2.mPersonalIcon->setPixmap( KIconLoader::global()->loadIcon( "user-identity", KIconLoader::Desktop,
                                                      KIconLoader::SizeMedium ) );
-  layout->addWidget( label, 4, 0, 2, 1);
-
-  label = new QLabel( i18n( "Nickname:" ), tab2 );
-  layout->addWidget( label, 4, 1 );
-  mNicknameEdit = new KLineEdit( tab2 );
-  connect( mNicknameEdit, SIGNAL( textChanged( const QString& ) ),
+  connect( tab2.mNicknameEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
-  label->setBuddy( mNicknameEdit );
-  layout->addWidget( mNicknameEdit, 4, 2 );
-
-  label = new QLabel( i18nc( "Wife/Husband/...", "Partner's name:" ), tab2 );
-  layout->addWidget( label, 5, 1 );
-  mSpouseEdit = new KPIM::AddresseeLineEdit( tab2 );
-  connect( mSpouseEdit, SIGNAL( textChanged( const QString& ) ),
+  tab2.mSpouseLabel->setText( i18nc( "Wife/Husband/...", "Partner's name:" ) );
+  connect( tab2.mSpouseEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
-  label->setBuddy( mSpouseEdit );
-  layout->addWidget( mSpouseEdit, 5, 2 );
-
-  label = new QLabel( i18n( "Birthdate:" ), tab2 );
-  layout->addWidget( label, 4, 3 );
-  mBirthdayPicker = new KPIM::KDateEdit( tab2 );
-  connect( mBirthdayPicker, SIGNAL( dateChanged( const QDate& ) ),
+  connect( tab2.mBirthdayPicker, SIGNAL( dateChanged( const QDate& ) ),
            SLOT( dateChanged( const QDate& ) ) );
-  connect( mBirthdayPicker, SIGNAL( textChanged( const QString& ) ),
+  connect( tab2.mBirthdayPicker, SIGNAL( textChanged( const QString& ) ),
            SLOT( emitModified() ) );
-  label->setBuddy( mBirthdayPicker );
-  layout->addWidget( mBirthdayPicker, 4, 4 );
-
-  label = new QLabel( i18n( "Anniversary:" ), tab2 );
-  layout->addWidget( label, 5, 3 );
-  mAnniversaryPicker = new KPIM::KDateEdit( tab2 );
-  connect( mAnniversaryPicker, SIGNAL( dateChanged( const QDate& ) ),
+  connect( tab2.mAnniversaryPicker, SIGNAL( dateChanged( const QDate& ) ),
            SLOT( dateChanged( const QDate& ) ) );
-  connect( mAnniversaryPicker, SIGNAL( textChanged( const QString& ) ),
+  connect( tab2.mAnniversaryPicker, SIGNAL( textChanged( const QString& ) ),
            SLOT( emitModified() ) );
-  label->setBuddy( mAnniversaryPicker );
-  layout->addWidget( mAnniversaryPicker, 5, 4 );
-
-  bar = new KSeparator( Qt::Horizontal, tab2 );
-  layout->addWidget( bar, 6, 0, 1, 6 );
-
    //////////////////////////////////////
   // Notes
-  label = new QLabel( i18n( "Note:" ), tab2 );
-  label->setAlignment( Qt::AlignTop | Qt::AlignLeft );
-  layout->addWidget( label, 7, 0 );
-  mNoteEdit = new QTextEdit( tab2 );
-  mNoteEdit->setWordWrapMode ( QTextOption::WrapAnywhere );
-  mNoteEdit->setMinimumSize( mNoteEdit->sizeHint() );
-  connect( mNoteEdit, SIGNAL( textChanged() ), SLOT( emitModified() ) );
-  label->setBuddy( mNoteEdit );
-  layout->addWidget( mNoteEdit, 7, 1, 1, 5 );
+  tab2.mNoteEdit->setWordWrapMode ( QTextOption::WrapAnywhere );
+  tab2.mNoteEdit->setMinimumSize( tab2.mNoteEdit->sizeHint() );
+  connect( tab2.mNoteEdit, SIGNAL( textChanged() ), SLOT( emitModified() ) );
 
-   // Build the layout and add to the tab widget
-  layout->activate(); // required
-
-  mTabWidget->addTab( tab2, i18n( "&Details" ) );
+  mTabWidget->addTab( page, i18n( "&Details" ) );
 }
 
 void AddresseeEditorWidget::setupAdditionalTabs()
@@ -518,9 +357,9 @@ void AddresseeEditorWidget::load()
   blockSignals( true );
   mBlockSignals = true; // used for internal signal blocking
 
-  mNameEdit->blockSignals( true );
-  mNameEdit->setText( mAddressee.assembledName() );
-  mNameEdit->blockSignals( false );
+  tab1.mNameEdit->blockSignals( true );
+  tab1.mNameEdit->setText( mAddressee.assembledName() );
+  tab1.mNameEdit->blockSignals( false );
 
   if ( mAddressee.formattedName().isEmpty() ) {
     KConfig _config( "kaddressbookrc" );
@@ -542,39 +381,39 @@ void AddresseeEditorWidget::load()
       mFormattedNameType = NameEditDialog::CustomName;
   }
 
-  mFormattedNameLabel->setText( mAddressee.formattedName() );
+  tab1.mFormattedNameLabel->setText( mAddressee.formattedName() );
 
-  mRoleEdit->setText( mAddressee.role() );
-  mOrgEdit->setText( mAddressee.organization() );
-  mDepartmentEdit->setText( mAddressee.department() );
+  tab1.mRoleEdit->setText( mAddressee.role() );
+  tab1.mOrgEdit->setText( mAddressee.organization() );
+  tab2.mDepartmentEdit->setText( mAddressee.department() );
   // compatibility with older versions
   if ( mAddressee.department().isEmpty() )
-    mDepartmentEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Department" ) );
-  mURLEdit->setUrl( mAddressee.url() );
-  mURLEdit->home( false );
-  mBlogEdit->setUrl( mAddressee.custom( "KADDRESSBOOK", "BlogFeed" ) );
-  mNoteEdit->setText( mAddressee.note() );
-  mEmailWidget->setEmails( mAddressee.emails() );
-  mPhoneEditWidget->setPhoneNumbers( mAddressee.phoneNumbers() );
-  mAddressEditWidget->setAddresses( mAddressee, mAddressee.addresses() );
-  mBirthdayPicker->setDate( mAddressee.birthday().date() );
+    tab2.mDepartmentEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Department" ) );
+  tab1.mURLEdit->setUrl( mAddressee.url() );
+  tab1.mURLEdit->home( false );
+  tab1.mBlogEdit->setUrl( mAddressee.custom( "KADDRESSBOOK", "BlogFeed" ) );
+  tab2.mNoteEdit->setText( mAddressee.note() );
+  tab1.mEmailWidget->setEmails( mAddressee.emails() );
+  tab1.mPhoneEditWidget->setPhoneNumbers( mAddressee.phoneNumbers() );
+  tab1.mAddressEditWidget->setAddresses( mAddressee, mAddressee.addresses() );
+  tab2.mBirthdayPicker->setDate( mAddressee.birthday().date() );
 
   QString anniversaryStr = mAddressee.custom( "KADDRESSBOOK", "X-Anniversary" );
   QDate anniversary = (anniversaryStr.isEmpty() ? QDate() : QDate::fromString( anniversaryStr, Qt::ISODate ));
-  mAnniversaryPicker->setDate( anniversary );
-  mNicknameEdit->setText( mAddressee.nickName() );
-  mCategoryEdit->setText( mAddressee.categories().join( "," ) );
+  tab2.mAnniversaryPicker->setDate( anniversary );
+  tab2.mNicknameEdit->setText( mAddressee.nickName() );
+  tab1.mCategoryEdit->setText( mAddressee.categories().join( "," ) );
 
-  mSecrecyWidget->setSecrecy( mAddressee.secrecy() );
+  tab1.mSecrecyWidget->setSecrecy( mAddressee.secrecy() );
 
   // Load customs
   mIMWidget->setPreferredIM( mAddressee.custom( "KADDRESSBOOK", "X-IMAddress" ) );
-  mSpouseEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-SpousesName" ) );
-  mManagerEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-ManagersName" ) );
-  mAssistantEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-AssistantsName" ) );
-  mOfficeEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Office" ) );
-  mProfessionEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Profession" ) );
-  mTitleEdit->setText( mAddressee.title() );
+  tab2.mSpouseEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-SpousesName" ) );
+  tab2.mManagerEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-ManagersName" ) );
+  tab2.mAssistantEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-AssistantsName" ) );
+  tab2.mOfficeEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Office" ) );
+  tab2.mProfessionEdit->setText( mAddressee.custom( "KADDRESSBOOK", "X-Profession" ) );
+  tab2.mTitleEdit->setText( mAddressee.title() );
 
   QHashIterator<QString, ContactEditorTabPage*> it( mTabPages );
   while ( it.hasNext() ) {
@@ -592,63 +431,63 @@ void AddresseeEditorWidget::save()
 {
   if ( !mDirty ) return;
 
-  mAddressee.setRole( mRoleEdit->text() );
-  mAddressee.setOrganization( mOrgEdit->text() );
-  mAddressee.setDepartment( mDepartmentEdit->text() );
-  mAddressee.setUrl( KUrl( mURLEdit->text().trimmed() ) );
-  if ( !mBlogEdit->text().isEmpty() )
-    mAddressee.insertCustom( "KADDRESSBOOK", "BlogFeed", mBlogEdit->text() );
+  mAddressee.setRole( tab1.mRoleEdit->text() );
+  mAddressee.setOrganization( tab1.mOrgEdit->text() );
+  mAddressee.setDepartment( tab2.mDepartmentEdit->text() );
+  mAddressee.setUrl( KUrl( tab1.mURLEdit->text().trimmed() ) );
+  if ( !tab1.mBlogEdit->text().isEmpty() )
+    mAddressee.insertCustom( "KADDRESSBOOK", "BlogFeed", tab1.mBlogEdit->text() );
   else
     mAddressee.removeCustom( "KADDRESSBOOK", "BlogFeed" );
 
-  mAddressee.setNote( mNoteEdit->toPlainText() );
-  if ( mBirthdayPicker->date().isValid() )
-    mAddressee.setBirthday( QDateTime( mBirthdayPicker->date() ) );
+  mAddressee.setNote( tab2.mNoteEdit->toPlainText() );
+  if ( tab2.mBirthdayPicker->date().isValid() )
+    mAddressee.setBirthday( QDateTime( tab2.mBirthdayPicker->date() ) );
   else
     mAddressee.setBirthday( QDateTime() );
 
-  mAddressee.setNickName( mNicknameEdit->text() );
-  mAddressee.setCategories( mCategoryEdit->text().split( ",", QString::SkipEmptyParts ) );
+  mAddressee.setNickName( tab2.mNicknameEdit->text() );
+  mAddressee.setCategories( tab1.mCategoryEdit->text().split( ",", QString::SkipEmptyParts ) );
 
-  mAddressee.setSecrecy( mSecrecyWidget->secrecy() );
+  mAddressee.setSecrecy( tab1.mSecrecyWidget->secrecy() );
 
   // save custom fields
   if ( !mIMWidget->preferredIM().isEmpty() )
     mAddressee.insertCustom( "KADDRESSBOOK", "X-IMAddress", mIMWidget->preferredIM() );
   else
     mAddressee.removeCustom( "KADDRESSBOOK", "X-IMAddress" );
-  if ( !mSpouseEdit->text().isEmpty() )
-    mAddressee.insertCustom( "KADDRESSBOOK", "X-SpousesName", mSpouseEdit->text() );
+  if ( !tab2.mSpouseEdit->text().isEmpty() )
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-SpousesName", tab2.mSpouseEdit->text() );
   else
     mAddressee.removeCustom( "KADDRESSBOOK", "X-SpousesName" );
-  if ( !mManagerEdit->text().isEmpty() )
-    mAddressee.insertCustom( "KADDRESSBOOK", "X-ManagersName", mManagerEdit->text() );
+  if ( !tab2.mManagerEdit->text().isEmpty() )
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-ManagersName", tab2.mManagerEdit->text() );
   else
     mAddressee.removeCustom( "KADDRESSBOOK", "X-ManagersName" );
-  if ( !mAssistantEdit->text().isEmpty() )
-    mAddressee.insertCustom( "KADDRESSBOOK", "X-AssistantsName", mAssistantEdit->text() );
+  if ( !tab2.mAssistantEdit->text().isEmpty() )
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-AssistantsName", tab2.mAssistantEdit->text() );
   else
     mAddressee.removeCustom( "KADDRESSBOOK", "X-AssistantsName" );
 
-  if ( !mOfficeEdit->text().isEmpty() )
-    mAddressee.insertCustom( "KADDRESSBOOK", "X-Office", mOfficeEdit->text() );
+  if ( !tab2.mOfficeEdit->text().isEmpty() )
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-Office", tab2.mOfficeEdit->text() );
   else
     mAddressee.removeCustom( "KADDRESSBOOK", "X-Office" );
-  if ( !mProfessionEdit->text().isEmpty() )
-    mAddressee.insertCustom( "KADDRESSBOOK", "X-Profession", mProfessionEdit->text() );
+  if ( !tab2.mProfessionEdit->text().isEmpty() )
+    mAddressee.insertCustom( "KADDRESSBOOK", "X-Profession", tab2.mProfessionEdit->text() );
   else
     mAddressee.removeCustom( "KADDRESSBOOK", "X-Profession" );
 
-  if ( mAnniversaryPicker->date().isValid() )
+  if ( tab2.mAnniversaryPicker->date().isValid() )
     mAddressee.insertCustom( "KADDRESSBOOK", "X-Anniversary",
-                             mAnniversaryPicker->date().toString( Qt::ISODate ) );
+                             tab2.mAnniversaryPicker->date().toString( Qt::ISODate ) );
   else
     mAddressee.removeCustom( "KADDRESSBOOK", "X-Anniversary" );
 
-  mAddressee.setTitle( mTitleEdit->text() );
+  mAddressee.setTitle( tab2.mTitleEdit->text() );
 
   // Save the email addresses
-  mAddressee.setEmails( mEmailWidget->emails() );
+  mAddressee.setEmails( tab1.mEmailWidget->emails() );
 
   // Save the phone numbers
   KABC::PhoneNumber::List phoneNumbers;
@@ -658,7 +497,7 @@ void AddresseeEditorWidget::save()
         ++phoneIter )
     mAddressee.removePhoneNumber( *phoneIter );
 
-  phoneNumbers = mPhoneEditWidget->phoneNumbers();
+  phoneNumbers = tab1.mPhoneEditWidget->phoneNumbers();
   for ( phoneIter = phoneNumbers.begin(); phoneIter != phoneNumbers.end();
         ++phoneIter )
     mAddressee.insertPhoneNumber( *phoneIter );
@@ -671,7 +510,7 @@ void AddresseeEditorWidget::save()
         ++addressIter )
     mAddressee.removeAddress( *addressIter );
 
-  addresses = mAddressEditWidget->addresses();
+  addresses = tab1.mAddressEditWidget->addresses();
   for ( addressIter = addresses.begin(); addressIter != addresses.end();
         ++addressIter )
     mAddressee.insertAddress( *addressIter );
@@ -725,7 +564,7 @@ void AddresseeEditorWidget::organizationTextChanged( const QString &text )
 
   nameBoxChanged();
 
-  mAddressEditWidget->updateAddressee( mAddressee );
+  tab1.mAddressEditWidget->updateAddressee( mAddressee );
 
   emitModified();
 }
@@ -735,22 +574,22 @@ void AddresseeEditorWidget::nameBoxChanged()
   KABC::Addressee addr;
   AddresseeConfig config( mAddressee );
   if ( config.automaticNameParsing() ) {
-    addr.setNameFromString( mNameEdit->text() );
+    addr.setNameFromString( tab1.mNameEdit->text() );
     mNameLabel->hide();
-    mNameEdit->show();
+    tab1.mNameEdit->show();
   } else {
     addr = mAddressee;
-    mNameEdit->hide();
-    mNameLabel->setText( mNameEdit->text() );
+    tab1.mNameEdit->hide();
+    mNameLabel->setText( tab1.mNameEdit->text() );
     mNameLabel->show();
   }
 
   if ( mFormattedNameType != NameEditDialog::CustomName ) {
-    mFormattedNameLabel->setText( NameEditDialog::formattedName( mAddressee, mFormattedNameType ) );
+    tab1.mFormattedNameLabel->setText( NameEditDialog::formattedName( mAddressee, mFormattedNameType ) );
     mAddressee.setFormattedName( NameEditDialog::formattedName( mAddressee, mFormattedNameType ) );
   }
 
-  mAddressEditWidget->updateAddressee( mAddressee );
+  tab1.mAddressEditWidget->updateAddressee( mAddressee );
 }
 
 void AddresseeEditorWidget::nameButtonClicked()
@@ -767,14 +606,14 @@ void AddresseeEditorWidget::nameButtonClicked()
       mAddressee.setAdditionalName( dialog.additionalName() );
       mFormattedNameType = dialog.formattedNameType();
       if ( mFormattedNameType == NameEditDialog::CustomName ) {
-        mFormattedNameLabel->setText( dialog.customFormattedName() );
+        tab1.mFormattedNameLabel->setText( dialog.customFormattedName() );
         mAddressee.setFormattedName( dialog.customFormattedName() );
       }
       // Update the name edit.
-      bool block = mNameEdit->signalsBlocked();
-      mNameEdit->blockSignals( true );
-      mNameEdit->setText( mAddressee.assembledName() );
-      mNameEdit->blockSignals( block );
+      bool block = tab1.mNameEdit->signalsBlocked();
+      tab1.mNameEdit->blockSignals( true );
+      tab1.mNameEdit->setText( mAddressee.assembledName() );
+      tab1.mNameEdit->blockSignals( block );
 
       // Update the combo box.
       nameBoxChanged();
@@ -795,14 +634,14 @@ void AddresseeEditorWidget::selectCategories()
              this, SLOT( editCategories() ) );
   }
 
-  mCategorySelectDialog->setSelected( mCategoryEdit->text().split( ",", QString::SkipEmptyParts) );
+  mCategorySelectDialog->setSelected( tab1.mCategoryEdit->text().split( ",", QString::SkipEmptyParts) );
   mCategorySelectDialog->show();
   mCategorySelectDialog->raise();
 }
 
 void AddresseeEditorWidget::categoriesSelected( const QStringList &list )
 {
-  mCategoryEdit->setText( list.join( "," ) );
+  tab1.mCategoryEdit->setText( list.join( "," ) );
 }
 
 void AddresseeEditorWidget::editCategories()
@@ -845,21 +684,21 @@ void AddresseeEditorWidget::pageChanged( QWidget *wdg )
 
 void AddresseeEditorWidget::setInitialFocus()
 {
-  mNameEdit->setFocus();
+  tab1.mNameEdit->setFocus();
 }
 
 bool AddresseeEditorWidget::readyToClose()
 {
   bool ok = true;
 
-  QDate date = mBirthdayPicker->date();
-  if ( !date.isValid() && !mBirthdayPicker->currentText().isEmpty() ) {
+  QDate date = tab2.mBirthdayPicker->date();
+  if ( !date.isValid() && !tab2.mBirthdayPicker->currentText().isEmpty() ) {
     KMessageBox::error( this, i18n( "You have to enter a valid birthdate." ) );
     ok = false;
   }
 
-  date = mAnniversaryPicker->date();
-  if ( !date.isValid() && !mAnniversaryPicker->currentText().isEmpty() ) {
+  date = tab2.mAnniversaryPicker->date();
+  if ( !date.isValid() && !tab2.mAnniversaryPicker->currentText().isEmpty() ) {
     KMessageBox::error( this, i18n( "You have to enter a valid anniversary." ) );
     ok = false;
   }
@@ -871,28 +710,28 @@ void AddresseeEditorWidget::setReadOnly( bool readOnly )
 {
   mReadOnly = readOnly;
 
-  mNameEdit->setReadOnly( readOnly );
-  mRoleEdit->setReadOnly( readOnly );
-  mOrgEdit->setReadOnly( readOnly );
-  mPhoneEditWidget->setReadOnly( readOnly );
-  mAddressEditWidget->setReadOnly( readOnly );
-  mEmailWidget->setReadOnly( readOnly );
-  mURLEdit->setReadOnly( readOnly );
-  mBlogEdit->setReadOnly( readOnly );
+  tab1.mNameEdit->setReadOnly( readOnly );
+  tab1.mRoleEdit->setReadOnly( readOnly );
+  tab1.mOrgEdit->setReadOnly( readOnly );
+  tab1.mPhoneEditWidget->setReadOnly( readOnly );
+  tab1.mAddressEditWidget->setReadOnly( readOnly );
+  tab1.mEmailWidget->setReadOnly( readOnly );
+  tab1.mURLEdit->setReadOnly( readOnly );
+  tab1.mBlogEdit->setReadOnly( readOnly );
   mIMWidget->setReadOnly( readOnly );
-  mCategoryButton->setEnabled( !readOnly );
-  mSecrecyWidget->setReadOnly( readOnly );
-  mDepartmentEdit->setReadOnly( readOnly );
-  mOfficeEdit->setReadOnly( readOnly );
-  mProfessionEdit->setReadOnly( readOnly );
-  mManagerEdit->setReadOnly( readOnly );
-  mAssistantEdit->setReadOnly( readOnly );
-  mTitleEdit->setReadOnly( readOnly );
-  mNicknameEdit->setReadOnly( readOnly );
-  mSpouseEdit->setReadOnly( readOnly );
-  mBirthdayPicker->setEnabled( !readOnly );
-  mAnniversaryPicker->setEnabled( !readOnly );
-  mNoteEdit->setReadOnly( mReadOnly );
+  tab1.mCategoryButton->setEnabled( !readOnly );
+  tab1.mSecrecyWidget->setReadOnly( readOnly );
+  tab2.mDepartmentEdit->setReadOnly( readOnly );
+  tab2.mOfficeEdit->setReadOnly( readOnly );
+  tab2.mProfessionEdit->setReadOnly( readOnly );
+  tab2.mManagerEdit->setReadOnly( readOnly );
+  tab2.mAssistantEdit->setReadOnly( readOnly );
+  tab2.mTitleEdit->setReadOnly( readOnly );
+  tab2.mNicknameEdit->setReadOnly( readOnly );
+  tab2.mSpouseEdit->setReadOnly( readOnly );
+  tab2.mBirthdayPicker->setEnabled( !readOnly );
+  tab2.mAnniversaryPicker->setEnabled( !readOnly );
+  tab2.mNoteEdit->setReadOnly( mReadOnly );
 
   QHashIterator<QString, ContactEditorTabPage*> it( mTabPages );
   while ( it.hasNext() ) {

@@ -143,6 +143,11 @@ set(kaddressbook_LIB_SRCS ${libkabim_SRCS} ${libprinter_SRCS}
    distributionlistpicker.cpp
 )
 
+kde4_add_ui_files(kaddressbook_LIB_SRCS
+	${CMAKE_CURRENT_SOURCE_DIR}/addresseditgeneraltab.ui
+	${CMAKE_CURRENT_SOURCE_DIR}/addresseditdetailstab.ui
+)
+
 qt4_add_dbus_adaptor(kaddressbook_LIB_SRCS
 ${CMAKE_SOURCE_DIR}/libkdepim/interfaces/org.kde.addressbook.service.xml kaddressbookservice.h KAddressBookService )
 
