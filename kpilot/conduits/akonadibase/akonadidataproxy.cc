@@ -42,11 +42,11 @@
 
 #include "akonadirecord.h"
 
-class AkonadiDataProxyPrivate : public QSharedData
+class AkonadiDataProxy::Private
 {
 public:
-	AkonadiDataProxyPrivate( Akonadi::Entity::Id id, const IDMapping& mapping ) 
-		: fCollectionId( id ), fMapping( mapping )
+	Private( const IDMapping& mapping )
+		: fCollectionId( -1 ), fMapping( mapping )
 	{
 	}
 	
@@ -55,21 +55,25 @@ public:
 	const IDMapping fMapping;
 };
 
-AkonadiDataProxy::AkonadiDataProxy( Akonadi::Entity::Id id, const IDMapping& mapping   )
-	: d( new AkonadiDataProxyPrivate( id, mapping ) )
+AkonadiDataProxy::AkonadiDataProxy( const IDMapping& mapping )
+	: d( new Private( mapping ) )
 {
 	FUNCTIONSETUP;
-	
-	// Lets make sure that Akonadi is started.
-	if ( !Akonadi::Control::start() )
-	{
-		WARNINGKPILOT << "Error: Could not start Akonadi.";
-	}
 }
 
 AkonadiDataProxy::~AkonadiDataProxy()
 {
 	FUNCTIONSETUP;
+	
+	delete d;
+}
+
+bool AkonadiDataProxy::createDataStore()
+{
+	FUNCTIONSETUP;
+	// TODO: We don't support creation of akonadi datastores yet. The user should
+	// use akonadiconsole for that.
+	return false;
 }
 
 bool AkonadiDataProxy::isOpen() const
@@ -84,10 +88,19 @@ bool AkonadiDataProxy::isOpen() const
 				,Akonadi::CollectionFetchJob::Base
 			);
 		
-		return job->exec();
+		if( !job->exec() )
+		{
+			WARNINGKPILOT << "Error: Could not fetch collection with id: " << d->fCollectionId;
+			return false;
+		}
+	}
+	else
+	{
+		WARNINGKPILOT << "Error: Could not start Akonadi.";
+		return false;
 	}
 	
-	return false;
+	return true;
 }
 
 void AkonadiDataProxy::loadAllRecords()
@@ -103,7 +116,7 @@ void AkonadiDataProxy::loadAllRecords()
 		Akonadi::Item::List items = job->items();
 		foreach( const Akonadi::Item &item, items )
 		{
-			if( item.hasPayload<KABC::Addressee>() )
+			if( hasValidPayload( item ) )
 			{
 				AkonadiRecord *rec = createAkonadiRecord( item, d->fMapping.lastSyncedDate() );
 				fRecords.insert( rec->id(), rec );
@@ -133,6 +146,11 @@ void AkonadiDataProxy::loadAllRecords()
 	{
 		DEBUGKPILOT << "Could not load records, is akonadi running?";
 	}
+}
+
+void AkonadiDataProxy::setCollectionId( const Akonadi::Collection::Id id )
+{
+	d->fCollectionId = id;
 }
 
 void AkonadiDataProxy::syncFinished()
@@ -168,9 +186,8 @@ void AkonadiDataProxy::commitCreate( Record *rec )
 	}
 	else
 	{
-		// Update the id of the record.
-		QString id = QString::number( job->item().id() );
-		rec->setId( id );
+		// Update the item of the record.
+		aRec->setItem( job->item() );
 	}
 }
 
@@ -188,9 +205,8 @@ void AkonadiDataProxy::commitUpdate( Record *rec )
 	}
 	else
 	{
-		// Update the id of the record.
-		QString id = QString::number( job->item().id() );
-		rec->setId( id );
+		// Update the item of the record.
+		aRec->setItem( job->item() );
 	}
 }
 

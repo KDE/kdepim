@@ -37,8 +37,31 @@
 #include <QDomElement>
 #include <QDomNode>
 
+class IDMappingXmlSourcePrivate : public QSharedData
+{
+public:
+	QString fPath;
+	
+	/**
+	 * Mappings between handheld ids (keys) and pc ids (values).
+	 */
+	QMap<QString, QString> fMappings;
+	QMap<QString, QString> fHHCategory;       // Key: HHRecordId, Value: Category name
+	QMap<QString, QStringList> fPCCategories; // Key: PCRecordId, Value: Categories
+	QStringList fArchivedRecords;
+	QDateTime fLastSyncedDateTime;
+	QString fLastSyncedPC;
+	
+	QString fCurrentHHId;
+	QString fCurrentPCId;
+};
+
+IDMappingXmlSource::IDMappingXmlSource() : d( new IDMappingXmlSourcePrivate )
+{
+}
+
 IDMappingXmlSource::IDMappingXmlSource( const QString &userName
-	, const QString &conduit )
+	, const QString &conduit ) : d( new IDMappingXmlSourcePrivate )
 {
 	FUNCTIONSETUP;
 	
@@ -47,7 +70,7 @@ IDMappingXmlSource::IDMappingXmlSource( const QString &userName
 	QString pathName = KGlobal::dirs()->saveLocation( "data",
 		CSL1("kpilot/conduits/"));
 	
-	fPath = pathName + CSL1( "/" ) + userName + CSL1( "/mapping/" ) + conduit 
+	d->fPath = pathName + CSL1( "/" ) + userName + CSL1( "/mapping/" ) + conduit 
 		+ CSL1( "-mapping.xml" );
 	
 	// Create directories if necessary.
@@ -77,51 +100,51 @@ IDMappingXmlSource::IDMappingXmlSource( const QString &userName
 	}
 }
 
+IDMappingXmlSource& IDMappingXmlSource::operator=( const IDMappingXmlSource& other )
+{
+	if( this != &other )
+	{
+		d = other.d;
+	}
+	
+	return *this;
+}
+
 IDMappingXmlSource::~IDMappingXmlSource()
 {
 	FUNCTIONSETUP;
 }
 
-void IDMappingXmlSource::setLastSyncedDate( const QDateTime &dateTime )
+QStringList* IDMappingXmlSource::archivedRecords()
 {
-	FUNCTIONSETUP;
-	
-	fLastSyncedDateTime = dateTime;
+	return &d->fArchivedRecords;
 }
 
-void IDMappingXmlSource::setLastSyncedPC( const QString &pc )
+const QStringList* IDMappingXmlSource::constArchivedRecords() const
 {
-	FUNCTIONSETUP;
-	
-	fLastSyncedPC = pc;
+	return &d->fArchivedRecords;
 }
 
-void IDMappingXmlSource::setHHCategory( const QString &hhRecordId, const QString &category )
+const QMap<QString, QString>* IDMappingXmlSource::constMappings() const
 {
-	FUNCTIONSETUP;
-	
-	fHHCategory.insert( hhRecordId, category );
+	return &d->fMappings;
 }
 
 QString IDMappingXmlSource::hhCategory( const QString &hhRecordId ) const
 {
 	FUNCTIONSETUP;
 	
-	return fHHCategory.value( hhRecordId );
+	return d->fHHCategory.value( hhRecordId );
 }
 
-void IDMappingXmlSource::setPCCategories( const QString &pcRecordId, const QStringList &categories )
+QDateTime IDMappingXmlSource::lastSyncedDate() const
 {
-	FUNCTIONSETUP;
-	
-	fPCCategories.insert( pcRecordId, categories );
+	return d->fLastSyncedDateTime;
 }
 
-QStringList IDMappingXmlSource::pcCategories( const QString &pcRecordId ) const
+QString IDMappingXmlSource::lastSyncedPC() const
 {
-	FUNCTIONSETUP;
-	
-	return fPCCategories.value( pcRecordId );
+	return d->fLastSyncedPC;
 }
 
 void IDMappingXmlSource::loadMapping()
@@ -129,11 +152,11 @@ void IDMappingXmlSource::loadMapping()
 	FUNCTIONSETUP;
 	
 	// Reset local data.
-	fMappings = QMap<QString, QString>();
-	fLastSyncedDateTime = QDateTime();
-	fLastSyncedPC = QString();
+	d->fMappings = QMap<QString, QString>();
+	d->fLastSyncedDateTime = QDateTime();
+	d->fLastSyncedPC = QString();
 	
-	QFile file( fPath );
+	QFile file( d->fPath );
 	
 	if( !file.exists() )
 	{
@@ -154,11 +177,23 @@ void IDMappingXmlSource::loadMapping()
 	}
 }
 
+QMap<QString, QString>* IDMappingXmlSource::mappings()
+{
+	return &d->fMappings;
+}
+
+QStringList IDMappingXmlSource::pcCategories( const QString &pcRecordId ) const
+{
+	FUNCTIONSETUP;
+	
+	return d->fPCCategories.value( pcRecordId );
+}
+
 bool IDMappingXmlSource::saveMapping()
 {
 	FUNCTIONSETUP;
 	
-	DEBUGKPILOT << "Saving " << fMappings.count() << " mappings...";
+	DEBUGKPILOT << "Saving " << d->fMappings.count() << " mappings...";
 	
 	QDomDocument doc;
 	QDomElement root = doc.createElement( CSL1("mappings") );
@@ -170,30 +205,30 @@ bool IDMappingXmlSource::saveMapping()
 	
 	QDomElement dateElement = doc.createElement( CSL1( "lastsync" ) );
 	dateElement.setAttribute( CSL1( "value" )
-		, fLastSyncedDateTime.toString( Qt::ISODate ) );
+		, d->fLastSyncedDateTime.toString( Qt::ISODate ) );
 	
 	QDomElement pcElement = doc.createElement( CSL1( "pc" ) );
-	pcElement.setAttribute( CSL1( "value" ), fLastSyncedPC );
+	pcElement.setAttribute( CSL1( "value" ), d->fLastSyncedPC );
 	
 	root.appendChild( dateElement );
 	root.appendChild( pcElement );
 	
 	QMap<QString, QString>::const_iterator it;
-	for( it = fMappings.begin(); it != fMappings.end(); ++it )
+	for( it = d->fMappings.begin(); it != d->fMappings.end(); ++it )
 	{
 		QDomElement mappingElement = doc.createElement( CSL1("mapping") );
 		mappingElement.setAttribute( CSL1("hh"), it.key() );
 		mappingElement.setAttribute( CSL1("pc"), it.value() );
 		
-		if( !fHHCategory.value( it.key() ).isEmpty() )
+		if( !d->fHHCategory.value( it.key() ).isEmpty() )
 		{
 			QDomElement hhCatElement = doc.createElement( CSL1("hhcategory") );
-			hhCatElement.setAttribute( CSL1("value"), fHHCategory.value( it.key() ) );
+			hhCatElement.setAttribute( CSL1("value"), d->fHHCategory.value( it.key() ) );
 			
 			mappingElement.appendChild( hhCatElement );
 		}
 		
-		foreach( const QString& pcCat, fPCCategories.value( it.value() ) )
+		foreach( const QString& pcCat, d->fPCCategories.value( it.value() ) )
 		{
 			QDomElement pcCatElement = doc.createElement( CSL1("pccategory") );
 			pcCatElement.setAttribute( CSL1("value"), pcCat );
@@ -201,7 +236,7 @@ bool IDMappingXmlSource::saveMapping()
 			mappingElement.appendChild( pcCatElement );
 		}
 		
-		if( fArchivedRecords.contains( it.value() ) )
+		if( d->fArchivedRecords.contains( it.value() ) )
 		{
 			mappingElement.setAttribute( CSL1( "archived" ), CSL1( "yes" ) );
 		}
@@ -209,7 +244,7 @@ bool IDMappingXmlSource::saveMapping()
 		root.appendChild( mappingElement );
 	}
 	
-	QFile file( fPath );
+	QFile file( d->fPath );
 	if( file.open( QIODevice::ReadWrite ) )
 	{
 		QTextStream out( &file );
@@ -221,24 +256,53 @@ bool IDMappingXmlSource::saveMapping()
 	return false;
 }
 
+void IDMappingXmlSource::setHHCategory( const QString &hhRecordId, const QString &category )
+{
+	FUNCTIONSETUP;
+	
+	d->fHHCategory.insert( hhRecordId, category );
+}
+
+void IDMappingXmlSource::setLastSyncedDate( const QDateTime &dateTime )
+{
+	FUNCTIONSETUP;
+	
+	d->fLastSyncedDateTime = dateTime;
+}
+
+void IDMappingXmlSource::setLastSyncedPC( const QString &pc )
+{
+	FUNCTIONSETUP;
+	
+	d->fLastSyncedPC = pc;
+}
+
+
+void IDMappingXmlSource::setPCCategories( const QString &pcRecordId, const QStringList &categories )
+{
+	FUNCTIONSETUP;
+	
+	d->fPCCategories.insert( pcRecordId, categories );
+}
+
 bool IDMappingXmlSource::rollback()
 {
 	FUNCTIONSETUP;
 	
-	QFile backup( fPath + "-backup" );
+	QFile backup( d->fPath + "-backup" );
 	
 	if( !backup.exists() )
 	{
 		// No backup, reset values.
-		fMappings = QMap<QString, QString>();
-		fLastSyncedDateTime = QDateTime();
-		fLastSyncedPC = QString();
+		d->fMappings = QMap<QString, QString>();
+		d->fLastSyncedDateTime = QDateTime();
+		d->fLastSyncedPC = QString();
 		return true;
 	}
 	
 	// Rename the incorrect mapping.
-	QFile fail( fPath );
-	bool renamed = fail.rename( fPath + ".fail" );
+	QFile fail( d->fPath );
+	bool renamed = fail.rename( d->fPath + ".fail" );
 	
 	if( !renamed )
 	{
@@ -248,7 +312,7 @@ bool IDMappingXmlSource::rollback()
 	}
 	
 	// Try to copy the backup back to the original location.
-	bool copied = backup.copy( fPath );
+	bool copied = backup.copy( d->fPath );
 	if( copied )
 	{
 		// Read the backup file.
@@ -270,41 +334,41 @@ bool IDMappingXmlSource::startElement( const QString &namespaceURI
 	
 	if( qName == CSL1( "mapping" ) )
 	{
-		fCurrentHHId = attribs.value( CSL1( "hh" ) );
-		fCurrentPCId = attribs.value( CSL1( "pc" ) );
+		d->fCurrentHHId = attribs.value( CSL1( "hh" ) );
+		d->fCurrentPCId = attribs.value( CSL1( "pc" ) );
 		
 		QString hh( attribs.value( CSL1( "hh" ) ) );
 		QString pc( attribs.value( CSL1( "pc" ) ) );
 		
 		if( attribs.value( CSL1( "archived" ) ) == CSL1( "yes" ) )
 		{
-			fArchivedRecords.append( pc );
+			d->fArchivedRecords.append( pc );
 		}
 		
-		fMappings.insert( hh, pc );
+		d->fMappings.insert( hh, pc );
 	}
 	else if( qName == CSL1( "hhcategory" ) )
 	{
 		QString category = attribs.value( CSL1("value") );
-		fHHCategory.insert( fCurrentHHId, category );
+		d->fHHCategory.insert( d->fCurrentHHId, category );
 	}
 	else if( qName == CSL1( "pccategory" ) )
 	{
 		QString category = attribs.value( CSL1("value") );
 		
-		QStringList cats = fPCCategories.value( fCurrentPCId );
+		QStringList cats = d->fPCCategories.value( d->fCurrentPCId );
 		cats << category;
 		
-		fPCCategories.insert( fCurrentPCId, cats );
+		d->fPCCategories.insert( d->fCurrentPCId, cats );
 	}
 	else if( qName == CSL1( "lastsync" ) )
 	{
-		fLastSyncedDateTime = QDateTime::fromString( attribs.value( CSL1("value") )
+		d->fLastSyncedDateTime = QDateTime::fromString( attribs.value( CSL1("value") )
 			, Qt::ISODate );
 	}
 	else if( qName == CSL1("pc") )
 	{
-		fLastSyncedPC = attribs.value( CSL1("value") );
+		d->fLastSyncedPC = attribs.value( CSL1("value") );
 	}
 
 	return true;

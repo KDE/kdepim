@@ -29,19 +29,30 @@
 
 #include "dataproxy.h"
 
+#include <akonadi/collection.h>
 #include <akonadi/item.h>
+
 #include <QtCore/QDateTime>
 
-class AkonadiDataProxyPrivate;
 class AkonadiRecord;
 class IDMapping;
 
 class KPILOT_EXPORT AkonadiDataProxy : public DataProxy
 {
 public:
-	AkonadiDataProxy( Akonadi::Entity::Id id, const IDMapping& mapping  );
+	/**
+	 * Creates a new AkonadiProxy object.
+	 *
+	 * The mapping is used to determine which Items are deleted.
+	 */
+	AkonadiDataProxy( const IDMapping& mapping );
 	
 	/* virtual */ ~AkonadiDataProxy();
+
+	/**
+	 * Tries to create a new Datastore and returns whether or not it succeeded.
+	 */
+	/* virtual */ bool createDataStore();
 
 	/**
 	 * Returns true when the proxy was able to open the underlying data store 
@@ -54,6 +65,13 @@ public:
 	 * counter and resets the iterator.
 	 */
 	/* virtual */ void loadAllRecords();
+
+	/**
+	 * Sets the collection which is used by loadAllRecords to retrieve the 
+	 * Akonadi::Item objects. The isOpen() method uses this id to check if the
+	 * collection can be retrieved.
+	 */
+	void setCollectionId( const Akonadi::Collection::Id id );
 
 	/**
 	 * Notifies the proxy that the synchronization is finished and that
@@ -90,7 +108,7 @@ protected: // Functions
 	 */
   virtual AkonadiRecord* createAkonadiRecord( const Akonadi::Item& i
                                             , const QDateTime& dt ) const = 0;
-	
+
 	/**
 	 * Creates a dummy record with given id. These are for the records that where
 	 * deleted from the collection after the last sync. The returned record
@@ -98,8 +116,14 @@ protected: // Functions
 	 */
 	virtual AkonadiRecord* createDeletedAkonadiRecord( const QString& id ) const = 0;
 
+	/**
+	 * Checks if the Item has payload that is supported by this proxy.
+	 */
+	virtual bool hasValidPayload( const Akonadi::Item& i ) const = 0;
+
 private:
-	QSharedDataPointer<AkonadiDataProxyPrivate> d;
+	class Private;
+	Private* d;
 };
 
 #endif

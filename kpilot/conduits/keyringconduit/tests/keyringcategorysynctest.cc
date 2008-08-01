@@ -183,7 +183,7 @@ void KeyringCategorySyncTest::test1()
 	QString pcId = fTestRecordIds.value( "test1" );
 	KeyringHHRecord* pcRec = fConduit->pcProxy()->record( pcId );
 	
-	QString hhId = fConduit->mapping()->hhRecordId( pcId );
+	QString hhId = fConduit->mapping().hhRecordId( pcId );
 	QVERIFY( hhId.isEmpty() );
 	
 	QVERIFY( pcRec );
@@ -194,7 +194,7 @@ void KeyringCategorySyncTest::test1()
 	fConduit->hotSync();
 	
 	// Postconditions
-	hhId = fConduit->mapping()->hhRecordId( pcId );
+	hhId = fConduit->mapping().hhRecordId( pcId );
 	QVERIFY( !hhId.isEmpty() );
 	
 	KeyringHHRecord *hhRec = fConduit->hhProxy()->record( hhId );
@@ -213,7 +213,7 @@ void KeyringCategorySyncTest::test2()
 	QVERIFY( (uint) fConduit->hhProxy()->categories().size() < Pilot::CATEGORY_COUNT  );
 	
 	QString pcId = fTestRecordIds.value( "test2" );
-	QString hhId = fConduit->mapping()->hhRecordId( pcId );
+	QString hhId = fConduit->mapping().hhRecordId( pcId );
 	QVERIFY( hhId.isEmpty() );
 	
 	KeyringHHRecord* pcRec = fConduit->pcProxy()->record( pcId );
@@ -227,7 +227,7 @@ void KeyringCategorySyncTest::test2()
 	// Postconditions
 	QVERIFY( fConduit->hhProxy()->categories().contains( "NewCategory1" ) );
 	
-	hhId = fConduit->mapping()->hhRecordId( pcId );
+	hhId = fConduit->mapping().hhRecordId( pcId );
 	QVERIFY( !hhId.isEmpty() );
 	
 	KeyringHHRecord *hhRec = fConduit->hhProxy()->record( hhId );
@@ -246,7 +246,7 @@ void KeyringCategorySyncTest::test3()
 	QCOMPARE( (uint) fConduit->hhProxy()->categories().size(), Pilot::CATEGORY_COUNT );
 	
 	QString pcId = fTestRecordIds.value( "test3" );
-	QString hhId = fConduit->mapping()->hhRecordId( pcId );
+	QString hhId = fConduit->mapping().hhRecordId( pcId );
 	QVERIFY( hhId.isEmpty() );
 	
 	KeyringHHRecord* pcRec = fConduit->pcProxy()->record( pcId );
@@ -262,7 +262,7 @@ void KeyringCategorySyncTest::test3()
 	// The category should not get added in favor of one of the other categories.
 	QVERIFY( !fConduit->hhProxy()->categories().contains( "NewCategory2" ) );
 	
-	hhId = fConduit->mapping()->hhRecordId( pcId );
+	hhId = fConduit->mapping().hhRecordId( pcId );
 	QVERIFY( !hhId.isEmpty() );
 	
 	KeyringHHRecord *hhRec = fConduit->hhProxy()->record( hhId );

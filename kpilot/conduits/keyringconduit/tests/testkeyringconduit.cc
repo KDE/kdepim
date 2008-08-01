@@ -14,7 +14,7 @@ TestKeyringConduit::TestKeyringConduit( const QVariantList& args )
 
 bool TestKeyringConduit::initDataProxies()
 {
-	fMapping = new IDMapping( "Test User", fConduitName );
+	fMapping = IDMapping( "Test User", fConduitName );
 
 	hhDataProxy = new TestKeyringProxy( "hhproxy.pdb" );
 	hhDataProxy->openDatabase( "test" );
@@ -51,7 +51,7 @@ void TestKeyringConduit::hotSync()
 	pcDataProxy->syncFinished();
 }
 
-IDMapping* TestKeyringConduit::mapping() const
+IDMapping TestKeyringConduit::mapping() const
 {
 	return fMapping;
 }

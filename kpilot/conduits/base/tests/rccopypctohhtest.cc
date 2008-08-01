@@ -90,7 +90,7 @@ void RCCopyPCToHHTest::testMappingForPCRecord()
 	
 	conduit.pcDataProxy()->records()->insert( pcRec->id(), pcRec );
 	conduit.hhDataProxy()->records()->insert( hhRec->id(), hhRec );
-	conduit.mapping()->map( hhRec->id(), pcRec->id() );
+	conduit.mapping().map( hhRec->id(), pcRec->id() );
 	
 	QVERIFY( !conduit.equal( pcRec, hhRec ) );
 	
@@ -126,9 +126,9 @@ void RCCopyPCToHHTest::testNoMappingForPCRecord()
 	conduit.copyPCToHHTest();
 	
 	// There should be a mapping right now.
-	QVERIFY( conduit.mapping()->containsPCId( pcRec->id() ) );
+	QVERIFY( conduit.mapping().containsPCId( pcRec->id() ) );
 	
-	QString hhId = conduit.mapping()->hhRecordId( pcRec->id() );
+	QString hhId = conduit.mapping().hhRecordId( pcRec->id() );
 	HHRecord *hhRec = static_cast<HHRecord*>( conduit.hhDataProxy()->find( hhId ) );
 	
 	QVERIFY( hhRec );
@@ -154,13 +154,13 @@ void RCCopyPCToHHTest::testMappingForHHRecord()
 	hhRec->setValue( CSL1( "f2" ), CSL1( "Another test value" ) );
 	
 	conduit.hhDataProxy()->records()->insert( hhRec->id(), hhRec );
-	conduit.mapping()->map( hhRec->id(), CSL1( "removed-id" ) );
+	conduit.mapping().map( hhRec->id(), CSL1( "removed-id" ) );
 	
 	conduit.copyPCToHHTest();
 	
 	// Mapping should be removed
-	QVERIFY( !conduit.mapping()->containsPCId( CSL1( "removed-id" ) ) );
-	QVERIFY( !conduit.mapping()->containsHHId( hhRec->id() ) );
+	QVERIFY( !conduit.mapping().containsPCId( CSL1( "removed-id" ) ) );
+	QVERIFY( !conduit.mapping().containsHHId( hhRec->id() ) );
 	
 	// PC record should be removed from database.
 	QVERIFY( !conduit.hhDataProxy()->find( hhRec->id() ) );
@@ -187,14 +187,14 @@ void RCCopyPCToHHTest::testNoMappingForHHRecord()
 	conduit.hhDataProxy()->records()->insert( hhRec->id(), hhRec );
 	
 	// There shouldn't be a mapping.
-	QVERIFY( !conduit.mapping()->containsHHId( hhRec->id() ) );
+	QVERIFY( !conduit.mapping().containsHHId( hhRec->id() ) );
 	// Record should be there.
 	QVERIFY( conduit.hhDataProxy()->find( hhRec->id() ) );
 	
 	conduit.copyPCToHHTest();
 	
 	// The still shouldn't be a mapping
-	QVERIFY( !conduit.mapping()->containsHHId( hhRec->id() ) );
+	QVERIFY( !conduit.mapping().containsHHId( hhRec->id() ) );
 	
 	// PC record should be removed from database.
 	QVERIFY( !conduit.hhDataProxy()->find( hhRec->id() ) );
@@ -226,7 +226,7 @@ void RCCopyPCToHHTest::testDeletedRecordOnPc()
 	conduit.hhDataProxy()->records()->insert( pcRec->id(), pcRec );
 	
 	// Verify starting values.
-	QVERIFY( !conduit.mapping()->containsHHId( pcRec->id() ) );
+	QVERIFY( !conduit.mapping().containsHHId( pcRec->id() ) );
 	QVERIFY( conduit.hhDataProxy()->find( pcRec->id() ) );
 	QVERIFY( conduit.hhDataProxy()->find( pcRec->id() )->isDeleted() );
 	
@@ -234,7 +234,7 @@ void RCCopyPCToHHTest::testDeletedRecordOnPc()
 	conduit.copyPCToHHTest();
 	
 	// Verify ending values.
-	QVERIFY( !conduit.mapping()->containsPCId( pcRec->id() ) );
+	QVERIFY( !conduit.mapping().containsPCId( pcRec->id() ) );
 	QVERIFY( !conduit.pcDataProxy()->find( pcRec->id() ) );
 }
 

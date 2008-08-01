@@ -45,7 +45,7 @@ public:
 	 */
 	void hotSync();
 	
-	IDMapping* mapping() const;
+	IDMapping mapping() const;
 	
 	TestKeyringProxy* hhProxy() const;
 	

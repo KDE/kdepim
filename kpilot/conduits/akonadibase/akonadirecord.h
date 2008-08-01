@@ -35,11 +35,11 @@
 
 class AkonadiRecordPrivate;
 
-class AkonadiRecord : public Record
+class KPILOT_EXPORT AkonadiRecord : public Record
 {
 public:
 	/**
-	 * Creates a AkonadiContact record from an existing item of the data store.
+	 * Creates a AkonadiRecord from an existing item of the data store.
 	 * @p lastSync is needed to determine if the record is changed after the last
 	 * sync.
 	 */
@@ -61,9 +61,9 @@ public:
 	/* virtual */ const QString id() const;
 
 	/**
-	 * Returns a reference of the Akonadi::Item used to represent this contact.
+	 * Returns the Akonadi::Item used to represent this contact.
 	 */
-	Akonadi::Item& item();
+	Akonadi::Item item() const;
 
 	/**
 	 * Returns true when this record is marked for deletion.
@@ -79,6 +79,11 @@ public:
 	 * Sets the id of this record to @p id;
 	 */
 	/* virtual */ void setId( const QString &id );
+
+	/**
+	 * Sets the item of this record.
+	 */
+	void setItem( const Akonadi::Item item );
 
 	/**
 	 * Notify the record that syncing is finished so that it can reset flags.

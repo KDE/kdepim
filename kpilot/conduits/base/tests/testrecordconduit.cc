@@ -44,7 +44,7 @@ TestRecordConduit::TestRecordConduit( const QVariantList &args, bool createRecs 
 {
 	
 	// Create a mapping, we don't test the exec() function.
-	fMapping = new IDMapping( CSL1( "test-user" ), fConduitName );
+	fMapping = IDMapping( CSL1( "test-user" ), fConduitName );
 }
 
 void TestRecordConduit::loadSettings()
@@ -116,7 +116,7 @@ bool TestRecordConduit::initDataProxies()
 		pcRec->synced();
 		fPCDataProxy->records()->insert( pcRec->id(), pcRec );
 		
-		fMapping->map( CSL1( "hh-1" ), CSL1( "pc-1" ) );
+		fMapping.map( CSL1( "hh-1" ), CSL1( "pc-1" ) );
 		 
 		// 6.5.2 |      |  X |N|  X |  N | hh-2 |
 		value1 = CSL1( "A value - " ) + QString::number( qrand() );
@@ -149,7 +149,7 @@ bool TestRecordConduit::initDataProxies()
 		pcRec->synced();
 		fPCDataProxy->records()->insert( pcRec->id(), pcRec );
 		
-		fMapping->map( CSL1( "hh-3" ), CSL1( "pc-2" ) );
+		fMapping.map( CSL1( "hh-3" ), CSL1( "pc-2" ) );
 		
 		// 6.5.4 | pc-3 |  - |Y|  - |  D | hh-4 |
 		value1 = CSL1( "A value - " ) + QString::number( qrand() );
@@ -173,7 +173,7 @@ bool TestRecordConduit::initDataProxies()
 		hhRec->setDeleted();
 		fHHDataProxy->records()->insert( hhRec->id(), hhRec );
 		
-		fMapping->map( CSL1( "hh-4" ), CSL1( "pc-3" ) );
+		fMapping.map( CSL1( "hh-4" ), CSL1( "pc-3" ) );
 		
 		// 6.5.5 | pc-4 |  N |N|  X |  X |      |
 		value1 = CSL1( "A value - " ) + QString::number( qrand() );
@@ -205,7 +205,7 @@ bool TestRecordConduit::initDataProxies()
 		pcRec->setValue( CSL1( "f2" ), value2 + CSL1( "-modified" ) );
 		fPCDataProxy->records()->insert( pcRec->id(), pcRec );
 		
-		fMapping->map( CSL1( "hh-5" ), CSL1( "pc-5" ) );
+		fMapping.map( CSL1( "hh-5" ), CSL1( "pc-5" ) );
 		
 		// 6.5.7 | pc-6 |  D |Y|  - |  - | hh-6 |
 		value1 = CSL1( "A value - " ) + QString::number( qrand() );
@@ -229,7 +229,7 @@ bool TestRecordConduit::initDataProxies()
 		pcRec->setDeleted();
 		fPCDataProxy->records()->insert( pcRec->id(), pcRec );
 		
-		fMapping->map( CSL1( "hh-6" ), CSL1( "pc-6" ) );
+		fMapping.map( CSL1( "hh-6" ), CSL1( "pc-6" ) );
 		
 		// 6.5.8 | pc-7 |  N |N|  X |  N | hh-7 |
 		value1 = CSL1( "A value - " ) + QString::number( qrand() );
@@ -265,7 +265,7 @@ bool TestRecordConduit::initDataProxies()
 		hhRec->setValue( CSL1( "f2" ), value2 );
 		fHHDataProxy->records()->insert( hhRec->id(), hhRec );
 		
-		fMapping->map( CSL1( "hh-8" ), CSL1( "pc-8" ) );
+		fMapping.map( CSL1( "hh-8" ), CSL1( "pc-8" ) );
 		
 		// 6.5.10| pc-9 |  M |Y|  - |  D | hh-9 |
 		value1 = CSL1( "A value - " ) + QString::number( qrand() );
@@ -288,7 +288,7 @@ bool TestRecordConduit::initDataProxies()
 		hhRec->setDeleted();
 		fHHDataProxy->records()->insert( hhRec->id(), hhRec );
 		
-		fMapping->map( CSL1( "hh-9" ), CSL1( "pc-9" ) );
+		fMapping.map( CSL1( "hh-9" ), CSL1( "pc-9" ) );
 		
 		// 6.5.11| pc-10|  D |Y|  - |  M | hh-10|
 		value1 = CSL1( "A value - " ) + QString::number( qrand() );
@@ -312,7 +312,7 @@ bool TestRecordConduit::initDataProxies()
 		hhRec->setModified();
 		fHHDataProxy->records()->insert( hhRec->id(), hhRec );
 		
-		fMapping->map( CSL1( "hh-10" ), CSL1( "pc-10" ) );
+		fMapping.map( CSL1( "hh-10" ), CSL1( "pc-10" ) );
 		
 		// 6.5.12| pc-11|  D |Y|  - |  D | hh-11|
 		value1 = CSL1( "A value - " ) + QString::number( qrand() );
@@ -336,7 +336,7 @@ bool TestRecordConduit::initDataProxies()
 		hhRec->setDeleted();
 		fHHDataProxy->records()->insert( hhRec->id(), hhRec );
 		
-		fMapping->map( CSL1( "hh-11" ), CSL1( "pc-11" ) );
+		fMapping.map( CSL1( "hh-11" ), CSL1( "pc-11" ) );
 		
 		// 6.5.13|      |  X |N|  X |  - | hh-12|
 		value1 = CSL1( "A value - " ) + QString::number( qrand() );
@@ -380,7 +380,7 @@ bool TestRecordConduit::initDataProxies()
 		hhRec->setArchived();
 		fHHDataProxy->records()->insert( hhRec->id(), hhRec );
 		
-		fMapping->map( CSL1( "hh-13" ), CSL1( "pc-13" ) );
+		fMapping.map( CSL1( "hh-13" ), CSL1( "pc-13" ) );
 		
 		// 6.5.16| pc-14|  M |Y|  - |  A | hh-14|
 		value1 = CSL1( "A value - " ) + QString::number( qrand() );
@@ -405,7 +405,7 @@ bool TestRecordConduit::initDataProxies()
 		hhRec->setArchived();
 		fHHDataProxy->records()->insert( hhRec->id(), hhRec );
 		
-		fMapping->map( CSL1( "hh-14" ), CSL1( "pc-14" ) );
+		fMapping.map( CSL1( "hh-14" ), CSL1( "pc-14" ) );
 		
 		// 6.5.17| pc-15|  D |A|  X |  X | hh-15|
 		value1 = CSL1( "A value - " ) + QString::number( qrand() );
@@ -417,8 +417,8 @@ bool TestRecordConduit::initDataProxies()
 		pcRec->setDeleted();
 		fPCDataProxy->records()->insert( pcRec->id(), pcRec );
 		
-		fMapping->map( CSL1( "hh-15" ), CSL1( "pc-15" ) );
-		fMapping->archiveRecord( CSL1( "hh-15" ) );
+		fMapping.map( CSL1( "hh-15" ), CSL1( "pc-15" ) );
+		fMapping.archiveRecord( CSL1( "hh-15" ) );
 		
 		// 6.5.18| pc-16|  ~ |Y|  - |  - | hh-16|
 		value1 = CSL1( "A value - " ) + QString::number( qrand() );
@@ -442,7 +442,7 @@ bool TestRecordConduit::initDataProxies()
 		hhRec->synced();
 		fHHDataProxy->records()->insert( hhRec->id(), hhRec );
 		
-		fMapping->map( CSL1( "hh-16" ), CSL1( "pc-16" ) );
+		fMapping.map( CSL1( "hh-16" ), CSL1( "pc-16" ) );
 		
 		// 6.5.19| pc-17|  - |Y|  - |  ~ | hh-17|
 		value1 = CSL1( "A value - " ) + QString::number( qrand() );
@@ -466,7 +466,7 @@ bool TestRecordConduit::initDataProxies()
 		hhRec->synced();
 		fHHDataProxy->records()->insert( hhRec->id(), hhRec );
 		
-		fMapping->map( CSL1( "hh-17" ), CSL1( "pc-17" ) );
+		fMapping.map( CSL1( "hh-17" ), CSL1( "pc-17" ) );
 		
 		// 6.5.20| pc-18|  ~ |Y|  - |  ~ | hh-18|
 		value1 = CSL1( "A value - " ) + QString::number( qrand() );
@@ -490,7 +490,7 @@ bool TestRecordConduit::initDataProxies()
 		hhRec->synced();
 		fHHDataProxy->records()->insert( hhRec->id(), hhRec );
 		
-		fMapping->map( CSL1( "hh-18" ), CSL1( "pc-18" ) );
+		fMapping.map( CSL1( "hh-18" ), CSL1( "pc-18" ) );
 		
 		this->fHHDataProxy = fHHDataProxy;
 		this->fBackupDataProxy = fBackupDataProxy;

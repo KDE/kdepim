@@ -69,7 +69,7 @@ const QString AkonadiRecord::id() const
 	}
 }
 
-Akonadi::Item& AkonadiRecord::item()
+Akonadi::Item AkonadiRecord::item() const
 {
 	FUNCTIONSETUP;
 	
@@ -110,6 +110,13 @@ void AkonadiRecord::setId( const QString &id )
 		d->fTempId = QString();
 		d->fItem.setId( id.toULongLong() );
 	}
+}
+
+void AkonadiRecord::setItem( const Akonadi::Item item )
+{
+	FUNCTIONSETUP;
+	
+	d->fItem = item;
 }
 
 void AkonadiRecord::synced()

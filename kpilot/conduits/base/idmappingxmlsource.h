@@ -29,45 +29,51 @@
 
 #include "kpilot_export.h"
 
-#include <QXmlDefaultHandler>
-#include <QDateTime>
-#include <QMap>
+#include <QtCore/QDateTime>
+#include <QtCore/QMap>
+#include <QtCore/QSharedDataPointer>
+#include <QtXml/QXmlDefaultHandler>
 
+class IDMappingXmlSourcePrivate;
 
 class KPILOT_EXPORT IDMappingXmlSource : public QXmlDefaultHandler
 {
 public:
+	IDMappingXmlSource();
+
 	IDMappingXmlSource( const QString &userName, const QString &conduit );
+	
+	IDMappingXmlSource& operator=( const IDMappingXmlSource& other );
 	
 	~IDMappingXmlSource();
 	
-	QDateTime lastSyncedDate() const { return fLastSyncedDateTime; }
+	QStringList* archivedRecords();
 	
-	void setLastSyncedDate( const QDateTime &dateTime );
+	const QStringList* constArchivedRecords() const;
 	
-	QString lastSyncedPC() const { return fLastSyncedPC; }
-	
-	void setLastSyncedPC( const QString &pc );
-	
-	QMap<QString, QString>* mappings() { return &fMappings; }
-	
-	const QMap<QString, QString>* constMappings() const { return &fMappings; }
-
-	void setHHCategory( const QString &hhRecordId, const QString &category );
+	const QMap<QString, QString>* constMappings() const;
 	
 	QString hhCategory( const QString &hhRecordId ) const;
-
-	void setPCCategories( const QString &pcRecordId, const QStringList &categories );
 	
-	QStringList pcCategories( const QString &pcRecordId ) const;
+	QDateTime lastSyncedDate() const;
 	
-	QStringList* archivedRecords() { return &fArchivedRecords; }
-	
-	const QStringList* constArchivedRecords() const { return &fArchivedRecords; }
+	QString lastSyncedPC() const;
 	
 	void loadMapping();
 	
+	QMap<QString, QString>* mappings();
+	
+	QStringList pcCategories( const QString &pcRecordId ) const;
+	
 	bool saveMapping();
+	
+	void setHHCategory( const QString &hhRecordId, const QString &category );
+	
+	void setLastSyncedDate( const QDateTime &dateTime );
+	
+	void setLastSyncedPC( const QString &pc );
+
+	void setPCCategories( const QString &pcRecordId, const QStringList &categories );
 	
 	bool rollback();
 	 
@@ -79,20 +85,7 @@ protected:
 		, const QString &qName, const QXmlAttributes &attribs );
 
 private:
-	QString fPath;
-	
-	/**
-	 * Mappings between handheld ids (keys) and pc ids (values).
-	 */
-	QMap<QString, QString> fMappings;
-	QMap<QString, QString> fHHCategory;       // Key: HHRecordId, Value: Category name
-	QMap<QString, QStringList> fPCCategories; // Key: PCRecordId, Value: Categories
-	QStringList fArchivedRecords;
-	QDateTime fLastSyncedDateTime;
-	QString fLastSyncedPC;
-	
-	QString fCurrentHHId;
-	QString fCurrentPCId;
+	QSharedDataPointer<IDMappingXmlSourcePrivate> d;
 };
 
 #endif /*IDMAPPERXMLSOURCE_H */

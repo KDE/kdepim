@@ -88,7 +88,7 @@ public:
 		return static_cast<TestHHDataProxy*>( fBackupDataProxy );
 	}
 	
-	IDMapping *mapping() { return fMapping; }
+	IDMapping& mapping() { return fMapping; }
 
 	void addHHRecord( HHRecord *rec );
 	

@@ -29,7 +29,8 @@
 #include "pilotAppInfo.h"
 #include "plugin.h"
 
-class IDMapping;
+#include "idmapping.h"
+
 class HHDataProxy;
 class PCDataProxy;
 class DataProxy;
@@ -46,7 +47,7 @@ class KPILOT_EXPORT RecordConduit : public ConduitAction {
 // Members
 protected:
 	QString fDatabaseName;
-	IDMapping *fMapping;
+	IDMapping fMapping;
 	HHDataProxy *fHHDataProxy;
 	HHDataProxy *fBackupDataProxy;
 	DataProxy *fPCDataProxy;

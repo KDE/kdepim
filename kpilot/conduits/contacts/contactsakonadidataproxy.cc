@@ -40,7 +40,7 @@
 #include "idmapping.h"
 #include "options.h"
 
-ContactsAkonadiDataProxy::ContactsAkonadiDataProxy( Entity::Id id, const IDMapping* mapping   )
+ContactsAkonadiDataProxy::ContactsAkonadiDataProxy( Entity::Id id, const IDMapping& mapping   )
 	: fId( id ), fMapping( mapping )
 {
 	FUNCTIONSETUP;
@@ -94,13 +94,13 @@ void ContactsAkonadiDataProxy::loadAllRecords()
 		{
 			if( item.hasPayload<KABC::Addressee>() )
 			{
-				AkonadiContact* ac = new AkonadiContact( item, fMapping->lastSyncedDate() );
+				AkonadiContact* ac = new AkonadiContact( item, fMapping.lastSyncedDate() );
 				fRecords.insert( ac->id(), ac );
 			}
 		}
 		
 		// Now add dummy records for deleted records.
-		foreach( const QString& mPcId, fMapping->pcRecordIds() )
+		foreach( const QString& mPcId, fMapping.pcRecordIds() )
 		{
 			if( !fRecords.contains( mPcId ) )
 			{

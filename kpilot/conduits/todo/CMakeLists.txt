@@ -6,8 +6,12 @@ include_directories(
 )
 
 set( todo_SRCS
-	todoconfig.cc
+	todoakonadirecord.cc
+	todoakonadiproxy.cc
 	todoconduit.cc
+	todoconfig.cc
+	todohhdataproxy.cc
+	todohhrecord.cc
 	todofactory.cc
 )
 
@@ -16,6 +20,7 @@ kde4_add_kcfg_files( todo_SRCS todosettings.kcfgc )
 kde4_add_library( kpilot_conduit_todo2 SHARED ${todo_SRCS} )
 
 target_link_libraries( kpilot_conduit_todo2
+	${KDE4_KCAL_LIBS}
 	kpilot_akonadibase
 )
 

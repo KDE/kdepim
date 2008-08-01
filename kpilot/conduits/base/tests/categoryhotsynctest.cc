@@ -116,7 +116,7 @@ void CategoryHotSyncTest::testCase_6_5_2()
 	// Postconditions relevant for category syncing.
 	// - The record in the pc datastore that maps to the hh record should have the
 	//   right Category.
-	QString pcId = fConduit->mapping()->pcRecordId( hhId );
+	QString pcId = fConduit->mapping().pcRecordId( hhId );
 	
 	Record *pcRec = fConduit->pcDataProxy()->records()->value( pcId );
 	
@@ -174,7 +174,7 @@ void CategoryHotSyncTest::testCase_6_5_3a()
 	QVERIFY( !pcRec->isModified() );
 	QCOMPARE( pcRec->categories().size(), 0 );
 	
-	QCOMPARE( fConduit->mapping()->pcRecordId( hhId ), pcId );
+	QCOMPARE( fConduit->mapping().pcRecordId( hhId ), pcId );
 	
 	// Sync
 	fConduit->hotSyncTest();
@@ -302,7 +302,7 @@ void CategoryHotSyncTest::initTestCase_653a()
 	fConduit->addPCRecord( pcRec );
 	
 	// Create a mapping
-	fConduit->mapping()->map( hhId, pcId );
+	fConduit->mapping().map( hhId, pcId );
 }
 
 /*

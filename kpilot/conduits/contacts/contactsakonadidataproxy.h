@@ -33,8 +33,9 @@
 
 #include <akonadi/entity.h>
 
+#include "idmapping.h"
+
 class AkonadiContact;
-class IDMapping;
 
 using namespace Akonadi;
 
@@ -42,14 +43,14 @@ class KPILOT_EXPORT ContactsAkonadiDataProxy : public DataProxy
 {
 private:
 	Entity::Id fId;
-	const IDMapping* fMapping;
+	const IDMapping fMapping;
 
 public:
 	/**
 	 * Creates a new ContactsAkonadiDataProxy. The mapping is used to determine if
 	 * records in the Akonadi resource are modified or deleted.
 	 */
-	ContactsAkonadiDataProxy( Entity::Id id, const IDMapping* mapping );
+	ContactsAkonadiDataProxy( Entity::Id id, const IDMapping& mapping );
 	
 	/* virtual */ ~ContactsAkonadiDataProxy();
 
