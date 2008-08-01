@@ -33,14 +33,16 @@
 #include <klocale.h>
 #include <KMenu>
 
-#include <qevent.h>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <QListWidgetItem>
-#include <qpoint.h>
-#include <QPointer>
-#include <QTimer>
-#include <QToolButton>
+#include <QtCore/QEvent>
+#include <QtCore/QPoint>
+#include <QtCore/QPointer>
+#include <QtCore/QTimer>
+#include <QtGui/QDragEnterEvent>
+#include <QtGui/QDragMoveEvent>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QListWidgetItem>
+#include <QtGui/QToolButton>
 
 KAB::DistributionListNg::ListBox::ListBox( QWidget* parent ) : QListWidget( parent )
 {

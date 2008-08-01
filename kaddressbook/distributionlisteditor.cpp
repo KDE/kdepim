@@ -29,7 +29,6 @@
 #include <kpimutils/email.h>
 
 #include <kabc/addressbook.h>
-
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <klineedit.h>
@@ -37,11 +36,11 @@
 #include <kmessagebox.h>
 #include <KRandom>
 
-#include <QApplication>
-#include <qlabel.h>
-#include <qlayout.h>
-#include <QScrollArea>
-#include <qsignalmapper.h>
+#include <QtCore/QSignalMapper>
+#include <QtGui/QApplication>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QScrollArea>
 
 class KPIM::DistributionListEditor::EditorWidgetPrivate
 {

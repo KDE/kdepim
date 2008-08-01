@@ -38,12 +38,13 @@ class AddHostDialog : public KDialog
     AddHostDialog( KLDAP::LdapServer* server, QWidget* parent = 0 );
     ~AddHostDialog();
 
-  signals:
+  Q_SIGNALS:
     void changed( bool );
 
-  private slots:
+  private Q_SLOTS:
     void slotHostEditChanged( const QString& );
     virtual void slotOk();
+
   private:
     KLDAP::LdapConfigWidget *mCfg;
     KLDAP::LdapServer *mServer;

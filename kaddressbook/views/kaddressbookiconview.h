@@ -24,13 +24,15 @@
 #ifndef KADDRESSBOOKICONVIEW_H
 #define KADDRESSBOOKICONVIEW_H
 
-#include <QString>
-//Added by qt3to4:
-#include <QList>
-#include <QDropEvent>
-#include <k3iconview.h>
 #include "kaddressbookview.h"
-#include <Q3ValueList>
+
+#include <QtCore/QList>
+#include <QtCore/QString>
+
+#include <k3iconview.h>
+#include <Qt3Support/Q3ValueList>
+
+class QDropEvent;
 class Q3IconViewItem;
 class KConfigGroup;
 class AddresseeIconView;
@@ -58,12 +60,12 @@ class KAddressBookIconView : public KAddressBookView
     void scrollUp();
     void scrollDown();
 
-  public slots:
+  public Q_SLOTS:
     void refresh( const QString &uid = QString() );
     void setSelected( const QString &uid = QString(), bool selected = true );
     virtual void setFirstSelected( bool selected = true );
 
-  protected slots:
+  protected Q_SLOTS:
     void addresseeExecuted( Q3IconViewItem *item );
     void addresseeSelected();
     void rmbClicked( Q3IconViewItem*, const QPoint& );
@@ -82,14 +84,14 @@ class AddresseeIconView : public K3IconView
     AddresseeIconView( QWidget *parent, const char *name = 0 );
     ~AddresseeIconView();
 
-  signals:
+  Q_SIGNALS:
     void addresseeDropped( QDropEvent* );
     void startAddresseeDrag();
 
   protected:
     virtual Q3DragObject *dragObject();
 
-  protected slots:
+  protected Q_SLOTS:
     void itemDropped( QDropEvent*, const Q3ValueList<Q3IconDragItem> & );
 };
 #endif

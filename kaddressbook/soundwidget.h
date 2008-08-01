@@ -45,7 +45,7 @@ class SoundWidget : public KAB::ContactEditorWidget
     void storeContact( KABC::Addressee *addr );
     void setReadOnly( bool readOnly );
 
-  private slots:
+  private Q_SLOTS:
     void playSound();
     void loadSound();
     void updateGUI();

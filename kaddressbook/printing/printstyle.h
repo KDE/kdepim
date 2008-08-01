@@ -24,10 +24,10 @@
 #ifndef PRINTSTYLE_H
 #define PRINTSTYLE_H
 
-#include <QHash>
-#include <QWidget>
-#include <QStringList>
-#include <QPixmap>
+#include <QtCore/QHash>
+#include <QtCore/QStringList>
+#include <QtGui/QPixmap>
+#include <QtGui/QWidget>
 
 #include <kabc/field.h>
 

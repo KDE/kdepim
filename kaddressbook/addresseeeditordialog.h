@@ -45,11 +45,11 @@ class AddresseeEditorDialog : public KDialog
 
     bool dirty();
 
-  signals:
+  Q_SIGNALS:
     void contactModified( const KABC::Addressee& );
     void editorDestroyed( const QString& );
 
-  protected slots:
+  protected Q_SLOTS:
     virtual void slotApply();
     virtual void slotOk();
     virtual void slotCancel();

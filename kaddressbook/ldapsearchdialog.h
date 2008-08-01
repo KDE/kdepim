@@ -28,7 +28,7 @@
 
 #include <kdialog.h>
 
-#include <QCloseEvent>
+#include <QtGui/QCloseEvent>
 
 class KComboBox;
 class KLineEdit;

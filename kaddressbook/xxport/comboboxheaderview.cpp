@@ -19,12 +19,12 @@
 */
 #include "comboboxheaderview.h"
 
-#include <QAbstractItemModel>
-#include <QComboBox>
-#include <QEvent>
-#include <QMouseEvent>
-#include <QResizeEvent>
-#include <QTableWidget>
+#include <QtCore/QAbstractItemModel>
+#include <QtCore/QEvent>
+#include <QtGui/QComboBox>
+#include <QtGui/QMouseEvent>
+#include <QtGui/QResizeEvent>
+#include <QtGui/QTableWidget>
 
 class ComboBoxHeaderView::ComboBox : public QComboBox {
   friend class ComboBoxHeaderView;

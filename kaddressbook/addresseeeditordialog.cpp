@@ -21,10 +21,9 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QApplication>
-//Added by qt3to4:
-#include <QVBoxLayout>
-#include <QFrame>
+#include <QtGui/QApplication>
+#include <QtGui/QFrame>
+#include <QtGui/QVBoxLayout>
 
 #include <kdebug.h>
 #include <klocale.h>

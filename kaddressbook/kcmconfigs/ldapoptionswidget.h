@@ -24,7 +24,7 @@
 #ifndef LDAPOPTIONSWIDGET_H
 #define LDAPOPTIONSWIDGET_H
 
-#include <QWidget>
+#include <QtGui/QWidget>
 
 class QToolButton;
 class K3ListView;
@@ -43,10 +43,10 @@ class LDAPOptionsWidget : public QWidget
     void saveSettings();
     void defaults();
 
-  signals:
+  Q_SIGNALS:
     void changed( bool );
 
-  private slots:
+  private Q_SLOTS:
     void slotAddHost();
     void slotEditHost();
     void slotRemoveHost();

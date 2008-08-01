@@ -25,8 +25,10 @@
 #define XXPORTMANAGER_H
 
 #include "xxport.h"
-#include <QHash>
-#include <QObject>
+
+#include <QtCore/QHash>
+#include <QtCore/QObject>
+
 #include <kurl.h>
 
 namespace KAB {
@@ -47,14 +49,14 @@ class KADDRESSBOOK_EXPORT XXPortManager : public QObject
     static KUrl importURL;
     static QString importData;
 
-  public slots:
+  public Q_SLOTS:
     void importVCard( const KUrl &url );
     void importVCardFromData( const QString &vCard );
 
-  signals:
+  Q_SIGNALS:
     void modified();
 
-  protected slots:
+  protected Q_SLOTS:
     void slotImport( const QString&, const QString& );
     void slotExport( const QString&, const QString& );
 

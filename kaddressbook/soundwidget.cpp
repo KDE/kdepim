@@ -31,13 +31,11 @@
 #include <kurlrequester.h>
 #include <Phonon/MediaObject>
 
-#include <QCheckBox>
 #include <QtCore/QBuffer>
-#include <QLabel>
-#include <QPushButton>
-
-//Added by qt3to4:
-#include <QGridLayout>
+#include <QtGui/QCheckBox>
+#include <QtGui/QGridLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QPushButton>
 
 #include "soundwidget.h"
 

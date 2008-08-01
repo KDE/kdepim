@@ -24,7 +24,7 @@
 #ifndef SEARCHMANAGER_H
 #define SEARCHMANAGER_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
 #include <kabc/stdaddressbook.h>
 
@@ -78,13 +78,13 @@ class SearchManager : public QObject
      */
     QStringList distributionListNames() const;
 
-  signals:
+  Q_SIGNALS:
     /**
       Emitted whenever the contacts have changed.
      */
     void contactsUpdated();
 
-  public slots:
+  public Q_SLOTS:
     void reload();
 
   private:

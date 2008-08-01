@@ -26,7 +26,7 @@
 
 #include <kabc/addressee.h>
 
-#include <QWidget>
+#include <QtGui/QWidget>
 
 class AddresseeEditorBase : public QWidget
 {
@@ -52,7 +52,7 @@ class AddresseeEditorBase : public QWidget
 
     virtual bool readyToClose() { return true; }
 
-  signals:
+  Q_SIGNALS:
     void modified();
 };
 

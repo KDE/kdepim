@@ -59,10 +59,10 @@ class IMEditWidget : public QWidget
   private:
     void initGui();
 
-  signals:
+  Q_SIGNALS:
     void modified();
 
-  private slots:
+  private Q_SLOTS:
     void edit();
     void textChanged( const QString& );
 

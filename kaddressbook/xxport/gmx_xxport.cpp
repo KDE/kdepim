@@ -29,10 +29,9 @@
     For further information please visit http://www.gmx.com
 */
 
-#include <QFile>
-#include <QMap>
-//Added by qt3to4:
-#include <QTextStream>
+#include <QtCore/QFile>
+#include <QtCore/QMap>
+#include <QtCore/QTextStream>
 
 #include <kfiledialog.h>
 #include <kio/netaccess.h>

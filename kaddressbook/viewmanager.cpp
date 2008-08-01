@@ -21,26 +21,26 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QFile>
-#include <QStackedWidget>
-#include <QHBoxLayout>
-#include <QDropEvent>
-#include <kselectaction.h>
-#include <kactioncollection.h>
-#include <libkdepim/kvcarddrag.h>
+#include <QtCore/QFile>
+#include <QtGui/QDropEvent>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QStackedWidget>
+
 #include <kabc/addressbook.h>
 #include <kabc/vcardconverter.h>
-
+#include <kactioncollection.h>
 #include <kconfig.h>
+#include <kconfiggroup.h>
 #include <kdebug.h>
 #include <kdeversion.h>
+#include <kicon.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <ktempdir.h>
+#include <kselectaction.h>
 #include <kservicetypetrader.h>
-#include <kicon.h>
-#include <kconfiggroup.h>
+#include <ktempdir.h>
+#include <libkdepim/kvcarddrag.h>
 
 #include "addviewdialog.h"
 #include "addresseeutil.h"

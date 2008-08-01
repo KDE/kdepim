@@ -21,13 +21,13 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QLabel>
-#include <QPushButton>
-#include <QToolButton>
-#include <QApplication>
-#include <QGridLayout>
-#include <QBoxLayout>
-#include <QListWidget>
+#include <QtGui/QApplication>
+#include <QtGui/QBoxLayout>
+#include <QtGui/QGridLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QListWidget>
+#include <QtGui/QPushButton>
+#include <QtGui/QToolButton>
 
 #include <kcombobox.h>
 #include <kdebug.h>

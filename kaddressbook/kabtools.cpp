@@ -21,14 +21,14 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include <QtCore/QFile>
+
 #include <kabc/addressbook.h>
 #include <kabc/vcardconverter.h>
 #include <kapplication.h>
 #include <kdebug.h>
 #include <ktempdir.h>
 #include <ktoolinvocation.h>
-
-#include <QFile>
 
 #include "kabtools.h"
 

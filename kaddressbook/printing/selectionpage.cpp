@@ -22,19 +22,17 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include <QtCore/QStringList>
+#include <QtGui/QComboBox>
+#include <QtGui/QGridLayout>
+#include <QtGui/QGroupBox>
+#include <QtGui/QLabel>
+#include <QtGui/QPushButton>
+#include <QtGui/QRadioButton>
+#include <QtGui/QVBoxLayout>
+
 #include <kdialog.h>
 #include <klocale.h>
-
-#include <QComboBox>
-#include <QGroupBox>
-#include <QLabel>
-#include <QPushButton>
-#include <QRadioButton>
-#include <QStringList>
-
-//Added by qt3to4:
-#include <QVBoxLayout>
-#include <QGridLayout>
 
 #include <libkdepim/categoryselectdialog.h>
 

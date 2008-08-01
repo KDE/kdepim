@@ -21,6 +21,17 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include <QtCore/QFile>
+#include <QtCore/QRegExp>
+#include <QtCore/QString>
+#include <QtGui/QCheckBox>
+#include <QtGui/QGridLayout>
+#include <QtGui/QGroupBox>
+#include <QtGui/QLabel>
+#include <QtGui/QPainter>
+#include <QtGui/QPixmap>
+#include <QtGui/QPushButton>
+
 #include <kabc/geo.h>
 #include <kacceleratormanager.h>
 #include <kcombobox.h>
@@ -29,17 +40,6 @@
 #include <klocale.h>
 #include <knuminput.h>
 #include <kstandarddirs.h>
-
-#include <QCheckBox>
-#include <QFile>
-#include <QGroupBox>
-#include <QLabel>
-#include <QPainter>
-#include <QPixmap>
-#include <QPushButton>
-#include <QRegExp>
-#include <QString>
-#include <QGridLayout>
 
 #include "geowidget.h"
 

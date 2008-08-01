@@ -23,8 +23,8 @@
 
 #include "detailledstyle.h"
 
-#include <QCheckBox>
-#include <QPainter>
+#include <QtGui/QCheckBox>
+#include <QtGui/QPainter>
 #include <QtGui/QPrinter>
 
 #include <kapplication.h>
@@ -32,11 +32,11 @@
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kdialog.h>
+#include <kglobal.h>
 #include <kglobalsettings.h>
 #include <klocale.h>
 #include <knuminput.h>
 #include <kstandarddirs.h>
-#include <kglobal.h>
 
 #include "ui_ds_appearance.h"
 #include "printingwizard.h"

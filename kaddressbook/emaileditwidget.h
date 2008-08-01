@@ -47,10 +47,10 @@ class EmailEditWidget : public QWidget
 
     void setReadOnly( bool readOnly );
 
-  signals:
+  Q_SIGNALS:
     void modified();
 
-  private slots:
+  private Q_SLOTS:
     void edit();
     void textChanged( const QString& );
 
@@ -71,7 +71,7 @@ class EmailEditDialog : public KDialog
     QStringList emails() const;
     bool changed() const;
 
-  protected slots:
+  protected Q_SLOTS:
     void add();
     void edit();
     void remove();

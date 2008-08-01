@@ -24,7 +24,7 @@
 #ifndef KABCONFIGWIDGET_H
 #define KABCONFIGWIDGET_H
 
-#include <QWidget>
+#include <QtGui/QWidget>
 
 class QCheckBox;
 class QLineEdit;
@@ -44,10 +44,10 @@ class KABConfigWidget : public QWidget
     void saveSettings();
     void defaults();
 
-  signals:
+  Q_SIGNALS:
     void changed( bool );
 
-  public slots:
+  public Q_SLOTS:
     void modified();
 
   private:

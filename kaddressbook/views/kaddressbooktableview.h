@@ -24,13 +24,11 @@
 #ifndef KADDRESSBOOKTABLEVIEW_H
 #define KADDRESSBOOKTABLEVIEW_H
 
-#include <QWidget>
-#include <q3listview.h>
-#include <QString>
-#include <q3tabdialog.h>
-#include <QStringList>
-
-#include <QVBoxLayout>
+#include <Qt3Support/Q3ListView>
+#include <Qt3Support/Q3TabDialog>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
+#include <QtGui/QWidget>
 
 #include "kaddressbookview.h"
 
@@ -74,10 +72,10 @@ friend class ContactListView;
     void scrollUp();
     void scrollDown();
 
-  public slots:
+  public Q_SLOTS:
     virtual void reconstructListView();
 
-  protected slots:
+  protected Q_SLOTS:
     /**
       Called whenever the user selects an addressee in the list view.
     */

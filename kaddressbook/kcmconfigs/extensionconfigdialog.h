@@ -41,7 +41,7 @@ class ExtensionConfigDialog : public KDialog
                            QWidget *parent );
     ~ExtensionConfigDialog();
 
-  protected slots:
+  protected Q_SLOTS:
     void slotOk();
 
   private:

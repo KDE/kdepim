@@ -24,7 +24,7 @@
 #ifndef VIEWCONFIGUREFILTERPAGE
 #define VIEWCONFIGUREFILTERPAGE
 
-#include <QWidget>
+#include <QtGui/QWidget>
 
 class QButtonGroup;
 
@@ -42,7 +42,7 @@ class ViewConfigureFilterPage : public QWidget
     void restoreSettings( const KConfigGroup & );
     void saveSettings( KConfigGroup& );
 
-  protected slots:
+  protected Q_SLOTS:
     void buttonClicked( int id );
 
   private:

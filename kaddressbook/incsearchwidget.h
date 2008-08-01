@@ -24,13 +24,12 @@
 #ifndef INCSEARCHWIDGET_H
 #define INCSEARCHWIDGET_H
 
-#include <QWidget>
-//Added by qt3to4:
-#include <QKeyEvent>
+#include <QtGui/QWidget>
 
 #include <kabc/field.h>
 
 class QComboBox;
+class QKeyEvent;
 class QTimer;
 class KLineEdit;
 
@@ -49,7 +48,7 @@ class IncSearchWidget : public QWidget
 
     void clear();
 
-  signals:
+  Q_SIGNALS:
     /**
       This signal is emitted whenever the text in the input
       widget is changed. You can get the sorting field by
@@ -67,10 +66,10 @@ class IncSearchWidget : public QWidget
      */
     void scrollDown();
 
-  public slots:
+  public Q_SLOTS:
     void setViewFields( const KABC::Field::List& );
 
-  private slots:
+  private Q_SLOTS:
     void announceDoSearch();
     void timeout();
 

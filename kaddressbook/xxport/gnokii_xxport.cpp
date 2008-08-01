@@ -32,7 +32,7 @@
 */
 #include <config-xxport.h>
 
-#include <QProgressBar>
+#include <QtGui/QProgressBar>
 
 #include <kdebug.h>
 #include <klocale.h>

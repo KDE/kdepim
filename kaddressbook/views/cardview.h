@@ -24,26 +24,22 @@
 #ifndef CARDVIEW_H
 #define CARDVIEW_H
 
-#include <QPair>
-#include <QPoint>
-#include <q3ptrlist.h>
-#include <QRect>
-#include <q3scrollview.h>
-#include <q3listbox.h>
-#include <QString>
-//Added by qt3to4:
-#include <QWheelEvent>
-#include <QFocusEvent>
-#include <QEvent>
-#include <QKeyEvent>
-#include <QLabel>
-#include <QResizeEvent>
-#include <QMouseEvent>
+#include <QtCore/QPair>
+#include <QtCore/QPoint>
+#include <QtCore/QString>
+#include <Qt3Support/Q3ListBox>
+#include <Qt3Support/Q3PtrList>
+#include <Qt3Support/Q3ScrollView>
 
+class QEvent;
+class QFocusEvent;
+class QKeyEvent;
 class QLabel;
 class QMouseEvent;
 class QPainter;
+class QRect;
 class QResizeEvent;
+class QWheelEvent;
 
 class CardView;
 class CardViewItemPrivate;
@@ -470,7 +466,7 @@ class CardView : public Q3ScrollView
      */
     int maxFieldLines() const;
 
-  signals:
+  Q_SIGNALS:
     /**
       Emitted whenever the selection changes. This means a user highlighted
       a new item or unhighlighted a currently selected item.
@@ -565,7 +561,7 @@ class CardView : public Q3ScrollView
      */
     virtual void startDrag();
 
-  private slots:
+  private Q_SLOTS:
     /**
       Called by a timer to display a label with truncated text.
       Pop up a label, if there is a field with obscured text or

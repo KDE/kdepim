@@ -21,17 +21,17 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QApplication>
-#include <QButtonGroup>
-#include <QGroupBox>
-#include <QList>
-#include <QPushButton>
-#include <QResizeEvent>
-#include <QString>
-#include <QStyle>
-#include <QStyleOption>
-#include <QTimer>
-#include <QVBoxLayout>
+#include <QtCore/QList>
+#include <QtCore/QString>
+#include <QtCore/QTimer>
+#include <QtGui/QApplication>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QGroupBox>
+#include <QtGui/QPushButton>
+#include <QtGui/QResizeEvent>
+#include <QtGui/QStyle>
+#include <QtGui/QStyleOption>
+#include <QtGui/QVBoxLayout>
 
 #include <kabc/addressbook.h>
 #include <kabc/field.h>

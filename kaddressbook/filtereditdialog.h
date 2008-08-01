@@ -50,7 +50,7 @@ class FilterDialog : public KDialog
     void setFilters( const Filter::List &list );
     Filter::List filters() const;
 
-  protected slots:
+  protected Q_SLOTS:
     void add();
     void edit();
     void remove();
@@ -79,7 +79,7 @@ class FilterEditDialog : public KDialog
     void setFilter( const Filter &filter );
     Filter filter();
 
-  protected slots:
+  protected Q_SLOTS:
     void filterNameTextChanged( const QString& );
     void slotHelp();
 

@@ -21,25 +21,23 @@
     without including the source code for Qt in the source distribution.
 */
 
-
 #include <limits.h>
 
-#include <QCursor>
-#include <QDateTime>
-#include <QLabel>
-#include <QPainter>
-#include <QStyle>
-#include <QStyleOption>
-#include <QTimer>
-#include <QToolTip>
-//Added by qt3to4:
-#include <QWheelEvent>
-#include <QFocusEvent>
-#include <Q3PtrList>
-#include <QEvent>
-#include <QKeyEvent>
-#include <QResizeEvent>
-#include <QMouseEvent>
+#include <Qt3Support/Q3PtrList>
+#include <QtCore/QDateTime>
+#include <QtCore/QEvent>
+#include <QtCore/QTimer>
+#include <QtGui/QCursor>
+#include <QtGui/QFocusEvent>
+#include <QtGui/QKeyEvent>
+#include <QtGui/QLabel>
+#include <QtGui/QMouseEvent>
+#include <QtGui/QPainter>
+#include <QtGui/QResizeEvent>
+#include <QtGui/QStyle>
+#include <QtGui/QStyleOption>
+#include <QtGui/QToolTip>
+#include <QtGui/QWheelEvent>
 
 #include <kdebug.h>
 #include <kglobalsettings.h>

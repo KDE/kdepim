@@ -28,14 +28,14 @@
 #include <kdialog.h>
 
 #include "addresseeconfig.h"
-//Added by qt3to4:
-#include <QVBoxLayout>
-#include <QList>
+
+#include <QtCore/QList>
 
 class QButtonGroup;
 class QCheckBox;
 class QScrollArea;
 class QSignalMapper;
+class QVBoxLayout;
 
 class KLineEdit;
 class KComboBox;
@@ -51,10 +51,10 @@ class PhoneTypeCombo : public KComboBox
     void setType( KABC::PhoneNumber::Type type );
     KABC::PhoneNumber::Type type() const;
 
-  signals:
+  Q_SIGNALS:
     void modified();
 
-  protected slots:
+  protected Q_SLOTS:
     void selected( int );
     void otherSelected();
 
@@ -78,7 +78,7 @@ class PhoneNumberWidget : public QWidget
 
     void setReadOnly( bool readOnly );
 
-  signals:
+  Q_SIGNALS:
     void modified();
 
   private:
@@ -102,14 +102,14 @@ class PhoneNumberListWidget : public QWidget
 
     int phoneNumberCount() const;
 
-  signals:
+  Q_SIGNALS:
     void modified();
 
-  public slots:
+  public Q_SLOTS:
     void add();
     void remove();
 
-  protected slots:
+  protected Q_SLOTS:
     void changed();
     void changed( int pos );
 
@@ -141,10 +141,10 @@ class PhoneEditWidget : public QWidget
 
     void setReadOnly( bool readOnly );
 
-  signals:
+  Q_SIGNALS:
     void modified();
 
-  protected slots:
+  protected Q_SLOTS:
     void changed();
 
   private:

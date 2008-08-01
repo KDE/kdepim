@@ -25,7 +25,7 @@
 #ifndef MIKESSTYLE_H
 #define MIKESSTYLE_H
 
-#include <QFont>
+#include <QtGui/QFont>
 
 #include "printstyle.h"
 

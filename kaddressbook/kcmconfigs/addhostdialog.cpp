@@ -21,14 +21,13 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QPushButton>
-
-//Added by qt3to4:
-#include <QHBoxLayout>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QPushButton>
 
 #include <kacceleratormanager.h>
 #include <klineedit.h>
 #include <klocale.h>
+
 #include "addhostdialog.h"
 
 AddHostDialog::AddHostDialog( KLDAP::LdapServer *server, QWidget* parent )

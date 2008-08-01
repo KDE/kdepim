@@ -28,10 +28,10 @@
 #include <kabc/field.h>
 #include <libkdepim/distributionlist.h>
 
-#include <QHash>
-#include <QLabel>
-#include <QWidget>
-#include <QHBoxLayout>
+#include <QtCore/QHash>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QWidget>
 
 namespace KABC {
 class AddressBook;
@@ -161,7 +161,7 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
      */
     virtual void setSelectedDistributionList( const QString &name );
 
-  public slots:
+  public Q_SLOTS:
     /**
       Is called whenever a contact is selected in the view.
      */
@@ -388,7 +388,7 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
     void editDistributionList( const KPIM::DistributionList &list );
     void showDistributionListEntry( const QString &uid );
 
-  private slots:
+  private Q_SLOTS:
     void setJumpButtonBarVisible( bool visible );
     void setDetailsVisible( bool visible );
 

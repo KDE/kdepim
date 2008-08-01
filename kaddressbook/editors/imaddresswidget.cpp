@@ -21,8 +21,9 @@
   with any edition of Qt, and distribute the resulting executable,
   without including the source code for Qt in the source distribution.
 */
-#include <QCheckBox>
-#include <QList>
+
+#include <QtCore/QList>
+#include <QtGui/QCheckBox>
 
 #include <kdebug.h>
 #include <kiconloader.h>

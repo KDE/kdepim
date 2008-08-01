@@ -27,8 +27,9 @@
 #include "kabcommon_export.h"
 
 #include <kabc/address.h>
-#include <QObject>
-#include <QString>
+
+#include <QtCore/QObject>
+#include <QtCore/QString>
 
 class KABCOMMON_EXPORT LocationMap : public QObject
 {
@@ -38,7 +39,7 @@ class KABCOMMON_EXPORT LocationMap : public QObject
     static LocationMap *instance();
     ~LocationMap();
 
-  public slots:
+  public Q_SLOTS:
     void showAddress( const KABC::Address& );
 
   protected:

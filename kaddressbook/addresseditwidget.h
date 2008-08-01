@@ -24,7 +24,7 @@
 #ifndef ADDRESSEDITWIDGET_H
 #define ADDRESSEDITWIDGET_H
 
-#include <QWidget>
+#include <QtGui/QWidget>
 
 #include <KDialog>
 
@@ -65,10 +65,10 @@ class AddressEditWidget : public QWidget
 
     void setReadOnly( bool readOnly );
 
-  signals:
+  Q_SIGNALS:
     void modified();
 
-  protected slots:
+  protected Q_SLOTS:
     void updateAddressEdit();
 
     void edit();
@@ -99,7 +99,7 @@ class AddressEditDialog : public KDialog
     KABC::Address::List addresses();
     bool changed() const;
 
-  protected slots:
+  protected Q_SLOTS:
     void addAddress();
     void removeAddress();
     void changeType();

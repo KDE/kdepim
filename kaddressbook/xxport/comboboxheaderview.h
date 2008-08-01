@@ -20,10 +20,9 @@
 #ifndef COMBOBOXHEADERVIEW_H
 #define COMBOBOXHEADERVIEW_H
 
-#include <QHeaderView>
-
-#include <QRect>
-#include <QStringList>
+#include <QtCore/QRect>
+#include <QtCore/QStringList>
+#include <QtGui/QHeaderView>
 
 class QAbstractItemModel;
 class QComboBox;

@@ -28,24 +28,19 @@
 #include <kdialog.h>
 #include <klocale.h>
 
-#include <QStringList>
-#include <QWidget>
-//Added by qt3to4:
-#include <QLabel>
-#include <QVBoxLayout>
-#include <QList>
-#include <QFrame>
-#include <QHBoxLayout>
-#include <QGridLayout>
+#include <QtCore/QList>
+#include <QtCore/QStringList>
+#include <QtGui/QWidget>
 
 #include "contacteditorwidget.h"
 
 class QCheckBox;
+class QFrame;
 class QGridLayout;
+class QHBoxLayout;
 class QLabel;
 class QPushButton;
 class QVBoxLayout;
-class QWidget;
 
 class KComboBox;
 class KLineEdit;
@@ -74,7 +69,7 @@ class AddFieldDialog : public KDialog
     QString type() const;
     bool isGlobal() const;
 
-  private slots:
+  private Q_SLOTS:
     void nameChanged( const QString& );
 
   private:
@@ -107,7 +102,7 @@ class FieldWidget : public QWidget
     void removeLocalFields();
     void clearFields();
 
-  signals:
+  Q_SIGNALS:
     void changed();
 
   private:
@@ -131,7 +126,7 @@ class CustomFieldsWidget : public KAB::ContactEditorWidget
     void storeContact( KABC::Addressee *addr );
     void setReadOnly( bool readOnly );
 
-  private slots:
+  private Q_SLOTS:
     void addField();
     void removeField();
 

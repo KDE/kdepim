@@ -21,23 +21,20 @@
     without including the source code for Qt in the source distribution.
 */
 
-//Added by qt3to4:
-#include <QVBoxLayout>
+#include <QtGui/QVBoxLayout>
 
 #include <kaboutdata.h>
-#include <kdebug.h>
-#include <klocale.h>
 #include <kcomponentdata.h>
-#include "kabconfigwidget.h"
-
-#include "kcmkabconfig.h"
-
+#include <kdebug.h>
 #include <kdemacros.h>
 #include <kgenericfactory.h>
+#include <klocale.h>
+
+#include "kabconfigwidget.h"
+#include "kcmkabconfig.h"
 
 K_PLUGIN_FACTORY(KCMKabConfigFactory, registerPlugin<KCMKabConfig>();)
 K_EXPORT_PLUGIN(KCMKabConfigFactory( "kcmkabconfig" ))
-
 
 KCMKabConfig::KCMKabConfig( QWidget *parent, const QVariantList & )
   : KCModule( KCMKabConfigFactory::componentData(), parent )

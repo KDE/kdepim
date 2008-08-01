@@ -21,15 +21,14 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QApplication>
-#include <q3iconview.h>
-#include <QStringList>
-//Added by qt3to4:
-#include <QPixmap>
-#include <QKeyEvent>
-#include <QEvent>
-#include <QDropEvent>
-#include <QVBoxLayout>
+#include <Qt3Support/Q3IconView>
+#include <QtCore/QEvent>
+#include <QtCore/QStringList>
+#include <QtGui/QApplication>
+#include <QtGui/QDropEvent>
+#include <QtGui/QKeyEvent>
+#include <QtGui/QPixmap>
+#include <QtGui/QVBoxLayout>
 
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>

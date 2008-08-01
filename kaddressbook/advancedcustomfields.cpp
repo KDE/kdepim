@@ -23,10 +23,9 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QCheckBox>
-#include <QRegExp>
-//Added by qt3to4:
-#include <QVBoxLayout>
+#include <QtCore/QRegExp>
+#include <QtGui/QCheckBox>
+#include <QtGui/QVBoxLayout>
 
 #include <kdatepicker.h>
 #include <kdatetimewidget.h>

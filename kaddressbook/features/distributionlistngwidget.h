@@ -27,9 +27,8 @@
 
 #include <kabc/addressee.h>
 
-#include <QListWidget>
-
-#include <QStringList>
+#include <QtCore/QStringList>
+#include <QtGui/QListWidget>
 
 class QDragEnterEvent;
 class QDragMoveEvent;
@@ -50,7 +49,7 @@ class ListBox : public QListWidget
 public:
     ListBox( QWidget* parent = 0 );
 
-signals:
+Q_SIGNALS:
 
     void dropped( const QString &listName, const KABC::Addressee::List &addressees );
 
@@ -76,12 +75,7 @@ public:
     //impl
     QString identifier() const;
 
-
-private:
-    void changed( const KABC::Addressee& );
-
-private slots:
-
+private Q_SLOTS:
     void deleteSelectedDistributionList();
     void editSelectedDistributionList();
 
@@ -91,6 +85,8 @@ private slots:
     void contactsDropped( const QString &listName, const KABC::Addressee::List &addressees );
 
 private:
+    void changed( const KABC::Addressee& );
+
     ListBox *mListBox;
     QStringList mCurrentEntries;
     QToolButton *mAddButton;

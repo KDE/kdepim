@@ -22,18 +22,17 @@
 */
 #include "phoneeditwidget.h"
 
-#include <QButtonGroup>
-#include <QCheckBox>
-#include <QGridLayout>
-#include <QGroupBox>
-#include <QHBoxLayout>
-#include <QList>
-#include <QPushButton>
-#include <QScrollArea>
-#include <QScrollBar>
-#include <QSignalMapper>
-#include <QString>
-#include <QVBoxLayout>
+#include <QtCore/QSignalMapper>
+#include <QtCore/QString>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QCheckBox>
+#include <QtGui/QGridLayout>
+#include <QtGui/QGroupBox>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QPushButton>
+#include <QtGui/QScrollArea>
+#include <QtGui/QScrollBar>
+#include <QtGui/QVBoxLayout>
 
 #include <KComboBox>
 #include <KDebug>

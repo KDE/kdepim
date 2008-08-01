@@ -26,10 +26,9 @@
 
 #include <kabc/addressbook.h>
 
-#include <QColor>
-#include <QFont>
-#include <QRect>
-
+#include <QtCore/QRect>
+#include <QtGui/QColor>
+#include <QtGui/QFont>
 
 typedef QList<QRect> QRectList;
 

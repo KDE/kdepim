@@ -30,7 +30,7 @@
 #include <kdialog.h>
 #include <kvbox.h>
 
-#include <QPixmap>
+#include <QtGui/QPixmap>
 
 class KPageWidget;
 
@@ -96,7 +96,7 @@ class ViewConfigureDialog : public KDialog
     void restoreSettings( const KConfigGroup& );
     void saveSettings( KConfigGroup& );
 
-  protected slots:
+  protected Q_SLOTS:
     void slotHelp();
 
   private:

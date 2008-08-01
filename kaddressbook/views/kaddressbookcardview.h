@@ -24,8 +24,7 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QString>
-#include <QDropEvent>
+#include <QtCore/QString>
 
 #include "cardview.h"
 #include "kaddressbookview.h"
@@ -58,12 +57,12 @@ class KAddressBookCardView : public KAddressBookView
     void scrollUp();
     void scrollDown();
 
-  public slots:
+  public Q_SLOTS:
     void refresh( const QString &uid = QString() );
     void setSelected( const QString &uid = QString(), bool selected = true );
     virtual void setFirstSelected( bool selected = true );
 
-  protected slots:
+  protected Q_SLOTS:
     void addresseeExecuted( CardViewItem* );
     void addresseeSelected();
     void rmbClicked( CardViewItem*, const QPoint& );
@@ -80,7 +79,7 @@ class AddresseeCardView : public CardView
     AddresseeCardView( QWidget *parent, const char *name = 0 );
     ~AddresseeCardView();
 
-  signals:
+  Q_SIGNALS:
     void startAddresseeDrag();
     void addresseeDropped( QDropEvent* );
 

@@ -48,7 +48,7 @@ class KAddressBookMain : public KXmlGuiWindow
     KAddressBookMain( const QString &file = QString() );
     virtual ~KAddressBookMain();
 
-  public slots:
+  public Q_SLOTS:
     void addEmail( QString addr );
     void importVCard( const KUrl& url );
     void importVCardFromData( const QString& vCard );
@@ -79,7 +79,7 @@ class KAddressBookMain : public KXmlGuiWindow
 
     virtual bool queryClose();
 
-  private slots:
+  private Q_SLOTS:
     void configureKeyBindings();
     void configureToolbars();
     void newToolbarConfig();

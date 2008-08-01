@@ -21,13 +21,13 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QCheckBox>
-#include <QFile>
-#include <QFrame>
-#include <QFont>
-#include <QLabel>
-#include <QPushButton>
-#include <QVBoxLayout>
+#include <QtCore/QFile>
+#include <QtGui/QCheckBox>
+#include <QtGui/QFont>
+#include <QtGui/QFrame>
+#include <QtGui/QLabel>
+#include <QtGui/QPushButton>
+#include <QtGui/QVBoxLayout>
 
 #include <kabc/vcardconverter.h>
 #include <kdialog.h>

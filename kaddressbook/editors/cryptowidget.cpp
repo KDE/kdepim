@@ -31,17 +31,17 @@
 
 #include <kdebug.h>
 #include <kdialog.h>
+#include <khbox.h>
 #include <kiconloader.h>
 #include <klocale.h>
 
-#include <QLayout>
-#include <QLabel>
-#include <QCheckBox>
-#include <QComboBox>
-#include <QPushButton>
-#include <QGroupBox>
-#include <khbox.h>
-#include <QGridLayout>
+#include <QtGui/QCheckBox>
+#include <QtGui/QComboBox>
+#include <QtGui/QGridLayout>
+#include <QtGui/QGroupBox>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QPushButton>
 
 #include "cryptowidget.h"
 

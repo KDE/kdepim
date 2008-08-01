@@ -21,32 +21,31 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QApplication>
-#include <q3header.h>
-#include <q3vbox.h>
-#include <q3listbox.h>
-#include <QWidget>
-#include <QEvent>
-#include <q3url.h>
-//Added by qt3to4:
-#include <QVBoxLayout>
-#include <QKeyEvent>
-#include <QDropEvent>
+#include <Qt3Support/Q3Header>
+#include <Qt3Support/Q3ListBox>
+#include <Qt3Support/Q3Url>
+#include <Qt3Support/Q3VBox>
+#include <QtCore/QEvent>
+#include <QtGui/QApplication>
+#include <QtGui/QDropEvent>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QKeyEvent>
+#include <QtGui/QWidget>
 
 #include <kabc/addressbook.h>
 #include <kapplication.h>
 #include <kconfig.h>
+#include <kconfiggroup.h>
 #include <kcolorbutton.h>
 #include <kdebug.h>
 #include <kglobal.h>
 #include <kiconloader.h>
+#include <kimproxy.h>
 #include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kurl.h>
 #include <kurlrequester.h>
-#include <kimproxy.h>
-#include <kconfiggroup.h>
 
 #include "configuretableviewdialog.h"
 #include "contactlistview.h"

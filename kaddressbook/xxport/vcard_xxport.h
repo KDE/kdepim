@@ -35,7 +35,7 @@ class VCardXXPort : public KAB::XXPort
 
     QString identifier() const { return "vcard"; }
 
-  public slots:
+  public Q_SLOTS:
     bool exportContacts( const KABC::AddresseeList &list, const QString &identifier );
     KABC::Addressee::List importContacts( const QString& ) const;
 

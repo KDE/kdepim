@@ -22,29 +22,28 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QCheckBox>
-
-#include <QBoxLayout>
-#include <QButtonGroup>
-#include <QEvent>
-#include <QFrame>
-#include <QGridLayout>
-#include <QGroupBox>
-#include <QKeyEvent>
-#include <QLabel>
-#include <QList>
-#include <QPushButton>
-#include <QTextEdit>
-#include <QApplication>
+#include <QtCore/QEvent>
+#include <QtCore/QList>
+#include <QtGui/QApplication>
+#include <QtGui/QBoxLayout>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QCheckBox>
+#include <QtGui/QFrame>
+#include <QtGui/QGridLayout>
+#include <QtGui/QGroupBox>
+#include <QtGui/QKeyEvent>
+#include <QtGui/QLabel>
+#include <QtGui/QPushButton>
+#include <QtGui/QTextEdit>
 
 #include <KAcceleratorManager>
 #include <KComboBox>
 #include <KDebug>
+#include <KHBox>
 #include <KInputDialog>
 #include <KLineEdit>
 #include <KLocale>
 #include <KSeparator>
-#include <KHBox>
 
 #include "addresseditwidget.h"
 

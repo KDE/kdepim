@@ -21,10 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <kvbox.h>
-//Added by qt3to4:
-#include <QPixmap>
-#include <QVBoxLayout>
+#include <QtGui/QPixmap>
+#include <QtGui/QVBoxLayout>
 
 #include <kconfig.h>
 #include <kdebug.h>
@@ -33,6 +31,7 @@
 #include <klocale.h>
 #include <kpagewidget.h>
 #include <ktoolinvocation.h>
+#include <kvbox.h>
 
 #include "viewconfigurefieldspage.h"
 #include "viewconfigurefilterpage.h"

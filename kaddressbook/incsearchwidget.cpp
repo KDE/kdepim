@@ -21,14 +21,11 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QComboBox>
-#include <QLabel>
-#include <QTimer>
-
-
-//Added by qt3to4:
-#include <QHBoxLayout>
-#include <QKeyEvent>
+#include <QtCore/QTimer>
+#include <QtGui/QComboBox>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QKeyEvent>
+#include <QtGui/QLabel>
 
 #include <kdialog.h>
 #include <kiconloader.h>

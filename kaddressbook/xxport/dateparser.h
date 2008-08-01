@@ -24,8 +24,9 @@
 #ifndef DATEPARSER_H
 #define DATEPARSER_H
 
-#include <QString>
-#include <QDate>
+#include <QtCore/QDate>
+#include <QtCore/QString>
+
 /**
   This class parses the date out of a given string with the
   help of a pattern.

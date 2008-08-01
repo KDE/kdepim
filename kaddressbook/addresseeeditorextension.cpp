@@ -21,8 +21,7 @@
     without including the source code for Qt in the source distribution.
 */
 
-//Added by qt3to4:
-#include <QVBoxLayout>
+#include <QtGui/QVBoxLayout>
 
 #include <klocale.h>
 

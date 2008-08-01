@@ -24,10 +24,10 @@
 #ifndef IMAGEWIDGET_H
 #define IMAGEWIDGET_H
 
-#include <QDragEnterEvent>
-#include <QDropEvent>
-#include <QMouseEvent>
-#include <QPushButton>
+#include <QtGui/QDragEnterEvent>
+#include <QtGui/QDropEvent>
+#include <QtGui/QMouseEvent>
+#include <QtGui/QPushButton>
 
 #include <kabc/picture.h>
 
@@ -68,7 +68,7 @@ class ImageButton : public QPushButton
 
     void setImageLoader( ImageLoader *loader );
 
-  signals:
+  Q_SIGNALS:
     void changed();
     void urlDropped( const KUrl& );
 
@@ -114,7 +114,7 @@ class ImageBaseWidget : public QWidget
 
     void setReadOnly( bool readOnly );
 
-  signals:
+  Q_SIGNALS:
     void changed();
 
   private:

@@ -21,22 +21,23 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QGroupBox>
-#include <QLabel>
-#include <QListWidget>
-#include <QPushButton>
-#include <QHBoxLayout>
-#include <QGridLayout>
+#include <QtDBus/QDBusConnection>
+#include <QtDBus/QDBusMessage>
+#include <QtGui/QGridLayout>
+#include <QtGui/QGroupBox>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QListWidget>
+#include <QtGui/QPushButton>
 
-#include <KDialogButtonBox>
 #include <kcombobox.h>
 #include <kconfig.h>
 #include <kdialog.h>
+#include <KDialogButtonBox>
 #include <kinputdialog.h>
-#include <klocale.h>
 #include <klineedit.h>
-#include <QDBusMessage>
-#include <QDBusConnection>
+#include <klocale.h>
+
 #include "addresseewidget.h"
 
 NamePartWidget::NamePartWidget( const QString &title, const QString &label,

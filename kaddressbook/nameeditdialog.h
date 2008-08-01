@@ -68,10 +68,10 @@ class NameEditDialog : public KDialog
 
     static QString formattedName( const KABC::Addressee &addr, int type );
 
-  protected slots:
+  protected Q_SLOTS:
     void slotHelp();
 
-  private slots:
+  private Q_SLOTS:
     void parseBoxChanged( bool );
     void formattedNameTypeChanged();
     void formattedNameChanged( const QString& );

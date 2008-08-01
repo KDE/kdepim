@@ -21,13 +21,12 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QCheckBox>
-#include <QLabel>
-#include <QPushButton>
-#include <QString>
-#include <QGridLayout>
+#include <QtCore/QString>
+#include <QtGui/QCheckBox>
+#include <QtGui/QGridLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QPushButton>
 
-#include <KListWidget>
 #include <kacceleratormanager.h>
 #include <kconfig.h>
 #include <kcombobox.h>
@@ -36,6 +35,7 @@
 #include <kiconloader.h>
 #include <kinputdialog.h>
 #include <klineedit.h>
+#include <KListWidget>
 #include <klocale.h>
 #include <kmessagebox.h>
 

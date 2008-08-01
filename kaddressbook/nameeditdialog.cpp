@@ -21,23 +21,20 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QLabel>
-
-#include <QPushButton>
-#include <QCheckBox>
-#include <QString>
-
-//Added by qt3to4:
-#include <QGridLayout>
+#include <QtCore/QString>
+#include <QtGui/QCheckBox>
+#include <QtGui/QGridLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QPushButton>
 
 #include <kacceleratormanager.h>
 #include <kapplication.h>
-#include <kconfig.h>
-#include <klineedit.h>
 #include <kcombobox.h>
-#include <klocale.h>
+#include <kconfig.h>
 #include <kdebug.h>
 #include <kiconloader.h>
+#include <klineedit.h>
+#include <klocale.h>
 #include <kmessagebox.h>
 #include <ktoolinvocation.h>
 

@@ -26,7 +26,7 @@
 #include <kabc/addresseelist.h>
 #include <kdialog.h>
 
-#include <QList>
+#include <QtCore/QList>
 
 class KUrlRequester;
 
@@ -47,10 +47,10 @@ class CSVImportDialog : public KDialog
 
     KABC::AddresseeList contacts() const;
 
-  protected slots:
+  protected Q_SLOTS:
     virtual void slotOk();
 
-  private slots:
+  private Q_SLOTS:
     void returnPressed();
     void delimiterClicked( int id );
     void lineSelected( const QString& line );

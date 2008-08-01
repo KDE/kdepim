@@ -26,9 +26,8 @@
 
 #include <libkdepim/distributionlist.h>
 
-#include <QObject>
-
-#include <QUndoStack>
+#include <QtCore/QObject>
+#include <QtGui/QUndoStack>
 
 #include "kaddressbook_export.h"
 #include <kabc/field.h>

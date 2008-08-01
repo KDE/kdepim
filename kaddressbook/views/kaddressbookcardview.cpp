@@ -21,20 +21,20 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QApplication>
-#include <QEvent>
-#include <QStringList>
-#include <QDragEnterEvent>
-#include <QVBoxLayout>
-#include <QKeyEvent>
-#include <QDropEvent>
+#include <QtCore/QEvent>
+#include <QtCore/QStringList>
+#include <QtGui/QApplication>
+#include <QtGui/QDragEnterEvent>
+#include <QtGui/QDropEvent>
+#include <QtGui/QKeyEvent>
+#include <QtGui/QVBoxLayout>
 
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
 #include <kconfig.h>
+#include <kconfiggroup.h>
 #include <kdebug.h>
 #include <klocale.h>
-#include <kconfiggroup.h>
 
 #include "core.h"
 #include "configurecardviewdialog.h"

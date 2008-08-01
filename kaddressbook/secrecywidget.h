@@ -24,7 +24,7 @@
 #ifndef SECRECYWIDGET_H
 #define SECRECYWIDGET_H
 
-#include <QWidget>
+#include <QtGui/QWidget>
 
 namespace KABC { class Secrecy; }
 class KComboBox;
@@ -42,7 +42,7 @@ class SecrecyWidget : public QWidget
 
     void setReadOnly( bool readOnly );
 
-  signals:
+  Q_SIGNALS:
     void changed();
 
   private:

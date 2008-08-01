@@ -24,9 +24,9 @@
 #ifndef JUMPBUTTONBAR_H
 #define JUMPBUTTONBAR_H
 
-#include <QResizeEvent>
-#include <QStringList>
-#include <QWidget>
+#include <QtCore/QStringList>
+#include <QtGui/QResizeEvent>
+#include <QtGui/QWidget>
 
 class QButtonGroup;
 class QGroupBox;
@@ -50,16 +50,16 @@ class JumpButtonBar : public QWidget
     JumpButtonBar( KAB::Core *core, QWidget *parent, const char *name = 0 );
     ~JumpButtonBar();
 
-  public slots:
+  public Q_SLOTS:
     void updateButtons();
 
-  signals:
+  Q_SIGNALS:
     /**
       Emitted whenever a letter is selected by the user.
      */
     void jumpToLetter( const QString &character );
 
-  protected slots:
+  protected Q_SLOTS:
     void letterClicked();
 
   protected:

@@ -20,20 +20,19 @@
 */
 #include "csvimportdialog.h"
 
-#include <QButtonGroup>
-#include <QCheckBox>
-#include <QComboBox>
-#include <QGroupBox>
-#include <QLabel>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QRadioButton>
-#include <QTableWidget>
-#include <QTextCodec>
-
-#include <QTextStream>
-#include <QGridLayout>
-#include <QHBoxLayout>
+#include <QtCore/QTextCodec>
+#include <QtCore/QTextStream>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QCheckBox>
+#include <QtGui/QComboBox>
+#include <QtGui/QGridLayout>
+#include <QtGui/QGroupBox>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
+#include <QtGui/QPushButton>
+#include <QtGui/QRadioButton>
+#include <QtGui/QTableWidget>
 
 #include <kprogressdialog.h>
 #include <kapplication.h>

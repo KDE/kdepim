@@ -35,7 +35,7 @@ class EudoraXXPort : public KAB::XXPort
 
     QString identifier() const { return "eudora"; }
 
-  public slots:
+  public Q_SLOTS:
     KABC::Addressee::List importContacts( const QString &data ) const;
 
   private:

@@ -21,12 +21,11 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QFile>
-#include <QLabel>
-#include <QPushButton>
-//Added by qt3to4:
-#include <QGridLayout>
-#include <QTextStream>
+#include <QtCore/QFile>
+#include <QtCore/QTextStream>
+#include <QtGui/QGridLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QPushButton>
 
 #include <kapplication.h>
 #include <kcombobox.h>

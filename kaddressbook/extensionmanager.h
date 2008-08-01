@@ -26,10 +26,9 @@
 
 #include "extensionwidget.h"
 
-#include <QList>
-#include <QStringList>
+#include <QtCore/QList>
+#include <QtCore/QStringList>
 
-//Added by qt3to4:
 #include <kvbox.h>
 
 class QSignalMapper;
@@ -85,18 +84,17 @@ class ExtensionManager : public QObject
 
     QWidget *activeDetailsWidget() const;
  
-  public slots:
+  public Q_SLOTS:
     void setSelectionChanged();
     void createActions();
 
-  signals:
-
+  Q_SIGNALS:
     void detailsWidgetActivated( QWidget* widget );
     void detailsWidgetDeactivated( QWidget* widget );
     void modified( const KABC::Addressee::List& );
     void deleted( const QStringList& );
 
-  private slots:
+  private Q_SLOTS:
     void activationToggled( const QString &extid );
 
   private:

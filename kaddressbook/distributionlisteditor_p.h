@@ -57,14 +57,14 @@ public:
     KPIM::DistributionList::Entry entry() const;
     void setFocusToLineEdit();
 
-signals:
+Q_SIGNALS:
     void cleared();
     void textChanged();
 
 private:
     KABC::Addressee findAddressee( const QString& name, const QString& email ) const;
 
-private slots:
+private Q_SLOTS:
     void textChanged( const QString& );
 
 private:

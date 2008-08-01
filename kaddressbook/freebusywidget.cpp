@@ -21,9 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QLabel>
-//Added by qt3to4:
-#include <QHBoxLayout>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QLabel>
 
 #include <kdialog.h>
 #include <klocale.h>

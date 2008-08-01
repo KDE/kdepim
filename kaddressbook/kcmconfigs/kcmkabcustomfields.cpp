@@ -25,17 +25,14 @@
 
 #include "kabprefs.h"
 
-#include <kstandarddirs.h>
-
-#include <QRegExp>
+#include <QtCore/QRegExp>
 
 #include <kdemacros.h>
 #include <kgenericfactory.h>
-
+#include <kstandarddirs.h>
 
 K_PLUGIN_FACTORY(KCMKabCustomFieldsFactory, registerPlugin<KCMKabCustomFields>();)
 K_EXPORT_PLUGIN(KCMKabCustomFieldsFactory( "kcmkabcustomfields" ))
-
 
 KCMKabCustomFields::KCMKabCustomFields( QWidget *parent, const QVariantList & )
   : KCMDesignerFields( KCMKabCustomFieldsFactory::componentData(), parent )

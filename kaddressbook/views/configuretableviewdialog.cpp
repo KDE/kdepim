@@ -21,22 +21,22 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QString>
-#include <QWidget>
-#include <QRadioButton>
-#include <QCheckBox>
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QGroupBox>
+#include <QtCore/QString>
+#include <QtGui/QCheckBox>
+#include <QtGui/QGroupBox>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QRadioButton>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QWidget>
 
+#include <kconfig.h>
 #include <kdeversion.h>
 #include <kglobal.h>
-#include <klocale.h>
-#include <klineedit.h>
-#include <kurlrequester.h>
 #include <kiconloader.h>
 #include <kimageio.h>
-#include <kconfig.h>
+#include <klineedit.h>
+#include <klocale.h>
+#include <kurlrequester.h>
 
 #include "configuretableviewdialog.h"
 

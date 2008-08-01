@@ -21,13 +21,14 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QSignalMapper>
+#include <QtCore/QSignalMapper>
 
 #include <kaction.h>
 #include <kactioncollection.h>
+#include <kapplication.h>
 #include <kcomponentdata.h>
 #include <kmessagebox.h>
-#include <kapplication.h>
+
 #include "xxport.h"
 
 using namespace KAB;

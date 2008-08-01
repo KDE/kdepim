@@ -24,7 +24,7 @@
 #ifndef ADDVIEWDIALOG_H
 #define ADDVIEWDIALOG_H
 
-#include <QHash>
+#include <QtCore/QHash>
 
 #include <KDialog>
 
@@ -49,7 +49,7 @@ class AddViewDialog : public KDialog
 
     QString viewType()const ;
 
-  protected slots:
+  protected Q_SLOTS:
     /**
       Called when the user selects a type radio button.
      */

@@ -21,18 +21,17 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QMenu>
-//Added by qt3to4:
-#include <QVBoxLayout>
+#include <QtGui/QMenu>
+#include <QtGui/QVBoxLayout>
 
 #include <kabc/addressbook.h>
 #include <kabc/distributionlistdialog.h>
 #include <kconfig.h>
+#include <kconfiggroup.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kxmlguifactory.h>
 #include <kxmlguiclient.h>
-#include <kconfiggroup.h>
 
 #include "core.h"
 #include "searchmanager.h"

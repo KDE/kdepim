@@ -21,26 +21,24 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QString>
-#include <QLabel>
-#include <QCheckBox>
-#include <kvbox.h>
-#include <q3groupbox.h>
-#include <QSpinBox>
-#include <QTabWidget>
+#include <Qt3Support/Q3GroupBox>
+#include <QtCore/QString>
+#include <QtGui/QCheckBox>
+#include <QtGui/QFrame>
+#include <QtGui/QGridLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QSpinBox>
+#include <QtGui/QTabWidget>
 
-//Added by qt3to4:
-#include <QFrame>
-#include <QGridLayout>
-
-#include <kdebug.h>
-#include <kglobal.h>
 #include <KColorScheme>
-#include <klocale.h>
-#include <kiconloader.h>
 #include <kconfig.h>
+#include <kdebug.h>
 #include <kfontdialog.h>
+#include <kglobal.h>
+#include <kiconloader.h>
+#include <klocale.h>
 #include <kpushbutton.h>
+#include <kvbox.h>
 
 #include <libkdepim/colorlistbox.h>
 

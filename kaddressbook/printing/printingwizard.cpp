@@ -22,15 +22,15 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QPushButton>
+#include <QtGui/QPushButton>
 #include <QtGui/QPrinter>
 
 #include <kabc/addresseelist.h>
 #include <kapplication.h>
 #include <kdebug.h>
 #include <kdialog.h>
-#include <klocale.h>
 #include <kglobal.h>
+#include <klocale.h>
 
 // including the styles
 #include "detailledstyle.h"

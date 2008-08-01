@@ -21,10 +21,9 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QProgressBar>
-#include <QTextBrowser>
-//Added by qt3to4:
-#include <QGridLayout>
+#include <QtGui/QGridLayout>
+#include <QtGui/QProgressBar>
+#include <QtGui/QTextBrowser>
 
 #include <kapplication.h>
 #include <kdebug.h>

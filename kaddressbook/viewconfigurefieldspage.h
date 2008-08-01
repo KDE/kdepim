@@ -24,7 +24,7 @@
 #ifndef VIEWCONFIGUREFIELDSPAGE_H
 #define VIEWCONFIGUREFIELDSPAGE_H
 
-#include <QWidget>
+#include <QtGui/QWidget>
 
 #include <kabc/field.h>
 #include <kabc/addressbook.h>
@@ -44,7 +44,7 @@ class ViewConfigureFieldsPage : public QWidget
     void restoreSettings( const KConfigGroup& );
     void saveSettings( KConfigGroup& );
 
-  public slots:
+  public Q_SLOTS:
     void slotSelect();
     void slotUnSelect();
     void slotMoveUp();

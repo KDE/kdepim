@@ -23,9 +23,9 @@
 
 #include "ringbinderstyle.h"
 
-#include <QCheckBox>
-#include <QPainter>
-#include <QStringList>
+#include <QtCore/QStringList>
+#include <QtGui/QCheckBox>
+#include <QtGui/QPainter>
 #include <QtGui/QPrinter>
 
 #include <kabc/addresseelist.h>
@@ -33,9 +33,9 @@
 #include <kcombobox.h>
 #include <kconfig.h>
 #include <kdebug.h>
+#include <kglobal.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
-#include <kglobal.h>
 
 #include "printingwizard.h"
 #include "printprogress.h"

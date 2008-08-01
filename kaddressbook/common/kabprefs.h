@@ -26,7 +26,8 @@
 
 #include "kabcommon_export.h"
 #include "kabprefs_base.h"
-#include <QStringList>
+
+#include <QtCore/QStringList>
 
 class KABCOMMON_EXPORT KABPrefs : public KABPrefsBase
 {

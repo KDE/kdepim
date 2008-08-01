@@ -26,7 +26,7 @@
 
 #include <kcmodule.h>
 #include <kcomponentdata.h>
-#include <QWidget>
+#include <QtGui/QWidget>
 
 class LDAPOptionsWidget;
 

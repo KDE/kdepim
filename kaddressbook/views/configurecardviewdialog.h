@@ -26,16 +26,13 @@
 
 #include "viewconfigurewidget.h"
 
-
-#include <QWidget>
-#include <QFont>
-//Added by qt3to4:
-#include <QLabel>
 #include <kvbox.h>
 
-class QWidget;
 class QCheckBox;
+class QFont;
 class QLabel;
+class QWidget;
+
 class KConfig;
 
 namespace KABC { class AddressBook; }
@@ -90,7 +87,7 @@ class CardViewLookNFeelPage : public KVBox {
     void restoreSettings( const KConfigGroup& );
     void saveSettings( KConfigGroup & );
 
-  private slots:
+  private Q_SLOTS:
     void setTextFont();
     void setHeaderFont();
     void enableFonts();

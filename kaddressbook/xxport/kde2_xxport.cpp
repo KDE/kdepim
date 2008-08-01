@@ -21,7 +21,7 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QFile>
+#include <QtCore/QFile>
 
 #include <kdebug.h>
 #include <kfiledialog.h>

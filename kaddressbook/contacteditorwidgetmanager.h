@@ -24,9 +24,8 @@
 #ifndef CONTACTEDITORWIDGETMANAGER_H
 #define CONTACTEDITORWIDGETMANAGER_H
 
-#include <QWidget>
-//Added by qt3to4:
-#include <QGridLayout>
+#include <QtGui/QGridLayout>
+#include <QtGui/QWidget>
 
 #include "contacteditorwidget.h"
 
@@ -101,7 +100,7 @@ class ContactEditorTabPage : public QWidget
      */
     void updateLayout();
 
-  signals:
+  Q_SIGNALS:
     /**
       Emitted whenever the page has changed.
      */

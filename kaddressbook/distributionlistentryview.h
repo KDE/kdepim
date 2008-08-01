@@ -3,9 +3,9 @@
 
 #include <libkdepim/distributionlist.h>
 
-#include <QMap>
-#include <QString>
-#include <QWidget>
+#include <QtCore/QMap>
+#include <QtCore/QString>
+#include <QtGui/QWidget>
 
 class QBoxLayout;
 class QComboBox;
@@ -28,13 +28,13 @@ public:
     explicit DistributionListEntryView( KAB::Core* core, QWidget* parent = 0 );
     void setEntry( const KPIM::DistributionList& list, const KPIM::DistributionList::Entry& entry );
 
-public slots:
+public Q_SLOTS:
     void clear();
 
-signals:
+Q_SIGNALS:
     void distributionListClicked( const QString& );
 
-private slots:
+private Q_SLOTS:
     void emailButtonClicked( int id );
 
 private:

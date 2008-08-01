@@ -24,18 +24,15 @@
 #ifndef CONTACTLISTVIEW_H
 #define CONTACTLISTVIEW_H
 
-#include <QColor>
-
-#include <QString>
-//Added by qt3to4:
-#include <QMouseEvent>
-#include <QDropEvent>
+#include <QtCore/QString>
+#include <QtGui/QColor>
 
 #include <k3listview.h>
-
 #include <kabc/field.h>
 
 class QDropEvent;
+class QMouseEvent;
+
 class KAddressBookTableView;
 class ContactListView;
 class KIMProxy;
@@ -150,12 +147,10 @@ protected:
   void contentsDropEvent( QDropEvent *e );
   virtual bool acceptDrag(QDropEvent *e) const;
 
-protected slots:
+protected Q_SLOTS:
   void itemDropped(QDropEvent *e);
 
-public slots:
-
-signals:
+Q_SIGNALS:
   void startAddresseeDrag();
   void addresseeDropped(QDropEvent *);
 

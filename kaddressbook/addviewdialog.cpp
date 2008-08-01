@@ -21,12 +21,12 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QButtonGroup>
-#include <QGridLayout>
-#include <QGroupBox>
-#include <QLabel>
-#include <QLineEdit>
-#include <QRadioButton>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QGridLayout>
+#include <QtGui/QGroupBox>
+#include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
+#include <QtGui/QRadioButton>
 
 #include <KLocale>
 

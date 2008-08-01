@@ -22,13 +22,13 @@
   without including the source code for Qt in the source distribution.
 */
 
-#include <q3listview.h>
-#include <QStringList>
-#include <QFont>
-#include <QList>
+#include <Qt3Support/Q3ListView>
+#include <QtCore/QList>
+#include <QtCore/QStringList>
+#include <QtGui/QFont>
 
-#include <kdialog.h>
 #include <kdebug.h>
+#include <kdialog.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kmessagebox.h>

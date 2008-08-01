@@ -21,7 +21,7 @@
 #ifndef KADDRESSBOOK_LDIFVCARDCREATOR_H
 #define KADDRESSBOOK_LDIFVCARDCREATOR_H
 
-#include <QPixmap>
+#include <QtGui/QPixmap>
 #include <kio/thumbcreator.h>
 
 class VCard_LDIFCreator : public ThumbCreator

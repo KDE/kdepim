@@ -24,7 +24,7 @@
 #ifndef ADDRESSEEWIDGET_H
 #define ADDRESSEEWIDGET_H
 
-#include <QWidget>
+#include <QtGui/QWidget>
 
 class KComboBox;
 
@@ -44,10 +44,10 @@ class NamePartWidget : public QWidget
     void setNameParts( const QStringList &list );
     QStringList nameParts() const;
 
-  signals:
+  Q_SIGNALS:
     void modified();
 
-  private slots:
+  private Q_SLOTS:
     void add();
     void edit();
     void remove();
@@ -75,7 +75,7 @@ class AddresseeWidget : public QWidget
     void restoreSettings();
     void saveSettings();
 
-  signals:
+  Q_SIGNALS:
     void modified();
 
   private:

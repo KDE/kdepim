@@ -48,7 +48,7 @@ public:
 
     void saveList();
 
-private slots:
+private Q_SLOTS:
     //override
     void slotButtonClicked( int button );
     void lineTextChanged( int id );

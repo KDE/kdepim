@@ -20,7 +20,7 @@
 #define KADDRESSBOOK_PAB_PABLIB_H
 
 #include <klocale.h>
-#include <QFile>
+#include <QtCore/QFile>
 
 #include "pab_mapihd.h"
 

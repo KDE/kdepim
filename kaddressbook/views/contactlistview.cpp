@@ -21,23 +21,23 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <q3header.h>
-#include <QPainter>
-#include <QBrush>
-#include <QPixmap>
-#include <QDropEvent>
-#include <QMouseEvent>
+#include <Qt3Support/Q3Header>
+#include <QtGui/QBrush>
+#include <QtGui/QDropEvent>
+#include <QtGui/QMouseEvent>
+#include <QtGui/QPainter>
+#include <QtGui/QPixmap>
 
-#include <klocale.h>
-#include <kcolorscheme.h>
-#include <kdebug.h>
-#include <kconfig.h>
-#include <kapplication.h>
-#include <kurl.h>
+#include <k3listview.h>
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
+#include <kapplication.h>
+#include <kcolorscheme.h>
+#include <kconfig.h>
+#include <kdebug.h>
 #include <kimproxy.h>
-#include <k3listview.h>
+#include <klocale.h>
+#include <kurl.h>
 
 #include "kaddressbooktableview.h"
 

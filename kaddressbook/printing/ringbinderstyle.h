@@ -41,7 +41,7 @@ class RingBinderStyleAppearanceForm : public QWidget, public Ui::RingBinderStyle
   public:
     RingBinderStyleAppearanceForm( QWidget *parent );
     ~RingBinderStyleAppearanceForm() {}
-  public slots:
+  public Q_SLOTS:
     void groupLetter();
     void ungroupLetter();
 };

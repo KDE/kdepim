@@ -52,7 +52,7 @@ class IMAddressWidget : public QWidget, Ui::IMAddressBase
     QString address() const ;
     QList<KPluginInfo> mProtocols;
 
-  signals:
+  Q_SIGNALS:
     void inValidState( bool );
 
   protected:
@@ -61,7 +61,7 @@ class IMAddressWidget : public QWidget, Ui::IMAddressBase
      */
     void populateProtocols();
 
-  protected slots:
+  protected Q_SLOTS:
     void slotProtocolChanged();
     void slotAddressChanged( const QString &text );
 

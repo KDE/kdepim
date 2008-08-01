@@ -26,10 +26,10 @@
  *
  */
 
-#include <QFile>
-#include <QPixmap>
-#include <QImage>
-#include <QPainter>
+#include <QtCore/QFile>
+#include <QtGui/QImage>
+#include <QtGui/QPainter>
+#include <QtGui/QPixmap>
 
 #include <kdebug.h>
 #include <kglobal.h>

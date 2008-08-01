@@ -22,7 +22,7 @@
 */
 
 
-#include <QPainter>
+#include <QtGui/QPainter>
 
 #include <kdebug.h>
 #include <kglobal.h>

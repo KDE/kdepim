@@ -21,12 +21,12 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QVBoxLayout>
+#include <QtGui/QVBoxLayout>
 
 #include <kaction.h>
+#include <kcomponentdata.h>
 #include <kdebug.h>
 #include <kiconloader.h>
-#include <kcomponentdata.h>
 #include <klocale.h>
 #include <kparts/genericfactory.h>
 #include <kparts/statusbarextension.h>

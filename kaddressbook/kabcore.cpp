@@ -21,15 +21,15 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QClipboard>
-#include <QRegExp>
-#include <QSplitter>
-#include <QVBoxLayout>
-#include <QList>
-#include <QHBoxLayout>
-#include <QStackedWidget>
-#include <QtGui/QPrinter>
+#include <QtCore/QList>
+#include <QtCore/QRegExp>
+#include <QtGui/QClipboard>
+#include <QtGui/QHBoxLayout>
 #include <QtGui/QPrintDialog>
+#include <QtGui/QPrinter>
+#include <QtGui/QSplitter>
+#include <QtGui/QStackedWidget>
+#include <QtGui/QVBoxLayout>
 
 #include <kabc/addresseelist.h>
 #include <kabc/errorhandler.h>

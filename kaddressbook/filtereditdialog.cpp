@@ -21,21 +21,20 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QButtonGroup>
-#include <QGroupBox>
-#include <QLabel>
-#include <QPushButton>
-#include <QRadioButton>
-#include <QString>
-
-#include <QWidget>
-#include <QVBoxLayout>
-#include <QGridLayout>
-#include <QBoxLayout>
+#include <QtCore/QString>
+#include <QtGui/QBoxLayout>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QGridLayout>
+#include <QtGui/QGroupBox>
+#include <QtGui/QLabel>
+#include <QtGui/QPushButton>
+#include <QtGui/QRadioButton>
+#include <QtGui/QVBoxLayout>
+#include <QtGui/QWidget>
 
 #include <kapplication.h>
-#include <KDialogButtonBox>
 #include <kdebug.h>
+#include <KDialogButtonBox>
 #include <kiconloader.h>
 #include <klineedit.h>
 #include <KListWidget>

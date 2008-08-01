@@ -26,7 +26,6 @@
 #define BOOKMARK_XXPORT_H
 
 #include <xxport.h>
-//Added by qt3to4:
 
 class BookmarkXXPort : public KAB::XXPort
 {
@@ -37,10 +36,10 @@ class BookmarkXXPort : public KAB::XXPort
 
     QString identifier() const { return "bookmark"; }
 
-  public slots:
+  public Q_SLOTS:
     bool exportContacts( const KABC::AddresseeList &list, const QString &data );
 
-  signals:
+  Q_SIGNALS:
     /**
       The following signals are used for building a bookmarks file
       using KBookmarkDomBuilder.

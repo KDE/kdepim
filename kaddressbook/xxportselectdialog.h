@@ -53,11 +53,11 @@ class XXPortSelectDialog : public KDialog
 
     KABC::AddresseeList contacts();
 
-  private slots:
+  private Q_SLOTS:
     void filterChanged( int );
     void categoryClicked();
 
-  protected slots:
+  protected Q_SLOTS:
     void slotHelp();
 
   private:

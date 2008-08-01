@@ -25,10 +25,7 @@
 #ifndef STYLEPAGE_H
 #define STYLEPAGE_H
 
-#include <QWidget>
-//Added by qt3to4:
-#include <QPixmap>
-#include <QLabel>
+#include <QtGui/QWidget>
 
 #include <kabc/addressbook.h>
 #include <kabc/field.h>
@@ -81,7 +78,7 @@ class StylePage : public QWidget
      */
     bool sortAscending();
 
-  signals:
+  Q_SIGNALS:
     /**
      * This signal is emmited when the user selects a new style in the
      * style combo box.

@@ -21,9 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
-//Added by qt3to4:
-#include <QFrame>
-#include <QGridLayout>
+#include <QtGui/QFrame>
+#include <QtGui/QGridLayout>
 
 #include <klocale.h>
 

@@ -24,7 +24,7 @@
 #ifndef KEYWIDGET_H
 #define KEYWIDGET_H
 
-#include <QWidget>
+#include <QtGui/QWidget>
 #include <kabc/key.h>
 
 class KComboBox;
@@ -42,10 +42,10 @@ class KeyWidget : public QWidget
     void setKeys( const KABC::Key::List &list );
     KABC::Key::List keys() const;
 
-  signals:
+  Q_SIGNALS:
     void changed();
 
-  private slots:
+  private Q_SLOTS:
     void addKey();
     void removeKey();
     void exportKey();

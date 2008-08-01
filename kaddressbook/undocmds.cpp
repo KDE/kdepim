@@ -22,15 +22,15 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QApplication>
-#include <QClipboard>
+#include <QtGui/QApplication>
+#include <QtGui/QClipboard>
 
-#include <klocale.h>
 #include <kapplication.h>
+#include <klocale.h>
 #include <krandom.h>
 
-#include "addresseeutil.h"
 #include "addresseeconfig.h"
+#include "addresseeutil.h"
 #include "core.h"
 #include "kablock.h"
 

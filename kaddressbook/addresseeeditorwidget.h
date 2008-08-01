@@ -24,7 +24,7 @@
 #ifndef ADDRESSEEEDITORWIDGET_H
 #define ADDRESSEEEDITORWIDGET_H
 
-#include <QHash>
+#include <QtCore/QHash>
 #include <kabc/addressee.h>
 #include <kdialog.h>
 
@@ -76,7 +76,7 @@ class AddresseeEditorWidget : public AddresseeEditorBase
 
     bool readyToClose();
 
-  protected slots:
+  protected Q_SLOTS:
     void textChanged( const QString& );
     void pageChanged( QWidget *wdg );
 

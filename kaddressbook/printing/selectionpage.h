@@ -24,7 +24,7 @@
 #ifndef SELECTIONPAGE_H
 #define SELECTIONPAGE_H
 
-#include <QWidget>
+#include <QtGui/QWidget>
 
 class QGroupBox;
 class QComboBox;
@@ -53,7 +53,7 @@ class SelectionPage : public QWidget
     void setUseSelection( bool value );
     bool useSelection() const;
 
-  private slots:
+  private Q_SLOTS:
     void filterChanged();
     void categoryChanged();
 

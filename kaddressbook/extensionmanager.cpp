@@ -21,6 +21,12 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include <QtCore/QSignalMapper>
+#include <QtCore/QTimer>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QSplitter>
+#include <QtGui/QStackedWidget>
+
 #include <kactioncollection.h>
 #include <kconfig.h>
 #include <kdebug.h>
@@ -28,12 +34,6 @@
 #include <kservicetypetrader.h>
 #include <ktoggleaction.h>
 #include <kvbox.h>
-
-#include <QHBoxLayout>
-#include <QSignalMapper>
-#include <QSplitter>
-#include <QStackedWidget>
-#include <QTimer>
 
 #include "addresseeeditorextension.h"
 #include "core.h"

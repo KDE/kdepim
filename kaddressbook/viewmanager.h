@@ -24,9 +24,10 @@
 #ifndef VIEWMANAGER_H
 #define VIEWMANAGER_H
 
-#include <QWidget>
-#include <QDropEvent>
-#include <QHash>
+#include <QtCore/QHash>
+#include <QtGui/QDropEvent>
+#include <QtGui/QWidget>
+
 #include <kaddressbookview.h>
 
 class QDropEvent;
@@ -69,7 +70,7 @@ class ViewManager : public QWidget
     KABC::Field *currentSortField() const;
     KABC::Field::List viewFields() const;
 
-  public slots:
+  public Q_SLOTS:
     void setSelected( const QString &uid = QString(), bool selected = true );
     void setFirstSelected( bool selected = true );
 
@@ -81,7 +82,7 @@ class ViewManager : public QWidget
     void scrollUp();
     void scrollDown();
 
-  protected slots:
+  protected Q_SLOTS:
     /**
       Called whenever the user drops something in the active view.
       This method will try to decode what was dropped, and if it was
@@ -96,7 +97,7 @@ class ViewManager : public QWidget
      */
     void startDrag();
 
-  signals:
+  Q_SIGNALS:
     /**
       Emitted whenever the user selects an entry in the view.
      */
@@ -127,7 +128,7 @@ class ViewManager : public QWidget
      */
     void viewFieldsChanged();
 
-  private slots:
+  private Q_SLOTS:
     void setActiveView( const QString &name );
     void setActiveFilter( int index );
     void configureFilters();

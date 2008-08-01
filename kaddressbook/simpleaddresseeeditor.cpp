@@ -21,13 +21,12 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QLabel>
-//Added by qt3to4:
-#include <QGridLayout>
+#include <QtGui/QGridLayout>
+#include <QtGui/QLabel>
 
+#include <kdialog.h>
 #include <klineedit.h>
 #include <klocale.h>
-#include <kdialog.h>
 
 #include "simpleaddresseeeditor.h"
 

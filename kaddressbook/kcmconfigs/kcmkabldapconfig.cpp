@@ -21,19 +21,18 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QCheckBox>
-//Added by qt3to4:
-#include <QVBoxLayout>
+#include <QtGui/QCheckBox>
+#include <QtGui/QVBoxLayout>
 
 #include <kaboutdata.h>
-#include <klocale.h>
 #include <kcomponentdata.h>
+#include <kdemacros.h>
+#include <kgenericfactory.h>
+#include <klocale.h>
+
 #include "ldapoptionswidget.h"
 
 #include "kcmkabldapconfig.h"
-
-#include <kdemacros.h>
-#include <kgenericfactory.h>
 
 K_PLUGIN_FACTORY(KCMKabLdapConfigFactory, registerPlugin<KCMKabLdapConfig>();)
 K_EXPORT_PLUGIN(KCMKabLdapConfigFactory( "kcmkabldapconfig" ))

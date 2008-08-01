@@ -25,7 +25,7 @@
 
 #include <kdialog.h>
 
-#include <QString>
+#include <QtCore/QString>
 
 class QLabel;
 class QListWidget;
@@ -45,7 +45,7 @@ public:
 
     void setLabelText( const QString& text );
 
-private slots:
+private Q_SLOTS:
 
     //override
     void slotOk();

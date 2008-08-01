@@ -21,13 +21,12 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <qbuttongroup.h>
-#include <QLabel>
-#include <QRadioButton>
-//Added by qt3to4:
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QBoxLayout>
+#include <QtGui/QBoxLayout>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QRadioButton>
+#include <QtGui/QVBoxLayout>
 
 #include <kconfig.h>
 #include <kcombobox.h>

@@ -25,7 +25,7 @@
 #ifndef IMEDITORWIDGET_H
 #define IMEDITORWIDGET_H
 
-#include <QTreeWidget>
+#include <QtGui/QTreeWidget>
 #include <kdialog.h>
 #include <KPluginInfo>
 
@@ -62,7 +62,7 @@ class IMEditorWidget : public KDialog
     bool isModified() const;
     QString preferred() const;
 
-  protected slots:
+  protected Q_SLOTS:
     void slotUpdateButtons();
     void slotAdd();
     void slotEdit();

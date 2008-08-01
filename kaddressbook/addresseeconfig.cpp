@@ -23,8 +23,8 @@
 
 #include "addresseeconfig.h"
 #include "kabprefs.h"
-//Added by qt3to4:
-#include <QList>
+
+#include <QtCore/QList>
 
 using namespace KABC;
 

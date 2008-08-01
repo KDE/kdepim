@@ -21,24 +21,22 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QCheckBox>
-#include <q3groupbox.h>
-#include <QLabel>
-#include <QLineEdit>
-#include <QPushButton>
-#include <QTabWidget>
+#include <Qt3Support/Q3GroupBox>
+#include <QtGui/QBoxLayout>
+#include <QtGui/QCheckBox>
+#include <QtGui/QComboBox>
+#include <QtGui/QGridLayout>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QLineEdit>
+#include <QtGui/QPushButton>
+#include <QtGui/QTabWidget>
+#include <QtGui/QVBoxLayout>
 
-#include <QComboBox>
-//Added by qt3to4:
-#include <QVBoxLayout>
-#include <QHBoxLayout>
-#include <QGridLayout>
-#include <QBoxLayout>
-
+#include <k3listview.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kdialog.h>
-#include <k3listview.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 

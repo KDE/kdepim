@@ -35,7 +35,7 @@ class KDE2XXPort : public KAB::XXPort
 
     QString identifier() const { return "kde2"; }
 
-  public slots:
+  public Q_SLOTS:
     KABC::Addressee::List importContacts( const QString &data ) const;
 };
 

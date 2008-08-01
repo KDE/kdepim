@@ -24,8 +24,8 @@
 #ifndef FILTER_H
 #define FILTER_H
 
-#include <QString>
-#include <QStringList>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
 
 #include "kabcommon_export.h"
 #include <kabc/addressee.h>

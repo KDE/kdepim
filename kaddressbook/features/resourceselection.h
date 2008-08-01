@@ -24,7 +24,7 @@
 #ifndef RESOURCESELECTION_H
 #define RESOURCESELECTION_H
 
-#include <QTreeWidget>
+#include <QtGui/QTreeWidget>
 
 #include "extensionwidget.h"
 
@@ -47,7 +47,7 @@ class ResourceSelection : public KAB::ExtensionWidget
 
     void contactsSelectionChanged() {}
 
-  private slots:
+  private Q_SLOTS:
     void add();
     void edit();
     void remove();

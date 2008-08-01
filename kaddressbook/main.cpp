@@ -24,7 +24,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-#include <QString>
+#include <QtCore/QString>
 
 #include <kabc/stdaddressbook.h>
 #include <kaboutdata.h>
@@ -33,8 +33,8 @@
 #include <kdebug.h>
 #include <klocale.h>
 #include <kstartupinfo.h>
-#include <libkdepim/pimapplication.h>
 #include <kwindowsystem.h>
+#include <libkdepim/pimapplication.h>
 
 #include "kaddressbookmain.h"
 #include "kaddressbook_options.h"

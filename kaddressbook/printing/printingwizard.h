@@ -25,8 +25,7 @@
 #ifndef PRINTINGWIZARD_H
 #define PRINTINGWIZARD_H
 
-#include <QStringList>
-#include <QVBoxLayout>
+#include <QtCore/QStringList>
 
 #include <KAssistantDialog>
 #include <kabc/addressbook.h>
@@ -80,7 +79,7 @@ class PrintingWizard : public KAssistantDialog
      */
     QPrinter* printer();
 
-  protected slots:
+  protected Q_SLOTS:
     /**
       A print style has been selected. The argument is the index
       in the cbStyle combo and in styles.

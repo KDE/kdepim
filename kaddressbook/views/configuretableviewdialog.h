@@ -70,7 +70,7 @@ class LookAndFeelPage : public QWidget
     void restoreSettings( const KConfigGroup&);
     void saveSettings( KConfigGroup& );
 
-  protected slots:
+  protected Q_SLOTS:
     void enableBackgroundToggled( bool );
 
   private:

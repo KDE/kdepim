@@ -22,11 +22,11 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QGroupBox>
-#include <QLabel>
-#include <QPixmap>
-#include <QVBoxLayout>
-#include <QGridLayout>
+#include <QtGui/QGridLayout>
+#include <QtGui/QGroupBox>
+#include <QtGui/QLabel>
+#include <QtGui/QPixmap>
+#include <QtGui/QVBoxLayout>
 
 #include <KComboBox>
 #include <KDialog>

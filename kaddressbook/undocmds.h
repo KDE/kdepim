@@ -27,9 +27,9 @@
 
 // Commands for undo/redo functionality.
 
-#include <QString>
-#include <QStringList>
-#include <QUndoCommand>
+#include <QtCore/QString>
+#include <QtCore/QStringList>
+#include <QtGui/QUndoCommand>
 
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>

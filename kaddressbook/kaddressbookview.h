@@ -32,9 +32,9 @@
 #include <kabc/field.h>
 #include <KPluginFactory>
 
-#include <QStringList>
-#include <QWidget>
-#include <QDropEvent>
+#include <QtCore/QStringList>
+#include <QtGui/QDropEvent>
+#include <QtGui/QWidget>
 
 class KConfigGroup;
 
@@ -155,7 +155,7 @@ class KADDRESSBOOK_EXPORT KAddressBookView : public QWidget
     virtual void scrollUp() = 0;
     virtual void scrollDown() = 0;
 
-  public slots:
+  public Q_SLOTS:
     /**
       Must be overloaded in subclasses to refresh the view.
       Refreshing includes updating the view to ensure that only items
@@ -184,7 +184,7 @@ class KADDRESSBOOK_EXPORT KAddressBookView : public QWidget
      */
     void popup( const QPoint &point );
 
-  signals:
+  Q_SIGNALS:
     /**
       This signal should be emitted by a subclass whenever an addressee
       is modified.
@@ -256,7 +256,7 @@ class KADDRESSBOOK_EXPORT KAddressBookView : public QWidget
      */
     QWidget *viewWidget();
 
-  private slots:
+  private Q_SLOTS:
     void updateView();
 
   private:

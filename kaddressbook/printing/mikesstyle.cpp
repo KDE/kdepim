@@ -22,8 +22,8 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <QPainter>
-#include <QPrinter>
+#include <QtGui/QPainter>
+#include <QtGui/QPrinter>
 
 #include <kabc/addressee.h>
 #include <kapplication.h>

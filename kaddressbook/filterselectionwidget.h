@@ -46,7 +46,7 @@ class FilterSelectionWidget : public KHBox
     int currentItem() const;
     void setCurrentItem( int index );
 
-  signals:
+  Q_SIGNALS:
     void filterActivated( int );
 
   private:

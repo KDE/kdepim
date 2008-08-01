@@ -46,7 +46,7 @@ class SimpleAddresseeEditor : public AddresseeEditorBase
 
     void setInitialFocus();
 
-  protected slots:
+  protected Q_SLOTS:
     void emitModified();
 
   protected:

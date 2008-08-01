@@ -33,9 +33,8 @@
     into your KDE Addressbook.
 */
 
-#include <QFile>
-//Added by qt3to4:
-#include <QTextStream>
+#include <QtCore/QFile>
+#include <QtCore/QTextStream>
 
 #include <kfiledialog.h>
 #include <kio/netaccess.h>

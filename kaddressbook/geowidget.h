@@ -27,9 +27,10 @@
 #include <kdialog.h>
 
 #include "contacteditorwidget.h"
-#include <QMouseEvent>
-#include <QLabel>
-#include <QPaintEvent>
+
+#include <QtGui/QLabel>
+#include <QtGui/QMouseEvent>
+#include <QtGui/QPaintEvent>
 
 namespace KABC {
 class Geo;
@@ -64,7 +65,7 @@ class GeoWidget : public KAB::ContactEditorWidget
 
     void setReadOnly( bool readOnly );
 
-  private slots:
+  private Q_SLOTS:
     void editGeoData();
 
   private:
@@ -91,7 +92,7 @@ class GeoDialog : public KDialog
     void setLongitude( double longitude );
     double longitude() const;
 
-  private slots:
+  private Q_SLOTS:
     void updateInputs();
 
     void sexagesimalInputChanged();
@@ -136,7 +137,7 @@ class GeoMapWidget : public QWidget
     void setLongitude( double longitude );
     double longitude()const;
 
-  signals:
+  Q_SIGNALS:
     void changed();
 
   protected:

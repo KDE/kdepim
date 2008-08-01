@@ -21,20 +21,20 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <q3groupbox.h>
-#include <q3header.h>
-#include <QLabel>
-#include <QPushButton>
-#include <QToolButton>
-#include <QString>
-#include <QVBoxLayout>
+#include <Qt3Support/Q3GroupBox>
+#include <Qt3Support/Q3Header>
+#include <QtCore/QString>
+#include <QtGui/QLabel>
+#include <QtGui/QPushButton>
+#include <QtGui/QToolButton>
+#include <QtGui/QVBoxLayout>
 
-#include <kapplication.h>
-#include <KDialogButtonBox>
-#include <kconfig.h>
 #include <k3listview.h>
-#include <klocale.h>
+#include <kapplication.h>
+#include <kconfig.h>
+#include <KDialogButtonBox>
 #include <khbox.h>
+#include <klocale.h>
 #include <kvbox.h>
 
 #include "addhostdialog.h"

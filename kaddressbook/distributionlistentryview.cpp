@@ -2,26 +2,24 @@
 #include "imagewidget.h"
 #include <interfaces/core.h>
 
-#include <kabc/resourceabc.h>
-
 #include <kabc/addressbook.h>
 #include <kabc/resource.h>
+#include <kabc/resourceabc.h>
 
 #include <kdialog.h>
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kurllabel.h>
 
-#include <qcombobox.h>
-#include <qlabel.h>
-#include <qradiobutton.h>
-#include <qstringlist.h>
-//Added by qt3to4:
-#include <QButtonGroup>
-#include <QPixmap>
-#include <QGridLayout>
-#include <QHBoxLayout>
-#include <QVBoxLayout>
+#include <QtCore/QStringList>
+#include <QtGui/QButtonGroup>
+#include <QtGui/QComboBox>
+#include <QtGui/QGridLayout>
+#include <QtGui/QHBoxLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QPixmap>
+#include <QtGui/QRadioButton>
+#include <QtGui/QVBoxLayout>
 
 
 KAB::DistributionListEntryView::DistributionListEntryView( KAB::Core* core, QWidget* parent ) : QWidget( parent ), m_core( core ), m_emailGroup( 0 )
