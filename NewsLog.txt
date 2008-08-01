@@ -1,3 +1,12 @@
+Friday, August 1st 2008
+
+Problems addressed
+------------------
+
+* kolab/issue2951 The name of the event which was created by d'n'd of a todo is "BEGIN:VCALENDAR".
+* kolab/issue2904 calender component reloads all events, e.g. after switching to todos and back.
+
+
 Friday, July 25th 2008
 
 Problems addressed
