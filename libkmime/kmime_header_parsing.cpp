@@ -57,6 +57,7 @@ namespace Types {
   QString AddrSpec::asString() const {
     bool needsQuotes = false;
     QString result;
+    result.reserve( localPart.length() + domain.length() + 1 );
     for ( unsigned int i = 0 ; i < localPart.length() ; ++i ) {
       const char ch = localPart[i].latin1();
       if ( ch == '.' || isAText( ch ) )
