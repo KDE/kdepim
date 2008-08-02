@@ -53,6 +53,7 @@ void FilterPMail::import(FilterInfo *info)
 
     if (chosenDir.isEmpty()) {
         info->alert(i18n("No directory selected."));
+        delete kfd;
         return;
     }
 
@@ -78,6 +79,7 @@ void FilterPMail::import(FilterInfo *info)
     info->addLog( i18n("Finished importing emails from %1", chosenDir ));
     info->setCurrent(100);
     info->setOverall(100);
+    delete kfd;
 }
 
 /** this looks for all files with the filemask 'mask' and calls the 'workFunc' on each of them */

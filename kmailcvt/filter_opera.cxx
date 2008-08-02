@@ -154,4 +154,5 @@ void FilterOpera::import(FilterInfo *info)
     if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
     info->setCurrent(100);
     info->setOverall(100);
+    delete kfd;
 }
