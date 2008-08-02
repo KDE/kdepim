@@ -214,6 +214,7 @@ int GroupwiseServer::gSoapSendCallback( struct soap * soap, const char *s, size_
     soap->error = SOAP_TCP_ERROR;
   }
 
+  m_sock->waitForBytesWritten(30000);
   m_sock->flush();
 
   return SOAP_OK;
@@ -222,20 +223,22 @@ int GroupwiseServer::gSoapSendCallback( struct soap * soap, const char *s, size_
 size_t GroupwiseServer::gSoapReceiveCallback( struct soap *soap, char *s,
   size_t n )
 {
-//  kDebug() <<"GroupwiseServer::gSoapReceiveCallback()";
+  kDebug();
 
-  if ( !m_sock ) {
-    kError() <<"no open connection";
-    soap->error = SOAP_FAULT;
-    return 0;
+  if ( m_sock->state() != KTcpSocket::ConnectedState ) {
+    if ( !m_sock->sslErrors().isEmpty() ) {
+      kError() <<"SSL is in error state.";
+      soap->error = SOAP_SSL_ERROR;
+      return 0;
+    } else {
+      kError() <<"no open connection";
+      soap->error = SOAP_TCP_ERROR;
+      return 0;
+    }
   }
-  if ( !mErrors.isEmpty() ) {
-    kError() <<"SSL is in error state.";
-    soap->error = SOAP_SSL_ERROR;
-    return 0;
-  }
-
 //   m_sock->open();
+  // make it synchronous
+  m_sock->waitForReadyRead();
   long ret = m_sock->read( s, n );
   if ( ret < 0 ) {
     kError() << "Receive failed:" << m_sock->errorString()
@@ -248,7 +251,7 @@ size_t GroupwiseServer::gSoapReceiveCallback( struct soap *soap, char *s,
       p[ret]='\0';
       qDebug("%s", p );
       qDebug("\n*************************");
-      qDebug("gSoapReceiveCallback return %ld", ret);
+      qDebug("gSoapReceiveCallback returning %ld bytes read.", ret);
     }
     log( "RECV", s, ret );
   }
