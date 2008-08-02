@@ -513,7 +513,9 @@ A commercial use license is available from Genivia, Inc., contact@genivia.com
 # endif
 #endif
 
+#ifdef I_KNOW_WHAT_IM_DOING
 #define DEBUG  /* Uncomment to debug sending (in file SENT.log) receiving (in file RECV.log) and messages (in file TEST.log) */
+#endif
 
 #ifdef __cplusplus
 extern "C" {

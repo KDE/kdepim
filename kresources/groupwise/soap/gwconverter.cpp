@@ -136,6 +136,44 @@ KDateTime GWConverter::charToKDateTime( const char *str )
   return dt;
 }
 
+bool GWConverter::emailsMatch( const QString & email1, const QString & email2 )
+{
+    // eg demo3.po1.dom1@dmz1.provo.novell.com == demo3@dmz1.provo.novell.com
+    if ( email1 == email2 )
+        return true;
+
+    QString shorter, longer;
+    if ( email1.length() < email2.length() )
+    {
+        shorter = email1;
+        longer = email2;
+    }
+    else
+    {
+        shorter = email2;
+        longer = email1;
+    }
+
+    QString shortStem = shorter.section( '@', 0, 0 );
+    QString longStem = longer.section( '@', 0, 0 );
+    QString shortHost = shorter.section( '@', 1, 1 );
+    QString longHost = longer.section( '@', 1, 1 );
+
+    QString extension = longStem.right( longStem.length() - shortStem.length() );
+
+    kDebug() << "gwconverter::emailsMatch(): " << shorter << " = " << longer;
+    kDebug() << "shortStem: " << shortStem << ", longStem: " << longStem << ", extension: " << extension;
+
+    if ( longStem.startsWith( shortStem ) && extension.startsWith( "." ) && (
+    shortHost == longHost ) )
+    {
+        kDebug() << "Looks like a match!";
+        return true;
+    }
+    return false;
+}
+
+
 KDateTime GWConverter::charToKDateTime( const char *str,
                                         const KDateTime::Spec &timeSpec )
 {

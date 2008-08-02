@@ -35,7 +35,7 @@
 
 #include "gwjobs.h"
 
-#define READ_ADDRESS_FOLDER_CHUNK_SIZE 250
+#define READ_ADDRESS_FOLDER_CHUNK_SIZE 50
 #define READ_CALENDAR_FOLDER_CHUNK_SIZE 50
 
 GWJob::GWJob( GroupwiseServer *server, struct soap *soap, const QString &url, const KDateTime::Spec & timeSpec, const std::string &session )
@@ -234,7 +234,7 @@ void ReadAddressBooksJob::readAddressBook( std::string &id )
   {
     if ( cursorResponse.status && cursorResponse.status->code != 0 )
     {
-      kdDebug() << "  Couldn't read " << GWConverter::stringToQString(id ) << " : " << GWConverter::stringToQString(cursorResponse.status->description) << endl;
+      kDebug() << "  Couldn't read " << GWConverter::stringToQString(id ) << " : " << GWConverter::stringToQString(cursorResponse.status->description);
       //mError = GroupWise::RefreshNeeded;
     }
   return;
@@ -670,63 +670,72 @@ void UpdateAddressBooksJob::run()
 {
   kDebug() <<"UpdateAddressBooksJob::run()";
 
-  mSoap->header->ngwt__session = mSession;
-  _ngwm__getDeltasRequest request;
-  _ngwm__getDeltasResponse response;
+  while ( true ) {
+    mSoap->header->ngwt__session = mSession;
+    _ngwm__getDeltasRequest request;
+    _ngwm__getDeltasResponse response;
 
-  GWConverter conv( mSoap );
-  request.container.append( mAddressBookIds.first().toLatin1() );
-  request.deltaInfo = soap_new_ngwt__DeltaInfo( mSoap, -1 );
-  request.deltaInfo->count = (int*)soap_malloc( mSoap, sizeof(int) );
-#warning UpdateAddressBooksJob::run() this might need to be called in a loop due to chunking
-  *( request.deltaInfo->count ) = READ_ADDRESS_FOLDER_CHUNK_SIZE;
- /* request.deltaInfo->count = 0;*/
-  request.deltaInfo->lastTimePORebuild = mLastPORebuildTime;
-  request.deltaInfo->firstSequence = (unsigned long*)soap_malloc( mSoap, sizeof(unsigned long) );
-  *(request.deltaInfo->firstSequence) = mStartSequenceNumber;
-  request.deltaInfo->lastSequence = 0; /*(unsigned long*)soap_malloc( mSoap, sizeof(unsigned long) );*/
-  /* *(request.deltaInfo->lastSequence) = mLastSequenceNumber; */
-  //request.view = soap_new_std__string( mSoap, -1 );
-  //request.view->append("id name version modified ItemChanges");
-  request.view = 0;
-  soap_call___ngw__getDeltasRequest( mSoap, mUrl.toLatin1(),
-      NULL, &request, &response);
-  soap_print_fault( mSoap, stderr );
+    GWConverter conv( mSoap );
+    request.container.append( mAddressBookIds.first().toLatin1() );
+    request.deltaInfo = soap_new_ngwt__DeltaInfo( mSoap, -1 );
+    request.deltaInfo->count = (int*)soap_malloc( mSoap, sizeof(int) );
+    *( request.deltaInfo->count ) = READ_ADDRESS_FOLDER_CHUNK_SIZE;
+    request.deltaInfo->lastTimePORebuild = mLastPORebuildTime;
+    request.deltaInfo->firstSequence = (unsigned long*)soap_malloc( mSoap, sizeof(unsigned long) );
+    *(request.deltaInfo->firstSequence) = mStartSequenceNumber;
+    request.deltaInfo->lastSequence = 0; /*(unsigned long*)soap_malloc( mSoap, sizeof(unsigned long) );*/
+    //request.view = soap_new_std__string( mSoap, -1 );
+    //request.view->append("id name version modified ItemChanges");
+    request.view = 0;
+    soap_call___ngw__getDeltasRequest( mSoap, mUrl.toLatin1(),
+                                                NULL, &request, &response);
+    soap_print_fault( mSoap, stderr );
 
-  if ( response.items ) {
-    std::vector<class ngwt__Item * > items = response.items->item;
+    if ( response.items ) {
+      std::vector<class ngwt__Item * > items = response.items->item;
 #if 1
     kDebug() << "  - got " << items.size() << "contacts";
 #endif
-    KABC::Addressee::List contacts;
-    ContactConverter converter( mSoap );
+      KABC::Addressee::List contacts;
+      ContactConverter converter( mSoap );
 
-    std::vector<class ngwt__Item * >::const_iterator it;
-    for ( it = items.begin(); it != items.end(); ++it ) {
-      ngwt__Item *item = *it;
+      std::vector<class ngwt__Item * >::const_iterator it;
+      for ( it = items.begin(); it != items.end(); ++it ) {
+        ngwt__Item *item = *it;
 
 #if 0
-    if ( item )
-      if ( item->name )
-        kDebug() <<"ITEM:" << item->name->c_str();
-      if ( item->id )
-        kDebug() <<"ITEM: ID (" << item->id->c_str()
-        << ")";
-    else 
-      kDebug() <<"ITEM is null";
+      if ( item )
+        if ( item->name )
+          kDebug() <<"ITEM:" << item->name->c_str();
+        if ( item->id )
+          kDebug() <<"ITEM: ID (" << item->id->c_str()
+          << ")" << endl;
+      else 
+        kDebug() << "ITEM is null";
 #endif
 
-      ngwt__Contact *contact = dynamic_cast<ngwt__Contact *>( item );
+        ngwt__Contact *contact = dynamic_cast<ngwt__Contact *>( item );
 
-      KABC::Addressee addr = converter.convertFromContact( contact );
-      if ( !addr.isEmpty() )
-        contacts.append( addr );
+        KABC::Addressee addr = converter.convertFromContact( contact );
+        if ( !addr.isEmpty() )
+          contacts.append( addr );
+      }
+      mServer->emitGotAddressees( contacts );
+
+      // now stop if we got less items than we asked for.
+      if ( items.size() < READ_ADDRESS_FOLDER_CHUNK_SIZE )
+        break;
+      else
+        mStartSequenceNumber += READ_ADDRESS_FOLDER_CHUNK_SIZE;
     }
-    mServer->emitGotAddressees( contacts );
-  }
-  else if ( response.status && response.status->code == 0xD716 )
-  {
-    kdDebug() << "The cached address book is too old, we have to refresh the whole thing." << endl;
-    mError = GroupWise::RefreshNeeded;
+    else if ( response.status && response.status->code == 0xD716 )
+    {
+      kDebug() << "The cached address book is too old, we have to refresh the whole thing.";
+      mError = GroupWise::RefreshNeeded;
+      return;
+    }
+    else
+      return;
   }
 }
+

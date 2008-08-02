@@ -70,6 +70,8 @@ ResourceGroupwise::ResourceGroupwise( const KUrl &url,
   mPrefs->setPassword( password );
   mPrefs->setReadAddressBooks( readAddressBooks );
   mPrefs->setWriteAddressBook( writeAddressBook );
+
+  initGroupwise();
 }
 
 void ResourceGroupwise::init()
@@ -78,11 +80,12 @@ void ResourceGroupwise::init()
   mProgress = 0;
   mSABProgress = 0;
   mUABProgress = 0;
+  mServerFirstSequence = 0;
+  mServerLastSequence = 0;
+  mServerLastPORebuildTime = 0;
   mPrefs = new GroupwisePrefs;
   mState = Start;
   setType( "groupwise" );
-
-  initGroupwise();
 }
 
 void ResourceGroupwise::initGroupwise()
@@ -149,6 +152,7 @@ void ResourceGroupwise::readAddressBooks()
 
     mAddressBooks.append( ab );
   }
+  initGroupwise();
 }
 
 void ResourceGroupwise::writeAddressBooks()
@@ -621,9 +625,9 @@ void ResourceGroupwise::cancelLoad()
 
 ResourceGroupwise::SABState ResourceGroupwise::systemAddressBookState()
 {
-  int storedFirstSequence = mPrefs->firstSequenceNumber();
-  int storedLastSequence = mPrefs->lastSequenceNumber();
-  int storedLastPORebuildTime = mPrefs->lastTimePORebuild();
+  unsigned long storedFirstSequence = mPrefs->firstSequenceNumber();
+  unsigned long storedLastSequence = mPrefs->lastSequenceNumber();
+  unsigned long storedLastPORebuildTime = mPrefs->lastTimePORebuild();
 
   kDebug() << "  Stored first seq no: " << storedFirstSequence ;
   kDebug() << "  Stored last seq no: " << storedLastSequence;
@@ -661,7 +665,17 @@ ResourceGroupwise::SABState ResourceGroupwise::systemAddressBookState()
       return InSync;
     }
   }
-  kDebug() << "  Fallthrough case - returning Stale";
+  else
+    emit loadingError( this, mServer->errorText() );
+
+
+  if ( storedFirstSequence == 0 || storedLastSequence == 0 )
+  {
+    kDebug() << "  Fallthrough - no fetched SAB exists yet, refresh";
+    return RefreshNeeded;
+  }
+  else
+    kDebug() << "  Fallthrough  - returning Stale";
   return Stale;
 }
 
@@ -724,6 +738,8 @@ void ResourceGroupwise::storeDeltaInfo()
   kDebug() << "  Server last seq no: " << mServerLastSequence;
   kDebug() << "  Server last PO Rebuild time: " << mServerLastPORebuildTime;
 
+  if ( mServerFirstSequence == 0 || mServerLastSequence == 0 || mServerLastPORebuildTime == 0 )
+    return;
   mPrefs->setFirstSequenceNumber( mServerFirstSequence );
   mPrefs->setLastSequenceNumber( mServerLastSequence );
   mPrefs->setLastTimePORebuild( mServerLastPORebuildTime );

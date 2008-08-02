@@ -57,7 +57,7 @@ class GWConverter
     KDateTime stringToKDateTime( const std::string* );
     KDateTime stringToKDateTime( const std::string*, const KDateTime::Spec &timeSpec );
 
-
+    bool emailsMatch( const QString & email1, const QString & email2 );
   private:
     struct soap* mSoap;
 };
