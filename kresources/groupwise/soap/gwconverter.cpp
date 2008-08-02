@@ -124,7 +124,7 @@ std::string* GWConverter::qDateToString( const QDate &date )
 
 QDate GWConverter::stringToQDate( std::string* str )
 {
-  return QDate::fromString( QString::fromUtf8( str->c_str() ) );
+  return QDate::fromString( QString::fromUtf8( str->c_str() ), Qt::ISODate );
 }
 
 KDateTime GWConverter::charToKDateTime( const char *str )
