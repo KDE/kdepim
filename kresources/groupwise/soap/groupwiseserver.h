@@ -21,6 +21,7 @@
 #ifndef GROUPWISESERVER_H
 #define GROUPWISESERVER_H
 
+#include <ktcpsocket.h>
 #include <kdemacros.h>
 #include <kio/job.h>
 #include <kio/jobclasses.h>
@@ -53,7 +54,7 @@ class ResourceCached;
 
 class ngwt__Settings;
 
-class QTcpSocket;
+class KTcpSocket;
 
 struct soap;
 
@@ -218,6 +219,7 @@ class GWSOAP_EXPORT GroupwiseServer : public QObject
     void log( const QString &prefix, const char *s, size_t n );
 
   protected slots:
+    void slotSocketError(KTcpSocket::Error);
     void slotSslErrors(const QList<QSslError> &);
 
   private:
@@ -238,7 +240,7 @@ class GWSOAP_EXPORT GroupwiseServer : public QObject
     struct soap *mSoap;
     GroupWiseBinding *mBinding;
     
-    QTcpSocket *m_sock;
+    KTcpSocket *m_sock;
 
     int mError;
     QStringList mErrors;
