@@ -175,8 +175,13 @@ int GroupwiseServer::gSoapSendCallback( struct soap * soap, const char *s, size_
 {
   kDebug() <<"GroupwiseServer::gSoapSendCallback()";
 
+  if ( !m_sock ) {
+    kError() << "no socket!";
+    return SOAP_TCP_ERROR;
+  }
+
   if ( m_sock->state() != KTcpSocket::ConnectedState ) {
-    kError() <<"no open connection";
+    kError() << "no open connection";
     soap->error = SOAP_TCP_ERROR;
     return SOAP_TCP_ERROR;
   }
