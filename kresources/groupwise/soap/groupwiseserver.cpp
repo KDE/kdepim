@@ -1657,7 +1657,7 @@ void GroupwiseServer::slotSocketError(KTcpSocket::Error error)
   if ( error == KTcpSocket::HostNotFoundError ) {
     errorMsg = QString::fromLatin1( "Host not found. Check your configuration" );
   }
-  mErrors.append( i18n("Connect failed: %1.").arg( errorMsg ) );
+  mErrors.append( i18n("Connect failed: %1.", errorMsg ) );
 }
 
 #include "groupwiseserver.moc"
