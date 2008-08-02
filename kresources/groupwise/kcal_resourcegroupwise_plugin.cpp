@@ -2,6 +2,7 @@
     This file is part of kdepim.
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2008 Will Stephenson <wtephenson@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -28,4 +29,14 @@
 
 using namespace KCal;
 
-EXPORT_KRESOURCES_PLUGIN2( ResourceGroupwise, ResourceGroupwiseConfig, "libkcal", "kres_groupwise" )
+class ResourceGroupwiseFactory : public KRES::PluginFactory<ResourceGroupwise, ResourceGroupwiseConfig>
+{
+  public:
+    ResourceGroupwiseFactory()
+      : KRES::PluginFactory<ResourceGroupwise, ResourceGroupwiseConfig>()
+    {
+      KGlobal::locale()->insertCatalog( QLatin1String( "kcal_groupwise" ) );
+    }
+};
+
+K_EXPORT_PLUGIN(ResourceGroupwiseFactory)
