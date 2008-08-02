@@ -135,15 +135,15 @@ class KABC_GROUPWISE_EXPORT ResourceGroupwise : public ResourceCached
 
   private slots:
     /** STATE CHANGING SLOTS **/
-    void fetchSABResult( KIO::Job * );
-    void fetchUABResult( KIO::Job * );
-    void updateSABResult( KIO::Job * );
+    void fetchSABResult( KJob * );
+    void fetchUABResult( KJob * );
+    void updateSABResult( KJob * );
     /** DATA PROCESSING SLOTS **/
     void slotReadJobData( KIO::Job *, const QByteArray & );
     void slotUpdateJobData( KIO::Job *, const QByteArray & );
     /** HELPER SLOT **/
     void slotJobPercent( KJob *job, unsigned long percent );
-
+    void slotJobFinished( KJob * job );
     void cancelLoad();
   private:
     GroupwisePrefs *mPrefs;

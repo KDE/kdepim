@@ -319,17 +319,18 @@ void ResourceGroupwise::fetchAddressBooks( const BookType bookType )
 
   mJob = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
   kDebug() << "  Job address: " << mJob;
-  connect( mJob, SIGNAL( result( KJob * ) ),
-           SLOT( slotFetchJobResult( KJob * ) ) );
   connect( mJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
            SLOT( slotReadJobData( KIO::Job *, const QByteArray & ) ) );
   connect( mJob, SIGNAL( percent( KJob *, unsigned long ) ),
            SLOT( slotJobPercent( KJob *, unsigned long ) ) );
+  connect( mJob, SIGNAL( finished( KJob * ) ),
+           SLOT( slotJobFinished( KJob * ) ) );
+
 
   if ( bookType == System )
   {
-    connect( mJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( fetchSABResult( KIO::Job * ) ) );
+    connect( mJob, SIGNAL( result( KJob * ) ),
+           SLOT( fetchSABResult( KJob * ) ) );
     mSABProgress = KPIM::ProgressManager::instance()->createProgressItem(
         mProgress, KPIM::ProgressManager::getUniqueID(),
         i18n( "Fetching System Address Book" ), QString::null,
@@ -338,8 +339,8 @@ void ResourceGroupwise::fetchAddressBooks( const BookType bookType )
   }
   else
   {
-    connect( mJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( fetchUABResult( KIO::Job * ) ) );
+    connect( mJob, SIGNAL( result( KJob * ) ),
+           SLOT( fetchUABResult( KJob * ) ) );
     mUABProgress = KPIM::ProgressManager::instance()->createProgressItem(
         mProgress, KPIM::ProgressManager::getUniqueID(),
         i18n( "Fetching User Address Books" ), QString::null,
@@ -389,7 +390,7 @@ bool ResourceGroupwise::asyncSave( Ticket* )
   return true;
 }
 
-void ResourceGroupwise::fetchSABResult( KIO::Job *job )
+void ResourceGroupwise::fetchSABResult( KJob *job )
 {
   kDebug();
 
@@ -413,7 +414,7 @@ void ResourceGroupwise::fetchSABResult( KIO::Job *job )
     loadCompleted();
 }
 
-void ResourceGroupwise::fetchUABResult( KIO::Job *job )
+void ResourceGroupwise::fetchUABResult( KJob *job )
 {
   kDebug() << "ResourceGroupwise::fetchUABResult() ";
 
@@ -457,12 +458,14 @@ void ResourceGroupwise::updateSystemAddressBook()
       mPrefs->url().startsWith("https" ) );
  
   mJob = KIO::get( url, KIO::NoReload, KIO::HideProgressInfo );
-  connect( mJob, SIGNAL( result( KIO::Job * ) ),
-           SLOT( updateSABResult( KIO::Job * ) ) );
+  connect( mJob, SIGNAL( result( KJob * ) ),
+           SLOT( updateSABResult( KJob * ) ) );
   connect( mJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
            SLOT( slotUpdateJobData( KIO::Job *, const QByteArray & ) ) );
   connect( mJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
            SLOT( slotJobPercent( KIO::Job *, unsigned long ) ) );
+  connect( mJob, SIGNAL( finished( KJob * ) ),
+           SLOT( slotJobFinished( KJob * ) ) );
 
   mProgress = KPIM::ProgressManager::instance()->createProgressItem(
     KPIM::ProgressManager::getUniqueID(), i18n("Updating System Address Book") );
@@ -473,7 +476,7 @@ void ResourceGroupwise::updateSystemAddressBook()
   return;
 }
 
-void ResourceGroupwise::updateSABResult( KIO::Job *job )
+void ResourceGroupwise::updateSABResult( KJob *job )
 {
   kDebug() << "ResourceGroupwise::updateSABResult() ";
 
@@ -607,6 +610,19 @@ void ResourceGroupwise::slotJobPercent( KJob *, unsigned long percent )
   // TODO: make this act on the correct progress item
   kDebug() <<"ResourceGroupwise::slotJobPercent()" << percent;
   if ( mProgress ) mProgress->setProgress( percent );
+}
+
+void ResourceGroupwise::slotJobFinished( KJob * )
+{
+  kDebug();
+  if ( mJob ) {
+    mJob = 0;
+  }
+  if ( mProgress ) {
+    mProgress->setComplete();
+    mProgress = 0;
+    mState = Start;
+  }
 }
 
 void ResourceGroupwise::cancelLoad()
