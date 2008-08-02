@@ -44,6 +44,8 @@ class Printer::Private
     Printer *mParent;
     Style mStyle;
     bool mCreationWarning;
+    QString mExportMacro;
+    QString mExportMacroFilename;
     QString mGenerator;
     QString mOutputDirectory;
     QString mSourceFile;
@@ -64,7 +66,13 @@ QString Printer::Private::classHeader( const Class &classObject, bool publicMemb
     code += " */";
   }
 
-  QString txt = "class " + mStyle.className( classObject.name() );
+  QString exportMacroString;
+  if ( !mExportMacro.isEmpty() && !mExportMacroFilename.isEmpty() ) {
+    exportMacroString += mExportMacro;
+    exportMacroString += " ";
+  }
+
+  QString txt = "class " + exportMacroString + mStyle.className( classObject.name() );
 
   Class::List baseClasses = classObject.baseClasses();
   if ( !baseClasses.isEmpty() ) {
@@ -418,6 +426,16 @@ void Printer::setCreationWarning( bool v )
   d->mCreationWarning = v;
 }
 
+void Printer::setExportMacro( const QString &macro )
+{
+  d->mExportMacro = macro;
+}
+
+void Printer::setExportMacroHeader( const QString &exportMacroHeader )
+{
+  d->mExportMacroFilename = exportMacroHeader;
+}
+
 void Printer::setGenerator( const QString &generator )
 {
   d->mGenerator = generator;
@@ -547,6 +565,9 @@ void Printer::printHeader( const File &file )
       }
     }
   }
+
+  if ( !d->mExportMacroFilename.isEmpty() )
+    out += "#include \"" + d->mExportMacroFilename + '"';
 
   if ( !processed.isEmpty() )
     out.newLine();

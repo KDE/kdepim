@@ -72,6 +72,18 @@ class KODE_EXPORT Printer
     void setCreationWarning( bool value );
 
     /**
+     * Sets a string to use as a symbol visibility export macro
+     * in class definitions
+     */
+    void setExportMacro( const QString &macro );
+
+    /**
+     * Sets the name of the source file defining the export
+     * macro
+     */
+    void setExportMacroHeader( const QString &exportMacroHeader );
+
+    /**
      * Sets the name of the @param generator which shall be
      * included in the C++ code.
      */
