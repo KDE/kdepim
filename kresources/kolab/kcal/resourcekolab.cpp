@@ -505,8 +505,10 @@ bool ResourceKolab::sendKMailUpdate( KCal::IncidenceBase* incidencebase, const Q
       attMimeTypes.append( (*it)->mimeType() );
       attNames.append( (*it)->label() );
       tempFile->close();
+      tmpFiles.append(tempFile);
     } else {
       kWarning(5650) << "Cannot open temporary file for attachment";
+      delete tempFile;
     }
   }
   QStringList deletedAtts;
