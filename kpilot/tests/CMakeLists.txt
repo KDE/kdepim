@@ -12,15 +12,15 @@ target_link_libraries(testconstants kpilot ${QT_LIBRARIES})
 
 set(testcategories_SRCS testcategories.cc)
 kde4_add_unit_test(testcategories ${testcategories_SRCS})
-target_link_libraries(testcategories kpilot ${QT_LIBRARIES})
+target_link_libraries(testcategories kpilot ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} ${QT_LIBRARIES})
 
 set(testaddresses_SRCS testaddress.cc)
 kde4_add_unit_test(testaddresses ${testaddresses_SRCS})
-target_link_libraries(testaddresses kpilot ${QT_LIBRARIES})
+target_link_libraries(testaddresses kpilot ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} ${QT_LIBRARIES})
 
 set(testdatebook_SRCS testdatebook.cc)
 kde4_add_unit_test(testdatebook ${testdatebook_SRCS})
-target_link_libraries(testdatebook kpilot ${QT_LIBRARIES})
+target_link_libraries(testdatebook kpilot ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} ${QT_LIBRARIES})
 
 #if (HAVE_CALENDARLOCAL_H)
 #	set(importdatebook_SRCS importdatebook.cc)
