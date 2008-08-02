@@ -39,7 +39,7 @@
 #define READ_CALENDAR_FOLDER_CHUNK_SIZE 50
 
 GWJob::GWJob( GroupwiseServer *server, struct soap *soap, const QString &url, const KDateTime::Spec & timeSpec, const std::string &session )
-  : mServer( server ), mSoap( soap ), mUrl( url ), mSession( session ), mTimeSpec( timeSpec )
+  : mServer( server ), mSoap( soap ), mUrl( url ), mSession( session ), mTimeSpec( timeSpec ), mError( 0 )
 {
 }
 
@@ -649,7 +649,7 @@ void UpdateAddressBooksJob::run()
   if ( response.items ) {
     std::vector<class ngwt__Item * > items = response.items->item;
 #if 1
-    kDebug() << "ReadAddressBooksJob::UpdateAddressBooksJob() - got " << items.size() << "contacts";
+    kDebug() << "  - got " << items.size() << "contacts";
 #endif
     KABC::Addressee::List contacts;
     ContactConverter converter( mSoap );
@@ -677,7 +677,11 @@ void UpdateAddressBooksJob::run()
     }
     mServer->emitGotAddressees( contacts );
   }
-
+  else if ( response.status && response.status->code == 0xD716 )
+  {
+    kdDebug() << "The cached address book is too old, we have to refresh the whole thing." << endl;
+    mError = GroupWise::RefreshNeeded;
+  }
 //   if ( addressBookListResponse.books ) { 
 //     std::vector<class ngwt__AddressBook * > *addressBooks = &addressBookListResponse.books->book;
 }

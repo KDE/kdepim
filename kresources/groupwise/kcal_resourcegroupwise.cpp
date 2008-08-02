@@ -245,7 +245,7 @@ bool ResourceGroupwise::doSave( bool )
 
   if ( !server.login() ) {
     kError() <<"Unable to login to server" << server.error();
-    emit resourceSaveError( this, i18n( "Unable to login to server: TODO: return whole error list; see console output" ) );
+    emit resourceSaveError( this, i18n( "Unable to login to server: " ) +server.errorText() );
     return false;
   }
 
