@@ -135,7 +135,7 @@ int GroupwiseServer::gSoapOpen( struct soap *soap, const char *,
     if ( !sslErrors.isEmpty() ) {
       // ignore untrusted certs for now, we can't handle it async
       bool untrusted = false;
-      foreach( KSslError err, sslErrors ) {
+      foreach( const KSslError& err, sslErrors ) {
         if ( err.error() == KSslError::UntrustedCertificate ) {
           untrusted = true;
           break;
@@ -1440,7 +1440,7 @@ void GroupwiseServer::slotSslErrors(const QList<KSslError> & errors)
 {
 
   bool untrusted = false;
-  foreach( KSslError err, errors ) {
+  foreach( const KSslError& err, errors ) {
     // ignore untrusted certs for now, we can't handle it async
     if ( err.error() == KSslError::UntrustedCertificate ) {
       untrusted = true;
