@@ -2,19 +2,18 @@ project(wizards)
 
 include_directories(${CMAKE_SOURCE_DIR}/kcal ${CMAKE_SOURCE_DIR}/kresources/kolab/shared ${CMAKE_SOURCE_DIR}/knotes ${CMAKE_SOURCE_DIR}/kresources/lib)
 
-message( STATUS "GroupWise wizard disabled." )
-
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 
 ########### next target ###############
 
 set(groupwarewizard_SRCS ${libknotesresources_SRCS} groupwarewizard.cpp groupwaremain.cpp overviewpage.cpp 
     egroupwarewizard.cpp
+    groupwisewizard.cpp
     sloxwizard.cpp
     kolabwizard.cpp kmailchanges.cpp kolabkmailchanges.cpp
 )
 
-kde4_add_kcfg_files(groupwarewizard_SRCS egroupwareconfig.kcfgc kolabconfig.kcfgc sloxconfig.kcfgc)
+kde4_add_kcfg_files(groupwarewizard_SRCS egroupwareconfig.kcfgc groupwiseconfig.kcfgc kolabconfig.kcfgc sloxconfig.kcfgc)
 
 
 # todo: more appropriate icon?
@@ -24,6 +23,7 @@ kde4_add_executable(groupwarewizard ${groupwarewizard_SRCS})
 
 target_link_libraries(groupwarewizard  ${KDE4_KDECORE_LIBS} 
 kabc_xmlrpc kcal_xmlrpc knotes_xmlrpc
+kabcgroupwise kcalgroupwise
 kcal_slox kabc_slox
 kabckolab knoteskolab
 kcalkolab kresources
@@ -48,6 +48,22 @@ kde4_add_executable(egroupwarewizard ${egroupwarewizard_SRCS})
 target_link_libraries(egroupwarewizard  ${KDE4_KDECORE_LIBS} kabc_xmlrpc kcal_xmlrpc knotes_xmlrpc ${KDE4_KCAL_LIBS} kdepim)
 
 install(TARGETS egroupwarewizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
+
+
+############ next target ###############
+
+set(groupwisewizard_SRCS groupwisewizard.cpp groupwisemain.cpp kmailchanges.cpp)
+
+kde4_add_kcfg_files(groupwisewizard_SRCS groupwiseconfig.kcfgc)
+
+# todo: more appropriate icon?
+kde4_add_app_icon(groupwisewizard_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/tools-wizard.png")
+
+kde4_add_executable(groupwisewizard ${groupwisewizard_SRCS})
+
+target_link_libraries(groupwisewizard ${KDE4_KDECORE_LIBS} kabcgroupwise kcalgroupwise ${KDE4_KCAL_LIBS} kdepim)
+
+install(TARGETS groupwisewizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### next target ###############

@@ -39,7 +39,7 @@
 #include <kabc/addressee.h>
 #include <kcal/freebusy.h>
 
-#include "groupwise_export.h"
+#include "../groupwise_export.h"
 #include "gwjobs.h"
 
 namespace KABC {

@@ -24,9 +24,10 @@
 
 class KLineEdit;
 class QCheckBox;
-class QFrame;
 class QSpinBox;
 class QGroupBox;
+
+using namespace KPIM;
 
 class GroupwiseWizard : public KConfigWizard
 {
@@ -51,7 +52,7 @@ class GroupwiseWizard : public KConfigWizard
     QCheckBox *mSavePasswordCheck;
     QCheckBox *mSecureCheck;
 
-    QFrame *mEmailPage;
+    QWidget *mEmailPage;
     QGroupBox *mEmailBox;
     QWidget *mEmailWidget;
     KLineEdit *mEmailEdit;
