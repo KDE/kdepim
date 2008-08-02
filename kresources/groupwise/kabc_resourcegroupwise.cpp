@@ -258,7 +258,7 @@ bool ResourceGroupwise::asyncLoad()
   if ( !mProgress )
   {
     mProgress = KPIM::ProgressManager::instance()->createProgressItem(
-      KPIM::ProgressManager::getUniqueID(), i18n( "Loading GroupWise resource %1" ).arg( resourceName() ), QString::null, true /*CanBeCancelled*/, mPrefs->url().startsWith("https" ) );
+      KPIM::ProgressManager::getUniqueID(), i18nc( "label for addressbook load progress", "Loading GroupWise resource %1", resourceName() ), QString::null, true /*CanBeCancelled*/, mPrefs->url().startsWith("https" ) );
     connect( mProgress, SIGNAL( progressItemCanceled( KPIM::ProgressItem * ) ),
                SLOT( cancelLoad() ) );
   }
