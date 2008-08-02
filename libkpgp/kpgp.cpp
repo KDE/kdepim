@@ -1345,7 +1345,7 @@ Module::checkForPGP(void)
   haveGpg=false;
   // lets try gpg
 
-  foreach( QString curPath, pSearchPaths )
+  foreach( const QString& curPath, pSearchPaths )
   {
     path = curPath;
     path += "/gpg";
@@ -1360,7 +1360,7 @@ Module::checkForPGP(void)
 
   // search for pgp5.0
   havePGP5=false;
-  foreach( QString curPath, pSearchPaths )
+  foreach( const QString& curPath, pSearchPaths )
   {
     path = curPath;
     path += "/pgpe";
@@ -1375,7 +1375,7 @@ Module::checkForPGP(void)
 
   // lets try pgp2.6.x
   if (!havePgp) {
-    foreach( QString curPath, pSearchPaths )
+    foreach( const QString& curPath, pSearchPaths )
     {
       path = curPath;
       path += "/pgp";
