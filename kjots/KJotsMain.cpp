@@ -109,6 +109,11 @@ void KJotsMain::updateCaption(QString caption)
     setCaption(caption);
 }
 
+bool KJotsMain::queryClose()
+{
+    return component->queryClose();
+}
+
 void KJotsMain::onQuit()
 {
     component->queryClose();
