@@ -19,7 +19,7 @@ kde4_add_ui_files(kcal_groupwise_LIB_SRCS groupwisesettingswidgetbase.ui )
 
 kde4_add_kcfg_files(kcal_groupwise_LIB_SRCS kcal_groupwiseprefsbase.kcfgc )
 kde4_add_library (kcalgroupwise SHARED ${kcal_groupwise_LIB_SRCS})
-target_link_libraries(kcalgroupwise  ${KDE4_KDECORE_LIBS} gwsoap ${KDE4_KCAL_LIBS} kdepim)
+target_link_libraries(kcalgroupwise  ${KDE4_KDECORE_LIBS} gwsoap ${KDE4_KCAL_LIBS} kdepim ${KDE4_KDE3SUPPORT_LIBS})
 set_target_properties(kcalgroupwise PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kcalgroupwise  DESTINATION ${LIB_INSTALL_DIR})
 
@@ -43,7 +43,7 @@ kde4_add_kcfg_files(kabc_groupwise_LIB_SRCS kabc_groupwiseprefs.kcfgc )
 
 kde4_add_library(kabcgroupwise SHARED ${kabc_groupwise_LIB_SRCS})
 
-target_link_libraries(kabcgroupwise ${KDE4_KDECORE_LIBS} gwsoap ${KDE4_KCAL_LIBS} kdepim ${KDE4_KABC_LIBS})
+target_link_libraries(kabcgroupwise ${KDE4_KDECORE_LIBS} gwsoap ${KDE4_KCAL_LIBS} kdepim ${KDE4_KABC_LIBS} ${QT_QT3SUPPORT_LIBRARY})
 
 set_target_properties(kabcgroupwise PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kabcgroupwise  DESTINATION ${LIB_INSTALL_DIR})

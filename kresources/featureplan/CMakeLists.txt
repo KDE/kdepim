@@ -14,7 +14,7 @@ set(kcal_resourcefeatureplan_LIB_SRCS ${libfeatureplancommon_SRCS} kcal_resource
 
 kde4_add_library(kcal_resourcefeatureplan SHARED ${kcal_resourcefeatureplan_LIB_SRCS})
 
-target_link_libraries(kcal_resourcefeatureplan  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim)
+target_link_libraries(kcal_resourcefeatureplan  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim ${QT_QT3SUPPORT_LIBRARY})
 
 set_target_properties(kcal_resourcefeatureplan PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kcal_resourcefeatureplan  DESTINATION ${LIB_INSTALL_DIR})
@@ -30,7 +30,7 @@ set(kcal_resourcefeatureplan_plugin_PART_SRCS kcal_resourcefeatureplanplugin.cpp
 
 kde4_add_plugin(kcal_resourcefeatureplan_plugin ${kcal_resourcefeatureplan_plugin_PART_SRCS})
 
-target_link_libraries(kcal_resourcefeatureplan_plugin ${KDE4_KDECORE_LIBS} kcal_resourcefeatureplan)
+target_link_libraries(kcal_resourcefeatureplan_plugin ${KDE4_KDECORE_LIBS} kcal_resourcefeatureplan ${KDE4_KRESOURCES_LIBS})
 
 install(TARGETS kcal_resourcefeatureplan_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
