@@ -240,7 +240,6 @@ else ( ONLY_KLEO )
 #enable korn in 4.2 if there is interest
 # macro_optional_add_subdirectory(korn)
   add_subdirectory(kresources)
-  macro_optional_add_subdirectory(ktnef)
   macro_optional_add_subdirectory(kontact)
 
   if(QGPGME_FOUND)

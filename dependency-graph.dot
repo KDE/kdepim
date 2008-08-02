@@ -50,7 +50,6 @@ strict digraph "inter-dependency graph for kdepim" {
         "korganizer"[style=filled, fillcolor=lightcyan, URL="korganizer/html/index.html"];
         "korn"[style=filled, fillcolor=lightcyan];
         "kresources"[style=filled, fillcolor=palegreen];
-        "ktnef"[style=filled, fillcolor=lightcyan];
         "libakonadi"[style=filled, fillcolor=lightyellow, URL="akonadi/libakonadi/html/index.html"];
         "libkdepim"[style=filled, fillcolor=lightyellow, URL="libkdepim/html/index.html"];
         "libkholidays"[style=filled, fillcolor=lightyellow, URL="libkholidays/html/index.html"];
@@ -133,7 +132,6 @@ strict digraph "inter-dependency graph for kdepim" {
         "knode" -> "kontact";
         "libsyndication" -> "akregator";
         "libsyndication" -> "kaddressbook";
-        "libktnef" -> "ktnef";
         "libktnef" -> "kmail";
         /* TODO: kabc deps incomplete
         "libkabc" -> "libkcal";

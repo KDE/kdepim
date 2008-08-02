@@ -30,7 +30,6 @@ if(QGPGME_FOUND)
 endif(QGPGME_FOUND)
 #korn is currently disabled until we find a new maintainer
 #add_subdirectory(korn)
-add_subdirectory(ktnef)
 add_subdirectory(kwatchgnupg)
 
 endif ( ONLY_KLEO )
