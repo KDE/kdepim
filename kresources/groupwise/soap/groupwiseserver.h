@@ -67,7 +67,7 @@ class GroupWiseBinding;
 
 namespace GroupWise {
 
-enum ErrorCode { RefreshNeeded };
+enum ErrorCode { NoError, RefreshNeeded };
 
 class AddressBook
 {
@@ -154,7 +154,7 @@ class GWSOAP_EXPORT GroupwiseServer : public QObject
 
     bool readAddressBooksSynchronous( const QStringList &addrBookIds );
     bool updateAddressBooks( const QStringList &addrBookIds,
-      const unsigned int startSequenceNumber );
+    const unsigned long startSequenceNumber, const unsigned long lastPORebuildTime );
 
     bool insertAddressee( const QString &addrBookId, KABC::Addressee& );
     bool changeAddressee( const KABC::Addressee& );

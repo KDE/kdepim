@@ -39,7 +39,7 @@
 #define READ_CALENDAR_FOLDER_CHUNK_SIZE 50
 
 GWJob::GWJob( GroupwiseServer *server, struct soap *soap, const QString &url, const KDateTime::Spec & timeSpec, const std::string &session )
-  : mServer( server ), mSoap( soap ), mUrl( url ), mSession( session ), mTimeSpec( timeSpec ), mError( 0 )
+  : mServer( server ), mSoap( soap ), mUrl( url ), mSession( session ), mTimeSpec( timeSpec ), mError( GroupWise::NoError )
 {
 }
 
@@ -656,9 +656,14 @@ void UpdateAddressBooksJob::setAddressBookIds( const QStringList &ids )
   kDebug() <<"ADDR IDS:" << ids.join("," );
 }
 
-void UpdateAddressBooksJob::setStartSequenceNumber( const int startSeqNo )
+void UpdateAddressBooksJob::setStartSequenceNumber( const unsigned long startSeqNo )
 {
   mStartSequenceNumber = startSeqNo;
+}
+
+void UpdateAddressBooksJob::setLastPORebuildTime( const unsigned long lastPORebuildTime)
+{
+  mLastPORebuildTime = lastPORebuildTime;
 }
 
 void UpdateAddressBooksJob::run()
@@ -673,9 +678,10 @@ void UpdateAddressBooksJob::run()
   request.container.append( mAddressBookIds.first().toLatin1() );
   request.deltaInfo = soap_new_ngwt__DeltaInfo( mSoap, -1 );
   request.deltaInfo->count = (int*)soap_malloc( mSoap, sizeof(int) );
-  *( request.deltaInfo->count ) = -1;
+#warning UpdateAddressBooksJob::run() this might need to be called in a loop due to chunking
+  *( request.deltaInfo->count ) = READ_ADDRESS_FOLDER_CHUNK_SIZE;
  /* request.deltaInfo->count = 0;*/
-  request.deltaInfo->lastTimePORebuild = 0;
+  request.deltaInfo->lastTimePORebuild = mLastPORebuildTime;
   request.deltaInfo->firstSequence = (unsigned long*)soap_malloc( mSoap, sizeof(unsigned long) );
   *(request.deltaInfo->firstSequence) = mStartSequenceNumber;
   request.deltaInfo->lastSequence = 0; /*(unsigned long*)soap_malloc( mSoap, sizeof(unsigned long) );*/
@@ -723,6 +729,4 @@ void UpdateAddressBooksJob::run()
     kdDebug() << "The cached address book is too old, we have to refresh the whole thing." << endl;
     mError = GroupWise::RefreshNeeded;
   }
-//   if ( addressBookListResponse.books ) { 
-//     std::vector<class ngwt__AddressBook * > *addressBooks = &addressBookListResponse.books->book;
 }
