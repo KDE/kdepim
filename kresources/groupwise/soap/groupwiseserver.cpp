@@ -748,12 +748,13 @@ std::string GroupwiseServer::getFullIDFor( const QString & gwRecordIDFromIcal )
       std::vector<class ngwt__Folder * >::const_iterator it;
       for ( it = folders->begin(); it != folders->end(); ++it ) {
         ngwt__SystemFolder * fld = dynamic_cast<ngwt__SystemFolder *>( *it );
-        if ( fld && fld->folderType == Calendar )
+        if ( fld && fld->folderType == Calendar ) {
           if ( !fld->id ) {
             kError() <<"No folder id";
           } else {
             calendarFolderID = *fld->id;
           }
+        }
       }
     }
   }
@@ -967,6 +968,28 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
 
   kDebug() <<"GroupwiseServer::changeIncidence()" << incidence->summary();
 
+  bool success = true;
+  bool todoCompletionChanged = false;
+
+  IncidenceConverter converter( mTimeSpec, mSoap );
+  converter.setFrom( mUserName, mUserEmail, mUserUuid );
+
+  incidence->setCustomProperty( "GWRESOURCE", "CONTAINER",
+                                converter.stringToQString( mCalendarFolder ) );
+
+  ngwt__Item *item;
+  if ( incidence->type() == "Event" ) {
+    item = converter.convertToAppointment( static_cast<KCal::Event *>( incidence ) );
+  } else if ( incidence->type() == "Todo" ) {
+    item = converter.convertToTask( static_cast<KCal::Todo *>( incidence ) );
+  } else if ( incidence->type() == "Journal" ) {
+    item = converter.convertToNote( static_cast<KCal::Journal *>( incidence ) );;
+  } else {
+    kError() << "KCal::GroupwiseServer::changeIncidence(): Unknown type: "
+        << incidence->type();
+    return false;
+  }
+
   if ( iAmTheOrganizer( incidence ) )
   {
     if ( incidence->attendeeCount() > 0 ) {
@@ -983,7 +1006,7 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
       return true;
     }
   }
-  else  // If I am not the organizer restrict my changes to accept or decline requests.
+  else  // If I am not the organizer restrict my changes to accept or decline requests or task completion
   {
     // find myself as attendee.
     KCal::Attendee::List attendees = incidence->attendees();
@@ -991,33 +1014,25 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
     for( it = attendees.begin(); it != attendees.end(); ++it ) {
       if ( (*it)->email() == mUserEmail ) {
         if ( (*it)->status() == KCal::Attendee::Accepted )
-          return acceptIncidence( incidence );
+          success &= acceptIncidence( incidence );
         else if ( (*it)->status() == KCal::Attendee::Declined )
-          return declineIncidence( incidence );
+          success &= declineIncidence( incidence );
+        return success;
         break;
       }
     }
+
+      // task completion
+    if ( incidence->type() == "Todo" )
+    {
+      KCal::Todo * todo = static_cast<KCal::Todo *>( incidence );
+      success &= setCompleted( todo );
+      //assume nothing else to change
+      return true;
+    }
+
     // if we are attending, but not the organiser, and we have not accepted or declined, there's nothing else to do.
     return true;
-  }
-
-  IncidenceConverter converter( mTimeSpec, mSoap );
-  converter.setFrom( mUserName, mUserEmail, mUserUuid );
-
-  incidence->setCustomProperty( "GWRESOURCE", "CONTAINER",
-                                converter.stringToQString( mCalendarFolder ) );
-
-  ngwt__Item *item;
-  if ( incidence->type() == "Event" ) {
-    item = converter.convertToAppointment( static_cast<KCal::Event *>( incidence ) );
-  } else if ( incidence->type() == "Todo" ) {
-    item = converter.convertToTask( static_cast<KCal::Todo *>( incidence ) );
-  } else if ( incidence->type() == "Journal" ) {
-    item = converter.convertToNote( static_cast<KCal::Journal *>( incidence ) );;
-  } else {
-    kError() <<"KCal::GroupwiseServer::changeIncidence(): Unknown type:"
-              << incidence->type();
-    return false;
   }
 
   _ngwm__modifyItemRequest request;
@@ -1036,7 +1051,17 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
 
   int result = soap_call___ngw__modifyItemRequest( mSoap, mUrl.toLatin1(), 0,
                                                     &request, &response );
-  return checkResponse( result, response.status );
+
+  success &= checkResponse( result, response.status );
+
+  // task completion after modify
+  if ( incidence->type() == "Todo" )
+  {
+    KCal::Todo * todo = static_cast<KCal::Todo *>( incidence );
+    success &= setCompleted( todo );
+  }
+
+  return success;
 }
 
 bool GroupwiseServer::checkResponse( int result, ngwt__Status *status )
@@ -1119,9 +1144,30 @@ bool GroupwiseServer::retractRequest( KCal::Incidence *incidence, RetractCause c
 
   kDebug() <<"GroupwiseServer::retractRequest():" << incidence->summary();
 
+  IncidenceConverter converter( mTimeSpec, mSoap );
+  converter.setFrom( mUserName, mUserEmail, mUserUuid );
+
+  incidence->setCustomProperty( "GWRESOURCE", "CONTAINER",
+      converter.stringToQString( mCalendarFolder ) );
+
+  ngwt__Item *item;
+  if ( incidence->type() == "Event" ) {
+    item = converter.convertToAppointment( static_cast<KCal::Event *>( incidence ) );
+  } else if ( incidence->type() == "Todo" ) {
+    item = converter.convertToTask( static_cast<KCal::Todo *>( incidence ) );
+  } else if ( incidence->type() == "Journal" ) {
+    item = converter.convertToNote( static_cast<KCal::Journal *>( incidence ) );;
+  } else {
+    kError() << "KCal::GroupwiseServer::addIncidence(): Unknown type: "
+              << incidence->type();
+    return false;
+  }
+
   _ngwm__retractRequest request;
   _ngwm__retractResponse response;
   mSoap->header->ngwt__session = mSession;
+  request.items = soap_new_ngwt__ItemRefList( mSoap, 1 );
+  request.items->item.push_back( *( item->id ) );
   request.comment = 0;
   request.retractCausedByResend = (bool*)soap_malloc( mSoap, 1 );
   request.retractingAllInstances = (bool*)soap_malloc( mSoap, 1 );
@@ -1517,6 +1563,38 @@ bool GroupwiseServer::modifyUserSettings( QMap<QString, QString> & settings  )
 bool GroupwiseServer::iAmTheOrganizer( KCal::Incidence * incidence )
 {
   return ( incidence->organizer().email() == mUserEmail );
+}
+
+bool GroupwiseServer::setCompleted( KCal::Todo * todo )
+{
+  if ( todo )
+  {
+    GWConverter conv( mSoap );
+    QString id = todo->customProperty( "GWRESOURCE", "UID" );
+    ngwt__ItemRefList * items = soap_new_ngwt__ItemRefList( mSoap, 1 );
+    items->item.push_back( *( conv.qStringToString( id ) ) );
+    if ( todo->isCompleted() )
+    {
+      _ngwm__completeRequest request;
+      _ngwm__completeResponse response;
+      mSoap->header->ngwt__session = mSession;
+      request.items = items;
+      int result = soap_call___ngw__completeRequest( mSoap, mUrl.toLatin1(), 0,
+          &request, &response );
+      return checkResponse( result, response.status );
+    }
+    else
+    {
+      _ngwm__uncompleteRequest request;
+      _ngwm__uncompleteResponse response;
+      mSoap->header->ngwt__session = mSession;
+      request.items = items;
+      int result = soap_call___ngw__uncompleteRequest( mSoap, mUrl.toLatin1(), 0,
+          &request, &response );
+      return checkResponse( result, response.status );
+    }
+  }
+  return false;
 }
 
 #include "groupwiseserver.moc"
