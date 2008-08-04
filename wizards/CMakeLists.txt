@@ -19,18 +19,18 @@ kde4_add_kcfg_files(groupwarewizard_SRCS egroupwareconfig.kcfgc groupwiseconfig.
 # todo: more appropriate icon?
 kde4_add_app_icon(groupwarewizard_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/tools-wizard.png")
 
-#kde4_add_executable(groupwarewizard ${groupwarewizard_SRCS})
+kde4_add_executable(groupwarewizard ${groupwarewizard_SRCS})
 
-#target_link_libraries(groupwarewizard  ${KDE4_KDECORE_LIBS} 
-#kabc_xmlrpc kcal_xmlrpc knotes_xmlrpc
-#kabcgroupwise kcalgroupwise
-#kcal_slox kabc_slox
-#kabckolab knoteskolab
-#kcalkolab kresources
-#kabc kcal kdepim ${KDE4_KPIMIDENTITIES_LIBS}
-#)
+target_link_libraries(groupwarewizard  ${KDE4_KDECORE_LIBS} 
+kabc_xmlrpc kcal_xmlrpc knotes_xmlrpc
+kabcgroupwise kcalgroupwise
+kcal_slox kabc_slox
+kabckolab knoteskolab
+kcalkolab kresources
+kabc kcal kdepim ${KDE4_KPIMIDENTITIES_LIBS}
+)
 
-#install(TARGETS groupwarewizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS groupwarewizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### next target ###############
@@ -59,11 +59,11 @@ kde4_add_kcfg_files(groupwisewizard_SRCS groupwiseconfig.kcfgc)
 # todo: more appropriate icon?
 kde4_add_app_icon(groupwisewizard_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/tools-wizard.png")
 
-#kde4_add_executable(groupwisewizard ${groupwisewizard_SRCS})
+kde4_add_executable(groupwisewizard ${groupwisewizard_SRCS})
 
-#target_link_libraries(groupwisewizard ${KDE4_KDECORE_LIBS} kabcgroupwise kcalgroupwise ${KDE4_KCAL_LIBS} kdepim)
+target_link_libraries(groupwisewizard ${KDE4_KDECORE_LIBS} kabcgroupwise kcalgroupwise ${KDE4_KCAL_LIBS} kdepim)
 
-#install(TARGETS groupwisewizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
+install(TARGETS groupwisewizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### next target ###############
