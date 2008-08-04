@@ -131,8 +131,9 @@ else ( ONLY_KLEO )
   )
 
   macro_optional_add_subdirectory(doc)
-  add_subdirectory(kode)
-  macro_optional_add_subdirectory(akonadi)
+  # FIXME disabled for the moment, since they are not needed
+  #add_subdirectory(kode)
+  #macro_optional_add_subdirectory(akonadi)
   add_subdirectory(libkdepim)
   add_subdirectory(libkholidays)
   add_subdirectory(kontactinterfaces)
