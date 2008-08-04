@@ -250,6 +250,10 @@ void TodoConduit::_copy( const HHRecord *from, Record *to  )
 	{
 		pcTo->setCompleted( KDateTime::currentLocalDateTime() );
 	}
+	else if( !hhFrom.getComplete() )
+	{
+		pcTo->setCompleted( false );
+	}
 
 	pcTo->setSummary( hhFrom.getDescription() );
 	pcTo->setDescription( hhFrom.getNote() );
