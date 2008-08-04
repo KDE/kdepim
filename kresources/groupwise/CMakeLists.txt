@@ -3,8 +3,6 @@ add_subdirectory( soap )
 add_subdirectory( kioslave ) 
 
 
-
-
 ########### next target ###############
 ### kcal groupwise shared library
 
