@@ -187,7 +187,7 @@ void CreateDisconnectedImapAccount::apply()
     uid = group.readEntry( "Folder",0 );
   }
   group.writeEntry( "Id", uid );
-  group.writeEntry( "Type", "cachedimap");
+  group.writeEntry( "Type", "DImap");
   switch ( mAuthentication ) {
     case NONE:
       group.writeEntry( "auth", "*" );
@@ -247,6 +247,9 @@ void CreateDisconnectedImapAccount::apply()
     group.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
     group.writeEntry( "store-passwd", true );
   }
+
+  group = c.group( QLatin1String( "AccountWizard" ) );
+  group.writeEntry( QLatin1String( "ShowOnStartup" ), false );
 
   KConfig transport( "mailtransports" );
   group = transport.group( QString("Transport %1").arg( transportId ) );
@@ -323,7 +326,7 @@ void CreateOnlineImapAccount::apply()
   int uid = KRandom::random();
   group.writeEntry( "Folder", uid );
   group.writeEntry( "Id", uid );
-  group.writeEntry( "Type", "imap" );
+  group.writeEntry( "Type", "Imap" );
   group.writeEntry( "auth", "*" );
   group.writeEntry( "Name", mAccountName );
   group.writeEntry( "host", mServer );
@@ -362,6 +365,9 @@ void CreateOnlineImapAccount::apply()
 
   group = c.group( QString("Folder-%1").arg( uid ) );
   group.writeEntry( "isOpen", true );
+
+  group = c.group( QLatin1String( "AccountWizard" ) );
+  group.writeEntry( QLatin1String( "ShowOnStartup" ), false );
 }
 
 bool CreateImapAccount::writeToWallet(const QString & type, int id)
