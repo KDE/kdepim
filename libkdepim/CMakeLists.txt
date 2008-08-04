@@ -99,7 +99,11 @@ target_link_libraries(kdepim oleaut32)
 endif(MINGW)
 
 
-set_target_properties(kdepim PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION})
+set_target_properties(kdepim PROPERTIES
+   VERSION ${GENERIC_LIB_VERSION} 
+   SOVERSION ${GENERIC_LIB_SOVERSION}
+   ${KDE4_DISABLE_PROPERTY_}LINK_INTERFACE_LIBRARIES "kdeui"
+)
 install(TARGETS kdepim  DESTINATION ${LIB_INSTALL_DIR})
 
 
