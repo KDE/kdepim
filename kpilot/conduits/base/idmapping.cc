@@ -148,6 +148,9 @@ bool IDMapping::isValid( const QList<QString>& ids ) const
 	
 	const QMap<QString, QString>* mappings = d->fSource.constMappings();
 	
+	DEBUGKPILOT << ids;
+	DEBUGKPILOT << d->fSource.constMappings()->keys();
+	
 	// If both are empty we have a valid mapping.
 	if( ids.isEmpty() && mappings->isEmpty() )
 	{

@@ -95,6 +95,7 @@ RecordConduit::~RecordConduit()
 	// This assumes that the records are loaded.
 	if( !fMapping.isValid( fBackupDataProxy->ids() ) )
 	{
+		DEBUGKPILOT << "Invalid record mapping. Doing first sync.";
 		addSyncLogEntry( "Invalid record mapping. Doing first sync." );
 		setFirstSync( true );
 	}

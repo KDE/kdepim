@@ -83,7 +83,7 @@ public:
 	/**
 	 * Sets the item of this record.
 	 */
-	void setItem( const Akonadi::Item item );
+	void setItem( const Akonadi::Item& item );
 
 	/**
 	 * Notify the record that syncing is finished so that it can reset flags.

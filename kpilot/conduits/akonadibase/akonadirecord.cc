@@ -47,7 +47,7 @@ AkonadiRecord::AkonadiRecord( const Akonadi::Item& item, const QDateTime& lastSy
 	d->fDeleted = false;
 }
 
-AkonadiRecord::AkonadiRecord( const QString& id )
+AkonadiRecord::AkonadiRecord( const QString& id ) : d( new AkonadiRecordPrivate )
 {
 	d->fTempId = id;
 	d->fDeleted = true;
@@ -112,11 +112,13 @@ void AkonadiRecord::setId( const QString &id )
 	}
 }
 
-void AkonadiRecord::setItem( const Akonadi::Item item )
+void AkonadiRecord::setItem( const Akonadi::Item& item )
 {
 	FUNCTIONSETUP;
 	
 	d->fItem = item;
+	// Make sure that we return the right id after updating the itemobject.
+	setId( QString::number( item.id() ) );
 }
 
 void AkonadiRecord::synced()

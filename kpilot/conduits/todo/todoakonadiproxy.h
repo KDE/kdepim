@@ -26,6 +26,12 @@
 
 #include "akonadidataproxy.h"
 
+#include <kcal/todo.h>
+
+#include <boost/shared_ptr.hpp>
+
+typedef boost::shared_ptr<KCal::Incidence> IncidencePtr;
+
 class TodoAkonadiProxy : public AkonadiDataProxy
 {
 public:

@@ -26,7 +26,12 @@
 
 #include "todoakonadirecord.h"
 
+#include <boost/shared_ptr.hpp>
 #include <kcal/todo.h>
+
+#include "options.h"
+
+typedef boost::shared_ptr<KCal::Incidence> IncidencePtr;
 
 TodoAkonadiRecord::TodoAkonadiRecord( const Akonadi::Item& i, const QDateTime& dt )
 	: AkonadiRecord( i, dt )
@@ -35,6 +40,10 @@ TodoAkonadiRecord::TodoAkonadiRecord( const Akonadi::Item& i, const QDateTime& d
 
 TodoAkonadiRecord::TodoAkonadiRecord( const QString& id ) : AkonadiRecord( id )
 {
+	Akonadi::Item item;
+	item.setPayload<IncidencePtr>( IncidencePtr( new KCal::Todo() ) );
+	item.setMimeType( "application/x-vnd.akonadi.calendar.todo" );
+	setItem( item );
 }
 
 TodoAkonadiRecord::~TodoAkonadiRecord()
@@ -43,33 +52,51 @@ TodoAkonadiRecord::~TodoAkonadiRecord()
 
 void TodoAkonadiRecord::addCategory( const QString& category )
 {
-	KCal::Todo a = item().payload<KCal::Todo>();
-	if( !a.categories().contains( category ) )
+	KCal::Todo* todo = static_cast<KCal::Todo*>( item().payload<IncidencePtr>().get() );
+	
+	if( !todo->categories().contains( category ) )
 	{
-		QStringList categories = a.categories();
+		QStringList categories = todo->categories();
 		categories.append( category );
-		a.setCategories( categories );
+		todo->setCategories( categories );
 	}
 	
-	item().setPayload<KCal::Todo>( a );
+	// This isn't needed when using pointers.
+	// item().setPayload<IncidencePtr>( IncidencePtr( todo ) );
 }
 
 int TodoAkonadiRecord::categoryCount() const
 {
-	KCal::Todo a = item().payload<KCal::Todo>();
-	return a.categories().size();
+	FUNCTIONSETUP;
+	
+	boost::shared_ptr<KCal::Todo> todo
+		 = boost::dynamic_pointer_cast<KCal::Todo, KCal::Incidence>( item().payload<IncidencePtr>() );
+	
+	DEBUGKPILOT << this << " TodoPointer: " <<  todo;
+	
+	return todo->categories().size();
 }
 
 bool TodoAkonadiRecord::containsCategory( const QString& category ) const
 {
-	KCal::Todo a = item().payload<KCal::Todo>();
-	return a.categories().contains( category );
+	FUNCTIONSETUP;
+	
+	boost::shared_ptr<KCal::Todo> todo
+		 = boost::dynamic_pointer_cast<KCal::Todo, KCal::Incidence>( item().payload<IncidencePtr>() );
+	
+	DEBUGKPILOT << todo;
+	return todo->categories().contains( category );
 }
 
 QStringList TodoAkonadiRecord::categories() const
 {
-	KCal::Todo a = item().payload<KCal::Todo>();
-	return a.categories();
+	FUNCTIONSETUP;
+	
+	boost::shared_ptr<KCal::Todo> todo
+		 = boost::dynamic_pointer_cast<KCal::Todo, KCal::Incidence>( item().payload<IncidencePtr>() );
+	
+	DEBUGKPILOT << todo;
+	return todo->categories();
 }
 
 QString TodoAkonadiRecord::toString() const

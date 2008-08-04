@@ -109,17 +109,44 @@ bool TodoConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 	const TodoAkonadiRecord* tar = static_cast<const TodoAkonadiRecord*>( pcRec );
 	const TodoHHRecord* thr = static_cast<const TodoHHRecord*>( hhRec );
 	
-	KCal::Todo pcTodo = tar->item().payload<KCal::Todo>();
+	boost::shared_ptr<KCal::Todo> pcTodo
+		 = boost::dynamic_pointer_cast<KCal::Todo, KCal::Incidence>( tar->item().payload<IncidencePtr>() );
 	PilotTodoEntry hhTodo = thr->todoEntry();
 	
-	bool descriptionEqual = pcTodo.summary() == hhTodo.getDescription();
-	bool noteEqual = pcTodo.description() == hhTodo.getNote();
-	bool categoriesEqual = pcTodo.categories().contains( thr->category() );
-	bool dueDateEqual = pcTodo.dtDue().dateTime() == readTm( hhTodo.getDueDate() );
-	bool completeEqual = pcTodo.isCompleted() == (hhTodo.getComplete() != 0 );
+	bool descriptionEqual = pcTodo->summary() == hhTodo.getDescription();
+	bool noteEqual = pcTodo->description() == hhTodo.getNote();
+	bool categoriesEqual = pcTodo->categories().contains( thr->category() );
+	bool completeEqual = pcTodo->isCompleted() == (hhTodo.getComplete() != 0 );
+	
+	bool dueDateEqual;
+	if( pcTodo->hasDueDate() && !hhTodo.getIndefinite() )
+	{
+		DEBUGKPILOT << "Both have due date";
+		dueDateEqual = pcTodo->dtDue().dateTime() == readTm( hhTodo.getDueDate() );
+	}
+	// This is a bit tricky when getIndefinite() returns true it means that no
+	// due date is set.
+	else if( pcTodo->hasDueDate() != !hhTodo.getIndefinite() )
+	{
+		DEBUGKPILOT << "On has and other doesn't have due date. PC[" 
+			<< pcTodo->hasDueDate() << "], HH[" << !hhTodo.getIndefinite() << ']';
+		dueDateEqual = false;
+	}
+	else
+	{
+		DEBUGKPILOT << "Both don't have duedate.";
+		dueDateEqual = true;
+	}
+	
 	
 	// TODO: Do some mapping for the priority.
 	// TODO: Do some mapping for the completed percentage.
+	
+	DEBUGKPILOT << "descriptionEqual: " << descriptionEqual;
+	DEBUGKPILOT << "noteEqual: " << noteEqual;
+	DEBUGKPILOT << "categoriesEqual: " << categoriesEqual;
+	DEBUGKPILOT << "dueDateEqual: " << dueDateEqual;
+	DEBUGKPILOT << "completeEqual: " << completeEqual;
 	
 	return descriptionEqual
 		&& noteEqual
@@ -132,9 +159,8 @@ Record* TodoConduit::createPCRecord( const HHRecord *hhRec )
 {
 	FUNCTIONSETUP;
 
-	// FIXME: We should use IncidencePtr here. This code doesn't work.
 	Akonadi::Item item;
-	item.setPayload<KCal::Todo>( KCal::Todo() );
+	item.setPayload<IncidencePtr>( IncidencePtr( new KCal::Todo() ) );
 	item.setMimeType( "application/x-vnd.akonadi.calendar.todo" );
 		
 	Record* rec = new TodoAkonadiRecord( item, fMapping.lastSyncedDate() );
@@ -154,18 +180,20 @@ void TodoConduit::_copy( const Record *from, HHRecord *to )
 	const TodoAkonadiRecord* tar = static_cast<const TodoAkonadiRecord*>( from );
 	TodoHHRecord* thr = static_cast<TodoHHRecord*>( to );
 	
-	KCal::Todo pcFrom = tar->item().payload<KCal::Todo>();
+	boost::shared_ptr<KCal::Todo> pcFrom
+		 = boost::dynamic_pointer_cast<KCal::Todo, KCal::Incidence>( tar->item().payload<IncidencePtr>() );
+	
 	PilotTodoEntry hhTo = thr->todoEntry();
 	
 	// set secrecy, start/end times, alarms, recurrence, exceptions, summary and description:
-	if( pcFrom.secrecy() != KCal::Todo::SecrecyPublic )
+	if( pcFrom->secrecy() != KCal::Todo::SecrecyPublic )
 	{
 		hhTo.setSecret( true );
 	}
 
-	if( pcFrom.hasDueDate() )
+	if( pcFrom->hasDueDate() )
 	{
-		struct tm t = writeTm( pcFrom.dtDue().dateTime() );
+		struct tm t = writeTm( pcFrom->dtDue().dateTime() );
 		hhTo.setDueDate( t );
 		hhTo.setIndefinite( 0 );
 	}
@@ -177,13 +205,13 @@ void TodoConduit::_copy( const Record *from, HHRecord *to )
 	// TODO: Map priority of KCal::Todo to PilotTodoEntry
 	// hhTo.setPriority( todo->priority() );
 
-	hhTo.setComplete( pcFrom.isCompleted() );
+	hhTo.setComplete( pcFrom->isCompleted() );
 
 	// what we call summary pilot calls description.
-	hhTo.setDescription( pcFrom.summary() );
+	hhTo.setDescription( pcFrom->summary() );
 
 	// what we call description pilot puts as a separate note
-	hhTo.setNote( pcFrom.description() );
+	hhTo.setNote( pcFrom->description() );
 	
 	// NOTE: copyCategory( from, to ); is called before _copy( from, to ). Make
 	// sure that the TodoHHRecord::setTodoEntry() keeps the information in the
@@ -197,35 +225,38 @@ void TodoConduit::_copy( const HHRecord *from, Record *to  )
 	TodoAkonadiRecord* tar = static_cast<TodoAkonadiRecord*>( to );
 	const TodoHHRecord* thr = static_cast<const TodoHHRecord*>( from );
 	
-	KCal::Todo pcTo = tar->item().payload<KCal::Todo>();
+	boost::shared_ptr<KCal::Todo> pcTo
+		 = boost::dynamic_pointer_cast<KCal::Todo, KCal::Incidence>( tar->item().payload<IncidencePtr>() );
+		 
 	PilotTodoEntry hhFrom = thr->todoEntry();
 	
-	pcTo.setSecrecy( hhFrom.isSecret() ? KCal::Todo::SecrecyPrivate : KCal::Todo::SecrecyPublic );
+	pcTo->setSecrecy( hhFrom.isSecret() ? KCal::Todo::SecrecyPrivate : KCal::Todo::SecrecyPublic );
 
 	if ( hhFrom.getIndefinite() )
 	{
-		pcTo.setHasDueDate( false );
+		pcTo->setHasDueDate( false );
 	}
 	else
 	{
-		pcTo.setDtDue(KDateTime(readTm(hhFrom.getDueDate()), KDateTime::Spec::LocalZone()));
-		pcTo.setHasDueDate( true );
+		pcTo->setDtDue(KDateTime(readTm(hhFrom.getDueDate()), KDateTime::Spec::LocalZone()));
+		pcTo->setHasDueDate( true );
 	}
 
 	// PRIORITY //
 	// TODO: e->setPriority(de->getPriority());
-
-	pcTo.setCompleted( KDateTime() );
-	if ( hhFrom.getComplete() && !pcTo.hasCompletedDate() )
+	
+	if( hhFrom.getComplete() && !pcTo->hasCompletedDate() )
 	{
-		pcTo.setCompleted( KDateTime::currentLocalDateTime() );
+		pcTo->setCompleted( KDateTime::currentLocalDateTime() );
 	}
 
-	pcTo.setSummary( hhFrom.getDescription() );
-	pcTo.setDescription( hhFrom.getNote() );
+	pcTo->setSummary( hhFrom.getDescription() );
+	pcTo->setDescription( hhFrom.getNote() );
 	
-	Akonadi::Item item( tar->item() );
-	item.setPayload<KCal::Todo>( pcTo );
-	
-	tar->setItem( item );
+	// This is not needed as we modified the Todo using a pointer. Uncommenting
+	// this give problems as there are now two IncidencePtr objects managing the
+	// same raw pointer.
+	// Akonadi::Item item( tar->item() );
+	// item.setPayload<IncidencePtr>( IncidencePtr( pcTo ) );
+	// tar->setItem( item );
 }

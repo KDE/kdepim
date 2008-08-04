@@ -79,6 +79,18 @@ inline std::ostream& operator <<(std::ostream &o, const QString &s)
 	}
 }
 
+inline std::ostream& operator <<(std::ostream &o, const QStringList &s)
+{
+	if (s.isEmpty())
+	{
+		return o << "[empty]";
+	}
+	else
+	{
+		return o << '[' << s.join( "," ).toLatin1().constData() << ']';
+	}
+}
+
 class KPILOT_EXPORT KPilotDebugStream
 {
 public:

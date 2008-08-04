@@ -26,8 +26,6 @@
 
 #include "todoakonadiproxy.h"
 
-#include <kcal/todo.h>
-
 #include "todoakonadirecord.h"
 
 TodoAkonadiProxy::TodoAkonadiProxy( const IDMapping& mapping )
@@ -62,5 +60,14 @@ AkonadiRecord* TodoAkonadiProxy::createDeletedAkonadiRecord( const QString& id )
 
 bool TodoAkonadiProxy::hasValidPayload( const Akonadi::Item& i ) const
 {
-	return i.hasPayload<KCal::Todo>();
+	if( i.hasPayload<IncidencePtr>() )
+	{
+		const KCal::Todo* todo = dynamic_cast<const KCal::Todo*>( i.payload<IncidencePtr>().get() );
+		if( todo )
+		{
+			return true;
+		}
+	}
+	
+	return false;
 }
