@@ -1,9 +1,13 @@
 [Desktop Entry]
 Type=Service
 Comment=This conduit syncs the handheld todo database with an Akonadi Todo Collection.
+Comment[nds]=Disse Kanaal synkroniseert de Handreekner-Opgavenlist mit een Akonadi-Opgavenlist.
 Comment[uk]=Цей акведук синхронізує базу даних завдань кишенькового пристрою зі збіркою завдань Akonadi.
+Comment[zh_TW]=此導管將掌上型裝置的待辦事項資料庫與 Akonadi 上的待辦事項同步。
 Name=To-do
+Name[nds]=Opgaav
 Name[uk]=Завдання
+Name[zh_TW]=待辦事項
 
 Implemented=file
 X-KDE-ServiceTypes=KPilotConduit
