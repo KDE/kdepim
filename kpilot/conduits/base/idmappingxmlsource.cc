@@ -40,6 +40,23 @@
 class IDMappingXmlSourcePrivate : public QSharedData
 {
 public:
+	IDMappingXmlSourcePrivate()
+	{
+	}
+	
+	IDMappingXmlSourcePrivate( const IDMappingXmlSourcePrivate& other ) : QSharedData( other )
+	{
+		fPath = other.fPath;
+		fMappings = other.fMappings;
+		fHHCategory = other.fHHCategory;
+		fPCCategories = other.fPCCategories;
+		fArchivedRecords = other.fArchivedRecords;
+		fLastSyncedDateTime = other.fLastSyncedDateTime;
+		fLastSyncedPC = other.fLastSyncedPC;
+		fCurrentHHId = other.fCurrentHHId;
+		fCurrentPCId = other.fCurrentPCId;
+	}
+
 	QString fPath;
 	
 	/**
@@ -58,6 +75,7 @@ public:
 
 IDMappingXmlSource::IDMappingXmlSource() : d( new IDMappingXmlSourcePrivate )
 {
+	FUNCTIONSETUP;
 }
 
 IDMappingXmlSource::IDMappingXmlSource( const QString &userName
@@ -102,6 +120,8 @@ IDMappingXmlSource::IDMappingXmlSource( const QString &userName
 
 IDMappingXmlSource& IDMappingXmlSource::operator=( const IDMappingXmlSource& other )
 {
+	FUNCTIONSETUP;
+
 	if( this != &other )
 	{
 		d = other.d;
