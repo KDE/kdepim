@@ -97,6 +97,7 @@ bool TodoConduit::initDataProxies()
 	fHHDataProxy = new TodoHHDataProxy( fLocalDatabase );
 	fHHDataProxy->loadAllRecords();
 	fBackupDataProxy = new TodoHHDataProxy( fLocalDatabase );
+	fBackupDataProxy->loadAllRecords();
 	fPCDataProxy->loadAllRecords();
 	
 	return true;
