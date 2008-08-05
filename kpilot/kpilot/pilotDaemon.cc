@@ -103,6 +103,9 @@ void PilotDaemonTray::setupWidget()
 	L(NotListening,"kpilot_nosync")
 #undef L
 
+	connect( this, SIGNAL( activated(QSystemTrayIcon::ActivationReason ) )
+		, this, SLOT( slotHandleActivation( QSystemTrayIcon::ActivationReason ) ) );
+
 	slotShowNotListening();
 	QTimer::singleShot(2000,this,SLOT(slotShowNormal()));
 
@@ -172,6 +175,15 @@ void PilotDaemonTray::setupWidget()
 	menu->addMenu( helpMenu->menu() );
 
 	DEBUGKPILOT << "Finished getting icons";
+}
+
+void PilotDaemonTray::slotHandleActivation( QSystemTrayIcon::ActivationReason reason )
+{
+	// Start kpilot when the tray is clicked once.
+	if( reason == QSystemTrayIcon::Trigger )
+	{
+		slotRunKPilot();
+	}
 }
 
 void PilotDaemonTray::slotShowAbout()

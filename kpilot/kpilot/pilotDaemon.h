@@ -81,6 +81,7 @@ protected:
 	QAction *menuDefaultSyncActionItem;
 
 protected slots:
+	void slotHandleActivation( QSystemTrayIcon::ActivationReason reason );
 	void slotShowAbout();
 	void slotShowBusy();
 	void slotShowNormal();
