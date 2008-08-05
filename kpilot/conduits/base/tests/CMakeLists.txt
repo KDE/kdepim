@@ -33,7 +33,7 @@ set(testlib_SRCS
 )
 
 kde4_add_library(testlib SHARED ${testlib_SRCS})
-target_link_libraries(testlib kpilot_conduit_base)
+target_link_libraries(testlib kpilot_conduit_base kpilot ${KDE4_KDEUI_LIBS})
 
 # NOTE: To run individual test with verbose output do ctest -V -R <testname>
 

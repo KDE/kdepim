@@ -23,8 +23,8 @@ kde4_add_ui_files(contacts_SRCS contacts-settings.ui)
 kde4_add_library(kpilot_conduit_contacts SHARED ${contacts_SRCS})
 
 target_link_libraries(kpilot_conduit_contacts
-	kpilot_conduit_base
-	${QT_LIBRARIES}
+	kpilot_conduit_base kpilot
+	${KDE4_KDEUI_LIBS}
 	${KDE4_AKONADI_LIBS}
 	${KDE4_KABC_LIBS}
 )

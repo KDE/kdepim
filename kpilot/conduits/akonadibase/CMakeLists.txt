@@ -15,8 +15,8 @@ kde4_add_ui_files(akonadibase_SRCS akonadi-setup-widget.ui)
 kde4_add_library(kpilot_akonadibase SHARED ${akonadibase_SRCS})
 
 target_link_libraries(kpilot_akonadibase
-	kpilot_conduit_base
-	${QT_LIBRARIES}
+	kpilot_conduit_base kpilot
+	${KDE4_KDEUI_LIBS}
 	${KDE4_AKONADI_LIBS}
 )
 
