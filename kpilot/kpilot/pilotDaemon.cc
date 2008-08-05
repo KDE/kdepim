@@ -273,14 +273,18 @@ void PilotDaemonTray::slotRunKPilot()
 {
 	FUNCTIONSETUP;
 
-	QString kpilotError;
-	QString kpilotPID;
-
-	if (KToolInvocation::startServiceByDesktopName(CSL1("kpilot"),
-			QStringList(), &kpilotError, &kpilotPID
-		))
+	if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.kpilot.kpilot" ) )
 	{
-		WARNINGKPILOT << "Couldn't start KPilot!" << kpilotError;
+		OrgKdeKpilotKpilotInterface* kpilot
+			 = new OrgKdeKpilotKpilotInterface( "org.kde.kpilot.kpilot"
+			                                  , "/KPilot"
+			                                  , QDBusConnection::sessionBus() );
+		kpilot->toggleVisibility();
+	}
+	else
+	{
+		QProcess *p = new QProcess;
+		p->start( "kpilot", QStringList() );
 	}
 }
 
@@ -308,7 +312,7 @@ void PilotDaemonTray::slotRunConfig()
 		DEBUGKPILOT << "kpilot running. telling it to raise/configure.";
 
 		OrgKdeKpilotKpilotInterface * kpilot = new OrgKdeKpilotKpilotInterface("org.kde.kpilot.kpilot", "/KPilot",QDBusConnection::sessionBus());
-		kpilot->raise();
+		kpilot->toggleVisibility();
 		kpilot->configure();
 	}
 	else

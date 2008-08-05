@@ -62,7 +62,7 @@ public:
 	*/
 	virtual void daemonStatus(int);
 	virtual int kpilotStatus() const; ///< Returns KPilotStatus values
-	virtual void raise();
+	virtual void toggleVisibility();
 
 
 

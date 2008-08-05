@@ -105,6 +105,8 @@ public:
 	LogWidget *fLogWidget;
 
 	KPilotStatus fAppStatus;
+	
+	QPoint fLastWindowPos;
 } ;
 
 KPilotInstaller::KPilotInstaller() :
@@ -675,10 +677,21 @@ void KPilotInstaller::componentChanged( KPageWidgetItem *current,
 	}
 }
 
-void KPilotInstaller::raise()
+void KPilotInstaller::toggleVisibility()
 {
-    FUNCTIONSETUP;
-    QWidget::raise();
+	FUNCTIONSETUP;
+	
+	if( isVisible() )
+	{
+		fP->fLastWindowPos = pos();
+		QWidget::setVisible( false );
+	}
+	else
+	{
+		QWidget::setVisible( true );
+		QWidget::move( fP->fLastWindowPos );
+		QWidget::raise();
+	}
 }
 
 void KPilotInstaller::configure()
