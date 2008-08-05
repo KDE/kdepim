@@ -25,7 +25,7 @@ kde4_add_ui_files(keyring_SRCS keyringwidget.ui)
 kde4_add_library(kpilot_conduit_keyring SHARED ${keyring_SRCS})
 
 target_link_libraries(kpilot_conduit_keyring
-	kpilot_conduit_base
+	kpilot_conduit_base kpilot
 	${KDE4_KIO_LIBS}
 	${QT_LIBRARIES}
 	${QCA2_LIBRARIES}

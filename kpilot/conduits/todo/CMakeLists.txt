@@ -22,8 +22,8 @@ kde4_add_kcfg_files( todo_SRCS todosettings.kcfgc )
 kde4_add_library( kpilot_conduit_todo2 SHARED ${todo_SRCS} )
 
 target_link_libraries( kpilot_conduit_todo2
-	${KDE4_KCAL_LIBS}
-	kpilot_akonadibase
+	${KDE4_KCAL_LIBS} ${KDE4_AKONADI_LIBS}
+	kpilot_akonadibase kpilot_conduit_base kpilot
 )
 
 set_target_properties( kpilot_conduit_todo2 PROPERTIES PREFIX "" )
