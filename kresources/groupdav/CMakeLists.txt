@@ -48,7 +48,7 @@ if (NOT MSVC)
 set_target_properties(kcal_groupdav_plugin PROPERTIES OUTPUT_NAME kcal_groupdav)
 endif (NOT MSVC) 
 
-target_link_libraries(kcal_groupdav_plugin  ${KDE4_KDECORE_LIBS} kcal_groupdav ${KDE4_KRESOURCES_LIBS})
+target_link_libraries(kcal_groupdav_plugin  ${KDE4_KDECORE_LIBS} kcal_groupdav ${KDE4_KRESOURCES_LIBS} kgroupwarebase)
 
 install(TARGETS kcal_groupdav_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -64,7 +64,7 @@ if (NOT MSVC)
 set_target_properties(kabc_groupdav_plugin PROPERTIES OUTPUT_NAME kabc_groupdav)
 endif (NOT MSVC) 
 
-target_link_libraries(kabc_groupdav_plugin  ${KDE4_KDECORE_LIBS} kabc_groupdav ${KDE4_KRESOURCES_LIBS})
+target_link_libraries(kabc_groupdav_plugin  ${KDE4_KDECORE_LIBS} kabc_groupdav ${KDE4_KRESOURCES_LIBS} ${KDE4_KCAL_LIBS} kgroupwarebase)
 
 install(TARGETS kabc_groupdav_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
