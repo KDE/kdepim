@@ -1,6 +1,6 @@
-#ifndef TODOAKONADIRECORD_H
-#define TODOAKONADIRECORD_H
-/* todoakonadirecord.h			KPilot
+#ifndef CALENDARAKONADIRECORD_H
+#define CALENDARAKONADIRECORD_H
+/* calendarakonadirecord.h			KPilot
 **
 ** Copyright (C) 2008 by Bertjan Broeksema <b.broeksema@kdemail.net>
 */
@@ -28,7 +28,7 @@
 
 #include "akonadirecord.h"
 
-class TodoAkonadiRecord : public AkonadiRecord
+class CalendarAkonadiRecord : public AkonadiRecord
 {
 public:
 	/**
@@ -36,14 +36,14 @@ public:
 	 * @p lastSync is needed to determine if the record is changed after the last
 	 * sync.
 	 */
-	TodoAkonadiRecord( const Akonadi::Item& i, const QDateTime& lastSync );
+	CalendarAkonadiRecord( const Akonadi::Item& i, const QDateTime& lastSync );
 	
 	/**
 	 * Creates an empty record with given id which is marked for deletion.
 	 */
-	TodoAkonadiRecord( const QString& id );
+	CalendarAkonadiRecord( const QString& id );
 
-	~TodoAkonadiRecord();
+	~CalendarAkonadiRecord();
 
 	void addCategory( const QString& category );
 

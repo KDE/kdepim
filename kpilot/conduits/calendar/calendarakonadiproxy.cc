@@ -1,4 +1,4 @@
-/* todoakonadiproxy.cc			KPilot
+/* CalendarAkonadiProxy.cc			KPilot
 **
 ** Copyright (C) 2008 by Bertjan Broeksema <b.broeksema@kdemail.net>
 */
@@ -28,37 +28,37 @@
 
 #include "calendarakonadirecord.h"
 
-TodoAkonadiProxy::TodoAkonadiProxy( const IDMapping& mapping )
+CalendarAkonadiProxy::CalendarAkonadiProxy( const IDMapping& mapping )
 	: AkonadiDataProxy( mapping )
 {
 }
 
-void TodoAkonadiProxy::addCategory( Record* rec, const QString& category )
+void CalendarAkonadiProxy::addCategory( Record* rec, const QString& category )
 {
-	TodoAkonadiRecord* tar = static_cast<TodoAkonadiRecord*>( rec );
+	CalendarAkonadiRecord* tar = static_cast<CalendarAkonadiRecord*>( rec );
 	tar->addCategory( category );
 }
 
-void TodoAkonadiProxy::setCategory( Record* rec, const QString& category )
+void CalendarAkonadiProxy::setCategory( Record* rec, const QString& category )
 {
-	TodoAkonadiRecord* tar = static_cast<TodoAkonadiRecord*>( rec );
+	CalendarAkonadiRecord* tar = static_cast<CalendarAkonadiRecord*>( rec );
 	tar->addCategory( category );
 }
 
 /* ***** Protected methods ***** */
 
-AkonadiRecord* TodoAkonadiProxy::createAkonadiRecord( const Akonadi::Item& i
+AkonadiRecord* CalendarAkonadiProxy::createAkonadiRecord( const Akonadi::Item& i
 	, const QDateTime& dt ) const
 {
-	return new TodoAkonadiRecord( i, dt );
+	return new CalendarAkonadiRecord( i, dt );
 }
 
-AkonadiRecord* TodoAkonadiProxy::createDeletedAkonadiRecord( const QString& id ) const
+AkonadiRecord* CalendarAkonadiProxy::createDeletedAkonadiRecord( const QString& id ) const
 {
-	return new TodoAkonadiRecord( id );
+	return new CalendarAkonadiRecord( id );
 }
 
-bool TodoAkonadiProxy::hasValidPayload( const Akonadi::Item& i ) const
+bool CalendarAkonadiProxy::hasValidPayload( const Akonadi::Item& i ) const
 {
 	if( i.hasPayload<IncidencePtr>() )
 	{

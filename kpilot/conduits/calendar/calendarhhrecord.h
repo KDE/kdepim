@@ -1,6 +1,6 @@
-#ifndef TODOHHRECORD_H
-#define TODOHHRECORD_H
-/* todohhrecord.h			KPilot
+#ifndef CALENDARHHRECORD_H
+#define CALENDARHHRECORD_H
+/* calendarhhrecord.h			KPilot
 **
 ** Copyright (C) 2008 by Bertjan Broeksema <b.broeksema@kdemail.net>
 */
@@ -30,10 +30,10 @@
 
 #include "pilotTodoEntry.h"
 
-class TodoHHRecord : public HHRecord
+class CalendarHHRecord : public HHRecord
 {
 public:
-	TodoHHRecord( PilotRecord *record, const QString &category );
+	CalendarHHRecord( PilotRecord *record, const QString &category );
 	
 	/* virtual */ bool equal( const HHRecord* other ) const;
 	

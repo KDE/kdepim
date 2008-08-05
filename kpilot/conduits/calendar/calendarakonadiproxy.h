@@ -1,4 +1,4 @@
-/* todoakonadiproxy.h			KPilot
+/* CalendarAkonadiProxy.h			KPilot
 **
 ** Copyright (C) 2008 by Bertjan Broeksema <b.broeksema@kdemail.net>
 */
@@ -32,10 +32,10 @@
 
 typedef boost::shared_ptr<KCal::Incidence> IncidencePtr;
 
-class TodoAkonadiProxy : public AkonadiDataProxy
+class CalendarAkonadiProxy : public AkonadiDataProxy
 {
 public:
-	TodoAkonadiProxy( const IDMapping& mapping );
+	CalendarAkonadiProxy( const IDMapping& mapping );
 
 	/**
 	 * Adds the given category to the record and might do some internal things

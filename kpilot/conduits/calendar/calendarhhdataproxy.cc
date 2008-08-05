@@ -1,4 +1,4 @@
-/* todohhdataproxy.cc			KPilot
+/* calendarhhdataproxy.cc			KPilot
 **
 ** Copyright (C) 2008 by Bertjan Broeksema <b.broeksema@kdemail.net>
 */
@@ -29,23 +29,23 @@
 #include "pilotRecord.h"
 #include "calendarhhrecord.h"
 
-bool TodoHHDataProxy::createDataStore()
+bool CalendarHHDataProxy::createDataStore()
 {
 	// TODO: Implement
 	return false;
 }
 
-TodoHHDataProxy::TodoHHDataProxy( PilotDatabase *db ) : HHDataProxy( db )
+CalendarHHDataProxy::CalendarHHDataProxy( PilotDatabase *db ) : HHDataProxy( db )
 {
 }
 
-HHRecord* TodoHHDataProxy::createHHRecord( PilotRecord *rec )
+HHRecord* CalendarHHDataProxy::createHHRecord( PilotRecord *rec )
 {
 	QString category = fAppInfo->categoryName( rec->category() );
-	return new TodoHHRecord( rec, category );
+	return new CalendarHHRecord( rec, category );
 }
 
-PilotAppInfoBase* TodoHHDataProxy::readAppInfo()
+PilotAppInfoBase* CalendarHHDataProxy::readAppInfo()
 {
 	if( fDatabase && fDatabase->isOpen() )
 	{
@@ -57,7 +57,7 @@ PilotAppInfoBase* TodoHHDataProxy::readAppInfo()
 	return 0;
 }
 
-void TodoHHDataProxy::storeAppInfo()
+void CalendarHHDataProxy::storeAppInfo()
 {
 	// NOTE: This function must be removed.
 }

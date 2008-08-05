@@ -1,4 +1,4 @@
-/* todoakonadirecord.cc			KPilot
+/* calendarakonadirecord.cc			KPilot
 **
 ** Copyright (C) 2008 by Bertjan Broeksema <b.broeksema@kdemail.net>
 */
@@ -33,12 +33,12 @@
 
 typedef boost::shared_ptr<KCal::Incidence> IncidencePtr;
 
-TodoAkonadiRecord::TodoAkonadiRecord( const Akonadi::Item& i, const QDateTime& dt )
+CalendarAkonadiRecord::CalendarAkonadiRecord( const Akonadi::Item& i, const QDateTime& dt )
 	: AkonadiRecord( i, dt )
 {
 }
 
-TodoAkonadiRecord::TodoAkonadiRecord( const QString& id ) : AkonadiRecord( id )
+CalendarAkonadiRecord::CalendarAkonadiRecord( const QString& id ) : AkonadiRecord( id )
 {
 	Akonadi::Item item;
 	item.setPayload<IncidencePtr>( IncidencePtr( new KCal::Todo() ) );
@@ -46,11 +46,11 @@ TodoAkonadiRecord::TodoAkonadiRecord( const QString& id ) : AkonadiRecord( id )
 	setItem( item );
 }
 
-TodoAkonadiRecord::~TodoAkonadiRecord()
+CalendarAkonadiRecord::~CalendarAkonadiRecord()
 {
 }
 
-void TodoAkonadiRecord::addCategory( const QString& category )
+void CalendarAkonadiRecord::addCategory( const QString& category )
 {
 	KCal::Todo* todo = static_cast<KCal::Todo*>( item().payload<IncidencePtr>().get() );
 	
@@ -65,7 +65,7 @@ void TodoAkonadiRecord::addCategory( const QString& category )
 	// item().setPayload<IncidencePtr>( IncidencePtr( todo ) );
 }
 
-int TodoAkonadiRecord::categoryCount() const
+int CalendarAkonadiRecord::categoryCount() const
 {
 	FUNCTIONSETUP;
 	
@@ -77,7 +77,7 @@ int TodoAkonadiRecord::categoryCount() const
 	return todo->categories().size();
 }
 
-bool TodoAkonadiRecord::containsCategory( const QString& category ) const
+bool CalendarAkonadiRecord::containsCategory( const QString& category ) const
 {
 	FUNCTIONSETUP;
 	
@@ -88,7 +88,7 @@ bool TodoAkonadiRecord::containsCategory( const QString& category ) const
 	return todo->categories().contains( category );
 }
 
-QStringList TodoAkonadiRecord::categories() const
+QStringList CalendarAkonadiRecord::categories() const
 {
 	FUNCTIONSETUP;
 	
@@ -99,7 +99,7 @@ QStringList TodoAkonadiRecord::categories() const
 	return todo->categories();
 }
 
-QString TodoAkonadiRecord::toString() const
+QString CalendarAkonadiRecord::toString() const
 {
 	return QString();
 }

@@ -1,6 +1,6 @@
-#ifndef TODOHHDATAPROXY_H
-#define TODOHHDATAPROXY_H
-/* todohhdataproxy.h			KPilot
+#ifndef CALENDARHHDATAPROXY_H
+#define CALENDARHHDATAPROXY_H
+/* calendarhhdataproxy.h			KPilot
 **
 ** Copyright (C) 2008 by Bertjan Broeksema <b.broeksema@kdemail.net>
 */
@@ -28,7 +28,7 @@
 
 #include "hhdataproxy.h"
 
-class TodoHHDataProxy : public HHDataProxy
+class CalendarHHDataProxy : public HHDataProxy
 {
 public:
 	/**
@@ -37,9 +37,9 @@ public:
 	/* virtual */ bool createDataStore();
 	
 	/**
-	 * Creates a new TodoHHDataProxy object.
+	 * Creates a new CalendarHHDataProxy object.
 	 */
-	TodoHHDataProxy( PilotDatabase *db );
+	CalendarHHDataProxy( PilotDatabase *db );
 	
 protected:
 	/** These functions must be implemented by the subclassing conduit **/

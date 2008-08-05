@@ -1,4 +1,4 @@
-/* todohhrecord.cc			KPilot
+/* calendarhhrecord.cc			KPilot
 **
 ** Copyright (C) 2008 by Bertjan Broeksema <b.broeksema@kdemail.net>
 */
@@ -30,16 +30,16 @@
 
 #include "options.h"
 
-TodoHHRecord::TodoHHRecord( PilotRecord *record, const QString &category ) 
+CalendarHHRecord::CalendarHHRecord( PilotRecord *record, const QString &category ) 
 	: HHRecord( record, category )
 {
 }
 
-bool TodoHHRecord::equal( const HHRecord* other ) const
+bool CalendarHHRecord::equal( const HHRecord* other ) const
 {
 	FUNCTIONSETUP;
 	
-	const TodoHHRecord* hhOther = static_cast<const TodoHHRecord*>( other );
+	const CalendarHHRecord* hhOther = static_cast<const CalendarHHRecord*>( other );
 	
 	PilotTodoEntry entryOther = hhOther->todoEntry();
 	PilotTodoEntry entryThis = todoEntry();
@@ -59,7 +59,7 @@ bool TodoHHRecord::equal( const HHRecord* other ) const
 		&& priorityEqual;
 }
 
-void TodoHHRecord::setTodoEntry( const PilotTodoEntry& entry, bool keepPrevCategory )
+void CalendarHHRecord::setTodoEntry( const PilotTodoEntry& entry, bool keepPrevCategory )
 {
 	FUNCTIONSETUP;
 	
@@ -74,7 +74,7 @@ void TodoHHRecord::setTodoEntry( const PilotTodoEntry& entry, bool keepPrevCateg
 	fRecord = record;
 }
 
-PilotTodoEntry TodoHHRecord::todoEntry() const
+PilotTodoEntry CalendarHHRecord::todoEntry() const
 {
 	FUNCTIONSETUP;
 	

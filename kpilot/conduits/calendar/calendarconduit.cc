@@ -86,7 +86,7 @@ bool CalendarConduit::initDataProxies()
 	
 	// At this point we should be able to read the backup and handheld database.
 	// However, it might be that Akonadi is not started.
-	TodoAkonadiProxy* tadp = new TodoAkonadiProxy( fMapping );
+	CalendarAkonadiProxy* tadp = new CalendarAkonadiProxy( fMapping );
 	tadp->setCollectionId( d->fCollectionId );
 	if( tadp->isOpen() )
 	{
@@ -94,9 +94,9 @@ bool CalendarConduit::initDataProxies()
 	}
 	 
 	fPCDataProxy = tadp;
-	fHHDataProxy = new TodoHHDataProxy( fDatabase );
+	fHHDataProxy = new CalendarHHDataProxy( fDatabase );
 	fHHDataProxy->loadAllRecords();
-	fBackupDataProxy = new TodoHHDataProxy( fLocalDatabase );
+	fBackupDataProxy = new CalendarHHDataProxy( fLocalDatabase );
 	fBackupDataProxy->loadAllRecords();
 	fPCDataProxy->loadAllRecords();
 	
@@ -107,8 +107,8 @@ bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 {
 	FUNCTIONSETUP;
 	
-	const TodoAkonadiRecord* tar = static_cast<const TodoAkonadiRecord*>( pcRec );
-	const TodoHHRecord* thr = static_cast<const TodoHHRecord*>( hhRec );
+	const CalendarAkonadiRecord* tar = static_cast<const CalendarAkonadiRecord*>( pcRec );
+	const CalendarHHRecord* thr = static_cast<const CalendarHHRecord*>( hhRec );
 	
 	boost::shared_ptr<KCal::Todo> pcTodo
 		 = boost::dynamic_pointer_cast<KCal::Todo, KCal::Incidence>( tar->item().payload<IncidencePtr>() );
@@ -164,22 +164,22 @@ Record* CalendarConduit::createPCRecord( const HHRecord *hhRec )
 	item.setPayload<IncidencePtr>( IncidencePtr( new KCal::Todo() ) );
 	item.setMimeType( "application/x-vnd.akonadi.calendar.todo" );
 		
-	Record* rec = new TodoAkonadiRecord( item, fMapping.lastSyncedDate() );
+	Record* rec = new CalendarAkonadiRecord( item, fMapping.lastSyncedDate() );
 	copy( hhRec, rec );
 	return rec;
 }
 
 HHRecord* CalendarConduit::createHHRecord( const Record *pcRec )
 {
-	HHRecord* hhRec = new TodoHHRecord( PilotTodoEntry().pack(), "Unfiled" );
+	HHRecord* hhRec = new CalendarHHRecord( PilotTodoEntry().pack(), "Unfiled" );
 	copy( pcRec, hhRec );
 	return hhRec;
 }
 
 void CalendarConduit::_copy( const Record *from, HHRecord *to )
 {
-	const TodoAkonadiRecord* tar = static_cast<const TodoAkonadiRecord*>( from );
-	TodoHHRecord* thr = static_cast<TodoHHRecord*>( to );
+	const CalendarAkonadiRecord* tar = static_cast<const CalendarAkonadiRecord*>( from );
+	CalendarHHRecord* thr = static_cast<CalendarHHRecord*>( to );
 	
 	boost::shared_ptr<KCal::Todo> pcFrom
 		 = boost::dynamic_pointer_cast<KCal::Todo, KCal::Incidence>( tar->item().payload<IncidencePtr>() );
@@ -215,7 +215,7 @@ void CalendarConduit::_copy( const Record *from, HHRecord *to )
 	hhTo.setNote( pcFrom->description() );
 	
 	// NOTE: copyCategory( from, to ); is called before _copy( from, to ). Make
-	// sure that the TodoHHRecord::setTodoEntry() keeps the information in the
+	// sure that the CalendarHHRecord::setTodoEntry() keeps the information in the
 	// pilot record.
 
 	thr->setTodoEntry( hhTo );
@@ -223,8 +223,8 @@ void CalendarConduit::_copy( const Record *from, HHRecord *to )
 
 void CalendarConduit::_copy( const HHRecord *from, Record *to  )
 {
-	TodoAkonadiRecord* tar = static_cast<TodoAkonadiRecord*>( to );
-	const TodoHHRecord* thr = static_cast<const TodoHHRecord*>( from );
+	CalendarAkonadiRecord* tar = static_cast<CalendarAkonadiRecord*>( to );
+	const CalendarHHRecord* thr = static_cast<const CalendarHHRecord*>( from );
 	
 	boost::shared_ptr<KCal::Todo> pcTo
 		 = boost::dynamic_pointer_cast<KCal::Todo, KCal::Incidence>( tar->item().payload<IncidencePtr>() );
