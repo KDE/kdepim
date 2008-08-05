@@ -1284,13 +1284,14 @@ bool kio_sieveProtocol::requestCapabilitiesAfterStartTLS() const
   // Cyrus didn't send CAPABILITIES after STARTTLS until 2.3.11, which is
   // not standard conform, but we need to support that anyway.
   // m_implementation looks like this 'Cyrus timsieved v2.2.12' for Cyrus btw.
-  QRegExp regExp( "Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)", false );
+  QRegExp regExp( "Cyrus\\stimsieved\\sv(\\d+)\\.(\\d+)\\.(\\d+)([-\\w]*)", false );
   if ( regExp.search( m_implementation ) >= 0 ) {
     const int major = regExp.cap( 1 ).toInt();
     const int minor = regExp.cap( 2 ).toInt();
     const int patch = regExp.cap( 3 ).toInt();
-    if ( major < 2 || (major == 2 && (minor < 3 || (major == 3 && patch < 11))) ) {
-      ksDebug() << k_funcinfo << "Enabling compat mode for Cyrus < 2.3.11" << endl;
+    const QString vendor = regExp.cap( 4 );
+    if ( major < 2 || (major == 2 && (minor < 3 || (major == 3 && patch < 11))) || (vendor == "-kolab-nocaps") ) {
+      ksDebug() << k_funcinfo << "Enabling compat mode for Cyrus < 2.3.11 or Cyrus marked as \"kolab-nocaps\"" << endl;
       return true;
     }
   }
