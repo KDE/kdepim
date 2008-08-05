@@ -36,7 +36,7 @@
 
 class IDMappingXmlSourcePrivate;
 
-class KPILOT_EXPORT IDMappingXmlSource : public QXmlDefaultHandler
+class KPILOT_TEST_EXPORT IDMappingXmlSource : public QXmlDefaultHandler
 {
 public:
 	IDMappingXmlSource();

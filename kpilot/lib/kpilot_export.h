@@ -17,6 +17,8 @@
     Boston, MA 02110-1301, USA.
 */
 
+#include "config-kpilot.h"
+
 #ifndef KPILOT_EXPORT_H
 #define KPILOT_EXPORT_H
 
@@ -30,6 +32,14 @@
 # else
    /* We are using this library */
 #  define KPILOT_EXPORT KDE_IMPORT
+# endif
+#endif
+
+#ifndef KPILOT_TEST_EXPORT
+# if defined(HAVE_TESTS_ENABLED)
+#  define KPILOT_TEST_EXPORT KDE_EXPORT
+# else
+#  define KPILOT_TEST_EXPORT KDE_NO_EXPORT
 # endif
 #endif
 

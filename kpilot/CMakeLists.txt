@@ -44,6 +44,9 @@ add_definitions(
 include(ConfigureChecks.cmake)
 
 # now create config headers
+string(COMPARE EQUAL ${KDE4_BUILD_TESTS} "ON" buildtests)
+macro_bool_to_01(buildtests HAVE_TESTS_ENABLED)
+message(STATUS "TEST-TEST-TEST: " ${buildtests} " " ${HAVE_TESTS_ENABLED})
 configure_file(config-kpilot.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kpilot.h )
 
 
@@ -64,7 +67,6 @@ if (PILOTLINK_FOUND)
 	add_subdirectory(kpilot)
 	add_subdirectory(conduits)
 
-	STRING(COMPARE EQUAL ${KDE4_BUILD_TESTS} "ON" buildtests)
 	if (buildtests)
 		MESSAGE(STATUS "KPILOT: Test suite enabled.")
 		enable_testing()

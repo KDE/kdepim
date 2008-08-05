@@ -17,6 +17,7 @@
 #cmakedefine HAVE_STRLCPY
 #cmakedefine HAVE_STRLCAT
 #cmakedefine HAVE_INET_ATON
+#cmakedefine HAVE_TESTS_ENABLED
 
 #if !defined(HAVE_STRLCAT)
 #ifdef __cplusplus
