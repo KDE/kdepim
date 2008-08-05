@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+Comment=This conduit syncs the handheld calendar database with an Akonadi calendar Collection.
+Name=Calendar
+
+Implemented=file
+X-KDE-ServiceTypes=KPilotConduit
+X-KDE-Library=kpilot_conduit_calendar2

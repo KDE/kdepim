@@ -9,6 +9,7 @@ link_libraries( ${QT_QT3SUPPORT_LIBRARY} )
 add_subdirectory(akonadibase)
 add_subdirectory(base)
 add_subdirectory(contacts)
+add_subdirectory(calendar)
 add_subdirectory(memofileconduit)
 add_subdirectory(todo)
 

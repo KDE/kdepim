@@ -1,0 +1,7 @@
+File=calendarsettings.kcfg
+ClassName=CalendarSettings
+Singleton=true
+ItemAccessors=true
+Mutators=true
+GlobalEnums=true
+SetUserTexts=true
