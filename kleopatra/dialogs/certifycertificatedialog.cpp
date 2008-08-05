@@ -94,6 +94,10 @@ void SecretKeysModel::setSecretKeys( const std::vector<Key> & keys ) {
     }
 }
 
+std::vector<GpgME::Key> SecretKeysModel::secretKeys() const {
+    return m_secretKeys;
+}
+
 Key SecretKeysModel::keyFromItem( const QStandardItem * item ) const {
     assert( item );
     const unsigned int idx = item->data( IndexRole ).toUInt();
@@ -170,6 +174,8 @@ void OptionsPage::setCertificatesWithSecretKeys( const std::vector<Key> & keys )
 }
 
 Key OptionsPage::selectedSecretKey() const {
+    if ( m_model.secretKeys().size() == 1 )
+        return m_model.secretKeys().at( 0 );
     const QModelIndexList idxs = m_ui.keyListView->selectionModel()->selectedIndexes();
     assert( idxs.size() <= 1 );
     return idxs.isEmpty() ? Key() : m_model.keyFromIndex( idxs[0] );
