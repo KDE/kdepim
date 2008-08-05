@@ -625,7 +625,7 @@ static QString splitURL( int mRealArgType, const KUrl& url )
     // The format is HOSTNAME:PORT:USERNAME:PASSWORD:BASE_DN
     Q_ASSERT( url.protocol() == "ldap" );
     return urlpart_encode( url.host() ) + ':' +
-      QString::number( url.port() ) + ':' +
+      ( url.port() != -1 ? QString::number( url.port() ) : QString() ) + ':' + // -1 is used for default ports, omit
       urlpart_encode( url.user() ) + ':' +
       urlpart_encode( url.pass() ) + ':' +
       // KUrl automatically encoded the query (e.g. for spaces inside it),
