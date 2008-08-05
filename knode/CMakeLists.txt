@@ -99,7 +99,7 @@ kde4_add_plugin(kcm_knode ${kcm_knode_PART_SRCS})
 
 
 
-kdepim4_link_unique_libraries(kcm_knode  ${KDE4_KDECORE_LIBS} knodecommon )
+kdepim4_link_unique_libraries(kcm_knode  ${KDE4_KDECORE_LIBS} ${KDE4_KUTILS_LIBS} knodecommon )
 
 install(TARGETS kcm_knode  DESTINATION ${PLUGIN_INSTALL_DIR})
 
