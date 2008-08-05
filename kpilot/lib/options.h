@@ -87,7 +87,7 @@ inline std::ostream& operator <<(std::ostream &o, const QStringList &s)
 	}
 	else
 	{
-		return o << '[' << s.join( "," ).toLatin1().constData() << ']';
+		return o << '[' << s.join( QString::fromLatin1( "," ) ).toLatin1().constData() << ']';
 	}
 }
 
