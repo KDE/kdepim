@@ -90,6 +90,28 @@ private:
         ui.charsetLB->setVisible( x509 );
     }
 
+    void updateFileName() {
+        const bool x509 = key.protocol() == CMS;
+        const bool armor = q->useArmor();
+
+        QString fn = q->fileName();
+        if ( fn.isEmpty() )
+            return;
+
+        static const char * extensions[] = {
+            ".gpg", ".asc", ".der", ".pem"
+        };
+        bool found = false;
+        for ( unsigned int i = 0 ; i < sizeof extensions / sizeof *extensions ; ++i )
+            if ( fn.endsWith( extensions[i], Qt::CaseInsensitive ) ) {
+                fn.chop( 4 );
+                found = true;
+                break;
+            }
+        if ( found )
+            q->setFileName( fn + extensions[2*x509+armor] );
+    }
+
     void updateLabel() {
         ui.descriptionLB->setText( i18nc("@info",
                                          "Please select export options for %1:",
@@ -106,6 +128,7 @@ private:
 
             outputFileFR->setExistingOnly( false );
             outputFileFR->setFilter( QDir::Files );
+            outputFileFR->setNameFilter( i18n("Secret Key Files (*.pem, *.der, *.gpg, *.asc)") );
 
             for ( unsigned int i = 0 ; i < numCharsets ; ++i )
                 charsetCB->addItem( QString::fromLatin1( charsets[i] ) );
@@ -168,6 +191,7 @@ bool ExportSecretKeyDialog::useArmor() const {
 }
 
 void ExportSecretKeyDialog::accept() {
+    d->updateFileName();
     const QString fn = fileName();
     if ( fn.isEmpty() ) {
         KMessageBox::information( this, i18nc("@info",
