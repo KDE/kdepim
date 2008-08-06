@@ -26,6 +26,7 @@
 
 #include "calendarhhdataproxy.h"
 
+#include "pilotDateEntry.h"
 #include "pilotRecord.h"
 #include "calendarhhrecord.h"
 
@@ -49,7 +50,7 @@ PilotAppInfoBase* CalendarHHDataProxy::readAppInfo()
 {
 	if( fDatabase && fDatabase->isOpen() )
 	{
-		PilotToDoInfo* appInfo = new PilotToDoInfo( fDatabase );
+		PilotDateInfo* appInfo = new PilotDateInfo( fDatabase );
 		
 		return appInfo;
 	}

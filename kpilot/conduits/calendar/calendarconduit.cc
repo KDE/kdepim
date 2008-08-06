@@ -50,7 +50,7 @@ public:
 };
 
 CalendarConduit::CalendarConduit( KPilotLink *o, const QVariantList &a )
-	: RecordConduit( o, a, CSL1( "ToDoDB" ), CSL1( "To-do Conduit" ) )
+	: RecordConduit( o, a, CSL1( "DatebookDB" ), CSL1( "Calendar Conduit" ) )
 	, d( new CalendarConduit::Private )
 {
 }
@@ -88,10 +88,6 @@ bool CalendarConduit::initDataProxies()
 	// However, it might be that Akonadi is not started.
 	CalendarAkonadiProxy* tadp = new CalendarAkonadiProxy( fMapping );
 	tadp->setCollectionId( d->fCollectionId );
-	if( tadp->isOpen() )
-	{
-		tadp->loadAllRecords();
-	}
 	 
 	fPCDataProxy = tadp;
 	fHHDataProxy = new CalendarHHDataProxy( fDatabase );
@@ -106,7 +102,9 @@ bool CalendarConduit::initDataProxies()
 bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 {
 	FUNCTIONSETUP;
-	
+	// TODO: Implement
+	return false;
+	/*
 	const CalendarAkonadiRecord* tar = static_cast<const CalendarAkonadiRecord*>( pcRec );
 	const CalendarHHRecord* thr = static_cast<const CalendarHHRecord*>( hhRec );
 	
@@ -154,30 +152,41 @@ bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 		&& categoriesEqual
 		&& dueDateEqual
 		&& completeEqual;
+	*/
 }
 
 Record* CalendarConduit::createPCRecord( const HHRecord *hhRec )
 {
 	FUNCTIONSETUP;
-
+	// TODO: Implement
+/*
 	Akonadi::Item item;
 	item.setPayload<IncidencePtr>( IncidencePtr( new KCal::Todo() ) );
-	item.setMimeType( "application/x-vnd.akonadi.calendar.todo" );
+	item.setMimeType( "application/x-vnd.akonadi.calendar.event" );
 		
 	Record* rec = new CalendarAkonadiRecord( item, fMapping.lastSyncedDate() );
 	copy( hhRec, rec );
 	return rec;
+	*/
+	return 0L;
 }
 
 HHRecord* CalendarConduit::createHHRecord( const Record *pcRec )
 {
+	FUNCTIONSETUP;
+	// TODO: Implement
+	/*
 	HHRecord* hhRec = new CalendarHHRecord( PilotTodoEntry().pack(), "Unfiled" );
 	copy( pcRec, hhRec );
 	return hhRec;
+	*/
+	return 0L;
 }
 
 void CalendarConduit::_copy( const Record *from, HHRecord *to )
 {
+	// TODO: Implement
+	/*
 	const CalendarAkonadiRecord* tar = static_cast<const CalendarAkonadiRecord*>( from );
 	CalendarHHRecord* thr = static_cast<CalendarHHRecord*>( to );
 	
@@ -219,10 +228,13 @@ void CalendarConduit::_copy( const Record *from, HHRecord *to )
 	// pilot record.
 
 	thr->setTodoEntry( hhTo );
+	*/
 }
 
 void CalendarConduit::_copy( const HHRecord *from, Record *to  )
 {
+	// TODO: Implement
+	/*
 	CalendarAkonadiRecord* tar = static_cast<CalendarAkonadiRecord*>( to );
 	const CalendarHHRecord* thr = static_cast<const CalendarHHRecord*>( from );
 	
@@ -264,4 +276,5 @@ void CalendarConduit::_copy( const HHRecord *from, Record *to  )
 	// Akonadi::Item item( tar->item() );
 	// item.setPayload<IncidencePtr>( IncidencePtr( pcTo ) );
 	// tar->setItem( item );
+	*/
 }

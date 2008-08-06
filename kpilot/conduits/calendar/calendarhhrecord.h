@@ -28,7 +28,7 @@
 
 #include "hhrecord.h"
 
-#include "pilotTodoEntry.h"
+#include "pilotDateEntry.h"
 
 class CalendarHHRecord : public HHRecord
 {
@@ -42,9 +42,9 @@ public:
 	 * is true then the category that this record had before the call we be saved.
 	 * otherwise it will be equal to wathever is set in entry.
 	 */
-	void setTodoEntry( const PilotTodoEntry& entry, bool keepPrevCategory = true );
+	void setDateEntry( const PilotDateEntry& entry, bool keepPrevCategory = true );
 	
-	PilotTodoEntry todoEntry() const;
+	PilotDateEntry dateEntry() const;
 };
 
 #endif
