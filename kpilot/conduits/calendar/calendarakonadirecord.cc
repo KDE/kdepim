@@ -27,7 +27,7 @@
 #include "calendarakonadirecord.h"
 
 #include <boost/shared_ptr.hpp>
-#include <kcal/todo.h>
+#include <kcal/event.h>
 
 #include "options.h"
 
@@ -41,8 +41,8 @@ CalendarAkonadiRecord::CalendarAkonadiRecord( const Akonadi::Item& i, const QDat
 CalendarAkonadiRecord::CalendarAkonadiRecord( const QString& id ) : AkonadiRecord( id )
 {
 	Akonadi::Item item;
-	item.setPayload<IncidencePtr>( IncidencePtr( new KCal::Todo() ) );
-	item.setMimeType( "application/x-vnd.akonadi.calendar.todo" );
+	item.setPayload<IncidencePtr>( IncidencePtr( new KCal::Event() ) );
+	item.setMimeType( "application/x-vnd.akonadi.calendar.event" );
 	setItem( item );
 }
 
@@ -52,51 +52,61 @@ CalendarAkonadiRecord::~CalendarAkonadiRecord()
 
 void CalendarAkonadiRecord::addCategory( const QString& category )
 {
-	KCal::Todo* todo = static_cast<KCal::Todo*>( item().payload<IncidencePtr>().get() );
+	boost::shared_ptr<KCal::Event> event
+		= boost::dynamic_pointer_cast<KCal::Event, KCal::Incidence>
+			(
+				item().payload<IncidencePtr>()
+			);
 	
-	if( !todo->categories().contains( category ) )
+	if( !event->categories().contains( category ) )
 	{
-		QStringList categories = todo->categories();
+		QStringList categories = event->categories();
 		categories.append( category );
-		todo->setCategories( categories );
+		event->setCategories( categories );
 	}
 	
-	// This isn't needed when using pointers.
-	// item().setPayload<IncidencePtr>( IncidencePtr( todo ) );
+	// This isn't needed when using pointers. And it is really a bad idea to have
+	// another IncidencePtr handling the same raw pointer.
+	// item().setPayload<IncidencePtr>( IncidencePtr( event ) );
 }
 
 int CalendarAkonadiRecord::categoryCount() const
 {
 	FUNCTIONSETUP;
 	
-	boost::shared_ptr<KCal::Todo> todo
-		 = boost::dynamic_pointer_cast<KCal::Todo, KCal::Incidence>( item().payload<IncidencePtr>() );
+	boost::shared_ptr<KCal::Event> event
+		= boost::dynamic_pointer_cast<KCal::Event, KCal::Incidence>
+			(
+				item().payload<IncidencePtr>() 
+			);
 	
-	DEBUGKPILOT << this << " TodoPointer: " <<  todo;
-	
-	return todo->categories().size();
+	return event->categories().size();
 }
 
 bool CalendarAkonadiRecord::containsCategory( const QString& category ) const
 {
 	FUNCTIONSETUP;
 	
-	boost::shared_ptr<KCal::Todo> todo
-		 = boost::dynamic_pointer_cast<KCal::Todo, KCal::Incidence>( item().payload<IncidencePtr>() );
+	boost::shared_ptr<KCal::Event> event
+		= boost::dynamic_pointer_cast<KCal::Event, KCal::Incidence>
+			(
+				item().payload<IncidencePtr>()
+			);
 	
-	DEBUGKPILOT << todo;
-	return todo->categories().contains( category );
+	return event->categories().contains( category );
 }
 
 QStringList CalendarAkonadiRecord::categories() const
 {
 	FUNCTIONSETUP;
 	
-	boost::shared_ptr<KCal::Todo> todo
-		 = boost::dynamic_pointer_cast<KCal::Todo, KCal::Incidence>( item().payload<IncidencePtr>() );
+	boost::shared_ptr<KCal::Event> event
+		= boost::dynamic_pointer_cast<KCal::Event, KCal::Incidence>
+			(
+				item().payload<IncidencePtr>()
+			);
 	
-	DEBUGKPILOT << todo;
-	return todo->categories();
+	return event->categories();
 }
 
 QString CalendarAkonadiRecord::toString() const
