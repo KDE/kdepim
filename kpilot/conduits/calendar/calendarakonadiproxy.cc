@@ -26,6 +26,8 @@
 
 #include "calendarakonadiproxy.h"
 
+#include <kcal/event.h>
+
 #include "calendarakonadirecord.h"
 
 CalendarAkonadiProxy::CalendarAkonadiProxy( const IDMapping& mapping )
@@ -62,8 +64,13 @@ bool CalendarAkonadiProxy::hasValidPayload( const Akonadi::Item& i ) const
 {
 	if( i.hasPayload<IncidencePtr>() )
 	{
-		const KCal::Todo* todo = dynamic_cast<const KCal::Todo*>( i.payload<IncidencePtr>().get() );
-		if( todo )
+		boost::shared_ptr<KCal::Event> event
+			= boost::dynamic_pointer_cast<KCal::Event, KCal::Incidence>
+			(
+				i.payload<IncidencePtr>()
+			);
+			
+		if( event )
 		{
 			return true;
 		}
