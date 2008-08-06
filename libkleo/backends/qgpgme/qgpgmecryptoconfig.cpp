@@ -605,7 +605,14 @@ static KUrl parseURL( int mRealArgType, const QString& str )
       KUrl url;
       url.setProtocol( "ldap" );
       url.setHost( urlpart_decode( *it++ ) );
-      url.setPort( (*it++).toInt() );
+
+      bool ok;
+      const int port = (*it++).toInt( &ok );
+      if ( ok )
+          url.setPort( port );
+      else if ( !it->isEmpty() )
+          kWarning(5150) <<"parseURL: malformed LDAP server port, ignoring: \"" << *it << "\"";
+
       url.setPath( "/" ); // workaround KUrl parsing bug
       url.setUser( urlpart_decode( *it++ ) );
       url.setPass( urlpart_decode( *it++ ) );
