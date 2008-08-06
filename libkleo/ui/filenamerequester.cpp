@@ -64,6 +64,7 @@ private:
     QToolButton  button;
     QHBoxLayout hlay;
 
+    QString nameFilter;
     bool existingOnly;
 };
 
@@ -74,6 +75,7 @@ FileNameRequester::Private::Private( FileNameRequester * qq )
       lineedit( q ),
       button( q ),
       hlay( q ),
+      nameFilter(),
       existingOnly( true )
 {
     dirmodel.setObjectName( "dirmodel" );
@@ -137,6 +139,14 @@ QDir::Filters FileNameRequester::filter() const {
     return d->dirmodel.filter();
 }
 
+void FileNameRequester::setNameFilter( const QString & nameFilter ) {
+    d->nameFilter = nameFilter;
+}
+
+QString FileNameRequester::nameFilter() const {
+    return d->nameFilter;
+}
+
 void FileNameRequester::Private::slotButtonClicked() {
     const QString fileName = q->requestFileName();
     if ( !fileName.isEmpty() )
@@ -148,9 +158,9 @@ QString FileNameRequester::requestFileName() {
     if ( (filters & QDir::Dirs) && !(filters & QDir::Files) )
         return QFileDialog::getExistingDirectory( this );
     else if ( d->existingOnly )
-        return QFileDialog::getOpenFileName( this );
+        return QFileDialog::getOpenFileName( this, QString(), QString(), d->nameFilter );
     else
-        return QFileDialog::getSaveFileName( this );
+        return QFileDialog::getSaveFileName( this, QString(), QString(), d->nameFilter );
 }
       
 #include "moc_filenamerequester.cpp"
