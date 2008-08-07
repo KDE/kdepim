@@ -105,8 +105,6 @@ bool CalendarConduit::initDataProxies()
 bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
-	return false;
 	
 	const CalendarAkonadiRecord* tar = static_cast<const CalendarAkonadiRecord*>( pcRec );
 	const CalendarHHRecord* thr = static_cast<const CalendarHHRecord*>( hhRec );
@@ -115,12 +113,15 @@ bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 	PilotDateEntry hhEntry = thr->dateEntry();
 
 	// A TEST define which immediatly returns when a TEST fails.
-#define TEST( a, b, c ) { if( a != b ) { DEBUGKPILOT << CSL1( c ) << " not equal."; return false; } }
-#define TEST1( a, b ) { if( !a ) { DEBUGKPILOT << CSL1( b ) << " was false."; return false; } }
+#define TEST( a, b, c ) { if( a != b ) { WARNINGKPILOT << CSL1( c ) << " not equal."; return false; } }
+#define TEST1( a, b ) { if( !a ) { WARNINGKPILOT << CSL1( b ) << " was false."; return false; } }
 	
 	TEST( pcEvent->summary(), hhEntry.getDescription(), "Description" )
 	TEST( pcEvent->description(), hhEntry.getNote(), "Note" )
-	TEST1( pcEvent->categories().contains( thr->category() ), "Category" )
+	if( thr->category() != "Unfiled" )
+	{
+		TEST1( pcEvent->categories().contains( thr->category() ), "Category" )
+	}
 	TEST( pcEvent->allDay(), hhEntry.doesFloat() , "AllDay" )
 	
 	// Check start and end times only when the event does not float.
@@ -130,8 +131,15 @@ bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 		TEST( pcEvent->dtStart().dateTime(), hhEntry.dtStart(), "dtStart" )
 		TEST( pcEvent->dtEnd().dateTime(), hhEntry.dtEnd(), "dtEnd" )
 	}
+	else
+	{
+		DEBUGKPILOT << "ENTRY FLOATS:" << pcEvent->dtStart().dateTime().toString()
+			<< hhEntry.dtStart().toString();
+		// The records should be on the same date.
+		TEST( pcEvent->dtStart().dateTime(), hhEntry.dtStart(), "DtStart" )
+	}
 	
-	TEST( !pcEvent->isAlarmEnabled(), hhEntry.isAlarmEnabled(), "HasAlarm" )
+	TEST( pcEvent->isAlarmEnabled(), hhEntry.isAlarmEnabled(), "HasAlarm" )
 	/* TODO: Find out some way to check this, but do we really want to test for this?
 	if( hhEntry.isAlarmEnabled() )
 	{
@@ -154,7 +162,18 @@ bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 		{
 			// Both entries seem to repeat and end the repetition, so lets see if the
 			// end time is equal.
-			TEST( recurrence->endDateTime().dateTime(), hhEntry.dtRepeatEnd(), "dtRepeatEnd" )
+			if( hhEntry.isMultiDay() )
+			{
+				KDateTime hhDt( readTm( hhEntry.getRepeatEnd() ), KDateTime::Spec::LocalZone() );
+				KDateTime pcDt = pcEvent->dtEnd();
+				TEST( hhDt, pcDt, "DtRepeatEnd" );
+			}
+			else
+			{
+				KDateTime hhDt( readTm( hhEntry.getEventEnd() ), KDateTime::Spec::LocalZone() );
+				KDateTime pcDt = pcEvent->dtEnd();
+				TEST( hhDt, pcDt, "DtEventEnd" );
+			}
 		}
 		
 		if( hhEntry.getRepeatType() == repeatMonthlyByDay )
@@ -173,12 +192,14 @@ bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 			QBitArray eventDays = recurrence->days();
 			const int* entryDays = hhEntry.getRepeatDays();
 			
-			for( int i = 0; i < 7; i++ )
+			TEST( ( entryDays[0] != 0 ), eventDays.at( 6 ), "RepeatDays" )
+			
+			for( int i = 1; i < 7; i++ )
 			{
 				// NOTE: Does this work? I'm not sure if the days item is set to 0 if the
 				// alarm is not set for that day. And I also don't know if they can be
 				// expected to be exactly equal when the alarm is set for a specific day.
-				TEST( (entryDays[i] == 0), eventDays.at( i ), "RepeatDays" )
+				TEST( (entryDays[i] != 0), eventDays.at( i - 1 ), "RepeatDays" )
 			}
 		}
 		

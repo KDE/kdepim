@@ -156,5 +156,9 @@ void CalendarHHRecord::setDateEntry( const PilotDateEntry& entry, bool keepPrevC
 
 QString CalendarHHRecord::toString() const
 {
-	return CSL1( "IMPLEMENT: conduits/calendar/calendarhhrecord.cc::toString()" );
+	PilotDateEntry de = dateEntry();
+	QString rs = id();
+	rs += CSL1( ":" ) + de.getDescription();
+	rs += CSL1( ":" ) + readTm( de.getEventStart() ).toString();
+	return rs;
 }
