@@ -24,7 +24,7 @@
 #include <kdemacros.h>
 
 #ifndef KCAL_GROUPWISE_EXPORT
-# if defined(MAKE_KCAL_GROUPWISE_LIB)
+# if defined(MAKE_KCALGROUPWISE_LIB)
    /* We are building this library */ 
 #  define KCAL_GROUPWISE_EXPORT KDE_EXPORT
 # else
@@ -34,7 +34,7 @@
 #endif
 
 #ifndef KABC_GROUPWISE_EXPORT
-# if defined(MAKE_KABC_GROUPWISE_LIB)
+# if defined(MAKE_KABCGROUPWISE_LIB)
    /* We are building this library */
 #  define KABC_GROUPWISE_EXPORT KDE_EXPORT
 # else
