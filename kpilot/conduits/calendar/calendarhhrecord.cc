@@ -35,6 +35,13 @@ CalendarHHRecord::CalendarHHRecord( PilotRecord *record, const QString &category
 {
 }
 
+PilotDateEntry CalendarHHRecord::dateEntry() const
+{
+	FUNCTIONSETUP;
+	
+	return PilotDateEntry( fRecord );
+}
+
 bool CalendarHHRecord::equal( const HHRecord* other ) const
 {
 	FUNCTIONSETUP;
@@ -147,9 +154,7 @@ void CalendarHHRecord::setDateEntry( const PilotDateEntry& entry, bool keepPrevC
 	fRecord = record;
 }
 
-PilotDateEntry CalendarHHRecord::dateEntry() const
+QString CalendarHHRecord::toString() const
 {
-	FUNCTIONSETUP;
-	
-	return PilotDateEntry( fRecord );
+	return CSL1( "IMPLEMENT: conduits/calendar/calendarhhrecord.cc::toString()" );
 }

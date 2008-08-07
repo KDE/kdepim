@@ -28,6 +28,20 @@
 
 #include "recordconduit.h"
 
+namespace boost
+{
+	template<class T> class shared_ptr;
+}
+
+namespace KCal
+{
+	class Event;
+}
+
+class PilotDateEntry;
+
+typedef boost::shared_ptr<KCal::Event> EventPtr;
+
 class CalendarConduit : public RecordConduit
 {
 public:
@@ -78,6 +92,23 @@ public:
 	 * implementing class can do whatever it wants to do for test purposes.
 	 */
 	/* virtual */ void test() {}
+
+private:
+	void setAlarms( PilotDateEntry* de, const EventPtr& e ) const;
+	
+	void setAlarms( EventPtr e, const PilotDateEntry& de ) const;
+
+	void setExceptions( PilotDateEntry* de, const EventPtr& e ) const;
+	
+	void setExceptions( EventPtr e, const PilotDateEntry& de ) const;
+
+	void setRecurrence( PilotDateEntry* de, const EventPtr& e ) const;
+	
+	void setRecurrence( EventPtr e, const PilotDateEntry& de ) const;
+	
+	void setStartEndTimes( PilotDateEntry* de, const EventPtr& e ) const;
+	
+	void setStartEndTimes( EventPtr e, const PilotDateEntry& de ) const;
 
 private:
 	class Private;

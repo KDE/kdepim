@@ -27,16 +27,19 @@
 #include "calendarconduit.h"
 
 #include <akonadi/collection.h>
-#include <kcal/todo.h>
+#include <kcal/alarm.h>
+#include <kcal/event.h>
+#include <kcal/recurrence.h>
 
 #include "idmapping.h"
 #include "options.h"
-#include "pilotTodoEntry.h"
 #include "calendarakonadiproxy.h"
 #include "calendarakonadirecord.h"
 #include "calendarhhrecord.h"
 #include "calendarhhdataproxy.h"
 #include "calendarsettings.h"
+
+#define boost_cast( a ) boost::dynamic_pointer_cast<KCal::Event, KCal::Incidence>( a )
 
 class CalendarConduit::Private
 {
@@ -104,177 +107,622 @@ bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 	FUNCTIONSETUP;
 	// TODO: Implement
 	return false;
-	/*
+	
 	const CalendarAkonadiRecord* tar = static_cast<const CalendarAkonadiRecord*>( pcRec );
 	const CalendarHHRecord* thr = static_cast<const CalendarHHRecord*>( hhRec );
 	
-	boost::shared_ptr<KCal::Todo> pcTodo
-		 = boost::dynamic_pointer_cast<KCal::Todo, KCal::Incidence>( tar->item().payload<IncidencePtr>() );
-	PilotTodoEntry hhTodo = thr->todoEntry();
+	EventPtr pcEvent = boost_cast( tar->item().payload<IncidencePtr>() );
+	PilotDateEntry hhEntry = thr->dateEntry();
+
+	// A TEST define which immediatly returns when a TEST fails.
+#define TEST( a, b, c ) { if( a != b ) { DEBUGKPILOT << CSL1( c ) << " not equal."; return false; } }
+#define TEST1( a, b ) { if( !a ) { DEBUGKPILOT << CSL1( b ) << " was false."; return false; } }
 	
-	bool descriptionEqual = pcTodo->summary() == hhTodo.getDescription();
-	bool noteEqual = pcTodo->description() == hhTodo.getNote();
-	bool categoriesEqual = pcTodo->categories().contains( thr->category() );
-	bool completeEqual = pcTodo->isCompleted() == (hhTodo.getComplete() != 0 );
+	TEST( pcEvent->summary(), hhEntry.getDescription(), "Description" )
+	TEST( pcEvent->description(), hhEntry.getNote(), "Note" )
+	TEST1( pcEvent->categories().contains( thr->category() ), "Category" )
+	TEST( pcEvent->allDay(), hhEntry.doesFloat() , "AllDay" )
 	
-	bool dueDateEqual;
-	if( pcTodo->hasDueDate() && !hhTodo.getIndefinite() )
+	// Check start and end times only when the event does not float.
+	if( !hhEntry.doesFloat() )
 	{
-		DEBUGKPILOT << "Both have due date";
-		dueDateEqual = pcTodo->dtDue().dateTime() == readTm( hhTodo.getDueDate() );
-	}
-	// This is a bit tricky when getIndefinite() returns true it means that no
-	// due date is set.
-	else if( pcTodo->hasDueDate() != !hhTodo.getIndefinite() )
-	{
-		DEBUGKPILOT << "On has and other doesn't have due date. PC[" 
-			<< pcTodo->hasDueDate() << "], HH[" << !hhTodo.getIndefinite() << ']';
-		dueDateEqual = false;
-	}
-	else
-	{
-		DEBUGKPILOT << "Both don't have duedate.";
-		dueDateEqual = true;
+		// Both entries do not float, so lets see if the start and end times are equal.
+		TEST( pcEvent->dtStart().dateTime(), hhEntry.dtStart(), "dtStart" )
+		TEST( pcEvent->dtEnd().dateTime(), hhEntry.dtEnd(), "dtEnd" )
 	}
 	
-	
-	// TODO: Do some mapping for the priority.
-	// TODO: Do some mapping for the completed percentage.
-	
-	DEBUGKPILOT << "descriptionEqual: " << descriptionEqual;
-	DEBUGKPILOT << "noteEqual: " << noteEqual;
-	DEBUGKPILOT << "categoriesEqual: " << categoriesEqual;
-	DEBUGKPILOT << "dueDateEqual: " << dueDateEqual;
-	DEBUGKPILOT << "completeEqual: " << completeEqual;
-	
-	return descriptionEqual
-		&& noteEqual
-		&& categoriesEqual
-		&& dueDateEqual
-		&& completeEqual;
+	TEST( !pcEvent->isAlarmEnabled(), hhEntry.isAlarmEnabled(), "HasAlarm" )
+	/* TODO: Find out some way to check this, but do we really want to test for this?
+	if( hhEntry.isAlarmEnabled() )
+	{
+		// Both entries have alarms enabled, lets see if they are set on the same time.
+		TEST1( entryOther.dtAlarm(), entryThis.dtAlarm(), "dtAlarm" )
+	}
 	*/
+	
+	TEST( pcEvent->recurs(), (hhEntry.getRepeatType() != repeatNone), "Recurs" )
+	
+	if( pcEvent->recurs() )
+	{
+		KCal::Recurrence* recurrence = pcEvent->recurrence();
+		
+		// Both have the same repeat type set, lets see if the repeat settings are
+		// also equal then.
+		TEST( (recurrence->duration() == -1), hhEntry.getRepeatForever(), "DurationForever" )
+		
+		if( !hhEntry.getRepeatForever() )
+		{
+			// Both entries seem to repeat and end the repetition, so lets see if the
+			// end time is equal.
+			TEST( recurrence->endDateTime().dateTime(), hhEntry.dtRepeatEnd(), "dtRepeatEnd" )
+		}
+		
+		if( hhEntry.getRepeatType() == repeatMonthlyByDay )
+		{
+			TEST1( pcEvent->recurrenceType() == KCal::Recurrence::rMonthlyDay, "RepeatMonthlyByDay" )
+			
+			// TODO: Check the actual day
+			//TEST( entryOther.getRepeatDay(), entryThis.getRepeatDay(), "getRepeatDay" )
+		}
+		
+		if( hhEntry.getRepeatType() == repeatWeekly )
+		{
+			TEST1( pcEvent->recurrenceType() == KCal::Recurrence::rWeekly, "RepeatWeekly" )
+			// When repeat type is weekly we should check if the days are the same for
+			// both entries.
+			QBitArray eventDays = recurrence->days();
+			const int* entryDays = hhEntry.getRepeatDays();
+			
+			for( int i = 0; i < 7; i++ )
+			{
+				// NOTE: Does this work? I'm not sure if the days item is set to 0 if the
+				// alarm is not set for that day. And I also don't know if they can be
+				// expected to be exactly equal when the alarm is set for a specific day.
+				TEST( (entryDays[i] == 0), eventDays.at( i ), "RepeatDays" )
+			}
+		}
+		
+		/*
+		// TODO: My (Bertjan) handheld (palm m515) doesn't seem to support exceptions
+		// so I'll leave it out for now but it should be something like this:
+		exceptionCountEqual = entryOther.getExceptionCount() == entryThis.getExceptionCount();
+		if( exceptionCountEqual && entryThis.getExceptionCount() > 0 )
+		{
+			// Both entries have the same number of exceptions, so lets check if the
+			// exceptions are on the same moments.
+			int count = entryThis.getExceptionCount();
+			tm* thisExceptions = entryThis.getExceptions();
+			tm* otherExceptions = entryOther.getExceptions();
+			
+			for( int i = 0; i < count; i++ )
+			{
+				exceptionEqual = exceptionEqual && readTm( otherExceptions[i] ) == readTm( thisExceptions[i] );
+			}
+		}
+		*/
+		// End of repeat stuff.
+	}
+	
+#undef TEST
+#undef TEST1
+	// No test returned false so the records are equal.
+	return true;
 }
 
 Record* CalendarConduit::createPCRecord( const HHRecord *hhRec )
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
-/*
+	
 	Akonadi::Item item;
-	item.setPayload<IncidencePtr>( IncidencePtr( new KCal::Todo() ) );
+	item.setPayload<IncidencePtr>( IncidencePtr( new KCal::Event() ) );
 	item.setMimeType( "application/x-vnd.akonadi.calendar.event" );
 		
 	Record* rec = new CalendarAkonadiRecord( item, fMapping.lastSyncedDate() );
 	copy( hhRec, rec );
+	
+	Q_ASSERT( equal( rec, hhRec ) );
+	
 	return rec;
-	*/
-	return 0L;
 }
 
 HHRecord* CalendarConduit::createHHRecord( const Record *pcRec )
 {
 	FUNCTIONSETUP;
-	// TODO: Implement
-	/*
-	HHRecord* hhRec = new CalendarHHRecord( PilotTodoEntry().pack(), "Unfiled" );
+	
+	HHRecord* hhRec = new CalendarHHRecord( PilotDateEntry().pack(), "Unfiled" );
 	copy( pcRec, hhRec );
+	
+	Q_ASSERT( equal( pcRec, hhRec ) );
+	
 	return hhRec;
-	*/
-	return 0L;
 }
 
 void CalendarConduit::_copy( const Record *from, HHRecord *to )
 {
-	// TODO: Implement
-	/*
+	FUNCTIONSETUP;
+	
 	const CalendarAkonadiRecord* tar = static_cast<const CalendarAkonadiRecord*>( from );
 	CalendarHHRecord* thr = static_cast<CalendarHHRecord*>( to );
 	
-	boost::shared_ptr<KCal::Todo> pcFrom
-		 = boost::dynamic_pointer_cast<KCal::Todo, KCal::Incidence>( tar->item().payload<IncidencePtr>() );
+	PilotDateEntry hhTo = thr->dateEntry();
+	EventPtr pcFrom = boost_cast( tar->item().payload<IncidencePtr>() );
 	
-	PilotTodoEntry hhTo = thr->todoEntry();
+	if( ( pcFrom->recurrenceType() == KCal::Recurrence::rYearlyDay ) ||
+		( pcFrom->recurrenceType() ==  KCal::Recurrence::rYearlyPos ) )
+	{
+		// Warn ahead of time
+		QString message( "Event \"%1\" has a yearly recurrence other than by month, " );
+		message += CSL1( "will change this to recurrence by month on handheld." );
+		
+		emit logMessage( i18n( message.toLatin1(), pcFrom->summary() ) );
+	}
 	
 	// set secrecy, start/end times, alarms, recurrence, exceptions, summary and description:
-	if( pcFrom->secrecy() != KCal::Todo::SecrecyPublic )
+	if( pcFrom->secrecy() != KCal::Event::SecrecyPublic )
 	{
 		hhTo.setSecret( true );
 	}
 
-	if( pcFrom->hasDueDate() )
-	{
-		struct tm t = writeTm( pcFrom->dtDue().dateTime() );
-		hhTo.setDueDate( t );
-		hhTo.setIndefinite( 0 );
-	}
-	else
-	{
-		hhTo.setIndefinite( 1 );
-	}
-
-	// TODO: Map priority of KCal::Todo to PilotTodoEntry
-	// hhTo.setPriority( todo->priority() );
-
-	hhTo.setComplete( pcFrom->isCompleted() );
-
-	// what we call summary pilot calls description.
-	hhTo.setDescription( pcFrom->summary() );
-
-	// what we call description pilot puts as a separate note
-	hhTo.setNote( pcFrom->description() );
+	setStartEndTimes( &hhTo, pcFrom );
+	setAlarms( &hhTo, pcFrom );
+	setRecurrence( &hhTo, pcFrom );
+	setExceptions( &hhTo, pcFrom );
 	
-	// NOTE: copyCategory( from, to ); is called before _copy( from, to ). Make
-	// sure that the CalendarHHRecord::setTodoEntry() keeps the information in the
-	// pilot record.
-
-	thr->setTodoEntry( hhTo );
-	*/
+	hhTo.setDescription( pcFrom->summary() );
+	hhTo.setNote( pcFrom->description() );
+	hhTo.setLocation( pcFrom->location() );
+	
+	thr->setDateEntry( hhTo );
 }
 
-void CalendarConduit::_copy( const HHRecord *from, Record *to  )
+void CalendarConduit::_copy( const HHRecord* from, Record *to  )
 {
-	// TODO: Implement
-	/*
-	CalendarAkonadiRecord* tar = static_cast<CalendarAkonadiRecord*>( to );
+	FUNCTIONSETUP;
+	
 	const CalendarHHRecord* thr = static_cast<const CalendarHHRecord*>( from );
+	CalendarAkonadiRecord* tar = static_cast<CalendarAkonadiRecord*>( to );
 	
-	boost::shared_ptr<KCal::Todo> pcTo
-		 = boost::dynamic_pointer_cast<KCal::Todo, KCal::Incidence>( tar->item().payload<IncidencePtr>() );
-		 
-	PilotTodoEntry hhFrom = thr->todoEntry();
+	PilotDateEntry hhFrom = thr->dateEntry();
+	EventPtr pcTo = boost_cast( tar->item().payload<IncidencePtr>() );
 	
-	pcTo->setSecrecy( hhFrom.isSecret() ? KCal::Todo::SecrecyPrivate : KCal::Todo::SecrecyPublic );
-
-	if ( hhFrom.getIndefinite() )
-	{
-		pcTo->setHasDueDate( false );
-	}
-	else
-	{
-		pcTo->setDtDue(KDateTime(readTm(hhFrom.getDueDate()), KDateTime::Spec::LocalZone()));
-		pcTo->setHasDueDate( true );
-	}
-
-	// PRIORITY //
-	// TODO: e->setPriority(de->getPriority());
+	pcTo->setSecrecy( hhFrom.isSecret() ?
+		KCal::Event::SecrecyPrivate :
+		KCal::Event::SecrecyPublic );
 	
-	if( hhFrom.getComplete() && !pcTo->hasCompletedDate() )
-	{
-		pcTo->setCompleted( KDateTime::currentLocalDateTime() );
-	}
-	else if( !hhFrom.getComplete() )
-	{
-		pcTo->setCompleted( false );
-	}
+	setStartEndTimes( pcTo, hhFrom );
+	setAlarms( pcTo, hhFrom );
+	setRecurrence( pcTo, hhFrom );
+	setExceptions( pcTo, hhFrom );
 
 	pcTo->setSummary( hhFrom.getDescription() );
 	pcTo->setDescription( hhFrom.getNote() );
-	
-	// This is not needed as we modified the Todo using a pointer. Uncommenting
-	// this give problems as there are now two IncidencePtr objects managing the
-	// same raw pointer.
-	// Akonadi::Item item( tar->item() );
-	// item.setPayload<IncidencePtr>( IncidencePtr( pcTo ) );
-	// tar->setItem( item );
-	*/
+	pcTo->setLocation( hhFrom.getLocation() );
 }
+
+void CalendarConduit::setAlarms( PilotDateEntry* de, const EventPtr& e ) const
+{
+	FUNCTIONSETUP;
+
+	if( !de || !e )
+	{
+		DEBUGKPILOT << "NULL entry given to setAlarms.";
+		return;
+	}
+
+	if( !e->isAlarmEnabled() )
+	{
+		de->setAlarmEnabled( false );
+		return;
+	}
+
+	// find the first enabled alarm
+	KCal::Alarm::List alms = e->alarms();
+	const KCal::Alarm* alm = 0;
+	
+	foreach( const KCal::Alarm* alarm, alms )
+	{
+		if( alarm->enabled() ) alm = alarm;
+	}
+
+	if (!alm )
+	{
+		DEBUGKPILOT << "no enabled alarm found (should exist!!!)";
+		de->setAlarmEnabled( false );
+		return;
+	}
+
+	// palm and PC offsets have a different sign!!
+	int aoffs = -alm->startOffset().asSeconds() / 60;
+	int offs = (aoffs > 0) ? aoffs : -aoffs;
+
+	// find the best Advance Unit
+	if( offs >= 100 || offs == 60 )
+	{
+		offs /= 60;
+		if( offs >= 48 || offs == 24 )
+		{
+			offs /= 24;
+			de->setAdvanceUnits( advDays );
+		}
+		else
+		{
+			de->setAdvanceUnits( advHours );
+		}
+	}
+	else
+	{
+		de->setAdvanceUnits( advMinutes );
+	}
+	
+	de->setAdvance( (aoffs > 0) ? offs : -offs );
+	de->setAlarmEnabled( true );
+}
+
+void CalendarConduit::setAlarms( EventPtr e, const PilotDateEntry& de ) const
+{
+	FUNCTIONSETUP;
+
+	if( !e ) return;
+	
+	// Delete all the alarms now and add them one by one later on.
+	e->clearAlarms();
+	if( !de.isAlarmEnabled() ) return;
+	
+	int advanceUnits = de.getAdvanceUnits();
+
+	switch( advanceUnits )
+	{
+	case advMinutes:
+		advanceUnits = 1;
+		break;
+	case advHours:
+		advanceUnits = 60;
+		break;
+	case advDays:
+		advanceUnits = 60 * 24;
+		break;
+	default:
+		WARNINGKPILOT << "Unknown advance units " << advanceUnits;
+		advanceUnits = 1;
+	}
+
+	KCal::Duration adv( -60 * advanceUnits * de.getAdvance() );
+	KCal::Alarm* alm = e->newAlarm();
+	if( !alm ) return;
+
+	alm->setStartOffset( adv );
+	alm->setEnabled( true );
+}
+
+void CalendarConduit::setExceptions( PilotDateEntry* de, const EventPtr& e ) const
+{
+	FUNCTIONSETUP;
+	struct tm* ex_List;
+	
+	if( !de || !e )
+	{
+		DEBUGKPILOT << "NULL entry given to setExceptions.";
+		return;
+	}
+	
+	KCal::DateList exDates = e->recurrence()->exDates();
+	size_t excount = exDates.size();
+	if (excount<1)
+	{
+		de->setExceptionCount( 0 );
+		de->setExceptions( 0 );
+		return;
+	}
+
+	// we have exceptions, so allocate mem and copy them there...
+	ex_List = new struct tm[excount];
+	if( !ex_List )
+	{
+		WARNINGKPILOT << "Couldn't allocate memory for the exceptions";
+		de->setExceptionCount( 0 );
+		de->setExceptions( 0 );
+		return;
+	}
+	
+	size_t n = 0;
+	
+	foreach( const QDate& dt, exDates )
+	{
+		struct tm ttm = writeTm( dt );
+		ex_List[n++] = ttm;
+	}
+	
+	de->setExceptionCount( excount );
+	de->setExceptions( ex_List );
+}
+
+void CalendarConduit::setExceptions( EventPtr e, const PilotDateEntry& de ) const
+{
+	FUNCTIONSETUP;
+
+	// Start from an empty exception list, and if necessary, add exceptions.
+	// At the end of the function, apply the (possibly empty) exception list.
+	KCal::DateList dl;
+
+	if( !( de.isMultiDay() ) && de.getExceptionCount() > 0 )
+	{
+		for( int i = 0; i < de.getExceptionCount(); i++ )
+		{
+			dl.append( readTm( de.getExceptions()[i] ).date() );
+		}
+	}
+	else
+	{
+		return;
+	}
+	
+	e->recurrence()->setExDates(dl);
+}
+
+void CalendarConduit::setRecurrence( PilotDateEntry* de, const EventPtr& e ) const
+{
+	FUNCTIONSETUP;
+	
+	if( !de || !e )
+	{
+		DEBUGKPILOT << "NULL entry given to setRecurrence.";
+		return;
+	}
+	
+	bool isMultiDay = false;
+
+	// first we have 'fake type of recurrence' when a multi-day event is passed to
+	// the pilot, it is converted to an event which recurs daily a number of times.
+	// if the event itself recurs, this will be overridden, and only the first day
+	// will be included in the event!!!!
+	
+	QDateTime startDt( readTm( de->getEventStart() ) );
+	QDateTime endDt( readTm( de->getEventEnd() ) );
+	
+	if( startDt.daysTo( endDt ) )
+	{
+		isMultiDay = true;
+		de->setRepeatType( repeatDaily );
+		de->setRepeatFrequency( 1 );
+		de->setRepeatEnd( de->getEventEnd() );
+		
+		DEBUGKPILOT << "Setting single-day recurrence (" << startDt.toString()
+			<< " - " << endDt.toString() << ")";
+	}
+	
+	KCal::Recurrence* r = e->recurrence();
+	
+	if( !r ) return;
+	
+	ushort recType = r->recurrenceType();
+	if( recType == KCal::Recurrence::rNone )
+	{
+		if( !isMultiDay ) de->setRepeatType( repeatNone );
+		return;
+	}
+
+	int freq = r->frequency();
+	QDate endDate = r->endDate();
+
+	if( r->duration() < 0 || !endDate.isValid() )
+	{
+		de->setRepeatForever();
+	}
+	else
+	{
+		de->setRepeatEnd(writeTm(endDate));
+	}
+	de->setRepeatFrequency(freq);
+	
+	DEBUGKPILOT << "Event: " << e->summary() << " (" << e->description() << ")";
+	DEBUGKPILOT << "duration:" << r->duration() << ", endDate:" 
+		<< endDate.toString() << ", ValidEndDate: " << endDate.isValid() 
+		<< ", NullEndDate:" << endDate.isNull();
+
+	QBitArray dayArray(7);
+	QBitArray dayArrayPalm(7);
+	
+	switch( recType )
+	{
+	case KCal::Recurrence::rDaily:
+		de->setRepeatType( repeatDaily );
+		break;
+		
+	case KCal::Recurrence::rWeekly:
+		de->setRepeatType( repeatWeekly );
+		dayArray = r->days();
+		
+		// rotate the bits by one
+		for (int i=0; i<7; i++)
+		{
+			dayArrayPalm.setBit( (i+1) % 7, dayArray[i] );
+		}
+		
+		de->setRepeatDays( dayArrayPalm );
+		break;
+		
+	case KCal::Recurrence::rMonthlyPos:
+		// Palm: Day=0(sun)-6(sat); week=0-4, 4=last week; pos=week*7+day
+		// libkcal: day=bit0(mon)-bit6(sun); week=-5to-1(from end) and 1-5 (from beginning)
+		// PC->Palm: pos=week*7+day
+		//  week: if w=-1 -> week=4, else week=w-1
+		//  day: day=(daybit+1)%7  (rotate because of the different offset)
+		de->setRepeatType( repeatMonthlyByDay );
+		if (r->monthPositions().count()>0)
+		{
+			// Only take the first monthly position, as the palm allows only one
+			KCal::RecurrenceRule::WDayPos mp = r->monthPositions().first();
+			int week = mp.pos();
+			int day = ( mp.day() + 1 ) % 7; // rotate because of different offset
+			// turn to 0-based and include starting from end of month
+			// TODO: We don't handle counting from the end of the month yet!
+			if( week == -1 ) week = 4; else week--;
+			de->setRepeatDay( static_cast<DayOfMonthType>( 7 * week + day ) );
+		}
+		break;
+		
+	case KCal::Recurrence::rMonthlyDay:
+		de->setRepeatType( repeatMonthlyByDate );
+		//TODO: is this needed?
+		//dateEntry->setRepeatDay( static_cast<DayOfMonthType>( startDt.day() ) );
+		break;
+		
+	case KCal::Recurrence::rYearlyDay:
+	case KCal::Recurrence::rYearlyPos:
+		WARNINGKPILOT << "Unsupported yearly recurrence type.";
+		break;
+		
+	case KCal::Recurrence::rYearlyMonth:
+		de->setRepeatType( repeatYearly );
+		break;
+		
+	case KCal::Recurrence::rNone:
+		if( !isMultiDay ) de->setRepeatType( repeatNone );
+		break;
+		
+	default:
+		WARNINGKPILOT << "Unknown recurrence type " << recType
+			<<" with frequency " << freq
+			<< " and duration " << r->duration();
+		break;
+	}
+}
+
+void CalendarConduit::setRecurrence( EventPtr e, const PilotDateEntry& de ) const
+{
+	FUNCTIONSETUP;
+
+	if( ( de.getRepeatType() == repeatNone) || de.isMultiDay() )
+	{
+		DEBUGKPILOT << "No recurrence to set.";
+		return;
+	}
+
+	KCal::Recurrence *recur = e->recurrence();
+	int freq = de.getRepeatFrequency();
+	bool repeatsForever = de.getRepeatForever();
+	QDate endDate;
+	QDate evt;
+
+	if( !repeatsForever )
+	{
+		endDate = readTm( de.getRepeatEnd() ).date();
+	}
+
+	QBitArray dayArray(7);
+
+	switch( de.getRepeatType() )
+	{
+		case repeatDaily:
+			recur->setDaily( freq );
+			break;
+		
+		case repeatWeekly:
+		{
+			const int *days = de.getRepeatDays();
+	
+			DEBUGKPILOT << "Got repeat-weekly entry, by-days = "
+				<< days[0] << " " << days[1] << " " << days[2] << " "
+				<< days[3] << " " << days[4] << " " << days[5] << " " << days[6];
+	
+			// Rotate the days of the week, since day numbers on the Pilot and
+			// in vCal / Events are different.
+			//
+			if( days[0] ) dayArray.setBit( 6 );
+			
+			for( int i = 1; i < 7; i++ )
+			{
+				if( days[i] )
+				{
+					dayArray.setBit( i - 1 );
+				}
+			}
+			recur->setWeekly( freq, dayArray );
+		}
+		break;
+		
+		case repeatMonthlyByDay:
+		{
+			// Palm: Day=0(sun)-6(sat); week=0-4, 4=last week; pos=week*7+day
+			// libkcal: day=bit0(mon)-bit6(sun); week=-5to-1(from end) and 1-5 (from beginning)
+			// Palm->PC: w=pos/7
+			// week: if w=4 -> week=-1, else week=w+1;
+			// day: day=(pos-1)%7 (rotate by one day!)
+			recur->setMonthly( freq );
+	
+			int day = de.getRepeatDay();
+			int week = day / 7;
+			// week=4 means last, otherwise convert to 0-based
+			if( week == 4 ) week = -1; else week++;
+			dayArray.setBit( ( day + 6 ) % 7 );
+			recur->addMonthlyPos( week, dayArray );
+			break;
+		}
+	
+		case repeatMonthlyByDate:
+			recur->setMonthly( freq );
+			recur->addMonthlyDate( de.getEventStart().tm_mday );
+			break;
+		
+		case repeatYearly:
+			recur->setYearly( freq );
+			evt = readTm( de.getEventStart() ).date();
+			recur->addYearlyMonth( evt.month() );
+			break;
+		
+		case repeatNone:
+		default :
+			WARNINGKPILOT << "Can't handle repeat type " << de.getRepeatType();
+			break;
+	}
+	
+	if( !repeatsForever )
+	{
+		recur->setEndDate( endDate );
+	}
+}
+
+void CalendarConduit::setStartEndTimes( PilotDateEntry* de, const EventPtr& e ) const
+{
+	FUNCTIONSETUP;
+	
+	if( !de || !e )
+	{
+		DEBUGKPILOT << "NULL entry given to setStartEndTimes.";
+		return;
+	}
+	
+	struct tm ttm = writeTm( e->dtStart().dateTime() );
+	de->setEventStart( ttm );
+	de->setFloats( e->allDay() );
+	
+	if( e->hasEndDate() && e->dtEnd().isValid() )
+	{
+		ttm = writeTm( e->dtEnd().dateTime() );
+	}
+	else
+	{
+		ttm = writeTm( e->dtStart().dateTime() );
+	}
+	
+	de->setEventEnd( ttm );
+}
+
+void CalendarConduit::setStartEndTimes( EventPtr e, const PilotDateEntry& de ) const
+{
+	FUNCTIONSETUP;
+
+	e->setDtStart( KDateTime( readTm( de.getEventStart() ), KDateTime::Spec::LocalZone() ) );
+	e->setAllDay( de.isEvent() );
+
+	if( de.isMultiDay() )
+	{
+		e->setDtEnd( KDateTime( readTm( de.getRepeatEnd() ), KDateTime::Spec::LocalZone() ) );
+	}
+	else
+	{
+		e->setDtEnd( KDateTime( readTm( de.getEventEnd() ), KDateTime::Spec::LocalZone() ) );
+	}
+}
+
+#undef boost_cast

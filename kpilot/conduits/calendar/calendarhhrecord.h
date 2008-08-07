@@ -35,6 +35,11 @@ class CalendarHHRecord : public HHRecord
 public:
 	CalendarHHRecord( PilotRecord *record, const QString &category );
 	
+	/**
+	 * Returns the DateEntry interpretation of the PilotRecord.
+	 */
+	PilotDateEntry dateEntry() const;
+	
 	/* virtual */ bool equal( const HHRecord* other ) const;
 	
 	/**
@@ -44,7 +49,10 @@ public:
 	 */
 	void setDateEntry( const PilotDateEntry& entry, bool keepPrevCategory = true );
 	
-	PilotDateEntry dateEntry() const;
+	/**
+	 * Returns a string presentation of this record.
+	 */
+	/* virtual */ QString toString() const;
 };
 
 #endif

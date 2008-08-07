@@ -111,5 +111,5 @@ QStringList CalendarAkonadiRecord::categories() const
 
 QString CalendarAkonadiRecord::toString() const
 {
-	return QString();
+	return CSL1( "IMPLEMENT: conduits/calendar/calendarakonadirecord.cc::toString()" );
 }
