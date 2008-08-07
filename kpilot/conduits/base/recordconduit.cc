@@ -483,6 +483,7 @@ void RecordConduit::firstSync()
 		
 		if( pcRecord )
 		{
+			DEBUGKPILOT << "Match found for hh record: [" << hhRecord->toString() << "]";
 			// TODO: Make this configurable or something, maybe pcRecord should
 			// overide or user should be asked which record should be used. In this
 			// case it might even be useful to let the user select per field which
