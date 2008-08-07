@@ -169,10 +169,10 @@ void Groupwise::getFreeBusy( const KUrl &url )
     debugMessage( "Email: " + email );
 
     // Sanitise local Nuernberg email addresses
-    kdDebug() << "Email before sanitizing: " << email << endl;
+    kDebug() << "Email before sanitizing: " << email;
     email = email.replace(QRegExp("\\.EMEA5-1\\.EMEA5" ), "" );
     email = email.replace(QRegExp("\\.Suse.INTERNET" ), "" );
-    kdDebug() << "Email after sanitizing: " << email << endl;
+    kDebug() << "Email after sanitizing: " << email;
 
     QString u = soapUrl( url );
 
@@ -332,7 +332,7 @@ void Groupwise::slotReadReceiveAddressees( const KABC::Addressee::List addressee
 
 void Groupwise::updateAddressbook( const KUrl &url )
 {
-  kdDebug() << "Groupwise::updateAddressbook() " << url << endl;
+  kDebug() << "Groupwise::updateAddressbook() " << url;
   QString u = soapUrl( url );
 
   QString user = url.user();
