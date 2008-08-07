@@ -1,6 +1,11 @@
 [Desktop Entry]
 Type=Service
 Comment=This conduit syncs the handheld calendar database with an Akonadi calendar Collection.
+Comment[ga]=Sioncrónaíonn an seoladán seo an bunachar sonraí féilire ar do ríomhaire boise le Bailiúchán féilirí Akonadi.
+Comment[nds]=Disse Kanaal synkroniseert den Handreekner-Kalenner mit en Akonadi-Kalenner.
+Comment[pt]=Esta conduta sincroniza a base de dados do calendário com uma Colecção de Calendário do Akonadi.
+Comment[pt_BR]=Esta conduta sincroniza a base de dados do calendário com uma Colecção de Calendário do Akonadi.
+Comment[uk]=Цей акведук синхронізує базу даних календаря кишенькового пристрою зі збіркою календаря Akonadi.
 Name=Calendar
 Name[af]=Kalender
 Name[br]=Deiziadur
