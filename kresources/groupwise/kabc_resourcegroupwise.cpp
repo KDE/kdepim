@@ -274,13 +274,13 @@ bool ResourceGroupwise::asyncLoad()
   {
     if ( sabState == RefreshNeeded )
     {
-      kdDebug() << "  Fetching system addressbook" << endl;
+      kDebug() << "  Fetching system addressbook";
       fetchAddressBooks( System );
       return true;
     }
     else if ( sabState == Stale )
     {
-      kdDebug() << "  Updating system addressbook" << endl;
+      kDebug() << "  Updating system addressbook";
       updateSystemAddressBook(); // we then fetch the user address books after doing this
       return true;
     }
