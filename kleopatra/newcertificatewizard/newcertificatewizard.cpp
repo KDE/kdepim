@@ -849,7 +849,7 @@ public:
           tmp( QDir::temp().absoluteFilePath( "kleo-" ) ),
           ui( q )
     {
-
+        q->setWindowTitle( i18nc("@title", "Certificate Creation Wizard") );
     }
 
 private:
