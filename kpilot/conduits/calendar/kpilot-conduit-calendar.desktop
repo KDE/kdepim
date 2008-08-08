@@ -6,6 +6,7 @@ Comment[nds]=Disse Kanaal synkroniseert den Handreekner-Kalenner mit en Akonadi-
 Comment[pt]=Esta conduta sincroniza a base de dados do calendário com uma Colecção de Calendário do Akonadi.
 Comment[pt_BR]=Esta conduta sincroniza a base de dados do calendário com uma Colecção de Calendário do Akonadi.
 Comment[uk]=Цей акведук синхронізує базу даних календаря кишенькового пристрою зі збіркою календаря Akonadi.
+Comment[zh_TW]=此導管將掌上型裝置的行事曆資料庫與 Akonadi 上的行事曆同步。
 Name=Calendar
 Name[af]=Kalender
 Name[br]=Deiziadur
