@@ -26,14 +26,6 @@ add_subdirectory(notepadconduit)
 add_subdirectory(popmail)
 #add_subdirectory(sysinfoconduit)
 
-FIND_PATH( HAVE_CALENDARLOCAL_H "kcal/calendarlocal.h" ${KDE4_INCLUDE_DIR} )
-
-IF (HAVE_CALENDARLOCAL_H)
-	add_subdirectory(vcalconduit)
-ELSE (HAVE_CALENDARLOCAL_H)
-	MESSAGE(STATUS "No KDE PIM development headers were found. Install it if you want to build it")
-ENDIF (HAVE_CALENDARLOCAL_H)
-
 ###
 #
 # MAL seems to be broken, or the MAL API has changed somewhat
