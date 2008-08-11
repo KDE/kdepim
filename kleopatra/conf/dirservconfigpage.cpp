@@ -177,12 +177,12 @@ DirectoryServicesConfigurationPage::DirectoryServicesConfigurationPage( const KC
 
   // Max number of items returned by queries
   ++row;
-  label = new QLabel( i18n( "&Maximum number of items returned by query:" ), this );
+  mMaxItemsLabel = new QLabel( i18n( "&Maximum number of items returned by query:" ), this );
   mMaxItems = new KIntNumInput( this );
   mMaxItems->setMinimum( 0 );
-  label->setBuddy( mMaxItems );
+  mMaxItemsLabel->setBuddy( mMaxItems );
   connect( mMaxItems, SIGNAL(valueChanged(int)), this, SLOT(changed()) );
-  glay->addWidget( label, row, 0 );
+  glay->addWidget( mMaxItemsLabel, row, 0 );
   glay->addWidget( mMaxItems, row, 1 );
 
 #ifdef NOT_USEFUL_CURRENTLY
@@ -272,6 +272,9 @@ void DirectoryServicesConfigurationPage::load()
     mMaxItems->setValue( mMaxItemsConfigEntry->uintValue() );
     mMaxItems->blockSignals( false );
   }
+  const bool maxItemsEnabled = mMaxItemsConfigEntry && !mMaxItemsConfigEntry->isReadOnly();
+  mMaxItems->setEnabled( maxItemsEnabled );
+  mMaxItemsLabel->setEnabled( maxItemsEnabled );
 
 #ifdef NOT_USEFUL_CURRENTLY
   mAddNewServersConfigEntry = configEntry( s_addnewservers_componentName, s_addnewservers_groupName, s_addnewservers_entryName, Kleo::CryptoConfigEntry::ArgType_None, false );
