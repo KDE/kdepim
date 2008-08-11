@@ -227,7 +227,7 @@ void DirectoryServicesConfigurationPage::load()
   // gpgsm/Configuration/keyserver is not provided by older gpgconf versions; it's type changed from String to LDAPURL
   if ( ( mX509ServicesEntry = configEntry( s_x509services_new_componentName, s_x509services_new_groupName, s_x509services_new_entryName,
                                            Kleo::CryptoConfigEntry::ArgType_LDAPURL, /*isList=*/true, /*showError=*/false ) ) )
-      mWidget->addX509Services( strings2urls( mX509ServicesEntry->stringValueList() ) );
+      mWidget->addX509Services( mX509ServicesEntry->urlValueList() );
   else if ( ( mX509ServicesEntry = configEntry( s_x509services_new_componentName, s_x509services_new_groupName, s_x509services_new_entryName,
                                            Kleo::CryptoConfigEntry::ArgType_String, /*isList=*/true, /*showError=*/false ) ) )
       mWidget->addX509Services( strings2urls( mX509ServicesEntry->stringValueList() ) );

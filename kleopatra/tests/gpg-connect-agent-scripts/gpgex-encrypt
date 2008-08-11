@@ -1,5 +1,7 @@
 # OPTION mode=filemanager
 /subst
-FILE ${get cwd}/test.data
-ENCRYPT --nohup
+INPUT FILE=${get cwd}/testdir
+OUTPUT FILE=${get cwd}/foobar.gpg
+RECIPIENT frank@bar.com
+ENCRYPT --protocol=OpenPGP --nohup
 BYE
