@@ -105,7 +105,7 @@ static unsigned int index2strength( unsigned int index ) {
 }
 
 static int strength2index( unsigned int strength ) {
-    const unsigned int * const it = 
+    const unsigned int * const it =
         std::lower_bound( begin( key_strengths ), end( key_strengths ), strength );
     if ( it == end( key_strengths ) )
         return key_strengths[num_key_strengths-1];
@@ -193,7 +193,7 @@ namespace NewCertificateUi {
         }
 
         QDir tmpDir() const;
-        
+
     protected Q_SLOTS:
         void setButtonVisible( QWizard::WizardButton button, bool visible ) {
             if ( QAbstractButton * const b = this->button( button ) )
@@ -756,7 +756,7 @@ namespace {
                           i18n("My new OpenPGP certificate"), // subject
                           i18n("Please find attached my new OpenPGP certificate."), // body
                           fileName );
-        }            
+        }
 
         QByteArray ol_quote( QByteArray str ) {
 #ifdef Q_OS_WIN
@@ -788,7 +788,7 @@ namespace {
                                             "<para><application>Kleopatra</application> tried to send a mail via your default mail client.</para>"
                                             "<para>Some mail clients are known not to support attachments when invoked this way.</para>"
                                             "<para>If your mail client does not have an attachment, then drag the <application>Kleopatra</application> icon and drop it on the message compose window of your mail client.</para>"
-                                            "<para>If that does not work, either, save the request to a file, and then attach that.<para>"),
+                                            "<para>If that does not work, either, save the request to a file, and then attach that.</para>"),
                                       i18nc("@title", "Sending Mail"),
                                       "newcertificatewizard-mailto-troubles" );
         }
