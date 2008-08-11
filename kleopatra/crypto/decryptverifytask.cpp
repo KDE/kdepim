@@ -307,8 +307,8 @@ static bool IsErrorOrCanceled( const Result & res )
 static bool IsBad( const Signature & sig ) {
     return sig.summary() & Signature::Red;
 }
-static bool IsValidOrGreen( const Signature & sig ) {
-    return sig.summary() & Signature::Valid || sig.summary() & Signature::Green;
+static bool IsValid( const Signature & sig ) {
+    return sig.summary() & Signature::Valid;
 }
 
 static UserID findUserIDByMailbox( const Key & key, const Mailbox & mbox ) {
@@ -369,7 +369,7 @@ static QString formatVerificationResultOverview( const VerificationResult & res,
     if ( bad > 0 ) {
         return i18np("<b>Invalid signature.</b>", "<b>%1 invalid signatures.</b>", bad );
     }
-    const uint warn = std::count_if( sigs.begin(), sigs.end(), !bind( IsValidOrGreen, _1 ) );
+    const uint warn = std::count_if( sigs.begin(), sigs.end(), !bind( IsValid, _1 ) );
     if ( warn > 0 )
         return i18np("<b>Not enough information to check signature validity.</b>", "<b>%1 signatures could not be verified.</b>", warn );
 
