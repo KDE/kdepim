@@ -31,8 +31,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <QtCore/qglobal.h>
-#include <QtCore/qnamespace.h>
+#include <QtCore/QDebug>
 
 #include <kdeversion.h>
 #include <klocale.h>
@@ -62,9 +61,9 @@ protected:
 	const char *fName;
 } ;
 
-inline std::ostream& operator <<(std::ostream &o, const KPilotDepthCount &d)
+inline QDebug operator <<(QDebug o, const KPilotDepthCount &d)
 {
-	return o << d.indent() << "> " << d.name();
+	return o << d.indent() << ">" << d.name();
 }
 
 inline std::ostream& operator <<(std::ostream &o, const QString &s)
@@ -91,41 +90,8 @@ inline std::ostream& operator <<(std::ostream &o, const QStringList &s)
 	}
 }
 
-class KPILOT_EXPORT KPilotDebugStream
-{
-public:
-	KPilotDebugStream(int dummy) :
-		enabled(false)
-	{ Q_UNUSED(dummy); }
-	KPilotDebugStream(const KPilotDepthCount &d) :
-		enabled(debug_level >= d.level())
-	{
-	}
-	KPilotDebugStream() : // For warnings, needs no fname / depth
-		enabled(true)
-	{
-	}
-	~KPilotDebugStream()
-	{
-		if (enabled)
-		{
-			std::cerr << std::endl;
-		}
-	}
-
-	template <typename T> KPilotDebugStream &operator <<(const T &v)
-	{
-		if (enabled)
-		{
-			std::cerr << v;
-		}
-		return *this;
-	}
-
-private:
-	bool enabled;
-} ;
-
+KPILOT_EXPORT QDebug KPilotDebugStream(const KPilotDepthCount &d);
+KPILOT_EXPORT QDebug KPilotDebugStream();
 
 #define DEBUG
 #ifdef __GNUC__
