@@ -56,9 +56,6 @@
         *   <i>An alarm client for KOrganizer.</i>
 	* </td>
 	* <td valign="top">
-        * - <a href="akonadi/libakonadi/html/index.html"><b>libakonadi</b></a>
-        *   (<a href="akonadi/libakonadi/html/classes.html">classes</a>)\n
-        *   <i>Client library for accessing Akonadi, the PIM storage service.</i>
         * - <a href="libkdepim/html/index.html"><b>libkdepim</b></a>
         *   (<a href="libkdepim/html/classes.html">classes</a>)\n
         *   <i>A library of widgets and other goodies for pim.</i>
