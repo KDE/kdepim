@@ -12,9 +12,6 @@
 	* <table width="100%">
 	* <tr><th>Applications</th><th>Libraries</th></tr>
 	* <tr><td valign="top">
-        * - <a href="kleopatra/html/index.html"><b>kleopatra</b></a>
-        *   (<a href="kleopatra/html/classes.html">classes</a>)\n
-        *   <i>KDE Key Manager.</i>
         * - <a href="kaddressbook/html/index.html"><b>kaddressbook</b></a>
         *   (<a href="kaddressbook/html/classes.html">classes</a>)\n
         *   <i>Keeps your addresses on file.</i>
@@ -24,9 +21,6 @@
         * - <a href="kalarm/kalarmd/html/index.html"><b>kalarmd</b></a>
         *   (<a href="kalarm/kalarmd/html/classes.html">classes</a>)\n
         *   <i>Alarm daemon.</i>
-        * - <a href="ktimetracker/html/index.html"><b>ktimetracker</b></a>
-        *   (<a href="ktimetracker/html/classes.html">classes</a>)\n
-        *   <i>A note taker.</i>
         * - <a href="kjots/html/index.html"><b>kjots</b></a>
         *   (<a href="kjots/html/classes.html">classes</a>)\n
         *   <i>A time tracker.</i>
@@ -36,6 +30,9 @@
         * - <a href="kmobiletools/html/index.html"><b>kmobiletools</b></a>
         *   (<a href="kmobiletools/html/classes.html">classes</a>)\n
         *   <i>An application specially designed to manage mobile phones.</i>
+        * - <a href="kleopatra/html/index.html"><b>kleopatra</b></a>
+        *   (<a href="kleopatra/html/classes.html">classes</a>)\n
+        *   <i>KDE Key Manager.</i>
         * - <a href="knode/html/index.html"><b>knode</b></a>
         *   (<a href="knode/html/classes.html">classes</a>)\n
         *   <i>The KDE news reader.</i>
@@ -54,6 +51,9 @@
         * - <a href="korganizer/korgac/html/index.html"><b>korgac</b></a>
         *   (<a href="korganizer/korgac/html/classes.html">classes</a>)\n
         *   <i>An alarm client for KOrganizer.</i>
+        * - <a href="ktimetracker/html/index.html"><b>ktimetracker</b></a>
+        *   (<a href="ktimetracker/html/classes.html">classes</a>)\n
+        *   <i>A note taker.</i>
 	* </td>
 	* <td valign="top">
         * - <a href="libkdepim/html/index.html"><b>libkdepim</b></a>
