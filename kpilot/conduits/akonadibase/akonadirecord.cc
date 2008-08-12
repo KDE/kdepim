@@ -44,6 +44,8 @@ AkonadiRecord::AkonadiRecord( const Akonadi::Item& item, const QDateTime& lastSy
 {
 	d->fItem = item;
 	d->fLastSyncDateTime = lastSync;
+	// Item times have UTC timeSpec
+	d->fLastSyncDateTime.setTimeSpec( Qt::UTC );
 	d->fDeleted = false;
 }
 
