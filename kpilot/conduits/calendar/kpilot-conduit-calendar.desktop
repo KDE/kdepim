@@ -1,7 +1,9 @@
 [Desktop Entry]
 Type=Service
 Comment=This conduit syncs the handheld calendar database with an Akonadi calendar Collection.
+Comment[et]=See kanal sünkroniseerib pihuarvuti kalendri andmebaasi Akonadi kalendrikoguga.
 Comment[ga]=Sioncrónaíonn an seoladán seo an bunachar sonraí féilire ar do ríomhaire boise le Bailiúchán féilirí Akonadi.
+Comment[km]=មូលដ្ឋាន​ទិន្នន័យ conduit syncs នេះ​​ជា​មួយ​បណ្ដុំ​ប្រតិទិន​របស់ Akonadi ។
 Comment[nds]=Disse Kanaal synkroniseert den Handreekner-Kalenner mit en Akonadi-Kalenner.
 Comment[pt]=Esta conduta sincroniza a base de dados do calendário com uma Colecção de Calendário do Akonadi.
 Comment[pt_BR]=Esta conduta sincroniza a base de dados do calendário com uma Colecção de Calendário do Akonadi.
