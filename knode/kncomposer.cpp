@@ -171,7 +171,7 @@ void KNLineEditSpell::spellCheckerCorrected( const QString &old, const QString &
 }
 
 
-KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &sig, const QString &unwraped, bool firstEdit, bool dislikesCopies, bool createCopy)
+KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &sig, const QString &unwraped, bool firstEdit, bool dislikesCopies, bool createCopy, bool allowMail)
     : KXmlGuiWindow(0), r_esult(CRsave), a_rticle(a), s_ignature(sig), u_nwraped(unwraped),
       n_eeds8Bit(true), v_alidated(false), a_uthorDislikesMailCopies(dislikesCopies), e_xternalEdited(false), e_xternalEditor(0),
       e_ditorTempfile(0), a_ttChanged(false),
@@ -299,6 +299,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   a_ctDoMail = actionCollection()->add<KToggleAction>("send_mail");
   a_ctDoMail->setIcon(KIcon("mail-send"));
   a_ctDoMail->setText(i18n("Send E&mail"));
+  a_ctDoMail->setEnabled(allowMail);
   connect(a_ctDoMail, SIGNAL(triggered(bool) ), SLOT(slotToggleDoMail()));
 
   a_ctSetCharset = actionCollection()->add<KSelectAction>("set_charset");
@@ -1224,6 +1225,7 @@ void KNComposer::slotToggleDoMail()
         return;
       }
     }
+  }
 //Laurent fix me
 #if 0
     if ( knGlobals.settings()->useExternalMailer() ) {
@@ -1241,11 +1243,12 @@ void KNComposer::slotToggleDoMail()
       a_ctDoMail->setChecked(false); //revert
       return;
     } else {
-      if (a_ctDoPost->isChecked())
-        m_ode=news_mail;
-      else
-        m_ode=mail;
-    }
+#endif
+  if (a_ctDoMail->isChecked()) {
+    if (a_ctDoPost->isChecked())
+      m_ode=news_mail;
+    else
+      m_ode=mail;
   } else {
     if (a_ctDoPost->isChecked())
       m_ode=news;
@@ -1253,7 +1256,6 @@ void KNComposer::slotToggleDoMail()
       a_ctDoMail->setChecked(true); //revert
       return;
     }
-#endif
   }
   setMessageMode(m_ode);
 }

@@ -65,9 +65,10 @@ class KNComposer : public KXmlGuiWindow {
 
     // unwraped == original, not rewraped text
     // firstEdit==true: place the cursor at the end of the article
+    // allowMail==false: Sending using smtp is disabled
     KNComposer( KNLocalArticle *a, const QString &text = QString(), const QString &sig = QString(),
                 const QString &unwraped = QString(), bool firstEdit = false,
-                bool dislikesCopies = false, bool createCopy = false );
+                bool dislikesCopies = false, bool createCopy = false, bool allowMail = true);
     ~KNComposer();
     void setConfig(bool onlyFonts);
     void setMessageMode(MessageMode mode);

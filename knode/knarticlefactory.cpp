@@ -73,7 +73,7 @@ void KNArticleFactory::createPosting(KNNntpAccount *a)
   art->setDoPost(true);
   art->setDoMail(false);
 
-  KNComposer *c = new KNComposer( art, QString(), sig, QString(), true );
+  KNComposer *c = new KNComposer( art, QString(), sig, QString(), true, false, false, false );
   mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -102,7 +102,7 @@ void KNArticleFactory::createPosting(KNGroup *g)
   art->setDoMail(false);
   art->newsgroups()->fromUnicodeString(g->groupname(), art->defaultCharset());
 
-  KNComposer *c = new KNComposer( art, QString(), sig, QString(), true );
+  KNComposer *c = new KNComposer( art, QString(), sig, QString(), true, false, false, false );
   mCompList.append( c );
   connect(c, SIGNAL(composerDone(KNComposer*)), this, SLOT(slotComposerDone(KNComposer*)));
   c->show();
@@ -658,7 +658,7 @@ void KNArticleFactory::sendArticles( KNLocalArticle::List &l, bool now )
       job = new ArticlePostJob( this, ser, (*it) );
       emitJob(job);
     }
-    else if( (*it)->doMail() && !(*it)->mailed() ) {
+    if ( (*it)->doMail() && !(*it)->mailed() ) {
       int transportId = TransportManager::self()->defaultTransportId();
       job = new MailSendJob( this, transportId, (*it) );
       emitJob(job);
