@@ -1,3 +1,12 @@
+Friday, August 13th 2008
+
+Problems addressed
+------------------
+
+* kolab/issue2933 Creating folder with a old folder name can trigger a crash.
+* kolab/issue2850 Crash while copying a mail to a read-only folder.
+* kolab/issue2904 Calender component reloads all events, e.g. after switching to todos and back.
+
 Friday, August 1st 2008
 
 Problems addressed
