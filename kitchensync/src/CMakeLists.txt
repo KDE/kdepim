@@ -17,7 +17,7 @@ kde4_add_app_icon(kitchensync_SRCS "pics/hi*-app-kitchensync.png")
 
 KDE4_ADD_EXECUTABLE(kitchensync ${kitchensync_SRCS})
 
-TARGET_LINK_LIBRARIES(kitchensync kitchensyncprivate ${QT_QTGUI_LIBRARY} ${KDE_KDEUI_LIBRARY} )
+TARGET_LINK_LIBRARIES(kitchensync kitchensyncprivate ${KDE4_KDEUI_LIBS} )
 
 INSTALL(TARGETS kitchensync ${INSTALL_TARGETS_DEFAULT_ARGS})
 
@@ -69,8 +69,8 @@ configguisynce.cpp
 KDE4_ADD_LIBRARY(kitchensyncprivate SHARED ${kitchensyncprivate_LIB_SRCS})
 
 TARGET_LINK_LIBRARIES(kitchensyncprivate ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY}
-                                         ${KDE4_KDECORE_LIBRARY} ${KDE4_KDEUI_LIBRARY}
-                                         ${KDE4_KDEKIO_LIBRARY} ${KDE4_KHTML_LIBRARY}
+                                         ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS}
+                                         ${KDE4_KDEKIO_LIBS} ${KDE4_KHTML_LIBS}
                                          kabc kcal kdepim qopensync )
 
 SET_TARGET_PROPERTIES(kitchensyncprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )

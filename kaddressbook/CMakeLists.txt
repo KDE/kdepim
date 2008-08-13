@@ -6,7 +6,7 @@ add_subdirectory( common )
 add_subdirectory( interfaces ) 
 add_subdirectory( printing ) 
 if(QGPGME_FOUND)
-add_subdirectory( editors ) 
+   add_subdirectory( editors ) 
 endif(QGPGME_FOUND)
 add_subdirectory( views ) 
 add_subdirectory( features ) 
@@ -42,7 +42,9 @@ set(libprinter_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/printing/stylepage.cpp 
 	${CMAKE_CURRENT_SOURCE_DIR}/printing/printsortmode.cpp
 )
-MACRO_ADD_FILE_DEPENDENCIES(${CMAKE_CURRENT_SOURCE_DIR}/printing/detailledstyle.cpp ${CMAKE_CURRENT_BINARY_DIR}/ui_ds_appearance.h ${CMAKE_CURRENT_BINARY_DIR}/ui_rbs_appearance.h)
+
+macro_add_file_dependencies(${CMAKE_CURRENT_SOURCE_DIR}/printing/detailledstyle.cpp
+                            ${CMAKE_CURRENT_BINARY_DIR}/ui_ds_appearance.h ${CMAKE_CURRENT_BINARY_DIR}/ui_rbs_appearance.h)
 
 kde4_add_ui_files(libprinter_SRCS
         ${CMAKE_CURRENT_SOURCE_DIR}/printing/ds_appearance.ui
@@ -151,7 +153,7 @@ kde4_add_ui_files(kaddressbook_LIB_SRCS
 qt4_add_dbus_adaptor(kaddressbook_LIB_SRCS
 ${CMAKE_SOURCE_DIR}/libkdepim/interfaces/org.kde.addressbook.service.xml kaddressbookservice.h KAddressBookService )
 
-QT4_ADD_DBUS_INTERFACE(kaddressbook_LIB_SRCS org.kde.KAddressbook.Core.xml kaddressbookcore_interface )
+qt4_add_dbus_interface(kaddressbook_LIB_SRCS org.kde.KAddressbook.Core.xml kaddressbookcore_interface )
 
 kde4_add_library(kaddressbookprivate SHARED ${kaddressbook_LIB_SRCS})
 
