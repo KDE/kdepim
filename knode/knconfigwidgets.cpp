@@ -300,7 +300,7 @@ KNode::NntpAccountListWidget::NntpAccountListWidget( const KComponentData &inst,
   setupUi( this );
 
   // account listbox
-  connect( mAccountList, SIGNAL( itemActivated( QListWidgetItem* ) ), SLOT( slotEditBtnClicked() ) );
+  connect( mAccountList, SIGNAL( itemDoubleClicked( QListWidgetItem* ) ), SLOT( slotEditBtnClicked() ) );
   connect( mAccountList, SIGNAL( itemSelectionChanged() ), SLOT( slotSelectionChanged() ) );
 
   // buttons
