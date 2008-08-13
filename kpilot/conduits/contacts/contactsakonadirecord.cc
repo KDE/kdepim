@@ -91,7 +91,7 @@ bool ContactsAkonadiRecord::containsCategory( const QString& category ) const
 void ContactsAkonadiRecord::setAddressee( const KABC::Addressee& addressee )
 {
 	FUNCTIONSETUP;
-	DEBUGKPILOT << addressee.givenName() << " " << addressee.familyName();
+	
 	Akonadi::Item i = item();
 	i.setPayload<KABC::Addressee>( addressee );
 	setItem( i );

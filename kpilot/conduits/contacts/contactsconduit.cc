@@ -339,6 +339,7 @@ bool ContactsConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 
 	KABC::PhoneNumber::List abPhones( abEntry.phoneNumbers() );
 	KABC::PhoneNumber::List piPhones = getPhoneNumbers( piAddress );
+	
 	// first make sure that all of the pilot phone numbers are in kabc
 	foreach( const KABC::PhoneNumber& piPhone, piPhones )
 	{
@@ -382,11 +383,15 @@ bool ContactsConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 		}
 	}
 
-	if( !_equal( getFieldForHHOtherPhone( abEntry ),
-		piAddress.getPhoneField( PilotAddressInfo::eOther ) ) )
+	// Only check the other field if it is not empty on the palm.
+	if( !piAddress.getPhoneField( PilotAddressInfo::eOther ).isEmpty() )
 	{
-		DEBUGKPILOT  << "not equal because of other phone field.";
-		return false;
+		if( !_equal( getFieldForHHOtherPhone( abEntry ),
+			piAddress.getPhoneField( PilotAddressInfo::eOther ) ) )
+		{
+			DEBUGKPILOT  << "not equal because of other phone field.";
+			return false;
+		}
 	}
 
 	KABC::Address address = getAddress( abEntry );
@@ -565,6 +570,7 @@ void ContactsConduit::_copy( const HHRecord* from, Record *to  )
 		{
 			phone.setType( d->fSettings.faxTypeOnPC() );
 		}
+		
 		toAbEntry.insertPhoneNumber( phone );
 	}
 
@@ -857,6 +863,14 @@ void ContactsConduit::setFieldFromHHCustom(
 void ContactsConduit::setFieldFromHHOtherPhone( KABC::Addressee & abEntry
 	, const QString &nr )
 {
+	FUNCTIONSETUP;
+	
+	// Don't try to do things with empty strings.
+	if( nr.isEmpty() )
+	{
+		return;
+	}
+	
 	KABC::PhoneNumber::Type phoneType = 0;
 	switch( d->fSettings.fieldForOtherPhone() )
 	{
