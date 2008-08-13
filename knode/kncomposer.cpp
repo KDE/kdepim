@@ -364,7 +364,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   a_ctExternalEditor->setText(i18n("Start &External Editor"));
   connect(a_ctExternalEditor, SIGNAL(triggered(bool)), SLOT(slotExternalEditor()));
 
-  a_ctSpellCheck = KStandardAction::spelling ( v_iew->e_dit, SLOT(slotCheckSpelling()), actionCollection());
+  a_ctSpellCheck = KStandardAction::spelling ( v_iew->e_dit, SLOT(checkSpelling()), actionCollection());
 
   //settings menu
   createStandardStatusBarAction();
@@ -1291,7 +1291,7 @@ void KNComposer::slotToggleWordWrap()
 
 void KNComposer::slotAutoSpellCheckingToggled()
 {
-  v_iew->e_dit->toggleSpellChecking( a_ctAutoSpellChecking->isChecked() );
+  v_iew->e_dit->setCheckSpellingEnabled( a_ctAutoSpellChecking->isChecked() );
 }
 
 
