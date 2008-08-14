@@ -129,7 +129,6 @@ target_link_libraries(kpilotDaemon
 set(kpilot_bin_SRCS
 	${settings_SRC}
 	viewer_page_base.cc
-	addressviewer_page.cc
 	memoviewer_page.cc
 	logWidget.cc
 	kpilot.cc
