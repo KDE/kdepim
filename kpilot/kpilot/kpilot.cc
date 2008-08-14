@@ -63,7 +63,6 @@
 #include "syncAction.h"
 #include "viewer_page_base.h"
 #include "logWidget.h"
-#include "memoviewer_page.h"
 #include "dbviewerWidget.h"
 #include "fileInstallWidget.h"
 #include "config_dialog.h"
@@ -257,9 +256,6 @@ QWidget *KPilotInstaller::initPages( QWidget *parent, QList<ComponentPageBase*> 
 	fP->fLogWidget = new LogWidget( pageWidget );
 	fP->fLogWidget->setShowTime( true );
 	ADDICONPAGE( fP->fLogWidget, i18n( "HotSync" ), CSL1( "kpilot_bhotsync" ) )
-
-	v = new MemoViewerPage( pageWidget, defaultDBPath);
-	ADDICONPAGE( v, i18n( "Memo Viewer" ), CSL1( "kpilot_knotes" ) )
 
 	v = new GenericDBWidget( pageWidget, defaultDBPath );
 	ADDICONPAGE( v, i18n("Generic DB Viewer"), CSL1( "kpilot_db" ) )
