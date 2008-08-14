@@ -63,7 +63,6 @@
 #include "syncAction.h"
 #include "viewer_page_base.h"
 #include "logWidget.h"
-#include "todoviewer_page.h"
 #include "addressviewer_page.h"
 #include "memoviewer_page.h"
 #include "dbviewerWidget.h"
@@ -259,9 +258,6 @@ QWidget *KPilotInstaller::initPages( QWidget *parent, QList<ComponentPageBase*> 
 	fP->fLogWidget = new LogWidget( pageWidget );
 	fP->fLogWidget->setShowTime( true );
 	ADDICONPAGE( fP->fLogWidget, i18n( "HotSync" ), CSL1( "kpilot_bhotsync" ) )
-
-	v = new TodoViewerPage( pageWidget, defaultDBPath );
-	ADDICONPAGE( v, i18n("To-do Viewer"), CSL1( "kpilot_todo" ) )
 
 	v = new AddressViewerPage( pageWidget, defaultDBPath );
 	ADDICONPAGE( v, i18n( "Address Viewer" ), CSL1( "kpilot_address" ) )
