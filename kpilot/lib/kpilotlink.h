@@ -34,7 +34,6 @@
 #include <QtCore/QEvent>
 #include <QtCore/QObject>
 
-#include <Qt3Support/Q3ValueList>
 #include "kpilot_export.h"
 /** @file
 * Encapsulates all the communication with the handheld. Also
@@ -176,7 +175,7 @@ Q_OBJECT
 friend class SyncAction;
 public:
 	/** A list of DBInfo structures. */
-	typedef Q3ValueList<struct DBInfo> DBInfoList;
+	typedef QList<struct DBInfo> DBInfoList;
 
 	/** Constructor. Use reset() to start looking for a device. */
 	explicit KPilotLink( QObject *parent = 0, const char *name = 0 );

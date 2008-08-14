@@ -49,6 +49,7 @@
 
 #include <QtCore/QDateTime>
 #include <QtCore/QDir>
+#include <QtCore/QList>
 #include <QtCore/QThread>
 #include <QtCore/QTimer>
 
@@ -67,7 +68,7 @@
 
 
 typedef QPair<QString, struct DBInfo> DatabaseDescriptor;
-typedef Q3ValueList<DatabaseDescriptor> DatabaseDescriptorList;
+typedef QList<DatabaseDescriptor> DatabaseDescriptorList;
 
 class KPilotLocalLink::Private
 {
@@ -235,10 +236,10 @@ KPilotLocalLink::~KPilotLocalLink()
 
 	QString desiredName = Pilot::fromPilot(name);
 	DEBUGKPILOT << "Looking for DB [" << desiredName << ']';
-	for ( DatabaseDescriptorList::ConstIterator i = d->fDBs.at(index);
-		i != d->fDBs.end(); ++i)
+	
+	for( int i = index; i < d->fDBs.size(); i++ )
 	{
-		const DatabaseDescriptor &dd = *i;
+		const DatabaseDescriptor &dd = d->fDBs.at( i );
 		if (dd.first == desiredName)
 		{
 			if ( (!type || (type == dd.second.type)) &&
