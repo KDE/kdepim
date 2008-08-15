@@ -310,6 +310,31 @@ void initMenu( KXmlGuiWindow *parent )
                 "should be a FullSync (check data on both sides)."));
         QObject::connect(a, SIGNAL(triggered()), parent, SLOT(slotFullSyncRequested()));
 
+        a = parent->actionCollection()->addAction( "file_PCtoHH");
+        a->setText(i18n("Copy PC to Handheld"));
+	a->setIcon(KIcon(CSL1("kpilot_hhtopc")));
+        a->setToolTip(i18n("Next HotSync will copy PC to Handheld."));
+        a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
+                "should copy all data from the PC to the Handheld, "
+                "overwriting entries on the Handheld."));
+        QObject::connect(a, SIGNAL(triggered()), parent, SLOT(slotPCtoHHRequested()));
+
+        a = parent->actionCollection()->addAction( "file_HHtoPC");
+        a->setText(i18n("Copy Handheld to PC"));
+	a->setIcon(KIcon(CSL1("kpilot_hhtopc")));
+        a->setToolTip(i18n("Next HotSync will copy Handheld to PC."));
+        a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
+                "should copy all data from the Handheld to the PC, "
+                "overwriting entries on the PC."));
+        QObject::connect(a, SIGNAL(triggered()), parent, SLOT(slotHHtoPCRequested()));
+
+        /*
+         * TODO: Not sure what the state of these are and we don't have
+         *       time/manpower to catch them before 4.2. These have been
+			*       taken out of kpilotui.rc for the time being. (Backup and
+			*       Restore). We can look at enabling them back later, after
+			*       the smoke has cleared.
+			*/
         a = parent->actionCollection()->addAction( "file_backup");
         a->setText(i18n("&Backup"));
         a->setIcon(KIcon(CSL1("kpilot_backup")));
@@ -325,15 +350,6 @@ void initMenu( KXmlGuiWindow *parent )
         a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
                 "should restore the Handheld from data on the PC."));
         QObject::connect(a, SIGNAL(triggered()), parent, SLOT(slotRestoreRequested()));
-
-        a = parent->actionCollection()->addAction( "file_HHtoPC");
-        a->setText(i18n("Copy Handheld to PC"));
-	a->setIcon(KIcon(CSL1("kpilot_hhtopc")));
-        a->setToolTip(i18n("Next HotSync will be backup."));
-        a->setWhatsThis(i18n("Tell the daemon that the next HotSync "
-                "should copy all data from the Handheld to the PC, "
-                "overwriting entries on the PC."));
-        QObject::connect(a, SIGNAL(triggered()), parent, SLOT(slotPCtoHHRequested()));
 
         a = parent->actionCollection()->addAction( "file_reload");
         a->setText(i18n("Rese&t Link"));
