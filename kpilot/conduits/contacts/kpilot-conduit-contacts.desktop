@@ -1,9 +1,12 @@
 [Desktop Entry]
 Type=Service
 Comment=This conduit syncs the handheld addressbook database with an Akonadi collection.
+Comment[ga]=Sioncrónaíonn an seoladán seo bunachar sonraí an leabhair seoltaí ar do ríomhaire boise le Bailiúchán Akonadi.
+Comment[nb]=Denne kanalen synkroniserer den håndholdtes adressebik-database med en Akonadi-samling.
 Comment[nds]=Disse Kanaal synkroniseert dat Handreekner-Adressbook mit en Akonadi-Sammeln.
 Comment[pt]=Esta conduta sincroniza a base de dados do livro de endereços do dispositivo com uma Colecção do Akonadi.
 Comment[pt_BR]=Esta conduta sincroniza a base de dados do livro de endereços do dispositivo com uma Colecção do Akonadi.
+Comment[sv]=Den här kanalen synkroniserar handdatorns adressboksdatabas med en Akonadi samling.
 Comment[uk]=Цей акведук синхронізує базу даних адресної книги кишенькового пристрою зі збіркою Akonadi.
 Name=Contacts
 Name[af]=Kontakte
