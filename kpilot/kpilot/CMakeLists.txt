@@ -34,7 +34,6 @@ set(kcmpilot_UIS
 	config_page_device.ui
 	config_page_startup.ui
 	config_page_sync.ui
-	config_page_viewers.ui
 )
 
 kde4_add_ui_files(kcmpilot_SRCS ${kcmpilot_UIS})
@@ -128,21 +127,13 @@ target_link_libraries(kpilotDaemon
 #
 set(kpilot_bin_SRCS
 	${settings_SRC}
-	viewer_page_base.cc
 	logWidget.cc
 	kpilot.cc
-	dbviewerWidget.cc
-	dbFlagsEditor.cc
-	dbRecordEditor.cc
-	dbAppInfoEditor.cc
 	fileInstaller.cc
 	fileInstallWidget.cc
 )
 
 set(kpilot_UIS
-	viewer_page_base.ui
-	viewer_genericdb.ui
-	dbFlagsEditor_base.ui
 	file_install_widget.ui
 )
 

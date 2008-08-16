@@ -35,7 +35,6 @@
 #include "ui_config_page_backup.h"
 #include "ui_config_page_sync.h"
 #include "ui_config_page_startup.h"
-#include "ui_config_page_viewers.h"
 
 // class KPilotConfigWidget;
 class StartExitConfigWidget;
@@ -125,19 +124,6 @@ protected:
 
 private:
 	Ui::StartExitConfigWidget fConfigWidget;
-} ;
-
-class ViewersConfigPage : public ConfigPage
-{
-public:
-	ViewersConfigPage( QWidget *, QVariantList &args );
-
-protected:
-	virtual void load();
-	virtual void commit();
-
-private:
-	Ui::ViewersConfigWidget fConfigWidget;
 } ;
 
 #endif

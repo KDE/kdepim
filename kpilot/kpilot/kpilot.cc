@@ -61,9 +61,7 @@
 #include "pilotDatabase.h"
 #include "pilotRecord.h"
 #include "syncAction.h"
-#include "viewer_page_base.h"
 #include "logWidget.h"
-#include "dbviewerWidget.h"
 #include "fileInstallWidget.h"
 #include "config_dialog.h"
 #include "kpilotadaptor.h"
@@ -244,7 +242,6 @@ QWidget *KPilotInstaller::initPages( QWidget *parent, QList<ComponentPageBase*> 
 
 	QString defaultDBPath = KPilotConfig::getDefaultDBPath();
 
-	ViewerPageBase *v;
 	KPageWidgetItem *item;
 
 #define ADDICONPAGE( widget, label, iconname ) \
@@ -256,9 +253,6 @@ QWidget *KPilotInstaller::initPages( QWidget *parent, QList<ComponentPageBase*> 
 	fP->fLogWidget = new LogWidget( pageWidget );
 	fP->fLogWidget->setShowTime( true );
 	ADDICONPAGE( fP->fLogWidget, i18n( "HotSync" ), CSL1( "kpilot_bhotsync" ) )
-
-	v = new GenericDBWidget( pageWidget, defaultDBPath );
-	ADDICONPAGE( v, i18n("Generic DB Viewer"), CSL1( "kpilot_db" ) )
 	
 	fP->fFileInstallWidget = new FileInstallWidget( pageWidget );
 	ADDICONPAGE( fP->fFileInstallWidget, i18n("File Installer")

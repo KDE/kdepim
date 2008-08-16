@@ -299,8 +299,6 @@ void ConduitConfigWidget::fillLists()
 		i18n("Special behavior during HotSync."),CSL1("general_sync"));
 	createItem(general, i18n("Backup"),
 		i18n("Special settings for backup."),CSL1("general_backup"));
-	createItem(general, i18n("Viewers"),
-		i18n("Viewer settings."), CSL1("general_view") );
 	createItem(general, i18n("Startup and Exit"),
 		i18n("Behavior at startup and exit."), CSL1("general_startexit") );
 
@@ -365,10 +363,6 @@ static ConduitConfigBase *handleGeneralPages(QWidget *w, QTreeWidgetItem *p)
 	else if (s.startsWith(CSL1("general_sync")))
 	{
 		o = new SyncConfigPage( w, QVariantList() << CSL1( "syncSetup" ) );
-	}
-	else if (s.startsWith(CSL1("general_view")))
-	{
-		o = new ViewersConfigPage( w, QVariantList() << CSL1( "viewSetup" ) );
 	}
 	else if (s.startsWith(CSL1("general_startexit")))
 	{

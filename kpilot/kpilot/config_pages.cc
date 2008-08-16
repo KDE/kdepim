@@ -379,65 +379,6 @@ void BackupConfigPage::slotSelectNoRestoreDBs()
 	KPILOT_DELETE(dlg);
 }
 
-ViewersConfigPage::ViewersConfigPage(QWidget * w, QVariantList &args )
-	: ConfigPage( w, args )
-{
-	FUNCTIONSETUP;
-
-	fWidget = new QWidget(w);
-	fConfigWidget.setupUi(fWidget);
-
-#define CM(a,b) connect(fConfigWidget.a,b,this,SLOT(modified()));
-	CM(fUseSecret, SIGNAL(toggled(bool)));
-	CM(fNormalDisplay, SIGNAL(toggled(bool)));
-	CM(fCompanyDisplay, SIGNAL(toggled(bool)));
-	CM(fUseKeyField, SIGNAL(toggled(bool)));
-#undef CM
-
-	fConduitName = i18n("Viewers");
-}
-
-void ViewersConfigPage::load()
-{
-	FUNCTIONSETUP;
-	KPilotSettings::self()->readConfig();
-
-	fConfigWidget.fUseSecret->setChecked(KPilotSettings::showSecrets());
-	
-	if( KPilotSettings::addressDisplayMode() == 0 )
-	{
-		fConfigWidget.fNormalDisplay->setChecked( true );
-	}
-	else
-	{
-		fConfigWidget.fCompanyDisplay->setChecked( true );
-	}
-
-	fConfigWidget.fUseKeyField->setChecked(KPilotSettings::useKeyField());
-	unmodified();
-}
-
-/* virtual */ void ViewersConfigPage::commit()
-{
-	FUNCTIONSETUP;
-
-	KPilotSettings::setShowSecrets(fConfigWidget.fUseSecret->isChecked());
-	
-	if( fConfigWidget.fNormalDisplay->isChecked() )
-	{
-		KPilotSettings::setAddressDisplayMode( 0 );
-	}
-	else
-	{
-		KPilotSettings::setAddressDisplayMode( 1 );
-	}
-	
-	KPilotSettings::setUseKeyField(fConfigWidget.fUseKeyField->isChecked());
-	KPilotConfig::updateConfigVersion();
-	KPilotSettings::self()->writeConfig();
-	unmodified();
-}
-
 
 
 
