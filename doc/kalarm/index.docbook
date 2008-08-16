@@ -119,7 +119,7 @@ alarms.</para>
 
 <tip><para>All spin boxes in &kalarm; have an acceleration facility.
 To make the value change by larger steps, hold down the
-<keycap>Shift</keycap> key while you click on the spin arrow
+&Shift; key while you click on the spin arrow
 buttons.</para>
 
 <mediaobject>
