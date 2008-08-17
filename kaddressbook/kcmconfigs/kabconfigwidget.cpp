@@ -75,14 +75,16 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   mNameParsing->setObjectName( "mparse" );
   boxLayout->addWidget( mNameParsing );
 
-  mTradeAsFamilyName = new QCheckBox( i18n( "Trade single name component as family name" ), groupBox );
-  mTradeAsFamilyName->setObjectName( "mtrade" );
-  boxLayout->addWidget( mTradeAsFamilyName );
 /**
   TODO: show the checkbox when we can compile agains kdelibs from HEAD, atm it
         doesn't work and would just confuse the users ;)
+
+        and please provide a better option string -- the current one is confusing
+        and the translators have no idea what it means.
+  mTradeAsFamilyName = new QCheckBox( i18n( "Trade single name component as family name" ), groupBox );
+  mTradeAsFamilyName->setObjectName( "mtrade" );
+  boxLayout->addWidget( mTradeAsFamilyName );
 */
-  mTradeAsFamilyName->hide();
 
   mLimitContactDisplay = new QCheckBox( i18n( "Limit unfiltered display to 100 contacts" ), groupBox );
   mLimitContactDisplay->setObjectName( "mlimit" );
@@ -157,7 +159,8 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
 
   connect( mNameParsing, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
   connect( mViewsSingleClickBox, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
-  connect( mTradeAsFamilyName, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
+//TODO: put back when this option is re-enabled and working
+//  connect( mTradeAsFamilyName, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
   connect( mLimitContactDisplay, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
   connect( mPhoneHook, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
   connect( mSMSHook, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
@@ -193,7 +196,8 @@ void KABConfigWidget::restoreSettings()
 
   KConfig _config("kabcrc", KConfig::NoGlobals);
   KConfigGroup config(&_config, "General" );
-  mTradeAsFamilyName->setChecked( config.readEntry( "TradeAsFamilyName", true ) );
+//TODO: put back when this option is re-enabled and working
+//mTradeAsFamilyName->setChecked( config.readEntry( "TradeAsFamilyName", true ) );
   mLimitContactDisplay->setChecked( config.readEntry( "LimitContactDisplay", true ) );
 
   blockSignals( blocked );
@@ -216,7 +220,8 @@ void KABConfigWidget::saveSettings()
 
   KConfig _config("kabcrc", KConfig::NoGlobals);
   KConfigGroup config(&_config, "General" );
-  config.writeEntry( "TradeAsFamilyName", mTradeAsFamilyName->isChecked() );
+//TODO: put back when this option is re-enabled and working
+//config.writeEntry( "TradeAsFamilyName", mTradeAsFamilyName->isChecked() );
   config.writeEntry( "LimitContactDisplay", mLimitContactDisplay->isChecked() );
 
   emit changed( false );
