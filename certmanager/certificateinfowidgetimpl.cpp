@@ -62,10 +62,11 @@
 #include <qcursor.h>
 #include <qapplication.h>
 #include <qdatetime.h>
+#include <qstylesheet.h>
+#include <qtextcodec.h>
 
 // other
 #include <assert.h>
-#include <qtextcodec.h>
 
 CertificateInfoWidgetImpl::CertificateInfoWidgetImpl( const GpgME::Key & key, bool external,
 						      QWidget * parent, const char * name )
@@ -266,7 +267,7 @@ void CertificateInfoWidgetImpl::startCertificateDump() {
 
   if ( !proc->start( KProcess::NotifyOnExit, (KProcess::Communication)(KProcess::Stdout | KProcess::Stderr) ) ) {
     QString wmsg = i18n("Failed to execute gpgsm:\n%1").arg( i18n( "program not found" ) );
-    dumpView->setText( wmsg );
+    dumpView->setText( QStyleSheet::escape( wmsg ) );
     delete proc;
   }
 }
@@ -285,10 +286,10 @@ void CertificateInfoWidgetImpl::slotDumpProcessExited(KProcess* proc) {
   int rc = ( proc->normalExit() ) ? proc->exitStatus() : -1 ;
 
   if ( rc == 0 ) {
-    dumpView->setText( QString::fromUtf8( mDumpOutput ) );
+    dumpView->setText( QStyleSheet::escape( QString::fromUtf8( mDumpOutput ) ) );
   } else {
     if ( !mDumpError.isEmpty() ) {
-      dumpView->setText( QString::fromUtf8( mDumpError ) );
+      dumpView->setText( QStyleSheet::escape( QString::fromUtf8( mDumpError ) ) );
     } else
     {
       QString wmsg = i18n("Failed to execute gpgsm:\n%1");
@@ -296,7 +297,7 @@ void CertificateInfoWidgetImpl::slotDumpProcessExited(KProcess* proc) {
         wmsg = wmsg.arg( i18n( "program cannot be executed" ) );
       else
         wmsg = wmsg.arg( strerror(rc) );
-      dumpView->setText( wmsg );
+      dumpView->setText( QStyleSheet::escape( wmsg ) );
     }
   }
 

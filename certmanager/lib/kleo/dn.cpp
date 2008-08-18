@@ -268,12 +268,33 @@ parse_dn( const QString & dn ) {
   return parse_dn( (const unsigned char*)dn.utf8().data() );
 }
 
+static QString dn_escape( const QString & s ) {
+    QString result;
+    for ( unsigned int i = 0, end = s.length() ; i != end ; ++i ) {
+        const QChar ch = s[i];
+        switch ( ch.unicode() ) {
+        case ',':
+        case '+':
+        case '"':
+        case '\\':
+        case '<':
+        case '>':
+        case ';':
+            result += '\\';
+            // fall through
+        default:
+            result += ch;
+        }
+    }
+    return result;
+}
+
 static QString
 serialise( const QValueVector<Kleo::DN::Attribute> & dn ) {
   QStringList result;
   for ( QValueVector<Kleo::DN::Attribute>::const_iterator it = dn.begin() ; it != dn.end() ; ++it )
     if ( !(*it).name().isEmpty() && !(*it).value().isEmpty() )
-      result.push_back( (*it).name().stripWhiteSpace() + '=' + (*it).value().stripWhiteSpace() );
+      result.push_back( (*it).name().stripWhiteSpace() + '=' + dn_escape( (*it).value().stripWhiteSpace() ) );
   return result.join( "," );
 }
 
@@ -365,6 +386,11 @@ QString Kleo::DN::prettyDN() const {
 
 QString Kleo::DN::dn() const {
   return d ? serialise( d->attributes ) : QString::null ;
+}
+
+// static
+QString Kleo::DN::escape( const QString & value ) {
+    return dn_escape( value );
 }
 
 void Kleo::DN::detach() {

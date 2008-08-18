@@ -200,7 +200,7 @@ CertManager::CertManager( bool remote, const QString& query, const QString & imp
            SLOT( slotDropped(const KURL::List&) ) );
 
   mLineEditAction->setText(query);
-  if ( !mRemote || !query.isEmpty() )
+  if ( !mRemote && !mNextFindRemote || !query.isEmpty() )
     slotSearch();
 
   if ( !import.isEmpty() )
