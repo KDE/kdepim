@@ -309,7 +309,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     enum MailType {
       Answer,
       Delegation,
-      Forward
+      Forward,
+      DeclineCounter
     };
 
     bool mail( Incidence* incidence, KMail::Callback& callback,
@@ -333,6 +334,11 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           break;
         case Forward:
           subject = i18n( "Forwarded: %1" ).arg( summary );
+          break;
+        case DeclineCounter:
+          // ### string freeze
+          //subject = i18n( "Declined Counter Proposal: %1" ).arg( summary );
+          subject = i18n( "Answer: %1" ).arg( summary );
           break;
       }
 
@@ -538,14 +544,34 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return true;
     }
 
+    bool handleDeclineCounter( const QString &iCal, KMail::Callback &callback ) const
+    {
+      const QString receiver = callback.receiver();
+      if ( receiver.isEmpty() )
+        return true;
+      Incidence* incidence = icalToString( iCal );
+      if ( callback.askForComment( Attendee::Declined ) ) {
+        bool ok = false;
+        // ### string freeze
+        QString comment = KInputDialog::getMultiLineText( i18n("Reaction to Invitation") /* i18n("Decline Counter Proposal") */,
+            i18n("Comment:"), QString(), &ok );
+        if ( !ok )
+          return true;
+        if ( !comment.isEmpty() )
+          incidence->addComment( comment );
+      }
+      return mail( incidence, callback, Attendee::NeedsAction, Scheduler::Declinecounter,
+                   callback.sender(), DeclineCounter );
+    }
+
     bool counterProposal( const QString &iCal, KMail::Callback &callback ) const
     {
       const QString receiver = callback.receiver();
       if ( receiver.isEmpty() )
         return true;
       saveFile( receiver, iCal, "counter" );
-      if ( callback.deleteInvitationAfterReply() )
-        ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
+      // Don't delete the invitation here in any case, if the counter proposal
+      // is declined you might need it again.
       return true;
     }
 
@@ -573,6 +599,9 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         result = handleIgnore( iCal, c );
       if ( path == "decline" )
         result = handleInvitation( iCal, Attendee::Declined, c );
+      if ( path == "decline_counter" ) {
+        result = handleDeclineCounter( iCal, c );
+      }
       if ( path == "delegate" )
         result = handleInvitation( iCal, Attendee::Delegated, c );
       if ( path == "forward" ) {
@@ -590,9 +619,10 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         Incidence* incidence = icalToString( iCal );
         showCalendar( incidence->dtStart().date() );
       }
-      if ( path == "reply" || path == "cancel" ) {
+      if ( path == "reply" || path == "cancel" || path == "accept_counter" ) {
         // These should just be saved with their type as the dir
-        if ( saveFile( "Receiver Not Searched", iCal, path ) ) {
+        const QString p = (path == "accept_counter" ? QString("reply") : path);
+        if ( saveFile( "Receiver Not Searched", iCal, p ) ) {
           if ( c.deleteInvitationAfterReply() )
             ( new KMDeleteMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
           result = true;
@@ -618,12 +648,18 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
           return i18n("Accept incidence");
         if ( path == "accept_conditionally" )
           return i18n( "Accept incidence conditionally" );
+// ### string freeze
+//        if ( path == "accept_counter" )
+//          return i18n( "Accept counter proposal" );
         if ( path == "counter" )
           return i18n( "Create a counter proposal..." );
         if ( path == "ignore" )
           return i18n( "Throw mail away" );
         if ( path == "decline" )
           return i18n( "Decline incidence" );
+// ### string freeze
+//        if ( path == "decline_counter" )
+//          return i18n( "Decline counter proposal" );
         if ( path == "check_calendar" )
           return i18n("Check my calendar..." );
         if ( path == "reply" )
