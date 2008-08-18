@@ -60,6 +60,11 @@ public:
 	void setCollection( Akonadi::Item::Id id );
 
 	/**
+	 * Sets the label text for the collection combobox.
+	 */
+	void setCollectionLabel( const QString& label );
+
+	/**
 	 * Sets the mimetypes for the collections combobox. Only collections which
 	 * have one of the mimetypes set, will be shown.
 	 */

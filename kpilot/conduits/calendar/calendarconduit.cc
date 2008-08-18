@@ -134,7 +134,7 @@ bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 	else
 	{
 		DEBUGKPILOT << "ENTRY FLOATS:" << pcEvent->dtStart().dateTime().toString()
-			<< hhEntry.dtStart().toString();
+			<< hhEntry.dtStart().toString() << " " << thr->toString();
 		// The records should be on the same date.
 		TEST( pcEvent->dtStart().dateTime(), hhEntry.dtStart(), "DtStart" )
 	}

@@ -71,7 +71,11 @@ CalendarConfig::CalendarConfig( QWidget* w, const QVariantList& ) : ConduitConfi
 	mimeTypes << "text/calendar" << "application/x-vnd.akonadi.calendar.todo";
 		
 	fAkonadiWidget = new AkonadiSetupWidget( akonadiTab );
+	fAkonadiWidget->setCollectionLabel( i18n( "Select Calendar: " ) );
 	fAkonadiWidget->setMimeTypes( mimeTypes );
+	
+	fLayout = new QGridLayout( akonadiTab );
+	fLayout->addWidget( fAkonadiWidget );
 	
 	connect( fAkonadiWidget, SIGNAL( collectionChanged() ), SLOT( modified() ) );
 	

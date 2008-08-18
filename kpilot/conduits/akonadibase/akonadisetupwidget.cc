@@ -44,6 +44,7 @@ public:
 	
 	Ui::AkonadiWidget fUi;
 	Akonadi::CollectionFilterProxyModel* fCollectionFilterModel;
+	QLabel* fCollectionsLabel;
 	CollectionComboBox* fCollections;
 	bool fCollectionModified;
 };
@@ -60,8 +61,7 @@ AkonadiSetupWidget::AkonadiSetupWidget( QWidget* parent )
 	d->fCollectionFilterModel = new Akonadi::CollectionFilterProxyModel();
 	d->fCollectionFilterModel->setSourceModel( collectionModel );
 	
-	QLabel* collectionsLabel = new QLabel( this );
-	collectionsLabel->setText( "Akonadi addresbook collection:" );
+	d->fCollectionsLabel = new QLabel( this );
 	
 	d->fCollections = new CollectionComboBox( this );
 	d->fCollections->setModel( d->fCollectionFilterModel );
@@ -74,7 +74,7 @@ AkonadiSetupWidget::AkonadiSetupWidget( QWidget* parent )
 	d->fUi.fWarnIcon2->setPixmap( 
 		KIcon( QLatin1String( "dialog-warning" ) ).pixmap( 32 ) );
 	
-	d->fUi.hboxLayout->addWidget( collectionsLabel, 1 );
+	d->fUi.hboxLayout->addWidget( d->fCollectionsLabel, 1 );
 	d->fUi.hboxLayout->addWidget( d->fCollections, 2 );
 }
 
@@ -102,6 +102,11 @@ Akonadi::Item::Id AkonadiSetupWidget::collection() const
 	return d->fCollections->selectedCollection().id();
 }
 
+bool AkonadiSetupWidget::modified() const
+{
+	return d->fCollectionModified;
+}
+
 void AkonadiSetupWidget::setCollection( Akonadi::Item::Id id )
 {
 	FUNCTIONSETUP;
@@ -114,9 +119,9 @@ void AkonadiSetupWidget::setCollection( Akonadi::Item::Id id )
 	}
 }
 
-bool AkonadiSetupWidget::modified() const
+void AkonadiSetupWidget::setCollectionLabel( const QString& label )
 {
-	return d->fCollectionModified;
+	d->fCollectionsLabel->setText( label );
 }
 
 void AkonadiSetupWidget::setMimeTypes( const QStringList& mimeTypes )

@@ -71,7 +71,11 @@ TodoConfig::TodoConfig( QWidget* w, const QVariantList& ) : ConduitConfigBase( w
 	mimeTypes << "text/calendar" << "application/x-vnd.akonadi.calendar.todo";
 		
 	fAkonadiWidget = new AkonadiSetupWidget( akonadiTab );
+	fAkonadiWidget->setCollectionLabel( i18n( "Select ToDo Collection: " ) );
 	fAkonadiWidget->setMimeTypes( mimeTypes );
+	
+	fLayout = new QGridLayout( akonadiTab );
+	fLayout->addWidget( fAkonadiWidget );
 	
 	connect( fAkonadiWidget, SIGNAL( collectionChanged() ), SLOT( modified() ) );
 	

@@ -57,6 +57,7 @@ public:
 
 private:
 	AkonadiSetupWidget* fAkonadiWidget;
+	QGridLayout* fLayout;
 	Ui::SettingsWidget fUi;
 
 };
