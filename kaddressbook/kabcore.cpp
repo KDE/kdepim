@@ -65,6 +65,7 @@
 #include <libkdepim/addresseeview.h>
 #include <libkdepim/categoryeditdialog.h>
 #include <libkdepim/categoryselectdialog.h>
+#include <libkdepim/resourceabc.h>
 #include "distributionlisteditor.h"
 
 #include "addresseeutil.h"
@@ -277,14 +278,13 @@ KABC::Resource *KABCore::requestResource( QWidget *parent )
   while ( ( resource = resIt.current() ) != 0 ) {
     ++resIt;
     if ( !resource->readOnly() ) {
-      KRES::Resource *res = static_cast<KRES::Resource*>( resource );
-      if ( res )
-        kresResources.append( res );
+      KRES::Resource *res = resource; // downcast
+      kresResources.append( res );
     }
   }
 
   KRES::Resource *res = KRES::SelectDialog::getResource( kresResources, parent );
-  return static_cast<KABC::Resource*>( res );
+  return static_cast<KABC::Resource*>( res ); // upcast
 }
 
 QWidget *KABCore::widget() const
@@ -337,32 +337,84 @@ void KABCore::setContactSelected( const QString &uid )
 #endif
   mExtensionManager->setSelectionChanged();
 
-  // update the actions
-  bool selected = !uid.isEmpty();
+  KABC::Addressee::List list = mViewManager->selectedAddressees();
+  const bool someSelected = list.size() > 0;
+  const bool singleSelected = list.size() == 1;
+  bool writable = mReadWrite;
 
-  if ( mReadWrite ) {
-    mActionCut->setEnabled( selected );
+  if ( writable ) {
+    //check if every single (sub)resource is writable
+    //### We have a performance problem here - everytime *one* item is added or
+    //    removed we re-check *all* items. If this turns out to be a bottleneck
+    //    we need to keep some state and check new items only.
+    KABC::Addressee::List::ConstIterator addrIt = list.constBegin();
+    for ( ; addrIt != list.constEnd(); ++addrIt ) {
+      KABC::Resource *res = ( *addrIt ).resource();
+      if ( !res ) {
+        kdDebug() << "KABCore::setContactSelected: this addressee has no resource!" << endl;
+        writable = false;
+        break;
+      }
+      if ( res->readOnly() ) {
+        writable = false;
+        break;
+      }
+      //HACK: manual polymorphism
+      if ( res->inherits( "KPIM::ResourceABC" ) ) {
+        KPIM::ResourceABC *resAbc = static_cast<KPIM::ResourceABC *>( res );
 
-    QClipboard *cb = QApplication::clipboard();
-    KABC::Addressee::List list = AddresseeUtil::clipboardToAddressees( cb->text() );
-    mActionPaste->setEnabled( !list.isEmpty() );
+        QString subresource = resAbc->uidToResourceMap()[ ( *addrIt ).uid() ];
+        if ( !subresource.isEmpty() && !resAbc->subresourceWritable( subresource ) ) {
+          writable = false;
+          break;
+        }
+      }
+    }
   }
 
-  mActionCopy->setEnabled( selected );
-  mActionDelete->setEnabled( selected );
-  mActionEditAddressee->setEnabled( selected );
-  mActionCopyAddresseeTo->setEnabled( selected );
-  mActionMoveAddresseeTo->setEnabled( selected );
-  mActionMail->setEnabled( selected );
-  mActionMailVCard->setEnabled( selected );
-  mActionChat->setEnabled( selected && mKIMProxy && mKIMProxy->initialize() );
-  mActionWhoAmI->setEnabled( selected );
-  mActionCategories->setEnabled( selected );
-  mActionMerge->setEnabled( selected );
+  bool moreThanOneResource = mAddressBook->resources().count() > 1;
+  if ( !moreThanOneResource && !mAddressBook->resources().isEmpty() ) {
+      KABC::Resource *res = mAddressBook->resources().first();
+      if ( res->inherits( "KPIM::ResourceABC" ) ) {
+        KPIM::ResourceABC *resAbc = static_cast<KPIM::ResourceABC *>( res );
+        const QStringList subresources = resAbc->subresources();
+        int writeables = 0;
+        for ( QStringList::ConstIterator it = subresources.begin(); it != subresources.end(); ++it ) {
+            if ( resAbc->subresourceActive(*it) && resAbc->subresourceWritable(*it) ) {
+                writeables++;
+            }
+        }
+        moreThanOneResource = ( writeables >= 2 );
+      }
+  }
+
+  // update the actions
+
+  mActionCopy->setEnabled( someSelected );
+  mActionCut->setEnabled( someSelected && writable );
+  mActionDelete->setEnabled( someSelected && writable );
+  // the "edit" dialog doubles as the details dialog and it knows when the addressee is read-only
+  // (### this does not make much sense from the user perspective!)
+  mActionEditAddressee->setEnabled( singleSelected );
+  mActionCopyAddresseeTo->setEnabled( someSelected && moreThanOneResource );
+  mActionMoveAddresseeTo->setEnabled( someSelected && moreThanOneResource && writable );
+  mActionMail->setEnabled( someSelected );
+  mActionMailVCard->setEnabled( someSelected );
+  mActionChat->setEnabled( singleSelected && mKIMProxy && mKIMProxy->initialize() );
+  mActionWhoAmI->setEnabled( singleSelected );
+  mActionCategories->setEnabled( someSelected && writable );
+  mActionMerge->setEnabled( ( list.size() == 2 ) && writable );
+
+  if ( mReadWrite ) {
+    QClipboard *cb = QApplication::clipboard();
+    list = AddresseeUtil::clipboardToAddressees( cb->text() );
+    mActionPaste->setEnabled( !list.isEmpty() );
+  }
 }
 
 void KABCore::sendMail()
 {
+  //FIXME: breaks with email addresses containing ","
   sendMail( mViewManager->selectedEmails().join( ", " ) );
 }
 
@@ -533,6 +585,7 @@ void KABCore::setWhoAmI()
   KABC::Addressee::List addrList = mViewManager->selectedAddressees();
 
   if ( addrList.count() > 1 ) {
+    // can probably be removed because we now check the selection in setContactSelected().
     KMessageBox::sorry( mWidget, i18n( "Please select only one contact." ) );
     return;
   }
@@ -780,7 +833,8 @@ void KABCore::storeContactIn( const QString &uid, bool copy /*false*/ )
       newAddr.setUid( KApplication::randomString( 10 ) );
       newAddr.setResource( resource );
       addressBook()->insertAddressee( newAddr );
-      if ( !copy ) {
+      const bool inserted = addressBook()->find( newAddr ) != addressBook()->end();
+      if ( !copy && inserted ) {
           KABLock::self( mAddressBook )->lock( addr.resource() );
           addressBook()->removeAddressee( addr );
           KABLock::self( mAddressBook )->unlock( addr.resource() );
