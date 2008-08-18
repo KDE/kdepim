@@ -1890,15 +1890,16 @@ QString IncidenceFormatter::ToolTipVisitor::dateRangeText( Event*event )
     ret += "<br>"+i18n("<i>Date:</i>&nbsp;%1").
         arg( event->dtStartDateStr().replace(" ", "&nbsp;") );
     if ( !event->doesFloat() ) {
-      if ( event->dtStartTimeStr() == event->dtEndTimeStr() ) { // to prevent 'Time: 17:00 - 17:00'
+      const QString dtStartTime = event->dtStartTimeStr().replace( " ", "&nbsp;" );
+      const QString dtEndTime = event->dtEndTimeStr().replace( " ", "&nbsp;" );
+      if ( dtStartTime == dtEndTime ) { // to prevent 'Time: 17:00 - 17:00'
         tmp = "<br>" + i18n("time for event, &nbsp; to prevent ugly line breaks",
         "<i>Time:</i>&nbsp;%1").
-        arg( event->dtStartTimeStr().replace(" ", "&nbsp;") );
+        arg( dtStartTime );
       } else {
         tmp = "<br>" + i18n("time range for event, &nbsp; to prevent ugly line breaks",
         "<i>Time:</i>&nbsp;%1&nbsp;-&nbsp;%2").
-        arg( event->dtStartTimeStr().replace(" ", "&nbsp;") ).
-        arg( event->dtEndTimeStr().replace(" ", "&nbsp;") );
+        arg( dtStartTime, dtEndTime );
       }
       ret += tmp;
     }
