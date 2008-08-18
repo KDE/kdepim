@@ -788,7 +788,7 @@ void imapParser::parseQuotaRoot (parseString & result)
     QCString word = parseLiteralC (result, false, false, &outlen);
     roots.append (word);
   }
-  lastResults.append( roots.join(" ") );
+  lastResults.append( roots.isEmpty()? "" : roots.join(" ") );
 }
 
 void imapParser::parseCustom (parseString & result)
