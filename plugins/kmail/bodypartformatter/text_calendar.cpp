@@ -101,6 +101,27 @@ CalendarManager::CalendarManager()
   mCalendar = new CalendarResources( KPimPrefs::timezone() );
   mCalendar->readConfig();
   mCalendar->load();
+  bool multipleKolabResources = false;
+  CalendarResourceManager *mgr = mCalendar->resourceManager();
+  for ( CalendarResourceManager::ActiveIterator it = mgr->activeBegin(); it != mgr->activeEnd(); ++it ) {
+    if ( (*it)->type() == "imap" || (*it)->type() == "kolab" ) {
+      const QStringList subResources = (*it)->subresources();
+      QMap<QString, int> prefixSet; // KDE4: QSet
+      for ( QStringList::ConstIterator subIt = subResources.begin(); subIt != subResources.end(); ++subIt ) {
+        if ( !(*subIt).contains( "/.INBOX.directory/" ) )
+          // we don't care about shared folders
+          continue;
+        prefixSet.insert( (*subIt).left( (*subIt).find( "/.INBOX.directory/" ) ), 0 );
+      }
+      if ( prefixSet.count() > 1 )
+        multipleKolabResources = true;
+    }
+  }
+  if ( multipleKolabResources ) {
+    kdDebug() << k_funcinfo << "disabling calendar lookup because multiple active Kolab resources" << endl;
+    delete mCalendar;
+    mCalendar = 0;
+  }
 }
 
 CalendarManager::~CalendarManager()

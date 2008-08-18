@@ -1201,6 +1201,21 @@ QString InvitationFormatterHelper::makeLink( const QString &id, const QString &t
   return res;
 }
 
+// Check if the given incidence is likely one that we own instead one from
+// a shared calendar (Kolab-specific)
+static bool incidenceOwnedByMe( Calendar* calendar, Incidence *incidence )
+{
+  CalendarResources* cal = dynamic_cast<CalendarResources*>( calendar );
+  if ( !cal || !incidence )
+    return true;
+  ResourceCalendar* res = cal->resource( incidence );
+  if ( !res )
+    return true;
+  const QString subRes = res->subresourceIdentifier( incidence );
+  if ( !subRes.contains( "/.INBOX.directory/" ) )
+    return false;
+  return true;
+}
 
 QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *mCalendar,
     InvitationFormatterHelper *helper )
@@ -1223,10 +1238,12 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   Incidence* existingIncidence = 0;
   if ( helper->calendar() ) {
     existingIncidence = helper->calendar()->incidence( incBase->uid() );
+    if ( !incidenceOwnedByMe( helper->calendar(), existingIncidence ) )
+      existingIncidence = 0;
     if ( !existingIncidence ) {
       const Incidence::List list = helper->calendar()->incidences();
       for ( Incidence::List::ConstIterator it = list.begin(), end = list.end(); it != end; ++it ) {
-        if ( (*it)->schedulingID() == incBase->uid() ) {
+        if ( (*it)->schedulingID() == incBase->uid() && incidenceOwnedByMe( helper->calendar(), *it ) ) {
           existingIncidence = *it;
           break;
         }
@@ -1293,7 +1310,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
         }
         html += "<td>";
 
-        if ( helper->calendar() && !existingIncidence ) {
+        if ( !existingIncidence ) {
           // Accept
           html += helper->makeLink( "accept", i18n( "[Accept]" ) );
           html += "</td><td> &nbsp; </td><td>";
