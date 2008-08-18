@@ -6,24 +6,34 @@ include_directories(
 
 link_libraries( ${QT_QT3SUPPORT_LIBRARY} )
 
+# libs
 add_subdirectory(akonadibase)
 add_subdirectory(base)
+
+# Conduits
 add_subdirectory(contacts)
 add_subdirectory(calendar)
 add_subdirectory(memofileconduit)
 add_subdirectory(todo)
 
-IF (QCA2_FOUND)
-	add_subdirectory(keyringconduit)
-ENDIF(QCA2_FOUND)
+# Conduits disabled by default.
+if(HAVE_TESTS_ENABLED)
+	add_subdirectory(null)
+	add_subdirectory(notepadconduit)
+	add_subdirectory(popmail)
 
-add_subdirectory(null)
+	if(QCA2_FOUND)
+		add_subdirectory(keyringconduit)
+	else(QCA2_FOUND)
+		message(STATUS "QCA2 not found, keyringconduit disabled.")
+	endif(QCA2_FOUND)
+else(HAVE_TESTS_ENABLED)
+	message(STATUS "Not a debug build, keyring and nullconduit disabled.")
+endif(HAVE_TESTS_ENABLED)
+
 add_subdirectory(timeconduit)
 
-
 #add_subdirectory(docconduit)
-add_subdirectory(notepadconduit)
-add_subdirectory(popmail)
 #add_subdirectory(sysinfoconduit)
 
 ###
