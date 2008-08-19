@@ -71,6 +71,7 @@ namespace Kleo {
                 };
                 explicit SecretKeysModel( QObject * parent=0 ) : QStandardItemModel( parent ) {}
                 void setSecretKeys( const std::vector<GpgME::Key> & keys );
+                std::vector<GpgME::Key> secretKeys() const;
                 GpgME::Key keyFromItem( const QStandardItem * item ) const;
                 GpgME::Key keyFromIndex( const QModelIndex & index ) const;
 
