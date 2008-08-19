@@ -38,6 +38,7 @@
 #include "libkleo/kleo/cryptoconfig.h"
 
 class QCheckBox;
+class QLabel;
 class QTimeEdit;
 class KIntNumInput;
 namespace Kleo {
@@ -71,6 +72,7 @@ private:
   Kleo::DirectoryServicesWidget* mWidget;
   QTimeEdit* mTimeout;
   KIntNumInput* mMaxItems;
+  QLabel* mMaxItemsLabel;
   QCheckBox* mAddNewServersCB;
 
   Kleo::CryptoConfigEntry* mX509ServicesEntry;
