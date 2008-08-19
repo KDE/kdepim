@@ -204,9 +204,15 @@ void SMimeValidationConfigurationWidget::load() {
         return;
     }
 
+#if 0
+    // crashes other pages' save() by nuking the CryptoConfigEntries under their feet.
+    // This was probably not a problem in KMail, where this code comes
+    // from. But here, it's fatal.
+
     // Force re-parsing gpgconf data, in case e.g. kleopatra or "configure backend" was used
     // (which ends up calling us via D-Bus)
     config->clear();
+#endif
 
     // Create config entries
     // Don't keep them around, they'll get deleted by clear(), which could be
