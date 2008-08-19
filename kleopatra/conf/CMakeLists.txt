@@ -62,9 +62,12 @@ kde4_add_kcfg_files( kcm_kleopatra_PART_SRCS
 
 kde4_add_plugin(kcm_kleopatra ${kcm_kleopatra_PART_SRCS})
 
+if (ONLY_KLEO)
+ target_link_libraries(kcm_kleopatra ${KDE4_KDEUI_LIBS} ${KDE4_KCMUTILS_LIBS} kleo ${_kcm_kleopatra_extra_libs} ${_kcm_kleopatra_libkleopatraclient_extra_LIBS})
+else (ONLY_KLEO)
+ target_link_libraries(kcm_kleopatra ${KDE4_KDEUI_LIBS} ${KDE4_KUTILS_LIBS} kleo ${_kcm_kleopatra_extra_libs} ${_kcm_kleopatra_libkleopatraclient_extra_LIBS})
+endif (ONLY_KLEO) 
 
-
-target_link_libraries(kcm_kleopatra ${KDE4_KDEUI_LIBS} ${KDE4_KUTILS_LIBS} kleo ${_kcm_kleopatra_extra_libs} ${_kcm_kleopatra_libkleopatraclient_extra_LIBS})
 
 install(TARGETS kcm_kleopatra  DESTINATION ${PLUGIN_INSTALL_DIR})
 
