@@ -30,7 +30,7 @@ set( kcal_groupwise_plugin_SRCS kcal_resourcegroupwise_plugin.cpp )
 
 kde4_add_plugin(kcal_groupwise ${kcal_groupwise_plugin_SRCS})
 
-target_link_libraries(kcal_groupwise ${KDE4_KDECORE_LIBS} kcalgroupwise)
+target_link_libraries(kcal_groupwise ${KDE4_KDECORE_LIBS} kcalgroupwise ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KRESOURCES_LIBS})
 
 install(TARGETS kcal_groupwise DESTINATION ${PLUGIN_INSTALL_DIR})
 
