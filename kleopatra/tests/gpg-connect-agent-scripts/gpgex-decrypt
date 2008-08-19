@@ -1,8 +1,6 @@
 # OPTION mode=filemanager
 /subst
-#INPUT FILE=${get cwd}/test.data.gpg
-INPUT FILE=${get cwd}/
-OUTPUT FILE=${get cwd}/test.data.decrypted
-#OUTPUT FILE=${get cwd}/
-DECRYPT --nohup --protocol=OpenPGP
+FILE ${get cwd}/test.data.gpg
+FILE ${get cwd}/test.data.pem
+DECRYPT --nohup
 BYE

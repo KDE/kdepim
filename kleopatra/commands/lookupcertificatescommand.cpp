@@ -213,7 +213,7 @@ void LookupCertificatesCommand::Private::slotSearchTextChanged( const QString & 
     }
 
     startKeyListJob( CMS,     str );
-//    startKeyListJob( OpenPGP, str );
+    startKeyListJob( OpenPGP, str );
 
 }
 
