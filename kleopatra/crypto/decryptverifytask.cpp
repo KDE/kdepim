@@ -120,11 +120,16 @@ static std::string email( const UserID & uid ) {
     return DN( uid.id() )["EMAIL"].trimmed().toUtf8().constData();
 }
 
+static Mailbox mailbox( const UserID & uid ) {
+    Mailbox mbox;
+    mbox.setAddress( email( uid ).c_str() );
+    return mbox;
+}
+
 static std::vector<Mailbox> extractMailboxes( const Key & key ) {
     std::vector<Mailbox> res;
     Q_FOREACH( const UserID & id, key.userIDs() ) {
-        Mailbox mbox;
-        mbox.setAddress( email( id ).c_str() );
+        const Mailbox mbox = mailbox( id );
         if ( !mbox.addrSpec().isEmpty() )
             res.push_back( mbox );
     }
@@ -178,20 +183,21 @@ static QString signatureSummaryToString( int summary )
     return QString();
 }
 
-static QString formatValidSignatureWithTrustLevel( const Key & key ) {
+static QString formatValidSignatureWithTrustLevel( const Key & key, const UserID & id ) {
     assert( !key.isNull() );
-    switch ( key.ownerTrust() ) {
-        case Key::Marginal:
+    assert( !id.isNull() );
+    switch ( id.validity() ) {
+        case UserID::Marginal:
             return i18n( "The signature is valid but the trust in the certificate's validity is only marginal." );
-        case Key::Full:
+        case UserID::Full:
             return i18n( "The signature is valid and the certificate's validity is fully trusted." );
-        case Key::Ultimate:
+        case UserID::Ultimate:
             return i18n( "The signature is valid and the certificate's validity is ultimately trusted." );
-        case Key::Never:
+        case UserID::Never:
             return i18n( "The signature is valid but the certificate's validity is <em>not trusted</em>." );
-        case Key::Unknown:
+        case UserID::Unknown:
             return i18n( "The signature is valid but the certificate's validity is unknown." );
-        case Key::Undefined:
+        case UserID::Undefined:
         default:
             return i18n( "The signature is valid but the certificate's validity is undefined." );
     }
@@ -305,6 +311,13 @@ static bool IsValid( const Signature & sig ) {
     return sig.summary() & Signature::Valid;
 }
 
+static UserID findUserIDByMailbox( const Key & key, const Mailbox & mbox ) {
+    Q_FOREACH( const UserID & id, key.userIDs() )
+        if ( mailbox_equal( mailbox( id ), mbox, Qt::CaseInsensitive ) )
+            return id;
+    return UserID();
+}
+
 }
 
 class DecryptVerifyResult::SenderInfo {
@@ -392,16 +405,17 @@ static QString formatDecryptionResultOverview( const DecryptionResult & result )
     return i18n("<b>Decryption succeeded.</b>" );
 }
 
-static QString formatSignature( const Signature & sig, const Key & key ) {
+static QString formatSignature( const Signature & sig, const Key & key, const DecryptVerifyResult::SenderInfo & info ) {
     if ( sig.isNull() )
         return QString();
 
     QString text = formatSigningInformation( sig, key ) + "<br/>";
 
     const bool red = sig.summary() & Signature::Red;
-    if ( sig.summary() & Signature::Valid )
-        return text + formatValidSignatureWithTrustLevel( key ); // ### TODO handle key.isNull()?
-
+    if ( sig.summary() & Signature::Valid ) {
+        const UserID id = findUserIDByMailbox( key, info.informativeSender );
+        return text + formatValidSignatureWithTrustLevel( key, !id.isNull() ? id : key.userID( 0 ) ); // ### TODO handle key.isNull()?
+    }
     if ( red )
         if ( key.isNull() )
             if ( const char * fpr = sig.fingerprint() )
@@ -431,7 +445,7 @@ static QString formatVerificationResultDetails( const VerificationResult & res, 
     const std::vector<Key> signers = KeyCache::instance()->findSigners( res );
     QString details;
     Q_FOREACH ( const Signature & sig, sigs )
-        details += formatSignature( sig, DecryptVerifyResult::keyForSignature( sig, signers ) ) + '\n';
+        details += formatSignature( sig, DecryptVerifyResult::keyForSignature( sig, signers ), info ) + '\n';
     details = details.trimmed();
     details.replace( '\n', "<br/>" );
     if ( info.conflicts() )

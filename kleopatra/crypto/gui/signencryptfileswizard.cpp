@@ -48,13 +48,13 @@ namespace {
 
     class SignerResolveValidator : public SignerResolvePage::Validator {
     public:
-        explicit SignerResolveValidator( SignerResolvePage* page ); 
+        explicit SignerResolveValidator( SignerResolvePage* page );
         bool isComplete() const;
         QString explanation() const;
         void update() const;
 
     private:
-        SignerResolvePage* m_page;
+        SignerResolvePage* const m_page;
         mutable QString expl;
         mutable bool complete;
     };
@@ -78,7 +78,7 @@ void SignerResolveValidator::update() const {
 #undef setAndReturn
 #define setAndReturn(text) { expl = text; return; }
 
-    if( needPgpSC && !havePgpSC ) 
+    if( needPgpSC && !havePgpSC )
         setAndReturn( i18n( "You need to select an OpenPGP signing certificate to perform this operation." ) );
 
     if ( needAnySC && !haveAnySC )
@@ -131,7 +131,7 @@ class SignEncryptFilesWizard::Private {
 public:
     explicit Private( SignEncryptFilesWizard * qq );
     ~Private();
-    
+
     void operationSelected();
 private:
 
