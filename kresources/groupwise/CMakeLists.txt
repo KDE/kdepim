@@ -55,7 +55,7 @@ set( kabc_groupwise_plugin_SRCS kabc_resourcegroupwise_plugin.cpp )
 
 kde4_add_plugin(kabc_groupwise ${kabc_groupwise_plugin_SRCS})
 
-target_link_libraries(kabc_groupwise ${KDE4_KDECORE_LIBS} kabcgroupwise)
+target_link_libraries(kabc_groupwise ${KDE4_KDECORE_LIBS} kabcgroupwise ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KRESOURCES_LIBS})
 
 install(TARGETS kabc_groupwise DESTINATION ${PLUGIN_INSTALL_DIR})
 
