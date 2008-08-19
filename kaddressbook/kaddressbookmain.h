@@ -61,6 +61,12 @@ class KAddressBookMain : public KXmlGuiWindow
     void exit();
     bool handleCommandLine();
 
+    //override
+    void loadProfile( const QString& path );
+
+    //override
+    void saveToProfile( const QString& path ) const;
+
   protected:
     void initActions();
 

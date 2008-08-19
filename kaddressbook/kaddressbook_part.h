@@ -37,6 +37,8 @@ class KAddressbookPart: public KParts::ReadOnlyPart
     KAddressbookPart( QWidget *parentWidget, QObject *parent, const QVariantList& );
     virtual ~KAddressbookPart();
 
+    virtual void saveToProfile( const QString& path ) const;
+    virtual void loadProfile( const QString& path );
   public slots:
     virtual void addEmail( QString addr );
     virtual void importVCard( const KUrl& url );

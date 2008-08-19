@@ -166,6 +166,14 @@ void KAddressBookMain::configureKeyBindings()
   KShortcutsDialog::configure( actionCollection(), KShortcutsEditor::LetterShortcutsAllowed, this );
 }
 
+void KAddressBookMain::loadProfile( const QString& )
+{
+}
+
+void KAddressBookMain::saveToProfile( const QString& ) const
+{
+}
+
 void KAddressBookMain::configureToolbars()
 {
   saveMainWindowSettings( KGlobal::config()->group( "MainWindow" ) );

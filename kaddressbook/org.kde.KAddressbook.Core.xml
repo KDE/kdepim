@@ -28,5 +28,11 @@
     <method name="handleCommandLine">
       <arg type="b" direction="out"/>
     </method>
+    <method name="loadProfile">
+      <arg name="directory" type="s" direction="in"/>
+    </method>
+    <method name="saveToProfile">
+      <arg name="directory" type="s" direction="in"/>
+    </method>
   </interface>
 </node>

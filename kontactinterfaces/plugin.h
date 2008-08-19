@@ -61,7 +61,7 @@ K_EXPORT_PLUGIN( KontactPluginFactory( "kontact_" #pluginname "plugin" ) )
 /**
   Increase this version number whenever you make a change in the API.
  */
-#define KONTACT_PLUGIN_VERSION 7
+#define KONTACT_PLUGIN_VERSION 8
 
 namespace Kontact
 {
@@ -268,6 +268,10 @@ class KONTACTINTERFACES_EXPORT Plugin : public QObject, virtual public KXMLGUICl
 
     bool disabled() const;
     void setDisabled( bool v );
+
+    virtual void loadProfile( const QString& directoryPath );
+
+    virtual void saveToProfile( const QString& directoryPath ) const;
 
   public Q_SLOTS:
     /**

@@ -1169,7 +1169,14 @@ documentation</ulink>.
 </sect2>
 
 </sect1>
-
+<sect1 id="kontact-configure-profiles">
+<title>&kontact; Profiles</title>
+<para>&kontact;'s profile support makes it possible to load and save user settings in profiles.
+The settings stored in the profile include typical Look&amp;Feel related options such as app-specific color schemes, icon sets, toolbar layout and application defaults. Personal information, e.g. accounts and identities are not stored in profiles. 
+Two default profiles are provided by Kontact: &quot;&kontact; Style&quot;, which contains the default &kontact; settings, and &quot;Outlook Style&quot;, adapting &kontact; to Microsoft Outlook Look&amp;Feel.
+The user can adapt existing profiles, create new profiles from his current settings, and import and export profiles. To manage profiles, choose &quot;Configure Profiles&quot; from the &quot;Settings&quot; menu.
+</para>
+</sect1>
 </chapter>
 
 

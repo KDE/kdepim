@@ -309,6 +309,16 @@ bool Plugin::disabled() const
   return d->disabled;
 }
 
+void Kontact::Plugin::loadProfile( const QString& directoryPath )
+{
+
+}
+
+void Kontact::Plugin::saveToProfile( const QString& directoryPath ) const
+{
+
+}
+
 void Plugin::virtual_hook( int, void * )
 {
   //BASE::virtual_hook( id, data );
