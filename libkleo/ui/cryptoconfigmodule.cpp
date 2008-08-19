@@ -315,8 +315,7 @@ static const struct WidgetsByEntryName {
     constructor create;
 } widgetsByEntryName[] = {
     { "*/*/debug-level",   &_create<CryptoConfigEntryDebugLevel> },
-    { "gpg/*/keyserver",   &_create<CryptoConfigEntryKeyserver>  },
-    { "gpgsm/*/keyserver", &_create<CryptoConfigEntryLDAPURL>    },
+    { "gpg/*/keyserver",   &_create<CryptoConfigEntryKeyserver>  }
 };
 static const unsigned int numWidgetsByEntryName = sizeof widgetsByEntryName / sizeof *widgetsByEntryName;
 
@@ -814,18 +813,12 @@ static QStringList urls2strings( const KUrl::List & urls ) {
 
 void Kleo::CryptoConfigEntryLDAPURL::doLoad()
 {
-  if ( mEntry->argType() == CryptoConfigEntry::ArgType_LDAPURL )
-    setURLList( mEntry->urlValueList() );
-  else
-    setURLList( strings2urls( mEntry->stringValueList() ) );
+  setURLList( mEntry->urlValueList() );
 }
 
 void Kleo::CryptoConfigEntryLDAPURL::doSave()
 {
-  if ( mEntry->argType() == CryptoConfigEntry::ArgType_LDAPURL )
-    mEntry->setURLValueList( mURLList );
-  else
-    mEntry->setStringValueList( urls2strings( mURLList ) );
+  mEntry->setURLValueList( mURLList );
 }
 
 void Kleo::CryptoConfigEntryLDAPURL::slotOpenDialog()
@@ -834,7 +827,10 @@ void Kleo::CryptoConfigEntryLDAPURL::slotOpenDialog()
   // This is just a simple dialog around the directory-services-widget
   KDialog dialog( mPushButton->parentWidget() );
   dialog.setCaption( i18n( "Configure LDAP Servers" ) );
-  dialog.setButtons( KDialog::Default|KDialog::Cancel|KDialog::Ok );
+  if ( mEntry->isReadOnly() )
+    dialog.setButtons( KDialog::Ok );
+  else
+    dialog.setButtons( KDialog::Default|KDialog::Cancel|KDialog::Ok );
   DirectoryServicesWidget* dirserv = new DirectoryServicesWidget( &dialog );
   dirserv->setX509ReadOnly( mEntry->isReadOnly() );
   dirserv->setAllowedSchemes( DirectoryServicesWidget::LDAP );
