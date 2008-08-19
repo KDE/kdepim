@@ -758,6 +758,15 @@ namespace {
                           fileName );
         }            
 
+        QByteArray ol_quote( QByteArray str ) {
+#ifdef Q_OS_WIN
+            return "\"\"" + str.replace( '"', "\\\"" ) + "\"\"";
+            //return '"' + str.replace( '"', "\\\"" ) + '"';
+#else
+            return str;
+#endif
+        }
+
         void invokeMailer( const QString & to, const QString & subject, QString body, const QString & attachment ) {
             kDebug() << "to:" << to << "subject:" << subject
                      << "body:" << body << "attachment:" << attachment;
@@ -771,7 +780,7 @@ namespace {
                 + "&subject=" + QUrl::toPercentEncoding( subject )
                 + "&body=" + QUrl::toPercentEncoding( body ) ;
             if ( !attachment.isEmpty() )
-                encoded += "&attach=" + QUrl::toPercentEncoding( QFileInfo( attachment ).absoluteFilePath() );
+                encoded += "&attach=" + ol_quote( QUrl::toPercentEncoding( QFileInfo( attachment ).absoluteFilePath() ) );
             kDebug() << "openUrl" << QUrl::fromEncoded( encoded );
             QDesktopServices::openUrl( QUrl::fromEncoded( encoded ) );
             KMessageBox::information( this,
