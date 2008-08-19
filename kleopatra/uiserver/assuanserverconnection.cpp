@@ -512,20 +512,28 @@ private:
     }
 
     static bool parse_informative( const char * & begin ) {
-        if ( qstrnicmp( begin, "--info", strlen("--info") ) != 0 )
-            return false;
-        const char * pos = begin + strlen("--info");
-        if ( *pos == '=' )
-            ;
-        else if ( *pos == ' ' || *pos == '\t' ) {
+        bool informative = false;
+        const char * pos = begin;
+        while ( true ) {
             while ( *pos == ' ' || *pos == '\t' )
                 ++pos;
-            if ( qstrncmp( pos, "-- ", strlen("-- ") ) == 0 )
+            if ( qstrnicmp( pos, "--info", strlen("--info") ) == 0 ) {
+                informative = true;
+                pos += strlen("--info");
+                if ( *pos == '=' ) {
+                    ++pos;
+                    break;
+                }
+            } else if ( qstrncmp( pos, "-- ", strlen("-- ") ) == 0 ) {
                 pos += 3;
-        } else
-            return false;
+                while ( *pos == ' ' || *pos == '\t' )
+                    ++pos;
+                break;
+            } else
+                break;
+        }
         begin = pos;
-        return true;
+        return informative;
     }
 
     template <typename T_memptr, typename T_memptr2>
