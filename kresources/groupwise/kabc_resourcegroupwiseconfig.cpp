@@ -210,3 +210,5 @@ void ResourceGroupwiseConfig::updateAddressBookView()
   int index = mWriteAddressBookIds.indexOf( mResource->prefs()->writeAddressBook() );
   mAddressBookBox->setCurrentIndex( index );
 }
+
+#include "kabc_resourcegroupwiseconfig.moc"
