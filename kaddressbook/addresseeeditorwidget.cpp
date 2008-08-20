@@ -96,12 +96,13 @@ void AddresseeEditorWidget::setAddressee( const KABC::Addressee &addr )
       readOnly = true;
 
     //HACK: some resources have finer access control than "generic" resources
-    } else if ( res->inherits( "KPIM::ResourceAbc" ) ) {
-      KABC::ResourceABC *resAbc = static_cast<KABC::ResourceABC *>( res );
-
-      QString subresource = resAbc->uidToResourceMap()[ addr.uid() ];
-      if ( !subresource.isEmpty() )
-        readOnly |= !resAbc->subresourceWritable( subresource );
+    } else {
+      KABC::ResourceABC *resAbc = dynamic_cast<KABC::ResourceABC *>( res );
+      if ( resAbc ) {
+        QString subresource = resAbc->uidToResourceMap()[ addr.uid() ];
+        if ( !subresource.isEmpty() )
+          readOnly |= !resAbc->subresourceWritable( subresource );
+      }
     }
   }
   setReadOnly( readOnly );
