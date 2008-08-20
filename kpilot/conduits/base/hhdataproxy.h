@@ -143,17 +143,17 @@ protected:
 	/**
 	 * Commits created record @p rec to the datastore.
 	 */
-	virtual void commitCreate( Record *rec );
+	virtual bool commitCreate( Record *rec );
 	
 	/**
 	 * Commits updated record @p rec to the datastore.
 	 */
-	virtual void commitUpdate( Record *rec );
+	virtual bool commitUpdate( Record *rec );
 	
 	/**
 	 * Undo the commit of created record @p rec to the datastore.
 	 */
-	virtual void commitDelete( Record *rec );
+	virtual bool commitDelete( Record *rec );
 
 protected:
 	PilotDatabase *fDatabase;

@@ -64,9 +64,9 @@ public:
 	QMap<QString, Record*>* records() { return &fRecords; }
 	
 protected:
-	virtual void commitCreate( Record *rec );
+	virtual bool commitCreate( Record *rec );
 	
-	virtual void commitUpdate( Record *rec );
+	virtual bool commitUpdate( Record *rec );
 	
 	virtual PilotAppInfoBase* readAppInfo() { return 0; };
 };

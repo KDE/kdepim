@@ -216,7 +216,13 @@ bool DataProxy::commit()
 		Record *rec = find( id );
 		if( rec )
 		{
-			commitCreate( rec );
+			if( !commitCreate( rec ) )
+			{
+				// Commit failed.
+				return false;
+			}
+			
+			// Commit succeeded.
 			
 			// Put the record with the new id in.
 			if( rec->id() != id )
@@ -255,7 +261,14 @@ bool DataProxy::commit()
 		
 		if( rec && !fCreated.value( id ) )
 		{
-			commitUpdate( rec );
+			if( !commitUpdate( rec ) )
+			{
+				// Commit failed.
+				return false;
+			}
+			
+			// Commit succeeded.
+			
 			QString newId = rec->id();
 			
 			if( newId != id )
@@ -279,7 +292,15 @@ bool DataProxy::commit()
 		if( !fDeleted.value( oldRec->id() ) )
 		{
 			DEBUGKPILOT << "Deleting record: [" << oldRec->id() << "].";
-			commitDelete( oldRec );
+			
+			if( !commitDelete( oldRec ) )
+			{
+				// Commit failed.
+				return false;
+			}
+			
+			// Commit succeeded.
+			
 			fDeleted.insert( oldRec->id(), true );
 		}
 	}

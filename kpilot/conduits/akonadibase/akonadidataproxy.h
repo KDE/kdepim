@@ -89,18 +89,18 @@ protected: // Functions
 	 * Commits created record @p rec to the datastore. Sets the id that the
 	 * data store created for this record to rec.
 	 */
-	/* virtual */ void commitCreate( Record *rec );
+	/* virtual */ bool commitCreate( Record *rec );
 	
 	/**
 	 * Commits updated record @p rec to the datastore. Must return rec->id() even
 	 * if it's unchanged.
 	 */
-	/* virtual */ void commitUpdate( Record *rec );
+	/* virtual */ bool commitUpdate( Record *rec );
 	
 	/**
 	 * Delete record @p rec from the datastore.
 	 */
-	/* virtual */ void commitDelete( Record *rec );
+	/* virtual */ bool commitDelete( Record *rec );
 
 	/**
 	 * Creates a new akonadi record for @param i and sets the last sync time

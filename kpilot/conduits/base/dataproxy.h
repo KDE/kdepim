@@ -200,19 +200,28 @@ protected: // Functions
 	/**
 	 * Commits created record @p rec to the datastore. Returns the id that the
 	 * data store created for this record.
+	 *
+	 * @return true when the record was succesfully added to the datastore managed
+	 *  by this proxy, false otherwise.
 	 */
-	virtual void commitCreate( Record *rec ) = 0;
+	virtual bool commitCreate( Record *rec ) = 0;
 	
 	/**
 	 * Commits updated record @p rec to the datastore. Must return rec->id() even
 	 * if it's unchanged.
+	 *
+	 * @return true when the changes are succesfully committed to the datastore
+	 *  managed by this proxy, false otherwise.
 	 */
-	virtual void commitUpdate( Record *rec ) = 0;
+	virtual bool commitUpdate( Record *rec ) = 0;
 	
 	/**
 	 * Delete record @p rec from the datastore.
+	 *
+	 * @return true when the record is succesfully deleted from the datastore
+	 *  managed by this proxy, false otherwise.
 	 */
-	virtual void commitDelete( Record *rec ) = 0;
+	virtual bool commitDelete( Record *rec ) = 0;
 
 protected: // Members
 	Mode fMode;

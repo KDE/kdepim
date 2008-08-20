@@ -69,9 +69,10 @@ void TestHHDataProxy::loadAllRecords()
 {
 }
 
-void TestHHDataProxy::commitCreate( Record *rec )
+bool TestHHDataProxy::commitCreate( Record *rec )
 {
 	Q_UNUSED( rec );
+	return true;
 }
 	
 void TestHHDataProxy::undoCommitCreate( const Record *rec )
@@ -79,7 +80,8 @@ void TestHHDataProxy::undoCommitCreate( const Record *rec )
 	Q_UNUSED( rec );
 }
 
-void TestHHDataProxy::commitUpdate( Record *rec )
+bool TestHHDataProxy::commitUpdate( Record *rec )
 {
 	Q_UNUSED( rec );
+	return true;
 }

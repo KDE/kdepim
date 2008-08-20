@@ -171,7 +171,7 @@ QString AkonadiDataProxy::generateUniqueId()
 	return QString::number( newId );
 }
 
-void AkonadiDataProxy::commitCreate( Record *rec )
+bool AkonadiDataProxy::commitCreate( Record *rec )
 {
 	FUNCTIONSETUP;
 	
@@ -183,15 +183,17 @@ void AkonadiDataProxy::commitCreate( Record *rec )
 	{
 		// Hmm an error occured
 		DEBUGKPILOT << "Create failed: " << job->errorString();
+		return false;
 	}
 	else
 	{
 		// Update the item of the record.
 		aRec->setItem( job->item() );
+		return true;
 	}
 }
 
-void AkonadiDataProxy::commitUpdate( Record *rec )
+bool AkonadiDataProxy::commitUpdate( Record *rec )
 {
 	FUNCTIONSETUP;
 	
@@ -202,15 +204,17 @@ void AkonadiDataProxy::commitUpdate( Record *rec )
 	{
 		// Hmm an error occured
 		DEBUGKPILOT << "Update failed: " << job->errorString();
+		return false;
 	}
 	else
 	{
 		// Update the item of the record.
 		aRec->setItem( job->item() );
+		return true;
 	}
 }
 
-void AkonadiDataProxy::commitDelete( Record *rec )
+bool AkonadiDataProxy::commitDelete( Record *rec )
 {
 	FUNCTIONSETUP;
 	
@@ -221,5 +225,8 @@ void AkonadiDataProxy::commitDelete( Record *rec )
 	{
 		// Hmm an error occured
 		DEBUGKPILOT << "Delete failed: " << job->errorString();
+		return false;
 	}
+	
+	return true;
 }

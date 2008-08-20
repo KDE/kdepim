@@ -82,11 +82,11 @@ public:
 	
 	virtual QStringList categoryNames() const { return QStringList(); }
 	
-	virtual void commitCreate( Record *rec );
+	virtual bool commitCreate( Record *rec );
 	
-	virtual void commitDelete( Record *rec );
+	virtual bool commitDelete( Record *rec );
 	
-	virtual void commitUpdate( Record *rec );
+	virtual bool commitUpdate( Record *rec );
 	
 	virtual bool createDataStore() { return true; }
 	

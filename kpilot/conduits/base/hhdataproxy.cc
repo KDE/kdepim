@@ -233,7 +233,7 @@ bool HHDataProxy::_rollback()
 	return true;
 }
 
-void HHDataProxy::commitCreate( Record *rec )
+bool HHDataProxy::commitCreate( Record *rec )
 {
 	FUNCTIONSETUP;
 	
@@ -245,15 +245,19 @@ void HHDataProxy::commitCreate( Record *rec )
 			// record.
 			hhRec->setId( QString::number( 0 ) );
 			fDatabase->writeRecord( hhRec->pilotRecord() );
+			return true;
 		}
 		else
 		{
 			DEBUGKPILOT << "Record " << rec->id() << " is not of type HHRecord*.";
+			return false;
 		}
 	}
+	
+	return false;
 }
 
-void HHDataProxy::commitUpdate( Record *rec )
+bool HHDataProxy::commitUpdate( Record *rec )
 {
 	FUNCTIONSETUP;
 
@@ -262,33 +266,37 @@ void HHDataProxy::commitUpdate( Record *rec )
 		if( HHRecord *hhRec = static_cast<HHRecord*>( rec ) )
 		{
 			fDatabase->writeRecord( hhRec->pilotRecord() );
+			return true;
 		}
 		else
 		{
 			DEBUGKPILOT << "Record " << rec->id() << " is not of type HHRecord*.";
+			return false;
 		}
 	}
+	
+	return false;
 }
 
-void HHDataProxy::commitDelete( Record *rec )
+bool HHDataProxy::commitDelete( Record *rec )
 {
 	FUNCTIONSETUP;
 	
-	if( !rec || !fDatabase )
-	{
-		return;
-	}
-	else
+	if( fDatabase && rec )
 	{
 		if( HHRecord *hhRec = static_cast<HHRecord*>( rec ) )
 		{
 			fDatabase->deleteRecord( hhRec->pilotRecord()->id() );
+			return true;
 		}
 		else
 		{
 			DEBUGKPILOT << "Record " << rec->id() << " is not of type HHRecord*.";
+			return false;
 		}
 	}
+	
+	return false;
 }
 
 bool HHDataProxy::isOpen() const
