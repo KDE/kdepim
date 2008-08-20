@@ -67,6 +67,9 @@ class ResourceSelection : public KAB::ExtensionWidget
 
     KABCResourceItem* selectedItem() const;
 
+    KABCResourceItem* findSubResourceItem( KABC::ResourceABC *resource,
+                                           const QString &subResource );
+
     QTreeWidget *mListView;
     QAbstractButton *mAddButton;
     QAbstractButton *mEditButton;

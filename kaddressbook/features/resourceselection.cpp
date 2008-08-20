@@ -340,7 +340,13 @@ void ResourceSelection::slotSubresourceAdded( KABC::ResourceABC *resource,
     return;
 
   KABCResourceItem *item = static_cast<KABCResourceItem *>( foundItems[0] );
-  (void)new KABCResourceItem( resource, item, subResource );
+
+  // make sure all other sub items have already been created
+  item->createSubresourceItems();
+
+  // check if we already have an item for it
+  if ( !findSubResourceItem( resource, subResource ) )
+    (void)new KABCResourceItem( resource, item, subResource );
 }
 
 // Remove an entry
@@ -349,14 +355,35 @@ void ResourceSelection::slotSubresourceRemoved( KABC::ResourceABC* resource,
                                                 const QString& subResource )
 {
   kDebug(5720) << resource->resourceName() << subResource;
+
+  KABCResourceItem *item = findSubResourceItem( resource, subResource );
+  delete item;
   // TODO
-  //delete findItemByIdentifier( resource );
   //emitResourcesChanged();
 }
 
 KABCResourceItem* ResourceSelection::selectedItem() const
 {
   return static_cast<KABCResourceItem*>( mListView->currentItem() );
+}
+
+KABCResourceItem* ResourceSelection::findSubResourceItem( KABC::ResourceABC *resource,
+                                                          const QString &subResource )
+{
+  QTreeWidgetItemIterator parentIt( mListView );
+  for ( ; *parentIt; ++parentIt ) {
+    if ( static_cast<KABCResourceItem*>(*parentIt)->resource() != resource )
+      continue;
+
+    QTreeWidgetItemIterator childIt( *parentIt );
+    for ( ; *childIt; ++childIt ) {
+      KABCResourceItem *item = static_cast<KABCResourceItem*>(*childIt);
+      if ( item->resourceIdentifier() == subResource )
+        return item;
+    }
+  }
+
+  return 0;
 }
 
 void ResourceSelection::initGUI()
