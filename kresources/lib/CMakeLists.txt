@@ -14,6 +14,7 @@ set(kgroupwarebase_LIB_SRCS
    folderlister.cpp 
    folderconfig.cpp 
    folderlistview.cpp 
+   folderselectdialog.cpp 
    groupwaredataadaptor.cpp 
    groupwaredownloadjob.cpp 
    calendaradaptor.cpp 
