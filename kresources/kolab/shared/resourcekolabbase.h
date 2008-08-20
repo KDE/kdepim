@@ -132,6 +132,10 @@ public: // for Contact
                            quint32 sernum,
                            const QString& filename ) const;
 
+  /** Get the mimetype of the specified attachment. */
+  bool kmailAttachmentMimetype( QString &mimeType, QString &resource,
+                                quint32 sernum, const QString &filename ) const;
+
   /// List all attachments of a mail.
   bool kmailListAttachments( QStringList &list, const QString &resource,
                              quint32 sernum ) const;

@@ -96,6 +96,12 @@ bool ResourceKolabBase::kmailGetAttachment( KUrl& url, const QString& resource,
   return mConnection->kmailGetAttachment( url, resource, sernum, filename );
 }
 
+bool ResourceKolabBase::kmailAttachmentMimetype( QString & mimeType, QString & resource,
+                                                 quint32 sernum, const QString & filename ) const
+{
+  return mConnection->kmailAttachmentMimetype( mimeType, resource, sernum, filename );
+}
+
 bool ResourceKolabBase::kmailListAttachments( QStringList &list,
                                               const QString & resource,
                                               quint32 sernum ) const

@@ -798,7 +798,9 @@ void Incidence::loadAttachments()
         QFile f( url.path() );
         if ( f.open( QFile::ReadOnly ) ) {
           data = f.readAll();
-          QString mimeType = KIO::NetAccess::mimetype( url, 0 );
+          QString mimeType;
+          if ( !mResource->kmailAttachmentMimetype( mimeType, mSubResource, mSernum, attachment ) )
+            mimeType = "application/octet-stream";
           KCal::Attachment *a = new KCal::Attachment( data.toBase64().constData(), mimeType );
           a->setLabel( attachment );
           mAttachments.append( a );

@@ -191,6 +191,16 @@ bool KMailConnection::kmailGetAttachment( KUrl& url,
   return checkReply( mKmailGroupwareInterface->getAttachment( resource, sernum, filename ), url );
 }
 
+bool KMailConnection::kmailAttachmentMimetype( QString & mimeType,
+                                               const QString & resource,
+                                               quint32 sernum,
+                                               const QString & filename )
+{
+  if ( !connectToKMail() )
+    return false;
+  return checkReply( mKmailGroupwareInterface->attachmentMimetype( resource, sernum, filename ), mimeType );
+}
+
 bool KMailConnection::kmailListAttachments(QStringList &list,
                                             const QString & resource, quint32 sernum)
 {
