@@ -49,7 +49,6 @@ void HHDataProxy::syncFinished()
 	if( fDatabase && fDatabase->isOpen() )
 	{
 		fDatabase->cleanup();
-		storeAppInfo();
 		fDatabase->resetSyncFlags();
 	}
 }

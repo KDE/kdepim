@@ -278,8 +278,3 @@ PilotAppInfoBase* KeyringHHDataProxy::readAppInfo()
 
 	return 0;
 }
-
-void KeyringHHDataProxy::storeAppInfo()
-{
-	// FIXME: Implement
-}

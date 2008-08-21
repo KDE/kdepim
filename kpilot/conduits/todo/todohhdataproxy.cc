@@ -56,8 +56,3 @@ PilotAppInfoBase* TodoHHDataProxy::readAppInfo()
 
 	return 0;
 }
-
-void TodoHHDataProxy::storeAppInfo()
-{
-	// NOTE: This function must be removed.
-}

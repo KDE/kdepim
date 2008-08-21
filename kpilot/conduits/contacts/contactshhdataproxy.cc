@@ -160,8 +160,3 @@ void ContactsHHDataProxy::setPhoneNumbers( PilotAddress &a
 		}
 	}
 }
-
-void ContactsHHDataProxy::storeAppInfo()
-{
-	// NOTE: This function must be removed.
-}

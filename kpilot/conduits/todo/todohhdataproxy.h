@@ -54,12 +54,6 @@ protected:
 	 * category information can be read and altered.
 	 */
 	/* virtual */ PilotAppInfoBase* readAppInfo();
-	
-	/**
-	 * Implementing classes should pack and store fAppInfo into the database so
-	 * that Category information is stored.
-	 */
-	/* virtual */ void storeAppInfo();
 };
 
 #endif

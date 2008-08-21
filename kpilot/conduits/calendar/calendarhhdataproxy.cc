@@ -57,8 +57,3 @@ PilotAppInfoBase* CalendarHHDataProxy::readAppInfo()
 
 	return 0;
 }
-
-void CalendarHHDataProxy::storeAppInfo()
-{
-	// NOTE: This function must be removed.
-}

@@ -113,12 +113,6 @@ protected:
 	 * category information can be read and altered.
 	 */
 	virtual PilotAppInfoBase* readAppInfo() = 0;
-	
-	/**
-	 * Implementing classes should pack and store fAppInfo into the database so
-	 * that Category information is stored.
-	 */
-	virtual void storeAppInfo() = 0;
 
 	/**
 	 * This function creates a (subclass of) HHRecord for @p rec.
