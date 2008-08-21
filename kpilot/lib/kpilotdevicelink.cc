@@ -170,8 +170,10 @@ DeviceCommWorker::~DeviceCommWorker()
 	FUNCTIONSETUPL(2);
 	close();
 
-	KPILOT_DELETE(fOpenTimer);
-	KPILOT_DELETE(fWorkaroundUSBTimer);
+	if (fOpenTimer)
+		fOpenTimer->deleteLater();
+	if (fWorkaroundUSBTimer)
+		fWorkaroundUSBTimer->deleteLater();
 }
 
 void DeviceCommWorker::close()
