@@ -170,10 +170,16 @@ DeviceCommWorker::~DeviceCommWorker()
 	FUNCTIONSETUPL(2);
 	close();
 
-	if (fOpenTimer)
-		fOpenTimer->deleteLater();
-	if (fWorkaroundUSBTimer)
-		fWorkaroundUSBTimer->deleteLater();
+	if (fOpenTimer) {
+	   fOpenTimer->stop();		
+	   fOpenTimer->deleteLater();
+	   fOpenTimer = 0L;
+	}
+	if (fWorkaroundUSBTimer) {
+	   fWorkaroundUSBTimer->stop();
+	   fWorkaroundUSBTimer->deleteLater();
+	   fWorkaroundUSBTimer = 0L;
+	}
 }
 
 void DeviceCommWorker::close()
