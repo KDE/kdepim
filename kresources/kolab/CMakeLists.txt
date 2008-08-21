@@ -1,4 +1,4 @@
-include_directories( ${CMAKE_SOURCE_DIR}/kmail  )
+include_directories( ${CMAKE_SOURCE_DIR}/kmail ${CMAKE_SOURCE_DIR}/kresources/lib )
 set( libresourcekolabshared_SRCS
 	${CMAKE_CURRENT_SOURCE_DIR}/shared/resourcekolabbase.cpp
 	${CMAKE_CURRENT_SOURCE_DIR}/shared/kmailconnection.cpp
