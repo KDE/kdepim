@@ -81,3 +81,8 @@ void FolderSelectDialog::closeEvent(QCloseEvent *event)
 {
   event->ignore();
 }
+
+void FolderSelectDialog::reject()
+{
+}
+
