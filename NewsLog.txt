@@ -1,3 +1,12 @@
+Friday, August 22nd 2008
+
+Problems addressed
+------------------
+* kolab/issue2954 Possible to delete a mail if just max append rights.
+* kolab/issue2036 Press "cancel" at the calender folder selection deletes an updated event.
+
+
+
 Friday, August 13th 2008
 
 Problems addressed
