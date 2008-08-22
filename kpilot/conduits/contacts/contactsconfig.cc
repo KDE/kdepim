@@ -61,7 +61,7 @@ ContactsConfig::ContactsConfig( QWidget* w, const QVariantList& ) : ConduitConfi
 {
 	FUNCTIONSETUP;
 
-	fConduitName = i18n( "To-do" );
+	fConduitName = i18n( "Contacts" );
 	fWidget = new QWidget( w );
 	fUi.setupUi( fWidget );
 	
