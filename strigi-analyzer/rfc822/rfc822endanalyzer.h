@@ -36,7 +36,7 @@ public:
 
   const char* name() const { return "Rfc822EndAnalyzer"; }
   bool checkHeader( const char* header, int32_t headersize ) const;
-  char analyze(  Strigi::AnalysisResult& idx, Strigi::InputStream* in );
+  signed char analyze(  Strigi::AnalysisResult& idx, Strigi::InputStream* in );
 
 private:
   const Rfc822EndAnalyzerFactory* m_factory;
