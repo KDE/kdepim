@@ -41,7 +41,7 @@ class GroupwiseWizard : public KConfigWizard
     void usrWriteConfig();
 
   protected slots:
-    void slotAboutToShowPage( QWidget * );
+    void slotAboutToShowPage( KPageWidgetItem *, KPageWidgetItem * );
 
   private:
     KLineEdit *mServerEdit;
