@@ -85,7 +85,11 @@ kdepim4_link_unique_libraries(knodecommon ${KDE4_KMIME_LIBRARY} ${KDE4_KUTILS_LI
                               ${KDE4_KPIMUTILS_LIBRARY} ${KDE4_MAILTRANSPORT_LIBRARY}
                               kdepim kpgp)
 
-set_target_properties(knodecommon PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+set_target_properties(knodecommon
+   PROPERTIES VERSION ${GENERIC_LIB_VERSION}
+   SOVERSION ${GENERIC_LIB_SOVERSION}
+   ${KDE4_DISABLE_PROPERTY_}LINK_INTERFACE_LIBRARIES "kutils;kio;kde3support"
+)
 
 install(TARGETS knodecommon  DESTINATION ${LIB_INSTALL_DIR})
 
