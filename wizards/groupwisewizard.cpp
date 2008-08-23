@@ -100,6 +100,7 @@ class UpdateGroupwiseKcalResource : public KConfigPropagator::Change
           r->prefs()->setUrl( serverUrl() );
           r->prefs()->setUser( GroupwiseConfig::self()->user() );
           r->prefs()->setPassword( GroupwiseConfig::self()->password() );
+          // TODO: don't change existing policy
           r->setSavePolicy( KCal::ResourceCached::SaveDelayed );
           r->setReloadPolicy( KCal::ResourceCached::ReloadInterval );
           r->setReloadInterval( 20 );
@@ -252,8 +253,9 @@ class GroupwisePropagator : public KConfigPropagator
         if ( !email.isEmpty() ) ca->setEmail( email );
         ca->enableSavePassword( true );
         ca->enableSieve( false );
-        ca->setEncryption( CreateDisconnectedImapAccount::TLS );
-        ca->setAuthenticationSend( CreateDisconnectedImapAccount::LOGIN );
+        ca->setEncryption( CreateDisconnectedImapAccount::SSL );
+        ca->setAuthentication( CreateDisconnectedImapAccount::PLAIN );
+        ca->setAuthenticationSend( CreateDisconnectedImapAccount::PLAIN );
         ca->setSmtpPort( 25 );
 
         ca->setExistingAccountId( GroupwiseConfig::kMailAccountId() );
@@ -403,11 +405,11 @@ void GroupwiseWizard::slotAboutToShowPage( KPageWidgetItem * page, KPageWidgetIt
 {
   if ( page->widget() == mEmailPage ) {
     if ( mEmailEdit->text().isEmpty() ) {
-      QString host = GroupwiseConfig::host();
+      QString host = mServerEdit->text();
       int pos = host.lastIndexOf( "." );
       if ( pos > 0 ) pos = host.lastIndexOf( ".", pos - 1 );
       if ( pos > 0 ) host = host.mid( pos + 1 );
-      QString email = GroupwiseConfig::user() + '@' + host;
+      QString email = mUserEdit->text() + '@' + host;
       mEmailEdit->setText( email );
     }
   }
