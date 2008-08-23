@@ -6,7 +6,7 @@ kde4_add_library( kleopatraclientgui SHARED
   certificaterequester.cpp
   )
 
-target_link_libraries( kleopatraclientgui ${QT_QTGUI_LIBRARY} kleopatraclientcore )
+target_link_libraries( kleopatraclientgui ${QT_QTGUI_LIBRARY} ${QT_QTCORE_LIBRARY} kleopatraclientcore )
 
 set_target_properties( kleopatraclientgui
   PROPERTIES
