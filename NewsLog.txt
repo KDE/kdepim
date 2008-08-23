@@ -1,3 +1,12 @@
+Saturday, August 23rd 2008
+
+Problems addressed
+------------------
+kolab/issue2927 Opened mails/composer are not reopened after a restart.
+kolab/issue2675 Calendar side-by-side view: scale doesn't fit with the hours view.
+
+
+
 Friday, August 22nd 2008
 
 Problems addressed
