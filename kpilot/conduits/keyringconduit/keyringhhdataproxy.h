@@ -69,8 +69,6 @@ protected:
 	
 	virtual PilotAppInfoBase* readAppInfo();
 	
-	virtual void storeAppInfo();
-
 private: // functions
 	QCA::SecureArray getDigest( const QCA::SecureArray &salt
 		, const QCA::SecureArray &pass );

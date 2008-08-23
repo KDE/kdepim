@@ -57,8 +57,3 @@ PilotAppInfoBase* ContactsHHDataProxy::readAppInfo()
 	return 0L;
 }
 
-void ContactsHHDataProxy::storeAppInfo()
-{
-	FUNCTIONSETUP;
-	//TODO: IMPLEMENT
-}
