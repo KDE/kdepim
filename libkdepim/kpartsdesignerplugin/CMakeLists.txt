@@ -11,7 +11,7 @@ kde4_add_plugin(kpartsdesignerplugin ${kpartsdesignerplugin_PART_SRCS})
 
 
 
-target_link_libraries(kpartsdesignerplugin  ${KDE4_KPARTS_LIBS} )
+target_link_libraries(kpartsdesignerplugin  ${KDE4_KPARTS_LIBS} ${KDE4_KDEUI_LIBS} )
 
 install(TARGETS kpartsdesignerplugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 

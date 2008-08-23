@@ -62,12 +62,12 @@ set(kcal_slox_plugin_PART_SRCS kcalresourceslox_plugin.cpp )
 
 kde4_add_plugin(kcal_slox_plugin ${kcal_slox_plugin_PART_SRCS})
 # TODO: plugin and shared lib could not have the same name
-if (NOT MSVC) 
-set_target_properties(kcal_slox_plugin PROPERTIES OUTPUT_NAME kcal_slox)
-endif (NOT MSVC) 
+if (NOT MSVC)
+  set_target_properties(kcal_slox_plugin PROPERTIES OUTPUT_NAME kcal_slox)
+endif (NOT MSVC)
 
 
-target_link_libraries(kcal_slox_plugin  ${KDE4_KDECORE_LIBS} ${QT_QT3SUPPORT_LIBRARY} kdepim kcal_slox)
+target_link_libraries(kcal_slox_plugin  ${KDE4_KDECORE_LIBS} ${QT_QT3SUPPORT_LIBRARY} kdepim kcal_slox ${KDE4_KRESOURCES_LIBS})
 
 install(TARGETS kcal_slox_plugin DESTINATION ${PLUGIN_INSTALL_DIR})
 
