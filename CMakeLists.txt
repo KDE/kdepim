@@ -180,8 +180,7 @@ else ( ONLY_KLEO )
 
   add_subdirectory(kdgantt1)
 
-  #Laurent: disable it until strigi SC was restored...
-  #macro_optional_add_subdirectory(strigi-analyzer)
+  macro_optional_add_subdirectory(strigi-analyzer)
 
   if(QGPGME_FOUND AND KMAIL_SUPPORTED)
      macro_optional_add_subdirectory(kmailcvt)
