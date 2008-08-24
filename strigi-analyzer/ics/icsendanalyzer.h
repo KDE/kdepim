@@ -36,7 +36,7 @@ public:
 
   const char* name() const { return "IcsEndAnalyzer"; }
   bool checkHeader( const char* header, int32_t headersize ) const;
-  char analyze(  Strigi::AnalysisResult& idx, Strigi::InputStream* in );
+  signed char analyze(  Strigi::AnalysisResult& idx, Strigi::InputStream* in );
 
 private:
   const IcsEndAnalyzerFactory* m_factory;
