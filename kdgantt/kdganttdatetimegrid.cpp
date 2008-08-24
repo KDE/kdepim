@@ -118,7 +118,7 @@ qreal DateTimeGrid::dayWidth() const
 void DateTimeGrid::setDayWidth( qreal w )
 {
     qDebug()<<"DateTimeGrid::setDayWidth"<<w;
-    d->dayWidth = qMax( w, 1.0 );
+    d->dayWidth = qMax( w, qreal(1.0) );
     emit gridChanged();
 }
 

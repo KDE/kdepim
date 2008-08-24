@@ -531,7 +531,7 @@ void GraphicsView::resizeEvent( QResizeEvent* ev )
     d->updateHeaderGeometry();
     QRectF r = scene()->itemsBoundingRect();
     // To scroll more to the left than the actual item start, bug #4516
-    r.setLeft( qMin( 0.0, r.left() ) );
+    r.setLeft( qMin( qreal(0.0), r.left() ) );
     // TODO: take scrollbars into account (if not always on)
     // The scene should be at least the size of the viewport
     // NOTE: scrollbar calculus uses maximumViewportSize() - frameWidth()*2 (not the same as viewport()->size())
@@ -584,7 +584,7 @@ void GraphicsView::updateSceneRect()
      */
     QRectF r = d->scene.itemsBoundingRect();
     // To scroll more to the left than the actual item start, bug #4516
-    r.setLeft( qMin( 0.0, r.left() ) );
+    r.setLeft( qMin( qreal(0.0), r.left() ) );
     r.setSize( r.size().expandedTo( maximumViewportSize() - QSizeF( frameWidth()*2, frameWidth()*2 ) ) );
 
     d->scene.setSceneRect( r );
