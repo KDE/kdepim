@@ -3,6 +3,7 @@ add_subdirectory(tests)
 include_directories(
 	${CMAKE_CURRENT_BINARY_DIR}
 	${CMAKE_BINARY_DIR}/kpilot
+	${CMAKE_CURRENT_BINARY_DIR}/../../lib
 )
 
 # A bit ugly? Maybe settings should be shared.

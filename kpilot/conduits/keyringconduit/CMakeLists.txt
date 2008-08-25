@@ -1,6 +1,7 @@
 include_directories(
 	${CMAKE_CURRENT_SOURCE_DIR}/../base
 	${CMAKE_CURRENT_BINARY_DIR}
+	${CMAKE_CURRENT_BINARY_DIR}/../../lib
 	${QCA2_INCLUDE_DIR}
 )
 
