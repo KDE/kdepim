@@ -32,6 +32,7 @@
 #include <QtGui/QLineEdit>
 #include <QtGui/QPushButton>
 #include <QtGui/QRadioButton>
+#include <QtGui/QScrollBar>
 #include <QtGui/QTableWidget>
 
 #include <kprogressdialog.h>
@@ -471,6 +472,9 @@ void CSVImportDialog::initGUI()
   enableButton( Ok, false );
   enableButton( User1, false );
   enableButton( User2, false );
+
+  connect( mTable->horizontalScrollBar(), SIGNAL( valueChanged( int ) ),
+           static_cast<ComboBoxHeaderView*>( mTable->horizontalHeader() ), SLOT( adaptMove( int ) ) );
 
   resize( 400, 300 );
 }

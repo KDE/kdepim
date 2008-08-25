@@ -57,7 +57,8 @@ class ComboBoxHeaderView::Private {
       mComboBox( 0 ),
       mCurrentIndex( -1 ),
       mHoverStyle( true ),
-      mMargin( 1 ) {}
+      mMargin( 1 ),
+      mScrollOffset( 0 ) {}
 
     QStringList mItems;
 
@@ -68,6 +69,7 @@ class ComboBoxHeaderView::Private {
 
     bool mHoverStyle;
     int mMargin;
+    int mScrollOffset;
 };
 //@endcond
 
@@ -202,10 +204,18 @@ void ComboBoxHeaderView::initialize()
         box = d->mBoxes[ i ];
       }
 
-      box->setGeometry( sectionRect( i ) );
+      QRect rect = sectionRect( i );
+      rect.moveLeft( rect.x() + d->mScrollOffset );
+      box->setGeometry( rect );
       box->setVisible( true );
     }
   }
+}
+
+void ComboBoxHeaderView::adaptMove( int shift )
+{
+  d->mScrollOffset = -shift;
+  initialize();
 }
 
 void ComboBoxHeaderView::slotActivated( const QString &text )

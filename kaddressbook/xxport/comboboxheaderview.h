@@ -50,6 +50,9 @@ class ComboBoxHeaderView : public QHeaderView {
     int indexOfHeaderLabel( int logicalIndex ) const;
     QString valueOfHeaderLabel( int logicalIndex ) const;
 
+  public Q_SLOTS:
+    void adaptMove( int );
+
   private:
     inline QRect sectionRect( int logicalIndex ) const;
     inline void adjustComboBoxIndex( QComboBox *comboBox, int logicalIndex );
