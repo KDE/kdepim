@@ -2,6 +2,7 @@
 Type=Service
 Comment=This conduit syncs the handheld todo database with an Akonadi Todo Collection.
 Comment[et]=See kanal sünkroniseerib pihuarvuti ülesannete andmebaasi ja Akonadi ülesannete kogu.
+Comment[ja]=このコンジットはハンドヘルドの To-Do データベースを Akonadi の To-Do コレクションと同期させます。
 Comment[km]=conduit syncs នេះ​ជា​មូលដ្ឋាន​ទិន្នន័យ​ការងារ​ត្រូវ​ធ្វើ​ជា​មួយ​នឹង​ការ​ប្រមូលផ្ដុំ​ការងារ​ត្រូវ​ធ្វើ​របស់ Akonadi ។
 Comment[nb]=Denne kanalen synkroniserer den håndholdtes database med en Akonadi gjøremålssamling.
 Comment[nds]=Disse Kanaal synkroniseert de Handreekner-Opgavenlist mit en Akonadi-Opgavenlist.
@@ -15,6 +16,7 @@ Comment[zh_TW]=此導管將掌上型裝置的待辦事項資料庫與 Akonadi �
 Name=To-do
 Name[et]=Ülesanded
 Name[ga]=Tascanna
+Name[ja]=To-Do
 Name[km]=​ការងារ​ត្រូវ​ធ្វើ
 Name[ko]=할 일
 Name[nb]=Gjøremål
