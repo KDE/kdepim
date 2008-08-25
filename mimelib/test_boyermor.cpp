@@ -2,6 +2,7 @@
 #include <mimelib/string.h>
 
 #include <iostream>
+#include <cstdlib>
 using std::cerr;
 using std::cout;
 using std::endl;

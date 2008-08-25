@@ -30,6 +30,7 @@
     your version.
 */
 #include <config.h>
+#include <cstdlib>
 #include <ksieve/parser.h>
 using KSieve::Parser;
 

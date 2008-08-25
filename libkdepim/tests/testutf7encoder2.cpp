@@ -3,7 +3,7 @@
 #include <qtextstream.h>
 #include <string.h>
 #include <assert.h>
-#include <iostream.h>
+#include <iostream>
 
 int main( int argc, char * argv[] ) {
   if ( argc == 1 ) {
@@ -31,10 +31,10 @@ int main( int argc, char * argv[] ) {
       len = 1;
       cout << (enc->fromUnicode(QString(buffer[i]),len)).data();
     }
-    cout << endl;
+    std::cout << std::endl;
 #else
     int len = buffer.length();
-    cout << (enc->fromUnicode(buffer,len)).data() << endl;;
+    std::cout << (enc->fromUnicode(buffer,len)).data() << std::endl;;
 #endif // CHAR_WISE
     delete enc;
 #endif // else USE_STREAM
