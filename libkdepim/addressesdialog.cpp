@@ -906,7 +906,7 @@ AddressesDialog::searchLdap()
 void
 AddressesDialog::ldapSearchResult()
 {
-  QStringList emails = QStringList::split(',', d->ldapSearchDialog->selectedEMails() );
+  QStringList emails = d->ldapSearchDialog->selectedEMails().split(',');
   QStringList::iterator it( emails.begin() );
   QStringList::iterator end( emails.end() );
   for ( ; it != end; ++it ){

@@ -127,14 +127,18 @@ LdapSearchDialog::LdapSearchDialog( QWidget* parent, const char* name )
   setButtonGuiItem( Cancel, KStandardGuiItem::close() );
   QFrame *page = new QFrame( this );
   setMainWidget( page );
-  QVBoxLayout *topLayout = new QVBoxLayout( page, marginHint(), spacingHint() );
+  QVBoxLayout *topLayout = new QVBoxLayout();
+  topLayout->setContentsMargins( marginHint(), marginHint(),
+                                 marginHint(), marginHint() );
+  topLayout->setSpacing( spacingHint() );
+  page->setLayout( topLayout );
 
   QGroupBox *groupBox = new QGroupBox( i18n( "Search for Addresses in Directory" ),
                                        page );
-  QGridLayout *boxLayout = new QGridLayout( groupBox, 2,
-                                            5, spacingHint() );
+  QGridLayout *boxLayout = new QGridLayout();
+  boxLayout->setSpacing( spacingHint() );
   groupBox->setLayout( boxLayout );
-  boxLayout->setColStretch( 1, 1 );
+  boxLayout->setColumnStretch( 1, 1 );
 
   QLabel *label = new QLabel( i18n( "Search for:" ), groupBox );
   boxLayout->addWidget( label, 0, 0 );
@@ -147,10 +151,10 @@ LdapSearchDialog::LdapSearchDialog( QWidget* parent, const char* name )
   boxLayout->addWidget( label, 0, 2 );
 
   mFilterCombo = new KComboBox( groupBox );
-  mFilterCombo->insertItem( i18n( "Name" ) );
-  mFilterCombo->insertItem( i18n( "Email" ) );
-  mFilterCombo->insertItem( i18n( "Home Number" ) );
-  mFilterCombo->insertItem( i18n( "Work Number" ) );
+  mFilterCombo->addItem( i18n( "Name" ) );
+  mFilterCombo->addItem( i18n( "Email" ) );
+  mFilterCombo->addItem( i18n( "Home Number" ) );
+  mFilterCombo->addItem( i18n( "Work Number" ) );
   boxLayout->addWidget( mFilterCombo, 0, 3 );
 
   QSize buttonSize;
@@ -166,12 +170,12 @@ LdapSearchDialog::LdapSearchDialog( QWidget* parent, const char* name )
 
   mRecursiveCheckbox = new QCheckBox( i18n( "Recursive search" ), groupBox  );
   mRecursiveCheckbox->setChecked( true );
-  boxLayout->addMultiCellWidget( mRecursiveCheckbox, 1, 1, 0, 4 );
+  boxLayout->addWidget( mRecursiveCheckbox, 1, 0, 1, 4 );
 
   mSearchType = new KComboBox( groupBox );
-  mSearchType->insertItem( i18n( "Contains" ) );
-  mSearchType->insertItem( i18n( "Starts With" ) );
-  boxLayout->addMultiCellWidget( mSearchType, 1, 1, 3, 4 );
+  mSearchType->addItem( i18n( "Contains" ) );
+  mSearchType->addItem( i18n( "Starts With" ) );
+  boxLayout->addWidget( mSearchType, 1, 3, 1, 2 );
 
   topLayout->addWidget( groupBox );
 
@@ -315,7 +319,7 @@ void LdapSearchDialog::cancelQuery()
   }
 }
 
-void LdapSearchDialog::slotAddResult( const KPIM::LdapClient &client, const KLDAP::LdapObject& obj )
+void LdapSearchDialog::slotAddResult( const KPIM::LdapClient &, const KLDAP::LdapObject& obj )
 {
   new ContactListItem( mResultListView, obj.attributes() );
 }
@@ -377,9 +381,9 @@ void LdapSearchDialog::slotStartSearch()
   connect( mSearchButton, SIGNAL( clicked() ),
            this, SLOT( slotStopSearch() ) );
 
-  bool startsWith = (mSearchType->currentItem() == 1);
+  bool startsWith = (mSearchType->currentIndex() == 1);
 
-  QString filter = makeFilter( mSearchEdit->text().stripWhiteSpace(), mFilterCombo->currentText(), startsWith );
+  QString filter = makeFilter( mSearchEdit->text().trimmed(), mFilterCombo->currentText(), startsWith );
 
    // loop in the list and run the KPIM::LdapClients
   mResultListView->clear();
@@ -435,9 +439,9 @@ QString LdapSearchDialog::selectedEMails() const
   ContactListItem* cli = static_cast<ContactListItem*>( mResultListView->firstChild() );
   while ( cli ) {
     if ( cli->isSelected() ) {
-      QString email = asUtf8( cli->mAttrs[ "mail" ].first() ).stripWhiteSpace();
+      QString email = asUtf8( cli->mAttrs[ "mail" ].first() ).trimmed();
       if ( !email.isEmpty() ) {
-        QString name = asUtf8( cli->mAttrs[ "cn" ].first() ).stripWhiteSpace();
+        QString name = asUtf8( cli->mAttrs[ "cn" ].first() ).trimmed();
         if ( name.isEmpty() ) {
           result << email;
         } else {
