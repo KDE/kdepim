@@ -40,7 +40,7 @@ KCMKabConfig::KCMKabConfig( QWidget *parent, const QVariantList & )
   : KCModule( KCMKabConfigFactory::componentData(), parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
-  mConfigWidget = new KABConfigWidget( this, "mConfigWidget" );
+  mConfigWidget = new KABConfigWidget( this );
   layout->addWidget( mConfigWidget );
 
   connect( mConfigWidget, SIGNAL( changed( bool ) ), SIGNAL( changed( bool ) ) );

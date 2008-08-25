@@ -21,34 +21,36 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <Qt3Support/Q3GroupBox>
-#include <Qt3Support/Q3Header>
 #include <QtCore/QString>
+#include <QtGui/QGroupBox>
 #include <QtGui/QLabel>
+#include <QtGui/QListWidget>
+#include <QtGui/QListWidgetItem>
 #include <QtGui/QPushButton>
 #include <QtGui/QToolButton>
 #include <QtGui/QVBoxLayout>
 
-#include <k3listview.h>
 #include <kapplication.h>
 #include <kconfig.h>
+#include <kconfiggroup.h>
 #include <KDialogButtonBox>
 #include <khbox.h>
+#include <kiconloader.h>
 #include <klocale.h>
 #include <kvbox.h>
 
 #include "addhostdialog.h"
 #include "ldapoptionswidget.h"
-#include <kiconloader.h>
-#include <kconfiggroup.h>
 
-class LDAPItem : public Q3CheckListItem
+class LDAPItem : public QListWidgetItem
 {
   public:
-    LDAPItem( Q3ListView *parent, const KLDAP::LdapServer &server, bool isActive = false )
-      : Q3CheckListItem( parent, parent->lastItem(), QString(), Q3CheckListItem::CheckBox ),
+    LDAPItem( QListWidget *parent, const KLDAP::LdapServer &server, bool isActive = false )
+      : QListWidgetItem( parent, QListWidgetItem::UserType ),
         mIsActive( isActive )
     {
+      setFlags( Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable );
+      setCheckState( isActive ? Qt::Checked : Qt::Unchecked );
       setServer( server );
     }
 
@@ -56,7 +58,7 @@ class LDAPItem : public Q3CheckListItem
     {
       mServer = server;
 
-      setText( 0, mServer.host() );
+      setText( mServer.host() );
     }
 
     const KLDAP::LdapServer &server() const { return mServer; }
@@ -75,18 +77,12 @@ LDAPOptionsWidget::LDAPOptionsWidget( QWidget* parent,  const char* name )
   setObjectName( name );
   initGUI();
 
-  mHostListView->setSorting( -1 );
-  mHostListView->setAllColumnsShowFocus( true );
-  mHostListView->setFullWidth( true );
-  mHostListView->addColumn( QString() );
-  mHostListView->header()->hide();
-  QTimer::singleShot( 0, mHostListView, SLOT(triggerUpdate()) );
-
-  connect( mHostListView, SIGNAL( selectionChanged( Q3ListViewItem* ) ),
-           SLOT( slotSelectionChanged( Q3ListViewItem* ) ) );
-  connect( mHostListView, SIGNAL(doubleClicked( Q3ListViewItem *, const QPoint &, int )), this, SLOT(slotEditHost()));
-  connect( mHostListView, SIGNAL( clicked( Q3ListViewItem* ) ),
-           SLOT( slotItemClicked( Q3ListViewItem* ) ) );
+  connect( mHostListView, SIGNAL( currentItemChanged( QListWidgetItem*, QListWidgetItem* ) ),
+           this, SLOT( slotSelectionChanged( QListWidgetItem* ) ) );
+  connect( mHostListView, SIGNAL( itemDoubleClicked( QListWidgetItem* ) ),
+           this, SLOT( slotEditHost() ) );
+  connect( mHostListView, SIGNAL( itemClicked( QListWidgetItem* ) ),
+           this, SLOT( slotItemClicked( QListWidgetItem* ) ) );
 
   connect( mUpButton, SIGNAL( clicked() ), this, SLOT( slotMoveUp() ) );
   connect( mDownButton, SIGNAL( clicked() ), this, SLOT( slotMoveDown() ) );
@@ -96,24 +92,24 @@ LDAPOptionsWidget::~LDAPOptionsWidget()
 {
 }
 
-void LDAPOptionsWidget::slotSelectionChanged( Q3ListViewItem *item )
+void LDAPOptionsWidget::slotSelectionChanged( QListWidgetItem *item )
 {
   bool state = ( item != 0 );
   mEditButton->setEnabled( state );
   mRemoveButton->setEnabled( state );
-  mDownButton->setEnabled( item && item->itemBelow() );
-  mUpButton->setEnabled( item && item->itemAbove() );
+  mDownButton->setEnabled( item && (mHostListView->row( item ) != (mHostListView->count() - 1)) );
+  mUpButton->setEnabled( item && (mHostListView->row( item ) != 0) );
 }
 
-void LDAPOptionsWidget::slotItemClicked( Q3ListViewItem *item )
+void LDAPOptionsWidget::slotItemClicked( QListWidgetItem *item )
 {
   LDAPItem *ldapItem = dynamic_cast<LDAPItem*>( item );
   if ( !ldapItem )
     return;
 
-  if ( ldapItem->isOn() != ldapItem->isActive() ) {
+  if ( (ldapItem->checkState() == Qt::Checked) != ldapItem->isActive() ) {
     emit changed( true );
-    ldapItem->setIsActive( ldapItem->isOn() );
+    ldapItem->setIsActive( ldapItem->checkState() == Qt::Checked );
   }
 }
 
@@ -148,11 +144,10 @@ void LDAPOptionsWidget::slotEditHost()
 
 void LDAPOptionsWidget::slotRemoveHost()
 {
-  Q3ListViewItem *item = mHostListView->currentItem();
+  QListWidgetItem *item = mHostListView->takeItem( mHostListView->currentRow() );
   if ( !item )
     return;
 
-  mHostListView->takeItem( item );
   delete item;
 
   slotSelectionChanged( mHostListView->currentItem() );
@@ -166,33 +161,53 @@ static void swapItems( LDAPItem *item, LDAPItem *other )
   bool isActive = item->isActive();
   item->setServer( other->server() );
   item->setIsActive( other->isActive() );
-  item->setOn( other->isActive() );
+  item->setCheckState( other->isActive() ? Qt::Checked : Qt::Unchecked );
   other->setServer( server );
   other->setIsActive( isActive );
-  other->setOn( isActive );
+  other->setCheckState( isActive ? Qt::Checked : Qt::Unchecked );
 }
 
 void LDAPOptionsWidget::slotMoveUp()
 {
-  LDAPItem *item = static_cast<LDAPItem *>( mHostListView->selectedItem() );
-  if ( !item ) return;
-  LDAPItem *above = static_cast<LDAPItem *>( item->itemAbove() );
-  if ( !above ) return;
+  const QList<QListWidgetItem*> selectedItems = mHostListView->selectedItems();
+  if ( selectedItems.count() == 0 )
+    return;
+
+  LDAPItem *item = static_cast<LDAPItem *>( mHostListView->selectedItems().first() );
+  if ( !item )
+    return;
+
+  LDAPItem *above = static_cast<LDAPItem *>( mHostListView->item( mHostListView->row( item ) - 1 ) );
+  if ( !above )
+    return;
+
   swapItems( item, above );
+
   mHostListView->setCurrentItem( above );
-  mHostListView->setSelected( above, true );
+  above->setSelected( true );
+
   emit changed( true );
 }
 
 void LDAPOptionsWidget::slotMoveDown()
 {
-  LDAPItem *item = static_cast<LDAPItem *>( mHostListView->selectedItem() );
-  if ( !item ) return;
-  LDAPItem *below = static_cast<LDAPItem *>( item->itemBelow() );
-  if ( !below ) return;
+  const QList<QListWidgetItem*> selectedItems = mHostListView->selectedItems();
+  if ( selectedItems.count() == 0 )
+    return;
+
+  LDAPItem *item = static_cast<LDAPItem *>( mHostListView->selectedItems().first() );
+  if ( !item )
+    return;
+
+  LDAPItem *below = static_cast<LDAPItem *>( mHostListView->item( mHostListView->row( item ) + 1 ) );
+  if ( !below )
+    return;
+
   swapItems( item, below );
+
   mHostListView->setCurrentItem( below );
-  mHostListView->setSelected( below, true );
+  below->setSelected( true );
+
   emit changed( true );
 }
 
@@ -209,7 +224,7 @@ void LDAPOptionsWidget::restoreSettings()
     KLDAP::LdapServer server;
     KPIM::LdapSearch::readConfig( server, group, i, true );
     LDAPItem *item = new LDAPItem( mHostListView, server, true );
-    item->setOn( true );
+    item->setCheckState( Qt::Checked );
   }
 
   count = group.readEntry( "NumHosts",0 );
@@ -230,14 +245,13 @@ void LDAPOptionsWidget::saveSettings()
   KConfigGroup group( config, "LDAP" );
 
   uint selected = 0; uint unselected = 0;
-  Q3ListViewItemIterator it( mHostListView );
-  for ( ; it.current(); ++it ) {
-    LDAPItem *item = dynamic_cast<LDAPItem*>( it.current() );
+  for ( int i = 0; i < mHostListView->count(); ++i ) {
+    LDAPItem *item = dynamic_cast<LDAPItem*>( mHostListView->item( i ) );
     if ( !item )
       continue;
 
     KLDAP::LdapServer server = item->server();
-    if ( item->isOn() ) {
+    if ( item->checkState() == Qt::Checked ) {
       KPIM::LdapSearch::writeConfig( server, group, selected, true );
       selected++;
     } else {
@@ -266,14 +280,8 @@ void LDAPOptionsWidget::initGUI()
   setLayout(layout);
 
   QGroupBox *groupBox = new QGroupBox( i18n( "LDAP Servers" ), this );
-  /*
-   * FIXME porting
-  groupBox->setInsideSpacing( KDialog::spacingHint() );
-  groupBox->setInsideMargin( KDialog::marginHint() );
-*/
+  QVBoxLayout *mainLayout = new QVBoxLayout( groupBox );
 
-  QVBoxLayout *mainLayout = new QVBoxLayout;
-  groupBox->setLayout(mainLayout);
   // Contents of the QVGroupBox: label and hbox
   QLabel *label = new QLabel( i18n( "Check all servers that should be used:" ));
   mainLayout->addWidget(label);
@@ -282,18 +290,17 @@ void LDAPOptionsWidget::initGUI()
   hBox->setSpacing( 6 );
   mainLayout->addWidget(hBox);
   // Contents of the hbox: listview and up/down buttons on the right (vbox)
-  mHostListView = new K3ListView( hBox );
+  mHostListView = new QListWidget( hBox );
+  mHostListView->setSortingEnabled( false );
 
   KVBox* upDownBox = new KVBox( hBox );
   upDownBox->setSpacing( 6 );
   mUpButton = new QToolButton( upDownBox );
-  mUpButton->setObjectName( "mUpButton" );
   mUpButton->setIcon( KIcon( "go-up" ) );
   mUpButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   mUpButton->setEnabled( false ); // b/c no item is selected yet
 
   mDownButton = new QToolButton( upDownBox );
-  mDownButton->setObjectName( "mDownButton" );
   mDownButton->setIcon( KIcon( "go-down" ) );
   mDownButton->setIconSize( QSize( KIconLoader::SizeSmall, KIconLoader::SizeSmall ) );
   mDownButton->setEnabled( false ); // b/c no item is selected yet

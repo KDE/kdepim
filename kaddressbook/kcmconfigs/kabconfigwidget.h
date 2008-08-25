@@ -27,9 +27,8 @@
 #include <QtGui/QWidget>
 
 class QCheckBox;
-class QLineEdit;
 class QComboBox;
-
+class QLineEdit;
 
 class AddresseeWidget;
 
@@ -38,7 +37,7 @@ class KABConfigWidget : public QWidget
   Q_OBJECT
 
   public:
-    KABConfigWidget( QWidget *parent, const char *name = 0 );
+    KABConfigWidget( QWidget *parent = 0 );
 
     void restoreSettings();
     void saveSettings();
@@ -53,7 +52,6 @@ class KABConfigWidget : public QWidget
   private:
     QCheckBox *mNameParsing;
     QCheckBox *mViewsSingleClickBox;
-    QCheckBox *mTradeAsFamilyName;
     QComboBox *mEditorCombo;
     QLineEdit *mPhoneHook;
     QLineEdit *mFaxHook;

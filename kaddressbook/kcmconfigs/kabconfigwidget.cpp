@@ -21,11 +21,11 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <Qt3Support/Q3GroupBox>
 #include <QtGui/QBoxLayout>
 #include <QtGui/QCheckBox>
 #include <QtGui/QComboBox>
 #include <QtGui/QGridLayout>
+#include <QtGui/QGroupBox>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QLabel>
 #include <QtGui/QLineEdit>
@@ -33,7 +33,6 @@
 #include <QtGui/QTabWidget>
 #include <QtGui/QVBoxLayout>
 
-#include <k3listview.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kdialog.h>
@@ -45,10 +44,9 @@
 
 #include "kabconfigwidget.h"
 
-KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
+KABConfigWidget::KABConfigWidget( QWidget *parent )
   : QWidget( parent )
 {
-  setObjectName( name );
   QVBoxLayout *topLayout = new QVBoxLayout( this );
   topLayout->setSpacing( KDialog::spacingHint() );
   topLayout->setMargin( 0 );
@@ -62,32 +60,17 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
   layout->setSpacing( KDialog::spacingHint() );
   layout->setMargin( KDialog::marginHint() );
 
-  Q3GroupBox *groupBox = new Q3GroupBox( 0, Qt::Vertical, i18n( "General" ), generalPage );
-  QBoxLayout *boxLayout = new QVBoxLayout();
-  groupBox->layout()->addItem( boxLayout );
+  QGroupBox *groupBox = new QGroupBox( i18n( "General" ), generalPage );
+  QBoxLayout *boxLayout = new QVBoxLayout( groupBox );
   boxLayout->setAlignment( Qt::AlignTop );
 
   mViewsSingleClickBox = new QCheckBox( i18n( "Honor KDE single click" ), groupBox );
-  mViewsSingleClickBox->setObjectName( "msingle" );
   boxLayout->addWidget( mViewsSingleClickBox );
 
   mNameParsing = new QCheckBox( i18n( "Automatic name parsing for new addressees" ), groupBox );
-  mNameParsing->setObjectName( "mparse" );
   boxLayout->addWidget( mNameParsing );
 
-/**
-  TODO: show the checkbox when we can compile agains kdelibs from HEAD, atm it
-        doesn't work and would just confuse the users ;)
-
-        and please provide a better option string -- the current one is confusing
-        and the translators have no idea what it means.
-  mTradeAsFamilyName = new QCheckBox( i18n( "Trade single name component as family name" ), groupBox );
-  mTradeAsFamilyName->setObjectName( "mtrade" );
-  boxLayout->addWidget( mTradeAsFamilyName );
-*/
-
   mLimitContactDisplay = new QCheckBox( i18n( "Limit unfiltered display to 100 contacts" ), groupBox );
-  mLimitContactDisplay->setObjectName( "mlimit" );
   boxLayout->addWidget( mLimitContactDisplay );
 
   QBoxLayout *editorLayout = new QHBoxLayout();
@@ -108,9 +91,8 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
 
   layout->addWidget( groupBox );
 
-  groupBox = new Q3GroupBox( 0, Qt::Vertical, i18n( "Script-Hooks" ), generalPage );
-  QGridLayout *grid = new QGridLayout();
-  groupBox->layout()->addItem( grid );
+  groupBox = new QGroupBox( i18n( "Script-Hooks" ), generalPage );
+  QGridLayout *grid = new QGridLayout( groupBox );
   grid->setSpacing( KDialog::spacingHint() );
   label = new QLabel( i18n( "Phone:" ), groupBox );
   grid->addWidget( label, 0, 0 );
@@ -139,9 +121,8 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
 
   layout->addWidget( groupBox );
 
-  groupBox = new Q3GroupBox( 0, Qt::Vertical, i18n( "Location Map" ), generalPage );
-  boxLayout = new QVBoxLayout();
-  groupBox->layout()->addItem( boxLayout );
+  groupBox = new QGroupBox( i18n( "Location Map" ), generalPage );
+  boxLayout = new QVBoxLayout( groupBox );
   boxLayout->setSpacing( KDialog::spacingHint() );
   boxLayout->setAlignment( Qt::AlignTop );
 
@@ -159,8 +140,6 @@ KABConfigWidget::KABConfigWidget( QWidget *parent, const char *name )
 
   connect( mNameParsing, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
   connect( mViewsSingleClickBox, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
-//TODO: put back when this option is re-enabled and working
-//  connect( mTradeAsFamilyName, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
   connect( mLimitContactDisplay, SIGNAL( toggled( bool ) ), SLOT( modified() ) );
   connect( mPhoneHook, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
   connect( mSMSHook, SIGNAL( textChanged( const QString& ) ), SLOT( modified() ) );
@@ -196,8 +175,6 @@ void KABConfigWidget::restoreSettings()
 
   KConfig _config("kabcrc", KConfig::NoGlobals);
   KConfigGroup config(&_config, "General" );
-//TODO: put back when this option is re-enabled and working
-//mTradeAsFamilyName->setChecked( config.readEntry( "TradeAsFamilyName", true ) );
   mLimitContactDisplay->setChecked( config.readEntry( "LimitContactDisplay", true ) );
 
   blockSignals( blocked );
@@ -220,8 +197,6 @@ void KABConfigWidget::saveSettings()
 
   KConfig _config("kabcrc", KConfig::NoGlobals);
   KConfigGroup config(&_config, "General" );
-//TODO: put back when this option is re-enabled and working
-//config.writeEntry( "TradeAsFamilyName", mTradeAsFamilyName->isChecked() );
   config.writeEntry( "LimitContactDisplay", mLimitContactDisplay->isChecked() );
 
   emit changed( false );

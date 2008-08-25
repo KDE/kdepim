@@ -26,10 +26,10 @@
 
 #include <QtGui/QWidget>
 
-class QToolButton;
-class K3ListView;
-class Q3ListViewItem;
+class QListWidget;
+class QListWidgetItem;
 class QPushButton;
+class QToolButton;
 
 class LDAPOptionsWidget : public QWidget
 {
@@ -50,15 +50,15 @@ class LDAPOptionsWidget : public QWidget
     void slotAddHost();
     void slotEditHost();
     void slotRemoveHost();
-    void slotSelectionChanged( Q3ListViewItem* );
-    void slotItemClicked( Q3ListViewItem* );
+    void slotSelectionChanged( QListWidgetItem* );
+    void slotItemClicked( QListWidgetItem* );
     void slotMoveUp();
     void slotMoveDown();
 
   private:
     void initGUI();
 
-    K3ListView* mHostListView;
+    QListWidget* mHostListView;
 
     QPushButton* mAddButton;
     QPushButton* mEditButton;
