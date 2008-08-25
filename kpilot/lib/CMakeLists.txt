@@ -38,7 +38,7 @@ target_link_libraries(kpilot
 #---------- INSTALL -----------------------*
 set(kpilotinclude_HEADERS
 	kpilotlink.h
-	kpilot_export.h
+	${CMAKE_CURRENT_BINARY_DIR}/kpilot_export.h
 	kpilotdevicelink.h
 	kpilotlocallink.h
 	pilot.h
