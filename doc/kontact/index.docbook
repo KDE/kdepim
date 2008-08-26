@@ -1171,10 +1171,89 @@ documentation</ulink>.
 </sect1>
 <sect1 id="kontact-configure-profiles">
 <title>&kontact; Profiles</title>
-<para>&kontact;'s profile support makes it possible to load and save user settings in profiles.
-The settings stored in the profile include typical Look&amp;Feel related options such as app-specific color schemes, icon sets, toolbar layout and application defaults. Personal information, e.g. accounts and identities are not stored in profiles. 
+<para>A profile is an arbitrary set of configuration values for any of the kontact components (mail, calendar, etc.) accompanied by a configuration file for the profile itself, which specifies its name, description etc. An example profile configuration file looks like this:
+</para>
+
+<informalexample>
+<para>
+<literallayout>
+[Kontact Profile]
+Description=Default KDE Kontact settings
+Identifier=KontactDefaults
+Name=Kontact Style
+</literallayout>
+</para>
+<para>
+The format is the standard .ini file format used for configuration throughout KDE, including in kiosk.
+</para>
+</informalexample>
+
+<para>
+&kontact;'s profile support makes it possible to load and save user settings in profiles.
+The settings stored in the profile include typical Look&amp;Feel related options such as app-specific color schemes, icon sets, toolbar layout and application defaults. Personal information, e.g. accounts and identities are not stored in profiles.
+</para>
+
+<para>
 Two default profiles are provided by Kontact: &quot;&kontact; Style&quot;, which contains the default &kontact; settings, and &quot;Outlook Style&quot;, adapting &kontact; to Microsoft Outlook Look&amp;Feel.
-The user can adapt existing profiles, create new profiles from his current settings, and import and export profiles. To manage profiles, choose &quot;Configure Profiles&quot; from the &quot;Settings&quot; menu.
+The user can adapt existing profiles, create new profiles from his current settings, and import and export profiles. 
+</para>
+
+<para>
+The dialog opened through Settings -> "Configure Profiles" allows profiles to be imported, exported, created, deleted and saved. They can also be loaded (applied) from there. Saving applies the currently active settings throughout Kontact to the selected profile, while import and export allow existing profiles to be written to or read from directories. To change a setting, one can edit the kontactrc file using a text editor and save it.
+</para>
+
+<para>
+Apart from the configuration file, a profile directory can contain configuration skeleton files for Kontact as a whole (kontactrc) or for any of the components (korganizerrc, kmailrc, etc.). These files can in turn contain any configuration values that the profile should set (overriding the user's current configuration) when the profile is loaded.
+
+<itemizedlist>
+        <listitem><para>
+          The korganizer configuration for the "Kontact Defaults" profile for example sets the calendar view to be merged, by default :
+<informalexample>
+<para>
+                [Views]
+                Agenda View Calendar Display=CalendarsMerged
+</para>
+</informalexample>
+</para>
+        </listitem>
+
+        <listitem><para>
+           The Outlook-like profile, on the other hand, sets it to be side by side, like in Outlook:
+<informalexample>
+<para>
+                [Views]
+                Agenda View Calendar Display=CalendarsSideBySide
+</para>
+</informalexample>
+</para>
+        </listitem>
+
+        <listitem><para>
+           If a profile wants to reset or remove a configuration key, it can specify that key like so:
+<informalexample>
+<para>
+                [General]
+                activeBackground=KONTACT_PROFILE_DELETE_KEY
+</para>
+</informalexample>
+</para>
+        </listitem>
+       
+        <listitem><para>
+           This example resets the background color to whatever the KDE style suggests. The Outlook compatability profile sets this key to the Windows/Outlook color style:
+<informalexample>
+<para>
+           [General]
+           activeBackground=47,103,255
+</para>
+</informalexample>
+</para>
+        </listitem>
+    </itemizedlist>
+</para>
+
+<para>
+Currently Kontact ships with two (incomplete) profiles, one which (re-)configures things to look and feel the way Kontact natively does, while the other one attempts to approach the look&amp;feel of Outlook on Windows. To this end they change a variety of things, concretely the color palette used, the icon theme used, how the calendar view is layed out, whether the navigation toolbar is visible how the splitter sizes are initialized, in the main kontact interface.
 </para>
 </sect1>
 </chapter>
