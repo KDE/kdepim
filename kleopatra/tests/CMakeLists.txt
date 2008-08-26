@@ -40,7 +40,7 @@ set(test_verify_SRCS test_verify.cpp)
 add_definitions( -DKLEO_TEST_GNUPGHOME=\\"${CMAKE_CURRENT_SOURCE_DIR}/gnupg_home\\" )
 add_definitions( -DKLEO_TEST_DATADIR=\\"${CMAKE_CURRENT_SOURCE_DIR}\\" )
 kde4_add_unit_test(test_verify TESTNAME kleo-verifytest ${test_verify_SRCS})
-target_link_libraries(test_verify kleo ${QT_QTTEST_LIBRARY})
+target_link_libraries(test_verify kleo ${QT_QTTEST_LIBRARY} ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} ${KDE4_KDECORE_LIBS} ${QGPGME_LIBRARIES})
 
 ########### next target ###############
 
