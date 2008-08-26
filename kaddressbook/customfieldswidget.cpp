@@ -29,6 +29,7 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QSpinBox>
+#include <QRegExpValidator>
 //Added by qt3to4:
 #include <QGridLayout>
 #include <QHBoxLayout>
@@ -66,6 +67,7 @@ AddFieldDialog::AddFieldDialog( QWidget *parent )
   layout->addWidget( label, 0, 0 );
 
   mTitle = new KLineEdit( page );
+  mTitle->setValidator( new QRegExpValidator( QRegExp( "([a-zA-Z]|\\d|-)+" ), mTitle ) );
   label->setBuddy( mTitle );
   layout->addWidget( mTitle, 0, 1 );
 
