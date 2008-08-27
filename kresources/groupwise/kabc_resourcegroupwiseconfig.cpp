@@ -179,7 +179,7 @@ void ResourceGroupwiseConfig::saveAddressBookSettings()
     mResource->prefs()->setLastSequenceNumber( 0 );
     mResource->prefs()->setFirstSequenceNumber( 0 );
   }
-  selectedWrite = mWriteAddressBookIds[ mAddressBookBox->currentIndex() ];
+  selectedWrite = mWriteAddressBookIds.value( mAddressBookBox->currentIndex() );
 
   mResource->prefs()->setReadAddressBooks( selectedRead );
   mResource->prefs()->setWriteAddressBook( selectedWrite );
