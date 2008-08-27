@@ -300,8 +300,8 @@ void MALConduit::printLogMessage(QString msg)
 	FUNCTIONSETUP;
 	// Remove the pseudo-progressbar:
 	QString newmsg(msg);
-	newmsg.replace( QRegExp("^\\s*\\.*\\s*"), "");
-	newmsg.replace( QRegExp("\\s*\\.*\\s*$"), "");
+	newmsg.remove( QRegExp( "^\\s*\\.*\\s*" ) );
+	newmsg.remove( QRegExp( "\\s*\\.*\\s*$" ) );
 	if (newmsg.length()>0)
 	{
 		emit logMessage(newmsg);

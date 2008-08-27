@@ -414,7 +414,7 @@ void PilotDateEntry::setLocation(const QString &s)
 	// per QString docs, this covers null and 0 length
 	if( s.isEmpty() )
 	{
-		note.replace(rxp,"");
+		note.remove( rxp );
 	}
 	else
 	{
@@ -445,8 +445,8 @@ QString PilotDateEntry::getLocation() const
 	{
 		QString location = rxp.capturedTexts().first();
 		rxp = QRegExp("^[Ll]ocation:[\\s|\t]*");
-		location.replace(rxp,"");
-		location.replace("\n", "");
+		location.remove( rxp );
+		location.remove( "\n" );
 		return location;
 	}
 	else
@@ -465,7 +465,7 @@ QString PilotDateEntry::getNote() const
 {
 	QString note = Pilot::fromPilot(getNoteP());
 	QRegExp rxp = QRegExp("^[Ll]ocation:[^\n]+\n");
-	note.replace(rxp, "" );
+	note.remove( rxp );
 	return note;
 }
 
