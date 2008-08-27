@@ -780,7 +780,10 @@ void AddresseeLineEdit::slotLDAPSearchData( const KPIM::LdapResultList& adrs )
        && completionMode() != KGlobalSettings::CompletionNone
        && completionMode() != KGlobalSettings::CompletionShell) {
     setText( m_previousAddresses + m_searchString );
-    doCompletion( m_lastSearchMode );
+    // only complete again if the user didn't change the selection while we were waiting
+    // otherwise the completion box will be closed
+    if ( m_searchString.stripWhiteSpace() != completionBox()->currentText().stripWhiteSpace() )
+      doCompletion( m_lastSearchMode );
   }
 }
 
