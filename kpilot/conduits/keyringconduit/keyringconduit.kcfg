@@ -4,7 +4,7 @@
 	<kcfgfile name="kpilotrc"/>
 	<group name="keyring-conduit">
 		<entry name="DatabaseUrl" type="Path">
-			<label>Wich local file do you want to use to sync the palm database with?</label>
+			<label>Which local file do you want to use to sync the palm database with?</label>
 			<default>$HOME/Keyring.pdb</default>
 		</entry>
 		<entry name="PasswordSetting" type="Enum">
