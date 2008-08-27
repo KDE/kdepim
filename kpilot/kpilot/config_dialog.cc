@@ -469,7 +469,7 @@ void ConduitConfigWidget::loadAndConfigure(QTreeWidgetItem *p)
 
 	if (!d)
 	{
-		DEBUGKPILOT << "Can't cast to config base object.";
+		DEBUGKPILOT << "Cannot cast to config base object.";
 		fStack->setCurrentIndex(BROKEN_CONDUIT);
 		warnNoLibrary(p);
 		return;
@@ -484,7 +484,7 @@ void ConduitConfigWidget::loadAndConfigure(QTreeWidgetItem *p)
 	}
 	if (fStack->insertWidget(NEW_CONDUIT,d->widget())<0)
 	{
-		DEBUGKPILOT << "Can't add config widget to stack.";
+		DEBUGKPILOT << "Cannot add config widget to stack.";
 	}
 	else
 	{
@@ -575,7 +575,7 @@ void ConduitConfigWidget::warnNoLibrary(const QTreeWidgetItem *p)
 		"for the conduit %1. This means that the "
 		"conduit was not installed properly.</qt>", p->text(CONDUIT_NAME));
 
-	DEBUGKPILOT << "Can't load library for ["
+	DEBUGKPILOT << "Cannot load library for ["
 		<< p->text(CONDUIT_NAME) << ']';
 
 	KMessageBox::error(this, msg, i18n("Conduit Error"));

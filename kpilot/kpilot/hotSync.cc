@@ -996,7 +996,7 @@ void RestoreAction::setDirectory( const QString &path )
 		}
 		else
 		{
-			WARNINGKPILOT << "Can't open" << s;
+			WARNINGKPILOT << "Cannot open" << s;
 			logMessage(i18n("File '%1' cannot be read.",s));
 		}
 	}
@@ -1055,7 +1055,7 @@ void RestoreAction::setDirectory( const QString &path )
 	listFile<<dbi.path;
 	if ( !deviceLink()->installFiles( listFile, false /* don't delete */ ) )
 	{
-		WARNINGKPILOT << "Couldn't  restore" << dbi.path;
+		WARNINGKPILOT << "Could not  restore" << dbi.path;
 		logError(i18n("Cannot restore file `%1'.",databaseInfo.fileName()));
 	}
 }

@@ -129,13 +129,13 @@ bool TodoConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 	// due date is set.
 	else if( pcTodo->hasDueDate() != !hhTodo.getIndefinite() )
 	{
-		DEBUGKPILOT << "On has and other doesn't have due date. PC[" 
+		DEBUGKPILOT << "On has and other does not have due date. PC[" 
 			<< pcTodo->hasDueDate() << "], HH[" << !hhTodo.getIndefinite() << ']';
 		dueDateEqual = false;
 	}
 	else
 	{
-		DEBUGKPILOT << "Both don't have duedate.";
+		DEBUGKPILOT << "Both do not have duedate.";
 		dueDateEqual = true;
 	}
 	

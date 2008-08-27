@@ -289,7 +289,7 @@ void DeviceCommWorker::openDevice()
 
 	if (tryTemp)
 	{
-		DEBUGKPILOT << ": Couldn't open main pilot path. "
+		DEBUGKPILOT << ": Could not open main pilot path. "
 			<< "Now trying temp device: ["
 			<< link()->fTempDevice << "].";
 		deviceOpened = open(link()->fTempDevice);

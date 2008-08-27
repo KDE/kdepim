@@ -75,7 +75,7 @@ void Memofiles::load (bool loadAll)
 		QDir dir = QDir(categoryDirname);
 		if (! dir.exists() ) {
 			DEBUGKPILOT << ": category directory: [" << categoryDirname
-				<< "] doesn't exist. skipping.";
+				<< "] does not exist. skipping.";
 			continue;
 		}
 
@@ -93,7 +93,7 @@ void Memofiles::load (bool loadAll)
 					memofile->setModified(true);
 					_memofiles.append(memofile);
 					DEBUGKPILOT
-						<< ": looks like we didn't know about this one until now. "
+						<< ": looks like we did not know about this one until now. "
 						<< "created new memofile for category: ["
 						<< categoryName << "], file: [" << file << ']';
 
@@ -109,7 +109,7 @@ void Memofiles::load (bool loadAll)
 					memofile->load();
 				}
 			} else {
-				DEBUGKPILOT << ": couldn't read file: [" << info.filePath() << "]. skipping it.";
+				DEBUGKPILOT << ": could not read file: [" << info.filePath() << "]. skipping it.";
 
 			}
 		} // end of iterating through files in this directory
@@ -173,11 +173,11 @@ bool Memofiles::checkDirectory(QString & dir)
 
 	if ( ! fid.isDir() ) {
 
-		DEBUGKPILOT << ": directory: [" << dir << "] doesn't exist. creating....";
+		DEBUGKPILOT << ": directory: [" << dir << "] does not exist. creating....";
 
 		if (!d.mkdir(dir)) {
 
-			DEBUGKPILOT << ": could not create directory: [" << dir << "].  this won't end well.";
+			DEBUGKPILOT << ": could not create directory: [" << dir << "].  this will not end well.";
 			return false;
 		} else {
 			DEBUGKPILOT << ": directory created: [" << dir << ']';
@@ -200,7 +200,7 @@ void Memofiles::eraseLocalMemos ()
 		QString dir = _baseDirectory + QDir::separator() + it.value();
 
 		if (!folderRemove(QDir(dir))) {
-			DEBUGKPILOT << ": couldn't erase all local memos from: ["<< dir << ']';
+			DEBUGKPILOT << ": could not erase all local memos from: ["<< dir << ']';
 		}
 	}
 	QDir d(_baseDirectory);
@@ -235,7 +235,7 @@ bool Memofiles::loadFromMetadata ()
 
 	QFile f( _memoMetadataFile );
 	if ( !f.open( QIODevice::ReadOnly ) ) {
-		DEBUGKPILOT << ": ooh, bad.  couldn't open your memo-id file for reading.";
+		DEBUGKPILOT << ": ooh, bad.  could not open your memo-id file for reading.";
 		return false;
 	}
 
@@ -275,7 +275,7 @@ bool Memofiles::loadFromMetadata ()
 		}
 
 		if (errors > 0) {
-			DEBUGKPILOT << ": error: couldn't understand this line: [" << data << ']';
+			DEBUGKPILOT << ": error: could not understand this line: [" << data << ']';
 		}
 	}
 
@@ -408,7 +408,7 @@ bool Memofiles::saveMemoMetadata()
 	QTextStream stream(&f);
 
 	if( !f.open(QIODevice::WriteOnly) ) {
-		DEBUGKPILOT << ": ooh, bad.  couldn't open your memo-id file for writing.";
+		DEBUGKPILOT << ": ooh, bad.  could not open your memo-id file for writing.";
 		return false;
 	}
 
@@ -447,7 +447,7 @@ MemoCategoryMap Memofiles::readCategoryMetadata()
 	QTextStream stream(&f);
 
 	if( !f.open(QIODevice::ReadOnly) ) {
-		DEBUGKPILOT << "Couldn't open your categories file for reading.";
+		DEBUGKPILOT << "Could not open your categories file for reading.";
 		return map;
 	}
 
@@ -474,7 +474,7 @@ MemoCategoryMap Memofiles::readCategoryMetadata()
 		}
 
 		if (errors > 0) {
-			DEBUGKPILOT << ": error: couldn't understand this line: [" << data << ']';
+			DEBUGKPILOT << ": error: could not understand this line: [" << data << ']';
 		}
 	}
 
@@ -496,7 +496,7 @@ bool Memofiles::saveCategoryMetadata()
 	QTextStream stream(&f);
 
 	if( !f.open(QIODevice::WriteOnly) ) {
-		DEBUGKPILOT << ": ooh, bad.  couldn't open your categories file for writing.";
+		DEBUGKPILOT << ": ooh, bad.  could not open your categories file for writing.";
 		return false;
 	}
 

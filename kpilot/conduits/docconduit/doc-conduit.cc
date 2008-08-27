@@ -347,7 +347,7 @@ bool DOCConduit::doSync(docSyncInfo &sinfo)
 #endif
 			} else {
 #ifdef DEBUG
-				DEBUGKPILOT<<"couldn't open file"<<docconverter.txtFilename()<<" for reading!!!";
+				DEBUGKPILOT<<"could not open file"<<docconverter.txtFilename()<<" for reading!!!";
 #endif
 			}
 		}
@@ -677,7 +677,7 @@ bool DOCConduit::needsSync(docSyncInfo &sinfo)
 	if (!fDBListSynced.contains(sinfo.handheldDB)) {
 		// the database wasn't included on last sync, so it has to be new.
 #ifdef DEBUG
-		DEBUGKPILOT<<"Database"<<sinfo.dbinfo.name<<" wasn't included in the previous sync!";
+		DEBUGKPILOT<<"Database"<<sinfo.dbinfo.name<<" was not included in the previous sync!";
 #endif
 
 		/* Resolution Table:

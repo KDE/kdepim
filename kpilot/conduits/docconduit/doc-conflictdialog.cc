@@ -92,7 +92,7 @@ ResolutionDialog::ResolutionDialog( QWidget* parent, const QString& caption, syn
 		DEBUGKPILOT<<"Adding resolution options for the databases";
 		syncInfoList::Iterator it;
 		int nr=0;
-		DEBUGKPILOT<<"We're having"<<(*syncInfo).size()<<" entries in the database list";
+		DEBUGKPILOT<<"We have "<<(*syncInfo).size()<<" entries in the database list";
 		for (it=syncInfo->begin(); it!=syncInfo->end(); ++it ) {
 			docSyncInfo si=(*it);
 			conflictEntry cE;

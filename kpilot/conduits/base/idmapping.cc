@@ -238,7 +238,7 @@ void IDMapping::map( const QString &hhRecordId, const QString &pcId )
 	{ 
 		WARNINGKPILOT << "Error.  pcId:[" << pcId 
 			<< "] already mapped to hhRecordId: [" << existingHhRecordId
-			<< "].  Shouldn't have same pcId mapped also to incoming: ["
+			<< "].  Should not have same pcId mapped also to incoming: ["
 			<< hhRecordId << "].  Removing it.";
 		d->fSource.mappings()->remove( existingHhRecordId );
 	}

@@ -452,7 +452,7 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
     KService::Ptr service = KService::serviceByDesktopName(fDesktopName);
 	if (!service)
 	{
-		WARNINGKPILOT << "Can't find desktop file for conduit ["
+		WARNINGKPILOT << "Cannot find desktop file for conduit ["
 			<< fDesktopName << ']';
 		addSyncLogEntry(i18n("Could not find conduit %1.",fDesktopName));
 		return false;
@@ -461,7 +461,7 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
     KPluginLoader loader(*service.constData());
 
     if (!loader.isLoaded()) {
-		WARNINGKPILOT << "Can't load library ["
+		WARNINGKPILOT << "Cannot load library ["
             << service->library()
 			<< "] - "
             << loader.errorString();
@@ -479,7 +479,7 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
 	KPluginFactory *factory = loader.factory();
 	if (!factory)
 	{
-		WARNINGKPILOT << "Can't find factory in library ["
+		WARNINGKPILOT << "Cannot find factory in library ["
 			<< service->library() << ']';
 		addSyncLogEntry(i18n("Could not initialize conduit %1.",fDesktopName));
 		return false;
@@ -496,7 +496,7 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
 
 	if (!object)
 	{
-		WARNINGKPILOT << "Can't create SyncAction.";
+		WARNINGKPILOT << "Cannot create SyncAction.";
 		addSyncLogEntry(i18n("Could not create conduit %1.",fDesktopName));
 		return false;
 	}
@@ -505,7 +505,7 @@ ConduitProxy::ConduitProxy(KPilotLink *p,
 
 	if (!fConduit)
 	{
-		WARNINGKPILOT << "Can't cast to ConduitAction.";
+		WARNINGKPILOT << "Cannot cast to ConduitAction.";
 		addSyncLogEntry(i18n("Could not create conduit %1.", fDesktopName));
 		return false;
 	}

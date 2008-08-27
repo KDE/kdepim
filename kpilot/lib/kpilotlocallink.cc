@@ -306,19 +306,19 @@ KPilotLocalLink::~KPilotLocalLink()
 	QFile in( sourcefile );
 	if ( !in.exists() )
 	{
-		WARNINGKPILOT << "Source file [" << sourcefile << "] doesn't exist.";
+		WARNINGKPILOT << "Source file [" << sourcefile << "] does not exist.";
 		return false;
 	}
 	if ( !in.open( QIODevice::ReadOnly | QIODevice::Unbuffered ) )
 	{
-		WARNINGKPILOT << "Can't read source file [" << sourcefile << ']';
+		WARNINGKPILOT << "Cannot read source file [" << sourcefile << ']';
 		return false;
 	}
 
 	QFile out( destfile );
 	if ( !out.open( QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Unbuffered ) )
 	{
-		WARNINGKPILOT << "Can't write destination file" << destfile;
+		WARNINGKPILOT << "Cannot write destination file" << destfile;
 		return false;
 	}
 

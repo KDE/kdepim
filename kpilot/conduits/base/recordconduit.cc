@@ -213,16 +213,16 @@ RecordConduit::~RecordConduit()
 	 */
 	if( !fHHDataProxy->commit() )
 	{
-		DEBUGKPILOT << "Couldn't save Palm changes. Sync failed";
-		emit logError( i18n( "Couldn't save Palm changes. Sync failed." ) );
+		DEBUGKPILOT << "Could not save Palm changes. Sync failed";
+		emit logError( i18n( "Could not save Palm changes. Sync failed." ) );
 		fHHDataProxy->rollback();
 		return false;
 	}
 	
 	if( !fPCDataProxy->commit() )
 	{
-		DEBUGKPILOT << "Couldn't save PC changes. Sync failed";
-		emit logError( i18n( "Couldn't save PC changes. Sync failed." ) );
+		DEBUGKPILOT << "Could not save PC changes. Sync failed";
+		emit logError( i18n( "Could not save PC changes. Sync failed." ) );
 		
 		fPCDataProxy->rollback();
 		fHHDataProxy->rollback();

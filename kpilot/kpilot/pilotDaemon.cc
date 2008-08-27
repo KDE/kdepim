@@ -600,7 +600,7 @@ bool PilotDaemon::setupPilotLink()
 	fPilotLink = new KPilotDeviceLink( 0, 0, fTempDevice );
 	if (!fPilotLink)
 	{
-		WARNINGKPILOT << "Can't get pilot link.";
+		WARNINGKPILOT << "Can not get pilot link.";
 		return false;
 	}
 

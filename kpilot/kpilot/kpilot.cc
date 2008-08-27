@@ -186,7 +186,7 @@ void KPilotInstaller::startDaemonIfNeeded()
 
 		if (!daemonStarted)
 		{
-			WARNINGKPILOT << "Can't start daemon: " << daemonError;
+			WARNINGKPILOT << "Could not start daemon: " << daemonError;
 			log(i18n("Could not start the "
 				"KPilot daemon. The system error message "
 				"was: &quot;%1&quot;",daemonError));
@@ -579,7 +579,7 @@ static bool runConfigure(OrgKdeKpilotDaemonInterface &daemon,QWidget *parent)
 
 	if (!options)
 	{
-		WARNINGKPILOT << "Can't allocate KPilotOptions object";
+		WARNINGKPILOT << "Cannot allocate KPilotOptions object";
 		daemon.requestSync(rememberedSync);
 		return false;
 	}
@@ -698,7 +698,7 @@ void KPilotInstaller::configure()
 
 	if ( kpilotStatus()!=Normal || fP->fConfigureKPilotDialogInUse )
 	{
-    		DEBUGKPILOT << "can't configure. in use.";
+		DEBUGKPILOT << "cannot configure. in use.";
 		log(i18n("Cannot configure KPilot right now (KPilot's UI is already busy)."));
 		return;
 	}

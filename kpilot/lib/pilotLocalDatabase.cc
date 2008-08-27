@@ -759,7 +759,7 @@ void PilotLocalDatabase::setDBPath(const QString &s)
 	f = pi_file_open( fileName );
 	if (!f)
 	{
-		WARNINGKPILOT << "Can't open" << path;
+		WARNINGKPILOT << "Cannot open" << path;
 		return false;
 	}
 

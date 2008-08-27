@@ -75,7 +75,7 @@ bool Memofile::load()
 	QFile f( filenameAbs() );
 	if ( !f.open( QIODevice::ReadOnly ) )
 	{
-		DEBUGKPILOT << ": Couldn't open file: [" << filenameAbs() << "] to read.";
+		DEBUGKPILOT << ": Could not open file: [" << filenameAbs() << "] to read.";
 		return false;
 	}
 
@@ -91,7 +91,7 @@ bool Memofile::load()
 		text = body;
 	} else {
 		DEBUGKPILOT << ": text of your memofile: [" << filename()
- 			<< "] didn't include the filename as the first line.  fixing it...";
+ 			<< "] did not include the filename as the first line.  fixing it...";
 		text = title + CSL1("\n") + body;
 	}
 	
@@ -152,8 +152,8 @@ bool Memofile::saveFile()
 
 	QFile f( filenameAbs() );
 	if ( !f.open( QIODevice::WriteOnly ) ) {
-		DEBUGKPILOT << ": Couldn't open file: [" << filenameAbs() << "] to write your memo to.  "
-			<< "This won't end well.";
+		DEBUGKPILOT << ": Could not open file: [" << filenameAbs() << "] to write your memo to.  "
+			<< "This will not end well.";
 		return false;
 	}
 

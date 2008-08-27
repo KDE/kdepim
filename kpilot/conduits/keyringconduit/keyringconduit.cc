@@ -110,8 +110,8 @@ bool KeyringConduit::initDataProxies()
 		Wallet *wallet = Wallet::openWallet( Wallet::LocalWallet(), window );
 		if ( ! wallet )
 		{
-			WARNINGKPILOT << "Error. Couldn't open wallet!";
-			addSyncLogEntry( i18n( "Error. Couldn't open wallet!" ) );
+			WARNINGKPILOT << "Error. Could not open wallet!";
+			addSyncLogEntry( i18n( "Error. Could not open wallet!" ) );
 			return false;
 		}
 		

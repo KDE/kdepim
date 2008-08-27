@@ -439,7 +439,7 @@ void CalendarConduit::setExceptions( PilotDateEntry* de, const EventPtr& e ) con
 	ex_List = new struct tm[excount];
 	if( !ex_List )
 	{
-		WARNINGKPILOT << "Couldn't allocate memory for the exceptions";
+		WARNINGKPILOT << "Could not allocate memory for the exceptions";
 		de->setExceptionCount( 0 );
 		de->setExceptions( 0 );
 		return;
@@ -693,7 +693,7 @@ void CalendarConduit::setRecurrence( EventPtr e, const PilotDateEntry& de ) cons
 		
 		case repeatNone:
 		default :
-			WARNINGKPILOT << "Can't handle repeat type " << de.getRepeatType();
+			WARNINGKPILOT << "Can not handle repeat type " << de.getRepeatType();
 			break;
 	}
 	
