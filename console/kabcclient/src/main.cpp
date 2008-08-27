@@ -125,8 +125,7 @@ int main(int argc, char** argv)
     KCmdLineArgs* args = KCmdLineArgs::parsedArgs();
 
     qInstallMsgHandler(avoidQPixmapWarning);
-    bool gui = args->getOption("input-format") == "dialog";
-    KApplication app(gui);
+    KApplication app;
     qInstallMsgHandler(0);
 
     FormatFactory formatFactory;
