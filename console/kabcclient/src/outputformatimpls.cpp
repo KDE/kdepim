@@ -676,7 +676,7 @@ bool CSVOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream& s
     for (int i = 0; i < m_template->columns(); ++i)
     {
         QString text = m_template->fieldText(i, addressee);
-        text.replace("\n", "\\n");
+        text.replace(QChar('\n'), "\\n");
 
         columns.append(m_template->quote() + text + m_template->quote());
     }
