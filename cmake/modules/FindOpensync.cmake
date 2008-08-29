@@ -17,7 +17,7 @@ else (OPENSYNC_INCLUDE_DIRS AND OPENSYNC_LDFLAGS)
   IF (NOT WIN32)
     # use pkg-config to get the directories and then use these values
     # in the FIND_PATH() and FIND_LIBRARY() calls
-    PKG_CHECK_MODULES(OPENSYNC opensync-1.0>=0.33)
+    PKG_CHECK_MODULES(OPENSYNC libopensync>=0.37)
   ENDIF(NOT WIN32)
 
   include(FindPackageHandleStandardArgs)
