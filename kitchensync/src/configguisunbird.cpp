@@ -279,7 +279,7 @@ WebdavCalendar::WebdavCalendar( QWidget *parent )
   : QWidget( parent )
 {
   initGui();
-};
+}
 
 WebdavCalendar::WebdavCalendar( const QString &username, const QString &password, const QString &url,
                                 const QString &defaultcal, const QString &days, QWidget *parent )
