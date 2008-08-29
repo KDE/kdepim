@@ -94,21 +94,24 @@ void Member::setConfiguration( const QByteArray &configurationData )
 {
   Q_ASSERT( mMember );
 
-  osync_member_set_config( mMember, configurationData.data() );
+//  FIXME: tokoe
+//  osync_member_set_config( mMember, configurationData.data() );
 }
 
 Result Member::configuration( QByteArray &configurationData, bool useDefault ) const
 {
   Q_ASSERT( mMember );
 
-  const char *data;
+  const char *data = "  ";
   int size;
 
   OSyncError *error = 0;
   if ( useDefault ) {
-    data = osync_member_get_config_or_default( mMember, &error );
+//  FIXME: tokoe
+//    data = osync_member_get_config_or_default( mMember, &error );
   } else {
-    data = osync_member_get_config( mMember, &error );
+//  FIXME: tokoe
+//    data = osync_member_get_config( mMember, &error );
   }
 
   if ( !data ) {

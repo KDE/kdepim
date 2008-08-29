@@ -7,7 +7,11 @@ SET(qopensync_LIB_SRCS
 callbackhandler.cpp
 engine.cpp
 groupenv.cpp
+pluginadvancedoption.cpp
+pluginauthentication.cpp
+pluginconnection.cpp
 pluginenv.cpp
+pluginlocalization.cpp
 filter.cpp
 group.cpp
 member.cpp
