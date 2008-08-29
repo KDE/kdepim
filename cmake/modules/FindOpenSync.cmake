@@ -40,7 +40,9 @@ FIND_PATH( OPENSYNC_CMAKE_MODULES "OpenSyncInternal.cmake" PATH_SUFFIXES "cmake/
 IF ( OPENSYNC_CMAKE_MODULES )
         SET( CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${OPENSYNC_CMAKE_MODULES}" )
 ELSE ( OPENSYNC_CMAKE_MODULES )
+    IF( OpenSync_FIND_REQUIRED )
         MESSAGE( FATAL_ERROR "OpenSync cmake modules not found. Have you installed opensync core or did you set your PKG_CONFIG_PATH if installing in a non system directory ?" )
+    ENDIF( OpenSync_FIND_REQUIRED )
 ENDIF ( OPENSYNC_CMAKE_MODULES )
 
 
