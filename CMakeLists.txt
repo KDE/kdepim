@@ -199,8 +199,9 @@ else ( ONLY_KLEO )
   endif(QGPGME_FOUND AND KMAIL_SUPPORTED)
 
   if(NOT WIN32)
-     macro_optional_find_package(Opensync)
-     macro_log_feature(OPENSYNC_FOUND "opensync" "OpenSync Development Libraries" "http://www.opensync.org" FALSE "0.30 or greater" "Needed to provide syncing functionality in KDE PIM applications. Necessary to compile kitchensync.")
+     set(OPENSYNC_MIN_VERSION 0.37)
+     macro_optional_find_package(OpenSync)
+     macro_log_feature(OPENSYNC_FOUND "opensync" "OpenSync Development Libraries" "http://www.opensync.org" FALSE "0.37 or greater" "Needed to provide syncing functionality in KDE PIM applications. Necessary to compile kitchensync.")
      macro_optional_find_package(GLIB2)
      macro_log_feature(GLIB2_FOUND "glib2" "Low-level core library for data structure handling, portability wrappers, etc." "http://www.gtk.org" FALSE "2.x" "Needed to provide synching applications from KDE PIM applications. Necessary to compile kitchensync and other PIM applications.")
 
