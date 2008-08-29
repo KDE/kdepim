@@ -446,7 +446,7 @@ QString PilotDateEntry::getLocation() const
 		QString location = rxp.capturedTexts().first();
 		rxp = QRegExp("^[Ll]ocation:[\\s|\t]*");
 		location.remove( rxp );
-		location.remove( "\n" );
+		location.remove( '\n' );
 		return location;
 	}
 	else
