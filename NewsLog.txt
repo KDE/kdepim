@@ -1,3 +1,15 @@
+Friday, August 29th 2008
+Problems addressed
+------------------
+
+* kolab/issue2680 Counter proposal: A user should be notified about an accepted counter proposal.
+* kolab/issue2625 Sync with the new sync button for emails stays offline without message.
+* kolab/issue2514 Moving a event and pressing "Cancel" in the send mail dialog, doesn't cancel the operation.
+* kolab/issue2489 Synchronize Calendar button always syncs all servers.
+* kolab/issue2111 Help->Feature Request looks for a non-existing page.
+* kolab/issue2655 Fast pressing "Down Arrow" Key in the address lookup of the composer selects an address in the "to" field.
+
+
 Saturday, August 23rd 2008
 
 Problems addressed
