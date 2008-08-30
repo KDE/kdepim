@@ -29,7 +29,10 @@ class QCheckBox;
 class QLabel;
 class QSpinBox;
 
-class KLDAP::LdapConfigWidget;
+namespace KLDAP {
+class LdapConfigWidget;
+}
+
 class KComboBox;
 class KLineEdit;
 

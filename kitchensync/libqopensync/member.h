@@ -76,7 +76,7 @@ class QSYNC_EXPORT Member
       Sets the configuration data as byte array. The developer has to decide the
       type of the data ( e.g. xml, plain text, binary ).
      */
-    void setConfiguration( const QByteArray &configurationData );
+    KDE_DEPRECATED void setConfiguration( const QByteArray &configurationData );
 
     /**
       Gets the configuration data as byte array. The developer has to decide the
@@ -88,7 +88,7 @@ class QSYNC_EXPORT Member
 
       @returns The result of this operation.
      */
-    Result configuration( QByteArray &configurationData,
+    KDE_DEPRECATED Result configuration( QByteArray &configurationData,
       bool useDefault = true ) const;
 
     /**
@@ -102,19 +102,6 @@ class QSYNC_EXPORT Member
     Result instance() const;
 
     bool operator==( const Member &member ) const;
-
-    /**
-      This method can be used to query the plugin for scanning devices.
-      The @param query is a plugin specific xml document as well as
-      the return value.
-     */
-    QString scanDevices( const QString &query ) const;
-
-    /**
-      This method can be used to test whether the plugin can connect
-      to the device with the given configuration.
-     */
-    bool testConnection( const QString &configuration ) const;
 
     /**
      * Deletes the member's information from the hard disc.
