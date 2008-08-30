@@ -26,10 +26,11 @@
 
 #include "keyringviewer.h"
 
-#include <QFileDialog>
-#include <QDir>
-#include <QMessageBox>
-#include <QtDebug>
+#include <QtCore/QDir>
+#include <QtCore/QtDebug>
+
+#include <kfiledialog.h>
+#include <kmessagebox.h>
 
 #include "pilotLocalDatabase.h"
 #include "pilotRecord.h"
@@ -135,8 +136,8 @@ void KeyringViewer::togglePasswordVisibility()
 
 void KeyringViewer::newDatabase()
 {
-	QString fileName = QFileDialog::getSaveFileName( this,
-		tr("New database"), QDir::home().absolutePath(), "*.pdb" );
+	QString fileName = KFileDialog::getSaveFileName( KUrl(), "*.pdb", this,
+		tr("New database") );
 	
 	if( fileName.isEmpty() )
 	{
@@ -183,8 +184,8 @@ void KeyringViewer::newDatabase()
 
 void KeyringViewer::openDatabase()
 {
-	QString fileName = QFileDialog::getOpenFileName( this,
-		tr("Open database"), QDir::home().absolutePath(), "*.pdb" );
+	QString fileName = KFileDialog::getOpenFileName( KUrl(), "*.pdb", this,
+		tr("Open database") );
 	
 	if( fileName.isEmpty() )
 	{
@@ -205,7 +206,7 @@ void KeyringViewer::openDatabase()
 	{
 		delete proxy;
 		
-		QMessageBox::critical( this, "Error", "Invalid password, could not open database" );
+		KMessageBox::error( this, "Error", "Invalid password, could not open database" );
 		
 		return;
 	}

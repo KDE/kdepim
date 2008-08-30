@@ -20,8 +20,9 @@
 #include "collectioncombobox.h"
 
 #include <QtCore/QAbstractItemModel>
-#include <QtGui/QComboBox>
 #include <QtGui/QVBoxLayout>
+
+#include <kcombobox.h>
 
 #include <akonadi/control.h>
 #include <akonadi/collectionmodel.h>
@@ -42,7 +43,7 @@ class CollectionComboBox::Private
 
     void checkCurrentSelectedCollection();
 
-    QComboBox *mComboBox;
+    KComboBox *mComboBox;
 
     Entity::Id mCurrentId;
 };
@@ -70,7 +71,7 @@ CollectionComboBox::CollectionComboBox( QWidget *parent )
   layout->setMargin( 0 );
   layout->setSpacing( 0 );
 
-  d->mComboBox = new QComboBox( this );
+  d->mComboBox = new KComboBox( this );
   layout->addWidget( d->mComboBox );
 
   connect( d->mComboBox, SIGNAL( activated( int ) ), SLOT( activated( int ) ) );
