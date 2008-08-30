@@ -1944,8 +1944,7 @@ to paste long lines that should not wrap.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Toggles automatic spellchecking. Note that in &html;-editing mode
-automatic spellchecking is not available.</para>
+<para>Toggles automatic spellchecking.</para>
 </listitem>
 </varlistentry>
 
