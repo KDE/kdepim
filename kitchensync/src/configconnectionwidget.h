@@ -18,8 +18,8 @@
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef CONFIGLOCALIZATIONWIDGET_H
-#define CONFIGLOCALIZATIONWIDGET_H
+#ifndef CONFIGCONNECTIONWIDGET_H
+#define CONFIGCONNECTIONWIDGET_H
 
 #include <QtGui/QWidget>
 

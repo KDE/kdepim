@@ -54,7 +54,7 @@ class GroupConfig : public QWidget
     void memberSelected( bool );
 
   protected Q_SLOTS:
-    void memberWidgetSelected( KPageWidgetItem* );
+    void memberWidgetSelected( KPageWidgetItem*, KPageWidgetItem* );
 
   private:
     QLabel *mNameLabel;

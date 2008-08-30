@@ -133,6 +133,8 @@ void ConfigConnectionWidget::load()
     case QSync::PluginConnection::IrdaConnection: mType->setCurrentIndex( 4 ); break;
   }
 
+  typeChanged( mType->currentIndex() );
+
   mBluetoothAddress->setText( mConnection.bluetoothAddress() );
   mBluetoothChannel->setText( QString::number( mConnection.bluetoothChannel() ) );
   mBluetoothSdpUuid->setText( mConnection.bluetoothSdpUuid() );
@@ -183,7 +185,7 @@ void ConfigConnectionWidget::save()
 
 void ConfigConnectionWidget::typeChanged( int type )
 {
-  switch ( type ) {
+  switch ( type + 1 ) {
     case QSync::PluginConnection::BlueToothConnection: mStack->setCurrentWidget( mBluetoothPage ); break;
     case QSync::PluginConnection::UsbConnection: mStack->setCurrentWidget( mUsbPage ); break;
     case QSync::PluginConnection::NetworkConnection: mStack->setCurrentWidget( mNetworkPage ); break;

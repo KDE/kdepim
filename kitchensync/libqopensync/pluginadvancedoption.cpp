@@ -218,6 +218,20 @@ void PluginAdvancedOption::removeParameter( const PluginAdvancedOptionParameter 
   osync_plugin_advancedoption_remove_parameter( mPluginAdvancedOption, parameter.mPluginAdvancedOptionParameter );
 }
 
+void PluginAdvancedOption::setMinimumSize( unsigned int minSize )
+{
+  Q_ASSERT( mPluginAdvancedOption );
+
+  osync_plugin_advancedoption_set_minsize( mPluginAdvancedOption, minSize );
+}
+
+unsigned int PluginAdvancedOption::minimumSize() const
+{
+  Q_ASSERT( mPluginAdvancedOption );
+
+  return osync_plugin_advancedoption_get_minsize( mPluginAdvancedOption );
+}
+
 void PluginAdvancedOption::setMaximumSize( unsigned int maxSize )
 {
   Q_ASSERT( mPluginAdvancedOption );

@@ -175,6 +175,16 @@ class QSYNC_EXPORT PluginAdvancedOption
     void removeParameter( const PluginAdvancedOptionParameter &parameter );
 
     /**
+      Sets the minimum size of the option.
+     */
+    void setMinimumSize( unsigned int minSize );
+
+    /**
+      Returns the minimum sizeof the option.
+     */
+    unsigned int minimumSize() const;
+
+    /**
       Sets the maximum size of the option.
      */
     void setMaximumSize( unsigned int maxSize );

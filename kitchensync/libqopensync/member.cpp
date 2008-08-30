@@ -90,41 +90,6 @@ QString Member::name() const
   return QString::fromUtf8( osync_member_get_name( mMember ) );
 }
 
-void Member::setConfiguration( const QByteArray &configurationData )
-{
-  Q_ASSERT( mMember );
-
-//  FIXME: tokoe
-//  osync_member_set_config( mMember, configurationData.data() );
-}
-
-Result Member::configuration( QByteArray &configurationData, bool useDefault ) const
-{
-  Q_ASSERT( mMember );
-
-  const char *data = "  ";
-  int size;
-
-  OSyncError *error = 0;
-  if ( useDefault ) {
-//  FIXME: tokoe
-//    data = osync_member_get_config_or_default( mMember, &error );
-  } else {
-//  FIXME: tokoe
-//    data = osync_member_get_config( mMember, &error );
-  }
-
-  if ( !data ) {
-    return Result( &error );
-  } else {
-    size = strlen( data );
-    configurationData.resize( size );
-    memcpy( configurationData.data(), data, size );
-
-    return Result();
-  }
-}
-
 bool Member::hasConfiguration() const
 {
   Q_ASSERT( mMember );
@@ -143,7 +108,7 @@ PluginConfig Member::configuration() const
 {
   Q_ASSERT( mMember );
 
-  OSyncError *error;
+  OSyncError *error = 0;
   OSyncPluginConfig *config = osync_member_get_config( mMember, &error );
 
   PluginConfig pluginConfig;
@@ -157,7 +122,7 @@ PluginConfig Member::configurationOrDefault() const
 {
   Q_ASSERT( mMember );
 
-  OSyncError *error;
+  OSyncError *error = 0;
   OSyncPluginConfig *config = osync_member_get_config_or_default( mMember, &error );
 
   PluginConfig pluginConfig;

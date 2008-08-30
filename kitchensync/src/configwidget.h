@@ -1,7 +1,7 @@
 /*
     This file is part of KitchenSync.
 
-    Copyright (c) 2005 Cornelius Schumacher <schumacher@kde.org>
+    Copyright (c) 2008 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -17,32 +17,40 @@
     along with this program; if not, write to the Free Software
     Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
-#ifndef MEMBERCONFIG_H
-#define MEMBERCONFIG_H
 
-#include <libqopensync/member.h>
+#ifndef CONFIGWIDGET_H
+#define CONFIGWIDGET_H
 
 #include <QtGui/QWidget>
 
-class ConfigWidget;
+#include <libqopensync/pluginconfig.h>
 
-class MemberConfig : public QWidget
+class KLineEdit;
+
+class ConfigAdvancedOptionWidget;
+class ConfigAuthenticationWidget;
+class ConfigLocalizationWidget;
+class ConfigConnectionWidget;
+
+class ConfigWidget : public QWidget
 {
-  Q_OBJECT
-
   public:
-    MemberConfig( QWidget *parent, const QSync::Member & );
-    ~MemberConfig();
+    ConfigWidget( const QSync::PluginConfig &config, QWidget *parent = 0 );
 
-    void loadData();
-    void saveData();
+    void setInstanceName( const QString &name );
+    QString instanceName() const;
 
-    QSync::Member member() const;
+    void load();
+    void save();
 
   private:
-    QSync::Member mMember;
+    QSync::PluginConfig mConfig;
 
-    ConfigWidget *mConfig;
+    KLineEdit *mInstanceName;
+    ConfigAdvancedOptionWidget *mAdvancedOption;
+    ConfigAuthenticationWidget *mAuthentication;
+    ConfigLocalizationWidget *mLocalization;
+    ConfigConnectionWidget *mConnection;
 };
 
 #endif

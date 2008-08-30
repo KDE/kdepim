@@ -74,25 +74,6 @@ class QSYNC_EXPORT Member
     QString name() const;
 
     /**
-      Sets the configuration data as byte array. The developer has to decide the
-      type of the data ( e.g. xml, plain text, binary ).
-     */
-    KDE_DEPRECATED void setConfiguration( const QByteArray &configurationData );
-
-    /**
-      Gets the configuration data as byte array. The developer has to decide the
-      type of the data ( e.g. xml, plain text, binary ).
-
-      @param useDefault  If set to true, return default config, if no config
-                         exists. If set to false, return error when no config
-                         exists.
-
-      @returns The result of this operation.
-     */
-    KDE_DEPRECATED Result configuration( QByteArray &configurationData,
-      bool useDefault = true ) const;
-
-    /**
       Returns whether the member has a configuration available.
      */
     bool hasConfiguration() const;

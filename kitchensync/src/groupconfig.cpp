@@ -169,7 +169,7 @@ void GroupConfig::saveConfig()
   mProcess->reinitEngine();
 }
 
-void GroupConfig::memberWidgetSelected( KPageWidgetItem *current )
+void GroupConfig::memberWidgetSelected( KPageWidgetItem *current, KPageWidgetItem* )
 {
   /**
    * Emit 'true' whenever a real member widget is selected by the

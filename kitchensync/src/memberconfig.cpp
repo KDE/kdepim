@@ -20,23 +20,18 @@
 
 #include "memberconfig.h"
 
-#include "configgui.h"
-#include "memberinfo.h"
-
-#include <klocale.h>
-#include <kmessagebox.h>
-
-#include <QtGui/QLabel>
 #include <QtGui/QLayout>
-#include <QtGui/QTabWidget>
+
+#include "configwidget.h"
+#include "memberinfo.h"
 
 MemberConfig::MemberConfig( QWidget *parent, const QSync::Member &member )
   : QWidget( parent ), mMember( member )
 {
-  QBoxLayout *topLayout = new QVBoxLayout( this );
+  QBoxLayout *layout = new QVBoxLayout( this );
 
-  mGui = ConfigGui::Factory::create( member, this );
-  topLayout->addWidget( mGui );
+  mConfig = new ConfigWidget( member.configurationOrDefault(), this );
+  layout->addWidget( mConfig );
 }
 
 MemberConfig::~MemberConfig()
@@ -45,35 +40,16 @@ MemberConfig::~MemberConfig()
 
 void MemberConfig::loadData()
 {
-  QByteArray cfg;
-  QSync::Result error = mMember.configuration( cfg );
-
-  if ( error ) {
-    KMessageBox::error( this,
-      i18n( "Unable to read config from plugin '%1':\n%2",
-            mMember.pluginName(), error.message() ) );
-  } else {
-    QString txt = QString::fromUtf8( cfg.data(), cfg.size() );
-    mGui->load( txt );
-    MemberInfo mi( mMember );
-    mGui->setInstanceName( mi.name() );
-  }
+  mConfig->load();
+  MemberInfo mi( mMember );
+  mConfig->setInstanceName( mi.name() );
 }
 
 void MemberConfig::saveData()
 {
-  QString txt = mGui->save();
-
-  if ( txt.isEmpty() ) {
-    KMessageBox::sorry( this, i18n("Configuration of %1 is empty.", mMember.pluginName() ) );
-  } else {
-    QByteArray cfg = txt.toUtf8();
-    cfg.truncate( cfg.size() );
-    mMember.setConfiguration( cfg );
-    mMember.setName( mGui->instanceName() );
-    // TODO: Check for save() error.
-    mMember.save();
-  }
+  mConfig->save();
+  mMember.setName( mConfig->instanceName() );
+  mMember.save();
 }
 
 QSync::Member MemberConfig::member() const
