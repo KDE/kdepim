@@ -174,7 +174,7 @@ void PilotDaemonTray::setupWidget()
 	menu->addMenu( fSyncTypeMenu );
 
 	KHelpMenu *helpMenu = new KHelpMenu( menu, aboutData );
-	helpMenu->menu()->setIcon( KIcon( CSL1( "help" ) ) );
+	helpMenu->menu()->setIcon( KIcon( CSL1( "system-help" ) ) );
 	menu->addMenu( helpMenu->menu() );
 
 	DEBUGKPILOT << "Finished getting icons";
