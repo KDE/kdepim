@@ -121,6 +121,9 @@ QString MemberInfo::pluginIconName( const QString &pluginName )
   if ( pluginName == "sunbird-sync" ) {
     return "office-calendar";
   }
+  if ( pluginName == "akonadi-sync" ) {
+    return "akonadi";
+  }
 
   return QString();
 }
