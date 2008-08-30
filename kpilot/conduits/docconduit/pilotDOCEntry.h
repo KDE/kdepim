@@ -1,3 +1,5 @@
+#ifndef PILOTDOCENTRY_H
+#define PILOTDOCENTRY_H
 /* pilotDOCEntry.h	-*- C++ -*-		KPilot
 **
 ** Copyright (C) 2002 by Reinhold Kainhofer
@@ -25,8 +27,6 @@
 /*
 ** Bug reports and questions can be sent to the mailinlist kde-pim@kde.org
 */
-#ifndef _KPILOT_PILOTDOCENTRY_H
-#define _KPILOT_PILOTDOCENTRY_H
 
 #include <pilotRecord.h>
 #include "makedoc9.h"

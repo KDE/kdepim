@@ -25,18 +25,17 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <options.h>
+#include "testrecordconduit.h"
+
+#include <QtCore/QDebug>
 
 #include "idmapping.h"
+#include "options.h"
 #include "record.h"
-
-#include "testrecordconduit.h"
 #include "testdataproxy.h"
 #include "testhhdataproxy.h"
 #include "testrecord.h"
 #include "testhhrecord.h"
-
-#include <QtCore/QDebug>
 
 TestRecordConduit::TestRecordConduit( const QVariantList &args, bool createRecs )
 	: RecordConduit( 0L, args, CSL1( "test-db" ), CSL1( "test-conduit" ) )

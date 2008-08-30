@@ -1,3 +1,5 @@
+#ifndef PILOTDOCHEAD_H
+#define PILOTDOCHEAD_H
 /* pilotDOCHead.h	-*- C++ -*-		KPilot
 **
 ** Copyright (C) 2002 by Reinhold Kainhofer
@@ -25,8 +27,6 @@
 /*
 ** Bug reports and questions can be sent to the mailinlist kde-pim@kde.org
 */
-#ifndef _KPILOT_PILOTDOCHEAD_H
-#define _KPILOT_PILOTDOCHEAD_H
 
 #include <pilotRecord.h>
 

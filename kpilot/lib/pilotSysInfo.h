@@ -1,5 +1,5 @@
-#ifndef _KPILOT_SYSINFO_H
-#define _KPILOT_SYSINFO_H
+#ifndef KPILOT_SYSINFO_H
+#define KPILOT_SYSINFO_H
 /* sysInfo.h			KPilot
 **
 ** Copyright (C) 2003 by Reinhold Kainhofer <reinhold@kainhofer.com>

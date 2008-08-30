@@ -30,8 +30,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-
-#include "options.h"
+#include "null-conduit.h"
 
 // Only include what we really need:
 // First UNIX system stuff, then std C++,
@@ -43,8 +42,8 @@
 #include <kconfig.h>
 #include <kdebug.h>
 
+#include "options.h"
 #include "pilotSerialDatabase.h"
-#include "null-conduit.h"
 #include "nullSettings.h"
 
 // A conduit that does nothing has a very

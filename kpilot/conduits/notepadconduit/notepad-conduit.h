@@ -1,5 +1,5 @@
-#ifndef _KPILOT_NOTEPAD_CONDUIT_H
-#define _KPILOT_NOTEPAD_CONDUIT_H
+#ifndef NOTEPAD_CONDUIT_H
+#define NOTEPAD_CONDUIT_H
 /* notepad-conduit.h			KPilot
 **
 ** Copyright (C) 2004 by Adriaan de Groot, Joern Ahrens, Angus Ainslie

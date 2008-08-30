@@ -1,5 +1,5 @@
-#ifndef _MEMOFILE_MEMOFILE_CONDUIT_H
-#define _MEMOFILE_MEMOFILE_CONDUIT_H
+#ifndef MEMOFILE_CONDUIT_H
+#define MEMOFILE_CONDUIT_H
 /* memofile-conduit.h			KPilot
 **
 ** Copyright (C) 2004-2007 by Jason 'vanRijn' Kasper
@@ -26,13 +26,14 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <pi-memo.h>
-
 #include "plugin.h"
 
-#include "memofiles.h"
+#include <pi-memo.h>
+
 //Added by qt3to4:
 #include <Q3PtrList>
+
+#include "memofiles.h"
 
 class PilotMemo;
 

@@ -24,8 +24,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <QtTest>
-#include <QFile>
+#include <QtCore/QFile>
 
 #include "qtest_kde.h"
 

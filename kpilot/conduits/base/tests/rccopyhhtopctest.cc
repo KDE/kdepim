@@ -26,7 +26,6 @@
 */
 
 // Qt includes
-#include <QtTest>
 #include <QtCore/QVariantList>
 
 // KDE includes

@@ -1,5 +1,5 @@
-#ifndef _POPMAIL_SETUPDIALOG_H
-#define _POPMAIL_SETUPDIALOG_H
+#ifndef SETUPDIALOG_H
+#define SETUPDIALOG_H
 /* setupDialog.h			KPilot
 **
 ** Copyright (C) 1998-2001 Dan Pilone

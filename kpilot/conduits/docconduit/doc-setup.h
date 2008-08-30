@@ -1,5 +1,5 @@
-#ifndef _DOC_DOC_SETUP_H
-#define _DOC_DOC_SETUP_H
+#ifndef DOC_SETUP_H
+#define DOC_SETUP_H
 /* doc-setup.h                       KPilot
 **
 ** Copyright (C) 2002 by Reinhold Kainhofer

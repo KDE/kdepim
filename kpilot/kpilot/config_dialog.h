@@ -1,5 +1,5 @@
-#ifndef _KPILOT_CONDUITCONFIGDIALOG_H
-#define _KPILOT_CONDUITCONFIGDIALOG_H
+#ifndef KPILOT_CONDUITCONFIGDIALOG_H
+#define KPILOT_CONDUITCONFIGDIALOG_H
 /* conduitConfigDialog.h                 KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone <dan@kpilot.org>

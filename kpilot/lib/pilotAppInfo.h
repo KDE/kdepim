@@ -1,5 +1,5 @@
-#ifndef _KPILOT_PILOTAPPINFO_H
-#define _KPILOT_PILOTAPPINFO_H
+#ifndef KPILOT_PILOTAPPINFO_H
+#define KPILOT_PILOTAPPINFO_H
 /* KPilot
 **
 ** Copyright (C) 2005-2007 Adriaan de Groot <groot@kde.org>

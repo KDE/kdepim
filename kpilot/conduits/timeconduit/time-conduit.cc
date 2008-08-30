@@ -25,6 +25,8 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org.
 */
 
+#include "time-conduit.h"
+
 #include "options.h"
 
 #include <time.h>
@@ -34,7 +36,6 @@
 #include <kconfig.h>
 #include <kdebug.h>
 
-#include "time-conduit.h"
 #include "timeConduitSettings.h"
 
 #define DIR_PCToPalm 0

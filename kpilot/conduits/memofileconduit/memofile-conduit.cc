@@ -26,6 +26,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include "memofile-conduit.h"
 
 #include "options.h"
 
@@ -46,7 +47,6 @@
 
 #include "pilotRecord.h"
 #include "pilotSerialDatabase.h"
-#include "memofile-conduit.h"
 #include "memofileSettings.h"
 
 

@@ -1,5 +1,5 @@
-#ifndef _KPILOT_PILOTLINKVERSION_H
-#define _KPILOT_PILOTLINKVERSION_H
+#ifndef KPILOT_PILOTLINKVERSION_H
+#define KPILOT_PILOTLINKVERSION_H
 /* KPilot
 **
 ** Copyright (C) 2005 by Adriaan de Groot <groot@kde.org>

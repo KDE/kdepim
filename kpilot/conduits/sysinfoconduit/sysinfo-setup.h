@@ -1,5 +1,5 @@
-#ifndef _SysInfo_SysInfo_SETUP_H
-#define _SysInfo_SysInfo_SETUP_H
+#ifndef SYSINFO_SETUP_H
+#define SYSINFO_SETUP_H
 /* sysinfo-setup.h                       KPilot
 **
 ** Copyright (C) 2003 by Reinhold Kainhofer

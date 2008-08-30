@@ -1,5 +1,5 @@
-#ifndef _MAL_SETUP_H
-#define _MAL_SETUP_H
+#ifndef MAL_SETUP_H
+#define MAL_SETUP_H
 /* mal-setup.h                       KPilot
 **
 ** Copyright (C) 2002 by Reinhold Kainhofer

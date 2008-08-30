@@ -1,8 +1,8 @@
-#ifndef _ABBROWSER_ABBROWSER_SETUP_H
-#define _ABBROWSER_ABBROWSER_SETUP_H
-/* knotes-setup.h                       KPilot
+#ifndef CONTACTS_SETUP_H
+#define CONTACTS_SETUP_H
+/* contacts-setup.h                       KPilot
 **
-** Copyright (C) 2008 Bertjan Broeksema
+** Copyright (C) 2008 Bertjan Broeksema <b.broeksema@kde.org>
 **
 ** This file defines the widget and behavior for the config dialog
 ** of the Contacts conduit.

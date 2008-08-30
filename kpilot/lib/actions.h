@@ -1,5 +1,5 @@
-#ifndef _KPILOT_ACTIONS_H
-#define _KPILOT_ACTIONS_H
+#ifndef KPILOT_ACTIONS_H
+#define KPILOT_ACTIONS_H
 /*
 **
 ** Copyright (C) 1998-2001,2003 by Dan Pilone <dan@kpilot.org>

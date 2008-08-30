@@ -1,5 +1,5 @@
-#ifndef _KPILOT_POPMAIL_CONDUIT_H
-#define _KPILOT_POPMAIL_CONDUIT_H
+#ifndef POPMAIL_CONDUIT_H
+#define POPMAIL_CONDUIT_H
 /* popmail-conduit.h			KPilot
 **
 ** Copyright (C) 1998,1999,2000 Dan Pilone
@@ -33,9 +33,9 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-
 #include "plugin.h"
 
+#include <stdio.h>
 
 class PilotRecord;
 

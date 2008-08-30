@@ -25,7 +25,8 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#include "options.h"
+
+#include "kpalmdoc_dlg.h"
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -48,10 +49,10 @@
 
 #include <pilotLocalDatabase.h>
 
-#include "kpalmdoc_dlg.h"
 #include "kpalmdoc_dlgbase.h"
 #include "DOC-converter.h"
 #include "kpalmdocSettings.h"
+#include "options.h"
 
 
 ConverterDlg::ConverterDlg( QWidget *parent, const QString& caption)

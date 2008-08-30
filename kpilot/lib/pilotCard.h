@@ -1,5 +1,5 @@
-#ifndef _KPILOT_PILOTCARD_H
-#define _KPILOT_PILOTCARD_H
+#ifndef KPILOT_PILOTCARD_H
+#define KPILOT_PILOTCARD_H
 /* pilotCard.h			KPilot
 **
 ** Copyright (C) 2003-2004 Reinhold Kainhofer <reinhold@kainhofer.com>

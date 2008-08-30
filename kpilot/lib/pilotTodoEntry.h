@@ -1,5 +1,5 @@
-#ifndef _KPILOT_PILOTTODOENTRY_H
-#define _KPILOT_PILOTTODOENTRY_H
+#ifndef KPILOT_PILOTTODOENTRY_H
+#define KPILOT_PILOTTODOENTRY_H
 /* pilotTodoEntry.h	-*- C++ -*-		KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>

@@ -1,5 +1,5 @@
-#ifndef _KPILOT_KPILOTLOCALLINK_H
-#define _KPILOT_KPILOTLOCALLINK_H
+#ifndef KPILOT_KPILOTLOCALLINK_H
+#define KPILOT_KPILOTLOCALLINK_H
 /*
 **
 ** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>

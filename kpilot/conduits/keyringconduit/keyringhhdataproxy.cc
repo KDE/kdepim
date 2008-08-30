@@ -25,21 +25,20 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include "keyringhhdataproxy.h"
+
 #include <pi-util.h>
 
 #include <QtCrypto>
 
+#include "keyringhhrecord.h"
 #include "options.h"
 #include "pilot.h"
 #include "pilotDatabase.h"
 #include "pilotAppInfo.h"
 #include "pilotLocalDatabase.h"
 #include "pilotRecord.h"
-
-#include "keyringhhrecord.h"
 #include "pi-keyring.h"
-
-#include "keyringhhdataproxy.h"
 
 KeyringHHDataProxy::KeyringHHDataProxy( PilotDatabase *db )
 	: HHDataProxy( db ), fZeroRecord( 0l ), fOwner( false )

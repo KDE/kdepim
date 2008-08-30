@@ -1,5 +1,5 @@
-#ifndef _DOC_CONVERTER_H
-#define _DOC_CONVERTER_H
+#ifndef DOC_CONVERTER_H
+#define DOC_CONVERTER_H
 /* DOC-converter.h                           KPilot
 **
 ** Copyright (C) 2002-2003 by Reinhold Kainhofer

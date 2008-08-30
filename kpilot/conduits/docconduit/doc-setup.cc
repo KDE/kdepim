@@ -26,7 +26,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "options.h"
+#include "doc-setup.h"
 
 #include <qtabwidget.h>
 #include <qcheckbox.h>
@@ -38,9 +38,9 @@
 #include <kconfig.h>
 #include <kurlrequester.h>
 
-#include "doc-setup.h"
 #include "doc-setup.moc"
 #include "docconduitSettings.h"
+#include "options.h"
 
 DOCWidgetConfig::DOCWidgetConfig(QWidget * w):
 	ConduitConfigBase(w, const QVariantList &),

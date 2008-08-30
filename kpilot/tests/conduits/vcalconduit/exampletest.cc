@@ -1,7 +1,7 @@
-#include "options.h"
-#include "config-kpilot.h"
-
 #include "exampletest.h"
+
+#include <config-kpilot.h>
+#include "options.h"
 
 CPPUNIT_TEST_SUITE_REGISTRATION( VCalConduitTest );
 

@@ -1,6 +1,6 @@
-#ifndef AKONADICONTACT_H
-#define AKONADICONTACT_H
-/* akonadicontact.h			KPilot
+#ifndef AKONADIRECORD_H
+#define AKONADIRECORD_H
+/* akonadirecord.h			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema <b.broeksema@kdemail.net>
 ** Copyright (C) 2007 by Jason "vanRijn" Kasper <vr@movingparts.net>

@@ -31,12 +31,12 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include "notepad-conduit.h"  // The Conduit action
+
+#include "notepadconduit.h"   // The settings class
 #include "options.h"
 #include "pilotUser.h"
 #include "pilotSerialDatabase.h"
-
-#include "notepad-conduit.h"  // The Conduit action
-#include "notepadconduit.h"   // The settings class
 
 #include <pi-notepad.h>
 

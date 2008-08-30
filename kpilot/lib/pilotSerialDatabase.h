@@ -1,5 +1,5 @@
-#ifndef _KPILOT_PILOTSERIALDATABASE_H
-#define _KPILOT_PILOTSERIALDATABASE_H
+#ifndef KPILOT_PILOTSERIALDATABASE_H
+#define KPILOT_PILOTSERIALDATABASE_H
 /* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>

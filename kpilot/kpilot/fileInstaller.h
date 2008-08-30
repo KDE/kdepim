@@ -1,5 +1,5 @@
-#ifndef _KPILOT_FILEINSTALLER_H
-#define _KPILOT_FILEINSTALLER_H
+#ifndef KPILOT_FILEINSTALLER_H
+#define KPILOT_FILEINSTALLER_H
 /* fileInstaller.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>

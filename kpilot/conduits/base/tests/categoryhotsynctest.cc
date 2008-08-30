@@ -24,8 +24,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <QtTest>
-
 #include "qtest_kde.h"
 
 #include "options.h"

@@ -1,3 +1,5 @@
+#ifndef PILOTDOCBOOKMARK_H
+#define PILOTDOCBOOKMARK_H
 /* pilotDOCBookmark.h	-*- C++ -*-		KPilot
 **
 ** Copyright (C) 2003 by Reinhold Kainhofer
@@ -25,8 +27,6 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#ifndef _KPILOT_PILOTDOCBOOKMARK_H
-#define _KPILOT_PILOTDOCBOOKMARK_H
 
 #include <pilotRecord.h>
 class PilotRecord;

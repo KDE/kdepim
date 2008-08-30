@@ -1,5 +1,5 @@
-#ifndef _doc_CONDUIT_H
-#define _doc_CONDUIT_H
+#ifndef DOC_CONDUIT_H
+#define DOC_CONDUIT_H
 /* doc-conduit.h                           KPilot
 **
 ** Copyright (C) 2002-2003 by Reinhold Kainhofer

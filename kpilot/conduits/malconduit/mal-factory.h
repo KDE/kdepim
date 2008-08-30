@@ -1,6 +1,6 @@
-#ifndef _MAL_FACTORY_H
-#define _MAL_FACTORY_H
-/* MAL-factory.h                       KPilot
+#ifndef MAL_FACTORY_H
+#define MAL_FACTORY_H
+/* mal-factory.h                       KPilot
 **
 ** Copyright (C) 2002 by Reinhold Kainhofer
 **

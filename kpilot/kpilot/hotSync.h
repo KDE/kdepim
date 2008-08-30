@@ -1,5 +1,5 @@
-#ifndef _KPILOT_HOTSYNC_H
-#define _KPILOT_HOTSYNC_H
+#ifndef KPILOT_HOTSYNC_H
+#define KPILOT_HOTSYNC_H
 /* hotSync.h                            KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone <dan@kpilot.org>

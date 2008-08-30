@@ -1,5 +1,5 @@
-#ifndef _Time_CONDUIT_H
-#define _Time_CONDUIT_H
+#ifndef TIME_CONDUIT_H
+#define TIME_CONDUIT_H
 /* time-conduit.h                           KPilot
 **
 ** Copyright (C) 2002 by Reinhold Kainhofer

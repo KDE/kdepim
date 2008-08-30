@@ -26,10 +26,9 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "options.h"
 #include "pilotDOCBookmark.h"
 
-
+#include "options.h"
 
 PilotDOCBookmark::PilotDOCBookmark():PilotRecordBase(), pos(0)
 {

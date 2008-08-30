@@ -26,10 +26,9 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "options.h"
 #include "pilotDOCEntry.h"
 
-
+#include "options.h"
 
 const int PilotDOCEntry::TEXT_SIZE = 4096;
 

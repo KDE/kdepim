@@ -1,5 +1,5 @@
-#ifndef _KPILOT_SYNCACTION_H
-#define _KPILOT_SYNCACTION_H
+#ifndef KPILOT_SYNCACTION_H
+#define KPILOT_SYNCACTION_H
 /* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>

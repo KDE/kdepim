@@ -1,3 +1,5 @@
+#ifndef CALENDARAKONADIPROXY_H
+#define CALENDARAKONADIPROXY_H
 /* CalendarAkonadiProxy.h			KPilot
 **
 ** Copyright (C) 2008 by Bertjan Broeksema <b.broeksema@kdemail.net>
@@ -75,3 +77,5 @@ protected:
 	 */
 	/* virtual */ bool hasValidPayload( const Akonadi::Item& i ) const;
 };
+
+#endif

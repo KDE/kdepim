@@ -31,12 +31,10 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "options.h"
 #include "popmail-conduit.h"
+
 //Added by qt3to4:
 #include <Q3CString>
-
-
 //#include <q3socket.h>
 #include <qregexp.h>
 
@@ -64,9 +62,9 @@
 #include <kconfig.h>
 #include <ksimpleconfig.h>
 
+#include "options.h"
 #include "pilotRecord.h"
 #include "pilotSerialDatabase.h"
-
 #include "popmailSettings.h"
 #include "setupDialog.h"
 

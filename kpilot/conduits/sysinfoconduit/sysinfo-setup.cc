@@ -1,3 +1,5 @@
+#ifndef SYSINFO_SETUP_H
+#define SYSINFO_SETUP_H
 /* SysInfo-setup.cc                      KPilot
 **
 ** Copyright (C) 2003 by Reinhold Kainhofer
@@ -26,7 +28,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "options.h"
+#include "sysinfo-setup.h"
 
 #include <qtabwidget.h>
 #include <qradiobutton.h>
@@ -37,9 +39,8 @@
 #include <kaboutdata.h>
 #include <kurlrequester.h>
 
+#include "options.h"
 #include "sysinfo-setup_dialog.h"
-
-#include "sysinfo-setup.h"
 #include "sysinfo-setup.moc"
 #include "sysinfoSettings.h"
 
@@ -184,3 +185,5 @@ void SysInfoWidgetConfig::load()
 	}
 	return false;
 }
+
+#endif

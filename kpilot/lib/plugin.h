@@ -1,5 +1,5 @@
-#ifndef _KPILOT_PLUGIN_H
-#define _KPILOT_PLUGIN_H
+#ifndef KPILOT_PLUGIN_H
+#define KPILOT_PLUGIN_H
 /* KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone <dan@kpilot.org>

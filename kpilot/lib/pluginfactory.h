@@ -1,5 +1,5 @@
-#ifndef _KPILOT_PLUGINFACTORY_H
-#define _KPILOT_PLUGINFACTORY_H
+#ifndef KPILOT_PLUGINFACTORY_H
+#define KPILOT_PLUGINFACTORY_H
 /* KPilot
 **
 ** Copyright (C) 2005-2007 by Adriaan de Groot <groot@kde.org>

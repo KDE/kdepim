@@ -1,5 +1,5 @@
-#ifndef _KPILOT_ACTIONQUEUE_H
-#define _KPILOT_ACTIONQUEUE_H
+#ifndef KPILOT_ACTIONQUEUE_H
+#define KPILOT_ACTIONQUEUE_H
 /*
 **
 ** Copyright (C) 1998-2001,2003 by Dan Pilone <dan@kpilot.org>

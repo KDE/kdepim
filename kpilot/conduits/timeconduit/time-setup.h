@@ -1,5 +1,5 @@
-#ifndef _Time_Time_SETUP_H
-#define _Time_Time_SETUP_H
+#ifndef TIME_SETUP_H
+#define TIME_SETUP_H
 /* knotes-setup.h                       KPilot
 **
 ** Copyright (C) 2002 by Reinhold Kainhofer

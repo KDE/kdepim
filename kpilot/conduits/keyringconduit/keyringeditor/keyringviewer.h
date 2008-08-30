@@ -1,5 +1,5 @@
-#ifndef KEYRINGEDITOR_H
-#define KEYRINGEDITOR_H
+#ifndef KEYRINGVIEWER_H
+#define KEYRINGVIEWER_H
 /* keyringeditor.h			KPilot
 **
 ** Copyright (C) 2007 by Bertjan Broeksema

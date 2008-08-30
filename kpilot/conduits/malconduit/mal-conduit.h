@@ -1,5 +1,5 @@
-#ifndef _MAL_CONDUIT_H
-#define _MAL_CONDUIT_H
+#ifndef MAL_CONDUIT_H
+#define MAL_CONDUIT_H
 /* mal-conduit.h                           KPilot
 **
 ** Copyright (C) 2002 by Reinhold Kainhofer

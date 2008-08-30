@@ -1,5 +1,5 @@
-#ifndef _KPILOT_KPILOT_H
-#define _KPILOT_KPILOT_H
+#ifndef KPILOT_KPILOT_H
+#define KPILOT_KPILOT_H
 /* kpilot.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>

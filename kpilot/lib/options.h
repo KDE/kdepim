@@ -1,5 +1,5 @@
-#ifndef _KPILOT_OPTIONS_H
-#define _KPILOT_OPTIONS_H
+#ifndef KPILOT_OPTIONS_H
+#define KPILOT_OPTIONS_H
 /* options.h			KPilot
 **
 ** Copyright (C) 1998-2001,2002,2003 by Dan Pilone <dan@kpilot.org>

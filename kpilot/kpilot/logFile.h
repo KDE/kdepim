@@ -1,5 +1,5 @@
-#ifndef _KPILOT_LOGFILE_H
-#define _KPILOT_LOGFILE_H
+#ifndef KPILOT_LOGFILE_H
+#define KPILOT_LOGFILE_H
 /* logFile.h                          KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone <dan@kpilot.org>

@@ -1,5 +1,5 @@
-#ifndef _KPILOT_KPILOTDEVICELINK_H
-#define _KPILOT_KPILOTDEVICELINK_H
+#ifndef KPILOT_KPILOTDEVICELINK_H
+#define KPILOT_KPILOTDEVICELINK_H
 /*
 **
 ** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>

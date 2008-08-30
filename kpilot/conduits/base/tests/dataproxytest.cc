@@ -25,9 +25,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <QtTest>
-#include <QtCore>
-
 #include <options.h>
 #include <idmapping.h>
 #include <cudcounter.h>

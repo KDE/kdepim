@@ -25,12 +25,11 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
-#include "options.h"
+
 #include "pilotDOCHead.h"
 
 #include "makedoc9.h"
-
-
+#include "options.h"
 
 const int PilotDOCHead::textRecordSize = 4096;
 

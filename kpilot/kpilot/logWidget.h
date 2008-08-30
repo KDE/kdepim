@@ -1,5 +1,5 @@
-#ifndef _KPILOT_LOGWIDGET_H
-#define _KPILOT_LOGWIDGET_H
+#ifndef KPILOT_LOGWIDGET_H
+#define KPILOT_LOGWIDGET_H
 /* logWidget.h                          KPilot
 **
 ** Copyright (C) 2001 by Dan Pilone <dan@kpilot.org>

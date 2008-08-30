@@ -1,4 +1,6 @@
-/* ContactsAkonadiProxy.h			KPilot
+#ifndef CONTACTSAKONADIPROXY_H
+#define CONTACTSAKONADIPROXY_H
+/* contactsakonadiproxy.h			KPilot
 **
 ** Copyright (C) 2008 by Bertjan Broeksema <b.broeksema@kdemail.net>
 */
@@ -71,3 +73,5 @@ protected:
 	 */
 	/* virtual */ bool hasValidPayload( const Akonadi::Item& i ) const;
 };
+
+#endif

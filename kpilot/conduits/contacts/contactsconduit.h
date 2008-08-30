@@ -1,6 +1,6 @@
-#ifndef CALENDARCONDUIT_H
-#define CALENDARCONDUIT_H
-/* calendarconduit.h			KPilot
+#ifndef CONTACTSCONDUIT_H
+#define CONTACTSCONDUIT_H
+/* contactsconduit.h			KPilot
 **
 ** Copyright (C) 2008 by Bertjan Broeksema <b.broeksema@kdemail.net>
 */

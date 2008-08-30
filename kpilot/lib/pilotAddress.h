@@ -1,5 +1,5 @@
-#ifndef _KPILOT_PILOTADDRESS_H
-#define _KPILOT_PILOTADDRESS_H
+#ifndef KPILOT_PILOTADDRESS_H
+#define KPILOT_PILOTADDRESS_H
 /* pilotAddress.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>

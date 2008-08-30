@@ -32,17 +32,13 @@
 ** MA 02110-1301, USA.
 */
 
+#include "makedoc9.h"
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include <iostream>
-
-
-#include "makedoc9.h"
-
-
 
 //
 // Issue()

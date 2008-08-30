@@ -1,5 +1,5 @@
-#ifndef _NULL_NULL_CONDUIT_H
-#define _NULL_NULL_CONDUIT_H
+#ifndef NULL_CONDUIT_H
+#define NULL_CONDUIT_H
 /* null-conduit.h			KPilot
 **
 ** Copyright (C) 2000-2001 by Adriaan de Groot

@@ -1,5 +1,5 @@
-#ifndef _KPILOT_PILOTLOCALDATABASE_H
-#define _KPILOT_PILOTLOCALDATABASE_H
+#ifndef KPILOT_PILOTLOCALDATABASE_H
+#define KPILOT_PILOTLOCALDATABASE_H
 /* KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>

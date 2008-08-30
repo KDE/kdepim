@@ -1,5 +1,5 @@
-#ifndef _MEMOFILE_MEMOFILES_H
-#define _MEMOFILE_MEMOFILES_H
+#ifndef MEMOFILES_H
+#define MEMOFILES_H
 /* memofiles.h			KPilot
 **
 ** Copyright (C) 2004-2007 by Jason 'vanRijn' Kasper

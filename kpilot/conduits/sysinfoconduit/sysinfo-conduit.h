@@ -1,5 +1,5 @@
-#ifndef _SysInfo_CONDUIT_H
-#define _SysInfo_CONDUIT_H
+#ifndef SYSINFO_CONDUIT_H
+#define SYSINFO_CONDUIT_H
 /* sysinfo-conduit.h                           KPilot
 **
 ** Copyright (C) 2003 by Reinhold Kainhofer
