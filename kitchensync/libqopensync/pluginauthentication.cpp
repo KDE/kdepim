@@ -42,30 +42,42 @@ bool PluginAuthentication::isValid() const
 
 void PluginAuthentication::setUserName( const QString &userName )
 {
+  Q_ASSERT( mPluginAuthentication );
+
   osync_plugin_authentication_set_username( mPluginAuthentication, userName.toUtf8().data() );
 }
 
 QString PluginAuthentication::userName() const
 {
+  Q_ASSERT( mPluginAuthentication );
+
   return QString::fromUtf8( osync_plugin_authentication_get_username( mPluginAuthentication ) );
 }
 
 void PluginAuthentication::setPassword( const QString &password )
 {
+  Q_ASSERT( mPluginAuthentication );
+
   osync_plugin_authentication_set_password( mPluginAuthentication, password.toUtf8().data() );
 }
 
 QString PluginAuthentication::password() const
 {
+  Q_ASSERT( mPluginAuthentication );
+
   return QString::fromUtf8( osync_plugin_authentication_get_password( mPluginAuthentication ) );
 }
 
 void PluginAuthentication::setReference( const QString &reference )
 {
+  Q_ASSERT( mPluginAuthentication );
+
   osync_plugin_authentication_set_reference( mPluginAuthentication, reference.toUtf8().data() );
 }
 
 QString PluginAuthentication::reference() const
 {
+  Q_ASSERT( mPluginAuthentication );
+
   return QString::fromUtf8( osync_plugin_authentication_get_reference( mPluginAuthentication ) );
 }

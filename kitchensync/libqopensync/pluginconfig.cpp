@@ -42,6 +42,8 @@ bool PluginConfig::isValid() const
 
 PluginAdvancedOption::List PluginConfig::advancedOptions() const
 {
+  Q_ASSERT( mPluginConfig );
+
   PluginAdvancedOption::List options;
 
   OSyncList *list = osync_plugin_config_get_advancedoptions( mPluginConfig );
@@ -57,30 +59,40 @@ PluginAdvancedOption::List PluginConfig::advancedOptions() const
 
 PluginAdvancedOption PluginConfig::advancedOption( const QString &name ) const
 {
-    PluginAdvancedOption option;
-    option.mPluginAdvancedOption = osync_plugin_config_get_advancedoption_value_by_name( mPluginConfig,
+  Q_ASSERT( mPluginConfig );
+
+  PluginAdvancedOption option;
+  option.mPluginAdvancedOption = osync_plugin_config_get_advancedoption_value_by_name( mPluginConfig,
                                                                                          name.toUtf8().data() );
 
-    return option;
+  return option;
 }
 
 void PluginConfig::addAdvancedOption( const PluginAdvancedOption &option )
 {
+  Q_ASSERT( mPluginConfig );
+
   osync_plugin_config_add_advancedoption( mPluginConfig, option.mPluginAdvancedOption );
 }
 
 void PluginConfig::removeAdvancedOption( const PluginAdvancedOption &option )
 {
+  Q_ASSERT( mPluginConfig );
+
   osync_plugin_config_remove_advancedoption( mPluginConfig, option.mPluginAdvancedOption );
 }
 
 void PluginConfig::setAuthentication( const PluginAuthentication &authentication )
 {
+  Q_ASSERT( mPluginConfig );
+
   osync_plugin_config_set_authentication( mPluginConfig, authentication.mPluginAuthentication );
 }
 
 PluginAuthentication PluginConfig::authentication() const
 {
+  Q_ASSERT( mPluginConfig );
+
   PluginAuthentication authentication;
   authentication.mPluginAuthentication = osync_plugin_config_get_authentication( mPluginConfig );
 
@@ -89,11 +101,15 @@ PluginAuthentication PluginConfig::authentication() const
 
 void PluginConfig::setLocalization( const PluginLocalization &localization )
 {
+  Q_ASSERT( mPluginConfig );
+
   osync_plugin_config_set_localization( mPluginConfig, localization.mPluginLocalization );
 }
 
 PluginLocalization PluginConfig::localization() const
 {
+  Q_ASSERT( mPluginConfig );
+
   PluginLocalization localization;
   localization.mPluginLocalization = osync_plugin_config_get_localization( mPluginConfig );
 
@@ -102,6 +118,8 @@ PluginLocalization PluginConfig::localization() const
 
 PluginResource::List PluginConfig::resources() const
 {
+  Q_ASSERT( mPluginConfig );
+
   PluginResource::List resources;
 
   OSyncList *list = osync_plugin_config_get_resources( mPluginConfig );
@@ -117,29 +135,39 @@ PluginResource::List PluginConfig::resources() const
 
 PluginResource PluginConfig::resource( const QString &objectType ) const
 {
-    PluginResource resource;
-    resource.mPluginResource = osync_plugin_config_find_active_resource( mPluginConfig, objectType.toUtf8().data() );
+  Q_ASSERT( mPluginConfig );
 
-    return resource;
+  PluginResource resource;
+  resource.mPluginResource = osync_plugin_config_find_active_resource( mPluginConfig, objectType.toUtf8().data() );
+
+  return resource;
 }
 
 void PluginConfig::addResource( const PluginResource &resource )
 {
+  Q_ASSERT( mPluginConfig );
+
   osync_plugin_config_add_resource( mPluginConfig, resource.mPluginResource );
 }
 
 void PluginConfig::removeResource( const PluginResource &resource )
 {
+  Q_ASSERT( mPluginConfig );
+
   osync_plugin_config_remove_resource( mPluginConfig, resource.mPluginResource );
 }
 
 void PluginConfig::setConnection( const PluginConnection &connection )
 {
+  Q_ASSERT( mPluginConfig );
+
   osync_plugin_config_set_connection( mPluginConfig, connection.mPluginConnection );
 }
 
 PluginConnection PluginConfig::connection() const
 {
+  Q_ASSERT( mPluginConfig );
+
   PluginConnection connection;
   connection.mPluginConnection = osync_plugin_config_get_connection( mPluginConfig );
 

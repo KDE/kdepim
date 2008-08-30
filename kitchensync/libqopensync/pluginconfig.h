@@ -37,6 +37,8 @@ namespace QSync {
 
 class QSYNC_EXPORT PluginConfig
 {
+    friend class Member;
+
   public:
     PluginConfig();
     ~PluginConfig();

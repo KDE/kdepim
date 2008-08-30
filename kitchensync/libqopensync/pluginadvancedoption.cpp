@@ -52,26 +52,36 @@ bool PluginAdvancedOptionParameter::isValid() const
 
 void PluginAdvancedOptionParameter::setDisplayName( const QString &displayName )
 {
+  Q_ASSERT( mPluginAdvancedOptionParameter );
+
   osync_plugin_advancedoption_param_set_displayname( mPluginAdvancedOptionParameter, displayName.toUtf8().data() );
 }
 
 QString PluginAdvancedOptionParameter::displayName() const
 {
+  Q_ASSERT( mPluginAdvancedOptionParameter );
+
   return QString::fromUtf8( osync_plugin_advancedoption_param_get_displayname( mPluginAdvancedOptionParameter ) );
 }
 
 void PluginAdvancedOptionParameter::setName( const QString &name )
 {
+  Q_ASSERT( mPluginAdvancedOptionParameter );
+
   osync_plugin_advancedoption_param_set_name( mPluginAdvancedOptionParameter, name.toUtf8() );
 }
 
 QString PluginAdvancedOptionParameter::name() const
 {
+  Q_ASSERT( mPluginAdvancedOptionParameter );
+
   return QString::fromUtf8( osync_plugin_advancedoption_param_get_name( mPluginAdvancedOptionParameter ) );
 }
 
 void PluginAdvancedOptionParameter::setType( OptionType type )
 {
+  Q_ASSERT( mPluginAdvancedOptionParameter );
+
   OSyncPluginAdvancedOptionType osyncType = OSYNC_PLUGIN_ADVANCEDOPTION_TYPE_NONE;
 
   switch ( type ) {
@@ -93,6 +103,8 @@ void PluginAdvancedOptionParameter::setType( OptionType type )
 
 PluginAdvancedOptionParameter::OptionType PluginAdvancedOptionParameter::type() const
 {
+  Q_ASSERT( mPluginAdvancedOptionParameter );
+
   OSyncPluginAdvancedOptionType osyncType = osync_plugin_advancedoption_param_get_type( mPluginAdvancedOptionParameter );
 
   OptionType type = NoneOption;
@@ -115,11 +127,15 @@ PluginAdvancedOptionParameter::OptionType PluginAdvancedOptionParameter::type() 
 
 QString PluginAdvancedOptionParameter::typeString() const
 {
+  Q_ASSERT( mPluginAdvancedOptionParameter );
+
   return QString::fromUtf8( osync_plugin_advancedoption_param_get_type_string( mPluginAdvancedOptionParameter ) );
 }
 
 QStringList PluginAdvancedOptionParameter::enumValues() const
 {
+  Q_ASSERT( mPluginAdvancedOptionParameter );
+
   QStringList values;
 
   OSyncList *list = osync_plugin_advancedoption_param_get_valenums( mPluginAdvancedOptionParameter );
@@ -131,21 +147,29 @@ QStringList PluginAdvancedOptionParameter::enumValues() const
 
 void PluginAdvancedOptionParameter::addEnumValue( const QString &value )
 {
+  Q_ASSERT( mPluginAdvancedOptionParameter );
+
   osync_plugin_advancedoption_param_add_valenum( mPluginAdvancedOptionParameter, value.toUtf8().data() );
 }
 
 void PluginAdvancedOptionParameter::removeEnumValue( const QString &value )
 {
+  Q_ASSERT( mPluginAdvancedOptionParameter );
+
   osync_plugin_advancedoption_param_remove_valenum( mPluginAdvancedOptionParameter, value.toUtf8().data() );
 }
 
 void PluginAdvancedOptionParameter::setValue( const QString &value )
 {
+  Q_ASSERT( mPluginAdvancedOptionParameter );
+
   osync_plugin_advancedoption_param_set_value( mPluginAdvancedOptionParameter, value.toUtf8().data() );
 }
 
 QString PluginAdvancedOptionParameter::value() const
 {
+  Q_ASSERT( mPluginAdvancedOptionParameter );
+
   return QString::fromUtf8( osync_plugin_advancedoption_param_get_value( mPluginAdvancedOptionParameter ) );
 }
 
@@ -166,6 +190,8 @@ bool PluginAdvancedOption::isValid() const
 
 PluginAdvancedOptionParameter::List PluginAdvancedOption::parameters() const
 {
+  Q_ASSERT( mPluginAdvancedOption );
+
   PluginAdvancedOptionParameter::List parameters;
 
   OSyncList *list = osync_plugin_advancedoption_get_parameters( mPluginAdvancedOption );
@@ -180,56 +206,78 @@ PluginAdvancedOptionParameter::List PluginAdvancedOption::parameters() const
 
 void PluginAdvancedOption::addParameter( const PluginAdvancedOptionParameter &parameter )
 {
+  Q_ASSERT( mPluginAdvancedOption );
+
   osync_plugin_advancedoption_add_parameter( mPluginAdvancedOption, parameter.mPluginAdvancedOptionParameter );
 }
 
 void PluginAdvancedOption::removeParameter( const PluginAdvancedOptionParameter &parameter )
 {
+  Q_ASSERT( mPluginAdvancedOption );
+
   osync_plugin_advancedoption_remove_parameter( mPluginAdvancedOption, parameter.mPluginAdvancedOptionParameter );
 }
 
 void PluginAdvancedOption::setMaximumSize( unsigned int maxSize )
 {
+  Q_ASSERT( mPluginAdvancedOption );
+
   osync_plugin_advancedoption_set_maxsize( mPluginAdvancedOption, maxSize );
 }
 
 unsigned int PluginAdvancedOption::maximumSize() const
 {
+  Q_ASSERT( mPluginAdvancedOption );
+
   return osync_plugin_advancedoption_get_maxsize( mPluginAdvancedOption );
 }
 
 void PluginAdvancedOption::setMaximumOccurrence( unsigned int occurrence )
 {
+  Q_ASSERT( mPluginAdvancedOption );
+
   osync_plugin_advancedoption_set_maxoccurs( mPluginAdvancedOption, occurrence );
 }
 
 unsigned int PluginAdvancedOption::maximumOccurrence() const
 {
+  Q_ASSERT( mPluginAdvancedOption );
+
   return osync_plugin_advancedoption_get_maxoccurs( mPluginAdvancedOption );
 }
 
 void PluginAdvancedOption::setDisplayName( const QString &displayName )
 {
+  Q_ASSERT( mPluginAdvancedOption );
+
   osync_plugin_advancedoption_set_displayname( mPluginAdvancedOption, displayName.toUtf8().data() );
 }
 
 QString PluginAdvancedOption::displayName() const
 {
+  Q_ASSERT( mPluginAdvancedOption );
+
   return QString::fromUtf8( osync_plugin_advancedoption_get_displayname( mPluginAdvancedOption ) );
 }
 
 void PluginAdvancedOption::setName( const QString &name )
 {
+  Q_ASSERT( mPluginAdvancedOption );
+
   osync_plugin_advancedoption_set_name( mPluginAdvancedOption, name.toUtf8() );
 }
 
 QString PluginAdvancedOption::name() const
 {
+  Q_ASSERT( mPluginAdvancedOption );
+
   return QString::fromUtf8( osync_plugin_advancedoption_get_name( mPluginAdvancedOption ) );
 }
 
 void PluginAdvancedOption::setType( OptionType type )
 {
+  Q_ASSERT( mPluginAdvancedOption );
+
   OSyncPluginAdvancedOptionType osyncType = OSYNC_PLUGIN_ADVANCEDOPTION_TYPE_NONE;
 
   switch ( type ) {
@@ -251,6 +299,8 @@ void PluginAdvancedOption::setType( OptionType type )
 
 PluginAdvancedOption::OptionType PluginAdvancedOption::type() const
 {
+  Q_ASSERT( mPluginAdvancedOption );
+
   OSyncPluginAdvancedOptionType osyncType = osync_plugin_advancedoption_get_type( mPluginAdvancedOption );
 
   OptionType type = NoneOption;
@@ -273,11 +323,15 @@ PluginAdvancedOption::OptionType PluginAdvancedOption::type() const
 
 QString PluginAdvancedOption::typeString() const
 {
+  Q_ASSERT( mPluginAdvancedOption );
+
   return QString::fromUtf8( osync_plugin_advancedoption_get_type_string( mPluginAdvancedOption ) );
 }
 
 QStringList PluginAdvancedOption::enumValues() const
 {
+  Q_ASSERT( mPluginAdvancedOption );
+
   QStringList values;
 
   OSyncList *list = osync_plugin_advancedoption_get_valenums( mPluginAdvancedOption );
@@ -289,20 +343,28 @@ QStringList PluginAdvancedOption::enumValues() const
 
 void PluginAdvancedOption::addEnumValue( const QString &value )
 {
+  Q_ASSERT( mPluginAdvancedOption );
+
   osync_plugin_advancedoption_add_valenum( mPluginAdvancedOption, value.toUtf8().data() );
 }
 
 void PluginAdvancedOption::removeEnumValue( const QString &value )
 {
+  Q_ASSERT( mPluginAdvancedOption );
+
   osync_plugin_advancedoption_remove_valenum( mPluginAdvancedOption, value.toUtf8().data() );
 }
 
 void PluginAdvancedOption::setValue( const QString &value )
 {
+  Q_ASSERT( mPluginAdvancedOption );
+
   osync_plugin_advancedoption_set_value( mPluginAdvancedOption, value.toUtf8().data() );
 }
 
 QString PluginAdvancedOption::value() const
 {
+  Q_ASSERT( mPluginAdvancedOption );
+
   return QString::fromUtf8( osync_plugin_advancedoption_get_value( mPluginAdvancedOption ) );
 }

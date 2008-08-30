@@ -125,6 +125,48 @@ Result Member::configuration( QByteArray &configurationData, bool useDefault ) c
   }
 }
 
+bool Member::hasConfiguration() const
+{
+  Q_ASSERT( mMember );
+
+  return (osync_member_has_config( mMember ) == TRUE);
+}
+
+void Member::setConfiguration( const PluginConfig &config )
+{
+  Q_ASSERT( mMember );
+
+  osync_member_set_config( mMember, config.mPluginConfig );
+}
+
+PluginConfig Member::configuration() const
+{
+  Q_ASSERT( mMember );
+
+  OSyncError *error;
+  OSyncPluginConfig *config = osync_member_get_config( mMember, &error );
+
+  PluginConfig pluginConfig;
+  if ( !error )
+    pluginConfig.mPluginConfig = config;
+
+  return pluginConfig;
+}
+
+PluginConfig Member::configurationOrDefault() const
+{
+  Q_ASSERT( mMember );
+
+  OSyncError *error;
+  OSyncPluginConfig *config = osync_member_get_config_or_default( mMember, &error );
+
+  PluginConfig pluginConfig;
+  if ( !error )
+    pluginConfig.mPluginConfig = config;
+
+  return pluginConfig;
+}
+
 Result Member::save() const
 {
   Q_ASSERT( mMember );

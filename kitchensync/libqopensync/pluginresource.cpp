@@ -43,36 +43,50 @@ bool PluginResource::isValid() const
 
 void PluginResource::setEnabled( bool enabled )
 {
+  Q_ASSERT( mPluginResource );
+
   osync_plugin_resource_enable( mPluginResource, enabled ? TRUE : FALSE );
 }
 
 bool PluginResource::enabled() const
 {
+  Q_ASSERT( mPluginResource );
+
   return (osync_plugin_resource_is_enabled( mPluginResource ) == TRUE);
 }
 
 void PluginResource::setName( const QString &name )
 {
+  Q_ASSERT( mPluginResource );
+
   osync_plugin_resource_set_name( mPluginResource, name.toUtf8().data() );
 }
 
 QString PluginResource::name() const
 {
+  Q_ASSERT( mPluginResource );
+
   return QString::fromUtf8( osync_plugin_resource_get_name( mPluginResource ) );
 }
 
 void PluginResource::setMimeType( const QString &mimeType )
 {
+  Q_ASSERT( mPluginResource );
+
   osync_plugin_resource_set_mime( mPluginResource, mimeType.toUtf8().data() );
 }
 
 QString PluginResource::mimeType() const
 {
+  Q_ASSERT( mPluginResource );
+
   return QString::fromUtf8( osync_plugin_resource_get_mime( mPluginResource ) );
 }
 
 ObjectFormatSink::List PluginResource::objectFormatSinks() const
 {
+  Q_ASSERT( mPluginResource );
+
   ObjectFormatSink::List sinks;
 
   OSyncList *list = osync_plugin_resource_get_objformat_sinks( mPluginResource );
@@ -87,40 +101,56 @@ ObjectFormatSink::List PluginResource::objectFormatSinks() const
 
 void PluginResource::addObjectFormatSink( const ObjectFormatSink &sink )
 {
+  Q_ASSERT( mPluginResource );
+
   osync_plugin_resource_add_objformat_sink( mPluginResource, sink.mObjectFormatSink );
 }
 
 void PluginResource::removeObjectFormatSink( const ObjectFormatSink &sink )
 {
+  Q_ASSERT( mPluginResource );
+
   osync_plugin_resource_remove_objformat_sink( mPluginResource, sink.mObjectFormatSink );
 }
 
 void PluginResource::setObjectType( const QString &objectType )
 {
+  Q_ASSERT( mPluginResource );
+
   osync_plugin_resource_set_objtype( mPluginResource, objectType.toUtf8().data() );
 }
 
 QString PluginResource::objectType() const
 {
+  Q_ASSERT( mPluginResource );
+
   return QString::fromUtf8( osync_plugin_resource_get_objtype( mPluginResource ) );
 }
 
 void PluginResource::setPath( const QString &path )
 {
+  Q_ASSERT( mPluginResource );
+
   osync_plugin_resource_set_path( mPluginResource, path.toUtf8().data() );
 }
 
 QString PluginResource::path() const
 {
+  Q_ASSERT( mPluginResource );
+
   return QString::fromUtf8( osync_plugin_resource_get_path( mPluginResource ) );
 }
 
 void PluginResource::setUrl( const QString &url )
 {
+  Q_ASSERT( mPluginResource );
+
   osync_plugin_resource_set_url( mPluginResource, url.toUtf8().data() );
 }
 
 QString PluginResource::url() const
 {
+  Q_ASSERT( mPluginResource );
+
   return QString::fromUtf8( osync_plugin_resource_get_url( mPluginResource ) );
 }

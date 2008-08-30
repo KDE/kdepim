@@ -42,31 +42,43 @@ bool PluginLocalization::isValid() const
 
 void PluginLocalization::setEncoding( const QString &encoding )
 {
+  Q_ASSERT( mPluginLocalization );
+
   osync_plugin_localization_set_encoding( mPluginLocalization, encoding.toLatin1().data() );
 }
 
 QString PluginLocalization::encoding() const
 {
+  Q_ASSERT( mPluginLocalization );
+
   return QString::fromLatin1( osync_plugin_localization_get_encoding( mPluginLocalization ) );
 }
 
 void PluginLocalization::setTimeZone( const QString &timezone )
 {
+  Q_ASSERT( mPluginLocalization );
+
   osync_plugin_localization_set_timezone( mPluginLocalization, timezone.toLatin1() );
 }
 
 QString PluginLocalization::timeZone() const
 {
+  Q_ASSERT( mPluginLocalization );
+
   return QString::fromLatin1( osync_plugin_localization_get_timezone( mPluginLocalization ) );
 }
 
 void PluginLocalization::setLanguage( const QString &language )
 {
+  Q_ASSERT( mPluginLocalization );
+
   osync_plugin_localization_set_language( mPluginLocalization, language.toLatin1().data() );
 }
 
 QString PluginLocalization::language() const
 {
+  Q_ASSERT( mPluginLocalization );
+
   return QString::fromLatin1( osync_plugin_localization_get_language( mPluginLocalization ) );
 }
 

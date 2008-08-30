@@ -24,6 +24,7 @@
 
 #include <libqopensync/qopensync_export.h>
 #include <libqopensync/plugin.h>
+#include <libqopensync/pluginconfig.h>
 #include <libqopensync/result.h>
 
 class OSyncMember;
@@ -90,6 +91,27 @@ class QSYNC_EXPORT Member
      */
     KDE_DEPRECATED Result configuration( QByteArray &configurationData,
       bool useDefault = true ) const;
+
+    /**
+      Returns whether the member has a configuration available.
+     */
+    bool hasConfiguration() const;
+
+    /**
+      Sets the configuration object of the member.
+     */
+    void setConfiguration( const PluginConfig &config );
+
+    /**
+      Returns the configuration object of the member.
+     */
+    PluginConfig configuration() const;
+
+    /**
+      Returns the configuration object of the member or the default if
+      no configuration is set.
+     */
+    PluginConfig configurationOrDefault() const;
 
     /**
       Saves the changes to the configuration to hard disc.

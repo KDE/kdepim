@@ -42,15 +42,21 @@ bool ObjectFormatSink::isValid() const
 
 QString ObjectFormatSink::objectFormat() const
 {
+  Q_ASSERT( mObjectFormatSink );
+
   return QString::fromUtf8( osync_objformat_sink_get_objformat( mObjectFormatSink ) );
 }
 
 void ObjectFormatSink::setConfiguration( const QString &config )
 {
+  Q_ASSERT( mObjectFormatSink );
+
   osync_objformat_sink_set_config( mObjectFormatSink, config.toUtf8().data() );
 }
 
 QString ObjectFormatSink::configuration() const
 {
+  Q_ASSERT( mObjectFormatSink );
+
   return QString::fromUtf8( osync_objformat_sink_get_config( mObjectFormatSink ) );
 }
