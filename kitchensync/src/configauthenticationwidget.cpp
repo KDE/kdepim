@@ -54,4 +54,4 @@ void ConfigAuthenticationWidget::save()
   mAuthentication.setUserName( mUserName->text() );
   mAuthentication.setPassword( mPassword->text() );
   mAuthentication.setReference( mReference->text() );
-};
+}

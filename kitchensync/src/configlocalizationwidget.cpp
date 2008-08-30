@@ -52,4 +52,4 @@ void ConfigLocalizationWidget::save()
   mLocalization.setEncoding( mEncoding->text() );
   mLocalization.setTimeZone( mTimeZone->text() );
   mLocalization.setLanguage( mLanguage->text() );
-};
+}
