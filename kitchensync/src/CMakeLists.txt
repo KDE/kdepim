@@ -63,6 +63,10 @@ configguimoto.cpp
 configguijescs.cpp
 configguisunbird.cpp
 configguisynce.cpp
+
+configauthenticationwidget.cpp
+configconnectionwidget.cpp
+configlocalizationwidget.cpp
 )
 
 
