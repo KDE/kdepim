@@ -131,7 +131,10 @@ class QSYNC_EXPORT PluginAdvancedOptionParameter
 
 class QSYNC_EXPORT PluginAdvancedOption
 {
+    friend class PluginConfig;
+
   public:
+    typedef QList<PluginAdvancedOption> List;
 
     enum OptionType
     {

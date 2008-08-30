@@ -32,6 +32,8 @@ namespace QSync {
 
 class QSYNC_EXPORT PluginLocalization
 {
+    friend class PluginConfig;
+
   public:
     PluginLocalization();
     ~PluginLocalization();

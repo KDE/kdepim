@@ -32,6 +32,8 @@ namespace QSync {
 
 class QSYNC_EXPORT PluginAuthentication
 {
+    friend class PluginConfig;
+
   public:
     PluginAuthentication();
     ~PluginAuthentication();

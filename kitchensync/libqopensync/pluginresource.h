@@ -25,6 +25,7 @@
 #include <libqopensync/qopensync_export.h>
 #include <libqopensync/objectformatsink.h>
 
+#include <QtCore/QList>
 #include <QtCore/QString>
 
 class OSyncPluginResource;
@@ -33,7 +34,11 @@ namespace QSync {
 
 class QSYNC_EXPORT PluginResource
 {
+    friend class PluginConfig;
+
   public:
+    typedef QList<PluginResource> List;
+
     PluginResource();
     ~PluginResource();
 

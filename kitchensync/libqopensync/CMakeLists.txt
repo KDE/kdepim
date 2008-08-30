@@ -14,6 +14,7 @@ SET(qopensync_LIB_SRCS
    plugin.cpp
    pluginadvancedoption.cpp
    pluginauthentication.cpp
+   pluginconfig.cpp
    pluginconnection.cpp
    pluginenv.cpp
    pluginlocalization.cpp

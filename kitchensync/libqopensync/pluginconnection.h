@@ -30,6 +30,8 @@ namespace QSync {
 
 class QSYNC_EXPORT PluginConnection
 {
+    friend class PluginConfig;
+
   public:
     enum ConnectionType
     {
