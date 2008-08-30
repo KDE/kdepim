@@ -1,8 +1,8 @@
 /* KPilot
 **
-** Copyright (C) 2008 by Dan Pilone
+** Copyright (C) 2008 by Bertjan Broeksema <b.broeksema@kdemail.net>
 **
-** This file defines the factory for the abbrowser-conduit plugin.
+** This file defines the factory for the contacts conduit.
 */
 
 /*
