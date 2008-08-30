@@ -54,6 +54,11 @@ class QSYNC_EXPORT PluginConnection
     bool isValid() const;
 
     /**
+      Sets the type of the plugin connection.
+     */
+    void setType( ConnectionType type );
+
+    /**
       Returns the type of the plugin connection.
      */
     ConnectionType type() const;

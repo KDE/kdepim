@@ -40,6 +40,24 @@ bool PluginConnection::isValid() const
   return (mPluginConnection != 0);
 }
 
+void PluginConnection::setType( ConnectionType type )
+{
+  Q_ASSERT( mPluginConnection );
+
+  OSyncPluginConnectionType osyncType = OSYNC_PLUGIN_CONNECTION_UNKNOWN;
+
+  switch ( type ) {
+    case UnknownConnection: osyncType = OSYNC_PLUGIN_CONNECTION_UNKNOWN; break;
+    case BlueToothConnection: osyncType = OSYNC_PLUGIN_CONNECTION_BLUETOOTH; break;
+    case UsbConnection: osyncType = OSYNC_PLUGIN_CONNECTION_USB; break;
+    case NetworkConnection: osyncType = OSYNC_PLUGIN_CONNECTION_NETWORK; break;
+    case SerialConnection: osyncType = OSYNC_PLUGIN_CONNECTION_SERIAL; break;
+    case IrdaConnection: osyncType = OSYNC_PLUGIN_CONNECTION_IRDA; break;
+  }
+
+  osync_plugin_connection_set_type( mPluginConnection, osyncType );
+}
+
 PluginConnection::ConnectionType PluginConnection::type() const
 {
   Q_ASSERT( mPluginConnection );
