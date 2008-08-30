@@ -171,7 +171,7 @@ protected:
 class DeviceCommEvent : public QEvent
 {
 public:
-	explicit DeviceCommEvent(DeviceCustomEvents type, QString msg = QString::null,
+	explicit DeviceCommEvent(DeviceCustomEvents type, QString msg = QString(),
 			int progress = 0) :
 		QEvent( (QEvent::Type)type ), fMessage(msg), fProgress(progress),
 				fPilotSocket(-1)
@@ -246,7 +246,7 @@ private:
 	 * Does the low-level opening of the device and handles the
 	 * pilot-link library initialisation.
 	 */
-	bool open(const QString &device = QString::null);
+	bool open(const QString &device = QString());
 
 	KPilotDeviceLink *fHandle;
 	inline KPilotDeviceLink *link()

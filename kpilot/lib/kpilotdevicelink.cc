@@ -28,9 +28,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "options.h"
-
-
+#include "kpilotlink.h"
 
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -60,13 +58,13 @@
 #include <kurl.h>
 #include <kio/netaccess.h>
 
+#include "options.h"
 #include "pilotUser.h"
 #include "pilotSysInfo.h"
 #include "pilotCard.h"
 #include "pilotSerialDatabase.h"
 #include "pilotLocalDatabase.h"
 
-#include "kpilotlink.h"
 #include "kpilotdevicelinkPrivate.moc"
 #include "kpilotdevicelink.moc"
 
@@ -461,7 +459,7 @@ void DeviceCommWorker::acceptDevice()
 		return;
 	}
 
-	QApplication::postEvent(link(), new DeviceCommEvent(EventLogProgress, QString::null, 10));
+	QApplication::postEvent(link(), new DeviceCommEvent(EventLogProgress, QString(), 10));
 
 	DEBUGKPILOT << 
 		": Listening to pilot. Now trying accept...";
@@ -497,7 +495,7 @@ void DeviceCommWorker::acceptDevice()
 		return;
 	}
 
-	QApplication::postEvent(link(), new DeviceCommEvent(EventLogProgress, QString::null, 30));
+	QApplication::postEvent(link(), new DeviceCommEvent(EventLogProgress, QString(), 30));
 
 	DEBUGKPILOT << ": doing dlp_ReadSysInfo...";
 
@@ -527,7 +525,7 @@ void DeviceCommWorker::acceptDevice()
 	// If we've made it this far, make sure our USB workaround timer doesn't fire!
 	fWorkaroundUSBTimer->stop();
 
-	QApplication::postEvent(link(), new DeviceCommEvent(EventLogProgress, QString::null, 60));
+	QApplication::postEvent(link(), new DeviceCommEvent(EventLogProgress, QString(), 60));
 
 	KPILOT_DELETE(link()->fPilotUser);
 	link()->fPilotUser = new KPilotUser;
@@ -557,7 +555,7 @@ void DeviceCommWorker::acceptDevice()
 	}
 	link()->fLinkStatus = AcceptedDevice;
 
-	QApplication::postEvent(link(), new DeviceCommEvent(EventLogProgress, QString::null, 100));
+	QApplication::postEvent(link(), new DeviceCommEvent(EventLogProgress, QString(), 100));
 
 	DeviceCommEvent * ev = new DeviceCommEvent(EventDeviceReady);
 	ev->setCurrentSocket(fPilotSocket);
@@ -692,7 +690,7 @@ void KPilotDeviceLink::reset(const QString & dP)
 	// Release all resources
 	//
 	close();
-	fPilotPath = QString();
+	fPilotPath.clear();
 
 	fPilotPath = dP;
 	if (fPilotPath.isEmpty())

@@ -174,7 +174,7 @@ void IDMappingXmlSource::loadMapping()
 	// Reset local data.
 	d->fMappings = QMap<QString, QString>();
 	d->fLastSyncedDateTime = QDateTime();
-	d->fLastSyncedPC = QString();
+	d->fLastSyncedPC.clear();
 	
 	QFile file( d->fPath );
 	
@@ -316,7 +316,7 @@ bool IDMappingXmlSource::rollback()
 		// No backup, reset values.
 		d->fMappings = QMap<QString, QString>();
 		d->fLastSyncedDateTime = QDateTime();
-		d->fLastSyncedPC = QString();
+		d->fLastSyncedPC.clear();
 		return true;
 	}
 	

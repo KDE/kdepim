@@ -662,12 +662,12 @@ QString ContactsConduit::getFieldForHHCustom( const unsigned int index
 	if( index > 3 )
 	{
 		WARNINGKPILOT <<"Bad index number" << index;
-		retval = QString();
+		retval.clear();
 	}
 	if( d->fSettings.customMapping().count() != 4 )
 	{
 		WARNINGKPILOT <<"Mapping does not have 4 elements." << index;
-		retval = QString();
+		retval.clear();
 	}
 
 	switch( d->fSettings.custom(index) )

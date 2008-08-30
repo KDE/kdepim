@@ -133,8 +133,8 @@ void RCFirstSyncTest::testMatch()
 	conduit.hhDataProxy()->records()->insert( rec2->id(), rec2 );
 	
 	// There should be a valid mapping
-	QVERIFY( conduit.mapping().hhRecordId( CSL1( "pc-1" ) ) == QString() );
-	QVERIFY( conduit.mapping().pcRecordId( CSL1( "hh-1" ) ) == QString() );
+	QVERIFY( conduit.mapping().hhRecordId( CSL1( "pc-1" ) ).isEmpty() );
+	QVERIFY( conduit.mapping().pcRecordId( CSL1( "hh-1" ) ).isEmpty() );
 	QVERIFY( conduit.equal( rec1, rec2 ) );
 	
 	// Everything is ok, do a hotsync now.
@@ -167,17 +167,17 @@ void RCFirstSyncTest::testNoMatch()
 	conduit.hhDataProxy()->records()->insert( rec2->id(), rec2 );
 	
 	// There should be a valid mapping
-	QVERIFY( conduit.mapping().hhRecordId( CSL1( "pc-1" ) ) == QString() );
-	QVERIFY( conduit.mapping().pcRecordId( CSL1( "hh-1" ) ) == QString() );
+	QVERIFY( conduit.mapping().hhRecordId( CSL1( "pc-1" ) ).isEmpty() );
+	QVERIFY( conduit.mapping().pcRecordId( CSL1( "hh-1" ) ).isEmpty() );
 	QVERIFY( !conduit.equal( rec1, rec2 ) );
 	
 	// Everything is ok, do a hotsync now.
 	conduit.firstSyncTest();
 	
 	// There should be a valid mapping
-	QVERIFY( conduit.mapping().hhRecordId( CSL1( "pc-1" ) ) != QString() );
+	QVERIFY( !conduit.mapping().hhRecordId( CSL1( "pc-1" ) ).isEmpty() );
 	QVERIFY( conduit.mapping().hhRecordId( CSL1( "pc-1" ) ) != CSL1( "hh-1" ) );
-	QVERIFY( conduit.mapping().pcRecordId( CSL1( "hh-1" ) ) != QString() );
+	QVERIFY( !conduit.mapping().pcRecordId( CSL1( "hh-1" ) ).isEmpty() );
 	QVERIFY( conduit.mapping().pcRecordId( CSL1( "hh-1" ) ) != CSL1( "pc-1" ) );
 	
 	QString hhId = conduit.mapping().hhRecordId( rec1->id() );

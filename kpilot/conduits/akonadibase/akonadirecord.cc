@@ -109,7 +109,7 @@ void AkonadiRecord::setId( const QString &id )
 	}
 	else
 	{
-		d->fTempId = QString();
+		d->fTempId.clear();
 		d->fItem.setId( id.toULongLong() );
 	}
 }

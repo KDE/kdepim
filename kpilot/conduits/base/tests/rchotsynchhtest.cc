@@ -289,7 +289,7 @@ void RCHotSyncHHTest::testCase_6_5_2()
 	QVERIFY( hhRec->isModified() );
 	
 	// There shouldn't be a mapping
-	QVERIFY( fConduit->mapping().hhRecordId( CSL1( "hh-2" ) ) == QString() );
+	QVERIFY( fConduit->mapping().hhRecordId( CSL1( "hh-2" ) ).isEmpty() );
 	
 	// Everything is ok, do a hotsync now.
 	fConduit->hotSyncTest();
@@ -299,7 +299,7 @@ void RCHotSyncHHTest::testCase_6_5_2()
 	
 	QString pcRecId = fConduit->mapping().pcRecordId( CSL1( "hh-2" ) );
 	
-	QVERIFY( pcRecId != QString() );
+	QVERIFY( !pcRecId.isEmpty() );
 	
 	Record *syncedPCRec = fConduit->pcDataProxy()->find( pcRecId );
 	
@@ -418,7 +418,7 @@ void RCHotSyncHHTest::testCase_6_5_5()
 	QVERIFY( pcRec->isModified() );
 	
 	// There shouldn't be a mapping
-	QVERIFY( fConduit->mapping().hhRecordId( CSL1( "pc-4" ) ) == QString() );
+	QVERIFY( fConduit->mapping().hhRecordId( CSL1( "pc-4" ) ).isEmpty() );
 	
 	// Everything is ok, do a hotsync now.
 	fConduit->hotSyncTest();
@@ -427,7 +427,7 @@ void RCHotSyncHHTest::testCase_6_5_5()
 	
 	QString hhRecId = fConduit->mapping().hhRecordId( CSL1( "pc-4" ) );
 	
-	QVERIFY( hhRecId != QString() );
+	QVERIFY( !hhRecId.isEmpty() );
 	
 	TestHHRecord *syncedHHRec = static_cast<TestHHRecord*>(
 		fConduit->hhDataProxy()->find( hhRecId ) );
@@ -705,7 +705,7 @@ void RCHotSyncHHTest::testCase_6_5_13()
 	QVERIFY( !hhRec->isModified() );
 	
 	// There shouldn't be a mapping
-	QVERIFY( fConduit->mapping().pcRecordId( CSL1( "hh-12" ) ) == QString() );
+	QVERIFY( fConduit->mapping().pcRecordId( CSL1( "hh-12" ) ).isEmpty() );
 	
 	// Everything is ok, do a hotsync now.
 	fConduit->hotSyncTest();
@@ -715,7 +715,7 @@ void RCHotSyncHHTest::testCase_6_5_13()
 	
 	QString pcRecId = fConduit->mapping().pcRecordId( CSL1( "hh-12" ) );
 	
-	QVERIFY( pcRecId == QString() );
+	QVERIFY( pcRecId.isEmpty() );
 	
 	// Record should be there.
 	QVERIFY( syncedHHRec );
@@ -741,7 +741,7 @@ void RCHotSyncHHTest::testCase_6_5_14()
 	QVERIFY( !pcRec->isModified() );
 	
 	// There shouldn't be a mapping
-	QVERIFY( fConduit->mapping().hhRecordId( CSL1( "pc-12" ) ) == QString() );
+	QVERIFY( fConduit->mapping().hhRecordId( CSL1( "pc-12" ) ).isEmpty() );
 	
 	// Everything is ok, do a hotsync now.
 	fConduit->hotSyncTest();
@@ -750,7 +750,7 @@ void RCHotSyncHHTest::testCase_6_5_14()
 	
 	QString hhRecId = fConduit->mapping().hhRecordId( CSL1( "pc-12" ) );
 	
-	QVERIFY( hhRecId == QString() );
+	QVERIFY( hhRecId.isEmpty() );
 	
 	// Record should be there.
 	QVERIFY( syncedPCRec );
@@ -881,8 +881,8 @@ void RCHotSyncHHTest::testCase_6_5_17()
 	fConduit->hotSyncTest();
 	
 	// There shouldn't be a mapping anymore
-	QVERIFY( fConduit->mapping().hhRecordId( CSL1( "pc-15" ) ) == QString() );
-	QVERIFY( fConduit->mapping().pcRecordId( CSL1( "hh-15" ) ) == QString() );
+	QVERIFY( fConduit->mapping().hhRecordId( CSL1( "pc-15" ) ).isEmpty() );
+	QVERIFY( fConduit->mapping().pcRecordId( CSL1( "hh-15" ) ).isEmpty() );
 	
 	Record *syncedPCRec = fConduit->pcDataProxy()->find( CSL1( "pc-15" ) );
 	Record *syncedHHRec = fConduit->hhDataProxy()->find( CSL1( "hh-15" ) );
