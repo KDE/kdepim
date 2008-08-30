@@ -4,22 +4,24 @@ INCLUDE_DIRECTORIES( ${OPENSYNC_INCLUDE_DIRS} ${GLIB2_INCLUDE_DIR} )
 ########### next target ###############
 
 SET(qopensync_LIB_SRCS
-callbackhandler.cpp
-engine.cpp
-groupenv.cpp
-pluginadvancedoption.cpp
-pluginauthentication.cpp
-pluginconnection.cpp
-pluginenv.cpp
-pluginlocalization.cpp
-filter.cpp
-group.cpp
-member.cpp
-plugin.cpp
-result.cpp
-syncmapping.cpp
-syncupdates.cpp
-syncchange.cpp
+   callbackhandler.cpp
+   engine.cpp
+   groupenv.cpp
+   filter.cpp
+   group.cpp
+   member.cpp
+   objectformatsink.cpp
+   plugin.cpp
+   pluginadvancedoption.cpp
+   pluginauthentication.cpp
+   pluginconnection.cpp
+   pluginenv.cpp
+   pluginlocalization.cpp
+   pluginresource.cpp
+   result.cpp
+   syncchange.cpp
+   syncmapping.cpp
+   syncupdates.cpp
 )
 
 
