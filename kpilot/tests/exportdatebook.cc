@@ -96,7 +96,7 @@ int main(int argc, char **argv)
 
 	if (!calendar)
 	{
-		WARNINGKPILOT <<"! Can't create calendar object.";
+		WARNINGKPILOT <<"! Cannot create calendar object.";
 		return 1;
 	}
 
