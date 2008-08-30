@@ -53,11 +53,11 @@ class KWidgetList : public QScrollArea
 
     virtual bool eventFilter( QObject *object, QEvent *event );
 
-  public slots:
+  public Q_SLOTS:
     void clear();
     virtual void setFocus();
 
-  signals:
+  Q_SIGNALS:
     void selectionChanged( KWidgetListItem *item );
     void doubleClicked( KWidgetListItem *item );
 

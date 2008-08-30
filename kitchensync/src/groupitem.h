@@ -52,12 +52,12 @@ class GroupItem : public KWidgetListItem
 
     void clear();
 
-  signals:
+  Q_SIGNALS:
     void synchronizeGroup( SyncProcess *syncProcess );
     void abortSynchronizeGroup( SyncProcess *syncProcess );
     void configureGroup( SyncProcess *syncProcess );
 
-  protected slots:
+  protected Q_SLOTS:
     void conflict( QSync::SyncMapping );
     void change( const QSync::SyncChangeUpdate &update );
     void mapping( const QSync::SyncMappingUpdate &update );

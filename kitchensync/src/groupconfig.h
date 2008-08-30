@@ -20,8 +20,8 @@
 #ifndef GROUPCONFIG_H
 #define GROUPCONFIG_H
 
-#include <QtCore/QList>
 #include <QtGui/QWidget>
+#include <QtCore/QList>
 #include <QtCore/QMap>
 
 class QLabel;
@@ -44,16 +44,16 @@ class GroupConfig : public QWidget
 
     void saveConfig();
 
-  public slots:
+  public Q_SLOTS:
     void addMember();
     void removeMember();
 
     void updateMembers();
 
-  signals:
+  Q_SIGNALS:
     void memberSelected( bool );
 
-  protected slots:
+  protected Q_SLOTS:
     void memberWidgetSelected( KPageWidgetItem* );
 
   private:

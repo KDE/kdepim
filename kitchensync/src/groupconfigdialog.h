@@ -33,12 +33,12 @@ class GroupConfigDialog : public KDialog
     GroupConfigDialog( QWidget *parent, SyncProcess * );
     ~GroupConfigDialog();
 
-  protected slots:
+  protected Q_SLOTS:
     void slotOk();
     void slotUser1();
     void slotUser2();
 
-  private slots:
+  private Q_SLOTS:
     void memberSelected( bool );
 
   private:

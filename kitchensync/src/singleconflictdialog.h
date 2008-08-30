@@ -38,7 +38,7 @@ class SingleConflictDialog : public ConflictDialog
     SingleConflictDialog( QSync::SyncMapping &mapping, QWidget *parent );
     ~SingleConflictDialog();
 
-  private slots:
+  private Q_SLOTS:
     void useFirstChange();
     void useSecondChange();
     void duplicateChange();

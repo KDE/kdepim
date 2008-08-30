@@ -50,7 +50,7 @@ class QSYNC_EXPORT CallbackHandler : public QObject
     void setEngine( Engine *engine );
     Engine *engine() const;
 
-  signals:
+  Q_SIGNALS:
     void conflict( QSync::SyncMapping mapping );
     void change( const QSync::SyncChangeUpdate &update );
     void mapping( const QSync::SyncMappingUpdate &update );

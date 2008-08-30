@@ -33,7 +33,7 @@ class MultiConflictDialog : public ConflictDialog
     MultiConflictDialog( QSync::SyncMapping &mapping, QWidget *parent );
     ~MultiConflictDialog();
 
-  private slots:
+  private Q_SLOTS:
     void useSelectedChange();
     void duplicateChange();
     void ignoreChange();

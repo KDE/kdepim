@@ -53,7 +53,7 @@ class SyncProcess : public QObject
     /** apply object type filter hack **/
     void applyObjectTypeFilter();
 
-  signals:
+  Q_SIGNALS:
     /**
       This signal is emitted whenever the engine has changed ( reinitialized ).
      */

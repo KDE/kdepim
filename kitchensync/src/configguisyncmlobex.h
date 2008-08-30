@@ -44,7 +44,7 @@ class ConfigGuiSyncmlObex : public ConfigGui
     void load( const QString &xml );
     QString save() const;
 
-  public slots:
+  public Q_SLOTS:
      void slotConnectionChanged( int pos );
 
   private:
@@ -80,7 +80,7 @@ class ConfigGuiSyncmlObex : public ConfigGui
     KComboBox *mCalendarDb;
     KComboBox *mNoteDb;
 
-  protected slots:
+  protected Q_SLOTS:
     void addLineEdit( QWidget *parent, const QString &text, KComboBox **edit, int row );
 };
 

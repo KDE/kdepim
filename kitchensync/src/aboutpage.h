@@ -32,10 +32,10 @@ class AboutPage : public QWidget
   public:
     AboutPage( QWidget *parent );
 
-  signals:
+  Q_SIGNALS:
     void addGroup();
 
-  private slots:
+  private Q_SLOTS:
     void handleUrl( const KUrl &url );
 
   private:

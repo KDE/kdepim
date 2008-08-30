@@ -41,7 +41,7 @@ class ConfigGuiIRMC : public ConfigGui
     void load( const QString &xml );
     QString save() const;
 
-  protected slots:
+  protected Q_SLOTS:
     void connectionTypeChanged( int type );
 
   private:

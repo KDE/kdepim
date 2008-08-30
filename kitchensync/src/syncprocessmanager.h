@@ -97,7 +97,7 @@ class SyncProcessManager : public QObject
     void removeMember( SyncProcess *process,
                        const QSync::Member &member );
 
-  signals:
+  Q_SIGNALS:
     void changed();
     void syncProcessChanged( SyncProcess *process );
 

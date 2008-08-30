@@ -51,10 +51,10 @@ class LocalCalendar : public QWidget
     QSpinBox *mDaysSpinBox;
     QCheckBox *mDefaultCheckBox;
 
-  signals:
+  Q_SIGNALS:
     void deleteRequest( LocalCalendar* );
 
-  private slots:
+  private Q_SLOTS:
     void deleteWidget();
     void toggleDays( bool days );
 
@@ -81,10 +81,10 @@ class WebdavCalendar : public QWidget
     KLineEdit *mUsername;
     KLineEdit *mPassword;
 
-  signals:
+  Q_SIGNALS:
     void deleteRequest( WebdavCalendar* );
 
-  private slots:
+  private Q_SLOTS:
     void deleteWidget();
     void toggleDays( bool state );
 
@@ -103,7 +103,7 @@ class ConfigGuiSunbird : public ConfigGui
 
     QString save() const;
 
-  public slots:
+  public Q_SLOTS:
     void addLocalCalendar();
     void addWebdavCalendar();
 

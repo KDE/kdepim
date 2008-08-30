@@ -52,7 +52,7 @@ class ConfigGuiGnokii : public ConfigGui
     typedef QList<ConnectionType> ConnectionTypeList;
     ConnectionTypeList mConnectionTypes;
 
-   protected slots:
+   protected Q_SLOTS:
      void slotConnectionChanged( int nth );
      void slotModelChanged();
 };

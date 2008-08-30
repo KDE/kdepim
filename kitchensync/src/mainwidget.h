@@ -43,7 +43,7 @@ class KITCHENSYNC_EXPORT MainWidget : public QWidget
     virtual KXMLGUIClient *guiClient() const;
     static KAboutData *aboutData();
 
-  public slots:
+  public Q_SLOTS:
     void addGroup();
     void deleteGroup();
     void editGroup();

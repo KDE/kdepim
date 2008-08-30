@@ -49,7 +49,7 @@ class PluginPicker : public QWidget
 
     QSync::Plugin selectedPlugin() const;
 
-  signals:
+  Q_SIGNALS:
     void selected();
 
   protected:
@@ -70,7 +70,7 @@ class PluginPickerDialog : public KDialog
 
     static QSync::Plugin getPlugin( QWidget *parent );
 
-  protected slots:
+  protected Q_SLOTS:
     void slotOk();
     void slotCancel();
 

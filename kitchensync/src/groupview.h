@@ -37,11 +37,11 @@ class GroupView : public QWidget
 
     void clear();
 
-  public slots:
+  public Q_SLOTS:
     void updateView();
     void updateSyncProcess( SyncProcess *process );
 
-  signals:
+  Q_SIGNALS:
     void addGroup();
     void synchronizeGroup( SyncProcess *syncProcess );
     void abortSynchronizeGroup( SyncProcess *syncProcess );
