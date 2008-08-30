@@ -35,7 +35,7 @@ class TodoConfig : public ConduitConfigBase
 {
 	Q_OBJECT
 public:
-	TodoConfig( QWidget*, const QVariantList& = QVariantList() );
+	explicit TodoConfig( QWidget*, const QVariantList& = QVariantList() );
 
 	/* virtual */~TodoConfig();
 

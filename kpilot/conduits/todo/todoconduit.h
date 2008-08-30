@@ -31,7 +31,7 @@
 class TodoConduit : public RecordConduit
 {
 public:
-	TodoConduit( KPilotLink *o, const QVariantList &a = QVariantList() );
+	explicit TodoConduit( KPilotLink *o, const QVariantList &a = QVariantList() );
 
 	~TodoConduit();
 
