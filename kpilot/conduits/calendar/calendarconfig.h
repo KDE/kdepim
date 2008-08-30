@@ -35,7 +35,7 @@ class CalendarConfig : public ConduitConfigBase
 {
 	Q_OBJECT
 public:
-	CalendarConfig( QWidget*, const QVariantList& = QVariantList() );
+	explicit CalendarConfig( QWidget*, const QVariantList& = QVariantList() );
 
 	/* virtual */~CalendarConfig();
 

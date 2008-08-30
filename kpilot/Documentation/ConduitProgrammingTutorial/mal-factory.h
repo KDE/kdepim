@@ -18,7 +18,7 @@ class MALConduitFactory : public KLibFactory
 Q_OBJECT
 
 public:
-    MALConduitFactory(QObject * = 0L,const char * = 0L);
+    explicit MALConduitFactory(QObject * = 0L,const char * = 0L);
     virtual ~MALConduitFactory();
 
     static KAboutData *about() { return fAbout; } ;

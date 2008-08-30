@@ -38,7 +38,7 @@ class ConverterDlg : public KDialog
     Q_OBJECT
 
 public:
-	ConverterDlg( QWidget *parent=0, const QString& caption=0);
+	explicit ConverterDlg( QWidget *parent=0, const QString& caption=0);
 	~ConverterDlg();
 
 protected slots:

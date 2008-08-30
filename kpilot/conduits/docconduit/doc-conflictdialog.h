@@ -61,7 +61,7 @@ class ResolutionDialog : public KDialog
 	Q_OBJECT
 
 public:
-	ResolutionDialog( QWidget* parent=0, const QString& caption=i18n("Resolution Dialog"), syncInfoList*sinfo=0L, KPilotLink*lnk=0L);
+	explicit ResolutionDialog( QWidget* parent=0, const QString& caption=i18n("Resolution Dialog"), syncInfoList*sinfo=0L, KPilotLink*lnk=0L);
 	~ResolutionDialog();
 
 	bool hasConflicts;

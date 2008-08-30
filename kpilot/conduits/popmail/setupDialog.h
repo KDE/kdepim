@@ -49,7 +49,7 @@ class PopMailWidgetConfig : public ConduitConfigBase
 {
 Q_OBJECT
 public:
-	PopMailWidgetConfig(QWidget *, const QVariantList & = QVariantList());
+	explicit PopMailWidgetConfig(QWidget *, const QVariantList & = QVariantList());
 	virtual void load();
 	virtual void commit();
 

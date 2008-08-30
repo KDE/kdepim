@@ -32,7 +32,7 @@
 class Contacts : public RecordConduit {
 
 public:
-	Contacts( KPilotLink *o, const QVariantList &a = QVariantList() );
+	explicit Contacts( KPilotLink *o, const QVariantList &a = QVariantList() );
 
 	virtual void loadSettings();
 	

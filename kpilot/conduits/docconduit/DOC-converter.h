@@ -72,7 +72,7 @@ public:
 class docMatchBookmark:public docBookmark {
  public:
 	docMatchBookmark():docBookmark() { from=0; to=100;};
-	docMatchBookmark(QString pattrn, int options=0):docBookmark(),
+	explicit docMatchBookmark(QString pattrn, int options=0):docBookmark(),
 		pattern(pattrn), opts(options) { from=0; to=100; };
 	docMatchBookmark(QString pattrn, QString bmkname,
 		int options=0):docBookmark(bmkname, 0), pattern(pattrn),
@@ -88,7 +88,7 @@ class docMatchBookmark:public docBookmark {
 class docRegExpBookmark:public docMatchBookmark {
  public:
 	docRegExpBookmark():docMatchBookmark() { capSubexpression=-1;};
-	docRegExpBookmark(QString regexp, int cap=0,
+	explicit docRegExpBookmark(QString regexp, int cap=0,
 		int options=0):docMatchBookmark(regexp, options) {capSubexpression=cap; };
 	docRegExpBookmark(QString pattrn, QString bmkname,
 		int options=0):docMatchBookmark(pattrn, bmkname, options) { capSubexpression=-1; };
@@ -121,7 +121,7 @@ public:
 	} eSortBookmarks;
 
 public:
-	 DOCConverter(QObject *parent=0L, const char *name=0L);
+	 explicit DOCConverter(QObject *parent=0L, const char *name=0L);
 	 virtual ~ DOCConverter();
 
 	QString readText();

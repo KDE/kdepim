@@ -35,7 +35,7 @@ class ContactsConfig : public ConduitConfigBase
 {
 	Q_OBJECT
 public:
-	ContactsConfig( QWidget*, const QVariantList& = QVariantList() );
+	explicit ContactsConfig( QWidget*, const QVariantList& = QVariantList() );
 
 	/* virtual */~ContactsConfig();
 

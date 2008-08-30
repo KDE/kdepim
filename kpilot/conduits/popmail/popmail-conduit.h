@@ -42,7 +42,7 @@ class PilotRecord;
 class PopMailConduit : public ConduitAction
 {
 public:
-	PopMailConduit(KPilotLink *d,
+	explicit PopMailConduit(KPilotLink *d,
 		const QVariantList &l=QVariantList());
 	virtual ~PopMailConduit();
 

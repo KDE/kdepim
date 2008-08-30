@@ -35,7 +35,7 @@ class PilotAddress;
 class ContactsConduit : public RecordConduit
 {
 public:
-	ContactsConduit( KPilotLink *o, const QVariantList &a = QVariantList() );
+	explicit ContactsConduit( KPilotLink *o, const QVariantList &a = QVariantList() );
 
 	~ContactsConduit();
 

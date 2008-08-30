@@ -39,7 +39,7 @@ class ContactsWidgetSetup : public ConduitConfigBase
 {
 Q_OBJECT
 public:
-	ContactsWidgetSetup( QWidget *, const QVariantList& = QVariantList() );
+	explicit ContactsWidgetSetup( QWidget *, const QVariantList& = QVariantList() );
 	virtual ~ContactsWidgetSetup();
 	virtual void load();
 	virtual void commit();

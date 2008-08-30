@@ -42,7 +42,7 @@ private:
 public:
 	static const int TEXT_SIZE;
 	PilotDOCEntry();
-	PilotDOCEntry(PilotRecord * rec, bool compressed = false);
+	explicit PilotDOCEntry(PilotRecord * rec, bool compressed = false);
 	PilotDOCEntry(const PilotDOCEntry & e);
 	~PilotDOCEntry() {};
 	PilotDOCEntry & operator=(const PilotDOCEntry & e);

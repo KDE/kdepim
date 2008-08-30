@@ -48,7 +48,7 @@ public:
 	 *  @c --fail as an argument to the conduit, then
 	 *  the conduit will fail instead of trivially succeeding.
 	 */
-	NullConduit(KPilotLink *,
+	explicit NullConduit(KPilotLink *,
 		const QVariantList &args = QVariantList());
 	virtual ~NullConduit();
 

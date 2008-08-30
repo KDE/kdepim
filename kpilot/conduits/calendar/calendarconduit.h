@@ -45,7 +45,7 @@ typedef boost::shared_ptr<KCal::Event> EventPtr;
 class CalendarConduit : public RecordConduit
 {
 public:
-	CalendarConduit( KPilotLink *o, const QVariantList &a = QVariantList() );
+	explicit CalendarConduit( KPilotLink *o, const QVariantList &a = QVariantList() );
 
 	~CalendarConduit();
 

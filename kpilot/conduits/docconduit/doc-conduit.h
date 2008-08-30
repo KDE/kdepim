@@ -61,7 +61,7 @@ public:
 	eSyncDirectionEnum eSyncDirection;
 
 public:
-	DOCConduit(KPilotLink * o,
+	explicit DOCConduit(KPilotLink * o,
 		const QVariantList & a = QVariantList());
 	 virtual ~ DOCConduit();
 
@@ -134,7 +134,7 @@ public slots:
 class docSyncInfo
 {
 public:
-	docSyncInfo(QString hhDB=QString(), QString txtfn=QString(), QString pdbfn=QString(), eSyncDirectionEnum dir=eSyncNone)
+	explicit docSyncInfo(QString hhDB=QString(), QString txtfn=QString(), QString pdbfn=QString(), eSyncDirectionEnum dir=eSyncNone)
 	{
 		handheldDB=hhDB;
 		txtfilename=txtfn;

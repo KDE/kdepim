@@ -171,7 +171,7 @@ protected:
 class DeviceCommEvent : public QEvent
 {
 public:
-	DeviceCommEvent(DeviceCustomEvents type, QString msg = QString::null,
+	explicit DeviceCommEvent(DeviceCustomEvents type, QString msg = QString::null,
 			int progress = 0) :
 		QEvent( (QEvent::Type)type ), fMessage(msg), fProgress(progress),
 				fPilotSocket(-1)

@@ -40,7 +40,7 @@ class MemofileConduit : public ConduitAction
 {
 Q_OBJECT
 public:
-	MemofileConduit(KPilotLink *,
+	explicit MemofileConduit(KPilotLink *,
 		const QVariantList &args = QVariantList());
 	virtual ~MemofileConduit();
 
