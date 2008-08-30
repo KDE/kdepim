@@ -26,6 +26,8 @@
 
 #include <QtCore/QString>
 
+class OSyncPluginConnection;
+
 namespace QSync {
 
 class QSYNC_EXPORT PluginConnection
