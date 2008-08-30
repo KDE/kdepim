@@ -61,6 +61,9 @@ class ResourceSelection : public KAB::ExtensionWidget
     void slotSubresourceRemoved( KABC::ResourceABC* /*resource*/,
                                  const QString& /*type*/,
                                  const QString& subResource );
+    void slotSubresourceChanged( KABC::ResourceABC* /*resource*/,
+                                 const QString& /*type*/,
+                                 const QString& subResource );
 
   private:
     void initGUI();

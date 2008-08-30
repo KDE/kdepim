@@ -122,15 +122,6 @@ void KABCResourceItem::createSubresourceItems()
   }
 }
 
-// TODO: connect this to some signalResourceModified
-// void KABCResourceItem::setGuiState()
-// {
-//   if ( mIsSubresource )
-//     setOn( mResource->subresourceActive( mResourceIdentifier ) );
-//   else
-//     setOn( mResource->isActive() );
-// }
-
 ////
 
 ResourceSelection::ResourceSelection( KAB::Core *core, QWidget *parent )
@@ -306,6 +297,10 @@ void ResourceSelection::updateView()
                                                            const QString &, const QString & ) ),
                SLOT( slotSubresourceRemoved( KABC::ResourceABC *,
                                              const QString &, const QString & ) ) );
+      connect( resource, SIGNAL( signalSubresourceChanged( KABC::ResourceABC *,
+                                                           const QString &, const QString & ) ),
+               SLOT( slotSubresourceChanged( KABC::ResourceABC *,
+                                             const QString &, const QString & ) ) );
       //connect( resource, SIGNAL( resourceSaved( KABC::ResourceABC * ) ),
       //         SLOT( closeResource( KABC::ResourceABC * ) ) );
     }
@@ -358,6 +353,27 @@ void ResourceSelection::slotSubresourceRemoved( KABC::ResourceABC* resource,
 
   KABCResourceItem *item = findSubResourceItem( resource, subResource );
   delete item;
+  // TODO
+  //emitResourcesChanged();
+}
+
+// change an entry
+void ResourceSelection::slotSubresourceChanged( KABC::ResourceABC* resource,
+                                                const QString& type,
+                                                const QString& subResource )
+{
+  kDebug(5720) << resource->resourceName() << subResource;
+
+  KABCResourceItem *item = findSubResourceItem( resource, subResource );
+  if ( item == 0 ) {
+    kWarning(5720) << "Changed before it was added?";
+    slotSubresourceAdded( resource, type, subResource );
+    return;
+  }
+
+  item->setText( 0, resource->subresourceLabel( subResource ) );
+  item->setCheckState( 0, resource->subresourceActive( subResource )
+                            ? Qt::Checked : Qt::Unchecked );
   // TODO
   //emitResourcesChanged();
 }
