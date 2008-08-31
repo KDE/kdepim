@@ -77,7 +77,8 @@ Result Engine::synchronize()
 Result Engine::discover( const Member &member )
 {
   OSyncError *error = 0;
-  if ( !osync_engine_discover( mEngine, member.mMember, &error ) ) {
+  osync_engine_finalize( mEngine, &error );
+  if ( !osync_engine_discover_and_block( mEngine, member.mMember, &error ) ) {
     return Result( &error );
   } else {
     return Result();
