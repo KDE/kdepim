@@ -51,6 +51,7 @@ public:
 
 protected:
   virtual void closeEvent(QCloseEvent *event);
+  void reject();
 private:
   K3ListBox* mListBox;
 };
