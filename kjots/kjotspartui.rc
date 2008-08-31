@@ -101,3 +101,4 @@
     <Action name="insert_horizontal_rule"/>
     <Action name="manage_link"/>
 </ToolBar>
+</kpartgui>
