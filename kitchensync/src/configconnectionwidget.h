@@ -26,6 +26,7 @@
 #include <libqopensync/pluginconnection.h>
 
 class KLineEdit;
+class QSpinBox;
 class QStackedLayout;
 
 class ConfigConnectionWidget : public QWidget
@@ -54,20 +55,20 @@ class ConfigConnectionWidget : public QWidget
     QWidget *mIrdaPage;
 
     KLineEdit *mBluetoothAddress;
-    KLineEdit *mBluetoothChannel;
+    QSpinBox  *mBluetoothChannel;
     KLineEdit *mBluetoothSdpUuid;
 
     KLineEdit *mUsbVendorId;
     KLineEdit *mUsbProductId;
-    KLineEdit *mUsbInterface;
+    QSpinBox *mUsbInterface;
 
     KLineEdit *mNetworkAddress;
-    KLineEdit *mNetworkPort;
+    QSpinBox *mNetworkPort;
     KLineEdit *mNetworkProtocol;
     KLineEdit *mNetworkDnsSd;
 
     KLineEdit *mSerialSpeed;
-    KLineEdit *mSerialDevice;
+    KComboBox *mSerialDevice;
 
     KLineEdit *mIrdaService;
 };

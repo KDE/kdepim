@@ -22,13 +22,35 @@
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QLabel>
 #include <QtGui/QStackedLayout>
+#include <QtGui/QSpinBox>
 #include <QtGui/QVBoxLayout>
 
 #include <kcombobox.h>
 #include <klineedit.h>
 #include <klocale.h>
 
+#include <stdio.h>
+
 #include "configconnectionwidget.h"
+
+static unsigned int hexStringToInt( const QString &txt )
+{
+  unsigned int value = 0;
+
+  if ( ::sscanf( txt.toLatin1(), "%x", &value ) != 1 )
+    value = 0;
+
+  return value;
+}
+
+static QString intToHexString( unsigned int value )
+{
+  QString txt;
+  txt.sprintf( "%x", value );
+
+  return txt;
+}
+
 
 ConfigConnectionWidget::ConfigConnectionWidget( const QSync::PluginConnection &connection, QWidget *parent )
   : QWidget( parent ),
@@ -61,7 +83,9 @@ ConfigConnectionWidget::ConfigConnectionWidget( const QSync::PluginConnection &c
   pageLayout = new QFormLayout( mBluetoothPage );
 
   mBluetoothAddress = new KLineEdit( mBluetoothPage );
-  mBluetoothChannel = new KLineEdit( mBluetoothPage );
+  mBluetoothAddress->setInputMask( ">HH:HH:HH:HH:HH:HH;" );
+  mBluetoothChannel = new QSpinBox( mBluetoothPage );
+  mBluetoothChannel->setRange( 1, 100 );
   mBluetoothSdpUuid = new KLineEdit( mBluetoothPage );
 
   pageLayout->addRow( i18n( "Address:" ), mBluetoothAddress );
@@ -75,8 +99,10 @@ ConfigConnectionWidget::ConfigConnectionWidget( const QSync::PluginConnection &c
   pageLayout = new QFormLayout( mUsbPage );
 
   mUsbVendorId = new KLineEdit( mUsbPage );
+  mUsbVendorId->setInputMask( "\\0\\xHHHH" );
   mUsbProductId = new KLineEdit( mUsbPage );
-  mUsbInterface = new KLineEdit( mUsbPage );
+  mUsbProductId->setInputMask( "\\0\\xHHHH" );
+  mUsbInterface = new QSpinBox( mUsbPage );
 
   pageLayout->addRow( i18n( "Vendor ID:" ), mUsbVendorId );
   pageLayout->addRow( i18n( "Product ID:" ), mUsbProductId );
@@ -89,7 +115,8 @@ ConfigConnectionWidget::ConfigConnectionWidget( const QSync::PluginConnection &c
   pageLayout = new QFormLayout( mNetworkPage );
 
   mNetworkAddress = new KLineEdit( mNetworkPage );
-  mNetworkPort = new KLineEdit( mNetworkPage );
+  mNetworkPort = new QSpinBox( mNetworkPage );
+  mNetworkPort->setRange( 1, 65535 );
   mNetworkProtocol = new KLineEdit( mNetworkPage );
   mNetworkDnsSd = new KLineEdit( mNetworkPage );
 
@@ -105,7 +132,12 @@ ConfigConnectionWidget::ConfigConnectionWidget( const QSync::PluginConnection &c
   pageLayout = new QFormLayout( mSerialPage );
 
   mSerialSpeed = new KLineEdit( mSerialPage );
-  mSerialDevice = new KLineEdit( mSerialPage );
+  mSerialDevice = new KComboBox( mSerialPage );
+  mSerialDevice->setEditable( true );
+  mSerialDevice->addItem( "/dev/ttyS0" );
+  mSerialDevice->addItem( "/dev/ttyS1" );
+  mSerialDevice->addItem( "/dev/ttyUSB0" );
+  mSerialDevice->addItem( "/dev/ttyUSB1" );
 
   pageLayout->addRow( i18n( "Speed:" ), mSerialSpeed );
   pageLayout->addRow( i18n( "Device:" ), mSerialDevice );
@@ -136,20 +168,20 @@ void ConfigConnectionWidget::load()
   typeChanged( mType->currentIndex() );
 
   mBluetoothAddress->setText( mConnection.bluetoothAddress() );
-  mBluetoothChannel->setText( QString::number( mConnection.bluetoothChannel() ) );
+  mBluetoothChannel->setValue( mConnection.bluetoothChannel() );
   mBluetoothSdpUuid->setText( mConnection.bluetoothSdpUuid() );
 
-  mUsbVendorId->setText( QString::number( mConnection.usbVendorId() ) );
-  mUsbProductId->setText( QString::number( mConnection.usbProductId() ) );
-  mUsbInterface->setText( QString::number( mConnection.usbInterface() ) );
+  mUsbVendorId->setText( intToHexString( mConnection.usbVendorId() ) );
+  mUsbProductId->setText( intToHexString( mConnection.usbProductId() ) );
+  mUsbInterface->setValue( mConnection.usbInterface() );
 
   mNetworkAddress->setText( mConnection.networkAddress() );
-  mNetworkPort->setText( QString::number( mConnection.networkPort() ) );
+  mNetworkPort->setValue( mConnection.networkPort() );
   mNetworkProtocol->setText( mConnection.networkProtocol() );
   mNetworkDnsSd->setText( mConnection.networkDnsSd() );
 
   mSerialSpeed->setText( QString::number( mConnection.serialSpeed() ) );
-  mSerialDevice->setText( mConnection.serialDeviceNode() );
+  mSerialDevice->setEditText( mConnection.serialDeviceNode() );
 
   mIrdaService->setText( mConnection.irdaService() );
 }
@@ -165,20 +197,20 @@ void ConfigConnectionWidget::save()
   }
 
   mConnection.setBluetoothAddress( mBluetoothAddress->text() );
-  mConnection.setBluetoothChannel( mBluetoothChannel->text().toUInt() );
+  mConnection.setBluetoothChannel( mBluetoothChannel->value() );
   mConnection.setBluetoothSdpUuid( mBluetoothSdpUuid->text() );
 
-  mConnection.setUsbVendorId( mUsbVendorId->text().toUInt() );
-  mConnection.setUsbProductId( mUsbProductId->text().toUInt() );
-  mConnection.setUsbInterface( mUsbInterface->text().toUInt() );
+  mConnection.setUsbVendorId( hexStringToInt( mUsbVendorId->text() ) );
+  mConnection.setUsbProductId( hexStringToInt( mUsbProductId->text() ) );
+  mConnection.setUsbInterface( mUsbInterface->value() );
 
   mConnection.setNetworkAddress( mNetworkAddress->text() );
-  mConnection.setNetworkPort( mNetworkPort->text().toUInt() );
+  mConnection.setNetworkPort( mNetworkPort->value() );
   mConnection.setNetworkProtocol( mNetworkProtocol->text() );
   mConnection.setNetworkDnsSd( mNetworkDnsSd->text() );
 
   mConnection.setSerialSpeed( mSerialSpeed->text().toUInt() );
-  mConnection.setSerialDeviceNode( mSerialDevice->text() );
+  mConnection.setSerialDeviceNode( mSerialDevice->currentText() );
 
   mConnection.setIrdaService( mIrdaService->text() );
 }
