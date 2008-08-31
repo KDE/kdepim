@@ -74,7 +74,7 @@ KXMLGUIClient *MainWidget::guiClient() const
 KAboutData *MainWidget::aboutData()
 {
   KAboutData *about = new KAboutData( "kitchensync", 0, ki18n( "KitchenSync" ),
-                                      "0.1", ki18n( "The KDE Syncing Application" ),
+                                      "0.4", ki18n( "The KDE Syncing Application" ),
                                       KAboutData::License_GPL_V2,
                                       ki18n( "(c) 2005, The KDE PIM Team" ) );
   about->addAuthor( ki18n("Tobias Koenig"), ki18n( "Current maintainer" ), "tokoe@kde.org" );

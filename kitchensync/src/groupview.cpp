@@ -56,8 +56,6 @@ void GroupView::updateView()
   clear();
 
   if ( SyncProcessManager::self()->count() == 0 ) {
-
-/* Disabled until KHTML is in a state that it doesn't crash the app
     mWidgetList->hide();
 
     if ( !mAboutPage ) {
@@ -68,7 +66,7 @@ void GroupView::updateView()
     }
 
     mAboutPage->show();
-*/
+
   } else {
     if ( mAboutPage ) {
       mAboutPage->hide();

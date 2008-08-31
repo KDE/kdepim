@@ -57,15 +57,11 @@ AboutPage::AboutPage( QWidget *parent )
 
   QString location = KStandardDirs::locate( "data", "kitchensync/about/main.html" );
   QString content = readFile( location );
-  qDebug( "path=%s",
-          qPrintable( KStandardDirs::locate( "data",
-                                             "libkdepim/about/kde_infopage.css" ) ) );
-  content = content.arg( KStandardDirs::locate( "data",
-                                                "libkdepim/about/kde_infopage.css" ) );
-  if ( QApplication::layoutDirection() == Qt::RightToLeft ) {
-    content = content.arg( "@import \"%1\";" )
-              .arg( KStandardDirs::locate( "data",
-                                           "libkdepim/about/kde_infopage_rtl.css" ) );
+
+  content = content.arg( KStandardDirs::locate( "data", "kdeui/about/kde_infopage.css" ) );
+  if ( QApplication::isRightToLeft() ) {
+    content = content.arg( "@import \"%1\";" ).
+              arg( KStandardDirs::locate( "data", "kdeui/about/kde_infopage_rtl.css" ) );
   } else {
     content = content.arg( "" );
   }
@@ -84,11 +80,15 @@ AboutPage::AboutPage( QWidget *parent )
   part->end();
 
   connect( part->browserExtension(),
-           SIGNAL( openUrlRequest( const KUrl&, const KParts::URLArgs& ) ),
+           SIGNAL( openUrlRequest( const KUrl&, const KParts::OpenUrlArguments&,
+                                                const KParts::BrowserArguments& ) ),
            SLOT( handleUrl( const KUrl& ) ) );
 
   connect( part->browserExtension(),
-           SIGNAL( createNewWindow( const KUrl&, const KParts::URLArgs& ) ),
+           SIGNAL( createNewWindow( const KUrl&, const KParts::OpenUrlArguments&,
+                                                 const KParts::BrowserArguments&,
+                                                 const KParts::WindowArgs&,
+                                                 KParts::ReadOnlyPart** ) ),
            SLOT( handleUrl( const KUrl& ) ) );
 }
 
@@ -108,9 +108,9 @@ QString AboutPage::htmlText() const
   KIconLoader *iconloader = KIconLoader::global();
   int iconSize = iconloader->currentSize( KIconLoader::Desktop );
 
-  QString handbook_icon_path = iconloader->iconPath( "contents2", KIconLoader::Desktop );
-  QString html_icon_path = iconloader->iconPath( "html", KIconLoader::Desktop );
-  QString wizard_icon_path = iconloader->iconPath( "wizard", KIconLoader::Desktop );
+  QString handbook_icon_path = iconloader->iconPath( "system-help", KIconLoader::Desktop );
+  QString html_icon_path = iconloader->iconPath( "applications-internet", KIconLoader::Desktop );
+  QString wizard_icon_path = iconloader->iconPath( "tools-wizard", KIconLoader::Desktop );
 
   QString info = QString( "<h2 style='text-align:center; margin-top: 0px;'>%1 %2</h2>" )
                  .arg( i18n( "Welcome to KitchenSync" ),
