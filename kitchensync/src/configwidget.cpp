@@ -26,11 +26,13 @@
 
 #include <klineedit.h>
 #include <klocale.h>
+#include <ktabwidget.h>
 
 #include "configadvancedoptionwidget.h"
 #include "configauthenticationwidget.h"
 #include "configlocalizationwidget.h"
 #include "configconnectionwidget.h"
+#include "configresourcewidget.h"
 
 ConfigWidget::ConfigWidget( const QSync::PluginConfig &config, QWidget *parent )
   : QWidget( parent ),
@@ -42,34 +44,53 @@ ConfigWidget::ConfigWidget( const QSync::PluginConfig &config, QWidget *parent )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 
-  QHBoxLayout *nameLayout = new QHBoxLayout;
-  layout->addLayout( nameLayout );
+  KTabWidget *tabWidget = new KTabWidget( this );
+  layout->addWidget( tabWidget );
 
-  nameLayout->addWidget( new QLabel( i18n( "Name:" ), this ) );
+  // general tab
+  QWidget *generalPage = new QWidget( tabWidget );
+  tabWidget->addTab( generalPage, i18n( "General" ) );
+
+  QVBoxLayout *generalLayout = new QVBoxLayout( generalPage );
+  QHBoxLayout *nameLayout = new QHBoxLayout;
+  generalLayout->addLayout( nameLayout );
+
+  nameLayout->addWidget( new QLabel( i18n( "Name:" ), generalPage ) );
   mInstanceName = new KLineEdit( this );
   nameLayout->addWidget( mInstanceName );
 
-  if ( !config.advancedOptions().isEmpty() ) {
-    mAdvancedOption = new ConfigAdvancedOptionWidget( config.advancedOptions(), this );
-    layout->addWidget( mAdvancedOption );
-  }
+  QFrame *hline = new QFrame( generalPage );
+  hline->setFrameShape( QFrame::HLine );
+  generalLayout->addWidget( hline );
 
   if ( config.authentication().isValid() ) {
-    mAuthentication = new ConfigAuthenticationWidget( config.authentication(), this );
-    layout->addWidget( mAuthentication );
+    mAuthentication = new ConfigAuthenticationWidget( config.authentication(), generalPage );
+    generalLayout->addWidget( mAuthentication );
   }
 
   if ( config.localization().isValid() ) {
-    mLocalization = new ConfigLocalizationWidget( config.localization(), this );
-    layout->addWidget( mLocalization );
+    mLocalization = new ConfigLocalizationWidget( config.localization(), generalPage );
+    generalLayout->addWidget( mLocalization );
   }
 
   if ( config.connection().isValid() ) {
-    mConnection = new ConfigConnectionWidget( config.connection(), this );
-    layout->addWidget( mConnection );
+    mConnection = new ConfigConnectionWidget( config.connection(), generalPage );
+    generalLayout->addWidget( mConnection );
   }
 
-  layout->addStretch();
+  generalLayout->addStretch();
+
+  // advanced tab
+  if ( !config.advancedOptions().isEmpty() ) {
+    mAdvancedOption = new ConfigAdvancedOptionWidget( config.advancedOptions(), tabWidget );
+    tabWidget->addTab( mAdvancedOption, i18n( "Advanced" ) );
+  }
+
+  // resource tab
+  if ( !config.resources().isEmpty() ) {
+    mResource = new ConfigResourceWidget( config.resources(), tabWidget );
+    tabWidget->addTab( mResource, i18n( "Resources" ) );
+  }
 }
 
 void ConfigWidget::setInstanceName( const QString &name )
@@ -95,6 +116,9 @@ void ConfigWidget::load()
 
   if ( mConnection )
     mConnection->load();
+
+  if ( mResource )
+    mResource->load();
 }
 
 void ConfigWidget::save()
@@ -110,4 +134,7 @@ void ConfigWidget::save()
 
   if ( mConnection )
     mConnection->save();
+
+  if ( mResource )
+    mResource->save();
 }

@@ -51,6 +51,7 @@ configadvancedoptionwidget.cpp
 configauthenticationwidget.cpp
 configconnectionwidget.cpp
 configlocalizationwidget.cpp
+configresourcewidget.cpp
 )
 
 

@@ -31,6 +31,7 @@ class ConfigAdvancedOptionWidget;
 class ConfigAuthenticationWidget;
 class ConfigLocalizationWidget;
 class ConfigConnectionWidget;
+class ConfigResourceWidget;
 
 class ConfigWidget : public QWidget
 {
@@ -51,6 +52,7 @@ class ConfigWidget : public QWidget
     ConfigAuthenticationWidget *mAuthentication;
     ConfigLocalizationWidget *mLocalization;
     ConfigConnectionWidget *mConnection;
+    ConfigResourceWidget *mResource;
 };
 
 #endif
