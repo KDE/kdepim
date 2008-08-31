@@ -179,7 +179,7 @@ else ( ONLY_KLEO )
   endif (Q_WS_X11)
 
   add_subdirectory(kdgantt1)
-  #macro_optional_add_subdirectory(strigi-analyzer)
+  macro_optional_add_subdirectory(strigi-analyzer)
   if(QGPGME_FOUND AND KMAIL_SUPPORTED)
      macro_optional_add_subdirectory(kmailcvt)
      message(STATUS "KMailCVT support enabled.")
