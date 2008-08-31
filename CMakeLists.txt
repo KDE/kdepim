@@ -84,6 +84,14 @@ else ( ONLY_KLEO )
     macro_log_feature(X11_Xscreensaver_LIB "libXss" "X Window Screen Saver Development Library" "http://xorg.freedesktop.org" FALSE "" "Required for building the KTimeTracker Program")
   endif(Q_WS_X11)
 
+  if (NOT WIN32)
+     set(OPENSYNC_MIN_VERSION 0.37)
+     macro_optional_find_package(OpenSync)
+     macro_log_feature(OPENSYNC_FOUND "opensync" "OpenSync Development Libraries" "http://www.opensync.org" FALSE "0.37 or greater" "Needed to provide syncing functionality in KDE PIM applications. Necessary to compile kitchensync.")
+     macro_optional_find_package(GLIB2)
+     macro_log_feature(GLIB2_FOUND "glib2" "Low-level core library for data structure handling, portability wrappers, etc." "http://www.gtk.org" FALSE "2.x" "Needed to provide synching applications from KDE PIM applications. Necessary to compile kitchensync and other PIM applications.")
+  endif (NOT WIN32)
+
   macro_optional_find_package(GNOKII)
   macro_bool_to_01(GNOKII_FOUND HAVE_GNOKII_H)
   macro_log_feature(GNOKII_FOUND "gnokii" "Gnokii Development Libraries" "http://www.gnokii.org" FALSE "" "Needed to provide the ability to import and export KDE addressbook entries to/from mobile phones that are accessible via gnokii")
@@ -199,12 +207,6 @@ else ( ONLY_KLEO )
   endif(QGPGME_FOUND AND KMAIL_SUPPORTED)
 
   if(NOT WIN32)
-     set(OPENSYNC_MIN_VERSION 0.37)
-     macro_optional_find_package(OpenSync)
-     macro_log_feature(OPENSYNC_FOUND "opensync" "OpenSync Development Libraries" "http://www.opensync.org" FALSE "0.37 or greater" "Needed to provide syncing functionality in KDE PIM applications. Necessary to compile kitchensync.")
-     macro_optional_find_package(GLIB2)
-     macro_log_feature(GLIB2_FOUND "glib2" "Low-level core library for data structure handling, portability wrappers, etc." "http://www.gtk.org" FALSE "2.x" "Needed to provide synching applications from KDE PIM applications. Necessary to compile kitchensync and other PIM applications.")
-
 #enable kmobiletools for 4.2
 #     set(KMOBILETOOLS_SUPPORTED TRUE)
 #     add_definitions(-DKMOBILETOOLS_SUPPORTED)
