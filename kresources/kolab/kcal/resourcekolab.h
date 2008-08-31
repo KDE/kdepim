@@ -156,6 +156,7 @@ signals:
   void useGlobalMode();
 protected slots:
   void slotEmitResourceChanged();
+  void writeConfig();
 protected:
   /**
    * Return list of alarms which are relevant for the current user. These

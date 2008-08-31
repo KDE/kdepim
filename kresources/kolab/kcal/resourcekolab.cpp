@@ -138,7 +138,7 @@ bool ResourceKolab::doOpen()
     && openResource( config, kmailJournalContentsType, mJournalSubResources );
 }
 
-static void closeResource( KConfig& config, ResourceMap& map )
+static void writeResourceConfig( KConfig& config, ResourceMap& map )
 {
   ResourceMap::ConstIterator it;
   for ( it = map.begin(); it != map.end(); ++it ) {
@@ -154,10 +154,7 @@ void ResourceKolab::doClose()
     return;
   mOpen = false;
 
-  KConfig config( configFile() );
-  closeResource( config, mEventSubResources );
-  closeResource( config, mTodoSubResources );
-  closeResource( config, mJournalSubResources );
+  writeConfig();
 }
 
 bool ResourceKolab::loadSubResource( const QString& subResource,
@@ -1085,6 +1082,7 @@ void ResourceKolab::setSubresourceActive( const QString &subresource, bool v )
     }
     mResourceChangedTimer.start( 100 );
   }
+  QTimer::singleShot( 0, this, SLOT(writeConfig()) );
 }
 
 void ResourceKolab::slotEmitResourceChanged()
@@ -1183,6 +1181,14 @@ bool ResourceKolab::unloadSubResource( const QString& subResource )
     }
     mSilent = silent;
     return true;
+}
+
+void ResourceKolab::writeConfig()
+{
+  KConfig config( configFile() );
+  writeResourceConfig( config, mEventSubResources );
+  writeResourceConfig( config, mTodoSubResources );
+  writeResourceConfig( config, mJournalSubResources );
 }
 
 #include "resourcekolab.moc"
