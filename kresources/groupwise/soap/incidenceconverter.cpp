@@ -476,7 +476,7 @@ void IncidenceConverter::setAttendees( KCal::Incidence *incidence,
     kDebug() <<"IncidenceConverter::setAttendees(), adding" << (*it)->fullName();
     QString uuid;
     QList<KABC::Addressee> addList = KABC::StdAddressBook::self()->findByEmail( (*it)->email() );
-    if ( !addList.first().isEmpty() )
+    if ( !addList.isEmpty() && !addList.first().isEmpty() )
       uuid = addList.first().custom( "GWRESOURCE", "UUID" ); //uuid may be mandatory for the recipients list to be stored on the server...
     item->distribution->recipients->recipient.push_back( createRecipient( (*it)->name(), (*it)->email(), uuid ) );
   }
