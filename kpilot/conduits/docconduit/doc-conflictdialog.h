@@ -2,7 +2,7 @@
 #define CONFLICTDIALOG_H
 /* doc-conflictdialog.h                           KPilot
 **
-** Copyright (C) 2002-2003 by Reinhold Kainhofer
+** Copyright (C) 2002-2003 by Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 */
 

@@ -5,11 +5,11 @@
 //
 // Compresses text files into a format that is ready to export to a Pilot
 // and work with Rick Bram's PilotDOC reader.
-// Copyright (C) Reinhold Kainhofer, 2002
-// Copyrigth (C) Pat Beirne, 2000
+// Copyright (C) 2002 by Reinhold Kainhofer <reinhold@kainhofer.com>
+// Copyrigth (C) 2000 by Pat Beirne <patbeirneottawa@netscape.net>
 //
-// Original file (makedoc9.cpp) copyright by:
-// Copyright (C) Pat Beirne, 2000.
+// Original file (makedoc9.cpp):
+// Copyright (C) 2000 by Pat Beirne <patbeirneottawa@netscape.net>
 // Distributable under the GNU General Public License Version 2 or later.
 //
 // ver 0.6 enforce 31 char limit on database names

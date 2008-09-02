@@ -2,7 +2,7 @@
 #define SETUPDIALOG_H
 /* setupDialog.h			KPilot
 **
-** Copyright (C) 1998-2001 Dan Pilone
+** Copyright (C) 1998-2001 Dan Pilone <pilone@slac.com>
 **
 ** This file is part of the popmail conduit, a conduit for KPilot that
 ** synchronizes the Pilot's email application with the outside world,

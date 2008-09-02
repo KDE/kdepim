@@ -1,6 +1,6 @@
 /* Time-setup.cc                      KPilot
 **
-** Copyright (C) 2002 by Reinhold Kainhofer
+** Copyright (C) 2002 by Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines the setup dialog for the Time-conduit plugin.
 */

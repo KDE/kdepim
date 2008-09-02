@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 2002 by Reinhold Kainhofer
+** Copyright (C) 2002 by Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** The doc conduit synchronizes text files on the PC with DOC databases on the Palm
 */

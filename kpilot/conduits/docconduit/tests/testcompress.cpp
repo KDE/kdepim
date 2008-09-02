@@ -1,5 +1,5 @@
 /* 
-** Copyright (C) 2003 by Reinhold Kainhofer
+** Copyright (C) 2003 by Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is just a very simple program to check the compress/uncompress 
 ** routines by taking one string, compress and then decompress it and

@@ -2,7 +2,7 @@
 #define AKONADISETUPWIDGET_H
 /* akonadisetupwidget.h                       KPilot
 **
-** Copyright (C) 2008 Bertjan Broeksema
+** Copyright (C) 2008 Bertjan Broeksema <b.broeksema@kdemail.net>
 **
 ** This file defines the widget and behavior for the config dialog
 ** of the Contacts conduit.

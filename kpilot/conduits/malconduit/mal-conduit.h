@@ -2,7 +2,7 @@
 #define MAL_CONDUIT_H
 /* mal-conduit.h                           KPilot
 **
-** Copyright (C) 2002 by Reinhold Kainhofer
+** Copyright (C) 2002 by Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 */
 

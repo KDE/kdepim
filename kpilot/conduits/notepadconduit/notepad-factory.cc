@@ -1,6 +1,7 @@
 /* KPilot
 **
-** Copyright (C) 2004 by Adriaan de Groot, Joern Ahrens
+** Copyright (C) 2004 by Adriaan de Groot <groot@kde.org>
+** Copyright (C) 2004 by Joern Ahrens <joern@kpilot.org>
 **
 ** This file defines the factory for the notepad-conduit plugin.
 */

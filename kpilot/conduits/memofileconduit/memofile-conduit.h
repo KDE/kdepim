@@ -2,7 +2,7 @@
 #define MEMOFILE_CONDUIT_H
 /* memofile-conduit.h			KPilot
 **
-** Copyright (C) 2004-2007 by Jason 'vanRijn' Kasper
+** Copyright (C) 2004-2007 by Jason 'vanRijn' Kasper <vR@movingparts.net>
 */
 
 /*

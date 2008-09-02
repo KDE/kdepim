@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 2008 by Dan Pilone
+** Copyright (C) 2008 by Dan Pilone <pilone@slac.com>
 **
 ** This file defines the factory for the abbrowser-conduit plugin.
 */

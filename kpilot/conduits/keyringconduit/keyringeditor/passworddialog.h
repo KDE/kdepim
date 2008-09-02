@@ -2,7 +2,7 @@
 #define PASSWORDDIALOG_H
 /* passworddialog.h			KPilot
 **
-** Copyright (C) 2008 by Bertjan Broeksema
+** Copyright (C) 2008 by Bertjan Broeksema <b.broeksema@kdemail.net>
 */
 
 /*

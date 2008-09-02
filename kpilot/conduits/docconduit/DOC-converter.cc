@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 2002-2003 by Reinhold Kainhofer
+** Copyright (C) 2002-2003 by Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** The doc converter synchronizes text files on the PC with DOC databases on the Palm
 */

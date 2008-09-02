@@ -1,6 +1,7 @@
 /* KPilot
 **
-** Copyright (C) 2004 by Adriaan de Groot, Joern Ahrens
+** Copyright (C) 2004 by Adriaan de Groot <groot@kde.org>
+** Copyright (C) 2004 by Joern Ahrens <joern@kpilot.org>
 **
 ** The code for NotepadActionThread::unpackNotePad was taken from
 ** Angus Ainslies read-notepad.c, which is part of pilot-link.

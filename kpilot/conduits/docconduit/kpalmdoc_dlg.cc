@@ -1,6 +1,6 @@
 /* kpalmdoc_dlg.cpp
 **
-** Copyright (C) 2003 by Reinhold Kainhofer
+** Copyright (C) 2003 by Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is the main dialog of the KDE PalmDOC converter.
 */

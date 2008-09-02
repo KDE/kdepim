@@ -1,6 +1,6 @@
 /* memofile-conduit.cc			KPilot
 **
-** Copyright (C) 2004-2007 by Jason 'vanRijn' Kasper
+** Copyright (C) 2004-2007 by Jason 'vanRijn' Kasper <vR@movingparts.net>
 **
 ** This file does the actual conduit work.
 */

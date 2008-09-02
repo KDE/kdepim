@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 2001 by Dan Pilone
+** Copyright (C) 2001 by Dan Pilone <pilone@slac.com>
 ** Copyright (C) 2006 by Adriaan de Groot <groot@kde.org>
 **
 ** This file defines the factory for the popmail-conduit plugin.

@@ -2,7 +2,7 @@
 #define KEYRINGLISTMODEL_H
 /* keyringlistmodel.h			KPilot
 **
-** Copyright (C) 2007 by Bertjan Broeksema
+** Copyright (C) 2007 by Bertjan Broeksema <b.broeksema@kdemail.net>
 */
 
 /*

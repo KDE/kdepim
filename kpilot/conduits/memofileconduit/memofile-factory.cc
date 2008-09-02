@@ -1,6 +1,6 @@
 /* memofile-factory.cc                      KPilot
 **
-** Copyright (C) 2004-2007 by Jason 'vanRijn' Kasper
+** Copyright (C) 2004-2007 by Jason 'vanRijn' Kasper <vR@movingparts.net>
 **
 ** This file defines the factory for the memofile-conduit plugin.
 */

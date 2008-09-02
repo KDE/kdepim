@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 2003 by Reinhold Kainhofer
+** Copyright (C) 2003 by Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines the factory for the SysInfo-conduit plugin.
 */

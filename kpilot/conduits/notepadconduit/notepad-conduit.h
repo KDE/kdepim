@@ -2,7 +2,9 @@
 #define NOTEPAD_CONDUIT_H
 /* notepad-conduit.h			KPilot
 **
-** Copyright (C) 2004 by Adriaan de Groot, Joern Ahrens, Angus Ainslie
+** Copyright (C) 2004 by Adriaan de Groot <groot@kde.org>
+** Copyright (C) 2004 by Joern Ahrens <joern@kpilot.org>
+** Copyright (C) 2004 by Angus Ainslie <angus.ainslie@gmail.com>
 **
 ** The code for NotepadActionThread::unpackNotePad was taken from
 ** Angus Ainslies read-notepad.c, which is part of pilot-link.

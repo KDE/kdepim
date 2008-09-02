@@ -2,7 +2,7 @@
 #define PILOTDOCHEAD_H
 /* pilotDOCHead.h	-*- C++ -*-		KPilot
 **
-** Copyright (C) 2002 by Reinhold Kainhofer
+** Copyright (C) 2002 by Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** See the .cc file for an explanation of what this file is for.
 */

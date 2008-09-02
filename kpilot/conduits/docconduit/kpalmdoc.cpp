@@ -1,6 +1,6 @@
 /* converter.cpp
 **
-** Copyright (C) 2003 by Reinhold Kainhofer
+** Copyright (C) 2003 by Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is the main program of the KDE PalmDOC converter.
 */

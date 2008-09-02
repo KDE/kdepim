@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 2002 by Reinhold Kainhofer
+** Copyright (C) 2002 by Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This is a C++ class for the DOC bookmark record structure
 */

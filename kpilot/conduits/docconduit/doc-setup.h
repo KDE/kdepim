@@ -2,7 +2,7 @@
 #define DOC_SETUP_H
 /* doc-setup.h                       KPilot
 **
-** Copyright (C) 2002 by Reinhold Kainhofer
+** Copyright (C) 2002 by Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines the widget and behavior for the config dialog
 ** of the doc conduit.

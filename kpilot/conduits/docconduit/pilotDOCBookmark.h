@@ -2,7 +2,7 @@
 #define PILOTDOCBOOKMARK_H
 /* pilotDOCBookmark.h	-*- C++ -*-		KPilot
 **
-** Copyright (C) 2003 by Reinhold Kainhofer
+** Copyright (C) 2003 by Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** See the .cc file for an explanation of what this file is for.
 */

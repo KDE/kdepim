@@ -2,8 +2,8 @@
 #define POPMAIL_CONDUIT_H
 /* popmail-conduit.h			KPilot
 **
-** Copyright (C) 1998,1999,2000 Dan Pilone
-** Copyright (C) 1999,2000 Michael Kropfberger
+** Copyright (C) 1998,1999,2000 Dan Pilone <pilone@slac.com>
+** Copyright (C) 1999,2000 Michael Kropfberger <michael@kropfberger.com>
 **
 ** This file is part of the popmail conduit, a conduit for KPilot that
 ** synchronizes the Pilot's email application with the outside world,

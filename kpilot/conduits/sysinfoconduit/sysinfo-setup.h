@@ -2,7 +2,7 @@
 #define SYSINFO_SETUP_H
 /* sysinfo-setup.h                       KPilot
 **
-** Copyright (C) 2003 by Reinhold Kainhofer
+** Copyright (C) 2003 by Reinhold Kainhofer <reinhold@kainhofer.com>
 **
 ** This file defines the widget and behavior for the config dialog
 ** of the KNotes conduit.

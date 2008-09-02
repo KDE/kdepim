@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 2000-2001 by Adriaan de Groot
+** Copyright (C) 2000-2001 by Adriaan de Groot <groot@kde.org>
 **
 ** This file is part of the NULL conduit, a conduit for KPilot that
 ** does nothing except add a log message to the Pilot's HotSync log.
