@@ -27,6 +27,7 @@
 #include "syncprocessmanager.h"
 
 #include <libqopensync/groupenv.h>
+#include <libqopensync/pluginenv.h>
 
 #include <kaboutdata.h>
 #include <kaction.h>
@@ -131,6 +132,13 @@ void MainWidget::enableActions()
 
 void MainWidget::addGroup()
 {
+  // check whether we have plugins installed at all
+  if ( SyncProcessManager::self()->pluginEnv()->pluginCount() == 0 ) {
+    KMessageBox::error( this, i18n( "There are no OpenSync plugins installed on the system."
+                                    " Please install them before creating a synchronization group" ) );
+    return;
+  }
+
   bool ok;
   QString name = KInputDialog::getText( i18n("Create Synchronization Group"),
     i18n("Name for new synchronization group."), QString(), &ok, this );
