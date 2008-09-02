@@ -185,6 +185,7 @@ void GroupItem::update()
   const QSync::Group group = mSyncProcess->group();
   for ( int i = 0; i < group.memberCount(); ++i ) {
     MemberItem *item = new MemberItem( mBox, mSyncProcess, group.memberAt( i ) );
+    mBoxLayout->addWidget( item );
     item->show();
     item->setStatusMessage( i18n( "Ready" ) );
     mMemberItems.append( item );
