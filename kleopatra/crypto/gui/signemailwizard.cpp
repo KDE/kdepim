@@ -36,6 +36,8 @@
 
 #include "signerresolvepage.h"
 
+#include <utils/formatting.h>
+
 #include <KLocale>
 
 #include <gpgme++/key.h>
@@ -50,7 +52,7 @@ namespace {
 
     class SignerResolveValidator : public SignerResolvePage::Validator {
     public:
-        explicit SignerResolveValidator( SignerResolvePage* page ); 
+        explicit SignerResolveValidator( SignerResolvePage* page );
         bool isComplete() const;
         QString explanation() const;
         void update() const;
@@ -68,9 +70,23 @@ SignerResolveValidator::SignerResolveValidator( SignerResolvePage* page ) : Sign
 }
 
 void SignerResolveValidator::update() const {
-    complete = !m_page->signingCertificates( m_page->protocol() ).empty();
-    expl = complete ? QString() : i18n( "You need to select an %1 signing certificate to proceed.", m_page->protocol() == OpenPGP ? i18n( "OpenPGP" ) : i18n( "S/MIME") );
-        
+    const bool haveSelected = !m_page->selectedProtocols().empty();
+    const std::vector<Protocol> missing = m_page->selectedProtocolsWithoutSigningCertificate();
+
+    complete = haveSelected && missing.empty();
+    expl.clear();
+    if ( complete )
+        return;
+    if ( !haveSelected ) {
+        expl = i18n( "You need to select a signing certificate to proceed." );
+        return;
+    }
+
+    assert( missing.size() <= 2 );
+    if ( missing.size() == 1 )
+        expl = i18n( "You need to select an %1 signing certificate to proceed.", Formatting::displayName( missing[0] ) );
+    else
+        expl = i18n( "You need to select %1 and %2 signing certificates to proceed.", Formatting::displayName( missing[0] ), Formatting::displayName( missing[1] ) );
 }
 
 QString SignerResolveValidator::explanation() const {
@@ -89,7 +105,7 @@ class SignEMailWizard::Private {
 public:
     explicit Private( SignEMailWizard * qq );
     ~Private();
-    
+
     void operationSelected();
 
     bool m_quickMode;
@@ -110,6 +126,7 @@ SignEMailWizard::Private::Private( SignEMailWizard * qq )
     q->setEncryptionUserMutable( false );
     q->setSigningSelected( true );
     q->setSigningUserMutable( false );
+    q->signerResolvePage()->setProtocolSelectionUserMutable( false );
     q->setMultipleProtocolsAllowed( false );
 }
 

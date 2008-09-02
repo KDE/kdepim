@@ -43,6 +43,7 @@
 
 using namespace Kleo;
 using namespace Kleo::Crypto::Gui;
+using namespace GpgME;
 
 namespace {
 
@@ -66,13 +67,13 @@ SignerResolveValidator::SignerResolveValidator( SignerResolvePage* page ) : Sign
 }
 
 void SignerResolveValidator::update() const {
+    expl.clear();
     const bool needPgpSC = m_page->operation() == SignerResolvePage::SignAndEncrypt;
     const bool isSignEncrypt = m_page->operation() == SignerResolvePage::SignAndEncrypt;
     const bool needAnySC = m_page->operation() != SignerResolvePage::EncryptOnly;
     const bool havePgpSC = !m_page->signingCertificates( GpgME::OpenPGP ).empty();
     const bool haveCmsSC = !m_page->signingCertificates( GpgME::CMS ).empty();
     const bool haveAnySC = havePgpSC || haveCmsSC;
-
     complete = ( !needPgpSC || havePgpSC ) && ( !needAnySC || haveAnySC );
 
 #undef setAndReturn
@@ -93,18 +94,15 @@ void SignerResolveValidator::update() const {
     if ( haveCmsSC && !havePgpSC )
         setAndReturn( i18n( "Only S/MIME certificates will be offered for selection because you specified an S/MIME signing certificate only." ) );
 
-    const QString second = i18n( " One for OpenPGP recipients, one for S/MIME recipients." );
-
     switch ( m_page->operation() )
     {
-    case SignerResolvePage::SignAndEncrypt:
-        expl = i18n( "If you select certificates of both type OpenPGP and S/MIME, two encrypted files will be created." ) + second;
-        break;
     case SignerResolvePage::SignOnly:
-        expl = QString();
+        if ( havePgpSC && haveCmsSC )
+            expl = i18n( "You have selected signing certificates of both type OpenPGP and S/MIME, thus two signatures will be created." );
         break;
+    case SignerResolvePage::SignAndEncrypt:
     case SignerResolvePage::EncryptOnly:
-        expl = i18n( "If you select certificates of both type OpenPGP and S/MIME, two encrypted files will be created." ) + second;
+        expl = i18n( "If you select recipient certificates of both type OpenPGP and S/MIME, two encrypted files will be created. One for OpenPGP recipients, one for S/MIME recipients." );
         break;
     }
 
@@ -150,6 +148,9 @@ SignEncryptFilesWizard::Private::Private( SignEncryptFilesWizard * qq )
     pageOrder.push_back( SignEncryptWizard::ResultPage );
     q->setPageOrder( pageOrder );
     q->setCommitPage( SignEncryptWizard::ResolveRecipientsPage );
+    std::vector<Protocol> protocols;
+    protocols.push_back( OpenPGP );
+    protocols.push_back( CMS );
     q->setMultipleProtocolsAllowed( true );
     q->setRecipientsUserMutable( true );
 }
