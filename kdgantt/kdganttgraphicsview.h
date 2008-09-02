@@ -87,8 +87,11 @@ namespace KDGantt {
         void updateSceneRect();
         void deleteSubtree( const QModelIndex& );
 
-        void print( QPainter* painter, const QRectF& target = QRectF(), bool drawRowLabels=true );
-
+        void print( QPainter* painter, const QRectF& target = QRectF(), const QRectF& source = QRectF(), bool drawRowLabels=true, bool drawHeader=true );
+        QRectF printRect(bool drawRowLabels=true );
+        void renderHeader( QPainter* painter, const QRectF& target, const QRectF& source, Qt::AspectRatioMode aspectRatioMode = Qt::KeepAspectRatio );
+        qreal headerHeight() const;
+        
     public Q_SLOTS:
         void setModel( QAbstractItemModel* );
         void setSummaryHandlingModel( QAbstractProxyModel* model );

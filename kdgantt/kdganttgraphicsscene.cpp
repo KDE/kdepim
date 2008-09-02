@@ -29,6 +29,7 @@
 #include "kdganttabstractrowcontroller.h"
 #include "kdganttdatetimegrid.h"
 #include "kdganttsummaryhandlingproxymodel.h"
+#include "kdganttgraphicsview.h"
 
 #include <QToolTip>
 #include <QGraphicsSceneHelpEvent>
@@ -591,7 +592,40 @@ GraphicsItem* GraphicsScene::dragSource() const
     return d->dragSource;
 }
 
-void GraphicsScene::print( QPainter* painter, const QRectF& target, bool drawRowLabels )
+QRectF GraphicsScene::printRect(bool drawRowLabels )
+{
+    assert(rowController());
+
+    QVector<QGraphicsTextItem*> labelItems;
+    if(drawRowLabels) {
+        labelItems.reserve(d->items.size());
+        qreal textWidth = 0.;
+        qreal rowHeight = 0.;
+        {Q_FOREACH( GraphicsItem* item, d->items ) {
+            QModelIndex sidx = summaryHandlingModel()->mapToSource( item->index() );
+            if( sidx.parent().isValid() && sidx.parent().data( ItemTypeRole ).toInt() == TypeMulti ) {
+                continue;
+            }
+            const Span rg=rowController()->rowGeometry( sidx );
+            const QString txt = item->index().data( Qt::DisplayRole ).toString();
+            QGraphicsTextItem* ti = new QGraphicsTextItem(txt,0,this);
+            ti->setPos( 0, rg.start() );
+            if( ti->document()->size().width() > textWidth ) textWidth = ti->document()->size().width();
+            if( rg.length() > rowHeight ) rowHeight = rg.length();
+            labelItems << ti;
+        }}
+        {Q_FOREACH( QGraphicsTextItem* item, labelItems ) {
+            item->setPos( -textWidth-rowHeight, item->pos().y() );
+            item->show();
+        }}
+    }
+    QRectF res = itemsBoundingRect();
+    qDeleteAll(labelItems);
+    qDebug()<<"printRect()"<<res;
+    return res;
+}
+
+void GraphicsScene::print( QPainter* painter, const QRectF& target, const QRectF& source, bool drawRowLabels, GraphicsView *view )
 {
   QRectF targetRect(target);
 
@@ -622,8 +656,31 @@ void GraphicsScene::print( QPainter* painter, const QRectF& target, bool drawRow
   }
   QRectF oldSceneRect( sceneRect() );
   setSceneRect( itemsBoundingRect() );
-  if(targetRect.isNull()) targetRect = sceneRect();
-  render( painter, target );
+  QRectF sourceRect = source;
+  //qDebug()<<"GraphicsScene::print() 1"<<sceneRect()<<targetRect<<sourceRect;
+  if ( view ) {
+      Qt::AspectRatioMode mode = Qt::KeepAspectRatio;
+      QRectF s = sourceRect;
+      s.setHeight( view->headerHeight() );
+      qreal xr = targetRect.width() / sourceRect.width();
+      qreal yr = (qreal)1.0;
+      if ( sourceRect.height() > s.height() ) {
+          yr = targetRect.height() / sourceRect.height();
+      }
+      xr = yr = qMin( xr, yr );
+      QRectF t = targetRect;
+      t.setHeight( s.height() * yr );
+      view->renderHeader( painter, t, s, mode );
+      targetRect.translate( (qreal)0.0, t.height() );
+      //qDebug()<<"GraphicsScene::print() 2"<<"t="<<t<<"s="<<s<<"yr="<<yr<<(s.height() * yr)<<"targetRect="<<targetRect;
+  }
+  //qDebug()<<"GraphicsScene::print() 3"<<sceneRect()<<targetRect<<sourceRect;
+  if ( targetRect.width() > sourceRect.width() && targetRect.height() > sourceRect.height() ) {
+      targetRect.setSize( sourceRect.size() );
+      render( painter, targetRect, sourceRect, Qt::IgnoreAspectRatio );
+  } else {
+      render( painter, targetRect, sourceRect );
+  }
   qDeleteAll(labelItems);
 
   setSceneRect( oldSceneRect );

@@ -55,6 +55,9 @@ namespace KDGantt {
                                 AbstractRowController* rowController = 0, QWidget* widget=0 ) = 0;
         virtual void paintHeader( QPainter* painter, const QRectF& headerRect, const QRectF& exposedRect,
                                   qreal offset, QWidget* widget=0 ) = 0;
+        
+        virtual void render( QPainter* /*painter*/,  const QRectF & /*target*/, const QRectF&  /*headerRect*/, const QRectF& /*exposedRect*/, QWidget* /*widget*/, Qt::AspectRatioMode /*aspectRatioMode*/ = Qt::KeepAspectRatio ) {}
+        
     public Q_SLOTS:
         /*internal*/ virtual void setModel( QAbstractItemModel* model );
         /*internal*/ virtual void setRootIndex( const QModelIndex& idx );

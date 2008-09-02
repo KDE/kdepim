@@ -38,6 +38,8 @@ namespace KDGantt {
 
         GraphicsView* view() const { return qobject_cast<GraphicsView*>( parent() );}
 
+        void render( QPainter* painter, const QRectF &targetRect, const QRectF &sourceRect, Qt::AspectRatioMode aspectRatioMode );
+        
     public Q_SLOTS:
         void scrollTo( int );
     protected:

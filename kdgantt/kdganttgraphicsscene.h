@@ -41,7 +41,8 @@ namespace KDGantt {
     class ConstraintModel;
     class ConstraintGraphicsItem;
     class ItemDelegate;
-
+    class GraphicsView;
+    
     class GraphicsScene : public QGraphicsScene {
         Q_OBJECT
         KDGANTT_DECLARE_PRIVATE_BASE_POLYMORPHIC( GraphicsScene )
@@ -97,8 +98,9 @@ namespace KDGantt {
         GraphicsItem* dragSource() const;
 
         /* Printing */
-        void print( QPainter* painter, const QRectF& target = QRectF(), bool drawRowLabels=true );
-
+        void print( QPainter* painter, const QRectF& target = QRectF(), const QRectF& source = QRectF(), bool drawRowLabels=true, GraphicsView *view=0 );
+        QRectF printRect(bool drawRowLabels=true );
+        
     Q_SIGNALS:
         void gridChanged();
 

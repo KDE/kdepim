@@ -65,7 +65,9 @@ namespace KDGantt {
         /*reimp*/ void paintHeader( QPainter* painter, const QRectF& headerRect, const QRectF& exposedRect,
                                     qreal offset, QWidget* widget=0 );
 
-	protected:
+        void render( QPainter* painter,  const QRectF &target, const QRectF& headerRect, const QRectF& exposedRect, QWidget *widget, Qt::AspectRatioMode aspectRatioMode = Qt::KeepAspectRatio );
+	
+    protected:
 		virtual void paintHourScaleHeader( QPainter* painter, const QRectF& headerRect, const QRectF& exposedRect,
                                     qreal offset, QWidget* widget=0 );
 		virtual void paintDayScaleHeader( QPainter* painter, const QRectF& headerRect, const QRectF& exposedRect,

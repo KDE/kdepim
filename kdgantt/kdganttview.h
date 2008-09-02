@@ -39,7 +39,8 @@ namespace KDGantt {
     class AbstractGrid;
     class GraphicsView;
     class AbstractRowController;
-
+    class GraphicsItem;
+    
     class KDGANTT_EXPORT View : public QWidget {
         Q_OBJECT
         KDGANTT_DECLARE_PRIVATE_BASE_POLYMORPHIC_QWIDGET(View)
@@ -74,7 +75,7 @@ namespace KDGantt {
         const QAbstractProxyModel* ganttProxyModel() const;
         QAbstractProxyModel* ganttProxyModel();
 
-        void print( QPainter* painter, const QRectF& target = QRectF(), bool drawRowLabels=true);
+        void print( QPainter* painter, const QRectF& target = QRectF(), const QRectF& source = QRectF(), bool drawRowLabels=true, bool drawHeader=true);
 
     public Q_SLOTS:
         void setModel(QAbstractItemModel* model);

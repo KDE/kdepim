@@ -428,40 +428,14 @@ QModelIndex View::indexAt( const QPoint& pos ) const
 /*! Render the GanttView inside the rectangle \a target using the painter \a painter.
  * \see KDGantt::GraphicsView::print(QPainter* painter, const QRectF& target,bool drawRowLabels)
  */
-void View::print( QPainter* painter, const QRectF& target, bool drawRowLabels)
+void View::print( QPainter* painter, const QRectF& target, const QRectF& source, bool drawRowLabels, bool drawHeader)
 {
-#if 0
+    
     QRectF targetRect = target;
-    if( targetRect.isNull() )
-        targetRect.setRect(0, 0,
-			   painter->device()->width(),
-			   painter->device()->height());
-
-    QPixmap leftw = QPixmap::grabWidget(d->leftWidget->viewport());
-
-    /* Now figure out the size of the whole thing to fit it into
-     * targetRect */
-    QRectF targetLeft( leftw.rect() );
-    QRectF targetRight( d->gfxview.scene()->sceneRect() );
-    qreal sw = (targetLeft.width()+targetRight.width())/targetRect.width();
-    qreal sh = (targetLeft.height()+targetRight.height())/targetRect.height();
-    if( sw > 1. || sh > 1. ) {
-      // we need to scale
-      qreal s = qMax(sw,sh);
-      targetLeft.setWidth(targetLeft.width()/s);
-      targetLeft.setHeight(targetLeft.height()/s);
-      targetRight.setWidth(targetRight.width()/s);
-      targetRight.setHeight(targetRight.height()/s);
+    if( targetRect.isNull() ) {
+        targetRect.setRect(0, 0, painter->device()->width(), painter->device()->height());
     }
-    targetRight.translate( targetLeft.width(),0 );
-
-    painter->drawPixmap( targetLeft, leftw, leftw.rect() );
-    d->gfxview.scene()->render( painter,
-				targetRight);
-#endif
-    d->gfxview.print( painter,
-		      target,
-		      drawRowLabels);
+    d->gfxview.print( painter, targetRect, source, drawRowLabels, drawHeader);
 }
 
 

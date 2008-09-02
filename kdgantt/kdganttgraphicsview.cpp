@@ -69,6 +69,11 @@ void HeaderWidget::paintEvent( QPaintEvent* ev )
     view()->grid()->paintHeader( &p, rect(), ev->rect(), m_offset, this );
 }
 
+void HeaderWidget::render( QPainter* painter, const QRectF &targetRect, const QRectF &sourceRect, Qt::AspectRatioMode aspectRatioMode)
+{
+    view()->grid()->render( painter, targetRect, rect(), sourceRect, this, aspectRatioMode );
+}
+
 void HeaderWidget::contextMenuEvent( QContextMenuEvent* event )
 {
     QMenu contextMenu;
@@ -625,11 +630,24 @@ void GraphicsView::deleteSubtree( const QModelIndex& idx )
  * If \a drawRowLabels is true, an additional per-row label
  * is drawn, mimicing the look of a listview.
  */
-void GraphicsView::print( QPainter* painter, const QRectF& target, bool drawRowLabels )
+void GraphicsView::print( QPainter* painter, const QRectF& target, const QRectF& source, bool drawRowLabels, bool drawHeader )
 {
-  d->scene.print(painter,target,drawRowLabels);
+  d->scene.print(painter,target,source,drawRowLabels,(drawHeader ? this : 0));
+}
+QRectF GraphicsView::printRect(bool drawRowLabels )
+{
+    return d->scene.printRect(drawRowLabels);
 }
 
+void GraphicsView::renderHeader( QPainter* painter, const QRectF& target, const QRectF& source, Qt::AspectRatioMode aspectRatioMode )
+{
+    d->headerwidget.render(painter,target,source,aspectRatioMode);
+}
+
+qreal GraphicsView::headerHeight() const
+{
+    return d->headerwidget.rect().height();
+}
 
 #include "moc_kdganttgraphicsview.cpp"
 #include "moc_kdganttgraphicsview_p.cpp"

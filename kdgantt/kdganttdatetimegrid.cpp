@@ -303,7 +303,7 @@ void DateTimeGrid::paintGrid( QPainter* painter,
             painter->fillRect( QRectF( x, exposedRect.top(), dayWidth(), exposedRect.height() ), painter->brush() );
         }
 
-        painter->drawLine( QPointF( x, sceneRect.top() ), QPointF( x, sceneRect.bottom() ) );
+        painter->drawLine( QPointF( x, exposedRect.top() ), QPointF( x, exposedRect.bottom() ) );
     }
     if ( rowController && d->rowSeparators ) {
         // First draw the rows
@@ -324,6 +324,40 @@ void DateTimeGrid::paintGrid( QPainter* painter,
         }
     }
 }
+
+void DateTimeGrid::render( QPainter* painter,  const QRectF &target, const QRectF& headerRect, const QRectF& exposedRect, QWidget *widget, Qt::AspectRatioMode aspectRatioMode )
+{
+    painter->save();
+    
+    qreal xratio = target.width() / exposedRect.width();
+    qreal yratio = target.height() / exposedRect.height();
+    //qDebug()<<"QGraphicsScene::render()"<<xratio<<yratio;
+    // Scale according to the aspect ratio mode.
+    switch (aspectRatioMode) {
+        case Qt::KeepAspectRatio:
+            xratio = yratio = qMin(xratio, yratio);
+            break;
+        case Qt::KeepAspectRatioByExpanding:
+            xratio = yratio = qMax(xratio, yratio);
+            break;
+        case Qt::IgnoreAspectRatio:
+            break;
+    }
+
+    //qDebug()<<"DateTimeGrid::render()"<<"target="<<target<<"exposedRect="<<exposedRect<<"xr="<<xratio<<"yr="<<yratio;
+    
+    painter->setClipRect( target );
+    QTransform painterTransform;
+    painterTransform *= QTransform()
+            .translate(target.left(), target.top())
+            .scale(xratio, yratio)
+            .translate(-exposedRect.left(), -exposedRect.top());
+    painter->setWorldTransform(painterTransform, true);
+    
+    paintHeader( painter, headerRect, exposedRect, 0.0, widget );
+    painter->restore();
+}
+
 void DateTimeGrid::paintHeader( QPainter* painter,  const QRectF& headerRect, const QRectF& exposedRect,
                                 qreal offset, QWidget* widget )
 {
