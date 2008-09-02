@@ -596,6 +596,7 @@ QRectF GraphicsScene::printRect(bool drawRowLabels )
 {
     assert(rowController());
 
+    qreal leftEdge = sceneRect().left();
     QVector<QGraphicsTextItem*> labelItems;
     if(drawRowLabels) {
         labelItems.reserve(d->items.size());
@@ -615,13 +616,13 @@ QRectF GraphicsScene::printRect(bool drawRowLabels )
             labelItems << ti;
         }}
         {Q_FOREACH( QGraphicsTextItem* item, labelItems ) {
-            item->setPos( -textWidth-rowHeight, item->pos().y() );
+            item->setPos( leftEdge-textWidth-rowHeight, item->pos().y() );
             item->show();
         }}
     }
     QRectF res = itemsBoundingRect();
     qDeleteAll(labelItems);
-    qDebug()<<"printRect()"<<res;
+    //qDebug()<<"printRect()"<<res;
     return res;
 }
 
@@ -634,6 +635,7 @@ void GraphicsScene::print( QPainter* painter, const QRectF& target, const QRectF
   QVector<QGraphicsTextItem*> labelItems;
   if(drawRowLabels) {
   labelItems.reserve(d->items.size());
+  qreal leftEdge = sceneRect().left();
   qreal textWidth = 0.;
   qreal rowHeight = 0.;
   {Q_FOREACH( GraphicsItem* item, d->items ) {
@@ -650,7 +652,7 @@ void GraphicsScene::print( QPainter* painter, const QRectF& target, const QRectF
     labelItems << ti;
   }}
   {Q_FOREACH( QGraphicsTextItem* item, labelItems ) {
-      item->setPos( -textWidth-rowHeight, item->pos().y() );
+      item->setPos( leftEdge-textWidth-rowHeight, item->pos().y() );
       item->show();
   }}
   }
