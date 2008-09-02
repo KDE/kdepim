@@ -348,10 +348,10 @@ void ResourceSelection::slotSubresourceRemoved( KABC::ResourceABC* resource,
                                                 const QString& /*type*/,
                                                 const QString& subResource )
 {
-  kDebug(5720) << resource->resourceName() << subResource;
-  // TODO
-  //delete findItemByIdentifier( resource );
-  //emitResourcesChanged();
+  Q_UNUSED( resource );
+  Q_UNUSED( subResource );
+  core()->addressBook()->emitAddressBookChanged();
+  updateView();
 }
 
 KABCResourceItem* ResourceSelection::selectedItem() const
