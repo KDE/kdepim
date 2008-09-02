@@ -57,7 +57,7 @@ NullConduit::NullConduit(KPilotLink *d,
 	fFailImmediately( l.contains( CSL1("--fail") ))
 {
 	FUNCTIONSETUP;
-	fConduitName=i18n("Null");
+	fConduitName = i18nc("This is the Null conduit, used for testing", "Null");
 }
 
 NullConduit::~NullConduit()

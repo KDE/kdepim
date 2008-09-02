@@ -192,7 +192,7 @@ void SysInfoConduit::hardwareInfo()
 {
 	FUNCTIONSETUP;
 	if (fHardwareInfo) {
-		QString unknown = i18n("unknown");
+		QString unknown = i18nc("Value of the item is unknown", "unknown");
 
 		/* Retrieve values for
 		* - #deviceid#
@@ -388,11 +388,13 @@ void SysInfoConduit::pcVersionInfo()
 		 * - #kpilot#
 		 * - #pilotlink#
 		 */
+		QString unknown = i18nc("Value of the item is unknown", "unknown");
+		
 		fValues[CSL1("kpilot")] = QString::fromLatin1(KPILOT_VERSION);
-		fValues[CSL1("kde")] = i18n("unknown");
-		fValues[CSL1("qt")] = i18n("unknown");
-		fValues[CSL1("os")] = i18n("unknown");
-		fValues[CSL1("hostname")] = i18n("unknown");
+		fValues[CSL1("kde")] = unknown;
+		fValues[CSL1("qt")] = unknown;
+		fValues[CSL1("os")] = unknown;
+		fValues[CSL1("hostname")] = unknown;
 		struct utsname name;
 		if (uname (&name) >= 0) {
 			fValues[CSL1("os")] = CSL1("%1 %3, %5")

@@ -163,13 +163,13 @@ ResolutionDialog::~ResolutionDialog()
 
 QString eTextStatusToString(eTextStatus stat) {
 	switch(stat) {
-		case eStatNone: return i18n("unchanged");
-		case eStatNew: return i18n("new");
-		case eStatChanged: return i18n("changed");
+		case eStatNone: return i18nc("No changes made", "unchanged");
+		case eStatNew: return i18nc("New item added", "new");
+		case eStatChanged: return i18nc("Item has changed", "changed");
 		case eStatBookmarksChanged: return i18n("only bookmarks changed");
-		case eStatDeleted: return i18n("deleted");
+		case eStatDeleted: return i18nc("Item was deleted", "deleted");
 		case eStatDoesntExist: return i18n("does not exist");
-		default: return i18n("unknown");
+		default: return i18nc("Status is unknown", "unknown");
 	}
 }
 

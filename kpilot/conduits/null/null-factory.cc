@@ -66,7 +66,7 @@ NullConduitConfig::NullConduitConfig(QWidget *p, const QVariantList &n) :
 	fWidget = new QWidget();
 	fConfigWidget.setupUi( fWidget );
 
-	fConduitName = i18n("Null");
+	fConduitName = i18nc("This is the Null conduit, used for testing", "Null");
 
 	fAbout = new KAboutData("nullConduit", 0,
 		ki18n("Null Conduit for KPilot"),

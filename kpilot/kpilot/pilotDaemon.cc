@@ -123,7 +123,7 @@ void PilotDaemonTray::setupWidget()
 	menu->addSeparator();
 
 	// Configured default sync
-	menuDefaultSyncActionItem = new QAction( i18n("Default (%1)"
+	menuDefaultSyncActionItem = new QAction( i18nc("Default sync action", "Default (%1)"
 		, SyncAction::SyncMode::name( (SyncAction::SyncMode::Mode)
 			KPilotSettings::syncType() ) ), this );
 	menuDefaultSyncActionItem->setCheckable( true );

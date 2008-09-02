@@ -200,9 +200,9 @@ QString PilotDateEntry::getTextRepresentation(Qt::TextFormat richText)
 		QString tmpArg;
 		switch (getAdvanceUnits())
 		{
-			case advMinutes: tmpArg = i18n("minutes"); break;
-			case advHours: tmpArg = i18n("hours"); break;
-			case advDays: tmpArg = i18n("days"); break;
+			case advMinutes: tmpArg = i18nc("Number of minutes", "minutes"); break;
+			case advHours: tmpArg = i18nc("Number of hours", "hours"); break;
+			case advDays: tmpArg = i18nc("Number of days", "days"); break;
 			default: tmpArg.clear(); break;
 		}
 		tmp=i18nc("%1 is the duration, %2 is the time unit", "Alarm: %1 %2 before event starts",getAdvance(),tmpArg);
@@ -216,11 +216,11 @@ QString PilotDateEntry::getTextRepresentation(Qt::TextFormat richText)
 		QString tmpStr;
 		switch(getRepeatType())
 		{
-			case repeatDaily: tmpStr = i18n("day(s)"); break;
-			case repeatWeekly: tmpStr = i18n("week(s)"); break;
+			case repeatDaily: tmpStr = i18nc("The weekday(s) on which the repeat occurs", "day(s)"); break;
+			case repeatWeekly: tmpStr = i18nc("The week(s) in which the repeat occurs", "week(s)"); break;
 			case repeatMonthlyByDay:
-			case repeatMonthlyByDate: tmpStr = i18n("month(s)"); break;
-			case repeatYearly: tmpStr = i18n("year(s)"); break;
+			case repeatMonthlyByDate: tmpStr = i18nc("The month(s) in which the repeat occurs", "month(s)"); break;
+			case repeatYearly: tmpStr = i18nc("The year(s) in which the repeat occurs", "year(s)"); break;
 			default: tmpStr.clear(); break;
 		}
 		tmp=i18n("Recurrence: every %1 %2",freq,tmpStr);
