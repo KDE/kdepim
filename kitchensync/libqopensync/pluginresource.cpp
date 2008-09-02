@@ -41,6 +41,21 @@ bool PluginResource::isValid() const
   return (mPluginResource != 0);
 }
 
+bool PluginResource::isOptionSupported( ConfigOption option ) const
+{
+  Q_ASSERT( mPluginResource );
+
+  OSyncPluginResourceOptionSupportedFlag flag = OSYNC_PLUGIN_RESOURCE_NAME;
+
+  switch ( option ) {
+    case NameOption: flag = OSYNC_PLUGIN_RESOURCE_NAME; break;
+    case PathOption: flag = OSYNC_PLUGIN_RESOURCE_PATH; break;
+    case UrlOption: flag = OSYNC_PLUGIN_RESOURCE_URL; break;
+  }
+
+  return (osync_plugin_resource_option_is_supported( mPluginResource, flag ) == TRUE);
+}
+
 void PluginResource::setEnabled( bool enabled )
 {
   Q_ASSERT( mPluginResource );

@@ -35,6 +35,13 @@ class QSYNC_EXPORT PluginLocalization
     friend class PluginConfig;
 
   public:
+    enum ConfigOption
+    {
+      EncodingOption,
+      TimeZoneOption,
+      LanguageOption
+    };
+
     PluginLocalization();
     ~PluginLocalization();
 
@@ -42,6 +49,11 @@ class QSYNC_EXPORT PluginLocalization
       Returns whether the object is a valid plugin localization.
      */
     bool isValid() const;
+
+    /**
+      Returns whether the given option is supported by the plugin.
+     */
+    bool isOptionSupported( ConfigOption option ) const;
 
     /**
       Sets the encoding.

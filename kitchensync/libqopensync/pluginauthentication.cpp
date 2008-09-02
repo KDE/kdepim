@@ -40,6 +40,21 @@ bool PluginAuthentication::isValid() const
   return (mPluginAuthentication != 0);
 }
 
+bool PluginAuthentication::isOptionSupported( ConfigOption option ) const
+{
+  Q_ASSERT( mPluginAuthentication );
+
+  OSyncPluginAuthenticationOptionSupportedFlag flag = OSYNC_PLUGIN_AUTHENTICATION_USERNAME;
+
+  switch ( option ) {
+    case UserNameOption: flag = OSYNC_PLUGIN_AUTHENTICATION_USERNAME; break;
+    case PasswordOption: flag = OSYNC_PLUGIN_AUTHENTICATION_PASSWORD; break;
+    case ReferenceOption: flag = OSYNC_PLUGIN_AUTHENTICATION_REFERENCE; break;
+  }
+
+  return (osync_plugin_authentication_option_is_supported( mPluginAuthentication, flag ) == TRUE);
+}
+
 void PluginAuthentication::setUserName( const QString &userName )
 {
   Q_ASSERT( mPluginAuthentication );

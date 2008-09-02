@@ -28,30 +28,48 @@
 ConfigAuthenticationWidget::ConfigAuthenticationWidget( const QSync::PluginAuthentication &authentication,
                                                         QWidget *parent )
   : QWidget( parent ),
-    mAuthentication( authentication )
+    mAuthentication( authentication ),
+    mUserName( 0 ), mPassword( 0 ), mReference( 0 )
 {
   QFormLayout *layout = new QFormLayout( this );
 
-  mUserName = new KLineEdit( this );
-  mPassword = new KLineEdit( this );
-  mPassword->setEchoMode( KLineEdit::Password );
-  mReference = new KLineEdit( this );
+  if ( authentication.isOptionSupported( QSync::PluginAuthentication::UserNameOption ) ) {
+    mUserName = new KLineEdit( this );
+    layout->addRow( i18n( "User:" ), mUserName );
+  }
 
-  layout->addRow( i18n( "User:" ), mUserName );
-  layout->addRow( i18n( "Password:" ), mPassword );
-  layout->addRow( i18n( "Reference:" ), mReference );
+  if ( authentication.isOptionSupported( QSync::PluginAuthentication::PasswordOption ) ) {
+    mPassword = new KLineEdit( this );
+    mPassword->setEchoMode( KLineEdit::Password );
+    layout->addRow( i18n( "Password:" ), mPassword );
+  }
+
+  if ( authentication.isOptionSupported( QSync::PluginAuthentication::ReferenceOption ) ) {
+    mReference = new KLineEdit( this );
+    layout->addRow( i18n( "Reference:" ), mReference );
+  }
 }
 
 void ConfigAuthenticationWidget::load()
 {
-  mUserName->setText( mAuthentication.userName() );
-  mPassword->setText( mAuthentication.password() );
-  mReference->setText( mAuthentication.reference() );
+  if ( mUserName )
+    mUserName->setText( mAuthentication.userName() );
+
+  if ( mPassword )
+    mPassword->setText( mAuthentication.password() );
+
+  if ( mReference )
+    mReference->setText( mAuthentication.reference() );
 }
 
 void ConfigAuthenticationWidget::save()
 {
-  mAuthentication.setUserName( mUserName->text() );
-  mAuthentication.setPassword( mPassword->text() );
-  mAuthentication.setReference( mReference->text() );
+  if ( mUserName )
+    mAuthentication.setUserName( mUserName->text() );
+
+  if ( mPassword )
+    mAuthentication.setPassword( mPassword->text() );
+
+  if ( mReference )
+    mAuthentication.setReference( mReference->text() );
 }

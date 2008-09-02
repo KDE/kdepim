@@ -47,10 +47,11 @@ class ResourceWidget : public QWidget
     QSync::PluginResource resource() const;
 
   private:
-    KLineEdit *mName;
-    KLineEdit *mPath;
-    KUrlRequester *mUrl;
     QSync::PluginResource mResource;
+
+    KLineEdit *mName;
+    KUrlRequester *mPath;
+    KUrlRequester *mUrl;
 };
 
 class TypeWidget : public QWidget

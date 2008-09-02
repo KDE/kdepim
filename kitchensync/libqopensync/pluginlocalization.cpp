@@ -40,6 +40,21 @@ bool PluginLocalization::isValid() const
   return (mPluginLocalization != 0);
 }
 
+bool PluginLocalization::isOptionSupported( ConfigOption option ) const
+{
+  Q_ASSERT( mPluginLocalization );
+
+  OSyncPluginLocalizationOptionSupportedFlag flag = (OSyncPluginLocalizationOptionSupportedFlag)0;
+
+  switch ( option ) {
+    case EncodingOption: flag = OSYNC_PLUGIN_LOCALIZATION_ENCODING; break;
+    case TimeZoneOption: flag = OSYNC_PLUGIN_LOCALIZATION_TIMEZONE; break;
+    case LanguageOption: flag = OSYNC_PLUGIN_LOCALIZATION_LANGUAGE; break;
+  }
+
+  return (osync_plugin_localization_option_is_supported( mPluginLocalization, flag ) == TRUE);
+}
+
 void PluginLocalization::setEncoding( const QString &encoding )
 {
   Q_ASSERT( mPluginLocalization );

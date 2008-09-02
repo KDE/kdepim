@@ -32,17 +32,26 @@
 
 ResourceWidget::ResourceWidget( const QSync::PluginResource &resource, QWidget *parent )
   : QWidget( parent ),
-    mResource( resource )
+    mResource( resource ),
+    mName( 0 ), mPath( 0 ), mUrl( 0 )
 {
   QHBoxLayout *layout = new QHBoxLayout( this );
 
-  mName = new KLineEdit( this );
-  mPath = new KLineEdit( this );
-  mUrl = new KUrlRequester( this );
+  if ( resource.isOptionSupported( QSync::PluginResource::NameOption ) ) {
+    mName = new KLineEdit( this );
+    layout->addWidget( mName );
+  }
 
-  layout->addWidget( mName );
-  layout->addWidget( mPath );
-  layout->addWidget( mUrl );
+  if ( resource.isOptionSupported( QSync::PluginResource::PathOption ) ) {
+    mPath = new KUrlRequester( this );
+    mPath->setMode( KFile::File | KFile::Directory | KFile::LocalOnly );
+    layout->addWidget( mPath );
+  }
+
+  if ( resource.isOptionSupported( QSync::PluginResource::UrlOption ) ) {
+    mUrl = new KUrlRequester( this );
+    layout->addWidget( mUrl );
+  }
 }
 
 ResourceWidget::~ResourceWidget()
@@ -56,16 +65,26 @@ QSync::PluginResource ResourceWidget::resource() const
 
 void ResourceWidget::load()
 {
-  mName->setText( mResource.name() );
-  mPath->setText( mResource.path() );
-  mUrl->setUrl( mResource.url() );
+  if ( mName )
+    mName->setText( mResource.name() );
+
+  if ( mPath )
+    mPath->setUrl( mResource.path() );
+
+  if ( mUrl )
+    mUrl->setUrl( mResource.url() );
 }
 
 void ResourceWidget::save()
 {
-  mResource.setName( mName->text() );
-  mResource.setPath( mPath->text() );
-  mResource.setUrl( mUrl->url().url() );
+  if ( mName )
+    mResource.setName( mName->text() );
+
+  if ( mPath )
+    mResource.setPath( mPath->url().path() );
+
+  if ( mUrl )
+    mResource.setUrl( mUrl->url().url() );
 }
 
 

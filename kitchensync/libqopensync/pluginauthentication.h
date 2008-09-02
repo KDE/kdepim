@@ -35,6 +35,13 @@ class QSYNC_EXPORT PluginAuthentication
     friend class PluginConfig;
 
   public:
+    enum ConfigOption
+    {
+      UserNameOption,
+      PasswordOption,
+      ReferenceOption
+    };
+
     PluginAuthentication();
     ~PluginAuthentication();
 
@@ -42,6 +49,11 @@ class QSYNC_EXPORT PluginAuthentication
       Returns whether the object is a valid plugin authentication.
      */
     bool isValid() const;
+
+    /**
+      Returns whether the given option is supported by the plugin.
+     */
+    bool isOptionSupported( ConfigOption option ) const;
 
     /**
       Sets the user name.

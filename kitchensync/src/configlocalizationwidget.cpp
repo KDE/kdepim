@@ -27,29 +27,47 @@
 
 ConfigLocalizationWidget::ConfigLocalizationWidget( const QSync::PluginLocalization &localization, QWidget *parent )
   : QWidget( parent ),
-    mLocalization( localization )
+    mLocalization( localization ),
+    mEncoding( 0 ), mTimeZone( 0 ), mLanguage( 0 )
 {
   QFormLayout *layout = new QFormLayout( this );
 
-  mEncoding = new KLineEdit( this );
-  mTimeZone = new KLineEdit( this );
-  mLanguage = new KLineEdit( this );
+  if ( localization.isOptionSupported( QSync::PluginLocalization::EncodingOption ) ) {
+    mEncoding = new KLineEdit( this );
+    layout->addRow( i18n( "Encoding:" ), mEncoding );
+  }
 
-  layout->addRow( i18n( "Encoding:" ), mEncoding );
-  layout->addRow( i18n( "Timezone:" ), mTimeZone );
-  layout->addRow( i18n( "Language:" ), mLanguage );
+  if ( localization.isOptionSupported( QSync::PluginLocalization::TimeZoneOption ) ) {
+    mTimeZone = new KLineEdit( this );
+    layout->addRow( i18n( "Timezone:" ), mTimeZone );
+  }
+
+  if ( localization.isOptionSupported( QSync::PluginLocalization::LanguageOption ) ) {
+    mLanguage = new KLineEdit( this );
+    layout->addRow( i18n( "Language:" ), mLanguage );
+  }
 }
 
 void ConfigLocalizationWidget::load()
 {
-  mEncoding->setText( mLocalization.encoding() );
-  mTimeZone->setText( mLocalization.timeZone() );
-  mLanguage->setText( mLocalization.language() );
+  if ( mEncoding )
+    mEncoding->setText( mLocalization.encoding() );
+
+  if ( mTimeZone )
+    mTimeZone->setText( mLocalization.timeZone() );
+
+  if ( mLanguage )
+    mLanguage->setText( mLocalization.language() );
 }
 
 void ConfigLocalizationWidget::save()
 {
-  mLocalization.setEncoding( mEncoding->text() );
-  mLocalization.setTimeZone( mTimeZone->text() );
-  mLocalization.setLanguage( mLanguage->text() );
+  if ( mEncoding )
+    mLocalization.setEncoding( mEncoding->text() );
+
+  if ( mTimeZone )
+    mLocalization.setTimeZone( mTimeZone->text() );
+
+  if ( mLanguage )
+    mLocalization.setLanguage( mLanguage->text() );
 }

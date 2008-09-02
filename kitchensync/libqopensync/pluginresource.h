@@ -42,10 +42,22 @@ class QSYNC_EXPORT PluginResource
     PluginResource();
     ~PluginResource();
 
+    enum ConfigOption
+    {
+      NameOption,
+      PathOption,
+      UrlOption
+    };
+
     /**
       Returns whether the object is a valid plugin resource.
      */
     bool isValid() const;
+
+    /**
+      Returns whether the given option is supported by the plugin.
+     */
+    bool isOptionSupported( ConfigOption option ) const;
 
     /**
       Sets whether the resource is enabled.
