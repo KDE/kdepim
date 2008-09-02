@@ -40,6 +40,45 @@ bool PluginConnection::isValid() const
   return (mPluginConnection != 0);
 }
 
+bool PluginConnection::isOptionSupported( ConfigOption option ) const
+{
+  OSyncPluginConnectionOptionSupportedFlag flag = OSYNC_PLUGIN_CONNECTION_IRDA_SERVICE;
+
+  switch ( option ) {
+    case BluetoothAddressOption: flag = OSYNC_PLUGIN_CONNECTION_BLUETOOTH_ADDRESS; break;
+    case BluetoothChannelOption: flag = OSYNC_PLUGIN_CONNECTION_BLUETOOTH_RFCOMM; break;
+    case BluetoothSdpUuidOption: flag = OSYNC_PLUGIN_CONNECTION_BLUETOOTH_SDPUUID; break;
+    case UsbVendorIdOption: flag = OSYNC_PLUGIN_CONNECTION_USB_VENDORID; break;
+    case UsbProductIdOption: flag = OSYNC_PLUGIN_CONNECTION_USB_PRODUCTID; break;
+    case UsbInterfaceOption: flag = OSYNC_PLUGIN_CONNECTION_USB_INTERFACE; break;
+    case NetworkAddressOption: flag = OSYNC_PLUGIN_CONNECTION_NETWORK_ADDRESS; break;
+    case NetworkPortOption: flag = OSYNC_PLUGIN_CONNECTION_NETWORK_PORT; break;
+    case NetworkProtocolOption: flag = OSYNC_PLUGIN_CONNECTION_NETWORK_PROTOCOL; break;
+    case NetworkDnsSdOption: flag = OSYNC_PLUGIN_CONNECTION_NETWORK_DNSSD; break;
+    case SerialSpeedOption: flag = OSYNC_PLUGIN_CONNECTION_SERIAL_SPEED; break;
+    case SerialDeviceNodeOption: flag = OSYNC_PLUGIN_CONNECTION_SERIAL_DEVICENODE; break;
+    case IrdaServiceOption: flag = OSYNC_PLUGIN_CONNECTION_IRDA_SERVICE; break;
+  }
+
+  return (osync_plugin_connection_option_is_supported( mPluginConnection, flag ) == TRUE);
+}
+
+bool PluginConnection::isTypeSupported( ConnectionType type ) const
+{
+  OSyncPluginConnectionSupportedFlag flag = OSYNC_PLUGIN_CONNECTION_UNKNOWN;
+
+  switch ( type ) {
+    case UnknownConnection: flag = OSYNC_PLUGIN_CONNECTION_UNKNOWN; break;
+    case BlueToothConnection: flag = OSYNC_PLUGIN_CONNECTION_BLUETOOTH; break;
+    case UsbConnection: flag = OSYNC_PLUGIN_CONNECTION_USB; break;
+    case NetworkConnection: flag = OSYNC_PLUGIN_CONNECTION_NETWORK; break;
+    case SerialConnection: flag = OSYNC_PLUGIN_CONNECTION_SERIAL; break;
+    case IrdaConnection: flag = OSYNC_PLUGIN_CONNECTION_IRDA; break;
+  }
+
+  return (osync_plugin_connection_is_supported( mPluginConnection, flag ) == TRUE);
+}
+
 void PluginConnection::setType( ConnectionType type )
 {
   Q_ASSERT( mPluginConnection );

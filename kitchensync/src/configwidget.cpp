@@ -40,7 +40,8 @@ ConfigWidget::ConfigWidget( const QSync::PluginConfig &config, QWidget *parent )
     mAdvancedOption( 0 ),
     mAuthentication( 0 ),
     mLocalization( 0 ),
-    mConnection( 0 )
+    mConnection( 0 ),
+    mResource( 0 )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 
@@ -63,17 +64,17 @@ ConfigWidget::ConfigWidget( const QSync::PluginConfig &config, QWidget *parent )
   hline->setFrameShape( QFrame::HLine );
   generalLayout->addWidget( hline );
 
-  if ( config.authentication().isValid() ) {
+  if ( config.isOptionSupported( QSync::PluginConfig::AuthenticationOption ) ) {
     mAuthentication = new ConfigAuthenticationWidget( config.authentication(), generalPage );
     generalLayout->addWidget( mAuthentication );
   }
 
-  if ( config.localization().isValid() ) {
+  if ( config.isOptionSupported( QSync::PluginConfig::LocalizationOption ) ) {
     mLocalization = new ConfigLocalizationWidget( config.localization(), generalPage );
     generalLayout->addWidget( mLocalization );
   }
 
-  if ( config.connection().isValid() ) {
+  if ( config.isOptionSupported( QSync::PluginConfig::ConnectionOption ) ) {
     mConnection = new ConfigConnectionWidget( config.connection(), generalPage );
     generalLayout->addWidget( mConnection );
   }
@@ -81,13 +82,13 @@ ConfigWidget::ConfigWidget( const QSync::PluginConfig &config, QWidget *parent )
   generalLayout->addStretch();
 
   // advanced tab
-  if ( !config.advancedOptions().isEmpty() ) {
+  if ( config.isOptionSupported( QSync::PluginConfig::AdvancedOption ) ) {
     mAdvancedOption = new ConfigAdvancedOptionWidget( config.advancedOptions(), tabWidget );
     tabWidget->addTab( mAdvancedOption, i18n( "Advanced" ) );
   }
 
   // resource tab
-  if ( !config.resources().isEmpty() ) {
+  if ( config.isOptionSupported( QSync::PluginConfig::ResourceOption ) ) {
     mResource = new ConfigResourceWidget( config.resources(), tabWidget );
     tabWidget->addTab( mResource, i18n( "Resources" ) );
   }

@@ -54,7 +54,13 @@ static QString intToHexString( unsigned int value )
 
 ConfigConnectionWidget::ConfigConnectionWidget( const QSync::PluginConnection &connection, QWidget *parent )
   : QWidget( parent ),
-    mConnection( connection )
+    mConnection( connection ),
+    mBluetoothPage( 0 ), mUsbPage( 0 ), mNetworkPage( 0 ), mSerialPage( 0 ), mIrdaPage( 0 ),
+    mBluetoothAddress( 0 ), mBluetoothChannel( 0 ), mBluetoothSdpUuid( 0 ),
+    mUsbVendorId( 0 ), mUsbProductId( 0 ), mUsbInterface( 0 ),
+    mNetworkAddress( 0 ), mNetworkPort( 0 ), mNetworkProtocol( 0 ), mNetworkDnsSd( 0 ),
+    mSerialSpeed( 0 ), mSerialDevice( 0 ),
+    mIrdaService( 0 )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 
@@ -62,12 +68,6 @@ ConfigConnectionWidget::ConfigConnectionWidget( const QSync::PluginConnection &c
   layout->addLayout( typeLayout );
 
   mType = new KComboBox( this );
-  mType->addItem( i18n( "Bluetooth" ) );
-  mType->addItem( i18n( "USB" ) );
-  mType->addItem( i18n( "Network" ) );
-  mType->addItem( i18n( "Serial" ) );
-  mType->addItem( i18n( "IRDA" ) );
-
   connect( mType, SIGNAL( activated( int ) ), this, SLOT( typeChanged( int ) ) );
 
   typeLayout->addWidget( new QLabel( i18n( "Type:" ) ) );
@@ -79,145 +79,209 @@ ConfigConnectionWidget::ConfigConnectionWidget( const QSync::PluginConnection &c
   QFormLayout *pageLayout = 0;
 
   // bluetooth
-  mBluetoothPage = new QWidget;
-  pageLayout = new QFormLayout( mBluetoothPage );
+  if ( connection.isTypeSupported( QSync::PluginConnection::BlueToothConnection ) ) {
+    mType->addItem( i18n( "Bluetooth" ), QSync::PluginConnection::BlueToothConnection );
 
-  mBluetoothAddress = new KLineEdit( mBluetoothPage );
-  mBluetoothAddress->setInputMask( ">HH:HH:HH:HH:HH:HH;" );
-  mBluetoothChannel = new QSpinBox( mBluetoothPage );
-  mBluetoothChannel->setRange( 1, 100 );
-  mBluetoothSdpUuid = new KLineEdit( mBluetoothPage );
+    mBluetoothPage = new QWidget;
+    pageLayout = new QFormLayout( mBluetoothPage );
 
-  pageLayout->addRow( i18n( "Address:" ), mBluetoothAddress );
-  pageLayout->addRow( i18n( "Channel:" ), mBluetoothChannel );
-  pageLayout->addRow( i18n( "SDP UUid:" ), mBluetoothSdpUuid );
+    if ( connection.isOptionSupported( QSync::PluginConnection::BluetoothAddressOption ) ) {
+      mBluetoothAddress = new KLineEdit( mBluetoothPage );
+      mBluetoothAddress->setInputMask( ">HH:HH:HH:HH:HH:HH;" );
+      pageLayout->addRow( i18n( "Address:" ), mBluetoothAddress );
+    }
 
-  mStack->addWidget( mBluetoothPage );
+    if ( connection.isOptionSupported( QSync::PluginConnection::BluetoothChannelOption ) ) {
+      mBluetoothChannel = new QSpinBox( mBluetoothPage );
+      mBluetoothChannel->setRange( 1, 100 );
+      pageLayout->addRow( i18n( "Channel:" ), mBluetoothChannel );
+    }
+
+    if ( connection.isOptionSupported( QSync::PluginConnection::BluetoothSdpUuidOption ) ) {
+      mBluetoothSdpUuid = new KLineEdit( mBluetoothPage );
+      pageLayout->addRow( i18n( "SDP UUid:" ), mBluetoothSdpUuid );
+    }
+
+    mStack->addWidget( mBluetoothPage );
+  }
 
   // usb
-  mUsbPage = new QWidget;
-  pageLayout = new QFormLayout( mUsbPage );
+  if ( connection.isTypeSupported( QSync::PluginConnection::UsbConnection ) ) {
+    mType->addItem( i18n( "USB" ), QSync::PluginConnection::UsbConnection );
 
-  mUsbVendorId = new KLineEdit( mUsbPage );
-  mUsbVendorId->setInputMask( "\\0\\xHHHH" );
-  mUsbProductId = new KLineEdit( mUsbPage );
-  mUsbProductId->setInputMask( "\\0\\xHHHH" );
-  mUsbInterface = new QSpinBox( mUsbPage );
+    mUsbPage = new QWidget;
+    pageLayout = new QFormLayout( mUsbPage );
 
-  pageLayout->addRow( i18n( "Vendor ID:" ), mUsbVendorId );
-  pageLayout->addRow( i18n( "Product ID:" ), mUsbProductId );
-  pageLayout->addRow( i18n( "Interface:" ), mUsbInterface );
+    if ( connection.isOptionSupported( QSync::PluginConnection::UsbVendorIdOption ) ) {
+      mUsbVendorId = new KLineEdit( mUsbPage );
+      mUsbVendorId->setInputMask( "\\0\\xHHHH" );
+      pageLayout->addRow( i18n( "Vendor ID:" ), mUsbVendorId );
+    }
 
-  mStack->addWidget( mUsbPage );
+    if ( connection.isOptionSupported( QSync::PluginConnection::UsbProductIdOption ) ) {
+      mUsbProductId = new KLineEdit( mUsbPage );
+      mUsbProductId->setInputMask( "\\0\\xHHHH" );
+      pageLayout->addRow( i18n( "Product ID:" ), mUsbProductId );
+    }
+
+    if ( connection.isOptionSupported( QSync::PluginConnection::UsbInterfaceOption ) ) {
+      mUsbInterface = new QSpinBox( mUsbPage );
+      pageLayout->addRow( i18n( "Interface:" ), mUsbInterface );
+    }
+
+    mStack->addWidget( mUsbPage );
+  }
 
   // network
-  mNetworkPage = new QWidget;
-  pageLayout = new QFormLayout( mNetworkPage );
+  if ( connection.isTypeSupported( QSync::PluginConnection::NetworkConnection ) ) {
+    mType->addItem( i18n( "Network" ), QSync::PluginConnection::NetworkConnection );
 
-  mNetworkAddress = new KLineEdit( mNetworkPage );
-  mNetworkPort = new QSpinBox( mNetworkPage );
-  mNetworkPort->setRange( 1, 65535 );
-  mNetworkProtocol = new KLineEdit( mNetworkPage );
-  mNetworkDnsSd = new KLineEdit( mNetworkPage );
+    mNetworkPage = new QWidget;
+    pageLayout = new QFormLayout( mNetworkPage );
 
-  pageLayout->addRow( i18n( "Address:" ), mNetworkAddress );
-  pageLayout->addRow( i18n( "Port:" ), mNetworkPort );
-  pageLayout->addRow( i18n( "Protocol:" ), mNetworkProtocol );
-  pageLayout->addRow( i18n( "DnsSd:" ), mNetworkDnsSd );
+    if ( connection.isOptionSupported( QSync::PluginConnection::NetworkAddressOption ) ) {
+      mNetworkAddress = new KLineEdit( mNetworkPage );
+      pageLayout->addRow( i18n( "Address:" ), mNetworkAddress );
+    }
 
-  mStack->addWidget( mNetworkPage );
+    if ( connection.isOptionSupported( QSync::PluginConnection::NetworkPortOption ) ) {
+      mNetworkPort = new QSpinBox( mNetworkPage );
+      mNetworkPort->setRange( 1, 65535 );
+      pageLayout->addRow( i18n( "Port:" ), mNetworkPort );
+    }
+
+    if ( connection.isOptionSupported( QSync::PluginConnection::NetworkProtocolOption ) ) {
+      mNetworkProtocol = new KLineEdit( mNetworkPage );
+      pageLayout->addRow( i18n( "Protocol:" ), mNetworkProtocol );
+    }
+
+    if ( connection.isOptionSupported( QSync::PluginConnection::NetworkDnsSdOption ) ) {
+      mNetworkDnsSd = new KLineEdit( mNetworkPage );
+      pageLayout->addRow( i18n( "DnsSd:" ), mNetworkDnsSd );
+    }
+
+    mStack->addWidget( mNetworkPage );
+  }
 
   // serial
-  mSerialPage = new QWidget;
-  pageLayout = new QFormLayout( mSerialPage );
+  if ( connection.isTypeSupported( QSync::PluginConnection::SerialConnection ) ) {
+    mType->addItem( i18n( "Serial" ), QSync::PluginConnection::SerialConnection );
 
-  mSerialSpeed = new KLineEdit( mSerialPage );
-  mSerialDevice = new KComboBox( mSerialPage );
-  mSerialDevice->setEditable( true );
-  mSerialDevice->addItem( "/dev/ttyS0" );
-  mSerialDevice->addItem( "/dev/ttyS1" );
-  mSerialDevice->addItem( "/dev/ttyUSB0" );
-  mSerialDevice->addItem( "/dev/ttyUSB1" );
+    mSerialPage = new QWidget;
+    pageLayout = new QFormLayout( mSerialPage );
 
-  pageLayout->addRow( i18n( "Speed:" ), mSerialSpeed );
-  pageLayout->addRow( i18n( "Device:" ), mSerialDevice );
+    if ( connection.isOptionSupported( QSync::PluginConnection::SerialSpeedOption ) ) {
+      mSerialSpeed = new KLineEdit( mSerialPage );
+      pageLayout->addRow( i18n( "Speed:" ), mSerialSpeed );
+    }
 
-  mStack->addWidget( mSerialPage );
+    if ( connection.isOptionSupported( QSync::PluginConnection::SerialDeviceNodeOption ) ) {
+      mSerialDevice = new KComboBox( mSerialPage );
+      mSerialDevice->setEditable( true );
+      mSerialDevice->addItem( "/dev/ttyS0" );
+      mSerialDevice->addItem( "/dev/ttyS1" );
+      mSerialDevice->addItem( "/dev/ttyUSB0" );
+      mSerialDevice->addItem( "/dev/ttyUSB1" );
+      pageLayout->addRow( i18n( "Device:" ), mSerialDevice );
+    }
+
+    mStack->addWidget( mSerialPage );
+  }
 
   // irda
-  mIrdaPage = new QWidget;
-  pageLayout = new QFormLayout( mIrdaPage );
+  if ( connection.isTypeSupported( QSync::PluginConnection::IrdaConnection ) ) {
+    mType->addItem( i18n( "IRDA" ), QSync::PluginConnection::IrdaConnection );
 
-  mIrdaService = new KLineEdit( mIrdaPage );
+    mIrdaPage = new QWidget;
+    pageLayout = new QFormLayout( mIrdaPage );
 
-  pageLayout->addRow( i18n( "Service:" ), mIrdaService );
+    if ( connection.isOptionSupported( QSync::PluginConnection::IrdaServiceOption ) ) {
+      mIrdaService = new KLineEdit( mIrdaPage );
+      pageLayout->addRow( i18n( "Service:" ), mIrdaService );
+    }
 
-  mStack->addWidget( mIrdaPage );
+    mStack->addWidget( mIrdaPage );
+  }
 }
 
 void ConfigConnectionWidget::load()
 {
-  switch ( mConnection.type() ) {
-    case QSync::PluginConnection::BlueToothConnection: mType->setCurrentIndex( 0 ); break;
-    case QSync::PluginConnection::UsbConnection: mType->setCurrentIndex( 1 ); break;
-    case QSync::PluginConnection::NetworkConnection: mType->setCurrentIndex( 2 ); break;
-    case QSync::PluginConnection::SerialConnection: mType->setCurrentIndex( 3 ); break;
-    case QSync::PluginConnection::IrdaConnection: mType->setCurrentIndex( 4 ); break;
-  }
-
+  mType->setCurrentIndex( mType->findData( mConnection.type() ) );
   typeChanged( mType->currentIndex() );
 
-  mBluetoothAddress->setText( mConnection.bluetoothAddress() );
-  mBluetoothChannel->setValue( mConnection.bluetoothChannel() );
-  mBluetoothSdpUuid->setText( mConnection.bluetoothSdpUuid() );
+  if ( mBluetoothAddress )
+    mBluetoothAddress->setText( mConnection.bluetoothAddress() );
+  if ( mBluetoothChannel )
+    mBluetoothChannel->setValue( mConnection.bluetoothChannel() );
+  if ( mBluetoothSdpUuid )
+    mBluetoothSdpUuid->setText( mConnection.bluetoothSdpUuid() );
 
-  mUsbVendorId->setText( intToHexString( mConnection.usbVendorId() ) );
-  mUsbProductId->setText( intToHexString( mConnection.usbProductId() ) );
-  mUsbInterface->setValue( mConnection.usbInterface() );
+  if ( mUsbVendorId )
+    mUsbVendorId->setText( intToHexString( mConnection.usbVendorId() ) );
+  if ( mUsbProductId )
+    mUsbProductId->setText( intToHexString( mConnection.usbProductId() ) );
+  if ( mUsbInterface )
+    mUsbInterface->setValue( mConnection.usbInterface() );
 
-  mNetworkAddress->setText( mConnection.networkAddress() );
-  mNetworkPort->setValue( mConnection.networkPort() );
-  mNetworkProtocol->setText( mConnection.networkProtocol() );
-  mNetworkDnsSd->setText( mConnection.networkDnsSd() );
+  if ( mNetworkAddress )
+    mNetworkAddress->setText( mConnection.networkAddress() );
+  if ( mNetworkPort )
+    mNetworkPort->setValue( mConnection.networkPort() );
+  if ( mNetworkProtocol )
+    mNetworkProtocol->setText( mConnection.networkProtocol() );
+  if ( mNetworkDnsSd )
+    mNetworkDnsSd->setText( mConnection.networkDnsSd() );
 
-  mSerialSpeed->setText( QString::number( mConnection.serialSpeed() ) );
-  mSerialDevice->setEditText( mConnection.serialDeviceNode() );
+  if ( mSerialSpeed )
+    mSerialSpeed->setText( QString::number( mConnection.serialSpeed() ) );
+  if ( mSerialDevice )
+    mSerialDevice->setEditText( mConnection.serialDeviceNode() );
 
-  mIrdaService->setText( mConnection.irdaService() );
+  if ( mIrdaService )
+    mIrdaService->setText( mConnection.irdaService() );
 }
 
 void ConfigConnectionWidget::save()
 {
-  switch ( mType->currentIndex() ) {
-    case 0: mConnection.setType( QSync::PluginConnection::BlueToothConnection ); break;
-    case 1: mConnection.setType( QSync::PluginConnection::UsbConnection ); break;
-    case 2: mConnection.setType( QSync::PluginConnection::NetworkConnection ); break;
-    case 3: mConnection.setType( QSync::PluginConnection::SerialConnection ); break;
-    case 4: mConnection.setType( QSync::PluginConnection::IrdaConnection ); break;
-  }
+  mConnection.setType( (QSync::PluginConnection::ConnectionType)mType->itemData( mType->currentIndex() ).toInt() );
 
-  mConnection.setBluetoothAddress( mBluetoothAddress->text() );
-  mConnection.setBluetoothChannel( mBluetoothChannel->value() );
-  mConnection.setBluetoothSdpUuid( mBluetoothSdpUuid->text() );
+  if ( mBluetoothAddress )
+    mConnection.setBluetoothAddress( mBluetoothAddress->text() );
+  if ( mBluetoothChannel )
+    mConnection.setBluetoothChannel( mBluetoothChannel->value() );
+  if ( mBluetoothSdpUuid )
+    mConnection.setBluetoothSdpUuid( mBluetoothSdpUuid->text() );
 
-  mConnection.setUsbVendorId( hexStringToInt( mUsbVendorId->text() ) );
-  mConnection.setUsbProductId( hexStringToInt( mUsbProductId->text() ) );
-  mConnection.setUsbInterface( mUsbInterface->value() );
+  if ( mUsbVendorId )
+    mConnection.setUsbVendorId( hexStringToInt( mUsbVendorId->text() ) );
+  if ( mUsbProductId )
+    mConnection.setUsbProductId( hexStringToInt( mUsbProductId->text() ) );
+  if ( mUsbInterface )
+    mConnection.setUsbInterface( mUsbInterface->value() );
 
-  mConnection.setNetworkAddress( mNetworkAddress->text() );
-  mConnection.setNetworkPort( mNetworkPort->value() );
-  mConnection.setNetworkProtocol( mNetworkProtocol->text() );
-  mConnection.setNetworkDnsSd( mNetworkDnsSd->text() );
+  if ( mNetworkAddress )
+    mConnection.setNetworkAddress( mNetworkAddress->text() );
+  if ( mNetworkPort )
+    mConnection.setNetworkPort( mNetworkPort->value() );
+  if ( mNetworkProtocol )
+    mConnection.setNetworkProtocol( mNetworkProtocol->text() );
+  if ( mNetworkDnsSd )
+    mConnection.setNetworkDnsSd( mNetworkDnsSd->text() );
 
-  mConnection.setSerialSpeed( mSerialSpeed->text().toUInt() );
-  mConnection.setSerialDeviceNode( mSerialDevice->currentText() );
+  if ( mSerialSpeed )
+    mConnection.setSerialSpeed( mSerialSpeed->text().toUInt() );
+  if ( mSerialDevice )
+    mConnection.setSerialDeviceNode( mSerialDevice->currentText() );
 
-  mConnection.setIrdaService( mIrdaService->text() );
+  if ( mIrdaService )
+    mConnection.setIrdaService( mIrdaService->text() );
 }
 
 void ConfigConnectionWidget::typeChanged( int type )
 {
-  switch ( type + 1 ) {
+  int i = mType->itemData( type ).toInt();
+
+  switch ( i ) {
     case QSync::PluginConnection::BlueToothConnection: mStack->setCurrentWidget( mBluetoothPage ); break;
     case QSync::PluginConnection::UsbConnection: mStack->setCurrentWidget( mUsbPage ); break;
     case QSync::PluginConnection::NetworkConnection: mStack->setCurrentWidget( mNetworkPage ); break;

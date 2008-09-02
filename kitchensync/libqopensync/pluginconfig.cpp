@@ -40,6 +40,23 @@ bool PluginConfig::isValid() const
   return (mPluginConfig != 0);
 }
 
+bool PluginConfig::isOptionSupported( ConfigOptions options ) const
+{
+  Q_ASSERT( mPluginConfig );
+
+  OSyncPluginConfigSupportedFlag flag;
+  switch ( options ) {
+    case AuthenticationOption: flag = OPENSYNC_PLUGIN_CONFIG_AUTHENTICATION; break;
+    case LocalizationOption: flag = OPENSYNC_PLUGIN_CONFIG_LOCALIZATION; break;
+    case ConnectionOption: flag = OPENSYNC_PLUGIN_CONFIG_CONNECTION; break;
+    case AdvancedOption: flag = OPENSYNC_PLUGIN_CONFIG_ADVANCEDOPTION; break;
+    case ResourceOption:
+    default: flag = OPENSYNC_PLUGIN_CONFIG_RESOURCES; break;
+  }
+
+  return (osync_plugin_config_is_supported( mPluginConfig, flag ) == TRUE);
+}
+
 PluginAdvancedOption::List PluginConfig::advancedOptions() const
 {
   Q_ASSERT( mPluginConfig );

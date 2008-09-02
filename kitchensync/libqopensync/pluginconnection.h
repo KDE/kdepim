@@ -45,6 +45,23 @@ class QSYNC_EXPORT PluginConnection
       IrdaConnection
     };
 
+    enum ConfigOption
+    {
+      BluetoothAddressOption,
+      BluetoothChannelOption,
+      BluetoothSdpUuidOption,
+      UsbVendorIdOption,
+      UsbProductIdOption,
+      UsbInterfaceOption,
+      NetworkAddressOption,
+      NetworkPortOption,
+      NetworkProtocolOption,
+      NetworkDnsSdOption,
+      SerialSpeedOption,
+      SerialDeviceNodeOption,
+      IrdaServiceOption
+    };
+
     PluginConnection();
     ~PluginConnection();
 
@@ -52,6 +69,16 @@ class QSYNC_EXPORT PluginConnection
       Returns whether the object is a valid plugin connection.
      */
     bool isValid() const;
+
+    /**
+      Returns whether the given option is supported by the plugin.
+     */
+    bool isOptionSupported( ConfigOption option ) const;
+
+    /**
+      Returns whether the given type is supported by the plugin.
+     */
+    bool isTypeSupported( ConnectionType type ) const;
 
     /**
       Sets the type of the plugin connection.

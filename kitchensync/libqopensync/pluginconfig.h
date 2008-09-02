@@ -40,6 +40,15 @@ class QSYNC_EXPORT PluginConfig
     friend class Member;
 
   public:
+    enum ConfigOptions
+    {
+      AuthenticationOption,
+      LocalizationOption,
+      ConnectionOption,
+      AdvancedOption,
+      ResourceOption
+    };
+
     PluginConfig();
     ~PluginConfig();
 
@@ -47,6 +56,11 @@ class QSYNC_EXPORT PluginConfig
       Returns whether the object is a valid plugin config.
      */
     bool isValid() const;
+
+    /**
+      Returns whether the given option is supported by this plugin.
+     */
+    bool isOptionSupported( ConfigOptions options ) const;
 
     /**
       Returns the list of advanced options.
