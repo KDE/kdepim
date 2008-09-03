@@ -25,10 +25,10 @@
 #include <QtGui/QRadioButton>
 #include <QtGui/QStackedLayout>
 
-#include <KComboBox>
-#include <KLineEdit>
-#include <KLocale>
-#include <KUrlRequester>
+#include <KDE/KComboBox>
+#include <KDE/KLineEdit>
+#include <KDE/KLocale>
+#include <KDE/KUrlRequester>
 
 ResourceWidget::ResourceWidget( const QSync::PluginResource &resource, QWidget *parent )
   : QWidget( parent ),
