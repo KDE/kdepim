@@ -146,7 +146,7 @@ void EncryptClipboardCommand::doStart() {
         d->controller.startResolveRecipients();
 
     } catch ( const std::exception & e ) {
-        KMessageBox::information( d->view(),
+        KMessageBox::information( d->parentWidgetOrView(),
                                   i18n("An error occurred: %1",
                                        QString::fromLocal8Bit( e.what() ) ),
                                   i18n("Encrypt Clipboard Error") );
@@ -160,7 +160,7 @@ void EncryptClipboardCommand::Private::slotRecipientsResolved() {
         input.reset(); // no longer needed, so don't keep a reference
         controller.start();
     } catch ( const std::exception & e ) {
-        KMessageBox::information( view(),
+        KMessageBox::information( parentWidgetOrView(),
                                   i18n("An error occurred: %1",
                                        QString::fromLocal8Bit( e.what() ) ),
                                   i18n("Encrypt Clipboard Error") );
@@ -175,7 +175,7 @@ void EncryptClipboardCommand::doCancel() {
 
 void EncryptClipboardCommand::applyWindowID( QWidget * wid ) const {
     if ( wid )
-        wid->setParent( d->view(), wid->windowFlags() );
+        wid->setParent( d->parentWidgetOrView(), wid->windowFlags() );
 }
 
 #undef d

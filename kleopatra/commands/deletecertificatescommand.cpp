@@ -215,7 +215,7 @@ void DeleteCertificatesCommand::doStart() {
         = std::remove_if( keys.begin(), keys.end(), bind( &Key::hasSecret, _1 ) );
 
     if ( keysEnd == keys.begin() ) {
-        KMessageBox::information( d->view(),
+        KMessageBox::information( d->parentWidgetOrView(),
                                   i18np("The certificate to be deleted is your own. "
                                         "It contains private key material, "
                                         "which is needed to decrypt past communication "
@@ -250,7 +250,7 @@ void DeleteCertificatesCommand::doStart() {
                                _detail::ByFingerprint<std::less>() );
 
     if ( it == keys.begin() ) {
-        KMessageBox::information( d->view(),
+        KMessageBox::information( d->parentWidgetOrView(),
                                   hadSecretKeys ?
                                   i18n("All of the certificates to be deleted "
                                        "are either your own, or are issuers of one of your own certificates. "
@@ -284,7 +284,7 @@ void DeleteCertificatesCommand::doStart() {
 
     if ( hadSecretKeys || hadSecretKeyIssuers )
         if ( KMessageBox::Continue != 
-             KMessageBox::warningContinueCancel( d->view(),
+             KMessageBox::warningContinueCancel( d->parentWidgetOrView(),
                                                  hadSecretKeys ?
                                                  hadSecretKeyIssuers ?
                                                  i18n("Some of the certificates to be deleted "
@@ -346,7 +346,7 @@ void DeleteCertificatesCommand::doStart() {
     std::vector<Key> openpgp( pgpBegin, pgpEnd ); 
 
     if ( cms.size() > static_cast<std::size_t>( cmsEnd - cmsBegin ) &&
-         KMessageBox::warningContinueCancel( d->view(),
+         KMessageBox::warningContinueCancel( d->parentWidgetOrView(),
 					     i18n("Some or all of the selected "
 						  "certificates are issuers (CA certificates) "
 						  "for other, non-selected certificates.\n"
@@ -367,7 +367,7 @@ void DeleteCertificatesCommand::doStart() {
             cms.empty() << 1U |     d->canDelete( CMS ) << 0U ;
 
     if ( const unsigned int actions = deletionErrorCases[errorCase].actions ) {
-        KMessageBox::information( d->view(),
+        KMessageBox::information( d->parentWidgetOrView(),
                                   i18n( deletionErrorCases[errorCase].text ),
                                   (actions & Failure)
                                   ? i18n( "Certificate Deletion Failed" )
@@ -436,7 +436,7 @@ void DeleteCertificatesCommand::Private::showErrorsAndFinish() {
                                  "the certificate:</p>"
                                  "<p><b>%1</b></p></qt>",
                                  pgpError ? cmsError ? pgpErrorString + "</br>" + cmsErrorString : pgpErrorString : cmsErrorString );
-        KMessageBox::error( view(), msg, i18n("Certificate Deletion Failed") );
+        KMessageBox::error( parentWidgetOrView(), msg, i18n("Certificate Deletion Failed") );
     } else {
         std::vector<Key> keys = pgpKeys;
         keys.insert( keys.end(), cmsKeys.begin(), cmsKeys.end() );

@@ -56,7 +56,7 @@ private:
         if ( dialog )
             return;
 
-        CertificateDetailsDialog * dlg = new CertificateDetailsDialog( view() );
+        CertificateDetailsDialog * dlg = new CertificateDetailsDialog( parentWidgetOrView() );
         dlg->setAttribute( Qt::WA_DeleteOnClose );
         connect( dlg, SIGNAL(rejected()), q, SLOT(slotDialogClosed()) );
 

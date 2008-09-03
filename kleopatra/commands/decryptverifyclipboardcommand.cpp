@@ -146,7 +146,7 @@ void DecryptVerifyClipboardCommand::doStart() {
         } else if ( classification & Class::CipherText ) {
             d->controller.setOperation( DecryptVerify );
         } else {
-            KMessageBox::information( d->view(),
+            KMessageBox::information( d->parentWidgetOrView(),
                                       i18n("The clipboard does not appear to "
                                            "contain a signature or encrypted text."),
                                       i18n("Decrypt/Verify Clipboard Error") );
@@ -161,7 +161,7 @@ void DecryptVerifyClipboardCommand::doStart() {
         d->controller.start();
 
     } catch ( const std::exception & e ) {
-        KMessageBox::information( d->view(),
+        KMessageBox::information( d->parentWidgetOrView(),
                                   i18n("An error occurred: %1",
                                        QString::fromLocal8Bit( e.what() ) ),
                                   i18n("Decrypt/Verify Clipboard Error") );
@@ -176,7 +176,7 @@ void DecryptVerifyClipboardCommand::doCancel() {
 
 void DecryptVerifyClipboardCommand::applyWindowID( QWidget * wid ) const {
     if ( wid )
-        wid->setParent( d->view(), wid->windowFlags() );
+        wid->setParent( d->parentWidgetOrView(), wid->windowFlags() );
 }
 
 #undef d

@@ -121,7 +121,7 @@ bool GnuPGProcessCommand::preStartHook( QWidget * ) const {
 
 void GnuPGProcessCommand::doStart() {
 
-    if ( !preStartHook( d->view() ) ) {
+    if ( !preStartHook( d->parentWidgetOrView() ) ) {
         d->finished();
         return;
     }
@@ -133,7 +133,7 @@ void GnuPGProcessCommand::doStart() {
     d->process.start();
 
     if ( !d->process.waitForStarted() ) {
-        KMessageBox::error( d->view(),
+        KMessageBox::error( d->parentWidgetOrView(),
                             i18n( "Unable to start process %1. "
                                   "Please check your installation.", d->arguments[0] ),
                             errorCaption() );
@@ -152,11 +152,12 @@ void GnuPGProcessCommand::doCancel() {
 void GnuPGProcessCommand::Private::slotProcessFinished( int code, QProcess::ExitStatus status ) {
     if ( !canceled )
         if ( status == QProcess::CrashExit )
-            KMessageBox::error( view(), q->crashExitMessage( arguments ), q->errorCaption() );
+            KMessageBox::error( parentWidgetOrView(), q->crashExitMessage( arguments ), q->errorCaption() );
         else if ( code )
-            KMessageBox::error( view(), q->errorExitMessage( arguments ), q->errorCaption() );
+            KMessageBox::error( parentWidgetOrView(), q->errorExitMessage( arguments ), q->errorCaption() );
         else
-            KMessageBox::information( view(), q->successMessage( arguments ), q->successCaption() );
+            KMessageBox::information( parentWidgetOrView(), q->successMessage( arguments ), q->successCaption() 
+);
     finished();
 }
 

@@ -78,16 +78,21 @@ public:
 
 private:
     void reload() {
-        ( new ReloadKeysCommand( 0 ) )->start();
+        Command * const cmd = new ReloadKeysCommand( 0 );
+        cmd->setParentWidget( q );
+        cmd->start();
     }
     void create() {
         NewCertificateCommand * cmd = new NewCertificateCommand( 0 );
+        cmd->setParentWidget( q );
         if ( ( options & AnyFormat ) != AnyFormat )
             cmd->setProtocol( (options & OpenPGPFormat) ? OpenPGP : CMS );
         cmd->start();
     }
     void lookup() {
-        ( new LookupCertificatesCommand( 0 ) )->start();
+        Command * const cmd = new LookupCertificatesCommand( 0 );
+        cmd->setParentWidget( q );
+        cmd->start();
     }
     void slotKeysMayHaveChanged();
     void slotCurrentViewChanged( QAbstractItemView * newView );
