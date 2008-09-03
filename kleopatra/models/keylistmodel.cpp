@@ -734,9 +734,22 @@ void HierarchicalKeyListModel::doRemoveKey( const Key & key ) {
         return;
 
     const char * const fpr = key.primaryFingerprint();
-    //TODO: only removal of leaf nodes is implemented so far
-    if ( mKeysByExistingParent.find( fpr ) != mKeysByExistingParent.end() )
+    if ( mKeysByExistingParent.find( fpr ) != mKeysByExistingParent.end() ) {
+        //handle non-leave nodes:
+        std::vector<Key> keys = mKeysByFingerprint;
+        const std::vector<Key>::iterator it = qBinaryFind( keys.begin(), keys.end(),
+                                                           key, _detail::ByFingerprint<std::less>() );
+        if ( it == keys.end() )
+            return;
+        keys.erase( it );
+        // FIXME for simplicity, we just clear the model and re-add all keys minus the removed one. This is suboptimal,
+        // but acceptable given that deletion of non-leave nodes is rather rare.
+        clear();
+        addKeys( keys );
         return;
+    }
+
+    //handle leave nodes:
 
     const std::vector<Key>::iterator it = qBinaryFind( mKeysByFingerprint.begin(), mKeysByFingerprint.end(),
                                                        key, _detail::ByFingerprint<std::less>() );
