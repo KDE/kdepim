@@ -42,6 +42,9 @@
 #include <QVariant>
 #include <QPointer>
 
+#include <vector>
+#include <utility>
+
 class QGpgMECryptoConfigComponent;
 class QGpgMECryptoConfigEntry;
 /**
@@ -74,7 +77,8 @@ private:
   void runGpgConf( bool showErrors );
 
 private:
-  QHash<QString, QGpgMECryptoConfigComponent*> mComponents;
+  std::vector<std::pair<QString, QGpgMECryptoConfigComponent*> > mComponentsNaturalOrder;
+  QHash<QString, QGpgMECryptoConfigComponent*> mComponentsByName;
   bool mParsed;
 };
 
@@ -102,7 +106,8 @@ private:
   void runGpgConf();
 
 private:
-  QHash<QString,QGpgMECryptoConfigGroup*> mGroups;
+  std::vector< std::pair<QString,QGpgMECryptoConfigGroup*> > mGroupsNaturalOrder;
+  QHash<QString,QGpgMECryptoConfigGroup*> mGroupsByName;
   QString mName;
   QString mDescription;
   QGpgMECryptoConfigGroup* mCurrentGroup; // during parsing
@@ -126,7 +131,8 @@ public:
 private:
   friend class QGpgMECryptoConfigComponent; // it adds the entries
   QPointer<QGpgMECryptoConfigComponent> mComponent;
-  QHash<QString,QGpgMECryptoConfigEntry*> mEntries;
+  std::vector< std::pair<QString,QGpgMECryptoConfigEntry*> > mEntriesNaturalOrder;
+  QHash<QString,QGpgMECryptoConfigEntry*> mEntriesByName;
   QString mName;
   QString mDescription;
   Kleo::CryptoConfigEntry::Level mLevel;
