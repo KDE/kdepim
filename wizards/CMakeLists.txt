@@ -61,7 +61,7 @@ kde4_add_app_icon(groupwisewizard_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/tools-
 
 kde4_add_executable(groupwisewizard ${groupwisewizard_SRCS})
 
-target_link_libraries(groupwisewizard ${KDE4_KDECORE_LIBS} kabcgroupwise kcalgroupwise ${KDE4_KCAL_LIBS} kdepim)
+target_link_libraries(groupwisewizard ${KDE4_KDECORE_LIBS} kabcgroupwise kcalgroupwise ${KDE4_KCAL_LIBS} kdepim kpimidentities)
 
 install(TARGETS groupwisewizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
 
