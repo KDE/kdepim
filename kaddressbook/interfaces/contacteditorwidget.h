@@ -114,7 +114,7 @@ class KABINTERFACES_EXPORT ContactEditorWidget : public QWidget
     ContactEditorWidgetPrivate *d;
 };
 
-class ContactEditorWidgetFactory : public KPluginFactory
+class KABINTERFACES_EXPORT ContactEditorWidgetFactory : public KPluginFactory
 {
   public:
     virtual ContactEditorWidget *createWidget( KABC::AddressBook *ab, QWidget *parent ) = 0;

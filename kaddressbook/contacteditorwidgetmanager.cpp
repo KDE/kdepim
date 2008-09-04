@@ -87,7 +87,11 @@ void ContactEditorWidgetManager::reload()
     }
 
     KAB::ContactEditorWidgetFactory *pageFactory =
-                          static_cast<KAB::ContactEditorWidgetFactory*>( factory );
+                          dynamic_cast<KAB::ContactEditorWidgetFactory*>( factory );
+    if ( !pageFactory ) {
+      kDebug(5720) <<"ContactEditorWidgetManager::reload(): Factory cast failed";
+      continue;
+    }
 
     mFactories.append( pageFactory );
   }
