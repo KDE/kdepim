@@ -41,6 +41,8 @@
 #include "assuanserverconnection.h"
 #include "assuancommand.h"
 
+#include <models/keycache.h> // :(
+
 #include <utils/input.h>
 #include <utils/output.h>
 #include <utils/gnupg-helper.h>
@@ -50,8 +52,10 @@
 #include <utils/exception.h>
 #include <utils/kleo_assert.h>
 #include <utils/getpid.h>
+#include <utils/stl_util.h>
 
 #include <gpgme++/data.h>
+#include <gpgme++/key.h>
 
 #include <kmime/kmime_header_parsing.h>
 
@@ -536,7 +540,7 @@ private:
     }
 
     template <typename T_memptr, typename T_memptr2>
-    static int recipient_sender_handler( T_memptr mp, T_memptr2 info, assuan_context_t ctx, char * line ) {
+    static int recipient_sender_handler( T_memptr mp, T_memptr2 info, assuan_context_t ctx, char * line, bool sender=false ) {
         assert( assuan_get_pointer( ctx ) );
         AssuanServerConnection::Private & conn = *static_cast<AssuanServerConnection::Private*>( assuan_get_pointer( ctx ) );
 
@@ -557,6 +561,27 @@ private:
                                             i18n("Garbage after valid RFC-2822 mailbox detected").toUtf8().constData() );
         (conn.*info) = informative;
         (conn.*mp).push_back( mb );
+        // ### we should wait for the KeyCache to become ready here,
+        // ### but we don't have time anymore to turn SENDER into a
+        // ### command, so we just ignore this for now:
+        const QString email = mb.addrSpec().asString();
+        (void)assuan_write_line( conn.ctx.get(), qPrintable( QString().sprintf( "# ok, parsed as \"%s\"", qPrintable( email ) ) ) );
+        if ( sender ) {
+            const std::vector<GpgME::Key> seckeys =
+                kdtools::copy_if<std::vector<GpgME::Key> >( KeyCache::instance()->findByEMailAddress( email.toStdString() ),
+                                                            mem_fn( &GpgME::Key::hasSecret ) );
+            if ( seckeys.empty() )
+                (void)assuan_write_line( conn.ctx.get(), "# no matching keys found" );
+            else
+                Q_FOREACH( const GpgME::Key & key, seckeys )
+                    (void)assuan_write_line( conn.ctx.get(), qPrintable( QString().sprintf( "# matching %s key %s", key.protocolAsString(), key.primaryFingerprint() ) ) );
+            const bool pgp = kdtools::any( seckeys, bind( &GpgME::Key::protocol, _1 ) == GpgME::OpenPGP );
+            const bool cms = kdtools::any( seckeys, bind( &GpgME::Key::protocol, _1 ) == GpgME::CMS );
+            if ( pgp != cms ) // only send PROTOCOL status line if there's a clesar preference
+                (void)assuan_write_status( conn.ctx.get(), "PROTOCOL", pgp ? "OpenPGP" : "CMS" );
+            else if ( pgp && cms )
+                (void)assuan_write_line( conn.ctx.get(), "# pick freely" );
+        }                    
         return assuan_process_done( ctx, 0 );
     }
 
@@ -565,7 +590,7 @@ private:
     }
 
     static int sender_handler( assuan_context_t ctx, char * line ) {
-        return recipient_sender_handler( &Private::senders, &Private::informativeSenders, ctx, line );
+        return recipient_sender_handler( &Private::senders, &Private::informativeSenders, ctx, line, true );
     }
 
     QByteArray dumpOptions() const {
