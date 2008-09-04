@@ -31,4 +31,5 @@ add_subdirectory( groupdav )
 add_subdirectory( birthdays ) 
 add_subdirectory( blog ) 
 add_subdirectory( groupwise )
-add_subdirectory( akonadi )
+# FIXME disabled for the moment, since they are not needed
+#add_subdirectory( akonadi )
