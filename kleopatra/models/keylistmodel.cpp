@@ -761,13 +761,13 @@ void HierarchicalKeyListModel::doRemoveKey( const Key & key ) {
     beginRemoveRows( parent( idx ), idx.row(), idx.row() );
     mKeysByFingerprint.erase( it );
 
-    const char * const issuer_fpr = static_cast<const char*>( idx.internalPointer() );
+    const char * const issuer_fpr = cleanChainID( key );
 
-    if ( !issuer_fpr || !*issuer_fpr ) {
-        const std::vector<Key>::iterator tlIt = qBinaryFind( mTopLevels.begin(), mTopLevels.end(), key, _detail::ByFingerprint<std::less>() );
-        assert( tlIt != mTopLevels.end() );
+    const std::vector<Key>::iterator tlIt = qBinaryFind( mTopLevels.begin(), mTopLevels.end(), key, _detail::ByFingerprint<std::less>() );
+    if( tlIt != mTopLevels.end() )
         mTopLevels.erase( tlIt );
-    } else {
+
+    if ( issuer_fpr && *issuer_fpr ) {
         const Map::iterator nexIt = mKeysByNonExistingParent.find( issuer_fpr );
         if ( nexIt != mKeysByNonExistingParent.end() ) {
             const std::vector<Key>::iterator eit = qBinaryFind( nexIt->second.begin(), nexIt->second.end(), key, _detail::ByFingerprint<std::less>() );
