@@ -84,7 +84,6 @@ class KABCResourceItem : public QTreeWidgetItem
 
     ~KABCResourceItem()
     {
-        qDebug( ) << "Deleting Item";
     }
 
     void createSubresourceItems();
