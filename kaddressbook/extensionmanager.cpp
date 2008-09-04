@@ -95,15 +95,6 @@ void ExtensionManager::saveSettings()
   KABPrefs::instance()->setExtensionsSplitterSizes( mSplitter->sizes() );
 }
 
-void ExtensionManager::reconfigure()
-{
-  saveSettings();
-  createExtensionWidgets();
-  createActions();
-  restoreSettings();
-  updateExtensionBarVisibility();
-}
-
 bool ExtensionManager::isQuickEditVisible() const
 {
   return mActiveExtensions.contains( "contact_editor" );
