@@ -524,8 +524,8 @@ static std::vector<std::string> emails( const Key & key ) {
         if ( !e.empty() )
             emails.push_back( e );
     }
-    std::sort( emails.begin(), emails.end() );
-    emails.erase( std::unique( emails.begin(), emails.end() ), emails.end() );
+    std::sort( emails.begin(), emails.end(), ByEMail<std::less>() );
+    emails.erase( std::unique( emails.begin(), emails.end(), ByEMail<std::equal_to>() ), emails.end() );
     return emails;
 }
 
