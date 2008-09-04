@@ -672,7 +672,7 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
         std::vector< std::pair<std::string,Key> > tmp, merge_tmp;
         tmp.reserve( emails.size() );
         Q_FOREACH( const std::string & e, emails )
-            pairs.push_back( std::make_pair( e, key ) );
+            tmp.push_back( std::make_pair( e, key ) );
         merge_tmp.reserve( tmp.size() + pairs.size() );
         std::merge( pairs.begin(), pairs.end(),
                     tmp.begin(), tmp.end(),
