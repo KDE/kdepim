@@ -997,6 +997,8 @@ void KABCore::delayedAddressBookChanged()
 
 void KABCore::addressBookChanged()
 {
+  const QStringList selectedUids = mViewManager->selectedUids();
+
   mAddressBookChangedTimer->stop();
 
   if ( mJumpButtonBar )
@@ -1004,7 +1006,14 @@ void KABCore::addressBookChanged()
 
   mSearchManager->reload();
   mViewManager->setSelected( QString(), false );
-  setContactSelected( QString() );
+
+  QString uid;
+  if ( !selectedUids.isEmpty() ) {
+    uid = selectedUids.first();
+    mViewManager->setSelected( uid, true );
+  }
+
+  setContactSelected( uid );
 
   updateCategories();
 }
