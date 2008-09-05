@@ -364,11 +364,6 @@ MainWindow::Private::~Private() {}
 MainWindow::MainWindow( QWidget* parent, Qt::WindowFlags flags )
     : KXmlGuiWindow( parent, flags ), d( new Private( this ) )
 {
-    // Switch off annoying KDE-knows-it-better-than-Qt
-    // quit-on-last-window-closed behaviour. Needs to be done for each
-    // KMainWindow, since KMainWindow unconditionally switches it on
-    // again.
-    KGlobal::setAllowQuit( false );
 }
 
 MainWindow::~MainWindow() {}
