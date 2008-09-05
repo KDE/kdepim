@@ -186,6 +186,10 @@ KleopatraApplication::KleopatraApplication()
     d->setupLogging();
     d->sysTray.show();
     setQuitOnLastWindowClosed( false );
+    // Switch off annoying KDE-knows-it-better-than-Qt
+    // quit-on-last-window-closed behaviour, too:
+    //KGlobal::setAllowQuit( false ); // doesn't work since KMainWindow's ctor switched it on again, unconditionally. HURRAY!
+
 }
 
 KleopatraApplication::~KleopatraApplication() {
