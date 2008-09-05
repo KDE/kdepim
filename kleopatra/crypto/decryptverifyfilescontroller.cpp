@@ -1,4 +1,4 @@
-  /* -*- mode: c++; c-basic-offset:4 -*-
+/* -*- mode: c++; c-basic-offset:4 -*-
     decryptverifyfilescontroller.cpp
 
     This file is part of Kleopatra, the KDE keymanager
@@ -267,7 +267,7 @@ std::vector<shared_ptr<QFile> > DecryptVerifyFilesController::Private::prepareWi
         } else {
 
             // probably the signed data file was selected:
-            QStringList signatures = findSignatures( fname );
+            const QStringList signatures = findSignatures( fname );
 
             if ( signatures.empty() ) {
                 // We are assuming this is a detached signature file, but
@@ -279,17 +279,19 @@ std::vector<shared_ptr<QFile> > DecryptVerifyFilesController::Private::prepareWi
                 op->setMode( DecryptVerifyOperationWidget::DecryptVerifyOpaque );
                 op->setInputFileName( fname );
                 files.push_back( file );
-            }
+            } else {
 
-            Q_FOREACH( const QString s, signatures ) {
-                DecryptVerifyOperationWidget * op = m_wizard->operationWidget( counter++ );
-                kleo_assert( op != 0 );
+                Q_FOREACH( const QString & s, signatures ) {
+                    DecryptVerifyOperationWidget * op = m_wizard->operationWidget( counter++ );
+                    kleo_assert( op != 0 );
 
-                op->setMode( DecryptVerifyOperationWidget::VerifyDetachedWithSignedData );
-                op->setInputFileName( s );
-                op->setSignedDataFileName( fname );
+                    op->setMode( DecryptVerifyOperationWidget::VerifyDetachedWithSignedData );
+                    op->setInputFileName( s );
+                    op->setSignedDataFileName( fname );
 
-                files.push_back( file );
+                    files.push_back( file );
+                }
+
             }
         }
     }
