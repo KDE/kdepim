@@ -268,19 +268,28 @@ std::vector<shared_ptr<QFile> > DecryptVerifyFilesController::Private::prepareWi
 
             // probably the signed data file was selected:
             QStringList signatures = findSignatures( fname );
-            if ( signatures.empty() )
-                signatures.push_back( QString() );
+
+            if ( signatures.empty() ) {
+                // We are assuming this is a detached signature file, but
+                // there were no signature files for it. Let's guess it's encrypted after all.
+                // ### FIXME once we have a proper heuristic for this, this should move into
+                // classify() and/or classifyContent()
+                DecryptVerifyOperationWidget * const op = m_wizard->operationWidget( counter++ );
+                kleo_assert( op != 0 );
+                op->setMode( DecryptVerifyOperationWidget::DecryptVerifyOpaque );
+                op->setInputFileName( fname );
+                files.push_back( file );
+            }
 
             Q_FOREACH( const QString s, signatures ) {
                 DecryptVerifyOperationWidget * op = m_wizard->operationWidget( counter++ );
                 kleo_assert( op != 0 );
 
                 op->setMode( DecryptVerifyOperationWidget::VerifyDetachedWithSignedData );
-                op->setInputFileName( s.isEmpty() ? fname : s );
+                op->setInputFileName( s );
                 op->setSignedDataFileName( fname );
 
                 files.push_back( file );
-
             }
         }
     }
