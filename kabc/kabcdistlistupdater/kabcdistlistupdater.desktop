@@ -5,6 +5,7 @@ Exec=kabcdistlistupdater --disable-autostart
 Icon=misc
 Type=Application
 Comment=Tool to update the old distribution lists to the new ones.
+Comment[sv]=Verktyg för att uppdatera gamla distributionslistor till nya.
 Terminal=false
 NoDisplay=true
 X-KDE-autostart-condition=kabcdistlistupdaterrc:Startup:EnableAutostart:true
