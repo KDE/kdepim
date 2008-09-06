@@ -42,6 +42,8 @@
 
 #include <cassert>
 
+#include <boost/weak_ptr.hpp>
+
 using namespace Kleo;
 using namespace GpgME;
 using namespace boost;
@@ -54,7 +56,10 @@ QGpgMEVerifyDetachedJob::QGpgMEVerifyDetachedJob( Context * context )
 
 QGpgMEVerifyDetachedJob::~QGpgMEVerifyDetachedJob() {}
 
-static QGpgMEVerifyDetachedJob::result_type verify_detached( Context * ctx, const boost::shared_ptr<QIODevice> & signature, const boost::shared_ptr<QIODevice> & signedData ) {
+static QGpgMEVerifyDetachedJob::result_type verify_detached( Context * ctx, const weak_ptr<QIODevice> & signature_, const weak_ptr<QIODevice> & signedData_ ) {
+  const shared_ptr<QIODevice> signature = signature_.lock();
+  const shared_ptr<QIODevice> signedData = signedData_.lock();
+
   QGpgME::QIODeviceDataProvider sigDP( signature );
   Data sig( &sigDP );
 
@@ -86,8 +91,12 @@ Error QGpgMEVerifyDetachedJob::start( const QByteArray & signature, const QByteA
   return Error();
 }
 
-void QGpgMEVerifyDetachedJob::start( const boost::shared_ptr<QIODevice> & signature, const boost::shared_ptr<QIODevice> & signedData ) {
-  run( bind( &verify_detached, _1, signature, signedData ) );
+void QGpgMEVerifyDetachedJob::start( const shared_ptr<QIODevice> & signature, const shared_ptr<QIODevice> & signedData ) {
+  // the arguments passed here to the functor are stored in a QFuture, and are not
+  // necessarily destroyed (living outside the UI thread) at the time the result signal
+  // is emitted and the signal receiver wants to clean up IO devices.
+  // To avoid such races, we pass weak_ptr's to the functor.
+  run( bind( &verify_detached, _1, weak_ptr<QIODevice>( signature ), weak_ptr<QIODevice>( signedData ) ) );
 }
 
 #include "qgpgmeverifydetachedjob.moc"
