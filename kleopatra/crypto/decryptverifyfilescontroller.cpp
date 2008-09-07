@@ -1,4 +1,4 @@
-/* -*- mode: c++; c-basic-offset:4 -*-
+  /* -*- mode: c++; c-basic-offset:4 -*-
     decryptverifyfilescontroller.cpp
 
     This file is part of Kleopatra, the KDE keymanager
@@ -276,7 +276,7 @@ std::vector<shared_ptr<QFile> > DecryptVerifyFilesController::Private::prepareWi
                 kleo_assert( op != 0 );
 
                 op->setMode( DecryptVerifyOperationWidget::VerifyDetachedWithSignedData );
-                op->setInputFileName( s );
+                op->setInputFileName( s.isEmpty() ? fname : s );
                 op->setSignedDataFileName( fname );
 
                 files.push_back( file );
