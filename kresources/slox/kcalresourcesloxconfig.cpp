@@ -56,19 +56,19 @@ KCalResourceSloxConfig::KCalResourceSloxConfig( QWidget* parent,  const char* na
   mDownloadUrl = new KUrlRequester( this );
   mDownloadUrl->setMode( KFile::File );
   mainLayout->addWidget( label, 1, 0 );
-  mainLayout->addWidget( mDownloadUrl, 1, 1 );
+  mainLayout->addWidget( mDownloadUrl, 1, 1, 1, 3 );
 
   label = new QLabel( i18n("User:"), this );
   mainLayout->addWidget( label, 2, 0 );
 
   mUserEdit = new KLineEdit( this );
-  mainLayout->addWidget( mUserEdit, 2, 1 );
+  mainLayout->addWidget( mUserEdit, 2, 1, 1, 3 );
 
   label = new QLabel( i18n("Password:"), this );
   mainLayout->addWidget( label, 3, 0 );
 
   mPasswordEdit = new KLineEdit( this );
-  mainLayout->addWidget( mPasswordEdit, 3, 1 );
+  mainLayout->addWidget( mPasswordEdit, 3, 1, 1, 3 );
   mPasswordEdit->setEchoMode( KLineEdit::Password );
 
   mLastSyncCheck = new QCheckBox( i18n("Only load data since last sync"),
@@ -76,18 +76,18 @@ KCalResourceSloxConfig::KCalResourceSloxConfig( QWidget* parent,  const char* na
   mainLayout->addWidget( mLastSyncCheck, 4, 0, 1, 2 );
 
   mCalButton = new KPushButton( i18n("Calendar Folder..."), this );
-  mainLayout->addWidget( mCalButton, 5, 0 );
+  mainLayout->addWidget( mCalButton, 5, 0, 1, 2 );
   connect( mCalButton, SIGNAL( clicked() ), SLOT( selectCalendarFolder() ) );
 
   mTaskButton = new KPushButton( i18n("Task Folder..."), this );
-  mainLayout->addWidget( mTaskButton, 5, 1 );
+  mainLayout->addWidget( mTaskButton, 5, 2, 1, 2 );
   connect( mTaskButton, SIGNAL( clicked() ), SLOT( selectTaskFolder() ) );
 
   mReloadConfig = new KCal::ResourceCachedReloadConfig( this );
   mainLayout->addWidget( mReloadConfig, 6, 0, 1, 2 );
 
   mSaveConfig = new KCal::ResourceCachedSaveConfig( this );
-  mainLayout->addWidget( mSaveConfig, 7, 0, 1, 2 );
+  mainLayout->addWidget( mSaveConfig, 6, 2, 1, 2 );
 }
 
 void KCalResourceSloxConfig::loadSettings( KRES::Resource *resource )

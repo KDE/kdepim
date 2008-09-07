@@ -46,33 +46,33 @@ using namespace KCal;
 ResourceGroupwiseConfig::ResourceGroupwiseConfig( QWidget* parent )
     : KRES::ConfigWidget( parent )
 {
-  resize( 245, 115 ); 
+  resize( 245, 115 );
   QGridLayout *mainLayout = new QGridLayout( this );
 
   QLabel *label = new QLabel( i18n("URL:"), this );
   mainLayout->addWidget( label, 1, 0 );
   mUrl = new KLineEdit( this );
-  mainLayout->addWidget( mUrl, 1, 1 );
-  
+  mainLayout->addWidget( mUrl, 1, 1, 1, 3 );
+
   label = new QLabel( i18n("User:"), this );
   mainLayout->addWidget( label, 2, 0 );
   mUserEdit = new KLineEdit( this );
-  mainLayout->addWidget( mUserEdit, 2, 1 );
-  
+  mainLayout->addWidget( mUserEdit, 2, 1, 1, 3 );
+
   label = new QLabel( i18n("Password:"), this );
   mainLayout->addWidget( label, 3, 0 );
   mPasswordEdit = new KLineEdit( this );
-  mainLayout->addWidget( mPasswordEdit, 3, 1 );
+  mainLayout->addWidget( mPasswordEdit, 3, 1, 1, 3 );
   mPasswordEdit->setEchoMode( KLineEdit::Password );
 
   QPushButton *settingsButton = new QPushButton( i18n( "View User Settings" ), this );
-  mainLayout->addWidget( settingsButton, 4, 0, 1, 2 );
+  mainLayout->addWidget( settingsButton, 4, 0, 1, 4 );
 
   mReloadConfig = new KCal::ResourceCachedReloadConfig( this );
   mainLayout->addWidget( mReloadConfig, 5, 0, 1, 2 );
 
   mSaveConfig = new KCal::ResourceCachedSaveConfig( this );
-  mainLayout->addWidget( mSaveConfig, 6, 0, 1, 2 );
+  mainLayout->addWidget( mSaveConfig, 5, 2, 1, 2 );
 
   settingsButton->hide();
   // connect( settingsButton, SIGNAL( clicked() ), SLOT( slotViewUserSettings() ) );
@@ -84,13 +84,13 @@ void ResourceGroupwiseConfig::loadSettings( KRES::Resource *resource )
   kDebug() <<"KCal::ResourceGroupwiseConfig::loadSettings()";
   ResourceGroupwise *res = static_cast<ResourceGroupwise *>( resource );
   mResource = res;
-  
+
   if ( res ) {
     if ( !res->prefs() ) {
       kError() <<"No PREF";
       return;
     }
-  
+
     mUrl->setText( res->prefs()->url() );
     mUserEdit->setText( res->prefs()->user() );
     mPasswordEdit->setText( res->prefs()->password() );
@@ -145,7 +145,7 @@ void ResourceGroupwiseConfig::slotViewUserSettings()
           groupName = QString::fromUtf8( group->type->c_str() );
           kDebug() <<"GROUP:" << groupName;;
         }
-        K3ListViewItem * groupLVI = new K3ListViewItem( settingsWidget.m_settingsList, groupName ); 
+        K3ListViewItem * groupLVI = new K3ListViewItem( settingsWidget.m_settingsList, groupName );
         std::vector<ngwt__Custom * > setting = group->setting;
         std::vector<class ngwt__Custom *>::const_iterator it2;
         for( it2 = setting.begin(); it2 != setting.end(); ++it2 )
@@ -161,12 +161,12 @@ void ResourceGroupwiseConfig::slotViewUserSettings()
             locked = *((*it2)->locked);
 
           kDebug() <<"  SETTING:" << setting  <<"   value :" << value <<  (locked ?"locked" :" not locked" );
-          K3ListViewItem * settingLVI = new K3ListViewItem( groupLVI, QString(), setting, value, (locked ? "locked" : " not locked " ) ); 
+          K3ListViewItem * settingLVI = new K3ListViewItem( groupLVI, QString(), setting, value, (locked ? "locked" : " not locked " ) );
           if ( !locked )
             settingLVI->setRenameEnabled( 2, true );
         }
       }
-  
+
       dialog->show();
       if ( dialog->exec() == QDialog::Accepted )
       {
@@ -174,7 +174,7 @@ void ResourceGroupwiseConfig::slotViewUserSettings()
         mResource->modifyUserSettings( settings );
       }
     }
-      else 
+      else
         kDebug() <<"KCal::ResourceGroupwiseConfig::slotViewUserSettings() - NO SETTINGS";
   }
 }

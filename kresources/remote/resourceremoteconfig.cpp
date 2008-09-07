@@ -44,7 +44,7 @@ using namespace KCal;
 ResourceRemoteConfig::ResourceRemoteConfig( QWidget* parent )
     : KRES::ConfigWidget( parent )
 {
-  resize( 245, 115 ); 
+  resize( 245, 115 );
   QGridLayout *mainLayout = new QGridLayout( this );
   mainLayout->setSpacing( KDialog::spacingHint() );
 
@@ -53,19 +53,19 @@ ResourceRemoteConfig::ResourceRemoteConfig( QWidget* parent )
   mDownloadUrl = new KUrlRequester( this );
   mDownloadUrl->setMode( KFile::File );
   mainLayout->addWidget( label, 1, 0 );
-  mainLayout->addWidget( mDownloadUrl, 1, 1 );
+  mainLayout->addWidget( mDownloadUrl, 1, 1, 1, 3 );
 
   label = new QLabel( i18n( "Upload to:" ), this );
   mUploadUrl = new KUrlRequester( this );
   mUploadUrl->setMode( KFile::File );
   mainLayout->addWidget( label, 2, 0 );
-  mainLayout->addWidget( mUploadUrl, 2, 1 );
+  mainLayout->addWidget( mUploadUrl, 2, 1, 1, 3 );
 
   mReloadConfig = new ResourceCachedReloadConfig( this );
   mainLayout->addWidget( mReloadConfig, 3, 0, 1, 2 );
 
   mSaveConfig = new ResourceCachedSaveConfig( this );
-  mainLayout->addWidget( mSaveConfig, 4, 0, 1, 2 );
+  mainLayout->addWidget( mSaveConfig, 3, 2, 1, 2 );
 }
 
 void ResourceRemoteConfig::loadSettings( KRES::Resource *resource )

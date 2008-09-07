@@ -46,20 +46,20 @@ ResourceBlogConfig::ResourceBlogConfig
   mUrl = new KUrlRequester( this );
   mUrl->setMode( KFile::File );
   mainLayout->addWidget( label, 1, 0 );
-  mainLayout->addWidget( mUrl, 1, 1 );
+  mainLayout->addWidget( mUrl, 1, 1, 1, 3 );
 
   label = new QLabel( i18n( "Username:" ), this );
   mUsername = new KLineEdit( this );
 
   mainLayout->addWidget( label, 2, 0 );
-  mainLayout->addWidget( mUsername, 2, 1 );
+  mainLayout->addWidget( mUsername, 2, 1, 1, 3 );
 
   label = new QLabel( i18n( "Password:" ), this );
   mPassword = new KLineEdit( this );
   mPassword->setEchoMode( QLineEdit::Password );
 
   mainLayout->addWidget( label, 3, 0 );
-  mainLayout->addWidget( mPassword, 3, 1 );
+  mainLayout->addWidget( mPassword, 3, 1, 1, 3 );
 
   label = new QLabel( i18n( "API:" ), this );
   mAPI = new KComboBox( false, this );
@@ -72,21 +72,21 @@ ResourceBlogConfig::ResourceBlogConfig
   mAPI->addItem( "Movable Type (Wordpress, Drupal <5.6 workarounds)" );
 
   mainLayout->addWidget( label, 4, 0 );
-  mainLayout->addWidget( mAPI, 4, 1 );
+  mainLayout->addWidget( mAPI, 4, 1, 1, 3 );
 
   label = new QLabel( i18n( "Blog:" ), this );
   mBlogs = new KComboBox( false, this );
   mBlogs->setEnabled( false );
 
   mainLayout->addWidget( label, 5, 0 );
-  mainLayout->addWidget( mBlogs, 5, 1 );
+  mainLayout->addWidget( mBlogs, 5, 1, 1, 3 );
 
   label = new QLabel( i18n( "Posts to download:" ), this );
   mDownloadCount = new KLineEdit( this );
   mDownloadCount->setValidator( new QIntValidator( 1, 1000, mDownloadCount ) );
 
   mainLayout->addWidget( label, 6, 0 );
-  mainLayout->addWidget( mDownloadCount, 6, 1 );
+  mainLayout->addWidget( mDownloadCount, 6, 1, 1, 3 );
 
   // Add the subwidget for the cache reload settings.
   mReloadConfig = new ResourceCachedReloadConfig( this );
@@ -94,7 +94,7 @@ ResourceBlogConfig::ResourceBlogConfig
 
   // Add the subwidget for the cache save settings.
   mSaveConfig = new ResourceCachedSaveConfig( this );
-  mainLayout->addWidget( mSaveConfig, 8, 0, 1, 2 );
+  mainLayout->addWidget( mSaveConfig, 7, 2, 1, 2 );
 }
 
 ResourceBlogConfig::~ResourceBlogConfig()
