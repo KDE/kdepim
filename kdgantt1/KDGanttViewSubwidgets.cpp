@@ -1422,6 +1422,9 @@ void KDTimeHeaderWidget::setScale(Scale unit, bool update  )
     myZoomFactor = 1.0;
     if ( update )
         computeTicks();
+    // Since we have disconnected autoupdate of scrollbars, we must do it ourselves
+    if (myGanttView && myGanttView->myCanvasView)
+        myGanttView->myCanvasView->updateHorScrollBar();
 }
 
 
