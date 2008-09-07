@@ -102,7 +102,6 @@ private:
 
         const QString nf = i18n("Secret Key Files") + QString::fromLatin1("(*%1 *%2 *%3 *%4)")
             .arg( extensions[idx], extensions[(idx+1)%4], extensions[(idx+2)%4], extensions[(idx+3)%4] );
-        kDebug() << "nf" << nf;
         ui.outputFileFR->setNameFilter( nf );
 
         QString fn = q->fileName();
