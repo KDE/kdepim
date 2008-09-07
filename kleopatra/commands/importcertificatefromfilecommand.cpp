@@ -83,7 +83,7 @@ ImportCertificateFromFileCommand::Private::Private( ImportCertificateFromFileCom
     : ImportCertificatesCommand::Private( qq, c ),
       files()
 {
-    
+
 }
 
 ImportCertificateFromFileCommand::Private::~Private() {}
@@ -96,13 +96,13 @@ ImportCertificateFromFileCommand::Private::~Private() {}
 ImportCertificateFromFileCommand::ImportCertificateFromFileCommand( KeyListController * p )
     : ImportCertificatesCommand( new Private( this, p ) )
 {
-    
+
 }
 
 ImportCertificateFromFileCommand::ImportCertificateFromFileCommand( QAbstractItemView * v, KeyListController * p )
     : ImportCertificatesCommand( v, new Private( this, p ) )
 {
-    
+
 }
 
 ImportCertificateFromFileCommand::ImportCertificateFromFileCommand( const QStringList & files, KeyListController * p )
@@ -133,7 +133,8 @@ void ImportCertificateFromFileCommand::doStart()
     }
     // TODO: allow multiple files
     if ( d->files.size() > 1 ) {
-        KMessageBox::information( d->view(), i18n( "Importing more than one file at a time is not yet implemented." ),
+        KMessageBox::information( d->parentWidgetOrView(),
+                                  i18n( "Importing more than one file at a time is not yet implemented." ),
                                   i18n( "Too many files" ) );
         emit canceled();
         d->finished();
@@ -143,13 +144,13 @@ void ImportCertificateFromFileCommand::doStart()
     //TODO: use KIO here
     QFile in( d->files.front() );
     if ( !in.open( QIODevice::ReadOnly ) ) {
-        KMessageBox::error( d->view(), i18n( "Could not open file %1 for reading", in.fileName() ), i18n( "Certificate Import Failed" ) );
+        KMessageBox::error( d->parentWidgetOrView(), i18n( "Could not open file %1 for reading", in.fileName() ), i18n( "Certificate Import Failed" ) );
         d->finished();
         return;
     }
     const GpgME::Protocol protocol = findProtocol( d->files.front() );
     if ( protocol == GpgME::UnknownProtocol ) { //TODO: might use exceptions here
-        KMessageBox::error( d->view(), i18n( "Could not determine certificate type of %1.", d->files.front() ), i18n( "Certificate Import Failed" ) );
+        KMessageBox::error( d->parentWidgetOrView(), i18n( "Could not determine certificate type of %1.", d->files.front() ), i18n( "Certificate Import Failed" ) );
         d->finished();
         return;
     }
@@ -178,7 +179,7 @@ static QStringList get_file_name( QWidget * parent ) {
 bool ImportCertificateFromFileCommand::Private::ensureHaveFile()
 {
     if ( files.empty() )
-        files = get_file_name( view() );
+        files = get_file_name( parentWidgetOrView() );
     return !files.empty();
 }
 

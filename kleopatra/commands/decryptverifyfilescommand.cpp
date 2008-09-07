@@ -167,7 +167,7 @@ void DecryptVerifyFilesCommand::doStart() {
         d->controller.start();
 
     } catch ( const std::exception & e ) {
-        KMessageBox::information( d->view(),
+        KMessageBox::information( d->parentWidgetOrView(),
                                   i18n("An error occurred: %1",
                                        QString::fromLocal8Bit( e.what() ) ),
                                   i18n("Decrypt/Verify Files Error") );
@@ -182,11 +182,11 @@ void DecryptVerifyFilesCommand::doCancel() {
 
 void DecryptVerifyFilesCommand::applyWindowID( QWidget * wid ) const {
     if ( wid )
-        wid->setParent( d->view(), wid->windowFlags() );
+        wid->setParent( d->parentWidgetOrView(), wid->windowFlags() );
 }
 
 QStringList DecryptVerifyFilesCommand::Private::selectFiles() const {
-    return QFileDialog::getOpenFileNames( view(), i18n( "Select One or More Files to Decrypt and/or Verify" ) );
+    return QFileDialog::getOpenFileNames( parentWidgetOrView(), i18n( "Select One or More Files to Decrypt and/or Verify" ) );
 }
 
 #undef d

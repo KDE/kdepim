@@ -65,7 +65,7 @@ private:
     void init();
     QStringList getFileNames() {
         const QString filter = i18n("Certificate Revocation Lists (*.crl *.arl *-crl.der *-arl.der)");
-        return QFileDialog::getOpenFileNames( view(), i18n("Select CRL File to Import"),
+        return QFileDialog::getOpenFileNames( parentWidgetOrView(), i18n("Select CRL File to Import"),
                                               QString(), filter );
     }
 
@@ -152,7 +152,7 @@ void ImportCrlCommand::doStart() {
     d->process.start();
 
     if ( !d->process.waitForStarted() ) {
-        KMessageBox::error( d->view(),
+        KMessageBox::error( d->parentWidgetOrView(),
                             i18n( "Unable to start process dirmngr. "
                                   "Please check your installation." ),
                             i18n( "Clear CRL Cache Error" ) );
@@ -171,18 +171,18 @@ void ImportCrlCommand::doCancel() {
 void ImportCrlCommand::Private::slotProcessFinished( int code, QProcess::ExitStatus status ) {
     if ( !canceled )
         if ( status == QProcess::CrashExit )
-            KMessageBox::error( view(),
+            KMessageBox::error( parentWidgetOrView(),
                                 i18n( "The GpgSM process that tried to import the CRL file "
                                       "ended prematurely because of an unexpected error. "
                                       "Please check the output of gpgsm --call-dirmngr loadcrl &lt;filename&gt; for details." ),
                                 i18n( "Import CRL Error" ) );
         else if ( code )
-            KMessageBox::error( view(),
+            KMessageBox::error( parentWidgetOrView(),
                                 i18n( "An error occurred while trying to import the CRL file. "
                                       "The output from gpgsm was:\n%1", errorString() ),
                                 i18n( "Import CRL Error" ) );
         else
-            KMessageBox::information( view(),
+            KMessageBox::information( parentWidgetOrView(),
                                       i18n( "CRL file imported successfully." ),
                                       i18n( "Import CRL Finished" ) );
     finished();

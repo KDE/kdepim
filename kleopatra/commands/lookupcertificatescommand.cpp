@@ -115,7 +115,8 @@ private:
     void checkForDownloadFinished();
     bool checkConfig() const;
 
-    QWidget * dialogOrView() const { if ( dialog ) return dialog; else return view(); }
+    QWidget * dialogOrParentWidgetOrView() const { if ( dialog ) return dialog; else return parentWidgetOrView();
+}
 
 private:
     QPointer<LookupCertificatesDialog> dialog;
@@ -191,7 +192,7 @@ void LookupCertificatesCommand::doStart() {
 void LookupCertificatesCommand::Private::createDialog() {
     if ( dialog )
         return;
-    dialog = new LookupCertificatesDialog( view() );
+    dialog = new LookupCertificatesDialog( parentWidgetOrView() );
     dialog->setAttribute( Qt::WA_DeleteOnClose );
     connect( dialog, SIGNAL(searchTextChanged(QString)),
              q, SLOT(slotSearchTextChanged(QString)) );
@@ -249,10 +250,10 @@ void LookupCertificatesCommand::Private::slotKeyListResult( const KeyListResult 
         return;
 
     if ( keyListing.result.error() && !keyListing.result.error().isCanceled() )
-        showError( dialogOrView(), keyListing.result );
+        showError( dialogOrParentWidgetOrView(), keyListing.result );
 
     if ( keyListing.result.isTruncated() )
-        showResult( dialogOrView(), keyListing.result );
+        showResult( dialogOrParentWidgetOrView(), keyListing.result );
 
     if ( dialog ) {
         dialog->setCertificates( keyListing.keys );
@@ -350,7 +351,7 @@ void LookupCertificatesCommand::Private::checkForDownloadFinished() {
         return; // still jobs to end
 
     if ( kdtools::all( downloads, mem_fn( &DownloadVariables::error ) ) ) {
-        KMessageBox::information( dialogOrView(),
+        KMessageBox::information( dialogOrParentWidgetOrView(),
                                   downloads.size() == 1 ?
                                   i18n( "Download of certificate %1 failed. Error message: %2",
                                         Formatting::formatForComboBox( downloads.front().key ),
@@ -361,7 +362,7 @@ void LookupCertificatesCommand::Private::checkForDownloadFinished() {
         finished();
         return;
     } else if ( kdtools::any( downloads, mem_fn( &DownloadVariables::error ) ) &&
-                KMessageBox::questionYesNoList( dialogOrView(),
+                KMessageBox::questionYesNoList( dialogOrParentWidgetOrView(),
                                                 i18n( "Some certificates failed to download. "
                                                       "Do you want to proceed importing the following, succeded, downloads?" ),
                                                 filter_and_format_successful_downloads( downloads ),
@@ -386,7 +387,9 @@ void LookupCertificatesCommand::Private::slotSaveAsRequested( const std::vector<
 }
 
 void LookupCertificatesCommand::Private::slotDetailsRequested( const Key & key ) {
-    ( new DetailsCommand( key, view(), controller() ) )->start();
+    Command * const cmd = new DetailsCommand( key, view(), controller() );
+    cmd->setParentWidget( dialogOrParentWidgetOrView() );
+    cmd->start();
 }
 
 void LookupCertificatesCommand::doCancel() {
@@ -444,7 +447,7 @@ static bool haveX509DirectoryServerConfigured() {
 bool LookupCertificatesCommand::Private::checkConfig() const {
     const bool ok = haveOpenPGPKeyserverConfigured() || haveX509DirectoryServerConfigured();
     if ( !ok )
-        KMessageBox::information( view(), i18nc("@info",
+        KMessageBox::information( parentWidgetOrView(), i18nc("@info",
                                            "<para>You do not have any directory servers configured.</para>"
                                            "<para>You need to configure at least one directory server to "
                                            "search on one.</para>"

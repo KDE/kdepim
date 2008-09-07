@@ -56,6 +56,7 @@ public:
     virtual ~Private();
 
     QAbstractItemView * view() const { return view_; }
+    QWidget * parentWidgetOrView() const { if ( parentWidget_ ) return parentWidget_; else return view_; }
     KeyListModelInterface * model() const { return view_ ? dynamic_cast<KeyListModelInterface*>( view_->model() ) : 0 ; }
     KeyListController * controller() const { return controller_; }
     QList<QModelIndex> indexes() const {
@@ -83,6 +84,7 @@ private:
     std::vector<GpgME::Key> keys_;
     QList<QPersistentModelIndex> indexes_;
     QPointer<QAbstractItemView> view_;
+    QPointer<QWidget> parentWidget_;
     QPointer<KeyListController> controller_;
 };
 

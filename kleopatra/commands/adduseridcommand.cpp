@@ -180,7 +180,7 @@ void AddUserIDCommand::Private::ensureDialogCreated() {
     if ( dialog )
         return;
 
-    dialog = new AddUserIDDialog( view() );
+    dialog = new AddUserIDDialog( parentWidgetOrView() );
     dialog->setAttribute( Qt::WA_DeleteOnClose );
 
     connect( dialog, SIGNAL(accepted()), q, SLOT(slotDialogAccepted()) );
@@ -207,7 +207,7 @@ void AddUserIDCommand::Private::createJob() {
 }
 
 void AddUserIDCommand::Private::showErrorDialog( const Error & err ) {
-    KMessageBox::error( view(),
+    KMessageBox::error( parentWidgetOrView(),
                         i18nc("@info",
                              "<para>An error occurred while trying to add the user-id: "
                               "<message>%1</message></para>",
@@ -216,7 +216,7 @@ void AddUserIDCommand::Private::showErrorDialog( const Error & err ) {
 }
 
 void AddUserIDCommand::Private::showSuccessDialog() {
-    KMessageBox::information( view(),
+    KMessageBox::information( parentWidgetOrView(),
                               i18n("User-ID successfully added."),
                               i18n("Add User-ID Succeeded") );
 }

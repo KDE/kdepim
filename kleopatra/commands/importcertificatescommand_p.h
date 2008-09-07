@@ -62,11 +62,11 @@ public:
     void importResult( const GpgME::ImportResult & );
     void showError( QWidget * parent, const GpgME::Error & error, const QString & id=QString() );
     void showError( const GpgME::Error & error, const QString & id=QString() ) {
-        showError( view(), error, id );
+        showError( parentWidgetOrView(), error, id );
     }
     void showDetails( QWidget * parent, const GpgME::ImportResult & result, const QString & id=QString() );
     void showDetails( const GpgME::ImportResult & result, const QString & id=QString() ) {
-        showDetails( view(), result, id );
+        showDetails( parentWidgetOrView(), result, id );
     }
     void setImportResultProxyModel( const GpgME::ImportResult & result, const QString & id=QString() );
 
