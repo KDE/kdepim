@@ -54,18 +54,16 @@ namespace Crypto {
     class SigningPreferences;
 
 namespace Gui {
-
     class SignerResolvePage : public WizardPage {
         Q_OBJECT
     public:
         explicit SignerResolvePage( QWidget * parent=0, Qt::WFlags f=0 );
         ~SignerResolvePage();
 
-        void setSignersAndCandidates( const std::vector<KMime::Types::Mailbox> & signers, 
+        void setSignersAndCandidates( const std::vector<KMime::Types::Mailbox> & signers,
                                       const std::vector< std::vector<GpgME::Key> > & keys );
 
         std::vector<GpgME::Key> resolvedSigners() const;
-
         std::vector<GpgME::Key> signingCertificates( GpgME::Protocol protocol = GpgME::UnknownProtocol ) const;
 
 
@@ -89,15 +87,25 @@ namespace Gui {
         bool removeUnencryptedFile() const;
         void setRemoveUnencryptedFile( bool remove );
 
-        void setProtocol( GpgME::Protocol protocol );
-        GpgME::Protocol protocol() const;
- 
+        void setPresetProtocol( GpgME::Protocol protocol );
+        void setPresetProtocols( const std::vector<GpgME::Protocol>& protocols );
+
+        std::vector<GpgME::Protocol> selectedProtocols() const;
+
+        std::vector<GpgME::Protocol> selectedProtocolsWithoutSigningCertificate() const;
+
+        void setMultipleProtocolsAllowed( bool allowed );
+        bool multipleProtocolsAllowed() const;
+
+        void setProtocolSelectionUserMutable( bool ismutable );
+        bool protocolSelectionUserMutable() const;
+
         enum Operation {
             SignAndEncrypt=0,
             SignOnly,
             EncryptOnly
         };
-        
+
         Operation operation() const;
 
         class Validator
@@ -113,19 +121,18 @@ namespace Gui {
 
         void setSigningPreferences( const boost::shared_ptr<SigningPreferences>& prefs );
         boost::shared_ptr<SigningPreferences> signingPreferences() const;
-        
+
     private:
         /*reimpl*/ void onNext();
-        
+
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
 
-        Q_PRIVATE_SLOT( d, void setOperation( int ) )
+        Q_PRIVATE_SLOT( d, void operationButtonClicked( int ) )
         Q_PRIVATE_SLOT( d, void selectCertificates() )
         Q_PRIVATE_SLOT( d, void updateUi() )
     };
-
 }
 }
 }
