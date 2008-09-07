@@ -372,6 +372,12 @@ void SignerResolvePage::Private::updateUi() {
 
     q->setExplanation( validator->explanation() );
     emit q->completeChanged();
+
+    const bool sign = q->signingSelected();
+    const bool encr = q->encryptionSelected();
+    emit q->windowTitleChanged( sign && encr ? i18n( "Sign/Encrypt Files" ) :
+                                sign         ? i18n( "Sign Files" )         :
+                                encr         ? i18n( "Encrypt Files" ) : QString() );
 }
 
 
