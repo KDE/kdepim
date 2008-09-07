@@ -255,7 +255,7 @@ private:
 };
 
 bool SignerResolvePage::Private::protocolSelectionActuallyUserMutable() const {
-    return q->protocolSelectionUserMutable() && q->operation() != EncryptOnly;
+    return ( q->protocolSelectionUserMutable() || presetProtocols.empty() ) && q->operation() == SignOnly;
 }
 
 SignerResolvePage::Private::Private( SignerResolvePage * qq )
@@ -366,9 +366,9 @@ void SignerResolvePage::Private::setCertificates( const QMap<GpgME::Protocol, Gp
 }
 
 void SignerResolvePage::Private::updateUi() {
-    const bool showReadOnly = !protocolSelectionActuallyUserMutable();
-    readOnlyProtocolSelectionWidget->setVisible( showReadOnly );
-    signingProtocolSelectionWidget->setVisible( !showReadOnly );
+    const bool ismutable = protocolSelectionActuallyUserMutable();
+    readOnlyProtocolSelectionWidget->setVisible( !ismutable );
+    signingProtocolSelectionWidget->setVisible( ismutable );
 
     q->setExplanation( validator->explanation() );
     emit q->completeChanged();
@@ -383,7 +383,7 @@ void SignerResolvePage::setProtocolSelectionUserMutable( bool ismutable ) {
 }
 
 bool SignerResolvePage::protocolSelectionUserMutable() const {
-    return d->protocolSelectionUserMutable || d->presetProtocols.empty();
+    return d->protocolSelectionUserMutable;
 }
 
 void SignerResolvePage::setMultipleProtocolsAllowed( bool allowed )
@@ -471,7 +471,7 @@ void SignerResolvePage::Private::setOperation( Operation op ) {
 
 SignerResolvePage::Operation SignerResolvePage::operation() const
 {
-    return operationFromFlags( encryptionSelected(), signingSelected() );
+    return operationFromFlags( signingSelected(), encryptionSelected() );
 }
 
 
