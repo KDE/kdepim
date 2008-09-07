@@ -73,18 +73,12 @@ class ExtensionManager : public QObject
     void saveSettings();
 
     /**
-      Rereads the extension manager specific settings with some
-      additional initialization stuff.
-     */
-    void reconfigure();
-
-    /**
       Returns whether the quickedit extension is currently visible.
      */
     bool isQuickEditVisible() const;
 
     QWidget *activeDetailsWidget() const;
- 
+
   public slots:
     void setSelectionChanged();
     void createActions();

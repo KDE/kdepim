@@ -1023,7 +1023,6 @@ void KABCore::showContactsAddress( const QString &addrUid )
 
 void KABCore::configurationChanged()
 {
-  mExtensionManager->reconfigure();
   mViewManager->refreshView();
 }
 
