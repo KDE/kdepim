@@ -354,6 +354,8 @@ void ResourceSelection::slotSubresourceRemoved( KABC::ResourceABC* resource,
   delete item;
   // TODO
   //emitResourcesChanged();
+  core()->addressBook()->emitAddressBookChanged();
+  updateView();
 }
 
 // change an entry
