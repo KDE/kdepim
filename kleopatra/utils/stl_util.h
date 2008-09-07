@@ -245,7 +245,7 @@ namespace kdtools {
     template <typename O, typename I, typename P>
     O copy_if( const I & i, P p ) {
         O o;
-        copy_if( boost::begin( i ), boost::end( i ), std::back_inserter( o ) );
+        copy_if( boost::begin( i ), boost::end( i ), std::back_inserter( o ), p );
         return o;
     }
 
