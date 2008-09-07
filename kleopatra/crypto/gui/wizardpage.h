@@ -78,6 +78,7 @@ namespace Gui {
         void titleChanged();
         void subTitleChanged();
         void autoAdvanceChanged();
+        void windowTitleChanged( const QString & title );
 
     protected:
         
