@@ -243,10 +243,12 @@ SystemTrayIcon::Private::~Private() {}
 SystemTrayIcon::SystemTrayIcon( QObject * p )
     : QSystemTrayIcon( KIcon( "kleopatra" ), p ), d( new Private( this ) )
 {
-
+    KGlobal::ref();
 }
 
-SystemTrayIcon::~SystemTrayIcon() {}
+SystemTrayIcon::~SystemTrayIcon() {
+    KGlobal::deref();
+}
 
 void SystemTrayIcon::setMainWindow( QWidget * mw ) {
     if ( d->mainWindow )
