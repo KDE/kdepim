@@ -42,6 +42,8 @@
 
 #include <QBuffer>
 
+#include <boost/weak_ptr.hpp>
+
 #include <cassert>
 
 using namespace Kleo;
@@ -61,7 +63,15 @@ void QGpgMESignJob::setOutputIsBase64Encoded( bool on ) {
   mOutputIsBase64Encoded = on;
 }
 
-static QGpgMESignJob::result_type sign( Context * ctx, const std::vector<Key> & signers, const shared_ptr<QIODevice> & plainText, const shared_ptr<QIODevice> & signature, SignatureMode mode, bool outputIsBsse64Encoded ) {
+static QGpgMESignJob::result_type sign( Context * ctx,
+                                        const std::vector<Key> & signers,
+                                        const weak_ptr<QIODevice> & plainText_,
+                                        const weak_ptr<QIODevice> & signature_,
+                                        SignatureMode mode,
+                                        bool outputIsBsse64Encoded ) {
+
+  const shared_ptr<QIODevice> plainText = plainText_.lock();
+  const shared_ptr<QIODevice> signature = signature_.lock();
 
   QGpgME::QIODeviceDataProvider in( plainText );
   const Data indata( &in );
@@ -96,7 +106,11 @@ static QGpgMESignJob::result_type sign( Context * ctx, const std::vector<Key> & 
 
 }
 
-static QGpgMESignJob::result_type sign_qba( Context * ctx, const std::vector<Key> & signers, const QByteArray & plainText, SignatureMode mode, bool outputIsBsse64Encoded ) {
+static QGpgMESignJob::result_type sign_qba( Context * ctx,
+                                            const std::vector<Key> & signers,
+                                            const QByteArray & plainText,
+                                            SignatureMode mode,
+                                            bool outputIsBsse64Encoded ) {
   const shared_ptr<QBuffer> buffer( new QBuffer );
   buffer->setData( plainText );
   if ( !buffer->open( QIODevice::ReadOnly ) )
@@ -110,7 +124,11 @@ Error QGpgMESignJob::start( const std::vector<Key> & signers, const QByteArray &
 }
 
 void QGpgMESignJob::start( const std::vector<Key> & signers, const shared_ptr<QIODevice> & plainText, const shared_ptr<QIODevice> & signature, SignatureMode mode ) {
-  run( bind( &sign, _1, signers, plainText, signature, mode, mOutputIsBase64Encoded ) );
+  // the arguments passed here to the functor are stored in a QFuture, and are not
+  // necessarily destroyed (living outside the UI thread) at the time the result signal
+  // is emitted and the signal receiver wants to clean up IO devices.
+  // To avoid such races, we pass weak_ptr's to the functor.
+  run( bind( &sign, _1, signers, weak_ptr<QIODevice>( plainText ), weak_ptr<QIODevice>( signature ), mode, mOutputIsBase64Encoded ) );
 }
 
 SigningResult QGpgMESignJob::exec( const std::vector<Key> & signers, const QByteArray & plainText, SignatureMode mode, QByteArray & signature ) {
