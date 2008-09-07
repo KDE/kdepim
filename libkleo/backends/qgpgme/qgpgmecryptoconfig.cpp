@@ -78,6 +78,7 @@ QGpgMECryptoConfig::QGpgMECryptoConfig()
 
 QGpgMECryptoConfig::~QGpgMECryptoConfig()
 {
+    clear();
 }
 
 void QGpgMECryptoConfig::runGpgConf( bool showErrors )
@@ -133,44 +134,53 @@ void QGpgMECryptoConfig::slotCollectStdOut()
     // Format: NAME:DESCRIPTION
     const QStringList lst = line.split( ':' );
     if ( lst.count() >= 2 ) {
-      mComponents.insert( lst[0], new QGpgMECryptoConfigComponent( this, lst[0], lst[1] ) );
+        const std::pair<QString,QGpgMECryptoConfigComponent*> pair( lst[0], new QGpgMECryptoConfigComponent( this, lst[0], lst[1] ) );
+        mComponentsNaturalOrder.push_back( pair );
+        mComponentsByName[pair.first] = pair.second;
     } else {
       kWarning(5150) <<"Parse error on gpgconf --list-components output:" << line;
     }
   }
 }
 
+namespace {
+    struct Select1St {
+        template <typename U, typename V>
+        const U & operator()( const std::pair<U,V> & p ) const { return p.first; }
+        template <typename U, typename V>
+        const U & operator()( const QPair<U,V> & p ) const { return p.first; }
+    };
+}
+
 QStringList QGpgMECryptoConfig::componentList() const
 {
   if ( !mParsed )
     const_cast<QGpgMECryptoConfig*>( this )->runGpgConf( true );
-  QStringList names;
-  QList<QString> keylist = mComponents.uniqueKeys();
-  foreach (QString key, keylist) {
-	names << key;
-  }
-  return names;
+  QStringList result;
+  std::transform( mComponentsNaturalOrder.begin(), mComponentsNaturalOrder.end(),
+                  std::back_inserter( result ), Select1St() );
+  return result;
 }
 
 Kleo::CryptoConfigComponent* QGpgMECryptoConfig::component( const QString& name ) const
 {
   if ( !mParsed )
     const_cast<QGpgMECryptoConfig*>( this )->runGpgConf( false );
-  return mComponents.value( name );
+  return mComponentsByName.value( name );
 }
 
 void QGpgMECryptoConfig::sync( bool runtime )
 {
-  foreach (QGpgMECryptoConfigComponent *it, mComponents){
-  	it->sync(runtime);
-  }
+  Q_FOREACH (QGpgMECryptoConfigComponent *it, mComponentsByName)
+      it->sync(runtime);
 }
 
 void QGpgMECryptoConfig::clear()
 {
   s_duringClear = true;
-  qDeleteAll(mComponents);
-  mComponents.clear();
+  mComponentsNaturalOrder.clear();
+  qDeleteAll(mComponentsByName);
+  mComponentsByName.clear();
   s_duringClear = false;
   mParsed = false; // next call to componentList/component will need to run gpgconf again
 }
@@ -185,8 +195,9 @@ QGpgMECryptoConfigComponent::QGpgMECryptoConfigComponent( QGpgMECryptoConfig*, c
 
 QGpgMECryptoConfigComponent::~QGpgMECryptoConfigComponent()
 {
-  qDeleteAll(mGroups);
-  mGroups.clear();
+  mGroupsNaturalOrder.clear();
+  qDeleteAll(mGroupsByName);
+  mGroupsByName.clear();
 }
 
 void QGpgMECryptoConfigComponent::runGpgConf()
@@ -223,8 +234,10 @@ void QGpgMECryptoConfigComponent::runGpgConf()
   if( rc != 0 ) // can happen when using the wrong version of gpg...
     kWarning(5150) <<"Running 'gpgconf --list-options" << mName <<"' failed." << strerror( rc ) <<", but try that command to see the real output";
   else {
-    if ( mCurrentGroup && !mCurrentGroup->mEntries.isEmpty() ) // only add non-empty groups
-      mGroups.insert( mCurrentGroupName, mCurrentGroup );
+    if ( mCurrentGroup && !mCurrentGroup->mEntriesNaturalOrder.empty() ) { // only add non-empty groups
+      mGroupsByName.insert( mCurrentGroupName, mCurrentGroup );
+      mGroupsNaturalOrder.push_back( std::make_pair( mCurrentGroupName, mCurrentGroup ) );
+    }
   }
 }
 
@@ -247,8 +260,10 @@ void QGpgMECryptoConfigComponent::slotCollectStdOut()
       if ( level > 2 ) // invisible or internal -> skip it;
         continue;
       if ( flags & GPGCONF_FLAG_GROUP ) {
-        if ( mCurrentGroup && !mCurrentGroup->mEntries.isEmpty() ) // only add non-empty groups
-          mGroups.insert( mCurrentGroupName, mCurrentGroup );
+        if ( mCurrentGroup && !mCurrentGroup->mEntriesNaturalOrder.empty() ) { // only add non-empty groups
+          mGroupsByName.insert( mCurrentGroupName, mCurrentGroup );
+          mGroupsNaturalOrder.push_back( std::make_pair( mCurrentGroupName, mCurrentGroup ) );
+        }
         //else
         //  kDebug(5150) <<"Discarding empty group" << mCurrentGroupName;
         mCurrentGroup = new QGpgMECryptoConfigGroup( this, lst[0], lst[3], level );
@@ -259,7 +274,10 @@ void QGpgMECryptoConfigComponent::slotCollectStdOut()
           mCurrentGroup = new QGpgMECryptoConfigGroup( this, "<nogroup>", QString(), 0 );
           mCurrentGroupName = "<nogroup>";
         }
-        mCurrentGroup->mEntries.insert( lst[0], new QGpgMECryptoConfigEntry( mCurrentGroup, lst ) );
+        const QString & name = lst[0];
+        QGpgMECryptoConfigEntry * value = new QGpgMECryptoConfigEntry( mCurrentGroup, lst );
+        mCurrentGroup->mEntriesByName.insert( name, value );
+        mCurrentGroup->mEntriesNaturalOrder.push_back( std::make_pair( name, value ) );
       }
     } else {
       // This happens on lines like
@@ -272,17 +290,15 @@ void QGpgMECryptoConfigComponent::slotCollectStdOut()
 
 QStringList QGpgMECryptoConfigComponent::groupList() const
 {
-  QStringList names;
-  QList<QString> keylist = mGroups.uniqueKeys();
-  foreach (QString key, keylist) {
-        names << key;
-  }
-  return names;
+  QStringList result;
+  std::transform( mGroupsNaturalOrder.begin(), mGroupsNaturalOrder.end(),
+                  std::back_inserter( result ), Select1St() );
+  return result;
 }
 
 Kleo::CryptoConfigGroup* QGpgMECryptoConfigComponent::group(const QString& name ) const
 {
-  return mGroups.value( name );
+  return mGroupsByName.value( name );
 }
 
 void QGpgMECryptoConfigComponent::sync( bool runtime )
@@ -293,11 +309,11 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   QList<QGpgMECryptoConfigEntry *> dirtyEntries;
 
   // Collect all dirty entries
-  QList<QString> keylist = mGroups.uniqueKeys();
-  foreach (QString key, keylist) {
-    QHash<QString,QGpgMECryptoConfigEntry*> entry = mGroups[key]->mEntries;
-    QList<QString> keylistentry = entry.uniqueKeys();
-    foreach (QString keyentry, keylistentry) {
+  const QList<QString> keylist = mGroupsByName.uniqueKeys();
+  Q_FOREACH (const QString & key, keylist) {
+    const QHash<QString,QGpgMECryptoConfigEntry*> entry = mGroupsByName[key]->mEntriesByName;
+    const QList<QString> keylistentry = entry.uniqueKeys();
+    Q_FOREACH (const QString & keyentry, keylistentry) {
       if(entry[keyentry]->isDirty())
       {
        // OK, we can set it.currentKey() to it.current()->outputString()
@@ -359,7 +375,7 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   }
   else
   {
-    QList<QGpgMECryptoConfigEntry *>::Iterator it = dirtyEntries.begin();
+    QList<QGpgMECryptoConfigEntry *>::const_iterator it = dirtyEntries.begin();
     for( ; it != dirtyEntries.end(); ++it ) {
       (*it)->setDirty( false );
     }
@@ -379,23 +395,22 @@ QGpgMECryptoConfigGroup::QGpgMECryptoConfigGroup( QGpgMECryptoConfigComponent * 
 
 QGpgMECryptoConfigGroup::~QGpgMECryptoConfigGroup()
 {
-  qDeleteAll(mEntries);
-  mEntries.clear();
+  mEntriesNaturalOrder.clear();
+  qDeleteAll(mEntriesByName);
+  mEntriesByName.clear();
 }
 
 QStringList QGpgMECryptoConfigGroup::entryList() const
 {
-  QStringList names;
-  QList<QString> keylist = mEntries.uniqueKeys();
-  foreach (QString key, keylist) {
-        names << key;
-  }
-  return names;
+  QStringList result;
+  std::transform( mEntriesNaturalOrder.begin(), mEntriesNaturalOrder.end(),
+                  std::back_inserter( result ), Select1St() );
+  return result;
 }
 
 Kleo::CryptoConfigEntry* QGpgMECryptoConfigGroup::entry( const QString& name ) const
 {
-  return mEntries.value( name );
+  return mEntriesByName.value( name );
 }
 
 ////
@@ -499,7 +514,7 @@ QGpgMECryptoConfigEntry::QGpgMECryptoConfigEntry( QGpgMECryptoConfigGroup * grou
 
 QVariant QGpgMECryptoConfigEntry::stringToValue( const QString& str, bool unescape ) const
 {
-  bool isString = isStringType();
+  const bool isString = isStringType();
 
   if ( isList() ) {
     QList<QVariant> lst;
