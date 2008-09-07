@@ -150,6 +150,8 @@ public:
   virtual bool addSubresource( const QString& resource, const QString& parent );
   virtual bool removeSubresource( const QString& resource );
 
+  QString subresourceType( const QString &resource );
+
   KABC::Lock* lock();
 
 signals:
