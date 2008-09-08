@@ -1,0 +1,10 @@
+# OPTION mode=email
+/subst
+/serverpid
+SENDER <foo@bar.com>
+/open in test.data r
+INPUT FD=$in
+/open out test.data.gpgol-sign_detached-openpgp.asc w
+OUTPUT FD=$out
+SIGN --detached
+BYE
