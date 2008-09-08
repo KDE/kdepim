@@ -114,6 +114,13 @@ namespace Gui {
             virtual ~Validator() {}
             virtual bool isComplete() const = 0;
             virtual QString explanation() const = 0;
+            /**
+             * returns a custom window title, or a null string if no custom
+             * title is required.
+             * (use this if the title needs dynamic adaption
+             * depending on the user's selection)
+             */
+            virtual QString customWindowTitle() const = 0;
         };
 
         void setValidator( const boost::shared_ptr<Validator>& );

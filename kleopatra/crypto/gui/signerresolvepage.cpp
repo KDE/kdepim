@@ -209,6 +209,7 @@ namespace {
     public:
         QString explanation() const { return QString(); }
         bool isComplete() const { return true; }
+        QString customWindowTitle() const { return QString(); }
     };
 }
 
@@ -375,9 +376,9 @@ void SignerResolvePage::Private::updateUi() {
 
     const bool sign = q->signingSelected();
     const bool encr = q->encryptionSelected();
-    emit q->windowTitleChanged( sign && encr ? i18n( "Sign/Encrypt Files" ) :
-                                sign         ? i18n( "Sign Files" )         :
-                                encr         ? i18n( "Encrypt Files" ) : QString() );
+    const QString customTitle = validator->customWindowTitle();
+    if ( !customTitle.isEmpty() )
+        emit q->windowTitleChanged( customTitle );
 }
 
 
