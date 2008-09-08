@@ -38,6 +38,7 @@ COMPILE_BEFORE_kitchensync = libkdepim
 COMPILE_BEFORE_akregator = libkdepim
 COMPILE_BEFORE_knotes = libkdepim
 COMPILE_BEFORE_konsolekalendar = libkdepim
+COMPILE_BEFORE_kabc = libkdepim
 
 AUTOMAKE_OPTIONS = foreign 1.6.1
 DISTCLEANFILES = inst-apps
