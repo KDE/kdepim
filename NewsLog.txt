@@ -1,4 +1,11 @@
+Mondy, September 8th 2008
+
+Problems addressed
+------------------
+* kolab/issue3024 Crash in KCal::Incidence::revision.
+
 Friday, August 29th 2008
+
 Problems addressed
 ------------------
 
