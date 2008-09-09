@@ -86,6 +86,7 @@ set(kpilotDaemon_SRCS
 	hotSync.cc
 	fileInstaller.cc
 	logFile.cc
+	pilotdaemontray.cc
 	pilotDaemon.cc
 )
 
