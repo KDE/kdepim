@@ -1,3 +1,5 @@
+#ifndef KPILOT_PILOTDAEMONTRAY_H
+#define KPILOT_PILOTDAEMONTRAY_H
 /* pilotdaemontray.h			KPilot
 **
 ** Copyright (C) 1998-2001 by Dan Pilone <dan@kpilot.org>
@@ -72,3 +74,5 @@ private:
 	class Private;
 	Private* d;
 };
+
+#endif
