@@ -30,7 +30,7 @@ kde4_add_kcfg_files(kpilot_conduit_doc_SRCS ${kpilot_conduit_doc_KCFGS})
 kde4_add_ui_files(kpilot_conduit_doc_SRCS ${kpilot_conduit_doc_UIS})
 kde4_add_plugin(kpilot_conduit_doc ${kpilot_conduit_doc_SRCS})
 target_link_libraries(kpilot_conduit_doc ${QT_LIBRARIES} kpilot  ${KDE4_KIO_LIBS})
-install(TARGETS kpilot_conduit_doc DESTINATION ${PLUGIN_INSTALL_DIR})
+#install(TARGETS kpilot_conduit_doc DESTINATION ${PLUGIN_INSTALL_DIR})
 
 set(kpalmdoc_SRCS
 	${doc_shared_SRCS}
@@ -42,24 +42,24 @@ kde4_add_ui3_files(kpalmdoc_SRCS kpalmdoc_dlgbase.ui)
 kde4_add_executable(kpalmdoc ${kpalmdoc_SRCS})
 target_link_libraries(kpalmdoc ${QT_LIBRARIES} kpilot  ${KDE4_KIO_LIBS})
 
-install(
-	TARGETS kpalmdoc ${INSTALL_TARGETS_DEFAULT_ARGS}) 
+#install(
+#	TARGETS kpalmdoc ${INSTALL_TARGETS_DEFAULT_ARGS}) 
 
-install(
-	FILES doc_conduit.desktop DESTINATION ${SERVICES_INSTALL_DIR}
-)
+#install(
+#	FILES doc_conduit.desktop DESTINATION ${SERVICES_INSTALL_DIR}
+#)
 
-install(
-	FILES docconduit.kcfg kpalmdoc.kcfg DESTINATION ${KCFG_INSTALL_DIR}
-)
+#install(
+#	FILES docconduit.kcfg kpalmdoc.kcfg DESTINATION ${KCFG_INSTALL_DIR}
+#)
 
-install(
-	FILES kpalmdoc.desktop DESTINATION ${XDG_APPS_INSTALL_DIR}
-)
+#install(
+#	FILES kpalmdoc.desktop DESTINATION ${XDG_APPS_INSTALL_DIR}
+#)
 
-install(
-	FILES kpalmdoc.upd
-	DESTINATION ${KCONF_UPDATE_INSTALL_DIR}
-)
+#install(
+#	FILES kpalmdoc.upd
+#	DESTINATION ${KCONF_UPDATE_INSTALL_DIR}
+#)
 
 add_subdirectory(icons)

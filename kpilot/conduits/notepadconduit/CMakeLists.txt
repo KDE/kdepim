@@ -21,6 +21,5 @@ kde4_add_ui_files(kpilot_conduit_notepad_SRCS ${kpilot_conduit_notepad_UIS})
 kde4_add_plugin(kpilot_conduit_notepad ${kpilot_conduit_notepad_SRCS})
 target_link_libraries(kpilot_conduit_notepad  ${KDE4_KIO_LIBS} kpilot)
 
-install(TARGETS kpilot_conduit_notepad DESTINATION ${PLUGIN_INSTALL_DIR})
-
-install(FILES notepad-conduit.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+#install(TARGETS kpilot_conduit_notepad DESTINATION ${PLUGIN_INSTALL_DIR})
+#install(FILES notepad-conduit.desktop DESTINATION ${SERVICES_INSTALL_DIR})

@@ -22,8 +22,7 @@ kde4_add_ui_files(kpilot_conduit_popmail_SRCS ${kpilot_conduit_popmail_UIS})
 
 kde4_add_plugin(kpilot_conduit_popmail ${kpilot_conduit_popmail_SRCS})
 target_link_libraries(kpilot_conduit_popmail  ${KDE4_KIO_LIBS} kpilot)
-install(TARGETS kpilot_conduit_popmail DESTINATION ${PLUGIN_INSTALL_DIR})
 
-install(FILES popmail-conduit.desktop DESTINATION ${SERVICES_INSTALL_DIR})
-
-install(FILES popmail.kcfg DESTINATION ${KCFG_INSTALL_DIR})
+#install(TARGETS kpilot_conduit_popmail DESTINATION ${PLUGIN_INSTALL_DIR})
+#install(FILES popmail-conduit.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+#install(FILES popmail.kcfg DESTINATION ${KCFG_INSTALL_DIR})

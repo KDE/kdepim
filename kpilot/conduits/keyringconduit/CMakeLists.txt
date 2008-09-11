@@ -34,6 +34,6 @@ target_link_libraries(kpilot_conduit_keyring
 
 set_target_properties(kpilot_conduit_keyring PROPERTIES PREFIX "")
 
-install(TARGETS kpilot_conduit_keyring LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR})
-install(FILES kpilot-conduit-keyring.desktop DESTINATION ${SERVICES_INSTALL_DIR})
-install(FILES keyringconduit.kcfg DESTINATION ${KCFG_INSTALL_DIR})
+#install(TARGETS kpilot_conduit_keyring LIBRARY DESTINATION ${PLUGIN_INSTALL_DIR})
+#install(FILES kpilot-conduit-keyring.desktop DESTINATION ${SERVICES_INSTALL_DIR})
+#install(FILES keyringconduit.kcfg DESTINATION ${KCFG_INSTALL_DIR})
