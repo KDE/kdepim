@@ -5,16 +5,13 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>576</width>
-    <height>436</height>
+    <width>445</width>
+    <height>316</height>
    </rect>
   </property>
-  <layout class="QGridLayout" >
+  <layout class="QGridLayout" name="gridLayout" >
    <item row="0" column="0" >
-    <widget class="QTabWidget" name="fTabWidget" >
-     <property name="currentIndex" >
-      <number>0</number>
-     </property>
+    <widget class="KTabWidget" name="fTabWidget" >
      <widget class="QWidget" name="fAkonadiTab" >
       <attribute name="title" >
        <string>Akonadi Settings</string>
@@ -24,6 +21,14 @@
    </item>
   </layout>
  </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KTabWidget</class>
+   <extends>QTabWidget</extends>
+   <header>ktabwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
