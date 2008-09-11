@@ -1,0 +1,4 @@
+SKIP /conduits/notepadconduit
+SKIP /conduits/docconduit
+SKIP /conduits/malconduit
+SKIP /conduits/popmail
