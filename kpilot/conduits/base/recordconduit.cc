@@ -1087,7 +1087,7 @@ void RecordConduit::copyCategory( const Record *from, HHRecord *to )
 		if( fHHDataProxy->containsCategory( category ) )
 		{
 			// Case 2
-			// The category count is one so we can savely use category() on the
+			// The category count is one so we can safely use category() on the
 			// pc record in stead of the categoies() method.
 			fHHDataProxy->setCategory( to, category );
 		}

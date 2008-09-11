@@ -245,7 +245,7 @@ void DeviceCommWorker::reset()
 }
 
 /**
- * This is an asyncronous process.  We try to create a socket with the Palm
+ * This is an asynchronous process.  We try to create a socket with the Palm
  * and then bind to it (in open()).  If we're able to do those 2 things, then
  * we do 2 things:  we set a timeout timer (which will tell us that X amount of
  * time has transpired before we get into the meat of the sync transaction), and
@@ -398,7 +398,7 @@ bool DeviceCommWorker::open(const QString &device)
 
 /**
  * We've been notified by our QSocketNotifier that we have data available on the
- * socket.  Try to go through the remaining steps of the connnection process.
+ * socket.  Try to go through the remaining steps of the connection process.
  * Note: If we return at all from this before the very end without a successful
  * connection, we need to make sure we restart our connection open timer, otherwise
  * it won't be restarted.

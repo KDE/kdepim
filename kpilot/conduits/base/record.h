@@ -72,7 +72,7 @@ public:
 	virtual int categoryCount() const = 0;
 	
 	/**
-	 * Returns wether or not the given category is set for this record.
+	 * Returns whether or not the given category is set for this record.
 	 */
 	virtual bool containsCategory( const QString& category ) const = 0;
 

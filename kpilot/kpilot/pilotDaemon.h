@@ -55,7 +55,7 @@ public:
 		HOTSYNC_START,    // Hotsync is running
 		HOTSYNC_END,      // Hotsync is cleaning up
 		FILE_INSTALL_REQ, // A file is being saved for installation
-		ERROR,            // Some error has occured
+		ERROR,            // Some error has occurred
 		READY,            // Connected to device and ready for Sync
 		INIT,
 		NOT_LISTENING

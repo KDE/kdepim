@@ -49,7 +49,7 @@
                             <string>Sync</string>
                         </property>
                         <property name="whatsThis" stdset="0">
-                            <string>Select how often AvantGo should be synchronised</string>
+                            <string>Select how often AvantGo should be synchronized</string>
                         </property>
                         <grid>
                             <property name="name">

@@ -181,7 +181,7 @@ bool AkonadiDataProxy::commitCreate( Record *rec )
 
 	if ( !job->exec() )
 	{
-		// Hmm an error occured
+		// Hmm an error occurred
 		DEBUGKPILOT << "Create failed: " << job->errorString();
 		return false;
 	}
@@ -202,7 +202,7 @@ bool AkonadiDataProxy::commitUpdate( Record *rec )
 
 	if ( !job->exec() )
 	{
-		// Hmm an error occured
+		// Hmm an error occurred
 		DEBUGKPILOT << "Update failed: " << job->errorString();
 		return false;
 	}
@@ -223,7 +223,7 @@ bool AkonadiDataProxy::commitDelete( Record *rec )
 
 	if ( !job->exec() )
 	{
-		// Hmm an error occured
+		// Hmm an error occurred
 		DEBUGKPILOT << "Delete failed: " << job->errorString();
 		return false;
 	}

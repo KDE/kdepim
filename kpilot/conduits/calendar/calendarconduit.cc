@@ -112,7 +112,7 @@ bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 	EventPtr pcEvent = boost_cast( tar->item().payload<IncidencePtr>() );
 	PilotDateEntry hhEntry = thr->dateEntry();
 
-	// A TEST define which immediatly returns when a TEST fails.
+	// A TEST define which immediately returns when a TEST fails.
 #define TEST( a, b, c ) { if( a != b ) { WARNINGKPILOT << CSL1( c ) << " not equal."; return false; } }
 #define TEST1( a, b ) { if( !a ) { WARNINGKPILOT << CSL1( b ) << " was false."; return false; } }
 	

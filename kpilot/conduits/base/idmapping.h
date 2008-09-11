@@ -82,13 +82,13 @@ public:
 	bool commit();
 	
 	/**
-	 * Method to find out wether or not there is a mapping for hh record with 
+	 * Method to find out whether or not there is a mapping for hh record with 
 	 * @p hhRecordId.
 	 */
 	bool containsHHId( const QString &hhRecordId ) const;
 
 	/**
-	 * Method to find out wether or not there is a mapping for pc record with 
+	 * Method to find out whether or not there is a mapping for pc record with 
 	 * @p pcRecordId.
 	 */
 	bool containsPCId( const QString &pcRecordId ) const;

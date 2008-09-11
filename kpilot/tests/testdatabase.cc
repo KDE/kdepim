@@ -272,7 +272,7 @@ int main(int argc, char **argv)
 	static struct { const char *path; recordInfo *info; int flags; } 
 		tests[] =
 	{
-		{ "/tmp/nonexistant/nonexistent", nonexistent,0 },
+		{ "/tmp/nonexistent/nonexistent", nonexistent,0 },
 		{ "/tmp/Aesop", aesop, ALLOW_NO_EXIST },
 		{ 0L, 0L, 0 }
 	} ;

@@ -78,7 +78,7 @@ public:
 	const CUDCounter* counter() const;
 
 	/**
-	 * Sends the endcount for the CUD counter.
+	 * Sends the end count for the CUD counter.
 	 */
 	void setEndcount();
 
@@ -164,7 +164,7 @@ public:
 	virtual bool isOpen() const = 0;
 
 	/**
-	 * Loads all records from underlying data source, sets the startcount of the
+	 * Loads all records from underlying data source, sets the start count of the
 	 * counter and resets the iterator.
 	 */
 	virtual void loadAllRecords() = 0;
@@ -193,7 +193,7 @@ protected: // Functions
 	
 	/**
 	 * This can be implemented by subclasses to undo things from _commit(). This
-	 * methdo is called by rollback() after the changes to the records are undone.
+	 * method is called by rollback() after the changes to the records are undone.
 	 */
 	bool _rollback() { return true; };
 	
@@ -201,7 +201,7 @@ protected: // Functions
 	 * Commits created record @p rec to the datastore. Returns the id that the
 	 * data store created for this record.
 	 *
-	 * @return true when the record was succesfully added to the datastore managed
+	 * @return true when the record was successfully added to the datastore managed
 	 *  by this proxy, false otherwise.
 	 */
 	virtual bool commitCreate( Record *rec ) = 0;
@@ -210,7 +210,7 @@ protected: // Functions
 	 * Commits updated record @p rec to the datastore. Must return rec->id() even
 	 * if it's unchanged.
 	 *
-	 * @return true when the changes are succesfully committed to the datastore
+	 * @return true when the changes are successfully committed to the datastore
 	 *  managed by this proxy, false otherwise.
 	 */
 	virtual bool commitUpdate( Record *rec ) = 0;
@@ -218,7 +218,7 @@ protected: // Functions
 	/**
 	 * Delete record @p rec from the datastore.
 	 *
-	 * @return true when the record is succesfully deleted from the datastore
+	 * @return true when the record is successfully deleted from the datastore
 	 *  managed by this proxy, false otherwise.
 	 */
 	virtual bool commitDelete( Record *rec ) = 0;

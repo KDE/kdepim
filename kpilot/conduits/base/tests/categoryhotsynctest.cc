@@ -89,7 +89,7 @@ private:
 
 /**
  * Because of the fact that a record on the handheld only supports one category,
- * we only have to test this one case. Wether a record on the pc supports one or
+ * we only have to test this one case. Whether a record on the pc supports one or
  * more categories does not matter here.
  */
 void CategoryHotSyncTest::testCase_6_5_2()

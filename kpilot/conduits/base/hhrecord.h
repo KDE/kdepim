@@ -55,7 +55,7 @@ public:
 	virtual bool equal( const HHRecord* other ) const  = 0;
 	
 	/**
-	 * Return wether or not this record is marked for deletion and archiving.
+	 * Return whether or not this record is marked for deletion and archiving.
 	 */
 	virtual bool isArchived() const;
 	
@@ -79,7 +79,7 @@ public:
 	virtual int categoryCount() const;
 	
 	/**
-	 * Returns wether or not the given category is set for this record.
+	 * Returns whether or not the given category is set for this record.
 	 */
 	virtual bool containsCategory( const QString& category ) const;
 
