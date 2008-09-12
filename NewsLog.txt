@@ -1,4 +1,10 @@
-Mondy, September 8th 2008
+Friday, September 12th 2008
+
+Problems addressed
+-------------------
+* kolab/issue2792 kontact sometimes doesn't display a shared folder
+
+Monday, September 8th 2008
 
 Problems addressed
 ------------------
