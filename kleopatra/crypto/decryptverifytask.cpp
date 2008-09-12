@@ -498,7 +498,7 @@ static QString formatDecryptVerifyResultDetails( const DecryptionResult & dr,
                                                  const DecryptVerifyResult::SenderInfo & info )
 {
     const QString drDetails = formatDecryptionResultDetails( dr, recipients );
-    if ( IsErrorOrCanceled( dr ) )
+    if ( IsErrorOrCanceled( dr ) || !relevantInDecryptVerifyContext( vr ) )
         return drDetails;
     return drDetails + ( drDetails.isEmpty() ? "" : "<br/>" ) + formatVerificationResultDetails( vr, info );
 }
