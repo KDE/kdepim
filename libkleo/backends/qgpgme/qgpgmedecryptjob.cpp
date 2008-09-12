@@ -40,6 +40,8 @@
 
 #include <QBuffer>
 
+#include <boost/weak_ptr.hpp>
+
 #include <cassert>
 
 using namespace Kleo;
@@ -54,7 +56,10 @@ QGpgMEDecryptJob::QGpgMEDecryptJob( Context * context )
 
 QGpgMEDecryptJob::~QGpgMEDecryptJob() {}
 
-static QGpgMEDecryptJob::result_type decrypt( Context * ctx, const shared_ptr<QIODevice> & cipherText, const shared_ptr<QIODevice> & plainText ) {
+static QGpgMEDecryptJob::result_type decrypt( Context * ctx, const weak_ptr<QIODevice> & cipherText_, const weak_ptr<QIODevice> & plainText_ ) {
+
+  const shared_ptr<QIODevice> cipherText = cipherText_.lock();
+  const shared_ptr<QIODevice> plainText = plainText_.lock();
 
   QGpgME::QIODeviceDataProvider in( cipherText );
   const Data indata( &in );
@@ -91,7 +96,11 @@ Error QGpgMEDecryptJob::start( const QByteArray & cipherText ) {
 }
 
 void QGpgMEDecryptJob::start( const shared_ptr<QIODevice> & cipherText, const shared_ptr<QIODevice> & plainText ) {
-  run( bind( &decrypt, _1, cipherText, plainText ) );
+  // the arguments passed here to the functor are stored in a QFuture, and are not
+  // necessarily destroyed (living outside the UI thread) at the time the result signal
+  // is emitted and the signal receiver wants to clean up IO devices.
+  // To avoid such races, we pass weak_ptr's to the functor.
+  run( bind( &decrypt, _1, weak_ptr<QIODevice>( cipherText ), weak_ptr<QIODevice>( plainText ) ) );
 }
 
 #include "qgpgmedecryptjob.moc"

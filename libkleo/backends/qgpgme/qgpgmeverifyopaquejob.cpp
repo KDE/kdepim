@@ -40,6 +40,8 @@
 
 #include <QBuffer>
 
+#include <boost/weak_ptr.hpp>
+
 #include <cassert>
 
 using namespace Kleo;
@@ -54,7 +56,10 @@ QGpgMEVerifyOpaqueJob::QGpgMEVerifyOpaqueJob( Context * context )
 
 QGpgMEVerifyOpaqueJob::~QGpgMEVerifyOpaqueJob() {}
 
-static QGpgMEVerifyOpaqueJob::result_type verify_opaque( Context * ctx, const shared_ptr<QIODevice> & signedData, const shared_ptr<QIODevice> & plainText ) {
+static QGpgMEVerifyOpaqueJob::result_type verify_opaque( Context * ctx, const weak_ptr<QIODevice> & signedData_, const weak_ptr<QIODevice> & plainText_ ) {
+
+  const shared_ptr<QIODevice> plainText = plainText_.lock();
+  const shared_ptr<QIODevice> signedData = signedData_.lock();
 
   QGpgME::QIODeviceDataProvider in( signedData );
   const Data indata( &in );
@@ -91,7 +96,11 @@ Error QGpgMEVerifyOpaqueJob::start( const QByteArray & signedData ) {
 }
 
 void QGpgMEVerifyOpaqueJob::start( const shared_ptr<QIODevice> & signedData, const shared_ptr<QIODevice> & plainText ) {
-  run( bind( &verify_opaque, _1, signedData, plainText ) );
+  // the arguments passed here to the functor are stored in a QFuture, and are not
+  // necessarily destroyed (living outside the UI thread) at the time the result signal
+  // is emitted and the signal receiver wants to clean up IO devices.
+  // To avoid such races, we pass weak_ptr's to the functor.
+  run( bind( &verify_opaque, _1, weak_ptr<QIODevice>( signedData ), weak_ptr<QIODevice>( plainText ) ) );
 }
 
 #include "qgpgmeverifyopaquejob.moc"
