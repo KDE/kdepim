@@ -65,6 +65,17 @@ QString UiServer::Private::makeFileName( const QString & socket ) const {
     if ( tmpDir.status() != 0 )
         throw_<std::runtime_error>( i18n( "Couldn't create directory %1: %2", tmpDirPrefix() + "XXXXXXXX", system_error_string() ) );
     const QString gnupgHome = gnupgHomeDirectory();
+    if ( !gnupgHome.isEmpty() ) {
+        const QFileInfo ghinfo( gnupgHome );
+        if ( ghinfo.exists() && !ghinfo.isDir() )
+            throw_<std::runtime_error>( i18n( "Cannot determine the GnuPG home directory: %1 exists but is no directory.", gnupgHome ) );
+        if ( !ghinfo.exists() ) {
+            const QDir dummy;
+            errno = 0;
+            if ( !dummy.mkpath( gnupgHome ) )
+                throw_<std::runtime_error>( i18n( "Could not create GnuPG home directory %1: %2", gnupgHome, system_error_string() ) );
+        }
+    }
     const QDir dir( gnupgHome.isEmpty() ? tmpDir.name() : gnupgHome );
     assert( dir.exists() );
     return dir.absoluteFilePath( "S.uiserver" );
