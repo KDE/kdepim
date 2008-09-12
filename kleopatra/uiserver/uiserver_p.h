@@ -64,7 +64,7 @@ namespace {
 }
 
 namespace Kleo {
-	
+
 	class UiServer::Private : public QTcpServer {
 	    Q_OBJECT
 	    friend class ::Kleo::UiServer;
@@ -72,19 +72,21 @@ namespace Kleo {
 	public:
 	    explicit Private( UiServer * qq );
 	    static bool isStaleAssuanSocket( const QString& socketName );
-	
+
 	private:
 	    void makeListeningSocket();
 	    // platform-specific creation impl for makeListeningSocket():
 	    void doMakeListeningSocket( const QByteArray & encodedFileName );
 	    QString makeFileName( const QString & hint=QString() ) const;
-	
+	    void ensureDirectoryExists( const QString& path ) const;
+	    static QString systemErrorString();
+
 	protected:
 	    /* reimp */ void incomingConnection( int fd );
-	
+
 	private Q_SLOTS:
 	    void slotConnectionClosed( Kleo::AssuanServerConnection * conn );
-	
+
 	private:
 	    KTempDir tmpDir;
 	    QFile file;

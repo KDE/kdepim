@@ -55,7 +55,7 @@ using namespace Kleo;
 using namespace boost;
 
 
-static inline QString system_error_string() {
+QString UiServer::Private::systemErrorString() {
     return QString::fromLocal8Bit( strerror(errno) );
 }
 
@@ -63,19 +63,10 @@ QString UiServer::Private::makeFileName( const QString & socket ) const {
     if ( !socket.isEmpty() )
         return socket;
     if ( tmpDir.status() != 0 )
-        throw_<std::runtime_error>( i18n( "Couldn't create directory %1: %2", tmpDirPrefix() + "XXXXXXXX", system_error_string() ) );
+        throw_<std::runtime_error>( i18n( "Couldn't create directory %1: %2", tmpDirPrefix() + "XXXXXXXX", systemErrorString() ) );
     const QString gnupgHome = gnupgHomeDirectory();
-    if ( !gnupgHome.isEmpty() ) {
-        const QFileInfo ghinfo( gnupgHome );
-        if ( ghinfo.exists() && !ghinfo.isDir() )
-            throw_<std::runtime_error>( i18n( "Cannot determine the GnuPG home directory: %1 exists but is no directory.", gnupgHome ) );
-        if ( !ghinfo.exists() ) {
-            const QDir dummy;
-            errno = 0;
-            if ( !dummy.mkpath( gnupgHome ) )
-                throw_<std::runtime_error>( i18n( "Could not create GnuPG home directory %1: %2", gnupgHome, system_error_string() ) );
-        }
-    }
+    if ( !gnupgHome.isEmpty() )
+        ensureDirectoryExists( gnupgHome );
     const QDir dir( gnupgHome.isEmpty() ? tmpDir.name() : gnupgHome );
     assert( dir.exists() );
     return dir.absoluteFilePath( "S.uiserver" );
@@ -89,7 +80,7 @@ void UiServer::Private::doMakeListeningSocket( const QByteArray & encodedFileNam
     const assuan_fd_t sock = ::socket( AF_UNIX, SOCK_STREAM, 0 );
 #endif
     if ( sock == ASSUAN_INVALID_FD )
-        throw_<std::runtime_error>( i18n( "Couldn't create socket: %1", system_error_string() ) );
+        throw_<std::runtime_error>( i18n( "Couldn't create socket: %1", systemErrorString() ) );
 
     try {
         // Bind
@@ -102,18 +93,18 @@ void UiServer::Private::doMakeListeningSocket( const QByteArray & encodedFileNam
 #else
         if ( ::bind( sock, (struct sockaddr*)&sa, sizeof( sa ) ) )
 #endif
-            throw_<std::runtime_error>( i18n( "Couldn't bind to socket: %1", system_error_string() ) );
+            throw_<std::runtime_error>( i18n( "Couldn't bind to socket: %1", systemErrorString() ) );
 
         // ### TODO: permissions?
 
 #ifdef HAVE_ASSUAN_SOCK_GET_NONCE
         if ( assuan_sock_get_nonce( (struct sockaddr*)&sa, sizeof( sa ), &nonce ) )
-            throw_<std::runtime_error>( i18n("Couldn't get socket nonce: %1", system_error_string() ) );
+            throw_<std::runtime_error>( i18n("Couldn't get socket nonce: %1", systemErrorString() ) );
 #endif
 
         // Listen
         if ( ::listen( sock, SOMAXCONN ) )
-            throw_<std::runtime_error>( i18n( "Couldn't listen to socket: %1", system_error_string() ) );
+            throw_<std::runtime_error>( i18n( "Couldn't listen to socket: %1", systemErrorString() ) );
 
         if ( !setSocketDescriptor( sock ) )
             throw_<std::runtime_error>( i18n( "Couldn't pass socket to Qt: %1. This should not happen, please report this bug.", errorString() ) );

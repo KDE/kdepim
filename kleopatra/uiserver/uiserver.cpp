@@ -36,6 +36,7 @@
 #include "uiserver_p.h"
 
 #include <utils/detail_p.h>
+#include "utils/gnupg-helper.h"
 #include <utils/exception.h>
 #include <utils/stl_util.h>
 
@@ -52,6 +53,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <cerrno>
 
 using namespace Kleo;
 using namespace boost;
@@ -107,9 +109,7 @@ bool UiServer::registerCommandFactory( const shared_ptr<AssuanCommandFactory> & 
 }
 
 void UiServer::start() {
-
     d->makeListeningSocket();
-
 }
 
 void UiServer::stop() {
@@ -200,6 +200,18 @@ void UiServer::Private::incomingConnection( int fd ) {
         s.waitForBytesWritten();
         s.close();
     }
+}
+
+void UiServer::Private::ensureDirectoryExists( const QString& path ) const {
+    const QFileInfo info( path );
+    if ( info.exists() && !info.isDir() )
+        throw_<std::runtime_error>( i18n( "Cannot determine the GnuPG home directory: %1 exists but is no directory.", path ) );
+    if ( info.exists() )
+        return;
+    const QDir dummy; //there is no static QDir::mkpath()...
+    errno = 0;
+    if ( !dummy.mkpath( path ) )
+        throw_<std::runtime_error>( i18n( "Could not create GnuPG home directory %1: %2", path, systemErrorString() ) );
 }
 
 void UiServer::Private::makeListeningSocket() {
