@@ -1166,6 +1166,7 @@ bool ResourceKolab::unloadSubResource( const QString& subResource )
     const bool silent = mSilent;
     mSilent = true;
     Kolab::UidMap::Iterator mapIt = mUidMap.begin();
+    QList<KCal::Incidence*> incidences;
     while ( mapIt != mUidMap.end() )
     {
         Kolab::UidMap::Iterator it = mapIt++;
@@ -1174,11 +1175,16 @@ bool ResourceKolab::unloadSubResource( const QString& subResource )
         // FIXME incidence() is expensive
         KCal::Incidence* incidence = mCalendar.incidence( it.key() );
         if( incidence ) {
-            incidence->unRegisterObserver( this );
-            mCalendar.deleteIncidence( incidence );
+          // register all observers first before actually deleting them
+          // in case of inter-incidence relations the other part will get
+          // the change notification otherwise
+          incidence->unRegisterObserver( this );
+          incidences.append( incidence );
         }
         mUidMap.remove( it.key() );
     }
+    foreach ( KCal::Incidence *incidence, incidences )
+      mCalendar.deleteIncidence( incidence );
     mSilent = silent;
     return true;
 }
