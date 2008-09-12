@@ -582,7 +582,7 @@ private:
                 (void)assuan_write_status( conn.ctx.get(), "PROTOCOL", pgp ? "OpenPGP" : "CMS" );
             else if ( pgp && cms )
                 (void)assuan_write_line( conn.ctx.get(), "# pick freely" );
-        }                    
+        }
         return assuan_process_done( ctx, 0 );
     }
 
@@ -1358,9 +1358,9 @@ AssuanCommand::Mode AssuanCommand::checkMode() const {
   GpgME::UnknownProtocol, but if \a mode == \c EMail, throws an
   Kleo::Exception instead.
 */
-GpgME::Protocol AssuanCommand::checkProtocol( Mode mode ) const {
+GpgME::Protocol AssuanCommand::checkProtocol( Mode mode, int options ) const {
     if ( !hasOption("protocol") )
-        if ( mode == AssuanCommand::EMail )
+        if ( mode == AssuanCommand::EMail && ( options & AllowProtocolMissing ) == 0 )
             throw Exception( makeError( GPG_ERR_MISSING_VALUE ), i18n( "Required --protocol option missing" ) );
         else
             return GpgME::UnknownProtocol;
