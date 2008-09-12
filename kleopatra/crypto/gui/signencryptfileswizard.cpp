@@ -53,6 +53,7 @@ namespace {
         bool isComplete() const;
         QString explanation() const;
         void update() const;
+        QString customWindowTitle() const;
 
     private:
         SignerResolvePage* const m_page;
@@ -122,6 +123,15 @@ QString SignerResolveValidator::explanation() const
     return expl;
 }
 
+QString SignerResolveValidator::customWindowTitle() const
+{
+    const bool sign = m_page->signingSelected();
+    const bool encr = m_page->encryptionSelected();
+
+    return sign && encr ? i18n( "Sign/Encrypt Files" ) :
+           sign         ? i18n( "Sign Files" )         :
+           encr         ? i18n( "Encrypt Files" ) : QString();
+}
 
 class SignEncryptFilesWizard::Private {
     friend class ::Kleo::Crypto::Gui::SignEncryptFilesWizard;

@@ -56,6 +56,7 @@ namespace {
         bool isComplete() const;
         QString explanation() const;
         void update() const;
+        QString customWindowTitle() const { return QString(); }
 
     private:
         SignerResolvePage* m_page;
