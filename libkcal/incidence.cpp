@@ -107,6 +107,8 @@ static bool stringCompare( const QString& s1, const QString& s2 )
 
 Incidence& Incidence::operator=( const Incidence &i )
 {
+  if ( &i == this )
+    return *this;
   IncidenceBase::operator=( i );
   mRevision = i.mRevision;
   mCreated = i.mCreated;
