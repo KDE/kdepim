@@ -29,28 +29,7 @@
 #include <klineedit.h>
 #include <klocale.h>
 
-#include <stdio.h>
-
 #include "configconnectionwidget.h"
-
-static unsigned int hexStringToInt( const QString &txt )
-{
-  unsigned int value = 0;
-
-  if ( ::sscanf( txt.toLatin1(), "%x", &value ) != 1 )
-    value = 0;
-
-  return value;
-}
-
-static QString intToHexString( unsigned int value )
-{
-  QString txt;
-  txt.sprintf( "%x", value );
-
-  return txt;
-}
-
 
 ConfigConnectionWidget::ConfigConnectionWidget( const QSync::PluginConnection &connection, QWidget *parent )
   : QWidget( parent ),
@@ -217,9 +196,9 @@ void ConfigConnectionWidget::load()
     mBluetoothSdpUuid->setText( mConnection.bluetoothSdpUuid() );
 
   if ( mUsbVendorId )
-    mUsbVendorId->setText( intToHexString( mConnection.usbVendorId() ) );
+    mUsbVendorId->setText( mConnection.usbVendorId() );
   if ( mUsbProductId )
-    mUsbProductId->setText( intToHexString( mConnection.usbProductId() ) );
+    mUsbProductId->setText( mConnection.usbProductId() );
   if ( mUsbInterface )
     mUsbInterface->setValue( mConnection.usbInterface() );
 
@@ -253,9 +232,9 @@ void ConfigConnectionWidget::save()
     mConnection.setBluetoothSdpUuid( mBluetoothSdpUuid->text() );
 
   if ( mUsbVendorId )
-    mConnection.setUsbVendorId( hexStringToInt( mUsbVendorId->text() ) );
+    mConnection.setUsbVendorId( mUsbVendorId->text() );
   if ( mUsbProductId )
-    mConnection.setUsbProductId( hexStringToInt( mUsbProductId->text() ) );
+    mConnection.setUsbProductId( mUsbProductId->text() );
   if ( mUsbInterface )
     mConnection.setUsbInterface( mUsbInterface->value() );
 

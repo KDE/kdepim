@@ -158,32 +158,32 @@ QString PluginConnection::bluetoothSdpUuid() const
   return QString::fromLatin1( osync_plugin_connection_bt_get_sdpuuid( mPluginConnection ) );
 }
 
-void PluginConnection::setUsbVendorId( unsigned int vendorId )
+void PluginConnection::setUsbVendorId( const QString &vendorId )
 {
   Q_ASSERT( mPluginConnection );
 
-  osync_plugin_connection_usb_set_vendorid( mPluginConnection, vendorId );
+  osync_plugin_connection_usb_set_vendorid( mPluginConnection, vendorId.toUtf8().data() );
 }
 
-unsigned int PluginConnection::usbVendorId() const
+QString PluginConnection::usbVendorId() const
 {
   Q_ASSERT( mPluginConnection );
 
-  return osync_plugin_connection_usb_get_vendorid( mPluginConnection );
+  return QString::fromUtf8( osync_plugin_connection_usb_get_vendorid( mPluginConnection ) );
 }
 
-void PluginConnection::setUsbProductId( unsigned int productId )
+void PluginConnection::setUsbProductId( const QString &productId )
 {
   Q_ASSERT( mPluginConnection );
 
-  osync_plugin_connection_usb_set_productid( mPluginConnection, productId );
+  osync_plugin_connection_usb_set_productid( mPluginConnection, productId.toUtf8().data() );
 }
 
-unsigned int PluginConnection::usbProductId() const
+QString PluginConnection::usbProductId() const
 {
   Q_ASSERT( mPluginConnection );
 
-  return osync_plugin_connection_usb_get_productid( mPluginConnection );
+  return QString::fromUtf8( osync_plugin_connection_usb_get_productid( mPluginConnection ) );
 }
 
 void PluginConnection::setUsbInterface( unsigned int interface )

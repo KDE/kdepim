@@ -123,22 +123,22 @@ class QSYNC_EXPORT PluginConnection
     /**
       Sets the usb vendor id of the connection.
      */
-    void setUsbVendorId( unsigned int vendorId );
+    void setUsbVendorId( const QString &vendorId );
 
     /**
       Returns the usb vendor id of the connection.
      */
-    unsigned int usbVendorId() const;
+    QString usbVendorId() const;
 
     /**
       Sets the usb product id of the connection.
      */
-    void setUsbProductId( unsigned int productId );
+    void setUsbProductId( const QString &productId );
 
     /**
       Returns the usb product id of the connection.
      */
-    unsigned int usbProductId() const;
+    QString usbProductId() const;
 
     /**
       Sets the usb interface of the connection.
