@@ -183,7 +183,7 @@
          </item>
          <item>
           <property name="text" >
-           <string>Email 2</string>
+           <string comment="Second email address.">Email 2</string>
           </property>
          </item>
          <item>

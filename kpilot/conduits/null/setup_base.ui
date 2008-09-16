@@ -48,7 +48,7 @@ the Null-conduit settings.</comment>
      </property>
      <widget class="QWidget" name="Widget2" >
       <attribute name="title" >
-       <string>General</string>
+       <string comment="General settings for null conduit.">General</string>
       </attribute>
       <layout class="QGridLayout" >
        <property name="margin" >

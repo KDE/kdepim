@@ -62,7 +62,7 @@
        </rect>
       </property>
       <attribute name="title" >
-       <string>General</string>
+       <string comment="General settings.">General</string>
       </attribute>
       <layout class="QGridLayout" name="gridLayout_2" >
        <item row="0" column="0" >
@@ -327,7 +327,7 @@
          </item>
          <item>
           <property name="text" >
-           <string>Email 2</string>
+           <string comment="Second email address.">Email 2</string>
           </property>
          </item>
          <item>

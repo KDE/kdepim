@@ -183,7 +183,7 @@ p, li { white-space: pre-wrap; }
      </property>
      <item>
       <property name="text" >
-       <string>None</string>
+       <string comment="No workarounds are used.">None</string>
       </property>
      </item>
      <item>

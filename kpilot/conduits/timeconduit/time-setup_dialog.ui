@@ -29,7 +29,7 @@
        </rect>
       </property>
       <attribute name="title" >
-       <string>General</string>
+       <string comment="General settings for time conduit.">General</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout" >
        <item>
