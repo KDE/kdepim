@@ -39,7 +39,7 @@ class SelectionPage : public QWidget
   Q_OBJECT
 
   public:
-    SelectionPage( QWidget* parent = 0, const char* name = 0 );
+    explicit SelectionPage( QWidget* parent = 0, const char* name = 0 );
     ~SelectionPage();
 
     void setFilters( const QStringList& );

@@ -37,7 +37,7 @@ class NamePartWidget : public QWidget
   Q_OBJECT
 
   public:
-    NamePartWidget( const QString &title, const QString &label, QWidget *parent,
+    explicit NamePartWidget( const QString &title, const QString &label, QWidget *parent,
                     const char *name = 0 );
     ~NamePartWidget();
 
@@ -69,7 +69,7 @@ class AddresseeWidget : public QWidget
   Q_OBJECT
 
   public:
-    AddresseeWidget( QWidget *parent, const char *name = 0 );
+    explicit AddresseeWidget( QWidget *parent, const char *name = 0 );
     ~AddresseeWidget();
 
     void restoreSettings();

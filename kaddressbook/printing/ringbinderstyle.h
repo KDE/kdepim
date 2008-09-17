@@ -39,7 +39,7 @@ class RingBinderStyleAppearanceForm : public QWidget, public Ui::RingBinderStyle
   Q_OBJECT
   
   public:
-    RingBinderStyleAppearanceForm( QWidget *parent );
+    explicit RingBinderStyleAppearanceForm( QWidget *parent );
     ~RingBinderStyleAppearanceForm() {}
   public Q_SLOTS:
     void groupLetter();
@@ -52,7 +52,7 @@ class RingBinderPrintStyle : public PrintStyle
   Q_OBJECT
 
   public:
-    RingBinderPrintStyle( PrintingWizard* parent, const char* name = 0 );
+    explicit RingBinderPrintStyle( PrintingWizard* parent, const char* name = 0 );
     ~RingBinderPrintStyle();
 
     void print( const KABC::Addressee::List &contacts, PrintProgress* );
@@ -81,7 +81,7 @@ class RingBinderPrintStyle : public PrintStyle
 class RingBinderPrintStyleFactory : public PrintStyleFactory
 {
   public:
-    RingBinderPrintStyleFactory( PrintingWizard *parent, const char *name = 0 );
+    explicit RingBinderPrintStyleFactory( PrintingWizard *parent, const char *name = 0 );
 
     PrintStyle *create() const;
     QString description() const;

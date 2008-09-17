@@ -39,7 +39,7 @@ class StylePage : public QWidget
   Q_OBJECT
 
   public:
-    StylePage( KABC::AddressBook *ab, QWidget* parent = 0, const char* name = 0 );
+    explicit StylePage( KABC::AddressBook *ab, QWidget* parent = 0, const char* name = 0 );
     ~StylePage();
 
     /**

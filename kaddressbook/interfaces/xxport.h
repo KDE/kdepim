@@ -68,7 +68,7 @@ class KABINTERFACES_EXPORT XXPort : public QObject, virtual public KXMLGUIClient
   Q_OBJECT
 
   public:
-    XXPort( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
+    explicit XXPort( KABC::AddressBook *ab, QWidget *parent, const char *name = 0 );
     ~XXPort();
 
     /**
@@ -162,7 +162,7 @@ class KABINTERFACES_EXPORT XXPortFactory : public KPluginFactory
   Q_OBJECT
 
   public:
-    XXPortFactory(const char *componentName = 0, const char *catalogName = 0)
+    explicit XXPortFactory(const char *componentName = 0, const char *catalogName = 0)
       : KPluginFactory(componentName, catalogName) {}
 
     virtual XXPort *xxportObject( KABC::AddressBook *ab, QWidget *parent,

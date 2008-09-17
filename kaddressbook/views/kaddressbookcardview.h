@@ -76,7 +76,7 @@ class AddresseeCardView : public CardView
 {
   Q_OBJECT
   public:
-    AddresseeCardView( QWidget *parent, const char *name = 0 );
+    explicit AddresseeCardView( QWidget *parent, const char *name = 0 );
     ~AddresseeCardView();
 
   Q_SIGNALS:

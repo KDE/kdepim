@@ -32,7 +32,7 @@
 class PrintSortMode : public KABC::SortMode
 {
   public:
-    PrintSortMode( KABC::Field *field, bool ascending = true );
+    explicit PrintSortMode( KABC::Field *field, bool ascending = true );
 
     virtual bool lesser( const KABC::Addressee&, const KABC::Addressee& ) const;
 

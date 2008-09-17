@@ -54,7 +54,7 @@ class MikesStyle : public PrintStyle
 class MikesStyleFactory : public PrintStyleFactory
 {
   public:
-    MikesStyleFactory( PrintingWizard *parent, const char *name = 0 );
+    explicit MikesStyleFactory( PrintingWizard *parent, const char *name = 0 );
 
     PrintStyle *create() const;
     QString description() const;

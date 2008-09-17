@@ -36,7 +36,7 @@ class LDAPOptionsWidget : public QWidget
   Q_OBJECT
 
   public:
-    LDAPOptionsWidget( QWidget* parent = 0, const char* name = 0 );
+    explicit LDAPOptionsWidget( QWidget* parent = 0, const char* name = 0 );
     ~LDAPOptionsWidget();
 
     void restoreSettings();

@@ -40,7 +40,7 @@ class DetailledPrintStyle : public PrintStyle
   Q_OBJECT
 
   public:
-    DetailledPrintStyle( PrintingWizard *parent, const char *name = 0 );
+    explicit DetailledPrintStyle( PrintingWizard *parent, const char *name = 0 );
     ~DetailledPrintStyle();
 
     void print( const KABC::Addressee::List &contacts, PrintProgress* );
@@ -59,7 +59,7 @@ class DetailledPrintStyle : public PrintStyle
 class DetailledPrintStyleFactory : public PrintStyleFactory
 {
   public:
-    DetailledPrintStyleFactory( PrintingWizard *parent, const char *name = 0 );
+    explicit DetailledPrintStyleFactory( PrintingWizard *parent, const char *name = 0 );
 
     PrintStyle *create() const;
     QString description() const;

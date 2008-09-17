@@ -42,7 +42,7 @@ class PrintProgress : public QWidget
   Q_OBJECT
 
   public:
-    PrintProgress( QWidget *parent, const char *name = 0 );
+    explicit PrintProgress( QWidget *parent, const char *name = 0 );
     ~PrintProgress();
 
     /**

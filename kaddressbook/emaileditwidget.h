@@ -39,7 +39,7 @@ class EmailEditWidget : public QWidget
   Q_OBJECT
 
   public:
-    EmailEditWidget( QWidget *parent, const char *name = 0 );
+    explicit EmailEditWidget( QWidget *parent, const char *name = 0 );
     ~EmailEditWidget();
 
     void setEmails( const QStringList &list );

@@ -70,7 +70,7 @@ class CardViewItem
       appear at the top of the card. This is also the string that will
       be used to sort the cards in the view.
      */
-    CardViewItem( CardView *parent, const QString &caption = QString() );
+    explicit CardViewItem( CardView *parent, const QString &caption = QString() );
     virtual ~CardViewItem();
 
     /**

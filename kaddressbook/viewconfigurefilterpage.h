@@ -36,7 +36,7 @@ class ViewConfigureFilterPage : public QWidget
   Q_OBJECT
 
   public:
-    ViewConfigureFilterPage( QWidget *parent, const char *name = 0 );
+    explicit ViewConfigureFilterPage( QWidget *parent, const char *name = 0 );
     ~ViewConfigureFilterPage();
 
     void restoreSettings( const KConfigGroup & );

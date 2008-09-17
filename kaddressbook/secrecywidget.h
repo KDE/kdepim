@@ -34,7 +34,7 @@ class SecrecyWidget : public QWidget
   Q_OBJECT
 
   public:
-    SecrecyWidget( QWidget *parent, const char *name = 0 );
+    explicit SecrecyWidget( QWidget *parent, const char *name = 0 );
     ~SecrecyWidget();
 
     void setSecrecy( const KABC::Secrecy &secrecy );

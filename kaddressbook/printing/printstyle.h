@@ -65,7 +65,7 @@ class PrintStyle : public QObject
   Q_OBJECT
 
   public:
-    PrintStyle( PrintingWizard* parent, const char* name = 0 );
+    explicit PrintStyle( PrintingWizard* parent, const char* name = 0 );
     virtual ~PrintStyle();
 
     /**
@@ -154,7 +154,7 @@ class PrintStyle : public QObject
 class PrintStyleFactory
 {
   public:
-    PrintStyleFactory( PrintingWizard* parent, const char* name = 0 );
+    explicit PrintStyleFactory( PrintingWizard* parent, const char* name = 0 );
     virtual ~PrintStyleFactory();
 
     virtual PrintStyle *create() const = 0;

@@ -81,7 +81,7 @@ class AddresseeIconView : public K3IconView
   Q_OBJECT
 
   public:
-    AddresseeIconView( QWidget *parent, const char *name = 0 );
+    explicit AddresseeIconView( QWidget *parent, const char *name = 0 );
     ~AddresseeIconView();
 
   Q_SIGNALS:

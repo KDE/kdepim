@@ -38,7 +38,7 @@ class ViewConfigureFieldsPage : public QWidget
   Q_OBJECT
 
   public:
-    ViewConfigureFieldsPage( KABC::AddressBook *ab, QWidget *parent = 0,
+    explicit ViewConfigureFieldsPage( KABC::AddressBook *ab, QWidget *parent = 0,
                              const char *name = 0 );
 
     void restoreSettings( const KConfigGroup& );

@@ -133,7 +133,7 @@ class PhoneEditWidget : public QWidget
   Q_OBJECT
 
   public:
-    PhoneEditWidget( QWidget *parent, const char *name = 0 );
+    explicit PhoneEditWidget( QWidget *parent, const char *name = 0 );
     ~PhoneEditWidget();
 
     void setPhoneNumbers( const KABC::PhoneNumber::List &list );

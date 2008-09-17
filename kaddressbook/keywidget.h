@@ -36,7 +36,7 @@ class KeyWidget : public QWidget
   Q_OBJECT
 
   public:
-    KeyWidget( QWidget *parent, const char *name = 0 );
+    explicit KeyWidget( QWidget *parent, const char *name = 0 );
     ~KeyWidget();
 
     void setKeys( const KABC::Key::List &list );

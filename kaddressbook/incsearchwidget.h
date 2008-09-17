@@ -38,7 +38,7 @@ class IncSearchWidget : public QWidget
   Q_OBJECT
 
   public:
-    IncSearchWidget( QWidget *parent, const char *name = 0 );
+    explicit IncSearchWidget( QWidget *parent, const char *name = 0 );
     ~IncSearchWidget();
 
     KABC::Field::List currentFields() const;
