@@ -41,6 +41,7 @@ class QDomElement;
 namespace KCal {
   class Incidence;
   class Recurrence;
+  class Alarm;
   class Attachment;
   class ResourceKolab;
 }
@@ -138,6 +139,9 @@ protected:
   void saveAttendees( QDomElement& element ) const;
   void saveAttachments( QDomElement& element ) const;
 
+  void loadAlarms( const QDomElement& element );
+  void saveAlarms( QDomElement& element ) const;
+
   void loadRecurrence( const QDomElement& element );
   void saveRecurrence( QDomElement& element ) const;
   void saveCustomAttributes( QDomElement& element ) const;
@@ -156,6 +160,7 @@ protected:
   bool mHasAlarm;
   Recurrence mRecurrence;
   QList<Attendee> mAttendees;
+  QList<KCal::Alarm*> mAlarms;
   QList<KCal::Attachment*> mAttachments;
   QString mInternalUID;
   int mRevision;
