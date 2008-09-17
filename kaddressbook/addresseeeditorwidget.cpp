@@ -446,7 +446,7 @@ void AddresseeEditorWidget::save()
     mAddressee.setBirthday( QDateTime() );
 
   mAddressee.setNickName( tab2.mNicknameEdit->text() );
-  mAddressee.setCategories( tab1.mCategoryEdit->text().split( ",", QString::SkipEmptyParts ) );
+  mAddressee.setCategories( tab1.mCategoryEdit->text().split( ',', QString::SkipEmptyParts ) );
 
   mAddressee.setSecrecy( tab1.mSecrecyWidget->secrecy() );
 
@@ -633,7 +633,7 @@ void AddresseeEditorWidget::selectCategories()
              this, SLOT( editCategories() ) );
   }
 
-  mCategorySelectDialog->setSelected( tab1.mCategoryEdit->text().split( ",", QString::SkipEmptyParts) );
+  mCategorySelectDialog->setSelected( tab1.mCategoryEdit->text().split( ',', QString::SkipEmptyParts) );
   mCategorySelectDialog->show();
   mCategorySelectDialog->raise();
 }

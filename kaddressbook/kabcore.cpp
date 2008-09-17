@@ -924,7 +924,7 @@ QString KABCore::getNameByPhone( const QString &phone )
     const KABC::PhoneNumber::List::Iterator phoneEndIter( phoneList.end() );
     for ( ; !found && ( phoneIter != phoneEndIter ); ++phoneIter) {
       // Get rid of separator chars so just the numbers are compared.
-      if ( (*phoneIter).number().replace( r, "" ) == localPhone.replace( r, "" ) ) {
+      if ( (*phoneIter).number().remove( r ) == localPhone.remove( r ) ) {
         ownerName = (*iter).realName();
         found = true;
       }

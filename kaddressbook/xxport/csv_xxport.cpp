@@ -118,7 +118,7 @@ void CSVXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )
       if ( !first )
         t << ",";
 
-      t << "\"" << (*fieldIter)->value( addr ).replace( "\n", "\\n" ) << "\"";
+      t << '\"' << (*fieldIter)->value( addr ).replace( '\n', "\\n" ) << '\"';
       first = false;
     }
 
