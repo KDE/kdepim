@@ -27,8 +27,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <QVariant>
-#include <QStringList>
+#include <QtCore/QStringList>
 
 #include "kpilot_export.h"
 

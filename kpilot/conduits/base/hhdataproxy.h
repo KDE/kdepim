@@ -27,7 +27,6 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "pilotAppInfo.h"
 #include "dataproxy.h"
 
 #include <pi-macros.h> // For recordid_t

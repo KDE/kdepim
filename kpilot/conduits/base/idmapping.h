@@ -26,14 +26,11 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "pi-macros.h"
-
 #include <QtCore/QDateTime>
-#include <QtCore/QFile>
-#include <QtCore/QMap>
 #include <QtCore/QString>
 
 #include "options.h"
+#include "pi-macros.h"
 
 class IDMappingPrivate;
 

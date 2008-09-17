@@ -27,12 +27,9 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+#include <QtCore/QMap>
+
 #include "cudcounter.h"
-
-#include <QMap>
-#include <QStringList>
-#include <QPair>
-
 #include "kpilot_export.h"
 
 class Record;

@@ -40,6 +40,8 @@
 #include "hhrecord.h"
 #include "recordconduitSettings.h"
 
+#include <QtCore/QFile>
+
 #include <KMessageBox>
 
 RecordConduit::RecordConduit( KPilotLink *o, const QVariantList &a

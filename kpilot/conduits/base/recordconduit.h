@@ -26,10 +26,8 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "pilotAppInfo.h"
-#include "plugin.h"
-
 #include "idmapping.h"
+#include "plugin.h"
 
 class HHDataProxy;
 class PCDataProxy;

@@ -28,8 +28,9 @@
 */
 
 #include "kpilot_export.h"
-
 #include "record.h"
+
+#include <QtCore/QMap>
 
 class KPILOT_EXPORT RecordBase : virtual Record {
 

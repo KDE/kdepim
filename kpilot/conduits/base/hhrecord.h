@@ -28,7 +28,6 @@
 */
 
 #include "kpilot_export.h"
-
 #include "record.h"
 
 class PilotRecord;
