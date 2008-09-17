@@ -6,33 +6,19 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>695</width>
-    <height>439</height>
+    <width>566</width>
+    <height>309</height>
    </rect>
   </property>
-  <layout class="QGridLayout" >
-   <property name="margin" >
-    <number>0</number>
-   </property>
-   <property name="spacing" >
-    <number>6</number>
-   </property>
+  <layout class="QGridLayout" name="gridLayout_2" >
    <item row="0" column="0" >
-    <widget class="QTabWidget" name="tabWidget" >
-     <widget class="QWidget" name="tab" >
-      <property name="geometry" >
-       <rect>
-        <x>0</x>
-        <y>0</y>
-        <width>683</width>
-        <height>401</height>
-       </rect>
-      </property>
+    <widget class="KTabWidget" name="tabWidget" >
+     <widget class="QWidget" name="tab_2" >
       <attribute name="title" >
        <string comment="General settings for time conduit.">General</string>
       </attribute>
-      <layout class="QVBoxLayout" name="verticalLayout" >
-       <item>
+      <layout class="QGridLayout" name="gridLayout" >
+       <item row="0" column="0" >
         <widget class="Q3ButtonGroup" name="directionGroup" >
          <property name="title" >
           <string>Direction</string>
@@ -73,7 +59,7 @@
          </layout>
         </widget>
        </item>
-       <item>
+       <item row="1" column="0" >
         <spacer name="Spacer3" >
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
@@ -83,13 +69,13 @@
          </property>
          <property name="sizeHint" stdset="0" >
           <size>
-           <width>0</width>
-           <height>0</height>
+           <width>523</width>
+           <height>97</height>
           </size>
          </property>
         </spacer>
        </item>
-       <item>
+       <item row="2" column="0" >
         <layout class="QHBoxLayout" name="horizontalLayout" >
          <item>
           <widget class="QLabel" name="fInfoIcon" >
@@ -138,15 +124,18 @@
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <customwidgets>
   <customwidget>
+   <class>KTabWidget</class>
+   <extends>QTabWidget</extends>
+   <header>ktabwidget.h</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
    <class>Q3ButtonGroup</class>
    <extends>Q3GroupBox</extends>
    <header>Qt3Support/Q3ButtonGroup</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
- <tabstops>
-  <tabstop>tabWidget</tabstop>
- </tabstops>
  <resources/>
  <connections/>
 </ui>

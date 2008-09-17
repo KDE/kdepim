@@ -8,14 +8,12 @@ the Null-conduit settings.</comment>
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>342</width>
-    <height>163</height>
+    <width>356</width>
+    <height>214</height>
    </rect>
   </property>
   <property name="sizePolicy" >
-   <sizepolicy>
-    <hsizetype>5</hsizetype>
-    <vsizetype>5</vsizetype>
+   <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
     <horstretch>0</horstretch>
     <verstretch>0</verstretch>
    </sizepolicy>
@@ -29,44 +27,17 @@ the Null-conduit settings.</comment>
   <property name="windowTitle" >
    <string>Null-Conduit Options</string>
   </property>
-  <layout class="QGridLayout" >
-   <property name="margin" >
-    <number>0</number>
-   </property>
-   <property name="spacing" >
-    <number>6</number>
-   </property>
+  <property name="whatsThis" >
+   <string>&amp;lt;qt>Enter the message to add to the Sync Log on your Pilot here.&amp;lt;/qt></string>
+  </property>
+  <layout class="QGridLayout" name="gridLayout_2" >
    <item row="0" column="0" >
-    <widget class="QTabWidget" name="tabWidget" >
-     <property name="sizePolicy" >
-      <sizepolicy>
-       <hsizetype>7</hsizetype>
-       <vsizetype>7</vsizetype>
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <widget class="QWidget" name="Widget2" >
+    <widget class="KTabWidget" name="tabWidget" >
+     <widget class="QWidget" name="tab" >
       <attribute name="title" >
-       <string comment="General settings for null conduit.">General</string>
+       <string comment="General settings for the null conduit.">General</string>
       </attribute>
-      <layout class="QGridLayout" >
-       <property name="margin" >
-        <number>11</number>
-       </property>
-       <property name="spacing" >
-        <number>6</number>
-       </property>
-       <item row="0" column="1" >
-        <widget class="QLineEdit" name="fLogMessage" >
-         <property name="whatsThis" >
-          <string>&lt;qt>Enter the message to add to the Sync Log on your Pilot here.&lt;/qt></string>
-         </property>
-         <property name="text" >
-          <string>KPilot was here.</string>
-         </property>
-        </widget>
-       </item>
+      <layout class="QGridLayout" name="gridLayout" >
        <item row="0" column="0" >
         <widget class="QLabel" name="TextLabel1_2" >
          <property name="text" >
@@ -80,7 +51,20 @@ the Null-conduit settings.</comment>
          </property>
         </widget>
        </item>
-       <item row="3" column="1" >
+       <item row="0" column="1" >
+        <widget class="KLineEdit" name="fLogMessage" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="text" >
+          <string>KPilot was here.</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1" >
         <spacer>
          <property name="orientation" >
           <enum>Qt::Vertical</enum>
@@ -88,10 +72,10 @@ the Null-conduit settings.</comment>
          <property name="sizeType" >
           <enum>QSizePolicy::Expanding</enum>
          </property>
-         <property name="sizeHint" >
+         <property name="sizeHint" stdset="0" >
           <size>
-           <width>20</width>
-           <height>20</height>
+           <width>230</width>
+           <height>120</height>
           </size>
          </property>
         </spacer>
@@ -104,9 +88,19 @@ the Null-conduit settings.</comment>
  </widget>
  <layoutdefault spacing="6" margin="11" />
  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
- <tabstops>
-  <tabstop>tabWidget</tabstop>
- </tabstops>
+ <customwidgets>
+  <customwidget>
+   <class>KLineEdit</class>
+   <extends>QLineEdit</extends>
+   <header>klineedit.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KTabWidget</class>
+   <extends>QTabWidget</extends>
+   <header>ktabwidget.h</header>
+   <container>1</container>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections/>
 </ui>
