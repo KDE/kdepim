@@ -64,7 +64,7 @@ KPIM::DistributionListPickerDialog::DistributionListPickerDialog( KABC::AddressB
              this, SLOT( slotUser1() ) );
 
     setMainWidget( main );
-    Q_FOREACH ( const KPIM::DistributionList i,
+    Q_FOREACH ( const KPIM::DistributionList& i,
                 KPIM::DistributionList::allDistributionLists( m_book ) )
     {
         m_listWidget->addItem( i.name() );
@@ -84,7 +84,7 @@ void KPIM::DistributionListPickerDialog::setLabelText( const QString& text )
 void KPIM::DistributionListPickerDialog::slotUser1()
 {
     QStringList listNames;
-    Q_FOREACH( const KPIM::DistributionList i,
+    Q_FOREACH( const KPIM::DistributionList& i,
                KPIM::DistributionList::allDistributionLists( m_book ) )
     {
         listNames += i.name();

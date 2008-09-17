@@ -129,7 +129,7 @@ void KAB::DistributionListEntryView::setEntry( const KPIM::DistributionList& lis
     const QStringList mails = m_entry.addressee.emails();
     m_idToEmail.clear();
     int nextId = 0;
-    foreach ( const QString it, mails )
+    foreach ( const QString& it, mails )
     {
         QRadioButton* button = new QRadioButton( m_emailGroup );
         button->setText( it );

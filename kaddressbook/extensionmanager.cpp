@@ -75,7 +75,7 @@ ExtensionManager::~ExtensionManager()
 void ExtensionManager::restoreSettings()
 {
   const QStringList activeExtensions = KABPrefs::instance()->activeExtensions();
-  Q_FOREACH ( const ExtensionData data, mExtensionMap ) {
+  Q_FOREACH ( const ExtensionData& data, mExtensionMap ) {
       if ( activeExtensions.contains( data.identifier ) ) {
       KToggleAction *action = static_cast<KToggleAction*>( data.action );
       if ( action )
@@ -102,7 +102,7 @@ bool ExtensionManager::isQuickEditVisible() const
 
 void ExtensionManager::setSelectionChanged()
 {
-  foreach ( const QString i, mActiveExtensions ) {
+  foreach ( const QString& i, mActiveExtensions ) {
     if ( mExtensionMap.contains( i ) && mExtensionMap[i].widget )
       mExtensionMap[i].widget->contactsSelectionChanged();
   }
@@ -117,7 +117,7 @@ void ExtensionManager::activationToggled( const QString &extid )
 
 void ExtensionManager::updateExtensionBarVisibility()
 {
-  foreach ( const QString i, mActiveExtensions ) {
+  foreach ( const QString& i, mActiveExtensions ) {
     if ( mExtensionMap[i].widget && !mExtensionMap[i].isDetailsExtension ) {
       mExtensionBar->setVisible( true );
       return;
@@ -169,7 +169,7 @@ void ExtensionManager::createActions()
   connect( mMapper, SIGNAL( mapped( const QString& ) ),
            this, SLOT( activationToggled( const QString& ) ) );
 
-  foreach ( const QString i, mExtensionMap.keys() ) {
+  foreach ( const QString& i, mExtensionMap.keys() ) {
     ExtensionData& data = mExtensionMap[i];
     data.action = mActionCollection->add<KToggleAction>( QString( data.identifier + "_extension" ) );
     data.action->setText( data.title );
@@ -192,7 +192,7 @@ QWidget* ExtensionManager::activeDetailsWidget() const
 void ExtensionManager::createExtensionWidgets()
 {
   // clean up
-  foreach ( const ExtensionData i, mExtensionMap )
+  foreach ( const ExtensionData& i, mExtensionMap )
     delete i.widget;
   mExtensionMap.clear();
 
@@ -219,7 +219,7 @@ void ExtensionManager::createExtensionWidgets()
   const KService::List plugins = KServiceTypeTrader::self()->query( "KAddressBook/Extension",
     QString( "[X-KDE-KAddressBook-ExtensionPluginVersion] == %1" ).arg( KAB_EXTENSIONWIDGET_PLUGIN_VERSION ) );
 
-  foreach ( KService::Ptr pluginService, plugins ) {
+  foreach ( const KService::Ptr& pluginService, plugins ) {
     KPluginFactory *factory = KPluginLoader( *pluginService ).factory();
     if ( !factory ) {
       kDebug(5720) <<"ExtensionManager::loadExtensions(): Factory creation failed";

@@ -715,7 +715,7 @@ void LDAPSearchDialog::slotUser2()
     if ( localAddrs.isEmpty() )
       return;
 
-    Q_FOREACH ( const KABC::Addressee i, localAddrs ) {
+    Q_FOREACH ( const KABC::Addressee& i, localAddrs ) {
         dist.insertEntry( i, QString() );
     }
     KABLock::self( mCore->addressBook() )->lock( resource );

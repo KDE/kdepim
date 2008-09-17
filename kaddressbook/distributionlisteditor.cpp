@@ -230,7 +230,7 @@ void KPIM::DistributionListEditor::EditorWidget::setDistributionList( const KPIM
     typedef KPIM::DistributionList::Entry Entry;
     const Entry::List entries = list.entries( d->addressBook );
 
-    Q_FOREACH( const KPIM::DistributionList::Entry i, entries )
+    Q_FOREACH( const KPIM::DistributionList::Entry& i, entries )
       d->addLineForEntry( i );
     KPIM::DistributionListEditor::Line* const last = d->addLineForEntry( Entry() );
     last->setFocusToLineEdit();
