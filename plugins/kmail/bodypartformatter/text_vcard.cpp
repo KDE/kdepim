@@ -84,7 +84,7 @@ namespace {
                 );
 
        int count = 0;
-       foreach (KABC::Addressee a, al ) {
+       foreach (const KABC::Addressee& a, al ) {
           if ( a.isEmpty() ) return AsIcon;
 
           QString contact = AddresseeView::vCardAsHTML( a, 0L, AddresseeView::NoLinks, false, AddresseeView::DefaultFields );
