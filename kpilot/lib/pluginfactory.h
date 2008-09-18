@@ -26,11 +26,14 @@
 /*
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
+
+// KPilot headers
+#include "kpilotlink.h"
 #include "options.h"
 
+// KDE headers
 #include <kpluginfactory.h>
 #include <kpluginloader.h>
-#include "kpilotlink.h"
 
 /**
  * A conduit has a name -- which must match the name of the library

@@ -29,13 +29,17 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+// KPilot headers
+#include "kpilot_export.h"
+#include "pilot.h"
+
+// pilot-link headers
+#include <pi-dlp.h>
+
+// Other headers
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <kpilot_export.h>
-#include <pi-dlp.h>
-
-#include "pilot.h"
 
 class KPILOT_EXPORT KPilotUser
 {

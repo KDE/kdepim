@@ -28,13 +28,14 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-
+// pilot-link headers
 #include <pi-version.h>
 #include <pi-dlp.h>
 
+// Other headers
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 
 class KPilotSysInfo

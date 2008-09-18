@@ -27,12 +27,17 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <errno.h>
+// KPilot headers
+#include "options.h"
 
+// Qt headers
+#include <QtCore/QStringList>
 #include <QtCore/QThread>
 
-#include "kpilotdevicelink.h"
+// Other headers
+#include <errno.h>
 
+class KPilotDeviceLink;
 class QTimer;
 class QSocketNotifier;
 

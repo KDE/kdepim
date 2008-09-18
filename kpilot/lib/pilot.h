@@ -29,15 +29,17 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+// KPilot headers
 #include "kpilot_export.h"
-
-#include <QtCore/QStringList>
-
 #include "pilotLinkVersion.h"
 
+// pilot-link headers
 #include <pi-appinfo.h>
 #include <pi-buffer.h>
 #include <pi-dlp.h>
+
+// Qt headers
+#include <QtCore/QStringList>
 
 /** @file
 * These are some base structures that reside on the

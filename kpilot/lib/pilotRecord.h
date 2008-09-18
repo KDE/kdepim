@@ -29,7 +29,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-
+// KPilot headers
 #include "pilot.h"
 
 /**

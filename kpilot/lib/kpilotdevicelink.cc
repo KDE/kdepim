@@ -28,36 +28,12 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+// KPilot headers
+#include "config-kpilot.h"
 #include "kpilotlink.h"
-
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <errno.h>
-
-#include <iostream>
-
-#include <pi-source.h>
-#include <pi-socket.h>
-#include <pi-dlp.h>
-#include <pi-file.h>
-#include <pi-buffer.h>
-
-#include <QtCore/QDateTime>
-#include <QtCore/QDir>
-#include <QtCore/QThread>
-#include <QtCore/QSocketNotifier>
-#include <QtCore/QTimer>
-#include <QtGui/QApplication>
-
-#include <kconfig.h>
-#include <kmessagebox.h>
-#include <kstandarddirs.h>
-#include <kurl.h>
-#include <kio/netaccess.h>
-
+#include "kpilotdevicelink.moc"
+#include "kpilotdevicelink.h"
+#include "kpilotdevicelinkPrivate.moc"
 #include "options.h"
 #include "pilotUser.h"
 #include "pilotSysInfo.h"
@@ -65,11 +41,36 @@
 #include "pilotSerialDatabase.h"
 #include "pilotLocalDatabase.h"
 
-#include "kpilotdevicelinkPrivate.moc"
-#include "kpilotdevicelink.moc"
+// pilot-link headers
+#include <pi-source.h>
+#include <pi-socket.h>
+#include <pi-dlp.h>
+#include <pi-file.h>
+#include <pi-buffer.h>
 
-#include <config-kpilot.h>
+// Qt headers
+#include <QtCore/QDateTime>
+#include <QtCore/QDir>
+#include <QtCore/QThread>
+#include <QtCore/QSocketNotifier>
+#include <QtCore/QTimer>
+#include <QtGui/QApplication>
 
+// KDE headers
+#include <kconfig.h>
+#include <kmessagebox.h>
+#include <kstandarddirs.h>
+#include <kurl.h>
+#include <kio/netaccess.h>
+
+// Other headers
+#include <errno.h>
+#include <fcntl.h>
+#include <iostream>
+#include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 DeviceMap *DeviceMap::mThis = 0L;
 

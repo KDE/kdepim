@@ -28,9 +28,12 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+// KPilot headers
+#include "syncAction.h"
+
+// Qt headers
 #include <QtCore/QQueue>
 
-#include "syncAction.h"
 
 /** @file
 * This file defines the ActionQueue.

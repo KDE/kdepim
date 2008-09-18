@@ -28,25 +28,23 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+// KPilot headers
+#include "kpilotlink.moc"
 #include "options.h"
+#include "pilotCard.h"
+#include "pilotUser.h"
+#include "pilotSerialDatabase.h"
+#include "pilotLocalDatabase.h"
+#include "pilotSysInfo.h"
 
-
-
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <stdio.h>
-#include <unistd.h>
-#include <fcntl.h>
-#include <errno.h>
-
-#include <iostream>
-
-#include <pi-source.h>
-#include <pi-socket.h>
+// pilot-link headers
+#include <pi-buffer.h>
 #include <pi-dlp.h>
 #include <pi-file.h>
-#include <pi-buffer.h>
+#include <pi-source.h>
+#include <pi-socket.h>
 
+// Qt headers
 #include <QtCore/QDir>
 #include <QtCore/QDateTime>
 #include <QtCore/QEvent>
@@ -54,19 +52,21 @@
 #include <QtCore/QTimer>
 #include <QtGui/QApplication>
 
+// KDE headers
 #include <kconfig.h>
 #include <kmessagebox.h>
 #include <kstandarddirs.h>
 #include <kurl.h>
 #include <kio/netaccess.h>
 
-#include "pilotUser.h"
-#include "pilotSysInfo.h"
-#include "pilotCard.h"
-#include "pilotSerialDatabase.h"
-#include "pilotLocalDatabase.h"
-
-#include "kpilotlink.moc"
+// other headers
+#include <errno.h>
+#include <fcntl.h>
+#include <iostream>
+#include <stdio.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <unistd.h>
 
 /** Class that handles periodically tickling the handheld through
 *   the virtual tickle() method; deals with cancels through the

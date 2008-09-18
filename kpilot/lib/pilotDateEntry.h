@@ -31,14 +31,17 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+// KPilot headers
+#include "pilotRecord.h"
+#include "pilotAppInfo.h"
+
+// pilot-link headers
 #include <pi-macros.h>
 #include <pi-datebook.h>
 
+// Qt headers
 #include <QtCore/QBitArray>
 #include <QtCore/QDateTime>
-
-#include "pilotRecord.h"
-#include "pilotAppInfo.h"
 
 namespace KCal
 {
@@ -301,7 +304,7 @@ public:
 			fAppointmentInfo.repeatDays[i] = rd[i];
 		}
 	}
-	inline void setRepeatDays(QBitArray rba)
+	inline void setRepeatDays(const QBitArray& rba)
 	{
 		for (int i = 0; i < 7; i++)
 		{

@@ -29,19 +29,24 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+// KPilot headers
+#include "kpilot_export.h"
+
+// pilot-link headers
 #include <pi-dlp.h>
 
-#include <QtCore/QEvent>
+// Qt headers
 #include <QtCore/QObject>
 
-#include "kpilot_export.h"
 /** @file
 * Encapsulates all the communication with the handheld. Also
 * does daemon-like polling of the handheld. Interesting status
 * changes are signalled.
 */
 
+class QEvent;
 class QThread;
+
 class KPilotUser;
 class KPilotSysInfo;
 class KPilotCard;

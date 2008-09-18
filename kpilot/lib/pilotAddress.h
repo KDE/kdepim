@@ -30,12 +30,14 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+// KPilot headers
+#include "kpilot_export.h"
+#include "pilotAppInfo.h"
+#include "pilotRecord.h"
+
+// pilot-link headers
 #include <pi-macros.h>
 #include <pi-address.h>
-
-#include <kpilot_export.h>
-#include "pilotRecord.h"
-#include "pilotAppInfo.h"
 
 /** Interpreted form of the AppInfo block in the address database. */
 typedef PilotAppInfo<

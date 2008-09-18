@@ -31,14 +31,18 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <QtCore/QDebug>
-
-#include <kdeversion.h>
-#include <klocale.h>
-
+// KPilot headers
 #include "pilotLinkVersion.h"
 #include "kpilot_export.h"
 
+// Qt headers
+#include <QtCore/QDebug>
+
+// KDE headers
+#include <kdeversion.h>
+#include <klocale.h>
+
+// Other headers
 #include <iostream>
 
 #define KPILOT_VERSION	"5.2.0-alpha1 (fjord)"

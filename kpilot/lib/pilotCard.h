@@ -28,13 +28,15 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <stdlib.h>
-#include <string.h>
-#include <time.h>
-
+// pilot-linkheaders
 #ifndef _PILOT_DLP_H_
 #include <pi-dlp.h>
 #endif
+
+// Other headers
+#include <stdlib.h>
+#include <string.h>
+#include <time.h>
 
 class KPilotCard
 {

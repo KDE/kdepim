@@ -29,15 +29,18 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <time.h>
+// KPilot headers
+#include "kpilotlink.h"
+#include "kpilot_export.h"
 
-#include <QtCore/QMetaType>
+// Qt headers
 #include <QtCore/QObject>
 #include <QtCore/QStringList>
 #include <QtCore/QVariantList>
 
-#include "kpilotlink.h"
-#include "kpilot_export.h"
+// Other headers
+#include <time.h>
+
 /** @file
 * SyncAction
 */

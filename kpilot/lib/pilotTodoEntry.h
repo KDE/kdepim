@@ -30,13 +30,16 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include <time.h>
+// KPilot headers
+#include "pilotAppInfo.h"
+#include "pilotRecord.h"
 
+// pilot-link headers
 #include <pi-macros.h>
 #include <pi-todo.h>
 
-#include "pilotRecord.h"
-#include "pilotAppInfo.h"
+// Other headers
+#include <time.h>
 
 /** @file This file defines structures wrapped around the ToDo database
 * on the Pilot, based on pilot-link's ToDo stuff.

@@ -27,10 +27,10 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "pilotLinkVersion.h"
-
+// KPilot headers
 #include "pilot.h"
 #include "pilotDatabase.h"
+#include "pilotLinkVersion.h"
 
 /**
 * A database on the handheld has an "AppInfo" block at the beginning

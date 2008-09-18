@@ -27,7 +27,7 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-
+// pilot-link headers
 #include <pi-version.h>
 
 /** @file

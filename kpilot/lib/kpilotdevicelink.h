@@ -29,10 +29,13 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+// KPilot headers
 #include "kpilotlink.h"
 
+// Qt headers
+#include <QtCore/QEvent>
+
 class QThread;
-class QEvent;
 
 class DeviceMap; ///< Globally tracks all devices that have a link assigned
 class Messages; ///< Tracks which messages have been printed

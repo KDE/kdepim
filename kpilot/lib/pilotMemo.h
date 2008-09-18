@@ -28,12 +28,13 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+// KPilot headers
 #include "options.h"
-
-#include <pi-memo.h>
-
 #include "pilotRecord.h"
 #include "pilotAppInfo.h"
+
+// pilot-link headers
+#include <pi-memo.h>
 
 class KPILOT_EXPORT PilotMemo : public PilotRecordBase
 {
