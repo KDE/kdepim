@@ -29,6 +29,7 @@
 #include "options.h"
 #include "hhrecord.h"
 #include "keyringhhrecord.h"
+#include "pilotAppInfo.h"
 
 TestKeyringProxy::TestKeyringProxy( const QString& fileName )
 	: KeyringHHDataProxy( fileName )

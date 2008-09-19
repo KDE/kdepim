@@ -27,6 +27,7 @@
 #include "localkeyringproxy.h"
 #include "hhrecord.h"
 #include "keyringhhrecord.h"
+#include "pilotAppInfo.h"
 
 LocalKeyringProxy::LocalKeyringProxy( const QString& fileName )
 	: KeyringHHDataProxy( fileName )
