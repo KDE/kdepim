@@ -59,13 +59,15 @@ KABC::Picture ImageLoader::loadPicture( const KUrl &url, bool *ok )
 
   QImage image;
   if ( url.isLocalFile() ) {
-    image.load( url.path() );
-    picture.setData( image );
-    (*ok) = true;
+    if ( image.load( url.path() ) ) {
+      picture.setData( image );
+      (*ok) = true;
+    }
   } else if ( KIO::NetAccess::download( url, tempFile, mParent ) ) {
-    image.load( tempFile );
-    picture.setData( image );
-    (*ok) = true;
+    if ( image.load( tempFile ) ) {
+      picture.setData( image );
+      (*ok) = true;
+    }
     KIO::NetAccess::removeTempFile( tempFile );
   }
 
