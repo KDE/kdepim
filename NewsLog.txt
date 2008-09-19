@@ -1,3 +1,12 @@
+Friday, September 19th 2008
+
+Problems addressed
+-------------------
+* kolab/issue2830 (Default identity used for invitation even if other identity is set as organizer.
+* kolab/issue2577 An invitation to a recurring event should give information about the recurrance.
+* kolab/issue1828 Printing event doesn't print list of attachment.
+
+
 Friday, September 12th 2008
 
 Problems addressed
