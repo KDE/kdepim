@@ -29,6 +29,11 @@
 #include "options.h"
 #include "syncAction.h"
 
+#include <kaboutdata.h>
+#include <kapplication.h>
+#include <kcmdlineargs.h>
+#include <kdebug.h>
+
 bool run_modes(bool test, bool local)
 {
 	bool ok = true;
@@ -42,8 +47,9 @@ bool run_modes(bool test, bool local)
 
 	for (int m = (int)SyncAction::SyncMode::eHotSync;
 		m <= (int) SyncAction::SyncMode::eRestore ;
-		m++)
+		++m)
 	{
+    kDebug() << "TEST:" << m;
 		SyncAction::SyncMode mode((SyncAction::SyncMode::Mode)m,test,local);
 		kDebug() <<"*" << mode.name();
 		SyncAction::SyncMode mode2(mode.list());
@@ -77,6 +83,12 @@ bool single_mode(int m, bool test, bool local)
 
 int main(int argc, char **argv)
 {
+  FUNCTIONSETUP;
+
+  KAboutData aboutData("testactions", 0,ki18n("Test Actions"),"0.1");
+  KCmdLineArgs::init(argc,argv,&aboutData);
+  KApplication app( false );
+  
 	if (!run_modes(false,false)) return 1;
 	if (!run_modes(false,true)) return 1;
 	if (!run_modes(true,false)) return 1;

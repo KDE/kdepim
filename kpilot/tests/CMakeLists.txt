@@ -5,6 +5,9 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../lib ${CMAKE_CURRENT_BINARY_DI
 # This can be used for finding data files in the source dir
 add_definitions( -DKDESRCDIR=\\"${CMAKE_CURRENT_SOURCE_DIR}\\" )
 
+set(testactions_SRCS testactions.cc)
+kde4_add_unit_test(testactions ${testactions_SRCS})
+target_link_libraries(testactions kpilot ${QT_LIBRARIES})
 
 set(testconstants_SRCS testconstants.cc)
 kde4_add_unit_test(testconstants ${testconstants_SRCS})
