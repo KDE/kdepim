@@ -29,8 +29,8 @@
 */
 
 // KPilot headers
-#include "config-kpilot.h"
 #include "kpilotlink.h"
+#include <config-kpilot.h>
 #include "kpilotdevicelink.moc"
 #include "kpilotdevicelink.h"
 #include "kpilotdevicelinkPrivate.moc"
