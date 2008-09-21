@@ -303,11 +303,11 @@ void KNGroupDialog::slotUser2()
   QRadioButton *takeCustom = new QRadioButton( i18n("Created since this date:"), btnGrp );
   topL->addWidget(takeCustom, 2, 0, 1, 2 );
 
-  KDatePicker *dateSel = new KDatePicker( lastDate, btnGrp );
+  dateSel = new KDatePicker( lastDate, btnGrp );
   dateSel->setMinimumSize(dateSel->sizeHint());
   topL->addWidget(dateSel, 3, 1, Qt::AlignLeft);
 
-  connect(takeCustom, SIGNAL(toggled(bool)), dateSel, SLOT(setEnabled(bool)));
+  connect(takeCustom, SIGNAL(toggled(bool)), this, SLOT(slotDatePickerEnabled(bool)));
 
   takeLast->setChecked(true);
   dateSel->setEnabled(false);
@@ -330,6 +330,11 @@ void KNGroupDialog::slotUser2()
   }
 
   delete dlg;
+}
+
+void KNGroupDialog::slotDatePickerEnabled( bool b )
+{
+  dateSel->setEnabled( b );
 }
 
 
