@@ -108,8 +108,6 @@ int KAddressBookApp::newInstance()
 
 int main( int argc, char *argv[] )
 {
-  KLocale::setMainCatalog( "kaddressbook" );
-
   KAboutData about = KABCore::createAboutData();
   KCmdLineArgs::init( argc, argv, &about );
   KCmdLineArgs::addCmdLineOptions( kaddressbook_options() );
@@ -120,7 +118,7 @@ int main( int argc, char *argv[] )
 
   KAddressBookApp app;
   KGlobal::locale()->insertCatalog( "libkdepim" );
-
+  KGlobal::locale()->insertCatalog( "kabc" );
   bool ret = app.exec();
   qDeleteAll( KMainWindow::memberList() );
 
