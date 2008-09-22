@@ -37,7 +37,7 @@ TestHHDataProxy::TestHHDataProxy( int count ) : HHDataProxy( 0l )
 	QStringList fields;
 	fields << CSL1( "f1" ) << CSL1( "f2" );
 	
-	for( int i = 1; i <= count; i++ )
+	for( int i = 1; i <= count; ++i )
 	{
 		QString id = CSL1( "hh-" ) + QString::number( i );
 		

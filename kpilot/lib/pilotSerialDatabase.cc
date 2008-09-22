@@ -160,7 +160,7 @@ QList<recordid_t> PilotSerialDatabase::idList()
 	}
 
 	// now create the QValue list from the idarr:
-	for (idlen=0; idlen<idlenread; idlen++)
+	for (idlen=0; idlen<idlenread; ++idlen)
 	{
 		idlist.append(idarr[idlen]);
 	}

@@ -176,14 +176,14 @@ QStringList listCategories()
 	cats.append(CSL1("Unfiled"));
 	m->dump();
 
-	for (int i=0; i<20; i++)
+	for (int i=0; i<20; ++i)
 	{
 		PilotRecord *r = l->readRecordByIndex(i);
 		kDebug() <<"Read record" << (void *)r <<" with id=" << r->id();
 		if (!r) break;
 	}
 
-	for (int i=0; i<4; i++)
+	for (int i=0; i<4; ++i)
 	{
 		QString s = m->category(i);
 		kDebug() <<"Category" << i <<":" << (s.isEmpty() ? CSL1("<empty>") : s);

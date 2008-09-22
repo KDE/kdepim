@@ -194,7 +194,7 @@ bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 			
 			TEST( ( entryDays[0] != 0 ), eventDays.at( 6 ), "RepeatDays" )
 			
-			for( int i = 1; i < 7; i++ )
+			for( int i = 1; i < 7; ++i )
 			{
 				// NOTE: Does this work? I'm not sure if the days item is set to 0 if the
 				// alarm is not set for that day. And I also don't know if they can be
@@ -467,7 +467,7 @@ void CalendarConduit::setExceptions( EventPtr e, const PilotDateEntry& de ) cons
 
 	if( !( de.isMultiDay() ) && de.getExceptionCount() > 0 )
 	{
-		for( int i = 0; i < de.getExceptionCount(); i++ )
+		for( int i = 0; i < de.getExceptionCount(); ++i )
 		{
 			dl.append( readTm( de.getExceptions()[i] ).date() );
 		}
@@ -554,7 +554,7 @@ void CalendarConduit::setRecurrence( PilotDateEntry* de, const EventPtr& e ) con
 		dayArray = r->days();
 		
 		// rotate the bits by one
-		for (int i=0; i<7; i++)
+		for (int i=0; i<7; ++i)
 		{
 			dayArrayPalm.setBit( (i+1) % 7, dayArray[i] );
 		}
@@ -651,7 +651,7 @@ void CalendarConduit::setRecurrence( EventPtr e, const PilotDateEntry& de ) cons
 			//
 			if( days[0] ) dayArray.setBit( 6 );
 			
-			for( int i = 1; i < 7; i++ )
+			for( int i = 1; i < 7; ++i )
 			{
 				if( days[i] )
 				{

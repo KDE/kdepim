@@ -980,7 +980,7 @@ void RestoreAction::setDirectory( const QString &path )
 
 	emit logProgress(i18n("Restoring %1...",QString()),1);
 
-	for (unsigned int i = 0; i < dir.count(); i++)
+	for (unsigned int i = 0; i < dir.count(); ++i)
 	{
 		QString s;
 		RestoreInfo info;

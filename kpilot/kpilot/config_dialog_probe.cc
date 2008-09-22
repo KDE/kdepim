@@ -219,7 +219,7 @@ void ProbeDialog::startDetection()
 	fProgressTimer->start( 300 );
 
 	KPilotDeviceLink*link;
-	for (int i=0; i<3; i++)
+	for (int i=0; i<3; ++i)
 	{
 		QStringList::iterator end(fDevicesToProbe[i].end());
 		for (QStringList::iterator it=fDevicesToProbe[i].begin(); it!=end; ++it)

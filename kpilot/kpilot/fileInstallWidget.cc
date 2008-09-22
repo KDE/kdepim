@@ -242,7 +242,7 @@ void FileInstallWidget::contextMenu( QContextMenuEvent *event )
 	QListWidgetItem *item;
 	QStringList files;
 	int itemCount = fP->fUi.fIconView->count();
-	for( int i = 0; i < itemCount; i++ )
+	for( int i = 0; i < itemCount; ++i )
 	{
 		item = fP->fUi.fIconView->item( i );
 		

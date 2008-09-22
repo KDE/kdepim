@@ -82,13 +82,9 @@ PilotDatabase::PilotDatabase(const QString &s) :
 {
 	Pilot::RecordIDList l;
 
-	for (unsigned int i = 0 ; ; i++)
-	{
-		PilotRecord *r = readRecordByIndex(i);
-		if (!r)
-		{
-			break;
-		}
+  unsigned int i = 0;
+	while (PilotRecord* r = readRecordByIndex( i++ ))
+  {
 		l.append(r->id());
 		delete r;
 	}

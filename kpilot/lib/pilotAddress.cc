@@ -217,7 +217,7 @@ bool PilotAddress::operator==(const PilotAddress &compareTo)
 	FUNCTIONSETUPL(4);
 
 	// now compare all the fields stored in the fAddressInfo.entry array of char*[19]
-	for (int i=0; i<MAXFIELDS; i++) {
+	for (int i=0; i<MAXFIELDS; ++i) {
 		// if one is NULL, and the other non-empty, they are not equal for sure
 		if ( !getFieldP(i) && compareTo.getFieldP(i))
 		{
@@ -243,7 +243,7 @@ void PilotAddress::_copyAddressInfo(const struct Address &copyFrom)
 	FUNCTIONSETUPL(4);
 	fAddressInfo.showPhone = copyFrom.showPhone;
 
-	for (int labelLp = 0; labelLp < 5; labelLp++)
+	for (int labelLp = 0; labelLp < 5; ++labelLp)
 	{
 		fAddressInfo.phoneLabel[labelLp] =
 			copyFrom.phoneLabel[labelLp];
@@ -376,7 +376,7 @@ QString PilotAddress::getTextRepresentation(const PilotAddressInfo *info, Qt::Te
 
 	// custom fields
 	text += par;
-	for (int i = entryCustom1; i <= entryCustom4; i++)
+	for (int i = entryCustom1; i <= entryCustom4; ++i)
 	{
 		if (!getField(i).isEmpty())
 		{

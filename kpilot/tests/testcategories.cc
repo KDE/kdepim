@@ -48,7 +48,7 @@ QStringList categories( const PilotAppInfoBase *appinfo )
 {
 	QStringList cats;
 
-	for (unsigned int i=0; i<Pilot::CATEGORY_COUNT; i++)
+	for (unsigned int i=0; i<Pilot::CATEGORY_COUNT; ++i)
 	{
 		QString cat = appinfo->categoryName(i);
 		if (!cat.isEmpty())
@@ -123,7 +123,7 @@ void categoryNames( const QString &dir )
 
 	DEBUGKPILOT <<"# Updating category names with various lengths.";
 	DEBUGKPILOT <<"# Expect three truncation errors and two bad category numbers.";
-	for (unsigned int i=0; i<Pilot::CATEGORY_COUNT+2; i++)
+	for (unsigned int i=0; i<Pilot::CATEGORY_COUNT+2; ++i)
 	{
 		QString name = QString::fromLatin1(funnyname+funnyname_length-i-3);
 		if (!appinfo->setCategoryName(i,name))
@@ -186,7 +186,7 @@ int main(int argc, char **argv)
 	Pilot::setupPilotCodec( CSL1("Latin1") );
 
 	// Include arbitrary break-off point, in case
-	for (unsigned int i = 0; i<sizeof(files)/sizeof(const char *) ; i++)
+	for (unsigned int i = 0; i<sizeof(files)/sizeof(const char *) ; ++i)
 	{
 		if (!files[i])
 		{

@@ -187,7 +187,7 @@ QString HHDataProxy::generateUniqueId()
 	
 	QList<QString> ids = fRecords.keys();
 	
-	for( int i = 0; i < fRecords.size(); i++ )
+	for( int i = 0; i < fRecords.size(); ++i )
 	{
 		if( ids.at( i ).toULong() > id )
 		{

@@ -237,7 +237,7 @@ KPilotLocalLink::~KPilotLocalLink()
 	QString desiredName = Pilot::fromPilot(name);
 	DEBUGKPILOT << "Looking for DB [" << desiredName << ']';
 	
-	for( int i = index; i < d->fDBs.size(); i++ )
+	for( int i = index; i < d->fDBs.size(); ++i )
 	{
 		const DatabaseDescriptor &dd = d->fDBs.at( i );
 		if (dd.first == desiredName)

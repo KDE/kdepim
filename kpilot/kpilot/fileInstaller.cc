@@ -72,7 +72,7 @@ void FileInstaller::clearPending()
 
 	// Start from 2 to skip . and ..
 	//
-	for (i = 2; i < installDir.count(); i++)
+	for (i = 2; i < installDir.count(); ++i)
 	{
 		QFile::remove(fDirName + installDir[i]);
 	}

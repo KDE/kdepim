@@ -100,7 +100,7 @@ bool CalendarHHRecord::equal( const HHRecord* other ) const
 			const int* otherDays = entryOther.getRepeatDays();
 			const int* thisDays = entryOther.getRepeatDays();
 			
-			for( int i = 0; i < 7; i++ )
+			for( int i = 0; i < 7; ++i )
 			{
 				// NOTE: Does this work? I'm not sure if the days item is set to 0 if the
 				// alarm is not set for that day. And I also don't know if they can be

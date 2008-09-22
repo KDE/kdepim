@@ -259,7 +259,7 @@ QString PilotDateEntry::getTextRepresentation(Qt::TextFormat richText)
 	{
 		text+=par;
 		text+=i18n("Exceptions:")+br;
-		for (int i = 0; i < getExceptionCount(); i++)
+		for (int i = 0; i < getExceptionCount(); ++i)
 		{
 			QDate exdt=readTm(getExceptions()[i]).date();
 			text+=exdt.toString(Qt::LocalDate);

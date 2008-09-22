@@ -57,7 +57,7 @@ public:
 
 	void deleteRecords()
 	{
-		for (int i=0; i<size(); i++)
+		for (int i=0; i<size(); ++i)
 		{
 			delete at(i);
 		}
@@ -274,7 +274,7 @@ QList<recordid_t> PilotLocalDatabase::idList()
 	}
 
 	// now create the QValue list from the idarr:
-	for (int i=0; i<idlen; i++)
+	for (int i=0; i<idlen; ++i)
 	{
 		idlist.append((*d)[i]->id());
 	}
@@ -295,7 +295,7 @@ PilotRecord *PilotLocalDatabase::readRecordById(recordid_t id)
 
 	d->pending = -1;
 
-	for (int i = 0; i < d->size(); i++)
+	for (int i = 0; i < d->size(); ++i)
 	{
 		if ((*d)[i]->id() == id)
 		{
@@ -467,7 +467,7 @@ recordid_t PilotLocalDatabase::writeRecord(PilotRecord * newRecord)
 	// First check to see if we have this record:
 	if (newRecord->id() != 0)
 	{
-	for (int i = 0; i < d->size(); i++)
+	for (int i = 0; i < d->size(); ++i)
 		if ((*d)[i]->id() == newRecord->id())
 		{
 			delete (*d)[i];
@@ -488,7 +488,7 @@ recordid_t PilotLocalDatabase::getNewUniqueId()
 {
 	recordid_t id = 0;
 
-	for (int i = 0; i < d->size(); i++)
+	for (int i = 0; i < d->size(); ++i)
 	{
 		if( d->at( i )->id() > id)
 		{
@@ -549,7 +549,7 @@ int PilotLocalDatabase::resetSyncFlags()
 		return -1;
 	}
 	d->pending = -1;
-	for (int i = 0; i < d->size(); i++)
+	for (int i = 0; i < d->size(); ++i)
 	{
 		(*d)[i]->setModified( false );
 	}
@@ -686,7 +686,7 @@ void PilotLocalDatabase::closeDatabase()
 	dbFile = pi_file_create(QFile::encodeName(newName),&fDBInfo);
 	pi_file_set_app_info(dbFile, fAppInfo, fAppLen);
 
-	for (int i = 0; i < d->size(); i++)
+	for (int i = 0; i < d->size(); ++i)
 	{
 		// How did a NULL pointer sneak in here?
 		if (!(*d)[i])

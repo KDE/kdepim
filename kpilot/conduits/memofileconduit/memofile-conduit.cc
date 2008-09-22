@@ -167,7 +167,7 @@ bool MemofileConduit::setAppInfo()
 
 	fCategories = map;
 
-	for (unsigned int i = 0; i < Pilot::CATEGORY_COUNT; i++)
+	for (unsigned int i = 0; i < Pilot::CATEGORY_COUNT; ++i)
 	{
 		if (fCategories.contains(i)) {
 			fMemoAppInfo->setCategoryName(i,fCategories[i]);
@@ -221,7 +221,7 @@ bool MemofileConduit::loadPilotCategories()
 	int _category_id=0;
 	int _category_num=0;
 
-	for (unsigned int i = 0; i < Pilot::CATEGORY_COUNT; i++)
+	for (unsigned int i = 0; i < Pilot::CATEGORY_COUNT; ++i)
 	{
 		_category_name = fMemoAppInfo->categoryName(i);
 		if (!_category_name.isEmpty())

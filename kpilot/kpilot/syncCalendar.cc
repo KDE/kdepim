@@ -76,7 +76,7 @@ KCal::CalendarLocal *retrieve(DatebookDB *db)
 		return cal;
 	}
 
-	for (int i=0; i<count; i++)
+	for (int i=0; i<count; ++i)
 	{
 		KCal::Event *e = db->readRecordByIndex(i);
 		if (!e) continue;

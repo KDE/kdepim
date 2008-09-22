@@ -174,7 +174,7 @@ int findCategory(const struct CategoryAppInfo *info,
 	}
 
 	int currentCatID = -1;
-	for (unsigned int i=0; i<CATEGORY_COUNT; i++)
+	for (unsigned int i=0; i<CATEGORY_COUNT; ++i)
 	{
 		if (!info->name[i][0]) continue;
 		if (selectedCategory == category(info, i))
@@ -217,7 +217,7 @@ int insertCategory(struct CategoryAppInfo *info,
 	{
 		// This is the case when the category is not known
 		// and unknownIsUnfiled is false.
-		for (unsigned int i=0; i<CATEGORY_COUNT; i++)
+		for (unsigned int i=0; i<CATEGORY_COUNT; ++i)
 		{
 			if (!info->name[i][0])
 			{
@@ -255,7 +255,7 @@ void dumpCategories(const struct CategoryAppInfo *info)
 
 	DEBUGKPILOT << "lastUniqueId:"
 		<< (int) info->lastUniqueID;
-	for (unsigned int i = 0; i < CATEGORY_COUNT; i++)
+	for (unsigned int i = 0; i < CATEGORY_COUNT; ++i)
 	{
 		if (!info->name[i][0]) continue;
 		DEBUGKPILOT << i << '='
