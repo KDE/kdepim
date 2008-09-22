@@ -28,12 +28,14 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
+// Own headers.
+#include "kpilotdevicelink.h"
+#include "kpilotdevicelink.moc"
+#include "kpilotdevicelinkPrivate.moc"
+
 // KPilot headers
 #include "kpilotlink.h"
 #include <config-kpilot.h>
-#include "kpilotdevicelink.moc"
-#include "kpilotdevicelink.h"
-#include "kpilotdevicelinkPrivate.moc"
 #include "options.h"
 #include "pilotUser.h"
 #include "pilotSysInfo.h"
