@@ -45,7 +45,6 @@
 #include <QtGui/QLayout>
 #include <QtGui/QPixmap>
 #include <QtGui/QPushButton>
-#include <QtGui/QTabWidget>
 
 #include <kdebug.h>
 #include <kglobal.h>
@@ -58,6 +57,7 @@
 #include <kmessagebox.h>
 #include <kservice.h>
 #include <kservicetype.h>
+#include <ktabwidget.h>
 #include <kstandarddirs.h>
 
 #include "pilotSerialDatabase.h"
@@ -238,7 +238,7 @@ QWidget *ConduitConfigBase::aboutPage(QWidget *parent, KAboutData *ad)
 	return w;
 }
 
-/* static */ void ConduitConfigBase::addAboutPage(QTabWidget *tw,
+/* static */ void ConduitConfigBase::addAboutPage(KTabWidget *tw,
 	KAboutData *ad)
 {
 	FUNCTIONSETUP;

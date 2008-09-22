@@ -45,7 +45,7 @@
 */
 
 
-class QTabWidget;
+class KTabWidget;
 class KAboutData;
 
 class PilotDatabase;
@@ -142,7 +142,7 @@ public:
 	* @param data The KAboutData that is used.
 	*
 	*/
-	static  void addAboutPage(QTabWidget *w,
+	static  void addAboutPage(KTabWidget *w,
 		KAboutData *data=0L);
 
 	/**
