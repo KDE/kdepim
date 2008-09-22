@@ -49,7 +49,7 @@
             <string>The IM Address that is set as the standard is the address that is shown in main editor window.</string>
           </property>
           <property name="whatsThis" stdset="0" >
-            <string>&lt;qt>Only one IM Address can be set as the standard IM Address.&lt;br>The standard IM Address is shown in the main editor window, and other programs may use this as hint for deciding which IM Address to show.&lt;/qt></string>
+            <string>&lt;qt>Only one IM Address can be set as the standard IM Address.&lt;br />The standard IM Address is shown in the main editor window, and other programs may use this as hint for deciding which IM Address to show.&lt;/qt></string>
           </property>
         </widget>
       </item>
