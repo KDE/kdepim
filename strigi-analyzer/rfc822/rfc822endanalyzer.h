@@ -24,6 +24,7 @@
 #include <strigi/analyzerplugin.h>
 #include <strigi/streamendanalyzer.h>
 #include "pimstrigi-analyzer_export.h"
+#include "config-strigi.h"
 
 class Rfc822EndAnalyzerFactory;
 
@@ -36,7 +37,8 @@ public:
 
   const char* name() const { return "Rfc822EndAnalyzer"; }
   bool checkHeader( const char* header, int32_t headersize ) const;
-  char analyze(  Strigi::AnalysisResult& idx, Strigi::InputStream* in );
+  STRIGI_ENDANALYZER_RETVAL analyze(  Strigi::AnalysisResult& idx, Strigi::InputStream* in );
+
 
 private:
   const Rfc822EndAnalyzerFactory* m_factory;

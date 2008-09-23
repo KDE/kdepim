@@ -51,7 +51,7 @@ bool IcsEndAnalyzer::checkHeader( const char* header, int32_t headersize ) const
 I chose to use libkcal instead of reading the calendar manually. It's easier to
 maintain this way.
 */
-char IcsEndAnalyzer::analyze( Strigi::AnalysisResult& idx, Strigi::InputStream* in )
+STRIGI_ENDANALYZER_RETVAL IcsEndAnalyzer::analyze( Strigi::AnalysisResult& idx, Strigi::InputStream* in )
 {
   CalendarLocal cal( QString::fromLatin1( "UTC" ) );
 

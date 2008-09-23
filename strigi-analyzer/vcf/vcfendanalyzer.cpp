@@ -26,6 +26,7 @@
 #include <strigi/analysisresult.h>
 #include <strigi/streamendanalyzer.h>
 
+
 VcfEndAnalyzer::VcfEndAnalyzer( const VcfEndAnalyzerFactory *factory )
   : m_factory( factory )
 {
@@ -43,7 +44,7 @@ bool VcfEndAnalyzer::checkHeader( const char* header, int32_t headersize ) const
  * It's easier to use KABC::VCardConverter to extract the single fields from the vCard
  * than doing it manually.
  */
-char VcfEndAnalyzer::analyze( Strigi::AnalysisResult& idx, Strigi::InputStream* in )
+STRIGI_ENDANALYZER_RETVAL VcfEndAnalyzer::analyze( Strigi::AnalysisResult& idx, Strigi::InputStream* in )
 {
   const char* data;
   if ( in->read( data, 1, in->size() ) < 0 )
