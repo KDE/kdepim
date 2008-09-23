@@ -160,7 +160,7 @@ class Formatter : public KMail::Interface::BodyPartFormatter
       } else {
         source = bodyPart->asText();
       }
-      QString html = IncidenceFormatter::formatICalInvitation( source, &cl, &helper );
+      QString html = IncidenceFormatter::formatICalInvitationNoHtml( source, &cl, &helper );
 
       if ( html.isEmpty() ) return AsIcon;
       writer->queue( html );
