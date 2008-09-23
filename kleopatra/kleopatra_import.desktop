@@ -32,6 +32,7 @@ Comment[pt_BR]=Gerenciador de certificados e interface gráfica do usuário unif
 Comment[sv]=Certifikathantering och gemensamt grafiskt användargränssnitt för kryptering
 Comment[tr]=Sertifika Yöneticisi ve Birleşik Şifreleme Arayüzü
 Comment[uk]=Засіб для керування сертифікатами і уніфікований графічний інтерфейс шифрування
+Comment[x-test]=xxCertificate Manager and Unified Crypto GUIxx
 Comment[zh_CN]=证书管理器和统一加密用户图形界面
 Comment[zh_TW]=憑證管理與統一加密介面
 NoDisplay=true
