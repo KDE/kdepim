@@ -38,7 +38,7 @@ bool Rfc822EndAnalyzer::checkHeader(  const char* header, int32_t headersize ) c
     return false;
 }
 
-signed char Rfc822EndAnalyzer::analyze( Strigi::AnalysisResult& idx, Strigi::InputStream* in )
+STRIGI_ENDANALYZER_RETVAL Rfc822EndAnalyzer::analyze( Strigi::AnalysisResult& idx, Strigi::InputStream* in )
 {
     char id_from[] = "From: ";
     char id_to[] = "To: ";
