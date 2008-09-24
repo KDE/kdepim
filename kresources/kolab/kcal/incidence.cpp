@@ -715,6 +715,7 @@ void Incidence::saveTo( KCal::Incidence* incidence )
     KCal::Alarm* alarm = incidence->newAlarm();
     alarm->setStartOffset( qRound( mAlarm * 60.0 ) );
     alarm->setEnabled( true );
+    alarm->setType( KCal::Alarm::Display );
   }
 
   if ( organizer().displayName.isEmpty() )
