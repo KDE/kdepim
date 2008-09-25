@@ -140,7 +140,7 @@ the &systemsettings; under <guilabel>Advanced</guilabel>->
 <variablelist>
 <varlistentry>
 <term><guilabel>Akonadi</guilabel></term>
-<listitem><para>????;</para></listitem>
+<listitem><para>To be written</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -226,7 +226,7 @@ the vCard format;</para></listitem>
 
 <varlistentry>
 <term><guilabel>KDE Repository Accounts</guilabel></term>
-<listitem><para>????</para></listitem>
+<listitem><para>To be written</para></listitem>
 </varlistentry>
 </variablelist>
 
@@ -345,7 +345,7 @@ If the type of the number is either a Phone, Mobile phone or Fax number you can 
 
 <sect3 id="managing-contacts-addresses">
 <title>Addresses</title>
-<para>Here you can enter your contact's addresses. You can do so by pressing the <guibutton>Edit Addresses...</guibutton> Button and simply enter the <guilabel>Street</guilabel>, <guilabel>Post Office Box</guilabel>, <guilabel>Locality</guilabel>, <guilabel>Postal Code</guilabel>, and <guilabel>Country</guilabel>. After you do so you can look up the address on the map by simply clicking on the address (you can change the map-service/string used by &kaddressbook; in its settings.???</para>
+<para>Here you can enter your contact's addresses. You can do so by pressing the <guibutton>Edit Addresses...</guibutton> Button and simply enter the <guilabel>Street</guilabel>, <guilabel>Post Office Box</guilabel>, <guilabel>Locality</guilabel>, <guilabel>Postal Code</guilabel>, and <guilabel>Country</guilabel>. After you do so you can look up the address on the map by simply clicking on the address (you can change the map-service/string used by &kaddressbook; in its settings.<!--??? needs rewrite--></para>
 <para>You can also create a label, which will be shown instead of the real address (however, the map lookup, will use the real address).</para>
 <para>You can also have set different addresses (i.e. one for work and one for home). It's also possible to set two different <guilabel>Home</guilabel> addresses.</para>
 </sect3>
@@ -397,9 +397,9 @@ If the type of the number is either a Phone, Mobile phone or Fax number you can 
 <sect2 id="managing-contacts-details">
 <title>Details tab</title>
 <para>This is the place where you can store additional details on your contacts.</para>
-<para>The fields are mostly self-explanatory. You will notice that the <guilabel>Anniversary</guilabel> and <guilabel>Birthday</guilabel> dates are listed in the <guilabel>Special Dates</guilabel> list in the &kontact; summary.???</para>
+<para>The fields are mostly self-explanatory. You will notice that the <guilabel>Anniversary</guilabel> and <guilabel>Birthday</guilabel> dates are listed in the <guilabel>Special Dates</guilabel> list in the &kontact; summary.<!--??? check this--></para>
 </sect2>
-<!-- not in 4-->
+
       <sect2 id="managing-contacts-crypto-preferences">
 	<title>Crypto Settings tab</title>
 	<para>
@@ -578,7 +578,7 @@ If the type of the number is either a Phone, Mobile phone or Fax number you can 
 		    <guilabel>Boolean</guilabel>
 		  </term>
 		  <listitem>
-		    <para>Boolean is only yes or no(true or false, or however you want to call it). In &kaddressbook; it's a simply check box you can check or uncheck it.
+		    <para>Boolean is only yes or no (true or false, or however you want to call it). In &kaddressbook; it's a simply check box you can check or uncheck it.
 		    </para>
 		  </listitem>
 		</varlistentry>
