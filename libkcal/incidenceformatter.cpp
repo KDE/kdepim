@@ -593,7 +593,7 @@ QString IncidenceFormatter::extensiveDisplayString( IncidenceBase *incidence )
 
 static QString string2HTML( const QString& str )
 {
-  return QStyleSheet::convertFromPlainText(str, QStyleSheetItem::WhiteSpaceNormal);
+  return QStyleSheet::escape( str );
 }
 
 static QString eventStartTimeStr( Event *event )
