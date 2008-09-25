@@ -286,7 +286,7 @@ void PilotDaemonTray::slotHandleActionTrigger( QAction* action )
 	
 	unsigned int actionData = action->data().toInt();
 	
-	// This should always pass, otherwhise actionData does not contain a valid
+	// This should always pass, otherwise actionData does not contain a valid
 	// SyncAction::SyncMode.
 	Q_ASSERT( actionData >= 1 && actionData <= 6 );
 	

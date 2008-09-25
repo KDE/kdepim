@@ -913,7 +913,7 @@ ${inlines}
 	
 	
 	comment "If the startcount is greater then 0 it returns (volatilityCount() / startCount).
-Otherewhise 100."
+Otherwise 100."
       end
 
       operation 134922 "volatilityCount"

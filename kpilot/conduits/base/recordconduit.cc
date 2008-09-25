@@ -1045,13 +1045,13 @@ void RecordConduit::copyCategory( const HHRecord *from, Record *to  )
 	 * always be zero (unfiled) or one. So the addCategory doesn't have to be
 	 * implemented in that case.
 	 * 
-	 * Otherwhise (thus when the pc record has more then one category) the
+	 * Otherwise (thus when the pc record has more then one category) the
 	 * dataproxy can check if that category is set already and if that's not the
 	 * case it should add the category to the pc record.
 	 *
 	 * NOTE: the equal( pcRecord, hhRecord ); is now virtual and not implemented.
 	 *       This has to change and it should also compare the categories of the
-	 *       records and the categories stored in the mapping. Otherwhise fullSync
+	 *       records and the categories stored in the mapping. Otherwise fullSync
 	 *       will not work as expected.
 	 */
 	if( to->categoryCount() <= 1 )

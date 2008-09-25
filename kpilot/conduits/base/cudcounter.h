@@ -75,7 +75,7 @@ public:
 	int volatilityCount() const;
 
 	/**
-	 * Returns 100 if startcount is 0 otherwhise volatilityCount() / startCount.
+	 * Returns 100 if startcount is 0 otherwise volatilityCount() / startCount.
 	 */
 	int volatilityPercent() const;
 

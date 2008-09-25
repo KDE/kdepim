@@ -163,7 +163,7 @@ conduit has behaved improperly." isSpecification="false" isLeaf="false" visibili
           <UML:Parameter kind="return" xmi.id="gNALDZcHY2RO" type="W0ygUoQUtzhc" />
          </UML:BehavioralFeature.parameter>
         </UML:Operation>
-        <UML:Operation comment="Returns 100 if startcount is 0 otherwhise volatilityCount() / startCount." isSpecification="false" isLeaf="false" visibility="public" xmi.id="3vjwwcLqjOJm" isRoot="false" isAbstract="false" isQuery="false" name="volatilityPercent" >
+        <UML:Operation comment="Returns 100 if startcount is 0 otherwise volatilityCount() / startCount." isSpecification="false" isLeaf="false" visibility="public" xmi.id="3vjwwcLqjOJm" isRoot="false" isAbstract="false" isQuery="false" name="volatilityPercent" >
          <UML:BehavioralFeature.parameter>
           <UML:Parameter kind="return" xmi.id="HdcmcChIZpbl" type="W0ygUoQUtzhc" />
          </UML:BehavioralFeature.parameter>

@@ -76,7 +76,7 @@ public:
 	
 	/**
 	 * Returns true if the PilotDatabase contains the given category, false
-	 * otherwhise.
+	 * otherwise.
 	 */
 	bool containsCategory( const QString& category ) const;
 	
@@ -87,7 +87,7 @@ public:
 	
 	/**
 	 * Adds the category to the pilot database. If the category app info block is
-	 * full and doesn't contain the category it returns false. True otherwhise.
+	 * full and doesn't contain the category it returns false. True otherwise.
 	 */
 	bool addGlobalCategory( const QString& category );
 	
