@@ -565,7 +565,7 @@ linkend="configure-misc-folders-go-unread"/> option.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Jumps to the the next folder with unread messages.</para>
+<para>Jumps to the next folder with unread messages.</para>
 </listitem>
 </varlistentry>
 
@@ -578,7 +578,7 @@ linkend="configure-misc-folders-go-unread"/> option.</para>
 </menuchoice>
 </term>
 <listitem>
-<para>Jumps to the the previous folder with unread messages.</para>
+<para>Jumps to the previous folder with unread messages.</para>
 </listitem>
 </varlistentry>
 

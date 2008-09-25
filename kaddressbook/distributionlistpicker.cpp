@@ -110,7 +110,7 @@ void KPIM::DistributionListPickerDialog::slotUser1()
         }
         else
         {
-            KMessageBox::error( this, i18n( "A distribution list with the the name %1 already exists. Please choose another name", name ), i18n( "Name Exists" ) );
+            KMessageBox::error( this, i18n( "A distribution list with the name %1 already exists. Please choose another name", name ), i18n( "Name Exists" ) );
         }
     }
     while ( !validName );

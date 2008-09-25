@@ -75,7 +75,7 @@ public:
 	void clearCategory( HHRecord *rec );
 	
 	/**
-	 * Returns true if the the PilotDatabase contains the given category, false
+	 * Returns true if the PilotDatabase contains the given category, false
 	 * otherwhise.
 	 */
 	bool containsCategory( const QString& category ) const;

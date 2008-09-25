@@ -48,7 +48,7 @@ class StdCalendar : public KCal::CalendarResources
      * Creates a calendar given a @p fileName and a resource.
      *
      * @param fileName is a filename containing a calendar.
-     * @param resName is the the name of a resource.
+     * @param resName is the name of a resource.
      */
     StdCalendar( const QString &fileName, const QString &resName );
 
@@ -61,7 +61,7 @@ class StdCalendar : public KCal::CalendarResources
      * Adds a resource to the calendar given a @p fileName and a resource.
      *
      * @param fileName is a filename containing a calendar.
-     * @param resName is the the name of a resource.
+     * @param resName is the name of a resource.
      */
     void addFileResource( const QString &fileName, const QString &resName );
 
