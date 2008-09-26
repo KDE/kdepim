@@ -61,6 +61,7 @@
 #include <kconfig.h>
 #include <kmessagebox.h>
 #include <kprocess.h>
+#include <kactivelabel.h>
 
 // Qt
 #include <qcheckbox.h>
@@ -340,9 +341,17 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   mTopLayout = new QVBoxLayout( page, 0, spacingHint() );
 
   if ( !text.isEmpty() ) {
-    QLabel* textLabel = new QLabel( text, page );
-    textLabel->setAlignment( textLabel->alignment() | Qt::WordBreak );
-    mTopLayout->addWidget( textLabel );
+    if ( text.startsWith( "<qt>" ) ) {
+      KActiveLabel *textLabel = new KActiveLabel( text, page );
+      disconnect( textLabel, SIGNAL(linkClicked(const QString&)), textLabel, SLOT(openLink(const QString&)) );
+      connect( textLabel, SIGNAL(linkClicked(const QString&)), SLOT(slotHelp()) );
+      textLabel->setAlignment( textLabel->alignment() | Qt::WordBreak );
+      mTopLayout->addWidget( textLabel );
+    } else {
+      QLabel *textLabel = new QLabel( text, page );
+      textLabel->setAlignment( textLabel->alignment() | Qt::WordBreak );
+      mTopLayout->addWidget( textLabel );
+    }
   }
 
   QHBoxLayout * hlay = new QHBoxLayout( mTopLayout ); // inherits spacing
