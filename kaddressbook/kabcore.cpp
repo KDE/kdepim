@@ -555,14 +555,14 @@ void KABCore::pasteContacts( KABC::Addressee::List &list )
 
 void KABCore::mergeContacts()
 {
-  KABC::Addressee::List list = mViewManager->selectedAddressees();
+  const KABC::Addressee::List list = mViewManager->selectedAddressees();
   if ( list.count() < 2 )
     return;
 
   KABC::Addressee addr = KABTools::mergeContacts( list );
 
-  KABC::Addressee::List::Iterator it = list.begin();
-  const KABC::Addressee::List::Iterator endIt( list.end() );
+  KABC::Addressee::List::ConstIterator it = list.begin();
+  const KABC::Addressee::List::ConstIterator endIt( list.end() );
   KABC::Addressee origAddr = *it;
   QStringList uids;
   ++it;
