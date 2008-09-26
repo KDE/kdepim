@@ -3,6 +3,14 @@ Friday, September 19th 2008
 Problems Addressed
 --------------------
 
+* kolab/issue2830 Default identity used for invitation even if other identity is set as organizer.
+* kolab/issue2954 Possible to delete a mail if just max append rights.
+
+Friday, September 19th 2008
+
+Problems Addressed
+--------------------
+
 * kolab/issue2757 contacts: configuration dialog "custom page": The pages list doesn't update, if a new page is imported.
 * kolab/issue2989 normal reminder changes to advanced reminder unexpectedly.
 
