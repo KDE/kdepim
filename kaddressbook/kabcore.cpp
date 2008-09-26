@@ -296,7 +296,7 @@ QWidget *KABCore::widget() const
 KAboutData KABCore::createAboutData()
 {
   KAboutData about( "kaddressbook", 0, ki18n( "KAddressBook" ),
-                    "4.1 (enterprise4 0.20080919.862693", ki18n( "The KDE Address Book" ),
+                    "4.1 (enterprise4 0.20080926.865025", ki18n( "The KDE Address Book" ),
                     KAboutData::License_GPL_V2,
                     ki18n( "(c) 1997-2008, The KDE PIM Team" ) );
   about.addAuthor( ki18n("Tobias Koenig"), ki18n( "Current maintainer" ), "tokoe@kde.org" );
