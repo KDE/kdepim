@@ -1,3 +1,10 @@
+Friday, September 26th 2008
+
+Problems addressed
+-------------------
+
+*kolab/issue2989 normal reminder changes to advanced reminder unexpectedly
+
 Friday, September 19th 2008
 
 Problems addressed
