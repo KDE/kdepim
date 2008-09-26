@@ -94,12 +94,12 @@
      </property>
      <column>
       <property name="text" >
-       <string>Protocol</string>
+       <string comment="Instant messaging">Protocol</string>
       </property>
      </column>
      <column>
       <property name="text" >
-       <string>Address</string>
+       <string comment="Instant messaging">Address</string>
       </property>
      </column>
     </widget>
