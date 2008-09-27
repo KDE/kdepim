@@ -460,21 +460,21 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
 
     QTimer *mAddressBookChangedTimer;
 
-    QAction *mActionPaste;
-    QAction *mActionCut;
-    QAction *mActionDelete;
-    QAction *mActionCopy;
-    QAction *mActionEditAddressee;
-    QAction *mActionMoveAddresseeTo;
-    QAction *mActionCopyAddresseeTo;
-    QAction *mActionMerge;
-    QAction *mActionMail;
-    QAction *mActionMailVCard;
-    QAction *mActionChat;
-    QAction *mActionSave;
-    QAction *mActionDeleteView;
-    QAction *mActionWhoAmI;
-    QAction *mActionCategories;
+    KAction *mActionPaste;
+    KAction *mActionCut;
+    KAction *mActionDelete;
+    KAction *mActionCopy;
+    KAction *mActionEditAddressee;
+    KAction *mActionMoveAddresseeTo;
+    KAction *mActionCopyAddresseeTo;
+    KAction *mActionMerge;
+    KAction *mActionMail;
+    KAction *mActionMailVCard;
+    KAction *mActionChat;
+    KAction *mActionSave;
+    KAction *mActionDeleteView;
+    KAction *mActionWhoAmI;
+    KAction *mActionCategories;
     KToggleAction *mActionJumpBar;
     KToggleAction *mActionDetails;
     KUndoStack *mCommandHistory;
