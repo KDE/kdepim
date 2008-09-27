@@ -42,7 +42,7 @@ class StdCalendar : public KCal::CalendarResources
     /**
      * Default Constructor
      */
-    StdCalendar();
+    explicit StdCalendar( bool allowGui );
 
     /**
      * Creates a calendar given a @p fileName and a resource.

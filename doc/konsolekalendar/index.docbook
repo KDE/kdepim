@@ -520,8 +520,11 @@ events will not be inserted.</para>
 </row>
 <row>
   <entry><option>--dry-run</option></entry>
-  <entry>Print what would have been done, but do not execute.  Do not change any
-files; do not insert, remove, modify any existing files, nor create any new files.</entry>
+  <entry>Print what would have been done, but do not execute.  Do not change any files; do not insert, remove, modify any existing files, nor create any new files.</entry>
+</row>
+<row>
+  <entry><option>--allow-gui</option></entry>
+  <entry>Permit resources which might need an interactive user interface. In normal operation, only resources which never will require a user interface are used (like file-based calendars).</entry>
 </row>
 <row>
   <entry><option>--file</option>

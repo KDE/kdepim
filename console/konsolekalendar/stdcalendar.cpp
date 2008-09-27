@@ -53,7 +53,7 @@ StdCalendar::StdCalendar( const QString &fileName, const QString &resName )
   }
 }
 
-StdCalendar::StdCalendar()
+StdCalendar::StdCalendar( bool allowGui )
   : CalendarResources( KPIM::KPimPrefs::timeSpec() )
 {
   readConfig();
@@ -66,13 +66,20 @@ StdCalendar::StdCalendar()
   // More types can be added as long as we are very sure they
   // can be run ok in a non-GUI environment, like cron.
   // See X-KDE-ResourceType in the resource .desktop file.
-  KCal::CalendarResourceManager::Iterator it;
-  for ( it = mManager->begin(); it != mManager->end(); ++it ) {
-    if ( (*it)->type() == QLatin1String( "file" ) ||
-         (*it)->type() == QLatin1String( "localdir" ) ) {
+  if ( allowGui ) {
+    KCal::CalendarResourceManager::Iterator it;
+    for ( it = mManager->begin(); it != mManager->end(); ++it ) {
       (*it)->load();
-    } else {
-      mManager->remove( *it );
+    }
+  } else {
+    KCal::CalendarResourceManager::Iterator it;
+    for ( it = mManager->begin(); it != mManager->end(); ++it ) {
+      if ( (*it)->type() == QLatin1String( "file" ) ||
+           (*it)->type() == QLatin1String( "localdir" ) ) {
+        (*it)->load();
+      } else {
+        mManager->remove( *it );
+      }
     }
   }
 

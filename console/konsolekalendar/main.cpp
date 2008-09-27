@@ -102,6 +102,8 @@ int main( int argc, char *argv[] )
                ki18n( "Print helpful runtime messages" ) );
   options.add( "dry-run",
                ki18n( "Print what would have been done, but do not execute" ) );
+  options.add( "allow-gui",
+               ki18n( "Allow resources which might need an interactive user interface" ) );
   options.add( "file <calendar-file>",
                ki18n( "Specify which calendar you want to use" ) );
   options.add( ":",
@@ -175,11 +177,12 @@ int main( int argc, char *argv[] )
                       "  http://pim.kde.org/components/konsolekalendar.php" ) );
   KCmdLineArgs::addCmdLineOptions( options ); // Add our own options.
 
-  KApplication app(
-    false  //GUI is not enabled - disable all GUI stuff
-    );
-
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
+
+  KApplication app(
+    // when not set (default) GUI is not enabled - disable all GUI stuff
+    args->isSet( "allow-gui" )
+    );
 
   // Default values for start date/time (today at 07:00)
   QDate startdate = QDate::currentDate();
@@ -211,6 +214,10 @@ int main( int argc, char *argv[] )
 
   if ( args->isSet( "dry-run" ) ) {
     variables.setDryRun( true );
+  }
+
+  if ( args->isSet( "allow-gui" ) ) {
+    variables.setAllowGui( true );
   }
 
   /*
@@ -680,7 +687,7 @@ int main( int argc, char *argv[] )
     calendarResource = new StdCalendar( variables.getCalendarFile(),
                                         i18n( "Active Calendar" ) );
   } else {
-    calendarResource = new StdCalendar();
+    calendarResource = new StdCalendar( variables.allowGui() );
   }
   if ( !args->isSet( "import" ) ) {
     variables.setCalendar( calendarResource );
