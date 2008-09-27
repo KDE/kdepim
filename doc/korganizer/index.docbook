@@ -403,7 +403,7 @@ want to use another resource, especially if you use a supported groupware
 server. Please ask the server administrator for the information required to
 configure the groupware resource, including free/busy information publishing
 and retrieving. Access to free/busy information allows an event organizer to
-take the attendee's calendar in consideration when adding him to the the event's
+take the attendee's calendar in consideration when adding him to the event's
 attendee list.</para>
 
 <note><para>Besides calendar storage, groupware servers typically offer contacts,
@@ -2128,7 +2128,7 @@ events with other users using one of these clients.
 &korganizer; is integrated with &kmail; for receiving, processing, and sending
 events, event responses, updates, cancellations, &etc; For instance, when you
 get an invitation in &kmail;, and decide to
-accept it, by clicking the the <guilabel>accept</guilabel> link in the mail
+accept it, by clicking the <guilabel>accept</guilabel> link in the mail
 body, the event is added to your calendar, and a response to the event's
 organizer is sent automatically.</para>
 

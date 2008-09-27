@@ -1410,7 +1410,7 @@ Undo the last edit.</action>
 <varlistentry> 
 <term>
 <menuchoice> 
-<shortcut><keycombo action="simul">&Ctrl;<keycap>Shift</keycap><keycap>Z</keycap></keycombo></shortcut>
+<shortcut><keycombo action="simul">&Ctrl;&Shift;<keycap>Z</keycap></keycombo></shortcut>
 <guimenu>Edit</guimenu>
 <guimenuitem>Redo</guimenuitem>
 </menuchoice>

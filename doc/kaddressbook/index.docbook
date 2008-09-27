@@ -53,8 +53,8 @@
 <!-- TRANS:ROLES_OF_TRANSLATORS -->
 </authorgroup>
 
-<date>2007-03-31</date>
-<releaseinfo>3.5.7 (&kde; 3.5.6)</releaseinfo>
+<date>2008-09-20</date>
+<releaseinfo>4.1 (&kde; 4.1.2)</releaseinfo>
 
 <legalnotice>
 &FDLNotice;
@@ -100,7 +100,8 @@ entry fields in its graphical user interface.
 <title>Getting Started</title>
 
 <para>
-After you have started &kaddressbook; (either using the &kmenu; or by typing
+After you have started &kaddressbook; (either using one of the &kde; application 
+launchers (&kickoff;, the classic &kmenu; or Lancelot Launcher) or by typing
 <command>kaddressbook</command> at the command prompt or by using the 
 <guilabel>Contacts</guilabel> tab in &kontact;) the &kaddressbook; main window
 will be displayed:</para>
@@ -122,7 +123,7 @@ its contacts. After starting &kaddressbook; for the first time you will have
 a default resource installed that saves all contacts in a vCard file
 under <filename>$<envar>HOME</envar>/.kde/share/apps/kabc/std.vcf</filename>; you can add more resources
 by using the <guilabel>Resource Configuration</guilabel> dialog, which is available in
-the &kcontrolcenter; under <guilabel>&kde; Components</guilabel>->
+the &systemsettings; under <guilabel>Advanced</guilabel>->
 <guilabel>&kde; Resources</guilabel>:</para>
 
 <screenshot>
@@ -137,6 +138,11 @@ the &kcontrolcenter; under <guilabel>&kde; Components</guilabel>->
 <para>Launch the <guilabel>Resource Configuration</guilabel> dialog by pushing the <guibutton>Add...</guibutton> button. Choose the resource you want to add to your <guilabel>Contacts</guilabel> module and click <guilabel>OK</guilabel> to confirm your choice.</para>
 
 <variablelist>
+<varlistentry>
+<term><guilabel>Akonadi</guilabel></term>
+<listitem><para>To be written</para></listitem>
+</varlistentry>
+
 <varlistentry>
 <term><guilabel>Directory</guilabel></term>
 <listitem><para>Each contact will be stored in its own file;</para></listitem>
@@ -158,7 +164,7 @@ the &kcontrolcenter; under <guilabel>&kde; Components</guilabel>->
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Addressbook on IMAP Server via Kmail</guilabel></term>
+<term><guilabel>Addressbook on IMAP Server via &kmail;</guilabel></term>
 <listitem><para>This resource stores contacts as messages on an IMAP server.  &kmail; is used to access the IMAP server, therefore, if you use this type of resource, &kmail; will open whenever you access the address book, if it (or &kontact;) are not already running.</para></listitem>
 </varlistentry>
 <!--
@@ -179,13 +185,13 @@ on a remote server (for example, through &HTTP;, WebDAV, &FTP; or Fish).</para><
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Addressbook on an Exchange Server (Experimental)</guilabel></term>
-<listitem><para>To be written</para></listitem>
+<term><guilabel>OpenXchange Server</guilabel></term>
+<listitem><para>This resource stores contacts on an OpenExchange server.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>OpenXchange Server</guilabel></term>
-<listitem><para>This resource stores contacts on an OpenExchange server.</para></listitem>
+<term><guilabel>Addressbook on Scalix Server via &kmail;</guilabel></term>
+<listitem><para>To be written</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -215,10 +221,16 @@ specified in RFC 2426;</para></listitem>
 <term><guilabel>Binary</guilabel></term>
 <listitem><para>the contacts will be stored in a binary format &mdash; this
 increases performance during loading and saving, but it is not portable like
-the vCard format.</para></listitem>
+the vCard format;</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>KDE Repository Accounts</guilabel></term>
+<listitem><para>To be written</para></listitem>
 </varlistentry>
 </variablelist>
 
+<!-- no Use as Standard</guibutton> button ???-->
 <para>&kaddressbook; needs a standard resource, where all contacts should be
 saved if no other resource is specified; for this reason, after starting
 &kaddressbook; the first time, there is already a resource available.
@@ -325,7 +337,7 @@ default formatted name type for new contacts, use the <link linkend="preferences
 <para>Here you can enter your contact's phone numbers. As well as land-lines and mobile/cell number, Fax, ISDN and many other types are possible.
 The number can contain almost any character, so it is possible to format the number in any way you need, including adding letters.</para>
 <para>
-	If three numbers aren't enough, simply press the <guilabel>Add</guilabel> button to get additional fields to enter a number.
+If three numbers aren't enough, simply press the <guibutton>Add</guibutton> button to get additional fields to enter a number.
 </para><para>
 If the type of the number is either a Phone, Mobile phone or Fax number you can select a script to be executed when clicking on it. (under Configuration → General)
 </para>
@@ -333,7 +345,7 @@ If the type of the number is either a Phone, Mobile phone or Fax number you can 
 
 <sect3 id="managing-contacts-addresses">
 <title>Addresses</title>
-<para>Here you can enter your contact's addresses. You can do so by pressing the <guibutton>Edit Addresses...</guibutton> Button and simply enter the <guilabel>Street</guilabel>, <guilabel>Post Office Box</guilabel>, <guilabel>Locality</guilabel>, <guilabel>Postal Code</guilabel>, and <guilabel>Country</guilabel>. After you do so you can look up the address on the map by simply clicking on the address (you can change the map-service/string used by &kaddressbook; in its settings.</para>
+<para>Here you can enter your contact's addresses. You can do so by pressing the <guibutton>Edit Addresses...</guibutton> Button and simply enter the <guilabel>Street</guilabel>, <guilabel>Post Office Box</guilabel>, <guilabel>Locality</guilabel>, <guilabel>Postal Code</guilabel>, and <guilabel>Country</guilabel>. After you do so you can look up the address on the map by simply clicking on the address (you can change the map-service/string used by &kaddressbook; in its settings.<!--??? needs rewrite--></para>
 <para>You can also create a label, which will be shown instead of the real address (however, the map lookup, will use the real address).</para>
 <para>You can also have set different addresses (i.e. one for work and one for home). It's also possible to set two different <guilabel>Home</guilabel> addresses.</para>
 </sect3>
@@ -342,7 +354,7 @@ If the type of the number is either a Phone, Mobile phone or Fax number you can 
 <title>Emails</title>
 <para>You can enter email addresses for your contact here. You can set one address as standard.</para>
 <para>If you set a photo for your contact on the <guilabel>Misc</guilabel> tab, &kmail; will show it when viewing these addresses. </para>
-<para>These addresses will be used in &kmail; if you type the name of the person in either the <guilabel>"to"</guilabel>, <guilabel>"cc"</guilabel> or <guilabel>"bcc"</guilabel> field of a new message.</para>
+<para>These addresses will be used in &kmail; if you type the name of the person in either the <guilabel>To</guilabel>, <guilabel>CC</guilabel> or <guilabel>BCC</guilabel> field of a new message.</para>
 </sect3>
 
 <sect3 id="managing-contacts-im-addresses">
@@ -385,7 +397,7 @@ If the type of the number is either a Phone, Mobile phone or Fax number you can 
 <sect2 id="managing-contacts-details">
 <title>Details tab</title>
 <para>This is the place where you can store additional details on your contacts.</para>
-<para>The fields are mostly self-explanatory. You will notice that the <guilabel>Anniversary</guilabel> and <guilabel>Birthday</guilabel> dates are listed in the <guilabel>Special Dates</guilabel> list in the &kontact; summary.</para>
+<para>The fields are mostly self-explanatory. You will notice that the <guilabel>Anniversary</guilabel> and <guilabel>Birthday</guilabel> dates are listed in the <guilabel>Special Dates</guilabel> list in the &kontact; summary.<!--??? check this--></para>
 </sect2>
 
       <sect2 id="managing-contacts-crypto-preferences">
@@ -518,7 +530,7 @@ If the type of the number is either a Phone, Mobile phone or Fax number you can 
 
 <sect3 id="managing-contacts-misc-geo-data">
 <title>Geo Data</title>
-<para>Here you can enter the contact's geographical location, with <guilabel>Latitude</guilabel> and <guilabel>Longitude</guilabel>. To "enable" them simply click on the check box <guilabel>use geo data</guilabel>. After that you can either enter the coordinates by hand or click on <guilabel>Edit Geo Data...</guilabel> to select them on a world map.</para>
+<para>Here you can enter the contact's geographical location, with <guilabel>Latitude</guilabel> and <guilabel>Longitude</guilabel>. To "enable" them simply click on the check box <guilabel>Use geo data</guilabel>. After that you can either enter the coordinates by hand or click on <guilabel>Edit Geo Data...</guilabel> to select them on a world map.</para>
 </sect3>
 <sect3 id="managing-contacts-misc-sound">
 <title>Sound</title>
@@ -530,7 +542,7 @@ If the type of the number is either a Phone, Mobile phone or Fax number you can 
 <title>Photo and Logo</title>
 <para>By clicking on the buddy icon you can select and scale a picture of your contact.</para>
 <para>The Photo will be shown in the contact preview and in the Icon view mode. However the Logo picture will only be shown in Icon view and only if there's no photo available.</para>
-<para>To reset a photo or logo simply right click on it and select <guilabel>Reset</guilabel>.</para>
+<para>To reset a photo or logo simply click on it with the &RMB; and select <guilabel>Reset</guilabel>.</para>
 </sect3>
 <sect3 id="managing-contacts-misc-free-busy-informations">
 <title>Location of Free/Busy informations</title>
@@ -566,7 +578,7 @@ If the type of the number is either a Phone, Mobile phone or Fax number you can 
 		    <guilabel>Boolean</guilabel>
 		  </term>
 		  <listitem>
-		    <para>Boolean is only yes or no(true or false, or however you want to call it). In KAddressbook it's a simply check box you can check or uncheck it.
+		    <para>Boolean is only yes or no (true or false, or however you want to call it). In &kaddressbook; it's a simply check box you can check or uncheck it.
 		    </para>
 		  </listitem>
 		</varlistentry>
@@ -644,7 +656,7 @@ what fields were selected in the view configuration dialog.</para></listitem>
 </mediaobject>
 </screenshot>
 
-<para>The <guilabel>Selected Fields</guilabel> page offers you the possibility
+<para>The <guilabel>Fields</guilabel> page offers you the possibility
 of selecting which of the stored details of a contact should be shown in the view. In the
 <guilabel>Default Filter</guilabel> page you can setup what
 <link linkend="using-filters">filter</link> should be used by the view.</para>
@@ -655,7 +667,7 @@ of selecting which of the stored details of a contact should be shown in the vie
 <para>
 You can setup filters in &kaddressbook; which depend on the categories a
 contact belongs to. For example, you can create a filter that matches all
-contacts which belong to the categories 'Family' and 'Friends'; 
+contacts which belong to the categories <guilabel>Family</guilabel> and <guilabel>Friends</guilabel>; 
 you can also create a filter that matches all contacts which do not
 these categories. To manage filters, use the filter configuration dialog:
 </para>
@@ -692,7 +704,7 @@ At the moment we already have three extensions:
 
 <varlistentry>
 <term><guilabel>Contact Editor</guilabel></term>
-<listitem><para>Similar to the the contact editing dialog, but
+<listitem><para>Similar to the contact editing dialog, but
 designed to allow contacts to be edited quickly.</para></listitem>
 </varlistentry>
 
@@ -795,7 +807,7 @@ by many (address book) applications.</para></listitem>
 <variablelist>
 <varlistentry>
 <term><guilabel>vCard 2.1 &#038; 3.0</guilabel></term>
-<listitem><para>With this entry you can import your contacts from the vCard format (<acronym>RFC</acronym> 2426). You can either export it into the 2.1 or in the 3.0 compatibel version of the vCard standard.</para></listitem>
+<listitem><para>With this entry you can export your contacts to the vCard format (<acronym>RFC</acronym> 2426). You can either export it into the 2.1 or in the 3.0 compatibel version of the vCard standard.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -867,7 +879,7 @@ checked.
 <para>You can modify many aspects of &kaddressbook;'s behavior in the
 preferences dialog; the dialog can be opened via
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure
-KAddressBook...</guimenuitem></menuchoice> or using the toolbar icon.</para>
+&kaddressbook;...</guimenuitem></menuchoice> or using the toolbar icon.</para>
 
 <screenshot>
 <screeninfo>Configuring &kaddressbook;</screeninfo>
@@ -1090,7 +1102,7 @@ contact details attached as vCard</action>.</para></listitem>
 <guimenu>File</guimenu>
 <guimenuitem>Chat With...</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>If a Instant Messenger application (like &kopete;)is started and online, and has an association for this contact, this entry appears. It will open a new chat window to your contact.</action></para></listitem>
+<listitem><para><action>If a Instant Messenger application (like &kopete;) is started and online, and has an association for this contact, this entry appears. It will open a new chat window to your contact.</action></para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -1183,7 +1195,7 @@ it is in a valid format)</action>.</para></listitem>
 <guimenu>Edit</guimenu>
 <guimenuitem>Store Contact In...</guimenuitem>
 </menuchoice></term>
-<listitem><para><action>If two or more resources are available you can move a contact into another resource.</action>.</para>
+<listitem><para><action>If two or more resources are available you can move a contact into another resource.</action></para>
 <para>Please notice: This dialog will only work if two or more resources are available, if only one resource is present nothing will happen (this is a known bug).</para></listitem>
 </varlistentry>
 
@@ -1204,7 +1216,7 @@ it is in a valid format)</action>.</para></listitem>
 <guimenuitem>Merge Contacts</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>To merge contacts, simply select two or more and press the <guimenuitem>Merge Contacts</guimenuitem> entry. The last contact selected will be the merged contact, which now contains all information from both.
-</action>.</para></listitem>
+</action></para></listitem>
 </varlistentry>
 
 <varlistentry>

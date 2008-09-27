@@ -21,7 +21,7 @@ Configure Calendar</guimenuitem></menuchoice>, inside &kontact;, and click the
 <sect2 id="date-numbers-plugin">
 <title>Date Numbers Plugin for Calendars</title>
 <para>
-This plugin adds the day number of day in the the year to the agenda view. For
+This plugin adds the day number of day in the year to the agenda view. For
 instance, February 1 is the day number 32.
 </para>
 </sect2>
@@ -29,7 +29,7 @@ instance, February 1 is the day number 32.
 <sect2 id="jewish-calendar-plugin">
 <title>Jewish Calendar Plugin</title>
 <para>
-The plugin provides you a the the Jewish calendar dates in addition to the
+The plugin provides you Jewish calendar dates in addition to the
 Gregorian calendar dates. In the configuration dialog of the plugin, you can
 choose if you want to display Israeli holidays, weekly prasha, day of Omer and /
 or Chol HaMoed.
