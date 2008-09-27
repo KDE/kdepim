@@ -51,6 +51,10 @@
 
 #include "viewmanager.h"
 
+// TODO FIXME this is a big hack to support i18n for the default view, a better proper method is welcome
+#define DEFAULT_VIEW_NAME "Default Table View"
+#define TRANSLATED_DEFAULT_VIEW_NAME i18nc("KAddressbook default view name", "Default Table View")
+
 ViewManager::ViewManager( KAB::Core *core, QWidget *parent, const char *name )
   : QWidget( parent ), mCore( core ), mActiveView( 0 ),
     mFilterSelectionWidget( 0 )
@@ -71,7 +75,13 @@ ViewManager::~ViewManager()
 void ViewManager::restoreSettings()
 {
   mViewNameList = KABPrefs::instance()->viewNames();
+  for (int i = 0; i < mViewNameList.count(); ++i)
+  {
+    if (mViewNameList[i] == DEFAULT_VIEW_NAME) mViewNameList[i] = TRANSLATED_DEFAULT_VIEW_NAME;
+  }
+
   QString activeViewName = KABPrefs::instance()->currentView();
+  if (activeViewName == DEFAULT_VIEW_NAME) activeViewName = TRANSLATED_DEFAULT_VIEW_NAME;
 
   mActionSelectView->setItems( mViewNameList );
   mActionSelectView->setCurrentItem( mViewNameList.indexOf( activeViewName ) );
@@ -86,7 +96,9 @@ void ViewManager::restoreSettings()
   QHashIterator<QString, KAddressBookView* > it( mViewDict );
   while ( it.hasNext() ) {
     it.next();
-    KConfigGroup group( mCore->config(), it.key() );
+    QString groupName = it.key();
+    if (groupName == TRANSLATED_DEFAULT_VIEW_NAME) groupName = DEFAULT_VIEW_NAME;
+    KConfigGroup group( mCore->config(), groupName );
     it.value()->readConfig( group );
   }
 
@@ -100,7 +112,9 @@ void ViewManager::saveSettings()
   QHashIterator<QString, KAddressBookView*> it( mViewDict );
   while ( it.hasNext() ) {
     it.next();
-    KConfigGroup group( mCore->config(), it.key() );
+    QString groupName = it.key();
+    if (groupName == TRANSLATED_DEFAULT_VIEW_NAME) groupName = DEFAULT_VIEW_NAME;
+    KConfigGroup group( mCore->config(), groupName );
     it.value()->writeConfig( group );
   }
 
@@ -108,10 +122,19 @@ void ViewManager::saveSettings()
   KABPrefs::instance()->setCurrentFilter( mFilterSelectionWidget->currentItem() );
 
   // write the view name list
-  KABPrefs::instance()->setViewNames( mViewNameList );
+  QStringList viewNameList = mViewNameList;
+  for (int i = 0; i < viewNameList.count(); ++i)
+  {
+    if (viewNameList[i] == TRANSLATED_DEFAULT_VIEW_NAME) viewNameList[i] = DEFAULT_VIEW_NAME;
+  }
+  KABPrefs::instance()->setViewNames( viewNameList );
 
   if ( mActiveView )
-    KABPrefs::instance()->setCurrentView( mActiveView->windowTitle() );
+  {
+    QString currentView = mActiveView->windowTitle();
+    if (currentView == TRANSLATED_DEFAULT_VIEW_NAME) currentView = DEFAULT_VIEW_NAME;
+    KABPrefs::instance()->setCurrentView( currentView );
+  }
 }
 
 QStringList ViewManager::selectedUids() const
@@ -210,7 +233,9 @@ void ViewManager::setActiveView( const QString &name )
   // Check if we found the view. If we didn't, then we need to create it
   if ( !view ) {
     KConfig *config = mCore->config();
-    KConfigGroup group( config, name );
+    QString groupName = name;
+    if (groupName == TRANSLATED_DEFAULT_VIEW_NAME) groupName = DEFAULT_VIEW_NAME;
+    KConfigGroup group( config, groupName );
     QString type = group.readEntry( "Type", "Table" );
 
     kDebug(5720) <<"ViewManager::setActiveView: creating view -" << name;
@@ -288,7 +313,9 @@ void ViewManager::editView()
   if ( wdg ) {
     ViewConfigureDialog dlg( wdg, mActiveView->windowTitle(), this );
 
-    KConfigGroup group( mCore->config(), mActiveView->windowTitle() );
+    QString groupName = mActiveView->windowTitle();
+    if (groupName == TRANSLATED_DEFAULT_VIEW_NAME) groupName = DEFAULT_VIEW_NAME;
+    KConfigGroup group( mCore->config(), groupName );
     dlg.restoreSettings( group );
 
     if ( dlg.exec() ) {
@@ -325,7 +352,9 @@ void ViewManager::deleteView()
 
     // remove the view from the config file
     KConfig *config = mCore->config();
-    config->deleteGroup( mActiveView->windowTitle() );
+    QString groupName = mActiveView->windowTitle();
+    if (groupName == TRANSLATED_DEFAULT_VIEW_NAME) groupName = DEFAULT_VIEW_NAME;
+    config->deleteGroup( groupName );
 
     KAddressBookView *view = mViewDict[ mActiveView->windowTitle() ];
     mViewDict.remove( mActiveView->windowTitle() );
