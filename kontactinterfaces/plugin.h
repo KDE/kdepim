@@ -172,6 +172,8 @@ class KONTACTINTERFACES_EXPORT Plugin : public QObject, virtual public KXMLGUICl
 
      /**
        Reimplement this method and return the a path relative to "data" to the tips file.
+       The tips file contains hints/tips that are displayed at the beginning of the program
+       as "tip of the day". It has nothing to do with tooltips.
      */
     virtual QString tipFile() const;
 
