@@ -76,7 +76,7 @@ void KornCfgImpl::slotEditBox()
 	pbMoveDown->setEnabled( false );
 	
 	m_base = new KDialog( this );
-	m_base->setCaption( "Box Configuration" );
+	m_base->setCaption( i18n("Box Configuration") );
 	m_base->setButtons( KDialog::Ok | KDialog::Cancel );
 	m_base->setModal( false );
 	m_base->showButtonSeparator( true );
