@@ -3125,7 +3125,7 @@ void KDLegendWidget::clearLegend ( )
     if ( dock )
         myLegend = new QGroupBox( 1, Qt::Horizontal, scroll->viewport() );
     else
-        myLegend = new QGroupBox( 1, Qt::Horizontal, "Legend:", scroll->viewport() );
+        myLegend = new QGroupBox( 1, Qt::Horizontal, tr("Legend:"), scroll->viewport() );
     QPalette pal = palette();
     pal.setColor( backgroundRole(), Qt::white );
     myLegend->setPalette( pal );
