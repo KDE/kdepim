@@ -23,7 +23,6 @@
 //Own Header
 #include "bookshelf.h"
 
-#include <QAction>
 #include <QMimeData>
 #include <QDir>
 #include <QApplication>

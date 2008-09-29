@@ -116,7 +116,7 @@ KJotsComponent::KJotsComponent(QWidget* parent, KActionCollection *collection) :
 
     // I've moved as much I could into DelayedInitialization(), but the XML
     // gui builder won't insert things properly if they don't get in there early.
-    QAction *action;
+    KAction *action;
     action = actionCollection->addAction( "go_next_book");
     action->setText( i18n("Next Book") );
     action->setIcon(KIcon("go-down"));
