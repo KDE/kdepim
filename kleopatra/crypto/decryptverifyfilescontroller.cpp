@@ -254,13 +254,22 @@ std::vector<shared_ptr<QFile> > DecryptVerifyFilesController::Private::prepareWi
             DecryptVerifyOperationWidget * const op = m_wizard->operationWidget( counter++ );
             kleo_assert( op != 0 );
 
-            if ( mayBeOpaqueSignature( classification ) || mayBeCipherText( classification ) )
+            const QString signedDataFileName = findSignedData( fname );
+
+            // this breaks opaque signatures whose source files still
+            // happen to exist in the same directory. Until we have
+            // content-based classification, this is the most unlikely
+            // case, so that's the case we break. ### FIXME remove when content-classify is done
+            if ( mayBeDetachedSignature( classification ) && !signedDataFileName.isEmpty() )
+                op->setMode( DecryptVerifyOperationWidget::VerifyDetachedWithSignature );
+            // ### end FIXME
+            else if ( mayBeOpaqueSignature( classification ) || mayBeCipherText( classification ) )
                 op->setMode( DecryptVerifyOperationWidget::DecryptVerifyOpaque );
             else
                 op->setMode( DecryptVerifyOperationWidget::VerifyDetachedWithSignature );
 
             op->setInputFileName( fname );
-            op->setSignedDataFileName( findSignedData( fname ) );
+            op->setSignedDataFileName( signedDataFileName );
 
             files.push_back( file );
 
