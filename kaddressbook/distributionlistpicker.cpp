@@ -127,7 +127,7 @@ void KPIM::DistributionListPickerDialog::slotOk()
 
 void KPIM::DistributionListPickerDialog::slotCancel()
 {
-    m_selectedDistributionList = QString();
+    m_selectedDistributionList.clear();
     reject();
 }
 

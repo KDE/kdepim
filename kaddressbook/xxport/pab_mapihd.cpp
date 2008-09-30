@@ -142,8 +142,8 @@ pabrec_entry mapitag_t::matchTag(void)
 int          i,j;
 pabrec_entry e=pr_unknown;
 
-  for(i=0;mapi_map[i]!=NULL && e==pr_unknown;i++) {
-    for(j=1;mapi_map[i][j]!=0 && _tag!=mapi_map[i][j];j++) {};
+  for(i=0;mapi_map[i]!=NULL && e==pr_unknown;++i) {
+    for(j=1;mapi_map[i][j]!=0 && _tag!=mapi_map[i][j];++j) {};
     if (mapi_map[i][j]!=0) {
       e=(pabrec_entry) mapi_map[i][0];
     }
@@ -177,7 +177,7 @@ pabfields_t::pabfields_t(pabrec & R, QWidget * /*parent*/)
 
   // get the right entries now
 
-  for(i=2,k=0;i<R.N() && k<tags.size();i++,k++) {
+  for(i=2,k=0;i<R.N() && k<tags.size();++i,++k) {
     if (!isUsed(k)) { i-=1; }
     else {pabrec_entry e;
           QString      E;
@@ -357,7 +357,7 @@ int       i;
   m_W=new word_t[m_N+1];
 
   P.read(dummy);
-  for(i=0;i<=m_N;i++) {
+  for(i=0;i<=m_N;++i) {
     P.read(m_W[i]);
   }
 }
@@ -384,7 +384,7 @@ const char *pabrec::getEntry(int i)
 int mb,me;
 int k;
   mb=m_W[i];me=m_W[i+1];
-  for(k=0;mb!=me;mb++) {
+  for(k=0;mb!=me;++mb) {
     if (_mem[mb]>=' ' || _mem[mb]=='\n' || _mem[mb]==13 || _mem[mb]=='\t') {
       if (_mem[mb]==13) { entry[k]='\n'; }
       else { entry[k]=_mem[mb]; }

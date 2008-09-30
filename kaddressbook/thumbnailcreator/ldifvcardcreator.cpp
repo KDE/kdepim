@@ -191,7 +191,7 @@ bool VCard_LDIFCreator::createImageSmall()
   Q_ASSERT( posNewLine > 0 );
   //const QPixmap *fontPixmap = &(mSplitter->pixmap());
 
-  for ( int i = 0; i < text.length(); i++ ) {
+  for ( int i = 0; i < text.length(); ++i ) {
     if ( x > posNewLine || newLine ) {  // start a new line?
       x = xborder;
       y += yOffset;

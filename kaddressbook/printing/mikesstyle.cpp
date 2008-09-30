@@ -165,7 +165,7 @@ void MikesStyle::doPaint( QPainter &painter, const KABC::Addressee &addr,
   QString label;
   QString value;
 
-  for ( int i = 0; i < numFields / 2; i++ ) {
+  for ( int i = 0; i < numFields / 2; ++i ) {
     label = fields[ i ]->label();
     value = trimString( fields[ i ]->value( addr ), (width - 10) / 4, fm );
 
@@ -181,7 +181,7 @@ void MikesStyle::doPaint( QPainter &painter, const KABC::Addressee &addr,
 
   yPos = bfm.height() + 2 * mFieldSpacingHint;
   xPos = margin + width / 2;
-  for ( int i = numFields / 2; i < numFields; i++ ) {
+  for ( int i = numFields / 2; i < numFields; ++i ) {
     label = fields[ i ]->label();
     value = value = trimString( fields[ i ]->value( addr ), (width - 10) / 4, fm );
 
@@ -221,14 +221,14 @@ int MikesStyle::calcHeight( const KABC::Addressee &addr,
   int halfHeight = 0;
 
   // Determine which half of the fields is higher
-  for ( int i = 0; i < numFields / 2; i++ )
+  for ( int i = 0; i < numFields / 2; ++i )
     halfHeight += fm.height() * (fieldList[ i ]->value( addr ).count( '\n' ) + 1);
 
   height = halfHeight;
 
   // now the second half
   halfHeight = 0;
-  for ( int i = numFields / 2; i < numFields; i++ )
+  for ( int i = numFields / 2; i < numFields; ++i )
     halfHeight += fm.height() * (fieldList[ i ]->value( addr ).count( '\n' ) + 1);
 
   height = qMax( height, halfHeight );

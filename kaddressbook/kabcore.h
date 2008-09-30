@@ -219,7 +219,7 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
 
 
     /**
-      Copys the selected contacts into clipboard for later pasting.
+      Copies the selected contacts into clipboard for later pasting.
      */
     void copyContacts();
 

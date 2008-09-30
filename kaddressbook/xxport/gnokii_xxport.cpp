@@ -290,7 +290,7 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 
   int num_read = 0;
 
-  for (int i = 1; !m_progressDlg->wasCancelled() && i <= memstat.used + memstat.free; i++) {
+  for (int i = 1; !m_progressDlg->wasCancelled() && i <= memstat.used + memstat.free; ++i) {
 	error = read_phone_entry( i, memtype, &entry );
 
 	progress->setValue(num_read);
@@ -351,7 +351,7 @@ static gn_error read_phone_entries( const char *memtypestr, gn_memory_type memty
 
 		/* scan sub-entries */
 		if (entry.subentries_count)
-		 for (int n=0; n<entry.subentries_count; n++) {
+		 for (int n=0; n<entry.subentries_count; ++n) {
 		  QString s = GN_FROM(entry.subentries[n].data.number).simplified();
 		  GNOKII_DEBUG(QString(" Subentry#%1, entry_type=%2, number_type=%3, number=%4\n")
 				.arg(n).arg(entry.subentries[n].entry_type)
@@ -529,7 +529,7 @@ static QString makeValidPhone( const QString &number )
 	// allowed chars: 0-9, *, #, p, w, +
 	QString num = number.simplified();
 	QString allowed("0123456789*+#pw");
-	for (unsigned int i=num.length(); i>=1; i--)
+	for (unsigned int i=num.length(); i>=1; --i)
 		if (allowed.indexOf(num[i-1])==-1)
 			num.remove(i-1,1);
 	if (num.isEmpty())
@@ -619,7 +619,7 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 	}
 	// add E-Mails
 	QStringList emails = addr->emails();
-	for (int n=0; n<emails.count(); n++) {
+	for (int n=0; n<emails.count(); ++n) {
 		if (entry.subentries_count >= GN_PHONEBOOK_SUBENTRIES_MAX_NUMBER)
 			break; // Phonebook full
 		s = emails[n].simplified();
@@ -635,7 +635,7 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 		entry.subentries_count++;
 		subentry++;
 	}
-	// add Adresses
+	// add Addresses
 	const KABC::Address::List addresses = addr->addresses();
 	KABC::Address::List::ConstIterator it2;
 	for ( it2 = addresses.begin(); it2 != addresses.end(); ++it2 ) {
@@ -669,7 +669,7 @@ static gn_error xxport_phone_write_entry( int phone_location, gn_memory_type mem
 	}
 
 	// debug output
-	for (int st=0; st<entry.subentries_count; st++) {
+	for (int st=0; st<entry.subentries_count; ++st) {
 		gn_phonebook_subentry *subentry = &entry.subentries[st];
 		GNOKII_DEBUG(QString(" SubTel #%1: entry_type=%2, number_type=%3, number=%4\n")
 						.arg(st).arg(subentry->entry_type)

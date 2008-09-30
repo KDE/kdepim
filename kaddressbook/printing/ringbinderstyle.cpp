@@ -143,7 +143,7 @@ void RingBinderPrintStyle::print( const KABC::Addressee::List &contacts, PrintPr
   config.writeEntry( FillWithEmptyFields, mPageAppearance->cbFillEmpty->isChecked() );
   config.writeEntry( MinNumberOfEmptyFields, mPageAppearance->sbMinNumFill->value() );
   QStringList tmpstrl;
-  for ( int i = 0; i < mPageAppearance->letterListBox->count(); i++ ) {
+  for ( int i = 0; i < mPageAppearance->letterListBox->count(); ++i ) {
     if ( !mPageAppearance->letterListBox->item( i )->text().isEmpty() ) {
       tmpstrl.append( mPageAppearance->letterListBox->item( i )->text() );
     }
@@ -463,7 +463,7 @@ bool RingBinderPrintStyle::printEmptyEntry( const QRect& window, QPainter* paint
   painter->setPen( thickpen );
   painter->drawRect( 0, top, window.width(), ( 3 * fmnorm.lineSpacing() ) );
   painter->setPen( thinpen );
-  for ( int i = 1; i < 3; i++ ) {
+  for ( int i = 1; i < 3; ++i ) {
     painter->drawLine( 0, top + i * fmnorm.lineSpacing(), window.width(),
         top + i * fmnorm.lineSpacing() );
   }

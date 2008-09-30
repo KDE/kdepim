@@ -291,7 +291,7 @@ void GMXXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )
 
   no = 1;
   while ( (addr = addrMap[no]) != NULL ) {
-    for (int record_id=0; record_id<3; record_id++) {
+    for (int record_id=0; record_id<3; ++record_id) {
 
 	KABC::Address address;
   	KABC::PhoneNumber phone, fax, cell;

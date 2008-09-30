@@ -309,7 +309,7 @@ void CardViewItem::paintCard( QPainter *p, const QPalette &pal )
       p->drawText( labelXPos, yPos, label + ':' );
     }
 
-    for ( cln = 0; cln <= maxLines; cln++ ) {
+    for ( cln = 0; cln <= maxLines; ++cln ) {
       tmp = value.section( '\n', cln, cln );
       if ( !tmp.isEmpty() )
         p->drawText( valueXPos, yPos + cln * fh, trimString( tmp, valueWidth, fm ) );
@@ -1080,7 +1080,7 @@ void CardView::contentsMousePressEvent( QMouseEvent *e )
       to = a > b ? a : b;
 
       CardViewItem *aItem;
-      for ( ; from <= to; from++ ) {
+      for ( ; from <= to; ++from ) {
         aItem = d->mItemList.at( from );
         aItem->setSelected( s );
         repaintItem( aItem );
@@ -1364,7 +1364,7 @@ void CardView::keyPressEvent( QKeyEvent *e )
         }
 
         CardViewItem *item;
-        for ( ; from <= to; from++ ) {
+        for ( ; from <= to; ++from ) {
           item = d->mItemList.at( from );
           item->setSelected( s );
           repaintItem( item );

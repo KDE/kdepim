@@ -33,6 +33,8 @@ class Core;
 
 class KAddressBookService : public QObject
 {
+  Q_OBJECT
+
   public:
     KAddressBookService( KAB::Core *core );
 

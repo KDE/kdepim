@@ -178,7 +178,7 @@ Filter::List Filter::restore( const KConfigBase *config, const QString &baseGrou
     count = s.readEntry( "Count", 0 );
   }
 
-  for ( int i = 0; i < count; i++ ) {
+  for ( int i = 0; i < count; ++i ) {
     {
       KConfigGroup s = config->group( QString( "%1_%2" ).arg( baseGroup ).arg( i ) );
       f.restore( s );

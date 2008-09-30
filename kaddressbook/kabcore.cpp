@@ -343,7 +343,7 @@ void KABCore::setContactSelected( const QString &uid )
 
   if ( writable ) {
     //check if every single (sub)resource is writable
-    //### We have a performance problem here - everytime *one* item is added or
+    //### We have a performance problem here - every time *one* item is added or
     //    removed we re-check *all* items. If this turns out to be a bottleneck
     //    we need to keep some state and check new items only.
     KABC::Addressee::List::ConstIterator addrIt = list.constBegin();
@@ -465,7 +465,7 @@ void KABCore::deleteDistributionLists( const QStringList & names )
       return;
   if ( KMessageBox::warningContinueCancelList( mWidget, i18np( "Do you really want to delete this distribution list?",
                                                  "Do you really want to delete these %1 distribution lists?", names.count() ),
-                                                 names, QString::null, KStandardGuiItem::del() ) == KMessageBox::Cancel )
+                                                 names, QString(), KStandardGuiItem::del() ) == KMessageBox::Cancel )
    return;
 
   QStringList uids;

@@ -177,7 +177,7 @@ QString EudoraXXPort::comment( const QString& line ) const
   }
 
   result = line.mid( b + 1 );
-  for ( i = 0; i < result.length(); i++ ) {
+  for ( i = 0; i < result.length(); ++i ) {
     if ( result[ i ] == CTRL_C )
       result[ i ] = '\n';
   }
@@ -202,7 +202,7 @@ QString EudoraXXPort::get( const QString& line, const QString& key ) const
 
   e--;
   QString result = line.mid( b, e - b + 1 );
-  for ( int i = 0; i < result.length(); i++ ) {
+  for ( int i = 0; i < result.length(); ++i ) {
     if ( result[ i ] == CTRL_C )
       result[ i ] = '\n';
   }

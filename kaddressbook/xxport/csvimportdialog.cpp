@@ -688,7 +688,7 @@ void CSVImportDialog::reloadCodecs()
   mCodecCombo->addItem( i18n( "Unicode" ), Uni );
   mCodecCombo->addItem( i18n( "Microsoft Unicode" ), MSBug );
 
-  for ( int i = 0; i < mCodecs.count(); i++ )
+  for ( int i = 0; i < mCodecs.count(); ++i )
     mCodecCombo->addItem( mCodecs.at( i )->name(), Codec + i );
 }
 

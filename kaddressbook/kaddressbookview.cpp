@@ -82,12 +82,12 @@ QString KAddressBookView::selectedEmails()
     addr = mCore->addressBook()->findByUid( *it );
 
     if ( !addr.isEmpty() ) {
-      QString m = QString();
+      QString mail;
 
       if ( addr.emails().count() > 1 )
-        m = KABC::EmailSelector::getEmail( addr.emails(), addr.preferredEmail(), this );
+        mail = KABC::EmailSelector::getEmail( addr.emails(), addr.preferredEmail(), this );
 
-      email = addr.fullEmail( m );
+      email = addr.fullEmail( mail );
 
       if ( !first )
         emailAddrs += ", ";
