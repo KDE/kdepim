@@ -39,6 +39,7 @@ FilterSelectionWidget::FilterSelectionWidget( QWidget *parent )
   label->setObjectName( "kde toolbar widget" );
 
   mFilterCombo = new KComboBox( this );
+  mFilterCombo->setMaximumWidth( 200 );
   label->setBuddy( mFilterCombo );
   connect( mFilterCombo, SIGNAL( activated( int ) ),
            this, SIGNAL( filterActivated( int ) ) );
