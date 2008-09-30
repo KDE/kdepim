@@ -245,6 +245,67 @@ void Incidence::saveAttachments( QDomElement& element ) const
   }
 }
 
+void Incidence::saveAlarms( QDomElement& element ) const
+{
+  if ( mAlarms.isEmpty() ) return;
+
+  QDomElement list = element.ownerDocument().createElement( "advanced-alarms" );
+  element.appendChild( list );
+  foreach ( KCal::Alarm *a, mAlarms ) {
+    QDomElement e = list.ownerDocument().createElement( "alarm" );
+    list.appendChild( e );
+
+    if ( a->startOffset() ) {
+      writeString( e, "start-offset", QString::number( a->startOffset().asSeconds()/60 ) );
+    }
+    if ( a->endOffset() ) {
+      writeString( e, "end-offset", QString::number( a->endOffset().asSeconds()/60 ) );
+    }
+    if ( a->repeatCount() ) {
+      writeString( e, "repeat-count", QString::number( a->repeatCount() ) );
+      writeString( e, "repeat-interval", QString::number( a->snoozeTime().asSeconds() ) );
+    }
+
+    switch ( a->type() ) {
+    case KCal::Alarm::Invalid:
+      break;
+    case KCal::Alarm::Display:
+      e.setAttribute( "type", "display" );
+      writeString( e, "text", a->text() );
+      break;
+    case KCal::Alarm::Procedure:
+      e.setAttribute( "type", "procedure" );
+      writeString( e, "program", a->programFile() );
+      writeString( e, "arguments", a->programArguments() );
+      break;
+    case KCal::Alarm::Email:
+    {
+      e.setAttribute( "type", "email" );
+      QDomElement addresses = e.ownerDocument().createElement( "addresses" );
+      e.appendChild( addresses );
+      foreach ( KCal::Person person, a->mailAddresses() ) {
+        writeString( addresses, "address", person.fullName() );
+      }
+      writeString( e, "subject", a->mailSubject() );
+      writeString( e, "mail-text", a->mailText() );
+      QDomElement attachments = e.ownerDocument().createElement( "attachments" );
+      e.appendChild( attachments );
+      foreach ( QString attachment, a->mailAttachments() ) {
+        writeString( attachments, "attachment", attachment );
+      }
+      break;
+    }
+    case KCal::Alarm::Audio:
+      e.setAttribute( "type", "audio" );
+      writeString( e, "file", a->audioFile() );
+      break;
+    default:
+      kWarning() << "Unhandled alarm type:" << a->type();
+      break;
+    }
+  }
+}
+
 void Incidence::saveRecurrence( QDomElement& element ) const
 {
   QDomElement e = element.ownerDocument().createElement( "recurrence" );
@@ -304,6 +365,115 @@ void Incidence::loadRecurrence( const QDomElement& element )
   }
 }
 
+static void loadAddressesHelper( const QDomElement& element, KCal::Alarm* a )
+{
+  for ( QDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+    if ( n.isComment() )
+      continue;
+    if ( n.isElement() ) {
+      QDomElement e = n.toElement();
+      QString tagName = e.tagName();
+
+      if ( tagName == "address" ) {
+        a->addMailAddress( KCal::Person( e.text() ) );
+      } else {
+        kWarning() << "Unhandled tag" << tagName;
+      }
+    }
+  }
+}
+
+static void loadAttachmentsHelper( const QDomElement& element, KCal::Alarm* a )
+{
+  for ( QDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+    if ( n.isComment() )
+      continue;
+    if ( n.isElement() ) {
+      QDomElement e = n.toElement();
+      QString tagName = e.tagName();
+
+      if ( tagName == "attachment" ) {
+        a->addMailAttachment( e.text() );
+      } else {
+        kWarning() << "Unhandled tag" << tagName;
+      }
+    }
+  }
+}
+
+static void loadAlarmHelper( const QDomElement& element, KCal::Alarm* a )
+{
+  for ( QDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+    if ( n.isComment() )
+      continue;
+    if ( n.isElement() ) {
+      QDomElement e = n.toElement();
+      QString tagName = e.tagName();
+
+      if ( tagName == "start-offset" ) {
+        a->setStartOffset( e.text().toInt()*60 );
+      } else if ( tagName == "end-offset" ) {
+        a->setEndOffset( e.text().toInt()*60 );
+      } else if ( tagName == "repeat-count" ) {
+        a->setRepeatCount( e.text().toInt() );
+      } else if ( tagName == "repeat-interval" ) {
+        a->setSnoozeTime( e.text().toInt() );
+      } else if ( tagName == "text" ) {
+        a->setText( e.text() );
+      } else if ( tagName == "program" ) {
+        a->setProgramFile( e.text() );
+      } else if ( tagName == "arguments" ) {
+        a->setProgramArguments( e.text() );
+      } else if ( tagName == "addresses" ) {
+        loadAddressesHelper( e, a );
+      } else if ( tagName == "subject" ) {
+        a->setMailSubject( e.text() );
+      } else if ( tagName == "mail-text" ) {
+        a->setMailText( e.text() );
+      } else if ( tagName == "attachments" ) {
+        loadAttachmentsHelper( e, a );
+      } else if ( tagName == "file" ) {
+        a->setAudioFile( e.text() );
+      } else {
+        kWarning() << "Unhandled tag" << tagName;
+      }
+    }
+  }
+}
+
+void Incidence::loadAlarms( const QDomElement& element )
+{
+  for ( QDomNode n = element.firstChild(); !n.isNull(); n = n.nextSibling() ) {
+    if ( n.isComment() )
+      continue;
+    if ( n.isElement() ) {
+      QDomElement e = n.toElement();
+      QString tagName = e.tagName();
+
+      if ( tagName == "alarm" ) {
+        KCal::Alarm *a = new KCal::Alarm( 0 );
+        QString type = e.attribute( "type" );
+        if ( type == "display" ) {
+          a->setType( KCal::Alarm::Display );
+        } else if ( type == "procedure" ) {
+          a->setType( KCal::Alarm::Procedure );
+        } else if ( type == "email" ) {
+          a->setType( KCal::Alarm::Email );
+        } else if ( type == "audio" ) {
+          a->setType( KCal::Alarm::Audio );
+        } else {
+          kWarning() << "Unhandled alarm type:" << type;
+        }
+
+        loadAlarmHelper( e, a );
+        mAlarms << a;
+      } else {
+        kWarning() << "Unhandled tag" << tagName;
+      }
+    }
+  }
+}
+
 bool Incidence::loadAttribute( QDomElement& element )
 {
   QString tagName = element.tagName();
@@ -335,6 +505,8 @@ bool Incidence::loadAttribute( QDomElement& element )
   } else if ( tagName == "alarm" )
     // Alarms should be minutes before. Libkcal uses event time + alarm time
     setAlarm( - element.text().toInt() );
+  else if ( tagName == "advanced-alarms" )
+    loadAlarms( element );
   else if ( tagName == "x-kde-internaluid" )
     setInternalUID( element.text() );
   else if ( tagName == "revision" ) {
@@ -380,6 +552,7 @@ bool Incidence::saveAttributes( QDomElement& element ) const
     int alarmTime = qRound( -alarm() );
     writeString( element, "alarm", QString::number( alarmTime ) );
   }
+  saveAlarms( element );
   writeString( element, "x-kde-internaluid", internalUID() );
   writeString( element, "revision", QString::number( revision() ) );
   saveCustomAttributes( element );
@@ -639,6 +812,14 @@ void Incidence::setFields( const KCal::Incidence* incidence )
     mAttachments.push_back( a );
   }
 
+  mAlarms.clear();
+
+  // Alarms
+  KCal::Alarm::List alarms = incidence->alarms();
+  foreach ( KCal::Alarm* a, alarms ) {
+    mAlarms.push_back( a );
+  }
+
   if ( incidence->recurs() ) {
     setRecurrence( incidence->recurrence() );
     mRecurrence.exclusions = incidence->recurrence()->exDates();
@@ -696,11 +877,15 @@ void Incidence::saveTo( KCal::Incidence* incidence )
   incidence->setSummary( summary() );
   incidence->setLocation( location() );
 
-  if ( mHasAlarm ) {
+  if ( mHasAlarm && mAlarms.isEmpty() ) {
     KCal::Alarm* alarm = incidence->newAlarm();
     alarm->setStartOffset( qRound( mAlarm * 60.0 ) );
     alarm->setEnabled( true );
     alarm->setType( KCal::Alarm::Display );
+  } else if ( !mAlarms.isEmpty() ) {
+    foreach ( KCal::Alarm* a, mAlarms ) {
+      incidence->addAlarm( a );
+    }
   }
 
   if ( organizer().displayName.isEmpty() )
