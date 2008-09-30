@@ -46,8 +46,8 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2003-09-18</date>
-<releaseinfo>3.0</releaseinfo>
+<date>2008-09-29</date>
+<releaseinfo>3.9</releaseinfo>
 
 <abstract><para>&knotes; is a sticky notes application for the
 desktop.</para></abstract>
@@ -90,13 +90,10 @@ defaults. </para>
 <term>Creating a new note:</term>
 <listitem>
 <para>To create a new note &RMB; click on the &knotes; panel
-icon and select <guimenuitem>New Note</guimenuitem> or using the
-shortcut <keycombo
-action="simul">&Alt;&Shift;<keycap>N</keycap></keycombo>.</para>
+icon and select <guimenuitem>New Note</guimenuitem>.</para>
 <para>You can create a new note containing the contents of the 
 clipboard by selecting <guimenuitem>New Note From
-Clipboard</guimenuitem> or using the shortcut <keycombo
-action="simul">&Alt;&Shift;<keycap>C</keycap></keycombo>.</para>
+Clipboard</guimenuitem> .</para>
 
 </listitem>
 </varlistentry>
@@ -110,13 +107,19 @@ Normal keyboard and mouse editing functions are supported.
 following menu options:</para>
 
 <itemizedlist>
-<listitem><para><guimenuitem>Undo</guimenuitem></para></listitem>
-<listitem><para><guimenuitem>Redo</guimenuitem></para></listitem>
-<listitem><para><guimenuitem>Cut</guimenuitem></para></listitem>
-<listitem><para><guimenuitem>Copy</guimenuitem></para></listitem>
-<listitem><para><guimenuitem>Paste</guimenuitem></para></listitem>
+<listitem><para><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>Z</keycap></keycombo>
+</shortcut><guimenuitem>Undo</guimenuitem></menuchoice></para></listitem>
+<listitem><para><menuchoice><shortcut><keycombo action="simul">&Ctrl;&Shift;<keycap>Z</keycap></keycombo>
+</shortcut><guimenuitem>Redo</guimenuitem></menuchoice></para></listitem>
+<listitem><para><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>X</keycap></keycombo>
+</shortcut><guimenuitem>Cut</guimenuitem></menuchoice></para></listitem>
+<listitem><para><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>C</keycap></keycombo>
+</shortcut><guimenuitem>Copy</guimenuitem></menuchoice></para></listitem>
+<listitem><para><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>V</keycap></keycombo>
+</shortcut><guimenuitem>Paste</guimenuitem></menuchoice></para></listitem>
 <listitem><para><guimenuitem>Clear</guimenuitem></para></listitem>
-<listitem><para><guimenuitem>Select All</guimenuitem></para></listitem>
+<listitem><para><menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>A</keycap></keycombo>
+</shortcut><guimenuitem>Select All</guimenuitem></menuchoice></para></listitem>
 </itemizedlist>
 <para>Text may be selected by holding down the &LMB; and moving the
 mouse, or by holding down the &Shift; key and using the
@@ -143,8 +146,7 @@ position in the text of the note.</para>
 <para>Type the new name of the note in the dialog that appears.  To
 accept the new name, press the <guibutton>OK</guibutton> button.  To
 exit the dialog without renaming the note, press the
-<guibutton>Cancel</guibutton> button.  To clear what you have typed
-and start over, click the <guibutton>Clear</guibutton> button.</para>
+<guibutton>Cancel</guibutton> button.</para>
 </listitem>
 </varlistentry>
 
@@ -154,7 +156,7 @@ and start over, click the <guibutton>Clear</guibutton> button.</para>
 <para>To mail a note &RMB; click on the note titlebar and select
 <guimenuitem>Mail...</guimenuitem>.</para> 
 <para>What happens next depends on how you configured the Mail action in the
-<guilabel>Preferences...</guilabel> dialog.</para>
+<guilabel>Settings</guilabel> dialog.</para>
 </listitem>
 </varlistentry>
 
@@ -162,7 +164,8 @@ and start over, click the <guibutton>Clear</guibutton> button.</para>
 <term>Printing a note:</term>
 <listitem>
 <para>To print a note &RMB; click on the note titlebar and select
-<guimenuitem>Print</guimenuitem>.</para>
+<menuchoice><shortcut><keycombo action="simul">&Ctrl;<keycap>P</keycap></keycombo>
+</shortcut><guimenuitem>Print</guimenuitem></menuchoice>.</para>
 <para>A standard &kde; print dialog will open.</para>
 </listitem>
 </varlistentry>
@@ -179,7 +182,9 @@ and start over, click the <guibutton>Clear</guibutton> button.</para>
 <term>Hiding a note:</term>
 <listitem>
 <para>To hide a note, click the <guiicon>X</guiicon> in the upper
-right corner of the titlebar of the note.  The note will no longer be
+right corner of the titlebar of the note or select <menuchoice><shortcut>
+<keycap>Esc</keycap></shortcut><guimenuitem>Hide</guimenuitem>
+</menuchoice> in the context menu.  The note will no longer be
 displayed on the screen.  The note itself will not be deleted.</para>
 </listitem>
 </varlistentry>
@@ -199,12 +204,12 @@ icon and select the note you wish to display.</para>
 <para>To send a note to a specific desktop, &RMB; click on the title
 bar of the note and select <guisubmenu>To Desktop</guisubmenu>.
 Choose the desktop desired, or alternatively, <guimenuitem>All
-desktops</guimenuitem></para> 
+Desktops</guimenuitem></para> 
 <para>To make the note remain on top of other windows &RMB; click on
-the titlebar of the note and select <guimenuitem>Always On
-Top</guimenuitem>.</para> 
-<para>To return the note to more normal window behavior, simply repeat
-this process.</para> 
+the titlebar of the note and select <guimenuitem>Keep Above 
+Others</guimenuitem>.</para> 
+<para>To return the note to more normal window behavior, select 
+<guimenuitem>Keep Below Others</guimenuitem>.</para> 
 </listitem>
 </varlistentry>
 
@@ -215,6 +220,14 @@ this process.</para>
 <guimenuitem>Quit</guimenuitem>.</para>
 </listitem>
 </varlistentry>
+
+<!-- missing in 4.2
+Set Alarm...
+Send...
+Save As...
+Lock
+Find...
+-->
 </variablelist>
 
 </chapter>
@@ -227,7 +240,7 @@ this process.</para>
 
 <para>To configure &knotes; &RMB; click on the panel icon. Select
 <guimenuitem>Configure KNotes...</guimenuitem> The &knotes;
-<guilabel>KNotes Defaults</guilabel> dialog will open.</para>
+<guilabel>KNotes Settings</guilabel> dialog will open.</para>
 
 <variablelist>
 <title>The <guilabel>Display</guilabel> Section</title>
@@ -263,6 +276,12 @@ taskbar for each note.  If you prefer they do so, enable this
 option.</para>
 </listitem>
 </varlistentry>
+
+<varlistentry>
+<term><guilabel>Remember desktop</guilabel></term>
+<listitem><para>.</para>
+</listitem>
+</varlistentry>
 </variablelist>
 
 <variablelist>
@@ -286,21 +305,21 @@ on.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Title Font: Click to Change</guilabel></term>
+<term><guilabel>Title font:</guilabel></term>
 <listitem><para>You can change the font used for the title of your
 notes.</para>
 
-<para>Click this button to open the standard &kde; font selection
+<para>Click <guibutton>Choose...</guibutton> to open the standard &kde; font selection
 dialog.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Text Font: Click to Change</guilabel></term>
+<term><guilabel>Text font: Click to Change</guilabel></term>
 <listitem>
 <para>You can change the font used for the text of your notes.</para>
 
-<para>Click this button to open the standard &kde; font selection
+<para>Click <guibutton>Choose...</guibutton>  to open the standard &kde; font selection
 dialog.</para></listitem>
 </varlistentry>
 </variablelist>
@@ -318,6 +337,30 @@ the filename of the note body to the mail command.</para>
 
 </variablelist>
 
+<!-- in 4.2 to be written
+<variablelist>
+<title>The <guilabel>Network</guilabel> Section</title>
+<varlistentry>
+<term><guilabel>Incoming Notes</guilabel></term>
+<listitem><para> </para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Outgoing Notes</guilabel></term>
+<listitem><para> </para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<variablelist>
+<title>The <guilabel>Style</guilabel> Section</title>
+<varlistentry>
+<term><guilabel>Style</guilabel></term>
+<listitem><para> </para></listitem>
+</varlistentry>
+
+</variablelist>
+-->
 </sect1>
 
 <sect1 id="customizing-display">
@@ -332,8 +375,69 @@ settings.</para>
 
 <para>To customize a single note display &RMB; click on the note title
 bar and select <guimenuitem>Preferences...</guimenuitem>.</para>
-<para>The <guilabel>Local Settings</guilabel> dialog will open,
+<para>A dialog with the <guilabel>Display Settings</guilabel> and
+<guilabel>Editor Settings</guilabel> pages will open,
 allowing you to configure the note.</para>
+</sect1>
+
+<sect1 id="configure-resources">
+<title>Configure Resources</title>
+
+<para>&knotes; can use multiple resources for loading and storing
+its contacts. After starting &knotes; for the first time you will have
+a default resource installed that saves all notes in a file
+under <filename>$<envar>HOME</envar>/.kde/share/apps/knotes/notes.ics</filename>; 
+you can add more resources by using the <guilabel>Resource Configuration</guilabel> 
+dialog, which is available in
+the &systemsettings; under <guilabel>Advanced</guilabel>->
+<guilabel>&kde; Resources</guilabel>:</para>
+
+<para>Load the configuration module you want to add your resource(s) to
+by selecting it from the drop down box at the top of the 
+<guilabel>Resources</guilabel> section. 
+The module for configuring &knotes;'s resources is <guilabel>Notes</guilabel>.</para>
+<para>Launch the <guilabel>Resource Configuration</guilabel> dialog by pushing the 
+<guibutton>Add...</guibutton> button. Choose the resource you want to add to your 
+<guilabel>Notes</guilabel> module and click <guilabel>OK</guilabel> to confirm your choice.</para>
+
+<variablelist>
+<varlistentry>
+<term><guilabel>Notes in Local File</guilabel></term>
+<listitem><para>All notes will be stored in a local file</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>IMAP Server via &kmail;</guilabel></term>
+<listitem><para>This resource stores notes as messages on an IMAP server.  
+&kmail; is used to access the IMAP server, therefore, if you use this 
+type of resource, &kmail; will open whenever you access the address book, 
+if it (or &kontact;) are not already running.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Notes on Scalix Server via &kmail;</guilabel></term>
+<listitem><para>To be written</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>eGroupware Server (via XML-RPC)</guilabel></term>
+<listitem><para>To be written</para></listitem>
+</varlistentry>
+
+</variablelist>
+
+<para>After selecting the type of resource another dialog appears 
+where you can configure the resource-specific settings.</para>
+
+<para>&knotes; needs a standard resource, where all contacts should be
+saved if no other resource is specified; for this reason, after starting
+&knotes; the first time, there is already a resource available.
+If you want to use another resource as the standard resource, use the
+<guibutton>Use as Standard</guibutton> button to select it.  You must have
+both read and write access to the new standard resource, otherwise you
+will not be able to select it.
+</para>
+
 </sect1>
 
 </chapter>
