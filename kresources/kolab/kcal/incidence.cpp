@@ -260,10 +260,10 @@ void Incidence::saveAlarms( QDomElement& element ) const
     QDomElement e = list.ownerDocument().createElement( "alarm" );
     list.appendChild( e );
 
-    if ( a->startOffset().asSeconds() > 0 ) {
+    if ( a->hasStartOffset() ) {
       writeString( e, "start-offset", QString::number( a->startOffset().asSeconds()/60 ) );
     }
-    if ( a->endOffset().asSeconds() > 0 ) {
+    if ( a->hasEndOffset() ) {
       writeString( e, "end-offset", QString::number( a->endOffset().asSeconds()/60 ) );
     }
     if ( a->repeatCount() ) {
