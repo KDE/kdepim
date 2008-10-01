@@ -46,11 +46,12 @@ KAction * Kleo::make_action_from_data( const action_data & ad, QObject * parent 
         a->setToolTip( ad.tooltip );
     if ( ad.icon )
         a->setIcon( KIcon( ad.icon ) );
-    if ( ad.receiver && ad.slot )
+    if ( ad.receiver && ad.slot ) {
         if ( ad.toggle )
             QObject::connect( a, SIGNAL(toggled(bool)), ad.receiver, ad.slot );
         else
             QObject::connect( a, SIGNAL(triggered()), ad.receiver, ad.slot );
+    }
     if ( !ad.shortcut.isEmpty() )
         a->setShortcuts( KShortcut( ad.shortcut ) );
     a->setEnabled( ad.enabled );

@@ -150,8 +150,9 @@ void SignEMailController::startResolveSigners() {
 void SignEMailController::startResolveSigners( const std::vector<Mailbox> & signers ) {
     const std::vector< std::vector<Key> > keys = CertificateResolver::resolveSigners( signers, d->protocol );
 
-    if ( !signers.empty() )
+    if ( !signers.empty() ) {
         kleo_assert( keys.size() == static_cast<size_t>( signers.size() ) );
+    }
 
     d->ensureWizardCreated();
 
@@ -202,11 +203,12 @@ void SignEMailController::setInputsAndOutputs( const std::vector< shared_ptr<Inp
         task->setOutput( outputs[i] );
         task->setSigners( keys );
         task->setDetachedSignature( d->detached );
-        if ( d->mode == ClipboardMode )
+        if ( d->mode == ClipboardMode ) {
             if ( d->protocol == OpenPGP )
                 task->setClearsign( true );
             else
                 task->setAsciiArmor( true );
+        }
 
         tasks.push_back( task );
     }

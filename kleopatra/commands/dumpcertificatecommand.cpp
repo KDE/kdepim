@@ -301,7 +301,7 @@ void DumpCertificateCommand::doCancel() {
 }
 
 void DumpCertificateCommand::Private::slotProcessFinished( int code, QProcess::ExitStatus status ) {
-    if ( !canceled )
+    if ( !canceled ) {
         if ( status == QProcess::CrashExit )
             KMessageBox::error( dialog,
                                 i18n( "The GpgSM process that tried to dump the certificate "
@@ -314,6 +314,7 @@ void DumpCertificateCommand::Private::slotProcessFinished( int code, QProcess::E
                                 i18n( "An error occurred while trying to dump the certificate. "
                                       "The output from GpgSM was:\n%1", errorString() ),
                                 i18n( "Dump Certificate Error" ) );
+    }
     if ( !useDialog )
         slotDialogDestroyed();
 }

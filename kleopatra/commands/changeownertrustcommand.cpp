@@ -133,7 +133,7 @@ void ChangeOwnerTrustCommand::doStart() {
     }
 
     const Key key = d->key();
-    if ( key.protocol() != GpgME::OpenPGP || key.hasSecret() && key.ownerTrust() == Key::Ultimate ) {
+    if ( key.protocol() != GpgME::OpenPGP || ( key.hasSecret() && key.ownerTrust() == Key::Ultimate ) ) {
         d->finished();
         return;
     }

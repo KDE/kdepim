@@ -150,14 +150,14 @@ void GnuPGProcessCommand::doCancel() {
 }
 
 void GnuPGProcessCommand::Private::slotProcessFinished( int code, QProcess::ExitStatus status ) {
-    if ( !canceled )
+    if ( !canceled ) {
         if ( status == QProcess::CrashExit )
             KMessageBox::error( parentWidgetOrView(), q->crashExitMessage( arguments ), q->errorCaption() );
         else if ( code )
             KMessageBox::error( parentWidgetOrView(), q->errorExitMessage( arguments ), q->errorCaption() );
         else
-            KMessageBox::information( parentWidgetOrView(), q->successMessage( arguments ), q->successCaption() 
-);
+            KMessageBox::information( parentWidgetOrView(), q->successMessage( arguments ), q->successCaption() );
+    }
     finished();
 }
 

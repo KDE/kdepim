@@ -226,8 +226,8 @@ void LookupCertificatesDialog::Private::enableDisableWidgets() {
     if ( ALLOW_MULTI_SELECTION ) {
         // this is commented out until such a time as we know how to
         // import more than one key in one go.
-        ui.importPB()->setEnabled( !selection.empty() &&
-                                   ALLOW_MULTI_PROTOCOL ||
+        ui.importPB()->setEnabled( ( !selection.empty() &&
+                                   ALLOW_MULTI_PROTOCOL ) ||
                                    // suppress mixed imports:
                                    kdtools::all( selection, bind( &Key::protocol, _1 ) == selection.front().protocol() ) );
     } else {

@@ -316,11 +316,12 @@ void SignEncryptFilesTask::setDetachedSignature( bool detached ) {
 Protocol SignEncryptFilesTask::protocol() const {
     if ( d->sign && !d->signers.empty() )
         return d->signers.front().protocol();
-    if ( d->encrypt )
+    if ( d->encrypt ) {
         if ( !d->recipients.empty() )
             return d->recipients.front().protocol();
         else
             return GpgME::OpenPGP; // symmetric OpenPGP encryption
+    }
     throw Kleo::Exception( gpg_error( GPG_ERR_INTERNAL ),
                            i18n("Cannot determine protocol for task") );
 }
@@ -340,8 +341,9 @@ unsigned long long SignEncryptFilesTask::inputSize() const
 
 void SignEncryptFilesTask::doStart() {
     kleo_assert( !d->job );
-    if ( d->sign )
+    if ( d->sign ) {
         kleo_assert( !d->signers.empty() );
+    }
 
     d->input = Input::createFromFile( d->inputFileName );
     d->output = Output::createFromFile( d->outputFileName, d->m_overwritePolicy );

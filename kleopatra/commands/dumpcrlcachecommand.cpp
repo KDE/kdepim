@@ -262,7 +262,7 @@ void DumpCrlCacheCommand::doCancel() {
 }
 
 void DumpCrlCacheCommand::Private::slotProcessFinished( int code, QProcess::ExitStatus status ) {
-    if ( !canceled )
+    if ( !canceled ) {
         if ( status == QProcess::CrashExit )
             KMessageBox::error( dialog,
                                 i18n( "The GpgSM process that tried to dump the CRL cache "
@@ -274,6 +274,7 @@ void DumpCrlCacheCommand::Private::slotProcessFinished( int code, QProcess::Exit
                                 i18n( "An error occurred while trying to dump the CRL cache. "
                                       "The output from GpgSM was:\n%1", errorString() ),
                                 i18n( "Dump CRL Cache Error" ) );
+    }
 }
 
 #undef d

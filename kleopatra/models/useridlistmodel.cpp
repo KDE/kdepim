@@ -217,11 +217,12 @@ QModelIndex UserIDListModel::index( int row, int col, const QModelIndex & pidx )
     if ( row < 0 || col < 0 || col >= NumColumns )
 	return QModelIndex();
 
-    if ( !pidx.isValid() )
+    if ( !pidx.isValid() ) {
 	if ( static_cast<unsigned>( row ) < d->key.numUserIDs() )
 	    return createIndex( row, col, -1 );
 	else
 	    return QModelIndex();
+    }
 
     if ( !is_userid_level( pidx ) )
 	return QModelIndex();

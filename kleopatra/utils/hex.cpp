@@ -90,7 +90,7 @@ std::string Kleo::hexencode( const std::string & in ) {
     for ( std::string::const_iterator it = in.begin(), end = in.end() ; it != end ; ++it )
         switch ( const unsigned char ch = *it ) {
         default:
-            if ( ch >= '!' && ch <= '~' || ch > 0xA0 ) {
+            if ( ( ch >= '!' && ch <= '~' ) || ch > 0xA0 ) {
                 result += ch;
                 break;
             }

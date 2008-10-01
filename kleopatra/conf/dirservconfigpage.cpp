@@ -286,11 +286,12 @@ void DirectoryServicesConfigurationPage::load()
 
 void DirectoryServicesConfigurationPage::save()
 {
-  if ( mX509ServicesEntry )
+  if ( mX509ServicesEntry ) {
       if ( mX509ServicesEntry->argType() == Kleo::CryptoConfigEntry::ArgType_LDAPURL )
           mX509ServicesEntry->setURLValueList( mWidget->x509Services() );
       else
           mX509ServicesEntry->setStringValueList( urls2strings( mWidget->x509Services() ) );
+  }
 
   if ( mOpenPGPServiceEntry ) {
       const KUrl::List serv = mWidget->openPGPServices();
@@ -334,11 +335,12 @@ void DirectoryServicesConfigurationPage::save()
 void DirectoryServicesConfigurationPage::defaults()
 {
   // these guys don't have a default, to clear them:
-  if ( mX509ServicesEntry )
+  if ( mX509ServicesEntry ) {
       if ( mX509ServicesEntry->argType() == Kleo::CryptoConfigEntry::ArgType_LDAPURL )
           mX509ServicesEntry->setURLValueList( KUrl() );
       else
           mX509ServicesEntry->setStringValueList( QStringList() );
+  }
   if ( mOpenPGPServiceEntry )
     mOpenPGPServiceEntry->setStringValue( QString() );
   // these presumably have a default, use that one:

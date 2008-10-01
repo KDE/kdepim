@@ -633,8 +633,8 @@ namespace {
         bool operator()( const U & lhs, const V & rhs ) const {
             return
                 T1<std::less>()( lhs, rhs ) ||
-                T1<std::equal_to>()( lhs, rhs ) &&
-                T2<std::less>()( lhs, rhs )
+                ( T1<std::equal_to>()( lhs, rhs ) &&
+                T2<std::less>()( lhs, rhs ) )
                 ;
         }
     };

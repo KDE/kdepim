@@ -274,11 +274,12 @@ void Page::init() {
     m_view->setAllColumnsShowFocus( true );
     m_view->setSortingEnabled( true );
 
-    if ( model() )
+    if ( model() ) {
         if ( m_additionalProxy )
             m_additionalProxy->setSourceModel( model() );
         else
             m_proxy.setSourceModel( model() );
+    }
     if ( m_additionalProxy ) {
         m_proxy.setSourceModel( m_additionalProxy );
         if ( !m_additionalProxy->parent() )
@@ -337,7 +338,7 @@ void Page::setStringFilter( const QString & filter ) {
 }
 
 void Page::setKeyFilter( const shared_ptr<KeyFilter> & filter ) {
-    if ( filter == m_keyFilter || filter && m_keyFilter && filter->id() == m_keyFilter->id() )
+    if ( filter == m_keyFilter || ( filter && m_keyFilter && filter->id() == m_keyFilter->id() ) )
         return;
     if ( !canChangeKeyFilter() )
         return;

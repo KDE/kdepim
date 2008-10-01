@@ -235,11 +235,12 @@ static void writeOrDelete( KConfigGroup & group, const char * key, const QVarian
 }
 
 static QVariant brush2color( const QVariant & v ) {
-    if ( v.isValid() )
+    if ( v.isValid() ) {
         if ( v.type() == QVariant::Color )
             return v;
         else if ( v.type() == QVariant::Brush )
             return v.value<QBrush>().color();
+    }
     return QVariant();
 }
 

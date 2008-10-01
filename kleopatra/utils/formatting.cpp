@@ -91,18 +91,20 @@ QString Formatting::prettyNameAndEMail( int proto, const char * id, const char *
 QString Formatting::prettyNameAndEMail( int proto, const QString & id, const QString & name, const QString & email, const QString & comment ) {
 
     if ( proto == OpenPGP ) {
-        if ( name.isEmpty() )
+        if ( name.isEmpty() ) {
             if ( email.isEmpty() )
                 return QString();
             else if ( comment.isEmpty() )
                 return QString::fromLatin1( "<%1>" ).arg( email );
             else
                 return QString::fromLatin1( "(%2) <%1>" ).arg( email, comment );
-        if ( email.isEmpty() )
+        }
+        if ( email.isEmpty() ) {
             if ( comment.isEmpty() )
                 return name;
             else
                 return QString::fromLatin1( "%1 (%2)" ).arg( name, comment );
+        }
         if ( comment.isEmpty() )
             return QString::fromLatin1( "%1 <%2>" ).arg( name, email );
         else
@@ -214,11 +216,12 @@ namespace {
 
     QString format_keyusage( const Key & key ) {
 	QStringList capabilites;
-	if ( key.canSign() )
+	if ( key.canSign() ) {
 	    if ( key.isQualified() )
 		capabilites.push_back( i18n( "Signing EMails and Files (Qualified)" ) );
 	    else
 		capabilites.push_back( i18n( "Signing EMails and Files" ) );
+    }
 	if ( key.canEncrypt() )
 	    capabilites.push_back( i18n( "Encrypting EMails and Files" ) );
 	if ( key.canCertify() )
@@ -241,13 +244,13 @@ namespace {
 }
 
 QString Formatting::toolTip( const Key & key, int flags ) {
-    if ( flags == 0 || key.protocol() != CMS && key.protocol() != OpenPGP )
+    if ( flags == 0 || ( key.protocol() != CMS && key.protocol() != OpenPGP ) )
         return QString();
 
     const Subkey subkey = key.subkey( 0 );
 
     QString result;
-    if ( flags & Validity )
+    if ( flags & Validity ) {
         if ( key.protocol() == OpenPGP || ( key.keyListMode() & Validate ) )
             if ( key.isRevoked() )
                 result += make_red( i18n( "This certificate has been revoked." ) );
@@ -259,6 +262,7 @@ QString Formatting::toolTip( const Key & key, int flags ) {
                 result += i18n( "This certificate is currently valid." );
         else
             result += i18n( "The validity of this certificate cannot be checked at the moment." );
+    }
     if ( flags == Validity )
         return result;
 
@@ -446,11 +450,12 @@ QString Formatting::validityShort( const UserID & uid ) {
 QString Formatting::validityShort( const UserID::Signature & sig ) {
     switch ( sig.status() ) {
     case UserID::Signature::NoError:
-	if ( !sig.isInvalid() )
+	if ( !sig.isInvalid() ) {
 	    if ( sig.certClass() > 0 )
 		return i18n("class %1", sig.certClass() );
 	    else
 		return i18nc("good/valid signature", "good");
+    }
 	// fall through:
     case UserID::Signature::GeneralError:
 	return i18n("invalid");

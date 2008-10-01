@@ -460,11 +460,12 @@ QModelIndex HierarchicalKeyListModel::index( int row, int col, const QModelIndex
         return QModelIndex();
 
     // toplevel item:
-    if ( !pidx.isValid() )
+    if ( !pidx.isValid() ) {
 	if ( static_cast<unsigned>( row ) < mTopLevels.size() )
 	    return index( mTopLevels[row], col );
 	else
 	    return QModelIndex();
+    }
 
     // non-toplevel item - find the row'th subject of this key:
     const Key issuer = this->key( pidx );
@@ -493,12 +494,13 @@ Key HierarchicalKeyListModel::doMapToKey( const QModelIndex & idx ) const {
 	return Key::null;
 
     const char * const issuer_fpr = static_cast<const char*>( idx.internalPointer() );
-    if ( !issuer_fpr || !*issuer_fpr )
+    if ( !issuer_fpr || !*issuer_fpr ) {
 	// top-level:
 	if ( static_cast<unsigned>( idx.row() ) >= mTopLevels.size() )
 	    return Key::null;
 	else
 	    return mTopLevels[idx.row()];
+    }
 
     // non-toplevel:
     const Map::const_iterator it

@@ -662,13 +662,14 @@ namespace {
             ui.sendRequestByEMailPB     ->setVisible( !pgp() );
             ui.sendCertificateByEMailPB ->setVisible(  pgp() );
 
-            if ( !error && !pgp() )
+            if ( !error && !pgp() ) {
                 if ( signingAllowed() && !encryptionAllowed() )
                     successfullyCreatedSigningCertificate = true;
                 else if ( !signingAllowed() && encryptionAllowed() )
                     successfullyCreatedEncryptionCertificate = true;
                 else
                     successfullyCreatedEncryptionCertificate = successfullyCreatedSigningCertificate = true;
+            }
 
             ui.createSigningCertificatePB->setVisible( successfullyCreatedEncryptionCertificate && !successfullyCreatedSigningCertificate );
             ui.createEncryptionCertificatePB->setVisible( successfullyCreatedSigningCertificate && !successfullyCreatedEncryptionCertificate );
@@ -1053,11 +1054,12 @@ void EnterDetailsPage::updateForm() {
     const KConfigGroup config( KGlobal::config(), "CertificateCreationWizard" );
 
     QStringList attrOrder = config.readEntry( pgp() ? "OpenPGPAttributeOrder" : "DNAttributeOrder", QStringList() );
-    if ( attrOrder.empty() )
+    if ( attrOrder.empty() ) {
         if ( pgp() )
             attrOrder << "NAME!" << "EMAIL!" << "COMMENT";
         else
             attrOrder << "CN!" << "L" << "OU" << "O!" << "C!" << "EMAIL!";
+    }
 
     QList<QWidget*> widgets;
     widgets.push_back( ui.nameLE );
@@ -1085,7 +1087,7 @@ void EnterDetailsPage::updateForm() {
             if ( !pgp() )
                 ui.addEmailToDnCB->show();
         } else if ( attr == "NAME" || attr == "CN" ) {
-            if ( pgp() && attr == "CN" || !pgp() && attr == "NAME" )
+            if ( ( pgp() && attr == "CN" ) || ( !pgp() && attr == "NAME" ) )
                 continue;
             if ( pgp() )
                 validator = regex.isEmpty() ? Validation::pgpName() : Validation::pgpName( QRegExp( regex ) ) ;

@@ -169,7 +169,7 @@ void ImportCrlCommand::doCancel() {
 }
 
 void ImportCrlCommand::Private::slotProcessFinished( int code, QProcess::ExitStatus status ) {
-    if ( !canceled )
+    if ( !canceled ) {
         if ( status == QProcess::CrashExit )
             KMessageBox::error( parentWidgetOrView(),
                                 i18n( "The GpgSM process that tried to import the CRL file "
@@ -185,6 +185,7 @@ void ImportCrlCommand::Private::slotProcessFinished( int code, QProcess::ExitSta
             KMessageBox::information( parentWidgetOrView(),
                                       i18n( "CRL file imported successfully." ),
                                       i18n( "Import CRL Finished" ) );
+    }
     finished();
 }
 

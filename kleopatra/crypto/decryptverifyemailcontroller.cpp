@@ -197,21 +197,23 @@ std::vector< shared_ptr<AbstractDecryptVerifyTask> > DecryptVerifyEMailControlle
         throw Kleo::Exception( makeGnuPGError( GPG_ERR_CONFLICT ),  //TODO use better error code if possible
                                i18n("Informative sender/signed data count mismatch") );
 
-    if ( numMessages )
+    if ( numMessages ) {
         if ( numMessages != numInputs )
             throw Kleo::Exception( makeGnuPGError( GPG_ERR_CONFLICT ),  //TODO use better error code if possible
                                    i18n("Signature/signed data count mismatch") );
         else if ( m_operation != Verify || m_verificationMode != Detached )
             throw Kleo::Exception( makeGnuPGError( GPG_ERR_CONFLICT ),
                                    i18n("Signed data can only be given for detached signature verification") );
+    }
 
-    if ( numOutputs )
+    if ( numOutputs ) {
         if ( numOutputs != numInputs )
             throw Kleo::Exception( makeGnuPGError( GPG_ERR_CONFLICT ), //TODO use better error code if possible
                                    i18n("Input/Output count mismatch") );
         else if ( numMessages )
             throw Kleo::Exception( makeGnuPGError( GPG_ERR_CONFLICT ),
                                    i18n("Cannot use output and signed data simultaneously") );
+    }
 
     kleo_assert( m_protocol != UnknownProtocol );
 
