@@ -103,10 +103,8 @@ void AddresseeEditorDialog::slotApply()
     return;
 
   if ( mEditorWidget->dirty() ) {
-    QApplication::setOverrideCursor( Qt::waitCursor );
     mEditorWidget->save();
     emit contactModified( mEditorWidget->addressee() );
-    QApplication::restoreOverrideCursor();
   }
 
   enableButton( KDialogBase::Apply, false );
