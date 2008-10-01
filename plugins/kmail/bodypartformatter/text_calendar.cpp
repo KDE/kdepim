@@ -48,8 +48,6 @@
 #include <kpimprefs.h> // for the time zone
 
 #include <kmail/callback.h>
-#include <kmail/kmmessage.h>
-#include <kmail/kmcommands.h>
 
 #include <kpimutils/email.h>
 
@@ -458,7 +456,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         }
       } else {
         if ( callback.deleteInvitationAfterReply() )
-          ( new KMDeleteMsgCommand( callback.getMsg()->getMsgSerNum() ) )->start();
+          callback.deleteInvitation();
+
       }
       delete incidence;
 
@@ -503,7 +502,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     bool handleIgnore( const QString&, KMail::Callback& c ) const
     {
       // simply move the message to trash
-      ( new KMDeleteMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
+      c.deleteInvitation();
       return true;
     }
 
@@ -586,7 +585,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         const QString p = (path == "accept_counter" ? QString("reply") : path);
         if ( saveFile( "Receiver Not Searched", iCal, p ) ) {
           if ( c.deleteInvitationAfterReply() )
-            ( new KMDeleteMsgCommand( c.getMsg()->getMsgSerNum() ) )->start();
+            c.deleteInvitation();
           result = true;
         }
       }
