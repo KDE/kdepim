@@ -16,7 +16,7 @@
 #define KNGROUPDIALOG_H
 
 #include "kngroupbrowser.h"
-
+class KDatePicker;
 
 /** New group subscription dialog. */
 class KNGroupDialog : public KNGroupBrowser {
@@ -39,7 +39,7 @@ class KNGroupDialog : public KNGroupBrowser {
     QPushButton *newListBtn;
     Q3ListView *subView, *unsubView;
     arrowDirection dir1, dir2;
-
+  KDatePicker *dateSel;
   protected slots:
     void slotItemSelected(Q3ListViewItem *it);
     /** deactivates the button when a root item is selected */
@@ -49,7 +49,8 @@ class KNGroupDialog : public KNGroupBrowser {
     /** new list */
     void slotUser1();
     /** new groups */
-    void slotUser2();
+  void slotUser2();
+  void slotDatePickerEnabled( bool );
 
   signals:
     void fetchList(KNNntpAccount *a);
