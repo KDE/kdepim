@@ -172,7 +172,7 @@ fetch a new group list from the news server.</para>
 <para>The newsgroup hierarchy is in a constant flux; all the time
 there are groups introduced, renamed or moved; some groups just
 disappear: they are no longer available and get deleted. To reflect
-this, &knode; gives you the possibility to refresh the the group
+this, &knode; gives you the possibility to refresh the group
 list. This is, normally, only needed to see if your server now
 provides a group which was not there before.</para> 
 
@@ -196,7 +196,7 @@ linkend="multiple-news-accounts"/> .</para>
 <sect3> 
 <title>Working with the dialog</title> 
 
-<para>We now want to subscribe to the &kde; group: mark the the box
+<para>We now want to subscribe to the &kde; group: mark the box
 beside the name; you can now see the group in the list labelled
 <guilabel>subscribe to</guilabel>. Another possibility is to use the
 arrows between the two windows.</para> 

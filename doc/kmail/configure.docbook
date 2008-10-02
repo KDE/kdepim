@@ -1908,13 +1908,33 @@ option is selected.</para>
 </variablelist>
 </sect2>
 
-<sect2 id="configure-non-gui-options">
+</sect1>
+
+<sect1 id="configure-non-gui-options">
 <title>Options without a user interface representation</title>
 <para>
 Apart from the options presented in the configuration dialog, some options 
-can only be set directly in the configuration file ($KDEHOME/share/config/kmailrc)
-or through KIOSK.
+can only be set directly in the &kmail; configuration file or through KIOSK.
+These so called "hidden" configuration options cannot be changed via
+the normal &kmail; Settings dialog; they must be made by modifying the
+configuration file using a text editor or the <command>kwriteconfig</command>
+program.
 </para>
+
+<para>
+The &kmail; configuration file is called <filename>kmailrc</filename>
+and can be found in your home directory. The location can vary according
+to your operating system or distribution, but can always be found by running
+the command <userinput><command>kde4-config --path config --locate kmailrc</command></userinput>.
+For the remainder of this section, assume that the configuration file is
+located in <filename>/path/to/kmailrc</filename>.
+</para>
+
+<warning><para>
+Whenever changing these options, make sure to quit &kmail; first before
+editing the configuration file.  Only restart &kmail; after you have made
+<emphasis>and saved</emphasis> the changes to the configuration file.
+</para></warning>
 
 <variablelist>
 
@@ -1932,8 +1952,11 @@ to the [MDN] section of the kmail configuration file. If there is no such sectio
 a line by itself just above the option.
 
 Note that the default setting of "false" strictly speaking violates internet standards, but is
-set that way for practical reasons, to avoid servers rejecting MDNs that KMail generates because they
-think they are SPAM.
+set that way for practical reasons, to avoid servers rejecting MDNs that KMail
+generates because they think they are SPAM.
+</para>
+<para>
+<prompt>&percnt;</prompt> <userinput><command>kwriteconfig</command> <option>--file <replaceable>/path/to/kmailrc</replaceable> --group MDN --key SendMDNsWithEmptySender true</option></userinput>
 </para>
 </listitem>
 </varlistentry>
@@ -1945,10 +1968,13 @@ think they are SPAM.
 This allows the maximum file size allowed for attachments in the mail
 composer to be limited.
 
-To limit attachments to 20 MB ins size, for example, add a line reading (under [Composer] section):
+To limit attachments to 20 MB in size, for example, add a line reading (under [Composer] section):
 </para>
 <programlisting>MaximumAttachmentSize=20
 </programlisting>
+<para>
+<prompt>&percnt;</prompt> <userinput><command>kwriteconfig</command> <option>--file <replaceable>/path/to/kmailrc</replaceable> --group Composer --key MaximumAttachmentSize 20</option></userinput>
+</para>
 </listitem>
 </varlistentry>
 
@@ -1963,6 +1989,10 @@ To enable the feature, add a line reading (under [General] section):
 </para>
 <programlisting>CloseDespiteSystemTray=true
 </programlisting>
+<para>
+<prompt>&percnt;</prompt> <userinput><command>kwriteconfig</command>
+<option>--file <replaceable>/path/to/kmailrc</replaceable> --group General --key CloseDespiteSystemTray true</option></userinput>
+</para>
 </listitem>
 </varlistentry>
 
@@ -1977,70 +2007,51 @@ To disable the feature, add a line reading (under [OutOfOffice] section):
 </para>
 <programlisting>CheckOutOfOfficeOnStartup=false
 </programlisting>
+<para>
+<prompt>&percnt;</prompt> <userinput><command>kwriteconfig</command>
+<option>--file <replaceable>/path/to/kmailrc</replaceable> --group OutOfOffice --key CheckOutOfOfficeOnStartup false</option></userinput>
+</para>
 </listitem>
 </varlistentry>
 
-
-</variablelist>
-</sect2>
-
-</sect1>
-
-<sect1 id="hidden-options"> 
-<title>Hidden Configuration Options</title> 
-
-<para>
-&kmail; provides a few "hidden" configuration options that cannot be
-changed via the normal Settings dialog. These types of options must
-be changed in a configuration file using a text editor.
-</para>
-
-<para>
-The &kmail; configuration file is called <filename>kmailrc</filename>
-and can be found in your home directory. The location can vary according
-to your operating system or distribution, but can always be found by running
-the command <userinput><command>kde4-config --path config --locate kmailrc</command></userinput>.
-</para>
-
-<warning><para>
-Whenever changing these options, make sure to quit &kmail;
-first before editing the configuration file.  Only restart &kmail;
-after you have saved your changes to the configuration file and
-quit your editor.
-</para></warning>
-
-<sect2 id="umask"> 
-<title>Disregard Umask</title>
+<varlistentry>
+<term><guilabel>disregardUmask</guilabel></term>
+<listitem>
 <para>
 In versions prior to 1.9, &kmail; saved all attachments
 to disk with permissions set to 600 &mdash; only readable or writable
 by the owner of the file. In response to user feedback, this was made
 configurable in &kmail; version 1.9, with the defaults changed to
 honour the umask set on the user account while saving files to disk.
-</para>
 
+To enable this feature, add a line reading (under [General] section):
+</para>
+<programlisting>disregardUmask=true
+</programlisting>
 <para>
-In <filename>kmailrc</filename>, scroll down to the heading
-<markup>[General]</markup> and add the line:
-<userinput>disregardUmask=true</userinput>. To reapply the default settings,
-either remove the line or set it to false.
+<prompt>&percnt;</prompt> <userinput><command>kwriteconfig</command> <option>--file <replaceable>/path/to/kmailrc</replaceable> --group General --key disregardUmask true</option></userinput>
 </para>
-</sect2>
+</listitem>
+</varlistentry>
 
-<sect2 id="showuseragent">
-<title>Show User Agent in Fancy Headers</title>
+<varlistentry>
+<term><guilabel>ShowUserAgent</guilabel></term>
+<listitem>
 <para>
 Starting in version 1.9, &kmail; can show the User-Agent or X-Mailer value
 from the message header when using Fancy Headers (see View->Headers menu).
-</para>
 
+To enable this feature, add a line reading (under [Reader] section):
+</para>
+<programlisting>ShowUserAgent=true
+</programlisting>
 <para>
-In <filename>kmailrc</filename>, scroll down to the heading
-<markup>[Reader]</markup> and add the line:
-<userinput>ShowUserAgent=true</userinput>. To reapply the default settings,
-either remove the line or set it to false.
+<prompt>&percnt;</prompt> <userinput><command>kwriteconfig</command> <option>--file <replaceable>/path/to/kmailrc</replaceable> --group Reader --key ShowUserAgent true</option></userinput>
 </para>
-</sect2>
+</listitem>
+</varlistentry>
 
+</variablelist>
 </sect1>
+
 </chapter>

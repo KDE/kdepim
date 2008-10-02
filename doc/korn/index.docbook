@@ -8,7 +8,7 @@
 
 <book lang="&language;">
 <bookinfo>
-<title>The &appname; Documentation</title>
+<title>The &kappname; Documentation</title>
 
 <authorgroup>
 <author>
@@ -73,7 +73,7 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<abstract><para>This Documentation describes &appname; Version
+<abstract><para>This Documentation describes &kappname; Version
 0.2</para></abstract>
 
 <keywordset>
@@ -86,8 +86,8 @@
 <chapter id="introduction">
 <title>Introduction</title>
 
-<para>&appname; is a &kde; Mail Checker that has the capabilities to dock itself to
-&kicker;. &appname; can check the following types of
+<para>&kappname; is a &kde; Mail Checker that has the capabilities to dock itself to
+&kicker;. &kappname; can check the following types of
 mailboxes:</para>
 
 <itemizedlist>
@@ -100,13 +100,13 @@ mailboxes:</para>
 <listitem><para>and the ability to check on a process</para></listitem>
 </itemizedlist>
 
-<para>&appname;, checks your mail on an interval that is user specified for each
-separate account.  Once mail is received you can have &appname; run a 3rd party
-program of your wishes or change the color/icon of &appname; while docked in
-&kicker;. In addition to this you can have &appname; run a program once you click
+<para>&kappname;, checks your mail on an interval that is user specified for each
+separate account.  Once mail is received you can have &kappname; run a 3rd party
+program of your wishes or change the color/icon of &kappname; while docked in
+&kicker;. In addition to this you can have &kappname; run a program once you click
 on the docked icon in &kicker;.</para>
 
-<para>The rest of this chapter relies on the user to &RMB; click on the &appname;
+<para>The rest of this chapter relies on the user to &RMB; click on the &kappname;
 icon in the &kicker; panel to access the appropriate menus.</para>
 </chapter>
 
@@ -118,12 +118,12 @@ icon in the &kicker; panel to access the appropriate menus.</para>
 <title>The buttons</title>
 
 <para>The <guilabel>Preferences</guilabel> window is the most powerful part of
-&appname;. At a first glimpse you may underestimate its capabilities, but further
-under-the-hood you will find many ways to use &appname;.</para>
+&kappname;. At a first glimpse you may underestimate its capabilities, but further
+under-the-hood you will find many ways to use &kappname;.</para>
 
-<para>The first tab lists your current mailboxes. As default &appname; installs
+<para>The first tab lists your current mailboxes. As default &kappname; installs
 <quote>Inbox</quote> as the default mailbox. The default <quote>Inbox</quote>
-may not fit most users needs. With this default mailbox in place &appname; will
+may not fit most users needs. With this default mailbox in place &kappname; will
 check the path <filename
 class="directory">/var/spool/mail/<replaceable>user</replaceable></filename> for
 new mail.</para>
@@ -147,14 +147,14 @@ when you click <guibutton>New...</guibutton>.</para>
 
 <title>The <guilabel>Display</guilabel> Tab</title>
 
-<para>The display tab contains the options to change where &appname; will show
+<para>The display tab contains the options to change where &kappname; will show
 itself.</para>
 
 <para>The first option, <guilabel>Horizontal</guilabel>, will create a window
 and the contents of the window will contain the options you specified in the
 <guilabel>View</guilabel> tab (which you can get to by selecting your mailbox
 and clicking <guimenuitem>Modify...</guimenuitem>). On the other hand, selecting
-<guilabel>Docked</guilabel> will dock &appname; into the &kicker; panel.</para>
+<guilabel>Docked</guilabel> will dock &kappname; into the &kicker; panel.</para>
 
 <para>The option <guilabel>Vertical</guilabel> is similar to
 <guilabel>Horizontal</guilabel>, except the accounts stack
@@ -167,7 +167,7 @@ vertically.</para>
 <para>The <guibutton>New...</guibutton> button will load a window showing you
 what mailboxes can be created for checking on a interval. Select your
 appropriate mailbox type. If you don't know what type you should use, and you
-currently use <application>&Netscape;</application> to check your mail, use
+currently use &Netscape; to check your mail, use
 POP3.</para>
 
 <para>Following that window the modify options appear, allowing you to change
@@ -185,17 +185,17 @@ changes the time interval between each check. Keep in mind this is in seconds,
 not minutes.</para>
 
 <para>Next, the <guilabel>view</guilabel> tab has options for changing the icon
-or icon color while &appname; is docked in &kicker;. There are two options:
+or icon color while &kappname; is docked in &kicker;. There are two options:
 <guilabel>Use color</guilabel> or <guilabel>Use icon</guilabel>. Selecting
 <guilabel>Use color</guilabel> will allow you to modify the colors. Selecting
 <guilabel>Use icon</guilabel> will allow you to change which icon is used for
-both <quote>Normal</quote> and <quote>New mail</quote>. Keep in mind that &appname;
+both <quote>Normal</quote> and <quote>New mail</quote>. Keep in mind that &kappname;
 can only use a icon or color, not both.</para>
 
 <para>In the commands tab you can specify a command to be run once you receive
 new mail in the <guilabel>New mail</guilabel> line. Also, the
 <guilabel>Click</guilabel> line can contain a command to be run when you
-<mousebutton>left</mousebutton> click on &appname;.</para>
+<mousebutton>left</mousebutton> click on &kappname;.</para>
 
 </sect1>
 
@@ -203,7 +203,7 @@ new mail in the <guilabel>New mail</guilabel> line. Also, the
 <chapter id="licenses-and-credits">
 <title>Credits and License</title>
 
-<para>&appname;.  Program copyright 2000:</para>
+<para>&kappname;.  Program copyright 2000:</para>
 
 <itemizedlist>
 <listitem><para>&Sirtaj.Singh.Kang; &Sirtaj.Singh.Kang.mail;</para></listitem>
@@ -217,7 +217,7 @@ new mail in the <guilabel>New mail</guilabel> line. Also, the
 
 <para>We hope this documentation helped you. If you need to contact me, the
 document writer, you can at nbetcher@uswest.net. If you wish to contact the
-developers of &appname;, you can find their names in the <guimenuitem>About
+developers of &kappname;, you can find their names in the <guimenuitem>About
 Korn...</guimenuitem> option or above.</para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
