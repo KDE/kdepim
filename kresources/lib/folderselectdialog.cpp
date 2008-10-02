@@ -60,10 +60,10 @@ FolderSelectDialog::FolderSelectDialog( const QString& caption, const QString& l
   mListBox->ensureCurrentVisible();
   layout->addWidget( mListBox, 10 );
 
-  connect( mListBox, SIGNAL( doubleClicked( QListBoxItem * ) ),
-           SLOT( okClicked() ) );
-  connect( mListBox, SIGNAL( returnPressed( QListBoxItem * ) ),
-           SLOT( okClicked() ) );
+  connect( mListBox, SIGNAL( doubleClicked( Q3ListBoxItem * ) ),
+           SLOT( accept() ) );
+  connect( mListBox, SIGNAL( returnPressed( Q3ListBoxItem * ) ),
+           SLOT( accept() ) );
 
   mListBox->setFocus();
 
