@@ -101,7 +101,7 @@ entry fields in its graphical user interface.
 
 <para>
 After you have started &kaddressbook; (either using one of the &kde; application 
-launchers (&kickoff;, the classic &kmenu; or Lancelot Launcher) or by typing
+launchers &kickoff;, the classic &kmenu; or Lancelot Launcher) or by typing
 <command>kaddressbook</command> at the command prompt or by using the 
 <guilabel>Contacts</guilabel> tab in &kontact;) the &kaddressbook; main window
 will be displayed:</para>
@@ -134,7 +134,7 @@ the &systemsettings; under <guilabel>Advanced</guilabel>->
 <caption><para>The Resource Configuration Dialog.</para></caption>
 </mediaobject>
 </screenshot>
-<para>Load the configuration module you want to add your resource(s) to. By selecting it from the combo box at the top of the <guilabel>Resources</guilabel> section. The module for configuring &kaddressbook;'s resources is <guilabel>Contacts</guilabel>.</para>
+<para>Load the configuration module you want to add your resource(s) to. By selecting it from the drop down box at the top of the <guilabel>Resources</guilabel> section. The module for configuring &kaddressbook;'s resources is <guilabel>Contacts</guilabel>.</para>
 <para>Launch the <guilabel>Resource Configuration</guilabel> dialog by pushing the <guibutton>Add...</guibutton> button. Choose the resource you want to add to your <guilabel>Contacts</guilabel> module and click <guilabel>OK</guilabel> to confirm your choice.</para>
 
 <variablelist>
@@ -230,7 +230,7 @@ the vCard format;</para></listitem>
 </varlistentry>
 </variablelist>
 
-<!-- no Use as Standard</guibutton> button ???-->
+<!-- no Use as Standard</guibutton> button ??? is in system settings kde resources-->
 <para>&kaddressbook; needs a standard resource, where all contacts should be
 saved if no other resource is specified; for this reason, after starting
 &kaddressbook; the first time, there is already a resource available.
@@ -1023,10 +1023,8 @@ You can include and exclude servers from the search by selecting or deselecting 
 <variablelist>
 <varlistentry>
 <term><menuchoice>
-<shortcut>
-<keycombo action="simul">&Ctrl;<keycap>N</keycap></keycombo>
-</shortcut>
 <guimenu>File</guimenu>
+<guisubmenu>New</guisubmenu>
 <guimenuitem>New Contact...</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Opens the contact editor for adding a new contact</action>.</para></listitem>
@@ -1035,11 +1033,20 @@ You can include and exclude servers from the search by selecting or deselecting 
 <varlistentry>
 <term><menuchoice>
 <guimenu>File</guimenu>
+<guisubmenu>new</guisubmenu>
+<guimenuitem>New Distribution List...</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Opens the distribution list editor for adding a new list</action>.</para></listitem>
+</varlistentry>
+
+<!--varlistentry>
+<term><menuchoice>
+<guimenu>File</guimenu>
 <guimenuitem>Edit Contact...</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Opens the contact editor for editing the currently selected
 contact</action>.</para></listitem>
-</varlistentry>
+</varlistentry-->
 
 <varlistentry>
 <term><menuchoice>
@@ -1181,6 +1188,24 @@ it is in a valid format)</action>.</para></listitem>
 
 <varlistentry>
 <term><menuchoice>
+<guimenu>Edit</guimenu>
+<guimenuitem>Copy Contact To...</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>To be written<!--Copies the currently-selected contacts to ???????-->
+</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>Edit</guimenu>
+<guimenuitem>Move Contact To...</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>To be written<!--Moves the currently-selected contacts to ???????-->
+</action>.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
 <shortcut>
 <keycombo action="simul"><keycap>Delete</keycap></keycombo>
 </shortcut>
@@ -1286,6 +1311,30 @@ you can modify the settings of the current view</action>.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <guimenu>View</guimenu>
+<guimenuitem>Contact Editor</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Display or hide</action> the contact editor window.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>View</guimenu>
+<guimenuitem>Distibution List Editor</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Display or hide</action> the distribution list editor window.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>View</guimenu>
+<guimenuitem>Address Books</guimenuitem>
+</menuchoice></term>
+<listitem><para><action>Display or hide</action> the adressbook window.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><menuchoice>
+<guimenu>View</guimenu>
 <guimenuitem>Refresh View</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Refreshes the current view</action>.</para></listitem>
@@ -1301,7 +1350,7 @@ you can modify the settings of the current view</action>.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <guimenu>Tools</guimenu>
-<guisubmenu>Lookup Addresses in LDAP Directory...</guisubmenu>
+<guisubmenu>LDAP Lookup</guisubmenu>
 </menuchoice></term>
 <listitem><para><action>Opens the search dialog for addresses located on
 LDAP servers. You can configure the server settings in the
@@ -1319,18 +1368,9 @@ appearance, shortcuts and standard behavior.</para>
 <varlistentry>
 <term><menuchoice>
 <guimenu>Settings</guimenu>
-<guisubmenu>Toolbars</guisubmenu>
+<guisubmenu>Show Toolbar</guisubmenu>
 </menuchoice></term>
 <listitem><para><action>Toggles the toolbars on/off</action>.</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice>
-<guimenu>Settings</guimenu>
-<guisubmenu>Show Extension Bar</guisubmenu>
-</menuchoice></term>
-<listitem><para><action>Selects what extension should be shown in the
-extension bar at the bottom of the main window</action>.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -1344,7 +1384,7 @@ extension bar at the bottom of the main window</action>.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <guimenu>Settings</guimenu>
-<guimenuitem>Show Details</guimenuitem>
+<guimenuitem>Show/Hide Details</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Toggles the Details Page on/off</action>.</para></listitem>
 </varlistentry>
