@@ -1,3 +1,19 @@
+Friday, October 3rd 2008
+
+Problems addressed
+-------------------
+* kolab/issue2936 Document non-gui OutOfOffice settings for enterprise35.
+* kolab/issue1570 Make standard identity the default in the "Select Address" dialog
+* kolab/issue2501 Calendar: events in the month view are displayed in wrong colors
+* kolab/issue2472 "Default event color" is not used
+* kolab/issue2314 documentation of snippets missing, especially for the variable substitution
+* kolab/issue2962 Composer text snippets: Add/Edit group, snippet text "GROUP" is not translated into German.
+* kolab/issue2389 contact: After creating a new contact, while I have to select a contact resource the cursor is a clock.
+* kolab/issue2989 normal reminder changes to advanced reminder unexpectedly
+* kolab/issue1589 "Keep replies in this folder" not honored when replying with identity not matching original recipients
+* kolab/issue2614 The context menu of the favorite folder view and the folder view should be more similar
+
+
 Friday, September 26th 2008
 
 Problems addressed
@@ -9,7 +25,7 @@ Friday, September 19th 2008
 
 Problems addressed
 -------------------
-* kolab/issue2830 (Default identity used for invitation even if other identity is set as organizer.
+* kolab/issue2830 Default identity used for invitation even if other identity is set as organizer.
 * kolab/issue2577 An invitation to a recurring event should give information about the recurrance.
 * kolab/issue1828 Printing event doesn't print list of attachment.
 
