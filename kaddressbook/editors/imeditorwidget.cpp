@@ -182,9 +182,7 @@ QList<KPluginInfo> IMEditorWidget::availableProtocols() const
 
 void IMEditorWidget::loadContact( KABC::Addressee *addr )
 {
-  if ( mWidget->lvAddresses ) {
-    mWidget->lvAddresses->clear();
-  }
+  mWidget->lvAddresses->clear();
 
   // see README for details of how Evolution stores IM addresses (differently)
   const QStringList customs = addr->customs();
