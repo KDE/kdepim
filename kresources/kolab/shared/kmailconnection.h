@@ -134,6 +134,8 @@ public:
       return b && ok;
     }
 
+
+
 private slots:
   void dbusServiceOwnerChanged(const QString & service, const QString & oldOwner, const QString & newOwner);
 
