@@ -82,15 +82,20 @@ int Summary::summaryHeight() const
 
 QWidget *Summary::createHeader( QWidget *parent, const QString &iconname, const QString &heading )
 {
-  KHBox *hbox = new KHBox( parent );
-  hbox->setMargin( 2 );
-  hbox->setBackgroundRole( QPalette::Window );
-  hbox->setForegroundRole( QPalette::WindowText );
-  hbox->setAutoFillBackground( true );
+  setStyleSheet( "KHBox {"
+                    "border: 1px solid palette(window);"
+                    "border-top: 0px solid white;"
+                    "border-left: 0px solid white;"
+                    "border-right: 0px solid white;"
+                    "font: bold large;"
+                    "padding: 2px;"
+                 "}"
+                 "KHBox > QLabel { font: bold larger; } "
+               );
 
-  QFont boldFont = KGlobalSettings::generalFont();
-  boldFont.setBold( true );
-  boldFont.setPointSize( boldFont.pointSize() + 2 );
+  KHBox *hbox = new KHBox( parent );
+  //hbox->setMargin( 2 );
+  //hbox->setAutoFillBackground( true );
 
   QLabel *label = new QLabel( hbox );
   label->setPixmap( KIconLoader::global()->loadIcon( iconname, KIconLoader::Toolbar ) );
@@ -101,7 +106,6 @@ QWidget *Summary::createHeader( QWidget *parent, const QString &iconname, const 
   label = new QLabel( heading, hbox );
   label->setAlignment( Qt::AlignLeft | Qt::AlignVCenter );
   label->setIndent( KDialog::spacingHint() );
-  label->setFont( boldFont );
 
   hbox->setMaximumHeight( hbox->minimumSizeHint().height() );
 
