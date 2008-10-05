@@ -1161,7 +1161,7 @@ documents in your computer and the direction of the synchronization.
 <term><guilabel>Text files:</guilabel></term>
 <listitem><para>
 Type on the text box or use the file picker to select the location of the folder
-that the Palm DOC conduit uses a as the place for the text files it will sync
+that the Palm DOC conduit uses as the place for the text files it will sync
 with the &handheld;. There, you may place the text documents you want install or
 synchronize to the <acronym>PDA</acronym>, and find the text documents created
 from Palm DOC
