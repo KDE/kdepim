@@ -291,6 +291,16 @@ namespace kdtools {
         return for_each_adjacent_pair( boost::begin( c ), boost::end( c ), b );
     }
 
+    template <typename C>
+    void sort( C & c ) {
+        return std::sort( boost::begin( c ), boost::end( c ) );
+    }
+
+    template <typename C, typename P>
+    void sort( C & c, P p ) {
+        return std::sort( boost::begin( c ), boost::end( c ), p );
+    }
+
 }
 
 #endif /* __KDTOOLSCORE_STL_UTIL_H__ */
