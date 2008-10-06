@@ -1078,6 +1078,11 @@ unsigned int AssuanCommand::numFiles() const {
     return d->files.size();
 }
 
+void AssuanCommand::closeFiles() {
+    Q_FOREACH( const IOF & io, d->files )
+        io.file->close();
+}
+
 #if 0
 QString AssuanCommand::bulkInputDeviceFileName( unsigned int idx ) const {
     return d->inputs.at( idx ).fileName;
