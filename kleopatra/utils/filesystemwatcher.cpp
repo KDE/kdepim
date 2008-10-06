@@ -48,6 +48,9 @@ class FileSystemWatcher::Private {
     FileSystemWatcher* const q;
 public:
     explicit Private(  FileSystemWatcher* qq, const QStringList& paths=QStringList() );
+    ~Private() {
+        delete m_watcher;
+    }
 
     void onFileChanged( const QString& path );
     void onDirectoryChanged( const QString& path );
