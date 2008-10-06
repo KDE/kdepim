@@ -61,6 +61,7 @@
 
 #include <KLocalizedString>
 #include <KWindowSystem>
+#include <KMessageBox>
 
 #include <QSocketNotifier>
 #include <QTimer>
@@ -577,10 +578,34 @@ private:
                     (void)assuan_write_line( conn.ctx.get(), qPrintable( QString().sprintf( "# matching %s key %s", key.protocolAsString(), key.primaryFingerprint() ) ) );
             const bool pgp = kdtools::any( seckeys, bind( &GpgME::Key::protocol, _1 ) == GpgME::OpenPGP );
             const bool cms = kdtools::any( seckeys, bind( &GpgME::Key::protocol, _1 ) == GpgME::CMS );
-            if ( pgp != cms ) // only send PROTOCOL status line if there's a clesar preference
-                (void)assuan_write_status( conn.ctx.get(), "PROTOCOL", pgp ? "OpenPGP" : "CMS" );
-            else if ( pgp && cms )
-                (void)assuan_write_line( conn.ctx.get(), "# pick freely" );
+            GpgME::Protocol proto = GpgME::UnknownProtocol;
+            if ( cms != pgp )
+                proto = pgp ? GpgME::OpenPGP : GpgME::CMS ;
+            if ( cms && pgp )
+                if ( conn.bias != GpgME::UnknownProtocol )
+                    proto = conn.bias;
+                else
+                    proto =
+                        KMessageBox::questionYesNo( 0, i18nc("@info",
+                                                             "<para>The sender address <email>%1</email> matches more than one cryptographic format.</para>"
+                                                             "<para>Which format do you want to use?</para>", email ),
+                                                    i18nc("@title","Format Choice"),
+                                                    KGuiItem( i18nc("@action:button","Send OpenPGP-Signed") ),
+                                                    KGuiItem( i18nc("@action:button","Send S/MIME-Signed") ),
+                                                    QLatin1String("uiserver-sender-ask-protocol") ) == KMessageBox::Yes
+                        ? GpgME::OpenPGP
+                        : GpgME::CMS ;
+            conn.bias = proto;
+            switch ( proto ) {
+            case GpgME::OpenPGP:
+                (void)assuan_write_status( conn.ctx.get(), "PROTOCOL", "OpenPGP" );
+                break;
+            case GpgME::CMS:
+                (void)assuan_write_status( conn.ctx.get(), "PROTOCOL", "CMS" );
+                break;
+            case GpgME::UnknownProtocol:
+                ; // keep compiler happy
+            };
         }
         return assuan_process_done( ctx, 0 );
     }
@@ -666,6 +691,7 @@ private:
         std::for_each( messages.begin(), messages.end(),
                        bind( &Input::finalize, _1 ) );
         messages.clear();
+        bias = GpgME::UnknownProtocol;
     }
 
     assuan_fd_t fd;
@@ -676,6 +702,7 @@ private:
     bool currentCommandIsNohup : 1;
     bool informativeSenders;    // address taken, so no : 1
     bool informativeRecipients; // address taken, so no : 1
+    GpgME::Protocol bias;
     QString sessionTitle;
     std::vector< shared_ptr<QSocketNotifier> > notifiers;
     std::vector< shared_ptr<AssuanCommandFactory> > factories; // sorted: _detail::ByName<std::less>
@@ -711,6 +738,7 @@ AssuanServerConnection::Private::Private( assuan_fd_t fd_, const std::vector< sh
       currentCommandIsNohup( false ),
       informativeSenders( false ),
       informativeRecipients( false ),
+      bias( GpgME::UnknownProtocol ),
       factories( factories_ )
 {
 #ifdef __GNUC__
@@ -886,6 +914,7 @@ public:
     Private()
         : informativeRecipients( false ),
           informativeSenders( false ),
+          bias( GpgME::UnknownProtocol ),
           done( false ),
           nohup( false )
     {
@@ -898,6 +927,7 @@ public:
     std::vector<IOF> files;
     std::vector<KMime::Types::Mailbox> recipients, senders;
     bool informativeRecipients, informativeSenders;
+    GpgME::Protocol bias;
     QString sessionTitle;
     QByteArray utf8ErrorKeepAlive;
     AssuanContext ctx;
@@ -1243,6 +1273,7 @@ int AssuanCommandFactory::_handle( assuan_context_t ctx, char * line, const char
         cmd->d->recipients.swap( conn.recipients ); kleo_assert( conn.recipients.empty() );
         cmd->d->informativeRecipients = conn.informativeRecipients;
         cmd->d->informativeSenders    = conn.informativeSenders;
+        cmd->d->bias                  = conn.bias;
         cmd->d->sessionTitle          = conn.sessionTitle;
 
         const std::map<std::string,std::string> cmdline_options = parse_commandline( line );
@@ -1353,13 +1384,16 @@ AssuanCommand::Mode AssuanCommand::checkMode() const {
   If \c --protocol was given, but has an invalid value, throws an
   Kleo::Exception.
 
-  If no \c --protocol was given, in FileManager mode, returns
+  If no \c --protocol was given, checks the connection bias, if
+  available, otherwise, in FileManager mode, returns
   GpgME::UnknownProtocol, but if \a mode == \c EMail, throws an
   Kleo::Exception instead.
 */
 GpgME::Protocol AssuanCommand::checkProtocol( Mode mode, int options ) const {
     if ( !hasOption("protocol") )
-        if ( mode == AssuanCommand::EMail && ( options & AllowProtocolMissing ) == 0 )
+        if ( d->bias != GpgME::UnknownProtocol )
+            return d->bias;
+        else if ( mode == AssuanCommand::EMail && ( options & AllowProtocolMissing ) == 0 )
             throw Exception( makeError( GPG_ERR_MISSING_VALUE ), i18n( "Required --protocol option missing" ) );
         else
             return GpgME::UnknownProtocol;
