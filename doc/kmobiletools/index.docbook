@@ -57,7 +57,7 @@
 
 <para>
 &kmobiletools; is a program that lets you manage mobile phones.</para>
-<para>It handles full SMS control, dialing calls, phonebook, and phone status monitoring. It's also integrated with the &kde; environment, so it can be embedd in &kontact;, or import/export from and to &kaddressbook;.</para>
+<para>It handles full SMS control, dialing calls, phonebook, and phone status monitoring. It's also integrated with the &kde; environment, so it can be embeded in &kontact;, or import/export from and to &kaddressbook;.</para>
 <para>&kmobiletools; is completely modular: the main program can load so called "Engines" which can support different range of devices. Each engine also has a set of wizard pages, so that the user is guided in adding new devices.</para>
 <itemizedlist>
 <listitem>
@@ -103,7 +103,7 @@ your application. -->
 
 <sect1 id="kmt-mainpage">
 <title>&kmobiletools; Main Window</title>
-<para>The main windows will show you a list of configured phones. It will display also their current status:</para>
+<para>The main window will show you a list of configured phones. It will display also their current status:</para>
 <itemizedlist>
 <listitem><para>Not Loaded: the engine relative to this mobile phone is not loaded.</para></listitem>
 <listitem><para>Not Connected: the engine is loaded, but the phone is not found.</para></listitem>
@@ -118,7 +118,7 @@ your application. -->
 <sect1 id="kmt-devicehome">
 <title>Mobile Phone HomePage</title>
 <para>The Mobile Phone Homepage will show you some useful informations about your mobile phone, like the number of messages, contacts, and a brief summary of the calendar. In the status bar you will also see your network operator (when supported), and the level of battery and network signal, plus a visual representation of currently executing tasks.</para>
-<para>Clicking on the <guilabel>Phone details</guilabel> link will also show you more advanced informations, like phone manufacturer and model and the IMEI code, </para>
+<para>Clicking on the <guilabel>Phone details</guilabel> link will also show you more advanced information, like phone manufacturer and model or the IMEI code.</para>
 <screenshot><screeninfo>Here's a screenshot of &kmobiletools; device homepage</screeninfo>
 <mediaobject><imageobject>
       <imagedata fileref="phonepage.png" format="PNG"/>
@@ -144,7 +144,7 @@ your application. -->
 
 <sect1 id="kmt-smslist">
 <title>Short Text Messages Management</title>
-<para>The SMS Page is similar to a mail application like &kmail; The left list shows the count of messages and their position, while the right one shows the sender number (or the name, if it is found in the phonebook), the date of the message and the subject. Finally, the page at down will show the message text, plus some actions allowing you to remove messages, or write a new one.</para>
+<para>The SMS Page is similar to a mail application like &kmail;. The left list shows the count of messages and their position, while the right one shows the sender number (or the name, if it is found in the phonebook), the date of the message and the subject. Finally, the page at down will show the message text, plus some actions allowing you to remove messages, or write a new one.</para>
 <screenshot><screeninfo>Here's a screenshot of &kmobiletools; sms list page</screeninfo>
 <mediaobject><imageobject>
       <imagedata fileref="smspage_0.png" format="PNG"/>
@@ -348,7 +348,7 @@ destroyed.
 <term>-
 </term>
 <listitem>
-<para>Otherwise, if the child is realized, it makes it nonvisible
+<para>Otherwise, if the child is realized, it makes it invisible
 by unmapping it.
 </para>
 </listitem>
