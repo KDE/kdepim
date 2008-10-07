@@ -1,5 +1,5 @@
 /****************************************************************************
-** Copyright (C) 2001-2007 Klarälvdalens Datakonsult AB.  All rights reserved.
+** Copyright (C) 2001-2007 KlarÃ¤lvdalens Datakonsult AB.  All rights reserved.
 **
 ** This file is part of the KD Tools library.
 **
@@ -309,7 +309,7 @@ void KDLogTextWidget::paintEvent( QPaintEvent * e ) {
 
     const Private::Cache & cache = d->cache;
 
-    // ### unused optimisation: paint lines by styles to minimise pen changes.
+    // ### unused optimization: paint lines by styles to minimise pen changes.
     for ( unsigned int i = visibleLines.first, end = visibleLines.second ; i != end ; ++i ) {
         const Private::LineItem & li = d->lines[i];
         assert( !li.styleID || d->styleByID.contains( li.styleID ) );

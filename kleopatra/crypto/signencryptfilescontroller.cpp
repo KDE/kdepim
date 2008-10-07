@@ -188,7 +188,7 @@ void SignEncryptFilesController::Private::updateWizardMode() {
         wizard->setSigningUserMutable( false );
         break;
     default:
-        assert( !"Shouldn't happen" );
+        assert( !"Should not happen" );
     case SignAllowed:
         wizard->setSigningSelected( encrOp == EncryptDisallowed );
         wizard->setSigningUserMutable( true );
@@ -201,7 +201,7 @@ void SignEncryptFilesController::Private::updateWizardMode() {
         wizard->setEncryptionUserMutable( false );
         break;
     default:
-        assert( !"Shouldn't happen" );
+        assert( !"Should not happen" );
     case EncryptAllowed:
         wizard->setEncryptionSelected( true );
         wizard->setEncryptionUserMutable( true );

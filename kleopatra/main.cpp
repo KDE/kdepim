@@ -99,7 +99,7 @@ static bool selfCheck( KSplashScreen & splash ) {
     QTimer::singleShot( 0, &cmd, SLOT(start()) ); // start() may emit finished()...
     loop.exec();
     if ( cmd.isCanceled() ) {
-        splash.showMessage( i18nc("didn't pass", "Self-Check Failed") );
+        splash.showMessage( i18nc("did not pass", "Self-Check Failed") );
         return false;
     } else {
         splash.showMessage( i18n("Self-Check Passed") );
@@ -205,7 +205,7 @@ int main( int argc, char** argv )
       server.waitForStopped();
   } catch ( const std::exception & e ) {
       QMessageBox::information( 0, i18n("GPG UI Server Error"),
-                                i18n("<qt>The Kleopatra GPG UI Server Module couldn't be initialized.<br/>"
+                                i18n("<qt>The Kleopatra GPG UI Server Module could not be initialized.<br/>"
                                      "The error given was: <b>%1</b><br/>"
                                      "You can use Kleopatra as a certificate manager, but cryptographic plugins that "
                                      "rely on a GPG UI Server being present might not work correctly, or at all.</qt>",

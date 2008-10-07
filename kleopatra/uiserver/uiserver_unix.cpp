@@ -63,7 +63,7 @@ QString UiServer::Private::makeFileName( const QString & socket ) const {
     if ( !socket.isEmpty() )
         return socket;
     if ( tmpDir.status() != 0 )
-        throw_<std::runtime_error>( i18n( "Couldn't create directory %1: %2", tmpDirPrefix() + "XXXXXXXX", systemErrorString() ) );
+        throw_<std::runtime_error>( i18n( "Could not create directory %1: %2", tmpDirPrefix() + "XXXXXXXX", systemErrorString() ) );
     const QString gnupgHome = gnupgHomeDirectory();
     if ( !gnupgHome.isEmpty() )
         ensureDirectoryExists( gnupgHome );
@@ -80,7 +80,7 @@ void UiServer::Private::doMakeListeningSocket( const QByteArray & encodedFileNam
     const assuan_fd_t sock = ::socket( AF_UNIX, SOCK_STREAM, 0 );
 #endif
     if ( sock == ASSUAN_INVALID_FD )
-        throw_<std::runtime_error>( i18n( "Couldn't create socket: %1", systemErrorString() ) );
+        throw_<std::runtime_error>( i18n( "Could not create socket: %1", systemErrorString() ) );
 
     try {
         // Bind
@@ -93,21 +93,21 @@ void UiServer::Private::doMakeListeningSocket( const QByteArray & encodedFileNam
 #else
         if ( ::bind( sock, (struct sockaddr*)&sa, sizeof( sa ) ) )
 #endif
-            throw_<std::runtime_error>( i18n( "Couldn't bind to socket: %1", systemErrorString() ) );
+            throw_<std::runtime_error>( i18n( "Could not bind to socket: %1", systemErrorString() ) );
 
         // ### TODO: permissions?
 
 #ifdef HAVE_ASSUAN_SOCK_GET_NONCE
         if ( assuan_sock_get_nonce( (struct sockaddr*)&sa, sizeof( sa ), &nonce ) )
-            throw_<std::runtime_error>( i18n("Couldn't get socket nonce: %1", systemErrorString() ) );
+            throw_<std::runtime_error>( i18n("Could not get socket nonce: %1", systemErrorString() ) );
 #endif
 
         // Listen
         if ( ::listen( sock, SOMAXCONN ) )
-            throw_<std::runtime_error>( i18n( "Couldn't listen to socket: %1", systemErrorString() ) );
+            throw_<std::runtime_error>( i18n( "Could not listen to socket: %1", systemErrorString() ) );
 
         if ( !setSocketDescriptor( sock ) )
-            throw_<std::runtime_error>( i18n( "Couldn't pass socket to Qt: %1. This should not happen, please report this bug.", errorString() ) );
+            throw_<std::runtime_error>( i18n( "Could not pass socket to Qt: %1. This should not happen, please report this bug.", errorString() ) );
 
     } catch ( ... ) {
         ::close( sock );

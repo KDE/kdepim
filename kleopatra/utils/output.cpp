@@ -249,7 +249,7 @@ PipeOutput::PipeOutput( assuan_fd_t fd )
     errno = 0;
     if ( !m_io->open( fd, QIODevice::WriteOnly ) )
         throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
-                         i18n( "Couldn't open FD %1 for writing",
+                         i18n( "Could not open FD %1 for writing",
                                assuanFD2int( fd ) ) );
 }
 
@@ -274,7 +274,7 @@ FileOutput::FileOutput( const QString & fileName, const shared_ptr<OverwritePoli
     errno = 0;
     if ( !m_tmpFile->openNonInheritable() )
         throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
-                         i18n( "Couldn't create temporary file for output \"%1\"", fileName ) );
+                         i18n( "Could not create temporary file for output \"%1\"", fileName ) );
 }
 
 bool FileOutput::obtainOverwritePermission() {
@@ -328,7 +328,7 @@ void FileOutput::doFinalize() {
 
     if ( !QFile::remove( m_fileName ) )
         throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
-                         i18n("Couldn't remove file \"%1\" for overwriting.", m_fileName ) );
+                         i18n("Could not remove file \"%1\" for overwriting.", m_fileName ) );
 
     kDebug() << this << "succeeded, renaming " << tmpFileName << "->" << m_fileName;
 
@@ -340,7 +340,7 @@ void FileOutput::doFinalize() {
     kDebug() << this << "failed";
 
     throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
-                     i18n( "Couldn't rename file \"%1\" to \"%2\"",
+                     i18n( "Could not rename file \"%1\" to \"%2\"",
                            tmpFileName, m_fileName ) );
 }
 
@@ -361,7 +361,7 @@ ClipboardOutput::ClipboardOutput( QClipboard::Mode mode )
     errno = 0;
     if ( !m_buffer->open( QIODevice::WriteOnly ) )
         throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
-                         i18n( "Couldn't write to clipboard" ) );
+                         i18n( "Could not write to clipboard" ) );
 }
 
 QString ClipboardOutput::label() const {
@@ -383,7 +383,7 @@ void ClipboardOutput::doFinalize() {
         cb->setText( QString::fromUtf8( m_buffer->data() ) );
     else
         throw Exception( gpg_error( GPG_ERR_EIO ),
-                         i18n( "Couldn't find clipboard" ) );
+                         i18n( "Could not find clipboard" ) );
 }
 
 

@@ -164,7 +164,7 @@ Policy SignEncryptFilesCommand::signingPolicy() const {
     const unsigned int mode = d->controller.operationMode();
     switch ( mode & SignEncryptFilesController::SignMask ) {
     default:
-        assert( !"This shouldn't happen!" );
+        assert( !"This should not happen!" );
         return NoPolicy;
     case SignEncryptFilesController::SignAllowed:
         return Allow;
@@ -199,7 +199,7 @@ Policy SignEncryptFilesCommand::encryptionPolicy() const {
     const unsigned int mode = d->controller.operationMode();
     switch ( mode & SignEncryptFilesController::EncryptMask ) {
     default:
-        assert( !"This shouldn't happen!" );
+        assert( !"This should not happen!" );
         return NoPolicy;
     case SignEncryptFilesController::EncryptAllowed:
         return Allow;

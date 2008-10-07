@@ -274,7 +274,7 @@ public:
         selectUserIDsPage = new SelectUserIDsPage( q );
         q->addPage( selectUserIDsPage );
         //selectCheckLevelPage = new SelectCheckLevelPage( q );
-        //setting the cert level explicitely is not supported by the backend,
+        //setting the cert level explicitly is not supported by the backend,
         //thus we omit the page from the UI
         //q->addPage( selectCheckLevelPage );
         optionsPage = new OptionsPage( q );

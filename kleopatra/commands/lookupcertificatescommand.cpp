@@ -364,7 +364,7 @@ void LookupCertificatesCommand::Private::checkForDownloadFinished() {
     } else if ( kdtools::any( downloads, mem_fn( &DownloadVariables::error ) ) &&
                 KMessageBox::questionYesNoList( dialogOrParentWidgetOrView(),
                                                 i18n( "Some certificates failed to download. "
-                                                      "Do you want to proceed importing the following, succeded, downloads?" ),
+                                                      "Do you want to proceed importing the following, succeeded, downloads?" ),
                                                 filter_and_format_successful_downloads( downloads ),
                                                 i18n( "Certificate Downloads Failed" ) )
                 == KMessageBox::No )

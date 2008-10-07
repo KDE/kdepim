@@ -128,7 +128,7 @@ read_w32_registry_string (const char *root, const char *dir, const char *name)
     {
       if (root)
 	return NULL; /* no need for a RegClose, so return direct */
-      /* It seems to be common practise to fall back to HKLM. */
+      /* It seems to be common practice to fall back to HKLM. */
       if (RegOpenKeyExA (HKEY_LOCAL_MACHINE, dir, 0, KEY_READ, &key_handle) )
 	return NULL; /* still no need for a RegClose, so return direct */
     }

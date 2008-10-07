@@ -152,7 +152,7 @@ PipeInput::PipeInput( assuan_fd_t fd )
     errno = 0;
     if ( !kdp->open( fd, QIODevice::ReadOnly ) )
         throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
-                         i18n( "Couldn't open FD %1 for reading",
+                         i18n( "Could not open FD %1 for reading",
                                _detail::assuanFD2int( fd ) ) );
     m_io = Log::instance()->createIOLogger( kdp, "pipe-input", Log::Read );
 }
@@ -181,7 +181,7 @@ FileInput::FileInput( const QString & fileName )
     errno = 0;
     if ( !file->open( QIODevice::ReadOnly ) )
         throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
-                         i18n( "Couldn't open file \"%1\" for reading", fileName ) );
+                         i18n( "Could not open file \"%1\" for reading", fileName ) );
     m_io = Log::instance()->createIOLogger( file, "file-in", Log::Read );
 
 }
@@ -197,7 +197,7 @@ FileInput::FileInput( const shared_ptr<QFile> & file )
                                 i18n( "File \"%1\" is already open, but not for reading", file->fileName() ) );
     if ( !file->isOpen() && !file->open( QIODevice::ReadOnly ) )
         throw Exception( errno ? gpg_error_from_errno( errno ) : gpg_error( GPG_ERR_EIO ),
-                         i18n( "Couldn't open file \"%1\" for reading", m_fileName ) );
+                         i18n( "Could not open file \"%1\" for reading", m_fileName ) );
     m_io = Log::instance()->createIOLogger( file, "file-in", Log::Read );
 }
 
@@ -255,7 +255,7 @@ ClipboardInput::ClipboardInput( QClipboard::Mode mode )
     m_buffer->setData( dataFromClipboard( mode ) );
     if ( !m_buffer->open( QIODevice::ReadOnly ) )
         throw Exception( gpg_error( GPG_ERR_EIO ),
-                         i18n( "Couldn't open clipboard for reading" ) );
+                         i18n( "Could not open clipboard for reading" ) );
 }
 
 void ClipboardInput::setLabel( const QString & ) {

@@ -318,7 +318,7 @@ private:
 
     static int capabilities_handler( assuan_context_t ctx_, char * line ) {
         if ( !QByteArray( line ).trimmed().isEmpty() ) {
-            static const QString errorString = i18n("CAPABILITIES doesn't take arguments");
+            static const QString errorString = i18n("CAPABILITIES does not take arguments");
             return assuan_process_done_msg( ctx_, gpg_error( GPG_ERR_ASS_PARAMETER ), errorString );
         }
         static const char capabilities[] =
@@ -1097,17 +1097,17 @@ void AssuanCommand::sendStatusEncoded( const char * keyword, const std::string &
     if ( d->nohup )
         return;
     if ( const int err = assuan_write_status( d->ctx.get(), keyword, text.c_str() ) )
-        throw Exception( err, i18n( "Can't send \"%1\" status", QString::fromLatin1( keyword ) ) );
+        throw Exception( err, i18n( "Can not send \"%1\" status", QString::fromLatin1( keyword ) ) );
 }
 
 void  AssuanCommand::sendData( const QByteArray & data, bool moreToCome ) {
     if ( d->nohup )
         return;
     if ( const gpg_error_t err = assuan_send_data( d->ctx.get(), data.constData(), data.size() ) )
-        throw Exception( err, i18n( "Can't send data" ) );
+        throw Exception( err, i18n( "Can not send data" ) );
     if ( !moreToCome )
         if ( const gpg_error_t err = assuan_send_data( d->ctx.get(), 0, 0 ) ) // flush
-            throw Exception( err, i18n( "Can't flush data" ) );
+            throw Exception( err, i18n( "Can not flush data" ) );
 }
 
 int AssuanCommand::inquire( const char * keyword, QObject * receiver, const char * slot, unsigned int maxSize ) {

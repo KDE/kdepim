@@ -117,7 +117,7 @@ namespace {
             if ( process.exitStatus() != QProcess::NormalExit ||
                  process.error()      != QProcess::UnknownError ) {
                 m_passed = false;
-                m_error = i18nc("self-test didn't pass", "Failed");
+                m_error = i18nc("self-test did not pass", "Failed");
                 m_explaination =
                     i18n( "There was an error executing the GnuPG configuration self-check for %2:\n"
                           "  %1\n"
@@ -129,14 +129,14 @@ namespace {
                 m_proposedFix = QString();
             } else if ( process.exitCode() ) {
                 m_passed = false;
-                m_error = i18nc("self-check didn't pass", "Failed");
+                m_error = i18nc("self-check did not pass", "Failed");
                 m_explaination = !output.trimmed().isEmpty()
-                    ? i18nc("Self-test didn't pass",
+                    ? i18nc("Self-test did not pass",
                             "The GnuPG configuration self-check failed.\n"
                             "\n"
                             "Error code: %1\n"
                             "Diagnostics:", process.exitCode() ) + '\n' + output
-                    : i18nc("self-check didn't pass",
+                    : i18nc("self-check did not pass",
                             "The GnuPG configuration self-check failed with error code %1.\n"
                             "No output was received.", process.exitCode() );
                 m_proposedFix = QString();
