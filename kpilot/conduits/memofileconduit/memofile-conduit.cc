@@ -261,8 +261,8 @@ void MemofileConduit::getAllFromPilot()
 	PilotMemo *memo = 0;
 
 	while ((pilotRec = fDatabase->readRecordByIndex(currentRecord)) != NULL) {
+		memo = new PilotMemo(pilotRec);
 		if ((!pilotRec->isSecret()) || _sync_private) {
-			memo = new PilotMemo(pilotRec);
 			fMemoList.append(memo);
 
 			DEBUGKPILOT

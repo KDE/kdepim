@@ -59,10 +59,10 @@ FileInstallWidget::FileInstallWidget( QWidget * parent )
 		, fInstaller(0L)
 {
 	FUNCTIONSETUP;
-	
+
 	fP->fUi.setupUi( this );
 	fP->fUi.fIconView->installEventFilter( this );
-	
+
 	fInstaller = new FileInstaller;
 
 	connect( fP->fUi.fAddButton, SIGNAL( clicked() ), this, SLOT( slotAddFile() ) );
@@ -97,7 +97,7 @@ bool FileInstallWidget::eventFilter( QObject *watched, QEvent *event )
 			dragEnterEvent( static_cast<QDragEnterEvent*>( event ) );
 			return true;
 		}
-		
+
 		if( event->type() == QEvent::Drop )
 		{
 			 dropEvent( static_cast<QDropEvent*>(event) );
@@ -109,7 +109,7 @@ bool FileInstallWidget::eventFilter( QObject *watched, QEvent *event )
 		{
 			return true;
 		}
-		
+
 		if( event->type() == QEvent::ContextMenu )
 		{
 			contextMenu( static_cast<QContextMenuEvent*>(event) );
@@ -133,7 +133,7 @@ void FileInstallWidget::dragEnterEvent( QDragEnterEvent *event )
 	KUrl::List urls = KUrl::List::fromMimeData( event->mimeData() );
 	KUrl::List::const_iterator it;
 	QString filename;
-	
+
 	for ( it = urls.begin(); it != urls.end(); ++it )
 	{
 		filename = (*it).fileName();
@@ -144,14 +144,14 @@ void FileInstallWidget::dragEnterEvent( QDragEnterEvent *event )
 			return;
 		}
 	}
-	
+
 	event->setAccepted(true);
 }
 
 void FileInstallWidget::dropEvent( QDropEvent * drop )
 {
 	FUNCTIONSETUP;
-	
+
 	if( !isVisible() )
 	{
 		return;
@@ -195,7 +195,7 @@ void FileInstallWidget::showPage()
 void FileInstallWidget::slotAddFile()
 {
 	FUNCTIONSETUP;
-	
+
 	if (!isVisible())
 	{
 		return;
@@ -245,7 +245,7 @@ void FileInstallWidget::contextMenu( QContextMenuEvent *event )
 	for( int i = 0; i < itemCount; ++i )
 	{
 		item = fP->fUi.fIconView->item( i );
-		
+
 		if( item && item->isSelected() )
 		{
 			files.append( item->text() );
@@ -276,12 +276,12 @@ void FileInstallWidget::contextMenu( QContextMenuEvent *event )
 
 	QAction *action = popup.exec(
 		fP->fUi.fIconView->viewport()->mapToGlobal( event->pos() ) );
-	
+
 	if( !action )
 	{
 		return;
 	}
-	else if(action->data().toInt() == 10)
+	else if(action->data().toInt() == 10 && item)
 	{
 		fInstaller->deleteFile(item->text());
 	}

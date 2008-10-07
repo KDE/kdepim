@@ -45,7 +45,7 @@ HHDataProxy::HHDataProxy( PilotDatabase *db ) : fDatabase( db )
 void HHDataProxy::syncFinished()
 {
 	FUNCTIONSETUP;
-	
+
 	if( fDatabase && fDatabase->isOpen() )
 	{
 		fDatabase->cleanup();
@@ -88,46 +88,46 @@ QString HHDataProxy::bestMatchCategory( const QStringList& pcCategories
 void HHDataProxy::clearCategory( HHRecord *rec )
 {
 	FUNCTIONSETUP;
-	
+
 	rec->setCategory( Pilot::Unfiled, CSL1( "Unfiled" ) );
 }
 
 bool HHDataProxy::containsCategory( const QString& category ) const
 {
 	FUNCTIONSETUP;
-	
+
 	DEBUGKPILOT << "HHDataProxy::containsCategory() - fAppInfo: " << fAppInfo
 		<< " category we are trying to find: " << category;
-	
+
 	// Do not map unknown to unfiled when looking for category
 	return fAppInfo->findCategory( category, false ) != -1;
 }
-	
+
 bool HHDataProxy::addGlobalCategory( const QString& category )
 {
 	FUNCTIONSETUP;
-	
+
 	if( fAppInfo->findCategory( category, false ) != -1 )
 	{
 		// The category is already there.
 		return true;
 	}
-	
+
 	if( (unsigned int) category.size() > Pilot::CATEGORY_SIZE )
 	{
 		// Let's not start on this one. It will get truncated and I don't have time
 		// energy to think about what should happen in that case.
 		return false;
 	}
-	
+
 	bool canHaveNewCategory = false;
 	unsigned int i = 0;
 	QString cat;
-	
+
 	while( i < Pilot::CATEGORY_COUNT && !canHaveNewCategory )
 	{
 		cat = fAppInfo->categoryName( i );
-		
+
 		if( cat.isEmpty() )
 		{
 			canHaveNewCategory = true;
@@ -138,21 +138,21 @@ bool HHDataProxy::addGlobalCategory( const QString& category )
 			i++;
 		}
 	}
-	
+
 	if( canHaveNewCategory )
 	{
 		fAppInfo->setCategoryName( i, category );
 		fAddedCategories.insert( i, category );
 		return true;
 	}
-	
+
 	return false;
 }
 
 void HHDataProxy::setCategory( Record* rec, const QString& category )
 {
 	FUNCTIONSETUP;
-	
+
 	if( !containsCategory( category ) )
 	{
 		// Let's try to add the category.
@@ -162,10 +162,10 @@ void HHDataProxy::setCategory( Record* rec, const QString& category )
 			return;
 		}
 	}
-	
+
 	// Get the category id or let findCategory return -1 if it does not exist.
 	int id = fAppInfo->findCategory( category, false );
-	
+
 	if( id != -1 )
 	{
 		if( HHRecord *hhRec = static_cast<HHRecord*>( rec ) )
@@ -176,7 +176,8 @@ void HHDataProxy::setCategory( Record* rec, const QString& category )
 		}
 		else
 		{
-			DEBUGKPILOT << "Record " << rec->id() << " is not of type HHRecord*.";
+                        DEBUGKPILOT << "Record " << (rec ? rec->id() : "null")
+                                    << " is not of type HHRecord*.";
 		}
 	}
 }
@@ -184,9 +185,9 @@ void HHDataProxy::setCategory( Record* rec, const QString& category )
 QString HHDataProxy::generateUniqueId()
 {
 	recordid_t id = 0;
-	
+
 	QList<QString> ids = fRecords.keys();
-	
+
 	for( int i = 0; i < fRecords.size(); ++i )
 	{
 		if( ids.at( i ).toULong() > id )
@@ -194,7 +195,7 @@ QString HHDataProxy::generateUniqueId()
 			id = ids.at( i ).toULong();
 		}
 	}
-	
+
 	return QString::number( id + 1 );
 }
 
@@ -202,40 +203,40 @@ QString HHDataProxy::generateUniqueId()
 bool HHDataProxy::_commit()
 {
 	FUNCTIONSETUP;
-	
+
 	if( fAppInfo )
 	{
 		fAppInfo->writeTo( fDatabase );
 	}
-	
+
 	return true;
 }
 
 bool HHDataProxy::_rollback()
 {
 	FUNCTIONSETUP;
-	
+
 	// Roll back the categories.
 	foreach( uint i, fAddedCategories.keys() )
 	{
 		fAppInfo->setCategoryName( i, "" );
 	}
-	
+
 	fAppInfo->writeTo( fDatabase );
-	
+
 	// Make sure we can commit them again if we want to.
 	foreach( uint i, fAddedCategories.keys() )
 	{
 		fAppInfo->setCategoryName( i, fAddedCategories.value( i ) );
 	}
-	
+
 	return true;
 }
 
 bool HHDataProxy::commitCreate( Record *rec )
 {
 	FUNCTIONSETUP;
-	
+
 	if( fDatabase && rec )
 	{
 		if( HHRecord *hhRec = static_cast<HHRecord*>( rec ) )
@@ -252,7 +253,7 @@ bool HHDataProxy::commitCreate( Record *rec )
 			return false;
 		}
 	}
-	
+
 	return false;
 }
 
@@ -273,14 +274,14 @@ bool HHDataProxy::commitUpdate( Record *rec )
 			return false;
 		}
 	}
-	
+
 	return false;
 }
 
 bool HHDataProxy::commitDelete( Record *rec )
 {
 	FUNCTIONSETUP;
-	
+
 	if( fDatabase && rec )
 	{
 		if( HHRecord *hhRec = static_cast<HHRecord*>( rec ) )
@@ -294,14 +295,14 @@ bool HHDataProxy::commitDelete( Record *rec )
 			return false;
 		}
 	}
-	
+
 	return false;
 }
 
 bool HHDataProxy::isOpen() const
 {
 	FUNCTIONSETUP;
-	
+
 	if( fDatabase )
 	{
 		return fDatabase->isOpen();
@@ -315,23 +316,23 @@ bool HHDataProxy::isOpen() const
 void HHDataProxy::loadAllRecords()
 {
 	FUNCTIONSETUP;
-	
+
 	if( fDatabase && fDatabase->isOpen() )
 	{
 		fAppInfo = readAppInfo();
-	
+
 		int index = 0;
-		
+
 		PilotRecord *pRec = fDatabase->readRecordByIndex( index );
-		
+
 		while( pRec )
 		{
 			// Create a record object.
 			HHRecord *rec = createHHRecord( pRec );
 			fRecords.insert( rec->id(), rec );
-			
+
 			QString cat = fAppInfo->categoryName( pRec->category() );
-			
+
 			if( cat.isEmpty() )
 			{
 				// This is strange, should not happen I think. However if it happens
@@ -342,12 +343,12 @@ void HHDataProxy::loadAllRecords()
 			{
 				rec->setCategory( pRec->category(), cat );
 			}
-				
+
 			// Read the next one.
 			pRec = fDatabase->readRecordByIndex( ++index );
 		}
 		fCounter.setStartCount( fRecords.count() );
-		
+
 		DEBUGKPILOT << "Loaded " << fRecords.count() << " records.";
 	}
 }
