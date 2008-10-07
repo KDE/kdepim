@@ -567,7 +567,7 @@ private:
         // ### command, so we just ignore this for now:
         const QString email = mb.addrSpec().asString();
         (void)assuan_write_line( conn.ctx.get(), qPrintable( QString().sprintf( "# ok, parsed as \"%s\"", qPrintable( email ) ) ) );
-        if ( sender ) {
+        if ( sender && !informative ) {
             const std::vector<GpgME::Key> seckeys =
                 kdtools::copy_if<std::vector<GpgME::Key> >( KeyCache::instance()->findByEMailAddress( email.toStdString() ),
                                                             mem_fn( &GpgME::Key::hasSecret ) );
