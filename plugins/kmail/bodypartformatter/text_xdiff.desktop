@@ -58,6 +58,7 @@ Comment[nn]=Eit programtillegg for formatering av meldingstekstar i «text/x-pat
 Comment[pl]=Wtyczka formatująca dla text/x-patch
 Comment[pt]=Um 'plugin' de formatação para text/x-patch
 Comment[pt_BR]=Um plug-in formatador de componente para o tipo text/x-diff
+Comment[ru]=Модуль форматирования text/x-patch
 Comment[sl]=Oblikovalni vstavek za text/x-patch
 Comment[sv]=Ett insticksprogram för brevtextformatering av text/x-patch
 Comment[tr]=text/x-patch için bir gövde biçimleyici eklentisi
