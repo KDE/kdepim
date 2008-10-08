@@ -62,7 +62,7 @@ static std::string hexencode( const std::string & in ) {
     for ( std::string::const_iterator it = in.begin(), end = in.end() ; it != end ; ++it )
         switch ( const unsigned char ch = *it ) {
         default:
-            if ( ch >= '!' && ch <= '~' || ch > 0xA0 ) {
+            if ( ( ch >= '!' && ch <= '~' ) || ch > 0xA0 ) {
                 result += ch;
                 break;
             }
@@ -442,7 +442,7 @@ void Command::Private::run() {
     }
 
     for ( std::map<std::string,Option>::const_iterator it = in.options.begin(), end = in.options.end() ; it != end ; ++it )
-        if ( ( err = send_option( ctx, it->first.c_str(), it->second.hasValue ? it->second.value.toString() : QVariant() ) ) )
+        if ( ( err = send_option( ctx, it->first.c_str(), it->second.hasValue ? it->second.value.toString() : QVariant() ) ) ) {
             if ( it->second.isCritical ) {
                 out.errorString = tr("Failed to send critical option %1: %2")
                     .arg( QString::fromLatin1( it->first.c_str() ), to_error_string( err ) );
@@ -450,6 +450,7 @@ void Command::Private::run() {
             } else {
                 qDebug() << "Failed to send non-critical option" << it->first.c_str() << ":" << to_error_string( err );
             }
+        }
 
     Q_FOREACH( const QString & filePath, in.filePaths )
         if ( ( err = send_file( ctx, filePath ) ) ) {

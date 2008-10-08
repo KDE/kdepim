@@ -255,8 +255,8 @@ int Model::rowCount( const QModelIndex & ) const {
 }
 
 QVariant Model::data( const QModelIndex & idx, int role ) const {
-    if ( role != Qt::DisplayRole && role != Qt::EditRole &&
-         role != Qt::ToolTipRole && role != Qt::DecorationRole ||
+    if ( ( role != Qt::DisplayRole && role != Qt::EditRole &&
+         role != Qt::ToolTipRole && role != Qt::DecorationRole ) ||
          !idx.isValid() || idx.model() != this ||
          idx.row() < 0 || static_cast<unsigned>(idx.row()) >  m_keyFilterManagerPrivate->filters.size() )
         return QVariant();

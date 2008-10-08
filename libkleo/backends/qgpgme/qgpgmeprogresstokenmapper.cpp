@@ -104,8 +104,8 @@ QString Kleo::QGpgMEProgressTokenMapper::map( const QString & token, int subtoke
 
   qDebug() << "QGpgMEProgressTokenMapper::map(" << token << subtoken << ")";
 
-  for ( const _tokens * it = boost::begin( tokens ), *end = boost::end( tokens ) ; it != end ; ++it )
-    if ( token.compare( QLatin1String( it->token ), Qt::CaseInsensitive ) == 0 )
+  for ( const _tokens * it = boost::begin( tokens ), *end = boost::end( tokens ) ; it != end ; ++it ) {
+    if ( token.compare( QLatin1String( it->token ), Qt::CaseInsensitive ) == 0 ) {
       if ( it->desc && it->numDesc ) {
         for ( unsigned int i = 0, e = it->numDesc ; i != e ; ++i )
           if ( it->desc[i].type == subtoken )
@@ -114,6 +114,8 @@ QString Kleo::QGpgMEProgressTokenMapper::map( const QString & token, int subtoke
       } else {
         break;
       }
+    }
+  }
 
   return token;
 }

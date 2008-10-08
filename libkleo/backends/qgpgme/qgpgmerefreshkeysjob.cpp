@@ -196,11 +196,12 @@ void Kleo::QGpgMERefreshKeysJob::slotStderr() {
 }
 
 void Kleo::QGpgMERefreshKeysJob::slotProcessExited(int exitCode, QProcess::ExitStatus exitStatus) {
-  if ( !mError && !mPatternsToDo.empty() )
+  if ( !mError && !mPatternsToDo.empty() ) {
     if ( const GpgME::Error err = startAProcess() )
       mError = err;
     else
       return;
+  }
 
   emit done();
   if ( !mError &&

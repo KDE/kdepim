@@ -207,8 +207,8 @@ namespace {
         KUrl          service( unsigned int row ) const { return row < m_items.size() ?  m_items[row].url : KUrl() ; }
 
         bool isReadOnlyRow( unsigned int row ) const {
-            return isX509Service( row ) && m_x509ReadOnly
-                || isOpenPGPService( row ) && m_openPGPReadOnly ;
+            return ( isX509Service( row ) && m_x509ReadOnly )
+                || ( isOpenPGPService( row ) && m_openPGPReadOnly );
         }
 
         enum Columns {

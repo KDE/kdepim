@@ -135,8 +135,8 @@ std::pair<SigningResult,EncryptionResult> QGpgMESignEncryptJob::exec( const std:
 }
 
 void QGpgMESignEncryptJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
-    if ( mResult.first.error()  && !mResult.first.error().isCanceled() ||
-         mResult.second.error() && !mResult.second.error().isCanceled() )
+    if ( ( mResult.first.error()  && !mResult.first.error().isCanceled() ) ||
+         ( mResult.second.error() && !mResult.second.error().isCanceled() ) )
         MessageBox::error( parent, mResult.first, mResult.second, this, caption );
 }
 
