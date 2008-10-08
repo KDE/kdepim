@@ -1,1 +1,2 @@
 EXCLUDE qclasses
+SKIP /models/modeltest.[cpp,h]
