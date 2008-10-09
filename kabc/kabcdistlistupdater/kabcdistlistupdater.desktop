@@ -6,6 +6,7 @@ Icon=misc
 Type=Application
 Comment=Tool to update the old distribution lists to the new ones.
 Comment[ca]=Eina per actualitzar les llistes de distribució antigues a les noves.
+Comment[es]=Herramienta para actualizar las antiguas listas de distribución al nuevo formato.
 Comment[et]=Tööriist vanade postiloendite uuendamiseks uue vormi kohaselt.
 Comment[nds]=Warktüüch, dat ole Verdeellisten to niege opfrischt
 Comment[sk]=Nástroj na aktualizáciu starých ditribučných zoznamov na nové.
