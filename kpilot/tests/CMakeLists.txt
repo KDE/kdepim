@@ -7,7 +7,7 @@ add_definitions( -DKDESRCDIR=\\"${CMAKE_CURRENT_SOURCE_DIR}\\" )
 
 set(testactions_SRCS testactions.cc)
 kde4_add_unit_test(testactions ${testactions_SRCS})
-target_link_libraries(testactions kpilot ${QT_LIBRARIES})
+target_link_libraries(testactions kpilot ${QT_LIBRARIES} ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS})
 
 set(testconstants_SRCS testconstants.cc)
 kde4_add_unit_test(testconstants ${testconstants_SRCS})
