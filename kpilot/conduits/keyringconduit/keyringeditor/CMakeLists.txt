@@ -24,6 +24,9 @@ kde4_add_executable(keyringeditor ${tests_SRCS})
 target_link_libraries(keyringeditor 
 	${QT_QTCORE_LIBRARY}
 	${QT_QTGUI_LIBRARY}
+  ${KDE4_KDECORE_LIBS}
+  ${KDE4_KDEUI_LIBS}
+  ${KDE4_KIO_LIBS}
 	${QCA2_LIBRARIES}
 	kpilot
 	kpilot_conduit_base

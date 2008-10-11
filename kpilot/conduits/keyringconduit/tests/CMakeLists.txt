@@ -8,7 +8,12 @@ macro( keyring_conduit_unit_tests )
 		
 		target_link_libraries( ${_testname}
 			${QT_QTTEST_LIBRARY}
-			keyring_testlib
+      ${QT_QTCORE_LIBRARY}
+      ${QT_QTGUI_LIBRARY}
+      ${KDE4_KDECORE_LIBS}
+      kpilot_conduit_base
+      kpilot
+      keyring_testlib
 		)
 	endforeach( _testname )
 endmacro( keyring_conduit_unit_tests )
