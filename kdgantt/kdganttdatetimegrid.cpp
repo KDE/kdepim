@@ -173,12 +173,6 @@ void DateTimeGrid::setFreeDays( const QSet<Qt::DayOfWeek>& fd )
     emit gridChanged();
 }
 
-/*! \returns The days marked as free in the grid. */
-QSet<Qt::DayOfWeek> DateTimeGrid::freeDays() const
-{
-    return d->freeDays;
-}
-
 /*! \returns true if row separators are used. */
 bool DateTimeGrid::rowSeparators() const
 {
@@ -188,6 +182,12 @@ bool DateTimeGrid::rowSeparators() const
 void DateTimeGrid::setRowSeparators( bool enable )
 {
     d->rowSeparators = enable;
+}
+
+/*! \returns The days marked as free in the grid. */
+QSet<Qt::DayOfWeek> DateTimeGrid::freeDays() const
+{
+    return d->freeDays;
 }
 
 /*! \param idx The index to get the Span for.
@@ -278,34 +278,184 @@ bool DateTimeGrid::mapFromChart( const Span& span, const QModelIndex& idx,
         && model()->setData( idx, qVariantFromValue(et), EndTimeRole );
 }
 
+int DateTimeGrid::autoScale() const
+{
+    int scale = ScaleDay;
+    if ( dayWidth() > 450) {
+        scale = ScaleHour;
+    } else if (dayWidth() * 7 < 20) {
+        scale = ScaleMonth;
+    } else if (dayWidth() < 12) {
+        scale = ScaleWeek;
+    }
+    return scale;
+}
+
 void DateTimeGrid::paintGrid( QPainter* painter,
                               const QRectF& sceneRect,
                               const QRectF& exposedRect,
                               AbstractRowController* rowController,
                               QWidget* widget )
 {
-    // TODO: Support hours and weeks
+    //qDebug()<<"paintGrid()"<<scale()<<dayWidth();
+    
+    paintRowGrid(painter,sceneRect,exposedRect,rowController,widget);
+    
+    switch(scale()) {
+        case ScaleHour:
+            paintHourGrid(painter,sceneRect,exposedRect,rowController,widget);
+            break;
+        case ScaleDay:
+            paintDayGrid(painter,sceneRect,exposedRect,rowController,widget);
+            break;
+        case ScaleWeek:
+            paintWeekGrid(painter,sceneRect,exposedRect,rowController,widget);
+            break;
+        case ScaleMonth:
+            paintMonthGrid(painter,sceneRect,exposedRect,rowController,widget);
+            break;
+        case ScaleAuto:
+            switch(autoScale()) {
+                case ScaleHour:
+                    paintHourGrid(painter,sceneRect,exposedRect,rowController,widget);
+                    break;
+                case ScaleDay:
+                    paintDayGrid(painter,sceneRect,exposedRect,rowController,widget);
+                    break;
+                case ScaleWeek:
+                    paintWeekGrid(painter,sceneRect,exposedRect,rowController,widget);
+                    break;
+                case ScaleMonth:
+                    paintMonthGrid(painter,sceneRect,exposedRect,rowController,widget);
+                    break;
+            }
+            break;
+    }
+}
+
+void DateTimeGrid::paintHourGrid( QPainter* painter,
+                              const QRectF& sceneRect,
+                              const QRectF& exposedRect,
+                              AbstractRowController* rowController,
+                              QWidget* widget )
+{
+    //qDebug()<<"paintHourGrid()"<<scale()<<dayWidth();
     QDateTime dt = d->chartXtoDateTime( exposedRect.left() );
-    dt.setTime( QTime( 0, 0, 0, 0 ) );
-    for ( qreal x = d->dateTimeToChartX( dt ); x < exposedRect.right();
-          dt = dt.addDays( 1 ),x=d->dateTimeToChartX( dt ) ) {
+    dt.setTime( QTime( dt.time().hour(), 0, 0, 0 ) );
+    for ( qreal x = d->dateTimeToChartX( dt ); x < exposedRect.right(); dt = dt.addSecs( 60*60 ),x=d->dateTimeToChartX( dt ) ) {
         QPen pen = painter->pen();
         pen.setBrush( QApplication::palette().dark() );
-        if ( dt.date().dayOfWeek() == d->weekStart ) {
+        if ( dt.time() == QTime( 23, 0, 0 ) ) {
             pen.setStyle( Qt::SolidLine );
         } else {
             pen.setStyle( Qt::DashLine );
         }
         painter->setPen( pen );
-        if ( d->freeDays.contains( static_cast<Qt::DayOfWeek>( dt.date().dayOfWeek() ) ) ) {
-            painter->setBrush( widget?widget->palette().alternateBase()
-                                     :QApplication::palette().alternateBase() );
-            painter->fillRect( QRectF( x, exposedRect.top(), dayWidth(), exposedRect.height() ), painter->brush() );
-        }
-
+        x += ( dayWidth() / 24.0 ) - 1;
         painter->drawLine( QPointF( x, exposedRect.top() ), QPointF( x, exposedRect.bottom() ) );
     }
-    if ( rowController && d->rowSeparators ) {
+}
+
+void DateTimeGrid::paintDayGrid( QPainter* painter,
+                                  const QRectF& sceneRect,
+                                  const QRectF& exposedRect,
+                                  AbstractRowController* rowController,
+                                  QWidget* widget )
+{
+    //qDebug()<<"paintDayGrid()"<<scale()<<dayWidth();
+    QDateTime dt = d->chartXtoDateTime( exposedRect.left() );
+    dt.setTime( QTime( 0, 0, 0, 0 ) );
+    for ( qreal x = d->dateTimeToChartX( dt ); x < exposedRect.right(); dt = dt.addDays( 1 ),x=d->dateTimeToChartX( dt ) ) {
+        QPen pen = painter->pen();
+        pen.setBrush( QApplication::palette().dark() );
+        if ( dt.date().addDays( 1 ).dayOfWeek() == d->weekStart ) {
+            pen.setStyle( Qt::SolidLine );
+        } else {
+            pen.setStyle( Qt::DashLine );
+        }
+        painter->setPen( pen );
+        paintFreeDay( painter, x, exposedRect, dt.date(), widget );
+        x += dayWidth() - 1;
+        painter->drawLine( QPointF( x, exposedRect.top() ), QPointF( x, exposedRect.bottom() ) );
+    }
+}
+
+void DateTimeGrid::paintWeekGrid( QPainter* painter,
+                                  const QRectF& sceneRect,
+                                  const QRectF& exposedRect,
+                                  AbstractRowController* rowController,
+                                  QWidget* widget )
+{
+    //qDebug()<<"paintWeekGrid()"<<scale()<<dayWidth();
+    QDateTime dt = d->chartXtoDateTime( exposedRect.left() );
+    dt.setTime( QTime( 0, 0, 0, 0 ) );
+    while ( dt.date().dayOfWeek() != d->weekStart ) dt = dt.addDays( -1 );
+    for ( qreal x = d->dateTimeToChartX( dt ); x < exposedRect.right(); dt = dt.addDays( 1 ),x=d->dateTimeToChartX( dt ) ) {
+        QPen pen = painter->pen();
+        pen.setBrush( QApplication::palette().dark() );
+        if ( dt.date().addDays( 1 ).day() == 1 ) {
+            pen.setStyle( Qt::SolidLine );
+        } else if ( dt.date().addDays( 1 ).dayOfWeek() == d->weekStart ) {
+            pen.setStyle( Qt::DashLine );
+        } else {
+            pen.setStyle( Qt::NoPen );
+        }
+        painter->setPen( pen );
+        paintFreeDay( painter, x, exposedRect, dt.date(), widget );
+        if ( pen.style() != Qt::NoPen ) {
+            //qDebug()<<"paintWeekGrid()"<<dt;
+            x += dayWidth() - 1;
+            painter->drawLine( QPointF( x, exposedRect.top() ), QPointF( x, exposedRect.bottom() ) );
+        }
+    }
+}
+
+void DateTimeGrid::paintMonthGrid( QPainter* painter,
+                                  const QRectF& sceneRect,
+                                  const QRectF& exposedRect,
+                                  AbstractRowController* rowController,
+                                  QWidget* widget )
+{
+    //qDebug()<<"paintMonthGrid()"<<scale()<<dayWidth();
+    QDateTime dt = d->chartXtoDateTime( exposedRect.left() );
+    dt.setTime( QTime( 0, 0, 0, 0 ) );
+    dt = dt.addDays( 1 - dt.date().day() );
+    for ( qreal x = d->dateTimeToChartX( dt ); x < exposedRect.right(); dt = dt.addDays( 1 ),x=d->dateTimeToChartX( dt ) ) {
+        QPen pen = painter->pen();
+        pen.setBrush( QApplication::palette().dark() );
+        if ( dt.date().addMonths( 1 ).month() == 1 && dt.date().addDays( 1 ).day() == 1 ) {
+            pen.setStyle( Qt::SolidLine );
+        } else if ( dt.date().addDays( 1 ).day() == 1 ) {
+            pen.setStyle( Qt::DashLine );
+        } else {
+            pen.setStyle( Qt::NoPen );
+        }
+        painter->setPen( pen );
+        paintFreeDay( painter, x, exposedRect, dt.date(), widget );
+        if ( pen.style() != Qt::NoPen ) {
+            //qDebug()<<"paintMonthGrid()"<<dt;
+            x += dayWidth() - 1;
+            painter->drawLine( QPointF( x, exposedRect.top() ), QPointF( x, exposedRect.bottom() ) );
+        }
+    }
+}
+
+void DateTimeGrid::paintFreeDay( QPainter* painter, qreal x, const QRectF& exposedRect, const QDate &dt, QWidget* widget )
+{
+    if ( d->freeDays.contains( static_cast<Qt::DayOfWeek>( dt.dayOfWeek() ) ) ) {
+        //FIXME We now use same color for alternating rows and free days
+        painter->setBrush( widget ? widget->palette().alternateBase() : QApplication::palette().alternateBase() );
+        painter->fillRect( QRectF( x, exposedRect.top(), dayWidth(), exposedRect.height() ), painter->brush() );
+    }
+}
+
+void DateTimeGrid::paintRowGrid( QPainter* painter,
+                                  const QRectF& sceneRect,
+                                  const QRectF& exposedRect,
+                                  AbstractRowController* rowController,
+                                  QWidget* widget )
+{
+    if ( rowController && rowSeparators() ) {
         // First draw the rows
         QPen pen = painter->pen();
         pen.setBrush( QApplication::palette().dark() );
@@ -316,10 +466,9 @@ void DateTimeGrid::paintGrid( QPainter* painter,
         while ( y < exposedRect.bottom() && idx.isValid() ) {
             const Span s = rowController->rowGeometry( idx );
             y = s.start()+s.length();
-            painter->drawLine( QPointF( sceneRect.left(), y ),
-                               QPointF( sceneRect.right(), y ) );
+            //painter->drawLine( QPointF( sceneRect.left(), y ), QPointF( sceneRect.right(), y ) );
             // Is alternating background better?
-            //if ( idx.row()%2 ) painter->fillRect( QRectF( exposedRect.x(), s.start(), exposedRect.width(), s.length() ), QApplication::palette().alternateBase() );
+            if ( idx.row()%2 ) painter->fillRect( QRectF( exposedRect.x(), s.start(), exposedRect.width(), s.length() ), QApplication::palette().alternateBase() );
             idx =  rowController->indexBelow( idx );
         }
     }
@@ -365,13 +514,21 @@ void DateTimeGrid::paintHeader( QPainter* painter,  const QRectF& headerRect, co
 		case ScaleHour: paintHourScaleHeader(painter,headerRect,exposedRect,offset,widget); break;
         case ScaleDay: paintDayScaleHeader(painter,headerRect,exposedRect,offset,widget); break;
         case ScaleWeek: paintWeekScaleHeader(painter,headerRect,exposedRect,offset,widget); break;
+        case ScaleMonth: paintMonthScaleHeader(painter,headerRect,exposedRect,offset,widget); break;
         case ScaleAuto:
-            if ( dayWidth() > 500) {
-                paintHourScaleHeader(painter,headerRect,exposedRect,offset,widget);
-            } else if (dayWidth() < 10) {
-                paintWeekScaleHeader(painter,headerRect,exposedRect,offset,widget);
-            } else {
-                paintDayScaleHeader(painter,headerRect,exposedRect,offset,widget);
+            switch(autoScale()) {
+                case ScaleHour:
+                    paintHourScaleHeader(painter,headerRect,exposedRect,offset,widget);
+                    break;
+                case ScaleDay:
+                    paintDayScaleHeader(painter,headerRect,exposedRect,offset,widget);
+                    break;
+                case ScaleWeek:
+                    paintWeekScaleHeader(painter,headerRect,exposedRect,offset,widget);
+                    break;
+                case ScaleMonth:
+                    paintMonthScaleHeader(painter,headerRect,exposedRect,offset,widget);
+                    break;
             }
             break;
 	}
@@ -406,7 +563,7 @@ void DateTimeGrid::paintHourScaleHeader( QPainter* painter,  const QRectF& heade
         QStyleOptionHeader opt;
         opt.init( widget );
         opt.rect = QRectF( x2-offset, headerRect.top(), dayWidth(), headerRect.height()/2. ).toRect();
-        opt.text = QString::number( dt.date().weekNumber() );
+        opt.text = QDate::longDayName( dt.date().dayOfWeek() );
         opt.textAlignment = Qt::AlignCenter;
         style->drawControl(QStyle::CE_Header, &opt, painter, widget);
     }
@@ -459,10 +616,11 @@ void DateTimeGrid::paintWeekScaleHeader( QPainter* painter,  const QRectF& heade
     QStyle* style = widget?widget->style():QApplication::style();
 
     // Paint a section for each week
-    QDateTime dt = d->chartXtoDateTime( offset+exposedRect.left() );
-    dt.setTime( QTime( 0, 0, 0, 0 ) );
+    QDateTime sdt = d->chartXtoDateTime( offset+exposedRect.left() );
+    sdt.setTime( QTime( 0, 0, 0, 0 ) );
     // Go backwards until start of week
-    while ( dt.date().dayOfWeek() != d->weekStart ) dt = dt.addDays( -1 );
+    while ( sdt.date().dayOfWeek() != d->weekStart ) sdt = sdt.addDays( -1 );
+    QDateTime dt = sdt;
     for ( qreal x = d->dateTimeToChartX( dt ); x < exposedRect.right()+offset;
             dt = dt.addDays( 7 ),x=d->dateTimeToChartX( dt ) ) {
         QStyleOptionHeader opt;
@@ -473,17 +631,62 @@ void DateTimeGrid::paintWeekScaleHeader( QPainter* painter,  const QRectF& heade
         style->drawControl(QStyle::CE_Header, &opt, painter, widget);
     }
 
-    dt = d->chartXtoDateTime( offset+exposedRect.left() );
-    dt.setTime( QTime( 0, 0, 0, 0 ) );
     // Paint a section for each month
-    for ( qreal x2 = d->dateTimeToChartX( dt ); x2 < exposedRect.right()+offset;
-            dt = dt.addMonths( 1 ),x2=d->dateTimeToChartX( dt ) ) {
+    dt = sdt;
+    for ( qreal x2 = d->dateTimeToChartX( dt ); x2 < exposedRect.right()+offset; x2=d->dateTimeToChartX( dt ) ) {
+        //qDebug()<<"paintWeekScaleHeader()"<<dt;
+        QDate next = dt.date().addMonths( 1 );
+        next = next.addDays( 1 - next.day() );
+
         QStyleOptionHeader opt;
         opt.init( widget );
-        opt.rect = QRectF( x2-offset, headerRect.top(), dayWidth()*dt.date().daysInMonth(), headerRect.height()/2. ).toRect();
+        opt.rect = QRectF( x2-offset, headerRect.top(), dayWidth()*dt.date().daysTo( next ), headerRect.height()/2. ).toRect();
         opt.text = QDate::longMonthName( dt.date().month() );
         opt.textAlignment = Qt::AlignCenter;
         style->drawControl(QStyle::CE_Header, &opt, painter, widget);
+        
+        dt.setDate( next );
+    }
+}
+
+/*! Paints the month scale header.
+ * \sa paintHeader()
+ */
+void DateTimeGrid::paintMonthScaleHeader( QPainter* painter,  const QRectF& headerRect, const QRectF& exposedRect,
+                                        qreal offset, QWidget* widget )
+{
+    QStyle* style = widget?widget->style():QApplication::style();
+
+    // Paint a section for each month
+    QDateTime sdt = d->chartXtoDateTime( offset+exposedRect.left() );
+    sdt.setTime( QTime( 0, 0, 0, 0 ) );
+    sdt = sdt.addDays( 1 - sdt.date().day() );
+    QDateTime dt = sdt;
+    for ( qreal x = d->dateTimeToChartX( dt ); x < exposedRect.right()+offset;
+            dt = dt.addMonths( 1 ),x=d->dateTimeToChartX( dt ) ) {
+        QStyleOptionHeader opt;
+        opt.init( widget );
+        opt.rect = QRectF( x-offset, headerRect.top()+headerRect.height()/2., dayWidth()*dt.date().daysInMonth(), headerRect.height()/2. ).toRect();
+        opt.text = QDate::shortMonthName( dt.date().month() );
+        opt.textAlignment = Qt::AlignCenter;
+        style->drawControl(QStyle::CE_Header, &opt, painter, widget);
+    }
+
+    // Paint a section for each year
+    dt = sdt;
+    for ( qreal x2 = d->dateTimeToChartX( dt ); x2 < exposedRect.right()+offset; x2=d->dateTimeToChartX( dt ) ) {
+        //qDebug()<<"paintMonthScaleHeader()"<<dt;
+        QDate next = dt.date().addYears( 1 );
+        next = next.addMonths( 1 - next.month() );
+        
+        QStyleOptionHeader opt;
+        opt.init( widget );
+        opt.rect = QRectF( x2-offset, headerRect.top(), dayWidth()*dt.date().daysTo( next ), headerRect.height()/2. ).toRect();
+        opt.text = QString::number( dt.date().year() );
+        opt.textAlignment = Qt::AlignCenter;
+        style->drawControl(QStyle::CE_Header, &opt, painter, widget);
+        
+        dt.setDate( next );
     }
 }
 

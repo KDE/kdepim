@@ -80,6 +80,7 @@ void HeaderWidget::contextMenuEvent( QContextMenuEvent* event )
 
     DateTimeGrid* const grid = qobject_cast< DateTimeGrid* >( view()->grid() );
     QAction* actionScaleAuto = 0;
+    QAction* actionScaleMonth = 0;
     QAction* actionScaleWeek = 0;
     QAction* actionScaleDay = 0;
     QAction* actionScaleHour = 0;
@@ -94,6 +95,9 @@ void HeaderWidget::contextMenuEvent( QContextMenuEvent* event )
         actionScaleAuto = new QAction( tr( "Auto" ), menuScale );
         actionScaleAuto->setCheckable( true );
         actionScaleAuto->setChecked( grid->scale() == DateTimeGrid::ScaleAuto );
+        actionScaleMonth = new QAction( tr( "Month" ), menuScale );
+        actionScaleMonth->setCheckable( true );
+        actionScaleMonth->setChecked( grid->scale() == DateTimeGrid::ScaleMonth );
         actionScaleWeek = new QAction( tr( "Week" ), menuScale );
         actionScaleWeek->setCheckable( true );
         actionScaleWeek->setChecked( grid->scale() == DateTimeGrid::ScaleWeek );
@@ -107,6 +111,9 @@ void HeaderWidget::contextMenuEvent( QContextMenuEvent* event )
         scaleGroup->addAction( actionScaleAuto );
         menuScale->addAction( actionScaleAuto );
     
+        scaleGroup->addAction( actionScaleMonth );
+        menuScale->addAction( actionScaleMonth );
+        
         scaleGroup->addAction( actionScaleWeek );
         menuScale->addAction( actionScaleWeek );
     
@@ -139,6 +146,11 @@ void HeaderWidget::contextMenuEvent( QContextMenuEvent* event )
         assert( grid != 0 );
         grid->setScale( DateTimeGrid::ScaleAuto );
     }
+    else if( action == actionScaleMonth )
+    {
+        assert( grid != 0 );
+        grid->setScale( DateTimeGrid::ScaleMonth );
+    }
     else if( action == actionScaleWeek )
     {
         assert( grid != 0 );
@@ -157,12 +169,12 @@ void HeaderWidget::contextMenuEvent( QContextMenuEvent* event )
     else if( action == actionZoomIn )
     {
         assert( grid != 0 );
-        grid->setDayWidth( grid->dayWidth() + 10.0 );
+        grid->setDayWidth( grid->dayWidth() * 1.25 );
     }
     else if( action == actionZoomOut )
     {
         assert( grid != 0 );
-        grid->setDayWidth( grid->dayWidth() - 10.0 );
+        grid->setDayWidth( grid->dayWidth() * 0.75 );
     }
 
     event->accept();
