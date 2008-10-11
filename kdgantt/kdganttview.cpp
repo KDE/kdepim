@@ -237,6 +237,9 @@ void View::setLeftView( QAbstractItemView* aiv )
              this, SLOT( slotLeftWidgetVerticalRangeChanged( int, int ) ) );
     connect( d->gfxview.verticalScrollBar(), SIGNAL( rangeChanged( int, int ) ),
              this, SLOT( slotGfxViewVerticalRangeChanged( int, int ) ) );
+
+    setTabOrder( &(d->splitter), d->leftWidget );
+    setTabOrder( d->leftWidget, graphicsView() );
 }
 
 /*! Sets \a ctrl to be the rowcontroller used by this View.
