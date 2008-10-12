@@ -222,15 +222,15 @@ QString Contact::profession() const
   return mProfession;
 }
 
-// void Contact::setJobTitle( const QString& title )
-// {
-//   mJobTitle = title;
-// }
+void Contact::setTitle( const QString& title )
+{
+  mTitle = title;
+}
 
-// QString Contact::jobTitle() const
-// {
-//   return mJobTitle;
-// }
+QString Contact::title() const
+{
+  return mTitle;
+}
 
 void Contact::setManagerName( const QString& name )
 {
@@ -749,6 +749,10 @@ bool Contact::loadAttribute( QDomElement& element )
       loadCustomAttributes( element );
       return true;
     }
+    if ( tagName == "x-title" ) {
+      setTitle( element.text() );
+      return true;
+    }
     break;
   case 'w':
     if ( tagName == "web-page" ) {
@@ -784,6 +788,7 @@ bool Contact::saveAttributes( QDomElement& element ) const
     //writeString( element, "role", role() );
     //writeString( element, "job-title", jobTitle() );
     writeString( element, "job-title", role() );
+    writeString( element, "x-title", title() );
     writeString( element, "manager-name", managerName() );
     writeString( element, "assistant", assistant() );
     writeString( element, "nick-name", nickName() );
@@ -1022,7 +1027,7 @@ void Contact::setFields( const KABC::Addressee* addressee )
   setOfficeLocation( addressee->custom( "KADDRESSBOOK", "X-Office" ) );
   setProfession( addressee->custom( "KADDRESSBOOK", "X-Profession" ) );
   setRole( addressee->role() );
-  //setJobTitle( addressee->title() );
+  setTitle( addressee->title() );
   setManagerName( addressee->custom( "KADDRESSBOOK", "X-ManagersName" ) );
   setAssistant( addressee->custom( "KADDRESSBOOK", "X-AssistantsName" ) );
   setNickName( addressee->nickName() );
@@ -1176,7 +1181,7 @@ void Contact::saveTo( KABC::Addressee* addressee )
   addressee->insertCustom( "KADDRESSBOOK", "X-Office", officeLocation() );
   addressee->insertCustom( "KADDRESSBOOK", "X-Profession", profession() );
   addressee->setRole( role() );
-  //addressee->setTitle( jobTitle() );
+  addressee->setTitle( title() );
   addressee->insertCustom( "KADDRESSBOOK", "X-ManagersName", managerName() );
   addressee->insertCustom( "KADDRESSBOOK", "X-AssistantsName", assistant() );
   addressee->setNickName( nickName() );
