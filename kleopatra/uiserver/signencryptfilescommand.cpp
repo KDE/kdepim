@@ -120,7 +120,7 @@ int SignEncryptFilesCommand::doStart() {
     d->controller->setProtocol( checkProtocol( FileManager ) );
     d->controller->setOperationMode( operation() );
     d->controller->setFiles( fileNames() );
-    closeFiles(); //as we use the filenames and (re-)open the files, close the QFile's opened by the connection (otherwise input deletion fails on windows)
+    releaseFiles(); //as we use the filenames and (re-)open the files, delete QFile's opened by the connection (otherwise input deletion fails on windows)
 
     QObject::connect( d->controller.get(), SIGNAL(done()), d.get(), SLOT(slotDone()), Qt::QueuedConnection );
     QObject::connect( d->controller.get(), SIGNAL(error(int,QString)), d.get(), SLOT(slotError(int,QString)), Qt::QueuedConnection );

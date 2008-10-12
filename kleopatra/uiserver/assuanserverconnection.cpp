@@ -1079,9 +1079,8 @@ unsigned int AssuanCommand::numFiles() const {
     return d->files.size();
 }
 
-void AssuanCommand::closeFiles() {
-    Q_FOREACH( const IOF & io, d->files )
-        io.file->close();
+void AssuanCommand::releaseFiles() {
+    d->files.clear();
 }
 
 #if 0
@@ -1201,6 +1200,7 @@ void AssuanCommand::done( const GpgME::Error& err ) {
     d->inputs.clear();
     d->outputs.clear();
     close_all( d->files ); // ### ???
+    d->files.clear();
 
     // oh, hack :(
     assert( assuan_get_pointer( d->ctx.get() ) );
