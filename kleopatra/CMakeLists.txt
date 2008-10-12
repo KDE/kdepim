@@ -2,7 +2,8 @@ project(kleopatra)
 
 include(MacroOptionalAddSubdirectory)
 
-set( kleopatra_version 2.0.0-rc5 )
+set( kleopatra_version 2.0.0 )
+if ( FALSE )
 if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
   if ( NOT KdeSubversion_FOUND )
     find_package( KdeSubversion )
@@ -13,6 +14,7 @@ if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
     set( kleopatra_version "${kleopatra_version} (svn-${Kleopatra_WC_REVISION}, ${Kleopatra_WC_LAST_CHANGED_DATE})" )
   endif ( KdeSubversion_FOUND )
 endif (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
+endif( FALSE )
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/version-kleopatra.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/version-kleopatra.h )
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-kleopatra.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kleopatra.h )
 
