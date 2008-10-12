@@ -314,8 +314,9 @@ static bool IsErrorOrCanceled( const Result & res )
 static bool IsBad( const Signature & sig ) {
     return sig.summary() & Signature::Red;
 }
-static bool IsValid( const Signature & sig ) {
-    return sig.summary() & Signature::Valid;
+
+static bool IsGoodOrValid( const Signature & sig ) {
+    return (sig.summary() & Signature::Valid) || (sig.summary() & Signature::Green);
 }
 
 static UserID findUserIDByMailbox( const Key & key, const Mailbox & mbox ) {
@@ -348,10 +349,12 @@ static Task::Result::VisualCode codeForVerificationResult( const VerificationRes
     if ( sigs.empty() )
         return Task::Result::Warning;
 
-    if ( !std::count_if( sigs.begin(), sigs.end(), IsBad ) )
-        return Task::Result::AllGood;
     if ( std::find_if( sigs.begin(), sigs.end(), IsBad ) != sigs.end() )
         return Task::Result::Danger;
+
+    if ( std::count_if( sigs.begin(), sigs.end(), IsGoodOrValid ) == sigs.size() )
+        return Task::Result::AllGood;
+
     return Task::Result::Warning;
 }
 
@@ -376,7 +379,7 @@ static QString formatVerificationResultOverview( const VerificationResult & res,
     if ( bad > 0 ) {
         return i18np("<b>Invalid signature.</b>", "<b>%1 invalid signatures.</b>", bad );
     }
-    const uint warn = std::count_if( sigs.begin(), sigs.end(), !bind( IsValid, _1 ) );
+    const uint warn = std::count_if( sigs.begin(), sigs.end(), !bind( IsGoodOrValid, _1 ) );
     if ( warn > 0 )
         return i18np("<b>Not enough information to check signature validity.</b>", "<b>%1 signatures could not be verified.</b>", warn );
 
