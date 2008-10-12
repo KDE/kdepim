@@ -82,6 +82,7 @@ QString Kleo::gpgPath() {
     return findGpgExe( GpgME::GpgEngine, "gpg" );
 }
 
+#if 0
 QStringList Kleo::gnupgFileWatchList() {
     const QString home = Kleo::gnupgHomeDirectory();
     QFileInfo info( home );
@@ -94,4 +95,9 @@ QStringList Kleo::gnupgFileWatchList() {
     Q_FOREACH( const QString& i, fileList )
         result.push_back( homeDir.absoluteFilePath( i ) );
     return result;
+}
+#endif
+
+QStringList Kleo::gnupgFileBlacklist() {
+    return QStringList() << "dirmngr-cache.d" << "S.uiserver";
 }

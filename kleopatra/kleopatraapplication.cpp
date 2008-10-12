@@ -140,7 +140,8 @@ public:
         keyCache = KeyCache::mutableInstance();
         watcher.reset( new FileSystemWatcher );
 
-        watcher->addPaths( gnupgFileWatchList() );
+        watcher->blacklistFiles( gnupgFileBlacklist() );
+        watcher->addPath( gnupgHomeDirectory() );
         watcher->setDelay( 1000 );
         keyCache->addFileSystemWatcher( watcher );
     }
