@@ -977,7 +977,6 @@ static KABC::PhoneNumber::Type phoneTypeFromString( const QString& type )
 
 static const char* s_knownCustomFields[] = {
   "X-IMAddress",
-  "X-Department",
   "X-Office",
   "X-Profession",
   "X-ManagersName",
@@ -1019,7 +1018,7 @@ void Contact::setFields( const KABC::Addressee* addressee )
   setOrganization( addressee->organization() );
   setWebPage( addressee->url().url() );
   setIMAddress( addressee->custom( "KADDRESSBOOK", "X-IMAddress" ) );
-  setDepartment( addressee->custom( "KADDRESSBOOK", "X-Department" ) );
+  setDepartment( addressee->department() );
   setOfficeLocation( addressee->custom( "KADDRESSBOOK", "X-Office" ) );
   setProfession( addressee->custom( "KADDRESSBOOK", "X-Profession" ) );
   setRole( addressee->role() );
@@ -1173,7 +1172,7 @@ void Contact::saveTo( KABC::Addressee* addressee )
   addressee->setOrganization( organization() );
   addressee->setUrl( webPage() );
   addressee->insertCustom( "KADDRESSBOOK", "X-IMAddress", imAddress() );
-  addressee->insertCustom( "KADDRESSBOOK", "X-Department", department() );
+  addressee->setDepartment( department() );
   addressee->insertCustom( "KADDRESSBOOK", "X-Office", officeLocation() );
   addressee->insertCustom( "KADDRESSBOOK", "X-Profession", profession() );
   addressee->setRole( role() );
