@@ -190,7 +190,8 @@ void FileSystemWatcher::setEnabled( bool enable )
     if ( enable ) {
         assert( !d->m_watcher );
         d->m_watcher = new QFileSystemWatcher;
-        d->m_watcher->addPaths( d->m_paths );
+        if ( !d->m_paths.empty() )
+            d->m_watcher->addPaths( d->m_paths );
         d->connectWatcher();
     } else {
        assert( d->m_watcher );
@@ -226,7 +227,7 @@ void FileSystemWatcher::blacklistFiles( const QStringList& paths )
     d->m_paths.erase( kdtools::separate_if( d->m_paths.begin(), d->m_paths.end(),
                                             std::back_inserter( blacklisted ), d->m_paths.begin(),
                                             bind( &Private::isBlacklisted, d.get(), _1 ) ).second, d->m_paths.end() );
-    if ( d->m_watcher )
+    if ( d->m_watcher && !blacklisted.empty() )
         d->m_watcher->removePaths( blacklisted );
 }
 
@@ -259,6 +260,8 @@ void FileSystemWatcher::addPath( const QString& path )
 
 void FileSystemWatcher::removePaths( const QStringList& paths )
 {
+    if ( paths.empty() )
+        return;
     Q_FOREACH ( const QString& i, paths )
         d->m_paths.removeAll( i );
     if ( d->m_watcher )
