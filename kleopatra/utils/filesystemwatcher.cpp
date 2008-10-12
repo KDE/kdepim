@@ -66,7 +66,6 @@ public:
     void onTimeout();
 
     void connectWatcher();
-    bool isBlacklisted( const QString & path ) const;
 
     QFileSystemWatcher* m_watcher;
     QTimer m_timer;
@@ -85,16 +84,20 @@ FileSystemWatcher::Private::Private( FileSystemWatcher* qq, const QStringList& p
     connect( &m_timer, SIGNAL( timeout() ), q, SLOT( onTimeout() ) );
 }
 
-bool FileSystemWatcher::Private::isBlacklisted( const QString& file ) const
-{
-    return m_blacklist.contains( file, Qt::CaseInsensitive );
+static bool is_blacklisted( const QString & file, const QStringList & blacklist ) {
+    Q_FOREACH( const QString & entry, blacklist )
+        if ( QRegExp( entry, Qt::CaseInsensitive, QRegExp::Wildcard ).exactMatch( file ) ) {
+            kDebug() << file << "matches blacklist entry" << entry;
+            return true;
+        }
+    return false;
 }
 
 void FileSystemWatcher::Private::onFileChanged( const QString& path )
 {
     kDebug() << path;
     const QFileInfo fi( path );
-    if ( isBlacklisted( fi.fileName() ) )
+    if ( is_blacklisted( fi.fileName(), m_blacklist ) )
         return;
     m_seenPaths.insert( path );
     m_cachedFiles.insert( path );
@@ -104,18 +107,14 @@ void FileSystemWatcher::Private::onFileChanged( const QString& path )
 static QStringList list_dir_absolute( const QString & path, const QStringList & blacklist ) {
     QDir dir( path );
     QStringList entries = dir.entryList( QDir::AllEntries|QDir::NoDotAndDotDot );
+    entries.erase( std::remove_if( entries.begin(), entries.end(),
+                                   bind( is_blacklisted, _1, cref( blacklist ) ) ), entries.end() );
     kdtools::sort( entries );
-    entries.erase( std::unique( entries.begin(), entries.end() ), entries.end() );
 
-    QStringList files;
-    std::set_difference( entries.begin(), entries.end(),
-                         blacklist.begin(), blacklist.end(),
-                         std::back_inserter( files ) );
-
-    std::transform( files.begin(), files.end(), files.begin(),
+    std::transform( entries.begin(), entries.end(), entries.begin(),
                     bind( &QDir::absoluteFilePath, &dir, _1 ) );
 
-    return files;
+    return entries;
 }
 
 static QStringList find_new_files( const QStringList & current, const std::set<QString> & seen ) {
@@ -130,7 +129,7 @@ void FileSystemWatcher::Private::onDirectoryChanged( const QString& path )
 {
     kDebug() << path;
     const QFileInfo fi( path );
-    if ( isBlacklisted( fi.fileName() ) )
+    if ( is_blacklisted( fi.fileName(), m_blacklist ) )
         return;
 
     const QStringList newFiles = find_new_files( list_dir_absolute( path, m_blacklist ), m_seenPaths );
@@ -226,7 +225,7 @@ void FileSystemWatcher::blacklistFiles( const QStringList& paths )
     QStringList blacklisted;
     d->m_paths.erase( kdtools::separate_if( d->m_paths.begin(), d->m_paths.end(),
                                             std::back_inserter( blacklisted ), d->m_paths.begin(),
-                                            bind( &Private::isBlacklisted, d.get(), _1 ) ).second, d->m_paths.end() );
+                                            bind( is_blacklisted, _1, cref( d->m_blacklist ) ) ).second, d->m_paths.end() );
     if ( d->m_watcher && !blacklisted.empty() )
         d->m_watcher->removePaths( blacklisted );
 }
