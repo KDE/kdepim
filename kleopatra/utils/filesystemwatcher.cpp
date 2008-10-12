@@ -57,6 +57,8 @@ public:
     void handleTimer();
     void onTimeout();
 
+    void connectWatcher();
+
     QFileSystemWatcher* m_watcher;
     QTimer m_timer;
     QSet<QString> m_cachedDirectories;
@@ -64,11 +66,12 @@ public:
     QStringList m_paths;
 };
 
-FileSystemWatcher::Private::Private( FileSystemWatcher* qq, const QStringList& paths ) : q( qq ), m_watcher( paths.isEmpty() ? new QFileSystemWatcher : new QFileSystemWatcher( paths ) ), m_paths( paths )
+FileSystemWatcher::Private::Private( FileSystemWatcher* qq, const QStringList& paths )
+    : q( qq ),
+      m_watcher( 0 ),
+      m_paths( paths )
 {
     m_timer.setSingleShot( true );
-    connect( m_watcher, SIGNAL( directoryChanged( QString ) ), q, SLOT( onDirectoryChanged( QString ) ) );
-    connect( m_watcher, SIGNAL( fileChanged( QString ) ), q, SLOT( onFileChanged( QString ) ) );
     connect( &m_timer, SIGNAL( timeout() ), q, SLOT( onTimeout() ) );
 }
 
@@ -103,6 +106,15 @@ void FileSystemWatcher::Private::handleTimer()
     m_timer.start();
 }
 
+void FileSystemWatcher::Private::connectWatcher() {
+    if ( !m_watcher )
+        return;
+    connect( m_watcher, SIGNAL(directoryChanged(QString)),
+             q, SLOT(onDirectoryChanged(QString)) );
+    connect( m_watcher, SIGNAL(fileChanged(QString)),
+             q, SLOT(onFileChanged(QString)) );
+}
+
 FileSystemWatcher::FileSystemWatcher( QObject* p )
     : QObject( p ), d( new Private( this ) )
 {
@@ -112,6 +124,7 @@ FileSystemWatcher::FileSystemWatcher( QObject* p )
 FileSystemWatcher::FileSystemWatcher( const QStringList& paths, QObject* p )
     : QObject( p ), d( new Private( this, paths ) )
 {
+    setEnabled( true );
 }
 
 void FileSystemWatcher::setEnabled( bool enable )
@@ -122,10 +135,7 @@ void FileSystemWatcher::setEnabled( bool enable )
         assert( !d->m_watcher );
         d->m_watcher = new QFileSystemWatcher;
         d->m_watcher->addPaths( d->m_paths );
-        connect( d->m_watcher, SIGNAL(directoryChanged(QString)),
-                 this, SIGNAL(directoryChanged(QString)) );
-        connect( d->m_watcher, SIGNAL(fileChanged(QString)),
-                 this, SIGNAL(fileChanged(QString)) );
+        d->connectWatcher();
     } else {
        assert( d->m_watcher );
        delete d->m_watcher;
