@@ -205,7 +205,7 @@ bool SelfTestImplementation::ensureEngineVersion( GpgME::Engine engine, int majo
     } else {
         // not properly installed
         m_explaination = i18nc( "@info",
-                                "<para><application>%1</application> is required for this test, but does not seem not available.</para>"
+                                "<para><application>%1</application> is required for this test, but does not seem available.</para>"
                                 "<para>See tests further up for more information.</para>",
                                 engine_name( engine ) );
         m_proposedFix = i18nc( "@info %1: test name",
