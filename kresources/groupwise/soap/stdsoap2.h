@@ -251,7 +251,7 @@ A commercial use license is available from Genivia, Inc., contact@genivia.com
 #  define HAVE_LOCALTIME_R
 #  define HAVE_WCTOMB
 #  define HAVE_MBTOWC
-# elif defined(FREEBSD) || defined(__FreeBSD__)
+# elif defined(FREEBSD) || defined(__FreeBSD__) || defined(__DragonFly__)
 #  define HAVE_STRRCHR
 #  define HAVE_STRTOD
 #  define HAVE_SSCANF
