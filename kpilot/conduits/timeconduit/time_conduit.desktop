@@ -14,7 +14,7 @@ Comment[et]=See kanal sünkroniseerib pihuarvuti aja PC kellaga.
 Comment[eu]=Kanal honek zure agenda elektronikoko ordua PC-aren ordura ezartzen du.
 Comment[fa]=این لوله، از طریق ساعت PC زمان دستی شما را تنظیم می‌کند.
 Comment[fi]=Tämä yhdyskäytävä asettaa taskutietokoneen kellonajan PC:n kellosta.
-Comment[fr]=Ce canal règle l'heure de votre périphérique depuis celle du PC.
+Comment[fr]=Ce canal règle l'heure de votre ordinateur de poche sur celle du PC.
 Comment[fy]=Comment=Dit conduit set de tiid fan jo handheld oan d ehÃ¢n fan de pc-klok.
 Comment[ga]=Sioncrónaíonn an seoladán seo an t-am ar do ríomhaire boise leis an gclog ar do ríomhaire deisce.
 Comment[gl]=Este conduto muda a hora do seu aparello portátil dende o reloxo do seu PC.
@@ -29,7 +29,7 @@ Comment[lt]=Šis kanalas nustato delninuko laiką pagal PC laiką.
 Comment[lv]=Šī ķēde uzstāda jūsu rokas datora pulksteni, izmantojot datora pulksteni.
 Comment[mk]=Овој канал го поставува времето на рачниот уред според времето на компјутерот.
 Comment[ms]=Saluran ini mengeset waktu pada komputer telapak anda dari jam PC.
-Comment[nb]=Denne kanalen stiller klokka på PDA-en fra PC-klokka.
+Comment[nb]=Denne kanalen stiller klokka på hånddatoren fra PC-klokka.
 Comment[nds]=Synkroniseert stellt Handreekner-Klock na de PC-Klock.
 Comment[ne]=यो कन्ड्युटले पीसी घडीबाट ह्यान्डहेल्डमा समय सेट गर्दछ ।
 Comment[nl]=Dit conduit stelt de tijd van uw handheld in aan de hand van de pc-klok.

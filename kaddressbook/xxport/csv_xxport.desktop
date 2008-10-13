@@ -14,7 +14,7 @@ Name[et]=KAB CSV eksport/importplugin
 Name[eu]=KAB-en CSV in/esportazioa plugin-a
 Name[fa]=وصلۀ KAB CSV XXPort
 Name[fi]=KAB CSV -liitännäinen
-Name[fr]=Module d'import / export CSV pour KAB
+Name[fr]=Module d'import / export CSV pour KAB
 Name[ga]=Breiseán Iompórtála/Easpórtála CSV le haghaidh KAB
 Name[gl]=Extensión XXPort de CSV para KAB
 Name[he]=תוסף ייבוא/ייצוא של קבצי CSV של KAB
@@ -59,7 +59,7 @@ Comment[et]=Plugin kontaktide importimiseks ja eksportimiseks CSV-vormingus
 Comment[eu]=CSV formatuan kontaktuak esportatu eta inportatzeko plugin-a
 Comment[fa]=وصله برای واردات و صادرات تماسها در قالب CSV
 Comment[fi]=Liitännäinen yhteystietojen vientiin ja tuontiin CSV-muodossa
-Comment[fr]=Module d'import / export de contacts au format CSV
+Comment[fr]=Module d'import / export de contacts au format CSV
 Comment[fy]=Comment=Plugin foar it ymportearjen en eksportearjen fan kontaktpersoanen yn CSV-formaat
 Comment[ga]=Breiseán a iompórtálann agus easpórtálann teagmhálacha i bhformáid CSV
 Comment[gl]=Extensión para importar e exportar contactos e formato CSV
