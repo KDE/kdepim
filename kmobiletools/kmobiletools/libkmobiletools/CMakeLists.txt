@@ -1,4 +1,5 @@
-add_subdirectory( akonadi )
+#disable for now - it doesn't link
+#add_subdirectory( akonadi )
 add_subdirectory( icons )
 
 IF (USE_CRASHHANDLER)
