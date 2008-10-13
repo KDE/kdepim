@@ -1,3 +1,17 @@
+Monday, October 13th 2008
+
+Problems Addressed
+--------------------
+
+* kolab/issue3094 Cannot accept a resource with double click in the resource chooser dialog
+* kolab/issue3095 After scrolling in the side-by-side view the different calendar lines don't fit anymore
+* kolab/issue3044 A contact's "section" is not saved.
+
+Merges
+-------
+
+* Merges in from 4.1 branch
+
 Friday, September 19th 2008
 
 Problems Addressed
