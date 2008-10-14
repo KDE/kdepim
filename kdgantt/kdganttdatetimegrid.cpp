@@ -118,7 +118,7 @@ qreal DateTimeGrid::dayWidth() const
 void DateTimeGrid::setDayWidth( qreal w )
 {
     qDebug()<<"DateTimeGrid::setDayWidth"<<w;
-    d->dayWidth = qMax( w, qreal(1.0) );
+    d->dayWidth = qMax( w, qreal(0.1) );
     emit gridChanged();
 }
 
@@ -142,6 +142,22 @@ void DateTimeGrid::setScale( Scale s )
 DateTimeGrid::Scale DateTimeGrid::scale() const
 {
 	return d->scale;
+}
+
+/*! \param factor The zoom factor
+ *
+ */
+void DateTimeGrid::zoomIn( qreal factor )
+{
+    setDayWidth( d->dayWidth * factor );
+}
+
+/*! \param factor The zoom factor
+ *
+ */
+void DateTimeGrid::zoomOut( qreal factor )
+{
+    setDayWidth( d->dayWidth * factor );
 }
 
 /*! \param ws The start day of the week.

@@ -67,6 +67,10 @@ namespace KDGantt {
 
         void render( QPainter* painter,  const QRectF &target, const QRectF& headerRect, const QRectF& exposedRect, QWidget *widget, Qt::AspectRatioMode aspectRatioMode = Qt::KeepAspectRatio );
 	
+    public Q_SLOTS:
+        void zoomIn( qreal factor = 1.25 );
+        void zoomOut( qreal factor = 0.25 );
+        
     protected:
         virtual void paintHourGrid( QPainter* painter, const QRectF& sceneRect, const QRectF& exposedRect, AbstractRowController* rowController = 0, QWidget* widget=0 );
 

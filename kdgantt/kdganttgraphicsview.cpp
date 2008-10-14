@@ -25,6 +25,7 @@
 #include "kdganttabstractrowcontroller.h"
 #include "kdganttgraphicsitem.h"
 #include "kdganttconstraintmodel.h"
+#include "kdgantttimescalezoomdialog.h"
 
 #include <QMenu>
 #include <QPainter>
@@ -32,6 +33,7 @@
 #include <QResizeEvent>
 #include <QScrollBar>
 #include <QAbstractProxyModel>
+#include <QToolButton>
 
 #include <cassert>
 
@@ -84,6 +86,7 @@ void HeaderWidget::contextMenuEvent( QContextMenuEvent* event )
     QAction* actionScaleWeek = 0;
     QAction* actionScaleDay = 0;
     QAction* actionScaleHour = 0;
+    QAction* actionZoom = 0;
     QAction* actionZoomIn = 0;
     QAction* actionZoomOut = 0;
     if( grid != 0 )
@@ -127,6 +130,8 @@ void HeaderWidget::contextMenuEvent( QContextMenuEvent* event )
 
         contextMenu.addSeparator();
 
+        actionZoom = new QAction( tr( "Zoom..." ), &contextMenu );
+        contextMenu.addAction( actionZoom );
         actionZoomIn = new QAction( tr( "Zoom In" ), &contextMenu );
         contextMenu.addAction( actionZoomIn );
         actionZoomOut = new QAction( tr( "Zoom Out" ), &contextMenu );
@@ -166,15 +171,23 @@ void HeaderWidget::contextMenuEvent( QContextMenuEvent* event )
         assert( grid != 0 );
         grid->setScale( DateTimeGrid::ScaleHour );
     }
+    else if( action == actionZoom )
+    {
+        assert( grid != 0 );
+        TimeScaleZoomDialog dlg;
+        connect( dlg.zoomIn, SIGNAL( pressed() ), grid, SLOT( zoomIn() ) );
+        connect( dlg.zoomOut, SIGNAL( pressed() ), grid, SLOT( zoomOut() ) );
+        dlg.exec();
+    }
     else if( action == actionZoomIn )
     {
         assert( grid != 0 );
-        grid->setDayWidth( grid->dayWidth() * 1.25 );
+        grid->zoomIn();
     }
     else if( action == actionZoomOut )
     {
         assert( grid != 0 );
-        grid->setDayWidth( grid->dayWidth() * 0.75 );
+        grid->zoomOut();
     }
 
     event->accept();

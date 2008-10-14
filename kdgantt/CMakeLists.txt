@@ -20,6 +20,8 @@ set(libkdgantt_SRCS
   ${CMAKE_SOURCE_DIR}/kdgantt/kdganttabstractgrid.cpp
   ${CMAKE_SOURCE_DIR}/kdgantt/kdganttdatetimegrid.cpp
   ${CMAKE_SOURCE_DIR}/kdgantt/kdganttlegend.cpp
+  
+  ${CMAKE_SOURCE_DIR}/kdgantt/kdgantttimescalezoomdialog.cpp
 )
 
 add_definitions(-DKDAB_NO_UNIT_TESTS)
@@ -40,6 +42,7 @@ set(libkdgantt_mocable_files
   kdganttsummaryhandlingproxymodel
   kdganttview
   kdganttlegend
+  kdgantttimescalezoomdialog
 )
 foreach(it ${libkdgantt_mocable_files})
   qt4_generate_moc(${CMAKE_SOURCE_DIR}/kdgantt/${it}.h ${CMAKE_BINARY_DIR}/kdgantt/moc_${it}.cpp)
