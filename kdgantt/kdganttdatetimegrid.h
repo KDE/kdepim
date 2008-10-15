@@ -69,7 +69,7 @@ namespace KDGantt {
 	
     public Q_SLOTS:
         void zoomIn( qreal factor = 1.25 );
-        void zoomOut( qreal factor = 0.25 );
+        void zoomOut( qreal factor = 0.8 );
         
     protected:
         virtual void paintHourGrid( QPainter* painter, const QRectF& sceneRect, const QRectF& exposedRect, AbstractRowController* rowController = 0, QWidget* widget=0 );
