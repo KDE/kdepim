@@ -73,16 +73,38 @@ static const QCString dcopObjectId = "KMailICalIface";
 bool KMailConnection::connectToKMail()
 {
   if ( !mKMailIcalIfaceStub ) {
-    QString error;
     QCString dcopService;
-    int result = KDCOPServiceStarter::self()->
-      findServiceFor( "DCOP/ResourceBackend/IMAP", QString::null,
-                      QString::null, &error, &dcopService );
-    if ( result != 0 ) {
-      kdError(5650) << "Couldn't connect to the IMAP resource backend\n";
-      // TODO: You might want to show "error" (if not empty) here,
-      // using e.g. KMessageBox
-      return false;
+
+    // if we are kmail (and probably kontact as well) ourselves, don't try to start us again
+    // this prevents a DCOP deadlock when launching the kmail while kontact is the IMAP backend
+    // provider (and probably vice versa)
+    if ( kapp->instanceName() == "kmail" ) {
+      // someone, probably ourselves, already offers the interface, if not stop here
+      const QCStringList services = kapp->dcopClient()->registeredApplications();
+      for ( uint i = 0; i < services.count(); ++i ) {
+        if ( services[i].find( "anonymous" ) == 0 ) // querying anonymous-XXXXX deadlocks as well, what are those anyway?
+          continue; 
+        const QCStringList objs = kapp->dcopClient()->remoteObjects( services[i] );
+        if ( objs.contains( dcopObjectId ) ) {
+          dcopService = services[i];
+          break;
+        }
+      }
+      if ( dcopService.isEmpty() ) {
+        kdError(5650) << k_funcinfo << "Not connecting to KMail to prevent DCOP deadlock" << endl;
+        return false;
+      }
+    } else {
+      QString error;
+      int result = KDCOPServiceStarter::self()->
+        findServiceFor( "DCOP/ResourceBackend/IMAP", QString::null,
+                        QString::null, &error, &dcopService );
+      if ( result != 0 ) {
+        kdError(5650) << "Couldn't connect to the IMAP resource backend\n";
+        // TODO: You might want to show "error" (if not empty) here,
+        // using e.g. KMessageBox
+        return false;
+      }
     }
 
     mKMailIcalIfaceStub = new KMailICalIface_stub( kapp->dcopClient(),
