@@ -62,6 +62,7 @@
 #include <kmessagebox.h>
 #include <kprocess.h>
 #include <kactivelabel.h>
+#include <kurl.h>
 
 // Qt
 #include <qcheckbox.h>
@@ -344,7 +345,7 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
     if ( text.startsWith( "<qt>" ) ) {
       KActiveLabel *textLabel = new KActiveLabel( text, page );
       disconnect( textLabel, SIGNAL(linkClicked(const QString&)), textLabel, SLOT(openLink(const QString&)) );
-      connect( textLabel, SIGNAL(linkClicked(const QString&)), SLOT(slotHelp()) );
+      connect( textLabel, SIGNAL(linkClicked(const QString&)), SLOT(slotStartCertificateManager(const QString&)) );
       textLabel->setAlignment( textLabel->alignment() | Qt::WordBreak );
       mTopLayout->addWidget( textLabel );
     } else {
@@ -509,10 +510,12 @@ void Kleo::KeySelectionDialog::slotHelp()
     emit helpClicked();
 }
 
-void Kleo::KeySelectionDialog::slotStartCertificateManager()
+void Kleo::KeySelectionDialog::slotStartCertificateManager( const QString &query )
 {
   KProcess certManagerProc;
   certManagerProc << "kleopatra";
+  if ( !query.isEmpty() )
+    certManagerProc << "--external" << "--query" << KURL::decode_string( query );
 
   if( !certManagerProc.start( KProcess::DontCare ) )
     KMessageBox::error( this, i18n( "Could not start certificate manager; "
