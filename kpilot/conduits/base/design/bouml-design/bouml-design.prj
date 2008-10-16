@@ -912,7 +912,7 @@ ${inlines}
 "
 	
 	
-	comment "If the startcount is greater then 0 it returns (volatilityCount() / startCount).
+	comment "If the startcount is greater than 0 it returns (volatilityCount() / startCount).
 Otherwise 100."
       end
 

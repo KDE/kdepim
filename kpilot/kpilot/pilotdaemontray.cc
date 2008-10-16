@@ -290,7 +290,7 @@ void PilotDaemonTray::slotHandleActionTrigger( QAction* action )
 	// SyncAction::SyncMode.
 	Q_ASSERT( actionData >= 1 && actionData <= 6 );
 	
-	// Check if the selected sync mode is different then the default mode and
+	// Check if the selected sync mode is different than the default mode and
 	// enable / disable the default syncaction checkbox accordingly.
 	if( actionData != KPilotSettings::syncType() )
 	{
