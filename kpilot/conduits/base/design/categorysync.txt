@@ -28,7 +28,7 @@ arise in that case is that the category on the handheld is not available on the
 pc and there's no room left. This seems a bit a hypothetical issue for me and I
 suggest that we leave that for what it is. The only conduit we have at the
 moment for which this problem might arise is the keyring conduit. If the record
-on the pc has more then one category the algorithm looks if the category is
+on the pc has more than one category the algorithm looks if the category is
 already there. When found, this category is stored somewhere (e.g. mapping)
 otherwise the category is added to the pc record.
 

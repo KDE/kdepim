@@ -196,14 +196,14 @@ private: //Functions
 	/**
 	 * Copies the category from the pc record to the handheld record. It also does
 	 * some checks because handheld records have always only one category while pc
-	 * records may have more then one category.
+	 * records may have more than one category.
 	 */
 	void copyCategory( const Record *from, HHRecord *to );
 	
 	/**
 	 * Copies the category from the handheld record to the pc record. It also does
 	 * some checks because handheld records have always only one category while pc
-	 * records may have more then one category.
+	 * records may have more than one category.
 	 */
 	void copyCategory( const HHRecord *from, Record *to  );
 };

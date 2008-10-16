@@ -23,7 +23,7 @@
  * @file
  *
  * KIO can handle multiple protocols. But some protocols have their own
- * manipulations of KUrl or MetaData , and some protocols could do more then other
+ * manipulations of KUrl or MetaData, and some protocols could do more than other
  * protocols. So, this file defines a generic class for specifying the specific
  * properties of a kio protocol.
  *

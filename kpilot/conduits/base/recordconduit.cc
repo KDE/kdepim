@@ -1045,7 +1045,7 @@ void RecordConduit::copyCategory( const HHRecord *from, Record *to  )
 	 * always be zero (unfiled) or one. So the addCategory doesn't have to be
 	 * implemented in that case.
 	 * 
-	 * Otherwise (thus when the pc record has more then one category) the
+	 * Otherwise (thus when the pc record has more than one category) the
 	 * dataproxy can check if that category is set already and if that's not the
 	 * case it should add the category to the pc record.
 	 *
@@ -1069,7 +1069,7 @@ void RecordConduit::copyCategory( const HHRecord *from, Record *to  )
 	
 	// Store the last synced category.
 	fMapping.storeHHCategory( from->id(), from->category() );
-	fMapping.storePCCategories( to->id(), to->categories() ); // might be more then one.
+	fMapping.storePCCategories( to->id(), to->categories() ); // might be more than one.
 }
 
 void RecordConduit::copyCategory( const Record *from, HHRecord *to )

@@ -1077,7 +1077,7 @@ deleted and should be deleted on the other side." isSpecification="false" isLeaf
         <UML:Operation comment="//Functions/**
 Copies the category from the pc record to the handheld record. It also does
 some checks because handheld records have always only one category while pc
-records may have more then one category." isSpecification="false" isLeaf="false" visibility="private" xmi.id="DKkRON3AafnT" isRoot="false" isAbstract="false" isQuery="false" name="copyCategory" >
+records may have more than one category." isSpecification="false" isLeaf="false" visibility="private" xmi.id="DKkRON3AafnT" isRoot="false" isAbstract="false" isQuery="false" name="copyCategory" >
          <UML:BehavioralFeature.parameter>
           <UML:Parameter isSpecification="false" visibility="private" xmi.id="zqkoM60tEkP6" value="" type="0mQhkQ1gIJ5O" name="from" />
           <UML:Parameter isSpecification="false" visibility="private" xmi.id="ofNwufS8xDXM" value="" type="DjZm10JmRTwL" name="to" />
@@ -1085,7 +1085,7 @@ records may have more then one category." isSpecification="false" isLeaf="false"
         </UML:Operation>
         <UML:Operation comment="Copies the category from the handheld record to the pc record. It also does
 some checks because handheld records have always only one category while pc
-records may have more then one category." isSpecification="false" isLeaf="false" visibility="private" xmi.id="YYW6DHZB6JzS" isRoot="false" isAbstract="false" isQuery="false" name="copyCategory" >
+records may have more than one category." isSpecification="false" isLeaf="false" visibility="private" xmi.id="YYW6DHZB6JzS" isRoot="false" isAbstract="false" isQuery="false" name="copyCategory" >
          <UML:BehavioralFeature.parameter>
           <UML:Parameter isSpecification="false" visibility="private" xmi.id="OyLciiiUN5PH" value="" type="iqwy2AmDM9nD" name="from" />
           <UML:Parameter isSpecification="false" visibility="private" xmi.id="irNe2u0ZQUfe" value="" type="QdJ1c1iXqC9g" name="to" />

@@ -152,7 +152,7 @@ void CategoryHotSyncTest::testCase_6_5_3a()
 	// - The handheld record is modified and has a category set.
 	// - The backup record does have the "Unfiled" category set and only supports
 	//   one category.
-	// - The pc record has no category but supports more then one category.
+	// - The pc record has no category but supports more than one category.
 	// - There is a mapping for the records.
 	QString hhId( "hh-3" );
 	QString pcId( "pc-2" );
