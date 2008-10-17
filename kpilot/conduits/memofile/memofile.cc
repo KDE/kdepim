@@ -1,6 +1,6 @@
 /* memofile.cc			KPilot
 **
-** Copyright (C) 2004-2007 by Jason 'vanRijn' Kasper <vR@movingparts.net>
+** Copyright (C) 2008 by Jason 'vanRijn' Kasper <vR@movingparts.net>
 **
 */
 
@@ -94,7 +94,7 @@ bool Memofile::load()
  			<< "] did not include the filename as the first line.  fixing it...";
 		text = title + CSL1("\n") + body;
 	}
-	
+
 	// check length of text.  if it's over the allowable length, warn user.
 	// NOTE: We don't need to truncate this here, since PilotMemo::setText()
 	// does it for us.
