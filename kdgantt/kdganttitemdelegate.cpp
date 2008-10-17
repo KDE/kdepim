@@ -151,6 +151,23 @@ QPen ItemDelegate::defaultPen( ItemType type ) const
     return d->defaultpen[type];
 }
 
+/*!\returns The tooltip for index \a idx
+ */
+QString ItemDelegate::toolTip( const QModelIndex &idx ) const
+{
+    if ( !idx.isValid() ) return QString();
+
+    const QAbstractItemModel* model = idx.model();
+    if ( !model ) return QString();
+    QString tip = model->data( idx, Qt::ToolTipRole ).toString();
+    if ( !tip.isNull() ) return tip;
+    else return tr( "%1 -> %2: %3" )
+                .arg( model->data( idx, StartTimeRole ).toString() )
+                .arg( model->data( idx, EndTimeRole ).toString() )
+                .arg( model->data( idx, Qt::DisplayRole ).toString() );
+
+}
+
 /*! \returns The bounding Span for the item identified by \a idx
  * when rendered with options \a opt. This is often the same as the
  * span given by the AbstractGrid for \a idx, but it might be larger
@@ -257,8 +274,8 @@ void ItemDelegate::paintGanttItem( QPainter* painter,
             qreal completion = idx.model()->data( idx, KDGantt::TaskCompletionRole ).toDouble( &ok );
             if ( ok ) {
                 qreal h = r.height();
-                QRectF cr( r.x(), r.y()+h/4.,
-                           r.width()*completion/100., h/2.+1 /*??*/ );
+                QRectF cr( r.x(), r.y()+h/4. + 1,
+                           r.width()*completion/100., h/2. - 2 );
                 painter->fillRect( cr, painter->pen().brush() );
             }
             painter->restore();

@@ -222,7 +222,7 @@ Qt::ItemFlags SummaryHandlingProxyModel::flags( const QModelIndex& idx ) const
 /*! \see QAbstractItemModel::data */
 QVariant SummaryHandlingProxyModel::data( const QModelIndex& proxyIndex, int role) const
 {
-  //qDebug() << "SummaryHandlingProxyModel::data("<<proxyIndex<<role<<")";
+    //qDebug() << "SummaryHandlingProxyModel::data("<<proxyIndex<<role<<")";
     const QModelIndex sidx = mapToSource( proxyIndex );
     const QAbstractItemModel* model = sourceModel();
     if ( d->isSummary(sidx) && ( role==StartTimeRole || role==EndTimeRole )) {

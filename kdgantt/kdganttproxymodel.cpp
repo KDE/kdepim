@@ -35,7 +35,7 @@ ProxyModel::Private::Private( ProxyModel* _q )
 {
     Q_UNUSED( _q ); // for now
 
-    columnMap[Qt::DisplayRole]    = 0;
+    //columnMap[Qt::DisplayRole]    = 0; Separate ItemNameRole ??
     columnMap[ItemTypeRole]       = 1;
     columnMap[StartTimeRole]      = 2;
     columnMap[EndTimeRole]        = 3;
@@ -82,7 +82,7 @@ QModelIndex ProxyModel::mapFromSource( const QModelIndex& sourceIdx ) const
             }
         }
 #endif
-        return BASE::mapFromSource( sourceIdx.model()->index( sourceIdx.row(),0,sourceIdx.parent()));
+        return BASE::mapFromSource( sourceIdx );
     }
     else return QModelIndex();
 }
