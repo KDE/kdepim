@@ -1,3 +1,13 @@
+Friday, October 17th 2008
+
+Problems addressed
+-------------------
+* kolab/issue2702 (calendar: After deleting an attendee no remaining attendee is selected.
+* kolab/issue3127 (Cannot open a mail d'n'ded to the desktop and then cannot restart kontact
+* kolab/issue2875 (Better guide the user to find S/MIME certificate manager when trying to encrypt email
+
+
+
 Friday, October 3rd 2008
 
 Problems addressed
