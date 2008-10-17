@@ -1,8 +1,8 @@
-#ifndef CONTACTSHHDATAPROXY_H
-#define CONTACTSHHDATAPROXY_H
-/* contactshhdataproxy.h			KPilot
+#ifndef MEMOFILEHHDATAPROXY_H
+#define MEMOFILEHHDATAPROXY_H
+/* memofilehhdataproxy.h			KPilot
 **
-** Copyright (C) 2008 by Bertjan Broeksema <b.broeksema@kdemail.net>
+** Copyright (C) 2008 by Jason 'vanRijn' Kasper <vR@movingparts.net>
 */
 
 /*
@@ -28,11 +28,8 @@
 
 #include "hhdataproxy.h"
 
-#include <kabc/phonenumber.h>
 
-class PilotAddress;
-
-class ContactsHHDataProxy : public HHDataProxy
+class MemofileHHDataProxy : public HHDataProxy
 {
 public:
 	/**
@@ -41,17 +38,10 @@ public:
 	/* virtual */ bool createDataStore();
 	
 	/**
-	 * Creates a new ContactsHHDataProxy object.
+	 * Creates a new MemofileHHDataProxy object.
 	 */
-	ContactsHHDataProxy( PilotDatabase *db );
-	
-	/**
-	 * Set the phone numbers from @p list in the handheld entry
-	 * @p contact as far as possible. @em No overflow handling is done at all. If
-	 * the desktop has more than 5 phone entries, the remainder are dropped.
-	 */
-	void setPhoneNumbers( PilotAddress &a, const KABC::PhoneNumber::List &list );
-	
+	MemofileHHDataProxy( PilotDatabase *db );
+
 protected:
 	/** These functions must be implemented by the subclassing conduit **/
 

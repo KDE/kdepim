@@ -1,8 +1,8 @@
-#ifndef CONTACTSHHRECORD_H
-#define CONTACTSHHRECORD_H
-/* contactshhrecord.h			KPilot
+#ifndef MEMOFILEHHRECORD_H
+#define MEMOFILEHHRECORD_H
+/* memofilehhrecord.h			KPilot
 **
-** Copyright (C) 2008 by Bertjan Broeksema <b.broeksema@kdemail.net>
+** Copyright (C) 2008 by Jason 'vanRijn' Kasper <vR@movingparts.net>
 */
 
 /*
@@ -28,12 +28,12 @@
 
 #include "hhrecord.h"
 
-class PilotAddress;
+class PilotMemo;
 
-class ContactsHHRecord : public HHRecord
+class MemofileHHRecord : public HHRecord
 {
 public:
-	ContactsHHRecord( PilotRecord *record, const QString &category );
+	MemofileHHRecord( PilotRecord *record, const QString &category );
 	
 	/**
 	 * Returns whether or not the current record is equal to @p other. Implementing 
@@ -44,14 +44,14 @@ public:
 	/* virtual */ bool equal( const HHRecord* other ) const;
 	
 	/**
-	 * Returns the PilotAddress object represented by this record.
+	 * Returns the PilotMemo object represented by this record.
 	 */
-	PilotAddress pilotAddress() const;
+	PilotMemo pilotMemo() const;
 
 	/**
-	 * Sets the pilot address represented by this record.
+	 * Sets the pilot memo represented by this record.
 	 */
-	void setPilotAddress( const PilotAddress& address );
+	void setPilotMemo( const PilotMemo& memo );
 	
 	/**
 	 * Returns a string presentation of this record.

@@ -1,6 +1,6 @@
-/* contactshhrecord.cc			KPilot
+/* memofilehhrecord.cc			KPilot
 **
-** Copyright (C) 2008 by Bertjan Broeksema <b.broeksema@kdemail.net>
+** Copyright (C) 2008 by Jason 'vanRijn' Kasper <vR@movingparts.net>
 */
 
 /*
@@ -24,44 +24,43 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "contactshhrecord.h"
+#include "memofilehhrecord.h"
 
 #include <QtCore/QDateTime>
 
 #include "options.h"
-#include "pilotAddress.h"
+#include "pilotMemo.h"
 
-ContactsHHRecord::ContactsHHRecord( PilotRecord *record, const QString &category ) 
+MemofileHHRecord::MemofileHHRecord( PilotRecord *record, const QString &category )
 	: HHRecord( record, category )
 {
 }
 
-bool ContactsHHRecord::equal( const HHRecord* other ) const
+bool MemofileHHRecord::equal( const HHRecord* other ) const
 {
 	FUNCTIONSETUP;
-	
-	const ContactsHHRecord* hrOther = static_cast<const ContactsHHRecord*>( other );
-	return hrOther->pilotAddress() == PilotAddress( fRecord );
+
+	const MemofileHHRecord* hrOther = static_cast<const MemofileHHRecord*>( other );
+	return hrOther->pilotMemo() == PilotMemo( fRecord );
 }
 
-PilotAddress ContactsHHRecord::pilotAddress() const
+PilotMemo MemofileHHRecord::pilotMemo() const
 {
-	return PilotAddress( fRecord );
+	return PilotMemo( fRecord );
 }
 
-void ContactsHHRecord::setPilotAddress( const PilotAddress& address )
+void MemofileHHRecord::setPilotMemo( const PilotMemo& memo )
 {
 	// Free the old data.
 	KPILOT_DELETE( fRecord );
-	// And set it to the updated address.
-	fRecord = address.pack();
+	// And set it to the updated memo.
+	fRecord = memo.pack();
 }
 
-QString ContactsHHRecord::toString() const
+QString MemofileHHRecord::toString() const
 {
-	PilotAddress pa = pilotAddress();
+	PilotMemo pa = pilotMemo();
 	QString rs = id();
-	rs += CSL1( ":" ) + pa.getField( entryFirstname );
-	rs += CSL1( ":" ) + pa.getField( entryLastname );
+	rs += CSL1( ":" ) + pa.getTitle();
 	return rs;
 }

@@ -1,6 +1,6 @@
-/* contactshhdataproxy.cc			KPilot
+/* memofilehhdataproxy.cc			KPilot
 **
-** Copyright (C) 2008 by Bertjan Broeksema <b.broeksema@kdemail.net>
+** Copyright (C) 2008 by Jason 'vanRijn' Kasper <vR@movingparts.net>
 */
 
 /*
@@ -24,139 +24,51 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "contactshhdataproxy.h"
+#include "memofilehhdataproxy.h"
 
-#include "contactshhrecord.h"
+#include "memofilehhrecord.h"
 #include "options.h"
-#include "pilotAddress.h"
-#include "pilottophonemap.h"
+#include "pilotMemo.h"
 #include "pilotRecord.h"
 
-class ContactsHHDataProxy::Private
+class MemofileHHDataProxy::Private
 {
 public:
-	Private() : fAddressInfo( 0L )
+	Private() : fMemoInfo( 0L )
 	{
 	}
-	
-	PilotAddressInfo* fAddressInfo;
+
+	PilotMemoInfo* fMemoInfo;
 };
 
 
-bool ContactsHHDataProxy::createDataStore()
+bool MemofileHHDataProxy::createDataStore()
 {
 	// TODO: Implement
 	return false;
 }
 
-ContactsHHDataProxy::ContactsHHDataProxy( PilotDatabase *db ) : HHDataProxy( db )
+MemofileHHDataProxy::MemofileHHDataProxy( PilotDatabase *db ) : HHDataProxy( db )
 	, d( new Private )
 {
 }
 
-HHRecord* ContactsHHDataProxy::createHHRecord( PilotRecord *rec )
+HHRecord* MemofileHHDataProxy::createHHRecord( PilotRecord *rec )
 {
 	QString category = fAppInfo->categoryName( rec->category() );
-	return new ContactsHHRecord( rec, category );
+	return new MemofileHHRecord( rec, category );
 }
 
-PilotAppInfoBase* ContactsHHDataProxy::readAppInfo()
+PilotAppInfoBase* MemofileHHDataProxy::readAppInfo()
 {
 	FUNCTIONSETUP;
-	
+
 	if( fDatabase && fDatabase->isOpen() )
 	{
-		d->fAddressInfo = new PilotAddressInfo( fDatabase );
-		
-		return d->fAddressInfo;
+		d->fMemoInfo = new PilotMemoInfo( fDatabase );
+
+		return d->fMemoInfo;
 	}
 
 	return 0;
-}
-
-void ContactsHHDataProxy::setPhoneNumbers( PilotAddress &a
-	, const KABC::PhoneNumber::List &list )
-{
-	FUNCTIONSETUP;
-
-	// clear all phone numbers (not e-mails) first
-	for ( PhoneSlot i = PhoneSlot::begin(); i.isValid() ; ++i )
-	{
-		PilotAddressInfo::EPhoneType ind = a.getPhoneType( i );
-		if (ind != PilotAddressInfo::eEmail)
-		{
-			a.setField(i, QString());
-		}
-	}
-
-	// now iterate through the list and for each PhoneNumber in the list,
-	// iterate through our phone types using our map and set the first one
-	// we find as the type of address for the Pilot
-	for(KABC::PhoneNumber::List::ConstIterator listIter = list.begin();
-		   listIter != list.end(); ++listIter)
-	{
-		KABC::PhoneNumber phone = *listIter;
-
-		PilotAddressInfo::EPhoneType phoneType = PilotAddressInfo::eHome;
-
-		for ( int pilotPhoneType = PilotAddressInfo::eWork;
-			pilotPhoneType <= PilotAddressInfo::eMobile;
-			++pilotPhoneType)
-		{
-			int phoneKey = pilotToPhoneMap[pilotPhoneType];
-			if ( phone.type() & phoneKey)
-			{
-				DEBUGKPILOT << "Found pilot type: ["
-					<< pilotPhoneType << "] ("
-					<< d->fAddressInfo->phoneLabel( (PilotAddressInfo::EPhoneType)pilotPhoneType)
-					<< ") for PhoneNumber: ["
-					<< phone.number() << ']';
-
-				phoneType = (PilotAddressInfo::EPhoneType) pilotPhoneType;
-				break;
-			}
-		}
-		PhoneSlot fieldSlot =
-			a.setPhoneField(phoneType, phone.number(), PilotAddress::NoFlags);
-
-		// if this is the preferred phone number, then set it as such
-		if (fieldSlot.isValid() && (phone.type() & KABC::PhoneNumber::Pref))
-		{
-			DEBUGKPILOT << "Found preferred PhoneNumber."
-				<< "setting showPhone to index: ["
-				<< fieldSlot << "], PhoneNumber: ["
-				<< phone.number() << ']';
-			a.setShownPhone( fieldSlot );
-		}
-
-		if (!fieldSlot.isValid())
-		{
-			DEBUGKPILOT << "Phone listing overflowed.";
-		}
-	}
-
-	DEBUGKPILOT << "Pilot's showPhone now: [" << a.getShownPhone() << ']';
-
-	// after setting the numbers, make sure that something sensible is set as the
-	// shownPhone on the Pilot if nothing is yet...
-	QString pref = a.getField(a.getShownPhone());
-	if (!a.getShownPhone().isValid() || pref.isEmpty())
-	{
-		DEBUGKPILOT << "Pilot's showPhone: ["
-			<< a.getShownPhone()
-			<< "] not properly set to a default.";
-
-		for (PhoneSlot i = PhoneSlot::begin(); i.isValid(); ++i)
-		{
-			pref = a.getField(i);
-			if (!pref.isEmpty())
-			{
-				a.setShownPhone( i );
-				DEBUGKPILOT << "Pilot's showPhone now: ["
-					<< a.getShownPhone()
-					<< "], and that's final.";
-				break;
-			}
-		}
-	}
 }
