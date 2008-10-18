@@ -363,6 +363,25 @@ checker. Note that you may first need to configure the spellchecker using
 
 </sect2>
 
+<sect2 id="setup-text-snippets">
+<title>Setting Up the Text Snippets Tool</title>
+<para>
+When editing in the composer window you can store often used parts of text as snippets. To configure the capabilities of the mail snippets part select <menuchoice> <guimenu>Settings</guimenu> <guimenuitem>Snippets</guimenuitem> </menuchoice> from the menubar. A new panel will appear on the left side of the composer.
+</para>
+<para>To add a new snippet to Snippet Panel, right click on panel, click on <menuchoice><guimenu>Add Snippet</guimenu></menuchoice> in the context menu. A snippet editor dialog will appear, in which new text can be added and the snippet can be given a name. Also a <guilabel>Shortcut</guilabel> can be associated with the snippet. 
+Snippets can be grouped together as well by creating groups and adding snippets to particular group. If you want to view the stored text in a tooltip window whenever you keep the mouse cursor over the title of that snippet.
+</para>
+<para>The <guilabel>Snippets</guilabel> tool allows for a variable text in predefined places any time you insert a snippet into a file. To accomplish this  <guilabel>Snippets</guilabel> provides its own variables' mechanism. You can set up its behaviour in the snippet text itself by using separators ( $ ) that enclose the variable names. For example : $variablename$, $invoicenumber$, $weekno$.
+</para>
+<para>
+The variable separator can be changed to some other character by changing "snippetDelimiter" in [SnippetPart] section. The Text Snippet configuration file can be found here $KDEHOME/share/config/kmailsnippetrc .
+<programlisting>
+snippetDelimiter=$
+</programlisting>
+
+</para>
+
+</sect2>
 </sect1>
 
 <sect1 id="folders">
