@@ -1,11 +1,13 @@
 [Desktop Entry]
 Name=kabcdistlistupdater
+Name[sv]=Uppdatering av adressbokens fördelningslistor
 Exec=kabcdistlistupdater --disable-autostart
 Icon=misc
 Type=Application
 Comment=Tool to update the old distribution lists to the new ones.
 Comment[pt]=Uma ferramenta de actualização das listas de distribuição antigas para as novas.
 Comment[pt_BR]=Ferramenta de atualização de listas de distribuição antigas para novas.
+Comment[sv]=Verktyg för att uppdatera gamla fördelningslistor till nya.
 Comment[uk]=Інструмент для оновлення старих списків розповсюдження
 Comment[zh_TW]=將舊的分派清單更新成新的清單的工具。
 Terminal=false
