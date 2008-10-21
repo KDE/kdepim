@@ -42,6 +42,8 @@
 
 #include <QBuffer>
 
+#include <boost/weak_ptr.hpp>
+
 #include <cassert>
 
 using namespace Kleo;
@@ -61,7 +63,15 @@ void QGpgMEEncryptJob::setOutputIsBase64Encoded( bool on ) {
   mOutputIsBase64Encoded = on;
 }
 
-static QGpgMEEncryptJob::result_type encrypt( Context * ctx, const std::vector<Key> & recipients, const shared_ptr<QIODevice> & plainText, const shared_ptr<QIODevice> & cipherText, bool alwaysTrust, bool outputIsBsse64Encoded ) {
+static QGpgMEEncryptJob::result_type encrypt( Context * ctx,
+                                              const std::vector<Key> & recipients,
+                                              const weak_ptr<QIODevice> & plainText_,
+                                              const weak_ptr<QIODevice> & cipherText_,
+                                              bool alwaysTrust,
+                                              bool outputIsBsse64Encoded ) {
+
+  const shared_ptr<QIODevice> plainText = plainText_.lock();
+  const shared_ptr<QIODevice> cipherText = cipherText_.lock();
 
   QGpgME::QIODeviceDataProvider in( plainText );
   const Data indata( &in );
@@ -107,7 +117,17 @@ Error QGpgMEEncryptJob::start( const std::vector<Key> & recipients, const QByteA
 }
 
 void QGpgMEEncryptJob::start( const std::vector<Key> & recipients, const shared_ptr<QIODevice> & plainText, const shared_ptr<QIODevice> & cipherText, bool alwaysTrust ) {
-  run( bind( &encrypt, _1, recipients, plainText, cipherText, alwaysTrust, mOutputIsBase64Encoded ) );
+  // the arguments passed here to the functor are stored in a QFuture, and are not
+  // necessarily destroyed (living outside the UI thread) at the time the result signal
+  // is emitted and the signal receiver wants to clean up IO devices.
+  // To avoid such races, we pass weak_ptr's to the functor.
+  run( bind( &encrypt,
+             _1,
+             recipients,
+             weak_ptr<QIODevice>( plainText ),
+             weak_ptr<QIODevice>( cipherText ),
+             alwaysTrust,
+             mOutputIsBase64Encoded ) );
 }
 
 EncryptionResult QGpgMEEncryptJob::exec( const std::vector<Key> & recipients, const QByteArray & plainText, bool alwaysTrust, QByteArray & cipherText ) {

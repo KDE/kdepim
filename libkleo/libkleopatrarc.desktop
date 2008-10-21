@@ -205,7 +205,7 @@ Name[uk]=Кореневий сертифікат з довірою
 Name[x-test]=xxTrusted Root Certificatexx
 Name[zh_CN]=可信任的根证书
 Name[zh_TW]=可信任的根憑證
-background-color=0,0,255
+background-color=95,135,255
 font-bold=true
 
 
