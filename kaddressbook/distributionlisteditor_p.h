@@ -44,6 +44,9 @@ class LineEdit : public KPIM::AddresseeLineEdit
     Q_OBJECT
 public:
     explicit LineEdit( QWidget* parent = 0 );
+
+  protected:
+    void addContact( const KABC::Addressee &addr, int weight, int source ); // reimpl
 };
 
 

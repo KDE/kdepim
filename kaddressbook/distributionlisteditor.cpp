@@ -142,6 +142,13 @@ KPIM::DistributionListEditor::LineEdit::LineEdit( QWidget* parent ) : KPIM::Addr
 {
 }
 
+void KPIM::DistributionListEditor::LineEdit::addContact( const KABC::Addressee &addr, int weight, int source )
+{
+    if ( KPIM::DistributionList::isDistributionList( addr ) )
+        return;
+    KPIM::AddresseeLineEdit::addContact( addr, weight, source );
+}
+
 void KPIM::DistributionListEditor::EditorWidget::slotButtonClicked( int button )
 {
     if ( button == Ok )
