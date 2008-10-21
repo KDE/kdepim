@@ -57,6 +57,9 @@ namespace Kleo {
 
         void addPaths( const QStringList& paths );
         void addPath( const QString& path );
+
+        void blacklistFiles( const QStringList & files );
+
         QStringList directories() const;
         QStringList files() const;
         void removePaths( const QStringList& path );

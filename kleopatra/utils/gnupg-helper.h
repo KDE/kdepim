@@ -44,7 +44,7 @@ namespace Kleo {
     QString gpgSmPath();
     QString gpgPath();
 
-    QStringList gnupgFileWatchList();
+    QStringList gnupgFileBlacklist();
 
     int makeGnuPGError( int code );
 }
