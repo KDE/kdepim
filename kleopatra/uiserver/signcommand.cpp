@@ -25,8 +25,8 @@
     combinations including the two.  You must obey the GNU General
     Public License in all respects for all of the code used other than
     Qt.  If you modify this file, you may extend this exception to
-    your version of the file, but you are not obligated to do so.  If
     you do not wish to do so, delete this exception statement from
+    your version of the file, but you are not obligated to do so.  If
     your version.
 */
 
@@ -108,7 +108,7 @@ int SignCommand::doStart() {
     d->checkForErrors();
 
     d->controller.reset( new SignEMailController( shared_from_this(), SignEMailController::GpgOLMode ) );
-    d->controller->setProtocol( checkProtocol( EMail ) );
+    d->controller->setProtocol( checkProtocol( EMail, AssuanCommand::AllowProtocolMissing ) );
 
     QObject::connect( d->controller.get(), SIGNAL(signersResolved()), d.get(), SLOT(slotSignersResolved() ) );
     QObject::connect( d->controller.get(), SIGNAL(reportMicAlg(QString)), d.get(), SLOT(slotMicAlgDetermined(QString)) );

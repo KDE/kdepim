@@ -233,7 +233,7 @@ void SignEncryptFilesCommand::doStart() {
         d->controller.start();
 
     } catch ( const std::exception & e ) {
-        KMessageBox::information( d->view(),
+        KMessageBox::information( d->parentWidgetOrView(),
                                   i18n("An error occurred: %1",
                                        QString::fromLocal8Bit( e.what() ) ),
                                   i18n("Sign/Encrypt Files Error") );
@@ -248,11 +248,11 @@ void SignEncryptFilesCommand::doCancel() {
 
 void SignEncryptFilesCommand::applyWindowID( QWidget * wid ) const {
     if ( wid )
-        wid->setParent( d->view(), wid->windowFlags() );
+        wid->setParent( d->parentWidgetOrView(), wid->windowFlags() );
 }
 
 QStringList SignEncryptFilesCommand::Private::selectFiles() const {
-    return QFileDialog::getOpenFileNames( view(), i18n( "Select One or More Files to Sign and/or Encrypt" ) );
+    return QFileDialog::getOpenFileNames( parentWidgetOrView(), i18n( "Select One or More Files to Sign and/or Encrypt" ) );
 }
 
 #undef d

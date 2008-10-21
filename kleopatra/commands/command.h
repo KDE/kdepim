@@ -81,6 +81,7 @@ namespace Kleo {
 
         static Restrictions restrictions() { return NoRestriction; }
 
+        void setParentWidget( QWidget* widget );
         void setView( QAbstractItemView * view );
         void setIndex( const QModelIndex & idx );
         void setIndexes( const QList<QModelIndex> & idx );
@@ -105,7 +106,7 @@ namespace Kleo {
 
     private:
         virtual void doStart() = 0;
-	virtual void doCancel() = 0;
+        virtual void doCancel() = 0;
 
     protected:
         void addTemporaryView( const QString & title, AbstractKeyListSortFilterProxyModel * proxy=0 );

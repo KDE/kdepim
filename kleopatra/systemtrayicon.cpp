@@ -67,6 +67,7 @@
 #include <cassert>
 
 using namespace boost;
+using namespace Kleo;
 using namespace Kleo::Commands;
 
 namespace {
@@ -121,20 +122,26 @@ private:
         decryptVerifyClipboardAction.setEnabled( DecryptVerifyClipboardCommand::canDecryptVerifyCurrentClipboard() );
     }
 
+    void startCommand( Command * cmd ) {
+        assert( cmd );
+        cmd->setParent( q->mainWindow() );
+        cmd->start();
+    }
+
     void slotEncryptClipboard() {
-        ( new EncryptClipboardCommand( 0 ) )->start();
+        startCommand( new EncryptClipboardCommand( 0 ) );
     }
 
     void slotOpenPGPSignClipboard() {
-        ( new SignClipboardCommand( GpgME::OpenPGP, 0 ) )->start();
+        startCommand( new SignClipboardCommand( GpgME::OpenPGP, 0 ) );
     }
 
     void slotSMIMESignClipboard() {
-        ( new SignClipboardCommand( GpgME::CMS, 0 ) )->start();
+        startCommand( new SignClipboardCommand( GpgME::CMS, 0 ) );
     }
 
     void slotDecryptVerifyClipboard() {
-        ( new DecryptVerifyClipboardCommand( 0 ) )->start();
+        startCommand( new DecryptVerifyClipboardCommand( 0 ) );
     }
 
 private:
@@ -236,10 +243,12 @@ SystemTrayIcon::Private::~Private() {}
 SystemTrayIcon::SystemTrayIcon( QObject * p )
     : QSystemTrayIcon( KIcon( "kleopatra" ), p ), d( new Private( this ) )
 {
-
+    KGlobal::ref();
 }
 
-SystemTrayIcon::~SystemTrayIcon() {}
+SystemTrayIcon::~SystemTrayIcon() {
+    KGlobal::deref();
+}
 
 void SystemTrayIcon::setMainWindow( QWidget * mw ) {
     if ( d->mainWindow )

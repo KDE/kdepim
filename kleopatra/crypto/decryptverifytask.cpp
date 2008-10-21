@@ -91,7 +91,6 @@ static QString auditLogFromSender( QObject* sender ) {
     return job ? job->auditLogAsHtml() : QString();
 }
 
-
 static bool addrspec_equal( const AddrSpec & lhs, const AddrSpec & rhs, Qt::CaseSensitivity cs  ) {
     return lhs.localPart.compare( rhs.localPart, cs ) == 0 && lhs.domain.compare( rhs.domain, Qt::CaseInsensitive ) == 0;
 }
@@ -152,6 +151,12 @@ static bool keyContainsMailbox( const Key & key, const Mailbox & mbox ) {
 
 static bool keysContainMailbox( const std::vector<Key> & keys, const Mailbox & mbox ) {
     return std::find_if( keys.begin(), keys.end(), bind( keyContainsMailbox, _1, mbox ) ) != keys.end();
+}
+
+static bool relevantInDecryptVerifyContext( const VerificationResult & r ) {
+    // for D/V operations, we ignore verification results which are not errors and contain
+    // no signatures (which means that the data was just not signed)
+    return r.error() || r.numSignatures() > 0;
 }
 
 static QString signatureSummaryToString( int summary )
@@ -482,7 +487,7 @@ static QString formatDecryptionResultDetails( const DecryptionResult & res, cons
 
 static QString formatDecryptVerifyResultOverview( const DecryptionResult & dr, const VerificationResult & vr, const  DecryptVerifyResult::SenderInfo & info )
 {
-    if ( IsErrorOrCanceled( dr ) )
+    if ( IsErrorOrCanceled( dr ) || !relevantInDecryptVerifyContext( vr ) )
         return formatDecryptionResultOverview( dr );
     return formatVerificationResultOverview( vr, info );
 }
@@ -493,7 +498,7 @@ static QString formatDecryptVerifyResultDetails( const DecryptionResult & dr,
                                                  const DecryptVerifyResult::SenderInfo & info )
 {
     const QString drDetails = formatDecryptionResultDetails( dr, recipients );
-    if ( IsErrorOrCanceled( dr ) )
+    if ( IsErrorOrCanceled( dr ) || !relevantInDecryptVerifyContext( vr ) )
         return drDetails;
     return drDetails + ( drDetails.isEmpty() ? "" : "<br/>" ) + formatVerificationResultDetails( vr, info );
 }
@@ -718,8 +723,8 @@ QString DecryptVerifyResult::auditLogAsHtml() const {
 }
 
 Task::Result::VisualCode DecryptVerifyResult::code() const {
-    if ( d->m_type == DecryptVerify || d->m_type == Verify )
-        return codeForVerificationResult( d->m_verificationResult );
+    if ( ( d->m_type == DecryptVerify || d->m_type == Verify ) && relevantInDecryptVerifyContext( verificationResult() ) )
+        return codeForVerificationResult( verificationResult() );
     return hasError() ? NeutralError : NeutralSuccess;
 }
 

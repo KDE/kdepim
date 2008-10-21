@@ -92,7 +92,7 @@ SignEncryptWizard::Private::Private( SignEncryptWizard * qq )
     q->setPage( SignEncryptWizard::ObjectsPage, objectsPage );
     q->setPage( SignEncryptWizard::ResolveRecipientsPage, recipientResolvePage );
     q->setPage( SignEncryptWizard::ResultPage, resultPage );
-    //TODO: move the RecipientPreferences creation out of here, don't create a new instance for each wizard 
+    //TODO: move the RecipientPreferences creation out of here, don't create a new instance for each wizard
     recipientResolvePage->setRecipientPreferences( shared_ptr<RecipientPreferences>( new KConfigBasedRecipientPreferences( KGlobal::config() ) ) );
     signerResolvePage->setSigningPreferences( shared_ptr<SigningPreferences>( new KConfigBasedSigningPreferences( KGlobal::config() ) ) );
     q->resize( QSize( 640, 480 ).expandedTo( q->sizeHint() ) );
@@ -137,7 +137,8 @@ void SignEncryptWizard::Private::setCommitPage( Page page )
 }
 
 void SignEncryptWizard::setPresetProtocol( Protocol proto ) {
-    d->signerResolvePage->setProtocol( proto );
+    d->signerResolvePage->setPresetProtocol( proto );
+    d->signerResolvePage->setProtocolSelectionUserMutable( proto == UnknownProtocol );
     d->recipientResolvePage->setPresetProtocol( proto );
 }
 
@@ -150,7 +151,7 @@ GpgME::Protocol SignEncryptWizard::presetProtocol() const
 {
     return d->recipientResolvePage->presetProtocol();
 }
- 
+
 void SignEncryptWizard::setEncryptionSelected( bool selected )
 {
     d->signerResolvePage->setEncryptionSelected( selected );
@@ -184,6 +185,7 @@ bool SignEncryptWizard::isMultipleProtocolsAllowed() const
 
 void SignEncryptWizard::setMultipleProtocolsAllowed( bool allowed )
 {
+    d->signerResolvePage->setMultipleProtocolsAllowed( allowed );
     d->recipientResolvePage->setMultipleProtocolsAllowed( allowed );
 }
 
@@ -201,7 +203,7 @@ QFileInfoList SignEncryptWizard::resolvedFiles() const {
     QFileInfoList infos;
     foreach ( const QString& i, files )
         infos.push_back( QFileInfo( i ) );
-    return infos;          
+    return infos;
 }
 
 bool SignEncryptWizard::signingSelected() const {

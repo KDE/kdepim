@@ -524,8 +524,8 @@ static std::vector<std::string> emails( const Key & key ) {
         if ( !e.empty() )
             emails.push_back( e );
     }
-    std::sort( emails.begin(), emails.end() );
-    emails.erase( std::unique( emails.begin(), emails.end() ), emails.end() );
+    std::sort( emails.begin(), emails.end(), ByEMail<std::less>() );
+    emails.erase( std::unique( emails.begin(), emails.end(), ByEMail<std::equal_to>() ), emails.end() );
     return emails;
 }
 
@@ -669,16 +669,10 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
     pairs.reserve( sorted.size() );
     Q_FOREACH( const Key & key, sorted ) {
         const std::vector<std::string> emails = ::emails( key );
-        std::vector< std::pair<std::string,Key> > tmp, merge_tmp;
-        tmp.reserve( emails.size() );
         Q_FOREACH( const std::string & e, emails )
             pairs.push_back( std::make_pair( e, key ) );
-        merge_tmp.reserve( tmp.size() + pairs.size() );
-        std::merge( pairs.begin(), pairs.end(),
-                    tmp.begin(), tmp.end(),
-                    std::back_inserter( merge_tmp ),
-                    ByEMail<std::less>() );
-        pairs.swap( merge_tmp );
+        std::inplace_merge( pairs.begin(), pairs.end() - emails.size(), pairs.end(),
+                            ByEMail<std::less>() );
     }
 
     // 3a. insert into email index:

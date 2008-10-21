@@ -306,6 +306,7 @@ private:
     Kleo::AbstractKeyListModel * flatModel;
     Kleo::AbstractKeyListModel * hierarchicalModel;
     Kleo::KeyListController controller;
+    bool firstShow : 1;
 
     struct UI {
 
@@ -332,6 +333,7 @@ MainWindow::Private::Private( MainWindow * qq )
       flatModel( AbstractKeyListModel::createFlatKeyListModel( q ) ),
       hierarchicalModel( AbstractKeyListModel::createHierarchicalKeyListModel( q ) ),
       controller( q ),
+      firstShow( true ),
       ui( q )
 {
     KDAB_SET_OBJECT_NAME( controller );
@@ -560,7 +562,10 @@ void MainWindow::closeEvent( QCloseEvent * e ) {
 
 void MainWindow::showEvent( QShowEvent * e ) {
     KXmlGuiWindow::showEvent( e );
-    d->ui.tabWidget.loadViews( KGlobal::config().data() );
+    if ( d->firstShow ) {
+        d->ui.tabWidget.loadViews( KGlobal::config().data() );
+        d->firstShow = false;
+    }
 }
 
 void MainWindow::importCertificatesFromFile( const QStringList & files ) {

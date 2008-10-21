@@ -177,7 +177,7 @@ bool ExportCertificateCommand::Private::requestFileNames( GpgME::Protocol protoc
     {
         if ( !fileNames[OpenPGP].isEmpty() && !fileNames[CMS].isEmpty() )
             return true;
-        const QPointer<ExportCertificatesDialog> dlg( new ExportCertificatesDialog( view() ) );
+        const QPointer<ExportCertificatesDialog> dlg( new ExportCertificatesDialog( parentWidgetOrView() ) );
         dlg->setOpenPgpExportFileName( fileNames[OpenPGP] );
         dlg->setCmsExportFileName( fileNames[CMS] );
         const bool accepted = dlg->exec() == QDialog::Accepted && dlg ;
@@ -197,7 +197,10 @@ bool ExportCertificateCommand::Private::requestFileNames( GpgME::Protocol protoc
     if ( !fileNames[protocol].isEmpty() )
         return true;
 
-    const QString fname = QFileDialog::getSaveFileName( view(), i18n( "Export Certificates" ), QString(), protocol == GpgME::OpenPGP ? i18n( "OpenPGP Certificates (.asc)" ) : i18n( "S/MIME Certificates (.pem)" ) );
+    const QString fname = QFileDialog::getSaveFileName( parentWidgetOrView(),
+                                                        i18n( "Export Certificates" ), 
+                                                        QString(), 
+                                                        protocol == GpgME::OpenPGP ? i18n( "OpenPGP Certificates (.asc)" ) : i18n( "S/MIME Certificates (.pem)" ) );
     fileNames[protocol] = fname;
     return !fname.isNull();
 }
@@ -242,7 +245,7 @@ void ExportCertificateCommand::Private::showError( const GpgME::Error& err )
                              "the certificate:</p>"
                              "<p><b>%1</b></p></qt>",
                              QString::fromLocal8Bit( err.asString() ) );
-    KMessageBox::error( view(), msg, i18n("Certificate Export Failed") );
+    KMessageBox::error( parentWidgetOrView(), msg, i18n("Certificate Export Failed") );
 }
 
 void ExportCertificateCommand::doCancel()
@@ -275,7 +278,7 @@ void ExportCertificateCommand::Private::exportResult( const GpgME::Error& err, c
     const QString errorCaption = i18n( "Certificate Export Failed" );
     if ( !savefile.open() )
     {
-        KMessageBox::error( view(), writeErrorMsg, errorCaption );
+        KMessageBox::error( parentWidgetOrView(), writeErrorMsg, errorCaption );
         finishedIfLastJob();
         return;
     }
@@ -291,7 +294,7 @@ void ExportCertificateCommand::Private::exportResult( const GpgME::Error& err, c
     }
 
     if ( !savefile.finalize() )
-        KMessageBox::error( view(), writeErrorMsg, errorCaption );
+        KMessageBox::error( parentWidgetOrView(), writeErrorMsg, errorCaption );
     finishedIfLastJob();
 }
 

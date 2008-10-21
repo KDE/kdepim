@@ -111,7 +111,7 @@ namespace Kleo {
       \code
               return makeError( GPG_ERR_NOT_IMPLEMENTED );
       \endcode
-      
+
       But usually, you will want to create a dialog, or call some
       GpgME function from here. In case of errors from GpgME, you
       shouldn't pipe them through makeError(), but return them
@@ -242,12 +242,16 @@ namespace Kleo {
         enum Mode { NoMode, EMail, FileManager };
         Mode checkMode() const;
 
-        GpgME::Protocol checkProtocol( Mode mode ) const;
+        enum CheckProtocolOption {
+            AllowProtocolMissing=0x01
+        };
+
+        GpgME::Protocol checkProtocol( Mode mode, int options=0 ) const;
 
         /* reimp */ void applyWindowID( QWidget* w ) const {
             doApplyWindowID( w );
         }
-        
+
         QString heuristicBaseDirectory() const;
 
         void setNohup( bool on );
@@ -346,7 +350,7 @@ namespace Kleo {
     protected:
         /* reimp */ const char * name() const { return Derived::staticName(); }
     };
-    
+
 }
 
 #endif /* __KLEOPATRA_UISERVER_ASSUANCOMMAND_H__ */

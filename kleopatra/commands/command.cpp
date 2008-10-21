@@ -131,6 +131,10 @@ bool Command::warnWhenRunningAtShutdown() const {
     return d->warnWhenRunningAtShutdown;
 }
 
+void Command::setParentWidget( QWidget * widget ) {
+    d->parentWidget_ = widget;
+}
+
 void Command::setView( QAbstractItemView * view ) {
     if ( view == d->view_ )
         return;

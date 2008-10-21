@@ -179,7 +179,7 @@ void ImportCertificatesCommand::Private::setImportResultProxyModel( const Import
     if ( result.imports().empty() )
         return;
     q->addTemporaryView( id.isEmpty() ? i18n("Imported Certificates") : i18n( "Imported Certificates from %1", id ), new ImportResultProxyModel( result ) );
-    if ( QTreeView * const tv = qobject_cast<QTreeView*>( view() ) )
+    if ( QTreeView * const tv = qobject_cast<QTreeView*>( parentWidgetOrView() ) )
         tv->expandAll();
 }
 
@@ -283,7 +283,7 @@ void ImportCertificatesCommand::Private::startImport( GpgME::Protocol protocol, 
     const Kleo::CryptoBackend::Protocol * const backend = CryptoBackendFactory::instance()->protocol( protocol );
     if ( !backend ) {
         setImportResultProxyModel( ImportResult(), id );
-        KMessageBox::error( view(), 
+        KMessageBox::error( parentWidgetOrView(), 
                             i18n( "The type of this certificate (%1) is not supported by this Kleopatra installation.",
                                   Formatting::displayName( protocol ) ),
                             i18n( "Certificate Import Failed" ) );

@@ -97,9 +97,12 @@ private:
         static const char * extensions[] = {
             ".gpg", ".asc", ".der", ".pem"
         };
-        const char * const extension = extensions[2*x509+armor];
+        const unsigned int idx = 2*x509+armor;
+        const char * const extension = extensions[idx];
 
-        ui.outputFileFR->setNameFilter( i18n("Secret Key Files (*%1 *.pem *.der *.gpg *.asc)", extension ) );
+        const QString nf = i18n("Secret Key Files") + QString::fromLatin1("(*%1 *%2 *%3 *%4)")
+            .arg( extensions[idx], extensions[(idx+1)%4], extensions[(idx+2)%4], extensions[(idx+3)%4] );
+        ui.outputFileFR->setNameFilter( nf );
 
         QString fn = q->fileName();
         if ( fn.isEmpty() )

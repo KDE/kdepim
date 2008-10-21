@@ -214,6 +214,7 @@ void Wizard::setPage( int id, WizardPage* widget )
     connect( widget, SIGNAL( subTitleChanged() ), this, SLOT( updateHeader() ) );
     connect( widget, SIGNAL( explanationChanged() ), this, SLOT( updateHeader() ) );
     connect( widget, SIGNAL( autoAdvanceChanged() ), this, SLOT( updateButtonStates() ) );
+    connect( widget, SIGNAL( windowTitleChanged(QString) ), this, SLOT( setWindowTitle(QString) ) );
 }
 
 void Wizard::setPageOrder( const std::vector<int>& pageOrder )

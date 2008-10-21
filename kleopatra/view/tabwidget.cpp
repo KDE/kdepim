@@ -73,6 +73,17 @@ using namespace boost;
 using namespace GpgME;
 
 namespace {
+
+class TreeView : public QTreeView {
+public:
+    explicit TreeView( QWidget * parent=0 ) : QTreeView( parent ) {}
+
+    /* reimp */ QSize minimumSizeHint() const {
+        const QSize min = QTreeView::minimumSizeHint();
+        return QSize( min.width(), min.height() + 5 * fontMetrics().height() );
+    }
+};
+
 class Page : public QWidget {
     Q_OBJECT
     Page( const Page & other );
@@ -153,7 +164,7 @@ Page::Page( const Page & other )
       m_proxy(),
       m_additionalProxy( other.m_additionalProxy ? other.m_additionalProxy->clone() : 0 ),
       m_layout( new QVBoxLayout( this ) ),
-      m_view( new QTreeView( this ) ),
+      m_view( new TreeView( this ) ),
       m_flatModel( other.m_flatModel ),
       m_hierarchicalModel( other.m_hierarchicalModel ),
       m_stringFilter( other.m_stringFilter ),
@@ -175,7 +186,7 @@ Page::Page( const QString & title, const QString & id, const QString & text, Abs
       m_proxy(),
       m_additionalProxy( proxy ),
       m_layout( new QVBoxLayout( this ) ),
-      m_view( new QTreeView( this ) ),
+      m_view( new TreeView( this ) ),
       m_flatModel( 0 ),
       m_hierarchicalModel( 0 ),
       m_stringFilter( text ),
@@ -203,7 +214,7 @@ Page::Page( const KConfigGroup & group, QWidget * parent )
       m_proxy(),
       m_additionalProxy( 0 ),
       m_layout( new QVBoxLayout( this ) ),
-      m_view( new QTreeView( this ) ),
+      m_view( new TreeView( this ) ),
       m_flatModel( 0 ),
       m_hierarchicalModel( 0 ),
       m_stringFilter( group.readEntry( STRING_FILTER_ENTRY ) ),
