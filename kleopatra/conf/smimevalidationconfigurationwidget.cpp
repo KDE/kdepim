@@ -130,7 +130,7 @@ static void disableDirmngrWidget( QWidget* w ) {
 static void initializeDirmngrCheckbox( QCheckBox* cb, CryptoConfigEntry* entry ) {
     if ( entry )
         cb->setChecked( entry->boolValue() );
-    else
+    if ( !entry || entry->isReadOnly() )
         disableDirmngrWidget( cb );
 }
 
@@ -223,6 +223,8 @@ void SMimeValidationConfigurationWidget::load() {
     } else {
         d->ui.OCSPGroupBox->setEnabled( false );
     }
+
+
     if ( e.mDoNotCheckCertPolicyConfigEntry )
         d->ui.doNotCheckCertPolicyCB->setChecked( e.mDoNotCheckCertPolicyConfigEntry->boolValue() );
     if ( e.mNeverConsultConfigEntry )
@@ -250,7 +252,8 @@ void SMimeValidationConfigurationWidget::load() {
         d->ui.honorHTTPProxyRB->setChecked( honor );
         d->ui.useCustomHTTPProxyRB->setChecked( !honor );
         d->ui.customHTTPProxy->setText( e.mCustomHTTPProxy->stringValue() );
-    } else {
+    } 
+    if ( !e.mCustomHTTPProxy || e.mCustomHTTPProxy->isReadOnly() ) {
         disableDirmngrWidget( d->ui.honorHTTPProxyRB );
         disableDirmngrWidget( d->ui.useCustomHTTPProxyRB );
         disableDirmngrWidget( d->ui.systemHTTPProxy );
@@ -258,7 +261,7 @@ void SMimeValidationConfigurationWidget::load() {
     }
     if ( e.mCustomLDAPProxy )
         d->ui.customLDAPProxy->setText( e.mCustomLDAPProxy->stringValue() );
-    else {
+    if ( !e.mCustomLDAPProxy || e.mCustomLDAPProxy->isReadOnly() ) {
         disableDirmngrWidget( d->ui.customLDAPProxy );
         disableDirmngrWidget( d->ui.customLDAPLabel );
     }

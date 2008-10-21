@@ -517,10 +517,12 @@ private:
         const char * pos = begin + strlen("--info");
         if ( *pos == '=' )
             ;
-        else if ( *pos == ' ' || *pos == '\t' )
+        else if ( *pos == ' ' || *pos == '\t' ) {
             while ( *pos == ' ' || *pos == '\t' )
                 ++pos;
-        else
+            if ( qstrncmp( pos, "-- ", strlen("-- ") ) == 0 )
+                pos += 3;
+        } else
             return false;
         begin = pos;
         return true;

@@ -111,6 +111,16 @@ namespace kdtools {
 	return true;
     }
 
+    template <typename InputIterator>
+    bool none_of( InputIterator first, InputIterator last ) {
+        return !any( first, last );
+    }
+
+    template <typename InputIterator, typename UnaryPredicate>
+    bool none_of( InputIterator first, InputIterator last, UnaryPredicate pred ) {
+        return !any( first, last, pred );
+    }
+
     template <typename InputIterator, typename BinaryOperation>
     BinaryOperation for_each_adjacent_pair( InputIterator first, InputIterator last, BinaryOperation op ) {
         typedef typename std::iterator_traits<InputIterator>::value_type ValueType;
@@ -264,6 +274,16 @@ namespace kdtools {
     template <typename C, typename P>
     bool all( const C & c, P p ) {
         return all( boost::begin( c ), boost::end( c ), p );
+    }
+
+    template <typename C>
+    bool none_of( const C & c ) {
+        return none_of( boost::begin( c ), boost::end( c ) );
+    }
+
+    template <typename C, typename P>
+    bool none_of( const C & c, P p ) {
+        return none_of( boost::begin( c ), boost::end( c ), p );
     }
 
     template <typename C, typename B>

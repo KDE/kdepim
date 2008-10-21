@@ -71,9 +71,13 @@ namespace {
                 return QStringList() << "--check-options" << m_component ;
         }
 
-        bool canRun() const {
+        bool canRun() {
+            if ( !ensureEngineVersion( GpgME::GpgConfEngine, 2, 0, 10 ) )
+                return false;
+
             if ( !m_component.isEmpty() )
                 return true;
+
             QProcess gpgconf;
             gpgconf.setReadChannel( QProcess::StandardOutput );
             gpgconf.start( gpgConfPath(), QStringList() << "--list-dirs", QIODevice::ReadOnly );
@@ -95,7 +99,8 @@ namespace {
         void runTest() {
 
             if ( !canRun() ) {
-                m_passed = true;
+                if ( !m_skipped )
+                    m_passed = true;
                 return;
             }
 
