@@ -31,6 +31,8 @@
 #include <QPainter>
 #include <QPaintEvent>
 #include <QResizeEvent>
+#include <QEvent>
+#include <QHelpEvent>
 #include <QScrollBar>
 #include <QAbstractProxyModel>
 #include <QToolButton>
@@ -74,6 +76,19 @@ void HeaderWidget::paintEvent( QPaintEvent* ev )
 void HeaderWidget::render( QPainter* painter, const QRectF &targetRect, const QRectF &sourceRect, Qt::AspectRatioMode aspectRatioMode)
 {
     view()->grid()->render( painter, targetRect, rect(), sourceRect, this, aspectRatioMode );
+}
+
+bool HeaderWidget::event( QEvent* event )
+{
+    if ( event->type() == QEvent::ToolTip ) {
+        DateTimeGrid* const grid = qobject_cast< DateTimeGrid* >( view()->grid() );
+        if ( grid ) {
+            QHelpEvent *e = static_cast<QHelpEvent*>( event );
+            QDateTime dt = grid->mapFromChart( e->x() ).toDateTime();
+            setToolTip( dt.toString() );
+        }
+    }
+    return QWidget::event( event );
 }
 
 void HeaderWidget::contextMenuEvent( QContextMenuEvent* event )
