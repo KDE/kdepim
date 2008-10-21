@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui>
-<kpartgui name="kaddressbook" version="393">
+<kpartgui name="kaddressbook" version="395">
   <MenuBar>
     <Menu name="file" noMerge="1"><text>&amp;File</text>
       <Menu name="file_new_actions_menu"><text>New</text>
@@ -97,8 +97,14 @@
     <Separator/>
     <Action name="file_sync" />
     <Separator/>
+    <Action name="edit_cut"/>
+    <Action name="edit_copy"/>
+    <Action name="edit_paste"/>
+    <Separator/>
     <Action name="edit_undo"/>
     <Action name="edit_redo"/>
+    <Separator/>
+    <Action name="edit_delete"/>
     <Separator/>
     <Action name="ldap_lookup"/>
   </ToolBar>
