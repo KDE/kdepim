@@ -54,15 +54,19 @@ class SMimeValidationConfigurationWidget::Private {
 public:
     explicit Private( SMimeValidationConfigurationWidget * qq )
         : q( qq ),
+          customHTTPProxyWritable( false ),
           ui( q )
     {
         QDBusConnection::sessionBus().connect(QString(), QString(), "org.kde.kleo.CryptoConfig", "changed", q, SLOT(load()) );
     }
 
+   bool customHTTPProxyWritable;
+
 private:
     void enableDisableActions() {
         ui.customHTTPProxy->setEnabled( ui.useCustomHTTPProxyRB->isChecked() &&
-                                        !ui.disableHTTPCB->isChecked() );
+                                        !ui.disableHTTPCB->isChecked() && 
+                                        customHTTPProxyWritable );
     }
 
 private:
@@ -204,9 +208,15 @@ void SMimeValidationConfigurationWidget::load() {
         return;
     }
 
+#if 0
+    // crashes other pages' save() by nuking the CryptoConfigEntries under their feet.
+    // This was probably not a problem in KMail, where this code comes
+    // from. But here, it's fatal.
+
     // Force re-parsing gpgconf data, in case e.g. kleopatra or "configure backend" was used
     // (which ends up calling us via D-Bus)
     config->clear();
+#endif
 
     // Create config entries
     // Don't keep them around, they'll get deleted by clear(), which could be
@@ -253,7 +263,8 @@ void SMimeValidationConfigurationWidget::load() {
         d->ui.useCustomHTTPProxyRB->setChecked( !honor );
         d->ui.customHTTPProxy->setText( e.mCustomHTTPProxy->stringValue() );
     } 
-    if ( !e.mCustomHTTPProxy || e.mCustomHTTPProxy->isReadOnly() ) {
+    d->customHTTPProxyWritable = e.mCustomHTTPProxy && !e.mCustomHTTPProxy->isReadOnly();
+    if ( !d->customHTTPProxyWritable ) {
         disableDirmngrWidget( d->ui.honorHTTPProxyRB );
         disableDirmngrWidget( d->ui.useCustomHTTPProxyRB );
         disableDirmngrWidget( d->ui.systemHTTPProxy );

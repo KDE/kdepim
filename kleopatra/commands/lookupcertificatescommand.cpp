@@ -100,6 +100,7 @@ private:
 private:
     using ImportCertificatesCommand::Private::showError;
     void showError( QWidget * parent, const KeyListResult & result );
+    void showResult( QWidget * parent, const KeyListResult & result );
     void createDialog();
     KeyListJob * createKeyListJob( GpgME::Protocol proto ) const {
         const CryptoBackend::Protocol * const cbp = CryptoBackendFactory::instance()->protocol( proto );
@@ -250,6 +251,9 @@ void LookupCertificatesCommand::Private::slotKeyListResult( const KeyListResult 
     if ( keyListing.result.error() && !keyListing.result.error().isCanceled() )
         showError( dialogOrView(), keyListing.result );
 
+    if ( keyListing.result.isTruncated() )
+        showResult( dialogOrView(), keyListing.result );
+
     if ( dialog ) {
         dialog->setCertificates( keyListing.keys );
         dialog->setPassive( false );
@@ -398,6 +402,22 @@ void LookupCertificatesCommand::Private::showError( QWidget * parent, const KeyL
         return;
     KMessageBox::information( parent, i18n( "Failed to search on keyserver. The error returned was:\n%1",
                                             QString::fromLocal8Bit( result.error().asString() ) ) );
+}
+
+void LookupCertificatesCommand::Private::showResult( QWidget * parent, const KeyListResult & result ) {
+    if ( result.isTruncated() )
+        KMessageBox::information( parent,
+                                  i18nc("@info",
+                                        "<para>The query result has been truncated.</para>"
+                                        "<para>Either the local or a remote limit on "
+                                        "the maximum number of returned hits has "
+                                        "been exceeded.</para>"
+                                        "<para>You can try to increase the local limit "
+                                        "in the configuration dialog, but if one "
+                                        "of the configured servers is the limiting "
+                                        "factor, you have to refine your search.</para>"),
+                                  i18nc("@title", "Result Truncated"),
+                                  "lookup-certificates-truncated-result" );
 }
 
 static bool haveOpenPGPKeyserverConfigured() {

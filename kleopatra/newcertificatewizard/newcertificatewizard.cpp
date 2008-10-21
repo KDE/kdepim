@@ -105,7 +105,7 @@ static unsigned int index2strength( unsigned int index ) {
 }
 
 static int strength2index( unsigned int strength ) {
-    const unsigned int * const it = 
+    const unsigned int * const it =
         std::lower_bound( begin( key_strengths ), end( key_strengths ), strength );
     if ( it == end( key_strengths ) )
         return key_strengths[num_key_strengths-1];
@@ -193,7 +193,7 @@ namespace NewCertificateUi {
         }
 
         QDir tmpDir() const;
-        
+
     protected Q_SLOTS:
         void setButtonVisible( QWizard::WizardButton button, bool visible ) {
             if ( QAbstractButton * const b = this->button( button ) )
@@ -700,7 +700,8 @@ namespace {
 
     private Q_SLOTS:
         void slotSaveRequestToFile() {
-            QString fileName = QFileDialog::getSaveFileName( this, i18nc("@title", "Save Request") );
+            QString fileName = QFileDialog::getSaveFileName( this, i18nc("@title", "Save Request"),
+                                                             QString(), i18n("PKCS#10 Requests (*.p10)") );
             if ( fileName.isEmpty() )
                 return;
             if ( !fileName.endsWith( ".p10", Qt::CaseInsensitive ) )
@@ -729,7 +730,7 @@ namespace {
             invokeMailer( config.readEntry( "CAEmailAddress" ), // to
                           i18n("Please process this certificate."), // subject
                           i18n("Please process this certificate and inform the sender about the location to fetch the resulting certificate.\n\nThanks,\n"), // body
-                          url() ); // attachment
+                          QUrl( url() ).toLocalFile() ); // attachment
         }
 
         void slotSendCertificateByEMail() {
@@ -747,6 +748,7 @@ namespace {
                 return;
             // ### better error handling?
             const QString fileName = exportCertificateCommand->openPGPFileName();
+            kDebug() << "fileName" << fileName;
             exportCertificateCommand = 0;
             if ( fileName.isEmpty() )
                 return;
@@ -754,9 +756,20 @@ namespace {
                           i18n("My new OpenPGP certificate"), // subject
                           i18n("Please find attached my new OpenPGP certificate."), // body
                           fileName );
-        }            
+        }
 
-        static void invokeMailer( const QString & to, const QString & subject, QString body, const QString & attachment ) {
+        QByteArray ol_quote( QByteArray str ) {
+#ifdef Q_OS_WIN
+            return "\"\"" + str.replace( '"', "\\\"" ) + "\"\"";
+            //return '"' + str.replace( '"', "\\\"" ) + '"';
+#else
+            return str;
+#endif
+        }
+
+        void invokeMailer( const QString & to, const QString & subject, QString body, const QString & attachment ) {
+            kDebug() << "to:" << to << "subject:" << subject
+                     << "body:" << body << "attachment:" << attachment;
             // KToolInvocation::invokeMailer is broken on Windows, and openUrl works fine on Unix, too.
 
             // RFC 2368 says body's linebreaks need to be encoded as
@@ -767,8 +780,17 @@ namespace {
                 + "&subject=" + QUrl::toPercentEncoding( subject )
                 + "&body=" + QUrl::toPercentEncoding( body ) ;
             if ( !attachment.isEmpty() )
-                encoded += "&attach=" + QUrl::toPercentEncoding( QFileInfo( attachment ).absoluteFilePath() );
+                encoded += "&attach=" + ol_quote( QUrl::toPercentEncoding( QFileInfo( attachment ).absoluteFilePath() ) );
+            kDebug() << "openUrl" << QUrl::fromEncoded( encoded );
             QDesktopServices::openUrl( QUrl::fromEncoded( encoded ) );
+            KMessageBox::information( this,
+                                      i18nc("@info",
+                                            "<para><application>Kleopatra</application> tried to send a mail via your default mail client.</para>"
+                                            "<para>Some mail clients are known not to support attachments when invoked this way.</para>"
+                                            "<para>If your mail client does not have an attachment, then drag the <application>Kleopatra</application> icon and drop it on the message compose window of your mail client.</para>"
+                                            "<para>If that does not work, either, save the request to a file, and then attach that.</para>"),
+                                      i18nc("@title", "Sending Mail"),
+                                      "newcertificatewizard-mailto-troubles" );
         }
 
         void slotUploadCertificateToDirectoryServer() {
@@ -836,7 +858,7 @@ public:
           tmp( QDir::temp().absoluteFilePath( "kleo-" ) ),
           ui( q )
     {
-
+        q->setWindowTitle( i18nc("@title", "Certificate Creation Wizard") );
     }
 
 private:

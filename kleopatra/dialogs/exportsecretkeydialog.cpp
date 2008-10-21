@@ -80,7 +80,7 @@ public:
         : q( qq ),
           ui( q )
     {
-        
+
     }
 
 private:
@@ -88,6 +88,32 @@ private:
         const bool x509 = key.protocol() == CMS;
         ui.charsetCB->setVisible( x509 );
         ui.charsetLB->setVisible( x509 );
+    }
+
+    void updateFileName() {
+        const bool x509 = key.protocol() == CMS;
+        const bool armor = q->useArmor();
+
+        static const char * extensions[] = {
+            ".gpg", ".asc", ".der", ".pem"
+        };
+        const char * const extension = extensions[2*x509+armor];
+
+        ui.outputFileFR->setNameFilter( i18n("Secret Key Files (*%1 *.pem *.der *.gpg *.asc)", extension ) );
+
+        QString fn = q->fileName();
+        if ( fn.isEmpty() )
+            return;
+
+        bool found = false;
+        for ( unsigned int i = 0 ; i < sizeof extensions / sizeof *extensions ; ++i )
+            if ( fn.endsWith( extensions[i], Qt::CaseInsensitive ) ) {
+                fn.chop( 4 );
+                found = true;
+                break;
+            }
+        if ( found )
+            q->setFileName( fn + extension );
     }
 
     void updateLabel() {
@@ -106,6 +132,7 @@ private:
 
             outputFileFR->setExistingOnly( false );
             outputFileFR->setFilter( QDir::Files );
+            outputFileFR->setNameFilter( i18n("Secret Key Files (*.pem *.der *.gpg *.asc)") );
 
             for ( unsigned int i = 0 ; i < numCharsets ; ++i )
                 charsetCB->addItem( QString::fromLatin1( charsets[i] ) );
@@ -130,6 +157,7 @@ void ExportSecretKeyDialog::setKey( const Key & key ) {
     d->key = key;
     d->updateWidgets();
     d->updateLabel();
+    d->updateFileName();
 }
 
 Key ExportSecretKeyDialog::key() const {
@@ -168,6 +196,7 @@ bool ExportSecretKeyDialog::useArmor() const {
 }
 
 void ExportSecretKeyDialog::accept() {
+    d->updateFileName();
     const QString fn = fileName();
     if ( fn.isEmpty() ) {
         KMessageBox::information( this, i18nc("@info",
