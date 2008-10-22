@@ -189,8 +189,8 @@ long, in the
 
 <para>Archived alarms may be shown in the alarm list by selecting
 <menuchoice><guimenu>View</guimenu><guimenuitem>Show Archived
-Alarms</guimenuitem></menuchoice>. To hide them again, select
-<menuchoice><guimenu>View</guimenu><guimenuitem>Hide Archived
+Alarms</guimenuitem></menuchoice>. To hide them again, unselect
+<menuchoice><guimenu>View</guimenu><guimenuitem>Show Archived
 Alarms</guimenuitem></menuchoice>.</para>
 
 </sect2>
@@ -200,7 +200,7 @@ Alarms</guimenuitem></menuchoice>.</para>
 
 <para>You can search through the alarm list to find alarms containing
 a search text. To invoke this, select <menuchoice>
-<guimenu>Edit</guimenu><guimenuitem>Find</guimenuitem></menuchoice>.
+<guimenu>Edit</guimenu><guimenuitem>Find...</guimenuitem></menuchoice>.
 In the search dialog, select the alarm types which you wish to search.
 To continue searching for more alarms which match, use <menuchoice>
 <guimenu>Edit</guimenu><guimenuitem>Find Next</guimenuitem></menuchoice>
@@ -256,7 +256,7 @@ you configure the alarm.</para>
 <listitem>
 <para><mousebutton>Right</mousebutton> click on the system tray icon
 and choose
-<menuchoice><guimenuitem>New</guimenuitem></menuchoice>
+<menuchoice><guimenuitem>New Alarm</guimenuitem></menuchoice>
 from the context menu.</para>
 </listitem>
 
@@ -527,7 +527,7 @@ details.</para>
 
 <listitem>
 <para>Highlight an alarm in the alarm list and select <menuchoice>
-<guimenu>Actions</guimenu><guimenuitem>Create template</guimenuitem>
+<guimenu>Actions</guimenu><guimenuitem>Create Template...</guimenuitem>
 </menuchoice>. This opens the Template Edit dialog already filled in
 with a copy of the selected alarm's details.</para>
 </listitem>
@@ -1851,9 +1851,9 @@ manager in order to display &kalarm; in the system tray.</para>
 <guimenu>View</guimenu><guimenuitem>Show in System Tray</guimenuitem>
 </menuchoice>.</para>
 
-<para>To remove &kalarm; from the system tray, select
+<para>To remove &kalarm; from the system tray, unselect
 <menuchoice><guimenu>View</guimenu>
-<guimenuitem>Hide from System Tray</guimenuitem></menuchoice>.</para>
+<guimenuitem>Show in System Tray</guimenuitem></menuchoice>.</para>
 
 <para>To choose whether or not &kalarm; will be shown at startup in
 the system tray, use the <link linkend="preferences-view">View</link>
@@ -2300,9 +2300,9 @@ transmission.</para>
 
 <listitem><para><guilabel>Sendmail</guilabel>: When an email alarm is
 triggered, the email is sent automatically using
-<application>&Sendmail;</application>. This option will only work if
-your system is configured to use <application>&Sendmail;</application>,
-or a <application>&Sendmail;</application> compatible mail transport
+&Sendmail;. This option will only work if
+your system is configured to use &Sendmail;,
+or a &Sendmail; compatible mail transport
 agent such as <application>postfix</application> or
 <application>qmail</application>.</para>
 </listitem>
