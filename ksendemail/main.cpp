@@ -155,7 +155,7 @@ void processArgs( KCmdLineArgs *args )
     if ( result != 0 ) { 
       result = KDBusServiceStarter::self()->startServiceFor( "DBUS/ResourceBackend/IMAP", QString(), &error, &dbusService ); // ... start Kontact
       if(  result != 0 ) {
-        KMessageBox::error( 0, i18n( "Unable to find or start Kontact." ) );
+        KMessageBox::error( 0, i18n( "Unable to find or start email service." ) );
         return;
       }
     }
@@ -166,7 +166,7 @@ void processArgs( KCmdLineArgs *args )
     QDBusReply<QDBusObjectPath> composerDbusPath = kmailObj.callWithArgumentList(QDBus::AutoDetect, "openComposer", messages);
 
     if ( !composerDbusPath.isValid() ) {
-      KMessageBox::error( 0, i18n( "Can't connect to Kontact." ) );
+      KMessageBox::error( 0, i18n( "Can't connect to email service." ) );
     }
 }
 
