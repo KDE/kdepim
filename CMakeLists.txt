@@ -197,6 +197,13 @@ else ( ONLY_KLEO )
      message(STATUS "KOrganizer support DISABLED (because KMail support is disabled).")
   endif(QGPGME_FOUND AND KMAIL_SUPPORTED)
 
+  if(QGPGME_FOUND AND KMAIL_SUPPORTED)
+     macro_optional_add_subdirectory(ksendemail)
+     message(STATUS "KSendEmail support enabled.")
+  else(QGPGME_FOUND AND KMAIL_SUPPORTED)
+     message(STATUS "KSendEmail support DISABLED (because KMail support is disabled).")
+  endif(QGPGME_FOUND AND KMAIL_SUPPORTED)
+
   if(NOT WIN32)
      macro_optional_find_package(Opensync)
      macro_log_feature(OPENSYNC_FOUND "opensync" "OpenSync Development Libraries" "http://www.opensync.org" FALSE "0.30 or greater" "Needed to provide syncing functionality in KDE PIM applications. Necessary to compile kitchensync.")
