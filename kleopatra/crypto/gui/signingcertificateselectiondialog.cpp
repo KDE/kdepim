@@ -72,7 +72,7 @@ SigningCertificateSelectionDialog::Private::Private( SigningCertificateSelection
     q->setWindowTitle( i18n( "Select Signing Certificates" ) );
     QWidget* main = new QWidget( q );
     ui.setupUi( main );
-    q->setMainWidget( main ); 
+    q->setMainWidget( main );
     addCandidates( GpgME::CMS, ui.cmsCombo );
     addCandidates( GpgME::OpenPGP, ui.pgpCombo );
     ui.rememberCO->setChecked( true );
@@ -114,7 +114,7 @@ void SigningCertificateSelectionDialog::Private::addCandidates( GpgME::Protocol 
 {
     const std::vector<GpgME::Key> keys = candidates( prot );
     Q_FOREACH( const GpgME::Key& i, keys )
-        combo->addItem( Formatting::formatForComboBox( i ), 
+        combo->addItem( Formatting::formatForComboBox( i ),
                         QByteArray( i.primaryFingerprint() ) );
 }
 
@@ -122,7 +122,7 @@ void SigningCertificateSelectionDialog::Private::addCandidates( GpgME::Protocol 
 QMap<GpgME::Protocol, GpgME::Key> SigningCertificateSelectionDialog::selectedCertificates() const
 {
     QMap<GpgME::Protocol, GpgME::Key> res;
-    
+
     const QByteArray pgpfpr = d->ui.pgpCombo->itemData( d->ui.pgpCombo->currentIndex() ).toByteArray();
     res.insert( GpgME::OpenPGP, KeyCache::instance()->findByFingerprint( pgpfpr.constData() ) );
     const QByteArray cmsfpr = d->ui.cmsCombo->itemData( d->ui.cmsCombo->currentIndex() ).toByteArray();
@@ -133,4 +133,17 @@ QMap<GpgME::Protocol, GpgME::Key> SigningCertificateSelectionDialog::selectedCer
 bool SigningCertificateSelectionDialog::rememberAsDefault() const
 {
     return d->ui.rememberCO->isChecked();
+}
+
+void SigningCertificateSelectionDialog::setAllowedProtocols( const QVector<GpgME::Protocol>& allowedProtocols )
+{
+    assert( allowedProtocols.size() >= 1 );
+    if ( !allowedProtocols.contains( GpgME::OpenPGP ) ) {
+        d->ui.pgpLabel->hide();
+        d->ui.pgpCombo->hide();
+    }
+    if ( !allowedProtocols.contains( GpgME::CMS ) ) {
+        d->ui.cmsLabel->hide();
+        d->ui.cmsCombo->hide();
+    }
 }
