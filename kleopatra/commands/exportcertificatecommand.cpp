@@ -200,7 +200,9 @@ bool ExportCertificateCommand::Private::requestFileNames( GpgME::Protocol protoc
     const QString fname = QFileDialog::getSaveFileName( parentWidgetOrView(),
                                                         i18n( "Export Certificates" ), 
                                                         QString(), 
-                                                        protocol == GpgME::OpenPGP ? i18n( "OpenPGP Certificates (.asc)" ) : i18n( "S/MIME Certificates (.pem)" ) );
+                                                        protocol == GpgME::OpenPGP
+                                                        ? i18n( "OpenPGP Certificates" ) + " (*.asc *.gpg)"
+                                                        : i18n( "S/MIME Certificates" )  + " (*.pem *.der)" );
     fileNames[protocol] = fname;
     return !fname.isNull();
 }
@@ -211,7 +213,11 @@ void ExportCertificateCommand::Private::startExportJob( GpgME::Protocol protocol
 
     const CryptoBackend::Protocol* const backend = CryptoBackendFactory::instance()->protocol( protocol );
     assert( backend );
-    std::auto_ptr<ExportJob> job( backend->publicKeyExportJob( /*armor=*/true ) );
+    const QString fileName = fileNames[protocol];
+    const bool binary = protocol == GpgME::OpenPGP
+        ? fileName.endsWith( ".gpg", Qt::CaseInsensitive )
+        : fileName.endsWith( ".der", Qt::CaseInsensitive ) ;
+    std::auto_ptr<ExportJob> job( backend->publicKeyExportJob( !binary ) );
     assert( job.get() );
 
     connect( job.get(), SIGNAL(result(GpgME::Error,QByteArray)),
@@ -234,7 +240,7 @@ void ExportCertificateCommand::Private::startExportJob( GpgME::Protocol protocol
     ++jobsPending;
     const QPointer<ExportJob> exportJob( job.release() );
 
-    outFileForSender[exportJob] = fileNames[protocol];
+    outFileForSender[exportJob] = fileName;
     ( protocol == CMS ? cmsJob : pgpJob ) = exportJob;
 }
 
