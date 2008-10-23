@@ -917,7 +917,7 @@ feature is used for new addresses.</para></listitem>
 <varlistentry>
 <term><guilabel>Addressee editor type</guilabel></term>
 <listitem><para>You can either select the "<guilabel>Simple Editor</guilabel>" or the "<guilabel>Full Editor</guilabel>".</para>
-<para>The Simple editor mode only lets you enter the name (which will be automaticly parsed, if enabled) and an email address.</para></listitem>
+<para>The Simple editor mode only lets you enter the name (which will be automatically parsed, if enabled) and an email address.</para></listitem>
 </varlistentry>
 
 <varlistentry>
