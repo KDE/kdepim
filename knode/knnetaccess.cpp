@@ -70,6 +70,7 @@ KNNetAccess::~KNNetAccess()
   disconnect(nntpNotifier, SIGNAL(activated(int)), this, SLOT(slotThreadSignal(int)));
 
   nntpClient->terminateClient();
+  triggerAsyncThread(nntpOutPipe[1]);
   nntpClient->wait();
 
   delete nntpClient;

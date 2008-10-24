@@ -93,7 +93,6 @@ void KNProtocolClient::waitForWork()
   timeval tv;
   int selectRet;
 
-  int holdTime = 1000 * account.hold();
   while (true) {
     if (isConnected()) {  // we are connected, hold the connection for xx secs
       FD_ZERO(&fdsR);
@@ -101,24 +100,21 @@ void KNProtocolClient::waitForWork()
       FD_SET(tcpSocket, &fdsR);
       FD_ZERO(&fdsE);
       FD_SET(tcpSocket, &fdsE);
-      tv.tv_sec = 0;
-      tv.tv_usec = 1000;
-      --holdTime;
+      tv.tv_sec = account.hold();
+      tv.tv_usec = 0;
       selectRet = KSocks::self()->select(FD_SETSIZE, &fdsR, NULL, &fdsE, &tv);
+      if ( mTerminate ) {
+        clearPipe();
+        closeConnection();
+        return;
+      }
+      // In addition to the timeout, this will also happen
+      // if select() returns early because of a signal
       if (selectRet == 0) {
-        if (holdTime <= 0) {
 #ifndef NDEBUG
           qDebug("knode: KNProtocolClient::waitForWork(): hold time elapsed, closing connection.");
 #endif
           closeConnection();               // nothing happend...
-          holdTime = 1000 * account.hold();
-        } else {
-          if ( mTerminate ) {
-            closeConnection();
-            return;
-          }
-          continue;
-        }
       } else {
         if (((selectRet > 0)&&(!FD_ISSET(fdPipeIn,&fdsR)))||(selectRet == -1)) {
 #ifndef NDEBUG
@@ -129,17 +125,15 @@ void KNProtocolClient::waitForWork()
       }
     }
 
-    struct timeval timeout;
     do {
-      timeout.tv_sec = 0;
-      timeout.tv_usec = 1000;
       FD_ZERO(&fdsR);
       FD_SET(fdPipeIn, &fdsR);
-      if (mTerminate)
-        return;
-    } while (select(FD_SETSIZE, &fdsR, NULL, NULL, &timeout) <= 0);  // don't get tricked by signals
+    } while (select(FD_SETSIZE, &fdsR, NULL, NULL, NULL) <= 0);  // don't get tricked by signals
 
     clearPipe();      // remove start signal
+
+    if (mTerminate)
+      return;
 
     timer.start();
 
