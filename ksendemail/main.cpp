@@ -28,6 +28,8 @@
 #include <kdbusservicestarter.h>
 #include <kmessagebox.h>
 
+#include <KToolInvocation>
+
 #include "kmailinterface.h"
 
 static const char description[] =
@@ -149,25 +151,7 @@ void processArgs( KCmdLineArgs *args )
     if ( !calledWithSession )
         args->clear();
 
-    QString error;
-    QString dbusService;
-    int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/ResourceBackend/IMAP", QString(), &error, &dbusService );//Check if Kontact is already running and if not ...
-    if ( result != 0 ) { 
-      result = KDBusServiceStarter::self()->startServiceFor( "DBUS/ResourceBackend/IMAP", QString(), &error, &dbusService ); // ... start Kontact
-      if(  result != 0 ) {
-        KMessageBox::error( 0, i18n( "Unable to find or start email service." ) );
-        return;
-      }
-    }
-
-    QDBusInterface kmailObj( dbusService, "/KMail", "org.kde.kmail.kmail" );
-    QList<QVariant> messages;
-    messages << to << cc << bcc << subj << body << false;
-    QDBusReply<QDBusObjectPath> composerDbusPath = kmailObj.callWithArgumentList(QDBus::AutoDetect, "openComposer", messages);
-
-    if ( !composerDbusPath.isValid() ) {
-      KMessageBox::error( 0, i18n( "Can't connect to email service." ) );
-    }
+    KToolInvocation::invokeMailer( to, cc, bcc, subj, body );
 }
 
 int main( int argc, char **argv )
