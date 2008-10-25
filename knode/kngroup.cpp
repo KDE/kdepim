@@ -315,7 +315,7 @@ bool KNGroup::loadHdrs()
         byteCount = f.read((char*)(&data0), dataSize);
       else
         byteCount = f.read((char*)(&data1), dataSize);
-      if ((byteCount == -1)||(byteCount!=dataSize))
+      if ((byteCount == -1)||(byteCount!=dataSize)) {
         if ( f.error() == QFile::NoError ) {
           kWarning(5003) <<"Found broken entry in dynamic-file: Ignored!";
           continue;
@@ -324,6 +324,7 @@ bool KNGroup::loadHdrs()
           clear();
           return false;
         }
+      }
 
       if (d_ynDataFormat==0)
         art=byId(data0.id);
@@ -399,7 +400,7 @@ bool KNGroup::unloadHdrs(bool force)
 void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNProtocolClient *client)
 {
   KNRemoteArticle *art=0, *art2=0;
-  int new_cnt=0, added_cnt=0, todo = list.count();
+  int new_cnt=0, added_cnt=0;
   QTime timer;
 
   l_astFetchCount=0;
@@ -896,7 +897,6 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
 
 KNRemoteArticle* KNGroup::findReference(KNRemoteArticle *a)
 {
-  int found=false;
   QByteArray ref_mid;
   KNRemoteArticle *ref_art=0;
 

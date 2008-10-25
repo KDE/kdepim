@@ -118,7 +118,7 @@ QString KNArticleManager::saveContentToTemp(KMime::Content *c)
 {
   QString path;
   KTemporaryFile* tmpFile;
-  KMime::Headers::Base *pathHdr=c->getHeaderByType("X-KNode-Tempfile");  // check for existing temp file
+  KMime::Headers::Base *pathHdr=c->headerByType("X-KNode-Tempfile");  // check for existing temp file
 
   if(pathHdr) {
     path = pathHdr->asUnicodeString();

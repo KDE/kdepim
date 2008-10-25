@@ -130,7 +130,7 @@ namespace KSieve {
     return isStringToken() ||
            token() == Lexer::Number ||
            token() == Lexer::Tag ||
-           token() == Lexer::Special && mTokenValue == "[" ;
+         ( token() == Lexer::Special && mTokenValue == "[" );
   }
 
   bool Parser::Impl::obtainToken() {

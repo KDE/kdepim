@@ -218,11 +218,12 @@ void KNGroupBrowser::createListItems(Q3ListViewItem *parent)
   qSort(*matchList);
   Q_FOREACH(const KNGroupInfo& gn, *matchList) {
 
-    if(!prefix.isEmpty() && !gn.name.startsWith(prefix))
+    if(!prefix.isEmpty() && !gn.name.startsWith(prefix)) {
       if(!compare.isNull())
         break;
       else
         continue;
+    }
 
     compare=gn.name.mid(prefix.length());
 

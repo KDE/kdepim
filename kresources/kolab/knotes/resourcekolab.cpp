@@ -179,11 +179,12 @@ KCal::Journal* ResourceKolab::addNote( const QString& data, const QString& subre
     journal = static_cast<KCal::Journal*>( formatter.fromString( data ) );
 
   Q_ASSERT( journal );
-  if( journal && !mUidMap.contains( journal->uid() ) )
+  if( journal && !mUidMap.contains( journal->uid() ) ) {
     if ( addNote( journal, subresource, sernum ) )
       return journal;
     else
       delete journal;
+  }
   return 0;
 }
 

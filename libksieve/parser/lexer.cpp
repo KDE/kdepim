@@ -471,7 +471,7 @@ namespace KSieve {
     }
 
     // rest of identifier chars ( now digits are allowed ):
-    for ( ++mState.cursor ; !atEnd() && isIText( *mState.cursor ) ; ++mState.cursor );
+    for ( ++mState.cursor ; !atEnd() && isIText( *mState.cursor ) ; ++mState.cursor ) ;
 
     const int identifierLength = mState.cursor - identifierStart;
 

@@ -590,7 +590,7 @@ void ArticleWidget::displayHeader()
     headerHtml += "<div class=\"header\">"
                   "<table width=\"100%\" cellpadding=\"0\" cellspacing=\"0\"> ";
     while ( !head.isEmpty() ) {
-      header = mArticle->getNextHeader( head );
+      header = mArticle->nextHeader( head );
       if ( header ) {
         headerHtml+=QString( "<tr><td align=\"right\" valign=\"top\"><b>%1</b></td><td width=\"100%\">%2</td></tr>" )
           .arg( toHtmlString( header->type(), None ) + ": " )
@@ -609,7 +609,7 @@ void ArticleWidget::displayHeader()
   KNDisplayedHeader::List dhs = knGlobals.configManager()->displayedHeaders()->headers();
   for ( KNDisplayedHeader::List::Iterator it = dhs.begin(); it != dhs.end(); ++it ) {
     KNDisplayedHeader *dh = (*it);
-    hb = mArticle->getHeaderByType(dh->header().toLatin1());
+    hb = mArticle->headerByType(dh->header().toLatin1());
     if ( !hb || hb->is("Subject") || hb->is("Organization") )
       continue;
 
@@ -629,7 +629,7 @@ void ArticleWidget::displayHeader()
       headerHtml += QString( "<a href=\"mailto:%1\">%2</a>")
           .arg( KPIMUtils::extractEmailAddress( hb->asUnicodeString() ) )
           .arg( toHtmlString( hb->asUnicodeString(), None ) );
-      KMime::Headers::Base *orgHdr = mArticle->getHeaderByType( "Organization" );
+      KMime::Headers::Base *orgHdr = mArticle->headerByType( "Organization" );
       if ( orgHdr && !orgHdr->isEmpty() ) {
         headerHtml += "&nbsp;&nbsp;(";
         headerHtml += toHtmlString( orgHdr->asUnicodeString() );
@@ -659,7 +659,7 @@ void ArticleWidget::displayHeader()
 
   // X-Face support
   QString xfhead;
-  KMime::Headers::Base *temp = mArticle->getHeaderByType("X-Face");
+  KMime::Headers::Base *temp = mArticle->headerByType("X-Face");
   if (temp)
     xfhead = temp->asUnicodeString();
   QString xface = "";

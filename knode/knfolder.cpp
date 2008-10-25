@@ -201,7 +201,7 @@ bool KNFolder::loadHdrs()
 
     //read index-data
     byteCount=i_ndexFile.read((char*)(&dynamic), sizeof(DynData));
-    if(byteCount!=sizeof(DynData))
+    if(byteCount!=sizeof(DynData)) {
       if( i_ndexFile.error() == QFile::NoError ) {
         kWarning(5003) <<"KNFolder::loadHeaders() : found broken entry in index-file: Ignored!";
         continue;
@@ -213,6 +213,7 @@ bool KNFolder::loadHdrs()
         knGlobals.top->setCursorBusy( false );
         return false;
       }
+    }
 
     art=new KNLocalArticle(this);
 
