@@ -579,7 +579,7 @@ is to be triggered.</para>
 </listitem>
 
 <listitem>
-<para>Check <guilabel>Any time</guilabel> to specify that the alarm
+<para>Check <guilabel>Date only</guilabel> to specify that the alarm
 should only have a date, not a time.</para>
 </listitem>
 
