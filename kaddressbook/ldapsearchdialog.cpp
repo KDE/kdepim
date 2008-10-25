@@ -594,7 +594,7 @@ KABC::Addressee LDAPSearchDialog::convertLdapAttributesToAddressee( const KLDAP:
   KLDAP::LdapAttrValue lst = attrs["mail"];
   KLDAP::LdapAttrValue::ConstIterator it = lst.begin();
   bool pref = true;
-  if ( it != lst.end() ) {
+  while ( it != lst.end() ) {
     addr.insertEmail( asUtf8( *it ), pref );
     pref = false;
     ++it;
