@@ -189,7 +189,7 @@ long, in the
 
 <para>Archived alarms may be shown in the alarm list by selecting
 <menuchoice><guimenu>View</guimenu><guimenuitem>Show Archived
-Alarms</guimenuitem></menuchoice>. To hide them again, unselect
+Alarms</guimenuitem></menuchoice>. To hide them again, deselect
 <menuchoice><guimenu>View</guimenu><guimenuitem>Show Archived
 Alarms</guimenuitem></menuchoice>.</para>
 
@@ -1851,7 +1851,7 @@ manager in order to display &kalarm; in the system tray.</para>
 <guimenu>View</guimenu><guimenuitem>Show in System Tray</guimenuitem>
 </menuchoice>.</para>
 
-<para>To remove &kalarm; from the system tray, unselect
+<para>To remove &kalarm; from the system tray, deselect
 <menuchoice><guimenu>View</guimenu>
 <guimenuitem>Show in System Tray</guimenuitem></menuchoice>.</para>
 
