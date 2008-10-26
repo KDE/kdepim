@@ -72,7 +72,7 @@ class Scheduler : public QObject  {
     QMutex nntp_Mutex;
 
   signals:
-    /** Indicates wether there are currently active jobs, useful to e.g. enable
+    /** Indicates whether there are currently active jobs, useful to e.g. enable
      * a cancel button.
      */
     void netActive(bool);

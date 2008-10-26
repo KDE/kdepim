@@ -263,7 +263,7 @@ typedef enum {
     The normal flags may <b>not</b> be used together with the
     special SigStat_NUMERICAL_CODE flag. When finding the special
     SigStat_NUMERICAL_CODE flag in a SigStatusFlags value you
-    can obtain the respective error code number by substracting
+    can obtain the respective error code number by subtracting
     the SigStatusFlags value by SigStat_NUMERICAL_CODE: this is
     used to transport special status information NOT matching
     any of the normal predefined status codes.

@@ -76,24 +76,24 @@ void FilterMBox::import(FilterInfo *info)
                 * (e.g. 8Bit). It also not help to convert the QTextStream to Unicode. By this you
                 * get Unicode/UTF-email but KMail can't detect the correct charset.
                 */
-                QByteArray seperate;
+                QByteArray separate;
                 QString x_status_flag = "";
 
                 /* check if the first line start with "From " (and not "From: ") and discard the line
                  * in this case because some IMAP servers (e.g. Cyrus) don't accept this header line */
-                if(!first_msg && ((seperate = input.data()).left(5) != "From "))
+                if(!first_msg && ((separate = input.data()).left(5) != "From "))
                     tmp.write( input, l );
 
                 l = mbox.readLine( input.data(),MAX_LINE); // read the first line, prevent "From "
 
-                if ((seperate = input.data()).left(5) != "From ")
+                if ((separate = input.data()).left(5) != "From ")
                     tmp.write( input, l );
 
-                while ( ! mbox.atEnd() &&  (l = mbox.readLine(input.data(),MAX_LINE)) && ((seperate = input.data()).left(5) != "From ")) {
+                while ( ! mbox.atEnd() &&  (l = mbox.readLine(input.data(),MAX_LINE)) && ((separate = input.data()).left(5) != "From ")) {
                     tmp.write( input, l );
 
-                    if ((seperate = input.data()).left(10) == "X-Status: ") {
-                        x_status_flag = seperate;
+                    if ((separate = input.data()).left(10) == "X-Status: ") {
+                        x_status_flag = separate;
                         x_status_flag.remove("X-Status: ");
                         x_status_flag = x_status_flag.trimmed();
                         // qDebug("x_status_flag: %s", x_status_flag.toLatin1() );

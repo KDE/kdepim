@@ -184,11 +184,11 @@ void FilterPMail::importMailFolder(const QString& file)
             inf->setCurrent( (int) ( ( (float) f.pos() / f.size() ) * 100 ) );
 
             if(!first_msg) {
-                // set the filepos back to last line minus the seperate char (0x1a)
+                // set the filepos back to last line minus the separate char (0x1a)
                 f.seek(f.pos() - l + 1);
             }
 
-            // no problem to loose the last line in file. This only contains a seperate char
+            // no problem to loose the last line in file. This only contains a separate char
             while ( ! f.atEnd() &&  (l = f.readLine(input.data(),MAX_LINE))) {
                     if (inf->shouldTerminate()){
                         return;
@@ -222,7 +222,7 @@ void FilterPMail::importUnixMailFolder(const QString& file)
     } pmg_head;
 
     QFile f;
-    QString folder("PegasusMail-Import/"), s(file), seperate;
+    QString folder("PegasusMail-Import/"), s(file), separate;
     QByteArray line(MAX_LINE,'\0');
     int n = 0, l = 0;
 
@@ -258,9 +258,9 @@ void FilterPMail::importUnixMailFolder(const QString& file)
             tempfile.open();
 
             // we lost the last line, which is the first line of the new message in
-            // this lopp, but this is ok, because this is the seperate line with
+            // this lopp, but this is ok, because this is the separate line with
             // "From ???@???" and we can forget them
-            while ( ! f.atEnd() &&  (l = f.readLine(line.data(),MAX_LINE)) && ((seperate = line.data()).left(5) != "From ")) {
+            while ( ! f.atEnd() &&  (l = f.readLine(line.data(),MAX_LINE)) && ((separate = line.data()).left(5) != "From ")) {
                 tempfile.write(line.data(), l);
                 if (inf->shouldTerminate()){
                     return;

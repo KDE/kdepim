@@ -158,7 +158,7 @@ void KNServerInfo::readPassword()
     return;
   mPassLoaded = true;
 
-  // check wether there is a chance to find our password at all
+  // check whether there is a chance to find our password at all
   if (Wallet::folderDoesNotExist(Wallet::NetworkWallet(), "knode") ||
       Wallet::keyDoesNotExist(Wallet::NetworkWallet(), "knode", QString::number(i_d)))
     return;

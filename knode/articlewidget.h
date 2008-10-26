@@ -76,7 +76,7 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
 
     /// notify all instances about a config change
     static void configChanged();
-    /** check wether the given article is displayed in any instance
+    /** check whether the given article is displayed in any instance
      * @param article The article to check.
      */
     static bool articleVisible( KNArticle *article );
@@ -100,7 +100,7 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
     /// cleanup all instances
     static void cleanup();
 
-    /// checks wether the readers is scrolled down to the bottom
+    /// checks whether the readers is scrolled down to the bottom
     bool atBottom() const;
 
   public slots:
@@ -161,7 +161,7 @@ class ArticleWidget : public QWidget, public KNJobConsumer {
      *  @returns -1 if no quoting was found, the quoting level otherwise
      */
     static int quotingDepth( const QString &line, const QString &quoteChars );
-    /// checks wether the given attachment can be shown inline
+    /// checks whether the given attachment can be shown inline
     bool inlinePossible( KMime::Content *c );
     /** Checks if the given charset is supported.
      * @param charset The charset to check.

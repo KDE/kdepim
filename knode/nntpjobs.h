@@ -65,7 +65,7 @@ class ArticleListJob : public KNJobData
     ArticleListJob( KNJobConsumer *c, KNServerInfo *a, KNJobItem *i, bool silent = false );
 
     virtual void execute();
-    /** Returns wether an error message should be shown. */
+    /** Returns whether an error message should be shown. */
     bool silent() { return mSilent; }
 
   private slots:

@@ -106,16 +106,16 @@ void FilterOpera::import(FilterInfo *info)
                         * (e.g. 8Bit). It also not help to convert the QTextStream to Unicode. By this you
                         * get Unicode/UTF-email but KMail can't detect the correct charset.
                         */
-                        QByteArray seperate;
+                        QByteArray separate;
 
                         if(!first_msg)
                             tmp.write( input, l );
                         l = operaArchiv.readLine( input.data(),MAX_LINE); // read the first line, prevent "From "
                         tmp.write( input, l );
 
-                        while ( ! operaArchiv.atEnd() &&  (l = operaArchiv.readLine(input.data(),MAX_LINE)) && ((seperate = input.data()).left(5) != "From ")) {
+                        while ( ! operaArchiv.atEnd() &&  (l = operaArchiv.readLine(input.data(),MAX_LINE)) && ((separate = input.data()).left(5) != "From ")) {
                             /** remove in KMail unneeded Flags from Opera (for example: X-Opera-Status)*/
-                            if(seperate.left(8) != "X-Opera-")
+                            if(separate.left(8) != "X-Opera-")
                                 tmp.write( input, l );
                         }
                         tmp.flush();

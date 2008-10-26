@@ -215,20 +215,20 @@ namespace {
     }
 
     QString format_keyusage( const Key & key ) {
-	QStringList capabilites;
+	QStringList capabilities;
 	if ( key.canSign() ) {
 	    if ( key.isQualified() )
-		capabilites.push_back( i18n( "Signing EMails and Files (Qualified)" ) );
+		capabilities.push_back( i18n( "Signing EMails and Files (Qualified)" ) );
 	    else
-		capabilites.push_back( i18n( "Signing EMails and Files" ) );
+		capabilities.push_back( i18n( "Signing EMails and Files" ) );
     }
 	if ( key.canEncrypt() )
-	    capabilites.push_back( i18n( "Encrypting EMails and Files" ) );
+	    capabilities.push_back( i18n( "Encrypting EMails and Files" ) );
 	if ( key.canCertify() )
-	    capabilites.push_back( i18n( "Certifying other Certificates" ) );
+	    capabilities.push_back( i18n( "Certifying other Certificates" ) );
 	if ( key.canAuthenticate() )
-	    capabilites.push_back( i18n( "Authenticate against Servers" ) );
-	return capabilites.join( i18n(", ") );
+	    capabilities.push_back( i18n( "Authenticate against Servers" ) );
+	return capabilities.join( i18n(", ") );
     }
 
     static QString time_t2string( time_t t ) {

@@ -75,7 +75,7 @@ namespace Kleo {
 
 
     /**
-     * If explicitely specified, only the listed user IDs will be signed. Otherwise all user IDs
+     * If explicitly specified, only the listed user IDs will be signed. Otherwise all user IDs
      * are signed.
      * @param list of user ID indexes (of the key to be signed).
      */

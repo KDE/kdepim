@@ -158,7 +158,7 @@ KNGroupPropDlg::KNGroupPropDlg( KNGroup *group, QWidget *parent )
 
   pageL->addStretch(1);
 
-  // Specfic Identity tab =========================================
+  // Specific Identity tab =========================================
   i_dWidget = new KNode::IdentityWidget( g_rp->identity(), knGlobals.componentData(), this );
   addPage( i_dWidget, i18n("&Identity") );
 

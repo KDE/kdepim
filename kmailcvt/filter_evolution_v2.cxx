@@ -194,14 +194,14 @@ void FilterEvolution_v2::importMBox(FilterInfo *info, const QString& mboxName, c
             * (e.g. 8Bit). It also not help to convert the QTextStream to Unicode. By this you
             * get Unicode/UTF-email but KMail can't detect the correct charset.
             */
-            QByteArray seperate;
+            QByteArray separate;
 
             if(!first_msg)
                 tmp.write( input, l );
             l = mbox.readLine( input.data(),MAX_LINE); // read the first line, prevent "From "
             tmp.write( input, l );
 
-            while ( ! mbox.atEnd() &&  (l = mbox.readLine(input.data(),MAX_LINE)) && ((seperate = input.data()).left(5) != "From ")) {
+            while ( ! mbox.atEnd() &&  (l = mbox.readLine(input.data(),MAX_LINE)) && ((separate = input.data()).left(5) != "From ")) {
                 tmp.write( input, l );
             }
             tmp.flush();
