@@ -1,4 +1,4 @@
-/* memofile-factory.cc                      KPilot
+/* memofilefactory.cc                      KPilot
 **
 ** Copyright (C) 2004-2007 by Jason 'vanRijn' Kasper <vR@movingparts.net>
 **

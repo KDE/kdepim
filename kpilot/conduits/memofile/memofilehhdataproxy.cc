@@ -45,6 +45,7 @@ public:
 bool MemofileHHDataProxy::createDataStore()
 {
 	// TODO: Implement
+        Q_ASSERT( false );
 	return false;
 }
 

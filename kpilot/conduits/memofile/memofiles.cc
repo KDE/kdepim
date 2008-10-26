@@ -1,6 +1,6 @@
-/* memofile-conduit.cc			KPilot
+/* memofiles.cc			KPilot
 **
-** Copyright (C) 2004-2007 by Jason 'vanRijn' Kasper <vR@movingparts.net>
+** Copyright (C) 2004 by Jason 'vanRijn' Kasper <vR@movingparts.net>
 **
 */
 
@@ -30,8 +30,7 @@
 #include "options.h"
 
 #include "memofile.h"
-//Added by qt3to4:
-#include <Q3PtrList>
+#include <QList>
 #include <QtCore/QTextStream>
 
 QString Memofiles::FIELD_SEP = CSL1("\t");
@@ -212,7 +211,7 @@ void Memofiles::eraseLocalMemos ()
 	_memofiles.clear();
 }
 
-void Memofiles::setPilotMemos (Q3PtrList<PilotMemo> & memos)
+void Memofiles::setPilotMemos (QList<PilotMemo> & memos)
 {
 	FUNCTIONSETUP;
 
@@ -367,11 +366,11 @@ void Memofiles::addModifiedMemo (PilotMemo * memo)
 
 }
 
-Q3PtrList<Memofile> Memofiles::getModified ()
+QList<Memofile> Memofiles::getModified ()
 {
 	FUNCTIONSETUP;
 
-	Q3PtrList<Memofile> modList;
+	QList<Memofile> modList;
 	modList.clear();
 
 	Memofile * memofile;

@@ -34,15 +34,15 @@ class MemofileHHRecord : public HHRecord
 {
 public:
 	MemofileHHRecord( PilotRecord *record, const QString &category );
-	
+
 	/**
-	 * Returns whether or not the current record is equal to @p other. Implementing 
+	 * Returns whether or not the current record is equal to @p other. Implementing
 	 * conduits should add support for both implementing records for this. This
 	 * means that if pcRec->equal( hhRec ) is true, then also hhRec->equal( pcRec )
 	 * should be true.
 	 */
 	/* virtual */ bool equal( const HHRecord* other ) const;
-	
+
 	/**
 	 * Returns the PilotMemo object represented by this record.
 	 */
@@ -52,7 +52,7 @@ public:
 	 * Sets the pilot memo represented by this record.
 	 */
 	void setPilotMemo( const PilotMemo& memo );
-	
+
 	/**
 	 * Returns a string presentation of this record.
 	 */

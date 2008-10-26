@@ -1,4 +1,4 @@
-/* conduit.cc			KPilot
+/* memofileconduit.cc			KPilot
 **
 ** Copyright (C) 2008 by Jason 'vanRijn' Kasper <vR@movingparts.net>
 */

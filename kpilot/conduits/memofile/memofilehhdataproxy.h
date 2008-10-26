@@ -36,7 +36,7 @@ public:
 	 * Tries to create a new Datastore and returns whether or not it succeeded.
 	 */
 	/* virtual */ bool createDataStore();
-	
+
 	/**
 	 * Creates a new MemofileHHDataProxy object.
 	 */

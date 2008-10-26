@@ -1,6 +1,6 @@
-/* contactsakonadiproxy.cc			KPilot
+/* memofilepcdataproxy.cc			KPilot
 **
-** Copyright (C) 2008 by Bertjan Broeksema <b.broeksema@kdemail.net>
+** Copyright (C) 2008 by Jason 'vanRijn' Kasper <vR@movingparts.net>
 */
 
 /*
@@ -24,43 +24,25 @@
 ** Bug reports and questions can be sent to kde-pim@kde.org
 */
 
-#include "contactsakonadiproxy.h"
+#include "memofilepcdataproxy.h"
 
-#include <kabc/addressee.h>
+#include "memofiledatarecord.h"
 
-#include "contactsakonadirecord.h"
-
-ContactsAkonadiProxy::ContactsAkonadiProxy( const IDMapping& mapping )
-	: AkonadiDataProxy( mapping )
+MemofilePcDataProxy::MemofilePcDataProxy( const IDMapping& mapping, QString directory )
+   : DataProxy( mapping ),
+     fDirectory( directory )
 {
+
 }
 
-void ContactsAkonadiProxy::addCategory( Record* rec, const QString& category )
+void MemofilePcDataProxy::addCategory( Record* rec, const QString& category )
 {
-	ContactsAkonadiRecord* tar = static_cast<ContactsAkonadiRecord*>( rec );
+	MemofileRecord* tar = static_cast<MemofileRecord*>( rec );
 	tar->addCategory( category );
 }
 
-void ContactsAkonadiProxy::setCategory( Record* rec, const QString& category )
+void MemofilePcDataProxy::setCategory( Record* rec, const QString& category )
 {
-	ContactsAkonadiRecord* tar = static_cast<ContactsAkonadiRecord*>( rec );
+	MemofileRecord* tar = static_cast<MemofileRecord*>( rec );
 	tar->addCategory( category );
-}
-
-/* ***** Protected methods ***** */
-
-AkonadiRecord* ContactsAkonadiProxy::createAkonadiRecord( const Akonadi::Item& i
-	, const QDateTime& dt ) const
-{
-	return new ContactsAkonadiRecord( i, dt );
-}
-
-AkonadiRecord* ContactsAkonadiProxy::createDeletedAkonadiRecord( const QString& id ) const
-{
-	return new ContactsAkonadiRecord( id );
-}
-
-bool ContactsAkonadiProxy::hasValidPayload( const Akonadi::Item& i ) const
-{
-	return i.hasPayload<KABC::Addressee>();
 }
