@@ -1,3 +1,16 @@
+Monday, October 27th 2008
+
+Problems Addressed
+--------------------
+
+* kolab/issue3169 No writable resource found if kontact is started the first time after a kolabwizard configuration.
+* KDE BUGS # 172732, 172786, 172787, 172531, 173437, 170909
+
+Merges
+---------
+
+* Merges in from enterprise35 branch.
+
 Friday, October 17th 2008
 
 Merges
