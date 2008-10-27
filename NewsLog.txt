@@ -1,3 +1,12 @@
+Monday, October 27th 2008
+
+Problems addressed
+-------------------
+
+* kolab/issue2230 Summary: Can select summaries of parts in the summary configuration dialog, which are deactivated in the components dialog.
+* kolab/issue2947 Kontact crashes by opening an added attachment file.
+
+
 Friday, October 17th 2008
 
 Problems addressed
