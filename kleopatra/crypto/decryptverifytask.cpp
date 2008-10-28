@@ -332,7 +332,8 @@ public:
     const Mailbox informativeSender;
     const std::vector<Key> signers;
     bool hasInformativeSender() const { return !informativeSender.addrSpec().isEmpty(); }
-    bool conflicts() const { return hasInformativeSender() && !keysContainMailbox( signers, informativeSender ); }
+    bool conflicts() const { return hasInformativeSender() && hasKeys() && !keysContainMailbox( signers, informativeSender ); }
+    bool hasKeys() const { return kdtools::any( signers, !bind( &Key::isNull, _1 ) ); }
     std::vector<Mailbox> signerMailboxes() const {return extractMailboxes( signers ); }
 };
 
