@@ -388,12 +388,11 @@ static QString formatVerificationResultOverview( const VerificationResult & res,
     if ( sigs.size() == 1 ) {
         const Key key = DecryptVerifyResult::keyForSignature( sigs[0], signers );
         if ( key.isNull() )
-            text = i18n( "<b>Signature is valid.</b>" );
-        else
-            text = i18n( "<b>Signed by %1</b>", renderKeyEMailOnlyNameAsFallback( key ) );
+            return i18n( "<b>Signature is valid.</b>" );
+        text = i18n( "<b>Signed by %1</b>", renderKeyEMailOnlyNameAsFallback( key ) );
         if ( info.conflicts() )
             text += i18n( "<br/><b>Warning:</b> The sender's mail address is not stored in the %1 used for signing.",
-                          key.isNull() ? i18n( "certificate" ) : renderKeyLink( key.primaryFingerprint(), i18n( "certificate" ) ) );
+                          renderKeyLink( key.primaryFingerprint(), i18n( "certificate" ) ) );
     }
     else {
         text = i18np("<b>Valid signature.</b>", "<b>%1 valid signatures.</b>", sigs.size() );
