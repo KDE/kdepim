@@ -79,7 +79,6 @@ public:
     void finishedIfLastJob();
 
 private:
-    bool textArmor;
     QMap<GpgME::Protocol, QString> fileNames;
     uint jobsPending;
     QMap<QObject*, QString> outFileForSender;
@@ -95,7 +94,6 @@ const ExportCertificateCommand::Private * ExportCertificateCommand::d_func() con
 
 ExportCertificateCommand::Private::Private( ExportCertificateCommand * qq, KeyListController * c )
     : Command::Private( qq, c ),
-      textArmor( true ),
       jobsPending( 0 )
 {
     
@@ -265,6 +263,19 @@ void ExportCertificateCommand::Private::finishedIfLastJob()
         finished();
 }
 
+static bool write_complete( QIODevice & iod, const QByteArray & data ) {
+    qint64 total = 0;
+    qint64 toWrite = data.size();
+    while ( total < toWrite ) {
+        const qint64 written = iod.write( data.data() + total, toWrite );
+        if ( written < 0 )
+            return false;
+        total += written;
+        toWrite -= written;
+    }
+    return true;
+}
+
 void ExportCertificateCommand::Private::exportResult( const GpgME::Error& err, const QByteArray& data )
 {
     assert( jobsPending > 0 );
@@ -288,18 +299,9 @@ void ExportCertificateCommand::Private::exportResult( const GpgME::Error& err, c
         finishedIfLastJob();
         return;
     }
-    if ( textArmor )
-    {
-        QTextStream out( &savefile );
-        out << data;
-    }
-    else
-    {
-        QDataStream out( &savefile );
-        out << data;
-    }
 
-    if ( !savefile.finalize() )
+    if ( !write_complete( savefile, data ) ||
+         !savefile.finalize() )
         KMessageBox::error( parentWidgetOrView(), writeErrorMsg, errorCaption );
     finishedIfLastJob();
 }
