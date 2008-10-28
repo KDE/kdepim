@@ -126,7 +126,7 @@ void SignCommand::Private::slotSignersResolved() {
 
     try {
         const QString sessionTitle = q->sessionTitle();
-        if ( !sessionTitle.isNull() )
+        if ( !sessionTitle.isEmpty() )
             Q_FOREACH ( const shared_ptr<Input> & i, q->inputs() )
                 i->setLabel( sessionTitle );
 

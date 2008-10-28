@@ -228,7 +228,7 @@ static QString renderKeyEMailOnlyNameAsFallback( const Key & key ) {
     if ( key.isNull() )
         return i18n( "Unknown key" );
     const QString email = Formatting::prettyEMail( key );
-    const QString user = !email.isNull() ? email : Formatting::prettyName( key );
+    const QString user = !email.isEmpty() ? email : Formatting::prettyName( key );
     return renderKeyLink( key.primaryFingerprint(), user );
 }
 

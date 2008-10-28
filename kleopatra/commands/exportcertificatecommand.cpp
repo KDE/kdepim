@@ -202,7 +202,7 @@ bool ExportCertificateCommand::Private::requestFileNames( GpgME::Protocol protoc
                                                         ? i18n( "OpenPGP Certificates" ) + " (*.asc *.gpg)"
                                                         : i18n( "S/MIME Certificates" )  + " (*.pem *.der)" );
     fileNames[protocol] = fname;
-    return !fname.isNull();
+    return !fname.isEmpty();
 }
 
 void ExportCertificateCommand::Private::startExportJob( GpgME::Protocol protocol, const std::vector<Key>& keys )
