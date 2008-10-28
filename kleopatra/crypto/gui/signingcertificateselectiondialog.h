@@ -33,7 +33,7 @@
 #define __KLEOPATRA_CRYPTO_GUI_SIGNINGCERTIFICATESELECTIONDIALOG_H__
 
 #include <KDialog>
-    
+
 #include <gpgme++/key.h>
 
 #include <utils/pimpl_ptr.h>
@@ -49,12 +49,13 @@ namespace Gui {
             public:
         explicit SigningCertificateSelectionDialog( QWidget * parent=0, Qt::WFlags f=0 );
         ~SigningCertificateSelectionDialog();
-        
+
+        void setAllowedProtocols( const QVector<GpgME::Protocol>& allowedProtocols );
         void setSelectedCertificates( const QMap<GpgME::Protocol, GpgME::Key>& certificates );
         QMap<GpgME::Protocol, GpgME::Key> selectedCertificates() const;
 
         bool rememberAsDefault() const;
-        
+
     private:
         class Private;
         kdtools::pimpl_ptr<Private> d;
@@ -65,4 +66,4 @@ namespace Gui {
 }
 
 #endif // __KLEOPATRA_CRYPTO_GUI_SIGNINGCERTIFICATESELECTIONDIALOG_H__
- 
+

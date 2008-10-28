@@ -379,6 +379,7 @@ void SignerResolvePage::Private::updateUi() {
     const QString customTitle = validator->customWindowTitle();
     if ( !customTitle.isEmpty() )
         emit q->windowTitleChanged( customTitle );
+    selectCertificatesButton->setEnabled(signingProtocolSelectionWidget->checkedProtocols().size()>0);
 }
 
 
@@ -434,6 +435,7 @@ void SignerResolvePage::Private::updateModeSelectionWidgets()
 void SignerResolvePage::Private::selectCertificates()
 {
     QPointer<SigningCertificateSelectionDialog> dlg = new SigningCertificateSelectionDialog( q );
+    dlg->setAllowedProtocols( QVector<Protocol>::fromStdVector(signingProtocolSelectionWidget->checkedProtocols() ) );
     if ( dlg->exec() == QDialog::Accepted && dlg )
     {
         const QMap<Protocol, Key> certs = dlg->selectedCertificates();
