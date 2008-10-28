@@ -95,7 +95,7 @@ private:
         const bool armor = q->useArmor();
 
         static const char * extensions[] = {
-            ".gpg", ".asc", ".der", ".pem"
+            ".gpg", ".asc", ".p12", ".pem"
         };
         const unsigned int idx = 2*x509+armor;
         const char * const extension = extensions[idx];
@@ -135,7 +135,7 @@ private:
 
             outputFileFR->setExistingOnly( false );
             outputFileFR->setFilter( QDir::Files );
-            outputFileFR->setNameFilter( i18n("Secret Key Files (*.pem *.der *.gpg *.asc)") );
+            outputFileFR->setNameFilter( i18n("Secret Key Files (*.pem *.p12 *.gpg *.asc)") );
 
             for ( unsigned int i = 0 ; i < numCharsets ; ++i )
                 charsetCB->addItem( QString::fromLatin1( charsets[i] ) );
