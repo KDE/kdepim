@@ -394,5 +394,5 @@ bool CreateImapAccount::writeToWallet(const QString & type, int id)
   if ( !mWallet->hasFolder( folder ) )
     mWallet->createFolder( folder );
   mWallet->setFolder( folder );
-  return mWallet->writePassword( str_id, mPassword );
+  return mWallet->writePassword( str_id, mPassword ) == 0;
 }
