@@ -206,6 +206,13 @@ else ( ONLY_KLEO )
      message(STATUS "KOrganizer support DISABLED (because KMail support is disabled).")
   endif(QGPGME_FOUND AND KMAIL_SUPPORTED)
 
+  if(QGPGME_FOUND AND KMAIL_SUPPORTED)
+     macro_optional_add_subdirectory(ksendemail)
+     message(STATUS "KSendEmail support enabled.")
+  else(QGPGME_FOUND AND KMAIL_SUPPORTED)
+     message(STATUS "KSendEmail support DISABLED (because KMail support is disabled).")
+  endif(QGPGME_FOUND AND KMAIL_SUPPORTED)
+
   if(NOT WIN32)
 #enable kmobiletools for 4.2
 #     set(KMOBILETOOLS_SUPPORTED TRUE)
