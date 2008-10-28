@@ -448,7 +448,7 @@ private:
 #endif
                 }
 
-                io = Input_or_Output<in>::type::createFromPipeDevice( fd, i18n( "Message #%1", (conn.*which).size() + 1 ) );
+                io = Input_or_Output<in>::type::createFromPipeDevice( fd, in ? i18n( "Message #%1", (conn.*which).size() + 1 ) : QString() );
 
                 options.erase( "FD" );
 

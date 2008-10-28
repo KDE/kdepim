@@ -169,12 +169,9 @@ void EncryptCommand::Private::slotRecipientsResolved() {
 
     try {
         const QString sessionTitle = q->sessionTitle();
-        if ( !sessionTitle.isNull() ) {
+        if ( !sessionTitle.isNull() )
             Q_FOREACH ( const shared_ptr<Input> & i, q->inputs() )
                 i->setLabel( sessionTitle );
-            Q_FOREACH ( const shared_ptr<Output> & i, q->outputs() )
-                i->setLabel( sessionTitle );
-        }
 
         cont->setInputsAndOutputs( q->inputs(), q->outputs() );
         cont->start();
