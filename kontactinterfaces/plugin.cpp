@@ -36,6 +36,8 @@
 #include <QObject>
 #include <QDBusConnection>
 
+#include <unistd.h>
+
 using namespace Kontact;
 
 /**
@@ -200,6 +202,10 @@ QString Plugin::registerClient()
 {
   if ( d->serviceName.isEmpty() ) {
     d->serviceName = "org.kde." + objectName().toLatin1();
+#ifdef Q_WS_WIN
+    const QString pid = QString::number(getpid());
+    d->serviceName.append(".unique-" + pid);
+#endif
     QDBusConnection::sessionBus().registerService( d->serviceName );
   }
   return d->serviceName;
