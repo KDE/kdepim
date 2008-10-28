@@ -112,7 +112,7 @@ int DecryptVerifyCommandEMailBase::doStart() {
     d->controller.reset( new DecryptVerifyEMailController( shared_from_this() ) );
 
     const QString st = sessionTitle();
-    if ( !st.isNull() )
+    if ( !st.isEmpty() )
         Q_FOREACH ( const shared_ptr<Input> & i, inputs() )
             i->setLabel( st );
 
