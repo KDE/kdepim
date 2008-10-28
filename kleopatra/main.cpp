@@ -80,12 +80,36 @@ namespace Kleo {
 
 using namespace boost;
 
+static const int SPLASHSCREEN_TIMEOUT = 5000; // 5s
+
 namespace {
     template <typename T>
     boost::shared_ptr<T> make_shared_ptr( T * t ) {
         return t ? boost::shared_ptr<T>( t ) : boost::shared_ptr<T>() ;
     }
 }
+
+class SplashScreen : public KSplashScreen {
+    QBasicTimer m_timer;
+public:
+    SplashScreen()
+        : KSplashScreen( UserIcon( "kleopatra_splashscreen" ), Qt::WindowStaysOnTopHint ),
+          m_timer()
+    {
+        m_timer.start( SPLASHSCREEN_TIMEOUT, this );
+    }
+
+protected:
+    void timerEvent( QTimerEvent * ev ) {
+        if ( ev->timerId() == m_timer.timerId() ) {
+            m_timer.stop();
+            hide();
+        } else {
+            KSplashScreen::timerEvent( ev );
+        }
+    }
+          
+};
 
 static bool selfCheck( KSplashScreen & splash ) {
     splash.showMessage( i18n("Performing Self-Check...") );
@@ -140,7 +164,7 @@ int main( int argc, char** argv )
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  KSplashScreen splash( UserIcon( "kleopatra_splashscreen" ), Qt::WindowStaysOnTopHint );
+  SplashScreen splash;
 
   int rc;
 #ifdef HAVE_USABLE_ASSUAN
