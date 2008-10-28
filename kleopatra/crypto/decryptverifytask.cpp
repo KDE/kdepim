@@ -424,20 +424,8 @@ static QString formatSignature( const Signature & sig, const Key & key, const De
         return text + formatValidSignatureWithTrustLevel( key, !id.isNull() ? id : key.userID( 0 ) ); // ### TODO handle key.isNull()?
     }
     if ( red )
-        if ( key.isNull() )
-            if ( const char * fpr = sig.fingerprint() )
-                return text + i18n("Bad signature by unknown key %1.", renderFingerprint( fpr ) );
-            else
-                return text + i18n("Bad signature by an unknown key." );
-        else
-            return text + i18n("Bad signature by %1.", renderKey( key ) );
-    if ( key.isNull() )
-        if ( const char * fpr = sig.fingerprint() )
-            return text + i18n("Invalid signature by unknown key %1: %2", renderFingerprint( fpr ), signatureSummaryToString( sig.summary() ) );
-        else
-            return text + i18n("Invalid signature by an unknown key: %1", signatureSummaryToString( sig.summary() ) );
-    else
-        return text + i18n("Invalid signature by %1: %2", renderKey( key ), signatureSummaryToString( sig.summary() ) );
+        return text + i18n("The signature is bad.");
+    return text + i18n("The signature is invalid: %1", signatureSummaryToString( sig.summary() ) );
 }
 
 static QStringList format( const std::vector<Mailbox> & mbxs ) {
