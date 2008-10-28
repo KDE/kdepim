@@ -237,7 +237,7 @@ protected slots:
 protected:
 
   //navigation
-  QAction   *a_ctNavNextArt,
+  KAction   *a_ctNavNextArt,
     *a_ctNavPrevArt,
     *a_ctNavNextUnreadArt,
     *a_ctNavNextUnreadThread,
@@ -246,7 +246,7 @@ protected:
     *a_ctNavReadThrough;
 
   //collection-view - accounts
-  QAction   *a_ctAccProperties,
+  KAction   *a_ctAccProperties,
     *a_ctAccRename,
     *a_ctAccSubscribe,
     *a_ctAccExpireAll,
@@ -256,7 +256,7 @@ protected:
     *a_ctAccPostNewArticle;
 
   //collection-view - groups
-  QAction   *a_ctGrpProperties,
+  KAction   *a_ctGrpProperties,
     *a_ctGrpRename,
     *a_ctGrpGetNewHdrs,
     *a_ctGrpExpire,
@@ -267,7 +267,7 @@ protected:
     *a_ctGrpSetUnread;
 
   //collection-view - folder
-  QAction   *a_ctFolNew,
+  KAction   *a_ctFolNew,
     *a_ctFolNewChild,
     *a_ctFolDelete,
     *a_ctFolRename,
@@ -280,7 +280,7 @@ protected:
   //header-view - list-handling
   KSelectAction         *a_ctArtSortHeaders;
   KNFilterSelectAction  *a_ctArtFilter;
-  QAction               *a_ctArtSortHeadersKeyb,
+  KAction               *a_ctArtSortHeadersKeyb,
     *a_ctArtFilterKeyb,
     *a_ctArtSearch,
     *a_ctArtRefreshList,
@@ -290,14 +290,14 @@ protected:
   KToggleAction         *a_ctArtToggleShowThreads;
 
   //header-view - remote articles
-  QAction *a_ctArtSetArtRead,
+  KAction *a_ctArtSetArtRead,
     *a_ctArtSetArtUnread,
     *a_ctArtSetThreadRead,
     *a_ctArtSetThreadUnread,
     *a_ctArtOpenNewWindow;
 
   // scoring
-  QAction *a_ctScoresEdit,
+  KAction *a_ctScoresEdit,
     *a_ctReScore,
     *a_ctScoreLower,
     *a_ctScoreRaise,
@@ -305,15 +305,15 @@ protected:
     *a_ctArtToggleWatched;
 
   //header-view local articles
-  QAction *a_ctArtSendOutbox,
+  KAction *a_ctArtSendOutbox,
     *a_ctArtDelete,
     *a_ctArtSendNow,
     *a_ctArtEdit;
 
   //network
-  QAction *a_ctNetCancel;
+  KAction *a_ctNetCancel;
 
-  QAction *a_ctFetchArticleWithID;
+  KAction *a_ctFetchArticleWithID;
 
   // settings menu
   KToggleAction *a_ctToggleQuickSearch;

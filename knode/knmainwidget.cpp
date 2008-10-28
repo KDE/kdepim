@@ -585,7 +585,7 @@ void KNMainWidget::initActions()
   connect(a_ctNavReadThrough, SIGNAL(triggered(bool) ), SLOT(slotNavReadThrough()));
   a_ctNavReadThrough->setShortcut(QKeySequence(Qt::Key_Space));
 
-  QAction *action = actionCollection()->addAction("inc_current_folder");
+  KAction *action = actionCollection()->addAction("inc_current_folder");
   action->setText(i18n("Focus on Next Folder"));
   connect(action, SIGNAL(triggered(bool) ), c_olView, SLOT(incCurrentFolder()));
   action->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_Right));
