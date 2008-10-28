@@ -117,6 +117,7 @@ int DecryptVerifyCommandEMailBase::doStart() {
             i->setLabel( st );
 
     d->controller->setOperation( operation() );
+    d->controller->setVerificationMode( messages().empty() ? Opaque : Detached );
     d->controller->setInputs( inputs() );
     d->controller->setSignedData( messages() );
     d->controller->setOutputs( outputs() );
