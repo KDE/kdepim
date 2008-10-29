@@ -105,7 +105,7 @@ namespace Kleo {
 
       This should set everything up and check the parameters in \a
       line and any options this command understands. If there's an
-      error, choose one the the gpg-error codes and create a
+      error, choose one of the gpg-error codes and create a
       gpg_error_t from it using the protected makeError() function:
 
       \code
