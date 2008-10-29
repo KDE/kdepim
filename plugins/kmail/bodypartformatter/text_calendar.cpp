@@ -48,6 +48,8 @@
 #include <kpimprefs.h> // for the time zone
 
 #include <kmail/callback.h>
+#include <kmail/kmcommands.h>
+#include <kmail/kmmessage.h>
 
 #include <kpimutils/email.h>
 
