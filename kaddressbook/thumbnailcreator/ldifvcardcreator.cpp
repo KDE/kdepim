@@ -32,6 +32,7 @@
 #include <QtGui/QPixmap>
 
 #include <kdebug.h>
+#include <kdemacros.h>
 #include <kglobal.h>
 #include <kglobalsettings.h>
 #include <klocale.h>
@@ -43,7 +44,7 @@
 
 extern "C"
 {
-  ThumbCreator *new_creator()
+  KDE_EXPORT ThumbCreator *new_creator()
   {
     KGlobal::locale()->insertCatalog( "kaddressbook" );
     return new VCard_LDIFCreator;
@@ -189,7 +190,6 @@ bool VCard_LDIFCreator::createImageSmall()
   int posLastLine = mPixmap.height() - (chSize.height() + yborder);
   bool newLine = false;
   Q_ASSERT( posNewLine > 0 );
-  //const QPixmap *fontPixmap = &(mSplitter->pixmap());
 
   for ( int i = 0; i < text.length(); ++i ) {
     if ( x > posNewLine || newLine ) {  // start a new line?
@@ -222,10 +222,11 @@ bool VCard_LDIFCreator::createImageSmall()
     }
 
     rect = glyphCoords( (unsigned char)ch.toLatin1(), mFont->width() );
-    /* FIXME porting
-    if ( !rect.isEmpty() )
-      bitBlt( &mPixmap, QPoint(x,y), fontPixmap, rect, Qt::CopyROP );
-     */
+    if ( !rect.isEmpty() ) {
+      QPainter p( &mPixmap );
+      p.drawPixmap( QPoint( x, y ), *mFont, rect );
+//      bitBlt( &mPixmap, QPoint(x,y), mFont, rect );
+    }
 
     x += xOffset; // next character
   }
