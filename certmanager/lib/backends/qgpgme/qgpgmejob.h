@@ -37,6 +37,7 @@
 #include <gpgmepp/interfaces/passphraseprovider.h>
 
 #include <gpgmepp/key.h>
+#include <gpgmepp/context.h>
 
 #include <qcstring.h>
 #include <qstring.h>
@@ -45,8 +46,6 @@
 #include <kdepimmacros.h>
 
 namespace GpgME {
-  class Error;
-  class Context;
   class Data;
 }
 
@@ -120,6 +119,7 @@ namespace Kleo {
     virtual void doEmitDoneSignal() = 0;
     void doSlotCancel();
     QString auditLogAsHtml() const { return mAuditLogAsHtml; }
+    GpgME::Error auditLogError() const { return mAuditLogError; }
 
   private:
     /*! \reimp from GpgME::ProgressProvider */
@@ -146,6 +146,7 @@ namespace Kleo {
     unsigned int mNumPatterns;
     unsigned int mChunkSize;
     unsigned int mPatternStartIndex, mPatternEndIndex;
+    GpgME::Error mAuditLogError;
     QString mAuditLogAsHtml;
   };
 
