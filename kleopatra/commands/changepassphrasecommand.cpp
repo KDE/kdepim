@@ -70,7 +70,7 @@ ChangePassphraseCommand::~ChangePassphraseCommand() {}
 QStringList ChangePassphraseCommand::arguments() const {
     const Key key = d->key();
     if ( key.protocol() == OpenPGP )
-        return QStringList() << gpgPath() << "--batch" << "--edit-key" << key.primaryFingerprint() << "passwd";
+        return QStringList() << gpgPath() << "--batch" << "--edit-key" << key.primaryFingerprint() << "passwd" << "save" ;
     else
         return QStringList() << gpgSmPath() << "--passwd" << key.primaryFingerprint();
 }

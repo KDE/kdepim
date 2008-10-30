@@ -204,7 +204,7 @@ void MainWindow::readConfiguration()
 
 void MainWindow::saveToFile( const QString& fileName )
 {
-    if ( fileName.isNull() )
+    if ( fileName.isEmpty() )
         return;
 
     QTemporaryFile tmp( fileName );

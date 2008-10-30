@@ -283,6 +283,17 @@ static shared_ptr<QBuffer> make_open_qbuffer() {
 void LookupCertificatesCommand::Private::startDownloadJob( const Key & key ) {
     if ( key.isNull() )
         return;
+
+    QStringList fprs;
+    const char * const fpr  = key.primaryFingerprint();
+    const char * const kid  = key.keyID();
+    if ( fpr && *fpr )
+        fprs.push_back( QString::fromLatin1( fpr ) );
+    else if ( kid && *kid )
+        fprs.push_back( QString::fromLatin1( kid ) );
+    else
+        return;
+
     DownloadJob * const dlj = createDownloadJob( key.protocol() );
     if ( !dlj )
         return;
@@ -292,7 +303,8 @@ void LookupCertificatesCommand::Private::startDownloadJob( const Key & key ) {
              : SLOT(slotOpenPGPDownloadResult(GpgME::Error,QByteArray)) );
     DownloadVariables var;
     var.key = key;
-    if ( const Error err = dlj->start( QStringList( key.primaryFingerprint() ) ) )
+
+    if ( const Error err = dlj->start( fprs ) )
         var.error = err;
     else
         var.job = dlj;

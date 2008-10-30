@@ -96,7 +96,7 @@ ObjectsPage::Private::~Private() {}
 void ObjectsPage::Private::add()
 {
     const QString fname = QFileDialog::getOpenFileName( q, i18n( "Select File" ) );
-    if ( fname.isNull() )
+    if ( fname.isEmpty() )
         return;
     addFile( QFileInfo( fname ) );
     emit q->completeChanged();

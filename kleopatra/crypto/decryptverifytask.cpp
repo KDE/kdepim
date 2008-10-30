@@ -215,7 +215,7 @@ static QString renderFingerprint( const char * fpr ) {
 }
 
 static QString renderKeyLink( const QString & fpr, const QString & text ) {
-    return QString::fromLatin1( "<a href=\"key:%1\">%2</a>" ).arg( fpr ).arg( text );
+    return QString::fromLatin1( "<a href=\"key:%1\">%2</a>" ).arg( fpr, text );
 }
 
 static QString renderKey( const Key & key ) {
@@ -228,7 +228,7 @@ static QString renderKeyEMailOnlyNameAsFallback( const Key & key ) {
     if ( key.isNull() )
         return i18n( "Unknown key" );
     const QString email = Formatting::prettyEMail( key );
-    const QString user = !email.isNull() ? email : Formatting::prettyName( key );
+    const QString user = !email.isEmpty() ? email : Formatting::prettyName( key );
     return renderKeyLink( key.primaryFingerprint(), user );
 }
 
@@ -332,7 +332,8 @@ public:
     const Mailbox informativeSender;
     const std::vector<Key> signers;
     bool hasInformativeSender() const { return !informativeSender.addrSpec().isEmpty(); }
-    bool conflicts() const { return hasInformativeSender() && !keysContainMailbox( signers, informativeSender ); }
+    bool conflicts() const { return hasInformativeSender() && hasKeys() && !keysContainMailbox( signers, informativeSender ); }
+    bool hasKeys() const { return kdtools::any( signers, !bind( &Key::isNull, _1 ) ); }
     std::vector<Mailbox> signerMailboxes() const {return extractMailboxes( signers ); }
 };
 
@@ -386,12 +387,11 @@ static QString formatVerificationResultOverview( const VerificationResult & res,
     if ( sigs.size() == 1 ) {
         const Key key = DecryptVerifyResult::keyForSignature( sigs[0], signers );
         if ( key.isNull() )
-            text = i18n( "<b>Signature is valid.</b>" );
-        else
-            text = i18n( "<b>Signed by %1</b>", renderKeyEMailOnlyNameAsFallback( key ) );
+            return i18n( "<b>Signature is valid.</b>" );
+        text = i18n( "<b>Signed by %1</b>", renderKeyEMailOnlyNameAsFallback( key ) );
         if ( info.conflicts() )
             text += i18n( "<br/><b>Warning:</b> The sender's mail address is not stored in the %1 used for signing.",
-                          key.isNull() ? i18n( "certificate" ) : renderKeyLink( key.primaryFingerprint(), i18n( "certificate" ) ) );
+                          renderKeyLink( key.primaryFingerprint(), i18n( "certificate" ) ) );
     }
     else {
         text = i18np("<b>Valid signature.</b>", "<b>%1 valid signatures.</b>", sigs.size() );
@@ -425,20 +425,8 @@ static QString formatSignature( const Signature & sig, const Key & key, const De
         return text + formatValidSignatureWithTrustLevel( key, !id.isNull() ? id : key.userID( 0 ) ); // ### TODO handle key.isNull()?
     }
     if ( red )
-        if ( key.isNull() )
-            if ( const char * fpr = sig.fingerprint() )
-                return text + i18n("Bad signature by unknown key %1.", renderFingerprint( fpr ) );
-            else
-                return text + i18n("Bad signature by an unknown key." );
-        else
-            return text + i18n("Bad signature by %1.", renderKey( key ) );
-    if ( key.isNull() )
-        if ( const char * fpr = sig.fingerprint() )
-            return text + i18n("Invalid signature by unknown key %1: %2", renderFingerprint( fpr ), signatureSummaryToString( sig.summary() ) );
-        else
-            return text + i18n("Invalid signature by an unknown key: %1", signatureSummaryToString( sig.summary() ) );
-    else
-        return text + i18n("Invalid signature by %1: %2", renderKey( key ), signatureSummaryToString( sig.summary() ) );
+        return text + i18n("The signature is bad.");
+    return text + i18n("The signature is invalid: %1", signatureSummaryToString( sig.summary() ) );
 }
 
 static QStringList format( const std::vector<Mailbox> & mbxs ) {

@@ -79,7 +79,6 @@ public:
     void finishedIfLastJob();
 
 private:
-    bool textArmor;
     QMap<GpgME::Protocol, QString> fileNames;
     uint jobsPending;
     QMap<QObject*, QString> outFileForSender;
@@ -95,7 +94,6 @@ const ExportCertificateCommand::Private * ExportCertificateCommand::d_func() con
 
 ExportCertificateCommand::Private::Private( ExportCertificateCommand * qq, KeyListController * c )
     : Command::Private( qq, c ),
-      textArmor( true ),
       jobsPending( 0 )
 {
     
@@ -200,9 +198,11 @@ bool ExportCertificateCommand::Private::requestFileNames( GpgME::Protocol protoc
     const QString fname = QFileDialog::getSaveFileName( parentWidgetOrView(),
                                                         i18n( "Export Certificates" ), 
                                                         QString(), 
-                                                        protocol == GpgME::OpenPGP ? i18n( "OpenPGP Certificates (.asc)" ) : i18n( "S/MIME Certificates (.pem)" ) );
+                                                        protocol == GpgME::OpenPGP
+                                                        ? i18n( "OpenPGP Certificates" ) + " (*.asc *.gpg)"
+                                                        : i18n( "S/MIME Certificates" )  + " (*.pem *.der)" );
     fileNames[protocol] = fname;
-    return !fname.isNull();
+    return !fname.isEmpty();
 }
 
 void ExportCertificateCommand::Private::startExportJob( GpgME::Protocol protocol, const std::vector<Key>& keys )
@@ -211,7 +211,11 @@ void ExportCertificateCommand::Private::startExportJob( GpgME::Protocol protocol
 
     const CryptoBackend::Protocol* const backend = CryptoBackendFactory::instance()->protocol( protocol );
     assert( backend );
-    std::auto_ptr<ExportJob> job( backend->publicKeyExportJob( /*armor=*/true ) );
+    const QString fileName = fileNames[protocol];
+    const bool binary = protocol == GpgME::OpenPGP
+        ? fileName.endsWith( ".gpg", Qt::CaseInsensitive )
+        : fileName.endsWith( ".der", Qt::CaseInsensitive ) ;
+    std::auto_ptr<ExportJob> job( backend->publicKeyExportJob( !binary ) );
     assert( job.get() );
 
     connect( job.get(), SIGNAL(result(GpgME::Error,QByteArray)),
@@ -234,7 +238,7 @@ void ExportCertificateCommand::Private::startExportJob( GpgME::Protocol protocol
     ++jobsPending;
     const QPointer<ExportJob> exportJob( job.release() );
 
-    outFileForSender[exportJob] = fileNames[protocol];
+    outFileForSender[exportJob] = fileName;
     ( protocol == CMS ? cmsJob : pgpJob ) = exportJob;
 }
 
@@ -257,6 +261,19 @@ void ExportCertificateCommand::Private::finishedIfLastJob()
 {
     if ( jobsPending <= 0 )
         finished();
+}
+
+static bool write_complete( QIODevice & iod, const QByteArray & data ) {
+    qint64 total = 0;
+    qint64 toWrite = data.size();
+    while ( total < toWrite ) {
+        const qint64 written = iod.write( data.data() + total, toWrite );
+        if ( written < 0 )
+            return false;
+        total += written;
+        toWrite -= written;
+    }
+    return true;
 }
 
 void ExportCertificateCommand::Private::exportResult( const GpgME::Error& err, const QByteArray& data )
@@ -282,18 +299,9 @@ void ExportCertificateCommand::Private::exportResult( const GpgME::Error& err, c
         finishedIfLastJob();
         return;
     }
-    if ( textArmor )
-    {
-        QTextStream out( &savefile );
-        out << data;
-    }
-    else
-    {
-        QDataStream out( &savefile );
-        out << data;
-    }
 
-    if ( !savefile.finalize() )
+    if ( !write_complete( savefile, data ) ||
+         !savefile.finalize() )
         KMessageBox::error( parentWidgetOrView(), writeErrorMsg, errorCaption );
     finishedIfLastJob();
 }

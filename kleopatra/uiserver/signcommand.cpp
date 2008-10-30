@@ -126,12 +126,9 @@ void SignCommand::Private::slotSignersResolved() {
 
     try {
         const QString sessionTitle = q->sessionTitle();
-        if ( !sessionTitle.isNull() ) {
+        if ( !sessionTitle.isEmpty() )
             Q_FOREACH ( const shared_ptr<Input> & i, q->inputs() )
                 i->setLabel( sessionTitle );
-            Q_FOREACH ( const shared_ptr<Output> & i, q->outputs() )
-                i->setLabel( sessionTitle );
-        }
 
         controller->setDetachedSignature( q->hasOption("detached" ) );
         controller->setInputsAndOutputs( q->inputs(), q->outputs() );

@@ -205,6 +205,32 @@ static std::map<std::string,std::string> parse_commandline( const char * line ) 
     return result;
 }
 
+static WId wid_from_string( const QString & winIdStr, bool * ok=0 ) {
+    return
+#ifdef Q_OS_WIN32
+        reinterpret_cast<WId>
+#else
+        static_cast<WId>
+#endif
+             ( winIdStr.toULongLong( ok, 16 ) );
+}
+
+static void apply_window_id( QWidget * widget, const QString & winIdStr ) {
+    if ( !widget || winIdStr.isEmpty() )
+        return;
+    bool ok = false;
+    const WId wid = wid_from_string( winIdStr, &ok );
+    if ( !ok ) {
+        qDebug() << "window-id value" << wid << "doesn't look like a number";
+        return;
+    }
+    if ( QWidget * pw = QWidget::find( wid ) )
+        widget->setParent( pw, widget->windowFlags() );
+    else {
+        KWindowSystem::setMainWindow( widget, wid );
+    }
+}
+
 //
 //
 // AssuanServerConnection:
@@ -423,7 +449,7 @@ private:
 #endif
                 }
 
-                io = Input_or_Output<in>::type::createFromPipeDevice( fd, i18n( "Message #%1", (conn.*which).size() + 1 ) );
+                io = Input_or_Output<in>::type::createFromPipeDevice( fd, in ? i18n( "Message #%1", (conn.*which).size() + 1 ) : QString() );
 
                 options.erase( "FD" );
 
@@ -516,7 +542,8 @@ private:
         }
     }
 
-    static bool parse_informative( const char * & begin ) {
+    static bool parse_informative( const char * & begin, GpgME::Protocol & protocol ) {
+        protocol = GpgME::UnknownProtocol;
         bool informative = false;
         const char * pos = begin;
         while ( true ) {
@@ -529,6 +556,16 @@ private:
                     ++pos;
                     break;
                 }
+            } else if ( qstrnicmp( pos, "--protocol=", strlen("--protocol=") ) == 0 ) {
+                pos += strlen("--protocol=");
+                if ( qstrnicmp( pos, "OpenPGP", strlen("OpenPGP") ) == 0 ) {
+                    protocol = GpgME::OpenPGP;
+                    pos += strlen("OpenPGP");
+                } else if ( qstrnicmp( pos, "CMS", strlen("CMS") ) == 0 ) {
+                    protocol = GpgME::CMS;
+                    pos += strlen("CMS");
+                } else
+                    ;
             } else if ( qstrncmp( pos, "-- ", strlen("-- ") ) == 0 ) {
                 pos += 3;
                 while ( *pos == ' ' || *pos == '\t' )
@@ -550,7 +587,8 @@ private:
             return assuan_process_done( conn.ctx.get(), gpg_error( GPG_ERR_INV_ARG ) );
         const char * begin     = line;
         const char * const end = begin + qstrlen( line );
-        const bool informative = parse_informative( begin );
+        GpgME::Protocol proto = GpgME::UnknownProtocol;
+        const bool informative = parse_informative( begin, proto );
         if ( !(conn.*mp).empty() && informative != (conn.*info) )
             return assuan_process_done_msg( conn.ctx.get(), gpg_error( GPG_ERR_CONFLICT ),
                                             i18n("Cannot mix --info with non-info SENDER or RECIPIENT").toUtf8().constData() );
@@ -577,25 +615,38 @@ private:
             else
                 Q_FOREACH( const GpgME::Key & key, seckeys )
                     (void)assuan_write_line( conn.ctx.get(), qPrintable( QString().sprintf( "# matching %s key %s", key.protocolAsString(), key.primaryFingerprint() ) ) );
-            const bool pgp = kdtools::any( seckeys, bind( &GpgME::Key::protocol, _1 ) == GpgME::OpenPGP );
-            const bool cms = kdtools::any( seckeys, bind( &GpgME::Key::protocol, _1 ) == GpgME::CMS );
-            GpgME::Protocol proto = GpgME::UnknownProtocol;
+            const bool pgp = proto != GpgME::CMS     && kdtools::any( seckeys, bind( &GpgME::Key::protocol, _1 ) == GpgME::OpenPGP );
+            const bool cms = proto != GpgME::OpenPGP && kdtools::any( seckeys, bind( &GpgME::Key::protocol, _1 ) == GpgME::CMS );
             if ( cms != pgp )
                 proto = pgp ? GpgME::OpenPGP : GpgME::CMS ;
             if ( cms && pgp )
-                if ( conn.bias != GpgME::UnknownProtocol )
+                if ( conn.bias != GpgME::UnknownProtocol ) {
                     proto = conn.bias;
-                else
-                    proto =
-                        KMessageBox::questionYesNo( 0, i18nc("@info",
-                                                             "<para>The sender address <email>%1</email> matches more than one cryptographic format.</para>"
-                                                             "<para>Which format do you want to use?</para>", email ),
-                                                    i18nc("@title","Format Choice"),
-                                                    KGuiItem( i18nc("@action:button","Send OpenPGP-Signed") ),
-                                                    KGuiItem( i18nc("@action:button","Send S/MIME-Signed") ),
-                                                    QLatin1String("uiserver-sender-ask-protocol") ) == KMessageBox::Yes
-                        ? GpgME::OpenPGP
-                        : GpgME::CMS ;
+                } else {
+                    if ( conn.options.count("window-id") )
+                        proto =
+                            KMessageBox::questionYesNoWId( wid_from_string( conn.options["window-id"].toString() ),
+                                                           i18nc("@info",
+                                                                 "<para>The sender address <email>%1</email> matches more than one cryptographic format.</para>"
+                                                                 "<para>Which format do you want to use?</para>", email ),
+                                                           i18nc("@title","Format Choice"),
+                                                           KGuiItem( i18nc("@action:button","Send OpenPGP-Signed") ),
+                                                           KGuiItem( i18nc("@action:button","Send S/MIME-Signed") ),
+                                                           QLatin1String("uiserver-sender-ask-protocol") ) == KMessageBox::Yes
+                            ? GpgME::OpenPGP
+                            : GpgME::CMS ;
+                    else
+                        proto =
+                            KMessageBox::questionYesNo( 0, i18nc("@info",
+                                                                 "<para>The sender address <email>%1</email> matches more than one cryptographic format.</para>"
+                                                                 "<para>Which format do you want to use?</para>", email ),
+                                                        i18nc("@title","Format Choice"),
+                                                        KGuiItem( i18nc("@action:button","Send OpenPGP-Signed") ),
+                                                        KGuiItem( i18nc("@action:button","Send S/MIME-Signed") ),
+                                                        QLatin1String("uiserver-sender-ask-protocol") ) == KMessageBox::Yes
+                            ? GpgME::OpenPGP
+                            : GpgME::CMS ;
+                }
             conn.bias = proto;
             switch ( proto ) {
             case GpgME::OpenPGP:
@@ -1418,22 +1469,7 @@ GpgME::Protocol AssuanCommand::checkProtocol( Mode mode, int options ) const {
 void AssuanCommand::doApplyWindowID( QWidget * widget ) const {
     if ( !widget || !hasOption( "window-id" ) )
         return;
-    const QString winIdStr = option("window-id").toString();
-    bool ok = false;
-#ifdef Q_OS_WIN32
-    const WId wid = reinterpret_cast<WId>( winIdStr.toULongLong( &ok, 16 ) );
-#else
-    const WId wid = static_cast<WId>( winIdStr.toULongLong( &ok, 16 ) );
-#endif
-    if ( !ok ) {
-        qDebug() << "window-id value" << wid << "doesn't look like a number";
-        return;
-    }
-    if ( QWidget * pw = QWidget::find( wid ) )
-        widget->setParent( pw, widget->windowFlags() );
-    else {
-        KWindowSystem::setMainWindow( widget, wid );
-    }
+    apply_window_id( widget, option("window-id").toString() );
 }
 
 static QString commonPrefix( const QString & s1, const QString & s2 ) {
