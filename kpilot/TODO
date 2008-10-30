@@ -4,13 +4,11 @@ are marked with a *, ignored issues get an -, and resolved issues a +
 for details on how an issue is resolved, since resolved issues are
  periodically purged from this list.
 
+2008-10-29 round of bug triage...
+=================================
+- https://bugs.kde.org/show_bug.cgi?id=96886 - fix device detection code broken with multi-threaded code.
+- https://bugs.kde.org/show_bug.cgi?id=109437 - make database backup/retrieval save to a temp file first and then rename it to Backup directory if transfer was successful.
 
-* Import pilot-link 0.12 CVS again
-* Implement correct full syncing in memofile conduit.  honestly, we should
-  really have a generic sync engine that knows how to do all of the
-  different sync types and only calls conduits for comparisons, list
-  fetching, pilotid->whateverId persistence and retrieval, etc.  *sigh*  is
-  that what opensync gives us?
 
 Essential
 =========
