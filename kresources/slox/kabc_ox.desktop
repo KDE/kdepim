@@ -43,6 +43,7 @@ Name[uk]=Сервер OpenXchange
 Name[x-test]=xxOpenXchange Serverxx
 Name[zh_CN]=OpenXchange 服务器
 Name[zh_TW]=OpenXchange 伺服器
+Comment=Provides access to contacts stored on an Open-Xchange server
 X-KDE-Library=kabc_slox
 Type=Service
 X-KDE-ServiceTypes=KResources/Plugin

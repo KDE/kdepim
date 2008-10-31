@@ -47,6 +47,7 @@ Name[uk]=Адресна книга на сервері IMAP через KMail
 Name[x-test]=xxAddressbook on IMAP Server via KMailxx
 Name[zh_CN]=通过 KMail 访问 IMAP 服务器上的地址簿
 Name[zh_TW]=透過 KMail 取得 IMAP 伺服器上的通訊錄
+Comment=Provides access to contacts stored on a Kolab server using IMAP via KMail or Kontact
 X-KDE-Library=kabc_kolab
 Type=Service
 X-KDE-ServiceTypes=KResources/Plugin

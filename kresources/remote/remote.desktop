@@ -51,6 +51,7 @@ Name[uk]=Календар у віддаленому файлі
 Name[x-test]=xxCalendar in Remote Filexx
 Name[zh_CN]=远程文件中的日历
 Name[zh_TW]=遠端檔案的行事曆
+Comment=Provides access to a calendar in a remote file using KDE's network framework KIO
 X-KDE-Library=kcal_remote
 Type=Service
 X-KDE-ServiceTypes=KResources/Plugin

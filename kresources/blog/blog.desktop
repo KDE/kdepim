@@ -34,6 +34,7 @@ Name[uk]=Журнал у мережі
 Name[x-test]=xxJournal in a blogxx
 Name[zh_CN]=博客日记
 Name[zh_TW]=部落格日誌
+Comment=Allows to post calendar journal entries as blog entries
 X-KDE-Library=kcal_blog
 Type=Service
 X-KDE-ServiceTypes=KResources/Plugin
