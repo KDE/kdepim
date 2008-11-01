@@ -27,7 +27,6 @@
 
 #include "akonadidataproxy.h"
 
-#include <akonadi/control.h>
 #include <akonadi/collection.h>
 #include <akonadi/collectionfetchjob.h>
 #include <akonadi/itemcreatejob.h>
@@ -35,7 +34,7 @@
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
-#include <kabc/addressee.h>
+#include <akonadi/servermanager.h>
 
 #include "idmapping.h"
 #include "options.h"
@@ -80,7 +79,7 @@ bool AkonadiDataProxy::isOpen() const
 {
 	FUNCTIONSETUP;
 	
-	if( Akonadi::Control::start() )
+	if( Akonadi::ServerManager::isRunning() )
 	{
 		Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob
 			(
@@ -96,7 +95,7 @@ bool AkonadiDataProxy::isOpen() const
 	}
 	else
 	{
-		WARNINGKPILOT << "Error: Could not start Akonadi.";
+		WARNINGKPILOT << "Error: Akonadi is not running.";
 		return false;
 	}
 	

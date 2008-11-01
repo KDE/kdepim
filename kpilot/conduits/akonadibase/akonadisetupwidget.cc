@@ -43,7 +43,6 @@ public:
 		: fCollectionFilterModel( 0L )
 		, fCollectionsLabel( 0L )
 		, fCollections( 0L )
-		, fAkonadiStarted( false )
 	{
 	}
 	
@@ -52,7 +51,6 @@ public:
 	QLabel* fCollectionsLabel;
 	CollectionComboBox* fCollections;
 	bool fCollectionModified;
-	bool fAkonadiStarted;
 };
 
 AkonadiSetupWidget::AkonadiSetupWidget( QWidget* parent )
@@ -61,22 +59,6 @@ AkonadiSetupWidget::AkonadiSetupWidget( QWidget* parent )
 	FUNCTIONSETUP;
 	
 	d->fUi.setupUi( this );
-	
-	// First check if akonadi is running:
-  if( !Akonadi::Control::start() )
-  {
-		d->fUi.fWarnIcon1->setPixmap(
-			KIcon( QLatin1String( "dialog-error" ) ).pixmap( 32 ) );
-		d->fUi.fSelectionWarnLabel->setText( i18n( "KPilot was not able to start "
-			"Akonadi. Please make sure that Akonadi is installed and configured properly." ) );
-			
-		d->fUi.fWarnIcon2->setVisible( false );
-		d->fUi.label_3->setVisible( false );
-		
-		return;
-  }
-	
-	d->fAkonadiStarted = true;
 	
 	Akonadi::CollectionModel* collectionModel = new Akonadi::CollectionModel( this );
 	
@@ -98,6 +80,8 @@ AkonadiSetupWidget::AkonadiSetupWidget( QWidget* parent )
 	
 	d->fUi.hboxLayout->addWidget( d->fCollectionsLabel, 1 );
 	d->fUi.hboxLayout->addWidget( d->fCollections, 2 );
+  
+  Akonadi::Control::widgetNeedsAkonadi( this );
 }
 
 AkonadiSetupWidget::~AkonadiSetupWidget()
@@ -108,9 +92,6 @@ AkonadiSetupWidget::~AkonadiSetupWidget()
 void AkonadiSetupWidget::changeCollection( const Akonadi::Collection& col )
 {
 	FUNCTIONSETUP;
-	
-	if( !d->fAkonadiStarted )
-		return;
 	
 	if( col.id() >= 0 )
 	{
@@ -124,26 +105,17 @@ void AkonadiSetupWidget::changeCollection( const Akonadi::Collection& col )
 
 Akonadi::Item::Id AkonadiSetupWidget::collection() const
 {
-	if( !d->fAkonadiStarted )
-		return -1;
-		
 	return d->fCollections->selectedCollection().id();
 }
 
 bool AkonadiSetupWidget::modified() const
 {
-	if( !d->fAkonadiStarted )
-		return false;
-	
 	return d->fCollectionModified;
 }
 
 void AkonadiSetupWidget::setCollection( Akonadi::Item::Id id )
 {
 	FUNCTIONSETUP;
-	
-	if( !d->fAkonadiStarted )
-		return;
 	
 	if( id >= 0 )
 	{
@@ -155,17 +127,11 @@ void AkonadiSetupWidget::setCollection( Akonadi::Item::Id id )
 
 void AkonadiSetupWidget::setCollectionLabel( const QString& label )
 {
-	if( !d->fAkonadiStarted )
-		return;
-	
 	d->fCollectionsLabel->setText( label );
 }
 
 void AkonadiSetupWidget::setMimeTypes( const QStringList& mimeTypes )
 {
-	if( !d->fAkonadiStarted )
-		return;
-	
 	d->fCollectionFilterModel->clearFilters();
 	foreach( const QString& mimeType, mimeTypes )
 	{
