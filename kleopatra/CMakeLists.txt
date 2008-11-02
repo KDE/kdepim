@@ -276,7 +276,7 @@ endif ( NOT KDE4_KCMUTILS_LIBS )
 
 target_link_libraries(kleopatra_bin ${_kleopatra_extra_libs} kleo ${QGPGME_LIBRARIES} ${KDE4_KDEUI_LIBS} ${KDE4_KMIME_LIBRARY} ${KDE4_KCMUTILS_LIBS} ${_kleopatra_uiserver_extra_libs} )
 
-install(TARGETS kleopatra_bin  DESTINATION ${BIN_INSTALL_DIR} )
+install(TARGETS kleopatra_bin ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### install files ###############

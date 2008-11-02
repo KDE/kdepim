@@ -111,7 +111,7 @@ else(WIN32)
 target_link_libraries(kleo ${kleo_LIB_LIBS} )
 endif(WIN32)
 set_target_properties(kleo PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS kleo DESTINATION ${LIB_INSTALL_DIR})
+install(TARGETS kleo ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install( FILES
 	kleo/cryptplug.h

@@ -16,6 +16,6 @@ set_target_properties(kontactinterfaces PROPERTIES VERSION ${GENERIC_LIB_VERSION
 
 ########### install files ###############
 
-install(TARGETS kontactinterfaces DESTINATION ${LIB_INSTALL_DIR})
+install(TARGETS kontactinterfaces ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES kontactplugin.desktop DESTINATION ${SERVICETYPES_INSTALL_DIR})

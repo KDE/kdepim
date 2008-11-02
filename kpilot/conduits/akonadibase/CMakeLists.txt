@@ -21,4 +21,4 @@ target_link_libraries(kpilot_akonadibase
 	${KDE4_AKONADI_LIBS}
 )
 
-install(TARGETS kpilot_akonadibase LIBRARY DESTINATION ${LIB_INSTALL_DIR})
+install(TARGETS kpilot_akonadibase LIBRARY ${INSTALL_TARGETS_DEFAULT_ARGS})

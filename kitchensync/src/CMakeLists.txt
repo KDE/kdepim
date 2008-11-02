@@ -63,7 +63,7 @@ TARGET_LINK_LIBRARIES(kitchensyncprivate ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY
                                          kabc kcal kdepim qopensync )
 
 SET_TARGET_PROPERTIES(kitchensyncprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-INSTALL(TARGETS kitchensyncprivate DESTINATION ${LIB_INSTALL_DIR} )
+INSTALL(TARGETS kitchensyncprivate ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### next target ###############

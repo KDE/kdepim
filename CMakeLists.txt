@@ -17,15 +17,6 @@ include(MacroOptionalAddSubdirectory)
 include(CheckIncludeFiles)
 include(FindKdepimLibs)
 
-if(WIN32)
-    set(LIB_INSTALL_DIR ${LIB_INSTALL_DIR}
-                        RUNTIME DESTINATION ${BIN_INSTALL_DIR}
-                        LIBRARY DESTINATION ${LIB_INSTALL_DIR}
-                        ARCHIVE DESTINATION ${LIB_INSTALL_DIR} )
-endif(WIN32)
-
-set(KDE4_ICON_DIR ${KDE4_INSTALL_DIR}/share/icons)
-
 # this macro exists to work around a stupid Mac OS X linker bug
 # where it can't handle the same library being referenced multiple
 # times on the linker line

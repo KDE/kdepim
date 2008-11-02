@@ -23,7 +23,7 @@ kde4_add_library(kabc_xmlrpc SHARED ${kabc_xmlrpc_LIB_SRCS})
 target_link_libraries(kabc_xmlrpc  ${KDE4_KIO_LIBS} ${KDE4_KABC_LIBS} ${KDE4_KCAL_LIBS} kdepim kabcommon )
 
 set_target_properties(kabc_xmlrpc PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS kabc_xmlrpc  DESTINATION ${LIB_INSTALL_DIR})
+install(TARGETS kabc_xmlrpc ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### next target ###############
@@ -40,7 +40,7 @@ kde4_add_library(kcal_xmlrpc SHARED ${kcal_xmlrpc_LIB_SRCS})
 target_link_libraries(kcal_xmlrpc  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim ${QT_QT3SUPPORT_LIBRARY})
 
 set_target_properties(kcal_xmlrpc PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS kcal_xmlrpc  DESTINATION ${LIB_INSTALL_DIR})
+install(TARGETS kcal_xmlrpc ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### next target ###############
@@ -57,7 +57,7 @@ set_target_properties(knotes_xmlrpc PROPERTIES VERSION ${GENERIC_LIB_VERSION} SO
 target_link_libraries(knotes_xmlrpc  ${KDE4_KCAL_LIBS} kdepim ${QT_QT3SUPPORT_LIBRARY})
 
 
-install(TARGETS knotes_xmlrpc  DESTINATION ${LIB_INSTALL_DIR})
+install(TARGETS knotes_xmlrpc ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### next target ###############

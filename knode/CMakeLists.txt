@@ -90,7 +90,7 @@ set_target_properties(knodecommon
    SOVERSION ${GENERIC_LIB_SOVERSION}
    ${KDE4_DISABLE_PROPERTY_}LINK_INTERFACE_LIBRARIES "kutils;kio;kde3support"
 )
-install(TARGETS knodecommon  DESTINATION ${LIB_INSTALL_DIR})
+install(TARGETS knodecommon ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### next target ###############

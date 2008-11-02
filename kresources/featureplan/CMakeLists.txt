@@ -17,7 +17,7 @@ kde4_add_library(kcal_resourcefeatureplan SHARED ${kcal_resourcefeatureplan_LIB_
 target_link_libraries(kcal_resourcefeatureplan  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim ${QT_QT3SUPPORT_LIBRARY})
 
 set_target_properties(kcal_resourcefeatureplan PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS kcal_resourcefeatureplan  DESTINATION ${LIB_INSTALL_DIR})
+install(TARGETS kcal_resourcefeatureplan ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### next target ###############

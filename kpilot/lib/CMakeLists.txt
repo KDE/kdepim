@@ -53,7 +53,7 @@ set(kpilotinclude_HEADERS
 	options.h
 )
 
-install(TARGETS kpilot LIBRARY DESTINATION ${LIB_INSTALL_DIR})
+install(TARGETS kpilot LIBRARY ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 install(FILES ${kpilotinclude_HEADERS} DESTINATION ${INCLUDE_INSTALL_DIR}/kpilot)
 

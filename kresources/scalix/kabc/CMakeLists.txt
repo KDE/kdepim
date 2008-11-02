@@ -14,7 +14,7 @@ kde4_add_library(kabcscalix SHARED ${kabcscalix_LIB_SRCS})
 target_link_libraries(kabcscalix  ${KDE4_KDECORE_LIBS} ${KDE4_KRESOURCES_LIBS} ${KDE4_KABC_LIBS} ${KDE4_KCAL_LIBS} kdepim kgroupwarebase)
 
 set_target_properties(kabcscalix PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS kabcscalix  DESTINATION ${LIB_INSTALL_DIR})
+install(TARGETS kabcscalix ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### next target ###############

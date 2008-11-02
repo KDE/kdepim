@@ -105,7 +105,7 @@ kdepim4_link_unique_libraries(kmobiletoolslib
    ${QT_QT3SUPPORT_LIBRARY} )
 
 set_target_properties(kmobiletoolslib PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS kmobiletoolslib DESTINATION ${LIB_INSTALL_DIR} )
+install(TARGETS kmobiletoolslib ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### install files ###############

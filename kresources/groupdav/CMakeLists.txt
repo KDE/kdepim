@@ -18,7 +18,7 @@ kde4_add_library(kcal_groupdav SHARED ${kcal_groupdav_LIB_SRCS})
 target_link_libraries(kcal_groupdav  ${KDE4_KDECORE_LIBS} kgroupwaredav ${KDE4_KCAL_LIBS} ${KDE4_KRESOURCES_LIBS} kdepim)
 
 set_target_properties(kcal_groupdav PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS kcal_groupdav  DESTINATION ${LIB_INSTALL_DIR})
+install(TARGETS kcal_groupdav ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### next target ###############
@@ -31,7 +31,7 @@ kde4_add_library(kabc_groupdav SHARED ${kabc_groupdav_LIB_SRCS})
 target_link_libraries(kabc_groupdav  ${KDE4_KDECORE_LIBS} kgroupwaredav ${KDE4_KCAL_LIBS} kdepim ${KDE4_KABC_LIBS})
 
 set_target_properties(kabc_groupdav PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS kabc_groupdav  DESTINATION ${LIB_INSTALL_DIR})
+install(TARGETS kabc_groupdav ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### next target ###############

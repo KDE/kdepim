@@ -47,7 +47,7 @@ kde4_add_library(mimelib SHARED ${mimelib_LIB_SRCS})
 target_link_libraries(mimelib  ${KDE4_KDECORE_LIBS})
 
 set_target_properties(mimelib PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS mimelib  DESTINATION ${LIB_INSTALL_DIR})
+install(TARGETS mimelib ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 
 ########### install files ###############

@@ -67,7 +67,7 @@ if ( USABLE_ASSUAN_FOUND  )
 	 target_link_libraries(test_uiserver ${ASSUAN_PTHREAD_LIBRARIES} ${QGPGME_LIBRARIES} )
   endif(WIN32)
   if (ONLY_KLEO)
-     install( TARGETS test_uiserver DESTINATION ${BIN_INSTALL_DIR})
+     install( TARGETS test_uiserver ${INSTALL_TARGETS_DEFAULT_ARGS})
   endif(ONLY_KLEO)
 endif( USABLE_ASSUAN_FOUND  )
 

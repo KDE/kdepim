@@ -28,7 +28,7 @@ set(gwsoap_SRCS
 kde4_add_library(gwsoap SHARED ${gwsoap_SRCS})
 target_link_libraries(gwsoap ${KDE4_KCAL_LIBS} ${KDE4_KABC_LIBS})
 set_target_properties(gwsoap PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS gwsoap DESTINATION ${LIB_INSTALL_DIR})
+install(TARGETS gwsoap ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### install files ###############
 

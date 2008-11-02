@@ -19,7 +19,7 @@ kde4_add_kcfg_files(kcal_groupwise_LIB_SRCS kcal_groupwiseprefsbase.kcfgc )
 kde4_add_library (kcalgroupwise SHARED ${kcal_groupwise_LIB_SRCS})
 target_link_libraries(kcalgroupwise  ${KDE4_KDECORE_LIBS} gwsoap ${KDE4_KCAL_LIBS} kdepim ${QT_QT3SUPPORT_LIBRARY})
 set_target_properties(kcalgroupwise PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS kcalgroupwise  DESTINATION ${LIB_INSTALL_DIR})
+install(TARGETS kcalgroupwise ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### next target ###############
 ### groupwise kcal plugin
@@ -44,7 +44,7 @@ kde4_add_library(kabcgroupwise SHARED ${kabc_groupwise_LIB_SRCS})
 target_link_libraries(kabcgroupwise ${KDE4_KDECORE_LIBS} gwsoap ${KDE4_KCAL_LIBS} kdepim ${KDE4_KABC_LIBS} ${QT_QT3SUPPORT_LIBRARY})
 
 set_target_properties(kabcgroupwise PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS kabcgroupwise  DESTINATION ${LIB_INSTALL_DIR})
+install(TARGETS kabcgroupwise ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### next target ###############
 ### kabc groupwise plugin
