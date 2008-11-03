@@ -34,7 +34,7 @@
 
 using namespace Kolab;
 
-class KolabFactory : public KRES::PluginFactoryBase
+class KABCKolabFactory : public KRES::PluginFactoryBase
 {
   public:
     KRES::Resource *resource( const KConfigGroup &config )
@@ -52,5 +52,5 @@ class KolabFactory : public KRES::PluginFactoryBase
     }
 };
 
-K_EXPORT_PLUGIN( KolabFactory )
+K_EXPORT_PLUGIN( KABCKolabFactory )
 

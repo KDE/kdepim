@@ -52,7 +52,7 @@
 
 using namespace Kolab;
 
-class KolabFactory : public KRES::PluginFactoryBase
+class KABCKolabFactory : public KRES::PluginFactoryBase
 {
   public:
     KRES::Resource *resource()
@@ -71,7 +71,7 @@ class KolabFactory : public KRES::PluginFactoryBase
     }
 };
 
-K_EXPORT_PLUGIN( KolabFactory )
+K_EXPORT_PLUGIN( KABCKolabFactory )
 
 static const char* s_kmailContentsType = "Contact";
 static const char* s_attachmentMimeTypeContact = "application/x-vnd.kolab.contact";
