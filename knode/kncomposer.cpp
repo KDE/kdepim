@@ -214,7 +214,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   //------------------------------- <Actions> --------------------------------------
 
   //file menu
-  QAction *action = actionCollection()->addAction("send_now");
+  KAction *action = actionCollection()->addAction("send_now");
   action->setIcon(KIcon("mail-send"));
   action->setText(i18n("&Send Now"));
   connect(action, SIGNAL(triggered(bool)), SLOT(slotSendNow()));
