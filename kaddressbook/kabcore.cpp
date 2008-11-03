@@ -1238,7 +1238,7 @@ void KABCore::initActions()
   connect( QApplication::clipboard(), SIGNAL( dataChanged() ),
            SLOT( clipboardDataChanged() ) );
 
-  QAction *action;
+  KAction *action;
   KActionCollection *coll = actionCollection();
 
   // file menu
