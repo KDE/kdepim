@@ -29,14 +29,14 @@
 
 using namespace KCal;
 
-class ResourceGroupwiseFactory : public KRES::PluginFactory<ResourceGroupwise, ResourceGroupwiseConfig>
+class ResourceGroupwiseKCalFactory : public KRES::PluginFactory<ResourceGroupwise, ResourceGroupwiseConfig>
 {
   public:
-    ResourceGroupwiseFactory()
+    ResourceGroupwiseKCalFactory()
       : KRES::PluginFactory<ResourceGroupwise, ResourceGroupwiseConfig>()
     {
       KGlobal::locale()->insertCatalog( QLatin1String( "kcal_groupwise" ) );
     }
 };
 
-K_EXPORT_PLUGIN(ResourceGroupwiseFactory)
+K_EXPORT_PLUGIN(ResourceGroupwiseKCalFactory)

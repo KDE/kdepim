@@ -32,7 +32,7 @@
 
 #include "resourcescalix.h"
 
-class ScalixFactory : public KRES::PluginFactoryBase
+class KNotesScalixFactory : public KRES::PluginFactoryBase
 {
 public:
   KRES::Resource *resource( const KConfigGroup &config )
@@ -50,5 +50,5 @@ public:
   }
 };
 
-K_EXPORT_PLUGIN( ScalixFactory )
+K_EXPORT_PLUGIN( KNotesScalixFactory )
 
