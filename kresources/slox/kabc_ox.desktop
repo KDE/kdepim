@@ -44,6 +44,7 @@ Name[x-test]=xxOpenXchange Serverxx
 Name[zh_CN]=OpenXchange 服务器
 Name[zh_TW]=OpenXchange 伺服器
 Comment=Provides access to contacts stored on an Open-Xchange server
+Comment[el]=Προσφέρει πρόσβαση σε επαφές αποθηκευμένες σε έναν εξυπηρετητή Open-Xchange
 Comment[nds]=Stellt Togriep op de op en Open-Xchange-Server wohrten Kontakten praat
 Comment[pt]=Oferece o acesso aos contactos guardados num servidor de Open-Xchange
 Comment[pt_BR]=Fornece acesso aos contatos armazenados em um servidor Open-Xchange
