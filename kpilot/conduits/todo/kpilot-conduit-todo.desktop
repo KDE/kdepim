@@ -18,6 +18,7 @@ Comment[uk]=Цей акведук синхронізує базу даних з�
 Comment[x-test]=xxThis conduit syncs the handheld todo database with an Akonadi Todo Collection.xx
 Comment[zh_TW]=此導管將掌上型裝置的待辦事項資料庫與 Akonadi 上的待辦事項同步。
 Name=To-do
+Name[de]=Aufgaben
 Name[el]=Προς υλοποίηση
 Name[et]=Ülesanded
 Name[fr]=Liste de tâches
