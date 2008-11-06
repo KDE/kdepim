@@ -65,6 +65,7 @@ namespace {
         { "crt", CMS    | Binary  | Certificate },
         { "der", CMS    | Binary  | Certificate },
         { "gpg", OpenPGP| Binary  | OpaqueSignature|CipherText|AnyCertStoreType },
+        { "pgp", OpenPGP| Binary  | OpaqueSignature|CipherText|AnyCertStoreType },
         { "p10", CMS    |  Ascii  | CertificateRequest },
         { "p12", CMS    | Binary  | ExportedPSM },
         { "p7c", CMS    | Binary  | Certificate  },
@@ -167,7 +168,7 @@ unsigned int Kleo::classifyContent( const QByteArray & data ) {
 #ifdef __GNUC__
     assert( __gnu_cxx::is_sorted( begin( content_classifications ), end( content_classifications ), ByContent<std::less>(100) ) );
 #endif
-    
+
     static const char beginString[] = "-----BEGIN ";
     static const QByteArrayMatcher beginMatcher( beginString );
     int pos = beginMatcher.indexIn( data );
