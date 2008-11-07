@@ -19,7 +19,7 @@ set(kslox_LIB_SRCS
 
 kde4_add_library(kslox SHARED ${kslox_LIB_SRCS})
 
-target_link_libraries(kslox  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} ${QT_QT3SUPPORT_LIBRARY} kdepim )
+target_link_libraries(kslox  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${QT_QT3SUPPORT_LIBRARY} kdepim )
 
 set_target_properties(kslox PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kslox ${INSTALL_TARGETS_DEFAULT_ARGS})
