@@ -2111,6 +2111,18 @@ bool IMAP4Protocol::makeLogin ()
       removeCapability( "ANNOTATEMORE" );
     }
 
+    // starting from Cyrus IMAP 2.3.9, shared seen flags are available
+    QRegExp regExp( "Cyrus\\sIMAP4\\sv(\\d+)\\.(\\d+)\\.(\\d+)", false );
+    if ( regExp.search( greeting ) >= 0 ) {
+      const int major = regExp.cap( 1 ).toInt();
+      const int minor = regExp.cap( 2 ).toInt();
+      const int patch = regExp.cap( 3 ).toInt();
+      if ( major > 2 || (major == 2 && (minor > 3 || (minor == 3 && patch > 9))) ) {
+        kdDebug(7116) << k_funcinfo << "Cyrus IMAP >= 2.3.9 detected, enabling shared seen flag support" << endl;
+        imapCapabilities.append( "x-kmail-sharedseen" );
+      }
+    }
+
     kdDebug(7116) << "IMAP4::makeLogin - attempting login" << endl;
 
     KIO::AuthInfo authInfo;
