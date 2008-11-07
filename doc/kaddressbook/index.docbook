@@ -84,7 +84,7 @@ not just the local file system, but also to LDAP servers and SQL databases.
 
 <para>
 The user interface is similar to MS Outlook and it supports different views
-for to represent the contact data differently;
+to represent the contact data differently;
 it also provides an incremental search over all fields and a jump button
 bar to quickly access single entries.
 Since the underlying kabc library uses the vCard format (specified in RFC
@@ -101,7 +101,7 @@ entry fields in its graphical user interface.
 
 <para>
 After you have started &kaddressbook; (either using one of the &kde; application 
-launchers &kickoff;, the classic &kmenu; or Lancelot Launcher) or by typing
+launchers &kickoff;, the classic &kmenu; or Lancelot Launcher, or by typing
 <command>kaddressbook</command> at the command prompt or by using the 
 <guilabel>Contacts</guilabel> tab in &kontact;) the &kaddressbook; main window
 will be displayed:</para>
@@ -134,7 +134,7 @@ the &systemsettings; under <guilabel>Advanced</guilabel>->
 <caption><para>The Resource Configuration Dialog.</para></caption>
 </mediaobject>
 </screenshot>
-<para>Load the configuration module you want to add your resource(s) to. By selecting it from the drop down box at the top of the <guilabel>Resources</guilabel> section. The module for configuring &kaddressbook;'s resources is <guilabel>Contacts</guilabel>.</para>
+<para>Load the configuration module you want to add your resource(s) to selecting it from the drop down box at the top of the <guilabel>Resources</guilabel> section. The module for configuring &kaddressbook;'s resources is <guilabel>Contacts</guilabel>.</para>
 <para>Launch the <guilabel>Resource Configuration</guilabel> dialog by pushing the <guibutton>Add...</guibutton> button. Choose the resource you want to add to your <guilabel>Contacts</guilabel> module and click <guilabel>OK</guilabel> to confirm your choice.</para>
 
 <variablelist>
@@ -207,8 +207,8 @@ on a remote server (for example, through &HTTP;, WebDAV, &FTP; or Fish).</para><
 </variablelist>
 
 <para>After selecting the type of resource another dialog appears where you can configure the resource-specific settings.</para>
-<para>The <guilabel>File</guilabel> and <guilabel>Directory</guilabel> resource
-supports different formats for storing the contacts:</para>
+<para>The <guilabel>File</guilabel> and <guilabel>Directory</guilabel> resources
+support different formats for storing the contacts:</para>
 
 <variablelist>
 <varlistentry>
@@ -345,7 +345,7 @@ If the type of the number is either a Phone, Mobile phone or Fax number you can 
 
 <sect3 id="managing-contacts-addresses">
 <title>Addresses</title>
-<para>Here you can enter your contact's addresses. You can do so by pressing the <guibutton>Edit Addresses...</guibutton> Button and simply enter the <guilabel>Street</guilabel>, <guilabel>Post Office Box</guilabel>, <guilabel>Locality</guilabel>, <guilabel>Postal Code</guilabel>, and <guilabel>Country</guilabel>. After you do so you can look up the address on the map by simply clicking on the address (you can change the map-service/string used by &kaddressbook; in its settings.<!--??? needs rewrite--></para>
+<para>Here you can enter your contact's addresses. You can do so by pressing the <guibutton>Edit Addresses...</guibutton> Button and simply enter the <guilabel>Street</guilabel>, <guilabel>Post Office Box</guilabel>, <guilabel>Locality</guilabel>, <guilabel>Postal Code</guilabel>, and <guilabel>Country</guilabel>. After you do so you can look up the address on the map by simply clicking on the address (you can change the map-service/string used by &kaddressbook; in its settings).<!--??? needs rewrite--></para>
 <para>You can also create a label, which will be shown instead of the real address (however, the map lookup, will use the real address).</para>
 <para>You can also have set different addresses (i.e. one for work and one for home). It's also possible to set two different <guilabel>Home</guilabel> addresses.</para>
 </sect3>
@@ -807,7 +807,7 @@ by many (address book) applications.</para></listitem>
 <variablelist>
 <varlistentry>
 <term><guilabel>vCard 2.1 &#038; 3.0</guilabel></term>
-<listitem><para>With this entry you can export your contacts to the vCard format (<acronym>RFC</acronym> 2426). You can either export it into the 2.1 or in the 3.0 compatibel version of the vCard standard.</para></listitem>
+<listitem><para>With this entry you can export your contacts to the vCard format (<acronym>RFC</acronym> 2426). You can either export it into the 2.1 or in the 3.0 compatible version of the vCard standard.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -981,7 +981,7 @@ for <link linkend="ldap-queries">ldap queries</link> in &kaddressbook;.</para>
 </screenshot>
 <para>Please notice that some of the fields might be disabled, depending on your selections.</para>
 <para>
-You can include and exclude servers from the search by selecting or deselecting their check boxes. In the server list. Press <guibutton>OK</guibutton> to close the dialog.
+You can include and exclude servers from the search by selecting or deselecting their check boxes in the server list. Press <guibutton>OK</guibutton> to close the dialog.
 </para>
 <para>You may configure the search order by moving the servers up or down in the list. This can be done using the arrows on the right side of the dialog.</para>
 </sect2>
