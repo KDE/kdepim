@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=kabcdistlistupdater
+Name[gl]=kabcdlistlistupdater
 Name[sv]=Uppdatering av adressbokens fördelningslistor
 Exec=kabcdistlistupdater --disable-autostart
 Icon=misc
@@ -7,6 +8,7 @@ Type=Application
 Comment=Tool to update the old distribution lists to the new ones.
 Comment[el]=Εργαλείο ενημέρωσης παλιών λιστών διανομής στις νέες.
 Comment[fr]=Outil de conversion des anciennes listes de diffusion au nouveau format.
+Comment[gl]=Ferramenta para actualizar as listas de distribuciÃ³ns antigas Ã¡s novas.
 Comment[nb]=Verktøy for å oppdatere de gamle distribusjonslistene til de nye.
 Comment[nds]=Warktüüch för't Opfrischen vun ole Verdeellisten
 Comment[pt]=Uma ferramenta de actualização das listas de distribuição antigas para as novas.

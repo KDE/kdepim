@@ -49,6 +49,7 @@ Name[zh_CN]=通过 KMail 访问 IMAP 服务器上的日历
 Name[zh_TW]=透過 KMail 取得 IMAP 伺服器上的行事曆
 Comment=Provides access to a calendar stored on a Kolab server using IMAP via KMail or Kontact
 Comment[el]=Προσφέρει πρόσβαση σε ένα ημερολόγιο αποθηκευμένο σε έναν εξυπηρετητή Kolab με τη χρήση του IMAP  μέσω του KMail ή Kontact
+Comment[gl]=Permite acceder a un calendario almacenado nun servidor de Kolab empregando IMAP mediante KMail ou Kontact
 Comment[nds]=Stellt mit KMail oder Kontact över IMAP Topgriep op en Kalenner op en Kolab-Server praat
 Comment[pt]=Oferece o acesso a um calendário guardado num servidor Kolab por IMAP, através do KMail ou do Kontact
 Comment[pt_BR]=Fornece acesso a um calendário armazenado em um servidor Kolab usando IMAP, pelo KMail ou Kontact

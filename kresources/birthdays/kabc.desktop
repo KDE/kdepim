@@ -55,6 +55,7 @@ Name[zh_CN]=KAddressBook 中的生日
 Name[zh_TW]=自 KDE 通訊錄匯入生日
 Comment=Provides access to birthday dates of contacts in the KDE address book as calendar events
 Comment[el]=Προσφέρει πρόσβαση σε γενέθλια επαφών του βιβλίο διευθύνσεωη του KDE ως  γεγονότα ημερολογίου
+Comment[gl]=Permite acceder Ã¡s datas de cumpreanos dos contactos do caderno de enderezos do KDE como eventos do calendario
 Comment[nds]=Stellt Togriep op binnen dat KDE-Adressbook as Kalenner-Begeevnissen wohrte Geboortsdaag-Daten praat
 Comment[pt]=Oferece o acesso às datas de aniversário dos contactos no livro de endereços como eventos do calendário
 Comment[pt_BR]=Fornece acesso às datas de aniversário de contatos do livro de endereços do KDE como eventos de calendário
