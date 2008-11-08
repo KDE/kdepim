@@ -17,6 +17,18 @@ include(MacroOptionalAddSubdirectory)
 include(CheckIncludeFiles)
 include(FindKdepimLibs)
 
+if(WIN32)
+  # detect oxygen icon dir at configure time based on KDEDIRS - there may be different package installation locations
+  execute_process(COMMAND "${KDE4_KDECONFIG_EXECUTABLE}" --path icon OUTPUT_VARIABLE _dir ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
+  file(TO_CMAKE_PATH "${_dir}" __dir)
+  find_path(KDE4_ICON_DIR oxygen PATHS
+      ${__dir}
+  )
+  message(STATUS "using oxygen application icons from ${KDE4_ICON_DIR}")
+else(WIN32)
+    set (KDE4_ICON_DIR  ${CMAKE_INSTALL_PREFIX}/share/icons)
+endif(WIN32)
+
 # this macro exists to work around a stupid Mac OS X linker bug
 # where it can't handle the same library being referenced multiple
 # times on the linker line
