@@ -75,6 +75,7 @@
 #include "kjotsentry.h"
 #include "bookshelf.h"
 #include "kjotsreplacenextdialog.h"
+#include "knowitimporter.h"
 
 #include <memory>
 
@@ -1120,21 +1121,33 @@ void KJotsComponent::saveFinished(KJob *job)
 
 void KJotsComponent::importBook()
 {
-    KUrl openUrl = KFileDialog::getOpenUrl(KUrl(), "*.book|" + i18n("KJots Books"));
+    KUrl openUrl = KFileDialog::getOpenUrl( KUrl(), "*.book|" + i18n( "KJots Books" ) +
+                                                    "\n*.kno|" + i18n( "KnowIt files" ) );
 
     if (!openUrl.isEmpty()) {
-        KTemporaryFile file;
-        file.setPrefix(KStandardDirs::locateLocal("data","kjots/"));
-        file.setSuffix(".book");
-        file.setAutoRemove(false);
+        if ( openUrl.path().endsWith( ".book" ) ) {
+            KTemporaryFile file;
+            file.setPrefix(KStandardDirs::locateLocal("data","kjots/"));
+            file.setSuffix(".book");
+            file.setAutoRemove(false);
 
-        if ( file.open() ) {
-            KUrl bookUrl = KUrl::fromPath(file.fileName());
-            KIO::Job* job = KIO::file_copy(openUrl, bookUrl, 0644, KIO::Overwrite);
-            if ( job->exec() ) {
-                KJotsBook* book = new KJotsBook();
-                bookshelf->addTopLevelItem(book);
-                book->openBook(file.fileName());
+            if ( file.open() ) {
+                KUrl bookUrl = KUrl::fromPath(file.fileName());
+                KIO::Job* job = KIO::file_copy(openUrl, bookUrl, 0644, KIO::Overwrite);
+                if ( job->exec() ) {
+                    KJotsBook* book = new KJotsBook();
+                    bookshelf->addTopLevelItem(book);
+                    book->openBook(file.fileName());
+                }
+            }
+        }
+        if ( openUrl.path().endsWith( ".kno" ) ) {
+            KnowItImporter *kni = new KnowItImporter();
+            KJotsBook *newBook = kni->importFromUrl( openUrl );
+            if (newBook)
+            {
+              bookshelf->addTopLevelItem( newBook );
+              newBook->setExpanded( true );
             }
         }
     }

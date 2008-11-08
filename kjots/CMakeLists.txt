@@ -21,6 +21,7 @@ set(kjots_SRCS
    kjotslinkdialog.cpp
    flatcollectionproxymodel.cpp
    kjotsbookshelfentryvalidator.cpp
+   knowitimporter.cpp
  )
 
 
