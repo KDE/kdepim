@@ -60,6 +60,7 @@ KDE4_ADD_LIBRARY(kitchensyncprivate SHARED ${kitchensyncprivate_LIB_SRCS})
 TARGET_LINK_LIBRARIES(kitchensyncprivate ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY}
                                          ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS}
                                          ${KDE4_KDEKIO_LIBS} ${KDE4_KHTML_LIBS}
+                                         ${KDE4_KDE3SUPPORT_LIBS}
                                          kabc kcal kdepim qopensync )
 
 SET_TARGET_PROPERTIES(kitchensyncprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
