@@ -1,3 +1,14 @@
+Sunday, November 9th 2008
+
+Problems addressed
+------------------
+
+* kolab/issue2627 Status line for audit log shown, even when it is not implemented.
+*Support the /vendor/cmu/cyrus-imapd/sharedseen annotation available in Cyrus IMAP server 2.3.9 or higher which allows to share the seen flags between all users that have access to a folder.
+* Detect if the server supports shared seen flags. Also preserve the IMAP server capabilities in kmailrc so that detection also works without a prior sync.
+ 
+
+
 Monday, October 27th 2008
 
 Problems addressed
