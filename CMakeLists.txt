@@ -78,7 +78,9 @@ else ( ONLY_KLEO )
 
   find_package(Akonadi REQUIRED)
 
+  add_subdirectory(libkdepim) # need that directory for building Kode, check here to avoid confusion
   find_package(Kode REQUIRED)
+
   find_package(ZLIB REQUIRED)
   find_package(Strigi REQUIRED)
   find_package(QGpgme)
@@ -144,7 +146,6 @@ else ( ONLY_KLEO )
   macro_optional_add_subdirectory(doc)
   add_subdirectory(kode)
   macro_optional_add_subdirectory(akonadi)
-  add_subdirectory(libkdepim)
   add_subdirectory(libkholidays)
   add_subdirectory(kontactinterfaces)
 
