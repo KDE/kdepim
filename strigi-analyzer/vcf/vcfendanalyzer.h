@@ -25,6 +25,7 @@
 #include <strigi/analyzerplugin.h>
 #include <strigi/streamendanalyzer.h>
 #include "pimstrigi-analyzer_export.h"
+#include "config-strigi.h"
 
 class VcfEndAnalyzerFactory;
 
@@ -37,7 +38,7 @@ class PIMSTRIGI_ANALYZER_EXPORT VcfEndAnalyzer : public Strigi::StreamEndAnalyze
 
     const char* name() const { return "VcfEndAnalyzer"; }
     bool checkHeader( const char* header, int32_t headersize ) const;
-    signed char analyze(  Strigi::AnalysisResult& idx, Strigi::InputStream* in );
+    STRIGI_ENDANALYZER_RETVAL analyze(  Strigi::AnalysisResult& idx, Strigi::InputStream* in );
 
   private:
     const VcfEndAnalyzerFactory* m_factory;

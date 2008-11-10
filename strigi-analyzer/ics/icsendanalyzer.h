@@ -24,6 +24,7 @@
 #include <strigi/analyzerplugin.h>
 #include <strigi/streamendanalyzer.h>
 #include "pimstrigi-analyzer_export.h"
+#include "config-strigi.h"
 
 class IcsEndAnalyzerFactory;
 
@@ -36,7 +37,7 @@ public:
 
   const char* name() const { return "IcsEndAnalyzer"; }
   bool checkHeader( const char* header, int32_t headersize ) const;
-  signed char analyze(  Strigi::AnalysisResult& idx, Strigi::InputStream* in );
+  STRIGI_ENDANALYZER_RETVAL analyze(  Strigi::AnalysisResult& idx, Strigi::InputStream* in );
 
 private:
   const IcsEndAnalyzerFactory* m_factory;
