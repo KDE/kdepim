@@ -100,7 +100,7 @@ private:
         const unsigned int idx = 2*x509+armor;
         const char * const extension = extensions[idx];
 
-        const QString nf = i18n("Secret Key Files") + QString::fromLatin1("(*%1 *%2 *%3 *%4)")
+        const QString nf = i18n("Secret Key Files") + QString::fromLatin1("(*%1 *%2 *%3 *%4 *.pgp)")
             .arg( extensions[idx], extensions[(idx+1)%4], extensions[(idx+2)%4], extensions[(idx+3)%4] );
         ui.outputFileFR->setNameFilter( nf );
 
@@ -135,7 +135,7 @@ private:
 
             outputFileFR->setExistingOnly( false );
             outputFileFR->setFilter( QDir::Files );
-            outputFileFR->setNameFilter( i18n("Secret Key Files (*.pem *.p12 *.gpg *.asc)") );
+            outputFileFR->setNameFilter( i18n("Secret Key Files (*.pem *.p12 *.gpg *.asc *.pgp)") );
 
             for ( unsigned int i = 0 ; i < numCharsets ; ++i )
                 charsetCB->addItem( QString::fromLatin1( charsets[i] ) );
