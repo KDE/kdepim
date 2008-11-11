@@ -143,7 +143,7 @@ IMEditorWidget::IMEditorWidget( QWidget *parent, const QString &preferredIM )
   connect( mWidget->lvAddresses, SIGNAL( itemDoubleClicked( QTreeWidgetItem *, int ) ),
            SLOT( slotEdit() ) );
 
-  setHelp( "managing-contacts-im-addresses" );
+  setHelp( "managing-contacts-im-addresses", "kaddressbook" );
 
   mWidget->btnEdit->setEnabled( false );
   mWidget->btnDelete->setEnabled( false );

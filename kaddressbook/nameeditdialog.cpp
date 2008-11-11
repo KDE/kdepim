@@ -315,7 +315,7 @@ void NameEditDialog::initTypeCombo()
 
 void NameEditDialog::slotHelp()
 {
-  KToolInvocation::invokeHelp( "managing-contacts-automatic-nameparsing" );
+  KToolInvocation::invokeHelp( "managing-contacts-automatic-nameparsing", "kaddressbook" );
 }
 
 #include "nameeditdialog.moc"
