@@ -291,11 +291,11 @@ namespace {
 static assuan_error_t
 my_assuan_transact( const AssuanClientContext & ctx,
                     const char *command,
-                    int (*data_cb)( void *, const void *, size_t )=0,
+                    assuan_error_t (*data_cb)( void *, const void *, size_t )=0,
                     void * data_cb_arg=0,
-                    int (*inquire_cb)( void *, const char * )=0,
+                    assuan_error_t (*inquire_cb)( void *, const char * )=0,
                     void * inquire_cb_arg=0,
-                    int (*status_cb)( void *, const char * )=0,
+                    assuan_error_t (*status_cb)( void *, const char * )=0,
                     void * status_cb_arg=0)
 {
     return assuan_transact( ctx.get(), command, data_cb, data_cb_arg, inquire_cb, inquire_cb_arg, status_cb, status_cb_arg );
@@ -337,26 +337,26 @@ static QString start_uiserver() {
     return Command::tr("start_uiserver: not yet implemented");
 }
 
-static int getinfo_pid_cb( void * opaque, const void * buffer, size_t length ) {
+static assuan_error_t getinfo_pid_cb( void * opaque, const void * buffer, size_t length ) {
     qint64 & pid = *static_cast<qint64*>( opaque );
     pid = QByteArray( static_cast<const char*>( buffer ), length ).toLongLong();
     return 0;
 }
 
-static int command_data_cb( void * opaque, const void * buffer, size_t length ) {
+static assuan_error_t command_data_cb( void * opaque, const void * buffer, size_t length ) {
     QByteArray & ba = *static_cast<QByteArray*>( opaque );
     ba.append( QByteArray( static_cast<const char*>(buffer), length ) );
     return 0;
 }
 
-static int send_option( const AssuanClientContext & ctx, const char * name, const QVariant & value ) {
+static assuan_error_t send_option( const AssuanClientContext & ctx, const char * name, const QVariant & value ) {
     if ( value.isValid() )
         return my_assuan_transact( ctx, QString().sprintf( "OPTION %s=%s", name, value.toString().toUtf8().constData() ).toUtf8().constData() );
     else
         return my_assuan_transact( ctx, QString().sprintf( "OPTION %s", name ).toUtf8().constData() );
 }
 
-static int send_file( const AssuanClientContext & ctx, const QString & file ) {
+static assuan_error_t send_file( const AssuanClientContext & ctx, const QString & file ) {
     return my_assuan_transact( ctx, QString().sprintf( "FILE %s", hexencode( QFile::encodeName( file ) ).constData() ).toUtf8().constData() );
 }
 
@@ -373,7 +373,7 @@ void Command::Private::run() {
 
     out.canceled = false;
 
-    int err = 0;
+    assuan_error_t err = 0;
 
     assuan_context_t naked_ctx = 0;
     AssuanClientContext ctx;
