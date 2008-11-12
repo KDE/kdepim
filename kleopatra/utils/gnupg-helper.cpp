@@ -90,5 +90,6 @@ QStringList Kleo::gnupgFileBlacklist() {
         << "*~"
         << "*.bak"
         << "*.lock"
+        << "*.tmp"
         ;
 }
