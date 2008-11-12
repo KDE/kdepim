@@ -19,6 +19,7 @@ if(KPILOT_SUPPORTED)
 endif(KPILOT_SUPPORTED)
 
 add_subdirectory(knode)
+add_subdirectory(kioslave)
 add_subdirectory(kjots)
 add_subdirectory(knotes)
 add_subdirectory(konsolekalendar)
