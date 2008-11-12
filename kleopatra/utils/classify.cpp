@@ -65,13 +65,13 @@ namespace {
         { "crt", CMS    | Binary  | Certificate },
         { "der", CMS    | Binary  | Certificate },
         { "gpg", OpenPGP| Binary  | OpaqueSignature|CipherText|AnyCertStoreType },
-        { "pgp", OpenPGP| Binary  | OpaqueSignature|CipherText|AnyCertStoreType },
         { "p10", CMS    |  Ascii  | CertificateRequest },
         { "p12", CMS    | Binary  | ExportedPSM },
         { "p7c", CMS    | Binary  | Certificate  },
         { "p7m", CMS    | Binary  | CipherText },
         { "p7s", CMS    | Binary  | AnySignature },
         { "pem", CMS    |  Ascii  | AnyType | ExamineContentHint },
+        { "pgp", OpenPGP| Binary  | OpaqueSignature|CipherText|AnyCertStoreType },
         { "sig", OpenPGP|AnyFormat| DetachedSignature },
     };
 
