@@ -197,10 +197,10 @@ std::vector<Kleo::KeyApprovalDialog::Item> Kleo::KeyApprovalDialog::items() cons
 
   std::vector<Item> result;
   result.reserve( d->requesters.size() );
-  QStringList::const_iterator ait = d->addresses.begin();
-  std::vector<KeyRequester*>::const_iterator rit = d->requesters.begin();
-  std::vector<QComboBox*>::const_iterator cit = d->preferences.begin();
-  while ( ait != d->addresses.end() )
+  QStringList::const_iterator ait = d->addresses.constBegin();
+  std::vector<KeyRequester*>::iterator rit = d->requesters.begin();
+  std::vector<QComboBox*>::iterator cit = d->preferences.begin();
+  while ( ait != d->addresses.constEnd() )
     result.push_back( Item( *ait++, (*rit++)->keys(), cb2pref( (*cit++)->currentIndex() ) ) );
   return result;
 }

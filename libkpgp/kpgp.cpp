@@ -518,8 +518,8 @@ Module::getEncryptionKeys( KeyIDList& encryptionKeyIds,
   }
   bool showKeysForApproval = false;
   int i = 1;
-  for( QStringList::ConstIterator it = recipients.begin();
-       it != recipients.end(); ++it, ++i ) {
+  for( QStringList::ConstIterator it = recipients.constBegin();
+       it != recipients.constEnd(); ++it, ++i ) {
     EncryptPref encrPref = encryptionPreference( *it );
     if( ( encrPref == UnknownEncryptPref ) || ( encrPref == NeverEncrypt ) )
       showKeysForApproval = true;
@@ -533,7 +533,7 @@ Module::getEncryptionKeys( KeyIDList& encryptionKeyIds,
 
   kDebug( 5326 ) <<"recipientKeyIds = (";
   QVector<KeyIDList>::const_iterator kit;
-  for( kit = recipientKeyIds.begin(); kit != recipientKeyIds.end(); ++kit ) {
+  for( kit = recipientKeyIds.constBegin(); kit != recipientKeyIds.constEnd(); ++kit ) {
     kDebug( 5326 ) <<"( 0x" << (*kit).toStringList().join(", 0x" )
                   << " ),\n";
   }
@@ -567,17 +567,17 @@ Module::getEncryptionKeys( KeyIDList& encryptionKeyIds,
 
   // flatten the list of lists of key IDs and count empty key ID lists
   int emptyListCount = 0;
-  for( QVector<KeyIDList>::const_iterator it = recipientKeyIds.begin();
-       it != recipientKeyIds.end(); ++it ) {
+  for( QVector<KeyIDList>::const_iterator it = recipientKeyIds.constBegin();
+       it != recipientKeyIds.constEnd(); ++it ) {
     if( (*it).isEmpty() ) {
       // only count empty key ID lists for the recipients
-      if( it != recipientKeyIds.begin() ) {
+      if( it != recipientKeyIds.constBegin() ) {
         emptyListCount++;
       }
     }
     else {
-      for( KeyIDList::ConstIterator kit = (*it).begin();
-           kit != (*it).end(); kit++ ) {
+      for( KeyIDList::ConstIterator kit = (*it).constBegin();
+           kit != (*it).constEnd(); kit++ ) {
         encryptionKeyIds.append( *kit );
       }
     }
@@ -645,8 +645,8 @@ Module::encryptionPossible( const QStringList& recipients )
 
   int noKey = 0, never = 0, unknown = 0, always = 0, aip = 0, ask = 0,
       askwp = 0;
-  for( QStringList::ConstIterator it = recipients.begin();
-       it != recipients.end(); ++it) {
+  for( QStringList::ConstIterator it = recipients.constBegin();
+       it != recipients.constEnd(); ++it) {
     if( haveTrustedEncryptionKey( *it ) ) {
       EncryptPref encrPref = encryptionPreference( *it );
       switch( encrPref ) {
@@ -1127,8 +1127,8 @@ Module::haveTrustedEncryptionKey( const QString& person )
   KeyIDList keyIds = keysForAddress( address );
   if( !keyIds.isEmpty() ) {
     // Check if at least one of the keys is a trusted and valid encryption key
-    for( KeyIDList::ConstIterator it = keyIds.begin();
-         it != keyIds.end(); ++it ) {
+    for( KeyIDList::ConstIterator it = keyIds.constBegin();
+         it != keyIds.constEnd(); ++it ) {
       keyTrust( *it ); // this is called to make sure that the trust info
                        // for this key is read
       Key *key = publicKey( *it );
@@ -1202,8 +1202,8 @@ Module::getEncryptionKeys( const QString& person )
                   << "for" << person;
     // Check if all of the keys are a trusted and valid encryption keys
     bool keysOk = true;
-    for( KeyIDList::ConstIterator it = keyIds.begin();
-         it != keyIds.end(); ++it ) {
+    for( KeyIDList::ConstIterator it = keyIds.constBegin();
+         it != keyIds.constEnd(); ++it ) {
       keyTrust( *it ); // this is called to make sure that the trust info
                        // for this key is read
       Key *key = publicKey( *it );

@@ -552,7 +552,7 @@ Base2::doGetPublicKeys( const QByteArray & cmd, const QStringList & patterns )
       }
     }
     // build list from the map
-    for ( KeyMap::ConstIterator it = map.begin(); it != map.end(); ++it ) {
+    for ( KeyMap::ConstIterator it = map.constBegin(); it != map.constEnd(); ++it ) {
       publicKeys.append( it.value() );
     }
   }

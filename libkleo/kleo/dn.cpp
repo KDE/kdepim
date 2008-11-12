@@ -417,8 +417,8 @@ QString Kleo::DN::operator[]( const QString & attr ) const {
   if ( !d )
     return QString();
   const QString attrUpper = attr.toUpper();
-  for ( QVector<Attribute>::const_iterator it = d->attributes.begin() ;
-	it != d->attributes.end() ; ++it )
+  for ( QVector<Attribute>::const_iterator it = d->attributes.constBegin() ;
+	it != d->attributes.constEnd() ; ++it )
     if ( (*it).name() == attrUpper )
       return (*it).value();
   return QString();
@@ -427,11 +427,11 @@ QString Kleo::DN::operator[]( const QString & attr ) const {
 static QVector<Kleo::DN::Attribute> empty;
 
 Kleo::DN::const_iterator Kleo::DN::begin() const {
-  return d ? d->attributes.begin() : empty.begin() ;
+  return d ? d->attributes.constBegin() : empty.constBegin() ;
 }
 
 Kleo::DN::const_iterator Kleo::DN::end() const {
-  return d ? d->attributes.end() : empty.end() ;
+  return d ? d->attributes.constEnd() : empty.constEnd() ;
 }
 
 

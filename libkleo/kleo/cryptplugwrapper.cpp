@@ -166,8 +166,8 @@ public:
     }else{
       _attrOrderChar = new char*[ _attrOrder.count()+1 ];
       int i=0;
-      for( QStringList::ConstIterator itOrder = _attrOrder.begin();
-           itOrder != _attrOrder.end();
+      for( QStringList::ConstIterator itOrder = _attrOrder.constBegin();
+           itOrder != _attrOrder.constEnd();
            ++itOrder ){
         _attrOrderChar[ i ] = (char*)malloc( ((*itOrder).length()+1)*sizeof(char) );
         strcpy( _attrOrderChar[ i ], (*itOrder).toLatin1() );
@@ -179,8 +179,8 @@ public:
   ~DNBeautifier()
   {
     int i=0;
-    for( QStringList::ConstIterator itOrder = _attrOrder.begin();
-         itOrder != _attrOrder.end();
+    for( QStringList::ConstIterator itOrder = _attrOrder.constBegin();
+         itOrder != _attrOrder.constEnd();
          ++itOrder ){
       free( _attrOrderChar[ i ] );
       ++i;
@@ -231,7 +231,7 @@ public:
         // find all unknown entries in their order of appearance
         for( itDN = dn.begin(); itDN != dn.end(); ++itDN ){
           bFound = false;
-          for( itOrder = attrOrder.begin(); itOrder != attrOrder.end(); ++itOrder ){
+          for( itOrder = attrOrder.constBegin(); itOrder != attrOrder.constEnd(); ++itOrder ){
             if( (*itOrder) == (*itDN).first ){
               bFound = true;
               break;
@@ -251,7 +251,7 @@ public:
 
       // process the known attrs in the desired order
       bool b_X_declared = false;
-      for( itOrder = attrOrder.begin(); itOrder != attrOrder.end(); ++itOrder ){
+      for( itOrder = attrOrder.constBegin(); itOrder != attrOrder.constEnd(); ++itOrder ){
         if( (*itOrder) == "_X_" ){
           b_X_declared = true;
           // insert the unknown attrs (if desired)

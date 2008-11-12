@@ -72,8 +72,8 @@ KParts::ReadOnlyPart *Core::createPart( const char *libname )
   kDebug() << libname;
 
   QMap<QByteArray,KParts::ReadOnlyPart *>::ConstIterator it;
-  it = d->mParts.find( libname );
-  if ( it != d->mParts.end() ) {
+  it = d->mParts.constFind( libname );
+  if ( it != d->mParts.constEnd() ) {
     return it.value();
   }
 

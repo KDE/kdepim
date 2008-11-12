@@ -375,8 +375,8 @@ void QGpgMECryptoConfigComponent::sync( bool runtime )
   }
   else
   {
-    QList<QGpgMECryptoConfigEntry *>::const_iterator it = dirtyEntries.begin();
-    for( ; it != dirtyEntries.end(); ++it ) {
+    QList<QGpgMECryptoConfigEntry *>::const_iterator it = dirtyEntries.constBegin();
+    for( ; it != dirtyEntries.constEnd(); ++it ) {
       (*it)->setDirty( false );
     }
   }
@@ -471,7 +471,7 @@ QGpgMECryptoConfigEntry::QGpgMECryptoConfigEntry( QGpgMECryptoConfigGroup * grou
 {
   // Format: NAME:FLAGS:LEVEL:DESCRIPTION:TYPE:ALT-TYPE:ARGNAME:DEFAULT:ARGDEF:VALUE
   assert( parsedLine.count() >= 10 ); // called checked for it already
-  QStringList::const_iterator it = parsedLine.begin();
+  QStringList::const_iterator it = parsedLine.constBegin();
   mName = *it++;
   mFlags = (*it++).toInt();
   mLevel = (*it++).toInt();
@@ -519,7 +519,7 @@ QVariant QGpgMECryptoConfigEntry::stringToValue( const QString& str, bool unesca
   if ( isList() ) {
     QList<QVariant> lst;
     QStringList items = str.split( ',', QString::SkipEmptyParts );
-    for( QStringList::const_iterator valit = items.begin(); valit != items.end(); ++valit ) {
+    for( QStringList::const_iterator valit = items.constBegin(); valit != items.constEnd(); ++valit ) {
       QString val = *valit;
       if ( isString ) {
         if ( val.isEmpty() ) {
@@ -616,7 +616,7 @@ static KUrl parseURL( int mRealArgType, const QString& str )
     // The format is HOSTNAME:PORT:USERNAME:PASSWORD:BASE_DN
     QStringList items = str.split( ':' );
     if ( items.count() == 5 ) {
-      QStringList::const_iterator it = items.begin();
+      QStringList::const_iterator it = items.constBegin();
       KUrl url;
       url.setProtocol( "ldap" );
       url.setHost( urlpart_decode( *it++ ) );
@@ -691,7 +691,7 @@ QList<int> QGpgMECryptoConfigEntry::intValueList() const
   Q_ASSERT( isList() );
   QList<int> ret;
   QList<QVariant> lst = mValue.toList();
-  for( QList<QVariant>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+  for( QList<QVariant>::const_iterator it = lst.constBegin(); it != lst.constEnd(); ++it ) {
     ret.append( (*it).toInt() );
   }
   return ret;
@@ -703,7 +703,7 @@ QList<unsigned int> QGpgMECryptoConfigEntry::uintValueList() const
   Q_ASSERT( isList() );
   QList<unsigned int> ret;
   QList<QVariant> lst = mValue.toList();
-  for( QList<QVariant>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+  for( QList<QVariant>::const_iterator it = lst.constBegin(); it != lst.constEnd(); ++it ) {
     ret.append( (*it).toUInt() );
   }
   return ret;
@@ -716,7 +716,7 @@ KUrl::List QGpgMECryptoConfigEntry::urlValueList() const
   QStringList lst = mValue.toStringList();
 
   KUrl::List ret;
-  for( QStringList::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+  for( QStringList::const_iterator it = lst.constBegin(); it != lst.constEnd(); ++it ) {
     if ( mArgType == ArgType_Path ) {
       KUrl url;
       url.setPath( *it );
@@ -809,7 +809,7 @@ void QGpgMECryptoConfigEntry::setStringValueList( const QStringList& lst )
 void QGpgMECryptoConfigEntry::setIntValueList( const QList<int>& lst )
 {
   QList<QVariant> ret;
-  for( QList<int>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+  for( QList<int>::const_iterator it = lst.constBegin(); it != lst.constEnd(); ++it ) {
     ret << QVariant( *it );
   }
   mValue = ret;
@@ -823,7 +823,7 @@ void QGpgMECryptoConfigEntry::setIntValueList( const QList<int>& lst )
 void QGpgMECryptoConfigEntry::setUIntValueList( const QList<unsigned int>& lst )
 {
   QList<QVariant> ret;
-  for( QList<unsigned int>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+  for( QList<unsigned int>::const_iterator it = lst.constBegin(); it != lst.constEnd(); ++it ) {
     ret << QVariant( *it );
   }
   if ( ret.isEmpty() && !isOptional() )
@@ -837,7 +837,7 @@ void QGpgMECryptoConfigEntry::setUIntValueList( const QList<unsigned int>& lst )
 void QGpgMECryptoConfigEntry::setURLValueList( const KUrl::List& urls )
 {
   QStringList lst;
-  for( KUrl::List::const_iterator it = urls.begin(); it != urls.end(); ++it ) {
+  for( KUrl::List::const_iterator it = urls.constBegin(); it != urls.constEnd(); ++it ) {
     lst << splitURL( mRealArgType, *it );
   }
   mValue = lst;
@@ -887,7 +887,7 @@ QString QGpgMECryptoConfigEntry::toString( bool escape ) const
     return QString::number( numberOfTimesSet() );
   QStringList ret;
   QList<QVariant> lst = mValue.toList();
-  for( QList<QVariant>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+  for( QList<QVariant>::const_iterator it = lst.constBegin(); it != lst.constEnd(); ++it ) {
       ret << (*it).toString(); // QVariant does the conversion
   }
   return ret.join( "," );
