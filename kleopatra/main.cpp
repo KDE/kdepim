@@ -149,6 +149,9 @@ static void fillKeyCache( KSplashScreen * splash, Kleo::UiServer * server ) {
 
 int main( int argc, char** argv )
 {
+    QTime timer;
+    timer.start();
+
   {
       const unsigned int threads = QThreadPool::globalInstance()->maxThreadCount();
       QThreadPool::globalInstance()->setMaxThreadCount( qMax( 2U, threads ) );
@@ -160,7 +163,11 @@ int main( int argc, char** argv )
 
   KCmdLineArgs::addCmdLineOptions( KleopatraApplication::commandLineOptions() );
 
+  kDebug() << timer.elapsed() << "Command line args created";
+
   KleopatraApplication app;
+
+  kDebug() << timer.elapsed() << "Application created";
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
@@ -170,6 +177,8 @@ int main( int argc, char** argv )
 #ifdef HAVE_USABLE_ASSUAN
   try {
       Kleo::UiServer server( args->getOption("uiserver-socket") );
+
+      kDebug() << timer.elapsed() << "UiServer created";
 
       QObject::connect( &server, SIGNAL(startKeyManagerRequested()),
                         &app, SLOT(openOrRaiseMainWindow()) );
@@ -195,6 +204,7 @@ int main( int argc, char** argv )
 #undef REGISTER
 
       server.start();
+      kDebug() << timer.elapsed() << "UiServer started";
 #endif
 
       const bool daemon = args->isSet("daemon");
@@ -203,16 +213,19 @@ int main( int argc, char** argv )
           splash.show();
       if ( !selfCheck( splash ) )
           return 1;
+      kDebug() << timer.elapsed() << "SelfCheck completed";
 #ifdef HAVE_USABLE_ASSUAN
       fillKeyCache( &splash, &server );
 #else
       fillKeyCache( &splash, 0 );
 #endif
+      kDebug() << timer.elapsed() << "KeyCache loaded";
 
       app.setIgnoreNewInstance( false );
 
       if ( !daemon ) {
           app.newInstance();
+          kDebug() << timer.elapsed() << "new instance created";
           splash.finish( app.mainWindow() );
       }
 
