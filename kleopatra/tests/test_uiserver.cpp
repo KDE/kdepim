@@ -89,17 +89,17 @@ static void usage( const std::string & msg=std::string() ) {
     exit( 1 );
 }
 
-static int data( void * void_ctx, const void * buffer, size_t len ) {
+static assuan_error_t data( void * void_ctx, const void * buffer, size_t len ) {
     (void)void_ctx; (void)buffer; (void)len;
     return 0; // ### implement me
 }
 
-static int status( void * void_ctx, const char * line ) {
+static assuan_error_t status( void * void_ctx, const char * line ) {
     (void)void_ctx; (void)line;
     return 0;
 }
 
-static int inquire( void * void_ctx, const char * keyword ) {
+static assuan_error_t inquire( void * void_ctx, const char * keyword ) {
     assuan_context_t ctx = (assuan_context_t)void_ctx;
     assert( ctx );
     const std::map<std::string,std::string>::const_iterator it = inquireData.find( keyword );

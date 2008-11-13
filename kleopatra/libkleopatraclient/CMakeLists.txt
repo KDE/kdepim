@@ -1,4 +1,4 @@
-set( libkleopatraclient_soversion 0.2.0 )
+set( libkleopatraclient_soversion 0.2.1 )
 set( libkleopatraclient_version ${libkleopatraclient_soversion} )
 
 add_subdirectory( core )
