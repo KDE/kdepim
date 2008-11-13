@@ -188,9 +188,9 @@ static QString signatureSummaryToString( int summary )
     return QString();
 }
 
-static QString formatValidSignatureWithTrustLevel( const Key & key, const UserID & id ) {
-    assert( !key.isNull() );
-    assert( !id.isNull() );
+static QString formatValidSignatureWithTrustLevel( const UserID & id ) {
+    if ( id.isNull() )
+        return QString();
     switch ( id.validity() ) {
         case UserID::Marginal:
             return i18n( "The signature is valid but the trust in the certificate's validity is only marginal." );
@@ -419,12 +419,12 @@ static QString formatSignature( const Signature & sig, const Key & key, const De
     if ( sig.isNull() )
         return QString();
 
-    QString text = formatSigningInformation( sig, key ) + "<br/>";
+    const QString text = formatSigningInformation( sig, key ) + "<br/>";
 
     const bool red = sig.summary() & Signature::Red;
     if ( sig.summary() & Signature::Valid ) {
         const UserID id = findUserIDByMailbox( key, info.informativeSender );
-        return text + formatValidSignatureWithTrustLevel( key, !id.isNull() ? id : key.userID( 0 ) ); // ### TODO handle key.isNull()?
+        return text + formatValidSignatureWithTrustLevel( !id.isNull() ? id : key.userID( 0 ) );
     }
     if ( red )
         return text + i18n("The signature is bad.");
