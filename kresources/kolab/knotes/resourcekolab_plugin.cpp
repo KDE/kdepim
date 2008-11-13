@@ -32,7 +32,7 @@
 
 #include "resourcekolab.h"
 
-class KolabFactory : public KRES::PluginFactoryBase
+class KNotesKolabFactory : public KRES::PluginFactoryBase
 {
 public:
   KRES::Resource *resource( const KConfigGroup &config )
@@ -50,5 +50,5 @@ public:
   }
 };
 
-K_EXPORT_PLUGIN( KolabFactory )
+K_EXPORT_PLUGIN( KNotesKolabFactory )
 
