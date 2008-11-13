@@ -186,7 +186,7 @@ SystemTrayIcon::Private::Private( SystemTrayIcon * qq )
       openCertificateManagerAction( i18n("&Open Certificate Manager..."), q ),
       configureAction( i18n("&Configure %1...", KGlobal::mainComponent().aboutData()->programName() ), q ),
       aboutAction( i18n("&About %1...", KGlobal::mainComponent().aboutData()->programName() ), q ),
-      quitAction( i18n("&Shutdown Kleopatra"), q ),
+      quitAction( i18n("&Quit Kleopatra"), q ),
       clipboardMenu( i18n("Clipboard" ) ),
       encryptClipboardAction( i18n("Encrypt..."), q ),
       smimeSignClipboardAction( i18n("S/MIME-Sign..."), q ),
