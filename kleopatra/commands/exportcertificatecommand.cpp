@@ -199,7 +199,7 @@ bool ExportCertificateCommand::Private::requestFileNames( GpgME::Protocol protoc
                                                         i18n( "Export Certificates" ), 
                                                         QString(), 
                                                         protocol == GpgME::OpenPGP
-                                                        ? i18n( "OpenPGP Certificates" ) + " (*.asc *.gpg)"
+                                                        ? i18n( "OpenPGP Certificates" ) + " (*.asc *.gpg *.pgp)"
                                                         : i18n( "S/MIME Certificates" )  + " (*.pem *.der)" );
     fileNames[protocol] = fname;
     return !fname.isEmpty();
@@ -213,7 +213,7 @@ void ExportCertificateCommand::Private::startExportJob( GpgME::Protocol protocol
     assert( backend );
     const QString fileName = fileNames[protocol];
     const bool binary = protocol == GpgME::OpenPGP
-        ? fileName.endsWith( ".gpg", Qt::CaseInsensitive )
+        ? fileName.endsWith( ".gpg", Qt::CaseInsensitive ) || fileName.endsWith( ".pgp", Qt::CaseInsensitive )
         : fileName.endsWith( ".der", Qt::CaseInsensitive ) ;
     std::auto_ptr<ExportJob> job( backend->publicKeyExportJob( !binary ) );
     assert( job.get() );
