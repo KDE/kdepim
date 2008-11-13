@@ -52,7 +52,7 @@
 
 using namespace Scalix;
 
-class ScalixFactory : public KRES::PluginFactoryBase
+class KABCScalixFactory : public KRES::PluginFactoryBase
 {
   public:
     KRES::Resource *resource()
@@ -71,7 +71,7 @@ class ScalixFactory : public KRES::PluginFactoryBase
     }
 };
 
-K_EXPORT_PLUGIN( ScalixFactory )
+K_EXPORT_PLUGIN( KABCScalixFactory )
 
 static const char* s_kmailContentsType = "Contact";
 static const char* s_attachmentMimeTypeContact = "application/x-vnd.kolab.contact";

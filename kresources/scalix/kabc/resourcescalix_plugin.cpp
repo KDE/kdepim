@@ -34,7 +34,7 @@
 
 using namespace Scalix;
 
-class ScalixFactory : public KRES::PluginFactoryBase
+class KABCScalixFactory : public KRES::PluginFactoryBase
 {
   public:
     KRES::Resource *resource( const KConfigGroup &config )
@@ -52,5 +52,5 @@ class ScalixFactory : public KRES::PluginFactoryBase
     }
 };
 
-K_EXPORT_PLUGIN( ScalixFactory )
+K_EXPORT_PLUGIN( KABCScalixFactory )
 

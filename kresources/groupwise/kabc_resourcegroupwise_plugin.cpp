@@ -28,14 +28,14 @@
 
 using namespace KABC;
 
-class ResourceGroupwiseFactory : public KRES::PluginFactory<ResourceGroupwise, ResourceGroupwiseConfig>
+class ResourceGroupwiseKABCFactory : public KRES::PluginFactory<ResourceGroupwise, ResourceGroupwiseConfig>
 {
   public:
-    ResourceGroupwiseFactory()
+    ResourceGroupwiseKABCFactory()
       : KRES::PluginFactory<ResourceGroupwise, ResourceGroupwiseConfig>()
     {
       KGlobal::locale()->insertCatalog( QLatin1String( "kres_groupwise" ) );
     }
 };
 
-K_EXPORT_PLUGIN(ResourceGroupwiseFactory)
+K_EXPORT_PLUGIN(ResourceGroupwiseKABCFactory)
