@@ -1,2 +1,2 @@
 #! /bin/sh
-$XGETTEXT *.cpp *.h -o $podir/ksendemail.pot
+$XGETTEXT *.cpp -o $podir/ksendemail.pot
