@@ -71,6 +71,7 @@ namespace Kleo {
 #include <QStringList>
 #include <QMessageBox>
 #include <QTimer>
+#include <QTime>
 #include <QEventLoop>
 #include <QThreadPool>
 
