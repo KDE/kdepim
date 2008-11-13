@@ -135,6 +135,9 @@ void FileSystemWatcher::Private::onDirectoryChanged( const QString& path )
     const QStringList newFiles = find_new_files( list_dir_absolute( path, m_blacklist ), m_seenPaths );
     kDebug() << "newFiles" << newFiles;
 
+    if ( newFiles.empty() )
+        return;
+
     m_cachedFiles.insert( newFiles.begin(), newFiles.end() );
     q->addPaths( newFiles );
 
