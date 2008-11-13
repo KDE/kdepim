@@ -293,7 +293,7 @@ void ResourceSelection::updateView()
   KRES::Manager<KABC::Resource>::Iterator it;
   for ( it = mManager->begin(); it != mManager->end(); ++it ) {
 
-    new KABCResourceItem( mListView, *it );
+    KABCResourceItem *item = new KABCResourceItem( mListView, *it );
     KABC::ResourceABC* resource = dynamic_cast<KABC::ResourceABC *>( *it );
     if ( resource ) {
       disconnect( resource, 0, this, 0 );
@@ -308,6 +308,7 @@ void ResourceSelection::updateView()
                                              const QString &, const QString & ) ) );
       //connect( resource, SIGNAL( resourceSaved( KABC::ResourceABC * ) ),
       //         SLOT( closeResource( KABC::ResourceABC * ) ) );
+      item->createSubresourceItems();
     }
   }
 
