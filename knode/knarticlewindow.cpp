@@ -19,7 +19,6 @@
 #include <kconfig.h>
 #include <kaction.h>
 #include <kactioncollection.h>
-#include <kdeversion.h>
 
 #include "knarticle.h"
 #include "articlewidget.h"

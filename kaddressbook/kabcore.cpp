@@ -47,7 +47,6 @@
 #include <kcmdlineargs.h>
 #include <kcmultidialog.h>
 #include <kdebug.h>
-#include <kdeversion.h>
 #include <kimproxy.h>
 #include <klocale.h>
 #include <kmessagebox.h>

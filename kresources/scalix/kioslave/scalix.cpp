@@ -24,7 +24,6 @@
 #include <kapplication.h>
 #include <kcmdlineargs.h>
 #include <kdebug.h>
-#include <kdeversion.h>
 #include <kio/global.h>
 #include <klocale.h>
 

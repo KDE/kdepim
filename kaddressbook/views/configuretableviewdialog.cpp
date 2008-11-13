@@ -30,7 +30,6 @@
 #include <QtGui/QWidget>
 
 #include <kconfig.h>
-#include <kdeversion.h>
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <kimageio.h>

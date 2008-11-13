@@ -17,7 +17,6 @@
 #include <QPainter>
 #include <QPixmap>
 
-#include <kdeversion.h>
 #include <kdebug.h>
 
 

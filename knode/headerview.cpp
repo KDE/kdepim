@@ -23,7 +23,6 @@
 
 #include <klocale.h>
 #include <kdebug.h>
-#include <kdeversion.h>
 #include <kmenu.h>
 
 #include "knglobals.h"

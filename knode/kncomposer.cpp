@@ -28,7 +28,6 @@
 #include <QLabel>
 #include <QtDBus/QtDBus>
 #include <qgroupbox.h>
-#include <kdeversion.h>
 #include "addressesdialog.h"
 using KPIM::AddressesDialog;
 #include "recentaddresses.h"

@@ -24,9 +24,6 @@
 #ifndef PRINTSORTMODE_H
 #define PRINTSORTMODE_H
 
-#include <kdeversion.h>
-
-
 #include <kabc/sortmode.h>
 
 class PrintSortMode : public KABC::SortMode

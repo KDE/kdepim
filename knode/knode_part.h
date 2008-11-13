@@ -25,7 +25,6 @@
 #define KNODE_PART_H
 
 
-#include <kdeversion.h>
 #include <kparts/browserextension.h>
 #include <kparts/factory.h>
 #include <kparts/event.h>

@@ -22,7 +22,6 @@
 */
 
 #include <kabc/addresseelist.h>
-#include <kdeversion.h>
 
 #include "searchmanager.h"
 

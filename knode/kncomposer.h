@@ -32,7 +32,6 @@
 #include <QDragEnterEvent>
 #include <QSplitter>
 
-#include <kdeversion.h>
 #include <kprocess.h>
 #include <kabc/addresslineedit.h>
 

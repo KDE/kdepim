@@ -29,7 +29,6 @@
 #include <kedittoolbar.h>
 #include <kstandardaction.h>
 #include <kdebug.h>
-#include <kdeversion.h>
 #include <kmenubar.h>
 #include <kiconloader.h>
 #include <kstatusbar.h>
