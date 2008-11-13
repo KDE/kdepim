@@ -1,7 +1,7 @@
 #ifndef KAB_DISTRIBUTIONLISTENTRYVIEW_H
 #define KAB_DISTRIBUTIONLISTENTRYVIEW_H
 
-#include <libkdepim/distributionlist.h>
+#include <kabc/distributionlist.h>
 
 #include <QtCore/QMap>
 #include <QtCore/QString>
@@ -26,7 +26,7 @@ class DistributionListEntryView : public QWidget
 
 public:
     explicit DistributionListEntryView( KAB::Core* core, QWidget* parent = 0 );
-    void setEntry( const KPIM::DistributionList& list, const KPIM::DistributionList::Entry& entry );
+    void setEntry( KABC::DistributionList *list, const KABC::DistributionList::Entry &entry );
 
 public Q_SLOTS:
     void clear();
@@ -40,8 +40,8 @@ private Q_SLOTS:
 private:
     QMap<int, QString> m_idToEmail;
     KAB::Core* m_core;
-    KPIM::DistributionList m_list;
-    KPIM::DistributionList::Entry m_entry;
+    KABC::DistributionList *m_list;
+    KABC::DistributionList::Entry m_entry;
     QGridLayout* m_radioLayout;
     QBoxLayout* m_mainLayout;
     QWidget* m_emailGroup;

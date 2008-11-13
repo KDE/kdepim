@@ -238,6 +238,7 @@ class ContactListModel : public QAbstractTableModel
         default: return QVariant(); break;
       }
 
+      return QVariant();
     }
 
   private:
@@ -648,13 +649,13 @@ KABC::Addressee LDAPSearchDialog::convertLdapAttributesToAddressee( const KLDAP:
   return addr;
 }
 
-KPIM::DistributionList LDAPSearchDialog::selectDistributionList()
+KABC::DistributionList *LDAPSearchDialog::selectDistributionList()
 {
   QPointer<KPIM::DistributionListPickerDialog> picker = new KPIM::DistributionListPickerDialog( mCore->addressBook(), this );
   picker->setLabelText( i18n( "Select a distribution list to add the selected contacts to." ) );
   picker->setCaption( i18n( "Select Distribution List" ) );
   picker->exec();
-  const KPIM::DistributionList list = KPIM::DistributionList::findByName( mCore->addressBook(), picker
+  KABC::DistributionList *list = mCore->addressBook()->findDistributionListByName( picker
 ? picker->selectedDistributionList() : QString() );
   delete picker;
   return list;
@@ -706,8 +707,8 @@ void LDAPSearchDialog::slotUser2()
                                       i18n( "No Contacts Selected" ) );
       return;
     }
-    KPIM::DistributionList dist = selectDistributionList();
-    if ( dist.isEmpty() )
+    KABC::DistributionList *dist = selectDistributionList();
+    if ( !dist )
       return;
 
     KABC::Addressee::List localAddrs = importContactsUnlessTheyExist( selectedItems, resource );
@@ -715,11 +716,10 @@ void LDAPSearchDialog::slotUser2()
     if ( localAddrs.isEmpty() )
       return;
 
-    Q_FOREACH ( const KABC::Addressee& i, localAddrs ) {
-        dist.insertEntry( i, QString() );
-    }
     KABLock::self( mCore->addressBook() )->lock( resource );
-    mCore->addressBook()->insertAddressee( dist );
+    Q_FOREACH ( const KABC::Addressee& i, localAddrs ) {
+        dist->insertEntry( i, QString() );
+    }
     emit addresseesAdded();
     KABLock::self( mCore->addressBook() )->unlock( resource );
 }

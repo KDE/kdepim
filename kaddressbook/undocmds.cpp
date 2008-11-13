@@ -28,6 +28,7 @@
 #include <kapplication.h>
 #include <klocale.h>
 #include <krandom.h>
+#include <kabc/resource.h>
 
 #include "addresseeconfig.h"
 #include "addresseeutil.h"
@@ -87,6 +88,65 @@ void DeleteCommand::redo()
   }
 }
 
+DeleteDistListsCommand::DeleteDistListsCommand( KABC::AddressBook *addressBook,
+                                                const QStringList &uidList)
+  : Command( addressBook ), mUIDList( uidList )
+{
+}
+
+DeleteDistListsCommand::~DeleteDistListsCommand()
+{
+  qDeleteAll( mDistributionLists );
+}
+
+QString DeleteDistListsCommand::text() const
+{
+  return i18np( "Delete Distributionlist",
+                "Delete %1 Distributionlists", mUIDList.count() );
+}
+
+void DeleteDistListsCommand::undo()
+{
+  // Put it back in the document
+  QList<KABC::DistributionList*>::ConstIterator it;
+  const QList<KABC::DistributionList*>::ConstIterator
+    endIt( mDistributionLists.constEnd() );
+
+  // lock resources
+  for ( it = mDistributionLists.constBegin(); it != endIt; ++it )
+    lock()->lock( (*it)->resource() );
+
+  for ( it = mDistributionLists.constBegin(); it != endIt; ++it ) {
+    (*it)->resource()->insertDistributionList( *it );
+    lock()->unlock( (*it)->resource() );
+  }
+
+  mDistributionLists.clear();
+}
+
+void DeleteDistListsCommand::redo()
+{
+  KABC::DistributionList *list;
+
+  QStringList::ConstIterator it;
+  const QStringList::ConstIterator endIt( mUIDList.constEnd() );
+  for ( it = mUIDList.constBegin(); it != endIt; ++it ) {
+    list = addressBook()->findDistributionListByIdentifier( *it );
+    if ( !list )
+      continue;
+    lock()->lock( list->resource() );
+    mDistributionLists.append( list );
+  }
+
+  QList<KABC::DistributionList*>::ConstIterator distListIt;
+  const QList<KABC::DistributionList*>::ConstIterator
+    distListEndIt( mDistributionLists.constEnd() );
+  for ( distListIt = mDistributionLists.constBegin(); distListIt != distListEndIt;
+        ++distListIt ) {
+    addressBook()->removeDistributionList( *distListIt );
+    lock()->unlock( (*distListIt)->resource() );
+  }
+}
 
 PasteCommand::PasteCommand( KAB::Core *core, const KABC::Addressee::List &addressees )
   : Command( core->addressBook() ), mAddresseeList( addressees ), mCore( core )

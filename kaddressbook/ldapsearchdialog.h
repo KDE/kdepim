@@ -23,8 +23,8 @@
 
 #include <ldapclient.h>
 
-#include <libkdepim/distributionlist.h>
 #include <kabc/addressbook.h>
+#include <kabc/distributionlist.h>
 
 #include <kdialog.h>
 
@@ -81,7 +81,7 @@ class LDAPSearchDialog : public KDialog
     void saveSettings();
     static KABC::Addressee convertLdapAttributesToAddressee( const KLDAP::LdapAttrMap& attrs );
 
-    KPIM::DistributionList selectDistributionList();
+    KABC::DistributionList *selectDistributionList();
 
     QString makeFilter( const QString& query, const QString& attr, bool startsWith );
 

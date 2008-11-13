@@ -33,6 +33,7 @@
 
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
+#include <kabc/distributionlist.h>
 
 #include "kablock.h"
 
@@ -64,6 +65,23 @@ class DeleteCommand : public Command
 
   private:
     KABC::Addressee::List mAddresseeList;
+    QStringList mUIDList;
+};
+
+class DeleteDistListsCommand : public Command
+{
+  public:
+    DeleteDistListsCommand( KABC::AddressBook *addressBook,
+                            const QStringList &uidList );
+
+    virtual ~DeleteDistListsCommand();
+
+    virtual QString text() const;
+    virtual void undo();
+    virtual void redo();
+
+  private:
+    QList<KABC::DistributionList*> mDistributionLists;
     QStringList mUIDList;
 };
 
