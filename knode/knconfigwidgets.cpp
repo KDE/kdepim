@@ -33,7 +33,6 @@
 #include <kscoringeditor.h>
 #include <sonnet/configwidget.h>
 #include <kcombobox.h>
-#include <libkpgp/kpgp.h>
 #include <libkpgp/kpgpui.h>
 #include <kurlcompletion.h>
 #include <kiconloader.h>

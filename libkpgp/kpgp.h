@@ -80,9 +80,13 @@ private:
     // the class running pgp
     Base *pgp;
 
+  /**
+   * Singleton pattern: use getKpgp()
+   */
+  Module();
+
 public:
-    Module();
-    virtual ~Module();
+  virtual ~Module();
 
   /** the following virtual function form the interface to the
       application using Kpgp

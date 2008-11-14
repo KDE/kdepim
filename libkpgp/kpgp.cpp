@@ -68,10 +68,6 @@ Module::Module()
     mSecretKeysCached(false),
     passphrase(0), passphrase_buffer_len(0), havePassPhrase(false)
 {
-  if (!kpgpObject) {
-    kDebug( 5326 ) <<"creating new pgp object";
-  }
-  kpgpObject=kpgpod.setObject(Module::kpgpObject, this);
   pgp = 0;
 
   config = new KConfig("kpgprc");
@@ -1018,7 +1014,7 @@ Module::getKpgp()
 {
   if (!kpgpObject)
   {
-      kError(5326) <<"there is no instance of kpgp available";
+    kpgpObject = kpgpod.setObject(Module::kpgpObject, new Module());
   }
   return kpgpObject;
 }

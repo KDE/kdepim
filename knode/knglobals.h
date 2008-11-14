@@ -37,9 +37,6 @@ class KNMainWidget;
 class KNScoringManager;
 class KNMemoryManager;
 class KXMLGUIClient;
-namespace Kpgp {
-   class Module;
-}
 namespace KNode {
   class ArticleWidget;
   class Scheduler;
@@ -68,7 +65,6 @@ class KNODE_EXPORT KNGlobals
     KNode::ArticleWidget  *artWidget;
     /** Returns the article factory. */
     KNArticleFactory      *artFactory;
-    Kpgp::Module          *pgp;
     KConfig               *config();
     /** Returns the current instance. */
     const KComponentData &componentData() const;
