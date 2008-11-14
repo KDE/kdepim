@@ -93,7 +93,7 @@ defaults. </para>
 icon and select <guimenuitem>New Note</guimenuitem>.</para>
 <para>You can create a new note containing the contents of the 
 clipboard by selecting <guimenuitem>New Note From
-Clipboard</guimenuitem> .</para>
+Clipboard</guimenuitem>.</para>
 
 </listitem>
 </varlistentry>
@@ -298,7 +298,7 @@ on.</para></listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Rich Text</guilabel></term>
+<term><guilabel>Rich text</guilabel></term>
 <listitem>
 <para>Not yet implemented</para>
 </listitem>
@@ -315,7 +315,7 @@ dialog.</para>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Text font: Click to Change</guilabel></term>
+<term><guilabel>Text font</guilabel></term>
 <listitem>
 <para>You can change the font used for the text of your notes.</para>
 
@@ -327,7 +327,7 @@ dialog.</para></listitem>
 <variablelist>
 <title>The <guilabel>Actions</guilabel> Section</title>
 <varlistentry>
-<term><guilabel>Mail Action</guilabel></term>
+<term><guilabel>Mail action</guilabel></term>
 <listitem><para>Type a mail command and any required command line switches in
 this box.</para>
 <para>By using <token>%f</token> in the command line you can pass
@@ -375,8 +375,8 @@ settings.</para>
 
 <para>To customize a single note display &RMB; click on the note title
 bar and select <guimenuitem>Preferences...</guimenuitem>.</para>
-<para>A dialog with the <guilabel>Display Settings</guilabel> and
-<guilabel>Editor Settings</guilabel> pages will open,
+<para>A dialog with the <guilabel>Display</guilabel> and
+<guilabel>Editor</guilabel> pages will open,
 allowing you to configure the note.</para>
 </sect1>
 
