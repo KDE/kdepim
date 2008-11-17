@@ -492,12 +492,12 @@ void AddresseeEditorWidget::save()
   KABC::PhoneNumber::List phoneNumbers;
   KABC::PhoneNumber::List::ConstIterator phoneIter;
   phoneNumbers = mAddressee.phoneNumbers();
-  for ( phoneIter = phoneNumbers.begin(); phoneIter != phoneNumbers.end();
+  for ( phoneIter = phoneNumbers.constBegin(); phoneIter != phoneNumbers.constEnd();
         ++phoneIter )
     mAddressee.removePhoneNumber( *phoneIter );
 
   phoneNumbers = tab1.mPhoneEditWidget->phoneNumbers();
-  for ( phoneIter = phoneNumbers.begin(); phoneIter != phoneNumbers.end();
+  for ( phoneIter = phoneNumbers.constBegin(); phoneIter != phoneNumbers.constEnd();
         ++phoneIter )
     mAddressee.insertPhoneNumber( *phoneIter );
 
@@ -505,12 +505,12 @@ void AddresseeEditorWidget::save()
   KABC::Address::List addresses;
   KABC::Address::List::ConstIterator addressIter;
   addresses = mAddressee.addresses();
-  for ( addressIter = addresses.begin(); addressIter != addresses.end();
+  for ( addressIter = addresses.constBegin(); addressIter != addresses.constEnd();
         ++addressIter )
     mAddressee.removeAddress( *addressIter );
 
   addresses = tab1.mAddressEditWidget->addresses();
-  for ( addressIter = addresses.begin(); addressIter != addresses.end();
+  for ( addressIter = addresses.constBegin(); addressIter != addresses.constEnd();
         ++addressIter )
     mAddressee.insertAddress( *addressIter );
 

@@ -161,14 +161,14 @@ IMEditorWidget::IMEditorWidget( QWidget *parent, const QString &preferredIM )
   QMap<QString, KPluginInfo> protocolMap;
   QList<KPluginInfo>::ConstIterator it;
   QList<KPluginInfo> sorted;
-  for ( it = mProtocols.begin(); it != mProtocols.end(); ++it ) {
+  for ( it = mProtocols.constBegin(); it != mProtocols.constEnd(); ++it ) {
     protocolMap.insert( it->name(), (*it) );
   }
 
   QStringList keys = protocolMap.keys();
   keys.sort();
-  QStringList::ConstIterator keyIt = keys.begin();
-  QStringList::ConstIterator end = keys.end();
+  QStringList::ConstIterator keyIt = keys.constBegin();
+  QStringList::ConstIterator end = keys.constEnd();
   for ( ; keyIt != end; ++keyIt ) {
     sorted.append( protocolMap[*keyIt] );
   }
@@ -189,7 +189,7 @@ void IMEditorWidget::loadContact( KABC::Addressee *addr )
 
   QStringList::ConstIterator it;
   bool isSet = false;
-  for ( it = customs.begin(); it != customs.end(); ++it ) {
+  for ( it = customs.constBegin(); it != customs.constEnd(); ++it ) {
     QString app, name, value;
     splitField( *it, app, name, value );
 
@@ -197,9 +197,9 @@ void IMEditorWidget::loadContact( KABC::Addressee *addr )
       if ( name == QString::fromLatin1( "All" ) ) {
         const KPluginInfo protocol = protocolFromString( app );
         if ( protocol.isValid() ) {
-          QStringList addresses = value.split( QChar( 0xE000 ), QString::SkipEmptyParts );
-          QStringList::iterator end = addresses.end();
-          for ( QStringList::ConstIterator it = addresses.begin(); it != end; ++it ) {
+          const QStringList addresses = value.split( QChar( 0xE000 ), QString::SkipEmptyParts );
+          QStringList::ConstIterator end = addresses.constEnd();
+          for ( QStringList::ConstIterator it = addresses.constBegin(); it != end; ++it ) {
             IMAddressLVI *imaddresslvi =
               new IMAddressLVI( mWidget->lvAddresses, protocol, *it, Any/*, false*/ );
             if ( !isSet && (*it).trimmed().toLower() == mPreferred.trimmed().toLower() ) {
@@ -224,8 +224,8 @@ void IMEditorWidget::storeContact( KABC::Addressee *addr )
   // for each changed protocol, write a new custom field containing the current set of
   // addresses
   QList<KPluginInfo>::ConstIterator protocolIt;
-  for ( protocolIt = mChangedProtocols.begin();
-        protocolIt != mChangedProtocols.end(); ++protocolIt ) {
+  for ( protocolIt = mChangedProtocols.constBegin();
+        protocolIt != mChangedProtocols.constEnd(); ++protocolIt ) {
     QStringList lst;
     QTreeWidgetItemIterator addressIt( mWidget->lvAddresses );
     while ( *addressIt ) {
@@ -465,7 +465,7 @@ QString IMEditorWidget::preferred() const
 KPluginInfo IMEditorWidget::protocolFromString( const QString &fieldValue ) const
 {
   QList<KPluginInfo>::ConstIterator it;
-  for ( it = mProtocols.begin(); it != mProtocols.end(); ++it ) {
+  for ( it = mProtocols.constBegin(); it != mProtocols.constEnd(); ++it ) {
     if ( it->property( "X-KDE-InstantMessagingKABCField" ).toString() == fieldValue ) {
       return *it;
     }

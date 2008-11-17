@@ -69,7 +69,7 @@ void PrintProgress::addMessage( const QString &msg )
 
   QString body;
   QStringList::ConstIterator it;
-  for ( it = mMessages.begin(); it != mMessages.end(); ++it )
+  for ( it = mMessages.constBegin(); it != mMessages.constEnd(); ++it )
     body.append( QString( "<li>" ) + (*it) + QString( "</li>" ) );
 
   mLogBrowser->setText( head + body + foot );

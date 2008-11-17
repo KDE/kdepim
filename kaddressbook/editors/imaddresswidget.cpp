@@ -121,7 +121,7 @@ void IMAddressWidget::populateProtocols()
 {
   // insert the protocols in order
   QList<KPluginInfo>::ConstIterator it;
-  for ( it = mProtocols.begin(); it != mProtocols.end(); ++it ) {
+  for ( it = mProtocols.constBegin(); it != mProtocols.constEnd(); ++it ) {
     cmbProtocol->addItem( SmallIcon( it->icon() ), it->name() );
   }
 }

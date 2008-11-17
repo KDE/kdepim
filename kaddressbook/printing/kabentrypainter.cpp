@@ -370,7 +370,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
     painter->setFont( mBodyFont );
 
     KABC::Address::List::ConstIterator it;
-    for ( it = addresses.begin(); it != addresses.end(); ++it ) {
+    for ( it = addresses.constBegin(); it != addresses.constEnd(); ++it ) {
       address = *it;
       switch ( address.type() ) {
         case KABC::Address::Dom:
