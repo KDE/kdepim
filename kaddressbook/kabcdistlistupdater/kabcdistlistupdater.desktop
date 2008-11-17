@@ -2,6 +2,7 @@
 Name=kabcdistlistupdater
 Name[gl]=kabcdlistlistupdater
 Name[sv]=Uppdatering av adressbokens fördelningslistor
+Name[x-test]=xxkabcdistlistupdaterxx
 Exec=kabcdistlistupdater --disable-autostart
 Icon=misc
 Type=Application
@@ -16,6 +17,7 @@ Comment[pt_BR]=Ferramenta de atualização de listas de distribuição antigas p
 Comment[sv]=Verktyg för att uppdatera gamla fördelningslistor till nya.
 Comment[tr]=Eski dağıtım listelerini yeni hale güncellemek için bir araç.
 Comment[uk]=Інструмент для оновлення старих списків розповсюдження
+Comment[x-test]=xxTool to update the old distribution lists to the new ones.xx
 Comment[zh_TW]=將舊的分派清單更新成新的清單的工具。
 Terminal=false
 NoDisplay=true

@@ -56,6 +56,7 @@ Comment[pt]=Oferece o acesso aos contactos guardados num servidor de Kolab por I
 Comment[pt_BR]=Fornece acesso aos contatos armazenados em um servidor Kolab usando IMAP, pelo KMail ou Kontact
 Comment[sv]=Ger tillgång till kontakter lagrade på en Kolab-server med användning av IMAP via Kmail eller Kontact
 Comment[uk]=Надає доступ до контактів, які зберігаються на сервері Kolab за допомогою IMAP за посередництва KMail або Kontact.
+Comment[x-test]=xxProvides access to contacts stored on a Kolab server using IMAP via KMail or Kontactxx
 Comment[zh_TW]=提供存取透過 KMail 或 Kontact，使用 IMAP 儲存在 Kolab 伺服器上的聯絡人的功能
 X-KDE-Library=kabc_kolab
 Type=Service

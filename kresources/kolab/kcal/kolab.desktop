@@ -56,6 +56,7 @@ Comment[pt]=Oferece o acesso a um calendário guardado num servidor Kolab por IM
 Comment[pt_BR]=Fornece acesso a um calendário armazenado em um servidor Kolab usando IMAP, pelo KMail ou Kontact
 Comment[sv]=Ger tillgång till en kalender lagrad på en Kolab-server med användning av IMAP via Kmail eller Kontact
 Comment[uk]=Надає доступ до календаря, який зберігається на сервері Kolab, за допомогою IMAP за посередництва KMail або Kontact
+Comment[x-test]=xxProvides access to a calendar stored on a Kolab server using IMAP via KMail or Kontactxx
 Comment[zh_TW]=提供存取透過 KMail 或 Kontact，使用 IMAP 儲存在 Kolab 伺服器上的行事曆的功能
 X-KDE-Library=kcal_kolab
 Type=Service
