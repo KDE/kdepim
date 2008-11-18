@@ -76,12 +76,15 @@ namespace Kleo {
 
             CertificateRequest = 0x400,
 
-            AnyType            = AnyMessageType|AnyCertStoreType|CertificateRequest,
+            CertificateRevocationList = 0x1000,
+
+            AnyType            = AnyMessageType|AnyCertStoreType|CertificateRequest|CertificateRevocationList,
             TypeMask           = AnyType
         };
     }
 
     unsigned int classify( const QString & filename );
+    unsigned int classify( const QStringList & fileNames );
     unsigned int classifyContent( const QByteArray & data );
 
     QString findSignedData( const QString & signatureFileName );
@@ -116,6 +119,8 @@ namespace Kleo {
     make_convenience( OpaqueSignature,   TypeMask )
     make_convenience( CipherText,        TypeMask )
     make_convenience( AnyMessageType,    TypeMask )
+    make_convenience( CertificateRevocationList, TypeMask )
+    make_convenience( AnyCertStoreType,  TypeMask )
 #undef make_convenience
 
     inline GpgME::Protocol findProtocol( const unsigned int classifcation ) {
