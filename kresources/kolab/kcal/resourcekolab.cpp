@@ -116,7 +116,7 @@ bool ResourceKolab::openResource( KConfig& config, const char* contentType,
     return false;
   map.clear();
   QList<KMail::SubResource>::ConstIterator it;
-  for ( it = subResources.begin(); it != subResources.end(); ++it )
+  for ( it = subResources.constBegin(); it != subResources.constEnd(); ++it )
     loadSubResourceConfig( config, (*it).location, (*it).label, (*it).writable,
                            (*it).alarmRelevant, map );
   return true;
@@ -141,7 +141,7 @@ bool ResourceKolab::doOpen()
 static void writeResourceConfig( KConfig& config, ResourceMap& map )
 {
   ResourceMap::ConstIterator it;
-  for ( it = map.begin(); it != map.end(); ++it ) {
+  for ( it = map.constBegin(); it != map.constEnd(); ++it ) {
     KConfigGroup group = config.group( it.key() );
     group.writeEntry( "Active", it.value().active() );
   }
@@ -212,7 +212,7 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
     }
     { // for RAII scoping below
       TemporarySilencer t( this );
-      for( KMail::SernumDataPair::List::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
+      for( KMail::SernumDataPair::List::ConstIterator it = lst.constBegin(); it != lst.constEnd(); ++it ) {
         addIncidence( mimetype, it->data, subResource, it->sernum );
       }
     }
@@ -249,7 +249,7 @@ bool ResourceKolab::doLoad( bool syncCache )
 bool ResourceKolab::doLoadAll( ResourceMap& map, const char* mimetype )
 {
   bool rc = true;
-  for ( ResourceMap::ConstIterator it = map.begin(); it != map.end(); ++it ) {
+  for ( ResourceMap::ConstIterator it = map.constBegin(); it != map.constEnd(); ++it ) {
     if ( !it.value().active() )
       // This resource is disabled
       continue;
@@ -299,7 +299,7 @@ void ResourceKolab::removeIncidences( const QByteArray& incidenceType )
     // better call event(uid), todo(uid) etc. directly.
 
     // A  faster but hackish way would probably be to check the type of the resource,
-    // like mEventSubResources.find( it.value().resource() ) != mEventSubResources.end() ?
+    // like mEventSubResources.find( it.value().resource() ) != mEventSubResources.constEnd() ?
     const QString& uid = it.key();
     if ( incidenceType == "Event" && mCalendar.event( uid ) )
       mUidMap.erase( it );
@@ -829,8 +829,8 @@ KCal::Journal::List ResourceKolab::rawJournalsForDate( const QDate &date )
 KCal::Alarm::List ResourceKolab::relevantAlarms( const KCal::Alarm::List &alarms )
 {
   KCal::Alarm::List relevantAlarms;
-  KCal::Alarm::List::ConstIterator it( alarms.begin() );
-  while ( it != alarms.end() ) {
+  KCal::Alarm::List::ConstIterator it( alarms.constBegin() );
+  while ( it != alarms.constEnd() ) {
     KCal::Alarm *a = (*it);
     ++it;
     const QString &uid = a->parent()->uid();
@@ -1033,7 +1033,7 @@ void ResourceKolab::fromKMailAsyncLoadResult( const QMap<quint32, QString>& map,
                                               const QString& folder )
 {
   TemporarySilencer t( this );
-  for( QMap<quint32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it )
+  for( QMap<quint32, QString>::ConstIterator it = map.constBegin(); it != map.constEnd(); ++it )
     addIncidence( type.toLatin1(), it.value(), folder, it.key() );
 }
 
@@ -1165,11 +1165,11 @@ bool ResourceKolab::unloadSubResource( const QString& subResource )
 {
     const bool silent = mSilent;
     mSilent = true;
-    Kolab::UidMap::Iterator mapIt = mUidMap.begin();
+    Kolab::UidMap::ConstIterator mapIt = mUidMap.constBegin();
     QList<KCal::Incidence*> incidences;
-    while ( mapIt != mUidMap.end() )
+    while ( mapIt != mUidMap.constEnd() )
     {
-        Kolab::UidMap::Iterator it = mapIt++;
+        Kolab::UidMap::ConstIterator it = mapIt++;
         const StorageReference ref = it.value();
         if ( ref.resource() != subResource ) continue;
         // FIXME incidence() is expensive

@@ -405,7 +405,7 @@ void KCalResourceSlox::createIncidenceAttributes( QDomDocument &doc,
         fieldName( Participants ) );
     Attendee::List attendees = incidence->attendees();
     Attendee::List::ConstIterator it;
-    for( it = attendees.begin(); it != attendees.end(); ++it ) {
+    for( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
       if ( mAccounts ) {
         QString userId = mAccounts->lookupId( (*it)->email() );
         QString status;
@@ -586,7 +586,7 @@ void KCalResourceSlox::createRecurrenceAttributes( QDomDocument &doc,
   // delete exceptions
   DateList exlist = r->exDates();
   QStringList res;
-  for ( DateList::Iterator it = exlist.begin(); it != exlist.end(); ++it )
+  for ( DateList::ConstIterator it = exlist.constBegin(); it != exlist.constEnd(); ++it )
     res.append( WebdavHandler::qDateTimeToSlox( QDateTime( *it ) ) );
   WebdavHandler::addSloxElement( this, doc, parent, fieldName( RecurrenceDelEx ), res.join( "," ) );
 }
@@ -820,8 +820,8 @@ void KCalResourceSlox::parseRecurrence( const QDomNode &node, Event *event )
       yearly2Month = text.toInt() + 1;
     } else if ( tag == fieldName( RecurrenceDelEx ) ) {
       QStringList exdates = text.split( "," );
-      QStringList::Iterator it;
-      for ( it = exdates.begin(); it != exdates.end(); ++it )
+      QStringList::ConstIterator it;
+      for ( it = exdates.constBegin(); it != exdates.constEnd(); ++it )
         deleteExceptions.append( WebdavHandler::sloxToKDateTime( *it ).date() );
     }
   }
@@ -931,7 +931,7 @@ void KCalResourceSlox::slotLoadTodosResult( KJob *job )
     disableChangeNotification();
 
     QList<SloxItem>::ConstIterator it;
-    for( it = items.begin(); it != items.end(); ++it ) {
+    for( it = items.constBegin(); it != items.constEnd(); ++it ) {
       SloxItem item = *it;
       QString uid = sloxIdToTodoUid( item.sloxId );
       if ( item.status == SloxItem::Delete ) {
@@ -1005,7 +1005,7 @@ void KCalResourceSlox::slotLoadEventsResult( KJob *job )
     disableChangeNotification();
 
     QList<SloxItem>::ConstIterator it;
-    for( it = items.begin(); it != items.end(); ++it ) {
+    for( it = items.constBegin(); it != items.constEnd(); ++it ) {
       SloxItem item = *it;
       QString uid = sloxIdToEventUid( item.sloxId );
       if ( item.status == SloxItem::Delete ) {

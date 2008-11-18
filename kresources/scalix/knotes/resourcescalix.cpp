@@ -81,7 +81,7 @@ bool ResourceScalix::doOpen()
   // Make the resource map from the folder list
   QList<KMail::SubResource>::ConstIterator it;
   mSubResources.clear();
-  for ( it = subResources.begin(); it != subResources.end(); ++it ) {
+  for ( it = subResources.constBegin(); it != subResources.constEnd(); ++it ) {
     const QString subResource = (*it).location;
     const bool active = group.readEntry( subResource, true );
     mSubResources[ subResource ] = Scalix::SubResource( active, (*it).writable, (*it).label );
@@ -95,7 +95,7 @@ void ResourceScalix::doClose()
   KConfig config( configFile() );
   KConfigGroup group = config.group( configGroupName );
   Scalix::ResourceMap::ConstIterator it;
-  for ( it = mSubResources.begin(); it != mSubResources.end(); ++it )
+  for ( it = mSubResources.constBegin(); it != mSubResources.constEnd(); ++it )
     group.writeEntry( it.key(), it.value().active() );
 }
 
@@ -122,7 +122,7 @@ bool ResourceScalix::loadSubResource( const QString& subResource,
   const bool silent = mSilent;
   mSilent = true;
   KMail::SernumDataPair::List::ConstIterator it;
-  for ( it = lst.begin(); it != lst.end(); ++it ) {
+  for ( it = lst.constBegin(); it != lst.constEnd(); ++it ) {
     KCal::Journal* journal = addNote( it->data, subResource, it->sernum, mimetype );
     if ( !journal )
       kDebug(5500) <<"loading note" << it->sernum <<" failed";
@@ -142,7 +142,7 @@ bool ResourceScalix::load()
 
   bool rc = true;
   Scalix::ResourceMap::ConstIterator itR;
-  for ( itR = mSubResources.begin(); itR != mSubResources.end(); ++itR ) {
+  for ( itR = mSubResources.constBegin(); itR != mSubResources.constEnd(); ++itR ) {
     if ( !itR.value().active() )
       // This subResource is disabled
       continue;
@@ -241,11 +241,11 @@ KCal::Alarm::List ResourceScalix::alarms( const KDateTime& from, const KDateTime
     KCal::Alarm::List alarms;
     KCal::Journal::List notes = mCalendar.journals();
     KCal::Journal::List::ConstIterator note;
-    for ( note = notes.begin(); note != notes.end(); ++note )
+    for ( note = notes.constBegin(); note != notes.constEnd(); ++note )
     {
         KDateTime preTime = from.addSecs( -1 );
         KCal::Alarm::List::ConstIterator it;
-        for( it = (*note)->alarms().begin(); it != (*note)->alarms().end(); ++it )
+        for( it = (*note)->alarms().constBegin(); it != (*note)->alarms().constEnd(); ++it )
         {
             if ( (*it)->enabled() )
             {
@@ -373,7 +373,7 @@ void ResourceScalix::fromKMailDelSubresource( const QString& type,
   // Make a list of all uids to remove
   Scalix::UidMap::ConstIterator mapIt;
   QStringList uids;
-  for ( mapIt = mUidMap.begin(); mapIt != mUidMap.end(); ++mapIt )
+  for ( mapIt = mUidMap.constBegin(); mapIt != mUidMap.constEnd(); ++mapIt )
     if ( mapIt.value().resource() == subResource )
       // We have a match
       uids << mapIt.key();
@@ -383,7 +383,7 @@ void ResourceScalix::fromKMailDelSubresource( const QString& type,
     const bool silent = mSilent;
     mSilent = true;
     QStringList::ConstIterator it;
-    for ( it = uids.begin(); it != uids.end(); ++it ) {
+    for ( it = uids.constBegin(); it != uids.constEnd(); ++it ) {
       KCal::Journal* j = mCalendar.journal( *it );
       if( j )
         deleteNote( j );
@@ -408,7 +408,7 @@ void ResourceScalix::fromKMailAsyncLoadResult( const QMap<quint32, QString>& map
     mimetype = attachmentMimeType;
   else
     mimetype = inlineMimeType;
-  for( QMap<quint32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it ) {
+  for( QMap<quint32, QString>::ConstIterator it = map.constBegin(); it != map.constEnd(); ++it ) {
     KCal::Journal* journal = addNote( it.value(), folder, it.key(), mimetype );
     if ( !journal )
       kDebug(5500) <<"loading note" << it.key() <<" failed";

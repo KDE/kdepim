@@ -244,7 +244,7 @@ void ResourceSlox::slotResult( KJob *job )
     bool changed = false;
 
     QList<SloxItem>::ConstIterator it;
-    for( it = items.begin(); it != items.end(); ++it ) {
+    for( it = items.constBegin(); it != items.constEnd(); ++it ) {
       SloxItem item = *it;
       QString uid = "kresources_slox_kabc_" + item.sloxId;
       if ( item.status == SloxItem::Delete ) {
@@ -307,7 +307,7 @@ void ResourceSlox::slotUploadResult( KJob *job )
     QList<SloxItem> items = WebdavHandler::getSloxItems( this, doc );
 
     QList<SloxItem>::ConstIterator it;
-    for( it = items.begin(); it != items.end(); ++it ) {
+    for( it = items.constBegin(); it != items.constEnd(); ++it ) {
       SloxItem item = *it;
       if ( !item.response.contains( "200" ) ) {
         savingError( this, item.response + '\n' + item.responseDescription );
@@ -436,10 +436,10 @@ KABC::PhoneNumber::Type ResourceSlox::phoneNumberType( const QString &fieldName 
   else
     pnmap = mPhoneNumberSloxMap;
   QMap<KABC::PhoneNumber::Type, QStringList>::ConstIterator it;
-  for ( it = pnmap.begin(); it != pnmap.end(); ++it ) {
+  for ( it = pnmap.constBegin(); it != pnmap.constEnd(); ++it ) {
     QStringList l = it.value();
     QStringList::ConstIterator it2;
-    for ( it2 = l.begin(); it2 != l.end(); ++it2 )
+    for ( it2 = l.constBegin(); it2 != l.constEnd(); ++it2 )
       if ( (*it2) == fieldName )
         return it.key();
   }
@@ -581,12 +581,12 @@ void ResourceSlox::createAddresseeFields( QDomDocument &doc, QDomElement &prop,
 
   // emails
   QStringList email_list = a.emails();
-  QStringList::const_iterator emails_it = email_list.begin();
-  if ( emails_it != email_list.end() )
+  QStringList::const_iterator emails_it = email_list.constBegin();
+  if ( emails_it != email_list.constEnd() )
     WebdavHandler::addSloxElement( this, doc, prop, fieldName( PrimaryEmail ), *(emails_it++) );
-  if ( emails_it != email_list.end() )
+  if ( emails_it != email_list.constEnd() )
     WebdavHandler::addSloxElement( this, doc, prop, fieldName( SecondaryEmail1 ), *(emails_it++) );
-  if ( emails_it != email_list.end() )
+  if ( emails_it != email_list.constEnd() )
     WebdavHandler::addSloxElement( this, doc, prop, fieldName( SecondaryEmail2 ), *(emails_it++) );
 
   // phone numbers
@@ -596,7 +596,7 @@ void ResourceSlox::createAddresseeFields( QDomDocument &doc, QDomElement &prop,
     pnSaveMap = mPhoneNumberOxMap;
   else
     pnSaveMap = mPhoneNumberSloxMap;
-  for ( PhoneNumber::List::ConstIterator it = pnlist.begin() ; it != pnlist.end(); ++it ) {
+  for ( PhoneNumber::List::ConstIterator it = pnlist.constBegin() ; it != pnlist.constEnd(); ++it ) {
     if ( pnSaveMap.contains( (*it).type() ) ) {
       QStringList l = pnSaveMap[(*it).type()];
       QString fn = l.first();
@@ -611,9 +611,9 @@ void ResourceSlox::createAddresseeFields( QDomDocument &doc, QDomElement &prop,
   }
   // send empty fields for the remaining ohone number fields
   // it's not possible to delete phone numbers otherwise
-  for ( QMap<KABC::PhoneNumber::Type, QStringList>::ConstIterator it = pnSaveMap.begin(); it != pnSaveMap.end(); ++it ) {
+  for ( QMap<KABC::PhoneNumber::Type, QStringList>::ConstIterator it = pnSaveMap.constBegin(); it != pnSaveMap.constEnd(); ++it ) {
     QStringList l = it.value();
-    for ( QStringList::ConstIterator it2 = l.begin(); it2 != l.end(); ++it2 )
+    for ( QStringList::ConstIterator it2 = l.constBegin(); it2 != l.constEnd(); ++it2 )
       WebdavHandler::addSloxElement( this, doc, prop, (*it2) );
   }
 

@@ -80,8 +80,8 @@ void SloxAccounts::insertUser( const QString &id, const KABC::Addressee &a )
 KABC::Addressee SloxAccounts::lookupUser( const QString &id )
 {
   QMap<QString, KABC::Addressee>::ConstIterator it;
-  it = mUsers.find( id );
-  if ( it == mUsers.end() ) {
+  it = mUsers.constFind( id );
+  if ( it == mUsers.constEnd() ) {
     requestAccounts();
     return KABC::Addressee();
   } else {
@@ -94,7 +94,7 @@ QString SloxAccounts::lookupId( const QString &email )
   kDebug() <<"SloxAccounts::lookupId()" << email;
 
   QMap<QString, KABC::Addressee>::ConstIterator it;
-  for( it = mUsers.begin(); it != mUsers.end(); ++it ) {
+  for( it = mUsers.constBegin(); it != mUsers.constEnd(); ++it ) {
     kDebug() <<"PREF:" << (*it).preferredEmail();
     kDebug() <<"KEY:" << it.key();
     if ( (*it).preferredEmail() == email ) return it.key();
