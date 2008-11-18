@@ -119,7 +119,7 @@ bool ResourceKABC::doLoad( bool syncCache )
   // import from kabc
   QString summary;
   QStringList::ConstIterator strIt;
-  const QStringList::ConstIterator endStrIt = mCategories.end();
+  QStringList::ConstIterator endStrIt = mCategories.constEnd();
   KABC::Addressee::List anniversaries;
   KABC::Addressee::List::Iterator addrIt;
 
@@ -129,8 +129,8 @@ bool ResourceKABC::doLoad( bool syncCache )
 
     if ( mUseCategories ) {
       bool hasCategory = false;
-      QStringList categories = (*it).categories();
-      for ( strIt = mCategories.begin(); strIt != endStrIt; ++strIt ) {
+      const QStringList categories = (*it).categories();
+      for ( strIt = mCategories.constBegin(); strIt != endStrIt; ++strIt ) {
         if ( categories.contains( *strIt ) ) {
           hasCategory = true;
           break;

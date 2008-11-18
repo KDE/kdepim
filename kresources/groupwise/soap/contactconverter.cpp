@@ -113,8 +113,8 @@ ngwt__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
     QStringList emails = addr.emails();
     emailList->primary = qStringToString( emails.first() );
 
-    QStringList::Iterator it;
-    for ( it = emails.begin(); it != emails.end(); ++it )
+    QStringList::ConstIterator it;
+    for ( it = emails.constBegin(); it != emails.constEnd(); ++it )
       list->push_back( std::string( (*it).toUtf8().data() ) );
 
     emailList->email = *list;
@@ -129,8 +129,8 @@ ngwt__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
     std::vector<class ngwt__PhoneNumber*> *list = soap_new_std__vectorTemplateOfPointerTongwt__PhoneNumber( soap(), -1 );
 
     KABC::PhoneNumber::List phones = addr.phoneNumbers();
-    KABC::PhoneNumber::List::Iterator it;
-    for ( it = phones.begin(); it != phones.end(); ++it ) {
+    KABC::PhoneNumber::List::ConstIterator it;
+    for ( it = phones.constBegin(); it != phones.constEnd(); ++it ) {
       ngwt__PhoneNumber* number = convertPhoneNumber( *it );
       if ( number ) {
         list->push_back( number );
@@ -152,8 +152,8 @@ ngwt__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
     std::vector<class ngwt__PostalAddress*> *list = soap_new_std__vectorTemplateOfPointerTongwt__PostalAddress( soap(), -1 );
 
     KABC::Address::List addresses = addr.addresses();
-    KABC::Address::List::Iterator it;
-    for ( it = addresses.begin(); it != addresses.end(); ++it ) {
+    KABC::Address::List::ConstIterator it;
+    for ( it = addresses.constBegin(); it != addresses.constEnd(); ++it ) {
       ngwt__PostalAddress* address = convertPostalAddress( *it );
       if ( address )
         list->push_back( address );
@@ -389,8 +389,8 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
     }
 
     // then construct a custom field from each qstringlist
-    QMap<QString, QStringList>::Iterator addrIt;
-    for ( addrIt = addressMap.begin(); addrIt != addressMap.end(); ++addrIt )
+    QMap<QString, QStringList>::ConstIterator addrIt;
+    for ( addrIt = addressMap.constBegin(); addrIt != addressMap.constEnd(); ++addrIt )
     {
       QString protocol = addrIt.key();
       QStringList addresses = addrIt.value();
@@ -575,7 +575,7 @@ ngwt__ImAddressList* ContactConverter::convertImAddresses( const KABC::Addressee
   const QStringList customs = addr.customs();
   QStringList::ConstIterator it;
   bool isSet = false;
-  for ( it = customs.begin(); it != customs.end(); ++it ) {
+  for ( it = customs.constBegin(); it != customs.constEnd(); ++it ) {
     QString app, name, value;
     splitField( *it, app, name, value );
 
@@ -586,9 +586,9 @@ ngwt__ImAddressList* ContactConverter::convertImAddresses( const KABC::Addressee
         if ( protocol == "groupwise" )
           protocol = "novell";
         QStringList addresses = value.split( QChar( 0xE000 ), QString::SkipEmptyParts );
-        QStringList::iterator end = addresses.end();
+        QStringList::ConstIterator end = addresses.constEnd();
         // extract each address for this protocol, and create an ngwt__ImAddress for it, and append it to list.
-        for ( QStringList::ConstIterator it = addresses.begin(); it != end; ++it ) {
+        for ( QStringList::ConstIterator it = addresses.constBegin(); it != end; ++it ) {
           ngwt__ImAddress* address = soap_new_ngwt__ImAddress( soap(), -1 );
           address->service = soap_new_std__string( soap(), -1 );
           address->address = soap_new_std__string( soap(), -1 );

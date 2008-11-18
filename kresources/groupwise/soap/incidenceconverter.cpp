@@ -470,7 +470,7 @@ void IncidenceConverter::setAttendees( KCal::Incidence *incidence,
 
   KCal::Attendee::List attendees = incidence->attendees();
   KCal::Attendee::List::ConstIterator it;
-  for( it = attendees.begin(); it != attendees.end(); ++it ) {
+  for( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
     if ( !to.isEmpty() )
       to += QString::fromLatin1( ";  %1" ).arg( (*it)->name() );
     kDebug() <<"IncidenceConverter::setAttendees(), adding" << (*it)->fullName();
@@ -544,7 +544,7 @@ bool IncidenceConverter::convertFromCalendarItem( ngwt__CalendarItem* item,
     std::vector<xsd__date>* dateList = item->rdate->date;
 
     std::vector<xsd__date>::const_iterator it;
-    for ( it = dateList->begin(); it != dateList->end(); ++it ) {
+    for ( it = dateList->constBegin(); it != dateList->constEnd(); ++it ) {
       QDate date = QDate::fromString( s2q( *it ), Qt::ISODate );
       if ( date.isValid() )
     }
@@ -696,7 +696,7 @@ void IncidenceConverter::setRecurrence( KCal::Incidence * incidence, ngwt__Calen
     if ( !exceptions.isEmpty() )
     {
       item->exdate = soap_new_ngwt__RecurrenceDateType( soap(), -1 );
-      for ( KCal::DateList::ConstIterator it = exceptions.begin(); it != exceptions.end(); ++it )
+      for ( KCal::DateList::ConstIterator it = exceptions.constBegin(); it != exceptions.constEnd(); ++it )
       {
         std::string startDate;
         startDate.append( (*it).toString( Qt::ISODate ).toUtf8().data() );
