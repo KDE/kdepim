@@ -1,3 +1,11 @@
+Tuesday, November 19th 2008
+
+Problems addressed
+-------------------
+
+* kolab/issue3196 large number of appointments can lead to corrupt index and loss of events.
+* kolab/issue2908 Wrong default name when renaming IMAP ressources
+
 Sunday, November 9th 2008
 
 Problems addressed
