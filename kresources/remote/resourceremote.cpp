@@ -294,7 +294,7 @@ void ResourceRemote::slotSaveJobResult( KJob *job )
     kDebug(5800) << "success";
 
     Incidence::List::ConstIterator it;
-    for( it = mChangedIncidences.begin(); it != mChangedIncidences.end();
+    for( it = mChangedIncidences.constBegin(); it != mChangedIncidences.constEnd();
          ++it ) {
       clearChange( *it );
     }

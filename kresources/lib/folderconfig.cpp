@@ -112,7 +112,7 @@ void FolderConfig::updateFolderList()
 
   FolderLister::Entry::List folders = mFolderLister->folders();
   FolderLister::Entry::List::ConstIterator it;
-  for( it = folders.begin(); it != folders.end(); ++it ) {
+  for( it = folders.constBegin(); it != folders.constEnd(); ++it ) {
     FolderListItem *item = new FolderListItem( mFolderList, (*it) );
     if ( mFolderLister->writeDestinationId( FolderLister::Event ) == (*it).id ) {
       item->setDefault( FolderListView::Event );

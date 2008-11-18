@@ -234,17 +234,17 @@ bool ResourceXMLRPC::asyncSave( Ticket* )
   KABC::Addressee::List::ConstIterator it;
 
   const KABC::Addressee::List addedList = addedAddressees();
-  for ( it = addedList.begin(); it != addedList.end(); ++it ) {
+  for ( it = addedList.constBegin(); it != addedList.constEnd(); ++it ) {
     addContact( *it );
   }
 
   const KABC::Addressee::List changedList = changedAddressees();
-  for ( it = changedList.begin(); it != changedList.end(); ++it ) {
+  for ( it = changedList.constBegin(); it != changedList.constEnd(); ++it ) {
     updateContact( *it );
   }
 
   const KABC::Addressee::List deletedList = deletedAddressees();
-  for ( it = deletedList.begin(); it != deletedList.end(); ++it ) {
+  for ( it = deletedList.constBegin(); it != deletedList.constEnd(); ++it ) {
     deleteContact( *it );
   }
 
@@ -338,7 +338,7 @@ void ResourceXMLRPC::listContactsFinished( const QList<QVariant> &mapList,
   QList<QVariant>::ConstIterator contactIt;
 
   KABC::Addressee::List serverContacts;
-  for ( contactIt = contactList.begin(); contactIt != contactList.end(); ++contactIt ) {
+  for ( contactIt = contactList.constBegin(); contactIt != contactList.constEnd(); ++contactIt ) {
     const QMap<QString, QVariant> map = (*contactIt).toMap();
 
     Addressee addr;
@@ -433,7 +433,7 @@ void ResourceXMLRPC::deleteContactFault( int, const QString &errorMsg,
 
   const KABC::Addressee::List deletedList = deletedAddressees();
   KABC::Addressee::List::ConstIterator it;
-  for ( it = deletedList.begin(); it != deletedList.end(); ++it ) {
+  for ( it = deletedList.constBegin(); it != deletedList.constEnd(); ++it ) {
     if ( (*it).uid() == id.toString() ) {
       addr = *it;
       break;
@@ -451,7 +451,7 @@ QString ResourceXMLRPC::addrTypesToTypeStr( int typeMask )
 {
   QStringList types;
   QMap<QString, KABC::Address::TypeFlag>::ConstIterator it;
-  for ( it = mAddrTypes.begin(); it != mAddrTypes.end(); ++it )
+  for ( it = mAddrTypes.constBegin(); it != mAddrTypes.constEnd(); ++it )
     if ( it.value() & typeMask )
       types.append( it.key() );
 
@@ -485,9 +485,9 @@ void ResourceXMLRPC::writeContact( const Addressee &addr, QMap<QString, QVariant
 
   QMap<QString, QVariant> catMap;
   int counter = 0;
-  for ( catIt = categories.begin(); catIt != categories.end(); ++catIt ) {
-    QMap<QString, int>::ConstIterator it = mCategoryMap.find( *catIt );
-    if ( it == mCategoryMap.end() ) // new category
+  for ( catIt = categories.constBegin(); catIt != categories.constEnd(); ++catIt ) {
+    QMap<QString, int>::ConstIterator it = mCategoryMap.constFind( *catIt );
+    if ( it == mCategoryMap.constEnd() ) // new category
       catMap.insert( QString::number( counter-- ), *catIt );
     else
       catMap.insert( QString::number( it.value() ), *catIt );
@@ -581,7 +581,7 @@ void ResourceXMLRPC::writeContact( const Addressee &addr, QMap<QString, QVariant
 
   const QStringList customFields = addr.customs();
   QStringList::ConstIterator it;
-  for ( it = customFields.begin(); it != customFields.end(); ++it ) {
+  for ( it = customFields.constBegin(); it != customFields.constEnd(); ++it ) {
     int colon = (*it).indexOf( ":" );
     QString identifier = (*it).left( colon );
     int dash = identifier.indexOf( "-" );
@@ -605,7 +605,7 @@ void ResourceXMLRPC::readContact( const QMap<QString, QVariant> &args, Addressee
   Address addrOne, addrTwo;
 
   QMap<QString, QVariant>::ConstIterator it;
-  for ( it = args.begin(); it != args.end(); ++it ) {
+  for ( it = args.constBegin(); it != args.constEnd(); ++it ) {
     if ( it.key() == "id" ) {
       uid = it.value().toString();
     } else if ( it.key() == "access" ) {
@@ -720,7 +720,7 @@ void ResourceXMLRPC::readContact( const QMap<QString, QVariant> &args, Addressee
       const QMap<QString, QVariant> categories = it.value().toMap();
       QMap<QString, QVariant>::ConstIterator it;
 
-      for ( it = categories.begin(); it != categories.end(); ++it )
+      for ( it = categories.constBegin(); it != categories.constEnd(); ++it )
         addr.insertCategory( it.value().toString() );
     } else if ( it.key() == "rights" ) {
       setRights( addr, it.value().toInt() );
@@ -728,7 +728,7 @@ void ResourceXMLRPC::readContact( const QMap<QString, QVariant> &args, Addressee
   }
 
   QMap<QString, QString>::ConstIterator cfIt;
-  for ( cfIt = mCustomFieldsMap.begin(); cfIt != mCustomFieldsMap.end(); ++cfIt ) {
+  for ( cfIt = mCustomFieldsMap.constBegin(); cfIt != mCustomFieldsMap.constEnd(); ++cfIt ) {
     if ( args[ cfIt.key() ].toString().isEmpty() )
       continue;
 
@@ -755,7 +755,7 @@ void ResourceXMLRPC::loadCategoriesFinished( const QList<QVariant> &mapList,
   QMap<QString, QVariant>::ConstIterator it;
 
   KABPrefs *prefs = KABPrefs::instance();
-  for ( it = map.begin(); it != map.end(); ++it ) {
+  for ( it = map.constBegin(); it != map.constEnd(); ++it ) {
     mCategoryMap.insert( it.value().toString(), it.key().toInt() );
 
     QStringList categories = prefs->customCategories();
@@ -774,7 +774,7 @@ void ResourceXMLRPC::loadCustomFieldsFinished( const QList<QVariant> &mapList,
   const QMap<QString, QVariant> map = mapList[ 0 ].toMap();
   QMap<QString, QVariant>::ConstIterator it;
 
-  for ( it = map.begin(); it != map.end(); ++it )
+  for ( it = map.constBegin(); it != map.constEnd(); ++it )
     mCustomFieldsMap.insert( it.key(), it.value().toString() );
 }
 

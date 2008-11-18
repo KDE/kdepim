@@ -451,8 +451,8 @@ bool Contact::loadPhoneAttribute( QDomElement& element )
 
 void Contact::savePhoneAttributes( QDomElement& element ) const
 {
-  QList<PhoneNumber>::ConstIterator it = mPhoneNumbers.begin();
-  for ( ; it != mPhoneNumbers.end(); ++it ) {
+  QList<PhoneNumber>::ConstIterator it = mPhoneNumbers.constBegin();
+  for ( ; it != mPhoneNumbers.constEnd(); ++it ) {
     QDomElement e = element.ownerDocument().createElement( "phone" );
     element.appendChild( e );
     const PhoneNumber& p = *it;
@@ -463,8 +463,8 @@ void Contact::savePhoneAttributes( QDomElement& element ) const
 
 void Contact::saveEmailAttributes( QDomElement& element ) const
 {
-  QList<Email>::ConstIterator it = mEmails.begin();
-  for ( ; it != mEmails.end(); ++it )
+  QList<Email>::ConstIterator it = mEmails.constBegin();
+  for ( ; it != mEmails.constEnd(); ++it )
     saveEmailAttribute( element, *it );
 }
 
@@ -479,8 +479,8 @@ void Contact::loadCustomAttributes( QDomElement& element )
 
 void Contact::saveCustomAttributes( QDomElement& element ) const
 {
-  QList<Custom>::ConstIterator it = mCustomList.begin();
-  for ( ; it != mCustomList.end(); ++it ) {
+  QList<Custom>::ConstIterator it = mCustomList.constBegin();
+  for ( ; it != mCustomList.constEnd(); ++it ) {
     Q_ASSERT( !(*it).name.isEmpty() );
     if ( (*it).app == s_unhandledTagAppName ) {
       writeString( element, (*it).name, (*it).value );
@@ -535,8 +535,8 @@ bool Contact::loadAddressAttribute( QDomElement& element )
 
 void Contact::saveAddressAttributes( QDomElement& element ) const
 {
-  QList<Address>::ConstIterator it = mAddresses.begin();
-  for ( ; it != mAddresses.end(); ++it ) {
+  QList<Address>::ConstIterator it = mAddresses.constBegin();
+  for ( ; it != mAddresses.constEnd(); ++it ) {
     QDomElement e = element.ownerDocument().createElement( "address" );
     element.appendChild( e );
     const Address& a = *it;
@@ -578,8 +578,8 @@ void Kolab::Contact::loadDistrListMember( const QDomElement& element )
 
 void Contact::saveDistrListMembers( QDomElement& element ) const
 {
-  QList<Member>::ConstIterator it = mDistrListMembers.begin();
-  for( ; it != mDistrListMembers.end(); ++it ) {
+  QList<Member>::ConstIterator it = mDistrListMembers.constBegin();
+  for( ; it != mDistrListMembers.constEnd(); ++it ) {
     QDomElement e = element.ownerDocument().createElement( "member" );
     element.appendChild( e );
     const Member& m = *it;
@@ -1003,8 +1003,8 @@ void Contact::setFields( const KABC::Addressee* addressee )
     // in the addressbook to get name+email from the UID.
     KPIM::DistributionList distrList( *addressee );
     const KPIM::DistributionList::Entry::List entries = distrList.entries( KABC::StdAddressBook::self() );
-    KPIM::DistributionList::Entry::List::ConstIterator it = entries.begin();
-    for ( ; it != entries.end() ; ++it ) {
+    KPIM::DistributionList::Entry::List::ConstIterator it = entries.constBegin();
+    for ( ; it != entries.constEnd() ; ++it ) {
       Member m;
       m.displayName = (*it).addressee.formattedName();
       m.email = (*it).email;
@@ -1042,7 +1042,7 @@ void Contact::setFields( const KABC::Addressee* addressee )
   // Conversion problem here:
   // KABC::Addressee has only one full name and N addresses, but the XML format
   // has N times (fullname+address). So we just copy the fullname over and ignore it on loading.
-  for ( QStringList::ConstIterator it = emails.begin(); it != emails.end(); ++it ) {
+  for ( QStringList::ConstIterator it = emails.constBegin(); it != emails.constEnd(); ++it ) {
     Email email;
     email.displayName = fullName();
     email.smtpAddress = *it;
@@ -1052,7 +1052,7 @@ void Contact::setFields( const KABC::Addressee* addressee )
   // Now the real-world addresses
   QString preferredAddress = "home";
   const KABC::Address::List addresses = addressee->addresses();
-  for ( KABC::Address::List::ConstIterator it = addresses.begin() ; it != addresses.end(); ++it ) {
+  for ( KABC::Address::List::ConstIterator it = addresses.constBegin() ; it != addresses.constEnd(); ++it ) {
     Address address;
     address.kdeAddressType = (*it).type();
     address.type = addressTypeToString( address.kdeAddressType );
@@ -1072,10 +1072,10 @@ void Contact::setFields( const KABC::Addressee* addressee )
   setPreferredAddress( preferredAddress );
 
   const KABC::PhoneNumber::List phones = addressee->phoneNumbers();
-  for ( KABC::PhoneNumber::List::ConstIterator it = phones.begin(); it != phones.end(); ++it ) {
+  for ( KABC::PhoneNumber::List::ConstIterator it = phones.constBegin(); it != phones.constEnd(); ++it ) {
     // Create a tag per phone type set in the bitfield
     QStringList types = phoneTypeToString( (*it).type() );
-    for( QStringList::Iterator typit = types.begin(); typit != types.end(); ++typit ) {
+    for( QStringList::ConstIterator typit = types.constBegin(); typit != types.constEnd(); ++typit ) {
       PhoneNumber phoneNumber;
       phoneNumber.type = *typit;
       phoneNumber.number = (*it).number();
@@ -1110,7 +1110,7 @@ void Contact::setFields( const KABC::Addressee* addressee )
   for ( const char** p = s_knownCustomFields; *p; ++p )
     knownCustoms << QString::fromLatin1( *p );
   QStringList customs = addressee->customs();
-  for( QStringList::Iterator it = customs.begin(); it != customs.end(); ++it ) {
+  for( QStringList::ConstIterator it = customs.constBegin(); it != customs.constEnd(); ++it ) {
     // KABC::Addressee doesn't offer a real way to iterate over customs, other than splitting strings ourselves
     // The format is "app-name:value".
     int pos = (*it).indexOf( '-' );
@@ -1154,8 +1154,8 @@ void Contact::saveTo( KABC::Addressee* addressee )
   if ( mIsDistributionList ) {
     KPIM::DistributionList distrList( *addressee );
     distrList.setName( fullName() );
-    QList<Member>::ConstIterator mit = mDistrListMembers.begin();
-    for ( ; mit != mDistrListMembers.end(); ++mit ) {
+    QList<Member>::ConstIterator mit = mDistrListMembers.constBegin();
+    for ( ; mit != mDistrListMembers.constEnd(); ++mit ) {
       QString displayName = (*mit).displayName;
       // fixup the display name DistributionList::assumes neither ',' nor ';' is present
       displayName.replace( ',', ' ' );
@@ -1213,13 +1213,13 @@ void Contact::saveTo( KABC::Addressee* addressee )
     addressee->setGeo( KABC::Geo( mLatitude, mLongitude ) );
 
   QStringList emailAddresses;
-  for ( QList<Email>::ConstIterator it = mEmails.begin(); it != mEmails.end(); ++it ) {
+  for ( QList<Email>::ConstIterator it = mEmails.constBegin(); it != mEmails.constEnd(); ++it ) {
     // we can't do anything with (*it).displayName
     emailAddresses.append( (*it).smtpAddress );
   }
   addressee->setEmails( emailAddresses );
 
-  for ( QList<Address>::ConstIterator it = mAddresses.begin(); it != mAddresses.end(); ++it ) {
+  for ( QList<Address>::ConstIterator it = mAddresses.constBegin(); it != mAddresses.constEnd(); ++it ) {
     KABC::Address address;
     int type = (*it).kdeAddressType;
     if ( type == -1 ) { // no kde-specific type available
@@ -1237,14 +1237,14 @@ void Contact::saveTo( KABC::Addressee* addressee )
     addressee->insertAddress( address );
   }
 
-  for ( QList<PhoneNumber>::ConstIterator it = mPhoneNumbers.begin(); it != mPhoneNumbers.end(); ++it ) {
+  for ( QList<PhoneNumber>::ConstIterator it = mPhoneNumbers.constBegin(); it != mPhoneNumbers.constEnd(); ++it ) {
     KABC::PhoneNumber number;
     number.setType( phoneTypeFromString( (*it).type ) );
     number.setNumber( (*it).number );
     addressee->insertPhoneNumber( number );
   }
 
-  for( QList<Custom>::ConstIterator it = mCustomList.begin(); it != mCustomList.end(); ++it ) {
+  for( QList<Custom>::ConstIterator it = mCustomList.constBegin(); it != mCustomList.constEnd(); ++it ) {
     QString app = (*it).app.isEmpty() ? QString::fromLatin1( "KADDRESSBOOK" ) : (*it).app;
     addressee->insertCustom( app, (*it).name, (*it).value );
   }

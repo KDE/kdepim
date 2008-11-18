@@ -132,7 +132,7 @@ bool KABC::ResourceKolab::doOpen()
     return false;
   mSubResources.clear();
   QList<KMail::SubResource>::ConstIterator it;
-  for ( it = subResources.begin(); it != subResources.end(); ++it ) {
+  for ( it = subResources.constBegin(); it != subResources.constEnd(); ++it ) {
     loadSubResourceConfig( config, (*it).location, (*it).label, (*it).writable );
   }
 
@@ -144,7 +144,7 @@ void KABC::ResourceKolab::doClose()
   KConfig config( configFile() );
 
   Kolab::ResourceMap::ConstIterator it;
-  for ( it = mSubResources.begin(); it != mSubResources.end(); ++it ) {
+  for ( it = mSubResources.constBegin(); it != mSubResources.constEnd(); ++it ) {
     KConfigGroup group = config.group( it.key() );
     group.writeEntry( "Active", it.value().active() );
     group.writeEntry( "CompletionWeight", it.value().completionWeight() );
@@ -247,7 +247,7 @@ bool KABC::ResourceKolab::loadSubResource( const QString& subResource )
 #endif
         return false;
       }
-      for( KMail::SernumDataPair::List::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
+      for( KMail::SernumDataPair::List::ConstIterator it = lst.constBegin(); it != lst.constEnd(); ++it ) {
         loadContact( it->data, subResource, it->sernum, format );
       }
 
@@ -282,7 +282,7 @@ bool KABC::ResourceKolab::load()
 
   bool rc = true;
   Kolab::ResourceMap::ConstIterator itR;
-  for ( itR = mSubResources.begin(); itR != mSubResources.end(); ++itR ) {
+  for ( itR = mSubResources.constBegin(); itR != mSubResources.constEnd(); ++itR ) {
     if ( !itR.value().active() )
       // This resource is disabled
       continue;
@@ -365,7 +365,7 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
   const QString uid = addr.uid();
   QString subResource;
   quint32 sernum;
-  if ( mUidMap.find( uid ) != mUidMap.end() ) {
+  if ( mUidMap.constFind( uid ) != mUidMap.constEnd() ) {
     subResource = mUidMap[ uid ].resource();
     if ( !subresourceWritable( subResource ) ) {
       kWarning() <<"Wow! Something tried to update a non-writable addressee! Fix this caller:" << kBacktrace();
@@ -451,7 +451,7 @@ void KABC::ResourceKolab::insertAddressee( const Addressee& addr )
 void KABC::ResourceKolab::removeAddressee( const Addressee& addr )
 {
   const QString uid = addr.uid();
-  if ( mUidMap.find( uid ) == mUidMap.end() ) return;
+  if ( mUidMap.constFind( uid ) == mUidMap.constEnd() ) return;
   //kDebug(5650) << uid;
   const QString resource = mUidMap[ uid ].resource();
   if ( !subresourceWritable( resource ) ) {
@@ -489,7 +489,7 @@ void KABC::ResourceKolab::insertDistributionList( DistributionList *list )
 void KABC::ResourceKolab::removeDistributionList( DistributionList *list )
 {
   const QString uid = list->identifier();
-  if ( mUidMap.find( uid ) == mUidMap.end() ) return;
+  if ( mUidMap.constFind( uid ) == mUidMap.constEnd() ) return;
   //kDebug(5650) << uid;
   const QString resource = mUidMap[ uid ].resource();
   if ( !subresourceWritable( resource ) ) {
@@ -612,7 +612,7 @@ void KABC::ResourceKolab::fromKMailDelSubresource( const QString& type,
   // Make a list of all uids to remove
   Kolab::UidMap::ConstIterator mapIt;
   QStringList uids;
-  for ( mapIt = mUidMap.begin(); mapIt != mUidMap.end(); ++mapIt )
+  for ( mapIt = mUidMap.constBegin(); mapIt != mUidMap.constEnd(); ++mapIt )
     if ( mapIt.value().resource() == subResource )
       // We have a match
       uids << mapIt.key();
@@ -620,7 +620,7 @@ void KABC::ResourceKolab::fromKMailDelSubresource( const QString& type,
   // Finally delete all the incidences
   if ( !uids.isEmpty() ) {
     QStringList::ConstIterator it;
-    for ( it = uids.begin(); it != uids.end(); ++it ) {
+    for ( it = uids.constBegin(); it != uids.constEnd(); ++it ) {
       mAddrMap.remove( *it );
       mUidMap.remove( *it );
     }
@@ -639,7 +639,7 @@ void KABC::ResourceKolab::fromKMailAsyncLoadResult( const QMap<quint32, QString>
 {
   // FIXME
   KMail::StorageFormat format = KMail::StorageXML;
-  for( QMap<quint32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it ) {
+  for( QMap<quint32, QString>::ConstIterator it = map.constBegin(); it != map.constEnd(); ++it ) {
     loadContact( it.value(), folder, it.key(), format );
   }
   if ( !addressBook() ){
@@ -708,7 +708,7 @@ QMap<QString, QString> KABC::ResourceKolab::uidToResourceMap() const
   // TODO: Couldn't this be made simpler?
   QMap<QString, QString> map;
   Kolab::UidMap::ConstIterator mapIt;
-  for ( mapIt = mUidMap.begin(); mapIt != mUidMap.end(); ++mapIt )
+  for ( mapIt = mUidMap.constBegin(); mapIt != mUidMap.constEnd(); ++mapIt )
     map[ mapIt.key() ] = mapIt.value().resource();
   return map;
 }

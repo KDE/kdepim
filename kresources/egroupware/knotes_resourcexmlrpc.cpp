@@ -201,11 +201,11 @@ KCal::Alarm::List ResourceXMLRPC::alarms( const KDateTime& from, const KDateTime
     KCal::Alarm::List alarms;
     KCal::Journal::List notes = mCalendar.journals();
     KCal::Journal::List::ConstIterator note;
-    for ( note = notes.begin(); note != notes.end(); ++note )
+    for ( note = notes.constBegin(); note != notes.constEnd(); ++note )
     {
         KDateTime preTime = from.addSecs( -1 );
         KCal::Alarm::List::ConstIterator it;
-        for( it = (*note)->alarms().begin(); it != (*note)->alarms().end(); ++it )
+        for( it = (*note)->alarms().constBegin(); it != (*note)->alarms().constEnd(); ++it )
         {
             if ( (*it)->enabled() )
             {
@@ -258,8 +258,8 @@ void ResourceXMLRPC::logoutFinished( const QList<QVariant>& variant,
 
 void ResourceXMLRPC::listNotesFinished( const QList<QVariant> &list, const QVariant& )
 {
-  QMap<QString, QString>::Iterator uidIt;
-  for ( uidIt = mUidMap.begin(); uidIt != mUidMap.end(); ++uidIt ) {
+  QMap<QString, QString>::ConstIterator uidIt;
+  for ( uidIt = mUidMap.constBegin(); uidIt != mUidMap.constEnd(); ++uidIt ) {
     KCal::Journal *journal = mCalendar.journal( uidIt.key() );
     mCalendar.deleteJournal( journal );
   }
@@ -267,9 +267,9 @@ void ResourceXMLRPC::listNotesFinished( const QList<QVariant> &list, const QVari
   mUidMap.clear();
 
   QList<QVariant> noteList = list[ 0 ].toList();
-  QList<QVariant>::Iterator noteIt;
+  QList<QVariant>::ConstIterator noteIt;
 
-  for ( noteIt = noteList.begin(); noteIt != noteList.end(); ++noteIt ) {
+  for ( noteIt = noteList.constBegin(); noteIt != noteList.constEnd(); ++noteIt ) {
     QMap<QString, QVariant> map = (*noteIt).toMap();
 
     KCal::Journal *journal = new KCal::Journal();

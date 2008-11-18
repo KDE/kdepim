@@ -185,8 +185,8 @@ QString Query::markupCall( const QString &cmd,
   if ( !args.isEmpty() )
   {
     markup += "<params>\r\n";
-    QList<QVariant>::ConstIterator it = args.begin();
-    QList<QVariant>::ConstIterator end = args.end();
+    QList<QVariant>::ConstIterator it = args.constBegin();
+    QList<QVariant>::ConstIterator end = args.constEnd();
     for ( ; it != end; ++it )
       markup += "<param>\r\n" + marshal( *it ) + "</param>\r\n";
     markup += "</params>\r\n";
@@ -229,8 +229,8 @@ QString Query::marshal( const QVariant &arg ) const
       {
         QString markup = "<value><array><data>\r\n";
         const QList<QVariant> args = arg.toList();
-        QList<QVariant>::ConstIterator it = args.begin();
-        QList<QVariant>::ConstIterator end = args.end();
+        QList<QVariant>::ConstIterator it = args.constBegin();
+        QList<QVariant>::ConstIterator end = args.constEnd();
         for ( ; it != end; ++it )
           markup += marshal( *it );
         markup += "</data></array></value>\r\n";
@@ -240,8 +240,8 @@ QString Query::marshal( const QVariant &arg ) const
       {
         QString markup = "<value><struct>\r\n";
         QMap<QString, QVariant> map = arg.toMap();
-        QMap<QString, QVariant>::ConstIterator it = map.begin();
-        QMap<QString, QVariant>::ConstIterator end = map.end();
+        QMap<QString, QVariant>::ConstIterator it = map.constBegin();
+        QMap<QString, QVariant>::ConstIterator end = map.constEnd();
         for ( ; it != end; ++it )
         {
           markup += "<member>\r\n";
@@ -449,8 +449,8 @@ void Server::call( const QString &method, const QStringList &arg,
                    const QVariant &id )
 {
   QList<QVariant> args;
-  QStringList::ConstIterator it = arg.begin();
-  QStringList::ConstIterator end = arg.end();
+  QStringList::ConstIterator it = arg.constBegin();
+  QStringList::ConstIterator end = arg.constEnd();
   for ( ; it != end; ++it )
     args << QVariant( *it );
   call( method, args, msgObj, messageSlot, faultObj, faultSlot, id );

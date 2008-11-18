@@ -144,13 +144,13 @@ void GroupwareDownloadJob::slotListItemsResult( KJob *job )
 void GroupwareDownloadJob::deleteIncidencesGoneFromServer()
 {
   QMap<QString, QString> remoteIds( adaptor()->idMapper()->remoteIdMap() );
-  KUrl::List::ConstIterator it = mCurrentlyOnServer.begin();
-  while ( it != mCurrentlyOnServer.end() ) {
+  KUrl::List::ConstIterator it = mCurrentlyOnServer.constBegin();
+  while ( it != mCurrentlyOnServer.constEnd() ) {
     remoteIds.remove( (*it).path() );
     ++it;
   }
   QMap<QString, QString>::ConstIterator it2;
-  for (it2 = remoteIds.begin(); it2 != remoteIds.end(); ++it2) {
+  for (it2 = remoteIds.constBegin(); it2 != remoteIds.constEnd(); ++it2) {
     adaptor()->deleteItem( remoteIds[ it2.key() ] );
   }
 }

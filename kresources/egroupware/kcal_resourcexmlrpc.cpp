@@ -275,7 +275,7 @@ bool ResourceXMLRPC::doSave( bool syncCache )
   Event::List::ConstIterator evIt;
 
   uint counter = 0;
-  for ( evIt = events.begin(); evIt != events.end(); ++evIt ) {
+  for ( evIt = events.constBegin(); evIt != events.constEnd(); ++evIt ) {
     if ( !(*evIt)->isReadOnly() ) {
       QMap<QString, QVariant> args;
       writeEvent( (*evIt), args );
@@ -291,7 +291,7 @@ bool ResourceXMLRPC::doSave( bool syncCache )
   const Todo::List todos = calendar()->rawTodos();
   Todo::List::ConstIterator todoIt;
 
-  for ( todoIt = todos.begin(); todoIt != todos.end(); ++todoIt ) {
+  for ( todoIt = todos.constBegin(); todoIt != todos.constEnd(); ++todoIt ) {
     if ( !(*todoIt)->isReadOnly() ) {
       QMap<QString, QVariant> args;
       writeTodo( (*todoIt), args );
@@ -566,7 +566,7 @@ void ResourceXMLRPC::listEventsFinished( const QList<QVariant>& list,
   Event::List retrievedEvents;
 
   bool changed = false;
-  for ( eventIt = eventList.begin(); eventIt != eventList.end(); ++eventIt ) {
+  for ( eventIt = eventList.constBegin(); eventIt != eventList.constEnd(); ++eventIt ) {
     QMap<QString, QVariant> map = (*eventIt).toMap();
 
     Event *event = new Event;
@@ -653,7 +653,7 @@ void ResourceXMLRPC::loadEventCategoriesFinished( const QList<QVariant> &mapList
   QMap<QString, QVariant>::ConstIterator it;
 
   KPIM::KPimPrefs prefs( "korganizerrc" );
-  for ( it = map.begin(); it != map.end(); ++it ) {
+  for ( it = map.constBegin(); it != map.constEnd(); ++it ) {
     mEventCategoryMap.insert( it.value().toString(), it.key().toInt() );
 
     if ( !prefs.mCustomCategories.contains( it.value().toString() )  )
@@ -677,7 +677,7 @@ void ResourceXMLRPC::listTodosFinished( const QList<QVariant>& list,
   Todo::List retrievedTodos;
 
   bool changed = false;
-  for ( todoIt = todoList.begin(); todoIt != todoList.end(); ++todoIt ) {
+  for ( todoIt = todoList.constBegin(); todoIt != todoList.constEnd(); ++todoIt ) {
     QMap<QString, QVariant> map = (*todoIt).toMap();
 
     Todo *todo = new Todo;
@@ -758,7 +758,7 @@ void ResourceXMLRPC::loadTodoCategoriesFinished( const QList<QVariant> &mapList,
   QMap<QString, QVariant>::ConstIterator it;
 
   KPIM::KPimPrefs prefs( "korganizerrc" );
-  for ( it = map.begin(); it != map.end(); ++it ) {
+  for ( it = map.constBegin(); it != map.constEnd(); ++it ) {
     mTodoCategoryMap.insert( it.value().toString(), it.key().toInt() );
 
     if ( !prefs.mCustomCategories.contains( it.value().toString() )  )
@@ -790,7 +790,7 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
   QList<KDateTime> rExceptions;
 
   QMap<QString, QVariant>::ConstIterator it;
-  for ( it = args.begin(); it != args.end(); ++it ) {
+  for ( it = args.constBegin(); it != args.constEnd(); ++it ) {
     if ( it.key() == "id" ) {
       uid = it.value().toString();
     } else if ( it.key() == "rights" ) {
@@ -825,7 +825,7 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
       QMap<QString, QVariant>::ConstIterator catIt;
 
       QStringList eventCategories;
-      for ( catIt = categories.begin(); catIt != categories.end(); ++catIt ) {
+      for ( catIt = categories.constBegin(); catIt != categories.constEnd(); ++catIt ) {
         mEventCategoryMap.insert( catIt.value().toString(), catIt.key().toInt() );
         eventCategories.append( catIt.value().toString() );
       }
@@ -858,13 +858,13 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
       const QMap<QString, QVariant> dateList = it.value().toMap();
       QMap<QString, QVariant>::ConstIterator dateIt;
 
-      for ( dateIt = dateList.begin(); dateIt != dateList.end(); ++dateIt )
+      for ( dateIt = dateList.constBegin(); dateIt != dateList.constEnd(); ++dateIt )
         rExceptions.append( KDateTime( (*dateIt).toDateTime(), timeSpec() ) );
     } else if ( it.key() == "participants" ) {
       const QMap<QString, QVariant> persons = it.value().toMap();
       QMap<QString, QVariant>::ConstIterator personsIt;
 
-      for ( personsIt = persons.begin(); personsIt != persons.end(); ++personsIt ) {
+      for ( personsIt = persons.constBegin(); personsIt != persons.constEnd(); ++personsIt ) {
         QMap<QString, QVariant> person = (*personsIt).toMap();
         Attendee::PartStat status = Attendee::InProcess;
         if ( person[ "status" ] == "A" )
@@ -886,7 +886,7 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
       const QMap<QString, QVariant> alarmList = it.value().toMap();
       QMap<QString, QVariant>::ConstIterator alarmIt;
 
-      for ( alarmIt = alarmList.begin(); alarmIt != alarmList.end(); ++alarmIt ) {
+      for ( alarmIt = alarmList.constBegin(); alarmIt != alarmList.constEnd(); ++alarmIt ) {
         QMap<QString, QVariant> alarm = (*alarmIt).toMap();
 
         Alarm *vAlarm = event->newAlarm();
@@ -933,7 +933,7 @@ void ResourceXMLRPC::readEvent( const QMap<QString, QVariant> &args, Event *even
       re->setEndDate( rEndDate.date() );
 
     QList<KDateTime>::ConstIterator exIt;
-    for ( exIt = rExceptions.begin(); exIt != rExceptions.end(); ++exIt )
+    for ( exIt = rExceptions.constBegin(); exIt != rExceptions.constEnd(); ++exIt )
       re->addExDateTime( *exIt );
   }
 
@@ -964,7 +964,7 @@ void ResourceXMLRPC::writeEvent( Event *event, QMap<QString, QVariant> &args )
   QStringList::ConstIterator catIt;
   QMap<QString, QVariant> catMap;
   int counter = 0;
-  for ( catIt = categories.begin(); catIt != categories.end(); ++catIt ) {
+  for ( catIt = categories.constBegin(); catIt != categories.constEnd(); ++catIt ) {
     QMap<QString, int>::Iterator it = mEventCategoryMap.find( *catIt );
     if ( it == mEventCategoryMap.end() ) // new category
       catMap.insert( QString::number( counter-- ), *catIt );
@@ -1039,7 +1039,7 @@ void ResourceXMLRPC::writeEvent( Event *event, QMap<QString, QVariant> &args )
     QList<KDateTime>::ConstIterator dateIt;
     QMap<QString, QVariant> exMap;
     int counter = 0;
-    for ( dateIt = dates.begin(); dateIt != dates.end(); ++dateIt, ++counter )
+    for ( dateIt = dates.constBegin(); dateIt != dates.constEnd(); ++dateIt, ++counter )
       exMap.insert( QString::number( counter ), (*dateIt).toTimeSpec( timeSpec() ).dateTime() );
 
     args.insert( "recur_exception", exMap );
@@ -1049,7 +1049,7 @@ void ResourceXMLRPC::writeEvent( Event *event, QMap<QString, QVariant> &args )
   const Attendee::List attendees = event->attendees();
   Attendee::List::ConstIterator attIt;
   QMap<QString, QVariant> persons;
-  for ( attIt = attendees.begin(); attIt != attendees.end(); ++attIt ) {
+  for ( attIt = attendees.constBegin(); attIt != attendees.constEnd(); ++attIt ) {
     QMap<QString, QVariant> person;
     QString status;
 
@@ -1074,7 +1074,7 @@ void ResourceXMLRPC::writeEvent( Event *event, QMap<QString, QVariant> &args )
   const Alarm::List alarms = event->alarms();
   Alarm::List::ConstIterator alarmIt;
   QMap<QString, QVariant> alarmMap;
-  for ( alarmIt = alarms.begin(); alarmIt != alarms.end(); ++alarmIt ) {
+  for ( alarmIt = alarms.constBegin(); alarmIt != alarms.constEnd(); ++alarmIt ) {
     QMap<QString, QVariant> alarm;
     alarm.insert( "time", (*alarmIt)->time().toTimeSpec( timeSpec() ).dateTime() );
     alarm.insert( "offset", (*alarmIt)->startOffset().asSeconds() );
@@ -1099,7 +1099,7 @@ void ResourceXMLRPC::writeTodo( Todo* todo, QMap<QString, QVariant>& args )
   const QStringList categories = todo->categories();
   QStringList::ConstIterator catIt;
   int counter = 0;
-  for ( catIt = categories.begin(); catIt != categories.end(); ++catIt ) {
+  for ( catIt = categories.constBegin(); catIt != categories.constEnd(); ++catIt ) {
     QMap<QString, int>::Iterator it = mTodoCategoryMap.find( *catIt );
     if ( it == mTodoCategoryMap.end() )
       catMap.insert( QString::number( counter-- ), *catIt );
@@ -1146,7 +1146,7 @@ void ResourceXMLRPC::readTodo( const QMap<QString, QVariant>& args, Todo *todo, 
   QMap<QString, QVariant>::ConstIterator it;
 
   QStringList todoCategories;
-  for ( it = categories.begin(); it != categories.end(); ++it ) {
+  for ( it = categories.constBegin(); it != categories.constEnd(); ++it ) {
     mTodoCategoryMap.insert( it.value().toString(), it.key().toInt() );
     todoCategories.append( it.value().toString() );
   }

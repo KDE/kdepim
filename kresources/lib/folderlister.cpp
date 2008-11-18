@@ -65,7 +65,7 @@ KUrl::List FolderLister::activeFolderIds() const
   KUrl::List ids;
 
   FolderLister::Entry::List::ConstIterator it;
-  for( it = mFolders.begin(); it != mFolders.end(); ++it ) {
+  for( it = mFolders.constBegin(); it != mFolders.constEnd(); ++it ) {
     if ( (*it).active ) {
       ids.append( KUrl((*it).id) );
     }
@@ -77,7 +77,7 @@ KUrl::List FolderLister::activeFolderIds() const
 bool FolderLister::isActive( const QString &id ) const
 {
   FolderLister::Entry::List::ConstIterator it;
-  for( it = mFolders.begin(); it != mFolders.end(); ++it ) {
+  for( it = mFolders.constBegin(); it != mFolders.constEnd(); ++it ) {
     if ( (*it).id == id ) return (*it).active;
   }
   return false;
@@ -180,7 +180,7 @@ void FolderLister::writeConfig( GroupwarePrefsBase *newprefs )
 //   KConfigGroup cfgg( newprefs->config(), "Folders" );
   int nr = 0;
   Entry::List::ConstIterator it;
-  for( it = mFolders.begin(); it != mFolders.end(); ++it ) {
+  for( it = mFolders.constBegin(); it != mFolders.constEnd(); ++it ) {
     QStringList lst;
     lst << (*it).id;
     lst << (*it).name;

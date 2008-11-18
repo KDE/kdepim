@@ -66,12 +66,12 @@ bool AddressBookAdaptor::localItemHasChanged( const QString &localId )
 {
   KABC::Addressee::List addressees = mResource->deletedAddressees();
   KABC::Addressee::List::ConstIterator it;
-  for( it = addressees.begin(); it != addressees.end(); ++it ) {
+  for( it = addressees.constBegin(); it != addressees.constEnd(); ++it ) {
     if ( (*it).uid() == localId ) return true;
   }
 
   addressees = mResource->changedAddressees();
-  for( it = addressees.begin(); it != addressees.end(); ++it ) {
+  for( it = addressees.constBegin(); it != addressees.constEnd(); ++it ) {
     if ( (*it).uid() == localId ) return true;
   }
 
