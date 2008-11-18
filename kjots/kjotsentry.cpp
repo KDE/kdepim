@@ -190,7 +190,7 @@ void KJotsEntry::parseXml( QDomElement &e, bool )
 
 bool KJotsEntry::isKJotsLink(const QString &link)
 {
-    return link.startsWith(kjotsLinkStringPrefix()); 
+    return link.startsWith(kjotsLinkStringPrefix());
 }
 
 QString KJotsEntry::kjotsLinkUrl()
@@ -242,6 +242,7 @@ void KJotsBook::setDirty(bool dirty)
     //Don't count opening a book as dirtying it.
     if ( !m_open ) return;
 
+    kDebug() << "marking book" << title() << "dirty";
     topLevelBook()->m_dirty = dirty;
 }
 
@@ -340,6 +341,7 @@ void KJotsBook::saveBook(void)
         if ( file.open() ) {
             m_fileName = file.fileName();
         } else {
+            kDebug() << "failed to open temporary file for saving";
             failed = true;
         }
     }
@@ -361,6 +363,7 @@ void KJotsBook::saveBook(void)
 
             setDirty(false);
         } else {
+          kDebug() << "failed to open savefile" << m_fileName;
             failed = true;
         }
     }
@@ -686,6 +689,7 @@ KJotsPage *KJotsPage::createNewPage(int pageCount)
 */
 void KJotsPage::documentModified(bool modified)
 {
+    kDebug() << modified;
     if ( modified ) {
         topLevelBook()->setDirty(true);
     }
@@ -792,13 +796,13 @@ void KJotsPage::generateHtml( KJotsEntry *top, bool diskMode, QTextCursor *curso
         }
     } else {
         //We need to fake QUrl in to thinking this is a real URL
-        
+
         html = "<table><tr><td>";
         html += QString("<h3><a name=\"%1\">&nbsp;</a><a href=\"%2\" >%3</a></h3>").arg(id()).arg(kjotsLinkUrl()).arg(htmlSubject);
         html += "</td></tr></table>";
     }
     html += "<br>";
-    
+
     cursorOut->insertFragment(QTextDocumentFragment::fromHtml(html));
     cursorOut->insertBlock(defaultBlockFormat, defaultCharFormat);
     html.clear(); //stop myself from making the same mistake over and over again.

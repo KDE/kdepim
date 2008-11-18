@@ -975,8 +975,15 @@ void KJotsComponent::autoSave()
 {
     for ( int i=0; i<bookshelf->topLevelItemCount(); i++ ) {
         KJotsBook *book = dynamic_cast<KJotsBook*>(bookshelf->topLevelItem(i));
-        if (book && book->dirty()) {
-            book->saveBook();
+        if (book)
+        {
+            if ( book->dirty() )
+            {
+                kDebug() << "book" << book->title() << book->id() << "is dirty";
+                book->saveBook();
+            } else {
+                kDebug() << "book" << book->title() << book->id() << "is not dirty";
+            }
         }
     }
 }
