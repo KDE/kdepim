@@ -1688,7 +1688,7 @@ void KNComposer::slotDropEvent(QDropEvent *ev)
   if ( urls.isEmpty() )
     return;
 
-  for (KUrl::List::ConstIterator it = urls.begin(); it != urls.end(); ++it) {
+  for (KUrl::List::ConstIterator it = urls.constBegin(); it != urls.constEnd(); ++it) {
     const KUrl &url = *it;
     KNLoadHelper *helper = new KNLoadHelper(this);
 

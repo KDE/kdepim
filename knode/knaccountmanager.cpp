@@ -88,7 +88,7 @@ KNNntpAccount* KNAccountManager::account( int id )
 {
   if ( id <= 0 )
     return 0;
-  for ( List::ConstIterator it = mAccounts.begin(); it != mAccounts.end(); ++it )
+  for ( List::ConstIterator it = mAccounts.constBegin(); it != mAccounts.constEnd(); ++it )
     if ( (*it)->id() == id )
       return *it;
   return 0;

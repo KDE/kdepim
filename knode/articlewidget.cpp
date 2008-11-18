@@ -709,7 +709,7 @@ void ArticleWidget::displayBodyBlock( const QStringList &lines )
   if (quoteChars.isEmpty())
     quoteChars = '>';
 
-  for ( QStringList::const_iterator it = lines.begin(); it != lines.end(); ++it) {
+  for ( QStringList::const_iterator it = lines.constBegin(); it != lines.constEnd(); ++it) {
     line = (*it);
     if ( !line.isEmpty() ) {
       // signature found
@@ -1043,7 +1043,7 @@ void ArticleWidget::removeTempFiles( )
   for ( QStringList::Iterator it = mTempFiles.begin(); it != mTempFiles.end(); ++it )
     QFile::remove(*it);
   mTempFiles.clear();
-  for ( QStringList::Iterator it = mTempDirs.begin(); it != mTempDirs.end(); ++it )
+  for ( QStringList::ConstIterator it = mTempDirs.constBegin(); it != mTempDirs.constEnd(); ++it )
     QDir(*it).rmdir(*it);
   mTempDirs.clear();
 }
@@ -1074,7 +1074,7 @@ typedef QList<ArticleWidget*>::ConstIterator InstanceIterator;
 
 void ArticleWidget::configChanged()
 {
-  for( InstanceIterator it = mInstances.begin(); it != mInstances.end(); ++it ) {
+  for( InstanceIterator it = mInstances.constBegin(); it != mInstances.constEnd(); ++it ) {
     (*it)->readConfig();
     (*it)->updateContents();
   }
@@ -1083,7 +1083,7 @@ void ArticleWidget::configChanged()
 
 bool ArticleWidget::articleVisible( KNArticle *article )
 {
-  for ( InstanceIterator it = mInstances.begin(); it != mInstances.end(); ++it )
+  for ( InstanceIterator it = mInstances.constBegin(); it != mInstances.constEnd(); ++it )
     if ( (*it)->article() == article )
       return true;
   return false;
@@ -1092,7 +1092,7 @@ bool ArticleWidget::articleVisible( KNArticle *article )
 
 void ArticleWidget::articleRemoved( KNArticle *article )
 {
-  for ( InstanceIterator it = mInstances.begin(); it != mInstances.end(); ++it )
+  for ( InstanceIterator it = mInstances.constBegin(); it != mInstances.constEnd(); ++it )
     if ( (*it)->article() == article )
       (*it)->setArticle( 0 );
 }
@@ -1100,7 +1100,7 @@ void ArticleWidget::articleRemoved( KNArticle *article )
 
 void ArticleWidget::articleChanged( KNArticle *article )
 {
-  for ( InstanceIterator it = mInstances.begin(); it != mInstances.end(); ++it )
+  for ( InstanceIterator it = mInstances.constBegin(); it != mInstances.constEnd(); ++it )
     if ( (*it)->article() == article )
       (*it)->displayArticle();
 }
@@ -1108,7 +1108,7 @@ void ArticleWidget::articleChanged( KNArticle *article )
 
 void ArticleWidget::articleLoadError( KNArticle *article, const QString &error )
 {
-  for ( InstanceIterator it = mInstances.begin(); it != mInstances.end(); ++it )
+  for ( InstanceIterator it = mInstances.constBegin(); it != mInstances.constEnd(); ++it )
   if ( (*it)->article() == article )
     (*it)->displayErrorMessage( error );
 }
@@ -1116,7 +1116,7 @@ void ArticleWidget::articleLoadError( KNArticle *article, const QString &error )
 
 void ArticleWidget::collectionRemoved( KNArticleCollection *coll )
 {
-  for ( InstanceIterator it = mInstances.begin(); it != mInstances.end(); ++it )
+  for ( InstanceIterator it = mInstances.constBegin(); it != mInstances.constEnd(); ++it )
     if ( (*it)->article() && (*it)->article()->collection() == coll )
       (*it)->setArticle( 0 );
 }
@@ -1124,7 +1124,7 @@ void ArticleWidget::collectionRemoved( KNArticleCollection *coll )
 
 void ArticleWidget::cleanup()
 {
-  for ( InstanceIterator it = mInstances.begin(); it != mInstances.end(); ++it )
+  for ( InstanceIterator it = mInstances.constBegin(); it != mInstances.constEnd(); ++it )
     (*it)->setArticle( 0 ); //delete orphant articles => avoid crash in destructor
 }
 

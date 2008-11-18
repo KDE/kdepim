@@ -79,7 +79,7 @@ void Scheduler::addJob(KNJobData *job)
     bool duplicate = false;
     if ( job->type() == KNJobData::JTfetchNewHeaders ) {
       QList<KNJobData*>::ConstIterator it;
-      for ( it = nntpJobQueue.begin(); it != nntpJobQueue.end(); ++it ) {
+      for ( it = nntpJobQueue.constBegin(); it != nntpJobQueue.constEnd(); ++it ) {
         if ( ( (*it)->type() == KNJobData::JTfetchNewHeaders )
           && (*it)->data() == job->data() ) // job works on the same group...
           duplicate = true;
@@ -202,7 +202,7 @@ void Scheduler::slotJobFinished( KNJobData * job )
 void Scheduler::slotPasswordsChanged()
 {
   QList<KNJobData*>::ConstIterator it;
-  for ( it = mWalletQueue.begin(); it != mWalletQueue.end(); ++it ) {
+  for ( it = mWalletQueue.constBegin(); it != mWalletQueue.constEnd(); ++it ) {
     (*it)->setStatus( i18n("Waiting...") );
     Q_ASSERT( (*it)->type() != KNJobData::JTmail );
     nntpJobQueue.append( (*it) );
