@@ -63,7 +63,7 @@ class SearchManager : public QObject
     KABC::Addressee::List contacts() const;
 
     /**
-      sets the distribution list to be shown 
+      sets the distribution list to be shown
      */
     void setSelectedDistributionList( const QString &name );
 
@@ -89,7 +89,6 @@ class SearchManager : public QObject
   private:
     KABC::Addressee::List mContacts;
     QString mSelectedDistributionList;
-    QList<KABC::DistributionList*> mDistributionLists;
     KABC::AddressBook *mAddressBook;
 
     QString mPattern;

@@ -61,8 +61,6 @@ void SearchManager::search( const QString &pattern, const KABC::Field::List &fie
       ++rmIt;
   }
 #endif
-  mDistributionLists = mAddressBook->allDistributionLists();
-
   typedef KABC::DistributionList::Entry Entry;
   if ( !mSelectedDistributionList.isNull() ) {
     const KABC::DistributionList *dl = mAddressBook->findDistributionListByName( mSelectedDistributionList );
@@ -165,7 +163,7 @@ void KAB::SearchManager::setSelectedDistributionList( const QString &name )
 
 QList<KABC::DistributionList*> KAB::SearchManager::distributionLists() const
 {
-  return mDistributionLists;
+  return mAddressBook->allDistributionLists();
 }
 
 QStringList KAB::SearchManager::distributionListNames() const
