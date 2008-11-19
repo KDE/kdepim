@@ -89,7 +89,9 @@ GpgME::VerificationResult Kleo::QGpgMEVerifyDetachedJob::exec( const QByteArray 
 }
 
 void Kleo::QGpgMEVerifyDetachedJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->verificationResult() );
+  const GpgME::VerificationResult res = mCtx->verificationResult();
+  getAuditLog();
+  emit result( res );
 }
 
 

@@ -102,7 +102,10 @@ GpgME::SigningResult Kleo::QGpgMESignJob::exec( const std::vector<GpgME::Key> & 
 }
 
 void Kleo::QGpgMESignJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mResult = mCtx->signingResult(), mOutDataDataProvider->data() );
+  mResult = mCtx->signingResult();
+  const QByteArray signature = mOutDataDataProvider->data();
+  getAuditLog();
+  emit result( mResult, signature );
 }
 
 void Kleo::QGpgMESignJob::showErrorDialog( QWidget * parent, const QString & caption ) const {

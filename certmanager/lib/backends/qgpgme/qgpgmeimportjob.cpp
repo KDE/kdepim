@@ -75,11 +75,15 @@ GpgME::Error Kleo::QGpgMEImportJob::start( const QByteArray & keyData ) {
 
 GpgME::ImportResult Kleo::QGpgMEImportJob::exec( const QByteArray & keyData ) {
   setup( keyData );
-  return mCtx->importKeys( *mInData );
+  const GpgME::ImportResult res = mCtx->importKeys( *mInData );
+  getAuditLog();
+  return res;
 }
 
 void Kleo::QGpgMEImportJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->importResult() );
+  const GpgME::ImportResult res = mCtx->importResult();
+  getAuditLog();
+  emit result( res );
 }
 
 

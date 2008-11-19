@@ -85,7 +85,10 @@ GpgME::DecryptionResult Kleo::QGpgMEDecryptJob::exec( const QByteArray & cipherT
 }
 
 void Kleo::QGpgMEDecryptJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->decryptionResult(), mOutDataDataProvider->data() );
+  const GpgME::DecryptionResult res = mCtx->decrypt( *mInData, *mOutData );
+  const QByteArray plainText = mOutDataDataProvider->data();
+  getAuditLog();
+  emit result( res, plainText );
 }
 
 #include "qgpgmedecryptjob.moc"

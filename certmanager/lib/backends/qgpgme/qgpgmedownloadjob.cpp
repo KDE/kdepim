@@ -72,7 +72,9 @@ GpgME::Error Kleo::QGpgMEDownloadJob::start( const QStringList & pats ) {
 }
 
 void Kleo::QGpgMEDownloadJob::doOperationDoneEvent( const GpgME::Error & error ) {
-  emit result( error, mOutDataDataProvider->data() );
+  const QByteArray data = mOutDataDataProvider->data();
+  getAuditLog();
+  emit result( error, data );
 }
 
 #include "qgpgmedownloadjob.moc"

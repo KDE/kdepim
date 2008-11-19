@@ -87,9 +87,11 @@ Kleo::QGpgMEDecryptVerifyJob::exec( const QByteArray & cipherText, QByteArray & 
 }
 
 void Kleo::QGpgMEDecryptVerifyJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mCtx->decryptionResult(),
-	       mCtx->verificationResult(),
-	       mOutDataDataProvider->data() );
+  const GpgME::DecryptionResult dr = mCtx->decryptionResult();
+  const GpgME::VerificationResult vr = mCtx->verificationResult();
+  const QByteArray plainText = mOutDataDataProvider->data();
+  getAuditLog();
+  emit result( dr, vr, plainText );
 }
 
 #include "qgpgmedecryptverifyjob.moc"

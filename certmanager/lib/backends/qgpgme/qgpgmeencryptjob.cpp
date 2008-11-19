@@ -97,7 +97,10 @@ GpgME::EncryptionResult Kleo::QGpgMEEncryptJob::exec( const std::vector<GpgME::K
 }
 
 void Kleo::QGpgMEEncryptJob::doOperationDoneEvent( const GpgME::Error & ) {
-  emit result( mResult = mCtx->encryptionResult(), mOutDataDataProvider->data() );
+  mResult = mCtx->encryptionResult();
+  const QByteArray ciphertext = mOutDataDataProvider->data();
+  getAuditLog();
+  emit result( mResult, ciphertext );
 }
 
 void Kleo::QGpgMEEncryptJob::showErrorDialog( QWidget * parent, const QString & caption ) const {
