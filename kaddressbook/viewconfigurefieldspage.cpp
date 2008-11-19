@@ -67,7 +67,7 @@ void ViewConfigureFieldsPage::restoreSettings( const KConfigGroup &config )
     fields = KABC::Field::defaultFields();
 
   KABC::Field::List::ConstIterator it;
-  for ( it = fields.begin(); it != fields.end(); ++it )
+  for ( it = fields.constBegin(); it != fields.constEnd(); ++it )
     new FieldItem( mSelectedBox, *it );
 
   slotShowFields( mCategoryCombo->currentIndex() );
@@ -97,7 +97,7 @@ void ViewConfigureFieldsPage::slotShowFields( int index )
   KABC::Field::List allFields = mAddressBook->fields( category );
 
   KABC::Field::List::ConstIterator it;
-  for ( it = allFields.begin(); it != allFields.end(); ++it ) {
+  for ( it = allFields.constBegin(); it != allFields.constEnd(); ++it ) {
     bool found = false;
 
     for ( int i = 0; i < mSelectedBox->count(); ++i ) {

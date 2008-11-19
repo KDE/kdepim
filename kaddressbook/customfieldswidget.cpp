@@ -245,7 +245,7 @@ void FieldWidget::removeField( const QString &identifier )
 void FieldWidget::clearFields()
 {
   FieldRecordList::ConstIterator fieldIt;
-  for ( fieldIt = mFieldList.begin(); fieldIt != mFieldList.end(); ++fieldIt ) {
+  for ( fieldIt = mFieldList.constBegin(); fieldIt != mFieldList.constEnd(); ++fieldIt ) {
     if ( qobject_cast<QLineEdit*>( (*fieldIt).mWidget ) ) {
       QLineEdit *wdg = static_cast<QLineEdit*>( (*fieldIt).mWidget );
       wdg->setText( QString() );
@@ -275,14 +275,14 @@ void FieldWidget::loadContact( KABC::Addressee *addr )
   clearFields();
 
   QStringList::ConstIterator it;
-  for ( it = customs.begin(); it != customs.end(); ++it ) {
+  for ( it = customs.constBegin(); it != customs.constEnd(); ++it ) {
     QString app, name, value;
     splitField( *it, app, name, value );
     if ( app != "KADDRESSBOOK" )
       continue;
 
     FieldRecordList::ConstIterator fieldIt;
-    for ( fieldIt = mFieldList.begin(); fieldIt != mFieldList.end(); ++fieldIt ) {
+    for ( fieldIt = mFieldList.constBegin(); fieldIt != mFieldList.constEnd(); ++fieldIt ) {
       if ( (*fieldIt).mIdentifier == name ) {
         if ( qobject_cast<QLineEdit*>( (*fieldIt).mWidget ) ) {
           QLineEdit *wdg = static_cast<QLineEdit*>( (*fieldIt).mWidget );
@@ -311,7 +311,7 @@ void FieldWidget::loadContact( KABC::Addressee *addr )
 void FieldWidget::storeContact( KABC::Addressee *addr )
 {
   FieldRecordList::ConstIterator it;
-  for ( it = mFieldList.begin(); it != mFieldList.end(); ++it ) {
+  for ( it = mFieldList.constBegin(); it != mFieldList.constEnd(); ++it ) {
     QString value;
     if ( qobject_cast<QLineEdit*>( (*it).mWidget ) ) {
       QLineEdit *wdg = static_cast<QLineEdit*>( (*it).mWidget );
@@ -361,10 +361,10 @@ void FieldWidget::recalculateLayout()
   int maxWidth = 0;
 
   FieldRecordList::ConstIterator it;
-  for ( it = mFieldList.begin(); it != mFieldList.end(); ++it )
+  for ( it = mFieldList.constBegin(); it != mFieldList.constEnd(); ++it )
     maxWidth = qMax( maxWidth, (*it).mLabel->minimumSizeHint().width() );
 
-  for ( it = mFieldList.begin(); it != mFieldList.end(); ++it )
+  for ( it = mFieldList.constBegin(); it != mFieldList.constEnd(); ++it )
     (*it).mLabel->setMinimumWidth( maxWidth );
 }
 
@@ -419,7 +419,7 @@ void CustomFieldsWidget::addField()
     FieldRecordList list = mFieldWidget->fields();
 
     FieldRecordList::ConstIterator it;
-    for ( it = list.begin(); it != list.end(); ++it )
+    for ( it = list.constBegin(); it != list.constEnd(); ++it )
       if ( (*it).mIdentifier == dlg.identifier() ) {
         KMessageBox::sorry( this, i18n( "A field with the same name already exists, please choose another one." ) );
         return;
@@ -446,7 +446,7 @@ void CustomFieldsWidget::removeField()
   QStringList fields;
 
   FieldRecordList::ConstIterator it;
-  for ( it = list.begin(); it != list.end(); ++it )
+  for ( it = list.constBegin(); it != list.constEnd(); ++it )
     fields.append( (*it).mTitle );
 
   bool ok;
@@ -455,7 +455,7 @@ void CustomFieldsWidget::removeField()
                                          fields, 0, false, &ok, this );
 
   if ( ok ) {
-    for ( it = list.begin(); it != list.end(); ++it )
+    for ( it = list.constBegin(); it != list.constEnd(); ++it )
       if ( (*it).mTitle == title ) {
         mFieldWidget->removeField( (*it).mIdentifier );
 
@@ -519,7 +519,7 @@ QStringList CustomFieldsWidget::marshallFields( bool global ) const
 
   const FieldRecordList list = mFieldWidget->fields();
   FieldRecordList::ConstIterator it;
-  for ( it = list.begin(); it != list.end(); ++it ) {
+  for ( it = list.constBegin(); it != list.constEnd(); ++it ) {
     if ( (*it).mGlobal == global ) {
       retval.append( (*it).mIdentifier );
       retval.append( (*it).mTitle );

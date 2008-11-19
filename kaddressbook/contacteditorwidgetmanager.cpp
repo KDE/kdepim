@@ -172,13 +172,13 @@ void ContactEditorTabPage::updateLayout()
   int row = 0;
   if( mWidgets.isEmpty() )
     return;
-  last = mWidgets.end();
+  last = mWidgets.constEnd();
   --last;
-  for ( it = mWidgets.begin(); it != mWidgets.end() ; ++it ) {
+  for ( it = mWidgets.constBegin(); it != mWidgets.constEnd() ; ++it ) {
     if ( (*it)->logicalWidth() == 2 ) {
       mLayout->addWidget( *it, row, 0, (*it)->logicalHeight(), 2 );
       row += (*it)->logicalHeight();
-      if ( it != mWidgets.end() ) {
+      if ( it != mWidgets.constEnd() ) {
         QFrame *frame = new QFrame( this );
         frame->setFrameStyle( QFrame::HLine | QFrame::Sunken );
         mLayout->addWidget( frame, row, 0, 1, 2 );

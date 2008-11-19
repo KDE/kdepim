@@ -92,14 +92,14 @@ void KeyWidget::addKey()
   QStringList existingKeyTypes;
 
   KABC::Key::List::ConstIterator listIt;
-  for ( listIt = mKeyList.begin(); listIt != mKeyList.end(); ++listIt ) {
+  for ( listIt = mKeyList.constBegin(); listIt != mKeyList.constEnd(); ++listIt ) {
     if ( (*listIt).type() != KABC::Key::Custom )
       existingKeyTypes.append( KABC::Key::typeLabel( (*listIt).type() ) );
   }
 
   KABC::Key::TypeList typeList = KABC::Key::typeList();
   KABC::Key::TypeList::ConstIterator it;
-  for ( it = typeList.begin(); it != typeList.end(); ++it ) {
+  for ( it = typeList.constBegin(); it != typeList.constEnd(); ++it ) {
     if ( (*it) != KABC::Key::Custom &&
          !existingKeyTypes.contains( KABC::Key::typeLabel( *it ) ) ) {
       keyMap.insert( KABC::Key::typeLabel( *it ), *it );
@@ -188,7 +188,7 @@ void KeyWidget::updateKeyCombo()
   mKeyCombo->clear();
 
   KABC::Key::List::ConstIterator it;
-  for ( it = mKeyList.begin(); it != mKeyList.end(); ++it ) {
+  for ( it = mKeyList.constBegin(); it != mKeyList.constEnd(); ++it ) {
     if ( (*it).type() == KABC::Key::Custom )
       mKeyCombo->addItem( (*it).customTypeString() );
     else

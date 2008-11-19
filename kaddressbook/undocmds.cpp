@@ -52,13 +52,13 @@ void DeleteCommand::undo()
 {
   // Put it back in the document
   KABC::Addressee::List::ConstIterator it;
-  const KABC::Addressee::List::ConstIterator endIt( mAddresseeList.end() );
+  const KABC::Addressee::List::ConstIterator endIt( mAddresseeList.constEnd() );
 
   // lock resources
-  for ( it = mAddresseeList.begin(); it != endIt; ++it )
+  for ( it = mAddresseeList.constBegin(); it != endIt; ++it )
     lock()->lock( (*it).resource() );
 
-  for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
+  for ( it = mAddresseeList.constBegin(); it != endIt; ++it ) {
     addressBook()->insertAddressee( *it );
     lock()->unlock( (*it).resource() );
   }
@@ -71,8 +71,8 @@ void DeleteCommand::redo()
   KABC::Addressee addr;
 
   QStringList::ConstIterator it;
-  const QStringList::ConstIterator endIt( mUIDList.end() );
-  for ( it = mUIDList.begin(); it != endIt; ++it ) {
+  const QStringList::ConstIterator endIt( mUIDList.constEnd() );
+  for ( it = mUIDList.constBegin(); it != endIt; ++it ) {
     addr = addressBook()->findByUid( *it );
     lock()->lock( addr.resource() );
     mAddresseeList.append( addr );
@@ -81,8 +81,8 @@ void DeleteCommand::redo()
   }
 
   KABC::Addressee::List::ConstIterator addrIt;
-  const KABC::Addressee::List::ConstIterator addrEndIt( mAddresseeList.end() );
-  for ( addrIt = mAddresseeList.begin(); addrIt != addrEndIt; ++addrIt ) {
+  const KABC::Addressee::List::ConstIterator addrEndIt( mAddresseeList.constEnd() );
+  for ( addrIt = mAddresseeList.constBegin(); addrIt != addrEndIt; ++addrIt ) {
     addressBook()->removeAddressee( *addrIt );
     lock()->unlock( (*addrIt).resource() );
   }
@@ -161,13 +161,13 @@ QString PasteCommand::text() const
 void PasteCommand::undo()
 {
   KABC::Addressee::List::ConstIterator it;
-  const KABC::Addressee::List::ConstIterator endIt( mAddresseeList.end() );
+  const KABC::Addressee::List::ConstIterator endIt( mAddresseeList.constEnd() );
 
   // lock resources
-  for ( it = mAddresseeList.begin(); it != endIt; ++it )
+  for ( it = mAddresseeList.constBegin(); it != endIt; ++it )
     lock()->lock( (*it).resource() );
 
-  for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
+  for ( it = mAddresseeList.constBegin(); it != endIt; ++it ) {
     addressBook()->removeAddressee( *it );
     lock()->unlock( (*it).resource() );
   }
@@ -178,10 +178,10 @@ void PasteCommand::redo()
   QStringList uids;
 
   KABC::Addressee::List::ConstIterator constIt;
-  const KABC::Addressee::List::ConstIterator constEndIt( mAddresseeList.end() );
+  const KABC::Addressee::List::ConstIterator constEndIt( mAddresseeList.constEnd() );
 
   // lock resources
-  for ( constIt = mAddresseeList.begin(); constIt != constEndIt; ++constIt )
+  for ( constIt = mAddresseeList.constBegin(); constIt != constEndIt; ++constIt )
     lock()->lock( (*constIt).resource() );
 
   KABC::Addressee::List::Iterator it;
@@ -198,8 +198,8 @@ void PasteCommand::redo()
   }
 
   QStringList::ConstIterator uidIt;
-  const QStringList::ConstIterator uidEndIt( uids.end() );
-  for ( uidIt = uids.begin(); uidIt != uidEndIt; ++uidIt )
+  const QStringList::ConstIterator uidEndIt( uids.constEnd() );
+  for ( uidIt = uids.constBegin(); uidIt != uidEndIt; ++uidIt )
     mCore->editContact( *uidIt );
 }
 
@@ -217,13 +217,13 @@ QString NewCommand::text() const
 void NewCommand::undo()
 {
   KABC::Addressee::List::ConstIterator it;
-  const KABC::Addressee::List::ConstIterator endIt( mAddresseeList.end() );
+  const KABC::Addressee::List::ConstIterator endIt( mAddresseeList.constEnd() );
 
   // lock resources
-  for ( it = mAddresseeList.begin(); it != endIt; ++it )
+  for ( it = mAddresseeList.constBegin(); it != endIt; ++it )
     lock()->lock( (*it).resource() );
 
-  for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
+  for ( it = mAddresseeList.constBegin(); it != endIt; ++it ) {
     addressBook()->removeAddressee( *it );
     lock()->unlock( (*it).resource() );
   }
@@ -286,13 +286,13 @@ QString CutCommand::text() const
 void CutCommand::undo()
 {
   KABC::Addressee::List::ConstIterator it;
-  const KABC::Addressee::List::ConstIterator endIt( mAddresseeList.end() );
+  const KABC::Addressee::List::ConstIterator endIt( mAddresseeList.constEnd() );
 
   // lock resources
-  for ( it = mAddresseeList.begin(); it != endIt; ++it )
+  for ( it = mAddresseeList.constBegin(); it != endIt; ++it )
     lock()->lock( (*it).resource() );
 
-  for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
+  for ( it = mAddresseeList.constBegin(); it != endIt; ++it ) {
     addressBook()->insertAddressee( *it );
     lock()->unlock( (*it).resource() );
   }
@@ -309,16 +309,16 @@ void CutCommand::redo()
   KABC::Addressee addr;
 
   QStringList::ConstIterator it;
-  const QStringList::ConstIterator endIt( mUIDList.end() );
-  for ( it = mUIDList.begin(); it != endIt; ++it ) {
+  const QStringList::ConstIterator endIt( mUIDList.constEnd() );
+  for ( it = mUIDList.constBegin(); it != endIt; ++it ) {
     addr = addressBook()->findByUid( *it );
     mAddresseeList.append( addr );
     lock()->lock( addr.resource() );
   }
 
   KABC::Addressee::List::ConstIterator addrIt;
-  const KABC::Addressee::List::ConstIterator addrEndIt( mAddresseeList.end() );
-  for ( addrIt = mAddresseeList.begin(); addrIt != addrEndIt; ++addrIt ) {
+  const KABC::Addressee::List::ConstIterator addrEndIt( mAddresseeList.constEnd() );
+  for ( addrIt = mAddresseeList.constBegin(); addrIt != addrEndIt; ++addrIt ) {
     addressBook()->removeAddressee( *addrIt );
     lock()->unlock( addr.resource() );
   }

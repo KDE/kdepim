@@ -230,7 +230,7 @@ void ContactListViewItem::refresh()
   }
 
   KABC::Field::List::ConstIterator it;
-  for ( it = mFields.begin(); it != mFields.end(); ++it ) {
+  for ( it = mFields.constBegin(); it != mFields.constEnd(); ++it ) {
     if ( (*it)->label() == KABC::Addressee::birthdayLabel() ) {
       QDate date = mAddressee.birthday().date();
       if ( date.isValid() )

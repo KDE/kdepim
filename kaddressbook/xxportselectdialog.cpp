@@ -64,7 +64,7 @@ XXPortSelectDialog::XXPortSelectDialog( KAB::Core *core, bool sort,
   mFilters = Filter::restore( KGlobal::config().data(), "Filter" );
   Filter::List::ConstIterator filterIt;
   QStringList filters;
-  for ( filterIt = mFilters.begin(); filterIt != mFilters.end(); ++filterIt )
+  for ( filterIt = mFilters.constBegin(); filterIt != mFilters.constEnd(); ++filterIt )
     filters.append( (*filterIt).name() );
 
   mFiltersCombo->addItems( filters );
@@ -84,7 +84,7 @@ XXPortSelectDialog::XXPortSelectDialog( KAB::Core *core, bool sort,
 
   mFields = mCore->addressBook()->fields( KABC::Field::All );
   KABC::Field::List::ConstIterator fieldIt;
-  for ( fieldIt = mFields.begin(); fieldIt != mFields.end(); ++fieldIt )
+  for ( fieldIt = mFields.constBegin(); fieldIt != mFields.constEnd(); ++fieldIt )
     mFieldCombo->addItem( (*fieldIt)->label() );
   connect(this,SIGNAL(helpClicked()),this,SLOT(slotHelp()));
 }
@@ -96,7 +96,7 @@ KABC::AddresseeList XXPortSelectDialog::contacts()
   KABC::AddresseeList list;
   if ( mUseSelection->isChecked() ) {
     QStringList::ConstIterator it;
-    for ( it = selection.begin(); it != selection.end(); ++it ) {
+    for ( it = selection.constBegin(); it != selection.constEnd(); ++it ) {
       KABC::Addressee addr = mCore->addressBook()->findByUid( *it );
       if ( !addr.isEmpty() )
         list.append( addr );
@@ -104,7 +104,7 @@ KABC::AddresseeList XXPortSelectDialog::contacts()
   } else if ( mUseFilters->isChecked() ) {
     // find contacts that can pass selected filter
     Filter::List::ConstIterator filterIt;
-    for ( filterIt = mFilters.begin(); filterIt != mFilters.end(); ++filterIt )
+    for ( filterIt = mFilters.constBegin(); filterIt != mFilters.constEnd(); ++filterIt )
       if ( (*filterIt).name() == mFiltersCombo->currentText() )
         break;
 
@@ -121,7 +121,7 @@ KABC::AddresseeList XXPortSelectDialog::contacts()
     for ( it = mCore->addressBook()->begin(); it != addressBookEnd; ++it ) {
       const QStringList tmp( (*it).categories() );
       QStringList::ConstIterator tmpIt;
-      for ( tmpIt = tmp.begin(); tmpIt != tmp.end(); ++tmpIt )
+      for ( tmpIt = tmp.constBegin(); tmpIt != tmp.constEnd(); ++tmpIt )
         if ( categorieList.contains( *tmpIt ) ) {
           list.append( *it );
           break;

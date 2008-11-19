@@ -85,7 +85,7 @@ void PhoneTypeCombo::update()
 
   clear();
   QList<int>::ConstIterator it;
-  for ( it = mTypeList.begin(); it != mTypeList.end(); ++it ) {
+  for ( it = mTypeList.constBegin(); it != mTypeList.constEnd(); ++it ) {
     if ( *it == -1 ) { // "Other..." entry
       addItem( i18n( "Other..." ) );
     } else {
@@ -215,7 +215,7 @@ KABC::PhoneNumber::List PhoneNumberListWidget::phoneNumbers() const
   KABC::PhoneNumber::List list;
 
   KABC::PhoneNumber::List::ConstIterator it;
-  for ( it = mPhoneNumberList.begin(); it != mPhoneNumberList.end(); ++it )
+  for ( it = mPhoneNumberList.constBegin(); it != mPhoneNumberList.constEnd(); ++it )
     if ( !(*it).number().isEmpty() )
       list.append( *it );
 
@@ -253,7 +253,7 @@ void PhoneNumberListWidget::recreateNumberWidgets()
 
   KABC::PhoneNumber::List::ConstIterator it;
   int counter = 0;
-  for ( it = mPhoneNumberList.begin(); it != mPhoneNumberList.end(); ++it ) {
+  for ( it = mPhoneNumberList.constBegin(); it != mPhoneNumberList.constEnd(); ++it ) {
     PhoneNumberWidget *wdg = new PhoneNumberWidget( this );
     wdg->setNumber( *it );
 
@@ -369,7 +369,7 @@ PhoneTypeDialog::PhoneTypeDialog( KABC::PhoneNumber::Type type, QWidget *parent 
   KABC::PhoneNumber::TypeList::ConstIterator it;
   mGroup = new QButtonGroup( box );
   int i = 0;
-  for ( it = mTypeList.begin(); it != mTypeList.end(); ++it, ++i ) {
+  for ( it = mTypeList.constBegin(); it != mTypeList.constEnd(); ++it, ++i ) {
     QCheckBox *cb = new QCheckBox( KABC::PhoneNumber::typeLabel( *it ), box );
     cb->setChecked( type & mTypeList[ i ] );
     buttonLayout->addWidget( cb );

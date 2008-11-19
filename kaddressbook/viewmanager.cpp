@@ -158,7 +158,7 @@ KABC::Addressee::List ViewManager::selectedAddressees() const
 
   const QStringList uids = selectedUids();
   QStringList::ConstIterator it;
-  for ( it = uids.begin(); it != uids.end(); ++it ) {
+  for ( it = uids.constBegin(); it != uids.constEnd(); ++it ) {
     KABC::Addressee addr = mCore->addressBook()->findByUid( *it );
     if ( !addr.isEmpty() )
       list.append( addr );
@@ -205,7 +205,7 @@ void ViewManager::setFirstSelected( bool selected )
 void ViewManager::unloadViews()
 {
   while ( mViewDict.count() ) {
-    KAddressBookView *view = *(mViewDict.begin());
+    KAddressBookView *view = *(mViewDict.constBegin());
     mViewDict.remove( mViewDict.key( view ) );
     delete view;
   }
@@ -459,12 +459,12 @@ void ViewManager::dropped( QDropEvent *e )
   QString clipText, vcards;
   KUrl::List urls = KUrl::List::fromMimeData( md );
   if ( !urls.isEmpty() ) {
-    KUrl::List::ConstIterator it = urls.begin();
+    KUrl::List::ConstIterator it = urls.constBegin();
     int c = urls.count();
     if ( c > 1 ) {
       QString questionString = i18np( "Import one contact into your addressbook?", "Import %1 contacts into your addressbook?", c );
       if ( KMessageBox::questionYesNo( this, questionString, i18n( "Import Contacts?" ), KGuiItem(i18n( "Import" )), KGuiItem(i18n( "Do Not Import" )) ) == KMessageBox::Yes ) {
-        for ( ; it != urls.end(); ++it )
+        for ( ; it != urls.constEnd(); ++it )
           emit urlDropped( *it );
       }
     } else if ( c == 1 )
@@ -475,7 +475,7 @@ void ViewManager::dropped( QDropEvent *e )
     KPIM::KVCardDrag::fromMimeData( md, list );
 
     KABC::Addressee::List::ConstIterator it;
-    for ( it = list.begin(); it != list.end(); ++it ) {
+    for ( it = list.constBegin(); it != list.constEnd(); ++it ) {
       KABC::Addressee a = mCore->addressBook()->findByUid( (*it).uid() );
       if ( a.isEmpty() ) { // not yet in address book
         mCore->addressBook()->insertAddressee( *it );
@@ -498,7 +498,7 @@ void ViewManager::startDrag()
   kDebug(5720) <<"ViewManager::startDrag: starting to drag";
 
   QStringList::ConstIterator it;
-  for ( it = uidList.begin(); it != uidList.end(); ++it )
+  for ( it = uidList.constBegin(); it != uidList.constEnd(); ++it )
     addrList.append( mCore->addressBook()->findByUid( *it ) );
 
   QDrag *drag = new QDrag( this );
@@ -579,7 +579,7 @@ QStringList ViewManager::filterNames() const
   names.append( i18n( "Unfiled" ) );
 
   Filter::List::ConstIterator it;
-  for ( it = mFilterList.begin(); it != mFilterList.end(); ++it )
+  for ( it = mFilterList.constBegin(); it != mFilterList.constEnd(); ++it )
     names.append( (*it).name() );
 
   return names;
@@ -590,7 +590,7 @@ int ViewManager::filterPosition( const QString &name ) const
   int pos = 0;
 
   Filter::List::ConstIterator it;
-  for ( it = mFilterList.begin(); it != mFilterList.end(); ++it, ++pos )
+  for ( it = mFilterList.constBegin(); it != mFilterList.constEnd(); ++it, ++pos )
     if ( name == (*it).name() )
       return pos + 2;
 

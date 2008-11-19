@@ -131,7 +131,7 @@ bool VCardXXPort::exportContacts( const KABC::AddresseeList &addrList, const QSt
           return true;
 
         KABC::AddresseeList::ConstIterator it;
-        for ( it = list.begin(); it != list.end(); ++it ) {
+        for ( it = list.constBegin(); it != list.constEnd(); ++it ) {
           url = baseUrl.url() + '/' + (*it).givenName() + '_' + (*it).familyName() + ".vcf";
 
           bool tmpOk;

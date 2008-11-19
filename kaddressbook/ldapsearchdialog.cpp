@@ -67,7 +67,7 @@ static QString join( const KLDAP::LdapAttrValue& lst, const QString& sep )
 {
   QString res;
   bool alredy = false;
-  for ( KLDAP::LdapAttrValue::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
+  for ( KLDAP::LdapAttrValue::ConstIterator it = lst.constBegin(); it != lst.constEnd(); ++it ) {
     if ( alredy )
       res += sep;
     alredy = true;
@@ -401,7 +401,7 @@ void LDAPSearchDialog::restoreSettings()
       ldapClient->setServer( ldapServer );
       QStringList attrs;
 
-      for ( QMap<QString, QString>::ConstIterator it = adrbookattr2ldap().begin(); it != adrbookattr2ldap().end(); ++it )
+      for ( QMap<QString, QString>::ConstIterator it = adrbookattr2ldap().constBegin(); it != adrbookattr2ldap().constEnd(); ++it )
         attrs << *it;
 
       ldapClient->setAttrs( attrs );
@@ -593,9 +593,9 @@ KABC::Addressee LDAPSearchDialog::convertLdapAttributesToAddressee( const KLDAP:
 
   // email
   KLDAP::LdapAttrValue lst = attrs["mail"];
-  KLDAP::LdapAttrValue::ConstIterator it = lst.begin();
+  KLDAP::LdapAttrValue::ConstIterator it = lst.constBegin();
   bool pref = true;
-  while ( it != lst.end() ) {
+  while ( it != lst.constEnd() ) {
     addr.insertEmail( asUtf8( *it ), pref );
     pref = false;
     ++it;

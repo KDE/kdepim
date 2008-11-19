@@ -111,7 +111,7 @@ void KABCResourceItem::createSubresourceItems()
 
       // This resource has subresources
       QStringList::ConstIterator it;
-      for ( it = subresources.begin(); it != subresources.end(); ++it ) {
+      for ( it = subresources.constBegin(); it != subresources.constEnd(); ++it ) {
         (void)new KABCResourceItem( res, this, *it );
       }
     }
