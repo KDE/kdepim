@@ -404,8 +404,8 @@ QString CSVInput::optionUsage() const
 
     const QMap<QString, QString> templateNames = m_templateFactory->templateNames();
 
-    QMap<QString, QString>::const_iterator it    = templateNames.begin();
-    QMap<QString, QString>::const_iterator endIt = templateNames.end();
+    QMap<QString, QString>::const_iterator it    = templateNames.constBegin();
+    QMap<QString, QString>::const_iterator endIt = templateNames.constEnd();
     for (; it != endIt; ++it)
     {
         QString name = it.key();
@@ -459,8 +459,8 @@ KABC::Addressee CSVInput::readAddressee(std::istream& stream)
     {
         QStringList list = split(values);
 
-        QStringList::const_iterator it    = list.begin();
-        QStringList::const_iterator endIt = list.end();
+        QStringList::const_iterator it    = list.constBegin();
+        QStringList::const_iterator endIt = list.constEnd();
         for (int i = 0; it != endIt; ++it, ++i)
         {
             m_template->setFieldText(i, addressee, *it);

@@ -308,8 +308,8 @@ bool KonsoleKalendar::printEventList( QTextStream *ts,
     Event *singleEvent;
     Event::List::ConstIterator it;
 
-    for ( it = eventList->begin();
-          it != eventList->end() && status != false;
+    for ( it = eventList->constBegin();
+          it != eventList->constEnd() && status != false;
           ++it ) {
       singleEvent = *it;
 
@@ -405,7 +405,7 @@ bool KonsoleKalendar::isEvent( QDateTime startdate,
                          rawEventsForDate( startdate.date(), timeSpec,
                                            EventSortStartDate,
                                            SortDirectionAscending ) );
-  for ( it = eventList.begin(); it != eventList.end(); ++it ) {
+  for ( it = eventList.constBegin(); it != eventList.constEnd(); ++it ) {
     event = *it;
     if ( event->dtEnd().toTimeSpec( timeSpec ).dateTime() == enddate &&
          event->summary() == summary ) {

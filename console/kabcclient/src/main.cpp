@@ -270,8 +270,8 @@ bool checkForFormatHelp(KCmdLineArgs* args, FormatFactory* factory)
         cout << i18n("The following input formats are available:").toLocal8Bit().data() << endl;
 
         QByteArrayList formats = factory->inputFormatList();
-        QByteArrayList::const_iterator it    = formats.begin();
-        QByteArrayList::const_iterator endIt = formats.end();
+        QByteArrayList::const_iterator it    = formats.constBegin();
+        QByteArrayList::const_iterator endIt = formats.constEnd();
         for (; it != endIt; ++it)
         {
             InputFormat* format = factory->inputFormat(*it);
@@ -324,8 +324,8 @@ bool checkForFormatHelp(KCmdLineArgs* args, FormatFactory* factory)
         cout << i18n("The following output formats are available:").toLocal8Bit().data() << endl;
 
         QByteArrayList formats = factory->outputFormatList();
-        QByteArrayList::const_iterator it    = formats.begin();
-        QByteArrayList::const_iterator endIt = formats.end();
+        QByteArrayList::const_iterator it    = formats.constBegin();
+        QByteArrayList::const_iterator endIt = formats.constEnd();
         for (; it != endIt; ++it)
         {
             OutputFormat* format = factory->outputFormat(*it);

@@ -91,8 +91,8 @@ bool UIDOutput::writeAddresseeList(const KABC::AddresseeList& addresseeList,
 {
     if (stream.bad()) return false;
 
-    AddresseeList::const_iterator it    = addresseeList.begin();
-    AddresseeList::const_iterator endIt = addresseeList.end();
+    AddresseeList::const_iterator it    = addresseeList.constBegin();
+    AddresseeList::const_iterator endIt = addresseeList.constEnd();
     for (; it != endIt; ++it)
     {
         if (!writeAddressee(*it, stream)) return false;
@@ -256,8 +256,8 @@ bool EmailOutput::setOptions(const QByteArray& options)
 {
     QStringList optionList = QString::fromLocal8Bit(options).split(',', QString::SkipEmptyParts);
 
-    QStringList::const_iterator it    = optionList.begin();
-    QStringList::const_iterator endIt = optionList.end();
+    QStringList::const_iterator it    = optionList.constBegin();
+    QStringList::const_iterator endIt = optionList.constEnd();
     for (; it != endIt; ++it)
     {
         if ((*it) == QString::fromUtf8("allemails"))
@@ -311,8 +311,8 @@ bool EmailOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream&
     {
         QStringList emails = addressee.emails();
 
-        QStringList::const_iterator it    = emails.begin();
-        QStringList::const_iterator endIt = emails.end();
+        QStringList::const_iterator it    = emails.constBegin();
+        QStringList::const_iterator endIt = emails.constEnd();
 
         if (it != endIt)
         {
@@ -351,8 +351,8 @@ bool EmailOutput::writeAddresseeList(const KABC::AddresseeList& addresseeList,
 {
     if (stream.bad()) return false;
 
-    AddresseeList::const_iterator it    = addresseeList.begin();
-    AddresseeList::const_iterator endIt = addresseeList.end();
+    AddresseeList::const_iterator it    = addresseeList.constBegin();
+    AddresseeList::const_iterator endIt = addresseeList.constEnd();
     for (; it != endIt; ++it)
     {
         if ((*it).emails().count() == 0) continue;
@@ -395,8 +395,8 @@ bool MuttOutput::setOptions(const QByteArray& options)
 {
     QStringList optionList = QString::fromLocal8Bit(options).split(',', QString::SkipEmptyParts);
 
-    QStringList::const_iterator it    = optionList.begin();
-    QStringList::const_iterator endIt = optionList.end();
+    QStringList::const_iterator it    = optionList.constBegin();
+    QStringList::const_iterator endIt = optionList.constEnd();
     for (; it != endIt; ++it)
     {
         if ((*it) == "allemails")
@@ -470,8 +470,8 @@ bool MuttOutput::writeAddressee(const KABC::Addressee& addressee, std::ostream& 
     {
         QStringList emails = addressee.emails();
 
-        QStringList::const_iterator it    = emails.begin();
-        QStringList::const_iterator endIt = emails.end();
+        QStringList::const_iterator it    = emails.constBegin();
+        QStringList::const_iterator endIt = emails.constEnd();
 
         if (it != endIt)
         {
@@ -557,8 +557,8 @@ bool MuttOutput::writeAddresseeList(const KABC::AddresseeList& addresseeList,
 {
     if (stream.bad()) return false;
 
-    AddresseeList::const_iterator it    = addresseeList.begin();
-    AddresseeList::const_iterator endIt = addresseeList.end();
+    AddresseeList::const_iterator it    = addresseeList.constBegin();
+    AddresseeList::const_iterator endIt = addresseeList.constEnd();
     for (; it != endIt; ++it)
     {
         if ((*it).emails().count() == 0) continue;
@@ -634,8 +634,8 @@ QString CSVOutput::optionUsage() const
 
     const QMap<QString, QString> templateNames = m_templateFactory->templateNames();
 
-    QMap<QString, QString>::const_iterator it    = templateNames.begin();
-    QMap<QString, QString>::const_iterator endIt = templateNames.end();
+    QMap<QString, QString>::const_iterator it    = templateNames.constBegin();
+    QMap<QString, QString>::const_iterator endIt = templateNames.constEnd();
     for (; it != endIt; ++it)
     {
         QString name = it.key();
@@ -693,8 +693,8 @@ bool CSVOutput::writeAddresseeList(const KABC::AddresseeList& addresseeList,
 {
     if (stream.bad()) return false;
 
-    AddresseeList::const_iterator it    = addresseeList.begin();
-    AddresseeList::const_iterator endIt = addresseeList.end();
+    AddresseeList::const_iterator it    = addresseeList.constBegin();
+    AddresseeList::const_iterator endIt = addresseeList.constEnd();
     for (; it != endIt; ++it)
     {
         if (!writeAddressee(*it, stream)) return false;

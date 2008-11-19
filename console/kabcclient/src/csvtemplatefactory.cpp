@@ -75,9 +75,9 @@ CSVTemplate* CSVTemplateFactory::createCachedTemplate(const QString& name)
 {
     if (name.isEmpty()) return 0;
 
-    QMap<QString, CSVTemplate*>::iterator it = m_templates.find(name);
+    QMap<QString, CSVTemplate*>::ConstIterator it = m_templates.constFind(name);
     CSVTemplate* temp = 0;
-    if (it != m_templates.end()) temp = it.value();
+    if (it != m_templates.constEnd()) temp = it.value();
 
     if (temp == 0)
     {
@@ -102,8 +102,8 @@ QMap<QString, QString> CSVTemplateFactory::templateNames()
         QStringList templateDirs =
             KGlobal::mainComponent().dirs()->findDirs("data", "kaddressbook/csv-templates");
 
-        QStringList::const_iterator it    = templateDirs.begin();
-        QStringList::const_iterator endIt = templateDirs.end();
+        QStringList::const_iterator it    = templateDirs.constBegin();
+        QStringList::const_iterator endIt = templateDirs.constEnd();
         for (; it != endIt; ++it)
         {
             addTemplateNames(*it);
@@ -162,8 +162,8 @@ void CSVTemplateFactory::addTemplateNames(const QString& directory)
     QDir dir(dirInfo.absoluteFilePath());
     const QFileInfoList fileInfos = dir.entryInfoList(filters);
 
-    QFileInfoList::const_iterator it    = fileInfos.begin();
-    QFileInfoList::const_iterator endIt = fileInfos.end();
+    QFileInfoList::const_iterator it    = fileInfos.constBegin();
+    QFileInfoList::const_iterator endIt = fileInfos.constEnd();
 
     for (; it != endIt; ++it)
     {
