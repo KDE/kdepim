@@ -41,8 +41,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2008-07-11</date>
-<releaseinfo>2.00.00</releaseinfo>
+<date>2008-11-17</date>
+<releaseinfo>2.01.00</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -185,7 +185,7 @@ they have expired or been deleted. (But note that alarms which you
 delete are stored only if they have already triggered at least once.)
 You can control whether &kalarm; archives expired alarms, and for how
 long, in the
-<link linkend="preferences-storage">Preferences dialog</link>.</para>
+<link linkend="preferences-storage">Configuration dialog</link>.</para>
 
 <para>Archived alarms may be shown in the alarm list by selecting
 <menuchoice><guimenu>View</guimenu><guimenuitem>Show Archived
@@ -387,7 +387,7 @@ from the context menu.</para>
 <para>When you delete an active alarm, it is archived, provided that
 it has triggered at least once before being deleted, and provided that
 expired alarms are archived at all. (Use the
-<link linkend="preferences-storage">Preferences dialog</link> to
+<link linkend="preferences-storage">Configuration dialog</link> to
 control whether and for how long archived alarms are stored.) When you
 delete an archived alarm, or an active alarm which has not yet
 triggered, it is removed permanently.</para>
@@ -758,7 +758,7 @@ Calendars</link>).</para>
 default resource for that alarm type. New alarms are automatically
 saved to the default resource for the appropriate alarm type, unless
 you have selected the prompt option for new alarms and templates in the
-<link linkend="preferences-storage">Preferences dialog</link>.</para>
+<link linkend="preferences-storage">Configuration dialog</link>.</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -912,7 +912,7 @@ templates) from the calendar.</para>
 <link linkend="resources">alarm resources</link>, alarms of each type
 will be added to the appropriate default resource, or if you have
 selected the prompt option for new alarms and templates in the
-<link linkend="preferences-storage">Preferences dialog</link>, you will
+<link linkend="preferences-storage">Configuration dialog</link>, you will
 be prompted for the resource to use.</para>
 </listitem>
 
@@ -979,7 +979,7 @@ defined in the <guilabel>Alarm Text</guilabel> group box.</para>
 <link linkend="resources">alarm resources</link>, the alarms will be
 added to the default active alarm resource, or if you have selected the
 prompt option for new alarms and templates in the
-<link linkend="preferences-storage">Preferences dialog</link>, you will
+<link linkend="preferences-storage">Configuration dialog</link>, you will
 be prompted for the resource to use.</para>
 
 </sect2>
@@ -1019,18 +1019,38 @@ button.</para>
 <sect1 id="alarm-edit-dlg">
 <title>The Alarm Edit Dialog</title>
 
-<para>The Alarm Edit dialog enables you to view and edit an
-alarm.</para>
+<para>The Alarm Edit dialog enables you to view and edit an alarm.
+When you first use &kalarm;, a simplified form of the dialog is
+displayed, with only a small number of options visible. To see all
+options, click the <guibutton>More Options</guibutton> button; to
+revert to the simplified dialog, click the
+<guibutton>Less Options</guibutton> button. &kalarm; always remembers
+your last display choice whenever the Alarm Edit dialog is
+redisplayed.</para>
 
 <screenshot>
-<screeninfo>Screenshot of the Alarm Edit dialog</screeninfo>
+<screeninfo>Screenshot of the simplified Alarm Edit dialog</screeninfo>
+<mediaobject>
+<imageobject>
+<imagedata fileref="editwindow-simple.png" format="PNG"/>
+</imageobject>
+<textobject>
+<phrase>Simplified Alarm Edit dialog for a display alarm</phrase>
+</textobject>
+<caption><para>Simplified Alarm Edit dialog for a display alarm</para></caption>
+</mediaobject>
+</screenshot>
+
+<screenshot>
+<screeninfo>Screenshot of the Alarm Edit dialog showing all options</screeninfo>
 <mediaobject>
 <imageobject>
 <imagedata fileref="editwindow.png" format="PNG"/>
 </imageobject>
 <textobject>
-<phrase>Alarm Edit dialog for a display alarm</phrase>
+<phrase>Alarm Edit dialog for a display alarm, showing all options</phrase>
 </textobject>
+<caption><para>Alarm Edit dialog for a display alarm, showing all options</para></caption>
 </mediaobject>
 </screenshot>
 
@@ -1150,13 +1170,12 @@ message. In the <guilabel>Choose Alarm Font &amp; Color</guilabel>
 dialog, check <guilabel>Use default font</guilabel> to display the
 message in whatever font is configured as the default at the time
 the message is displayed. To choose a specific font for the message,
-uncheck <guilabel>Use default font</guilabel>. (The default font, and
-the colors shown in the color selection lists, can be set in the
-<link linkend="preferences-fontcolour">Preferences dialog</link>.)</para>
+uncheck <guilabel>Use default font</guilabel>. (The default font and
+colors can be set in the
+<link linkend="preferences-edit">Configuration dialog</link>.)</para>
 
-<para>The selected font and colors are shown in a sample text
-alongside the button. You can edit this text to show special
-characters.</para>
+<para>The selected colors are shown in the alarm message text entry
+field.</para>
 </listitem>
 
 <listitem>
@@ -1252,7 +1271,7 @@ produces when it executes.</para>
 <para>Check <guilabel>Execute in terminal window</guilabel> to cause
 the command to be executed in a terminal window. You can choose
 which type of terminal window should be used in the
-<link linkend="preferences-general">Preferences dialog</link>.</para>
+<link linkend="preferences-general">Configuration dialog</link>.</para>
 </listitem>
 
 <listitem>
@@ -1297,10 +1316,10 @@ button.</para>
 which &kmail; identity to use as your email address for sending the
 email. This option only appears if your <guilabel>From</guilabel>
 email address in the
-<link linkend="preferences-email">Preferences dialog</link> is set to
+<link linkend="preferences-email">Configuration dialog</link> is set to
 <guilabel>Use &kmail; identities</guilabel>. Otherwise your email
 address is preset in the
-<link linkend="preferences-email">Preferences dialog</link>, rendering
+<link linkend="preferences-email">Configuration dialog</link>, rendering
 this option inapplicable.</para>
 </listitem>
 
@@ -1308,7 +1327,7 @@ this option inapplicable.</para>
 <para>Check <guilabel>Copy email to self</guilabel> to send a blind
 copy of the email to yourself when the alarm is triggered. The email
 address to which the copy will be sent may be set in the
-<link linkend="preferences-email">Preferences dialog</link>, the
+<link linkend="preferences-email">Configuration dialog</link>, the
 default being your email address set in the &kde; System
 Settings.</para>
 </listitem>
@@ -1356,18 +1375,23 @@ after the current time.</para>
 </listitem>
 </itemizedlist>
 
-<para>Choose the time zone to apply to the alarm. This time zone is
-used for all dates and times relating to this alarm, including
+<para>If desired, choose a time zone to apply to the alarm. This time
+zone is used for all dates and times relating to this alarm, including
 recurrence and exception dates and times. Normally, you should leave
 the time zone controls unchanged unless you have a good reason to
 change them.</para>
+
+<para>The time zone controls are displayed only when the selected time
+zone is different from the default time zone set in the
+<link linkend="preferences-time">Configuration dialog</link>, or if
+you click the <guibutton>Time Zone...</guibutton> button.</para>
 
 <itemizedlist>
 <listitem>
 <para>In the combo box, choose the time zone which this alarm is to
 use. When creating a new alarm, this is initially set to the time zone
 selected in the
-<link linkend="preferences-time">Preferences dialog</link>, which
+<link linkend="preferences-time">Configuration dialog</link>, which
 will be your computer's time zone unless you have changed it.</para>
 </listitem>
 
@@ -1495,6 +1519,29 @@ a position (&eg; the second Tuesday).</para>
 the month, or a position in a month (&eg; the last Saturday in
 May). Check each month of the year in which you wish to trigger the
 alarm.</para>
+
+<para>If you set up a yearly recurrence for February 29th, you can
+specify how it is to be handled in non-leap years by selecting the
+appropriate
+<guilabel>February 29th alarm in non-leap years</guilabel>
+option:</para>
+
+<itemizedlist>
+<listitem><para><guilabel>None</guilabel>: the alarm will occur on
+February 29th in leap years, but will be suppressed in non-leap
+years.</para>
+</listitem>
+
+<listitem><para><guilabel>28 Feb</guilabel>: the alarm will occur on
+February 29th in leap years, and on February 28th in non-leap
+years.</para>
+</listitem>
+
+<listitem><para><guilabel>1 Mar</guilabel>: the alarm will occur on
+February 29th in leap years, and on March 1st in non-leap
+years.</para>
+</listitem>
+</itemizedlist>
 </listitem>
 </itemizedlist>
 
@@ -1525,22 +1572,40 @@ regardless of the end date/time.</para></note>
 </listitem>
 </itemizedlist>
 
-<para>If you wish to exclude certain date/times from the recurrence
-which you have set up, specify them in the
-<guilabel>Exceptions</guilabel> group box. The list of exceptions
-(&ie; excluded date/times) is shown on the left. To add a new
-exception, enter a date on the right and press
+<para>The <guilabel>Exceptions</guilabel> group box allows you to
+exclude certain date/times from the recurrence which you have set up.
+Note that these controls are not shown in the simplified form of the
+Alarm Edit dialog: to see them, click
+<guibutton>More Options</guibutton>.</para>
+
+<itemizedlist>
+<listitem>
+<para>The list of exceptions (&ie; excluded date/times) is shown on
+the left. To add a new exception, enter a date on the right and press
 <guibutton>Add</guibutton>. To change an exception, highlight it in
 the list, enter the new date on the right and press
 <guibutton>Change</guibutton>. To delete an exception, highlight it
 in the list and press <guibutton>Delete</guibutton>.</para>
+</listitem>
 
+<listitem>
+<para>You can restrict an alarm not to occur on holidays by checking
+<guilabel>Exclude holidays</guilabel>. This does not change the way
+the alarm is scheduled; it simply suppresses the alarm whenever it
+happens to trigger on a holiday. You can select your holiday country
+or region in the
+<link linkend="preferences-time">Configuration dialog</link>.</para>
+</listitem>
+
+<listitem>
 <para>You can restrict an alarm to occur only during working time by
 checking <guilabel>Only during working hours</guilabel>. This does not
 change the way the alarm is scheduled; it simply suppresses the alarm
 whenever it happens to trigger outside working hours. Work days and
 working hours are set in the
-<link linkend="preferences-time">Preferences dialog</link>.</para>
+<link linkend="preferences-time">Configuration dialog</link>.</para>
+</listitem>
+</itemizedlist>
 
 <sect3>
 <title>Sub-Repetition</title>
@@ -1718,7 +1783,7 @@ a convenient way to activate &kalarm;.</para>
 </itemizedlist>
 
 <para>You can choose in the
-<link linkend="preferences-view">Preferences dialog</link> which of
+<link linkend="preferences-view">Configuration dialog</link> which of
 two schemes should be used to position alarm message windows:</para>
 
 <itemizedlist>
@@ -1738,7 +1803,7 @@ configurable delay.</para>
 </itemizedlist>
 
 <para>You can also choose in the
-<link linkend="preferences-view">Preferences dialog</link> which of
+<link linkend="preferences-view">Configuration dialog</link> which of
 two different modes should be used to display alarm message
 windows:</para>
 
@@ -1772,7 +1837,7 @@ a gray icon indicates that alarms are not being monitored.</para>
 summary of the first few message alarms due in the next 24 hours are
 displayed as a tooltip. You can switch this feature off, or configure
 the number of alarms to display and their format, in the
-<link linkend="preferences-view">Preferences dialog</link>.</para>
+<link linkend="preferences-view">Configuration dialog</link>.</para>
 
 <para><mousebutton>Left</mousebutton> click on the system tray icon to
 toggle between displaying and hiding the &kalarm; main window.</para>
@@ -1819,8 +1884,8 @@ with that template's details.</action></para>
 
 <varlistentry>
 <term><menuchoice><guimenuitem>Configure &kalarm;...</guimenuitem></menuchoice></term>
-<listitem><para><action>Displays the &kalarm; Preferences dialog.</action></para>
-<para>The Preferences dialog is described in
+<listitem><para><action>Displays the &kalarm; Configuration dialog.</action></para>
+<para>The Configuration dialog is described in
 <link linkend="preferences">Configuring &kalarm;</link>. It
 includes options relating to the &kalarm; system tray icon.</para>
 </listitem>
@@ -1857,7 +1922,7 @@ manager in order to display &kalarm; in the system tray.</para>
 
 <para>To choose whether or not &kalarm; will be shown at startup in
 the system tray, use the <link linkend="preferences-view">View</link>
-tab of the Preferences dialog.</para>
+tab of the Configuration dialog.</para>
 </sect2>
 </sect1>
 
@@ -1918,8 +1983,8 @@ re-enabled.</para>
 
 <para>An alarm's individual enabled/disabled status is indicated by
 its color in the alarm list (the color being configurable in the
-<link linkend="preferences-fontcolour">Font &amp; Color</link> tab of
-the Preferences dialog).</para>
+<link linkend="preferences-view">View</link> tab of the Configuration
+dialog).</para>
 </listitem>
 </itemizedlist>
 
@@ -1933,7 +1998,7 @@ as alarm monitoring being enabled.</para>
 run &kalarm;, it will from then on start automatically whenever you log
 in unless you later disable it in the 
 <link linkend="preferences-general">General</link> tab of the
-Preferences dialog.</para>
+Configuration dialog.</para>
 
 <para>If alarm monitoring is currently disabled, do one of the
 following to enable alarms:</para>
@@ -1984,7 +2049,7 @@ from the context menu.</para>
 <para>Alarms may be permanently disabled by preventing &kalarm; from
 being started at login using the
 <link linkend="preferences-general">General</link> tab of the
-Preferences dialog.</para>
+Configuration dialog.</para>
 
 </sect2>
 
@@ -2050,7 +2115,7 @@ is not visible, close all &kalarm;'s windows.</para>
 <para>To configure &kalarm;'s operation to suit your system and your
 personal preferences, select <menuchoice><guimenu>Settings</guimenu>
 <guimenuitem>Configure &kalarm;...</guimenuitem></menuchoice>.
-This displays the Preferences dialog.</para>
+This displays the Configuration dialog.</para>
 
 <sect1 id="preferences-general">
 <title>General</title>
@@ -2151,39 +2216,17 @@ options relating to time and date:</para>
 for individual alarms.</para>
 </listitem>
 
+<listitem><para><guilabel>Holiday region</guilabel>: Select which
+country's or region's holidays to use. This affects recurring alarms
+for which the option to exclude holidays is selected.</para>
+</listitem>
+
 <listitem><para><guilabel>Start of day for date-only
 alarms</guilabel>: Set the start-of-day time for the purposes of
 triggering date-only alarms, &ie; ones for which the <guilabel>Any
 time</guilabel> option was selected. On the date when they are due,
 such alarms will be output at the earliest opportunity during the
 24 hours starting from the start-of-day time.</para>
-</listitem>
-
-<listitem><para>If you set up yearly recurrences for February 29th,
-specify how these are to be handled in non-leap years by selecting one
-of the following options:</para>
-
-<itemizedlist>
-<listitem><para><guilabel>February 28th</guilabel>: the alarm will
-occur on February 29th in leap years, and on February 28th in
-non-leap years.</para>
-</listitem>
-
-<listitem><para><guilabel>March 1st</guilabel>: the alarm will
-occur on February 29th in leap years, and on March 1st in
-non-leap years.</para>
-</listitem>
-
-<listitem><para><guilabel>Do not repeat</guilabel>: the alarm will
-occur on February 29th in leap years, but will be suppressed in
-non-leap years.</para>
-</listitem>
-</itemizedlist>
-
-<note><para>Changing this option will not cause the next scheduled
-recurrence of any existing alarms to be re-evaluated. It will only
-affect new alarms, or existing alarms after they are next
-triggered.</para></note>
 </listitem>
 
 <listitem><para><guilabel>Working Hours</guilabel> group box: These
@@ -2320,6 +2363,16 @@ the email client, since &kmail; automatically does this.</para></note>
 </listitem>
 
 <listitem>
+<para><guilabel>Notify when remote emails are queued</guilabel>:
+Select this option to display a notification whenever an email alarm
+queues an email for sending to a remote system. This may be useful
+if, for example, you have a dial-up connection, or email is queued in
+&kmail;'s <filename>outbox</filename> folder, so that you can
+ensure that you do whatever is needed to actually transmit
+the email.</para>
+</listitem>
+
+<listitem>
 <para>Select your email address to be used as the sender's address in
 email alarms:</para>
 
@@ -2360,16 +2413,6 @@ Settings</guilabel> to use the email address which is configured in the
 </listitem>
 </itemizedlist>
 </listitem>
-
-<listitem>
-<para><guilabel>Notify when remote emails are queued</guilabel>:
-Select this option to display a notification whenever an email alarm
-queues an email for sending to a remote system. This may be useful
-if, for example, you have a dial-up connection, or email is queued in
-&kmail;'s <filename>outbox</filename> folder, so that you can
-ensure that you do whatever is needed to actually transmit
-the email.</para>
-</listitem>
 </itemizedlist>
 </sect1>
 
@@ -2377,7 +2420,8 @@ the email.</para>
 <title>View</title>
 
 <para>The <guilabel>View</guilabel> section lets you control some
-aspects of &kalarm;'s appearance:</para>
+aspects of &kalarm;'s appearance. In the <guilabel>General</guilabel>
+tab:</para>
 <itemizedlist>
 
 <listitem>
@@ -2427,8 +2471,14 @@ time at which the alarm is scheduled.</para>
 </listitem>
 
 <listitem>
-<para><guilabel>Alarm Message Windows</guilabel> group box: These options
-control the appearance of alarm message windows.</para>
+<para>The <guilabel>Alarm List</guilabel> group box allows the
+selection of the colors used in the alarm list in &kalarm;'s main
+window, to show disabled and archived alarms.</para>
+</listitem>
+</itemizedlist>
+
+<para>The <guilabel>Alarm Windows</guilabel> tab contains options to control
+the appearance of alarm message windows.</para>
 
 <itemizedlist>
 <listitem>
@@ -2456,49 +2506,6 @@ whether they grab the keyboard focus when they appear. See the
 details.</para>
 </listitem>
 </itemizedlist>
-</listitem>
-</itemizedlist>
-</sect1>
-
-<sect1 id="preferences-fontcolour">
-<title>Font &amp; Color</title>
-
-<para>The <guilabel>Font &amp; Color</guilabel> section lets you set
-the default appearance of alarm messages, and the colors to be used
-in the alarm list:</para>
-<itemizedlist>
-
-<listitem><para>Select the default font and background color to use
-for alarm message display.</para>
-</listitem>
-
-<listitem><para>Edit the color selection list which is displayed when
-you click on the background color combo box:</para>
-<itemizedlist>
-
-<listitem><para><guilabel>Add color...</guilabel>: Displays a color
-selection dialog which lets you choose a color to add to the
-list.</para>
-</listitem>
-
-<listitem><para><guilabel>Remove color</guilabel>: Removes the color
-currently displayed in the <guilabel>Background color</guilabel>
-combo box from the list. The Custom color item cannot be removed from
-the list, and when it is displayed, this button is disabled.</para>
-</listitem>
-
-</itemizedlist>
-</listitem>
-
-<listitem><para>Select the color to be used in the alarm list to show
-disabled alarms.</para>
-</listitem>
-
-<listitem><para>Select the color to be used in the alarm list to show
-archived alarms.</para>
-</listitem>
-
-</itemizedlist>
 </sect1>
 
 <sect1 id="preferences-edit">
@@ -2508,6 +2515,30 @@ archived alarms.</para>
 default values for the options in the
 <link linkend="alarm-edit-dlg">Alarm Edit dialog</link>:</para>
 
+<itemizedlist>
+<listitem><para>The <guilabel>General</guilabel> tab contains options
+which apply to all alarm types.</para>
+
+<itemizedlist>
+<listitem><para>Set the default states for the <guilabel>Show in
+KOrganizer</guilabel> and <guilabel>Cancel if late</guilabel> check
+boxes.</para>
+</listitem>
+
+<listitem><para>Set the default recurrence type.</para>
+</listitem>
+
+<listitem><para>Select the default handling in non-leap years of
+yearly recurrences scheduled for February 29th.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+
+<listitem><para>The <guilabel>Alarm Types</guilabel> tab contains
+options which apply to specific types of alarm.</para>
+
+<itemizedlist>
+<listitem>
 <para>For display alarms:</para>
 
 <itemizedlist>
@@ -2527,7 +2558,9 @@ sound file may be specified even if the sound type is not set to
 <guilabel>Sound file</guilabel>.</para>
 </listitem>
 </itemizedlist>
+</listitem>
 
+<listitem>
 <para>For command alarms:</para>
 
 <itemizedlist>
@@ -2536,7 +2569,9 @@ script</guilabel> and <guilabel>Execute in terminal window</guilabel>
 check boxes.</para>
 </listitem>
 </itemizedlist>
+</listitem>
 
+<listitem>
 <para>For email alarms:</para>
 
 <itemizedlist>
@@ -2544,20 +2579,13 @@ check boxes.</para>
 self</guilabel> check box.</para>
 </listitem>
 </itemizedlist>
-
-<para>For all alarm types:</para>
-
-<itemizedlist>
-<listitem><para>Set the default states for the <guilabel>Show in
-KOrganizer</guilabel> and <guilabel>Cancel if late</guilabel> check
-boxes.</para>
+</listitem>
+</itemizedlist>
 </listitem>
 
-<listitem><para>Set the default recurrence type.</para>
-</listitem>
-
-<listitem><para>Select the default handling in non-leap years of
-yearly recurrences scheduled for February 29th.</para>
+<listitem><para>The <guilabel>Font &amp; Color</guilabel> tab lets you
+set the default appearance of alarm messages. Select their default
+font, and foreground and background colors.</para>
 </listitem>
 </itemizedlist>
 </sect1>
