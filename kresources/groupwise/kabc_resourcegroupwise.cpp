@@ -162,7 +162,7 @@ void ResourceGroupwise::writeAddressBooks()
   QStringList personals;
   QStringList frequents;
   GroupWise::AddressBook::List::ConstIterator it;
-  for( it = mAddressBooks.begin(); it != mAddressBooks.end(); ++it ) {
+  for( it = mAddressBooks.constBegin(); it != mAddressBooks.constEnd(); ++it ) {
     ids.append( (*it).id );
     names.append( (*it).name );
     personals.append( (*it).isPersonal ? "1" : "0" );
@@ -191,7 +191,7 @@ void ResourceGroupwise::retrieveAddressBooks()
     QString write;
 
     GroupWise::AddressBook::List::ConstIterator it;
-    for( it = mAddressBooks.begin(); it != mAddressBooks.end(); ++it ) {
+    for( it = mAddressBooks.constBegin(); it != mAddressBooks.constEnd(); ++it ) {
       reads.append( (*it).id );
       if ( (*it).isPersonal ) {
         if ( write.isEmpty() ) write = (*it).id;
@@ -520,7 +520,7 @@ void ResourceGroupwise::slotReadJobData( KIO::Job *job , const QByteArray &data 
   kDebug() << "  parsed " << addressees.count() << " contacts in "  << profile.elapsed() << "ms, now adding to resource...";
 
   Addressee::List::ConstIterator it;
-  for( it = addressees.begin(); it != addressees.end(); ++it ) {
+  for( it = addressees.constBegin(); it != addressees.constEnd(); ++it ) {
     KABC::Addressee addr = *it;
     if ( !addr.isEmpty() ) {
       addr.setResource( this );
@@ -549,7 +549,7 @@ void ResourceGroupwise::slotUpdateJobData( KIO::Job *job, const QByteArray &data
   Addressee::List addressees = conv.parseVCards( mJobData );
   Addressee::List::ConstIterator it;
 
-  for( it = addressees.begin(); it != addressees.end(); ++it ) {
+  for( it = addressees.constBegin(); it != addressees.constEnd(); ++it ) {
     KABC::Addressee addr = *it;
     if ( !addr.isEmpty() ) {
       // if added or changed
@@ -734,8 +734,8 @@ KUrl ResourceGroupwise::createAccessUrl( BookType bookType, AccessMode mode, uns
 
   QString query = "?";
   QStringList::ConstIterator it;
-  for( it = ids.begin(); it != ids.end(); ++it ) {
-    if ( it != ids.begin() ) query += "&";
+  for( it = ids.constBegin(); it != ids.constEnd(); ++it ) {
+    if ( it != ids.constBegin() ) query += "&";
     query += "addressbookid=" + *it;
   }
 

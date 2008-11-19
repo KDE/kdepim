@@ -198,7 +198,7 @@ void ResourceGroupwiseConfig::updateAddressBookView()
 
   GroupWise::AddressBook::List addressBooks = mResource->addressBooks();
   GroupWise::AddressBook::List::ConstIterator abIt;
-  for ( abIt = addressBooks.begin(); abIt != addressBooks.end(); ++abIt ) {
+  for ( abIt = addressBooks.constBegin(); abIt != addressBooks.constEnd(); ++abIt ) {
     AddressBookItem *item = new AddressBookItem( mAddressBookView, *abIt );
     if ( selectedRead.contains( (*abIt).id ) )
       item->setOn( true );

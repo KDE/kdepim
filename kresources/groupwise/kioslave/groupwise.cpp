@@ -284,7 +284,7 @@ void Groupwise::getAddressbook( const KUrl &url )
     query = query.mid( 1 );
     QStringList queryItems = query.split( "&", QString::SkipEmptyParts );
     QStringList::ConstIterator it;
-    for( it = queryItems.begin(); it != queryItems.end(); ++it ) {
+    for( it = queryItems.constBegin(); it != queryItems.constEnd(); ++it ) {
       QStringList item = (*it).split( "=", QString::SkipEmptyParts );
       if ( item.count() == 2 && item[ 0 ] == "addressbookid" ) {
         ids.append( item[ 1 ] );
@@ -355,7 +355,7 @@ void Groupwise::updateAddressbook( const KUrl &url )
     query = query.mid( 1 );
     QStringList queryItems = query.split( "&", QString::SkipEmptyParts );
     QStringList::ConstIterator it;
-    for( it = queryItems.begin(); it != queryItems.end(); ++it ) {
+    for( it = queryItems.constBegin(); it != queryItems.constEnd(); ++it ) {
       QStringList item = (*it).split( "=", QString::SkipEmptyParts );
       if ( item.count() == 2 && item[ 0 ] == "addressbookid" ) {
         ids.append( item[ 1 ] );

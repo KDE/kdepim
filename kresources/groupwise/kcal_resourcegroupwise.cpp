@@ -193,7 +193,7 @@ void ResourceGroupwise::slotJobResult( KJob *job )
     } else {
       Incidence::List incidences = calendar.incidences();
       Incidence::List::ConstIterator it;
-      for( it = incidences.begin(); it != incidences.end(); ++it ) {
+      for( it = incidences.constBegin(); it != incidences.constEnd(); ++it ) {
 //        kDebug() <<"INCIDENCE:" << (*it)->summary();
         Incidence *i = (*it)->clone();
         QString remote = (*it)->customProperty( "GWRESOURCE", "UID" );
@@ -252,18 +252,18 @@ bool ResourceGroupwise::doSave( bool )
   Incidence::List::ConstIterator it;
 
   Incidence::List added = addedIncidences();
-  for( it = added.begin(); it != added.end(); ++it ) {
+  for( it = added.constBegin(); it != added.constEnd(); ++it ) {
     if ( server.addIncidence( *it, this ) ) {
       clearChange( *it );
       saveToCache();
     }
   }
   Incidence::List changed = changedIncidences();
-  for( it = changed.begin(); it != changed.end(); ++it ) {
+  for( it = changed.constBegin(); it != changed.constEnd(); ++it ) {
     if ( server.changeIncidence( *it ) ) clearChange( *it );
   }
   Incidence::List deleted = deletedIncidences();
-  for( it = deleted.begin(); it != deleted.end(); ++it ) {
+  for( it = deleted.constBegin(); it != deleted.constEnd(); ++it ) {
     if ( server.deleteIncidence( *it ) ) clearChange( *it );
   }
 

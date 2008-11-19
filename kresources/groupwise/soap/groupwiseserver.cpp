@@ -61,8 +61,8 @@ static QMap<struct soap *,GroupwiseServer *> mServerMap;
 int myOpen( struct soap *soap, const char *endpoint, const char *host, int port )
 {
   QMap<struct soap *,GroupwiseServer *>::ConstIterator it;
-  it = mServerMap.find( soap );
-  if ( it == mServerMap.end() ) {
+  it = mServerMap.constFind( soap );
+  if ( it == mServerMap.constEnd() ) {
     soap->error = SOAP_FATAL_ERROR;
     return SOAP_INVALID_SOCKET;
   }
@@ -73,8 +73,8 @@ int myOpen( struct soap *soap, const char *endpoint, const char *host, int port 
 int myClose( struct soap *soap )
 {
   QMap<struct soap *,GroupwiseServer *>::ConstIterator it;
-  it = mServerMap.find( soap );
-  if ( it == mServerMap.end() ) {
+  it = mServerMap.constFind( soap );
+  if ( it == mServerMap.constEnd() ) {
     soap->error = SOAP_FATAL_ERROR;
     return SOAP_FATAL_ERROR;
   }
@@ -85,8 +85,8 @@ int myClose( struct soap *soap )
 int mySendCallback( struct soap *soap, const char *s, size_t n )
 {
   QMap<struct soap *,GroupwiseServer *>::ConstIterator it;
-  it = mServerMap.find( soap );
-  if ( it == mServerMap.end() ) return SOAP_FAULT;
+  it = mServerMap.constFind( soap );
+  if ( it == mServerMap.constEnd() ) return SOAP_FAULT;
 
   return (*it)->gSoapSendCallback( soap, s, n );
 }
@@ -94,8 +94,8 @@ int mySendCallback( struct soap *soap, const char *s, size_t n )
 size_t myReceiveCallback( struct soap *soap, char *s, size_t n )
 {
   QMap<struct soap *,GroupwiseServer *>::ConstIterator it;
-  it = mServerMap.find( soap );
-  if ( it == mServerMap.end() ) {
+  it = mServerMap.constFind( soap );
+  if ( it == mServerMap.constEnd() ) {
     kDebug() <<"No soap object found";
     soap->error = SOAP_FAULT;
     return 0;
@@ -1044,7 +1044,7 @@ bool GroupwiseServer::changeIncidence( KCal::Incidence *incidence )
     GWConverter conv( mSoap );
     KCal::Attendee::List attendees = incidence->attendees();
     KCal::Attendee::List::ConstIterator it;
-    for( it = attendees.begin(); it != attendees.end(); ++it ) {
+    for( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
       if ( conv.emailsMatch( (*it)->email(), mUserEmail ) ) {
         if ( (*it)->status() == KCal::Attendee::Accepted )
           success &= acceptIncidence( incidence );
