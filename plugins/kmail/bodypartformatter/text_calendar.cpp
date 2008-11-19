@@ -98,7 +98,7 @@ CalendarManager::CalendarManager()
     if ( (*it)->type() == "imap" || (*it)->type() == "kolab" ) {
       const QStringList subResources = (*it)->subresources();
       QSet<QString> prefixSet;
-      for ( QStringList::ConstIterator subIt = subResources.begin(); subIt != subResources.end(); ++subIt ) {
+      for ( QStringList::ConstIterator subIt = subResources.constBegin(); subIt != subResources.constEnd(); ++subIt ) {
         if ( !(*subIt).contains( "/.INBOX.directory/" ) )
           // we don't care about shared folders
           continue;
@@ -195,7 +195,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       Attendee* myself = 0;
       // Find myself. There will always be all attendees listed, even if
       // only I need to answer it.
-      for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+      for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
         // match only the email part, not the name
         if( KPIMUtils::compareEmail( (*it)->email(), receiver, false ) ) {
           // We are the current one, and even the receiver, note
@@ -212,8 +212,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       bool rsvp = true; // better send superfluously than not at all
       Attendee::List attendees = incidence->attendees();
       Attendee::List::ConstIterator it;
-      for ( it = attendees.begin(); it != attendees.end(); ++it ) {
-        if ( it == attendees.begin() ) {
+      for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
+        if ( it == attendees.constBegin() ) {
           rsvp = (*it)->RSVP(); // use what the first one has
         } else {
           if ( (*it)->RSVP() != rsvp ) {
@@ -230,8 +230,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       Attendee::Role role = Attendee::OptParticipant;
       Attendee::List attendees = incidence->attendees();
       Attendee::List::ConstIterator it;
-      for ( it = attendees.begin(); it != attendees.end(); ++it ) {
-        if ( it == attendees.begin() ) {
+      for ( it = attendees.constBegin(); it != attendees.constEnd(); ++it ) {
+        if ( it == attendees.constBegin() ) {
           role = (*it)->role(); // use what the first one has
         } else {
           if ( (*it)->role() != role ) {
