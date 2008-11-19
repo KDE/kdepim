@@ -879,14 +879,14 @@ KDGanttViewTaskLink* KDGanttViewTaskLink::createFromDomElement( QDomElement& ele
 
     QPtrList<KDGanttViewItem> fromItemList;
     QPtrList<KDGanttViewItem> toItemList;
-    for( QStringList::const_iterator fromIt = fromList.begin();
-         fromIt != fromList.end(); ++fromIt ) {
+    for( QStringList::const_iterator fromIt = fromList.constBegin();
+         fromIt != fromList.constEnd(); ++fromIt ) {
         KDGanttViewItem* item = KDGanttViewItem::find( *fromIt );
         if( item )
             fromItemList.append( item );
     }
-    for( QStringList::const_iterator toIt = toList.begin();
-         toIt != toList.end(); ++toIt ) {
+    for( QStringList::const_iterator toIt = toList.constBegin();
+         toIt != toList.constEnd(); ++toIt ) {
         KDGanttViewItem* item = KDGanttViewItem::find( *toIt );
         if( item )
             toItemList.append( item );
