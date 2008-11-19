@@ -116,7 +116,7 @@ KABC::Address::List AddressEditWidget::addresses()
   KABC::Address::List retList;
 
   KABC::Address::List::ConstIterator it;
-  for ( it = mAddressList.begin(); it != mAddressList.end(); ++it )
+  for ( it = mAddressList.constBegin(); it != mAddressList.constEnd(); ++it )
     if ( !(*it).isEmpty() )
       retList.append( *it );
 
@@ -140,13 +140,13 @@ void AddressEditWidget::setAddresses( const KABC::Addressee &addr,
   AddresseeConfig config( mAddressee );
   const QList<KABC::Address::Type> configList = config.noDefaultAddrTypes();
   QList<KABC::Address::Type>::ConstIterator it;
-  for ( it = configList.begin(); it != configList.end(); ++it )
+  for ( it = configList.constBegin(); it != configList.constEnd(); ++it )
     defaultTypes.removeAll( *it );
 
   // Insert default types.
   // Doing this for mPrefCombo is enough because the list is shared by all
   // combos.
-  for ( it = defaultTypes.begin(); it != defaultTypes.end(); ++it ) {
+  for ( it = defaultTypes.constBegin(); it != defaultTypes.constEnd(); ++it ) {
     if ( !mTypeCombo->hasType( *it ) )
       mTypeCombo->insertType( list, *it, Address( *it ) );
   }
@@ -156,7 +156,7 @@ void AddressEditWidget::setAddresses( const KABC::Addressee &addr,
   // find preferred address which will be shown
   KABC::Address::Type preferred( KABC::Address::Home );  // default if no preferred address set
   KABC::Address::List::ConstIterator addrIt;
-  for ( addrIt = list.begin(); addrIt != list.end(); ++addrIt )
+  for ( addrIt = list.constBegin(); addrIt != list.constEnd(); ++addrIt )
     if ( (*addrIt).type() & KABC::Address::Pref ) {
       preferred = (*addrIt).type();
       break;
@@ -182,7 +182,7 @@ void AddressEditWidget::edit()
 
       bool hasHome = false, hasWork = false;
       KABC::Address::List::ConstIterator it;
-      for ( it = mAddressList.begin(); it != mAddressList.end(); ++it ) {
+      for ( it = mAddressList.constBegin(); it != mAddressList.constEnd(); ++it ) {
         if ( (*it).type() == KABC::Address::Home ) {
           if ( !(*it).isEmpty() )
             hasHome = true;
@@ -602,7 +602,7 @@ AddressTypeDialog::AddressTypeDialog( KABC::Address::Type type, QWidget *parent 
   KABC::Address::TypeList::ConstIterator it;
   int i = 0;
   int row = 0;
-  for ( it = mTypeList.begin(); it != mTypeList.end(); ++it, ++i ) {
+  for ( it = mTypeList.constBegin(); it != mTypeList.constEnd(); ++it, ++i ) {
     QCheckBox *cb = new QCheckBox( KABC::Address::typeLabel( *it ), box );
     cb->setChecked( type & mTypeList[ i ] );
     buttonLayout->addWidget( cb, row, i%3 );
@@ -653,14 +653,14 @@ QStringList AddressEditDialog::sortLocaleAware( const QStringList &list )
   QList<LocaleAwareString> sortedList;
 
   QStringList::ConstIterator it;
-  for ( it = list.begin(); it != list.end(); ++it )
+  for ( it = list.constBegin(); it != list.constEnd(); ++it )
     sortedList.append( LocaleAwareString( *it ) );
 
   qSort( sortedList.begin(), sortedList.end() );
 
   QStringList retval;
   QList<LocaleAwareString>::ConstIterator retIt;
-  for ( retIt = sortedList.begin(); retIt != sortedList.end(); ++retIt )
+  for ( retIt = sortedList.constBegin(); retIt != sortedList.constEnd(); ++retIt )
     retval.append( *retIt );
 
   return retval;

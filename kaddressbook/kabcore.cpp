@@ -277,7 +277,7 @@ KABC::Resource *KABCore::requestResource( QWidget *parent )
 
   QList<KRES::Resource*> kresResources;
   QList<KABC::Resource*>::const_iterator resIt;
-  for ( resIt = kabcResources.begin(); resIt != kabcResources.end(); ++resIt) {
+  for ( resIt = kabcResources.constBegin(); resIt != kabcResources.constEnd(); ++resIt) {
     if ( !(*resIt)->readOnly() ) {
       KRES::Resource *res = static_cast<KRES::Resource*>( *resIt );
       if ( res )
@@ -379,7 +379,7 @@ void KABCore::setContactSelected( const QString &uid )
         KABC::ResourceABC *resAbc = static_cast<KABC::ResourceABC *>( res );
         const QStringList subresources = resAbc->subresources();
         int writeables = 0;
-        for ( QStringList::ConstIterator it = subresources.begin(); it != subresources.end(); ++it ) {
+        for ( QStringList::ConstIterator it = subresources.constBegin(); it != subresources.constEnd(); ++it ) {
             if ( resAbc->subresourceActive(*it) && resAbc->subresourceWritable(*it) ) {
                 writeables++;
             }
@@ -470,7 +470,7 @@ void KABCore::deleteDistributionLists( const QStringList & names )
    return;
 
   QStringList uids;
-  for ( QStringList::ConstIterator it = names.begin(); it != names.end(); ++it ) {
+  for ( QStringList::ConstIterator it = names.constBegin(); it != names.constEnd(); ++it ) {
       const KABC::DistributionList *list = mAddressBook->findDistributionListByName( *it );
       if ( list )
           uids.append( list->identifier() );
@@ -484,8 +484,8 @@ void KABCore::deleteContacts( const QStringList &uids )
 {
   if ( uids.count() > 0 ) {
     QStringList names;
-    QStringList::ConstIterator it = uids.begin();
-    const QStringList::ConstIterator endIt( uids.end() );
+    QStringList::ConstIterator it = uids.constBegin();
+    const QStringList::ConstIterator endIt( uids.constEnd() );
     while ( it != endIt ) {
       KABC::Addressee addr = mAddressBook->findByUid( *it );
       names.append( addr.realName().isEmpty() ? addr.preferredEmail() : addr.realName() );
@@ -564,8 +564,8 @@ void KABCore::mergeContacts()
 
   KABC::Addressee addr = KABTools::mergeContacts( list );
 
-  KABC::Addressee::List::ConstIterator it = list.begin();
-  const KABC::Addressee::List::ConstIterator endIt( list.end() );
+  KABC::Addressee::List::ConstIterator it = list.constBegin();
+  const KABC::Addressee::List::ConstIterator endIt( list.constEnd() );
   KABC::Addressee origAddr = *it;
   QStringList uids;
   ++it;
@@ -619,8 +619,8 @@ void KABCore::incrementalJumpButtonSearch( const QString& character )
   if ( field ) {
     list.sortByField( field );
     KABC::AddresseeList::ConstIterator it;
-    const KABC::AddresseeList::ConstIterator endIt( list.end() );
-    for ( it = list.begin(); it != endIt; ++it ) {
+    const KABC::AddresseeList::ConstIterator endIt( list.constEnd() );
+    for ( it = list.constBegin(); it != endIt; ++it ) {
       if ( field->value( *it ).startsWith( character, Qt::CaseInsensitive ) ) {
         mViewManager->setSelected( (*it).uid(), true );
         return;
@@ -838,7 +838,7 @@ void KABCore::save()
   const QList<KABC::Resource*> resources = mAddressBook->resources();
   QList<KABC::Resource*>::const_iterator it;
 
-  for(it = resources.begin(); it != resources.end(); ++it) {
+  for(it = resources.constBegin(); it != resources.constEnd(); ++it) {
     KABC::Ticket *ticket = mAddressBook->requestSaveTicket( *it );
     if ( ticket ) {
       if ( !mAddressBook->save( ticket ) ) {
@@ -876,8 +876,8 @@ void KABCore::extensionModified( const KABC::Addressee::List &list )
 {
   if ( list.count() != 0 ) {
     KABC::Addressee::List::ConstIterator it;
-    const KABC::Addressee::List::ConstIterator endIt( list.end() );
-    for ( it = list.begin(); it != endIt; ++it ) {
+    const KABC::Addressee::List::ConstIterator endIt( list.constEnd() );
+    for ( it = list.constBegin(); it != endIt; ++it ) {
       Command *command = 0;
 
       // check if it exists already
@@ -1015,8 +1015,8 @@ void KABCore::showContactsAddress( const QString &addrUid )
 
   const KABC::Address::List list = addr.addresses();
   KABC::Address::List::ConstIterator it;
-  const KABC::Address::List::ConstIterator endIt( list.end() );
-  for ( it = list.begin(); it != endIt; ++it )
+  const KABC::Address::List::ConstIterator endIt( list.constEnd() );
+  for ( it = list.constBegin(); it != endIt; ++it )
     if ( (*it).id() == addrUid ) {
       LocationMap::instance()->showAddress( *it );
       break;
@@ -1396,8 +1396,8 @@ void KABCore::updateCategories()
 
   const QStringList customCategories( KABPrefs::instance()->customCategories() );
   QStringList::ConstIterator it;
-  const QStringList::ConstIterator endIt( customCategories.end() );
-  for ( it = customCategories.begin(); it != endIt; ++it ) {
+  const QStringList::ConstIterator endIt( customCategories.constEnd() );
+  for ( it = customCategories.constBegin(); it != endIt; ++it ) {
     if ( !categories.contains( *it )  ) {
       categories.append( *it );
     }
@@ -1419,8 +1419,8 @@ QStringList KABCore::allCategories() const
   const KABC::AddressBook::ConstIterator endIt( mAddressBook->end() );
   for ( it = mAddressBook->begin(); it != endIt; ++it ) {
     categories = (*it).categories();
-    const QStringList::ConstIterator catEndIt( categories.end() );
-    for ( catIt = categories.begin(); catIt != catEndIt; ++catIt )
+    const QStringList::ConstIterator catEndIt( categories.constEnd() );
+    for ( catIt = categories.constBegin(); catIt != catEndIt; ++catIt )
       if ( !allCategories.contains( *catIt ) )
         allCategories.append( *catIt );
   }
@@ -1451,8 +1451,8 @@ void KABCore::categoriesSelected( const QStringList &categories )
 
   QStringList uids = mViewManager->selectedUids();
   QStringList::ConstIterator it;
-  const QStringList::ConstIterator endIt( uids.end() );
-  for ( it = uids.begin(); it != endIt; ++it ) {
+  const QStringList::ConstIterator endIt( uids.constEnd() );
+  for ( it = uids.constBegin(); it != endIt; ++it ) {
     KABC::Addressee addr = mAddressBook->findByUid( *it );
     if ( !addr.isEmpty() ) {
       if ( !merge )
@@ -1460,8 +1460,8 @@ void KABCore::categoriesSelected( const QStringList &categories )
       else {
         QStringList addrCategories = addr.categories();
         QStringList::ConstIterator catIt;
-        const QStringList::ConstIterator catEndIt( categories.end() );
-        for ( catIt = categories.begin(); catIt != catEndIt; ++catIt ) {
+        const QStringList::ConstIterator catEndIt( categories.constEnd() );
+        for ( catIt = categories.constBegin(); catIt != catEndIt; ++catIt ) {
           if ( !addrCategories.contains( *catIt ) )
             addrCategories.append( *catIt );
         }

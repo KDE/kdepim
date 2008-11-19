@@ -109,7 +109,7 @@ void IncSearchWidget::initFields()
   mFieldCombo->addItem( i18n( "All Fields" ) );
 
   KABC::Field::List::ConstIterator it;
-  for ( it = mFieldList.begin(); it != mFieldList.end(); ++it )
+  for ( it = mFieldList.constBegin(); it != mFieldList.constEnd(); ++it )
     mFieldCombo->addItem( (*it)->label() );
 
   announceDoSearch();

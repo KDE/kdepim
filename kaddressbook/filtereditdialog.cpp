@@ -228,7 +228,7 @@ void FilterDialog::refresh()
   mFilterListBox->clear();
 
   Filter::List::ConstIterator it;
-  for ( it = mFilterList.begin(); it != mFilterList.end(); ++it )
+  for ( it = mFilterList.constBegin(); it != mFilterList.constEnd(); ++it )
     mFilterListBox->addItem( new QListWidgetItem( (*it).name() ) );
 }
 
