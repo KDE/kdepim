@@ -155,7 +155,7 @@ namespace Kleo {
 #define make_slot_cancel private: void slotCancel() { QGpgMEJob::doSlotCancel(); }
 #define make_progress_emitter private: void doEmitProgressSignal( const QString & what, int cur, int tot ) { emit progress( what, cur, tot ); }
 #define make_done_emitter private: void doEmitDoneSignal() { emit done(); }
-#define make_auditLogAsHtml private: QString auditLogAsHtml() const { return QGpgMEJob::auditLogAsHtml(); }
+#define make_auditLogAsHtml private: QString auditLogAsHtml() const { return QGpgMEJob::auditLogAsHtml(); } GpgME::Error auditLogError() const { return QGpgMEJob::auditLogError(); }
 #define QGPGME_JOB make_slot_cancel make_progress_emitter make_done_emitter make_auditLogAsHtml
 
 #endif // __KLEO_QGPGMEJOB_H__
