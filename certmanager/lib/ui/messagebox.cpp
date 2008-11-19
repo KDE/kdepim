@@ -51,6 +51,7 @@
 #include <qtextedit.h>
 #include <qtextstream.h>
 #include <qvbox.h>
+#include <qapplication.h>
 
 #include <gpg-error.h>
 
@@ -89,6 +90,14 @@ public:
 
     void setAuditLog( const QString & log ) {
         m_textEdit->setText( log );
+        const QRect rect = m_textEdit->paragraphRect( 0 );
+        kdDebug() << "setAuditLog: rect = " << rect;
+        if ( !rect.isValid() )
+            return;
+        QSize maxSize = qApp->desktop()->screenGeometry( this ).size() * 2 / 3 ;
+        if ( !maxSize.isValid() )
+            maxSize = QSize( 640, 480 );
+        m_textEdit->setMinimumSize( rect.size().boundedTo( maxSize ) );
     }
 
 private:
