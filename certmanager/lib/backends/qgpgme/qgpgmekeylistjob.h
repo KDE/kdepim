@@ -65,6 +65,7 @@ namespace Kleo {
   private slots:
     void slotNextKeyEvent( GpgME::Context * context, const GpgME::Key & key );
     void slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & e );
+    void slotFakeOperationDoneEvent();
 
   private:
     void doOperationDoneEvent( const GpgME::Error &) {} // unused, we implement slotOperationDoneEvent ourselves.

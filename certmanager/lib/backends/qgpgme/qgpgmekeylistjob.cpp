@@ -48,6 +48,7 @@
 #include <kdebug.h>
 
 #include <qstringlist.h>
+#include <qtimer.h>
 
 #include <algorithm>
 
@@ -97,6 +98,10 @@ GpgME::Error Kleo::QGpgMEKeyListJob::start( const QStringList & pats, bool secre
 	kdDebug(5150) << "QGpgMEKeyListJob::start(): retrying keylisting with chunksize " << chunkSize() << endl;
 	continue;
       }
+    } else if ( err.code() == GPG_ERR_EOF ) {
+        kdDebug(5150) << "QGpgMEKeyListJob::start(): early end of keylisting, trying to fake an empty result" << endl;
+        QTimer::singleShot( 10, this, SLOT(slotFakeOperationDoneEvent()) );
+        return GpgME::Error();
     }
     deleteLater();
     mResult = GpgME::KeyListResult( 0, err );
@@ -156,6 +161,17 @@ GpgME::KeyListResult Kleo::QGpgMEKeyListJob::attemptSyncKeyListing( std::vector<
 void Kleo::QGpgMEKeyListJob::slotNextKeyEvent( GpgME::Context * context, const GpgME::Key & key ) {
   if ( context == mCtx )
     emit nextKey( key );
+}
+
+void Kleo::QGpgMEKeyListJob::slotFakeOperationDoneEvent() {
+  const GpgME::KeyListResult res = mCtx->keyListResult();
+  if ( !res.error().code() == GPG_ERR_EOF )
+    kdDebug(5150) << "QGpgMEKeyListJob::slotFakeOperationDoneEvent: expected EOF, got "
+                  << res.error().asString() << endl;
+  mResult = GpgME::KeyListResult();
+  emit done();
+  emit result( mResult );
+  deleteLater();
 }
 
 void Kleo::QGpgMEKeyListJob::slotOperationDoneEvent( GpgME::Context * context, const GpgME::Error & ) {
