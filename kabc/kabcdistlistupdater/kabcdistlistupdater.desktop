@@ -1,6 +1,7 @@
 # KDE Config File
 [Desktop Entry]
 Name=kabcdistlistupdater
+Name[nl]=kabcdistlijstbijwerker
 Exec=kabcdistlistupdater --disable-autostart
 Icon=misc
 Type=Application
@@ -9,6 +10,7 @@ Comment[ca]=Eina per actualitzar les llistes de distribució antigues a les nove
 Comment[es]=Herramienta para actualizar las antiguas listas de distribución al nuevo formato.
 Comment[et]=Tööriist vanade postiloendite uuendamiseks uue vormi kohaselt.
 Comment[nds]=Warktüüch, dat ole Verdeellisten to niege opfrischt
+Comment[nl]=Hulpmiddel om de oude distributielijsten bij te werken tot de nieuwe.
 Comment[sk]=Nástroj na aktualizáciu starých ditribučných zoznamov na nové.
 Comment[sr]=Алат за ажурирање старих дистрибуционих листи новима.
 Comment[sr@Latn]=Алат за ажурирање старих дистрибуционих листи новима.
