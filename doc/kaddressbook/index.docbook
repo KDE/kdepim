@@ -390,7 +390,7 @@ If the type of the number is either a Phone, Mobile phone or Fax number you can 
 
 <sect3 id="managing-contacts-public-private-confidental">
 <title>Public, Private and Confidental</title>
-<para>The three modes Public, Private and Confidental are part of the vCard standart and implemented as such.  These allow you another way to group your contacts.</para>
+<para>The three modes Public, Private and Confidental are part of the vCard standard and implemented as such.  These allow you another way to group your contacts.</para>
 </sect3>
 
 </sect2>
@@ -505,7 +505,7 @@ If the type of the number is either a Phone, Mobile phone or Fax number you can 
 		      having signing preferences of
 		      "Never". Situations in which encryption might
 		      not be possible include missing
-		      keys/certificates for this or other recievers.
+		      keys/certificates for this or other receivers.
 		    </para>
 		  </listitem>
 		</varlistentry>
@@ -813,7 +813,7 @@ by many (address book) applications.</para></listitem>
 <varlistentry>
 <term><guilabel>CSV List</guilabel></term>
 <listitem><para>CSV (comma separated value) is a format that is used
-by many (address book) applications, it stores the contact informations in a plaintext field seperated by commas. This makes CSV very flexible and good for interaction with scripts.</para></listitem>
+by many (address book) applications, it stores the contact informations in a plaintext field separated by commas. This makes CSV very flexible and good for interaction with scripts.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -1033,7 +1033,7 @@ You can include and exclude servers from the search by selecting or deselecting 
 <varlistentry>
 <term><menuchoice>
 <guimenu>File</guimenu>
-<guisubmenu>new</guisubmenu>
+<guisubmenu>New</guisubmenu>
 <guimenuitem>New Distribution List...</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Opens the distribution list editor for adding a new list</action>.</para></listitem>
@@ -1319,7 +1319,7 @@ you can modify the settings of the current view</action>.</para></listitem>
 <varlistentry>
 <term><menuchoice>
 <guimenu>View</guimenu>
-<guimenuitem>Distibution List Editor</guimenuitem>
+<guimenuitem>Distribution List Editor</guimenuitem>
 </menuchoice></term>
 <listitem><para><action>Display or hide</action> the distribution list editor window.</para></listitem>
 </varlistentry>

@@ -121,7 +121,7 @@ help you keep your schedule. </para></abstract>
 <keyword>alarm</keyword>
 <keyword>appointment</keyword>
 <keyword>event</keyword>
-<keyword>jornal</keyword>
+<keyword>journal</keyword>
 <keyword>to-do</keyword>
 </keywordset>
 
@@ -3349,7 +3349,7 @@ menu item and choose a different calendar). </para></listitem>
 menu item to give your new calendar a filename and to save it).</para></listitem>
 </itemizedlist>
 
-<para>For more information about this acton, please refer to
+<para>For more information about this action, please refer to
 <xref linkend="managing-import-export" />.</para>
 
 </listitem>
