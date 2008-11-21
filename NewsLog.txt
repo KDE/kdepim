@@ -1,3 +1,13 @@
+Friday, November 21st 2008
+
+Problems addressed
+------------------
+
+* kolab/issue2627 Status line for audit log shown, even when it is not implemented.
+* kolab/issue2617 Kleopatra: After importing a p7c or p12 file the user is informed, that he has imported 0 certifictes.
+* kolab/issue2620 Kleopatra throws an error message, if no .gnupg exists and no agent is running.
+
+
 Tuesday, November 19th 2008
 
 Problems addressed
