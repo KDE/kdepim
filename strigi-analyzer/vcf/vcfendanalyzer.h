@@ -24,6 +24,8 @@
 #define STRIGI_IMPORT_API
 #include <strigi/analyzerplugin.h>
 #include <strigi/streamendanalyzer.h>
+#include <qstring.h>
+#include <kabc/vcardconverter.h>
 #include "pimstrigi-analyzer_export.h"
 #include "config-strigi.h"
 
@@ -34,13 +36,12 @@ class PIMSTRIGI_ANALYZER_EXPORT VcfEndAnalyzer : public Strigi::StreamEndAnalyze
   public:
     VcfEndAnalyzer( const VcfEndAnalyzerFactory *factory );
 
-    enum Field { Name = 0, Email, Telephone };
-
     const char* name() const { return "VcfEndAnalyzer"; }
     bool checkHeader( const char* header, int32_t headersize ) const;
     STRIGI_ENDANALYZER_RETVAL analyze(  Strigi::AnalysisResult& idx, Strigi::InputStream* in );
 
   private:
+    QString formatAddress(const KABC::Address& a) const;
     const VcfEndAnalyzerFactory* m_factory;
 };
 
@@ -49,12 +50,30 @@ class PIMSTRIGI_ANALYZER_EXPORT VcfEndAnalyzerFactory : public Strigi::StreamEnd
   friend class VcfEndAnalyzer;
 
   public:
-    const Strigi::RegisteredField* field( VcfEndAnalyzer::Field ) const;
+    const Strigi::RegisteredField* givenNameField;
+    const Strigi::RegisteredField* familyNameField;
 
-  private:
-    const Strigi::RegisteredField* nameField;
     const Strigi::RegisteredField* emailField;
-    const Strigi::RegisteredField* telephoneField;
+    const Strigi::RegisteredField* typeField;
+    const Strigi::RegisteredField* homepageField;
+    const Strigi::RegisteredField* commentField;
+
+    const Strigi::RegisteredField* cellPhoneField;
+    const Strigi::RegisteredField* workPhoneField;
+    const Strigi::RegisteredField* homePhoneField;
+    const Strigi::RegisteredField* faxPhoneField;
+    const Strigi::RegisteredField* otherPhoneField;
+
+    const Strigi::RegisteredField* photoField;
+
+    const Strigi::RegisteredField* homeAddressField;
+    const Strigi::RegisteredField* workAddressField;
+    const Strigi::RegisteredField* postalAddressField;
+    const Strigi::RegisteredField* otherAddressField;
+
+    const Strigi::RegisteredField* prefixField;
+    const Strigi::RegisteredField* suffixField;
+
 
     const char* name() const { return "VcfEndAnalyzer"; }
     Strigi::StreamEndAnalyzer* newInstance() const { return new VcfEndAnalyzer( this ); }

@@ -20,12 +20,9 @@
 
 #include "vcfendanalyzer.h"
 
-#include <kabc/vcardconverter.h>
-
 #include <strigi/fieldtypes.h>
 #include <strigi/analysisresult.h>
 #include <strigi/streamendanalyzer.h>
-
 
 VcfEndAnalyzer::VcfEndAnalyzer( const VcfEndAnalyzerFactory *factory )
   : m_factory( factory )
@@ -34,10 +31,21 @@ VcfEndAnalyzer::VcfEndAnalyzer( const VcfEndAnalyzerFactory *factory )
 
 bool VcfEndAnalyzer::checkHeader( const char* header, int32_t headersize ) const
 {
-  const char* magic = "BEGIN:VCARD";
-  int32_t magicLength = strlen( magic );
+  return headersize >= 11 && !strncmp( "BEGIN:VCARD", header, 11 );
+}
 
-  return headersize >= magicLength && !strncmp( magic, header, magicLength );
+// cannot use Address::formattedAddress because it requires KComponentData
+QString VcfEndAnalyzer::formatAddress(const KABC::Address& a) const
+{
+  QStringList parts;
+  if (!a.country().isEmpty()) parts+=a.country();
+  if (!a.region().isEmpty()) parts+=a.region();
+  if (!a.postalCode().isEmpty()) parts+=a.postalCode();
+  if (!a.locality().isEmpty()) parts+=a.locality();
+  if (!a.street().isEmpty()) parts+=a.street();
+  if (!a.postOfficeBox().isEmpty()) parts+=a.postOfficeBox();
+  if (!a.extended().isEmpty()) parts+=a.extended();
+  return parts.join(", ");
 }
 
 /**
@@ -46,48 +54,77 @@ bool VcfEndAnalyzer::checkHeader( const char* header, int32_t headersize ) const
  */
 STRIGI_ENDANALYZER_RETVAL VcfEndAnalyzer::analyze( Strigi::AnalysisResult& idx, Strigi::InputStream* in )
 {
+  using namespace KABC;
   const char* data;
-  if ( in->read( data, 1, in->size() ) < 0 )
+
+  int read=in->read( data, in->size(), in->size() );
+  if ( read < 0 )
     return Strigi::Error;
+  const QByteArray text( data, read );
 
-  const QByteArray text( data, in->size() );
-
-  KABC::VCardConverter converter;
-  KABC::Addressee addr = converter.parseVCard( text );
-
+  VCardConverter converter;
+  Addressee addr = converter.parseVCard( text );
   if ( addr.isEmpty() )
     return Strigi::Error;
 
-  idx.addValue( m_factory->field( Name ), addr.assembledName().toUtf8().data() );
-  idx.addValue( m_factory->field( Email ), addr.preferredEmail().toUtf8().data() );
-  if (addr.phoneNumbers().size()) {
-    idx.addValue( m_factory->field( Telephone ),
-      addr.phoneNumbers().first().number().toUtf8().data() );
-  }
+  Q_FOREACH (const QString& email, addr.emails() )
+    idx.addValue( m_factory->emailField, email.toUtf8().data() );
+  idx.addValue( m_factory->givenNameField, addr.givenName().toUtf8().data() );
+  idx.addValue( m_factory->familyNameField, addr.familyName().toUtf8().data() );
 
+  if (addr.url().isValid()) idx.addValue( m_factory->homepageField, addr.url().url().toUtf8().data() );
+  if (!addr.note().isEmpty()) idx.addValue( m_factory->commentField, addr.note().toUtf8().data() );
+  idx.addValue( m_factory->typeField, "http://freedesktop.org/standards/xesam/1.0/core#Person" );
+
+  Q_FOREACH (const PhoneNumber& pn, addr.phoneNumbers() )
+      switch (pn.type()) {
+        case PhoneNumber::Cell: idx.addValue( m_factory->cellPhoneField, pn.number().toUtf8().data() ); break;
+        case PhoneNumber::Home: idx.addValue( m_factory->homePhoneField, pn.number().toUtf8().data() ); break;
+        case PhoneNumber::Work: idx.addValue( m_factory->workPhoneField, pn.number().toUtf8().data() ); break;
+        case PhoneNumber::Fax: idx.addValue( m_factory->faxPhoneField, pn.number().toUtf8().data() ); break;
+        default: idx.addValue( m_factory->otherPhoneField, pn.number().toUtf8().data() ); 
+    }
+
+  Q_FOREACH (const Address& a, addr.addresses() )
+      switch (a.type()) {
+        case Address::Home: idx.addValue( m_factory->homeAddressField, formatAddress(a).toUtf8().data() ); break;
+        case Address::Work: idx.addValue( m_factory->workAddressField, formatAddress(a).toUtf8().data() ); break;
+        default: idx.addValue( m_factory->otherAddressField, formatAddress(a).toUtf8().data() ); break;
+    }
+
+  if (!addr.photo().isEmpty() && !addr.photo().isIntern())
+    idx.addValue( m_factory->photoField, addr.photo().url().toUtf8().data() );
+
+  if (!addr.suffix().isEmpty())
+   idx.addValue( m_factory->suffixField, addr.suffix().toUtf8().data() );
+  if (!addr.prefix().isEmpty())
+   idx.addValue( m_factory->prefixField, addr.prefix().toUtf8().data() );
+    
   return Strigi::Ok;
-}
-
-const Strigi::RegisteredField* VcfEndAnalyzerFactory::field( VcfEndAnalyzer::Field field ) const
-{
-  switch ( field ) {
-    default:
-    case VcfEndAnalyzer::Name:
-      return nameField;
-      break;
-    case VcfEndAnalyzer::Email:
-      return emailField;
-      break;
-    case VcfEndAnalyzer::Telephone:
-      return telephoneField;
-      break;
-  }
 }
 
 void VcfEndAnalyzerFactory::registerFields( Strigi::FieldRegister& reg )
 {
-  nameField = reg.registerField( "vcf.name", Strigi::FieldRegister::stringType, 1, 0 );
-  emailField = reg.registerField( "vcf.email", Strigi::FieldRegister::stringType, 1, 0 );
-  telephoneField = reg.registerField( "vcf.telephone", Strigi::FieldRegister::stringType, 1, 0 );
+  givenNameField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#givenName" );
+  familyNameField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#familyName" );
+
+  emailField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#emailAddress" );
+  homepageField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#homepageContactURL" );
+  commentField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#contentComment" );
+
+  cellPhoneField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#cellPhoneNumber" );
+  homePhoneField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#homePhoneNumber" );
+  workPhoneField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#workPhoneNumber" );
+  faxPhoneField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#faxPhoneNumber" );
+  otherPhoneField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#phoneNumber" );
+
+  homeAddressField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#homePostalAddress" );
+  workAddressField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#workPostalAddress" );
+  otherAddressField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#postalAddress" );
+
+  prefixField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#honorificPrefix" );
+  suffixField = reg.registerField( "http://freedesktop.org/standards/xesam/1.0/core#honorificSuffix" );
+   
+  typeField = reg.typeField;
 }
 
