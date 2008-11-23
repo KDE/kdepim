@@ -48,6 +48,9 @@ public:
 protected:
     virtual void contextMenuEvent( QContextMenuEvent* );
 
+    /** Override to make ctrl+click follow links */
+    virtual void mouseReleaseEvent(QMouseEvent *);
+
 protected slots:
     void onBookshelfSelection ( void );
     void onTextChanged ( void );

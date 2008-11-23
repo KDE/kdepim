@@ -34,6 +34,7 @@
 
 #include <kaction.h>
 #include <kactioncollection.h>
+#include <krun.h>
 
 #include "kjotsentry.h"
 #include "kjotslinkdialog.h"
@@ -211,6 +212,23 @@ void KJotsEdit::insertFromMimeData ( const QMimeData *source )
         KTextEdit::insertFromMimeData(source);
     }
 }
+
+void KJotsEdit::mouseReleaseEvent(QMouseEvent *event)
+{
+    if ( ( event->modifiers() & Qt::ControlModifier ) && ( event->button() & Qt::LeftButton )
+          && !anchorAt(event->pos()).isEmpty() )
+    {
+        QUrl anchor(anchorAt(event->pos()));
+        if ( anchor.scheme() == "kjots" ) {
+            quint64 target = anchor.path().mid(1).toULongLong();
+            bookshelf->jumpToId(target);
+        } else {
+            new KRun ( anchor, this );
+        }
+    }
+    KTextEdit::mouseReleaseEvent(event);
+}
+
 
 #include "kjotsedit.moc"
 /* ex: set tabstop=4 softtabstop=4 shiftwidth=4 expandtab: */
