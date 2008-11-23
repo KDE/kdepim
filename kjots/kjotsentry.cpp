@@ -754,10 +754,12 @@ void KJotsPage::parseXml( QDomElement &me, bool oldBook )
                     }
 
                     if ( oldBook ) {
-                        bodyText = Qt::convertFromPlainText(bodyText, Qt::WhiteSpaceNormal);
+                        // Ensure that whitespace is reproduced as in kjots of kde3.5.
+                        // https://bugs.kde.org/show_bug.cgi?id=175100
+                        document.setPlainText(bodyText);
+                    } else {
+                        document.setHtml(bodyText);
                     }
-
-                    document.setHtml(bodyText);
                 }
                 else
                 {
