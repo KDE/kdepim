@@ -58,7 +58,7 @@ STRIGI_ENDANALYZER_RETVAL IcsEndAnalyzer::analyze( Strigi::AnalysisResult& idx, 
   const char* data;
   //FIXME: large calendars will exhaust memory; incremental loading would be
   // nice
-  int32_t nread = in->read( data, 1, in->size() );
+  int32_t nread = in->read( data, in->size(), in->size() );
   if ( nread <= 0 ) {
     //kDebug() <<"Reading data from input stream failed";
     return Strigi::Error;
