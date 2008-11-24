@@ -62,8 +62,20 @@ static inline QPixmap loadIcon( QString s ) {
     ->loadIcon( s.replace( QRegExp( "[^a-zA-Z0-9_]" ), "_" ), KIcon::NoGroup, KIcon::SizeMedium );
 }
 
+static unsigned int num_components_with_options( const Kleo::CryptoConfig * config ) {
+  if ( !config )
+    return 0;
+  const QStringList components = config->componentList();
+  unsigned int result = 0;
+  for ( QStringList::const_iterator it = components.begin() ; it != components.end() ; ++it )
+    if ( const Kleo::CryptoConfigComponent * const comp = config->component( *it ) )
+      if ( !comp->groupList().empty() )
+        ++result;
+  return result;
+}
+
 static const KJanusWidget::Face determineJanusFace( const Kleo::CryptoConfig * config ) {
-  return config && config->componentList().size() < 2
+  return num_components_with_options( config ) < 2
     ? KJanusWidget::Plain
     : KJanusWidget::IconList ;
 }
@@ -114,6 +126,18 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
     scrollView->setMinimumSize( sz.width()
                                 + scrollView->style().pixelMetric(QStyle::PM_ScrollBarExtent),
                                 QMIN( compGUI->sizeHint().height(), dialogHeight ) );
+  }
+  if ( mComponentGUIs.empty() ) {
+      Q_ASSERT( face() == Plain );
+      const QString msg = i18n("The gpgconf tool used to provide the information "
+                               "for this dialog does not seem to be installed "
+                               "properly. It did not return any components. "
+                               "Try running \"%1\" on the command line for more "
+                               "information.")
+          .arg( components.empty() ? "gpgconf --list-components" : "gpgconf --list-options gpg" );
+      QLabel * label = new QLabel( msg, vbox );
+      label->setAlignment( Qt::WordBreak );
+      label->setMinimumHeight( fontMetrics().lineSpacing() * 5 );
   }
 }
 
