@@ -171,7 +171,6 @@ void Bookshelf::contextMenuEvent( QContextMenuEvent* event)
         if ( entry->isBook() ) {
             popup->addAction(m_actionCollection->action("del_folder"));
         } else {
-            popup->addAction(m_actionCollection->action("del_folder"));
             popup->addAction(m_actionCollection->action("del_page"));
         }
     } else if ( selection.size() < 1 ) {

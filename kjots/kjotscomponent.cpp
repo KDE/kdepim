@@ -339,7 +339,6 @@ void KJotsComponent::DelayedInitialization()
     entryActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Print)) );
     entryActions.insert( actionCollection->action("go_next_book") );
     entryActions.insert( actionCollection->action("go_prev_book") );
-    entryActions.insert( actionCollection->action("del_folder") );
     entryActions.insert( actionCollection->action("rename_entry") );
     entryActions.insert( actionCollection->action("change_color") );
     entryActions.insert( actionCollection->action("save_to") );
@@ -359,6 +358,7 @@ void KJotsComponent::DelayedInitialization()
 
     // Actions that are used only when a book is selected.
     bookActions.insert( actionCollection->action("save_to_book") );
+    bookActions.insert( actionCollection->action("del_folder") );
 
     // Actions that are used when multiple items are selected.
     multiselectionActions.insert( actionCollection->action(KStandardAction::name(KStandardAction::Find)) );
