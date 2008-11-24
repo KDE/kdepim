@@ -128,7 +128,7 @@ namespace Kleo {
 
   private Q_SLOTS:
     void slotRereadKeys();
-    void slotStartCertificateManager();
+    void slotStartCertificateManager( const QString &query = QString() );
     void slotKeyListResult( const GpgME::KeyListResult & );
     void slotSelectionChanged();
     void slotCheckSelection() { slotCheckSelection( 0 ); }

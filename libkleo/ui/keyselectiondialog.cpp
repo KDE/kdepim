@@ -60,6 +60,7 @@
 #include <kconfiggroup.h>
 #include <kmenu.h>
 #include <klineedit.h>
+#include <kurl.h>
 
 // Qt
 #include <QCheckBox>
@@ -357,7 +358,7 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   if ( !text.isEmpty() ) {
     QLabel* textLabel = new QLabel( text, page );
     textLabel->setWordWrap( true );
-    connect( textLabel, SIGNAL(linkActivated(QString)), SLOT(slotStartCertificateManager()) );
+    connect( textLabel, SIGNAL(linkActivated(QString)), SLOT(slotStartCertificateManager(QString)) );
     mTopLayout->addWidget( textLabel );
   }
 
@@ -519,9 +520,16 @@ void Kleo::KeySelectionDialog::slotRereadKeys() {
   }
 }
 
-void Kleo::KeySelectionDialog::slotStartCertificateManager()
+void Kleo::KeySelectionDialog::slotStartCertificateManager( const QString &query )
 {
-  if( !QProcess::startDetached("kleopatra" ) )
+  QStringList args;
+  // ### waits for bug 175980 to be fixed, ie. those command line args to be added again
+#if 0
+  // ### port to libkleopatra
+  if ( !query.isEmpty() )
+    args << "--external" << "--query" << KUrl::decode_string( query );
+#endif
+  if( !QProcess::startDetached( "kleopatra", args ) )
     KMessageBox::error( this,
                         i18n( "Could not start certificate manager; "
                               "please check your installation." ),
