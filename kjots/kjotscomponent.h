@@ -98,13 +98,13 @@ class KJotsComponent : public QWidget
         void copySelection();
         void insertDate();
         void onPrint();
-        
+
         void onShowSearch();
         void onUpdateSearch();
         void onStartSearch();
         void onRepeatSearch();
         void onEndSearch();
-        
+
         void onShowReplace();
         void onUpdateReplace();
         void onStartReplace();
@@ -120,6 +120,12 @@ class KJotsComponent : public QWidget
         void importBook();
 
         void autoSave(void);
+
+        /**
+        Saves all books, whether marked as dirty or not.
+        Called when closing KJots or when manual save action is invoked.
+        */
+        void saveAll(void);
 
     protected:
         int search(bool);
@@ -138,7 +144,7 @@ private:
         QSet<QAction*> entryActions, pageActions, bookActions, multiselectionActions;
         KActionCollection *actionCollection;
 
-        
+
         KFindDialog *searchDialog;
         QStringList searchHistory;
         int searchBeginPos, searchEndPos, searchPos;

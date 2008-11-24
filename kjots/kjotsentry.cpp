@@ -242,7 +242,6 @@ void KJotsBook::setDirty(bool dirty)
     //Don't count opening a book as dirtying it.
     if ( !m_open ) return;
 
-    kDebug() << "marking book" << title() << "dirty";
     topLevelBook()->m_dirty = dirty;
 }
 
@@ -656,6 +655,7 @@ KJotsPage::KJotsPage()
     setIcon(0, KIconLoader::global()->loadIcon(QString("text-x-generic"), KIconLoader::Small));
     setFlags(Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDragEnabled
         | Qt::ItemIsEnabled);
+
     connect(&document, SIGNAL(modificationChanged(bool)), SLOT(documentModified(bool)));
 }
 
@@ -689,7 +689,6 @@ KJotsPage *KJotsPage::createNewPage(int pageCount)
 */
 void KJotsPage::documentModified(bool modified)
 {
-    kDebug() << modified;
     if ( modified ) {
         topLevelBook()->setDirty(true);
     }

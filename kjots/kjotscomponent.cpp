@@ -203,7 +203,7 @@ KJotsComponent::KJotsComponent(QWidget* parent, KActionCollection *collection) :
     action->setText(i18n("Manual Save"));
     action->setIcon(KIcon("document-save"));
     action->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_S));
-    connect(action, SIGNAL(triggered()), SLOT(autoSave()));
+    connect(action, SIGNAL(triggered()), SLOT(saveAll()));
 
     action = actionCollection->addAction("auto_bullet");
     action->setText(i18n("Auto Bullets"));
@@ -979,11 +979,20 @@ void KJotsComponent::autoSave()
         {
             if ( book->dirty() )
             {
-                kDebug() << "book" << book->title() << book->id() << "is dirty";
                 book->saveBook();
-            } else {
-                kDebug() << "book" << book->title() << book->id() << "is not dirty";
             }
+        }
+    }
+}
+
+void KJotsComponent::saveAll()
+{
+    for ( int i=0; i<bookshelf->topLevelItemCount(); i++ )
+    {
+        KJotsBook *book = dynamic_cast<KJotsBook*>(bookshelf->topLevelItem(i));
+        if (book)
+        {
+            book->saveBook();
         }
     }
 }
@@ -1346,7 +1355,7 @@ void KJotsComponent::updateMenu()
 */
 bool KJotsComponent::queryClose()
 {
-    autoSave();
+    saveAll();
     bookshelf->prepareForExit();
 
     KJotsSettings::setSplitterSizes(splitter->sizes());
