@@ -85,7 +85,7 @@ static QGpgMEKeyListJob::result_type list_keys( Context * ctx, QStringList pats,
   if ( pats.size() < 2 ) {
     std::vector<Key> keys;
     const KeyListResult r = do_list_keys( ctx, pats, keys, secretOnly );
-    return make_tuple( r, keys, QString() );
+    return make_tuple( r, keys, QString(), Error() );
   }
 
   // The communication channel between gpgme and gpgsm is limited in
@@ -109,7 +109,7 @@ retry:
       chunkSize /= 2;
       if ( chunkSize < 1 )
         // chunks smaller than one can't be -> return the error.
-        return make_tuple( this_result, keys, QString() );
+        return make_tuple( this_result, keys, QString(), Error() );
       else
         goto retry;
     }
@@ -119,7 +119,7 @@ retry:
       break;
     pats = pats.mid( chunkSize );
   } while ( !pats.empty() );
-  return make_tuple( result, keys, QString() );
+  return make_tuple( result, keys, QString(), Error() );
 }
 
 Error QGpgMEKeyListJob::start( const QStringList & patterns, bool secretOnly ) {

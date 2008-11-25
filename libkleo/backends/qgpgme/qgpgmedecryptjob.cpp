@@ -69,15 +69,17 @@ static QGpgMEDecryptJob::result_type decrypt( Context * ctx, const weak_ptr<QIOD
     Data outdata( &out );
 
     const DecryptionResult res = ctx->decrypt( indata, outdata );
-    const QString log = _detail::audit_log_as_html( ctx );
-    return make_tuple( res, out.data(), log );
+    Error ae;
+    const QString log = _detail::audit_log_as_html( ctx, ae );
+    return make_tuple( res, out.data(), log, ae );
   } else {
     QGpgME::QIODeviceDataProvider out( plainText );
     Data outdata( &out );
 
     const DecryptionResult res = ctx->decrypt( indata, outdata );
-    const QString log = _detail::audit_log_as_html( ctx );
-    return make_tuple( res, QByteArray(), log );
+    Error ae;
+    const QString log = _detail::audit_log_as_html( ctx, ae );
+    return make_tuple( res, QByteArray(), log, ae );
   }
 
 }

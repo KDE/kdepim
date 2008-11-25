@@ -62,8 +62,9 @@ static QGpgMEDownloadJob::result_type download_qsl( Context * ctx, const QString
   const _detail::PatternConverter pc( pats );
 
   const Error err= ctx->exportPublicKeys( pc.patterns(), data );
-  const QString log = _detail::audit_log_as_html( ctx );
-  return make_tuple( err, dp.data(), log );
+  Error ae;
+  const QString log = _detail::audit_log_as_html( ctx, ae );
+  return make_tuple( err, dp.data(), log, ae );
 }
 
 static QGpgMEDownloadJob::result_type download( Context * ctx, const QByteArray & fpr, const weak_ptr<QIODevice> & keyData_ ) {
@@ -77,8 +78,9 @@ static QGpgMEDownloadJob::result_type download( Context * ctx, const QByteArray 
   const _detail::PatternConverter pc( fpr );
 
   const Error err = ctx->exportPublicKeys( pc.patterns(), data );
-  const QString log = _detail::audit_log_as_html( ctx );
-  return make_tuple( err, QByteArray(), log );
+  Error ae;
+  const QString log = _detail::audit_log_as_html( ctx, ae );
+  return make_tuple( err, QByteArray(), log, ae );
 }
 
 Error QGpgMEDownloadJob::start( const QStringList & pats ) {

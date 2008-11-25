@@ -66,8 +66,9 @@ static QGpgMEChangeExpiryJob::result_type change_expiry( Context * ctx, const Ke
   Data data( &dp );
   assert( !data.isNull() );
   const Error err = ctx->edit( key, ei, data );
-  const QString log = _detail::audit_log_as_html( ctx );
-  return make_tuple( err, log );
+  Error ae;
+  const QString log = _detail::audit_log_as_html( ctx, ae );
+  return make_tuple( err, log, ae );
 }
 
 Error QGpgMEChangeExpiryJob::start( const Key & key, const QDateTime & expiry ) {

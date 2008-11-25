@@ -51,8 +51,9 @@ QGpgMEDeleteJob::~QGpgMEDeleteJob() {}
 
 static QGpgMEDeleteJob::result_type delete_key( Context * ctx, const Key & key, bool allowSecretKeyDeletion ) {
   const Error err = ctx->deleteKey( key, allowSecretKeyDeletion );
-  const QString log = _detail::audit_log_as_html( ctx );
-  return make_tuple( err, log );
+  Error ae;
+  const QString log = _detail::audit_log_as_html( ctx, ae );
+  return make_tuple( err, log, ae );
 }
 
 Error QGpgMEDeleteJob::start( const Key & key, bool allowSecretKeyDeletion ) {

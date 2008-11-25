@@ -89,7 +89,8 @@ namespace Kleo {
   Q_SIGNALS:
     void result( const GpgME::DecryptionResult & decryptionresult,
 		 const GpgME::VerificationResult & verificationresult,
-		 const QByteArray & plainText, const QString & auditLogAsHtml=QString() );
+		 const QByteArray & plainText, const QString & auditLogAsHtml=QString(),
+                 const GpgME::Error & auditLogError=GpgME::Error() );
   };
 
 }

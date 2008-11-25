@@ -46,7 +46,7 @@ namespace Kleo {
 #ifdef Q_MOC_RUN
     : public EncryptJob
 #else
-    : public _detail::ThreadedJobMixin<EncryptJob, boost::tuple<GpgME::EncryptionResult, QByteArray, QString> >
+    : public _detail::ThreadedJobMixin<EncryptJob, boost::tuple<GpgME::EncryptionResult, QByteArray, QString, GpgME::Error> >
 #endif
   {
     Q_OBJECT

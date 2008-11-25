@@ -43,7 +43,7 @@ namespace Kleo {
 #ifdef Q_MOC_RUN
     : public DownloadJob
 #else
-    : public _detail::ThreadedJobMixin<DownloadJob, boost::tuple<GpgME::Error, QByteArray, QString> >
+    : public _detail::ThreadedJobMixin<DownloadJob, boost::tuple<GpgME::Error, QByteArray, QString, GpgME::Error> >
 #endif
   {
     Q_OBJECT

@@ -57,8 +57,9 @@ static QGpgMEImportJob::result_type import_qba( Context * ctx, const QByteArray 
   Data data( &dp );
 
   const ImportResult res = ctx->importKeys( data );
-  const QString log = _detail::audit_log_as_html( ctx );
-  return make_tuple( res, log );
+  Error ae;
+  const QString log = _detail::audit_log_as_html( ctx, ae );
+  return make_tuple( res, log, ae );
 }
 
 Error QGpgMEImportJob::start( const QByteArray & certData ) {

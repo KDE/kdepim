@@ -68,8 +68,9 @@ static QGpgMEAddUserIDJob::result_type add_user_id( Context * ctx, const Key & k
   Data data( &dp );
   assert( !data.isNull() );
   const Error err = ctx->edit( key, ei, data );
-  const QString log = _detail::audit_log_as_html( ctx );
-  return make_tuple( err, log );
+  Error ae;
+  const QString log = _detail::audit_log_as_html( ctx, ae );
+  return make_tuple( err, log, ae );
 }
 
 Error QGpgMEAddUserIDJob::start( const Key & key, const QString & name, const QString & email, const QString & comment ) {

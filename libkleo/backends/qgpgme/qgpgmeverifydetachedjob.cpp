@@ -67,9 +67,10 @@ static QGpgMEVerifyDetachedJob::result_type verify_detached( Context * ctx, cons
   Data data( &dataDP );
 
   const VerificationResult res = ctx->verifyDetachedSignature( sig, data );
-  const QString log = _detail::audit_log_as_html( ctx );
+  Error ae;
+  const QString log = _detail::audit_log_as_html( ctx, ae );
 
-  return make_tuple( res, log );
+  return make_tuple( res, log, ae );
 }
 
 static QGpgMEVerifyDetachedJob::result_type verify_detached_qba( Context * ctx, const QByteArray & signature, const QByteArray & signedData ) {
@@ -80,9 +81,10 @@ static QGpgMEVerifyDetachedJob::result_type verify_detached_qba( Context * ctx, 
   Data data( &dataDP );
 
   const VerificationResult res = ctx->verifyDetachedSignature( sig, data );
-  const QString log = _detail::audit_log_as_html( ctx );
+  Error ae;
+  const QString log = _detail::audit_log_as_html( ctx, ae );
 
-  return make_tuple( res, log );
+  return make_tuple( res, log, ae );
 
 }
 
