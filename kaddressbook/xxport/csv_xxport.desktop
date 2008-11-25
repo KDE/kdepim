@@ -16,7 +16,7 @@ Name[fa]=وصلۀ KAB CSV XXPort
 Name[fi]=KAB CSV -liitännäinen
 Name[fr]=Module d'import / export CSV pour KAB
 Name[ga]=Breiseán Iompórtála/Easpórtála CSV le haghaidh KAB
-Name[gl]=ExtensiÃ³n XXPort de CSV para KAB
+Name[gl]=Extensión XXPort de CSV para KAB
 Name[he]=תוסף ייבוא/ייצוא של קבצי CSV של KAB
 Name[hu]=KAB XXPort bővítőmodul
 Name[is]=Íforrit fyrir KAV CSV XXPort
@@ -62,7 +62,7 @@ Comment[fi]=Liitännäinen yhteystietojen vientiin ja tuontiin CSV-muodossa
 Comment[fr]=Module d'import / export de contacts au format CSV
 Comment[fy]=Comment=Plugin foar it ymportearjen en eksportearjen fan kontaktpersoanen yn CSV-formaat
 Comment[ga]=Breiseán a iompórtálann agus easpórtálann teagmhálacha i bhformáid CSV
-Comment[gl]=ExtensiÃ³n para importar e exportar contactos e formato CSV
+Comment[gl]=Extensión para importar e exportar contactos e formato CSV
 Comment[hu]=Bővítőmodul névjegyek importálásához/exportálásához, CSV formátumban
 Comment[is]=Íforrit til að flytja tengiliði inn og út í CSV sniði
 Comment[it]=Plugin per importare ed esportare contatti in formato CSV

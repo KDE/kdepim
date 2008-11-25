@@ -17,7 +17,7 @@ Name[fi]=KAB vCard liitännäinen
 Name[fr]=Module d'import / export vCard pour KAB
 Name[fy]=KAB vCard XXPort-plugin
 Name[ga]=Breiseán Iompórtála/Easpórtála vCard le haghaidh KAB
-Name[gl]=ExtensiÃ³n XXPort de vCard para KAB
+Name[gl]=Extensión XXPort de vCard para KAB
 Name[he]=תוסף ייבוא/ייצוא עבור vCard של KAB
 Name[hu]=KAB vCard XXPort bővítőmodul
 Name[is]=Íforrit fyrir KAB vCard XXPort
@@ -66,7 +66,7 @@ Comment[fi]=Liitännäinen vCard-muodossa olevien kontaktien tuontiin ja vientii
 Comment[fr]=Module d'import / export de contacts au format vCard
 Comment[fy]=Comment=Plugin foar it ymportearjen fan kontaktpersoanen yn vCard-formaat
 Comment[ga]=Breiseán a iompórtálann agus easpórtálann teagmhálacha i bhformáid vCard
-Comment[gl]=Plugin para importar e exportar contactos en formato vCard
+Comment[gl]=Plugin para importar e exportar contactos no formato vCard
 Comment[hu]=Bővítőmodul vCard névjegyek importálásához/exportálásához
 Comment[is]=Íforrit til að flytja inn eða út tengiliði í vCard sniði
 Comment[it]=Plugin per importare ed esportare contatti in formato vCard

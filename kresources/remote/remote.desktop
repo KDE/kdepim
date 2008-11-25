@@ -54,8 +54,11 @@ Name[zh_TW]=遠端檔案的行事曆
 Comment=Provides access to a calendar in a remote file using KDE's network framework KIO
 Comment[el]=Προσφέρει πρόσβαση ημερολογίου σε ένα απομακρυσμένο αρχείου με τη χρήση του  συστήματος KIO του KDE
 Comment[gl]=Permite acceder a un calendario nun ficheiro remoto empregando a infraestrutura de rede KIO do KDE
+Comment[ja]=KDE のネットワークフレームワーク KIO を使って、リモートファイルに保存されているカレンダーへのアクセスを提供します
+Comment[km]=ផ្ដល់​សិទ្ធិ​ចូល​ដំណើរការ​ទៅកាន់​ប្រតិទិន​នៅ​ក្នុង​ឯកសារ​ពីចម្ងាយ​ដោយប្រើ​គ្រោងការណ៍​បណ្ដាញ KIO របស់ KDE
 Comment[nb]=Git tilgang til en kalender i en fil på nettverket, ved bruk av KDEs rammeverk KIO for nettverk
 Comment[nds]=Stellt mit dat In-/Utgaavmoduul vun KDE sien Nettwark-Rahmenwerk Togriep op en binnen en feern Datei wohrten Kalenner praat.
+Comment[nl]=Geeft toegang naar een agenda in een extern bestand gebruikmakend van KIO, een netwerkonderdeel van KDE
 Comment[nn]=Gjev tilgang til kalendrar lagra i ei ekstern fil ved bruk av nettverksrammeverket KIO
 Comment[pt]=Oferece o acesso a um calendário num ficheiro remoto, usando um KIO da plataforma de rede do KDE
 Comment[pt_BR]=Fornece acesso a um calendário em um arquivo remoto usando o KIO framework da rede do KDE

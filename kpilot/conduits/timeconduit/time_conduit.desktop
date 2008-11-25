@@ -17,7 +17,7 @@ Comment[fi]=Tämä yhdyskäytävä asettaa taskutietokoneen kellonajan PC:n kell
 Comment[fr]=Ce canal règle l'heure de votre ordinateur de poche sur celle du PC.
 Comment[fy]=Comment=Dit conduit set de tiid fan jo handheld oan d ehÃ¢n fan de pc-klok.
 Comment[ga]=Sioncrónaíonn an seoladán seo an t-am ar do ríomhaire boise leis an gclog ar do ríomhaire deisce.
-Comment[gl]=Este conduto muda a hora do seu aparello portÃ¡til dende o reloxo do seu PC.
+Comment[gl]=Este conduto muda a hora do aparello portátil dende o reloxo do PC.
 Comment[hu]=Ez a csatoló beállítja a kéziszámítógép óráját a számítógépé alapján
 Comment[is]=Þessi rás stillir klukku lófatölvunnar eftir klukku PC tölvunnar.
 Comment[it]=Questo conduit imposta l'ora sul tuo palmare prendendola dall'orologio del PC.
@@ -67,7 +67,7 @@ Name[fi]=Ajan synkronointi
 Name[fr]=Synchronisation de l'heure
 Name[fy]=Tiidssyngronisaasje
 Name[ga]=Sioncrónú an Ama
-Name[gl]=SincronizaciÃ³n Horaria
+Name[gl]=Sincronización Horaria
 Name[hu]=Időszinkronizálás
 Name[is]=Tíma samstilling
 Name[it]=Sincronizzazione temporale
