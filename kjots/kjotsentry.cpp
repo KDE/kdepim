@@ -656,6 +656,11 @@ KJotsPage::KJotsPage()
     setFlags(Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDragEnabled
         | Qt::ItemIsEnabled);
 
+    // Don't have an action to set top and bottom margins on paragraphs.
+    // Set the margins to 0 for all inserted html. Lists get some padding top and bottom.
+    // See http://bugs.kde.org/show_bug.cgi?id=160600.
+    document.setDefaultStyleSheet( "p,h1,h2,h3,h4,h5,h6,pre,br{margin-top:0px;margin-bottom:0px;}ul{margin-top:12px;margin-bottom:12px;}" );
+
     connect(&document, SIGNAL(modificationChanged(bool)), SLOT(documentModified(bool)));
 }
 

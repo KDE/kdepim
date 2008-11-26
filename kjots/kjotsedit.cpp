@@ -40,6 +40,8 @@
 #include "kjotslinkdialog.h"
 #include "bookshelf.h"
 
+#include <kdebug.h>
+
 KJotsEdit::KJotsEdit ( QWidget *parent ) : KRichTextWidget(parent)
 {
     setAcceptRichText(true);
@@ -208,6 +210,37 @@ void KJotsEdit::insertFromMimeData ( const QMimeData *source )
                 insertHtml(html);
             }
         }
+     } else if( source->hasHtml() ) {
+        // Don't have an action to set top and bottom margins on paragraphs yet.
+        // Remove the margins for all inserted html.
+//         kDebug() << source->html();
+        QString str = source->html();
+        int styleBegin = 0;
+        while ((styleBegin = str.indexOf("style=\"", styleBegin, Qt::CaseInsensitive) + 7) != (-1 + 7)) {
+            int styleEnd = str.indexOf('"', styleBegin);
+            int styleFragmentStart = styleBegin;
+            int styleFragmentEnd = styleBegin;
+            while ((styleFragmentEnd = str.indexOf(";", styleFragmentEnd) + 1) != (-1 + 1)) {
+              if (styleFragmentEnd > styleEnd) break;
+              int fragmentLength = styleFragmentEnd-styleFragmentStart;
+              if (str.mid(styleFragmentStart, fragmentLength).contains("margin", Qt::CaseInsensitive))
+              {
+                str.remove(styleFragmentStart, fragmentLength);
+                styleEnd -= fragmentLength;
+                styleFragmentEnd = styleFragmentStart;
+
+                if (styleBegin == styleEnd)
+                {
+                  str.remove(styleBegin-7, 7+1); // remove the now empty style attribute.
+                }
+              } else {
+                styleFragmentStart = styleFragmentEnd;
+              }
+            }
+            styleBegin = styleEnd;
+        }
+//         kDebug() << str;
+        insertHtml(str);
     } else {
         KTextEdit::insertFromMimeData(source);
     }
