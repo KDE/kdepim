@@ -87,7 +87,12 @@ static bool checkKeyUsage( const GpgME::Key & key, unsigned int keyUsage ) {
 
   if ( keyUsage & Kleo::KeySelectionDialog::ValidKeys ) {
     if ( key.isInvalid() )
-      kdDebug() << "key is invalid - ignoring" << endl;
+        if ( key.keyListMode() & GpgME::Context::Validate ) {
+            kdDebug() << "key is invalid" << endl;
+            return false;
+        } else {
+            kdDebug() << "key is invalid - ignoring" << endl;
+        }
     if ( key.isExpired() ) {
       kdDebug() << "key is expired" << endl;
       return false;
