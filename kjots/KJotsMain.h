@@ -35,11 +35,12 @@ class KJotsMain : public KXmlGuiWindow
 
     public:
         KJotsMain();
-        
+
 
     public slots:
         void updateCaption(QString);
         void onQuit();
+        void activeAnchorChanged(const QString &, const QString &);
 
     protected:
         bool queryClose();

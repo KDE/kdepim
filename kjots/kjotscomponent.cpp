@@ -86,6 +86,7 @@ KJotsComponent::KJotsComponent(QWidget* parent, KActionCollection *collection) :
 {
     actionCollection = collection;
     searchDialog = 0;
+    activeAnchor = QString();
 
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.registerObject("/KJotsComponent", this, QDBusConnection::ExportScriptableSlots);
@@ -383,6 +384,8 @@ void KJotsComponent::DelayedInitialization()
     connect(bookshelf->itemDelegate(), SIGNAL(closeEditor( QWidget *, QAbstractItemDelegate::EndEditHint )),
         SLOT(bookshelfEditItemFinished( QWidget *, QAbstractItemDelegate::EndEditHint )));
 
+        connect( editor, SIGNAL(currentCharFormatChanged( const QTextCharFormat &)),
+                 SLOT(currentCharFormatChanged( const QTextCharFormat &)) );
     updateMenu();
 }
 
@@ -391,6 +394,27 @@ inline QTextEdit* KJotsComponent::activeEditor() {
         return browser;
     } else {
         return editor;
+    }
+}
+
+void KJotsComponent::currentCharFormatChanged(const QTextCharFormat & fmt)
+{
+    QString selectedAnchor = fmt.anchorHref();
+    if (selectedAnchor != activeAnchor)
+    {
+        activeAnchor = selectedAnchor;
+        if (!selectedAnchor.isEmpty())
+        {
+            QTextCursor c(editor->textCursor());
+            editor->selectLinkText(&c);
+            QString selectedText = c.selectedText();
+            if (!selectedText.isEmpty())
+            {
+              emit activeAnchorChanged(selectedAnchor, selectedText);
+            }
+        } else {
+            emit activeAnchorChanged(QString(), QString());
+        }
     }
 }
 
@@ -1092,7 +1116,6 @@ void KJotsComponent::saveToFile(KJotsComponent::ExportType type)
                 if ( book->dirty() ) {
                     book->saveBook();
                 }
-
                 QFile sourceFile ( book->fileName() );
                 if ( !sourceFile.open(QIODevice::ReadOnly | QIODevice::Text) ) {
                     KMessageBox::error(0, i18n("<qt>Error opening internal file.</qt>"));
@@ -1289,7 +1312,6 @@ void KJotsComponent::insertDate()
 
 void KJotsComponent::updateMenu()
 {
-
     QList<QTreeWidgetItem*> selection = bookshelf->selectedItems();
     int selectionSize = selection.size();
 

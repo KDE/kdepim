@@ -72,6 +72,7 @@
 #include <kstandardaction.h>
 #include <kfontaction.h>
 #include <kfontsizeaction.h>
+#include <kstatusbar.h>
 
 #include "KJotsSettings.h"
 #include "kjotsbookmarks.h"
@@ -95,6 +96,11 @@ KJotsMain::KJotsMain()
     component = new KJotsComponent(this, actionCollection());
 
     setCentralWidget(component);
+    statusBar()->insertItem(QString(), 0, 1);
+    statusBar()->setItemAlignment(0, Qt::AlignLeft | Qt::AlignVCenter);
+
+    connect(component, SIGNAL(activeAnchorChanged(const QString &, const QString &)),
+            SLOT(activeAnchorChanged(const QString &, const QString &)));
 
     setupGUI();
     connect(component, SIGNAL(captionChanged(QString)), SLOT(updateCaption(QString)));
@@ -107,6 +113,16 @@ KJotsMain::KJotsMain()
 void KJotsMain::updateCaption(QString caption)
 {
     setCaption(caption);
+}
+
+void KJotsMain::activeAnchorChanged(const QString &anchorTarget, const QString &anchorText)
+{
+    if (!anchorTarget.isEmpty())
+    {
+        statusBar()->changeItem(anchorText + " -> " + anchorTarget, 0);
+    } else {
+        statusBar()->changeItem(QString(), 0);
+    }
 }
 
 bool KJotsMain::queryClose()

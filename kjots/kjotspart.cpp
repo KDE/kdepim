@@ -28,6 +28,8 @@
 #include "kjotscomponent.h"
 #include "aboutdata.h"
 
+#include <kdebug.h>
+
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <kcomponentdata.h>
@@ -39,7 +41,9 @@
 
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
+#include <QTimer>
 #include <QtGui/QTextEdit>
+#include <QtGui/QLabel>
 
 const KAboutData &createAboutData()
 {
@@ -59,22 +63,46 @@ KJotsPart::KJotsPart( QWidget *parentWidget, QObject *parent, const QVariantList
     // this should be your custom internal widget
     component = new KJotsComponent(parentWidget, actionCollection());
 
+    mStatusBar = new KParts::StatusBarExtension(this);
     // notify the part that this is our internal widget
     setWidget(component);
 
     // set our XML-UI resource file
     setXMLFile(KStandardDirs::locate("data", "kjots/kjotspartui.rc"));
+
+    QTimer::singleShot(0, this, SLOT(delayedInitialization()));
 }
 
 KJotsPart::~KJotsPart()
 {
 	component->queryClose();
+  delete linkLabel;
 }
 
 bool KJotsPart::openFile()
 {
     return false;
 }
+
+void KJotsPart::delayedInitialization()
+{
+    linkLabel = new QLabel();
+    mStatusBar->addStatusBarItem( linkLabel, 2, false);
+
+    connect(component, SIGNAL(activeAnchorChanged(const QString &, const QString &)),
+            SLOT(activeAnchorChanged(const QString &, const QString &)));
+}
+
+void KJotsPart::activeAnchorChanged(const QString &anchorTarget, const QString &anchorText)
+{
+    if (!anchorTarget.isEmpty())
+    {
+        linkLabel->setText(anchorText + " -> " + anchorTarget);
+    } else {
+        linkLabel->setText(QString());
+    }
+}
+
 //
 // bool KJotsPart::saveFile()
 // {

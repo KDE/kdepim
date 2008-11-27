@@ -26,8 +26,10 @@
 #define KJOTSPART_H
 
 #include <kparts/part.h>
+#include <kparts/statusbarextension.h>
 
 class QWidget;
+class QLabel;
 class QTextEdit;
 class KAboutData;
 class KJotsComponent;
@@ -62,9 +64,15 @@ protected:
      */
     virtual bool openFile();
 
+protected Q_SLOTS:
+    void delayedInitialization();
+    void activeAnchorChanged(const QString &, const QString &);
+
 private:
     KJotsComponent *component;
+    KParts::StatusBarExtension *mStatusBar;
     QTextEdit* m_widget;
+    QLabel *linkLabel;
 };
 
 #endif // KJOTSPART_H

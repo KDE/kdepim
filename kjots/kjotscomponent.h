@@ -32,6 +32,8 @@
 #include <QSplitter>
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
+#include <QTextCharFormat>
+
 #include "ui_confpagemisc.h"
 
 class QTimer;
@@ -82,7 +84,15 @@ class KJotsComponent : public QWidget
         Q_SCRIPTABLE bool createNewBook();
 
     signals:
-        void captionChanged(QString);
+        void captionChanged(QString captionText);
+
+        /**
+        Signals that the text cursor in the editor is now on a different anchor, or not on
+        an anchor anymore.
+        @param anchorTarget The href of the focussed anchor.
+        @param anchorText The display text of the focussed anchor.
+        */
+        void activeAnchorChanged(const QString &anchorTarget, const QString &anchorText);
 
     protected slots:
         void DelayedInitialization();
@@ -118,6 +128,7 @@ class KJotsComponent : public QWidget
         void saveToFile(ExportType);
         void saveFinished(KJob *);
         void importBook();
+        void currentCharFormatChanged(const QTextCharFormat &);
 
         void autoSave(void);
 
@@ -139,6 +150,8 @@ private:
         QStackedWidget *stackedWidget;
         QFont           m_font;
         QTimer         *m_autosaveTimer;
+
+        QString activeAnchor;
 
         KActionMenu *exportMenu, *bookmarkMenu;
         QSet<QAction*> entryActions, pageActions, bookActions, multiselectionActions;
