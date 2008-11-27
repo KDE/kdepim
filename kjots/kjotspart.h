@@ -72,7 +72,6 @@ private:
     KJotsComponent *component;
     KParts::StatusBarExtension *mStatusBar;
     QTextEdit* m_widget;
-    QLabel *linkLabel;
 };
 
 #endif // KJOTSPART_H

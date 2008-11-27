@@ -38,6 +38,7 @@
 #include <kstandarddirs.h>
 #include <kpluginfactory.h>
 #include <klocale.h>
+#include <kstatusbar.h>
 
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
@@ -76,7 +77,6 @@ KJotsPart::KJotsPart( QWidget *parentWidget, QObject *parent, const QVariantList
 KJotsPart::~KJotsPart()
 {
 	component->queryClose();
-  delete linkLabel;
 }
 
 bool KJotsPart::openFile()
@@ -86,9 +86,6 @@ bool KJotsPart::openFile()
 
 void KJotsPart::delayedInitialization()
 {
-    linkLabel = new QLabel();
-    mStatusBar->addStatusBarItem( linkLabel, 2, false);
-
     connect(component, SIGNAL(activeAnchorChanged(const QString &, const QString &)),
             SLOT(activeAnchorChanged(const QString &, const QString &)));
 }
@@ -97,9 +94,9 @@ void KJotsPart::activeAnchorChanged(const QString &anchorTarget, const QString &
 {
     if (!anchorTarget.isEmpty())
     {
-        linkLabel->setText(anchorText + " -> " + anchorTarget);
+        mStatusBar->statusBar()->showMessage(anchorText + " -> " + anchorTarget);
     } else {
-        linkLabel->setText(QString());
+        mStatusBar->statusBar()->showMessage(QString());
     }
 }
 
