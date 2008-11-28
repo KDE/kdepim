@@ -285,7 +285,7 @@ private:
         ui.addUserIDPB->setVisible( secret );
         ui.expandAllCertificationsPB->setVisible( pgp && sigs );
         ui.collapseAllCertificationsPB->setVisible( pgp && sigs );
-        ui.showCertificationsPB->setVisible( pgp && !sigs );
+        ui.showCertificationsPB->setVisible( !external && pgp && !sigs );
 
         // Technical Details Tab
         ui.tabWidget->setTabEnabled( ui.tabWidget->indexOf( ui.detailsTab ), pgp );
