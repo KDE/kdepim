@@ -100,7 +100,6 @@ namespace {
         TrustedCertificatesKeyFilter()
             : KeyFilterImplBase()
         {
-            mHasSecret = NotSet;
             mRevoked = NotSet;
             mValidity = IsAtLeast;
             mValidityReferenceLevel = UserID::Marginal; // Full?
