@@ -46,7 +46,7 @@ namespace Commands {
         explicit ChangePassphraseCommand( const GpgME::Key & key );
         ~ChangePassphraseCommand();
 
-        /* reimp */ static Restrictions restrictions() { return OnlyOneKey; }
+        /* reimp */ static Restrictions restrictions() { return OnlyOneKey|NeedSecretKey; }
 
     private:
         //* reimp */ bool preStartHook( QWidget * ) const;
