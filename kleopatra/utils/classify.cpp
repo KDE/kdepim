@@ -61,9 +61,11 @@ namespace {
         unsigned int classification;
     } classifications[] = {
         // ordered by extension
+        { "arl", CMS    | Binary  | CertificateRevocationList },
         { "asc", OpenPGP|  Ascii  | OpaqueSignature|DetachedSignature|CipherText|AnyCertStoreType | ExamineContentHint },
+        { "crl", CMS    | Binary  | CertificateRevocationList },
         { "crt", CMS    | Binary  | Certificate },
-        { "der", CMS    | Binary  | Certificate },
+        { "der", CMS    | Binary  | Certificate|CertificateRevocationList },
         { "gpg", OpenPGP| Binary  | OpaqueSignature|CipherText|AnyCertStoreType },
         { "p10", CMS    |  Ascii  | CertificateRequest },
         { "p12", CMS    | Binary  | ExportedPSM },
@@ -137,6 +139,14 @@ namespace {
 
 }
 
+unsigned int Kleo::classify( const QStringList & fileNames ) {
+    if ( fileNames.empty() )
+        return 0;
+    unsigned int result = classify( fileNames.front() );
+    Q_FOREACH( const QString & fileName, fileNames )
+        result &= classify( fileName );
+    return result;
+}
 
 unsigned int Kleo::classify( const QString & filename ) {
 #ifdef __GNUC__
