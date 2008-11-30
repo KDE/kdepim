@@ -190,7 +190,7 @@ void KJotsEntry::parseXml( QDomElement &e, bool )
 
 bool KJotsEntry::isKJotsLink(const QString &link)
 {
-    return link.startsWith(kjotsLinkStringPrefix()); 
+    return link.startsWith(kjotsLinkStringPrefix());
 }
 
 QString KJotsEntry::kjotsLinkUrl()
@@ -653,6 +653,11 @@ KJotsPage::KJotsPage()
     setIcon(0, KIconLoader::global()->loadIcon(QString("text-x-generic"), KIconLoader::Small));
     setFlags(Qt::ItemIsSelectable | Qt::ItemIsEditable | Qt::ItemIsDragEnabled
         | Qt::ItemIsEnabled);
+    // Don't have an action to set top and bottom margins on paragraphs.
+    // Set the margins to 0 for all inserted html. Lists get some padding top and bottom.
+    // See http://bugs.kde.org/show_bug.cgi?id=160600.
+    document.setDefaultStyleSheet( "p,h1,h2,h3,h4,h5,h6,pre,br{margin-top:0px;margin-bottom:0px;}ul{margin-top:12px;margin-bottom:12px;}" );
+
     connect(&document, SIGNAL(modificationChanged(bool)), SLOT(documentModified(bool)));
 }
 
@@ -750,10 +755,12 @@ void KJotsPage::parseXml( QDomElement &me, bool oldBook )
                     }
 
                     if ( oldBook ) {
-                        bodyText = Qt::convertFromPlainText(bodyText, Qt::WhiteSpaceNormal);
+                        // Ensure that whitespace is reproduced as in kjots of kde3.5.
+                        // https://bugs.kde.org/show_bug.cgi?id=175100
+                        document.setPlainText(bodyText);
+                    } else {
+                        document.setHtml(bodyText);
                     }
-
-                    document.setHtml(bodyText);
                 }
                 else
                 {
@@ -792,13 +799,13 @@ void KJotsPage::generateHtml( KJotsEntry *top, bool diskMode, QTextCursor *curso
         }
     } else {
         //We need to fake QUrl in to thinking this is a real URL
-        
+
         html = "<table><tr><td>";
         html += QString("<h3><a name=\"%1\">&nbsp;</a><a href=\"%2\" >%3</a></h3>").arg(id()).arg(kjotsLinkUrl()).arg(htmlSubject);
         html += "</td></tr></table>";
     }
     html += "<br>";
-    
+
     cursorOut->insertFragment(QTextDocumentFragment::fromHtml(html));
     cursorOut->insertBlock(defaultBlockFormat, defaultCharFormat);
     html.clear(); //stop myself from making the same mistake over and over again.
