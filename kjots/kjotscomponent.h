@@ -69,6 +69,7 @@ class KJotsComponent : public QWidget
 
     public:
         KJotsComponent(QWidget* parent, KActionCollection *actionCollection);
+        ~KJotsComponent();
 
         QTextEdit* activeEditor();
         QString currentCaption();
@@ -138,8 +139,14 @@ class KJotsComponent : public QWidget
         */
         void saveAll(void);
 
+        /**
+        Saves and backs up all books.
+        */
+        void saveAndBackupAll();
+
     protected:
         int search(bool);
+        void cleanupOldBackups();
 
 private:
 

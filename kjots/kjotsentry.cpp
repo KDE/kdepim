@@ -373,6 +373,15 @@ void KJotsBook::saveBook(void)
     }
 }
 
+void KJotsBook::saveAndBackupBook()
+{
+    if (!m_fileName.isEmpty())
+    {
+      KSaveFile::numberedBackupFile(m_fileName);
+    }
+    saveBook();
+}
+
 /*!
     \brief Deletes a book by removing the data file.
     This does not affect the list display, and can be called for reasons other than
@@ -381,7 +390,10 @@ void KJotsBook::saveBook(void)
 */
 void KJotsBook::deleteBook ( void )
 {
-    QFile::remove(m_fileName);
+    if (!m_fileName.isEmpty())
+    {
+        QFile::remove(m_fileName);
+    }
     m_fileName.clear();
 }
 

@@ -28,6 +28,7 @@
 #include <q3header.h>
 #include <QStackedWidget>
 #include <QtDBus/QDBusConnection>
+#include <QDateTime>
 #include <QPainter>
 #include <QtGui/QPrinter>
 #include <QtGui/QPrintDialog>
@@ -296,6 +297,53 @@ KJotsComponent::KJotsComponent(QWidget* parent, KActionCollection *collection) :
     connect(bookshelf, SIGNAL(itemSelectionChanged()), SLOT(updateMenu()));
     connect(bookshelf, SIGNAL(itemChanged(QTreeWidgetItem*, int)), SLOT(onItemRenamed(QTreeWidgetItem*, int)));
     connect(m_autosaveTimer, SIGNAL(timeout()), SLOT(autoSave()));
+}
+
+KJotsComponent::~KJotsComponent()
+{
+  cleanupOldBackups();
+}
+
+void KJotsComponent::cleanupOldBackups()
+{
+  QDir dir(KStandardDirs::locateLocal("data","kjots"));
+
+  QStringList filter;
+  filter << "*.book";
+
+  QStringList backupFilter;
+  backupFilter << "*.book.*~";
+
+  //Read in books from disk
+  QStringList files = dir.entryList(filter, QDir::Files|QDir::Readable);
+  QStringList backupFiles = dir.entryList(backupFilter, QDir::Files|QDir::Readable);
+
+  int maxBackups = 10; // The default amount of numbered backups saved by KSaveFile::numberedBackupFile
+  QSet<QString> fileSet;
+  foreach( const QString &file, files )
+  {
+    for( int bkup=1; bkup <= maxBackups; bkup++)
+    {
+      fileSet << file + "." + QString::number(bkup) + "~";
+    }
+  }
+
+  QSet<QString> backupFileSet = backupFiles.toSet();
+
+  // deletedFileBackups is a list of backup files whose original has already been deleted.
+  // If the backup file is older than AGE days, delete it.
+  QSet<QString> deletedFileBackups = backupFileSet - fileSet;
+
+  const int AGE = 7;
+
+  foreach ( const QString &backupFile, deletedFileBackups ) {
+    QString filepath = dir.absoluteFilePath(backupFile);
+    QFileInfo fi(filepath);
+    if (fi.lastModified().addDays(AGE) < QDateTime::currentDateTime() )
+    {
+      QFile::remove(filepath);
+    }
+  }
 }
 
 void KJotsComponent::DelayedInitialization()
@@ -1021,6 +1069,19 @@ void KJotsComponent::saveAll()
     }
 }
 
+
+void KJotsComponent::saveAndBackupAll()
+{
+    for ( int i=0; i<bookshelf->topLevelItemCount(); i++ )
+    {
+        KJotsBook *book = dynamic_cast<KJotsBook*>(bookshelf->topLevelItem(i));
+        if (book)
+        {
+            book->saveAndBackupBook();
+        }
+    }
+}
+
 void KJotsComponent::saveAscii()
 {
     saveToFile(Ascii);
@@ -1377,7 +1438,7 @@ void KJotsComponent::updateMenu()
 */
 bool KJotsComponent::queryClose()
 {
-    saveAll();
+    saveAndBackupAll();
     bookshelf->prepareForExit();
 
     KJotsSettings::setSplitterSizes(splitter->sizes());

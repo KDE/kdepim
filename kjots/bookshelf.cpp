@@ -264,6 +264,13 @@ void Bookshelf::remove(QTreeWidgetItem *item)
     KJotsEntry *entry = dynamic_cast<KJotsEntry*>(item);
     Q_ASSERT(entry);
 
+
+    if ( entry->isBook() ) {
+        // Backup the book before it gets removed from the bookshelf.
+        KJotsBook *book = dynamic_cast<KJotsBook*>(entry);
+        book->saveAndBackupBook();
+    }
+
     if ( entry->parentBook() ) {
         entry->parentBook()->takeChild(entry->parentBook()->indexOfChild(entry));
     } else {
@@ -278,7 +285,12 @@ void Bookshelf::remove(QTreeWidgetItem *item)
         // Stephen Kelly - 20th June 2008
         jumpToEntry( entry );
 
-        dynamic_cast<KJotsBook*>(entry)->deleteBook();
+        KJotsBook *book = dynamic_cast<KJotsBook*>(entry);
+        if (book)
+        {
+//             book->
+            book->deleteBook();
+        }
     }
 
     delete entry;

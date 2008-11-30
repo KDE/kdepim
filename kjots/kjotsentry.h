@@ -71,7 +71,7 @@ class KJotsEntry : public QObject, public QTreeWidgetItem
     protected:
         void setId(quint64);
         bool m_isBook; //!< used for speed and code clarity.
-        
+
     private:
         quint64 m_id; //!< unique ID for this entry
         static QSet<quint64> all_ids;
@@ -93,6 +93,7 @@ friend class KJotsEntry;
 
         bool openBook(const QString&);
         void saveBook();
+        void saveAndBackupBook();
         void deleteBook();
         void rename();
         KJotsPage* addPage(void);
