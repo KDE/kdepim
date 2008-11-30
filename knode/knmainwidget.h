@@ -214,7 +214,6 @@ protected:
   KNFilterManager   *f_ilManager;
   KNScoringManager  *s_coreManager;
   KNMemoryManager   *m_emManager;
-  Kpgp::Module      *p_gp;
 
 protected slots:
   //listview slots

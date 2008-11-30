@@ -74,7 +74,6 @@ using MailTransport::TransportManager;
 #include "kncleanup.h"
 #include "utilities.h"
 #include "knscoring.h"
-#include <libkpgp/kpgp.h>
 #include "knmemorymanager.h"
 #include "scheduler.h"
 #include "settings.h"
@@ -209,10 +208,6 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   // Memory Manager
   m_emManager = knGlobals.memoryManager();
 
-  // create a global pgp instance
-  p_gp = new Kpgp::Module();
-  knGlobals.pgp = p_gp;
-
   QDBusConnection::sessionBus().registerObject( "/", this, QDBusConnection::ExportScriptableSlots );
   //-------------------------------- </CORE> -----------------------------------
 
@@ -277,8 +272,6 @@ KNMainWidget::~KNMainWidget()
   delete m_emManager;
   kDebug(5003) <<"KNMainWidget::~KNMainWidget() : Memory Manager deleted";
 
-  delete p_gp;
-  kDebug(5003) <<"KNMainWidget::~KNMainWidget() : PGP deleted";
 }
 
 void KNMainWidget::initStatusBar()
