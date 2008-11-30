@@ -155,7 +155,7 @@ option. &kabcclient; will list all contacts in the &kde; address book, writing t
 </para>
 
 <para>
-<informalexample><para>In the following example, all contacts with <replaceable>jane</replaceable> as part of any name field or e-mail address will be written to the program's standard output, formatted as vCards (since this is the default for he <option>--output-format</option> option:</para>
+<informalexample><para>In the following example, all contacts with <replaceable>jane</replaceable> as part of any name field or e-mail address will be written to the program's standard output, formatted as vCards (since this is the default for the <option>--output-format</option> option):</para>
 
 <para>
 <screen><prompt>%</prompt><userinput> <command>kabcclient</command> <option>--search</option> <replaceable>jane</replaceable></userinput></screen>
@@ -247,7 +247,7 @@ Since textual data can be encoded both input and output can be subjected to addi
 <sect2 id="csv-format">
 <title>Comma-Separated Values (<acronym>CSV</acronym>) Format</title>
 
-<para>Comma-Separated Value Format can be used as input format to fill data into specific field of a contact entry and as an output format to reduce or re-order data for futher processing. To allow for enough flexibility mapping of contact fields to CSV columns can be specified using CSV-template description files also used by &kaddressbook; for the same purpose.
+<para>Comma-Separated Value Format can be used as input format to fill data into specific field of a contact entry and as an output format to reduce or re-order data for further processing. To allow for enough flexibility mapping of contact fields to CSV columns can be specified using CSV-template description files also used by &kaddressbook; for the same purpose.
 </para>
 </sect2>
 </sect1>
@@ -293,7 +293,7 @@ Since textual data can be encoded both input and output can be subjected to addi
 </row>
 <row>
   <entry><option>--match-case</option></entry>
-  <entry>Use case sensitive matching when comparing input data with contact data from the addreess book.</entry>
+  <entry>Use case sensitive matching when comparing input data with contact data from the address book.</entry>
 </row>
 <row>
   <entry><emphasis>Major Operation Modes:</emphasis></entry>
