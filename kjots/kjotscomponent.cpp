@@ -38,6 +38,7 @@
 #include <QLabel>
 #include <QGridLayout>
 #include <QTextFrame>
+#include <QTextDocumentFragment>
 #include <QFont>
 
 #include <QFrame>
@@ -1285,13 +1286,24 @@ void KJotsComponent::onPrint()
     //are before I setup the printer?
 
     QPrintDialog printDialog(printer, this);
-    printDialog.setWindowTitle(i18n("Send To Printer"));
-    if (printDialog.exec()) {
-        QTextDocument printDocument;
-        QTextCursor printCursor ( &printDocument );
 
-        foreach ( KJotsEntry *entry, bookshelf->selected() ) {
-            entry->generatePrintData ( &printCursor );
+    QAbstractPrintDialog::PrintDialogOptions options = printDialog.enabledOptions();
+    options &= ~QAbstractPrintDialog::PrintPageRange;
+    if (activeEditor()->textCursor().hasSelection())
+      options |= QAbstractPrintDialog::PrintSelection;
+    printDialog.setEnabledOptions(options);
+
+    printDialog.setWindowTitle(i18n("Send To Printer"));
+    if (printDialog.exec() == QDialog::Accepted) {
+        QTextDocument printDocument;
+        if ( printer->printRange() == QPrinter::Selection )
+        {
+            printDocument.setHtml( activeEditor()->textCursor().selection().toHtml() );
+        } else {
+            QTextCursor printCursor ( &printDocument );
+            foreach ( KJotsEntry *entry, bookshelf->selected() ) {
+                entry->generatePrintData ( &printCursor );
+            }
         }
 
         QPainter p(printer);
