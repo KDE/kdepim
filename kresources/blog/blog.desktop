@@ -35,6 +35,7 @@ Name[x-test]=xxJournal in a blogxx
 Name[zh_CN]=博客日记
 Name[zh_TW]=部落格日誌
 Comment=Allows to post calendar journal entries as blog entries
+Comment[ca]=Us permet publicar entrades del diari del calenadri com a entrades del bloc
 Comment[el]=Επιτρέπει την αποστολή καταχωρήσεων χρονικού ως καταχωρήσεις ιστολογίου
 Comment[gl]=Permite publicar as entradas do diario como entradas de blogue
 Comment[ja]=日記のエントリをブログのエントリとして投稿できるようにします

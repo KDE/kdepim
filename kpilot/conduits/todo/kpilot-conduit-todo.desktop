@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Comment=This conduit syncs the handheld todo database with an Akonadi Todo Collection.
+Comment[ca]=Aquest conducte sincronitza base de dades de tasques pendents de l'agenda electrònica amb una col·lecció de tasques pendents de l'Akonadi.
 Comment[el]=Αυτό το κύκλωμα συγχρονίζει τη λίστα προς υλοποίηση εργασιών με τη συλλογή προς υλοποίηση εργασιών του Akonadi.
 Comment[et]=See kanal sünkroniseerib pihuarvuti ülesannete andmebaasi ja Akonadi ülesannete kogu.
 Comment[fr]=Ce canal synchronise la liste de tâches du périphérique avec une collection de liste de tâches Akonadi.
@@ -19,6 +20,7 @@ Comment[uk]=Цей акведук синхронізує базу даних з�
 Comment[x-test]=xxThis conduit syncs the handheld todo database with an Akonadi Todo Collection.xx
 Comment[zh_TW]=此導管將掌上型裝置的待辦事項資料庫與 Akonadi 上的待辦事項同步。
 Name=To-do
+Name[ca]=Pendent
 Name[de]=Aufgaben
 Name[el]=Προς υλοποίηση
 Name[et]=Ülesanded

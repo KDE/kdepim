@@ -31,6 +31,7 @@ Name[x-test]=xxAddressbook on Scalix Server via KMailxx
 Name[zh_CN]=通过 KMail 访问 Scalix 服务器上的地址簿
 Name[zh_TW]=透過 KMail 取得 Scalix 伺服器上的通訊錄
 Comment=Provides access to contacts stored on a Scalix server using IMAP via KMail or Kontact
+Comment[ca]=Proporciona l'accés als contactes emmagatzemats en un servidor Scalix usant IMAP via el KMail o el Kontact
 Comment[el]=Προσφέρει πρόσβαση σε επαφές αποθηκευμένες σε έναν εξυπηρετητή Scalix με τη χρήση του IMAP  μέσω του KMail ή Kontact
 Comment[gl]=Permite acceder aos contactos almacenados nun servidor de Scalix empregando IMAP mediante o KMail ou o Kontact
 Comment[ja]=KMail または Kontact 経由で IMAP を使って、Scalix サーバに保存されている連絡先へのアクセスを提供します
