@@ -776,7 +776,7 @@ QString ArticleWidget::displaySigHeader( const Kpgp::Block &block )
     signClass = "signWarn";
   } else {
     // determine the validity of the key
-    Kpgp::Module *pgp = knGlobals.pgp;
+    Kpgp::Module *pgp = Kpgp::Module::getKpgp();
     Kpgp::Validity keyTrust;
     if( !signerKey.isEmpty() )
       keyTrust = pgp->keyTrust( signerKey );

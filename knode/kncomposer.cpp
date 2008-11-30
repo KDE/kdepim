@@ -47,7 +47,6 @@ using KPIM::RecentAddresses;
 #include <klineedit.h>
 #include <kcombobox.h>
 #include <ktemporaryfile.h>
-#include <libkpgp/kpgp.h>
 #include <libkpgp/kpgpblock.h>
 #include <kpimutils/spellingfilter.h>
 #include <kcompletionbox.h>
