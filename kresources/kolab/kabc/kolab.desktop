@@ -60,6 +60,7 @@ Comment[nn]=Gjev tilgang til kontaktar lagra på ein Kolab-tenar med IMAP via KM
 Comment[pt]=Oferece o acesso aos contactos guardados num servidor de Kolab por IMAP, através do KMail ou do Kontact
 Comment[pt_BR]=Fornece acesso aos contatos armazenados em um servidor Kolab usando IMAP, pelo KMail ou Kontact
 Comment[sv]=Ger tillgång till kontakter lagrade på en Kolab-server med användning av IMAP via Kmail eller Kontact
+Comment[tr]=KMail ya da KOntact IMAP kullanarak Kolab sunucusu üzerindeki kişilere erişim sağlar
 Comment[uk]=Надає доступ до контактів, які зберігаються на сервері Kolab за допомогою IMAP за посередництва KMail або Kontact.
 Comment[x-test]=xxProvides access to contacts stored on a Kolab server using IMAP via KMail or Kontactxx
 Comment[zh_TW]=提供存取透過 KMail 或 Kontact，使用 IMAP 儲存在 Kolab 伺服器上的聯絡人的功能

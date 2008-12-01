@@ -59,6 +59,7 @@ Comment[nn]=Gjev tilgang til kontaktar lagra i adressebøker på GroupDAV-tenara
 Comment[pt]=Oferece o acesso aos contactos guardados nos livros de endereços dos servidores baseados em GroupDAV, p.ex. o OpenGroupware
 Comment[pt_BR]=Fornece acesso aos contatos armazenados nos livros de endereços dos servidores habilitados GroupDAV, como o OpenGroupware
 Comment[sv]=Ger tillgång till kontakter lagrade i adressböcker på servrar som kan hantera GroupDAV, t.ex. OpenGroupware
+Comment[tr]=GroupDAV etkinleştirilmiş olan sunucular üzerinde bulunan adres defterindeki kişilere erişimi sağlar, OpenGroupware gibi
 Comment[uk]=Надає доступ до контактів, які зберігаються у адресних книгах на серверах з увімкненим GroupDAV, наприклад, OpenGroupware.
 Comment[x-test]=xxProvides access to contacts stored in address books on GroupDAV enabled servers, e.g. OpenGroupwarexx
 Comment[zh_TW]=提供存取儲存在有開啟 GroupDAV 功能的通訊錄（如 OpenGroupware）的聯絡人的功能

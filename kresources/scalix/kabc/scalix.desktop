@@ -43,6 +43,7 @@ Comment[nn]=Gjev tilgang til kontaktar lagra på ein Scalix-tenar med IMAP via K
 Comment[pt]=Oferece o acesso aos contactos guardados num servidor de Scalix por IMAP, através do KMail ou do Kontact
 Comment[pt_BR]=Fornece acesso aos contatos armazenados em um servidor Scalix usando IMAP, pelo KMail ou Kontact
 Comment[sv]=Ger tillgång till kontakter lagrade på en Scalix-server med användning av IMAP via Kmail eller Kontact
+Comment[tr]=KMail ya da KOntact IMAP kullanarak Scalix sunucusu üzerindeki kişilere erişim sağlar
 Comment[uk]=Надає доступ до календаря, який зберігається на сервері Scalix, за допомогою IMAP за посередництва KMail або Kontact
 Comment[x-test]=xxProvides access to contacts stored on a Scalix server using IMAP via KMail or Kontactxx
 Comment[zh_TW]=提供存取透過 KMail 或 Kontact，使用 IMAP 儲存在 Scalix 伺服器上的聯絡人的功能
