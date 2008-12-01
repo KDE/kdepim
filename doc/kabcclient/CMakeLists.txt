@@ -1,3 +1,2 @@
 kde4_create_handbook(index.docbook INSTALL_DESTINATION ${HTML_INSTALL_DIR}/en)
-########### install files ###############
-install(FILES ${CMAKE_CURRENT_SOURCE_DIR}/kabcclient.1 DESTINATION "${MAN_INSTALL_DIR}/man1")
+kde4_create_manpage(man-kabcclient.1.docbook 1 INSTALL_DESTINATION ${MAN_INSTALL_DIR})
