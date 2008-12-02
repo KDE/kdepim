@@ -65,6 +65,13 @@ static void _dumpIcaltime( const icaltimetype& t)
   kdDebug(5800) << "--- zoneId: " << icaltimezone_get_tzid( const_cast<icaltimezone*>( t.zone ) )<< endl;
 }
 
+static QString quoteForParam( const QString &text )
+{
+  QString tmp = text;
+  tmp.remove( '"' );
+  return QString::fromLatin1( "\"" ) + tmp + QString::fromLatin1( "\"" );
+}
+
 const int gSecondsPerMinute = 60;
 const int gSecondsPerHour   = gSecondsPerMinute * 60;
 const int gSecondsPerDay    = gSecondsPerHour   * 24;
@@ -540,7 +547,7 @@ icalproperty *ICalFormatImpl::writeOrganizer( const Person &organizer )
   icalproperty *p = icalproperty_new_organizer("MAILTO:" + organizer.email().utf8());
 
   if (!organizer.name().isEmpty()) {
-    icalproperty_add_parameter( p, icalparameter_new_cn(organizer.name().utf8()) );
+    icalproperty_add_parameter( p, icalparameter_new_cn(quoteForParam(organizer.name()).utf8()) );
   }
   // TODO: Write dir, sent-by and language
 
@@ -553,7 +560,7 @@ icalproperty *ICalFormatImpl::writeAttendee(Attendee *attendee)
   icalproperty *p = icalproperty_new_attendee("mailto:" + attendee->email().utf8());
 
   if (!attendee->name().isEmpty()) {
-    icalproperty_add_parameter(p,icalparameter_new_cn(attendee->name().utf8()));
+    icalproperty_add_parameter(p,icalparameter_new_cn(quoteForParam(attendee->name()).utf8()));
   }
 
 
@@ -828,7 +835,7 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
       for (QValueList<Person>::Iterator ad = addresses.begin();  ad != addresses.end();  ++ad) {
         icalproperty *p = icalproperty_new_attendee("MAILTO:" + (*ad).email().utf8());
         if (!(*ad).name().isEmpty()) {
-          icalproperty_add_parameter(p,icalparameter_new_cn((*ad).name().utf8()));
+          icalproperty_add_parameter(p,icalparameter_new_cn(quoteForParam((*ad).name()).utf8()));
         }
         icalcomponent_add_property(a,p);
       }
