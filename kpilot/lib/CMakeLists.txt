@@ -27,13 +27,15 @@ configure_file (kpilot_export.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/kpilot_export.
 kde4_add_kcfg_files(lib_SRCS kpilotlibSettings.kcfgc)
 kde4_add_library(kpilot SHARED ${lib_SRCS})
 set_target_properties(kpilot PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-set_target_properties(kpilot PROPERTIES LINK_INTERFACE_LIBRARIES "${QT_QTCORE_LIBRARY};${QT_QT3SUPPORT_LIBRARY};${PILOTLINK_LIBRARY}")
+#set_target_properties(kpilot PROPERTIES LINK_INTERFACE_LIBRARIES "${QT_QTCORE_LIBRARY};${QT_QT3SUPPORT_LIBRARY};${PILOTLINK_LIBRARY}")
 
 target_link_libraries(kpilot
 	${PILOTLINK_LIBRARY}
 	${QT_LIBRARIES}
 	${KDE4_KIO_LIBS}
 )
+target_link_libraries(kpilot LINK_INTERFACE_LIBRARIES ${KDE4_KIO_LIBS} ${PILOTLINK_LIBRARY})
+
 
 #---------- INSTALL -----------------------*
 set(kpilotinclude_HEADERS

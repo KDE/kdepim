@@ -7,15 +7,15 @@ endif(KDE4_KDEPIM_NEW_DISTRLISTS)
 
 add_definitions ( -DTest1Area=5121 ) # jstaniek
 
-set(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake/modules)
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 # search packages used by KDE
 find_package (KDE4 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
-include(MacroOptionalAddSubdirectory)
 include(CheckIncludeFiles)
-include(FindKdepimLibs)
+find_package(KdepimLibs REQUIRED)
+
 
 if(WIN32)
   # detect oxygen icon dir at configure time based on KDEDIRS - there may be different package installation locations
@@ -79,7 +79,7 @@ else ( ONLY_KLEO )
   find_package(Akonadi REQUIRED)
 
   if ( NOT EXISTS ${CMAKE_SOURCE_DIR}/libkdepim/kdepim_export.h )
-  	message ( FATAL_ERROR "libkdepim directory not found" ) # needed for Kode to compile correctly
+     message ( FATAL_ERROR "libkdepim directory not found" ) # needed for Kode to compile correctly
   endif ( NOT EXISTS ${CMAKE_SOURCE_DIR}/libkdepim/kdepim_export.h )
   find_package(Kode REQUIRED)
   find_package(ZLIB REQUIRED)

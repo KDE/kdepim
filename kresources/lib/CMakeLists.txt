@@ -50,10 +50,10 @@ set(kgroupwaredav_LIB_SRCS
 kde4_add_library(kgroupwaredav SHARED ${kgroupwaredav_LIB_SRCS})
 
 target_link_libraries(kgroupwaredav  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} ${KDE4_KDE3SUPPORT_LIBS} kdepim kgroupwarebase )
+target_link_libraries(kgroupwaredav  LINK_INTERFACE_LIBRARIES  kgroupwarebase )
 
 set_target_properties(kgroupwaredav
    PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION}
-   ${KDE4_DISABLE_PROPERTY_}LINK_INTERFACE_LIBRARIES "kgroupwarebase"
 )
 install(TARGETS kgroupwaredav ${INSTALL_TARGETS_DEFAULT_ARGS})
 

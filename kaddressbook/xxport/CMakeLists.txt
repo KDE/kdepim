@@ -52,8 +52,6 @@ set(kaddrbk_bookmark_xxport_PART_SRCS bookmark_xxport.cpp )
 
 kde4_add_plugin(kaddrbk_bookmark_xxport ${kaddrbk_bookmark_xxport_PART_SRCS})
 
-
-
 target_link_libraries(kaddrbk_bookmark_xxport kaddressbookprivate kabinterfaces kabcommon ${KDE4_KABC_LIBS} ${KDE4_KDEUI_LIBS} )
 
 install(TARGETS kaddrbk_bookmark_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
