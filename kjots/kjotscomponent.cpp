@@ -1243,8 +1243,8 @@ void KJotsComponent::importBook()
             }
         }
         if ( openUrl.path().endsWith( ".kno" ) ) {
-            KnowItImporter *kni = new KnowItImporter();
-            KJotsBook *newBook = kni->importFromUrl( openUrl );
+            KnowItImporter kni;
+            KJotsBook *newBook = kni.importFromUrl( openUrl );
             if (newBook)
             {
               bookshelf->addTopLevelItem( newBook );
