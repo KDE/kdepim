@@ -1,3 +1,17 @@
+Wednesday, December 3rd 2008
+
+Problems addressed
+------------------
+
+* kolab/issue3228 forwarding filter action does not directly send the email
+* kolab/issue1950 Kontact: gpgme config dialog broken when /etc/gnupg/gpgconf.conf not empty
+* kolab/issue3195 Sending a mail encrypted and signed with an expired Openpgp key shows confusing dialog
+* kolab/issue3265 OpenPGP key expiry warning not emitted for signing keys) Editing
+* kolab/issue2472 ("Default event color" is not used
+* kolab/issue3143 (s/mime invalid keys are accepted by KMail and shown green in kleo (certmanager/lib/ui/keyselectiondialog.cpp)
+* kolab/issue3249 (Strange crash while replying to an SMIME mail.
+* kolab/issue3281 (Kontact does not quote CNs in iCalendar mails, which Outlook 2003 (OL 2K3) then fails to recognise
+
 Friday, November 21st 2008
 
 Problems addressed
