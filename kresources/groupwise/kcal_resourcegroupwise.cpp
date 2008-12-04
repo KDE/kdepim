@@ -197,13 +197,17 @@ void ResourceGroupwise::slotJobResult( KJob *job )
 //        kDebug() <<"INCIDENCE:" << (*it)->summary();
         Incidence *i = (*it)->clone();
         QString remote = (*it)->customProperty( "GWRESOURCE", "UID" );
-        QString local = idMapper().localId( remote );
-        if ( local.isEmpty() ) {
-          idMapper().setRemoteId( i->uid(), remote );
+        if ( remote.isEmpty() ) {
+          kDebug() <<"INCIDENCE:" << (*it)->summary() << " HAS NO REMOTE UID, REJECTING!";
         } else {
-          i->setUid( local );
+          QString local = idMapper().localId( remote );
+          if ( local.isEmpty() ) {
+            idMapper().setRemoteId( i->uid(), remote );
+          } else {
+            i->setUid( local );
+          }
+          addIncidence( i );
         }
-        addIncidence( i );
       }
     }
     saveToCache();
