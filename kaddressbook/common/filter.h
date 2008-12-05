@@ -27,9 +27,10 @@
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 
-#include "kabcommon_export.h"
 #include <kabc/addressee.h>
 #include <kconfig.h>
+
+#include "kabcommon_export.h"
 
 /**
   Filter for AddressBook related objects (Addressees)

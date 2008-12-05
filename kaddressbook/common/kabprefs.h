@@ -24,10 +24,10 @@
 #ifndef KABPREFS_H
 #define KABPREFS_H
 
+#include <QtCore/QStringList>
+
 #include "kabcommon_export.h"
 #include "kabprefs_base.h"
-
-#include <QtCore/QStringList>
 
 class KABCOMMON_EXPORT KABPrefs : public KABPrefsBase
 {

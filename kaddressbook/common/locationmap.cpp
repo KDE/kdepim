@@ -21,6 +21,9 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "locationmap.h"
+
+#include <kabc/addressee.h>
 #include <kapplication.h>
 #include <kconfig.h>
 #include <kdeversion.h>
@@ -31,7 +34,6 @@
 #include <ktoolinvocation.h>
 
 #include "kabprefs.h"
-#include "locationmap.h"
 
 class LocationMapHelper {
   public:

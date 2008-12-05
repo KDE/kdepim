@@ -21,13 +21,13 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "filter.h"
+
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kconfiggroup.h>
 
 #include "kabprefs.h"
-
-#include "filter.h"
 
 Filter::Filter()
   : mName( QString() ), mMatchRule( Matching ), mEnabled( true ),

@@ -21,10 +21,10 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "kabprefs.h"
+
 #include <kconfig.h>
 #include <klocale.h>
-
-#include "kabprefs.h"
 
 class KABPrefsHelper {
   public:
