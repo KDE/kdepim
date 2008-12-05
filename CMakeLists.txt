@@ -90,13 +90,14 @@ else ( ONLY_KLEO )
     macro_log_feature(X11_Xscreensaver_LIB "libXss" "X Window Screen Saver Development Library" "http://xorg.freedesktop.org" FALSE "" "Required for building the KTimeTracker Program")
   endif(Q_WS_X11)
 
-  if (NOT WIN32)
-     set(OPENSYNC_MIN_VERSION 0.38)
-     macro_optional_find_package(OpenSync)
-     macro_log_feature(OPENSYNC_FOUND "opensync" "OpenSync Development Libraries" "http://www.opensync.org" FALSE "0.38 or greater" "Needed to provide syncing functionality in KDE PIM applications. Necessary to compile kitchensync.")
-     macro_optional_find_package(GLIB2)
-     macro_log_feature(GLIB2_FOUND "glib2" "Low-level core library for data structure handling, portability wrappers, etc." "http://www.gtk.org" FALSE "2.x" "Needed to provide synching applications from KDE PIM applications. Necessary to compile kitchensync and other PIM applications.")
-  endif (NOT WIN32)
+# uncomment the following block for 4.3 in order to enable kitchensync
+#  if (NOT WIN32)
+#     set(OPENSYNC_MIN_VERSION 0.38)
+#     macro_optional_find_package(OpenSync)
+#     macro_log_feature(OPENSYNC_FOUND "opensync" "OpenSync Development Libraries" "http://www.opensync.org" FALSE "0.38 or greater" "Needed to provide syncing functionality in KDE PIM applications. Necessary to compile kitchensync.")
+#     macro_optional_find_package(GLIB2)
+#     macro_log_feature(GLIB2_FOUND "glib2" "Low-level core library for data structure handling, portability wrappers, etc." "http://www.gtk.org" FALSE "2.x" "Needed to provide synching applications from KDE PIM applications. Necessary to compile kitchensync and other PIM applications.")
+#  endif (NOT WIN32)
 
   macro_optional_find_package(GNOKII)
   macro_bool_to_01(GNOKII_FOUND HAVE_GNOKII_H)
@@ -220,7 +221,7 @@ else ( ONLY_KLEO )
   endif(KMAIL_SUPPORTED)
 
   if(NOT WIN32)
-#enable kmobiletools for 4.2
+#enable kmobiletools 4.3 if there is interest
 #     set(KMOBILETOOLS_SUPPORTED TRUE)
 #     add_definitions(-DKMOBILETOOLS_SUPPORTED)
 #     message(STATUS "KMobileTools support enabled.")
@@ -255,7 +256,7 @@ else ( ONLY_KLEO )
      message(STATUS "KitchenSync support DISABLED (Windows target).")
   endif(NOT WIN32)
 
-#enable korn in 4.2 if there is interest
+#enable korn in 4.3 if there is interest
 # macro_optional_add_subdirectory(korn)
   add_subdirectory(kresources)
   macro_optional_add_subdirectory(kontact)
