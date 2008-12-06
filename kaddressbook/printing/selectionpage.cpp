@@ -22,6 +22,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "selectionpage.h"
+
 #include <QtCore/QStringList>
 #include <QtGui/QComboBox>
 #include <QtGui/QGridLayout>
@@ -37,7 +39,6 @@
 #include <libkdepim/categoryselectdialog.h>
 
 #include "kabprefs.h"
-#include "selectionpage.h"
 
 SelectionPage::SelectionPage( QWidget* parent, const char* name )
     : QWidget( parent )

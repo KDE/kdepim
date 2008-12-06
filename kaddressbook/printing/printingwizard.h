@@ -27,7 +27,7 @@
 
 #include <QtCore/QStringList>
 
-#include <KAssistantDialog>
+#include <kassistantdialog.h>
 #include <kabc/addressbook.h>
 
 #include "common/filter.h"

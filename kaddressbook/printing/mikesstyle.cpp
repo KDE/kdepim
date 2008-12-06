@@ -22,6 +22,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "mikesstyle.h"
+
 #include <QtGui/QPainter>
 #include <QtGui/QPrinter>
 
@@ -34,8 +36,6 @@
 #include "printingwizard.h"
 #include "printprogress.h"
 #include "printstyle.h"
-
-#include "mikesstyle.h"
 
 using namespace KABPrinting;
 

@@ -24,11 +24,11 @@
 #ifndef KABENTRYPAINTER_H
 #define KABENTRYPAINTER_H
 
-#include <kabc/addressbook.h>
-
 #include <QtCore/QRect>
 #include <QtGui/QColor>
 #include <QtGui/QFont>
+
+#include <kabc/addressbook.h>
 
 typedef QList<QRect> QRectList;
 

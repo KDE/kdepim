@@ -21,6 +21,7 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "kabentrypainter.h"
 
 #include <QtGui/QPainter>
 
@@ -28,8 +29,6 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <kurl.h>
-
-#include "kabentrypainter.h"
 
 KABEntryPainter::KABEntryPainter()
   : mShowAddresses( true ), mShowEmails( true ), mShowPhones( true ),

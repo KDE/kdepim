@@ -38,10 +38,10 @@
 #include <knuminput.h>
 #include <kstandarddirs.h>
 
-#include "ui_ds_appearance.h"
 #include "printingwizard.h"
 #include "printprogress.h"
 #include "printstyle.h"
+#include "ui_ds_appearance.h"
 
 using namespace KABPrinting;
 

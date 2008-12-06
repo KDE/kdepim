@@ -22,6 +22,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "printingwizard.h"
+
 #include <QtGui/QPushButton>
 #include <QtGui/QPrinter>
 
@@ -41,8 +43,6 @@
 #include "printprogress.h"
 #include "printstyle.h"
 #include "printsortmode.h"
-
-#include "printingwizard.h"
 
 using namespace KABPrinting;
 

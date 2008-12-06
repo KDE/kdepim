@@ -25,9 +25,9 @@
 #define RINGBINDERSTYLE_H
 
 #include <kabc/addressee.h>
+
 #include "printstyle.h"
 #include "ui_rbs_appearance.h"
-
 
 class QPrinter;
 

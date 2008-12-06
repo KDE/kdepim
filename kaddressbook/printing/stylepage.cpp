@@ -22,17 +22,18 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "stylepage.h"
+
 #include <QtGui/QGridLayout>
 #include <QtGui/QGroupBox>
 #include <QtGui/QLabel>
 #include <QtGui/QPixmap>
 #include <QtGui/QVBoxLayout>
 
+#include <kabc/addressbook.h>
 #include <KComboBox>
 #include <KDialog>
 #include <KLocale>
-
-#include "stylepage.h"
 
 StylePage::StylePage( KABC::AddressBook *ab, QWidget* parent,  const char* name )
   : QWidget( parent ), mAddressBook( ab )

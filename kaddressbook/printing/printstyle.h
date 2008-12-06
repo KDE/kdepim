@@ -29,9 +29,11 @@
 #include <QtGui/QPixmap>
 #include <QtGui/QWidget>
 
-#include <kabc/field.h>
+#include <kabc/addressee.h>
 
 class KPageWidgetItem;
+
+namespace KABC { class Field; }
 
 namespace KABPrinting {
 

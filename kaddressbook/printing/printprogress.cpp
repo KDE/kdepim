@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "printprogress.h"
+
 #include <QtGui/QGridLayout>
 #include <QtGui/QProgressBar>
 #include <QtGui/QTextBrowser>
@@ -29,8 +31,6 @@
 #include <kdebug.h>
 #include <kdialog.h>
 #include <klocale.h>
-
-#include "printprogress.h"
 
 using namespace KABPrinting;
 

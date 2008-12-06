@@ -21,9 +21,9 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <kabc/field.h>
-
 #include "printsortmode.h"
+
+#include <kabc/field.h>
 
 
 PrintSortMode::PrintSortMode( KABC::Field *field, bool ascending )

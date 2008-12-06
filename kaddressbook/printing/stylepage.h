@@ -27,12 +27,13 @@
 
 #include <QtGui/QWidget>
 
-#include <kabc/addressbook.h>
 #include <kabc/field.h>
 
 class QLabel;
 class QPixmap;
 class KComboBox;
+
+namespace KABC { class AddressBook; }
 
 class StylePage : public QWidget
 {

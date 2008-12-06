@@ -21,13 +21,15 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <kstandarddirs.h>
-#include <kdebug.h>
+#include "printstyle.h"
 
 #include <QtGui/QPixmap>
 #include <QtGui/QWidget>
 
-#include "printstyle.h"
+#include <kabc/field.h>
+#include <kstandarddirs.h>
+#include <kdebug.h>
+
 #include "printingwizard.h"
 
 using namespace KABPrinting;
