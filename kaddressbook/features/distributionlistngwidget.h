@@ -20,15 +20,15 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef KAB_DISTRIBUTIONLISTNG_MAINWIDGET_H
-#define KAB_DISTRIBUTIONLISTNG_MAINWIDGET_H
-
-#include "extensionwidget.h"
-
-#include <kabc/addressee.h>
+#ifndef KAB_DISTRIBUTIONLISTNG_WIDGET_H
+#define KAB_DISTRIBUTIONLISTNG_WIDGET_H
 
 #include <QtCore/QStringList>
 #include <QtGui/QListWidget>
+
+#include <kabc/addressee.h>
+
+#include "extensionwidget.h"
 
 class QDragEnterEvent;
 class QDragMoveEvent;

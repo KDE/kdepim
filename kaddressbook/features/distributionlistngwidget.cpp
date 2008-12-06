@@ -21,17 +21,6 @@
 */
 
 #include "distributionlistngwidget.h"
-#include "interfaces/core.h"
-#include "searchmanager.h"
-
-#include <libkdepim/distributionlist.h>
-#include <libkdepim/kvcarddrag.h>
-
-#include <kabc/vcardconverter.h>
-
-#include <kdialog.h>
-#include <klocale.h>
-#include <KMenu>
 
 #include <QtCore/QEvent>
 #include <QtCore/QPoint>
@@ -43,6 +32,16 @@
 #include <QtGui/QLayout>
 #include <QtGui/QListWidgetItem>
 #include <QtGui/QToolButton>
+
+#include <kabc/vcardconverter.h>
+#include <kdialog.h>
+#include <klocale.h>
+#include <kmenu.h>
+#include <libkdepim/distributionlist.h>
+#include <libkdepim/kvcarddrag.h>
+
+#include "interfaces/core.h"
+#include "searchmanager.h"
 
 KAB::DistributionListNg::ListBox::ListBox( QWidget* parent ) : QListWidget( parent )
 {

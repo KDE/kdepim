@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "resourceselection.h"
+
 #include <QtCore/QTimer>
 #include <QtGui/QGridLayout>
 #include <QtGui/QHeaderView>
@@ -40,7 +42,6 @@
 #include <kresources/configdialog.h>
 
 #include "core.h"
-#include "resourceselection.h"
 
 class AddressBookWrapper : public KABC::AddressBook
 {
