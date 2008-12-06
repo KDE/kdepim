@@ -21,9 +21,11 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include "core.h"
-
 #include "extensionwidget.h"
+
+#include <kxmlguiclient.h>
+
+#include "core.h"
 
 using namespace KAB;
 

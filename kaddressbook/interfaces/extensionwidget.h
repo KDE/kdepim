@@ -24,10 +24,12 @@
 #ifndef KAB_EXTENSIONWIDGET_H
 #define KAB_EXTENSIONWIDGET_H
 
-#include "kaddressbook_export.h"
+#include <QtGui/QWidget>
+
 #include <kabc/addressbook.h>
 #include <kpluginfactory.h>
-#include <QtGui/QWidget>
+
+#include "kaddressbook_export.h"
 
 #define KAB_EXTENSIONWIDGET_PLUGIN_VERSION 1
 

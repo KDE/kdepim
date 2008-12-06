@@ -24,14 +24,13 @@
 #ifndef KAB_CORE_H
 #define KAB_CORE_H
 
-#include <kabc/distributionlist.h>
-
 #include <QtCore/QObject>
 #include <QtGui/QUndoStack>
 
-#include "kaddressbook_export.h"
+#include <kabc/distributionlist.h>
 #include <kabc/field.h>
-#include <kxmlguiclient.h>
+
+#include "kaddressbook_export.h"
 
 namespace KABC {
 class AddressBook;
@@ -43,6 +42,7 @@ class QWidget;
 class KActionCollection;
 class KConfig;
 class KUrl;
+class KXMLGUIClient;
 
 namespace KAB {
 

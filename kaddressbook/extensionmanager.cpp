@@ -34,6 +34,7 @@
 #include <kservicetypetrader.h>
 #include <ktoggleaction.h>
 #include <kvbox.h>
+#include <kxmlguiclient.h>
 
 #include "addresseeeditorextension.h"
 #include "core.h"

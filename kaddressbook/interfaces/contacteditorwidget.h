@@ -24,12 +24,13 @@
 #ifndef KAB_CONTACTEDITORWIDGET_H
 #define KAB_CONTACTEDITORWIDGET_H
 
-#include "kaddressbook_export.h"
+#include <QtGui/QWidget>
+#include <QtCore/QList>
+
 #include <kabc/addressbook.h>
 #include <kpluginfactory.h>
 
-#include <QtGui/QWidget>
-#include <QtCore/QList>
+#include "kaddressbook_export.h"
 
 #define KAB_CEW_PLUGIN_VERSION 1
 

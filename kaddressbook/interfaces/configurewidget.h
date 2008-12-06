@@ -24,13 +24,15 @@
 #ifndef KAB_CONFIGUREWIDGET_H
 #define KAB_CONFIGUREWIDGET_H
 
-#include "kaddressbook_export.h"
-#include <kconfig.h>
 #include <QtGui/QWidget>
+
+#include "kaddressbook_export.h"
 
 namespace KABC {
 class AddressBook;
 }
+
+class KConfigGroup;
 
 namespace KAB {
 

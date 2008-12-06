@@ -21,9 +21,9 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <kabc/addressbook.h>
-
 #include "configurewidget.h"
+
+#include <kabc/addressbook.h>
 
 using namespace KAB;
 

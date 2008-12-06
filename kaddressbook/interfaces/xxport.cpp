@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "xxport.h"
+
 #include <QtCore/QSignalMapper>
 
 #include <kaction.h>
@@ -28,8 +30,6 @@
 #include <kapplication.h>
 #include <kcomponentdata.h>
 #include <kmessagebox.h>
-
-#include "xxport.h"
 
 using namespace KAB;
 
