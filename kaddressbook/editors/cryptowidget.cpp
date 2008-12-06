@@ -21,19 +21,7 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include "libkleo/ui/keyrequester.h"
-#include "libkleo/kleo/cryptplugfactory.h"
-#include "libkleo/kleo/cryptplugwrapper.h"
-#include "libkleo/kleo/enum.h"
-
-#include "gpgme++/data.h"
-#include "gpgme++/key.h"
-
-#include <kdebug.h>
-#include <kdialog.h>
-#include <khbox.h>
-#include <kiconloader.h>
-#include <klocale.h>
+#include "cryptowidget.h"
 
 #include <QtGui/QCheckBox>
 #include <QtGui/QComboBox>
@@ -43,7 +31,19 @@
 #include <QtGui/QLayout>
 #include <QtGui/QPushButton>
 
-#include "cryptowidget.h"
+#include <kdebug.h>
+#include <kdialog.h>
+#include <khbox.h>
+#include <kiconloader.h>
+#include <klocale.h>
+
+#include "gpgme++/data.h"
+#include "gpgme++/key.h"
+
+#include "libkleo/ui/keyrequester.h"
+#include "libkleo/kleo/cryptplugfactory.h"
+#include "libkleo/kleo/cryptplugwrapper.h"
+#include "libkleo/kleo/enum.h"
 
 K_EXPORT_PLUGIN(CryptoWidgetFactory)
 

@@ -22,6 +22,8 @@
   without including the source code for Qt in the source distribution.
 */
 
+#include "imeditorwidget.h"
+
 #include <Qt3Support/Q3ListView>
 #include <QtCore/QList>
 #include <QtCore/QStringList>
@@ -38,7 +40,6 @@
 
 #include "imaddresswidget.h"
 #include "ui_imeditorbase.h"
-#include "imeditorwidget.h"
 
 IMAddressLVI::IMAddressLVI( QTreeWidget *parent, const KPluginInfo &protocol,
                             const QString &address, const IMContext &context )

@@ -25,9 +25,10 @@
 #ifndef IMEDITORWIDGET_H
 #define IMEDITORWIDGET_H
 
-#include <QtGui/QTreeWidget>
+#include <QtGui/QTreeWidgetItem>
+
 #include <kdialog.h>
-#include <KPluginInfo>
+#include <kplugininfo.h>
 
 #include "contacteditorwidget.h"
 

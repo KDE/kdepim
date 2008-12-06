@@ -22,6 +22,8 @@
   without including the source code for Qt in the source distribution.
 */
 
+#include "imaddresswidget.h"
+
 #include <QtCore/QList>
 #include <QtGui/QCheckBox>
 
@@ -29,8 +31,6 @@
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kplugininfo.h>
-
-#include "imaddresswidget.h"
 
 IMAddressWidget::IMAddressWidget( QWidget *parent, QList<KPluginInfo> protocols )
   : QWidget( parent )
