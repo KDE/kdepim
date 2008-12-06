@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "kcmkabconfig.h"
+
 #include <QtGui/QVBoxLayout>
 
 #include <kaboutdata.h>
@@ -31,7 +33,6 @@
 #include <klocale.h>
 
 #include "kabconfigwidget.h"
-#include "kcmkabconfig.h"
 
 K_PLUGIN_FACTORY(KCMKabConfigFactory, registerPlugin<KCMKabConfig>();)
 K_EXPORT_PLUGIN(KCMKabConfigFactory( "kcmkabconfig" ))

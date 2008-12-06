@@ -26,11 +26,11 @@
 
 #include <QtGui/QWidget>
 
-class KComboBox;
-
 class QListWidget;
 class QListWidgetItem;
 class QPushButton;
+
+class KComboBox;
 
 class NamePartWidget : public QWidget
 {

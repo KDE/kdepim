@@ -25,10 +25,11 @@
 #define ADDHOSTDIALOG_H
 
 #include <kdialog.h>
-#include <kldap/ldapserver.h>
-#include <kldap/ldapconfigwidget.h>
-#include <libkdepim/ldapclient.h>
 
+namespace KLDAP {
+class LdapConfigWidget;
+class LdapServer;
+}
 
 class AddHostDialog : public KDialog
 {

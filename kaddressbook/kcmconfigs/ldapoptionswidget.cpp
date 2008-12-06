@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "ldapoptionswidget.h"
+
 #include <QtCore/QString>
 #include <QtGui/QGroupBox>
 #include <QtGui/QLabel>
@@ -38,9 +40,9 @@
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kvbox.h>
+#include <libkdepim/ldapclient.h>
 
 #include "addhostdialog.h"
-#include "ldapoptionswidget.h"
 
 class LDAPItem : public QListWidgetItem
 {

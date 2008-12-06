@@ -24,9 +24,9 @@
 #ifndef KCMKABLDAPCONFIG_H
 #define KCMKABLDAPCONFIG_H
 
-#include <kcmodule.h>
-#include <kcomponentdata.h>
 #include <QtGui/QWidget>
+
+#include <kcmodule.h>
 
 class LDAPOptionsWidget;
 

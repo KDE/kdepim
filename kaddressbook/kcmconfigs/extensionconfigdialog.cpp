@@ -21,13 +21,14 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "extensionconfigdialog.h"
+
 #include <QtGui/QFrame>
 #include <QtGui/QGridLayout>
 
 #include <klocale.h>
 
 #include "configurewidget.h"
-#include "extensionconfigdialog.h"
 #include "extensionwidget.h"
 
 ExtensionConfigDialog::ExtensionConfigDialog( KAB::ExtensionFactory *factory, KConfigGroup &config,

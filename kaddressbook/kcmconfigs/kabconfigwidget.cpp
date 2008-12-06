@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "kabconfigwidget.h"
+
 #include <QtGui/QBoxLayout>
 #include <QtGui/QCheckBox>
 #include <QtGui/QComboBox>
@@ -41,8 +43,6 @@
 
 #include "addresseewidget.h"
 #include "kabprefs.h"
-
-#include "kabconfigwidget.h"
 
 KABConfigWidget::KABConfigWidget( QWidget *parent )
   : QWidget( parent )

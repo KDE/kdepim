@@ -21,6 +21,7 @@
 
 #include <QtCore/QCoreApplication>
 
+#include <kabc/stdaddressbook.h>
 #include <kaboutdata.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>
@@ -29,11 +30,9 @@
 #include <kdebug.h>
 #include <kglobal.h>
 #include <klocale.h>
-#include <kstandarddirs.h>
-
-#include <kabc/stdaddressbook.h>
-#include <libkdepim/distributionlist.h>
 #include <krandom.h>
+#include <kstandarddirs.h>
+#include <libkdepim/distributionlist.h>
 
 void convertDistributionLists()
 {

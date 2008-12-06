@@ -21,14 +21,16 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "addhostdialog.h"
+
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QPushButton>
 
 #include <kacceleratormanager.h>
+#include <kldap/ldapserver.h>
+#include <kldap/ldapconfigwidget.h>
 #include <klineedit.h>
 #include <klocale.h>
-
-#include "addhostdialog.h"
 
 AddHostDialog::AddHostDialog( KLDAP::LdapServer *server, QWidget* parent )
   : KDialog( parent )

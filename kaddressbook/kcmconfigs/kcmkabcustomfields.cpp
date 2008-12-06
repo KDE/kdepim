@@ -23,13 +23,13 @@
 
 #include "kcmkabcustomfields.h"
 
-#include "kabprefs.h"
-
 #include <QtCore/QRegExp>
 
 #include <kdemacros.h>
 #include <kgenericfactory.h>
 #include <kstandarddirs.h>
+
+#include "kabprefs.h"
 
 K_PLUGIN_FACTORY(KCMKabCustomFieldsFactory, registerPlugin<KCMKabCustomFields>();)
 K_EXPORT_PLUGIN(KCMKabCustomFieldsFactory( "kcmkabcustomfields" ))

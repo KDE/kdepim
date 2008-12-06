@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "kcmkabldapconfig.h"
+
 #include <QtGui/QCheckBox>
 #include <QtGui/QVBoxLayout>
 
@@ -31,8 +33,6 @@
 #include <klocale.h>
 
 #include "ldapoptionswidget.h"
-
-#include "kcmkabldapconfig.h"
 
 K_PLUGIN_FACTORY(KCMKabLdapConfigFactory, registerPlugin<KCMKabLdapConfig>();)
 K_EXPORT_PLUGIN(KCMKabLdapConfigFactory( "kcmkabldapconfig" ))

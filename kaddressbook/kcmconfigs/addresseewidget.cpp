@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "addresseewidget.h"
+
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusMessage>
 #include <QtGui/QGridLayout>
@@ -33,12 +35,10 @@
 #include <kcombobox.h>
 #include <kconfig.h>
 #include <kdialog.h>
-#include <KDialogButtonBox>
+#include <kdialogbuttonbox.h>
 #include <kinputdialog.h>
 #include <klineedit.h>
 #include <klocale.h>
-
-#include "addresseewidget.h"
 
 NamePartWidget::NamePartWidget( const QString &title, const QString &label,
                                 QWidget *parent, const char *name )
