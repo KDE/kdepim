@@ -24,7 +24,7 @@
 #ifndef ADDRESSEEWIDGET_H
 #define ADDRESSEEWIDGET_H
 
-#include <QtGui/QWidget>
+#include <QtGui/QGroupBox>
 
 class QListWidget;
 class QListWidgetItem;
@@ -32,7 +32,7 @@ class QPushButton;
 
 class KComboBox;
 
-class NamePartWidget : public QWidget
+class NamePartWidget: public QGroupBox
 {
   Q_OBJECT
 

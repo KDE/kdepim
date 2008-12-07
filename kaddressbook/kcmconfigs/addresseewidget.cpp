@@ -42,36 +42,30 @@
 
 NamePartWidget::NamePartWidget( const QString &title, const QString &label,
                                 QWidget *parent, const char *name )
-  : QWidget( parent ), mTitle( title ), mLabel( label )
+  : QGroupBox( title, parent )
+  , mTitle( title )
+  , mLabel( label )
 {
   setObjectName( name );
   QHBoxLayout *layout = new QHBoxLayout( this );
   layout->setSpacing( KDialog::spacingHint() );
-  layout->setMargin( 0 );
+  layout->setMargin( KDialog::marginHint() );
 
-  QGroupBox *group = new QGroupBox( title, this );
-  QGridLayout *groupLayout = new QGridLayout();
-  groupLayout->setSpacing( KDialog::spacingHint() );
-  groupLayout->setMargin( KDialog::marginHint() );
-  group->setLayout( groupLayout );
-
-  mBox = new QListWidget( group );
-  mBox->setMaximumWidth( 100 );
+  mBox = new QListWidget( this );
   connect( mBox, 
            SIGNAL( currentItemChanged( QListWidgetItem *, QListWidgetItem * ) ),
            SLOT( selectionChanged( QListWidgetItem * ) ) );
-  groupLayout->addWidget( mBox, 0, 0 );
+  layout->addWidget( mBox );
 
-  KDialogButtonBox *bbox = new KDialogButtonBox( group, Qt::Vertical );
+  KDialogButtonBox *bbox = new KDialogButtonBox( this, Qt::Vertical );
   mAddButton = bbox->addButton( i18n( "Add..." ), QDialogButtonBox::ActionRole, this,  SLOT( add() ) );
   mEditButton = bbox->addButton( i18n( "Edit..." ), QDialogButtonBox::ActionRole, this,  SLOT( edit() ) );
   mEditButton->setEnabled( false );
   mRemoveButton = bbox->addButton( i18n( "Remove" ), QDialogButtonBox::ActionRole, this,  SLOT( remove() ) );
   mRemoveButton->setEnabled( false );
   bbox->layout();
-  groupLayout->addWidget( bbox, 0, 1 );
+  layout->addWidget( bbox );
 
-  layout->addWidget( group );
 }
 
 NamePartWidget::~NamePartWidget()
