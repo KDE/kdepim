@@ -441,7 +441,17 @@ void ArticleWidget::displayArticle()
 
   // body
   QString html;
-  KMime::Content *text = mArticle->textContent();
+  KMime::Content *text = 0;
+  if ( mShowHtml ) {
+    foreach ( KMime::Content *c, mArticle->contents() ) {
+      if ( c->contentType()->isHTMLText() && c->contentType()->category() == KMime::Headers::CCalternativePart ) {
+        text = c;
+        break;
+      }
+    }
+  }
+  if ( !text )
+    text = mArticle->textContent();
 
   // check if codec is available
   if ( text && !canDecodeText( text->contentType()->charset() ) ) {
