@@ -49,6 +49,7 @@ Name[zh_TW]=群組伺服器
 Comment=Provides access to contacts stored on a Groupware server.
 Comment[ca]=Proporciona l'accés als contactes emmagatzemats en un servidor Groupware.
 Comment[el]=Προσφέρει πρόσβαση σε επαφές αποθηκευμένες σε έναν εξυπηρετητή Groupware.
+Comment[et]=Võimaldab kasutada grupitöö serverisse salvestatud kontakte.
 Comment[fr]=Fourni l'accès aux contacts stockés un serveur collaboratif.
 Comment[gl]=Permite acceder aos contactos almacenados nun servidor de Groupware.
 Comment[ja]=グループウェアサーバに保存されている連絡先へのアクセスを提供します

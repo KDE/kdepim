@@ -49,6 +49,7 @@ Name[zh_TW]=GroupDAV 伺服器 (如: OpenGroupware)
 Comment=Provides access to contacts stored in address books on GroupDAV enabled servers, e.g. OpenGroupware
 Comment[ca]=Proporciona l'accés als contactes emmagatzemats en llibretes d'adreces en servidors basats en GroupDAV, p.ex. OpenGroupware
 Comment[el]=Προσφέρει πρόσβαση σε επαφές αποθηκευμένες σε βιβλία διευθύνσεων εξυπηρετών GroupDAV  π.χ. το OpenGroupware
+Comment[et]=Võimaldab kasutada kontakte, mis on salvestatud aadressiraamatutesse GroupDAVi toetusega serverites (nt OpenGroupware)
 Comment[fr]=Fourni l'accès aux contacts stockés dans les dossiers du carnet d'adresses d'un serveur prenant en charge GroupDAV comme par exemple OpenGroupware
 Comment[gl]=Permite acceder aos contactos almacenados nos cadernos de enderezos dos servidores con GroupDAV, p. ex. OpenGroupware
 Comment[ja]=GroupDAV に対応したサーバ (例: OpenGroupware) のアドレス帳に保存されている連絡先へのアクセスを提供します

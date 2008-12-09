@@ -9,6 +9,7 @@ Type=Application
 Comment=Tool to update the old distribution lists to the new ones.
 Comment[ca]=Eina per actualitzar les llistes de distribució antigues a les noves.
 Comment[el]=Εργαλείο ενημέρωσης παλιών λιστών διανομής στις νέες.
+Comment[et]=Tööriist vanade postiloendite uuendamiseks uude vormingusse.
 Comment[fr]=Outil de conversion des anciennes listes de diffusion au nouveau format.
 Comment[gl]=Ferramenta para actualizar as listas de distribucións antigas ás novas.
 Comment[ja]=古い配布リストを新しいものに更新するツール
