@@ -17,7 +17,6 @@
 #include <klocale.h>
 #include <kdebug.h>
 
-#include "knprotocolclient.h"
 #include "knglobals.h"
 #include "kncollectionviewitem.h"
 #include "knconfig.h"
@@ -397,10 +396,11 @@ bool KNGroup::unloadHdrs(bool force)
 
 
 // Attention: this method is called from the network thread!
-void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNProtocolClient *client)
+void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNJobData *job)
 {
   KNRemoteArticle *art=0, *art2=0;
   int new_cnt=0, added_cnt=0;
+  int todo = list.count();
   QTime timer;
 
   l_astFetchCount=0;
@@ -502,16 +502,15 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNProtocolClient 
 
     if (timer.elapsed() > 200) {           // don't flicker
       timer.restart();
-#ifdef __GNUC__
-#warning Port me!
-#endif
-//      if (client) client->updatePercentage((new_cnt*30)/todo);
+      if(job) {
+        job->setProgress((new_cnt*30)/todo);
+      }
     }
   }
 
   // now we build the threads
   syncSearchIndex(); // recreate the msgId-index so it contains the appended headers
-  buildThreads(added_cnt, client);
+  buildThreads(added_cnt, job);
   updateThreadInfo();
 
   // save the new headers
@@ -701,7 +700,7 @@ void KNGroup::processXPostBuffer(bool deleteAfterwards)
 }
 
 
-void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
+void KNGroup::buildThreads(int cnt, KNJobData *job)
 {
   int end=length(),
       start=end-cnt,
@@ -756,11 +755,9 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
 
     if (timer.elapsed() > 200) {           // don't flicker
       timer.restart();
-#ifdef __GNUC__
-#warning Port me!
-#endif
-//      if(client)
-//        client->updatePercentage(30+((foundCnt)*70)/cnt);
+      if(job) {
+        job->setProgress(30+((foundCnt)*70)/cnt);
+      }
     }
   }
 
@@ -819,10 +816,9 @@ void KNGroup::buildThreads(int cnt, KNProtocolClient *client)
 
       if (timer.elapsed() > 200) {           // don't flicker
         timer.restart();
-#ifdef __GNUC__
-#warning Port me!
-#endif
-//        if (client) client->updatePercentage(30+((bySubCnt+foundCnt)*70)/cnt);
+        if(job) {
+          job->setProgress(30+((bySubCnt+foundCnt)*70)/cnt);
+        }
       }
     }
   }

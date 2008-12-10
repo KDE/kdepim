@@ -24,7 +24,6 @@
 #include <QByteArray>
 #include <QList>
 
-class KNProtocolClient;
 class KNNntpAccount;
 
 namespace KNode {
@@ -121,7 +120,8 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
     /** Load the stored headers from disk. */
     bool loadHdrs();
     bool unloadHdrs(bool force=true);
-    void insortNewHeaders( const KIO::UDSEntryList &list, KNProtocolClient *client = 0 );
+    /** Insert headers of new articles into this group, and then sort */
+    void insortNewHeaders( const KIO::UDSEntryList &list, KNJobData *job = 0 );
     int saveStaticData(int cnt,bool ovr=false);
     void saveDynamicData(int cnt,bool ovr=false);
     void syncDynamicData();
@@ -179,7 +179,7 @@ class KNGroup : public KNArticleCollection , public KNJobItem  {
 
 
   protected:
-    void buildThreads(int cnt, KNProtocolClient *client=0);
+    void buildThreads(int cnt, KNJobData *parent=0);
     KNRemoteArticle* findReference(KNRemoteArticle *a);
 
     int       n_ewCount,

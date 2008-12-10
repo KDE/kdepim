@@ -22,7 +22,6 @@
 #include "kngroup.h"
 
 class KNNntpAccount;
-class KNProtocolClient;
 class KNServerInfo;
 class KNArticleManager;
 class KNCleanUp;
@@ -58,7 +57,7 @@ class KNGroupListData : public KNJobItem {
     KNGroupListData();
     ~KNGroupListData();
 
-    bool readIn(KNProtocolClient *client=0);
+    bool readIn(KNJobData *job=0);
     bool writeOut();
     void merge(QList<KNGroupInfo>* newGroups);
 

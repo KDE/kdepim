@@ -30,7 +30,6 @@
 #include "knarticlemanager.h"
 #include "kngroupdialog.h"
 #include "knnntpaccount.h"
-#include "knprotocolclient.h"
 #include "kncleanup.h"
 #include "scheduler.h"
 #include "knglobals.h"
@@ -97,7 +96,7 @@ KNGroupListData::~KNGroupListData()
 
 
 
-bool KNGroupListData::readIn(KNProtocolClient *client)
+bool KNGroupListData::readIn(KNJobData *job)
 {
   QFile f( path + "groups" );
   QByteArray line;
@@ -109,10 +108,9 @@ bool KNGroupListData::readIn(KNProtocolClient *client)
   uint size=f.size()+2;
 
   timer.start();
-#ifdef __GNUC__
-#warning Port me!
-#endif
-//  if (client) client->updatePercentage(0);
+  if(job) {
+    job->setProgress(0);
+  }
 
   if(f.open(QIODevice::ReadOnly)) {
     while(!f.atEnd()) {
@@ -155,10 +153,9 @@ bool KNGroupListData::readIn(KNProtocolClient *client)
 
       if (timer.elapsed() > 200) {           // don't flicker
         timer.restart();
-#ifdef __GNUC__
-#warning Port me!
-#endif
-//        if (client) client->updatePercentage((f.at()*100)/size);
+        if(job) {
+          job->setProgress( (f.at()*100)/size );
+        }
       }
     }
 

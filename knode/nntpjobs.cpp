@@ -97,7 +97,7 @@ void KNode::GroupListJob::slotResult( KJob * job )
     // TODO: use thread weaver here?
     if ( mIncremental ) {
       setStatus( i18n("Loading group list from disk...") );
-      if ( !target->readIn() ) {
+      if ( !target->readIn( this ) ) {
         setError( KIO::ERR_COULD_NOT_READ, i18n("Unable to read the group list file") );
         emitFinished();
         return;
@@ -126,7 +126,7 @@ void KNode::GroupLoadJob::execute( )
 
   setStatus( i18n("Loading group list from disk...") );
   // TODO: use the thread weaver here
-  if ( !target->readIn() )
+  if ( !target->readIn( this ) )
     setError( KIO::ERR_COULD_NOT_READ, i18n("Unable to read the group list file") );
 
   emitFinished();
@@ -183,7 +183,7 @@ void KNode::ArticleListJob::slotResult( KJob * _job )
       target->setFirstNr( firstSerNum );
     }
 
-    target->insortNewHeaders( mArticleList );
+    target->insortNewHeaders( mArticleList, this );
 
     if ( job->metaData().contains( "LastSerialNumber" ) ) {
       int lastSerNum = job->metaData()["LastSerialNumber"].toInt();
