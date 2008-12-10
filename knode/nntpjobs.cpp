@@ -173,6 +173,8 @@ void KNode::ArticleListJob::slotResult( KJob * _job )
   if ( job->error() )
     setError( job->error(), job->errorString() );
   else {
+    createProgressItem();
+
     KNGroup* target = static_cast<KNGroup*>( data() );
     target->setLastFetchCount( 0 );
 
@@ -190,6 +192,8 @@ void KNode::ArticleListJob::slotResult( KJob * _job )
       target->setLastNr( lastSerNum );
     }
   }
+
+  setComplete();
 
   emitFinished();
 }
