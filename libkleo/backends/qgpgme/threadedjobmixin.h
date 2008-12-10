@@ -112,6 +112,7 @@ namespace _detail {
       const T_result r = m_watcher.result();
       m_auditLog = boost::get<boost::tuples::length<T_result>::value-1>( r );
       resultHook( r );
+      emit this->done();
       doEmitResult( r );
       this->deleteLater();
       kDebug() << "end";
@@ -129,7 +130,7 @@ namespace _detail {
                                    Q_ARG( QString, QGpgMEProgressTokenMapper::map( what, type ) ),
                                    Q_ARG( int, current ),
                                    Q_ARG( int, total ) );
-    } 
+    }
   private:
     template <typename T1, typename T2>
     void doEmitResult( const boost::tuple<T1,T2> & tuple ) {
