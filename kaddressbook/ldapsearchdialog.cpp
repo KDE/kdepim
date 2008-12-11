@@ -18,6 +18,8 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA
  */
 
+#include "ldapsearchdialog.h"
+
 #include <QtCore/QPair>
 #include <QtCore/QPointer>
 #include <QtGui/QApplication>
@@ -33,20 +35,20 @@
 #include <QtGui/QVBoxLayout>
 
 #include <addresseelineedit.h>
-#include <KRandom>
-#include <KDialogButtonBox>
+#include <kabc/distributionlist.h>
 #include <kcombobox.h>
 #include <kconfig.h>
+#include <kconfiggroup.h>
+#include <kdialogbuttonbox.h>
 #include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <krandom.h>
 #include <ktoolinvocation.h>
-#include <kconfiggroup.h>
 
-#include "kabcore.h"
-#include "ldapsearchdialog.h"
-#include "kablock.h"
 #include "distributionlistpicker.h"
+#include "kabcore.h"
+#include "kablock.h"
 
 
 static QString asUtf8( const QByteArray &val )

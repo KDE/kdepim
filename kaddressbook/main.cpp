@@ -36,9 +36,9 @@
 #include <kwindowsystem.h>
 #include <libkdepim/pimapplication.h>
 
+#include "kabcore.h"
 #include "kaddressbookmain.h"
 #include "kaddressbook_options.h"
-#include "kabcore.h"
 
 class KAddressBookApp : public KPIM::PimApplication {
   public:

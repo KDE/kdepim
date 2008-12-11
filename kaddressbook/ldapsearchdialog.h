@@ -21,14 +21,11 @@
 #ifndef LDAPSEARCHDIALOG_H
 #define LDAPSEARCHDIALOG_H
 
-#include <ldapclient.h>
-
-#include <kabc/addressbook.h>
-#include <kabc/distributionlist.h>
-
-#include <kdialog.h>
-
 #include <QtGui/QCloseEvent>
+
+#include <kabc/addressee.h>
+#include <kdialog.h>
+#include <ldapclient.h>
 
 class KComboBox;
 class KLineEdit;
@@ -40,7 +37,9 @@ class KABCore;
 class ContactListModel;
 
 namespace KABC {
-    class Resource;
+  class AddressBook;
+  class DistributionList;
+  class Resource;
 }
 
 class LDAPSearchDialog : public KDialog
