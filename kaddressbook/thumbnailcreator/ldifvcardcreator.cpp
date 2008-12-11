@@ -26,6 +26,8 @@
  *
  */
 
+#include "ldifvcardcreator.h"
+
 #include <QtCore/QFile>
 #include <QtGui/QImage>
 #include <QtGui/QPainter>
@@ -39,8 +41,6 @@
 #include <kabc/ldifconverter.h>
 #include <kabc/vcardconverter.h>
 #include <kstandarddirs.h>
-
-#include "ldifvcardcreator.h"
 
 extern "C"
 {
