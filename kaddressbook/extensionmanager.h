@@ -24,19 +24,19 @@
 #ifndef EXTENSIONMANAGER_H
 #define EXTENSIONMANAGER_H
 
-#include "extensionwidget.h"
-
 #include <QtCore/QList>
 #include <QtCore/QStringList>
 
-#include <kvbox.h>
+#include "extensionwidget.h"
 
 class QSignalMapper;
+class QSplitter;
 class QStackedWidget;
 
-namespace KAB {
-class Core;
-}
+class KActionCollection;
+class KToggleAction;
+
+namespace KAB { class Core; }
 
 class ExtensionData
 {

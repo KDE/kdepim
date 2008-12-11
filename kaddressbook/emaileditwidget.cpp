@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "emaileditwidget.h"
+
 #include <QtCore/QString>
 #include <QtGui/QCheckBox>
 #include <QtGui/QGridLayout>
@@ -38,8 +40,6 @@
 #include <KListWidget>
 #include <klocale.h>
 #include <kmessagebox.h>
-
-#include "emaileditwidget.h"
 
 class EmailValidator : public QRegExpValidator
 {

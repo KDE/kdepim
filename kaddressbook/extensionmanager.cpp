@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "extensionmanager.h"
+
 #include <QtCore/QSignalMapper>
 #include <QtCore/QTimer>
 #include <QtGui/QHBoxLayout>
@@ -39,8 +41,6 @@
 #include "addresseeeditorextension.h"
 #include "core.h"
 #include "kabprefs.h"
-
-#include "extensionmanager.h"
 
 ExtensionData::ExtensionData() : action( 0 ), widget( 0 ), weight( 0 ), isDetailsExtension( false )
 {

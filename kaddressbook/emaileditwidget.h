@@ -24,7 +24,6 @@
 #ifndef EMAILEDITWIDGET_H
 #define EMAILEDITWIDGET_H
 
-#include <kabc/addressee.h>
 #include <kdialog.h>
 
 class KLineEdit;
