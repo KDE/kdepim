@@ -19,14 +19,15 @@
    Boston, MA 02110-1301, USA.
 */
 
-#ifndef KADDRESSBOOK_CVSIMPORTDIALOG_H
-#define KADDRESSBOOK_CVSIMPORTDIALOG_H
+#ifndef KADDRESSBOOK_CSVIMPORTDIALOG_H
+#define KADDRESSBOOK_CSVIMPORTDIALOG_H
 
-#include <kabc/addressbook.h>
 #include <kabc/addresseelist.h>
 #include <kdialog.h>
 
 #include <QtCore/QList>
+
+namespace KABC { class AddressBook; }
 
 class KUrlRequester;
 

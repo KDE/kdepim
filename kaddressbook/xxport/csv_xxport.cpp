@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "csv_xxport.h"
+
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 
@@ -32,8 +34,6 @@
 #include <kurl.h>
 
 #include "csvimportdialog.h"
-
-#include "csv_xxport.h"
 
 K_EXPORT_KADDRESSBOOK_XXFILTER( kaddrbk_csv_xxport, CSVXXPort )
 

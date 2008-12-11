@@ -30,15 +30,19 @@
 	- create a log file and give user possibility to see it afterwards
 	- handle callergroup value (Friend, VIP, Family, ...) better
 */
+
+#include "gnokii_xxport.h"
+
 #include <config-xxport.h>
 
 #include <QtGui/QProgressBar>
 
 #include <kdebug.h>
+#include <kguiitem.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kguiitem.h>
 #include <kprogressdialog.h>
+
 #ifdef HAVE_GNOKII_H
 extern "C" {
 #include <gnokii.h>
@@ -48,8 +52,6 @@ extern "C" {
 # warning "Please install the gnokii development headers and libraries !"
 #endif
 #endif
-
-#include "gnokii_xxport.h"
 
 #define APP "GNOKII_XXPORT"
 

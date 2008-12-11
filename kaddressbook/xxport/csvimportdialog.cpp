@@ -35,20 +35,21 @@
 #include <QtGui/QScrollBar>
 #include <QtGui/QTableWidget>
 
-#include <kprogressdialog.h>
+#include <kabc/addressbook.h>
 #include <kapplication.h>
 #include <kdebug.h>
 #include <kdialog.h>
 #include <kfiledialog.h>
+#include <kinputdialog.h>
 #include <klineedit.h>
 #include <klocale.h>
-#include <kinputdialog.h>
 #include <kmessagebox.h>
+#include <kprogressdialog.h>
 #include <kstandarddirs.h>
 #include <kurlrequester.h>
 
-#include "dateparser.h"
 #include "comboboxheaderview.h"
+#include "dateparser.h"
 
 enum { Local = 0, Guess = 1, Latin1 = 2, Uni = 3, MSBug = 4, Codec = 5 };
 

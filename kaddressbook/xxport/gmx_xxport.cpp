@@ -29,21 +29,20 @@
     For further information please visit http://www.gmx.com
 */
 
+#include "gmx_xxport.h"
+
 #include <QtCore/QFile>
 #include <QtCore/QMap>
 #include <QtCore/QTextStream>
 
+#include <kcodecs.h>
+#include <kdebug.h>
 #include <kfiledialog.h>
 #include <kio/netaccess.h>
 #include <klocale.h>
-#include <kcodecs.h>
 #include <kmessagebox.h>
 #include <ktemporaryfile.h>
 #include <kurl.h>
-
-#include <kdebug.h>
-
-#include "gmx_xxport.h"
 
 K_EXPORT_KADDRESSBOOK_XXFILTER_CATALOG( kaddrbk_gmx_xxport, GMXXXPort, "kaddrbk_gmx_xxport" )
 

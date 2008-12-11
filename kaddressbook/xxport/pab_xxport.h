@@ -27,6 +27,8 @@
 
 #include <xxport.h>
 
+class QFile;
+
 class PABXXPort : public KAB::XXPort
 {
   Q_OBJECT

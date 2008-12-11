@@ -33,21 +33,20 @@
     into your KDE Addressbook.
 */
 
+#include "ldif_xxport.h"
+
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 
+#include <kabc/ldifconverter.h>
+#include <kcodecs.h>
+#include <kdebug.h>
 #include <kfiledialog.h>
 #include <kio/netaccess.h>
 #include <klocale.h>
-#include <kcodecs.h>
 #include <kmessagebox.h>
 #include <ktemporaryfile.h>
 #include <kurl.h>
-#include <kabc/ldifconverter.h>
-
-#include <kdebug.h>
-
-#include "ldif_xxport.h"
 
 K_EXPORT_KADDRESSBOOK_XXFILTER( kaddrbk_ldif_xxport, LDIFXXPort )
 

@@ -15,8 +15,8 @@
  *                                                                         *
  ***************************************************************************/
 
-#ifndef _MAPIHD_H_
-#define _MAPIHD_H_
+#ifndef MAPIHD_H
+#define MAPIHD_H
 
 #include <q3memarray.h>
 

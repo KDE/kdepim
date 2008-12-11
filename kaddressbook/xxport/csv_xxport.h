@@ -26,6 +26,8 @@
 
 #include <xxport.h>
 
+class QFile;
+
 class CSVXXPort : public KAB::XXPort
 {
   Q_OBJECT

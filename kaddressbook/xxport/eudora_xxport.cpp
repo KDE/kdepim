@@ -21,19 +21,18 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "eudora_xxport.h"
+
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 
+#include <kdebug.h>
 #include <kfiledialog.h>
 #include <kio/netaccess.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <ktemporaryfile.h>
 #include <kurl.h>
-
-#include <kdebug.h>
-
-#include "eudora_xxport.h"
 
 #define CTRL_C 3
 

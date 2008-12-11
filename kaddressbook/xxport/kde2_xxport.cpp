@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "kde2_xxport.h"
+
 #include <QtCore/QFile>
 
 #include <kdebug.h>
@@ -34,8 +36,6 @@
 #include <kurl.h>
 
 #include "xxportmanager.h"
-
-#include "kde2_xxport.h"
 
 K_EXPORT_KADDRESSBOOK_XXFILTER( kaddrbk_kde2_xxport, KDE2XXPort )
 

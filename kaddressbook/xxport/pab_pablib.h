@@ -19,8 +19,9 @@
 #ifndef KADDRESSBOOK_PAB_PABLIB_H
 #define KADDRESSBOOK_PAB_PABLIB_H
 
-#include <klocale.h>
 #include <QtCore/QFile>
+
+#include <klocale.h>
 
 #include "pab_mapihd.h"
 

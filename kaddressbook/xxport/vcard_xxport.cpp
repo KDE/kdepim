@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "vcard_xxport.h"
+
 #include <QtCore/QFile>
 #include <QtGui/QCheckBox>
 #include <QtGui/QFont>
@@ -30,16 +32,16 @@
 #include <QtGui/QVBoxLayout>
 
 #include <kabc/vcardconverter.h>
+#include <kapplication.h>
 #include <kdialog.h>
 #include <kfiledialog.h>
 #include <kio/netaccess.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <kpushbutton.h>
 #include <ktemporaryfile.h>
 #include <kurl.h>
-#include <kapplication.h>
 #include <libkdepim/addresseeview.h>
-#include <kpushbutton.h>
 
 #include "gpgme++/context.h"
 #include "gpgme++/data.h"
@@ -47,7 +49,6 @@
 #include "qgpgme/dataprovider.h"
 
 #include "xxportmanager.h"
-#include "vcard_xxport.h"
 
 K_EXPORT_KADDRESSBOOK_XXFILTER( kaddrbk_vcard_xxport, VCardXXPort )
 

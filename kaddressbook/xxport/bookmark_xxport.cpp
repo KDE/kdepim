@@ -22,15 +22,15 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "bookmark_xxport.h"
+
 #include <kbookmark.h>
+#include <kbookmarkdombuilder.h>
 #include <kbookmarkmanager.h>
 #include <kbookmarkmenu.h>
-#include <konqbookmarkmenu.h>
-#include <kbookmarkdombuilder.h>
 #include <klocale.h>
+#include <konqbookmarkmenu.h>
 #include <kstandarddirs.h>
-
-#include "bookmark_xxport.h"
 
 K_EXPORT_KADDRESSBOOK_XXFILTER( kaddrbk_bookmark_xxport, BookmarkXXPort )
 

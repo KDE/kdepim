@@ -22,20 +22,19 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "opera_xxport.h"
+
 #include <QtCore/QFile>
 #include <QtCore/QRegExp>
 #include <QtCore/QTextStream>
 
+#include <kdebug.h>
 #include <kfiledialog.h>
 #include <kio/netaccess.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <ktemporaryfile.h>
 #include <kurl.h>
-
-#include <kdebug.h>
-
-#include "opera_xxport.h"
 
 K_EXPORT_KADDRESSBOOK_XXFILTER( kaddrbk_opera_xxport, OperaXXPort )
 
