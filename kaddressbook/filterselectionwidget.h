@@ -24,8 +24,8 @@
 #ifndef FILTERSELECTIONWIDGET_H
 #define FILTERSELECTIONWIDGET_H
 
-
 #include <khbox.h>
+
 class KComboBox;
 
 /**

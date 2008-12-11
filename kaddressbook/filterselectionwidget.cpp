@@ -21,14 +21,14 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "filterselectionwidget.h"
+
 #include <QtGui/QLabel>
 
 #include <kcombobox.h>
 #include <kdialog.h>
 #include <klocale.h>
 #include <kvbox.h>
-
-#include "filterselectionwidget.h"
 
 FilterSelectionWidget::FilterSelectionWidget( QWidget *parent )
   : KHBox( parent )

@@ -21,16 +21,16 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "freebusywidget.h"
+
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QLabel>
 
+#include <kcal/freebusyurlstore.h>
 #include <kdialog.h>
 #include <klocale.h>
 #include <kstandarddirs.h>
-
-#include <kcal/freebusyurlstore.h>
-
-#include "freebusywidget.h"
+#include <kurlrequester.h>
 
 FreeBusyWidget::FreeBusyWidget( KABC::AddressBook *ab, QWidget *parent )
   : KAB::ContactEditorWidget( ab, parent )

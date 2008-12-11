@@ -24,6 +24,10 @@
 #ifndef FILTEREDITDIALOG_H
 #define FILTEREDITDIALOG_H
 
+#include <kdialog.h>
+
+#include "filter.h"
+
 class QButtonGroup;
 class QString;
 class QWidget;
@@ -34,10 +38,6 @@ class KListWidget;
 namespace KPIM {
 class CategorySelectWidget;
 }
-
-#include <kdialog.h>
-
-#include "filter.h"
 
 class FilterDialog : public KDialog
 {

@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "filtereditdialog.h"
+
 #include <QtCore/QString>
 #include <QtGui/QBoxLayout>
 #include <QtGui/QButtonGroup>
@@ -34,16 +36,15 @@
 
 #include <kapplication.h>
 #include <kdebug.h>
-#include <KDialogButtonBox>
+#include <kdialogbuttonbox.h>
 #include <kiconloader.h>
 #include <klineedit.h>
-#include <KListWidget>
+#include <klistwidget.h>
 #include <klocale.h>
 #include <ktoolinvocation.h>
 #include <libkdepim/categoryselectdialog.h>
 
 #include "kabprefs.h"
-#include "filtereditdialog.h"
 
 FilterEditDialog::FilterEditDialog( QWidget *parent )
   : KDialog( parent)

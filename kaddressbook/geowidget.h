@@ -28,23 +28,18 @@
 
 #include "contacteditorwidget.h"
 
-#include <QtGui/QLabel>
-#include <QtGui/QMouseEvent>
-#include <QtGui/QPaintEvent>
-
-namespace KABC {
-class Geo;
-}
+namespace KABC { class Geo; }
 
 class GeoMapWidget;
 
-class KComboBox;
-class QDoubleSpinBox;
-
 class QCheckBox;
-class QLabel;
-class QSpinBox;
+class QDoubleSpinBox;
+class QMouseEvent;
+class QPaintEvent;
 class QPushButton;
+class QSpinBox;
+
+class KComboBox;
 
 typedef struct {
   double latitude;

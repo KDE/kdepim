@@ -24,9 +24,9 @@
 #ifndef FREEBUSYWIDGET_H
 #define FREEBUSYWIDGET_H
 
-#include <kurlrequester.h>
-
 #include "contacteditorwidget.h"
+
+class KUrlRequester;
 
 class FreeBusyWidget : public KAB::ContactEditorWidget
 {

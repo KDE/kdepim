@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "geowidget.h"
+
 #include <QtCore/QFile>
 #include <QtCore/QRegExp>
 #include <QtCore/QString>
@@ -28,6 +30,7 @@
 #include <QtGui/QGridLayout>
 #include <QtGui/QGroupBox>
 #include <QtGui/QLabel>
+#include <QtGui/QMouseEvent>
 #include <QtGui/QPainter>
 #include <QtGui/QPixmap>
 #include <QtGui/QPushButton>
@@ -40,8 +43,6 @@
 #include <klocale.h>
 #include <knuminput.h>
 #include <kstandarddirs.h>
-
-#include "geowidget.h"
 
 GeoWidget::GeoWidget( KABC::AddressBook *ab, QWidget *parent )
   : KAB::ContactEditorWidget( ab, parent ), mReadOnly( false )
