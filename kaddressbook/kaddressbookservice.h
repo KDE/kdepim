@@ -25,7 +25,8 @@
 #define KADDRESSBOOKSERVICE_H
 
 #include <QtCore/QObject>
-#include <kurl.h>
+
+class KUrl;
 
 namespace KAB {
 class Core;

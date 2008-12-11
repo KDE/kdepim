@@ -26,15 +26,15 @@
 
 #define KAB_VIEW_PLUGIN_VERSION 1
 
-#include "kaddressbook_export.h"
-#include "filter.h"
-#include "viewconfigurewidget.h"
-#include <kabc/field.h>
-#include <KPluginFactory>
-
 #include <QtCore/QStringList>
-#include <QtGui/QDropEvent>
 #include <QtGui/QWidget>
+
+#include <kabc/field.h>
+#include <kpluginfactory.h>
+
+#include "filter.h"
+#include "kaddressbook_export.h"
+#include "viewconfigurewidget.h"
 
 class KConfigGroup;
 

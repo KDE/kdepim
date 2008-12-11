@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "keywidget.h"
+
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 #include <QtGui/QGridLayout>
@@ -36,8 +38,6 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <ktemporaryfile.h>
-
-#include "keywidget.h"
 
 KeyWidget::KeyWidget( QWidget *parent, const char *name )
   : QWidget( parent )

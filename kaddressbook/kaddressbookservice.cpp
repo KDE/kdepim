@@ -21,9 +21,9 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include "core.h"
-
 #include "kaddressbookservice.h"
+
+#include "core.h"
 #include "serviceadaptor.h"
 
 KAddressBookService::KAddressBookService( KAB::Core *core )

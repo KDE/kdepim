@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "kaddressbook_part.h"
+
 #include <QtGui/QVBoxLayout>
 
 #include <kaction.h>
@@ -35,8 +37,6 @@
 #include "kabcore.h"
 #include "kabprefs.h"
 #include "kaddressbookpartadaptor.h"
-
-#include "kaddressbook_part.h"
 
 static const KAboutData &createAboutData()
 {

@@ -21,23 +21,22 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "kaddressbookmain.h"
+
+#include <kaction.h>
+#include <kactioncollection.h>
 #include <kedittoolbar.h>
-#include <kshortcutsdialog.h>
 #include <kglobal.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <kstatusbar.h>
+#include <kshortcutsdialog.h>
 #include <kstandardaction.h>
-#include <kactioncollection.h>
-
+#include <kstatusbar.h>
 #include <libkdepim/statusbarprogresswidget.h>
 #include <libkdepim/progressdialog.h>
 
-#include "kaddressbookadaptor.h"
-
 #include "kabcore.h"
-
-#include "kaddressbookmain.h"
+#include "kaddressbookadaptor.h"
 
 KAddressBookMain::KAddressBookMain( const QString &file )
   : KXmlGuiWindow( 0 )

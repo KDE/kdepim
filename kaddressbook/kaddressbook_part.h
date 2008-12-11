@@ -24,7 +24,6 @@
 #define KADDRESSBOOK_PART_H
 
 #include <kparts/event.h>
-#include <kparts/factory.h>
 #include <kparts/part.h>
 
 class KABCore;

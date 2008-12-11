@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "kabtools.h"
+
 #include <QtCore/QFile>
 
 #include <kabc/addressbook.h>
@@ -29,8 +31,6 @@
 #include <kdebug.h>
 #include <ktempdir.h>
 #include <ktoolinvocation.h>
-
-#include "kabtools.h"
 
 static QString uniqueFileName( const KABC::Addressee &addressee, QStringList &existingFiles )
 {

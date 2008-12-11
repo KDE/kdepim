@@ -25,11 +25,12 @@
 #define KEYWIDGET_H
 
 #include <QtGui/QWidget>
+
 #include <kabc/key.h>
 
-class KComboBox;
-
 class QPushButton;
+
+class KComboBox;
 
 class KeyWidget : public QWidget
 {

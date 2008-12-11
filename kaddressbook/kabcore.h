@@ -24,14 +24,15 @@
 #ifndef KABCORE_H
 #define KABCORE_H
 
-#include "core.h"
-#include <kabc/field.h>
-#include <kabc/distributionlist.h>
-
 #include <QtCore/QHash>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QLabel>
 #include <QtGui/QWidget>
+
+#include <kabc/field.h>
+#include <kabc/distributionlist.h>
+
+#include "core.h"
 
 namespace KABC {
 class AddressBook;

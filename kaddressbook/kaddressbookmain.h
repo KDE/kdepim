@@ -24,11 +24,8 @@
 #ifndef KADDRESSBOOKMAIN_H
 #define KADDRESSBOOKMAIN_H
 
-
-#include <kaction.h>
-#include <kapplication.h>
-#include <kxmlguiwindow.h>
 #include <kurl.h>
+#include <kxmlguiwindow.h>
 
 class KABCore;
 

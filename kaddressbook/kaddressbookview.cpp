@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "kaddressbookview.h"
+
 #include <QtGui/QMenu>
 #include <QtGui/QVBoxLayout>
 
@@ -30,13 +32,11 @@
 #include <kconfiggroup.h>
 #include <kdebug.h>
 #include <klocale.h>
-#include <kxmlguifactory.h>
 #include <kxmlguiclient.h>
+#include <kxmlguifactory.h>
 
 #include "core.h"
 #include "searchmanager.h"
-
-#include "kaddressbookview.h"
 
 KAddressBookView::KAddressBookView( KAB::Core *core, QWidget *parent )
     : QWidget( parent ), mCore( core ), mFieldList()

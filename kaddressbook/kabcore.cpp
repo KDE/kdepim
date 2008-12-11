@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "kabcore.h"
+
 #include <QtCore/QList>
 #include <QtCore/QRegExp>
 #include <QtGui/QClipboard>
@@ -34,16 +36,13 @@
 #include <kabc/addresseelist.h>
 #include <kabc/errorhandler.h>
 #include <kabc/resource.h>
+#include <kabc/resourceabc.h>
 #include <kabc/stdaddressbook.h>
 #include <kabc/vcardconverter.h>
-#include <kabc/resourceabc.h>
 #include <kaboutdata.h>
 #include <kacceleratormanager.h>
+#include <kactioncollection.h>
 #include <kapplication.h>
-
-#include <KActionCollection>
-#include <KRandom>
-#include <KToolInvocation>
 #include <kcmdlineargs.h>
 #include <kcmultidialog.h>
 #include <kdebug.h>
@@ -52,15 +51,17 @@
 #include <kmessagebox.h>
 #include <kprotocolinfo.h>
 #include <kpushbutton.h>
+#include <krandom.h>
 #include <kresources/selectdialog.h>
-#include <kstandarddirs.h>
-#include <kstatusbar.h>
 #include <kstandardaction.h>
-#include <KStandardGuiItem>
-#include <KToggleAction>
+#include <kstandarddirs.h>
+#include <kstandardguiitem.h>
+#include <kstatusbar.h>
+#include <ktoggleaction.h>
+#include <ktoolbar.h>
+#include <ktoolinvocation.h>
 #include <kundostack.h>
 #include <kxmlguiclient.h>
-#include <ktoolbar.h>
 #include <libkdepim/addresseeview.h>
 #include <libkdepim/distributionlist.h>
 #include <libkdepim/distributionlistconverter.h>
@@ -87,7 +88,6 @@
 #include "viewmanager.h"
 #include "xxportmanager.h"
 
-#include "kabcore.h"
 #include "kaddressbookcore_interface.h"
 
 KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,

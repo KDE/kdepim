@@ -24,9 +24,11 @@
 #ifndef KABTOOLS_H
 #define KABTOOLS_H
 
-namespace KABC {
-class AddressBook;
-}
+#include <kabc/addressee.h>
+
+class QStringList;
+
+namespace KABC { class AddressBook; }
 
 class KABTools
 {

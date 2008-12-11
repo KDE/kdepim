@@ -21,12 +21,12 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "kablock.h"
+
 #include <kabc/addressbook.h>
 #include <kabc/resource.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-
-#include "kablock.h"
 
 class KABLockHelper {
   public:

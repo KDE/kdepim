@@ -24,6 +24,8 @@
 #ifndef KABLOCK_H
 #define KABLOCK_H
 
+#include <QtCore/QMap>
+
 namespace KABC {
 class AddressBook;
 class Resource;
@@ -32,7 +34,7 @@ class Ticket;
 
 typedef struct {
   KABC::Ticket *ticket;
-  uint counter;
+  unsigned int counter;
 } LockEntry;
 
 class KABLock
