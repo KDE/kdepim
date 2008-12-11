@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "cardview.h"
+
 #include <limits.h>
 
 #include <Qt3Support/Q3PtrList>
@@ -41,8 +43,6 @@
 
 #include <kdebug.h>
 #include <kglobalsettings.h>
-
-#include "cardview.h"
 
 #define MIN_ITEM_WIDTH 80
 

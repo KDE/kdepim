@@ -24,9 +24,9 @@
 #ifndef CONFIGURECARDVIEWDIALOG_H
 #define CONFIGURECARDVIEWDIALOG_H
 
-#include "viewconfigurewidget.h"
-
 #include <kvbox.h>
+
+#include "viewconfigurewidget.h"
 
 class QCheckBox;
 class QFont;

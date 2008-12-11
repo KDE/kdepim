@@ -24,11 +24,11 @@
 #ifndef KADDRESSBOOKTABLEVIEW_H
 #define KADDRESSBOOKTABLEVIEW_H
 
-#include <Qt3Support/Q3ListView>
-#include <Qt3Support/Q3TabDialog>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
 #include <QtGui/QWidget>
+#include <Qt3Support/Q3ListView>
+#include <Qt3Support/Q3TabDialog>
 
 #include "kaddressbookview.h"
 
@@ -36,6 +36,7 @@ class Q3ListViewItem;
 class QVBoxLayout;
 class KConfig;
 class KIMProxy;
+class K3ListView;
 
 class ContactListView;
 

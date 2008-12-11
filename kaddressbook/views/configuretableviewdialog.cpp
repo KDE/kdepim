@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "configuretableviewdialog.h"
+
 #include <QtCore/QString>
 #include <QtGui/QCheckBox>
 #include <QtGui/QGroupBox>
@@ -36,8 +38,6 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kurlrequester.h>
-
-#include "configuretableviewdialog.h"
 
 ConfigureTableViewWidget::ConfigureTableViewWidget( KABC::AddressBook *ab,
                                                     QWidget *parent )

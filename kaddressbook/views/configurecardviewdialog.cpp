@@ -21,7 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <Qt3Support/Q3GroupBox>
+#include "configurecardviewdialog.h"
+
 #include <QtCore/QString>
 #include <QtGui/QCheckBox>
 #include <QtGui/QFrame>
@@ -29,8 +30,9 @@
 #include <QtGui/QLabel>
 #include <QtGui/QSpinBox>
 #include <QtGui/QTabWidget>
+#include <Qt3Support/Q3GroupBox>
 
-#include <KColorScheme>
+#include <kcolorscheme.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kfontdialog.h>
@@ -41,8 +43,6 @@
 #include <kvbox.h>
 
 #include <libkdepim/colorlistbox.h>
-
-#include "configurecardviewdialog.h"
 
 /////////////////////////////////
 // ConfigureCardViewDialog

@@ -28,9 +28,9 @@
 
 #include <QtCore/QList>
 #include <QtCore/QString>
+#include <Qt3Support/Q3ValueList>
 
 #include <k3iconview.h>
-#include <Qt3Support/Q3ValueList>
 
 class QDropEvent;
 class Q3IconViewItem;

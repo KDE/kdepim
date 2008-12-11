@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "contactlistview.h"
+
 #include <Qt3Support/Q3Header>
 #include <QtGui/QBrush>
 #include <QtGui/QDropEvent>
@@ -40,8 +42,6 @@
 #include <kurl.h>
 
 #include "kaddressbooktableview.h"
-
-#include "contactlistview.h"
 
 /////////////////////////////////
 // DynamicTip Methods

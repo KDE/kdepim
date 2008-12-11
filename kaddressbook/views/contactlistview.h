@@ -37,6 +37,8 @@ class KAddressBookTableView;
 class ContactListView;
 class KIMProxy;
 
+namespace KABC { class AddressBook; }
+
 /** The whole tooltip design needs a lot of work. Currently it is
 * hacked together to function.
 */

@@ -21,7 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <Qt3Support/Q3IconView>
+#include "kaddressbookiconview.h"
+
 #include <QtCore/QEvent>
 #include <QtCore/QStringList>
 #include <QtGui/QApplication>
@@ -29,6 +30,7 @@
 #include <QtGui/QKeyEvent>
 #include <QtGui/QPixmap>
 #include <QtGui/QVBoxLayout>
+#include <Qt3Support/Q3IconView>
 
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
@@ -40,8 +42,6 @@
 
 #include "core.h"
 #include "kabprefs.h"
-
-#include "kaddressbookiconview.h"
 
 class IconViewFactory : public ViewFactory
 {

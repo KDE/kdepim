@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "kaddressbookcardview.h"
+
 #include <QtCore/QEvent>
 #include <QtCore/QStringList>
 #include <QtGui/QApplication>
@@ -39,8 +41,6 @@
 #include "core.h"
 #include "configurecardviewdialog.h"
 #include "kabprefs.h"
-
-#include "kaddressbookcardview.h"
 
 class CardViewFactory : public ViewFactory
 {

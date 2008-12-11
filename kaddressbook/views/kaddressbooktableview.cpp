@@ -21,16 +21,18 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <Qt3Support/Q3Header>
-#include <Qt3Support/Q3ListBox>
-#include <Qt3Support/Q3Url>
-#include <Qt3Support/Q3VBox>
+#include "kaddressbooktableview.h"
+
 #include <QtCore/QEvent>
 #include <QtGui/QApplication>
 #include <QtGui/QDropEvent>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QWidget>
+#include <Qt3Support/Q3Header>
+#include <Qt3Support/Q3ListBox>
+#include <Qt3Support/Q3Url>
+#include <Qt3Support/Q3VBox>
 
 #include <kabc/addressbook.h>
 #include <kapplication.h>
@@ -52,8 +54,6 @@
 #include "core.h"
 #include "kabprefs.h"
 #include "undocmds.h"
-
-#include "kaddressbooktableview.h"
 
 class TableViewFactory : public ViewFactory
 {
