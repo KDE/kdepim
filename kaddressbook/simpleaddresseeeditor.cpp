@@ -21,14 +21,14 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "simpleaddresseeeditor.h"
+
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>
 
 #include <kdialog.h>
 #include <klineedit.h>
 #include <klocale.h>
-
-#include "simpleaddresseeeditor.h"
 
 SimpleAddresseeEditor::SimpleAddresseeEditor( QWidget *parent )
   : AddresseeEditorBase( parent ),

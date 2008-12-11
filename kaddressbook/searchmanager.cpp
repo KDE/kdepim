@@ -21,9 +21,9 @@
     without including the source code for Qt in the source distribution.
 */
 
-#include <kabc/addresseelist.h>
-
 #include "searchmanager.h"
+
+#include <kabc/addresseelist.h>
 
 using namespace KAB;
 

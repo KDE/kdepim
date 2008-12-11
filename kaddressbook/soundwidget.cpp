@@ -21,6 +21,14 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "soundwidget.h"
+
+#include <QtCore/QBuffer>
+#include <QtGui/QCheckBox>
+#include <QtGui/QGridLayout>
+#include <QtGui/QLabel>
+#include <QtGui/QPushButton>
+
 #include <kabc/sound.h>
 #include <kdebug.h>
 #include <kdialog.h>
@@ -29,15 +37,7 @@
 #include <klocale.h>
 #include <ktemporaryfile.h>
 #include <kurlrequester.h>
-#include <Phonon/MediaObject>
-
-#include <QtCore/QBuffer>
-#include <QtGui/QCheckBox>
-#include <QtGui/QGridLayout>
-#include <QtGui/QLabel>
-#include <QtGui/QPushButton>
-
-#include "soundwidget.h"
+#include <phonon/mediaobject.h>
 
 SoundWidget::SoundWidget( KABC::AddressBook *ab, QWidget *parent )
   : KAB::ContactEditorWidget( ab, parent ), mReadOnly( false )

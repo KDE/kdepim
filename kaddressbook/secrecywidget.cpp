@@ -21,13 +21,13 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "secrecywidget.h"
+
 #include <QtGui/QVBoxLayout>
 
 #include <kabc/secrecy.h>
 #include <kcombobox.h>
 #include <kdialog.h>
-
-#include "secrecywidget.h"
 
 SecrecyWidget::SecrecyWidget( QWidget *parent, const char *name )
   : QWidget( parent )
