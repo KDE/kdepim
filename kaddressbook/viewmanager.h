@@ -28,14 +28,17 @@
 #include <QtGui/QDropEvent>
 #include <QtGui/QWidget>
 
-#include <kaddressbookview.h>
+#include <filter.h>
+#include <kabc/field.h>
 
 class QDropEvent;
-class QStackedWidget ;
+class QStackedWidget;
 
+class KAddressBookView;
 class KSelectAction;
 
 class FilterSelectionWidget;
+class ViewFactory;
 
 namespace KAB { class Core; }
 namespace KABC { class AddressBook; }

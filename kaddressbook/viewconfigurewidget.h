@@ -24,13 +24,12 @@
 #ifndef VIEWCONFIGUREWIDGET_H
 #define VIEWCONFIGUREWIDGET_H
 
-#include "kaddressbook_export.h"
-#include "configurewidget.h"
+#include <QtGui/QPixmap>
 
 #include <kdialog.h>
-#include <kvbox.h>
 
-#include <QtGui/QPixmap>
+#include "configurewidget.h"
+#include "kaddressbook_export.h"
 
 class KPageWidget;
 

@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "viewmanager.h"
+
 #include <QtCore/QFile>
 #include <QtGui/QDropEvent>
 #include <QtGui/QHBoxLayout>
@@ -29,6 +31,7 @@
 #include <kabc/addressbook.h>
 #include <kabc/vcardconverter.h>
 #include <kactioncollection.h>
+#include <kaddressbookview.h>
 #include <kconfig.h>
 #include <kconfiggroup.h>
 #include <kdebug.h>
@@ -41,14 +44,12 @@
 #include <ktempdir.h>
 #include <libkdepim/kvcarddrag.h>
 
-#include "addviewdialog.h"
 #include "addresseeutil.h"
+#include "addviewdialog.h"
 #include "core.h"
 #include "filtereditdialog.h"
 #include "filterselectionwidget.h"
 #include "kabprefs.h"
-
-#include "viewmanager.h"
 
 // TODO FIXME this is a big hack to support i18n for the default view, a better proper method is welcome
 #define DEFAULT_VIEW_NAME "Default Table View"

@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "viewconfigurewidget.h"
+
 #include <QtGui/QPixmap>
 #include <QtGui/QVBoxLayout>
 
@@ -36,8 +38,6 @@
 #include "viewconfigurefieldspage.h"
 #include "viewconfigurefilterpage.h"
 #include "viewmanager.h"
-
-#include "viewconfigurewidget.h"
 
 ViewConfigureWidget::ViewConfigureWidget( KABC::AddressBook *ab, QWidget *parent )
   : KAB::ConfigureWidget( ab, parent )

@@ -38,6 +38,7 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kurlrequester.h>
+#include <kvbox.h>
 
 ConfigureTableViewWidget::ConfigureTableViewWidget( KABC::AddressBook *ab,
                                                     QWidget *parent )

@@ -30,6 +30,7 @@ class QButtonGroup;
 
 class KComboBox;
 class KConfig;
+class KConfigGroup;
 
 class ViewConfigureFilterPage : public QWidget
 {

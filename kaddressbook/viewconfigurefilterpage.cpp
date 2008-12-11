@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "viewconfigurefilterpage.h"
+
 #include <QtGui/QBoxLayout>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QHBoxLayout>
@@ -33,7 +35,6 @@
 #include <kdialog.h>
 #include <klocale.h>
 
-#include "viewconfigurefilterpage.h"
 #include "filter.h"
 
 ViewConfigureFilterPage::ViewConfigureFilterPage( QWidget *parent,

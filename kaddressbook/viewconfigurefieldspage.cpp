@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "viewconfigurefieldspage.h"
+
 #include <QtGui/QApplication>
 #include <QtGui/QBoxLayout>
 #include <QtGui/QGridLayout>
@@ -34,8 +36,6 @@
 #include <kdialog.h>
 #include <kiconloader.h>
 #include <klocale.h>
-
-#include "viewconfigurefieldspage.h"
 
 class FieldItem : public QListWidgetItem
 {
