@@ -22,6 +22,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "addresseditwidget.h"
+
 #include <QtCore/QEvent>
 #include <QtCore/QList>
 #include <QtGui/QApplication>
@@ -36,16 +38,16 @@
 #include <QtGui/QPushButton>
 #include <QtGui/QTextEdit>
 
-#include <KAcceleratorManager>
-#include <KComboBox>
-#include <KDebug>
-#include <KHBox>
-#include <KInputDialog>
-#include <KLineEdit>
-#include <KLocale>
-#include <KSeparator>
+#include <kacceleratormanager.h>
+#include <kcombobox.h>
+#include <kdebug.h>
+#include <khbox.h>
+#include <kinputdialog.h>
+#include <klineedit.h>
+#include <klocale.h>
+#include <kseparator.h>
 
-#include "addresseditwidget.h"
+#include "addresseeconfig.h"
 
 class TabPressEater : public QObject
 {

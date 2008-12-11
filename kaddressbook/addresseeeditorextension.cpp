@@ -21,16 +21,15 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "addresseeeditorextension.h"
+
 #include <QtGui/QVBoxLayout>
 
 #include <klocale.h>
 
-#include "kabprefs.h"
-
 #include "addresseeeditorwidget.h"
+#include "kabprefs.h"
 #include "simpleaddresseeeditor.h"
-
-#include "addresseeeditorextension.h"
 
 AddresseeEditorExtension::AddresseeEditorExtension( KAB::Core *core, QWidget *parent )
   : KAB::ExtensionWidget( core, parent )

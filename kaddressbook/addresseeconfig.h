@@ -24,9 +24,9 @@
 #ifndef ADDRESSEECONFIG_H
 #define ADDRESSEECONFIG_H
 
-#include <kabc/addressee.h>
-#include <kconfig.h>
 #include <QtCore/QList>
+
+#include <kabc/addressee.h>
 
 using namespace KABC;
 

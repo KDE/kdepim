@@ -26,12 +26,10 @@
 
 #include <QtGui/QWidget>
 
-#include <KDialog>
-
 #include <kabc/address.h>
 #include <kabc/addressee.h>
+#include <kdialog.h>
 
-#include "addresseeconfig.h"
 #include "typecombo.h"
 
 class QButtonGroup;

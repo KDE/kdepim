@@ -25,6 +25,7 @@
 #define ADDRESSEEUTIL_H
 
 #include <QtCore/QString>
+
 #include <kabc/addressee.h>
 
 /**

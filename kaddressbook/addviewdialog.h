@@ -26,7 +26,7 @@
 
 #include <QtCore/QHash>
 
-#include <KDialog>
+#include <kdialog.h>
 
 class QButtonGroup;
 class QLineEdit;

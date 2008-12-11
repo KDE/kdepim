@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "addresseeeditorwidget.h"
+
 #include <QtGui/QCheckBox>
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>
@@ -44,12 +46,12 @@
 #include <kseparator.h>
 #include <ksqueezedtextlabel.h>
 #include <kstandarddirs.h>
+#include <kvbox.h>
 
 #include <libkdepim/addresseelineedit.h>
 #include <libkdepim/categoryeditdialog.h>
 #include <libkdepim/categoryselectdialog.h>
 #include <libkdepim/kdateedit.h>
-#include <kvbox.h>
 
 #include "addresseditwidget.h"
 #include "advancedcustomfields.h"
@@ -60,8 +62,6 @@
 #include "nameeditdialog.h"
 #include "phoneeditwidget.h"
 #include "secrecywidget.h"
-
-#include "addresseeeditorwidget.h"
 
 AddresseeEditorWidget::AddresseeEditorWidget( QWidget *parent )
   : AddresseeEditorBase( parent ),

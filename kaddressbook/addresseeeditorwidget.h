@@ -25,6 +25,7 @@
 #define ADDRESSEEEDITORWIDGET_H
 
 #include <QtCore/QHash>
+
 #include <kabc/addressee.h>
 #include <kdialog.h>
 

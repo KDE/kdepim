@@ -21,13 +21,13 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "addresseeutil.h"
+
 #include <kabc/stdaddressbook.h>
 #include <kabc/vcardconverter.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-
-#include "addresseeutil.h"
 
 QByteArray AddresseeUtil::addresseesToClipboard( const KABC::Addressee::List &list )
 {

@@ -24,9 +24,9 @@
 #ifndef ADDRESSEEEDITORBASE_H
 #define ADDRESSEEEDITORBASE_H
 
-#include <kabc/addressee.h>
-
 #include <QtGui/QWidget>
+
+namespace KABC { class Addressee; }
 
 class AddresseeEditorBase : public QWidget
 {

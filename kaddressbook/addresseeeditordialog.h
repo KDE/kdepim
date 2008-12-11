@@ -24,9 +24,8 @@
 #ifndef ADDRESSEEEDITORDIALOG_H
 #define ADDRESSEEEDITORDIALOG_H
 
+#include <kabc/addressee.h>
 #include <kdialog.h>
-
-#include <kabc/addressbook.h>
 
 class AddresseeEditorBase;
 class QWidget;

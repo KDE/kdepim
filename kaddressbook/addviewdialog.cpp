@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "addviewdialog.h"
+
 #include <QtGui/QButtonGroup>
 #include <QtGui/QGridLayout>
 #include <QtGui/QGroupBox>
@@ -31,8 +33,6 @@
 #include <KLocale>
 
 #include "kaddressbookview.h"
-
-#include "addviewdialog.h"
 
 AddViewDialog::AddViewDialog( QHash<QString, ViewFactory*> *viewFactoryDict,
                               QWidget *parent )

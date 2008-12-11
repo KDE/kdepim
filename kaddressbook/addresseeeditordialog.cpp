@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "addresseeeditordialog.h"
+
 #include <QtGui/QApplication>
 #include <QtGui/QFrame>
 #include <QtGui/QVBoxLayout>
@@ -28,12 +30,10 @@
 #include <kdebug.h>
 #include <klocale.h>
 
-#include "core.h"
 #include "addresseeeditorwidget.h"
-#include "simpleaddresseeeditor.h"
+#include "core.h"
 #include "kabprefs.h"
-
-#include "addresseeeditordialog.h"
+#include "simpleaddresseeeditor.h"
 
 AddresseeEditorDialog::AddresseeEditorDialog( KAB::Core*, QWidget *parent )
   : KDialog( parent )

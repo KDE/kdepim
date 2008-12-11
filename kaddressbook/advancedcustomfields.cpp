@@ -23,6 +23,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "advancedcustomfields.h"
+
 #include <QtCore/QRegExp>
 #include <QtGui/QCheckBox>
 #include <QtGui/QVBoxLayout>
@@ -32,12 +34,9 @@
 #include <kdialog.h>
 #include <klineedit.h>
 #include <kstandarddirs.h>
-
 #include <libkdepim/designerfields.h>
 
 #include "customfieldswidget.h"
-
-#include "advancedcustomfields.h"
 
 class KABCStorage : public KPIM::DesignerFields::Storage
 {

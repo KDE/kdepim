@@ -26,9 +26,6 @@
 #ifndef ADVANCEDCUSTOMFIELDS_H
 #define ADVANCEDCUSTOMFIELDS_H
 
-#include <klocale.h>
-
-
 #include <libkdepim/designerfields.h>
 
 #include "contacteditorwidget.h"
