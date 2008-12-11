@@ -23,16 +23,14 @@
 #ifndef KPIM_DISTRIBUTIONLISTPICKER_H
 #define KPIM_DISTRIBUTIONLISTPICKER_H
 
-#include <kdialog.h>
-
 #include <QtCore/QString>
+
+#include <kdialog.h>
 
 class QLabel;
 class QListWidget;
 
-namespace KABC {
-    class AddressBook;
-}
+namespace KABC { class AddressBook; }
 
 namespace KPIM {
 

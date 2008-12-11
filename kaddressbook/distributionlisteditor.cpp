@@ -23,10 +23,11 @@
 #include "distributionlisteditor.h"
 #include "distributionlisteditor_p.h"
 
-#include <libkdepim/addresseelineedit.h>
-#include <libkdepim/distributionlist.h>
-
-#include <kpimutils/email.h>
+#include <QtCore/QSignalMapper>
+#include <QtGui/QApplication>
+#include <QtGui/QLabel>
+#include <QtGui/QLayout>
+#include <QtGui/QScrollArea>
 
 #include <kabc/addressbook.h>
 #include <kabc/distributionlist.h>
@@ -35,13 +36,11 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
-#include <KRandom>
+#include <kpimutils/email.h>
+#include <krandom.h>
 
-#include <QtCore/QSignalMapper>
-#include <QtGui/QApplication>
-#include <QtGui/QLabel>
-#include <QtGui/QLayout>
-#include <QtGui/QScrollArea>
+#include <libkdepim/addresseelineedit.h>
+#include <libkdepim/distributionlist.h>
 
 class KPIM::DistributionListEditor::EditorWidgetPrivate
 {

@@ -22,15 +22,6 @@
 
 #include "distributionlistpicker.h"
 
-#include <kabc/distributionlist.h>
-
-#include <kabc/addressbook.h>
-#include <kapplication.h>
-#include <kinputdialog.h>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <KRandom>
-
 #include <QtCore/QList>
 #include <QtCore/QRegExp>
 #include <QtGui/QGridLayout>
@@ -39,6 +30,14 @@
 #include <QtGui/QListWidgetItem>
 #include <QtGui/QPushButton>
 #include <QtGui/QRegExpValidator>
+
+#include <kabc/addressbook.h>
+#include <kabc/distributionlist.h>
+#include <kapplication.h>
+#include <kinputdialog.h>
+#include <klocale.h>
+#include <kmessagebox.h>
+#include <krandom.h>
 
 KPIM::DistributionListPickerDialog::DistributionListPickerDialog( KABC::AddressBook* book, QWidget* parent ) : KDialog( parent ), m_book( book )
 {

@@ -25,9 +25,7 @@
 
 #include <KDialog>
 
-namespace KABC {
-    class AddressBook;
-}
+namespace KABC { class AddressBook; }
 
 namespace KPIM {
 

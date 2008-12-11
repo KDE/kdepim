@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "customfieldswidget.h"
+
 #include <QtGui/QCheckBox>
 #include <QtGui/QDateEdit>
 #include <QtGui/QDateTimeEdit>
@@ -42,8 +44,6 @@
 
 #include "addresseeconfig.h"
 #include "kabprefs.h"
-
-#include "customfieldswidget.h"
 
 AddFieldDialog::AddFieldDialog( QWidget *parent )
   : KDialog( parent )

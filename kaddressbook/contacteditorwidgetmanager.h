@@ -24,7 +24,6 @@
 #ifndef CONTACTEDITORWIDGETMANAGER_H
 #define CONTACTEDITORWIDGETMANAGER_H
 
-#include <QtGui/QGridLayout>
 #include <QtGui/QWidget>
 
 #include "contacteditorwidget.h"

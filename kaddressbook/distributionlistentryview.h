@@ -1,11 +1,11 @@
 #ifndef KAB_DISTRIBUTIONLISTENTRYVIEW_H
 #define KAB_DISTRIBUTIONLISTENTRYVIEW_H
 
-#include <kabc/distributionlist.h>
-
 #include <QtCore/QMap>
 #include <QtCore/QString>
 #include <QtGui/QWidget>
+
+#include <kabc/distributionlist.h>
 
 class QBoxLayout;
 class QComboBox;

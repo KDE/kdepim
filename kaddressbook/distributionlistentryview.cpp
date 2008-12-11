@@ -1,15 +1,4 @@
 #include "distributionlistentryview.h"
-#include "imagewidget.h"
-#include <interfaces/core.h>
-
-#include <kabc/addressbook.h>
-#include <kabc/resource.h>
-#include <kabc/resourceabc.h>
-
-#include <kdialog.h>
-#include <kiconloader.h>
-#include <klocale.h>
-#include <kurllabel.h>
 
 #include <QtCore/QStringList>
 #include <QtGui/QButtonGroup>
@@ -21,6 +10,17 @@
 #include <QtGui/QRadioButton>
 #include <QtGui/QVBoxLayout>
 
+#include <interfaces/core.h>
+
+#include <kabc/addressbook.h>
+#include <kabc/resource.h>
+#include <kabc/resourceabc.h>
+#include <kdialog.h>
+#include <kiconloader.h>
+#include <klocale.h>
+#include <kurllabel.h>
+
+#include "imagewidget.h"
 
 KAB::DistributionListEntryView::DistributionListEntryView( KAB::Core* core, QWidget* parent ) : QWidget( parent ), m_core( core ), m_emailGroup( 0 )
 {

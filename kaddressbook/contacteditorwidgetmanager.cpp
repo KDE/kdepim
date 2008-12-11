@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "contacteditorwidgetmanager.h"
+
 #include <QtGui/QFrame>
 #include <QtGui/QGridLayout>
 
@@ -30,14 +32,12 @@
 #include <kservicetypetrader.h>
 
 // include non-plugin contact editor widgets
+#include "contacteditorwidget.h"
 #include "customfieldswidget.h"
 #include "freebusywidget.h"
 #include "geowidget.h"
 #include "imagewidget.h"
 #include "soundwidget.h"
-
-#include "contacteditorwidget.h"
-#include "contacteditorwidgetmanager.h"
 
 ContactEditorWidgetManager *ContactEditorWidgetManager::mSelf = 0;
 

@@ -23,11 +23,10 @@
 #ifndef KPIM_DISTRIBUTIONLISTEDITOR_P_H
 #define KPIM_DISTRIBUTIONLISTEDITOR_P_H
 
+#include <QtCore/QString>
+
 #include <libkdepim/addresseelineedit.h>
 #include <libkdepim/distributionlist.h>
-
-#include <qpushbutton.h>
-#include <qstring.h>
 
 class QToolButton;
 
