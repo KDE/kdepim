@@ -22,20 +22,20 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "undocmds.h"
+
 #include <QtGui/QApplication>
 #include <QtGui/QClipboard>
 
+#include <kabc/resource.h>
 #include <kapplication.h>
 #include <klocale.h>
 #include <krandom.h>
-#include <kabc/resource.h>
 
 #include "addresseeconfig.h"
 #include "addresseeutil.h"
 #include "core.h"
 #include "kablock.h"
-
-#include "undocmds.h"
 
 DeleteCommand::DeleteCommand( KABC::AddressBook *addressBook,
                               const QStringList &uidList)

@@ -22,8 +22,8 @@
     without including the source code for Qt in the source distribution.
 */
 
-#ifndef COMMANDS_H
-#define COMMANDS_H
+#ifndef UNDOCMDS_H
+#define UNDOCMDS_H
 
 // Commands for undo/redo functionality.
 
@@ -37,9 +37,7 @@
 
 #include "kablock.h"
 
-namespace KAB {
-class Core;
-}
+namespace KAB { class Core; }
 
 class Command : public QUndoCommand
 {
@@ -145,4 +143,4 @@ class EditCommand : public Command
     KABC::Addressee mNewAddressee;
 };
 
-#endif
+#endif // UNDOCMDS

@@ -26,6 +26,7 @@
 
 #include <kabc/phonenumber.h>
 #include <kcombobox.h>
+#include <klocalizedstring.h>
 
 /**
   Combo box for type information of Addresses and Phone numbers.
