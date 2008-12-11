@@ -195,8 +195,10 @@ QString decodeRFC2047String(const QCString &src, const char **usedCS,
           {
             str = KCodecs::base64Decode(str);
           }
-          for (i=0; str[i]; i++) {
-            *dest++ = str[i];
+          if (!str.isNull()) {
+            for (i=0; str[i]; i++) {
+              *dest++ = str[i];
+            }
           }
         }
 
