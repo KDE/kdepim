@@ -24,12 +24,12 @@
 #ifndef XXPORTMANAGER_H
 #define XXPORTMANAGER_H
 
-#include "xxport.h"
-
 #include <QtCore/QHash>
 #include <QtCore/QObject>
 
 #include <kurl.h>
+
+#include "xxport.h"
 
 namespace KAB {
 class Core;

@@ -22,6 +22,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "xxportselectdialog.h"
+
 #include <QtCore/QStringList>
 #include <QtGui/QComboBox>
 #include <QtGui/QGridLayout>
@@ -41,8 +43,6 @@
 
 #include "core.h"
 #include "kabprefs.h"
-
-#include "xxportselectdialog.h"
 
 XXPortSelectDialog::XXPortSelectDialog( KAB::Core *core, bool sort,
                                         QWidget* parent )

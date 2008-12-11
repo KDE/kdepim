@@ -21,21 +21,20 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "xxportmanager.h"
 
 #include <kabc/addressbook.h>
 #include <kabc/resource.h>
+#include <kapplication.h>
 #include <kdebug.h>
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kservicetypetrader.h>
-#include <kapplication.h>
 
 #include "core.h"
 #include "kablock.h"
 #include "undocmds.h"
 #include "xxportselectdialog.h"
-
-#include "xxportmanager.h"
 
 KUrl XXPortManager::importURL = KUrl();
 QString XXPortManager::importData = QString();
