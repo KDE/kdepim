@@ -24,14 +24,15 @@
 #ifndef IMAGEWIDGET_H
 #define IMAGEWIDGET_H
 
-#include <QtGui/QDragEnterEvent>
-#include <QtGui/QDropEvent>
-#include <QtGui/QMouseEvent>
 #include <QtGui/QPushButton>
 
 #include <kabc/picture.h>
 
 #include "contacteditorwidget.h"
+
+class QDragEnterEvent;
+class QDropEvent;
+class QMouseEvent;
 
 /**
   Small helper class

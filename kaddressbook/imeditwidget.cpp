@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "imeditwidget.h"
+
 #include <QtCore/QString>
 #include <QtGui/QCheckBox>
 #include <QtGui/QGridLayout>
@@ -37,7 +39,6 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 
-#include "imeditwidget.h"
 #include "imeditorwidget.h"
 
 IMEditWidget::IMEditWidget( QWidget *parent, KABC::Addressee &addr, const char *name )

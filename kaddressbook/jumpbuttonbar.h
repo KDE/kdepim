@@ -24,8 +24,6 @@
 #ifndef JUMPBUTTONBAR_H
 #define JUMPBUTTONBAR_H
 
-#include <QtCore/QStringList>
-#include <QtGui/QResizeEvent>
 #include <QtGui/QWidget>
 
 class QButtonGroup;

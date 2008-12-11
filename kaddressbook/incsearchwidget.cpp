@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "incsearchwidget.h"
+
 #include <QtCore/QTimer>
 #include <QtGui/QComboBox>
 #include <QtGui/QHBoxLayout>
@@ -31,8 +33,6 @@
 #include <kiconloader.h>
 #include <klineedit.h>
 #include <klocale.h>
-
-#include "incsearchwidget.h"
 
 IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
     : QWidget( parent )

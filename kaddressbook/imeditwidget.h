@@ -24,10 +24,13 @@
 #ifndef IMEDITWIDGET_H
 #define IMEDITWIDGET_H
 
-#include <kabc/addressee.h>
-#include <kdialog.h>
+#include <QtGui/QWidget>
+
+namespace KABC{ class Addressee; }
 
 class QGridLayout;
+class QPushButton;
+
 class KLineEdit;
 
 /**

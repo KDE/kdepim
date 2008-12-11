@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "jumpbuttonbar.h"
+
 #include <QtCore/QList>
 #include <QtCore/QString>
 #include <QtCore/QTimer>
@@ -40,8 +42,6 @@
 #include <klocale.h>
 
 #include "core.h"
-
-#include "jumpbuttonbar.h"
 
 static bool localAwareLessThan( const QString &left, const QString &right )
 {

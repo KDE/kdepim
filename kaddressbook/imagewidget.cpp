@@ -21,6 +21,15 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "imagewidget.h"
+
+#include <QtGui/QGroupBox>
+#include <QtGui/QImage>
+#include <QtGui/QMenu>
+#include <QtGui/QMouseEvent>
+#include <QtGui/QPixmap>
+#include <QtGui/QVBoxLayout>
+
 #include <kabc/picture.h>
 #include <kdebug.h>
 #include <kdialog.h>
@@ -32,15 +41,6 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <kpixmapregionselectordialog.h>
-
-#include <QtGui/QGroupBox>
-#include <QtGui/QImage>
-#include <QtGui/QMenu>
-#include <QtGui/QMouseEvent>
-#include <QtGui/QPixmap>
-#include <QtGui/QVBoxLayout>
-
-#include "imagewidget.h"
 
 ImageLoader::ImageLoader( QWidget *parent )
   : QObject( 0 ), mParent( parent )
