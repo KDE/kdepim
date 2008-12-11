@@ -34,12 +34,11 @@
 #include <QtGui/QScrollBar>
 #include <QtGui/QVBoxLayout>
 
-#include <KComboBox>
-#include <KDebug>
-#include <KLineEdit>
-#include <KLocale>
-
 #include <kabc/phonenumber.h>
+#include <kcombobox.h>
+#include <kdebug.h>
+#include <klineedit.h>
+#include <klocale.h>
 
 PhoneTypeCombo::PhoneTypeCombo( QWidget *parent )
   : KComboBox( parent ),

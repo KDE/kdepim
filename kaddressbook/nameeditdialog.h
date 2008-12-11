@@ -24,8 +24,8 @@
 #ifndef NAMEEDITDIALOG_H
 #define NAMEEDITDIALOG_H
 
-#include <kdialog.h>
 #include <kabc/addressee.h>
+#include <kdialog.h>
 
 #include "addresseeconfig.h"
 

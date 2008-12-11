@@ -21,6 +21,8 @@
     without including the source code for Qt in the source distribution.
 */
 
+#include "nameeditdialog.h"
+
 #include <QtCore/QString>
 #include <QtGui/QCheckBox>
 #include <QtGui/QGridLayout>
@@ -37,8 +39,6 @@
 #include <klocale.h>
 #include <kmessagebox.h>
 #include <ktoolinvocation.h>
-
-#include "nameeditdialog.h"
 
 NameEditDialog::NameEditDialog( const KABC::Addressee &addr, int type,
                                 bool readOnly, QWidget *parent )

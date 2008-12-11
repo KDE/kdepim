@@ -24,12 +24,12 @@
 #ifndef PHONEEDITWIDGET_H
 #define PHONEEDITWIDGET_H
 
+#include <QtCore/QList>
+
 #include <kcombobox.h>
 #include <kdialog.h>
 
 #include "addresseeconfig.h"
-
-#include <QtCore/QList>
 
 class QButtonGroup;
 class QCheckBox;
