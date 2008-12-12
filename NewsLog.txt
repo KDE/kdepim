@@ -1,3 +1,12 @@
+Friday, December 12th 2008
+
+Problems addressed
+-------------------
+
+* kolab/issue3276 cannot encrypt to marginally trusted OpenPGP key, with email address not in key and key in contact entry ( part fix )
+* kolab/issue3305 Double click on a distribution list in the distribution list editor should open an edit dialog
+* kolab/issue2048 Distribution list: couldn't delete a contact from a dist list with pressing on "delete"
+
 Wednesday, December 3rd 2008
 
 Problems addressed
