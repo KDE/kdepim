@@ -1,3 +1,15 @@
+Friday, December 12th 2008
+
+Problems Addressed
+------------------
+
+* kolab/issue3305 Double click on a distribution list in the distribution list editor should open an edit dialog.
+* kolab/issue3306 "No attendees" behind the title of a new event or task not translated into German.
+* kolab/issue2048 Distribution list: couldn't delete a contact from a dist list with pressing on "delete".
+* kolab/issue3281 Kontact does not quote CNs in iCalendar mails, which Outlook 2003 (OL 2K3) then fails to recognise.
+
+
+
 Monday, October 27th 2008
 
 Problems Addressed
