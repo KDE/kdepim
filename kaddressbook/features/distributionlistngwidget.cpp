@@ -154,6 +154,7 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
              this, SLOT( contactsDropped( const QString &, const KABC::Addressee::List & ) ) );
     connect( mListBox, SIGNAL( highlighted( int ) ),
              this, SLOT( itemSelected( int ) ) );
+    connect( mListBox, SIGNAL(doubleClicked(QListBoxItem*)), SLOT(editSelectedDistributionList()) );
     layout->addWidget( mListBox );
 
     connect( core, SIGNAL( contactsUpdated() ),
