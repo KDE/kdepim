@@ -666,6 +666,10 @@ void KABCore::contactModified( const KABC::Addressee &addr )
 
 void KABCore::newDistributionList()
 {
+  KABC::Resource *resource = requestResource( mWidget );
+  if ( !resource )
+    return;
+
   QString name = i18n( "New Distribution List" );
   const KPIM::DistributionList distList = KPIM::DistributionList::findByName( addressBook(), name );
   if ( !distList.isEmpty() ) {
@@ -679,6 +683,7 @@ void KABCore::newDistributionList()
   KPIM::DistributionList list;
   list.setUid( KRandom::randomString( 10 ) );
   list.setName( name );
+  list.setResource( resource );
   editDistributionList( list );
 }
 
