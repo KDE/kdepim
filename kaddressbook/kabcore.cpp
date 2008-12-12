@@ -669,6 +669,10 @@ void KABCore::contactModified( const KABC::Addressee &addr )
 
 void KABCore::newDistributionList()
 {
+  KABC::Resource *resource = requestResource( mWidget );
+  if ( !resource )
+    return;
+
   QString name = i18n( "New Distribution List" );
   const KABC::DistributionList *distList = addressBook()->findDistributionListByName( name );
   if ( distList ) {
@@ -679,7 +683,7 @@ void KABCore::newDistributionList()
       foundUnused = addressBook()->findDistributionListByName( name ) == 0;
     }
   }
-  KABC::DistributionList *list = mAddressBook->createDistributionList( name );
+  KABC::DistributionList *list = mAddressBook->createDistributionList( name, resource );
   list->setIdentifier( KRandom::randomString( 10 ) );
   editDistributionList( list );
 }

@@ -31,6 +31,8 @@
 
 #include <kabc/addressbook.h>
 #include <kabc/distributionlist.h>
+#include <kabc/resource.h>
+
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <klineedit.h>
@@ -41,6 +43,7 @@
 
 #include <libkdepim/addresseelineedit.h>
 #include <libkdepim/distributionlist.h>
+#include <QPointer>
 
 class KPIM::DistributionListEditor::EditorWidgetPrivate
 {
@@ -55,6 +58,7 @@ public:
     QWidget* memberListWidget;
     QVBoxLayout* addresseeLayout;
     QList<KPIM::DistributionListEditor::Line*> addressees;
+    QPointer<KABC::Resource> resource;
     KPIM::DistributionList distributionList;
     KPIM::DistributionListEditor::Line* addLineForEntry( const KPIM::DistributionList::Entry& entry );
     int lastLineId;
@@ -229,6 +233,7 @@ void KPIM::DistributionListEditor::EditorWidget::setDistributionList( const KPIM
 {
     d->distListUid = list.uid();
     d->nameLineEdit->setText( list.name() );
+    d->resource = list.resource();
 
     using KPIM::DistributionListEditor::Line;
     qDeleteAll( d->addressees );
@@ -270,6 +275,7 @@ void KPIM::DistributionListEditor::EditorWidget::saveList()
     KPIM::DistributionList list;
     list.setUid( d->distListUid.isNull() ? KRandom::randomString( 10 ) :d->distListUid );
     list.setName( name );
+    list.setResource( d->resource );
     foreach ( const KPIM::DistributionListEditor::Line* i, d->addressees )
     {
         const KPIM::DistributionList::Entry entry = i->entry();
