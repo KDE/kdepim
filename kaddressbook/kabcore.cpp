@@ -1559,10 +1559,18 @@ void KABCore::removeSelectedContactsFromDistList()
   const QStringList uids = selectedUIDs();
   if ( uids.isEmpty() )
       return;
-  for ( QStringList::ConstIterator it = uids.constBegin(); it != uids.constEnd(); ++it ) {
-      const KABC::Addressee addressee = addressBook()->findByUid( *it );
-      if ( !addressee.isEmpty() )
-          dist->removeEntry( addressee );
+  for ( QStringList::ConstIterator uidIt = uids.constBegin(); uidIt != uids.constEnd(); ++uidIt ) {
+      const KABC::Addressee addressee = addressBook()->findByUid( *uidIt );
+      if ( !addressee.isEmpty() ) {
+          typedef KABC::DistributionList::Entry::List EntryList;
+          const EntryList entries = dist->entries();
+          for ( EntryList::ConstIterator it = entries.begin(); it != entries.end(); ++it ) {
+              if ( (*it).addressee().uid() == (*uidIt) ) {
+                  dist->removeEntry( (*it).addressee(), (*it).email() );
+                  break;
+              }
+          }
+      }
   }
   setModified();
 }
