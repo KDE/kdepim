@@ -226,7 +226,7 @@ void KABCore::restoreSettings()
   mDetailsSplitter->setSizes( splitterSize );
 
   const QValueList<int> leftSplitterSizes = KABPrefs::instance()->leftSplitter();
-  if ( !leftSplitterSizes.isEmpty() )    
+  if ( !leftSplitterSizes.isEmpty() )
       mLeftSplitter->setSizes( leftSplitterSizes );
 }
 
@@ -236,7 +236,7 @@ void KABCore::saveSettings()
   KABPrefs::instance()->setDetailsPageVisible( mActionDetails->isChecked() );
   KABPrefs::instance()->setDetailsSplitter( mDetailsSplitter->sizes() );
   KABPrefs::instance()->setLeftSplitter( mLeftSplitter->sizes() );
-  
+
   mExtensionManager->saveSettings();
   mViewManager->saveSettings();
 
@@ -330,7 +330,7 @@ void KABCore::setContactSelected( const QString &uid )
   KABC::Addressee addr = mAddressBook->findByUid( uid );
   if ( !mDetailsViewer->isHidden() )
     mDetailsViewer->setAddressee( addr );
-#ifdef KDEPIM_NEW_DISTRLISTS 
+#ifdef KDEPIM_NEW_DISTRLISTS
   if ( !mSelectedDistributionList.isNull() && mDistListEntryView->isShown() ) {
       showDistributionListEntry( uid );
   }
@@ -470,10 +470,10 @@ void KABCore::deleteDistributionLists( const QStringList & names )
 
   QStringList uids;
   for ( QStringList::ConstIterator it = names.begin(); it != names.end(); ++it ) {
-      uids.append( KPIM::DistributionList::findByName( mAddressBook, *it ).uid() ); 
+      uids.append( KPIM::DistributionList::findByName( mAddressBook, *it ).uid() );
   }
   DeleteCommand *command = new DeleteCommand( mAddressBook, uids );
-  mCommandHistory->addCommand( command );  
+  mCommandHistory->addCommand( command );
   setModified( true );
 }
 
@@ -661,19 +661,24 @@ void KABCore::contactModified( const KABC::Addressee &addr )
 void KABCore::newDistributionList()
 {
 #ifdef KDEPIM_NEW_DISTRLISTS
+  KABC::Resource *resource = requestResource( mWidget );
+  if ( !resource )
+    return;
+
   QString name = i18n( "New Distribution List" );
   const KPIM::DistributionList distList = KPIM::DistributionList::findByName( addressBook(), name );
   if ( !distList.isEmpty() ) {
     bool foundUnused = false;
     int i = 1;
     while ( !foundUnused ) {
-      name = i18n( "New Distribution List (%1)" ).arg( i++ );  
+      name = i18n( "New Distribution List (%1)" ).arg( i++ );
       foundUnused = KPIM::DistributionList::findByName( addressBook(), name ).isEmpty();
     }
   }
   KPIM::DistributionList list;
   list.setUid( KApplication::randomString( 10 ) );
   list.setName( name );
+  list.setResource( resource );
   editDistributionList( list );
 #endif
 }
@@ -1158,14 +1163,14 @@ void KABCore::initGUI()
 
   topLayout->addWidget( searchTB );
   topLayout->addWidget( mDetailsSplitter );
-  
+
   mDetailsStack = new QWidgetStack( mDetailsSplitter );
   mExtensionManager = new ExtensionManager( new QWidget( mLeftSplitter ), mDetailsStack, this, this );
-  connect( mExtensionManager, SIGNAL( detailsWidgetDeactivated( QWidget* ) ), 
+  connect( mExtensionManager, SIGNAL( detailsWidgetDeactivated( QWidget* ) ),
            this, SLOT( deactivateDetailsWidget( QWidget* ) ) );
-  connect( mExtensionManager, SIGNAL( detailsWidgetActivated( QWidget* ) ), 
+  connect( mExtensionManager, SIGNAL( detailsWidgetActivated( QWidget* ) ),
            this, SLOT( activateDetailsWidget( QWidget* ) ) );
-  
+
   QWidget *viewWidget = new QWidget( mLeftSplitter );
   if ( KABPrefs::instance()->contactListAboveExtensions() )
     mLeftSplitter->moveToFirst( viewWidget );
@@ -1187,7 +1192,7 @@ void KABCore::initGUI()
 
   KPushButton *addDistListButton = new KPushButton( mDistListButtonWidget );
   addDistListButton->setText( i18n( "Add" ) );
-  connect( addDistListButton, SIGNAL( clicked() ), 
+  connect( addDistListButton, SIGNAL( clicked() ),
            this, SLOT( editSelectedDistributionList() ) );
   buttonLayout->addWidget( addDistListButton );
   mDistListButtonWidget->setShown( false );
@@ -1195,7 +1200,7 @@ void KABCore::initGUI()
 
   KPushButton *removeDistListButton = new KPushButton( mDistListButtonWidget );
   removeDistListButton->setText( i18n( "Remove" ) );
-  connect( removeDistListButton, SIGNAL( clicked() ), 
+  connect( removeDistListButton, SIGNAL( clicked() ),
            this, SLOT( removeSelectedContactsFromDistList() ) );
   buttonLayout->addWidget( removeDistListButton );
 #endif
@@ -1559,12 +1564,12 @@ void KABCore::sendMailToDistributionList( const QString &name )
   KPIM::DistributionList dist = KPIM::DistributionList::findByName( addressBook(), name );
   if ( dist.isEmpty() )
     return;
-  typedef KPIM::DistributionList::Entry::List EntryList; 
+  typedef KPIM::DistributionList::Entry::List EntryList;
   QStringList mails;
   const EntryList entries = dist.entries( addressBook() );
   for ( EntryList::ConstIterator it = entries.begin(); it != entries.end(); ++it )
     mails += (*it).addressee.fullEmail( (*it).email );
-  sendMail( mails.join( ", " ) ); 
+  sendMail( mails.join( ", " ) );
 #endif
 }
 
@@ -1590,8 +1595,8 @@ void KABCore::showDistributionListEntry( const QString& uid )
   KPIM::DistributionList dist = KPIM::DistributionList::findByName( addressBook(), mSelectedDistributionList );
   if ( !dist.isEmpty() ) {
     mDistListEntryView->clear();
-    typedef KPIM::DistributionList::Entry::List EntryList;   
-    const EntryList entries = dist.entries( addressBook() ); 
+    typedef KPIM::DistributionList::Entry::List EntryList;
+    const EntryList entries = dist.entries( addressBook() );
     for (EntryList::ConstIterator it = entries.begin(); it != entries.end(); ++it ) {
       if ( (*it).addressee.uid() == uid ) {
         mDistListEntryView->setEntry( dist, *it );
