@@ -1550,8 +1550,15 @@ void KABCore::removeSelectedContactsFromDistList()
   const QStringList uids = selectedUIDs();
   if ( uids.isEmpty() )
       return;
-  for ( QStringList::ConstIterator it = uids.begin(); it != uids.end(); ++it ) {
-      dist.removeEntry ( *it );
+  for ( QStringList::ConstIterator uidIt = uids.begin(); uidIt != uids.end(); ++uidIt ) {
+    typedef KPIM::DistributionList::Entry::List EntryList;
+    const EntryList entries = dist.entries( addressBook() );
+    for ( EntryList::ConstIterator it = entries.begin(); it != entries.end(); ++it ) {
+      if ( (*it).addressee.uid() == (*uidIt) ) {
+        dist.removeEntry( (*it).addressee, (*it).email );
+        break;
+      }
+    }
   }
   addressBook()->insertAddressee( dist );
   setModified();
