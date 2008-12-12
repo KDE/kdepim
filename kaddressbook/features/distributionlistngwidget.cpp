@@ -153,6 +153,8 @@ KAB::DistributionListNg::MainWidget::MainWidget( KAB::Core *core, QWidget *paren
              this, SLOT( contactsDropped( const QString &, const KABC::Addressee::List & ) ) );
     connect( mListBox, SIGNAL( currentRowChanged( int ) ),
              this, SLOT( itemSelected( int ) ) );
+    connect( mListBox, SIGNAL(itemDoubleClicked(QListWidgetItem*)),
+             SLOT(editSelectedDistributionList()) );
 
 
     connect( core->addressBook(), SIGNAL( addressBookChanged( AddressBook* ) ),
