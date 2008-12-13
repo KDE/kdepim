@@ -12,8 +12,6 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <q3accel.h>
-
 #include <kdialog.h>
 #include <klocale.h>
 
@@ -22,43 +20,35 @@
 #include "settings.h"
 #include "utilities.h"
 
+#include <QShortcut>
+#include <QPalette>
+
 
 KNSourceViewWindow::KNSourceViewWindow( const QString &text )
   : KTextBrowser(0)
 {
   setWindowFlags( Qt::Window );
   setAttribute( Qt::WA_DeleteOnClose );
-  Q3Accel *accel = new Q3Accel( this, "browser close-accel" );
-  accel->connectItem( accel->insertItem( Qt::Key_Escape ), this , SLOT( close() ));
+
+  QShortcut *shortcut = new QShortcut( QKeySequence(Qt::Key_Escape), this );
+  connect( shortcut, SIGNAL(activated()), this, SLOT(close()) );
 
   setAcceptRichText( false );
 
   setWindowTitle(KDialog::makeStandardCaption(i18n("Article Source"), this));
-#ifdef __GNUC__
-#warning "kde4: porting\n";  
-#endif
-  //setPaper( QBrush( knGlobals.settings()->backgroundColor()) );
+
+  QPalette p = palette();
+  p.setColor( QPalette::Text, knGlobals.settings()->textColor() );
+  p.setColor( QPalette::Base, knGlobals.settings()->backgroundColor() );
+  setPalette( p );
+
   setFont( knGlobals.settings()->articleFixedFont() );
-  setTextColor( knGlobals.settings()->textColor() );
-#ifdef __GNUC__
-#warning "kde4: porting\n";  
-#endif
-  //setWordWrap( KTextBrowser::NoWrap );
+  setWordWrapMode( QTextOption::NoWrap );
 
   setPlainText( text );
   KNHelper::restoreWindowSize("sourceWindow", this, QSize(500,300));
   show();
 }
-
-
-void KNSourceViewWindow::setPalette( const QPalette &pal )
-{
-  QPalette p = pal;
-  p.setColor( QPalette::Text, knGlobals.settings()->textColor() );
-  p.setColor( QPalette::Background, knGlobals.settings()->backgroundColor() );
-  KTextBrowser::setPalette( p );
-}
-
 
 KNSourceViewWindow::~KNSourceViewWindow()
 {
