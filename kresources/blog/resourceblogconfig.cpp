@@ -65,7 +65,8 @@ ResourceBlogConfig::ResourceBlogConfig
   mAPI = new KComboBox( false, this );
   //TODO: Nasty, can we change KBlog to use a string we can get access to?
   mAPI->addItem( "Google Blogger Data" );
-  mAPI->addItem( "LiveJournal" );
+  // LiveJournal not currently supported.
+  //mAPI->addItem( "LiveJournal" );
   mAPI->addItem( "Movable Type" );
   mAPI->addItem( "MetaWeblog" );
   mAPI->addItem( "Blogger 1.0" );
