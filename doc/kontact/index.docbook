@@ -131,7 +131,7 @@ them stand-alone.
             </listitem>
     </varlistentry>
     <varlistentry>
-        <term><ulink url="help:akregator">&karm;</ulink></term>
+        <term><ulink url="help:ktimetracker">&ktimetracker;</ulink></term>
         <listitem><para>The &kde; time tracker tool.</para>
             </listitem>
     </varlistentry>
