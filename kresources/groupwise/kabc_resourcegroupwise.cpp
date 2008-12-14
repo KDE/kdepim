@@ -92,7 +92,6 @@ void ResourceGroupwise::initGroupwise()
 {
   mServer = new GroupwiseServer( mPrefs->url(), mPrefs->user(),
                                  mPrefs->password(), KDateTime::Spec::LocalZone(), this );
-
 }
 
 ResourceGroupwise::~ResourceGroupwise()
@@ -178,14 +177,14 @@ void ResourceGroupwise::retrieveAddressBooks()
 {
   bool firstRetrieve = mAddressBooks.isEmpty();
 
-  GroupwiseServer server( prefs()->url(),
-                          prefs()->user(),
-                          prefs()->password(), /*HACK*/ KDateTime::Spec::LocalZone(), this );
+  //GroupwiseServer server( prefs()->url(),
+  //                        prefs()->user(),
+  //                        prefs()->password(), /*HACK*/ KDateTime::Spec::LocalZone(), this );
 
-  if ( server.login() )
+  if ( mServer->login() )
   {
-    mAddressBooks = server.addressBookList();
-    server.logout();
+    mAddressBooks = mServer->addressBookList();
+    mServer->logout();
 
     QStringList reads;
     QString write;
@@ -206,7 +205,7 @@ void ResourceGroupwise::retrieveAddressBooks()
     }
   }
   else
-    emit loadingError( this, server.errorText() );
+    emit loadingError( this, i18nc( "Message displayed while fetching the list of address books", "Error retrieving your address book list from the server: %1", mServer->errorText() ) );
 }
 
 Ticket *ResourceGroupwise::requestSaveTicket()
@@ -396,7 +395,7 @@ void ResourceGroupwise::fetchSABResult( KJob *job )
 
   if ( job->error() ) {
     kError() << job->errorString();
-    emit loadingError( this, job->errorString() );
+    emit loadingError( this, i18nc( "Message displayed on error fetching the Groupwise system address book", "Error while fetching the Groupwise System Address Book: %1", job->errorString() ) );
     // TODO kill the rest of the load sequence as well
   }
 
@@ -420,7 +419,7 @@ void ResourceGroupwise::fetchUABResult( KJob *job )
 
   if ( job->error() ) {
     kError() << job->errorString();
-    emit loadingError( this, job->errorString() );
+    emit loadingError( this, i18nc( "Message displayed on error fetching the Groupwise user address book", "Error while fetching your Groupwise user address book: %1", job->errorString() ) );
     // TODO kill the rest of the load sequence as well
   }
 
@@ -462,8 +461,8 @@ void ResourceGroupwise::updateSystemAddressBook()
            SLOT( updateSABResult( KJob * ) ) );
   connect( mJob, SIGNAL( data( KIO::Job *, const QByteArray & ) ),
            SLOT( slotUpdateJobData( KIO::Job *, const QByteArray & ) ) );
-  connect( mJob, SIGNAL( percent( KIO::Job *, unsigned long ) ),
-           SLOT( slotJobPercent( KIO::Job *, unsigned long ) ) );
+  connect( mJob, SIGNAL( percent( KJob *, unsigned long ) ),
+           SLOT( slotJobPercent( KJob *, unsigned long ) ) );
   connect( mJob, SIGNAL( finished( KJob * ) ),
            SLOT( slotJobFinished( KJob * ) ) );
 
@@ -482,7 +481,6 @@ void ResourceGroupwise::updateSABResult( KJob *job )
 
   mSABProgress->setComplete();
   mSABProgress = 0;
-  mJob->disconnect( this );
   mJob = 0;
 
   int errorCode = job->error();
@@ -526,15 +524,19 @@ void ResourceGroupwise::slotReadJobData( KIO::Job *job , const QByteArray &data 
       addr.setResource( this );
 
       QString remote = addr.custom( "GWRESOURCE", "UID" );
-      QString local = idMapper().localId( remote );
-      if ( local.isEmpty() ) {
-        idMapper().setRemoteId( addr.uid(), remote );
+      if ( remote.isEmpty() ) {
+        kDebug() <<"ADDRESSEE:" << addr.formattedName() << " HAS NO REMOTE UID, REJECTING!";
       } else {
-        addr.setUid( local );
-      }
+        QString local = idMapper().localId( remote );
+        if ( local.isEmpty() ) {
+          idMapper().setRemoteId( addr.uid(), remote );
+        } else {
+          addr.setUid( local );
+        }
 
-      insertAddressee( addr );
-      clearChange( addr );
+        insertAddressee( addr );
+        clearChange( addr );
+      }
     }
   }
   mJobData.clear();
@@ -682,7 +684,7 @@ ResourceGroupwise::SABState ResourceGroupwise::systemAddressBookState()
     }
   }
   else
-    emit loadingError( this, mServer->errorText() );
+    emit loadingError( this, i18nc( "Message syncing Groupwise address book", "Error calculating how to sync the System Address Book: %1", mServer->errorText() ) );
 
 
   if ( storedFirstSequence == 0 || storedLastSequence == 0 )
