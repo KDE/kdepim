@@ -161,7 +161,7 @@ void ResolveRecipientsPage::ListWidget::setProtocol( GpgME::Protocol prot )
     if ( m_protocol == prot )
         return;
     m_protocol = prot;
-    Q_FOREACH ( ItemWidget* i, widgets.values() )
+    Q_FOREACH ( ItemWidget* i, widgets )
         i->setProtocol( prot );
 }
 
