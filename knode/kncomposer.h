@@ -214,7 +214,12 @@ class KNComposer : public KXmlGuiWindow {
 
   private:
     bool mFirstEdit;
-
+    /**
+    * Temporary hack for bug 169411 stolen from KMail (kmmsgbase.{h,cpp})
+    * Fixes an encoding received by a KDE function and returns the proper,
+    * MIME-compilant encoding name instead.
+    */
+    QByteArray fixEncoding( const QByteArray &encoding );
 };
 
 #if 0
