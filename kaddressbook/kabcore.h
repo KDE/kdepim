@@ -394,6 +394,7 @@ class KADDRESSBOOK_EXPORT KABCore : public KAB::Core
     void setDetailsVisible( bool visible );
 
     void extensionModified( const KABC::Addressee::List &list );
+    void extensionModified( const KABC::DistributionList *list );
     void extensionDeleted( const QStringList &uidList );
     void clipboardDataChanged();
     void updateIncSearchWidget();

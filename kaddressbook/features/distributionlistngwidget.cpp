@@ -33,6 +33,7 @@
 #include <QtGui/QListWidgetItem>
 #include <QtGui/QToolButton>
 
+#include <kabc/distributionlist.h>
 #include <kabc/vcardconverter.h>
 #include <kdialog.h>
 #include <klocale.h>
@@ -193,12 +194,13 @@ void KAB::DistributionListNg::MainWidget::deleteSelectedDistributionList()
 {
     const QList<QListWidgetItem*> items = mListBox->selectedItems();
     const QString name = items.isEmpty() ? QString() : items.first()->text();
+    kDebug() << "name=" << name;
     if ( name.isEmpty() )
         return;
 
-    const KPIM::DistributionList list = KPIM::DistributionList::findByName(
-    core()->addressBook(), name );
-    if ( list.isEmpty() )
+    const KABC::DistributionList *list =
+        core()->addressBook()->findDistributionListByName( name );
+    if ( !list )
         return;
 
     core()->deleteDistributionLists( QStringList( name ) );
@@ -209,22 +211,21 @@ void KAB::DistributionListNg::MainWidget::contactsDropped( const QString &listNa
     if ( addressees.isEmpty() )
         return;
 
-    KPIM::DistributionList list = KPIM::DistributionList::findByName(
-    core()->addressBook(), listName );
-    if ( list.isEmpty() ) // not found [should be impossible]
+    KABC::DistributionList *list =
+        core()->addressBook()->findDistributionListByName( listName );
+    if ( !list ) // not found [should be impossible]
         return;
 
     for ( KABC::Addressee::List::ConstIterator it = addressees.begin(); it != addressees.end(); ++it ) {
-        list.insertEntry( *it );
+        list->insertEntry( *it );
     }
 
-    core()->addressBook()->insertAddressee( list );
     changed( list );
 }
 
-void KAB::DistributionListNg::MainWidget::changed( const KABC::Addressee& dist )
+void KAB::DistributionListNg::MainWidget::changed( const KABC::DistributionList* dist )
 {
-    emit modified( KABC::Addressee::List() << dist );
+    emit modified( dist );
 }
 
 void KAB::DistributionListNg::MainWidget::updateEntries()

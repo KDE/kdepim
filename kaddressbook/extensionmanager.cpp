@@ -205,6 +205,8 @@ void ExtensionManager::createExtensionWidgets()
 
     connect( wdg, SIGNAL( modified( const KABC::Addressee::List& ) ),
              SIGNAL( modified( const KABC::Addressee::List& ) ) );
+    connect( wdg, SIGNAL( modified( const KABC::DistributionList* ) ),
+             SIGNAL( modified( const KABC::DistributionList* ) ) );
     connect( wdg, SIGNAL( deleted( const QStringList& ) ),
              SIGNAL( deleted( const QStringList& ) ) );
 
@@ -243,6 +245,8 @@ void ExtensionManager::createExtensionWidgets()
       wdg->setVisible( false );
       connect( wdg, SIGNAL( modified( const KABC::Addressee::List& ) ),
                SIGNAL( modified( const KABC::Addressee::List& ) ) );
+      connect( wdg, SIGNAL( modified( const KABC::DistributionList* ) ),
+               SIGNAL( modified( const KABC::DistributionList* ) ) );
       connect( wdg, SIGNAL( deleted( const QStringList& ) ),
                SIGNAL( deleted( const QStringList& ) ) );
 

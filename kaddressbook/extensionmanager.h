@@ -86,6 +86,7 @@ class ExtensionManager : public QObject
     void detailsWidgetActivated( QWidget* widget );
     void detailsWidgetDeactivated( QWidget* widget );
     void modified( const KABC::Addressee::List& );
+    void modified( const KABC::DistributionList* );
     void deleted( const QStringList& );
 
   private Q_SLOTS:
@@ -93,7 +94,7 @@ class ExtensionManager : public QObject
 
   private:
     void createExtensionWidgets();
-    void setExtensionActive( const QString &extid, bool active ); 
+    void setExtensionActive( const QString &extid, bool active );
     void updateExtensionBarVisibility();
 
   private:
@@ -105,7 +106,7 @@ class ExtensionManager : public QObject
     QList<QAction*> mActionList;
     KActionCollection *mActionCollection;
     QSplitter *mSplitter;
-    QStackedWidget *mDetailsStack; 
+    QStackedWidget *mDetailsStack;
     QWidget *mActiveDetailsWidget;
 };
 
