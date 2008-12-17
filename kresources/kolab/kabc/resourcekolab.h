@@ -163,6 +163,9 @@ protected:
     return Kolab::ResourceKolabBase::configFile( "kabc" );
   }
 
+  using KABC::Resource::writeConfig;
+  void writeConfig();
+
   // The list of subresources
   Kolab::ResourceMap mSubResources;
   QString mCachedSubresource;
