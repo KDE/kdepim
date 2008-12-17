@@ -25,7 +25,7 @@
 #include <QtGui/QHeaderView>
 
 class QAbstractItemModel;
-class QComboBox;
+class KComboBox;
 class QEvent;
 class QMouseEvent;
 class QResizeEvent;
@@ -55,7 +55,7 @@ class ComboBoxHeaderView : public QHeaderView {
 
   private:
     inline QRect sectionRect( int logicalIndex ) const;
-    inline void adjustComboBoxIndex( QComboBox *comboBox, int logicalIndex );
+    inline void adjustComboBoxIndex( KComboBox *comboBox, int logicalIndex );
     void adjustComboBoxIndex( int logicalIndex );
     bool isViewVisible() const;
 

@@ -32,11 +32,12 @@ namespace KABC { class AddressBook; }
 class KUrlRequester;
 
 class QButtonGroup;
-class QComboBox;
 class QCheckBox;
-class QLineEdit;
 class QRadioButton;
 class QTableWidget;
+
+class KComboBox;
+class KLineEdit;
 
 class CSVImportDialog : public KDialog
 {
@@ -85,12 +86,12 @@ class CSVImportDialog : public KDialog
     QRadioButton* mRadioTab;
     QRadioButton* mRadioSpace;
     QRadioButton* mRadioOther;
-    QLineEdit* mDelimiterEdit;
-    QLineEdit* mDatePatternEdit;
-    QComboBox* mComboLine;
-    QComboBox* mComboQuote;
+    KLineEdit* mDelimiterEdit;
+    KLineEdit* mDatePatternEdit;
+    KComboBox* mComboLine;
+    KComboBox* mComboQuote;
     QCheckBox* mIgnoreDuplicates;
-    QComboBox* mCodecCombo;
+    KComboBox* mCodecCombo;
     QWidget* mPage;
     KUrlRequester* mUrlRequester;
 

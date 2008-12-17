@@ -21,17 +21,18 @@
 
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QEvent>
-#include <QtGui/QComboBox>
 #include <QtGui/QMouseEvent>
 #include <QtGui/QResizeEvent>
 #include <QtGui/QTableWidget>
 
-class ComboBoxHeaderView::ComboBox : public QComboBox {
+#include <kcombobox.h>
+
+class ComboBoxHeaderView::ComboBox : public KComboBox {
   friend class ComboBoxHeaderView;
 
   public:
     ComboBox( int index, ComboBoxHeaderView *parent ) 
-      : QComboBox( parent ), mIndex( index ), mParent( parent ) 
+      : KComboBox( parent ), mIndex( index ), mParent( parent )
     {
     }
 
@@ -62,7 +63,7 @@ class ComboBoxHeaderView::Private {
 
     QStringList mItems;
 
-    QComboBox *mComboBox;
+    KComboBox *mComboBox;
     QList<ComboBox*> mBoxes;
 
     int mCurrentIndex;
@@ -134,7 +135,7 @@ QRect ComboBoxHeaderView::sectionRect( int logicalIndex ) const
                 sectionSize( logicalIndex ) - 2 * d->mMargin, height() );
 }
 
-void ComboBoxHeaderView::adjustComboBoxIndex( QComboBox *comboBox, 
+void ComboBoxHeaderView::adjustComboBoxIndex( KComboBox *comboBox,
                                               int logicalIndex )
 {
   comboBox->setCurrentIndex(
@@ -147,7 +148,7 @@ void ComboBoxHeaderView::adjustComboBoxIndex( int logicalIndex )
   if ( d->mHoverStyle ) {
     adjustComboBoxIndex( d->mComboBox, logicalIndex );
   } else {
-    adjustComboBoxIndex( static_cast< QComboBox* >( d->mBoxes[ logicalIndex ] ), 
+    adjustComboBoxIndex( static_cast< KComboBox* >( d->mBoxes[ logicalIndex ] ),
                          logicalIndex );
   }
 }
@@ -177,7 +178,7 @@ void ComboBoxHeaderView::initialize()
 
   if ( d->mHoverStyle ) {
     if ( !( d->mComboBox ) ) {
-      d->mComboBox = new QComboBox( this );
+      d->mComboBox = new KComboBox( this );
       d->mComboBox->addItems( d->mItems );
       d->mComboBox->setVisible( false );
 
@@ -196,7 +197,7 @@ void ComboBoxHeaderView::initialize()
       if ( toBeAdded ) {
         box = new ComboBox( i, this );
         box->addItems( d->mItems );
-        adjustComboBoxIndex( static_cast< QComboBox* >( box ), i );
+        adjustComboBoxIndex( static_cast< KComboBox* >( box ), i );
         d->mBoxes.append( box );
         connect( box, SIGNAL( activated( const QString & ) ),
                  this, SLOT( slotActivated( const QString & ) ) );

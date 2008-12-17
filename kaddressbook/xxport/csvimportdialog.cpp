@@ -24,12 +24,10 @@
 #include <QtCore/QTextStream>
 #include <QtGui/QButtonGroup>
 #include <QtGui/QCheckBox>
-#include <QtGui/QComboBox>
 #include <QtGui/QGridLayout>
 #include <QtGui/QGroupBox>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
 #include <QtGui/QPushButton>
 #include <QtGui/QRadioButton>
 #include <QtGui/QScrollBar>
@@ -37,6 +35,7 @@
 
 #include <kabc/addressbook.h>
 #include <kapplication.h>
+#include <kcombobox.h>
 #include <kdebug.h>
 #include <kdialog.h>
 #include <kfiledialog.h>
@@ -421,22 +420,22 @@ void CSVImportDialog::initGUI()
   mDelimiterGroup->addButton( mRadioOther, 4 );
   delimiterLayout->addWidget( mRadioOther, 0, 2 );
 
-  mDelimiterEdit = new QLineEdit( group );
+  mDelimiterEdit = new KLineEdit( group );
   delimiterLayout->addWidget( mDelimiterEdit, 1, 2 );
 
-  mComboLine = new QComboBox( mPage );
+  mComboLine = new KComboBox( mPage );
   mComboLine->setEditable( false );
   mComboLine->addItem( i18n( "1" ) );
   layout->addWidget( mComboLine, 2, 3 );
 
-  mComboQuote = new QComboBox( mPage );
+  mComboQuote = new KComboBox( mPage );
   mComboQuote->setEditable( false );
   mComboQuote->addItem( i18n( "\"" ), 0 );
   mComboQuote->addItem( i18n( "'" ), 1 );
   mComboQuote->addItem( i18n( "None" ), 2 );
   layout->addWidget( mComboQuote, 2, 2 );
 
-  mDatePatternEdit = new QLineEdit( mPage );
+  mDatePatternEdit = new KLineEdit( mPage );
   mDatePatternEdit->setText( "Y-M-D" ); // ISO 8601 format as default
   mDatePatternEdit->setToolTip( i18n( "<ul><li>y: year with 2 digits</li>"
                                          "<li>Y: year with 4 digits</li>"
@@ -459,7 +458,7 @@ void CSVImportDialog::initGUI()
   mIgnoreDuplicates->setText( i18n( "Ignore duplicate delimiters" ) );
   layout->addWidget( mIgnoreDuplicates, 3, 2, 1, 3 );
 
-  mCodecCombo = new QComboBox( mPage );
+  mCodecCombo = new KComboBox( mPage );
   layout->addWidget( mCodecCombo, 4, 2, 1, 3 );
 
   mTable = new QTableWidget( 0, 0, mPage );
