@@ -27,8 +27,9 @@
 #include <QtGui/QWidget>
 
 class QCheckBox;
-class QComboBox;
-class QLineEdit;
+
+class KComboBox;
+class KLineEdit;
 
 class AddresseeWidget;
 
@@ -52,12 +53,12 @@ class KABConfigWidget : public QWidget
   private:
     QCheckBox *mNameParsing;
     QCheckBox *mViewsSingleClickBox;
-    QComboBox *mEditorCombo;
-    QLineEdit *mPhoneHook;
-    QLineEdit *mFaxHook;
-    QLineEdit *mSMSHook;
+    KComboBox *mEditorCombo;
+    KLineEdit *mPhoneHook;
+    KLineEdit *mFaxHook;
+    KLineEdit *mSMSHook;
     QCheckBox *mLimitContactDisplay;
-    QComboBox *mLocationMapURL;
+    KComboBox *mLocationMapURL;
 
     AddresseeWidget *mAddresseeWidget;
 };

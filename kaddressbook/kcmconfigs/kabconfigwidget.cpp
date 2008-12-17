@@ -25,21 +25,21 @@
 
 #include <QtGui/QBoxLayout>
 #include <QtGui/QCheckBox>
-#include <QtGui/QComboBox>
 #include <QtGui/QGridLayout>
 #include <QtGui/QGroupBox>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
 #include <QtGui/QPushButton>
-#include <QtGui/QTabWidget>
 #include <QtGui/QVBoxLayout>
 
+#include <kcombobox.h>
 #include <kconfig.h>
 #include <kdebug.h>
 #include <kdialog.h>
+#include <klineedit.h>
 #include <klocale.h>
 #include <kmessagebox.h>
+#include <ktabwidget.h>
 
 #include "addresseewidget.h"
 #include "kabprefs.h"
@@ -51,7 +51,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent )
   topLayout->setSpacing( KDialog::spacingHint() );
   topLayout->setMargin( 0 );
 
-  QTabWidget *tabWidget = new QTabWidget( this );
+  KTabWidget *tabWidget = new KTabWidget( this );
   topLayout->addWidget( tabWidget );
 
   // General page
@@ -80,7 +80,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent )
   QLabel *label = new QLabel( i18n( "Addressee editor type:" ), groupBox );
   editorLayout->addWidget( label );
 
-  mEditorCombo = new QComboBox( groupBox );
+  mEditorCombo = new KComboBox( groupBox );
   mEditorCombo->addItem( i18n( "Full Editor" ) );
   mEditorCombo->addItem( i18n( "Simple Editor" ) );
   label->setBuddy( mEditorCombo );
@@ -97,14 +97,14 @@ KABConfigWidget::KABConfigWidget( QWidget *parent )
   label = new QLabel( i18n( "Phone:" ), groupBox );
   grid->addWidget( label, 0, 0 );
 
-  mPhoneHook = new QLineEdit( groupBox );
+  mPhoneHook = new KLineEdit( groupBox );
   mPhoneHook->setToolTip( i18n( "<ul><li>%N: Phone Number</li></ul>" ) );
   grid->addWidget( mPhoneHook, 0, 1 );
 
   label = new QLabel( i18n( "Fax:" ), groupBox );
   grid->addWidget( label, 1, 0 );
 
-  mFaxHook = new QLineEdit( groupBox );
+  mFaxHook = new KLineEdit( groupBox );
   mFaxHook->setToolTip( i18n( "<ul><li>%N: Fax Number</li></ul>" ) );
   grid->addWidget( mFaxHook, 1, 1 );
 
@@ -112,7 +112,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent )
   label = new QLabel( i18n( "SMS text:" ), groupBox );
   grid->addWidget( label, 2, 0 );
 
-  mSMSHook = new QLineEdit( groupBox );
+  mSMSHook = new KLineEdit( groupBox );
   mSMSHook->setToolTip( i18n( "<ul><li>%N: Phone Number</li><li>%F: File containing the text message(s)</li></ul>" ) );
   grid->addWidget( mSMSHook, 2, 1 );
 
@@ -126,7 +126,7 @@ KABConfigWidget::KABConfigWidget( QWidget *parent )
   boxLayout->setSpacing( KDialog::spacingHint() );
   boxLayout->setAlignment( Qt::AlignTop );
 
-  mLocationMapURL = new QComboBox( groupBox );
+  mLocationMapURL = new KComboBox( groupBox );
   mLocationMapURL->setEditable( true );
   mLocationMapURL->setMinimumContentsLength( 20 );
   mLocationMapURL->setSizeAdjustPolicy( QComboBox::AdjustToMinimumContentsLength );
