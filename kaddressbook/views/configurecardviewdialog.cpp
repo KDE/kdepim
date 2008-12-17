@@ -29,7 +29,6 @@
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>
 #include <QtGui/QSpinBox>
-#include <QtGui/QTabWidget>
 #include <Qt3Support/Q3GroupBox>
 
 #include <kcolorscheme.h>
@@ -40,6 +39,7 @@
 #include <kiconloader.h>
 #include <klocale.h>
 #include <kpushbutton.h>
+#include <ktabwidget.h>
 #include <kvbox.h>
 
 #include <libkdepim/colorlistbox.h>
@@ -191,7 +191,7 @@ void CardViewLookNFeelPage::initGUI()
   int spacing = KDialog::spacingHint();
   int margin = KDialog::marginHint();
 
-  QTabWidget *tabs = new QTabWidget( this );
+  KTabWidget *tabs = new KTabWidget( this );
 
   // Layout
   KVBox *loTab = new KVBox( this );
@@ -242,7 +242,7 @@ void CardViewLookNFeelPage::initGUI()
   sbSepWidth->setWhatsThis( text );
   lSW->setWhatsThis( text );
 
-  tabs->addTab( loTab, i18n("&Layout") );
+  tabs->addTab( loTab, i18n("Layout") );
 
   // Colors
   KVBox *colorTab = new KVBox( this );
@@ -251,7 +251,7 @@ void CardViewLookNFeelPage::initGUI()
   cbEnableCustomColors = new QCheckBox( i18n("&Enable custom colors"), colorTab );
   connect( cbEnableCustomColors, SIGNAL(clicked()), this, SLOT(enableColors()) );
   lbColors = new KPIM::ColorListBox( colorTab );
-  tabs->addTab( colorTab, i18n("&Colors") );
+  tabs->addTab( colorTab, i18n("Colors") );
 
   cbEnableCustomColors->setWhatsThis( i18n(
         "If custom colors is enabled, you may choose the colors for the view below. "
@@ -302,7 +302,7 @@ void CardViewLookNFeelPage::initGUI()
         "normal style for the data."
         ) );
 
-  tabs->addTab( fntTab, i18n("&Fonts") );
+  tabs->addTab( fntTab, i18n("Fonts") );
 
   // Behaviour
   KVBox *behaviourTab = new KVBox( this );
@@ -314,7 +314,7 @@ void CardViewLookNFeelPage::initGUI()
 
   behaviourTab->setStretchFactor( new QWidget( behaviourTab ), 1 );
 
-  tabs->addTab( behaviourTab, i18n("Be&havior") );
+  tabs->addTab( behaviourTab, i18n("Behavior") );
 
 }
 
