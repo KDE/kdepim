@@ -35,10 +35,10 @@
 class QButtonGroup;
 class QCheckBox;
 class QLabel;
-class QTextEdit;
 
 class KComboBox;
 class KLineEdit;
+class KTextEdit;
 
 typedef TypeCombo<KABC::Address, KABC::Address::Type> AddressTypeCombo;
 
@@ -112,7 +112,7 @@ class AddressEditDialog : public KDialog
     QStringList sortLocaleAware( const QStringList& );
 
     AddressTypeCombo *mTypeCombo;
-    QTextEdit *mStreetTextEdit;
+    KTextEdit *mStreetTextEdit;
     KComboBox *mCountryCombo;
     KLineEdit *mRegionEdit;
     KLineEdit *mLocalityEdit;

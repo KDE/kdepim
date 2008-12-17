@@ -188,7 +188,7 @@
       </widget>
      </item>
      <item row="7" column="1" colspan="4" >
-      <widget class="QTextEdit" name="mNoteEdit" />
+      <widget class="KTextEdit" name="mNoteEdit" />
      </item>
     </layout>
    </item>
@@ -214,6 +214,11 @@
    <class>KSeparator</class>
    <extends>QFrame</extends>
    <header>kseparator.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header>ktextedit.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

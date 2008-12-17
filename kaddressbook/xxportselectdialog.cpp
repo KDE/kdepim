@@ -25,7 +25,6 @@
 #include "xxportselectdialog.h"
 
 #include <QtCore/QStringList>
-#include <QtGui/QComboBox>
 #include <QtGui/QGridLayout>
 #include <QtGui/QGroupBox>
 #include <QtGui/QLabel>
@@ -203,7 +202,7 @@ void XXPortSelectDialog::initGUI()
                                        "This option is disabled if you have no categories." ) );
   groupLayout->addWidget( mUseCategories, 3, 0, Qt::AlignTop );
 
-  mFiltersCombo = new QComboBox( mButtonGroup );
+  mFiltersCombo = new KComboBox( mButtonGroup );
   mFiltersCombo->setEditable( false );
   mFiltersCombo->setWhatsThis( i18n( "Select a filter to decide which contacts to export." ) );
   groupLayout->addWidget( mFiltersCombo, 2, 1 );

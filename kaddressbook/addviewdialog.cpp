@@ -27,10 +27,10 @@
 #include <QtGui/QGridLayout>
 #include <QtGui/QGroupBox>
 #include <QtGui/QLabel>
-#include <QtGui/QLineEdit>
 #include <QtGui/QRadioButton>
 
-#include <KLocale>
+#include <klocale.h>
+#include <klineedit.h>
 
 #include "kaddressbookview.h"
 
@@ -57,7 +57,7 @@ AddViewDialog::AddViewDialog( QHash<QString, ViewFactory*> *viewFactoryDict,
   QLabel *label = new QLabel( i18n( "View name:" ), page );
   layout->addWidget( label, 0, 0 );
 
-  mViewNameEdit = new QLineEdit( page );
+  mViewNameEdit = new KLineEdit( page );
   connect( mViewNameEdit, SIGNAL( textChanged( const QString& ) ),
            SLOT( textChanged( const QString& ) ) );
   layout->addWidget( mViewNameEdit, 0, 1 );

@@ -28,9 +28,9 @@
 
 #include <kabc/field.h>
 
-class QComboBox;
 class QKeyEvent;
 class QTimer;
+class KComboBox;
 class KLineEdit;
 
 class IncSearchWidget : public QWidget
@@ -79,7 +79,7 @@ class IncSearchWidget : public QWidget
   private:
     void initFields();
 
-    QComboBox* mFieldCombo;
+    KComboBox* mFieldCombo;
     KLineEdit* mSearchText;
     KABC::Field::List mFieldList;
     KABC::Field::List mViewFields;

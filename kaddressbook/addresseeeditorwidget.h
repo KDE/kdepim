@@ -35,11 +35,9 @@
 #include "ui_addresseditgeneraltab.h"
 #include "ui_addresseditdetailstab.h"
 
-class QTabWidget;
-class QTextEdit;
-
 class KLineEdit;
 class KSqueezedTextLabel;
+class KTabWidget;
 
 class AddressEditWidget;
 class EmailEditWidget;
@@ -124,7 +122,7 @@ class AddresseeEditorWidget : public AddresseeEditorBase
     // GUI
     KPIM::CategorySelectDialog *mCategorySelectDialog;
     KPIM::CategoryEditDialog *mCategoryEditDialog;
-    QTabWidget *mTabWidget;
+    KTabWidget *mTabWidget;
 
     // Tab1
     Ui::tab1 tab1;

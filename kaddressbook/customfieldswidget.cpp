@@ -191,7 +191,7 @@ void FieldWidget::addField( const QString &identifier, const QString &title,
     connect( wdg, SIGNAL( dateTimeChanged( const QDateTime& ) ),
              this, SIGNAL( changed() ) );
   } else  if ( type == "text" ) {
-    QLineEdit *wdg = new QLineEdit( this );
+    KLineEdit *wdg = new KLineEdit( this );
     record.mWidget = wdg;
     connect( wdg, SIGNAL( textChanged( const QString& ) ),
              this, SIGNAL( changed() ) );
@@ -246,8 +246,8 @@ void FieldWidget::clearFields()
 {
   FieldRecordList::ConstIterator fieldIt;
   for ( fieldIt = mFieldList.constBegin(); fieldIt != mFieldList.constEnd(); ++fieldIt ) {
-    if ( qobject_cast<QLineEdit*>( (*fieldIt).mWidget ) ) {
-      QLineEdit *wdg = static_cast<QLineEdit*>( (*fieldIt).mWidget );
+    if ( qobject_cast<KLineEdit*>( (*fieldIt).mWidget ) ) {
+      KLineEdit *wdg = static_cast<KLineEdit*>( (*fieldIt).mWidget );
       wdg->setText( QString() );
     } else if ( qobject_cast<QSpinBox*>( (*fieldIt).mWidget ) ) {
       QSpinBox *wdg = static_cast<QSpinBox*>( (*fieldIt).mWidget );
@@ -284,8 +284,8 @@ void FieldWidget::loadContact( KABC::Addressee *addr )
     FieldRecordList::ConstIterator fieldIt;
     for ( fieldIt = mFieldList.constBegin(); fieldIt != mFieldList.constEnd(); ++fieldIt ) {
       if ( (*fieldIt).mIdentifier == name ) {
-        if ( qobject_cast<QLineEdit*>( (*fieldIt).mWidget ) ) {
-          QLineEdit *wdg = static_cast<QLineEdit*>( (*fieldIt).mWidget );
+        if ( qobject_cast<KLineEdit*>( (*fieldIt).mWidget ) ) {
+          KLineEdit *wdg = static_cast<KLineEdit*>( (*fieldIt).mWidget );
           wdg->setText( value );
         } else if ( qobject_cast<QSpinBox*>( (*fieldIt).mWidget ) ) {
           QSpinBox *wdg = static_cast<QSpinBox*>( (*fieldIt).mWidget );
@@ -313,8 +313,8 @@ void FieldWidget::storeContact( KABC::Addressee *addr )
   FieldRecordList::ConstIterator it;
   for ( it = mFieldList.constBegin(); it != mFieldList.constEnd(); ++it ) {
     QString value;
-    if ( qobject_cast<QLineEdit*>( (*it).mWidget ) ) {
-      QLineEdit *wdg = static_cast<QLineEdit*>( (*it).mWidget );
+    if ( qobject_cast<KLineEdit*>( (*it).mWidget ) ) {
+      KLineEdit *wdg = static_cast<KLineEdit*>( (*it).mWidget );
       value = wdg->text();
     } else if ( qobject_cast<QSpinBox*>( (*it).mWidget ) ) {
       QSpinBox *wdg = static_cast<QSpinBox*>( (*it).mWidget );
@@ -535,7 +535,7 @@ QStringList CustomFieldsWidget::marshallFields( bool global ) const
         type = "time";
       } else if ( qobject_cast<QDateTimeEdit*>( (*it).mWidget ) ) {
         type = "datetime";
-      } else if ( qobject_cast<QLineEdit*>( (*it).mWidget ) ) {
+      } else if ( qobject_cast<KLineEdit*>( (*it).mWidget ) ) {
         type = "text";
       }
 

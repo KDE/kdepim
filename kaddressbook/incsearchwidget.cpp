@@ -24,11 +24,11 @@
 #include "incsearchwidget.h"
 
 #include <QtCore/QTimer>
-#include <QtGui/QComboBox>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QKeyEvent>
 #include <QtGui/QLabel>
 
+#include <kcombobox.h>
 #include <kdialog.h>
 #include <kiconloader.h>
 #include <klineedit.h>
@@ -54,7 +54,7 @@ IncSearchWidget::IncSearchWidget( QWidget *parent, const char *name )
   label->setAlignment( Qt::AlignVCenter | Qt::AlignRight );
   layout->addWidget( label );
 
-  mFieldCombo = new QComboBox( this );
+  mFieldCombo = new KComboBox( this );
   mFieldCombo->setEditable( false );
   layout->addWidget( mFieldCombo );
   label->setBuddy(mFieldCombo);

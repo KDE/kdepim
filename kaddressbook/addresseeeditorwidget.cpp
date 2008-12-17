@@ -27,7 +27,6 @@
 #include <QtGui/QGridLayout>
 #include <QtGui/QLabel>
 #include <QtGui/QPushButton>
-#include <QtGui/QTabWidget>
 #include <QtGui/QTextEdit>
 #include <QtGui/QVBoxLayout>
 
@@ -46,6 +45,7 @@
 #include <kseparator.h>
 #include <ksqueezedtextlabel.h>
 #include <kstandarddirs.h>
+#include <ktabwidget.h>
 #include <kvbox.h>
 
 #include <libkdepim/addresseelineedit.h>
@@ -126,7 +126,7 @@ void AddresseeEditorWidget::initGUI()
   layout->setMargin( 0 );
   layout->setSpacing( KDialog::spacingHint() );
 
-  mTabWidget = new QTabWidget( this );
+  mTabWidget = new KTabWidget( this );
   layout->addWidget( mTabWidget );
 
   setupTab1();
@@ -227,7 +227,7 @@ void AddresseeEditorWidget::setupTab1()
   // Build the layout and add to the tab widget
   //layout->activate(); // required
 
-  mTabWidget->addTab( page, i18n( "&General" ) );
+  mTabWidget->addTab( page, i18n( "General" ) );
 }
 
 void AddresseeEditorWidget::setupTab2()
@@ -280,7 +280,7 @@ void AddresseeEditorWidget::setupTab2()
   tab2.mNoteEdit->setMinimumSize( tab2.mNoteEdit->sizeHint() );
   connect( tab2.mNoteEdit, SIGNAL( textChanged() ), SLOT( emitModified() ) );
 
-  mTabWidget->addTab( page, i18n( "&Details" ) );
+  mTabWidget->addTab( page, i18n( "Details" ) );
 }
 
 void AddresseeEditorWidget::setupAdditionalTabs()

@@ -28,6 +28,8 @@
 #include <kcombobox.h>
 #include <klocalizedstring.h>
 
+class KLineEdit;
+
 /**
   Combo box for type information of Addresses and Phone numbers.
 */
@@ -40,8 +42,8 @@ class TypeCombo : public KComboBox
 
     TypeCombo( List &list, QWidget *parent, const char *name = 0 );
 
-    void setLineEdit( QLineEdit *edit ) { mLineEdit = edit; }
-    QLineEdit *lineEdit() const { return mLineEdit; }
+    void setLineEdit( KLineEdit *edit ) { mLineEdit = edit; }
+    KLineEdit *lineEdit() const { return mLineEdit; }
 
     void updateTypes();
 
@@ -61,7 +63,7 @@ class TypeCombo : public KComboBox
 
   private:
     List &mTypeList;
-    QLineEdit *mLineEdit;
+    KLineEdit *mLineEdit;
 };
 
 template <class T, typename U>

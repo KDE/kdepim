@@ -36,7 +36,6 @@
 #include <QtGui/QKeyEvent>
 #include <QtGui/QLabel>
 #include <QtGui/QPushButton>
-#include <QtGui/QTextEdit>
 
 #include <kacceleratormanager.h>
 #include <kcombobox.h>
@@ -46,6 +45,7 @@
 #include <klineedit.h>
 #include <klocale.h>
 #include <kseparator.h>
+#include <ktextedit.h>
 
 #include "addresseeconfig.h"
 
@@ -258,7 +258,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   QLabel *label = new QLabel( i18nc( "<streetLabel>:", "%1:", KABC::Address::streetLabel() ), page );
   label->setAlignment( Qt::AlignTop | Qt::AlignLeft );
   topLayout->addWidget( label, 1, 0 );
-  mStreetTextEdit = new QTextEdit( page );
+  mStreetTextEdit = new KTextEdit( page );
   mStreetTextEdit->setAcceptRichText( false );
   label->setBuddy( mStreetTextEdit );
   topLayout->addWidget( mStreetTextEdit, 1, 1 );

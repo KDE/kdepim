@@ -31,7 +31,6 @@
 #include "filter.h"
 
 class QGroupBox;
-class QComboBox;
 class QRadioButton;
 
 namespace KAB {
@@ -69,7 +68,7 @@ class XXPortSelectDialog : public KDialog
     QRadioButton* mUseFilters;
     QRadioButton* mUseWholeBook;
     QRadioButton* mUseSelection;
-    QComboBox* mFiltersCombo;
+    KComboBox* mFiltersCombo;
     KPIM::CategorySelectWidget* mCategoriesView;
 
     KComboBox *mFieldCombo;

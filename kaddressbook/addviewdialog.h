@@ -28,8 +28,8 @@
 
 #include <kdialog.h>
 
+class KLineEdit;
 class QButtonGroup;
-class QLineEdit;
 class ViewFactory;
 
 /**
@@ -62,7 +62,7 @@ class AddViewDialog : public KDialog
 
   private:
     QHash<QString, ViewFactory*> *mViewFactoryDict;
-    QLineEdit *mViewNameEdit;
+    KLineEdit *mViewNameEdit;
     QButtonGroup *mTypeGroup;
 
     int mTypeId;
