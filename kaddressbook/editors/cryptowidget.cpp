@@ -24,13 +24,13 @@
 #include "cryptowidget.h"
 
 #include <QtGui/QCheckBox>
-#include <QtGui/QComboBox>
 #include <QtGui/QGridLayout>
 #include <QtGui/QGroupBox>
 #include <QtGui/QLabel>
 #include <QtGui/QLayout>
 #include <QtGui/QPushButton>
 
+#include <kcombobox.h>
 #include <kdebug.h>
 #include <kdialog.h>
 #include <khbox.h>
@@ -111,7 +111,7 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent )
 
   l = new QLabel( i18n( "Sign:" ), hbox );
 
-  mSignPref = new QComboBox( hbox );
+  mSignPref = new KComboBox( hbox );
   mSignPref->setEditable( false );
   for ( unsigned int i = Kleo::UnknownSigningPreference; i < Kleo::MaxSigningPreference ; ++i )
     mSignPref->addItem( Kleo::signingPreferenceToLabel(
@@ -123,7 +123,7 @@ CryptoWidget::CryptoWidget( KABC::AddressBook *ab, QWidget *parent )
 
   l = new QLabel( i18n("Encrypt:"), hbox );
 
-  mCryptPref = new QComboBox( hbox );
+  mCryptPref = new KComboBox( hbox );
   mCryptPref->setEditable( false );
   for ( unsigned int i = Kleo::UnknownPreference; i < Kleo::MaxEncryptionPreference ; ++i )
     mCryptPref->addItem( Kleo::encryptionPreferenceToLabel(
