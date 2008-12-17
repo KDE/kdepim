@@ -28,7 +28,8 @@
 
 class QProgressBar;
 class QString;
-class QTextBrowser;
+
+class KTextBrowser;
 
 namespace KABPrinting {
 
@@ -58,7 +59,7 @@ class PrintProgress : public QWidget
   private:
     QStringList mMessages;
 
-    QTextBrowser* mLogBrowser;
+    KTextBrowser* mLogBrowser;
     QProgressBar* mProgressBar;
 };
 

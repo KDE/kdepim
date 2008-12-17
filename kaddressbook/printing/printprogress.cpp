@@ -25,12 +25,12 @@
 
 #include <QtGui/QGridLayout>
 #include <QtGui/QProgressBar>
-#include <QtGui/QTextBrowser>
 
 #include <kapplication.h>
 #include <kdebug.h>
 #include <kdialog.h>
 #include <klocale.h>
+#include <ktextbrowser.h>
 
 using namespace KABPrinting;
 
@@ -44,7 +44,7 @@ PrintProgress::PrintProgress( QWidget *parent, const char *name )
   topLayout->setSpacing( KDialog::spacingHint() );
   topLayout->setMargin( KDialog::marginHint() );
 
-  mLogBrowser = new QTextBrowser( this );
+  mLogBrowser = new KTextBrowser( this );
   topLayout->addWidget( mLogBrowser, 0, 0 );
 
   mProgressBar = new QProgressBar( this );

@@ -25,7 +25,6 @@
 #include "selectionpage.h"
 
 #include <QtCore/QStringList>
-#include <QtGui/QComboBox>
 #include <QtGui/QGridLayout>
 #include <QtGui/QGroupBox>
 #include <QtGui/QLabel>
@@ -33,6 +32,7 @@
 #include <QtGui/QRadioButton>
 #include <QtGui/QVBoxLayout>
 
+#include <kcombobox.h>
 #include <kdialog.h>
 #include <klocale.h>
 
@@ -82,7 +82,7 @@ SelectionPage::SelectionPage( QWidget* parent, const char* name )
                                        "This option is disabled if you have no categories." ) );
   groupLayout->addWidget( mUseCategories, 3, 0, Qt::AlignTop );
 
-  mFiltersCombo = new QComboBox( mButtonGroup );
+  mFiltersCombo = new KComboBox( mButtonGroup );
   mFiltersCombo->setEditable( false );
   mFiltersCombo->setWhatsThis( i18n( "Select a filter to decide which contacts to print." ) );
   groupLayout->addWidget( mFiltersCombo, 2, 1 );

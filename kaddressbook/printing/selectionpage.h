@@ -27,8 +27,9 @@
 #include <QtGui/QWidget>
 
 class QGroupBox;
-class QComboBox;
 class QRadioButton;
+
+class KComboBox;
 
 namespace KPIM {
   class CategorySelectWidget;
@@ -63,7 +64,7 @@ class SelectionPage : public QWidget
     QRadioButton* mUseFilters;
     QRadioButton* mUseWholeBook;
     QRadioButton* mUseSelection;
-    QComboBox* mFiltersCombo;
+    KComboBox* mFiltersCombo;
     KPIM::CategorySelectWidget* mCategoriesView;
 };
 
