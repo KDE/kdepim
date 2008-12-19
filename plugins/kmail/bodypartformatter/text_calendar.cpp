@@ -538,9 +538,33 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
       return true;
     }
 
+    bool hasWritableCalendars() const
+    {
+      CalendarResourceManager *manager = new CalendarResourceManager( "calendar" );
+      manager->readConfig();
+      for ( CalendarResourceManager::ActiveIterator it = manager->activeBegin(); it != manager->activeEnd(); ++it ) {
+        if ( (*it)->readOnly() )
+          continue;
+        const QStringList subResources = (*it)->subresources();
+        if ( subResources.isEmpty() )
+          return true;
+        for ( QStringList::ConstIterator subIt = subResources.begin(); subIt != subResources.end(); ++subIt ) {
+          if ( !(*it)->subresourceActive( (*subIt) ) )
+            continue;
+          return true;
+        }
+      }
+      return false;
+    }
+
     bool handleClick( KMail::Interface::BodyPart *part,
                       const QString &path, KMail::Callback& c ) const
     {
+      if ( !hasWritableCalendars() ) {
+        KMessageBox::error( 0, i18n("No writable calendar found.") );
+        return false;
+      }
+
       QString iCal;
       /* If the bodypart does not have a charset specified, we need to fall back
          to utf8, not the KMail fallback encoding, so get the contents as binary
