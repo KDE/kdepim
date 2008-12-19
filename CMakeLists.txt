@@ -71,8 +71,6 @@ if ( ONLY_KLEO )
     message(STATUS "topological_sort.hpp is necessary to compile kleopatra. Please install package which contains it.")
   endif(TOPOLOGICAL_SORT_DIR)
 
-  macro_optional_add_subdirectory(doc)
-
 else ( ONLY_KLEO )
   # regular case, build everything
 
@@ -146,7 +144,6 @@ else ( ONLY_KLEO )
      ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttXMLTools.cpp
   )
 
-  macro_optional_add_subdirectory(doc)
   add_subdirectory(kode)
   macro_optional_add_subdirectory(akonadi)
   add_subdirectory(libkdepim)
@@ -275,4 +272,5 @@ else ( ONLY_KLEO )
 
 endif( ONLY_KLEO )
 
+macro_optional_add_subdirectory(doc)
 macro_display_feature_log()
