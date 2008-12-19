@@ -86,9 +86,10 @@ else ( ONLY_KLEO )
   find_package(Strigi REQUIRED)
   find_package(QGpgme)
 
-  if(Q_WS_X11)
-    macro_log_feature(X11_Xscreensaver_LIB "libXss" "X Window Screen Saver Development Library" "http://xorg.freedesktop.org" FALSE "" "Required for building the KTimeTracker Program")
-  endif(Q_WS_X11)
+  if(X11_FOUND)
+    #X11_Xscreensaver discovery is done by FindX11
+    macro_log_feature(X11_Xscreensaver_FOUND "X11 screensaver extension" "X Window Screen Saver Development Library" "http://xorg.freedesktop.org" FALSE "" "Required for building the KTimeTracker Program")
+  endif(X11_FOUND)
 
 # uncomment the following block for 4.3 in order to enable kitchensync
 #  if (NOT WIN32)
