@@ -548,8 +548,8 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         const QStringList subResources = (*it)->subresources();
         if ( subResources.isEmpty() )
           return true;
-        for ( QStringList::ConstIterator subIt = subResources.begin(); subIt != subResources.end(); ++subIt ) {
-          if ( !(*it)->subresourceActive( (*subIt) ) )
+        foreach( const QString& subResource, subResources ) {
+          if ( !(*it)->subresourceActive( subResource ) )
             continue;
           return true;
         }
