@@ -15,7 +15,7 @@ Name[fa]=وصلۀ XXPort تلفن همراه KAB
 Name[fi]=KAB-matkapuhelinliitännäinen
 Name[fr]=Module d'import / export de téléphone portable pour KAB
 Name[fy]=KAB Mobile Tillefoan XXPort-plugin
-Name[gl]=Extensión XXPort de Teléfono Móbil para KAB
+Name[gl]=Engadido XXPort de Teléfono Móbil para KAB
 Name[he]=תוסף ייבוא/ייצוא עבור טלפונים ניידים של KAB
 Name[hu]=KAB mobiltelefon XXPort bővítőmodul
 Name[is]=Íforrit fyrir KAB farsíma XXPort
@@ -63,7 +63,7 @@ Comment[fa]=وصلۀ تلفن همراه جهت واردات و صادرات م�
 Comment[fi]=Matkapuhelinliitännäinen osoitekirjan kontaktien tuontiin ja vientiin.
 Comment[fr]=Module de téléphone portable pour importer et exporter des entrées du carnet d'adresses
 Comment[fy]=Comment=Mobile-tillefoan-plugin faor it importearjen en eksportearjen fan adresboekitems
-Comment[gl]=Extensión de Teléfono Móbil para importar e exportar entradas do caderno de enderezos
+Comment[gl]=Engadido de Teléfono Móbil para importar e exportar entradas do caderno de enderezos
 Comment[hu]=Mobiltelefonos bővítőmodul címbejegyzések importálásához/exportálásához
 Comment[is]=Íforrit til að færa tengilið milli póstfangaskrár og farsíma
 Comment[it]=Plugin per importare ed esportare voci della rubrica da un telefono cellulare
