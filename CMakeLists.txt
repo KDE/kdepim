@@ -51,7 +51,7 @@ macro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
 endmacro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
 
 find_package(Boost REQUIRED)
-macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "1.33.1" "Required by Akonadi and Kleopatra")
+macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "1.33.1" "Required by Akonadi and several critical KDEPIM apps")
 
 if ( ONLY_KLEO )
   find_package(QGpgme REQUIRED)
