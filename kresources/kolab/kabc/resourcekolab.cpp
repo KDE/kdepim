@@ -141,14 +141,7 @@ bool KABC::ResourceKolab::doOpen()
 
 void KABC::ResourceKolab::doClose()
 {
-  KConfig config( configFile() );
-
-  Kolab::ResourceMap::ConstIterator it;
-  for ( it = mSubResources.constBegin(); it != mSubResources.constEnd(); ++it ) {
-    KConfigGroup group = config.group( it.key() );
-    group.writeEntry( "Active", it.value().active() );
-    group.writeEntry( "CompletionWeight", it.value().completionWeight() );
-  }
+  writeConfig();
 }
 
 KABC::Ticket * KABC::ResourceKolab::requestSaveTicket()
@@ -721,6 +714,7 @@ void KABC::ResourceKolab::setSubresourceActive( const QString &subresource, bool
   } else {
     kDebug(5650) <<"setSubresourceCompletionWeight: subresource" << subresource <<" not found";
   }
+  writeConfig();
 }
 
 
@@ -734,6 +728,18 @@ bool KABC::ResourceKolab::addSubresource( const QString& label, const QString& p
 bool KABC::ResourceKolab::removeSubresource( const QString& id )
 {
   return kmailRemoveSubresource( id );
+}
+
+void KABC::ResourceKolab::writeConfig()
+{
+  KConfig config( configFile() );
+
+  Kolab::ResourceMap::ConstIterator it;
+  for ( it = mSubResources.constBegin(); it != mSubResources.constEnd(); ++it ) {
+    KConfigGroup group = config.group( it.key() );
+    group.writeEntry( "Active", it.value().active() );
+    group.writeEntry( "CompletionWeight", it.value().completionWeight() );
+  }
 }
 
 #include "resourcekolab.moc"
