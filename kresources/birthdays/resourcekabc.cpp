@@ -317,6 +317,8 @@ bool ResourceKABC::doLoad( bool syncCache )
     kDebug(5800) <<"imported" << anniversary.toString();
   }
 
+  emit resourceLoaded( this );
+
   return true;
 }
 
