@@ -117,7 +117,7 @@ namespace {
        VCardConverter vcc;
        Addressee::List al = vcc.parseVCards( vCard.toUtf8() );
        int index = path.right( path.length() - path.lastIndexOf( ":" ) - 1 ).toInt();
-       if ( index == -1 ) return true;
+       if ( index == -1 || index >= al.count() ) return true;
        KABC::Addressee a = al[index];
        if ( a.isEmpty() ) return true;
        KPIM::KAddrBookExternal::addVCard( a, 0 );
