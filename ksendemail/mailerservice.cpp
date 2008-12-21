@@ -82,6 +82,7 @@ bool MailerService::start()
 
 void MailerService::serviceOwnerChanged( const QString & name, const QString & oldOwner, const QString & newOwner )
 {
+  Q_UNUSED( oldOwner );
   if ( name == "org.kde.kmail" && !newOwner.isEmpty() && mEventLoop && mEventLoop->isRunning() ) {
      mEventLoop->quit();
      mSuccess = true;
@@ -95,7 +96,7 @@ void MailerService::processArgs( KCmdLineArgs *args )
     QString to, cc, bcc, subj, body;
     QStringList customHeaders;
     KUrl messageFile;
-    KUrl::List attachURLs;
+    QStringList attachURLs;
     bool mailto = false;
     bool calledWithSession = false; // for ignoring '-session foo'
 
@@ -147,7 +148,7 @@ void MailerService::processArgs( KCmdLineArgs *args )
         mailto = true;
         for ( QStringList::Iterator it = attachList.begin() ; it != attachList.end() ; ++it )
             if ( !(*it).isEmpty() )
-                attachURLs += KUrl( *it );
+                attachURLs.append( *it );
     }
 
     customHeaders = args->getOptionList("header");
@@ -167,7 +168,7 @@ void MailerService::processArgs( KCmdLineArgs *args )
                 QString tmpArg = args->arg(i);
                 KUrl url( tmpArg );
                 if (url.isValid() && !url.protocol().isEmpty())
-                    attachURLs += url;
+                    attachURLs.append( url.url() );
                 else
                     to += tmpArg + ", ";
             }
@@ -182,17 +183,17 @@ void MailerService::processArgs( KCmdLineArgs *args )
     if ( !calledWithSession )
         args->clear();
 
-    if( mSuccess ) {
+    if ( mSuccess ) {
      QDBusInterface kmailObj( "org.kde.kmail", "/KMail", "org.kde.kmail.kmail" );
 
      QList<QVariant> messages;
-     messages << to << cc << bcc << subj << body << false;
-     QDBusReply<QDBusObjectPath> composerDbusPath = kmailObj.callWithArgumentList(QDBus::AutoDetect, "openComposer", messages);
+     messages << to << cc << bcc << subj << body << false << messageFile.url() << attachURLs << customHeaders;
+     QDBusReply<int> composerDbusPath = kmailObj.callWithArgumentList(QDBus::AutoDetect, "openComposer", messages);
 
      if ( !composerDbusPath.isValid() ) {
       KMessageBox::error( 0, i18n( "Can't connect to email service." ) );
      }
-    }else {
+    } else {
       KMessageBox::error( 0, i18n( "Unable to find or start email service." ) );
     }
 
