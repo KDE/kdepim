@@ -1,5 +1,5 @@
 /*
-    This file is part of KSendEmail. Some of the code has been taken from KMail (kmkernel.cpp)
+    This file is part of KSendEmail.
     Copyright (c) 2008 Pradeepto Bhattacharya <pradeepto@kde.org>
     
     This library is free software; you can redistribute it and/or
@@ -18,17 +18,11 @@
     Boston, MA 02110-1301, USA.
 */
 
-#include <QtDBus/QtDBus>
+#include "mailerservice.h"
 
 #include <kaboutdata.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>
-#include <kurl.h>
-#include <kdebug.h>
-#include <kdbusservicestarter.h>
-#include <kmessagebox.h>
-
-#include "kmailinterface.h"
 
 static const char description[] =
   I18N_NOOP( "KDE Commandline Emailer." );
@@ -55,121 +49,6 @@ static KCmdLineOptions kmail_options ()
 }
 
 
-void processArgs( KCmdLineArgs *args )
-{
-    kDebug() << "bool processArgs( KCmdLineArgs *args )";
-
-    QString to, cc, bcc, subj, body;
-    QStringList customHeaders;
-    KUrl messageFile;
-    KUrl::List attachURLs;
-    bool mailto = false;
-    bool calledWithSession = false; // for ignoring '-session foo'
-
-    if (args->isSet("subject"))
-    {
-        subj = args->getOption("subject");
-     // if kmail is called with 'kmail -session abc' then this doesn't mean
-     // that the user wants to send a message with subject "ession" but
-     // (most likely) that the user clicked on KMail's system tray applet
-     // which results in KMKernel::raise() calling "kmail kmail newInstance"
-     // via D-Bus which apparently executes the application with the original
-     // command line arguments and those include "-session ..." if
-     // kmail/kontact was restored by session management
-        if ( subj == "ession" ) {
-            subj.clear();
-            calledWithSession = true;
-        }
-        else
-            mailto = true;
-    }
-
-    if (args->isSet("cc"))
-    {
-        mailto = true;
-        cc = args->getOption("cc");
-    }
-
-    if (args->isSet("bcc"))
-    {
-        mailto = true;
-        bcc = args->getOption("bcc");
-    }
-
-    if (args->isSet("msg"))
-    {
-        mailto = true;
-        messageFile.setPath( args->getOption("msg") );
-    }
-
-    if (args->isSet("body"))
-    {
-        mailto = true;
-        body = args->getOption("body");
-    }
-
-    QStringList attachList = args->getOptionList("attach");
-    if (!attachList.isEmpty())
-    {
-        mailto = true;
-        for ( QStringList::Iterator it = attachList.begin() ; it != attachList.end() ; ++it )
-            if ( !(*it).isEmpty() )
-                attachURLs += KUrl( *it );
-    }
-
-    customHeaders = args->getOptionList("header");
-
-    if (args->isSet("composer"))
-        mailto = true;
-
-
-    if ( !calledWithSession ) {
-    // only read additional command line arguments if kmail/kontact is
-    // not called with "-session foo"
-        for(int i= 0; i < args->count(); i++)
-        {
-            if (args->arg(i).startsWith("mailto:", Qt::CaseInsensitive))
-                to += args->url(i).path() + ", ";
-            else {
-                QString tmpArg = args->arg(i);
-                KUrl url( tmpArg );
-                if (url.isValid() && !url.protocol().isEmpty())
-                    attachURLs += url;
-                else
-                    to += tmpArg + ", ";
-            }
-            mailto = true;
-        }
-        if ( !to.isEmpty() ) {
-      // cut off the superfluous trailing ", "
-            to.truncate( to.length() - 2 );
-        }
-    }
-
-    if ( !calledWithSession )
-        args->clear();
-
-    QString error;
-    QString dbusService;
-    int result = KDBusServiceStarter::self()->findServiceFor( "DBUS/ResourceBackend/IMAP", QString(), &error, &dbusService );//Check if Kontact is already running and if not ...
-    if ( result != 0 ) { 
-      result = KDBusServiceStarter::self()->startServiceFor( "DBUS/ResourceBackend/IMAP", QString(), &error, &dbusService ); // ... start Kontact
-      if(  result != 0 ) {
-        KMessageBox::error( 0, i18n( "Unable to find or start Kontact." ) );
-        return;
-      }
-    }
-
-    QDBusInterface kmailObj( dbusService, "/KMail", "org.kde.kmail.kmail" );
-    QList<QVariant> messages;
-    messages << to << cc << bcc << subj << body << false;
-    QDBusReply<QDBusObjectPath> composerDbusPath = kmailObj.callWithArgumentList(QDBus::AutoDetect, "openComposer", messages);
-
-    if ( !composerDbusPath.isValid() ) {
-      KMessageBox::error( 0, i18n( "Can't connect to Kontact." ) );
-    }
-}
-
 int main( int argc, char **argv )
 {
   KAboutData aboutData( "ksendemail", 0, ki18n( "KSendEmail" ), "0.01", ki18n(description),
@@ -186,5 +65,6 @@ int main( int argc, char **argv )
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
-  processArgs( args );
+  MailerService *ms = new MailerService();
+  ms->processArgs( args );
 }
