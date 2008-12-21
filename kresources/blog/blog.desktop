@@ -53,6 +53,7 @@ Comment[sv]=Gör det möjligt att skriva ut journalanteckningar som webbjournali
 Comment[tr]=Takvim günlük girdilerini günlük (blog) girdileri olarak göndermeyi sağlar
 Comment[uk]=Надає можливість розміщувати записи журналу календаря як записи у блозі.
 Comment[x-test]=xxAllows to post calendar journal entries as blog entriesxx
+Comment[zh_CN]=允许您将日记内容发送到博客上
 Comment[zh_TW]=允許將行事曆日誌項目發送為部落格的文章
 X-KDE-Library=kcal_blog
 Type=Service

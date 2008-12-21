@@ -49,6 +49,7 @@ Comment[sv]=Ger tillgång till kontakter lagrade på en Scalix-server med använ
 Comment[tr]=KMail ya da KOntact IMAP kullanarak Scalix sunucusu üzerindeki kişilere erişim sağlar
 Comment[uk]=Надає доступ до календаря, який зберігається на сервері Scalix, за допомогою IMAP за посередництва KMail або Kontact
 Comment[x-test]=xxProvides access to contacts stored on a Scalix server using IMAP via KMail or Kontactxx
+Comment[zh_CN]=通过 KMail 或 Kontact 的 IMAP 功能，提供对存储在 Scalix 服务器上的联系人的访问支持
 Comment[zh_TW]=提供存取透過 KMail 或 Kontact，使用 IMAP 儲存在 Scalix 伺服器上的聯絡人的功能
 X-KDE-Library=kabc_scalix
 Type=Service

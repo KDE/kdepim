@@ -19,6 +19,7 @@ Comment[sv]=Den här kanalen synkroniserar handdatorns uppgiftsdatabas med en Ak
 Comment[tr]=Bu kanal el bilgisayarınızdaki yapılacak ögeleri ile bilgisayarınızdaki Akonadi Yapılacak Ögeleri Koleksiyonunu eşzamanlar.
 Comment[uk]=Цей акведук синхронізує базу даних завдань кишенькового пристрою зі збіркою завдань Akonadi.
 Comment[x-test]=xxThis conduit syncs the handheld todo database with an Akonadi Todo Collection.xx
+Comment[zh_CN]=此管道会将您的手持设备中的待办事宜数据库和 Akonadi 待办收藏库进行同步。
 Comment[zh_TW]=此導管將掌上型裝置的待辦事項資料庫與 Akonadi 上的待辦事項同步。
 Name=To-do
 Name[ca]=Pendent
@@ -44,6 +45,7 @@ Name[sv]=Uppgifter
 Name[tr]=Yapılacak Ögesi
 Name[uk]=Завдання
 Name[x-test]=xxTo-doxx
+Name[zh_CN]=待办事宜
 Name[zh_TW]=待辦事項
 
 Implemented=file

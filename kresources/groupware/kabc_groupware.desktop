@@ -65,6 +65,7 @@ Comment[sv]=Ger tillgång till kontakter lagrade på en grupprogramserver.
 Comment[tr]=Groupware sunucusu üzerindeki kişilere erişim sağlar.
 Comment[uk]=Надає доступ до контактів, які зберігаються на сервері Groupware.
 Comment[x-test]=xxProvides access to contacts stored on a Groupware server.xx
+Comment[zh_CN]=提供对存储在 Groupware 服务器上的联系人的访问支持
 Comment[zh_TW]=提供存取儲存在 Groupware 伺服器上的聯絡人的功能
 X-KDE-Library=kabc_groupware
 Type=Service

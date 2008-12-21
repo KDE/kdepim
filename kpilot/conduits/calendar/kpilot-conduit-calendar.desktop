@@ -20,6 +20,7 @@ Comment[sv]=Den här kanalen synkroniserar handdatorns kalenderdatabas med en Ak
 Comment[tr]=Bu kanal el bilgisayarınızdaki takvim ile bilgisayarınızdakini eşzamanlar.
 Comment[uk]=Цей акведук синхронізує базу даних календаря кишенькового пристрою зі збіркою календаря Akonadi.
 Comment[x-test]=xxThis conduit syncs the handheld calendar database with an Akonadi calendar Collection.xx
+Comment[zh_CN]=此管道会将您的手持设备中的日历数据库和 Akonadi 的日历收藏库进行同步。
 Comment[zh_TW]=此導管將掌上型裝置的行事曆資料庫與 Akonadi 上的行事曆同步。
 Name=Calendar
 Name[af]=Kalender

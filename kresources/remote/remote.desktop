@@ -69,6 +69,7 @@ Comment[pt_BR]=Fornece acesso a um calendário em um arquivo remoto usando o KIO
 Comment[sv]=Ger tillgång till en kalender i en fjärrfil med användning av KDE:s I/O-ramverk
 Comment[uk]=Надає доступ до календаря, який зберігається у віддаленому файлі, за допомогою засобів KIO KDE
 Comment[x-test]=xxProvides access to a calendar in a remote file using KDE's network framework KIOxx
+Comment[zh_CN]=通过 KDE 网络框架 KIO，提供对远程日历文件的访问支持
 Comment[zh_TW]=提供存取使用 KDE 網路架構 KIO 儲存在遠端檔案中的行事曆的功能
 X-KDE-Library=kcal_remote
 Type=Service

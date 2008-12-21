@@ -72,6 +72,7 @@ Comment[sv]=Ger tillgång till födelsedagsdatum för kontakter i KDE:s adressbo
 Comment[tr]=KDE Adres defterindeki kişilerin doğumgünü günlerine takvim olayları olarak erişmeyi sağlar
 Comment[uk]=Надає доступ до дат днів народження, які зберігаються у адресній книзі KDE як події календаря
 Comment[x-test]=xxProvides access to birthday dates of contacts in the KDE address book as calendar eventsxx
+Comment[zh_CN]=提供对存储在 KDE 地址簿文件夹中的联系人生日的访问支持，并将其作为日历中的事件
 Comment[zh_TW]=提供存取儲存 KDE 通訊錄中的生日日期，做為行事曆的事件
 X-KDE-Library=kcal_kabc
 Type=Service
