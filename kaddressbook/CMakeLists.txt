@@ -177,5 +177,5 @@ install( FILES zone.tab  DESTINATION ${DATA_INSTALL_DIR}/kaddressbook)
 install( FILES kaddressbookui.rc kaddressbook_part.rc  DESTINATION ${DATA_INSTALL_DIR}/kaddressbook)
 install( FILES kaddressbook_view.desktop dbusaddressbook.desktop  DESTINATION ${SERVICETYPES_INSTALL_DIR})
 install( FILES org.kde.KAddressbook.Core.xml DESTINATION ${KDE4_DBUS_INTERFACES_DIR} )
-install( FILES kaddressbook_export.h  DESTINATION ${INCLUDE_INSTALL_DIR}/kaddressbook)
+install( FILES kaddressbook_export.h  DESTINATION ${INCLUDE_INSTALL_DIR}/kaddressbook COMPONENT Devel)
 
