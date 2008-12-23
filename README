@@ -28,6 +28,7 @@ What it is
 * kalarm: gui for setting up personal alarm messages, emails and commands
 * kalarmd: alarm monitoring daemon, shared by korganizer and kalarm.
 * kontact: Integrated PIM application
+* ksendemail: commandline email tool.
 * ktimetracker: Time tracker.
 * kfile-plugins: vCard KFIleItem plugin.
 * knotes: yellow notes application
