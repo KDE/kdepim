@@ -186,6 +186,7 @@ bool ResourceKABC::doLoad( bool syncCache )
       if ( mAlarm ) {
         // Set the alarm
         Alarm *vAlarm = ev->newAlarm();
+        vAlarm->setType( Alarm::Display );
         vAlarm->setText( summary );
         vAlarm->setTime( KDateTime( birthdate, KDateTime::ClockTime ) );
         // N days before
