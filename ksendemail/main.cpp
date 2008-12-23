@@ -42,9 +42,6 @@ static KCmdLineOptions kmail_options ()
     options.add("body <text>",		ki18n("Set body of message"));
     options.add("attach <url>",		ki18n("Add an attachment to the mail. This can be repeated"));
     options.add("composer",		ki18n("Only open composer window"));
-    options.add("+[address|URL]",		ki18n("Send message to 'address' resp. "
-            "attach the file the 'URL' points "
-                    "to"));
     return options;
 }
 
