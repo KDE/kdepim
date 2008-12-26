@@ -421,8 +421,12 @@ QMimeData *EntityTreeModel::mimeData( const QModelIndexList &indexes ) const
 bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, int role )
 {
   Q_D( EntityTreeModel );
+  kDebug() << index.column()
+      << (role & (Qt::EditRole | ItemRole | CollectionRole))
+      << role << (Qt::EditRole | ItemRole | CollectionRole) ;
   // Delegate to something? Akonadi updater, or the manager classes? I think akonadiUpdater. entityUpdateAdapter
-  if ( index.column() == 0 && role == Qt::EditRole ) {
+  if ( index.column() == 0 && role & (Qt::EditRole | ItemRole | CollectionRole) ) {
+    kDebug() << "ok";
     if ( d->isCollection( index ) ) {
       // rename collection
       Collection col = d->collectionForIndex( index );
@@ -440,9 +444,11 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
       return true;
     }
     if ( d->isItem( index ) ) {
-      Item item = d->m_items.value( index.internalId() );
-      if ( !item.isValid() || value.toString().isEmpty() )
-        return false;
+      kDebug() << "item";
+      Item i = value.value<Item>();
+//       Item item = d->m_items.value( index.internalId() );
+//       if ( !item.isValid() || value.toString().isEmpty() )
+//         return false;
 
 //       if ( item.hasAttribute< EntityDisplayAttribute >() )
 //       {
@@ -450,7 +456,8 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
 //       displayAttribute->setDisplayName( value.toString() );
 //       }
 //           item.addAttribute(displayAttribute);
-      d->entityUpdateAdapter->updateEntities( Item::List() << item );
+      d->entityUpdateAdapter->updateEntities( Item::List() << i );
+//       d->entityUpdateAdapter->updateEntities( Item::List() << item );
       return true;
     }
   }
