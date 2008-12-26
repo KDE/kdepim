@@ -32,6 +32,7 @@
 #include <akonadi/itemmovejob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemcreatejob.h>
+#include <akonadi/itemmodifyjob.h>
 #include <akonadi/transactionsequence.h>
 #include <akonadi/entitydisplayattribute.h>
 #include "collectionchildorderattribute.h"
@@ -183,7 +184,9 @@ void EntityUpdateAdapter::updateEntities( Collection::List updatedCollections )
 
 void EntityUpdateAdapter::updateEntities( Item::List updatedItems )
 {
-
+  foreach( Item item, updatedItems ) {
+    Akonadi::ItemModifyJob *itemModifyJob = new Akonadi::ItemModifyJob( item, m_job_parent );
+  }
 }
 
 void EntityUpdateAdapter::listJobDone( KJob *job )
