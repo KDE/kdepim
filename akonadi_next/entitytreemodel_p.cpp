@@ -338,6 +338,7 @@ void EntityTreeModelPrivate::itemChanged( const Akonadi::Item &item, const QSet<
 {
   kDebug() << item.remoteId();
   Q_Q( EntityTreeModel );
+  m_items[ item.id() * -1 ] = item;
   QModelIndex i = indexForItem( item );
   if ( i.isValid() )
     emit q->dataChanged( i, i );
@@ -484,6 +485,8 @@ QModelIndex EntityTreeModelPrivate::indexForId( qint64 id, int column ) const
 
 bool EntityTreeModelPrivate::passesFilter( const QStringList &mimetypes )
 {
+  if (m_mimeTypeFilter.size() == 0)
+    return true;
   return mimetypeMatches( m_mimeTypeFilter, mimetypes );
 }
 
