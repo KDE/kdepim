@@ -49,6 +49,15 @@ EntityUpdateAdapter::EntityUpdateAdapter( Session *s, ItemFetchScope scope, QObj
 {
 
   m_includeUnsubscribed = ( includeUnsubscribed == IncludeUnsubscribed ) ? true : false;
+
+
+  m_session->setParent(this);
+
+}
+
+EntityUpdateAdapter::~EntityUpdateAdapter()
+{
+  delete m_job_parent;
 }
 
 void EntityUpdateAdapter::addEntities( Item::List newItems, Collection::List newCollections, Collection parent, int row )
@@ -58,13 +67,12 @@ void EntityUpdateAdapter::addEntities( Item::List newItems, Collection::List new
 
 void EntityUpdateAdapter::beginTransaction()
 {
-//   m_job_parent = new TransactionSequence(m_session);
+  m_job_parent = new TransactionSequence(m_session);
 }
 
 void EntityUpdateAdapter::endTransaction()
 {
-//   delete m_job_parent;
-//   m_job_parent = m_session;
+  m_job_parent = m_session;
 }
 
 void EntityUpdateAdapter::fetchCollections( Collection col, CollectionFetchJob::Type type )
