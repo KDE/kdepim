@@ -136,6 +136,8 @@ EntityTreeView::EntityTreeView( QWidget * parent ) :
     QTreeView( parent ),
     d( new Private( this ) )
 {
+
+  setSelectionMode( QAbstractItemView::SingleSelection );
   d->init();
 }
 

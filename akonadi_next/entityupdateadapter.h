@@ -51,6 +51,8 @@ public:
                        QObject *parent = 0,
                        int includeUnsubscribed = EntityUpdateAdapter::DoNotIncludeUnsubscribed );
 
+  ~EntityUpdateAdapter();
+
   void addEntities( Item::List newItems, Collection::List newCollections, Collection parent, int row );
 
   void fetchCollections( Collection col, CollectionFetchJob::Type = CollectionFetchJob::FirstLevel );
