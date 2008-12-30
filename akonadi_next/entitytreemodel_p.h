@@ -86,6 +86,7 @@ public:
   ItemFetchScope m_itemFetchScope;
   Collection m_rootCollection;
   bool m_showStats;
+  int m_entitiesToFetch;
 
   QModelIndex indexForItem( Item );
 

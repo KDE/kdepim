@@ -43,6 +43,7 @@ EntityTreeModel::EntityTreeModel( EntityUpdateAdapter *entityUpdateAdapter,
                                   QStringList mimetypes,
                                   QObject *parent,
                                   Collection rootCollection,
+                                  int entitiesToFetch,
                                   int showStats
                                 )
     : QAbstractItemModel( parent ),
@@ -55,6 +56,7 @@ EntityTreeModel::EntityTreeModel( EntityUpdateAdapter *entityUpdateAdapter,
   d->monitor = monitor;
   d->m_rootCollection = rootCollection;
   d->m_showStats = ( showStats == ShowStatistics ) ? true : false;
+  d->m_entitiesToFetch = entitiesToFetch;
 
   AttributeFactory::registerAttribute<CollectionChildOrderAttribute>();
 
@@ -418,6 +420,7 @@ QMimeData *EntityTreeModel::mimeData( const QModelIndexList &indexes ) const
   return data;
 }
 
+// Always return false for actions which take place syncronously, eg via a Job.
 bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, int role )
 {
   Q_D( EntityTreeModel );
@@ -441,7 +444,7 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
 // //       }
 
       d->entityUpdateAdapter->updateEntities( Collection::List() << col );
-      return true;
+      return false;
     }
     if ( d->isItem( index ) ) {
       kDebug() << "item";
@@ -458,7 +461,7 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
 //           item.addAttribute(displayAttribute);
       d->entityUpdateAdapter->updateEntities( Item::List() << i );
 //       d->entityUpdateAdapter->updateEntities( Item::List() << item );
-      return true;
+        return false;
     }
   }
 

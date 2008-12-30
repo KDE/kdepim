@@ -44,10 +44,6 @@ void EntityTreeModelPrivate::init()
 {
   Q_Q( EntityTreeModel );
 
-//   // Make sure the essential is set on the monitor.
-//   monitor->setCollectionMonitored( m_rootCollection );
-
-
   // ### Hack to get the kmail resource folder icons . REMOVE
   KIconLoader::global()->addAppDir( QLatin1String( "kmail" ) );
   KIconLoader::global()->addAppDir( QLatin1String( "kdepim" ) );
@@ -91,8 +87,19 @@ void EntityTreeModelPrivate::init()
 
   collections.insert( m_rootCollection.id(), m_rootCollection );
   kDebug() << m_rootCollection.id() << m_rootCollection.name();
-  entityUpdateAdapter->fetchCollections( m_rootCollection, CollectionFetchJob::FirstLevel );
 
+  // Includes recursive trees. Lower levels are fetched in the onRowsInserted slot if
+  // necessary.
+  if (m_entitiesToFetch & EntityTreeModel::FetchFirstLevelChildCollections)
+  {
+    entityUpdateAdapter->fetchCollections( m_rootCollection, CollectionFetchJob::FirstLevel );
+  }
+  if (m_entitiesToFetch & EntityTreeModel::FetchItems)
+  {
+    entityUpdateAdapter->fetchItems( m_rootCollection );
+  }
+  // else someone wants a model which has neither items nor collections.
+  // Not that anyone would want such a thing...
 }
 
 
@@ -230,8 +237,16 @@ void EntityTreeModelPrivate::onRowsInserted( const QModelIndex & parent, int sta
 
     Akonadi::Collection col = qvariant_cast< Akonadi::Collection > ( datav );
 
-    entityUpdateAdapter->fetchCollections( col, CollectionFetchJob::FirstLevel );
-    entityUpdateAdapter->fetchItems( col );
+    if (m_entitiesToFetch == EntityTreeModel::FetchCollectionsRecursive)
+    {
+      // Fetch the next level of collections if neccessary.
+      entityUpdateAdapter->fetchCollections( col, CollectionFetchJob::FirstLevel );
+    }
+    if (m_entitiesToFetch & EntityTreeModel::FetchItems)
+    {
+      // Fetch items if neccessary.
+      entityUpdateAdapter->fetchItems( col );
+    }
   }
 }
 

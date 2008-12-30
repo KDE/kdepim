@@ -88,6 +88,16 @@ public:
   //                  QStringList mimeFilter = QStringList(), QObject *parent = 0);
 
   /**
+  What to fetch and represent in the model.
+  */
+  enum EntitiesToFetch {
+    FetchNothing = 0,                     /// Fetch nothing. This creates an empty model.
+    FetchItems = 1,                       /// Fetch items in the rootCollection
+    FetchFirstLevelChildCollections = 2,  /// Fetch first level collections in the root collection.
+    FetchCollectionsRecursive = 4 | FetchFirstLevelChildCollections,    /// Fetch collections in the root collection recursively. This implies FetchFirstLevelChildCollections.
+  };
+
+  /**
    * Creates a new collection and item model.
    *
    * @param parent The parent object.
@@ -99,6 +109,7 @@ public:
                             QObject *parent = 0,
                             Collection rootCollection = Collection::root(),
 // TODO: figure out what to do about this:
+                            int entitiesToFetch = EntityTreeModel::FetchCollectionsRecursive,
                             int showStats = EntityTreeModel::DoNotShowStatistics
                           );
 
