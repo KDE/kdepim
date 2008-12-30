@@ -1,0 +1,191 @@
+/** @mainpage akonadi_next
+
+Some classes to be merged into akonadi when finished.
+
+<h1> Models and Views</h1>
+Akonadi models and views are a high level way to interact with the akonadi server. Most applications will use these classes.
+
+Because communication with akonadi happens asynchronously, and the models only hold a cached copy of the data on the akonadi server, some typical behaviours of models are not followed by Akonadi models.
+
+For example, when setting data on a model via a view, most models syncronously update their internal store and notify akonadi to update its view of the data by returning <tt>true</tt>.
+
+@dot
+digraph utmg {
+    rankdir = LR;
+    size = "7.5,7.5";
+    pack = true;
+    { node [label="",style=invis, height=0, width=0 ];
+      V_Set_Data; V_Result; V_Data_Changed;
+      M_Set_Data; M_Result;
+    }
+    { node [shape=box, fillcolor=lightyellow, style=filled,fontsize=26];
+      View [label=":View"]; Model [label=":Model"];
+    }
+    { node [style=invis];
+      View_EOL; Model_EOL;
+    }
+    edge [fontsize=26];
+    {
+      V_Set_Data -> M_Set_Data [label="Set Data"];
+      M_Result -> V_Result [label="Success",arrowhead="vee", style="dashed"];
+      V_Result -> V_Data_Changed [label="Update View \n[ Success = True ]"];
+    }
+
+    // Dashed Vertical lines for object lifetimes.
+    edge [style=dashed, arrowhead=none];
+    { rank = same; View -> V_Set_Data -> V_Result -> V_Data_Changed -> View_EOL; }
+    { rank = same; Model -> M_Set_Data -> M_Result -> Model_EOL; }
+
+    // Make sure top nodes are in a straight line.
+    { View -> Model [style=invis]; }
+    // And the bottom nodes.
+    { View_EOL -> Model_EOL [style=invis]; }
+}
+@enddot
+
+Akonadi models only cache data from the akonadi server. To update data on an Akonadi::Entity stored in a model, the model makes a request to the akonadi server to update the model data. At that point the data cached internally in the model is not updated, so <tt>false</tt> is always returned from setData. If the request to update data on the akonadi server is successful, an Akonadi::Monitor notifies the model that the data on that item has changed. The model then updates its internal data store and notifies the view that the data has changed.
+
+@dot
+digraph utmg {
+    rankdir = LR;
+    size = "7.5,7.5";
+    pack = true;
+    { node [label="",style=invis, height=0, width=0 ];
+      ETV_Set_Data; ETV_Result; ETV_Data_Changed;
+      ETM_Set_Data; ETM_Result; ETM_Changed;
+      M_Dummy_1; M_Changed;
+      AS_Modify;
+    }
+    { node [shape=box, fillcolor=lightyellow, style=filled,fontsize=26];
+      EntityTreeView [label=":View"]; EntityTreeModel [label=":Model"]; Monitor [label=":Monitor"]; Akonadi_Server [label=":Akonadi"];
+    }
+    { node [style=invis];
+      EntityTreeView_EOL; EntityTreeModel_EOL; Monitor_EOL; Akonadi_Server_EOL;
+    }
+
+    edge [fontsize=26];
+    {
+      { rank = same; ETV_Set_Data -> ETM_Set_Data [label="Set Data"]; }
+      { rank = same; ETM_Result -> ETV_Result [label="False",arrowhead="vee", style="dashed"]; }
+      { rank = same; ETM_Result -> M_Dummy_1 [style=invis]; }
+      { rank = same; ETM_Set_Data -> AS_Modify [arrowhead="vee",taillabel="Modify Item", labeldistance=14.0, labelangle=10]; }
+      { rank = same; M_Changed -> ETM_Changed [arrowhead="vee",label="Item Changed"]; }
+      { rank = same; ETM_Changed -> ETV_Data_Changed [arrowhead="vee",label="Update View"]; }
+    }
+
+    // Dashed Vertical lines for object lifetimes.
+    edge [style=dashed, arrowhead=none];
+    { rank = same; EntityTreeView -> ETV_Set_Data -> ETV_Result -> ETV_Data_Changed -> EntityTreeView_EOL; }
+    { rank = same; EntityTreeModel -> ETM_Set_Data -> ETM_Result -> ETM_Changed -> EntityTreeModel_EOL; }
+    { rank = same; Monitor -> M_Dummy_1 -> M_Changed -> Monitor_EOL; }
+    { rank = same; Akonadi_Server -> AS_Modify -> Akonadi_Server_EOL; }
+
+    // Make sure top nodes are in a straight line.
+    { EntityTreeView -> EntityTreeModel -> Monitor -> Akonadi_Server [style=invis]; }
+    // And the bottom nodes.
+    { EntityTreeView_EOL -> EntityTreeModel_EOL -> Monitor_EOL -> Akonadi_Server_EOL [style=invis]; }
+}
+@enddot
+
+Similarly, in drag and drop operations, most models would update an internal data store and return <tt>true</tt> from dropMimeData if the drop is successful.
+
+@dot
+digraph utmg {
+    rankdir = LR;
+    size = "7.5,7.5";
+    pack = true;
+    { node [label="",style=invis, height=0, width=0 ];
+      Left_Phantom; Left_Phantom_DropEvent;
+      V_DropEvent; V_Result; V_Data_Changed; V_Dummy_1;
+      M_DropMimeData; M_Result;
+    }
+    { node [shape=box, fillcolor=lightyellow, style=filled,fontsize=26];
+      View [label=":View"]; Model [label=":Model"];
+    }
+    { node [style=invis];
+       Left_Phantom_EOL;
+       View_EOL; Model_EOL;
+    }
+    edge [fontsize=26];
+    {
+      Left_Phantom_DropEvent -> V_DropEvent [label="DropEvent"];
+      V_DropEvent -> M_DropMimeData [label="DropMimeData"];
+      M_Result -> V_Result [label="Success",arrowhead="vee", style="dashed"];
+      V_Result -> V_Data_Changed [label="Update View \n[Success = True]"];
+    }
+
+    // Dashed Vertical lines for object lifetimes.
+    edge [style=dashed, arrowhead=none];
+    { rank = same; View -> V_DropEvent -> V_Result -> V_Dummy_1 -> V_Data_Changed -> View_EOL; }
+    { rank = same; Model -> M_DropMimeData -> M_Result -> Model_EOL; }
+
+    //Phantom line
+    { rank= same; Left_Phantom -> Left_Phantom_DropEvent -> Left_Phantom_EOL [style=invis]; }
+
+    // Make sure top nodes are in a straight line.
+    {  Left_Phantom -> View -> Model [style=invis]; }
+    // And the bottom nodes.
+    {  Left_Phantom_EOL ->  View_EOL -> Model_EOL [style=invis]; }
+}
+
+@enddot
+
+Akonadi models, for the same reason as above, always return false from dropMimeData. At the same time a suitable request is sent to the akonadi server to make the changes resulting from the drop (for example, moving or copying an entity, or adding a new entity to a collection etc). If that request is successful, the Akonadi::Monitor notifies the model that the data is changed and the model updates its internal store and notifies the view that the model data is changed.
+
+@dot
+
+digraph utmg {
+    rankdir = LR;
+    size = "7.5,7.5";
+    pack = true;
+    { node [label="",style=invis, height=0, width=0 ];
+      Left_Phantom; Left_Phantom_DropEvent;
+      ETV_DropEvent; ETV_Result; ETV_Data_Changed;
+      ETM_DropMimeData; ETM_Result; ETM_Changed;
+      M_Dummy_1; M_Changed;
+      AS_Modify;
+    }
+    { node [shape=box, fillcolor=lightyellow, style=filled,fontsize=26];
+      EntityTreeView [label=":View"];
+      EntityTreeModel [label=":Model"];
+      Monitor [label=":Monitor"];
+      Akonadi_Server [label=":Akonadi"];
+    }
+    { node [style=invis];
+      Left_Phantom_EOL;
+      EntityTreeView_EOL; EntityTreeModel_EOL; Monitor_EOL; Akonadi_Server_EOL;
+    }
+
+    edge [fontsize=26];
+    {
+      { rank = same; Left_Phantom_DropEvent -> ETV_DropEvent [label="DropEvent"]; }
+      { rank = same; ETV_DropEvent -> ETM_DropMimeData [label="Drop MimeData"]; }
+      { rank = same; ETM_Result -> ETV_Result [label="False",arrowhead="vee", style="dashed"]; }
+      { rank = same; ETM_Result -> M_Dummy_1 [style=invis]; }
+      { rank = same; ETM_DropMimeData -> AS_Modify [arrowhead="vee",taillabel="Action", labeldistance=14.0, labelangle=10]; }
+      { rank = same; M_Changed -> ETM_Changed [arrowhead="vee",label="Item Changed"]; }
+      { rank = same; ETM_Changed -> ETV_Data_Changed [arrowhead="vee",label="Update View"]; }
+    }
+
+    // Dashed Vertical lines for object lifetimes.
+    edge [style=dashed, arrowhead=none];
+    { rank = same; EntityTreeView -> ETV_DropEvent -> ETV_Result -> ETV_Data_Changed -> EntityTreeView_EOL; }
+    { rank = same; EntityTreeModel -> ETM_DropMimeData -> ETM_Result -> ETM_Changed -> EntityTreeModel_EOL; }
+    { rank = same; Monitor -> M_Dummy_1 -> M_Changed -> Monitor_EOL; }
+    { rank = same; Akonadi_Server -> AS_Modify -> Akonadi_Server_EOL; }
+
+    //Phantom line
+    { rank= same; Left_Phantom -> Left_Phantom_DropEvent -> Left_Phantom_EOL [style=invis]; }
+
+    // Make sure top nodes are in a straight line.
+    { Left_Phantom -> EntityTreeView -> EntityTreeModel -> Monitor -> Akonadi_Server [style=invis]; }
+    // And the bottom nodes.
+    { Left_Phantom_EOL -> EntityTreeView_EOL -> EntityTreeModel_EOL -> Monitor_EOL -> Akonadi_Server_EOL [style=invis]; }
+}
+
+
+@enddot
+
+
+*/
+
