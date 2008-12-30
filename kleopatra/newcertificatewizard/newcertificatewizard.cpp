@@ -968,7 +968,7 @@ void EnterDetailsPage::registerDialogPropertiesAsFields() {
 }
 
 void EnterDetailsPage::saveValues() {
-    for ( QVector< QPair<QString,QLineEdit*> >::const_iterator it = attributePairList.begin(), end = attributePairList.end() ; it != end ; ++it )
+    for ( QVector< QPair<QString,QLineEdit*> >::const_iterator it = attributePairList.constBegin(), end = attributePairList.constEnd() ; it != end ; ++it )
         savedValues[ attributeFromKey(it->first) ] = it->second->text().trimmed();
 }
 

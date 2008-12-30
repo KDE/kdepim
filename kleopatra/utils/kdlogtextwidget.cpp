@@ -486,10 +486,10 @@ void KDLogTextWidget::Private::addPendingLines() {
 
         // update dimensions:
         const QVector<int>::const_iterator it =
-            std::max_element( plw.begin(), plw.end() );
+            std::max_element( plw.constBegin(), plw.constEnd() );
         if ( *it >= cache.dimensions.longestLineLength ) {
             cache.dimensions.longestLineLength = *it;
-            cache.dimensions.indexOfLongestLine = oldNumLines + ( it - plw.begin() );
+            cache.dimensions.indexOfLongestLine = oldNumLines + ( it - plw.constBegin() );
         }
     }
 

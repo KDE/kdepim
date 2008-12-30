@@ -78,7 +78,7 @@ static KUrl parseUrl( ConfigEntry::ArgType argType, const QString& str )
         QStringList items = str.split( ':' );
         if ( items.count() == 5 )
         {
-            QStringList::const_iterator it = items.begin();
+            QStringList::const_iterator it = items.constBegin();
             KUrl url;
             url.setProtocol( "ldap" );
             url.setHost( urlpart_decode( *it++ ) );
@@ -427,7 +427,7 @@ QList<int> ConfigEntry::intValueList() const
   assert( isList() );
   QList<int> ret;
   QList<QVariant> lst = m_value.toList();
-  for( QList<QVariant>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+  for( QList<QVariant>::const_iterator it = lst.constBegin(); it != lst.constEnd(); ++it ) {
     ret.append( (*it).toInt() );
   }
   return ret;
@@ -439,7 +439,7 @@ QList<unsigned int> ConfigEntry::uintValueList() const
   assert( isList() );
   QList<unsigned int> ret;
   QList<QVariant> lst = m_value.toList();
-  for( QList<QVariant>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+  for( QList<QVariant>::const_iterator it = lst.constBegin(); it != lst.constEnd(); ++it ) {
     ret.append( (*it).toUInt() );
   }
   return ret;
@@ -449,10 +449,10 @@ KUrl::List ConfigEntry::urlValueList() const
 {
   assert( m_argType == Path || m_argType == Url || m_argType == LdapUrl );
   assert( isList() );
-  QStringList lst = m_value.toStringList();
+  const QStringList lst = m_value.toStringList();
 
   KUrl::List ret;
-  Q_FOREACH( const QString i, lst )
+  Q_FOREACH( const QString &i, lst )
   {
     if ( m_argType == Path ) {
       KUrl url;
@@ -577,8 +577,8 @@ QVariant ConfigEntry::stringToValue( const QString& str, UnescapeMode mode ) con
   const bool unescape = mode & Unescape;
   if ( isList() ) {
     QList<QVariant> lst;
-    QStringList items = str.split( ',', QString::SkipEmptyParts );
-    for( QStringList::const_iterator valit = items.begin(); valit != items.end(); ++valit ) {
+    const QStringList items = str.split( ',', QString::SkipEmptyParts );
+    for( QStringList::const_iterator valit = items.constBegin(); valit != items.constEnd(); ++valit ) {
       QString val = *valit;
       if ( isString ) {
         if ( val.isEmpty() ) {
@@ -663,7 +663,7 @@ QString ConfigEntry::toString( ConfigEntry::EscapeMode mode ) const
   }
   QStringList ret;
   QList<QVariant> lst = m_value.toList();
-  for( QList<QVariant>::const_iterator it = lst.begin(); it != lst.end(); ++it ) {
+  for( QList<QVariant>::const_iterator it = lst.constBegin(); it != lst.constEnd(); ++it ) {
       ret << (*it).toString(); // QVariant does the conversion
   }
   return ret.join( "," );

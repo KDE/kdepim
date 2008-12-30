@@ -170,8 +170,8 @@ void KWatchGnuPGMainWindow::setGnuPGConfig()
     return;
   //Q_ASSERT( cconfig );
   KConfigGroup config(KGlobal::config(), "WatchGnuPG");
-  QStringList comps = cconfig->componentList();
-  for( QStringList::const_iterator it = comps.begin(); it != comps.end(); ++it ) {
+  const QStringList comps = cconfig->componentList();
+  for( QStringList::const_iterator it = comps.constBegin(); it != comps.constEnd(); ++it ) {
 	Kleo::CryptoConfigComponent* comp = cconfig->component( *it );
 	Q_ASSERT(comp);
 	// Look for log-file entry in Debug group
