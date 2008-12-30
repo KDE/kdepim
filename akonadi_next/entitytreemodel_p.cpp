@@ -90,8 +90,9 @@ void EntityTreeModelPrivate::init()
 
   // Includes recursive trees. Lower levels are fetched in the onRowsInserted slot if
   // necessary.
-  if (m_entitiesToFetch & EntityTreeModel::FetchFirstLevelChildCollections)
+  if (m_entitiesToFetch & (EntityTreeModel::FetchFirstLevelChildCollections | EntityTreeModel::FetchCollectionsRecursive))
   {
+    kDebug() << "Fetching cols for" << m_rootCollection.id();
     entityUpdateAdapter->fetchCollections( m_rootCollection, CollectionFetchJob::FirstLevel );
   }
   if (m_entitiesToFetch & EntityTreeModel::FetchItems)
@@ -237,7 +238,7 @@ void EntityTreeModelPrivate::onRowsInserted( const QModelIndex & parent, int sta
 
     Akonadi::Collection col = qvariant_cast< Akonadi::Collection > ( datav );
 
-    if (m_entitiesToFetch == EntityTreeModel::FetchCollectionsRecursive)
+    if (m_entitiesToFetch & EntityTreeModel::FetchCollectionsRecursive)
     {
       // Fetch the next level of collections if neccessary.
       entityUpdateAdapter->fetchCollections( col, CollectionFetchJob::FirstLevel );
