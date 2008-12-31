@@ -75,7 +75,8 @@
  5d) type "knode" -> kontact is brought to front
 
  6) start "kontact --module summaryplugin"
- 6a) type "qdbus org.kde.kmail /kmail_PimApplication newInstance '' ''" -> kontact switches to kmail (#103775)
+ 6a) type "qdbus org.kde.kmail /kmail_PimApplication newInstance '' ''" ->
+     kontact switches to kmail (#103775)
  6b) type "kmail" -> kontact is brought to front
  6c) type "kontact" -> kontact is brought to front
  6d) type "kontact --module summaryplugin" -> kontact switches to summary

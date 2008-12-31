@@ -90,8 +90,7 @@ QWidget *Summary::createHeader( QWidget *parent, const QString &iconname, const 
                     "font: bold large;"
                     "padding: 2px;"
                  "}"
-                 "KHBox > QLabel { font: bold larger; } "
-               );
+                 "KHBox > QLabel { font: bold larger; } " );
 
   KHBox *hbox = new KHBox( parent );
   //hbox->setMargin( 2 );

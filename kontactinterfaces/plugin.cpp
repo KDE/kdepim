@@ -203,8 +203,8 @@ QString Plugin::registerClient()
   if ( d->serviceName.isEmpty() ) {
     d->serviceName = "org.kde." + objectName().toLatin1();
 #ifdef Q_WS_WIN
-    const QString pid = QString::number(getpid());
-    d->serviceName.append(".unique-" + pid);
+    const QString pid = QString::number( getpid() );
+    d->serviceName.append( ".unique-" + pid );
 #endif
     QDBusConnection::sessionBus().registerService( d->serviceName );
   }
