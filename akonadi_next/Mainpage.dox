@@ -1,10 +1,115 @@
 /** @mainpage akonadi_next
 
-Some classes to be merged into akonadi when finished.
+Some classes to be merged into akonadi when finished. This doc will also need to be merged.
 
-<h1> Models and Views</h1>
+<h1>How to use Akonadi in your application</h1>
+
+This library provides classes for KDE applications to communicate with the akonadi server. The most high-level interface to Akonadi is the Models and Views provided in this library. Ready to use models are provided for use with views to interact with a tree of collections, a list of items in a collection, or a combined tree of Collections and items.
+
+<h2>Collections and Items</h2>
+
+In the Akonadi concept, Items are individual objects of PIM data, eg emails, contacts, events, notes etc. The data in an item is stored in it a typed payload. For example, if an Akonadi Item holds a contact, the contact is available as a KABC::Addressee:
+
+@code
+  if (item.hasPayload<KABC::Addressee>())
+  {
+    KABC::Addressee addr = item.payload<KABC::Addressee>();
+    // use addr in some way...
+  }
+@endcode
+
+Additionally, an Item must have a mimetype which corresponds to the type of payload it holds.
+
+Collections are simply containers of Items. A Collection has a name and a list of mimetypes that it may contain. If a collection may contain events if it can contain the mimetype 'text/calendar'. All Collections have the same mimetype. A Collection which can itself contain Collections must be able to contain the Collection mimetype.
+
+@code
+  Collection col;
+  // This collection can contain events and nested collections.
+  col.setContentMimetypes( QStringList() << Collection::mimeType() << "text/calendar" );
+@endcode
+
+This systems makes it simple to create PIM applications. For example, to create an application for viewing and editing events, you simply need to tell akonadi to retrieve all items matching the mimetype 'text/application'.
+
+<h2> Models and Views</h2>
 Akonadi models and views are a high level way to interact with the akonadi server. Most applications will use these classes.
 
+Models provide an interface for viewing, deleting and moving Items and Collections. New Items can also be created by dropping data of the appropriate type on a model. Additionally, the models are updated automatically if another application changes the data or inserts of deletes items etc.
+
+<h2>Jobs and Monitors</h2>
+
+The lower level way to interact with Akonadi is to use Jobs and Monitors (This is what models use internally). Jobs are used to make changes to akonadi, and in some cases (eg, a fetch job) emit a signal with data resulting from the job. A Monitor reports changes made to the data stored in Akonadi (eg, creating, updating, deleting or moving an item or collection ) via signals.
+
+Typically, an application will configure a monitor to report changes to a particular Collection, mimetype or resource, and then connect to the signals it emits.
+
+Most applications will use some of the low level api for actions unrelated to a model-tree view, such as creating new items and collections.
+
+<h2>Tricky details</h2>
+
+<h3>Change Conflicts</h3>
+It is possible that while an application is editing an item, that item gets updated in akonadi. Akonadi will notify the application of the conflict through a Monitor signal. It is the responsibility of the application to handle the conflict by for example offering the user a dialog to resolve it.
+
+This is something that every application using akonadi will probably have to handle.
+
+<h3>Using Entity::Id as an identifier</h3>
+
+Items and Collections have a id() member which is a unique identifier used by akonadi. It can be useful to use the id() as an identifier when storing Collections or Items.
+
+However, as an item and a collection can have the same id(), if you need to store both Collections and Items together by a simple identifier, conflicts can occur.
+
+@code
+  QString getRemoteIdById( Entity::Id id )
+  {
+    // Note:
+    // m_items is QHash<Entity::Id, Item>
+    // m_collections is QHash<Entity::Id, Collection>
+    if ( m_items.contains( id ) )
+    {
+      // Oops, we could accidentally match a collection here.
+      return m_items.value( id ).remoteId();
+    } else if ( m_collections.contains( id ) )
+    {
+      return m_collections.value( id ).remoteId();
+    }
+    return QString();
+  }
+@endcode
+
+In this case, it makes more sense to use a normal qint64 as the internal identifier, and use the sign bit to determine if the identifier refers to a Collection or an Item. This is done in the implementation of EntityTreeModel to tell Collections and Items apart.
+
+@code
+  QString getRemoteIdByInternalIdentifier( qint64 internalIdentifier )
+  {
+    // Note:
+    // m_items is QHash<Entity::Id, Item>
+    // m_collections is QHash<Entity::Id, Collection>
+
+    // If the id is negative, it refers to an Item
+    // Otherwise it refers to a Collection.
+
+    if ( internalIdentifier < 0 )
+    {
+      // Reverse the sign of the id before using it.
+      return m_items.value( internalIdentifier * -1 ).remoteId();
+    } else
+    {
+      return m_collections.value( internalIdentifier ).remoteId();
+    }
+  }
+@endcode
+
+<h2>Resources</h2>
+The KDEPIM module includes resources for handling many types of PIM data, such as imap email, vcard files and vcard directories, ical event files etc. These cover many of the sources for your PIM data, but in the case that you need to use data from another source (for example a website providing a contacts storage service and an api), you simply have to write a new resource.
+
+http://techbase.kde.org/Development/Tutorials/Akonadi/Resources
+
+<h2>Serializers</h2>
+Serializers provide the functionality of converting raw data, for example from a file, to a strongly typed object of PIM data. For example, the addressee serializer reads data from a file and creates a KABC::Addressee object.
+
+New serializers can also easily be written if the data you are dealing with is not one of the standard PIM data types.
+
+<h1>Implementation details</h1>
+
+<h3>Updating Akonadi Models</h3>
 Because communication with akonadi happens asynchronously, and the models only hold a cached copy of the data on the akonadi server, some typical behaviours of models are not followed by Akonadi models.
 
 For example, when setting data on a model via a view, most models syncronously update their internal store and notify akonadi to update its view of the data by returning <tt>true</tt>.
@@ -12,8 +117,6 @@ For example, when setting data on a model via a view, most models syncronously u
 @dot
 digraph utmg {
     rankdir = LR;
-    size = "7.5,7.5";
-    pack = true;
     { node [label="",style=invis, height=0, width=0 ];
       V_Set_Data; V_Result; V_Data_Changed;
       M_Set_Data; M_Result;
@@ -24,7 +127,6 @@ digraph utmg {
     { node [style=invis];
       View_EOL; Model_EOL;
     }
-    edge [fontsize=26];
     {
       V_Set_Data -> M_Set_Data [label="Set Data"];
       M_Result -> V_Result [label="Success",arrowhead="vee", style="dashed"];
@@ -43,13 +145,11 @@ digraph utmg {
 }
 @enddot
 
-Akonadi models only cache data from the akonadi server. To update data on an Akonadi::Entity stored in a model, the model makes a request to the akonadi server to update the model data. At that point the data cached internally in the model is not updated, so <tt>false</tt> is always returned from setData. If the request to update data on the akonadi server is successful, an Akonadi::Monitor notifies the model that the data on that item has changed. The model then updates its internal data store and notifies the view that the data has changed.
+Akonadi models only cache data from the akonadi server. To update data on an Akonadi::Entity stored in a model, the model makes a request to the akonadi server to update the model data. At that point the data cached internally in the model is not updated, so <tt>false</tt> is always returned from setData. If the request to update data on the akonadi server is successful, an Akonadi::Monitor notifies the model that the data on that item has changed. The model then updates its internal data store and notifies the view that the data has changed. The details of how the Monitor communicates with akonadi are omitted for clarity.
 
 @dot
 digraph utmg {
     rankdir = LR;
-    size = "7.5,7.5";
-    pack = true;
     { node [label="",style=invis, height=0, width=0 ];
       ETV_Set_Data; ETV_Result; ETV_Data_Changed;
       ETM_Set_Data; ETM_Result; ETM_Changed;
@@ -62,8 +162,6 @@ digraph utmg {
     { node [style=invis];
       EntityTreeView_EOL; EntityTreeModel_EOL; Monitor_EOL; Akonadi_Server_EOL;
     }
-
-    edge [fontsize=26];
     {
       { rank = same; ETV_Set_Data -> ETM_Set_Data [label="Set Data"]; }
       { rank = same; ETM_Result -> ETV_Result [label="False",arrowhead="vee", style="dashed"]; }
@@ -92,8 +190,6 @@ Similarly, in drag and drop operations, most models would update an internal dat
 @dot
 digraph utmg {
     rankdir = LR;
-    size = "7.5,7.5";
-    pack = true;
     { node [label="",style=invis, height=0, width=0 ];
       Left_Phantom; Left_Phantom_DropEvent;
       V_DropEvent; V_Result; V_Data_Changed; V_Dummy_1;
@@ -106,7 +202,6 @@ digraph utmg {
        Left_Phantom_EOL;
        View_EOL; Model_EOL;
     }
-    edge [fontsize=26];
     {
       Left_Phantom_DropEvent -> V_DropEvent [label="DropEvent"];
       V_DropEvent -> M_DropMimeData [label="DropMimeData"];
@@ -136,8 +231,6 @@ Akonadi models, for the same reason as above, always return false from dropMimeD
 
 digraph utmg {
     rankdir = LR;
-    size = "7.5,7.5";
-    pack = true;
     { node [label="",style=invis, height=0, width=0 ];
       Left_Phantom; Left_Phantom_DropEvent;
       ETV_DropEvent; ETV_Result; ETV_Data_Changed;
@@ -156,7 +249,6 @@ digraph utmg {
       EntityTreeView_EOL; EntityTreeModel_EOL; Monitor_EOL; Akonadi_Server_EOL;
     }
 
-    edge [fontsize=26];
     {
       { rank = same; Left_Phantom_DropEvent -> ETV_DropEvent [label="DropEvent"]; }
       { rank = same; ETV_DropEvent -> ETM_DropMimeData [label="Drop MimeData"]; }
