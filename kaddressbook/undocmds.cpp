@@ -136,10 +136,6 @@ void PasteCommand::execute()
     lock()->unlock( (*it).resource() );
   }
 
-  QStringList::ConstIterator uidIt;
-  const QStringList::ConstIterator uidEndIt( uids.end() );
-  for ( uidIt = uids.begin(); uidIt != uidEndIt; ++uidIt )
-    mCore->editContact( *uidIt );
 }
 
 
