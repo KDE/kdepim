@@ -380,7 +380,6 @@ QModelIndex EntityTreeModel::parent( const QModelIndex & index ) const
   if ( !col.isValid() || col.id() == d->m_rootCollection.id() )
     return QModelIndex();
 
-  kDebug() << d->m_childEntities[ col.parent()] << col.id();
   int row = d->m_childEntities[ col.parent()].indexOf( col.id() );
   return createIndex( row, 0, reinterpret_cast<void*>( col.id() ) );
 
@@ -425,12 +424,8 @@ QMimeData *EntityTreeModel::mimeData( const QModelIndexList &indexes ) const
 bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, int role )
 {
   Q_D( EntityTreeModel );
-  kDebug() << index.column()
-      << (role & (Qt::EditRole | ItemRole | CollectionRole))
-      << role << (Qt::EditRole | ItemRole | CollectionRole) ;
   // Delegate to something? Akonadi updater, or the manager classes? I think akonadiUpdater. entityUpdateAdapter
   if ( index.column() == 0 && role & (Qt::EditRole | ItemRole | CollectionRole) ) {
-    kDebug() << "ok";
     if ( d->isCollection( index ) ) {
       // rename collection
       Collection col = d->collectionForIndex( index );
