@@ -46,9 +46,9 @@ Most applications will use some of the low level api for actions unrelated to a 
 <h2>Tricky details</h2>
 
 <h3>Change Conflicts</h3>
-It is possible that while an application is editing an item, that item gets updated in akonadi. Akonadi will notify the application of the conflict through a Monitor signal. It is the responsibility of the application to handle the conflict by for example offering the user a dialog to resolve it.
+It is possible that while an application is editing an item, that item gets updated in akonadi. Akonadi will notify the application that that item has changed via a Monitor signal. It is the responsibility of the application to handle the conflict by for example offering the user a dialog to resolve it. Alternatively, the application could ignore the dataChanged signal for that item, and will get another chance to resolve the conflict when trying to save the result back to akonadi. In that case, the ItemModifyJob will fail and report that the revision number of the item on the server differs from its revision number as reported by the job. Again, it is up to the application to handle this case.
 
-This is something that every application using akonadi will probably have to handle.
+This is something that every application using akonadi will have to handle.
 
 <h3>Using Entity::Id as an identifier</h3>
 
@@ -97,6 +97,35 @@ In this case, it makes more sense to use a normal qint64 as the internal identif
   }
 @endcode
 
+<h3>Unordered Lists</h3>
+Collection and Item both provide a ::List to represent groups of objects. However the objects in the list are usually not ordered in any particular way, even though the API provides methods to work with an ordered list. It makes more sense to think of it as a Set instead of a list in most cases.
+
+For example, when using an ItemFetchJob to fetch the items in a collection, the items could be in any order when returned from the job. The order that a Monitor emits notices of changes is also indeterminate. By using a Transaction however, it is sometimes possible to retrieve objects in order. Additionally, using s constructor overload in the CollectionFetchJob it is possible to retrieve collections in a particular order.
+
+@code
+  Collection::List getCollections(QList<Collection::Id> idsToGet)
+  {
+    Collection::List getList;
+    foreach(Collection::Id id, idsToGet)
+    {
+      getList << Collection(id);
+    }
+    CollectionFetchJob *job = CollectionFetchJob(getList);
+    if (job->exec())
+    {
+       // job->collections() is in the same order as the ids in idsToGet. 
+    }
+  }
+
+@endcode
+
+
+<h3>Be careful when fetching collections recursively</h3>
+Collections could be returned in multiple signal calls and out of order.
+
+@TODO: more info.
+
+
 <h2>Resources</h2>
 The KDEPIM module includes resources for handling many types of PIM data, such as imap email, vcard files and vcard directories, ical event files etc. These cover many of the sources for your PIM data, but in the case that you need to use data from another source (for example a website providing a contacts storage service and an api), you simply have to write a new resource.
 
@@ -110,6 +139,9 @@ New serializers can also easily be written if the data you are dealing with is n
 <h1>Implementation details</h1>
 
 <h3>Updating Akonadi Models</h3>
+
+@note The details here are only relevant if you are writing a new view using EntityTreeModel, or writing a new model.
+
 Because communication with akonadi happens asynchronously, and the models only hold a cached copy of the data on the akonadi server, some typical behaviours of models are not followed by Akonadi models.
 
 For example, when setting data on a model via a view, most models syncronously update their internal store and notify akonadi to update its view of the data by returning <tt>true</tt>.
