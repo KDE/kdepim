@@ -380,6 +380,7 @@ QModelIndex EntityTreeModel::parent( const QModelIndex & index ) const
   if ( !col.isValid() || col.id() == d->m_rootCollection.id() )
     return QModelIndex();
 
+  kDebug() << d->m_childEntities[ col.parent()] << col.id();
   int row = d->m_childEntities[ col.parent()].indexOf( col.id() );
   return createIndex( row, 0, reinterpret_cast<void*>( col.id() ) );
 

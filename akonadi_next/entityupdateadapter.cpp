@@ -128,15 +128,19 @@ void EntityUpdateAdapter::moveEntities( Item::List movedItems, Collection::List 
   foreach( Collection col, movedCollections ) {
     // This is effectively a collectionmovejob.
     col.setParent( dst.id() );
+    kDebug() << "moving" << col.remoteId();
     Akonadi::CollectionModifyJob *modifyJob = new Akonadi::CollectionModifyJob( col, transaction );
 //     Akonadi::CollectionModifyJob *modifyJob = new Akonadi::CollectionModifyJob(col, m_job_parent);
   }
   foreach( Item item, movedItems ) {
     // This doesn't have any effect on the resource.
+    kDebug() << "moving" << item.remoteId();
     Akonadi::ItemMoveJob *itemMoveJob = new Akonadi::ItemMoveJob( item, dst, transaction );
 //     Akonadi::ItemMoveJob *itemMoveJob = new Akonadi::ItemMoveJob(item, dst, m_job_parent);
   }
 
+  // Disable this stuff.
+  if (false)
   if ( src.hasAttribute<CollectionChildOrderAttribute>() ) {
     // Update the source collection...
     CollectionChildOrderAttribute *srcCcoa = src.attribute<CollectionChildOrderAttribute>();

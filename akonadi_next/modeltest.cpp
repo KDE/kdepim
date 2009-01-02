@@ -517,6 +517,7 @@ void ModelTest::layoutChanged()
  */
 void ModelTest::rowsAboutToBeRemoved ( const QModelIndex &parent, int start, int end )
 {
+qDebug() << "ratbr" << parent << start << end;
     Changing c;
     c.parent = parent;
     c.oldSize = model->rowCount ( parent );
@@ -532,6 +533,7 @@ void ModelTest::rowsAboutToBeRemoved ( const QModelIndex &parent, int start, int
  */
 void ModelTest::rowsRemoved ( const QModelIndex & parent, int start, int end )
 {
+  qDebug() << "rr" << parent << start << end;
     Changing c = remove.pop();
     Q_ASSERT ( c.parent == parent );
     Q_ASSERT ( c.oldSize - ( end - start + 1 ) == model->rowCount ( parent ) );

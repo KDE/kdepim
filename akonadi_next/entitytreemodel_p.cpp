@@ -90,7 +90,9 @@ void EntityTreeModelPrivate::init()
 
   // Includes recursive trees. Lower levels are fetched in the onRowsInserted slot if
   // necessary.
-  if (m_entitiesToFetch & (EntityTreeModel::FetchFirstLevelChildCollections | EntityTreeModel::FetchCollectionsRecursive))
+  if (m_entitiesToFetch &
+        ( EntityTreeModel::FetchFirstLevelChildCollections | EntityTreeModel::FetchCollectionsRecursive )
+     )
   {
     kDebug() << "Fetching cols for" << m_rootCollection.id();
     entityUpdateAdapter->fetchCollections( m_rootCollection, CollectionFetchJob::FirstLevel );
@@ -433,6 +435,9 @@ void EntityTreeModelPrivate::itemRemoved( const Akonadi::Item &item )
   Collection col = collectionForIndex(parentIndex);
   QList<qint64> list = m_childEntities.value( col.id() );
 
+  // modeltest crashes if I remove the resource while the app is running.
+  // Looks like row here is wrong. I imagine indexForItem is doing an index of to figure that out...
+  // Actually the index is fine, but parent is fucking up.
   int row = itemIndex.row();
 
   q->beginRemoveRows( parentIndex, row, row );
@@ -494,6 +499,7 @@ QModelIndex EntityTreeModelPrivate::indexForId( qint64 id, int column ) const
   if ( !col.isValid() )
     return QModelIndex();
 
+//   kDebug() << m_childEntities.value( col.id() ) << id;
   int row = m_childEntities.value( col.id() ).indexOf( id );
 
   return q->createIndex( row, column, reinterpret_cast<void*>( id ) );
