@@ -71,7 +71,7 @@ KABC::Addressee::List LDIFXXPort::importContacts( const QString& ) const
     return addrList;
 
   QFile file( fileName );
-  if ( !file.open( QIODevice::ReadOnly ) ) {
+  if ( !file.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
     QString msg = i18n( "<qt>Unable to open <b>%1</b> for reading.</qt>", fileName );
     KMessageBox::error( parentWidget(), msg );
     return addrList;
