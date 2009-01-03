@@ -60,8 +60,8 @@ bool CalendarHHRecord::equal( const HHRecord* other ) const
 	if( !entryThis.doesFloat() )
 	{
 		// Both entries do not float, so lets see if the start and end times are equal.
-		TEST( entryOther.dtStart(), entryThis.dtStart(), "dtStart" )
-		TEST( entryOther.dtEnd(), entryThis.dtEnd(), "dtStart" )
+		TEST( entryOther.dtStart().toLocalTime(), entryThis.dtStart().toLocalTime(), "dtStart" )
+		TEST( entryOther.dtEnd().toLocalTime(), entryThis.dtEnd().toLocalTime(), "dtStart" )
 	}
 	
 	TEST( entryOther.isAlarmEnabled(), entryThis.isAlarmEnabled(), "isAlarmEnabled" )

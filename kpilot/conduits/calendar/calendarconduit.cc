@@ -113,7 +113,9 @@ bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 	PilotDateEntry hhEntry = thr->dateEntry();
 
 	// A TEST define which immediately returns when a TEST fails.
-#define TEST( a, b, c ) { if( a != b ) { WARNINGKPILOT << CSL1( c ) << " not equal."; return false; } }
+#define TEST( a, b, c ) { if( a != b ) { \
+	      WARNINGKPILOT << CSL1( c ) << ", a: [" << a << "] not equal to b: [" << b << "]."; \
+	      return false; } }
 #define TEST1( a, b ) { if( !a ) { WARNINGKPILOT << CSL1( b ) << " was false."; return false; } }
 	
 	TEST( pcEvent->summary(), hhEntry.getDescription(), "Description" )
@@ -125,18 +127,18 @@ bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 	TEST( pcEvent->allDay(), hhEntry.doesFloat() , "AllDay" )
 	
 	// Check start and end times only when the event does not float.
-	if( !hhEntry.doesFloat() )
+	if( !hhEntry.doesFloat() && !hhEntry.isMultiDay())
 	{
 		// Both entries do not float, so lets see if the start and end times are equal.
-		TEST( pcEvent->dtStart().dateTime(), hhEntry.dtStart(), "dtStart" )
-		TEST( pcEvent->dtEnd().dateTime(), hhEntry.dtEnd(), "dtEnd" )
+		TEST( pcEvent->dtStart().dateTime().toLocalTime(), hhEntry.dtStart().toLocalTime(), "dtStart" )
+	       	TEST( pcEvent->dtEnd().dateTime().toLocalTime(), hhEntry.dtEnd().toLocalTime(), "dtEnd" )
 	}
 	else
 	{
-		DEBUGKPILOT << "ENTRY FLOATS:" << pcEvent->dtStart().dateTime().toString()
-			<< hhEntry.dtStart().toString() << " " << thr->toString();
+		DEBUGKPILOT << "ENTRY FLOATS:" << pcEvent->dtStart().dateTime().toLocalTime().toString()
+			    << hhEntry.dtStart().toLocalTime().toString() << " " << thr->toString();
 		// The records should be on the same date.
-		TEST( pcEvent->dtStart().dateTime(), hhEntry.dtStart(), "DtStart" )
+		TEST( pcEvent->dtStart().dateTime().toLocalTime(), hhEntry.dtStart().toLocalTime(), "DtStart" )
 	}
 	
 	TEST( pcEvent->isAlarmEnabled(), hhEntry.isAlarmEnabled(), "HasAlarm" )
@@ -238,6 +240,7 @@ Record* CalendarConduit::createPCRecord( const HHRecord *hhRec )
 	item.setPayload<IncidencePtr>( IncidencePtr( new KCal::Event() ) );
 	item.setMimeType( "application/x-vnd.akonadi.calendar.event" );
 		
+	DEBUGKPILOT << "fMapping.lastSyncedDate: [" << fMapping.lastSyncedDate() << ']';
 	Record* rec = new CalendarAkonadiRecord( item, fMapping.lastSyncedDate() );
 	copy( hhRec, rec );
 	
@@ -261,13 +264,15 @@ HHRecord* CalendarConduit::createHHRecord( const Record *pcRec )
 void CalendarConduit::_copy( const Record *from, HHRecord *to )
 {
 	FUNCTIONSETUP;
-	
+
 	const CalendarAkonadiRecord* tar = static_cast<const CalendarAkonadiRecord*>( from );
 	CalendarHHRecord* thr = static_cast<CalendarHHRecord*>( to );
 	
 	PilotDateEntry hhTo = thr->dateEntry();
 	EventPtr pcFrom = boost_cast( tar->item().payload<IncidencePtr>() );
-	
+
+	DEBUGKPILOT << "Summary: " << pcFrom->summary();
+
 	if( ( pcFrom->recurrenceType() == KCal::Recurrence::rYearlyDay ) ||
 		( pcFrom->recurrenceType() ==  KCal::Recurrence::rYearlyPos ) )
 	{
@@ -299,12 +304,14 @@ void CalendarConduit::_copy( const Record *from, HHRecord *to )
 void CalendarConduit::_copy( const HHRecord* from, Record *to  )
 {
 	FUNCTIONSETUP;
-	
+
 	const CalendarHHRecord* thr = static_cast<const CalendarHHRecord*>( from );
 	CalendarAkonadiRecord* tar = static_cast<CalendarAkonadiRecord*>( to );
 	
 	PilotDateEntry hhFrom = thr->dateEntry();
 	EventPtr pcTo = boost_cast( tar->item().payload<IncidencePtr>() );
+
+	DEBUGKPILOT << "Summary: " << hhFrom.getDescription();
 	
 	pcTo->setSecrecy( hhFrom.isSecret() ?
 		KCal::Event::SecrecyPrivate :
@@ -613,9 +620,10 @@ void CalendarConduit::setRecurrence( EventPtr e, const PilotDateEntry& de ) cons
 {
 	FUNCTIONSETUP;
 
-	if( ( de.getRepeatType() == repeatNone) || de.isMultiDay() )
+	if( ( de.getRepeatType() == repeatNone) )
 	{
-		DEBUGKPILOT << "No recurrence to set.";
+		DEBUGKPILOT << "No recurrence to set. Repeat type: " << de.getRepeatType()
+			    << ", multi-day: " << de.isMultiDay();
 		return;
 	}
 
@@ -713,17 +721,20 @@ void CalendarConduit::setStartEndTimes( PilotDateEntry* de, const EventPtr& e ) 
 		return;
 	}
 	
-	struct tm ttm = writeTm( e->dtStart().dateTime() );
+	struct tm ttm = writeTm( e->dtStart().dateTime().toLocalTime() );
+	DEBUGKPILOT << "event start: " << e->dtStart().dateTime().toLocalTime();
 	de->setEventStart( ttm );
 	de->setFloats( e->allDay() );
 	
 	if( e->hasEndDate() && e->dtEnd().isValid() )
 	{
-		ttm = writeTm( e->dtEnd().dateTime() );
+		DEBUGKPILOT << "event end : " << e->dtEnd().dateTime().toLocalTime();
+		ttm = writeTm( e->dtEnd().dateTime().toLocalTime() );
 	}
 	else
 	{
-		ttm = writeTm( e->dtStart().dateTime() );
+		DEBUGKPILOT << "event end : " << e->dtStart().dateTime().toLocalTime();
+		ttm = writeTm( e->dtStart().dateTime().toLocalTime() );
 	}
 	
 	de->setEventEnd( ttm );
@@ -732,17 +743,21 @@ void CalendarConduit::setStartEndTimes( PilotDateEntry* de, const EventPtr& e ) 
 void CalendarConduit::setStartEndTimes( EventPtr e, const PilotDateEntry& de ) const
 {
 	FUNCTIONSETUP;
+	DEBUGKPILOT << "Start time on Palm: " << readTm(de.getEventStart()).toString()
+		    << ", multi-day: " << de.isMultiDay() << ", all-day: " << de.isEvent();
 
-	e->setDtStart( KDateTime( readTm( de.getEventStart() ), KDateTime::Spec::LocalZone() ) );
+	e->setDtStart( KDateTime( readTm( de.getEventStart() ) ) );
 	e->setAllDay( de.isEvent() );
 
 	if( de.isMultiDay() )
 	{
-		e->setDtEnd( KDateTime( readTm( de.getRepeatEnd() ), KDateTime::Spec::LocalZone() ) );
+		DEBUGKPILOT << "End time on Palm: " << readTm(de.getRepeatEnd()).toString();
+		e->setDtEnd( KDateTime( readTm( de.getRepeatEnd() ) ) );
 	}
 	else
 	{
-		e->setDtEnd( KDateTime( readTm( de.getEventEnd() ), KDateTime::Spec::LocalZone() ) );
+		DEBUGKPILOT << "End time on Palm: " << readTm(de.getEventEnd()).toString();
+		e->setDtEnd( KDateTime( readTm( de.getEventEnd() ) ) );
 	}
 }
 

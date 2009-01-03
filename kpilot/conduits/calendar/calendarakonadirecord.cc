@@ -36,6 +36,8 @@ typedef boost::shared_ptr<KCal::Incidence> IncidencePtr;
 CalendarAkonadiRecord::CalendarAkonadiRecord( const Akonadi::Item& i, const QDateTime& dt )
 	: AkonadiRecord( i, dt )
 {
+	FUNCTIONSETUPL(5);
+	DEBUGKPILOT << toString();
 }
 
 CalendarAkonadiRecord::CalendarAkonadiRecord( const QString& id ) : AkonadiRecord( id )
@@ -111,5 +113,19 @@ QStringList CalendarAkonadiRecord::categories() const
 
 QString CalendarAkonadiRecord::toString() const
 {
-	return CSL1( "IMPLEMENT: conduits/calendar/calendarakonadirecord.cc::toString()" );
+	boost::shared_ptr<KCal::Event> event
+		= boost::dynamic_pointer_cast<KCal::Event, KCal::Incidence>
+			(
+				item().payload<IncidencePtr>()
+			);
+	QString desc = 
+		QString("CalendarAkonadiRecord. Summary: [%1], "
+			"Start: [%2] (timespec: %3), End: [%4] (timespec: %5)")
+		.arg(event->summary())
+		.arg(event->dtStart().dateTime().toLocalTime().toString())
+		.arg(event->dtStart().dateTime().timeSpec())
+		.arg(event->dtEnd().dateTime().toLocalTime().toString())
+		.arg(event->dtEnd().dateTime().timeSpec());
+
+	return desc;
 }

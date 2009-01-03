@@ -122,8 +122,9 @@ bool TodoConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 	bool dueDateEqual;
 	if( pcTodo->hasDueDate() && !hhTodo.getIndefinite() )
 	{
-		DEBUGKPILOT << "Both have due date";
-		dueDateEqual = pcTodo->dtDue().dateTime() == readTm( hhTodo.getDueDate() );
+		DEBUGKPILOT << "Both have due date. PC: [" << pcTodo->dtDue().dateTime().toLocalTime() << "], HH: ["
+			    << readTm( hhTodo.getDueDate() ) << ']';
+		dueDateEqual = pcTodo->dtDue().dateTime().toUTC() == readTm( hhTodo.getDueDate()).toUTC();
 	}
 	// This is a bit tricky when getIndefinite() returns true it means that no
 	// due date is set.
@@ -194,7 +195,7 @@ void TodoConduit::_copy( const Record *from, HHRecord *to )
 
 	if( pcFrom->hasDueDate() )
 	{
-		struct tm t = writeTm( pcFrom->dtDue().dateTime() );
+		struct tm t = writeTm( pcFrom->dtDue().dateTime().toLocalTime() );
 		hhTo.setDueDate( t );
 		hhTo.setIndefinite( 0 );
 	}

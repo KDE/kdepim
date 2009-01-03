@@ -74,12 +74,7 @@ public:
 
 	void unbindDevice(const QString &device)
 	{
-		FUNCTIONSETUPL(5);
-		DEBUGKPILOT << ": device: ["
-			<< device << "]";
-
 		mBoundDevices.removeAll(device);
-		showList();
 	}
 
 protected:

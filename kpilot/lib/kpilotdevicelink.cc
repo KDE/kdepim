@@ -172,7 +172,7 @@ DeviceCommWorker::~DeviceCommWorker()
 	close();
 
 	if (fOpenTimer) {
-	   fOpenTimer->stop();		
+	   fOpenTimer->stop();
 	   fOpenTimer->deleteLater();
 	   fOpenTimer = 0L;
 	}
@@ -207,7 +207,7 @@ void DeviceCommWorker::close()
 
 	if (fTempSocket != -1)
 	{
-		DEBUGKPILOT 
+		DEBUGKPILOT
 		<< ": device comm thread closing socket: ["
 		<< fTempSocket << "]";
 
@@ -366,7 +366,7 @@ bool DeviceCommWorker::open(const QString &device)
 
 	if (ret < 0)
 	{
-		DEBUGKPILOT 
+		DEBUGKPILOT
 			<< ": pi_bind error: [" << strerror(errno) << "]";
 
 		e = errno;
@@ -464,7 +464,7 @@ void DeviceCommWorker::acceptDevice()
 
 	QApplication::postEvent(link(), new DeviceCommEvent(EventLogProgress, QString(), 10));
 
-	DEBUGKPILOT << 
+	DEBUGKPILOT <<
 		": Listening to pilot. Now trying accept...";
 
 	int timeout = 20;
@@ -476,7 +476,7 @@ void DeviceCommWorker::acceptDevice()
 
 		WARNINGKPILOT << "pi_accept returned: [" << s << "]";
 
-		QApplication::postEvent(link(), new DeviceCommEvent(EventLogError, 
+		QApplication::postEvent(link(), new DeviceCommEvent(EventLogError,
 			i18n("Cannot accept Pilot (%1)", QString::fromLocal8Bit(s))));
 
 		link()->fLinkStatus = PilotLinkError;
@@ -491,7 +491,7 @@ void DeviceCommWorker::acceptDevice()
 		link()->fLinkStatus = PilotLinkError;
 		WARNINGKPILOT << "Already connected or unable to connect!";
 
-		QApplication::postEvent(link(), new DeviceCommEvent(EventLogError, 
+		QApplication::postEvent(link(), new DeviceCommEvent(EventLogError,
 			i18n("Cannot accept Pilot (%1)", i18n("already connected"))));
 
 		reset();
@@ -518,7 +518,7 @@ void DeviceCommWorker::acceptDevice()
 
 		KPILOT_DELETE(link()->fPilotSysInfo);
 		link()->fPilotSysInfo = new KPilotSysInfo(&sys_info);
-		DEBUGKPILOT 
+		DEBUGKPILOT
 			<< ": RomVersion: [" << link()->fPilotSysInfo->getRomVersion()
 			<< "] Locale: [" << link()->fPilotSysInfo->getLocale()
 			<< "] Product: [" << link()->fPilotSysInfo->getProductID()
@@ -542,7 +542,7 @@ void DeviceCommWorker::acceptDevice()
 	DEBUGKPILOT
 		<< ": Read user name: [" << n << "]";
 
-	QApplication::postEvent(link(), new DeviceCommEvent(EventLogProgress, 
+	QApplication::postEvent(link(), new DeviceCommEvent(EventLogProgress,
 		i18n("Checking last PC..."), 90));
 
 	/* Tell user (via Pilot) that we are starting things up */
@@ -653,7 +653,7 @@ void KPilotDeviceLink::stopCommThread()
 
 		// try to wait for our thread to finish, but don't
 		// block the main thread forever
-		if (fDeviceCommThread->isRunning()) 
+		if (fDeviceCommThread->isRunning())
 		{
 			DEBUGKPILOT
 				<< "comm thread still running. Waiting for it to complete.";
@@ -719,7 +719,7 @@ void KPilotDeviceLink::startCommThread()
 
 
 		fLinkStatus = PilotLinkError;
-		
+
 		emit logError(msg);
 		return;
 	}
@@ -745,6 +745,13 @@ void KPilotDeviceLink::reset()
 
 void KPilotDeviceLink::checkDevice()
 {
+
+        if ( fPilotPath == "usb:" ||
+             fPilotPath == "net:any" )
+	{
+	  return;
+	}
+
 	// If the device exists yet doesn't have the right
 	// permissions, complain and then continue anyway.
 	//
