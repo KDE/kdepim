@@ -16,7 +16,6 @@ include(MacroLibrary)
 include(CheckIncludeFiles)
 find_package(KdepimLibs REQUIRED)
 
-
 if(WIN32)
   # detect oxygen icon dir at configure time based on KDEDIRS - there may be different package installation locations
   execute_process(COMMAND "${KDE4_KDECONFIG_EXECUTABLE}" --path icon OUTPUT_VARIABLE _dir ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
@@ -33,21 +32,22 @@ endif(WIN32)
 # where it can't handle the same library being referenced multiple
 # times on the linker line
 macro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
-  set(LINK_ARG_LIST)  
-  foreach(arg ${ARGN})
-    set(LINK_ARG_FOUND FALSE)
-    foreach(existing ${LINK_ARG_LIST})
-      if(${arg} STREQUAL ${existing})
-        set(LINK_ARG_FOUND)
-      endif(${arg} STREQUAL ${existing})
-    endforeach(existing)
-
-    if(NOT ${LINK_ARG_FOUND})
-      list(APPEND LINK_ARG_LIST ${arg})
-    endif(NOT ${LINK_ARG_FOUND})
-  endforeach(arg)
-
-  target_link_libraries(${LINK_ARG_LIST})
+#   set(LINK_ARG_LIST)  
+#   foreach(arg ${ARGN})
+#     set(LINK_ARG_FOUND FALSE)
+#     foreach(existing ${LINK_ARG_LIST})
+#       if(${arg} STREQUAL ${existing})
+#         set(LINK_ARG_FOUND)
+#       endif(${arg} STREQUAL ${existing})
+#     endforeach(existing)
+# 
+#     if(NOT ${LINK_ARG_FOUND})
+#       list(APPEND LINK_ARG_LIST ${arg})
+#     endif(NOT ${LINK_ARG_FOUND})
+#   endforeach(arg)
+# 
+#   target_link_libraries(${LINK_ARG_LIST})
+  target_link_libraries(${ARGN})
 endmacro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
 
 find_package(Boost REQUIRED)
