@@ -328,6 +328,29 @@ KOIncidenceEditor *CalendarView::editorDialog( Incidence *incidence ) const
   }
 }
 
+QDate CalendarView::activeDate()
+{
+  KOrg::BaseView *curView = mViewManager->currentView();
+  if ( curView ) {
+    // Only the agenda view has a selectionStart (at this time)
+    KOAgendaView *aView = mViewManager->agendaView();
+    if ( curView == aView && aView->selectionStart().isValid() ) {
+      if ( aView->selectionStart().isValid() ) {
+        return aView->selectionStart().date();
+      }
+    }
+    // Try the view's selectedDates()
+    if ( !curView->selectedDates().isEmpty() ) {
+      if ( curView->selectedDates().first().isValid() ) {
+        return curView->selectedDates().first();
+      }
+    }
+  }
+
+  // When all else fails, use the navigator start date.
+  return mNavigator->selectedDates().first();
+}
+
 QDate CalendarView::startDate()
 {
   DateList dates = mNavigator->selectedDates();
@@ -909,10 +932,11 @@ void CalendarView::edit_options()
   mDialogManager->showOptionsDialog();
 }
 
-void CalendarView::dateTimesForNewEvent( QDateTime &startDt, QDateTime &endDt, bool &allDay )
+void CalendarView::dateTimesForNewEvent( QDateTime &startDt, QDateTime &endDt,
+                                         bool &allDay )
 {
   if ( !startDt.isValid() ) {
-    startDt.setDate( mNavigator->selectedDates().first() );
+    startDt.setDate( activeDate() );
     startDt.setTime( KOPrefs::instance()->mStartTime.time() );
   }
   if ( !endDt.isValid() ) {
@@ -925,11 +949,13 @@ void CalendarView::dateTimesForNewEvent( QDateTime &startDt, QDateTime &endDt, b
 }
 
 KOEventEditor *CalendarView::newEventEditor( const QDateTime &startDtParam,
-                                             const QDateTime &endDtParam, bool allDayParam )
+                                             const QDateTime &endDtParam,
+                                             bool allDayParam )
 {
-  // let the current view change the default start/end datetime
+  // Let the current view change the default start/end datetime
   bool allDay = allDayParam;
   QDateTime startDt( startDtParam ), endDt( endDtParam );
+
   // Adjust the start/end date times (i.e. replace invalid values by defaults,
   // and let the view adjust the type.
   dateTimesForNewEvent( startDt, endDt, allDay );
@@ -972,6 +998,7 @@ void CalendarView::newEvent( const QString &summary, const QString &description,
 {
   KOEventEditor *eventEditor = newEventEditor();
   eventEditor->setTexts( summary, description );
+
   // if attach or attendee list is empty, these methods don't do anything, so
   // it's save to call them in every case
   eventEditor->addAttachments( attachments, attachmentMimetypes, inlineAttachment );
@@ -1000,7 +1027,7 @@ void CalendarView::newTodo()
   connectIncidenceEditor( todoEditor );
   todoEditor->newTodo();
   if ( mViewManager->currentView()->isEventView() ) {
-    dtDue.setDate( mNavigator->selectedDates().first() );
+    dtDue.setDate( activeDate() );
     QDateTime dtDummy = QDateTime::currentDateTime();
     mViewManager->currentView()->
       eventDurationHint( dtDue, dtDummy, allday );
@@ -1020,8 +1047,7 @@ void CalendarView::newTodo( const QDate &date )
 
 void CalendarView::newJournal()
 {
-  kDebug();
-  newJournal( QString(), QDate() );
+  newJournal( QString(), activeDate() );
 }
 
 void CalendarView::newJournal( const QDate &date )
@@ -1036,7 +1062,7 @@ void CalendarView::newJournal( const QString &text, const QDate &date )
   connectIncidenceEditor( journalEditor );
   journalEditor->newJournal();
   if ( !journalDate.isValid() ) {
-    journalDate = mNavigator->selectedDates().first();
+    journalDate = activeDate();
   }
   journalEditor->setDate( journalDate );
   if ( !text.isEmpty() ) {
@@ -1066,9 +1092,7 @@ void CalendarView::newSubTodo( Todo *parentEvent )
 
 void CalendarView::newFloatingEvent()
 {
-  DateList tmpList = mNavigator->selectedDates();
-  QDate date = tmpList.first();
-
+  QDate date = activeDate();
   newEvent( QDateTime( date, QTime( 12, 0, 0 ) ),
             QDateTime( date, QTime( 12, 0, 0 ) ), true );
 }
