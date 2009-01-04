@@ -599,6 +599,11 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
     */
     void adaptNavigationUnits();
 
+    /**
+      Returns the best guess at the current active date in the view.
+    */
+    QDate activeDate();
+
   protected:
     void setIncidenceChanger( IncidenceChangerBase *changer );
 
@@ -623,10 +628,6 @@ class KORGANIZERPRIVATE_EXPORT CalendarView : public KOrg::CalendarViewBase,
   private:
     void init();
 
-    /**
-      Returns the best guess at the current active date in the view.
-    */
-    QDate activeDate();
 
     void createPrinter();
 
