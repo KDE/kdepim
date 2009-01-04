@@ -119,26 +119,26 @@ bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 #define TEST1( a, b ) { if( !a ) { WARNINGKPILOT << CSL1( b ) << " was false."; return false; } }
 	
 	TEST( pcEvent->summary(), hhEntry.getDescription(), "Description" )
-	TEST( pcEvent->description(), hhEntry.getNote(), "Note" )
+	/*
+	 * We have to compare apples and apples here. Truthfully, every text field should be
+	 * doing this, since we convert PC (which uses UTF mainly) to HH (which uses whatever
+	 * codec our user has configured us to use), so string comparisons are not guaranteed
+	 * to work like you might otherwise expect. The note field is particularly nasty wrt
+	 * this, so make sure we convert the PC string to the same codec that the HH should
+	 * be using before testing for equality.
+	 */
+	TEST( QString(Pilot::toPilot(pcEvent->description())), hhEntry.getNote(), "Note" )
 	if( thr->category() != "Unfiled" )
 	{
 		TEST1( pcEvent->categories().contains( thr->category() ), "Category" )
 	}
 	TEST( pcEvent->allDay(), hhEntry.doesFloat() , "AllDay" )
 	
-	// Check start and end times only when the event does not float.
-	if( !hhEntry.doesFloat() && !hhEntry.isMultiDay())
+	// Always check start time, but customize end-time check
+	TEST( pcEvent->dtStart().dateTime().toLocalTime(), hhEntry.dtStart(), "dtStart" )
+	if( !hhEntry.doesFloat() && !hhEntry.isMultiDay() )
 	{
-		// Both entries do not float, so lets see if the start and end times are equal.
-		TEST( pcEvent->dtStart().dateTime().toLocalTime(), hhEntry.dtStart().toLocalTime(), "dtStart" )
-	       	TEST( pcEvent->dtEnd().dateTime().toLocalTime(), hhEntry.dtEnd().toLocalTime(), "dtEnd" )
-	}
-	else
-	{
-		DEBUGKPILOT << "ENTRY FLOATS:" << pcEvent->dtStart().dateTime().toLocalTime().toString()
-			    << hhEntry.dtStart().toLocalTime().toString() << " " << thr->toString();
-		// The records should be on the same date.
-		TEST( pcEvent->dtStart().dateTime().toLocalTime(), hhEntry.dtStart().toLocalTime(), "DtStart" )
+		TEST( pcEvent->dtEnd().dateTime().toLocalTime(), hhEntry.dtEnd(), "dtEnd" )
 	}
 	
 	TEST( pcEvent->isAlarmEnabled(), hhEntry.isAlarmEnabled(), "HasAlarm" )
@@ -150,14 +150,20 @@ bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 	}
 	*/
 	
-	TEST( pcEvent->recurs(), (hhEntry.getRepeatType() != repeatNone), "Recurs" )
+	/*
+	 * This would be really  nice to check, but we can't because of the differences between
+	 * the PC side and the HH side. The PC side can have a single event that doesn't recur that
+	 * spans multiple days. The HH side cannot. As you'll see in setRecurrence(HH,PC), when a
+	 * multi-day event comes in, the HH side is changed to view it as a recurrence. But the PC
+	 * doesn't see it that way and since we can't get the 2 sides to agree, don't check for
+	 * it here.
+	 */
+	//TEST( pcEvent->recurs(), (hhEntry.getRepeatType() != repeatNone), "Recurs" )
 	
 	if( pcEvent->recurs() )
 	{
 		KCal::Recurrence* recurrence = pcEvent->recurrence();
 		
-		// Both have the same repeat type set, lets see if the repeat settings are
-		// also equal then.
 		TEST( (recurrence->duration() == -1), hhEntry.getRepeatForever(), "DurationForever" )
 		
 		if( !hhEntry.getRepeatForever() )
@@ -166,14 +172,14 @@ bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 			// end time is equal.
 			if( hhEntry.isMultiDay() )
 			{
-				KDateTime hhDt( readTm( hhEntry.getRepeatEnd() ), KDateTime::Spec::LocalZone() );
-				KDateTime pcDt = pcEvent->dtEnd();
+				QDateTime hhDt = hhEntry.dtRepeatEnd();
+				QDateTime pcDt(recurrence->endDate());
 				TEST( hhDt, pcDt, "DtRepeatEnd" );
 			}
 			else
 			{
-				KDateTime hhDt( readTm( hhEntry.getEventEnd() ), KDateTime::Spec::LocalZone() );
-				KDateTime pcDt = pcEvent->dtEnd();
+				QDateTime hhDt = hhEntry.dtEnd();
+				QDateTime pcDt = pcEvent->dtEnd().dateTime().toLocalTime();
 				TEST( hhDt, pcDt, "DtEventEnd" );
 			}
 		}
@@ -507,6 +513,7 @@ void CalendarConduit::setRecurrence( PilotDateEntry* de, const EventPtr& e ) con
 	QDateTime startDt( readTm( de->getEventStart() ) );
 	QDateTime endDt( readTm( de->getEventEnd() ) );
 	
+	DEBUGKPILOT << "Start date: " << startDt.toString() << ", end date: " << endDt.toString();
 	if( startDt.daysTo( endDt ) )
 	{
 		isMultiDay = true;
@@ -520,12 +527,21 @@ void CalendarConduit::setRecurrence( PilotDateEntry* de, const EventPtr& e ) con
 	
 	KCal::Recurrence* r = e->recurrence();
 	
-	if( !r ) return;
+	if( !r )
+       	{
+		DEBUGKPILOT << "No recurrence found. returning.";
+		return;
+	}
 	
 	ushort recType = r->recurrenceType();
 	if( recType == KCal::Recurrence::rNone )
 	{
-		if( !isMultiDay ) de->setRepeatType( repeatNone );
+		if( !isMultiDay )
+		{
+			de->setRepeatType( repeatNone );
+		}
+		DEBUGKPILOT << "Recurrence type is: " << recType << ", multiDay: "
+			    << isMultiDay << ". returning.";
 		return;
 	}
 
@@ -534,18 +550,21 @@ void CalendarConduit::setRecurrence( PilotDateEntry* de, const EventPtr& e ) con
 
 	if( r->duration() < 0 || !endDate.isValid() )
 	{
+		DEBUGKPILOT << "Duration: " << r->duration() << ", endDate: " << endDate.toString()
+			    << ". Setting repeat forever.";
 		de->setRepeatForever();
 	}
 	else
 	{
+		DEBUGKPILOT << "Setting end date: " << endDate.toString();
+		de->setRepeatForever(0);
 		de->setRepeatEnd(writeTm(endDate));
 	}
 	de->setRepeatFrequency(freq);
 	
-	DEBUGKPILOT << "Event: " << e->summary() << " (" << e->description() << ")";
-	DEBUGKPILOT << "duration:" << r->duration() << ", endDate:" 
-		<< endDate.toString() << ", ValidEndDate: " << endDate.isValid() 
-		<< ", NullEndDate:" << endDate.isNull();
+	DEBUGKPILOT << "Event: " << e->summary() << ", duration: " << r->duration() << ", endDate: "
+		<< endDate.toString() << ", ValidEndDate: " << endDate.isValid()
+		<< ", NullEndDate: " << endDate.isNull();
 
 	QBitArray dayArray(7);
 	QBitArray dayArrayPalm(7);
@@ -722,18 +741,18 @@ void CalendarConduit::setStartEndTimes( PilotDateEntry* de, const EventPtr& e ) 
 	}
 	
 	struct tm ttm = writeTm( e->dtStart().dateTime().toLocalTime() );
-	DEBUGKPILOT << "event start: " << e->dtStart().dateTime().toLocalTime();
+	DEBUGKPILOT << "event start: " << e->dtStart().dateTime().toLocalTime().toString();
 	de->setEventStart( ttm );
 	de->setFloats( e->allDay() );
 	
 	if( e->hasEndDate() && e->dtEnd().isValid() )
 	{
-		DEBUGKPILOT << "event end : " << e->dtEnd().dateTime().toLocalTime();
+		DEBUGKPILOT << "event end : " << e->dtEnd().dateTime().toLocalTime().toString();
 		ttm = writeTm( e->dtEnd().dateTime().toLocalTime() );
 	}
 	else
 	{
-		DEBUGKPILOT << "event end : " << e->dtStart().dateTime().toLocalTime();
+		DEBUGKPILOT << "event end : " << e->dtStart().dateTime().toLocalTime().toString();
 		ttm = writeTm( e->dtStart().dateTime().toLocalTime() );
 	}
 	
