@@ -23,6 +23,7 @@
 #define STRIGI_IMPORT_API
 #include <strigi/analyzerplugin.h>
 #include <strigi/streamendanalyzer.h>
+#include <kcomponentdata.h>
 #include "pimstrigi-analyzer_export.h"
 #include "config-strigi.h"
 
@@ -64,8 +65,14 @@ private:
 
 class PIMSTRIGI_ANALYZER_EXPORT IcsFactoryFactory : public Strigi::AnalyzerFactoryFactory
 {
+private:
+  KComponentData kcomponentdata;
 public:
+  IcsFactoryFactory() :kcomponentdata("IcsFactoryFactory") {}
   std::list<Strigi::StreamEndAnalyzerFactory*> streamEndAnalyzerFactories() const {
+     if (!kcomponentdata.isValid()) {
+         qFatal("KComponentData is not valid.");
+     }
      std::list<Strigi::StreamEndAnalyzerFactory*> af;
      af.push_back( new IcsEndAnalyzerFactory );
      return af;
