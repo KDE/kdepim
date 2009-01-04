@@ -104,7 +104,7 @@ bool CalendarConduit::initDataProxies()
 
 bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(5);
 	
 	const CalendarAkonadiRecord* tar = static_cast<const CalendarAkonadiRecord*>( pcRec );
 	const CalendarHHRecord* thr = static_cast<const CalendarHHRecord*>( hhRec );

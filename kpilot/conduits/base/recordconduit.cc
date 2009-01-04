@@ -76,7 +76,10 @@ RecordConduit::~RecordConduit()
 	// If retrieved is true there was no local backup database so a first sync 
 	// should be done then (see 6.3.2).
 	bool backupDatabaseOpen = !retrieved;
-	setFirstSync( retrieved );
+	DEBUGKPILOT << "After openDatabases call. hhDatabaseOpen: " << hhDatabaseOpen
+		    << ", retrieved: " << retrieved << ". Setting first sync to: "
+		    << !retrieved ;
+	setFirstSync( !retrieved );
 	
 	// See 6.2
 	fMapping = IDMapping( KPilotSettings::userName(), fConduitName );
@@ -189,6 +192,8 @@ RecordConduit::~RecordConduit()
 	fHHDataProxy->setEndcount();
 	fPCDataProxy->setEndcount();
 
+	DEBUGKPILOT << "HH data proxy: " << fHHDataProxy->counter()->moo();
+	DEBUGKPILOT << "PC data proxy: " << fPCDataProxy->counter()->moo();
 	addSyncLogEntry( "HH data proxy: " + fHHDataProxy->counter()->moo() +'\n' );
 	addSyncLogEntry( "PC data proxy: " + fPCDataProxy->counter()->moo() +'\n' );
 	
@@ -476,6 +481,7 @@ void RecordConduit::firstSync()
 	fPCDataProxy->setIterateMode( DataProxy::All );
 	
 	DEBUGKPILOT << "Walking over all hh records.";
+	emit logMessage(i18n("Doing first sync. This may take a while."));
 	
 	fHHDataProxy->resetIterator();
 	while( fHHDataProxy->hasNext() )

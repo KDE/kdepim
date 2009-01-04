@@ -251,7 +251,7 @@ bool ContactsConduit::initDataProxies()
 
 bool ContactsConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(5);
 	
 	// empty records are never equal!
 	if( !pcRec || !hhRec )

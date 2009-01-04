@@ -213,6 +213,7 @@ PilotRecord *PilotSerialDatabase::readRecordByIndex(int index)
 		b, &id, &attr, &category) >= 0)
 	{
 		rec = new PilotRecord(b, attr, category, id);
+		DEBUGKPILOT << "Index=" << index << " Count=" << recordCount();
 	}
 
 

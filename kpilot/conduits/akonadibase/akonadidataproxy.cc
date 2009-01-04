@@ -105,7 +105,7 @@ bool AkonadiDataProxy::isOpen() const
 void AkonadiDataProxy::loadAllRecords()
 {
 	FUNCTIONSETUP;
-	
+
 	// Fetch all items with full payload from the root collection
 	Akonadi::ItemFetchJob* job
 		= new Akonadi::ItemFetchJob( Akonadi::Collection( d->fCollectionId ) );
