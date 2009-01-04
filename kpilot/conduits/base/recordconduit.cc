@@ -73,13 +73,14 @@ RecordConduit::~RecordConduit()
 	bool retrieved = false;
 	
 	bool hhDatabaseOpen = openDatabases( fDatabaseName, &retrieved );
-	// If retrieved is true there was no local backup database so a first sync 
+	// If retrieved is true there was no local backup database and it had to be
+	// retrieved from the Palm before it could be opened, so a first sync
 	// should be done then (see 6.3.2).
 	bool backupDatabaseOpen = !retrieved;
 	DEBUGKPILOT << "After openDatabases call. hhDatabaseOpen: " << hhDatabaseOpen
 		    << ", retrieved: " << retrieved << ". Setting first sync to: "
-		    << !retrieved ;
-	setFirstSync( !retrieved );
+		    << retrieved ;
+	setFirstSync( retrieved );
 	
 	// See 6.2
 	fMapping = IDMapping( KPilotSettings::userName(), fConduitName );
