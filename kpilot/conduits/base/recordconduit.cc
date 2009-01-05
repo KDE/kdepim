@@ -485,19 +485,26 @@ void RecordConduit::firstSync()
 	addSyncLogEntry(i18n("Doing first sync. This may take a while."));
 	
 	fHHDataProxy->resetIterator();
+	QSet<QString> pcIds; // pcRecords that where created or for which we found a match.
 	while( fHHDataProxy->hasNext() )
 	{
 		HHRecord *hhRecord = static_cast<HHRecord*>( fHHDataProxy->next() );
 		Record *pcRecord = findMatch( hhRecord );
 		
-		if( pcRecord )
+		if( pcRecord && pcIds.contains(pcRecord->id()) )
+		{
+			DEBUGKPILOT << "Match found on 'touched' pcRecord for hh record: ["
+				<< hhRecord->toString() << "] deleting hhRecord";
+			fHHDataProxy->remove( hhRecord->id() );
+		}
+		else if(pcRecord)
 		{
 			DEBUGKPILOT << "Match found for hh record: [" << hhRecord->toString() << "]";
 			// TODO: Make this configurable or something, maybe pcRecord should
 			// overide or user should be asked which record should be used. In this
 			// case it might even be useful to let the user select per field which
 			// record should be used. For now the handheld record overides.
-			
+			pcIds << pcRecord->id();
 			// Overide pcRecord values with hhRecord values.
 			//  ( from    , to       );
 			copy( hhRecord, pcRecord );
@@ -521,6 +528,7 @@ void RecordConduit::firstSync()
 				DEBUGKPILOT << "hhRecord not deleted.  Adding to PC";
 				Record *pcRecord = createPCRecord( hhRecord );
 				fPCDataProxy->create( pcRecord );
+				pcIds << pcRecord->id();
 				fMapping.map( hhRecord->id(), pcRecord->id() );
 				copyCategory( hhRecord, pcRecord );
 			}
