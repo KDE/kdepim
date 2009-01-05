@@ -46,6 +46,7 @@ Name[zh_CN]=OpenXchange 服务器
 Name[zh_TW]=OpenXchange 伺服器
 Comment=Provides access to contacts stored on an Open-Xchange server
 Comment[ca]=Proporciona l'accés als contactes emmagatzemats en un servidor Open-Xchange
+Comment[da]=Giver adgang til kontakter lagret på en Open-Xchange-server
 Comment[el]=Προσφέρει πρόσβαση σε επαφές αποθηκευμένες σε έναν εξυπηρετητή Open-Xchange
 Comment[et]=Võimaldab kasutada kontakte, mis on salvestatud Open-Xchange'i serverisse
 Comment[fr]=Fourni l'accès aux contacts stockés dans un serveur Open-Xchange
