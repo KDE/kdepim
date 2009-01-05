@@ -76,7 +76,7 @@ RecordConduit::~RecordConduit()
 	// If retrieved is true there was no local backup database and it had to be
 	// retrieved from the Palm before it could be opened, so a first sync
 	// should be done then (see 6.3.2).
-	bool backupDatabaseOpen = !retrieved;
+	bool backupDatabaseOpen = hhDatabaseOpen && !retrieved;
 	DEBUGKPILOT << "After openDatabases call. hhDatabaseOpen: " << hhDatabaseOpen
 		    << ", retrieved: " << retrieved << ". Setting first sync to: "
 		    << retrieved ;
