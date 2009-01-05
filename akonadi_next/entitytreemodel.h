@@ -94,7 +94,7 @@ public:
     FetchNothing = 0,                     /// Fetch nothing. This creates an empty model.
     FetchItems = 1,                       /// Fetch items in the rootCollection
     FetchFirstLevelChildCollections = 2,  /// Fetch first level collections in the root collection.
-    FetchCollectionsRecursive = 4,    /// Fetch collections in the root collection recursively. This implies FetchFirstLevelChildCollections.
+    FetchCollectionsRecursive = 4    /// Fetch collections in the root collection recursively. This implies FetchFirstLevelChildCollections.
   };
 
   /**
