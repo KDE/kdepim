@@ -90,7 +90,7 @@ RecordConduit::~RecordConduit()
 	if( !initDataProxies() )
 	{
 		DEBUGKPILOT << "One of the data proxies could not be initialized.";
-		emit logError(i18n("One of the data proxies could not be initialized."));
+		addSyncLogEntry(i18n("One of the data proxies could not be initialized."));
 		return false;
 	}
 	
@@ -102,7 +102,7 @@ RecordConduit::~RecordConduit()
 	if( !fMapping.isValid( fBackupDataProxy->ids() ) )
 	{
 		DEBUGKPILOT << "Invalid record mapping. Doing first sync.";
-		addSyncLogEntry( "Invalid record mapping. Doing first sync." );
+		addSyncLogEntry( i18n( "Invalid record mapping. Doing first sync." ));
 		setFirstSync( true );
 	}
 	
@@ -160,7 +160,7 @@ RecordConduit::~RecordConduit()
 		else
 		{
 			DEBUGKPILOT << "Could not open or create pc data store.";
-			emit logError(i18n("Could not open or create PC data store."));
+			addSyncLogEntry(i18n("Could not open or create PC data store."));
 			return false;
 		}
 	}
@@ -176,7 +176,7 @@ RecordConduit::~RecordConduit()
 		else
 		{
 			DEBUGKPILOT << "Could not open or create hand held data store.";
-			emit logError(i18n("Could not open or create Palm data store."));
+			addSyncLogEntry(i18n("Could not open or create Palm data store."));
 			return false;
 		}
 	}
@@ -184,7 +184,7 @@ RecordConduit::~RecordConduit()
 	{
 		DEBUGKPILOT <<  "Failed to open the pc database and the handheld "
 		"database, no data to sync.";
-		emit logError( i18n( "Failed to open the pc database and the handheld "
+		addSyncLogEntry( i18n( "Failed to open the pc database and the handheld "
 			"database, no data to sync." ) );
 		return false; // 6.3.7 and 6.3.8
 	}
@@ -202,7 +202,7 @@ RecordConduit::~RecordConduit()
 	if( !fMapping.isValid( fHHDataProxy->ids() ) )
 	{
 		DEBUGKPILOT <<  "Data mapping invalid after sync. Sync failed.";
-		emit logError( i18n( "Data mapping invalid after sync. Sync failed." ) );
+		addSyncLogEntry( i18n( "Data mapping invalid after sync. Sync failed." ) );
 		return false;
 	}
 	
@@ -210,7 +210,7 @@ RecordConduit::~RecordConduit()
 	{
 		// volatility bounds are exceeded or the user did not want to proceed.
 		DEBUGKPILOT <<  "Changes are too volatile. Sync failed.";
-		emit logError( i18n( "Changes are too volatile. Sync failed." ) );
+		addSyncLogEntry( i18n( "Changes are too volatile. Sync failed." ) );
 		return false;
 	}
 	
@@ -222,7 +222,7 @@ RecordConduit::~RecordConduit()
 	if( !fHHDataProxy->commit() )
 	{
 		DEBUGKPILOT << "Could not save Palm changes. Sync failed";
-		emit logError( i18n( "Could not save Palm changes. Sync failed." ) );
+		addSyncLogEntry( i18n( "Could not save Palm changes. Sync failed." ) );
 		fHHDataProxy->rollback();
 		return false;
 	}
@@ -230,7 +230,7 @@ RecordConduit::~RecordConduit()
 	if( !fPCDataProxy->commit() )
 	{
 		DEBUGKPILOT << "Could not save PC changes. Sync failed";
-		emit logError( i18n( "Could not save PC changes. Sync failed." ) );
+		addSyncLogEntry( i18n( "Could not save PC changes. Sync failed." ) );
 		
 		fPCDataProxy->rollback();
 		fHHDataProxy->rollback();
@@ -482,7 +482,7 @@ void RecordConduit::firstSync()
 	fPCDataProxy->setIterateMode( DataProxy::All );
 	
 	DEBUGKPILOT << "Walking over all hh records.";
-	emit logMessage(i18n("Doing first sync. This may take a while."));
+	addSyncLogEntry(i18n("Doing first sync. This may take a while."));
 	
 	fHHDataProxy->resetIterator();
 	while( fHHDataProxy->hasNext() )
