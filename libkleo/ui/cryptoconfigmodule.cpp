@@ -86,8 +86,20 @@ inline KIcon loadIcon( const QString &s ) {
   return KIcon( ss.replace( QRegExp( "[^a-zA-Z0-9_]" ), "-" ) );
 }
 
+static unsigned int num_components_with_options( const Kleo::CryptoConfig * config ) {
+  if ( !config )
+    return 0;
+  const QStringList components = config->componentList();
+  unsigned int result = 0;
+  for ( QStringList::const_iterator it = components.begin() ; it != components.end() ; ++it )
+    if ( const Kleo::CryptoConfigComponent * const comp = config->component( *it ) )
+      if ( !comp->groupList().empty() )
+        ++result;
+  return result;
+}
+
 static const KPageView::FaceType determineJanusFace( const Kleo::CryptoConfig * config ) {
-  return config && config->componentList().size() < 2
+  return num_components_with_options( config ) < 2
     ? KPageView::Plain
     : KPageView::List ;
 }
@@ -104,6 +116,7 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
     vlay = new QVBoxLayout( vbox );
     vlay->setSpacing( KDialog::spacingHint() );
     vlay->setMargin( 0 );
+    addPage( vbox, i18n("GpgConf Error") );
   }
 
   const QStringList components = config->componentList();
@@ -147,6 +160,18 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
       dialogHeight = 400;
     assert( scrollArea->widget() );
     scrollArea->setMinimumHeight( qMin( compGUI->sizeHint().height(), dialogHeight ) );
+  }
+  if ( mComponentGUIs.empty() ) {
+      const QString msg = i18n("The gpgconf tool used to provide the information "
+                               "for this dialog does not seem to be installed "
+                               "properly. It did not return any components. "
+                               "Try running \"%1\" on the command line for more "
+                               "information.",
+                               components.empty() ? "gpgconf --list-components" : "gpgconf --list-options gpg" );
+      QLabel * label = new QLabel( msg, vbox );
+      label->setWordWrap( true);
+      label->setMinimumHeight( fontMetrics().lineSpacing() * 5 );
+      vlay->addWidget( label );
   }
 }
 
