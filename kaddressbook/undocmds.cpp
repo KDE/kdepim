@@ -196,11 +196,6 @@ void PasteCommand::redo()
     addressBook()->insertAddressee( *it );
     lock()->unlock( (*it).resource() );
   }
-
-  QStringList::ConstIterator uidIt;
-  const QStringList::ConstIterator uidEndIt( uids.constEnd() );
-  for ( uidIt = uids.constBegin(); uidIt != uidEndIt; ++uidIt )
-    mCore->editContact( *uidIt );
 }
 
 
