@@ -83,16 +83,16 @@ static QMap<QString, QString>& adrbookattr2ldap()
   static QMap<QString, QString> keys;
 
   if ( keys.isEmpty() ) {
-    keys[ i18n( "Title" ) ] = "title";
+    keys[ i18nc( "@item LDAP search key", "Title" ) ] = "title";
     keys[ i18n( "Full Name" ) ] = "cn";
-    keys[ i18n( "Email" ) ] = "mail";
+    keys[ i18nc( "@item LDAP search key", "Email" ) ] = "mail";
     keys[ i18n( "Home Number" ) ] = "homePhone";
     keys[ i18n( "Work Number" ) ] = "telephoneNumber";
     keys[ i18n( "Mobile Number" ) ] = "mobile";
     keys[ i18n( "Fax Number" ) ] = "facsimileTelephoneNumber";
     keys[ i18n( "Pager" ) ] = "pager";
     keys[ i18n( "Street" ) ] = "street";
-    keys[ i18n( "State" ) ] = "st";
+    keys[ i18nc( "@item LDAP search key", "State" ) ] = "st";
     keys[ i18n( "Country" ) ] = "co";
     keys[ i18n( "City" ) ] = "l";
     keys[ i18n( "Organization" ) ] = "o";
@@ -179,7 +179,7 @@ class ContactListModel : public QAbstractTableModel
 
       switch ( section ) {
         case  0: return i18n( "Full Name" ); break;
-        case  1: return i18n( "Email" ); break;
+        case  1: return i18nc( "@title:column Column containing email addresses", "Email" ); break;
         case  2: return i18n( "Home Number" ); break;
         case  3: return i18n( "Work Number" ); break;
         case  4: return i18n( "Mobile Number" ); break;
@@ -187,7 +187,7 @@ class ContactListModel : public QAbstractTableModel
         case  6: return i18n( "Company" ); break;
         case  7: return i18n( "Organization" ); break;
         case  8: return i18n( "Street" ); break;
-        case  9: return i18n( "State" ); break;
+        case  9: return i18nc( "@title:column Column containing the residential state of the address", "State" ); break;
         case 10: return i18n( "Country" ); break;
         case 11: return i18n( "Zip Code" ); break;
         case 12: return i18n( "Postal Address" ); break;
@@ -195,7 +195,7 @@ class ContactListModel : public QAbstractTableModel
         case 14: return i18n( "Department" ); break;
         case 15: return i18n( "Description" ); break;
         case 16: return i18n( "User ID" ); break;
-        case 17: return i18n( "Title" ); break;
+        case 17: return i18nc( "@title:column Column containing title of the person", "Title" ); break;
         default: return QVariant(); break;
       };
 
@@ -303,16 +303,16 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
   boxLayout->addWidget( label, 0, 2 );
 
   mFilterCombo = new KComboBox( groupBox );
-  mFilterCombo->addItem( i18n( "Name" ) );
-  mFilterCombo->addItem( i18n( "Email" ) );
-  mFilterCombo->addItem( i18n( "Home Number" ) );
-  mFilterCombo->addItem( i18n( "Work Number" ) );
+  mFilterCombo->addItem( i18nc( "@item:inlistbox Name of the contact", "Name" ) );
+  mFilterCombo->addItem( i18nc( "@item:inlistbox email address of the contact", "Email" ) );
+  mFilterCombo->addItem( i18nc( "@item:inlistbox", "Home Number" ) );
+  mFilterCombo->addItem( i18nc( "@item:inlistbox", "Work Number" ) );
   boxLayout->addWidget( mFilterCombo, 0, 3 );
 
   QSize buttonSize;
   mSearchButton = new QPushButton( i18n( "Stop" ), groupBox );
   buttonSize = mSearchButton->sizeHint();
-  mSearchButton->setText( i18n( "&Search" ) );
+  mSearchButton->setText( i18nc( "@action:button Start searching", "&Search" ) );
   if ( buttonSize.width() < mSearchButton->sizeHint().width() )
     buttonSize = mSearchButton->sizeHint();
   mSearchButton->setFixedWidth( buttonSize.width() );
@@ -466,12 +466,12 @@ QString LDAPSearchDialog::makeFilter( const QString& query, const QString& attr,
     // Return a filter that matches everything
     return result + "|(cn=*)(sn=*)" + ')';
 
-  if ( attr == i18n( "Name" ) ) {
+  if ( attr == i18nc( "Search attribute: Name of contact", "Name" ) ) {
     result += startsWith ? "|(cn=%1*)(sn=%2*)" : "|(cn=*%1*)(sn=*%2*)";
     result = result.arg( query ).arg( query );
   } else {
     result += (startsWith ? "%1=%2*" : "%1=*%2*");
-    if ( attr == i18n( "Email" ) ) {
+    if ( attr == i18nc( "Search attribute: Email of the contact", "Email" ) ) {
       result = result.arg( "mail" ).arg( query );
     } else if ( attr == i18n( "Home Number" ) ) {
       result = result.arg( "homePhone" ).arg( query );
@@ -530,7 +530,7 @@ void LDAPSearchDialog::slotSearchDone()
   connect( mSearchButton, SIGNAL( clicked() ),
            this, SLOT( slotStartSearch() ) );
 
-  mSearchButton->setText( i18n( "&Search" ) );
+  mSearchButton->setText( i18nc( "@action:button Start searching", "&Search" ) );
   QApplication::restoreOverrideCursor();
 }
 

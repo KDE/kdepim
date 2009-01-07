@@ -303,12 +303,12 @@ void NameEditDialog::initTypeCombo()
   int pos = mFormattedNameCombo->currentIndex();
 
   mFormattedNameCombo->clear();
-  mFormattedNameCombo->addItem( i18n( "Custom" ) );
-  mFormattedNameCombo->addItem( i18n( "Simple Name" ) );
-  mFormattedNameCombo->addItem( i18n( "Full Name" ) );
-  mFormattedNameCombo->addItem( i18n( "Reverse Name with Comma" ) );
-  mFormattedNameCombo->addItem( i18n( "Reverse Name" ) );
-  mFormattedNameCombo->addItem( i18n( "Organization" ) );
+  mFormattedNameCombo->addItem( i18nc( "@item:inlistbox Custom name format", "Custom" ) );
+  mFormattedNameCombo->addItem( i18nc( "@item:inlistbox", "Simple Name" ) );
+  mFormattedNameCombo->addItem( i18nc( "@item:inlistbox", "Full Name" ) );
+  mFormattedNameCombo->addItem( i18nc( "@item:inlistbox", "Reverse Name with Comma" ) );
+  mFormattedNameCombo->addItem( i18nc( "@item:inlistbox", "Reverse Name" ) );
+  mFormattedNameCombo->addItem( i18nc( "@item:inlistbox", "Organization" ) );
 
   mFormattedNameCombo->setCurrentIndex( pos );
 }

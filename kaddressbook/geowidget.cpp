@@ -59,10 +59,10 @@ GeoWidget::GeoWidget( KABC::AddressBook *ab, QWidget *parent )
   label->setAlignment( Qt::AlignTop );
   topLayout->addWidget( label, 0, 0, 4, 1);
 
-  mGeoIsValid = new QCheckBox( i18n( "Use geo data" ), this );
+  mGeoIsValid = new QCheckBox( i18nc( "@option:check", "Use geo data" ), this );
   topLayout->addWidget( mGeoIsValid, 0, 1, 1, 2 );
 
-  label = new QLabel( i18n( "Latitude:" ), this );
+  label = new QLabel( i18nc( "@label:textbox", "Latitude:" ), this );
   topLayout->addWidget( label, 1, 1 );
 
   mLatitudeBox = new QDoubleSpinBox( this );
@@ -76,7 +76,7 @@ GeoWidget::GeoWidget( KABC::AddressBook *ab, QWidget *parent )
   topLayout->addWidget( mLatitudeBox, 1, 2 );
   label->setBuddy( mLatitudeBox );
 
-  label = new QLabel( i18n( "Longitude:" ), this );
+  label = new QLabel( i18nc( "@label:textbox", "Longitude:" ), this );
   topLayout->addWidget( label, 2, 1 );
 
   mLongitudeBox = new QDoubleSpinBox( this );
@@ -90,7 +90,7 @@ GeoWidget::GeoWidget( KABC::AddressBook *ab, QWidget *parent )
   topLayout->addWidget( mLongitudeBox, 2, 2 );
   label->setBuddy( mLongitudeBox );
 
-  mExtendedButton = new QPushButton( i18n( "Edit Geo Data..." ), this );
+  mExtendedButton = new QPushButton( i18nc( "@action:button", "Edit Geo Data..." ), this );
   mExtendedButton->setEnabled( false );
   topLayout->addWidget( mExtendedButton, 3, 1, 1, 2 );
 
@@ -171,7 +171,7 @@ GeoDialog::GeoDialog( QWidget *parent )
   : KDialog( parent ),
     mUpdateSexagesimalInput( true )
 {
-  setCaption( i18n( "Geo Data Input" ) );
+  setCaption( i18nc( "@title:window", "Geo Data Input" ) );
   setButtons( Ok | Cancel );
   setDefaultButton( Ok );
   showButtonSeparator( true );
@@ -191,12 +191,12 @@ GeoDialog::GeoDialog( QWidget *parent )
   mCityCombo = new KComboBox( page );
   topLayout->addWidget( mCityCombo, 0, 1 );
 
-  QGroupBox *sexagesimalGroup = new QGroupBox( i18n( "Sexagesimal" ), page );
+  QGroupBox *sexagesimalGroup = new QGroupBox( i18nc( "@title:group", "Sexagesimal" ), page );
   QGridLayout *sexagesimalLayout = new QGridLayout();
   sexagesimalGroup->setLayout( sexagesimalLayout );
   sexagesimalLayout->setSpacing( spacingHint() );
 
-  QLabel *label = new QLabel( i18n( "Latitude:" ), sexagesimalGroup );
+  QLabel *label = new QLabel( i18nc( "@label:spinbox", "Latitude:" ), sexagesimalGroup );
   sexagesimalLayout->addWidget( label, 0, 0 );
 
   mLatDegrees = new QSpinBox( sexagesimalGroup );
@@ -224,11 +224,11 @@ GeoDialog::GeoDialog( QWidget *parent )
   sexagesimalLayout->addWidget( mLatSeconds, 0, 3 );
 
   mLatDirection = new KComboBox( sexagesimalGroup );
-  mLatDirection->addItem( i18n( "North" ) );
-  mLatDirection->addItem( i18n( "South" ) );
+  mLatDirection->addItem( i18nc( "@item:inlistbox Latitude direction", "North" ) );
+  mLatDirection->addItem( i18nc( "@item:inlistbox Latitude direction", "South" ) );
   sexagesimalLayout->addWidget( mLatDirection, 0, 4 );
 
-  label = new QLabel( i18n( "Longitude:" ), sexagesimalGroup );
+  label = new QLabel( i18nc( "@label:spinbox", "Longitude:" ), sexagesimalGroup );
   sexagesimalLayout->addWidget( label, 1, 0 );
 
   mLongDegrees = new QSpinBox( sexagesimalGroup );
@@ -254,8 +254,8 @@ GeoDialog::GeoDialog( QWidget *parent )
   sexagesimalLayout->addWidget( mLongSeconds, 1, 3 );
 
   mLongDirection = new KComboBox( sexagesimalGroup );
-  mLongDirection->addItem( i18n( "East" ) );
-  mLongDirection->addItem( i18n( "West" ) );
+  mLongDirection->addItem( i18nc( "@item:inlistbox Longtitude direction", "East" ) );
+  mLongDirection->addItem( i18nc( "@item:inlistbox Longtitude direction", "West" ) );
   sexagesimalLayout->addWidget( mLongDirection, 1, 4 );
 
   topLayout->addWidget( sexagesimalGroup, 1, 1 );
@@ -459,7 +459,7 @@ void GeoDialog::loadCityList()
       }
     }
     QStringList items( mGeoDataMap.keys() );
-    items.prepend( i18n( "Undefined" ) );
+    items.prepend( i18nc( "@item:inlistbox Undefined location", "Undefined" ) );
     mCityCombo->addItems( items );
 
     file.close();

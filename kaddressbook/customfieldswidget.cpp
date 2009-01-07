@@ -61,7 +61,7 @@ AddFieldDialog::AddFieldDialog( QWidget *parent )
   layout->setSpacing( spacingHint() );
   layout->setMargin( 0 );
 
-  QLabel *label = new QLabel( i18n( "Title:" ), page );
+  QLabel *label = new QLabel( i18nc( "@label:textbox Title of the contact", "Title:" ), page );
   layout->addWidget( label, 0, 0 );
 
   mTitle = new KLineEdit( page );

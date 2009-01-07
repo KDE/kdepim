@@ -84,7 +84,7 @@ EmailEditWidget::EmailEditWidget( QWidget *parent, const char *name )
   topLayout->setSpacing( KDialog::spacingHint() );
   topLayout->setMargin( KDialog::marginHint() );
 
-  QLabel *label = new QLabel( i18n( "Email:" ), this );
+  QLabel *label = new QLabel( i18nc( "@label:textbox Inputfield for an email address", "Email:" ), this );
   topLayout->addWidget( label, 0, 0 );
 
   mEmailEdit = new KLineEdit( this );
@@ -271,7 +271,8 @@ void EmailEditDialog::edit()
 
   QListWidgetItem *item = mEmailListBox->currentItem();
 
-  QString email = KInputDialog::getText( i18n( "Edit Email" ), i18n( "Email:" ),
+  QString email = KInputDialog::getText( i18n( "Edit Email" ),
+                                         i18nc( "@label:textbox Inputfield for an email address", "Email:" ),
                                          item->text(), &ok, this,
                                          validator );
 

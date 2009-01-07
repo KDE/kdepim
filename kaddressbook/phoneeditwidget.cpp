@@ -86,7 +86,7 @@ void PhoneTypeCombo::update()
   QList<int>::ConstIterator it;
   for ( it = mTypeList.constBegin(); it != mTypeList.constEnd(); ++it ) {
     if ( *it == -1 ) { // "Other..." entry
-      addItem( i18n( "Other..." ) );
+      addItem( i18nc( "@item:inlistbox Category of contact info field", "Other..." ) );
     } else {
       KABC::PhoneNumber number;
       number.setType( KABC::PhoneNumber::Type( *it ) );

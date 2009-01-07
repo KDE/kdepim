@@ -227,7 +227,7 @@ void AddresseeEditorWidget::setupTab1()
   // Build the layout and add to the tab widget
   //layout->activate(); // required
 
-  mTabWidget->addTab( page, i18n( "General" ) );
+  mTabWidget->addTab( page, i18nc( "@title:tab General information about a contact", "General" ) );
 }
 
 void AddresseeEditorWidget::setupTab2()

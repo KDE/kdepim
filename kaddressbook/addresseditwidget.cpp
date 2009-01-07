@@ -314,7 +314,7 @@ AddressEditDialog::AddressEditDialog( const KABC::Address::List &list,
   buttonBox->setSpacing( spacingHint() );
   topLayout->addWidget( buttonBox, 10, 0, 1, 2 );
 
-  QPushButton *addButton = new QPushButton( i18n( "New..." ), buttonBox );
+  QPushButton *addButton = new QPushButton( i18nc( "@action:button Add a new address", "New..." ), buttonBox );
   connect( addButton, SIGNAL( clicked() ), SLOT( addAddress() ) );
 
   mRemoveButton = new QPushButton( i18n( "Remove" ), buttonBox );

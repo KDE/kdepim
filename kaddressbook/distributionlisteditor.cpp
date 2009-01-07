@@ -183,7 +183,7 @@ KPIM::DistributionListEditor::EditorWidget::EditorWidget( KABC::AddressBook* boo
     QHBoxLayout* nameLayout = new QHBoxLayout( nameWidget );
     nameLayout->setSpacing( KDialog::spacingHint() );
     d->nameLabel = new QLabel;
-    d->nameLabel->setText( i18n( "Name:" ) );
+    d->nameLabel->setText( i18nc( "@label:textbox Name of the distribution list", "Name:" ) );
     nameLayout->addWidget( d->nameLabel );
 
     d->nameLineEdit = new KLineEdit;

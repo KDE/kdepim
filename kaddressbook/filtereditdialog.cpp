@@ -104,7 +104,7 @@ void FilterEditDialog::initGUI()
   topLayout->setSpacing( spacingHint() );
   topLayout->setMargin( 0 );
 
-  label = new QLabel( i18n( "Name:" ), page );
+  label = new QLabel( i18nc( "@label:textbox Name of the filter", "Name:" ), page );
   mNameEdit = new KLineEdit( page );
   mNameEdit->setFocus();
   topLayout->addWidget( label, 0, 0 );

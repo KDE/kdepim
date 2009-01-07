@@ -78,8 +78,8 @@ XXPortSelectDialog::XXPortSelectDialog( KAB::Core *core, bool sort,
   mUseSelection->setEnabled( count != 0 );
   mUseSelection->setChecked( count  > 0 );
 
-  mSortTypeCombo->addItem( i18n( "Ascending" ) );
-  mSortTypeCombo->addItem( i18n( "Descending" ) );
+  mSortTypeCombo->addItem( i18nc( "@item:inlistbox Sort order", "Ascending" ) );
+  mSortTypeCombo->addItem( i18nc( "@item:inlistbox Sort order", "Descending" ) );
 
   mFields = mCore->addressBook()->fields( KABC::Field::All );
   KABC::Field::List::ConstIterator fieldIt;
@@ -176,7 +176,7 @@ void XXPortSelectDialog::initGUI()
   QLabel *label = new QLabel( i18n( "Which contacts do you want to export?" ), page );
   topLayout->addWidget( label );
 
-  mButtonGroup = new QGroupBox( i18n( "Selection" ), page );
+  mButtonGroup = new QGroupBox( i18nc( "@title:group Selection of contacts that must be exported", "Selection" ), page );
   QGridLayout *groupLayout = new QGridLayout();
   groupLayout->setSpacing( KDialog::spacingHint() );
   groupLayout->setMargin( KDialog::marginHint() );

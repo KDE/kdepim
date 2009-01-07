@@ -576,8 +576,8 @@ void ViewManager::configureFilters()
 
 QStringList ViewManager::filterNames() const
 {
-  QStringList names( i18n( "None" ) );
-  names.append( i18n( "Unfiled" ) );
+  QStringList names( i18nc( "Category to filter on", "None" ) );
+  names.append( i18nc( "Category to filter on", "Unfiled" ) );
 
   Filter::List::ConstIterator it;
   for ( it = mFilterList.constBegin(); it != mFilterList.constEnd(); ++it )

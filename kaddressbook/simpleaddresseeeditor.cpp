@@ -68,7 +68,7 @@ void SimpleAddresseeEditor::initGui()
   topLayout->setSpacing( KDialog::spacingHint() );
   topLayout->setMargin( 0 );
 
-  QLabel *label = new QLabel( i18n( "Name:" ), this );
+  QLabel *label = new QLabel( i18nc( "@label:textbox Name of the contact", "Name:" ), this );
   topLayout->addWidget( label, 0, 0 );
 
   mNameEdit = new KLineEdit( this );
@@ -76,7 +76,7 @@ void SimpleAddresseeEditor::initGui()
   connect( mNameEdit, SIGNAL( textChanged( const QString & ) ),
            SLOT( emitModified() ) );
 
-  label = new QLabel( i18n( "Email:" ), this );
+  label = new QLabel( i18nc( "@label:textbox Email address of the contact", "Email:" ), this );
   topLayout->addWidget( label, 1, 0 );
 
   mEmailEdit = new KLineEdit( this );
