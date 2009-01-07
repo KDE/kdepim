@@ -87,7 +87,7 @@
      <item row="2" column="3" >
       <widget class="QLabel" name="mTitleLabel" >
        <property name="text" >
-        <string>Title:</string>
+        <string comment="@label:textbox Job title of the contact" >Title:</string>
        </property>
        <property name="buddy" >
         <cstring>mTitleEdit</cstring>

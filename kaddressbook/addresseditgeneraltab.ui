@@ -79,7 +79,7 @@
         </size>
        </property>
        <property name="text" >
-        <string>Name</string>
+        <string comment="@label Displays an image" >Name</string>
        </property>
       </widget>
      </item>
@@ -150,7 +150,7 @@
         </size>
        </property>
        <property name="text" >
-        <string>Email</string>
+        <string comment="@label:textbox primary email address of the contact" >Email</string>
        </property>
       </widget>
      </item>
@@ -202,7 +202,7 @@
         </size>
        </property>
        <property name="text" >
-        <string>Address</string>
+        <string comment="@label Displays an image" >Address</string>
        </property>
       </widget>
      </item>

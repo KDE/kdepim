@@ -1,7 +1,4 @@
 <ui version="4.0" >
- <author></author>
- <comment></comment>
- <exportmacro></exportmacro>
  <class>RingBinderStyleAppearanceForm_Base</class>
  <widget class="QWidget" name="RingBinderStyleAppearanceForm_Base" >
   <property name="geometry" >
@@ -25,7 +22,7 @@
    <item row="1" column="1" >
     <widget class="QGroupBox" name="GroupBox3" >
      <property name="title" >
-      <string>Miscellaneous</string>
+      <string comment="@title:group Print settings" >Miscellaneous</string>
      </property>
      <layout class="QGridLayout" >
       <property name="margin" >
@@ -39,7 +36,7 @@
         <property name="orientation" >
          <enum>Qt::Vertical</enum>
         </property>
-        <property name="sizeHint" >
+        <property name="sizeHint" stdset="0" >
          <size>
           <width>20</width>
           <height>40</height>
@@ -102,11 +99,11 @@
       <string>Print Contact's Information</string>
      </property>
      <layout class="QVBoxLayout" >
-      <property name="margin" >
-       <number>9</number>
-      </property>
       <property name="spacing" >
        <number>6</number>
+      </property>
+      <property name="margin" >
+       <number>9</number>
       </property>
       <item>
        <widget class="QCheckBox" name="cbPhoneNumbers" >
@@ -157,7 +154,7 @@
         <property name="orientation" >
          <enum>Qt::Vertical</enum>
         </property>
-        <property name="sizeHint" >
+        <property name="sizeHint" stdset="0" >
          <size>
           <width>20</width>
           <height>40</height>
@@ -232,7 +229,7 @@
         <property name="sizeType" >
          <enum>QSizePolicy::Expanding</enum>
         </property>
-        <property name="sizeHint" >
+        <property name="sizeHint" stdset="0" >
          <size>
           <width>16</width>
           <height>119</height>
@@ -251,9 +248,7 @@
   <customwidget>
    <class>KListWidget</class>
    <extends>QListWidget</extends>
-   <header>KListWidget</header>
-   <container>0</container>
-   <pixmap></pixmap>
+   <header>klistwidget.h</header>
   </customwidget>
  </customwidgets>
  <resources/>
