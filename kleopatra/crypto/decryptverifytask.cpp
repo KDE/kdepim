@@ -428,6 +428,8 @@ static QString formatSignature( const Signature & sig, const Key & key, const De
     }
     if ( red )
         return text + i18n("The signature is bad.");
+    if ( !sig.summary() )
+        return text + i18n("The validity of the signature cannot be verified.");
     return text + i18n("The signature is invalid: %1", signatureSummaryToString( sig.summary() ) );
 }
 
