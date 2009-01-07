@@ -60,6 +60,7 @@
 #include <kconfiggroup.h>
 #include <kmenu.h>
 #include <klineedit.h>
+
 // Qt
 #include <QCheckBox>
 #include <QToolButton>
@@ -362,6 +363,7 @@ void Kleo::KeySelectionDialog::init( bool rememberChoice, bool extendedSelection
   if ( !text.isEmpty() ) {
     QLabel* textLabel = new QLabel( text, page );
     textLabel->setWordWrap( true );
+    connect( textLabel, SIGNAL(linkActivated(QString)), SLOT(slotStartCertificateManager()) );
     mTopLayout->addWidget( textLabel );
   }
 
