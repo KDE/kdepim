@@ -33,4 +33,4 @@
 #include "todoconduit.h"
 #include "todoconfig.h"
 
-DECLARE_KPILOT_PLUGIN( kpilot_conduit_todo2, TodoConfig, TodoConduit )
+DECLARE_KPILOT_PLUGIN( kpilot_conduit_todo, TodoConfig, TodoConduit )

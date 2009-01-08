@@ -33,4 +33,4 @@
 #include "calendarconduit.h"
 #include "calendarconfig.h"
 
-DECLARE_KPILOT_PLUGIN( kpilot_conduit_todo2, CalendarConfig, CalendarConduit )
+DECLARE_KPILOT_PLUGIN( kpilot_conduit_calendar, CalendarConfig, CalendarConduit )

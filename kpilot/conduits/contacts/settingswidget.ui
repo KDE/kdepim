@@ -13,7 +13,7 @@
    <item row="0" column="0" >
     <widget class="KTabWidget" name="fTabWidget" >
      <property name="currentIndex" >
-      <number>3</number>
+      <number>0</number>
      </property>
      <widget class="QWidget" name="tab_5" >
       <attribute name="title" >
@@ -60,6 +60,9 @@
             </property>
             <property name="wordWrap" >
              <bool>false</bool>
+            </property>
+            <property name="buddy" >
+             <cstring>fConflictResolution</cstring>
             </property>
            </widget>
           </item>
