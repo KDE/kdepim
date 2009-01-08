@@ -3,6 +3,7 @@ Type=Service
 Comment=This conduit syncs the handheld addressbook database with an Akonadi collection.
 Comment[ca]=Aquest conducte sincronitza base de dades de la llibreta d'adreces de l'agenda electrònica amb una col·lecció de l'Akonadi.
 Comment[da]=Denne kanal synkroniserer den håndholdtes adressebogs-database med en Akonadi-samling.
+Comment[de]=Abgleich der Adressbücher von Taschencomputer und Akonadi-Ressourcen.
 Comment[el]=Αυτό το κύκλωμα συγχρονίζει το βιβλίο διευθύνσεων του υπολογιστή παλάμης με μια συλλογή του Akonadi.
 Comment[et]=See kanal sünkroniseerib pihuarvuti aadressiraamatu andmebaasi Akonadi koguga.
 Comment[fr]=Ce canal synchronise le carnet d'adresse du périphérique avec une collection Akonadi.

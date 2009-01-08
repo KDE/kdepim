@@ -3,6 +3,7 @@ Type=Service
 Comment=This conduit syncs the handheld todo database with an Akonadi Todo Collection.
 Comment[ca]=Aquest conducte sincronitza base de dades de tasques pendents de l'agenda electrònica amb una col·lecció de tasques pendents de l'Akonadi.
 Comment[da]=Denne kanal synkroniserer den håndholdtes gøremåls-database med en Akonadi gøremålssamling.
+Comment[de]=Abgleich der Aufgaben-Datenbanken von Taschencomputer und Akonadi-Ressourcen.
 Comment[el]=Αυτό το κύκλωμα συγχρονίζει τη λίστα προς υλοποίηση εργασιών με τη συλλογή προς υλοποίηση εργασιών του Akonadi.
 Comment[et]=See kanal sünkroniseerib pihuarvuti ülesannete andmebaasi ja Akonadi ülesannete kogu.
 Comment[fr]=Ce canal synchronise la liste de tâches du périphérique avec une collection de liste de tâches Akonadi.

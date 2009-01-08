@@ -56,6 +56,7 @@ Name[zh_TW]=自 KDE 通訊錄匯入生日
 Comment=Provides access to birthday dates of contacts in the KDE address book as calendar events
 Comment[ca]=Proporciona l'accés a les dates de naixement dels contactes de la llibreta d'adreces del KDE com a esdeveniments de calendari
 Comment[da]=Giver adgang til fødselsdatoer for kontakter i KDE's adressebog som kalenderbegivenheder
+Comment[de]=Ermöglicht den Zugriff auf Geburtstage von Kontakten aus dem KDE-Adressbuch in Form von Kalendereinträgen.
 Comment[el]=Προσφέρει πρόσβαση σε γενέθλια επαφών του βιβλίο διευθύνσεωη του KDE ως  γεγονότα ημερολογίου
 Comment[et]=Võimaldab kasutada KDE aadressiraamatusse kalendrisündmustena salvestatud kontaktide sünnipäevi
 Comment[fr]=Fourni l'accès aux dates d'anniversaire des contacts du carnet d'adresses comme des évènements du calendrier

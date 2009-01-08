@@ -3,6 +3,7 @@ Type=Service
 Comment=This conduit syncs the handheld calendar database with an Akonadi calendar Collection.
 Comment[ca]=Aquest conducte sincronitza la base de dades de calendari l'agenda electrònica una col·lecció de calendari de l'Akonadi.
 Comment[da]=Denne kanal synkroniserer den håndholdtes kalenderdatabase, med en Akonadi kalendersamling.
+Comment[de]=Abgleich der Kalender-Datenbanken von Taschencomputer und Akonadi-Ressourcen.
 Comment[el]=Αυτό το κύκλωμα συγχρονίζει το ημερολόγιο του υπολογιστή παλάμης με τη συλλογή ημερολογίων του Akonadi.
 Comment[et]=See kanal sünkroniseerib pihuarvuti kalendri andmebaasi Akonadi kalendrikoguga.
 Comment[fr]=Ce canal synchronise l'agenda du périphérique avec une collection d'agenda Akonadi.
