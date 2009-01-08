@@ -33,7 +33,6 @@
 #include <kabc/resource.h>
 #include <kabc/resourceabc.h>
 #include <kabc/stdaddressbook.h>
-#include <kacceleratormanager.h>
 #include <kconfig.h>
 #include <kcombobox.h>
 #include <kdebug.h>
@@ -133,9 +132,6 @@ void AddresseeEditorWidget::initGUI()
   setupTab2();
   setupAdditionalTabs();
   setupCustomFieldsTabs();
-
-  connect( mTabWidget, SIGNAL( currentChanged(QWidget*) ),
-           SLOT( pageChanged(QWidget*) ) );
 }
 
 void AddresseeEditorWidget::setupTab1()
@@ -673,12 +669,6 @@ void AddresseeEditorWidget::dateChanged( const QDate& )
 void AddresseeEditorWidget::invalidDate()
 {
   KMessageBox::sorry( this, i18n( "You must specify a valid date" ) );
-}
-
-void AddresseeEditorWidget::pageChanged( QWidget *wdg )
-{
-  if ( wdg )
-    KAcceleratorManager::manage( wdg );
 }
 
 void AddresseeEditorWidget::setInitialFocus()
