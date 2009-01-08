@@ -40,7 +40,6 @@
 #include <kabc/stdaddressbook.h>
 #include <kabc/vcardconverter.h>
 #include <kaboutdata.h>
-#include <kacceleratormanager.h>
 #include <kactioncollection.h>
 #include <kapplication.h>
 #include <kcmdlineargs.h>
@@ -191,8 +190,6 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
   mSearchManager->reload();
 
   setModified( false );
-
-  KAcceleratorManager::manage( mWidget );
 
   mKIMProxy = ::KIMProxy::instance();
 }
