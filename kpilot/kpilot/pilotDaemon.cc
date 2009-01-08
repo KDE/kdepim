@@ -66,6 +66,7 @@
 #include "pilotdaemontray.h"
 #include "pilotRecord.h"
 #include "pilotUser.h"
+#include "plugin.h"
 
 static KAboutData *aboutData = 0L;
 
@@ -1184,10 +1185,11 @@ int main(int argc, char **argv)
 			return 1;
 		}
 
-		DEBUGKPILOT << "Configuration version "
+		DEBUGKPILOT << "Configuration version: "
 			<< KPilotSettings::configVersion();
 	}
-
+	DEBUGKPILOT << "Plugin API version: "
+		    << Pilot::PLUGIN_API;
 
 	PilotDaemon *pilotDaemon = new PilotDaemon();
 
