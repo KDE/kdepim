@@ -144,7 +144,11 @@ void EmailEditWidget::edit()
   if ( dlg.exec() ) {
     if ( dlg.changed() ) {
       mEmailList = dlg.emails();
-      mEmailEdit->setText( mEmailList[ 0 ] );
+      if ( mEmailList.count() > 0 ) {
+        mEmailEdit->setText( mEmailList[ 0 ] );
+      } else {
+        mEmailEdit->setText( QString() );
+      }
       emit modified();
     }
   }
