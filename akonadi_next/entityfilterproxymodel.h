@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2007 Bruno Virlet <bruno.virlet@gmail.com>
+    Copyright (c) 2009 Stephen Kelly <steveire@gmail.com>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -20,72 +21,87 @@
 #ifndef AKONADI_COLLECTIONFILTERPROXYMODEL_H
 #define AKONADI_COLLECTIONFILTERPROXYMODEL_H
 
-#include "akonadi_export.h"
+// #include "akonadi_export.h"
 #include <QtGui/QSortFilterProxyModel>
 
 namespace Akonadi {
 
-class CollectionModel;
-
 /**
- * @short A proxy model that filters collections by mime type.
+ * @short A proxy model that filters entities by mime type.
  *
- * This class can be used on top of a CollectionModel to filter out
- * all collections that doesn't match a given mime type.
- *
- * For instance, a mail application will use addMimeType( "message/rfc822" ) to only show
- * collections containing mail.
+ * This class can be used on top of an EntityTreeModel to exclude entities by mimetype
+ * or to include only certain mimetypes.
  *
  * @code
  *
- *   Akonadi::CollectionModel *model = new Akonadi::CollectionModel( this );
+ *   Akonadi::EntityTreeModel *model = new Akonadi::EntityTreeModel( this );
  *
- *   Akonadi::CollectionFilterProxyModel *proxy = new Akonadi::CollectionFilterProxyModel();
- *   proxy->addMimeTypeFilter( "message/rfc822" );
+ *   Akonadi::EntityFilterProxyModel *proxy = new Akonadi::EntityFilterProxyModel();
+ *   proxy->addMimeTypeInclusionFilter( "message/rfc822" );
  *   proxy->setSourceModel( model );
  *
- *   QTreeView *view = new QTreeView( this );
+ *   Akonadi::EntityTreeView *view = new Akonadi::EntityTreeView( this );
  *   view->setModel( proxy );
  *
  * @endcode
  *
  * @author Bruno Virlet <bruno.virlet@gmail.com>
+ * @author Stephen Kelly <steveire@gmail.com>
  */
-class AKONADI_EXPORT CollectionFilterProxyModel : public QSortFilterProxyModel
+class /*AKONADI_EXPORT*/ EntityFilterProxyModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 
   public:
     /**
-     * Creates a new collection proxy filter model.
+     * Creates a new proxy filter model.
      *
      * @param parent The parent object.
      */
-    explicit CollectionFilterProxyModel( QObject *parent = 0 );
+    explicit EntityFilterProxyModel( QObject *parent = 0 );
 
     /**
-     * Destroys the collection proxy filter model.
+     * Destroys the proxy filter model.
      */
-    virtual ~CollectionFilterProxyModel();
+    virtual ~EntityFilterProxyModel();
 
     /**
      * Add mime types to be shown by the filter.
      *
-     * @param mimeTypes A list of mime types to be shown.
+     * @param mimeTypes A list of mime types to be included.
      */
-    void addMimeTypeFilters( const QStringList &mimeTypes );
+    void addMimeTypeInclusionFilters( const QStringList &mimeTypes );
+
+    /**
+    Add mimetypes to filter out
+
+    @param mimeTypes A list to exclude from the model.
+    */
+    void addMimeTypeExclusionFilters( const QStringList &mimeTypes );
 
     /**
      * Add mime type to be shown by the filter.
      *
      * @param mimeType A mime type to be shown.
      */
-    void addMimeTypeFilter( const QString &mimeType );
+    void addMimeTypeInclusionFilter( const QString &mimeType );
 
     /**
-     * Returns the list of mime type filters.
+     * Add mime type to be excluded by the filter.
+     *
+     * @param mimeType A mime type to be excluded.
      */
-    QStringList mimeTypeFilters() const;
+    void addMimeTypeExclusionFilter( const QString &mimeType );
+
+    /**
+     * Returns the list of mime type inclusion filters.
+     */
+    QStringList mimeTypeInclusionFilters() const;
+
+    /**
+     * Returns the list of mime type exclusion filters.
+     */
+    QStringList mimeTypeExclusionFilters() const;
 
     /**
      * Clear all mime type filters.
