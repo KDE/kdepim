@@ -66,8 +66,11 @@ KABPrefs *KABPrefs::instance()
 void KABPrefs::setCategoryDefaults()
 {
   mCustomCategories.clear();
-  mCustomCategories << i18n( "Business" ) << i18n( "Family" ) << i18n( "School" )
-                    << i18n( "Customer" ) << i18n( "Friend" );
+  mCustomCategories << i18nc( "@item Contact category", "Business" )
+                    << i18nc( "@item Contact category", "Family" )
+                    << i18nc( "@item Contact category", "School" )
+                    << i18nc( "@item Contact category", "Customer" )
+                    << i18nc( "@item Contact category", "Friend" );
 }
 
 void KABPrefs::usrReadConfig()

@@ -199,7 +199,8 @@ void CardViewLookNFeelPage::initGUI()
   loTab->setSpacing( spacing );
   loTab->setMargin( margin );
 
-  Q3GroupBox *gbGeneral = new Q3GroupBox( 1, Qt::Horizontal, i18n("General"), loTab );
+  Q3GroupBox *gbGeneral = new Q3GroupBox( 1, Qt::Horizontal
+    , i18nc("@title:group General layout settings", "General"), loTab );
 
   cbDrawSeps = new QCheckBox( i18n("Draw &separators"), gbGeneral );
 

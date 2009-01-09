@@ -117,7 +117,7 @@ void LookAndFeelPage::initGUI()
   mAlternateButton->setObjectName( "mAlternateButton" );
   mLineButton = new QRadioButton(i18n("Single line"));
   mLineButton->setObjectName( "mLineButton" );
-  mNoneButton = new QRadioButton(i18n("None"));
+  mNoneButton = new QRadioButton(i18nc("@option:radio Row seperator option.", "None"));
   mNoneButton->setObjectName( "mNoneButton" );
   QVBoxLayout *updateLayout = new QVBoxLayout;
   updateLayout->addWidget(mNoneButton);

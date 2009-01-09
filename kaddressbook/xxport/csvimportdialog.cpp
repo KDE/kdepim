@@ -60,13 +60,13 @@ CSVImportDialog::CSVImportDialog( KABC::AddressBook *ab, QWidget *parent )
     mDelimiter( "," ),
     mAddressBook( ab )
 {
-  setCaption( i18n ( "CSV Import Dialog" ) );
+  setCaption( i18nc( "@title:window", "CSV Import Dialog" ) );
   setButtons( Ok | Cancel | User1 | User2 );
   setDefaultButton( Ok );
   setModal( true );
   showButtonSeparator( true );
 
-  mTypeMap.insert( i18n( "Undefined" ), Undefined );
+  mTypeMap.insert( i18nc( "@item Undefined import field type", "Undefined" ), Undefined );
   mTypeMap.insert( KABC::Addressee::formattedNameLabel(), FormattedName );
   mTypeMap.insert( KABC::Addressee::familyNameLabel(), FamilyName );
   mTypeMap.insert( KABC::Addressee::givenNameLabel(), GivenName );
@@ -171,7 +171,7 @@ KABC::AddresseeList CSVImportDialog::contacts() const
   KProgressDialog progressDialog( mPage );
   progressDialog.setAutoClose( true );
   progressDialog.progressBar()->setMaximum( mTable->rowCount() );
-  progressDialog.setLabelText( i18n( "Importing contacts" ) );
+  progressDialog.setLabelText( i18nc( "@label", "Importing contacts" ) );
   progressDialog.show();
 
   kapp->processEvents();
@@ -378,7 +378,7 @@ void CSVImportDialog::initGUI()
   QHBoxLayout *hbox = new QHBoxLayout();
   hbox->setSpacing( spacingHint() );
 
-  QLabel *label = new QLabel( i18n( "File to import:" ), mPage );
+  QLabel *label = new QLabel( i18nc( "@label", "File to import:" ), mPage );
   hbox->addWidget( label );
 
   mUrlRequester = new KUrlRequester( mPage );
@@ -388,7 +388,7 @@ void CSVImportDialog::initGUI()
   layout->addLayout( hbox, 0, 0, 1, 5 );
 
   // Delimiter: comma, semicolon, tab, space, other
-  QGroupBox *group = new QGroupBox( i18n( "Delimiter" ), mPage );
+  QGroupBox *group = new QGroupBox( i18nc( "@title:group", "elimiter" ), mPage );
   QGridLayout *delimiterLayout = new QGridLayout;
   delimiterLayout->setMargin( marginHint() );
   delimiterLayout->setSpacing( spacingHint() );
@@ -399,24 +399,24 @@ void CSVImportDialog::initGUI()
   mDelimiterGroup = new QButtonGroup( this );
   mDelimiterGroup->setExclusive( true );
 
-  mRadioComma = new QRadioButton( i18n( "Comma" ), group );
+  mRadioComma = new QRadioButton( i18nc( "@option:radio Field seperator", "Comma" ), group );
   mRadioComma->setChecked( true );
   mDelimiterGroup->addButton( mRadioComma, 0 );
   delimiterLayout->addWidget( mRadioComma, 0, 0 );
 
-  mRadioSemicolon = new QRadioButton( i18n( "Semicolon" ), group );
+  mRadioSemicolon = new QRadioButton( i18nc( "@option:radio Field seperator", "Semicolon" ), group );
   mDelimiterGroup->addButton( mRadioSemicolon, 1 );
   delimiterLayout->addWidget( mRadioSemicolon, 0, 1 );
 
-  mRadioTab = new QRadioButton( i18n( "Tabulator" ), group );
+  mRadioTab = new QRadioButton( i18nc( "@option:radio Field seperator", "Tabulator" ), group );
   mDelimiterGroup->addButton( mRadioTab, 2 );
   delimiterLayout->addWidget( mRadioTab, 1, 0 );
 
-  mRadioSpace = new QRadioButton( i18n( "Space" ), group );
+  mRadioSpace = new QRadioButton( i18nc( "@option:radio Field seperator", "Space" ), group );
   mDelimiterGroup->addButton( mRadioSpace, 3 );
   delimiterLayout->addWidget( mRadioSpace, 1, 1 );
 
-  mRadioOther = new QRadioButton( i18n( "Other" ), group );
+  mRadioOther = new QRadioButton( i18nc( "@option:radio Custum field seperator", "Other" ), group );
   mDelimiterGroup->addButton( mRadioOther, 4 );
   delimiterLayout->addWidget( mRadioOther, 0, 2 );
 
@@ -425,37 +425,38 @@ void CSVImportDialog::initGUI()
 
   mComboLine = new KComboBox( mPage );
   mComboLine->setEditable( false );
-  mComboLine->addItem( i18n( "1" ) );
+  mComboLine->addItem( i18nc( "@item:inlistbox", "1" ) );
   layout->addWidget( mComboLine, 2, 3 );
 
   mComboQuote = new KComboBox( mPage );
   mComboQuote->setEditable( false );
-  mComboQuote->addItem( i18n( "\"" ), 0 );
-  mComboQuote->addItem( i18n( "'" ), 1 );
-  mComboQuote->addItem( i18n( "None" ), 2 );
+  mComboQuote->addItem( i18nc( "@item:inlistbox Qoute character option", "\"" ), 0 );
+  mComboQuote->addItem( i18nc( "@item:inlistbox Quote character option", "'" ), 1 );
+  mComboQuote->addItem( i18nc( "@item:inlistbox Quote character option", "None" ), 2 );
   layout->addWidget( mComboQuote, 2, 2 );
 
   mDatePatternEdit = new KLineEdit( mPage );
   mDatePatternEdit->setText( "Y-M-D" ); // ISO 8601 format as default
-  mDatePatternEdit->setToolTip( i18n( "<ul><li>y: year with 2 digits</li>"
-                                         "<li>Y: year with 4 digits</li>"
-                                         "<li>m: month with 1 or 2 digits</li>"
-                                         "<li>M: month with 2 digits</li>"
-                                         "<li>d: day with 1 or 2 digits</li>"
-                                         "<li>D: day with 2 digits</li></ul>" ) );
+  mDatePatternEdit->setToolTip( i18nc( "@info:tooltip",
+                                         "<para><list><item>y: year with 2 digits</item>"
+                                         "<item>Y: year with 4 digits</item>"
+                                         "<item>m: month with 1 or 2 digits</item>"
+                                         "<item>M: month with 2 digits</item>"
+                                         "<item>d: day with 1 or 2 digits</item>"
+                                         "<item>D: day with 2 digits</item></list></para>" ) );
   layout->addWidget( mDatePatternEdit, 2, 4 );
 
-  label = new QLabel( i18n( "Start at line:" ), mPage );
+  label = new QLabel( i18nc( "@label:listbox","Start at line:" ), mPage );
   layout->addWidget( label, 1, 3 );
 
-  label = new QLabel( i18n( "Textquote:" ), mPage );
+  label = new QLabel( i18nc( "@label:listbox", "Textquote:" ), mPage );
   layout->addWidget( label, 1, 2 );
 
-  label = new QLabel( i18n( "Date format:" ), mPage );
+  label = new QLabel( i18nc( "@label:listbox", "Date format:" ), mPage );
   layout->addWidget( label, 1, 4 );
 
   mIgnoreDuplicates = new QCheckBox( mPage );
-  mIgnoreDuplicates->setText( i18n( "Ignore duplicate delimiters" ) );
+  mIgnoreDuplicates->setText( i18nc( "@option:check", "Ignore duplicate delimiters" ) );
   layout->addWidget( mIgnoreDuplicates, 3, 2, 1, 3 );
 
   mCodecCombo = new KComboBox( mPage );
@@ -466,8 +467,8 @@ void CSVImportDialog::initGUI()
   mTable->setHorizontalHeader( new ComboBoxHeaderView( mTypeMap.keys(), mTable, false ) );
   layout->addWidget( mTable, 5, 0, 1, 5 );
 
-  setButtonText( User1, i18n( "Apply Template..." ) );
-  setButtonText( User2, i18n( "Save Template..." ) );
+  setButtonText( User1, i18nc( "@action:button", "Apply Template..." ) );
+  setButtonText( User2, i18nc( "@action:button", "Save Template..." ) );
 
   enableButton( Ok, false );
   enableButton( User1, false );
@@ -682,11 +683,11 @@ void CSVImportDialog::reloadCodecs()
     mCodecs.append( QTextCodec::codecForName( name ) );
   }
 
-  mCodecCombo->addItem( i18n( "Local (%1)", QLatin1String( QTextCodec::codecForLocale()->name() ) ), Local );
-  mCodecCombo->addItem( i18n( "[guess]" ), Guess );
-  mCodecCombo->addItem( i18n( "Latin1" ), Latin1 );
-  mCodecCombo->addItem( i18n( "Unicode" ), Uni );
-  mCodecCombo->addItem( i18n( "Microsoft Unicode" ), MSBug );
+  mCodecCombo->addItem( i18nc( "@item:inlistbox Codec setting", "Local (%1)", QLatin1String( QTextCodec::codecForLocale()->name() ) ), Local );
+  mCodecCombo->addItem( i18nc( "@item:inlistbox Codec setting", "[guess]" ), Guess );
+  mCodecCombo->addItem( i18nc( "@item:inlistbox Codec setting", "Latin1" ), Latin1 );
+  mCodecCombo->addItem( i18nc( "@item:inlistbox Codec setting", "Unicode" ), Uni );
+  mCodecCombo->addItem( i18nc( "@item:inlistbox Codec setting", "Microsoft Unicode" ), MSBug );
 
   for ( int i = 0; i < mCodecs.count(); ++i )
     mCodecCombo->addItem( mCodecs.at( i )->name(), Codec + i );
@@ -809,7 +810,7 @@ void CSVImportDialog::slotOk()
   }
 
   if ( !assigned )
-    KMessageBox::sorry( this, i18n( "You have to assign at least one column." ) );
+    KMessageBox::sorry( this, i18nc( "@info:status", "You have to assign at least one column." ) );
 }
 
 void CSVImportDialog::applyTemplate()
@@ -837,8 +838,8 @@ void CSVImportDialog::applyTemplate()
   // let the user chose, what to take
   bool ok = false;
   QString tmp;
-  tmp = KInputDialog::getItem( i18n( "Template Selection" ),
-                  i18n( "Please select a template, that matches the CSV file:" ),
+  tmp = KInputDialog::getItem( i18nc( "@title:window", "Template Selection" ),
+                  i18nc( "@info", "Please select a template, that matches the CSV file:" ),
                   templates, 0, false, &ok, this );
 
   if ( !ok )
@@ -885,7 +886,8 @@ void CSVImportDialog::saveTemplate()
   if ( !fileName.contains( ".desktop" ) )
     fileName += ".desktop";
 
-  QString name = KInputDialog::getText( i18n( "Template Name" ), i18n( "Please enter a name for the template:" ) );
+  QString name = KInputDialog::getText( i18nc( "@title:window", "Template Name" ),
+                                        i18nc( "@info", "Please enter a name for the template:" ) );
 
   if ( name.isEmpty() )
     return;
@@ -961,7 +963,7 @@ void CSVImportDialog::setFile( const QString &fileName )
 
   QFile file( fileName );
   if ( !file.open( QIODevice::ReadOnly ) ) {
-    KMessageBox::sorry( this, i18n( "Cannot open input file." ) );
+    KMessageBox::sorry( this, i18nc( "@info:status", "Cannot open input file." ) );
     file.close();
     return;
   }
