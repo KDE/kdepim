@@ -89,6 +89,11 @@ public:
    */
   virtual ~EntityTreeView();
 
+  void showChildCollectionTree( bool show );
+  bool childCollectionTreeShown();
+
+  void setRootIndex(const QModelIndex &idx);
+
   /**
    * Sets the KXmlGuiWindow which the view is used in.
    * This is needed if you want to use the built-in context menu.
