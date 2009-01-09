@@ -92,6 +92,9 @@ public:
   void showChildCollectionTree( bool show );
   bool childCollectionTreeShown();
 
+  /**
+  Reimplemented to hide the child collection tree if that option is set.
+  */
   void setRootIndex(const QModelIndex &idx);
 
   /**
