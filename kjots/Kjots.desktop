@@ -1,6 +1,7 @@
 [Desktop Entry]
 X-DocPath=kjots/index.html
 Name=KJots
+Name[pa]=ਕੇ-ਜੋਟਸ
 Name[pl]=Notatki
 Name[sv]=Kjots
 Name[x-test]=xxKJotsxx
@@ -22,6 +23,7 @@ GenericName[nb]=Notisblokk
 GenericName[nds]=Notizenprogramm
 GenericName[nl]=Notitieboekje
 GenericName[nn]=Notatprogram
+GenericName[pa]=ਨੋਟ ਟੇਕਰ
 GenericName[pl]=Notatki
 GenericName[pt]=Bloco de Notas
 GenericName[pt_BR]=Tomador de notas
