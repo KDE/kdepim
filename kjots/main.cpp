@@ -26,11 +26,10 @@
 #include "KJotsMain.h"
 #include "aboutdata.h"
 
-#include <stdlib.h>
-#include <stdio.h>
 #include <libkdepim/pimapplication.h>
 #include <kcmdlineargs.h>
 #include <kconfig.h>
+#include <kdebug.h>
 #include <klocale.h>
 #include <kglobal.h>
 #include <kconfiggroup.h>
@@ -42,7 +41,7 @@ int main( int argc, char **argv )
     KPIM::PimApplication::addCmdLineOptions();
 
     if (!KPIM::PimApplication::start()) {
-        fprintf(stderr, "kjots is already running!\n");
+        kWarning() << "kjots is already running!";
         exit(0);
     }
 

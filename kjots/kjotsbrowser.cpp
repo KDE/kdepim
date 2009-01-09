@@ -27,9 +27,9 @@
 #include <QTextBrowser>
 #include <QTextDocument>
 #include <QStackedWidget>
-#include <QDebug>
 
 #include <krun.h>
+#include <kdebug.h>
 
 #include "kjotsentry.h"
 #include "bookshelf.h"
@@ -85,7 +85,7 @@ void KJotsBrowser::onSelectionChange ( void )
 */
 void KJotsBrowser::linkClicked(const QUrl& link)
 {
-    qDebug() << "Link clicked: " << link;
+    kDebug() << "Link clicked: " << link;
 
     //Stop QTextBrowser from being stupid by giving it an invalid url.
     QUrl url;
