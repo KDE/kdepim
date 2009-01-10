@@ -1,5 +1,0 @@
-set(kabcdistlistupdater_SRCS kabcdistlistupdater.cpp)
-kde4_add_executable(kabcdistlistupdater ${kabcdistlistupdater_SRCS})
-target_link_libraries(kabcdistlistupdater ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} kdepim)
-install(TARGETS kabcdistlistupdater ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(FILES  kabcdistlistupdater.desktop DESTINATION ${AUTOSTART_INSTALL_DIR})

@@ -22,6 +22,7 @@
 
 #include <QtGui/QAction>
 #include <QtGui/QHBoxLayout>
+#include <QtGui/QHeaderView>
 #include <QtGui/QListView>
 #include <QtGui/QSortFilterProxyModel>
 #include <QtGui/QSplitter>
@@ -63,9 +64,14 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   sortModel->setSourceModel( mCollectionFilterModel );
 
   mCollectionView->setModel( sortModel );
+  mCollectionView->header()->setDefaultAlignment( Qt::AlignCenter );
+  mCollectionView->header()->setSortIndicatorShown( false );
 
   mContactModel = new Akonadi::KABCModel( this );
   mContactView->setModel( mContactModel );
+  mContactView->header()->setDefaultAlignment( Qt::AlignCenter );
+  for ( int column = 1; column < mContactModel->columnCount(); ++column )
+    mContactView->setColumnHidden( column, true );
 
   connect( mCollectionView, SIGNAL( currentChanged( const Akonadi::Collection& ) ),
            mContactModel, SLOT( setCollection( const Akonadi::Collection& ) ) );
@@ -102,14 +108,14 @@ void MainWidget::setupActions()
   KActionCollection *collection = mGuiClient->actionCollection();
 
   action = collection->addAction( "file_new_contact" );
-  action->setIcon( KIcon( "add-user" ) );
+  action->setIcon( KIcon( "contact-new" ) );
   action->setText( i18n( "&New Contact..." ) );
   connect( action, SIGNAL( triggered(bool) ), SLOT( newContact() ));
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
   action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data about a person, including addresses and phone numbers.</p>" ) );
 
   action = collection->addAction( "file_new_group" );
-  action->setIcon( KIcon( "add-user" ) ); //TODO: new icon
+  action->setIcon( KIcon( "user-group-new" ) );
   action->setText( i18n( "&New Group..." ) );
   connect( action, SIGNAL( triggered(bool) ), SLOT( newGroup() ));
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_G ) );
