@@ -77,7 +77,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
            mContactModel, SLOT( setCollection( const Akonadi::Collection& ) ) );
   connect( mContactView, SIGNAL( currentChanged( const Akonadi::Item& ) ),
            mContactDetails, SLOT( setItem( const Akonadi::Item& ) ) );
-  connect( mContactView, SIGNAL( activated( const Akonadi::Item& ) ),
+  connect( mContactView, SIGNAL( doubleClicked( const Akonadi::Item& ) ),
            this, SLOT( editItem( const Akonadi::Item& ) ) );
 }
 
