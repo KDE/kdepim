@@ -265,9 +265,6 @@ else ( ONLY_KLEO )
 
   add_subdirectory(cmake)
 
-  # maildir access library
-  add_subdirectory(maildir)
-
   add_subdirectory(plugins)
 
 endif( ONLY_KLEO )
