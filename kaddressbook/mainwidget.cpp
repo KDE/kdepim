@@ -50,6 +50,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   setupActions();
 
   mCollectionModel = new Akonadi::CollectionModel( this );
+  mCollectionModel->setHeaderData( 0, Qt::Horizontal, i18nc( "@title:column, contact groups", "Group" ) , Qt::EditRole );
 
   mCollectionFilterModel = new Akonadi::CollectionFilterProxyModel();
   mCollectionFilterModel->addMimeTypeFilter( "text/x-vcard" );
