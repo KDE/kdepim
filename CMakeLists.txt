@@ -254,6 +254,7 @@ else ( ONLY_KLEO )
      message(STATUS "KitchenSync support DISABLED (Windows target).")
   endif(NOT WIN32)
 
+  add_subdirectory(akonadiconsole)
 #enable korn in 4.3 if there is interest
 # macro_optional_add_subdirectory(korn)
   add_subdirectory(kresources)
