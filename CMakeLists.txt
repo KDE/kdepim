@@ -51,7 +51,7 @@ macro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
 endmacro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
 
 find_package(Boost REQUIRED)
-macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "1.33.1" "Required by Akonadi and several critical KDEPIM apps")
+macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "1.33.1" "Required by several critical KDEPIM apps.")
 
 if ( ONLY_KLEO )
   find_package(QGpgme REQUIRED)
@@ -107,9 +107,6 @@ else ( ONLY_KLEO )
 
   macro_optional_find_package(Nepomuk)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "Nepomuk" "http://www.kde.org" FALSE "" "For adding desktop-wide tagging support to kmail")
-
-  find_program(XSLTPROC_EXECUTABLE xsltproc)
-  macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "The command line XSLT processor from libxslt" "http://xmlsoft.org/XSLT/" FALSE "" "Needed for building Akonadi resources. Recommended.")
 
   add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 
