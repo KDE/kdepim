@@ -38,6 +38,7 @@
 #include <kactioncollection.h>
 #include <kabc/contactgroup.h>
 #include <kabc/contactgroupbrowser.h>
+#include <kabc/contactlineedit.h>
 #include <kabc/kabcmodel.h>
 #include <kabc/kabcitembrowser.h>
 #include <kicon.h>
@@ -46,11 +47,14 @@
 #include <kaction.h>
 
 #include "contacteditordialog.h"
+#include "contactgroupeditordialog.h"
 
 MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   : QWidget( parent ),
     mGuiClient( guiClient )
 {
+  mContactModel = new Akonadi::KABCModel( this );
+
   setupGui();
   setupActions();
 
@@ -74,7 +78,6 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mCollectionView->header()->setDefaultAlignment( Qt::AlignCenter );
   mCollectionView->header()->setSortIndicatorShown( false );
 
-  mContactModel = new Akonadi::KABCModel( this );
   mItemView->setModel( mContactModel );
   mItemView->header()->setDefaultAlignment( Qt::AlignCenter );
   for ( int column = 1; column < mContactModel->columnCount(); ++column )
@@ -156,6 +159,8 @@ void MainWidget::newContact()
 
 void MainWidget::newGroup()
 {
+  ContactGroupEditorDialog dlg( ContactGroupEditorDialog::CreateMode, mCollectionFilterModel, this );
+  dlg.exec();
 }
 
 void MainWidget::editItem( const Akonadi::Item &reference )
@@ -193,8 +198,11 @@ void MainWidget::editContact( const Akonadi::Item &contact )
   dlg.exec();
 }
 
-void MainWidget::editGroup( const Akonadi::Item& )
+void MainWidget::editGroup( const Akonadi::Item &group )
 {
+  ContactGroupEditorDialog dlg( ContactGroupEditorDialog::EditMode, mCollectionFilterModel, this );
+  dlg.setContactGroup( group );
+  dlg.exec();
 }
 
 #include "mainwidget.moc"
