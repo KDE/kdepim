@@ -79,4 +79,4 @@ set(contactgrouptest_SRCS contactgrouptest.cpp)
 
 kde4_add_unit_test(contactgrouptest TESTNAME kabc-contactgrouptest ${contactgrouptest_SRCS})
 
-target_link_libraries(contactgrouptest ${KDE4_KDECORE_LIBS} kabc ${QT_QTTEST_LIBRARY})
+target_link_libraries(contactgrouptest ${KDE4_KDECORE_LIBS} kabc kdepim ${QT_QTTEST_LIBRARY})
