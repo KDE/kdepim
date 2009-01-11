@@ -76,6 +76,8 @@ set(kdepim_LIB_SRCS
    colorlistbox.cpp
    uistatesaver.cpp
    distributionlistconverter.cpp
+   contactgroup.cpp
+   contactgrouptool.cpp
 )
 
 #if(WIN32)

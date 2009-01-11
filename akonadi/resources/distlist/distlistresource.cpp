@@ -22,7 +22,7 @@
 #include "settingsadaptor.h"
 #include "singlefileresourceconfigdialog.h"
 
-#include <kabc/contactgrouptool.h>
+#include <libkdepim/contactgrouptool.h>
 
 #include <kfiledialog.h>
 #include <klocale.h>
@@ -36,7 +36,7 @@ DistListResource::DistListResource( const QString &id )
   : SingleFileResource<Settings>( id ),
     mLegacyKConfigFormat( false )
 {
-  setSupportedMimetypes( QStringList() << KABC::ContactGroup::mimeType() );
+  setSupportedMimetypes( QStringList() << KPIM::ContactGroup::mimeType() );
 
   new SettingsAdaptor( Settings::self() );
   QDBusConnection::sessionBus().registerObject( QLatin1String( "/Settings" ),
@@ -69,10 +69,10 @@ void DistListResource::retrieveItems( const Akonadi::Collection & col )
   // items, otherwise set a bool and in the result slot of the job send the
   // items if the bool is set.
 
-  foreach ( const KABC::ContactGroup &contactGroup, mContactGroups ) {
+  foreach ( const KPIM::ContactGroup &contactGroup, mContactGroups ) {
     Item item;
     item.setRemoteId( contactGroup.id() );
-    item.setMimeType( KABC::ContactGroup::mimeType() );
+    item.setMimeType( KPIM::ContactGroup::mimeType() );
     item.setPayload( contactGroup );
     items.append( item );
   }
@@ -89,7 +89,7 @@ bool DistListResource::retrieveItem( const Akonadi::Item &item, const QSet<QByte
     return false;
   }
   Item i( item );
-  i.setPayload<KABC::ContactGroup>( mContactGroups.value( rid ) );
+  i.setPayload<KPIM::ContactGroup>( mContactGroups.value( rid ) );
   itemRetrieved( i );
   return true;
 }
@@ -108,13 +108,13 @@ bool DistListResource::readFromFile( const QString &fileName )
   KMimeType::Ptr contentType = KMimeType::findByContent( peekData );
   if ( contentType->is( QLatin1String( "application/xml" ) ) ) {
     kDebug() << "File format is XML based";
-    KABC::ContactGroup::List list;
+    KPIM::ContactGroup::List list;
     // TODO check for error
-    KABC::ContactGroupTool::convertFromXml( &file, list );
+    KPIM::ContactGroupTool::convertFromXml( &file, list );
 
     file.close();
 
-    foreach( const KABC::ContactGroup &group, list ) {
+    foreach( const KPIM::ContactGroup &group, list ) {
       mContactGroups.insert( group.id(), group );
     }
   } else {
@@ -131,7 +131,7 @@ bool DistListResource::readFromFile( const QString &fileName )
       foreach ( const QString &entry, entryList ) {
         const QStringList value = cg.readEntry( entry, QStringList() );
 
-        KABC::ContactGroup contactGroup( entry );
+        KPIM::ContactGroup contactGroup( entry );
         contactGroup.setId( fileName + entry );
 
         QStringList::const_iterator entryIt = value.constBegin();
@@ -141,7 +141,7 @@ bool DistListResource::readFromFile( const QString &fileName )
 
           const QString email = entryIt != value.constEnd() ? *entryIt : QString();
 
-          KABC::ContactGroup::Reference reference( id );
+          KPIM::ContactGroup::Reference reference( id );
           if ( !email.isEmpty() )
             reference.setPreferredEmail( email );
 
@@ -176,14 +176,14 @@ bool DistListResource::writeToFile( const QString &fileName )
     KConfigGroup cg( &cfg, "DistributionLists" );
     cg.deleteGroup();
 
-    QMap<QString, KABC::ContactGroup>::const_iterator it = mContactGroups.constBegin();
-    QMap<QString, KABC::ContactGroup>::const_iterator endIt = mContactGroups.constEnd();
+    QMap<QString, KPIM::ContactGroup>::const_iterator it = mContactGroups.constBegin();
+    QMap<QString, KPIM::ContactGroup>::const_iterator endIt = mContactGroups.constEnd();
     for ( ; it != endIt; ++it ) {
-      const KABC::ContactGroup contactGroup = it.value();
+      const KPIM::ContactGroup contactGroup = it.value();
 
       QStringList value;
       for ( unsigned int index = 0; index < contactGroup.referencesCount(); ++index ) {
-        const KABC::ContactGroup::Reference reference = contactGroup.reference( index );
+        const KPIM::ContactGroup::Reference reference = contactGroup.reference( index );
 
         value.append( reference.uid() );
         value.append( reference.preferredEmail() );
@@ -197,7 +197,7 @@ bool DistListResource::writeToFile( const QString &fileName )
   }
 
   // TODO check for error
-  KABC::ContactGroupTool::convertToXml( mContactGroups.values(), &file );
+  KPIM::ContactGroupTool::convertToXml( mContactGroups.values(), &file );
 
   file.close();
 
@@ -212,9 +212,9 @@ void DistListResource::aboutToQuit()
 
 void DistListResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collection& )
 {
-  KABC::ContactGroup contactGroup;
-  if ( item.hasPayload<KABC::ContactGroup>() )
-    contactGroup = item.payload<KABC::ContactGroup>();
+  KPIM::ContactGroup contactGroup;
+  if ( item.hasPayload<KPIM::ContactGroup>() )
+    contactGroup = item.payload<KPIM::ContactGroup>();
 
   if ( !contactGroup.id().isEmpty() ) {
     if ( mLegacyKConfigFormat ) {
@@ -240,9 +240,9 @@ void DistListResource::itemAdded( const Akonadi::Item &item, const Akonadi::Coll
 
 void DistListResource::itemChanged( const Akonadi::Item &item, const QSet<QByteArray>& )
 {
-  KABC::ContactGroup contactGroup;
-  if ( item.hasPayload<KABC::ContactGroup>() )
-    contactGroup = item.payload<KABC::ContactGroup>();
+  KPIM::ContactGroup contactGroup;
+  if ( item.hasPayload<KPIM::ContactGroup>() )
+    contactGroup = item.payload<KPIM::ContactGroup>();
 
   if ( !contactGroup.id().isEmpty() ) {
     if ( mLegacyKConfigFormat ) {

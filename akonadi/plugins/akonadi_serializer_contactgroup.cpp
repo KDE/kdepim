@@ -21,8 +21,8 @@
 
 #include <QtCore/qplugin.h>
 
-#include <kabc/contactgroup.h>
-#include <kabc/contactgrouptool.h>
+#include <libkdepim/contactgroup.h>
+#include <libkdepim/contactgrouptool.h>
 
 #include <kdebug.h>
 
@@ -36,14 +36,14 @@ bool SerializerPluginContactGroup::deserialize( Item& item, const QByteArray& la
   Q_UNUSED( label );
   Q_UNUSED( version );
 
-  KABC::ContactGroup contactGroup;
+  KPIM::ContactGroup contactGroup;
 
-  if ( !KABC::ContactGroupTool::convertFromXml( &data, contactGroup ) ){
+  if ( !KPiM::ContactGroupTool::convertFromXml( &data, contactGroup ) ){
     // TODO: error reporting
     return false;
   }
 
-  item.setPayload<KABC::ContactGroup>( contactGroup );
+  item.setPayload<KPIM::ContactGroup>( contactGroup );
 
   return true;
 }
@@ -53,10 +53,10 @@ void SerializerPluginContactGroup::serialize( const Item& item, const QByteArray
   Q_UNUSED( label );
   Q_UNUSED( version );
 
-  if ( !item.hasPayload<KABC::ContactGroup>() )
+  if ( !item.hasPayload<KPIM::ContactGroup>() )
     return;
 
-  KABC::ContactGroupTool::convertToXml( item.payload<KABC::ContactGroup>(), &data );
+  KPIM::ContactGroupTool::convertToXml( item.payload<KPIM::ContactGroup>(), &data );
 }
 
 Q_EXPORT_PLUGIN2( akonadi_serializer_contactgroup, Akonadi::SerializerPluginContactGroup )

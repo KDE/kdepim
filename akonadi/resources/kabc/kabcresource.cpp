@@ -26,7 +26,7 @@
 
 #include <kabc/addressbook.h>
 #include <kabc/addressee.h>
-#include <kabc/contactgroup.h>
+#include <libkdepim/contactgroup.h>
 #include <kabc/distributionlist.h>
 #include <kabc/errorhandler.h>
 #include <kabc/resource.h>
@@ -188,7 +188,7 @@ void KABCResource::retrieveCollections()
   mimeTypes << QLatin1String( "text/directory" );
 
   QStringList topLevelMimeTypes = mimeTypes;
-  topLevelMimeTypes << KABC::ContactGroup::mimeType();
+  topLevelMimeTypes << KPIM::ContactGroup::mimeType();
 
   if ( mFolderResource != 0 ) {
     topLevelMimeTypes << Collection::mimeType();
@@ -260,10 +260,10 @@ void KABCResource::retrieveItems( const Akonadi::Collection &col )
   foreach ( const KABC::DistributionList *list, distLists ) {
     Item item;
     item.setRemoteId( list->identifier() );
-    item.setMimeType( KABC::ContactGroup::mimeType() );
+    item.setMimeType( KPIM::ContactGroup::mimeType() );
 
     if ( mFullItemRetrieve ) {
-      item.setPayload<KABC::ContactGroup>( contactGroupFromDistList( list ) );
+      item.setPayload<KPIM::ContactGroup>( contactGroupFromDistList( list ) );
     }
 
     items.append( item );
@@ -281,7 +281,7 @@ bool KABCResource::retrieveItem( const Akonadi::Item &item, const QSet<QByteArra
   Q_UNUSED( parts );
   const QString rid = item.remoteId();
 
-  if ( item.mimeType() == KABC::ContactGroup::mimeType() ) {
+  if ( item.mimeType() == KPIM::ContactGroup::mimeType() ) {
     KABC::DistributionList *list =
       mAddressBook->findDistributionListByIdentifier( rid );
     if ( list == 0 ) {
@@ -293,7 +293,7 @@ bool KABCResource::retrieveItem( const Akonadi::Item &item, const QSet<QByteArra
     }
 
     Item i( item );
-    i.setPayload<KABC::ContactGroup>( contactGroupFromDistList( list ) );
+    i.setPayload<KPIM::ContactGroup>( contactGroupFromDistList( list ) );
     itemRetrieved( i );
   } else {
     KABC::Addressee addressee = mAddressBook->findByUid( item.remoteId() );
@@ -339,7 +339,7 @@ void KABCResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collecti
   Q_UNUSED( col );
 
   kDebug() << "item.hasPayload<Addressee>() " << item.hasPayload<KABC::Addressee>();
-  kDebug() << "item.hasPayload<ContactGroup>() " << item.hasPayload<KABC::ContactGroup>();
+  kDebug() << "item.hasPayload<ContactGroup>() " << item.hasPayload<KPIM::ContactGroup>();
   if ( item.hasPayload<KABC::Addressee>() ) {
     KABC::Addressee addressee = item.payload<KABC::Addressee>();
 
@@ -358,8 +358,8 @@ void KABCResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collecti
       changeCommitted( i );
       return;
     }
-  } else if ( item.hasPayload<KABC::ContactGroup>() ) {
-    KABC::ContactGroup contactGroup = item.payload<KABC::ContactGroup>();
+  } else if ( item.hasPayload<KPIM::ContactGroup>() ) {
+    KPIM::ContactGroup contactGroup = item.payload<KPIM::ContactGroup>();
 
     if ( contactGroup.id().isEmpty() )
       contactGroup.setId( KRandom::randomString( 10 ) );
@@ -371,7 +371,7 @@ void KABCResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collecti
     if ( scheduleSaveAddressBook() ) {
       Item i( item );
       i.setRemoteId( contactGroup.id() );
-      i.setPayload<KABC::ContactGroup>( contactGroup );
+      i.setPayload<KPIM::ContactGroup>( contactGroup );
 
       changeCommitted( i );
       return;
@@ -389,7 +389,7 @@ void KABCResource::itemChanged( const Akonadi::Item &item, const QSet<QByteArray
   Q_UNUSED( parts );
 
   kDebug() << "item.hasPayload<Addressee>() " << item.hasPayload<KABC::Addressee>();
-  kDebug() << "item.hasPayload<ContactGroup>() " << item.hasPayload<KABC::ContactGroup>();
+  kDebug() << "item.hasPayload<ContactGroup>() " << item.hasPayload<KPIM::ContactGroup>();
   if ( item.hasPayload<KABC::Addressee>() ) {
     KABC::Addressee addressee = item.payload<KABC::Addressee>();
     Q_ASSERT( !addressee.uid().isEmpty() );
@@ -402,8 +402,8 @@ void KABCResource::itemChanged( const Akonadi::Item &item, const QSet<QByteArray
       changeCommitted( item );
       return;
     }
-  } else if ( item.hasPayload<KABC::ContactGroup>() ) {
-    KABC::ContactGroup contactGroup = item.payload<KABC::ContactGroup>();
+  } else if ( item.hasPayload<KPIM::ContactGroup>() ) {
+    KPIM::ContactGroup contactGroup = item.payload<KPIM::ContactGroup>();
     Q_ASSERT( !contactGroup.id().isEmpty() );
 
     KABC::DistributionList *list =
@@ -436,7 +436,7 @@ void KABCResource::itemRemoved( const Akonadi::Item &item )
 {
   kDebug() << "item id="  << item.id() << ", remoteId=" << item.remoteId()
            << "mimeType=" << item.mimeType();
-  if ( item.mimeType() == KABC::ContactGroup::mimeType() ) {
+  if ( item.mimeType() == KPIM::ContactGroup::mimeType() ) {
     KABC::DistributionList *list =
       mAddressBook->findDistributionListByIdentifier( item.remoteId() );
     if ( list != 0 ) {
@@ -749,13 +749,13 @@ void KABCResource::delayedSaveAddressBook()
   }
 }
 
-KABC::DistributionList *KABCResource::distListFromContactGroup( const KABC::ContactGroup& contactGroup )
+KABC::DistributionList *KABCResource::distListFromContactGroup( const KPIM::ContactGroup& contactGroup )
 {
   KABC::DistributionList *list =
     new KABC::DistributionList( mBaseResource, contactGroup.id(), contactGroup.name() );
 
   for ( unsigned int refIndex = 0; refIndex < contactGroup.referencesCount(); ++refIndex ) {
-    const KABC::ContactGroup::Reference &reference = contactGroup.reference( refIndex );
+    const KPIM::ContactGroup::Reference &reference = contactGroup.reference( refIndex );
 
     KABC::Addressee addressee = mBaseResource->findByUid( reference.uid() );
     if ( addressee.isEmpty() ) {
@@ -769,7 +769,7 @@ KABC::DistributionList *KABCResource::distListFromContactGroup( const KABC::Cont
   }
 
   for ( unsigned int dataIndex = 0; dataIndex < contactGroup.dataCount(); ++dataIndex ) {
-    const KABC::ContactGroup::Data &data = contactGroup.data( dataIndex );
+    const KPIM::ContactGroup::Data &data = contactGroup.data( dataIndex );
 
     KABC::Addressee addressee;
     addressee.setName( data.name() );
@@ -783,12 +783,12 @@ KABC::DistributionList *KABCResource::distListFromContactGroup( const KABC::Cont
   return list;
 }
 
-KABC::ContactGroup KABCResource::contactGroupFromDistList( const KABC::DistributionList* list ) const
+KPIM::ContactGroup KABCResource::contactGroupFromDistList( const KABC::DistributionList* list ) const
 {
   kDebug() << "name=" << list->name() << ", identifier=" << list->identifier()
            << ", entries.count=" << list->entries().count();
 
-  KABC::ContactGroup contactGroup( list->name() );
+  KPIM::ContactGroup contactGroup( list->name() );
   contactGroup.setId( list->identifier() );
 
   KABC::DistributionList::Entry::List entries = list->entries();
@@ -799,16 +799,16 @@ KABC::ContactGroup KABCResource::contactGroupFromDistList( const KABC::Distribut
       if ( email.isEmpty() )
         continue;
 
-      KABC::ContactGroup::Data data( email, email );
+      KPIM::ContactGroup::Data data( email, email );
       contactGroup.append( data );
     } else {
       KABC::Addressee baseAddressee = mBaseResource->findByUid( addressee.uid() );
       if ( baseAddressee.isEmpty() ) {
-        KABC::ContactGroup::Data data( email, email );
+        KPIM::ContactGroup::Data data( email, email );
         // TODO: transer custom fields?
         contactGroup.append( data );
       } else {
-        KABC::ContactGroup::Reference reference( addressee.uid() );
+        KPIM::ContactGroup::Reference reference( addressee.uid() );
         reference.setPreferredEmail( email );
         // TODO: transer custom fields?
         contactGroup.append( reference );

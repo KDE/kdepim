@@ -23,7 +23,7 @@
 #include "singlefileresource.h"
 #include "settings.h"
 
-#include <kabc/contactgroup.h>
+#include <libkdepim/contactgroup.h>
 
 class DistListResource : public Akonadi::SingleFileResource<Settings>
 {
@@ -50,7 +50,7 @@ class DistListResource : public Akonadi::SingleFileResource<Settings>
     virtual void itemRemoved( const Akonadi::Item &item );
 
   private:
-    QMap<QString, KABC::ContactGroup> mContactGroups;
+    QMap<QString, KPIM::ContactGroup> mContactGroups;
     bool mLegacyKConfigFormat;
 };
 
