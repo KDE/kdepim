@@ -36,7 +36,7 @@ class ContactGroup;
 /**
  * @since 4.2
  */
-class KPIM_EXPORT ContactGroupTool
+class KDEPIM_EXPORT ContactGroupTool
 {
   public:
     static bool convertFromXml( QIODevice *device, ContactGroup &group,

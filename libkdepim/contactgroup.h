@@ -41,14 +41,14 @@ namespace KPIM {
  *
  * @since 4.2
  */
-class KPIM_EXPORT ContactGroup
+class KDEPIM_EXPORT ContactGroup
 {
   public:
 
     /**
      * This class represents a contact reference
      */
-    class KPIM_EXPORT Reference
+    class KDEPIM_EXPORT Reference
     {
       public:
         /**
@@ -136,7 +136,7 @@ class KPIM_EXPORT ContactGroup
     /**
      * This class represents a contact data object
      */
-    class KPIM_EXPORT Data
+    class KDEPIM_EXPORT Data
     {
       public:
         /**
