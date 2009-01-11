@@ -35,7 +35,7 @@
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/transactionsequence.h>
 
-#include <kabc/contactgroup.h>
+#include <libkdepim/contactgroup.h>
 
 #include <kconfiggroup.h>
 #include <kdebug.h>
@@ -177,9 +177,9 @@ class ResourceAkonadi::Private
 
     bool reloadSubResource( SubResource *subResource, bool &changed );
 
-    DistributionList *distListFromContactGroup( const ContactGroup &contactGroup );
+    DistributionList *distListFromContactGroup( const KPIM::ContactGroup &contactGroup );
 
-    ContactGroup contactGroupFromDistList( const DistributionList* list ) const;
+    KPIM::ContactGroup contactGroupFromDistList( const DistributionList* list ) const;
 };
 
 ResourceAkonadi::ResourceAkonadi()
@@ -256,7 +256,7 @@ bool ResourceAkonadi::doOpen()
 
   d->mCollectionFilterModel = new CollectionFilterProxyModel( this );
   d->mCollectionFilterModel->addMimeTypeFilter( QLatin1String( "text/directory" ) );
-  d->mCollectionFilterModel->addMimeTypeFilter( ContactGroup::mimeType() );
+  d->mCollectionFilterModel->addMimeTypeFilter( KPIM::ContactGroup::mimeType() );
 
   connect( d->mCollectionFilterModel, SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
            this, SLOT( collectionRowsInserted( const QModelIndex&, int, int ) ) );
@@ -270,7 +270,7 @@ bool ResourceAkonadi::doOpen()
   d->mMonitor = new Monitor( this );
 
   d->mMonitor->setMimeTypeMonitored( QLatin1String( "text/directory" ) );
-  d->mMonitor->setMimeTypeMonitored( ContactGroup::mimeType() );
+  d->mMonitor->setMimeTypeMonitored( KPIM::ContactGroup::mimeType() );
   d->mMonitor->itemFetchScope().fetchFullPayload();
 
   connect( d->mMonitor,
@@ -357,7 +357,7 @@ bool ResourceAkonadi::load()
   bool result = true;
   foreach ( const Collection &collection, collections ) {
      if ( !collection.contentMimeTypes().contains( QLatin1String( "text/directory" ) )
-          && !collection.contentMimeTypes().contains( ContactGroup::mimeType() ) )
+          && !collection.contentMimeTypes().contains( KPIM::ContactGroup::mimeType() ) )
        continue;
 
     const QString collectionUrl = collection.url().url();
@@ -413,7 +413,7 @@ bool ResourceAkonadi::asyncLoad()
 
     foreach ( const Collection &collection, colJob->collections() ) {
       if ( !collection.contentMimeTypes().contains( QLatin1String( "text/directory" ) )
-            && !collection.contentMimeTypes().contains( ContactGroup::mimeType() ) )
+            && !collection.contentMimeTypes().contains( KPIM::ContactGroup::mimeType() ) )
         continue;
 
       collections << collection;
@@ -431,7 +431,7 @@ bool ResourceAkonadi::asyncLoad()
 
   d->mCollectionFilterModel = new CollectionFilterProxyModel( this );
   d->mCollectionFilterModel->addMimeTypeFilter( QLatin1String( "text/directory" ) );
-  d->mCollectionFilterModel->addMimeTypeFilter( ContactGroup::mimeType() );
+  d->mCollectionFilterModel->addMimeTypeFilter( KPIM::ContactGroup::mimeType() );
 
   connect( d->mCollectionFilterModel, SIGNAL( rowsInserted( const QModelIndex&, int, int ) ),
            this, SLOT( collectionRowsInserted( const QModelIndex&, int, int ) ) );
@@ -680,8 +680,8 @@ void ResourceAkonadi::loadResult( KJob *job )
       d->mIdMapping.insert( addressee.uid(), id );
 
       mAddrMap.insert( addressee.uid(), addressee );
-    } else if ( item.hasPayload<ContactGroup>() ) {
-      ContactGroup contactGroup = item.payload<ContactGroup>();
+    } else if ( item.hasPayload<KPIM::ContactGroup>() ) {
+      KPIM::ContactGroup contactGroup = item.payload<KPIM::ContactGroup>();
 
       const Item::Id id = item.id();
       d->mIdMapping.insert( contactGroup.id(), id );
@@ -736,8 +736,8 @@ void ResourceAkonadi::Private::subResourceLoadResult( KJob *job )
       mParent->mAddrMap.insert( addressee.uid(), addressee );
       mUidToResourceMap.insert( addressee.uid(), collectionUrl );
       mItemIdToResourceMap.insert( id, collectionUrl );
-    } else if ( item.hasPayload<ContactGroup>() ) {
-      ContactGroup contactGroup = item.payload<ContactGroup>();
+    } else if ( item.hasPayload<KPIM::ContactGroup>() ) {
+      KPIM::ContactGroup contactGroup = item.payload<KPIM::ContactGroup>();
 
       const Item::Id id = item.id();
       mIdMapping.insert( contactGroup.id(), id );
@@ -793,8 +793,8 @@ void ResourceAkonadi::Private::itemAdded( const Akonadi::Item &item,
 
       mParent->addressBook()->emitAddressBookChanged();
     }
-  } else if ( item.hasPayload<ContactGroup>() ) {
-    ContactGroup contactGroup = item.payload<ContactGroup>();
+  } else if ( item.hasPayload<KPIM::ContactGroup>() ) {
+    KPIM::ContactGroup contactGroup = item.payload<KPIM::ContactGroup>();
 
     kDebug(5700) << "ContactGroup" << contactGroup.id() << "("
                  << contactGroup.name() << ")";
@@ -868,8 +868,8 @@ void ResourceAkonadi::Private::itemChanged( const Akonadi::Item &item,
     addrIt.value() = addressee;
 
     mParent->addressBook()->emitAddressBookChanged();
-  } else if ( item.hasPayload<ContactGroup>() ) {
-    ContactGroup contactGroup = item.payload<ContactGroup>();
+  } else if ( item.hasPayload<KPIM::ContactGroup>() ) {
+    KPIM::ContactGroup contactGroup = item.payload<KPIM::ContactGroup>();
 
     kDebug(5700) << "ContactGroup" << contactGroup.id() << "("
                  << contactGroup.name() << ")";
@@ -924,8 +924,8 @@ void ResourceAkonadi::Private::itemRemoved( const Akonadi::Item &item )
   QString uid;
   if ( oldItem.hasPayload<Addressee>() ) {
     uid = oldItem.payload<Addressee>().uid();
-  } else if ( oldItem.hasPayload<ContactGroup>() ) {
-    uid = oldItem.payload<ContactGroup>().id();
+  } else if ( oldItem.hasPayload<KPIM::ContactGroup>() ) {
+    uid = oldItem.payload<KPIM::ContactGroup>().id();
   } else {
     // since we always fetch the payload this should not happen
     // but we really do not want stale entries
@@ -1226,10 +1226,10 @@ KJob *ResourceAkonadi::Private::createSaveSequence() const
         } else {
           DistributionList *list = mParent->mDistListMap.value( uid );
           if ( list != 0 ) {
-            ContactGroup contactGroup = contactGroupFromDistList( list );
+            KPIM::ContactGroup contactGroup = contactGroupFromDistList( list );
 
-            item.setMimeType( ContactGroup::mimeType() );
-            item.setPayload<ContactGroup>( contactGroup );
+            item.setMimeType( KPIM::ContactGroup::mimeType() );
+            item.setPayload<KPIM::ContactGroup>( contactGroup );
 
             (void) new ItemCreateJob( item, subResource->mCollection, sequence );
             kDebug(5700) << "CreateJob for contact group" << contactGroup.id()
@@ -1253,12 +1253,12 @@ KJob *ResourceAkonadi::Private::createSaveSequence() const
           (void) new ItemModifyJob( item, sequence );
           kDebug(5700) << "ModifyJob for addressee" << addressee.uid()
                        << addressee.formattedName();
-        } else if ( item.hasPayload<KABC::ContactGroup>() ) {
+        } else if ( item.hasPayload<KPIM::ContactGroup>() ) {
           DistributionList *list = mParent->mDistListMap.value( uid );
           if ( list != 0 ) {
-            ContactGroup contactGroup = contactGroupFromDistList( list );
+            KPIM::ContactGroup contactGroup = contactGroupFromDistList( list );
 
-            item.setPayload<KABC::ContactGroup>( contactGroup );
+            item.setPayload<KPIM::ContactGroup>( contactGroup );
 
             (void) new ItemModifyJob( item, sequence );
             kDebug(5700) << "ModifyJob for addressee" << addressee.uid()
@@ -1278,8 +1278,8 @@ KJob *ResourceAkonadi::Private::createSaveSequence() const
 
           kDebug(5700) << "DeleteJob for addressee" << uid
                       << addressee.formattedName();
-        } else if ( item.hasPayload<KABC::ContactGroup>() ) {
-          ContactGroup contactGroup = item.payload<KABC::ContactGroup>();
+        } else if ( item.hasPayload<KPIM::ContactGroup>() ) {
+          KPIM::ContactGroup contactGroup = item.payload<KPIM::ContactGroup>();
 
           kDebug(5700) << "DeleteJob for contact group" << uid
                        << contactGroup.name();
@@ -1324,10 +1324,10 @@ bool ResourceAkonadi::Private::reloadSubResource( SubResource *subResource, bool
       mParent->mAddrMap.insert( addressee.uid(), addressee );
       mUidToResourceMap.insert( addressee.uid(), collectionUrl );
       mItemIdToResourceMap.insert( id, collectionUrl );
-    } else if ( item.hasPayload<KABC::ContactGroup>() ) {
+    } else if ( item.hasPayload<KPIM::ContactGroup>() ) {
       changed = true;
 
-      ContactGroup contactGroup = item.payload<ContactGroup>();
+      KPIM::ContactGroup contactGroup = item.payload<KPIM::ContactGroup>();
 
       DistributionList *list = distListFromContactGroup( contactGroup );
 
@@ -1347,12 +1347,12 @@ bool ResourceAkonadi::Private::reloadSubResource( SubResource *subResource, bool
   return true;
 }
 
-DistributionList *ResourceAkonadi::Private::distListFromContactGroup( const ContactGroup &contactGroup )
+DistributionList *ResourceAkonadi::Private::distListFromContactGroup( const KPIM::ContactGroup &contactGroup )
 {
   DistributionList *list = new DistributionList( mParent, contactGroup.id(), contactGroup.name() );
 
   for ( unsigned int refIndex = 0; refIndex < contactGroup.referencesCount(); ++refIndex ) {
-    const ContactGroup::Reference &reference = contactGroup.reference( refIndex );
+    const KPIM::ContactGroup::Reference &reference = contactGroup.reference( refIndex );
 
     Addressee addressee;
     Addressee::Map::const_iterator it = mParent->mAddrMap.constFind( reference.uid() );
@@ -1369,7 +1369,7 @@ DistributionList *ResourceAkonadi::Private::distListFromContactGroup( const Cont
   }
 
   for ( unsigned int dataIndex = 0; dataIndex < contactGroup.dataCount(); ++dataIndex ) {
-    const ContactGroup::Data &data = contactGroup.data( dataIndex );
+    const KPIM::ContactGroup::Data &data = contactGroup.data( dataIndex );
 
     Addressee addressee;
     addressee.setName( data.name() );
@@ -1383,9 +1383,9 @@ DistributionList *ResourceAkonadi::Private::distListFromContactGroup( const Cont
   return list;
 }
 
-ContactGroup ResourceAkonadi::Private::contactGroupFromDistList( const KABC::DistributionList* list ) const
+KPIM::ContactGroup ResourceAkonadi::Private::contactGroupFromDistList( const KABC::DistributionList* list ) const
 {
-  ContactGroup contactGroup( list->name() );
+  KPIM::ContactGroup contactGroup( list->name() );
   contactGroup.setId( list->identifier() );
 
   DistributionList::Entry::List entries = list->entries();
@@ -1396,16 +1396,16 @@ ContactGroup ResourceAkonadi::Private::contactGroupFromDistList( const KABC::Dis
       if ( email.isEmpty() )
         continue;
 
-      ContactGroup::Data data( email, email );
+      KPIM::ContactGroup::Data data( email, email );
       contactGroup.append( data );
     } else {
       Addressee baseAddressee = mParent->mAddrMap.value( addressee.uid() );
       if ( baseAddressee.isEmpty() ) {
-        ContactGroup::Data data( email, email );
+        KPIM::ContactGroup::Data data( email, email );
         // TODO: transer custom fields?
         contactGroup.append( data );
       } else {
-        ContactGroup::Reference reference( addressee.uid() );
+        KPIM::ContactGroup::Reference reference( addressee.uid() );
         reference.setPreferredEmail( email );
         // TODO: transer custom fields?
         contactGroup.append( reference );
