@@ -38,7 +38,7 @@ bool SerializerPluginContactGroup::deserialize( Item& item, const QByteArray& la
 
   KPIM::ContactGroup contactGroup;
 
-  if ( !KPiM::ContactGroupTool::convertFromXml( &data, contactGroup ) ){
+  if ( !KPIM::ContactGroupTool::convertFromXml( &data, contactGroup ) ){
     // TODO: error reporting
     return false;
   }
