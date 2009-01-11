@@ -27,6 +27,7 @@ namespace Akonadi {
 class CollectionFilterProxyModel;
 class CollectionModel;
 class CollectionView;
+class ContactGroupBrowser;
 class Item;
 class ItemView;
 class KABCItemBrowser;
@@ -34,6 +35,7 @@ class KABCModel;
 }
 
 class KXMLGUIClient;
+class QStackedWidget;
 
 class MainWidget : public QWidget
 {
@@ -48,6 +50,7 @@ class MainWidget : public QWidget
     void newGroup();
 
     void editItem( const Akonadi::Item &item );
+    void itemSelected( const Akonadi::Item &item );
 
   private:
     void setupGui();
@@ -58,11 +61,14 @@ class MainWidget : public QWidget
 
     Akonadi::CollectionModel *mCollectionModel;
     Akonadi::CollectionFilterProxyModel *mCollectionFilterModel;
-    Akonadi::ItemView *mContactView;
-    Akonadi::KABCItemBrowser *mContactDetails;
+    Akonadi::KABCModel *mContactModel;
 
     Akonadi::CollectionView *mCollectionView;
-    Akonadi::KABCModel *mContactModel;
+    Akonadi::ItemView *mItemView;
+    QStackedWidget *mDetailsViewStack;
+
+    Akonadi::KABCItemBrowser *mContactDetails;
+    Akonadi::ContactGroupBrowser *mContactGroupDetails;
 
     KXMLGUIClient *mGuiClient;
 };

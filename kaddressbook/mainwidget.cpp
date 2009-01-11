@@ -20,12 +20,15 @@
 
 #include "mainwidget.h"
 
+#include <QDebug>
+
 #include <QtGui/QAction>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
 #include <QtGui/QListView>
 #include <QtGui/QSortFilterProxyModel>
 #include <QtGui/QSplitter>
+#include <QtGui/QStackedWidget>
 
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>
@@ -33,6 +36,8 @@
 #include <akonadi/itemview.h>
 
 #include <kactioncollection.h>
+#include <kabc/contactgroup.h>
+#include <kabc/contactgroupbrowser.h>
 #include <kabc/kabcmodel.h>
 #include <kabc/kabcitembrowser.h>
 #include <kicon.h>
@@ -56,6 +61,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mCollectionFilterModel->addMimeTypeFilter( "text/x-vcard" );
   mCollectionFilterModel->addMimeTypeFilter( "text/directory" );
   mCollectionFilterModel->addMimeTypeFilter( "text/vcard" );
+  mCollectionFilterModel->addMimeTypeFilter( KABC::ContactGroup::mimeType() );
   mCollectionFilterModel->setSourceModel( mCollectionModel );
 
   // display collections sorted
@@ -69,17 +75,20 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mCollectionView->header()->setSortIndicatorShown( false );
 
   mContactModel = new Akonadi::KABCModel( this );
-  mContactView->setModel( mContactModel );
-  mContactView->header()->setDefaultAlignment( Qt::AlignCenter );
+  mItemView->setModel( mContactModel );
+  mItemView->header()->setDefaultAlignment( Qt::AlignCenter );
   for ( int column = 1; column < mContactModel->columnCount(); ++column )
-    mContactView->setColumnHidden( column, true );
+    mItemView->setColumnHidden( column, true );
 
   connect( mCollectionView, SIGNAL( currentChanged( const Akonadi::Collection& ) ),
            mContactModel, SLOT( setCollection( const Akonadi::Collection& ) ) );
-  connect( mContactView, SIGNAL( currentChanged( const Akonadi::Item& ) ),
-           mContactDetails, SLOT( setItem( const Akonadi::Item& ) ) );
-  connect( mContactView, SIGNAL( doubleClicked( const Akonadi::Item& ) ),
+  connect( mItemView, SIGNAL( currentChanged( const Akonadi::Item& ) ),
+           this, SLOT( itemSelected( const Akonadi::Item& ) ) );
+  connect( mItemView, SIGNAL( doubleClicked( const Akonadi::Item& ) ),
            this, SLOT( editItem( const Akonadi::Item& ) ) );
+
+  // show the contact details view as default
+  mDetailsViewStack->setCurrentWidget( mContactDetails );
 }
 
 MainWidget::~MainWidget()
@@ -88,19 +97,35 @@ MainWidget::~MainWidget()
 
 void MainWidget::setupGui()
 {
+  // the horizontal main layout
   QHBoxLayout *layout = new QHBoxLayout( this );
 
+  // the splitter that contains the three main parts of the gui
+  //   - collection view on the left
+  //   - item view in the middle
+  //   - details view on the right
   QSplitter *splitter = new QSplitter;
   layout->addWidget( splitter );
 
+  // the collection view
   mCollectionView = new Akonadi::CollectionView();
   splitter->addWidget( mCollectionView );
 
-  mContactView = new Akonadi::ItemView;
-  splitter->addWidget( mContactView );
+  // the items view
+  mItemView = new Akonadi::ItemView;
+  splitter->addWidget( mItemView );
 
-  mContactDetails = new Akonadi::KABCItemBrowser;
-  splitter->addWidget( mContactDetails );
+  // the details view stack
+  mDetailsViewStack = new QStackedWidget();
+  splitter->addWidget( mDetailsViewStack );
+
+  // the details widget for contacts
+  mContactDetails = new Akonadi::KABCItemBrowser( mDetailsViewStack );
+  mDetailsViewStack->addWidget( mContactDetails );
+
+  // the details widget for contact groups
+  mContactGroupDetails = new Akonadi::ContactGroupBrowser( mDetailsViewStack );
+  mDetailsViewStack->addWidget( mContactGroupDetails );
 }
 
 void MainWidget::setupActions()
@@ -140,8 +165,24 @@ void MainWidget::editItem( const Akonadi::Item &reference )
 
   if ( item.mimeType() == "text/directory" || item.mimeType() == "text/vcard" ) {
     editContact( reference );
-  } else if ( item.mimeType() == "text/distributionlist" ) {
+  } else if ( item.mimeType() == KABC::ContactGroup::mimeType() ) {
     editGroup( reference );
+  }
+}
+
+/**
+ * Depending on the mime type of the selected item, this method
+ * brings up the right view on the detail view stack and sets the
+ * selected item on it.
+ */
+void MainWidget::itemSelected( const Akonadi::Item &item )
+{
+  if ( item.mimeType() == QLatin1String( "text/directory" ) ) {
+    mDetailsViewStack->setCurrentWidget( mContactDetails );
+    mContactDetails->setItem( item );
+  } else if ( item.mimeType() == KABC::ContactGroup::mimeType() ) {
+    mDetailsViewStack->setCurrentWidget( mContactGroupDetails );
+    mContactGroupDetails->setItem( item );
   }
 }
 
@@ -152,7 +193,7 @@ void MainWidget::editContact( const Akonadi::Item &contact )
   dlg.exec();
 }
 
-void MainWidget::editGroup( const Akonadi::Item &group )
+void MainWidget::editGroup( const Akonadi::Item& )
 {
 }
 
