@@ -1225,7 +1225,7 @@ bool ResourceAkonadi::Private::prepareSaving()
               // check if the collection can store contact group items as well
               SubResource *subResource = mSubResources.value( findIt2.value(), 0 );
               if ( subResource != 0 ) {
-                if ( subResource->mCollection.contentMimeTypes().contains( ContactGroup::mimeType() ) ) {
+                if ( subResource->mCollection.contentMimeTypes().contains( KPIM::ContactGroup::mimeType() ) ) {
                   distListStoreCollection = findIt2.value();
                   break;
                 }
