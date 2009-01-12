@@ -683,7 +683,6 @@ void KABCore::newDistributionList()
     }
   }
   KABC::DistributionList *list = mAddressBook->createDistributionList( name, resource );
-  list->setIdentifier( KRandom::randomString( 10 ) );
   editDistributionList( list );
 }
 
@@ -904,6 +903,12 @@ void KABCore::extensionModified( const KABC::Addressee::List &list )
 void KABCore::extensionModified( const KABC::DistributionList *list )
 {
   if ( list != 0 ) {
+    // let the resource know that the data has changed
+    // ideally the list would be using observer pattern or explicit
+    // "changed" marking
+    KABC::Resource *resource = list->resource();
+    Q_ASSERT( resource != 0 );
+    resource->insertDistributionList( const_cast<KABC::DistributionList*>( list ) );
     setModified( true );
   }
 }
