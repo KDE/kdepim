@@ -67,7 +67,7 @@
 <para><acronym>Gammu Engine</acronym> uses <ulink url="http://www.gammu.org">Gammu</ulink> as backend to connect to the mobile phone, and so the list of supported phones can be found in the project homepage (<ulink url="http://www.gammu.org/wiki/index.php?title=Phones:Support" /> or <ulink url="http://cihar.com/gammu/phonedb/" />). It has almost the same features than the AT Engine, and even something more, but it is younger and less tested. It also supports a smaller list of mobile phones.</para>
 </listitem>
 </itemizedlist>
-<para>&kmobiletools; homepage can be found on <ulink url="http://www.kmobiletools.org" />. There you will find user documentation, a support forum and contact informations.</para>
+<para>&kmobiletools; homepage can be found on <ulink url="http://www.kmobiletools.org" />. There you will find user documentation, a support forum and contact information.</para>
 </chapter>
 
 <chapter id="get-started">
@@ -117,7 +117,7 @@ your application. -->
 
 <sect1 id="kmt-devicehome">
 <title>Mobile Phone HomePage</title>
-<para>The Mobile Phone Homepage will show you some useful informations about your mobile phone, like the number of messages, contacts, and a brief summary of the calendar. In the status bar you will also see your network operator (when supported), and the level of battery and network signal, plus a visual representation of currently executing tasks.</para>
+<para>The Mobile Phone Homepage will show you some useful information about your mobile phone, like the number of messages, contacts, and a brief summary of the calendar. In the status bar you will also see your network operator (when supported), and the level of battery and network signal, plus a visual representation of currently executing tasks.</para>
 <para>Clicking on the <guilabel>Phone details</guilabel> link will also show you more advanced information, like phone manufacturer and model or the IMEI code.</para>
 <screenshot><screeninfo>Here's a screenshot of &kmobiletools; device homepage</screeninfo>
 <mediaobject><imageobject>
@@ -252,7 +252,7 @@ application -->
 <title>Requirements</title>
 
 <para>
-<!-- taken from the phone wizard, TODO have to make this look better, more arch-generic and with more informations. -->
+<!-- taken from the phone wizard, TODO have to make this look better, more arch-generic and with more information. -->
 To use &kmobiletools; you need to properly configure your distribution, try reading documentation in your distribution first.
 &kmobiletools; needs that you already have the devices created in /dev (manually or with udev),
 and that you have read/write permissions.
