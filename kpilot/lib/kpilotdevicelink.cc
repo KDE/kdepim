@@ -205,22 +205,28 @@ void DeviceCommWorker::close()
 	 */
 	KPILOT_DELETE(fSocketNotifier);
 
-	if (fTempSocket != -1)
-	{
-		DEBUGKPILOT
-		<< ": device comm thread closing socket: ["
-		<< fTempSocket << "]";
+	/*
+	 * Unfortunately, Bad Things Happen (TM) from the bowels of libpisock and
+	 * libusb. Safety first.
+	 */
+	try {
+		if (fTempSocket != -1)
+		{
+			DEBUGKPILOT
+				<< ": device comm thread closing temp socket: ["
+				<< fTempSocket << "]";
+			pi_close(fTempSocket);
+		}
 
-		pi_close(fTempSocket);
-	}
-
-	if (fPilotSocket != -1)
-	{
-		DEBUGKPILOT
-		<< ": device comm thread closing socket: ["
-		<< fPilotSocket << "]";
-
-		pi_close(fPilotSocket);
+		if (fPilotSocket != -1)
+		{
+			DEBUGKPILOT
+				<< ": device comm thread closing socket: ["
+				<< fPilotSocket << "]";
+			pi_close(fPilotSocket);
+		}
+	} catch ( ... ) {
+		WARNINGKPILOT << "Caught exception closing socket. Yuckie!";
 	}
 
 	fTempSocket = (-1);
