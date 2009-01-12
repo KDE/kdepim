@@ -96,7 +96,7 @@ void EntityUpdateAdapter::fetchItems( Collection parent )
   Akonadi::ItemFetchJob *itemJob = new Akonadi::ItemFetchJob( parent, m_job_parent );
   itemJob->setFetchScope( m_itemFetchScope );
 
-  // ### HACK: itemsAdded needs to know which collection items were added to.
+  // ### HACK: itemsReceivedFromJob needs to know which collection items were added to.
   // That is not provided by akonadi, so we attach it in a property.
   itemJob->setProperty( ItemFetchCollectionId(), QVariant( parent.id() ) );
 
@@ -109,10 +109,8 @@ void EntityUpdateAdapter::fetchItems( Collection parent )
 void EntityUpdateAdapter::itemsReceivedFromJob( Akonadi::Item::List list )
 {
   QObject *job = this->sender();
-  kDebug() << job;
   if ( job ) {
     Collection::Id colId = job->property( ItemFetchCollectionId() ).value<Collection::Id>();
-    kDebug() << colId;
     emit itemsReceived( list, colId );
   }
 }

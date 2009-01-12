@@ -102,7 +102,7 @@ private:
 
   /**
   The id of the collection which starts an item fetch job. This is part of a hack with QObject::sender
-  in itemsAdded to correctly insert items into the model.
+  in itemsReceivedFromJob to correctly insert items into the model.
   */
   static QByteArray ItemFetchCollectionId() {
     return "ItemFetchCollectionId";
