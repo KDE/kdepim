@@ -41,6 +41,7 @@
 #include <QString>
 #include <QStringList>
 #include <QPushButton>
+#include <QValidator>
 
 #include <cassert>
 
@@ -112,14 +113,26 @@ QString AddUserIDDialog::comment() const {
     return d->ui.commentLE->text().trimmed();
 }
 
+static bool has_intermediate_input( const QLineEdit * le ) {
+    QString text = le->text();
+    int pos = le->cursorPosition();
+    const QValidator * const v = le->validator();
+    return !v || v->validate( text, pos ) == QValidator::Intermediate ;
+}
 
 void AddUserIDDialog::Private::slotUserIDChanged() {
 
     bool ok = false;
     QString error;
 
-    if ( !ui.nameLE->hasAcceptableInput() )
+    if ( ui.nameLE->text().trimmed().isEmpty() )
+        error = i18nc("@info", "<interface>Real name</interface> is required, but missing.");
+    else if ( !ui.nameLE->hasAcceptableInput() )
         error = i18nc("@info", "<interface>Real name</interface> must be at least 5 characters long.");
+    else if ( ui.emailLE->text().trimmed().isEmpty() )
+        error = i18nc("@info", "<interface>EMail address</interface> is required, but missing.");
+    else if ( has_intermediate_input( ui.emailLE ) )
+        error = i18nc("@info", "<interface>EMail address</interface> is incomplete." );
     else if ( !ui.emailLE->hasAcceptableInput() )
         error = i18nc("@info", "<interface>EMail address</interface> is invalid.");
     else if ( !ui.commentLE->hasAcceptableInput() )
