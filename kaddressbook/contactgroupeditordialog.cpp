@@ -23,8 +23,10 @@
 #include "kabc/contactgroupeditor.h"
 
 #include "collectioncombobox.h"
+#include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/item.h>
 
+#include <kabc/contactgroup.h>
 #include <klocale.h>
 
 #include <QtGui/QGridLayout>
@@ -45,18 +47,23 @@ ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QAbstractItemMode
                                              Akonadi::ContactGroupEditor::CreateMode : Akonadi::ContactGroupEditor::EditMode, this );
 
   if ( mode == CreateMode ) {
-     QLabel *label = new QLabel( i18n( "Add to:" ), mainWidget );
-     KABC::CollectionComboBox *box = new KABC::CollectionComboBox( mainWidget );
-     if ( collectionModel )
-       box->setModel( collectionModel );
+    QLabel *label = new QLabel( i18n( "Add to:" ), mainWidget );
 
-     layout->addWidget( label, 0, 0 );
-     layout->addWidget( box, 0, 1 );
+    // filter for collections that support contact groups
+    Akonadi::CollectionFilterProxyModel *filterModel = new Akonadi::CollectionFilterProxyModel( this );
+    filterModel->addMimeTypeFilter( KABC::ContactGroup::mimeType() );
+    filterModel->setSourceModel( collectionModel );
 
-     connect( box, SIGNAL( selectionChanged( const Akonadi::Collection& ) ),
-              mEditor, SLOT( setDefaultCollection( const Akonadi::Collection& ) ) );
+    KABC::CollectionComboBox *box = new KABC::CollectionComboBox( mainWidget );
+    box->setModel( filterModel );
 
-     mEditor->setDefaultCollection( box->selectedCollection() );
+    layout->addWidget( label, 0, 0 );
+    layout->addWidget( box, 0, 1 );
+
+    connect( box, SIGNAL( selectionChanged( const Akonadi::Collection& ) ),
+             mEditor, SLOT( setDefaultCollection( const Akonadi::Collection& ) ) );
+
+    mEditor->setDefaultCollection( box->selectedCollection() );
   }
 
   layout->addWidget( mEditor, 1, 0, 1, 2 );
@@ -64,9 +71,6 @@ ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QAbstractItemMode
 
   connect( mEditor, SIGNAL( contactGroupStored( const Akonadi::Item& ) ),
            this, SIGNAL( contactGroupStored( const Akonadi::Item& ) ) );
-
-  connect( this, SIGNAL( okClicked() ), this, SLOT( slotOkClicked() ) );
-  connect( this, SIGNAL( cancelClicked() ), this, SLOT( slotCancelClicked() ) );
 
   setInitialSize( QSize( 420, 120 ) );
 }
@@ -80,16 +84,14 @@ void ContactGroupEditorDialog::setContactGroup( const Akonadi::Item &group )
   mEditor->loadContactGroup( group );
 }
 
-void ContactGroupEditorDialog::slotOkClicked()
+void ContactGroupEditorDialog::slotButtonClicked( int button )
 {
-  mEditor->saveContactGroup();
-
-  accept();
-}
-
-void ContactGroupEditorDialog::slotCancelClicked()
-{
-  reject();
+  if ( button == KDialog::Ok ) {
+    if ( mEditor->saveContactGroup() )
+      accept();
+  } else if ( button == KDialog::Cancel ) {
+    reject();
+  }
 }
 
 #include "contactgroupeditordialog.moc"

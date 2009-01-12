@@ -68,9 +68,8 @@ class ContactGroupEditorDialog : public KDialog
      */
     void contactGroupStored( const Akonadi::Item &group );
 
-  private Q_SLOTS:
-    void slotOkClicked();
-    void slotCancelClicked();
+  protected Q_SLOTS:
+    virtual void slotButtonClicked( int button );
 
   private:
     Akonadi::ContactGroupEditor *mEditor;

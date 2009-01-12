@@ -62,9 +62,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mCollectionModel->setHeaderData( 0, Qt::Horizontal, i18nc( "@title:column, contact groups", "Group" ) , Qt::EditRole );
 
   mCollectionFilterModel = new Akonadi::CollectionFilterProxyModel();
-  mCollectionFilterModel->addMimeTypeFilter( "text/x-vcard" );
   mCollectionFilterModel->addMimeTypeFilter( "text/directory" );
-  mCollectionFilterModel->addMimeTypeFilter( "text/vcard" );
   mCollectionFilterModel->addMimeTypeFilter( KABC::ContactGroup::mimeType() );
   mCollectionFilterModel->setSourceModel( mCollectionModel );
 
