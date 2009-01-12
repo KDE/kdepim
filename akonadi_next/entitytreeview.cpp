@@ -36,6 +36,7 @@
 
 #include <akonadi/collection.h>
 #include <akonadi/control.h>
+#include <akonadi/item.h>
 #include "entitytreemodel.h"
 
 #include <kdebug.h>
@@ -81,6 +82,7 @@ void EntityTreeView::Private::init()
 {
   mParent->header()->setClickable( true );
   mParent->header()->setStretchLastSection( false );
+//   mParent->setRootIsDecorated( false );
 
 //   mParent->setAutoExpandDelay ( QApplication::startDragTime() );
 
@@ -203,29 +205,41 @@ void EntityTreeView::dragMoveEvent( QDragMoveEvent * event )
   }
 
   // Check if the collection under the cursor accepts this data type
-  QStringList supportedContentTypes = model()->data( index, EntityTreeModel::CollectionRole ).value<Collection>().contentMimeTypes();
-  const QMimeData *data = event->mimeData();
-  KUrl::List urls = KUrl::List::fromMimeData( data );
-  foreach( const KUrl &url, urls ) {
-    kDebug() << url;
-    const Collection collection = Collection::fromUrl( url );
-    if ( collection.isValid() ) {
-      if ( !supportedContentTypes.contains( QString::fromLatin1( "inode/directory" ) ) )
-        break;
-
-      kDebug() << d->hasParent( index, collection.id() );
-      // Check if we don't try to drop on one of the children
-      if ( d->hasParent( index, collection.id() ) )
-        break;
-    } else { // This is an item.
-      QString type = url.queryItems()[ QString::fromLatin1( "type" )];
-      kDebug() << type << supportedContentTypes;
-      if ( !supportedContentTypes.contains( type ) )
-        break;
+  Collection col = model()->data( index, EntityTreeModel::CollectionRole ).value<Collection>();
+  if (!col.isValid())
+  {
+    Item item = model()->data( index, EntityTreeModel::ItemRole ).value<Item>();
+    if (item.isValid())
+    {
+      col = model()->data( index.parent(), EntityTreeModel::CollectionRole ).value<Collection>();
     }
+  }
+  if ( col.isValid() )
+  {
+    QStringList supportedContentTypes = col.contentMimeTypes();
+    const QMimeData *data = event->mimeData();
+    KUrl::List urls = KUrl::List::fromMimeData( data );
+    foreach( const KUrl &url, urls ) {
+      kDebug() << url;
+      const Collection collection = Collection::fromUrl( url );
+      if ( collection.isValid() ) {
+        if ( !supportedContentTypes.contains( Collection::mimeType() ) )
+          break;
 
-    QTreeView::dragMoveEvent( event );
-    return;
+        kDebug() << d->hasParent( index, collection.id() );
+        // Check if we don't try to drop on one of the children
+        if ( d->hasParent( index, collection.id() ) )
+          break;
+      } else { // This is an item.
+        QString type = url.queryItems()[ QString::fromLatin1( "type" )];
+        kDebug() << type << supportedContentTypes;
+        if ( !supportedContentTypes.contains( type ) )
+          break;
+      }
+      // All urls are supported. process the event.
+      QTreeView::dragMoveEvent( event );
+      return;
+    }
   }
 
   event->setDropAction( Qt::IgnoreAction );
@@ -242,6 +256,7 @@ void EntityTreeView::dragLeaveEvent( QDragLeaveEvent * event )
 
 void EntityTreeView::dropEvent( QDropEvent * event )
 {
+kDebug();
   d->dragExpandTimer.stop();
   d->dragOverIndex = QModelIndex();
 
