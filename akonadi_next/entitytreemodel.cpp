@@ -482,5 +482,26 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
   return QAbstractItemModel::setData( index, value, role );
 }
 
+bool EntityTreeModel::insertRows(int , int, const QModelIndex&)
+{
+    return false;
+}
+
+bool EntityTreeModel::insertColumns(int, int, const QModelIndex&)
+{
+    return false;
+}
+
+bool EntityTreeModel::removeRows(int, int, const QModelIndex&)
+{
+    return false;
+}
+
+bool EntityTreeModel::removeColumns(int, int, const QModelIndex&)
+{
+    return false;
+}
+
+
 
 #include "entitytreemodel.moc"

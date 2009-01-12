@@ -125,6 +125,12 @@ private:
   //@cond PRIVATE
   EntityTreeModelPrivate *d_ptr;
 
+  // Make these private, they shouldn't be called by applications
+  virtual bool insertRows(int , int, const QModelIndex & = QModelIndex());
+  virtual bool insertColumns(int, int, const QModelIndex & = QModelIndex());
+  virtual bool removeRows(int, int, const QModelIndex & = QModelIndex());
+  virtual bool removeColumns(int, int, const QModelIndex & = QModelIndex());
+
   Q_PRIVATE_SLOT( d_func(), void rowsAboutToBeInserted( Collection::Id colId, int start, int end ) )
   Q_PRIVATE_SLOT( d_func(), void rowsAboutToBeRemoved( Collection::Id colId, int start, int end ) )
   Q_PRIVATE_SLOT( d_func(), void rowsInserted() )
