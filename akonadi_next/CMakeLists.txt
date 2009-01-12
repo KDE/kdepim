@@ -4,6 +4,8 @@ set( akonadi_next_SRCS
   entitytreemodel.cpp
   entitytreemodel_p.cpp
   entityupdateadapter.cpp
+  clientsideentitystorage.cpp
+  #descendantentitiesproxymodel.cpp
   entityfilterproxymodel.cpp
   entitytreeview.cpp
   collectionchildorderattribute.cpp

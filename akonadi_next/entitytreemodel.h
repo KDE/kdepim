@@ -25,13 +25,14 @@
 
 #include <akonadi/collection.h>
 
+
 namespace Akonadi
 {
 
 class Collection;
 class Item;
-class Monitor;
 class EntityUpdateAdapter;
+class ClientSideEntityStorage;
 
 class EntityTreeModelPrivate;
 
@@ -78,24 +79,9 @@ public:
     UserRole = Qt::UserRole + 1000          ///< Role for user extensions.
   };
 
-  enum ShouldShowStatistics {
-    ShowStatistics,            ///< Show collection statistics
-    DoNotShowStatistics        ///< Do not show collection statistics.
-  };
-
   // EntityTreeModel( EntityUpdateAdapter,
   //                  MonitorAdapter,
   //                  QStringList mimeFilter = QStringList(), QObject *parent = 0);
-
-  /**
-  What to fetch and represent in the model.
-  */
-  enum EntitiesToFetch {
-    FetchNothing = 0,                     /// Fetch nothing. This creates an empty model.
-    FetchItems = 1,                       /// Fetch items in the rootCollection
-    FetchFirstLevelChildCollections = 2,  /// Fetch first level collections in the root collection.
-    FetchCollectionsRecursive = 4    /// Fetch collections in the root collection recursively. This implies FetchFirstLevelChildCollections.
-  };
 
   /**
    * Creates a new collection and item model.
@@ -103,14 +89,13 @@ public:
    * @param parent The parent object.
    * @param mimeTypes The list of mimetypes to be retrieved in the model.
    */
-  explicit EntityTreeModel( EntityUpdateAdapter *entityUpdateAdapter,
-                            Monitor *monitor,
-                            QStringList mimeTypes = QStringList(),
-                            QObject *parent = 0,
-                            Collection rootCollection = Collection::root(),
+  EntityTreeModel( EntityUpdateAdapter *entityUpdateAdapter,
+                            ClientSideEntityStorage *clientSideEntityStorage,
+                            QObject *parent = 0
 // TODO: figure out what to do about this:
-                            int entitiesToFetch = EntityTreeModel::FetchCollectionsRecursive,
-                            int showStats = EntityTreeModel::DoNotShowStatistics
+// I think if you want to show stats, you fetch them in the monitor.
+// This model should show them if they are fetched.
+//                             int showStats = EntityTreeModel::DoNotShowStatistics
                           );
 
   /**
@@ -130,7 +115,6 @@ public:
   virtual Qt::DropActions supportedDropActions() const;
   virtual QMimeData *mimeData( const QModelIndexList &indexes ) const;
   virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
-//     virtual void moveEntities(QModelIndexList sourceIndexes, QModelIndex destParentIndex);
   virtual bool setData( const QModelIndex &index, const QVariant &value, int role = Qt::EditRole );
 
   virtual QModelIndex index( int row, int column, const QModelIndex & parent = QModelIndex() ) const;
@@ -141,22 +125,11 @@ private:
   //@cond PRIVATE
   EntityTreeModelPrivate *d_ptr;
 
-  Q_PRIVATE_SLOT( d_func(), void onRowsInserted( const QModelIndex &parent, int start, int end ) )
-  Q_PRIVATE_SLOT( d_func(), void collectionsReceived( const Akonadi::Collection::List& ) )
-  Q_PRIVATE_SLOT( d_func(), void itemsReceived( const Akonadi::Item::List&, Collection::Id ) )
+  Q_PRIVATE_SLOT( d_func(), void rowsAboutToBeInserted( Collection::Id colId, int start, int end ) )
+  Q_PRIVATE_SLOT( d_func(), void rowsAboutToBeRemoved( Collection::Id colId, int start, int end ) )
+  Q_PRIVATE_SLOT( d_func(), void rowsInserted() )
+  Q_PRIVATE_SLOT( d_func(), void rowsRemoved() )
 
-  Q_PRIVATE_SLOT( d_func(), void collectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) )
-  Q_PRIVATE_SLOT( d_func(), void collectionRemoved( const Akonadi::Collection& ) )
-  Q_PRIVATE_SLOT( d_func(), void collectionChanged( const Akonadi::Collection& ) )
-
-  Q_PRIVATE_SLOT( d_func(), void itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) )
-  Q_PRIVATE_SLOT( d_func(), void itemRemoved( const Akonadi::Item& ) )
-  Q_PRIVATE_SLOT( d_func(), void itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) )
-  Q_PRIVATE_SLOT( d_func(), void itemMoved( const Akonadi::Item&,
-                  const Akonadi::Collection&, const Akonadi::Collection& ) )
-
-  Q_PRIVATE_SLOT( d_func(), void collectionStatisticsChanged(
-                    Akonadi::Collection::Id, const Akonadi::CollectionStatistics& ) )
   //@endcond
 
 

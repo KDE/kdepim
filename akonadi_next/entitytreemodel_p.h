@@ -21,14 +21,11 @@
 #define ENTITYTREEMODELPRIVATE_H
 
 #include <akonadi/item.h>
-#include <akonadi/itemfetchscope.h>
 #include "entitytreemodel.h"
 
 namespace Akonadi
 {
-class Monitor;
-class ItemFetchScope;
-
+class ClientSideEntityStorage;
 /**
  * @internal
  */
@@ -39,66 +36,20 @@ public:
   EntityTreeModelPrivate( EntityTreeModel *parent );
   EntityTreeModel *q_ptr;
 
-  void init();
-
-  /**
-  Adds items to the model when notified to do so for @p parent.
-  */
-  void onRowsInserted( const QModelIndex &parent, int start, int end );
-  void collectionsReceived( const Akonadi::Collection::List &cols );
-  void itemsReceived( const Item::List &list, Collection::Id colId );
-
-  void collectionAdded( const Akonadi::Collection& , const Akonadi::Collection& );
   void collectionChanged( const Akonadi::Collection& );
-  void collectionRemoved( const Akonadi::Collection& );
-
-  /**
-  Warning: This slot should never be called directly. It should only be connected to by the itemsRetrieved signal
-  of the ItemFetchJob.
-  */
-  void itemAdded( const Item &item, const Collection& );
   void itemChanged( const Item&, const QSet<QByteArray>& );
-  void itemRemoved( const Item& );
-  void itemMoved( const Item&, const Collection& src, const Collection& dst );
 
-  void collectionStatisticsChanged( Collection::Id, const Akonadi::CollectionStatistics& );
+//   void collectionStatisticsChanged( Collection::Id, const Akonadi::CollectionStatistics& );
 
-  QModelIndex indexForId( qint64 id, int column = 0 ) const;
-  Collection collectionForIndex( QModelIndex idx ) const;
-//   Item itemForIndex(QModelIndex idx);
-  int childEntitiesCount( const QModelIndex & parent ) const;
-
-  bool passesFilter( const QStringList &mimetypes );
   bool mimetypeMatches( const QStringList &mimetypes, const QStringList &other );
 
-  Collection findParentCollection( qint64 id ) const;
-  Collection findParentCollection( Item item ) const;
-  void orderChildEntities( Collection col, QStringList );
+  void rowsAboutToBeInserted( Collection::Id colId, int start, int end );
+  void rowsAboutToBeRemoved( Collection::Id colId, int start, int end );
+  void rowsInserted();
+  void rowsRemoved();
 
-  QHash< Collection::Id, Collection > collections;
-  QHash< qint64, Item > m_items;
-  QHash< Collection::Id, QList< qint64 > > m_childEntities;
-
-  QStringList m_mimeTypeFilter;
-
-  Monitor *monitor;
   EntityUpdateAdapter *entityUpdateAdapter;
-  ItemFetchScope m_itemFetchScope;
-  Collection m_rootCollection;
-  bool m_showStats;
-  int m_entitiesToFetch;
-
-  QModelIndex indexForItem( Item );
-
-  /**
-  Returns true if the index @p index refers to an item.
-  */
-  bool isItem( const QModelIndex &index ) const;
-
-  /**
-  Returns true if the index @p index refers to a collection.
-  */
-  bool isCollection( const QModelIndex &index ) const;
+  ClientSideEntityStorage *m_clientSideEntityStorage;
 
   Q_DECLARE_PUBLIC( EntityTreeModel )
 };

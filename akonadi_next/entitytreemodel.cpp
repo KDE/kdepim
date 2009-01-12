@@ -32,43 +32,45 @@
 #include "collectionchildorderattribute.h"
 #include <akonadi/entitydisplayattribute.h>
 #include "entityupdateadapter.h"
-#include <akonadi/monitor.h>
+#include "clientsideentitystorage.h"
+// #include <akonadi/monitor.h>
 
 #include "kdebug.h"
 
 using namespace Akonadi;
 
 EntityTreeModel::EntityTreeModel( EntityUpdateAdapter *entityUpdateAdapter,
-                                  Monitor *monitor,
-                                  QStringList mimetypes,
-                                  QObject *parent,
-                                  Collection rootCollection,
-                                  int entitiesToFetch,
-                                  int showStats
+                                  ClientSideEntityStorage *clientSideEntityStorage,
+                                  QObject *parent
                                 )
     : QAbstractItemModel( parent ),
     d_ptr( new EntityTreeModelPrivate( this ) )
 {
   Q_D( EntityTreeModel );
-  d->m_mimeTypeFilter = mimetypes;
 
+  d->m_clientSideEntityStorage = clientSideEntityStorage;
   d->entityUpdateAdapter = entityUpdateAdapter;
-  d->monitor = monitor;
-  d->m_rootCollection = rootCollection;
-  d->m_showStats = ( showStats == ShowStatistics ) ? true : false;
-  d->m_entitiesToFetch = entitiesToFetch;
 
-  AttributeFactory::registerAttribute<CollectionChildOrderAttribute>();
+//   AttributeFactory::registerAttribute<CollectionChildOrderAttribute>();
 
-  d->init();
+  connect( d->m_clientSideEntityStorage, SIGNAL( beginInsertEntities( Collection::Id, int, int ) ),
+           SLOT( rowsAboutToBeInserted( Collection::Id, int, int ) ) );
+  connect( d->m_clientSideEntityStorage, SIGNAL( endInsertEntities() ),
+           SLOT( rowsInserted() ) );
+  connect( d->m_clientSideEntityStorage, SIGNAL( beginRemoveEntities( Collection::Id, int, int ) ),
+           SLOT( rowsAboutToBeRemoved( Collection::Id, int, int ) ) );
+  connect( d->m_clientSideEntityStorage, SIGNAL( endRemoveEntities() ),
+           SLOT( rowsRemoved() ) );
+  connect( d->m_clientSideEntityStorage, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
+           SLOT( collectionChanged( const Akonadi::Collection& ) ) );
+  connect( d->m_clientSideEntityStorage, SIGNAL( itemChanged( const Akonadi::Item&, const QSet< QByteArray >& ) ),
+           SLOT( itemChanged( const Akonadi::Item&, const QSet< QByteArray >& ) ) );
+
 }
 
 EntityTreeModel::~EntityTreeModel()
 {
   Q_D( EntityTreeModel );
-  d->collections.clear();
-  d->m_items.clear();
-  d->m_childEntities.clear();
 }
 
 int EntityTreeModel::columnCount( const QModelIndex & parent ) const
@@ -84,53 +86,11 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
   if ( !index.isValid() )
     return QVariant();
   Q_D( const EntityTreeModel );
-//   return d->modelEntityManager.data(index, role);
 
-  if ( d->isItem( index ) ) {
-//     Item item = modelEntityManager.getItem(index.internalId());
-//     return itemManager.data(index, role);
-
-
-    Item item = d->m_items.value( index.internalId() );
-
-    if ( !item.isValid() )
-      return QVariant();
-
-    switch ( role ) {
-    case Qt::DisplayRole:
-    case Qt::EditRole:
-      if ( item.hasAttribute<EntityDisplayAttribute>() &&
-           ! item.attribute<EntityDisplayAttribute>()->displayName().isEmpty() )
-        return item.attribute<EntityDisplayAttribute>()->displayName();
-      return item.remoteId();
-
-    case Qt::DecorationRole:
-      if ( item.hasAttribute<EntityDisplayAttribute>() &&
-           ! item.attribute<EntityDisplayAttribute>()->iconName().isEmpty() )
-        return item.attribute<EntityDisplayAttribute>()->icon();
-
-    case MimeTypeRole:
-      return item.mimeType();
-
-    case RemoteIdRole:
-      return item.remoteId();
-
-    case ItemRole:
-      return QVariant::fromValue( item );
-
-    case ItemIdRole:
-      return item.id();
-
-    default:
-      break;
-    }
-  }
-
-//   modelEntityManager->isCollection(index.internalId());
-  if ( d->isCollection( index ) ) {
-//     Collection col = modelEntityManager.getCollection(index.internalId());
-//     return collectionManager.data(index, role);
-    const Collection col = d->collectionForIndex( index );
+  int entityType = d->m_clientSideEntityStorage->entityTypeForInternalIdentifier(index.internalId());
+  if (entityType == ClientSideEntityStorage::CollectionType)
+  {
+    const Collection col = d->m_clientSideEntityStorage->getCollection( index.internalId() );
     if ( !col.isValid() )
       return QVariant();
     if ( index.column() == 0 && ( role == Qt::DisplayRole || role == Qt::EditRole ) ) {
@@ -174,9 +134,45 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
     default:
       break;
     }
+  }
+  else if ( entityType == ClientSideEntityStorage::ItemType)
+  {
+    const Item item = d->m_clientSideEntityStorage->getItem( index.internalId() );
+    if ( !item.isValid() )
+      return QVariant();
+
+    switch ( role ) {
+    case Qt::DisplayRole:
+    case Qt::EditRole:
+      if ( item.hasAttribute<EntityDisplayAttribute>() &&
+           ! item.attribute<EntityDisplayAttribute>()->displayName().isEmpty() )
+        return item.attribute<EntityDisplayAttribute>()->displayName();
+      return item.remoteId();
+
+    case Qt::DecorationRole:
+      if ( item.hasAttribute<EntityDisplayAttribute>() &&
+           ! item.attribute<EntityDisplayAttribute>()->iconName().isEmpty() )
+        return item.attribute<EntityDisplayAttribute>()->icon();
+
+    case MimeTypeRole:
+      return item.mimeType();
+
+    case RemoteIdRole:
+      return item.remoteId();
+
+    case ItemRole:
+      return QVariant::fromValue( item );
+
+    case ItemIdRole:
+      return item.id();
+
+    default:
+      break;
+    }
 
   }
   return QVariant();
+
 }
 
 
@@ -196,8 +192,11 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
   if ( index.column() != 0 )
     return flags;
 
-  if ( d->isCollection( index ) ) {
-    const Collection col = d->collectionForIndex( index );
+  int entityType = d->m_clientSideEntityStorage->entityTypeForInternalIdentifier(index.internalId());
+
+  if (entityType == ClientSideEntityStorage::CollectionType)
+  {
+    const Collection col = d->m_clientSideEntityStorage->getCollection( index.internalId() );
     if ( col.isValid() ) {
       int rights = col.rights();
       if ( rights & Collection::CanChangeCollection ) {
@@ -216,13 +215,14 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
         flags |= Qt::ItemIsDropEnabled;
       }
     }
-  } else if ( d->isItem( index ) ) {
+  } else if ( entityType == ClientSideEntityStorage::ItemType )
+  {
     // Rights come from the parent collection.
 
     // TODO: Is this right for the root collection? I think so, but only by chance.
     // But will it work if m_rootCollection is different from Collection::root?
     // Should probably rely on index.parent().isValid() for that.
-    const Collection parentCol = d->collectionForIndex( index.parent() );
+    const Collection parentCol = d->m_clientSideEntityStorage->getCollection( index.parent().internalId() );
     if ( parentCol.isValid() ) {
       int rights = parentCol.rights();
       // Can't drop onto items.
@@ -255,6 +255,8 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
 
   // TODO Use action and collection rights and return false if neccessary
 
+  // TODO: Try to delegate most of this to the clientSideEntityStorage.
+
 // if row and column are -1, then the drop was on parent directly.
 // data should then be appended on the end of the items of the collections as appropriate.
 // That will mean begin insert rows etc.
@@ -273,17 +275,19 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
   if ( column > 0 )
     return false;
 
-  kDebug() << "isItem" << d->isItem( parent );
-  if ( d->isItem( parent ) ) {
+  int entityType = d->m_clientSideEntityStorage->entityTypeForInternalIdentifier( parent.internalId() );
+
+  if (entityType == ClientSideEntityStorage::ItemType)
+  {
     // Can't drop data onto an item, although we can drop data between items.
     return false;
     // TODO: Maybe if it's a drop on an item I should drop below the item instead?
     // Find out what others do.
   }
 
-  kDebug() << "d->isCollection" << d->isCollection( parent );
-  if ( d->isCollection( parent ) ) {
-    Collection destCol = d->collectionForIndex( parent );
+  if (entityType == ClientSideEntityStorage::CollectionType)
+  {
+    Collection destCol = d->m_clientSideEntityStorage->getCollection( parent.internalId() );
 
     if ( data->hasFormat( "text/uri-list" ) ) {
       QHash<Collection::Id, Collection::List> dropped_cols;
@@ -291,19 +295,16 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
 
       KUrl::List urls = KUrl::List::fromMimeData( data );
       foreach( const KUrl &url, urls ) {
-        Collection col = d->collections.value( Collection::fromUrl( url ).id() );
-        kDebug() << "url" << url << col.mimeType();
+        Collection col = d->m_clientSideEntityStorage->getCollection( Collection::fromUrl( url ).id() );
         if ( col.isValid() ) {
           if ( !d->mimetypeMatches( destCol.contentMimeTypes(), col.contentMimeTypes() ) )
             return false;
 
           dropped_cols[ col.parent()].append( col );
         } else {
-          Item item = d->m_items.value( Item::fromUrl( url ).id() * -1 );
-          kDebug() << item.remoteId();
+          Item item = d->m_clientSideEntityStorage->getItem( Item::fromUrl( url ).id() );
           if ( item.isValid() ) {
-            Collection col = d->findParentCollection( item );
-            kDebug() << col.id() << item.remoteId();
+            Collection col = d->m_clientSideEntityStorage->getParentCollection( item );
             dropped_items[ col.id()].append( item );
           } else {
             // A uri, but not an akonadi url. What to do?
@@ -316,8 +317,7 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
       d->entityUpdateAdapter->beginTransaction();
       while ( item_iter.hasNext() ) {
         item_iter.next();
-//         Collection srcCol = collectionForIndex( indexForId( item_iter.key() ) );
-        Collection srcCol = d->collections.value( item_iter.key() );
+        Collection srcCol = d->m_clientSideEntityStorage->getCollection( item_iter.key() );
         if ( action == Qt::MoveAction ) {
           d->entityUpdateAdapter->moveEntities( item_iter.value(), dropped_cols.value( item_iter.key() ), srcCol, destCol, row );
         } else if ( action == Qt::CopyAction ) {
@@ -328,10 +328,9 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
       QHashIterator<Collection::Id, Collection::List> col_iter( dropped_cols );
       while ( col_iter.hasNext() ) {
         col_iter.next();
-//         Collection srcCol = collectionForIndex( indexForId( col_iter.key() ) );
-        Collection srcCol = d->collections.value( col_iter.key() );
+        Collection srcCol = d->m_clientSideEntityStorage->getCollection( col_iter.key() );
         if ( action == Qt::MoveAction ) {
-          // Item::List() because I know I've already dealt with the items of this parent.
+          // Empty Item::List() because I know I've already dealt with the items of this parent.
           d->entityUpdateAdapter->moveEntities( Item::List(), col_iter.value(), srcCol, destCol, row );
         } else if ( action == Qt::CopyAction ) {
           d->entityUpdateAdapter->addEntities( Item::List(), col_iter.value(), destCol, row );
@@ -359,14 +358,14 @@ QModelIndex EntityTreeModel::index( int row, int column, const QModelIndex & par
   if ( column >= columnCount() || column < 0 )
     return QModelIndex();
 
-  Collection col = d->collectionForIndex( parent );
-
-  QList<qint64> idList = d->m_childEntities.value( col.id() );
-
-  if ( row < 0 || row >= idList.size() )
+  int size = d->m_clientSideEntityStorage->childEntitiesCount( parent.internalId() );
+  if ( row < 0 || row >= size )
     return QModelIndex();
 
-  return createIndex( row, column, reinterpret_cast<void*>( idList.at( row ) ) );
+  qint64 internalIdentifier = d->m_clientSideEntityStorage->childAt( parent.internalId(), row );
+
+  return createIndex( row, column, reinterpret_cast<void*>( internalIdentifier ) );
+
 }
 
 QModelIndex EntityTreeModel::parent( const QModelIndex & index ) const
@@ -376,11 +375,25 @@ QModelIndex EntityTreeModel::parent( const QModelIndex & index ) const
   if ( !index.isValid() )
     return QModelIndex();
 
-  Collection col = d->findParentCollection( index.internalId() );
-  if ( !col.isValid() || col.id() == d->m_rootCollection.id() )
+  int entityType = d->m_clientSideEntityStorage->entityTypeForInternalIdentifier( index.internalId() );
+
+  Collection col;
+  if ( ClientSideEntityStorage::CollectionType == entityType )
+  {
+    Collection childCol = d->m_clientSideEntityStorage->getCollection( index.internalId() );
+    col = d->m_clientSideEntityStorage->getParentCollection( childCol );
+  } else if ( ClientSideEntityStorage::ItemType == entityType )
+  {
+    Item item = d->m_clientSideEntityStorage->getItem( index.internalId() );
+    col = d->m_clientSideEntityStorage->getParentCollection( item );
+  }
+
+  if ( !col.isValid() || ( col.id() == d->m_clientSideEntityStorage->rootCollection().id() ) )
     return QModelIndex();
 
-  int row = d->m_childEntities[ col.parent()].indexOf( col.id() );
+
+  int row = d->m_clientSideEntityStorage->indexOf( col.parent(), col.id() );
+
   return createIndex( row, 0, reinterpret_cast<void*>( col.id() ) );
 
 }
@@ -388,7 +401,7 @@ QModelIndex EntityTreeModel::parent( const QModelIndex & index ) const
 int EntityTreeModel::rowCount( const QModelIndex & parent ) const
 {
   Q_D( const EntityTreeModel );
-  return d->childEntitiesCount( parent );
+  return d->m_clientSideEntityStorage->childEntitiesCount( parent.internalId() );
 }
 
 QVariant EntityTreeModel::headerData( int section, Qt::Orientation orientation, int role ) const
@@ -407,12 +420,14 @@ QMimeData *EntityTreeModel::mimeData( const QModelIndexList &indexes ) const
     if ( index.column() != 0 )
       continue;
 
-    if ( d->isCollection( index ) ) {
-      urls << d->collectionForIndex( index ).url();
-    }
+    int entityType = d->m_clientSideEntityStorage->entityTypeForInternalIdentifier( index.internalId() );
 
-    if ( d->isItem( index ) ) {
-      urls << d->m_items.value( index.internalId() ).url( Item::UrlWithMimeType );
+    if (entityType == ClientSideEntityStorage::CollectionType)
+    {
+      urls << d->m_clientSideEntityStorage->getCollection( index.internalId() ).url();
+    } else if ( entityType == ClientSideEntityStorage::ItemType )
+    {
+      urls << d->m_clientSideEntityStorage->getItem( index.internalId() ).url( Item::UrlWithMimeType );
     }
   }
   urls.populateMimeData( data );
@@ -425,10 +440,13 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
 {
   Q_D( EntityTreeModel );
   // Delegate to something? Akonadi updater, or the manager classes? I think akonadiUpdater. entityUpdateAdapter
-  if ( index.column() == 0 && role & (Qt::EditRole | ItemRole | CollectionRole) ) {
-    if ( d->isCollection( index ) ) {
+  if ( index.column() == 0 && ( role & (Qt::EditRole | ItemRole | CollectionRole) ) ) {
+    int entityType = d->m_clientSideEntityStorage->entityTypeForInternalIdentifier( index.internalId() );
+    if ( ClientSideEntityStorage::CollectionType == entityType )
+    {
       // rename collection
-      Collection col = d->collectionForIndex( index );
+//       Collection col = d->collectionForIndex( index );
+      Collection col = d->m_clientSideEntityStorage->getCollection( index.internalId() );
       if ( !col.isValid() || value.toString().isEmpty() )
         return false;
 
@@ -442,8 +460,8 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
       d->entityUpdateAdapter->updateEntities( Collection::List() << col );
       return false;
     }
-    if ( d->isItem( index ) ) {
-      kDebug() << "item";
+    if ( ClientSideEntityStorage::ItemType == entityType )
+    {
       Item i = value.value<Item>();
 //       Item item = d->m_items.value( index.internalId() );
 //       if ( !item.isValid() || value.toString().isEmpty() )
@@ -463,5 +481,6 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
 
   return QAbstractItemModel::setData( index, value, role );
 }
+
 
 #include "entitytreemodel.moc"
