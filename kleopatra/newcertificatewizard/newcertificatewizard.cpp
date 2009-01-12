@@ -1252,9 +1252,9 @@ QString OverviewPage::i18nFormatGnupgKeyParms( bool details ) const {
             s     << Row<        >( i18n("Key Strength:"),      i18n("default") );
     }
     if ( details )
-        s         << Row<        >( i18n("Key Usage:"),         i18nKeyUsages().join("&nbsp;") );
+        s         << Row<        >( i18n("Key Usage:"),         i18nKeyUsages().join(i18nc("separator for key usages",",&nbsp;")) );
     else
-        s         << Row<        >( i18n("Certificate Usage:"), i18nCombinedKeyUsages().join("&nbsp;") );
+        s         << Row<        >( i18n("Certificate Usage:"), i18nCombinedKeyUsages().join(i18nc("separator for key usages",",&nbsp;")) );
     if ( details )
         if ( const unsigned int subkey = subkeyType() ) {
             s     << Row<        >( i18n("Subkey Type:"),       gpgme_pubkey_algo_name( static_cast<gpgme_pubkey_algo_t>( subkey ) ) );
@@ -1262,7 +1262,7 @@ QString OverviewPage::i18nFormatGnupgKeyParms( bool details ) const {
                 s << Row<unsigned>( i18n("Subkey Strength:"),   strength );
             else
                 s << Row<        >( i18n("Subkey Strength:"),   i18n("default") );
-            s     << Row<        >( i18n("Subkey Usage:"),      i18nSubkeyUsages().join("&nbsp;") );
+            s     << Row<        >( i18n("Subkey Usage:"),      i18nSubkeyUsages().join(i18nc("separator for key usages",",&nbsp;")) );
     }
     if ( pgp() && expiryDate().isValid() )
         s         << Row<        >( i18n("Valid Until:"),       KGlobal::locale()->formatDate( expiryDate() ) );
