@@ -4,13 +4,11 @@ Problems addressed
 ------------------
 
 * kolab/issue3306 "No attendees" behind the title of a new event or task not translated into German.
-* kolab/issue3275 translation of "calendar" to "Kalendar" is wrong, should be "Kalender"
 * kolab/issue3297 If kontact is started via knotes, knotes sometimes crashed while renaming a note
 * kolab/issue2962 Composer text snippets: Add/Edit group, snippet text "GROUP" is not translated into German.
 * kolab/issue3324 can delete attachments in read-only folders
 * kolab/issue3316 Doubled folder lists in move-to filteraction selection dialog
 * kolab/issue3314 Contact folder selection state not saved between KDE sessions
-* kolab/issue3326 calendar schedule menu items doesn't work
 * kolab/issue3084 An organizor of an event cannot change his status
 * kolab/issue1783 Invitation get lost, if no Kalender resource is activated
 
