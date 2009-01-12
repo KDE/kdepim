@@ -59,19 +59,6 @@ QString UiServer::Private::systemErrorString() {
     return QString::fromLocal8Bit( strerror(errno) );
 }
 
-QString UiServer::Private::makeFileName( const QString & socket ) const {
-    if ( !socket.isEmpty() )
-        return socket;
-    if ( tmpDir.status() != 0 )
-        throw_<std::runtime_error>( i18n( "Couldn't create directory %1: %2", tmpDirPrefix() + "XXXXXXXX", systemErrorString() ) );
-    const QString gnupgHome = gnupgHomeDirectory();
-    if ( !gnupgHome.isEmpty() )
-        ensureDirectoryExists( gnupgHome );
-    const QDir dir( gnupgHome.isEmpty() ? tmpDir.name() : gnupgHome );
-    assert( dir.exists() );
-    return dir.absoluteFilePath( "S.uiserver" );
-}
-
 void UiServer::Private::doMakeListeningSocket( const QByteArray & encodedFileName ) {
     // Create a Unix Domain Socket:
 #ifdef HAVE_ASSUAN_SOCK_GET_NONCE

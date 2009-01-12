@@ -39,8 +39,6 @@
 
 #include <utils/wsastarter.h>
 
-#include <ktempdir.h>
-
 #include <QTcpServer>
 #include <QFile>
 #include <QDir>
@@ -56,10 +54,6 @@ namespace {
     template <typename Ex>
     void throw_( const QString & message ) {
         throw Ex( message.toUtf8().constData() );
-    }
-
-    static QString tmpDirPrefix() {
-        return QDir::temp().absoluteFilePath( "gpg-" );
     }
 }
 
@@ -88,7 +82,6 @@ namespace Kleo {
 	    void slotConnectionClosed( Kleo::AssuanServerConnection * conn );
 
 	private:
-	    KTempDir tmpDir;
 	    QFile file;
 	    std::vector< boost::shared_ptr<AssuanCommandFactory> > factories;
 	    std::vector< boost::shared_ptr<AssuanServerConnection> > connections;
