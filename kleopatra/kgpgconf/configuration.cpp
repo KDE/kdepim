@@ -342,7 +342,7 @@ QString ConfigEntry::typeDescription() const
     switch ( m_argType )
     {
     case None:
-        return list ? i18n( "Multiple Settable" ) : i18n( "Set/Unset" );
+        return list ? i18nc( "as in \"verbosity level\"", "Level" ) : i18n( "Set/Unset" );
     case String:
         return list ? i18n( "String List" ) : i18n( "String" );
     case Int:
