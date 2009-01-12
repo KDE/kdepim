@@ -1583,6 +1583,14 @@ void KABCore::removeSelectedContactsFromDistList()
           }
       }
   }
+
+  // let the resource know that the data has changed
+  // ideally the list would be using observer pattern or explicit
+  // "changed" marking
+  KABC::Resource *resource = dist->resource();
+  Q_ASSERT( resource != 0 );
+  resource->insertDistributionList( dist );
+
   setModified();
 }
 
@@ -1650,6 +1658,13 @@ void KABCore::editDistributionList( KABC::DistributionList *dist )
       }
 
       dist->setName( newDist.name() );
+
+      // let the resource know that the data has changed
+      // ideally the list would be using observer pattern or explicit
+      // "changed" marking
+      KABC::Resource *resource = dist->resource();
+      Q_ASSERT( resource != 0 );
+      resource->insertDistributionList( dist );
 
       setModified();
     }
