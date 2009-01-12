@@ -30,6 +30,7 @@
 #include <QGridLayout>
 #include <QBoxLayout>
 #include <QCheckBox>
+#include <QIntValidator>
 
 #include <kabprefs.h>
 #include <kdebug.h>
