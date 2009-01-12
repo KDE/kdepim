@@ -28,7 +28,7 @@
 
 #include "akonadidataproxy.h"
 
-#include <kcal/todo.h>
+#include <kcal/event.h>
 
 #include <boost/shared_ptr.hpp>
 

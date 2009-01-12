@@ -18,6 +18,7 @@
 */
 
 #include "collectioncombobox.h"
+#include "options.h"
 
 #include <QtCore/QAbstractItemModel>
 #include <QtGui/QVBoxLayout>
@@ -50,16 +51,22 @@ class CollectionComboBox::Private
 
 void CollectionComboBox::Private::activated( int index )
 {
+  FUNCTIONSETUPL(5);
   if ( !mComboBox->model() )
     return;
 
   const QModelIndex modelIndex = mComboBox->model()->index( index, 0 );
-  if ( modelIndex.isValid() )
+  DEBUGKPILOT << "current index: " << index;
+  if ( modelIndex.isValid() ) {
+    DEBUGKPILOT << "modelIndex is valid.";
     emit mParent->selectionChanged( Collection( modelIndex.data( CollectionModel::CollectionIdRole ).toLongLong() ) );
+  }
 }
 
 void CollectionComboBox::Private::checkCurrentSelectedCollection()
 {
+  FUNCTIONSETUPL(5);
+  DEBUGKPILOT << "mcurrentId: " << mCurrentId;
   if( mCurrentId != -1 )
     mParent->setSelectedCollection( mCurrentId );
 }
@@ -92,28 +99,45 @@ void CollectionComboBox::setModel( QAbstractItemModel *model )
 
 Akonadi::Collection CollectionComboBox::selectedCollection() const
 {
+  FUNCTIONSETUPL(5);
   Q_ASSERT_X( d->mComboBox->model() != 0, "CollectionComboBox::selectionChanged", "No model set!" );
 
   int index = d->mComboBox->currentIndex();
+  DEBUGKPILOT << "current index: " << index;
 
   const QModelIndex modelIndex = d->mComboBox->model()->index( index, 0 );
-  if ( modelIndex.isValid() )
-    return Akonadi::Collection( modelIndex.data( Akonadi::CollectionModel::CollectionIdRole ).toLongLong() );
-  else
+
+  if ( modelIndex.isValid() ) {
+    Akonadi::Collection col( modelIndex.data(
+       Akonadi::CollectionModel::CollectionIdRole ).toLongLong() );
+    DEBUGKPILOT << "modelIndex is valid. returning: " << col.id();
+    return col;
+  } else {
+    DEBUGKPILOT << "modelIndex is invalid.";
     return Akonadi::Collection();
+  }
 }
 
 void CollectionComboBox::setSelectedCollection( const Entity::Id id )
 {
+  FUNCTIONSETUPL(5);
+  DEBUGKPILOT << "requested id to set: " << id;
   Q_ASSERT_X( d->mComboBox->model() != 0, "CollectionComboBox::setSelectedCollection", "No model set!" );
-
-  d->mCurrentId = id;
 
   QAbstractItemModel* model = d->mComboBox->model();
   QModelIndexList result = model->match( model->index( 0, 0 ), CollectionModel::CollectionIdRole, id );
+  d->mCurrentId = id;
 
   if( !result.isEmpty() ) {
     d->mComboBox->setCurrentIndex( result.first().row() );
+  } else {
+    DEBUGKPILOT << "invalid id requested.";
+    if ( d->mComboBox->count() > 0 ) {
+      DEBUGKPILOT << "selecting first available.";
+      d->mComboBox->setCurrentIndex( 0 );
+      d->mCurrentId = selectedCollection().id();
+      DEBUGKPILOT << "current id now: " << d->mCurrentId;
+    }
   }
 }
 
