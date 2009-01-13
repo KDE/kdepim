@@ -301,6 +301,12 @@ private:
 	*/
 	int fAcceptedCount;
 
+	/**
+	  * Helps us know when we should pi_close() our main socket. libusb (and
+	  * whatever net:any uses) are flakey and if we close their socket when
+	  * they're not expecting it, we catch their wrath and die.
+	  */
+	bool fSuccessfulHandshake;
 };
 
 /**

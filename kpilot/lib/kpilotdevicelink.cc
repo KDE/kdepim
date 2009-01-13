@@ -112,7 +112,7 @@ void DeviceCommThread::run()
 	 * now sleep one last bit to make sure the pthread inside
 	 * pilot-link (potentially, if it's libusb) is done before we exit
 	 */
-	QThread::sleep(1);
+	QThread::sleep(5);
 
 	DEBUGKPILOT << ": comm thread now done...";
 }
@@ -130,7 +130,8 @@ DeviceCommWorker::DeviceCommWorker(KPilotDeviceLink *d) :
 	fWorkaroundUSBTimer(0L),
 	fPilotSocket(-1),
 	fTempSocket(-1),
-	fAcceptedCount(0)
+	fAcceptedCount(0),
+	fSuccessfulHandshake(false)
 {
 	FUNCTIONSETUP;
 
@@ -205,32 +206,27 @@ void DeviceCommWorker::close()
 	 */
 	KPILOT_DELETE(fSocketNotifier);
 
-	/*
-	 * Unfortunately, Bad Things Happen (TM) from the bowels of libpisock and
-	 * libusb. Safety first.
-	 */
-	try {
-		if (fTempSocket != -1)
-		{
-			DEBUGKPILOT
-				<< ": device comm thread closing temp socket: ["
-				<< fTempSocket << "]";
-			pi_close(fTempSocket);
-		}
+	if (fTempSocket != -1)
+	{
+		DEBUGKPILOT
+			<< ": device comm thread closing temp socket: ["
+			<< fTempSocket << "]";
+		pi_close(fTempSocket);
+	}
 
-		if (fPilotSocket != -1)
-		{
-			DEBUGKPILOT
-				<< ": device comm thread closing socket: ["
-				<< fPilotSocket << "]";
-			pi_close(fPilotSocket);
-		}
-	} catch ( ... ) {
-		WARNINGKPILOT << "Caught exception closing socket. Yuckie!";
+	if (fPilotSocket != -1 &&
+	    fSuccessfulHandshake)
+	{
+		DEBUGKPILOT
+			<< ": device comm thread closing socket: ["
+			<< fPilotSocket << "]";
+		pi_close(fPilotSocket);
 	}
 
 	fTempSocket = (-1);
 	fPilotSocket = (-1);
+
+	fSuccessfulHandshake = false;
 
 	DeviceMap::self()->unbindDevice(link()->fRealPilotPath);
 }
@@ -562,6 +558,7 @@ void DeviceCommWorker::acceptDevice()
 					"Perhaps you have a password set on the device?")));
 
 	}
+	fSuccessfulHandshake = true;
 	link()->fLinkStatus = AcceptedDevice;
 
 	QApplication::postEvent(link(), new DeviceCommEvent(EventLogProgress, QString(), 100));
@@ -673,7 +670,7 @@ void KPilotDeviceLink::stopCommThread()
 				// not normally to be done, but we must make sure
 				// that this device doesn't come back alive
 				fDeviceCommThread->terminate();
-				fDeviceCommThread->wait();
+				fDeviceCommThread->wait(5000);
 			}
 		}
 
