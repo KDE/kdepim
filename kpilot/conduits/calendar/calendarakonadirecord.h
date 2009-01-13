@@ -66,6 +66,11 @@ public:
 	 * Returns a string representation of the record.
 	 */
 	/* virtual */ QString toString() const;
+
+	/**
+	 * Validity check.
+	 */
+	/* virtual */ bool isValid() const;
 };
 
 #endif

@@ -129,3 +129,18 @@ QString CalendarAkonadiRecord::toString() const
 
 	return desc;
 }
+
+bool CalendarAkonadiRecord::isValid() const
+{
+	FUNCTIONSETUPL(5);
+	boost::shared_ptr<KCal::Event> event
+		= boost::dynamic_pointer_cast<KCal::Event, KCal::Incidence>
+			(
+				item().payload<IncidencePtr>()
+			);
+	bool check = (!event->summary().isEmpty() &&
+		      event->dtStart().dateTime().isValid() &&
+		      event->dtEnd().dateTime().isValid());
+	DEBUGKPILOT << toString() << ", returning: " << check;;
+	return check;
+}

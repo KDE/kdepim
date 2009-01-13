@@ -59,7 +59,7 @@ public:
 	
 	QString lastSyncedPC() const;
 	
-	void loadMapping();
+	bool loadMapping();
 	
 	QMap<QString, QString>* mappings();
 	

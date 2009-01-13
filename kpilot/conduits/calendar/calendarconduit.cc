@@ -520,6 +520,7 @@ void CalendarConduit::setRecurrence( PilotDateEntry* de, const EventPtr& e ) con
 		de->setRepeatType( repeatDaily );
 		de->setRepeatFrequency( 1 );
 		de->setRepeatEnd( de->getEventEnd() );
+		de->setRepeatForever( 0 );
 		
 		DEBUGKPILOT << "Setting single-day recurrence (" << startDt.toString()
 			<< " - " << endDt.toString() << ")";

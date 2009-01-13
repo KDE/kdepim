@@ -121,7 +121,9 @@ void AkonadiDataProxy::loadAllRecords()
 				fRecords.insert( rec->id(), rec );
 			}
 		}
-		
+		int loadedFromAkonadi = fRecords.size();
+		int dummyDeletedRecords = 0;
+
 		// Now add dummy records for deleted records.
 		foreach( const QString& mPcId, d->fMapping.pcRecordIds() )
 		{
@@ -132,14 +134,17 @@ void AkonadiDataProxy::loadAllRecords()
 				AkonadiRecord* ar = createDeletedAkonadiRecord( mPcId );
 				Q_ASSERT( ar->isDeleted() );
 				Q_ASSERT( ar->isModified() );
-				
+
 				fRecords.insert( mPcId, ar );
+				++dummyDeletedRecords;
 			}
 		}
-		
 		fCounter.setStartCount( fRecords.size() );
-		
-		DEBUGKPILOT << "Loaded " << fRecords.size() << " records.";
+
+		DEBUGKPILOT << "Loaded: " << loadedFromAkonadi
+			    << " records from Akonadi, created: " << dummyDeletedRecords
+			    << " dummy deleted records. Total starting record count: "
+			    << fRecords.size();
 	}
 	else
 	{

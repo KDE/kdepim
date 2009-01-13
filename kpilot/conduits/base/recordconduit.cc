@@ -205,7 +205,14 @@ RecordConduit::~RecordConduit()
 		addSyncLogEntry( i18n( "Data mapping invalid after sync. Sync failed." ) );
 		return false;
 	}
-	
+
+	if( fHHDataProxy->counter()->countEnd() != fPCDataProxy->counter()->countEnd() )
+	{
+		DEBUGKPILOT <<  "Ending counts do not match after sync. Sync failed.";
+		addSyncLogEntry( i18n( "Ending counts do not match after sync. Sync failed." ) );
+		return false;
+	}
+
 	if( !checkVolatility() )
 	{
 		// volatility bounds are exceeded or the user did not want to proceed.
@@ -390,7 +397,7 @@ void RecordConduit::updateBackupDatabase()
 // 4.1 || 5.2
 void RecordConduit::hotOrFullSync()
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(2);
 	
 	fSyncedPcRecords = new QStringList();
 	
@@ -418,11 +425,13 @@ void RecordConduit::hotOrFullSync()
 	while( fHHDataProxy->hasNext() )
 	{
 		HHRecord *hhRecord = static_cast<HHRecord*>( fHHDataProxy->next() );
-		HHRecord *backupRecord = static_cast<HHRecord*>( 
+		HHRecord *backupRecord = static_cast<HHRecord*>(
 			fBackupDataProxy->find( hhRecord->id() ) );
 		Record *pcRecord = 0L;
 		
 		QString pcRecordId = fMapping.pcRecordId( hhRecord->id() );
+		DEBUGKPILOT << "hhRecord id: " << hhRecord->id()
+			    << ", pcRecordId: " << pcRecordId;
 		if( !pcRecordId.isEmpty() ) {
 			// There is a mapping.
 			pcRecord = fPCDataProxy->find( pcRecordId );
@@ -845,6 +854,7 @@ void RecordConduit::syncRecords( Record *pcRecord, HHRecord *backupRecord,
 	}
 	else if( pcRecord )
 	{
+		DEBUGKPILOT << "pcRecord id: " << pcRecord->id();
 		if( fMapping.containsPCId( pcRecord->id() ) && pcRecord->isDeleted() )
 		{
 			DEBUGKPILOT << "Case 6.5.17 - pc:" << pcRecord->id();
@@ -855,13 +865,19 @@ void RecordConduit::syncRecords( Record *pcRecord, HHRecord *backupRecord,
 		{
 			// Case: 6.5.5 or 6.5.8
 			DEBUGKPILOT << "Case 6.5.5 or 6.5.8";
-			hhRecord = createHHRecord( pcRecord );
-			QString id = fHHDataProxy->create( hhRecord );
-			fMapping.map( id, pcRecord->id() );
-			copyCategory( pcRecord, hhRecord );
-			
-			pcRecord->synced();
-			hhRecord->synced();
+			if ( ! pcRecord->isValid() ) {
+				WARNINGKPILOT << "pcRecord id: " << pcRecord->id()
+					      << " (" << pcRecord->toString()
+					      << ") is not valid.";
+			} else {
+				hhRecord = createHHRecord( pcRecord );
+				QString id = fHHDataProxy->create( hhRecord );
+				fMapping.map( id, pcRecord->id() );
+				copyCategory( pcRecord, hhRecord );
+
+				pcRecord->synced();
+				hhRecord->synced();
+			}
 		}
 	}
 	else
