@@ -5,7 +5,7 @@ set( akonadi_next_SRCS
   entitytreemodel_p.cpp
   entityupdateadapter.cpp
   clientsideentitystorage.cpp
-#   descendantentitiesproxymodel.cpp
+  clientsideentitystorage_p.cpp
   descendantentitiesmodel.cpp
   descendantentitiesmodel_p.cpp
   entityfilterproxymodel.cpp
