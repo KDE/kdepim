@@ -20,15 +20,16 @@
 
 #include "entityupdateadapter.h"
 
+#include <QVariant>
+#include <QStringList>
+
 #include <akonadi/session.h>
-#include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionmodifyjob.h>
 #include <akonadi/collectiondeletejob.h>
 #include <akonadi/collectioncreatejob.h>
 #include <akonadi/collectioncopyjob.h>
 #include <akonadi/collectionstatisticsjob.h>
 #include <akonadi/collectionstatistics.h>
-#include <akonadi/itemfetchjob.h>
 #include <akonadi/itemmovejob.h>
 #include <akonadi/itemdeletejob.h>
 #include <akonadi/itemcreatejob.h>
@@ -37,20 +38,14 @@
 #include <akonadi/entitydisplayattribute.h>
 #include "collectionchildorderattribute.h"
 
-#include <QVariant>
-#include <QStringList>
 
 #include <kdebug.h>
 
 using namespace Akonadi;
 
-EntityUpdateAdapter::EntityUpdateAdapter( Session *s, ItemFetchScope scope, QObject *parent, int includeUnsubscribed )
-    : QObject( parent ), m_session( s ), m_job_parent( s ), m_itemFetchScope( scope )
+EntityUpdateAdapter::EntityUpdateAdapter( Session *s, QObject *parent )
+    : QObject( parent ), m_session( s ), m_job_parent( s )
 {
-
-  m_includeUnsubscribed = ( includeUnsubscribed == IncludeUnsubscribed ) ? true : false;
-
-
   m_session->setParent(this);
 
 }
@@ -58,11 +53,6 @@ EntityUpdateAdapter::EntityUpdateAdapter( Session *s, ItemFetchScope scope, QObj
 EntityUpdateAdapter::~EntityUpdateAdapter()
 {
   delete m_job_parent;
-}
-
-void EntityUpdateAdapter::addEntities( Item::List newItems, Collection::List newCollections, Collection parent, int row )
-{
-
 }
 
 void EntityUpdateAdapter::beginTransaction()
@@ -73,46 +63,6 @@ void EntityUpdateAdapter::beginTransaction()
 void EntityUpdateAdapter::endTransaction()
 {
   m_job_parent = m_session;
-}
-
-void EntityUpdateAdapter::fetchCollections( Collection col, CollectionFetchJob::Type type )
-{
-  CollectionFetchJob *job = new CollectionFetchJob( col, type, m_job_parent );
-  job->includeUnsubscribed( m_includeUnsubscribed );
-  connect( job, SIGNAL( collectionsReceived( Akonadi::Collection::List ) ),
-           this, SIGNAL( collectionsReceived( Akonadi::Collection::List ) ) );
-  connect( job, SIGNAL( result( KJob* ) ), this, SLOT( listJobDone( KJob* ) ) );
-
-}
-
-void EntityUpdateAdapter::fetchItems( Item::List items )
-{
-
-
-}
-
-void EntityUpdateAdapter::fetchItems( Collection parent )
-{
-  Akonadi::ItemFetchJob *itemJob = new Akonadi::ItemFetchJob( parent, m_job_parent );
-  itemJob->setFetchScope( m_itemFetchScope );
-
-  // ### HACK: itemsReceivedFromJob needs to know which collection items were added to.
-  // That is not provided by akonadi, so we attach it in a property.
-  itemJob->setProperty( ItemFetchCollectionId(), QVariant( parent.id() ) );
-
-  connect( itemJob, SIGNAL( itemsReceived( Akonadi::Item::List ) ),
-           this, SLOT( itemsReceivedFromJob( Akonadi::Item::List ) ) );
-  connect( itemJob, SIGNAL( result( KJob* ) ),
-           this, SLOT( listJobDone( KJob* ) ) );
-}
-
-void EntityUpdateAdapter::itemsReceivedFromJob( Akonadi::Item::List list )
-{
-  QObject *job = this->sender();
-  if ( job ) {
-    Collection::Id colId = job->property( ItemFetchCollectionId() ).value<Collection::Id>();
-    emit itemsReceived( list, colId );
-  }
 }
 
 void EntityUpdateAdapter::moveEntities( Item::List movedItems, Collection::List movedCollections, Collection src, Collection dst, int row )
@@ -199,24 +149,9 @@ void EntityUpdateAdapter::updateEntities( Item::List updatedItems )
   }
 }
 
-void EntityUpdateAdapter::listJobDone( KJob *job )
+void EntityUpdateAdapter::addEntities( Item::List newItems, Collection::List newCollections, Collection parent, int row )
 {
-  if ( job->error() ) {
-    kWarning( 5250 ) << "Job error: " << job->errorString() << endl;
-  }
-}
 
-void EntityUpdateAdapter::updateJobDone( KJob *job )
-{
-  if ( job->error() ) {
-    // TODO: handle job errors
-    kWarning( 5250 ) << "Job error:" << job->errorString();
-  } else {
-    // TODO: Is this trying to do the job of collectionstatisticschanged?
-//     CollectionStatisticsJob *csjob = static_cast<CollectionStatisticsJob*>( job );
-//     Collection result = csjob->collection();
-//     collectionStatisticsChanged( result.id(), csjob->statistics() );
-  }
 }
 
 // #include "entityupdateadapter.moc"

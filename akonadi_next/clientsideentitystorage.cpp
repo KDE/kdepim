@@ -1,10 +1,13 @@
 
 #include "clientsideentitystorage.h"
 
-#include <QTimer>
 #include <QListIterator>
+#include <QTimer>
+#include <QVariant>
 
 #include <akonadi/collectionfetchjob.h>
+#include <akonadi/itemfetchscope.h>
+#include <akonadi/itemfetchjob.h>
 #include <akonadi/monitor.h>
 
 #include <kdebug.h>
@@ -27,18 +30,25 @@ public:
 
   Monitor *m_monitor;
   int m_entitiesToFetch;
-  EntityUpdateAdapter *m_entityUpdateAdapter;
   Collection m_rootCollection;
   QStringList m_mimeTypeFilter;
+  ItemFetchScope m_itemFetchScope;
+  bool m_includeUnsubscribed;
 
   void startFirstListJob();
+
+  void fetchJobDone( KJob *job );
+  void updateJobDone( KJob *job );
 
   bool passesFilter( const QStringList &mimetypes );
   bool mimetypeMatches( const QStringList &mimetypes, const QStringList &other );
   Collection getParentCollection( qint64 id );
 
-  void collectionsReceived( const Akonadi::Collection::List& );
-  void itemsReceived( const Akonadi::Item::List&, Collection::Id );
+
+  void fetchCollections( Collection col, CollectionFetchJob::Type = CollectionFetchJob::FirstLevel );
+  void fetchItems( Collection col );
+  void collectionsFetched( const Akonadi::Collection::List& );
+  void itemsFetched( const Akonadi::Item::List& );
 
   void monitoredCollectionAdded( const Akonadi::Collection&, const Akonadi::Collection& );
   void monitoredCollectionRemoved( const Akonadi::Collection& );
@@ -49,6 +59,14 @@ public:
   void monitoredItemRemoved( const Akonadi::Item& );
   void monitoredItemChanged( const Akonadi::Item&, const QSet<QByteArray>& );
   void monitoredItemMoved( const Akonadi::Item&, const Akonadi::Collection&, const Akonadi::Collection& );
+
+  /**
+  The id of the collection which starts an item fetch job. This is part of a hack with QObject::sender
+  in itemsReceivedFromJob to correctly insert items into the model.
+  */
+  static QByteArray ItemFetchCollectionId() {
+    return "ItemFetchCollectionId";
+  }
 
 };
 
@@ -64,17 +82,39 @@ void ClientSideEntityStoragePrivate::startFirstListJob()
 
   // Includes recursive trees. Lower levels are fetched in the onRowsInserted slot if
   // necessary.
+  kDebug() << m_entitiesToFetch;
   if (m_entitiesToFetch &
         ( ClientSideEntityStorage::FetchFirstLevelChildCollections | ClientSideEntityStorage::FetchCollectionsRecursive )
      )
   {
-    m_entityUpdateAdapter->fetchCollections( m_rootCollection, CollectionFetchJob::FirstLevel );
+    fetchCollections( m_rootCollection, CollectionFetchJob::FirstLevel );
   }
-  if (m_entitiesToFetch & ClientSideEntityStorage::FetchItems)
+  if (m_entitiesToFetch & ClientSideEntityStorage::FetchItems )
   {
-    m_entityUpdateAdapter->fetchItems( m_rootCollection );
+    fetchItems( m_rootCollection );
   }
 }
+
+void ClientSideEntityStoragePrivate::fetchJobDone( KJob *job )
+{
+  if ( job->error() ) {
+    kWarning( 5250 ) << "Job error: " << job->errorString() << endl;
+  }
+}
+
+void ClientSideEntityStoragePrivate::updateJobDone( KJob *job )
+{
+  if ( job->error() ) {
+    // TODO: handle job errors
+    kWarning( 5250 ) << "Job error:" << job->errorString();
+  } else {
+    // TODO: Is this trying to do the job of collectionstatisticschanged?
+//     CollectionStatisticsJob *csjob = static_cast<CollectionStatisticsJob*>( job );
+//     Collection result = csjob->collection();
+//     collectionStatisticsChanged( result.id(), csjob->statistics() );
+  }
+}
+
 
 static ClientSideEntityStorage *sClientSideEntityStorage = 0;
 
@@ -94,27 +134,23 @@ qint64 ClientSideEntityStorage::Iterator::next()
   return sClientSideEntityStorage->d_ptr->m_childEntities.value( iter_collection ).at( iter_position++ );
 }
 
-ClientSideEntityStorage::ClientSideEntityStorage( Monitor *monitor, EntityUpdateAdapter *entityUpdateAdapter,
-QStringList mimetypes,
-      Collection rootCollection,
-      QObject *parent,
-              int entitiesToFetch )
+ClientSideEntityStorage::ClientSideEntityStorage( Monitor *monitor,
+                                                  ItemFetchScope itemFetchScope,
+                                                  QStringList mimetypes,
+                                                  Collection rootCollection,
+                                                  QObject *parent,
+                                                  int entitiesToFetch,
+                                                  int includeUnsubscribed )
               : QObject( parent ), d_ptr( new ClientSideEntityStoragePrivate( this ) )
 {
   Q_D( ClientSideEntityStorage );
   d->m_monitor = monitor;
   d->m_entitiesToFetch = entitiesToFetch;
-  d->m_entityUpdateAdapter = entityUpdateAdapter;
   d->m_rootCollection = rootCollection;
   d->m_mimeTypeFilter = mimetypes;
+  d->m_itemFetchScope = itemFetchScope;
+  d->m_includeUnsubscribed = ( includeUnsubscribed == IncludeUnsubscribed ) ? true : false;
   sClientSideEntityStorage = this;
-
-
-  // Signals for collections we retrieve through entityUpdateAdapter.
-  connect( entityUpdateAdapter, SIGNAL( collectionsReceived( Akonadi::Collection::List ) ),
-           SLOT( collectionsReceived( Akonadi::Collection::List ) ) );
-  connect( entityUpdateAdapter, SIGNAL( itemsReceived( Akonadi::Item::List, Collection::Id ) ),
-           SLOT( itemsReceived( Akonadi::Item::List, Collection::Id ) ) );
 
   // monitor collection changes
   connect( monitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
@@ -202,9 +238,9 @@ int ClientSideEntityStorage::childItemsCount( Collection::Id id )
 
   int itemCount = 0;
   QListIterator<qint64> i( d->m_childEntities.value( id ) );
-  while (i.hasNext())
+  while ( i.hasNext() )
   {
-    if (i.next() < 0)
+    if ( i.next() < 0 )
     {
       itemCount++;
     }
@@ -273,15 +309,16 @@ Collection ClientSideEntityStoragePrivate::getParentCollection( qint64 id )
       return m_collections.value( iter.key() );
     }
   }
-  return Collection( -1 );
+  return Collection();
 }
 
-void ClientSideEntityStoragePrivate::collectionsReceived( const Akonadi::Collection::List& cols )
+void ClientSideEntityStoragePrivate::collectionsFetched( const Akonadi::Collection::List& cols )
 {
   Q_Q( ClientSideEntityStorage );
   QHash<Collection::Id, Collection> newCollections;
   QHash< Collection::Id, QList< Collection::Id > > newChildCollections;
   foreach( Collection col, cols ) {
+//     kDebug() << col.name() << m_entitiesToFetch;
     if ( m_collections.contains( col.id() ) ) {
       // If the collection is already known to the model, we simply update it...
       // Notify akonadi about this? Do I need a col stats job? Or something in entityUpdateAdapter?
@@ -315,26 +352,26 @@ void ClientSideEntityStoragePrivate::collectionsReceived( const Akonadi::Collect
     if ( m_collections.contains( parentId ) ) {
       int startRow = 0; // Prepend collections.
 
-//       TODO: account for ordering.
-    q->beginInsertEntities(parentId, startRow, startRow + newChildCount - 1 );
-      foreach( Collection::Id id, newChildCols ) {
-        Collection c = newCollections.value( id );
-        m_collections.insert( id, c );
-        m_childEntities[ parentId ].prepend( id );
-      }
-    q->endInsertEntities();
+  //       TODO: account for ordering.
+      q->beginInsertEntities( parentId, startRow, startRow + newChildCount - 1 );
+        foreach( Collection::Id id, newChildCols ) {
+          Collection c = newCollections.value( id );
+          m_collections.insert( id, c );
+          m_childEntities[ parentId ].prepend( id );
+        }
+      q->endInsertEntities();
 
       foreach( Collection::Id id, newChildCols ) {
         Collection col = newCollections.value( id );
-        if (m_entitiesToFetch & ClientSideEntityStorage::FetchCollectionsRecursive)
+        // Fetch the next level of collections if neccessary.
+        if ( m_entitiesToFetch & ClientSideEntityStorage::FetchCollectionsRecursive )
         {
-          // Fetch the next level of collections if neccessary.
-          m_entityUpdateAdapter->fetchCollections( col, CollectionFetchJob::FirstLevel );
+          fetchCollections( col, CollectionFetchJob::FirstLevel );
         }
+        // Fetch items if neccessary.
         if (m_entitiesToFetch & ClientSideEntityStorage::FetchItems)
         {
-          // Fetch items if neccessary.
-          m_entityUpdateAdapter->fetchItems( col );
+          fetchItems( col );
         }
       }
 
@@ -347,34 +384,38 @@ void ClientSideEntityStoragePrivate::collectionsReceived( const Akonadi::Collect
   }
 }
 
-void ClientSideEntityStoragePrivate::itemsReceived( const Akonadi::Item::List& list, Collection::Id colId )
+void ClientSideEntityStoragePrivate::itemsFetched( const Akonadi::Item::List& list )
 {
   Q_Q( ClientSideEntityStorage );
-  Item::List itemsToInsert;
-  Item::List itemsToUpdate;
+  QObject *job = q->sender();
+  if ( job ) {
+    Collection::Id colId = job->property( ItemFetchCollectionId() ).value<Collection::Id>();
+    Item::List itemsToInsert;
+    Item::List itemsToUpdate;
 
-  foreach( Item item, list ) {
-    if ( m_items.contains( item.id() * -1 ) ) {
-      itemsToUpdate << item;
-    } else {
-      if ( passesFilter( QStringList() << item.mimeType() ) ) {
-        itemsToInsert << item;
+    foreach( Item item, list ) {
+      if ( m_items.contains( item.id() * -1 ) ) {
+        itemsToUpdate << item;
+      } else {
+        if ( passesFilter( QStringList() << item.mimeType() ) ) {
+          itemsToInsert << item;
+        }
       }
     }
-  }
-  if ( itemsToInsert.size() > 0 ) {
-    int startRow = m_childEntities.value( colId ).size();
-    q->beginInsertEntities(colId, startRow, startRow + itemsToInsert.size() - 1 );
-    foreach( Item item, itemsToInsert ) {
-      qint64 itemId = item.id() * -1;
-      m_items.insert( itemId, item );
-      m_childEntities[ colId ].append( itemId );
+    if ( itemsToInsert.size() > 0 ) {
+      int startRow = m_childEntities.value( colId ).size();
+      q->beginInsertEntities(colId, startRow, startRow + itemsToInsert.size() - 1 );
+      foreach( Item item, itemsToInsert ) {
+        qint64 itemId = item.id() * -1;
+        m_items.insert( itemId, item );
+        m_childEntities[ colId ].append( itemId );
+      }
+      q->endInsertEntities();
     }
-    q->endInsertEntities();
-  }
-  if ( itemsToUpdate.size() > 0 ) {
-// TODO: Implement
-// ... Or remove. This slot is only for new collections and items fetched from akonadi.
+    if ( itemsToUpdate.size() > 0 ) {
+      // TODO: Implement
+      // ... Or remove. This slot is only for new collections and items fetched from akonadi.
+    }
   }
 }
 
@@ -534,6 +575,37 @@ bool ClientSideEntityStoragePrivate::mimetypeMatches( const QStringList &mimetyp
   }
   return found;
 }
+
+void ClientSideEntityStoragePrivate::fetchItems( Collection parent )
+{
+  Q_Q( ClientSideEntityStorage );
+  Akonadi::ItemFetchJob *itemJob = new Akonadi::ItemFetchJob( parent );
+  itemJob->setFetchScope( m_itemFetchScope );
+  kDebug();
+
+  // ### HACK: itemsReceivedFromJob needs to know which collection items were added to.
+  // That is not provided by akonadi, so we attach it in a property.
+  itemJob->setProperty( ItemFetchCollectionId(), QVariant( parent.id() ) );
+
+  q->connect( itemJob, SIGNAL( itemsReceived( Akonadi::Item::List ) ),
+           q, SLOT( itemsFetched( Akonadi::Item::List ) ) );
+  q->connect( itemJob, SIGNAL( result( KJob* ) ),
+           q, SLOT( fetchJobDone( KJob* ) ) );
+}
+
+void ClientSideEntityStoragePrivate::fetchCollections( Collection col, CollectionFetchJob::Type type )
+{
+  Q_Q( ClientSideEntityStorage );
+  // Session?
+  kDebug() << col.name();
+  CollectionFetchJob *job = new CollectionFetchJob( col, type );
+  job->includeUnsubscribed( m_includeUnsubscribed );
+  q->connect( job, SIGNAL( collectionsReceived( Akonadi::Collection::List ) ),
+           q, SLOT( collectionsFetched( Akonadi::Collection::List ) ) );
+  q->connect( job, SIGNAL( result( KJob* ) ), SLOT( fetchJobDone( KJob* ) ) );
+
+}
+
 
 
 #include "clientsideentitystorage.moc"

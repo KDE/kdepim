@@ -8,12 +8,11 @@
 #include <akonadi/collection.h>
 #include <akonadi/item.h>
 
-#include "entityupdateadapter.h"
-
 namespace Akonadi
 {
 class CollectionStatistics;
 class Monitor;
+class ItemFetchScope;
 
 class ClientSideEntityStoragePrivate;
 
@@ -42,6 +41,11 @@ class ClientSideEntityStorage : public QObject
     FetchCollectionsRecursive = 4         /// Fetch collections in the root collection recursively. This implies FetchFirstLevelChildCollections.
   };
 
+  enum IncludeUnsub {
+    IncludeUnsubscribed,
+    DoNotIncludeUnsubscribed
+  };
+
   /**
     Iterate over the entities in a collection.
   */
@@ -59,11 +63,13 @@ class ClientSideEntityStorage : public QObject
     int iter_position;
   };
 
-  ClientSideEntityStorage( Monitor *monitor, EntityUpdateAdapter *entityUpdateAdapter,
-              QStringList mimetypes = QStringList(),
-              Collection m_rootCollection = Collection::root(),
-              QObject *parent = 0,
-              int entitiesToFetch = ClientSideEntityStorage::FetchCollectionsRecursive );
+  ClientSideEntityStorage( Monitor *monitor,
+                           ItemFetchScope itemFetchScope,
+                           QStringList mimetypes = QStringList(),
+                           Collection m_rootCollection = Collection::root(),
+                           QObject *parent = 0,
+                           int entitiesToFetch = ClientSideEntityStorage::FetchCollectionsRecursive,
+                           int includeUnsubscribed = ClientSideEntityStorage::DoNotIncludeUnsubscribed );
 
   virtual ~ClientSideEntityStorage();
 
@@ -100,8 +106,10 @@ private:
 
   Q_PRIVATE_SLOT( d_func(), void startFirstListJob() )
 
-  Q_PRIVATE_SLOT( d_func(), void collectionsReceived( const Akonadi::Collection::List& ) )
-  Q_PRIVATE_SLOT( d_func(), void itemsReceived( const Akonadi::Item::List&, Collection::Id ) )
+  Q_PRIVATE_SLOT( d_func(), void fetchJobDone( KJob *job ) )
+  Q_PRIVATE_SLOT( d_func(), void updateJobDone( KJob *job ) )
+  Q_PRIVATE_SLOT( d_func(), void itemsFetched( Akonadi::Item::List list ) )
+  Q_PRIVATE_SLOT( d_func(), void collectionsFetched( Akonadi::Collection::List list ) )
 
   Q_PRIVATE_SLOT( d_func(), void monitoredCollectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) )
   Q_PRIVATE_SLOT( d_func(), void monitoredCollectionRemoved( const Akonadi::Collection& ) )
