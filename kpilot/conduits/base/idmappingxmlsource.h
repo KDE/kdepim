@@ -76,6 +76,8 @@ public:
 	void setPCCategories( const QString &pcRecordId, const QStringList &categories );
 	
 	bool rollback();
+
+	bool remove();
 	 
 protected:
 	/**

@@ -165,6 +165,11 @@ public:
 	 * Tries to undo the changes in persistent storage.
 	 */
 	bool rollback();
+
+	/**
+	 * Allows for complete removable of persistant storage.
+	 */
+	bool remove();
 	
 	/**
 	 * Sets the date/time on which the last sync is executed to @p dateTime.

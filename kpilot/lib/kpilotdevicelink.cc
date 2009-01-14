@@ -666,14 +666,9 @@ void KPilotDeviceLink::stopCommThread()
 				DEBUGKPILOT
 					<< "comm thread still running "
 					<< "after wait(). "
-					<< "going to have to terminate it.";
-				// not normally to be done, but we must make sure
-				// that this device doesn't come back alive
-				fDeviceCommThread->terminate();
-				fDeviceCommThread->wait(5000);
+					<< "going to have to delete it anyway. yipee!";
 			}
 		}
-
 		KPILOT_DELETE(fDeviceCommThread);
 	}
 }
@@ -790,8 +785,7 @@ void KPilotDeviceLink::setTempDevice( const QString &d )
 
 /* virtual */ bool KPilotDeviceLink::tickle()
 {
-	// No FUNCTIONSETUP here because it may be called from
-	// a separate thread.
+	FUNCTIONSETUPL(5);
 	return pi_tickle(pilotSocket()) >= 0;
 }
 

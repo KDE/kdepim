@@ -338,3 +338,9 @@ IDMapping& IDMapping::operator=( const IDMapping& other )
 	
 	return *this;
 }
+
+bool IDMapping::remove()
+{
+	FUNCTIONSETUP;
+	return d->fSource.remove();
+}

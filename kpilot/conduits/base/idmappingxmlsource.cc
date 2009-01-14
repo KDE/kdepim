@@ -396,3 +396,25 @@ bool IDMappingXmlSource::startElement( const QString &namespaceURI
 
 	return true;
 }
+
+bool IDMappingXmlSource::remove()
+{
+	FUNCTIONSETUP;
+	
+	// $HOME/.kde/share/apps/kpilot/conduits/<Username>/mapping/<Conduit>-mapping.xml.
+	DEBUGKPILOT << "removing file: " << d->fPath;
+	QFile file( d->fPath );
+	bool success;
+	
+	if( !file.exists() )
+	{
+		DEBUGKPILOT << "File does not exist. Can't remove.";
+	}
+	else
+	{
+		success = file.remove();
+		DEBUGKPILOT << (success ? "Successfully removed " : "Failed to remove ")
+			    << "file.";
+	}
+	return success;
+}

@@ -66,7 +66,7 @@ RecordConduit::~RecordConduit()
 /* virtual */ bool RecordConduit::exec()
 {
 	FUNCTIONSETUP;
-	
+
 	loadSettings();
 	
 	// Try to open the handheld database and the local backup database.
@@ -103,6 +103,9 @@ RecordConduit::~RecordConduit()
 	{
 		DEBUGKPILOT << "Invalid record mapping. Doing first sync.";
 		addSyncLogEntry( i18n( "Invalid record mapping. Doing first sync." ));
+		// clean it up and start again.
+		fMapping.remove();
+		fMapping = IDMapping( KPilotSettings::userName(), fConduitName );
 		setFirstSync( true );
 	}
 	
@@ -203,6 +206,8 @@ RecordConduit::~RecordConduit()
 	{
 		DEBUGKPILOT <<  "Data mapping invalid after sync. Sync failed.";
 		addSyncLogEntry( i18n( "Data mapping invalid after sync. Sync failed." ) );
+		// remove our data mapping. it's messed up. start fresh next time.
+		fMapping.remove();
 		return false;
 	}
 

@@ -76,6 +76,7 @@ SyncAction::SyncAction(KPilotLink *p,
 
 SyncAction::~SyncAction()
 {
+   FUNCTIONSETUPL(5);
 }
 
 /* virtual */ QString SyncAction::statusString() const
