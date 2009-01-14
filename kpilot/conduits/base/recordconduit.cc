@@ -87,7 +87,10 @@ RecordConduit::~RecordConduit()
 	
 	// NOTE: Do not forget that the HHData proxy and the backup proxy must use
 	// the opened databases, maybe we should pass them for clarity to this method.
-	if( !initDataProxies() )
+	startTickle();
+	bool success = initDataProxies();
+	stopTickle();
+	if( !success )
 	{
 		DEBUGKPILOT << "One of the data proxies could not be initialized.";
 		addSyncLogEntry(i18n("One of the data proxies could not be initialized."));
@@ -231,15 +234,19 @@ RecordConduit::~RecordConduit()
 	 * very best to deliver sane data) some of the data (mapping, hh database or
 	 * pc database) will be corrupted.
 	 */
-	if( !fHHDataProxy->commit() )
+	success = fHHDataProxy->commit();
+	if( !success )
 	{
 		DEBUGKPILOT << "Could not save Palm changes. Sync failed";
 		addSyncLogEntry( i18n( "Could not save Palm changes. Sync failed." ) );
 		fHHDataProxy->rollback();
 		return false;
 	}
-	
-	if( !fPCDataProxy->commit() )
+
+	startTickle();
+	success = fPCDataProxy->commit();
+	stopTickle();
+	if( !success )
 	{
 		DEBUGKPILOT << "Could not save PC changes. Sync failed";
 		addSyncLogEntry( i18n( "Could not save PC changes. Sync failed." ) );
@@ -269,6 +276,7 @@ RecordConduit::~RecordConduit()
 	if( !fMapping.commit() )
 	{
 		DEBUGKPILOT << "Commit of ID mapping failed.";
+		fMapping.remove();
 	}
 	
 	// Clean up things like modified flags.
