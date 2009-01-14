@@ -42,7 +42,6 @@ class EntityFilterProxyModel::Private
     {
     }
 
-    QList< QModelIndex > acceptedResources;
     EntityFilterProxyModel *mParent;
     QStringList includedMimeTypes;
     QStringList excludedMimeTypes;
@@ -52,7 +51,7 @@ EntityFilterProxyModel::EntityFilterProxyModel( QObject *parent )
   : QSortFilterProxyModel( parent ),
     d( new Private( this ) )
 {
-  // Override setSourceModel and do this there?
+  // TODO: Override setSourceModel and do this there?
   setSupportedDragActions( Qt::CopyAction | Qt::MoveAction );
 }
 
@@ -89,10 +88,9 @@ bool EntityFilterProxyModel::filterAcceptsRow( int sourceRow, const QModelIndex 
 {
   QString rowMimetype = sourceModel()->data(
           sourceModel()->index(sourceRow, 0, sourceParent), EntityTreeModel::MimeTypeRole ).toString();
-
   if ( d->excludedMimeTypes.contains( rowMimetype ) )
     return false;
-  if ( d->includedMimeTypes.contains( rowMimetype ) )
+  if ( d->includedMimeTypes.isEmpty() || d->includedMimeTypes.contains( rowMimetype ) )
     return true;
 
   return false;

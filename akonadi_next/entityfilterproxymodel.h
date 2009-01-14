@@ -45,6 +45,11 @@ namespace Akonadi {
  *
  * @endcode
  *
+ * @li If a mimetype is in both the exclusion list and the inclusion list, it is excluded.
+ * @li If the mimeTypeInclusionFilter is empty, all mimetypes are
+ *     accepted (except if they are in the exclusion filter of course).
+ *
+ *
  * @author Bruno Virlet <bruno.virlet@gmail.com>
  * @author Stephen Kelly <steveire@gmail.com>
  */
