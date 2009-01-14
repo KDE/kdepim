@@ -42,6 +42,22 @@ class ClientSideEntityStorage : public QObject
     FetchCollectionsRecursive = 4         /// Fetch collections in the root collection recursively. This implies FetchFirstLevelChildCollections.
   };
 
+  /**
+    Iterate over the entities in a collection.
+  */
+  class Iterator
+  {
+  public:
+    Iterator(Collection::Id colId);
+    bool hasNext();
+
+    qint64 next();
+    // Or void next() and qint64 value()?
+    // TODO: {has,}previous API, or start, atEnd, end, atStart API?
+  private:
+    Collection::Id iter_collection;
+    int iter_position;
+  };
 
   ClientSideEntityStorage( Monitor *monitor, EntityUpdateAdapter *entityUpdateAdapter,
               QStringList mimetypes = QStringList(),

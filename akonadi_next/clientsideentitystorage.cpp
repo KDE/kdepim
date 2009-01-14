@@ -11,8 +11,6 @@
 
 using namespace Akonadi;
 
-// static ClientSideEntityStorage *sClientSideEntityStorage = 0;
-
 namespace Akonadi{
 
 class ClientSideEntityStoragePrivate
@@ -78,6 +76,24 @@ void ClientSideEntityStoragePrivate::startFirstListJob()
   }
 }
 
+static ClientSideEntityStorage *sClientSideEntityStorage = 0;
+
+ClientSideEntityStorage::Iterator::Iterator( Collection::Id colId )
+{
+  iter_collection = colId;
+  iter_position = 0;
+}
+
+bool ClientSideEntityStorage::Iterator::hasNext()
+{
+  return ( iter_position < sClientSideEntityStorage->d_ptr->m_childEntities.value( iter_collection ).size() );
+}
+
+qint64 ClientSideEntityStorage::Iterator::next()
+{
+  return sClientSideEntityStorage->d_ptr->m_childEntities.value( iter_collection ).at( iter_position++ );
+}
+
 ClientSideEntityStorage::ClientSideEntityStorage( Monitor *monitor, EntityUpdateAdapter *entityUpdateAdapter,
 QStringList mimetypes,
       Collection rootCollection,
@@ -91,7 +107,7 @@ QStringList mimetypes,
   d->m_entityUpdateAdapter = entityUpdateAdapter;
   d->m_rootCollection = rootCollection;
   d->m_mimeTypeFilter = mimetypes;
-//   sClientSideEntityStorage = this;
+  sClientSideEntityStorage = this;
 
 
   // Signals for collections we retrieve through entityUpdateAdapter.
@@ -303,7 +319,6 @@ void ClientSideEntityStoragePrivate::collectionsReceived( const Akonadi::Collect
     q->beginInsertEntities(parentId, startRow, startRow + newChildCount - 1 );
       foreach( Collection::Id id, newChildCols ) {
         Collection c = newCollections.value( id );
-        kDebug() << id << c.name();
         m_collections.insert( id, c );
         m_childEntities[ parentId ].prepend( id );
       }
@@ -391,7 +406,6 @@ void ClientSideEntityStoragePrivate::monitoredCollectionRemoved( const Akonadi::
   // TODO: can I be sure child indexes are already gone from the model? I don't think I can be.
   // However, I don't think it matters. Maybe beginRemoveRows takes that into account.
   // Other wise I'll have to persist pending deletes somewhere.
-  kDebug() << collection.name() << collection.id();
   Q_Q( ClientSideEntityStorage );
 
   int row = q->indexOf( collection.parent(), collection.id() );
