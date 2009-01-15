@@ -49,11 +49,11 @@ qint64 ClientSideEntityStorage::Iterator::next()
 }
 
 ClientSideEntityStorage::ClientSideEntityStorage( Monitor *monitor,
-                                                  ItemFetchScope itemFetchScope,
                                                   QStringList mimetypes,
                                                   Collection rootCollection,
                                                   QObject *parent,
                                                   int entitiesToFetch,
+                                                  int itemPopulation,
                                                   int includeUnsubscribed )
               : QObject( parent ), d_ptr( new ClientSideEntityStoragePrivate( this ) )
 {
@@ -62,7 +62,7 @@ ClientSideEntityStorage::ClientSideEntityStorage( Monitor *monitor,
   d->m_entitiesToFetch = entitiesToFetch;
   d->m_rootCollection = rootCollection;
   d->m_mimeTypeFilter = mimetypes;
-  d->m_itemFetchScope = itemFetchScope;
+  d->m_itemPopulation = itemPopulation;
   d->m_includeUnsubscribed = ( includeUnsubscribed == IncludeUnsubscribed ) ? true : false;
   sClientSideEntityStorage = this;
 
@@ -76,6 +76,10 @@ ClientSideEntityStorage::ClientSideEntityStorage( Monitor *monitor,
   connect( monitor,
             SIGNAL( collectionMoved( const Akonadi::Collection &, const Akonadi::Collection &, const Akonadi::Collection & ) ),
            SLOT( monitoredCollectionMoved( const Akonadi::Collection &, const Akonadi::Collection &, const Akonadi::Collection & ) ) );
+
+  //TODO: Figure out if the monitor emits these signals even without an item fetch scope.
+  // Wrap them in an if() if so.
+
 
   // Monitor item changes.
   connect( monitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
@@ -212,6 +216,86 @@ Collection ClientSideEntityStorage::getParentCollection( Item item )
 {
   Q_D( ClientSideEntityStorage );
   return d->getParentCollection( item.id() * -1 );
+}
+
+void ClientSideEntityStorage::populateCollection( Collection::Id colId )
+{
+  Q_D( ClientSideEntityStorage );
+
+  if ( d->m_itemPopulation == ImmediatePopulation )
+    return;
+  else if ( d->m_itemPopulation == LazyPopulation )
+  {
+    d->m_populatedCols.insert( colId );
+    d->fetchItems( d->m_collections.value( colId ), ClientSideEntityStoragePrivate::Base );
+  }
+}
+
+bool ClientSideEntityStorage::canPopulate( Collection::Id colId )
+{
+  Q_D( ClientSideEntityStorage );
+  if ( d->m_itemPopulation == ClientSideEntityStorage::ImmediatePopulation )
+    return false;
+  if ( !d->m_collections.contains( colId ) )
+    return false;
+  if ( d->m_populatedCols.contains( colId ) )
+    return false;
+  return true;
+}
+
+void ClientSideEntityStorage::purgeCollection( Collection::Id colId )
+{
+  Q_D( ClientSideEntityStorage );
+  kDebug() << "foo" << colId;
+
+  if (d->m_itemPopulation == ImmediatePopulation)
+    return;
+
+  d->m_populatedCols.remove(colId);
+
+  Iterator i(colId);
+  QList <qint64> contiguousItems;
+  int idx = 0;
+  while (i.hasNext())
+  {
+    qint64 entId = i.next();
+    int entityType = entityTypeForInternalIdentifier(entId);
+    if ( CollectionType == entityType )
+    {
+      if ( contiguousItems.size() > 0 )
+      {
+        // Don't remove subcollections that have been externally populated.
+        if (!d->m_populatedCols.contains(entId))
+        {
+          kDebug() << colId << idx << contiguousItems;
+          beginRemoveEntities(colId, idx, idx + contiguousItems.size() -1 );
+          foreach(qint64 id, contiguousItems)
+          {
+            d->m_items.remove( id );
+            d->m_childEntities[ colId ].removeOne( id );
+          }
+          endRemoveEntities();
+          purgeCollection( entId );
+        }
+      }
+      idx++;
+      contiguousItems.clear();
+    } else if ( ItemType == entityType )
+    {
+      contiguousItems << entId;
+    }
+  }
+  if (contiguousItems.size() > 0)
+  {
+    kDebug() << colId << idx << contiguousItems;
+    beginRemoveEntities(colId, idx, idx + contiguousItems.size() - 1 );
+    foreach(qint64 id, contiguousItems)
+    {
+      Item i = d->m_items.take( id );
+      d->m_childEntities[ colId ].removeOne( id );
+    }
+    endRemoveEntities();
+  }
 }
 
 

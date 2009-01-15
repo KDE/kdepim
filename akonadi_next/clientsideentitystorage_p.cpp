@@ -23,6 +23,7 @@
 #include <QVariant>
 
 #include <akonadi/itemfetchjob.h>
+#include <akonadi/monitor.h>
 
 #include <kdebug.h>
 
@@ -45,10 +46,12 @@ void ClientSideEntityStoragePrivate::startFirstListJob()
   {
     fetchCollections( m_rootCollection, CollectionFetchJob::FirstLevel );
   }
-  if (m_entitiesToFetch & ClientSideEntityStorage::FetchItems )
-  {
-    fetchItems( m_rootCollection );
-  }
+  // If the root collection is not collection::root, then it could have items, and they will need to be
+  // retrieved now.
+
+  if ( m_itemPopulation == ClientSideEntityStorage::LazyPopulation )
+    fetchItems( m_rootCollection, Base );
+
 }
 
 void ClientSideEntityStoragePrivate::fetchJobDone( KJob *job )
@@ -140,14 +143,13 @@ void ClientSideEntityStoragePrivate::collectionsFetched( const Akonadi::Collecti
         {
           fetchCollections( col, CollectionFetchJob::FirstLevel );
         }
-        // Fetch items if neccessary.
-        if (m_entitiesToFetch & ClientSideEntityStorage::FetchItems)
+        // Fetch items if neccessary. If we don't fetch them now, we'll wait for an application
+        // to request them through ClientSideEntityStorage::populateCollection
+        if ( m_itemPopulation == ClientSideEntityStorage::ImmediatePopulation )
         {
-          fetchItems( col );
+          fetchItems( col, Base );
         }
       }
-
-
     }
     // TODO: Fetch parent again so that its entities get ordered properly. Or start a modify job?
     // Should I do this for all other cases as well instead of using transactions?
@@ -166,6 +168,7 @@ void ClientSideEntityStoragePrivate::itemsFetched( const Akonadi::Item::List& li
     Item::List itemsToUpdate;
 
     foreach( Item item, list ) {
+      kDebug() << "from job" << item.remoteId();
       if ( m_items.contains( item.id() * -1 ) ) {
         itemsToUpdate << item;
       } else {
@@ -348,12 +351,12 @@ bool ClientSideEntityStoragePrivate::mimetypeMatches( const QStringList &mimetyp
   return found;
 }
 
-void ClientSideEntityStoragePrivate::fetchItems( Collection parent )
+void ClientSideEntityStoragePrivate::fetchItems( Collection parent, int retrieveDepth )
 {
   Q_Q( ClientSideEntityStorage );
   Akonadi::ItemFetchJob *itemJob = new Akonadi::ItemFetchJob( parent );
-  itemJob->setFetchScope( m_itemFetchScope );
-  kDebug();
+  itemJob->setFetchScope( m_monitor->itemFetchScope() );
+  kDebug() << parent.id();
 
   // ### HACK: itemsReceivedFromJob needs to know which collection items were added to.
   // That is not provided by akonadi, so we attach it in a property.
@@ -363,6 +366,19 @@ void ClientSideEntityStoragePrivate::fetchItems( Collection parent )
            q, SLOT( itemsFetched( Akonadi::Item::List ) ) );
   q->connect( itemJob, SIGNAL( result( KJob* ) ),
            q, SLOT( fetchJobDone( KJob* ) ) );
+
+  if ( retrieveDepth == Recursive )
+  {
+    ClientSideEntityStorage::Iterator i(parent.id());
+    while (i.hasNext())
+    {
+      qint64 eid = i.next();
+      if (eid > 0)
+      {
+        fetchItems( q->getCollection( eid ), Recursive );
+      }
+    }
+  }
 }
 
 void ClientSideEntityStoragePrivate::fetchCollections( Collection col, CollectionFetchJob::Type type )
@@ -374,7 +390,9 @@ void ClientSideEntityStoragePrivate::fetchCollections( Collection col, Collectio
   job->includeUnsubscribed( m_includeUnsubscribed );
   q->connect( job, SIGNAL( collectionsReceived( Akonadi::Collection::List ) ),
            q, SLOT( collectionsFetched( Akonadi::Collection::List ) ) );
-  q->connect( job, SIGNAL( result( KJob* ) ), SLOT( fetchJobDone( KJob* ) ) );
+  q->connect( job, SIGNAL( result( KJob* ) ),
+           q, SLOT( fetchJobDone( KJob* ) ) );
 
 }
+
 

@@ -35,7 +35,7 @@ class ItemFetchScope;
 class ClientSideEntityStoragePrivate;
 
 /**
-  This class wraps Akonadi::Monitor, and takes care of emitting Entities in heirarchical order.
+This class wraps Akonadi::Monitor, and takes care of emitting Entities in heirarchical order.
 */
 class ClientSideEntityStorage : public QObject
 {
@@ -52,16 +52,21 @@ class ClientSideEntityStorage : public QObject
   /**
   What to fetch and represent in the model.
   */
-  enum EntitiesToFetch {
-    FetchNothing = 0,                     /// Fetch nothing. This creates an empty model.
-    FetchItems = 1,                       /// Fetch items in the rootCollection
-    FetchFirstLevelChildCollections = 2,  /// Fetch first level collections in the root collection.
-    FetchCollectionsRecursive = 4         /// Fetch collections in the root collection recursively. This implies FetchFirstLevelChildCollections.
+  enum CollectionsToFetch {
+    FetchNoCollections,                     /// Fetch nothing. This creates an empty model.
+    FetchFirstLevelChildCollections,        /// Fetch first level collections in the root collection.
+    FetchCollectionsRecursive               /// Fetch collections in the root collection recursively. This implies FetchFirstLevelChildCollections.
   };
 
   enum IncludeUnsub {
     IncludeUnsubscribed,
     DoNotIncludeUnsubscribed
+  };
+
+  enum ItemPopulation {
+    NoItemPopulation,
+    ImmediatePopulation,
+    LazyPopulation
   };
 
   /**
@@ -82,12 +87,13 @@ class ClientSideEntityStorage : public QObject
   };
 
   ClientSideEntityStorage( Monitor *monitor,
-                           ItemFetchScope itemFetchScope,
                            QStringList mimetypes = QStringList(),
                            Collection m_rootCollection = Collection::root(),
                            QObject *parent = 0,
                            int entitiesToFetch = ClientSideEntityStorage::FetchCollectionsRecursive,
-                           int includeUnsubscribed = ClientSideEntityStorage::DoNotIncludeUnsubscribed );
+                           int itemPopulation = ClientSideEntityStorage::ImmediatePopulation,
+                           int includeUnsubscribed = ClientSideEntityStorage::DoNotIncludeUnsubscribed
+                           );
 
   virtual ~ClientSideEntityStorage();
 
@@ -104,6 +110,27 @@ class ClientSideEntityStorage : public QObject
   qint64 childAt( Collection::Id id, int row );
   Collection getParentCollection( Collection );
   Collection getParentCollection( Item );
+
+  /**
+  Recursively tries to remove items from storage starting at @p col. The child collection tree
+  remain after this operation, but it may be empty.
+
+  This has no effect if using ImmediatePopulation.
+  */
+  void purgeCollection( Collection::Id colId );
+
+  /**
+  Retrieves items in Collection @p col. This is not recursive and will retrieve only
+  the items in @p colId if using LazyPopulation.
+
+  This has no effect if using ImmediatePopulation.
+  */
+  void populateCollection( Collection::Id colId );
+
+  /**
+  Returns true if colId is unpopulated and can be populated.
+  */
+  bool canPopulate( Collection::Id colId );
 
 Q_SIGNALS:
   void beginInsertEntities( Collection::Id parent, int startRow, int endRow);

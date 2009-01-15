@@ -32,6 +32,13 @@ namespace Akonadi{
 class ClientSideEntityStoragePrivate
 {
 public:
+
+  enum RetrieveDepth
+  {
+    Base,
+    Recursive
+  };
+
   ClientSideEntityStoragePrivate( ClientSideEntityStorage *storage );
 
   Q_DECLARE_PUBLIC( ClientSideEntityStorage )
@@ -40,12 +47,13 @@ public:
   QHash< Collection::Id, Collection > m_collections;
   QHash< qint64, Item > m_items;
   QHash< Collection::Id, QList< qint64 > > m_childEntities;
+  QSet<Collection::Id> m_populatedCols;
 
   Monitor *m_monitor;
   int m_entitiesToFetch;
   Collection m_rootCollection;
   QStringList m_mimeTypeFilter;
-  ItemFetchScope m_itemFetchScope;
+  int m_itemPopulation;
   bool m_includeUnsubscribed;
 
   void startFirstListJob();
@@ -59,7 +67,7 @@ public:
 
 
   void fetchCollections( Collection col, CollectionFetchJob::Type = CollectionFetchJob::FirstLevel );
-  void fetchItems( Collection col );
+  void fetchItems( Collection col, int retrieveDepth = Base );
   void collectionsFetched( const Akonadi::Collection::List& );
   void itemsFetched( const Akonadi::Item::List& );
 
