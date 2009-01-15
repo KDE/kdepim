@@ -30,7 +30,7 @@ int main( int argc, char **argv )
   KAboutData *about = new KAboutData( "kcontactmanager", 0, ki18n( "KContactManager" ),
                                       "0.1", ki18n( "The KDE Contact Management Application" ),
                                       KAboutData::License_GPL_V2,
-                                      ki18n( "(c) 2007, The KDE PIM Team" ) );
+                                      ki18n( "(c) 2007-2009 The KDE PIM Team" ) );
   about->addAuthor( ki18n( "Tobias Koenig" ), ki18n( "Current maintainer" ), "tokoe@kde.org" );
 
   KCmdLineArgs::init( argc, argv, about );
