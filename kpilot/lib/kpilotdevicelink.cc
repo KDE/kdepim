@@ -144,7 +144,7 @@ DeviceCommWorker::DeviceCommWorker(KPilotDeviceLink *d) :
 	fOpenTimer = new QTimer();
 	connect(fOpenTimer, SIGNAL(timeout()), this, SLOT(openDevice()));
 	fOpenTimer->setSingleShot(true);
-	fOpenTimer->setInterval(2000);
+	fOpenTimer->setInterval(5000);
 
 	/**
 	 * We _always_ want to set a maximum amount of time that we will wait

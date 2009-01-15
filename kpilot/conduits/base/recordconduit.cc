@@ -87,9 +87,7 @@ RecordConduit::~RecordConduit()
 	
 	// NOTE: Do not forget that the HHData proxy and the backup proxy must use
 	// the opened databases, maybe we should pass them for clarity to this method.
-	startTickle();
 	bool success = initDataProxies();
-	stopTickle();
 	if( !success )
 	{
 		DEBUGKPILOT << "One of the data proxies could not be initialized.";
@@ -244,9 +242,7 @@ RecordConduit::~RecordConduit()
 		return false;
 	}
 
-	startTickle();
 	success = fPCDataProxy->commit();
-	stopTickle();
 	if( !success )
 	{
 		DEBUGKPILOT << "Could not save PC changes. Sync failed";
@@ -567,10 +563,22 @@ void RecordConduit::firstSync()
 		
 		if( !fMapping.containsPCId( pcRecord->id() ) )
 		{
-			HHRecord *hhRecord = createHHRecord( pcRecord );
-			fHHDataProxy->create( hhRecord );
-			fMapping.map( hhRecord->id(), pcRecord->id() );
-			copyCategory( pcRecord, hhRecord );
+			if ( pcRecord->isDeleted() || !pcRecord->isValid() )
+			{
+				DEBUGKPILOT << "pcRecord: " << pcRecord->id()
+					    << " (" << pcRecord->toString()
+					    << ") deleted or invalid.  Removing.";
+				fMapping.removePCId( pcRecord->id() );
+				fPCDataProxy->remove( pcRecord->id() );
+			}
+			else
+			{
+				DEBUGKPILOT << "pcRecord valid and not deleted.  Adding to HH";
+				HHRecord *hhRecord = createHHRecord( pcRecord );
+				fHHDataProxy->create( hhRecord );
+				fMapping.map( hhRecord->id(), pcRecord->id() );
+				copyCategory( pcRecord, hhRecord );
+			}
 		}
 	}
 }
@@ -686,14 +694,17 @@ void RecordConduit::copyPCToHH()
 		{
 			DEBUGKPILOT << "No match found for:" << pcRecord->id();
 			// TODO: need a way to allow the user to configure us to archive deleted
-			if ( pcRecord->isDeleted() )
+			if ( pcRecord->isDeleted() || !pcRecord->isValid() )
 			{
-				DEBUGKPILOT << "pcRecord deleted.  Removing.";
+				DEBUGKPILOT << "pcRecord: " << pcRecord->id()
+					    << " (" << pcRecord->toString()
+					    << ") deleted or invalid.  Removing.";
+				fMapping.removePCId( pcRecord->id() );
 				fPCDataProxy->remove( pcRecord->id() );
 			}
 			else
 			{
-				DEBUGKPILOT << "pcRecord not deleted.  Adding to HH";
+				DEBUGKPILOT << "pcRecord valid and not deleted.  Adding to HH";
 				HHRecord *hhRecord = createHHRecord( pcRecord );
 				fHHDataProxy->create( hhRecord );
 				fMapping.map( hhRecord->id(), pcRecord->id() );
@@ -879,10 +890,12 @@ void RecordConduit::syncRecords( Record *pcRecord, HHRecord *backupRecord,
 		{
 			// Case: 6.5.5 or 6.5.8
 			DEBUGKPILOT << "Case 6.5.5 or 6.5.8";
-			if ( ! pcRecord->isValid() ) {
+			if ( pcRecord->isDeleted() || ! pcRecord->isValid() ) {
 				WARNINGKPILOT << "pcRecord id: " << pcRecord->id()
 					      << " (" << pcRecord->toString()
-					      << ") is not valid.";
+					      << ") deleted or invalid. Removing";
+				fMapping.removePCId( pcRecord->id() );
+				fPCDataProxy->remove( pcRecord->id() );
 			} else {
 				hhRecord = createHHRecord( pcRecord );
 				QString id = fHHDataProxy->create( hhRecord );
