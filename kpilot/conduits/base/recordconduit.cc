@@ -218,6 +218,7 @@ RecordConduit::~RecordConduit()
 	{
 		DEBUGKPILOT <<  "Ending counts do not match after sync. Sync failed.";
 		addSyncLogEntry( i18n( "Ending counts do not match after sync. Sync failed." ) );
+		fMapping.remove();
 		return false;
 	}
 
