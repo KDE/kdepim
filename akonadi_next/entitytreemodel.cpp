@@ -185,7 +185,6 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
   if ( !index.isValid() )
     return 0;
 
-
   Qt::ItemFlags flags = QAbstractItemModel::flags( index );
 
 //   Only show and enable items in columns other than 0.
@@ -480,6 +479,32 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
   }
 
   return QAbstractItemModel::setData( index, value, role );
+}
+
+
+bool EntityTreeModel::canFetchMore ( const QModelIndex & parent ) const
+{
+  Q_D( const EntityTreeModel  );
+//   kDebug() << parent << d->m_clientSideEntityStorage->canPopulate(parent.internalId());
+  return d->m_clientSideEntityStorage->canPopulate(parent.internalId());
+}
+
+void EntityTreeModel::fetchMore ( const QModelIndex & parent )
+{
+  Q_D( EntityTreeModel );
+//   kDebug() << parent;
+  return d->m_clientSideEntityStorage->populateCollection(parent.internalId());
+}
+
+bool EntityTreeModel::hasChildren(const QModelIndex &parent ) const
+{
+  Q_D( const EntityTreeModel );
+  // TODO: Empty collections right now will return true and get a little + to expand.
+  // There is probably no way to tell if a collection
+  // has child items in akonadi without first attempting an itemFetchJob...
+  // Figure out a way to fix this.
+  int entityType = d->m_clientSideEntityStorage->entityTypeForInternalIdentifier(parent.internalId());
+  return entityType == ClientSideEntityStorage::CollectionType;
 }
 
 bool EntityTreeModel::insertRows(int , int, const QModelIndex&)

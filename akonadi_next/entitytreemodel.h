@@ -49,7 +49,7 @@ class EntityTreeModelPrivate;
  *
  *   EntityTreeModel *model = new EntityTreeModel( this, QStringList() << FooMimeType << BarMimeType );
  *
- *   QTreeView *view = new QTreeView( this );
+ *   EntityTreeView *view = new EntityTreeView( this );
  *   view->setModel( model );
  *
  * @endcode
@@ -119,6 +119,10 @@ public:
 
   virtual QModelIndex index( int row, int column, const QModelIndex & parent = QModelIndex() ) const;
   virtual QModelIndex parent( const QModelIndex & index ) const;
+
+  virtual bool canFetchMore ( const QModelIndex & parent ) const;
+  virtual void fetchMore ( const QModelIndex & parent );
+  virtual bool hasChildren(const QModelIndex &parent = QModelIndex() ) const;
 
 private:
   Q_DECLARE_PRIVATE( EntityTreeModel )
