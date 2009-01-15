@@ -517,7 +517,7 @@ bool BackupAction::startBackupThread(DBInfo *info)
 {
 	if (e->type() == (QEvent::Type)Thread::TerminateOK)
 	{
-		KPILOT_DELETE(fBackupThread);
+		fBackupThread->deleteLater();
 		// This was a successful termination.
 		addSyncLogEntry( i18n("... OK.\n"), false );
 		QTimer::singleShot(0,this,SLOT(backupOneDB()));
@@ -525,7 +525,7 @@ bool BackupAction::startBackupThread(DBInfo *info)
 	}
 	if (e->type() == (QEvent::Type)Thread::TerminateFailure)
 	{
-		KPILOT_DELETE(fBackupThread);
+		fBackupThread->deleteLater();
 		// Unsuccessful termination.
 		addSyncLogEntry( i18n("Backup failed.") );
 		QTimer::singleShot(0,this,SLOT(backupOneDB()));
@@ -621,7 +621,8 @@ FileInstallAction::~FileInstallAction()
 	if ((!fList.count()) || (fDBIndex >= fList.count()))
 	{
 		DEBUGKPILOT << "Peculiar file index, bailing out.";
-		KPILOT_DELETE(fTimer);
+		fTimer->stop();
+		fTimer->deleteLater();
 		fDBIndex = (-1);
 		emit logProgress(i18n("Done Installing Files"), 100);
 		delayDone();
