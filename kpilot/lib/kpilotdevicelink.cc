@@ -131,8 +131,7 @@ DeviceCommWorker::DeviceCommWorker(KPilotDeviceLink *d) :
 	fWorkaroundUSBTimer(0L),
 	fPilotSocket(-1),
 	fTempSocket(-1),
-	fAcceptedCount(0),
-	fSuccessfulHandshake(false)
+	fAcceptedCount(0)
 {
 	FUNCTIONSETUP;
 
@@ -211,9 +210,7 @@ void DeviceCommWorker::close()
 	KPILOT_DELETE(fSocketNotifier);
 
 	bool closeTemp = (fTempSocket != -1);
-	bool closeMainSocket = (fPilotSocket != -1) &&
-		               (fPilotSocket != fTempSocket) &&
-		                fSuccessfulHandshake;
+	bool closeMainSocket = (fPilotSocket != -1);
 
 	DEBUGKPILOT << "Temp socket: " << fTempSocket << ", main socket: " << fPilotSocket;
 	if (closeTemp)
@@ -230,8 +227,6 @@ void DeviceCommWorker::close()
 	}
 	fPilotSocket = (-1);
 
-	fSuccessfulHandshake = false;
-
 	DeviceMap::self()->unbindDevice(link()->fRealPilotPath);
 }
 
@@ -247,7 +242,8 @@ void DeviceCommWorker::reset()
 
 	link()->fMessages->reset();
 
-	// don't close first. let openDevice() do it for us.
+	close();
+
 	fOpenTimer->start();
 
 	link()->fLinkStatus = WaitingForDevice;
@@ -266,7 +262,6 @@ void DeviceCommWorker::openDevice()
 {
 	FUNCTIONSETUPL(2);
 
-	close();
 	bool deviceOpened = false;
 
 	// This transition (from Waiting to Found) can only be
@@ -307,7 +302,7 @@ void DeviceCommWorker::openDevice()
 	if (!deviceOpened)
 	{
 		DEBUGKPILOT << ": Will try again.";
-		fOpenTimer->start();
+		reset();
 	}
 }
 
@@ -553,7 +548,6 @@ void DeviceCommWorker::acceptDevice()
 					"Perhaps you have a password set on the device?")));
 
 	}
-	fSuccessfulHandshake = true;
 	link()->fLinkStatus = AcceptedDevice;
 
 	QApplication::postEvent(link(), new DeviceCommEvent(EventLogProgress, QString(), 100));
