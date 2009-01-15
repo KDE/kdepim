@@ -25,9 +25,9 @@
 
 namespace Akonadi {
   class Item;
-  class KABCItemEditor;
 }
 
+class ContactItemEditor;
 class QAbstractItemModel;
 
 class ContactEditorDialog : public KDialog
@@ -73,7 +73,7 @@ class ContactEditorDialog : public KDialog
     void slotCancelClicked();
 
   private:
-    Akonadi::KABCItemEditor *mEditor;
+    ContactItemEditor *mEditor;
 };
 
 #endif

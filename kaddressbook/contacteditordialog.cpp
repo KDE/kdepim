@@ -20,9 +20,10 @@
 
 #include "contacteditordialog.h"
 
-#include "kabc/kabcitemeditor.h"
-
 #include "collectioncombobox.h"
+#include "contacteditor.h"
+#include "contactitemeditor.h"
+
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/item.h>
 
@@ -42,7 +43,8 @@ ContactEditorDialog::ContactEditorDialog( Mode mode, QAbstractItemModel *collect
 
   QGridLayout *layout = new QGridLayout( mainWidget );
 
-  mEditor = new Akonadi::KABCItemEditor( mode == CreateMode ? Akonadi::KABCItemEditor::CreateMode : Akonadi::KABCItemEditor::EditMode, this );
+  mEditor = new ContactItemEditor( mode == CreateMode ? ContactItemEditor::CreateMode : ContactItemEditor::EditMode,
+                                   new ContactEditor(), this );
 
   if ( mode == CreateMode ) {
     QLabel *label = new QLabel( i18n( "Add to:" ), mainWidget );
@@ -72,6 +74,8 @@ ContactEditorDialog::ContactEditorDialog( Mode mode, QAbstractItemModel *collect
 
   connect( this, SIGNAL( okClicked() ), this, SLOT( slotOkClicked() ) );
   connect( this, SIGNAL( cancelClicked() ), this, SLOT( slotCancelClicked() ) );
+
+  setInitialSize( QSize( 550, 650 ) );
 }
 
 ContactEditorDialog::~ContactEditorDialog()
