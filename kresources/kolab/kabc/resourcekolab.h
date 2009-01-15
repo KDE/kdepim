@@ -191,6 +191,7 @@ protected:
   bool mLocked;
 
   KPIM::DistributionListConverter *mDistListConverter;
+  bool mInternalDistListChange;
 };
 
 }
