@@ -44,11 +44,9 @@ public:
 	Private()
 	{
 		fCollectionId = -1;
-		fPrevCollectionId = -2;
 	}
 	
 	Akonadi::Collection::Id fCollectionId;
-	Akonadi::Collection::Id fPrevCollectionId;
 };
 
 TodoConduit::TodoConduit( KPilotLink *o, const QVariantList &a )
@@ -86,14 +84,6 @@ bool TodoConduit::initDataProxies()
 		return false;
 	}
 	
-	if( d->fPrevCollectionId != d->fCollectionId )
-	{
-		// TODO: Enable this in trunk.
-		//addSyncLogEntry( i18n( "Note: Collection has changed since last sync, removing mapping." ) );
-		DEBUGKPILOT << "Note: Collection has changed since last sync, removing mapping.";
-		fMapping.remove();
-	}
-	
 	// At this point we should be able to read the backup and handheld database.
 	// However, it might be that Akonadi is not started.
 	TodoAkonadiProxy* tadp = new TodoAkonadiProxy( fMapping );
@@ -111,13 +101,6 @@ bool TodoConduit::initDataProxies()
 	fPCDataProxy->loadAllRecords();
 	
 	return true;
-}
-
-void TodoConduit::syncFinished()
-{
-	TodoSettings::self()->readConfig();
-	TodoSettings::self()->setPrevAkonadiCollection(d->fCollectionId);
-	TodoSettings::self()->writeConfig();
 }
 
 bool TodoConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const

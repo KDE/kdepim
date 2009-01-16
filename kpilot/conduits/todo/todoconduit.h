@@ -40,11 +40,6 @@ public:
 	/* virtual */ bool initDataProxies();
 	
 	/**
-	 * Give implementing conduits the change to clean up after a succesful sync.
-	 */
-	/* virtual */ void syncFinished();
-	
-	/**
 	 * Compares @p pcRecord with @p hhRec and returns true if they are considered
 	 * equal.
 	 */

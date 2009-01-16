@@ -277,7 +277,6 @@ RecordConduit::~RecordConduit()
 	}
 	
 	// Clean up things like modified flags.
-	syncFinished();
 	fHHDataProxy->syncFinished();
 	fPCDataProxy->syncFinished();
 

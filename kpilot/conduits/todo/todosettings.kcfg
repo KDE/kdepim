@@ -10,9 +10,6 @@
 		<entry name="AkonadiCollection" type="Int">
 			<default>-1</default>
 		</entry>
-		<entry name="PrevAkonadiCollection" type="Int">
-			<default>-1</default>
-		</entry>
 	</group>
 
 </kcfg>
