@@ -177,6 +177,7 @@ else ( ONLY_KLEO )
 
   macro_optional_add_subdirectory(kalarm)
   macro_optional_add_subdirectory(kaddressbook)
+#  macro_optional_add_subdirectory(kcontactmanager)
 
   if(Q_WS_X11)
     set(KTIMETRACKER_SUPPORTED TRUE)
