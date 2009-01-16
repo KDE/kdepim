@@ -5,6 +5,7 @@ X-KDE-ServiceTypes=inode/directory,KonqPopupMenu/Plugin
 Actions=kleosignencryptfolder;kleoencryptfolder;
 Name=Kleopatra Sign/Encrypt Folders
 Name[ca]=Signatura/Xifrat de carpetes del Kleopatra
+Name[cs]=Podepsat/zašifrovat složky (Kleopatra)
 Name[da]=Kleopatra signér/kryptér mapper
 Name[de]=Kleopatra - Ordner Signieren/Verschlüsseln
 Name[el]=Υπογραφή/κρυπτογράφηση φακέλων μέσω Kleopatra
@@ -33,6 +34,7 @@ Name[zh_TW]=Kleopatra 簽署/加密資料夾
 [Desktop Action kleosignencryptfolder]
 Name=Archive, Sign & Encrypt Folder
 Name[ca]=Arxivat, signatura i xifrat de carpeta
+Name[cs]=Archivovat, podepsat a zašifrovat složku
 Name[da]=Arkivér, signér og kryptér mappe
 Name[de]=Ordner packen, signieren & verschlüsseln
 Name[el]=Αρχειοθέτηση, υπογραφή & κρυπτογράφηση φακέλου
@@ -65,6 +67,7 @@ Exec=kleopatra --sign-encrypt %F
 [Desktop Action kleoencryptfolder]
 Name=Archive & Encrypt Folder
 Name[ca]=Arxivat i xifrat de carpeta
+Name[cs]=Archivovat a zašifrovat složku
 Name[da]=Arkivér og kryptér mappe
 Name[de]=Ordner packen und verschlüsseln
 Name[el]=Αρχειοθέτηση & κρυπτογράφηση φακέλου

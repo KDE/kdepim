@@ -26,6 +26,7 @@ Comment[zh_CN]=此管道会将您的手持设备中的待办事宜数据库和 A
 Comment[zh_TW]=此導管將掌上型裝置的待辦事項資料庫與 Akonadi 上的待辦事項同步。
 Name=To-do
 Name[ca]=Pendent
+Name[cs]=Úkol
 Name[da]=Gøremål
 Name[de]=Aufgaben
 Name[el]=Προς υλοποίηση

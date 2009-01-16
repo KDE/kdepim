@@ -9,6 +9,7 @@ Comment[x-test]=xxKMobileToolsxx
 [Event/kmobiletools_ring]
 Name=Incoming Call
 Name[ca]=Trucada entrant
+Name[cs]=Příchozí hovor
 Name[da]=Indkommende opkald
 Name[de]=Eingehender Anruf
 Name[el]=Εισερχόμενη κλήση
@@ -79,6 +80,7 @@ Action=Sound|Popup|Taskbar
 Name=New SMS Messages
 Name[bg]=Нови SMS съобщения
 Name[ca]=Missatges SMS nous
+Name[cs]=Nové SMS zprávy
 Name[da]=Nye SMS-beskeder
 Name[de]=Neue SMS-Nachrichten
 Name[el]=Νέα SMS μηνύματα

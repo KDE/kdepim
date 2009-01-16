@@ -6,6 +6,7 @@ MimeType=application/octet-stream;
 X-KDE-ServiceTypes=KonqPopupMenu/Plugin
 Name=Kleopatra Sign/Encrypt Files
 Name[ca]=Signatura/Xifrat de fitxers del Kleopatra
+Name[cs]=Zašifrovat a podepsat soubory (Kleopatra)
 Name[da]=Kleopatra signér/kryptér filer
 Name[de]=Kleopatra - Signieren/Verschlüsseln von Dateien
 Name[el]=Υπογραφή/κρυπτογράφηση αρχείων μέσω Kleopatra
@@ -35,6 +36,7 @@ Actions=kleoencryptsignfiles;kleoencryptfiles;kleosignfilesopenpgp;kleosignfiles
 [Desktop Action kleoencryptsignfiles]
 Name=Encrypt & Sign File
 Name[ca]=Signatura i xifrat de fitxer
+Name[cs]=Zašifrovat a podepsat soubor
 Name[da]=Kryptér og signér fil
 Name[de]=Datei verschlüsseln & signieren
 Name[el]=Κρυπτογράφηση & υπογραφή αρχείου
@@ -68,6 +70,7 @@ Exec=kleopatra --sign-encrypt %F
 [Desktop Action kleoencryptfiles]
 Name=Encrypt File
 Name[ca]=Xifrat de fitxer
+Name[cs]=Zašifrovat soubor
 Name[da]=Kryptér fil
 Name[de]=Datei verschlüsseln
 Name[el]=Κρυπτογράφηση αρχείου
@@ -103,6 +106,7 @@ Exec=kleopatra --encrypt %F
 [Desktop Action kleosignfilesopenpgp]
 Name=OpenPGP-Sign File
 Name[ca]=Signatura OpenPGP de fitxer
+Name[cs]=Podepsat soubor pomocí OpenPGP
 Name[da]=OpenPGP-signér fil
 Name[de]=Datei mit OpenPGP signieren
 Name[el]=Υπογραφή OpenPGP αρχείου
@@ -135,6 +139,7 @@ Exec=kleopatra --openpgp --sign %F
 [Desktop Action kleosignfilescms]
 Name=S/MIME-Sign File
 Name[ca]=Signatura S/MIME de fitxer
+Name[cs]=Podepsat soubor pomocí S/MIME
 Name[da]=S/MIME-signér fil
 Name[de]=Datei mit S/MIME signieren
 Name[el]=Υπογραφή S/MIME αρχείου
