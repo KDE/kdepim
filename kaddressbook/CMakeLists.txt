@@ -40,8 +40,9 @@ set( kcontactmanager_SRCS
   # editors/phoneeditwidget.cpp
   # editors/secrecywidget.cpp
   # editors/soundwidget.cpp
-   editor/contacteditor.cpp
    editor/addresseditwidget.cpp
+   editor/contacteditor.cpp
+   editor/imagewidget.cpp
 )
 
 # todo: more appropriate icon?
