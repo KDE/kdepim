@@ -927,6 +927,18 @@ bool KNComposer::applyChanges()
   return true;
 }
 
+QByteArray KNComposer::fixEncoding( const QByteArray &encoding )
+{
+  QString returnEncoding = encoding;
+  // According to http://www.iana.org/assignments/character-sets, uppercase is
+  // preferred in MIME headers
+  if ( returnEncoding.toUpper().contains( "ISO " ) ) {
+    returnEncoding = returnEncoding.toUpper();
+    returnEncoding.replace( "ISO ", "ISO-" );
+  }
+  return returnEncoding.toLatin1();
+}
+
 
 void KNComposer::closeEvent(QCloseEvent *e)
 {
@@ -993,6 +1005,8 @@ void KNComposer::initData(const QString &text)
     c_harset=textContent->contentType()->charset();
   else
     c_harset = knGlobals.settings()->charset().toLatin1();
+
+  c_harset = fixEncoding(c_harset); // workaround previous wrong configuration
 
   a_ctSetCharset->setCurrentItem( a_ctSetCharset->items().indexOf( c_harset ) );
 
@@ -1264,7 +1278,7 @@ void KNComposer::slotSetCharset(const QString &s)
   if(s.isEmpty())
     return;
 
-  c_harset = s.toLatin1();
+  c_harset = fixEncoding(s.toLatin1());
   setConfig(true); //adjust fonts
 }
 
