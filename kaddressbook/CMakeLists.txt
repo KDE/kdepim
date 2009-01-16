@@ -42,6 +42,7 @@ set( kcontactmanager_SRCS
   # editors/soundwidget.cpp
    editor/addresseditwidget.cpp
    editor/contacteditor.cpp
+   editor/emaileditwidget.cpp
    editor/imagewidget.cpp
 )
 
