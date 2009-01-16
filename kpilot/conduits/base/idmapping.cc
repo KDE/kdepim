@@ -342,5 +342,6 @@ IDMapping& IDMapping::operator=( const IDMapping& other )
 bool IDMapping::remove()
 {
 	FUNCTIONSETUP;
-	return d->fSource.remove();
+	bool success = d->fSource.remove();
+	return success && d->fSource.loadMapping(); // Make sure that we reset local structures.
 }

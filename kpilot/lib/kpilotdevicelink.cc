@@ -207,7 +207,8 @@ void DeviceCommWorker::close()
 	 * This one we do delete because we require the socket itself to create
 	 * this and we don't have that until we're past the pi_bind phase.
 	 */
-	KPILOT_DELETE(fSocketNotifier);
+	fSocketNotifier->deleteLater();
+	fSocketNotifier = 0;
 
 	bool closeTemp = (fTempSocket != -1);
 	bool closeMainSocket = (fPilotSocket != -1);

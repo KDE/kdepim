@@ -136,11 +136,12 @@ private:
 class ContactsConduit::Private
 {
 public:
-	Private() : fCollectionId( -1 ), fContactsHHDataProxy( 0L )
+	Private() : fCollectionId( -1 ), fPrevCollectionId(-2), fContactsHHDataProxy( 0L )
 	{
 	}
 	
 	Akonadi::Collection::Id fCollectionId;
+	Akonadi::Collection::Id fPrevCollectionId;
 	ContactsHHDataProxy* fContactsHHDataProxy;
 	Settings fSettings;
 };
@@ -211,6 +212,7 @@ void ContactsConduit::loadSettings()
 	
 	ContactsSettings::self()->readConfig();
 	d->fCollectionId = ContactsSettings::akonadiCollection();
+	d->fPrevCollectionId = ContactsSettings::prevAkonadiCollection();
 }
 
 bool ContactsConduit::initDataProxies()
@@ -227,6 +229,14 @@ bool ContactsConduit::initDataProxies()
 	{
 		addSyncLogEntry( i18n( "Error: No valid akonadi collection configured." ) );
 		return false;
+	}
+	
+	if( d->fPrevCollectionId != d->fCollectionId )
+	{
+		// TODO: Enable this in trunk.
+		//addSyncLogEntry( i18n( "Note: Collection has changed since last sync, removing mapping." ) );
+		DEBUGKPILOT << "Note: Collection has changed since last sync, removing mapping.";
+		fMapping.remove();
 	}
 	
 	d->fContactsHHDataProxy = new ContactsHHDataProxy( fDatabase );
@@ -247,6 +257,13 @@ bool ContactsConduit::initDataProxies()
 	}
 	
 	return true;
+}
+
+void ContactsConduit::syncFinished()
+{
+	ContactsSettings::self()->readConfig();
+	ContactsSettings::self()->setPrevAkonadiCollection(d->fCollectionId);
+	ContactsSettings::self()->writeConfig();
 }
 
 bool ContactsConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
