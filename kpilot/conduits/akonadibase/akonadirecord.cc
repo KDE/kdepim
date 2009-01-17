@@ -37,6 +37,8 @@ public:
 	QString fTempId;
 	QDateTime fLastSyncDateTime;
 	bool fDeleted;
+	// Dummy record, created only for deletion from HH
+	bool fDummy;
 };
 
 AkonadiRecord::AkonadiRecord( const Akonadi::Item& item, const QDateTime& lastSync )
@@ -51,6 +53,7 @@ AkonadiRecord::AkonadiRecord( const QString& id ) : d( new AkonadiRecordPrivate 
 {
 	d->fTempId = id;
 	d->fDeleted = true;
+	d->fDummy = true;
 }
 
 AkonadiRecord::~AkonadiRecord()
@@ -125,4 +128,11 @@ void AkonadiRecord::synced()
 {
 	FUNCTIONSETUP;
 	// Nothing to do here.
+}
+
+bool AkonadiRecord::isValid() const
+{
+	FUNCTIONSETUPL(5);
+	bool valid = ! d->fDummy;
+	return valid;
 }

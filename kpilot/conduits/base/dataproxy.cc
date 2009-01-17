@@ -210,12 +210,13 @@ bool DataProxy::commit()
 	while( it.hasNext() )
 	{
 		QString id = it.next();
-		
-		DEBUGKPILOT << "Committing id: [" << id << "]";
-		
+
 		Record *rec = find( id );
 		if( rec )
 		{
+			DEBUGKPILOT << "Committing record id: " << rec->id()
+				    << ", description: " << rec->toString();
+
 			if( !commitCreate( rec ) )
 			{
 				// Commit failed.
@@ -291,7 +292,8 @@ bool DataProxy::commit()
 		
 		if( !fDeleted.value( oldRec->id() ) )
 		{
-			DEBUGKPILOT << "Deleting record: [" << oldRec->id() << "].";
+			DEBUGKPILOT << "Deleting record id: " << oldRec->id()
+				    << ", description: " << oldRec->toString();
 			
 			if( !commitDelete( oldRec ) )
 			{
