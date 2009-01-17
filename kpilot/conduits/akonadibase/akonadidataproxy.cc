@@ -134,7 +134,8 @@ void AkonadiDataProxy::loadAllRecords()
 				AkonadiRecord* ar = createDeletedAkonadiRecord( mPcId );
 				Q_ASSERT( ar->isDeleted() );
 				Q_ASSERT( ar->isModified() );
-
+				Q_ASSERT( ar->id() == mPcId );
+				
 				fRecords.insert( mPcId, ar );
 				++dummyDeletedRecords;
 			}

@@ -46,6 +46,9 @@ CalendarAkonadiRecord::CalendarAkonadiRecord( const QString& id ) : AkonadiRecor
 	item.setPayload<IncidencePtr>( IncidencePtr( new KCal::Event() ) );
 	item.setMimeType( "application/x-vnd.akonadi.calendar.event" );
 	setItem( item );
+	// Set item changes the Id of the record to the item id which is invalid in case
+	// of deleted records.
+	setId(id);
 }
 
 CalendarAkonadiRecord::~CalendarAkonadiRecord()
