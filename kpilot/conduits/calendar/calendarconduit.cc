@@ -128,7 +128,7 @@ bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 	 * be using before testing for equality.
 	 */
 	TEST( QString(Pilot::toPilot(pcEvent->description())), hhEntry.getNote(), "Note" )
-	if( thr->category() != "Unfiled" )
+	if( !thr->category().isEmpty() && thr->category() != "Unfiled" )
 	{
 		TEST1( pcEvent->categories().contains( thr->category() ), "Category" )
 	}
