@@ -29,7 +29,7 @@
 namespace Akonadi {
 class Collection;
 class Item;
-};
+}
 
 class ContactItemEditor : public QWidget
 {
