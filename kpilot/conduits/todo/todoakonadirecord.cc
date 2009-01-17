@@ -44,6 +44,9 @@ TodoAkonadiRecord::TodoAkonadiRecord( const QString& id ) : AkonadiRecord( id )
 	item.setPayload<IncidencePtr>( IncidencePtr( new KCal::Todo() ) );
 	item.setMimeType( "application/x-vnd.akonadi.calendar.todo" );
 	setItem( item );
+	// Set item changes the Id of the record to the item id which is invalid in case
+	// of deleted records.
+	setId(id);
 }
 
 TodoAkonadiRecord::~TodoAkonadiRecord()

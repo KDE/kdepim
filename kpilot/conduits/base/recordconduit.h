@@ -129,6 +129,11 @@ protected:
 	virtual void _copy( const HHRecord *from, Record *to  ) = 0;
 	
 	/**
+	 * Give implementing conduits the change to clean up after a succesful sync.
+	 */
+	virtual void syncFinished() {};
+	
+	/**
 	 * This method is called when the conduit is run in Test Mode. The 
 	 * implementing class can do whatever it wants to do for test purposes.
 	 */
