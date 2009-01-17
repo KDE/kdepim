@@ -19,7 +19,7 @@ Name[gl]=Engadido XXPort de Teléfono Móbil para KAB
 Name[he]=תוסף ייבוא/ייצוא עבור טלפונים ניידים של KAB
 Name[hu]=KAB mobiltelefon XXPort bővítőmodul
 Name[is]=Íforrit fyrir KAB farsíma XXPort
-Name[it]=Plugin KAB telefono cellulare XXPort
+Name[it]=Estensione XXPort di KAB per telefono cellulare
 Name[ja]=KAB 携帯電話インポート/エクスポートプラグイン
 Name[ka]=KAB მობილურ ტელეფონთან ექსპორტის მოდული
 Name[kk]=Қалта телефонға экспорт/импорт ету
@@ -67,7 +67,7 @@ Comment[fy]=Comment=Mobile-tillefoan-plugin faor it importearjen en eksportearje
 Comment[gl]=Engadido de Teléfono Móbil para importar e exportar entradas do caderno de enderezos
 Comment[hu]=Mobiltelefonos bővítőmodul címbejegyzések importálásához/exportálásához
 Comment[is]=Íforrit til að færa tengilið milli póstfangaskrár og farsíma
-Comment[it]=Plugin per importare ed esportare voci della rubrica da un telefono cellulare
+Comment[it]=Estensione per importare ed esportare voci della rubrica di un telefono cellulare
 Comment[ja]=アドレス帳のエントリをインポート/エクスポートする携帯電話用プラグイン
 Comment[ka]=მობილური ტელეფონის მოდული წიგნაკის ელემენტების იმპორტ/ექსპორტისათვის
 Comment[kk]=Қалта телефонға адр. кітапша жазуын экспорт/импорт ету модулі
