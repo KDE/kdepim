@@ -33,6 +33,7 @@
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>
 #include <akonadi/collectionview.h>
+#include <akonadi/control.h>
 #include <akonadi/itemview.h>
 
 #include <kactioncollection.h>
@@ -90,6 +91,8 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
 
   // show the contact details view as default
   mDetailsViewStack->setCurrentWidget( mContactDetails );
+
+  Akonadi::Control::widgetNeedsAkonadi( this );
 }
 
 MainWidget::~MainWidget()

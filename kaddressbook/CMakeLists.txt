@@ -44,6 +44,7 @@ set( kcontactmanager_SRCS
    editor/contacteditor.cpp
    editor/emaileditwidget.cpp
    editor/imagewidget.cpp
+   editor/soundeditwidget.cpp
 )
 
 # todo: more appropriate icon?
