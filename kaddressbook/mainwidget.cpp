@@ -20,7 +20,6 @@
 
 #include "mainwidget.h"
 
-#include <QDebug>
 
 #include <QtGui/QAction>
 #include <QtGui/QHBoxLayout>
