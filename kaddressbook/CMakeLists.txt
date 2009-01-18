@@ -53,7 +53,7 @@ kde4_add_app_icon(kcontactmanager_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/view-p
 
 kde4_add_executable(kcontactmanager RUN_UNINSTALLED ${kcontactmanager_SRCS})
 
-kdepim4_link_unique_libraries(kcontactmanager  ${KDE4_SYNDICATION_LIBS} kdepim ${KDE4_KCAL_LIBS}
+target_link_libraries(kcontactmanager  ${KDE4_SYNDICATION_LIBS} kdepim ${KDE4_KCAL_LIBS}
                               ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_PHONON_LIBS})
 target_link_libraries(kcontactmanager ${KDE4_AKONADI_LIBS} akonadi-kabccommon ${KDE4_KDEUI_LIBS} )
 

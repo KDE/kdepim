@@ -80,7 +80,7 @@ kde4_add_kcfg_files(knodecommon_LIB_SRCS settings_base.kcfgc )
 
 kde4_add_library(knodecommon SHARED ${knodecommon_LIB_SRCS})
 
-kdepim4_link_unique_libraries(knodecommon ${KDE4_KMIME_LIBRARY} ${KDE4_KUTILS_LIBS} ${KDE4_KIO_LIBS}
+target_link_libraries(knodecommon ${KDE4_KMIME_LIBRARY} ${KDE4_KUTILS_LIBS} ${KDE4_KIO_LIBS}
                               ${KDE4_KDE3SUPPORT_LIBS} ${KDE4_KABC_LIBS} ${KDE4_KHTML_LIBS}
                               ${KDE4_KPIMUTILS_LIBRARY} ${KDE4_MAILTRANSPORT_LIBRARY}
                               kdepim kpgp)
@@ -103,7 +103,7 @@ kde4_add_plugin(kcm_knode ${kcm_knode_PART_SRCS})
 
 
 
-kdepim4_link_unique_libraries(kcm_knode  ${KDE4_KDECORE_LIBS} knodecommon )
+target_link_libraries(kcm_knode  ${KDE4_KDECORE_LIBS} knodecommon )
 
 install(TARGETS kcm_knode  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -117,7 +117,7 @@ kde4_add_plugin(knodepart ${knodepart_PART_SRCS})
 
 
 
-kdepim4_link_unique_libraries(knodepart  ${KDE4_KPARTS_LIBS} knodecommon )
+target_link_libraries(knodepart  ${KDE4_KPARTS_LIBS} knodecommon )
 
 install(TARGETS knodepart  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -132,7 +132,7 @@ kde4_add_app_icon(knode_SRCS "hi*-app-knode2.png")
 
 kde4_add_executable(knode ${knode_SRCS})
 
-kdepim4_link_unique_libraries(knode ${KDE4_KDECORE_LIBS} kdepim knodecommon)
+target_link_libraries(knode ${KDE4_KDECORE_LIBS} kdepim knodecommon)
 
 install(TARGETS knode  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 

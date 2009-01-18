@@ -28,28 +28,6 @@ else(WIN32)
     set (KDE4_ICON_DIR  ${CMAKE_INSTALL_PREFIX}/share/icons)
 endif(WIN32)
 
-# this macro exists to work around a stupid Mac OS X linker bug
-# where it can't handle the same library being referenced multiple
-# times on the linker line
-macro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
-#   set(LINK_ARG_LIST)  
-#   foreach(arg ${ARGN})
-#     set(LINK_ARG_FOUND FALSE)
-#     foreach(existing ${LINK_ARG_LIST})
-#       if(${arg} STREQUAL ${existing})
-#         set(LINK_ARG_FOUND)
-#       endif(${arg} STREQUAL ${existing})
-#     endforeach(existing)
-# 
-#     if(NOT ${LINK_ARG_FOUND})
-#       list(APPEND LINK_ARG_LIST ${arg})
-#     endif(NOT ${LINK_ARG_FOUND})
-#   endforeach(arg)
-# 
-#   target_link_libraries(${LINK_ARG_LIST})
-  target_link_libraries(${ARGN})
-endmacro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
-
 find_package(Boost REQUIRED)
 macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "1.33.1" "Required by several critical KDEPIM apps.")
 

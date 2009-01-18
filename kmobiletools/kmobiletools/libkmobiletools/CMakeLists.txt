@@ -93,7 +93,7 @@ kde4_add_kcfg_files(kmobiletoolslib_LIB_SRCS kmobiletools_cfg.kcfgc kmobiletools
 
 kde4_add_library(kmobiletoolslib SHARED ${kmobiletoolslib_LIB_SRCS})
 
-kdepim4_link_unique_libraries(kmobiletoolslib
+target_link_libraries(kmobiletoolslib
    ${KDE4_KDECORE_LIBS}
    ${KDE4_KDEUI_LIBS}
    ${KDE4_KIO_LIBS}  

@@ -69,7 +69,7 @@ kde4_add_ui_files(kmobiletoolsmainpart_PART_SRCS
 
 kde4_add_plugin(kmobiletoolsmainpart ${kmobiletoolsmainpart_PART_SRCS})
 
-kdepim4_link_unique_libraries(kmobiletoolsmainpart  kmobiletoolslib kabc_file_core ${KDE4_KHTML_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDE4_KPARTS_LIBRARY} ${KDE4_KRESOURCES_LIBS} ${KDE4_KABC_LIBRARY} ${KDE4_KNOTIFYCONFIG_LIBS} ${QT_QT3SUPPORT_LIBRARY} ${QT_QTGUI_LIBRARY})
+target_link_libraries(kmobiletoolsmainpart  kmobiletoolslib kabc_file_core ${KDE4_KHTML_LIBRARY} ${KDE4_KDEUI_LIBS} ${KDE4_KPARTS_LIBRARY} ${KDE4_KRESOURCES_LIBS} ${KDE4_KABC_LIBRARY} ${KDE4_KNOTIFYCONFIG_LIBS} ${QT_QT3SUPPORT_LIBRARY} ${QT_QTGUI_LIBRARY})
 
 install(TARGETS kmobiletoolsmainpart DESTINATION ${PLUGIN_INSTALL_DIR} )
 
