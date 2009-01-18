@@ -34,7 +34,7 @@
 #include "resourcekolab.h"
 
 #include <kabc/addressee.h>
-#include <kabc/stdaddressbook.h>
+#include <kabc/addressbook.h>
 #include <libkdepim/distributionlist.h>
 #include <kio/netaccess.h>
 #include <kdebug.h>
@@ -49,10 +49,10 @@ static const char* s_soundAttachmentName = "sound";
 static const char* s_unhandledTagAppName = "KOLABUNHANDLED"; // no hyphens in appnames!
 
 // saving (addressee->xml)
-Contact::Contact( const KABC::Addressee* addr )
+Contact::Contact( const KABC::Addressee* addr, KABC::AddressBook* addressBook )
   : mHasGeo( false )
 {
-  setFields( addr );
+  setFields( addr, addressBook );
 }
 
 // loading (xml->addressee)
@@ -993,7 +993,7 @@ static const char* s_knownCustomFields[] = {
 };
 
 // The saving is addressee -> Contact -> xml, this is the first part
-void Contact::setFields( const KABC::Addressee* addressee )
+void Contact::setFields( const KABC::Addressee* addressee, KABC::AddressBook* addressBook )
 {
   KolabBase::setFields( addressee );
 
@@ -1002,7 +1002,7 @@ void Contact::setFields( const KABC::Addressee* addressee )
     // Hopefully all resources are available during saving, so we can look up
     // in the addressbook to get name+email from the UID.
     KPIM::DistributionList distrList( *addressee );
-    const KPIM::DistributionList::Entry::List entries = distrList.entries( KABC::StdAddressBook::self() );
+    const KPIM::DistributionList::Entry::List entries = distrList.entries( addressBook );
     KPIM::DistributionList::Entry::List::ConstIterator it = entries.constBegin();
     for ( ; it != entries.constEnd() ; ++it ) {
       Member m;

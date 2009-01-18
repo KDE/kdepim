@@ -393,7 +393,7 @@ bool KABC::ResourceKolab::kmailUpdateAddressee( const Addressee& addr )
   bool isXMLStorageFormat = kmailStorageFormat( subResource ) == KMail::StorageXML;
   QString subject = uid; // as per kolab2 spec
   if ( isXMLStorageFormat ) {
-    Contact contact( &addr );
+    Contact contact( &addr, addressBook() );
     // The addressee is converted to: 1) the xml  2) the optional picture 3) the optional logo 4) the optional sound
     data = contact.saveXML();
     att.updatePictureAttachment( contact.picture(), contact.pictureAttachmentName() );
