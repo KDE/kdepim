@@ -103,6 +103,22 @@ else ( ONLY_KLEO )
     ${CMAKE_SOURCE_DIR}/knotes/knoteedit.cpp
   )
 
+  set(libkdgantt1_SRCS
+     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttView.cpp
+     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewEventItem.cpp
+     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewItem.cpp
+     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewItemDrag.cpp
+     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewSubwidgets.cpp
+     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewSummaryItem.cpp
+     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewTaskItem.cpp
+     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewTaskLink.cpp
+     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewTaskLinkGroup.cpp
+     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttMinimizeSplitter.cpp
+     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttSemiSizingControl.cpp
+     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttSizingControl.cpp
+     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttXMLTools.cpp
+  )
+
   add_subdirectory(kode)
   macro_optional_add_subdirectory(akonadi)
   add_subdirectory(libkdepim)
