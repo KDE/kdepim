@@ -1,2 +1,2 @@
 #! /bin/sh
-$XGETTEXT *.cpp *.h -o $podir/kcontactmanager.pot
+$XGETTEXT `find -name \*.cpp -o -name \*.h` -o $podir/kcontactmanager.pot
