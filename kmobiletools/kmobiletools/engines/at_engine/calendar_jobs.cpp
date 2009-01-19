@@ -115,7 +115,6 @@ void FetchCalendar::fetchMotorolaCalendar()
         if( startDT.isValid () &&  duration!=1440 ) event->setFloats(false); else event->setFloats(true);
         event->setDtStart(startDT);
         event->setDuration( duration*60);
-#if KDE_IS_VERSION( 3, 5, 0 )
         switch( repeat ){
             case 1:
                 event->recurrence ()->setDaily(1);
@@ -135,27 +134,6 @@ void FetchCalendar::fetchMotorolaCalendar()
             default:
                 event->recurrence()->clear();
         }
-#else
-        switch( repeat ){
-            case 1:
-                event->recurrence ()->setDaily(1,0);
-                break;
-            case 2:
-                event->recurrence()->setWeekly(1,0,0,0);
-                break;
-            case 3:
-                event->recurrence()->setMonthly(1,0,0);
-                break;
-            case 4:
-                event->recurrence()->setWeekly(4,0,0,0);
-                break;
-            case 5:
-                event->recurrence()->setYearly(1,0,0);
-                break;
-        //default:
-        // event->recurrence()->clear();
-        }
-#endif
         event->setDescription(text);
         if(enabled)
         {
