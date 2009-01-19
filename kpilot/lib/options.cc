@@ -33,6 +33,7 @@
 
 #include <kcmdlineargs.h>
 #include <kconfig.h>
+#include <kdebug.h>
 
 #include <config-kpilot.h>
 
@@ -131,27 +132,15 @@ const char *KPilotDepthCount::indent() const
 
 int KPilotDepthCount::depth = 0;
 
-// taken from KDebug
-class KPilotNoDebugStream: public QIODevice
-{
-public:
-	KPilotNoDebugStream() { open(WriteOnly); }
-	bool isSequential() const { return true; }
-	qint64 readData(char *, qint64) { return 0; /* eof */ }
-	qint64 readLineData(char *, qint64) { return 0; /* eof */ }
-	qint64 writeData(const char *, qint64 len) { return len; }
-};
-
 QDebug KPilotDebugStream(const KPilotDepthCount &d)
 {
-	if  (debug_level >= d.level()) 
+	if  (debug_level >= d.level())
 	{
 		return QDebug(QtDebugMsg);
 	}
 	else
 	{
-		static KPilotNoDebugStream noDebug;
-		return QDebug(&noDebug);
+		return kDebugDevNull();
 	}
 }
 
