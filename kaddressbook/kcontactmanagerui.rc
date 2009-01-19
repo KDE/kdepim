@@ -13,8 +13,8 @@
 
     <Menu name="edit"><text>&amp;Edit</text>
       <Action name="akonadi_paste" append="edit_paste_merge"/>
-      <Action name="akonadi_copy" append="edit_copy_merge"/>
-      <Action name="akonadi_delete" append="edit_delete_merge"/>
+      <Action name="akonadi_item_copy" append="edit_copy_merge"/>
+      <Action name="akonadi_item_delete" append="edit_delete_merge"/>
     </Menu>
 
     <Menu name="settings"><text>&amp;Settings</text>

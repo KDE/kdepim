@@ -101,8 +101,11 @@ MainWidget::MainWidget( KXmlGuiWindow *guiWindow, QWidget *parent )
   mActionManager->setItemSelectionModel( mItemView->selectionModel() );
 
   mActionManager->createAllActions();
-  mActionManager->setActionText( Akonadi::StandardActionManager::CreateCollection, ki18n( "Add Address Book" ) );
-  mActionManager->setActionText( Akonadi::StandardActionManager::DeleteCollections, ki18np( "Delete Address Book", "Delete %1 Address Books" ) );
+  mActionManager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add Address Book" ) );
+  mActionManager->setActionText( Akonadi::StandardActionManager::CopyCollections, ki18np( "Copy Address Book", "Copy %1 Address Books" ) );
+  mActionManager->action( Akonadi::StandardActionManager::DeleteCollections )->setText( i18n( "Delete Address Book" ) );
+  mActionManager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setText( i18n( "Reload" ) );
+  mActionManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Properties..." ) );
   mActionManager->setActionText( Akonadi::StandardActionManager::CopyItems, ki18np( "Copy Contact", "Copy %1 Contacts" ) );
   mActionManager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete Contact", "Delete %1 Contacts" ) );
 }
