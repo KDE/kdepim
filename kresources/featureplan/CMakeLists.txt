@@ -30,7 +30,7 @@ set(kcal_resourcefeatureplan_plugin_PART_SRCS kcal_resourcefeatureplanplugin.cpp
 
 kde4_add_plugin(kcal_resourcefeatureplan_plugin ${kcal_resourcefeatureplan_plugin_PART_SRCS})
 
-target_link_libraries(kcal_resourcefeatureplan_plugin ${KDE4_KDECORE_LIBS} kcal_resourcefeatureplan ${KDE4_KRESOURCES_LIBS})
+target_link_libraries(kcal_resourcefeatureplan_plugin ${KDE4_KDECORE_LIBS} kcal_resourcefeatureplan ${KDE4_KRESOURCES_LIBS} ${KDE4_KCAL_LIBS})
 
 install(TARGETS kcal_resourcefeatureplan_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
