@@ -52,6 +52,7 @@ Comment[ca]=Proporciona l'accés a un calendari emmagatzemat en un servidor Kola
 Comment[da]=Giver adgang til en kalender lagret på en Kolab-server som bruger IMAP via KMail eller Kontact
 Comment[de]=Ermöglicht den Zugriff auf Kalender, die mittels IMAP via KMail oder Kontact auf einem Kolab-Server gespeichert sind.
 Comment[el]=Προσφέρει πρόσβαση σε ένα ημερολόγιο αποθηκευμένο σε έναν εξυπηρετητή Kolab με τη χρήση του IMAP  μέσω του KMail ή Kontact
+Comment[es]=Provee acceso a un calendario almacenado en un servidor Kolab usando IMAP via KMail o Kontact
 Comment[et]=Võimaldab kasutada kalendrit, mis on salvestatud Kolabi serverisse IMAP abil KMaili või Kontacti vahendusel
 Comment[fr]=Fourni l'accès à un calendrier stocké dans un serveur Kolab utilisant IMAP via KMail ou Kontact
 Comment[gl]=Permite acceder a un calendario almacenado nun servidor de Kolab empregando IMAP mediante o KMail ou o Kontact

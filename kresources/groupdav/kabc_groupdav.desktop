@@ -51,6 +51,7 @@ Comment[ca]=Proporciona l'accés als contactes emmagatzemats en llibretes d'adre
 Comment[da]=Giver adgang til kontakter lagret i adressebøger på GroupDAV-aktiverede servere, f.eks. OpenGroupware
 Comment[de]=Ermöglicht den Zugriff auf Kontakte, die in einem Adressbuch auf einem GroupDAV-Server wie z. B. OpenGroupware gespeichert sind.
 Comment[el]=Προσφέρει πρόσβαση σε επαφές αποθηκευμένες σε βιβλία διευθύνσεων εξυπηρετών GroupDAV  π.χ. το OpenGroupware
+Comment[es]=Provee acceso a los contactos almacenados en la libreta de direcciones en un servidor GroupDAV habilitado, por ej. OpenGroupware
 Comment[et]=Võimaldab kasutada kontakte, mis on salvestatud aadressiraamatutesse GroupDAVi toetusega serverites (nt OpenGroupware)
 Comment[fr]=Fourni l'accès aux contacts stockés dans les dossiers du carnet d'adresses d'un serveur prenant en charge GroupDAV comme par exemple OpenGroupware
 Comment[gl]=Permite acceder aos contactos almacenados nos cadernos de enderezos dos servidores con GroupDAV, p. ex. OpenGroupware

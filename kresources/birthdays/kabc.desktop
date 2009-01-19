@@ -37,6 +37,7 @@ Name[nds]=Geboortsdaag ut KAdressbook
 Name[ne]=केडीई ठेगाना पुस्तिकामा भएका जन्मदिन
 Name[nl]=Verjaardagen uit KAddressBook
 Name[nn]=Fødselsdagar frå KDE-adresseboka
+Name[pa]=ਕੇ-ਐਡਰੈੱਸ-ਬੁੱਕ ਤੋਂ ਜਨਮ-ਦਿਨ
 Name[pl]=Urodziny z Książki adresowej
 Name[pt]=Aniversários do KAddressBook
 Name[pt_BR]=Datas de nascimento do KAddressBook
@@ -58,6 +59,7 @@ Comment[ca]=Proporciona l'accés a les dates de naixement dels contactes de la l
 Comment[da]=Giver adgang til fødselsdatoer for kontakter i KDE's adressebog som kalenderbegivenheder
 Comment[de]=Ermöglicht den Zugriff auf Geburtstage von Kontakten aus dem KDE-Adressbuch in Form von Kalendereinträgen.
 Comment[el]=Προσφέρει πρόσβαση σε γενέθλια επαφών του βιβλίο διευθύνσεωη του KDE ως  γεγονότα ημερολογίου
+Comment[es]=Provee acceso a las fechas de cumpleaños de los contactos en la libreta de direcciones como eventos de calendario
 Comment[et]=Võimaldab kasutada KDE aadressiraamatusse kalendrisündmustena salvestatud kontaktide sünnipäevi
 Comment[fr]=Fourni l'accès aux dates d'anniversaire des contacts du carnet d'adresses comme des évènements du calendrier
 Comment[gl]=Permite acceder ás datas de cumpreanos dos contactos do caderno de enderezos do KDE como eventos do calendario

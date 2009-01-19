@@ -1,12 +1,14 @@
 [Desktop Entry]
 Name=Akonadi
 Name[de]=Akonadi-Ressource
+Name[pa]=ਅਕੌਂਡੀ
 Name[x-test]=xxAkonadixx
 Comment=Provides access to calendars stored in Akonadi calendar folders
 Comment[ca]=Proporciona l'accés als calendaris emmagatzemats en carpetes de calendari de l'Akonadi
 Comment[da]=Giver adgang til kalendere lagret i Akonadi kalender-mapper
 Comment[de]=Ermöglicht den Zugriff auf Kalender, die in Akonadi-Ordnern gespeichert sind.
 Comment[el]=Προσφέρει πρόσβαση σε ημερολόγια αποθηκευμένα σε φακέλους ημερολογίου του Akonadi
+Comment[es]=Provee acceso a calendarios almacenados en carpetas de calendario de Akonadi
 Comment[et]=Võimaldab kasutada Akonadi kalendrikaustadesse salvestatud kalendreid
 Comment[fr]=Fourni l'accès aux calendriers stockés dans les dossiers de calendrier Akonadi
 Comment[gl]=Permite acceder aos calendarios almacenados nos cartafoles de calendario do Akonadi
@@ -18,6 +20,7 @@ Comment[nb]=Gir tilgang til kalendere lagret i Akonadi adressebok-mappene
 Comment[nds]=Stellt Togriep op binnen Akonadi sien Kalennerornern wohrte Kalenners praat
 Comment[nl]=Geeft toegang tot de in de agendamappen van Akonadi opgeslagen agenda's
 Comment[nn]=Gjev tilgang til kalendrar lagra i Akonadi-kalendermapper
+Comment[pa]=ਅਕੌਂਡੀ ਕੈਲੰਡਰ ਫੋਲਡਰਾਂ ਵਿੱਚ ਸਟੋਰ ਕੀਤੇ ਕੈਲੰਡਰਾਂ ਲਈ ਅਸੈੱਸ ਹੈ
 Comment[pl]=Zapewnia dostęp do kalendarzy przechowywanych w katalogach kalendarzy Akonadi
 Comment[pt]=Oferece o acesso aos calendários guardados nas pastas de calendários do Akonadi
 Comment[pt_BR]=Fornece acesso aos calendários armazenados nas pastas de calendários do Akonadi
