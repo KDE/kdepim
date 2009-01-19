@@ -37,7 +37,7 @@ MainWindow::MainWindow()
 
   setStandardToolBarMenuEnabled( true );
 
-  createGUI( "kcontactmanagerui.rc" );
+  setupGUI(  Keys /*| ToolBar | StatusBar*/ | Save | Create, "kcontactmanagerui.rc" );
 
   toolBar()->setToolButtonStyle( Qt::ToolButtonTextUnderIcon );
 

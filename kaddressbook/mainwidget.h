@@ -24,6 +24,7 @@
 #include <QtGui/QWidget>
 
 namespace Akonadi {
+class Collection;
 class CollectionFilterProxyModel;
 class CollectionModel;
 class CollectionView;
@@ -32,9 +33,10 @@ class Item;
 class ItemView;
 class KABCItemBrowser;
 class KABCModel;
+class StandardActionManager;
 }
 
-class KXMLGUIClient;
+class KXmlGuiWindow;
 class QStackedWidget;
 
 class MainWidget : public QWidget
@@ -42,7 +44,7 @@ class MainWidget : public QWidget
   Q_OBJECT
 
   public:
-    explicit MainWidget( KXMLGUIClient *guiClient, QWidget *parent = 0 );
+    explicit MainWidget( KXmlGuiWindow *guiWindow, QWidget *parent = 0 );
     ~MainWidget();
 
   private Q_SLOTS:
@@ -51,6 +53,8 @@ class MainWidget : public QWidget
 
     void editItem( const Akonadi::Item &item );
     void itemSelected( const Akonadi::Item &item );
+
+    void collectionSelected( const Akonadi::Collection &collection );
 
   private:
     void setupGui();
@@ -69,8 +73,9 @@ class MainWidget : public QWidget
 
     Akonadi::KABCItemBrowser *mContactDetails;
     Akonadi::ContactGroupBrowser *mContactGroupDetails;
+    Akonadi::StandardActionManager *mActionManager;
 
-    KXMLGUIClient *mGuiClient;
+    KXmlGuiWindow *mGuiWindow;
 };
 
 #endif

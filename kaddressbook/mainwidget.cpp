@@ -34,6 +34,7 @@
 #include <akonadi/collectionview.h>
 #include <akonadi/control.h>
 #include <akonadi/itemview.h>
+#include <akonadi/standardactionmanager.h>
 
 #include <kactioncollection.h>
 #include <kabc/contactgroup.h>
@@ -43,15 +44,15 @@
 #include <kabc/kabcitembrowser.h>
 #include <kicon.h>
 #include <klocale.h>
-#include <kxmlguiclient.h>
+#include <kxmlguiwindow.h>
 #include <kaction.h>
 
 #include "contacteditordialog.h"
 #include "contactgroupeditordialog.h"
 
-MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
+MainWidget::MainWidget( KXmlGuiWindow *guiWindow, QWidget *parent )
   : QWidget( parent ),
-    mGuiClient( guiClient )
+    mGuiWindow( guiWindow )
 {
   mContactModel = new Akonadi::KABCModel( this );
 
@@ -73,16 +74,18 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   sortModel->setSourceModel( mCollectionFilterModel );
 
   mCollectionView->setModel( sortModel );
+  mCollectionView->setXmlGuiWindow( guiWindow );
   mCollectionView->header()->setDefaultAlignment( Qt::AlignCenter );
   mCollectionView->header()->setSortIndicatorShown( false );
 
   mItemView->setModel( mContactModel );
+  mItemView->setXmlGuiWindow( guiWindow );
   mItemView->header()->setDefaultAlignment( Qt::AlignCenter );
   for ( int column = 1; column < mContactModel->columnCount(); ++column )
     mItemView->setColumnHidden( column, true );
 
   connect( mCollectionView, SIGNAL( currentChanged( const Akonadi::Collection& ) ),
-           mContactModel, SLOT( setCollection( const Akonadi::Collection& ) ) );
+           this, SLOT( collectionSelected( const Akonadi::Collection& ) ) );
   connect( mItemView, SIGNAL( currentChanged( const Akonadi::Item& ) ),
            this, SLOT( itemSelected( const Akonadi::Item& ) ) );
   connect( mItemView, SIGNAL( doubleClicked( const Akonadi::Item& ) ),
@@ -92,6 +95,16 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mDetailsViewStack->setCurrentWidget( mContactDetails );
 
   Akonadi::Control::widgetNeedsAkonadi( this );
+
+  mActionManager = new Akonadi::StandardActionManager( guiWindow->actionCollection(), guiWindow );
+  mActionManager->setCollectionSelectionModel( mCollectionView->selectionModel() );
+  mActionManager->setItemSelectionModel( mItemView->selectionModel() );
+
+  mActionManager->createAllActions();
+  mActionManager->setActionText( Akonadi::StandardActionManager::CreateCollection, ki18n( "Add Address Book" ) );
+  mActionManager->setActionText( Akonadi::StandardActionManager::DeleteCollections, ki18np( "Delete Address Book", "Delete %1 Address Books" ) );
+  mActionManager->setActionText( Akonadi::StandardActionManager::CopyItems, ki18np( "Copy Contact", "Copy %1 Contacts" ) );
+  mActionManager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete Contact", "Delete %1 Contacts" ) );
 }
 
 MainWidget::~MainWidget()
@@ -134,7 +147,7 @@ void MainWidget::setupGui()
 void MainWidget::setupActions()
 {
   KAction *action = 0;
-  KActionCollection *collection = mGuiClient->actionCollection();
+  KActionCollection *collection = mGuiWindow->actionCollection();
 
   action = collection->addAction( "file_new_contact" );
   action->setIcon( KIcon( "contact-new" ) );
@@ -173,6 +186,12 @@ void MainWidget::editItem( const Akonadi::Item &reference )
   } else if ( item.mimeType() == KABC::ContactGroup::mimeType() ) {
     editGroup( reference );
   }
+}
+
+void MainWidget::collectionSelected( const Akonadi::Collection &collection )
+{
+  mContactModel->setCollection( collection );
+  mActionManager->setItemSelectionModel( mItemView->selectionModel() );
 }
 
 /**
