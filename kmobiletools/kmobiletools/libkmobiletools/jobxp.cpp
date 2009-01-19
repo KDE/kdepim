@@ -46,6 +46,7 @@ JobXP::JobXP( JobXP::Type jobType, QObject* parent )
 
 JobXP::~JobXP()
 {
+    delete d; 
 }
 
 JobXP::Type JobXP::jobType() const {
