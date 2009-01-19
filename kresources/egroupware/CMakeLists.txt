@@ -72,7 +72,7 @@ set_target_properties(kabc_xmlrpc_plugin PROPERTIES OUTPUT_NAME kabc_xmlrpc)
 endif (NOT MSVC) 
 
 
-target_link_libraries(kabc_xmlrpc_plugin  ${KDE4_KDECORE_LIBS} ${KDE4_KRESOURCES_LIBS} kabc_xmlrpc)
+target_link_libraries(kabc_xmlrpc_plugin  ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} ${KDE4_KRESOURCES_LIBS} kabc_xmlrpc)
 
 install(TARGETS kabc_xmlrpc_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -89,7 +89,7 @@ set_target_properties(kcal_xmlrpc_plugin PROPERTIES OUTPUT_NAME kcal_xmlrpc)
 endif (NOT MSVC) 
 
 
-target_link_libraries(kcal_xmlrpc_plugin ${KDE4_KDECORE_LIBS} kcal_xmlrpc ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KRESOURCES_LIBS})
+target_link_libraries(kcal_xmlrpc_plugin ${KDE4_KDECORE_LIBS} kcal_xmlrpc ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KCAL_LIBS} ${KDE4_KRESOURCES_LIBS})
 
 install(TARGETS kcal_xmlrpc_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -106,7 +106,7 @@ set_target_properties(knotes_xmlrpc_plugin PROPERTIES OUTPUT_NAME knotes_xmlrpc)
 endif (NOT MSVC) 
 
 
-target_link_libraries(knotes_xmlrpc_plugin knotes_xmlrpc ${KDE4_KDECORE_LIBS} ${KDE4_KRESOURCES_LIBS} ${QT_QT3SUPPORT_LIBRARY} knotes_xmlrpc )
+target_link_libraries(knotes_xmlrpc_plugin knotes_xmlrpc ${KDE4_KDECORE_LIBS} ${QT_QTGUI_LIBRARY} ${KDE4_KRESOURCES_LIBS} ${QT_QT3SUPPORT_LIBRARY} knotes_xmlrpc )
 
 install(TARGETS knotes_xmlrpc_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
