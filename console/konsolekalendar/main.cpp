@@ -3,7 +3,7 @@
  *                                                                            *
  * KonsoleKalendar is a command line interface to KDE calendars               *
  * Copyright (C) 2002-2004  Tuukka Pasanen <illuusio@mailcity.com>            *
- * Copyright (C) 2003-2005,2008  Allen Winter <winter@kde.org>                *
+ * Copyright (C) 2003-2009  Allen Winter <winter@kde.org>                     *
  *                                                                            *
  * This program is free software; you can redistribute it and/or modify       *
  * it under the terms of the GNU General Public License as published by       *
@@ -64,7 +64,8 @@ using namespace std;
 //@cond IGNORE
 static const char progName[] = "konsolekalendar";
 static const char progDisplay[] = "KonsoleKalendar";
-static const char progVersion[] = "1.4.1";
+#include "kdepim-version.h"
+static const char progVersion[] = KDEPIM_VERSION;
 static const char progDesc[] = "A command line interface to KDE calendars";
 static const char progURL[] = "pim.kde.org/components/konsolekalendar.php";
 
@@ -76,7 +77,7 @@ int main( int argc, char *argv[] )
     progVersion,                 // version string
     ki18n( progDesc ),           // short program description
     KAboutData::License_GPL,     // license type
-    ki18n( "(c) 2002-2007, Tuukka Pasanen and Allen Winter" ),
+    ki18n( "(c) 2002-2009, Tuukka Pasanen and Allen Winter" ),
     ki18n( 0 ),                  // any free form text
     progURL,                     // program home page address
     "bugs.kde.org"               // bug report email address
