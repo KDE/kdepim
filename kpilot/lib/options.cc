@@ -39,11 +39,7 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QIODevice>
 
-#ifndef NDEBUG
-int debug_level = 1;
-#else
 int debug_level = 0;
-#endif
 
 // The daemon also has a debug level; debug_spaces is 60 spaces,
 // to align FUNCTIONSETUP output. The one byte extra is for the NUL.

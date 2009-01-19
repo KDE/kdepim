@@ -93,7 +93,6 @@
 {
 	FUNCTIONSETUP;
 
-#ifdef DEBUG
 	if (p)
 	{
 		if (p->isSet("debug"))
@@ -101,11 +100,10 @@
 			debug_level = p->getOption("debug").toInt();
 		}
 	}
-	if (debug_level < 1)
+	if (debug_level < 0)
 	{
-		debug_level = 1;
+		debug_level = 0;
 	}
-#endif
 
 	return debug_level;
 }
