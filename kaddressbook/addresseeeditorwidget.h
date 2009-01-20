@@ -76,7 +76,6 @@ class AddresseeEditorWidget : public AddresseeEditorBase
 
   protected slots:
     void textChanged( const QString& );
-    void pageChanged( QWidget *wdg );
 
     /**
       Emits the modified signal and sets the dirty flag. Any slot
