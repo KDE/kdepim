@@ -127,4 +127,37 @@ class EditCommand : public Command
     KABC::Addressee mNewAddressee;
 };
 
+class CopyToCommand : public Command
+{
+    public:
+        CopyToCommand( KABC::AddressBook *addressBook, const QStringList &uidList,
+                               KABC::Resource *resource );
+
+        virtual QString name() const;
+        virtual void unexecute();
+        virtual void execute();
+
+    private:
+        KABC::Addressee::List mAddresseeList;
+        QStringList mUIDList;
+        KABC::Resource *mResource;
+};
+
+class MoveToCommand : public Command
+{
+    public:
+        MoveToCommand( KAB::Core *core, const QStringList &uidList,
+                               KABC::Resource *resource );
+
+        virtual QString name() const;
+        virtual void unexecute();
+        virtual void execute();
+        void moveContactTo( KABC::Resource *resource );
+
+    private:
+        KABC::Addressee::List mAddresseeList;
+        QStringList mUIDList;
+        KABC::Resource *mResource;
+        KAB::Core *mCore;
+};
 #endif

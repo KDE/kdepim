@@ -826,27 +826,14 @@ void KABCore::storeContactIn( const QString &uid, bool copy /*false*/ )
   if ( !resource )
     return;
 
-  KABLock::self( mAddressBook )->lock( resource );
-  QStringList::Iterator it( uidList.begin() );
-  const QStringList::Iterator endIt( uidList.end() );
-  while ( it != endIt ) {
-    KABC::Addressee addr = mAddressBook->findByUid( *it++ );
-    if ( !addr.isEmpty() ) {
-      KABC::Addressee newAddr( addr );
-      // We need to set a new uid, otherwise the insert below is
-      // ignored. This is bad for syncing, but unavoidable, afaiks
-      newAddr.setUid( KApplication::randomString( 10 ) );
-      newAddr.setResource( resource );
-      addressBook()->insertAddressee( newAddr );
-      const bool inserted = addressBook()->find( newAddr ) != addressBook()->end();
-      if ( !copy && inserted ) {
-          KABLock::self( mAddressBook )->lock( addr.resource() );
-          addressBook()->removeAddressee( addr );
-          KABLock::self( mAddressBook )->unlock( addr.resource() );
-      }
-    }
+  if ( copy ) {
+    CopyToCommand *command = new CopyToCommand( mAddressBook, uidList, resource );
+    mCommandHistory->addCommand( command );
   }
-  KABLock::self( mAddressBook )->unlock( resource );
+  else {
+    MoveToCommand *command = new MoveToCommand( this, uidList, resource );
+    mCommandHistory->addCommand( command );
+  }
 
   addressBookChanged();
   setModified( true );

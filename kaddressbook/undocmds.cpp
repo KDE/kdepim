@@ -266,3 +266,104 @@ void CutCommand::execute()
   kapp->processEvents();
   cb->setText( mClipText );
 }
+
+CopyToCommand::CopyToCommand( KABC::AddressBook *addressBook, const QStringList &uidList,
+                                              KABC::Resource *resource )
+    : Command( addressBook ), mUIDList( uidList ), mResource( resource )
+{
+}
+
+QString CopyToCommand::name() const
+{
+    return i18n( "Copy Contact To", "Copy %n Contacts To", mUIDList.count() );
+}
+
+void CopyToCommand::unexecute()
+{
+    KABC::Addressee::List::ConstIterator it;
+    const KABC::Addressee::List::ConstIterator endIt( mAddresseeList.end() );
+    //For copy : just remove it from the "copied to" resource.
+    // lock resources
+    for ( it = mAddresseeList.begin(); it != endIt; ++it )
+        lock()->lock( (*it).resource() );
+
+    for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
+        addressBook()->removeAddressee( *it );
+        lock()->unlock( (*it).resource() );
+    }
+}
+
+void CopyToCommand::execute()
+{
+  KABLock::self( addressBook() )->lock( mResource );
+  QStringList::Iterator it( mUIDList.begin() );
+  const QStringList::Iterator endIt( mUIDList.end() );
+  while ( it != endIt ) {
+    KABC::Addressee addr = addressBook()->findByUid( *it++ );
+    if ( !addr.isEmpty() ) {
+      KABC::Addressee newAddr( addr );
+      // We need to set a new uid, otherwise the insert below is
+      // ignored. This is bad for syncing, but unavoidable, afaiks
+      newAddr.setUid( KApplication::randomString( 10 ) );
+      newAddr.setResource( mResource );
+      addressBook()->insertAddressee( newAddr );
+      mAddresseeList.append( newAddr );
+    }
+  }
+  KABLock::self( addressBook() )->unlock( mResource );
+
+}
+
+MoveToCommand::MoveToCommand( KAB::Core *core, const QStringList &uidList,
+                                              KABC::Resource *resource )
+    : Command( core->addressBook() ), mUIDList( uidList ), mResource( resource ), mCore( core )
+{
+}
+
+QString MoveToCommand::name() const
+{
+    return i18n( "Move Contact To", "Move %n Contacts To", mUIDList.count() );
+}
+
+void MoveToCommand::unexecute()
+{
+  //For move : remove it from the "copied to" resource and insert it back to "copied from" resource.
+    KABC::Resource *resource = mCore->requestResource( mCore->widget() );
+    if ( !resource )
+      return;
+    moveContactTo( resource );
+}
+
+void MoveToCommand::execute()
+{
+    moveContactTo( mResource );
+}
+
+void MoveToCommand::moveContactTo( KABC::Resource *resource )
+{
+    KABLock::self( addressBook() )->lock( resource );
+    QStringList::Iterator it( mUIDList.begin() );
+    const QStringList::Iterator endIt( mUIDList.end() );
+    while ( it != endIt ) {
+        KABC::Addressee addr = addressBook()->findByUid( *it++ );
+        if ( !addr.isEmpty() ) {
+            KABC::Addressee newAddr( addr );
+      // We need to set a new uid, otherwise the insert below is
+      // ignored. This is bad for syncing, but unavoidable, afaiks
+            QString uid = KApplication::randomString( 10 );
+            newAddr.setUid( uid );
+            newAddr.setResource( resource );
+            addressBook()->insertAddressee( newAddr );
+            mAddresseeList.append( newAddr );
+            mUIDList.append( uid );
+            const bool inserted = addressBook()->find( newAddr ) != addressBook()->end();
+            if ( inserted ) {
+                KABLock::self( addressBook() )->lock( addr.resource() );
+                addressBook()->removeAddressee( addr );
+                KABLock::self( addressBook() )->unlock( addr.resource() );
+            }
+        }
+    }
+    KABLock::self( addressBook() )->unlock( resource );
+
+}
