@@ -38,7 +38,6 @@
 #include <kabc/vcardconverter.h>
 #include <kabc/resourceabc.h>
 #include <kaboutdata.h>
-#include <kacceleratormanager.h>
 #include <kapplication.h>
 
 #include <KActionCollection>
@@ -188,8 +187,6 @@ KABCore::KABCore( KXMLGUIClient *client, bool readWrite, QWidget *parent,
   mSearchManager->reload();
 
   setModified( false );
-
-  KAcceleratorManager::manage( mWidget );
 
   mKIMProxy = ::KIMProxy::instance();
 }
