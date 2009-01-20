@@ -1,3 +1,17 @@
+Tuesday, January 20th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue2846 Need canonical command line to send email via Kontact (running and not running)
+* kolab/issue2677 Misleading german translation "Die Terminordner gehören zur Identität"
+
+Merges
+------
+
+* Bug fixes merged in from 4.1 branch
+
+
 Friday, December 12th 2008
 
 Problems Addressed
