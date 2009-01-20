@@ -76,22 +76,24 @@ KAB::ContactEditorWidgetFactory *ContactEditorWidgetManager::factory( int pos ) 
 void ContactEditorWidgetManager::reload()
 {
   mFactories.clear();
-  kDebug(5720) <<"ContactEditorWidgetManager::reload()";
-  const KService::List plugins = KServiceTypeTrader::self()->query( "KAddressBook/ContactEditorWidget",
-    QString( "[X-KDE-KAddressBook-CEWPluginVersion] == %1" ).arg( KAB_CEW_PLUGIN_VERSION ) );
+  kDebug(5720) << "ContactEditorWidgetManager::reload()";
+  const KService::List plugins =
+    KServiceTypeTrader::self()->query(
+      "KAddressBook/ContactEditorWidget",
+      QString( "[X-KDE-KAddressBook-CEWPluginVersion] == %1" ).arg( KAB_CEW_PLUGIN_VERSION ) );
 
   foreach ( KService::Ptr pluginService, plugins ) {
     KPluginFactory *factory = KPluginLoader( *pluginService ).factory();
     if ( !factory ) {
-      kDebug(5720) <<"ContactEditorWidgetManager::reload(): Factory creation failed";
+      kDebug(5720) << "ContactEditorWidgetManager::reload(): Factory creation failed";
       continue;
     }
 
     KAB::ContactEditorWidgetFactory *pageFactory =
-                          dynamic_cast<KAB::ContactEditorWidgetFactory*>( factory );
+      static_cast<KAB::ContactEditorWidgetFactory*>( factory );
 
     if ( !pageFactory ) {
-      kDebug(5720) <<"ContactEditorWidgetManager::reload(): Cast failed";
+      kDebug(5720) << "ContactEditorWidgetManager::reload(): Factory cast failed";
       continue;
     }
 
