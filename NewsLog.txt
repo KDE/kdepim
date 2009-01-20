@@ -1,3 +1,13 @@
+Tuesday, January 20th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3304 Pasting a contact opens an edit dialog.
+* kolab/issue3345 Calendar: The default status of an organizer should be accepted.
+* kolab/issue2300 Undo doesn't work with "Copy To" and "Move To" of a contact.
+
+
 Sunday, December 21st 2008
 
 Problems addressed
