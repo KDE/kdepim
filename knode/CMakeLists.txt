@@ -117,7 +117,7 @@ kde4_add_plugin(knodepart ${knodepart_PART_SRCS})
 
 
 
-kdepim4_link_unique_libraries(knodepart  ${KDE4_KPARTS_LIBS} knodecommon )
+kdepim4_link_unique_libraries(knodepart  ${KDE4_KPARTS_LIBS} ${QT_QT3SUPPORT_LIBRARY} knodecommon )
 
 install(TARGETS knodepart  DESTINATION ${PLUGIN_INSTALL_DIR})
 
