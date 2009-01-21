@@ -27,10 +27,10 @@
 #include <QDir>
 #include <QApplication>
 #include <QClipboard>
-#include <QHeaderView>
 #include <QDragMoveEvent>
 #include <QMenu>
 #include <QContextMenuEvent>
+#include <QHeaderView>
 
 #include <kaction.h>
 #include <kmessagebox.h>

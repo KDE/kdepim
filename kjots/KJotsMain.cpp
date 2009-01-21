@@ -28,21 +28,12 @@
 
 
 #include <q3header.h>
-#include <QStackedWidget>
-#include <QPainter>
 #include <QtGui/QPrinter>
 #include <QtGui/QPrintDialog>
-#include <QAbstractTextDocumentLayout>
-#include <QTextCodec>
 #include <QCheckBox>
-#include <QGridLayout>
-#include <QTextFrame>
-#include <QFont>
 #include <QTextCharFormat>
 
 //Added by qt3to4:
-#include <QFrame>
-#include <QVBoxLayout>
 #include <kactionmenu.h>
 
 #include <kio/job.h>

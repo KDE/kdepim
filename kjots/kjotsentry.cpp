@@ -28,6 +28,7 @@
 #include <QTextCodec>
 #include <QTextDocumentFragment>
 #include <qdom.h>
+#include <QCoreApplication>
 
 #include <kiconloader.h>
 #include <kinputdialog.h>

@@ -24,7 +24,6 @@
 #ifndef __KJOTSENTRY_H
 #define __KJOTSENTRY_H
 
-#include <QCoreApplication>
 #include <QTreeWidgetItem>
 #include <QTextDocument>
 #include <QTextCursor>

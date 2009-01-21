@@ -25,8 +25,6 @@
 
 #include <QFile>
 #include <QTextStream>
-#include <QTextDocument>
-#include <QDomDocument>
 
 #include <KStandardDirs>
 #include <KUrl>

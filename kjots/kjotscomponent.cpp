@@ -33,15 +33,13 @@
 #include <QtGui/QPrinter>
 #include <QtGui/QPrintDialog>
 #include <QAbstractTextDocumentLayout>
+#include <QTextDocumentFragment>
 #include <QTextCodec>
 #include <QCheckBox>
-#include <QLabel>
 #include <QGridLayout>
 #include <QTextFrame>
-#include <QTextDocumentFragment>
 #include <QFont>
 
-#include <QFrame>
 #include <QVBoxLayout>
 #include <kactionmenu.h>
 

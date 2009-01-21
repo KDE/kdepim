@@ -28,8 +28,6 @@
 #include <KLocale>
 #include <KComboBox>
 #include <KLineEdit>
-#include <KUrl>
-#include <KActionCollection>
 
 #include "KJotsSettings.h"
 #include "flatcollectionproxymodel.h"
