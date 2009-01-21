@@ -1,7 +1,7 @@
 /*
  *  functions.cpp  -  miscellaneous functions
  *  Program:  kalarm
- *  Copyright © 2001-2008 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2009 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -71,6 +71,9 @@ bool sendToKOrganizer(const KAEvent&);
 bool deleteFromKOrganizer(const QString& eventID);
 bool runKOrganizer();
 }
+#ifdef HAVE_XTEST
+void x11_cancelScreenSaver();
+#endif
 
 
 namespace KAlarm
@@ -928,6 +931,17 @@ QString stripAccel(const QString& text)
 	return out;
 }
 
+/******************************************************************************
+* Cancel the screen saver, in case it is active.
+* Only implemented if the X11 XTest extension is installed.
+*/
+void cancelScreenSaver()
+{
+#ifdef HAVE_XTEST
+	x11_cancelScreenSaver();
+#endif // HAVE_XTEST
+}
+
 } // namespace KAlarm
 
 
@@ -1061,3 +1075,25 @@ bool runKOrganizer()
 }
 
 } // namespace
+
+#ifdef HAVE_XTEST
+#include <X11/keysym.h>
+#include <X11/extensions/XTest.h>
+#include <qwindowdefs.h>
+
+/******************************************************************************
+* Cancel the screen saver, in case it is active.
+* Only implemented if the X11 XTest extension is installed.
+*/
+void x11_cancelScreenSaver()
+{
+	kdDebug(5950) << "KAlarm::cancelScreenSaver()" << endl;
+	Display* display = qt_xdisplay();
+	static int XTestKeyCode = 0;
+	if (!XTestKeyCode)
+		XTestKeyCode = XKeysymToKeycode(display, XK_Shift_L);
+	XTestFakeKeyEvent(display, XTestKeyCode, true, CurrentTime);
+	XTestFakeKeyEvent(display, XTestKeyCode, false, CurrentTime);
+	XSync(display, false);
+}
+#endif // HAVE_XTEST

@@ -1,7 +1,7 @@
 /*
  *  kalarmapp.cpp  -  the KAlarm application object
  *  Program:  kalarm
- *  Copyright © 2001-2008 by David Jarvie <djarvie@kde.org>
+ *  Copyright © 2001-2009 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -1631,11 +1631,13 @@ void* KAlarmApp::execAlarm(KAEvent& event, const KAAlarm& alarm, bool reschedule
 				if (win)
 					win->setRecreating();    // prevent post-alarm actions
 				delete win;
+				KAlarm::cancelScreenSaver();
 				(new MessageWin(event, alarm, reschedule, allowDefer))->show();
 			}
 			else
 			{
 				// Raise the existing message window and replay any sound
+				KAlarm::cancelScreenSaver();
 				win->repeat(alarm);    // N.B. this reschedules the alarm
 			}
 			break;

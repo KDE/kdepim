@@ -1,7 +1,7 @@
 /*
  *  functions.h  -  miscellaneous functions
  *  Program:  kalarm
- *  Copyright © 2004-2006 by David Jarvie <software@astrojar.org.uk>
+ *  Copyright © 2004-2006,2009 by David Jarvie <djarvie@kde.org>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -108,6 +108,7 @@ UpdateStatus        enableEvent(KAEvent&, AlarmListView* selectionView, bool ena
 void                displayUpdateError(QWidget* parent, UpdateStatus, UpdateError, int nAlarms);
 void                displayKOrgUpdateError(QWidget* parent, KOrgUpdateError, int nAlarms);
 
+void                cancelScreenSaver();
 QString             stripAccel(const QString&);
 
 int                 localeFirstDayOfWeek();

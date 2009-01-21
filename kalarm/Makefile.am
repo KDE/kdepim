@@ -33,7 +33,7 @@ kalarm_LDADD = $(top_builddir)/kalarm/lib/libkalarm.la \
 	$(top_builddir)/kalarm/kalarmd/libkalarmd.la \
 	$(top_builddir)/libkdepim/libkdepim.la \
 	$(top_builddir)/libkpimidentities/libkpimidentities.la \
-	-lkabc -lkutils $(LIB_KDEUI) $(ARTSLIB)
+	-lkabc -lkutils $(LIB_KDEUI) $(ARTSLIB) $(LIBXTST)
 noinst_HEADERS = alarmcalendar.h alarmevent.h alarmlistview.h alarmtext.h \
 	alarmtimewidget.h birthdaydlg.h daemon.h dcophandler.h deferdlg.h \
 	editdlg.h editdlgprivate.h emailidcombo.h eventlistviewbase.h find.h \
