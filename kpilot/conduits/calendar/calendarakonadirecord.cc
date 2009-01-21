@@ -141,14 +141,14 @@ bool CalendarAkonadiRecord::isValid() const
 			(
 				item().payload<IncidencePtr>()
 			);
-	bool check = (!event->summary().isEmpty() &&
-		      event->dtStart().dateTime().isValid() &&
-		      event->dtEnd().dateTime().isValid());
+	bool myCheck = (!event->summary().isEmpty() &&
+			event->dtStart().dateTime().isValid() &&
+			event->dtEnd().dateTime().isValid());
 	DEBUGKPILOT << toString();
-	DEBUGKPILOT << "my checks: " << check;
+	DEBUGKPILOT << "my checks: " << myCheck;
 	bool parentCheck = AkonadiRecord::isValid();
 	DEBUGKPILOT << "parent check: " << parentCheck;
-	DEBUGKPILOT << "returning: " << (check && parentCheck);
+	DEBUGKPILOT << "returning: " << (myCheck && parentCheck);
 
-	return (check && parentCheck);
+	return (myCheck && parentCheck);
 }
