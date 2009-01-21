@@ -103,6 +103,12 @@ public:
 	 */
 	/* virtual */ bool isValid() const;
 
+	/**
+	  * Explicit set of whether this is a dummy (intended only for delete)
+	  * record.
+	  */
+	void setDummy( bool dummy = true );
+
 private:
 	QSharedDataPointer<AkonadiRecordPrivate> d;
 };

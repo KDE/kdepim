@@ -53,7 +53,6 @@ AkonadiRecord::AkonadiRecord( const QString& id ) : d( new AkonadiRecordPrivate 
 {
 	d->fTempId = id;
 	d->fDeleted = true;
-	d->fDummy = true;
 }
 
 AkonadiRecord::~AkonadiRecord()
@@ -130,9 +129,17 @@ void AkonadiRecord::synced()
 	// Nothing to do here.
 }
 
+void AkonadiRecord::setDummy(bool dummy)
+{
+	FUNCTIONSETUPL(5);
+	DEBUGKPILOT << "dummy: " << dummy;
+	d->fDummy = dummy;
+}
+
 bool AkonadiRecord::isValid() const
 {
 	FUNCTIONSETUPL(5);
 	bool valid = ! d->fDummy;
+	DEBUGKPILOT << "valid: " << valid;
 	return valid;
 }

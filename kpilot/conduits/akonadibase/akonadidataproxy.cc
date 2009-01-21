@@ -136,6 +136,7 @@ void AkonadiDataProxy::loadAllRecords()
 				// Well the record with id mPcId doesn't seem to be in the akonadi
 				// resource any more so it is deleted.
 				AkonadiRecord* ar = createDeletedAkonadiRecord( mPcId );
+				ar->setDummy();
 				Q_ASSERT( ar->isDeleted() );
 				Q_ASSERT( ar->isModified() );
 				Q_ASSERT( ar->id() == mPcId );
