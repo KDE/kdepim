@@ -1,3 +1,4 @@
+project(kcontactmanager)
 include_directories(
     ${CMAKE_SOURCE_DIR}/akonadi
     ${CMAKE_SOURCE_DIR}/libkdepim
