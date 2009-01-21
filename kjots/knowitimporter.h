@@ -24,7 +24,6 @@
 
 #include "kjotsentry.h"
 
-class QFile;
 class QDomElement;
 
 #include <QHash>

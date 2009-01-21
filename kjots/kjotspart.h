@@ -29,7 +29,6 @@
 #include <kparts/statusbarextension.h>
 
 class QWidget;
-class QLabel;
 class QTextEdit;
 class KAboutData;
 class KJotsComponent;
