@@ -150,7 +150,7 @@ bool CalendarAkonadiRecord::isValid() const
 	if ( myCheck ) ++validChecks;
 
 	bool parentCheck = AkonadiRecord::isValid();
-	DEBUGKPILOT << "parent check: " << parentCheck;
+	DEBUGKPILOT << "parent check: " << parentCheck << ", myCheck: " << myCheck;
 	if ( parentCheck ) ++validChecks;
 
 	/*
