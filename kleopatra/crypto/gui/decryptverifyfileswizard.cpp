@@ -229,6 +229,8 @@ OperationsWidget::UI::UI( OperationsWidget * q )
     KDAB_SET_OBJECT_NAME( vlay );
     KDAB_SET_OBJECT_NAME( hlay );
 
+    outputDirectoryFNR.setFilter( QDir::Dirs );
+
     useOutputDirectoryCB.setChecked( true );
     connect( &useOutputDirectoryCB, SIGNAL(toggled(bool)), &outputDirectoryLB, SLOT(setEnabled(bool)) );
     connect( &useOutputDirectoryCB, SIGNAL(toggled(bool)), &outputDirectoryFNR, SLOT(setEnabled(bool)) );
