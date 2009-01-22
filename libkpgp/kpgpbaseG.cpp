@@ -241,6 +241,12 @@ BaseG::decrypt( Block& block, const char *passphrase )
   // gpg: public key decryption failed: bad passphrase
   // gpg: encrypted with 2048-bit ELG-E key, ID 23456789, created 2000-02-02
   //       "Foo Bar (home) <foo@bar.xyz>"
+
+  // Example 5: passphrase dialog cancelled by user
+  // gpg: cancelled by user
+  // gpg: encrypted with 2048-bit ELG key, ID XXXXXXXX, created 2006-11-16
+  //       "Foo Bar <foobar@foo.org>"
+  // gpg: public key decryption failed: General error [..]
   if( error.contains( "gpg: encrypted with" ) )
   {
     //kDebug( 5326 ) <<"kpgpbase: message is encrypted";
@@ -274,6 +280,13 @@ BaseG::decrypt( Block& block, const char *passphrase )
         status |= ERROR;
         errMsg = i18n("You do not have the secret key needed to decrypt this message.");
         kDebug( 5326 ) <<"Base: no secret key for this message";
+      }
+      else if( error.contains( "cancelled by user" ) )
+      {
+        status |= CANCEL;
+        status |= ERROR;
+        errMsg = i18n("The passphrase dialog was cancelled.");
+        kDebug( 5326 ) << errMsg;
       }
     }
     // check for persons
