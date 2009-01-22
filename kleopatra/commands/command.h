@@ -109,7 +109,7 @@ namespace Kleo {
         virtual void doCancel() = 0;
 
     protected:
-        void addTemporaryView( const QString & title, AbstractKeyListSortFilterProxyModel * proxy=0 );
+        void addTemporaryView( const QString & title, AbstractKeyListSortFilterProxyModel * proxy=0, const QString & tabToolTip=QString() );
 
     protected:
         class Private;

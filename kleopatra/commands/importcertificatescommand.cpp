@@ -178,7 +178,8 @@ ImportCertificatesCommand::~ImportCertificatesCommand() {}
 void ImportCertificatesCommand::Private::setImportResultProxyModel( const ImportResult & result, const QString & id ) {
     if ( result.imports().empty() )
         return;
-    q->addTemporaryView( id.isEmpty() ? i18n("Imported Certificates") : i18n( "Imported Certificates from %1", id ), new ImportResultProxyModel( result ) );
+    q->addTemporaryView( i18n("Imported Certificates"), new ImportResultProxyModel( result ),
+                         id.isEmpty() ? QString() : i18n( "Imported Certificates from %1", id ) );
     if ( QTreeView * const tv = qobject_cast<QTreeView*>( parentWidgetOrView() ) )
         tv->expandAll();
 }
