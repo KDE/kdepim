@@ -66,7 +66,6 @@ void UiServer::setLogStream( FILE * stream ) {
 UiServer::Private::Private( UiServer * qq )
     : QTcpServer(),
       q( qq ),
-      tmpDir( tmpDirPrefix() ),
       file(),
       factories(),
       connections(),
@@ -200,6 +199,18 @@ void UiServer::Private::incomingConnection( int fd ) {
         s.waitForBytesWritten();
         s.close();
     }
+}
+
+QString UiServer::Private::makeFileName( const QString & socket ) const {
+    if ( !socket.isEmpty() )
+        return socket;
+    const QString gnupgHome = gnupgHomeDirectory();
+    if ( gnupgHome.isEmpty() )
+        throw_<std::runtime_error>( i18n( "Could not determine the GnuPG home directory. Consider setting the GNUPGHOME environment variable." ) );
+    ensureDirectoryExists( gnupgHome );
+    const QDir dir( gnupgHome );
+    assert( dir.exists() );
+    return dir.absoluteFilePath( "S.uiserver" );
 }
 
 void UiServer::Private::ensureDirectoryExists( const QString& path ) const {
