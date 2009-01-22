@@ -79,7 +79,9 @@ void Bookshelf::DelayedInitialization ( KActionCollection *actionCollection ) {
         this, SLOT(copyLinkAddress()));
     connect(actionCollection->action("change_color"), SIGNAL(triggered()),
         this, SLOT(changeColor()));
-    connect(header(), SIGNAL(sectionClicked(int)), this, SLOT(onHeaderClick(int)));
+    // This doesn't work and causes crashes.
+    // Disabling for KDE4.2.
+//     connect(header(), SIGNAL(sectionClicked(int)), this, SLOT(onHeaderClick(int)));
 
     m_actionCollection = actionCollection;
 
@@ -774,6 +776,11 @@ void Bookshelf::onHeaderClick(int)
 // or not but yes; all this crap is actually necessary to get it to
 // work. Things fail spectaculalry if you don't make sure all the
 // books are closed before sorting them.
+// --
+// The problem is that sorting the children of an item does not rearrange the children of that
+// item when it is sorted. Fix scheduled for Qt4.5.
+// http://trolltech.com/developer/task-tracker/index_html?method=entry&id=233975
+// -- Stephen Kelly, 16th Jan 2009.
 void Bookshelf::sortBook(QTreeWidgetItem *book )
 {
     setUpdatesEnabled(false);
