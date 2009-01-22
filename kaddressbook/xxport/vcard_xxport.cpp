@@ -294,6 +294,7 @@ KABC::AddresseeList VCardXXPort::filterContacts( const KABC::AddresseeList &addr
       addr.setTitle( (*it).title() );
       addr.setRole( (*it).role() );
       addr.setOrganization( (*it).organization() );
+      addr.setDepartment( (*it).department() );
 
       addr.setDepartment( (*it).department() );
       addr.setLogo( (*it).logo() );
