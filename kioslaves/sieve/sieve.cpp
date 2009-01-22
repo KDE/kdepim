@@ -322,7 +322,7 @@ void kio_sieveProtocol::changeCheck( const KURL &url )
         // For TLS, only disconnect if we are unencrypted and are
         // no longer allowed (otherwise, it's still fine):
         const bool allowUnencryptedNow = url.queryItem("x-allow-unencrypted") == "true" ;
-        if ( m_allowUnencrypted && allowUnencryptedNow )
+        if ( m_allowUnencrypted && !allowUnencryptedNow )
             if ( isConnectionValid() )
                 disconnect();
         m_allowUnencrypted = allowUnencryptedNow;
