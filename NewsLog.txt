@@ -6,6 +6,7 @@ Problems addressed
 * kolab/issue3304 Pasting a contact opens an edit dialog.
 * kolab/issue3345 Calendar: The default status of an organizer should be accepted.
 * kolab/issue2677 Misleading german translation "Die Terminordner gehören zur Identität"
+* kolab/issue2908 Wrong default name when renaming IMAP ressources
 
 Sunday, December 21st 2008
 
