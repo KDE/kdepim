@@ -47,12 +47,14 @@ AkonadiRecord::AkonadiRecord( const Akonadi::Item& item, const QDateTime& lastSy
 	d->fItem = item;
 	d->fLastSyncDateTime = lastSync.toUTC(); // Item times are saved in UTC time.
 	d->fDeleted = false;
+	d->fDummy = false;
 }
 
 AkonadiRecord::AkonadiRecord( const QString& id ) : d( new AkonadiRecordPrivate )
 {
 	d->fTempId = id;
 	d->fDeleted = true;
+	d->fDummy = false;
 }
 
 AkonadiRecord::~AkonadiRecord()
