@@ -60,9 +60,8 @@ namespace Kleo {
         class Private;
         friend class Private;
         kdtools::pimpl_ptr<Private> d;
-        Q_PRIVATE_SLOT( d, void jobDone( GpgME::KeyListResult ) )
-        Q_PRIVATE_SLOT( d, void nextSecretKey( GpgME::Key ) )
-        Q_PRIVATE_SLOT( d, void nextPublicKey( GpgME::Key ) )
+        Q_PRIVATE_SLOT( d, void publicKeyJobDone(GpgME::KeyListResult,std::vector<GpgME::Key>) )
+        Q_PRIVATE_SLOT( d, void secretKeyJobDone(GpgME::KeyListResult,std::vector<GpgME::Key>) )
         Q_PRIVATE_SLOT( d, void doStart() )
     };
 }
