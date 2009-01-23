@@ -51,13 +51,26 @@
 using namespace Kleo;
 
 class HeaderView::Private {
+    friend class ::Kleo::HeaderView;
+    HeaderView * const q;
 public:
-    Private()
-        : mousePressed( false ),
+    Private( HeaderView * qq )
+        : q( qq ),
+          mousePressed( false ),
           modes(),
           sizes()
     {
+        connect( q, SIGNAL(sectionCountChanged(int,int)),
+                 q, SLOT(_klhv_slotSectionCountChanged(int,int)) );
+    }
 
+    void _klhv_slotSectionCountChanged( int oldCount, int newCount ) {
+        kDebug() << oldCount << "->" << newCount;
+        if ( oldCount > newCount )
+            return;
+        ensureNumSections( newCount );
+        for ( unsigned int i = 0, end = std::min<unsigned int>( newCount, modes.size() ) ; i < end ; ++i )
+            q->QHeaderView::setResizeMode( i, modes[i] );
     }
 
     void ensureNumSections( unsigned int num ) {
@@ -71,7 +84,7 @@ public:
 };
 
 HeaderView::HeaderView( Qt::Orientation o, QWidget * p )
-    : QHeaderView( o, p ), d( new Private )
+    : QHeaderView( o, p ), d( new Private( this ) )
 {
 
 }
@@ -115,7 +128,7 @@ QDebug operator<<( QDebug debug, const std::vector<T,A> & v ) {
 }
 
 
-
+#if 0
 static std::vector<int> calculate_section_sizes( const std::vector<int> & oldSizes, int newLength, const std::vector<QHeaderView::ResizeMode> & modes, int minSize ) {
 
     if ( oldSizes.empty() ) {
@@ -155,7 +168,7 @@ static std::vector<int> calculate_section_sizes( const std::vector<int> & oldSiz
 
     return newSizes;
 }
-
+#endif
 
 void HeaderView::setSectionSizes( const std::vector<int> & sizes ) {
     hvDebug() << sizes;
@@ -172,8 +185,11 @@ std::vector<int> HeaderView::sectionSizes() const {
 void HeaderView::setSectionResizeMode( unsigned int section, ResizeMode mode ) {
     d->ensureNumSections( section+1 );
     d->modes[section] = mode;
+    if ( section < static_cast<unsigned int>( count() ) )
+        QHeaderView::setResizeMode( section, mode );
 }
 
+#if 0
 void HeaderView::setModel( QAbstractItemModel * model ) {
 
     hvDebug() << "before" << section_sizes( this );
@@ -215,5 +231,6 @@ void HeaderView::updateGeometries() {
 
     apply_section_sizes( this, newSizes );
 }
+#endif
 
 #include "moc_headerview.cpp"
