@@ -50,11 +50,15 @@ AkonadiRecord::AkonadiRecord( const Akonadi::Item& item, const QDateTime& lastSy
 	d->fDummy = false;
 }
 
+/**
+ * This ctor is _only_ used for dummy records which are temporarily used to delete
+ * data.
+ */
 AkonadiRecord::AkonadiRecord( const QString& id ) : d( new AkonadiRecordPrivate )
 {
 	d->fTempId = id;
 	d->fDeleted = true;
-	d->fDummy = false;
+	d->fDummy = true;
 }
 
 AkonadiRecord::~AkonadiRecord()
@@ -123,6 +127,11 @@ void AkonadiRecord::setItem( const Akonadi::Item& item )
 	d->fItem = item;
 	// Make sure that we return the right id after updating the itemobject.
 	setId( QString::number( item.id() ) );
+	/**
+	 * Assuming we're being passed a valid item to use, make sure fDummy
+	 * is not still false after this.
+	 */
+	setDummy( false );
 }
 
 void AkonadiRecord::synced()
