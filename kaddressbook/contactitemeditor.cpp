@@ -32,6 +32,8 @@
 #include <akonadi/monitor.h>
 #include <akonadi/session.h>
 
+#include <klocale.h>
+
 class ContactItemEditor::Private
 {
   public:
@@ -97,8 +99,8 @@ void ContactItemEditor::Private::itemChanged( const Akonadi::Item&, const QSet<Q
   QMessageBox dlg( mParent );
 
   dlg.setInformativeText( QLatin1String( "The contact has been changed by anyone else\nWhat shall be done?" ) );
-  dlg.addButton( QLatin1String( "Take over changes" ), QMessageBox::AcceptRole );
-  dlg.addButton( QLatin1String( "Ignore and Overwrite changes" ), QMessageBox::RejectRole );
+  dlg.addButton( i18n( "Take over changes" ), QMessageBox::AcceptRole );
+  dlg.addButton( i18n( "Ignore and Overwrite changes" ), QMessageBox::RejectRole );
 
   if ( dlg.exec() == QMessageBox::AcceptRole ) {
     Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( mItem );
