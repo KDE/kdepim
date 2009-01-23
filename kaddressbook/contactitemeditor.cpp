@@ -146,6 +146,7 @@ ContactItemEditor::ContactItemEditor( Mode mode, AbstractContactEditorWidget *ed
 
 ContactItemEditor::~ContactItemEditor()
 {
+  delete d;
 }
 
 void ContactItemEditor::loadContact( const Akonadi::Item &item )
