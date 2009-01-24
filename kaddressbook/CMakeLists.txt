@@ -23,6 +23,7 @@ set( kcontactmanager_SRCS
   editor/dateeditwidget.cpp
   editor/displaynameeditwidget.cpp
   editor/emaileditwidget.cpp
+  editor/freebusyeditwidget.cpp
   editor/imagewidget.cpp
   editor/imeditwidget.cpp
   editor/nameeditwidget.cpp
