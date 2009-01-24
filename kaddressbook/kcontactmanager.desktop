@@ -47,4 +47,4 @@ Type=Application
 X-DocPath=kcontactmanager/index.html
 Terminal=false
 X-KDE-StartupNotify=true
-Categories=Qt;KDE;Office;
+Categories=Qt;KDE;Office;ContactManagement;

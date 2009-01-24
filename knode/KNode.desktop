@@ -73,4 +73,4 @@ GenericName[zh_CN]=新闻组阅读器
 GenericName[zh_TW]=新聞閱讀器
 X-KDE-StartupNotify=true
 X-DBUS-StartupType=Unique
-Categories=Qt;KDE;Network;
+Categories=Qt;KDE;Network;News;
