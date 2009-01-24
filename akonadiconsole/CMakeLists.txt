@@ -56,6 +56,8 @@ target_link_libraries( akonadiconsole_bin
   kdepim
   ${KDE4_KDEUI_LIBS}
   ${AKONADICONSOLE_EXTRA_LIBS}
+  ${QT_QTSQL_LIBRARY}
+  ${AKONADI_COMMON_LIBRARIES}
 )
 
 install( TARGETS akonadiconsole_bin ${INSTALL_TARGETS_DEFAULT_ARGS} )
