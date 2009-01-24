@@ -16,40 +16,21 @@ add_subdirectory(icons)
 set( kcontactmanager_SRCS
   collectioncombobox.cpp
   contacteditordialog.cpp
-  contactitemeditor.cpp
   contactgroupeditordialog.cpp
+  contactitemeditor.cpp
+  editor/addresseditwidget.cpp
+  editor/contacteditor.cpp
+  editor/dateeditwidget.cpp
+  editor/displaynameeditwidget.cpp
+  editor/emaileditwidget.cpp
+  editor/imagewidget.cpp
+  editor/imeditwidget.cpp
+  editor/nameeditwidget.cpp
+  editor/phoneeditwidget.cpp
+  editor/soundeditwidget.cpp
   main.cpp
   mainwidget.cpp
   mainwindow.cpp
-
-  # editors/addresseditwidget.cpp
-  # editors/addresseeconfig.cpp
-  # editors/addresseeeditorwidget.cpp
-  # editors/advancedcustomfields.cpp
-  # editors/contacteditorwidget.cpp
-  # editors/contacteditorwidgetmanager.cpp
-  # editors/customfieldswidget.cpp
-  # editors/emaileditwidget.cpp
-  # editors/extendedcontacteditor.cpp
-  # editors/extendedcontacteditordialog.cpp
-  # editors/freebusywidget.cpp
-  # editors/geowidget.cpp
-  # editors/imagewidget.cpp
-  # editors/imeditwidget.cpp
-  # editors/keywidget.cpp
-  # editors/nameeditdialog.cpp
-  # editors/phoneeditwidget.cpp
-  # editors/secrecywidget.cpp
-  # editors/soundwidget.cpp
-   editor/addresseditwidget.cpp
-   editor/contacteditor.cpp
-   editor/dateeditwidget.cpp
-   editor/displaynameeditwidget.cpp
-   editor/emaileditwidget.cpp
-   editor/imagewidget.cpp
-   editor/nameeditwidget.cpp
-   editor/phoneeditwidget.cpp
-   editor/soundeditwidget.cpp
 )
 
 # todo: more appropriate icon?
