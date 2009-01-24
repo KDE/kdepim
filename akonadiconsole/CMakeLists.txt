@@ -23,6 +23,7 @@ set(akonadiconsole_bin_SRCS
   main.cpp
   mainwidget.cpp
   mainwindow.cpp
+  rawsocketconsole.cpp
   searchdialog.cpp
 )
 
@@ -45,6 +46,7 @@ kde4_add_ui_files(akonadiconsole_bin_SRCS
   collectionaclpage.ui
   dbbrowser.ui
   dbconsole.ui
+  rawsocketconsole.ui
 )
 
 kde4_add_kcfg_files(akonadiconsole_bin_SRCS settings.kcfgc)

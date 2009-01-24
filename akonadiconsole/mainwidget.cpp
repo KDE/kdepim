@@ -26,6 +26,7 @@
 #include "dbbrowser.h"
 #include "dbconsole.h"
 #include "debugwidget.h"
+#include "rawsocketconsole.h"
 #include "searchdialog.h"
 
 #include <akonadi/agentinstancewidget.h>
@@ -52,6 +53,7 @@ MainWidget::MainWidget( KXmlGuiWindow *parent )
   BrowserWidget *browser = new BrowserWidget( parent, tabWidget );
   tabWidget->addTab( browser, "Browser" );
   tabWidget->addTab( new DebugWidget( tabWidget ), "Debugger" );
+  tabWidget->addTab( new RawSocketConsole( tabWidget ), "Raw Socket" );
   tabWidget->addTab( new DbBrowser( tabWidget ), "DB Browser" );
   tabWidget->addTab( new DbConsole( tabWidget ), "DB Console" );
 

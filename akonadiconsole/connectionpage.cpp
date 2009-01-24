@@ -21,6 +21,8 @@
 
 #include "connectionpage.h"
 
+#include <KGlobalSettings>
+
 #include <QtGui/QTextEdit>
 #include <QtGui/QVBoxLayout>
 
@@ -33,6 +35,7 @@ ConnectionPage::ConnectionPage( const QString &identifier, QWidget *parent )
 
   mDataView = new QTextEdit( this );
   mDataView->setReadOnly( true );
+  mDataView->setFont( KGlobalSettings::fixedFont() );
 
   layout->addWidget( mDataView );
 
