@@ -33,6 +33,7 @@ qt4_add_dbus_interface( akonadiconsole_bin_SRCS
 )
 
 kde4_add_ui_files(akonadiconsole_bin_SRCS
+  agentwidget.ui
   browserwidget_itemview.ui
   browserwidget_contentview.ui
   collectionattributespage.ui

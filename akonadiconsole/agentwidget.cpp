@@ -28,6 +28,8 @@
 #include <akonadi/control.h>
 
 #include <KLocale>
+#include <KMessageBox>
+#include <KStandardGuiItem>
 
 #include <QtGui/QGridLayout>
 #include <QtGui/QMenu>
@@ -38,36 +40,33 @@ using namespace Akonadi;
 AgentWidget::AgentWidget( QWidget *parent )
   : QWidget( parent )
 {
-  QGridLayout *layout = new QGridLayout( this );
+  ui.setupUi( this );
 
-  mWidget = new Akonadi::AgentInstanceWidget( this );
-  connect( mWidget, SIGNAL( doubleClicked( const Akonadi::AgentInstance& ) ), SLOT( configureAgent() ) );
+  connect( ui.instanceWidget, SIGNAL(doubleClicked(Akonadi::AgentInstance)), SLOT(configureAgent()) );
+  connect( ui.instanceWidget, SIGNAL(currentChanged(Akonadi::AgentInstance,Akonadi::AgentInstance)),
+           SLOT(currentChanged(Akonadi::AgentInstance)) );
+  connect( ui.instanceWidget, SIGNAL(customContextMenuRequested(QPoint)), SLOT(showContextMenu(QPoint)) );
+  currentChanged( ui.instanceWidget->currentAgentInstance() );
 
-  layout->addWidget( mWidget, 0, 0, 1, 6 );
+  ui.addButton->setGuiItem( KStandardGuiItem::add() );
+  connect( ui.addButton, SIGNAL( clicked() ), this, SLOT( addAgent() ) );
 
-  QPushButton *button = new QPushButton( "Add...", this );
-  connect( button, SIGNAL( clicked() ), this, SLOT( addAgent() ) );
-  layout->addWidget( button, 1, 1 );
+  ui.removeButton->setGuiItem( KStandardGuiItem::remove() );
+  connect( ui.removeButton, SIGNAL( clicked() ), this, SLOT( removeAgent() ) );
 
-  button = new QPushButton( "Remove", this );
-  connect( button, SIGNAL( clicked() ), this, SLOT( removeAgent() ) );
-  layout->addWidget( button, 1, 2 );
+  ui.configButton->setGuiItem( KStandardGuiItem::configure() );
+  connect( ui.configButton, SIGNAL( clicked() ), this, SLOT( configureAgent() ) );
 
-  button = new QPushButton( "Configure...", this );
-  connect( button, SIGNAL( clicked() ), this, SLOT( configureAgent() ) );
-  layout->addWidget( button, 1, 3 );
+  mSyncMenu = new QMenu( i18n("Synchronize"), this );
+  mSyncMenu->addAction( i18n("Synchronize All"), this, SLOT(synchronizeAgent()) );
+  mSyncMenu->addAction( i18n("Synchronize Collection Tree"), this, SLOT(synchronizeTree()) );
+  mSyncMenu->setIcon( KIcon("view-refresh" ) );
+  ui.syncButton->setMenu( mSyncMenu );
+  ui.syncButton->setIcon( KIcon( "view-refresh" ) );
+  connect( ui.syncButton, SIGNAL( clicked() ), this, SLOT( synchronizeAgent() ) );
 
-  QMenu *syncMenu = new QMenu( this );
-  syncMenu->addAction( i18n("Synchronize All"), this, SLOT(synchronizeAgent()) );
-  syncMenu->addAction( i18n("Synchronize Collection Tree"), this, SLOT(synchronizeTree()) );
-  button = new QPushButton( "Synchronize", this );
-  button->setMenu( syncMenu );
-  connect( button, SIGNAL( clicked() ), this, SLOT( synchronizeAgent() ) );
-  layout->addWidget( button, 1, 4 );
-
-  button = new QPushButton( "Toggle Online/Offline", this );
-  connect( button, SIGNAL(clicked()), SLOT(toggleOnline()) );
-  layout->addWidget( button, 1, 5 );
+  ui.restartButton->setIcon( KIcon( "system-restart" ) );
+  connect( ui.restartButton, SIGNAL(clicked()), SLOT(restartAgent()) );
 
   Control::widgetNeedsAkonadi( this );
 }
@@ -88,37 +87,91 @@ void AgentWidget::addAgent()
 
 void AgentWidget::removeAgent()
 {
-  const AgentInstance agent = mWidget->currentAgentInstance();
-  if ( agent.isValid() )
-    AgentManager::self()->removeInstance( agent );
+  const AgentInstance agent = ui.instanceWidget->currentAgentInstance();
+  if ( agent.isValid() ) {
+    if ( KMessageBox::questionYesNo( this,
+                                     i18n( "Do you really want to delete agent instance %1?", agent.name() ),
+                                     i18n( "Agent Deletion" ),
+                                     KStandardGuiItem::del(),
+                                     KStandardGuiItem::cancel(),
+                                     QString(),
+                                     KMessageBox::Dangerous )
+      == KMessageBox::Yes )
+    {
+      AgentManager::self()->removeInstance( agent );
+    }
+  }
 }
 
 void AgentWidget::configureAgent()
 {
-  AgentInstance agent = mWidget->currentAgentInstance();
+  AgentInstance agent = ui.instanceWidget->currentAgentInstance();
   if ( agent.isValid() )
     agent.configure( this );
 }
 
 void AgentWidget::synchronizeAgent()
 {
-  AgentInstance agent = mWidget->currentAgentInstance();
+  AgentInstance agent = ui.instanceWidget->currentAgentInstance();
   if ( agent.isValid() )
     agent.synchronize();
 }
 
 void AgentWidget::toggleOnline()
 {
-  AgentInstance agent = mWidget->currentAgentInstance();
+  AgentInstance agent = ui.instanceWidget->currentAgentInstance();
   if ( agent.isValid() )
     agent.setIsOnline( !agent.isOnline() );
 }
 
 void AgentWidget::synchronizeTree()
 {
-  AgentInstance agent = mWidget->currentAgentInstance();
+  AgentInstance agent = ui.instanceWidget->currentAgentInstance();
   if ( agent.isValid() )
     agent.synchronizeCollectionTree();
 }
+
+void AgentWidget::restartAgent()
+{
+  AgentInstance agent = ui.instanceWidget->currentAgentInstance();
+  if ( agent.isValid() )
+    agent.restart();
+}
+
+void AgentWidget::currentChanged(const Akonadi::AgentInstance& instance)
+{
+  ui.removeButton->setEnabled( instance.isValid() );
+  ui.configButton->setEnabled( instance.isValid() );
+  ui.syncButton->setEnabled( instance.isValid() );
+  ui.restartButton->setEnabled( instance.isValid() );
+
+  if ( instance.isValid() ) {
+    ui.identifierLabel->setText( instance.identifier() );
+    ui.typeLabel->setText( instance.type().name() );
+    ui.statusLabel->setText( instance.isOnline() ? i18n( "Online" ) : i18n( "Offline" ) );
+    ui.capabilitiesLabel->setText( instance.type().capabilities().join( ", " ) );
+    ui.mimeTypeLabel->setText( instance.type().mimeTypes().join( ", " ) );
+  } else {
+    ui.identifierLabel->setText( QString() );
+    ui.typeLabel->setText( QString() );
+    ui.statusLabel->setText( QString() );
+    ui.capabilitiesLabel->setText( QString() );
+    ui.mimeTypeLabel->setText( QString() );
+  }
+}
+
+void AgentWidget::showContextMenu(const QPoint& pos)
+{
+  QMenu menu( this );
+  menu.addAction( KIcon("list-add"), i18n("Add Agent..."), this, SLOT(addAgent()) );
+  menu.addSeparator();
+  menu.addMenu( mSyncMenu );
+  menu.addAction( KIcon("system-restart"), i18n("Restart Agent"), this, SLOT(restartAgent()) );
+  menu.addAction( KIcon("network-disconnect"), i18n("Toggle Online/Offline"), this, SLOT(toggleOnline()) );
+  menu.addAction( KIcon("configure"), i18n("Configure..."), this, SLOT(configureAgent()) );
+  menu.addAction( KIcon("list-remove"), i18n("Remove Agent"), this, SLOT(removeAgent()) );
+  menu.exec( mapToGlobal( pos ) );
+}
+
 
 #include "agentwidget.moc"

@@ -22,12 +22,10 @@
 #ifndef AGENTWIDGET_H
 #define AGENTWIDGET_H
 
-#include <QtGui/QWidget>
+#include "ui_agentwidget.h"
 
-namespace Akonadi {
-class AgentInstanceWidget;
-class AgentManager;
-}
+class QMenu;
+class QPoint;
 
 class AgentWidget : public QWidget
 {
@@ -35,7 +33,7 @@ class AgentWidget : public QWidget
 
   public:
     AgentWidget( QWidget *parent = 0 );
-    Akonadi::AgentInstanceWidget *widget() const { return mWidget; }
+    Akonadi::AgentInstanceWidget *widget() const { return ui.instanceWidget; }
 
   private Q_SLOTS:
     void addAgent();
@@ -44,10 +42,14 @@ class AgentWidget : public QWidget
     void synchronizeAgent();
     void synchronizeTree();
     void toggleOnline();
+    void restartAgent();
+
+    void currentChanged( const Akonadi::AgentInstance &instance );
+    void showContextMenu( const QPoint &pos );
 
   private:
-    Akonadi::AgentInstanceWidget *mWidget;
-    Akonadi::AgentManager *mManager;
+    Ui::AgentWidget ui;
+    QMenu *mSyncMenu;
 };
 
 #endif

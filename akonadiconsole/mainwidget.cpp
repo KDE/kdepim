@@ -47,9 +47,6 @@ MainWidget::MainWidget( KXmlGuiWindow *parent )
   layout->addWidget( tabWidget );
 
   tabWidget->addTab( new AgentWidget( tabWidget ), "Agents" );
-  AgentWidget *resView = new AgentWidget( tabWidget );
-  resView->widget()->agentFilterProxyModel()->addCapabilityFilter( "Resource" );
-  tabWidget->addTab( resView, "Resources" );
   BrowserWidget *browser = new BrowserWidget( parent, tabWidget );
   tabWidget->addTab( browser, "Browser" );
   tabWidget->addTab( new DebugWidget( tabWidget ), "Debugger" );
