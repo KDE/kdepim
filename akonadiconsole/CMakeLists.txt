@@ -15,6 +15,7 @@ set(akonadiconsole_bin_SRCS
   collectioninternalspage.cpp
   collectionaclpage.cpp
   connectionpage.cpp
+  dbaccess.cpp
   dbbrowser.cpp
   dbconsole.cpp
   debugwidget.cpp

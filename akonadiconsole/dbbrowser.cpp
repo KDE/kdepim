@@ -18,16 +18,10 @@
 */
 
 #include "dbbrowser.h"
+#include "dbaccess.h"
 
-#include <akonadi/private/xdgbasedirs_p.h>
-
-#include <KMessageBox>
-
-#include <QSettings>
-#include <QSqlError>
+#include <QSqlDatabase>
 #include <QSqlTableModel>
-
-using namespace Akonadi;
 
 DbBrowser::DbBrowser(QWidget* parent) :
   QWidget( parent ),
@@ -35,22 +29,7 @@ DbBrowser::DbBrowser(QWidget* parent) :
 {
   ui.setupUi( this );
 
-  const QString serverConfigFile = XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite );
-  QSettings settings( serverConfigFile, QSettings::IniFormat );
-
-  const QString driver = settings.value( "General/Driver", "QMYSQL" ).toString();
-  mDatabase = QSqlDatabase::addDatabase( driver );
-  settings.beginGroup( driver );
-  mDatabase.setHostName( settings.value( "Host", QString() ).toString() );
-  mDatabase.setDatabaseName( settings.value( "Name", "akonadi" ).toString() );
-  mDatabase.setUserName( settings.value( "User", QString() ).toString() );
-  mDatabase.setPassword( settings.value( "Password", QString() ).toString() );
-  mDatabase.setConnectOptions( settings.value( "Options", QString() ).toString() );
-  if ( !mDatabase.open() ) {
-    KMessageBox::error( this, i18n( "Failed to connect to database: %1", mDatabase.lastError().text() ) );
-  }
-
-  ui.tableBox->addItems( mDatabase.tables(QSql::AllTables) );
+  ui.tableBox->addItems( DbAccess::database().tables(QSql::AllTables) );
 
   ui.refreshButton->setIcon( KIcon( "view-refresh" ) );
   connect( ui.refreshButton, SIGNAL(clicked()), SLOT(refreshClicked()) );
@@ -62,7 +41,7 @@ void DbBrowser::refreshClicked()
   if ( table.isEmpty() )
     return;
   delete mTableModel;
-  mTableModel = new QSqlTableModel( this, mDatabase );
+  mTableModel = new QSqlTableModel( this, DbAccess::database() );
   mTableModel->setTable( table );
   mTableModel->setEditStrategy( QSqlTableModel::OnRowChange );
   mTableModel->select();

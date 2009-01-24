@@ -17,25 +17,14 @@
     02110-1301, USA.
 */
 
-#ifndef DBCONSOLE_H
-#define DBCONSOLE_H
+#ifndef DBACCESS_H
+#define DBACCESS_H
 
-#include "ui_dbconsole.h"
+class QSqlDatabase;
 
-class QSqlQueryModel;
-
-class DbConsole : public QWidget
+namespace DbAccess
 {
-  Q_OBJECT
-  public:
-    DbConsole( QWidget *parent = 0 );
-
-  private slots:
-    void execClicked();
-
-  private:
-    Ui::DbConsole ui;
-    QSqlQueryModel *mQueryModel;
-};
+  QSqlDatabase database();
+}
 
 #endif

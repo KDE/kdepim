@@ -18,39 +18,18 @@
 */
 
 #include "dbconsole.h"
-
-#include <akonadi/private/xdgbasedirs_p.h>
+#include "dbaccess.h"
 
 #include <KGlobalSettings>
-#include <KMessageBox>
 
-#include <QSettings>
-#include <QSqlError>
+#include <QSqlDatabase>
 #include <QSqlQueryModel>
-
-using namespace Akonadi;
 
 DbConsole::DbConsole(QWidget* parent) :
   QWidget( parent ),
   mQueryModel( 0 )
 {
   ui.setupUi( this );
-
-  // TODO refactor to share with DbBrowser
-  const QString serverConfigFile = XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite );
-  QSettings settings( serverConfigFile, QSettings::IniFormat );
-
-  const QString driver = settings.value( "General/Driver", "QMYSQL" ).toString();
-  mDatabase = QSqlDatabase::addDatabase( driver );
-  settings.beginGroup( driver );
-  mDatabase.setHostName( settings.value( "Host", QString() ).toString() );
-  mDatabase.setDatabaseName( settings.value( "Name", "akonadi" ).toString() );
-  mDatabase.setUserName( settings.value( "User", QString() ).toString() );
-  mDatabase.setPassword( settings.value( "Password", QString() ).toString() );
-  mDatabase.setConnectOptions( settings.value( "Options", QString() ).toString() );
-  if ( !mDatabase.open() ) {
-    KMessageBox::error( this, i18n( "Failed to connect to database: %1", mDatabase.lastError().text() ) );
-  }
 
   ui.execButton->setIcon( KIcon( "application-x-executable" ) );
   connect( ui.execButton, SIGNAL(clicked()), SLOT(execClicked()) );
@@ -65,7 +44,7 @@ void DbConsole::execClicked()
     return;
   delete mQueryModel;
   mQueryModel = new QSqlQueryModel( this );
-  mQueryModel->setQuery( query, mDatabase );
+  mQueryModel->setQuery( query, DbAccess::database() );
   ui.resultView->setModel( mQueryModel );
 }
 

@@ -22,8 +22,6 @@
 
 #include "ui_dbbrowser.h"
 
-#include <QSqlDatabase>
-
 class QSqlTableModel;
 
 class DbBrowser : public QWidget
@@ -37,7 +35,6 @@ class DbBrowser : public QWidget
 
   private:
     Ui::DbBrowser ui;
-    QSqlDatabase mDatabase;
     QSqlTableModel *mTableModel;
 };
 
