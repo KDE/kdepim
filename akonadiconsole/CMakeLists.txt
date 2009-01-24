@@ -16,6 +16,7 @@ set(akonadiconsole_bin_SRCS
   collectionaclpage.cpp
   connectionpage.cpp
   dbbrowser.cpp
+  dbconsole.cpp
   debugwidget.cpp
   main.cpp
   mainwidget.cpp
@@ -41,6 +42,7 @@ kde4_add_ui_files(akonadiconsole_bin_SRCS
   collectioninternalspage.ui
   collectionaclpage.ui
   dbbrowser.ui
+  dbconsole.ui
 )
 
 kde4_add_kcfg_files(akonadiconsole_bin_SRCS settings.kcfgc)

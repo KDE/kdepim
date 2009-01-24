@@ -24,6 +24,7 @@
 #include "agentwidget.h"
 #include "browserwidget.h"
 #include "dbbrowser.h"
+#include "dbconsole.h"
 #include "debugwidget.h"
 #include "searchdialog.h"
 
@@ -52,6 +53,7 @@ MainWidget::MainWidget( KXmlGuiWindow *parent )
   tabWidget->addTab( browser, "Browser" );
   tabWidget->addTab( new DebugWidget( tabWidget ), "Debugger" );
   tabWidget->addTab( new DbBrowser( tabWidget ), "DB Browser" );
+  tabWidget->addTab( new DbConsole( tabWidget ), "DB Console" );
 
   KAction *action = parent->actionCollection()->addAction( "akonadiconsole_search" );
   action->setText( "Create Search" );

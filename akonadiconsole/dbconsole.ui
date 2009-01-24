@@ -1,0 +1,73 @@
+<ui version="4.0" >
+ <class>DbConsole</class>
+ <widget class="QWidget" name="DbConsole" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>443</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Form</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <item>
+    <widget class="QSplitter" name="splitter" >
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <widget class="QTableView" name="resultView" />
+     <widget class="QWidget" name="" >
+      <layout class="QHBoxLayout" name="horizontalLayout" >
+       <item>
+        <widget class="KTextEdit" name="queryEdit" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="tabChangesFocus" >
+          <bool>true</bool>
+         </property>
+         <property name="acceptRichText" >
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="KPushButton" name="execButton" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="MinimumExpanding" hsizetype="Minimum" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="toolTip" >
+          <string>Execute query</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KPushButton</class>
+   <extends>QPushButton</extends>
+   <header>kpushbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>KTextEdit</class>
+   <extends>QTextEdit</extends>
+   <header>ktextedit.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

@@ -17,28 +17,28 @@
     02110-1301, USA.
 */
 
-#ifndef DBBROWSER_H
-#define DBBROWSER_H
+#ifndef DBCONSOLE_H
+#define DBCONSOLE_H
 
-#include "ui_dbbrowser.h"
+#include "ui_dbconsole.h"
 
 #include <QSqlDatabase>
 
-class QSqlTableModel;
+class QSqlQueryModel;
 
-class DbBrowser : public QWidget
+class DbConsole : public QWidget
 {
   Q_OBJECT
   public:
-    DbBrowser( QWidget *parent = 0 );
+    DbConsole( QWidget *parent = 0 );
 
   private slots:
-    void refreshClicked();
+    void execClicked();
 
   private:
-    Ui::DbBrowser ui;
+    Ui::DbConsole ui;
     QSqlDatabase mDatabase;
-    QSqlTableModel *mTableModel;
+    QSqlQueryModel *mQueryModel;
 };
 
 #endif

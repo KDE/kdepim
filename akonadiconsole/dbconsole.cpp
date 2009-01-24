@@ -17,24 +17,26 @@
     02110-1301, USA.
 */
 
-#include "dbbrowser.h"
+#include "dbconsole.h"
 
 #include <akonadi/private/xdgbasedirs_p.h>
 
+#include <KGlobalSettings>
 #include <KMessageBox>
 
 #include <QSettings>
 #include <QSqlError>
-#include <QSqlTableModel>
+#include <QSqlQueryModel>
 
 using namespace Akonadi;
 
-DbBrowser::DbBrowser(QWidget* parent) :
+DbConsole::DbConsole(QWidget* parent) :
   QWidget( parent ),
-  mTableModel( 0 )
+  mQueryModel( 0 )
 {
   ui.setupUi( this );
 
+  // TODO refactor to share with DbBrowser
   const QString serverConfigFile = XdgBaseDirs::akonadiServerConfigFile( XdgBaseDirs::ReadWrite );
   QSettings settings( serverConfigFile, QSettings::IniFormat );
 
@@ -50,23 +52,21 @@ DbBrowser::DbBrowser(QWidget* parent) :
     KMessageBox::error( this, i18n( "Failed to connect to database: %1", mDatabase.lastError().text() ) );
   }
 
-  ui.tableBox->addItems( mDatabase.tables(QSql::AllTables) );
+  ui.execButton->setIcon( KIcon( "application-x-executable" ) );
+  connect( ui.execButton, SIGNAL(clicked()), SLOT(execClicked()) );
 
-  ui.refreshButton->setIcon( KIcon( "view-refresh" ) );
-  connect( ui.refreshButton, SIGNAL(clicked()), SLOT(refreshClicked()) );
+  ui.queryEdit->setFont( KGlobalSettings::fixedFont() );
 }
 
-void DbBrowser::refreshClicked()
+void DbConsole::execClicked()
 {
-  const QString table = ui.tableBox->currentText();
-  if ( table.isEmpty() )
+  const QString query = ui.queryEdit->toPlainText();
+  if ( query.isEmpty() )
     return;
-  delete mTableModel;
-  mTableModel = new QSqlTableModel( this, mDatabase );
-  mTableModel->setTable( table );
-  mTableModel->setEditStrategy( QSqlTableModel::OnRowChange );
-  mTableModel->select();
-  ui.tableView->setModel( mTableModel );
+  delete mQueryModel;
+  mQueryModel = new QSqlQueryModel( this );
+  mQueryModel->setQuery( query, mDatabase );
+  ui.resultView->setModel( mQueryModel );
 }
 
-#include "dbbrowser.moc"
+#include "dbconsole.moc"
