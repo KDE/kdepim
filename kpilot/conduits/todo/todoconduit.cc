@@ -68,6 +68,7 @@ void TodoConduit::loadSettings()
 	
 	TodoSettings::self()->readConfig();
 	d->fCollectionId = TodoSettings::akonadiCollection();
+	d->fPrevCollectionId = TodoSettings::prevAkonadiCollection();
 }
 
 bool TodoConduit::initDataProxies()
