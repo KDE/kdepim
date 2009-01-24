@@ -22,6 +22,7 @@
 #include "collectionattributespage.h"
 #include "collectioninternalspage.h"
 #include "collectionaclpage.h"
+#include "settings.h"
 
 #include <akonadi/attributefactory.h>
 #include <akonadi/job.h>
@@ -221,29 +222,34 @@ void BrowserWidget::setItem( const Akonadi::Item &item )
   contentUi.attrView->setModel( mAttrModel );
 
 #ifdef NEPOMUK_FOUND
-  Nepomuk::Resource res( item.url() );
-  delete mNepomukModel;
-  mNepomukModel = 0;
-  if ( res.isValid() ) {
-    QHash<QUrl, Nepomuk::Variant> props = res.properties();
-    mNepomukModel = new QStandardItemModel( props.count(), 2, this );
-    QStringList labels;
-    labels << i18n( "Property" ) << i18n( "Value" );
-    mNepomukModel->setHorizontalHeaderLabels( labels );
-    int row = 0;
-    for ( QHash<QUrl, Nepomuk::Variant>::ConstIterator it = props.constBegin(); it != props.constEnd(); ++it, ++row ) {
-      QModelIndex index = mNepomukModel->index( row, 0 );
-      Q_ASSERT( index.isValid() );
-      mNepomukModel->setData( index, it.key().toString() );
-      index = mNepomukModel->index( row, 1 );
-      Q_ASSERT( index.isValid() );
-      mNepomukModel->setData( index, it.value().toString() );
+  if ( Settings::self()->nepomukEnabled() ) {
+    Nepomuk::Resource res( item.url() );
+    delete mNepomukModel;
+    mNepomukModel = 0;
+    if ( res.isValid() ) {
+      QHash<QUrl, Nepomuk::Variant> props = res.properties();
+      mNepomukModel = new QStandardItemModel( props.count(), 2, this );
+      QStringList labels;
+      labels << i18n( "Property" ) << i18n( "Value" );
+      mNepomukModel->setHorizontalHeaderLabels( labels );
+      int row = 0;
+      for ( QHash<QUrl, Nepomuk::Variant>::ConstIterator it = props.constBegin(); it != props.constEnd(); ++it, ++row ) {
+        QModelIndex index = mNepomukModel->index( row, 0 );
+        Q_ASSERT( index.isValid() );
+        mNepomukModel->setData( index, it.key().toString() );
+        index = mNepomukModel->index( row, 1 );
+        Q_ASSERT( index.isValid() );
+        mNepomukModel->setData( index, it.value().toString() );
+      }
+      contentUi.nepomukView->setEnabled( true );
+    } else {
+      contentUi.nepomukView->setEnabled( false );
     }
-    contentUi.nepomukView->setEnabled( true );
+    contentUi.nepomukView->setModel( mNepomukModel );
+    contentUi.nepomukTab->setEnabled( true );
   } else {
-    contentUi.nepomukView->setEnabled( false );
+    contentUi.nepomukTab->setEnabled( false );
   }
-  contentUi.nepomukView->setModel( mNepomukModel );
 #endif
 
   if ( mMonitor )

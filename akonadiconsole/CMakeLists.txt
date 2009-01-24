@@ -41,6 +41,8 @@ kde4_add_ui_files(akonadiconsole_bin_SRCS
   collectionaclpage.ui
 )
 
+kde4_add_kcfg_files(akonadiconsole_bin_SRCS settings.kcfgc)
+
 kde4_add_executable(akonadiconsole_bin ${akonadiconsole_bin_SRCS})
 set_target_properties(akonadiconsole_bin PROPERTIES OUTPUT_NAME akonadiconsole)
 
