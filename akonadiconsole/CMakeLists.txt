@@ -1,5 +1,6 @@
 include_directories(${CMAKE_SOURCE_DIR}/akonadi)
 include_directories(${CMAKE_SOURCE_DIR}/libkdepim)
+include_directories(${AKONADI_INCLUDE_DIR})
 
 if(NEPOMUK_FOUND)
   set(AKONADICONSOLE_EXTRA_LIBS ${NEPOMUK_LIBRARIES})
