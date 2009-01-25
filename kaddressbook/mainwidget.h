@@ -38,6 +38,7 @@ class StandardActionManager;
 
 class KXmlGuiWindow;
 class QStackedWidget;
+class QuickSearchWidget;
 
 class MainWidget : public QWidget
 {
@@ -67,6 +68,7 @@ class MainWidget : public QWidget
     Akonadi::CollectionFilterProxyModel *mCollectionFilterModel;
     Akonadi::KABCModel *mContactModel;
 
+    QuickSearchWidget *mQuickSearchWidget;
     Akonadi::CollectionView *mCollectionView;
     Akonadi::ItemView *mItemView;
     QStackedWidget *mDetailsViewStack;

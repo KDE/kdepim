@@ -47,6 +47,7 @@
   <ToolBar name="mainToolBar" noMerge="1"><text>Main Toolbar</text>
     <Action name="file_new_contact"/>
     <Action name="file_new_group"/>
+    <Action name="quick_search"/>
   </ToolBar>
 
 </kpartgui>

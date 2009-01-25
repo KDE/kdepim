@@ -36,6 +36,7 @@
 #include <akonadi/itemview.h>
 #include <akonadi/standardactionmanager.h>
 
+#include <kaction.h>
 #include <kactioncollection.h>
 #include <kabc/contactgroup.h>
 #include <kabc/contactgroupbrowser.h>
@@ -43,12 +44,15 @@
 #include <kabc/kabcmodel.h>
 #include <kabc/kabcitembrowser.h>
 #include <kicon.h>
+#include <klineedit.h>
 #include <klocale.h>
+#include <ktoolbar.h>
 #include <kxmlguiwindow.h>
-#include <kaction.h>
 
 #include "contacteditordialog.h"
+#include "contactfiltermodel.h"
 #include "contactgroupeditordialog.h"
+#include "quicksearchwidget.h"
 
 MainWidget::MainWidget( KXmlGuiWindow *guiWindow, QWidget *parent )
   : QWidget( parent ),
@@ -78,7 +82,12 @@ MainWidget::MainWidget( KXmlGuiWindow *guiWindow, QWidget *parent )
   mCollectionView->header()->setDefaultAlignment( Qt::AlignCenter );
   mCollectionView->header()->setSortIndicatorShown( false );
 
-  mItemView->setModel( mContactModel );
+  ContactFilterModel *contactFilterModel = new ContactFilterModel( this );
+  contactFilterModel->setSourceModel( mContactModel );
+  connect( mQuickSearchWidget, SIGNAL( filterStringChanged( const QString& ) ),
+           contactFilterModel, SLOT( setFilterString( const QString& ) ) );
+
+  mItemView->setModel( contactFilterModel );
   mItemView->setXmlGuiWindow( guiWindow );
   mItemView->header()->setDefaultAlignment( Qt::AlignCenter );
   for ( int column = 1; column < mContactModel->columnCount(); ++column )
@@ -145,6 +154,8 @@ void MainWidget::setupGui()
   // the details widget for contact groups
   mContactGroupDetails = new Akonadi::ContactGroupBrowser( mDetailsViewStack );
   mDetailsViewStack->addWidget( mContactGroupDetails );
+
+  mQuickSearchWidget = new QuickSearchWidget;
 }
 
 void MainWidget::setupActions()
@@ -165,6 +176,9 @@ void MainWidget::setupActions()
   connect( action, SIGNAL( triggered(bool) ), SLOT( newGroup() ));
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_G ) );
   action->setWhatsThis( i18n( "Create a new group<p>You will be presented with a dialog where you can add a new group of contacts.</p>" ) );
+
+  action = collection->addAction( "quick_search" );
+  action->setDefaultWidget( mQuickSearchWidget );
 }
 
 void MainWidget::newContact()

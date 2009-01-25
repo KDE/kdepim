@@ -16,6 +16,7 @@ add_subdirectory(icons)
 set( kcontactmanager_SRCS
   collectioncombobox.cpp
   contacteditordialog.cpp
+  contactfiltermodel.cpp
   contactgroupeditordialog.cpp
   contactitemeditor.cpp
   editor/addresseditwidget.cpp
@@ -32,6 +33,7 @@ set( kcontactmanager_SRCS
   main.cpp
   mainwidget.cpp
   mainwindow.cpp
+  quicksearchwidget.cpp
 )
 
 # todo: more appropriate icon?
