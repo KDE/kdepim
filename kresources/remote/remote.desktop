@@ -73,6 +73,7 @@ Comment[pt]=Oferece o acesso a um calendário num ficheiro remoto, usando um KIO
 Comment[pt_BR]=Fornece acesso a um calendário em um arquivo remoto usando o KIO framework da rede do KDE
 Comment[sl]=Z uporabo KDE-jevega omrežnega ogrodja KIO omogoča dostop do koledarja, ki je shranjen v oddaljeni datoteki
 Comment[sv]=Ger tillgång till en kalender i en fjärrfil med användning av KDE:s I/O-ramverk
+Comment[tr]=KDE'nin ağ çatısı KIO'yu kullanarak uzak bir dosyadaki bir takvime erişimi sağlar
 Comment[uk]=Надає доступ до календаря, який зберігається у віддаленому файлі, за допомогою засобів KIO KDE
 Comment[x-test]=xxProvides access to a calendar in a remote file using KDE's network framework KIOxx
 Comment[zh_CN]=通过 KDE 网络框架 KIO，提供对远程日历文件的访问支持
