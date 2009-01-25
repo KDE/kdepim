@@ -27,6 +27,7 @@
 #include <akonadi/agentinstancecreatejob.h>
 #include <akonadi/control.h>
 
+#include <KDebug>
 #include <KLocale>
 #include <KMessageBox>
 #include <KStandardGuiItem>
@@ -34,6 +35,10 @@
 #include <QtGui/QGridLayout>
 #include <QtGui/QMenu>
 #include <QtGui/QPushButton>
+#include <QDBusInterface>
+#include <QDBusMessage>
+#include <QMetaObject>
+#include <QMetaMethod>
 
 using namespace Akonadi;
 
@@ -138,6 +143,74 @@ void AgentWidget::restartAgent()
     agent.restart();
 }
 
+void AgentWidget::cloneAgent()
+{
+  mCloneSource = ui.instanceWidget->currentAgentInstance();
+  if ( !mCloneSource.isValid() )
+    return;
+  const AgentType agentType = mCloneSource.type();
+  if ( agentType.isValid() ) {
+    AgentInstanceCreateJob *job = new AgentInstanceCreateJob( agentType, this );
+    connect( job, SIGNAL(result(KJob*)), SLOT(cloneAgent(KJob*)) );
+    job->start();
+  } else {
+    kWarning() << "WTF?";
+  }
+}
+
+void AgentWidget::cloneAgent( KJob* job )
+{
+  if ( job->error() ) {
+    KMessageBox::error( this, i18n("Cloneing agent failed: %1.", job->errorText() ) );
+    return;
+  }
+
+  AgentInstance cloneTarget = static_cast<AgentInstanceCreateJob*>( job )->instance();
+  Q_ASSERT( cloneTarget.isValid() );
+  Q_ASSERT( mCloneSource.isValid() );
+
+  QDBusInterface sourceIface( QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg( mCloneSource.identifier() ),
+                              "/Settings" );
+  if ( !sourceIface.isValid() ) {
+    kError() << "Unable to obtain KConfigXT D-Bus interface of source agent" << mCloneSource.identifier();
+    return;
+  }
+
+  QDBusInterface targetIface( QString::fromLatin1("org.freedesktop.Akonadi.Agent.%1").arg( cloneTarget.identifier() ),
+                              "/Settings" );
+  if ( !targetIface.isValid() ) {
+    kError() << "Unable to obtain KConfigXT D-Bus interface of target agent" << cloneTarget.identifier();
+    return;
+  }
+
+  cloneTarget.setName( mCloneSource.name() + " (Clone)" );
+
+  // iterate over all getter methods in the source interface and call the
+  // corresponding setter in the target interface
+  for ( int i = 0; i < sourceIface.metaObject()->methodCount(); ++i ) {
+    const QMetaMethod method = sourceIface.metaObject()->method( i );
+    if ( QByteArray( method.typeName() ).isEmpty() ) // returns void
+      continue;
+    const QByteArray signature( method.signature() );
+    if ( signature.isEmpty() )
+      continue;
+    if ( signature.startsWith( "set" ) || !signature.contains( "()" ) ) // setter or takes parameters
+      continue;
+    if ( signature.startsWith( "Introspect" ) ) // D-Bus stuff
+      continue;
+    const QString methodName = QString::fromLatin1( signature.left( signature.indexOf( '(' ) ) );
+    const QDBusMessage reply = sourceIface.call( methodName );
+    if ( !reply.arguments().count() == 1 ) {
+      kError() << "call to method" << signature << "failed: " << reply.arguments() << reply.errorMessage();
+      continue;
+    }
+    const QString setterName = QLatin1String("set") + methodName.at( 0 ).toUpper() + methodName.mid( 1 );
+    targetIface.call( setterName, reply.arguments().at( 0 ) );
+  }
+
+  cloneTarget.reconfigure();
+}
+
 void AgentWidget::currentChanged(const Akonadi::AgentInstance& instance)
 {
   ui.removeButton->setEnabled( instance.isValid() );
@@ -164,6 +237,7 @@ void AgentWidget::showContextMenu(const QPoint& pos)
 {
   QMenu menu( this );
   menu.addAction( KIcon("list-add"), i18n("Add Agent..."), this, SLOT(addAgent()) );
+  menu.addAction( KIcon("edit-copy"), i18n("Clone Agent"), this, SLOT(cloneAgent()) );
   menu.addSeparator();
   menu.addMenu( mSyncMenu );
   menu.addAction( KIcon("system-restart"), i18n("Restart Agent"), this, SLOT(restartAgent()) );

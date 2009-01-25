@@ -24,6 +24,9 @@
 
 #include "ui_agentwidget.h"
 
+#include <akonadi/agentinstance.h>
+
+class KJob;
 class QMenu;
 class QPoint;
 
@@ -43,6 +46,8 @@ class AgentWidget : public QWidget
     void synchronizeTree();
     void toggleOnline();
     void restartAgent();
+    void cloneAgent();
+    void cloneAgent( KJob *job );
 
     void currentChanged( const Akonadi::AgentInstance &instance );
     void showContextMenu( const QPoint &pos );
@@ -50,6 +55,7 @@ class AgentWidget : public QWidget
   private:
     Ui::AgentWidget ui;
     QMenu *mSyncMenu;
+    Akonadi::AgentInstance mCloneSource;
 };
 
 #endif
