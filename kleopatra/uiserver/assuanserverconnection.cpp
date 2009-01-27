@@ -709,7 +709,7 @@ private:
         QByteArray result;
         for ( std::map< QByteArray, shared_ptr<AssuanCommand::Memento> >::const_iterator it = mementos.begin(), end = mementos.end() ; it != end ; ++it ) {
             char buf[2 + 2*sizeof(void*) + 2];
-            sprintf( buf, "0x%p\n", it->second.get() );
+            sprintf( buf, "0x%p\n", ( void* )it->second.get() );
             buf[sizeof(buf)-1] = '\0';
             result += it->first + QByteArray::fromRawData( buf, sizeof buf );
         }

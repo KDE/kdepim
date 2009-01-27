@@ -102,7 +102,7 @@ bool UiServer::registerCommandFactory( const shared_ptr<AssuanCommandFactory> & 
         std::inplace_merge( d->factories.begin(), d->factories.end() - 1, d->factories.end(), _detail::ByName<std::less>() );
         return true;
     } else {
-        qWarning( "UiServer::registerCommandFactory( %p ): factory NULL or already registered", cf ? cf.get() : 0 );
+        qWarning( "UiServer::registerCommandFactory( %p ): factory NULL or already registered", ( void* )( cf ? cf.get() : 0 ) );
         return false;
     }
 }
@@ -154,7 +154,7 @@ bool UiServer::isStopping() const {
 }
 
 void UiServer::Private::slotConnectionClosed( Kleo::AssuanServerConnection * conn ) {
-    qDebug( "UiServer: connection %p closed", conn );
+    qDebug( "UiServer: connection %p closed", ( void* )conn );
     connections.erase( std::remove_if( connections.begin(), connections.end(),
                                        boost::bind( &boost::shared_ptr<AssuanServerConnection>::get, _1 ) == conn ),
                        connections.end() );
@@ -182,7 +182,7 @@ void UiServer::Private::incomingConnection( int fd ) {
                  q, SIGNAL(startConfigDialogRequested()), Qt::QueuedConnection );
         c->enableCryptoCommands( cryptoCommandsEnabled );
         connections.push_back( c );
-        qDebug( "UiServer: client connection %p established successfully", c.get() );
+        qDebug( "UiServer: client connection %p established successfully", ( void* )c.get() );
     } catch ( const Exception & e ) {
         qDebug( "UiServer: client connection failed: %s", e.what() );
         QTcpSocket s;

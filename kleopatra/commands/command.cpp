@@ -143,7 +143,7 @@ void Command::setView( QAbstractItemView * view ) {
         return;
     const QItemSelectionModel * const sm = view->selectionModel();
     if ( !sm ) {
-        qWarning( "Command::setView: view %p has no selectionModel!", view );
+        qWarning( "Command::setView: view %p has no selectionModel!", ( void* )view );
         return;
     }
     const QList<QModelIndex> selected = sm->selectedRows();

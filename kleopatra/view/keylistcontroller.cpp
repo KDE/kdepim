@@ -93,7 +93,7 @@ public:
 
 public:
     void slotDestroyed( QObject * o ) {
-        qDebug( "KeyListController::Private::slotDestroyed( %p )", o );
+        qDebug( "KeyListController::Private::slotDestroyed( %p )", ( void* )o );
         views.erase( std::remove( views.begin(), views.end(), o ), views.end() );
 	commands.erase( std::remove( commands.begin(), commands.end(), o ), commands.end() );
     }
@@ -283,7 +283,7 @@ void KeyListController::registerCommand( Command * cmd ) {
     if ( !cmd || std::binary_search( d->commands.begin(), d->commands.end(), cmd ) )
         return;
     d->addCommand( cmd );
-    qDebug( "KeyListController::registerCommand( %p )", cmd );
+    qDebug( "KeyListController::registerCommand( %p )", ( void* )cmd );
     if ( d->commands.size() == 1 )
         emit commandsExecuting( true );
 }
@@ -366,7 +366,7 @@ void KeyListController::Private::slotCommandFinished() {
     Command * const cmd = qobject_cast<Command*>( q->sender() );
     if ( !cmd || !std::binary_search( commands.begin(), commands.end(), cmd ) )
         return;
-    qDebug( "KeyListController::Private::slotCommandFinished( %p )", cmd );
+    qDebug( "KeyListController::Private::slotCommandFinished( %p )", ( void* )cmd );
     if ( commands.size() == 1 )
         emit q->commandsExecuting( false );
 }
