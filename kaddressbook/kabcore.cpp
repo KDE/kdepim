@@ -1382,7 +1382,7 @@ void KABCore::initActions()
   connect(mActionCategories, SIGNAL(triggered(bool) ), SLOT( setCategories() ));
   mActionCategories->setWhatsThis( i18n( "Set the categories for all selected contacts." ) );
 
-  QAction *clearLocation = coll->addAction( "clear_search" );
+  KAction *clearLocation = coll->addAction( "clear_search" );
   clearLocation->setIcon( KIcon(QApplication::isRightToLeft() ? "edit-clear-locationbar-rtl" : "edit-clear-locationbar-ltr") );
   clearLocation->setText( i18n( "Clear Search Bar" ) );
   connect(clearLocation, SIGNAL(triggered(bool) ), SLOT( slotClearSearchBar() ));
