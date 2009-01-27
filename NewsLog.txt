@@ -7,6 +7,8 @@ Problems addressed
 * kolab/issue3345 Calendar: The default status of an organizer should be accepted.
 * kolab/issue2677 Misleading german translation "Die Terminordner gehören zur Identität"
 * kolab/issue2908 Wrong default name when renaming IMAP ressources
+* kolab/issue3219 user templates do not work, if the email has an attachment
+
 
 Sunday, December 21st 2008
 
