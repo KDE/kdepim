@@ -38,7 +38,6 @@ libkdepim         Marc Mutz <mutz@kde.org>
                   Tobias Koenig <tokoe@kde.org> (addresseeview, kvcarddrag)
                   Zack Rusin <zack@kde.org> (addressesdialog, komposer)
                   Don Sanders <sanders@kde.org> (maillistdrag)
-libkholidays      Allen Winter <winter@kde.org>
 libkpgp           Ingo Klöcker <kloecker@kde.org>
 libksieve         Marc Mutz <mutz@kde.org>
 mimelib           ?
