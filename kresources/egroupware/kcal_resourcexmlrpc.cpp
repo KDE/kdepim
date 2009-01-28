@@ -23,7 +23,6 @@
 #include <typeinfo>
 
 #include <QApplication>
-#include <q3ptrlist.h>
 #include <QStringList>
 #include <QTimer>
 #include <QList>

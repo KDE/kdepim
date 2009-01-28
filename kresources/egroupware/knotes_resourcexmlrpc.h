@@ -22,7 +22,6 @@
 #ifndef KNOTES_RESOURCEXMLRPC_H
 #define KNOTES_RESOURCEXMLRPC_H
 
-#include <q3ptrlist.h>
 #include <QString>
 #include <QList>
 
