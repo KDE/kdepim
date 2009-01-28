@@ -178,6 +178,7 @@ void MainWidget::setupActions()
   action->setWhatsThis( i18n( "Create a new group<p>You will be presented with a dialog where you can add a new group of contacts.</p>" ) );
 
   action = collection->addAction( "quick_search" );
+  action->setText(i18n("Quick search"));
   action->setDefaultWidget( mQuickSearchWidget );
 }
 
