@@ -118,7 +118,7 @@ if ( WIN32 )
     set( ASSUAN_INCLUDES ${ASSUAN_INCLUDES} )
 
     if ( _assuan_vanilla_library AND _gpg_error_library )
-      set( ASSUAN_VANILLA_LIBRARIES ${_assuan_vanilla_library} ${_gpg_error_library} )
+      set( ASSUAN_VANILLA_LIBRARIES ${_assuan_vanilla_library} ${_gpg_error_library} ws2_32 )
       set( ASSUAN_VANILLA_FOUND     true )
       set( ASSUAN_FOUND             true )
     endif()
