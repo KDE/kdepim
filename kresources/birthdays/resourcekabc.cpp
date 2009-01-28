@@ -23,7 +23,6 @@
 #include <stdlib.h>
 
 #include <QString>
-#include <q3ptrlist.h>
 
 #include <klocale.h>
 #include <kdebug.h>

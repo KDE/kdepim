@@ -21,7 +21,7 @@
 
 #include <typeinfo>
 
-#include <q3header.h>
+
 #include <QLayout>
 //Added by qt3to4:
 #include <QLabel>

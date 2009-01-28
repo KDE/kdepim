@@ -24,7 +24,6 @@
 #include "webdavhandler.h"
 #include "slox_export.h"
 
-#include <q3ptrlist.h>
 #include <QString>
 #include <QDateTime>
 #include <qdom.h>

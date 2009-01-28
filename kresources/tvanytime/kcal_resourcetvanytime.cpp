@@ -33,7 +33,6 @@
 #include <QApplication>
 #include <qdom.h>
 #include <QDateTime>
-#include <q3ptrlist.h>
 #include <QRegExp>
 #include <QStringList>
 #include <QTimer>
