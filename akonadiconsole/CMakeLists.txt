@@ -1,3 +1,5 @@
+project(akonadiconsole)
+
 include_directories(${CMAKE_SOURCE_DIR}/akonadi)
 include_directories(${CMAKE_SOURCE_DIR}/libkdepim)
 include_directories(${AKONADI_INCLUDE_DIR})
