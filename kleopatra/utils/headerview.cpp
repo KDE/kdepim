@@ -65,8 +65,8 @@ public:
     }
 
     void _klhv_slotSectionCountChanged( int oldCount, int newCount ) {
-        kDebug() << oldCount << "->" << newCount;
-        if ( oldCount > newCount )
+        hvDebug() << oldCount << "->" << newCount;
+        if ( newCount <= oldCount )
             return;
         ensureNumSections( newCount );
         for ( unsigned int i = 0, end = std::min<unsigned int>( newCount, modes.size() ) ; i < end ; ++i )
