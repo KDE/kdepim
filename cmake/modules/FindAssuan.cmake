@@ -75,12 +75,6 @@ if ( WIN32 )
 
   else()
 
-    # is this needed, of just unreflected cut'n'paste?
-    # this isn't a KDE library, after all!
-    if( NOT KDEWIN_FOUND )
-      find_package( KDEWIN REQUIRED )
-    endif()
-
     set( ASSUAN_FOUND         false )
     set( ASSUAN_VANILLA_FOUND false )
     #set( ASSUAN_GLIB_FOUND    false )
