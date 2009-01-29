@@ -49,9 +49,12 @@
 #include <klocale.h>
 #include <ksavefile.h>
 #include <kguiitem.h>
+#include <kdebug.h>
 
 #include <qtextedit.h>
 #include <qtextstream.h>
+
+#include <gpg-error.h>
 
 using namespace Kleo;
 using namespace Kleo::Private;
@@ -136,13 +139,23 @@ void MessageBox::auditLog( QWidget * parent, const Job * job, const QString & ca
     if ( !job )
         return;
 
-    if ( !GpgME::hasFeature( AuditLogFeature ) ) {
+    if ( !GpgME::hasFeature( AuditLogFeature ) || !job->isAuditLogSupported() ) {
         KMessageBox::information( parent, i18n("Your system does not have support for GnuPG Audit Logs"),
                                   i18n("System Error") );
         return;
     }
 
+    const GpgME::Error err = job->auditLogError();
+
+    if ( err.code() != GPG_ERR_NO_DATA ) {
+        KMessageBox::information( parent, i18n("An error occurred while trying to retrieve the GnuPG Audit Log:\n%1",
+                                  QString::fromLocal8Bit( err.asString() ) ),
+                                  i18n("GnuPG Audit Log Error") );
+        return;
+    }
+
     const QString log = job->auditLogAsHtml();
+
     if ( log.isEmpty() ) {
         KMessageBox::information( parent, i18n("No GnuPG Audit Log available for this operation."),
                                   i18n("No GnuPG Audit Log") );
@@ -259,10 +272,36 @@ void MessageBox::error( QWidget * parent, const SigningResult & sresult, const E
 }
 
 // static
+bool MessageBox::showAuditLogButton( const Kleo::Job * job ) {
+    if ( !job ) {
+        kDebug() << "not showing audit log button (no job instance)";
+        return false;
+    }
+    if ( !GpgME::hasFeature( GpgME::AuditLogFeature ) ) {
+        kDebug() << "not showing audit log button (gpgme too old)";
+        return false;
+    }
+    if ( !job->isAuditLogSupported() ) {
+        kDebug() << "not showing audit log button (not supported)";
+        return false;
+    }
+    if ( job->auditLogError().code() == GPG_ERR_NO_DATA ) {
+        kDebug() << "not showing audit log button (GPG_ERR_NO_DATA)";
+        return false;
+    }
+    if ( !job->auditLogError() && job->auditLogAsHtml().isEmpty() ) {
+        kDebug() << "not showing audit log button (success, but result empty)";
+        return false;
+    }
+    return true;
+}
+
+
+// static
 void MessageBox::make( QWidget * parent, QMessageBox::Icon icon, const QString & text, const Job * job, const QString & caption, KMessageBox::Options options ) {
     KDialog * dialog = new KDialog( parent );
     dialog->setCaption( caption );
-    dialog->setButtons( GpgME::hasFeature( GpgME::AuditLogFeature ) ? ( KDialog::Yes | KDialog::No ) : KDialog::Yes );
+    dialog->setButtons( showAuditLogButton( job ) ? ( KDialog::Yes | KDialog::No ) : KDialog::Yes );
     dialog->setDefaultButton( KDialog::Yes );
     dialog->setEscapeButton( KDialog::Yes );
     dialog->setObjectName( "error" );
