@@ -45,7 +45,7 @@ namespace Kleo {
 #ifdef Q_MOC_RUN
     : public VerifyDetachedJob
 #else
-    : public _detail::ThreadedJobMixin<VerifyDetachedJob, boost::tuple<GpgME::VerificationResult, QString> >
+    : public _detail::ThreadedJobMixin<VerifyDetachedJob, boost::tuple<GpgME::VerificationResult, QString, GpgME::Error> >
 #endif
   {
     Q_OBJECT

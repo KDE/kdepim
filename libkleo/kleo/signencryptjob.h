@@ -120,7 +120,8 @@ namespace Kleo {
   Q_SIGNALS:
     void result( const GpgME::SigningResult & signingresult,
 		 const GpgME::EncryptionResult & encryptionresult,
-		 const QByteArray & cipherText, const QString & auditLogAsHtml=QString() );
+		 const QByteArray & cipherText, const QString & auditLogAsHtml=QString(),
+                 const GpgME::Error & auditLogError=GpgME::Error() );
   };
 
 }

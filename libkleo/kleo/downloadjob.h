@@ -93,7 +93,7 @@ namespace Kleo {
     virtual KDE_DEPRECATED GpgME::Error start( const QStringList & fingerprints ) = 0;
 
   Q_SIGNALS:
-    void result( const GpgME::Error & result, const QByteArray & keyData, const QString & auditLogAsHtml=QString() );
+    void result( const GpgME::Error & result, const QByteArray & keyData, const QString & auditLogAsHtml=QString(), const GpgME::Error & auditLogError=GpgME::Error() );
   };
 
 }

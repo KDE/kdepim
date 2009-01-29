@@ -62,8 +62,9 @@ static QGpgMEExportJob::result_type export_qba( Context * ctx, const QStringList
   Data data( &dp );
 
   const Error err = ctx->exportPublicKeys( pc.patterns(), data );
-  const QString log = _detail::audit_log_as_html( ctx );
-  return make_tuple( err, dp.data(), log );
+  Error ae;
+  const QString log = _detail::audit_log_as_html( ctx, ae );
+  return make_tuple( err, dp.data(), log, ae );
 }
 
 Error QGpgMEExportJob::start( const QStringList & patterns ) {

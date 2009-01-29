@@ -72,7 +72,7 @@ namespace Kleo {
                                 const QString & email, const QString & comment=QString() ) = 0;
 
   Q_SIGNALS:
-    void result( const GpgME::Error & result, const QString & auditLogAsHtml=QString() );
+    void result( const GpgME::Error & result, const QString & auditLogAsHtml=QString(), const GpgME::Error & auditLogError=GpgME::Error() );
   };
 
 }

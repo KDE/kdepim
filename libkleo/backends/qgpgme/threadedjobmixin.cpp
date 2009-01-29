@@ -50,13 +50,12 @@ using namespace boost;
 
 static const unsigned int GetAuditLogFlags = Context::AuditLogWithHelp|Context::HtmlAuditLog;
 
-QString _detail::audit_log_as_html( Context * ctx ) {
-  if ( !ctx )
-    return QString();
+QString _detail::audit_log_as_html( Context * ctx, GpgME::Error & err ) {
+  assert( ctx );
   QGpgME::QByteArrayDataProvider dp;
   Data data( &dp );
   assert( !data.isNull() );
-  if ( const Error err = ctx->getAuditLog( data, GetAuditLogFlags ) )
+  if ( ( err = ctx->getAuditLog( data, GetAuditLogFlags ) ) )
     return QString::fromLocal8Bit( err.asString() );
   else
     return QString::fromUtf8( dp.data().data() );

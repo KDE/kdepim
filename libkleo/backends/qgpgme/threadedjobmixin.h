@@ -55,7 +55,7 @@
 namespace Kleo {
 namespace _detail {
 
-  QString audit_log_as_html( GpgME::Context * ctx );
+  QString audit_log_as_html( GpgME::Context * ctx, GpgME::Error & err );
 
   class PatternConverter {
     const QList<QByteArray> m_list;
@@ -70,25 +70,35 @@ namespace _detail {
     const char ** patterns() const;
   };
 
-  template <typename T_base, typename T_result=boost::tuple<GpgME::Error,QString> >
+  template <typename T_base, typename T_result=boost::tuple<GpgME::Error,QString,GpgME::Error> >
   class ThreadedJobMixin : public T_base, public GpgME::ProgressProvider {
   public:
     typedef ThreadedJobMixin<T_base, T_result> mixin_type;
     typedef T_result result_type;
 
   protected:
+    BOOST_STATIC_ASSERT(( boost::tuples::length<T_result>::value > 2 ));
+    BOOST_STATIC_ASSERT((
+      boost::is_same<
+        typename boost::tuples::element<
+          boost::tuples::length<T_result>::value - 2,
+          T_result
+        >::type,
+        QString
+      >::value
+    ));
     BOOST_STATIC_ASSERT((
       boost::is_same<
         typename boost::tuples::element<
           boost::tuples::length<T_result>::value - 1,
           T_result
         >::type,
-        QString
+        GpgME::Error
       >::value
     ));
 
     explicit ThreadedJobMixin( GpgME::Context * ctx )
-      : T_base( 0 ), m_ctx( ctx ), m_watcher(), m_auditLog()
+      : T_base( 0 ), m_ctx( ctx ), m_watcher(), m_auditLog(), m_auditLogError()
     {
 
     }
@@ -110,7 +120,8 @@ namespace _detail {
     void slotFinished() {
       kDebug();
       const T_result r = m_watcher.result();
-      m_auditLog = boost::get<boost::tuples::length<T_result>::value-1>( r );
+      m_auditLog = boost::get<boost::tuples::length<T_result>::value-2>( r );
+      m_auditLogError = boost::get<boost::tuples::length<T_result>::value-1>( r );
       resultHook( r );
       emit this->done();
       doEmitResult( r );
@@ -121,6 +132,7 @@ namespace _detail {
       if ( m_ctx ) m_ctx->cancelPendingOperation();
     }
     /* reimp */ QString auditLogAsHtml() const { return m_auditLog; }
+    /* reimp */ GpgME::Error auditLogError() const { return m_auditLogError; }
     /* reimp */ void showProgress( const char * what, int type, int current, int total ) {
         // will be called from the thread exec'ing the operation, so
         // just bounce everything to the owning thread:
@@ -150,10 +162,17 @@ namespace _detail {
       emit this->result( boost::get<0>( tuple ), boost::get<1>( tuple ), boost::get<2>( tuple ), boost::get<3>( tuple ) );
     }
 
+    template <typename T1, typename T2, typename T3, typename T4, typename T5>
+    void doEmitResult( const boost::tuple<T1,T2,T3,T4,T5> & tuple ) {
+      kDebug();
+      emit this->result( boost::get<0>( tuple ), boost::get<1>( tuple ), boost::get<2>( tuple ), boost::get<3>( tuple ), boost::get<4>( tuple ) );
+    }
+
   private:
     GpgME::Context * m_ctx;
     QFutureWatcher<T_result> m_watcher;
     QString m_auditLog;
+    GpgME::Error m_auditLogError;
   };
 
 }

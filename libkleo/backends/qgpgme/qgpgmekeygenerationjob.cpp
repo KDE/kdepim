@@ -57,8 +57,9 @@ static QGpgMEKeyGenerationJob::result_type generate_key( Context * ctx, const QS
   assert( data.isNull() == ( ctx->protocol() != CMS ) );
 
   const KeyGenerationResult res = ctx->generateKey( parameters.toUtf8().constData(), data );
-  const QString log = _detail::audit_log_as_html( ctx );
-  return make_tuple( res, dp.data(), log );
+  Error ae;
+  const QString log = _detail::audit_log_as_html( ctx, ae );
+  return make_tuple( res, dp.data(), log, ae );
 }
 
 Error QGpgMEKeyGenerationJob::start( const QString & parameters ) {

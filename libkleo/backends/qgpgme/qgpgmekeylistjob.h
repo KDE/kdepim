@@ -46,7 +46,7 @@ namespace Kleo {
 #ifdef Q_MOC_RUN
     : public KeyListJob
 #else
-    : public _detail::ThreadedJobMixin<KeyListJob, boost::tuple<GpgME::KeyListResult, std::vector<GpgME::Key>, QString> >
+    : public _detail::ThreadedJobMixin<KeyListJob, boost::tuple<GpgME::KeyListResult, std::vector<GpgME::Key>, QString, GpgME::Error> >
 #endif
   {
     Q_OBJECT

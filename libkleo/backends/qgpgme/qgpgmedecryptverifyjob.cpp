@@ -74,17 +74,19 @@ static QGpgMEDecryptVerifyJob::result_type decrypt_verify( Context * ctx, const 
     Data outdata( &out );
 
     const std::pair<DecryptionResult,VerificationResult> res = ctx->decryptAndVerify( indata, outdata );
-    const QString log = _detail::audit_log_as_html( ctx );
+    Error ae;
+    const QString log = _detail::audit_log_as_html( ctx, ae );
     kDebug() << "end";
-    return make_tuple( res.first, res.second, out.data(), log );
+    return make_tuple( res.first, res.second, out.data(), log, ae );
   } else {
     QGpgME::QIODeviceDataProvider out( plainText );
     Data outdata( &out );
 
     const std::pair<DecryptionResult,VerificationResult> res = ctx->decryptAndVerify( indata, outdata );
-    const QString log = _detail::audit_log_as_html( ctx );
+    Error ae;
+    const QString log = _detail::audit_log_as_html( ctx, ae );
     kDebug() << "end";
-    return make_tuple( res.first, res.second, QByteArray(), log );
+    return make_tuple( res.first, res.second, QByteArray(), log, ae );
   }
 
 }

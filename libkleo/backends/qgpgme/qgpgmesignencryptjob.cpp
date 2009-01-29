@@ -80,7 +80,7 @@ static QGpgMESignEncryptJob::result_type sign_encrypt( Context * ctx, const std:
   Q_FOREACH( const Key & signer, signers )
     if ( !signer.isNull() )
       if ( const Error err = ctx->addSigningKey( signer ) )
-        return make_tuple( SigningResult( err ), EncryptionResult(), QByteArray(), QString() );
+        return make_tuple( SigningResult( err ), EncryptionResult(), QByteArray(), QString(), Error() );
 
   if ( !cipherText ) {
     QGpgME::QByteArrayDataProvider out;
@@ -90,8 +90,9 @@ static QGpgMESignEncryptJob::result_type sign_encrypt( Context * ctx, const std:
       outdata.setEncoding( Data::Base64Encoding );
 
     const std::pair<SigningResult, EncryptionResult> res = ctx->signAndEncrypt( recipients, indata, outdata, eflags );
-    const QString log = _detail::audit_log_as_html( ctx );
-    return make_tuple( res.first, res.second, out.data(), log );
+    Error ae;
+    const QString log = _detail::audit_log_as_html( ctx, ae );
+    return make_tuple( res.first, res.second, out.data(), log, ae );
   } else {
     QGpgME::QIODeviceDataProvider out( cipherText );
     Data outdata( &out );
@@ -100,8 +101,9 @@ static QGpgMESignEncryptJob::result_type sign_encrypt( Context * ctx, const std:
       outdata.setEncoding( Data::Base64Encoding );
 
     const std::pair<SigningResult, EncryptionResult> res = ctx->signAndEncrypt( recipients, indata, outdata, eflags );
-    const QString log = _detail::audit_log_as_html( ctx );
-    return make_tuple( res.first, res.second, QByteArray(), log );
+    Error ae;
+    const QString log = _detail::audit_log_as_html( ctx, ae );
+    return make_tuple( res.first, res.second, QByteArray(), log, ae );
   }
 
 }

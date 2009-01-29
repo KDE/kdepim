@@ -40,6 +40,8 @@
 
 #include "kleo/kleo_export.h"
 
+#include <gpgme++/error.h>
+
 class QWidget;
 
 namespace Kleo {
@@ -71,6 +73,8 @@ namespace Kleo {
     virtual void showErrorDialog( QWidget * parent=0, const QString & caption=QString() ) const;
 
     virtual QString auditLogAsHtml() const;
+    virtual GpgME::Error auditLogError() const;
+    bool isAuditLogSupported() const;
 
   public Q_SLOTS:
     virtual void slotCancel() = 0;

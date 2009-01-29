@@ -89,7 +89,7 @@ namespace Kleo {
 
   Q_SIGNALS:
     void nextKey( const GpgME::Key & key );
-    void result( const GpgME::KeyListResult & result, const std::vector<GpgME::Key> & keys=std::vector<GpgME::Key>(), const QString & auditLogAsHtml=QString() );
+    void result( const GpgME::KeyListResult & result, const std::vector<GpgME::Key> & keys=std::vector<GpgME::Key>(), const QString & auditLogAsHtml=QString(), const GpgME::Error & auditLogError=GpgME::Error() );
   };
 
 }

@@ -87,8 +87,9 @@ static QGpgMEEncryptJob::result_type encrypt( Context * ctx,
       outdata.setEncoding( Data::Base64Encoding );
 
     const EncryptionResult res = ctx->encrypt( recipients, indata, outdata, eflags );
-    const QString log = _detail::audit_log_as_html( ctx );
-    return make_tuple( res, out.data(), log );
+    Error ae;
+    const QString log = _detail::audit_log_as_html( ctx, ae );
+    return make_tuple( res, out.data(), log, ae );
   } else {
     QGpgME::QIODeviceDataProvider out( cipherText );
     Data outdata( &out );
@@ -97,8 +98,9 @@ static QGpgMEEncryptJob::result_type encrypt( Context * ctx,
       outdata.setEncoding( Data::Base64Encoding );
 
     const EncryptionResult res = ctx->encrypt( recipients, indata, outdata, eflags );
-    const QString log = _detail::audit_log_as_html( ctx );
-    return make_tuple( res, QByteArray(), log );
+    Error ae;
+    const QString log = _detail::audit_log_as_html( ctx, ae );
+    return make_tuple( res, QByteArray(), log, ae );
   }
 
 }

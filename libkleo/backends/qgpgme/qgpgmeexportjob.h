@@ -43,7 +43,7 @@ namespace Kleo {
 #ifdef Q_MOC_RUN
     : public ExportJob
 #else
-    : public _detail::ThreadedJobMixin<ExportJob, boost::tuple<GpgME::Error, QByteArray, QString> >
+    : public _detail::ThreadedJobMixin<ExportJob, boost::tuple<GpgME::Error, QByteArray, QString, GpgME::Error> >
 #endif
   {
     Q_OBJECT

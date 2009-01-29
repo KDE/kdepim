@@ -80,7 +80,7 @@ static QGpgMESignJob::result_type sign( Context * ctx,
   Q_FOREACH( const Key & signer, signers )
     if ( !signer.isNull() )
       if ( const Error err = ctx->addSigningKey( signer ) )
-        return make_tuple( SigningResult( err ), QByteArray(), QString() );
+        return make_tuple( SigningResult( err ), QByteArray(), QString(), Error() );
 
   if ( !signature ) {
     QGpgME::QByteArrayDataProvider out;
@@ -90,8 +90,9 @@ static QGpgMESignJob::result_type sign( Context * ctx,
       outdata.setEncoding( Data::Base64Encoding );
 
     const SigningResult res = ctx->sign( indata, outdata, mode );
-    const QString log = _detail::audit_log_as_html( ctx );
-    return make_tuple( res, out.data(), log );
+    Error ae;
+    const QString log = _detail::audit_log_as_html( ctx, ae );
+    return make_tuple( res, out.data(), log, ae );
   } else {
     QGpgME::QIODeviceDataProvider out( signature );
     Data outdata( &out );
@@ -100,8 +101,9 @@ static QGpgMESignJob::result_type sign( Context * ctx,
       outdata.setEncoding( Data::Base64Encoding );
 
     const SigningResult res = ctx->sign( indata, outdata, mode );
-    const QString log = _detail::audit_log_as_html( ctx );
-    return make_tuple( res, QByteArray(), log );
+    Error ae;
+    const QString log = _detail::audit_log_as_html( ctx, ae );
+    return make_tuple( res, QByteArray(), log, ae );
   }
 
 }

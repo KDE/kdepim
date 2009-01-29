@@ -53,8 +53,12 @@
 #include "adduseridjob.h"
 #include "specialjob.h"
 
+#include <gpgme++/error.h>
+
 #include <QCoreApplication>
 #include <kdebug.h>
+
+#include <gpg-error.h>
 
 Kleo::Job::Job( QObject * parent )
   : QObject( parent )
@@ -74,6 +78,15 @@ void Kleo::Job::showErrorDialog( QWidget *, const QString & ) const {
 QString Kleo::Job::auditLogAsHtml() const {
     kDebug() << "Kleo::Job::auditLogAsHtml() should be reimplemented in Kleo::Job subclasses!" << endl;
     return QString();
+}
+
+GpgME::Error Kleo::Job::auditLogError() const {
+    kDebug() << "Kleo::Job::auditLogError() should be reimplemented in Kleo::Job subclasses!" << endl;
+    return GpgME::Error( gpg_error( GPG_ERR_NOT_IMPLEMENTED ) );
+}
+
+bool Kleo::Job::isAuditLogSupported() const {
+    return auditLogError().code() != GPG_ERR_NOT_IMPLEMENTED ;
 }
 
 #define make_job_subclass(x) \
