@@ -88,7 +88,7 @@ class Page : public QWidget {
     Q_OBJECT
     Page( const Page & other );
 public:
-    Page( const QString & title, const QString & id, const QString & text, AbstractKeyListSortFilterProxyModel * proxy=0, QWidget * parent=0 );
+    Page( const QString & title, const QString & id, const QString & text, AbstractKeyListSortFilterProxyModel * proxy=0, const QString & toolTip=QString(), QWidget * parent=0 );
     Page( const KConfigGroup & group, QWidget * parent=0 );
     ~Page();
 
@@ -114,6 +114,9 @@ public:
 
     QString title() const { return m_title.isEmpty() && m_keyFilter ? m_keyFilter->name() : m_title ; }
     void setTitle( const QString & title );
+
+    QString toolTip() const { return m_toolTip.isEmpty() ? title() : m_toolTip ; }
+    void setToolTip( const QString & tip );
 
     bool canBeClosed() const { return m_canBeClosed; }
     bool canBeRenamed() const { return m_canBeRenamed; }
@@ -149,6 +152,7 @@ private:
     QString m_stringFilter;
     shared_ptr<KeyFilter> m_keyFilter;
     QString m_title;
+    QString m_toolTip;
     bool m_isHierarchical : 1;
     bool m_isTemporary : 1;
     bool m_canBeClosed : 1;
@@ -170,6 +174,7 @@ Page::Page( const Page & other )
       m_stringFilter( other.m_stringFilter ),
       m_keyFilter( other.m_keyFilter ),
       m_title( other.m_title ),
+      m_toolTip( other.m_toolTip ),
       m_isHierarchical( other.m_isHierarchical ),
       m_isTemporary( other.m_isTemporary ),
       m_canBeClosed( other.m_canBeClosed ),
@@ -181,7 +186,7 @@ Page::Page( const Page & other )
     init();
 }
 
-Page::Page( const QString & title, const QString & id, const QString & text, AbstractKeyListSortFilterProxyModel * proxy, QWidget * parent )
+Page::Page( const QString & title, const QString & id, const QString & text, AbstractKeyListSortFilterProxyModel * proxy, const QString & toolTip, QWidget * parent )
     : QWidget( parent ),
       m_proxy(),
       m_additionalProxy( proxy ),
@@ -192,6 +197,7 @@ Page::Page( const QString & title, const QString & id, const QString & text, Abs
       m_stringFilter( text ),
       m_keyFilter( KeyFilterManager::instance()->keyFilterByID( id ) ),
       m_title( title ),
+      m_toolTip( toolTip ),
       m_isHierarchical( true ),
       m_isTemporary( false ),
       m_canBeClosed( true ),
@@ -220,6 +226,7 @@ Page::Page( const KConfigGroup & group, QWidget * parent )
       m_stringFilter( group.readEntry( STRING_FILTER_ENTRY ) ),
       m_keyFilter( KeyFilterManager::instance()->keyFilterByID( group.readEntry( KEY_FILTER_ENTRY ) ) ),
       m_title( group.readEntry( TITLE_ENTRY ) ),
+      m_toolTip(),
       m_isHierarchical( group.readEntry( HIERARCHICAL_VIEW_ENTRY, true ) ),
       m_isTemporary( false ),
       m_canBeClosed( !group.isImmutable() ),
@@ -361,6 +368,18 @@ void Page::setTitle( const QString & t ) {
     const QString newTitle = title();
     if ( oldTitle != newTitle )
         emit titleChanged( newTitle );
+}
+
+void Page::setToolTip( const QString & tip ) {
+    if ( tip == m_toolTip )
+        return;
+    if ( !m_canBeRenamed )
+        return;
+    const QString oldTip = toolTip();
+    m_toolTip = tip;
+    const QString newTip = toolTip();
+    if ( oldTip != newTip )
+        emit titleChanged( title() );
 }
 
 static QItemSelection itemSelectionFromKeys( const std::vector<Key> & keys, const KeyListSortFilterProxyModel & proxy ) {
@@ -648,8 +667,11 @@ void TabWidget::Private::enableDisablePageActions( QAction * actions[], const Pa
 }
 
 void TabWidget::Private::slotPageTitleChanged( const QString & ) {
-    if ( Page * const page = senderPage() )
-        tabWidget.setTabText( tabWidget.indexOf( page ), page->title() );
+    if ( Page * const page = senderPage() ) {
+        const int idx = tabWidget.indexOf( page );
+        tabWidget.setTabText( idx, page->title() );
+        tabWidget.setTabToolTip( idx, page->toolTip() );
+    }
 }
 
 void TabWidget::Private::slotPageKeyFilterChanged( const shared_ptr<KeyFilter> & kf ) {
@@ -824,8 +846,8 @@ QAbstractItemView * TabWidget::addView( const KConfigGroup & group ) {
     return d->addView( new Page( group ) );
 }
 
-QAbstractItemView * TabWidget::addTemporaryView( const QString & title, AbstractKeyListSortFilterProxyModel * proxy ) {
-    Page * const page = new Page( title, QString(), QString(), proxy );
+QAbstractItemView * TabWidget::addTemporaryView( const QString & title, AbstractKeyListSortFilterProxyModel * proxy, const QString & tabToolTip ) {
+    Page * const page = new Page( title, QString(), QString(), proxy, tabToolTip );
     page->setTemporary( true );
     QAbstractItemView * v = d->addView( page );
     d->tabWidget.setCurrentIndex( d->tabWidget.count()-1 );
@@ -849,7 +871,8 @@ QTreeView * TabWidget::Private::addView( Page * page ) {
              q, SLOT(slotPageHierarchyChanged(bool)) );
 
     QAbstractItemView * const previous = q->currentView(); 
-    tabWidget.addTab( page, page->title() );
+    const int tabIndex = tabWidget.addTab( page, page->title() );
+    tabWidget.setTabToolTip( tabIndex, page->toolTip() );
     tabWidget.setTabBarHidden( tabWidget.count() < 2 );
     // work around a bug in QTabWidget (tested with 4.3.2) not emitting currentChanged() when the first widget is inserted
     QAbstractItemView * const current = q->currentView(); 

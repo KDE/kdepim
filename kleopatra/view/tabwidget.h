@@ -64,7 +64,7 @@ namespace Kleo {
 
         QAbstractItemView * addView( const QString & title=QString(), const QString & keyFilterID=QString(), const QString & searchString=QString() );
         QAbstractItemView * addView( const KConfigGroup & group );
-        QAbstractItemView * addTemporaryView( const QString & title=QString(), AbstractKeyListSortFilterProxyModel * proxy=0 );
+        QAbstractItemView * addTemporaryView( const QString & title=QString(), AbstractKeyListSortFilterProxyModel * proxy=0, const QString & tabToolTip=QString() );
 
         void loadViews( const KConfig * cfg );
         void saveViews( KConfig * cfg ) const;
