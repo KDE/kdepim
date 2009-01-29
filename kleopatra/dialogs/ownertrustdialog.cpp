@@ -55,6 +55,7 @@ public:
         : q( qq ),
           formattedCertificateName( i18n("(unknown certificate)") ),
           hasSecret( false ),
+          originalTrust( Key::Undefined ),
           advancedMode( false ),
           ui( qq )
     {
@@ -70,6 +71,7 @@ private:
 
 private:
     QString formattedCertificateName;
+    Key::OwnerTrust originalTrust;
     bool hasSecret : 1;
     bool advancedMode : 1;
 
@@ -132,7 +134,7 @@ void OwnerTrustDialog::Private::enableDisableWidgets() {
     ui.marginalRB->setEnabled( !hasSecret || advancedMode );
     ui.fullRB    ->setEnabled( !hasSecret || advancedMode );
     ui.ultimateRB->setEnabled(  hasSecret || advancedMode );
-    ui.okPB()->setEnabled( q->ownerTrust() != Key::Undefined );
+    ui.okPB()->setEnabled( q->ownerTrust() != Key::Undefined && q->ownerTrust() != originalTrust );
 }
 
 static void force_set_checked( QAbstractButton * b, bool on ) {
@@ -144,6 +146,7 @@ static void force_set_checked( QAbstractButton * b, bool on ) {
 }
 
 void OwnerTrustDialog::setOwnerTrust( Key::OwnerTrust trust ) {
+    d->originalTrust = trust;
     force_set_checked( d->ui.unknownRB, trust == Key::Unknown  );
     force_set_checked( d->ui.neverRB,   trust == Key::Never    );
     force_set_checked( d->ui.marginalRB,trust == Key::Marginal );
