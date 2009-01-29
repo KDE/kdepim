@@ -63,7 +63,6 @@
 #include <boost/weak_ptr.hpp>
 #include <boost/iterator/filter_iterator.hpp>
 
-#include <deque>
 #include <utility>
 #include <algorithm>
 #include <functional>
@@ -769,17 +768,25 @@ public:
     Private( KeyCache * cache, RefreshKeysJob * qq );
     void doStart();
     Error startKeyListing( const char* protocol, KeyType type );
-    void jobDone( const KeyListResult & res );
+    void publicKeyJobDone( const KeyListResult & res, const std::vector<Key> & keys ) {
+        m_publicKeys.insert( m_publicKeys.end(), keys.begin(), keys.end() );
+        jobDone( res );
+    }
+    void secretKeyJobDone( const KeyListResult & res, const std::vector<Key> & keys ) {
+        m_secretKeys.insert( m_secretKeys.end(), keys.begin(), keys.end() );
+        jobDone( res );
+    }
     void emitDone( const KeyListResult & result );
-    void nextSecretKey( const Key & key );
-    void nextPublicKey( const Key & key );
     void mergeKeysAndUpdateKeyCache();
 
     KeyCache * m_cache;
     uint m_jobsPending;
-    std::deque<Key> m_publicKeys;
-    std::deque<Key> m_secretKeys;
+    std::vector<Key> m_publicKeys;
+    std::vector<Key> m_secretKeys;
     KeyListResult m_mergedResult;
+
+private:
+    void jobDone( const KeyListResult & res );
 };
 
 KeyCache::RefreshKeysJob::Private::Private( KeyCache * cache, RefreshKeysJob * qq ) : q( qq ), m_cache( cache ), m_jobsPending( 0 )
@@ -805,16 +812,6 @@ void KeyCache::RefreshKeysJob::Private::emitDone( const KeyListResult & res )
 {
     q->deleteLater();
     emit q->done( res );
-}
-
-void KeyCache::RefreshKeysJob::Private::nextSecretKey( const Key & key )
-{
-    m_secretKeys.push_back( key );
-}
-
-void KeyCache::RefreshKeysJob::Private::nextPublicKey( const Key & key )
-{
-    m_publicKeys.push_back( key );
 }
 
 KeyCache::RefreshKeysJob::RefreshKeysJob( KeyCache * cache, QObject * parent ) : QObject( parent ), d( new Private( cache, this ) )
@@ -881,21 +878,18 @@ Error KeyCache::RefreshKeysJob::Private::startKeyListing( const char* backend, K
     Kleo::KeyListJob * const job = protocol->keyListJob( /*remote*/false, /*includeSigs*/false, /*validate*/true );
     if ( !job )
         return Error();
-    connect( job, SIGNAL(result(GpgME::KeyListResult)),
-             q, SLOT(jobDone(GpgME::KeyListResult)) );
+    if ( type == PublicKeys )
+        connect( job, SIGNAL(result(GpgME::KeyListResult,std::vector<GpgME::Key>)),
+                 q, SLOT(publicKeyJobDone(GpgME::KeyListResult,std::vector<GpgME::Key>)) );
+    else
+        connect( job, SIGNAL(result(GpgME::KeyListResult,std::vector<GpgME::Key>)),
+                 q, SLOT(secretKeyJobDone(GpgME::KeyListResult,std::vector<GpgME::Key>)) );
 #if 0
     connect( job, SIGNAL(progress(QString,int,int)),
              q, SIGNAL(progress(QString,int,int)) );
 #endif
     connect( q, SIGNAL(canceled()),
              job, SLOT(slotCancel()) );
-
-    if ( type == PublicKeys )
-        connect( job, SIGNAL(nextKey(GpgME::Key)),
-                 q, SLOT(nextPublicKey(GpgME::Key)) );
-    else
-        connect( job, SIGNAL(nextKey(GpgME::Key)),
-                 q, SLOT(nextSecretKey(GpgME::Key)) );
 
     const Error error = job->start( QStringList(), type == SecretKeys );
 
