@@ -183,9 +183,9 @@ void Command::cancel() {
     emit canceled();
 }
 
-void Command::addTemporaryView( const QString & title, AbstractKeyListSortFilterProxyModel * proxy ) {
+void Command::addTemporaryView( const QString & title, AbstractKeyListSortFilterProxyModel * proxy, const QString & tabToolTip ) {
     if ( TabWidget * const tw = d->controller_ ? d->controller_->tabWidget() : 0 )
-        if ( QAbstractItemView * const v = tw->addTemporaryView( title, proxy ) )
+        if ( QAbstractItemView * const v = tw->addTemporaryView( title, proxy, tabToolTip ) )
             setView( v );
 }
 
