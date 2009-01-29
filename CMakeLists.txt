@@ -28,8 +28,11 @@ else(WIN32)
     set (KDE4_ICON_DIR  ${CMAKE_INSTALL_PREFIX}/share/icons)
 endif(WIN32)
 
-find_package(Boost REQUIRED)
+macro_optional_find_package(Boost)
 macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "1.33.1" "Required by several critical KDEPIM apps.")
+if(NOT Boost_FOUND)
+  macro_display_feature_log()
+endif(NOT Boost_FOUND)
 
 if ( ONLY_KLEO )
   find_package(QGpgme REQUIRED)
