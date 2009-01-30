@@ -67,7 +67,7 @@ namespace Kleo {
   class KLEO_EXPORT MultiDeleteJob : public Job {
     Q_OBJECT
   public:
-    MultiDeleteJob( const CryptoBackend::Protocol * protocol );
+    explicit MultiDeleteJob( const CryptoBackend::Protocol * protocol );
     ~MultiDeleteJob();
 
     /**
