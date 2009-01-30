@@ -1,4 +1,16 @@
-Tuesday, January 20th 2009
+Friday, January 30th 2009
+
+Problems addressed
+-------------------
+
+* kolab/issue2444 kontact sends base64 encoded password when sieve server does not advertise STARTTLS
+
+
+Merges
+-------
+
+*  Merges in from 4.2 branch
+
 
 Problems addressed
 ------------------
