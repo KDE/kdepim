@@ -19,7 +19,7 @@ QT4_ADD_DBUS_INTERFACE2( kcalscalix_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/org.kde.k
 
 kde4_add_library(kcalscalix SHARED ${kcalscalix_LIB_SRCS})
 
-target_link_libraries(kcalscalix  ${KDE4_KDECORE_LIBS} ${KDE4_KRESOURCES_LIBS} ${KDE4_KCAL_LIBS} kdepim kgroupwarebase)
+target_link_libraries(kcalscalix  ${KDE4_KDECORE_LIBS} ${KDE4_KRESOURCES_LIBS} ${KDE4_KCAL_LIBS} ${KDE4_KIO_LIBS} kdepim kgroupwarebase)
 
 set_target_properties(kcalscalix
    PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION}

@@ -1,5 +1,4 @@
 set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
-
 include_directories( ${CMAKE_SOURCE_DIR}/kresources/groupwise  )
 
 
@@ -26,7 +25,7 @@ set(gwsoap_SRCS
    )
 
 kde4_add_library(gwsoap SHARED ${gwsoap_SRCS})
-target_link_libraries(gwsoap ${KDE4_KCAL_LIBS} ${KDE4_KABC_LIBS})
+target_link_libraries(gwsoap ${KDE4_KCAL_LIBS} ${KDE4_KABC_LIBS} ${KDE4_KIO_LIBS} )
 set_target_properties(gwsoap PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS gwsoap DESTINATION ${LIB_INSTALL_DIR})
 
