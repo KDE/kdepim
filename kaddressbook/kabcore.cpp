@@ -1274,7 +1274,7 @@ void KABCore::initActions()
   action = coll->addAction( "file_new_contact" );
   action->setIcon( KIcon("contact-new") );
   action->setText( i18n( "&New Contact..." ) );
-  action->setIconText( i18nc( "@action:intoolbar Create ne contact", "New" ) );
+  action->setIconText( i18nc( "@action:intoolbar Create new contact", "New" ) );
   connect(action, SIGNAL(triggered(bool)), SLOT( newContact() ));
   action->setShortcut(QKeySequence(Qt::CTRL+Qt::Key_N));
   action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data about a person, including addresses and phone numbers.</p>" ) );
