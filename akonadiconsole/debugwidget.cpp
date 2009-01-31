@@ -23,7 +23,6 @@
 
 #include "tracernotificationinterface.h"
 #include "connectionpage.h"
-#include "debuginterface.h"
 
 #include <akonadi/control.h>
 
@@ -35,6 +34,8 @@
 #include <QtGui/QTextEdit>
 #include <QtGui/QVBoxLayout>
 #include <QtGui/QCheckBox>
+
+using org::freedesktop::Akonadi::DebugInterface;
 
 DebugWidget::DebugWidget( QWidget *parent )
   : QWidget( parent )
