@@ -7,6 +7,7 @@ QuoteType=0
 
 [Misc]
 Name=Yahoo! Address Book
+Name[pt_BR]=Livro de endereços do Yahoo!
 
 [csv column map]
 0=3

@@ -49,6 +49,7 @@ Name[x-test]=xxKAB Mobile Phone XXPort Pluginxx
 Name[zh_CN]=KAB 移动电话 XXPort 插件
 Name[zh_TW]=KAB Mobile Phone XXPort 外掛程式
 Comment=Mobile phone plugin to import and export address book entries
+Comment[pt_BR]=Plug-in para importar e exportar entradas do livro de endereços do celular
 Type=Service
 X-KDE-ServiceTypes=KAddressBook/XXPort
 X-KDE-KAddressBook-XXPortPluginVersion=1

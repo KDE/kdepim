@@ -1,6 +1,7 @@
 [Desktop Entry]
 X-KDE-Library=kaddrbk_pab_xxport
 Name=KAB MS Exchange Personal Address Book XXPort Plugin
+Name[pt_BR]=Plug-in do KAB para importação/exportação de livros de endereços pessoais do MS Exchange
 Comment=Plugin to import MS Exchange Personal Address Books
 Comment[af]=Inprop module wat kontakte in MS Exchange adresboek formaat invoer
 Comment[bg]=Приставка за импортиране на контактите от MS Exchange Personal Address Books

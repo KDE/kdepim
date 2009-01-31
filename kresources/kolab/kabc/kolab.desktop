@@ -1,5 +1,6 @@
 [Desktop Entry]
 Name=Address Book on IMAP Server via KMail
+Name[pt_BR]=Livro de endereços em servidor IMAP com o KMail
 Comment=Provides access to contacts stored on a Kolab server using IMAP via KMail or Kontact
 Comment[ca]=Proporciona l'accés als contactes emmagatzemats en un servidor Kolab usant IMAP via el KMail o el Kontact
 Comment[da]=Giver adgang til kontakter lagret på en Kolap-server som bruger IMAP via KMail eller Kontact

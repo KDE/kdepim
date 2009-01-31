@@ -35,6 +35,7 @@ Name[x-test]=xxKAB GMX XXPort Pluginxx
 Name[zh_CN]=KAB GMX XXPort 插件
 Name[zh_TW]=KAB GMX XXPort 外掛程式
 Comment=Plugin to import and export contacts in GMX's address book format
+Comment[pt_BR]=Plug-in para importar e exportar contatos no formato de livro de endereços do GMX
 Type=Service
 X-KDE-ServiceTypes=KAddressBook/XXPort
 X-KDE-KAddressBook-XXPortPluginVersion=1
