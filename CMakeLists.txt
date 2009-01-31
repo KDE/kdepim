@@ -16,6 +16,15 @@ include(MacroLibrary)
 include(CheckIncludeFiles)
 find_package(KdepimLibs REQUIRED)
 
+#####
+##### Backwards compatibility section:
+##### Support building against earlier kdelibs or kdepimlibs
+#####
+if(NOT DEFINED KDE4_KHOLIDAYS_LIBS)
+  set(KDE4_KHOLIDAYS_LIBS kholidays)
+endif(NOT DEFINED KDE4_KHOLIDAYS_LIBS)
+#####
+
 if(WIN32)
   # detect oxygen icon dir at configure time based on KDEDIRS - there may be different package installation locations
   execute_process(COMMAND "${KDE4_KDECONFIG_EXECUTABLE}" --path icon OUTPUT_VARIABLE _dir ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
