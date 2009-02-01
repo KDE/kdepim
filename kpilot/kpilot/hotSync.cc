@@ -517,7 +517,9 @@ bool BackupAction::startBackupThread(DBInfo *info)
 {
 	if (e->type() == (QEvent::Type)Thread::TerminateOK)
 	{
-		fBackupThread->deleteLater();
+		// delete the thread when it's finished
+		// TODO: figure out why calling deleteLater directly doesn't work
+		QTimer::singleShot(0,fBackupThread,SLOT(deleteLater()));
 		fBackupThread = 0L;
 		// This was a successful termination.
 		addSyncLogEntry( i18n("... OK.\n"), false );
@@ -526,7 +528,9 @@ bool BackupAction::startBackupThread(DBInfo *info)
 	}
 	if (e->type() == (QEvent::Type)Thread::TerminateFailure)
 	{
-		fBackupThread->deleteLater();
+		// delete the thread when it's finished
+		// TODO: figure out why calling deleteLater directly doesn't work
+		QTimer::singleShot(0,fBackupThread,SLOT(deleteLater()));
 		fBackupThread = 0L;
 		// Unsuccessful termination.
 		addSyncLogEntry( i18n("Backup failed.") );
