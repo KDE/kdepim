@@ -268,7 +268,7 @@ bool IDMappingXmlSource::saveMapping()
 	}
 	
 	QFile file( d->fPath );
-	if( file.open( QIODevice::ReadWrite ) )
+	if( file.open( QIODevice::WriteOnly | QIODevice::Truncate) )
 	{
 		QTextStream out( &file );
 		doc.save( out, 4 );
