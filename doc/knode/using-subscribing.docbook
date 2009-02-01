@@ -184,7 +184,7 @@ deleted groups vanish from the grouplist.</para>
 </tip> 
 
 <para>Unfortunately there is no guarantee that your newsserver is
-providing all available newsgroups: many newsserver refuse groups
+providing all available newsgroups: many newsservers refuse groups
 publishing binary attachments; other groups are only available from
 special servers. &knode; provides you the possibility to use more than
 one news-server if you want to access alternative servers providing
@@ -446,7 +446,7 @@ and reply to news</link>.</para>
 <varlistentry> 
 <term><guilabel>From</guilabel></term> 
 <listitem> 
-<para>The <guilabel>From</guilabel> column shows the author, or their
+<para>The <guilabel>From</guilabel> column shows the author, or his
 e-mail address if the author didn't give a name. You can configure
 your settings in
 <menuchoice><guimenu>Settings</guimenu><guimenuitem>Configure

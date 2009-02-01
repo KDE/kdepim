@@ -1233,7 +1233,7 @@ of key words can be modified.</para>
 	    <guilabel>Store sent messages encrypted</guilabel><!--
 	    --><footnote>
 	      <para>
-		This options enables a mode of using mail encryption
+		This option enables a mode of using mail encryption
 		that is sometimes (misleadingly) called
 		<quote>transport-only</quote> encryption. In this mode
 		of operation, the message encryption is stripped off
@@ -1316,7 +1316,7 @@ of key words can be modified.</para>
 	      <guilabel>drafts</guilabel> folder. This is more
 	      convenient, and does not result in a gross loss of
 	      security, provided the drafts folder is safe. &imap;
-	      users might want this options turned off, if their
+	      users might want this option turned off, if their
 	      <guilabel>drafts</guilabel> folder is on the server.
 	    </para>
 	  </listitem>
@@ -1332,7 +1332,7 @@ of key words can be modified.</para>
       </title>
 
       <para>
-	On this tab you can switch security-relavant warnings on and
+	On this tab you can switch security-relevant warnings on and
 	off.
       </para>
 

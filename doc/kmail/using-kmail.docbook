@@ -1472,7 +1472,7 @@ carefully <emphasis>uncheck</emphasis> the
 <para>Just keep in mind to move the <quote>Priority: urgent</quote>
 filter entry to the top of the <guilabel>Available Filters</guilabel>
 list, each time, when you have added another filter, so your
-non-stopping filter will allways be applied first.</para>
+non-stopping filter will always be applied first.</para>
 </step>
 </procedure>
 

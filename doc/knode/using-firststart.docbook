@@ -246,7 +246,7 @@ signature file as &knode; inserts it automatically.</para>
 <para>If this option is activated, the signature file is not handled
 as a text file, but as a program. The signature file will be started
 as a program and the output will be used as a signature. Through that
-you'll be able to chose a signature by accident or to use fortune to
+you'll be able to choose a signature by accident or to use fortune to
 generate a cool slogan every time.</para>
 
 </sect3>
@@ -942,7 +942,7 @@ one position up. Try it: select the second filter and press
 
 <para>The <guibutton>Down</guibutton> button does the opposite
 action: select the filter you just shifted one up and
-press<guibutton>Down</guibutton> until it reaches its old
+press <guibutton>Down</guibutton> until it reaches its old
 position.</para>
 
 <para>With the two buttons <guibutton>Add Separator</guibutton> and

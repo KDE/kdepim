@@ -1097,7 +1097,7 @@ C=DE
 	linkend="configuration-appearance">visual appearance</link> of
 	keys based on a concept called <guilabel>Key
 	Categories</guilabel>. <guilabel>Key Categories</guilabel> are
-	also used to filter the list of certificates.This section
+	also used to filter the list of certificates. This section
 	describes how you can edit the available categories and add
 	new ones.
       </para>

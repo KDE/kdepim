@@ -656,7 +656,7 @@ you might want to compact a folder manually.</para>
 <para>Deletes old messages from the current folder or moves them to another
 folder, according to the rules in the folder's <guilabel>Properties</guilabel> dialog (the default is not to delete or move old messages). Usually &kmail;
 does this automatically, but under certain circumstances you might want to
-expire a folder manually..</para>
+expire a folder manually...</para>
 </listitem>
 </varlistentry>
 
@@ -737,7 +737,7 @@ of a folder after it has been removed.</para></warning>
 </menuchoice>
 </term>
 <listitem>
-<para>If enabled then &html; messages in this folders will be shown using
+<para>If enabled then &html; messages in this folder will be shown using
 &html; rendering. For security reasons, we recommend to only
 activate this for folders which only contain trusted messages.</para>
 </listitem>
