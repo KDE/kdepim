@@ -865,18 +865,28 @@ void RecordConduit::syncRecords( Record *pcRecord, HHRecord *backupRecord,
 	}
 	else if( hhRecord )
 	{
-		// Case: 6.5.2 or 6.5.8
-		// Warning id is a temporary id. Only after commit we know what id is
-		// assigned to the record. So on commit the proxy should get the mapping
-		// so that it can change the mapping.
-		DEBUGKPILOT << "Case 6.5.2 and 6.5.8";
-		pcRecord = createPCRecord( hhRecord );
-		QString id = fPCDataProxy->create( pcRecord );
-		fMapping.map( hhRecord->id(), id );
-		copyCategory( hhRecord, pcRecord );
+		if( !hhRecord->isDeleted() )
+		{
+			// Case: 6.5.2 or 6.5.8
+			// Warning id is a temporary id. Only after commit we know what id is
+			// assigned to the record. So on commit the proxy should get the mapping
+			// so that it can change the mapping.
+
+			DEBUGKPILOT << "Case 6.5.2 and 6.5.8";
+			pcRecord = createPCRecord( hhRecord );
+			QString id = fPCDataProxy->create( pcRecord );
+			fMapping.map( hhRecord->id(), id );
+			copyCategory( hhRecord, pcRecord );
 		
-		pcRecord->synced();
-		hhRecord->synced();
+			pcRecord->synced();
+			hhRecord->synced();
+		}
+		else
+		{
+			// Case: 6.5.18
+			DEBUGKPILOT << "Case 6.5.18";
+			fHHDataProxy->remove( hhRecord->id() );
+                }
 	}
 	else if( pcRecord )
 	{
