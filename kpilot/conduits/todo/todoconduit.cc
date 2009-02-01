@@ -62,6 +62,55 @@ TodoConduit::~TodoConduit()
 	KPILOT_DELETE( d );
 }
 
+static int mapHHPriorityToPC( int hhPriority )
+{
+	FUNCTIONSETUPL(5);
+	
+	int pcPriority;
+
+	if( 1 <= hhPriority && hhPriority <= 5 )
+	{
+		pcPriority =  2 * hhPriority - 1;
+	}
+	else
+	{
+		// hhPriority out of range so set pcPriority to undefined value
+		WARNINGKPILOT << "HH Priority (" << hhPriority << ") not in range 1..5";
+		pcPriority = 0;
+	}
+
+	DEBUGKPILOT << "hhPriority=" << hhPriority << ", pcPriority=" << pcPriority;
+
+	return pcPriority;
+}
+
+static int mapPCPriorityToHH( int pcPriority )
+{
+	FUNCTIONSETUPL(5);
+	
+	int hhPriority;
+	
+	if( 1 <= pcPriority && pcPriority <= 9 )
+	{
+		hhPriority = (pcPriority + 1) / 2;
+	}
+	else if( pcPriority == 0 )
+        {
+		// force unspecified pc priority to lowest hh priority
+		hhPriority = 5;
+        }
+	else
+	{
+		// pcPriority out of range, so set hh priority to lowest valid valud
+		WARNINGKPILOT << "pcPriority (" << pcPriority << ") not in range 0..9";
+		hhPriority = 5;
+	}
+	
+	DEBUGKPILOT << "pcPriority=" << pcPriority << "hhPriority=" << hhPriority;
+	
+	return hhPriority;
+}
+
 void TodoConduit::loadSettings()
 {
 	FUNCTIONSETUP;
@@ -109,7 +158,7 @@ bool TodoConduit::initDataProxies()
 	fHHDataProxy->loadAllRecords();
 	fBackupDataProxy = new TodoHHDataProxy( fLocalDatabase );
 	fBackupDataProxy->loadAllRecords();
-	fPCDataProxy->loadAllRecords();
+	//fPCDataProxy->loadAllRecords();
 	
 	return true;
 }
@@ -148,7 +197,7 @@ bool TodoConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 	// due date is set.
 	else if( pcTodo->hasDueDate() != !hhTodo.getIndefinite() )
 	{
-		DEBUGKPILOT << "On has and other does not have due date. PC[" 
+		DEBUGKPILOT << "One has and other does not have due date. PC[" 
 			<< pcTodo->hasDueDate() << "], HH[" << !hhTodo.getIndefinite() << ']';
 		dueDateEqual = false;
 	}
@@ -158,8 +207,9 @@ bool TodoConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 		dueDateEqual = true;
 	}
 	
-	
-	// TODO: Do some mapping for the priority.
+	// Priorities are equal if the pc priority maps correctly to the hh priority
+	bool priorityEqual = mapPCPriorityToHH( pcTodo->priority() ) == hhTodo.getPriority();
+
 	// TODO: Do some mapping for the completed percentage.
 	
 	DEBUGKPILOT << "descriptionEqual: " << descriptionEqual;
@@ -167,12 +217,14 @@ bool TodoConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 	DEBUGKPILOT << "categoriesEqual: " << categoriesEqual;
 	DEBUGKPILOT << "dueDateEqual: " << dueDateEqual;
 	DEBUGKPILOT << "completeEqual: " << completeEqual;
+	DEBUGKPILOT << "priorityEqual: " << priorityEqual;
 	
 	return descriptionEqual
 		&& noteEqual
 		&& categoriesEqual
 		&& dueDateEqual
-		&& completeEqual;
+		&& completeEqual
+		&& priorityEqual;
 }
 
 Record* TodoConduit::createPCRecord( const HHRecord *hhRec )
@@ -222,9 +274,10 @@ void TodoConduit::_copy( const Record *from, HHRecord *to )
 		hhTo.setIndefinite( 1 );
 	}
 
-	// TODO: Map priority of KCal::Todo to PilotTodoEntry
-	// hhTo.setPriority( todo->priority() );
+	// Map priority from PC to HH
+	hhTo.setPriority( mapPCPriorityToHH( pcFrom->priority() ) );
 
+	// Set Completed
 	hhTo.setComplete( pcFrom->isCompleted() );
 
 	// what we call summary pilot calls description.
@@ -252,7 +305,7 @@ void TodoConduit::_copy( const HHRecord *from, Record *to  )
 	
 	pcTo->setSecrecy( hhFrom.isSecret() ? KCal::Todo::SecrecyPrivate : KCal::Todo::SecrecyPublic );
 
-	if ( hhFrom.getIndefinite() )
+	if( hhFrom.getIndefinite() )
 	{
 		pcTo->setHasDueDate( false );
 	}
@@ -262,9 +315,10 @@ void TodoConduit::_copy( const HHRecord *from, Record *to  )
 		pcTo->setHasDueDate( true );
 	}
 
-	// PRIORITY //
-	// TODO: e->setPriority(de->getPriority());
-	
+	// Map priority from HH to PC
+	pcTo->setPriority( mapHHPriorityToPC( hhFrom.getPriority() ) );
+
+	// Properly set the completion state
 	if( hhFrom.getComplete() && !pcTo->hasCompletedDate() )
 	{
 		pcTo->setCompleted( KDateTime::currentLocalDateTime() );
