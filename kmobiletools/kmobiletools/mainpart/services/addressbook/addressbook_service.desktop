@@ -1,7 +1,10 @@
 [Desktop Entry]
 Type=Service
 Name=Address Book Service
+Name[pt]=Serviço do Livro de Endereços
 Name[pt_BR]=Serviço de livro de endereços
+Name[sv]=Adressbokstjänst
+Name[uk]=Служба адресної книги
 Comment=A KMobileTools service that provides address book functions
 Comment[ca]=Un servei del KMobileTools que proporciona funcions de llibreta d'adreces
 Comment[da]=En KMobileTools-tjeneste der tilbyder adressebogsfunktioner
