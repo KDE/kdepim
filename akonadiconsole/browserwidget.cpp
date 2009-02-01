@@ -52,6 +52,7 @@
 
 #ifdef NEPOMUK_FOUND
 #include <nepomuk/resource.h>
+#include <nepomuk/resourcemanager.h>
 #include <nepomuk/variant.h>
 #endif
 
@@ -140,6 +141,8 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
 
 #ifndef NEPOMUK_FOUND
   contentUi.mainTabWidget->removeTab( contentUi.mainTabWidget->indexOf( contentUi.nepomukTab ) );
+#else
+  Nepomuk::ResourceManager::instance()->init();
 #endif
 }
 
