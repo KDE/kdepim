@@ -80,3 +80,12 @@ PilotTodoEntry TodoHHRecord::todoEntry() const
 	
 	return PilotTodoEntry( fRecord );
 }
+
+QString TodoHHRecord::toString() const
+{
+	PilotTodoEntry tde = todoEntry();
+	QString desc =
+		QString("TodoHHRecord. Summary: [%1]")
+		.arg(tde.getDescription());
+	return desc;
+}
