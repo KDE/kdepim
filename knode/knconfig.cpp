@@ -125,9 +125,16 @@ QString KNode::Identity::getSignature()
               s_igContents += '\n';
           }
           f.close();
-        }
-        else
+        } else {
+          // Debug message for #138821
+          kDebug() << "Signature file opening error code : " << f.error();
+          kDebug() << "Signature file exist ? " << f.exists();
+          kDebug() << "Signature : QFile.fileName()==" << f.fileName();
+          kDebug() << "Signature file permission : " << f.permissions();
+          kDebug() << "Signature file size : " << f.size();
+
           KMessageBox::error(knGlobals.topWidget, i18n("Cannot open the signature file."));
+        }
       } else {
         m_process = new KProcess;
 
