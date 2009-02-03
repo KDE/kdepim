@@ -43,7 +43,7 @@ kde4_add_ui_files(kjots_common_SRCS confpagemisc.ui )
 #########################################################################
 
 qt4_generate_dbus_interface( kjotscomponent.h org.kde.KJotsComponent.xml OPTIONS -m )
-qt4_add_dbus_interfaces(kjots_SRCS
+qt4_add_dbus_interfaces(kjots_common_SRCS
     ${PROJECT_BINARY_DIR}/org.kde.KJotsComponent.xml)
 
 
