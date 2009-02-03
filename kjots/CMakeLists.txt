@@ -15,6 +15,8 @@ include_directories( ${PROJECT_BINARY_DIR}/../ ${PROJECT_SOURCE_DIR}/../ )
 
 #########################################################################
 # Code common to the kjots application and the kontact plugin
+# Don't make it a static library, this code needs to be compiled
+# with -fPIC for the part and without -fPIC for the executable
 #########################################################################
 
 set (kjots_common_SRCS
@@ -36,12 +38,6 @@ kde4_add_kcfg_files(kjots_common_SRCS KJotsSettings.kcfgc )
 
 kde4_add_ui_files(kjots_common_SRCS confpagemisc.ui )
 
-kde4_add_library(kjots_common ${kjots_common_SRCS} )
-
-
-
-
-
 #########################################################################
 # D-Bus interface
 #########################################################################
@@ -58,12 +54,12 @@ qt4_add_dbus_interfaces(kjots_SRCS
 set(kjots_SRCS
    main.cpp
    KJotsMain.cpp
+   ${kjots_common_SRCS}
 )
 
 kde4_add_executable(kjots ${kjots_SRCS})
 
 target_link_libraries(kjots
-  kjots_common
   ${KDE4_KIO_LIBS}
 )
 
@@ -92,13 +88,14 @@ install( FILES kjotsui.rc  DESTINATION ${DATA_INSTALL_DIR}/kjots)
 
 set(kjotspart_PART_SRCS
    kjotspart.cpp
- )
+   ${kjots_common_SRCS}
+)
 
 kde4_add_plugin(kjotspart ${kjotspart_PART_SRCS}
 )
 
 
-target_link_libraries(kjotspart kjots_common ${KDE4_KPARTS_LIBS} kdepim)
+target_link_libraries(kjotspart ${KDE4_KPARTS_LIBS} kdepim)
 
 install( FILES kjotspart.desktop  DESTINATION ${SERVICES_INSTALL_DIR} )
 install( FILES kjotspartui.rc  DESTINATION ${DATA_INSTALL_DIR}/kjots)
