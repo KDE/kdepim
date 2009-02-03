@@ -35,6 +35,7 @@ Name[x-test]=xxKAB GMX XXPort Pluginxx
 Name[zh_CN]=KAB GMX XXPort 插件
 Name[zh_TW]=KAB GMX XXPort 外掛程式
 Comment=Plugin to import and export contacts in GMX's address book format
+Comment[et]=Plugin kontaktide importimiseks ja eksportimiseks GMX aadressiraamatu vormingus
 Comment[pt]=Um 'plugin' para importar e exportar os contactos no formato GMX
 Comment[pt_BR]=Plug-in para importar e exportar contatos no formato de livro de endereços do GMX
 Comment[sv]=Insticksprogram för import och export av kontakter med GMX-adressboksformat
