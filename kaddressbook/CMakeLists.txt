@@ -19,6 +19,7 @@ set( kcontactmanager_SRCS
   contactfiltermodel.cpp
   contactgroupeditordialog.cpp
   contactitemeditor.cpp
+  contactmetadata.cpp
   editor/addresseditwidget.cpp
   editor/contacteditor.cpp
   editor/dateeditwidget.cpp
