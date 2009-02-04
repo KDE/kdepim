@@ -6,6 +6,7 @@ Name[pt]='Plugin' XXPort do Livro de Endereços Pessoal do MS Exchange para o KA
 Name[pt_BR]=Plug-in do KAB para importação/exportação de livros de endereços pessoais do MS Exchange
 Name[sv]=Adressbokens överföringsinsticksprogram för MS Exchange personlig adressbok
 Name[uk]=Втулок KAB для обміну з персональною адресною книгою MS Exchange
+Name[zh_TW]=KAB MS Exchange Personal Addressbook XXPort 外掛程式
 Comment=Plugin to import MS Exchange Personal Address Books
 Comment[af]=Inprop module wat kontakte in MS Exchange adresboek formaat invoer
 Comment[bg]=Приставка за импортиране на контактите от MS Exchange Personal Address Books

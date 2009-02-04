@@ -1,10 +1,12 @@
 [Desktop Entry]
 Name=Address Book on Scalix Server via KMail
 Name[et]=Aadressiraamat Scalix-serveris (KMaili vahendusel)
+Name[ga]=Leabhar Seoltaí ar Fhreastalaí Scalix via KMail
 Name[pt]=Livro de Endereços em Servidor Scalix via KMail
 Name[pt_BR]=Livro de endereços em servidor Scalix via KMail
 Name[sv]=Adressbok på Scalix-server via Kmail
 Name[uk]=Адресна книга на сервері Scalix через KMail
+Name[zh_TW]=透過 KMail 取得 Scalix 伺服器上的通訊錄
 Comment=Provides access to contacts stored on a Scalix server using IMAP via KMail or Kontact
 Comment[ca]=Proporciona l'accés als contactes emmagatzemats en un servidor Scalix usant IMAP via el KMail o el Kontact
 Comment[da]=Giver adgang til kontakter lagret på en Scalix-server som bruger IMAP via KMail eller Kontact

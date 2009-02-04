@@ -1,10 +1,12 @@
 [Desktop Entry]
 Name=Address Book on IMAP Server via KMail
 Name[et]=Aadressiraamat IMAP-serveris (KMaili vahendusel)
+Name[ga]=Leabhar Seoltaí ar Fhreastalaí IMAP via KMail
 Name[pt]=Livro de Endereços em Servidor IMAP via KMail
 Name[pt_BR]=Livro de endereços em servidor IMAP com o KMail
 Name[sv]=Adressbok på IMAP-server via Kmail
 Name[uk]=Адресна книга на сервері IMAP через KMail
+Name[zh_TW]=透過 KMail 取得 IMAP 伺服器上的通訊錄
 Comment=Provides access to contacts stored on a Kolab server using IMAP via KMail or Kontact
 Comment[ca]=Proporciona l'accés als contactes emmagatzemats en un servidor Kolab usant IMAP via el KMail o el Kontact
 Comment[da]=Giver adgang til kontakter lagret på en Kolap-server som bruger IMAP via KMail eller Kontact
