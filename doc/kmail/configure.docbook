@@ -819,6 +819,18 @@ folder will be selected in &kmail;'s main window.
 	    </para>
 	  </listitem>
 	</varlistentry>
+    <varlistentry id="configure-composer-general-forwading-type">
+	  <term>
+	    <guilabel>Default Forwarding Type</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+           Lets you decide whether you want to forward messages inline or as an attachment by default.
+           This changes which type of forwarding mechanism is used when you click the toolbar icon or
+           when you activate the shortcut for forwarding.
+	    </para>
+	  </listitem>
+	</varlistentry>
 	<varlistentry id="configure-composer-general-external-editor">
 	  <term>
 	    <guilabel>External Editor</guilabel>
@@ -1951,20 +1963,6 @@ In RFC2822, the comma (,) is the only allowed separator for email addresses in f
 The option is enabled by default. To disable the feature, add a line reading (under [Composer] section):
 </para>
 <programlisting>AllowSemicolonAsAddressSeparator=false
-</programlisting>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>ForwardingInlineByDefault</guilabel></term>
-<listitem>
-<para>
-This option allows you to make inline forwarding the default forwarding method instead
-of forwarding as attachement.
-
-To enable the feature, add a line reading (under [Composer] section):
-</para>
-<programlisting>ForwardingInlineByDefault=true
 </programlisting>
 </listitem>
 </varlistentry>
