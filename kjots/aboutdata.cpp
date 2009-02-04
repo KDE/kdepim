@@ -23,8 +23,8 @@
 */
 
 #include "aboutdata.h"
+#include <kdeversion.h>
 #include <klocale.h>
-#include <libkdepim/pimapplication.h>
 
 AboutData::AboutData()
   : KAboutData( "kjots", 0, ki18n( "KJots" ), KDE_VERSION_STRING,
