@@ -2,10 +2,8 @@
                           filter_oe.cxx  -  Outlook Express mail import
                              -------------------
     begin                : Sat Feb 1 2003
-    copyright            : (C) 2003 by Laurence Anderson
-                           (C) 2005 by Danny Kukawka
-    email                : l.d.anderson@warwick.ac.uk
-                           danny.Kukawka@web.de
+    copyright            : (C) 2003 by Laurence Anderson <l.d.anderson@warwick.ac.uk>
+                           (C) 2005 by Danny Kukawka <danny.Kukawka@web.de>
  ***************************************************************************/
 
 /***************************************************************************

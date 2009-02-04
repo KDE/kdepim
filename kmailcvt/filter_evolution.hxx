@@ -1,7 +1,7 @@
 /*
  *  filter_evolution.hxx
  *  Author : Simon MARTIN <simartin@users.sourceforge.net>
- *  Copyright (c) 2004 Simon MARTIN
+ *  Copyright (c) 2004 Simon MARTIN <simartin@users.sourceforge.net>
  *
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by

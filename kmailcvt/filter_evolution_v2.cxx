@@ -2,9 +2,8 @@
             filter_evolution_v2.cxx  -  Evolution 2.0.x mail import
                              -------------------
     begin                : Januar 26 2005
-    copyright            : (C) 2005 by Danny Kukawka
+    copyright            : (C) 2005 by Danny Kukawka <danny.kukawka@web.de>
                            (inspired and partly copied from filter_evolution)
-    email                : danny.kukawka@web.de
  ***************************************************************************/
 
 /***************************************************************************

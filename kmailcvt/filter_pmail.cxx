@@ -2,10 +2,8 @@
                           FilterPMail.cxx  -  Pegasus-Mail import
                              -------------------
     begin                : Sat Jan 6 2001
-    copyright            : (C) 2001 by Holger Schurig
-                           (C) 2005 by Danny Kukawka
-    email                : holgerschurig@gmx.de
-                           danny.kukawka@web.de
+    copyright            : (C) 2001 by Holger Schurig <holgerschurig@gmx.de>
+                           (C) 2005 by Danny Kukawka <danny.kukawka@web.de>
  ***************************************************************************/
 
 /***************************************************************************
