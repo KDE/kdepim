@@ -29,7 +29,6 @@
 #include <kconfiggroup.h>
 #include <kconfig.h>
 #include <k3staticdeleter.h>
-#include <kconfiggroup.h>
 #include <kde_file.h>
 
 #include <QLabel>

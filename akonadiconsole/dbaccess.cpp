@@ -21,8 +21,6 @@
 
 #include <akonadi/private/xdgbasedirs_p.h>
 
-#include <KMessageBox>
-
 #include <QSettings>
 #include <QSqlDatabase>
 #include <QSqlError>
