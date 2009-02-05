@@ -664,6 +664,8 @@ void TabWidget::Private::enableDisablePageActions( QAction * actions[], const Pa
     actions[Hierarchical]->setChecked( p && p->isHierarchical() );
     actions[ExpandAll]   ->setEnabled( p && p->isHierarchical() );
     actions[CollapseAll] ->setEnabled( p && p->isHierarchical() );
+
+    tabWidget.setTabBarHidden( tabWidget.count() < 2 );
 }
 
 void TabWidget::Private::slotPageTitleChanged( const QString & ) {
@@ -873,7 +875,6 @@ QTreeView * TabWidget::Private::addView( Page * page ) {
     QAbstractItemView * const previous = q->currentView(); 
     const int tabIndex = tabWidget.addTab( page, page->title() );
     tabWidget.setTabToolTip( tabIndex, page->toolTip() );
-    tabWidget.setTabBarHidden( tabWidget.count() < 2 );
     // work around a bug in QTabWidget (tested with 4.3.2) not emitting currentChanged() when the first widget is inserted
     QAbstractItemView * const current = q->currentView(); 
     if ( previous != current )
