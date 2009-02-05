@@ -9,10 +9,12 @@ QuoteType=0
 Name=Yahoo! Address Book
 Name[et]=Yahoo! aadressiraamat
 Name[ga]=Leabhar Seoltaí Yahoo!
+Name[nds]=Yahoo!-Adressbook
 Name[pt]=Livro de Endereços do Yahoo!
 Name[pt_BR]=Livro de endereços do Yahoo!
 Name[sv]=Yahoo!-adressbok
 Name[uk]=Адресна книга Yahoo!
+Name[x-test]=xxYahoo! Address Bookxx
 Name[zh_TW]=Yahoo! 通訊錄
 
 [csv column map]
