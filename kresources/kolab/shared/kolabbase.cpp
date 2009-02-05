@@ -412,7 +412,7 @@ QDomDocument KolabBase::domTree()
 
 QString KolabBase::dateTimeToString( const KDateTime& time )
 {
-  return time.toString( KDateTime::ISODate ) + 'Z';
+  return time.toString( KDateTime::ISODate );
 }
 
 QString KolabBase::dateToString( const QDate& date )
@@ -422,9 +422,7 @@ QString KolabBase::dateToString( const QDate& date )
 
 KDateTime KolabBase::stringToDateTime( const QString& _date )
 {
-  QString date( _date );
-  if ( date.endsWith( 'Z' ) )
-    date.truncate( date.length() - 1 );
+  const QString date( _date );
   return KDateTime::fromString( date, KDateTime::ISODate );
 }
 
