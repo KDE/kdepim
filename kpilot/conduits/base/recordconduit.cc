@@ -937,12 +937,30 @@ void RecordConduit::syncConflictedRecords( Record *pcRecord, HHRecord *hhRecord
 		}
 		else
 		{
-			// Keep pcRecord. The hhRecord is changed so undo that changes.
-			copy( pcRecord, hhRecord );
-			fHHDataProxy->update( hhRecord->id(), hhRecord );
-			// Both records are in sync so they are no longer modified.
-			hhRecord->synced();
-			pcRecord->synced();
+			if( !hhRecord->isDeleted() )
+			{
+				// Keep pcRecord. The hhRecord is changed so undo that change.
+				copy( pcRecord, hhRecord );
+				fHHDataProxy->update( hhRecord->id(), hhRecord );
+				// Both records are in sync so they are no longer modified.
+				hhRecord->synced();
+				pcRecord->synced();
+			}
+			else
+			{
+				// hhRecord is deleted
+				// Break the current mapping between hh record and pc record
+				fMapping.removeHHId( hhRecord->id() );
+
+				// now remove the hh record
+				fHHDataProxy->remove( hhRecord->id() );
+
+				// create a new hhRecord and adjust mappings, etc.
+				HHRecord *hhRec = createHHRecord( pcRecord );
+				fHHDataProxy->create( hhRec );
+				fMapping.map( hhRec->id(), pcRecord->id() );
+				copyCategory( pcRecord, hhRec );
+			}
 		}
 	}
 	else
@@ -964,12 +982,30 @@ void RecordConduit::syncConflictedRecords( Record *pcRecord, HHRecord *hhRecord
 		}
 		else
 		{
-			// Keep hhRecord. The pcRecord is changed so undo that changes.
-			copy( hhRecord, pcRecord );
-			fPCDataProxy->update( pcRecord->id(), pcRecord );
-			// Both records are in sync so they are no longer modified.
-			hhRecord->synced();
-			pcRecord->synced();
+			if( !pcRecord->isDeleted() )
+			{
+				// Keep hhRecord. The pcRecord is changed so undo that change.
+				copy( hhRecord, pcRecord );
+				fPCDataProxy->update( pcRecord->id(), pcRecord );
+				// Both records are in sync so they are no longer modified.
+				hhRecord->synced();
+				pcRecord->synced();
+			}
+			else
+			{
+				// pcRecord is deleted
+				// Break the current mapping between hh record and (dummy) pc record
+				fMapping.removeHHId( hhRecord->id() );
+
+				// now remove the dummy pc record
+				fPCDataProxy->remove( pcRecord->id() );
+
+				// create a new pcRecord and adjust mappings, etc.
+				Record *pcRec = createPCRecord( hhRecord );
+				fPCDataProxy->create( pcRec );
+				fMapping.map( hhRecord->id(), pcRec->id() );
+				copyCategory( hhRecord, pcRec );
+			}
 		}
 	}
 }
