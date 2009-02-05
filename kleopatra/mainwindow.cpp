@@ -176,7 +176,7 @@ public:
         const int rc = KMessageBox::questionYesNoCancel( q,
                                                          i18n("%1 may be used by other applications as a service.\n"
                                                               "You may instead want to close this window without exiting %1.", app ),
-                                                         i18n("Really Quit?"), KStandardGuiItem_quit(), KStandardGuiItem_close(), KStandardGuiItem::cancel(),
+                                                         i18n("Really Quit?"), KStandardGuiItem_close(), KStandardGuiItem_quit(), KStandardGuiItem::cancel(),
                                                          "really-quit-" + app.toLower() );
         if ( rc == KMessageBox::Cancel )
             return;
