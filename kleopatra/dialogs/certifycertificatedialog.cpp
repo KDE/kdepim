@@ -50,6 +50,8 @@
 
 #include <QTextDocument> // Qt::escape
 
+#include <gpg-error.h>
+
 #include <cassert>
 
 using namespace boost;
@@ -210,6 +212,7 @@ SummaryPage::SummaryPage( QWidget * parent ) : QWizardPage( parent ), m_complete
     layout->addWidget( m_secretKeyLabel = new QLabel, row, 1 );
     m_secretKeyLabel->setTextFormat( Qt::PlainText );
     layout->addWidget( m_resultLabel = new QLabel, ++row, 0, 1, 2, Qt::AlignCenter );
+    m_resultLabel->setWordWrap( true );
     layout->setRowStretch( row, 1 );
     m_resultLabel->setAlignment( Qt::AlignCenter );
 }
@@ -251,7 +254,10 @@ void SummaryPage::setComplete( bool complete ) {
 }
 void SummaryPage::setResult( const Error & err ) {
     if ( err && !err.isCanceled() )
-        m_resultLabel->setText( i18n( "The certificate could not be certified. <b>Error</b>: %1", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) ) );
+        if ( err.code() == GPG_ERR_USER_1 )
+            m_resultLabel->setText( i18n( "The certificate could not be certified. <b>Error</b>: %1", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) ) );
+        else
+            m_resultLabel->setText( i18n( "The certificate was not certified because it was already certified by the same certificate." ) );
     else if ( err.isCanceled() )
         m_resultLabel->setText( i18n("Certification canceled.") );
     else
