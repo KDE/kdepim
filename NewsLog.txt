@@ -11,7 +11,7 @@ Merges
 -------
 
 *  Merges from 4.2 branch:
-   - fixes in KPilot
+   - blocked fixes from KPilot
    - spelling fixes
    - fixes to the dk and import of an sk holiday file
    - fix for d'n'd of events crossing canvas limits
