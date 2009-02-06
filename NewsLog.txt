@@ -33,7 +33,6 @@ Problems Addressed
 * kolab/issue3306 "No attendees" behind the title of a new event or task not translated into German.
 * kolab/issue2048 Distribution list: couldn't delete a contact from a dist list with pressing on "delete".
 * kolab/issue3281 Kontact does not quote CNs in iCalendar mails, which Outlook 2003 (OL 2K3) then fails to recognise.
-* kolab/issue3275 (translation of "calendar" to "Kalendar" is wrong, should be "Kalender"
 * KDE BUGS #175594,169563,88781,149309,145163,174332,170030,175045,173964,140032,174707,174707,160600,175100,175623,
 174992,169140,175590,
 * kolab/issue3249 Strange crash while replying to an SMIME mail. ( forward port from e3 )
