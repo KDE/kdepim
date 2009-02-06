@@ -39,6 +39,9 @@ class QButtonGroup;
 class QCheckBox;
 class QLabel;
 
+#include <vector>
+#include <map>
+
 namespace Kleo {
 namespace Crypto {
 namespace Gui {

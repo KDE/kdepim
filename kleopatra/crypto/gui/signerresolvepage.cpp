@@ -61,6 +61,7 @@
 #include <QRadioButton>
 #include <QStackedLayout>
 #include <QVBoxLayout>
+#include <QVector>
 
 #include <cassert>
 
@@ -435,7 +436,7 @@ void SignerResolvePage::Private::updateModeSelectionWidgets()
 void SignerResolvePage::Private::selectCertificates()
 {
     QPointer<SigningCertificateSelectionDialog> dlg = new SigningCertificateSelectionDialog( q );
-    dlg->setAllowedProtocols( QVector<Protocol>::fromStdVector(signingProtocolSelectionWidget->checkedProtocols() ) );
+    dlg->setAllowedProtocols( QVector<Protocol>::fromStdVector( signingProtocolSelectionWidget->checkedProtocols() ) );
     if ( dlg->exec() == QDialog::Accepted && dlg )
     {
         const QMap<Protocol, Key> certs = dlg->selectedCertificates();
