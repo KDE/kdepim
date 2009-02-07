@@ -26,10 +26,12 @@
 #include "KJotsMain.h"
 #include "aboutdata.h"
 
-// if building kontact plugin:
+#ifdef KJOTSKONTACTPLUGIN
 #include <libkdepim/pimapplication.h>
-// #else
-// #include <kuniqueapplication.h>
+#else
+#include <kuniqueapplication.h>
+#endif
+
 #include <kcmdlineargs.h>
 #include <kconfig.h>
 #include <kdebug.h>
@@ -42,22 +44,22 @@ int main( int argc, char **argv )
     AboutData aboutData;
     KCmdLineArgs::init(argc, argv, &aboutData);
 
-    // if building kontact plugin:
+#ifdef KJOTSKONTACTPLUGIN
     KPIM::PimApplication::addCmdLineOptions();
     if (!KPIM::PimApplication::start()) {
         kWarning() << "kjots is already running!";
         exit(0);
     }
     KPIM::PimApplication a;
-    // else:
-    //
-//     KUniqueApplication::addCmdLineOptions();
-//     if (!KUniqueApplication::start()) {
-//         fprintf(stderr, "kjots is already running!\n");
-//         exit(0);
-//     }
-//     KUniqueApplication a;
-
+#else
+    
+    KUniqueApplication::addCmdLineOptions();
+    if (!KUniqueApplication::start()) {
+        kWarning() << "kjots is already running!";
+        exit(0);
+    }
+    KUniqueApplication a;
+#endif
 
 
     // backwards compatibility code to convert "old" user font settings
