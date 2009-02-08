@@ -27,7 +27,6 @@
 #include "kncomposer.h"
 #include "kncomposereditor.h"
 #include "kncomposerview.h"
-#include "kncomposerview.moc"
 
 //=====================================================================================
 
