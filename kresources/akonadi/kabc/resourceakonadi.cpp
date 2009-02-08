@@ -1,7 +1,7 @@
 // -*- c-basic-offset: 2 -*-
 /*
     This file is part of libkabc.
-    Copyright (c) 2008 Kevin Krammer <kevin.krammer@gmx.at>
+    Copyright (c) 2008-2009 Kevin Krammer <kevin.krammer@gmx.at>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -40,10 +40,97 @@
 #include <kconfiggroup.h>
 #include <kdebug.h>
 
+#include <QtConcurrentRun>
+#include <QFuture>
 #include <QHash>
 
 using namespace Akonadi;
 using namespace KABC;
+
+class UidToCollectionMapper
+{
+public:
+  virtual ~UidToCollectionMapper() {}
+
+  virtual Collection collectionForUid( const QString &uid ) const = 0;
+};
+
+static KJob *createSaveSequence( const UidToCollectionMapper &mapper,
+    const Item::List &addedItems, const Item::List &modifiedItems, const Item::List &deletedItems );
+
+class ThreadJobContext
+{
+  public:
+    explicit ThreadJobContext( const UidToCollectionMapper &mapper )
+      : mMapper( mapper ) {}
+
+    void clear()
+    {
+      mJobError.clear();
+      mCollections.clear();
+      mItems.clear();
+
+      mAddedItems.clear();
+      mModifiedItems.clear();
+      mDeletedItems.clear();
+    }
+
+    bool fetchCollections()
+    {
+      CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
+
+      bool jobResult = job->exec();
+      if ( jobResult )
+        mCollections = job->collections();
+      else
+        mJobError = job->errorString();
+
+      delete job;
+      return jobResult;
+    }
+
+    bool fetchItems( const Collection &collection )
+    {
+      ItemFetchJob *job = new ItemFetchJob( collection );
+      job->fetchScope().fetchFullPayload();
+
+      bool jobResult = job->exec();
+      if ( jobResult )
+        mItems = job->items();
+      else
+        mJobError = job->errorString();
+
+      delete job;
+      return jobResult;
+    }
+
+    bool saveChanges()
+    {
+      KJob *job = createSaveSequence( mMapper, mAddedItems, mModifiedItems, mDeletedItems );
+
+      bool jobResult = job->exec();
+      if ( !jobResult )
+        mJobError = job->errorString();
+
+      delete job;
+      return jobResult;
+    }
+
+  public:
+    QString mJobError;
+
+    Collection::List mCollections;
+    Item::List mItems;
+
+    Item::List mAddedItems;
+    Item::List mModifiedItems;
+    Item::List mDeletedItems;
+
+  private:
+    const UidToCollectionMapper &mMapper;
+
+  private:
+};
 
 typedef QMap<Item::Id, Item> ItemMap;
 typedef QHash<QString, Item::Id> IdHash;
@@ -114,12 +201,21 @@ typedef QHash<QString, SubResource*> SubResourceMap;
 typedef QMap<QString, QString>  UidResourceMap;
 typedef QMap<Item::Id, QString> ItemIdResourceMap;
 
-class ResourceAkonadi::Private
+class ResourceAkonadi::Private : public UidToCollectionMapper
 {
   public:
     Private( ResourceAkonadi *parent )
-      : mParent( parent ), mMonitor( 0 ), mCollectionModel( 0 ), mCollectionFilterModel( 0 )
+      : mParent( parent ), mMonitor( 0 ), mCollectionModel( 0 ), mCollectionFilterModel( 0 ),
+        mThreadJobContext( *this )
     {
+    }
+
+    Collection collectionForUid( const QString &uid ) const
+    {
+      SubResource *subResource = mSubResources.value( mUidToResourceMap.value( uid ), 0 );
+      Q_ASSERT( subResource != 0 );
+
+      return subResource->mCollection;
     }
 
  public:
@@ -157,6 +253,8 @@ class ResourceAkonadi::Private
 
     QSet<QString> mAsyncLoadCollections;
 
+    ThreadJobContext mThreadJobContext;
+
   public:
     void subResourceLoadResult( KJob *job );
 
@@ -174,6 +272,8 @@ class ResourceAkonadi::Private
     Collection findDefaultCollection() const;
     bool prepareSaving();
     KJob *createSaveSequence() const;
+
+    void createItemListsForSave( Item::List &added, Item::List &modified, Item::List &deleted ) const;
 
     bool reloadSubResource( SubResource *subResource, bool &changed );
 
@@ -343,15 +443,15 @@ bool ResourceAkonadi::load()
 
   // if we do not have any collection yet, fetch them explicitly
   if ( collections.isEmpty() ) {
-    CollectionFetchJob *colJob =
-      new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
-    if ( !colJob->exec() ) {
-      emit loadingError( this, colJob->errorString() );
+    d->mThreadJobContext.clear();
+    QFuture<bool> threadResult =
+      QtConcurrent::run( &(d->mThreadJobContext), &ThreadJobContext::fetchCollections );
+    if ( !threadResult.result() ) {
+      emit loadingError( this, d->mThreadJobContext.mJobError );
       return false;
     }
 
-    // TODO: should probably add the data to the model right here
-    collections = colJob->collections();
+    collections = d->mThreadJobContext.mCollections;
   }
 
   bool result = true;
@@ -404,14 +504,15 @@ bool ResourceAkonadi::asyncLoad()
 
   // if we do not have any collection yet, fetch them explicitly
   if ( collections.isEmpty() ) {
-    CollectionFetchJob *colJob =
-      new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
-    if ( !colJob->exec() ) {
-      emit loadingError( this, colJob->errorString() );
+    d->mThreadJobContext.clear();
+    QFuture<bool> threadResult =
+      QtConcurrent::run( &(d->mThreadJobContext), &ThreadJobContext::fetchCollections );
+    if ( !threadResult.result() ) {
+      emit loadingError( this, d->mThreadJobContext.mJobError );
       return false;
     }
 
-    foreach ( const Collection &collection, colJob->collections() ) {
+    foreach ( const Collection &collection, d->mThreadJobContext.mCollections ) {
       if ( !collection.contentMimeTypes().contains( QLatin1String( "text/directory" ) )
             && !collection.contentMimeTypes().contains( KPIM::ContactGroup::mimeType() ) )
         continue;
@@ -458,13 +559,17 @@ bool ResourceAkonadi::save( Ticket *ticket )
   if ( !d->prepareSaving() )
     return false;
 
-  KJob *job = d->createSaveSequence();
-  if ( job == 0 )
-    return false;
+  d->mThreadJobContext.clear();
 
-  if ( !job->exec() ) {
+  d->createItemListsForSave( d->mThreadJobContext.mAddedItems,
+                             d->mThreadJobContext.mModifiedItems,
+                             d->mThreadJobContext.mDeletedItems );
+
+  QFuture<bool> threadResult =
+    QtConcurrent::run( &(d->mThreadJobContext), &ThreadJobContext::saveChanges );
+  if ( !threadResult.result() ) {
     // TODO error handling
-    kError(5700) << "Save Sequence failed:" << job->errorString();
+    kError(5700) << "Save Sequence failed:" << d->mThreadJobContext.mJobError;
     return false;
   }
 
@@ -754,6 +859,7 @@ void ResourceAkonadi::Private::subResourceLoadResult( KJob *job )
       mParent->mAddrMap.insert( addressee.uid(), addressee );
       mUidToResourceMap.insert( addressee.uid(), collectionUrl );
       mItemIdToResourceMap.insert( id, collectionUrl );
+      mChanges.remove( addressee.uid() );
     } else if ( item.hasPayload<KPIM::ContactGroup>() ) {
       KPIM::ContactGroup contactGroup = item.payload<KPIM::ContactGroup>();
 
@@ -1277,11 +1383,82 @@ bool ResourceAkonadi::Private::prepareSaving()
   return true;
 }
 
+static KJob *createSaveSequence( const UidToCollectionMapper &mapper,
+    const Item::List &addedItems, const Item::List &modifiedItems, const Item::List &deletedItems )
+{
+  TransactionSequence *sequence = new TransactionSequence();
+
+  foreach ( const Item &item, addedItems ) {
+    QString uid;
+    if ( item.hasPayload<KABC::Addressee>() ) {
+      const KABC::Addressee addressee = item.payload<KABC::Addressee>();
+      kDebug(5700) << "CreateJob for addressee" << addressee.uid()
+                   << addressee.formattedName();
+      uid = addressee.uid();
+    } else if ( item.hasPayload<KPIM::ContactGroup>() ) {
+      const KPIM::ContactGroup contactGroup = item.payload<KPIM::ContactGroup>();
+      kDebug(5700) << "CreateJob for contact group" << contactGroup.id()
+                   << contactGroup.name();
+      uid = contactGroup.id();
+    } else {
+      kWarning(5700) << "New item id=" << item.id() << "neither addressee nor contactgroup";
+      continue;
+    }
+
+    (void) new ItemCreateJob( item, mapper.collectionForUid( uid ), sequence );
+  }
+
+  foreach ( const Item &item, modifiedItems ) {
+    if ( item.hasPayload<KABC::Addressee>() ) {
+      const KABC::Addressee addressee = item.payload<KABC::Addressee>();
+      kDebug(5700) << "ModifyJob for addressee" << addressee.uid()
+                   << addressee.formattedName();
+    } else if ( item.hasPayload<KPIM::ContactGroup>() ) {
+      const KPIM::ContactGroup contactGroup = item.payload<KPIM::ContactGroup>();
+      kDebug(5700) << "ModifyJob for contact group" << contactGroup.id()
+                   << contactGroup.name();
+    } else {
+      kWarning(5700) << "Modified item id=" << item.id() << "neither addressee nor contactgroup";
+      continue;
+    }
+
+    (void) new ItemModifyJob( item, sequence );
+  }
+
+  foreach ( const Item &item, deletedItems ) {
+    if ( item.hasPayload<KABC::Addressee>() ) {
+      const KABC::Addressee addressee = item.payload<KABC::Addressee>();
+      kDebug(5700) << "DeleteJob for addressee" << addressee.uid()
+                   << addressee.formattedName();
+    } else if ( item.hasPayload<KPIM::ContactGroup>() ) {
+      const KPIM::ContactGroup contactGroup = item.payload<KPIM::ContactGroup>();
+      kDebug(5700) << "DeleteJob for contact group" << contactGroup.id()
+                   << contactGroup.name();
+    } else {
+      kWarning(5700) << "Deleted item id=" << item.id() << "neither addressee nor contactgroup";
+      continue;
+    }
+
+    (void) new ItemDeleteJob( item, sequence );
+  }
+
+  return sequence;
+}
+
 KJob *ResourceAkonadi::Private::createSaveSequence() const
 {
-  kDebug(5700) << mChanges.count() << "changes";
+  Item::List addedItems;
+  Item::List modifiedItems;
+  Item::List deletedItems;
 
-  TransactionSequence *sequence = new TransactionSequence();
+  createItemListsForSave( addedItems, modifiedItems, deletedItems );
+
+  return ::createSaveSequence( *this, addedItems, modifiedItems, deletedItems );
+}
+
+void ResourceAkonadi::Private::createItemListsForSave( Item::List &added, Item::List &modified, Item::List &deleted ) const
+{
+  kDebug(5700) << mChanges.count() << "changes";
 
   ChangeMap::const_iterator changeIt    = mChanges.constBegin();
   ChangeMap::const_iterator changeEndIt = mChanges.constEnd();
@@ -1306,9 +1483,7 @@ KJob *ResourceAkonadi::Private::createSaveSequence() const
           item.setMimeType( QLatin1String( "text/directory" ) );
           item.setPayload<KABC::Addressee>( addressee );
 
-          (void) new ItemCreateJob( item, subResource->mCollection, sequence );
-          kDebug(5700) << "CreateJob for addressee" << addressee.uid()
-                      << addressee.formattedName();
+          added << item;
         } else {
           DistributionList *list = mParent->mDistListMap.value( uid );
           if ( list != 0 ) {
@@ -1317,9 +1492,7 @@ KJob *ResourceAkonadi::Private::createSaveSequence() const
             item.setMimeType( KPIM::ContactGroup::mimeType() );
             item.setPayload<KPIM::ContactGroup>( contactGroup );
 
-            (void) new ItemCreateJob( item, subResource->mCollection, sequence );
-            kDebug(5700) << "CreateJob for contact group" << contactGroup.id()
-                         << contactGroup.name();
+            added << item;
           }
         }
         break;
@@ -1336,9 +1509,7 @@ KJob *ResourceAkonadi::Private::createSaveSequence() const
 
           item.setPayload<KABC::Addressee>( addressee );
 
-          (void) new ItemModifyJob( item, sequence );
-          kDebug(5700) << "ModifyJob for addressee" << addressee.uid()
-                       << addressee.formattedName();
+          modified << item;
         } else if ( item.hasPayload<KPIM::ContactGroup>() ) {
           DistributionList *list = mParent->mDistListMap.value( uid );
           if ( list != 0 ) {
@@ -1346,9 +1517,7 @@ KJob *ResourceAkonadi::Private::createSaveSequence() const
 
             item.setPayload<KPIM::ContactGroup>( contactGroup );
 
-            (void) new ItemModifyJob( item, sequence );
-            kDebug(5700) << "ModifyJob for addressee" << addressee.uid()
-                         << addressee.formattedName();
+            modified << item;
           }
         }
         break;
@@ -1359,40 +1528,26 @@ KJob *ResourceAkonadi::Private::createSaveSequence() const
         Q_ASSERT( itemIt != mItems.constEnd() );
 
         item = itemIt.value();
-        if ( item.hasPayload<KABC::Addressee>() ) {
-          addressee = item.payload<KABC::Addressee>();
-
-          kDebug(5700) << "DeleteJob for addressee" << uid
-                      << addressee.formattedName();
-        } else if ( item.hasPayload<KPIM::ContactGroup>() ) {
-          KPIM::ContactGroup contactGroup = item.payload<KPIM::ContactGroup>();
-
-          kDebug(5700) << "DeleteJob for contact group" << uid
-                       << contactGroup.name();
-        }
-
-        (void) new ItemDeleteJob( item, sequence );
+        deleted << item;
         break;
     }
   }
-
-  return sequence;
 }
 
 bool ResourceAkonadi::Private::reloadSubResource( SubResource *subResource, bool &changed )
 {
   changed = false;
-  ItemFetchJob *job = new ItemFetchJob( subResource->mCollection );
-  job->fetchScope().fetchFullPayload();
-
-  if ( !job->exec() ) {
-    emit mParent->loadingError( mParent, job->errorString() );
+  mThreadJobContext.clear();
+  QFuture<bool> threadResult =
+    QtConcurrent::run( &mThreadJobContext, &ThreadJobContext::fetchItems, subResource->mCollection );
+  if ( !threadResult.result() ) {
+    emit mParent->loadingError( mParent, mThreadJobContext.mJobError );
     return false;
   }
 
-  const QString collectionUrl = subResource->mCollection.url().url();
+  Item::List items = mThreadJobContext.mItems;
 
-  Item::List items = job->items();
+  const QString collectionUrl = subResource->mCollection.url().url();
 
   kDebug(5700) << "Reload for sub resource " << collectionUrl
                << "produced" << items.count() << "items";
