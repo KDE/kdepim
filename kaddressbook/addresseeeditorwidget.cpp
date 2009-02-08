@@ -210,7 +210,7 @@ void AddresseeEditorWidget::setupTab1()
 
   mIMWidget = new IMEditWidget( page, mAddressee, tab1.mInetLayout );
   connect( mIMWidget, SIGNAL( modified() ), SLOT( emitModified() ) );
-  tab1.layout->addWidget( mIMWidget, 7, 4, 3, 2 );
+  tab1.layout->addWidget( mIMWidget );
 
   // Categories
   connect( tab1.mCategoryButton, SIGNAL( clicked() ), SLOT( selectCategories() ) );
