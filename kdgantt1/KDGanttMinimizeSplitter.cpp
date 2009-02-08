@@ -1576,4 +1576,3 @@ void kdganttGeomCalc( QMemArray<QLayoutStruct> &chain, int start, int count, int
 */
 
 
-#include "KDGanttMinimizeSplitter.moc"
