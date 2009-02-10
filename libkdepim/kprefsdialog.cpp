@@ -376,7 +376,7 @@ KPrefsWidDate::KPrefsWidDate( KConfigSkeleton::ItemDateTime *item,
 
 void KPrefsWidDate::readConfig()
 {
-  mDateEdit->setDate( mItem->value().date() );
+  mDateEdit->setDate( mItem->value().date().isNull() ? QDate::currentDate() : mItem->value().date() );
 }
 
 void KPrefsWidDate::writeConfig()
