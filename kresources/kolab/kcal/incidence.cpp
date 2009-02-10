@@ -260,6 +260,7 @@ void Incidence::saveAlarms( QDomElement& element ) const
     QDomElement e = list.ownerDocument().createElement( "alarm" );
     list.appendChild( e );
 
+    writeString( e, "enabled", a->enabled() ? "1" : "0" );
     if ( a->hasStartOffset() ) {
       writeString( e, "start-offset", QString::number( a->startOffset().asSeconds()/60 ) );
     }
@@ -440,6 +441,8 @@ static void loadAlarmHelper( const QDomElement& element, KCal::Alarm* a )
         loadAttachmentsHelper( e, a );
       } else if ( tagName == "file" ) {
         a->setAudioFile( e.text() );
+      } else if ( tagName == "enabled" ) {
+        a->setEnabled( e.text().toInt() != 0 );
       } else {
         kdWarning() << "Unhandled tag" << tagName << endl;
       }
@@ -458,6 +461,7 @@ void Incidence::loadAlarms( const QDomElement& element )
 
       if ( tagName == "alarm" ) {
         KCal::Alarm *a = new KCal::Alarm( 0 );
+        a->setEnabled( true ); // default to enabled, unless some XML attribute says otherwise.
         QString type = e.attribute( "type" );
         if ( type == "display" ) {
           a->setType( KCal::Alarm::Display );
@@ -900,7 +904,9 @@ void Incidence::saveTo( KCal::Incidence* incidence )
     alarm->setType( KCal::Alarm::Display );
   } else if ( !mAlarms.isEmpty() ) {
     for ( KCal::Alarm::List::ConstIterator it = mAlarms.constBegin(); it != mAlarms.constEnd(); ++it ) {
-      incidence->addAlarm( *it );
+      KCal::Alarm *alarm = *it;
+      alarm->setParent( incidence );
+      incidence->addAlarm( alarm );
     }
   }
 

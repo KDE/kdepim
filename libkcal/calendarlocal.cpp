@@ -263,13 +263,26 @@ void CalendarLocal::appendAlarms( Alarm::List &alarms, Incidence *incidence,
   Alarm::List::ConstIterator it;
   for( it = incidence->alarms().begin(); it != incidence->alarms().end();
        ++it ) {
-    if ( (*it)->enabled() ) {
-      QDateTime dt = (*it)->nextRepetition(preTime);
+    Alarm *alarm = *it;
+    if ( alarm->enabled() ) {
+
+      // Fist, check if the alarm has any repetition, and use the date
+      // of the next repetition
+      QDateTime dt = alarm->nextRepetition( preTime );
+
+      // If the alarm doesn't have a repetition, simply use its normal time.
+      if ( !dt.isValid() && alarm->repeatCount() == 0 &&
+           ( alarm->hasStartOffset() || alarm->hasEndOffset() ) ) {
+        if ( alarm->time() >= preTime ) {
+          dt = alarm->time();
+        }
+      }
+
       if ( dt.isValid() && dt <= to ) {
         kdDebug(5800) << "CalendarLocal::appendAlarms() '"
                       << incidence->summary() << "': "
                       << dt.toString() << endl;
-        alarms.append( *it );
+        alarms.append( alarm );
       }
     }
   }
