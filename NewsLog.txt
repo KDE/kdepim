@@ -5,7 +5,6 @@ Problems addressed
 
 kolab/issue3374 Window behaviour of Kontact is undesirable sometimes if a message box comes up.
 kolab/issue3376 Make gui for option ForwardingInlineByDefault
-kolab/issue3385 Reminder of an event doesn't work
 kolab/issue3386 Kontact requires that free/busy urls match email addresses
 
 
