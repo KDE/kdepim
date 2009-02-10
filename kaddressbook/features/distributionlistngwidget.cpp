@@ -173,7 +173,7 @@ void KAB::DistributionListNg::MainWidget::contextMenuRequested( QListBoxItem *it
 {
     QGuardedPtr<KPopupMenu> menu = new KPopupMenu( this );
     menu->insertItem( i18n( "New Distribution List..." ), core(), SLOT( newDistributionList() ) );
-    if ( item )
+    if ( item && ( item->text() !=i18n( "All Contacts" ) ) )
     {
         menu->insertItem( i18n( "Edit..." ), this, SLOT( editSelectedDistributionList() ) );
         menu->insertItem( i18n( "Delete" ), this, SLOT( deleteSelectedDistributionList() ) );
