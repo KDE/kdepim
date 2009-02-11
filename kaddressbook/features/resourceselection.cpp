@@ -204,6 +204,7 @@ void ResourceSelection::add()
 
     mLastResource = resource->identifier();
     updateView();
+    currentChanged(mListView->currentItem() );
   } else {
     delete resource;
     resource = 0;
@@ -246,6 +247,7 @@ void ResourceSelection::remove()
   core()->addressBook()->emitAddressBookChanged();
 
   updateView();
+  currentChanged(mListView->currentItem() );
 }
 
 void ResourceSelection::currentChanged( QListViewItem *item )
