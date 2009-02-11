@@ -233,7 +233,6 @@ bool ResourceKolab::deleteNote( KCal::Journal* journal )
                           mUidMap[ uid ].serialNumber() );
   }
   mUidMap.remove( uid );
-  manager()->deleteNote( journal );
   mCalendar.deleteJournal( journal );
   return true;
 }
@@ -322,7 +321,10 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
   mSilent = true;
   KCal::Journal* j = mCalendar.journal( uid );
   if( j )
+  {
+    manager()->deleteNote( j );
     deleteNote( j );
+  }
   mSilent = silent;
 }
 
