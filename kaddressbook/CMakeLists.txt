@@ -15,6 +15,7 @@ add_subdirectory( xxport )
 add_subdirectory( pics ) 
 add_subdirectory( csv-templates ) 
 add_subdirectory( thumbnailcreator ) 
+add_subdirectory( kabcdistlistupdater ) 
 
 include_directories( 
 	${CMAKE_CURRENT_SOURCE_DIR}/interfaces 
