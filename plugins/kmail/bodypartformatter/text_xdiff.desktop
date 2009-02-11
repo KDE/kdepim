@@ -50,6 +50,7 @@ Comment[ja]=text/x-patch 用の bodypart フォーマッタプラグイン
 Comment[kk]=Text/x-diff бөлімін пішімдеу модулі
 Comment[km]=កម្មវិធី​ជំនួយ​ឧបករណ៍ធ្វើទ្រង់ទ្រាយ​ផ្នែកតួ​សម្រាប់ text/x-patch
 Comment[ko]=text/x-patch 형식 꾸미기 플러그인
+Comment[lt]=text/x-patch formatavimo priedas
 Comment[lv]=Satura daļas formēšanas spraudnis text/x-patch datu tipam
 Comment[nb]=Et programtillegg for text/x-patch for brødtekst-formatering
 Comment[nds]=En Hööftdeel-Formateermoduul för text/x-patch
