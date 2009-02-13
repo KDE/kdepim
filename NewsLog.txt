@@ -1,3 +1,18 @@
+Friday, February 13th 2009
+
+Problems addressed
+------------------
+
+kolab/issue3385 Reminder of an event doesn't work
+kolab/issue2523 Export Calendar as Web Page: Date range empty by default, no warning
+
+Attempt to fix kolab/issue3065: Crash in KOAgendaItem::paintEvent
+
+Add a cancel button to the reoccurence editor
+Fix memory leak in KNotes
+Disable various buttons if they have no effect, in KOrganizer, Knotes, KAddressbook and KMail
+
+
 Friday, February 6th 2009
 
 Problems addressed
