@@ -576,7 +576,7 @@ void KNComposer::setConfig(bool onlyFonts)
   v_iew->t_o->setFont(fnt);
   v_iew->g_roups->setFont(fnt);
   v_iew->f_up2->setFont(fnt);
-  v_iew->e_dit->setFont(fnt);
+  v_iew->e_dit->setFontForWholeText(fnt);
 
   slotUpdateStatusBar();
 }
