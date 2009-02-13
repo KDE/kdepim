@@ -1,3 +1,37 @@
+Friday, February 13th 2009
+
+Problems addressed
+------------------
+
+* Disable the broken "Details" link for signed S/MIME messages
+
+Merges
+------
+
+* Merges from KDE 4.2 branch:
+    - Correctly display broken S/MIME messages without protocol paramter in the header
+    - Hide the "msg.asc" attachment for encrypted messages
+    - Don't add POP3 and local accounts to the manage sieve script dialog
+    - Fix icons in Kleopatra's audit log
+    - Performance improvement in agendaview and support for multi-day recurring events in KOrganizer
+    - Fix crash in KOrganizer's agenda view
+    - Some changes to the look of the Kontact summary
+    - Honor the font setting in KNode's composer
+    - Attempt to fix the paint event crash in KOrganizer
+    - Improvments in the color chooser of KOrganizer's setting dialog
+
+* Merges from KDE trunk:
+    - Show nice status bar text for the attachment quicklilst button
+
+* merges from enterprise35 branch:
+    - kolab/issue3385: Reminder of an event doesn't work
+    - kolab/issue3374: Window behaviour of Kontact is undesirable sometimes if a message box comes up
+    - Add the distribution list updater
+    - Add search and move messages to trash to context menu of favorite folders
+    - Fix a crash when deleting a note
+    - Fix memory leak in KNotes
+
+
 Friday, February 6th 2009
 
 Problems addressed
