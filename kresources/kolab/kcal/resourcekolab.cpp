@@ -239,11 +239,20 @@ bool ResourceKolab::doLoad( bool syncCache )
 {
   Q_UNUSED( syncCache );
   if (!mUidMap.isEmpty() ) {
+    emit resourceLoaded( this );
     return true;
   }
   mUidMap.clear();
 
-  return loadAllEvents() & loadAllTodos() & loadAllJournals();
+  bool result = loadAllEvents() & loadAllTodos() & loadAllJournals();
+  if ( result ) {
+    emit resourceLoaded( this );
+  } else {
+    // FIXME: anyone know if the resource correctly calls loadError()
+    // if it has one?
+  }
+
+  return result;
 }
 
 bool ResourceKolab::doLoadAll( ResourceMap& map, const char* mimetype )
