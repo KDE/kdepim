@@ -3,14 +3,16 @@ Friday, February 13th 2009
 Problems addressed
 ------------------
 
-kolab/issue3385 Reminder of an event doesn't work
-kolab/issue2523 Export Calendar as Web Page: Date range empty by default, no warning
+* kolab/issue3385 Reminder of an event doesn't work
+* kolab/issue2523 Export Calendar as Web Page: Date range empty by default, no warning
+* kolab/issue3065: Crash in KOAgendaItem::paintEvent
 
-Attempt to fix kolab/issue3065: Crash in KOAgendaItem::paintEvent
+Merges
+------
 
-Add a cancel button to the reoccurence editor
-Fix memory leak in KNotes
-Disable various buttons if they have no effect, in KOrganizer, Knotes, KAddressbook and KMail
+* Add a cancel button to the reoccurence editor
+* Fix memory leak in KNotes
+* Disable various buttons if they have no effect, in KOrganizer, Knotes, KAddressbook and KMail
 
 
 Friday, February 6th 2009
@@ -18,9 +20,9 @@ Friday, February 6th 2009
 Problems addressed
 ------------------
 
-kolab/issue3374 Window behaviour of Kontact is undesirable sometimes if a message box comes up.
-kolab/issue3376 Make gui for option ForwardingInlineByDefault
-kolab/issue3386 Kontact requires that free/busy urls match email addresses
+* kolab/issue3374 Window behaviour of Kontact is undesirable sometimes if a message box comes up.
+* kolab/issue3376 Make gui for option ForwardingInlineByDefault
+* kolab/issue3386 Kontact requires that free/busy urls match email addresses
 
 
 Friday, January 30th 2009
