@@ -275,6 +275,9 @@ if ( NOT KDE4_KCMUTILS_LIBS )
 endif ( NOT KDE4_KCMUTILS_LIBS )
 
 target_link_libraries(kleopatra_bin ${_kleopatra_extra_libs} kleo ${QGPGME_LIBRARIES} ${KDE4_KMIME_LIBRARY} ${KDE4_KCMUTILS_LIBS} ${_kleopatra_uiserver_extra_libs} )
+if ( USABLE_ASSUAN_FOUND )
+  target_link_libraries(kleopatra_bin ${QT_QTNETWORK_LIBRARY}) 
+ENDIF ( USABLE_ASSUAN_FOUND )
 
 install(TARGETS kleopatra_bin  DESTINATION ${BIN_INSTALL_DIR} )
 
