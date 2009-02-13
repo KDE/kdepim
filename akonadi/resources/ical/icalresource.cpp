@@ -24,6 +24,7 @@
 #include <kcal/calendarlocal.h>
 #include <kcal/incidence.h>
 
+#include <akonadi/kcal/assignmentvisitor.h>
 #include <akonadi/kcal/kcalmimetypevisitor.h>
 
 #include <kdebug.h>
@@ -39,7 +40,9 @@ using namespace KCal;
 typedef boost::shared_ptr<KCal::Incidence> IncidencePtr;
 
 ICalResource::ICalResource( const QString &id )
-    : SingleFileResource<Settings>( id ), mCalendar( 0 ), mMimeVisitor( new KCalMimeTypeVisitor() )
+    : SingleFileResource<Settings>( id ), mCalendar( 0 ),
+      mMimeVisitor( new KCalMimeTypeVisitor() ),
+      mIncidenceAssigner( new AssignmentVisitor() )
 {
   QStringList mimeTypes;
   mimeTypes << QLatin1String( "text/calendar" );
@@ -55,6 +58,7 @@ ICalResource::~ICalResource()
 {
   delete mCalendar;
   delete mMimeVisitor;
+  delete mIncidenceAssigner;
 }
 
 bool ICalResource::retrieveItem( const Akonadi::Item &item, const QSet<QByteArray> &parts )
@@ -139,7 +143,13 @@ void ICalResource::itemChanged( const Akonadi::Item &item, const QSet<QByteArray
     // not in the calendar yet, should not happen -> add it
     mCalendar->addIncidence( payload.get()->clone() );
   } else {
-    *incidence = *(payload.get());
+    if ( !mIncidenceAssigner->assign( incidence, payload.get() ) ) {
+      kWarning() << "Item changed incidence type. Replacing it.";
+
+      mCalendar->deleteIncidence( incidence );
+      delete incidence;
+      mCalendar->addIncidence( payload.get()->clone() );
+    }
     mCalendar->setModified( true );
   }
   fileDirty();
