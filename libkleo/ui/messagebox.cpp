@@ -2,7 +2,7 @@
     messagebox.cpp
 
     This file is part of libkleopatra, the KDE keymanagement library
-    Copyright (c) 2004 Klar‰lvdalens Datakonsult AB
+    Copyright (c) 2004 Klar√§lvdalens Datakonsult AB
 
     Libkleopatra is free software; you can redistribute it and/or
     modify it under the terms of the GNU General Public License as
@@ -60,11 +60,11 @@ using namespace GpgME;
 namespace {
 
 static KGuiItem KGuiItem_save() {
-    return KGuiItem( i18n("&Save to Disk..."), "filesaveas" );
+    return KGuiItem( i18n("&Save to Disk..."), "document-save-as" );
 }
 
 static KGuiItem KGuiItem_copy() {
-    return KGuiItem( i18n("&Copy to Clipboard"), "editcopy", i18n("Copy Audit Log to Clipboard") );
+    return KGuiItem( i18n("&Copy to Clipboard"), "edit-copy", i18n("Copy Audit Log to Clipboard") );
 }
 
 static KGuiItem KGuiItem_showAuditLog() {
