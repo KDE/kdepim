@@ -185,7 +185,7 @@ void ContactItemEditor::saveContact()
 
     Akonadi::Item item;
     item.setPayload<KABC::Addressee>( addr );
-    item.setMimeType( QLatin1String( "text/directory" ) );
+    item.setMimeType( KABC::Addressee::mimeType() );
 
     Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, d->mDefaultCollection );
     connect( job, SIGNAL( result( KJob* ) ), SLOT( storeDone( KJob* ) ) );

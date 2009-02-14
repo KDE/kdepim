@@ -67,7 +67,7 @@ MainWidget::MainWidget( KXmlGuiWindow *guiWindow, QWidget *parent )
   mCollectionModel->setHeaderData( 0, Qt::Horizontal, i18nc( "@title:column, contact groups", "Group" ) , Qt::EditRole );
 
   mCollectionFilterModel = new Akonadi::CollectionFilterProxyModel();
-  mCollectionFilterModel->addMimeTypeFilter( "text/directory" );
+  mCollectionFilterModel->addMimeTypeFilter( KABC::Addressee::mimeType() );
   mCollectionFilterModel->addMimeTypeFilter( KABC::ContactGroup::mimeType() );
   mCollectionFilterModel->setSourceModel( mCollectionModel );
 
@@ -199,7 +199,7 @@ void MainWidget::editItem( const Akonadi::Item &reference )
   const QModelIndex index = mContactModel->indexForItem( reference, 0 );
   const Akonadi::Item item = mContactModel->itemForIndex( index );
 
-  if ( item.mimeType() == "text/directory" || item.mimeType() == "text/vcard" ) {
+  if ( item.mimeType() == KABC::Addressee::mimeType() || item.mimeType() == "text/vcard" ) {
     editContact( reference );
   } else if ( item.mimeType() == KABC::ContactGroup::mimeType() ) {
     editGroup( reference );

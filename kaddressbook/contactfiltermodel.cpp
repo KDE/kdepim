@@ -46,7 +46,7 @@ bool ContactFilterModel::filterAcceptsRow( int row, const QModelIndex &parent ) 
   const QModelIndex index = itemModel->index( row, 0, parent );
   const Akonadi::Item item = itemModel->itemForIndex( index );
 
-  if ( item.mimeType() == QLatin1String( "text/directory" ) ) {
+  if ( item.mimeType() == KABC::Addressee::mimeType() ) {
     const KABC::Addressee contact = item.payload<KABC::Addressee>();
     return contactMatchesFilter( contact, mFilter );
   }

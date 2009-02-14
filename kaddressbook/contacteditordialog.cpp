@@ -51,7 +51,7 @@ ContactEditorDialog::ContactEditorDialog( Mode mode, QAbstractItemModel *collect
 
     // filter for collections that support contact groups
     Akonadi::CollectionFilterProxyModel *filterModel = new Akonadi::CollectionFilterProxyModel( this );
-    filterModel->addMimeTypeFilter( QLatin1String( "text/directory" ) );
+    filterModel->addMimeTypeFilter( KABC::Addressee::mimeType() );
     filterModel->setSourceModel( collectionModel );
 
     KABC::CollectionComboBox *box = new KABC::CollectionComboBox( mainWidget );
