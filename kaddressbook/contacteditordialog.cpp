@@ -27,6 +27,8 @@
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/item.h>
 
+#include <kabc/addressee.h>
+
 #include <klocale.h>
 
 #include <QtGui/QGridLayout>

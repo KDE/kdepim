@@ -38,6 +38,7 @@
 
 #include <kaction.h>
 #include <kactioncollection.h>
+#include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
 #include <kabc/contactgroupbrowser.h>
 #include <kabc/contactlineedit.h>
