@@ -48,7 +48,7 @@ macro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
 endmacro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
 
 find_package(Boost REQUIRED)
-macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org/" TRUE "" "Required by Akonadi and kleopatra")
+macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org/" TRUE "" "Required by kleopatra")
 
 if ( ONLY_KLEO )
   find_package(QGpgme REQUIRED)
@@ -72,9 +72,6 @@ if ( ONLY_KLEO )
 
 else ( ONLY_KLEO )
   # regular case, build everything
-
-  find_package(Akonadi REQUIRED)
-
   find_package(Kode REQUIRED)
   find_package(ZLIB REQUIRED)
   find_package(Strigi REQUIRED)
@@ -95,7 +92,6 @@ else ( ONLY_KLEO )
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "Nepomuk" "http://www.kde.org" FALSE "" "For adding desktop-wide tagging support to kmail")
 
   find_program(XSLTPROC_EXECUTABLE xsltproc)
-  macro_log_feature(XSLTPROC_EXECUTABLE "xsltproc" "The command line XSLT processor from libxslt" "http://xmlsoft.org/XSLT/" FALSE "" "Needed for building Akonadi resources. Recommended.")
 
   add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 
@@ -133,7 +129,6 @@ else ( ONLY_KLEO )
   macro_optional_add_subdirectory(doc)
   # FIXME disabled for the moment, since they are not needed
   #add_subdirectory(kode)
-  #macro_optional_add_subdirectory(akonadi)
   add_subdirectory(libkdepim)
   add_subdirectory(libkholidays)
   add_subdirectory(kontactinterfaces)
