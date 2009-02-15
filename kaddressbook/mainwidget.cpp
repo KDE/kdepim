@@ -34,6 +34,7 @@
 #include <akonadi/collectionview.h>
 #include <akonadi/control.h>
 #include <akonadi/itemview.h>
+#include <akonadi/mimetypechecker.h>
 #include <akonadi/standardactionmanager.h>
 
 #include <kaction.h>
@@ -200,9 +201,9 @@ void MainWidget::editItem( const Akonadi::Item &reference )
   const QModelIndex index = mContactModel->indexForItem( reference, 0 );
   const Akonadi::Item item = mContactModel->itemForIndex( index );
 
-  if ( item.mimeType() == KABC::Addressee::mimeType() || item.mimeType() == "text/vcard" ) {
+  if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::Addressee::mimeType() ) ) {
     editContact( reference );
-  } else if ( item.mimeType() == KABC::ContactGroup::mimeType() ) {
+  } else if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::ContactGroup::mimeType() ) ) {
     editGroup( reference );
   }
 }
@@ -220,10 +221,10 @@ void MainWidget::collectionSelected( const Akonadi::Collection &collection )
  */
 void MainWidget::itemSelected( const Akonadi::Item &item )
 {
-  if ( item.mimeType() == QLatin1String( "text/directory" ) ) {
+  if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::Addressee::mimeType() ) ) {
     mDetailsViewStack->setCurrentWidget( mContactDetails );
     mContactDetails->setItem( item );
-  } else if ( item.mimeType() == KABC::ContactGroup::mimeType() ) {
+  } else if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::ContactGroup::mimeType() ) ) {
     mDetailsViewStack->setCurrentWidget( mContactGroupDetails );
     mContactGroupDetails->setItem( item );
   }
