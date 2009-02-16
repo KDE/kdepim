@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2008 Kevin Krammer <kevin.krammer@gmx.at>
+    Copyright (c) 2008-2009 Kevin Krammer <kevin.krammer@gmx.at>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -28,6 +28,7 @@
 #include <akonadi/changerecorder.h>
 #include <akonadi/entitydisplayattribute.h>
 #include <akonadi/itemfetchscope.h>
+#include <akonadi/kcal/assignmentvisitor.h>
 #include <akonadi/kcal/kcalmimetypevisitor.h>
 
 #include <kconfig.h>
@@ -51,7 +52,8 @@ KCalResource::KCalResource( const QString &id )
     mResource( 0 ),
     mMimeVisitor( new KCalMimeTypeVisitor() ),
     mFullItemRetrieve( false ),
-    mDelayedSaveTimer( new QTimer( this ) )
+    mDelayedSaveTimer( new QTimer( this ) ),
+    mIncidenceAssigner( new KCal::AssignmentVisitor() )
 {
   // setup for UID generation
   const QString prodId = QLatin1String( "-//Akonadi//NONSGML KDE Compatibility Resource %1//EN" );
@@ -70,6 +72,7 @@ KCalResource::KCalResource( const QString &id )
 KCalResource::~KCalResource()
 {
   delete mMimeVisitor;
+  delete mIncidenceAssigner;
 }
 
 void KCalResource::configure( WId windowId )
@@ -350,9 +353,8 @@ void KCalResource::itemChanged( const Akonadi::Item &item, const QSet<QByteArray
   if ( item.hasPayload<IncidencePtr>() ) {
     IncidencePtr incidencePtr = item.payload<IncidencePtr>();
 
-    // TODO check if there is a way to update an incidence instead of delete/add
     KCal::Incidence *incidence = mResource->incidence( incidencePtr->uid() );
-    if ( incidence == 0 || mResource->deleteIncidence( incidence ) ) {
+    if ( incidence == 0 ) {
       incidence = incidencePtr->clone();
       if ( mResource->addIncidence( incidence ) ) {
         if ( !mResource->save( incidence ) ) {
@@ -364,8 +366,23 @@ void KCalResource::itemChanged( const Akonadi::Item &item, const QSet<QByteArray
       }
 
       kError() << "Failed to add incidence to resource";
-    } else
-      kError() << "Failed to delete old incidence from resource";
+    } else {
+      if ( !mIncidenceAssigner->assign( incidence, incidencePtr.get() ) ) {
+        kWarning() << "Item changed incidence type. Replacing it.";
+
+        mResource->deleteIncidence( incidence );
+        delete incidence;
+        mResource->addIncidence( incidencePtr->clone() );
+        scheduleSaveCalendar();
+      } else {
+        if ( !mResource->save( incidence ) ) {
+          kError() << "Failed to save incidence" << incidence->uid();
+          // resource error emitted by savingError()
+        }
+      }
+      changeCommitted( item );
+      return;
+    }
   }
 
   changeProcessed();
