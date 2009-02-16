@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007 Bruno Virlet <bruno.virlet@gmail.com>
+    Copyright (c) 2009 Omat Holding B.V. <info@omat.nl>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,44 +17,31 @@
     02110-1301, USA.
 */
 
-#ifndef MAINWIDGET_H
-#define MAINWIDGET_H
+#include <kwidgetitemdelegate.h>
 
-#include "blogmodel.h"
-#include <QWidget>
-#include <akonadi/collection.h>
+#ifndef MICROBLOGDELEGATE_H
+#define MICROBLOGDELEGATE_H
 
-class QModelIndex;
-class QListView;
-
-class KJob;
-
-namespace Akonadi
-{
-class CollectionView;
-class CollectionModel;
-}
-
-class MainWindow;
-
-class MainWidget: public QWidget
+class MicroblogDelegate : public KWidgetItemDelegate
 {
     Q_OBJECT
 
 public:
-    MainWidget( MainWindow *parent = 0 );
+    MicroblogDelegate( QObject *parent, QListView *listView );
 
-private slots:
-    void collectionClicked( const Akonadi::Collection & collection );
+    QList<QWidget*> createItemWidgets() const;
+
+    void updateItemWidgets( const QList<QWidget*> widgets,
+                            const QStyleOptionViewItem &option,
+                            const QPersistentModelIndex &index ) const;
+
+    void paint( QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index ) const;
+    QSize sizeHint( const QStyleOptionViewItem &option, const QModelIndex &index ) const;
+
 
 private:
-    Akonadi::Collection mCurrentCollection;
-    Akonadi::CollectionModel *mCollectionModel;
-    Akonadi::CollectionView *mCollectionList;
-    BlogModel *mMessageModel;
-    QListView *mMessageList;
-
-    MainWindow *mMainWindow;
+    QWidget* m_parent;
 };
 
 #endif
+
