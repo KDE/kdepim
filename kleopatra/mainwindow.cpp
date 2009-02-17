@@ -183,7 +183,7 @@ public:
         if ( !q->close() )
             return;
         // WARNING: 'this' might be deleted at this point!
-        if ( rc == KMessageBox::Yes )
+        if ( rc == KMessageBox::No )
             qApp->quit();
     }
     void certificateDetails() {
