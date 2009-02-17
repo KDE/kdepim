@@ -900,18 +900,18 @@ void CSVImportDialog::saveTemplate()
   config.writeEntry( "DelimiterOther", mDelimiterEdit->text() );
   config.writeEntry( "QuoteType", mComboQuote->currentIndex() );
 
-  config.changeGroup( "Misc" );
-  config.writeEntry( "Name", name );
+  KConfigGroup miscGrp(&_config, "Misc" );
+  miscGrp.writeEntry( "Name", name );
 
-  config.changeGroup( "csv column map" );
+  KConfigGroup cvsGrp(&_config, "csv column map" );
 
   ComboBoxHeaderView *headerView = static_cast< ComboBoxHeaderView* >
       ( mTable->horizontalHeader() );
   for ( int column = 0; column < mTable->columnCount(); ++column ) {
-    config.writeEntry( QString::number( column ), mTypeMap.value( mTable->model()->headerData( column, Qt::Horizontal ).toString() ) );
+    cvsGrp.writeEntry( QString::number( column ), mTypeMap.value( mTable->model()->headerData( column, Qt::Horizontal ).toString() ) );
   }
 
-  config.sync();
+  _config.sync();
 }
 
 QString CSVImportDialog::getText( int row, int col )
