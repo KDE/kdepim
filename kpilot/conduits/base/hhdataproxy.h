@@ -154,5 +154,6 @@ protected:
 	QList<recordid_t> fResettedRecords;
 	PilotAppInfoBase *fAppInfo;
 	QMap<uint, QString> fAddedCategories;
+	qint64 fNextTempId;
 };
 #endif

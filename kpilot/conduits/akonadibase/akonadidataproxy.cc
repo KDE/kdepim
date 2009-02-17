@@ -45,13 +45,14 @@ class AkonadiDataProxy::Private
 {
 public:
 	Private( const IDMapping& mapping )
-		: fCollectionId( -1 ), fMapping( mapping )
+		: fCollectionId( -1 ), fMapping( mapping ), fNextTempId( -1 )
 	{
 	}
-	
+
 	Akonadi::Entity::Id fCollectionId;
 	// Make it const as the proxy should not make changes to it.
 	const IDMapping fMapping;
+	qint64 fNextTempId;
 };
 
 AkonadiDataProxy::AkonadiDataProxy( const IDMapping& mapping )
@@ -63,7 +64,7 @@ AkonadiDataProxy::AkonadiDataProxy( const IDMapping& mapping )
 AkonadiDataProxy::~AkonadiDataProxy()
 {
 	FUNCTIONSETUP;
-	
+
 	delete d;
 }
 
@@ -75,14 +76,14 @@ bool AkonadiDataProxy::createDataStore()
 	DEBUGKPILOT << "We don't support creation of akonadi datastores yet. Not doing anything.";
 	// TODO: figure out how to tell our user via their Palm sync log that
 	// they need to configure akonadi.
-	
+
 	return false;
 }
 
 bool AkonadiDataProxy::isOpen() const
 {
 	FUNCTIONSETUP;
-	
+
 	if( Akonadi::ServerManager::isRunning() )
 	{
 		Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob
@@ -102,7 +103,7 @@ bool AkonadiDataProxy::isOpen() const
 		WARNINGKPILOT << "Error: Akonadi is not running.";
 		return false;
 	}
-	
+
 	return true;
 }
 
@@ -114,7 +115,7 @@ void AkonadiDataProxy::loadAllRecords()
 	Akonadi::ItemFetchJob* job
 		= new Akonadi::ItemFetchJob( Akonadi::Collection( d->fCollectionId ) );
 	job->fetchScope().fetchFullPayload();
-	
+
 	if ( job->exec() ) {
 		Akonadi::Item::List items = job->items();
 		foreach( const Akonadi::Item &item, items )
@@ -171,20 +172,17 @@ void AkonadiDataProxy::syncFinished()
 
 /* Protected methods */
 
-static qint64 newId = -1;
-
 QString AkonadiDataProxy::generateUniqueId()
 {
 	FUNCTIONSETUP;
-	
-	newId--;
-	return QString::number( newId );
+
+	return QString::number( d->fNextTempId-- );
 }
 
 bool AkonadiDataProxy::commitCreate( Record *rec )
 {
 	FUNCTIONSETUP;
-	
+
 	AkonadiRecord* aRec = static_cast<AkonadiRecord*>( rec );
 	Akonadi::ItemCreateJob* job = new Akonadi::ItemCreateJob( aRec->item()
 		, Akonadi::Collection( d->fCollectionId ) );
@@ -206,7 +204,7 @@ bool AkonadiDataProxy::commitCreate( Record *rec )
 bool AkonadiDataProxy::commitUpdate( Record *rec )
 {
 	FUNCTIONSETUP;
-	
+
 	AkonadiRecord* aRec = static_cast<AkonadiRecord*>( rec );
 	Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( aRec->item() );
 

@@ -37,7 +37,8 @@ class KPILOT_EXPORT HHRecord : public Record {
 protected:
 	PilotRecord *fRecord;
 	QString fCategory;
-	
+	QString fTempId;
+
 public:
 	HHRecord( PilotRecord *record, const QString &category );
 
