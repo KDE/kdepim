@@ -12,12 +12,14 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
+#include <kdepim-version.h>
+
 #ifndef KNODE_RESOURCE_H
 #define KNODE_RESOURCE_H
 
 //========= KNode Version Information ============
 
-#define KNODE_VERSION "0.99.01"
+#define KNODE_VERSION KDEPIM_VERSION
 
 //================= StatusBar ====================
 
