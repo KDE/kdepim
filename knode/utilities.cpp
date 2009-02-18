@@ -256,7 +256,7 @@ int findBreakPos(const QString &text, int start)
       break;
   if(i>0)
     return i;
-  for(i=start;i<(int)text.length();i++)   // ok, the line is to long
+  for(i=start;i<(int)text.length();++i)   // ok, the line is to long
     if(text[i].isSpace())
       break;
   return i;

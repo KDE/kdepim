@@ -683,7 +683,7 @@ bool KNComposer::hasValidData()
   int sigLength = 0;
   int notQuoted = 0;
   int textLines = 0;
-  QStringList text = v_iew->e_dit->toWrappedPlainText().split("\n");
+  QStringList text = v_iew->e_dit->toWrappedPlainText().split('\n');
 
   for (QStringList::Iterator it = text.begin(); it != text.end(); ++it) {
 
@@ -1467,7 +1467,7 @@ void KNComposer::slotGroupsChanged(const QString &t)
   v_iew->f_up2->clear();
 
   QStringList groups = t.split(',');
-  foreach ( QString s, groups ) {
+  foreach ( const QString &s, groups ) {
     v_iew->f_up2->addItem( s );
   }
   v_iew->f_up2->addItem("");

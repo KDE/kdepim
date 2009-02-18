@@ -511,7 +511,7 @@ KNode::NntpAccountConfDialog::~NntpAccountConfDialog()
 
 void KNode::NntpAccountConfDialog::slotServerTextEdited()
 {
-  if ( mName->text().trimmed() == "" ) {
+  if ( mName->text().trimmed().isEmpty() ) {
     mUseServerForName = true;
   }
 

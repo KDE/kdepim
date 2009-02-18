@@ -167,13 +167,15 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, const QString &selectedTe
   KMime::Headers::ReplyTo *replyTo=a->replyTo(false);
   KMime::Types::Mailbox address;
   if(replyTo && !replyTo->isEmpty()) {
-    foreach( KMime::Types::Mailbox mbox, replyTo->mailboxes() )
+    foreach( const KMime::Types::Mailbox &mbox, replyTo->mailboxes() ) {
       art->to()->addAddress( mbox );
+    }
   }
   else {
     KMime::Headers::From *from=a->from();
-    foreach( KMime::Types::Mailbox mbox, from->mailboxes() )
+    foreach( const KMime::Types::Mailbox &mbox, from->mailboxes() ) {
       art->to()->addAddress( mbox );
+    }
   }
 
   //References
@@ -200,8 +202,9 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, const QString &selectedTe
                                 QString(), "mailCopiesToWarning" );
     if ( authorWantsMailCopies && !mailCopiesTo->mailboxes().isEmpty() ) {
       art->to()->clear();
-      foreach ( KMime::Types::Mailbox mbox, mailCopiesTo->mailboxes() )
+      foreach ( const KMime::Types::Mailbox &mbox, mailCopiesTo->mailboxes() ) {
         art->to()->addAddress(address);
+      }
     }
   }
 
@@ -839,7 +842,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, co
   //Reply-To
   if(id->hasReplyTo()) {
     art->replyTo()->fromUnicodeString( id->replyTo(), knGlobals.settings()->charset().toLatin1() );
-    foreach ( KMime::Types::Mailbox mbox, art->replyTo()->mailboxes() ) {
+    foreach ( const KMime::Types::Mailbox &mbox, art->replyTo()->mailboxes() ) {
       if ( !mbox.hasAddress() ) {   // the header is invalid => drop it
         art->removeHeader("Reply-To");
         break;

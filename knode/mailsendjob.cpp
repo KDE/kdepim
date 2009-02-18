@@ -46,8 +46,9 @@ void KNode::MailSendJob::execute()
 
   // FIXME
   QStringList to;
-  foreach ( QByteArray b, art->to()->addresses() )
+  foreach ( const QByteArray &b, art->to()->addresses() ) {
     to << QString::fromLatin1( b );
+  }
   job->setTo( to );
 
   connect( job, SIGNAL( result(KJob*) ), SLOT( slotResult(KJob*) ) );

@@ -579,7 +579,7 @@ void ArticleWidget::displayErrorMessage( const QString &msg )
   mViewer->write( QString("<b><font size=\"+1\" color=\"red\">") );
   mViewer->write( i18n("An error occurred.") );
   mViewer->write( QString("</font></b><hr/><br/>") );
-  mViewer->write( errMsg.replace( "\n", "<br/>" ) );
+  mViewer->write( errMsg.replace( '\n', "<br/>" ) );
   mViewer->write( QString("</body></html>") );
   mViewer->end();
 

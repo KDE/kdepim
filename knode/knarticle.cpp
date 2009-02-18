@@ -152,8 +152,9 @@ void KNRemoteArticle::setHeader(Headers::Base *h)
   if(h->is("Message-ID"))
     m_essageID.from7BitString(h->as7BitString(false));
   else if(h->is("From")) {
-    foreach ( KMime::Types::Mailbox mbox, static_cast<Headers::From*>( h )->mailboxes() )
+    foreach ( const KMime::Types::Mailbox &mbox, static_cast<Headers::From*>( h )->mailboxes() ) {
       f_rom.addAddress( mbox );
+    }
   }
   else if(h->is("References")) {
     r_eferences.from7BitString(h->as7BitString(false));

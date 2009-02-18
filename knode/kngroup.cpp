@@ -546,7 +546,7 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
     QTextStream ts(&f);
     ts.setCodec( "ISO 8859-1" );
 
-    for(idx=length()-cnt; idx<length(); idx++) {
+    for(idx=length()-cnt; idx<length(); ++idx) {
 
       art=at(idx);
 
@@ -579,7 +579,7 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
 
       // optional headers
       ts << mOptionalHeaders.count() << '\n';
-      Q_FOREACH( QByteArray hdrName, mOptionalHeaders ) {
+      Q_FOREACH( const QByteArray &hdrName, mOptionalHeaders ) {
         KMime::Headers::Base *hdr = art->getHeaderByType( hdrName.data() );
         if ( hdr )
           ts << hdrName << ": " << hdr->asUnicodeString() << '\n';
@@ -718,7 +718,7 @@ void KNGroup::buildThreads(int cnt, KNJobData *job)
 
   //resort old hdrs
   if(start>0)
-    for(idx=0; idx<start; idx++) {
+    for(idx=0; idx<start; ++idx) {
       art=at(idx);
       if(art->threadingLevel()>1) {
         oldRef=art->idRef();
@@ -735,7 +735,7 @@ void KNGroup::buildThreads(int cnt, KNJobData *job)
     }
 
 
-  for(idx=start; idx<end; idx++) {
+  for(idx=start; idx<end; ++idx) {
 
     art=at(idx);
 
@@ -768,7 +768,7 @@ void KNGroup::buildThreads(int cnt, KNJobData *job)
     KNRemoteArticle *oldest;
     KNRemoteArticle::List list;
 
-    for(idx=start; idx<end; idx++) {
+    for(idx=start; idx<end; ++idx) {
 
       art=at(idx);
 
