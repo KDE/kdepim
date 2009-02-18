@@ -89,6 +89,9 @@ private:
     Q_PRIVATE_SLOT( d, void gnupgAdministrativeConsole() )
     Q_PRIVATE_SLOT( d, void slotConfigCommitted() )
     Q_PRIVATE_SLOT( d, void slotContextMenuRequested(QAbstractItemView*,QPoint) )
+#ifdef ONLY_KLEO
+    Q_PRIVATE_SLOT( d, void saveIconUsageLog() )
+#endif
 };
 
 

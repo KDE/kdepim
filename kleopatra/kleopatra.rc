@@ -13,6 +13,8 @@
 		<Action name="file_export_secret_keys"/>
                 <Action name="file_export_certificates_to_server"/>
 		<Separator/>
+                <Action name="file_save_icon_usage_log"/>
+		<Separator/>
 		<Action name="file_decrypt_verify_files"/>
 		<Action name="file_sign_encrypt_files"/>
 		<Separator/>
