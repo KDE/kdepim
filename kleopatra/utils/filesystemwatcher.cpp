@@ -87,7 +87,6 @@ FileSystemWatcher::Private::Private( FileSystemWatcher* qq, const QStringList& p
 static bool is_blacklisted( const QString & file, const QStringList & blacklist ) {
     Q_FOREACH( const QString & entry, blacklist )
         if ( QRegExp( entry, Qt::CaseInsensitive, QRegExp::Wildcard ).exactMatch( file ) ) {
-            kDebug() << file << "matches blacklist entry" << entry;
             return true;
         }
     return false;
@@ -95,10 +94,10 @@ static bool is_blacklisted( const QString & file, const QStringList & blacklist 
 
 void FileSystemWatcher::Private::onFileChanged( const QString& path )
 {
-    kDebug() << path;
     const QFileInfo fi( path );
     if ( is_blacklisted( fi.fileName(), m_blacklist ) )
         return;
+    kDebug() << path;
     m_seenPaths.insert( path );
     m_cachedFiles.insert( path );
     handleTimer();
@@ -127,16 +126,18 @@ static QStringList find_new_files( const QStringList & current, const std::set<Q
 
 void FileSystemWatcher::Private::onDirectoryChanged( const QString& path )
 {
-    kDebug() << path;
     const QFileInfo fi( path );
     if ( is_blacklisted( fi.fileName(), m_blacklist ) )
         return;
 
+    kDebug() << path;
+
     const QStringList newFiles = find_new_files( list_dir_absolute( path, m_blacklist ), m_seenPaths );
-    kDebug() << "newFiles" << newFiles;
 
     if ( newFiles.empty() )
         return;
+
+    kDebug() << "newFiles" << newFiles;
 
     m_cachedFiles.insert( newFiles.begin(), newFiles.end() );
     q->addPaths( newFiles );
