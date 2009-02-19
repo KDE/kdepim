@@ -72,6 +72,7 @@ namespace Kleo {
         class Private;
         kdtools::pimpl_ptr<Private> d;
         Q_PRIVATE_SLOT( d, void _klhv_slotSectionCountChanged(int,int) )
+        Q_PRIVATE_SLOT( d, void _klhv_slotSectionResized(int,int,int) )
     };
 
 }
