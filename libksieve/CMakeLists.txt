@@ -28,7 +28,7 @@ target_link_libraries(ksieve  ${KDE4_KDECORE_LIBS}  )
 
 set_target_properties(ksieve PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS ksieve ${INSTALL_TARGETS_DEFAULT_ARGS})
-install(FILES libksieve_export.h  DESTINATION ${INCLUDE_INSTALL_DIR}/ksieve)
+install(FILES libksieve_export.h  DESTINATION ${INCLUDE_INSTALL_DIR}/ksieve COMPONENT Devel)
 
 
 ########### install files ###############
