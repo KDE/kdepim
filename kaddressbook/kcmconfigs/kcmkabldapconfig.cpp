@@ -42,6 +42,7 @@ K_EXPORT_PLUGIN(KCMKabLdapConfigFactory( "kcmkabldapconfig" ))
 KCMKabLdapConfig::KCMKabLdapConfig( QWidget *parent, const QVariantList & )
   : KCModule( KCMKabLdapConfigFactory::componentData(), parent )
 {
+  KGlobal::locale()->insertCatalog( "libkldap" );
   QVBoxLayout *layout = new QVBoxLayout( this );
   mConfigWidget = new LDAPOptionsWidget( this );
   layout->addWidget( mConfigWidget );
