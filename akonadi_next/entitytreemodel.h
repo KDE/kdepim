@@ -24,15 +24,60 @@
 #include <QtCore/QStringList>
 
 #include <akonadi/collection.h>
+#include <akonadi/item.h>
 
+// TODO (Applies to all these 'new' models, not just EntityTreeModel):
+// * Implement support for moving entities in the model. This will require
+//     AgentBase::ObserverV2 and support in the server, and figure out how to notify
+//     proxy models abouut moves: http://thread.gmane.org/gmane.comp.lib.qt.general/10723
+// * Figure out how LazyPopulation and signals from monitor containing items should
+//     fit together. Possibly store a list of collections whose items have already
+//     been lazily fetched.
+// * Fgure out whether DescendantEntitiesProxyModel needs to use fetchMore.
+// * Add setRootIndex functionality to EntityFilterProxyModel
+// * Profile this and DescendantEntitiesProxyModel. Make sure it's faster than
+//     FlatCollectionProxyModel. See if the cache in that class can be cleared less often.
+// * Unit tests. Much of the stuff here is not covered by modeltest, and some of
+//     it is akonadi specific, such as setting root collection etc.
+// * Implement support for includeUnsubscribed.
+// * Find out what should be done for statistics.
+// * Figure out how for example new mails, rss, news items etc should be represented.
+//     Should there be an NewAttribute on Item that indicates that it is new? Then
+//     they would need to be counted and put into the displayrole data of collections.
+// * Make sure there are applications using it before committing to it until KDE5.
+//     Some API/ virtual methods might need to be added when real applications are made.
+// * Fix compiler warnings about unused variables. Could be mistakes about.
+// * Implement ordering support.
+// * Implement some proxy models for time-table like uses, eg KOrganizer events.
+// * Apidox++
+// * Handle 'structural' collections better. Possibly make the server tell us
+//     the mimetypes of descendants of a collection. Eg,
+//         Col0-0 (contentMimeTypes: text/foo, Collection::mimeType())
+//         -> Col0-1 (contentMimeTypes: Collection::mimeType())
+//         -> -> Col 0-2 (contentMimeTypes: text/foo, Collection::mimeType())
+//
+//     If a tree in the akonadi server had the above structure, and
+//     fetchMimeTypes(text/foo) was set, Col0-2 would not make it into the model.
+//     This is because the model does Breadth first traversal and never fetches anything
+//     after Col0-1 because it doesn't match the mimetype we're interested in.
+// * Find out what the usecases are for structural collections.
+// * The API for tying proxies together is currently a bit cumbersome. Write a
+//     glue class to make stringing them together easier.
+// * Implement support for linking/virtual collections using the QAbstractItemModel::buddy
+//     system.
+// * See if it makes sense to use the buddy system instead of a proxy model for descendant
+//     entities. That would probably make it easier to use QColumnView.
+// * Alternatively subclass QColumnView and make it insert descendants into the view, or
+//     create another proxy model which uses buddys to create virtual copies of
+//     descendants instead of moving them.
 
 namespace Akonadi
 {
-
-class Collection;
 class Item;
 class EntityUpdateAdapter;
-class ClientSideEntityStorage;
+class CollectionStatistics;
+class Monitor;
+class ItemFetchScope;
 
 class EntityTreeModelPrivate;
 
@@ -47,15 +92,18 @@ class EntityTreeModelPrivate;
  *
  * @code
  *
- *   EntityTreeModel *model = new EntityTreeModel( this, QStringList() << FooMimeType << BarMimeType );
+ *   Monitor *monitor = new Monitor(this);
+ *   monitor->setCollectionMonitored(Collection::root());
+ *
+ *   EntityUpdateAdapter *eua = new EntityUpdateAdapter(this);
+ *
+ *   EntityTreeModel *model = new EntityTreeModel( eua, monitor, this );
+ *   model->fetchMimeTypes( QStringList() << FooMimeType << BarMimeType );
  *
  *   EntityTreeView *view = new EntityTreeView( this );
  *   view->setModel( model );
  *
  * @endcode
- *
- * Only collections and items matching @p mimeTypes will be shown. This way,
- * retrieving every item in Akonadi is avoided.
  *
  * @author Stephen Kelly <steveire@gmail.com>
  * @since 4.3
@@ -84,14 +132,14 @@ public:
   //                  QStringList mimeFilter = QStringList(), QObject *parent = 0);
 
   /**
-   * Creates a new collection and item model.
+   * Creates a new EntityTreeModel
    *
    * @param parent The parent object.
    * @param mimeTypes The list of mimetypes to be retrieved in the model.
    */
   EntityTreeModel( EntityUpdateAdapter *entityUpdateAdapter,
-                            ClientSideEntityStorage *clientSideEntityStorage,
-                            QObject *parent = 0
+                   Monitor *monitor,
+                   QObject *parent = 0
 // TODO: figure out what to do about this:
 // I think if you want to show stats, you fetch them in the monitor.
 // This model should show them if they are fetched.
@@ -99,9 +147,65 @@ public:
                           );
 
   /**
-   * Destroys the collection and item model.
+   * Destroys the entityTreeModel.
    */
   virtual ~EntityTreeModel();
+
+  /**
+  How the model should be populated with items.
+  */
+  enum ItemPopulationStrategy {
+    NoItemPopulation, ///< Do not include items in the model.
+    ImmediatePopulation, ///< Retrieve items immediately when their parent is in the model. This is the default.
+    LazyPopulation ///< Fetch items only when requested (using canFetchMore/fetchMore)
+  };
+
+  void setItemPopulationStrategy(int type);
+  int itemPopulationStrategy() const;
+
+  /**
+  The root collection to create an entity tree for. By default the Collection::root() is used.
+
+  The Collection @p col must be valid.
+  */
+  void setRootCollection(Collection col);
+  Collection rootCollection() const;
+
+  void setIncludeRootCollection(bool include);
+  bool includeRootCollection() const;
+
+  /**
+  If Collection::root() is shown in the model, set a displayName for it.
+  Default is "[*]"
+  If another collection (ie not Collection::root()), is at the root, it's name
+  or display attribute is automatically used instead and this method as no effect.
+  */
+  void setRootCollectionDisplayName(const QString &displayName);
+  QString rootCollectionDisplayName() const;
+
+  void fetchMimeTypes(QStringList mimetypes);
+  QStringList mimeTypesToFetch() const;
+
+  /**
+  What to fetch and represent in the model.
+  */
+  enum CollectionsToFetch {
+    FetchNoCollections,                     /// Fetch nothing. This creates an empty model.
+    FetchFirstLevelChildCollections,        /// Fetch first level collections in the root collection.
+    FetchCollectionsRecursive               /// Fetch collections in the root collection recursively. This is the default.
+  };
+
+  void setCollectionFetchStrategy(int type);
+  int collectionFetchStrategy() const;
+
+  void setIncludeUnsubscribed(bool include);
+  bool includeUnsubscribed() const;
+
+  QModelIndex indexForCollection(Collection col) const;
+  QModelIndex indexForItem(Item item) const;
+
+  Collection getCollection(Collection::Id);
+  Item getItem(Item::Id);
 
   virtual int columnCount( const QModelIndex & parent = QModelIndex() ) const;
   virtual int rowCount( const QModelIndex & parent = QModelIndex() ) const;
@@ -120,6 +224,7 @@ public:
   virtual QModelIndex index( int row, int column, const QModelIndex & parent = QModelIndex() ) const;
   virtual QModelIndex parent( const QModelIndex & index ) const;
 
+// TODO: Review the implementations of these. I think they could be better.
   virtual bool canFetchMore ( const QModelIndex & parent ) const;
   virtual void fetchMore ( const QModelIndex & parent );
   virtual bool hasChildren(const QModelIndex &parent = QModelIndex() ) const;
@@ -135,10 +240,23 @@ private:
   virtual bool removeRows(int, int, const QModelIndex & = QModelIndex());
   virtual bool removeColumns(int, int, const QModelIndex & = QModelIndex());
 
-  Q_PRIVATE_SLOT( d_func(), void rowsAboutToBeInserted( Collection::Id colId, int start, int end ) )
-  Q_PRIVATE_SLOT( d_func(), void rowsAboutToBeRemoved( Collection::Id colId, int start, int end ) )
-  Q_PRIVATE_SLOT( d_func(), void rowsInserted() )
-  Q_PRIVATE_SLOT( d_func(), void rowsRemoved() )
+  Q_PRIVATE_SLOT( d_func(), void startFirstListJob() )
+
+  Q_PRIVATE_SLOT( d_func(), void fetchJobDone( KJob *job ) )
+  Q_PRIVATE_SLOT( d_func(), void updateJobDone( KJob *job ) )
+  Q_PRIVATE_SLOT( d_func(), void itemsFetched( Akonadi::Item::List list ) )
+  Q_PRIVATE_SLOT( d_func(), void collectionsFetched( Akonadi::Collection::List list ) )
+
+  Q_PRIVATE_SLOT( d_func(), void monitoredCollectionAdded( const Akonadi::Collection&, const Akonadi::Collection& ) )
+  Q_PRIVATE_SLOT( d_func(), void monitoredCollectionRemoved( const Akonadi::Collection& ) )
+  Q_PRIVATE_SLOT( d_func(), void monitoredCollectionChanged( const Akonadi::Collection& ) )
+  Q_PRIVATE_SLOT( d_func(), void monitoredCollectionMoved( const Akonadi::Collection&, const Akonadi::Collection&, const Akonadi::Collection&) )
+
+  Q_PRIVATE_SLOT( d_func(), void monitoredItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) )
+  Q_PRIVATE_SLOT( d_func(), void monitoredItemRemoved( const Akonadi::Item& ) )
+  Q_PRIVATE_SLOT( d_func(), void monitoredItemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) )
+  Q_PRIVATE_SLOT( d_func(), void monitoredItemMoved( const Akonadi::Item&,
+                  const Akonadi::Collection&, const Akonadi::Collection& ) )
 
   //@endcond
 

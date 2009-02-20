@@ -22,6 +22,7 @@
 
 #include <QtCore/QHash>
 #include <QtCore/QMimeData>
+#include <QTimer>
 
 #include <KIcon>
 #include <KUrl>
@@ -33,14 +34,14 @@
 #include <akonadi/entitydisplayattribute.h>
 #include "entityupdateadapter.h"
 #include "clientsideentitystorage.h"
-// #include <akonadi/monitor.h>
+#include <akonadi/monitor.h>
 
 #include "kdebug.h"
 
 using namespace Akonadi;
 
 EntityTreeModel::EntityTreeModel( EntityUpdateAdapter *entityUpdateAdapter,
-                                  ClientSideEntityStorage *clientSideEntityStorage,
+                                  Monitor *monitor,
                                   QObject *parent
                                 )
     : QAbstractItemModel( parent ),
@@ -48,29 +49,71 @@ EntityTreeModel::EntityTreeModel( EntityUpdateAdapter *entityUpdateAdapter,
 {
   Q_D( EntityTreeModel );
 
-  d->m_clientSideEntityStorage = clientSideEntityStorage;
+  d->m_monitor = monitor;
   d->entityUpdateAdapter = entityUpdateAdapter;
 
-//   AttributeFactory::registerAttribute<CollectionChildOrderAttribute>();
+  // monitor collection changes
+  connect( monitor, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
+           SLOT( monitoredCollectionChanged( const Akonadi::Collection& ) ) );
+  connect( monitor, SIGNAL( collectionAdded( const Akonadi::Collection &, const Akonadi::Collection & ) ),
+           SLOT( monitoredCollectionAdded( const Akonadi::Collection &, const Akonadi::Collection & ) ) );
+  connect( monitor, SIGNAL( collectionRemoved( const Akonadi::Collection & ) ),
+           SLOT( monitoredCollectionRemoved( const Akonadi::Collection &) ) );
+  connect( monitor,
+            SIGNAL( collectionMoved( const Akonadi::Collection &, const Akonadi::Collection &, const Akonadi::Collection & ) ),
+           SLOT( monitoredCollectionMoved( const Akonadi::Collection &, const Akonadi::Collection &, const Akonadi::Collection & ) ) );
 
-  connect( d->m_clientSideEntityStorage, SIGNAL( beginInsertEntities( Collection::Id, int, int ) ),
-           SLOT( rowsAboutToBeInserted( Collection::Id, int, int ) ) );
-  connect( d->m_clientSideEntityStorage, SIGNAL( endInsertEntities() ),
-           SLOT( rowsInserted() ) );
-  connect( d->m_clientSideEntityStorage, SIGNAL( beginRemoveEntities( Collection::Id, int, int ) ),
-           SLOT( rowsAboutToBeRemoved( Collection::Id, int, int ) ) );
-  connect( d->m_clientSideEntityStorage, SIGNAL( endRemoveEntities() ),
-           SLOT( rowsRemoved() ) );
-  connect( d->m_clientSideEntityStorage, SIGNAL( collectionChanged( const Akonadi::Collection& ) ),
-           SLOT( collectionChanged( const Akonadi::Collection& ) ) );
-  connect( d->m_clientSideEntityStorage, SIGNAL( itemChanged( const Akonadi::Item&, const QSet< QByteArray >& ) ),
-           SLOT( itemChanged( const Akonadi::Item&, const QSet< QByteArray >& ) ) );
+  //TODO: Figure out if the monitor emits these signals even without an item fetch scope.
+  // Wrap them in an if() if so.
+  // Don't want to be adding items to a model if NoItemPopulation is set.
+  // If LazyPopulation is set, then we'll have to add items to collections which
+  // have already been lazily populated.
+
+
+  // Monitor item changes.
+  connect( monitor, SIGNAL( itemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ),
+           SLOT( monitoredItemAdded( const Akonadi::Item&, const Akonadi::Collection& ) ) );
+  connect( monitor, SIGNAL( itemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ),
+           SLOT( monitoredItemChanged( const Akonadi::Item&, const QSet<QByteArray>& ) ) );
+  connect( monitor, SIGNAL( itemRemoved( const Akonadi::Item& ) ),
+           SLOT( monitoredItemRemoved( const Akonadi::Item& ) ) );
+  connect( monitor, SIGNAL( itemMoved( const Akonadi::Item, const Akonadi::Collection, const Akonadi::Collection ) ),
+           SLOT( monitoredItemMoved( const Akonadi::Item, const Akonadi::Collection, const Akonadi::Collection ) ) );
+
+  connect( monitor, SIGNAL( collectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics &) ),
+           SLOT(monitoredCollectionStatisticsChanged( Akonadi::Collection::Id, const Akonadi::CollectionStatistics &) ) );
+
+
+// TODO:
+//   q->connect( monitor, SIGNAL( itemLinked(const Akonadi::Item &item, const Akonadi::Collection &collection)),
+//             q, SLOT(itemLinked(const Akonadi::Item &item, const Akonadi::Collection &collection)));
+//   q->connect( monitor, SIGNAL( itemUnlinked(const Akonadi::Item &item, const Akonadi::Collection &collection)),
+//             q, SLOT(itemUnlinked(const Akonadi::Item &item, const Akonadi::Collection &collection)));
+
+  d->m_rootCollection = Collection::root();
+  d->m_rootCollectionDisplayName = QString("[*]");
+
+  // Start retrieving collections and items at the next event loop.
+  QTimer::singleShot( 0, this, SLOT(startFirstListJob()) );
 
 }
 
 EntityTreeModel::~EntityTreeModel()
 {
   Q_D( EntityTreeModel );
+}
+
+Collection EntityTreeModel::getCollection( Collection::Id id )
+{
+  Q_D( EntityTreeModel );
+  return d->m_collections.value(id);
+}
+
+Item EntityTreeModel::getItem( qint64 id )
+{
+  Q_D( EntityTreeModel );
+  if (id > 0) id *= -1;
+  return d->m_items.value(id);
 }
 
 int EntityTreeModel::columnCount( const QModelIndex & parent ) const
@@ -87,12 +130,26 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
     return QVariant();
   Q_D( const EntityTreeModel );
 
-  int entityType = d->m_clientSideEntityStorage->entityTypeForInternalIdentifier(index.internalId());
-  if (entityType == ClientSideEntityStorage::CollectionType)
+  if (!index.isValid())
   {
-    const Collection col = d->m_clientSideEntityStorage->getCollection( index.internalId() );
-    if ( !col.isValid() )
+    return QVariant();
+  }
+
+  if (d->m_collections.contains(index.internalId()))
+  {
+
+    const Collection col = d->m_collections.value(index.internalId());
+
+    if (col == Collection::root())
+    {
+      // Only display the root collection. It may not be edited.
+      if ( role == Qt::DisplayRole)
+        return d->m_rootCollectionDisplayName;
+
+      // I don't think this can happen...
       return QVariant();
+    }
+
     if ( index.column() == 0 && ( role == Qt::DisplayRole || role == Qt::EditRole ) ) {
       if ( col.hasAttribute<EntityDisplayAttribute>() &&
            !col.attribute<EntityDisplayAttribute>()->displayName().isEmpty() )
@@ -135,9 +192,11 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
       break;
     }
   }
-  else if ( entityType == ClientSideEntityStorage::ItemType)
+//   else if ( entityType == ClientSideEntityStorage::ItemType)
+  else if (d->m_items.contains(index.internalId()))
   {
-    const Item item = d->m_clientSideEntityStorage->getItem( index.internalId() );
+//     const Item item = d->m_clientSideEntityStorage->getItem( index.internalId() );
+    const Item item = d->m_items.value(index.internalId());
     if ( !item.isValid() )
       return QVariant();
 
@@ -191,12 +250,17 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
   if ( index.column() != 0 )
     return flags;
 
-  int entityType = d->m_clientSideEntityStorage->entityTypeForInternalIdentifier(index.internalId());
-
-  if (entityType == ClientSideEntityStorage::CollectionType)
+  if (d->m_collections.contains(index.internalId()))
   {
-    const Collection col = d->m_clientSideEntityStorage->getCollection( index.internalId() );
+    const Collection col = d->m_collections.value(index.internalId());
     if ( col.isValid() ) {
+
+      if (col == Collection::root())
+      {
+        // Selectable and displayable only.
+        return flags;
+      }
+
       int rights = col.rights();
       if ( rights & Collection::CanChangeCollection ) {
         flags |= Qt::ItemIsEditable;
@@ -214,14 +278,16 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
         flags |= Qt::ItemIsDropEnabled;
       }
     }
-  } else if ( entityType == ClientSideEntityStorage::ItemType )
+//   } else if ( entityType == ClientSideEntityStorage::ItemType )
+  } else if (d->m_items.contains(index.internalId()))
   {
     // Rights come from the parent collection.
 
     // TODO: Is this right for the root collection? I think so, but only by chance.
     // But will it work if m_rootCollection is different from Collection::root?
     // Should probably rely on index.parent().isValid() for that.
-    const Collection parentCol = d->m_clientSideEntityStorage->getCollection( index.parent().internalId() );
+//     const Collection parentCol = d->m_clientSideEntityStorage->getCollection( index.parent().internalId() );
+    const Collection parentCol = d->m_collections.value( index.parent().internalId() );
     if ( parentCol.isValid() ) {
       int rights = parentCol.rights();
       // Can't drop onto items.
@@ -236,6 +302,28 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
   }
   return flags;
 }
+
+// void EntityTreeModelPrivate::moveEntity(const QModelIndex &src, int srcRow, const QModelIndex &dest, int destRow)
+// {
+//   layoutAboutToBeChanged();
+//   // change persistant indexes.
+//   layoutChanged();
+// }
+//
+//
+// void EntityTreeModelPrivate::entityMoved(Collection col, Collection src, Collection dest)
+// {
+//   Q_Q(EntityTreeModel);
+//
+//   QModelIndex entityIndex = indexForCollection(col);
+//   QModelIndex srcIndex = entityIndex.parent();
+//   int srcRow = entityIndex.row();
+// }
+//
+// void EntityTreeModelPrivate::entityMoved(Item item, Collection src, Collection dest)
+// {
+//
+// }
 
 Qt::DropActions EntityTreeModel::supportedDropActions() const
 {
@@ -270,13 +358,11 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
 //   if (!data->hasFormat("text/uri-list"))
 //       return false;
 
-// This is probably wrong and unneccessary.
+// TODO This is probably wrong and unneccessary.
   if ( column > 0 )
     return false;
 
-  int entityType = d->m_clientSideEntityStorage->entityTypeForInternalIdentifier( parent.internalId() );
-
-  if (entityType == ClientSideEntityStorage::ItemType)
+  if (d->m_items.contains(parent.internalId()))
   {
     // Can't drop data onto an item, although we can drop data between items.
     return false;
@@ -284,9 +370,13 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
     // Find out what others do.
   }
 
-  if (entityType == ClientSideEntityStorage::CollectionType)
+  if (d->m_collections.contains(parent.internalId()))
   {
-    Collection destCol = d->m_clientSideEntityStorage->getCollection( parent.internalId() );
+    Collection destCol = d->m_collections.value( parent.internalId() );
+
+    // Applications can't create new collections in root. Only resources can.
+    if (destCol == Collection::root())
+      return false;
 
     if ( data->hasFormat( "text/uri-list" ) ) {
       QHash<Collection::Id, Collection::List> dropped_cols;
@@ -294,16 +384,16 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
 
       KUrl::List urls = KUrl::List::fromMimeData( data );
       foreach( const KUrl &url, urls ) {
-        Collection col = d->m_clientSideEntityStorage->getCollection( Collection::fromUrl( url ).id() );
+        Collection col = d->m_collections.value( Collection::fromUrl( url ).id() );
         if ( col.isValid() ) {
           if ( !d->mimetypeMatches( destCol.contentMimeTypes(), col.contentMimeTypes() ) )
             return false;
 
           dropped_cols[ col.parent()].append( col );
         } else {
-          Item item = d->m_clientSideEntityStorage->getItem( Item::fromUrl( url ).id() );
+          Item item = d->m_items.value( Item::fromUrl( url ).id() );
           if ( item.isValid() ) {
-            Collection col = d->m_clientSideEntityStorage->getParentCollection( item );
+            Collection col = d->getParentCollection( item );
             dropped_items[ col.id()].append( item );
           } else {
             // A uri, but not an akonadi url. What to do?
@@ -316,7 +406,8 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
       d->entityUpdateAdapter->beginTransaction();
       while ( item_iter.hasNext() ) {
         item_iter.next();
-        Collection srcCol = d->m_clientSideEntityStorage->getCollection( item_iter.key() );
+//         Collection srcCol = d->m_clientSideEntityStorage->getCollection( item_iter.key() );
+        Collection srcCol = d->m_collections.value(item_iter.key());
         if ( action == Qt::MoveAction ) {
           d->entityUpdateAdapter->moveEntities( item_iter.value(), dropped_cols.value( item_iter.key() ), srcCol, destCol, row );
         } else if ( action == Qt::CopyAction ) {
@@ -327,7 +418,7 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
       QHashIterator<Collection::Id, Collection::List> col_iter( dropped_cols );
       while ( col_iter.hasNext() ) {
         col_iter.next();
-        Collection srcCol = d->m_clientSideEntityStorage->getCollection( col_iter.key() );
+        Collection srcCol = d->m_collections.value(item_iter.key());
         if ( action == Qt::MoveAction ) {
           // Empty Item::List() because I know I've already dealt with the items of this parent.
           d->entityUpdateAdapter->moveEntities( Item::List(), col_iter.value(), srcCol, destCol, row );
@@ -357,12 +448,41 @@ QModelIndex EntityTreeModel::index( int row, int column, const QModelIndex & par
   if ( column >= columnCount() || column < 0 )
     return QModelIndex();
 
-  int size = d->m_clientSideEntityStorage->childEntitiesCount( parent.internalId() );
+  QList<Entity::Id> childEntities;
+
+  if (!parent.isValid())
+  {
+    if (d->m_showRootCollection)
+    {
+      childEntities << d->m_rootCollection.id();
+    } else {
+      childEntities = d->m_childEntities.value(d->m_rootCollection.id());
+    }
+  } else {
+    childEntities = d->m_childEntities.value(parent.internalId());
+  }
+
+
+//   if (!parent.isValid() && d->m_showRootCollection)
+//   {
+//     childEntities << m_rootCollection.id();
+//   } else
+//   {
+//     childEntities = d->m_childEntities.value(parent.internalId());
+//   }
+
+  int size = childEntities.size();
   if ( row < 0 || row >= size )
     return QModelIndex();
 
-  qint64 internalIdentifier = d->m_clientSideEntityStorage->childAt( parent.internalId(), row );
+  qint64 internalIdentifier = childEntities.at(row);
 
+//   bool found;
+//   qint64 internalIdentifier = d->childAt( parent.internalId(), row, &found );
+//
+//   if (!found)
+//     return QModelIndex();
+//
   return createIndex( row, column, reinterpret_cast<void*>( internalIdentifier ) );
 
 }
@@ -374,24 +494,29 @@ QModelIndex EntityTreeModel::parent( const QModelIndex & index ) const
   if ( !index.isValid() )
     return QModelIndex();
 
-  int entityType = d->m_clientSideEntityStorage->entityTypeForInternalIdentifier( index.internalId() );
-
   Collection col;
-  if ( ClientSideEntityStorage::CollectionType == entityType )
+  if (d->m_collections.contains(index.internalId()))
   {
-    Collection childCol = d->m_clientSideEntityStorage->getCollection( index.internalId() );
-    col = d->m_clientSideEntityStorage->getParentCollection( childCol );
-  } else if ( ClientSideEntityStorage::ItemType == entityType )
+    Collection childCol = d->m_collections.value( index.internalId() );
+    col = d->getParentCollection( childCol );
+  } else if ( d->m_items.contains(index.internalId() ) )
   {
-    Item item = d->m_clientSideEntityStorage->getItem( index.internalId() );
-    col = d->m_clientSideEntityStorage->getParentCollection( item );
+    Item item = d->getItem(index.internalId());
+    col = d->getParentCollection( item );
   }
 
-  if ( !col.isValid() || ( col.id() == d->m_clientSideEntityStorage->rootCollection().id() ) )
+  if ( !col.isValid() )
     return QModelIndex();
 
+  if ( col.id() == d->m_rootCollection.id() )
+  {
+    if (!d->m_showRootCollection)
+      return QModelIndex();
+    else
+      return createIndex(0, 0, reinterpret_cast<void *>(d->m_rootCollection.id()));
+  }
 
-  int row = d->m_clientSideEntityStorage->indexOf( col.parent(), col.id() );
+  int row = d->m_childEntities.value(col.parent()).indexOf(col.id());
 
   return createIndex( row, 0, reinterpret_cast<void*>( col.id() ) );
 
@@ -400,7 +525,22 @@ QModelIndex EntityTreeModel::parent( const QModelIndex & index ) const
 int EntityTreeModel::rowCount( const QModelIndex & parent ) const
 {
   Q_D( const EntityTreeModel );
-  return d->m_clientSideEntityStorage->childEntitiesCount( parent.internalId() );
+
+  kDebug() << parent;
+  qint64 id;
+  if (!parent.isValid())
+  {
+    // If we're showing the root collection then it will be the only child of the root.
+    if (d->m_showRootCollection)
+      return d->m_childEntities.value(-1).size();
+
+    id = d->m_rootCollection.id();
+  } else {
+    id = parent.internalId();
+  }
+
+  kDebug() << d->m_childEntities.value(id);
+  return d->m_childEntities.value(id).size();
 }
 
 QVariant EntityTreeModel::headerData( int section, Qt::Orientation orientation, int role ) const
@@ -419,14 +559,15 @@ QMimeData *EntityTreeModel::mimeData( const QModelIndexList &indexes ) const
     if ( index.column() != 0 )
       continue;
 
-    int entityType = d->m_clientSideEntityStorage->entityTypeForInternalIdentifier( index.internalId() );
+    if (!index.isValid())
+      continue;
 
-    if (entityType == ClientSideEntityStorage::CollectionType)
+    if (d->m_collections.contains(index.internalId()))
     {
-      urls << d->m_clientSideEntityStorage->getCollection( index.internalId() ).url();
-    } else if ( entityType == ClientSideEntityStorage::ItemType )
+      urls << d->m_collections.value(index.internalId()).url();
+    } else if (d->m_items.contains(index.internalId()))
     {
-      urls << d->m_clientSideEntityStorage->getItem( index.internalId() ).url( Item::UrlWithMimeType );
+      urls << d->m_items.value( index.internalId() ).url( Item::UrlWithMimeType );
     }
   }
   urls.populateMimeData( data );
@@ -434,18 +575,18 @@ QMimeData *EntityTreeModel::mimeData( const QModelIndexList &indexes ) const
   return data;
 }
 
-// Always return false for actions which take place syncronously, eg via a Job.
+// Always return false for actions which take place asyncronously, eg via a Job.
 bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, int role )
 {
   Q_D( EntityTreeModel );
   // Delegate to something? Akonadi updater, or the manager classes? I think akonadiUpdater. entityUpdateAdapter
   if ( index.column() == 0 && ( role & (Qt::EditRole | ItemRole | CollectionRole) ) ) {
-    int entityType = d->m_clientSideEntityStorage->entityTypeForInternalIdentifier( index.internalId() );
-    if ( ClientSideEntityStorage::CollectionType == entityType )
+    if (d->m_collections.contains(index.internalId()))
     {
       // rename collection
 //       Collection col = d->collectionForIndex( index );
-      Collection col = d->m_clientSideEntityStorage->getCollection( index.internalId() );
+      Collection col = d->m_collections.value( index.internalId() );
+//       Collection col = d->m_clientSideEntityStorage->getCollection( index.internalId() );
       if ( !col.isValid() || value.toString().isEmpty() )
         return false;
 
@@ -459,7 +600,7 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
       d->entityUpdateAdapter->updateEntities( Collection::List() << col );
       return false;
     }
-    if ( ClientSideEntityStorage::ItemType == entityType )
+    if (d->m_items.contains(index.internalId()))
     {
       Item i = value.value<Item>();
 //       Item item = d->m_items.value( index.internalId() );
@@ -484,16 +625,38 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
 
 bool EntityTreeModel::canFetchMore ( const QModelIndex & parent ) const
 {
-  Q_D( const EntityTreeModel  );
-//   kDebug() << parent << d->m_clientSideEntityStorage->canPopulate(parent.internalId());
-  return d->m_clientSideEntityStorage->canPopulate(parent.internalId());
+  Q_D( const EntityTreeModel );
+  Item item = parent.data(ItemRole).value<Item>();
+  if (item.isValid())
+  {
+    // items can't have more rows.
+    return false;
+  } else {
+    // but collections can...
+    return true;
+  }
+  // TODO: It might be possible to get akonadi to tell us if a collection is empty or not and use that information instead of assuming all collections are not empty.
 }
 
 void EntityTreeModel::fetchMore ( const QModelIndex & parent )
 {
   Q_D( EntityTreeModel );
+
+  if ( d->m_itemPopulation == ImmediatePopulation )
+    // Nothing to do. The items are already in the model.
+    return;
+  else if ( d->m_itemPopulation == LazyPopulation )
+  {
+    Collection col = parent.data(CollectionRole).value<Collection>();
+
+    if (!col.isValid())
+      return;
+
+    kDebug() << col.id() << col.name();
+    d->fetchItems( col, EntityTreeModelPrivate::Base );
+  }
 //   kDebug() << parent;
-  return d->m_clientSideEntityStorage->populateCollection(parent.internalId());
+//   return d->m_clientSideEntityStorage->populateCollection(parent.internalId());
 }
 
 bool EntityTreeModel::hasChildren(const QModelIndex &parent ) const
@@ -503,8 +666,9 @@ bool EntityTreeModel::hasChildren(const QModelIndex &parent ) const
   // There is probably no way to tell if a collection
   // has child items in akonadi without first attempting an itemFetchJob...
   // Figure out a way to fix this.
-  int entityType = d->m_clientSideEntityStorage->entityTypeForInternalIdentifier(parent.internalId());
-  return entityType == ClientSideEntityStorage::CollectionType;
+//   int entityType = d->m_clientSideEntityStorage->entityTypeForInternalIdentifier(parent.internalId());
+//   return entityType == ClientSideEntityStorage::CollectionType;
+  return ((rowCount(parent) > 0) || (canFetchMore(parent) && d->m_itemPopulation == LazyPopulation));
 }
 
 bool EntityTreeModel::insertRows(int , int, const QModelIndex&)
@@ -527,6 +691,109 @@ bool EntityTreeModel::removeColumns(int, int, const QModelIndex&)
     return false;
 }
 
+void EntityTreeModel::setRootCollection(Collection col)
+{
+  Q_D(EntityTreeModel);
 
+  Q_ASSERT(col.isValid());
+  d->m_rootCollection = col;
+  reset();
+  // clear?
+  // start a new list job?
+}
+
+Collection EntityTreeModel::rootCollection() const
+{
+  Q_D(const EntityTreeModel);
+  return d->m_rootCollection;
+}
+
+QModelIndex EntityTreeModel::indexForCollection(Collection col) const
+{
+  Q_D(const EntityTreeModel);
+
+  // TODO: will this work for collection::root while showing it?
+
+  int row = d->m_childEntities.value(col.parent()).indexOf(col.id());
+  if (row < 0)
+    return QModelIndex();
+  int column = 0;
+  return createIndex(row, column, reinterpret_cast<void *>(col.id()));
+}
+
+QModelIndex EntityTreeModel::indexForItem(Item item) const
+{
+  Q_D(const EntityTreeModel);
+  Collection col = d->getParentCollection(item);
+  qint64 id = item.id() * - 1;
+  int row = d->m_childEntities.value(col.id()).indexOf(id);
+  int column = 0;
+  return createIndex(row, column, reinterpret_cast<void *>(id));
+
+}
+
+void EntityTreeModel::fetchMimeTypes(QStringList mimeTypes)
+{
+  Q_D(EntityTreeModel);
+  d->m_mimeTypeFilter = mimeTypes;
+  // reset, clear etc?
+}
+
+QStringList EntityTreeModel::mimeTypesToFetch() const
+{
+  Q_D(const EntityTreeModel);
+  return d->m_mimeTypeFilter;
+}
+
+void EntityTreeModel::setItemPopulationStrategy(int type)
+{
+  Q_D(EntityTreeModel);
+  d->m_itemPopulation = type;
+  // reset, clear etc?
+}
+
+int EntityTreeModel::itemPopulationStrategy() const
+{
+  Q_D(const EntityTreeModel);
+  return d->m_itemPopulation;
+}
+
+void EntityTreeModel::setIncludeRootCollection(bool include)
+{
+  Q_D(EntityTreeModel);
+  d->m_showRootCollection = include;
+  // clear reset etc?
+}
+
+bool EntityTreeModel::includeRootCollection() const
+{
+  Q_D(const EntityTreeModel);
+  return d->m_showRootCollection;
+}
+
+
+void EntityTreeModel::setRootCollectionDisplayName(const QString &displayName)
+{
+  Q_D(EntityTreeModel);
+  d->m_rootCollectionDisplayName = displayName;
+}
+
+QString EntityTreeModel::rootCollectionDisplayName() const
+{
+  Q_D( const EntityTreeModel);
+  return d->m_rootCollectionDisplayName;
+}
+
+void EntityTreeModel::setCollectionFetchStrategy(int type)
+{
+  Q_D( EntityTreeModel);
+  d->m_collectionFetchStrategy = type;
+}
+
+int EntityTreeModel::collectionFetchStrategy() const
+{
+  Q_D( const EntityTreeModel);
+  return d->m_collectionFetchStrategy;
+}
 
 #include "entitytreemodel.moc"
