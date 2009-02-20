@@ -3,6 +3,7 @@ Type=Service
 Comment=This conduit syncs the handheld address book database with an Akonadi collection.
 Comment[et]=See kanal sünkroniseerib pihuarvuti aadressiraamatu andmebaasi Akonadi koguga.
 Comment[ga]=Sioncrónaíonn an seoladán seo bunachar sonraí an leabhair seoltaí ar do ríomhaire boise le Bailiúchán Akonadi.
+Comment[gl]=Este conduto sincroniza o caderno de enderezos do aparello móbil coa colección de calendarios do Akonadi
 Comment[ja]=このコンジットはハンドヘルドのアドレス帳データベースを Akonadi のコレクションと同期させます。
 Comment[nds]=Disse Kanaal synkroniseert dat Handreekner-Adressbook mit en Akonadi-Sammeln.
 Comment[pt]=Esta conduta sincroniza o livro de endereços do dispositivo com uma colecção do Akonadi.
