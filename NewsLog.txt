@@ -1,3 +1,42 @@
+Friday, February 20th 2009
+
+Problems addressed
+------------------
+
+* Fix crash of reminder daemon on Windows.
+* Fix serious memory leak on Windows that would crash KMail in minutes.
+* Make the message box that appears when quitting Kleopatra work correctly again.
+* Fix column resizing in Kleopatra.
+* Fix incorrect word-wrapping in Kleopatra.
+* Remove unused Akonadi, to save some space in the snapshots.
+* Add icon usage log to Kleopatra, to help finding out which icons are needed.
+
+Merges
+------
+
+* Merges from KDE 4.2 branch:
+    - Load missing translation catalogs in KOrganizer and KAddressbook
+    - Fix Kontact needing a refresh to show the incidences at startup
+    - Fix network connection bug in KNode
+    - Fix endless recursion in KOrganizer
+    - Make sure to not execute executables when clicking a link, in KMail
+    - In KMail, convert a non-breaking space to normal spaces in the plain text version,
+      to fix the encoding.
+    - Load resources only once in the summary
+    - Remove duplicated code in KOrganizer, this should fix multi-day/recurrence logic
+    - Further layout fixes for the summary
+    - Fix memory leak in KOrganizer
+    - Remove the unused "default color for events" configuration setting
+    - When creating a journal, use today as the default date
+    - When moving a recurring event, if it was dropped to it's original place, don't show the "Changing Recurring Item"
+      dialog, don't even count this as a modification
+
+* merges from enterprise35 branch:
+    - Disable various buttons if they have no effect, in KOrganizer, KNotes, KAddressbook and KMail
+    - Fix memory leak in KMail
+
+
+
 Friday, February 13th 2009
 
 Problems addressed
