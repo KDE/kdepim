@@ -33,7 +33,6 @@
 #include "collectionchildorderattribute.h"
 #include <akonadi/entitydisplayattribute.h>
 #include "entityupdateadapter.h"
-#include "clientsideentitystorage.h"
 #include <akonadi/monitor.h>
 
 #include "kdebug.h"
@@ -192,10 +191,8 @@ QVariant EntityTreeModel::data( const QModelIndex & index, int role ) const
       break;
     }
   }
-//   else if ( entityType == ClientSideEntityStorage::ItemType)
   else if (d->m_items.contains(index.internalId()))
   {
-//     const Item item = d->m_clientSideEntityStorage->getItem( index.internalId() );
     const Item item = d->m_items.value(index.internalId());
     if ( !item.isValid() )
       return QVariant();
@@ -278,7 +275,6 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
         flags |= Qt::ItemIsDropEnabled;
       }
     }
-//   } else if ( entityType == ClientSideEntityStorage::ItemType )
   } else if (d->m_items.contains(index.internalId()))
   {
     // Rights come from the parent collection.
@@ -286,7 +282,6 @@ Qt::ItemFlags EntityTreeModel::flags( const QModelIndex & index ) const
     // TODO: Is this right for the root collection? I think so, but only by chance.
     // But will it work if m_rootCollection is different from Collection::root?
     // Should probably rely on index.parent().isValid() for that.
-//     const Collection parentCol = d->m_clientSideEntityStorage->getCollection( index.parent().internalId() );
     const Collection parentCol = d->m_collections.value( index.parent().internalId() );
     if ( parentCol.isValid() ) {
       int rights = parentCol.rights();
@@ -341,8 +336,6 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
   Q_D( EntityTreeModel );
 
   // TODO Use action and collection rights and return false if neccessary
-
-  // TODO: Try to delegate most of this to the clientSideEntityStorage.
 
 // if row and column are -1, then the drop was on parent directly.
 // data should then be appended on the end of the items of the collections as appropriate.
@@ -406,7 +399,6 @@ bool EntityTreeModel::dropMimeData( const QMimeData * data, Qt::DropAction actio
       d->entityUpdateAdapter->beginTransaction();
       while ( item_iter.hasNext() ) {
         item_iter.next();
-//         Collection srcCol = d->m_clientSideEntityStorage->getCollection( item_iter.key() );
         Collection srcCol = d->m_collections.value(item_iter.key());
         if ( action == Qt::MoveAction ) {
           d->entityUpdateAdapter->moveEntities( item_iter.value(), dropped_cols.value( item_iter.key() ), srcCol, destCol, row );
@@ -586,7 +578,6 @@ bool EntityTreeModel::setData( const QModelIndex &index, const QVariant &value, 
       // rename collection
 //       Collection col = d->collectionForIndex( index );
       Collection col = d->m_collections.value( index.internalId() );
-//       Collection col = d->m_clientSideEntityStorage->getCollection( index.internalId() );
       if ( !col.isValid() || value.toString().isEmpty() )
         return false;
 
@@ -656,7 +647,6 @@ void EntityTreeModel::fetchMore ( const QModelIndex & parent )
     d->fetchItems( col, EntityTreeModelPrivate::Base );
   }
 //   kDebug() << parent;
-//   return d->m_clientSideEntityStorage->populateCollection(parent.internalId());
 }
 
 bool EntityTreeModel::hasChildren(const QModelIndex &parent ) const
@@ -666,8 +656,6 @@ bool EntityTreeModel::hasChildren(const QModelIndex &parent ) const
   // There is probably no way to tell if a collection
   // has child items in akonadi without first attempting an itemFetchJob...
   // Figure out a way to fix this.
-//   int entityType = d->m_clientSideEntityStorage->entityTypeForInternalIdentifier(parent.internalId());
-//   return entityType == ClientSideEntityStorage::CollectionType;
   return ((rowCount(parent) > 0) || (canFetchMore(parent) && d->m_itemPopulation == LazyPopulation));
 }
 
