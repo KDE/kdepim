@@ -35,6 +35,159 @@ Akonadi models and views are a high level way to interact with the akonadi serve
 
 Models provide an interface for viewing, deleting and moving Items and Collections. New Items can also be created by dropping data of the appropriate type on a model. Additionally, the models are updated automatically if another application changes the data or inserts of deletes items etc.
 
+The most basic model provided by akonadi is the EntityTreeModel. Most likely every application wants exactly one of these. It should be configured to store the items of the mimetypes the application is interested in.
+
+@warning Some of the features in the examples below are not fully implemented yet. See entitytreemodel.h for a list of remaining issues with the api and implementation of these classes.
+
+@code
+
+// Configure what should be shown in the model:
+Monitor *monitor = new Monitor( this );
+monitor->fetchCollection( true );
+monitor->setItemFetchScope( scope );
+monitor->setCollectionMonitored( Collection::root() );
+
+// Provide objects for the model to update itself. The same EntityUpdateAdapter would likely be used elsewhere in the application also:
+Session *session = new Session( QByteArray( "MyEmailApp-" ) + QByteArray::number( qrand() ), this );
+EntityUpdateAdapter *entityUpdater = new EntityUpdateAdapter( session, this );
+
+EntityTreeModel *entityTree = new Akonadi::EntityTreeModel(eua, monitor, this);
+entityTree->fetchMimeTypes(QStringList() << EMail::mimeType());
+@endcode
+
+\image html entitytreemodel.png "A plain EntityTreeModel in a view"
+
+To create a model of only a collection tree and no items, set that in the model. This is just like CollectionModel:
+
+@code
+entityTree->setItemPopulationStrategy(EntityTreeModel::NoItemPopulation);
+@code
+
+
+\image html entitytreemodel-collections.png "A plain EntityTreeModel which does not fetch items."
+
+Or, to create a model of only items and not child collections. This is just like ItemModel:
+
+@code
+entityTree->setRootCollection(myCollection);
+// This will need to be a filter.
+entityTree->setCollectionFetchStrategy(EntityTreeModel::FetchNoCollections);
+@endcode
+
+The CollectionModel-like and ItemModel-like configurations will probably not be used much. Usually, a full tree of collections and items will be created and prxoy models will be used to filter collections or items as needed.
+
+Or, to create a model which includes items and first level collections:
+
+@code
+entityTree->setCollectionFetchStrategy(EntityTreeModel::FetchFirstLevelCollections);
+@endcode
+
+The items in the model can also be inserted lazily for performance reasons. The Collection tree is always built immediately.
+
+Additionally, a DescendantEntitiesProxyModel may be used to alter how the items in the tree are presented.
+
+@code
+// ... Create an entityTreeModel
+DescendantEntitiesProxyModel *descProxy = new DescendantEntitiesProxyModel(this);
+descProxy->setSourceModel(entityTree);
+view->setModel(descProxy);
+@endcode
+
+\image html descendantentitiesproxymodel.png "A DescendantEntitiesProxyModel wrapping an EntityTreeModel"
+
+This can be combined with a filter to for example remove collections.
+
+@code
+// ... Create an entityTreeModel
+DescendantEntitiesProxyModel *descProxy = new DescendantEntitiesProxyModel(this);
+descProxy->setSourceModel(entityTree);
+
+// #### This is new.
+EntityFilterProxyModel *filterModel = new EntityFilterProxyModel(this);
+filterModel->setSourceModel(descProxy);
+filterModel->setExclusionFilter(QStringList() << Collection::mimeType());
+
+view->setModel(filterModel);
+@endcode
+
+\image html descendantentitiesproxymodel-colfilter.png "An EntityFilterProxyModel wrapping a DescendantEntitiesProxyModel wrapping an EntityTreeModel"
+
+It is also possible to show the root item as part of the selectable model:
+
+@code
+
+entityTree->setIncludeRootCollection(true);
+
+@endcode
+
+\image html entitytreemodel-showroot.png "An EntityTreeModel showing Collection::root"
+
+By default the displayed name of the root collection is '[*]', because it doesn't require i18n, and is generic. It can be changed too.
+
+@code
+entityTree->setIncludeRootCollection(true);
+entityTree->setRootCollectionDisplayName(i18nc("Name of top level for all collections in the application", "[All]"))
+@endcode
+
+\image html entitytreemodel-showrootwithname.png "An EntityTreeModel showing Collection::root with an application specific name."
+
+These can of course be combined to create an application which uses one EntityTreeModel along with several proxies and views.
+
+@code
+// ... create an EntityTreeModel.
+EntityFilterProxyModel *collectionTree = new EntityFilterProxyModel(this);
+collectionTree->setSourceModel(entityTree);
+// Filter to include collections only:
+collectionTree->setInclusionFilter(QStringList() << Collection::mimeType());
+EntityTreeView *treeView = new EntityTreeView(this);
+treeView->setModel(collectionTree);
+
+EntityFilterProxyModel *itemList = new EntityFilterProxyModel(this);
+itemList->setSourceModel(entityTree);
+// Filter *out* collections
+itemList->setExclusionFilter(QStringList() << Collection::mimeType());
+EntityTreeView *listView = new EntityTreeView(this);
+listView->setModel(itemList);
+@endcode
+
+
+\image html treeandlistapp.png "A single EntityTreeModel with several views and proxies."
+
+Or to also show items of child collections in the list: (Doesn't work yet. Requires setRootIndex in the EntityFilterProxyModel and better reset behaviour in model and proxies.)
+
+@code
+
+// ... create an EntityTreeModel.
+
+EntityFilterProxyModel *collectionTree = new EntityFilterProxyModel(this);
+collectionTree->setSourceModel(entityTree);
+// Filter to include collections only:
+collectionTree->setInclusionFilter(QStringList() << Collection::mimeType());
+EntityTreeView *treeView = new EntityTreeView(this);
+treeView->setModel(collectionTree);
+
+// #### Only this is new:
+DescendantEntitiesProxyModel *descList = new DescendantEntitiesProxyModel(this);
+descList->setSourceModel(entityTree);
+
+EntityFilterProxyModel *itemList = new EntityFilterProxyModel(this);
+itemList->setSourceModel(descList);
+// Filter *out* collections
+itemList->setExclusionFilter(QStringList() << Collection::mimeType());
+EntityTreeView *listView = new EntityTreeView(this);
+listView->setModel(itemList);
+@endcode
+
+A different view can also be used with the model, such as a QColumnView. However this does not work for an unknown reason.
+
+@code
+// ... Create an EntityTreeModel
+view = new QColumnView(this);
+view->setModel(entityTree);
+@endcode
+
+Work is also started on time basedd proxy models so that Items containing calendar data can be represented in a table.
+
 <h2>Jobs and Monitors</h2>
 
 The lower level way to interact with Akonadi is to use Jobs and Monitors (This is what models use internally). Jobs are used to make changes to akonadi, and in some cases (eg, a fetch job) emit a signal with data resulting from the job. A Monitor reports changes made to the data stored in Akonadi (eg, creating, updating, deleting or moving an item or collection ) via signals.
@@ -113,7 +266,7 @@ For example, when using an ItemFetchJob to fetch the items in a collection, the 
     CollectionFetchJob *job = CollectionFetchJob(getList);
     if (job->exec())
     {
-       // job->collections() is in the same order as the ids in idsToGet. 
+       // job->collections() is in the same order as the ids in idsToGet.
     }
   }
 
