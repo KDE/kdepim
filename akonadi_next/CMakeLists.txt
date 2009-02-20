@@ -1,13 +1,22 @@
 project(akonadi_next)
 
+find_package(KDE4 REQUIRED)
+find_package(Akonadi REQUIRED)
+find_package(KdepimLibs REQUIRED)
+
+include_directories(
+  ${AKONADI_INCLUDE_DIR}
+  ${KDE4_INCLUDES}
+  ${KDEPIMLIBS_INCLUDE_DIR}
+  ${QT_INCLUDES}
+)
+
+
 set( akonadi_next_SRCS
   entitytreemodel.cpp
   entitytreemodel_p.cpp
   entityupdateadapter.cpp
-  clientsideentitystorage.cpp
-  clientsideentitystorage_p.cpp
-  descendantentitiesmodel.cpp
-  descendantentitiesmodel_p.cpp
+  descendantentitiesproxymodel.cpp
   entityfilterproxymodel.cpp
   entitytreeview.cpp
   collectionchildorderattribute.cpp
