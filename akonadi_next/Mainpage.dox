@@ -95,7 +95,24 @@ view->setModel(descProxy);
 
 \image html descendantentitiesproxymodel.png "A DescendantEntitiesProxyModel wrapping an EntityTreeModel"
 
-This can be combined with a filter to for example remove collections.
+DescendantEntitiesProxyModel can also display the same data as FlatCollectionProxyModel, but optionally for the entire entity tree, not just collections.
+
+@code
+// ... Create an entityTreeModel
+DescendantEntitiesProxyModel *descProxy = new DescendantEntitiesProxyModel(this);
+descProxy->setSourceModel(entityTree);
+
+// #### This is new
+descProxy->setDisplayAncestorData(true, QString(" / "));
+
+view->setModel(descProxy);
+
+@endcode
+
+\image html descendantentitiesproxymodel-withansecnames.png "A DescendantEntitiesProxyModel with ancestor names."
+
+
+This proxy can be combined with a filter to for example remove collections.
 
 @code
 // ... Create an entityTreeModel
