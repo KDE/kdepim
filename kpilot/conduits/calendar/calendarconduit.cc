@@ -156,7 +156,16 @@ bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 	TEST( pcEvent->dtStart().dateTime().toLocalTime(), hhEntry.dtStart(), "dtStart" )
 	if( !hhEntry.doesFloat() && !hhEntry.isMultiDay() )
 	{
-		TEST( pcEvent->dtEnd().dateTime().toLocalTime(), hhEntry.dtEnd(), "dtEnd" )
+		// Handle midnight palm bug (http://bugs.kde.org/show_bug.cgi?id=183631)
+		QTime time = pcEvent->dtEnd().dateTime().toLocalTime().time();
+		if ( pcEvent->recurs() && time.hour() == 0 && time.minute() == 0 )
+		{
+			QDateTime pcDt = pcEvent->dtEnd().dateTime().toLocalTime();
+			pcDt.setDate(pcDt.date().addDays(-1));
+			TEST( pcDt, hhEntry.dtEnd(), "dtEnd" )
+		}
+		else
+			TEST( pcEvent->dtEnd().dateTime().toLocalTime(), hhEntry.dtEnd(), "dtEnd" )
 	}
 	
 	TEST( pcEvent->isAlarmEnabled(), hhEntry.isAlarmEnabled(), "HasAlarm" )
@@ -198,6 +207,9 @@ bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 			{
 				QDateTime hhDt = hhEntry.dtEnd();
 				QDateTime pcDt = pcEvent->dtEnd().dateTime().toLocalTime();
+				if (hhDt.time().hour() == 0 && hhDt.time().minute() == 0)
+					pcDt.setDate(pcDt.date().addDays(-1));
+
 				TEST( hhDt, pcDt, "DtEventEnd" );
 			}
 		}
