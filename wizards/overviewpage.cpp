@@ -59,7 +59,7 @@ OverViewPage::OverViewPage( QWidget *parent )
   layout->addWidget( label, 1, 0 );
   layout->setRowMinimumHeight( 1, 20 );
 
-  label = new QLabel( i18n( "Select the type of server you would like KDE to connect to:" ), this );
+  label = new QLabel( i18n( "Select the type of server you would like Kontact to connect to:" ), this );
   layout->addWidget( label, 2, 0, 1, 4 );
 
   QPushButton *button = new QPushButton( i18n("eGroupware"), this );
