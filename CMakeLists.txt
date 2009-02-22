@@ -100,7 +100,7 @@ else ( ONLY_KLEO )
 
   add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 
-  include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDEPIMLIBS_INCLUDE_DIR} ${KDE4_INCLUDES} ${QT_QTDBUS_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/libkdepim/)
+  include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDEPIMLIBS_INCLUDE_DIRS} ${KDE4_INCLUDES} ${QT_QTDBUS_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/libkdepim/)
 
   include (kleopatra/ConfigureChecks.cmake)
 
@@ -166,7 +166,7 @@ else ( ONLY_KLEO )
 
   macro_optional_add_subdirectory(kalarm)
   macro_optional_add_subdirectory(kaddressbook)
-#  macro_optional_add_subdirectory(kcontactmanager)
+  macro_optional_add_subdirectory(kcontactmanager)
 
   if(Q_WS_X11)
     set(KTIMETRACKER_SUPPORTED TRUE)
