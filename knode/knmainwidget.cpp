@@ -428,7 +428,7 @@ void KNMainWidget::openURL(const KUrl &url)
 {
   kDebug(5003) << url;
   QString host = url.host();
-  unsigned short int port = url.port();
+  short int port = url.port();
   KNNntpAccount *acc=0;
 
   if (url.url().left(7) == "news://") {
@@ -436,7 +436,7 @@ void KNMainWidget::openURL(const KUrl &url)
     // lets see if we already have an account for this host...
     KNAccountManager::List list = a_ccManager->accounts();
     for ( KNAccountManager::List::Iterator it = list.begin(); it != list.end(); ++it ) {
-      if ( (*it)->server().toLower() == host.toLower() && ( port==0 || (*it)->port() == port ) ) {
+      if ( (*it)->server().toLower() == host.toLower() && ( port==-1 || (*it)->port() == port ) ) {
         acc = *it;
         break;
       }
@@ -447,7 +447,7 @@ void KNMainWidget::openURL(const KUrl &url)
       acc->setName(host);
       acc->setServer(host);
 
-      if(port!=0)
+      if(port!=-1)
         acc->setPort(port);
 
       if(url.hasUser() && url.hasPass()) {
