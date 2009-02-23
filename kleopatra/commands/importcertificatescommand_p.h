@@ -60,14 +60,13 @@ public:
 
     void startImport( GpgME::Protocol proto, const QByteArray & data, const QString & id=QString() );
     void importResult( const GpgME::ImportResult & );
+
     void showError( QWidget * parent, const GpgME::Error & error, const QString & id=QString() );
-    void showError( const GpgME::Error & error, const QString & id=QString() ) {
-        showError( parentWidgetOrView(), error, id );
-    }
+    void showError( const GpgME::Error & error, const QString & id=QString() );
+
     void showDetails( QWidget * parent, const GpgME::ImportResult & result, const QString & id=QString() );
-    void showDetails( const GpgME::ImportResult & result, const QString & id=QString() ) {
-        showDetails( parentWidgetOrView(), result, id );
-    }
+    void showDetails( const GpgME::ImportResult & result, const QString & id=QString() );
+
     void setImportResultProxyModel( const GpgME::ImportResult & result, const QString & id=QString() );
 
 private:
