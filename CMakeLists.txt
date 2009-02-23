@@ -1,6 +1,8 @@
 project(kdepim)
 
 option(KDE4_KDEPIM_NEW_DISTRLISTS "Whether to use new distribution lists, which stores them like normal contacts; useful for Kolab")
+option(BUILD_EVERYTHING "Build everything. By default, only the minimal set of code needed by our customers is built.")
+
 if(KDE4_KDEPIM_NEW_DISTRLISTS)
   add_definitions (-DKDEPIM_NEW_DISTRLISTS)
 endif(KDE4_KDEPIM_NEW_DISTRLISTS)
@@ -127,8 +129,9 @@ else ( ONLY_KLEO )
   )
 
   macro_optional_add_subdirectory(doc)
-  # FIXME disabled for the moment, since they are not needed
-  #add_subdirectory(kode)
+  if(BUILD_EVERYTHING)
+    add_subdirectory(kode)
+  endif(BUILD_EVERYTHING)
   add_subdirectory(libkdepim)
   add_subdirectory(libkholidays)
   add_subdirectory(kontactinterfaces)
@@ -148,7 +151,9 @@ else ( ONLY_KLEO )
   add_subdirectory(mimelib)
   add_subdirectory(icons)
   macro_optional_add_subdirectory(akregator)
-  macro_optional_add_subdirectory(knode)
+  if(BUILD_EVERYTHING)
+    macro_optional_add_subdirectory(knode)
+  endif(BUILD_EVERYTHING)
   macro_optional_add_subdirectory(kjots)
 
   if(QGPGME_FOUND)
