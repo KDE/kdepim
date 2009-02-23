@@ -40,6 +40,7 @@
 
 #include <utils/input.h>
 #include <utils/output.h>
+#include <utils/stl_util.h>
 
 #include <KLocale>
 #include <KMessageBox>
@@ -55,13 +56,6 @@ using namespace Kleo;
 using namespace Kleo::Commands;
 using namespace Kleo::Crypto;
 using namespace boost;
-
-namespace {
-    struct nodelete {
-        template <typename T>
-        void operator()( const T * ) const {}
-    };
-}
 
 class EncryptClipboardCommand::Private : public Command::Private {
     friend class ::Kleo::Commands::EncryptClipboardCommand;
@@ -96,7 +90,7 @@ const EncryptClipboardCommand::Private * EncryptClipboardCommand::d_func() const
 
 EncryptClipboardCommand::Private::Private( EncryptClipboardCommand * qq, KeyListController * c )
     : Command::Private( qq, c ),
-      shared_qq( qq, nodelete() ),
+      shared_qq( qq, kdtools::nodelete() ),
       input(),
       controller( EncryptEMailController::ClipboardMode )
 {
