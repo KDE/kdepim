@@ -38,6 +38,7 @@
 #include <crypto/task.h>
 
 #include <utils/pimpl_ptr.h>
+#include <utils/types.h>
 
 #include <boost/shared_ptr.hpp>
 
@@ -45,12 +46,6 @@ class QDialog;
 
 namespace Kleo {
 namespace Crypto {
-
-    class ExecutionContext {
-    public:
-        virtual ~ExecutionContext() {}
-        virtual void applyWindowID( QWidget* widget ) const = 0;
-    };
 
     class Controller : public QObject {
         Q_OBJECT

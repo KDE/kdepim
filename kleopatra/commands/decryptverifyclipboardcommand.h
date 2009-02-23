@@ -35,12 +35,12 @@
 
 #include <commands/command.h>
 
-#include <crypto/controller.h>
+#include <utils/types.h>
 
 namespace Kleo {
 namespace Commands {
 
-    class DecryptVerifyClipboardCommand : public Command, public Crypto::ExecutionContext {
+    class DecryptVerifyClipboardCommand : public Command, public ExecutionContext {
         Q_OBJECT
     public:
         explicit DecryptVerifyClipboardCommand( QAbstractItemView * view, KeyListController * parent );

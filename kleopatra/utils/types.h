@@ -33,6 +33,8 @@
 #ifndef __KLEOPATRA_UTILS_TYPES_H__
 #define __KLEOPATRA_UTILS_TYPES_H__
 
+class QWidget;
+
 namespace Kleo {
     enum DecryptVerifyOperation {
         Decrypt,
@@ -53,6 +55,13 @@ namespace Kleo {
         Force,
         Deny
     };
+
+    class ExecutionContext {
+    public:
+        virtual ~ExecutionContext() {}
+        virtual void applyWindowID( QWidget * widget ) const = 0;
+    };
+
 }
 
 #endif // __KLEOPATRA_UTILS_TYPES_H__

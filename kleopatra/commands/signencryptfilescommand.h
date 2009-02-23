@@ -35,8 +35,6 @@
 
 #include <commands/command.h>
 
-#include <crypto/controller.h>
-
 #include <utils/types.h>
 
 #include <gpgme++/global.h>
@@ -46,7 +44,7 @@ class QStringList;
 namespace Kleo {
 namespace Commands {
 
-    class SignEncryptFilesCommand : public Command, public Crypto::ExecutionContext {
+    class SignEncryptFilesCommand : public Command, public ExecutionContext {
         Q_OBJECT
     public:
         explicit SignEncryptFilesCommand( QAbstractItemView * view, KeyListController * parent );

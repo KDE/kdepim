@@ -33,9 +33,8 @@
 #ifndef __KLEOPATRA_UISERVER_ASSUANCOMMAND_H__
 #define __KLEOPATRA_UISERVER_ASSUANCOMMAND_H__
 
-#include <crypto/controller.h>
-
 #include <utils/pimpl_ptr.h>
+#include <utils/types.h>
 
 #include <gpgme++/global.h>
 #include <gpgme++/error.h>
@@ -205,7 +204,7 @@ namespace Kleo {
       \endcode
 
     */
-    class AssuanCommand : public Crypto::ExecutionContext, public boost::enable_shared_from_this<AssuanCommand> {
+    class AssuanCommand : public ExecutionContext, public boost::enable_shared_from_this<AssuanCommand> {
         // defined in assuanserverconnection.cpp!
     public:
         AssuanCommand();

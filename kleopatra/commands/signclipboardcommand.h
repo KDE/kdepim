@@ -35,14 +35,14 @@
 
 #include <commands/command.h>
 
-#include <crypto/controller.h>
+#include <utils/types.h>
 
 #include <gpgme++/global.h>
 
 namespace Kleo {
 namespace Commands {
 
-    class SignClipboardCommand : public Command, public Crypto::ExecutionContext {
+    class SignClipboardCommand : public Command, public ExecutionContext {
         Q_OBJECT
     public:
         explicit SignClipboardCommand( GpgME::Protocol protocol, QAbstractItemView * view, KeyListController * parent );
