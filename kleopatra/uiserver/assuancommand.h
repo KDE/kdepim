@@ -41,6 +41,8 @@
 
 #include <kmime/kmime_header_parsing.h>
 
+#include <qwindowdefs.h> // for WId
+
 #include <boost/shared_ptr.hpp>
 #include <boost/enable_shared_from_this.hpp>
 
@@ -250,6 +252,7 @@ namespace Kleo {
         /* reimp */ void applyWindowID( QWidget* w ) const {
             doApplyWindowID( w );
         }
+        WId parentWId() const;
 
         QString heuristicBaseDirectory() const;
 

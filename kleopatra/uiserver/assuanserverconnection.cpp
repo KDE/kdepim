@@ -1471,6 +1471,10 @@ void AssuanCommand::doApplyWindowID( QWidget * widget ) const {
     apply_window_id( widget, option("window-id").toString() );
 }
 
+WId AssuanCommand::parentWId() const {
+    return wid_from_string( option("window-id").toString() );
+}
+
 static QString commonPrefix( const QString & s1, const QString & s2 ) {
     return QString( s1.data(), std::mismatch( s1.data(), s1.data() + std::min( s1.size(), s2.size() ), s2.data() ).first - s1.data() );
 }
