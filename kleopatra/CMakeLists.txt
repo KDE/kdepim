@@ -16,7 +16,7 @@ if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
     set( kleopatra_version "${kleopatra_version}-svn${Kleopatra_WC_REVISION} (${Kleopatra_WC_LAST_CHANGED_DATE})" )
   endif ( KdeSubversion_FOUND )
 endif (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/.svn")
-endif (NOT kleopatra_version)
+endif (NOT kleopatra_release)
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-kleopatra.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-kleopatra.h )
 
 include_directories(
