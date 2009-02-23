@@ -806,6 +806,19 @@ folder will be selected in &kmail;'s main window.
 	    </para>
 	  </listitem>
 	</varlistentry>
+    <varlistentry id="configure-composer-general-too-many-recipients">
+      <term>
+        <guilabel>Warn if the recipient number is bigger than</guilabel>
+      </term>
+      <listitem>
+        <para>
+          If there are more recipients than a certain number for a mail, KMail warns the
+          user and asks for a confirmation before sending the mail.
+          The default setting is warn if there are more than <literal>5</literal> recipients.
+          This warning can be turned off.
+        </para>
+      </listitem>
+    </varlistentry>
 	<varlistentry id="configure-composer-general-autosave-interval">
 	  <term>
 	    <guilabel>Autosave interval</guilabel>
