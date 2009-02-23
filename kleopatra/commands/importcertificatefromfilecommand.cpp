@@ -44,7 +44,6 @@
 #include <gpgme++/importresult.h>
 
 #include <KLocale>
-#include <KMessageBox>
 #include <KConfigGroup>
 
 #include <QByteArray>
@@ -133,9 +132,8 @@ void ImportCertificateFromFileCommand::doStart()
     }
     // TODO: allow multiple files
     if ( d->files.size() > 1 ) {
-        KMessageBox::information( d->parentWidgetOrView(),
-                                  i18n( "Importing more than one file at a time is not yet implemented." ),
-                                  i18n( "Too many files" ) );
+        d->information( i18n( "Importing more than one file at a time is not yet implemented." ),
+                        i18n( "Too many files" ) );
         emit canceled();
         d->finished();
         return;
@@ -144,13 +142,13 @@ void ImportCertificateFromFileCommand::doStart()
     //TODO: use KIO here
     QFile in( d->files.front() );
     if ( !in.open( QIODevice::ReadOnly ) ) {
-        KMessageBox::error( d->parentWidgetOrView(), i18n( "Could not open file %1 for reading", in.fileName() ), i18n( "Certificate Import Failed" ) );
+        d->error( i18n( "Could not open file %1 for reading", in.fileName() ), i18n( "Certificate Import Failed" ) );
         d->finished();
         return;
     }
     const GpgME::Protocol protocol = findProtocol( d->files.front() );
     if ( protocol == GpgME::UnknownProtocol ) { //TODO: might use exceptions here
-        KMessageBox::error( d->parentWidgetOrView(), i18n( "Could not determine certificate type of %1.", d->files.front() ), i18n( "Certificate Import Failed" ) );
+        d->error( i18n( "Could not determine certificate type of %1.", d->files.front() ), i18n( "Certificate Import Failed" ) );
         d->finished();
         return;
     }
