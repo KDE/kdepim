@@ -157,7 +157,7 @@ bool KMailConnection::kmailSubresources( QList<KMail::SubResource>& lst,
 {
   if ( !connectToKMail() )
     return false;
-  return checkReply( mKmailGroupwareInterface->subresourcesKolab( contentsType ), lst );
+  return checkReply<QList<KMail::SubResource>, QList<KMail::SubResource> >( mKmailGroupwareInterface->subresourcesKolab( contentsType ), lst );
 }
 
 bool KMailConnection::kmailIncidencesCount( int& count,
@@ -166,7 +166,7 @@ bool KMailConnection::kmailIncidencesCount( int& count,
 {
   if ( !connectToKMail() )
     return false;
-  return checkReply( mKmailGroupwareInterface->incidencesKolabCount( mimetype, resource ), count );
+  return checkReply<int, int>( mKmailGroupwareInterface->incidencesKolabCount( mimetype, resource ), count );
 }
 
 bool KMailConnection::kmailIncidences( KMail::SernumDataPair::List& lst,
@@ -177,7 +177,8 @@ bool KMailConnection::kmailIncidences( KMail::SernumDataPair::List& lst,
 {
   if ( !connectToKMail() )
     return false;
-  return checkReply( mKmailGroupwareInterface->incidencesKolab( mimetype, resource, startIndex, nbMessages ), lst );
+  return checkReply<QList<KMail::SernumDataPair>, QList<KMail::SernumDataPair> >(
+      mKmailGroupwareInterface->incidencesKolab( mimetype, resource, startIndex, nbMessages ), lst );
 }
 
 
@@ -188,7 +189,7 @@ bool KMailConnection::kmailGetAttachment( KUrl& url,
 {
   if ( !connectToKMail() )
     return false;
-  return checkReply( mKmailGroupwareInterface->getAttachment( resource, sernum, filename ), url );
+  return checkReply<QString, KUrl>( mKmailGroupwareInterface->getAttachment( resource, sernum, filename ), url );
 }
 
 bool KMailConnection::kmailAttachmentMimetype( QString & mimeType,
@@ -198,7 +199,7 @@ bool KMailConnection::kmailAttachmentMimetype( QString & mimeType,
 {
   if ( !connectToKMail() )
     return false;
-  return checkReply( mKmailGroupwareInterface->attachmentMimetype( resource, sernum, filename ), mimeType );
+  return checkReply<QString, QString>( mKmailGroupwareInterface->attachmentMimetype( resource, sernum, filename ), mimeType );
 }
 
 bool KMailConnection::kmailListAttachments(QStringList &list,
@@ -206,7 +207,7 @@ bool KMailConnection::kmailListAttachments(QStringList &list,
 {
   if ( !connectToKMail() )
     return false;
-  return checkReply( mKmailGroupwareInterface->listAttachments( resource, sernum ), list );
+  return checkReply<QStringList, QStringList>( mKmailGroupwareInterface->listAttachments( resource, sernum ), list );
 }
 
 bool KMailConnection::kmailDeleteIncidence( const QString& resource,
@@ -229,7 +230,7 @@ bool KMailConnection::kmailUpdate( const QString& resource,
 {
   if ( !connectToKMail() )
     return false;
-  return checkReply( mKmailGroupwareInterface->update(
+  return checkReply<quint32,quint32>( mKmailGroupwareInterface->update(
       resource,
       sernum,
       subject,
