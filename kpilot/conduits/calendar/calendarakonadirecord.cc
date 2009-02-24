@@ -141,28 +141,9 @@ bool CalendarAkonadiRecord::isValid() const
 			(
 				item().payload<IncidencePtr>()
 			);
-	unsigned int validChecks = 0;
 	bool myCheck = (!event->summary().isEmpty() &&
 			event->dtStart().dateTime().isValid() &&
 			event->dtEnd().dateTime().isValid());
-	DEBUGKPILOT << toString();
-	DEBUGKPILOT << "my checks: " << myCheck;
-	if ( myCheck ) ++validChecks;
-
 	bool parentCheck = AkonadiRecord::isValid();
-	DEBUGKPILOT << "parent check: " << parentCheck << ", myCheck: " << myCheck;
-	if ( parentCheck ) ++validChecks;
-
-	/*
-	 * For some inexplicable reason, myCheck == true, and parentCheck == true,
-	 * but (myCheck && parentCheck) == false earlier. We know that at this point
-	 * we should have 2 things that are true, so use an int to get around
-	 * this weirdness for the time being. At this point, something like this is
-	 * preferable to data loss, which we do hit if isValid() returns false when
-	 * it should be true.
-	 */
-	// TODO: Figure out how (true && true) can be false =:/
-	DEBUGKPILOT << "returning: " << ( validChecks == 2 );
-
-	return ( validChecks == 2 );
+	return myCheck && parentCheck;
 }
