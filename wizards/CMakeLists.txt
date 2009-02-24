@@ -131,6 +131,8 @@ endif(BUILD_EVERYTHING)
 
 ########### install files ###############
 
-install( FILES groupwarewizard.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
-install( FILES egroupware.kcfg slox.kcfg kolab.kcfg groupwise.kcfg scalix.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
-
+install( FILES kolab.kcfg DESTINATION ${KCFG_INSTALL_DIR})
+if(BUILD_EVERYTHING)
+  install(FILES groupwarewizard.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
+  install(FILES egroupware.kcfg slox.kcfg kolab.kcfg groupwise.kcfg scalix.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
+endif(BUILD_EVERYTHING)
