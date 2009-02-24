@@ -41,6 +41,7 @@
 
 #include <utils/filesystemwatcher.h>
 #include <utils/stl_util.h>
+#include <utils/progressmanager.h>
 
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/dn.h>
@@ -53,6 +54,8 @@
 #include <gpgme++/keylistresult.h>
 
 #include <gpg-error.h>
+
+#include <KLocale>
 
 #include <QPointer>
 #include <QStringList>
@@ -884,10 +887,12 @@ Error KeyCache::RefreshKeysJob::Private::startKeyListing( const char* backend, K
     else
         connect( job, SIGNAL(result(GpgME::KeyListResult,std::vector<GpgME::Key>)),
                  q, SLOT(secretKeyJobDone(GpgME::KeyListResult,std::vector<GpgME::Key>)) );
-#if 0
-    connect( job, SIGNAL(progress(QString,int,int)),
-             q, SIGNAL(progress(QString,int,int)) );
-#endif
+
+    const QString label = protocol == Kleo::CryptoBackendFactory::instance()->smime()
+        ? type == PublicKeys ? i18n("Listing public X.509 keys") : i18n("Listing private X.509 keys")
+        : type == PublicKeys ? i18n("Listing public OpenPGP keys") : i18n("Listing private OpenPGP keys") ;
+    (void)ProgressManager::createForJob( job, label );
+
     connect( q, SIGNAL(canceled()),
              job, SLOT(slotCancel()) );
 

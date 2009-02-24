@@ -22,6 +22,7 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-kleopatra.h.cmake ${CMAKE_CURR
 include_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
   ${CMAKE_SOURCE_DIR}/libkleo
+  ${CMAKE_SOURCE_DIR}/libkdepim
   ${Boost_INCLUDE_DIR}
   ${QGPGME_INCLUDES}
   ${GPGME_INCLUDES} )
@@ -109,6 +110,7 @@ set( _kleopatra_SRCS
   utils/scrollarea.cpp
   utils/dragqueen.cpp
   utils/multivalidator.cpp
+  utils/progressmanager.cpp
 
   utils/hex.cpp
   utils/input.cpp
@@ -257,7 +259,18 @@ kde4_add_kcfg_files( _kleopatra_SRCS
 
 
 if (ONLY_KLEO)
-   add_definitions( -DONLY_KLEO )
+  add_definitions( -DONLY_KLEO )
+  set( _kleopatra_libkdepim_SRCS
+    ../libkdepim/progressmanager.cpp
+    ../libkdepim/progressdialog.cpp
+    ../libkdepim/overlaywidget.cpp
+    ../libkdepim/ssllabel.cpp
+    ../libkdepim/statusbarprogresswidget.cpp
+    )
+  set( _kleopatra_libkdepim_LIBS )
+else(ONLY_KLEO)
+  set( _kleopatra_libkdepim_SRCS )
+  set( _kleopatra_libkdepim_LIBS kdepim )
 endif(ONLY_KLEO)
 
 set( _kleopatra_mainwindow_SRCS
@@ -268,7 +281,7 @@ add_definitions ( -DKDE_DEFAULT_DEBUG_AREA=5151 )
 
 
 kde4_add_app_icon(_kleopatra_mainwindow_SRCS "ox*-app-kleopatra.png")
-kde4_add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_mainwindow_SRCS} ${_kleopatra_uiserver_SRCS} )
+kde4_add_executable(kleopatra_bin ${_kleopatra_SRCS} ${_kleopatra_mainwindow_SRCS} ${_kleopatra_uiserver_SRCS} ${_kleopatra_libkdepim_SRCS} )
 set_target_properties(kleopatra_bin  PROPERTIES OUTPUT_NAME kleopatra)
 
 set( _kleopatra_extra_libs ${QT_QT3SUPPORT_LIBRARY} )
@@ -277,7 +290,7 @@ if ( NOT KDE4_KCMUTILS_LIBS )
   set( KDE4_KCMUTILS_LIBS ${KDE4_KUTILS_LIBS} )
 endif ( NOT KDE4_KCMUTILS_LIBS )
 
-target_link_libraries(kleopatra_bin ${_kleopatra_extra_libs} kleo ${QGPGME_LIBRARIES} ${KDE4_KMIME_LIBRARY} ${KDE4_KCMUTILS_LIBS} ${_kleopatra_uiserver_extra_libs} )
+target_link_libraries(kleopatra_bin ${_kleopatra_extra_libs} kleo ${_kleopatra_libkdepim_LIBS} ${QGPGME_LIBRARIES} ${KDE4_KMIME_LIBRARY} ${KDE4_KCMUTILS_LIBS} ${_kleopatra_uiserver_extra_libs} )
 if ( USABLE_ASSUAN_FOUND )
   target_link_libraries(kleopatra_bin ${QT_QTNETWORK_LIBRARY}) 
 ENDIF ( USABLE_ASSUAN_FOUND )
