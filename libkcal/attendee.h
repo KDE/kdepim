@@ -37,7 +37,7 @@ class LIBKCAL_EXPORT Attendee : public Person
 {
   public:
     enum PartStat { NeedsAction, Accepted, Declined, Tentative,
-                    Delegated, Completed, InProcess };
+                    Delegated, Completed, InProcess, None };
     enum Role { ReqParticipant, OptParticipant, NonParticipant, Chair };
 
     typedef ListBase<Attendee> List;
@@ -53,7 +53,7 @@ class LIBKCAL_EXPORT Attendee : public Person
       @param u the uid for the attendee
     */
     Attendee( const QString &name, const QString &email,
-              bool rsvp = false, PartStat status = NeedsAction,
+              bool rsvp = false, PartStat status = None,
               Role role = ReqParticipant, const QString &u = QString::null );
     /**
       Destruct Attendee.
