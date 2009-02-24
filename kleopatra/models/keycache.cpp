@@ -673,9 +673,8 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
         const std::vector<std::string> emails = ::emails( key );
         Q_FOREACH( const std::string & e, emails )
             pairs.push_back( std::make_pair( e, key ) );
-        std::inplace_merge( pairs.begin(), pairs.end() - emails.size(), pairs.end(),
-                            ByEMail<std::less>() );
     }
+    std::sort( pairs.begin(), pairs.end(), ByEMail<std::less>() );
 
     // 3a. insert into email index:
     std::vector< std::pair<std::string,Key> > by_email;
