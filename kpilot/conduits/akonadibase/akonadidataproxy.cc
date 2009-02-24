@@ -227,25 +227,30 @@ bool AkonadiDataProxy::commitDelete( Record *rec )
 	FUNCTIONSETUP;
 
 	AkonadiRecord* aRec = static_cast<AkonadiRecord*>( rec );
-	Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( aRec->item() );
 
-	if ( !job->exec() )
+	// nothing to do if this record is not valid.  This can only happen if the record
+	// is a dummy record that has already been deleted in the pc.
+	if( !aRec->isValid() )
 	{
-		/**
-		 * An error occurred, but it could be that it's because we're trying
-		 * to delete something that doesn't exist in Akonadi (our dummy,
-		 * used-only-for-deletion records). Check for the validity of our
-		 * object and if it's valid, then fail, but otherwise, ignore the
-		 * failure.
-		 */
-		DEBUGKPILOT << "Delete failed. error: " << job->error()
-			    << ", message: " << job->errorString();
-		// TODO: Akonadi needs to get enhanced to return useful return codes
-		// that we can check. In KDE 4.2, it's not there yet, so we just use
-		// this. But in the future, we should look for Akonadi error codes too.
-		if ( aRec->isValid() )
+		DEBUGKPILOT << "Record is already deleted - not asking akonadi to delete it";
+	}
+	else
+	{
+		// this is a valid (i.e., not a dummy) record so delete it
+		Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( aRec->item() );
+
+		if ( !job->exec() )
 		{
+			DEBUGKPILOT << "Delete failed. error: " << job->error()
+				    << ", message: " << job->errorString();
+			// TODO: Akonadi needs to get enhanced to return useful return codes
+			// that we can check. In KDE 4.2, it's not there yet, so we just use
+			// this. But in the future, we should look for Akonadi error codes too.
 			return false;
+		}
+		else
+		{
+			DEBUGKPILOT << "Delete from akonadi was successful";
 		}
 	}
 
