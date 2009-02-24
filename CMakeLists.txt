@@ -50,7 +50,7 @@ macro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
 endmacro (KDEPIM4_LINK_UNIQUE_LIBRARIES)
 
 find_package(Boost REQUIRED)
-macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org/" TRUE "" "Required by kleopatra")
+macro_log_feature(Boost_FOUND "Boost" "Boost C++ Libraries" "http://www.boost.org/" TRUE "" "Required by kleopatra")
 
 if ( ONLY_KLEO )
   find_package(QGpgme REQUIRED)
@@ -64,11 +64,11 @@ if ( ONLY_KLEO )
   add_subdirectory(libkleo)
 
   find_path(TOPOLOGICAL_SORT_DIR NAMES boost/graph/topological_sort.hpp PATHS ${Boost_INCLUDE_DIRS})
+     macro_log_feature(TOPOLOGICAL_SORT_DIR "Boost Topological Sort" "Missing Boost header topological.h" "http://www.boost.org/" FALSE "" "Necessary to build kleopatra")
   if(TOPOLOGICAL_SORT_DIR)
     macro_optional_add_subdirectory(kleopatra)
-  else(TOPOLOGICAL_SORT_DIR)
-    message(STATUS "topological_sort.hpp is necessary to compile kleopatra. Please install package which contains it.")
   endif(TOPOLOGICAL_SORT_DIR)
+  
 
   macro_optional_add_subdirectory(doc)
 
@@ -136,12 +136,11 @@ else ( ONLY_KLEO )
   add_subdirectory(libkholidays)
   add_subdirectory(kontactinterfaces)
 
-  find_path(TOPOLOGICAL_SORT_DIR NAMES boost/graph/topological_sort.hpp PATHS ${Boost_INCLUDE_DIRS})
   if(QGPGME_FOUND)
+     find_path(TOPOLOGICAL_SORT_DIR NAMES boost/graph/topological_sort.hpp PATHS ${Boost_INCLUDE_DIRS})
+     macro_log_feature(TOPOLOGICAL_SORT_DIR "Boost Topological Sort" "Missing Boost header topological.h" "http://www.boost.org/" FALSE "" "Necessary to build kleopatra")
      if(TOPOLOGICAL_SORT_DIR)
         macro_optional_add_subdirectory(kleopatra)
-     else(TOPOLOGICAL_SORT_DIR)
-        message(STATUS "topological_sort.hpp is necessary to compile kleopatra. Please install package which contains it.")
      endif(TOPOLOGICAL_SORT_DIR)
      add_subdirectory(libkleo)
   endif(QGPGME_FOUND)
