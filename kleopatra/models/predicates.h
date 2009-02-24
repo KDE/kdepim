@@ -35,16 +35,23 @@
 
 #include <QByteArray>
 
+#include <cstring>
+
 namespace Kleo {
 namespace _detail {
 
-#define make_comparator_str( Name, expr )                               \
+    inline int mystrcmp( const char * s1, const char * s2 ) {
+        using namespace std;
+        return s1 ? s2 ? strcmp( s1, s2 ) : 1 : s2 ? -1 : 0 ;
+    }
+
+#define make_comparator_str_impl( Name, expr, cmp )                     \
     template <template <typename U> class Op>                           \
     struct Name {                                                       \
         typedef bool result_type;                                       \
                                                                         \
         bool operator()( const char * lhs, const char * rhs ) const {   \
-            return Op<int>()( qstricmp( lhs, rhs ), 0 );                \
+            return Op<int>()( cmp, 0 );                                 \
         }                                                               \
                                                                         \
         bool operator()( const std::string & lhs, const std::string & rhs ) const { \
@@ -79,11 +86,15 @@ namespace _detail {
         }                                                               \
     }
 
-    make_comparator_str( ByFingerprint, .primaryFingerprint() );
+#define make_comparator_str_fast( Name, expr )                          \
+    make_comparator_str_impl( Name, expr, _detail::mystrcmp( lhs, rhs ) )
+#define make_comparator_str( Name, expr )                               \
+    make_comparator_str_impl( Name, expr, qstricmp( lhs, rhs ) )
+
+    make_comparator_str_fast( ByFingerprint, .primaryFingerprint() );
     make_comparator_str( ByKeyID, .keyID() );
     make_comparator_str( ByShortKeyID, .shortKeyID() );
     make_comparator_str( ByChainID, .chainID() );
-
 
 }
 }
