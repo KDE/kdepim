@@ -29,7 +29,7 @@
 #include <QObject>
 #include <QString>
 #include <QMap>
-#include <Q3Dict>
+#include <QHash>
 
 namespace KPIM {
 
@@ -41,7 +41,6 @@ class KDEPIM_EXPORT ProgressItem : public QObject
 {
   Q_OBJECT
   friend class ProgressManager;
-  friend class Q3Dict< ProgressItem >; // so it can be deleted from dicts
 
   public:
 
@@ -226,6 +225,8 @@ class KDEPIM_EXPORT ProgressItem : public QObject
     bool mUsesCrypto;
 };
 
+struct ProgressManagerPrivate;
+
 /**
  * The ProgressManager singleton keeps track of all ongoing transactions
  * and notifies observers (progress dialogs) when their progress percent value
@@ -251,6 +252,8 @@ class KDEPIM_EXPORT ProgressManager : public QObject
 {
 
   Q_OBJECT
+
+  friend struct ProgressManagerPrivate;
 
   public:
     virtual ~ProgressManager();
@@ -416,8 +419,7 @@ class KDEPIM_EXPORT ProgressManager : public QObject
                                                   bool usesCrypto );
     void emitShowProgressDialogImpl();
 
-    Q3Dict< ProgressItem > mTransactions;
-    static ProgressManager *mInstance;
+    QHash<QString,ProgressItem*> mTransactions;
     static unsigned int uID;
 };
 

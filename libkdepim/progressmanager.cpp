@@ -25,11 +25,10 @@
 
 #include <KDebug>
 #include <KLocale>
-#include <K3StaticDeleter>
+#include <kglobal.h>
 
 namespace KPIM {
 
-KPIM::ProgressManager *KPIM::ProgressManager::mInstance = 0;
 unsigned int KPIM::ProgressManager::uID = 42;
 
 ProgressItem::ProgressItem( ProgressItem *parent, const QString &id,
@@ -128,21 +127,23 @@ void ProgressItem::setUsesCrypto( bool v )
 
 // ======================================
 
+struct ProgressManagerPrivate {
+    ProgressManager instance;
+};
+
+K_GLOBAL_STATIC( ProgressManagerPrivate, progressManagerPrivate )
+
 ProgressManager::ProgressManager()
   : QObject()
 {
-  mInstance = this;
+
 }
 
-ProgressManager::~ProgressManager() { mInstance = 0; }
-static K3StaticDeleter<ProgressManager> progressManagerDeleter;
+ProgressManager::~ProgressManager() {}
 
 ProgressManager *ProgressManager::instance()
 {
-  if ( !mInstance ) {
-    progressManagerDeleter.setObject( mInstance, new ProgressManager() );
-  }
-  return mInstance;
+    return progressManagerPrivate.isDestroyed() ? 0 : &progressManagerPrivate->instance ;
 }
 
 ProgressItem *ProgressManager::createProgressItemImpl( ProgressItem *parent,
@@ -218,13 +219,12 @@ void ProgressManager::slotStandardCancelHandler( ProgressItem *item )
 ProgressItem *ProgressManager::singleItem() const
 {
   ProgressItem *item = 0;
-  Q3DictIterator< ProgressItem > it( mTransactions );
-  for ( ; it.current(); ++it ) {
-    if ( !(*it)->parent() ) { // if it's a top level one, only those count
+  Q_FOREACH( ProgressItem * it, mTransactions ) {
+    if ( it && !it->parent() ) { // if it's a top level one, only those count
       if ( item ) {
         return 0; // we found more than one
       } else {
-        item = (*it);
+        item = it;
       }
     }
   }
@@ -233,9 +233,9 @@ ProgressItem *ProgressManager::singleItem() const
 
 void ProgressManager::slotAbortAll()
 {
-  Q3DictIterator< ProgressItem > it( mTransactions );
-  for ( ; it.current(); ++it ) {
-    it.current()->cancel();
+  Q_FOREACH( ProgressItem * it, mTransactions ) {
+      if ( it )
+          it->cancel();
   }
 }
 
