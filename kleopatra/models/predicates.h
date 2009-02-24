@@ -34,6 +34,7 @@
 #define __KLEOPATRA_MODELS_PREDICATES_H__
 
 #include <QByteArray>
+#include <string>
 
 namespace Kleo {
 namespace _detail {
