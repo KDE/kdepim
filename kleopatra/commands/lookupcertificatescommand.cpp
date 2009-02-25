@@ -250,10 +250,10 @@ void LookupCertificatesCommand::Private::slotKeyListResult( const KeyListResult 
         return;
 
     if ( keyListing.result.error() && !keyListing.result.error().isCanceled() )
-        showError( dialogOrParentWidgetOrView(), keyListing.result );
+        showError( dialog, keyListing.result );
 
     if ( keyListing.result.isTruncated() )
-        showResult( dialogOrParentWidgetOrView(), keyListing.result );
+        showResult( dialog, keyListing.result );
 
     if ( dialog ) {
         dialog->setCertificates( keyListing.keys );
