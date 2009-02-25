@@ -205,12 +205,14 @@ bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 			}
 			else
 			{
-				QDateTime hhDt = hhEntry.dtEnd();
-				QDateTime pcDt = pcEvent->dtEnd().dateTime().toLocalTime();
-				if (hhDt.time().hour() == 0 && hhDt.time().minute() == 0)
-					pcDt.setDate(pcDt.date().addDays(-1));
+				QDateTime hhDtEnd = hhEntry.dtEnd();
+				QDateTime hhDtStart = hhEntry.dtStart();
+				QDateTime pcDtEnd = pcEvent->dtEnd().dateTime().toLocalTime();
+				if( (hhDtEnd.time().hour() == 0) && (hhDtEnd.time().minute() == 0) &&
+					(hhDtEnd != hhDtStart) )
+					pcDtEnd.setDate(pcDtEnd.date().addDays(-1));
 
-				TEST( hhDt, pcDt, "DtEventEnd" );
+				TEST( hhDtEnd, pcDtEnd, "DtEventEnd" );
 			}
 		}
 		
