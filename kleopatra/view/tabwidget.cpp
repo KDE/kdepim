@@ -596,7 +596,7 @@ TabWidget::Private::Private( TabWidget * qq )
     struct action_data actionData[NumPageActions] = {
         { "window_rename_tab", i18n("Rename Tab..."), i18n("Rename this tab"),
           "edit-rename", q, SLOT(slotRenameCurrentTab()), i18n("CTRL+SHIFT+R"), false, false },
-        { "window_duplicate_tab", i18n("Duplicate Current Tab"), i18n("Duplicate the current tab"),
+        { "window_duplicate_tab", i18n("Duplicate Tab"), i18n("Duplicate this tab"),
           "tab-duplicate", q, SLOT(slotDuplicateCurrentTab()), i18n("CTRL+SHIFT+D"), false, true },
         { "window_close_tab", i18n("Close Tab"), i18n("Close this tab"),
           "tab-close", q, SLOT(slotCloseCurrentTab()), i18n("CTRL+SHIFT+W"), false, false }, // ### CTRL-W when available
