@@ -67,20 +67,6 @@ using namespace boost;
 
 static const int minimalSearchTextLength = 2; // ### TODO: make that KIOSK-able
 
-static const QHeaderView::ResizeMode resize_modes[AbstractKeyListModel::NumColumns] = {
-    QHeaderView::Stretch,          // Name
-    QHeaderView::Stretch, // EMail
-    QHeaderView::Fixed, // Valid From
-    QHeaderView::Fixed, // Valid Until
-    QHeaderView::Fixed, // Details
-    QHeaderView::Fixed, // Fingerprint
-};
-
-static void adjust_header( HeaderView * hv ) {
-    for ( int i = 0, end = AbstractKeyListModel::NumColumns ; i < end ; ++i )
-        hv->setSectionResizeMode( i, resize_modes[i] );
-}
-
 class LookupCertificatesDialog::Private {
     friend class ::Kleo::Dialogs::LookupCertificatesDialog;
     LookupCertificatesDialog * const q;
@@ -143,7 +129,6 @@ private:
             HeaderView * hv = new HeaderView( Qt::Horizontal );
             KDAB_SET_OBJECT_NAME( hv );
             resultTV->setHeader( hv );
-            adjust_header( hv );
 
             connect( resultTV,   SIGNAL(doubleClicked(QModelIndex)),
                      importPB(), SLOT(animateClick()) );
@@ -185,6 +170,7 @@ LookupCertificatesDialog::~LookupCertificatesDialog() {}
 
 void LookupCertificatesDialog::setCertificates( const std::vector<Key> & certs ) {
     d->model->setKeys( certs );
+    d->ui.resultTV->header()->resizeSections( QHeaderView::ResizeToContents );
 }
 
 std::vector<Key> LookupCertificatesDialog::selectedCertificates() const {
