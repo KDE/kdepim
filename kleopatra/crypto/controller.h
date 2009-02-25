@@ -47,24 +47,21 @@ class QDialog;
 namespace Kleo {
 namespace Crypto {
 
-    class Controller : public QObject {
+    class Controller : public QObject, protected ExecutionContextUser {
         Q_OBJECT
     public:
         explicit Controller( QObject * parent=0 );
         explicit Controller( const boost::shared_ptr<const ExecutionContext> & cmd, QObject * parent=0 );
         ~Controller();
 
-        void setExecutionContext( const boost::shared_ptr<const ExecutionContext> & cmd );
+        using ExecutionContextUser::setExecutionContext;
 
      Q_SIGNALS:
          void error( int err, const QString & details );
 
     protected:   
-        boost::shared_ptr<const ExecutionContext> executionContext() const;
         void emitDoneOrError();
         void connectTask( const boost::shared_ptr<Task> & task );
-
-        void bringToForeground( QWidget* wid );
 
         virtual void doTaskDone( const Task* task, const boost::shared_ptr<const Task::Result> & result ) = 0;
 

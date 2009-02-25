@@ -34,12 +34,7 @@
 
 #include "controller.h"
 
-#include <KWindowSystem>
-
 #include <QDialog>
-#include <QVector>
-
-#include <boost/weak_ptr.hpp>
 
 using namespace Kleo;
 using namespace Kleo::Crypto;
@@ -49,60 +44,32 @@ class Controller::Private {
     friend class ::Kleo::Crypto::Controller;
     Controller * const q;
 public:
-    explicit Private( const shared_ptr<const ExecutionContext> & ctx, Controller * qq );
-    
-    void applyWindowID( QWidget* wid );
-    
+    explicit Private( Controller * qq )
+        : q( qq ),
+          lastError( 0 ),
+          lastErrorString()
+    {
+
+    }
+
 private:
-    weak_ptr<const ExecutionContext> executionContext;
-    QVector<QWidget*> idApplied;
     int lastError;
     QString lastErrorString;
 };
 
-Controller::Private::Private( const shared_ptr<const ExecutionContext> & ctx, Controller * qq )
-    : q( qq ), 
-    executionContext( ctx ),
-    lastError( 0 ),
-    lastErrorString()
-{
-
-}
-
-void Controller::Private::applyWindowID( QWidget* wid )
-{
-    if ( idApplied.contains( wid ) )
-        return;
-    if ( const shared_ptr<const ExecutionContext> ctx = executionContext.lock() ) {
-        ctx->applyWindowID( wid );
-        idApplied.append( wid );
-    }
-}
-
 Controller::Controller( QObject * parent )
-    : QObject( parent ), d( new Private( shared_ptr<const ExecutionContext>(), this ) )
+    : QObject( parent ), ExecutionContextUser(), d( new Private( this ) )
 {
     
 }
 
 Controller::Controller( const shared_ptr<const ExecutionContext> & ctx, QObject* parent )
-    : QObject( parent ), d( new Private( ctx, this ) )
+    : QObject( parent ), ExecutionContextUser( ctx ), d( new Private( this ) )
 {
     
 }
 
 Controller::~Controller() {}
-
-void Controller::setExecutionContext( const shared_ptr<const ExecutionContext> & ctx )
-{
-    d->executionContext = ctx;
-    d->idApplied.clear();
-}
-
-shared_ptr<const ExecutionContext> Controller::executionContext() const
-{
-    return d->executionContext.lock();
-}
 
 void Controller::taskDone( const boost::shared_ptr<const Task::Result> & result ) {
     if ( result->hasError() ) {
@@ -125,18 +92,6 @@ void Controller::emitDoneOrError() {
         emit error( d->lastError, d->lastErrorString );
     else
         emit done();
-}
-
-void Controller::bringToForeground( QWidget* wid )
-{
-    d->applyWindowID( wid );
-    if ( wid->isVisible() )
-        wid->raise();
-    else
-        wid->show();
-#ifdef Q_WS_WIN
-    KWindowSystem::forceActiveWindow( wid->winId() );
-#endif
 }
 
 #include "controller.moc"

@@ -33,7 +33,13 @@
 #ifndef __KLEOPATRA_UTILS_TYPES_H__
 #define __KLEOPATRA_UTILS_TYPES_H__
 
+#include <utils/pimpl_ptr.h>
+
 class QWidget;
+
+namespace boost {
+    template <typename T> class shared_ptr;
+}
 
 namespace Kleo {
     enum DecryptVerifyOperation {
@@ -60,6 +66,22 @@ namespace Kleo {
     public:
         virtual ~ExecutionContext() {}
         virtual void applyWindowID( QWidget * widget ) const = 0;
+    };
+
+    class ExecutionContextUser {
+    public:
+        ExecutionContextUser();
+        explicit ExecutionContextUser( const boost::shared_ptr<const ExecutionContext> & ec );
+        virtual ~ExecutionContextUser();
+
+        void setExecutionContext( const boost::shared_ptr<const ExecutionContext> & ec );
+        boost::shared_ptr<const ExecutionContext> executionContext() const;
+
+    protected:
+        void bringToForeground( QWidget * wid );
+    private:
+        class Private;
+        kdtools::pimpl_ptr<Private> d;
     };
 
 }

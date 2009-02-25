@@ -121,6 +121,7 @@ set( _kleopatra_SRCS
   utils/iodevicelogger.cpp
   utils/log.cpp
   utils/action_data.cpp
+  utils/types.cpp
 
   selftest/selftest.cpp
   selftest/enginecheck.cpp
