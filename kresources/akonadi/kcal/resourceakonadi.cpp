@@ -245,7 +245,7 @@ class ResourceAkonadi::Private : public KCal::Calendar::CalendarObserver,
         mMimeVisitor( new KCalMimeTypeVisitor() ),
         mCollectionModel( 0 ), mCollectionFilterModel( 0 ),
         mAgentModel( 0 ), mAgentFilterModel( 0 ),
-        mThreadJobContext( *this )
+        mThreadJobContext( *this ), mOpenState( Closed )
     {
       mCalendar.registerObserver( this );
     }
@@ -302,6 +302,15 @@ class ResourceAkonadi::Private : public KCal::Calendar::CalendarObserver,
     ThreadJobContext mThreadJobContext;
 
     AssignmentVisitor mIncidenceAssigner;
+
+    enum OpenState
+    {
+      Closed,
+      Opened,
+      Failed
+    };
+
+    OpenState mOpenState;
 
   public:
     void subResourceLoadResult( KJob *job );
@@ -746,6 +755,10 @@ bool ResourceAkonadi::doLoad( bool syncCache )
 {
   kDebug(5800) << "syncCache=" << syncCache;
 
+  // TODO error reporting
+  if ( d->mOpenState != Private::Opened )
+    return false;
+
   // TODO since Akonadi resources can set a MIME type depending on incidence type
   // it should be enough to just "list" the items and fetch the payloads
   // when the class' getter methods are called or do a full fetch in the
@@ -820,6 +833,10 @@ bool ResourceAkonadi::doLoad( bool syncCache )
 bool ResourceAkonadi::doSave( bool syncCache )
 {
   kDebug(5800) << "syncCache=" << syncCache;
+
+  // TODO error reporting
+  if ( d->mOpenState != Private::Opened )
+    return false;
 
   if ( !d->prepareSaving() )
     return false;
@@ -913,7 +930,10 @@ bool ResourceAkonadi::doOpen()
   if ( d->mCollectionFilterModel != 0 )
     return true;
 
-  // TODO: probably check if Akonadi is running
+  if ( !Akonadi::Control::start() ) {
+    d->mOpenState = Private::Failed;
+    return false;
+  }
 
   d->mCollectionModel = new CollectionModel( this );
 
@@ -957,6 +977,7 @@ bool ResourceAkonadi::doOpen()
 
   d->mAgentFilterModel->setSourceModel( d->mAgentModel );
 
+  d->mOpenState = Private::Opened;
   return true;
 }
 
@@ -980,6 +1001,7 @@ void ResourceAkonadi::doClose()
   d->mItemIdToResourceMap.clear();
   d->mJobToResourceMap.clear();
   d->mChanges.clear();
+  d->mOpenState = Private::Closed;
 }
 
 void ResourceAkonadi::saveResult( KJob *job )
@@ -995,8 +1017,6 @@ void ResourceAkonadi::saveResult( KJob *job )
 
 void ResourceAkonadi::init()
 {
-  // TODO: might be better to do this already in the resource factory
-  Akonadi::Control::start();
 }
 
 void ResourceAkonadi::Private::subResourceLoadResult( KJob *job )
