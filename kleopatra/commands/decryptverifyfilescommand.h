@@ -35,8 +35,6 @@
 
 #include <commands/command.h>
 
-#include <crypto/controller.h>
-
 #include <utils/types.h>
 
 class QStringList;
@@ -44,7 +42,7 @@ class QStringList;
 namespace Kleo {
 namespace Commands {
 
-    class DecryptVerifyFilesCommand : public Command, public Crypto::ExecutionContext {
+    class DecryptVerifyFilesCommand : public Command, public ExecutionContext {
         Q_OBJECT
     public:
         explicit DecryptVerifyFilesCommand( QAbstractItemView * view, KeyListController * parent );
