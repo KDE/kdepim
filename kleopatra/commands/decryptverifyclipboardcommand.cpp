@@ -43,6 +43,7 @@
 
 #include <utils/classify.h>
 #include <utils/types.h>
+#include <utils/stl_util.h>
 
 #include <KLocale>
 #include <KMessageBox>
@@ -54,13 +55,6 @@ using namespace Kleo;
 using namespace Kleo::Commands;
 using namespace Kleo::Crypto;
 using namespace boost;
-
-namespace {
-    struct nodelete {
-        template <typename T>
-        void operator()( const T * ) const {}
-    };
-}
 
 class DecryptVerifyClipboardCommand::Private : public Command::Private {
     friend class ::Kleo::Commands::DecryptVerifyClipboardCommand;
@@ -94,7 +88,7 @@ const DecryptVerifyClipboardCommand::Private * DecryptVerifyClipboardCommand::d_
 
 DecryptVerifyClipboardCommand::Private::Private( DecryptVerifyClipboardCommand * qq, KeyListController * c )
     : Command::Private( qq, c ),
-      shared_qq( qq, nodelete() ),
+      shared_qq( qq, kdtools::nodelete() ),
       input(),
       controller()
 {

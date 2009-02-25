@@ -38,6 +38,8 @@
 
 #include <crypto/signencryptfilescontroller.h>
 
+#include <utils/stl_util.h>
+
 #include <KLocale>
 #include <KMessageBox>
 #include <kdebug.h>
@@ -51,13 +53,6 @@ using namespace Kleo;
 using namespace Kleo::Commands;
 using namespace Kleo::Crypto;
 using namespace boost;
-
-namespace {
-    struct nodelete {
-        template <typename T>
-        void operator()( const T * ) const {}
-    };
-}
 
 class SignEncryptFilesCommand::Private : public Command::Private {
     friend class ::Kleo::Commands::SignEncryptFilesCommand;
@@ -94,7 +89,7 @@ const SignEncryptFilesCommand::Private * SignEncryptFilesCommand::d_func() const
 SignEncryptFilesCommand::Private::Private( SignEncryptFilesCommand * qq, KeyListController * c )
     : Command::Private( qq, c ),
       files(),
-      shared_qq( qq, nodelete() ),
+      shared_qq( qq, kdtools::nodelete() ),
       controller()
 {
     controller.setOperationMode( SignEncryptFilesController::SignAllowed | SignEncryptFilesController::EncryptAllowed );

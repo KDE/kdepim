@@ -31,6 +31,11 @@
 
 namespace kdtools {
 
+    struct nodelete {
+        template <typename T>
+        void operator()( const T * ) const {}
+    };
+
     template <typename InputIterator, typename OutputIterator, typename UnaryPredicate>
     OutputIterator copy_if( InputIterator first, InputIterator last, OutputIterator dest, UnaryPredicate pred ) {
 	while ( first != last ) {
