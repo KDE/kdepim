@@ -50,47 +50,6 @@
 
 using namespace Kleo;
 
-class HeaderView::Private {
-    friend class ::Kleo::HeaderView;
-    HeaderView * const q;
-public:
-    Private( HeaderView * qq )
-        : q( qq ),
-          mousePressed( false ),
-          modes(),
-          sizes()
-    {
-        connect( q, SIGNAL(sectionCountChanged(int,int)),
-                 q, SLOT(_klhv_slotSectionCountChanged(int,int)) );
-    }
-
-    void _klhv_slotSectionCountChanged( int oldCount, int newCount ) {
-        hvDebug() << oldCount << "->" << newCount;
-        if ( newCount <= oldCount )
-            return;
-        ensureNumSections( newCount );
-        for ( unsigned int i = 0, end = std::min<unsigned int>( newCount, modes.size() ) ; i < end ; ++i )
-            q->QHeaderView::setResizeMode( i, modes[i] );
-    }
-
-    void ensureNumSections( unsigned int num ) {
-        if ( num > modes.size() )
-            modes.resize( num, QHeaderView::Fixed );
-    }
-
-    bool mousePressed : 1;
-    std::vector<QHeaderView::ResizeMode> modes;
-    std::vector<int> sizes;
-};
-
-HeaderView::HeaderView( Qt::Orientation o, QWidget * p )
-    : QHeaderView( o, p ), d( new Private( this ) )
-{
-
-}
-
-HeaderView::~HeaderView() {}
-
 static std::vector<int> section_sizes( const QHeaderView * view ) {
     assert( view );
     std::vector<int> result;
@@ -127,6 +86,60 @@ QDebug operator<<( QDebug debug, const std::vector<T,A> & v ) {
     return debug.space();
 }
 
+
+class HeaderView::Private {
+    friend class ::Kleo::HeaderView;
+    HeaderView * const q;
+public:
+    Private( HeaderView * qq )
+        : q( qq ),
+          mousePressed( false ),
+          modes(),
+          sizes()
+    {
+        connect( q, SIGNAL(sectionCountChanged(int,int)),
+                 q, SLOT(_klhv_slotSectionCountChanged(int,int)) );
+        connect( q, SIGNAL(sectionResized(int,int,int)),
+                 q, SLOT(_klhv_slotSectionResized(int,int,int)) );
+    }
+
+    void _klhv_slotSectionCountChanged( int oldCount, int newCount ) {
+        if ( newCount == oldCount )
+            return;
+        hvDebug() << oldCount << "->" << newCount;
+        if ( newCount < oldCount )
+            return;
+        ensureNumSections( newCount );
+        for ( unsigned int i = 0, end = std::min<unsigned int>( newCount, modes.size() ) ; i < end ; ++i )
+            q->QHeaderView::setResizeMode( i, modes[i] );
+        apply_section_sizes( q, sizes );
+    }
+
+    void _klhv_slotSectionResized( int idx, int oldSize, int newSize ) {
+        hvDebug() << idx << ':' << oldSize << "->" << newSize;
+        ensureNumSections( idx+1 );
+        sizes[idx] = newSize;
+    }
+
+    void ensureNumSections( unsigned int num ) {
+        if ( num > modes.size() )
+            modes.resize( num, QHeaderView::Interactive );
+        if ( num > sizes.size() )
+            sizes.resize( num, q->defaultSectionSize() );
+    }
+
+    bool mousePressed : 1;
+    std::vector<QHeaderView::ResizeMode> modes;
+    std::vector<int> sizes;
+};
+
+HeaderView::HeaderView( Qt::Orientation o, QWidget * p )
+    : QHeaderView( o, p ), d( new Private( this ) )
+{
+
+}
+
+HeaderView::~HeaderView() {}
 
 #if 0
 static std::vector<int> calculate_section_sizes( const std::vector<int> & oldSizes, int newLength, const std::vector<QHeaderView::ResizeMode> & modes, int minSize ) {
