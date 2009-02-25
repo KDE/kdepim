@@ -195,12 +195,17 @@ QString Formatting::prettyEMail( const char * email_, const char * id ) {
 
 namespace {
 
+    static QString protect_whitespace( QString s ) {
+        static const QLatin1Char SP( ' ' ), NBSP( '\xA0' );
+        return s.replace( SP, NBSP );
+    }
+
     template <typename T_arg>
     QString format_row( const QString & field, const T_arg & arg ) {
-	return i18n( "<tr><th>%1:</th><td>%2</td></tr>", field, arg );
+	return i18n( "<tr><th>%1:</th><td>%2</td></tr>", protect_whitespace( field ), arg );
     }
     QString format_row( const QString & field, const QString & arg ) {
-        return i18n( "<tr><th>%1:</th><td>%2</td></tr>", field, Qt::escape( arg )  );
+        return i18n( "<tr><th>%1:</th><td>%2</td></tr>", protect_whitespace( field ), Qt::escape( arg )  );
     }
     QString format_row( const QString & field, const char * arg ) {
 	return format_row( field, QString::fromUtf8( arg ) );
