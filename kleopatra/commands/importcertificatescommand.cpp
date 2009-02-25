@@ -184,9 +184,7 @@ void ImportCertificatesCommand::Private::setImportResultProxyModel( const Import
         tv->expandAll();
 }
 
-void ImportCertificatesCommand::Private::showDetails( QWidget * parent, const ImportResult & res, const QString & id ) {
-
-    setImportResultProxyModel( res, id );
+static QString make_details_message( const ImportResult & res, const QString & id ) {
 
     const KLocalizedString normalLine = ki18n("<tr><td align=\"right\">%1</td><td>%2</td></tr>");
     const KLocalizedString boldLine = ki18n("<tr><td align=\"right\"><b>%1</b></td><td>%2</td></tr>");
@@ -231,22 +229,34 @@ void ImportCertificatesCommand::Private::showDetails( QWidget * parent, const Im
     if ( res.numSecretKeysUnchanged() )
         lines.push_back( normalLine.subs( i18n("Secret keys unchanged:") )
                          .subs( res.numSecretKeysUnchanged() ).toString() );
-    
-    KMessageBox::information( parent,
-                              id.isEmpty()
-                              ? i18n( "<qt><p>Detailed results of certificate import:</p>"
-                                      "<table>%1</table></qt>",
-                                      lines.join( QString() ) )
-                              : i18n( "<qt><p>Detailed results of importing %1:</p>"
-                                      "<table>%2</table></qt>" ,
-                                      id, lines.join( QString() ) ),
-                              i18n( "Certificate Import Result" ) );
+
+    return id.isEmpty()
+        ? i18n( "<qt><p>Detailed results of certificate import:</p>"
+                "<table>%1</table></qt>",
+                lines.join( QString() ) )
+        : i18n( "<qt><p>Detailed results of importing %1:</p>"
+                "<table>%2</table></qt>" ,
+                id, lines.join( QString() ) );
 }
 
-void ImportCertificatesCommand::Private::showError( QWidget * parent, const Error & err, const QString & id ) {
+void ImportCertificatesCommand::Private::showDetails( QWidget * parent, const ImportResult & res, const QString & id ) {
+    if ( parent ) {
+        setImportResultProxyModel( res, id );
+        KMessageBox::information( parent, make_details_message( res, id ), i18n( "Certificate Import Result" ) );
+    } else {
+        showDetails( res, id );
+    }
+}
+
+void ImportCertificatesCommand::Private::showDetails( const ImportResult & res, const QString & id ) {
+    setImportResultProxyModel( res, id );
+    information( make_details_message( res, id ), i18n( "Certificate Import Result" ) );
+}
+
+static QString make_error_message( const Error & err, const QString & id ) {
     assert( err );
     assert( !err.isCanceled() );
-    const QString msg = id.isEmpty()
+    return id.isEmpty()
         ? i18n( "<qt><p>An error occurred while trying "
                 "to import the certificate:</p>"
                 "<p><b>%1</b></p></qt>",
@@ -255,7 +265,17 @@ void ImportCertificatesCommand::Private::showError( QWidget * parent, const Erro
                 "to import the certificate %1:</p>"
                 "<p><b>%2</b></p></qt>",
                 id, QString::fromLocal8Bit( err.asString() ) );
-    KMessageBox::error( parent, msg, i18n( "Certificate Import Failed" ) );
+}
+
+void ImportCertificatesCommand::Private::showError( QWidget * parent, const Error & err, const QString & id ) {
+    if ( parent )
+        KMessageBox::error( parent, make_error_message( err, id ), i18n( "Certificate Import Failed" ) );
+    else
+        showError( err, id );
+}
+
+void ImportCertificatesCommand::Private::showError( const Error & err, const QString & id ) {
+    error( make_error_message( err, id ), i18n( "Certificate Import Failed" ) );
 }
 
 void ImportCertificatesCommand::Private::importResult( const ImportResult & result ) {
