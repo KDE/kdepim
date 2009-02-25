@@ -71,6 +71,10 @@
 #include "utils/action_data.h"
 #include "utils/classify.h"
 
+// from libkdepim
+#include "statusbarprogresswidget.h"
+#include "progressdialog.h"
+
 #include <KActionCollection>
 #include <KLocale>
 #include <KTabWidget>
@@ -91,7 +95,6 @@
 #include <QFileDialog>
 #include <QToolBar>
 #include <QWidgetAction>
-#include <QProgressBar>
 #include <QApplication>
 #include <QCloseEvent>
 #include <QMenu>
@@ -118,20 +121,6 @@ using namespace Kleo;
 using namespace Kleo::Commands;
 using namespace boost;
 using namespace GpgME;
-
-namespace {
-    class ProgressBar : public QProgressBar {
-        Q_OBJECT
-    public:
-        explicit ProgressBar( QWidget * p=0 ) : QProgressBar( p ) {}
-
-    public Q_SLOTS:
-        void setProgress( int current, int total ) {
-            setRange( 0, total );
-            setValue( current );
-        }
-    };
-}
 
 static KGuiItem KStandardGuiItem_quit() {
     static const QString app = KGlobal::mainComponent().aboutData()->programName();
@@ -311,19 +300,22 @@ private:
     struct UI {
 
         TabWidget tabWidget;
-	ProgressBar progressBar;
 
 	explicit UI( MainWindow * q )
-	    : tabWidget( q ),
-	      progressBar( q->statusBar() )
+	    : tabWidget( q )
 	{
 	    KDAB_SET_OBJECT_NAME( tabWidget );
-	    KDAB_SET_OBJECT_NAME( progressBar );
 
-            progressBar.setFixedSize( progressBar.sizeHint() );
+            KPIM::ProgressDialog * progressDialog = new KPIM::ProgressDialog( q->statusBar(), q );
+            KDAB_SET_OBJECT_NAME( progressDialog );
+            //progressDialog->raise();
+            //progressDialog->hide();
+            KPIM::StatusbarProgressWidget * statusBarProgressWidget = new KPIM::StatusbarProgressWidget( progressDialog, q->statusBar() );
+            KDAB_SET_OBJECT_NAME( statusBarProgressWidget );
+            // statusBarProgressWidget->show();
 
             q->setCentralWidget( &tabWidget );
-            q->statusBar()->addPermanentWidget( &progressBar );
+            q->statusBar()->addPermanentWidget( statusBarProgressWidget, 0 );
 	}
     } ui;
 };
@@ -349,7 +341,6 @@ MainWindow::Private::Private( MainWindow * qq )
 
     setupActions();
 
-    connect( &controller, SIGNAL(progress(int,int)), &ui.progressBar, SLOT(setProgress(int,int)) );
     connect( &controller, SIGNAL(message(QString,int)),  q->statusBar(), SLOT(showMessage(QString,int)) );
     connect( &controller, SIGNAL(contextMenuRequested(QAbstractItemView*,QPoint)),
              q, SLOT(slotContextMenuRequested(QAbstractItemView*,QPoint)) );
@@ -649,5 +640,4 @@ void MainWindow::dropEvent( QDropEvent * e ) {
     e->accept();
 }
 
-#include "mainwindow.moc"
 #include "moc_mainwindow.cpp"
