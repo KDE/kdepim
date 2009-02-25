@@ -153,7 +153,6 @@ void ImportCertificateFromFileCommand::doStart()
         return;
     }
     d->startImport( protocol, in.readAll(), d->files.front() );
-    emit info( i18n( "Importing certificate..." ) );
 }
 
 static QStringList get_file_name( QWidget * parent ) {
