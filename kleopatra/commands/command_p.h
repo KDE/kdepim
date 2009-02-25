@@ -37,6 +37,8 @@
 #include "view/keylistcontroller.h"
 #include "models/keylistmodel.h"
 
+#include <KMessageBox>
+
 #include <QAbstractItemView>
 #include <QPointer>
 #include <QList>
@@ -78,6 +80,19 @@ public:
         finished();
     }
 
+    void error( const QString & text, const QString & caption=QString(), KMessageBox::Options options=KMessageBox::Notify ) const {
+        if ( parentWId )
+            KMessageBox::errorWId( parentWId, text, caption, options );
+        else
+            KMessageBox::error( parentWidgetOrView(), text, caption, options );
+    }
+    void information( const QString & text, const QString & caption=QString(), const QString & dontShowAgainName=QString(), KMessageBox::Options options=KMessageBox::Notify ) const {
+        if ( parentWId )
+            KMessageBox::informationWId( parentWId, text, caption, dontShowAgainName, options );
+        else
+            KMessageBox::information( parentWidgetOrView(), text, caption, dontShowAgainName, options );
+    }
+
 private:
     bool autoDelete : 1;
     bool warnWhenRunningAtShutdown : 1;
@@ -85,6 +100,7 @@ private:
     QList<QPersistentModelIndex> indexes_;
     QPointer<QAbstractItemView> view_;
     QPointer<QWidget> parentWidget_;
+    WId parentWId;
     QPointer<KeyListController> controller_;
 };
 

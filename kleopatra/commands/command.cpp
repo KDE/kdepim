@@ -50,6 +50,7 @@ Command::Private::Private( Command * qq, KeyListController * controller )
       warnWhenRunningAtShutdown( true ),
       indexes_(),
       view_(),
+      parentWId( 0 ),
       controller_( controller )
 {
 
@@ -133,6 +134,10 @@ bool Command::warnWhenRunningAtShutdown() const {
 
 void Command::setParentWidget( QWidget * widget ) {
     d->parentWidget_ = widget;
+}
+
+void Command::setParentWId( WId wid ) {
+    d->parentWId = wid;
 }
 
 void Command::setView( QAbstractItemView * view ) {

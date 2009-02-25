@@ -35,6 +35,8 @@
 
 #include <QObject>
 
+#include <QWidget> // for WId
+
 #include <utils/pimpl_ptr.h>
 
 #include <vector>
@@ -82,6 +84,7 @@ namespace Kleo {
         static Restrictions restrictions() { return NoRestriction; }
 
         void setParentWidget( QWidget* widget );
+        void setParentWId( WId wid );
         void setView( QAbstractItemView * view );
         void setIndex( const QModelIndex & idx );
         void setIndexes( const QList<QModelIndex> & idx );
