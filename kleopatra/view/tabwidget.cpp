@@ -132,6 +132,13 @@ public:
         m_canBeClosed = m_canBeRenamed = m_canChangeStringFilter = m_canChangeKeyFilter = m_canChangeHierarchical = true;
     }
 
+    void setColumnSizes( const std::vector<int> & sizes );
+    std::vector<int> columnSizes() const;
+
+    void setSortColumn( int sortColumn, Qt::SortOrder sortOrder );
+    int sortColumn() const;
+    Qt::SortOrder sortOrder() const;
+
 Q_SIGNALS:
     void titleChanged( const QString & title );
     void stringFilterChanged( const QString & filter );
@@ -184,6 +191,8 @@ Page::Page( const Page & other )
       m_canChangeHierarchical( other.m_canChangeHierarchical )
 {
     init();
+    setColumnSizes( other.columnSizes() );
+    setSortColumn( other.sortColumn(), other.sortOrder() );
 }
 
 Page::Page( const QString & title, const QString & id, const QString & text, AbstractKeyListSortFilterProxyModel * proxy, const QString & toolTip, QWidget * parent )
@@ -238,18 +247,47 @@ Page::Page( const KConfigGroup & group, QWidget * parent )
       m_canChangeHierarchical( !group.isEntryImmutable( HIERARCHICAL_VIEW_ENTRY ) )
 {
     init();
+    setColumnSizes( kdtools::copy< std::vector<int> >( group.readEntry( COLUMN_SIZES, QList<int>() ) ) );
+    setSortColumn(  group.readEntry( SORT_COLUMN, 0 ),
+                    group.readEntry( SORT_DESCENDING, true ) ? Qt::DescendingOrder : Qt::AscendingOrder );
+}
+
+void Page::setColumnSizes( const std::vector<int> & sizes ) {
+    if ( sizes.empty() )
+        return;
     assert( m_view );
     assert( m_view->header() );
     assert( qobject_cast<HeaderView*>( m_view->header() ) == static_cast<HeaderView*>( m_view->header() ) );
-    if ( HeaderView * const hv = static_cast<HeaderView*>( m_view->header() ) ) {
-        const QList<int> sizes = group.readEntry( COLUMN_SIZES, QList<int>() );
-        if ( !sizes.empty() )
-            hv->setSectionSizes( kdtools::copy< std::vector<int> >( sizes ) );
-    }
-    const int sortColumn = group.readEntry( SORT_COLUMN, 0 );
-    const Qt::SortOrder sortOrder = group.readEntry( SORT_DESCENDING, true ) ? Qt::DescendingOrder : Qt::AscendingOrder ;
+    if ( HeaderView * const hv = static_cast<HeaderView*>( m_view->header() ) )
+        hv->setSectionSizes( sizes );
+}
+
+void Page::setSortColumn( int sortColumn, Qt::SortOrder sortOrder ) {
+    assert( m_view );
     m_view->sortByColumn( sortColumn, sortOrder );
 }
+
+int Page::sortColumn() const {
+    assert( m_view );
+    assert( m_view->header() );
+    return m_view->header()->sortIndicatorSection();
+}
+
+Qt::SortOrder Page::sortOrder() const {
+    assert( m_view );
+    assert( m_view->header() );
+    return m_view->header()->sortIndicatorOrder();
+}
+
+std::vector<int> Page::columnSizes() const {
+    assert( m_view );
+    assert( m_view->header() );
+    assert( qobject_cast<HeaderView*>( m_view->header() ) == static_cast<HeaderView*>( m_view->header() ) );
+    if ( HeaderView * const hv = static_cast<HeaderView*>( m_view->header() ) )
+        return hv->sectionSizes();
+    else
+        return std::vector<int>();
+}    
 
 void Page::init() {
     KDAB_SET_OBJECT_NAME( m_proxy );
@@ -500,7 +538,7 @@ private:
         return sp && sp == currentPage();
     }
 
-    QTreeView * addView( Page * page );
+    QTreeView * addView( Page * page, Page * columnReference );
     void setCornerAction( QAction * action, Qt::Corner corner );
 
 private:
@@ -684,7 +722,8 @@ void TabWidget::Private::slotPageHierarchyChanged( bool ) {
 }
 
 void TabWidget::Private::slotNewTab() {
-    q->addView( QString(), "all-certificates" );
+    Page * page = new Page( QString(), "all-certificates", QString() );
+    addView( page, currentPage() );
     tabWidget.setCurrentIndex( tabWidget.count()-1 );
 }
 
@@ -704,7 +743,7 @@ void TabWidget::Private::duplicatePage( Page * page ) {
     Page * const clone = page->clone();
     assert( clone );
     clone->liftAllRestrictions();
-    addView( clone );
+    addView( clone, page );
 }
 
 void TabWidget::Private::closePage( Page * page) {
@@ -834,22 +873,22 @@ void TabWidget::createActions( KActionCollection * coll ) {
 }
 
 QAbstractItemView * TabWidget::addView( const QString & title, const QString & id, const QString & text ) {
-    return d->addView( new Page( title, id, text ) );
+    return d->addView( new Page( title, id, text ), d->currentPage() );
 }
 
 QAbstractItemView * TabWidget::addView( const KConfigGroup & group ) {
-    return d->addView( new Page( group ) );
+    return d->addView( new Page( group ), 0 );
 }
 
 QAbstractItemView * TabWidget::addTemporaryView( const QString & title, AbstractKeyListSortFilterProxyModel * proxy, const QString & tabToolTip ) {
     Page * const page = new Page( title, QString(), QString(), proxy, tabToolTip );
     page->setTemporary( true );
-    QAbstractItemView * v = d->addView( page );
+    QAbstractItemView * v = d->addView( page, d->currentPage() );
     d->tabWidget.setCurrentIndex( d->tabWidget.count()-1 );
     return v;
 }
 
-QTreeView * TabWidget::Private::addView( Page * page ) {
+QTreeView * TabWidget::Private::addView( Page * page, Page * columnReference ) {
     if ( !page )
         return 0;
 
@@ -864,6 +903,11 @@ QTreeView * TabWidget::Private::addView( Page * page ) {
              q, SLOT(slotPageStringFilterChanged(QString)) );
     connect( page, SIGNAL(hierarchicalChanged(bool)),
              q, SLOT(slotPageHierarchyChanged(bool)) );
+
+    if ( columnReference ) {
+        page->setColumnSizes( columnReference->columnSizes() );
+        page->setSortColumn( columnReference->sortColumn(), columnReference->sortOrder() );
+    }
 
     QAbstractItemView * const previous = q->currentView(); 
     const int tabIndex = tabWidget.addTab( page, page->title() );
