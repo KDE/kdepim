@@ -76,8 +76,8 @@ static const about_data credits[] = {
 AboutData::AboutData()
   : KAboutData( "kleopatra", 0, ki18n("Kleopatra"),
 		kleopatra_version, ki18n(description), License_GPL,
-		ki18n("(c) 2002 Steffen Hansen, Matthias Kalle Dalheimer, Klar\xC3\xA4lvdalens Datakonsult AB\n"
-		      "(c) 2004, 2007, 2008 Marc Mutz, Klar\xC3\xA4lvdalens Datakonsult AB") )
+		ki18n("(c) 2002 Steffen\xC2\xA0Hansen, Matthias\xC2\xA0Kalle\xC2\xA0" "Dalheimer, Klar\xC3\xA4lvdalens\xC2\xA0" "Datakonsult\xC2\xA0" "AB\n"
+		      "(c) 2004, 2007, 2008, 2009 Marc\xC2\xA0Mutz, Klar\xC3\xA4lvdalens\xC2\xA0" "Datakonsult\xC2\xA0" "AB") )
 {
   using ::authors;
   using ::credits;
