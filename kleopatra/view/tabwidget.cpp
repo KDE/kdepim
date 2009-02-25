@@ -214,6 +214,8 @@ static const char STRING_FILTER_ENTRY[] = "string-filter";
 static const char KEY_FILTER_ENTRY[] = "key-filter";
 static const char HIERARCHICAL_VIEW_ENTRY[] = "hierarchical-view";
 static const char COLUMN_SIZES[] = "column-sizes";
+static const char SORT_COLUMN[] = "sort-column";
+static const char SORT_DESCENDING[] = "sort-descending";
 
 Page::Page( const KConfigGroup & group, QWidget * parent )
     : QWidget( parent ),
@@ -244,20 +246,9 @@ Page::Page( const KConfigGroup & group, QWidget * parent )
         if ( !sizes.empty() )
             hv->setSectionSizes( kdtools::copy< std::vector<int> >( sizes ) );
     }
-}
-
-static const QHeaderView::ResizeMode resize_modes[AbstractKeyListModel::NumColumns] = {
-    QHeaderView::Stretch,          // Name
-    QHeaderView::Stretch, // EMail
-    QHeaderView::Fixed, // Valid From
-    QHeaderView::Fixed, // Valid Until
-    QHeaderView::Fixed, // Details
-    QHeaderView::Fixed, // Fingerprint
-};
-
-static void adjust_header( HeaderView * hv ) {
-    for ( int i = 0, end = AbstractKeyListModel::NumColumns ; i < end ; ++i )
-        hv->setSectionResizeMode( i, resize_modes[i] );
+    const int sortColumn = group.readEntry( SORT_COLUMN, 0 );
+    const Qt::SortOrder sortOrder = group.readEntry( SORT_DESCENDING, true ) ? Qt::DescendingOrder : Qt::AscendingOrder ;
+    m_view->sortByColumn( sortColumn, sortOrder );
 }
 
 void Page::init() {
@@ -273,7 +264,6 @@ void Page::init() {
     HeaderView * headerView = new HeaderView( Qt::Horizontal );
     KDAB_SET_OBJECT_NAME( headerView );
     m_view->setHeader( headerView );
-    adjust_header( headerView );
 
     m_view->setSelectionBehavior( QAbstractItemView::SelectRows );
     m_view->setSelectionMode( QAbstractItemView::ExtendedSelection );
@@ -305,8 +295,11 @@ void Page::saveTo( KConfigGroup & group ) const {
     group.writeEntry( STRING_FILTER_ENTRY, m_stringFilter );
     group.writeEntry( KEY_FILTER_ENTRY, m_keyFilter ? m_keyFilter->id() : QString() );
     group.writeEntry( HIERARCHICAL_VIEW_ENTRY, m_isHierarchical );
-    if ( const HeaderView * const hv = m_view ? qobject_cast<HeaderView*>( m_view->header() ) : 0 )
+    if ( const HeaderView * const hv = m_view ? qobject_cast<HeaderView*>( m_view->header() ) : 0 ) {
         group.writeEntry( COLUMN_SIZES, kdtools::copy< QList<int> >( hv->sectionSizes() ) );
+        group.writeEntry( SORT_COLUMN, hv->sortIndicatorSection() );
+        group.writeEntry( SORT_DESCENDING, hv->sortIndicatorOrder() == Qt::DescendingOrder );
+    }
 }
 
 static QAbstractProxyModel * find_last_proxy( QAbstractProxyModel * pm ) {
