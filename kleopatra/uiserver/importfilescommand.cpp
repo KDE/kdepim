@@ -90,6 +90,7 @@ ImportFilesCommand::~ImportFilesCommand() {}
 
 int ImportFilesCommand::doStart() {
 
+    d->command.setParentWId( parentWId() );
     d->command.setFiles( fileNames() );
     releaseFiles();
     d->command.start();
