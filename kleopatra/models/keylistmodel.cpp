@@ -447,9 +447,9 @@ Key FlatKeyListModel::doMapToKey( const QModelIndex & idx ) const {
 QModelIndex FlatKeyListModel::doMapFromKey( const Key & key, int col ) const {
     assert( !key.isNull() );
     const std::vector<Key>::const_iterator it
-        = qBinaryFind( mKeysByFingerprint.begin(), mKeysByFingerprint.end(),
+        = std::lower_bound( mKeysByFingerprint.begin(), mKeysByFingerprint.end(),
                        key, _detail::ByFingerprint<std::less>() );
-    if ( it == mKeysByFingerprint.end() )
+    if ( it == mKeysByFingerprint.end() || !_detail::ByFingerprint<std::equal_to>()( *it, key ) )
         return QModelIndex();
     else
         return createIndex( it - mKeysByFingerprint.begin(), col );
@@ -610,8 +610,8 @@ QModelIndex HierarchicalKeyListModel::doMapFromKey( const Key & key, int col ) c
     }
 
     const std::vector<Key>::const_iterator it
-	= qBinaryFind( v->begin(), v->end(), key, _detail::ByFingerprint<std::less>() );
-    if ( it == v->end() )
+	= std::lower_bound( v->begin(), v->end(), key, _detail::ByFingerprint<std::less>() );
+    if ( it == v->end() || !_detail::ByFingerprint<std::equal_to>()( *it, key ) )
 	return QModelIndex();
 
     const unsigned int row = std::distance( v->begin(), it );
