@@ -35,7 +35,7 @@
 
 #include <QObject>
 
-#include <QWidget> // for WId
+#include <qwindowdefs.h> // for WId
 
 #include <utils/pimpl_ptr.h>
 
