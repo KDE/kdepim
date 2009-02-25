@@ -1,6 +1,8 @@
 project(kdepim)
 
 option(KDE4_KDEPIM_NEW_DISTRLISTS "Whether to use new distribution lists, which stores them like normal contacts; useful for Kolab")
+option(BUILD_EVERYTHING "Build everything. Enabled by default. If you disable this, only the minimal parts needed for the Kolab client are built." TRUE)
+
 if(KDE4_KDEPIM_NEW_DISTRLISTS)
   add_definitions (-DKDEPIM_NEW_DISTRLISTS)
 endif(KDE4_KDEPIM_NEW_DISTRLISTS)
@@ -130,8 +132,10 @@ else ( ONLY_KLEO )
      ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttXMLTools.cpp
   )
 
-  add_subdirectory(kode)
-  macro_optional_add_subdirectory(akonadi)
+  if(BUILD_EVERYTHING)
+    add_subdirectory(kode)
+    macro_optional_add_subdirectory(akonadi)
+  endif(BUILD_EVERYTHING)
   add_subdirectory(libkdepim)
   add_subdirectory(kontactinterfaces)
 
@@ -149,7 +153,9 @@ else ( ONLY_KLEO )
   add_subdirectory(mimelib)
   add_subdirectory(icons)
   macro_optional_add_subdirectory(akregator)
-  macro_optional_add_subdirectory(knode)
+  if(BUILD_EVERYTHING)
+    macro_optional_add_subdirectory(knode)
+  endif(BUILD_EVERYTHING)
   macro_optional_add_subdirectory(kjots)
 
   if(QGPGME_FOUND)

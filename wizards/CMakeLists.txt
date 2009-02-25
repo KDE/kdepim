@@ -6,6 +6,7 @@ add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 
 ########### next target ###############
 
+if(BUILD_EVERYTHING)
 set(groupwarewizard_SRCS ${libknotesresources_SRCS} groupwarewizard.cpp groupwaremain.cpp overviewpage.cpp 
     egroupwarewizard.cpp
     groupwisewizard.cpp
@@ -31,10 +32,11 @@ kabc kcal kdepim ${KDE4_KPIMIDENTITIES_LIBS}  ${QT_QT3SUPPORT_LIBRARY}
 )
 
 install(TARGETS groupwarewizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
-
+endif(BUILD_EVERYTHING)
 
 ########### next target ###############
 
+if(BUILD_EVERYTHING)
 set(egroupwarewizard_SRCS ${libknotesresources_SRCS} egroupwarewizard.cpp egroupwaremain.cpp)
 
 
@@ -48,10 +50,11 @@ kde4_add_executable(egroupwarewizard ${egroupwarewizard_SRCS})
 target_link_libraries(egroupwarewizard  ${KDE4_KDECORE_LIBS} kabc_xmlrpc kcal_xmlrpc knotes_xmlrpc ${KDE4_KCAL_LIBS} kdepim  ${QT_QT3SUPPORT_LIBRARY})
 
 install(TARGETS egroupwarewizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
+endif(BUILD_EVERYTHING)
 
+########### next target ###############
 
-############ next target ###############
-
+if(BUILD_EVERYTHING)
 set(groupwisewizard_SRCS groupwisewizard.cpp groupwisemain.cpp kmailchanges.cpp)
 
 kde4_add_kcfg_files(groupwisewizard_SRCS groupwiseconfig.kcfgc)
@@ -64,10 +67,11 @@ kde4_add_executable(groupwisewizard ${groupwisewizard_SRCS})
 target_link_libraries(groupwisewizard ${KDE4_KPIMIDENTITIES_LIBS} ${KDE4_KDECORE_LIBS} ${KDE4_KIDENTITIES_LIBS} kabcgroupwise kcalgroupwise ${KDE4_KCAL_LIBS} kdepim ${QT_QT3SUPPORT_LIBRARY})
 
 install(TARGETS groupwisewizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
-
+endif(BUILD_EVERYTHING)
 
 ########### next target ###############
 
+if(BUILD_EVERYTHING)
 set(sloxwizard_SRCS ${libknotesresources_SRCS} sloxwizard.cpp sloxmain.cpp)
 
 
@@ -81,7 +85,7 @@ kde4_add_executable(sloxwizard ${sloxwizard_SRCS})
 target_link_libraries(sloxwizard  ${KDE4_KDECORE_LIBS} kcal_slox kabc_slox ${KDE4_KCAL_LIBS} ${KDE4_KABC_LIBS} kdepim ${QT_QT3SUPPORT_LIBRARY})
 
 install(TARGETS sloxwizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
-
+endif(BUILD_EVERYTHING)
 
 ########### next target ###############
 
@@ -105,6 +109,7 @@ install(TARGETS kolabwizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
 
 ########### next target ###############
 
+if(BUILD_EVERYTHING)
 set(scalixwizard_SRCS ${libknotesresources_SRCS} 
    scalixwizard.cpp 
    kmailchanges.cpp 
@@ -122,9 +127,12 @@ kde4_add_executable(scalixwizard ${scalixwizard_SRCS})
 target_link_libraries(scalixwizard  ${KDE4_KCAL_LIBS} ${KDE4_KPIMIDENTITIES_LIBS} kabcscalix knotesscalix kcalscalix kdepim  ${QT_QT3SUPPORT_LIBRARY})
 
 install(TARGETS scalixwizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
+endif(BUILD_EVERYTHING)
 
 ########### install files ###############
 
-install( FILES groupwarewizard.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
-install( FILES egroupware.kcfg slox.kcfg kolab.kcfg groupwise.kcfg scalix.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
-
+install( FILES kolab.kcfg DESTINATION ${KCFG_INSTALL_DIR})
+if(BUILD_EVERYTHING)
+  install(FILES groupwarewizard.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
+  install(FILES egroupware.kcfg slox.kcfg kolab.kcfg groupwise.kcfg scalix.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
+endif(BUILD_EVERYTHING)
