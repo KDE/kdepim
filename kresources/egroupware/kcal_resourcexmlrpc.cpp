@@ -590,8 +590,10 @@ void ResourceXMLRPC::listEventsFinished( const QList<QVariant>& list,
         calendar()->addEvent( event );
         retrievedEvents.append( event );
         changed = true;
-      } else
+      } else {
+        retrievedEvents.append( oldEvent );
         delete event;
+      }
     } else {
       if ( !localUid.isEmpty() )
         event->setUid( localUid );
@@ -700,8 +702,10 @@ void ResourceXMLRPC::listTodosFinished( const QList<QVariant>& list,
         calendar()->addTodo( todo );
         retrievedTodos.append( todo );
         changed = true;
-      } else
+      } else {
+        retrievedTodos.append( oldTodo );
         delete todo;
+      }
     } else {
       idMapper().setRemoteId( todo->uid(), uid );
       calendar()->addTodo( todo );
