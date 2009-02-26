@@ -66,7 +66,6 @@ namespace Kleo {
 #include <klocale.h>
 #include <kiconloader.h>
 #include <ksplashscreen.h>
-#include <KDebug>
 
 #include <QTextDocument> // for Qt::escape
 #include <QStringList>
@@ -75,6 +74,7 @@ namespace Kleo {
 #include <QTime>
 #include <QEventLoop>
 #include <QThreadPool>
+#include <QDebug>
 
 #include <boost/shared_ptr.hpp>
 
@@ -169,11 +169,11 @@ int main( int argc, char** argv )
 
   KCmdLineArgs::addCmdLineOptions( KleopatraApplication::commandLineOptions() );
 
-  kDebug() << timer.elapsed() << "Command line args created";
+  qDebug() << "Statup timing:" << timer.elapsed() << "ms elapsed: Command line args created";
 
   KleopatraApplication app;
 
-  kDebug() << timer.elapsed() << "Application created";
+  qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: Application created";
 
   KCmdLineArgs *args = KCmdLineArgs::parsedArgs();
 
@@ -184,7 +184,7 @@ int main( int argc, char** argv )
   try {
       Kleo::UiServer server( args->getOption("uiserver-socket") );
 
-      kDebug() << timer.elapsed() << "UiServer created";
+      qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: UiServer created";
 
       QObject::connect( &server, SIGNAL(startKeyManagerRequested()),
                         &app, SLOT(openOrRaiseMainWindow()) );
@@ -211,7 +211,7 @@ int main( int argc, char** argv )
 #undef REGISTER
 
       server.start();
-      kDebug() << timer.elapsed() << "UiServer started";
+      qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: UiServer started";
 #endif
 
       const bool daemon = args->isSet("daemon");
@@ -220,19 +220,19 @@ int main( int argc, char** argv )
           splash.show();
       if ( !selfCheck( splash ) )
           return 1;
-      kDebug() << timer.elapsed() << "SelfCheck completed";
+      qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: SelfCheck completed";
 #ifdef HAVE_USABLE_ASSUAN
       fillKeyCache( &splash, &server );
 #else
       fillKeyCache( &splash, 0 );
 #endif
-      kDebug() << timer.elapsed() << "KeyCache loaded";
+      qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: KeyCache loaded";
 
       app.setIgnoreNewInstance( false );
 
       if ( !daemon ) {
           app.newInstance();
-          kDebug() << timer.elapsed() << "new instance created";
+          qDebug() << "Startup timing:" << timer.elapsed() << "ms elapsed: new instance created";
           splash.finish( app.mainWindow() );
       }
 
