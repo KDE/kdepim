@@ -284,7 +284,7 @@ QVariant AbstractKeyListModel::data( const QModelIndex & index, int role ) const
         case PrettyEMail:
             if ( const char * const fpr = key.primaryFingerprint() ) {
                 const QHash<const char*,QVariant>::const_iterator it = d->prettyEMailCache.constFind( fpr );
-                if ( it != d->prettyEMailCache.end() )
+                if ( it != d->prettyEMailCache.constEnd() )
                     return *it;
                 else
                     return d->prettyEMailCache[fpr] = Formatting::prettyEMail( key );
