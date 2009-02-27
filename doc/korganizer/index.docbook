@@ -1491,7 +1491,7 @@ program; if you do not, the program will not run.</para></tip>-->
 reminded, or click the <guibutton>Advanced</guibutton> button to open the
 <guilabel>Edit Reminders</guilabel> dialog. Using this dialog, you can set
 repeating intervals for your reminders, and create special reminders that play
-sounds, run programs, or send emails.</para>
+sounds, or run programs.</para>
 
 <!--Click the musical <guiicon>Note</guiicon> symbol to choose the
 alarm sound. Click the <guiicon>Gear</guiicon> icon to browse for a
@@ -1969,7 +1969,7 @@ program; if you do not, the program will not run.</para></tip>-->
 reminded, or click the <guibutton>Advanced</guibutton> button to open the
 <guilabel>Edit Reminders</guilabel> dialog. Using this dialog, you can set
 repeating intervals for your reminders, and create special reminders that play
-sounds, run programs, or send emails.</para>
+sounds, or run programs.</para>
 
 <!--Click the musical <guiicon>Note</guiicon> symbol to choose the
 alarm sound. Click the <guiicon>Gear</guiicon> icon to browse for a
