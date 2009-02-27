@@ -91,11 +91,21 @@ namespace {
     }
 }
 
+static QPixmap UserIcon_nocached( const char * name ) {
+    // KIconLoader insists on caching all pixmaps. Since the splash
+    // screen is a particularly large 'icon' and used only once,
+    // caching is unneccesary and just hurts startup preformance.
+    KIconLoader * const il = KIconLoader::global();
+    assert( il );
+    const QString iconPath = il->iconPath( QLatin1String( name ), KIconLoader::User );
+    return iconPath.isEmpty() ? il->unknown() : QPixmap( iconPath ) ;
+}
+
 class SplashScreen : public KSplashScreen {
     QBasicTimer m_timer;
 public:
     SplashScreen()
-        : KSplashScreen( UserIcon( "kleopatra_splashscreen" ), Qt::WindowStaysOnTopHint ),
+        : KSplashScreen( UserIcon_nocached( "kleopatra_splashscreen" ), Qt::WindowStaysOnTopHint ),
           m_timer()
     {
         m_timer.start( SPLASHSCREEN_TIMEOUT, this );
