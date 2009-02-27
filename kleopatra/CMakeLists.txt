@@ -260,7 +260,7 @@ kde4_add_kcfg_files( _kleopatra_SRCS
 
 
 if (ONLY_KLEO)
-  add_definitions( -DONLY_KLEO )
+  add_definitions( -DONLY_KLEO -DKDEPIM_EXPORT= )
   set( _kleopatra_libkdepim_SRCS
     ../libkdepim/progressmanager.cpp
     ../libkdepim/progressdialog.cpp
