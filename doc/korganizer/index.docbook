@@ -710,7 +710,7 @@ Server</ulink>, version 4.1, add this resource in order to be able to save
 resource, you will need to know the server &URL;, your user name and your
 password. There is support for storage of contacts, so you may want to configure
 &kaddressbook; resource.</para>
-<para>The most practical way to configure the access to a OpenExchange server is
+<para>The most practical way to configure the access to an OpenExchange server is
 to use the <application>sloxwizard</application> wizard. You can start it
 from the command line prompt:
 
@@ -2652,7 +2652,7 @@ defined in the <guilabel>Use holiday region</guilabel> drop down above.</para>
 <term><guilabel>Enable tooltips for displaying summaries</guilabel></term>
 <listitem><para>If your summary for an event is longer than would fit in the
 current View, the remaining characters are not displayed. Check <guilabel>Enable 
-tooltips displaying summary of events</guilabel> if you want the full summary
+tooltips for dispaying summaries</guilabel> if you want the full summary
 displayed when the hovering the mouse pointer over the appointment for a few
 seconds.</para></listitem>
 </varlistentry>
