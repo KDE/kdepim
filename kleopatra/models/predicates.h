@@ -92,9 +92,9 @@ namespace _detail {
     make_comparator_str_impl( Name, expr, qstricmp( lhs, rhs ) )
 
     make_comparator_str_fast( ByFingerprint, .primaryFingerprint() );
-    make_comparator_str( ByKeyID, .keyID() );
-    make_comparator_str( ByShortKeyID, .shortKeyID() );
-    make_comparator_str( ByChainID, .chainID() );
+    make_comparator_str_fast( ByKeyID, .keyID() );
+    make_comparator_str_fast( ByShortKeyID, .shortKeyID() );
+    make_comparator_str_fast( ByChainID, .chainID() );
 
 }
 }
