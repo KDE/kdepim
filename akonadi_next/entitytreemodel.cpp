@@ -89,6 +89,8 @@ EntityTreeModel::EntityTreeModel( EntityUpdateAdapter *entityUpdateAdapter,
 //   q->connect( monitor, SIGNAL( itemUnlinked(const Akonadi::Item &item, const Akonadi::Collection &collection)),
 //             q, SLOT(itemUnlinked(const Akonadi::Item &item, const Akonadi::Collection &collection)));
 
+//   connect(q, SIGNAL(modelReset()), q, SLOT(slotModelReset()));
+
   d->m_rootCollection = Collection::root();
   d->m_rootCollectionDisplayName = QString("[*]");
 
@@ -100,6 +102,19 @@ EntityTreeModel::EntityTreeModel( EntityUpdateAdapter *entityUpdateAdapter,
 EntityTreeModel::~EntityTreeModel()
 {
   Q_D( EntityTreeModel );
+}
+
+// Could be a problem here. We can't control what slot will get called first when the
+// signal is emitted, but we require that this slot is called first.
+// Solved by calling this instead of reset()?
+void EntityTreeModel::clearAndReset()
+{
+  Q_D( EntityTreeModel );
+  reset();
+  d->m_collections.clear();
+  d->m_items.clear();
+  d->m_childEntities.clear();
+  d->startFirstListJob();
 }
 
 Collection EntityTreeModel::getCollection( Collection::Id id )
@@ -518,7 +533,7 @@ int EntityTreeModel::rowCount( const QModelIndex & parent ) const
 {
   Q_D( const EntityTreeModel );
 
-  kDebug() << parent;
+//   kDebug() << parent;
   qint64 id;
   if (!parent.isValid())
   {
@@ -531,7 +546,7 @@ int EntityTreeModel::rowCount( const QModelIndex & parent ) const
     id = parent.internalId();
   }
 
-  kDebug() << d->m_childEntities.value(id);
+//   kDebug() << d->m_childEntities.value(id);
   return d->m_childEntities.value(id).size();
 }
 
@@ -685,9 +700,7 @@ void EntityTreeModel::setRootCollection(Collection col)
 
   Q_ASSERT(col.isValid());
   d->m_rootCollection = col;
-  reset();
-  // clear?
-  // start a new list job?
+  clearAndReset();
 }
 
 Collection EntityTreeModel::rootCollection() const
@@ -724,7 +737,7 @@ void EntityTreeModel::fetchMimeTypes(QStringList mimeTypes)
 {
   Q_D(EntityTreeModel);
   d->m_mimeTypeFilter = mimeTypes;
-  // reset, clear etc?
+  clearAndReset();
 }
 
 QStringList EntityTreeModel::mimeTypesToFetch() const
@@ -737,7 +750,7 @@ void EntityTreeModel::setItemPopulationStrategy(int type)
 {
   Q_D(EntityTreeModel);
   d->m_itemPopulation = type;
-  // reset, clear etc?
+  clearAndReset();
 }
 
 int EntityTreeModel::itemPopulationStrategy() const
@@ -750,7 +763,7 @@ void EntityTreeModel::setIncludeRootCollection(bool include)
 {
   Q_D(EntityTreeModel);
   d->m_showRootCollection = include;
-  // clear reset etc?
+  clearAndReset();
 }
 
 bool EntityTreeModel::includeRootCollection() const
@@ -759,11 +772,12 @@ bool EntityTreeModel::includeRootCollection() const
   return d->m_showRootCollection;
 }
 
-
 void EntityTreeModel::setRootCollectionDisplayName(const QString &displayName)
 {
   Q_D(EntityTreeModel);
   d->m_rootCollectionDisplayName = displayName;
+
+  // TODO: Emit datachanged if it is being shown.
 }
 
 QString EntityTreeModel::rootCollectionDisplayName() const
@@ -776,6 +790,7 @@ void EntityTreeModel::setCollectionFetchStrategy(int type)
 {
   Q_D( EntityTreeModel);
   d->m_collectionFetchStrategy = type;
+  clearAndReset();
 }
 
 int EntityTreeModel::collectionFetchStrategy() const

@@ -20,6 +20,8 @@
 #ifndef AKONADI_ENTITYTREEMODEL_H
 #define AKONADI_ENTITYTREEMODEL_H
 
+// #include "abstractitemmodel.h"
+
 #include <QtCore/QAbstractItemModel>
 #include <QtCore/QStringList>
 
@@ -108,7 +110,7 @@ class EntityTreeModelPrivate;
  * @author Stephen Kelly <steveire@gmail.com>
  * @since 4.3
  */
-class EntityTreeModel : public QAbstractItemModel
+class EntityTreeModel : public QAbstractItemModel //AbstractItemModel<QAbstractItemModel> //
 {
   Q_OBJECT
 
@@ -229,6 +231,12 @@ public:
   virtual void fetchMore ( const QModelIndex & parent );
   virtual bool hasChildren(const QModelIndex &parent = QModelIndex() ) const;
 
+protected:
+  /**
+  Clears and resets the model. Always call this instead of the reset method in the superclass. Using the reset method will not reliably clear or refill the model
+  */
+  void clearAndReset();
+
 private:
   Q_DECLARE_PRIVATE( EntityTreeModel )
   //@cond PRIVATE
@@ -241,6 +249,7 @@ private:
   virtual bool removeColumns(int, int, const QModelIndex & = QModelIndex());
 
   Q_PRIVATE_SLOT( d_func(), void startFirstListJob() )
+//   Q_PRIVATE_SLOT( d_func(), void slotModelReset() )
 
   Q_PRIVATE_SLOT( d_func(), void fetchJobDone( KJob *job ) )
   Q_PRIVATE_SLOT( d_func(), void updateJobDone( KJob *job ) )
