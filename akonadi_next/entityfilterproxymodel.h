@@ -113,6 +113,8 @@ class /*AKONADI_EXPORT*/ EntityFilterProxyModel : public QSortFilterProxyModel
      */
     void clearFilters();
 
+    void setRootIndex(const QModelIndex &srcIndex);
+
   protected:
     virtual bool filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent) const;
 

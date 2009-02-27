@@ -45,6 +45,8 @@ class EntityFilterProxyModel::Private
     EntityFilterProxyModel *mParent;
     QStringList includedMimeTypes;
     QStringList excludedMimeTypes;
+
+    QPersistentModelIndex m_rootIndex;
 };
 
 EntityFilterProxyModel::EntityFilterProxyModel( QObject *parent )
@@ -86,6 +88,23 @@ void EntityFilterProxyModel::addMimeTypeExclusionFilter(const QString &type)
 
 bool EntityFilterProxyModel::filterAcceptsRow( int sourceRow, const QModelIndex &sourceParent) const
 {
+  // All rows that are not below m_rootIndex are unfiltered.
+  QModelIndex _parent = sourceParent.parent();
+  bool found = false;
+  while (_parent.isValid())
+  {
+    if (_parent == d->m_rootIndex)
+    {
+      found = true;
+    }
+    _parent = _parent.parent();
+  }
+
+  if (!found)
+  {
+    return true;
+  }
+
   QString rowMimetype = sourceModel()->data(
           sourceModel()->index(sourceRow, 0, sourceParent), EntityTreeModel::MimeTypeRole ).toString();
   if ( d->excludedMimeTypes.contains( rowMimetype ) )
@@ -111,6 +130,12 @@ void EntityFilterProxyModel::clearFilters()
   d->includedMimeTypes.clear();
   d->excludedMimeTypes.clear();
   invalidateFilter();
+}
+
+void EntityFilterProxyModel::setRootIndex(const QModelIndex &srcIndex)
+{
+  d->m_rootIndex = srcIndex;
+  reset();
 }
 
 #include "entityfilterproxymodel.moc"
