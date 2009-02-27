@@ -131,7 +131,7 @@ class DescendantEntitiesProxyModelPrivate
   void sourceLayoutChanged();
   void sourceDataChanged(QModelIndex,QModelIndex);
 
-  QModelIndex m_rootDescendIndex;
+  QPersistentModelIndex m_rootDescendIndex;
   // Hmm, if I make this QHash<QPersistentModelIndex, int> instead then moves are
   // automatically handled. Nope, they're not. deeper levels than base would
   // still need to be updated or calculated.
@@ -172,7 +172,13 @@ void DescendantEntitiesProxyModel::setRootIndex(const QModelIndex &index)
   // b) Someone might set the root index before setting the model.
 //   Q_ASSERT(index.model() == sourceModel());
   Q_D(DescendantEntitiesProxyModel);
+
+  // Hmm, what if a consumer of this class does an operation in modelAboutToBeReset
+  // which involves looking at m_rootDescendIndex? It would break?
+  // I think I need separate beginResetModel and endResetModel methods to
+  // handle things like this. Can probably put them in my abstract class.
   d->m_rootDescendIndex = index;
+  kDebug() << "clear ###";
   d->m_descendantsCount.clear();
   reset();
 }
@@ -180,6 +186,7 @@ void DescendantEntitiesProxyModel::setRootIndex(const QModelIndex &index)
 DescendantEntitiesProxyModel::~DescendantEntitiesProxyModel()
 {
   Q_D(DescendantEntitiesProxyModel);
+  kDebug() << "clear ###";
   d->m_descendantsCount.clear();
 }
 
@@ -220,14 +227,18 @@ void DescendantEntitiesProxyModel::setSourceModel(QAbstractItemModel * sourceMod
 {
   Q_D(DescendantEntitiesProxyModel);
   QAbstractProxyModel::setSourceModel( sourceModel );
-  connect( sourceModel, SIGNAL(modelReset()), SIGNAL(modelReset()) );
-  connect( sourceModel, SIGNAL(layoutChanged()), SIGNAL(layoutChanged()) );
+  connect( sourceModel, SIGNAL(modelReset()), SLOT( sourceModelReset() ) );
+  connect( sourceModel, SIGNAL(modelAboutToBeReset()), SLOT(sourceModelAboutToBeReset() ) );
+  connect( sourceModel, SIGNAL(layoutChanged()), SLOT(sourceLayoutChanged()) );
+  connect( sourceModel, SIGNAL(layoutAboutToBeChanged()), SLOT(sourceLayoutAboutToBeChanged()) );
   connect( sourceModel, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
           SLOT(sourceDataChanged(QModelIndex,QModelIndex)) );
   connect( sourceModel, SIGNAL(rowsInserted(const QModelIndex, int, int)),
           SLOT(sourceRowsInserted(const QModelIndex, int, int)) );
   connect( sourceModel, SIGNAL(rowsAboutToBeInserted(const QModelIndex, int, int)),
           SLOT(sourceRowsAboutToBeInserted(const QModelIndex, int, int)) );
+
+  kDebug() << "clear ###";
   d->m_descendantsCount.clear();
   reset();
 }
@@ -435,6 +446,7 @@ void DescendantEntitiesProxyModelPrivate::sourceRowsInserted(const QModelIndex &
   // It's probably easier to just clear it.
 //   m_descendantsCount.remove( sourceParentIndex.internalId() );
 
+// Disable this and only clear on layout change.
   // This is a rare operation, so clearing it should not be too expensive.
   m_descendantsCount.clear();
 
@@ -484,14 +496,26 @@ void DescendantEntitiesProxyModelPrivate::sourceModelAboutToBeReset()
 {
   Q_Q(DescendantEntitiesProxyModel);
 
-//   q->aboutToBeReset();
+// This doesn't work because it's a private method.
+//   q->modelAboutToBeReset();
+  // We reset the proxy model when the source model is about to be reset.
+  // This way, consumers of the proxy model can react to the modelAboutToBeReset
+  // signal before the sourcemodel is fully reset.
+
+  // The alternative might be to use QMetaObject::invokeMethod to emit the private
+  // signal if they really do need to be emitted in concert
+  // between the source and the proxy model.
+
+  kDebug() << "clear ###";
+  m_descendantsCount.clear();
+  q->reset();
 }
 
 void DescendantEntitiesProxyModelPrivate::sourceModelReset()
 {
   Q_Q(DescendantEntitiesProxyModel);
-  m_descendantsCount.clear();
-  q->reset();
+//   m_descendantsCount.clear();
+//   q->reset();
 }
 
 void DescendantEntitiesProxyModelPrivate::sourceLayoutAboutToBeChanged()
@@ -504,6 +528,8 @@ void DescendantEntitiesProxyModelPrivate::sourceLayoutAboutToBeChanged()
 void DescendantEntitiesProxyModelPrivate::sourceLayoutChanged()
 {
   Q_Q(DescendantEntitiesProxyModel);
+
+  kDebug() << "clear ###";
   m_descendantsCount.clear();
   q->layoutChanged();
 }
