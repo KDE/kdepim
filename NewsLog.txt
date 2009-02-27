@@ -1,3 +1,24 @@
+Friday, February 27th 2009
+
+Problems addressed
+------------------
+
+* Timezone fixes for Windows.
+* Speed improvemnets in Kleopatra.
+
+Merges
+------
+
+* Merges from KDE 4.2 branch:
+    - Fix problem with todo hierachy in KOrganizer getting lost.
+
+* Merges from enterprise35 branch:
+    - kolab/issue3377: Warn if the mail is sent to a large number of recipient.
+    - kolab/issue3367: Let the organizer of an event decline attendance.
+    - kolab/issue1530: Add option to change default forwarding type.
+    - kolab/issue3376: Add GUI option for issue 1530.
+
+
 Friday, February 20th 2009
 
 Problems addressed
