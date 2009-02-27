@@ -454,7 +454,7 @@ list and press <guilabel>Delete</guilabel> to remove it or
 </procedure>
 
 <para>Alternatively, you can configure the &korganizer; resources (plus all
-other &kde; resources), in the &kcontrolcenter;, using the <guilabel>&kde;
+other &kde; resources), in the &systemsettings;, using the <guilabel>&kde;
 Resources</guilabel> configuration module.</para>
 
 <para>Among the existing resources, you can find:</para>
@@ -512,7 +512,7 @@ storing your calendar information under
 <listitem><para>
 If you have access to a server that supports the
 <ulink url="http://www.groupdav.org">GroupDav protocol</ulink>, add this
-resource in order to be able to to save (and load) events<!--, journals, free/busy information?--> and to-dos
+resource in order to be able to save (and load) events<!--, journals, free/busy information?--> and to-dos
 to the server. To add the resource, you will need to know the server &URL;, your
 user name and your password. The GroupDav protocol supports the storage of 
 contacts, so you may want to add and configure the &kaddressbook;
@@ -530,7 +530,7 @@ date list can be obtained at the
 <listitem><para>
 If you have access to a
 <ulink url="http://www.novell.com/products/groupwise">Novell GroupWise Server</ulink>
-(version 6.5 or later), add this resource in order to be able to to save (and load)
+(version 6.5 or later), add this resource in order to be able to save (and load)
 events, free/busy information <!--,journals ?-->and to-dos to the server. To add the resource, you will
 need to know the server &URL;, your user name and your password. There is
 support for storage of contacts, so you may want to configure &kaddressbook;
@@ -550,7 +550,7 @@ GroupWise resources, but &kmail;, &kaddressbook; too.</para>
 <term><guilabel>Calendar on IMAP Server via &kmail;</guilabel></term>
 <listitem><para>
 If you have access to a server that shares calendar data via IMAP, add this
-resource in order to be able to to save (and load) events, to-dos, free/busy
+resource in order to be able to save (and load) events, to-dos, free/busy
 information and journal entries to the IMAP server. To enable IMAP access, you
 will need to configure &kmail; first, then add the &korganizer; resource.
 Also, since you are using &kmail; to contact the server, &korganizer; will
@@ -615,7 +615,7 @@ corruption, you will lose only one calendar item, not the whole calendar.</para>
 <listitem><para>
 If you have access to a
 <ulink url="http://www.microsoft.com/exchange">Exchange 2000 Server</ulink>,
-add this resource in order to be able to to save (and load)
+add this resource in order to be able to save (and load)
 events FIXME:,journals, free/busy information and to-dos? to the server. To add the resource, you will
 need to know the server &URL;, FIXME:port? your user name and your password. There
 is support for (read only) contacts, so you may want to configure &kaddressbook;
@@ -704,13 +704,13 @@ the file, his changes will be lost.
 <term><guilabel>SUSE &Linux; OpenExchange Server</guilabel></term>
 <listitem><para>
 If you have access to a
-<ulink url="http://www.novell.com/products/groupwise">SUSE &Linux; OpenExchange
-Server</ulink>, version 4.1, add this resource in order to be able to to save
+<ulink url="http://www.novell.com/coolsolutions/openexchange/">SUSE &Linux; OpenExchange
+Server</ulink>, version 4.1, add this resource in order to be able to save
 (and load) events, free/busy information <!--,journals ?-->and to-dos to the server. To add the
 resource, you will need to know the server &URL;, your user name and your
 password. There is support for storage of contacts, so you may want to configure
 &kaddressbook; resource.</para>
-<para>The most practical way to configure the access to a GroupWise server is
+<para>The most practical way to configure the access to a OpenExchange server is
 to use the <application>sloxwizard</application> wizard. You can start it
 from the command line prompt:
 
@@ -728,7 +728,7 @@ OpenExchange resources, but &kmail;, &kaddressbook; too.</para>
 <listitem><para>
 If you have access to a
 <ulink url="http://www.egroupware.org">eGroupware
-Server</ulink>, version 1.0, add this resource in order to be able to to save
+Server</ulink>, version 1.0, add this resource in order to be able to save
 (and load) events, free/busy information <!--,journals ?-->and to-dos to the server. To add the
 resource, you will need to know the server &URL;, your user name and your
 password. There is support for storage of contacts, so you may want to configure
@@ -1695,9 +1695,9 @@ selected on this combo box will be used when sending these mails. The default
 identity can be set in the <guilabel>Personal</guilabel> section of the
 &korganizer; configuration, other identities in the <guilabel>Security &amp;
 Privacy</guilabel>-&gt;<guilabel>Password &amp; User Account</guilabel> section
-of the &kcontrolcenter;. In addition, identities are gathered from your &kmail;
+of the &systemsettings;. In addition, identities are gathered from your &kmail;
 settings and from your address book. If you choose to set it globally for &kde;
-in the &kcontrolcenter;, be sure to check the <guilabel>Use email settings from
+in the &systemsettings;, be sure to check the <guilabel>Use email settings from
 Control Center</guilabel>' box in the <guilabel>Personal</guilabel> section of
 the &korganizer; configuration.</para></listitem>
 </varlistentry>
@@ -2469,13 +2469,13 @@ the toolbar handle and drag the toolbar to a new position on your the
 &korganizer; window.</para>
 
 <para>Localization information like date and time formats can be
-configured from &kcontrolcenter; within the <menuchoice>
+configured from &systemsettings; within the <menuchoice>
 <guisubmenu>Regional &amp; Accessibility</guisubmenu> <guimenuitem>Country/Region &amp;
 Language</guimenuitem> </menuchoice> module.  This control module can be
 accessed from within &korganizer;: just choose the <menuchoice><guimenu>
 Settings</guimenu><guimenuitem>Configure Date &amp;
 Time...</guimenuitem></menuchoice> menu item.  &korganizer; has to be restarted
-for changes done in &kcontrolcenter; to take effect.</para>
+for changes done in &systemsettings; to take effect.</para>
 
 <para>To configure where &korganizer; stores and retrieves calendar events,
 journal entries and to-dos, (in local files, groupware servers, journal entries as blogs,
@@ -2499,7 +2499,7 @@ categories.</para>
 <varlistentry>
 <term><guilabel>Use email settings from control center</guilabel></term>
 <listitem><para>Check this box to use your name and email address as set in
-&kcontrolcenter; (<menuchoice><guimenuitem>Security &amp; Privacy</guimenuitem>
+&systemsettings; (<menuchoice><guimenuitem>Security &amp; Privacy</guimenuitem>
 <guimenuitem>Password &amp; User Account</guimenuitem></menuchoice>).</para>
 </listitem>
 </varlistentry>
@@ -2509,7 +2509,7 @@ categories.</para>
 <listitem><para><guilabel>Full name</guilabel> is initially set to
 <quote>Anonymous</quote> with an email address of
 <quote>nobody@nowhere</quote>. You can change your name by directly
-entering it here or you can use your Email Settings from &kcontrolcenter; (see
+entering it here or you can use your Email Settings from &systemsettings; (see
 above).  This name will be displayed by default as
 <guilabel>Organizer</guilabel> in to-dos and Events.</para></listitem> 
 </varlistentry>
@@ -2649,9 +2649,9 @@ defined in the <guilabel>Use holiday region</guilabel> drop down above.</para>
 <variablelist>
 
 <varlistentry>
-<term><guilabel>Enable tooltips displaying summary of events</guilabel></term>
+<term><guilabel>Enable tooltips for displaying summaries</guilabel></term>
 <listitem><para>If your summary for an event is longer than would fit in the
-current View, the remaining characters are not displayed. Check <guilabel>Enable
+current View, the remaining characters are not displayed. Check <guilabel>Enable 
 tooltips displaying summary of events</guilabel> if you want the full summary
 displayed when the hovering the mouse pointer over the appointment for a few
 seconds.</para></listitem>
