@@ -577,7 +577,7 @@ TabWidget::Private::Private( TabWidget * qq )
     layout.addWidget( &tabWidget );
 
     tabWidget.setTabBarHidden( true );
-    tabWidget.setTabReorderingEnabled( true );
+    tabWidget.setMovable( true );
 
     connect( &tabWidget, SIGNAL(currentChanged(int)),
              q, SLOT(currentIndexChanged(int)) );
