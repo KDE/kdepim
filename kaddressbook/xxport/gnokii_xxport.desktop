@@ -49,6 +49,7 @@ Name[x-test]=xxKAB Mobile Phone XXPort Pluginxx
 Name[zh_CN]=KAB 移动电话 XXPort 插件
 Name[zh_TW]=KAB Mobile Phone XXPort 外掛程式
 Comment=Mobile phone plugin to import and export address book entries
+Comment[el]=Πρόσθετο για εισαγωγή και εξαγωγή επαφών βιβλίου διευθύνσεων από κινητά τηλέφωνα
 Comment[et]=Mobiiltelefoni plugin aadressiraamatu kirjete importimiseks ja eksportimiseks
 Comment[ga]=Breiseán fóin póca a iompórtálann agus easpórtálann teagmhálacha Eudora
 Comment[gl]=Engadido de teléfono móbil para importar e exportar entradas do caderno de enderezos
