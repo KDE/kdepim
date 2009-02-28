@@ -205,6 +205,11 @@ bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 			}
 			else
 			{
+				// Events that end at midnight cause problems
+				// (http://bugs.kde.org/show_bug.cgi?id=183631); however, events with
+				// no time associated with them are stored as beginning and ending
+				// at midnight on the same day, and these are OK.  Other events that end at
+				// midnight will need to be adjusted.
 				QDateTime hhDtEnd = hhEntry.dtEnd();
 				QDateTime hhDtStart = hhEntry.dtStart();
 				QDateTime pcDtEnd = pcEvent->dtEnd().dateTime().toLocalTime();
