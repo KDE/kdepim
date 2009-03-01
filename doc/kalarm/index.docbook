@@ -1848,18 +1848,7 @@ display its context menu:</para>
 <variablelist>
 <varlistentry>
 <term><menuchoice><guimenuitem>Enable Alarms</guimenuitem></menuchoice></term>
-<listitem><para><action>Enables monitoring of alarms. This option
-only appears if alarms are currently disabled.</action></para>
-<para>See
-<link linkend="enable-disable">Enabling and Disabling Alarms</link>
-for details.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice><guimenuitem>Disable Alarms</guimenuitem></menuchoice></term>
-<listitem><para><action>Disables monitoring of alarms. This option
-only appears if alarms are currently enabled.</action></para>
+<listitem><para><action>Enables monitoring of alarms.</action></para>
 <para>See
 <link linkend="enable-disable">Enabling and Disabling Alarms</link>
 for details.</para>
@@ -2029,14 +2018,14 @@ until the next time you log in.</para>
 
 <itemizedlist>
 <listitem>
-<para>Select <menuchoice><guimenu>Actions</guimenu>
-<guimenuitem>Disable Alarms</guimenuitem></menuchoice>.</para>
+<para>Unselect <menuchoice><guimenu>Actions</guimenu>
+<guimenuitem>Enable Alarms</guimenuitem></menuchoice>.</para>
 </listitem>
 
 <listitem>
 <para><mousebutton>Right</mousebutton> click on the system tray icon
-and choose
-<menuchoice><guimenuitem>Disable Alarms</guimenuitem></menuchoice>
+and uncheck
+<menuchoice><guimenuitem>Enable Alarms</guimenuitem></menuchoice>
 from the context menu.</para>
 </listitem>
 
