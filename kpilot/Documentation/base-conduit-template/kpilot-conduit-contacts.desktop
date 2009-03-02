@@ -6,6 +6,7 @@ Comment[ca]=Aquest conducte sincronitza base de dades de l'anell de claus de l'a
 Comment[da]=Denne kanal synkroniserer den håndholdte nøglering, med en database lagret på PC'en.
 Comment[de]=Abgleich der Schlüsselbund-Datenbanken von Taschencomputer und PC.
 Comment[el]=Αυτό το κύκλωμα συγχρονίζει το βιβλίο διευθύνσεων του υπολογιστή παλάμης με το βιβλίο διευθύνσεων του pc.
+Comment[en_GB]=This conduit syncs the handheld keyring database with a database stored on the PC.
 Comment[es]=Este conducto sincroniza la base de datos del anillo de claves de la agenda electrónica con la base de datos almacenada en el equipo.
 Comment[et]=See kanal sünkroniseerib pihuarvuti võtmerõnga andmebaasi ja PC-s leiduva andmebaasi.
 Comment[fr]=Ce canal synchronise le trousseau de clés de l'ordinateur de poche avec une base de données sur votre ordinateur.
