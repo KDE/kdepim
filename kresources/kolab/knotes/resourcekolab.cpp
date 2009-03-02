@@ -172,10 +172,17 @@ KCal::Journal* ResourceKolab::addNote( const QString& data, const QString& subre
 
   Q_ASSERT( journal );
   if( journal && !mUidMap.contains( journal->uid() ) )
+  {
     if ( addNote( journal, subresource, sernum ) )
       return journal;
     else
       delete journal;
+  }
+  else if ( journal && mUidMap.contains( journal->uid() ) )
+  {
+    //For debugging
+    kdDebug( 5500 )<< "mUidMap already contains "<<journal->uid()<<endl;
+  }
   return 0;
 }
 
@@ -193,8 +200,9 @@ bool ResourceKolab::addNote( KCal::Journal* journal,
   QString resource =
     newNote ? findWritableResource( mSubResources ) : subresource;
   if ( resource.isEmpty() ) // canceled
+  {
     return false;
-
+  }
   if ( !mSilent ) {
     QString xml = Note::journalToXML( journal );
     kdDebug(5500) << k_funcinfo << "XML string:\n" << xml << endl;
@@ -209,7 +217,6 @@ bool ResourceKolab::addNote( KCal::Journal* journal,
     mUidMap[ journal->uid() ] = StorageReference( resource, sernum );
     return true;
   }
-
   return false;
 }
 
