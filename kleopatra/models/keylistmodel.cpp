@@ -142,7 +142,7 @@ static uint hash(const uchar *p)
 static inline uint qHash( const char * data ) {
     if ( !data )
         return 1; // something != 0
-    return hash( reinterpret_cast<const uchar*>( data ) );
+    return ::hash( reinterpret_cast<const uchar*>( data ) );
 }
 
 class AbstractKeyListModel::Private {
@@ -682,38 +682,34 @@ void HierarchicalKeyListModel::addTopLevelKey( const Key & key ) {
 
 }
 
-namespace {
+// sorts 'keys' such that parent always come before their children:
+static std::vector<Key> topological_sort( const std::vector<Key> & keys ) {
 
-    // sorts 'keys' such that parent always come before their children:
-    std::vector<Key> topological_sort( const std::vector<Key> & keys ) {
+    adjacency_list<> graph( keys.size() );
 
-        adjacency_list<> graph( keys.size() );
-
-        // add edges from children to parents:
-        for ( unsigned int i = 0, end = keys.size() ; i != end ; ++i ) {
-            const char * const issuer_fpr = cleanChainID( keys[i] );
-            if ( !issuer_fpr || !*issuer_fpr )
-                continue;
-            const std::vector<Key>::const_iterator it
-                = qBinaryFind( keys.begin(), keys.end(), issuer_fpr, _detail::ByFingerprint<std::less>() );
-            if ( it == keys.end() )
-                continue;
-            add_edge( i, std::distance( keys.begin(), it ), graph );
-        }
-
-        std::vector<int> order;
-        order.reserve( keys.size() );
-        topological_sort( graph, std::back_inserter( order ) );
-
-        assert( order.size() == keys.size() );
-
-        std::vector<Key> result;
-        result.reserve( keys.size() );
-        Q_FOREACH( int i, order )
-	    result.push_back( keys[i] );
-        return result;
+    // add edges from children to parents:
+    for ( unsigned int i = 0, end = keys.size() ; i != end ; ++i ) {
+        const char * const issuer_fpr = cleanChainID( keys[i] );
+        if ( !issuer_fpr || !*issuer_fpr )
+            continue;
+        const std::vector<Key>::const_iterator it
+            = qBinaryFind( keys.begin(), keys.end(), issuer_fpr, _detail::ByFingerprint<std::less>() );
+        if ( it == keys.end() )
+            continue;
+        add_edge( i, std::distance( keys.begin(), it ), graph );
     }
 
+    std::vector<int> order;
+    order.reserve( keys.size() );
+    topological_sort( graph, std::back_inserter( order ) );
+
+    assert( order.size() == keys.size() );
+
+    std::vector<Key> result;
+    result.reserve( keys.size() );
+    Q_FOREACH( int i, order )
+        result.push_back( keys[i] );
+    return result;
 }
 
 QList<QModelIndex> HierarchicalKeyListModel::doAddKeys( const std::vector<Key> & keys ) {
