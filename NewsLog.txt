@@ -3,9 +3,6 @@ Friday, February 27th 2009
 Problems addressed
 ------------------
 
-* kolab/issue3377: Warn if too many recipients are specified.
-* Kolab/issue3371: Folder properties dialog layoutproblem with freebusy block and common seendb options.
-* kolab/issue3367: Let the organizer of an event decline attendance.
 * kolab/issue3436: Fix crash in extractAuditLog in KMail.
 * Fix enabling/disabling of the Add/Remove Quote Characters actions.
 
