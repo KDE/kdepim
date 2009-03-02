@@ -184,7 +184,7 @@ RecordConduit::~RecordConduit()
 	{
 		DEBUGKPILOT <<  "Failed to open the pc database and the handheld "
 		"database, no data to sync.";
-		addSyncLogEntry( i18n( "Failed to open the pc database and the handheld "
+		addSyncLogEntry( i18n( "Failed to open the PC database and the handheld "
 			"database, no data to sync." ) );
 		return false; // 6.3.7 and 6.3.8
 	}
@@ -315,7 +315,7 @@ bool RecordConduit::checkVolatility()
 	{
 		QString query = template_query
 			.subs( fConduitName )
-			.subs( i18n( "pc" ) )
+			.subs( i18n( "PC" ) )
 			.subs( fCtrPC->moo() )
 			.toString();
 		

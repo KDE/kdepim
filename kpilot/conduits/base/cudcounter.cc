@@ -77,9 +77,9 @@ QString CUDCounter::moo() const
 {
 	QString result = i18n("Start: %1. End: %2. ",fStart,fEnd);
 
-	if (fC > 0) result += i18nc("Created record count", "%1 new record(s). ",fC);
-	if (fU > 0) result += i18nc("Updated record count", "%1 changed record(s). ",fU);
-	if (fD > 0) result += i18nc("Deleted record count", "%1 deleted record(s). ",fD);
+	if (fC > 0) result += i18ncp("Created record count", "1 new record. ",    "%1 new records. ",    fC);
+	if (fU > 0) result += i18ncp("Updated record count", "1 changed record. ","%1 changed records. ",fU);
+	if (fD > 0) result += i18ncp("Deleted record count", "1 deleted record. ","%1 deleted records. ",fD);
 
 	if ( (fC+fU+fD) <= 0) result += i18n("No changes made. ");
 

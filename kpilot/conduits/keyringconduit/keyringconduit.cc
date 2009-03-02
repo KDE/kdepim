@@ -70,7 +70,7 @@ bool KeyringConduit::initDataProxies()
 	QCA::Initializer init;
 	if(!QCA::isSupported("tripledes-cbc")) {
 		WARNINGKPILOT << "Error: Triple DES not supported! Unable to continue.";
-		addSyncLogEntry(i18n("Error. Triple DES not supported! Unable to continue."));
+		addSyncLogEntry(i18n("Error: Triple DES not supported. Unable to continue."));
 		return false;
 	}
 	
@@ -98,7 +98,7 @@ bool KeyringConduit::initDataProxies()
 			
 			DEBUGKPILOT << "Trying password: " << pass;
 			
-			addSyncLogEntry( i18n( "Password invalid!" ) );
+			addSyncLogEntry( i18n( "Password invalid." ) );
 			pass = askPassword();
 		}
 	}
@@ -111,7 +111,7 @@ bool KeyringConduit::initDataProxies()
 		if ( ! wallet )
 		{
 			WARNINGKPILOT << "Error. Could not open wallet!";
-			addSyncLogEntry( i18n( "Error. Could not open wallet!" ) );
+			addSyncLogEntry( i18n( "Error: Could not open wallet." ) );
 			return false;
 		}
 		
@@ -125,7 +125,7 @@ bool KeyringConduit::initDataProxies()
 			
 			if( !hhDataProxy->openDatabase( pass ) )
 			{
-				addSyncLogEntry( i18n( "Password invalid! Update your password in "
+				addSyncLogEntry( i18n( "Password invalid. Update your password in "
 					"the settings dialog." ) );
 			}
 		}
