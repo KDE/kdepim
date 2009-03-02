@@ -449,7 +449,7 @@ void CSVImportDialog::initGUI()
   label = new QLabel( i18nc( "@label:listbox","Start at line:" ), mPage );
   layout->addWidget( label, 1, 3 );
 
-  label = new QLabel( i18nc( "@label:listbox", "Textquote:" ), mPage );
+  label = new QLabel( i18nc( "@label:listbox", "Text quote:" ), mPage );
   layout->addWidget( label, 1, 2 );
 
   label = new QLabel( i18nc( "@label:listbox", "Date format:" ), mPage );
