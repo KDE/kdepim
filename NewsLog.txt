@@ -4,6 +4,7 @@ Problems addressed
 ------------------
 
 * kolab/issue3436: Fix crash in extractAuditLog in KMail.
+* kolab/issue3377: Issue warning when emailing to more than X recipients
 * Fix enabling/disabling of the Add/Remove Quote Characters actions.
 
 
