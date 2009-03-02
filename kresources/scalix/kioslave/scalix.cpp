@@ -144,7 +144,7 @@ void Scalix::publishFreeBusy( const KUrl &url )
     calendar = path.mid( secondSlash + 1, lastSlash - secondSlash - 1 );
 
   if ( requestUser.isEmpty() || calendar.isEmpty() ) {
-    error( KIO::ERR_SLAVE_DEFINED, i18n( "No user or calendar given!" ) );
+    error( KIO::ERR_SLAVE_DEFINED, i18n( "No user or calendar given." ) );
     return;
   };
 

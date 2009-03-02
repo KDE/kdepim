@@ -73,7 +73,7 @@ void PasswordPage::buttonClicked()
 {
   if ( !mJob ) {
     if ( mPassword->text() != mPasswordRetype->text() ) {
-      KMessageBox::error( this, i18n( "The two passwords differ!" ) );
+      KMessageBox::error( this, i18n( "The two passwords differ." ) );
       return;
     }
 
