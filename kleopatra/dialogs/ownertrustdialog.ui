@@ -25,7 +25,7 @@
      <item>
       <widget class="QRadioButton" name="unknownRB" >
        <property name="text" >
-        <string>I don't know</string>
+        <string>I do not know</string>
        </property>
        <property name="checked" >
         <bool>true</bool>

@@ -216,7 +216,7 @@ QString UiServer::Private::makeFileName( const QString & socket ) const {
 void UiServer::Private::ensureDirectoryExists( const QString& path ) const {
     const QFileInfo info( path );
     if ( info.exists() && !info.isDir() )
-        throw_<std::runtime_error>( i18n( "Cannot determine the GnuPG home directory: %1 exists but is no directory.", path ) );
+        throw_<std::runtime_error>( i18n( "Cannot determine the GnuPG home directory: %1 exists but is not a directory.", path ) );
     if ( info.exists() )
         return;
     const QDir dummy; //there is no static QDir::mkpath()...

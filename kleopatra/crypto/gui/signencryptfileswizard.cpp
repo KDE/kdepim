@@ -87,23 +87,23 @@ void SignerResolveValidator::update() const {
         setAndReturn( i18n( "You need to select at least one signing certificate to proceed." ) );
 
     if ( isSignEncrypt && needPgpSC && havePgpSC )
-        setAndReturn( i18n( "Only OpenPGP certificates will be offered for selection because you specified a combined sign/encrypt operation, which is only available for OpenPGP." ) );
+        setAndReturn( i18n( "Only OpenPGP certificates will be offered for selection because you specified a combined sign/encrypt operation that is only available for OpenPGP." ) );
 
     if ( isSignEncrypt && havePgpSC && !haveCmsSC )
-        setAndReturn( i18n( "Only OpenPGP certificates will be offered for selection because you specified an OpenPGP signing certificate only." ) );
+        setAndReturn( i18n( "Only OpenPGP certificates will be offered for selection because you only specified an OpenPGP signing certificate." ) );
 
     if ( haveCmsSC && !havePgpSC )
-        setAndReturn( i18n( "Only S/MIME certificates will be offered for selection because you specified an S/MIME signing certificate only." ) );
+        setAndReturn( i18n( "Only S/MIME certificates will be offered for selection because you only specified an S/MIME signing certificate." ) );
 
     switch ( m_page->operation() )
     {
     case SignerResolvePage::SignOnly:
         if ( havePgpSC && haveCmsSC )
-            expl = i18n( "You have selected signing certificates of both type OpenPGP and S/MIME, thus two signatures will be created." );
+            expl = i18n( "You have selected both OpenPGP and S/MIME signing certificate types, thus two signatures will be created." );
         break;
     case SignerResolvePage::SignAndEncrypt:
     case SignerResolvePage::EncryptOnly:
-        expl = i18n( "If you select recipient certificates of both type OpenPGP and S/MIME, two encrypted files will be created. One for OpenPGP recipients, one for S/MIME recipients." );
+        expl = i18n( "If you select both OpenPGP and S/MIME receipient certificates, two encrypted files will be created: one for OpenPGP recipients, one for S/MIME recipients." );
         break;
     }
 

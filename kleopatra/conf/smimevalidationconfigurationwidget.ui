@@ -157,7 +157,7 @@
    <item>
     <widget class="QCheckBox" name="fetchMissingCB" >
      <property name="whatsThis" >
-      <string>If this option is checked, missing issuer certificates are fetched when necessary (this applies to both validation methods, CRLs and OCSP)</string>
+      <string>If this option is checked, missing issuer certificates are fetched when necessary (this applies to both validation methods, CRLs and OCSP).</string>
      </property>
      <property name="text" >
       <string>Fetch missing issuer certificates</string>

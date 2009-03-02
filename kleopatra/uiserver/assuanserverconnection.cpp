@@ -1017,7 +1017,7 @@ int AssuanCommand::start() {
         return 0;
     } catch ( ... ) {
         if ( !d->done )
-            done( makeError( GPG_ERR_INTERNAL ), i18n("Caught unknown exception - fix the program!" ) );
+            done( makeError( GPG_ERR_INTERNAL ), i18n("Caught unknown exception - please report this error to the developers." ) );
         return 0;
     }
 }

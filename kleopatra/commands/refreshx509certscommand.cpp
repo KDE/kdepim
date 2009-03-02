@@ -62,7 +62,7 @@ bool RefreshX509CertsCommand::preStartHook( QWidget * parent ) const {
                                                      "<para>Refreshing X.509 certificates implies downloading CRLs for all certificates, "
                                                      "even if they might otherwise still be valid.</para>"
                                                      "<para>This can put a severe strain on your own as well as other people's network "
-                                                     "connection, and can take up to an hour or more to complete, depending on "
+                                                     "connections, and can take up to an hour or more to complete, depending on "
                                                      "your network connection, and the number of certificates to check.</para> "
                                                      "<para>Are you sure you want to continue?</para>"),
                                                i18n("X.509 Certificate Refresh"),

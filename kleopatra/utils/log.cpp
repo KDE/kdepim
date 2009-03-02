@@ -154,7 +154,7 @@ shared_ptr<QIODevice> Log::createIOLogger( const shared_ptr<QIODevice>& io, cons
     shared_ptr<QFile> file( new QFile( fn ) );
 
     if ( !file->open( QIODevice::WriteOnly ) )
-        throw Exception( gpg_error( GPG_ERR_EIO ), i18n( "Log Error: Could not open log file \"%1\" for write", fn ) );
+        throw Exception( gpg_error( GPG_ERR_EIO ), i18n( "Log Error: Could not open log file \"%1\" for writing.", fn ) );
  
     if ( mode & Read )    
         logger->setReadLogDevice( file );

@@ -31,7 +31,7 @@
       <bool>true</bool>
      </property>
      <property name="description" >
-      <string>OpenPGP key pairs are created locally, and certified by your friends and acquaintances. There is no central certification authority; instead, every individual creates a personal Web Of Trust by certifying other user's key pairs with his own certificate.</string>
+      <string>OpenPGP key pairs are created locally, and certified by your friends and acquaintances. There is no central certification authority; instead, every individual creates a personal Web Of Trust by certifying other users' key pairs with their own certificate.</string>
      </property>
     </widget>
    </item>

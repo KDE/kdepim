@@ -14,7 +14,7 @@
    <item>
     <widget class="QLabel" name="label" >
      <property name="text" >
-      <string>The process of creating a key requires large amounts of random numbers. To foster this process, you can use the entry field below to enter some gibberish. The text itself won't be used at all, only the inter-character timing. You can also move this window around with your mouse, or start some disk-intensive application.</string>
+      <string>The process of creating a key requires large amounts of random numbers. To foster this process, you can use the entry field below to enter some gibberish. The text itself does not matter - only the inter-character timing. You can also move this window around with your mouse, or start some disk-intensive application.</string>
      </property>
      <property name="wordWrap" >
       <bool>true</bool>

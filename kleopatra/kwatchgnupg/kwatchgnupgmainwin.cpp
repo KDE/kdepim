@@ -153,7 +153,7 @@ void KWatchGnuPGMainWindow::startWatcher()
   mWatcher->start();
   const bool ok = mWatcher->waitForStarted();
   if( !ok) {
-	KMessageBox::sorry( this, i18n("The watchgnupg logging process could not be started.\nPlease install watchgnupg somewhere in your $PATH.\nThis log window is now completely useless." ) );
+	KMessageBox::sorry( this, i18n("The watchgnupg logging process could not be started.\nPlease install watchgnupg somewhere in your $PATH.\nThis log window is unable to display any useful information." ) );
   } else {
 	mCentralWidget->message( i18n("[%1] Log started",QDateTime::currentDateTime().toString(Qt::ISODate) ) );
   }
@@ -200,7 +200,7 @@ void KWatchGnuPGMainWindow::slotWatcherExited(int, QProcess::ExitStatus)
 	mCentralWidget->message( i18n("====== Restarting logging process =====") );
 	startWatcher();
   } else {
-	KMessageBox::sorry( this, i18n("The watchgnupg logging process is not running.\nThis log window is now completely useless." ) );
+	KMessageBox::sorry( this, i18n("The watchgnupg logging process is not running.\nThis log window is unable to display any useful information." ) );
   }
 }
 

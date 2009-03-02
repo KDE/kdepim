@@ -370,15 +370,15 @@ void LookupCertificatesCommand::Private::checkForDownloadFinished() {
                                         QString::fromLocal8Bit( downloads.front().error.asString() ) ) :
                                   i18n( "All certificate downloads failed. Sample error message: %1",
                                         QString::fromLocal8Bit( downloads.front().error.asString() ) ),
-                                  i18n( "Certificate Downloads Failed" ) );
+                                  i18n( "Certificate Download Failed" ) );
         finished();
         return;
     } else if ( kdtools::any( downloads, mem_fn( &DownloadVariables::error ) ) &&
                 KMessageBox::questionYesNoList( dialogOrParentWidgetOrView(),
                                                 i18n( "Some certificates failed to download. "
-                                                      "Do you want to proceed importing the following, succeeded, downloads?" ),
+                                                      "Do you want to proceed with importing the following successful downloads?" ),
                                                 filter_and_format_successful_downloads( downloads ),
-                                                i18n( "Certificate Downloads Failed" ) )
+                                                i18n( "Certificate Download Failed" ) )
                 == KMessageBox::No )
     {
         finished();

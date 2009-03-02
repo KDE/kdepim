@@ -90,7 +90,7 @@ bool RefreshOpenPGPCertsCommand::preStartHook( QWidget * parent ) const {
                                                     "<para>Refreshing OpenPGP certificates implies downloading all certificates anew, "
                                                     "to check if any of them have been revoked in the meantime.</para>"
                                                     "<para>This can put a severe strain on your own as well as other people's network "
-                                                    "connection, and can take up to an hour or more to complete, depending on "
+                                                    "connections, and can take up to an hour or more to complete, depending on "
                                                     "your network connection, and the number of certificates to check.</para> "
                                                     "<para>Are you sure you want to continue?</para>"),
                                                i18n("OpenPGP Certificate Refresh"),
