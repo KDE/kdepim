@@ -31,8 +31,6 @@ if(QGPGME_FOUND)
   add_subdirectory(kmail)
   add_subdirectory(kleopatra)
 endif(QGPGME_FOUND)
-#korn is currently disabled until we find a new maintainer
-#add_subdirectory(korn)
 add_subdirectory(kwatchgnupg)
 add_subdirectory(kabcclient)
 
