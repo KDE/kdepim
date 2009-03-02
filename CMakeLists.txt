@@ -7,8 +7,6 @@ if(KDE4_KDEPIM_NEW_DISTRLISTS)
   add_definitions (-DKDEPIM_NEW_DISTRLISTS)
 endif(KDE4_KDEPIM_NEW_DISTRLISTS)
 
-add_definitions ( -DTest1Area=5121 ) # jstaniek
-
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 # search packages used by KDE
