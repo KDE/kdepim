@@ -62,7 +62,7 @@ int main(int argc, char** argv)
     }
 
     KAboutData aboutData("kabcclient", "kabcclient", ki18n("KABC client"), version,
-                         ki18n("KDE addressbook commandline client"),
+                         ki18n("KDE address book command-line client"),
                          KAboutData::License_GPL_V2);
 
     aboutData.addAuthor(ki18n("Kevin Krammer"), ki18n("Primary Author"), "kevin.krammer@gmx.at");
@@ -71,7 +71,7 @@ int main(int argc, char** argv)
 
     cmdLineOptions.add("A");
 
-    cmdLineOptions.add("add", ki18n("Add input data as new addressbook entries"));
+    cmdLineOptions.add("add", ki18n("Add input data as new address book entries"));
 
     cmdLineOptions.add("R");
 
@@ -79,7 +79,7 @@ int main(int argc, char** argv)
 
     cmdLineOptions.add("M");
 
-    cmdLineOptions.add("merge", ki18n("Merge input data into the addressbook"));
+    cmdLineOptions.add("merge", ki18n("Merge input data into the address book"));
 
     cmdLineOptions.add("S");
 
@@ -89,7 +89,7 @@ int main(int argc, char** argv)
 
     cmdLineOptions.add("list", ki18n("List all entries in address book"));
 
-    cmdLineOptions.add("nosave", ki18n("Do not save changes to the addressbook on add/remove operations"));
+    cmdLineOptions.add("nosave", ki18n("Do not save changes to the address book on add/remove operations"));
 
     cmdLineOptions.add("if");
 
@@ -494,13 +494,13 @@ int handleKABC2Mutt(int argc, char** argv)
     }
 
     // mutt wants a line of text before the results
-    cout << i18n("Searching KDE addressbook").toLocal8Bit().data() << endl;
+    cout << i18n("Searching KDE address book").toLocal8Bit().data() << endl;
 
     int result =  app.exec();
 
     // in case of no match mutt wants a line of text saying so
     if (result == 2) // Operation Search returns 2 on no match
-        cout << i18n("No matches in KDE addressbook").toLocal8Bit().data() << endl;
+        cout << i18n("No matches in KDE address book").toLocal8Bit().data() << endl;
 
     return result;
 }

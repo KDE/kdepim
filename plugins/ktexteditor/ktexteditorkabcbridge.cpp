@@ -44,7 +44,7 @@ KDE_EXPORT QString ktexteditorkabcbridge(const QString& placeholder, QWidget *wi
 	KABC::Addressee userAddress=addrBook->whoAmI();
 	if (userAddress.isEmpty()) {
  		KMessageBox::error(widget,
-                          i18n("The template needs information about you. It looks like you did not set that information in the addressbook. Please set the information to use this template"),
+                          i18n("The template needs information about you. It looks like you did not set that information in the address book. Please set the information to use this template."),
                           i18n("Missing personal information"));
                 *ok=false;
                 return QString();

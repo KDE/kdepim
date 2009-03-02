@@ -45,7 +45,7 @@
 using namespace KABC;
 
 // error messages
-static const char saveError[] = I18N_NOOP("Saving modifications to addressbook failed");
+static const char saveError[] = I18N_NOOP("Saving modifications to address book failed");
 static const char ambiguousMatch[] = I18N_NOOP("Input number %1 matches more than one contact. "
                                                "Skipping it to avoid undesired results");
 
