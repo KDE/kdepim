@@ -122,7 +122,7 @@ void AuditLogViewer::slotUser1() {
     }
 
     if ( const int err = file.error() )
-        KMessageBox::error( this, i18n("Couldn't save to file \"%1\": %2",
+        KMessageBox::error( this, i18n("Could not save to file \"%1\": %2",
                             file.fileName(), QString::fromLocal8Bit( strerror( err ) ) ),
                             i18n("File Save Error") );
 }
