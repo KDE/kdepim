@@ -182,7 +182,7 @@ applications.</para>
 The most common use for the restore functionality is to recover from a hardware
 or software failure on the device.
 The restore function can be accessed from the
-main &kpilot; application, and from the &kpilot; daemon. be careful, as
+main &kpilot; application, and from the &kpilot; daemon. Be careful, as
 restoring the data is not a common operation. In order
 to restore the data at the next sync, click the
 <menuchoice>
@@ -204,7 +204,7 @@ There are three ways to sync your &handheld;, <guilabel>HotSync</guilabel>,
 </para>
 
 <para>
-When you press the &HotSync; button on your &handheld;, &kpilot;'s will run the
+When you press the &HotSync; button on your &handheld;, &kpilot; will run the
 default sync operation (usually a <guilabel>HotSync</guilabel>). You can select
 the default sync operation in the <link linkend="page-hotsync">&HotSync;
 configure dialog</link>. Alternatively, you can click one of the sync options on
@@ -431,7 +431,7 @@ They are not normally listed, but you may see them on some systems.
 <para>
 Data records can be changed both on the &handheld; and
 on the <acronym>PC</acronym>. If one record has incompatible changes
-in both the &handheld; and the <acronym>PC</acronym>, (such as
+in both the &handheld; and the <acronym>PC</acronym> (such as
 changing a phone number in different ways on both sides),
 the conflicting change needs to be resolved so
 that both the &handheld; and the <acronym>PC</acronym> are in sync again.

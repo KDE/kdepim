@@ -701,7 +701,7 @@ is not running you can &HotSync; if the daemon is. Therefore, if you want to
 be able to sync your &handheld; at anytime, it is important to start the daemon
 at login, or the opposite, if you want to be able to sync only when &kpilot; is
 running, you have to stop the daemon on exit. The last option is especially
-usefull if you have other applications that use the same port as &kpilot;.
+useful if you have other applications that use the same port as &kpilot;.
 </para>
 
 
@@ -1525,7 +1525,7 @@ application. Since there are no natural correspondence between these fields and
 other &kde; address book fields, you can set them as you like. You can use them
 to store a <guilabel>URL</guilabel>, a <guilabel>IM Address</guilabel>,
 the <guilabel>Birthdate</guilabel> of your contact or the obvious:
-<guilabel>Store as Costume Field</guilabel>.
+<guilabel>Store as Custom Field</guilabel>.
 </para>
 
 <para>
