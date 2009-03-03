@@ -87,10 +87,6 @@ else ( ONLY_KLEO )
 #     macro_log_feature(GLIB2_FOUND "glib2" "Low-level core library for data structure handling, portability wrappers, etc." "http://www.gtk.org" FALSE "2.x" "Needed to provide synching applications from KDE PIM applications. Necessary to compile kitchensync and other PIM applications.")
 #  endif (NOT WIN32)
 
-  macro_optional_find_package(GNOKII)
-  macro_bool_to_01(GNOKII_FOUND HAVE_GNOKII_H)
-  macro_log_feature(GNOKII_FOUND "gnokii" "Gnokii Development Libraries" "http://www.gnokii.org" FALSE "" "Needed to provide the ability to import and export KDE addressbook entries to/from mobile phones that are accessible via gnokii")
-
   macro_optional_find_package(Soprano)
   macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "" FALSE "" "Soprano is needed for Nepomuk")
 
