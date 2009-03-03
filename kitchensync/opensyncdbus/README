@@ -1,5 +1,0 @@
-This directory contains opensyncdbus, a D-BUS frontend for OpenSync. It's a
-daemon which provides a D-BUS interface for controlling OpenSync.
-
-To compile opensyncdbus you need the Qt3 bindings for D-BUS.
-They are in SVN under branches/work/dbus-qt4-qt3backport/
