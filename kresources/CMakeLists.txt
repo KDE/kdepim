@@ -25,7 +25,7 @@ add_subdirectory( birthdays )
 add_subdirectory( blog ) 
 add_subdirectory( remote ) 
 add_subdirectory( kolab ) 
-add_subdirectory( featureplan )
+# add_subdirectory( featureplan )
 
 if(BUILD_EVERYTHING)
   add_subdirectory( egroupware ) 
