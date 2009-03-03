@@ -219,13 +219,6 @@ else ( ONLY_KLEO )
   endif(KMAIL_SUPPORTED)
 
   if(NOT WIN32)
-#enable kmobiletools 4.3 if there is interest
-#     set(KMOBILETOOLS_SUPPORTED TRUE)
-#     add_definitions(-DKMOBILETOOLS_SUPPORTED)
-#     message(STATUS "KMobileTools support enabled.")
-#     macro_optional_add_subdirectory(kmobiletools)
-      set(KMOBILETOOLS_SUPPORTED FALSE)
-
      set(KPILOT_SUPPORTED TRUE)
      add_definitions(-DKPILOT_SUPPORTED)
      message(STATUS "KPilot support enabled.")
