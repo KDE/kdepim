@@ -73,10 +73,10 @@ else ( ONLY_KLEO )
 
   find_package(Akonadi REQUIRED)
 
-  if ( NOT EXISTS ${CMAKE_SOURCE_DIR}/libkdepim/kdepim_export.h )
-     message ( FATAL_ERROR "libkdepim directory not found" ) # needed for Kode to compile correctly
-  endif ( NOT EXISTS ${CMAKE_SOURCE_DIR}/libkdepim/kdepim_export.h )
-  find_package(Kode REQUIRED)
+#  if ( NOT EXISTS ${CMAKE_SOURCE_DIR}/libkdepim/kdepim_export.h )
+#     message ( FATAL_ERROR "libkdepim directory not found" ) # needed for Kode to compile correctly
+#  endif ( NOT EXISTS ${CMAKE_SOURCE_DIR}/libkdepim/kdepim_export.h )
+#  find_package(Kode REQUIRED)
   find_package(ZLIB REQUIRED)
   find_package(Strigi REQUIRED)
   find_package(QGpgme)
@@ -135,7 +135,7 @@ else ( ONLY_KLEO )
   )
 
   if(BUILD_EVERYTHING)
-    add_subdirectory(kode)
+#    add_subdirectory(kode)
     macro_optional_add_subdirectory(akonadi)
   endif(BUILD_EVERYTHING)
   add_subdirectory(libkdepim)
