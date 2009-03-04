@@ -829,6 +829,18 @@ folder will be selected in &kmail;'s main window.
 	    </para>
 	  </listitem>
 	</varlistentry>
+    <varlistentry id="configure-composer-general-forwading-type">
+	  <term>
+	    <guilabel>Default Forwarding Type</guilabel>
+	  </term>
+	  <listitem>
+	    <para>
+           Lets you decide whether you want to forward messages inline or as an attachment by default.
+           This changes which type of forwarding mechanism is used when you click the toolbar icon or
+           when you activate the shortcut for forwarding.
+	    </para>
+	  </listitem>
+	</varlistentry>
 	<varlistentry id="configure-composer-general-external-editor">
 	  <term>
 	    <guilabel>External Editor</guilabel>
