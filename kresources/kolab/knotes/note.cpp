@@ -108,7 +108,6 @@ bool Note::richText() const
 bool Note::loadAttribute( QDomElement& element )
 {
   QString tagName = element.tagName();
-
   if ( tagName == "summary" )
     setSummary( element.text() );
   else if ( tagName == "foreground-color" )
@@ -136,8 +135,10 @@ bool Note::saveAttributes( QDomElement& element ) const
 #endif
 
   writeString( element, "summary", summary() );
-  writeString( element, "foreground-color", colorToString( foregroundColor() ) );
-  writeString( element, "background-color", colorToString( backgroundColor() ) );
+  if ( foregroundColor().isValid() )
+    writeString( element, "foreground-color", colorToString( foregroundColor() ) );
+  if ( backgroundColor().isValid() )
+    writeString( element, "background-color", colorToString( backgroundColor() ) );
   writeString( element, "knotes-richtext", mRichText ? "true" : "false" );
 
   return true;
@@ -196,10 +197,12 @@ void Note::saveTo( KCal::Journal* journal )
 
   // TODO: background and foreground
   journal->setSummary( summary() );
-  journal->setCustomProperty( "KNotes", "FgColor",
-                              colorToString( foregroundColor() ) );
-  journal->setCustomProperty( "KNotes", "BgColor",
-                              colorToString( backgroundColor() ) );
+  if ( foregroundColor().isValid() )
+    journal->setCustomProperty( "KNotes", "FgColor",
+                                colorToString( foregroundColor() ) );
+  if ( backgroundColor().isValid() )
+    journal->setCustomProperty( "KNotes", "BgColor",
+                                colorToString( backgroundColor() ) );
   journal->setCustomProperty( "KNotes", "RichText",
                               richText() ? "true" : "false" );
 }
