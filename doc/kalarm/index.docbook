@@ -1709,7 +1709,7 @@ button. This displays the
 when the message is to be redisplayed, or select <guilabel>Defer for
 time interval</guilabel> to enter how long after now (in hours and
 minutes) the message should be redisplayed. Then click
-<guibutton>Defer</guibutton> to defer the alarm message and close its
+<guibutton>OK</guibutton> to defer the alarm message and close its
 window.</para>
 
 <note><para>The time the alarm is deferred to must be earlier than its
@@ -1812,7 +1812,7 @@ display its context menu:</para>
 <variablelist>
 <varlistentry>
 <term><menuchoice><guimenuitem>Enable Alarms</guimenuitem></menuchoice></term>
-<listitem><para><action>Enables monitoring of alarms.</action></para>
+<listitem><para><action>Enables or disables monitoring of alarms.</action></para>
 <para>See
 <link linkend="enable-disable">Enabling and Disabling Alarms</link>
 for details.</para>
