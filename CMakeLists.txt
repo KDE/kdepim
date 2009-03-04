@@ -1,8 +1,16 @@
 project(kdepim)
 
-option(KDE4_KDEPIM_NEW_DISTRLISTS "Whether to use new distribution lists, which stores them like normal contacts; useful for Kolab")
-option(BUILD_EVERYTHING "Build everything. By default, only the minimal set of code needed by our customers is built.")
+option(ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disabled many components not needed for Kontact as the Kolab client." TRUE)
+if(ENTERPRISE_BUILD)
+  set(BUILD_EVERYTHING FALSE)
+  message(STATUS "Enterprise build is enabled.")
+else(ENTERPRISE_BUILD)
+  set(BUILD_EVERYTHING TRUE)
+  message(STATUS "Enterprise build is disabled.")
+endif(ENTERPRISE_BUILD)
+configure_file(config-enterprise.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-enterprise.h )
 
+option(KDE4_KDEPIM_NEW_DISTRLISTS "Whether to use new distribution lists, which stores them like normal contacts; useful for Kolab")
 if(KDE4_KDEPIM_NEW_DISTRLISTS)
   add_definitions (-DKDEPIM_NEW_DISTRLISTS)
 endif(KDE4_KDEPIM_NEW_DISTRLISTS)
