@@ -1,0 +1,1 @@
+#cmakedefine ENTERPRISE_BUILD 1
