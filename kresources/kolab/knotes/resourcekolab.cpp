@@ -82,7 +82,7 @@ bool ResourceKolab::doOpen()
   // Make the resource map from the folder list
   QList<KMail::SubResource>::ConstIterator it;
   mSubResources.clear();
-  for ( it = subResources.begin(); it != subResources.end(); ++it ) {
+  for ( it = subResources.constBegin(); it != subResources.constEnd(); ++it ) {
     const QString subResource = (*it).location;
     const bool active = group.readEntry( subResource, true );
     mSubResources[ subResource ] = Kolab::SubResource( active, (*it).writable, (*it).label );
@@ -142,7 +142,7 @@ bool ResourceKolab::load()
 
   bool rc = true;
   Kolab::ResourceMap::ConstIterator itR;
-  for ( itR = mSubResources.begin(); itR != mSubResources.end(); ++itR ) {
+  for ( itR = mSubResources.constBegin(); itR != mSubResources.constEnd(); ++itR ) {
     if ( !itR.value().active() )
       // This subResource is disabled
       continue;
