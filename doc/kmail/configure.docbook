@@ -111,11 +111,11 @@ able to select an identity on a per-message basis.</para>
 
 <para>The page consists of a list of identities and buttons to manage
 them. The identities list will always show at
-least one identity, which is then the <guilabel>Default</guilabel> 
+least one identity, which is then the <guilabel>Default</guilabel>
 identity.</para>
 
 <para>To add a new identity to the identity list, click on the
-<guibutton>New...</guibutton> button. 
+<guibutton>New...</guibutton> button.
 The <link linkend="configure-identity-newidentitydialog">New identity</link> dialog
 will then appear.</para>
 
@@ -174,7 +174,7 @@ basic settings for the currently selected identity.</para>
 <term><guilabel>Your name</guilabel></term>
 <listitem>
 <para>Enter your full name here (sometimes also called <emphasis>display name</emphasis>).
-Although this field is not strictly mandatory, it is recommended to enter 
+Although this field is not strictly mandatory, it is recommended to enter
 the correct value here.</para>
 </listitem>
 </varlistentry>
@@ -187,7 +187,7 @@ the correct value here.</para>
 <varlistentry>
 <term><guilabel>Email address</guilabel></term>
 <listitem>
-<para>Enter your email address here, &ie; something like 
+<para>Enter your email address here, &ie; something like
 <userinput>joe@example.com</userinput>.</para>
 </listitem>
 </varlistentry>
@@ -243,7 +243,7 @@ address</guilabel> field.</para></example>
 	  </listitem>
 	</varlistentry>
 
-	
+
 	<varlistentry id="configure-identity-cryptography-openpgp-encrypt">
 	  <term>
 	    <guilabel>OpenPGP encryption key</guilabel>
@@ -272,7 +272,7 @@ address</guilabel> field.</para></example>
 	  </listitem>
 	</varlistentry>
 
-	
+
 	<varlistentry id="configure-identity-cryptography-smime-sign">
 	  <term>
 	    <guilabel>&smime; signing certificate</guilabel>
@@ -297,7 +297,7 @@ address</guilabel> field.</para></example>
 	  </listitem>
 	</varlistentry>
 
-	
+
 	<varlistentry id="configure-identity-cryptography-smime-encrypt">
 	  <term>
 	    <guilabel>&smime; encryption certificate</guilabel>
@@ -370,7 +370,7 @@ anyway.</para>
 <note><para>This field is only useful if you want replies to your mail
 to go somewhere else than your regular email address, &eg; if you are
 using this identity to send messages from an email address that cannot
-receive messages. Note that 
+receive messages. Note that
 some mailing lists overwrite this header field with their post address to
 make sure that replies go to the list instead of individuals. So the
 usefulness of this field is very limited and it should only be used in
@@ -383,8 +383,8 @@ rare cases.</para></note>
 <listitem>
 <para>Optionally enter an address to which blind copies of your messages
 should be sent to. Note that a BCC is only send to this address, when
-<menuchoice><guimenu>View</guimenu><guimenuitem>BCC</guimenuitem></menuchoice> 
-is activated while composing a message. If you want to send a BCC regardless 
+<menuchoice><guimenu>View</guimenu><guimenuitem>BCC</guimenuitem></menuchoice>
+is activated while composing a message. If you want to send a BCC regardless
 of this setting, you should look at the <guilabel>Headers</guilabel> tab of the
 <guilabel>Composer</guilabel> page.</para>
 </listitem>
@@ -394,9 +394,9 @@ of this setting, you should look at the <guilabel>Headers</guilabel> tab of the
 <term><guilabel>Sent-mail folder</guilabel></term>
 <listitem>
 <para>Select the folder into which messages should be filed after sending
-when using this identity. <acronym>IMAP</acronym> users should consider changing this to an 
-<acronym>IMAP</acronym> folder, so their sent-mail is stored on a server instead of being 
-stored in a local folder. This way they can access these messages at a 
+when using this identity. <acronym>IMAP</acronym> users should consider changing this to an
+<acronym>IMAP</acronym> folder, so their sent-mail is stored on a server instead of being
+stored in a local folder. This way they can access these messages at a
 different location.</para>
 
 <tip><para>You can exercise more fine-grained control over where to
@@ -410,9 +410,9 @@ messages.</para></tip>
 <varlistentry>
 <term><guilabel>Drafts folder</guilabel></term>
 <listitem>
-<para>Select the folder into which drafts should be filed when using 
-this identity. <acronym>IMAP</acronym> users should consider changing this to an 
-<acronym>IMAP</acronym> folder, so their drafts are stored on a server instead of being 
+<para>Select the folder into which drafts should be filed when using
+this identity. <acronym>IMAP</acronym> users should consider changing this to an
+<acronym>IMAP</acronym> folder, so their drafts are stored on a server instead of being
 stored in a local folder. This way they can easily continue to work
 on their drafts at a different location.</para>
 </listitem>
@@ -492,7 +492,7 @@ character <quote>-- </quote> (dash, dash, space). &kmail; will
 automatically prepend the signature text with this line if it is not
 already present in the signature text.</para>
 <para>If you do not wish the separator to be prepended
-automatically by &kmail;, simply add it to the signature 
+automatically by &kmail;, simply add it to the signature
 text yourself.</para>
 </note>
 
@@ -551,7 +551,7 @@ should be sent. You can choose between:</para>
 <variablelist>
 <varlistentry>
 <term><guilabel>Never Automatically</guilabel></term>
-<listitem><para>Queued messages will only be sent if you select 
+<listitem><para>Queued messages will only be sent if you select
 <menuchoice><guimenu>File</guimenu><guimenuitem>Send queued messages</guimenuitem></menuchoice>.</para></listitem>
 </varlistentry>
 <varlistentry>
@@ -577,7 +577,7 @@ selected, the message is sent to the mail server immediately, while if
 the outbox to be sent later with the
 <menuchoice><guimenu>File</guimenu><guimenuitem>Send
 Queued Messages</guimenuitem></menuchoice> command or automatically when you
-check your mail, depending on the setting of 
+check your mail, depending on the setting of
 <guilabel>Send messages in outbox folder</guilabel> above.</para>
 
 <para><guilabel>Message property</guilabel> lets you select how your
@@ -587,7 +587,7 @@ message will be encoded when it is sent. <guilabel>Allow
 as accented letters will be sent as-is. If <guilabel>MIME Compliant
 (Quoted Printable)</guilabel> is selected, special characters will be
 encoded using standard &MIME; encodings, which may be more portable to
-mailing systems other than 8-bit <acronym>ASCII</acronym>. 
+mailing systems other than 8-bit <acronym>ASCII</acronym>.
 We recommend to use <guilabel>MIME Compliant</guilabel>.</para>
 
 <note><para>Even with <guilabel>Allow 8-bit</guilabel>
@@ -598,7 +598,7 @@ example for sending cryptographically signed messages.</para></note>
 <para><guilabel>Default domain</guilabel> lets you specify which domain name
 should be used to complete email addresses that only consist of the recipient's user
 name. For example when you set the default domain to <replaceable>kde.org</replaceable>
-then messages you send to <replaceable>johndoe</replaceable> will be sent to 
+then messages you send to <replaceable>johndoe</replaceable> will be sent to
 <replaceable>johndoe@kde.org</replaceable>.</para>
 
 </sect2>
@@ -617,7 +617,7 @@ how &kmail; will notify you if new messages have arrived:
 <guilabel>Beep</guilabel> will play a short beep sound;
 if <guilabel>Detailed new mail notification</guilabel> is enabled then
 &kmail; will show the number of new messages for each folder provided
-you have chosen to be notified with a dialog. More advanced 
+you have chosen to be notified with a dialog. More advanced
 notification options, like showing a dialog or running a certain command,
 are available via the <guibutton>Other Actions</guibutton> button.</para>
 
@@ -646,7 +646,7 @@ so you can choose a monospaced font for the date field for better readability.</
 <para>This section allows you to change the color of the text.
 <guilabel>Recycle colors on deep quoting</guilabel> means that even text that is
 quoted more than three times will appear in color. Note that the
-<guilabel>Quoted text</guilabel> colors only work in the message reader, not in 
+<guilabel>Quoted text</guilabel> colors only work in the message reader, not in
 the composer.<!-- TODO --></para>
 
 </sect2>
@@ -660,9 +660,9 @@ pane that tells you if a message is &html; or not. This is important because
 you should be aware of the fact that you are reading a &html; message. The &html;
 status bar itself cannot be influenced by the &html; code of the message.</para>
 
-<para>The <guilabel>Window Layout</guilabel> section lets you choose the 
-layout of the main window. You can choose where you want the 
-<guilabel>Message Preview Pane</guilabel> or choose not to have 
+<para>The <guilabel>Window Layout</guilabel> section lets you choose the
+layout of the main window. You can choose where you want the
+<guilabel>Message Preview Pane</guilabel> or choose not to have
 it at all.</para>
 
 <para>The <guilabel>Message Structure Viewer</guilabel> option lets you choose when
@@ -670,7 +670,7 @@ the structure viewer will be shown: the structure viewer is a part of the main w
 lets you access all parts of a message. <guilabel>Show never</guilabel> will
 disable the structure viewer (note that you can still access attachments as icons),
 <guilabel>Show always</guilabel> will show the structure viewer even if there is only
-one plaintext part. <guilabel>Show only for non-plaintext messages</guilabel> will 
+one plaintext part. <guilabel>Show only for non-plaintext messages</guilabel> will
 display the structure viewer only if it makes sense, &ie; if the current message
 has attachments or has &html; parts.</para>
 
@@ -679,7 +679,7 @@ has attachments or has &html; parts.</para>
 <sect2 id="configure-appearance-headers">
 <title>Headers</title>
 
-<para>With <guilabel>Display message sizes</guilabel> selected there will be another 
+<para>With <guilabel>Display message sizes</guilabel> selected there will be another
 column in the header pane that shows the messages' size.</para>
 
 <para><guilabel>Show crypto icons</guilabel> will add more status information
@@ -690,15 +690,15 @@ of the subject, every message that has been encrypted will have a small
 to select a message once before these icons will appear, until then only
 question marks will be displayed.</para>
 
-<para><guilabel>Thread list of message headers</guilabel> will put all the messages 
-in the header pane in a kind of tree list, so that the replies to a message are 
+<para><guilabel>Thread list of message headers</guilabel> will put all the messages
+in the header pane in a kind of tree list, so that the replies to a message are
 directly below that message.</para>
 
 <para>With <guilabel>Message header threading options</guilabel> you can select
 whether threads should appear expanded (<guilabel>open</guilabel>) by
 default or whether they should be collapsed (<guilabel>closed</guilabel>).
 You can of course still open/close threads using the  <guilabel>+</guilabel>/<guilabel>-</guilabel>
-buttons.</para> 
+buttons.</para>
 
 <para>With <guilabel>Date Display</guilabel> you can choose between several
 date formats. The <guilabel>Localized Format</guilabel> is the one you can
@@ -803,6 +803,19 @@ folder will be selected in &kmail;'s main window.
 	    </para>
 	  </listitem>
 	</varlistentry>
+    <varlistentry id="configure-composer-general-too-many-recipients">
+      <term>
+        <guilabel>Warn if the number of recipients is larger than</guilabel>
+      </term>
+      <listitem>
+        <para>
+          If the number of recipients is larger than this value, KMail will
+          warn and ask for a confirmation before sending the mail.
+          The default is to warn if there are more than <literal>5</literal> recipients.
+          This warning can be turned off.
+        </para>
+      </listitem>
+    </varlistentry>
 	<varlistentry id="configure-composer-general-autosave-interval">
 	  <term>
 	    <guilabel>Autosave interval</guilabel>
@@ -810,8 +823,8 @@ folder will be selected in &kmail;'s main window.
 	  <listitem>
 	    <para>
               A backup copy of the text in the composer window can be created
-	      regularly. This option lets you specify the interval used to 
-              create the backup. You can disable autosaving by setting it to 
+	      regularly. This option lets you specify the interval used to
+              create the backup. You can disable autosaving by setting it to
               the value <literal>0</literal>.
 	    </para>
 	  </listitem>
@@ -848,7 +861,7 @@ folder will be selected in &kmail;'s main window.
 
 <para>The <guilabel>Phrases</guilabel> tab lets you define the automatically
 generated lines that are added to message replies, forwarded messages, and the
-character that is added in front of quoted text. 
+character that is added in front of quoted text.
 There are special &percnt;-denoted characters that will insert certain
 values, which are also displayed at the top of the <guilabel>Phrases</guilabel> section.
 You can add reply phrases in languages other than
@@ -864,10 +877,10 @@ This will only work for languages whose i18n package you have installed.</para>
 
 <para>This section contains a list of prefixes for <quote>Reply</quote> and
 <quote>Forward</quote>. If you receive messages that use prefixes different
-to the standard ones, you can add them here so &kmail; will recognize 
+to the standard ones, you can add them here so &kmail; will recognize
 them. This way &kmail; can ignore them for sorting messages and
-when setting the subject of a reply or a forwarded messages, and optionally 
-replace them with <quote>Re:</quote> or <quote>Fwd:</quote> 
+when setting the subject of a reply or a forwarded messages, and optionally
+replace them with <quote>Re:</quote> or <quote>Fwd:</quote>
 respectively.</para>
 
 </sect2>
@@ -875,11 +888,11 @@ respectively.</para>
 <sect2 id="configure-composer-charset">
 <title>Charset</title>
 
-<para>Here you can manage the default charsets used for your own messages. 
+<para>Here you can manage the default charsets used for your own messages.
 Every message you send will be checked if it is written in one of the listed
 charsets, starting at the top of the list. If it is, this charset will be used.
 If it is not, a dialog will show up and tell you that you manually have to choose
-a charset using 
+a charset using
 <menuchoice><guimenu>Options</guimenu><guisubmenu>Set Encoding</guisubmenu></menuchoice>.
 </para>
 
@@ -913,7 +926,7 @@ is only useful for advanced users.</para>
 <sect2 id="configure-composer-attachments">
 <title>Attachments</title>
 
-<para>If you have to send attachments with filenames containing non-English 
+<para>If you have to send attachments with filenames containing non-English
 characters to users of Outlook(TM) or Outlook Express(TM) then you might want
 to check the <guilabel>Outlook-compatible attachment naming</guilabel> option.
 &kmail; will then encode the attachment names in a non-standard way that is
@@ -1465,7 +1478,7 @@ of key words can be modified.</para>
 	  </term>
 	  <listitem>
 	    <para>
-	      If checked, &smime; certificates are validated using 
+	      If checked, &smime; certificates are validated using
 	      Certificate Revocation Lists (<acronym>CRLs</acronym>).
 	    </para>
 	  </listitem>
@@ -1477,14 +1490,14 @@ of key words can be modified.</para>
 	  </term>
 	  <listitem>
 	    <para>
-	      If this option is selected, &smime; certificates are validated 
-              using the Online Certificates Status Protocol 
+	      If this option is selected, &smime; certificates are validated
+              using the Online Certificates Status Protocol
               (<acronym>OCSP</acronym>).
             </para>
             <para>
               Fill in the <acronym>URL</acronym> of the <acronym>OCSP</acronym>
-              responder in the field reserved at this effect.  
-	    </para> 
+              responder in the field reserved at this effect.
+	    </para>
 	  </listitem>
 	</varlistentry>
 
@@ -1496,7 +1509,7 @@ of key words can be modified.</para>
 	      <para>
 		Enter the address of the server for online validation
 		of certificates. The <acronym>URL</acronym>
-                is usually starting with <emphasis>http://</emphasis>. 
+                is usually starting with <emphasis>http://</emphasis>.
 	      </para>
 	  </listitem>
 	</varlistentry>
@@ -1530,7 +1543,7 @@ of key words can be modified.</para>
 	  </term>
 	  <listitem>
 	    <para>
-	      By default, <guilabel>GnuPG</guilabel> uses the file 
+	      By default, <guilabel>GnuPG</guilabel> uses the file
               <emphasis>~/.gnupg/policies.txt</emphasis> to check if a
               certificate policy is allowed. If this option is selected,
               policies are not checked.
@@ -1544,7 +1557,7 @@ of key words can be modified.</para>
 	  </term>
 	  <listitem>
 	    <para>
-	      If this option is checked, Certificate Revocation Lists are 
+	      If this option is checked, Certificate Revocation Lists are
               never used to validate <acronym>&smime;</acronym> certificates.
 	    </para>
 	  </listitem>
@@ -1557,7 +1570,7 @@ of key words can be modified.</para>
 	  <listitem>
 	    <para>
 	      Check this option if you want the missing issuer certificates
-              to be fetched when necessary. This applies to both validation 
+              to be fetched when necessary. This applies to both validation
               methods, <acronym>CRLs</acronym> and <acronym>OCSP</acronym>.
 	    </para>
 	  </listitem>
@@ -1569,7 +1582,7 @@ of key words can be modified.</para>
 	  </term>
 	  <listitem>
 	    <para>
-	     Entirely disables the use of <acronym>HTTP</acronym> for 
+	     Entirely disables the use of <acronym>HTTP</acronym> for
              <acronym>&smime;</acronym>.
 	    </para>
 	  </listitem>
@@ -1581,14 +1594,14 @@ of key words can be modified.</para>
 	  </term>
 	  <listitem>
 	    <para>
-	     When looking for the location of a <acronym>CRL</acronym>, 
-             <quote>the "to-be-tested"</quote>certificate usually contains 
+	     When looking for the location of a <acronym>CRL</acronym>,
+             <quote>the "to-be-tested"</quote>certificate usually contains
              what are known as CRL Distribution Point (<acronym>DP</acronym>) entries,
-             which are <acronym>URLs</acronym> describing the way to access 
+             which are <acronym>URLs</acronym> describing the way to access
              the <acronym>URL</acronym>. The first found <acronym>DP</acronym>
-             entry is used.  
+             entry is used.
              With this option all entries using the <acronym>HTTP</acronym>
-             scheme are ignored when looking for a suitable 
+             scheme are ignored when looking for a suitable
              <acronym>DP</acronym>.
 	    </para>
 	  </listitem>
@@ -1600,9 +1613,9 @@ of key words can be modified.</para>
 	  </term>
 	  <listitem>
 	    <para>
-	     If this option is selected, the value of the 
-             <acronym>HTTP</acronym> proxy shown on the right 
-             (which comes from the environment variable http_proxy) 
+	     If this option is selected, the value of the
+             <acronym>HTTP</acronym> proxy shown on the right
+             (which comes from the environment variable http_proxy)
              will be used for any <acronym>HTTP</acronym> request.
 	    </para>
 	  </listitem>
@@ -1614,10 +1627,10 @@ of key words can be modified.</para>
 	  </term>
 	  <listitem>
 	    <para>
-	      Enter here the location of your <acronym>HTTP</acronym> Proxy, 
-              which will be used for all <acronym>HTTP</acronym> requests 
-              relating to <acronym>&smime;</acronym>. 
-              The syntax is <quote>"host:port"</quote>, for instance 
+	      Enter here the location of your <acronym>HTTP</acronym> Proxy,
+              which will be used for all <acronym>HTTP</acronym> requests
+              relating to <acronym>&smime;</acronym>.
+              The syntax is <quote>"host:port"</quote>, for instance
               <emphasis>myproxy.nowhere.com:3128</emphasis>.
 	    </para>
 	  </listitem>
@@ -1629,7 +1642,7 @@ of key words can be modified.</para>
 	  </term>
 	  <listitem>
 	    <para>
-	     Entirely disables the use of <acronym>LDAP</acronym> for 
+	     Entirely disables the use of <acronym>LDAP</acronym> for
              <acronym>&smime;</acronym>.
 	    </para>
 	  </listitem>
@@ -1641,14 +1654,14 @@ of key words can be modified.</para>
 	  </term>
 	  <listitem>
 	    <para>
-	     When looking for the location of a <acronym>CRL</acronym>, 
-             the <quote>"to-be-tested"</quote> certificate usually contains 
+	     When looking for the location of a <acronym>CRL</acronym>,
+             the <quote>"to-be-tested"</quote> certificate usually contains
              what are known as CRL Distribution Point (<acronym>DP</acronym>) entries,
-             which are <acronym>URLs</acronym> describing the way to access 
-             the <acronym>URL</acronym>. 
-             The first found <acronym>DP</acronym> entry is used.  
+             which are <acronym>URLs</acronym> describing the way to access
+             the <acronym>URL</acronym>.
+             The first found <acronym>DP</acronym> entry is used.
              With this option all entries using the <acronym>LDAP</acronym>
-             scheme are ignored when looking for a suitable 
+             scheme are ignored when looking for a suitable
              <acronym>DP</acronym>.
 	    </para>
 	  </listitem>
@@ -1660,17 +1673,17 @@ of key words can be modified.</para>
 	  </term>
 	  <listitem>
 	    <para>
-	     Entering a <acronym>LDAP</acronym> server here will make all 
-             <acronym>LDAP</acronym> requests go to that server first. 
-             More precisely, this setting overrides any specified host 
-             and port part in a <acronym>LDAP URL</acronym> and will also 
-             be used if host and port have been omitted from the 
-             <acronym>URL</acronym>. Other <acronym>LDAP</acronym> servers 
-             will be used only if the connection to the 
+	     Entering a <acronym>LDAP</acronym> server here will make all
+             <acronym>LDAP</acronym> requests go to that server first.
+             More precisely, this setting overrides any specified host
+             and port part in a <acronym>LDAP URL</acronym> and will also
+             be used if host and port have been omitted from the
+             <acronym>URL</acronym>. Other <acronym>LDAP</acronym> servers
+             will be used only if the connection to the
              <emphasis>proxy</emphasis> failed.
-             The syntax is <acronym>HOST</acronym> or 
-             <acronym>HOST:PORT</acronym>. If <acronym>PORT</acronym> is 
-             omitted, <quote>port 389</quote> 
+             The syntax is <acronym>HOST</acronym> or
+             <acronym>HOST:PORT</acronym>. If <acronym>PORT</acronym> is
+             omitted, <quote>port 389</quote>
              (standard <acronym>LDAP</acronym> port) is used.
 	    </para>
 	  </listitem>
@@ -1773,7 +1786,7 @@ unread message below the currently selected message then the following happens:
 </para>
 </listitem>
 <listitem>
-<para>If <guilabel>Loop in Current Folder</guilabel> is selected then &kmail; 
+<para>If <guilabel>Loop in Current Folder</guilabel> is selected then &kmail;
 will search from the beginning of the current folder for an unread message. If
 none is found then nothing happens.</para>
 </listitem>
@@ -1802,7 +1815,7 @@ that was selected when you last left the folder.</para>
 <varlistentry>
 <term><guilabel>Mark selected message as read after...</guilabel></term>
 <listitem>
-<para>When you select a <guilabel>new</guilabel> or 
+<para>When you select a <guilabel>new</guilabel> or
 <guilabel>unread</guilabel> message, &kmail; will change the
 message's status to <guilabel>read</guilabel> after the number of seconds
 entered here. If you disable this option, messages will keep their
@@ -1832,8 +1845,8 @@ that is used when you create a new folder.</para>
 <listitem>
 <para>Here you can set the folder that should be selected by default if you
 start &kmail;. If you use only &imap; folders then you might want to set
-this to your &imap; inbox folder. If you do that, you can collapse the local 
-folders in the folder list, and then they will stay collapsed when &kmail; 
+this to your &imap; inbox folder. If you do that, you can collapse the local
+folders in the folder list, and then they will stay collapsed when &kmail;
 starts.</para>
 </listitem>
 </varlistentry>
@@ -1842,7 +1855,7 @@ starts.</para>
 <term><guilabel>Empty trash on program exit</guilabel></term>
 <listitem>
 <para>The trash folder is cleared of messages when you quit &kmail; if this
-option is selected.</para> 
+option is selected.</para>
 </listitem>
 </varlistentry>
 
@@ -1902,7 +1915,7 @@ option is selected.</para>
 <varlistentry>
 <term><guilabel>Send invitations in the mail body</guilabel></term>
 <listitem>
-<para>Invitations use to be send as attachments to a mail. By enabling this option, you let the invitation mails to be sent in the text of the mail, which is necessary to send invitations and replies to Microsoft Outlook(tm).</para> 
+<para>Invitations use to be send as attachments to a mail. By enabling this option, you let the invitation mails to be sent in the text of the mail, which is necessary to send invitations and replies to Microsoft Outlook(tm).</para>
 </listitem>
 </varlistentry>
 </variablelist>
@@ -1913,7 +1926,7 @@ option is selected.</para>
 <sect1 id="configure-non-gui-options">
 <title>Options without a user interface representation</title>
 <para>
-Apart from the options presented in the configuration dialog, some options 
+Apart from the options presented in the configuration dialog, some options
 can only be set directly in the &kmail; configuration file or through KIOSK.
 These so called "hidden" configuration options cannot be changed via
 the normal &kmail; Settings dialog; they must be made by modifying the
@@ -1942,13 +1955,13 @@ editing the configuration file.  Only restart &kmail; after you have made
 <term><guilabel>Send Message Distribution Notifications with an empty sender string (SendMDNsWithEmptySender)</guilabel></term>
 <listitem>
 <para>
-Send Message Disposition Notifications with an empty sender string. Some servers might be configured to reject 
+Send Message Disposition Notifications with an empty sender string. Some servers might be configured to reject
 such messages, so if you are experiencing problems sending MDNs, make sure this option is set to false. To
 enable this feature, add a line reading:
 
 SendMDNsWithEmptySender=true
 
-to the [MDN] section of the kmail configuration file. If there is no such section, simply add "[MDN]" on 
+to the [MDN] section of the kmail configuration file. If there is no such section, simply add "[MDN]" on
 a line by itself just above the option.
 
 Note that the default setting of "false" strictly speaking violates internet standards, but is
