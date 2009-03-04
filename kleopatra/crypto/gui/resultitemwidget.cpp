@@ -57,12 +57,12 @@ namespace {
     static QColor colorForVisualCode( Task::Result::VisualCode code ) {
         switch ( code ) {
             case Task::Result::AllGood:
-                return Qt::green;
+                return QColor(0x3E, 0xAC, 0x31); //green
             case Task::Result::NeutralError:
             case Task::Result::Warning:
-                return Qt::yellow;
+                return QColor(0xE1, 0xB6, 0x13); //yellow
             case Task::Result::Danger:
-                return Qt::red;
+                return QColor(0xD4, 0x23, 0x23); //red
             case Task::Result::NeutralSuccess:
             default:
                 return Qt::blue;
