@@ -294,11 +294,11 @@ void AttachmentList::updatePictureAttachment( const QImage& image, const QString
 {
   assert( !name.isEmpty() );
   if ( !image.isNull() ) {
-    KTempFile* tempFile = new KTempFile;
-    image.save( tempFile->file(), "PNG" );
-    tempFile->close();
+    KTempFile tempFile;
+    image.save( tempFile.file(), "PNG" );
+    tempFile.close();
     KURL url;
-    url.setPath( tempFile->name() );
+    url.setPath( tempFile.name() );
     kdDebug(5650) << "picture saved to " << url.path() << endl;
     addAttachment( url.url(), name, "image/png" );
   } else {
@@ -310,11 +310,11 @@ void AttachmentList::updateAttachment( const QByteArray& data, const QString& na
 {
   assert( !name.isEmpty() );
   if ( !data.isNull() ) {
-    KTempFile* tempFile = new KTempFile;
-    tempFile->file()->writeBlock( data );
-    tempFile->close();
+    KTempFile tempFile;
+    tempFile.file()->writeBlock( data );
+    tempFile.close();
     KURL url;
-    url.setPath( tempFile->name() );
+    url.setPath( tempFile.name() );
     kdDebug(5650) << "data saved to " << url.path() << endl;
     addAttachment( url.url(), name, mimetype );
   } else {
