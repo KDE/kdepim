@@ -70,7 +70,7 @@ AgentWidget::AgentWidget( QWidget *parent )
   ui.syncButton->setIcon( KIcon( "view-refresh" ) );
   connect( ui.syncButton, SIGNAL( clicked() ), this, SLOT( synchronizeAgent() ) );
 
-  ui.restartButton->setIcon( KIcon( "system-restart" ) );
+  ui.restartButton->setIcon( KIcon( "system-reboot" ) ); //FIXME: Is using system-reboot icon here a good idea?
   connect( ui.restartButton, SIGNAL(clicked()), SLOT(restartAgent()) );
 
   Control::widgetNeedsAkonadi( this );
@@ -240,7 +240,7 @@ void AgentWidget::showContextMenu(const QPoint& pos)
   menu.addAction( KIcon("edit-copy"), i18n("Clone Agent"), this, SLOT(cloneAgent()) );
   menu.addSeparator();
   menu.addMenu( mSyncMenu );
-  menu.addAction( KIcon("system-restart"), i18n("Restart Agent"), this, SLOT(restartAgent()) );
+  menu.addAction( KIcon("system-reboot"), i18n("Restart Agent"), this, SLOT(restartAgent()) );  //FIXME: Is using system-reboot icon here a good idea?
   menu.addAction( KIcon("network-disconnect"), i18n("Toggle Online/Offline"), this, SLOT(toggleOnline()) );
   menu.addAction( KIcon("configure"), i18n("Configure..."), this, SLOT(configureAgent()) );
   menu.addAction( KIcon("list-remove"), i18n("Remove Agent"), this, SLOT(removeAgent()) );
