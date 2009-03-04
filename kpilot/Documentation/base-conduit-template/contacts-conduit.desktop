@@ -1,11 +1,14 @@
 [Desktop Entry]
 Type=Service
 Comment=This conduit syncs the handheld address book with a database stored on the PC.
+Comment[et]=See kanal sünkroniseerib pihuarvuti aadressiraamatu PC-s leiduva andmebaasiga.
 Comment[ga]=Sioncrónaíonn an seoladán seo leabhar seoltaí an ríomhaire boise le bunachar sonraí ar an ríomhaire deisce.
+Comment[nds]=Disse Kanaal synkroniseert dat Adressbook op den Handreekner mit een op den Reekner.
 Comment[pt]=Esta conduta sincroniza o livro de endereços do seu dispositivo com uma base de dados guardada no PC.
 Comment[pt_BR]=Esta conduta sincroniza o livro de endereços do handheld com a base de dados armazenada no PC.
 Comment[sv]=Den här kanalen synkroniserar handdatorns adressbok med en databas lagrad på PC:n.
 Comment[uk]=Цей акведук синхронізує адресну книгу кишенькового пристрою з базою даних, що зберігається на комп’ютері.
+Comment[zh_TW]=此導管將掌上型裝置的通訊錄與 PC 上的資料庫同步。
 Name=Contacts
 Name[af]=Kontakte
 Name[be]=Кантакты
