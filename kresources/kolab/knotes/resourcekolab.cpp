@@ -96,7 +96,7 @@ void ResourceKolab::doClose()
   KConfig config( configFile() );
   KConfigGroup group = config.group( configGroupName );
   Kolab::ResourceMap::ConstIterator it;
-  for ( it = mSubResources.begin(); it != mSubResources.end(); ++it )
+  for ( it = mSubResources.constBegin(); it != mSubResources.constEnd(); ++it )
     group.writeEntry( it.key(), it.value().active() );
 }
 
@@ -122,10 +122,11 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
   // Populate with the new entries
   const bool silent = mSilent;
   mSilent = true;
-  for ( KMail::SernumDataPair::List::ConstIterator it = lst.begin(); it != lst.end(); ++it ) {
+  KMail::SernumDataPair::List::ConstIterator it;
+  for ( it = lst.constBegin(); it != lst.constEnd(); ++it ) {
     KCal::Journal* journal = addNote( it->data, subResource, it->sernum, mimetype );
     if ( !journal )
-      kDebug(5500) <<"loading note" << it->sernum <<" failed";
+      kDebug(5500) << "loading note" << it->sernum << "failed";
     else
       manager()->registerNote( this, journal );
   }
@@ -253,7 +254,7 @@ KCal::Alarm::List ResourceKolab::alarms( const KDateTime& from, const KDateTime&
     {
         KDateTime preTime = from.addSecs( -1 );
         KCal::Alarm::List::ConstIterator it;
-        for( it = (*note)->alarms().begin(); it != (*note)->alarms().end(); ++it )
+        for( it = (*note)->alarms().constBegin(); it != (*note)->alarms().constEnd(); ++it )
         {
             if ( (*it)->enabled() )
             {
@@ -387,7 +388,7 @@ void ResourceKolab::fromKMailDelSubresource( const QString& type,
   // Make a list of all uids to remove
   Kolab::UidMap::ConstIterator mapIt;
   QStringList uids;
-  for ( mapIt = mUidMap.begin(); mapIt != mUidMap.end(); ++mapIt )
+  for ( mapIt = mUidMap.constBegin(); mapIt != mUidMap.constEnd(); ++mapIt )
     if ( mapIt.value().resource() == subResource )
       // We have a match
       uids << mapIt.key();
@@ -397,7 +398,7 @@ void ResourceKolab::fromKMailDelSubresource( const QString& type,
     const bool silent = mSilent;
     mSilent = true;
     QStringList::ConstIterator it;
-    for ( it = uids.begin(); it != uids.end(); ++it ) {
+    for ( it = uids.constBegin(); it != uids.constEnd(); ++it ) {
       KCal::Journal* j = mCalendar.journal( *it );
       if( j )
         deleteNote( j );
@@ -422,7 +423,7 @@ void ResourceKolab::fromKMailAsyncLoadResult( const QMap<quint32, QString>& map,
     mimetype = attachmentMimeType;
   else
     mimetype = inlineMimeType;
-  for( QMap<quint32, QString>::ConstIterator it = map.begin(); it != map.end(); ++it ) {
+  for( QMap<quint32, QString>::ConstIterator it = map.constBegin(); it != map.constEnd(); ++it ) {
     KCal::Journal* journal = addNote( it.value(), folder, it.key(), mimetype );
     if ( !journal )
       kDebug(5500) <<"loading note" << it.key() <<" failed";
