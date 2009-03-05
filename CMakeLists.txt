@@ -209,16 +209,10 @@ set(libkdgantt1_SRCS
 
   # Kpilot won't build on Windows
   if(NOT WIN32)
-    set(KPILOT_SUPPORTED)
     macro_optional_add_subdirectory(kpilot)
-    message(STATUS "KPilot support enabled")
 
     #if(OPENSYNC_FOUND AND GLIB2_FOUND)
-    #set(KITCHENSYNC SUPPORTED)
-    #message(STATUS "KitchenSync support enabled.")
-    #else(OPENSYNC_FOUND AND GLIB2_FOUND)
-    #set(KITCHENSYNC SUPPORTED FALSE)
-    #message(STATUS "KitchenSync support disabled (OpenSync or GLIB2 not found).")
+    #  macro_optional_add_subdirectory(kitchensync)
     #endif(OPENSYNC_FOUND AND GLIB2_FOUND)
   endif(NOT WIN32)
 
@@ -238,3 +232,4 @@ if(NOT QGPGME_FOUND)
 endif(NOT QGPGME_FOUND)
 # All done, let's display what we found...
 macro_display_feature_log()
+
