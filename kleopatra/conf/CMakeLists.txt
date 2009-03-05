@@ -1,13 +1,13 @@
 include_directories( ${CMAKE_SOURCE_DIR}/kleopatra ${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
 
-if ( ONLY_KLEO )
-  add_definitions( -DONLY_KLEO )
+if ( KDEPIM_ONLY_KLEO )
+  add_definitions( -DKDEPIM_ONLY_KLEO )
   set( _kcm_kleopatra_kleo_only_SRCS
     ../utils/kleo_kicondialog.cpp
     )
-else ( ONLY_KLEO )
+else ( KDEPIM_ONLY_KLEO )
   set( _kcm_kleopatra_extra_libs ${KDE4_KIO_LIBS} )
-endif ( ONLY_KLEO )
+endif ( KDEPIM_ONLY_KLEO )
 
 if ( BUILD_libkleopatraclient )
 
@@ -62,11 +62,11 @@ kde4_add_kcfg_files( kcm_kleopatra_PART_SRCS
 
 kde4_add_plugin(kcm_kleopatra ${kcm_kleopatra_PART_SRCS})
 
-if (ONLY_KLEO)
+if (KDEPIM_ONLY_KLEO)
  target_link_libraries(kcm_kleopatra ${KDE4_KDEUI_LIBS} ${KDE4_KCMUTILS_LIBS} kleo ${_kcm_kleopatra_extra_libs} ${_kcm_kleopatra_libkleopatraclient_extra_LIBS})
-else (ONLY_KLEO)
+else (KDEPIM_ONLY_KLEO)
  target_link_libraries(kcm_kleopatra ${KDE4_KDEUI_LIBS} ${KDE4_KUTILS_LIBS} kleo ${_kcm_kleopatra_extra_libs} ${_kcm_kleopatra_libkleopatraclient_extra_LIBS})
-endif (ONLY_KLEO) 
+endif (KDEPIM_ONLY_KLEO) 
 
 
 install(TARGETS kcm_kleopatra  DESTINATION ${PLUGIN_INSTALL_DIR})

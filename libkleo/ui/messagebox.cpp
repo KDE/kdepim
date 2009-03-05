@@ -39,7 +39,7 @@
 #include <gpgme++/encryptionresult.h>
 
 
-#ifndef ONLY_KLEO
+#ifndef KDEPIM_ONLY_KLEO
 # include <kfiledialog.h>
 #else
 # include <QFileDialog>
@@ -103,7 +103,7 @@ void AuditLogViewer::setAuditLog( const QString & log ) {
 }
 
 void AuditLogViewer::slotUser1() {
-#ifndef ONLY_KLEO
+#ifndef KDEPIM_ONLY_KLEO
     const QString fileName = KFileDialog::getSaveFileName( QString(), QString(),
                                                            this, i18n("Choose File to Save GnuPG Audit Log to") );
 #else

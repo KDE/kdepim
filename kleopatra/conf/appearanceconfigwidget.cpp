@@ -42,7 +42,7 @@
 #include "libkleo/kleo/cryptobackendfactory.h"
 #include "libkleo/kleo/keyfiltermanager.h"
 
-#ifdef ONLY_KLEO
+#ifdef KDEPIM_ONLY_KLEO
 # include <utils/kleo_kicondialog.h>
 #else
 # include <kicondialog.h>
@@ -70,7 +70,7 @@
 using namespace Kleo;
 using namespace Kleo::Config;
 using namespace boost;
-#ifdef ONLY_KLEO
+#ifdef KDEPIM_ONLY_KLEO
 using namespace Kleo::KioAvoidance;
 #endif
 

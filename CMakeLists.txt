@@ -1,252 +1,240 @@
 project(kdepim)
 
-option(ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disabled many components not needed for Kontact as the Kolab client." FALSE)
-if(ENTERPRISE_BUILD)
-  set(BUILD_EVERYTHING FALSE)
-  message(STATUS "Enterprise build is enabled.")
-else(ENTERPRISE_BUILD)
-  set(BUILD_EVERYTHING TRUE)
-  message(STATUS "Enterprise build is disabled.")
-endif(ENTERPRISE_BUILD)
-configure_file(config-enterprise.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-enterprise.h )
-
+# where to look first for cmake modules. This line must be the first one or cmake will use the system's FindFoo.cmake
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
-# search packages used by KDE
-find_package (KDE4 REQUIRED)
+
+############### Build Options ###############
+
+option(KDEPIM_ENTERPRISE_BUILD "Enable features specific to the enterprise branch, which are normally disabled. Also, it disables many components not needed for Kontact such as the Kolab client." FALSE)
+option(KDEPIM_ONLY_KLEO "Only build Kleopatra. This option will disable KDEPIM_BUILD_EVERYTHING and KDEPIM_ENTERPRISE_BUILD." FALSE)
+
+# if KDEPIM_ENTERPRISE_BUILD is defined, KDEPIM_ONLY_KLEO is disabled
+if(KDEPIM_ENTERPRISE_BUILD)
+  set(KDEPIM_ONLY_KLEO FALSE)
+  set(KDEPIM_BUILD_EVERYTHING FALSE)
+  message(STATUS "Enterprise build is enabled.")
+else(KDEPIM_ENTERPRISE_BUILD)
+  # if KDEPIM_ONLY_KLEO is defined, KDEPIM_BUILD_EVERYTHING is disabled.
+  if(KDEPIM_ONLY_KLEO)
+    set(KDEPIM_BUILD_EVERYTHING FALSE)
+    set(KDEPIM_DEFINITIONS "-DHAVE_CONFIG_H=1")
+    message(STATUS "Only libkleo and Kleopatra will be built.")
+  endif(KDEPIM_ONLY_KLEO)
+  # Default
+    set(KDEPIM_BUILD_EVERYTHING TRUE)
+    message(STATUS "Enterprise build is disabled.")
+endif(KDEPIM_ENTERPRISE_BUILD)
+
+# config-enterprise.h is needed for both ENTERPRISE_BUILD and BUILD_EVERYTHING
+configure_file(config-enterprise.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-enterprise.h )
+
+
+############### search packages used by KDE ###############
+
+find_package(KDE4 REQUIRED)
 include(KDE4Defaults)
 include(MacroLibrary)
 include(CheckIncludeFiles)
 find_package(KdepimLibs REQUIRED)
 
-#####
-##### Backwards compatibility section:
-##### Support building against earlier kdelibs or kdepimlibs
-#####
-if(NOT DEFINED KDE4_KHOLIDAYS_LIBS)
-  set(KDE4_KHOLIDAYS_LIBS kholidays)
-endif(NOT DEFINED KDE4_KHOLIDAYS_LIBS)
-#####
+
+############### search Boost ###############
+
+set(Boost_MINIMUM_VERSION "1.33.1")
+find_package(Boost)
+macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "" "Required by several critical KDEPIM apps.")
+
+# Kleopatra needs to know if the topological.hpp header exists (part of Boost_graph).
+find_path(Boost_TOPOLOGICAL_SORT_DIR NAMES boost/graph/topological_sort.hpp PATHS ${Boost_INCLUDE_DIRS})
+macro_log_feature(Boost_TOPOLOGICAL_SORT_DIR "The Boost Topological_sort header" "topological_sort.hpp (part of Boost_graph)" "http://www.boost.org/" FALSE "" "Necessary to build kleopatra")
+
+
+############### Windows specific ###############
 
 if(WIN32)
   # detect oxygen icon dir at configure time based on KDEDIRS - there may be different package installation locations
   execute_process(COMMAND "${KDE4_KDECONFIG_EXECUTABLE}" --path icon OUTPUT_VARIABLE _dir ERROR_QUIET OUTPUT_STRIP_TRAILING_WHITESPACE)
   file(TO_CMAKE_PATH "${_dir}" __dir)
   find_path(KDE4_ICON_DIR oxygen PATHS
-      ${__dir}
+    ${__dir}
   )
   message(STATUS "using oxygen application icons from ${KDE4_ICON_DIR}")
 else(WIN32)
     set (KDE4_ICON_DIR  ${CMAKE_INSTALL_PREFIX}/share/icons)
 endif(WIN32)
 
-macro_optional_find_package(Boost)
-macro_log_feature(Boost_FOUND "boost" "Boost C++ Libraries" "http://www.boost.org" TRUE "1.33.1" "Required by several critical KDEPIM apps.")
-if(NOT Boost_FOUND)
-  macro_display_feature_log()
-endif(NOT Boost_FOUND)
 
-if ( ONLY_KLEO )
-  find_package(QGpgme REQUIRED)
+############### Compatibility ###############
+# Support building against earlier kdelibs or kdepimlibs
+# TODO Remove this section once KDE 4.3 is out.
 
-  add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS} -DHAVE_CONFIG_H=1)
+if(NOT DEFINED KDE4_KHOLIDAYS_LIBS)
+  set(KDE4_KHOLIDAYS_LIBS kholidays)
+endif(NOT DEFINED KDE4_KHOLIDAYS_LIBS)
 
-  include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${QT_QTDBUS_INCLUDE_DIR} )
 
-  include (kleopatra/ConfigureChecks.cmake)
+############### ONLY_KLEO ###############
+
+# The KDEPIM_ONLY_KLEO option is true
+if(KDEPIM_ONLY_KLEO)
+  find_package(QGpgme)
+  macro_log_feature(QGPGME_FOUND "qgpgme" "The QGpgME library." "http://www.kde.org" TRUE "" "QGpgME is required to build Kleopatra.")
+
+  add_definitions(${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${KDEPIM_DEFINITIONS})
+  include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDE4_INCLUDES} ${QT_QTDBUS_INCLUDE_DIR})
+  include(kleopatra/ConfigureChecks.cmake)
 
   add_subdirectory(libkleo)
-
-  find_path(TOPOLOGICAL_SORT_DIR NAMES boost/graph/topological_sort.hpp PATHS ${Boost_INCLUDE_DIRS})
-  macro_log_feature(TOPOLOGICAL_SORT_DIR "Boost Topological Sort" "Missing Boost header topological.h" "http://www.boost.org/" FALSE "" "Necessary to build kleopatra")
-  if(TOPOLOGICAL_SORT_DIR)
+  if (Boost_TOPOLOGICAL_SORT_DIR)
     macro_optional_add_subdirectory(kleopatra)
-  endif(TOPOLOGICAL_SORT_DIR)
+  endif (Boost_TOPOLOGICAL_SORT_DIR)
 
-else ( ONLY_KLEO )
-  # regular case, build everything
+else(KDEPIM_ONLY_KLEO)
 
-  find_package(Akonadi REQUIRED)
+# Otherwise...
+############### Find the stuff we need ###############
 
-#  if ( NOT EXISTS ${CMAKE_SOURCE_DIR}/libkdepim/kdepim_export.h )
-#     message ( FATAL_ERROR "libkdepim directory not found" ) # needed for Kode to compile correctly
-#  endif ( NOT EXISTS ${CMAKE_SOURCE_DIR}/libkdepim/kdepim_export.h )
-#  find_package(Kode REQUIRED)
-  find_package(ZLIB REQUIRED)
-  find_package(Strigi REQUIRED)
+  find_package(Akonadi)
+  macro_log_feature(Akonadi_FOUND "akonadi" "Akonadi client libraries (from kdepimlibs)" "http://pim.kde.org/akonadi" TRUE "" "Akonadi is required to build KDEPIM")
+
+  find_package(ZLIB)
+  macro_log_feature(ZLIB_FOUND "zlib" "The Zlib compression library" "http://www.zlib.net" TRUE "" "")
+
+  find_package(Strigi)
+  macro_log_feature(STRIGI_FOUND "strigi" "Index metadata of files" "http:// strigi.sourceforge.net" TRUE "" "")
+
   find_package(QGpgme)
+  macro_log_feature(QGPGME_FOUND "qgpgme" "The QGpgME library." "http://www.kde.org" FALSE "" "QGpgME is required to build KMail, KOrganizer and Kleopatra")
 
-  if(X11_FOUND)
-    #X11_Xscreensaver discovery is done by FindX11
-    macro_log_feature(X11_Xscreensaver_FOUND "X11 screensaver extension" "X Window Screen Saver Development Library" "http://xorg.freedesktop.org" FALSE "" "Required for building the KTimeTracker Program")
-  endif(X11_FOUND)
-
-# uncomment the following block for 4.3 in order to enable kitchensync
-#  if (NOT WIN32)
-#     set(OPENSYNC_MIN_VERSION 0.38)
-#     macro_optional_find_package(OpenSync)
-#     macro_log_feature(OPENSYNC_FOUND "opensync" "OpenSync Development Libraries" "http://www.opensync.org" FALSE "0.38 or greater" "Needed to provide syncing functionality in KDE PIM applications. Necessary to compile kitchensync.")
-#     macro_optional_find_package(GLIB2)
-#     macro_log_feature(GLIB2_FOUND "glib2" "Low-level core library for data structure handling, portability wrappers, etc." "http://www.gtk.org" FALSE "2.x" "Needed to provide synching applications from KDE PIM applications. Necessary to compile kitchensync and other PIM applications.")
-#  endif (NOT WIN32)
+  # If QGpgme is found, KMail support is enabled
+  macro_bool_to_01(QGPGME_FOUND KMAIL_SUPPORTED)
+  # which makes these components supported as well
+  macro_bool_to_01(QGPGME_FOUND KMAILCVT_SUPPORTED)
+  macro_bool_to_01(QGPGME_FOUND KSENDEMAIL_SUPPORTED)
+  macro_bool_to_01(QGPGME_FOUND KORGANIZER_SUPPORTED)
 
   macro_optional_find_package(Soprano)
-  macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" "" FALSE "" "Soprano is needed for Nepomuk")
+  macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" FALSE "" "" "Soprano is needed for Nepomuk")
 
   macro_optional_find_package(Nepomuk)
-  macro_log_feature(Nepomuk_FOUND "Nepomuk" "Nepomuk" "http://www.kde.org" FALSE "" "For adding desktop-wide tagging support to kmail")
+  macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" FALSE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
 
-  add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS})
 
-  include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDEPIMLIBS_INCLUDE_DIRS} ${KDE4_INCLUDES} ${QT_QTDBUS_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/libkdepim/)
+############### Needed commands before building anything ###############
+
+add_definitions (${QT_DEFINITIONS} ${KDE4_DEFINITIONS} ${KDEPIM_DEFINITIONS})
+include_directories (${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR} ${KDEPIMLIBS_INCLUDE_DIRS} ${KDE4_INCLUDES} ${QT_QTDBUS_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/libkdepim)
+
+
+############### Code used in several places ###############
+# TODO Remove from the top CMakeLists.
+
+# used in knotes, kontact/plugins/knotes, kresources/egroupware, kresources/kolab/knotes, kresources/scalix/knotes, wizard
+set(libknotesresources_SRCS
+  ${CMAKE_SOURCE_DIR}/knotes/resourcemanager.cpp
+  ${CMAKE_SOURCE_DIR}/knotes/resourcenotes.cpp
+  ${CMAKE_SOURCE_DIR}/knotes/resourcelocal.cpp
+  ${CMAKE_SOURCE_DIR}/knotes/resourcelocalconfig.cpp
+)
+
+# used in knotes, kontact/plugins/knotes
+set(libknoteseditor_SRCS
+  ${CMAKE_SOURCE_DIR}/knotes/knoteedit.cpp
+)
+
+# used in kdgantt1, korganizer
+set(libkdgantt1_SRCS
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttView.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewEventItem.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewItem.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewItemDrag.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewSubwidgets.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewSummaryItem.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewTaskItem.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewTaskLink.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewTaskLinkGroup.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttMinimizeSplitter.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttSemiSizingControl.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttSizingControl.cpp
+  ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttXMLTools.cpp
+)
+
+
+############### Now, we add the PIM components ###############
 
   include (kleopatra/ConfigureChecks.cmake)
 
-  set(libknotesresources_SRCS
-     ${CMAKE_SOURCE_DIR}/knotes/resourcemanager.cpp
-     ${CMAKE_SOURCE_DIR}/knotes/resourcenotes.cpp
-     ${CMAKE_SOURCE_DIR}/knotes/resourcelocal.cpp
-     ${CMAKE_SOURCE_DIR}/knotes/resourcelocalconfig.cpp
-  )
-
-  set(libknoteseditor_SRCS
-    ${CMAKE_SOURCE_DIR}/knotes/knoteedit.cpp
-  )
-
-  set(libkdgantt1_SRCS
-     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttView.cpp
-     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewEventItem.cpp
-     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewItem.cpp
-     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewItemDrag.cpp
-     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewSubwidgets.cpp
-     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewSummaryItem.cpp
-     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewTaskItem.cpp
-     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewTaskLink.cpp
-     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttViewTaskLinkGroup.cpp
-     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttMinimizeSplitter.cpp
-     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttSemiSizingControl.cpp
-     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttSizingControl.cpp
-     ${CMAKE_SOURCE_DIR}/kdgantt1/KDGanttXMLTools.cpp
-  )
-
-  if(BUILD_EVERYTHING)
-#    add_subdirectory(kode)
-    macro_optional_add_subdirectory(akonadi)
-  endif(BUILD_EVERYTHING)
+  # These targets will always be built
   add_subdirectory(libkdepim)
-  add_subdirectory(kontactinterfaces)
-
-  if(QGPGME_FOUND)
-     find_path(TOPOLOGICAL_SORT_DIR NAMES boost/graph/topological_sort.hpp PATHS ${Boost_INCLUDE_DIRS})
-     macro_log_feature(TOPOLOGICAL_SORT_DIR "Boost Topological Sort" "Missing Boost header topological.h" "http://www.boost.org/" FALSE "" "Necessary to build kleopatra")
-     if(TOPOLOGICAL_SORT_DIR)
-        macro_optional_add_subdirectory(kleopatra)
-     endif(TOPOLOGICAL_SORT_DIR)
-     add_subdirectory(libkleo)
-  endif(QGPGME_FOUND)
-
+  add_subdirectory(libkleo)
   add_subdirectory(libkpgp)
   add_subdirectory(libksieve)
+  add_subdirectory(kontactinterfaces)
   add_subdirectory(mimelib)
-  add_subdirectory(icons)
-  macro_optional_add_subdirectory(akregator)
-  if(BUILD_EVERYTHING)
-    macro_optional_add_subdirectory(knode)
-  endif(BUILD_EVERYTHING)
-  macro_optional_add_subdirectory(kjots)
-
-  if(QGPGME_FOUND)
-    set(KMAIL_SUPPORTED TRUE)
-    add_definitions(-DKMAIL_SUPPORTED)
-    message(STATUS "KMail support enabled.")
-    macro_optional_add_subdirectory(kmail)
-  else(QGPGME_FOUND)
-    set(KMAIL_SUPPORTED FALSE)
-    message(STATUS "KMail support DISABLED (QGPGME not found).")
-  endif(QGPGME_FOUND)
-
-  macro_optional_add_subdirectory(kalarm)
-  macro_optional_add_subdirectory(kaddressbook)
-#  macro_optional_add_subdirectory(kcontactmanager)
-
-  if(Q_WS_X11)
-    set(KTIMETRACKER_SUPPORTED TRUE)
-    add_definitions(-DKTIMETRACKER_SUPPORTED)
-    message(STATUS "KTimeTracker support enabled.")
-    macro_optional_add_subdirectory(ktimetracker)
-  else(Q_WS_X11)
-    set(KTIMETRACKER_SUPPORTED FALSE)
-    message(STATUS "KTimeTracker support DISABLED (non-X11 target).")
-  endif (Q_WS_X11)
-
-  add_subdirectory(kdgantt1)
-
-  macro_optional_add_subdirectory(strigi-analyzer)
-
-  if(QGPGME_FOUND AND KMAIL_SUPPORTED)
-     macro_optional_add_subdirectory(kmailcvt)
-     message(STATUS "KMailCVT support enabled.")
-  else(QGPGME_FOUND AND KMAIL_SUPPORTED)
-     message(STATUS "KMailCVT support DISABLED (because KMail support is disabled).")
-  endif(QGPGME_FOUND AND KMAIL_SUPPORTED)
-  macro_optional_add_subdirectory(knotes)
-  macro_optional_add_subdirectory(console)
-
-  if(QGPGME_FOUND AND KMAIL_SUPPORTED)
-     macro_optional_add_subdirectory(korganizer)
-     message(STATUS "KOrganizer support enabled.")
-  else(QGPGME_FOUND AND KMAIL_SUPPORTED)
-     message(STATUS "KOrganizer support DISABLED (because KMail support is disabled).")
-  endif(QGPGME_FOUND AND KMAIL_SUPPORTED)
-
-  if(KMAIL_SUPPORTED)
-     macro_optional_add_subdirectory(ksendemail)
-     message(STATUS "KSendEmail support enabled.")
-  else(KMAIL_SUPPORTED)
-     message(STATUS "KSendEmail support DISABLED (because KMail support is disabled).")
-  endif(KMAIL_SUPPORTED)
-
-  if(NOT WIN32)
-     set(KPILOT_SUPPORTED TRUE)
-     add_definitions(-DKPILOT_SUPPORTED)
-     message(STATUS "KPilot support enabled.")
-     macro_optional_add_subdirectory(kpilot)
-
-#     if(OPENSYNC_FOUND AND GLIB2_FOUND)
-#       set(KITCHENSYNC_SUPPORTED TRUE)
-#       add_definitions(-DKITCHENSYNC_SUPPORTED)
-#       message(STATUS "KitchenSync support enabled.")
-#       macro_optional_add_subdirectory(kitchensync)
-#     else(OPENSYNC_FOUND AND GLIB2_FOUND)
-#       set(KITCHENSYNC_SUPPORTED FALSE)
-#       if(NOT OPENSYNC_FOUND)
-#         message(STATUS "KitchenSync support disabled (OpenSync not found).")
-#       endif(NOT OPENSYNC_FOUND)
-#       if(NOT GLIB2_FOUND)
-#         message(STATUS "KitchenSync support disabled (GLIB not found).")
-#       endif(NOT GLIB2_FOUND)
-#     endif(OPENSYNC_FOUND AND GLIB2_FOUND)
-     set(KITCHENSYNC_SUPPORTED FALSE)
-  else(NOT WIN32)
-     set(KPILOT_SUPPORTED FALSE)
-     message(STATUS "KPilot support DISABLED (Windows target).")
-     set(KITCHENSYNC_SUPPORTED FALSE)
-     message(STATUS "KitchenSync support DISABLED (Windows target).")
-  endif(NOT WIN32)
-
-  add_subdirectory(akonadiconsole)
   add_subdirectory(kresources)
-  macro_optional_add_subdirectory(kontact)
-
-  if(QGPGME_FOUND)
-     add_subdirectory(wizards)
-  endif(QGPGME_FOUND)
-
+  add_subdirectory(kdgantt1)
+  add_subdirectory(akonadiconsole)
   add_subdirectory(cmake)
-
+  add_subdirectory(icons)
   add_subdirectory(plugins)
 
-endif( ONLY_KLEO )
+  if(QGPGME_FOUND)
+    if (Boost_TOPOLOGICAL_SORT_DIR)
+      macro_optional_add_subdirectory(kleopatra)
+    endif(Boost_TOPOLOGICAL_SORT_DIR)
+    add_subdirectory(wizards)
+    # The following components depends on QGpgME.
+    macro_optional_add_subdirectory(kmail)
+    macro_optional_add_subdirectory(kmailcvt)
+    macro_optional_add_subdirectory(ksendemail)
+    macro_optional_add_subdirectory(korganizer)
+  endif(QGPGME_FOUND)
 
+  if(KDEPIM_BUILD_EVERYTHING)
+    macro_optional_add_subdirectory(akonadi)
+    macro_optional_add_subdirectory(knode)
+  endif(KDEPIM_BUILD_EVERYTHING)
+
+  macro_optional_add_subdirectory(akregator)
+  macro_optional_add_subdirectory(console)
+  macro_optional_add_subdirectory(kaddressbook)
+  macro_optional_add_subdirectory(kalarm)
+  # macro_optional_add_subdirectory(kcontactmanager)
+  macro_optional_add_subdirectory(kjots)
+  macro_optional_add_subdirectory(knotes)
+  macro_optional_add_subdirectory(kontact)
+  macro_optional_add_subdirectory(ktimetracker)
+  macro_optional_add_subdirectory(strigi-analyzer)
+
+  # Kpilot won't build on Windows
+  if(NOT WIN32)
+    set(KPILOT_SUPPORTED)
+    macro_optional_add_subdirectory(kpilot)
+    message(STATUS "KPilot support enabled")
+
+    #if(OPENSYNC_FOUND AND GLIB2_FOUND)
+    #set(KITCHENSYNC SUPPORTED)
+    #message(STATUS "KitchenSync support enabled.")
+    #else(OPENSYNC_FOUND AND GLIB2_FOUND)
+    #set(KITCHENSYNC SUPPORTED FALSE)
+    #message(STATUS "KitchenSync support disabled (OpenSync or GLIB2 not found).")
+    #endif(OPENSYNC_FOUND AND GLIB2_FOUND)
+  endif(NOT WIN32)
+
+endif (KDEPIM_ONLY_KLEO)
+
+
+# doc must be a subdir of kdepim or packagers will kill us
 macro_optional_add_subdirectory(doc)
+
+
+# We really want to encourage users to enable/install QGpgME from kdepimlibs
+if(NOT QGPGME_FOUND)
+  # Users must be aware that QGpgMe is really needed
+  message(STATUS "*** WARNING: QGpgME is not installed on your system ***")
+  message(STATUS "*** It is required if you want to use KMail, KOrganizer or Kleopatra ***")
+  message(STATUS "*** You are really encouraged to install it ***")
+endif(NOT QGPGME_FOUND)
+# All done, let's display what we found...
 macro_display_feature_log()
