@@ -9,7 +9,14 @@ Merges
 ------
 
 * Merges from KDE 4.2 branch:
-    - 
+    - Fix a memory leak in the IMAP KIO slave
+    - Don't crash Kontact when disabling the KMail plugin
+    - Speed up folder syncing for disconnected IMAP by only uploading flags that really changed
+    - Some fixes for the "Dissociate from occurrence" function in KOrganizer
+    - When "Toggle Alarm" creates an alarm, initialize it's type so we don't see "Unknown alarm type",
+      which doesn't match the selected radio button
+    - Per RFC, if an organizer or attendee email address is empty, do not write that property
+    - Don't add an ORGANIZER property if there is no email for the organizer
 
 * Merges from enterprise35 branch:
     - kolab/issue3436: Crash in extractAuditLog() in KMail
