@@ -1,3 +1,24 @@
+Friday, March 6th 2009
+
+Problems addressed
+------------------
+
+* Fix Kontact crash on Windows Server 2003
+
+Merges
+------
+
+* Merges from KDE 4.2 branch:
+    - 
+
+* Merges from enterprise35 branch:
+    - kolab/issue3436: Crash in extractAuditLog() in KMail
+    - kolab/issue3119: Black notes are displayed after system start
+    - kolab/issue3367: Changing organizer's status doesn't work
+    - Avoid some unnecessary resyncs in KNotes
+    - Don't allow to rename locked notes
+
+
 Friday, February 27th 2009
 
 Problems addressed
