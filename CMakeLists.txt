@@ -199,8 +199,11 @@ set(libkdgantt1_SRCS
   macro_optional_add_subdirectory(kjots)
   macro_optional_add_subdirectory(knotes)
   macro_optional_add_subdirectory(kontact)
-  macro_optional_add_subdirectory(ktimetracker)
   macro_optional_add_subdirectory(strigi-analyzer)
+
+  if(Q_WS_X11)
+    macro_optional_add_subdirectory(ktimetracker)
+  endif(Q_WS_X11)
 
   # Kpilot won't build on Windows
   if(NOT WIN32)
