@@ -14,20 +14,22 @@
 #ifndef KNODE_KNCOLLECTIONVIEW_H
 #define KNODE_KNCOLLECTIONVIEW_H
 
-#include <kfoldertree.h>
-#include <QEvent>
+#include <foldertreewidget.h>
+
 #include <QDropEvent>
 
-class KMenu;
 class KNNntpAccount;
 class KNGroup;
 class KNFolder;
 class KNCollectionViewItem;
 
+class QContextMenuEvent;
+
 using namespace KPIM;
 
 /** The group/folder tree. */
-class KNCollectionView : public KFolderTree {
+class KNCollectionView : public FolderTreeWidget
+{
 
   Q_OBJECT
 
@@ -35,7 +37,8 @@ class KNCollectionView : public KFolderTree {
     KNCollectionView( QWidget *parent );
     ~KNCollectionView();
 
-    void setActive(Q3ListViewItem *item);
+    /** Selects @p item and set it the current item. */
+    void setActive( QTreeWidgetItem *item );
 
     void readConfig();
     void writeConfig();
@@ -67,25 +70,33 @@ class KNCollectionView : public KFolderTree {
     void incCurrentFolder();
     void selectCurrentFolder();
 
-    void toggleUnreadColumn();
-    void toggleTotalColumn();
-    void updatePopup() const;
-
   signals:
     void folderDrop( QDropEvent *e, KNCollectionViewItem *item );
+    /**
+      This signal is emitted when a context menu should be displayed
+      for @p item as global position @p position.
+      */
+    void contextMenu( QTreeWidgetItem *item, const QPoint &position );
 
   protected:
+    /**
+      Emits the signal contextMenu() to display a context menu on
+      items of the view.
+      Reimplemented from QAbstractScrollArea.
+      */
+    virtual void contextMenuEvent( QContextMenuEvent *event );
+
     // dnd
+/* TODO
     virtual Q3DragObject* dragObject();
     virtual void contentsDropEvent( QDropEvent *e );
-
-    bool eventFilter( QObject *, QEvent * );
+*/
 
   private:
-    Q3ListViewItem *mActiveItem;
-    KMenu *mPopup;
-    int mUnreadPop, mTotalPop;
+    /** Loads the column layout. */
+    void loadLayout();
 
+    QTreeWidgetItem *mActiveItem;
 };
 
 #endif // KNODE_KNCOLLECTIONVIEW_H

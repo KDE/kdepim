@@ -88,7 +88,7 @@ KNFolder::~KNFolder()
 void KNFolder::updateListItem()
 {
   if(l_istItem) {
-    l_istItem->setText(0, n_ame);
+    l_istItem->setLabelText( n_ame );
     if (!isRootFolder())
       l_istItem->setTotalCount( c_ount );
   }
@@ -152,7 +152,7 @@ void KNFolder::saveInfo()
       grp.writeEntry("parentId", p_arentId);
     }
     if(l_istItem)
-      grp.writeEntry("wasOpen", l_istItem->isOpen());
+      grp.writeEntry("wasOpen", l_istItem->isExpanded());
   }
 }
 

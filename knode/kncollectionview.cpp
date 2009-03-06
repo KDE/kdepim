@@ -11,17 +11,7 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <QCursor>
-#include <q3header.h>
-//Added by qt3to4:
-#include <QEvent>
-#include <QDropEvent>
-#include <QMouseEvent>
-#include <Q3DragObject>
-#include <kiconloader.h>
-#include <k3listview.h>
-#include <klocale.h>
-#include <kmenu.h>
+#include "kncollectionview.h"
 
 #include "knglobals.h"
 #include "knconfig.h"
@@ -31,32 +21,32 @@
 #include "kngroupmanager.h"
 #include "knfolder.h"
 #include "knfoldermanager.h"
-#include "headerview.h"
-#include "kncollectionview.h"
 #include "kncollectionviewitem.h"
 #include "settings.h"
 
+#include <kiconloader.h>
+#include <klocale.h>
+
+#include <QCursor>
+#include <QDropEvent>
+
+
 KNCollectionView::KNCollectionView( QWidget *parent ) :
-  KFolderTree( parent ),
-  mActiveItem( 0 ),
-  mPopup( 0 )
+  FolderTreeWidget( parent ),
+  mActiveItem( 0 )
 {
+/* TODO
   setDragEnabled(true);
   addAcceptableDropMimetype("x-knode-drag/article", false);
   addAcceptableDropMimetype("x-knode-drag/folder", true);
-  addColumn(i18n("Name"),162);
+*/
+/* TODO
   setDropHighlighter(true);
-
-  // popup menu to enable/disable unread and total columns
-  header()->setClickEnabled( true );
-  header()->installEventFilter( this );
-  mPopup = new KMenu( this );
-  mPopup->addTitle( i18n("View Columns") );
-  mPopup->setCheckable( true );
-  mUnreadPop = mPopup->insertItem( i18n("Unread Column"), this, SLOT(toggleUnreadColumn()) );
-  mTotalPop = mPopup->insertItem( i18n("Total Column"), this, SLOT(toggleTotalColumn()) );
+*/
 
   // add unread and total columns if necessary
+  loadLayout();
+
   readConfig();
 
   // load accounts and folders
@@ -81,7 +71,8 @@ KNCollectionView::KNCollectionView( QWidget *parent ) :
   connect(fm, SIGNAL(folderRemoved(KNFolder*)), SLOT(removeFolder(KNFolder*)));
   connect(fm, SIGNAL(folderActivated(KNFolder*)), SLOT(activateFolder(KNFolder*)));
 
-  installEventFilter(this);
+  // Edition of label
+  setEditTriggers( QAbstractItemView::NoEditTriggers );
 }
 
 
@@ -91,53 +82,25 @@ KNCollectionView::~KNCollectionView()
 }
 
 
+void KNCollectionView::loadLayout()
+{
+  addLabelColumn( i18n("Name") );
+  addUnreadColumn( i18n("Unread") );
+  addTotalColumn( i18n("Total") );
+
+  restoreLayout( knGlobals.config(), "GroupView" );
+}
 
 void KNCollectionView::readConfig()
 {
-  KConfigGroup conf(knGlobals.config(), "GroupView" );
-
-  // execute the listview layout stuff only once
-  static bool initDone = false;
-  if (!initDone) {
-    initDone = true;
-    const int unreadColumn = conf.readEntry("UnreadColumn", 1);
-    const int totalColumn = conf.readEntry("TotalColumn", 2);
-
-    // we need to _activate_ them in the correct order
-    // this is ugly because we can't use header()->moveSection
-    // but otherwise the restoreLayout doesn't know that to do
-    if (unreadColumn != -1 && unreadColumn < totalColumn)
-      addUnreadColumn( i18n("Unread"), 48 );
-    if (totalColumn != -1)
-      addTotalColumn( i18n("Total"), 36 );
-    if (unreadColumn != -1 && unreadColumn > totalColumn)
-      addUnreadColumn( i18n("Unread"), 48 );
-    updatePopup();
-
-    restoreLayout( knGlobals.config(), "GroupView" );
-  }
-
-  // font & color settings
+  // font
   setFont( knGlobals.settings()->groupListFont() );
-
-  QPalette p = palette();
-  p.setColor( QPalette::Base, knGlobals.settings()->backgroundColor() );
-  p.setColor( QPalette::Text, knGlobals.settings()->textColor() );
-  setPalette( p );
-  setAlternateBackground( knGlobals.settings()->backgroundColor() );
-  // FIXME: make this configurable
-  mPaintInfo.colUnread = QColor( "blue" );
-  mPaintInfo.colFore = knGlobals.settings()->textColor();
-  mPaintInfo.colBack = knGlobals.settings()->backgroundColor();
 }
 
 
 void KNCollectionView::writeConfig()
 {
-  KConfigGroup conf( knGlobals.config(), "GroupView" );
   saveLayout( knGlobals.config(), "GroupView" );
-  conf.writeEntry( "UnreadColumn", unreadIndex() );
-  conf.writeEntry( "TotalColumn", totalIndex() );
 }
 
 
@@ -145,14 +108,14 @@ void KNCollectionView::writeConfig()
 void KNCollectionView::addAccount(KNNntpAccount *a)
 {
   // add account item
-  KNCollectionViewItem* item = new KNCollectionViewItem( this, KFolderTreeItem::News );
+  KNCollectionViewItem* item = new KNCollectionViewItem( this, FolderTreeWidgetItem::News );
   a->setListItem( item );
-  item->setOpen( a->wasOpen() );
+  item->setExpanded( a->wasOpen() );
 
   // add groups for this account
   KNGroup::List groups = knGlobals.groupManager()->groupsOfAccount( a );
   for ( KNGroup::List::Iterator it = groups.begin(); it != groups.end(); ++it ) {
-    KNCollectionViewItem *gitem = new KNCollectionViewItem( item, KFolderTreeItem::News );
+    KNCollectionViewItem *gitem = new KNCollectionViewItem( item, FolderTreeWidgetItem::News );
     (*it)->setListItem( gitem );
     (*it)->updateListItem();
   }
@@ -163,9 +126,11 @@ void KNCollectionView::removeAccount(KNNntpAccount *a)
 {
   if(!a->listItem())
     return;
-  KNCollectionViewItem *child = 0, *aitem = a->listItem();
-  while((child = static_cast<KNCollectionViewItem*>(aitem->firstChild())))
+  KNCollectionViewItem *child = 0;
+  KNCollectionViewItem *aitem = a->listItem();
+  while ( ( child = static_cast<KNCollectionViewItem*>( aitem->takeChild( 0 ) ) ) ) {
     removeGroup(static_cast<KNGroup*>(child->coll));
+  }
   delete aitem;
   a->setListItem(0);
 }
@@ -194,7 +159,7 @@ void KNCollectionView::addGroup(KNGroup *g)
     return;
 
   KNCollectionViewItem *gitem =
-      new KNCollectionViewItem( g->account()->listItem(), KFolderTreeItem::News );
+      new KNCollectionViewItem( g->account()->listItem(), FolderTreeWidgetItem::News );
   g->setListItem(gitem);
   updateGroup(g);
 }
@@ -223,22 +188,22 @@ void KNCollectionView::addFolder(KNFolder *f)
 
   if (!f->parent()) {
     // root folder
-    it = new KNCollectionViewItem(this, KFolderTreeItem::Local);
+    it = new KNCollectionViewItem(this, FolderTreeWidgetItem::Local);
   } else {
     // make sure the parent folder has already been added
     if (!f->parent()->listItem())
       addFolder( static_cast<KNFolder*>(f->parent()) );
     // handle special folders
-    KFolderTreeItem::Type type = KFolderTreeItem::Other;
+    FolderTreeWidgetItem::FolderType type = FolderTreeWidgetItem::Other;
     switch ( f->id() ) {
       case 1:
-        type = KFolderTreeItem::Drafts; break;
+        type = FolderTreeWidgetItem::Drafts; break;
       case 2:
-        type = KFolderTreeItem::Outbox; break;
+        type = FolderTreeWidgetItem::Outbox; break;
       case 3:
-        type = KFolderTreeItem::SentMail; break;
+        type = FolderTreeWidgetItem::SentMail; break;
     }
-    it = new KNCollectionViewItem( f->parent()->listItem(), KFolderTreeItem::Local, type );
+    it = new KNCollectionViewItem( f->parent()->listItem(), FolderTreeWidgetItem::Local, type );
   }
   f->setListItem( it );
   updateFolder( f );
@@ -249,9 +214,11 @@ void KNCollectionView::removeFolder(KNFolder* f)
 {
   if(!f->listItem())
     return;
-  KNCollectionViewItem *child = 0, *it = f->listItem();
-  while((child = static_cast<KNCollectionViewItem*>(it->firstChild())))
+  KNCollectionViewItem *child = 0;
+  KNCollectionViewItem *it = f->listItem();
+  while ( ( child = static_cast<KNCollectionViewItem*>( it->takeChild( 0 ) ) ) ) {
     removeFolder(static_cast<KNFolder*>(child->coll));
+  }
   delete f->listItem();
   f->setListItem(0);
 }
@@ -274,9 +241,11 @@ void KNCollectionView::addPendingFolders()
     if ( !(*it)->listItem() )
       addFolder( (*it) );
   // now open the folders if they were open in the last session
-  for ( KNFolderManager::List::Iterator it = folders.begin(); it != folders.end(); ++it )
-    if ( (*it)->listItem())
-      (*it)->listItem()->setOpen( (*it)->wasOpen() );
+  for ( KNFolderManager::List::Iterator it = folders.begin(); it != folders.end(); ++it ) {
+    if ( (*it)->listItem()) {
+      (*it)->listItem()->setExpanded( (*it)->wasOpen() );
+    }
+  }
 }
 
 
@@ -299,16 +268,15 @@ void KNCollectionView::reload()
   reloadFolders();
 }
 
-void KNCollectionView::setActive( Q3ListViewItem *i )
+void KNCollectionView::setActive( QTreeWidgetItem *i )
 {
   if (!i || mActiveItem == i)
     return;
 
   clearSelection();
-  setSelected( i, true );
+  i->setSelected( true );
   setCurrentItem( i );
   mActiveItem = i;
-  emit( selectionChanged( i ) );
 }
 
 
@@ -328,11 +296,10 @@ void KNCollectionView::prevGroup()
 
 void KNCollectionView::decCurrentFolder()
 {
-  Q3ListViewItemIterator it( currentItem() );
+  QTreeWidgetItemIterator it( currentItem() );
   --it;
-  KFolderTreeItem* fti = static_cast<KFolderTreeItem*>(it.current());
+  FolderTreeWidgetItem* fti = static_cast<FolderTreeWidgetItem*>( *it );
   if (fti) {
-    ensureItemVisible( fti );
     setFocus();
     setCurrentItem( fti );
   }
@@ -341,11 +308,10 @@ void KNCollectionView::decCurrentFolder()
 
 void KNCollectionView::incCurrentFolder()
 {
-  Q3ListViewItemIterator it( currentItem() );
+  QTreeWidgetItemIterator it( currentItem() );
   ++it;
-  KFolderTreeItem* fti = static_cast<KFolderTreeItem*>(it.current());
+  FolderTreeWidgetItem* fti = static_cast<FolderTreeWidgetItem*>( *it );
   if (fti) {
-    ensureItemVisible( fti );
     setFocus();
     setCurrentItem( fti );
   }
@@ -354,19 +320,26 @@ void KNCollectionView::incCurrentFolder()
 
 void KNCollectionView::selectCurrentFolder()
 {
-  KFolderTreeItem* fti = static_cast<KFolderTreeItem*>( currentItem() );
+  FolderTreeWidgetItem* fti = static_cast<FolderTreeWidgetItem*>( currentItem() );
   if (fti) {
-    ensureItemVisible( fti );
     setActive( fti );
   }
 }
 
+void KNCollectionView::contextMenuEvent( QContextMenuEvent *event )
+{
+  QTreeWidgetItem *item = itemAt( event->pos() );
+  if(item) {
+    emit contextMenu( item, event->globalPos() );
+  }
+}
 
+/*
 Q3DragObject* KNCollectionView::dragObject()
 {
-  KFolderTreeItem *item = static_cast<KFolderTreeItem*>
+  FolderTreeWidgetItem *item = static_cast<FolderTreeWidgetItem*>
       (itemAt(viewport()->mapFromGlobal(QCursor::pos())));
-  if ( item && item->protocol() == KFolderTreeItem::Local && item->type() == KFolderTreeItem::Other ) {
+  if ( item && item->protocol() == FolderTreeWidgetItem::Local && item->folderType() == FolderTreeWidgetItem::Other ) {
     Q3DragObject *d = new Q3StoredDrag( "x-knode-drag/folder", viewport() );
     d->setPixmap( SmallIcon("folder") );
     return d;
@@ -387,51 +360,7 @@ void KNCollectionView::contentsDropEvent( QDropEvent *e )
   else
     e->setAccepted( false );
 }
-
-
-
-void KNCollectionView::toggleUnreadColumn()
-{
-  if ( isUnreadActive() )
-    removeUnreadColumn();
-  else
-    addUnreadColumn( i18n("Unread"), 48 );
-  mPopup->setItemChecked( mUnreadPop, isUnreadActive() );
-  reload();
-}
-
-
-void KNCollectionView::toggleTotalColumn()
-{
-  if ( isTotalActive() )
-    removeTotalColumn();
-  else
-    addTotalColumn( i18n("Total"), 36 );
-  mPopup->setItemChecked( mTotalPop, isTotalActive() );
-  reload();
-}
-
-void KNCollectionView::updatePopup() const
-{
-  mPopup->setItemChecked( mUnreadPop, isUnreadActive() );
-  mPopup->setItemChecked( mTotalPop, isTotalActive() );
-}
-
-
-
-bool KNCollectionView::eventFilter(QObject *o, QEvent *e)
-{
-  // header popup menu
-  if ( e->type() == QEvent::MouseButtonPress &&
-       static_cast<QMouseEvent*>(e)->button() == Qt::RightButton &&
-       qobject_cast<Q3Header*>( o ) )
-  {
-    mPopup->popup( static_cast<QMouseEvent*>(e)->globalPos() );
-    return true;
-  }
-
-  return KFolderTree::eventFilter(o, e);
-}
+*/
 
 
 #include "kncollectionview.moc"

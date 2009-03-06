@@ -119,14 +119,14 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   //collection view
   c_olView = new KNCollectionView( mSecondSplitter );
 
-  connect(c_olView, SIGNAL(selectionChanged(Q3ListViewItem*)),
-          SLOT(slotCollectionSelected(Q3ListViewItem*)));
-  connect(c_olView, SIGNAL(contextMenu(K3ListView*, Q3ListViewItem*, const QPoint&)),
-          SLOT(slotCollectionRMB(K3ListView*, Q3ListViewItem*, const QPoint&)));
+  connect( c_olView, SIGNAL(itemSelectionChanged()),
+           this, SLOT(slotCollectionSelected()) );
+  connect( c_olView, SIGNAL(contextMenu(QTreeWidgetItem*, const QPoint&)),
+           this, SLOT(slotCollectionRMB(QTreeWidgetItem*, const QPoint&)) );
   connect(c_olView, SIGNAL(folderDrop(QDropEvent*, KNCollectionViewItem*)),
           SLOT(slotCollectionViewDrop(QDropEvent*, KNCollectionViewItem*)));
-  connect(c_olView, SIGNAL(itemRenamed(Q3ListViewItem*)),
-          SLOT(slotCollectionRenamed(Q3ListViewItem*)));
+  connect( c_olView, SIGNAL(renamed(QTreeWidgetItem*)),
+           this, SLOT(slotCollectionRenamed(QTreeWidgetItem*)) );
 
   accel->connectItem( accel->insertItem(Qt::Key_Up), mArticleViewer, SLOT(scrollUp()) );
   accel->connectItem( accel->insertItem(Qt::Key_Down), mArticleViewer, SLOT(scrollDown()) );
@@ -217,11 +217,11 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   configChanged();
 
   // set the keyboard focus indicator on the first item in the Collection View
-  if( c_olView->firstChild() ) {
-    Q3ListViewItem *i = c_olView->firstChild();
-    bool open = i->isOpen();
+  if( c_olView->firstItem() ) {
+    QTreeWidgetItem *i = c_olView->firstItem();
+    bool open = i->isExpanded();
     c_olView->setActive( i );
-    i->setOpen( open );
+    i->setExpanded( open );
   }
 
   c_olView->setFocus();
@@ -240,6 +240,10 @@ KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
 
 KNMainWidget::~KNMainWidget()
 {
+  // Avoid that removals of items from c_olView call this object back and lead to a crash.
+  disconnect( c_olView, SIGNAL(itemSelectionChanged()),
+              this, SLOT(slotCollectionSelected()) );
+
   //delete a_ccel;
 
   h_drView->clear(); //avoid some random crashes in KNHdrViewItem::~KNHdrViewItem()
@@ -339,28 +343,6 @@ void KNMainWidget::setCursorBusy(bool b)
 {
   if(b) QApplication::setOverrideCursor(Qt::WaitCursor);
   else  QApplication::restoreOverrideCursor();
-}
-
-
-void KNMainWidget::blockUI(bool b)
-{
-  b_lockui = b;
-  KMainWindow *mainWin = dynamic_cast<KMainWindow*>(topLevelWidget());
-  KMenuBar *mbar =  mainWin ? mainWin->menuBar() : 0;
-  if ( mbar )
-    mbar->setEnabled(!b);
-#ifdef __GNUC__
-#warning Port me!
-#endif
-  /*a_ccel->setEnabled(!b);
-  KAccel *naccel = mainWin ? mainWin->accel() : 0;
-  if ( naccel )
-  naccel->setEnabled(!b);*/
-  if (b)
-    installEventFilter(this);
-  else
-    removeEventFilter(this);
-  setCursorBusy(b);
 }
 
 
@@ -478,10 +460,10 @@ void KNMainWidget::openURL(const KUrl &url)
       QString groupname=url.path( KUrl::RemoveTrailingSlash );
       while(groupname.startsWith('/'))
         groupname.remove(0,1);
-      Q3ListViewItem *item=0;
-      if(groupname.isEmpty())
+      QTreeWidgetItem *item=0;
+      if ( groupname.isEmpty() ) {
         item=acc->listItem();
-      else {
+      } else {
         KNGroup *grp= g_rpManager->group(groupname, acc);
 
         if(!grp) {
@@ -496,7 +478,6 @@ void KNMainWidget::openURL(const KUrl &url)
       }
 
       if (item) {
-        c_olView->ensureItemVisible(item);
         c_olView->setActive( item );
       }
     } else {
@@ -1174,7 +1155,7 @@ void KNMainWidget::slotArticleSelectionChanged()
 }
 
 
-void KNMainWidget::slotCollectionSelected(Q3ListViewItem *i)
+void KNMainWidget::slotCollectionSelected()
 {
   kDebug(5003) <<"KNMainWidget::slotCollectionSelected(QListViewItem *i)";
   if(b_lockui)
@@ -1193,13 +1174,15 @@ void KNMainWidget::slotCollectionSelected(Q3ListViewItem *i)
     a_rtManager->setAllRead( true );
   a_rtManager->setAllNotNew();
 
+  QTreeWidgetItem *i = c_olView->selectedItems().value( 0 ); // Single item selection
   if(i) {
     c=(static_cast<KNCollectionViewItem*>(i))->coll;
     switch(c->type()) {
       case KNCollection::CTnntpAccount :
         selectedAccount=static_cast<KNNntpAccount*>(c);
-        if(!i->isOpen())
-          i->setOpen(true);
+        if( !i->isExpanded() ) {
+          i->setExpanded( true );
+        }
       break;
       case KNCollection::CTgroup :
         if ( !h_drView->hasFocus() && !mArticleViewer->hasFocus() )
@@ -1294,7 +1277,7 @@ void KNMainWidget::slotCollectionSelected(Q3ListViewItem *i)
 }
 
 
-void KNMainWidget::slotCollectionRenamed(Q3ListViewItem *i)
+void KNMainWidget::slotCollectionRenamed(QTreeWidgetItem *i)
 {
   kDebug(5003) <<"KNMainWidget::slotCollectionRenamed(QListViewItem *i)";
 
@@ -1361,30 +1344,26 @@ void KNMainWidget::slotArticleRMB(K3ListView*, Q3ListViewItem *i, const QPoint &
 }
 
 
-void KNMainWidget::slotCollectionRMB(K3ListView*, Q3ListViewItem *i, const QPoint &p)
+void KNMainWidget::slotCollectionRMB( QTreeWidgetItem *i, const QPoint &pos )
 {
   if(b_lockui)
     return;
 
   if(i) {
+    QMenu *popup = 0;
     if( (static_cast<KNCollectionViewItem*>(i))->coll->type()==KNCollection::CTgroup) {
-      QMenu *popup = static_cast<QMenu *>(factory()->container("group_popup", m_GUIClient));
-      if ( popup )
-        popup->popup(p);
+      popup = static_cast<QMenu *>(factory()->container("group_popup", m_GUIClient));
     } else if ((static_cast<KNCollectionViewItem*>(i))->coll->type()==KNCollection::CTfolder) {
       if (static_cast<KNFolder*>(static_cast<KNCollectionViewItem*>(i)->coll)->isRootFolder()) {
-        QMenu *popup = static_cast<QMenu *>(factory()->container("root_folder_popup", m_GUIClient));
-        if ( popup )
-          popup->popup(p);
+        popup = static_cast<QMenu *>(factory()->container("root_folder_popup", m_GUIClient));
       } else {
-        QMenu *popup  = static_cast<QMenu *>(factory()->container("folder_popup", m_GUIClient));
-        if ( popup )
-          popup->popup(p);
+        popup = static_cast<QMenu *>(factory()->container("folder_popup", m_GUIClient));
       }
     } else {
-      QMenu *popup = static_cast<QMenu *>(factory()->container("account_popup", m_GUIClient));
-      if ( popup )
-        popup->popup( p );
+      popup = static_cast<QMenu *>(factory()->container("account_popup", m_GUIClient));
+    }
+    if ( popup ) {
+      popup->popup( pos );
     }
   }
 }
@@ -1464,8 +1443,8 @@ void KNMainWidget::slotAccRename()
 {
   kDebug(5003) <<"KNMainWidget::slotAccRename()";
   if(a_ccManager->currentAccount()) {
-    disableAccels(true);   // hack: global accels break the inplace renaming
-    c_olView->rename(a_ccManager->currentAccount()->listItem(), 0);
+//     disableAccels(true);   // hack: global accels break the inplace renaming
+    c_olView->editItem( a_ccManager->currentAccount()->listItem(), c_olView->labelColumnIndex() );
   }
 }
 
@@ -1500,7 +1479,7 @@ void KNMainWidget::slotAccDelete()
   kDebug(5003) <<"KNMainWidget::slotAccDelete()";
   if(a_ccManager->currentAccount()) {
     if (a_ccManager->removeAccount(a_ccManager->currentAccount()))
-      slotCollectionSelected(0);
+      slotCollectionSelected();
   }
 }
 
@@ -1535,8 +1514,8 @@ void KNMainWidget::slotGrpRename()
 {
   kDebug(5003) <<"slotGrpRename()";
   if(g_rpManager->currentGroup()) {
-    disableAccels(true);   // hack: global accels break the inplace renaming
-    c_olView->rename(g_rpManager->currentGroup()->listItem(), 0);
+//     disableAccels(true);   // hack: global accels break the inplace renaming
+    c_olView->editItem( g_rpManager->currentGroup()->listItem(),  c_olView->labelColumnIndex() );
   }
 }
 
@@ -1571,7 +1550,7 @@ void KNMainWidget::slotGrpUnsubscribe()
     if(KMessageBox::Yes==KMessageBox::questionYesNo(knGlobals.topWidget,
        i18n("Do you really want to unsubscribe from %1?", g_rpManager->currentGroup()->groupname()), QString(), KGuiItem(i18n("Unsubscribe")), KStandardGuiItem::cancel()))
       if (g_rpManager->unsubscribeGroup(g_rpManager->currentGroup()))
-        slotCollectionSelected(0);
+        slotCollectionSelected();
   }
 }
 
@@ -1612,7 +1591,6 @@ void KNMainWidget::slotFolNew()
 
   if (f) {
     f_olManager->setCurrentFolder(f);
-    c_olView->ensureItemVisible(f->listItem());
     c_olView->setActive( f->listItem() );
     slotFolRename();
   }
@@ -1627,7 +1605,6 @@ void KNMainWidget::slotFolNewChild()
 
     if (f) {
       f_olManager->setCurrentFolder(f);
-      c_olView->ensureItemVisible(f->listItem());
       c_olView->setActive( f->listItem() );
       slotFolRename();
     }
@@ -1652,7 +1629,7 @@ void KNMainWidget::slotFolDelete()
       KMessageBox::sorry(knGlobals.topWidget,
       i18n("This folder cannot be deleted because some of\n its articles are currently in use.") );
     else
-      slotCollectionSelected(0);
+      slotCollectionSelected();
   }
 }
 
@@ -1665,8 +1642,8 @@ void KNMainWidget::slotFolRename()
     if(f_olManager->currentFolder()->isStandardFolder())
       KMessageBox::sorry(knGlobals.topWidget, i18n("You cannot rename a standard folder."));
     else {
-      disableAccels(true);   // hack: global accels break the inplace renaming
-      c_olView->rename(f_olManager->currentFolder()->listItem(), 0);
+//       disableAccels(true);   // hack: global accels break the inplace renaming
+      c_olView->editItem( f_olManager->currentFolder()->listItem(), c_olView->labelColumnIndex() );
     }
   }
 }

@@ -27,6 +27,8 @@
 class Q3ListViewItem;
 class QLineEdit;
 class QSplitter;
+class QTreeWidget;
+class QTreeWidgetItem;
 
 class K3ListView;
 class KUrl;
@@ -81,7 +83,6 @@ public:
   void setStatusHelpMsg(const QString& text);
   void updateCaption();
   void setCursorBusy(bool b=true);
-  void blockUI(bool b=true);
   void disableAccels(bool b=true);
   /** processEvents with some blocking */
   void secureProcessEvents();
@@ -219,11 +220,14 @@ protected slots:
   //listview slots
   void slotArticleSelected(Q3ListViewItem*);
   void slotArticleSelectionChanged();
-  void slotCollectionSelected(Q3ListViewItem*);
-  void slotCollectionRenamed(Q3ListViewItem*);
+  /** Called when the selection collection changed. */
+  void slotCollectionSelected();
+  /** Called when a collection is renamed. */
+  void slotCollectionRenamed( QTreeWidgetItem *i );
   void slotCollectionViewDrop(QDropEvent* e, KNCollectionViewItem* after);
   void slotArticleRMB(K3ListView*, Q3ListViewItem *i, const QPoint &p);
-  void slotCollectionRMB(K3ListView*, Q3ListViewItem *i, const QPoint &p);
+  /** Display a menu on items of the collections view. */
+  void slotCollectionRMB( QTreeWidgetItem *i, const QPoint &pos );
   /** Open selected article in own composer/reader window */
   void slotOpenArticle(Q3ListViewItem *item);
   void slotHdrViewSortingChanged(int i);

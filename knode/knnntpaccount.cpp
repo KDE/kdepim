@@ -137,7 +137,7 @@ void KNNntpAccount::saveInfo()
   conf.writeEntry("fetchDescriptions", f_etchDescriptions);
   conf.writeEntry("lastNewFetch", QDateTime(l_astNewFetch));
   if(l_istItem)
-    conf.writeEntry("listItemOpen", l_istItem->isOpen());
+    conf.writeEntry("listItemOpen", l_istItem->isExpanded());
   conf.writeEntry("useDiskCache", u_seDiskCache);
   conf.writeEntry("intervalChecking", i_ntervalChecking);
   conf.writeEntry("checkInterval", c_heckInterval);

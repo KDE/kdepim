@@ -12,31 +12,31 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-
-#include <QDropEvent>
-
-#include <kiconloader.h>
-
-
 #include "kncollectionviewitem.h"
+
 #include "kncollectionview.h"
 #include "kngroup.h"
 #include "knfolder.h"
 #include "knglobals.h"
 #include "knconfigmanager.h"
 
+#include <kiconloader.h>
 
-KNCollectionViewItem::KNCollectionViewItem( KFolderTree *parent, Protocol protocol, Type type) :
-  KFolderTreeItem(parent, QString(), protocol, type), coll(0)
+#include <QDropEvent>
+
+KNCollectionViewItem::KNCollectionViewItem( FolderTreeWidget *parent, Protocol protocol, FolderType type) :
+  FolderTreeWidgetItem(parent, QString(), protocol, type), coll(0)
 {
-  setIcon();
+  setUp();
 }
 
 
-KNCollectionViewItem::KNCollectionViewItem( KFolderTreeItem *it, Protocol protocol, Type type, int unread, int total ) :
-  KFolderTreeItem(it, QString(), protocol, type, unread, total), coll(0)
+KNCollectionViewItem::KNCollectionViewItem( FolderTreeWidgetItem *parent, Protocol protocol, FolderType type, int unread, int total ) :
+  FolderTreeWidgetItem(parent, QString(), protocol, type), coll(0)
 {
-  setIcon();
+  setUp();
+  setUnreadCount( unread );
+  setTotalCount( total );
 }
 
 
@@ -46,52 +46,56 @@ KNCollectionViewItem::~KNCollectionViewItem()
 }
 
 
-void KNCollectionViewItem::setIcon() {
-  if ( protocol() == KFolderTreeItem::News ) {
+void KNCollectionViewItem::setUp()
+{
+  // Label edition
+  setFlags( flags() | Qt::ItemIsEditable );
+
+  // Icons
+  if ( protocol() == FolderTreeWidgetItem::News ) {
     // news servers/groups
-    switch ( type() ) {
-      case KFolderTreeItem::Root:
-        setPixmap( 0, SmallIcon("network-server") );
+    switch ( folderType() ) {
+      case FolderTreeWidgetItem::Root:
+        setIcon( 0, KIcon("network-server") );
         break;
       default:
-        setPixmap( 0, UserIcon("group") );
+        setIcon( 0, KIcon("group") );
     }
   } else {
     // local folders
-    switch ( type() ) {
-      case KFolderTreeItem::Outbox:
-        setPixmap( 0, SmallIcon("mail-folder-outbox") );
+    switch ( folderType() ) {
+      case FolderTreeWidgetItem::Outbox:
+        setIcon( 0, KIcon("mail-folder-outbox") );
         break;
-      case KFolderTreeItem::Drafts:
-        setPixmap( 0, SmallIcon("document-properties") );
+      case FolderTreeWidgetItem::Drafts:
+        setIcon( 0, KIcon("document-properties") );
         break;
-      case KFolderTreeItem::SentMail:
-        setPixmap( 0, SmallIcon("mail-folder-sent") );
+      case FolderTreeWidgetItem::SentMail:
+        setIcon( 0, KIcon("mail-folder-sent") );
         break;
       default:
-        setPixmap( 0, SmallIcon("folder") );
+        setIcon( 0, KIcon("folder") );
     }
   }
 }
 
 
-int KNCollectionViewItem::compare(Q3ListViewItem *i, int col, bool ascending) const
+bool KNCollectionViewItem::operator<( const QTreeWidgetItem &other ) const
 {
-  KFolderTreeItem *other = static_cast<KFolderTreeItem*>(i);
+  const FolderTreeWidgetItem &otherFolder = static_cast<const FolderTreeWidgetItem&>( other );
 
-  // folders should be always on the bottom
-  if (protocol() == KFolderTreeItem::Local) {
-    if (other && other->protocol() == KFolderTreeItem::News)
-      return ascending ? 1 : -1;
+  if( protocol() == FolderTreeWidgetItem::Local ) {
+    if( otherFolder.protocol() == FolderTreeWidgetItem::News) {
+      return false;
+    }
   }
 
-  // news servers should be always on top
-  if (protocol() == KFolderTreeItem::News) {
-    if (other && other->protocol() == KFolderTreeItem::Local)
-      return ascending ? -1 : 1;
+  if( protocol() == FolderTreeWidgetItem::News ) {
+    if( otherFolder.protocol() == FolderTreeWidgetItem::Local ) {
+      return true;
+    }
   }
-
-  return KFolderTreeItem::compare(i, col, ascending);
+  return FolderTreeWidgetItem::operator<( other );
 }
 
 
@@ -107,12 +111,11 @@ bool KNCollectionViewItem::acceptDrag(QDropEvent* event) const
   return false;
 }
 
-QString KNCollectionViewItem::squeezeFolderName( const QString &text,
-                                                 const QFontMetrics &fm,
-                                                 uint width ) const
+
+QString KNCollectionViewItem::elidedLabelText( const QFontMetrics &fm, unsigned int width ) const
 {
-  if (protocol() == KFolderTreeItem::News && type() == KFolderTreeItem::Other) {
-    QString t(text);
+  if (protocol() == FolderTreeWidgetItem::News && folderType() == FolderTreeWidgetItem::Other) {
+    QString t( labelText() );
     int curPos = 0, nextPos = 0;
     QString temp;
     while ( (uint)fm.width(t) > width && nextPos != -1 ) {
@@ -126,6 +129,7 @@ QString KNCollectionViewItem::squeezeFolderName( const QString &text,
     if ( (uint)fm.width( t ) > width )
       t = fm.elidedText( t, Qt::ElideRight, width  );
     return t;
-  } else
-    return KFolderTreeItem::squeezeFolderName( text, fm, width );
+  } else {
+    return FolderTreeWidgetItem::elidedLabelText( fm, width );
+  }
 }

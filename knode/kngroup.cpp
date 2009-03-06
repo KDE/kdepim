@@ -72,7 +72,6 @@ void KNGroup::updateListItem()
   if(!l_istItem) return;
   l_istItem->setTotalCount( c_ount );
   l_istItem->setUnreadCount( c_ount - r_eadCount - i_gnoreCount );
-  l_istItem->repaint();
 }
 
 
@@ -1039,9 +1038,11 @@ void KNGroup::showProperties()
   if(!i_dentity) i_dentity=new KNode::Identity(false);
   KNGroupPropDlg *d=new KNGroupPropDlg(this, knGlobals.topWidget);
 
-  if(d->exec())
-    if(d->nickHasChanged())
-      l_istItem->setText(0, name());
+  if(d->exec()) {
+    if(d->nickHasChanged()) {
+      l_istItem->setLabelText( name() );
+    }
+  }
 
   if(i_dentity->isEmpty()) {
     delete i_dentity;

@@ -15,26 +15,28 @@
 #ifndef KNCOLLECTIONVIEWITEM_H
 #define KNCOLLECTIONVIEWITEM_H
 
-#include <kfoldertree.h>
-#include <QDropEvent>
+#include <foldertreewidget.h>
 
-class QPainter;
-class QColorGroup;
+#include <QDropEvent>
 
 class KNCollection;
 
 using namespace KPIM;
 
 /** Folder tree item. */
-class KNCollectionViewItem : public KFolderTreeItem  {
+class KNCollectionViewItem : public FolderTreeWidgetItem  {
 
   public:
-    KNCollectionViewItem( KFolderTree *parent, Protocol protocol = NONE, Type type = Root);
-    KNCollectionViewItem( KFolderTreeItem *parent, Protocol protocol = NONE,
-                          Type type = Other, int unread = 0, int total = 0 );
+    KNCollectionViewItem( FolderTreeWidget *parent, Protocol protocol = NONE, FolderType type = Root);
+    KNCollectionViewItem( FolderTreeWidgetItem *parent, Protocol protocol = NONE,
+                          FolderType type = Other, int unread = 0, int total = 0 );
     ~KNCollectionViewItem();
 
-    int compare(Q3ListViewItem *i, int col, bool ascending) const;
+    /**
+      Sort newsgroups before local folders.
+      Reimplemented from FolderTreeWidgetItem.
+     */
+    bool operator<( const QTreeWidgetItem &other ) const;
 
     // DND
     virtual bool acceptDrag(QDropEvent* event) const;
@@ -42,12 +44,14 @@ class KNCollectionViewItem : public KFolderTreeItem  {
     KNCollection *coll;
 
   protected:
-    virtual QString squeezeFolderName( const QString &text,
-                                       const QFontMetrics &fm,
-                                       uint width ) const;
-
+    /**
+      Elid names of group according to usenet habit.
+      (e.g. fr.comp.lang.perl is elided to f.c.lang.perl)
+     */
+    virtual QString elidedLabelText( const QFontMetrics &fm, unsigned int width ) const;
   private:
-    void setIcon();
+    /** Inialize this item. */
+    void setUp();
 
 };
 

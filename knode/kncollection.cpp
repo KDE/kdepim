@@ -36,7 +36,7 @@ void KNCollection::setListItem(KNCollectionViewItem *i)
   l_istItem=i;
   if(i) {
     i->coll=this;
-    i->setText(0, name());
+    i->setLabelText( name() );
   }
 }
 
@@ -44,5 +44,7 @@ void KNCollection::setListItem(KNCollectionViewItem *i)
 
 void KNCollection::updateListItem()
 {
-  if(l_istItem) l_istItem->setText(0, name());
+  if ( l_istItem ) {
+    l_istItem->setLabelText( name() );
+  }
 }
