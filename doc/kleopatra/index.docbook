@@ -201,7 +201,7 @@ request.</para>
 and enter some text (&eg; the name of the person
 you want the certificate for) into the line edit of the <guilabel>Keyserver 
 Certificate Lookup</guilabel> dialog, then click on the
-<guilabel>search</guilabel> button. The results will be displayed in the
+<guilabel>Search</guilabel> button. The results will be displayed in the
 key list below the search bar, where you can select certificates to
 look at them by clicking the <guibutton>Details</guibutton> button
 or download them with <guibutton>Import</guibutton> into the

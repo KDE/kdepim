@@ -321,7 +321,7 @@ should be resolved. A conflict happens when both the desktop application and the
 </para>
 
 <para>
-&kpilot; interfaces with your &handheld; in two ways: using the
+&kpilot; interfaces with your &handheld; in two ways: using
 the conduits and the internal viewers. Conduits are plug-in programs which
 extend the synchronization capabilities of &kpilot;. &kpilot; stores separate copies of
 the databases and records for conduits, while the internal viewers and backup
@@ -1048,7 +1048,7 @@ For these systems, the conduit will be simply skipped.
 This conduit will synchronize your &PalmPilot; with &korganizer; and &kontact;
 or to an iCalendar file of your choice. In the latter case, the conduit will
 need the filename of the calendar file (this will usually be a file that ends in
-<literal role="extension">.ics</literal>) to sync with, of if it uses the
+<literal role="extension">.ics</literal>) to sync with, or if it uses the
 standard &korganizer; iCalendar file, it will be under the <filename
 class="directory">$KDEHOME/share/apps/korganizer/</filename> folder, where the
 <filename class="directory">$KDEHOME</filename> environment variable (typically
@@ -1107,7 +1107,7 @@ or &kontact;.
 <para>
 Check this box to save a copy of the archived records from your
 &handheld; on the <acronym>PC</acronym>, in order to keep a history of
-past appointments in you &kde; desktop as well.
+past appointments in your &kde; desktop as well.
 </para>
 </listitem>
 </varlistentry>
@@ -1173,7 +1173,7 @@ be ignored by the conduit. Also, the text has to be in an encoding that is
 compatible with your &handheld; encoding. Therefore, if the text file has
 characters that are not being correctly recognized by the Palm DOC reader in
 your &handheld;, try opening the file a text editor, like &kwrite;, and saving
-it in an compatible text encoding using the <guilabel>Save As..</guilabel>
+it in an compatible text encoding using the <guilabel>Save As...</guilabel>
 dialog, or set the encoding in the <guilabel>PC -> Handheld</guilabel> tab.
 </para></important>
 </para>
@@ -1270,7 +1270,7 @@ in your Palm DOC documents.
 Convert tags in the format &lt;<replaceable>BookmarkName</replaceable>&gt;
 located in the end of the text to Palm DOC bookmarks. Whenever the
 <replaceable>BookmarkName</replaceable> text appears in the text, the conduit
-will generate a the bookmark in the resulting Palm DOC document pointing to it.
+will generate a bookmark in the resulting Palm DOC document pointing to it.
 The tag will then be removed from the resulting Palm DOC document, leaving the
 text clean. This is a simple way to create repetitive bookmarks, like one for
 each <quote>Chapter</quote> in your Palm DOC documents.
@@ -1329,10 +1329,10 @@ extension to avoid conflicts with <literal role="extension">.bmk</literal> files
 created previously.</para>
 
 <para>Finally, the <guilabel>Convert as inline tags</guilabel> option creates
-inline tags inside the resulting text file form &lt;*
+inline tags inside the resulting text file in the form &lt;*
 <replaceable>BookmarkName</replaceable> *&gt; placing each tag in the place that
 was previously referenced by the bookmark, and using the bookmark name as the
-<replaceable>BookmarkName</replaceable> text inside the tag. Now you You can
+<replaceable>BookmarkName</replaceable> text inside the tag. Now you can
 edit the bookmark name, move it or delete it and convert back to Palm DOC, as
 you wish.
 </para>
@@ -1377,8 +1377,7 @@ user decide on a file by file, case by case basis.
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Always show resolution dialog, even when there are no
-conflicts</guilabel></term>
+<term><guilabel>Always show resolution dialog</guilabel></term>
 <listitem><para>
 This option will always bring the conflict resolution dialog, even if there is
 no conflicts to solve. The advantage is that you can keep track of all the files
