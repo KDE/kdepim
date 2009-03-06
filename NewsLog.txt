@@ -1,3 +1,23 @@
+Friday, March 6th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3367: Changing organizer's status doesn't work
+* kolab/issue3119: Black notes are displayed after system start
+* Don't allow selection of S/MIME certificates when we only want OpenPGP ones (and vice versa)
+* Avoid some unnecessary resyncs in KNotes
+* Don't enable undo/redo for locked notes
+* Don't allow to rename locked notes
+* Fix memory leak in the Kolab resource
+* Don't save the spellcheck coloring to the notes
+
+Merges
+------
+
+* Speed up folder syncing for disconnected IMAP by only uploading flags that really changed
+
+
 Friday, February 27th 2009
 
 Problems addressed
