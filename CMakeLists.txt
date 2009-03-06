@@ -96,23 +96,16 @@ else(KDEPIM_ONLY_KLEO)
 ############### Find the stuff we need ###############
 
   find_package(Akonadi)
-  macro_log_feature(Akonadi_FOUND "akonadi" "Akonadi client libraries (from kdepimlibs)" "http://pim.kde.org/akonadi" TRUE "" "Akonadi is required to build KDEPIM")
+  macro_log_feature(Akonadi_FOUND "Akonadi" "Akonadi client libraries (from kdepimlibs)" "http://pim.kde.org/akonadi" TRUE "" "Akonadi is required to build KDEPIM")
 
   find_package(ZLIB)
   macro_log_feature(ZLIB_FOUND "zlib" "The Zlib compression library" "http://www.zlib.net" TRUE "" "")
 
   find_package(Strigi)
-  macro_log_feature(STRIGI_FOUND "strigi" "Index metadata of files" "http:// strigi.sourceforge.net" TRUE "" "")
+  macro_log_feature(STRIGI_FOUND "Strigi" "Index metadata of files" "http:// strigi.sourceforge.net" TRUE "" "")
 
   find_package(QGpgme)
-  macro_log_feature(QGPGME_FOUND "qgpgme" "The QGpgME library." "http://www.kde.org" FALSE "" "QGpgME is required to build KMail, KOrganizer and Kleopatra")
-
-  # If QGpgme is found, KMail support is enabled
-  macro_bool_to_01(QGPGME_FOUND KMAIL_SUPPORTED)
-  # which makes these components supported as well
-  macro_bool_to_01(QGPGME_FOUND KMAILCVT_SUPPORTED)
-  macro_bool_to_01(QGPGME_FOUND KSENDEMAIL_SUPPORTED)
-  macro_bool_to_01(QGPGME_FOUND KORGANIZER_SUPPORTED)
+  macro_log_feature(QGPGME_FOUND "QGpgME" "The QGpgME library." "http://www.kde.org" FALSE "" "QGpgME is required to build KMail, KOrganizer and Kleopatra")
 
   macro_optional_find_package(Soprano)
   macro_log_feature(Soprano_FOUND "Soprano" "Semantic Desktop Storing" FALSE "" "" "Soprano is needed for Nepomuk")
@@ -186,6 +179,8 @@ set(libkdgantt1_SRCS
     add_subdirectory(wizards)
     # The following components depends on QGpgME.
     macro_optional_add_subdirectory(kmail)
+    # If kmail is compiled, KMAIL_SUPPORTED is true (used in several places)
+    macro_bool_to_01(BUILD_kmail KMAIL_SUPPORTED)
     macro_optional_add_subdirectory(kmailcvt)
     macro_optional_add_subdirectory(ksendemail)
     macro_optional_add_subdirectory(korganizer)
@@ -232,4 +227,3 @@ if(NOT QGPGME_FOUND)
 endif(NOT QGPGME_FOUND)
 # All done, let's display what we found...
 macro_display_feature_log()
-
