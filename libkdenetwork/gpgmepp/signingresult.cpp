@@ -25,11 +25,15 @@
 #include <gpgmepp/signingresult.h>
 #include "shared.h"
 #include "result_p.h"
+#include "util.h"
 
 #include <gpgme.h>
 
 #include <cstring>
 #include <cstdlib>
+#include <algorithm>
+#include <istream>
+#include <iterator>
 
 class GpgME::SigningResult::Private : public GpgME::Shared {
 public:
@@ -239,3 +243,41 @@ unsigned int GpgME::CreatedSignature::signatureClass() const {
   return isNull() ? 0 : d->created[idx]->sig_class ;
 }
 
+
+std::ostream & GpgME::operator<<( std::ostream & os, const SigningResult & result ) {
+    os << "GpgME::SigningResult(";
+    if ( !result.isNull() ) {
+        os << "\n error:              " << result.error()
+           << "\n createdSignatures:\n";
+        const std::vector<CreatedSignature> cs = result.createdSignatures();
+        std::copy( cs.begin(), cs.end(),
+                   std::ostream_iterator<CreatedSignature>( os, "\n" ) );
+        os << " invalidSigningKeys:\n";
+        const std::vector<InvalidSigningKey> isk = result.invalidSigningKeys();
+        std::copy( isk.begin(), isk.end(),
+                   std::ostream_iterator<InvalidSigningKey>( os, "\n" ) );
+    }
+    return os << ')';
+}
+
+std::ostream & GpgME::operator<<( std::ostream & os, const CreatedSignature & sig ) {
+    os << "GpgME::CreatedSignature(";
+    if ( !sig.isNull() )
+        os << "\n fingerprint:        " << protect( sig.fingerprint() )
+           << "\n creationTime:       " << sig.creationTime()
+           << "\n mode:               " << sig.mode()
+           << "\n publicKeyAlgorithm: " << protect( sig.publicKeyAlgorithmAsString() )
+           << "\n hashAlgorithm:      " << protect( sig.hashAlgorithmAsString() )
+           << "\n signatureClass:     " << sig.signatureClass()
+           << '\n';
+    return os << ')';
+}
+
+std::ostream & GpgME::operator<<( std::ostream & os, const InvalidSigningKey & key ) {
+    os << "GpgME::InvalidSigningKey(";
+    if ( !key.isNull() )
+        os << "\n fingerprint: " << protect( key.fingerprint() )
+           << "\n reason:      " << key.reason()
+           << '\n';
+    return os << ')';
+}

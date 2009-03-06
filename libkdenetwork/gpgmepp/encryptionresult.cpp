@@ -25,11 +25,15 @@
 #include <gpgmepp/encryptionresult.h>
 #include "shared.h"
 #include "result_p.h"
+#include "util.h"
 
 #include <gpgme.h>
 
 #include <cstring>
 #include <cstdlib>
+#include <istream>
+#include <algorithm>
+#include <iterator>
 
 class GpgME::EncryptionResult::Private : public GpgME::Shared {
 public:
@@ -137,3 +141,25 @@ GpgME::Error GpgME::InvalidRecipient::reason() const {
   return isNull() ? 0 : d->invalid[idx]->reason ;
 }
 
+
+
+std::ostream & GpgME::operator<<( std::ostream & os, const EncryptionResult & result ) {
+    os << "GpgME::EncryptionResult(";
+    if ( !result.isNull() ) {
+        os << "\n error:        " << result.error()
+           << "\n invalid recipients:\n";
+        const std::vector<InvalidRecipient> ir = result.invalidEncryptionKeys();
+        std::copy( ir.begin(), ir.end(),
+                   std::ostream_iterator<InvalidRecipient>( os, "\n" ) );
+    }
+    return os << ')';
+}
+
+std::ostream & GpgME::operator<<( std::ostream & os, const InvalidRecipient & ir ) {
+    os << "GpgME::InvalidRecipient(";
+    if ( !ir.isNull() )
+        os << "\n fingerprint: " << protect( ir.fingerprint() )
+           << "\n reason:      " << ir.reason()
+           << '\n';
+    return os << ')';
+}

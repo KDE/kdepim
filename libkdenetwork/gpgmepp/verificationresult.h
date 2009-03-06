@@ -27,6 +27,7 @@
 #include <time.h>
 
 #include <vector>
+#include <iosfwd>
 
 #include <kdepimmacros.h>
 
@@ -53,6 +54,8 @@ namespace GpgME {
   private:
     Private * d;
   };
+
+  KDE_EXPORT std::ostream & operator<<( std::ostream & os, const VerificationResult & result );
 
   class KDE_EXPORT Signature {
     friend class VerificationResult;
@@ -110,6 +113,9 @@ namespace GpgME {
     unsigned int idx;
   };
 
+  KDE_EXPORT std::ostream & operator<<( std::ostream & os, const Signature & sig );
+  KDE_EXPORT std::ostream & operator<<( std::ostream & os, Signature::Summary summary );
+
   class KDE_EXPORT Signature::Notation {
     friend class Signature;
     Notation( VerificationResult::Private * parent, unsigned int sindex, unsigned int nindex );
@@ -130,6 +136,8 @@ namespace GpgME {
     unsigned int sidx;
     unsigned int nidx;
   };
+
+  KDE_EXPORT std::ostream & operator<<( std::ostream & os, const Signature::Notation & nota );
 
 }
 

@@ -25,11 +25,13 @@
 #include <gpgmepp/decryptionresult.h>
 #include "shared.h"
 #include "result_p.h"
+#include "util.h"
 
 #include <gpgme.h>
 
 #include <cstring>
 #include <cstdlib>
+#include <istream>
 
 class GpgME::DecryptionResult::Private : public GpgME::Shared {
 public:
@@ -70,4 +72,14 @@ bool GpgME::DecryptionResult::wrongKeyUsage() const {
     return d->res.wrong_key_usage;
 #endif
   return false;
+}
+
+std::ostream & GpgME::operator<<( std::ostream & os, const DecryptionResult & result ) {
+    os << "GpgME::DecryptionResult(";
+    if ( !result.isNull() )
+        os << "\n error:                " << result.error()
+           << "\n unsupportedAlgortihm: " << protect( result.unsupportedAlgortihm() )
+           << "\n wrongKeyUsage:        " << result.wrongKeyUsage()
+           << '\n';
+    return os << ')';
 }

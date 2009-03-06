@@ -25,6 +25,8 @@
 #include <gpgmepp/result.h>
 
 #include <vector>
+#include <iosfwd>
+
 #include <kdepimmacros.h>
 
 namespace GpgME {
@@ -53,6 +55,8 @@ namespace GpgME {
     Private * d;
   };
 
+  KDE_EXPORT std::ostream & operator<<( std::ostream & os, const EncryptionResult & result );
+
   class KDE_EXPORT InvalidRecipient {
     friend class EncryptionResult;
     InvalidRecipient( EncryptionResult::Private * parent, unsigned int index );
@@ -72,6 +76,8 @@ namespace GpgME {
     EncryptionResult::Private * d;
     unsigned int idx;
   };
+
+  KDE_EXPORT std::ostream & operator<<( std::ostream & os, const InvalidRecipient & recipient );
 
 }
 

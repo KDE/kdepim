@@ -25,10 +25,13 @@
 #include <gpgmepp/verificationresult.h>
 #include "shared.h"
 #include "result_p.h"
+#include "util.h"
 
 #include <gpgme.h>
 
+#include <istream>
 #include <algorithm>
+#include <iterator>
 #include <cstring>
 #include <cstdlib>
 
@@ -299,3 +302,56 @@ const char * GpgME::Signature::Notation::value() const {
   return isNull() ? 0 : d->nota[sidx][nidx].value ;
 }
 
+
+std::ostream & GpgME::operator<<( std::ostream & os, const VerificationResult & result ) {
+    os << "GpgME::VerificationResult(";
+    if ( !result.isNull() ) {
+        os << "\n error:      " << result.error()
+           << "\n signatures:\n";
+        const std::vector<Signature> sigs = result.signatures();
+        std::copy( sigs.begin(), sigs.end(),
+                   std::ostream_iterator<Signature>( os, "\n" ) );
+    }
+    return os << ')';
+}
+
+std::ostream & GpgME::operator<<( std::ostream & os, Signature::Summary summary ) {
+#define OUTPUT( x ) if ( !(summary & (GpgME::Signature:: x)) ) {} else do { os << #x " "; } while(0)
+    os << "GpgME::Signature::Summary(";
+    OUTPUT( Valid );
+    OUTPUT( Green );
+    OUTPUT( Red );
+    OUTPUT( KeyRevoked );
+    OUTPUT( KeyExpired );
+    OUTPUT( SigExpired );
+    OUTPUT( KeyMissing );
+    OUTPUT( CrlMissing );
+    OUTPUT( CrlTooOld );
+    OUTPUT( BadPolicy );
+    OUTPUT( SysError );
+#undef OUTPUT
+    return os << ')';
+}
+
+std::ostream & GpgME::operator<<( std::ostream & os, const Signature & sig ) {
+    os << "GpgME::Signature(";
+    if ( !sig.isNull() ) {
+        os << "\n Summary:           " << sig.summary()
+           << "\n Fingerprint:       " << protect( sig.fingerprint() )
+           << "\n Status:            " << sig.status()
+           << "\n creationTime:      " << sig.creationTime()
+           << "\n expirationTime:    " << sig.expirationTime()
+           << "\n wrongKeyUsage:     " << sig.wrongKeyUsage()
+           << "\n validity:          " << sig.validityAsString()
+           << "\n nonValidityReason: " << sig.nonValidityReason()
+           << "\n notations:\n";
+        const std::vector<Signature::Notation> nota = sig.notations();
+        std::copy( nota.begin(), nota.end(),
+                   std::ostream_iterator<Signature::Notation>( os, "\n" ) );
+    }
+    return os << ')';
+}
+
+std::ostream & GpgME::operator<<( std::ostream & os, const Signature::Notation & nota ) {
+    return os << "GpgME::Signature::Notation( \"" << protect( nota.name() ) << "\", \"" << protect( nota.value() ) << "\")";
+}

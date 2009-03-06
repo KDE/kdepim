@@ -25,6 +25,8 @@
 
 #include <vector>
 #include <utility>
+#include <iosfwd>
+
 #include <kdepimmacros.h>
 
 namespace GpgME {
@@ -63,6 +65,8 @@ namespace GpgME {
   private:
     int mErr;
   };
+
+  KDE_EXPORT std::ostream & operator<<( std::ostream & os, Error err );
 
   class KDE_EXPORT Context {
     Context( gpgme_ctx_t );
@@ -280,6 +284,13 @@ namespace GpgME {
     Context( const Context & );
     const Context & operator=( const Context & );
   };
+
+  KDE_EXPORT std::ostream & operator<<( std::ostream & os, Context::Protocol proto );
+  KDE_EXPORT std::ostream & operator<<( std::ostream & os, Context::CertificateInclusion incl );
+  KDE_EXPORT std::ostream & operator<<( std::ostream & os, Context::KeyListMode mode );
+  KDE_EXPORT std::ostream & operator<<( std::ostream & os, Context::SignatureMode mode );
+  KDE_EXPORT std::ostream & operator<<( std::ostream & os, Context::EncryptionFlags flags );
+  KDE_EXPORT std::ostream & operator<<( std::ostream & os, Context::AuditLogFlags flags );
 
   //
   //

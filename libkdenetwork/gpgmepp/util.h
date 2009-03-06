@@ -28,6 +28,10 @@
 #include <iostream>
 #endif
 
+static inline const char * protect( const char * s ) {
+    return s ? s : "<null>" ;
+}
+
 static inline gpgme_keylist_mode_t add_to_gpgme_keylist_mode_t( unsigned int oldmode, unsigned int newmodes ) {
   if ( newmodes & GpgME::Context::Local ) oldmode |= GPGME_KEYLIST_MODE_LOCAL;
   if ( newmodes & GpgME::Context::Extern ) oldmode |= GPGME_KEYLIST_MODE_EXTERN;

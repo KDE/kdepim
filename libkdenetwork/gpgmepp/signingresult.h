@@ -28,7 +28,10 @@
 #include <time.h>
 
 #include <vector>
+#include <iosfwd>
+
 #include <kdepimmacros.h>
+
 namespace GpgME {
 
   class Error;
@@ -57,6 +60,8 @@ namespace GpgME {
     Private * d;
   };
 
+  KDE_EXPORT std::ostream & operator<<( std::ostream & os, const SigningResult & result );
+
   class KDE_EXPORT InvalidSigningKey {
     friend class SigningResult;
     InvalidSigningKey( SigningResult::Private * parent, unsigned int index );
@@ -76,6 +81,8 @@ namespace GpgME {
     SigningResult::Private * d;
     unsigned int idx;
   };
+
+  KDE_EXPORT std::ostream & operator<<( std::ostream & os, const InvalidSigningKey & key );
 
   class KDE_EXPORT CreatedSignature {
     friend class SigningResult;
@@ -109,6 +116,8 @@ namespace GpgME {
     SigningResult::Private * d;
     unsigned int idx;
   };
+
+  KDE_EXPORT std::ostream & operator<<( std::ostream & os, const CreatedSignature & sig );
 
 }
 

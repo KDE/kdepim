@@ -23,6 +23,9 @@
 
 #include <gpgmepp/gpgmefw.h>
 #include <gpgmepp/result.h>
+
+#include <iosfwd>
+
 #include <kdepimmacros.h>
 
 namespace GpgME {
@@ -49,6 +52,8 @@ namespace GpgME {
     Private * d;
   };
 
+  KDE_EXPORT std::ostream & operator<<( std::ostream & os, const DecryptionResult & result );
+
 }
 
-#endif // __GPGMEPP_KEYGENERATIONRESULT_H__
+#endif // __GPGMEPP_DECRYPTIONRESULT_H__
