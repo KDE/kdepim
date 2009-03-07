@@ -39,6 +39,7 @@ extern "C" {
 #include <kurl.h>
 #include <kmdcodec.h>
 #include <kglobal.h>
+#include <kmessagebox.h>
 
 #include <qcstring.h>
 #include <qregexp.h>
@@ -361,6 +362,17 @@ bool kio_sieveProtocol::connect(bool useTLSIfAvailable)
 	// Attempt to start TLS
 	if ( !m_allowUnencrypted && !canUseTLS() ) {
             error( ERR_SLAVE_DEFINED, i18n("Can not use TLS. Please enable TLS in the KDE cryptography setting.") );
+            disconnect();
+            return false;
+        }
+
+        if ( !m_allowUnencrypted && useTLSIfAvailable && canUseTLS() && !m_supportsTLS &&
+             messageBox( WarningContinueCancel,
+                         i18n("TLS encryption was requested, but your Sieve server does not advertise TLS in its capabilities.\n"
+                              "You can choose to try to initiate TLS negotiations nonetheless, or cancel the operation."),
+                         i18n("Server Does Not Advertise TLS"), i18n("&Start TLS nonetheless"), i18n("&Cancel") ) != KMessageBox::Continue )
+        {
+            error( ERR_USER_CANCELED, i18n("TLS encryption requested, but not supported by server.") );
             disconnect();
             return false;
         }
