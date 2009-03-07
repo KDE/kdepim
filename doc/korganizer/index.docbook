@@ -1060,7 +1060,7 @@ a <guiicon>chasing-arrows</guiicon> icon is displayed if it repeats multiple
 times. Hovering the mouse over an calendar item will bring up a tooltip
 with the item detailed information. To make &korganizer; show a red line
 marking the current-time on the current day (the Marcus Bains line),
-check the <guilabel>Show current-time (Marcus Bains Line)</guilabel> box in the
+check the <guilabel>Show current-time (Marcus Bains) line</guilabel> box in the
 <link linkend="config-main-views">&korganizer; view
 configuration</link>.</para>
 
@@ -1953,7 +1953,7 @@ in steps of 10%.</para></listitem>
 <varlistentry>
 <term><guilabel>Priority</guilabel></term>
 <listitem><para>Assign a priority to your to-do.  This drop down menu offers
-priorities from one to five, one being the highest.  Initially to-dos are set
+priorities from one to nine, one being the highest.  Initially to-dos are set
 to priority five (medium).</para></listitem>
 </varlistentry>
 
