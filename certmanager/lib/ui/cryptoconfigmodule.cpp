@@ -141,6 +141,10 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
   }
 }
 
+bool Kleo::CryptoConfigModule::hasError() const {
+    return mComponentGUIs.empty();
+}
+
 void Kleo::CryptoConfigModule::save()
 {
   bool changed = false;

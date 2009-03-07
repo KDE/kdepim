@@ -50,6 +50,8 @@ namespace Kleo {
   public:
     CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent=0, const char * name=0 );
 
+    bool hasError() const;
+
     void save();
     void reset(); // i.e. reload current settings, discarding user input
     void defaults();
