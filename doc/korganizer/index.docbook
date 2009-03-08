@@ -1334,7 +1334,7 @@ and edit filters that will affect which items will be displayed by
 <para>The <menuchoice><guimenu>View</guimenu>
 <guisubmenu>Filter</guisubmenu></menuchoice> submenu and the filter toolbar drop
 down offer access to all available filters  created using
-the <link linkend="menu-settings-edit-filters"><guilabel>Edit
+the <link linkend="menu-settings-edit-filters"><guilabel>Edit Calendar 
 Filters</guilabel></link> dialog. To toggle the display of the filters toolbar
 on and off, choose the <menuchoice><guimenu>Settings</guimenu>
 <guisubmenu>Toolbars</guisubmenu><guimenuitem>Filter toolbar</guimenuitem></menuchoice>.
@@ -1429,7 +1429,7 @@ Enter your data as described below.</para></step>
 
 <para>This is a thorough description of the individual event window fields and
 widgets. Not all fields have to be filled in; some can be left empty. Read the
-<link linkend="entering-data-required-fields">Required fields section</link>
+<link linkend="entering-data-required-fields">Required fields</link> section 
 for detailed information. And if you prefer to learn by example, there's one
 in the <link linkend="examples-entering-event">Entering event</link> section.
 </para>
@@ -1502,7 +1502,7 @@ program that should run at the alarm time.</para>--></listitem>
 <term><guilabel>Show Time As:</guilabel></term>
 <listitem><para>The duration of the event may be shown as Busy or Free in your
 schedule. Choose it from the <guilabel>Show Time As</guilabel>
-menu.</para></listitem>
+drop down box.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -1520,7 +1520,7 @@ you.</para></listitem>
 <term><guilabel>Select Categories</guilabel></term>
 <listitem><para>You can assign several
 <link linkend="categories-view">categories</link> to a calendar item. Click the
-<guilabel>Select Categories</guilabel> button to open the
+<guilabel>Select</guilabel> button to open the
 <guilabel>Select Categories</guilabel> dialog. Check the category boxes to
 assign suitable categories to the event. You can also add a new category, modify
 a category or delete a category by pressing the button
@@ -1552,7 +1552,7 @@ only you can access.</para></warning></listitem>
 
 </variablelist>
 
-<para>When you want to confirm, call off or revert the entered data, choose
+<para>When you want to confirm, apply or call off the entered data, choose
 among the <link linkend="reference-action-buttons">Action Buttons</link>,
 <guibutton>OK</guibutton>, <guibutton>Apply</guibutton> and
 <guibutton>Cancel</guibutton>.</para>
@@ -1629,7 +1629,7 @@ on.</para></listitem>
 <para>This is similar to Monthly.  You need to choose whether or not you
 are indicating a calendar day of the year (&eg;, the 250th day of the
 year) - <guilabel>Recur on day <replaceable>#</replaceable> of the
-year</guilabel>, in in a specific week on a specific day of the week of a month
+year</guilabel>, in a specific week on a specific day of the week of a month
 (&eg;, the 2nd Tuesday of March), or the day of the month in a
 particular month of the year - <guilabel>Recur on day <replaceable>#</replaceable>
 of the <replaceable>month</replaceable></guilabel>.  By default, &korganizer;
@@ -2884,7 +2884,7 @@ allowing you to select the agenda view background color.</para></listitem>
 <varlistentry>
 <term><guilabel>Working hours color</guilabel></term>
 <listitem><para>This button opens the <guilabel>Select Color</guilabel> dialog,
-allowing you to select the agenda view.</para></listitem>
+allowing you to select color of the working hours background in the agenda view.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -3029,7 +3029,7 @@ when inviting you to an event.</para>
 <variablelist>
 
 <varlistentry>
-<term><guilabel>Publish free/busy information</guilabel></term>
+<term><guilabel>Publish free/busy information automatically</guilabel></term>
 <listitem><para>Enable this option if you wish your Free/Busy information to be
 uploaded automatically. Note that you may skip this option and choose to mail or
 upload your Free/Busy information via the <guilabel>Schedule</guilabel> menu of
@@ -3043,7 +3043,7 @@ it from other users.</para>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Minimum time between uploads in minutes</guilabel></term>
+<term><guilabel>Minimum time between uploads (in minutes)</guilabel></term>
 <listitem><para>In case you choose to publish your information automatically,
 you may configure the interval of time in minutes between each upload.</para>
 </listitem>
@@ -3205,7 +3205,7 @@ linkend="other-features-drag-and-drop">drag-and-drop operations</link>.
 <itemizedlist>
 <listitem><para>The tool set is configured in the <menuchoice><guimenu>
 Settings</guimenu><guimenuitem>Configure
-Toolbars....</guimenuitem></menuchoice> menu item.
+Toolbars...</guimenuitem></menuchoice> menu item.
 </para></listitem>
 <listitem><para>The graphic style (icon size, text position, &etc;) is
 adjusted through the <guimenu>Toolbar Context Menu</guimenu>. Right click the
