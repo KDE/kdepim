@@ -44,7 +44,6 @@ strict digraph "inter-dependency graph for kdepim" {
         "kmailcvt"[style=filled, fillcolor=lightcyan];
         "knode"[style=filled, fillcolor=lightcyan, URL="knode/html/index.html"];
         "knotes"[style=filled, fillcolor=lightcyan, URL="knotes/html/index.html"];
-        "kode"[style=filled, fillcolor=orange];
         "konsolekalendar"[style=filled, fillcolor=lightcyan, URL="konsolekalendar/html/index.html"];
         "kontact"[style=filled, fillcolor=lightcyan, URL="kontact/html/index.html"];
         "korganizer"[style=filled, fillcolor=lightcyan, URL="korganizer/html/index.html"];
@@ -78,7 +77,6 @@ strict digraph "inter-dependency graph for kdepim" {
         "kmail" -> "plugins";
         "knotes" -> "kontact";
         "knotes" -> "kresources";
-        "kode" -> "kresources";
         "korganizer" -> "kontact";
         "korganizer" -> "wizards";
         "kresources" -> "ktimetracker";
