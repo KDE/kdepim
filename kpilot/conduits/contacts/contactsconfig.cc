@@ -71,7 +71,7 @@ ContactsConfig::ContactsConfig( QWidget* w, const QVariantList& ) : ConduitConfi
 	mimeTypes << "text/directory" << "text/x-vcard" << "text/vcard";
 	
 	fAkonadiWidget = new AkonadiSetupWidget( akonadiTab );
-	fAkonadiWidget->setCollectionLabel( i18n( "Select Addressbook: " ) );
+	fAkonadiWidget->setCollectionLabel( i18n( "Select Address Book: " ) );
 	fAkonadiWidget->setMimeTypes( mimeTypes );
 	
 	fLayout = new QGridLayout( akonadiTab );

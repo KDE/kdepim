@@ -28,7 +28,7 @@
         <default>true</default>
     </entry>
     <entry name="DatabaseList" key="Database List" type="Bool">
-        <label>List of databases on handheld (takes long!)</label>
+        <label>List of databases on handheld (takes a long time.)</label>
         <default>true</default>
     </entry>
     <entry name="MemoryInfo" key="Memory Info" type="Bool">
