@@ -261,19 +261,9 @@ from the context menu.</para>
 </listitem>
 
 <listitem>
-<para>Click the <mousebutton>Middle</mousebutton> mouse button on the
-system tray icon.</para>
-</listitem>
-
-<listitem>
 <para><mousebutton>Right</mousebutton> click in the alarm list and
 choose <menuchoice><guimenuitem>New</guimenuitem></menuchoice> from
 the context menu.</para>
-</listitem>
-
-<listitem>
-<para>Double click on empty space below the last entry in the alarm
-list.</para>
 </listitem>
 </itemizedlist>
 
@@ -419,32 +409,6 @@ from the context menu.</para>
 
 <para>See <link linkend="enable-disable">Enabling and Disabling Alarms</link>
 for how to enable and disable alarms, either individually or as a whole.</para>
-
-</sect2>
-
-<sect2>
-<title>Viewing an Alarm</title>
-
-<para>To view an existing alarm without the ability to modify it, do
-one of the following:</para>
-
-<itemizedlist>
-<listitem>
-<para>Select it by clicking on its entry in the alarm list. Then choose
-<menuchoice>
-<guimenu>Actions</guimenu><guimenuitem>View</guimenuitem>
-</menuchoice>.</para>
-</listitem>
-<listitem>
-<para><mousebutton>Right</mousebutton> click on its entry in the alarm
-list and choose
-<menuchoice><guimenuitem>View</guimenuitem></menuchoice>
-from the context menu.</para>
-</listitem>
-</itemizedlist>
-
-<para>This displays the <link linkend="alarm-edit-dlg">Alarm Edit
-dialog</link> in read-only mode.</para>
 
 </sect2>
 
@@ -1745,7 +1709,7 @@ button. This displays the
 when the message is to be redisplayed, or select <guilabel>Defer for
 time interval</guilabel> to enter how long after now (in hours and
 minutes) the message should be redisplayed. Then click
-<guibutton>Defer</guibutton> to defer the alarm message and close its
+<guibutton>OK</guibutton> to defer the alarm message and close its
 window.</para>
 
 <note><para>The time the alarm is deferred to must be earlier than its
@@ -1848,18 +1812,7 @@ display its context menu:</para>
 <variablelist>
 <varlistentry>
 <term><menuchoice><guimenuitem>Enable Alarms</guimenuitem></menuchoice></term>
-<listitem><para><action>Enables monitoring of alarms. This option
-only appears if alarms are currently disabled.</action></para>
-<para>See
-<link linkend="enable-disable">Enabling and Disabling Alarms</link>
-for details.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><menuchoice><guimenuitem>Disable Alarms</guimenuitem></menuchoice></term>
-<listitem><para><action>Disables monitoring of alarms. This option
-only appears if alarms are currently enabled.</action></para>
+<listitem><para><action>Enables or disables monitoring of alarms.</action></para>
 <para>See
 <link linkend="enable-disable">Enabling and Disabling Alarms</link>
 for details.</para>
@@ -2029,14 +1982,14 @@ until the next time you log in.</para>
 
 <itemizedlist>
 <listitem>
-<para>Select <menuchoice><guimenu>Actions</guimenu>
-<guimenuitem>Disable Alarms</guimenuitem></menuchoice>.</para>
+<para>Unselect <menuchoice><guimenu>Actions</guimenu>
+<guimenuitem>Enable Alarms</guimenuitem></menuchoice>.</para>
 </listitem>
 
 <listitem>
 <para><mousebutton>Right</mousebutton> click on the system tray icon
-and choose
-<menuchoice><guimenuitem>Disable Alarms</guimenuitem></menuchoice>
+and uncheck
+<menuchoice><guimenuitem>Enable Alarms</guimenuitem></menuchoice>
 from the context menu.</para>
 </listitem>
 
