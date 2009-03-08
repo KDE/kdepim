@@ -4001,7 +4001,7 @@ linkend="entering-data-to-do">the Entering To-dos</link> section.</para></listit
 <guimenuitem>New Sub-to-do...</guimenuitem>
 </menuchoice></term>
 <listitem><para>Choose <guilabel>New Sub-to-do...</guilabel> to <action>start
-writing a new sub-to-do. The currently selected to-do will be the the
+writing a new sub-to-do. The currently selected to-do will be the
 sub-to-do parent.</action>. Initially the to-do has no due date, but you can
 specify one.</para>
 <para>You can get a detailed description of the to-do window in <link

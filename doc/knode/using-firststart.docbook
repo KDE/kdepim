@@ -825,7 +825,7 @@ checked, &knode; automatically closes a thread if you mark
 it as read.</para>
 
 <para>If <guilabel>Go to next unread thread</guilabel> is
-checked, &knode; automatically shows the next thread if you mark the
+checked, &knode; automatically shows the next thread if you mark
 the previous thread as read.</para>
 
 </sect3>

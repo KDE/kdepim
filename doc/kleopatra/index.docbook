@@ -856,7 +856,7 @@ items.</action></para>
 
 <sect1 id="menuwindow"><title><guimenu>Window</guimenu> Menu</title>
 <para>The <guimenu>Window</guimenu> menu allows you to manage the tabs.
-Using the items in this menu you can rename a tab, add a new tab, duplicate the current tab, close the the current tab, and move the current tab to the left or right.</para>
+Using the items in this menu you can rename a tab, add a new tab, duplicate the current tab, close the current tab, and move the current tab to the left or right.</para>
 
 <para>By clicking with the &RMB; click on a tab you open a context menu, where you can also select the same actions.</para>
 </sect1>
