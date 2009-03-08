@@ -25,7 +25,7 @@
 #include <kcmdlineargs.h>
 
 static const char description[] =
-  I18N_NOOP( "KDE Commandline Emailer." );
+  I18N_NOOP( "KDE Command Line Emailer." );
 
 static KCmdLineOptions kmail_options ()
 {

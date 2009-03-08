@@ -191,7 +191,7 @@ void MailerService::processArgs( KCmdLineArgs *args )
      QDBusReply<int> composerDbusPath = kmailObj.callWithArgumentList(QDBus::AutoDetect, "openComposer", messages);
 
      if ( !composerDbusPath.isValid() ) {
-      KMessageBox::error( 0, i18n( "Can't connect to email service." ) );
+      KMessageBox::error( 0, i18n( "Cannot connect to email service." ) );
      }
     } else {
       KMessageBox::error( 0, i18n( "Unable to find or start email service." ) );

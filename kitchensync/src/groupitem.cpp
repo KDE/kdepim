@@ -219,11 +219,11 @@ void GroupItem::change( const QSync::SyncChangeUpdate &update )
   switch ( update.type() ) {
     case QSync::SyncChangeUpdate::Read:
       mProcessedItems++;
-      mStatus->setText( i18n( "%1 entries read", mProcessedItems ) );
+      mStatus->setText( i18np( "1 entry read", "%1 entries read", mProcessedItems ) );
       break;
     case QSync::SyncChangeUpdate::Written:
       mProcessedItems--;
-      mStatus->setText( i18n( "%1 entries written", mMaxProcessedItems - mProcessedItems ) );
+      mStatus->setText( i18np( "1 entry written", "%1 entries written", mMaxProcessedItems - mProcessedItems ) );
 
       mProgressBar->show();
 
