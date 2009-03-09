@@ -88,16 +88,16 @@ bool KMailConnection::connectToKMail()
       // using e.g. KMessageBox
       return false;
     }
-    mKmailGroupwareInterface = new QDBusInterface( dbusService, "/Groupware" , "org.kde.kmail.groupware", QDBusConnection::sessionBus());
+    mKmailGroupwareInterface = new QDBusInterface( dbusService, KMAIL_DBUS_GROUPWARE_PATH, KMAIL_DBUS_GROUPWARE_INTERFACE, QDBusConnection::sessionBus());
     registerTypes();
 
     QDBusConnection dbus = QDBusConnection::sessionBus();
-    dbus.connect( KMAIL_DBUS_SERVICE, "/Groupware", "org.kde.kmail.groupware", "incidenceAdded", this, SLOT(fromKMailAddIncidence(QString,QString,quint32,int,QString) ) );
-    dbus.connect( KMAIL_DBUS_SERVICE, "/Groupware", "org.kde.kmail.groupware", "incidenceDeleted", this, SLOT( fromKMailDelIncidence(QString,QString,QString) ) );
-    dbus.connect( KMAIL_DBUS_SERVICE, "/Groupware", "org.kde.kmail.groupware", "signalRefresh", this, SLOT( fromKMailRefresh(QString,QString) ) );
-    dbus.connect( KMAIL_DBUS_SERVICE, "/Groupware", "org.kde.kmail.groupware", "subresourceAdded", this, SLOT(fromKMailAddSubresource( QString, QString, QString, bool, bool ) ) );
-    dbus.connect( KMAIL_DBUS_SERVICE, "/Groupware", "org.kde.kmail.groupware", "subresourceDeleted", this, SLOT(fromKMailDelSubresource(QString,QString) ) );
-    dbus.connect( KMAIL_DBUS_SERVICE, "/Groupware", "org.kde.kmail.groupware", "asyncLoadResult", this, SLOT( fromKMailAsyncLoadResult(QMap<quint32, QString>, QString, QString) ) );
+    dbus.connect( KMAIL_DBUS_SERVICE, KMAIL_DBUS_GROUPWARE_PATH, KMAIL_DBUS_GROUPWARE_INTERFACE, "incidenceAdded", this, SLOT(fromKMailAddIncidence(QString,QString,quint32,int,QString) ) );
+    dbus.connect( KMAIL_DBUS_SERVICE, KMAIL_DBUS_GROUPWARE_PATH, KMAIL_DBUS_GROUPWARE_INTERFACE, "incidenceDeleted", this, SLOT( fromKMailDelIncidence(QString,QString,QString) ) );
+    dbus.connect( KMAIL_DBUS_SERVICE, KMAIL_DBUS_GROUPWARE_PATH, KMAIL_DBUS_GROUPWARE_INTERFACE, "signalRefresh", this, SLOT( fromKMailRefresh(QString,QString) ) );
+    dbus.connect( KMAIL_DBUS_SERVICE, KMAIL_DBUS_GROUPWARE_PATH, KMAIL_DBUS_GROUPWARE_INTERFACE, "subresourceAdded", this, SLOT(fromKMailAddSubresource( QString, QString, QString, bool, bool ) ) );
+    dbus.connect( KMAIL_DBUS_SERVICE, KMAIL_DBUS_GROUPWARE_PATH, KMAIL_DBUS_GROUPWARE_INTERFACE, "subresourceDeleted", this, SLOT(fromKMailDelSubresource(QString,QString) ) );
+    dbus.connect( KMAIL_DBUS_SERVICE, KMAIL_DBUS_GROUPWARE_PATH, KMAIL_DBUS_GROUPWARE_INTERFACE, "asyncLoadResult", this, SLOT( fromKMailAsyncLoadResult(QMap<quint32, QString>, QString, QString) ) );
 
   }
   return ( mKmailGroupwareInterface != 0 );
