@@ -752,7 +752,12 @@ varlistentry id="certificates-download">
 <term><menuchoice><guimenu>Tools</guimenu><guimenuitem>Refresh X.509 or OpenPGP Certificates</guimenuitem></menuchoice></term>
 
 <listitem>
-<para>???</para>
+<para>Refreshing X.509 or OpenPGP certificates implies downloading all certificates
+and CRLs, to check if any of them have been revoked in the meantime.</para>
+<para>This can put a severe strain on your own as well as other
+people's network connections, and can take up to an hour or more to
+complete, depending on your network connection, and the number of
+certificates to check.</para>
 </listitem>
 </varlistentry>
 
