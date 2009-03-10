@@ -996,7 +996,7 @@ void Incidence::saveTo( KCal::Incidence* incidence )
   if ( hasPilotSyncStatus() )
     incidence->setSyncStatus( pilotSyncStatus() );
 
-  for( QValueList<Custom>::ConstIterator it = mCustomList.begin(); it != mCustomList.end(); ++it ) {
+  for( QValueList<Custom>::ConstIterator it = mCustomList.constBegin(); it != mCustomList.constEnd(); ++it ) {
     incidence->setNonKDECustomProperty( (*it).key, (*it).value );
   }
 
