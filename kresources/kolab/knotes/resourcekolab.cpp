@@ -192,7 +192,6 @@ bool ResourceKolab::addNote( KCal::Journal* journal,
                              const QString& subresource, quint32 sernum )
 {
   kDebug(5500) <<"ResourceKolab::addNote( KCal::Journal*, '" << subresource <<"'," << sernum <<" )";
-
   journal->registerObserver( this );
 
   // Find out if this note was previously stored in KMail
@@ -342,6 +341,8 @@ void ResourceKolab::fromKMailAddSubresource( const QString& type,
                                              bool writable,
                                              bool /*alarmRelevant*/ )
 {
+  kDebug(5500) <<"ResourceKolab::fromKMailAddSubresource(" << type <<"," << subResource
+	                            << ")";
   if ( type != kmailContentsType )
     // Not ours
     return;
@@ -362,6 +363,8 @@ void ResourceKolab::fromKMailAddSubresource( const QString& type,
 void ResourceKolab::fromKMailDelSubresource( const QString& type,
                                              const QString& subResource )
 {
+  kDebug(5500) <<"ResourceKolab::fromKMailDelSubresource(" << type <<"," << subResource
+	                  << ")";
   if ( type != configGroupName )
     // Not ours
     return;
