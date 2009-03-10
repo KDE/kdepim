@@ -15,12 +15,12 @@
  ** your option) use any later version of the GNU General Public
  ** License if such license has been publicly approved by
  ** Klarälvdalens Datakonsult AB (or its successors, if any).
- ** 
+ **
  ** This file is provided "AS IS" with NO WARRANTY OF ANY KIND,
  ** INCLUDING THE WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR
  ** A PARTICULAR PURPOSE. Klarälvdalens Datakonsult AB reserves all rights
  ** not expressly granted herein.
- ** 
+ **
  ** This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
  ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  **
@@ -266,7 +266,7 @@ KDGanttViewItem::~KDGanttViewItem()
   if ( floatStartShape ) delete  floatStartShape ;
   if ( floatEndShape ) delete  floatEndShape ;
   bool block = myGanttView->myTimeTable->blockUpdating();
-  myGanttView->myTimeTable->setBlockUpdating(); 
+  myGanttView->myTimeTable->setBlockUpdating();
   myGanttView->myTimeTable->removeItemFromTasklinks( this );
   myGanttView->myCanvasView->resetCutPaste( this );
   if ( listView() ) {
@@ -303,7 +303,7 @@ void KDGanttViewItem::generateAndInsertName( const QString& name )
         if ( sItemDict.find( name ) ) {
             newName.sprintf( "%p", (void* )this );
         }
-        else 
+        else
             newName = name;
     }
     while (  sItemDict.find( newName ) )
@@ -384,7 +384,7 @@ QString KDGanttViewItem::name() const
 /*!
   Returns the type of the item as string value.
   This may be Event, Task, Summary.
-  Reimplement this virtual method in your subclass of a 
+  Reimplement this virtual method in your subclass of a
   KDGanttViewTaskItem, KDGanttViewEventItem or KDGanttViewSummaryItem
   to know what type your items is of.
 
@@ -412,8 +412,8 @@ KDGanttViewItem::Type KDGanttViewItem::type() const
 
 /*!
   Computes a list of direct subitems of this item which do have some duration during the timespan.
-  It call for every direct subitem getTimeForTimespan() and appends it to the list 
-  if this call does not return 0. 
+  It call for every direct subitem getTimeForTimespan() and appends it to the list
+  if this call does not return 0.
   Please read getTimeForTimespan() for an example when a call of getTimeForTimespan() does not return 0.
 
   \param  start the start QDateTime of the interval. If an invalid QDateTime is passed it is an open interval,
@@ -443,9 +443,9 @@ QPtrList <KDGanttViewItem>  KDGanttViewItem::getChildListForTimespan( const QDat
   (Specified by the items start datetime and end datetime).
   The default implementation of this method returns 0.
   This method is reimplemented in  the subclass KDGanttViewTaskItem only.
-  Example: Let eTask be a task item with 
-           start date time 24. March 2005 - 17:00 
-           and end date time 24. March 2005 - 19:30 
+  Example: Let eTask be a task item with
+           start date time 24. March 2005 - 17:00
+           and end date time 24. March 2005 - 19:30
            i.e. it has a duration of 2:30 hours , which are 9000 seconds.
 
            eTask->getTimeForTimespan( QDateTime(),QDateTime() )
@@ -464,9 +464,9 @@ QPtrList <KDGanttViewItem>  KDGanttViewItem::getChildListForTimespan( const QDat
   \param  start the start QDateTime of the interval. If an invalid QDateTime is passed it is an open interval.
           end   the end QDateTime of the interval. If an invalid QDateTime is passed it is an open interval.
                 if start and end are invalid the duration (start time to end time in seconds) is returned.
-  \return the time of this item in the interval in seconds 
+  \return the time of this item in the interval in seconds
   \sa getChildTimeForTimespan()  getAllSubChildTimeForTimespan() getChildListForTimespan()
-*/ 
+*/
 unsigned int KDGanttViewItem::getTimeForTimespan( const QDateTime&, const QDateTime&)
 {
     return 0;
@@ -486,7 +486,7 @@ unsigned int KDGanttViewItem::getTimeForTimespan( const QDateTime&, const QDateT
           end   the end QDateTime of the interval. If an invalid QDateTime is passed it is an open interval,
                 i.e. all items after the start datetime will be computed.
                 if start and end are invalid all items will be computed.
-  \return the sum of times of computed items in seconds 
+  \return the sum of times of computed items in seconds
   \sa getTimeForTimespan() getChildTimeForTimespan()  getChildListForTimespan()
 */
 unsigned int KDGanttViewItem::getAllSubChildTimeForTimespan(  const QDateTime& start,  const QDateTime& end )
@@ -515,7 +515,7 @@ unsigned int KDGanttViewItem::getAllSubChildTimeForTimespan(  const QDateTime& s
           end   the end QDateTime of the interval. If an invalid QDateTime is passed it is an open interval,
                 i.e. all items after the start datetime will be computed.
                 if start and end are invalid all items will be computed.
-  \return the sum of times of computed items in seconds 
+  \return the sum of times of computed items in seconds
   \sa getTimeForTimespan() getAllSubChildTimeForTimespan() getChildListForTimespan()
 */
 
@@ -803,7 +803,7 @@ QDateTime KDGanttViewItem::endTime() const
   \sa text(), setTextColor(), textColor(), setListViewText(),
   listViewText()
 */
-void KDGanttViewItem::setText( const QString& text )
+void KDGanttViewItem::setItemText( const QString& text )
 {
     textcanvas()->setText(text);
     textCanvasText = text;
@@ -818,7 +818,7 @@ void KDGanttViewItem::setText( const QString& text )
   \sa setText(), setTextColor(), textColor(), setListViewText(),
   listViewText()
 */
-QString KDGanttViewItem::text() const
+QString KDGanttViewItem::itemText() const
 {
     return textCanvasText;
 }
@@ -882,7 +882,7 @@ void KDGanttViewItem::setFont( const QFont& font )
 QFont KDGanttViewItem::font() const
 {
 
-    if (mTextCanvas) 
+    if (mTextCanvas)
         return mTextCanvas->font();
     return myGanttView->font();
 }
@@ -1591,7 +1591,7 @@ void KDGanttViewItem::updateCanvasItems()
             startLine->setPen(p);
             endLine->setPen(p);
         }
-    
+
         pBack.setWidth((myItemSize/3-1)+2);
         startLineBack->setPen(pBack);
         endLineBack->setPen(pBack);
@@ -1679,7 +1679,7 @@ QCanvasText* KDGanttViewItem::textcanvas()
 void KDGanttViewItem::updateItemsOnCanvas( bool forceUpdate  )
 {
     if ( !forceUpdate && myGanttView->myTimeTable->blockUpdating() )
-        return; 
+        return;
     showItem( isVisibleInGanttView, mCurrentCoord_Y );
     KDGanttViewItem * par = parent();
     while ( par ) {
@@ -1714,7 +1714,7 @@ void KDGanttViewItem::initColorAndShapes(Type t)
     endLine = 0;
     startLineBack = 0;
     endLineBack = 0;
-    actualEnd = 0; 
+    actualEnd = 0;
     myProgress = 0;
     progressShape = 0;
     floatStartShape = 0;
@@ -1821,11 +1821,11 @@ KDGanttViewItem::Shape KDGanttViewItem::stringToShape( const QString& string )
         return TriangleDown;
 }
 /*!
-  This virtual method does nothing. 
+  This virtual method does nothing.
   Reimplement it to save your own data to the QDomElement.
   The data can be read with userReadFromElement().
   You should reimplement it in a subclass to make Drag&Drop working properly.
-  The body contains a small example to write an int value and a QString, 
+  The body contains a small example to write an int value and a QString,
   which is commented out.
   This method is automatically called from  KDGanttViewItem::createNode()
   after a start Drag operation or if a configuration file is saved via KDGanttView::saveProject().
@@ -1865,13 +1865,13 @@ void KDGanttViewItem::createNode( QDomDocument& doc,
     KDGanttXML::createDateTimeNode( doc, itemElement, "StartTime", startTime() );
     KDGanttXML::createDateTimeNode( doc, itemElement, "EndTime", endTime() );
     KDGanttXML::createFontNode( doc, itemElement, "Font", font() );
-    KDGanttXML::createStringNode( doc, itemElement, "Text", text() );
+    KDGanttXML::createStringNode( doc, itemElement, "Text", itemText() );
     KDGanttXML::createStringNode( doc, itemElement, "TooltipText", tooltipText() );
     KDGanttXML::createStringNode( doc, itemElement, "WhatsThisText",whatsThisText() );
     if( pixmap() ) {
         KDGanttXML::createPixmapNode( doc, itemElement, "Pixmap", *pixmap() );
     }
-    //PENDING save pixmaps for all clomuns with 
+    //PENDING save pixmaps for all clomuns with
     //KDGanttXML::createPixmapNode( doc, itemElement, "Pixmap", *pixmap(), column );
     KDGanttXML::createStringNode( doc, itemElement, "ListViewText", listViewText() );
     KDGanttXML::createBoolNode( doc, itemElement, "Open", isOpen() );
@@ -2012,11 +2012,11 @@ KDGanttViewItem* KDGanttViewItem::createFromDomElement( KDGanttViewItem* parent,
 }
 
 /*!
-  This virtual method does nothing. 
+  This virtual method does nothing.
   Reimplement it to read your own data from the QDomElement.
   The data was written from userWriteToElement().
   You should reimplement it in a subclass to make Drag&Drop working properly.
-  The body contains a small example to read  an int value and a QString, 
+  The body contains a small example to read  an int value and a QString,
   which is commented out.
   This method is automatically called from createFromDomElement()=>loadFromDomElement()
   after a Drop operation or if a configuration file is loaded via KDGanttView::loadProject().
@@ -2045,7 +2045,7 @@ void KDGanttViewItem::userReadFromElement( QDomElement& element )
                 if( KDGanttXML::readStringNode( userElement, value ) )
                     userData = value;
 
-        } 
+        }
         node = node.nextSibling();
     }
     qDebug("User data read: %d  %s ", userNumber,userData.toLatin1() );
@@ -2080,7 +2080,7 @@ void KDGanttViewItem::loadFromDomElement( QDomElement& element )
             } else if( tagName == "Text" ) {
                 QString value;
                 if( KDGanttXML::readStringNode( element, value ) )
-                    setText( value );
+                    setItemText( value );
             } else if( tagName == "Font" ) {
                 QFont value;
                 if( KDGanttXML::readFontNode( element, value ) )
@@ -2231,7 +2231,7 @@ void KDGanttViewItem::loadFromDomElement( QDomElement& element )
     QListViewItem::setEnabled( _enabled );
     myStartColor = startColor;
     myMiddleColor = middleColor;
-    myEndColor = endColor;  
+    myEndColor = endColor;
     myStartColorHL = startHighlightColor ;
     myMiddleColorHL = middleHighlightColor;
     myEndColorHL = endHighlightColor;
@@ -2406,7 +2406,7 @@ bool KDGanttViewItem::showNoInformation()
 }
 
 /*!
-  Returns whether the 'showNoInformation' line  should be shown for the time 
+  Returns whether the 'showNoInformation' line  should be shown for the time
   periods before and after this item
 
   \return true if showNoInformation line should be shown
@@ -2697,8 +2697,8 @@ void  KDGanttViewItem::resetSubitemVisibility()
                 setVisible( false );
             return;
         }
-        
-        setDisplaySubitemsAsGroup( true ); 
+
+        setDisplaySubitemsAsGroup( true );
         setVisible( true );
         while (temp) {
             if (temp->firstChild()) {
@@ -2753,13 +2753,13 @@ void  KDGanttViewItem::setUid( const QString& text )
   getChildByUid() and KDGanttView::getItemByUid().
   When there is more than one subitem with the same uid for an item then the
   result of getChildByUid() and KDGanttView::getItemByUid() is not well defined.
-  Note that after a Drag&Drop (DnD) drop operation you may get another 
+  Note that after a Drag&Drop (DnD) drop operation you may get another
   item somewhere in the gantt view with the same uid.
   If you want to use a unique id which is unique in every case
   (even after a DnD drop operation) please use KDGanttViewItem::name()
-  which is set automatically and which has a very fast lookup compared to 
+  which is set automatically and which has a very fast lookup compared to
   KDGanttViewItem::getChildByUid().
- 
+
   \return the uid of the item
   \sa  setUid() getChildByUid() KDGanttView::getItemByUid() name()
 */
@@ -2988,7 +2988,7 @@ bool KDGanttViewItem::isMyTextCanvas(QCanvasItem *tc)
 
 /*!
   \fn void KDGanttViewItem::setProgress(int percent)
-  
+
   Specifies the progress of this item in percent.
   Progress is limited to minimum 0, maximum 100.
 
@@ -3003,7 +3003,7 @@ void KDGanttViewItem::setProgress(int percent)
 
 /*!
   \fn void KDGanttViewItem::setFloatStartTime(const QDateTime &start)
-  
+
   Specifies the float start time of this item.
   If the time is invalid, the start float is not shown.
 
@@ -3016,7 +3016,7 @@ void KDGanttViewItem::setFloatStartTime(const QDateTime &start)
 
 /*!
   \fn void KDGanttViewItem::setFloatEndTime(const QDateTime &end)
-  
+
   Specifies the float end time of this item.
   If the time is invalid, the end float is not shown.
 

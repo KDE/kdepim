@@ -15,12 +15,12 @@
  ** your option) use any later version of the GNU General Public
  ** License if such license has been publicly approved by
  ** Klarälvdalens Datakonsult AB (or its successors, if any).
- ** 
+ **
  ** This file is provided "AS IS" with NO WARRANTY OF ANY KIND,
  ** INCLUDING THE WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR
  ** A PARTICULAR PURPOSE. Klarälvdalens Datakonsult AB reserves all rights
  ** not expressly granted herein.
- ** 
+ **
  ** This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
  ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  **
@@ -4984,9 +4984,8 @@ void KDGanttView::startDrag ()
 /*!
   This method is overridden for internal purposes.
 */
-#ifdef __GNUC__
-#warning "FIXME: This overridden method is not called any more, as it is deprecated"
-#endif
+#if 0
+// This overridden method is not called any more, as it is deprecated"
 void KDGanttView::setPaletteBackgroundColor( const QColor& col)
 {
   QPalette pal = palette();
@@ -4994,7 +4993,7 @@ void KDGanttView::setPaletteBackgroundColor( const QColor& col)
   QWidget::setPalette( pal );
   timeHeaderSpacerWidget->setPalette( pal );
 }
-
+#endif
 
 /*!
   Sets the background color of the Gantt view.

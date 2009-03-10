@@ -15,12 +15,12 @@
  ** your option) use any later version of the GNU General Public
  ** License if such license has been publicly approved by
  ** Klarälvdalens Datakonsult AB (or its successors, if any).
- ** 
+ **
  ** This file is provided "AS IS" with NO WARRANTY OF ANY KIND,
  ** INCLUDING THE WARRANTIES OF DESIGN, MERCHANTABILITY AND FITNESS FOR
  ** A PARTICULAR PURPOSE. Klarälvdalens Datakonsult AB reserves all rights
  ** not expressly granted herein.
- ** 
+ **
  ** This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
  ** WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
  **
@@ -85,7 +85,7 @@ protected:
     KDCanvasPolygonItem* startShape,* midShape, *endShape,
       * startShapeBack,* midShapeBack, *endShapeBack,
       * progressShape, * floatStartShape, * floatEndShape;
-    
+
     KDGanttView* myGanttView;
     KDCanvasText* mTextCanvas;
     QString textCanvasText;
@@ -96,13 +96,13 @@ protected:
     QCanvasText* textcanvas();
     void generateAndInsertName( const QString& name );
     QString mUid;
-    
+
     void moveTextCanvas(int x, int y);
 
     int myProgress;
     QDateTime myFloatStartTime;
     QDateTime myFloatEndTime;
-    
+
 public:
     virtual ~KDGanttViewItem();
 
@@ -127,8 +127,8 @@ public:
     virtual void setEndTime( const QDateTime& end );
     QDateTime endTime() const;
 
-    void setText( const QString& text );
-    QString text() const;
+    void setItemText( const QString& text );
+    QString itemText() const;
     void setListViewText( const QString& text, int column = 0 );
     void setListViewText( int column, const QString& text );
     QString listViewText( int column = 0 ) const;
@@ -165,7 +165,7 @@ public:
     void setProgress(int percent);
     void setFloatStartTime(const QDateTime &start);
     void setFloatEndTime(const QDateTime &end);
-    
+
     KDGanttViewItem* firstChild() const;
     KDGanttViewItem* nextSibling() const;
     KDGanttViewItem* parent() const;
