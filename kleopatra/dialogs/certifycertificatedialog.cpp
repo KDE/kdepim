@@ -255,9 +255,9 @@ void SummaryPage::setComplete( bool complete ) {
 void SummaryPage::setResult( const Error & err ) {
     if ( err && !err.isCanceled() )
         if ( err.code() == GPG_ERR_USER_1 )
-            m_resultLabel->setText( i18n( "The certificate could not be certified. <b>Error</b>: %1", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) ) );
-        else
             m_resultLabel->setText( i18n( "The certificate was not certified because it was already certified by the same certificate." ) );
+        else
+            m_resultLabel->setText( i18n( "The certificate could not be certified. <b>Error</b>: %1", Qt::escape( QString::fromLocal8Bit( err.asString() ) ) ) );
     else if ( err.isCanceled() )
         m_resultLabel->setText( i18n("Certification canceled.") );
     else
