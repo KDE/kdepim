@@ -113,8 +113,8 @@ void KMailConnection::fromKMailDelIncidence( const QString& type,
                                              const QString& folder,
                                              const QString& xml )
 {
-//   kDebug(5650) <<"KMailConnection::fromKMailDelIncidence(" << type <<","
-//                 << folder << ", " << uid << " )\n";
+   //kDebug(5650) <<"KMailConnection::fromKMailDelIncidence(" << type <<","
+   //              << folder << ", " << xml << " )\n";
   mResource->fromKMailDelIncidence( type, folder, xml );
 }
 
