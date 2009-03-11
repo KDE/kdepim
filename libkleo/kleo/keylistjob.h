@@ -85,7 +85,7 @@ namespace Kleo {
     */
     virtual GpgME::Error start( const QStringList & patterns, bool secretOnly=false ) = 0;
 
-    virtual KDE_DEPRECATED GpgME::KeyListResult exec( const QStringList & patterns, bool secretOnly, std::vector<GpgME::Key> & keys ) = 0;
+    virtual GpgME::KeyListResult exec( const QStringList & patterns, bool secretOnly, std::vector<GpgME::Key> & keys ) = 0;
 
   Q_SIGNALS:
     void nextKey( const GpgME::Key & key );
