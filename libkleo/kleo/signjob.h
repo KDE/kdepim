@@ -95,7 +95,7 @@ namespace Kleo {
                         const boost::shared_ptr<QIODevice> & signature,
                         GpgME::SignatureMode mode ) = 0;
 
-    virtual KDE_DEPRECATED GpgME::SigningResult exec( const std::vector<GpgME::Key> & signers,
+    virtual GpgME::SigningResult exec( const std::vector<GpgME::Key> & signers,
 				       const QByteArray & plainText,
 				       GpgME::SignatureMode mode,
 				       QByteArray & signature ) = 0;

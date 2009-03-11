@@ -75,7 +75,7 @@ namespace Kleo {
     */
     virtual GpgME::Error start() = 0;
 
-    virtual KDE_DEPRECATED GpgME::Error exec() = 0;
+    virtual GpgME::Error exec() = 0;
 
   Q_SIGNALS:
     void result( const GpgME::Error & result, const QVariant & data );

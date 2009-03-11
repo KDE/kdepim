@@ -98,7 +98,7 @@ namespace Kleo {
                         const boost::shared_ptr<QIODevice> & cipherText=boost::shared_ptr<QIODevice>(),
                         bool alwaysTrust=false ) = 0;
 
-    virtual KDE_DEPRECATED GpgME::EncryptionResult exec( const std::vector<GpgME::Key> & recipients,
+    virtual GpgME::EncryptionResult exec( const std::vector<GpgME::Key> & recipients,
 					  const QByteArray & plainText,
 					  bool alwaysTrust, QByteArray & cipherText ) = 0;
 

@@ -86,7 +86,7 @@ namespace Kleo {
     */
     GpgME::Error start( const QStringList & patterns, bool secretOnly=false );
 
-    KDE_DEPRECATED GpgME::KeyListResult exec( const QStringList & patterns, bool secretOnly,
+    GpgME::KeyListResult exec( const QStringList & patterns, bool secretOnly,
 			       std::vector<GpgME::Key> & keys );
 
   private Q_SLOTS:
