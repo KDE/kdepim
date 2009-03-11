@@ -544,8 +544,8 @@ If the type of the number is either a Phone, Mobile phone or Fax number you can 
 <para>The Photo will be shown in the contact preview and in the Icon view mode. However the Logo picture will only be shown in Icon view and only if there's no photo available.</para>
 <para>To reset a photo or logo simply click on it with the &RMB; and select <guilabel>Reset</guilabel>.</para>
 </sect3>
-<sect3 id="managing-contacts-misc-free-busy-informations">
-<title>Location of Free/Busy informations</title>
+<sect3 id="managing-contacts-misc-free-busy-information">
+<title>Location of Free/Busy information</title>
 <para>Here you can select a path to a contact's Free/Busy information, which are used when you add him to an event in &korganizer; or &kontact;'s calendar view.</para>
 </sect3>
 </sect2>
@@ -813,7 +813,7 @@ by many (address book) applications.</para></listitem>
 <varlistentry>
 <term><guilabel>CSV List</guilabel></term>
 <listitem><para>CSV (comma separated value) is a format that is used
-by many (address book) applications, it stores the contact informations in a plaintext field seperated by commas. This makes CSV very flexible and good for interaction with scripts.</para></listitem>
+by many (address book) applications, it stores the contact information in a plaintext field separated by commas. This makes CSV very flexible and good for interaction with scripts.</para></listitem>
 </varlistentry>
 
 <varlistentry>

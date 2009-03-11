@@ -644,7 +644,7 @@ copy an existing rule; below that you have the possibility to limit
 the rules which are shown &mdash; you have the choice whether to show all
 rules or only the rules for a specific <glossterm>newsgroup</glossterm>.</para> 
 
-<para>If you chose a rule-name in the list you the rule will be displayed
+<para>If you choose a rule-name in the list the rule will be displayed
 on the right-hand side; now you can edit the rule. At the top you can change
 the name of the rule and set the newsgroups to which this rule applies.
 You can choose one or
@@ -725,7 +725,7 @@ space and it is not very elegant, is it?</para>
 raise or lower the score, by the configured value, for articles to which
 this rule applies.  &knode; can also show you a little message when finding
 such an article or colorize the header in the article list; for example, you could make
-interesting articles scraeming pink so you would notice them very
+interesting articles screaming pink so you would notice them very
 quickly.</para> 
 
 <para>When leaving the editor, or when the 

@@ -155,12 +155,12 @@ can be removed using <menuchoice><guimenu>File</guimenu>
 <guimenuitem>Delete Page</guimenuitem></menuchoice>.</para>
 
 <tip><para>If you need to insert the current date and time while you are 
-writing a note, you can use  <keycombo action="simul">&Ctrl;<keycap>I
+writing a note, you can use  <keycombo action="simul">&Ctrl;&Shift;<keycap>I
 </keycap></keycombo>.</para></tip>
 
 <para>So that you can get to the page you want to see, pages can (and
 should) be given a name. This can be done in the way you are used to: 
-select the page you want to rename, wait a second and click it once more. 
+double click the page you want to rename.
 You are then able to rename the page. Of course there is also a keyboard 
 shortcut, you can use that at any time while writing a note. The shortcut 
 is: <keycombo action="simul">&Ctrl;<keycap>M</keycap></keycombo>.</para>
