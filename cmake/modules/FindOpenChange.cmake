@@ -19,6 +19,8 @@ if (LIBMAPI_INCLUDE_DIRS AND LIBMAPI_LIBRARIES)
 else (LIBMAPI_INCLUDE_DIRS AND LIBMAPI_LIBRARIES)
   if(NOT WIN32)
     find_package(PkgConfig)
+#TODO: Add QUIET parameter once kdelibs 4.3 is required for kdepim
+#    pkg_check_modules(libmapi QUIET libmapi)
     pkg_check_modules(libmapi libmapi)
   endif(NOT WIN32)
 
