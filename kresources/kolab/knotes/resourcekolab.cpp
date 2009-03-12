@@ -113,7 +113,7 @@ bool ResourceKolab::loadSubResource( const QString& subResource,
   KMail::SernumDataPair::List lst;
   if( !kmailIncidences( lst, mimetype, subResource, 0, count ) ) {
     kError(5500) <<"Communication problem in"
-                  << "ResourceKolab::getIncidenceList()\n";
+                  << "ResourceKolab::getIncidenceList()";
     return false;
   }
 
@@ -336,6 +336,7 @@ void ResourceKolab::fromKMailDelIncidence( const QString& type,
 void ResourceKolab::fromKMailRefresh( const QString& type,
                                       const QString& /*subResource*/ )
 {
+  kDebug(5500) <<"ResourceKolab::fromKMailRefresh(" <<type;
   if ( type == kmailContentsType )
     load(); // ### should call loadSubResource(subResource) probably
 }
