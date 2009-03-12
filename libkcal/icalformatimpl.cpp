@@ -69,6 +69,8 @@ static QString quoteForParam( const QString &text )
 {
   QString tmp = text;
   tmp.remove( '"' );
+  if ( tmp.contains( ';' ) || tmp.contains( ':' ) || tmp.contains( ',' ) )
+    return tmp; // libical quotes in this case already, see icalparameter_as_ical_string()
   return QString::fromLatin1( "\"" ) + tmp + QString::fromLatin1( "\"" );
 }
 
