@@ -113,15 +113,15 @@ void KMailConnection::fromKMailDelIncidence( const QString& type,
                                              const QString& folder,
                                              const QString& xml )
 {
-   //kDebug(5650) <<"KMailConnection::fromKMailDelIncidence(" << type <<","
-   //              << folder << ", " << xml << " )\n";
+  kDebug(5650) <<"KMailConnection::fromKMailDelIncidence(" << type <<","
+                << folder << ", " << xml << " )";
   mResource->fromKMailDelIncidence( type, folder, xml );
 }
 
 void KMailConnection::fromKMailRefresh( const QString& type, const QString& folder )
 {
 //   kDebug(5650) <<"KMailConnection::fromKMailRefresh(" << type <<","
-//                 << folder << " )\n";
+//                 << folder << " )";
   mResource->fromKMailRefresh( type, folder );
 }
 
@@ -132,7 +132,7 @@ void KMailConnection::fromKMailAddSubresource( const QString& type,
                                                bool alarmRelevant )
 {
 //   kDebug(5650) <<"KMailConnection::fromKMailAddSubresource(" << type <<","
-//                 << resource << " )\n";
+//                 << resource << " )";
   mResource->fromKMailAddSubresource( type, resource, label,
                                       writable, alarmRelevant );
 }
@@ -141,7 +141,7 @@ void KMailConnection::fromKMailDelSubresource( const QString& type,
                                                const QString& resource )
 {
 //   kDebug(5650) <<"KMailConnection::fromKMailDelSubresource(" << type <<","
-//                 << resource << " )\n";
+//                 << resource << " )";
   mResource->fromKMailDelSubresource( type, resource );
 }
 
