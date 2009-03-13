@@ -1,3 +1,17 @@
+Friday, March 13th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue2685: Signature not recognised with combined OpenPGP encrypted/signed email
+* kolab/issue2444: Kontact sends base64 encoded password when sieve server does not advertise STARTTLS
+* kolab/issue1950: gpgme config dialog broken when /etc/gnupg/gpgconf.conf not empty
+* kolab/issue2628: For encrypted emails where no encryption was tried, it says "decryption impossible"
+* kolab/issue3477: Kontact creates bad invitations if attendee name with umlauts is entered with double quotes
+* In KNotes, disable actions when the note is locked
+* In KMail, consider marginally trusted keys as trusted, too
+
+
 Friday, March 6th 2009
 
 Problems addressed
