@@ -54,8 +54,8 @@ public:
     explicit Private( OwnerTrustDialog * qq )
         : q( qq ),
           formattedCertificateName( i18n("(unknown certificate)") ),
-          hasSecret( false ),
           originalTrust( Key::Undefined ),
+          hasSecret( false ),
           advancedMode( false ),
           ui( qq )
     {
