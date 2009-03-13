@@ -143,7 +143,9 @@ private:
   ResourceKolabBase* mResource;
   OrgKdeKmailGroupwareInterface* mKmailGroupwareInterface;
 
-  /// The current name of the D-Bus service we're connected to. This is 
+  /// The current name of the D-Bus service we're connected to. This is used to remember the old
+  /// service name if KMail gets disconnected, so that we can find out when KMail is started again
+  /// by looking for a newly appeared service with that name.
   QString mOldServiceName;
 };
 
