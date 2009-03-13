@@ -142,6 +142,9 @@ private slots:
 private:
   ResourceKolabBase* mResource;
   OrgKdeKmailGroupwareInterface* mKmailGroupwareInterface;
+
+  /// The current name of the D-Bus service we're connected to. This is 
+  QString mOldServiceName;
 };
 
 }
