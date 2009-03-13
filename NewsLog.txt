@@ -1,3 +1,28 @@
+Friday, March 13th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3385: Reminder of an event does not work when restarting Kontact and then entering a new event
+* Fix problem that when upgrading from e35 to e4, the incoming accounts could get lost under
+  certain circumstances
+* Add an icon usage log for Kontact as well
+
+Merges
+------
+
+* Merges from KDE 4.2 branch:
+    - Fix opening a .tar.gz attachment from within KMail (KDE bug 184459)
+
+* Merges from enterprise35 branch:
+    - kolab/issue1950: gpgme config dialog broken when /etc/gnupg/gpgconf.conf not empty
+    - kolab/issue2685: Signature not recognised with combined OpenPGP encrypted/signed email
+    - kolab/issue2444: Kontact sends base64 encoded password when sieve server does not advertise STARTTLS
+    - kolab/issue2628: For encrypted emails where no encryption was tried, it says "decryption impossible"
+    - Don't allow selection of S/MIME certificates when we only want OpenPGP ones
+    - In KMail, consider marginally trusted keys as trusted, too
+
+
 Friday, March 6th 2009
 
 Problems addressed
