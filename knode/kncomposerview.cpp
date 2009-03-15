@@ -92,7 +92,6 @@ KNComposer::ComposerView::ComposerView( KNComposer *composer )
   e_dit=new KNComposerEditor(this);
   e_dit->switchToPlainText();
   e_dit->setMinimumHeight(50);
-  e_dit->setFont(KGlobalSettings::fixedFont());
 
   QVBoxLayout *notL=new QVBoxLayout(e_dit);
   notL->addStretch(1);
