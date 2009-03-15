@@ -334,7 +334,7 @@ Maybe later.
 </sect1>
 
 
-<sect1>
+<sect1 id="faq-dcop">
 <title>&kpilot;'s &DCOP; interface</title>
 
 <qandaset>
