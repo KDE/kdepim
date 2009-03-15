@@ -42,7 +42,8 @@
 
 #include <kdebug.h>
 
-KJotsEdit::KJotsEdit ( QWidget *parent ) : KRichTextWidget(parent)
+KJotsEdit::KJotsEdit ( QWidget *parent ) : KRichTextWidget(parent),
+  allowAutoDecimal(false)
 {
     setAcceptRichText(true);
     setWordWrapMode(QTextOption::WordWrap);
@@ -78,6 +79,7 @@ void KJotsEdit::DelayedInitialization ( KActionCollection *collection, Bookshelf
     actionCollection = collection;
 
     connect(actionCollection->action("auto_bullet"), SIGNAL(triggered()), SLOT(onAutoBullet()));
+    connect(actionCollection->action("auto_decimal"), SIGNAL(triggered()), SLOT(onAutoDecimal())); //auto decimal list
     connect(actionCollection->action("manage_link"), SIGNAL(triggered()), SLOT(onLinkify()));
     connect(actionCollection->action("insert_checkmark"), SIGNAL(triggered()), SLOT(addCheckmark()));
 
@@ -156,6 +158,58 @@ void KJotsEdit::onAutoBullet ( void )
         actionCollection->action("auto_bullet")->setChecked( true );
     }
 }
+
+void KJotsEdit::createAutoDecimalList( void )
+{//this is an adaptation of Qt's createAutoBulletList() function for creating a bulleted list, except in this case I use it to create a decimal list.
+    QTextCursor cursor = textCursor();
+    cursor.beginEditBlock();
+
+    QTextBlockFormat blockFmt = cursor.blockFormat();
+
+    QTextListFormat listFmt;
+    listFmt.setStyle(QTextListFormat::ListDecimal);
+    listFmt.setIndent(blockFmt.indent() + 1);
+
+    blockFmt.setIndent(0);
+    cursor.setBlockFormat(blockFmt);
+
+    cursor.createList(listFmt);
+
+    cursor.endEditBlock();
+    setTextCursor(cursor);
+}
+
+void KJotsEdit::DecimalList( void )
+{
+  QTextCursor cursor = textCursor();
+
+  if (cursor.currentList()) {
+      return;
+  }
+
+  QString blockText = cursor.block().text();
+
+  if (blockText.length() == 2 && blockText == "1.")
+  {
+      cursor.movePosition(QTextCursor::StartOfLine, QTextCursor::KeepAnchor);
+      cursor.removeSelectedText();
+      createAutoDecimalList();
+  }
+}
+
+void KJotsEdit::onAutoDecimal( void )
+{
+    if (allowAutoDecimal == true ) {
+        allowAutoDecimal = false;
+        disconnect(this, SIGNAL(textChanged()), this, SLOT(DecimalList(void)));
+        actionCollection->action("auto_decimal")->setChecked( false );
+    } else {
+        allowAutoDecimal = true;
+        connect(this, SIGNAL(textChanged()), this, SLOT(DecimalList(void)));
+        actionCollection->action("auto_decimal")->setChecked( true );
+    }
+}
+
 
 void KJotsEdit::onLinkify ( void )
 {

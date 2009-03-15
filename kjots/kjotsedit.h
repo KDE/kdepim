@@ -57,13 +57,15 @@ protected slots:
     void onAutoBullet ( void );
     void onLinkify ( void );
     void addCheckmark( void );
-
+    void onAutoDecimal( void );
+    void DecimalList( void );
 private:
     void disableEditing ( void );
-
+    void createAutoDecimalList();
     QPointer<Bookshelf> bookshelf;
     QPointer<KJotsPage> currentPage;
     KActionCollection *actionCollection;
+    bool allowAutoDecimal;
 
 };
 

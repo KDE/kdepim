@@ -211,6 +211,11 @@ KJotsComponent::KJotsComponent(QWidget* parent, KActionCollection *collection) :
     action->setIcon(KIcon("format-list-unordered"));
     action->setCheckable(true);
 
+    action = actionCollection->addAction("auto_decimal");
+    action->setText(i18n("Auto Decimal List"));
+    action->setIcon(KIcon("format-list-ordered"));
+    action->setCheckable(true);
+
     action = actionCollection->addAction("manage_link");
     action->setText(i18n("Link"));
     action->setIcon(KIcon("insert-link"));
@@ -401,6 +406,7 @@ void KJotsComponent::DelayedInitialization()
     pageActions.insert( actionCollection->action("del_page") );
     pageActions.insert( actionCollection->action("insert_date") );
     pageActions.insert( actionCollection->action("auto_bullet") );
+    pageActions.insert( actionCollection->action("auto_decimal") );
     pageActions.insert( actionCollection->action("manage_link") );
     pageActions.insert( actionCollection->action("insert_checkmark") );
 
