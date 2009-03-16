@@ -32,6 +32,7 @@
 #ifndef CRYPTOCONFIGMODULE_H
 #define CRYPTOCONFIGMODULE_H
 
+#include "kleo/kleo_export.h"
 #include <kpagedialog.h>
 #include <QtCore/QList>
 
@@ -44,10 +45,12 @@ namespace Kleo {
    * Crypto Config Module widget, dynamically generated from CryptoConfig
    * It's a simple QWidget so that it can be embedded into a dialog or into a KCModule.
    */
-  class CryptoConfigModule : public KPageWidget {
+  class KLEO_EXPORT CryptoConfigModule : public KPageWidget {
     Q_OBJECT
   public:
+    enum Layout { TabbedLayout, IconListLayout };
     explicit CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent=0 );
+    explicit CryptoConfigModule( Kleo::CryptoConfig* config, Layout layout, QWidget * parent=0 );
 
     bool hasError() const;
 
@@ -58,6 +61,9 @@ namespace Kleo {
 
   Q_SIGNALS:
     void changed();
+
+  private:
+    void init( Layout layout );
 
   private:
     Kleo::CryptoConfig* mConfig;
