@@ -62,6 +62,7 @@ ConfigureDialog::ConfigureDialog( QWidget * parent )
 #ifdef HAVE_KLEOPATRACLIENT_LIBRARY
   addModule( "kleopatra_config_smimevalidation" );
 #endif
+  addModule( "kleopatra_config_gnupgsystem" );
 
   // We store the minimum size of the dialog on hide, because otherwise
   // the KCMultiDialog starts with the size of the first kcm, not
