@@ -212,6 +212,11 @@ void DetailledPrintStyle::print( const KABC::Addressee::List &contacts, PrintPro
   mPainter->setBodyFont( body );
   mPainter->setFixedFont( fixed );
   mPainter->setCommentFont( comment );
+  // Printing "Work Address:" / "Telephones:" headlines adds
+  // no interesting information and just take space.
+  // So I added this setter, but I leave it true by default because
+  // otherwise the indenting looks a bit weird -- ## TODO.
+  mPainter->setPrintHeadLines( true ); // TODO a checkbox for it
 
   QPrinter *printer = wizard()->printer();
 
