@@ -38,6 +38,8 @@
 
 #include <dialogs/exportcertificatesdialog.h>
 
+#include <utils/filedialog.h>
+
 #include <kleo/cryptobackend.h>
 #include <kleo/cryptobackendfactory.h>
 #include <kleo/exportjob.h>
@@ -49,7 +51,6 @@
 #include <KSaveFile>
 
 #include <QDataStream>
-#include <QFileDialog>
 #include <QMap>
 #include <QPointer>
 #include <QTextStream>
@@ -195,9 +196,9 @@ bool ExportCertificateCommand::Private::requestFileNames( GpgME::Protocol protoc
     if ( !fileNames[protocol].isEmpty() )
         return true;
 
-    const QString fname = QFileDialog::getSaveFileName( parentWidgetOrView(),
+    const QString fname =  FileDialog::getSaveFileName( parentWidgetOrView(),
                                                         i18n( "Export Certificates" ), 
-                                                        QString(), 
+                                                        "imp",
                                                         protocol == GpgME::OpenPGP
                                                         ? i18n( "OpenPGP Certificates" ) + " (*.asc *.gpg *.pgp)"
                                                         : i18n( "S/MIME Certificates" )  + " (*.pem *.der)" );

@@ -51,6 +51,7 @@
 #include <utils/formatting.h>
 #include <utils/validation.h>
 #include <utils/stl_util.h>
+#include <utils/filedialog.h>
 
 #include <kleo/dn.h>
 #include <kleo/oidmap.h>
@@ -75,7 +76,6 @@
 #include <QDir>
 #include <QFile>
 #include <QUrl>
-#include <QFileDialog>
 #include <QDesktopServices>
 
 #include <boost/range.hpp>
@@ -700,8 +700,8 @@ namespace {
 
     private Q_SLOTS:
         void slotSaveRequestToFile() {
-            QString fileName = QFileDialog::getSaveFileName( this, i18nc("@title", "Save Request"),
-                                                             QString(), i18n("PKCS#10 Requests (*.p10)") );
+            QString fileName = FileDialog::getSaveFileName( this, i18nc("@title", "Save Request"),
+                                                            "imp", i18n("PKCS#10 Requests (*.p10)") );
             if ( fileName.isEmpty() )
                 return;
             if ( !fileName.endsWith( ".p10", Qt::CaseInsensitive ) )

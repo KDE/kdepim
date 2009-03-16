@@ -39,12 +39,12 @@
 #include <crypto/decryptverifyfilescontroller.h>
 
 #include <utils/stl_util.h>
+#include <utils/filedialog.h>
 
 #include <KLocale>
 #include <KMessageBox>
 #include <kdebug.h>
 
-#include <QFileDialog>
 #include <QStringList>
 
 #include <exception>
@@ -181,7 +181,7 @@ void DecryptVerifyFilesCommand::applyWindowID( QWidget * wid ) const {
 }
 
 QStringList DecryptVerifyFilesCommand::Private::selectFiles() const {
-    return QFileDialog::getOpenFileNames( parentWidgetOrView(), i18n( "Select One or More Files to Decrypt and/or Verify" ) );
+    return FileDialog::getOpenFileNames( parentWidgetOrView(), i18n( "Select One or More Files to Decrypt and/or Verify" ), "enc" );
 }
 
 #undef d

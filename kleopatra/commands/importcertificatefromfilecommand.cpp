@@ -161,7 +161,7 @@ static QStringList get_file_name( QWidget * parent ) {
     QString previousDir;
     if ( const KSharedConfig::Ptr config = KGlobal::config() ) {
         const KConfigGroup group( config, "Import Certificate" );
-        previousDir = group.readPathEntry( "last-open-file-directory", QString() );
+        previousDir = group.readPathEntry( "last-open-file-directory", QDir::homePath() );
     }
     const QString fn = QFileDialog::getOpenFileName( parent, i18n( "Select Certificate File" ), previousDir, certificateFilter + ";;" + anyFilesFilter );
     if ( fn.isEmpty() )

@@ -34,10 +34,11 @@
 
 #include "objectspage.h"
 
+#include <utils/filedialog.h>
+
 #include <KIcon>
 #include <KLocale>
 
-#include <QFileDialog>
 #include <QFileInfo>
 #include <QListWidget>
 #include <QHBoxLayout>
@@ -95,7 +96,7 @@ ObjectsPage::Private::~Private() {}
 
 void ObjectsPage::Private::add()
 {
-    const QString fname = QFileDialog::getOpenFileName( q, i18n( "Select File" ) );
+    const QString fname = FileDialog::getOpenFileName( q, i18n( "Select File" ), "enc" );
     if ( fname.isEmpty() )
         return;
     addFile( QFileInfo( fname ) );
