@@ -215,7 +215,6 @@ void DetailledPrintStyle::print( const KABC::Addressee::List &contacts, PrintPro
 
   QPrinter *printer = wizard()->printer();
 
-  QPainter painter;
   progress->addMessage( i18n( "Setting up margins and spacing" ) );
   int marginTop = 0,
       marginLeft = 64, // to allow stapling, need refinement with two-side prints
@@ -224,15 +223,14 @@ void DetailledPrintStyle::print( const KABC::Addressee::List &contacts, PrintPro
 
   register int left, top, width, height;
 
-  painter.begin( printer );
-  printer->setFullPage( true ); // use whole page
+  QPainter painter( printer );
 
-
-  left = qMax( printer->paperRect().left() - printer->pageRect().left(), marginLeft );
-  top = qMax( printer->paperRect().top() - printer->pageRect().top(), marginTop );
+  left = qMax( printer->pageRect().left() - printer->paperRect().left(), marginLeft );
+  top = qMax( printer->pageRect().top() - printer->paperRect().top(), marginTop );
   width = printer->width() - left - qMax( printer->paperRect().right() - printer->pageRect().right(), marginRight );
   height = printer->height() - top - qMax( printer->paperRect().bottom() - printer->pageRect().bottom(), marginBottom );
 
+  printer->setFullPage( true ); // use whole page
   painter.setViewport( left, top, width, height );
   progress->addMessage( i18n( "Printing" ) );
 
@@ -240,7 +238,6 @@ void DetailledPrintStyle::print( const KABC::Addressee::List &contacts, PrintPro
                 QRect( 0, 0, printer->width(), printer->height() ) );
 
   progress->addMessage( i18n( "Done" ) );
-  painter.end();
 
   config.sync();
 }
