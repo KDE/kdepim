@@ -112,6 +112,7 @@ set( _kleopatra_SRCS
   utils/dragqueen.cpp
   utils/multivalidator.cpp
   utils/progressmanager.cpp
+  utils/filedialog.cpp
 
   utils/hex.cpp
   utils/input.cpp
