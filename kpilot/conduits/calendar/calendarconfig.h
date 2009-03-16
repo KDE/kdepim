@@ -1,6 +1,6 @@
 #ifndef CALENDARCONFIG_H
 #define CALENDARCONFIG_H
-/* todoconfig.h			KPilot
+/* calendarconfig.h			KPilot
 **
 ** Copyright (C) 2008 by Bertjan Broeksema <b.broeksema@kdemail.net>
 */

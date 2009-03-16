@@ -300,7 +300,6 @@ private:
 	* and data remains available on the pilot socket.
 	*/
 	int fAcceptedCount;
-
 };
 
 /**

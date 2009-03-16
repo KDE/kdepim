@@ -53,7 +53,7 @@
 // (increase) this number.
 //
 //
-/* static */ const uint KPilotConfig::ConfigurationVersion = 443;
+/* static */ const uint KPilotConfig::ConfigurationVersion = 520;
 
 /* static */ int KPilotConfig::getConfigVersion()
 {
@@ -93,7 +93,6 @@
 {
 	FUNCTIONSETUP;
 
-#ifdef DEBUG
 	if (p)
 	{
 		if (p->isSet("debug"))
@@ -101,11 +100,10 @@
 			debug_level = p->getOption("debug").toInt();
 		}
 	}
-	if (debug_level < 1)
+	if (debug_level < 0)
 	{
-		debug_level = 1;
+		debug_level = 0;
 	}
-#endif
 
 	return debug_level;
 }
@@ -150,6 +148,13 @@ static QFont *thefont = 0L;
 	if (fileversion < 443)
 	{
 		s += i18n("Changed format of no-backup databases.");
+		s += ' ';
+	}
+	if (fileversion < 520)
+	{
+		s += i18n("Calendar, ToDo, and Contacts conduits are now using "
+			  "KDE4's Akonadi server and require valid Akonadi "
+			  "resources to sync.");
 		s += ' ';
 	}
 	// Insert more recent additions here

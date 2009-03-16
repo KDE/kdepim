@@ -45,7 +45,7 @@ HHRecord::~HHRecord()
 PilotRecord* HHRecord::pilotRecord() const
 {
 	FUNCTIONSETUP;
-	
+
 	return fRecord;
 }
 
@@ -69,24 +69,40 @@ void HHRecord::setArchived()
 
 const QString HHRecord::id() const
 {
-	return QString::number( fRecord->id() );
+	if( fTempId.isEmpty() )
+	{
+		return QString::number( fRecord->id() );
+	}
+	else
+	{
+		return fTempId;
+	}
 }
 
 void HHRecord::setId( const QString &id )
 {
 	FUNCTIONSETUP;
-	
-	bool converted;
-	recordid_t rid = id.toULong( &converted );
-	
-	if( !converted )
+
+	// ids < 0 are temporary ids
+	if( id.toLongLong() < 0 )
 	{
-		DEBUGKPILOT <<"Could not convert " << id << " to ulong. Id not set!";
-		return;
+		fTempId = id;
 	}
 	else
 	{
-		fRecord->setID( rid );
+		bool converted;
+		recordid_t rid = id.toULong( &converted );
+
+		if( !converted )
+		{
+			DEBUGKPILOT <<"Could not convert " << id << " to ulong. Id not set!";
+			return;
+		}
+		else
+		{
+			fTempId.clear();
+			fRecord->setID( rid );
+		}
 	}
 }
 

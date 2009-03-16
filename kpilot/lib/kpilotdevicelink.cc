@@ -53,6 +53,7 @@
 // Qt headers
 #include <QtCore/QDateTime>
 #include <QtCore/QDir>
+#include <QtCore/QMutex>
 #include <QtCore/QThread>
 #include <QtCore/QSocketNotifier>
 #include <QtCore/QTimer>
@@ -112,7 +113,7 @@ void DeviceCommThread::run()
 	 * now sleep one last bit to make sure the pthread inside
 	 * pilot-link (potentially, if it's libusb) is done before we exit
 	 */
-	QThread::sleep(1);
+	QThread::sleep(5);
 
 	DEBUGKPILOT << ": comm thread now done...";
 }
@@ -143,7 +144,7 @@ DeviceCommWorker::DeviceCommWorker(KPilotDeviceLink *d) :
 	fOpenTimer = new QTimer();
 	connect(fOpenTimer, SIGNAL(timeout()), this, SLOT(openDevice()));
 	fOpenTimer->setSingleShot(true);
-	fOpenTimer->setInterval(2000);
+	fOpenTimer->setInterval(5000);
 
 	/**
 	 * We _always_ want to set a maximum amount of time that we will wait
@@ -169,7 +170,6 @@ DeviceCommWorker::DeviceCommWorker(KPilotDeviceLink *d) :
 DeviceCommWorker::~DeviceCommWorker()
 {
 	FUNCTIONSETUPL(2);
-	close();
 
 	if (fOpenTimer) {
 	   fOpenTimer->stop();
@@ -181,11 +181,15 @@ DeviceCommWorker::~DeviceCommWorker()
 	   fWorkaroundUSBTimer->deleteLater();
 	   fWorkaroundUSBTimer = 0L;
 	}
+	close();
 }
 
 void DeviceCommWorker::close()
 {
 	FUNCTIONSETUPL(2);
+
+	static QMutex *mutex = 0L;
+	QMutexLocker locker(mutex);
 
 	/*
 	 * Note: We don't want to delete these.  Just stop them.  Things seem to
@@ -203,27 +207,25 @@ void DeviceCommWorker::close()
 	 * This one we do delete because we require the socket itself to create
 	 * this and we don't have that until we're past the pi_bind phase.
 	 */
-	KPILOT_DELETE(fSocketNotifier);
+	fSocketNotifier->deleteLater();
+	fSocketNotifier = 0;
 
-	if (fTempSocket != -1)
+	bool closeTemp = (fTempSocket != -1);
+	bool closeMainSocket = (fPilotSocket != -1);
+
+	DEBUGKPILOT << "Temp socket: " << fTempSocket << ", main socket: " << fPilotSocket;
+	if (closeTemp)
 	{
-		DEBUGKPILOT
-		<< ": device comm thread closing socket: ["
-		<< fTempSocket << "]";
-
+		DEBUGKPILOT << "Closing temp socket: " << fTempSocket;
 		pi_close(fTempSocket);
 	}
+	fTempSocket = (-1);
 
-	if (fPilotSocket != -1)
+	if (closeMainSocket)
 	{
-		DEBUGKPILOT
-		<< ": device comm thread closing socket: ["
-		<< fPilotSocket << "]";
-
+		DEBUGKPILOT << "Closing main socket: " << fPilotSocket;
 		pi_close(fPilotSocket);
 	}
-
-	fTempSocket = (-1);
 	fPilotSocket = (-1);
 
 	DeviceMap::self()->unbindDevice(link()->fRealPilotPath);
@@ -240,6 +242,7 @@ void DeviceCommWorker::reset()
 	}
 
 	link()->fMessages->reset();
+
 	close();
 
 	fOpenTimer->start();
@@ -300,7 +303,7 @@ void DeviceCommWorker::openDevice()
 	if (!deviceOpened)
 	{
 		DEBUGKPILOT << ": Will try again.";
-		fOpenTimer->start();
+		reset();
 	}
 }
 
@@ -311,12 +314,6 @@ bool DeviceCommWorker::open(const QString &device)
 	int ret;
 	int e = 0;
 	QString msg;
-
-	if (fTempSocket != -1)
-	{
-		pi_close(fTempSocket);
-	}
-	fTempSocket = (-1);
 
 	link()->fRealPilotPath
 			= KStandardDirs::realFilePath(device.isEmpty() ? link()->fPilotPath : device);
@@ -419,24 +416,18 @@ void DeviceCommWorker::acceptDevice()
 	 */
 	if (!fSocketNotifierActive)
 	{
-		if (!fAcceptedCount)
+		WARNINGKPILOT << ": Accidentally in acceptDevice()";
+		if (fSocketNotifier)
 		{
-		   WARNINGKPILOT << ": Accidentally in acceptDevice()";
-		}
-		fAcceptedCount++;
-		if (fAcceptedCount>10)
-		{
-			// Damn the torpedoes
-			KPILOT_DELETE(fSocketNotifier);
+			fSocketNotifier->setEnabled(false);
 		}
 		return;
 	}
 
 	if (fSocketNotifier)
 	{
-		// fSocketNotifier->setEnabled(false);
 		fSocketNotifierActive=false;
-		KPILOT_DELETE(fSocketNotifier);
+		fSocketNotifier->setEnabled(false);
 	}
 
 	DEBUGKPILOT << ": Found connection on device: ["
@@ -505,6 +496,8 @@ void DeviceCommWorker::acceptDevice()
 	struct SysInfo sys_info;
 	if (dlp_ReadSysInfo(fPilotSocket, &sys_info) < 0)
 	{
+		WARNINGKPILOT << "Unable to do dlp_ReadSysInfo";
+
 		QApplication::postEvent(link(), new DeviceCommEvent(EventLogError,
 			i18n("Unable to read system information from Pilot")));
 
@@ -569,7 +562,11 @@ void DeviceCommWorker::acceptDevice()
 void DeviceCommWorker::workaroundUSB()
 {
 	FUNCTIONSETUP;
-
+        if ( link()->fPilotPath == "usb:" ||
+             link()->fPilotPath == "net:any" ) {
+		DEBUGKPILOT << "usb: or net:any device. not resetting.";
+		return;
+	}
 	reset();
 }
 
@@ -657,20 +654,14 @@ void KPilotDeviceLink::stopCommThread()
 		{
 			DEBUGKPILOT
 				<< "comm thread still running. Waiting for it to complete.";
-			bool done = fDeviceCommThread->wait(5000);
+			bool done = fDeviceCommThread->wait(30000);
 			if (!done)
 			{
 				DEBUGKPILOT
-					<< "comm thread still running "
-					<< "after wait(). "
-					<< "going to have to terminate it.";
-				// not normally to be done, but we must make sure
-				// that this device doesn't come back alive
-				fDeviceCommThread->terminate();
-				fDeviceCommThread->wait();
+					<< "comm thread still running after wait(). "
+					<< "going to have to delete it anyway. this may end badly.";
 			}
 		}
-
 		KPILOT_DELETE(fDeviceCommThread);
 	}
 }
@@ -787,8 +778,7 @@ void KPilotDeviceLink::setTempDevice( const QString &d )
 
 /* virtual */ bool KPilotDeviceLink::tickle()
 {
-	// No FUNCTIONSETUP here because it may be called from
-	// a separate thread.
+	FUNCTIONSETUPL(5);
 	return pi_tickle(pilotSocket()) >= 0;
 }
 

@@ -45,13 +45,14 @@ class AkonadiDataProxy::Private
 {
 public:
 	Private( const IDMapping& mapping )
-		: fCollectionId( -1 ), fMapping( mapping )
+		: fCollectionId( -1 ), fMapping( mapping ), fNextTempId( -1 )
 	{
 	}
-	
+
 	Akonadi::Entity::Id fCollectionId;
 	// Make it const as the proxy should not make changes to it.
 	const IDMapping fMapping;
+	qint64 fNextTempId;
 };
 
 AkonadiDataProxy::AkonadiDataProxy( const IDMapping& mapping )
@@ -63,7 +64,7 @@ AkonadiDataProxy::AkonadiDataProxy( const IDMapping& mapping )
 AkonadiDataProxy::~AkonadiDataProxy()
 {
 	FUNCTIONSETUP;
-	
+
 	delete d;
 }
 
@@ -72,13 +73,17 @@ bool AkonadiDataProxy::createDataStore()
 	FUNCTIONSETUP;
 	// TODO: We don't support creation of akonadi datastores yet. The user should
 	// use akonadiconsole for that.
+	DEBUGKPILOT << "We don't support creation of akonadi datastores yet. Not doing anything.";
+	// TODO: figure out how to tell our user via their Palm sync log that
+	// they need to configure akonadi.
+
 	return false;
 }
 
 bool AkonadiDataProxy::isOpen() const
 {
 	FUNCTIONSETUP;
-	
+
 	if( Akonadi::ServerManager::isRunning() )
 	{
 		Akonadi::CollectionFetchJob *job = new Akonadi::CollectionFetchJob
@@ -98,7 +103,7 @@ bool AkonadiDataProxy::isOpen() const
 		WARNINGKPILOT << "Error: Akonadi is not running.";
 		return false;
 	}
-	
+
 	return true;
 }
 
@@ -110,7 +115,7 @@ void AkonadiDataProxy::loadAllRecords()
 	Akonadi::ItemFetchJob* job
 		= new Akonadi::ItemFetchJob( Akonadi::Collection( d->fCollectionId ) );
 	job->fetchScope().fetchFullPayload();
-	
+
 	if ( job->exec() ) {
 		Akonadi::Item::List items = job->items();
 		foreach( const Akonadi::Item &item, items )
@@ -121,7 +126,9 @@ void AkonadiDataProxy::loadAllRecords()
 				fRecords.insert( rec->id(), rec );
 			}
 		}
-		
+		int loadedFromAkonadi = fRecords.size();
+		int dummyDeletedRecords = 0;
+
 		// Now add dummy records for deleted records.
 		foreach( const QString& mPcId, d->fMapping.pcRecordIds() )
 		{
@@ -130,16 +137,21 @@ void AkonadiDataProxy::loadAllRecords()
 				// Well the record with id mPcId doesn't seem to be in the akonadi
 				// resource any more so it is deleted.
 				AkonadiRecord* ar = createDeletedAkonadiRecord( mPcId );
+				ar->setDummy();
 				Q_ASSERT( ar->isDeleted() );
 				Q_ASSERT( ar->isModified() );
-				
+				Q_ASSERT( ar->id() == mPcId );
+
 				fRecords.insert( mPcId, ar );
+				++dummyDeletedRecords;
 			}
 		}
-		
 		fCounter.setStartCount( fRecords.size() );
-		
-		DEBUGKPILOT << "Loaded " << fRecords.size() << " records.";
+
+		DEBUGKPILOT << "Loaded: " << loadedFromAkonadi
+			    << " records from Akonadi, created: " << dummyDeletedRecords
+			    << " dummy deleted records. Total starting record count: "
+			    << fRecords.size();
 	}
 	else
 	{
@@ -160,20 +172,17 @@ void AkonadiDataProxy::syncFinished()
 
 /* Protected methods */
 
-static qint64 newId = -1;
-
 QString AkonadiDataProxy::generateUniqueId()
 {
 	FUNCTIONSETUP;
-	
-	newId--;
-	return QString::number( newId );
+
+	return QString::number( d->fNextTempId-- );
 }
 
 bool AkonadiDataProxy::commitCreate( Record *rec )
 {
 	FUNCTIONSETUP;
-	
+
 	AkonadiRecord* aRec = static_cast<AkonadiRecord*>( rec );
 	Akonadi::ItemCreateJob* job = new Akonadi::ItemCreateJob( aRec->item()
 		, Akonadi::Collection( d->fCollectionId ) );
@@ -195,7 +204,7 @@ bool AkonadiDataProxy::commitCreate( Record *rec )
 bool AkonadiDataProxy::commitUpdate( Record *rec )
 {
 	FUNCTIONSETUP;
-	
+
 	AkonadiRecord* aRec = static_cast<AkonadiRecord*>( rec );
 	Akonadi::ItemModifyJob* job = new Akonadi::ItemModifyJob( aRec->item() );
 
@@ -216,16 +225,34 @@ bool AkonadiDataProxy::commitUpdate( Record *rec )
 bool AkonadiDataProxy::commitDelete( Record *rec )
 {
 	FUNCTIONSETUP;
-	
-	AkonadiRecord* aRec = static_cast<AkonadiRecord*>( rec );
-	Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( aRec->item() );
 
-	if ( !job->exec() )
+	AkonadiRecord* aRec = static_cast<AkonadiRecord*>( rec );
+
+	// nothing to do if this record is not valid.  This can only happen if the record
+	// is a dummy record that has already been deleted in the pc.
+	if( !aRec->isValid() )
 	{
-		// Hmm an error occurred
-		DEBUGKPILOT << "Delete failed: " << job->errorString();
-		return false;
+		DEBUGKPILOT << "Record is already deleted - not asking akonadi to delete it";
 	}
-	
+	else
+	{
+		// this is a valid (i.e., not a dummy) record so delete it
+		Akonadi::ItemDeleteJob *job = new Akonadi::ItemDeleteJob( aRec->item() );
+
+		if ( !job->exec() )
+		{
+			DEBUGKPILOT << "Delete failed. error: " << job->error()
+				    << ", message: " << job->errorString();
+			// TODO: Akonadi needs to get enhanced to return useful return codes
+			// that we can check. In KDE 4.2, it's not there yet, so we just use
+			// this. But in the future, we should look for Akonadi error codes too.
+			return false;
+		}
+		else
+		{
+			DEBUGKPILOT << "Delete from akonadi was successful";
+		}
+	}
+
 	return true;
 }

@@ -46,6 +46,9 @@ CalendarAkonadiRecord::CalendarAkonadiRecord( const QString& id ) : AkonadiRecor
 	item.setPayload<IncidencePtr>( IncidencePtr( new KCal::Event() ) );
 	item.setMimeType( "application/x-vnd.akonadi.calendar.event" );
 	setItem( item );
+	// Set item changes the Id of the record to the item id which is invalid in case
+	// of deleted records.
+	setId(id);
 }
 
 CalendarAkonadiRecord::~CalendarAkonadiRecord()
@@ -128,4 +131,19 @@ QString CalendarAkonadiRecord::toString() const
 		.arg(event->dtEnd().dateTime().timeSpec());
 
 	return desc;
+}
+
+bool CalendarAkonadiRecord::isValid() const
+{
+	FUNCTIONSETUPL(5);
+	boost::shared_ptr<KCal::Event> event
+		= boost::dynamic_pointer_cast<KCal::Event, KCal::Incidence>
+			(
+				item().payload<IncidencePtr>()
+			);
+	bool myCheck = (!event->summary().isEmpty() &&
+			event->dtStart().dateTime().isValid() &&
+			event->dtEnd().dateTime().isValid());
+	bool parentCheck = AkonadiRecord::isValid();
+	return myCheck && parentCheck;
 }

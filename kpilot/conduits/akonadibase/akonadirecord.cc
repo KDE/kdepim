@@ -37,22 +37,28 @@ public:
 	QString fTempId;
 	QDateTime fLastSyncDateTime;
 	bool fDeleted;
+	// Dummy record, created only for deletion from HH
+	bool fDummy;
 };
 
 AkonadiRecord::AkonadiRecord( const Akonadi::Item& item, const QDateTime& lastSync )
 	: d( new AkonadiRecordPrivate )
 {
 	d->fItem = item;
-	d->fLastSyncDateTime = lastSync;
-	// Item times have UTC timeSpec
-	d->fLastSyncDateTime.setTimeSpec( Qt::UTC );
+	d->fLastSyncDateTime = lastSync.toUTC(); // Item times are saved in UTC time.
 	d->fDeleted = false;
+	d->fDummy = false;
 }
 
+/**
+ * This ctor is _only_ used for dummy records which are temporarily used to delete
+ * data.
+ */
 AkonadiRecord::AkonadiRecord( const QString& id ) : d( new AkonadiRecordPrivate )
 {
 	d->fTempId = id;
 	d->fDeleted = true;
+	d->fDummy = true;
 }
 
 AkonadiRecord::~AkonadiRecord()
@@ -121,10 +127,30 @@ void AkonadiRecord::setItem( const Akonadi::Item& item )
 	d->fItem = item;
 	// Make sure that we return the right id after updating the itemobject.
 	setId( QString::number( item.id() ) );
+	/**
+	 * Assuming we're being passed a valid item to use, make sure fDummy
+	 * is not still false after this.
+	 */
+	setDummy( false );
 }
 
 void AkonadiRecord::synced()
 {
 	FUNCTIONSETUP;
 	// Nothing to do here.
+}
+
+void AkonadiRecord::setDummy(bool dummy)
+{
+	FUNCTIONSETUPL(5);
+	DEBUGKPILOT << "dummy: " << dummy;
+	d->fDummy = dummy;
+}
+
+bool AkonadiRecord::isValid() const
+{
+	FUNCTIONSETUPL(5);
+	bool valid = ! d->fDummy;
+	DEBUGKPILOT << "valid: " << valid;
+	return valid;
 }

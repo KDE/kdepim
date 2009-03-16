@@ -36,6 +36,8 @@ typedef boost::shared_ptr<KCal::Incidence> IncidencePtr;
 TodoAkonadiRecord::TodoAkonadiRecord( const Akonadi::Item& i, const QDateTime& dt )
 	: AkonadiRecord( i, dt )
 {
+	FUNCTIONSETUPL(5);
+	DEBUGKPILOT << toString();
 }
 
 TodoAkonadiRecord::TodoAkonadiRecord( const QString& id ) : AkonadiRecord( id )
@@ -44,6 +46,9 @@ TodoAkonadiRecord::TodoAkonadiRecord( const QString& id ) : AkonadiRecord( id )
 	item.setPayload<IncidencePtr>( IncidencePtr( new KCal::Todo() ) );
 	item.setMimeType( "application/x-vnd.akonadi.calendar.todo" );
 	setItem( item );
+	// Set item changes the Id of the record to the item id which is invalid in case
+	// of deleted records.
+	setId(id);
 }
 
 TodoAkonadiRecord::~TodoAkonadiRecord()
@@ -101,5 +106,13 @@ QStringList TodoAkonadiRecord::categories() const
 
 QString TodoAkonadiRecord::toString() const
 {
-	return QString();
+	boost::shared_ptr<KCal::Todo> todo
+		= boost::dynamic_pointer_cast<KCal::Todo, KCal::Incidence>(
+		item().payload<IncidencePtr>() );
+
+	QString desc =
+		QString("TodoAkonadiRecord. Summary: [%1]")
+		.arg(todo->summary());
+
+	return desc;
 }

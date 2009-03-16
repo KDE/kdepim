@@ -30,9 +30,12 @@
 
 #include "options.h"
 
-CalendarHHRecord::CalendarHHRecord( PilotRecord *record, const QString &category ) 
+CalendarHHRecord::CalendarHHRecord( PilotRecord *record, const QString &category )
 	: HHRecord( record, category )
 {
+	FUNCTIONSETUPL(5);
+	DEBUGKPILOT << "id: [" << id() << "], description: [" << toString() << "]";
+
 }
 
 PilotDateEntry CalendarHHRecord::dateEntry() const

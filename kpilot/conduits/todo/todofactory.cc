@@ -1,6 +1,6 @@
 /* KPilot
 **
-** Copyright (C) 2008 by Dan Pilone <pilone@slac.com>
+** Copyright (C) 2008 - 2009 by Bertjan Broeksema <b.broeksema@home.nl>
 **
 ** This file defines the factory for the abbrowser-conduit plugin.
 */
@@ -33,4 +33,4 @@
 #include "todoconduit.h"
 #include "todoconfig.h"
 
-DECLARE_KPILOT_PLUGIN( kpilot_conduit_todo2, TodoConfig, TodoConduit )
+DECLARE_KPILOT_PLUGIN( kpilot_conduit_todo, TodoConfig, TodoConduit )

@@ -196,9 +196,10 @@ void RCFullSyncHHTest::testCUD()
 	U = cudPC->countUpdated();
 	D = cudPC->countDeleted();
 	
-	QCOMPARE( C, 3 ); // 6.5.{2, 8, 13}
-	QCOMPARE( U, 6 ); // 6.5.{3, 9, 11, 16, 19, 20}
-	QCOMPARE( D, 5 ); // 6.5.{4, 10, 12, 15, 16}
+	QCOMPARE( C, 4 ); // 6.5.{2, 8, 11, 13}
+	QCOMPARE( U, 5 ); // 6.5.{3, 9, 16, 19, 20}
+	QCOMPARE( D, 6 ); // 6.5.{4, 10, 11, 12, 15, 16}
+
 }
 
 void RCFullSyncHHTest::testCase_6_5_1()

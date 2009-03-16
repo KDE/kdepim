@@ -46,7 +46,10 @@
 
 /* virtual */ QString PilotRecordBase::textRepresentation() const
 {
-	return CSL1("[ %1,%2,%3 ]") . arg(attributes(),category(),id());
+	return CSL1("[ %1,%2,%3 ]")
+		.arg( attributes() )
+		.arg( category() )
+		.arg( id() );
 }
 
 /* virtual */ QString PilotRecord::textRepresentation() const

@@ -59,7 +59,7 @@ public:
 	
 	QString lastSyncedPC() const;
 	
-	void loadMapping();
+	bool loadMapping();
 	
 	QMap<QString, QString>* mappings();
 	
@@ -76,6 +76,8 @@ public:
 	void setPCCategories( const QString &pcRecordId, const QStringList &categories );
 	
 	bool rollback();
+
+	bool remove();
 	 
 protected:
 	/**

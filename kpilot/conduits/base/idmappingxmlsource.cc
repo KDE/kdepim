@@ -167,7 +167,7 @@ QString IDMappingXmlSource::lastSyncedPC() const
 	return d->fLastSyncedPC;
 }
 
-void IDMappingXmlSource::loadMapping()
+bool IDMappingXmlSource::loadMapping()
 {
 	FUNCTIONSETUP;
 	
@@ -175,7 +175,8 @@ void IDMappingXmlSource::loadMapping()
 	d->fMappings = QMap<QString, QString>();
 	d->fLastSyncedDateTime = QDateTime();
 	d->fLastSyncedPC.clear();
-	
+	bool success = false;
+
 	QFile file( d->fPath );
 	
 	if( !file.exists() )
@@ -190,11 +191,13 @@ void IDMappingXmlSource::loadMapping()
 		
 		// Make sure that the file is closed after parsing.
 		const QXmlInputSource *source = new QXmlInputSource( &file );
-		reader.parse( source );
+		success = reader.parse( source );
+		DEBUGKPILOT << "was able to parse file: " << success;
 		file.close();
 		
 		delete source;
 	}
+	return success;
 }
 
 QMap<QString, QString>* IDMappingXmlSource::mappings()
@@ -265,7 +268,7 @@ bool IDMappingXmlSource::saveMapping()
 	}
 	
 	QFile file( d->fPath );
-	if( file.open( QIODevice::ReadWrite ) )
+	if( file.open( QIODevice::WriteOnly | QIODevice::Truncate) )
 	{
 		QTextStream out( &file );
 		doc.save( out, 4 );
@@ -392,4 +395,26 @@ bool IDMappingXmlSource::startElement( const QString &namespaceURI
 	}
 
 	return true;
+}
+
+bool IDMappingXmlSource::remove()
+{
+	FUNCTIONSETUP;
+	
+	// $HOME/.kde/share/apps/kpilot/conduits/<Username>/mapping/<Conduit>-mapping.xml.
+	DEBUGKPILOT << "removing file: " << d->fPath;
+	QFile file( d->fPath );
+	bool success;
+	
+	if( !file.exists() )
+	{
+		DEBUGKPILOT << "File does not exist. Can't remove.";
+	}
+	else
+	{
+		success = file.remove();
+		DEBUGKPILOT << (success ? "Successfully removed " : "Failed to remove ")
+			    << "file.";
+	}
+	return success;
 }

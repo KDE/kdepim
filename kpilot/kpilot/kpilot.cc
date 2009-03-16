@@ -738,7 +738,7 @@ int main(int argc, char **argv)
 
 	// a non-intuitive note about this... now that we're using dbus, the way that the path 
 	// is constructed to communicate with our objects on the bus are of 2 pieces...
-	// in the dbus interface string "org.kde.kpilot.foo", 
+	// in the dbus interface string "org.kde.kpilot.foo",
 	// the "org.kde.kpilot" part comes from setOrganizationDomain, found in
 	// KPILOT_ABOUT_INIT.  the "foo" part comes in the first argument to KAboutData below...
 	KAboutData about("kpilot", 0, ki18n("KPilot"),
@@ -831,7 +831,6 @@ int main(int argc, char **argv)
 	KGlobal::dirs()->addResourceType("pilotdbs", "data",
 		CSL1("share/apps/kpilot/DBBackup"));
 	tp->show();
-	//a.setMainWidget(tp);
 	return a.exec();
 }
 

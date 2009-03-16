@@ -45,6 +45,12 @@ public:
 	void setTodoEntry( const PilotTodoEntry& entry, bool keepPrevCategory = true );
 	
 	PilotTodoEntry todoEntry() const;
+
+	/**
+	 * Returns a string presentation of this record.
+	 */
+	/* virtual */ QString toString() const;
+
 };
 
 #endif

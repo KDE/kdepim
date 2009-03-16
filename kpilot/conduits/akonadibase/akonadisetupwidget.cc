@@ -92,7 +92,9 @@ AkonadiSetupWidget::~AkonadiSetupWidget()
 void AkonadiSetupWidget::changeCollection( const Akonadi::Collection& col )
 {
 	FUNCTIONSETUP;
-	
+	DEBUGKPILOT << "collection id: "<< col.id() << ", name: " << col.name()
+		    << ", resource: " << col.resource() << ", mimeType: " << col.mimeType();
+
 	if( col.id() >= 0 )
 	{
 		d->fCollectionModified = true;
@@ -116,7 +118,9 @@ bool AkonadiSetupWidget::modified() const
 void AkonadiSetupWidget::setCollection( Akonadi::Item::Id id )
 {
 	FUNCTIONSETUP;
-	
+
+	DEBUGKPILOT << "request to set collection to id: " << id;
+
 	if( id >= 0 )
 	{
 		d->fUi.fWarnIcon1->setVisible( false );
@@ -133,9 +137,6 @@ void AkonadiSetupWidget::setCollectionLabel( const QString& label )
 void AkonadiSetupWidget::setMimeTypes( const QStringList& mimeTypes )
 {
 	d->fCollectionFilterModel->clearFilters();
-	foreach( const QString& mimeType, mimeTypes )
-	{
-		d->fCollectionFilterModel->addMimeTypeFilter( mimeType );
-	}
+	d->fCollectionFilterModel->addMimeTypeFilters( mimeTypes );
 }
 

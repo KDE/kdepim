@@ -91,6 +91,24 @@ public:
 	 */
 	/* virtual */ void synced();
 
+	/**
+	 * Allows subclasses to do some validity checks on the records. (Optional).
+	 * When our user deletes a record from Akonadi, it is physically deleted,
+	 * not logically deleted. This means that when we retrieve the current
+	 * cache from Akonadi, we won't get records that have been deleted. To
+	 * compensate for this, we create dummy records that allow us to delete
+	 * their HH counterparts. Checking for isValid() should return false for
+	 * these dummy records, in addition to telling us that they're otherwise
+	 * not something that should be added to the handheld.
+	 */
+	/* virtual */ bool isValid() const;
+
+	/**
+	  * Explicit set of whether this is a dummy (intended only for delete)
+	  * record.
+	  */
+	void setDummy( bool dummy = true );
+
 private:
 	QSharedDataPointer<AkonadiRecordPrivate> d;
 };

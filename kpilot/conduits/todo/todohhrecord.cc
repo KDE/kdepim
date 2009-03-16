@@ -30,9 +30,12 @@
 
 #include "options.h"
 
-TodoHHRecord::TodoHHRecord( PilotRecord *record, const QString &category ) 
+TodoHHRecord::TodoHHRecord( PilotRecord *record, const QString &category )
 	: HHRecord( record, category )
 {
+	FUNCTIONSETUPL(5);
+	DEBUGKPILOT << "id: [" << id() << "], description: [" << toString() << "]";
+
 }
 
 bool TodoHHRecord::equal( const HHRecord* other ) const
@@ -79,4 +82,10 @@ PilotTodoEntry TodoHHRecord::todoEntry() const
 	FUNCTIONSETUP;
 	
 	return PilotTodoEntry( fRecord );
+}
+
+QString TodoHHRecord::toString() const
+{
+	PilotTodoEntry tde = todoEntry();
+	return tde.getDescription();
 }

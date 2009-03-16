@@ -66,7 +66,7 @@ RecordConduit::~RecordConduit()
 /* virtual */ bool RecordConduit::exec()
 {
 	FUNCTIONSETUP;
-	
+
 	loadSettings();
 	
 	// Try to open the handheld database and the local backup database.
@@ -87,7 +87,8 @@ RecordConduit::~RecordConduit()
 	
 	// NOTE: Do not forget that the HHData proxy and the backup proxy must use
 	// the opened databases, maybe we should pass them for clarity to this method.
-	if( !initDataProxies() )
+	bool success = initDataProxies();
+	if( !success )
 	{
 		DEBUGKPILOT << "One of the data proxies could not be initialized.";
 		addSyncLogEntry(i18n("One of the data proxies could not be initialized."));
@@ -103,6 +104,9 @@ RecordConduit::~RecordConduit()
 	{
 		DEBUGKPILOT << "Invalid record mapping. Doing first sync.";
 		addSyncLogEntry( i18n( "Invalid record mapping. Doing first sync." ));
+		// clean it up and start again.
+		fMapping.remove();
+		fMapping = IDMapping( KPilotSettings::userName(), fConduitName );
 		setFirstSync( true );
 	}
 	
@@ -203,9 +207,19 @@ RecordConduit::~RecordConduit()
 	{
 		DEBUGKPILOT <<  "Data mapping invalid after sync. Sync failed.";
 		addSyncLogEntry( i18n( "Data mapping invalid after sync. Sync failed." ) );
+		// remove our data mapping. it's messed up. start fresh next time.
+		fMapping.remove();
 		return false;
 	}
-	
+
+	if( fHHDataProxy->counter()->countEnd() != fPCDataProxy->counter()->countEnd() )
+	{
+		DEBUGKPILOT <<  "Ending counts do not match after sync. Sync failed.";
+		addSyncLogEntry( i18n( "Ending counts do not match after sync. Sync failed." ) );
+		fMapping.remove();
+		return false;
+	}
+
 	if( !checkVolatility() )
 	{
 		// volatility bounds are exceeded or the user did not want to proceed.
@@ -219,15 +233,17 @@ RecordConduit::~RecordConduit()
 	 * very best to deliver sane data) some of the data (mapping, hh database or
 	 * pc database) will be corrupted.
 	 */
-	if( !fHHDataProxy->commit() )
+	success = fHHDataProxy->commit();
+	if( !success )
 	{
 		DEBUGKPILOT << "Could not save Palm changes. Sync failed";
 		addSyncLogEntry( i18n( "Could not save Palm changes. Sync failed." ) );
 		fHHDataProxy->rollback();
 		return false;
 	}
-	
-	if( !fPCDataProxy->commit() )
+
+	success = fPCDataProxy->commit();
+	if( !success )
 	{
 		DEBUGKPILOT << "Could not save PC changes. Sync failed";
 		addSyncLogEntry( i18n( "Could not save PC changes. Sync failed." ) );
@@ -257,9 +273,11 @@ RecordConduit::~RecordConduit()
 	if( !fMapping.commit() )
 	{
 		DEBUGKPILOT << "Commit of ID mapping failed.";
+		fMapping.remove();
 	}
 	
 	// Clean up things like modified flags.
+	syncFinished();
 	fHHDataProxy->syncFinished();
 	fPCDataProxy->syncFinished();
 
@@ -390,7 +408,7 @@ void RecordConduit::updateBackupDatabase()
 // 4.1 || 5.2
 void RecordConduit::hotOrFullSync()
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(2);
 	
 	fSyncedPcRecords = new QStringList();
 	
@@ -418,11 +436,13 @@ void RecordConduit::hotOrFullSync()
 	while( fHHDataProxy->hasNext() )
 	{
 		HHRecord *hhRecord = static_cast<HHRecord*>( fHHDataProxy->next() );
-		HHRecord *backupRecord = static_cast<HHRecord*>( 
+		HHRecord *backupRecord = static_cast<HHRecord*>(
 			fBackupDataProxy->find( hhRecord->id() ) );
 		Record *pcRecord = 0L;
 		
 		QString pcRecordId = fMapping.pcRecordId( hhRecord->id() );
+		DEBUGKPILOT << "hhRecord id: " << hhRecord->id()
+			    << ", pcRecordId: " << pcRecordId;
 		if( !pcRecordId.isEmpty() ) {
 			// There is a mapping.
 			pcRecord = fPCDataProxy->find( pcRecordId );
@@ -544,10 +564,22 @@ void RecordConduit::firstSync()
 		
 		if( !fMapping.containsPCId( pcRecord->id() ) )
 		{
-			HHRecord *hhRecord = createHHRecord( pcRecord );
-			fHHDataProxy->create( hhRecord );
-			fMapping.map( hhRecord->id(), pcRecord->id() );
-			copyCategory( pcRecord, hhRecord );
+			if ( pcRecord->isDeleted() || !pcRecord->isValid() )
+			{
+				DEBUGKPILOT << "pcRecord: " << pcRecord->id()
+					    << " (" << pcRecord->toString()
+					    << ") deleted or invalid.  Removing.";
+				fMapping.removePCId( pcRecord->id() );
+				fPCDataProxy->remove( pcRecord->id() );
+			}
+			else
+			{
+				DEBUGKPILOT << "pcRecord valid and not deleted.  Adding to HH";
+				HHRecord *hhRecord = createHHRecord( pcRecord );
+				fHHDataProxy->create( hhRecord );
+				fMapping.map( hhRecord->id(), pcRecord->id() );
+				copyCategory( pcRecord, hhRecord );
+			}
 		}
 	}
 }
@@ -663,14 +695,17 @@ void RecordConduit::copyPCToHH()
 		{
 			DEBUGKPILOT << "No match found for:" << pcRecord->id();
 			// TODO: need a way to allow the user to configure us to archive deleted
-			if ( pcRecord->isDeleted() )
+			if ( pcRecord->isDeleted() || !pcRecord->isValid() )
 			{
-				DEBUGKPILOT << "pcRecord deleted.  Removing.";
+				DEBUGKPILOT << "pcRecord: " << pcRecord->id()
+					    << " (" << pcRecord->toString()
+					    << ") deleted or invalid.  Removing.";
+				fMapping.removePCId( pcRecord->id() );
 				fPCDataProxy->remove( pcRecord->id() );
 			}
 			else
 			{
-				DEBUGKPILOT << "pcRecord not deleted.  Adding to HH";
+				DEBUGKPILOT << "pcRecord valid and not deleted.  Adding to HH";
 				HHRecord *hhRecord = createHHRecord( pcRecord );
 				fHHDataProxy->create( hhRecord );
 				fMapping.map( hhRecord->id(), pcRecord->id() );
@@ -830,21 +865,32 @@ void RecordConduit::syncRecords( Record *pcRecord, HHRecord *backupRecord,
 	}
 	else if( hhRecord )
 	{
-		// Case: 6.5.2 or 6.5.8
-		// Warning id is a temporary id. Only after commit we know what id is
-		// assigned to the record. So on commit the proxy should get the mapping
-		// so that it can change the mapping.
-		DEBUGKPILOT << "Case 6.5.2 and 6.5.8";
-		pcRecord = createPCRecord( hhRecord );
-		QString id = fPCDataProxy->create( pcRecord );
-		fMapping.map( hhRecord->id(), id );
-		copyCategory( hhRecord, pcRecord );
+		if( !hhRecord->isDeleted() )
+		{
+			// Case: 6.5.2 or 6.5.8
+			// Warning id is a temporary id. Only after commit we know what id is
+			// assigned to the record. So on commit the proxy should get the mapping
+			// so that it can change the mapping.
+
+			DEBUGKPILOT << "Case 6.5.2 and 6.5.8";
+			pcRecord = createPCRecord( hhRecord );
+			QString id = fPCDataProxy->create( pcRecord );
+			fMapping.map( hhRecord->id(), id );
+			copyCategory( hhRecord, pcRecord );
 		
-		pcRecord->synced();
-		hhRecord->synced();
+			pcRecord->synced();
+			hhRecord->synced();
+		}
+		else
+		{
+			// Case: 6.5.18
+			DEBUGKPILOT << "Case 6.5.18";
+			fHHDataProxy->remove( hhRecord->id() );
+                }
 	}
 	else if( pcRecord )
 	{
+		DEBUGKPILOT << "pcRecord id: " << pcRecord->id();
 		if( fMapping.containsPCId( pcRecord->id() ) && pcRecord->isDeleted() )
 		{
 			DEBUGKPILOT << "Case 6.5.17 - pc:" << pcRecord->id();
@@ -855,13 +901,21 @@ void RecordConduit::syncRecords( Record *pcRecord, HHRecord *backupRecord,
 		{
 			// Case: 6.5.5 or 6.5.8
 			DEBUGKPILOT << "Case 6.5.5 or 6.5.8";
-			hhRecord = createHHRecord( pcRecord );
-			QString id = fHHDataProxy->create( hhRecord );
-			fMapping.map( id, pcRecord->id() );
-			copyCategory( pcRecord, hhRecord );
-			
-			pcRecord->synced();
-			hhRecord->synced();
+			if ( pcRecord->isDeleted() || ! pcRecord->isValid() ) {
+				WARNINGKPILOT << "pcRecord id: " << pcRecord->id()
+					      << " (" << pcRecord->toString()
+					      << ") deleted or invalid. Removing";
+				fMapping.removePCId( pcRecord->id() );
+				fPCDataProxy->remove( pcRecord->id() );
+			} else {
+				hhRecord = createHHRecord( pcRecord );
+				QString id = fHHDataProxy->create( hhRecord );
+				fMapping.map( id, pcRecord->id() );
+				copyCategory( pcRecord, hhRecord );
+
+				pcRecord->synced();
+				hhRecord->synced();
+			}
 		}
 	}
 	else
@@ -883,12 +937,30 @@ void RecordConduit::syncConflictedRecords( Record *pcRecord, HHRecord *hhRecord
 		}
 		else
 		{
-			// Keep pcRecord. The hhRecord is changed so undo that changes.
-			copy( pcRecord, hhRecord );
-			fHHDataProxy->update( hhRecord->id(), hhRecord );
-			// Both records are in sync so they are no longer modified.
-			hhRecord->synced();
-			pcRecord->synced();
+			if( !hhRecord->isDeleted() )
+			{
+				// Keep pcRecord. The hhRecord is changed so undo that change.
+				copy( pcRecord, hhRecord );
+				fHHDataProxy->update( hhRecord->id(), hhRecord );
+				// Both records are in sync so they are no longer modified.
+				hhRecord->synced();
+				pcRecord->synced();
+			}
+			else
+			{
+				// hhRecord is deleted
+				// Break the current mapping between hh record and pc record
+				fMapping.removeHHId( hhRecord->id() );
+
+				// now remove the hh record
+				fHHDataProxy->remove( hhRecord->id() );
+
+				// create a new hhRecord and adjust mappings, etc.
+				HHRecord *hhRec = createHHRecord( pcRecord );
+				fHHDataProxy->create( hhRec );
+				fMapping.map( hhRec->id(), pcRecord->id() );
+				copyCategory( pcRecord, hhRec );
+			}
 		}
 	}
 	else
@@ -910,12 +982,30 @@ void RecordConduit::syncConflictedRecords( Record *pcRecord, HHRecord *hhRecord
 		}
 		else
 		{
-			// Keep hhRecord. The pcRecord is changed so undo that changes.
-			copy( hhRecord, pcRecord );
-			fPCDataProxy->update( pcRecord->id(), pcRecord );
-			// Both records are in sync so they are no longer modified.
-			hhRecord->synced();
-			pcRecord->synced();
+			if( !pcRecord->isDeleted() )
+			{
+				// Keep hhRecord. The pcRecord is changed so undo that change.
+				copy( hhRecord, pcRecord );
+				fPCDataProxy->update( pcRecord->id(), pcRecord );
+				// Both records are in sync so they are no longer modified.
+				hhRecord->synced();
+				pcRecord->synced();
+			}
+			else
+			{
+				// pcRecord is deleted
+				// Break the current mapping between hh record and (dummy) pc record
+				fMapping.removeHHId( hhRecord->id() );
+
+				// now remove the dummy pc record
+				fPCDataProxy->remove( pcRecord->id() );
+
+				// create a new pcRecord and adjust mappings, etc.
+				Record *pcRec = createPCRecord( hhRecord );
+				fPCDataProxy->create( pcRec );
+				fMapping.map( hhRecord->id(), pcRec->id() );
+				copyCategory( hhRecord, pcRec );
+			}
 		}
 	}
 }

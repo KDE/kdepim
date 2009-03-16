@@ -8,6 +8,9 @@
 		<entry name="AkonadiCollection" type="Int">
 			<default>-1</default>
 		</entry>
+		<entry name="PrevAkonadiCollection" type="Int">
+			<default>-2</default>
+		</entry>
 		<entry name="ArchiveDeleted" type="Bool">
 				<default>true</default>
 		</entry>

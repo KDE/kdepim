@@ -100,7 +100,7 @@ TickleThread::~TickleThread()
 
 void TickleThread::run()
 {
-	FUNCTIONSETUP;
+	FUNCTIONSETUPL(5);
 	int subseconds = ChecksPerSecond;
 	int ticktock = SecondsPerTickle;
 	int timeout = fTimeout;
@@ -116,6 +116,7 @@ void TickleThread::run()
 			{
 				if (!(--timeout))
 				{
+					DEBUGKPILOT << "posting timeout event.";
 					QApplication::postEvent(fHandle, new QEvent(static_cast<QEvent::Type>(KPilotLink::EventTickleTimeout)));
 					break;
 				}
@@ -124,6 +125,7 @@ void TickleThread::run()
 			if (!(--ticktock))
 			{
 				ticktock=SecondsPerTickle;
+				DEBUGKPILOT << "sending tickle from tickle thread.";
 				fHandle->tickle();
 			}
 		}
@@ -193,17 +195,9 @@ void KPilotLink::startTickle(unsigned int timeout)
 {
 	FUNCTIONSETUP;
 
-	Q_ASSERT(fTickleDone);
-
-	/*
-	** We've told the thread to finish up, but it hasn't
-	** done so yet - so wait for it to do so, should be
-	** only 200ms at most.
-	*/
-	if (fTickleDone && fTickleThread)
+	if (fTickleThread)
 	{
-		fTickleThread->wait();
-		KPILOT_DELETE(fTickleThread);
+		stopTickle();
 	}
 
 	DEBUGKPILOT << "Done @" << (void *) (&fTickleDone);

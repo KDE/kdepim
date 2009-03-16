@@ -63,6 +63,7 @@ QString fromPilot( const char *c, int len )
 		if (!c[i])
 		{
 			str = codec->toUnicode(c,i);
+			break; // leave after first \0 encountered
 		}
 	}
 	// Use the whole length

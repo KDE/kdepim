@@ -84,5 +84,10 @@ public:
 	 * Returns a string representation of the record.
 	 */
 	virtual QString toString() const = 0;
+
+	/**
+	 * Allows subclasses to do some validity checks on the records. (Optional)
+	 */
+	virtual bool isValid() const { return true; } ;
 };
 #endif

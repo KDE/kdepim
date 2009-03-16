@@ -47,9 +47,11 @@ public:
 	Private()
 	{
 		fCollectionId = -1;
+		fPrevCollectionId = -2;
 	}
 	
 	Akonadi::Collection::Id fCollectionId;
+	Akonadi::Collection::Id fPrevCollectionId;
 };
 
 CalendarConduit::CalendarConduit( KPilotLink *o, const QVariantList &a )
@@ -69,6 +71,7 @@ void CalendarConduit::loadSettings()
 	
 	CalendarSettings::self()->readConfig();
 	d->fCollectionId = CalendarSettings::akonadiCollection();
+	d->fPrevCollectionId = CalendarSettings::prevAkonadiCollection();
 }
 
 bool CalendarConduit::initDataProxies()
@@ -87,6 +90,14 @@ bool CalendarConduit::initDataProxies()
 		return false;
 	}
 	
+	if( d->fPrevCollectionId != d->fCollectionId )
+	{
+		// TODO: Enable this in trunk.
+		//addSyncLogEntry( i18n( "Note: Collection has changed since last sync, removing mapping." ) );
+		DEBUGKPILOT << "Note: Collection has changed since last sync, removing mapping.";
+		fMapping.remove();
+	}
+	
 	// At this point we should be able to read the backup and handheld database.
 	// However, it might be that Akonadi is not started.
 	CalendarAkonadiProxy* tadp = new CalendarAkonadiProxy( fMapping );
@@ -100,6 +111,13 @@ bool CalendarConduit::initDataProxies()
 	fPCDataProxy->loadAllRecords();
 	
 	return true;
+}
+
+void CalendarConduit::syncFinished()
+{
+	CalendarSettings::self()->readConfig();
+	CalendarSettings::self()->setPrevAkonadiCollection(d->fCollectionId);
+	CalendarSettings::self()->writeConfig();
 }
 
 bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
@@ -128,7 +146,7 @@ bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 	 * be using before testing for equality.
 	 */
 	TEST( QString(Pilot::toPilot(pcEvent->description())), hhEntry.getNote(), "Note" )
-	if( thr->category() != "Unfiled" )
+	if( !thr->category().isEmpty() && thr->category() != "Unfiled" )
 	{
 		TEST1( pcEvent->categories().contains( thr->category() ), "Category" )
 	}
@@ -138,7 +156,16 @@ bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 	TEST( pcEvent->dtStart().dateTime().toLocalTime(), hhEntry.dtStart(), "dtStart" )
 	if( !hhEntry.doesFloat() && !hhEntry.isMultiDay() )
 	{
-		TEST( pcEvent->dtEnd().dateTime().toLocalTime(), hhEntry.dtEnd(), "dtEnd" )
+		// Handle midnight palm bug (http://bugs.kde.org/show_bug.cgi?id=183631)
+		QTime time = pcEvent->dtEnd().dateTime().toLocalTime().time();
+		if ( pcEvent->recurs() && time.hour() == 0 && time.minute() == 0 )
+		{
+			QDateTime pcDt = pcEvent->dtEnd().dateTime().toLocalTime();
+			pcDt.setDate(pcDt.date().addDays(-1));
+			TEST( pcDt, hhEntry.dtEnd(), "dtEnd" )
+		}
+		else
+			TEST( pcEvent->dtEnd().dateTime().toLocalTime(), hhEntry.dtEnd(), "dtEnd" )
 	}
 	
 	TEST( pcEvent->isAlarmEnabled(), hhEntry.isAlarmEnabled(), "HasAlarm" )
@@ -178,9 +205,19 @@ bool CalendarConduit::equal( const Record *pcRec, const HHRecord *hhRec ) const
 			}
 			else
 			{
-				QDateTime hhDt = hhEntry.dtEnd();
-				QDateTime pcDt = pcEvent->dtEnd().dateTime().toLocalTime();
-				TEST( hhDt, pcDt, "DtEventEnd" );
+				// Events that end at midnight cause problems
+				// (http://bugs.kde.org/show_bug.cgi?id=183631); however, events with
+				// no time associated with them are stored as beginning and ending
+				// at midnight on the same day, and these are OK.  Other events that end at
+				// midnight will need to be adjusted.
+				QDateTime hhDtEnd = hhEntry.dtEnd();
+				QDateTime hhDtStart = hhEntry.dtStart();
+				QDateTime pcDtEnd = pcEvent->dtEnd().dateTime().toLocalTime();
+				if( (hhDtEnd.time().hour() == 0) && (hhDtEnd.time().minute() == 0) &&
+					(hhDtEnd != hhDtStart) )
+					pcDtEnd.setDate(pcDtEnd.date().addDays(-1));
+
+				TEST( hhDtEnd, pcDtEnd, "DtEventEnd" );
 			}
 		}
 		
@@ -520,6 +557,7 @@ void CalendarConduit::setRecurrence( PilotDateEntry* de, const EventPtr& e ) con
 		de->setRepeatType( repeatDaily );
 		de->setRepeatFrequency( 1 );
 		de->setRepeatEnd( de->getEventEnd() );
+		de->setRepeatForever( 0 );
 		
 		DEBUGKPILOT << "Setting single-day recurrence (" << startDt.toString()
 			<< " - " << endDt.toString() << ")";
@@ -590,20 +628,55 @@ void CalendarConduit::setRecurrence( PilotDateEntry* de, const EventPtr& e ) con
 		
 	case KCal::Recurrence::rMonthlyPos:
 		// Palm: Day=0(sun)-6(sat); week=0-4, 4=last week; pos=week*7+day
-		// libkcal: day=bit0(mon)-bit6(sun); week=-5to-1(from end) and 1-5 (from beginning)
+		// libkcal: day=1(mon)-7(sun); week=-5to-1(from end) and 1-5 (from beginning)
 		// PC->Palm: pos=week*7+day
 		//  week: if w=-1 -> week=4, else week=w-1
-		//  day: day=(daybit+1)%7  (rotate because of the different offset)
+		//  day: palmday=kcalday %7 (adjust for Sunday being different between palm and libkcal)
 		de->setRepeatType( repeatMonthlyByDay );
 		if (r->monthPositions().count()>0)
 		{
 			// Only take the first monthly position, as the palm allows only one
 			KCal::RecurrenceRule::WDayPos mp = r->monthPositions().first();
 			int week = mp.pos();
-			int day = ( mp.day() + 1 ) % 7; // rotate because of different offset
+			int day = mp.day() % 7;
 			// turn to 0-based and include starting from end of month
-			// TODO: We don't handle counting from the end of the month yet!
-			if( week == -1 ) week = 4; else week--;
+			if( week > 0 )
+			{
+				week--;
+			}
+			else if( week == -1 )
+			{
+				// Handle last week of the month occurrence
+				week = 4;
+			}
+			else if( week < 0 )
+			{
+				// TODO: Handle counting from the end of the month better.  The following
+				// code implements the following mapping, which works for when the recurrent
+				// day occurs 4 times in the month; when the day occurs 5 times in a month, the
+				// recurrence appears 1 week early.
+				// kcal=-2 (second from last) => palm 2 (week 3)
+				// kcal=-3 (third from last) => palm 1 (week 2)
+				// kcal=-4 (fourth from last) => palm 0 (week 1)
+				// kcal=-5 (fifth from last) => palm 0 (week 1)
+				DEBUGKPILOT << "Recurring event from end of month, week (from PC) =" << week;
+				if( week > -5)
+				{
+					week += 4;
+				}
+				else
+				{
+					week = 0;
+				}
+			}
+			else
+			{
+				// if none of the cases above are executed week==0.  I'm not sure what this would 
+				// mean but for now let's leave it alone, meaning that the occurrence on the palm 
+				// will be during the first week of the month.
+				DEBUGKPILOT << "Week (from PC) is 0.  Leaving it alone.";
+			}
+
 			de->setRepeatDay( static_cast<DayOfMonthType>( 7 * week + day ) );
 		}
 		break;

@@ -46,7 +46,7 @@
         </sizepolicy>
        </property>
        <property name="text" >
-        <string>No collection selected yet. Make sure you select a collection before synchronizing. If you do not see any collections in the combobox, make sure that Akonadi started and that there is an addressbook resource.</string>
+        <string>No collection selected yet. Make sure you select a collection before synchronizing. If you do not see any collections in the combobox, make sure that Akonadi started and that there is a valid resource for this data type.</string>
        </property>
        <property name="alignment" >
         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>

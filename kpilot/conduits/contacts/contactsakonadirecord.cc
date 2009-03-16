@@ -41,6 +41,9 @@ ContactsAkonadiRecord::ContactsAkonadiRecord( const QString& id ) : AkonadiRecor
 	item.setPayload<KABC::Addressee>( KABC::Addressee() );
 	item.setMimeType( "text/directory" );
 	setItem( item );
+	// Set item changes the Id of the record to the item id which is invalid in case
+	// of deleted records.
+	setId(id);
 }
 
 ContactsAkonadiRecord::~ContactsAkonadiRecord()

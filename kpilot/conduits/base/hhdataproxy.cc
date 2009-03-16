@@ -38,7 +38,7 @@
 #include "hhrecord.h"
 
 HHDataProxy::HHDataProxy( PilotDatabase *db ) : fDatabase( db )
-	, fLastUsedUniqueId( 0L ), fAppInfo( 0L )
+	, fLastUsedUniqueId( 0L ), fAppInfo( 0L ), fNextTempId( -1 )
 {
 }
 
@@ -182,21 +182,12 @@ void HHDataProxy::setCategory( Record* rec, const QString& category )
 	}
 }
 
+
 QString HHDataProxy::generateUniqueId()
 {
-	recordid_t id = 0;
+	FUNCTIONSETUP;
 
-	QList<QString> ids = fRecords.keys();
-
-	for( int i = 0; i < fRecords.size(); ++i )
-	{
-		if( ids.at( i ).toULong() > id )
-		{
-			id = ids.at( i ).toULong();
-		}
-	}
-
-	return QString::number( id + 1 );
+	return QString::number( fNextTempId-- );
 }
 
 

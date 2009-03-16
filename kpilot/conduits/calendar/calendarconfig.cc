@@ -1,4 +1,4 @@
-/* todoconfig.cc			KPilot
+/* calendarconfig.cc			KPilot
 **
 ** Copyright (C) 2008 by Bertjan Broeksema <b.broeksema@kdemail.net>
 */
@@ -34,10 +34,10 @@
 
 static KAboutData *createAbout()
 {
-	KAboutData *fAbout = new KAboutData( "To-do conduit", 0
-		, ki18n( "To-do Conduit for KPilot" )
+	KAboutData *fAbout = new KAboutData( "Calendar conduit", 0
+		, ki18n( "Calendar Conduit for KPilot" )
 		, KPILOT_VERSION
-		, ki18n( "Configures the To-do Conduit for KPilot" )
+		, ki18n( "Configures the Calendar Conduit for KPilot" )
 		, KAboutData::License_GPL
 		, ki18n( "(C) 2008, Bertjan Broeksema" )
 	);
@@ -61,14 +61,14 @@ CalendarConfig::CalendarConfig( QWidget* w, const QVariantList& ) : ConduitConfi
 {
 	FUNCTIONSETUP;
 
-	fConduitName = i18n( "To-do" );
+	fConduitName = i18n( "Calendar" );
 	fWidget = new QWidget( w );
 	fUi.setupUi( fWidget );
 	
 	// Set up the akonadi tab.
 	QWidget* akonadiTab = fUi.fTabWidget->widget( 0 );
 	QStringList mimeTypes;
-	mimeTypes << "text/calendar" << "application/x-vnd.akonadi.calendar.todo";
+	mimeTypes << "text/calendar" << "application/x-vnd.akonadi.calendar.event";
 		
 	fAkonadiWidget = new AkonadiSetupWidget( akonadiTab );
 	fAkonadiWidget->setCollectionLabel( i18n( "Select Calendar: " ) );
