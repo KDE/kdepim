@@ -143,6 +143,7 @@ set( _kleopatra_SRCS
   view/searchbar.cpp
   view/tabwidget.cpp
 
+  dialogs/aboutgpg4windialog.cpp
   dialogs/certificateselectiondialog.cpp
   dialogs/expirydialog.cpp
   dialogs/lookupcertificatesdialog.cpp
@@ -236,6 +237,7 @@ if ( KLEO_MODEL_TEST )
 endif ( KLEO_MODEL_TEST )
 
 kde4_add_ui_files( _kleopatra_SRCS
+  dialogs/aboutgpg4windialog.ui
   dialogs/certificationoptionswidget.ui
   dialogs/expirydialog.ui
   dialogs/lookupcertificatesdialog.ui

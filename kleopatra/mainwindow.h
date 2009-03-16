@@ -92,6 +92,7 @@ private:
 #ifdef ONLY_KLEO
     Q_PRIVATE_SLOT( d, void saveIconUsageLog() )
 #endif
+    Q_PRIVATE_SLOT( d, void aboutGpg4Win() )
 };
 
 

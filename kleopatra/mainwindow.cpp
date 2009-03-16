@@ -41,6 +41,8 @@
 #include "view/tabwidget.h"
 #include "view/keylistcontroller.h"
 
+#include "dialogs/aboutgpg4windialog.h"
+
 #include "commands/exportcertificatecommand.h"
 #include "commands/exportopenpgpcertstoservercommand.h"
 #include "commands/exportsecretkeycommand.h"
@@ -70,6 +72,7 @@
 #include "utils/stl_util.h"
 #include "utils/action_data.h"
 #include "utils/classify.h"
+#include "utils/filedialog.h"
 
 // from libkdepim
 #include "statusbarprogresswidget.h"
@@ -283,7 +286,7 @@ public:
 
 #ifdef ONLY_KLEO
     void saveIconUsageLog() {
-        const QString filename = QFileDialog::getSaveFileName( q );
+        const QString filename = FileDialog::getSaveFileName( q, QString(), "debug" );
         if ( filename.isEmpty() )
             return;
         QFile file( filename );
@@ -296,6 +299,12 @@ public:
         QTextStream( &file ) << KIconLoader::iconUsageLog() << '\n';
     }
 #endif
+
+    void aboutGpg4Win() {
+        QPointer<Dialogs::AboutGpg4WinDialog> dlg( new Dialogs::AboutGpg4WinDialog( q ) );
+        dlg->exec();
+        delete dlg;
+    }
 
 private:
     void setupActions();
@@ -462,6 +471,9 @@ void MainWindow::Private::setupActions() {
           0, q, SLOT(selfTest()), QString(), false, true },
         // Window menu
         // (come from ui.tabWidget)
+        // Help menu
+        { "help_about_gpg4win", i18n("About Gpg4win"), QString(),
+          0, q, SLOT(aboutGpg4Win()), QString(), false, true },
     };
 
     make_actions_from_data( action_data, /*sizeof action_data / sizeof *action_data,*/ coll );
