@@ -39,10 +39,10 @@ namespace Config {
  
     class SMimeValidationConfigurationWidget;
 
-    class SMimeValidationConfigurationurationPage : public KCModule {
+    class SMimeValidationConfigurationPage : public KCModule {
         Q_OBJECT
     public:
-        explicit SMimeValidationConfigurationurationPage( const KComponentData &instance, QWidget *parent=0, const QVariantList &args=QVariantList() );
+        explicit SMimeValidationConfigurationPage( const KComponentData &instance, QWidget *parent=0, const QVariantList &args=QVariantList() );
 
         /* reimp */ void load();
         /* reimp */ void save();
