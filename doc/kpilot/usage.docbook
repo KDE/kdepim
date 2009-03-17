@@ -181,7 +181,7 @@ words, to show it if hidden, or to hide it if shown.
 Displays &kpilot;'s shortcut configuration dialog, allowing you change or create
 key bindings, which are associations between actions (for example, opening
 &kpilot;'s configuration dialog) and keys or key combinations (for instance,
-Ctrl + Shift + a).
+<keycombo action="simul">&Ctrl;&Shift;<keycap>A</keycap></keycombo>).
 </para>
 </listitem>
 </varlistentry>

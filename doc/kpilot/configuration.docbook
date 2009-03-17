@@ -496,7 +496,7 @@ every backup.
 <title>Startup and Exit Behavior Setup</title>
 
 <para>
-This pages present options related to the startup and exit of &kpilot; and
+This page presents options related to the startup and exit of &kpilot; and
 &kpilot; daemon.
 </para>
 
