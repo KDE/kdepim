@@ -9,9 +9,7 @@ The <link linkend="config-conduits">conduits</link>
 need to be configured as well.
 After that you can use &kpilot;
 to synchronize your &PalmPilot; with
-your &kde; desktop or view
-data from your &PalmPilot; with the
-<link linkend="builtin">built-in viewers</link>.
+your &kde; desktop.
 </para>
 
 <para>
@@ -57,101 +55,7 @@ Each group of configuration options
 (<link linkend="general-setup">general</link>
 and <link linkend="config-conduits">conduits</link>)
 will be discussed separately.
-We will begin, however, by taking a look at the
-<link linkend="configwizard">configuration wizard</link>, which should make most
-of the
-general group of configuration options superfluous.
 </para>
-
-<sect1 id="configwizard">
-<title>Using the Wizard</title>
-
-<para>
-The configuration wizard helps you to set up &kpilot; to communicate
-with the &PalmPilot; and to configure the conduits as a group. It's a great
-start for new users, and you can always fine-tune your preferences later.
-</para>
-
-<para>
-In the <guilabel>Pilot Info</guilabel> dialog, type your <guilabel>User
-Name</guilabel>. It
-should match the one from the &PalmPilot;. Next, type the file name of
-the <guilabel>Device</guilabel> you will use to connect the &PalmPilot; (The
-connection can be through a serial port, USB port, infrared, Bluetooth, network
-or the generic <filename class="devicefile">/dev/pilot</filename> device.)
-Alternatively, click the
-<guibutton>Automatically detect handheld and user name...</guibutton>
-button and press the &HotSync; button on your &handheld;. The Wizard will try
-to find the correct <guilabel>Device</guilabel> and
-<guilabel>User Name</guilabel>.
-</para>
-
-<important><para>
-If the
-<guilabel>Device</guilabel> does not have the right permissions, the wizard will
-not be able to find it. Normal users must be able to read/write the correct
-device. To resolve this issue, please refer to <link
-linkend="faq-connection"><quote>&kpilot; says <errorname>Can't connect to
-pilot</errorname></quote>
-&FAQ; entry</link>, or contact your system administrator.
-</para></important>
-
-
-<screenshot>
-<screeninfo>The First Configuring Wizard Dialog</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="wizard-general.png"
-format="PNG"/></imageobject>
-<textobject><phrase>Configuring Wizard: The Pilot Info
-Dialog</phrase></textobject>
-<caption><para>Configuring Wizard: The Pilot Info Dialog</para></caption>
-</mediaobject>
-</screenshot>
-
-<para>
-Press the &HotSync; button of your &handheld; to probe for the
-correct <guilabel>Device</guilabel> and <guilabel>User Name</guilabel>.
-</para>
-
-
-<screenshot>
-<screeninfo>The Second Configuring Wizard Dialog</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="wizard-connection.png"
-format="PNG"/></imageobject>
-<textobject><phrase>Configuring Wizard: The Autodetection
-Dialog</phrase></textobject>
-<caption><para>Configuring Wizard: The Autodetection Dialog</para></caption>
-</mediaobject>
-</screenshot>
-
-<para>
-&kpilot; has the ability to sync the data on your &handheld; with
-applications or files on your <acronym>PC</acronym>. The programs that
-perform these actions are called conduits. The sync dialog configures
-all applicable &kpilot; conduits to sync with widely used
-<acronym>PIM</acronym> suites. You can fine-tune these settings later, from the
-<menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Configure &kpilot;</guimenuitem>
-</menuchoice>
-menu. Please check the <link linkend="config-conduits">conduits
-configuration</link>
-section of this document for more information.
-</para>
-
-<screenshot>
-<screeninfo>The Third Configuring Wizard Dialog</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="wizard-conduits.png"
-format="PNG"/></imageobject>
-<textobject><phrase>Configuring Wizard: The Sync Dialog</phrase></textobject>
-<caption><para>Configuring Wizard: The Sync Dialog</para></caption>
-</mediaobject>
-</screenshot>
-
-
-</sect1>
 
 
 <sect1 id="general-setup">
@@ -372,17 +276,6 @@ a nice balance between speed and data safety.
 
 <listitem>
 <para>
-<guilabel>FastSync</guilabel>: Only synchronize those
-databases that have conduits, and perform no backup of the data
-on the &PalmPilot;, reducing greatly the time required for the sync
-operation. This also means that if something goes wrong with your &PalmPilot;,
-you may not be able to recover the databases. This is a classic
-trade-off between speed and safety.
-</para>
-</listitem>
-
-<listitem>
-<para>
 <guilabel>FullSync</guilabel>: run all selected conduits, and sync all
 databases, reading all records, and performing a full backup. It is the safest
 option, but takes the longest time to complete, as it will merge all the records
@@ -407,13 +300,6 @@ databases, but instead of merging the information from both sources, copy the
 handheld data to the PC. <emphasis>Use with care, as this option erases the
 changes you made in your PC since the last sync</emphasis>.
 </para>
-<warning>
-<para>
-Remember, when &kpilot; does a &HotSync; and runs the conduits,
-the databases in the internal viewers are <emphasis>not</emphasis>
-updated. To update the internal viewers, use the FullSync or backup actions.
-</para>
-</warning>
 
 </listitem>
 
@@ -424,7 +310,7 @@ updated. To update the internal viewers, use the FullSync or backup actions.
 
 
 <varlistentry>
-<term><guilabel>Do full backup when changing PCs</guilabel></term>
+<term><guilabel>Do full sync when changing PCs</guilabel></term>
 <listitem>
 <para>
 If you &HotSync; your &handheld; with multiple <acronym>PC</acronym>s, the flag
@@ -435,9 +321,9 @@ disable the full sync by unchecking this box.
 </para>
 </listitem>
 </varlistentry>
-<!--
+
 <varlistentry>
-<term><guilabel>Do not sync when screen saver is active</guilabel></term>
+<term><guilabel>Do not sync when screensaver is active</guilabel></term>
 <listitem>
 <para>
 This is a security feature that prevents the &handheld; from synchronization
@@ -448,7 +334,7 @@ and you will need to disable it to use &kpilot; in non-&kde; environments.
 </para>
 </listitem>
 </varlistentry>
--->
+
 <varlistentry>
 <term><guilabel>Conflict Resolution</guilabel></term>
 <listitem>
@@ -479,14 +365,14 @@ discarding the changes on the <acronym>PC</acronym>.
 copy the values from the <acronym>PC</acronym> to the &handheld;,
 discarding changes on the &handheld;.
 </para></listitem>
-<listitem><para><guilabel>Values From Last Sync (if possible)</guilabel>:
+<listitem><para><guilabel>Values From Last Sync (Not Supported)</guilabel>:
 &kpilot; stores a backup copy of the information on your &handheld; depending on
 the synchronization method you selected. If this information is available, use
 neither
 the values from the &handheld; nor the PC, but the values from
 the last sync.
 </para></listitem>
-<listitem><para><guilabel>Use Both Entries</guilabel>:
+<listitem><para><guilabel>Use Both Entries (Not Supported)</guilabel>:
 Create duplicate entries of the conflicting records on both the
 <acronym>PC</acronym> and
 &handheld;, one with the value from the <acronym>PC</acronym>, the other with
@@ -513,7 +399,7 @@ restore this information later.
 
 <para>In short, databases are all files stored in your &handheld;. A database
 can be either a record database, which stores dynamic information created by the
-user (for instance, the addresses or the todo information), or a resource
+user (for instance, the addresses or the To-Do information), or a resource
 database, which tend to be static (for instance the applications).</para>
 
 <screenshot>
@@ -606,86 +492,6 @@ every backup.
 
 </sect2>
 
-
-<sect2 id="page-viewers">
-<title>Internal Viewers Setup</title>
-<para>
-&kpilot; contains <quote>viewers</quote> for
-presenting information from the &PalmPilot;.
-These viewers present the databases available on
-the &PalmPilot; in much the same way that the device
-itself does. Not all databases have an application-specific
-viewer, though you can use the generic database viewer for those.
-The viewers page contains settings for the internal viewers in
-&kpilot;.
-These settings change the way in which the data is shown.
-</para>
-
-<screenshot>
-<screeninfo>Viewers Page</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="setup-viewer.png" format="PNG"/></imageobject>
-<textobject><phrase>The Viewers Setup Page</phrase></textobject>
-<caption><para>The Viewers Setup Page</para></caption>
-</mediaobject>
-</screenshot>
-
-<variablelist>
-<varlistentry>
-<term><guilabel>Make internal viewers editable</guilabel></term>
-<listitem><para>
-The internal viewers can be read only or editable. The editable mode allows you
-to add new records, delete or edit the existing records and sync your
-modifications back to the &handheld;. Check
-this box to set the internal viewers to editable mode, uncheck to set them to
-read
-only mode.</para>
-<warning><para>
-On some &kpilot; versions, it is not possible check this box, and therefore to
-use the internal viewers as editors.
-</para></warning>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Show private records</guilabel></term>
-<listitem><para>
-In your &PalmPilot; you can mark some records as <quote>private</quote>. By
-default, &kpilot; does not display these records on the screen. Check this box
-if you want to see them.
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Address Viewer</guilabel></term>
-<listitem><para>
-Set there the options for the address internal viewer.
-
-<itemizedlist>
-<listitem><para>
-<guilabel>Show as "Last, first"</guilabel> or
-<guilabel>Show as "Company, last"</guilabel>: the order and display of the
-address records in the address internal viewer can be set to match the
-&handheld;. Select the option that suits better your personal preferences.
-</para></listitem>
-
-<listitem><para>
-<guilabel>Use key field</guilabel> Check this box to combine entries with the
-same last name.
-</para></listitem>
-
-</itemizedlist>
-
-</para></listitem>
-</varlistentry>
-
-
-</variablelist>
-
-</sect2>
-
-
-
 <sect2 id="page-startup-exit">
 <title>Startup and Exit Behavior Setup</title>
 
@@ -727,7 +533,7 @@ format="PNG"/></imageobject>
 <itemizedlist>
 <listitem>
 <para>
-<guilabel>Start daemon at login</guilabel>:
+<guilabel>Start KPilot at login</guilabel>:
 By checking this, a link to
 the daemon is placed in your autostart folder
 and will be started automatically.  Note that this is not normally
@@ -738,7 +544,7 @@ needed if the daemon is docked in the panel.
 
 <listitem>
 <para>
-<guilabel>Show daemon in panel</guilabel>:
+<guilabel>Show KPilot in system tray</guilabel>:
 Check this box to instruct the daemon to place a &kpilot; icon
 <guiicon>
 <inlinemediaobject>
@@ -780,10 +586,8 @@ systems where the &USB; daemon starts &kpilot; automatically.
 <listitem>
 <para>
 <anchor id="stopdaemononexit"/>
-<guilabel>Stop daemon on exit</guilabel>: Setting this option will cause the
-daemon to exit when you quit &kpilot;, leaving the device port free for other
-&PalmPilot;-synchronization tools such as <application>malsync</application>
-</para>
+<guilabel>Stop KPilot's system tray application on exit</guilabel>: Setting this option will cause the
+daemon to exit when you quit &kpilot;.</para>
 </listitem>
 </itemizedlist>
 </para>
@@ -831,24 +635,40 @@ it inactive or click on the conduit name to configure it.
 <variablelist>
 
 <varlistentry>
-<term><guilabel>KNotes / Memos</guilabel></term>
+<term><guilabel>Install Files</guilabel></term>
 <listitem>
 <para>
-Synchronizes the Memo Pad application with &knotes;.
+Allows &kpilot; to install files and databases onto your &PalmPilot;.
 </para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Notepad</guilabel></term>
+<term><guilabel>Calendar</guilabel></term>
 <listitem>
 <para>
-Exports the free hand notes  of the &handheld;'s Notepad application as pictures
-to the PC.
+Synchronizes the Datebook application with &korganizer;.
 </para>
 </listitem>
 </varlistentry>
 
+<varlistentry>
+<term><guilabel>To-Do</guilabel></term>
+<listitem>
+<para>
+Synchronizes the To-Do list application with &korganizer;.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Contacts</guilabel></term>
+<listitem>
+<para>
+Synchronizes the Addressbook application with &kaddressbook;.
+</para>
+</listitem>
+</varlistentry>
 
 <varlistentry>
 <term><guilabel>Time Synchronization</guilabel></term>
@@ -861,183 +681,24 @@ Useful for keeping the clock of the &handheld; accurate.
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Calendar (KOrganizer)</guilabel></term>
+<term><guilabel>Memo File</guilabel></term>
 <listitem>
 <para>
-Synchronizes the Datebook application with &korganizer; or with an
-iCalendar file of
-your choice.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Palm DOC</guilabel></term>
-<listitem>
-<para>
-Automatically converts and installs text files in the &PalmPilot;
-DOC format, so you can read the text files with most DOC-capable
-applications on the &handheld;.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Addressbook</guilabel></term>
-<listitem>
-<para>
-Synchronizes the Address application with &kaddressbook; or with a vCard file of
-your choice.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>System Information</guilabel></term>
-<listitem>
-<para>
-Writes information about your &handheld;, (such as OS version,
-RAM available, and the list of databases) to a file. Useful mostly for
-debugging purposes.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>ToDo's (KOrganizer)</guilabel></term>
-<listitem>
-<para>
-Synchronizes the Todo list application with &korganizer; or with a iCalendar
-file of
-your choice.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>MAL (AvantGo) Conduit</guilabel></term>
-<listitem>
-<para>
-Synchronizes your &handheld; with the &AvantGo; server. The &AvantGo; server
-offers general content (news, guides, stock quotes, &etc;) in a format that is
-suitable for reading in a &handheld;. To use this conduit, you need to register,
-subscribe
-the channels you select and install the &AvantGo; software on your &handheld;.
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Mail</guilabel></term>
-<listitem>
-<para>
-Sends mail written on the &handheld; through &kmail;.
-There is no provision for receiving mail, however.
+Synchronizes the Memo Pad application with a directory and files on your computer.
 </para>
 </listitem>
 </varlistentry>
 
 </variablelist>
 
-
-<sect2 id="conduit-knotes">
-<title>&knotes; Conduit Setup</title>
-
-<para>
-The &knotes; Conduit is a partial replacement for the built-in <link
-linkend="builtin">memo application</link>.  It keeps the notes you write
-with &knotes; synchronized with the memos you write on your &PalmPilot;.
-</para>
+<sect2 id="install-cond">
+<title>Install Files Conduit Setup</title>
 
 <para>
-Setting up the &knotes; conduit is very simple.
+The Install Files Conduit installs any &PalmPilot; database that has been added
+to &kpilot;'s File Install window onto the &handheld;. No additional
+configuration is required for this conduit.
 </para>
-
-<screenshot>
-<screeninfo>&knotes; Conduit Setup</screeninfo>
-<mediaobject>
-<imageobject>
-<imagedata fileref="conduit-knotes.png" format="PNG"/>
-</imageobject>
-<textobject>
-<phrase>&knotes; Conduit Setup</phrase>
-</textobject>
-<caption>
-<para>&knotes; Conduit Setup</para>
-</caption>
-</mediaobject>
-</screenshot>
-
-<para>
-In the <guilabel>General</guilabel> Tab there are two configuration options:
-
-<variablelist>
-
-<varlistentry>
-<term><guilabel>Delete KNote when Pilot memo is deleted</guilabel></term>
-<listitem>
-<para>
-Uncheck this box if you wish to maintain the note on &knotes; even if the
-correspondent memo was deleted on the &handheld; memo application.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Suppress delete-confirmation in KNotes</guilabel></term>
-<listitem>
-<para>
-If the <guilabel>Delete KNote when Pilot memo is deleted</guilabel> box is
-checked, you may check this box to automatically delete the notes that
-correspond to a deleted memo, without confirmation.
-</para>
-</listitem>
-</varlistentry>
-
-</variablelist>
-
-<note>
-<para>
-By default, the options <quote>delete knote</quote> and <quote>suppress
-delete-confirmation</quote> are turned <emphasis>off</emphasis>, so that notes
-will accumulate on your PC.
-</para>
-</note>
-
-</para>
-</sect2>
-
-<sect2 id="notepad-cond">
-<title>Notepad Conduit Setup</title>
-
-<para>
-The Notepad Conduit exports the free hand notes of the &handheld;'s Notepad
-application  as pictures to the desktop. To set the folder to which the pictures
-should be exported, either enter it in the <guilabel>Output</guilabel> edit
-box or select it clicking the file picker button.
-</para>
-
-</sect2>
-
-<sect2 id="time-cond">
-<title>Time Synchronization Conduit Setup</title>
-
-<para>
-The Time Synchronization Conduit syncs the &handheld;'s time to that of the
-desktop
-machine. It is useful for keeping the clock of the &handheld; accurate. There
-are really no configuration options other that enabling and disabling the
-conduit, as currently only one direction for the synchronization is enabled,
-you can only <guilabel>Set the handheld time from the time on the PC</guilabel>,
-and not <guilabel>Set the PC time from the time on the handheld</guilabel>.
-</para>
-
-
-<note>
-<para>
-&PalmOS; Version 3.25 and 3.3 do not support setting the &handheld; system time.
-For these systems, the conduit will be simply skipped.
-</para>
-</note>
 
 </sect2>
 
@@ -1046,14 +707,9 @@ For these systems, the conduit will be simply skipped.
 
 <para>
 This conduit will synchronize your &PalmPilot; with &korganizer; and &kontact;
-or to an iCalendar file of your choice. In the latter case, the conduit will
-need the filename of the calendar file (this will usually be a file that ends in
-<literal role="extension">.ics</literal>) to sync with, or if it uses the
-standard &korganizer; iCalendar file, it will be under the <filename
-class="directory">$KDEHOME/share/apps/korganizer/</filename> folder, where the
-<filename class="directory">$KDEHOME</filename> environment variable (typically
-<filename class="directory">/home/user/.kde/</filename>) points to the folder
-that contains your configuration and data for the &kde; applications.
+by using Akonadi. Before you can use this conduit, you must configure Akonadi to
+have a resource for the calendar that you wish to synchronize with. Once you've
+done that, you can select that resource for synchronization use here.
 </para>
 
 <screenshot>
@@ -1071,349 +727,47 @@ that contains your configuration and data for the &kde; applications.
 </mediaobject>
 </screenshot>
 
-<para>
-In the <guilabel>General</guilabel> page, you can set the calendar options.
-</para>
-
-<variablelist>
-
-<varlistentry>
-<term><guilabel>Calendar Destination</guilabel></term>
-<listitem>
-<para>
-Choose between synchronizing with the <guilabel>Standard Calendar</guilabel>,
-or in other words, the &korganizer; standard calendar or with a
-<guilabel>Calendar file</guilabel> of your choice, that you must either
-write in the <guilabel>Calendar file</guilabel> edit box or select using the
-file picker.
-</para>
-
-<warning>
-<para>
-You can use the calendar conduit with any application that accepts a file in
-the iCalendar format as a resource. However, some applications, like Evolution,
-do not handle the synchronization gracefully while they are open. As a rule of
-thumb, quit these applications before synchronizing, otherwise you will lose
-data. There is no need to take these precautions when syncing with &korganizer;
-or &kontact;.
-</para>
-</warning>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Store archived records in the KDE calendar</guilabel></term>
-<listitem>
-<para>
-Check this box to save a copy of the archived records from your
-&handheld; on the <acronym>PC</acronym>, in order to keep a history of
-past appointments in your &kde; desktop as well.
-</para>
-</listitem>
-</varlistentry>
-
-</variablelist>
-
-<para>
-In the <guilabel>Conflicts</guilabel> page, you can set the calendar options,
-overriding &kpilot;'s general settings for conflict resolution when you are
-using this conduit. For a detailed description of the different conflict
-resolution possibilities available, please refer to the <link
-linkend="page-hotsync">HotSync Setup section</link> of this handbook.
-</para>
-
 </sect2>
 
-
-<sect2 id="conduit-palmdoc">
-<title>Palm DOC Conduit Setup</title>
+<sect2 id="todo-cond">
+<title>To-Do Conduit Setup</title>
 
 <para>
-The Palm DOC conduit converts text files in your <acronym>PC</acronym> from and
-to
-databases in Palm DOC format in the &PalmPilot;. You can use any Palm DOC reader
-to view these files on your &PalmPilot;.
+This conduit will synchronize your &PalmPilot; To Do List application with
+&korganizer; and &kontact;, through Akonadi.  Before you can use this conduit,
+you must configure Akonadi to have a resource for the To-Do file that you wish
+to synchronize with. Once you've done that, you can select that resource for
+synchronization use here.
 </para>
 
 <screenshot>
-<screeninfo>Palm DOC Conduit Setup</screeninfo>
+<screeninfo>The To-Do Conduit Setup Dialog</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="conduit-palmdoc.png"
-format="PNG"/></imageobject>
-<textobject><phrase>Palm DOC Conduit Setup</phrase></textobject>
-<caption><para>Palm DOC Conduit Setup</para></caption>
+<imageobject><imagedata fileref="conduit-todo.png" format="PNG"/></imageobject>
+<textobject><phrase>To-Do Conduit Setup</phrase></textobject>
+<caption><para>To-Do Conduit Setup</para></caption>
 </mediaobject>
 </screenshot>
-
-<important><para>
-After changing the Palm DOC conduit configuration, you have to restart &kpilot;
-to let the changes you made take effect.
-</para></important>
-
-<para>
-In the <guilabel>General</guilabel> page, you can set the location of the text
-documents in your computer and the direction of the synchronization.
-</para>
-
-<variablelist>
-
-<varlistentry>
-<term><guilabel>Text files:</guilabel></term>
-<listitem><para>
-Type on the text box or use the file picker to select the location of the folder
-that the Palm DOC conduit uses as the place for the text files it will sync
-with the &handheld;. There, you may place the text documents you want install or
-synchronize to the <acronym>PDA</acronym>, and find the text documents created
-from Palm DOC
-databases in your &handheld;.
-<important><para>
-The file name has to end in <literal role="extension">.txt</literal> for the
-conduit to recognize it as text. If the file is not recognized as text, it will
-be ignored by the conduit. Also, the text has to be in an encoding that is
-compatible with your &handheld; encoding. Therefore, if the text file has
-characters that are not being correctly recognized by the Palm DOC reader in
-your &handheld;, try opening the file a text editor, like &kwrite;, and saving
-it in an compatible text encoding using the <guilabel>Save As...</guilabel>
-dialog, or set the encoding in the <guilabel>PC -> Handheld</guilabel> tab.
-</para></important>
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Local copy:</guilabel></term>
-<listitem><para>
-If you want to save a copy of the Palm DOC databases from your &handheld; in
-your computer, check the <guilabel>Local copy:</guilabel> box and
-type on the text box or use the file picker to select the location of the folder
-where these databases will be saved.
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Synchronization Mode</guilabel></term>
-<listitem><para>
-The Palm DOC conduit has the ability to sync from and to the &handheld;,
-automatically converting the text files to Palm DOC databases and vice versa.
-The <guilabel>Sync only PC to PDA</guilabel> option will convert all text files
-located in the folder you selected above to Palm DOC databases and install them
-in your &handheld;.
-The <guilabel>Sync only PDA to PC</guilabel> option will convert all Palm DOC
-databases from your &handheld; to files and install them in the
-folder you selected above. Finally, The <guilabel>Sync all</guilabel> option
-allows the synchronization to work in both directions.
-
-<note><para>
-When both the text file and the Palm DOC database are modified, you cannot merge
-the modifications, you have to choose one of the versions, losing the changes
-in one of them.
-</para></note>
-</para></listitem>
-</varlistentry>
-
-</variablelist>
-
-<para>
-In the <guilabel>PC -> Handheld</guilabel> page, you can configure the Palm DOC
-compression and bookmarks settings to use when converting from text files to
-Palm DOC databases.
-</para>
-
-<variablelist>
-
-<varlistentry>
-<term><guilabel>Compress</guilabel></term>
-<listitem><para>
-Palm DOC documents can be compressed, saving considerable amounts
-of available memory in your &handheld;. Most Palm DOC readers support
-compressed documents, but if you use a reader or editor that is not compatible
-with compression (for instance, the Sied editor), you will not be able to read
-or edit the compressed Palm DOC documents created by this conduit.
-Therefore, check this box to save &handheld; memory, but uncheck it if you have
-compatibility problems with compressed Palm DOC in your favorite editor or
-reader.
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Convert bookmarks</guilabel></term>
-<listitem><para>
-The Palm DOC format has a provision for bookmark records. Bookmarks allow you to
-easily jump to selected parts of the document, making browsing long documents
-easier. Check this box to allow the Palm DOC conduit to create bookmark records.
-To create them, the conduit has to know the location in the text and the name of
-the bookmark. There are three supported ways to let the conduit know the
-location and name of the bookmark: from inline tags in the text, from tags at
-the end of the text and from a <literal role="extension">.bmk</literal> bookmark
-file. To make the creation of bookmarks effective, you have to check at least
-one of these boxes below.
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Inline tags in text</guilabel></term>
-<listitem><para>
-Convert tags in the format &lt;* <replaceable>BookmarkName</replaceable> *&gt;
-located inside the text to Palm DOC bookmarks, where the location of the
-tag in the text will be converted to the bookmark location and the
-<replaceable>BookmarkName</replaceable> text inside the tag will be converted to
-the name of the bookmark in the Palm DOC format. The tag will be removed from
-the resulting Palm DOC document, leaving the text clean.
-This is a very easy and intuitive way to create bookmarks
-in your Palm DOC documents.
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Tags at end of text</guilabel></term>
-<listitem><para>
-Convert tags in the format &lt;<replaceable>BookmarkName</replaceable>&gt;
-located in the end of the text to Palm DOC bookmarks. Whenever the
-<replaceable>BookmarkName</replaceable> text appears in the text, the conduit
-will generate a bookmark in the resulting Palm DOC document pointing to it.
-The tag will then be removed from the resulting Palm DOC document, leaving the
-text clean. This is a simple way to create repetitive bookmarks, like one for
-each <quote>Chapter</quote> in your Palm DOC documents.
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Regular expressions in .bmk file</guilabel></term>
-<listitem><para>
-This is the most complex but the most powerful way to create bookmarks.
-The method involves using regular expressions (QRegExp) in a file
-<filename>TextName.bmk</filename>, where <filename>TextName.txt</filename> is
-the filename of the text, to search the text for bookmarks. See the
-<ulink
-url="http://reinhold.kainhofer.com/Linux/KPilot/bmkSpecification.txt">
-documentation</ulink>
-for an in-depth description of the bmk file format.
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Encoding</guilabel></term>
-<listitem><para>
-Set here the encoding of your &handheld;. &kpilot; will convert the text
-document to this encoding when exporting the file to the &handheld;.
-</para></listitem>
-</varlistentry>
-
-</variablelist>
-
-<para>
-In the <guilabel>Handheld -> PC</guilabel> page, you can configure bookmarks
-settings to use when converting from Palm DOC databases to text files.
-</para>
-
-<variablelist>
-
-<varlistentry>
-<term><guilabel>Convert Bookmarks</guilabel></term>
-<listitem>
-<para>
-The Palm DOC format has a provision for bookmark records. Bookmarks allow you to
-easily jump to selected parts of the document, making browsing long documents
-easier. The Palm DOC conduit can convert Palm DOC
-bookmark records to a format that is readable in your computer, either as
-a separate file or as tags in the middle of the text file. Select
-<guilabel>Do not convert bookmarks</guilabel> if you want to ignore the Palm DOC
-bookmarks, resulting in a text that is clean from bookmark tags.</para>
-
-<para>
-The <guilabel>Convert into .bm file</guilabel> options also result in a clean
-text file, as the bookmarks are converted to a separate file in the bmk format,
-as described <ulink
-url="http://reinhold.kainhofer.com/Linux/KPilot/bmkSpecification.txt">here</ulink>. The file is saved with a <literal role="extension">.bm</literal>
-extension to avoid conflicts with <literal role="extension">.bmk</literal> files
-created previously.</para>
-
-<para>Finally, the <guilabel>Convert as inline tags</guilabel> option creates
-inline tags inside the resulting text file in the form &lt;*
-<replaceable>BookmarkName</replaceable> *&gt; placing each tag in the place that
-was previously referenced by the bookmark, and using the bookmark name as the
-<replaceable>BookmarkName</replaceable> text inside the tag. Now you can
-edit the bookmark name, move it or delete it and convert back to Palm DOC, as
-you wish.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Do not convert, if text unchanged (only
-bookmarks)</guilabel></term>
-<listitem>
-<para>
-If you check this box, only changes in the text will trigger conversions from
-Palm DOC to text files. In other words, changes in the bookmarks only will not
-result in updates for the text files in your computer.
-</para>
-</listitem>
-</varlistentry>
-
-</variablelist>
-
-<para>
-In the <guilabel>Conflicts</guilabel> page, you can configure how the conduit
-deals with files that changed both in the computer and the &handheld;.
-</para>
-
-<variablelist>
-
-<varlistentry>
-<term><guilabel>Conflict Resolution</guilabel></term>
-<listitem><para>
-The Palm DOC conduit does not feature merging the modifications when a text is
-changed both in the &handheld; and in the computer. Therefore, the choice is
-between working with the files out of sync, or discarding the changes in one of
-them. The <guilabel>No resolution</guilabel> option will avoid synchronizing
-texts with conflicts, the <guilabel>PDA overrides</guilabel> option will
-overwrite the computer text file version in case of conflict,
-the <guilabel>PC overrides</guilabel> will do the same, but the other way
-around,
-and the <guilabel>Ask the user</guilabel> option will bring a dialog to let the
-user decide on a file by file, case by case basis.
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Always show resolution dialog</guilabel></term>
-<listitem><para>
-This option will always bring the conflict resolution dialog, even if there is
-no conflicts to solve. The advantage is that you can keep track of all the files
-that are being covered by the conduit.
-</para></listitem>
-</varlistentry>
-
-</variablelist>
-
 
 </sect2>
 
 
 <sect2 id="conduit-kaddressbook">
-<title>&kaddressbook; Conduit Setup</title>
+<title>Contacs Conduit Setup</title>
 
 <para>
-This conduit will synchronize your &PalmPilot; with the &kde; address book or to
-a vCard file of your choice. In the latter case, the conduit will need the
-filename of the
-vCard file (this will usually be a file that ends in <literal
-role="extension">.vcf</literal>) to sync with, of if it uses the standard
-&kde; address book file, it will be under the
-<filename class="directory">$KDEHOME/share/apps/kabc/</filename>
-folder, where the <filename class="directory">$KDEHOME</filename> environment
-variable (typically <filename class="directory">/home/Login Name/.kde/</filename>)
-points to the folder that contains your configuration and data for the &kde;
-applications.
+This conduit will synchronize your &PalmPilot; with the &kde; address book
+through Akonadi. Before you can use this conduit, you must configure Akonadi to
+have a resource for the To-Do file that you wish to synchronize with. Once
+you've done that, you can select that resource for synchronization use here.
 </para>
 
 <screenshot>
-<screeninfo>The &kaddressbook; Conduit Setup Dialog</screeninfo>
+<screeninfo>The Contacts Conduit Setup Dialog</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="setup-address.png" format="PNG"/></imageobject>
-<textobject><phrase>&kaddressbook; Conduit Setup</phrase></textobject>
-<caption><para>&kaddressbook; Conduit Setup</para></caption>
+<textobject><phrase>Contacts Conduit Setup</phrase></textobject>
+<caption><para>Contacts Conduit Setup</para></caption>
 </mediaobject>
 </screenshot>
 
@@ -1421,40 +775,6 @@ applications.
 In the <guilabel>General</guilabel> page, you can set the general address sync
 options.
 </para>
-
-<variablelist>
-
-<varlistentry>
-<term><guilabel>Sync Destination</guilabel></term>
-<listitem><para>
-Choose between synchronizing with the <guilabel>Standard address book</guilabel>,
-or in other words, the &kde; standard address book or with a
-<guilabel>vCard file</guilabel> of your choice, that you must either
-write in the <guilabel>vCard file</guilabel> edit box or select using the
-file picker.
-</para>
-<warning><para>
-You can use the address book conduit with any application that accepts a file in
-the vCard format as a resource. However, some applications may not handle
-the synchronization gracefully while they are open. As a rule of thumb,
-quit these applications before synchronizing, otherwise you may lose data.
-There is no need to take these precautions when syncing with the  &kde; address
-book.
-</para></warning>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Store archived records in the KDE address book</guilabel></term>
-<listitem><para>
-The &handheld; offers an option to archive deleted addresses in your desktop.
-If that option is selected, check this box to keep the deleted addresses from
-your &handheld; in your <acronym>PC</acronym> address book. These addresses will
-be no longer synchronized with your handheld.
-</para></listitem>
-</varlistentry>
-
-</variablelist>
 
 <para>
 In the <guilabel>Conflicts</guilabel> page, you can set the address book conduit
@@ -1540,243 +860,57 @@ generate a date like 27.3.1952, while %m/%d/%y would write the same date as
 
 </sect2>
 
-<sect2 id="sysinfo-cond">
-<title>System Information Conduit Setup</title>
+
+
+<sect2 id="time-cond">
+<title>Time Synchronization Conduit Setup</title>
 
 <para>
-This conduit generates a page with your &handheld; information. Some info about
-your &kde;, &kpilot; and Pilot-Link version is included as well. The available
-output formats are &HTML;, text or custom template. The conduit
-output and in special, the debug output section of the output may help the
-developers track down bugs.
+The Time Synchronization Conduit syncs the &handheld;'s time to that of the
+desktop
+machine. It is useful for keeping the clock of the &handheld; accurate. There
+are really no configuration options other that enabling and disabling the
+conduit, as currently only one direction for the synchronization is enabled,
+you can only <guilabel>Set the handheld time from the time on the PC</guilabel>,
+and not <guilabel>Set the PC time from the time on the handheld</guilabel>.
 </para>
 
 
+<note>
+<para>
+&PalmOS; Version 3.25 and 3.3 do not support setting the &handheld; system time.
+For these systems, the conduit will be simply skipped.
+</para>
+</note>
+
+</sect2>
+
+<sect2 id="memofile-cond">
+<title>Memo File Conduit Setup</title>
+
+<para>
+This conduit will synchronize your &PalmPilot; Memo Pad application with a
+directory and files on your computer. This conduit will create a directory for
+each category that your &PalmPilot; Memos uses, and within each of those
+directories will be the plain text files that contain the contents of your
+memos.  To set the top level folder to which your Memos will be synchronized
+with, either enter it in the <guilabel>Memos directory</guilabel> edit box or
+select it clicking the directory picker button.
+</para>
+
 <screenshot>
-<screeninfo>The System Information Conduit Setup Dialog</screeninfo>
+<screeninfo>The Memo File Conduit Setup Dialog</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="conduit-sysinfo.png"
-format="PNG"/></imageobject>
-<textobject><phrase>System Information Conduit Setup</phrase></textobject>
-<caption><para>System Information Conduit Setup</para></caption>
+<imageobject><imagedata fileref="conduit-memofile.png" format="PNG"/></imageobject>
+<textobject><phrase>Memo File Conduit Setup</phrase></textobject>
+<caption><para>Memo File Conduit Setup</para></caption>
 </mediaobject>
 </screenshot>
 
-<para>
-In the <guilabel>General</guilabel> page, you can set the output location and
-format.
-</para>
-
-<variablelist>
-
-<varlistentry>
-<term><guilabel>Output File</guilabel></term>
-<listitem><para>
-Write  in the edit box or use the file picker to select the location and file
-name of the output file where the &handheld; system information will be written.
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Type of Output</guilabel></term>
-<listitem><para>
-Choose between <guilabel>HTML</guilabel>, <guilabel>Text file</guilabel> (plain
-text),
-or a selectable <guilabel>Custom template</guilabel>. To create a custom
-template, you can
-use the default template as a reference.
-</para></listitem>
-</varlistentry>
-
-</variablelist>
-
-<para>
-In the <guilabel>Parts Included</guilabel> page, you can set which parts will be
-included in the output, one by one, by checking or unchecking them in the
-<guilabel>Output Type</guilabel> list.
-</para>
 
 </sect2>
 
 
-<sect2 id="todo-cond">
-<title>Todo Conduit Setup</title>
-
-<para>
-This conduit will synchronize your &PalmPilot; To Do List application with
-&korganizer; and &kontact;, or to an iCalendar file of your choice.
-The configuration dialog looks and behaves exactly the same as the configuration
-dialog for the <link linkend="vcal-cond">Calendar Conduit</link>. The only
-difference is that instead of synchronizing the Calendar, you will be  syncing
-the To Do List.
-</para>
-
-<screenshot>
-<screeninfo>The Calendar Conduit Setup Dialog</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="conduit-vcal.png" format="PNG"/></imageobject>
-<textobject><phrase>Calendar Conduit Setup</phrase></textobject>
-<caption><para>Calendar Conduit Setup</para></caption>
-</mediaobject>
-</screenshot>
-
-</sect2>
-
-<sect2 id="mal-cond">
-<title>MAL (AvantGo) Conduit Setup</title>
-
-<para>
-The MAL (&AvantGo;) Conduit synchronizes your &handheld; with the &AvantGo;
-server.
-This conduit is based on
-<ulink url="http://jasonday.home.att.net/code/libmal/libmal.html">Jason Day's
-libmal</ulink>.
-The &AvantGo; server offers general content (news, guides, stock quotes, &etc;)
-in a format that is suitable for reading in a &handheld;. To use this conduit,
-you need to register to a service provider, for instance,
-<ulink url="http://www.avantgo.com">AvantGo.com</ulink>, subscribe
-the channels you select and install the &AvantGo; software on your &handheld;,
-and configure the software on your handheld to find the MAL server.
-</para>
-
-<para>
-The installation software for the &handheld; client is usually only available
-for &Microsoft; &Windows;, if you
-do not have access to a windows computer, you can try installing the databases
-available in the <ulink url="http://www.tomw.org/malsync/">MalSync
-Homepage</ulink>,
-with different versions, one for <trademark>PalmOS</trademark> 5 and other for
-older <trademark>PalmOS</trademark>s.
-</para>
-
-<para>
-To configure the software on your handheld to find the MAL server, open the
-AGConnect application in your &handheld;, click <guilabel>Settings...</guilabel>
-and enter your MAL server address, the <guilabel>User Name</guilabel> and
-<guilabel>Password</guilabel> you got while registering. The
-&AvantGo; server address is
-<userinput>sync.avantgo.com</userinput>, and its port is
-<userinput>80</userinput>. On some installations, you should use the MobileLink
-instead of the AGConnect application on your &handheld;.
-</para>
-
-<screenshot>
-<screeninfo>The MAL (AvantGo) Conduit Setup Dialog</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="conduit-mal.png" format="PNG"/></imageobject>
-<textobject><phrase>MAL (AvantGo) Conduit Setup</phrase></textobject>
-<caption><para>MAL (AvantGo) Conduit Setup</para></caption>
-</mediaobject>
-</screenshot>
-
-<para>
-In the <guilabel>General</guilabel> page, you can set the synchronization
-frequency options. It can be  set for <guilabel>Every Sync</guilabel>,
-<guilabel>Once per Hour</guilabel>, <guilabel>Once a Day</guilabel>,
-<guilabel>Once a Week</guilabel> or <guilabel>Once a Month</guilabel>.
-The conduit only runs when you hit &HotSync; on your &handheld;, so
-<guilabel>Once per Hour</guilabel>, for instance, really means that
-&kpilot; will only try to synchronize with the MAL servers if it is more than an
-hour since the last MAL sync.
-</para>
-
-<para>
-The MAL conduit can work through a proxy server. In the
-<guilabel>Proxy</guilabel>
-page, you can set the proxy settings.
-</para>
-
-<variablelist>
-
-<varlistentry>
-<term><guilabel>Proxy Type</guilabel></term>
-<listitem><para>
-If you connect the Internet directly, select <guilabel>No proxy</guilabel>,
-requiring no further configuration. But if you use a <guilabel>HTTP
-proxy</guilabel>
-or a <guilabel>SOCKS proxy</guilabel>, select it, to enable the rest of the
-dialog and to make the conduit use it to connect the MAL server.
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Server Information</guilabel></term>
-<listitem><para>
-Write in the <guilabel>Server Name</guilabel> dropdown box the address of the
-proxy server to use, in the form <userinput>foo.bar.com</userinput>, not
-<userinput>http://foo.bar.com</userinput> or
-<userinput>http://foo.bar.com:8080</userinput>.
-</para>
-<para>
-Check the box <guilabel>Custom port:</guilabel> if your proxy uses a non
-standard
-port, and enter the correct port number.
-</para>
-<para>
-In the <guilabel>No proxy for</guilabel> edit box, you may enter the list of MAL
-servers that do not need the use of a proxy, separated by commas. For instance,
-<userinput>localhost,lan</userinput>.
-</para>
-<para>
-If your proxy require authentication, enter your <guilabel>User name</guilabel>
-and <guilabel>Password</guilabel> in the respective edit boxes.
-</para>
-</listitem>
-</varlistentry>
-
-</variablelist>
-
-<para>In the <guilabel>MAL Server</guilabel> page, you can set the MAL server
-address and settings. Currently, you can only configure this settings using
-the &handheld; MobileLink or AGConnect applications, so this page is
-disabled.</para>
-
-</sect2>
-
-<sect2 id="popmail-cond">
-<title>Mail Conduit Setup</title>
-
-<para>
-This conduit allows you to send mail using a transport.
-The configuration of the Mail Conduit is fairly simple.
-</para>
-<screenshot>
-<screeninfo>Setting up the Mail Conduit</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="conduit-popmail-kmail.png"
-format="PNG"/></imageobject>
-<textobject><phrase>The Mail Conduit Setup Dialog</phrase></textobject>
-<caption><para>The Mail Conduit Conduit Setup Dialog</para></caption>
-</mediaobject>
-</screenshot>
-<para>
-There are two tabs in the setup dialog for the Mail Conduit,
-one for Sending mail and one for the credits of the mail conduit.
-</para>
-
-<para>
-Depending on which send method you choose,
-different fields will be activated in the remainder of the
-tab, allowing you to enter the necessary information.
-Currently, the only method available is <guilabel>Using KMail</guilabel>,
-which has a very simple configuration.
-</para>
-
-<para>
-Your email address can be entered in the <guilabel>Email
-Address:</guilabel> field.  This is the email address that goes in the
-<quote>From:</quote> line in outgoing mail.  If you enter a file name in
-the <guilabel>Signature File</guilabel> field then that file will be
-appended to each outgoing mail as a signature.
-</para>
-
-<para>
-When sending mail through &kmail;, &kpilot; automatically places it in
-your &kmail; outbox.  &kmail; saves mail in the outbox until you request
-that those pieces of mail are <emphasis>really</emphasis> sent.
-</para>
-
-</sect2>
 </sect1>
 
 </chapter>

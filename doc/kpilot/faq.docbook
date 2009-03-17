@@ -334,53 +334,5 @@ Maybe later.
 </sect1>
 
 
-<sect1 id="faq-dcop">
-<title>&kpilot;'s &DCOP; interface</title>
-
-<qandaset>
-
-<qandaentry>
-<question>
-<para>What does &kpilot; use &DCOP; for?</para>
-</question>
-<answer><para>
-The daemon and &kpilot; communicate using &DCOP;
-for several purposes: logging messages, changing the &HotSync;
-type, and exchanging configuration information.
-</para></answer>
-</qandaentry>
-
-<qandaentry><question>
-<para>Which &DCOP; interfaces are there?</para></question>
-
-<answer><para>
-The daemon has two important interfaces:
-<interface>LogIface</interface>
-and
-<interface>KPilotDaemonIface
-</interface>.
-The <interface>LogIface</interface>
-interface is used to record messages in the sync log
-on the &handheld;, and is rarely used.
-The <interface>KPilotDaemonIface</interface>
-is the more important &DCOP; interface,
-and is used to control the kind of &HotSync; that
-&kpilot; will do.
-</para></answer>
-</qandaentry>
-
-<qandaentry><question><para>
-How can I tell the daemon to perform a specific kind of &HotSync;?</para></question>
-<answer><para>
-There are three &DCOP; functions that control what kind
-of &HotSync;
-the daemon will do next:
-<function></function>
-<function></function>
-</para></answer>
-</qandaentry>
-</qandaset>
-
-</sect1>
 
 </chapter>
