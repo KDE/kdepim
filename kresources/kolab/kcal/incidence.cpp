@@ -1005,7 +1005,7 @@ void Incidence::loadAttachments()
 
 QString Incidence::productID() const
 {
-  return QString( "KOrganizer " ) + korgVersion + ", Kolab resource";
+  return QString( "KOrganizer %1, Kolab resource" ).arg( korgVersion );
 }
 
 // Unhandled KCal::Incidence fields:
