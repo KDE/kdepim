@@ -45,6 +45,7 @@ set(kcm_kleopatra_PART_SRCS
    appearanceconfigpage.cpp 
    appearanceconfigwidget.cpp 
    dnorderconfigpage.cpp
+   gnupgsystemconfigurationpage.cpp
    ${_kcm_kleopatra_libkleopatraclient_extra_SRCS}
    )
 
@@ -78,6 +79,7 @@ install( FILES
   kleopatra_config_dirserv.desktop
   kleopatra_config_appear.desktop
   kleopatra_config_dnorder.desktop
+  kleopatra_config_gnupgsystem.desktop
   ${_kcm_kleopatra_libkleopatraclient_extra_install_FILES}
   DESTINATION ${SERVICES_INSTALL_DIR})
 

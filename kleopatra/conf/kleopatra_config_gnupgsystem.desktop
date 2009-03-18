@@ -1,0 +1,19 @@
+[Desktop Entry]
+Icon=gpg
+Type=Service
+X-KDE-ServiceTypes=KCModule
+X-DocPath=kleopatra/configuration.html#configuration-gnupgsystem
+
+X-KDE-ModuleType=Library
+X-KDE-Library=kcm_kleopatra
+X-KDE-FactoryName=kleopatra_config_gnupgsystem
+X-KDE-HasReadOnlyMode=false
+X-KDE-ParentApp=kleopatra
+X-KDE-ParentComponents=kleopatra
+X-KDE-CfgDlgHierarchy=Kleopatra
+
+Name=GnuPG System
+Name[de]=GnuPG-System
+Comment=Configuration of GnuPG System options
+Comment[de]=Einrichtung der Optionen des GnuPG-Systems
+X-KDE-Keywords=gpg,gpgsm,gpg-agent,dirmngr,scdaemon,kleopatra,signing,encryption
