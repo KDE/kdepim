@@ -78,6 +78,7 @@ bool KMailConnection::connectToKMail()
     }
     mKmailGroupwareInterface = new OrgKdeKmailGroupwareInterface( dbusService, KMAIL_DBUS_GROUPWARE_PATH,
                                                                   QDBusConnection::sessionBus() );
+    mOldServiceName = mKmailGroupwareInterface->service();
 
     connect( mKmailGroupwareInterface, SIGNAL(incidenceAdded(QString,QString,uint,int,QString)),
              SLOT(fromKMailAddIncidence(QString,QString,uint,int,QString)) );
@@ -280,12 +281,19 @@ bool KMailConnection::kmailTriggerSync( const QString &contentsType )
 
 void KMailConnection::dbusServiceOwnerChanged(const QString & service, const QString&, const QString&)
 {
-  if (mKmailGroupwareInterface && mKmailGroupwareInterface->service() == service)
-  {
-    // Delete the stub so that the next time we need to talk to kmail,
-    // we'll know that we need to start a new one.
-    delete mKmailGroupwareInterface;
-    mKmailGroupwareInterface = 0;
+  // The owner of the D-Bus service we're interested in changed, so either connect or disconnect.
+  if ( mOldServiceName == service && !service.isEmpty() ) {
+    if ( mKmailGroupwareInterface )
+    {
+      // Delete the stub so that the next time we need to talk to kmail,
+      // we'll know that we need to start a new one.
+      delete mKmailGroupwareInterface;
+      mKmailGroupwareInterface = 0;
+    }
+    else {
+      if ( !connectToKMail() )
+        kWarning(5650) << "Could not connect to KMail, even though the D-Bus service just became available!";
+    }
   }
 }
 
