@@ -98,16 +98,27 @@ static unsigned int num_components_with_options( const Kleo::CryptoConfig * conf
   return result;
 }
 
-static const KPageView::FaceType determineJanusFace( const Kleo::CryptoConfig * config ) {
+static const KPageView::FaceType determineJanusFace( const Kleo::CryptoConfig * config, Kleo::CryptoConfigModule::Layout layout ) {
   return num_components_with_options( config ) < 2
     ? KPageView::Plain
-    : KPageView::List ;
+    : layout == Kleo::CryptoConfigModule::TabbedLayout ? KPageView::Tabbed : KPageView::List ;
 }
 
 Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidget * parent )
   : KPageWidget( parent ), mConfig( config )
 {
-  const KPageView::FaceType type=determineJanusFace( config );
+    init( IconListLayout );
+}
+
+Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, Layout layout, QWidget * parent )
+  : KPageWidget( parent ), mConfig( config )
+{
+    init( layout );
+}
+
+void Kleo::CryptoConfigModule::init( Layout layout ) {
+  Kleo::CryptoConfig * const config = mConfig;
+  const KPageView::FaceType type=determineJanusFace( config, layout );
   setFaceType(type);
   QVBoxLayout * vlay = 0;
   QWidget * vbox = 0;
@@ -132,7 +143,8 @@ Kleo::CryptoConfigModule::CryptoConfigModule( Kleo::CryptoConfig* config, QWidge
       vlay->setSpacing( KDialog::spacingHint() );
       vlay->setMargin( 0 );
       KPageWidgetItem *pageItem = new KPageWidgetItem( vbox, comp->description() );
-      pageItem->setIcon( loadIcon( comp->iconName() ) );
+      if ( type != Tabbed )
+          pageItem->setIcon( loadIcon( comp->iconName() ) );
       addPage(pageItem);
     }
 
