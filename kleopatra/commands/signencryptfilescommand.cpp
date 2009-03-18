@@ -39,12 +39,12 @@
 #include <crypto/signencryptfilescontroller.h>
 
 #include <utils/stl_util.h>
+#include <utils/filedialog.h>
 
 #include <KLocale>
 #include <KMessageBox>
 #include <kdebug.h>
 
-#include <QFileDialog>
 #include <QStringList>
 
 #include <exception>
@@ -247,7 +247,7 @@ void SignEncryptFilesCommand::applyWindowID( QWidget * wid ) const {
 }
 
 QStringList SignEncryptFilesCommand::Private::selectFiles() const {
-    return QFileDialog::getOpenFileNames( parentWidgetOrView(), i18n( "Select One or More Files to Sign and/or Encrypt" ) );
+    return FileDialog::getOpenFileNames( parentWidgetOrView(), i18n( "Select One or More Files to Sign and/or Encrypt" ), "enc" );
 }
 
 #undef d
