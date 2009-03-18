@@ -2,7 +2,7 @@
 <!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN"
  "dtd/kdex.dtd" [
 <!ENTITY kappname "&kpilot;">
-<!ENTITY kpilotver "4.4.6">
+<!ENTITY kpilotver "5.2.1">
 <!ENTITY package "kdepim">
 <!ENTITY USB "<acronym>USB</acronym>">
 <!ENTITY PalmOS '<trademark class="registered">Palm OS</trademark>'>
@@ -10,7 +10,6 @@
 <!ENTITY Sony '<trademark class="registered">Sony</trademark>'>
 <!ENTITY Clie "<productname><trademark>Clie</trademark></productname>">
 <!ENTITY FreeBSD '<trademark class="registered">FreeBSD</trademark>'>
-<!ENTITY AvantGo '<trademark class="registered">AvantGo</trademark>'>
 <!ENTITY handheld "handheld">
 <!ENTITY configuring-kpilot SYSTEM "configuration.docbook">
 <!ENTITY using-kpilot SYSTEM "usage.docbook">
@@ -22,7 +21,7 @@
 
 <!--
     From LW: http://www.palm.com/about/trademark.html According to this,
-	we have have overspecified some of the tradmarks... feel free to
+	we have have overspecified some of the trademarks... feel free to
 	adjust if you think this is the case.
 -->
 
@@ -74,7 +73,7 @@
 
 <legalnotice>&FDLNotice;</legalnotice>
 
-<date>2004-06-27</date>
+<date>2009-03-14</date>
 <releaseinfo>&kpilotver;</releaseinfo>
 
 <abstract>
@@ -160,26 +159,16 @@ you need to tell it which hardware device to use to communicate with
 your &handheld;.
 Configuration settings are described at length in
 the <link linkend="configure">section on configuring &kpilot;</link>.
-For the impatient, the <link linkend="configwizard">configuration wizard</link>
-can set up most things for you.
 </para>
 
 <para>
-Once &kpilot; is configured, you should make a <link
-linkend="backup">backup</link> of your &handheld; first. That is to be on the
+Once &kpilot; is configured, you should make a 
+backup of your &handheld; first. That is to be on the
 safe side. Once that is done, you can just leave the &kpilot; daemon running in
 the system tray, and all you need to do is press the &HotSync; button, and
 changes in the &handheld; data and the &kde; applications will be <link
 linkend="synchronization">synchronized</link>, so that the information matches
 again on both the &handheld; and the desktop.
-</para>
-
-<para>
-If you want to <link linkend="page-viewers">examine</link> the
-data stored on your &handheld;, the built in <link
-linkend="page-viewers">viewers</link> can be used. This allows you to view
-memos, addresses, &etc;. There is a generic hexadecimal database viewer for
-advanced use.
 </para>
 
 <para>
