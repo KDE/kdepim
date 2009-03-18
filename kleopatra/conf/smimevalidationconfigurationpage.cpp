@@ -44,7 +44,7 @@
 
 using namespace Kleo::Config;
 
-SMimeValidationConfigurationurationPage::SMimeValidationConfigurationurationPage( const KComponentData &instance, QWidget *parent, const QVariantList &args )
+SMimeValidationConfigurationPage::SMimeValidationConfigurationPage( const KComponentData &instance, QWidget *parent, const QVariantList &args )
     : KCModule( instance, parent, args )
 {
   QVBoxLayout * lay = new QVBoxLayout( this );
@@ -61,25 +61,25 @@ SMimeValidationConfigurationurationPage::SMimeValidationConfigurationurationPage
 }
 
 
-void SMimeValidationConfigurationurationPage::load()
+void SMimeValidationConfigurationPage::load()
 {
   mWidget->load();
 }
 
-void SMimeValidationConfigurationurationPage::save()
+void SMimeValidationConfigurationPage::save()
 {
   mWidget->save();
 
 }
 
-void SMimeValidationConfigurationurationPage::defaults()
+void SMimeValidationConfigurationPage::defaults()
 {
   mWidget->defaults();
 }
 
 extern "C" KDE_EXPORT KCModule *create_kleopatra_config_smimevalidation( QWidget * parent, const QVariantList & args ) {
-    SMimeValidationConfigurationurationPage * page =
-        new SMimeValidationConfigurationurationPage( KComponentData( "kleopatra" ), parent, args );
+    SMimeValidationConfigurationPage * page =
+        new SMimeValidationConfigurationPage( KComponentData( "kleopatra" ), parent, args );
     page->setObjectName( "kleopatra_config_smimevalidation" );
     return page;
 }
