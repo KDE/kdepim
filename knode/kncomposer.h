@@ -113,11 +113,16 @@ class KNComposer : public KXmlGuiWindow {
     composerResult r_esult;
     KNLocalArticle *a_rticle;
     QString s_ignature, u_nwraped;
-    QByteArray c_harset;
     MessageMode m_ode;
     bool n_eeds8Bit,    // false: fall back to us-ascii
          v_alidated,    // hasValidData was run and found no problems, n_eeds8Bit is valid
          a_uthorDislikesMailCopies;
+
+    /**
+      Sets the character set to used to encode this message.
+      This also enforces some sanity check.
+    */
+    void setCharset( const QString &charset );
 
     //edit
     bool e_xternalEdited;
@@ -215,11 +220,17 @@ class KNComposer : public KXmlGuiWindow {
   private:
     bool mFirstEdit;
     /**
-    * Temporary hack for bug 169411 stolen from KMail (kmmsgbase.{h,cpp})
-    * Fixes an encoding received by a KDE function and returns the proper,
-    * MIME-compilant encoding name instead.
+      Character set used to encode the out-going message.
+
+      This is going to end in the mime header of the message
+      so it should be a valid encoding as per
+      @link http://www.iana.org/assignments/character-sets IANA character-set encoding @endlink
+      and not be empty; both issue are taken care of by setCharset().
+      See bug #169411, #163524
+
+      As a consequence this can not used directly as input of methods from KCharset.
     */
-    QByteArray fixEncoding( const QByteArray &encoding );
+    QString mCharset;
 };
 
 #if 0

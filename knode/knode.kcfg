@@ -353,6 +353,7 @@
     </entry>
     <entry name="composerFont" type="Font">
       <label>Composer</label>
+      <default code="true">KGlobalSettings::fixedFont()</default>
     </entry>
     <entry name="groupListFont" type="Font">
       <label>Group List</label>

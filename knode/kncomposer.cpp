@@ -719,7 +719,7 @@ bool KNComposer::hasValidData()
     firstLine = false;
   }
 
-  if (n_eeds8Bit && (c_harset.toLower()=="us-ascii")) {
+  if (n_eeds8Bit && ( mCharset.toLower()=="us-ascii" )) {
     KMessageBox::sorry(this, i18n("Your message contains characters which are not included\nin the \"us-ascii\" character set; please choose\na suitable character set from the \"Options\" menu."));
     return false;
   }
@@ -806,7 +806,7 @@ bool KNComposer::applyChanges()
   a_rticle->date()->setDateTime( KDateTime::currentLocalDateTime() );    //set current date+time
 
   //Subject
-  a_rticle->subject()->fromUnicodeString(v_iew->s_ubject->text(), c_harset);
+  a_rticle->subject()->fromUnicodeString( v_iew->s_ubject->text(), mCharset.toLatin1() );
 
   //Newsgroups
   if (m_ode != mail) {
@@ -817,7 +817,7 @@ bool KNComposer::applyChanges()
 
   //To
   if (m_ode != news) {
-    a_rticle->to()->fromUnicodeString(v_iew->t_o->text(), c_harset);
+    a_rticle->to()->fromUnicodeString( v_iew->t_o->text(), mCharset.toLatin1() );
     a_rticle->setDoMail(true);
   } else
     a_rticle->setDoMail(false);
@@ -862,22 +862,24 @@ bool KNComposer::applyChanges()
   //set text
   if (v_alidated) {
     if (n_eeds8Bit) {
-      text->contentType()->setCharset(c_harset);
+      text->contentType()->setCharset( mCharset.toLatin1() );
       if ( knGlobals.settings()->allow8BitBody() )
         text->contentTransferEncoding()->setEncoding(KMime::Headers::CE8Bit);
       else
         text->contentTransferEncoding()->setEncoding(KMime::Headers::CEquPr);
     } else {
-      text->contentType()->setCharset("us-ascii");   // fall back to us-ascii
+      setCharset( "us-ascii" ); // fall back to us-ascii
+      text->contentType()->setCharset( mCharset.toLatin1() );
       text->contentTransferEncoding()->setEncoding(KMime::Headers::CE7Bit);
     }
   } else {             // save as draft
-    text->contentType()->setCharset(c_harset);
-    if (c_harset.toLower()=="us-ascii")
+    text->contentType()->setCharset( mCharset.toLatin1() );
+    if ( mCharset.toLower()=="us-ascii" ) {
       text->contentTransferEncoding()->setEncoding(KMime::Headers::CE7Bit);
-    else
+    } else {
       text->contentTransferEncoding()->setEncoding( knGlobals.settings()->allow8BitBody()
           ? KMime::Headers::CE8Bit : KMime::Headers::CEquPr );
+    }
   }
 
   QString tmp = v_iew->e_dit->toWrappedPlainText();
@@ -902,7 +904,7 @@ bool KNComposer::applyChanges()
           QString tmpText = tmp;
           Kpgp::Block block;
           bool ok=true;
-          QTextCodec *codec=KGlobal::charsets()->codecForName(c_harset, ok);
+          QTextCodec *codec=KGlobal::charsets()->codecForName( mCharset, ok);
           if(!ok) // no suitable codec found => try local settings and hope the best ;-)
               codec=KGlobal::locale()->codecForEncoding();
 
@@ -927,16 +929,25 @@ bool KNComposer::applyChanges()
   return true;
 }
 
-QByteArray KNComposer::fixEncoding( const QByteArray &encoding )
+void KNComposer::setCharset( const QString &charset )
 {
-  QString returnEncoding = encoding;
   // According to http://www.iana.org/assignments/character-sets, uppercase is
   // preferred in MIME headers
-  if ( returnEncoding.toUpper().contains( "ISO " ) ) {
-    returnEncoding = returnEncoding.toUpper();
-    returnEncoding.replace( "ISO ", "ISO-" );
+  mCharset = charset.toUpper();
+
+  // For bug 163524 (Knode sending empty charset)
+  // Placed first so that the logic below also applies to the charset from settings.
+  if ( mCharset.isEmpty() ) {
+    mCharset = knGlobals.settings()->charset();
+    if ( mCharset.isEmpty() ) {
+      mCharset = "UTF-8";
+    }
   }
-  return returnEncoding.toLatin1();
+
+  // hack for bug 169411 stolen from KMail (kmmsgbase.{h,cpp})
+  if ( mCharset.contains( "ISO " ) ) {
+    mCharset = mCharset.replace( "ISO ", "ISO-" );
+  }
 }
 
 
@@ -1001,14 +1012,13 @@ void KNComposer::initData(const QString &text)
   v_iew->e_dit->setText(s);
 
   // initialize the charset select action
-  if(textContent)
-    c_harset=textContent->contentType()->charset();
-  else
-    c_harset = knGlobals.settings()->charset().toLatin1();
+  if(textContent) {
+    setCharset( textContent->contentType()->charset() );
+  } else {
+    setCharset( knGlobals.settings()->charset() );
+  }
 
-  c_harset = fixEncoding(c_harset); // workaround previous wrong configuration
-
-  a_ctSetCharset->setCurrentItem( a_ctSetCharset->items().indexOf( c_harset ) );
+  a_ctSetCharset->setCurrentItem( a_ctSetCharset->items().indexOf( mCharset ) );
 
   // initialize the message type select action
   if (a_rticle->doPost() && a_rticle->doMail())
@@ -1036,7 +1046,7 @@ void KNComposer::insertFile( QFile *file, bool clear, bool box, const QString &b
 {
   QString temp;
   bool ok=true;
-  QTextCodec *codec=KGlobal::charsets()->codecForName(c_harset, ok);
+  QTextCodec *codec=KGlobal::charsets()->codecForName( mCharset, ok);
   QTextStream ts(file);
   ts.setCodec(codec);
 
@@ -1277,7 +1287,8 @@ void KNComposer::slotSetCharset(const QString &s)
   if(s.isEmpty())
     return;
 
-  c_harset = fixEncoding(s.toLatin1());
+  setCharset( s );
+
   setConfig(true); //adjust fonts
 }
 
@@ -1339,7 +1350,7 @@ void KNComposer::slotExternalEditor()
   }
 
   bool ok=true;
-  QTextCodec *codec=KGlobal::charsets()->codecForName(c_harset, ok);
+  QTextCodec *codec=KGlobal::charsets()->codecForName( mCharset, ok );
 
   QString tmp = v_iew->e_dit->toWrappedPlainText();
 
@@ -1402,7 +1413,7 @@ void KNComposer::slotUpdateStatusBar()
     overwriteDesc = i18n(" INS ");
 
   statusBar()->changeItem(i18n(" Type: %1 ", typeDesc), 1);
-  statusBar()->changeItem(i18n(" Charset: %1 ", QString( c_harset ) ), 2);
+  statusBar()->changeItem(i18n(" Charset: %1 ", mCharset ), 2);
   statusBar()->changeItem(overwriteDesc, 3);
   statusBar()->changeItem(i18n(" Column: %1 ", v_iew->e_dit->columnNumber () + 1), 4);
   statusBar()->changeItem(i18n(" Line: %1 ", v_iew->e_dit->linePosition() + 1), 5);
