@@ -9,6 +9,7 @@ Comment[pt]=Esta conduta sincroniza o livro de endereços do seu dispositivo com
 Comment[pt_BR]=Esta conduta sincroniza o livro de endereços do handheld com a base de dados armazenada no PC.
 Comment[sv]=Den här kanalen synkroniserar handdatorns adressbok med en databas lagrad på PC:n.
 Comment[uk]=Цей акведук синхронізує адресну книгу кишенькового пристрою з базою даних, що зберігається на комп’ютері.
+Comment[x-test]=xxThis conduit syncs the handheld address book with a database stored on the PC.xx
 Comment[zh_TW]=此導管將掌上型裝置的通訊錄與 PC 上的資料庫同步。
 Name=Contacts
 Name[af]=Kontakte
