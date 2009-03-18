@@ -66,6 +66,7 @@
 #include <KIconLoader>
 #include <KLocale>
 #include <KLocalizedString>
+#include <KDebug>
 
 #include <QByteArray>
 #include <QColor>
@@ -77,6 +78,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <sstream>
 
 using namespace Kleo::Crypto;
 using namespace Kleo;
@@ -790,6 +792,11 @@ void DecryptVerifyTask::Private::emitResult( const shared_ptr<DecryptVerifyResul
 
 void DecryptVerifyTask::Private::slotResult( const DecryptionResult& dr, const VerificationResult& vr, const QByteArray& plainText )
 {
+    {
+        std::stringstream ss;
+        ss << dr << '\n' << vr;
+        kDebug() << ss.str().c_str();
+    }
     const QString auditLog = auditLogFromSender( q->sender() );
     if ( dr.error().code() || vr.error().code() ) {
         m_output->cancel();
@@ -915,6 +922,11 @@ void DecryptTask::Private::emitResult( const shared_ptr<DecryptVerifyResult>& re
 
 void DecryptTask::Private::slotResult( const DecryptionResult& result, const QByteArray& plainText )
 {
+    {
+        std::stringstream ss;
+        ss << result;
+        kDebug() << ss.str().c_str();
+    }
     const QString auditLog = auditLogFromSender( q->sender() );
     if ( result.error().code() ) {
         m_output->cancel();
@@ -1041,6 +1053,11 @@ void VerifyOpaqueTask::Private::emitResult( const shared_ptr<DecryptVerifyResult
 
 void VerifyOpaqueTask::Private::slotResult( const VerificationResult& result, const QByteArray& plainText )
 {
+    {
+        std::stringstream ss;
+        ss << result;
+        kDebug() << ss.str().c_str();
+    }
     const QString auditLog = auditLogFromSender( q->sender() );
     if ( result.error().code() ) {
         m_output->cancel();
@@ -1165,6 +1182,11 @@ void VerifyDetachedTask::Private::emitResult( const shared_ptr<DecryptVerifyResu
 
 void VerifyDetachedTask::Private::slotResult( const VerificationResult& result )
 {
+    {
+        std::stringstream ss;
+        ss << result;
+        kDebug() << ss.str().c_str();
+    }
     const QString auditLog = auditLogFromSender( q->sender() );
     try {
         kleo_assert( !result.isNull() );
