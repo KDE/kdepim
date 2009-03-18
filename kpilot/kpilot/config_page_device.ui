@@ -31,11 +31,7 @@
    <item row="0" column="1" >
     <widget class="KLineEdit" name="fPilotDevice" >
      <property name="whatsThis" >
-      <string>&lt;!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
-&lt;html>&lt;head>&lt;meta name="qrichtext" content="1" />&lt;style type="text/css">
-p, li { white-space: pre-wrap; }
-&lt;/style>&lt;/head>&lt;body style=" font-family:'Sans Serif'; font-size:10pt; font-weight:400; font-style:normal;">
-&lt;p style=" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;">Workarounds enable special handling for specific devices. Most devices do not need special handling. However, the Zire 31, Zire 72 and Tungsten T5 &lt;span style=" font-style:italic;">do&lt;/span> have special needs, so if you are connecting such a device, please select the workaround for them.&lt;/p>&lt;/body>&lt;/html></string>
+      <string>&lt;qt>Enter the device the Pilot is attached to (for instance a serial or USB port) here. You can also use &lt;i>/dev/pilot&lt;/i>, and make that a symlink to the correct device. You need write permission to successfully synchronize with the handheld.&lt;/qt></string>
      </property>
      <property name="showClearButton" stdset="0" >
       <bool>true</bool>
@@ -60,6 +56,9 @@ p, li { white-space: pre-wrap; }
    </item>
    <item row="2" column="0" >
     <widget class="QLabel" name="textLabel1_2" >
+     <property name="whatsThis" >
+      <string>&lt;qt>Workarounds enable special handling for specific devices. Most devices do not need special handling. However, the Zire 31, Zire 72 and Tungsten T5 &lt;i>do&lt;/i> have special needs, so if you are connecting such a device, please select the workaround for them.&lt;/qt></string>
+     </property>
      <property name="text" >
       <string>&amp;Workarounds:</string>
      </property>

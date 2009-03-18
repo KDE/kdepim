@@ -61,16 +61,12 @@
           </property>
           <property name="whatsThis" >
            <string>&lt;qt>
-&lt;p>Select in this list how conflicting entries (entries which were edited both on your handheld and on the PC) are resolved. Possibly values are:&lt;/p>
+&lt;p>Select in this list how frequently backups are done. Possible values are:&lt;/p>
 &lt;ul>
-&lt;li>"Ask User" to let you decide case by case&lt;/li>
-&lt;li>"Do Nothing" to allow the entries to be different&lt;/li> &lt;li>"PC overrides"&lt;/li>
-&lt;li>"Handheld overrides"&lt;/li>
-&lt;li>"Use values from last sync"&lt;/li>
-&lt;li>"Use both entries" to create a new entry on both the PC and handheld.&lt;/li>
+&lt;li>"On Every HotSync" - A backup of your handheld will be done every time you HotSync&lt;/li>
+&lt;li>"On Request Only" - A backup of your handheld will be done only when you choose your next sync to be of type "Backup"&lt;/li>
 &lt;/ul>
-&lt;p>&lt;b>Note I&lt;/b>: that the conflict resolution option selected here can be overridden by conduits that have their own conflict resolution configuration.&lt;/p>
-&lt;p>&lt;b>Note II&lt;/b>: The last two options are curently not supported by any conduit and might be removed in the future.&lt;/p>&lt;/qt></string>
+&lt;/qt></string>
           </property>
           <item>
            <property name="text" >
