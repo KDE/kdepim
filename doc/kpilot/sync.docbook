@@ -2,16 +2,14 @@
 <title>Syncing your &handheld; with a PC</title>
 
 <para>
-This chapter describes the synchronization process
-that &kpilot; uses, focusing on the &kpilot; daemon functionality.
-You may sync your &handheld; using the <link linkend="builtin">internal
-viewers</link> and / or <link linkend="conduits">conduits</link>, depending
-on your personal preferences. Conduits allow external applications to interface
-with the data on your &handheld;.
+This chapter describes the synchronization process that &kpilot; uses, focusing
+on the &kpilot; daemon functionality.  You may sync your &handheld; using
+the <link linkend="conduits">conduits</link>. Conduits allow external
+applications to interface with the data on your &handheld;.
 </para>
 
 <para>
-It is a good idea to make a <link linkend="backup">backup</link>
+It is a good idea to make a backup
 of your &handheld; regularly. Other than making backups, it should rarely be
 necessary to do anything other than drop your &handheld; on the cradle and press
 the &HotSync; button. The &kpilot; daemon icon in the system tray will flash
@@ -30,7 +28,7 @@ indicating that a sync is under way.
 
 
 <para>
-To which type of sync &kpilot; will perform next, you can use the main
+To set which type of sync &kpilot; will perform next, you can use the main
 application
 <link linkend="menu-file">
 <menuchoice>
@@ -64,30 +62,9 @@ a nice balance between speed and data safety.
 </para></listitem>
 
 <listitem><para>
-<guilabel>FastSync (once)</guilabel>: only sync those
-databases that have conduits.
-</para></listitem>
-
-<listitem><para>
 <guilabel>FullSync (once)</guilabel>: the safest option, but
 takes the longest time to complete.
 </para></listitem>
-
-<listitem><para>
-<guilabel>Backup (once)</guilabel>: copy all the data from the &handheld; to the
-<acronym>PC</acronym>.
-</para></listitem>
-
-<listitem><para>
-<guilabel>Restore from Backup (once)</guilabel>: copy the data from a previous backup from the PC to the
-&handheld;, erasing the data previously held there.
-
-<warning><para>
-Use the restore functionality with care, as you can lose all the new
-data entered on the &handheld; since the last backup.
-</para></warning>
-</para>
-</listitem>
 
 <listitem>
 <para>
@@ -128,83 +105,17 @@ menu item is available on the &kpilot; daemon popup menu as well.
 
 </para>
 
-<sect1 id="backup">
-<title>Backing up your &handheld; data</title>
-
-<para>
-On every backup, &kpilot; stores a copy of all your &handheld; data under the
-<filename class="directory">$KDEHOME/share/apps/kpilot/DBBackup/User Name/</filename>
-folder, allowing you to restore that copy later, if needed. The
-<filename class="directory">$KDEHOME</filename> environment variable
-(typically <filename class="directory">/home/Login Name/.kde/</filename>)
-points to the folder that contains your configuration and data for the &kde;
-applications.</para>
-
-<para>
-It is a good idea to backup your data often. To perform a backup, you can click
-the
-<menuchoice>
-<guisubmenu>Next Sync</guisubmenu>
-<guimenuitem>Backup</guimenuitem>
-</menuchoice>
-on the &kpilot; daemon icon popup menu or the
-<menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Backup</guimenuitem>
-</menuchoice>
-menu item on the main &kpilot; application menu in order
-to make the next sync a backup. Then, just press the &HotSync; button.
-</para>
-
-</sect1>
-
-<sect1 id="restore">
-<title>Restoring Your &handheld; Data</title>
-
-<para>
-The restore operation consist of transferring all the data previously saved on
-the <acronym>PC</acronym> to the &handheld;, effectively erasing all the new
-data held by the device by returning it to a previous state.
-<warning><para>
-Use the restore functionality with care, as you can lose all the new
-data entered on the &handheld; since the last backup.
-</para></warning>
-</para>
-
-<para>
-The data saved on the last backup is located on the <filename class="directory">$KDEHOME/share/apps/kpilot/DBBackup/User Name/</filename>
-folder. The <filename class="directory">$KDEHOME</filename> environment variable
-(typically <filename class="directory">/home/Login Name/.kde/</filename>)
-points to the folder that contains your configuration and data for the &kde;
-applications.</para>
-
-<para>
-The most common use for the restore functionality is to recover from a hardware
-or software failure on the device.
-The restore function can be accessed from the
-main &kpilot; application, and from the &kpilot; daemon. be careful, as
-restoring the data is not a common operation. In order
-to restore the data at the next sync, click the
-<menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Restore</guimenuitem>
-</menuchoice>
-menu item, then press the &HotSync; button.
-</para>
-
-</sect1>
-
 
 <sect1 id="sync-s">
 <title>Selecting the Synchronization Type</title>
 
 <para>
-There are three ways to sync your &handheld;, <guilabel>HotSync</guilabel>,
-<guilabel>FastSync</guilabel> or <guilabel>FullSync</guilabel>.
+There are two ways to sync your &handheld;, <guilabel>HotSync</guilabel>,
+or <guilabel>FullSync</guilabel>.
 </para>
 
 <para>
-When you press the &HotSync; button on your &handheld;, &kpilot;'s will run the
+When you press the &HotSync; button on your &handheld;, &kpilot; will run the
 default sync operation (usually a <guilabel>HotSync</guilabel>). You can select
 the default sync operation in the <link linkend="page-hotsync">&HotSync;
 configure dialog</link>. Alternatively, you can click one of the sync options on
@@ -279,150 +190,6 @@ menu item.
 </mediaobject>
 </screenshot>
 
-<para>
-The <guilabel>Conduits</guilabel> tree in the configuration dialog
-collects all the installed conduits available.
-The conduits can be enabled and disabled
-by clicking on the check box to the left of the conduit's name.
-Conduits can have an extensive configuration of
-their own, and may be supplied by third parties.
-Most of the conduits require some initial configuration, so it is strongly
-recommended to check the
-<link linkend="config-conduits">section detailing the default conduits
-configuration</link> before using them.
-</para>
-
-
-<para>
-The default conduits are the following:
-</para>
-
-
-<variablelist>
-
-<varlistentry>
-<term><guilabel>KNotes / Memos</guilabel></term>
-<listitem><para>
-Synchronizes the Memo Pad application with &knotes;.
-
-<important><para>
-The conduit only synchronizes the Memo Pad data if &knotes; is running. If you
-want to enable this functionality, please remember to start &knotes; first, or
-check if it is already running (tip: look for the &knotes; icon in the system tray).
-</para></important>
-
-</para></listitem>
-</varlistentry>
-
-
-<varlistentry>
-<term><guilabel>Notepad</guilabel></term>
-<listitem>
-<para>
-Exports the free hand notes  of the &handheld;'s Notepad application as pictures
-to the PC.
-</para>
-</listitem>
-</varlistentry>
-
-
-<varlistentry>
-<term><guilabel>Time Synchronization</guilabel></term>
-<listitem><para>
-Sets the &handheld;'s time to that of the desktop machine.
-Useful for keeping the clock of the &handheld; accurate.
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Calendar (KOrganizer)</guilabel></term>
-<listitem><para>
-Synchronizes the Datebook application with &korganizer; or with a iCalendar file of
-your choice.
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Palm DOC</guilabel></term>
-<listitem><para>
-Automatically converts, installs and sync text files in the &PalmPilot;
-DOC format, so you can read the text files with most DOC-capable
-applications on the &handheld;. There are many free or open source Palm
-DOC readers, and some Palm DOC editors for your handheld.</para>
-<para>
-Any plain text file can be easily converted. For instance, you can download and
-convert the public domain books provided by the <ulink url="http://www.gutenberg.net">
-Gutenberg Project</ulink> and read them in your &handheld;.
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Addressbook</guilabel></term>
-<listitem><para>
-Synchronizes the Address application with &kaddressbook; or with a vCard file of
-your choice.
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>System Information</guilabel></term>
-<listitem><para>
-Writes information about your &handheld;, (such as OS version,
-RAM available, and the list of databases) to a file. Useful mostly for
-debugging purposes.
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>ToDo's (KOrganizer)</guilabel></term>
-<listitem><para>
-Synchronizes the Todo list application with &korganizer; or with a iCalendar file of
-your choice.
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>MAL (AvantGo) Conduit</guilabel></term>
-<listitem><para>
-Synchronizes your &handheld; with the &AvantGo; server. The &AvantGo; server
-offers general content (news, guides, stock quotes, &etc;) in a format that is
-suitable for reading in a &handheld;. To use this conduit, you need to register, subscribe
-the channels you select and install the &AvantGo; software on your &handheld;.
-</para></listitem>
-</varlistentry>
-
-
-<varlistentry>
-<term><guilabel>Mail</guilabel></term>
-<listitem><para>
-Sends mail written on the &handheld; through &kmail;.
-There is no provision for receiving mail, however.
-</para></listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Perl</guilabel></term>
-<term><guilabel>Python</guilabel></term>
-<term><guilabel>NULL</guilabel></term>
-<listitem><para>
-These conduits are intended as a programming demonstration,
-and serve no practical purpose during a &HotSync;.
-They are not normally listed, but you may see them on some systems.
-</para></listitem>
-</varlistentry>
-
-</variablelist>
-
-<screenshot>
-<screeninfo>The Conduit Setup Dialog</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="setup-conduit.png" format="PNG"/></imageobject>
-<textobject><phrase>The Conduit Setup Dialog</phrase></textobject>
-<caption><para>The Conduit Setup Dialog</para></caption>
-</mediaobject>
-</screenshot>
-
-
 </sect1>
 
 <sect1 id="conflicts">
@@ -431,7 +198,7 @@ They are not normally listed, but you may see them on some systems.
 <para>
 Data records can be changed both on the &handheld; and
 on the <acronym>PC</acronym>. If one record has incompatible changes
-in both the &handheld; and the <acronym>PC</acronym>, (such as
+in both the &handheld; and the <acronym>PC</acronym> (such as
 changing a phone number in different ways on both sides),
 the conflicting change needs to be resolved so
 that both the &handheld; and the <acronym>PC</acronym> are in sync again.

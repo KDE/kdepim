@@ -1,12 +1,10 @@
 <chapter id="using-kpilot">
-<title>Using &kpilot; Data Viewers and Main Window Interface</title>
+<title>Using &kpilot; Main Window Interface</title>
 
 <para>
-This chapter describes the usage of &kpilot;'s main window; as a viewer
-application for data on the &handheld;, and  its menu structure.
-The main window of &kpilot; also contains
-the &HotSync;-log, which can be useful when
-debugging problems.
+This chapter describes the usage of &kpilot;'s main window and its menu
+structure.  The main window of &kpilot; also contains the &HotSync;-log, which
+can be useful when debugging problems.
 </para>
 
 <para>
@@ -31,7 +29,7 @@ The main window contains the application menu, which we will deal with here.
 </para>
 
 <para>
-The <guimenu>file</guimenu> menu contains the synchronization menu items. Note
+The <guimenu>File</guimenu> menu contains the synchronization menu items. Note
 that these items do not start the sync process, they only select what the new
 sync will be. To really start it, you must press the HotSync button on your
 &PalmPilot;'s cradle (or on the &handheld; itself, when there is no cradle).
@@ -70,23 +68,6 @@ handbook.
 <term>
 <menuchoice>
 <guimenu>File</guimenu>
-<guimenuitem>FastSync</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>
-(not available with all installations)
-Make the next sync a FastSync. For more information, please check the
-<link linkend="sync-s">Syncing your &handheld; data</link> section of this
-handbook.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>File</guimenu>
 <guimenuitem>FullSync</guimenuitem>
 </menuchoice>
 </term>
@@ -99,56 +80,6 @@ handbook.
 </para>
 </listitem>
 </varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Backup</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>
-Make the next sync a full backup of your &PalmPilot; data. This action can take
-several minutes. For more information, please check the
-<link linkend="backup"> Backing up your &handheld; data</link> section of this
-handbook.
-</para>
-<tip>
-<para>
-The first thing you should do after starting &kpilot; for
-the first time is make a full backup.
-</para>
-</tip>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>Restore</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>
-This copies all the data from a previous backup on your
-<acronym>PC</acronym> to your &PalmPilot;,
-replacing whatever data was there.
-Use this if your &PalmPilot; suffers some from software or hardware failure
-(or is replaced by a new one). For more information, please check the
-<link linkend="restore"> Restoring your &handheld; data</link> section of this
-handbook.
-</para>
-<warning>
-<para>
-Doing a restore will erase all data on the &PalmPilot;
-before restoring the information from your
-<acronym>PC</acronym>!</para>
-</warning>
-</listitem>
-</varlistentry>
-
 
 <varlistentry>
 <term>
@@ -181,24 +112,6 @@ information from both sources, it will copy the PC data to the handheld.
 you made in your handheld since the last sync</emphasis>.</para>
 </listitem>
 </varlistentry>
-
-
-<!--
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>File</guimenu>
-<guimenuitem>List Only</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>
-The next sync will only list the databases on your &handheld;, no exchange of
-data will be performed.
-</para>
-</listitem>
-</varlistentry>
--->
 
 <varlistentry>
 <term>
@@ -268,7 +181,7 @@ words, to show it if hidden, or to hide it if shown.
 Displays &kpilot;'s shortcut configuration dialog, allowing you change or create
 key bindings, which are associations between actions (for example, opening
 &kpilot;'s configuration dialog) and keys or key combinations (for instance,
-Ctrl + Shift + a).
+<keycombo action="simul">&Ctrl;&Shift;<keycap>A</keycap></keycombo>).
 </para>
 </listitem>
 </varlistentry>
@@ -302,35 +215,14 @@ toolbar.
 <listitem>
 <para>
 Displays &kpilot;'s configuration dialog, allowing you to match your hardware
-with the configuration, so that &kpilot; can talk with your &handheld;, to
-configure the way &kpilot; synchronizes your &PalmPilot; with your
-desktop applications (through conduits) and the way it shows the data from your &PalmPilot; in the
-<link linkend="builtin">built-in viewers</link>. The <link linkend="configure">
-Configuring &kpilot;</link> chapter of this handbook offers detailed information
-about these configuration options.
+with the configuration, so that &kpilot; can talk with your &handheld;, and to
+configure the way &kpilot; synchronizes your &PalmPilot; with your desktop
+applications (through conduits). The <link linkend="configure"> Configuring
+&kpilot;</link> chapter of this handbook offers detailed information about these
+configuration options.
 </para>
 </listitem>
 </varlistentry>
-
-<varlistentry>
-<term>
-<menuchoice>
-<guimenu>Settings</guimenu>
-<guimenuitem>Configuration Wizard...</guimenuitem>
-</menuchoice>
-</term>
-<listitem>
-<para>
-Displays &kpilot;'s configuration wizard dialog. The
-<link linkend="configwizard">configuration wizard</link> helps you to set up
-&kpilot; to communicate with the &PalmPilot; and to configure the conduits as
-a group. It's a great start for new users, and you can always fine-tune your
-preferences later, using the <link linkend="configure">configure
-dialog</link>.
-</para>
-</listitem>
-</varlistentry>
-
 
 </variablelist>
 
@@ -360,243 +252,8 @@ sidebar.
 <para>
 Selecting one of the built-in applications
 will cause that application to appear in &kpilot;'s main
-window.
-You may use the viewer applications to edit the information, by enabling
-this option in the <link linkend="page-viewers">database viewer's
-configuration dialog</link>. The ability to view and edit private records is
-configurable too.</para>
+window.</para>
 
-<para>
-Any changes you make to the &PalmPilot; databases with
-the built-in applications (such as deleting a memo)
-do not take effect on the &PalmPilot; until the next HotSync.
-</para>
-
-<important><para>
-If the <guilabel>Make internal viewers editable</guilabel> option is
-not enabled, the changes in the viewers are not synchronized with your
-&handheld;, and will be lost. In recent versions of &kpilot; it is not possible
-enable this option, and therefore, to edit the databases with the viewers.
-</para></important>
-
-<sect2 id="todo-app">
-
-<title>The Todo Viewer</title>
-
-<para>
-The todo application allows you to view the tasks from your &PalmPilot;,
-add new tasks and edit or delete existing ones. The changes you made
-are applied to the &handheld; the next time you &HotSync;.
-</para>
-
-<screenshot>
-<screeninfo>Todo Viewer Application</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="todo-app.png" format="PNG"/></imageobject>
-<textobject><phrase>The Todo Viewer Application</phrase></textobject>
-<caption><para>The Todo Viewer Application</para></caption>
-</mediaobject>
-</screenshot>
-
-<para>
-The todo application has a drop down box
-for the memo categories defined in the &PalmPilot;.
-In the screenshot, category <quote>All</quote> is selected.
-Underneath the drop down box is a list of todo entries, with a check box
-indicating if they are completed or not. You can click the check box to toggle
-the todo item between completed and not completed status. Clicking on one of the
-todo items in the list will display its details in the text box labelled
-<guilabel>Todo info:</guilabel> to the right.
-</para>
-
-<para>
-If you have the <guilabel>Make internal viewers editable</guilabel> option
-enabled in the <link linkend="page-viewers">viewers configuration page</link> you
-can use the buttons <guibutton>Edit Record...</guibutton>,
-<guibutton>New Record...</guibutton> and <guibutton>Delete Record</guibutton>
-to edit the todo data from your &handheld;, and sync the data in the next
-&HotSync;.</para>
-
-<!--
-<note><para>
-If you create new todo and decide that
-you do not want to have it on the &PalmPilot;
-you must perform a &HotSync; (copying the todo
-to the &PalmPilot;) and then delete the todo record
-from the &PalmPilot; or the viewer, and &HotSync; again. It is not possible to
-delete newly-added records from the built-in applications.
-</para></note>
--->
-
-<para>
-The <guibutton>Edit Record...</guibutton> button opens a dialog where you can 
-edit the details of the currently selected todo item, including description,
-priority and end date. Click the <guibutton>New Record...</guibutton> button to
-open the same dialog, but instead of editing the current selected record, a new
-todo will be added to the list. And finally, click the
-<guibutton>Delete Record</guibutton> button to remove the selected todo record
-from the list.
-</para>
-
-</sect2>
-
-<sect2 id="address-app">
-<title>The Address Viewer</title>
-<para>
-The address viewer lets you view, create, delete and edit addresses
-from the &PalmPilot;, and synchronize changes back. The addresses can be 
-sorted and viewed in the <guilabel>"Last, first"</guilabel> or <guilabel>"Company,
-last"</guilabel> format, depending on your
-<link linkend="page-viewers">viewers configuration.</link>
-</para>
-
-<screenshot>
-<screeninfo>The Address Viewer Application</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="address-app.png" format="PNG"/></imageobject>
-<textobject><phrase>The Address Viewer Application</phrase></textobject>
-<caption><para>The Address Viewer Application</para></caption>
-</mediaobject>
-</screenshot>
-
-
-<para>
-The address application resembles the todo application;
-the drop down box, buttons, list and text area function exactly
-the same, allowing you to select, view and edit an address
-as on the &PalmPilot;.
-</para>
-
-<para>
-The <guibutton>Edit Record...</guibutton> dialog allows you to edit the
-<guilabel>Last Name</guilabel>, <guilabel>First Name</guilabel>,
-<guilabel>Company</guilabel>, &etc; fields, just as if you where using your
-&handheld;.  Click the <guibutton>New Record...</guibutton> button to
-open the same dialog, but instead of editing the current selected record, a new
-address will be added to the list. Click the
-<guibutton>Delete Record</guibutton> button to remove the selected address
-from the list.
-
-<!--
-<note><para>
-If you create new address and decide that
-you do not want to have it on the &PalmPilot;
-you must perform a &HotSync; (copying the address
-to the &PalmPilot;) and then delete the address record
-from the &PalmPilot; or the viewer, and &HotSync; again. It is not possible to
-delete newly-added records from the built-in applications.
-</para></note>
--->
-
-</para>
-</sect2>
-
-
-<sect2 id="memo-app">
-
-<title>The Memo Viewer</title>
-
-<para>
-The memo application allows you to view the memos on your &PalmPilot;,
-export them to text files, import new ones to be installed the next
-time you &HotSync;, or edit existing ones.
-</para>
-
-<screenshot>
-<screeninfo>Memo Viewer Application</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="memo-app.png" format="PNG"/></imageobject>
-<textobject><phrase>The Memo Viewer Application</phrase></textobject>
-<caption><para>The Memo Viewer Application</para></caption>
-</mediaobject>
-</screenshot>
-
-<para>
-The memo application has a drop down box
-for the memo categories defined in the &PalmPilot;.
-Here category <quote>All</quote> is selected.
-Underneath the drop down box is a list of memo titles.
-These are the first lines of the memos, just like
-in the &PalmPilot; memo application.
-Clicking on one of the memo titles in the list
-box will display it in the text box labelled
-<guilabel>Memo Text:</guilabel> to the right.
-</para>
-
-<para>
-When a memo is selected, you can use the buttons
-<guibutton>Export Memo...</guibutton> and
-<guibutton>Delete Memo</guibutton>
-to export the selected memo to a file
-or to delete the selected memo.
-Exporting a memo requires
-you to give a filename; the memo
-is written to that file.
-Take care not to overwrite existing files with this action.
-Deleting a memo does not affect the &PalmPilot;
-until the next &HotSync;.
-</para>
-
-<para>
-The
-<guibutton>Import Memo...</guibutton>
-button allows you to read a text file and
-add it &mdash; as a memo &mdash; to the &PalmPilot;.
-Importing a memo does not take effect until
-the next &HotSync;.
-
-<!--
-<note><para>
-If you import a memo and decide that
-you do not want to have it on the &PalmPilot;
-you must perform a &HotSync; (copying the memo
-to the &PalmPilot;) and then delete the memo record
-from the &PalmPilot; or the viewer, and &HotSync; again. It is not possible to
-delete newly-added records from the built-in applications.
-</para></note>
--->
-
-</para>
-
-
-</sect2>
-
-<sect2 id="db-app">
-<title>The Generic DB Viewer</title>
-
-<para>
-In short, databases are all files stored in your &handheld;. A database
-can be either a record database, which stores dynamic information created by the
-user (for instance, the addresses or the todo information), or a resource
-database, which tend to be static (for instance the applications).
-</para>
-
-<para>
-The Generic DB Viewer is a tool to view and analyze databases stored on
-your handheld, especially record databases. It helps a lot creating new conduits
-and to debug existing ones.
-
-<warning><para>
-While it is possible use the database viewer to edit, add and delete records, you
-should really know what you are doing, otherwise you may damage your data. Use
-the viewer applications or conduits to edit your &handheld; data instead, in a
-normal usage scenario.
-</para></warning>
-
-</para>
-
-
-
-<screenshot>
-<screeninfo>The Generic DB Viewer</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="db-app.png" format="PNG"/></imageobject>
-<textobject><phrase>The Generic DB Viewer</phrase></textobject>
-<caption><para>The Generic DB Viewer</para></caption>
-</mediaobject>
-</screenshot>
-
-</sect2>
 
 
 <sect2 id="installer-app">
@@ -616,11 +273,9 @@ to remove any pending files.
 </para>
 
 <para>
-If you are using the &HotSync; Daemon you may drag and
-drop files or &URL;s
-onto the docked icon on the toolbar. The file installer application also
-supports dragging and dropping into the <guilabel>Files to Install:</guilabel>area.
-Provided <guilabel>Sync Files</guilabel> is checked in the
+The file installer application supports dragging and dropping into
+the <guilabel>Files to Install:</guilabel>area.  Provided <guilabel>Sync
+Files</guilabel> is checked in the
 <link linkend="page-general">settings dialog</link> they
 will be installed the next time you HotSync.
 </para>
