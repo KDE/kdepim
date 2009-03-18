@@ -706,7 +706,7 @@ configuration is required for this conduit.
 <title>Calendar Conduit Setup</title>
 
 <para>
-This conduit will synchronize your &PalmPilot; with &korganizer; and &kontact;
+This conduit will synchronize your &PalmPilot; calendar application with &korganizer; and &kontact;
 by using Akonadi. Before you can use this conduit, you must configure Akonadi to
 have a resource for the calendar that you wish to synchronize with. Once you've
 done that, you can select that resource for synchronization use here.
@@ -758,7 +758,7 @@ synchronization use here.
 <para>
 This conduit will synchronize your &PalmPilot; with the &kde; address book
 through Akonadi. Before you can use this conduit, you must configure Akonadi to
-have a resource for the To-Do file that you wish to synchronize with. Once
+have a resource for the address book file that you wish to synchronize with. Once
 you've done that, you can select that resource for synchronization use here.
 </para>
 
