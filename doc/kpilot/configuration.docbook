@@ -68,7 +68,7 @@ give you detailed control over the operation of &kpilot;:
 you can select a non-standard hardware device,
 set special encodings for foreign-language &handheld;s,
 and control how &kpilot; displays your data. There
-are five items under the <guilabel>General Setup</guilabel>
+are four items under the <guilabel>General Setup</guilabel>
 heading. You may need to expand the <guilabel>General Setup</guilabel>
 heading to see them.
 </para>
