@@ -221,8 +221,10 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
   y += fmBody.lineSpacing() / 2;
 
   painter->setPen( mForegroundColor );
-  if ( !addr.prefix().isEmpty() ) {
-    line1 = addr.prefix().trimmed();
+  // This used to be addr.prefix(), but that makes no sense, it's part of the formattedName already.
+  // The role, OTOH, can be useful. E.g. formattedName="Dr Foo Bar", role="Dentist"                 
+  if ( !addr.role().isEmpty() ) {                                                                   
+    const QString line1 = addr.role().trimmed();                                                    
 
     if ( fake ) {
       rect = painter->boundingRect( Ruler1, y, Width-Ruler1, Height,
