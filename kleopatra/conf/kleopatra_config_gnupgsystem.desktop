@@ -13,7 +13,5 @@ X-KDE-ParentComponents=kleopatra
 X-KDE-CfgDlgHierarchy=Kleopatra
 
 Name=GnuPG System
-Name[de]=GnuPG-System
 Comment=Configuration of GnuPG System options
-Comment[de]=Einrichtung der Optionen des GnuPG-Systems
 X-KDE-Keywords=gpg,gpgsm,gpg-agent,dirmngr,scdaemon,kleopatra,signing,encryption

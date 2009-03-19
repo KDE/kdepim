@@ -4,6 +4,7 @@ Comment=This conduit syncs the handheld keyring database with a database stored 
 Comment[et]=See kanal sünkroniseerib pihuarvuti võtmerõnga andmebaasi ja PC-s leiduva andmebaasi.
 Comment[ga]=Sioncrónaíonn an seoladán seo fáinní eochracha an ríomhaire boise le bunachar sonraí ar an ríomhaire deisce.
 Comment[ja]=このコンジットはハンドヘルドのキーリングデータベースを PC のデータベースと同期させます。
+Comment[nb]=Denne koblingen synkroniserer hånddatorens nøkkelring-database med en database lagret på PC-en.
 Comment[nds]=Disse Kanaal synkroniseert dat Slötelbund op den Handreekner mit een op den Reekner.
 Comment[pt]=Esta conduta sincroniza o porta-chaves do seu dispositivo com uma base de dados guardada no PC.
 Comment[pt_BR]=Esta conduta sincroniza o base de dados do chaveiro com a base de dados armazenada no PC.
