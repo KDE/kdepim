@@ -64,4 +64,4 @@ Name[zh_TW]=待辦事項
 
 Implemented=file
 X-KDE-ServiceTypes=KPilotConduit
-X-KDE-Library=kpilot_conduit_todo2
+X-KDE-Library=kpilot_conduit_todo

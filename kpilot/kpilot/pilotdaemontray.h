@@ -65,7 +65,6 @@ protected slots:
 	void slotHandleActionTrigger( QAction* );
 	void slotHandleActivation( QSystemTrayIcon::ActivationReason reason );
 	void slotHandleDefaultSyncToggle( bool );
-	void slotShowAbout();
 	void slotShowBusy();
 	void slotShowNormal();
 	void slotShowNotListening();

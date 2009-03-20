@@ -335,18 +335,6 @@ void PilotDaemonTray::slotHandleDefaultSyncToggle( bool defaultActionEnabled )
 	}
 }
 
-void PilotDaemonTray::slotShowAbout()
-{
-	FUNCTIONSETUP;
-
-	if( !d->fAboutDialog )
-	{
-		d->fAboutDialog = new KAboutApplicationDialog( d->fAboutData, false );
-	}
-
-	d->fAboutDialog->show();
-}
-
 void PilotDaemonTray::slotShowBusy()
 {
 	FUNCTIONSETUP;

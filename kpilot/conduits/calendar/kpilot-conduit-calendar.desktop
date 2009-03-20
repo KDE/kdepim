@@ -89,4 +89,4 @@ Name[zh_TW]=行事曆
 
 Implemented=file
 X-KDE-ServiceTypes=KPilotConduit
-X-KDE-Library=kpilot_conduit_calendar2
+X-KDE-Library=kpilot_conduit_calendar

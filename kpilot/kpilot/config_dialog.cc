@@ -452,7 +452,7 @@ void ConduitConfigWidget::loadAndConfigure(QTreeWidgetItem *p)
 			return;
 		}
 
-        WARNINGKPILOT << "library: " << libraryName << " version: " << loader.pluginVersion();
+        DEBUGKPILOT << "library: " << libraryName << " version: " << loader.pluginVersion();
 		if (Pilot::PLUGIN_API > loader.pluginVersion())
 		{
 			WARNINGKPILOT << "Old conduit library found.";
