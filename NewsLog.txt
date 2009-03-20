@@ -1,3 +1,36 @@
+Friday, March 20th 2009
+
+Problems addressed
+------------------
+
+* In Kleopatra, make the home directory the starting point in file dialogs
+* Add the GnuPG backend configuration into the normal Kleopatra config dialog
+* Add Help->About Gpg4win to Kleopatra
+
+Merges
+------
+
+* Dozens of KNotes merges from the enterprise35 and the KDE 4.2 branch
+
+* Merges from KDE 4.2 branch:
+    - Fix addressbook on WebDAV being empty after some days (Novell bug 480957)
+    - With the local resource, save some view updates when editing an incidence
+    - Correctly set multiday recurring events as bold in the day matrix
+    - Count multiday events correctly in the time spent view
+    - Some fixes for the undo function in KOrganizer
+    - Fix changing font for agenda view items
+    - Make categories appear directly in the selection dialog when creating/deleting them
+    - In KOrganizer, rearrange the layout of some settings pages
+    - In Addressbook, don't print into the printer margins
+    - Fix printing of roles of contacts
+    - In KMail, change the layout of the message window configuration tab (KDE bug 183740)
+    - Make sure HTML messages can not overwrite the header (KDE bug 96557)
+    - Fix mails becoming corrupted after forwarding them with a filter (KDE bug 174942)
+
+* Merges from enterprise35 branch:
+    - kolab/issue3477: Kontact creates bad invitations if attendee name with umlauts is entered with double quotes
+
+
 Friday, March 13th 2009
 
 Problems addressed
