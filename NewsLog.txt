@@ -1,3 +1,16 @@
+Friday, March 20th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3467: Frequent crash after editing notes
+* Eliminate some unnecessary groupware syncs in KNotes
+* Don't crash when using "Save As" in KNotes
+* Fix problems with notes being randomly recreated or randomly placed
+* Don't allow resizes when a note is locked
+* Disable "Find Text" and "Show/Hide All Notes" actions when there are no notes
+
+
 Friday, March 13th 2009
 
 Problems addressed
