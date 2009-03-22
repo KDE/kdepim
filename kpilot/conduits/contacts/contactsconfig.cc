@@ -34,10 +34,10 @@
 
 static KAboutData *createAbout()
 {
-	KAboutData *fAbout = new KAboutData( "To-do conduit", 0
-		, ki18n( "To-do Conduit for KPilot" )
+	KAboutData *fAbout = new KAboutData( "Contacts conduit", 0
+		, ki18n( "Contacts Conduit for KPilot" )
 		, KPILOT_VERSION
-		, ki18n( "Configures the To-do Conduit for KPilot" )
+		, ki18n( "Configures the Contacts Conduit for KPilot" )
 		, KAboutData::License_GPL
 		, ki18n( "(C) 2008, Bertjan Broeksema" )
 	);
