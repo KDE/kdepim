@@ -58,6 +58,7 @@ Comment[gl]=Permite acceder aos contactos almacenados nos cadernos de enderezos 
 Comment[it]=Consente l'accesso ai contatti della rubrica nei server GroupDAV, come ad esempio OpenGroupware
 Comment[ja]=GroupDAV に対応したサーバ (例: OpenGroupware) のアドレス帳に保存されている連絡先へのアクセスを提供します
 Comment[km]=ផ្ដល់​សិទ្ធិ​ចូល​ដំណើរការ​ទៅកាន់​ទំនាក់ទំនង​ដែល​បាន​រក្សាទុក​នៅ​ក្នុង​សៀវភៅ​អាសយដ្ឋាន​នៅលើ​ម៉ាស៊ីន​បម្រើ​ដែល​បាន​អនុញ្ញាត GroupDAV ឧ. OpenGroupware
+Comment[lt]=Suteikia priėjimą prie kontaktų, saugomų adresų knygelėse serverių, kuriuose įjungtas GroupDAV, pvz., OpenGroupware
 Comment[lv]=Nodrošina piekļuvi kontaktiem, kas glabājas GroupDAV serveru adrešu grāmatās, piem., OpenGroupware.
 Comment[nb]=Gir tilgang til kontakter lagret i adressebøker på tjenere som støtter GroupDAV, f.eks. OpenGroupWare
 Comment[nds]=Stellt Togriep op Kontakten praat, de binnen Adressböker op GroupDAV-Servers liggt, a.B. OpenGroupware
