@@ -19,7 +19,7 @@ set(kslox_LIB_SRCS
 
 kde4_add_library(kslox SHARED ${kslox_LIB_SRCS})
 
-target_link_libraries(kslox  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${QT_QT3SUPPORT_LIBRARY} kdepim )
+target_link_libraries(kslox  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} ${KDE4_KDE3SUPPORT_LIBS} kdepim )
 
 set_target_properties(kslox PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kslox ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -49,7 +49,7 @@ kde4_add_kcfg_files(kcal_slox_LIB_SRCS kcalsloxprefs.kcfgc )
 
 kde4_add_library(kcal_slox SHARED ${kcal_slox_LIB_SRCS})
 
-target_link_libraries(kcal_slox  ${KDE4_KDECORE_LIBS} kslox ${KDE4_KCAL_LIBS} ${KDE4_KRESOURCES_LIBS} kdepim ${QT_QT3SUPPORT_LIBRARY})
+target_link_libraries(kcal_slox  ${KDE4_KDECORE_LIBS} kslox ${KDE4_KCAL_LIBS} ${KDE4_KRESOURCES_LIBS} kdepim )
 
 set_target_properties(kcal_slox PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kcal_slox ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -67,7 +67,7 @@ set_target_properties(kcal_slox_plugin PROPERTIES OUTPUT_NAME kcal_slox)
 endif (NOT MSVC) 
 
 
-target_link_libraries(kcal_slox_plugin  ${KDE4_KDECORE_LIBS} ${QT_QT3SUPPORT_LIBRARY} kcal_slox ${KDE4_KRESOURCES_LIBS} ${KDE4_KCAL_LIBS})
+target_link_libraries(kcal_slox_plugin  ${KDE4_KDECORE_LIBS} kcal_slox ${KDE4_KRESOURCES_LIBS} ${KDE4_KCAL_LIBS})
 
 install(TARGETS kcal_slox_plugin DESTINATION ${PLUGIN_INSTALL_DIR})
 
