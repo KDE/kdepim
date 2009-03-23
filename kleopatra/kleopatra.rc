@@ -1,5 +1,5 @@
 <!DOCTYPE kpartgui >
-<kpartgui name="kleopatra" version="439" >
+<kpartgui name="kleopatra" version="440" >
 <MenuBar>
 	<Menu name="file">
 		<text>&amp;File</text>
@@ -73,9 +73,9 @@
                 <Action name="window_move_tab_left"/>
                 <Action name="window_move_tab_right"/>
         </Menu>
-	<Menu name="help" append="about_merge">
+	<Menu name="help">
                 <text>&amp;Help</text>
-                <Action name="help_about_gpg4win"/>
+                <Action append="about_merge" name="help_about_gpg4win"/>
         </Menu>
 </MenuBar>
 
