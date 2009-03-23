@@ -33,6 +33,7 @@
 #include <config-kleopatra.h>
 
 #include "mainwindow.h"
+#include "aboutdata.h"
 
 #include "models/keylistmodel.h"
 #include "models/keylistsortfilterproxymodel.h"
@@ -40,8 +41,6 @@
 #include "view/searchbar.h"
 #include "view/tabwidget.h"
 #include "view/keylistcontroller.h"
-
-#include "dialogs/aboutgpg4windialog.h"
 
 #include "commands/exportcertificatecommand.h"
 #include "commands/exportopenpgpcertstoservercommand.h"
@@ -92,6 +91,7 @@
 #include <KXMLGUIFactory>
 #include <KEditToolBar>
 #include <KIconLoader>
+#include <KAboutApplicationDialog>
 #include <kdebug.h>
 
 #include <QAbstractItemView>
@@ -126,6 +126,15 @@ using namespace Kleo;
 using namespace Kleo::Commands;
 using namespace boost;
 using namespace GpgME;
+
+namespace {
+
+    static const KAboutData * aboutGpg4WinData() {
+        static const AboutGpg4WinData data;
+        return &data;
+    }
+
+}
 
 static KGuiItem KStandardGuiItem_quit() {
     static const QString app = KGlobal::mainComponent().aboutData()->programName();
@@ -301,9 +310,7 @@ public:
 #endif
 
     void aboutGpg4Win() {
-        QPointer<Dialogs::AboutGpg4WinDialog> dlg( new Dialogs::AboutGpg4WinDialog( q ) );
-        dlg->exec();
-        delete dlg;
+        ( new KAboutApplicationDialog( aboutGpg4WinData(), q ) )->show();
     }
 
 private:

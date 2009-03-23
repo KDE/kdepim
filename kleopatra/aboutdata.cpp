@@ -87,3 +87,24 @@ AboutData::AboutData()
     addCredit( ki18n(credits[i].name), ki18n(credits[i].desc),
 	       credits[i].email, credits[i].web );
 }
+
+
+static const char gpg4win_description[] = I18N_NOOP( "Gpg4win is an installer package for Windows for EMail and "
+                                                     "file encryption using the core component GnuPG for Windows. "
+                                                     "Both relevant cryptography standards are supported, OpenPGP "
+                                                     "and S/MIME. Gpg4win and the software included with Gpg4win "
+                                                     "are Free Software.");
+static const char gpg4win_version[] = "1.9.15-beta"; // ### make this better come from somewhere...
+
+
+AboutGpg4WinData::AboutGpg4WinData()
+    : KAboutData( "gpg4win", 0, ki18n("Gpg4win"),
+                  gpg4win_version, ki18n(gpg4win_description),
+                  License_GPL, KLocalizedString(), KLocalizedString(), "http://www.gpg4win.de" )
+{
+    addAuthor( ki18n("Intevation GmbH (Project Management)"), KLocalizedString(), 0, "http://www.intevation.de" );
+    addAuthor( ki18n("g\xC2\xB9\xC2\xBA" "code GmbH (Crypto Functionality, GpgOL, GpgEX, GPA)"), KLocalizedString(), 0, "http://www.g10code.de" );
+    addAuthor( ki18n("KDAB (Kleopatra)"), KLocalizedString(), 0, "http://www.kdab.com" );
+    setCustomAuthorText( ki18n("Gpg4win is being developed by the following companies:"),
+                         ki18n("Gpg4win is being developed by the following companies:") );
+}
