@@ -876,7 +876,7 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
       offset = alarm->startOffset();
     else
       offset = alarm->endOffset();
-    trigger.duration = icaldurationtype_from_int( offset.asSeconds() );
+    trigger.duration = writeICalDuration( offset.asSeconds() );
   }
   icalproperty *p = icalproperty_new_trigger(trigger);
   if ( alarm->hasEndOffset() )
@@ -887,7 +887,7 @@ icalcomponent *ICalFormatImpl::writeAlarm(Alarm *alarm)
   if (alarm->repeatCount()) {
     icalcomponent_add_property(a,icalproperty_new_repeat(alarm->repeatCount()));
     icalcomponent_add_property(a,icalproperty_new_duration(
-                             icaldurationtype_from_int(alarm->snoozeTime()*60)));
+                                 writeICalDuration(alarm->snoozeTime()*60)));
   }
 
   // Custom properties
@@ -1897,13 +1897,16 @@ QDate ICalFormatImpl::readICalDate(icaltimetype t)
 
 icaldurationtype ICalFormatImpl::writeICalDuration(int seconds)
 {
+  // should be able to use icaldurationtype_from_int(), except we know
+  // that some older tools do not properly support weeks. So we never
+  // set a week duration, only days
+
   icaldurationtype d;
 
   d.is_neg  = (seconds<0)?1:0;
   if (seconds<0) seconds = -seconds;
 
-  d.weeks    = seconds / gSecondsPerWeek;
-  seconds   %= gSecondsPerWeek;
+  d.weeks    = 0;
   d.days     = seconds / gSecondsPerDay;
   seconds   %= gSecondsPerDay;
   d.hours    = seconds / gSecondsPerHour;
