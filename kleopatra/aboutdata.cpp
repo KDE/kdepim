@@ -35,6 +35,12 @@
 #include "aboutdata.h"
 
 #include <klocale.h>
+#include <kiconloader.h>
+
+#include <QPixmap>
+#include <QVariant>
+
+#include <cassert>
 
 static const char kleopatra_version[] = KLEOPATRA_VERSION_STRING;
 static const char description[] = I18N_NOOP("Certificate Manager and Unified Crypto GUI");
@@ -97,6 +103,17 @@ static const char gpg4win_description[] = I18N_NOOP( "Gpg4win is an installer pa
 static const char gpg4win_version[] = "1.9.15-beta"; // ### make this better come from somewhere...
 
 
+static QPixmap UserIcon_nocached2( const char * name ) {
+    // KIconLoader insists on caching all pixmaps. Since the splash
+    // screen is a particularly large 'icon' and used only once,
+    // caching is unneccesary and just hurts startup preformance.
+    KIconLoader * const il = KIconLoader::global();
+    assert( il );
+    const QString iconPath = il->iconPath( QLatin1String( name ), KIconLoader::User );
+    return iconPath.isEmpty() ? il->unknown() : QPixmap( iconPath ) ;
+}
+
+
 AboutGpg4WinData::AboutGpg4WinData()
     : KAboutData( "gpg4win", 0, ki18n("Gpg4win"),
                   gpg4win_version, ki18n(gpg4win_description),
@@ -107,4 +124,5 @@ AboutGpg4WinData::AboutGpg4WinData()
     addAuthor( ki18n("KDAB (Kleopatra)"), KLocalizedString(), 0, "http://www.kdab.com" );
     setCustomAuthorText( ki18n("Gpg4win is being developed by the following companies:"),
                          ki18n("Gpg4win is being developed by the following companies:") );
+    setProgramLogo( UserIcon_nocached2( "gpg4win" ) );
 }
