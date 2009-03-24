@@ -471,8 +471,10 @@ void MainWindow::Private::setupActions() {
 #endif // ONLY_KLEO
         { "crl_import_crl", i18n("Import CRL From File..."), QString(),
           0, q, SLOT(importCrlFromFile()), QString(), false, true },
+#if 0
         { "configure_backend", i18n("Configure GnuPG Backend..."), QString(),
           0, q, SLOT(configureBackend()), QString(), false, true },
+#endif
         // Settings menu
         { "settings_self_test", i18n("Perform Self-Test"), QString(),
           0, q, SLOT(selfTest()), QString(), false, true },
