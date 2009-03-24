@@ -340,16 +340,15 @@ private:
 	{
 	    KDAB_SET_OBJECT_NAME( tabWidget );
 
-            KPIM::ProgressDialog * progressDialog = new KPIM::ProgressDialog( q->statusBar(), q );
-            KDAB_SET_OBJECT_NAME( progressDialog );
-            //progressDialog->raise();
-            //progressDialog->hide();
-            KPIM::StatusbarProgressWidget * statusBarProgressWidget = new KPIM::StatusbarProgressWidget( progressDialog, q->statusBar() );
-            KDAB_SET_OBJECT_NAME( statusBarProgressWidget );
-            // statusBarProgressWidget->show();
-
-            q->setCentralWidget( &tabWidget );
-            q->statusBar()->addPermanentWidget( statusBarProgressWidget, 0 );
+	    q->setCentralWidget(&tabWidget);
+	    KPIM::ProgressDialog * progressDialog = new KPIM::ProgressDialog( q->statusBar(), q );
+	    KDAB_SET_OBJECT_NAME( progressDialog );
+	    progressDialog->hide();
+	    KPIM::StatusbarProgressWidget * statusBarProgressWidget 
+		    = new KPIM::StatusbarProgressWidget( progressDialog, q->statusBar() );
+	    KDAB_SET_OBJECT_NAME( statusBarProgressWidget );
+	    q->statusBar()->addPermanentWidget( statusBarProgressWidget, 0 );
+	    statusBarProgressWidget->show();
 	}
     } ui;
 };
