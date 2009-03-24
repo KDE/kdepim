@@ -397,7 +397,7 @@ void KABCore::setContactSelected( const QString &uid )
   mActionEditAddressee->setEnabled( singleSelected );
   mActionCopyAddresseeTo->setEnabled( someSelected && moreThanOneResource );
   mActionMoveAddresseeTo->setEnabled( someSelected && moreThanOneResource && writable );
-  mActionMail->setEnabled( someSelected );
+  mActionMail->setEnabled( someSelected && !mViewManager->selectedEmails().isEmpty());
   mActionMailVCard->setEnabled( someSelected );
   mActionChat->setEnabled( singleSelected && mKIMProxy && mKIMProxy->initialize() );
   mActionWhoAmI->setEnabled( singleSelected );
