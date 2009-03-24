@@ -454,10 +454,8 @@ void SignerResolvePage::Private::selectCertificates()
 void SignerResolvePage::Private::operationButtonClicked( int mode_ )
 {
     const Operation op = static_cast<SignerResolvePage::Operation>( mode_ );
-    signingSelected = op != EncryptOnly;
-    encryptionSelected = op != SignOnly;
-    signingCertificateBox->setEnabled( signingSelected );
-    encryptBox->setEnabled( encryptionSelected );
+    signingCertificateBox->setEnabled( op != EncryptOnly );
+    encryptBox->setEnabled( op != SignOnly );
     if ( op == SignAndEncrypt ) {
         signingProtocolSelectionWidget->setProtocolChecked( CMS, false );
         readOnlyProtocolSelectionWidget->setProtocolChecked( CMS, false );
