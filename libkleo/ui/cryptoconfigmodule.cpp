@@ -148,7 +148,7 @@ void Kleo::CryptoConfigModule::init( Layout layout ) {
       addPage(pageItem);
     }
 
-    ScrollArea* scrollArea = new ScrollArea( this );
+    QScrollArea* scrollArea = type == Tabbed ? new QScrollArea( this ) : new ScrollArea( this );
     scrollArea->setWidgetResizable( true );
 
     vlay->addWidget( scrollArea );
@@ -171,7 +171,8 @@ void Kleo::CryptoConfigModule::init( Layout layout ) {
     else // small (800x600, 640x480) desktop
       dialogHeight = 400;
     assert( scrollArea->widget() );
-    scrollArea->setMinimumHeight( qMin( compGUI->sizeHint().height(), dialogHeight ) );
+    if ( type != Tabbed )
+        scrollArea->setMinimumHeight( qMin( compGUI->sizeHint().height(), dialogHeight ) );
   }
   if ( mComponentGUIs.empty() ) {
       const QString msg = i18n("The gpgconf tool used to provide the information "
