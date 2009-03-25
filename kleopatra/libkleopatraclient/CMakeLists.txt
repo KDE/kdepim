@@ -1,5 +1,5 @@
-set( libkleopatraclient_soversion 0.2.1 )
-set( libkleopatraclient_version ${libkleopatraclient_soversion} )
+set( libkleopatraclient_version "0.2.1" )
+set( libkleopatraclient_soversion "0" )
 
 add_subdirectory( core )
 add_subdirectory( gui )
