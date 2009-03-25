@@ -458,7 +458,7 @@ void MainWindow::Private::setupActions() {
         // (come from ui.tabWidget)
         // Help menu
         { "help_about_gpg4win", i18n("About Gpg4win"), QString(),
-          0, q, SLOT(aboutGpg4Win()), QString(), false, true },
+          "gpg4win", q, SLOT(aboutGpg4Win()), QString(), false, true },
     };
 
     make_actions_from_data( action_data, /*sizeof action_data / sizeof *action_data,*/ coll );
