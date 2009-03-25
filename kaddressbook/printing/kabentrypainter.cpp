@@ -32,7 +32,7 @@
 
 KABEntryPainter::KABEntryPainter()
   : mShowAddresses( true ), mShowEmails( true ), mShowPhones( true ),
-    mShowURLs( true )
+    mShowURLs( true ), mPrintHeadLines( true )
 {
 }
 
@@ -87,6 +87,11 @@ void KABEntryPainter::setCommentFont( const QFont &font )
 void KABEntryPainter::setUseHeaderColor( bool value )
 {
   mUseHeaderColor = value;
+}
+
+void KABEntryPainter::setPrintHeadLines( bool value )
+{
+  mPrintHeadLines = value;
 }
 
 void KABEntryPainter::setShowAddresses( bool value )
@@ -144,6 +149,35 @@ int KABEntryPainter::hits( const QRectList& list, const QPoint &p )
   return -1;
 }
 
+static QString addressTypeToString(const KABC::Address& address)
+{
+  QString line1;
+  switch ( address.type() ) {
+  case KABC::Address::Dom:
+    line1 = i18n( "Domestic Address" );
+    break;
+  case KABC::Address::Intl:
+    line1 = i18n( "International Address" );
+    break;
+  case KABC::Address::Postal:
+    line1 = i18n( "Postal Address" );
+    break;
+  case KABC::Address::Parcel:
+    line1 = i18n( "Parcel Address" );
+    break;
+  case KABC::Address::Home:
+    line1 = i18n( "Home Address" );
+    break;
+  case KABC::Address::Work:
+    line1 = i18n( "Work Address" );
+    break;
+  case KABC::Address::Pref:
+  default:
+    line1 = i18n( "Preferred Address" );
+  }
+  return line1 + ':'; // TODO merge into the i18n calls?
+}
+
 bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
                                       const QRect &window, QPainter *painter,
                                       int top, bool fake, QRect *brect )
@@ -153,8 +187,6 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
   const int Height = window.height();
   const int Ruler1 = Width/32;
   const int Ruler2 = 2 * Ruler1;
-  const int Ruler3 = 3 * Ruler1;
-  QString text, line1, line2, line3, line4;
   QRect rect;
 
   // settings derived from the options:
@@ -165,7 +197,6 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
   QFontMetrics fmComment( mCommentFont );
 
   int y = top;
-  KABC::Address address;
 
   // this is used to prepare some fields for printing and decide about
   // the layout later:
@@ -183,7 +214,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
   painter->setFont( mHeaderFont );
   painter->setBrush( QBrush( mBackgroundColor ) );
   painter->setPen( mBackgroundColor );
-  text = addr.realName();
+  const QString text = addr.realName();
 
   // replacement for: api->addressbook()->literalName(entry, text);
   rect = painter->boundingRect( Ruler1, y, Width, Height,
@@ -204,7 +235,7 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
   // paint the birthday to the right:
   QDateTime dt = addr.birthday();
   if ( dt.isValid() ) {
-    line1 = KGlobal::locale()->formatDate( dt.date(), KLocale::ShortDate );
+    const QString line1 = KGlobal::locale()->formatDate( dt.date(), KLocale::ShortDate );
     if ( !fake ) {
       // create a little (1/8) space on top of the letters:
       float ypos = y + ( (float)rect.height() ) * 0.125;
@@ -221,9 +252,9 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
 
   painter->setPen( mForegroundColor );
   // This used to be addr.prefix(), but that makes no sense, it's part of the formattedName already.
-  // The role, OTOH, can be useful. E.g. formattedName="Dr Foo Bar", role="Dentist"                 
-  if ( !addr.role().isEmpty() ) {                                                                   
-    const QString line1 = addr.role().trimmed();                                                    
+  // The role, OTOH, can be useful. E.g. formattedName="Dr Foo Bar", role="Dentist"
+  if ( !addr.role().isEmpty() ) {
+    const QString line1 = addr.role().trimmed();
 
     if ( fake ) {
       rect = painter->boundingRect( Ruler1, y, Width-Ruler1, Height,
@@ -285,13 +316,13 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
   /*
   // Talk addresses:
   if ( !addr.talk.isEmpty() ) {
-    contents.push_back( &mTalkRects );
-    QStringList list;
+  contents.push_back( &mTalkRects );
+  QStringList list;
 
-    list.append( addr.talk.count() == 1 ? i18n( "Talk address:" )
-                 : i18n( "Talk addresses:" ) );
-    list += addr.talk;
-    parts.push_back( list );
+  list.append( addr.talk.count() == 1 ? i18n( "Talk address:" )
+  : i18n( "Talk addresses:" ) );
+  list += addr.talk;
+  parts.push_back( list );
   }
   */
 
@@ -308,21 +339,23 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
     const int Offset = counter > 1 ? qMax( heights[ 0 ], heights[ 1 ] ) : 0;
     QStringList list = *pos;
 
-    painter->setFont( mHeadLineFont );
-    if ( fake ) {
-      rect = painter->boundingRect( limits[ counter ].left(),
-                                    limits[ counter ].top() + heights[counter]
-                                    + Offset, limits[ counter ].width(),
-                                    limits[ counter ].height(),
-                                    Qt::AlignTop | Qt::AlignLeft, list.at( 0 ) );
-    } else {
-      painter->drawText( limits[ counter ].left(), limits[ counter ].top() +
-                         heights[ counter ] + Offset, limits[ counter ].width(),
-                         limits[ counter ].height(), Qt::AlignTop | Qt::AlignLeft,
-                         list.at( 0 ), &rect );
-    }
+    if ( mPrintHeadLines ) {
+      painter->setFont( mHeadLineFont );
+      if ( fake ) {
+        rect = painter->boundingRect( limits[ counter ].left(),
+                                      limits[ counter ].top() + heights[counter]
+                                      + Offset, limits[ counter ].width(),
+                                      limits[ counter ].height(),
+                                      Qt::AlignTop | Qt::AlignLeft, list.at( 0 ) );
+      } else {
+        painter->drawText( limits[ counter ].left(), limits[ counter ].top() +
+                           heights[ counter ] + Offset, limits[ counter ].width(),
+                           limits[ counter ].height(), Qt::AlignTop | Qt::AlignLeft,
+                           list.at( 0 ), &rect );
+      }
 
-    heights[ counter ] += rect.height();
+      heights[ counter ] += rect.height();
+    }
 
     // paint the other elements at Ruler1:
     painter->setFont( mFixedFont );
@@ -348,117 +381,43 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
     ++rpos;
   }
 
-  y = y + qMax( heights[ 0 ], heights[ 1 ] ) + qMax( heights[ 2 ], heights[ 3 ] );
+  y += qMax( heights[ 0 ], heights[ 1 ] ) + qMax( heights[ 2 ], heights[ 3 ] );
   // ^^^^^ done with emails, telephone, URLs and talk addresses
 
   // now print the addresses:
-  KABC::Address::List addresses = addr.addresses();
-  if ( addresses.count() > 0 && mShowAddresses ) {
-    y += fmBody.lineSpacing() / 2;
-    painter->setFont( mHeadLineFont );
-    if ( fake ) {
-      rect = painter->boundingRect( 0, y, Width, Height, Qt::AlignTop | Qt::AlignLeft,
-                                    addresses.count() == 1 ? i18n( "Address:" )
-                                    : i18n( "Addresses:" ) );
-    } else {
-      painter->drawText( 0, y, Width, Height, Qt::AlignTop | Qt::AlignLeft,
-                         addresses.count() == 1 ? i18n( "Address:" )
-                         : i18n( "Addresses:" ), &rect );
-    }
-
-    y += rect.height();
-    y += fmBody.lineSpacing() / 4;
-    painter->setFont( mBodyFont );
-
+  const KABC::Address::List addresses = addr.addresses();
+  if ( !addresses.isEmpty() && mShowAddresses ) {
+    //y += fmBody.lineSpacing() / 2;
     KABC::Address::List::ConstIterator it;
     for ( it = addresses.constBegin(); it != addresses.constEnd(); ++it ) {
-      address = *it;
-      switch ( address.type() ) {
-        case KABC::Address::Dom:
-          line1 = i18n( "Domestic Address" );
-          break;
-        case KABC::Address::Intl:
-          line1 = i18n( "International Address" );
-          break;
-        case KABC::Address::Postal:
-          line1 = i18n( "Postal Address" );
-          break;
-        case KABC::Address::Parcel:
-          line1 = i18n( "Parcel Address" );
-          break;
-        case KABC::Address::Home:
-          line1 = i18n( "Home Address" );
-          break;
-        case KABC::Address::Work:
-          line1 = i18n( "Work Address" );
-          break;
-        case KABC::Address::Pref:
-        default:
-          line1 = i18n( "Preferred Address" );
-      }
+      const KABC::Address address = *it;
 
-      line1 += QString::fromLatin1( ":" );
-      text.clear();
-
-      if ( !address.extended().isEmpty() )
-        text = address.extended().trimmed();
-
-      if ( !text.isEmpty() ) {
-        line1 = line1 + QString::fromLatin1( " (" ) + text +
-        QString::fromLatin1( ")" );
-      }
-
-      line1 = line1.trimmed();
-      line2 = address.street();
-      if ( !address.postOfficeBox().isEmpty() )
-        line2 += QString::fromLatin1( " - " ) + address.postOfficeBox();
-
-      // print address in american style, this will need localization: (see BUG #80419)
-      line3 = address.locality() + ( address.region().isEmpty() ?
-              QString::fromLatin1( "" ) : QString::fromLatin1( ", " ) +
-              address.region() ) + ( address.postalCode().isEmpty()
-              ? QString::fromLatin1( "" ) : QString::fromLatin1( " " )
-              + address.postalCode() );
-      line4 = address.country();
-
-      if ( fake ) {
-        rect = painter->boundingRect( Ruler1, y, Width - Ruler1, Height,
-                                      Qt::AlignTop | Qt::AlignLeft, line1 );
-      } else {
-        painter->drawText( Ruler1, y, Width - Ruler1, Height,
-                           Qt::AlignTop | Qt::AlignLeft, line1, &rect );
-      }
-
-      y += rect.height();
-      if ( !line2.isEmpty() ) {
+      if ( mPrintHeadLines ) {
+        // First line: address type
+        painter->setFont( mHeadLineFont );
+        QString headerText = addressTypeToString(*it);
         if ( fake ) {
-          rect = painter->boundingRect( Ruler2, y, Width - Ruler2, Height,
-                                        Qt::AlignTop | Qt::AlignLeft, line2 );
+          rect = painter->boundingRect( 0, y, Width, Height, Qt::AlignTop | Qt::AlignLeft,
+                                        headerText );
         } else {
-          painter->drawText( Ruler2, y, Width - Ruler2, Height,
-                             Qt::AlignTop | Qt::AlignLeft, line2, &rect );
+          painter->drawText( 0, y, Width, Height, Qt::AlignTop | Qt::AlignLeft,
+                             headerText, &rect );
         }
         y += rect.height();
       }
 
-      if ( !line3.isEmpty() ) {
-        if ( fake ) {
-          rect = painter->boundingRect( Ruler2, y, Width - Ruler2, Height,
-                                        Qt::AlignTop | Qt::AlignLeft, line3 );
-        } else {
-          painter->drawText( Ruler2, y, Width - Ruler2, Height,
-                             Qt::AlignTop | Qt::AlignLeft, line3, &rect );
-        }
-        y += rect.height();
-      }
+      y += fmBody.lineSpacing() / 4;
+      painter->setFont( mBodyFont );
 
-      if ( !line4.isEmpty() ) {
+      const QString formattedAddress = (*it).formattedAddress();
+      const QStringList laddr = formattedAddress.split( QChar( '\n' ), QString::SkipEmptyParts );
+      Q_FOREACH(const QString& line, laddr) {
         if ( fake ) {
-          rect = painter->boundingRect( Ruler2, y, Width - Ruler2, Height,
-                                        Qt::AlignTop | Qt::AlignLeft, line4 );
+          rect = painter->boundingRect( Ruler1, y, Width - Ruler1, Height,
+                                        Qt::AlignTop | Qt::AlignLeft, line );
         } else {
-          painter->drawText( Ruler2, y, Width - Ruler2, Height,
-                             Qt::AlignTop | Qt::AlignLeft, line4, &rect );
+          painter->drawText( Ruler1, y, Width - Ruler1, Height,
+                             Qt::AlignTop | Qt::AlignLeft, line, &rect );
         }
         y += rect.height();
       }
@@ -466,11 +425,11 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
       y += fmBody.lineSpacing() / 4;
       if ( !address.label().isEmpty() ) {
         if ( fake ) {
-          rect = painter->boundingRect( Ruler2, y, Width - Ruler2, Height,
+          rect = painter->boundingRect( Ruler1, y, Width - Ruler1, Height,
                                         Qt::AlignTop | Qt::AlignLeft,
                                         i18n( "(Deliver to:)" ) );
         } else {
-          painter->drawText( Ruler2, y, Width - Ruler2, Height,
+          painter->drawText( Ruler1, y, Width - Ruler1, Height,
                              Qt::AlignTop | Qt::AlignLeft,
                              i18n( "(Deliver to:)" ), &rect );
         }
@@ -478,10 +437,10 @@ bool KABEntryPainter::printAddressee( const KABC::Addressee &addr,
         y += rect.height();
         y += fmBody.lineSpacing() / 4;
         if ( fake ) {
-          rect = painter->boundingRect( Ruler3, y, Width - Ruler3, Height,
+          rect = painter->boundingRect( Ruler2, y, Width - Ruler2, Height,
                                         Qt::AlignTop | Qt::AlignLeft, address.label() );
         } else {
-          painter->drawText( Ruler3, y, Width - Ruler3, Height,
+          painter->drawText( Ruler2, y, Width - Ruler2, Height,
                              Qt::AlignTop | Qt::AlignLeft, address.label(), &rect );
         }
 
