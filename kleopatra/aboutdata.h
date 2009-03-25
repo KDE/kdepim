@@ -40,4 +40,9 @@ public:
   AboutData();
 };
 
+class AboutGpg4WinData : public KAboutData {
+public:
+    AboutGpg4WinData();
+};
+
 #endif // __ABOUTDATA_H__
