@@ -50,12 +50,14 @@ class AddresseeEditorExtension : public KAB::ExtensionWidget
       This method should be reimplemented and return a unique identifier.
      */
     virtual QString identifier() const;
-
+  private slots:
+    void emitModifiedAddresses();
     QSize minimumSizeHint() const;
 
   private:
     AddresseeEditorBase *mAddresseeEditor;
     bool mDirty;
+    KABC::Addressee::List addressees;
 };
 
 #endif
