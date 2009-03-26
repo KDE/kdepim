@@ -123,6 +123,13 @@
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QCheckBox" name="kcfg_allowExternalReferences" >
+        <property name="text" >
+         <string>Allow external references in HTML</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </widget>
    </item>

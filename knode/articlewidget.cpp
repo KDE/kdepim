@@ -334,6 +334,7 @@ void ArticleWidget::readConfig()
   mFancyToggle->setChecked( knGlobals.settings()->interpretFormatTags() );
 
   mShowHtml = knGlobals.settings()->alwaysShowHTML();
+  mViewer->setOnlyLocalReferences( !knGlobals.settings()->allowExternalReferences() );
 
   KConfigGroup conf(knGlobals.config(), "READNEWS" );
   mAttachmentStyle = conf.readEntry( "attachmentStyle", "inline" );

@@ -152,6 +152,10 @@
       <label>Prefer HTML to plain text</label>
       <default>false</default>
     </entry>
+    <entry name="allowExternalReferences" type="Bool">
+      <label>Allow external references in HTML</label>
+      <default>false</default>
+    </entry>
   </group>
     <!-- Navigation options -->
     <group name="READNEWS_NAVIGATION">
