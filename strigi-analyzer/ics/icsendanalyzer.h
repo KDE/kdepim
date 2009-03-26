@@ -37,7 +37,7 @@ public:
   enum Field { ProductId = 0, Events, Journals, Todos, TodosCompleted, TodosOverdue };
 
   const char* name() const { return "IcsEndAnalyzer"; }
-  bool checkHeader( const char* header, int32_t headersize ) const;
+  bool checkHeader( const char* header, qint32 headersize ) const;
   STRIGI_ENDANALYZER_RETVAL analyze(  Strigi::AnalysisResult& idx, Strigi::InputStream* in );
 
 private:

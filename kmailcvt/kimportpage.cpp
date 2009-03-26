@@ -15,10 +15,10 @@
  *                                                                         *
  ***************************************************************************/
 
+#include "kimportpage.h"
+
 #include <kapplication.h>
 #include <kstandarddirs.h>
-
-#include "kimportpage.h"
 
 KImportPage::KImportPage(QWidget *parent ) : KImportPageDlg(parent) {
 

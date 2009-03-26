@@ -39,10 +39,10 @@ IcsEndAnalyzer::IcsEndAnalyzer( const IcsEndAnalyzerFactory* f )
 {
 }
 
-bool IcsEndAnalyzer::checkHeader( const char* header, int32_t headersize ) const
+bool IcsEndAnalyzer::checkHeader( const char* header, qint32 headersize ) const
 {
   const char* magic = "BEGIN:VCALENDAR";
-  int32_t magicLength = strlen( magic );
+  qint32 magicLength = strlen( magic );
 
   return headersize >= magicLength && !strncmp( magic, header, magicLength );
 }
@@ -58,7 +58,7 @@ STRIGI_ENDANALYZER_RETVAL IcsEndAnalyzer::analyze( Strigi::AnalysisResult& idx, 
   const char* data;
   //FIXME: large calendars will exhaust memory; incremental loading would be
   // nice
-  int32_t nread = in->read( data, in->size(), in->size() );
+  qint32 nread = in->read( data, in->size(), in->size() );
   if ( nread <= 0 ) {
     //kDebug() <<"Reading data from input stream failed";
     return Strigi::Error;
@@ -74,8 +74,8 @@ STRIGI_ENDANALYZER_RETVAL IcsEndAnalyzer::analyze( Strigi::AnalysisResult& idx, 
   }
 
   idx.addValue( m_factory->field( ProductId ), cal.productId().toUtf8().data() );
-  idx.addValue( m_factory->field( Events ), (uint32_t)cal.events().count() );
-  idx.addValue( m_factory->field( Journals ), (uint32_t)cal.journals().count() );
+  idx.addValue( m_factory->field( Events ), (quint32)cal.events().count() );
+  idx.addValue( m_factory->field( Journals ), (quint32)cal.journals().count() );
   Todo::List todos = cal.todos();
 
   // count completed and overdue
@@ -89,9 +89,9 @@ STRIGI_ENDANALYZER_RETVAL IcsEndAnalyzer::analyze( Strigi::AnalysisResult& idx, 
     }
   }
 
-  idx.addValue( m_factory->field( Todos ), (uint32_t)todos.count() );
-  idx.addValue( m_factory->field( TodosCompleted ), (uint32_t)completed );
-  idx.addValue( m_factory->field( TodosOverdue ), (uint32_t)overdue );
+  idx.addValue( m_factory->field( Todos ), (quint32)todos.count() );
+  idx.addValue( m_factory->field( TodosCompleted ), (quint32)completed );
+  idx.addValue( m_factory->field( TodosOverdue ), (quint32)overdue );
 
   cal.close();
 

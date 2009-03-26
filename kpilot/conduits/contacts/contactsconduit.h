@@ -78,7 +78,7 @@ public:
 	/* virtual */ void _copy( const HHRecord *from, Record *to  );
 	
 	/**
-	 * Give implementing conduits the change to clean up after a succesful sync.
+	 * Give implementing conduits the change to clean up after a successful sync.
 	 */
 	/* virtual */ void syncFinished();
 	

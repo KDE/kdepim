@@ -131,13 +131,13 @@ void FilterKMail_maildir::importFiles( FilterInfo *info, const QString& dirName)
     for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile, ++currentFile) {
         if(info->shouldTerminate()) return;
         QString temp_mailfile = *mailFile;
-        if (!(temp_mailfile.endsWith(".index") || temp_mailfile.endsWith(".index.ids") ||
-                temp_mailfile.endsWith(".index.sorted") || temp_mailfile.endsWith(".uidcache") )) {
+        if (!(temp_mailfile.endsWith(QLatin1String(".index")) || temp_mailfile.endsWith(QLatin1String(".index.ids")) ||
+                temp_mailfile.endsWith(QLatin1String(".index.sorted")) || temp_mailfile.endsWith(QLatin1String(".uidcache")) )) {
             if(!generatedPath) {
                 _path = "KMail-Import";
                 QString _tmp = dir.filePath(*mailFile);
                 _tmp = _tmp.remove( mailDir, Qt::CaseSensitive );
-                QStringList subFList = _tmp.split( "/", QString::SkipEmptyParts );
+                QStringList subFList = _tmp.split( '/', QString::SkipEmptyParts );
                 for ( QStringList::Iterator it = subFList.begin(); it != subFList.end(); ++it ) {
                     QString _cat = *it;
                     if(!(_cat == *mailFile)) {

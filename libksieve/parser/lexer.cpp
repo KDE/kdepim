@@ -159,8 +159,8 @@ static inline bool is8Bit( signed char ch ) {
 }
 
 static QString removeCRLF( const QString & s ) {
-  const bool CRLF = s.endsWith( "\r\n" );
-  const bool LF = !CRLF && s.endsWith( "\n" );
+  const bool CRLF = s.endsWith( QLatin1String("\r\n") );
+  const bool LF = !CRLF && s.endsWith( '\n' );
 
   const int e = CRLF ? 2 : LF ? 1 : 0 ;  // what to chop off at the end
 
@@ -168,7 +168,7 @@ static QString removeCRLF( const QString & s ) {
 }
 
 static QString removeDotStuff( const QString & s ) {
-    return s.startsWith( ".." ) ? s.mid( 1 ) : s ;
+    return s.startsWith( QLatin1String("..") ) ? s.mid( 1 ) : s ;
 }
 
 namespace KSieve {

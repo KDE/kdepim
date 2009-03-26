@@ -63,7 +63,7 @@ RawSocketConsole::RawSocketConsole(QWidget* parent) :
 
 void RawSocketConsole::execClicked()
 {
-  const QString command = ui.commandEdit->text().trimmed() + "\n";
+  const QString command = ui.commandEdit->text().trimmed() + '\n';
   if ( command.isEmpty() )
     return;
   mSocket->write( command.toUtf8() );

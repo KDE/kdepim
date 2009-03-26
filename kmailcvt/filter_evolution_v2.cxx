@@ -88,8 +88,8 @@ void FilterEvolution_v2::import(FilterInfo *info)
         for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile) {
             if (info->shouldTerminate()) break;
             QString temp_mailfile = *mailFile;
-            if (temp_mailfile.endsWith(".cmeta") || temp_mailfile.endsWith(".ev-summary") ||
-                temp_mailfile.endsWith(".ibex.index") || temp_mailfile.endsWith(".ibex.index.data") ) {}
+            if (temp_mailfile.endsWith(QLatin1String(".cmeta")) || temp_mailfile.endsWith(QLatin1String(".ev-summary")) ||
+                temp_mailfile.endsWith(QLatin1String(".ibex.index")) || temp_mailfile.endsWith(QLatin1String(".ibex.index.data")) ) {}
             else {
                 info->addLog( i18n("Start import file %1...", temp_mailfile ) );
                 importMBox(info, mailDir + temp_mailfile , temp_mailfile, QString());
@@ -125,8 +125,8 @@ void FilterEvolution_v2::importDirContents(FilterInfo *info, const QString& dirN
     QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
     for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile) {
         QString temp_mailfile = *mailFile;
-        if (temp_mailfile.endsWith(".cmeta") || temp_mailfile.endsWith(".ev-summary") ||
-            temp_mailfile.endsWith(".ibex.index") || temp_mailfile.endsWith(".ibex.index.data") ) {}
+        if (temp_mailfile.endsWith(QLatin1String(".cmeta")) || temp_mailfile.endsWith(QLatin1String(".ev-summary")) ||
+            temp_mailfile.endsWith(QLatin1String(".ibex.index")) || temp_mailfile.endsWith(QLatin1String(".ibex.index.data")) ) {}
         else {
             info->addLog( i18n("Start import file %1...", temp_mailfile ) );
             importMBox(info, (dirName + '/' + temp_mailfile) , KMailRootDir, KMailSubDir);

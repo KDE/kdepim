@@ -194,9 +194,9 @@ void AgentWidget::cloneAgent( KJob* job )
     const QByteArray signature( method.signature() );
     if ( signature.isEmpty() )
       continue;
-    if ( signature.startsWith( "set" ) || !signature.contains( "()" ) ) // setter or takes parameters
+    if ( signature.startsWith( "set" ) || !signature.contains( "()" ) ) // setter or takes parameters // krazy:exclude=strings
       continue;
-    if ( signature.startsWith( "Introspect" ) ) // D-Bus stuff
+    if ( signature.startsWith( "Introspect" ) ) // D-Bus stuff // krazy:exclude=strings
       continue;
     const QString methodName = QString::fromLatin1( signature.left( signature.indexOf( '(' ) ) );
     const QDBusMessage reply = sourceIface.call( methodName );

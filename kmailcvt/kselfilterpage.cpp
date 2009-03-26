@@ -15,11 +15,7 @@
  *                                                                         *
  ***************************************************************************/
 
-#include <kstandarddirs.h>
-#include <q3textedit.h>
-#include <QCheckBox> 
-#include <klocale.h>
-#include "filters.hxx"
+#include "kselfilterpage.h"
 
 #include "filter_mbox.hxx"
 #include "filter_oe.hxx"
@@ -36,7 +32,12 @@
 #include "filter_thebat.hxx"
 #include "filter_lnotes.hxx"
 
-#include "kselfilterpage.h"
+#include "filters.hxx"
+
+#include <kstandarddirs.h>
+#include <q3textedit.h>
+#include <QCheckBox> 
+#include <klocale.h>
 
 KSelFilterPage::KSelFilterPage(QWidget *parent ) : KSelFilterPageDlg(parent) {
 

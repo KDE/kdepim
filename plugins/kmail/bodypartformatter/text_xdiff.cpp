@@ -98,15 +98,15 @@ namespace {
         if ( !line.isEmpty() ) {
           if ( line.startsWith( "+++" ) ) {
             style = fileAddStyle;
-          } else if ( line.startsWith( "---" ) ) {
+          } else if ( line.startsWith( QLatin1String("---") ) ) {
             style = fileRemoveStyle;
           } else if ( line.startsWith( '+' ) || line.startsWith( '>' ) ) {
             style = addedLineStyle;
           } else if ( line.startsWith( '-' ) || line.startsWith( '<' ) ) {
             style = removedLineStyle;
-          } else if ( line.startsWith( "==") ) {
+          } else if ( line.startsWith( QLatin1String("==") ) ) {
             style = sepStyle;
-          } else if ( line.startsWith( "@@" ) ) {
+          } else if ( line.startsWith( QLatin2String("@@") ) ) {
             style = chunkStyle;
           }
         }

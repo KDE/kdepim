@@ -358,7 +358,7 @@ EGroupwareWizard::~EGroupwareWizard()
 
 QString EGroupwareWizard::validate()
 {
-  if( !mXMLRPC->text().endsWith( "xmlrpc.php" ) )
+  if( !mXMLRPC->text().endsWith( QLatin1String("xmlrpc.php") ) )
     return i18n( "Invalid path to xmlrpc.php entered." );
 
   if( mServerEdit->text().isEmpty() ||

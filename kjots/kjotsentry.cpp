@@ -287,7 +287,7 @@ bool KJotsBook::openBook(const QString& filename)
         QByteArray firstLine = file.readLine();
         file.reset();
 
-        if ( !firstLine.startsWith("<?xml") ) {
+        if ( !firstLine.startsWith( "<?xml" ) ) { // krazy:exclude=strings
             kDebug(0) << m_fileName << " is an old-style book." ;
 
             QTextStream st(&file);

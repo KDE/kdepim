@@ -398,7 +398,7 @@ QString FilterOE::getFolderName(QString filename)
 
     while (!found)
     {
-        for ( FolderStructureIterator it = folderStructure.begin(); it != folderStructure.end(); it++) {
+        for ( FolderStructureIterator it = folderStructure.begin(); it != folderStructure.end(); ++it) {
             FolderStructure tmp = *it;
             if(foundFilename == false) {
                 QString _tmpFileName = tmp[1];

@@ -29,7 +29,7 @@ VcfEndAnalyzer::VcfEndAnalyzer( const VcfEndAnalyzerFactory *factory )
 {
 }
 
-bool VcfEndAnalyzer::checkHeader( const char* header, int32_t headersize ) const
+bool VcfEndAnalyzer::checkHeader( const char* header, qint32 headersize ) const
 {
   return headersize >= 11 && !strncmp( "BEGIN:VCARD", header, 11 );
 }

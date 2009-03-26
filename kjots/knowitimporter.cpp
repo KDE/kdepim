@@ -113,7 +113,7 @@ QDomElement KnowItImporter::addNote( KnowItNote note)
   } else {
       QString contents = note.content;
       if ( note.links.size() > 0 ) {
-        if ( contents.endsWith( "</body></html>" ) ) {
+        if ( contents.endsWith( QLatin1String("</body></html>") ) ) {
           contents.chop( 14 );
         }
         contents.append( "<br /><br /><p><b>Links:</b></p>\n<ul>\n" );
@@ -151,7 +151,7 @@ void KnowItImporter::buildDomDocument()
   parent.appendChild( openTag );
   m_domDoc.appendChild( parent );
 
-  foreach (KnowItNote n, m_notes)
+  foreach (const KnowItNote &n, m_notes)
   {
     QDomElement e = addNote( n );
     parent.appendChild(e);
@@ -180,7 +180,7 @@ void KnowItImporter::buildNoteTree( KUrl url )
         continue;
       }
 
-      foreach( QByteArray header, entryHeaders ) {
+      foreach( const QByteArray &header, entryHeaders ) {
         if ( line.startsWith( header ) ) {
           kDebug() << "init" << line << header;
           line = line.right( line.size() - header.size() ).trimmed();
@@ -214,12 +214,12 @@ void KnowItImporter::buildNoteTree( KUrl url )
             QString target;
             while (( !in.atEnd() ) && ( !contentLine.trimmed().isEmpty() ) ) {
               kDebug() << contentLine;
-              if ( contentLine.startsWith( "\\Link" ) ) {
+              if ( contentLine.startsWith( QLatin1String("\\Link") ) ) {
                 url = contentLine.right( contentLine.size() - 5 ).trimmed();
                 contentLine = in.readLine();
                 continue;
               }
-              if ( contentLine.startsWith( "\\Descr" ) ) {
+              if ( contentLine.startsWith( QLatin1String("\\Descr") ) ) {
                 target = contentLine.right( contentLine.size() - 6 ).trimmed();
                 contentLine = in.readLine();
                 continue;
@@ -229,8 +229,8 @@ void KnowItImporter::buildNoteTree( KUrl url )
                 link.first = url;
                 link.second = target;
                 n.links << link;
-                url = QString();
-                target = QString();
+                url.clear();
+                target.clear();
               }
               contents.append( contentLine );
               contentLine = in.readLine();

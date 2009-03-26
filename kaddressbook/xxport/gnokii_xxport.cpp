@@ -808,7 +808,7 @@ bool GNOKIIXXPort::exportContacts( const KABC::AddresseeList &list, const QStrin
 		if (addr->isEmpty())
 			continue;
 		// don't write back SIM-card entries !
-		if (addr->custom(APP, "X_GSM_STORE_AT").startsWith("SM"))
+		if (addr->custom(APP, "X_GSM_STORE_AT").startsWith(QLatin1String("SM")))
 			continue;
 
 		progress->setValue(entries_written++);

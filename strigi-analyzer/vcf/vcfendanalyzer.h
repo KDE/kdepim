@@ -37,7 +37,7 @@ class PIMSTRIGI_ANALYZER_EXPORT VcfEndAnalyzer : public Strigi::StreamEndAnalyze
     VcfEndAnalyzer( const VcfEndAnalyzerFactory *factory );
 
     const char* name() const { return "VcfEndAnalyzer"; }
-    bool checkHeader( const char* header, int32_t headersize ) const;
+    bool checkHeader( const char* header, qint32 headersize ) const;
     STRIGI_ENDANALYZER_RETVAL analyze(  Strigi::AnalysisResult& idx, Strigi::InputStream* in );
 
   private:

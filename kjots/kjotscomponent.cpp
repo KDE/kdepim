@@ -86,7 +86,7 @@ KJotsComponent::KJotsComponent(QWidget* parent, KActionCollection *collection) :
 {
     actionCollection = collection;
     searchDialog = 0;
-    activeAnchor = QString();
+    activeAnchor.clear();
 
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.registerObject("/KJotsComponent", this, QDBusConnection::ExportScriptableSlots);
@@ -328,7 +328,7 @@ void KJotsComponent::cleanupOldBackups()
   {
     for( int bkup=1; bkup <= maxBackups; bkup++)
     {
-      fileSet << file + "." + QString::number(bkup) + "~";
+      fileSet << file + '.' + QString::number(bkup) + '~';
     }
   }
 
@@ -1198,7 +1198,7 @@ void KJotsComponent::saveToFile(KJotsComponent::ExportType type)
                     QString line = inStream.readLine();
                     QString trimmed = line.trimmed();
 
-                    if ( trimmed.startsWith("<ID>") && trimmed.endsWith("</ID>") ) {
+                    if ( trimmed.startsWith(QLatin1String("<ID>")) && trimmed.endsWith(QLatin1String("</ID>")) ) {
                         outStream << "<ID>0</ID>\n";
                     } else {
                         outStream << line << '\n';
@@ -1230,7 +1230,7 @@ void KJotsComponent::importBook()
                                                     "\n*.kno|" + i18n( "KnowIt files" ) );
 
     if (!openUrl.isEmpty()) {
-        if ( openUrl.path().endsWith( ".book" ) ) {
+        if ( openUrl.path().endsWith( QLatin1String(".book") ) ) {
             KTemporaryFile file;
             file.setPrefix(KStandardDirs::locateLocal("data","kjots/"));
             file.setSuffix(".book");
@@ -1246,7 +1246,7 @@ void KJotsComponent::importBook()
                 }
             }
         }
-        if ( openUrl.path().endsWith( ".kno" ) ) {
+        if ( openUrl.path().endsWith( QLatin1String(".kno") ) ) {
             KnowItImporter kni;
             KJotsBook *newBook = kni.importFromUrl( openUrl );
             if (newBook)

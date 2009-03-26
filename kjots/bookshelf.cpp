@@ -118,7 +118,7 @@ void Bookshelf::loadBooks ( void )
     //Sort books and add them in order. KConfig doesn't have a built-in
     //ULongLongList so we do our own thing for now.
     QString orderString = KJotsSettings::bookshelfOrder();
-    QStringList idStrings = orderString.split(",");
+    QStringList idStrings = orderString.split(',');
     foreach ( const QString &idString, idStrings ) {
         quint64 id = idString.toLongLong();
         foreach ( KJotsBook *book, books ) {

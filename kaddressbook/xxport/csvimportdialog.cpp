@@ -399,24 +399,24 @@ void CSVImportDialog::initGUI()
   mDelimiterGroup = new QButtonGroup( this );
   mDelimiterGroup->setExclusive( true );
 
-  mRadioComma = new QRadioButton( i18nc( "@option:radio Field seperator", "Comma" ), group );
+  mRadioComma = new QRadioButton( i18nc( "@option:radio Field separator", "Comma" ), group );
   mRadioComma->setChecked( true );
   mDelimiterGroup->addButton( mRadioComma, 0 );
   delimiterLayout->addWidget( mRadioComma, 0, 0 );
 
-  mRadioSemicolon = new QRadioButton( i18nc( "@option:radio Field seperator", "Semicolon" ), group );
+  mRadioSemicolon = new QRadioButton( i18nc( "@option:radio Field separator", "Semicolon" ), group );
   mDelimiterGroup->addButton( mRadioSemicolon, 1 );
   delimiterLayout->addWidget( mRadioSemicolon, 0, 1 );
 
-  mRadioTab = new QRadioButton( i18nc( "@option:radio Field seperator", "Tabulator" ), group );
+  mRadioTab = new QRadioButton( i18nc( "@option:radio Field separator", "Tabulator" ), group );
   mDelimiterGroup->addButton( mRadioTab, 2 );
   delimiterLayout->addWidget( mRadioTab, 1, 0 );
 
-  mRadioSpace = new QRadioButton( i18nc( "@option:radio Field seperator", "Space" ), group );
+  mRadioSpace = new QRadioButton( i18nc( "@option:radio Field separator", "Space" ), group );
   mDelimiterGroup->addButton( mRadioSpace, 3 );
   delimiterLayout->addWidget( mRadioSpace, 1, 1 );
 
-  mRadioOther = new QRadioButton( i18nc( "@option:radio Custum field seperator", "Other" ), group );
+  mRadioOther = new QRadioButton( i18nc( "@option:radio Custum field separator", "Other" ), group );
   mDelimiterGroup->addButton( mRadioOther, 4 );
   delimiterLayout->addWidget( mRadioOther, 0, 2 );
 

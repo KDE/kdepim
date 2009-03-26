@@ -73,7 +73,7 @@ class SetupLDAPSearchAccount : public KConfigPropagator::Change
         group.writeEntry( "Default domain", basedn );
       }
 
-      basedn.replace(".",",dc=");
+      basedn.replace('.',",dc=");
       basedn.prepend("dc=");
 
       // Set the changes

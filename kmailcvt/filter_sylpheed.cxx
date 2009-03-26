@@ -130,7 +130,8 @@ void FilterSylpheed::importFiles( FilterInfo *info, const QString& dirName)
     for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile, ++currentFile) {
         if(info->shouldTerminate()) return;
         QString _mfile = *mailFile;
-        if (!(_mfile.endsWith(".sylpheed_cache") || _mfile.endsWith(".sylpheed_mark") || _mfile.endsWith(".mh_sequences") )) {
+        if (!(_mfile.endsWith(QLatin1String(".sylpheed_cache")) || _mfile.endsWith(QLatin1String(".sylpheed_mark"))
+                    || _mfile.endsWith(QLatin1String(".mh_sequences")) )) {
             if(!generatedPath) {
                 _path = "Sylpheed-Import/";
                 QString _tmp = dir.filePath(*mailFile);

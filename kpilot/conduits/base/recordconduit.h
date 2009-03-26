@@ -129,7 +129,7 @@ protected:
 	virtual void _copy( const HHRecord *from, Record *to  ) = 0;
 	
 	/**
-	 * Give implementing conduits the change to clean up after a succesful sync.
+	 * Give implementing conduits the change to clean up after a successful sync.
 	 */
 	virtual void syncFinished() {};
 	

@@ -40,7 +40,7 @@ public:
 	/* virtual */ bool initDataProxies();
 	
 	/**
-	 * Give implementing conduits the change to clean up after a succesful sync.
+	 * Give implementing conduits the change to clean up after a successful sync.
 	 */
 	/* virtual */ void syncFinished();
 	

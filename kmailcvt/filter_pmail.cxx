@@ -297,7 +297,7 @@ bool FilterPMail::parseFolderMatrix()
                 break;
             QString tmpArray[5];
             tmpRead.remove(tmpRead.length() -2,2);
-            QStringList tmpList = QString(tmpRead).split(",", QString::SkipEmptyParts);
+            QStringList tmpList = QString(tmpRead).split(',', QString::SkipEmptyParts);
             int i = 0;
             for ( QStringList::Iterator it = tmpList.begin(); it != tmpList.end(); ++it, i++) {
                 QString _tmp = *it;
@@ -323,7 +323,7 @@ QString FilterPMail::getFolderName(QString ID)
 
     while (!found)
     {
-        for ( FolderStructureIterator it = folderMatrix.begin(); it != folderMatrix.end(); it++) {
+        for ( FolderStructureIterator it = folderMatrix.begin(); it != folderMatrix.end(); ++it) {
             FolderStructure tmp = *it;
 
             QString _ID = tmp[2];
