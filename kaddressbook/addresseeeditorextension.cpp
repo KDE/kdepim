@@ -22,6 +22,7 @@
 */
 
 #include <qlayout.h>
+#include <qtimer.h>
 
 #include <klocale.h>
 
@@ -51,16 +52,22 @@ AddresseeEditorExtension::~AddresseeEditorExtension()
 
 void AddresseeEditorExtension::contactsSelectionChanged()
 {
+  qDebug("void AddresseeEditorExtension::contactsSelectionChanged()" );
   const KABC::Addressee::List selectedAddressees = selectedContacts();
-  KABC::Addressee::List addressees;
-
+  KABC::Addressee::List modifiedAddress;
   if ( mAddresseeEditor->dirty() ) {
     mAddresseeEditor->save();
     addressees.append( mAddresseeEditor->addressee() );
-    emit modified( addressees );
+    modifiedAddress = addressees;
+    QTimer::singleShot(0, this, SLOT(emitModifiedAddresses()));
   }
 
   mAddresseeEditor->setAddressee( selectedAddressees[ 0 ] );
+}
+
+void AddresseeEditorExtension::emitModifiedAddresses()
+{
+  emit modified( addressees );
 }
 
 QString AddresseeEditorExtension::title() const
