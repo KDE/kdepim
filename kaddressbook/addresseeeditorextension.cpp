@@ -52,7 +52,6 @@ AddresseeEditorExtension::~AddresseeEditorExtension()
 
 void AddresseeEditorExtension::contactsSelectionChanged()
 {
-  qDebug("void AddresseeEditorExtension::contactsSelectionChanged()" );
   const KABC::Addressee::List selectedAddressees = selectedContacts();
   KABC::Addressee::List modifiedAddress;
   if ( mAddresseeEditor->dirty() ) {
