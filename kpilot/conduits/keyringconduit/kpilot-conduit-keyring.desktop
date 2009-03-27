@@ -3,6 +3,7 @@ Type=Service
 Comment=This conduit syncs the handheld keyring database with a database stored on the PC.
 Comment[et]=See kanal sünkroniseerib pihuarvuti võtmerõnga andmebaasi ja PC-s leiduva andmebaasi.
 Comment[ga]=Sioncrónaíonn an seoladán seo fáinní eochracha an ríomhaire boise le bunachar sonraí ar an ríomhaire deisce.
+Comment[gl]=Este conduto sincroniza o base de datos do chaveiro dun aparello portátil cunha base de datos almacenada no computador.
 Comment[ja]=このコンジットはハンドヘルドのキーリングデータベースを PC のデータベースと同期させます。
 Comment[nb]=Denne koblingen synkroniserer hånddatorens nøkkelring-database med en database lagret på PC-en.
 Comment[nds]=Disse Kanaal synkroniseert dat Slötelbund op den Handreekner mit een op den Reekner.
