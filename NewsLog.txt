@@ -1,3 +1,22 @@
+Friday, March 27th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3482: Kontact creates invitations with reminders for one week (1W) that Outlook 2003 does not understand
+* kolab/issue3263: Support custom templates when forwarding with filters, and also support fixed recipients for templates
+* kolab/issue3471: Copy menu entry doubled in context menu
+* kolab/issue3312: Crashes if a contact is changed with the contact editor
+* In KMail, fix crash when changing the configuration
+* When deleting templates in KMail, make sure they are removed from the configuration file
+* Remove one unnecessary sync in KNotes
+
+Merges
+------
+
+* Merge the forwarding fixes from enterprise4, to prevent corrupt mails after using filters for forwarding
+
+
 Friday, March 20th 2009
 
 Problems addressed
