@@ -1,3 +1,32 @@
+Friday, March 27th 2009
+
+Problems addressed
+------------------
+
+* Use the default KDE dialog for "About Gpg4win"
+* Honor the ASCII armor setting in the Kleopatra GUI.
+
+Merges
+------
+
+* Merges from KDE 4.2 branch:
+    - kolab/issue3502: Special email with .ifb attachment busy hangs Kontact
+    - kolab/issue3508: text selection not movable by mouse in email body composer
+    - Don't ignore the theme color in the hour label in the agenda view (KDE bug 187666)
+    - Don't cut off the server check label in the account wizard (KDE bug 186401)
+    - In Akregator, make "Open in Tab/External Browser" work with multiple articles selected (KDE bug 187856)
+    - In Akregator, disable article actions if no article is selected (KDE bug 163605)
+    - Make pasting journals work
+    - Fix inconsistencies with month view navigation
+    - Various little KOrganizer and KNotes GUI fixes
+
+* Merges from enterprise35 branch:
+    - kolab/issue3471: Copy menu entry doubled in context menu
+    - kolab/issue3482: Kontact creates invitations with reminders for one week (1W) that Outlook 2003 does not understand
+    - kolab/issue3312: Crashes if a contact is changed with the contact editor
+    - Merge some KNotes fixes
+
+
 Friday, March 20th 2009
 
 Problems addressed
