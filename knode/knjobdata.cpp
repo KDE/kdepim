@@ -131,6 +131,7 @@ void KNJobData::setupKIOJob( KIO::Job *job )
         job->addMetaData( "tls", "off" );
     }
   }
+  job->setUiDelegate(0);
   setupKJob( job );
 }
 
