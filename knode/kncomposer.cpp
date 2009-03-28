@@ -515,7 +515,7 @@ void KNComposer::slotCut()
   QWidget* fw = focusWidget();
   if (!fw) return;
 
-  if (fw->inherits("KEdit"))
+  if (fw->inherits("KTextEdit"))
     ((KTextEdit*)fw)->cut();
   else if (fw->inherits("QLineEdit"))
     ((QLineEdit*)fw)->cut();
