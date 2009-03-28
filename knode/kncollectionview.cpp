@@ -273,7 +273,6 @@ void KNCollectionView::setActive( QTreeWidgetItem *i )
   if (!i || mActiveItem == i)
     return;
 
-  clearSelection();
   i->setSelected( true );
   setCurrentItem( i );
   mActiveItem = i;
