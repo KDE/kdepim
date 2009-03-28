@@ -131,9 +131,8 @@ QString KNDisplayedHeader::translatedName()
 void KNDisplayedHeader::setTranslatedName(const QString &s)
 {
   bool retranslated = false;
-  QString c;
   QStringList pd = predefs();
-  Q_FOREACH( c, pd ) {
+  Q_FOREACH( const QString &c, pd ) {
     if ( s == i18nc("collection of article headers", c.toLatin1()) ) {
       n_ame = c;
       retranslated = true;

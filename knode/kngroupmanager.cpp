@@ -477,8 +477,7 @@ bool KNGroupManager::unsubscribeGroup(KNGroup *g)
       }
 
       QFileInfoList list = dir.entryInfoList();  // get list of matching files and delete all
-      QFileInfo it;
-      Q_FOREACH( it, list ) {
+      Q_FOREACH( const QFileInfo &it, list ) {
         if ( it.fileName() == g->groupname()+".dynamic" ||
              it.fileName() == g->groupname()+".static" ||
              it.fileName() == g->groupname()+".grpinfo" )
