@@ -35,7 +35,7 @@
 KNFolderManager::KNFolderManager(KNArticleManager *a) : a_rtManager(a)
 {
   //standard folders
-  QString dir(KStandardDirs::locateLocal("data","knode/")+"folders/");
+  QString dir( KStandardDirs::locateLocal( "data", "knode/folders/" ) );
   if (dir.isNull()) {
     KNHelper::displayInternalFileError();
     return;
@@ -422,7 +422,7 @@ void KNFolderManager::exportToMBox(KNFolder *f)
 
 void KNFolderManager::syncFolders()
 {
-  QString dir(KStandardDirs::locateLocal("data","knode/")+"folders/");
+  QString dir( KStandardDirs::locateLocal( "data", "knode/folders/" ) );
   if (dir.isNull()) {
     KNHelper::displayInternalFileError();
     return;
@@ -440,7 +440,7 @@ void KNFolderManager::syncFolders()
 int KNFolderManager::loadCustomFolders()
 {
   int cnt=0;
-  QString dir(KStandardDirs::locateLocal("data","knode/")+"folders/");
+  QString dir( KStandardDirs::locateLocal( "data", "knode/folders/" ) );
   KNFolder *f;
 
   if (dir.isNull()) {

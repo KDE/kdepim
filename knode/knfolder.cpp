@@ -97,7 +97,7 @@ void KNFolder::updateListItem()
 
 QString KNFolder::path()
 {
-  QString dir(KStandardDirs::locateLocal("data","knode/")+"folders/");
+  QString dir( KStandardDirs::locateLocal( "data", "knode/folders/" ) );
   /*if (dir.isNull())
     KNHelper::displayInternalFileError();*/
   return dir;

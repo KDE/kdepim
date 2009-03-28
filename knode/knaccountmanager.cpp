@@ -60,7 +60,7 @@ void KNAccountManager::prepareShutdown()
 
 void KNAccountManager::loadAccounts()
 {
-  QString dir(KStandardDirs::locateLocal("data","knode/"));
+  QString dir( KStandardDirs::locateLocal( "data", "knode/" ) );
   if (dir.isNull()) {
     KNHelper::displayInternalFileError();
     return;
@@ -105,7 +105,7 @@ void KNAccountManager::setCurrentAccount(KNNntpAccount *a)
 bool KNAccountManager::newAccount(KNNntpAccount *a)
 {
   // find a unused id for the new account...
-  QString dir(KStandardDirs::locateLocal("data","knode/"));
+  QString dir( KStandardDirs::locateLocal( "data", "knode/" ) );
   if (dir.isNull()) {
     delete a;
     KNHelper::displayInternalFileError();
@@ -120,7 +120,7 @@ bool KNAccountManager::newAccount(KNNntpAccount *a)
 
   a->setId(id);
 
-  dir = KStandardDirs::locateLocal("data",QString("knode/nntp.%1/").arg(a->id()));
+  dir = KStandardDirs::locateLocal( "data", QString( "knode/nntp.%1/" ).arg( a->id() ) );
   if (!dir.isNull()) {
     mAccounts.append(a);
     emit(accountAdded(a));
