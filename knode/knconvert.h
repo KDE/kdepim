@@ -16,9 +16,7 @@
 #define KNCONVERT_H
 
 #include "knode_export.h"
-#include <time.h>
 
-#include <qglobal.h>
 #include <QList>
 
 #include <KDialog>

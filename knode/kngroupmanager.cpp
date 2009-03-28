@@ -12,9 +12,6 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <stdio.h>
-#include <stdlib.h>
-
 #include <QByteArray>
 #include <QDir>
 #include <QFile>

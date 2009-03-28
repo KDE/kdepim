@@ -15,8 +15,6 @@
 #ifndef KNFOLDER_H
 #define KNFOLDER_H
 
-#include <time.h>
-
 #include "utilities.h"
 #include "knarticle.h"
 #include "knarticlecollection.h"

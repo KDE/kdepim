@@ -14,8 +14,6 @@
 
 #include "knconfig.h"
 
-#include <stdlib.h>
-
 #include <QPixmap>
 #include <QTextStream>
 
