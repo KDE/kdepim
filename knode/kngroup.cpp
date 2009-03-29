@@ -579,7 +579,7 @@ int KNGroup::saveStaticData(int cnt,bool ovr)
       // optional headers
       ts << mOptionalHeaders.count() << '\n';
       Q_FOREACH( const QByteArray &hdrName, mOptionalHeaders ) {
-        KMime::Headers::Base *hdr = art->getHeaderByType( hdrName.data() );
+        KMime::Headers::Base *hdr = art->headerByType( hdrName.data() );
         if ( hdr )
           ts << hdrName << ": " << hdr->asUnicodeString() << '\n';
         else

@@ -116,7 +116,7 @@ class KNRemoteArticle : public KNArticle {
     virtual void clear();
 
     // header access
-    KMime::Headers::Base* getHeaderByType(const char *type);
+    KMime::Headers::Base* headerByType(const char *type);
     void setHeader(KMime::Headers::Base *h);
     bool removeHeader(const char *type);
     KMime::Headers::MessageID* messageID(bool create=true)   { if(!create && m_essageID.isEmpty()) return 0; return &m_essageID; }
@@ -235,7 +235,7 @@ class KNLocalArticle : public KNArticle {
     void clear();
 
     // header access
-    KMime::Headers::Base* getHeaderByType(const char *type);
+    KMime::Headers::Base* headerByType(const char *type);
     void setHeader(KMime::Headers::Base *h);
     bool removeHeader(const char *type);
     KMime::Headers::Newsgroups* newsgroups(bool create=true)     { if ( (!create && n_ewsgroups.isEmpty()) ||

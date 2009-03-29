@@ -129,7 +129,7 @@ void KNRemoteArticle::clear()
 }
 
 
-Headers::Base* KNRemoteArticle::getHeaderByType(const char *type)
+Headers::Base* KNRemoteArticle::headerByType(const char *type)
 {
   if(strcasecmp("Message-ID", type)==0) {
     if(m_essageID.isEmpty()) return 0;
@@ -144,7 +144,7 @@ Headers::Base* KNRemoteArticle::getHeaderByType(const char *type)
     else return &r_eferences;
   }
   else
-    return KNArticle::getHeaderByType(type);
+    return KNArticle::headerByType(type);
 }
 
 
@@ -341,14 +341,14 @@ void KNLocalArticle::clear()
 }
 
 
-Headers::Base* KNLocalArticle::getHeaderByType(const char *type)
+Headers::Base* KNLocalArticle::headerByType(const char *type)
 {
   if(strcasecmp("Newsgroups", type)==0)
     return newsgroups(false);
   else if(strcasecmp("To", type)==0)
     return to(false);
   else
-    return KNArticle::getHeaderByType(type);
+    return KNArticle::headerByType(type);
 }
 
 

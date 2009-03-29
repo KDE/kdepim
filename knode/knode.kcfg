@@ -305,11 +305,11 @@
     </entry>
     <entry name="linkColor" key="URLColor" type="Color">
       <label>Link</label>
-      <default code="true">KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::LinkText)</default>
+      <default code="true">KColorScheme(QPalette::Active, KColorScheme::View).foreground(KColorScheme::LinkText).color()</default>
     </entry>
     <entry name="readThreadColor" type="Color">
       <label>Read Thread</label>
-      <default code="true">qApp->palette().disabled().text()</default>
+      <default code="true">KColorScheme( QPalette::Disabled, KColorScheme::View ).foreground( KColorScheme::InactiveText ).color()</default>
     </entry>
     <entry name="unreadThreadColor" type="Color">
       <label>Unread Thread</label>

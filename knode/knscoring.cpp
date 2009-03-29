@@ -69,9 +69,9 @@ QString KNScorableArticle::subject() const
 
 QString KNScorableArticle::getHeaderByType(const QString& s) const
 {
-  KMime::Headers::Base *h = _a->getHeaderByType(s.toLatin1());
+  KMime::Headers::Base *h = _a->headerByType(s.toLatin1());
   if (!h) return "";
-  QString t = _a->getHeaderByType(s.toLatin1())->asUnicodeString();
+  QString t = _a->headerByType(s.toLatin1())->asUnicodeString();
   Q_ASSERT( !t.isEmpty() );
   return t;
 }

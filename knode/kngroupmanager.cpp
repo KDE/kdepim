@@ -151,7 +151,7 @@ bool KNGroupListData::readIn(KNJobData *job)
       if (timer.elapsed() > 200) {           // don't flicker
         timer.restart();
         if(job) {
-          job->setProgress( (f.at()*100)/size );
+          job->setProgress( (f.pos()*100)/size );
         }
       }
     }
@@ -159,7 +159,7 @@ bool KNGroupListData::readIn(KNJobData *job)
     f.close();
     return true;
   } else {
-    kWarning(5003) <<"unable to open" << f.fileName() <<" reason" << f.status();
+    kWarning(5003) <<"unable to open" << f.fileName() <<" reason" << f.error();
     return false;
   }
 }
@@ -190,7 +190,7 @@ bool KNGroupListData::writeOut()
     f.close();
     return true;
   } else {
-    kWarning(5003) <<"unable to open" << f.fileName() <<" reason" << f.status();
+    kWarning(5003) <<"unable to open" << f.fileName() <<" reason" << f.error();
     return false;
   }
 }

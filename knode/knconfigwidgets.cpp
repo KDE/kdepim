@@ -183,7 +183,7 @@ KNode::IdentityWidget::IdentityWidget( Identity *d, const KComponentData &inst, 
 
   topL->setColumnStretch(1,1);
   topL->setRowStretch(7,1);
-  topL->setResizeMode(QLayout::SetMinimumSize);
+  topL->setSizeConstraint( QLayout::SetMinimumSize );
   connect(s_ig,SIGNAL(textChanged ( const QString & )),
           this,SLOT(textFileNameChanged(const QString &)));
 
@@ -1100,12 +1100,14 @@ KNode::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog( KNDisplayedHeader *
   QVBoxLayout *ngbL = new QVBoxLayout(ngb);
   ngbL->setSpacing(5);
   ngbL->setMargin(8);
-  ngbL->setAutoAdd(true);
   ngbL->addSpacing(fontMetrics().lineSpacing()-4);
   n_ameCB[0]=new QCheckBox(i18n("&Large"), ngb);
   n_ameCB[1]=new QCheckBox(i18n("&Bold"), ngb);
   n_ameCB[2]=new QCheckBox(i18n("&Italic"), ngb);
   n_ameCB[3]=new QCheckBox(i18n("&Underlined"), ngb);
+  for( int i = 0 ; i < 4 ; ++i) {
+    ngbL->addWidget( n_ameCB[i] );
+  }
   topL->addWidget(ngb,1,0);
 
   QGroupBox *vgb=new QGroupBox(i18n("Value"), page);
@@ -1114,12 +1116,14 @@ KNode::DisplayedHeaderConfDialog::DisplayedHeaderConfDialog( KNDisplayedHeader *
   QVBoxLayout *vgbL = new QVBoxLayout(vgb);
   vgbL->setSpacing(5);
   vgbL->setMargin(8);
-  vgbL->setAutoAdd(true);
   vgbL->addSpacing(fontMetrics().lineSpacing()-4);
   v_alueCB[0]=new QCheckBox(i18n("L&arge"), vgb);
   v_alueCB[1]=new QCheckBox(i18n("Bol&d"), vgb);
   v_alueCB[2]=new QCheckBox(i18n("I&talic"), vgb);
   v_alueCB[3]=new QCheckBox(i18n("U&nderlined"), vgb);
+  for( int i = 0 ; i < 4 ; ++i) {
+    vgbL->addWidget( v_alueCB[i] );
+  }
   topL->addWidget(vgb,1,1);
 
   topL->setColumnStretch(0,1);
