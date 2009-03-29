@@ -58,7 +58,7 @@
       <item>
        <widget class="QPushButton" name="sendRequestByEMailPB" >
         <property name="text" >
-         <string>Send Request By EMail...</string>
+         <string>Send Request By Email...</string>
         </property>
        </widget>
       </item>
@@ -72,7 +72,7 @@
       <item>
        <widget class="QPushButton" name="sendCertificateByEMailPB" >
         <property name="text" >
-         <string>Send Certificate By EMail...</string>
+         <string>Send Certificate By Email...</string>
         </property>
        </widget>
       </item>
