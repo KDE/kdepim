@@ -1,0 +1,16 @@
+[Desktop Entry]
+Icon=kjots
+Type=Service
+X-KDE-ServiceTypes=KCModule
+
+X-KDE-ModuleType=Library
+X-KDE-Library=kcm_kjots
+X-KDE-FactoryName=kjots_config_misc
+X-KDE-HasReadOnlyMode=false
+X-KDE-ParentApp=knotes
+X-KDE-ParentComponents=kjots,kontact_kjotsplugin
+X-KDE-CfgDlgHierarchy=Notebooks
+X-KDE-Weight=200
+
+Name=Misc
+Comment=Setup misc for kjots

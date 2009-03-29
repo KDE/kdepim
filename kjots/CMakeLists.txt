@@ -45,11 +45,12 @@ set (kjots_common_SRCS
      flatcollectionproxymodel.cpp
      kjotsbookshelfentryvalidator.cpp
      knowitimporter.cpp
+     kjotsconfigdlg.cpp
 )
 
 kde4_add_kcfg_files(kjots_common_SRCS KJotsSettings.kcfgc )
 
-kde4_add_ui_files(kjots_common_SRCS confpagemisc.ui )
+kde4_add_ui_files(kjots_common_SRCS confpagemisc.ui) 
 
 #########################################################################
 # D-Bus interface
@@ -72,7 +73,7 @@ set(kjots_SRCS
 
 kde4_add_executable(kjots ${kjots_SRCS})
 
-target_link_libraries(kjots ${kjotsLibs})
+target_link_libraries(kjots ${kjotsLibs} )
 
 install(TARGETS kjots  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
@@ -102,10 +103,32 @@ if ( KJOTS_BUILD_KONTACT_PLUGIN  )
   )
 
 
-  target_link_libraries(kjotspart ${KDE4_KPARTS_LIBS} kdepim)
+  target_link_libraries(kjotspart ${KDE4_KUTILS_LIBS} ${KDE4_KPARTS_LIBS} kdepim)
 
   install( FILES kjotspart.desktop  DESTINATION ${SERVICES_INSTALL_DIR} )
   install( FILES kjotspartui.rc  DESTINATION ${DATA_INSTALL_DIR}/kjots)
 
   install(TARGETS kjotspart  DESTINATION ${PLUGIN_INSTALL_DIR} )
+
+
+  ###########################################################################
+  set(kcm_kjots_PART_SRCS kjotsconfigdlg.cpp )
+
+  kde4_add_kcfg_files(kcm_kjots_PART_SRCS KJotsSettings.kcfgc )
+
+  kde4_add_ui_files(kcm_kjots_PART_SRCS confpagemisc.ui )
+
+  kde4_add_plugin(kcm_kjots ${kcm_kjots_PART_SRCS}) 
+
+  target_link_libraries(kcm_kjots  ${KDE4_KDEUI_LIBS} ${KDE4_KUTILS_LIBS})
+
+  install(TARGETS kcm_kjots DESTINATION ${PLUGIN_INSTALL_DIR})
+
+
+  install(FILES
+        kjots_config_misc.desktop
+        DESTINATION ${SERVICES_INSTALL_DIR})
+
+
+
 endif ( KJOTS_BUILD_KONTACT_PLUGIN )

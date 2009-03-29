@@ -24,6 +24,7 @@
 
 //Own Header
 #include "kjotscomponent.h"
+#include "kjotsconfigdlg.h"
 
 #include <q3header.h>
 #include <QStackedWidget>
@@ -595,16 +596,10 @@ void KJotsComponent::newPage()
 
 void KJotsComponent::configure()
 {
-    if(KConfigDialog::showDialog("settings"))
-        return;
-
-    KConfigDialog* dialog = new KConfigDialog(this, "settings", KJotsSettings::self());
-
-    confPageMisc* cpMisc = new confPageMisc(0);
-    dialog->addPage(cpMisc, i18n("Autosave"), "document-save");
-
-    connect(dialog, SIGNAL(settingsChanged(const QString &)), this, SLOT(updateConfiguration()));
-
+    // create a new preferences dialog...
+    KJotsConfigDlg *dialog = new KJotsConfigDlg( i18n( "Settings" ), this);
+    connect( dialog, SIGNAL( configCommitted( ) ),
+             this,   SLOT( updateConfiguration() ) );
     dialog->show();
 }
 

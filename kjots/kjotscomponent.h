@@ -34,7 +34,6 @@
 #include <QTreeWidgetItem>
 #include <QTextCharFormat>
 
-#include "ui_confpagemisc.h"
 
 class QTimer;
 class QTextEdit;
@@ -53,14 +52,6 @@ class KJotsEdit;
 class KJotsBrowser;
 class KJob;
 
-
-class confPageMisc : public QDialog, public Ui::confPageMisc
-{
-public:
-  confPageMisc( QWidget *parent ) : QDialog( parent ) {
-    setupUi( this );
-  }
-};
 
 class KJotsComponent : public QWidget
 {
