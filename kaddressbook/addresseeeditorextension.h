@@ -52,10 +52,12 @@ class AddresseeEditorExtension : public KAB::ExtensionWidget
     virtual QString identifier() const;
 
     QSize minimumSizeHint() const;
-
+  private slots:
+    void emitModifiedAddresses();
   private:
     AddresseeEditorBase *mAddresseeEditor;
     bool mDirty;
+    KABC::Addressee::List addressees;
 };
 
 #endif
