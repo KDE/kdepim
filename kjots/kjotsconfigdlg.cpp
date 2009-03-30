@@ -43,15 +43,6 @@ void KJotsConfigDlg::slotOk()
 {
 }
 
-extern "C"
-{
-  KDE_EXPORT KCModule *create_kjots_config_misc( QWidget *parent )
-  {
-      KComponentData instance( "kjots_config_misc" );
-      return new KJotsConfigMisc( instance, parent );
-  }
-}
-
 KJotsConfigMisc::KJotsConfigMisc( const KComponentData &inst, QWidget *parent )
     :KCModule( inst, parent )
 {

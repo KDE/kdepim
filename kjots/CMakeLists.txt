@@ -32,6 +32,13 @@ add_subdirectory( icons )
 # with -fPIC for the part and without -fPIC for the executable
 #########################################################################
 
+set(kjots_config_SRCS kjotsconfigdlg.cpp)
+
+kde4_add_kcfg_files(kjots_config_SRCS KJotsSettings.kcfgc )
+
+kde4_add_ui_files(kjots_config_SRCS confpagemisc.ui)
+
+
 set (kjots_common_SRCS
      aboutdata.cpp
      kjotsentry.cpp
@@ -44,13 +51,8 @@ set (kjots_common_SRCS
      kjotslinkdialog.cpp
      flatcollectionproxymodel.cpp
      kjotsbookshelfentryvalidator.cpp
-     knowitimporter.cpp
-     kjotsconfigdlg.cpp
+     knowitimporter.cpp ${kjots_config_SRCS}
 )
-
-kde4_add_kcfg_files(kjots_common_SRCS KJotsSettings.kcfgc )
-
-kde4_add_ui_files(kjots_common_SRCS confpagemisc.ui) 
 
 #########################################################################
 # D-Bus interface
@@ -112,11 +114,7 @@ if ( KJOTS_BUILD_KONTACT_PLUGIN  )
 
 
   ###########################################################################
-  set(kcm_kjots_PART_SRCS kjotsconfigdlg.cpp )
-
-  kde4_add_kcfg_files(kcm_kjots_PART_SRCS KJotsSettings.kcfgc )
-
-  kde4_add_ui_files(kcm_kjots_PART_SRCS confpagemisc.ui )
+  set(kcm_kjots_PART_SRCS kcm_kjots.cpp ${kjots_config_SRCS} )
 
   kde4_add_plugin(kcm_kjots ${kcm_kjots_PART_SRCS}) 
 
