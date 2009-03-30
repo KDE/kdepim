@@ -5,6 +5,7 @@ Comment[ca]=Aquest conducte sincronitza base de dades de la llibreta d'adreces d
 Comment[da]=Denne kanal synkroniserer den håndholdtes adressebogs-database med en Akonadi-samling.
 Comment[de]=Abgleich der Adressbücher von Taschencomputer und Akonadi-Ressourcen.
 Comment[el]=Αυτό το κύκλωμα συγχρονίζει το βιβλίο διευθύνσεων του υπολογιστή παλάμης με μια συλλογή του Akonadi.
+Comment[en_GB]=This conduit syncs the handheld address book database with an Akonadi collection.
 Comment[es]=Este conducto sincroniza la base de datos de la libreta de direcciones de la agenda electrónica con una colección Akonadi.
 Comment[et]=See kanal sünkroniseerib pihuarvuti aadressiraamatu andmebaasi Akonadi koguga.
 Comment[fr]=Ce canal synchronise le carnet d'adresse du périphérique avec une collection Akonadi.
