@@ -148,7 +148,6 @@ void MailerService::processArgs( KCmdLineArgs *args )
         mailto = true;
         for ( QStringList::Iterator it = attachList.begin() ; it != attachList.end() ; ++it )
         {
-        {
             if ( !(*it).isEmpty() )
             {
               KUrl url( *it );
