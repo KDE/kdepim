@@ -60,6 +60,10 @@ MainWidget::MainWidget( KXmlGuiWindow *parent )
   KAction *action = parent->actionCollection()->addAction( "akonadiconsole_search" );
   action->setText( "Create Search" );
   connect( action, SIGNAL( triggered() ), this, SLOT( createSearch() ) );
+
+  action = parent->actionCollection()->addAction( "akonadiconsole_akonadi2xml" );
+  action->setText( "Dump to XML..." );
+  connect( action, SIGNAL(triggered()), browser, SLOT(dumpToXml()) );
 }
 
 void MainWidget::createSearch()

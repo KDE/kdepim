@@ -37,6 +37,7 @@
 #include <akonadi/collectionpropertiesdialog.h>
 #include <akonadi/standardactionmanager.h>
 #include <akonadi/monitor.h>
+#include <akonadi/xml/xmlwritejob.h>
 
 #include <kcal/kcalmodel.h>
 #include <kabc/kabcmodel.h>
@@ -47,6 +48,7 @@
 
 #include <kdebug.h>
 #include <kconfig.h>
+#include <kfiledialog.h>
 #include <kmessagebox.h>
 #include <kxmlguiwindow.h>
 
@@ -339,6 +341,24 @@ void BrowserWidget::delAttribute()
   if ( selection.count() != 1 )
     return;
   mAttrModel->removeRow( selection.first().row() );
+}
+
+void BrowserWidget::dumpToXml()
+{
+  const Collection root = mCollectionView->currentIndex().data( CollectionModel::CollectionRole ).value<Collection>();
+  if ( !root.isValid() )
+    return;
+  const QString fileName = KFileDialog::getSaveFileName( KUrl(), "*.xml", this, i18n( "Select XML file" ) );
+  if ( fileName.isEmpty() )
+    return;
+  XmlWriteJob *job = new XmlWriteJob( root, fileName, this );
+  connect( job, SIGNAL(result(KJob*)), SLOT(dumpToXmlResult(KJob*)) );
+}
+
+void BrowserWidget::dumpToXmlResult( KJob* job )
+{
+  if ( job->error() )
+    KMessageBox::error( this, job->errorString() );
 }
 
 #include "browserwidget.moc"

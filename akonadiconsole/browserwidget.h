@@ -53,6 +53,9 @@ class BrowserWidget: public QWidget
   public:
     explicit BrowserWidget( KXmlGuiWindow *xmlGuiWindow, QWidget *parent = 0 );
 
+  public slots:
+    void dumpToXml();
+
   private slots:
     void collectionActivated( const QModelIndex &index );
     void itemActivated( const QModelIndex &index );
@@ -63,6 +66,7 @@ class BrowserWidget: public QWidget
     void addAttribute();
     void delAttribute();
     void setItem( const Akonadi::Item &item );
+    void dumpToXmlResult( KJob *job );
 
   private:
     Akonadi::CollectionModel *mCollectionModel;

@@ -61,6 +61,7 @@ target_link_libraries( akonadiconsole_bin
   akonadi-kabccommon
   ${KDE4_AKONADI_KMIME_LIBS}
   akonadi-kcal
+  akonadi-xml
   kdepim
   ${KDE4_KDEUI_LIBS}
   ${AKONADICONSOLE_EXTRA_LIBS}
