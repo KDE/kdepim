@@ -2112,7 +2112,7 @@ bool IMAP4Protocol::makeLogin ()
     }
 
     // starting from Cyrus IMAP 2.3.9, shared seen flags are available
-    QRegExp regExp( "Cyrus\\sIMAP4\\sv(\\d+)\\.(\\d+)\\.(\\d+)", false );
+    QRegExp regExp( "Cyrus\\sIMAP[4]{0,1}\\sv(\\d+)\\.(\\d+)\\.(\\d+)", false );
     if ( regExp.search( greeting ) >= 0 ) {
       const int major = regExp.cap( 1 ).toInt();
       const int minor = regExp.cap( 2 ).toInt();
