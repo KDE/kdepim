@@ -147,8 +147,21 @@ void MailerService::processArgs( KCmdLineArgs *args )
     {
         mailto = true;
         for ( QStringList::Iterator it = attachList.begin() ; it != attachList.end() ; ++it )
+        {
+        {
             if ( !(*it).isEmpty() )
+            {
+              KUrl url( *it );
+
+              if ( url.protocol().isEmpty() )
+              {
+                const QString newUrl =  QDir::currentPath () + QDir::separator () + url.fileName();
+                attachURLs.append( newUrl );
+              }
+              else
                 attachURLs.append( *it );
+            }
+        }
     }
 
     customHeaders = args->getOptionList("header");
