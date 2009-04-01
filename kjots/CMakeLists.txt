@@ -75,7 +75,7 @@ set(kjots_SRCS
 
 kde4_add_executable(kjots ${kjots_SRCS})
 
-target_link_libraries(kjots ${kjotsLibs} )
+target_link_libraries(kjots ${kjotsLibs} ${KDE4_KUTILS_LIBS})
 
 install(TARGETS kjots  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 
