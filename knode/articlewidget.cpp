@@ -176,7 +176,7 @@ void ArticleWidget::initActions()
   connect(mFixedFontToggle, SIGNAL(triggered(bool) ), SLOT(slotToggleFixedFont()));
   mFixedFontToggle->setShortcut(QKeySequence(Qt::Key_X));
   mFancyToggle = mActionCollection->add<KToggleAction>("view_fancyFormating");
-  mFancyToggle->setText(i18n("Fancy Formating"));
+  mFancyToggle->setText(i18n("Fancy Formatting"));
   connect(mFancyToggle, SIGNAL(triggered(bool) ), SLOT(slotToggleFancyFormating()));
   mFancyToggle->setShortcut(QKeySequence(Qt::Key_Y));
   mRot13Toggle = mActionCollection->add<KToggleAction>("view_rot13");

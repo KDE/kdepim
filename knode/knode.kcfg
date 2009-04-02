@@ -125,7 +125,7 @@
       <default>true</default>
     </entry>
     <entry name="interpretFormatTags" type="Bool">
-      <label>Interpret emoticons and other formating</label>
+      <label>Interpret emoticons and other formatting</label>
       <default>true</default>
     </entry>
     <entry name="quoteCharacters" type="String">
