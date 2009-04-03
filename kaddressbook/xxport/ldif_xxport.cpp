@@ -106,6 +106,12 @@ bool LDIFXXPort::exportContacts( const KABC::AddresseeList &list, const QString&
   if ( url.isEmpty() )
       return true;
 
+  if( QFileInfo(url.path()).exists() ) {
+      if(KMessageBox::questionYesNo( parentWidget(), i18n("Do you want to overwrite file \"%1\"").arg( url.path()) ) == KMessageBox::No)   
+        return false;
+  }
+
+
   if ( !url.isLocalFile() ) {
     KTemporaryFile tmpFile;
     if ( !tmpFile.open() ) {
