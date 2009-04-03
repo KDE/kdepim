@@ -857,6 +857,10 @@ void CSVImportDialog::saveTemplate()
   if ( !fileName.contains( ".desktop" ) )
     fileName += ".desktop";
 
+  if( QFileInfo(fileName).exists() ) {                                                                                                   
+      if(KMessageBox::questionYesNo( this, i18n("Do you want to overwrite file \"%1\"").arg(fileName) ) == KMessageBox::No)        
+        return;                                                                                                                      
+  }
   QString name = KInputDialog::getText( i18n( "Template Name" ), i18n( "Please enter a name for the template:" ) );
 
   if ( name.isEmpty() )
