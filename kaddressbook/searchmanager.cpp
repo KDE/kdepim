@@ -25,6 +25,65 @@
 
 #include <kabc/addresseelist.h>
 
+static QStringList phoneNumberValues( const KABC::Addressee &addressee,
+                                      KABC::PhoneNumber::Type type )
+{
+  QStringList result;
+
+  const KABC::PhoneNumber::List list = addressee.phoneNumbers( type );
+  foreach ( const KABC::PhoneNumber &number, list ) {
+    result << number.number();
+  }
+
+  return result;
+}
+
+typedef QString (KABC::Address::*AddressQStringGetter)() const;
+
+static QStringList addressValues( const KABC::Addressee &addressee,
+                                  KABC::Address::Type type,
+                                  AddressQStringGetter getter )
+{
+  QStringList result;
+
+  const KABC::Address::List list = addressee.addresses( type );
+  foreach ( const KABC::Address &address, list ) {
+    result << (address.*getter)();
+  }
+
+  return result;
+}
+
+static QStringList addressStreetValues( const KABC::Addressee &addressee,
+                                        KABC::Address::Type type )
+{
+  return addressValues( addressee, type, &KABC::Address::street );
+}
+
+static QStringList addressLocalityValues( const KABC::Addressee &addressee,
+                                          KABC::Address::Type type )
+{
+  return addressValues( addressee, type, &KABC::Address::locality );
+}
+
+static QStringList addressRegionValues( const KABC::Addressee &addressee,
+                                        KABC::Address::Type type )
+{
+  return addressValues( addressee, type, &KABC::Address::region );
+}
+
+static QStringList addressCountryValues( const KABC::Addressee &addressee,
+                                         KABC::Address::Type type )
+{
+  return addressValues( addressee, type, &KABC::Address::country );
+}
+
+static QStringList addressPostalCodeValues( const KABC::Addressee &addressee,
+                                            KABC::Address::Type type )
+{
+  return addressValues( addressee, type, &KABC::Address::postalCode );
+}
+
 using namespace KAB;
 
 SearchManager::SearchManager( KABC::AddressBook *ab,
@@ -92,22 +151,69 @@ void SearchManager::search( const QString &pattern, const KABC::Field::List &fie
     KABC::Field::List::ConstIterator fieldIt( fieldList.begin() );
     const KABC::Field::List::ConstIterator fieldEndIt( fieldList.end() );
     for ( ; fieldIt != fieldEndIt; ++fieldIt ) {
+      QStringList values;
+      if ( (*fieldIt)->label() == KABC::Addressee::homeAddressStreetLabel() ) {
+        values = addressStreetValues( *it, KABC::Address::Home );
+      } else if ( (*fieldIt)->label() == KABC::Addressee::homeAddressLocalityLabel() ) {
+        values = addressLocalityValues( *it, KABC::Address::Home );
+      } else if ( (*fieldIt)->label() == KABC::Addressee::homeAddressRegionLabel() ) {
+        values = addressRegionValues( *it, KABC::Address::Home );
+      } else if ( (*fieldIt)->label() == KABC::Addressee::homeAddressCountryLabel() ) {
+        values = addressCountryValues( *it, KABC::Address::Home );
+      } else if ( (*fieldIt)->label() == KABC::Addressee::homeAddressPostalCodeLabel() ) {
+        values = addressPostalCodeValues( *it, KABC::Address::Home );
+      } else if ( (*fieldIt)->label() == KABC::Addressee::businessAddressStreetLabel() ) {
+        values = addressStreetValues( *it, KABC::Address::Work );
+      } else if ( (*fieldIt)->label() == KABC::Addressee::businessAddressLocalityLabel() ) {
+        values = addressLocalityValues( *it, KABC::Address::Work );
+      } else if ( (*fieldIt)->label() == KABC::Addressee::businessAddressRegionLabel() ) {
+        values = addressRegionValues( *it, KABC::Address::Work );
+      } else if ( (*fieldIt)->label() == KABC::Addressee::businessAddressCountryLabel() ) {
+        values = addressCountryValues( *it, KABC::Address::Work );
+      } else if ( (*fieldIt)->label() == KABC::Addressee::businessAddressPostalCodeLabel() ) {
+        values = addressPostalCodeValues( *it, KABC::Address::Work );
+      } else if ( (*fieldIt)->label() == KABC::Addressee::homePhoneLabel() ) {
+        values = phoneNumberValues( *it, KABC::PhoneNumber::Home );
+      } else if ( (*fieldIt)->label() == KABC::Addressee::businessPhoneLabel() ) {
+        values = phoneNumberValues( *it, KABC::PhoneNumber::Work );
+      } else if ( (*fieldIt)->label() == KABC::Addressee::carPhoneLabel() ) {
+        values = phoneNumberValues( *it, KABC::PhoneNumber::Car );
+      } else if ( (*fieldIt)->label() == KABC::Addressee::isdnLabel() ) {
+        values = phoneNumberValues( *it, KABC::PhoneNumber::Isdn );
+      } else if ( (*fieldIt)->label() == KABC::Addressee::pagerLabel() ) {
+        values = phoneNumberValues( *it, KABC::PhoneNumber::Pager );
+      } else if ( (*fieldIt)->label() == KABC::Addressee::mobilePhoneLabel() ) {
+        values = phoneNumberValues( *it, KABC::PhoneNumber::Cell );
+      } else if ( (*fieldIt)->label() == KABC::Addressee::homeFaxLabel() ) {
+        values = phoneNumberValues( *it, KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax );
+      } else if ( (*fieldIt)->label() == KABC::Addressee::businessFaxLabel() ) {
+        values = phoneNumberValues( *it, KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax);
+      } else if ( (*fieldIt)->label() == KABC::Addressee::emailLabel() ) {
+        values = (*it).emails();
+      } else {
+        values << (*fieldIt)->value( *it );
+      }
+      foreach ( const QString &value, values ) {
+        if ( type == StartsWith && value.startsWith( pattern, Qt::CaseInsensitive ) ) {
+        mContacts.append( *it );
+        found = true;
+        break;
+        } else if ( type == EndsWith && value.endsWith( pattern, Qt::CaseInsensitive ) ) {
+        mContacts.append( *it );
+        found = true;
+        break;
+        } else if ( type == Contains && value.contains( pattern, Qt::CaseInsensitive ) ) {
+        mContacts.append( *it );
+        found = true;
+        break;
+        } else if ( type == Equals && value.localeAwareCompare( pattern ) == 0 ) {
+        mContacts.append( *it );
+        found = true;
+        break;
+      }
+    }
 
-      if ( type == StartsWith && (*fieldIt)->value( *it ).startsWith( pattern, Qt::CaseInsensitive ) ) {
-        mContacts.append( *it );
-        found = true;
-        break;
-      } else if ( type == EndsWith && (*fieldIt)->value( *it ).endsWith( pattern, Qt::CaseInsensitive ) ) {
-        mContacts.append( *it );
-        found = true;
-        break;
-      } else if ( type == Contains && (*fieldIt)->value( *it ).contains( pattern, Qt::CaseInsensitive ) ) {
-        mContacts.append( *it );
-        found = true;
-        break;
-      } else if ( type == Equals && (*fieldIt)->value( *it ).localeAwareCompare( pattern ) == 0 ) {
-        mContacts.append( *it );
-        found = true;
+      if ( found ) {
         break;
       }
     }
