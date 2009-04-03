@@ -47,8 +47,8 @@ int main(int argc,char **argv)
 
   bool verbose = false;
   if ( args->isSet( "verbose" ) ) verbose = true;
-
+  args->clear();
   SloxWizard wizard;
 
-  wizard.exec();
+  return wizard.exec();
 }

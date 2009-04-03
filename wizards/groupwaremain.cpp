@@ -48,11 +48,11 @@ int main( int argc, char **argv )
   QString serverType;
   if ( args->isSet( "serverType" ) )
     serverType = args->getOption( "serverType" );
-
+  args->clear();
   GroupwareWizard wizard( 0 );
   app.setMainWidget( &wizard );
 
   wizard.show();
 
-  app.exec();
+  return app.exec();
 }
