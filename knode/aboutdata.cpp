@@ -27,7 +27,8 @@ namespace KNode
   };
 
   static const about_authors authors[] = {
-    { "Volker Krause", I18N_NOOP("Maintainer"), "volker.krause@rwth-aachen.de" },
+    { "Olivier Trichet", I18N_NOOP("Maintainer"), "nive@nivalis.org" },
+    { "Volker Krause", I18N_NOOP("Former maintainer"), "vkrause@kde.org" },
     { "Roberto Selbach Teixeira", I18N_NOOP("Former maintainer"), "roberto@kde.org" },
     { "Christian Gebauer", 0, "gebauer@kde.org" },
     { "Christian Thurner", 0, "cthurner@web.de" },
@@ -46,7 +47,7 @@ namespace KNode
                   KNODE_VERSION,
                   ki18n("A newsreader for KDE"),
                   KAboutData::License_GPL,
-                  ki18n("Copyright (c) 1999-2005 the KNode authors"),
+                  ki18n("Copyright (c) 1999-2009 the KNode authors"),
                   KLocalizedString(),
                   "http://kontact.kde.org/knode/" )
   {
