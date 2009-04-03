@@ -41,13 +41,13 @@ K_EXPORT_KADDRESSBOOK_XXFILTER( kaddrbk_eudora_xxport, EudoraXXPort )
 EudoraXXPort::EudoraXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )
 {
-  createImportAction( i18n( "Import Eudora Addressbook..." ) );
+  createImportAction( i18n( "Import Eudora Address Book..." ) );
 }
 
 KABC::Addressee::List EudoraXXPort::importContacts( const QString& ) const
 {
   QString fileName = KFileDialog::getOpenFileName( QDir::homePath(),
-		"*.[tT][xX][tT]|" + i18n("Eudora Light Addressbook (*.txt)"), 0 );
+		"*.[tT][xX][tT]|" + i18n("Eudora Light Address Book (*.txt)"), 0 );
   if ( fileName.isEmpty() )
     return KABC::AddresseeList();
 

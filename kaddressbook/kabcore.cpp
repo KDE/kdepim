@@ -1327,7 +1327,7 @@ void KABCore::initActions()
   mActionDelete->setShortcut(QKeySequence(Qt::Key_Delete));
   mActionDelete->setWhatsThis( i18n( "Delete all selected contacts." ) );
 
-  const QString copyMoveWhatsThis = i18n( "Store a contact in a different Addressbook<p>You will be presented with a dialog where you can select a new storage place for this contact.</p>" );
+  const QString copyMoveWhatsThis = i18n( "Store a contact in a different address book<p>You will be presented with a dialog where you can select a new storage place for this contact.</p>" );
   mActionCopyAddresseeTo = coll->addAction( "copy_contact_to" );
   mActionCopyAddresseeTo->setText( i18n( "C&opy Contact To..." ) );
   connect(mActionCopyAddresseeTo, SIGNAL(triggered(bool) ), SLOT( copySelectedContactToResource() ));

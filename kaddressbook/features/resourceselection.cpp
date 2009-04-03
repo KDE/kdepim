@@ -421,17 +421,17 @@ void ResourceSelection::initGUI()
 
   mAddButton = new QToolButton( this );
   mAddButton->setIcon( KIcon( "list-add" ) );
-  mAddButton->setToolTip( i18n( "Add addressbook" ) );
+  mAddButton->setToolTip( i18n( "Add address book" ) );
   buttonLayout->addWidget( mAddButton );
   mEditButton = new QToolButton( this );
   mEditButton->setIcon( KIcon( "document-properties" ) );
   mEditButton->setEnabled( false );
-  mEditButton->setToolTip( i18n( "Edit addressbook settings" ) );
+  mEditButton->setToolTip( i18n( "Edit address book settings" ) );
   buttonLayout->addWidget( mEditButton );
   mRemoveButton = new QToolButton( this );
   mRemoveButton->setIcon( KIcon( "edit-delete" ) );
   mRemoveButton->setEnabled( false );
-  mRemoveButton->setToolTip( i18n( "Remove addressbook" ) );
+  mRemoveButton->setToolTip( i18n( "Remove address book" ) );
   buttonLayout->addWidget( mRemoveButton );
 
   mListView = new QTreeWidget( this );

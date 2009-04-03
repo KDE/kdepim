@@ -613,7 +613,7 @@ void ViewManager::initActions()
   action->setIcon( KIcon("configure") );
   action->setText( i18n( "Modify View..." ) );
   connect(action, SIGNAL(triggered(bool) ), SLOT( editView() ));
-  action->setWhatsThis( i18n( "By pressing this button a dialog opens that allows you to modify the view of the addressbook. There you can add or remove fields that you want to be shown or hidden in the addressbook like the name for example." ) );
+  action->setWhatsThis( i18n( "Pressing this button opens a dialog that allows you to modify the view of the address book. From there you can add or remove fields that you want to be shown or hidden in the address book, like the name for example." ) );
 
   action = coll->addAction( "view_add" );
   action->setIcon( KIcon("window-new") );

@@ -46,7 +46,7 @@
 
 K_EXPORT_KADDRESSBOOK_XXFILTER_CATALOG( kaddrbk_gmx_xxport, GMXXXPort, "kaddrbk_gmx_xxport" )
 
-#define GMX_FILESELECTION_STRING "*.gmxa|" + i18n( "GMX addressbook file (*.gmxa)" )
+#define GMX_FILESELECTION_STRING "*.gmxa|" + i18n( "GMX address book file (*.gmxa)" )
 
 GMXXXPort::GMXXXPort( KABC::AddressBook *ab, QWidget *parent, const char *name )
   : KAB::XXPort( ab, parent, name )
