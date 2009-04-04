@@ -55,15 +55,13 @@
 #include "contactfiltermodel.h"
 #include "contactgroupeditordialog.h"
 #include "quicksearchwidget.h"
+#include "xxportmanager.h"
 
 MainWidget::MainWidget( KXmlGuiWindow *guiWindow, QWidget *parent )
   : QWidget( parent ),
     mGuiWindow( guiWindow )
 {
   mContactModel = new Akonadi::KABCModel( this );
-
-  setupGui();
-  setupActions();
 
   mCollectionModel = new Akonadi::CollectionModel( this );
   mCollectionModel->setHeaderData( 0, Qt::Horizontal, i18nc( "@title:column, contact groups", "Group" ) , Qt::EditRole );
@@ -78,6 +76,11 @@ MainWidget::MainWidget( KXmlGuiWindow *guiWindow, QWidget *parent )
   sortModel->setDynamicSortFilter( true );
   sortModel->setSortCaseSensitivity( Qt::CaseInsensitive );
   sortModel->setSourceModel( mCollectionFilterModel );
+
+  mXXPortManager = new XXPortManager( sortModel, this );
+
+  setupGui();
+  setupActions();
 
   mCollectionView->setModel( sortModel );
   mCollectionView->setXmlGuiWindow( guiWindow );
@@ -180,8 +183,38 @@ void MainWidget::setupActions()
   action->setWhatsThis( i18n( "Create a new group<p>You will be presented with a dialog where you can add a new group of contacts.</p>" ) );
 
   action = collection->addAction( "quick_search" );
-  action->setText(i18n("Quick search"));
+  action->setText( i18n( "Quick search" ) );
   action->setDefaultWidget( mQuickSearchWidget );
+
+  // import actions
+  action = collection->addAction( "file_import_vcard" );
+  action->setText( i18n( "Import vCard..." ) );
+  mXXPortManager->addImportAction( action, "vcard30" );
+
+  action = collection->addAction( "file_import_csv" );
+  action->setText( i18n( "Import CSV file..." ) );
+  mXXPortManager->addImportAction( action, "csv" );
+
+  action = collection->addAction( "file_import_ldif" );
+  action->setText( i18n( "Import LDIF file..." ) );
+  mXXPortManager->addImportAction( action, "ldif" );
+
+  // export actions
+  action = collection->addAction( "file_export_vcard30" );
+  action->setText( i18n( "Export vCard 3.0..." ) );
+  mXXPortManager->addExportAction( action, "vcard30" );
+
+  action = collection->addAction( "file_export_vcard21" );
+  action->setText( i18n( "Export vCard 2.1..." ) );
+  mXXPortManager->addExportAction( action, "vcard21" );
+
+  action = collection->addAction( "file_export_csv" );
+  action->setText( i18n( "Export CSV file..." ) );
+  mXXPortManager->addExportAction( action, "csv" );
+
+  action = collection->addAction( "file_export_ldif" );
+  action->setText( i18n( "Export LDIF file..." ) );
+  mXXPortManager->addExportAction( action, "ldif" );
 }
 
 void MainWidget::newContact()

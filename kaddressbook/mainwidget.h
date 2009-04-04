@@ -39,6 +39,7 @@ class StandardActionManager;
 class KXmlGuiWindow;
 class QStackedWidget;
 class QuickSearchWidget;
+class XXPortManager;
 
 class MainWidget : public QWidget
 {
@@ -78,6 +79,7 @@ class MainWidget : public QWidget
     Akonadi::StandardActionManager *mActionManager;
 
     KXmlGuiWindow *mGuiWindow;
+    XXPortManager *mXXPortManager;
 };
 
 #endif

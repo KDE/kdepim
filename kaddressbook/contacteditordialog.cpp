@@ -51,7 +51,7 @@ ContactEditorDialog::ContactEditorDialog( Mode mode, QAbstractItemModel *collect
   if ( mode == CreateMode ) {
     QLabel *label = new QLabel( i18n( "Add to:" ), mainWidget );
 
-    // filter for collections that support contact groups
+    // filter for collections that support contacts
     Akonadi::CollectionFilterProxyModel *filterModel = new Akonadi::CollectionFilterProxyModel( this );
     filterModel->addMimeTypeFilter( KABC::Addressee::mimeType() );
     filterModel->setSourceModel( collectionModel );
