@@ -64,29 +64,29 @@ LDIFXXPort::LDIFXXPort( QWidget *parentWidget )
 
 KABC::Addressee::List LDIFXXPort::importContacts() const
 {
-  KABC::Addressee::List addrList;
+  KABC::Addressee::List contacts;
 
   const QString fileName = KFileDialog::getOpenFileName( QDir::homePath(), "text/x-ldif", 0 );
   if ( fileName.isEmpty() )
-    return addrList;
+    return contacts;
 
   QFile file( fileName );
   if ( !file.open( QIODevice::ReadOnly | QIODevice::Text ) ) {
     const QString msg = i18n( "<qt>Unable to open <b>%1</b> for reading.</qt>", fileName );
     KMessageBox::error( parentWidget(), msg );
-    return addrList;
+    return contacts;
   }
 
   QTextStream stream( &file );
   stream.setCodec( "ISO 8859-1" );
 
   const QString wholeFile = stream.readAll();
-  QDateTime dtDefault = QFileInfo( file ).lastModified();
+  const QDateTime dtDefault = QFileInfo( file ).lastModified();
   file.close();
 
-  KABC::LDIFConverter::LDIFToAddressee( wholeFile, addrList, dtDefault );
+  KABC::LDIFConverter::LDIFToAddressee( wholeFile, contacts, dtDefault );
 
-  return addrList;
+  return contacts;
 }
 
 bool LDIFXXPort::exportContacts( const KABC::Addressee::List &list ) const

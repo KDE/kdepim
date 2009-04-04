@@ -66,6 +66,9 @@ void XXPortManager::slotImport( const QString &identifier )
 
   delete xxport;
 
+  if ( contacts.isEmpty() ) // nothing to import
+    return;
+
   CollectionSelectionDialog dlg( mCollectionModel, mParentWidget );
   if ( !dlg.exec() )
     return;
