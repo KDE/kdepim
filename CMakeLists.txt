@@ -65,15 +65,6 @@ else(WIN32)
 endif(WIN32)
 
 
-############### Compatibility ###############
-# Support building against earlier kdelibs or kdepimlibs
-# TODO Remove this section once KDE 4.3 is out.
-
-if(NOT DEFINED KDE4_KHOLIDAYS_LIBS)
-  set(KDE4_KHOLIDAYS_LIBS kholidays)
-endif(NOT DEFINED KDE4_KHOLIDAYS_LIBS)
-
-
 ############### ONLY_KLEO ###############
 
 # The KDEPIM_ONLY_KLEO option is true
