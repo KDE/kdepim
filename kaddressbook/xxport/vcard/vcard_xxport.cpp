@@ -398,7 +398,7 @@ VCardViewerDialog::VCardViewerDialog( const KABC::Addressee::List &list, QWidget
   layout->setSpacing( spacingHint() );
   layout->setMargin( marginHint() );
 
-  QLabel *label = new QLabel( i18n( "Do you want to import this contact in your address book?" ), page );
+  QLabel *label = new QLabel( i18n( "Do you want to import this contact into your address book?" ), page );
   QFont font = label->font();
   font.setBold( true );
   label->setFont( font );
