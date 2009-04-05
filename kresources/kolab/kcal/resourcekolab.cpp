@@ -38,6 +38,7 @@
 #include "journal.h"
 
 #include <kapplication.h>
+#include <kcal/comparisonvisitor.h>
 #include <kcal/icalformat.h>
 #include <libkdepim/kincidencechooser.h>
 #include <kabc/locknull.h>
@@ -389,7 +390,8 @@ void ResourceKolab::resolveConflict( KCal::Incidence* inc, const QString& subres
     Incidence* addedIncidence = 0;
     Incidence*  result = 0;
     if ( local ) {
-      if (*local == *inc) {
+      ComparisonVisitor visitor;
+      if ( visitor.compare( local, inc ) ) {
         // real duplicate, remove the second one
         result = local;
       } else {
