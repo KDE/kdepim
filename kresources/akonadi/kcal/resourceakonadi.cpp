@@ -21,6 +21,8 @@
 #include "resourceakonadi.h"
 #include "resourceakonadiconfig.h"
 
+#include "../shared/concurrentjobs.h"
+
 #include "kcal/calendarlocal.h"
 #include "kabc/locknull.h"
 
@@ -28,9 +30,6 @@
 #include <akonadi/agentinstance.h>
 #include <akonadi/agentinstancemodel.h>
 #include <akonadi/collection.h>
-#include <akonadi/collectioncreatejob.h>
-#include <akonadi/collectiondeletejob.h>
-#include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>
 #include <akonadi/control.h>
@@ -39,7 +38,6 @@
 #include <akonadi/item.h>
 #include <akonadi/itemcreatejob.h>
 #include <akonadi/itemdeletejob.h>
-#include <akonadi/itemfetchjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <akonadi/itemmodifyjob.h>
 #include <akonadi/transactionsequence.h>
@@ -50,8 +48,6 @@
 #include <kdebug.h>
 #include <kmimetype.h>
 
-#include <QtConcurrentRun>
-#include <QFuture>
 #include <QHash>
 
 #include <boost/shared_ptr.hpp>
@@ -91,81 +87,42 @@ public:
   virtual Collection collectionForUid( const QString &uid ) const = 0;
 };
 
-static KJob *createSaveSequence( const UidToCollectionMapper &mapper,
+static Akonadi::Job *createSaveSequence( const UidToCollectionMapper &mapper,
     const Item::List &addedItems, const Item::List &modifiedItems, const Item::List &deletedItems );
 
-class ThreadJobContext
+class ConcurrentItemSaveJob : public ConcurrentJob<Akonadi::Job>
 {
   public:
-    explicit ThreadJobContext( const UidToCollectionMapper &mapper )
-      : mMapper( mapper ) {}
+    ConcurrentItemSaveJob(  const UidToCollectionMapper &mapper,
+        const Item::List &addedItems, const Item::List &modifiedItems,
+        const Item::List &deletedItems )
+      : ConcurrentJob<Akonadi::Job>(),
+        mMapper( mapper ),
+        mAddedItems( addedItems ),
+        mModifiedItems( modifiedItems ),
+        mDeletedItems( deletedItems ) {}
 
-    void clear()
+    const ConcurrentItemSaveJob *operator->() const
     {
-      mJobError.clear();
-      mCollections.clear();
-      mItems.clear();
-
-      mAddedItems.clear();
-      mModifiedItems.clear();
-      mDeletedItems.clear();
+      return this;
     }
 
-    bool fetchCollections()
-    {
-      CollectionFetchJob *job = new CollectionFetchJob( Collection::root(), CollectionFetchJob::Recursive );
-
-      bool jobResult = job->exec();
-      if ( jobResult )
-        mCollections = job->collections();
-      else
-        mJobError = job->errorString();
-
-      delete job;
-      return jobResult;
-    }
-
-    bool fetchItems( const Collection &collection )
-    {
-      ItemFetchJob *job = new ItemFetchJob( collection );
-      job->fetchScope().fetchFullPayload();
-
-      bool jobResult = job->exec();
-      if ( jobResult )
-        mItems = job->items();
-      else
-        mJobError = job->errorString();
-
-      delete job;
-      return jobResult;
-    }
-
-    bool saveChanges()
-    {
-      KJob *job = createSaveSequence( mMapper, mAddedItems, mModifiedItems, mDeletedItems );
-
-      bool jobResult = job->exec();
-      if ( !jobResult )
-        mJobError = job->errorString();
-
-      delete job;
-      return jobResult;
-    }
-
-  public:
-    QString mJobError;
-
-    Collection::List mCollections;
-    Item::List mItems;
-
-    Item::List mAddedItems;
-    Item::List mModifiedItems;
-    Item::List mDeletedItems;
-
-  private:
+  protected:
     const UidToCollectionMapper &mMapper;
 
-  private:
+    const Item::List mAddedItems;
+    const Item::List mModifiedItems;
+    const Item::List mDeletedItems;
+
+  protected:
+    void createJob()
+    {
+      mJob = createSaveSequence( mMapper, mAddedItems, mModifiedItems, mDeletedItems );
+    }
+
+    void handleSuccess()
+    {
+    }
 };
 
 class SubResource
@@ -245,7 +202,7 @@ class ResourceAkonadi::Private : public KCal::Calendar::CalendarObserver,
         mMimeVisitor( new KCalMimeTypeVisitor() ),
         mCollectionModel( 0 ), mCollectionFilterModel( 0 ),
         mAgentModel( 0 ), mAgentFilterModel( 0 ),
-        mThreadJobContext( *this ), mOpenState( Closed )
+        mOpenState( Closed )
     {
       mCalendar.registerObserver( this );
     }
@@ -298,8 +255,6 @@ class ResourceAkonadi::Private : public KCal::Calendar::CalendarObserver,
 
     AgentInstanceModel *mAgentModel;
     AgentFilterProxyModel *mAgentFilterModel;
-
-    ThreadJobContext mThreadJobContext;
 
     AssignmentVisitor mIncidenceAssigner;
 
@@ -639,10 +594,9 @@ bool ResourceAkonadi::addSubresource( const QString &resource, const QString &pa
   // TODO should we set content mime types at all?
   collection.setContentMimeTypes( QStringList( QLatin1String( "text/calendar" ) ) );
 
-  CollectionCreateJob *job = new CollectionCreateJob( collection );
-
-  if ( !job->exec() ) {
-    kError(5800) << "Creating collection failed:" << job->errorString();
+  ConcurrentCollectionCreateJob createJob( collection );
+  if ( !createJob.exec() ) {
+    kError(5800) << "Creating collection failed:" << createJob->errorString();
     return false;
   }
 
@@ -663,10 +617,10 @@ bool ResourceAkonadi::removeSubresource( const QString &resource )
     return false;
   }
 
-  CollectionDeleteJob *job = new CollectionDeleteJob( subResource->mCollection );
+  ConcurrentCollectionDeleteJob deleteJob( subResource->mCollection );
 
-  if ( !job->exec() ) {
-    kError(5800) << "Deleting collection failed:" << job->errorString();
+  if ( !deleteJob.exec() ) {
+    kError(5800) << "Deleting collection failed:" << deleteJob->errorString();
     return false;
   }
 
@@ -789,15 +743,13 @@ bool ResourceAkonadi::doLoad( bool syncCache )
 
   // if we do not have any collection yet, fetch them explicitly
   if ( collections.isEmpty() ) {
-    d->mThreadJobContext.clear();
-    QFuture<bool> threadResult =
-      QtConcurrent::run( &(d->mThreadJobContext), &ThreadJobContext::fetchCollections );
-    if ( !threadResult.result() ) {
-      loadError( d->mThreadJobContext.mJobError );
+    ConcurrentCollectionFetchJob fetchJob;
+    if ( !fetchJob.exec() ) {
+      loadError( fetchJob->errorString() );
       return false;
     }
 
-    collections = d->mThreadJobContext.mCollections;
+    collections = fetchJob->collections();
   }
 
   bool result = true;
@@ -841,18 +793,16 @@ bool ResourceAkonadi::doSave( bool syncCache )
   if ( !d->prepareSaving() )
     return false;
 
-  d->mThreadJobContext.clear();
+  Item::List addedItems;
+  Item::List modifiedItems;
+  Item::List deletedItems;
 
-  d->createItemListsForSave( d->mThreadJobContext.mAddedItems,
-                             d->mThreadJobContext.mModifiedItems,
-                             d->mThreadJobContext.mDeletedItems );
+  d->createItemListsForSave( addedItems, modifiedItems, deletedItems );
 
-  QFuture<bool> threadResult =
-    QtConcurrent::run( &(d->mThreadJobContext), &ThreadJobContext::saveChanges );
-  if ( !threadResult.result() ) {
-    // TODO error handling
-    kError(5800) << "Save Sequence failed:" << d->mThreadJobContext.mJobError;
-    saveError( d->mThreadJobContext.mJobError );
+  ConcurrentItemSaveJob saveJob( *d, addedItems, modifiedItems, deletedItems );
+  if ( !saveJob.exec() ) {
+    kError(5800) << "Save Sequence failed:" << saveJob->errorString();
+    saveError( saveJob->errorString() );
     return false;
   }
 
@@ -903,17 +853,16 @@ bool ResourceAkonadi::doSave( bool syncCache, Incidence *incidence )
     }
   }
 
-  d->mThreadJobContext.clear();
+  Item::List addedItems;
+  Item::List modifiedItems;
+  Item::List deletedItems;
 
-  d->processChange( changeIt, d->mThreadJobContext.mAddedItems,
-                    d->mThreadJobContext.mModifiedItems, d->mThreadJobContext.mDeletedItems );
+  d->processChange( changeIt, addedItems, modifiedItems, deletedItems );
 
-  QFuture<bool> threadResult =
-    QtConcurrent::run( &(d->mThreadJobContext), &ThreadJobContext::saveChanges );
-  if ( !threadResult.result() ) {
-    // TODO error handling
-    kError(5800) << "Save Sequence failed:" << d->mThreadJobContext.mJobError;
-    saveError( d->mThreadJobContext.mJobError );
+  ConcurrentItemSaveJob saveJob( *d, addedItems, modifiedItems, deletedItems );
+  if ( !saveJob.exec() ) {
+    kError(5800) << "Save Sequence failed:" << saveJob->errorString();
+    saveError( saveJob->errorString() );
     return false;
   }
 
@@ -1465,7 +1414,7 @@ bool ResourceAkonadi::Private::prepareSaving()
   return true;
 }
 
-static KJob *createSaveSequence( const UidToCollectionMapper &mapper,
+static Akonadi::Job *createSaveSequence( const UidToCollectionMapper &mapper,
     const Item::List &addedItems, const Item::List &modifiedItems, const Item::List &deletedItems )
 {
   TransactionSequence *sequence = new TransactionSequence();
@@ -1632,15 +1581,13 @@ bool ResourceAkonadi::Private::reloadSubResource( SubResource *subResource, bool
 {
   changed = false;
 
-  mThreadJobContext.clear();
-  QFuture<bool> threadResult =
-    QtConcurrent::run( &mThreadJobContext, &ThreadJobContext::fetchItems, subResource->mCollection );
-  if ( !threadResult.result() ) {
-    mParent->loadError( mThreadJobContext.mJobError );
+  ConcurrentItemFetchJob fetchJob( subResource->mCollection );
+  if ( !fetchJob.exec() ) {
+    mParent->loadError( fetchJob->errorString() );
     return false;
   }
 
-  Item::List items = mThreadJobContext.mItems;
+  Item::List items = fetchJob->items();
 
   const QString collectionUrl = subResource->mCollection.url().url();
 
