@@ -66,9 +66,10 @@ KABC::Addressee::List KDE2XXPort::importContacts( const QString& ) const
     proc << "--override";
   } else if ( result == KMessageBox::No )
     proc << "kab2kabc";
-  else
+  else {
     kDebug(5720) <<"KAddressBook::importKDE2(): Unknow return value.";
-
+    return KABC::AddresseeList();
+  }
   proc.execute();
 
   addressBook()->load();
