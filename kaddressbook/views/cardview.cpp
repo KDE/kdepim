@@ -57,6 +57,7 @@ class CardViewTip : public QLabel
       setFrameStyle( Panel | Plain );
       setMidLineWidth( 0 );
       setIndent( 1 );
+      setAutoFillBackground( true );
     }
 
     ~CardViewTip() {}
