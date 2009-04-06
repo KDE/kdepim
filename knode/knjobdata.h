@@ -29,6 +29,7 @@ namespace KIO {
 class Job;
 }
 
+class KNJobItem;
 class KNJobData;
 class KNServerInfo;
 
@@ -54,6 +55,10 @@ class KNJobConsumer {
      *  to be completed
      */
     bool jobsPending() const { return !mJobs.isEmpty(); }
+
+    /** Find any job related to a job item and cancel it.
+     */
+    void cancelJobs( KNJobItem *item );
 
   protected:
     /** The actual work is done here */

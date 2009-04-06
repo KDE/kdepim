@@ -54,6 +54,16 @@ void KNJobConsumer::jobDone( KNJobData *j )
     processJob( j );
 }
 
+void KNJobConsumer::cancelJobs( KNJobItem *item )
+{
+  Q_FOREACH( KNJobData *job, mJobs ) {
+    if ( job->data() == item ) {
+      job->d_ata = 0;
+      job->cancel();
+    }
+  }
+}
+
 
 void KNJobConsumer::processJob( KNJobData *j )
 {
@@ -77,7 +87,9 @@ KNJobData::KNJobData(jobType t, KNJobConsumer *c, KNServerInfo *a, KNJobItem *i)
 
 KNJobData::~KNJobData()
 {
-  d_ata->setLocked(false);
+  if ( d_ata ) {
+    d_ata->setLocked( false );
+  }
 }
 
 
