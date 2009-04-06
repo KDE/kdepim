@@ -26,6 +26,8 @@
 #include <QtCore/QStringList>
 #include <QtCore/QDebug>
 
+#include <cassert>
+
 class JobTracker::Private
 {
 public:
