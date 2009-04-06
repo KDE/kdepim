@@ -1,3 +1,30 @@
+Monday, April 6th 2009
+
+Problems addressed
+------------------
+
+Merges
+------
+
+* Merges from KDE trunk:
+    - Improve KOrganizer's ability to configure colors
+
+* Merges from KDE 4.2 branch:
+    - kolab/issue2846: Accept relative paths in ksendemail
+
+* Merges from enterprise35 branch:
+      - kolab/issue3512: Kontact does not detect shared seen folder capabilty anymore
+      - kolab/issue1848: Deactivate Sieve Script is not possible
+      - kolab/issue3480: Icon doesn't change if folder type of a calendar folder is changed to mail
+      - kolab/issue2687: After applying a new identity, the columns of the mail view reset
+      - kolab/issue2150: Cannot reply on a mail form the local sent-mails folder with context menu
+      - kolab/issue1940: Activating "unseen mails behind folder" sets the option "unread mails in own column"
+      - kolab/issue2276: Export contacts or calendar overwrites files without a warning
+      - Fix enable/disable action when we are in template folder
+      - Fix crash in the composer if the transport is empty
+      - Fix swedish holiday definitions
+
+
 Friday, March 27th 2009
 
 Problems addressed
