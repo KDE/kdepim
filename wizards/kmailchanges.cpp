@@ -243,6 +243,10 @@ void CreateDisconnectedImapAccount::apply()
   c.setGroup( QString("Folder-%1").arg( uid ) );
   c.writeEntry( "isOpen", true );
 
+  c.setGroup(  "AccountWizard"  );
+  c.writeEntry(  "ShowOnStartup" , false );
+
+
   c.setGroup( QString("Transport %1").arg( transportId ) );
   c.writeEntry( "name", mAccountName );
   c.writeEntry( "host", mServer );
@@ -355,6 +359,11 @@ void CreateOnlineImapAccount::apply()
 
   c.setGroup( QString("Folder-%1").arg( uid ) );
   c.writeEntry( "isOpen", true );
+
+
+  c.setGroup(  "AccountWizard" );
+  c.writeEntry(  "ShowOnStartup" , false );
+
 }
 
 bool CreateImapAccount::writeToWallet(const QString & type, int id)
