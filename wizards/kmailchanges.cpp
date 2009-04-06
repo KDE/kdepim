@@ -243,11 +243,6 @@ void CreateDisconnectedImapAccount::apply()
   group = c.group( QString("Folder-%1").arg( uid ) );
   group.writeEntry( "isOpen", true );
 
-  if ( mEnableSavePassword ) {
-    group.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
-    group.writeEntry( "store-passwd", true );
-  }
-
   group = c.group( QLatin1String( "AccountWizard" ) );
   group.writeEntry( QLatin1String( "ShowOnStartup" ), false );
 
