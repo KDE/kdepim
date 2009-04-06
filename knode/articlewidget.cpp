@@ -130,8 +130,12 @@ ArticleWidget::~ArticleWidget()
   mInstances.removeAll( this );
   delete mTimer;
   delete mCSSHelper;
-  if ( mArticle && mArticle->isOrphant() )
+  if ( mArticle && mArticle->isOrphant() ) {
+    // if the article manager is still loading the current article,
+    // cancel the job.
+    knGlobals.articleManager()->cancelJobs( mArticle );
     delete mArticle;
+  }
   removeTempFiles();
 }
 
