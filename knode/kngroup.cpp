@@ -465,6 +465,13 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNJobData *job)
             art->subject()->fromUnicodeString( i18n("no subject"), art->defaultCharset() );
         } else if ( hdrName == "From" ) {
           art->from()->from7BitString( hdrValue.toLatin1() );
+          if ( art->from()->as7BitString().isEmpty() ) {
+            // If the address incorrect (e.g. "toto <toto AT domain>"), the from is empty !
+            // Used the full header as display name.
+            const QString name = KMime::decodeRFC2047String( hdrValue.toLatin1() );
+            const QByteArray email = "@invalid";
+            art->from()->addAddress( email, name );
+          }
         } else if ( hdrName == "Date" ) {
           art->date()->from7BitString( hdrValue.toLatin1() );
         } else if ( hdrName == "Message-ID" ) {
