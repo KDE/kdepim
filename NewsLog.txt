@@ -20,6 +20,8 @@ Merges
       - kolab/issue2150: Cannot reply on a mail form the local sent-mails folder with context menu
       - kolab/issue1940: Activating "unseen mails behind folder" sets the option "unread mails in own column"
       - kolab/issue2276: Export contacts or calendar overwrites files without a warning
+      - kolab/issue2472: Default event color" is not used
+      - kolab/issue2501: Calendar: events in the month view are displayed in wrong colors
       - Fix enable/disable action when we are in template folder
       - Fix crash in the composer if the transport is empty
       - Fix swedish holiday definitions
