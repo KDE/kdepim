@@ -243,11 +243,6 @@ void CreateDisconnectedImapAccount::apply()
   c.setGroup( QString("Folder-%1").arg( uid ) );
   c.writeEntry( "isOpen", true );
 
-  if ( mEnableSavePassword ) {
-    c.writeEntry( "pass", KStringHandler::obscure( mPassword ) );
-    c.writeEntry( "store-passwd", true );
-  }
-
   c.setGroup( QString("Transport %1").arg( transportId ) );
   c.writeEntry( "name", mAccountName );
   c.writeEntry( "host", mServer );
