@@ -3,6 +3,7 @@ project(akonadiconsole)
 include_directories(${CMAKE_SOURCE_DIR}/akonadi)
 include_directories(${CMAKE_SOURCE_DIR}/libkdepim)
 include_directories(${AKONADI_INCLUDE_DIR})
+include_directories( BEFORE ${CMAKE_CURRENT_BINARY_DIR} )
 
 if(NEPOMUK_FOUND)
   set(AKONADICONSOLE_EXTRA_LIBS ${NEPOMUK_LIBRARIES})
@@ -27,7 +28,14 @@ set(akonadiconsole_bin_SRCS
   mainwindow.cpp
   rawsocketconsole.cpp
   searchdialog.cpp
+  jobtracker.cpp
+  jobtrackerwidget.cpp
+  jobtrackermodel.cpp
 )
+
+qt4_generate_dbus_interface( jobtracker.h org.freedesktop.Akonadi.JobTracker.xml )
+qt4_add_dbus_adaptor( akonadiconsole_bin_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.JobTracker.xml jobtracker.h JobTracker )
+
 
 qt4_add_dbus_interfaces( akonadiconsole_bin_SRCS
   ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.TracerNotification.xml

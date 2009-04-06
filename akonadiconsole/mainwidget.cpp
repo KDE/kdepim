@@ -28,6 +28,7 @@
 #include "debugwidget.h"
 #include "rawsocketconsole.h"
 #include "searchdialog.h"
+#include "jobtrackerwidget.h"
 
 #include <akonadi/agentinstancewidget.h>
 #include <akonadi/agentfilterproxymodel.h>
@@ -56,6 +57,7 @@ MainWidget::MainWidget( KXmlGuiWindow *parent )
   tabWidget->addTab( new RawSocketConsole( tabWidget ), "Raw Socket" );
   tabWidget->addTab( new DbBrowser( tabWidget ), "DB Browser" );
   tabWidget->addTab( new DbConsole( tabWidget ), "DB Console" );
+  tabWidget->addTab( new JobTrackerWidget( tabWidget ), "Job Tracker" );
 
   KAction *action = parent->actionCollection()->addAction( "akonadiconsole_search" );
   action->setText( "Create Search" );
