@@ -58,6 +58,8 @@ QModelIndex JobTrackerModel::index(int row, int column, const QModelIndex & pare
 {
   if ( !parent.isValid() ) // session, at top level
   {
+    if ( row < 0 || row >= d->tracker.sessions().size() )
+      return QModelIndex();
     return createIndex( row, column, d->tracker.idForSession( d->tracker.sessions().at(row) ) );
   }
   // non-toplevel job
