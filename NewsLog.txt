@@ -1,3 +1,25 @@
+Monday, April 6th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue2472: Default event color" is not used
+* kolab/issue2501: Calendar: events in the month view are displayed in wrong colors
+* kolab/issue2276: Export contacts or calendar overwrites files without a warning
+* kolab/issue2150: Cannot reply on a mail form the local sent-mails folder with context menu
+* kolab/issue3492: Default outgoing transport changes randomly when removing any outgoing account
+* kolab/issue3051: Pressing Shift+R at a shown mail opens a composer with a reference to the mail
+* kolab/issue2238: D'n'D a contact on the contact sidebar icon should not be possible.
+* kolab/issue1940: Activating "unseen mails behind folder" sets the option "unread mails in own column"
+* kolab/issue3512: Kontact does not detect shared seen folder capabilty anymore
+* kolab/issue3480: Icon doesn't change if folder type of a calendar folder is changed to mail
++ kolab/issue2687: After applying a new identity, the columns of the mail view reset
+* kolab/issue1848: Deactivate Sieve Script is not possible
+* Other small improvements in the sieve script editor
+* Fix crash in the composer if the transport is empty
+* Fix enable/disable action when we are in template folder
+
+
 Friday, March 27th 2009
 
 Problems addressed
