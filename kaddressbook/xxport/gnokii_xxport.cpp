@@ -484,9 +484,7 @@ KABC::Addressee::List GNOKIIXXPort::importContacts( const QString& ) const
 	m_progressDlg->show();
   	processEvents();
 
-#if (QT_VERSION >= 0x030300)
 	m_progressDlg->setCursor( Qt::BusyCursor );
-#endif
 	QString errStr = businit();
 	m_progressDlg->unsetCursor();
 
