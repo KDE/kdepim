@@ -26,6 +26,7 @@
 
 #include <QtGui/QApplication>
 #include <QtGui/QClipboard>
+#include <QMimeData>
 
 #include <kabc/resource.h>
 #include <kapplication.h>
@@ -318,11 +319,12 @@ void CutCommand::redo()
     lock()->unlock( addr.resource() );
   }
 
-  // Convert to clipboard
-  mClipText = AddresseeUtil::addresseesToClipboard( mAddresseeList );
-
   QClipboard *cb = QApplication::clipboard();
   mOldText = cb->text();
   kapp->processEvents();
-  cb->setText( mClipText );
+  // Convert to clipboard
+  mClipText = AddresseeUtil::addresseesToClipboard( mAddresseeList );
+  QMimeData *data = new QMimeData();
+  data->setData( "text/directory", mClipText );
+  cb->setMimeData( data );
 }
