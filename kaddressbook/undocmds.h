@@ -110,7 +110,7 @@ class CutCommand : public Command
   private:
     KABC::Addressee::List mAddresseeList;
     QStringList mUIDList;
-    QString mClipText;
+    QByteArray mClipText;
     QString mOldText;
 };
 
