@@ -134,7 +134,7 @@ QVariant JobTrackerModel::data(const QModelIndex & idx, int role) const
       if ( idx.column() == 2 )
         return info.type;
       if ( idx.column() == 3 )
-        return info.running;
+        return info.stateAsString();
     }
   }
   return QVariant();
@@ -153,7 +153,7 @@ QVariant JobTrackerModel::headerData(int section, Qt::Orientation orientation, i
       if ( section == 2 )
         return QLatin1String("Job Type");
       if ( section == 3 )
-        return QLatin1String("Running");
+        return QLatin1String("State");
 
     }
   }
@@ -166,7 +166,7 @@ Qt::ItemFlags JobTrackerModel::flags(const QModelIndex & index) const
   if ( index.isValid() && index.parent().isValid() )
   {
     const JobInfo info = d->tracker.info( index.internalId() );
-    if ( !info.running )
+    if ( info.state != JobInfo::Running )
       f ^= Qt::ItemIsEnabled;
   }
   return f;

@@ -28,19 +28,29 @@
 class JobInfo
 {
 public:
-  JobInfo() :parent(-1), running(false)
+  JobInfo() :parent(-1)
   {}
-  bool operator==(const JobInfo& other)
+  bool operator==( const JobInfo& other )
   {
-    return id == other.id
-        && parent == other.parent
-        && running == other.running;
+      return id == other.id
+          && parent == other.parent
+          && type == other.type
+          && timestamp == other.timestamp
+          && state == other.state;
   }
+  
   QString id;
   int parent;
   QString type;
   QDateTime timestamp;
-  bool running;
+  enum JobState
+  {
+      Initial = 0,
+      Running,
+      Ended
+  };
+  JobState state;
+  QString stateAsString() const;
 };
 
 class JobTracker : public QObject

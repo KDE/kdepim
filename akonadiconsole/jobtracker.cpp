@@ -28,6 +28,22 @@
 
 #include <cassert>
 
+QString JobInfo::stateAsString() const
+{
+    switch( state )
+    {
+        case Initial:
+            return QLatin1String("Initial");
+        case Running:
+            return QLatin1String("Running");
+        case Ended:
+            return QLatin1String("Ended");
+        default:
+            return QLatin1String("Unknown state!");
+    }
+}
+
+
 class JobTracker::Private
 {
 public:
@@ -125,7 +141,7 @@ void JobTracker::jobCreated( const QString & session, const QString & job, const
     info.parent = idForSession( session );
   else
     info.parent = idForJob( parent );
-  info.running = true;
+  info.state = JobInfo::Initial;
   info.timestamp = QDateTime::currentDateTime();
   info.type = jobType;
   d->infos.insert( job, info );
@@ -154,7 +170,7 @@ void JobTracker::jobEnded( const QString & job )
   if ( !d->jobs.contains( job ) || !d->infos.contains( job ) ) return;
 
   JobInfo info = d->infos[job];
-  info.running = false;
+  info.state = JobInfo::Ended;
   d->infos[job] = info;
 
   emit updated();
@@ -163,6 +179,15 @@ void JobTracker::jobEnded( const QString & job )
 void JobTracker::jobStarted( const QString & job )
 {
   qDebug() << "Started Job" << job;
+  // this is called from dbus, so better be defensive
+  if ( !d->jobs.contains( job ) || !d->infos.contains( job ) ) return;
+
+  JobInfo info = d->infos[job];
+  info.state = JobInfo::Running;
+  d->infos[job] = info;
+
+  emit updated();
+
 }
 
 QStringList JobTracker::sessions() const
