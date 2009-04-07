@@ -166,7 +166,7 @@ Qt::ItemFlags JobTrackerModel::flags(const QModelIndex & index) const
   if ( index.isValid() && index.parent().isValid() )
   {
     const JobInfo info = d->tracker.info( index.internalId() );
-    if ( info.state != JobInfo::Running )
+    if ( info.state == JobInfo::Running )
       f ^= Qt::ItemIsEnabled;
   }
   return f;
