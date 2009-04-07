@@ -33,6 +33,9 @@ class RawSocketConsole : public QWidget
   private slots:
     void execClicked();
     void dataReceived();
+    void connected();
+    void disconnected();
+    void connectClicked();
 
   private:
     QLocalSocket *mSocket;

@@ -39,26 +39,15 @@ RawSocketConsole::RawSocketConsole(QWidget* parent) :
   ui.execButton->setIcon( KIcon( "application-x-executable" ) );
   connect( ui.execButton, SIGNAL(clicked()), SLOT(execClicked()) );
   connect( ui.commandEdit, SIGNAL(returnPressed()), SLOT(execClicked()) );
+  connect( ui.connectButton, SIGNAL(clicked()), SLOT(connectClicked()) );
   ui.protocolView->setFont( KGlobalSettings::fixedFont() );
 
-  const QString connectionConfigFile = XdgBaseDirs::akonadiConnectionConfigFile();
-  if ( !QFile::exists( connectionConfigFile ) ) {
-    kWarning( 5250 ) << "Akonadi Client Session: connection config file '"
-    << "akonadi/akonadiconnectionrc can not be found in '"
-    << XdgBaseDirs::homePath( "config" ) << "' nor in any of "
-    << XdgBaseDirs::systemPathList( "config" );
-  }
-  QSettings conSettings( connectionConfigFile, QSettings::IniFormat );
-#ifdef Q_OS_WIN  //krazy:exclude=cpp
-  const QString namedPipe = conSettings.value( QLatin1String( "Data/NamedPipe" ), QLatin1String( "Akonadi" ) ).toString();
-  mSocket->connectToServer( namedPipe );
-#else
-  const QString defaultSocketDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) );
-  const QString path = conSettings.value( QLatin1String( "Data/UnixPath" ), defaultSocketDir + QLatin1String( "/akonadiserver.socket" ) ).toString();
-  mSocket->connectToServer( path );
-#endif
-
   connect( mSocket, SIGNAL(readyRead()), SLOT(dataReceived()) );
+  connect( mSocket, SIGNAL(connected()), SLOT(connected()) );
+  connect( mSocket, SIGNAL(disconnected()), SLOT(disconnected()) );
+
+  disconnected();
+  connectClicked();
 }
 
 void RawSocketConsole::execClicked()
@@ -76,6 +65,46 @@ void RawSocketConsole::dataReceived()
   while ( mSocket->canReadLine() ) {
     const QString line = QString::fromUtf8( mSocket->readLine() );
     ui.protocolView->append( "<font color=\"blue\">" + line + "</font>" );
+  }
+}
+
+void RawSocketConsole::connected()
+{
+  ui.connectButton->setChecked( true );
+  ui.connectButton->setText( i18n( "Disconnect" ) );
+  ui.execButton->setEnabled( true );
+  ui.commandEdit->setEnabled( true );
+}
+
+void RawSocketConsole::disconnected()
+{
+  ui.connectButton->setChecked( false );
+  ui.connectButton->setText( i18n( "Connect" ) );
+  ui.execButton->setEnabled( false );
+  ui.commandEdit->setEnabled( false );
+}
+
+void RawSocketConsole::connectClicked()
+{
+  if ( mSocket->state() == QLocalSocket::ConnectedState ) {
+    mSocket->close();
+  } else {
+    const QString connectionConfigFile = XdgBaseDirs::akonadiConnectionConfigFile();
+    if ( !QFile::exists( connectionConfigFile ) ) {
+      kWarning( 5250 ) << "Akonadi Client Session: connection config file '"
+      << "akonadi/akonadiconnectionrc can not be found in '"
+      << XdgBaseDirs::homePath( "config" ) << "' nor in any of "
+      << XdgBaseDirs::systemPathList( "config" );
+    }
+    QSettings conSettings( connectionConfigFile, QSettings::IniFormat );
+#ifdef Q_OS_WIN  //krazy:exclude=cpp
+    const QString namedPipe = conSettings.value( QLatin1String( "Data/NamedPipe" ), QLatin1String( "Akonadi" ) ).toString();
+    mSocket->connectToServer( namedPipe );
+#else
+    const QString defaultSocketDir = XdgBaseDirs::saveDir( "data", QLatin1String( "akonadi" ) );
+    const QString path = conSettings.value( QLatin1String( "Data/UnixPath" ), defaultSocketDir + QLatin1String( "/akonadiserver.socket" ) ).toString();
+    mSocket->connectToServer( path );
+#endif
   }
 }
 

@@ -1,7 +1,8 @@
-<ui version="4.0" >
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
  <class>RawSocketConsole</class>
- <widget class="QWidget" name="RawSocketConsole" >
-  <property name="geometry" >
+ <widget class="QWidget" name="RawSocketConsole">
+  <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
@@ -9,27 +10,37 @@
     <height>443</height>
    </rect>
   </property>
-  <layout class="QVBoxLayout" name="verticalLayout" >
+  <layout class="QVBoxLayout" name="verticalLayout">
    <item>
-    <widget class="KTextEdit" name="protocolView" >
-     <property name="readOnly" >
+    <widget class="KTextEdit" name="protocolView">
+     <property name="readOnly">
       <bool>true</bool>
      </property>
     </widget>
    </item>
    <item>
-    <layout class="QHBoxLayout" name="horizontalLayout" >
+    <layout class="QHBoxLayout" name="horizontalLayout">
      <item>
-      <widget class="KLineEdit" name="commandEdit" >
-       <property name="clickMessage" >
+      <widget class="KLineEdit" name="commandEdit">
+       <property name="clickMessage">
         <string>COMMAND</string>
        </property>
       </widget>
      </item>
      <item>
-      <widget class="KPushButton" name="execButton" >
-       <property name="text" >
+      <widget class="KPushButton" name="execButton">
+       <property name="text">
         <string>Execute</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="KPushButton" name="connectButton">
+       <property name="text">
+        <string>Connect</string>
+       </property>
+       <property name="checkable">
+        <bool>true</bool>
        </property>
       </widget>
      </item>
@@ -39,18 +50,18 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>KLineEdit</class>
-   <extends>QLineEdit</extends>
-   <header>klineedit.h</header>
-  </customwidget>
-  <customwidget>
    <class>KPushButton</class>
-   <extends>QPushButton</extends>
+   <extends></extends>
    <header>kpushbutton.h</header>
   </customwidget>
   <customwidget>
+   <class>KLineEdit</class>
+   <extends></extends>
+   <header>klineedit.h</header>
+  </customwidget>
+  <customwidget>
    <class>KTextEdit</class>
-   <extends>QTextEdit</extends>
+   <extends></extends>
    <header>ktextedit.h</header>
   </customwidget>
  </customwidgets>
