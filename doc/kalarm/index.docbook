@@ -33,7 +33,7 @@
 </authorgroup>
 
 <copyright>
-<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year><year>2007</year><year>2008</year>
+<year>2001</year><year>2002</year><year>2003</year><year>2004</year><year>2005</year><year>2006</year><year>2007</year><year>2008</year><year>2009</year>
 <holder>&David.Jarvie;</holder>
 </copyright>
 
@@ -41,8 +41,8 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2008-11-17</date>
-<releaseinfo>2.01.00</releaseinfo>
+<date>2009-04-06</date>
+<releaseinfo>2.02.00</releaseinfo>
 
 <abstract>
 <para>&kalarm; is a personal alarm message, command and email scheduler for &kde;.</para>
@@ -129,6 +129,53 @@ buttons.</para>
 </mediaobject>
 </tip>
 
+<sect1 id="alarm-types">
+<title>Alarm Types</title>
+
+<para>The basic functions available from the different alarm types
+which KAlarm provides are:</para>
+
+<itemizedlist>
+<listitem>
+<para>Display alarms display either a text message which you type in,
+or the contents of a text or image file, or the textual output from a
+command which is run when the alarm triggers. In addition to
+displaying one of these items, they can also play audio files, have
+their text spoken, or emit a simple beep. You can also specify
+commands to be executed before and after the alarm message is
+displayed.</para>
+</listitem>
+
+<listitem>
+<para>Command alarms execute either a command or a shell script which
+you can type in. Nothing is displayed unless an error occurs.</para>
+</listitem>
+
+<listitem>
+<para>Email alarms send a email. Nothing is displayed unless an error
+occurs.</para>
+</listitem>
+</itemizedlist>
+
+<sect2 id="errors">
+<title>Error Handling</title>
+
+<para>If an error occurs when an alarm triggers, an error message will
+be displayed (unless you have previously specified not to show that
+type of message again).</para>
+
+<para>If an execution error occurred the last time a command alarm
+triggered, a white on red exclamation mark is shown in the message
+color column. Details of the error are displayed in a tooltip if you
+position the cursor over that line in the alarm list. The same error
+indications are shown for display alarms if an execution error
+occurred for a pre- or post-alarm command specified in the Special
+Actions dialog, except that the color column is not changed to a red
+background.</para>
+
+</sect2>
+</sect1>
+
 <sect1 id="alarm-list">
 <title>Alarm List</title>
 
@@ -159,6 +206,15 @@ a daily recurrence, <quote>3 Weeks</quote> for a recurrence which
 triggers on Monday and Wednesday every third week,
 <quote>Login</quote> for a repeat-at-login alarm).</para>
 
+<para>If an execution error occurred the last time a command alarm
+triggered, or the last time a display alarm's pre- or post-alarm
+command was executed, an error indication is shown in the color
+column, as described in <link linkend="errors">Error Handling</link>
+above.</para>
+
+<sect2 id="listappear">
+<title>Changing the Alarm List Appearance</title>
+
 <para>The alarms may be ordered by date/time, repeat interval, color,
 type or text by clicking on the titlebar for the appropriate column.
 To reverse the sort order, click the column titlebar again.</para>
@@ -176,6 +232,8 @@ always shown.</para>
 <para>If you use multiple alarm resources, you can color code alarms
 according to which resource they belong to, by selecting a different
 background color for each resource.</para>
+
+</sect2>
 
 <sect2 id="expired">
 <title>Archived Alarms</title>
@@ -299,6 +357,14 @@ message, drag the email from &kmail; onto &kalarm;'s main window or
 system tray icon. Then select the <guilabel>Email</guilabel> option.
 The <link linkend="alarm-edit-dlg">Alarm Edit dialog</link> is preset
 with the entire email message except sender.</para>
+</listitem>
+
+<listitem>
+<para>To create a new alarm which displays a summary of an existing
+to-do, drag the to-do from &korganizer; or other application onto
+&kalarm;'s main window or system tray icon. This opens the
+<link linkend="alarm-edit-dlg">Alarm Edit dialog</link> with the
+to-do contents as the alarm text.</para>
 </listitem>
 
 <listitem>
@@ -816,6 +882,16 @@ resources.</para>
 </varlistentry>
 
 <varlistentry>
+<term><menuchoice><guimenuitem>Export...</guimenuitem></menuchoice></term>
+<listitem>
+<para>Export all the alarms in the selected resource to an external calendar
+file. This is described in
+<link linkend="export">Exporting Alarms to External Calendars</link>.
+This option is not available for disabled resources.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
 <term><menuchoice><guimenuitem>Show Details</guimenuitem></menuchoice></term>
 <listitem>
 <para>Display details about the selected resource. This shows the
@@ -898,6 +974,39 @@ on the data storage conventions used by the other application, and is
 unavoidable if those conventions differ from what &kalarm; expects.
 Always check imported alarms for unexpected changes, and adjust them
 as necessary.</para></warning>
+
+</sect2>
+
+<sect2 id="export">
+<title>Exporting Alarms to External Calendars</title>
+
+<para>You can export alarms from &kalarm; to other calendar files,
+either the alarms currently selected in the alarm list, or all the
+alarms from an alarm resource. The methods to do this are given below.
+Whichever method is used, you can either create a new calendar file
+or append the exported alarms to an existing calendar file. To append
+the alarms, check <guilabel>Append to existing file</guilabel> in the
+file selection dialog; otherwise, any existing file is
+overwritten.</para>
+
+<itemizedlist>
+<listitem>
+<para>To export the alarms currently selected in the alarm list,
+<mousebutton>Right</mousebutton> click on the selection and choose
+<menuchoice><guimenuitem>Export...</guimenuitem></menuchoice> from the
+context menu, or use <menuchoice><guimenu>File</guimenu>
+<guimenuitem>Export Selected Alarms...</guimenuitem></menuchoice> in
+the main menu.</para>
+</listitem>
+
+<listitem>
+<para>To export all the alarms from a resource,
+<mousebutton>Right</mousebutton> click on a resource in the resource
+list, and choose
+<menuchoice><guimenuitem>Export...</guimenuitem></menuchoice> from the
+context menu.</para>
+</listitem>
+</itemizedlist>
 
 </sect2>
 
@@ -1748,26 +1857,6 @@ a convenient way to activate &kalarm;.</para>
 
 <para>You can choose in the
 <link linkend="preferences-view">Configuration dialog</link> which of
-two schemes should be used to position alarm message windows:</para>
-
-<itemizedlist>
-<listitem>
-<para>The windows are displayed as far away from the current mouse
-cursor as possible. This minimizes disruption to your work flow and
-minimizes the possibility of accidentally acknowledging the
-alarm.</para>
-</listitem>
-
-<listitem>
-<para>The windows are displayed in the center of the screen. To reduce
-the chance of accidentally acknowledging the alarm, the buttons on the
-window are initially disabled, becoming active only after a
-configurable delay.</para>
-</listitem>
-</itemizedlist>
-
-<para>You can also choose in the
-<link linkend="preferences-view">Configuration dialog</link> which of
 two different modes should be used to display alarm message
 windows:</para>
 
@@ -1787,6 +1876,43 @@ titlebar or frame, so you cannot move it or resize it.</para>
 </listitem>
 </itemizedlist>
 
+<note><para>When an alarm is displayed on top of a full screen
+application, it is shown as a non-modal window regardless of this
+configuration setting. This is due to a limitation of the window
+system.</para></note>
+
+<sect2>
+<title>Positioning of Message Windows</title>
+
+<para>You can choose in the
+<link linkend="preferences-view">Configuration dialog</link> which of
+two schemes should be used to position alarm message windows:</para>
+
+<itemizedlist>
+<listitem>
+<para>The windows are displayed as far away from the current mouse
+cursor as possible. This minimizes disruption to your work flow and
+minimizes the possibility of accidentally acknowledging the
+alarm.</para>
+</listitem>
+
+<listitem>
+<para>The windows are displayed in the center of the screen. To reduce
+the chance of accidentally acknowledging the alarm, the buttons on the
+window are initially disabled, becoming active only after a
+configurable delay.</para>
+</listitem>
+</itemizedlist>
+
+<para>If you have several alarm message windows, or error messages,
+displayed, you can spread the windows out across the screen to make
+them all visible, or group them all together again in the top left
+corner of the screen, by means of the <menuchoice>
+<guimenu>View</guimenu><guimenuitem>Spread Windows</guimenuitem>
+</menuchoice> menu option. If you wish, you can set up a global
+shortcut key for this action.</para>
+
+</sect2>
 </sect1>
 
 <sect1 id="system-tray">
@@ -2104,6 +2230,14 @@ mode.</para>
 <listitem><para><guilabel>Confirm alarm deletions</guilabel>: Specify
 whether you should be prompted for confirmation each time you delete
 an alarm.</para>
+</listitem>
+
+<listitem><para><guilabel>Default defer time interval</guilabel>:
+Enter the default time interval, in hours and minutes, to show
+initially when the Defer Alarm dialog is displayed. Note that if an
+alarm has been deferred previously, the interval shown initially in the
+Defer Alarm dialog will be equal to the deferral interval used the last
+time that alarm was deferred.</para>
 </listitem>
 
 <listitem><para><guilabel>Terminal for Command Alarms</guilabel>:
@@ -4251,11 +4385,11 @@ that the session manager has time to do its job) before starting
 &kalarm;
 </para>
 <para>
-Program copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 &David.Jarvie; &David.Jarvie.mail;
+Program copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 &David.Jarvie; &David.Jarvie.mail;
 </para>
 
 <para>
-Documentation copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008 &David.Jarvie; &David.Jarvie.mail;
+Documentation copyright 2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009 &David.Jarvie; &David.Jarvie.mail;
 </para>
 
 <!-- TRANS:CREDIT_FOR_TRANSLATORS -->
