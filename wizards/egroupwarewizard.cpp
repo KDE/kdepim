@@ -61,7 +61,7 @@ class CreateEGroupwareKabcResource : public KConfigPropagator::Change
 {
   public:
     CreateEGroupwareKabcResource()
-      : KConfigPropagator::Change( i18n("Create eGroupware Addressbook Resource") )
+      : KConfigPropagator::Change( i18n("Create eGroupware Address Book Resource") )
     {
     }
 
@@ -88,7 +88,7 @@ class ChangeEGroupwareKabcResource : public KConfigPropagator::Change
 {
   public:
     ChangeEGroupwareKabcResource( const QString &identifier )
-      : KConfigPropagator::Change( i18n("Create eGroupware Addressbook Resource") ),
+      : KConfigPropagator::Change( i18n("Create eGroupware Address Book Resource") ),
         mIdentifier( identifier )
     {
     }

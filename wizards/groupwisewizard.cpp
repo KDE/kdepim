@@ -114,7 +114,7 @@ class CreateGroupwiseKabcResource : public KConfigPropagator::Change
 {
   public:
     CreateGroupwiseKabcResource()
-      : KConfigPropagator::Change( i18n("Create GroupWise Addressbook Resource") )
+      : KConfigPropagator::Change( i18n("Create GroupWise Address Book Resource") )
     {
     }
 
@@ -143,7 +143,7 @@ class UpdateGroupwiseKabcResource : public KConfigPropagator::Change
 {
   public:
     UpdateGroupwiseKabcResource()
-      : KConfigPropagator::Change( i18n("Update GroupWise Addressbook Resource") )
+      : KConfigPropagator::Change( i18n("Update GroupWise Address Book Resource") )
     {
     }
 

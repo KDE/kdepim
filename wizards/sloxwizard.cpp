@@ -114,7 +114,7 @@ class CreateSloxKabcResource : public KConfigPropagator::Change
 {
   public:
     CreateSloxKabcResource()
-      : KConfigPropagator::Change( i18n("Create SLOX Addressbook Resource") )
+      : KConfigPropagator::Change( i18n("Create SLOX Address Book Resource") )
     {
     }
 
@@ -140,7 +140,7 @@ class UpdateSloxKabcResource : public KConfigPropagator::Change
 {
   public:
     UpdateSloxKabcResource()
-      : KConfigPropagator::Change( i18n("Update SLOX Addressbook Resource") )
+      : KConfigPropagator::Change( i18n("Update SLOX Address Book Resource") )
     {
     }
 

@@ -90,7 +90,7 @@ namespace {
           QString contact = AddresseeView::vCardAsHTML( a, 0L, AddresseeView::NoLinks, false, AddresseeView::DefaultFields );
           writer->queue( contact );
 
-          QString addToLinkText = i18n( "[Add this contact to the addressbook]" );
+          QString addToLinkText = i18n( "[Add this contact to the address book]" );
           QString op = QString::fromLatin1( "addToAddressBook:%1" ).arg( count );
           writer->queue(
                 "<div align=\"center\"><a href=\"" +

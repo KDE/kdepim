@@ -42,8 +42,8 @@ QString SloxFolder::name( ) const
 {
   // special cases for system folders
   if ( mName == "system_global" )
-    return i18n( "Global Addressbook" );
+    return i18n( "Global Address Book" );
   if ( mName == "system_ldap" )
-    return i18n( "Internal Addressbook" );
+    return i18n( "Internal Address Book" );
   return mName;
 }

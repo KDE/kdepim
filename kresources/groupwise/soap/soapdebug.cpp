@@ -46,7 +46,7 @@ int main( int argc, char **argv )
   options.add("password <string>", ki18n("Password"));
   options.add("f");
   options.add("freebusy-user <string>", ki18n("Free/Busy user name"));
-  options.add("addressbook-id <string>", ki18n("Addressbook identifier"));
+  options.add("addressbook-id <string>", ki18n("Address book identifier"));
   KCmdLineArgs::addCmdLineOptions( options );
 
   KApplication app;

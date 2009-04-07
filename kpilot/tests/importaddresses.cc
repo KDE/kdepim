@@ -52,7 +52,7 @@ int main(int argc, char **argv)
 	KCmdLineOptions options;
 	options.add("verbose", ki18n("Verbose output"));
 	options.add("data-dir <path>", ki18n("Set data directory"), ".");
-	options.add("address-file <path>", ki18n("Set addressbook file"));
+	options.add("address-file <path>", ki18n("Set address book file"));
 	KCmdLineArgs::addCmdLineOptions( options );
 
 	//  KApplication app( false, false );

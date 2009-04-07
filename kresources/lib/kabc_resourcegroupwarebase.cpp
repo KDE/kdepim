@@ -95,8 +95,8 @@ void ResourceGroupwareBase::setAdaptor( AddressBookAdaptor *adaptor )
   mAdaptor = adaptor;
   mAdaptor->setFolderLister( mFolderLister );
   if ( mFolderLister ) mFolderLister->setAdaptor( mAdaptor );
-  mAdaptor->setDownloadProgressMessage( i18n("Downloading addressbook") );
-  mAdaptor->setUploadProgressMessage( i18n("Uploading addressbook") );
+  mAdaptor->setDownloadProgressMessage( i18n("Downloading address book") );
+  mAdaptor->setUploadProgressMessage( i18n("Uploading address book") );
   if ( prefs() ) {
     mAdaptor->setBaseURL( prefs()->url() );
     mAdaptor->setUser( prefs()->user() );

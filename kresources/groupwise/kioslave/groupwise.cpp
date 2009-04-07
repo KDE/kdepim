@@ -277,7 +277,7 @@ void Groupwise::getAddressbook( const KUrl &url )
 
   QString query = url.query();
   if ( query.isEmpty() || query == "?" ) {
-    errorMessage( i18n("No addressbook IDs given.") );
+    errorMessage( i18n("No address book IDs given.") );
   } else {
     QStringList ids;
 
@@ -310,7 +310,7 @@ void Groupwise::getAddressbook( const KUrl &url )
     } else {
       kDebug() <<"Read Addressbook";
       if ( !server.readAddressBooksSynchronous( ids ) ) {
-        errorMessage( i18n("Unable to read addressbook data: ") + server.errorText() );
+        errorMessage( i18n("Unable to read address book data: ") + server.errorText() );
       }
       kDebug() <<"Logout";
       server.logout();
@@ -347,7 +347,7 @@ void Groupwise::updateAddressbook( const KUrl &url )
   unsigned long lastPORebuildTime = 0;
 
   if ( query.isEmpty() || query == "?" ) {
-    errorMessage( i18n("No addressbook IDs given.") );
+    errorMessage( i18n("No address book IDs given.") );
     return;
   } else {
     QStringList ids;

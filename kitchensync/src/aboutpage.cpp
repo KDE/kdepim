@@ -117,7 +117,7 @@ QString AboutPage::htmlText() const
                        KGlobal::mainComponent().aboutData()->version() );
 
   info += QString( "<p>%1</p>" )
-          .arg( i18n( "KitchenSync synchronizes your e-mail, addressbook, calendar, to-do list and more." ) );
+          .arg( i18n( "KitchenSync synchronizes your e-mail, address book, calendar, to-do list and more." ) );
 
   info += QLatin1String( "<table align=\"center\">" );
 
