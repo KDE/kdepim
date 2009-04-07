@@ -55,7 +55,8 @@ JobTracker::JobTracker( QObject* parent )
 :QObject( parent ), d( new Private( this ) )
 {
   new JobTrackerAdaptor( this );
-    QDBusConnection::sessionBus().registerObject( QLatin1String("/jobtracker"),
+  QDBusConnection::sessionBus().registerService( QLatin1String("org.kde.akonadiconsole") );
+  QDBusConnection::sessionBus().registerObject( QLatin1String("/jobtracker"),
       this, QDBusConnection::ExportAdaptors );
 
 #if 0
@@ -95,20 +96,23 @@ JobTracker::~JobTracker()
   delete d;
 }
 
-void JobTracker::jobStarted( const QString & session, const QString & job, const QString & parent, const QString & jobType )
+void JobTracker::jobCreated( const QString & session, const QString & job, const QString & parent, const QString & jobType )
 {
-  qDebug() << "Started Job" << job << "for session" << session;
+  qDebug() << "Created Job" << job << "for session" << session;
   if ( session.isEmpty() || job.isEmpty() ) return;
 
   if ( !parent.isEmpty() && !d->jobs.contains( parent ) )
   {
     qWarning() << "JobTracker: Job arrived before it's parent! Fix the library!";
-    return;
+    jobCreated( session, parent, QString(),"dummy job type" );
   }
 
   // check if it's a new session, if so, add it
   if (!d->sessions.contains( session ) )
+  {
     d->sessions.append( session );
+    d->jobs.insert( session, QStringList() );
+  }
 
   // deal with the job
   if ( d->jobs.contains( job ) ) return; // duplicate?
@@ -156,6 +160,11 @@ void JobTracker::jobEnded( const QString & job )
   emit updated();
 }
 
+void JobTracker::jobStarted( const QString & job )
+{
+  qDebug() << "Started Job" << job;
+}
+
 QStringList JobTracker::sessions() const
 {
   return d->sessions;
@@ -163,13 +172,14 @@ QStringList JobTracker::sessions() const
 
 QList<JobInfo> JobTracker::jobs( int id ) const
 {
+  if ( d->isSession( id ) )
+    return jobs( sessionForId( id ) );
   return jobs( jobForId( id ) );
 }
 
 QList<JobInfo> JobTracker::jobs( const QString & parent ) const
 {
   assert( d->jobs.contains(parent) );
-
   const QStringList jobs = d->jobs[parent];
   QList<JobInfo> infos;
   Q_FOREACH( QString job, jobs )

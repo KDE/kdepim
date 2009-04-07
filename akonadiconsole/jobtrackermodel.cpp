@@ -151,7 +151,10 @@ QVariant JobTrackerModel::headerData(int section, Qt::Orientation orientation, i
       if ( section == 1 )
         return QLatin1String("Timestamp");
       if ( section == 2 )
+        return QLatin1String("Job Type");
+      if ( section == 3 )
         return QLatin1String("Running");
+
     }
   }
   return QVariant();

@@ -68,7 +68,8 @@ Q_SIGNALS:
   void updated();
 
 public Q_SLOTS:
-  Q_SCRIPTABLE void jobStarted( const QString & session, const QString & job, const QString& parentJob, const QString & jobType );
+  Q_SCRIPTABLE void jobCreated( const QString & session, const QString & job, const QString& parentJob, const QString & jobType );
+  Q_SCRIPTABLE void jobStarted( const QString & job );
   Q_SCRIPTABLE void jobEnded( const QString & job );
   Q_SCRIPTABLE void reset();
 
