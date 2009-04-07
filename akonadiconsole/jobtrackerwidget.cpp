@@ -28,6 +28,7 @@
 #include <KLocale>
 
 #include <QtGui/QTreeView>
+#include <QtGui/QHeaderView>
 #include <QtGui/QVBoxLayout>
 
 
@@ -41,6 +42,9 @@ JobTrackerWidget::JobTrackerWidget( QWidget *parent )
   QTreeView *tv = new QTreeView( this );
   JobTrackerModel * model = new JobTrackerModel( this );
   tv->setModel( model );
+  tv->expandAll();
+  tv->header()->setResizeMode( QHeaderView::ResizeToContents );
+  connect( model, SIGNAL( modelReset( ) ), tv, SLOT( expandAll() ) );
   layout->addWidget( tv );
 
   Akonadi::Control::widgetNeedsAkonadi( this );
