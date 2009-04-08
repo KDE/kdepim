@@ -246,6 +246,8 @@ void CreateDisconnectedImapAccount::apply()
   c.setGroup(  "AccountWizard"  );
   c.writeEntry(  "ShowOnStartup" , false );
 
+  c.setGroup( "Composer" );
+  c.writeEntry( "default-transport", mAccountName );
 
   c.setGroup( QString("Transport %1").arg( transportId ) );
   c.writeEntry( "name", mAccountName );
