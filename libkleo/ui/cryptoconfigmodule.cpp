@@ -928,14 +928,51 @@ Kleo::CryptoConfigEntryKeyserver::CryptoConfigEntryKeyserver(
   }
 }
 
+Kleo::ParsedKeyserver Kleo::parseKeyserver( const QString & str ) {
+  const QStringList list = str.split( QRegExp( QLatin1String( "[\\s,]" ) ), QString::SkipEmptyParts );
+  if ( list.empty() )
+    return Kleo::ParsedKeyserver();
+  Kleo::ParsedKeyserver result;
+  result.url = list.front();
+  Q_FOREACH( const QString & kvpair, list.mid( 1 ) ) {
+    const int idx = kvpair.indexOf( QLatin1Char( '=' ) );
+    if ( idx < 0 ) {
+        result.options.push_back( qMakePair( kvpair, QString() ) ); // null QString
+    } else {
+        const QString key = kvpair.left( idx );
+        const QString value = kvpair.mid( idx+1 );
+        if ( value.isEmpty() )
+            result.options.push_back( qMakePair( key, QString("") ) ); // make sure it's not a null QString, only an empty one
+        else
+            result.options.push_back( qMakePair( key, value ) );
+    }
+  }
+  return result;
+}
+
+QString Kleo::assembleKeyserver( const ParsedKeyserver & keyserver ) {
+    if ( keyserver.options.empty() )
+        return keyserver.url;
+    QString result = keyserver.url;
+    typedef QPair<QString,QString> Pair;
+    Q_FOREACH( const Pair & pair, keyserver.options )
+        if ( pair.second.isNull() )
+            result += QLatin1Char( ' ' ) + pair.first ;
+        else
+            result += QLatin1Char( ' ' ) + pair.first + QLatin1Char( '=' ) + pair.second ;
+    return result;
+}
+
 void Kleo::CryptoConfigEntryKeyserver::doLoad()
 {
-  mLabel->setText( mEntry->stringValue() );
+  mParsedKeyserver = parseKeyserver( mEntry->stringValue() );
+  mLabel->setText( mParsedKeyserver.url );
 }
 
 void Kleo::CryptoConfigEntryKeyserver::doSave()
 {
-  mEntry->setStringValue( mLabel->text() );
+  mParsedKeyserver.url = mLabel->text();
+  mEntry->setStringValue( assembleKeyserver( mParsedKeyserver ) );
 }
 
 static KUrl::List string2urls( const QString & str ) {

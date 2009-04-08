@@ -41,6 +41,15 @@ namespace Kleo {
   class CryptoConfig;
   class CryptoConfigComponentGUI;
 
+  struct ParsedKeyserver {
+      QString url;
+      QVector< QPair<QString,QString> > options;
+  };
+
+  KLEO_EXPORT ParsedKeyserver parseKeyserver( const QString & str );
+  KLEO_EXPORT QString assembleKeyserver( const ParsedKeyserver & keyserver );
+
+
   /**
    * Crypto Config Module widget, dynamically generated from CryptoConfig
    * It's a simple QWidget so that it can be embedded into a dialog or into a KCModule.

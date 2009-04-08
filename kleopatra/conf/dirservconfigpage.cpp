@@ -34,6 +34,7 @@
 
 #include "dirservconfigpage.h"
 #include "libkleo/ui/directoryserviceswidget.h"
+#include "libkleo/ui/cryptoconfigmodule.h"
 #include "libkleo/kleo/cryptobackendfactory.h"
 
 #include <kdemacros.h>
@@ -240,7 +241,7 @@ void DirectoryServicesConfigurationPage::load()
   mOpenPGPServiceEntry = configEntry( s_pgpservice_componentName, s_pgpservice_groupName, s_pgpservice_entryName,
                                       Kleo::CryptoConfigEntry::ArgType_String, false );
   if ( mOpenPGPServiceEntry )
-      mWidget->addOpenPGPServices( string2urls( mOpenPGPServiceEntry->stringValue() ) );
+      mWidget->addOpenPGPServices( string2urls( parseKeyserver( mOpenPGPServiceEntry->stringValue() ).url ) );
 
   mWidget->setOpenPGPReadOnly( mOpenPGPServiceEntry && mOpenPGPServiceEntry->isReadOnly() );
 
@@ -296,8 +297,11 @@ void DirectoryServicesConfigurationPage::save()
       const KUrl::List serv = mWidget->openPGPServices();
       if ( serv.empty() )
           mOpenPGPServiceEntry->setStringValue( QString() );
-      else
-          mOpenPGPServiceEntry->setStringValue( serv.front().url() );
+      else {
+          ParsedKeyserver pks = parseKeyserver( mOpenPGPServiceEntry->stringValue() );
+          pks.url = serv.front().url();
+          mOpenPGPServiceEntry->setStringValue( assembleKeyserver( pks ) );
+      }
   }
 
   QTime time( mTimeout->time() );

@@ -305,7 +305,7 @@ namespace Kleo {
   };
 
   /**
-   * A widget manager for an LDAP list entry in the crypto config
+   * A widget manager for a (OpenPGP) keyserver entry in the crypto config
    */
   class CryptoConfigEntryKeyserver : public CryptoConfigEntryGUI {
     Q_OBJECT
@@ -323,6 +323,7 @@ namespace Kleo {
   private:
     QLabel* mLabel;
     QPushButton* mPushButton;
+    ParsedKeyserver mParsedKeyserver;
   };
 }
 
