@@ -20,9 +20,11 @@
 #include "dbconsole.h"
 #include "dbaccess.h"
 
+#include <KDebug>
 #include <KGlobalSettings>
 
 #include <QSqlDatabase>
+#include <QSqlError>
 #include <QSqlQueryModel>
 
 DbConsole::DbConsole(QWidget* parent) :
@@ -35,6 +37,7 @@ DbConsole::DbConsole(QWidget* parent) :
   connect( ui.execButton, SIGNAL(clicked()), SLOT(execClicked()) );
 
   ui.queryEdit->setFont( KGlobalSettings::fixedFont() );
+  ui.errorView->setFont( KGlobalSettings::fixedFont() );
 }
 
 void DbConsole::execClicked()
@@ -46,6 +49,14 @@ void DbConsole::execClicked()
   mQueryModel = new QSqlQueryModel( this );
   mQueryModel->setQuery( query, DbAccess::database() );
   ui.resultView->setModel( mQueryModel );
+
+  if ( mQueryModel->lastError().isValid() ) {
+    ui.errorView->appendPlainText( mQueryModel->lastError().text() );
+    ui.resultStack->setCurrentWidget( ui.errorViewPage );
+  } else {
+    ui.errorView->clear();
+    ui.resultStack->setCurrentWidget( ui.resultViewPage );
+  }
 }
 
 #include "dbconsole.moc"
