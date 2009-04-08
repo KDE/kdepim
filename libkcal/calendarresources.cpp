@@ -55,6 +55,23 @@
 
 using namespace KCal;
 
+bool CalendarResources::DestinationPolicy::hasCalendarResources(  )
+{
+  CalendarResourceManager::ActiveIterator it;
+  for ( it = resourceManager()->activeBegin();
+        it != resourceManager()->activeEnd(); ++it ) {
+    if ( !(*it)->readOnly() ) {
+      //Insert the first the Standard resource to get be the default selected.
+      if ( resourceManager()->standardResource() == *it ) {
+        return true;
+      } else {
+        return true;
+      }
+    }
+  }
+  return false;
+}
+
 ResourceCalendar
 *CalendarResources::StandardDestinationPolicy::destination( Incidence * )
 {
@@ -447,6 +464,11 @@ Alarm::List CalendarResources::alarms( const QDateTime &from,
       result.append( *alarmit );
   }
   return result;
+}
+
+bool CalendarResources::hasCalendarResources()
+{
+  return mDestinationPolicy->hasCalendarResources();
 }
 
 /****************************** PROTECTED METHODS ****************************/

@@ -80,7 +80,7 @@ class LIBKCAL_EXPORT CalendarResources :
         virtual ResourceCalendar *destination( Incidence *incidence ) = 0;
         virtual QWidget *parent() { return mParent; }
         virtual void setParent( QWidget *newparent ) { mParent = newparent; }
-
+        bool hasCalendarResources();
       protected:
         CalendarResourceManager *resourceManager()
          { return mManager; }
@@ -253,20 +253,20 @@ class LIBKCAL_EXPORT CalendarResources :
        Resource which is queried.
     */
     void setAskDestinationPolicy();
-    
-    /** 
+
+    /**
        Returns the current parent for new dialogs. This is a bad hack, but we need
        to properly set the parent for the resource selection dialog. Otherwise
-       the dialog will not be modal to the editor dialog in korganizer and 
+       the dialog will not be modal to the editor dialog in korganizer and
        the user can still work in the editor dialog (and thus crash korganizer).
-       Afterwards we need to reset it (to avoid pointers to widgets that are 
+       Afterwards we need to reset it (to avoid pointers to widgets that are
        already deleted) so we also need the accessor
     */
     QWidget *dialogParentWidget();
-    /** 
+    /**
        Set the widget parent for new dialogs. This is a bad hack, but we need
        to properly set the parent for the resource selection dialog. Otherwise
-       the dialog will not be modal to the editor dialog in korganizer and 
+       the dialog will not be modal to the editor dialog in korganizer and
        the user can still work in the editor dialog (and thus crash korganizer).
     */
     void setDialogParentWidget( QWidget *parent );
@@ -607,6 +607,8 @@ class LIBKCAL_EXPORT CalendarResources :
      */
     void setTimeZoneIdViewOnly( const QString& tz );
 
+  //issue 2508
+    bool hasCalendarResources();
   signals:
     /**
        Signal that the Resource has been modified.
