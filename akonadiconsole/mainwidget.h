@@ -35,6 +35,10 @@ class MainWidget : public QWidget
 
   private Q_SLOTS:
     void createSearch();
+    void startServer();
+    void stopServer();
+    void restartServer();
+    void configureServer();
 };
 
 #endif

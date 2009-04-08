@@ -32,10 +32,12 @@
 
 #include <akonadi/agentinstancewidget.h>
 #include <akonadi/agentfilterproxymodel.h>
+#include <akonadi/control.h>
 #include <akonadi/searchcreatejob.h>
 
 #include <KAction>
 #include <KActionCollection>
+#include <KCMultiDialog>
 #include <KXmlGuiWindow>
 
 #include <QtGui/QTabWidget>
@@ -66,6 +68,23 @@ MainWidget::MainWidget( KXmlGuiWindow *parent )
   action = parent->actionCollection()->addAction( "akonadiconsole_akonadi2xml" );
   action->setText( "Dump to XML..." );
   connect( action, SIGNAL(triggered()), browser, SLOT(dumpToXml()) );
+
+  action = parent->actionCollection()->addAction( "akonadiserver_start" );
+  action->setText( "Start Server" );
+  connect( action, SIGNAL(triggered()), SLOT(startServer()) );
+
+  action = parent->actionCollection()->addAction( "akonadiserver_stop" );
+  action->setText( "Stop Server" );
+  connect( action, SIGNAL(triggered()), SLOT(stopServer()) );
+
+  action = parent->actionCollection()->addAction( "akonadiserver_restart" );
+  action->setText( "Restart Server" );
+  connect( action, SIGNAL(triggered()), SLOT(restartServer()) );
+
+  action = parent->actionCollection()->addAction( "akonadiserver_configure" );
+  action->setText( "Configure Server..." );
+  action->setIcon( KIcon("configure") );
+  connect( action, SIGNAL(triggered()), SLOT(configureServer()) );
 }
 
 void MainWidget::createSearch()
@@ -84,5 +103,28 @@ void MainWidget::createSearch()
 
   new Akonadi::SearchCreateJob( name, query );
 }
+
+void MainWidget::startServer()
+{
+  Akonadi::Control::start( this );
+}
+
+void MainWidget::stopServer()
+{
+  Akonadi::Control::stop( this );
+}
+
+void MainWidget::restartServer()
+{
+  Akonadi::Control::restart( this );
+}
+
+void MainWidget::configureServer()
+{
+  KCMultiDialog dlg;
+  dlg.addModule( "kcm_akonadi_server" );
+  dlg.exec();
+}
+
 
 #include "mainwidget.moc"
