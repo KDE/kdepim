@@ -70,6 +70,7 @@ Name[x-test]=xxMiscxx
 Name[zh_CN]=杂项
 Name[zh_TW]=其他
 Comment=Setup misc for KJots
+Comment[et]=KJotsi muud seadistused
 Comment[nds]=Anner Saken binnen KJots instellen
 Comment[pt]=Configuração diversa do KJots
 Comment[pt_BR]=Configurações diversas do KJots
