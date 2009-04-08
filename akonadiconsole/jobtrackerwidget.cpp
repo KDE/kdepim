@@ -30,30 +30,41 @@
 #include <QtGui/QTreeView>
 #include <QtGui/QHeaderView>
 #include <QtGui/QVBoxLayout>
+#include <QMenu>
 
 
-using org::freedesktop::Akonadi::DebugInterface;
+class JobTrackerWidget::Private
+{
+  public:
+    JobTrackerModel* model;
+};
 
 JobTrackerWidget::JobTrackerWidget( QWidget *parent )
-  : QWidget( parent )
+  : QWidget( parent ),
+  d( new Private )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 
   QTreeView *tv = new QTreeView( this );
-  JobTrackerModel * model = new JobTrackerModel( this );
-  tv->setModel( model );
+  d->model = new JobTrackerModel( this );
+  tv->setModel( d->model );
   tv->expandAll();
+  tv->setAlternatingRowColors( true );
+  tv->setContextMenuPolicy( Qt::CustomContextMenu );
   tv->header()->setResizeMode( QHeaderView::ResizeToContents );
-  connect( model, SIGNAL( modelReset( ) ), tv, SLOT( expandAll() ) );
+  connect( d->model, SIGNAL( modelReset( ) ), tv, SLOT( expandAll() ) );
+  connect( tv, SIGNAL(customContextMenuRequested(QPoint)), SLOT(contextMenu(QPoint)) );
   layout->addWidget( tv );
 
   Akonadi::Control::widgetNeedsAkonadi( this );
 }
 
-
-void JobTrackerWidget::jobStarted( const QString &identifier, const QString& )
+void JobTrackerWidget::contextMenu( const QPoint &pos )
 {
-
+  QMenu menu;
+  menu.addAction( i18n( "Clear View" ), d->model, SLOT(resetTracker()) );
+  menu.exec( mapToGlobal( pos ) );
 }
+
 
 #include "jobtrackerwidget.moc"

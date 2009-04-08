@@ -22,10 +22,13 @@
 #include "jobtrackermodel.h"
 #include "jobtracker.h"
 
+#include <KGlobal>
+#include <KLocale>
 #include <QtCore/QStringList>
 #include <QtCore/QModelIndex>
 #include <QtCore/QDebug>
 #include <QtCore/QDateTime>
+#include <QFont>
 
 #include <cassert>
 
@@ -104,6 +107,7 @@ int JobTrackerModel::rowCount(const QModelIndex & parent) const
 
 int JobTrackerModel::columnCount(const QModelIndex & parent) const
 {
+  Q_UNUSED( parent );
   return 4;
 }
 
@@ -130,11 +134,27 @@ QVariant JobTrackerModel::data(const QModelIndex & idx, int role) const
       if ( idx.column() == 0 )
         return info.id;
       if ( idx.column() == 1 )
-        return info.timestamp;
+        return KGlobal::locale()->formatTime( info.timestamp.time(), true )
+          + QString::fromLatin1( ".%1" ).arg( info.timestamp.time().msec(), 3, 10, QLatin1Char('0') );
       if ( idx.column() == 2 )
         return info.type;
       if ( idx.column() == 3 )
         return info.stateAsString();
+    }
+    else if ( role == Qt::ForegroundRole ) {
+      if ( info.state == JobInfo::Failed )
+        return Qt::red;
+    }
+    else if ( role == Qt::FontRole ) {
+      if ( info.state == JobInfo::Running ) {
+        QFont f;
+        f.setBold( true );
+        return f;
+      }
+    }
+    else if ( role == Qt::ToolTipRole ) {
+      if ( info.state == JobInfo::Failed )
+        return info.error;
     }
   }
   return QVariant();
@@ -160,16 +180,10 @@ QVariant JobTrackerModel::headerData(int section, Qt::Orientation orientation, i
   return QVariant();
 }
 
-Qt::ItemFlags JobTrackerModel::flags(const QModelIndex & index) const
+void JobTrackerModel::resetTracker()
 {
-  Qt::ItemFlags f = QAbstractItemModel::flags( index );
-  if ( index.isValid() && index.parent().isValid() )
-  {
-    const JobInfo info = d->tracker.info( index.internalId() );
-    if ( info.state == JobInfo::Running )
-      f ^= Qt::ItemIsEnabled;
-  }
-  return f;
+  d->tracker.reset();
 }
+
 
 #include "jobtrackermodel.moc"

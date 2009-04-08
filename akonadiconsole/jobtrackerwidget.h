@@ -22,9 +22,7 @@
 #ifndef JOBTRACKERWIDGET_H
 #define JOBTRACKERWIDGET_H
 
-#include <QtCore/QHash>
 #include <QtGui/QWidget>
-#include "debuginterface.h"
 
 class JobTrackerWidget : public QWidget
 {
@@ -33,12 +31,12 @@ class JobTrackerWidget : public QWidget
   public:
     JobTrackerWidget( QWidget *parent = 0 );
 
-  private Q_SLOTS:
-    void jobStarted( const QString&, const QString& );
+  private slots:
+    void contextMenu(const QPoint& pos);
 
   private:
     class Private;
-    Private const *d;
+    Private* const d;
 };
 
 #endif

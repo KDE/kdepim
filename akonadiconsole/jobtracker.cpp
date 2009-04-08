@@ -38,6 +38,8 @@ QString JobInfo::stateAsString() const
             return QLatin1String("Running");
         case Ended:
             return QLatin1String("Ended");
+        case Failed:
+            return QString::fromLatin1( "Failed: %1" ).arg( error );
         default:
             return QLatin1String("Unknown state!");
     }
@@ -163,14 +165,19 @@ void JobTracker::jobCreated( const QString & session, const QString & job, const
   emit updated();
 }
 
-void JobTracker::jobEnded( const QString & job )
+void JobTracker::jobEnded( const QString& job, const QString& error )
 {
-  qDebug() << "Ended Job" << job;
+  qDebug() << "Ended Job" << job << error;
   // this is called from dbus, so better be defensive
   if ( !d->jobs.contains( job ) || !d->infos.contains( job ) ) return;
 
   JobInfo info = d->infos[job];
-  info.state = JobInfo::Ended;
+  if ( error.isEmpty() ) {
+    info.state = JobInfo::Ended;
+  } else {
+    info.state = JobInfo::Failed;
+    info.error = error;
+  }
   d->infos[job] = info;
 
   emit updated();
