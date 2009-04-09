@@ -50,6 +50,7 @@ int main(int argc, char *argv[])
   if (!client->attach()) {
     return 1;
   }
-
-  return a.exec();
+  int ret = a.exec();
+  delete kmailcvt;
+  return ret;
 }

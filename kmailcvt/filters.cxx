@@ -202,12 +202,10 @@ bool Filter::endImport()
     if ( !kapp->dcopClient()->isApplicationRegistered( "kmail" ) )
     KApplication::startServiceByDesktopName( "kmail", QString::null ); // Will wait until kmail is started
 
-    DCOPReply reply = DCOPRef( "kmail", "KMailIface" ).call(  "dcopAddMessage", QString::null, QString::null);
+    DCOPReply reply = DCOPRef( "kmail", "KMailIface" ).call(  "dcopAddMessage", QString::null, QString::null, QString::null);
     if ( !reply.isValid() ) return false;
-
     reply = DCOPRef( "kmail", "KMailIface" ).call( "dcopResetAddMessage" );
     if ( !reply.isValid() ) return false;
-
     return true;
 }
 // vim: ts=2 sw=2 et
