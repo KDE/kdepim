@@ -33,6 +33,7 @@
 #include <config-kleopatra.h>
 
 #include "tabwidget.h"
+#include "keytreeview.h"
 
 #include <models/keylistmodel.h>
 #include <models/keylistsortfilterproxymodel.h>
@@ -84,7 +85,7 @@ public:
     }
 };
 
-class Page : public QWidget {
+class Page : public Kleo::KeyTreeView {
     Q_OBJECT
     Page( const Page & other );
 public:
@@ -92,27 +93,14 @@ public:
     Page( const KConfigGroup & group, QWidget * parent=0 );
     ~Page();
 
-    QTreeView * view() const { return m_view; }
-
-    AbstractKeyListModel * model() const {
-        return m_isHierarchical ? m_hierarchicalModel : m_flatModel ;
-    }
-    void setFlatModel( AbstractKeyListModel * model );
-    void setHierarchicalModel( AbstractKeyListModel * model );
-
     void setTemporary( bool temporary );
     bool isTemporary() const { return m_isTemporary; }
 
-    void setHierarchical( bool hierarchical );
-    bool isHierarchical() const { return m_isHierarchical; }
+    /* reimp */ void setHierarchicalView( bool hierarchical );
+    /* reimp */ void setStringFilter( const QString & filter ); 
+    /* reimp */ void setKeyFilter( const shared_ptr<KeyFilter> & filter );
 
-    QString stringFilter() const { return m_stringFilter; }
-    void setStringFilter( const QString & filter ); 
-
-    const shared_ptr<KeyFilter> & keyFilter() const { return m_keyFilter; }
-    void setKeyFilter( const shared_ptr<KeyFilter> & filter );
-
-    QString title() const { return m_title.isEmpty() && m_keyFilter ? m_keyFilter->name() : m_title ; }
+    QString title() const { return m_title.isEmpty() && keyFilter() ? keyFilter()->name() : m_title ; }
     void setTitle( const QString & title );
 
     QString toolTip() const { return m_toolTip.isEmpty() ? title() : m_toolTip ; }
@@ -126,41 +114,21 @@ public:
 
     void saveTo( KConfigGroup & group ) const;
 
-    Page * clone() const { return new Page( *this ); }
+    /* reimp */ Page * clone() const { return new Page( *this ); }
 
     void liftAllRestrictions() {
         m_canBeClosed = m_canBeRenamed = m_canChangeStringFilter = m_canChangeKeyFilter = m_canChangeHierarchical = true;
     }
 
-    void setColumnSizes( const std::vector<int> & sizes );
-    std::vector<int> columnSizes() const;
-
-    void setSortColumn( int sortColumn, Qt::SortOrder sortOrder );
-    int sortColumn() const;
-    Qt::SortOrder sortOrder() const;
-
 Q_SIGNALS:
     void titleChanged( const QString & title );
-    void stringFilterChanged( const QString & filter );
-    void keyFilterChanged( const boost::shared_ptr<Kleo::KeyFilter> & filter );
-    void hierarchicalChanged( bool on );
 
 private:
     void init();
 
 private:
-    KeyListSortFilterProxyModel m_proxy;
-    AbstractKeyListSortFilterProxyModel * m_additionalProxy;
-    QVBoxLayout * m_layout;
-    QTreeView * m_view;
-    AbstractKeyListModel * m_flatModel;
-    AbstractKeyListModel * m_hierarchicalModel;
-
-    QString m_stringFilter;
-    shared_ptr<KeyFilter> m_keyFilter;
     QString m_title;
     QString m_toolTip;
-    bool m_isHierarchical : 1;
     bool m_isTemporary : 1;
     bool m_canBeClosed : 1;
     bool m_canBeRenamed : 1;
@@ -170,19 +138,26 @@ private:
 };
 } // anon namespace
 
-Page::Page( const Page & other )
+KeyTreeView::KeyTreeView( const KeyTreeView & other )
     : QWidget( 0 ),
-      m_proxy(),
+      m_proxy( new KeyListSortFilterProxyModel( this ) ),
       m_additionalProxy( other.m_additionalProxy ? other.m_additionalProxy->clone() : 0 ),
-      m_layout( new QVBoxLayout( this ) ),
       m_view( new TreeView( this ) ),
       m_flatModel( other.m_flatModel ),
       m_hierarchicalModel( other.m_hierarchicalModel ),
       m_stringFilter( other.m_stringFilter ),
       m_keyFilter( other.m_keyFilter ),
+      m_isHierarchical( other.m_isHierarchical )
+{
+    init();
+    setColumnSizes( other.columnSizes() );
+    setSortColumn( other.sortColumn(), other.sortOrder() );
+}
+
+Page::Page( const Page & other )
+    : KeyTreeView( other ),
       m_title( other.m_title ),
       m_toolTip( other.m_toolTip ),
-      m_isHierarchical( other.m_isHierarchical ),
       m_isTemporary( other.m_isTemporary ),
       m_canBeClosed( other.m_canBeClosed ),
       m_canBeRenamed( other.m_canBeRenamed ),
@@ -191,23 +166,26 @@ Page::Page( const Page & other )
       m_canChangeHierarchical( other.m_canChangeHierarchical )
 {
     init();
-    setColumnSizes( other.columnSizes() );
-    setSortColumn( other.sortColumn(), other.sortOrder() );
 }
 
-Page::Page( const QString & title, const QString & id, const QString & text, AbstractKeyListSortFilterProxyModel * proxy, const QString & toolTip, QWidget * parent )
+KeyTreeView::KeyTreeView( const QString & text, const shared_ptr<KeyFilter> & kf, AbstractKeyListSortFilterProxyModel * proxy, QWidget * parent )
     : QWidget( parent ),
-      m_proxy(),
+      m_proxy( new KeyListSortFilterProxyModel( this ) ),
       m_additionalProxy( proxy ),
-      m_layout( new QVBoxLayout( this ) ),
       m_view( new TreeView( this ) ),
       m_flatModel( 0 ),
       m_hierarchicalModel( 0 ),
       m_stringFilter( text ),
-      m_keyFilter( KeyFilterManager::instance()->keyFilterByID( id ) ),
+      m_keyFilter( kf ),
+      m_isHierarchical( true )
+{
+    init();
+}
+
+Page::Page( const QString & title, const QString & id, const QString & text, AbstractKeyListSortFilterProxyModel * proxy, const QString & toolTip, QWidget * parent )
+    : KeyTreeView( text, KeyFilterManager::instance()->keyFilterByID( id ), proxy, parent ),
       m_title( title ),
       m_toolTip( toolTip ),
-      m_isHierarchical( true ),
       m_isTemporary( false ),
       m_canBeClosed( true ),
       m_canBeRenamed( true ),
@@ -227,18 +205,11 @@ static const char SORT_COLUMN[] = "sort-column";
 static const char SORT_DESCENDING[] = "sort-descending";
 
 Page::Page( const KConfigGroup & group, QWidget * parent )
-    : QWidget( parent ),
-      m_proxy(),
-      m_additionalProxy( 0 ),
-      m_layout( new QVBoxLayout( this ) ),
-      m_view( new TreeView( this ) ),
-      m_flatModel( 0 ),
-      m_hierarchicalModel( 0 ),
-      m_stringFilter( group.readEntry( STRING_FILTER_ENTRY ) ),
-      m_keyFilter( KeyFilterManager::instance()->keyFilterByID( group.readEntry( KEY_FILTER_ENTRY ) ) ),
+    : KeyTreeView( group.readEntry( STRING_FILTER_ENTRY ),
+                   KeyFilterManager::instance()->keyFilterByID( group.readEntry( KEY_FILTER_ENTRY ) ),
+                   0, parent ),
       m_title( group.readEntry( TITLE_ENTRY ) ),
       m_toolTip(),
-      m_isHierarchical( group.readEntry( HIERARCHICAL_VIEW_ENTRY, true ) ),
       m_isTemporary( false ),
       m_canBeClosed( !group.isImmutable() ),
       m_canBeRenamed( !group.isEntryImmutable( TITLE_ENTRY ) ),
@@ -247,12 +218,13 @@ Page::Page( const KConfigGroup & group, QWidget * parent )
       m_canChangeHierarchical( !group.isEntryImmutable( HIERARCHICAL_VIEW_ENTRY ) )
 {
     init();
+    setHierarchicalView( group.readEntry( HIERARCHICAL_VIEW_ENTRY, true ) );
     setColumnSizes( kdtools::copy< std::vector<int> >( group.readEntry( COLUMN_SIZES, QList<int>() ) ) );
     setSortColumn(  group.readEntry( SORT_COLUMN, 0 ),
                     group.readEntry( SORT_DESCENDING, true ) ? Qt::DescendingOrder : Qt::AscendingOrder );
 }
 
-void Page::setColumnSizes( const std::vector<int> & sizes ) {
+void KeyTreeView::setColumnSizes( const std::vector<int> & sizes ) {
     if ( sizes.empty() )
         return;
     assert( m_view );
@@ -262,24 +234,24 @@ void Page::setColumnSizes( const std::vector<int> & sizes ) {
         hv->setSectionSizes( sizes );
 }
 
-void Page::setSortColumn( int sortColumn, Qt::SortOrder sortOrder ) {
+void KeyTreeView::setSortColumn( int sortColumn, Qt::SortOrder sortOrder ) {
     assert( m_view );
     m_view->sortByColumn( sortColumn, sortOrder );
 }
 
-int Page::sortColumn() const {
+int KeyTreeView::sortColumn() const {
     assert( m_view );
     assert( m_view->header() );
     return m_view->header()->sortIndicatorSection();
 }
 
-Qt::SortOrder Page::sortOrder() const {
+Qt::SortOrder KeyTreeView::sortOrder() const {
     assert( m_view );
     assert( m_view->header() );
     return m_view->header()->sortIndicatorOrder();
 }
 
-std::vector<int> Page::columnSizes() const {
+std::vector<int> KeyTreeView::columnSizes() const {
     assert( m_view );
     assert( m_view->header() );
     assert( qobject_cast<HeaderView*>( m_view->header() ) == static_cast<HeaderView*>( m_view->header() ) );
@@ -289,15 +261,16 @@ std::vector<int> Page::columnSizes() const {
         return std::vector<int>();
 }    
 
-void Page::init() {
+void KeyTreeView::init() {
     KDAB_SET_OBJECT_NAME( m_proxy );
-    KDAB_SET_OBJECT_NAME( m_layout );
     KDAB_SET_OBJECT_NAME( m_view );
     if ( m_additionalProxy && m_additionalProxy->objectName().isEmpty() )
         KDAB_SET_OBJECT_NAME( m_additionalProxy );
 
-    m_layout->setMargin( 0 );
-    m_layout->addWidget( m_view );
+    QLayout * layout = new QVBoxLayout( this );
+    KDAB_SET_OBJECT_NAME( layout );
+    layout->setMargin( 0 );
+    layout->addWidget( m_view );
 
     HeaderView * headerView = new HeaderView( Qt::Horizontal );
     KDAB_SET_OBJECT_NAME( headerView );
@@ -313,26 +286,32 @@ void Page::init() {
         if ( m_additionalProxy )
             m_additionalProxy->setSourceModel( model() );
         else
-            m_proxy.setSourceModel( model() );
+            m_proxy->setSourceModel( model() );
     if ( m_additionalProxy ) {
-        m_proxy.setSourceModel( m_additionalProxy );
+        m_proxy->setSourceModel( m_additionalProxy );
         if ( !m_additionalProxy->parent() )
             m_additionalProxy->setParent( this );
     }
-    m_proxy.setFilterFixedString( m_stringFilter );
-    m_proxy.setKeyFilter( m_keyFilter );
-    m_view->setModel( &m_proxy );
+    m_proxy->setFilterFixedString( m_stringFilter );
+    m_proxy->setKeyFilter( m_keyFilter );
+    m_view->setModel( m_proxy );
 }
+
+void Page::init() {
+
+}
+
+KeyTreeView::~KeyTreeView() {}
 
 Page::~Page() {}
 
 void Page::saveTo( KConfigGroup & group ) const {
 
     group.writeEntry( TITLE_ENTRY, m_title );
-    group.writeEntry( STRING_FILTER_ENTRY, m_stringFilter );
-    group.writeEntry( KEY_FILTER_ENTRY, m_keyFilter ? m_keyFilter->id() : QString() );
-    group.writeEntry( HIERARCHICAL_VIEW_ENTRY, m_isHierarchical );
-    if ( const HeaderView * const hv = m_view ? qobject_cast<HeaderView*>( m_view->header() ) : 0 ) {
+    group.writeEntry( STRING_FILTER_ENTRY, stringFilter() );
+    group.writeEntry( KEY_FILTER_ENTRY, keyFilter() ? keyFilter()->id() : QString() );
+    group.writeEntry( HIERARCHICAL_VIEW_ENTRY, isHierarchicalView() );
+    if ( const HeaderView * const hv = view() ? qobject_cast<HeaderView*>( view()->header() ) : 0 ) {
         group.writeEntry( COLUMN_SIZES, kdtools::copy< QList<int> >( hv->sectionSizes() ) );
         group.writeEntry( SORT_COLUMN, hv->sortIndicatorSection() );
         group.writeEntry( SORT_DESCENDING, hv->sortIndicatorOrder() == Qt::DescendingOrder );
@@ -346,44 +325,52 @@ static QAbstractProxyModel * find_last_proxy( QAbstractProxyModel * pm ) {
     return pm;
 }
 
-void Page::setFlatModel( AbstractKeyListModel * model ) {
+void KeyTreeView::setFlatModel( AbstractKeyListModel * model ) {
     if ( model == m_flatModel )
         return;
     m_flatModel = model;
     if ( !m_isHierarchical )
-        find_last_proxy( &m_proxy )->setSourceModel( model );
+        find_last_proxy( m_proxy )->setSourceModel( model );
 }
 
-void Page::setHierarchicalModel( AbstractKeyListModel * model ) {
+void KeyTreeView::setHierarchicalModel( AbstractKeyListModel * model ) {
     if ( model == m_hierarchicalModel )
         return;
     m_hierarchicalModel = model;
     if ( m_isHierarchical ) {
-        find_last_proxy( &m_proxy )->setSourceModel( model );
+        find_last_proxy( m_proxy )->setSourceModel( model );
         m_view->expandAll();
     }
 }
 
-void Page::setStringFilter( const QString & filter ) {
+void KeyTreeView::setStringFilter( const QString & filter ) {
     if ( filter == m_stringFilter )
         return;
-    if ( !m_canChangeStringFilter )
-        return;
     m_stringFilter = filter;
-    m_proxy.setFilterFixedString( filter ); 
+    m_proxy->setFilterFixedString( filter ); 
     emit stringFilterChanged( filter );
 }
 
-void Page::setKeyFilter( const shared_ptr<KeyFilter> & filter ) {
+void Page::setStringFilter( const QString & filter ) {
+    if ( !m_canChangeStringFilter )
+        return;
+    KeyTreeView::setStringFilter( filter );
+}
+
+void KeyTreeView::setKeyFilter( const shared_ptr<KeyFilter> & filter ) {
     if ( filter == m_keyFilter || filter && m_keyFilter && filter->id() == m_keyFilter->id() )
         return;
+    m_keyFilter = filter;
+    m_proxy->setKeyFilter( filter );
+    emit keyFilterChanged( filter );
+}
+
+void Page::setKeyFilter( const shared_ptr<KeyFilter> & filter ) {
     if ( !canChangeKeyFilter() )
         return;
     const QString oldTitle = title();
-    m_keyFilter = filter;
-    m_proxy.setKeyFilter( filter );
+    KeyTreeView::setKeyFilter( filter );
     const QString newTitle = title();
-    emit keyFilterChanged( filter );
     if ( oldTitle != newTitle )
         emit titleChanged( newTitle );
 }
@@ -422,37 +409,39 @@ static QItemSelection itemSelectionFromKeys( const std::vector<Key> & keys, cons
     return result;
 }
 
-void Page::setHierarchical( bool on ) {
+void KeyTreeView::setHierarchicalView( bool on ) {
     if ( on == m_isHierarchical )
         return;
-    if ( !m_canChangeHierarchical )
-        return;
-    const std::vector<Key> selectedKeys = m_proxy.keys( m_view->selectionModel()->selectedRows() );
-    const Key currentKey = m_proxy.key( m_view->currentIndex() );
+    const std::vector<Key> selectedKeys = m_proxy->keys( m_view->selectionModel()->selectedRows() );
+    const Key currentKey = m_proxy->key( m_view->currentIndex() );
 
     m_isHierarchical = on;
-    find_last_proxy( &m_proxy )->setSourceModel( model() );
+    find_last_proxy( m_proxy )->setSourceModel( model() );
     if ( on )
         m_view->expandAll();
-    m_view->selectionModel()->select( itemSelectionFromKeys( selectedKeys, m_proxy ), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows );
+    m_view->selectionModel()->select( itemSelectionFromKeys( selectedKeys, *m_proxy ), QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows );
     if ( !currentKey.isNull() ) {
-        const QModelIndex currentIndex = m_proxy.index( currentKey );
+        const QModelIndex currentIndex = m_proxy->index( currentKey );
         if ( currentIndex.isValid() ) {
-            m_view->selectionModel()->setCurrentIndex( m_proxy.index( currentKey ), QItemSelectionModel::NoUpdate );
+            m_view->selectionModel()->setCurrentIndex( m_proxy->index( currentKey ), QItemSelectionModel::NoUpdate );
             m_view->scrollTo( currentIndex );
         }
     }
     emit hierarchicalChanged( on );
 }
 
+void Page::setHierarchicalView( bool on ) {
+    if ( !m_canChangeHierarchical )
+        return;
+    KeyTreeView::setHierarchicalView( on );
+}
+
 void Page::setTemporary( bool on ) {
     if ( on == m_isTemporary )
         return;
     m_isTemporary = on;
-    if ( on && m_keyFilter ) {
-        m_keyFilter.reset();
-        emit keyFilterChanged( shared_ptr<KeyFilter>() );
-    }
+    if ( on )
+        setKeyFilter( shared_ptr<KeyFilter>() );
 }
 
 //
@@ -691,9 +680,9 @@ void TabWidget::Private::enableDisablePageActions( QAction * actions[], const Pa
     actions[MoveLeft]    ->setEnabled( p && tabWidget.indexOf( const_cast<Page*>(p) ) != 0 );
     actions[MoveRight]   ->setEnabled( p && tabWidget.indexOf( const_cast<Page*>(p) ) != tabWidget.count()-1 );
     actions[Hierarchical]->setEnabled( p && p->canChangeHierarchical() );
-    actions[Hierarchical]->setChecked( p && p->isHierarchical() );
-    actions[ExpandAll]   ->setEnabled( p && p->isHierarchical() );
-    actions[CollapseAll] ->setEnabled( p && p->isHierarchical() );
+    actions[Hierarchical]->setChecked( p && p->isHierarchicalView() );
+    actions[ExpandAll]   ->setEnabled( p && p->isHierarchicalView() );
+    actions[CollapseAll] ->setEnabled( p && p->isHierarchicalView() );
 
     tabWidget.setTabBarHidden( tabWidget.count() < 2 );
 }
@@ -776,7 +765,7 @@ void TabWidget::Private::movePageRight( Page * page ) {
 void TabWidget::Private::toggleHierarchicalView( Page * page, bool on ) {
     if ( !page )
         return;
-    page->setHierarchical( on );
+    page->setHierarchicalView( on );
 }
 
 void TabWidget::Private::expandAll( Page * page ) {
@@ -979,3 +968,4 @@ void TabWidget::connectSearchBar( QObject * sb ) {
 
 #include "moc_tabwidget.cpp"
 #include "tabwidget.moc"
+#include "moc_keytreeview.cpp"
