@@ -71,7 +71,7 @@ target_link_libraries( akonadiconsole_bin
   akonadi-kcal
   akonadi-xml
   kdepim
-  ${KDE4_KDEUI_LIBS}
+  ${KDE4_KUTILS_LIBS}
   ${AKONADICONSOLE_EXTRA_LIBS}
   ${QT_QTSQL_LIBRARY}
   ${AKONADI_COMMON_LIBRARIES}
