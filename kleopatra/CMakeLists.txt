@@ -140,6 +140,7 @@ set( _kleopatra_SRCS
   models/useridlistmodel.cpp
 
   view/keylistcontroller.cpp
+  view/keytreeview.cpp
   view/searchbar.cpp
   view/tabwidget.cpp
 
