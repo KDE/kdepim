@@ -43,5 +43,7 @@ int main(int argc, char *argv[])
   a.setMainWidget(kmailcvt);
   kmailcvt->show();
 
-  return a.exec();
+  int ret = a.exec();
+  delete kmailcvt;
+  return ret;
 }
