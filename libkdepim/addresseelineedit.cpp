@@ -781,16 +781,6 @@ void AddresseeLineEdit::slotLDAPSearchData( const KPIM::LdapResultList& adrs )
     addContact( addr, (*it).completionWeight, (*it ).clientNumber  );
   }
 
-  if ( (hasFocus() || completionBox()->hasFocus() )
-       && completionMode() != KGlobalSettings::CompletionNone
-       && completionMode() != KGlobalSettings::CompletionShell
-    && completionMode() != KGlobalSettings::CompletionAuto ) {
-    setText( m_previousAddresses + m_searchString );
-    // only complete again if the user didn't change the selection while we were waiting
-    // otherwise the completion box will be closed
-    if ( m_searchString.stripWhiteSpace() != completionBox()->currentText().stripWhiteSpace() )
-      doCompletion( m_lastSearchMode );
-  }
 }
 
 void AddresseeLineEdit::setCompletedItems( const QStringList& items, bool autoSuggest )
