@@ -252,6 +252,10 @@ KABC::AddresseeList VCardXXPort::parseVCard( const QString &data ) const
 
 bool VCardXXPort::doExport( const KURL &url, const QString &data )
 {
+  if( QFileInfo(url.path()).exists() ) {
+      if(KMessageBox::questionYesNo( parentWidget(), i18n("Do you want to overwrite file \"%1\"").arg( url.path()) ) == KMessageBox::No)
+        return false;
+  }	
   KTempFile tmpFile;
   tmpFile.setAutoDelete( true );
 
