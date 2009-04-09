@@ -55,6 +55,7 @@ public:
 
     void addEntry( const QString& id, const QString& name );
     void addEntry( const KMime::Types::Mailbox& mbox );
+    void addEntry( const QString& id, const QString& name, const KMime::Types::Mailbox& mbox );
 
     void removeEntry( const QString& id );
     QStringList selectedEntries() const;
@@ -73,9 +74,6 @@ public:
 Q_SIGNALS:
     void selectionChanged();
     void completeChanged();
-
-private:
-    void addEntry( const QString& id, const QString& name, const KMime::Types::Mailbox& mbox );
 
 private Q_SLOTS:
     void onSelectionChange();

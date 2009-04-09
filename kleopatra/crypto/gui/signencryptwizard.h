@@ -110,7 +110,7 @@ namespace Gui {
 
         //@}
 
-        void setRecipients( const std::vector<KMime::Types::Mailbox> & recipients );
+        void setRecipients( const std::vector<KMime::Types::Mailbox> & recipients, const std::vector<KMime::Types::Mailbox> & encryptoToSelfRecipients );
 
         /** if true, the user is allowed to remove/add recipients via the UI.
          * Defaults to @p false.

@@ -83,7 +83,7 @@ namespace Crypto {
         GpgME::Protocol protocol() const;
 
         void startResolveRecipients();
-        void startResolveRecipients( const std::vector<KMime::Types::Mailbox> & recipients );
+        void startResolveRecipients( const std::vector<KMime::Types::Mailbox> & recipients, const std::vector<KMime::Types::Mailbox> & senders );
 
         void setInputAndOutput( const boost::shared_ptr<Kleo::Input>  & input,
                                 const boost::shared_ptr<Kleo::Output> & output );

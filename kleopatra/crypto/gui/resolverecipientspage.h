@@ -97,7 +97,7 @@ namespace Gui {
 
         void setAdditionalRecipientsInfo( const std::vector<GpgME::Key> & recipients );
 
-        void setRecipients( const std::vector<KMime::Types::Mailbox>& recipients );
+        void setRecipients( const std::vector<KMime::Types::Mailbox> & recipients, const std::vector<KMime::Types::Mailbox> & encryptToSelfRecipients );
         std::vector<GpgME::Key> resolvedCertificates() const;
 
         boost::shared_ptr<RecipientPreferences> recipientPreferences() const;

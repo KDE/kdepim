@@ -158,7 +158,7 @@ int EncryptCommand::doStart() {
     if ( hasPreviousMemento )
         QTimer::singleShot( 0, d.get(), SLOT(slotRecipientsResolved()) );
     else
-        d->controller->startResolveRecipients( recipients() );
+        d->controller->startResolveRecipients( recipients(), senders() );
 
     return 0;
 }
