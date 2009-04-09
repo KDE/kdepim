@@ -730,6 +730,11 @@ void AddresseeLineEdit::addCompletionItem( const QString& string, int weight, in
 
 void AddresseeLineEdit::slotStartLDAPLookup()
 {
+  KGlobalSettings::Completion  mode = completionMode();
+
+  if ( mode == KGlobalSettings::CompletionNone  )
+    return;
+
   if ( !s_LDAPSearch->isAvailable() ) {
     return;
   }
