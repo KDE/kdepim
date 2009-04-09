@@ -134,12 +134,12 @@ bool Filter::addMessage( FilterInfo* info, const QString& folderName,
 {
   KURL msgURL;
   msgURL.setPath( msgPath );
-  
+
   if ( !kapp->dcopClient()->isApplicationRegistered( "kmail" ) )
     KApplication::startServiceByDesktopName( "kmail", QString::null ); // Will wait until kmail is started
 
   DCOPReply reply = DCOPRef( "kmail", "KMailIface" ).call( "dcopAddMessage", folderName, msgURL, msgStatusFlags );
-  
+
   if ( !reply.isValid() )
   {
     info->alert( i18n( "<b>Fatal:</b> Unable to start KMail for DCOP communication. "
@@ -170,7 +170,7 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
 {
   KURL msgURL;
   msgURL.setPath( msgPath );
-  
+
   if ( !kapp->dcopClient()->isApplicationRegistered( "kmail" ) )
     KApplication::startServiceByDesktopName( "kmail", QString::null ); // Will wait until kmail is started
 
@@ -197,15 +197,4 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
   return true;
 }
 
-bool Filter::endImport()
-{
-    if ( !kapp->dcopClient()->isApplicationRegistered( "kmail" ) )
-    KApplication::startServiceByDesktopName( "kmail", QString::null ); // Will wait until kmail is started
-
-    DCOPReply reply = DCOPRef( "kmail", "KMailIface" ).call(  "dcopAddMessage", QString::null, QString::null, QString::null);
-    if ( !reply.isValid() ) return false;
-    reply = DCOPRef( "kmail", "KMailIface" ).call( "dcopResetAddMessage" );
-    if ( !reply.isValid() ) return false;
-    return true;
-}
 // vim: ts=2 sw=2 et

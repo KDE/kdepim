@@ -17,7 +17,9 @@
 #include "kmailcvt.h"
 #include <kaboutapplication.h>
 #include <qpushbutton.h>
-
+#include <dcopclient.h>
+#include <dcopref.h>
+#include <kdebug.h>
 #include "filters.hxx"
 
 KMailCVT::KMailCVT(QWidget *parent, const char *name)
@@ -34,6 +36,19 @@ KMailCVT::KMailCVT(QWidget *parent, const char *name)
 }
 
 KMailCVT::~KMailCVT() {
+  endImport();
+}
+
+void KMailCVT::endImport() {
+  if ( !kapp->dcopClient()->isApplicationRegistered( "kmail" ) )
+    KApplication::startServiceByDesktopName( "kmail", QString::null ); // Will wait until kmail is started
+
+  DCOPReply reply = DCOPRef( "kmail", "KMailIface" ).call(  "dcopAddMessage", QString::null, QString::null, QString::null);
+  if ( !reply.isValid() )
+    return;
+  reply = DCOPRef( "kmail", "KMailIface" ).call( "dcopResetAddMessage" );
+  if ( !reply.isValid() )
+    return;
 }
 
 void KMailCVT::next() {

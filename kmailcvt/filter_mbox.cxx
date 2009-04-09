@@ -37,7 +37,6 @@ FilterMBox::FilterMBox() :
 
 FilterMBox::~FilterMBox()
 {
-    endImport();
 }
 
 void FilterMBox::import(FilterInfo *info)

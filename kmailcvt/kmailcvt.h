@@ -23,7 +23,7 @@
 
 #include "kimportpage.h"
 #include "kselfilterpage.h"
-  
+
 /** KMailCVT is the base class of the project */
 class KMailCVT : public KWizard {
 	Q_OBJECT
@@ -36,6 +36,7 @@ public:
 public slots:
 	void help();
 private:
+        void endImport();
 	KSelFilterPage* selfilterpage;
 	KImportPage* importpage;
 };

@@ -38,7 +38,6 @@ FilterPMail::FilterPMail() :
 
 FilterPMail::~FilterPMail()
 {
-    endImport();
 }
 
 void FilterPMail::import(FilterInfo *info)

@@ -44,7 +44,6 @@ FilterTheBat::FilterTheBat( void ) :
 /** Destructor. */
 FilterTheBat::~FilterTheBat( void )
 {
-    endImport();
 }
 
 /** Recursive import of The Bat! maildir. */
