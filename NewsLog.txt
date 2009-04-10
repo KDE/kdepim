@@ -1,3 +1,28 @@
+Friday, April 10th 2009
+
+Problems addressed
+------------------
+
+* In Kleopatra, handle and preserve name/value pairs in the gpg/keyserver URL
+
+Merges
+------
+
+* Merges from KDE 4.2 branch:
+      - kolab/issue2979: Crash when activating groupware folders
+
+* Merges from enterprise35 branch:
+      - kolab/issue2205: Don't allow to remove default resource in KOrganizer
+      - kolab/issue2508: Kontact should not send an invitation, if no resource folder is activated
+      - kolab/issue3492: Default outgoing transport changes randomly when removing any outgoing account
+      - kolab/issue3244: Crash at KMFolder::addMsg after a second import of testmails
+      - When formatting incidences, don't add "[Accept]" to it if it can't be accepted
+      - In the attendee editor, disable "Response request" when the attendee is oneself
+      - When address completion is disabled, don't search on the LDAP server when typing
+      - When exporting addresses to vcard, ask before overwriting files
+      - Fix small memory leaks in KMail
+
+
 Monday, April 6th 2009
 
 Problems addressed
@@ -7,10 +32,10 @@ Merges
 ------
 
 * Merges from KDE trunk:
-    - Improve KOrganizer's ability to configure colors
+      - Improve KOrganizer's ability to configure colors
 
 * Merges from KDE 4.2 branch:
-    - kolab/issue2846: Accept relative paths in ksendemail
+      - kolab/issue2846: Accept relative paths in ksendemail
 
 * Merges from enterprise35 branch:
       - kolab/issue3512: Kontact does not detect shared seen folder capabilty anymore
