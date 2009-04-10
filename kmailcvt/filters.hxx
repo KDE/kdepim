@@ -64,9 +64,9 @@ class Filter
     QString author() const { return m_author; }
     QString name() const { return m_name; }
     QString info() const { return m_info; }
-    
+
     int count_duplicates; //to count all duplicate messages
-    
+
   protected:
     bool addMessage( FilterInfo* info,
                      const QString& folder,
@@ -76,7 +76,6 @@ class Filter
                      		    const QString& folder,
                      		    const QString& msgFile,
                                 const QString& msgStatusFlags = QString());
-    bool endImport();
   private:
     QString m_name;
     QString m_author;
@@ -85,8 +84,8 @@ class Filter
 
 
 
-/** 
-* Glorified QString[N] for (a) understandability (b) older gcc compatibility. 
+/**
+* Glorified QString[N] for (a) understandability (b) older gcc compatibility.
 */
 template <unsigned int size> class FolderStructureBase
 {
@@ -95,8 +94,8 @@ public:
 	/** Constructor. Need a default constructor for QValueList. */
 	FolderStructureBase() {} 
 
-	/** Constructor. Turn N QStrings into a folder structure 
-	*   description. 
+	/** Constructor. Turn N QStrings into a folder structure
+	*   description.
 	*/
 	FolderStructureBase(const NString &s)
 	{
@@ -109,7 +108,7 @@ public:
 	    for(unsigned int i=0; i<size; i++) d[i]=s[i];
 	} 
 
-	/** Assignment operator. Does the same thing as 
+	/** Assignment operator. Does the same thing as
 	*   the copy constructor.
 	*/
 	FolderStructureBase &operator =(const FolderStructureBase &s)

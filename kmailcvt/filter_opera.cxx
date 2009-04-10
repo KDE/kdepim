@@ -36,7 +36,6 @@ FilterOpera::FilterOpera() :
 
 FilterOpera::~FilterOpera()
 {
-    endImport();
 }
 
 void FilterOpera::import(FilterInfo *info)

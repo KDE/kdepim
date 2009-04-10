@@ -36,7 +36,6 @@ FilterMailApp::FilterMailApp() :
 
 FilterMailApp::~FilterMailApp()
 {
-    endImport();
 }
 
 void FilterMailApp::import(FilterInfo *info)

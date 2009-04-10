@@ -204,20 +204,4 @@ bool Filter::addMessage_fastImport( FilterInfo* info, const QString& folderName,
   return true;
 }
 
-bool Filter::endImport()
-{
-    QDBusConnectionInterface * sessionBus = 0;
-    sessionBus = QDBusConnection::sessionBus().interface();
-    if ( sessionBus && !sessionBus->isServiceRegistered( "org.kde.kmail" ) )
-    	KToolInvocation::startServiceByDesktopName( "kmail", QString() ); // Will wait until kmail is started
-
-    org::kde::kmail::kmail kmail("org.kde.kmail", "/KMail", QDBusConnection::sessionBus());
-    QDBusReply<int> reply = kmail.dbusAddMessage(QString(), QString(),QString());
-    if ( !reply.isValid() ) return false;
-
-    QDBusReply<void> reply2 = kmail.dbusResetAddMessage();
-    if ( !reply2.isValid() ) return false;
-
-    return true;
-}
 // vim: ts=2 sw=2 et
