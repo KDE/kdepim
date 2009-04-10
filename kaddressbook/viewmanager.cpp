@@ -145,10 +145,10 @@ QStringList ViewManager::selectedUids() const
     return QStringList();
 }
 
-QStringList ViewManager::selectedEmails() const
+QStringList ViewManager::selectedEmails(  bool askForEMail ) const
 {
-  if ( mActiveView && !mActiveView->selectedEmails().isEmpty() )
-    return QStringList( mActiveView->selectedEmails() );
+  if ( mActiveView && !mActiveView->selectedEmails( askForEMail ).isEmpty() )
+    return QStringList( mActiveView->selectedEmails( askForEMail ) );
   else
     return QStringList();
 }
