@@ -188,7 +188,7 @@ bool IDMapping::isValid( const QList<QString>& ids ) const
 		else
 		{
 			// The ids are pc ids.
-			foreach( const QString& storedId, d->fSource.constMappings()->values() )
+			foreach( const QString& storedId, *(d->fSource.constMappings()) )
 			{
 				if( !ids.contains( storedId ) )
 				{
