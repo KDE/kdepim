@@ -18,6 +18,7 @@
 #include <kdebug.h>
 
 #include "knglobals.h"
+#include "kncollectionview.h"
 #include "kncollectionviewitem.h"
 #include "knconfig.h"
 #include "kngrouppropdlg.h"
@@ -72,6 +73,11 @@ void KNGroup::updateListItem()
   if(!l_istItem) return;
   l_istItem->setTotalCount( c_ount );
   l_istItem->setUnreadCount( c_ount - r_eadCount - i_gnoreCount );
+
+  if( knGlobals.top && knGlobals.top->collectionView() ) {
+    l_istItem->updateColumn( knGlobals.top->collectionView()->totalColumnIndex() );
+    l_istItem->updateColumn( knGlobals.top->collectionView()->unreadColumnIndex() );
+  }
 }
 
 

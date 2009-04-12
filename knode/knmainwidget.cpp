@@ -84,7 +84,8 @@ using namespace KNode;
 KNMainWidget::KNMainWidget( KXMLGUIClient* client, QWidget* parent ) :
   KVBox( parent ),
   b_lockui( false ),
-  m_GUIClient( client )
+  m_GUIClient( client ),
+  c_olView( 0 )
 {
   (void) new KnodeAdaptor( this );
   QDBusConnection::sessionBus().registerObject("/KNode", this);
