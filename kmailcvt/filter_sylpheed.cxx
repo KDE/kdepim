@@ -118,8 +118,7 @@ void FilterSylpheed::importFiles( FilterInfo *info, const QString& dirName)
     QString _path;
     bool generatedPath = false;
 
-    Q3Dict<unsigned long> msgflags;
-    msgflags.setAutoDelete(true);
+    QHash<QString,unsigned long> msgflags;
 
     QDir importDir (dirName);
     const QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
@@ -147,7 +146,7 @@ void FilterSylpheed::importFiles( FilterInfo *info, const QString& dirName)
 
             QString flags;
             if (msgflags[_mfile])
-                flags = msgFlagsToString(*(msgflags[_mfile]));
+                flags = msgFlagsToString((msgflags[_mfile]));
 
             if(info->removeDupMsg) {
                 if(! addMessage( info, _path, dir.filePath(*mailFile), flags )) {
@@ -165,7 +164,7 @@ void FilterSylpheed::importFiles( FilterInfo *info, const QString& dirName)
 }
 
 
-void FilterSylpheed::readMarkFile( FilterInfo *info, const QString &path, Q3Dict<unsigned long> &dict )
+void FilterSylpheed::readMarkFile( FilterInfo *info, const QString &path, QHash<QString,unsigned long> &dict )
 {
     /* Each sylpheed mail directory contains a .sylpheed_mark file which
      * contains all the flags for each messages. The layout of this file
@@ -209,7 +208,7 @@ void FilterSylpheed::readMarkFile( FilterInfo *info, const QString &path, Q3Dict
         stream >> flags;
         QString s;
         s.setNum((uint) in);
-        dict.insert(s, new unsigned long(flags));
+        dict.insert(s, flags);
     }
 }
 

@@ -17,7 +17,7 @@
 #ifndef FILTER_SYLPHEED_HXX
 #define FILTER_SYLPHEED_HXX
 
-#include <q3dict.h>
+#include <QHash>
 
 #include "filters.hxx"
 
@@ -40,7 +40,7 @@ private:
     void importDirContents(FilterInfo*, const QString&);
     void importFiles(FilterInfo*, const QString&);
     
-    void readMarkFile( FilterInfo*, const QString&, Q3Dict<unsigned long>&);
+    void readMarkFile( FilterInfo*, const QString&, QHash<QString,unsigned long>&);
     QString msgFlagsToString(unsigned long);
 };
 
