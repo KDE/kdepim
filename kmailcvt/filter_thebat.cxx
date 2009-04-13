@@ -70,9 +70,9 @@ void FilterTheBat::import( FilterInfo *info )
 
         /** Recursive import of the MailFolders */
         QDir dir(mailDir);
-        QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
+        const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
         int currentDir = 1, numSubDirs = rootSubDirs.size();
-        for(QStringList::Iterator filename = rootSubDirs.begin() ; filename != rootSubDirs.end() ; ++filename, ++currentDir) {
+        for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != rootSubDirs.constEnd() ; ++filename, ++currentDir) {
             importDirContents(info, dir.filePath(*filename));
             info->setOverall((int) ((float) currentDir / numSubDirs * 100));
             if(info->shouldTerminate()) break;
@@ -103,8 +103,8 @@ void FilterTheBat::importDirContents( FilterInfo *info, const QString& dirName)
     /** Here Import all archives in the current dir */
     QDir dir(dirName);
     QDir importDir (dirName);
-    QStringList files = importDir.entryList(QStringList("*.[tT][bB][bB]"), QDir::Files, QDir::Name);
-    for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile) {
+    const QStringList files = importDir.entryList(QStringList("*.[tT][bB][bB]"), QDir::Files, QDir::Name);
+    for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != files.constEnd(); ++mailFile) {
         QString temp_mailfile = *mailFile;
         importFiles(info, (dirName + '/' + temp_mailfile));
         if(info->shouldTerminate()) return;
@@ -112,8 +112,8 @@ void FilterTheBat::importDirContents( FilterInfo *info, const QString& dirName)
 
     /** If there are subfolders, we import them one by one */
     QDir subfolders(dirName);
-    QStringList subDirs = subfolders.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
-    for(QStringList::Iterator filename = subDirs.begin() ; filename != subDirs.end() ; ++filename) {
+    const QStringList subDirs = subfolders.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
+    for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != subDirs.constEnd() ; ++filename) {
         importDirContents(info, subfolders.filePath(*filename));
         if(info->shouldTerminate()) return;
     }
@@ -228,3 +228,4 @@ void FilterTheBat::importFiles( FilterInfo *info, const QString& FileName)
     }
     tbb.close();
 }
+

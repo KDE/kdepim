@@ -88,7 +88,7 @@ void FilterOE::import(FilterInfo *info)
     }
 
     int n=0;
-    for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
+    for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != files.constEnd(); ++mailFile ) {
         if ( info->shouldTerminate() ) break;
         importMailBox(info, dir.filePath(*mailFile));
         info->setOverall(100 * ++n  / files.count());

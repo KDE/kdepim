@@ -45,13 +45,13 @@ void FilterMailApp::import(FilterInfo *info)
     int overall_status = 0;
     bool first_msg = true;
 
-    QString directory = KFileDialog::getExistingDirectory( QDir::homePath(), info->parent() );
+    const QString directory = KFileDialog::getExistingDirectory( QDir::homePath(), info->parent() );
     info->setOverall(0);
 
     //   kDebug() <<"starting by looking in directory" << directory;
     traverseDirectory(directory);
 
-    for ( QStringList::Iterator filename = mMboxFiles.begin(); filename != mMboxFiles.end(); ++filename, ++currentFile) {
+    for ( QStringList::ConstIterator filename = mMboxFiles.constBegin(); filename != mMboxFiles.constEnd(); ++filename, ++currentFile) {
         if ( info->shouldTerminate() ) break;
         QFile mbox( *filename );
         if (! mbox.open( QIODevice::ReadOnly ) ) {
@@ -130,7 +130,7 @@ void FilterMailApp::traverseDirectory(const QString &dirName)
     dir.setFilter(QDir::Dirs | QDir::Files);
 
     const QFileInfoList fileinfolist = dir.entryInfoList();
-    Q_FOREACH( QFileInfo fi, fileinfolist ) {
+    Q_FOREACH( const QFileInfo &fi, fileinfolist ) {
         if (fi.fileName() == "." || fi.fileName() == "..") {
             continue;
         }

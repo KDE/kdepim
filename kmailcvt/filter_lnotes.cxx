@@ -52,13 +52,13 @@ void FilterLNotes::import(FilterInfo *info) {
     currentFile = 1;
     totalFiles = 0;
 
-    QStringList filenames = KFileDialog::getOpenFileNames( QDir::homePath(), "*|" + i18n("All Files (*)"), 
+    const QStringList filenames = KFileDialog::getOpenFileNames( QDir::homePath(), "*|" + i18n("All Files (*)"), 
                                                            inf->parent() );
     totalFiles = filenames.count();
     inf->setOverall(0);
 
     // See filter_mbox.cxx for better reference.
-    for ( QStringList::Iterator filename = filenames.begin(); filename != filenames.end(); ++filename ) {
+    for ( QStringList::ConstIterator filename = filenames.constBegin(); filename != filenames.constEnd(); ++filename ) {
 
         ++currentFile;
         info->addLog( i18n("Importing emails from %1", *filename) );

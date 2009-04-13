@@ -66,9 +66,9 @@ void FilterKMail_maildir::import( FilterInfo *info )
 
         /** Recursive import of the MailArchives */
         QDir dir(mailDir);
-        QStringList rootSubDirs = dir.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
+        const QStringList rootSubDirs = dir.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
         int currentDir = 1, numSubDirs = rootSubDirs.size();
-        for(QStringList::Iterator filename = rootSubDirs.begin() ; filename != rootSubDirs.end() ; ++filename, ++currentDir) {
+        for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != rootSubDirs.constEnd() ; ++filename, ++currentDir) {
             if(info->shouldTerminate()) break;
             if(!(*filename == "." || *filename == "..")) {
                 info->setCurrent(0);
@@ -104,8 +104,8 @@ void FilterKMail_maildir::importDirContents( FilterInfo *info, const QString& di
     /** If there are subfolders, we import them one by one */
 
     QDir subfolders(dirName);
-    QStringList subDirs = subfolders.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
-    for(QStringList::Iterator filename = subDirs.begin() ; filename != subDirs.end() ; ++filename) {
+    const QStringList subDirs = subfolders.entryList(QStringList("*"), QDir::Dirs | QDir::Hidden, QDir::Name);
+    for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != subDirs.constEnd() ; ++filename) {
         if(info->shouldTerminate()) return;
         if(!(*filename == "." || *filename == "..")) {
             importDirContents(info, subfolders.filePath(*filename));
@@ -126,9 +126,9 @@ void FilterKMail_maildir::importFiles( FilterInfo *info, const QString& dirName)
     bool generatedPath = false;
 
     QDir importDir (dirName);
-    QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
+    const QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
     int currentFile = 1, numFiles = files.size();
-    for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile, ++currentFile) {
+    for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != files.constEnd(); ++mailFile, ++currentFile) {
         if(info->shouldTerminate()) return;
         QString temp_mailfile = *mailFile;
         if (!(temp_mailfile.endsWith(QLatin1String(".index")) || temp_mailfile.endsWith(QLatin1String(".index.ids")) ||
@@ -173,3 +173,4 @@ void FilterKMail_maildir::importFiles( FilterInfo *info, const QString& dirName)
         }
     }
 }
+

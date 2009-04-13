@@ -65,9 +65,9 @@ void FilterSylpheed::import( FilterInfo *info )
 
         /** Recursive import of the MailFolders */
         QDir dir(mailDir);
-        QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
+        const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
         int currentDir = 1, numSubDirs = rootSubDirs.size();
-        for(QStringList::Iterator filename = rootSubDirs.begin() ; filename != rootSubDirs.end() ; ++filename, ++currentDir) {
+        for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != rootSubDirs.constEnd() ; ++filename, ++currentDir) {
             if(info->shouldTerminate()) break;
             importDirContents(info, dir.filePath(*filename));
             info->setOverall((int) ((float) currentDir / numSubDirs * 100));
@@ -99,8 +99,8 @@ void FilterSylpheed::importDirContents( FilterInfo *info, const QString& dirName
 
     /** If there are subfolders, we import them one by one */
     QDir subfolders(dirName);
-    QStringList subDirs = subfolders.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
-    for(QStringList::Iterator filename = subDirs.begin() ; filename != subDirs.end() ; ++filename) {
+    const QStringList subDirs = subfolders.entryList(QStringList("[^\\.]*"), QDir::Dirs , QDir::Name);
+    for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != subDirs.constEnd() ; ++filename) {
         if(info->shouldTerminate()) return;
         importDirContents(info, subfolders.filePath(*filename));
     }
@@ -122,12 +122,12 @@ void FilterSylpheed::importFiles( FilterInfo *info, const QString& dirName)
     msgflags.setAutoDelete(true);
 
     QDir importDir (dirName);
-    QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
+    const QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
     int currentFile = 1, numFiles = files.size();
 
     readMarkFile(info, dir.filePath(".sylpheed_mark"), msgflags);
 
-    for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile, ++currentFile) {
+    for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != files.constEnd(); ++mailFile, ++currentFile) {
         if(info->shouldTerminate()) return;
         QString _mfile = *mailFile;
         if (!(_mfile.endsWith(QLatin1String(".sylpheed_cache")) || _mfile.endsWith(QLatin1String(".sylpheed_mark"))

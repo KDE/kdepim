@@ -38,13 +38,13 @@ FilterPlain::~FilterPlain()
 void FilterPlain::import(FilterInfo *info)
 {
     // Select directory containing plain text emails
-    QString mailDir = KFileDialog::getExistingDirectory(QDir::homePath(),info->parent());
+    const QString mailDir = KFileDialog::getExistingDirectory(QDir::homePath(),info->parent());
     if (mailDir.isEmpty()) { // No directory selected
         info->alert(i18n("No directory selected."));
         return;
     }
     QDir dir (mailDir);
-    QStringList files = dir.entryList(QStringList("*.[eE][mM][lL]")<<"*.[tT][xX][tT]"<<"*.[mM][sS][gG]", QDir::Files, QDir::Name);
+    const QStringList files = dir.entryList(QStringList("*.[eE][mM][lL]")<<"*.[tT][xX][tT]"<<"*.[mM][sS][gG]", QDir::Files, QDir::Name);
 
     // Count total number of files to be processed
     info->addLog(i18n("Counting files..."));
@@ -52,7 +52,7 @@ void FilterPlain::import(FilterInfo *info)
     int currentFile = 0;
 
     info->addLog(i18n("Importing new mail files..."));
-    for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile ) {
+    for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != files.constEnd(); ++mailFile ) {
         info->setFrom(*mailFile);
         info->setTo(dir.dirName());
         info->setCurrent(0);
@@ -84,3 +84,4 @@ void FilterPlain::import(FilterInfo *info)
     
     count_duplicates = 0;
 }
+

@@ -42,7 +42,7 @@ FilterOpera::~FilterOpera()
 void FilterOpera::importRecursive(const QDir& mailDir, FilterInfo *info, const QString &accountName)
 {
   // Recursive import of the MBoxes.
-  QStringList rootSubDirs = mailDir.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name); // Removal of . and ..
+  const QStringList rootSubDirs = mailDir.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name); // Removal of . and ..
   int currentDir = 1;
   int numSubDirs = rootSubDirs.size();
   if ( numSubDirs > 0 ) {

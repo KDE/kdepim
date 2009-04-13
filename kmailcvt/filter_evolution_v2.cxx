@@ -74,9 +74,9 @@ void FilterEvolution_v2::import(FilterInfo *info)
 
         /** Recursive import of the MailArchives */
         QDir dir(mailDir);
-        QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name); // Removal of . and ..
+        const QStringList rootSubDirs = dir.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name); // Removal of . and ..
         int currentDir = 1, numSubDirs = rootSubDirs.size();
-        for(QStringList::Iterator filename = rootSubDirs.begin() ; filename != rootSubDirs.end() ; ++filename, ++currentDir) {
+        for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != rootSubDirs.constEnd() ; ++filename, ++currentDir) {
             if (info->shouldTerminate()) break;
             importDirContents(info, dir.filePath(*filename), *filename, *filename);
             info->setOverall((int) ((float) currentDir / numSubDirs * 100));
@@ -84,8 +84,8 @@ void FilterEvolution_v2::import(FilterInfo *info)
 
         /** import last but not least all archives from the root-dir */
         QDir importDir (mailDir);
-        QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
-        for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile) {
+        const QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
+        for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != files.constEnd(); ++mailFile) {
             if (info->shouldTerminate()) break;
             QString temp_mailfile = *mailFile;
             if (temp_mailfile.endsWith(QLatin1String(".cmeta")) || temp_mailfile.endsWith(QLatin1String(".ev-summary")) ||
@@ -122,8 +122,8 @@ void FilterEvolution_v2::importDirContents(FilterInfo *info, const QString& dirN
     QDir dir(dirName);
 
     QDir importDir (dirName);
-    QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
-    for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile) {
+    const QStringList files = importDir.entryList(QStringList("[^\\.]*"), QDir::Files, QDir::Name);
+    for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != files.constEnd(); ++mailFile) {
         QString temp_mailfile = *mailFile;
         if (temp_mailfile.endsWith(QLatin1String(".cmeta")) || temp_mailfile.endsWith(QLatin1String(".ev-summary")) ||
             temp_mailfile.endsWith(QLatin1String(".ibex.index")) || temp_mailfile.endsWith(QLatin1String(".ibex.index.data")) ) {}
@@ -135,8 +135,8 @@ void FilterEvolution_v2::importDirContents(FilterInfo *info, const QString& dirN
 
     /** If there are subfolders, we import them one by one */
     QDir subfolders(dirName);
-    QStringList subDirs = subfolders.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name);
-    for(QStringList::Iterator filename = subDirs.begin() ; filename != subDirs.end() ; ++filename) {
+    const QStringList subDirs = subfolders.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name);
+    for(QStringList::ConstIterator filename = subDirs.constBegin() ; filename != subDirs.constEnd() ; ++filename) {
         QString kSubDir;
         if(!KMailSubDir.isNull()) {
             kSubDir = KMailSubDir + '/' + *filename;
@@ -231,3 +231,4 @@ void FilterEvolution_v2::importMBox(FilterInfo *info, const QString& mboxName, c
         mbox.close();
     }
 }
+
