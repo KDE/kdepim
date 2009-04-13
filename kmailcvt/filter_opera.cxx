@@ -54,6 +54,7 @@ void FilterOpera::import(FilterInfo *info)
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
     kfd->exec();
     QString operaDir = kfd->selectedFile();
+    delete kfd;
 
     if (operaDir.isEmpty()) {
         info->alert(i18n("No directory selected."));
