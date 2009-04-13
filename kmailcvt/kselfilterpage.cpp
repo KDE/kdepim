@@ -87,7 +87,7 @@ void KSelFilterPage::addFilter(Filter *f)
 	if (mFilterCombo->count() == 1) filterSelected(0); // Setup description box with fist filter selected
 }
 
-bool KSelFilterPage::removeDupMsg_checked()
+bool KSelFilterPage::removeDupMsg_checked() const
 {
         return remDupMsg->isChecked();
 }

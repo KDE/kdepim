@@ -40,7 +40,7 @@ public:
 public:
 	void  addFilter(Filter *f);
 	Filter *getSelectedFilter(void);
-        bool removeDupMsg_checked();
+        bool removeDupMsg_checked() const;
 private:
 	QList<Filter*> mFilterList;
 private slots:
