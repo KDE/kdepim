@@ -50,6 +50,7 @@ void FilterPMail::import(FilterInfo *info)
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
     kfd->exec();
     chosenDir = kfd->selectedFile();
+    delete kfd;
 
     if (chosenDir.isEmpty()) {
         info->alert(i18n("No directory selected."));

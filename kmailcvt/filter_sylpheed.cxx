@@ -50,6 +50,7 @@ void FilterSylpheed::import( FilterInfo *info )
     kfd->setMode( KFile::Directory | KFile::LocalOnly );
     kfd->exec();
     mailDir = kfd->selectedFile();
+    delete kfd;
 
     if ( mailDir.isEmpty() ) {
         info->alert( i18n( "No directory selected." ) );
