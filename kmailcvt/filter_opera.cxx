@@ -39,9 +39,8 @@ FilterOpera::~FilterOpera()
     endImport();
 }
 
-void FilterOpera::importRecursive(const QDir& mailDir, FilterInfo *info)
+void FilterOpera::importRecursive(const QDir& mailDir, FilterInfo *info, const QString &accountName)
 {
-  //qDebug()<<" mailDir :"<<mailDir;
   // Recursive import of the MBoxes.
   QStringList rootSubDirs = mailDir.entryList(QStringList("[^\\.]*"), QDir::Dirs, QDir::Name); // Removal of . and ..
   int currentDir = 1;
@@ -50,19 +49,16 @@ void FilterOpera::importRecursive(const QDir& mailDir, FilterInfo *info)
     for(QStringList::ConstIterator filename = rootSubDirs.constBegin() ; filename != rootSubDirs.constEnd() ; ++filename, ++currentDir) {
       QDir importDir ( mailDir.path() +QDir::separator()+ *filename );
       const QStringList files = importDir.entryList(QStringList("*.[mM][bB][sS]"), QDir::Files, QDir::Name);
-      //qDebug()<<" filename :"<<*filename;
-      //qDebug()<<" files: "<<files;
       if ( files.isEmpty() ) {
-        //qDebug()<<" importRecursive :"<<files;
-        importRecursive( importDir,info );
+        importRecursive( importDir,info,accountName.isEmpty() ?  *filename : accountName);
       } else {
-        importBox( importDir, files, info );
+        importBox( importDir, files, info,accountName );
       }
     }
   }
 }
 
-void FilterOpera::importBox(const QDir& importDir, const QStringList &files, FilterInfo *info)
+void FilterOpera::importBox(const QDir& importDir, const QStringList &files, FilterInfo *info, const QString & accountName)
 {
   int overall_status = 0;
   int totalFiles = files.count();
@@ -76,7 +72,11 @@ void FilterOpera::importBox(const QDir& importDir, const QStringList &files, Fil
     } else {
       info->addLog( i18n("Importing emails from %1...", *mailFile ) );
       QFileInfo filenameInfo( importDir.filePath(*mailFile) );
-      QString folderName( "OPERA-" + importDir.dirName() );
+      QString folderName;
+      if ( accountName.isEmpty() )
+        folderName = QString(  "OPERA-" + importDir.dirName() );
+      else
+        folderName = QString( "OPERA-" + accountName );
 
       info->setFrom( *mailFile );
       info->setTo( folderName );
@@ -177,9 +177,8 @@ void FilterOpera::import(FilterInfo *info)
         if(files.count() > 0) {
           importBox(importDir, files,info );
         } else {
-
+          //opera > 9.10 stores mail in subfolder.
           importRecursive( importDir, info );
-          info->addLog(i18n("No files found for import."));
         }
     }
     if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));

@@ -32,8 +32,8 @@ public:
     ~FilterOpera();
 
     void import(FilterInfo *info);
-  void importBox( const QDir & importDir, const QStringList & , FilterInfo *info);
-  void importRecursive(const QDir& maildir, FilterInfo *info );
+  void importBox( const QDir & importDir, const QStringList & , FilterInfo *info, const QString & accountName = QString());
+  void importRecursive(const QDir& maildir, FilterInfo *info, const QString &accountName = QString() );
 };
 
 #endif
