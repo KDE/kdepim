@@ -2,15 +2,15 @@ The KDE Mail Import tool - KMailCVT
 ===================================
 
 This directory contains the sources for the kmailcvt program. It communicates
-with KMail via its DCOP interface to add messages.
+with KMail via its D-Bus interface to add messages.
 
 Writing a filter
 ----------------
 
 ...is very easy. Create two files filter_myformat.cxx and filter_myformat.hxx
-and add "filter_myformat.cxx" to the end of the kmailcvt_SOURCES line in
-Makefile.am and "filter_myformat.cxx filter_myformat.hxx" to the end of the
-EXTRA_DIST line in Makefile.am. Now run "make -f Makefile.cvs; ./configure" in
+and add "filter_myformat.cxx" to the end of the kmailcvt_SRCS line in
+CMakeLists.txt and "filter_myformat.cxx filter_myformat.hxx" . 
+Now run "cmake ../;" in
 your kdepim source directory.
 
 In the import method of your filter you are passed a FilterInfo object. This has
@@ -44,3 +44,4 @@ kselfilterpage.cpp and add an appropriate addFilter() function call.
 
 Danny Kukawka, February 2005
 Laurence Anderson, April 2003.
+
