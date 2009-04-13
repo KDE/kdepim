@@ -4,8 +4,7 @@ if(KMAIL_SUPPORTED)
 
   add_subdirectory( pics )
 
-  add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
-
+  add_definitions (-DQT3_SUPPORT)
   ########### next target ###############
 
   set(kmailcvt_SRCS
@@ -38,7 +37,7 @@ if(KMAIL_SUPPORTED)
   kde4_add_executable(kmailcvt ${kmailcvt_SRCS})
   add_dependencies(kmailcvt kmail_xml)
 
-  target_link_libraries(kmailcvt  ${QT_QT3SUPPORT_LIBRARY}  ${KDE4_KIO_LIBS} )
+  target_link_libraries(kmailcvt  ${KDE4_KIO_LIBS} )
 
   install(TARGETS kmailcvt  ${INSTALL_TARGETS_DEFAULT_ARGS} )
 

@@ -131,5 +131,4 @@ This program will help you import your email from your previous email program in
     </layout>
   </widget>
   <layoutdefault spacing="6" margin="11" />
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
 </ui>

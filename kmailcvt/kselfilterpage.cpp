@@ -35,7 +35,6 @@
 #include "filters.hxx"
 
 #include <kstandarddirs.h>
-#include <q3textedit.h>
 #include <QCheckBox> 
 #include <klocale.h>
 

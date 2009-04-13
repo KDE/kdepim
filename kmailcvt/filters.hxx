@@ -22,8 +22,6 @@
 #define MAX_LINE 4096
 #endif
 
-#include <q3ptrlist.h>
-#include <q3listbox.h>
 
 #include "kimportpage.h"
 
