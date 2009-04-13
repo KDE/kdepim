@@ -80,9 +80,8 @@ void  FilterInfo::setOverall( int percent )
 
 void FilterInfo::addLog( const QString& log )
 {
-  m_dlg->_log->insertItem( log );
-  m_dlg->_log->setCurrentItem( m_dlg->_log->count() - 1 );
-  m_dlg->_log->centerCurrentItem();
+  m_dlg->_log->addItem( log );
+  m_dlg->_log->setCurrentItem( m_dlg->_log->item(m_dlg->_log->count() - 1 ));
   kapp->processEvents();
 }
 

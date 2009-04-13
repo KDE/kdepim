@@ -191,7 +191,7 @@
             </layout>
           </item>
           <item>
-            <widget class="Q3ListBox" name="_log" />
+            <widget class="QListWidget" name="_log" />
           </item>
           <item>
             <widget class="QLabel" name="textLabel1_2" >
@@ -208,5 +208,4 @@
     </layout>
   </widget>
   <layoutdefault spacing="6" margin="11" />
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
 </ui>
