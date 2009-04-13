@@ -54,6 +54,7 @@ void FilterOpera::import(FilterInfo *info)
     kfd->setMode(KFile::Directory | KFile::LocalOnly);
     kfd->exec();
     QString operaDir = kfd->selectedFile();
+    delete kfd;
 
     if (operaDir.isEmpty()) {
         info->alert(i18n("No directory selected."));
@@ -68,7 +69,7 @@ void FilterOpera::import(FilterInfo *info)
         info->setOverall(0);
 
         QDir importDir (operaDir);
-        QStringList files = importDir.entryList(QStringList("*.[mM][bB][sS]"), QDir::Files, QDir::Name);
+        const QStringList files = importDir.entryList(QStringList("*.[mM][bB][sS]"), QDir::Files, QDir::Name);
 
         // Count total number of files to be processed
         info->addLog(i18n("Counting files..."));
@@ -79,7 +80,7 @@ void FilterOpera::import(FilterInfo *info)
             int overall_status = 0;
 
             info->addLog(i18n("Importing new mail files..."));
-            for ( QStringList::Iterator mailFile = files.begin(); mailFile != files.end(); ++mailFile) {
+            for ( QStringList::ConstIterator mailFile = files.constBegin(); mailFile != files.constEnd(); ++mailFile) {
                 info->setCurrent(0);
                 QFile operaArchiv( importDir.filePath(*mailFile) );
                 if (! operaArchiv.open( QIODevice::ReadOnly ) ) {
@@ -154,5 +155,5 @@ void FilterOpera::import(FilterInfo *info)
     if (info->shouldTerminate()) info->addLog( i18n("Finished import, canceled by user."));
     info->setCurrent(100);
     info->setOverall(100);
-    delete kfd;
 }
+
