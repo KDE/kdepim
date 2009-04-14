@@ -69,7 +69,7 @@ void KAddressBookView::writeConfig( KConfigGroup& )
   // Most of writing the config is handled by the ConfigureViewDialog
 }
 
-QString KAddressBookView::selectedEmails()
+QString KAddressBookView::selectedEmails( bool askForEMail )
 {
   bool first = true;
   QString emailAddrs;
@@ -84,8 +84,12 @@ QString KAddressBookView::selectedEmails()
     if ( !addr.isEmpty() ) {
       QString mail;
 
-      if ( addr.emails().count() > 1 )
-        mail = KABC::EmailSelector::getEmail( addr.emails(), addr.preferredEmail(), this );
+      if ( addr.emails().count() > 1 ) {
+        if ( askForEMail )
+          mail = KABC::EmailSelector::getEmail( addr.emails(), addr.preferredEmail(), this );
+        else
+          mail = addr.preferredEmail();
+      }
 
       email = addr.fullEmail( mail );
 
