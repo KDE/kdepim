@@ -48,6 +48,7 @@ int main(int argc, char *argv[])
 
   DCOPClient *client=a.dcopClient();
   if (!client->attach()) {
+    delete kmailcvt;
     return 1;
   }
   int ret = a.exec();
