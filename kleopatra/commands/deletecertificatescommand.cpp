@@ -36,6 +36,8 @@
 
 #include "command_p.h"
 
+#include <dialogs/deletecertificatesdialog.h>
+
 #include <models/keycache.h>
 #include <models/predicates.h>
 
@@ -63,6 +65,7 @@
 using namespace boost;
 using namespace GpgME;
 using namespace Kleo;
+using namespace Kleo::Dialogs;
 
 class DeleteCertificatesCommand::Private : public Command::Private {
     friend class ::Kleo::DeleteCertificatesCommand;
@@ -87,7 +90,27 @@ public:
         return false;
     }
 
+    void ensureDialogCreated() {
+        if ( dialog )
+            return;
+        dialog = new DeleteCertificatesDialog( parentWidgetOrView() );
+        dialog->setAttribute( Qt::WA_DeleteOnClose );
+        dialog->setWindowTitle( i18nc("@title:window", "Delete Certificates") );
+        connect( dialog, SIGNAL(accepted()), q, SLOT(slotDialogAccepted()) );
+        connect( dialog, SIGNAL(rejected()), q, SLOT(slotDialogRejected()) );
+    }
+    void ensureDialogShown() {
+        if ( dialog )
+            dialog->show();
+    }
+
+    void slotDialogAccepted();
+    void slotDialogRejected() {
+        canceled();
+    }
+
 private:
+    QPointer<DeleteCertificatesDialog> dialog;
     QPointer<MultiDeleteJob> cmsJob, pgpJob;
     GpgME::Error cmsError, pgpError;
     std::vector<Key> cmsKeys, pgpKeys;
@@ -203,171 +226,56 @@ namespace {
 
 void DeleteCertificatesCommand::doStart() {
 
-    std::vector<Key> keys = d->keys();
-    if ( keys.empty() ) {
+    std::vector<Key> selected = d->keys();
+    if ( selected.empty() ) {
         d->finished();
         return;
     }
 
-    // 1. Remove secret keys:
+    kdtools::sort( selected, _detail::ByFingerprint<std::less>() );
 
-    std::vector<Key>::iterator keysEnd
-        = std::remove_if( keys.begin(), keys.end(), bind( &Key::hasSecret, _1 ) );
+    // Calculate the closure of the selected keys (those that need to
+    // be deleted with them, though not selected themselves):
 
-    if ( keysEnd == keys.begin() ) {
-        KMessageBox::information( d->parentWidgetOrView(),
-                                  i18np("The certificate to be deleted is your own. "
-                                        "It contains private key material, "
-                                        "which is needed to decrypt past communication "
-                                        "encrypted to the certificate, and can therefore "
-                                        "not be deleted.",
+    std::vector<Key> toBeDeleted = KeyCache::instance()->findSubjects( selected );
+    kdtools::sort( toBeDeleted, _detail::ByFingerprint<std::less>() );
 
-                                        "All of the certificates to be deleted "
-                                        "are your own. "
-                                        "They contain private key material, "
-                                        "which is needed to decrypt past communication "
-                                        "encrypted to the certificate, and can therefore "
-                                        "not be deleted.",
+    std::vector<Key> unselected;
+    unselected.reserve( toBeDeleted.size() );
+    std::set_difference( toBeDeleted.begin(), toBeDeleted.end(),
+                         selected.begin(), selected.end(),
+                         std::back_inserter( unselected ),
+                         _detail::ByFingerprint<std::less>() );
 
-                                        keys.size() ),
-                                  i18n("Secret Key Deletion") );
-        d->finished();
-        return;
-    }
+    d->ensureDialogCreated();
 
-    const bool hadSecretKeys = keysEnd != keys.end();
+    d->dialog->setSelectedKeys( selected );
+    d->dialog->setUnselectedKeys( unselected );
 
-    // 2. Remove issuers of secret keys:
+    d->ensureDialogShown();
 
-    const std::vector<Key> issuersOfSecretKeys = KeyCache::instance()->findIssuers( KeyCache::instance()->keys() );
+}
 
-    std::sort( keys.begin(), keysEnd, _detail::ByFingerprint<std::less>() );
-
-    const std::vector<Key>::iterator it
-        = std::set_difference( keys.begin(), keysEnd,
-                               issuersOfSecretKeys.begin(), issuersOfSecretKeys.end(),
-                               keys.begin(),
-                               _detail::ByFingerprint<std::less>() );
-
-    if ( it == keys.begin() ) {
-        KMessageBox::information( d->parentWidgetOrView(),
-                                  hadSecretKeys ?
-                                  i18n("All of the certificates to be deleted "
-                                       "are either your own, or are issuers of one of your own certificates. "
-                                       "Your own certificates contain private key material, "
-                                       "which is needed to decrypt past communication "
-                                       "encrypted to the certificate. They can therefore not be deleted, "
-                                       "and neither can their issuers.")
-                                  :
-                                  i18np("The certificate to be deleted "
-                                        "is an issuer of one of your own certificates. "
-                                        "Your own certificates contain private key material, "
-                                        "which is needed to decrypt past communication "
-                                        "encrypted to the certificate. They can therefore not be deleted, "
-                                        "and neither can their issuers.",
-                                        
-                                        "All of the certificates to be deleted "
-                                        "are issuers of one of your own certificates. "
-                                        "Your own certificates contain private key material, "
-                                        "which is needed to decrypt past communication "
-                                        "encrypted to the certificate. They can therefore not be deleted, "
-                                        "and neither can their issuers.",
-
-                                        keys.size() ),
-                                  i18n("Secret Key Deletion") );
-        d->finished();
-        return;
-    }
-
-    const bool hadSecretKeyIssuers = it != keysEnd;
-    keysEnd = it;
-
-    if ( hadSecretKeys || hadSecretKeyIssuers )
-        if ( KMessageBox::Continue != 
-             KMessageBox::warningContinueCancel( d->parentWidgetOrView(),
-                                                 hadSecretKeys ?
-                                                 hadSecretKeyIssuers ?
-                                                 i18n("Some of the certificates to be deleted "
-                                                      "are your own, or are issuers of one of your own certificates. "
-                                                      "Your own certificates contain private key material, "
-                                                      "which is needed to decrypt past communication "
-                                                      "encrypted to the certificate. They can therefore not be deleted, "
-                                                      "and neither can their issuers.\n"
-                                                      "If you choose to continue, your own, "
-                                                      "as well as any issuer certificates, will be "
-                                                      "skipped from deletion.")
-                                                 :
-                                                 i18n("Some of the certificates to be deleted "
-                                                      "are your own. "
-                                                      "They contain private key material, "
-                                                      "which is needed to decrypt past communication "
-                                                      "encrypted to the certificate. They can therefore not be deleted.\n"
-                                                      "If you choose to continue, they will be "
-                                                      "skipped from deletion.")
-                                                 :
-                                                 i18n("Some of the certificates to be deleted "
-                                                      "are issuers of one of your own certificates. "
-                                                      "Your own certificates contain private key material, "
-                                                      "which is needed to decrypt past communication "
-                                                      "encrypted to the certificate. They can therefore not be deleted, "
-                                                      "and neither can their issuers.\n"
-                                                      "If you choose to continue, they will be "
-                                                      "skipped from deletion."),
-                                                 i18n("Secret Key Deletion" ) ) )
-        {
-            emit canceled();
-            d->finished();
-            return;
-        }
-
-    std::sort( keys.begin(), keysEnd, _detail::ByFingerprint<std::less>() );
+void DeleteCertificatesCommand::Private::slotDialogAccepted() {
+    std::vector<Key> keys = dialog->keys();
+    assert( !keys.empty() );
 
     std::vector<Key>::iterator
         pgpBegin = keys.begin(),
-        pgpEnd = std::stable_partition( pgpBegin, keysEnd,
+        pgpEnd = std::stable_partition( pgpBegin, keys.end(),
                                         bind( &GpgME::Key::protocol, _1 ) != CMS ),
         cmsBegin = pgpEnd,
-        cmsEnd = std::set_difference( cmsBegin, keysEnd,
-                                      issuersOfSecretKeys.begin(), issuersOfSecretKeys.end(),
-                                      cmsBegin,
-                                      _detail::ByFingerprint<std::less>() );
+        cmsEnd = keys.end() ;
 
-    const std::vector<Key> subjects = KeyCache::instance()->findSubjects( cmsBegin, cmsEnd );
-
-    assert( !kdtools::any( subjects.begin(), subjects.end(), bind( &Key::hasSecret, _1 ) ) );
-
-    std::vector<Key> cms;
-    cms.reserve( cmsEnd - cmsBegin + subjects.size() );
-    std::set_union( cmsBegin, cmsEnd,
-                    subjects.begin(), subjects.end(),
-                    std::back_inserter( cms ),
-                    _detail::ByFingerprint<std::less>() );
-
-    std::vector<Key> openpgp( pgpBegin, pgpEnd ); 
-
-    if ( cms.size() > static_cast<std::size_t>( cmsEnd - cmsBegin ) &&
-         KMessageBox::warningContinueCancel( d->parentWidgetOrView(),
-					     i18n("Some or all of the selected "
-						  "certificates are issuers (CA certificates) "
-						  "for other, non-selected certificates.\n"
-						  "Deleting a CA certificate will also delete "
-						  "all certificates issued by it."),
-					     i18n("Deleting CA Certificates") )
-	 != KMessageBox::Continue ) {
-        emit canceled();
-        d->finished();
-        return;
-    }
-
-    assert( !kdtools::any( openpgp.begin(), openpgp.end(), bind( &Key::hasSecret, _1 ) ) );
-    assert( !kdtools::any( cms.begin(), cms.end(), bind( &Key::hasSecret, _1 ) ) );
+    std::vector<Key> openpgp( pgpBegin, pgpEnd );
+    std::vector<Key>     cms( cmsBegin, cmsEnd );
 
     const unsigned int errorCase =
-        openpgp.empty() << 3U | d->canDelete( OpenPGP ) << 2U |
-            cms.empty() << 1U |     d->canDelete( CMS ) << 0U ;
+        openpgp.empty() << 3U | canDelete( OpenPGP ) << 2U |
+            cms.empty() << 1U |     canDelete( CMS ) << 0U ;
 
     if ( const unsigned int actions = deletionErrorCases[errorCase].actions ) {
-        KMessageBox::information( d->parentWidgetOrView(),
+        KMessageBox::information( parentWidgetOrView(),
                                   i18n( deletionErrorCases[errorCase].text ),
                                   (actions & Failure)
                                   ? i18n( "Certificate Deletion Failed" )
@@ -377,25 +285,24 @@ void DeleteCertificatesCommand::doStart() {
         if ( actions & ClearPGP )
             openpgp.clear();
         if ( actions & Failure ) {
-            emit canceled();
-            d->finished();
+            canceled();
             return;
         }
     }
 
     assert( !openpgp.empty() || !cms.empty() );
 
-    d->pgpKeys.swap( openpgp );
-    d->cmsKeys.swap( cms );
+    pgpKeys.swap( openpgp );
+    cmsKeys.swap( cms );
 
-    if ( !d->pgpKeys.empty() )
-        d->startDeleteJob( GpgME::OpenPGP );
-    if ( !d->cmsKeys.empty() )
-        d->startDeleteJob( GpgME::CMS );
+    if ( !pgpKeys.empty() )
+        startDeleteJob( GpgME::OpenPGP );
+    if ( !cmsKeys.empty() )
+        startDeleteJob( GpgME::CMS );
 
-    if ( ( d->pgpKeys.empty() || d->pgpError.code() ) &&
-         ( d->cmsKeys.empty() || d->cmsError.code() ) )
-        d->showErrorsAndFinish();
+    if ( ( pgpKeys.empty() || pgpError.code() ) &&
+         ( cmsKeys.empty() || cmsError.code() ) )
+        showErrorsAndFinish();
 }
     
 void DeleteCertificatesCommand::Private::startDeleteJob( GpgME::Protocol protocol ) {
@@ -414,7 +321,7 @@ void DeleteCertificatesCommand::Private::startDeleteJob( GpgME::Protocol protoco
     connect( job.get(), SIGNAL(progress(QString,int,int)),
              q, SIGNAL(progress(QString,int,int)) );
 
-    if ( const Error err = job->start( keys ) )
+    if ( const Error err = job->start( keys, true /*allowSecretKeyDeletion*/ ) )
         ( protocol == CMS ? cmsError : pgpError ) = err;
     else
         ( protocol == CMS ? cmsJob : pgpJob ) = job.release();

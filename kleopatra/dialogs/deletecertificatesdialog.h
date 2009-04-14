@@ -1,8 +1,8 @@
 /* -*- mode: c++; c-basic-offset:4 -*-
-    deletecertificatescommand.h
+    dialogs/deletecertificatesdialog.h
 
     This file is part of Kleopatra, the KDE keymanager
-    Copyright (c) 2007 Klarälvdalens Datakonsult AB
+    Copyright (c) 2009 Klarälvdalens Datakonsult AB
 
     Kleopatra is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -30,35 +30,42 @@
     your version.
 */
 
-#ifndef __KLEOPATRA_COMMANDS_DELETECERTIFICATESCOMMAND_H__
-#define __KLEOPATRA_COMMANDS_DELETECERTIFICATESCOMMAND_H__
+#ifndef __KLEOPATRA_DIALOGS_DELETECERTIFICATESDIALOG_H__
+#define __KLEOPATRA_DIALOGS_DELETECERTIFICATESDIALOG_H__
 
-#include "command.h"
+#include <QDialog>
+
+#include <utils/pimpl_ptr.h>
+
+#include <vector>
+
+namespace GpgME {
+    class Key;
+}
 
 namespace Kleo {
-    class DeleteCertificatesCommand : public Command {
+namespace Dialogs {
+
+    class DeleteCertificatesDialog : public QDialog {
         Q_OBJECT
     public:
-        explicit DeleteCertificatesCommand( QAbstractItemView * view, KeyListController * parent );
-        explicit DeleteCertificatesCommand( KeyListController * parent );
-        ~DeleteCertificatesCommand();
+        explicit DeleteCertificatesDialog( QWidget * parent=0, Qt::WindowFlags f=0 );
+        ~DeleteCertificatesDialog();
 
-        /* reimp */ static Restrictions restrictions() { return NeedSelection; }
+        void setSelectedKeys( const std::vector<GpgME::Key> & keys );
+        void setUnselectedKeys( const std::vector<GpgME::Key> & keys );
 
-    private:
-        /* reimp */ void doStart();
-        /* reimp */ void doCancel();
+        std::vector<GpgME::Key> keys() const;
+
+        /* reimp */ void accept();
 
     private:
         class Private;
-        inline Private * d_func();
-        inline const Private * d_func() const;
-        Q_PRIVATE_SLOT( d_func(), void slotDialogAccepted() )
-        Q_PRIVATE_SLOT( d_func(), void slotDialogRejected() )
-        Q_PRIVATE_SLOT( d_func(), void pgpDeleteResult( GpgME::Error ) )
-        Q_PRIVATE_SLOT( d_func(), void cmsDeleteResult( GpgME::Error ) )
+        kdtools::pimpl_ptr<Private> d;
+        Q_PRIVATE_SLOT( d, void slotWhatsThisRequested() );
     };
+
+}
 }
 
-#endif // __KLEOPATRA_COMMANDS_DELETECERTIFICATESCOMMAND_H__
-
+#endif /* __KLEOPATRA_DIALOGS_DELETECERTIFICATESDIALOG_H__ */

@@ -154,6 +154,7 @@ set( _kleopatra_SRCS
   dialogs/adduseriddialog.cpp
   dialogs/certificatedetailsdialog.cpp
   dialogs/exportcertificatesdialog.cpp
+  dialogs/deletecertificatesdialog.cpp
 
   crypto/certificateresolver.cpp
   crypto/task.cpp
