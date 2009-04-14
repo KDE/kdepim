@@ -423,10 +423,19 @@ std::vector<Key> KeyCache::findSubjects( std::vector<Key>::const_iterator first,
     std::sort( result.begin(), result.end(), _detail::ByFingerprint<std::less>() );
     result.erase( std::unique( result.begin(), result.end(), _detail::ByFingerprint<std::equal_to>() ), result.end() );
 
-    if ( options & RecursiveSearch )
-        return findSubjects( result, options );
-    else
-        return result;
+    if ( options & RecursiveSearch ) {
+        const std::vector<Key> furtherSubjects = findSubjects( result, options );
+        std::vector<Key> combined;
+        combined.reserve( result.size() + furtherSubjects.size() );
+        std::merge( result.begin(), result.end(),
+                    furtherSubjects.begin(), furtherSubjects.end(),
+                    std::back_inserter( combined ),
+                    _detail::ByFingerprint<std::less>() );
+        combined.erase( std::unique( combined.begin(), combined.end(), _detail::ByFingerprint<std::equal_to>() ), combined.end() );
+        result.swap( combined );
+    }
+
+    return result;
 }
 
 static const unsigned int LIKELY_CHAIN_DEPTH = 3;
@@ -690,7 +699,8 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
     // 3.5a: insert into chain-id index:
     std::vector<Key> by_chainid;
     by_chainid.reserve( sorted.size() + d->by.chainid.size() );
-    std::merge( sorted.begin(), sorted.end(),
+    std::merge( boost::make_filter_iterator( !bind( &Key::isRoot, _1 ), sorted.begin(), sorted.end() ),
+                boost::make_filter_iterator( !bind( &Key::isRoot, _1 ), sorted.end(),   sorted.end() ),
                 d->by.chainid.begin(), d->by.chainid.end(),
                 std::back_inserter( by_chainid ),
                 lexicographically<_detail::ByChainID,_detail::ByFingerprint>() );
@@ -741,6 +751,7 @@ void KeyCache::insert( const std::vector<Key> & keys ) {
     by_shortkeyid.swap( d->by.shortkeyid );
     by_email.swap( d->by.email );
     by_subkeyid.swap( d->by.subkeyid );
+    by_chainid.swap( d->by.chainid );
 
     Q_FOREACH( const Key & key, sorted )
         emit added( key );
