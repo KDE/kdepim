@@ -47,6 +47,7 @@ int main(int argc,char **argv)
   bool verbose = false;
   if ( args->isSet( "verbose" ) ) verbose = true;
   args->clear();
+  args->clear();
   ScalixWizard wizard;
 
   return wizard.exec();
