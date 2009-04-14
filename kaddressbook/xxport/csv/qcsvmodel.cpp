@@ -148,6 +148,7 @@ QCsvModel::QCsvModel( QObject *parent )
 
 QCsvModel::~QCsvModel()
 {
+  delete d;
 }
 
 bool QCsvModel::load( QIODevice *device )
