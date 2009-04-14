@@ -74,6 +74,7 @@ class KABEntryPainter
 
     void setUseHeaderColor( bool value = true );
 
+    void setPrintHeadLines( bool value );
     void setShowAddresses( bool value = true );
     void setShowEmails( bool value = true );
     void setShowPhones( bool value = true );
@@ -123,6 +124,7 @@ class KABEntryPainter
     bool mShowEmails;
     bool mShowPhones;
     bool mShowURLs;
+    bool mPrintHeadLines;
 
     QRectList mEmailRects;
     QRectList mPhoneRects;
