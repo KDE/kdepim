@@ -514,9 +514,9 @@ void KABCore::copyContacts()
 
 void KABCore::cutContacts()
 {
-  QStringList uidList = mViewManager->selectedUids();
+  const QStringList uidList = mViewManager->selectedUids();
 
-  if ( uidList.size() > 0 ) {
+  if ( !uidList.isEmpty() ) {
     CutCommand *command = new CutCommand( mAddressBook, uidList );
     mCommandHistory->push( command );
 
