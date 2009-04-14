@@ -41,8 +41,6 @@
 
 #include <kleo/keyfilter.h>
 
-#include <gpgme++/key.h>
-
 #include <QTreeView>
 #include <QItemSelectionModel>
 #include <QItemSelection>
@@ -67,6 +65,21 @@ public:
 };
 
 } // anon namespace
+
+KeyTreeView::KeyTreeView( QWidget * parent )
+    : QWidget( parent ),
+      m_proxy( new KeyListSortFilterProxyModel( this ) ),
+      m_additionalProxy( 0 ),
+      m_view( new TreeView( this ) ),
+      m_flatModel( 0 ),
+      m_hierarchicalModel( 0 ),
+      m_stringFilter(),
+      m_keyFilter(),
+      m_isHierarchical( true )
+{
+    init();
+}
+
 
 KeyTreeView::KeyTreeView( const KeyTreeView & other )
     : QWidget( 0 ),
@@ -243,6 +256,17 @@ void KeyTreeView::setHierarchicalView( bool on ) {
         }
     }
     emit hierarchicalChanged( on );
+}
+
+void KeyTreeView::setKeys( const std::vector<Key> & keys ) {
+    m_keys = keys;
+    if ( m_flatModel )
+        m_flatModel->setKeys( keys );
+    if ( m_hierarchicalModel )
+        m_hierarchicalModel->setKeys( keys );
+    if ( !keys.empty() )
+        if ( QHeaderView * const hv = m_view ? m_view->header() : 0 )
+            hv->resizeSections( QHeaderView::ResizeToContents );
 }
 
 #include "moc_keytreeview.cpp"
