@@ -109,7 +109,7 @@ int PrepEncryptCommand::doStart() {
     QObject::connect( d->controller.get(), SIGNAL(recipientsResolved()), d.get(), SLOT(slotRecipientsResolved()) );
     QObject::connect( d->controller.get(), SIGNAL(error(int,QString)), d.get(), SLOT(slotError(int,QString)) );
 
-    d->controller->startResolveRecipients( recipients() );
+    d->controller->startResolveRecipients( recipients(), senders() );
 
     return 0;
 }

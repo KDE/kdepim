@@ -214,8 +214,8 @@ bool SignEncryptWizard::encryptionSelected() const {
     return d->signerResolvePage->encryptionSelected();
 }
 
-void SignEncryptWizard::setRecipients( const std::vector<Mailbox> & recipients ) {
-    d->recipientResolvePage->setRecipients( recipients );
+void SignEncryptWizard::setRecipients( const std::vector<Mailbox> & recipients, const std::vector<Mailbox> & encryptToSelfRecipients ) {
+    d->recipientResolvePage->setRecipients( recipients, encryptToSelfRecipients );
 }
 
 void SignEncryptWizard::setSignersAndCandidates( const std::vector<Mailbox> & signers, const std::vector< std::vector<Key> > & keys ) {

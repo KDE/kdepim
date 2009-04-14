@@ -602,10 +602,20 @@ void ResolveRecipientsPage::setAdditionalRecipientsInfo( const std::vector<Key> 
     d->m_additionalRecipientsLabel->setText( i18n( "<qt><p>Recipients predefined via GnuPG settings:</p>%1", listKeysForInfo( recipients ) ) );
 }
 
-void ResolveRecipientsPage::setRecipients( const std::vector<Mailbox>& recipients )
+void ResolveRecipientsPage::setRecipients( const std::vector<Mailbox>& recipients, const std::vector<Mailbox> & encryptToSelfRecipients )
 {
     uint cmsCount = 0;
     uint pgpCount = 0;
+    uint senders = 0;
+    Q_FOREACH( const Mailbox & mb, encryptToSelfRecipients ) {
+        const QString id = "sender-" + QString::number( ++senders );
+        d->m_listWidget->addEntry( id, i18n("Sender"), mb );
+        const std::vector<Key> pgp = makeSuggestions( d->m_recipientPreferences, mb, OpenPGP );
+        const std::vector<Key> cms = makeSuggestions( d->m_recipientPreferences, mb, CMS );
+        pgpCount += !pgp.empty();
+        cmsCount += !cms.empty();
+        d->m_listWidget->setCertificates( id, pgp, cms );
+    }
     Q_FOREACH( const Mailbox& i, recipients )
     {
         //TODO:
