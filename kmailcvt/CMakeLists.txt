@@ -4,7 +4,6 @@ if(KMAIL_SUPPORTED)
 
   add_subdirectory( pics )
 
-  add_definitions (-DQT3_SUPPORT)
   ########### next target ###############
 
   set(kmailcvt_SRCS

@@ -40,9 +40,8 @@ int main(int argc, char *argv[])
 
   KApplication a;
   KMailCVT *kmailcvt = new KMailCVT();
-  a.setMainWidget(kmailcvt);
+  a.setTopWidget(kmailcvt);
   kmailcvt->show();
-
   int ret = a.exec();
   delete kmailcvt;
   return ret;
