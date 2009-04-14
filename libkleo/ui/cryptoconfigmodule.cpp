@@ -293,7 +293,10 @@ Kleo::CryptoConfigGroupGUI::CryptoConfigGroupGUI(
   for( QStringList::const_iterator it = entries.begin(), end = entries.end() ; it != end; ++it ) {
     Kleo::CryptoConfigEntry* entry = group->entry( *it );
     Q_ASSERT( entry );
-    if ( entry->level() > CryptoConfigEntry::Level_Advanced ) continue;
+    if ( entry->level() > CryptoConfigEntry::Level_Advanced ) {
+        kDebug(5150) << "entry" << *it << "too advanced, skipping";
+        continue;
+    }
     CryptoConfigEntryGUI* entryGUI =
       CryptoConfigEntryGUIFactory::createEntryGUI( module, entry, *it, glay, widget );
     if ( entryGUI ) {
