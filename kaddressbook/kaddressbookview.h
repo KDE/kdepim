@@ -99,8 +99,12 @@ class KADDRESSBOOK_EXPORT KAddressBookView : public QWidget
     /**
       Returns a QString with all the selected email addresses concatenated
       together with a ',' separator.
+      @param askForEMail if an addressee has more than one mail address
+                         and this parameter is true, a dialog will pop
+                         up and ask the user for the mail address to take.
+                         Otherwise, the preffered mail address will be taken
      */
-    virtual QString selectedEmails();
+    virtual QString selectedEmails( bool askForEMail = true );
 
     /**
       Return the type of the view: Icon, Table, etc. Please make sure that

@@ -61,7 +61,15 @@ class ViewManager : public QWidget
     void unloadViews();
 
     QStringList selectedUids() const;
-    QStringList selectedEmails() const;
+
+    /**
+      @param askForEMail if an addressee has more than one mail address
+                         and this parameter is true, a dialog will pop
+                         up and ask the user for the mail address to take.
+                         Otherwise, the preffered mail address will be taken
+     */
+    QStringList selectedEmails( bool askForEMail = true ) const;
+
     KABC::Addressee::List selectedAddressees() const;
 
     void setFilterSelectionWidget( FilterSelectionWidget *wdg );
