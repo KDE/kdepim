@@ -32,7 +32,6 @@
 
 #include <QApplication>
 #include <QDateTime>
-#include <q3ptrlist.h>
 #include <QStringList>
 #include <QTimer>
 
