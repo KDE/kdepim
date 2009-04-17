@@ -39,7 +39,6 @@ FilterLNotes::FilterLNotes() :
 
 /** Destructor. */
 FilterLNotes::~FilterLNotes() {
-    endImport();
 }
 
 /** 

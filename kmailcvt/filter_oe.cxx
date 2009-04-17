@@ -47,7 +47,6 @@ FilterOE::FilterOE() :
 
 FilterOE::~FilterOE()
 {
-    endImport();
 }
 
 void FilterOE::import(FilterInfo *info)

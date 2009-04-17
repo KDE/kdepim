@@ -36,7 +36,6 @@ FilterSylpheed::FilterSylpheed( void ) :
 /** Destructor. */
 FilterSylpheed::~FilterSylpheed( void )
 {
-    endImport();
 }
 
 /** Recursive import of Sylpheed maildir. */

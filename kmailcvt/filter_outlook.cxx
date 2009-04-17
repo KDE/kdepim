@@ -35,7 +35,6 @@ FilterOutlook::FilterOutlook() :
 
 FilterOutlook::~FilterOutlook()
 {
-    endImport();
 }
 
 void FilterOutlook::import(FilterInfo *info)

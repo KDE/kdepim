@@ -21,7 +21,7 @@ class KPageWidgetItem;
 class KSelFilterPage;
 class KImportPage;
 
-  
+
 /** KMailCVT is the base class of the project */
 class KMailCVT : public KAssistantDialog {
 	Q_OBJECT
@@ -36,6 +36,7 @@ public slots:
 private:
 	KPageWidgetItem* page1;
 	KPageWidgetItem* page2;
+        void endImport();
 	KSelFilterPage *selfilterpage;
 	KImportPage *importpage;
 

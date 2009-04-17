@@ -19,7 +19,9 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <QPushButton>
-
+#include <kdebug.h>
+#include <ktoolinvocation.h>
+#include <kmailinterface.h>
 #include "kimportpage.h"
 #include "kselfilterpage.h"
 #include "filters.hxx"
@@ -42,6 +44,22 @@ KMailCVT::KMailCVT(QWidget *parent)
 }
 
 KMailCVT::~KMailCVT() {
+  endImport();
+}
+
+void KMailCVT::endImport()
+{
+    QDBusConnectionInterface * sessionBus = 0;
+    sessionBus = QDBusConnection::sessionBus().interface();
+    if ( sessionBus && !sessionBus->isServiceRegistered( "org.kde.kmail" ) )
+       KToolInvocation::startServiceByDesktopName( "kmail", QString() ); // Will wait until kmail is started
+
+    org::kde::kmail::kmail kmail("org.kde.kmail", "/KMail", QDBusConnection::sessionBus());
+    QDBusReply<int> reply = kmail.dbusAddMessage(QString(), QString(),QString());
+    if ( !reply.isValid() ) return;
+
+    QDBusReply<void> reply2 = kmail.dbusResetAddMessage();
+    if ( !reply2.isValid() ) return;
 }
 
 void KMailCVT::next() {

@@ -36,7 +36,6 @@ FilterOpera::FilterOpera() :
 
 FilterOpera::~FilterOpera()
 {
-    endImport();
 }
 
 void FilterOpera::importRecursive(const QDir& mailDir, FilterInfo *info, const QString &accountName)

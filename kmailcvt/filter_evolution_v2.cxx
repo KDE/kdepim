@@ -37,7 +37,6 @@ FilterEvolution_v2::FilterEvolution_v2(void) :
 /** Destructor. */
 FilterEvolution_v2::~FilterEvolution_v2(void)
 {
-    endImport();
 }
 
 /** Recursive import of Evolution's mboxes. */

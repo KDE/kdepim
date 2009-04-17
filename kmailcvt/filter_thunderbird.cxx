@@ -38,7 +38,6 @@ FilterThunderbird::FilterThunderbird(void) :
 /** Destructor. */
 FilterThunderbird::~FilterThunderbird(void)
 {
-    endImport();
 }
 
 /** Recursive import of Evolution's mboxes. */
