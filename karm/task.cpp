@@ -183,12 +183,12 @@ void Task::setPercentComplete(const int percent, KarmStorage *storage)
 
 void Task::setPixmapProgress()
 {
-  QPixmap* icon = new QPixmap();
+  QPixmap icon ;
   if (_percentcomplete >= 100)
-    *icon = UserIcon("task-complete.xpm");
+    icon = UserIcon("task-complete.xpm");
   else
-    *icon = UserIcon("task-incomplete.xpm");
-  setPixmap(0, *icon);
+    icon = UserIcon("task-incomplete.xpm");
+  setPixmap(0, icon);
 }
 
 bool Task::isComplete() { return _percentcomplete == 100; }
