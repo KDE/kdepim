@@ -353,7 +353,11 @@ void ResourceSlox::parseContactAttribute( const QDomElement &e, Addressee &a )
   } else if ( tag == fieldName( Organization ) ) {
     a.setOrganization( text );
   } else if ( tag == fieldName( Department ) ) {
+#if KDE_IS_VERSION(3,5,8)
+    a.setDepartment( text );
+#else
     a.insertCustom( "KADDRESSBOOK", "X-Department", text );
+#endif
   } else if ( tag == fieldName( FamilyName ) ) {
     a.setFamilyName( text );
   } else if ( tag == fieldName( GivenName) ) {
@@ -542,8 +546,13 @@ void ResourceSlox::createAddresseeFields( QDomDocument &doc, QDomElement &prop,
   else
     WebdavHandler::addSloxElement( this, doc, prop, fieldName( Birthday ) );
   WebdavHandler::addSloxElement( this, doc, prop, fieldName( Role ), a.role() );
+#if KDE_IS_VERSION(3,5,8)
+  WebdavHandler::addSloxElement( this, doc, prop, fieldName( Department ),
+                                 a.department( ) );
+#else
   WebdavHandler::addSloxElement( this, doc, prop, fieldName( Department ),
                                  a.custom( "KADDRESSBOOK", "X-Department" ) );
+#endif
   if ( type() == "ox" ) { // OX only fields
     WebdavHandler::addSloxElement( this, doc, prop, fieldName( DisplayName ), a.formattedName() );
     WebdavHandler::addSloxElement( this, doc, prop, fieldName( SecondName ), a.additionalName() );

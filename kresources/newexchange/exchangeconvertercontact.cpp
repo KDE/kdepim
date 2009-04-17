@@ -52,7 +52,7 @@ void ExchangeConverterContact::createRequest( QDomDocument &doc, QDomElement &pr
   QDomAttr att_cal = doc.createAttribute( "xmlns:cal" );
   att_cal.setValue( "urn:schemas:calendar:" );
   doc.documentElement().setAttributeNode( att_cal );
-  
+
   propertyDAV( "contentclass" );
   propertyDAV( "getcontenttype" );
   propertyNS( "http://schemas.microsoft.com/exchange/", "outlookmessageclass" );
@@ -160,10 +160,10 @@ void ExchangeConverterContact::createRequest( QDomDocument &doc, QDomElement &pr
 #undef property
 
 
-bool ExchangeConverterContact::extractAddress( const QDomElement &node, 
+bool ExchangeConverterContact::extractAddress( const QDomElement &node,
     Addressee &addressee, int type,
-    const QString &street, const QString &pobox, const QString &location, 
-    const QString &postalcode, const QString &state, const QString &country, 
+    const QString &street, const QString &pobox, const QString &location,
+    const QString &postalcode, const QString &state, const QString &country,
     const QString &/*countycode*/ )
 {
   bool haveAddr = false;
@@ -206,13 +206,13 @@ bool ExchangeConverterContact::extractAddress( const QDomElement &node,
 
 
 /**
-For the complete list of Exchange <=> KABC field mappings see the file 
+For the complete list of Exchange <=> KABC field mappings see the file
 Person.mapping */
-bool ExchangeConverterContact::readAddressee( const QDomElement &node, Addressee &addressee ) 
+bool ExchangeConverterContact::readAddressee( const QDomElement &node, Addressee &addressee )
 {
   QString tmpstr;
   long tmplng;
-  
+
   // The UID is absolutely required!
   if ( WebdavHandler::extractString( node, "uid", tmpstr ) ) {
     addressee.setUid( tmpstr );
@@ -224,7 +224,7 @@ bool ExchangeConverterContact::readAddressee( const QDomElement &node, Addressee
     addressee.insertCustom( "KDEPIM-Exchange-Resource", "fingerprint", tmpstr );
   if ( WebdavHandler::extractString( node, "href", tmpstr ) )
     addressee.insertCustom( "KDEPIM-Exchange-Resource", "href", tmpstr );
-    
+
 /* KDE4: addressee does not have any creation or modification date :-(( */
 /* KDE4: read-only not supported by libkabc */
 
@@ -232,16 +232,16 @@ bool ExchangeConverterContact::readAddressee( const QDomElement &node, Addressee
   if ( WebdavHandler::extractString( node, "fileas", tmpstr ) ||
        WebdavHandler::extractString( node, "cn", tmpstr ) )
     addressee.setFormattedName( tmpstr );
-  if ( WebdavHandler::extractString( node, "givenName", tmpstr ) ) 
+  if ( WebdavHandler::extractString( node, "givenName", tmpstr ) )
     addressee.setGivenName( tmpstr );
-  if ( WebdavHandler::extractString( node, "middlename", tmpstr ) ) 
+  if ( WebdavHandler::extractString( node, "middlename", tmpstr ) )
     addressee.setAdditionalName( tmpstr );
-  if ( WebdavHandler::extractString( node, "sn", tmpstr ) ) 
+  if ( WebdavHandler::extractString( node, "sn", tmpstr ) )
     addressee.setFamilyName( tmpstr );
   //urn:schemas:contacts:initials not used      -
-  if ( WebdavHandler::extractString( node, "namesuffix", tmpstr ) ) 
+  if ( WebdavHandler::extractString( node, "namesuffix", tmpstr ) )
     addressee.setSuffix( tmpstr );
-  if ( WebdavHandler::extractString( node, "personaltitle", tmpstr ) ) 
+  if ( WebdavHandler::extractString( node, "personaltitle", tmpstr ) )
     addressee.setPrefix( tmpstr );
 
   // Role
@@ -249,31 +249,37 @@ bool ExchangeConverterContact::readAddressee( const QDomElement &node, Addressee
     addressee.setRole( tmpstr );
 
   // Company-Related settings
-  if ( WebdavHandler::extractString( node, "o", tmpstr ) ) 
+  if ( WebdavHandler::extractString( node, "o", tmpstr ) )
     addressee.setOrganization( tmpstr );
-  if ( WebdavHandler::extractString( node, "department", tmpstr ) ) 
+  if ( WebdavHandler::extractString( node, "department", tmpstr ) )
+  {
+#if KDE_IS_VERSION(3,5,8)
+    addressee.setDepartment( tmpstr );
+#else
     addressee.insertCustom( "KADDRESSBOOK", "X-Department", tmpstr );
-  if ( WebdavHandler::extractString( node, "roomnumber", tmpstr ) ) 
+#endif
+  }
+  if ( WebdavHandler::extractString( node, "roomnumber", tmpstr ) )
     addressee.insertCustom( "KADDRESSBOOK", "X-Office", tmpstr );
-  if ( WebdavHandler::extractString( node, "profession", tmpstr ) ) 
+  if ( WebdavHandler::extractString( node, "profession", tmpstr ) )
     addressee.insertCustom( "KADDRESSBOOK", "X-Profession", tmpstr );
-  if ( WebdavHandler::extractString( node, "manager", tmpstr ) ) 
+  if ( WebdavHandler::extractString( node, "manager", tmpstr ) )
     addressee.insertCustom( "KADDRESSBOOK", "X-ManagersName", tmpstr );
 
-  if ( WebdavHandler::extractString( node, "secretarycn", tmpstr ) ) 
+  if ( WebdavHandler::extractString( node, "secretarycn", tmpstr ) )
     addressee.insertCustom( "KADDRESSBOOK", "X-AssistantsName", tmpstr );
 
 
   // Web-Related settings
   if ( WebdavHandler::extractString( node, "email1", tmpstr ) )
     addressee.insertEmail( tmpstr, true );
-  if ( WebdavHandler::extractString( node, "email2", tmpstr ) ) 
+  if ( WebdavHandler::extractString( node, "email2", tmpstr ) )
     addressee.insertEmail( tmpstr );
-  if ( WebdavHandler::extractString( node, "email3", tmpstr ) ) 
+  if ( WebdavHandler::extractString( node, "email3", tmpstr ) )
     addressee.insertEmail( tmpstr );
-    
+
   // No kabc field for personalHomePage
-  if ( WebdavHandler::extractString( node, "businesshomepage", tmpstr ) ) 
+  if ( WebdavHandler::extractString( node, "businesshomepage", tmpstr ) )
     addressee.setUrl( tmpstr );
 
   if ( WebdavHandler::extractString( node, "fburl", tmpstr ) ) {
@@ -284,14 +290,14 @@ bool ExchangeConverterContact::readAddressee( const QDomElement &node, Addressee
 
   // General stuff:
   QStringList tmplst;
-  if ( WebdavHandler::extractStringList( node, "Keywords", tmplst ) ) 
+  if ( WebdavHandler::extractStringList( node, "Keywords", tmplst ) )
     addressee.setCategories( tmplst );
   // Exchange sentitivity values:
   // 0 None, 1 Personal, 2 Private, 3 Company Confidential
   if ( WebdavHandler::extractLong( node, "sensitivity", tmplng ) ) {
     switch( tmplng ) {
       case 0: addressee.setSecrecy( KABC::Secrecy::Public ); break;
-      case 1: 
+      case 1:
       case 2: addressee.setSecrecy( KABC::Secrecy::Private ); break;
       case 3: addressee.setSecrecy( KABC::Secrecy::Confidential ); break;
       default: kdWarning() << "Unknown sensitivity: " << tmplng << endl;
@@ -322,39 +328,39 @@ bool ExchangeConverterContact::readAddressee( const QDomElement &node, Addressee
   insertPhone( "callbackphone",           PhoneNumber::Msg );
   insertPhone( "telexnumber",             PhoneNumber::Bbs );
   insertPhone( "ttytddphone",             PhoneNumber::Pcs );
-#undef insertPhone  
+#undef insertPhone
 
   // Addresses: Work, Home, Mailing and Other:
   extractAddress( node, addressee, Address::Work | Address::Pref,
     "street", "postofficebox", "l", "postalcode", "st", "co", "c" );
   extractAddress( node, addressee, Address::Home,
-    "homeStreet", "homepostofficebox", "homeCity", "homePostalCode", 
+    "homeStreet", "homepostofficebox", "homeCity", "homePostalCode",
     "homeState", "homeCountry", "homeCountrycode" );
   // Exchange doesn't support writing/changing the mailing address fields,
   // so don't download it. It's equal to either the home or work address anyway
 /*  extractAddress( node, addressee, Address::Postal,
-    "mailingstreet", "mailingpostofficebox", "mailingcity", "mailingpostalcode", 
+    "mailingstreet", "mailingpostofficebox", "mailingcity", "mailingpostalcode",
     "mailingstate", "mailingcountry", "mailingcountrycode" );*/
   extractAddress( node, addressee, 0,
-    "otherstreet", "otherpostofficebox", "othercity", "otherpostalcode", 
+    "otherstreet", "otherpostofficebox", "othercity", "otherpostalcode",
     "otherstate", "othercountry", "othercountrycode" );
 
 
-  if ( WebdavHandler::extractString( node, "nickname", tmpstr ) ) 
+  if ( WebdavHandler::extractString( node, "nickname", tmpstr ) )
     addressee.setNickName( tmpstr );
-  if ( WebdavHandler::extractString( node, "spousecn", tmpstr ) ) 
+  if ( WebdavHandler::extractString( node, "spousecn", tmpstr ) )
     addressee.insertCustom( "KADDRESSBOOK", "X-SpousesName", tmpstr );
 
   QDateTime tmpdt;
-  if ( WebdavHandler::extractDateTime( node, "bday", tmpdt ) ) 
+  if ( WebdavHandler::extractDateTime( node, "bday", tmpdt ) )
     addressee.setBirthday( tmpdt.date() );
-  if ( WebdavHandler::extractString( node, "weddinganniversary", tmpstr ) ) 
+  if ( WebdavHandler::extractString( node, "weddinganniversary", tmpstr ) )
     addressee.insertCustom( "KADDRESSBOOK", "X-Anniversary", tmpstr );
 
 // TODO? timeZone()
 
   float lt,lng;
-  if ( WebdavHandler::extractFloat( node, "geolatitude", lt ) && 
+  if ( WebdavHandler::extractFloat( node, "geolatitude", lt ) &&
        WebdavHandler::extractFloat( node, "geolongitude", lng ) )
     addressee.setGeo( Geo( lt, lng ) );
   // TODO: mapurl
@@ -363,7 +369,7 @@ bool ExchangeConverterContact::readAddressee( const QDomElement &node, Addressee
   if ( WebdavHandler::extractString( node, "textdescription", tmpstr ) )
     addressee.setNote( tmpstr );
 
-//   if ( WebdavHandler::extractString( node, "usercertificate", tmpstr ) ) 
+//   if ( WebdavHandler::extractString( node, "usercertificate", tmpstr ) )
 //     addressee.setKeys()
 
   return true;
@@ -380,24 +386,24 @@ Addressee::List ExchangeConverterContact::parseWebDAV( const QDomDocument& davda
 kdDebug()<<"ExchangeConverterContact::parseWebDAV, no response->propstat->prop element!"<<endl;
     return list;
   }
- 
+
   QString contentclass;
   bool success = WebdavHandler::extractString( prop, "contentclass", contentclass );
   if ( !success ) {
 kdDebug()<<"ExchangeConverterContact::parseWebDAV, No contentclass entry"<<endl;
     return list;
   }
-  
+
   success = false;
   Addressee addressee;
   if ( contentclass == "urn:content-classes:person" ) {
     success = readAddressee( prop, addressee );
-  } 
-  
+  }
+
   if ( success ) {
     list.append( addressee );
   } else {
-  
+
   }
   return list;
 }
@@ -420,11 +426,11 @@ QDomDocument ExchangeConverterContact::createWebDAV( Addressee addr )
   QDomElement root = WebdavHandler::addDavElement( doc, doc, "d:propertyupdate" );
   QDomElement set = WebdavHandler::addElement( doc, root, "d:set" );
   QDomElement prop = WebdavHandler::addElement( doc, set, "d:prop" );
-  
+
   QDomAttr att_c = doc.createAttribute( "xmlns:c" );
   att_c.setValue( "urn:schemas:contacts:" );
   doc.documentElement().setAttributeNode( att_c );
-  
+
   QDomAttr att_b = doc.createAttribute( "xmlns:b" );
   att_b.setValue( "urn:schemas-microsoft-com:datatypes" );
   root.setAttributeNode( att_b );
@@ -433,25 +439,29 @@ QDomDocument ExchangeConverterContact::createWebDAV( Addressee addr )
   domProperty( "http://schemas.microsoft.com/exchange/",
                "outlookmessageclass", "IPM.Contact" );
 //   domContactProperty( "uid", addr.uid() );
-  
+
   domContactProperty( "fileas", addr.formattedName() );
   domContactProperty( "givenName", addr.givenName() );
   domContactProperty( "middlename", addr.additionalName() );
   domContactProperty( "sn", addr.familyName() );
   domContactProperty( "namesuffix", addr.suffix() );
   domContactProperty( "personaltitle", addr.prefix() );
-  
+
   domContactProperty( "title", addr.role() );
   domContactProperty( "o", addr.organization() );
+#if KDE_IS_VERSION(3,5,8)
+  domContactProperty( "department", addr.department() );
+#else
   domContactProperty( "department", addr.custom( "KADDRESSBOOK", "X-Department" ) );
+#endif
   domContactProperty( "roomnumber", addr.custom( "KADDRESSBOOK", "X-Office" ) );
   domContactProperty( "profession", addr.custom( "KADDRESSBOOK", "X-Profession" ) );
   domContactProperty( "manager", addr.custom( "KADDRESSBOOK", "X-ManagersName" ) );
   domContactProperty( "secretarycn", addr.custom( "KADDRESSBOOK", "X-AssistantsName" ) );
-  
+
   QStringList emails = addr.emails();
   QString prefemail = addr.preferredEmail();
-  if ( emails.contains( prefemail ) ) 
+  if ( emails.contains( prefemail ) )
     emails.remove( prefemail );
   emails.prepend( prefemail );
   if ( emails.count() > 0 ) {
@@ -463,10 +473,10 @@ QDomDocument ExchangeConverterContact::createWebDAV( Addressee addr )
   if ( emails.count() > 2 ) {
     domContactProperty( "email3", emails[2] );
   }
-  
+
   // No value for "personalHomePage"
   domContactProperty( "businesshomepage", addr.url().url() );
-  
+
   QString fburl = KCal::FreeBusyUrlStore::self()->readUrl( addr.preferredEmail() );
   if ( !fburl.isEmpty() ) {
     domContactProperty( "fburl", fburl );
@@ -475,16 +485,16 @@ QDomDocument ExchangeConverterContact::createWebDAV( Addressee addr )
 /* FIXME: This doesn't work!
   QStringList cats = addr.categories();
   if ( cats.isEmpty() ) {
-    QDomElement catsnode = WebdavHandler::addElementNS( doc, prop, 
+    QDomElement catsnode = WebdavHandler::addElementNS( doc, prop,
                 "urn:schemas-microsoft-com:office:office", "Keywords" );
     for ( QStringList::Iterator it = cats.begin(); it != cats.end(); ++it ) {
       WebdavHandler::addElementNS( doc, catsnode, "xml:", "v", *it );
     }
   } else {
-//     QDomElement catsnode = addProperty( doc, prop, 
+//     QDomElement catsnode = addProperty( doc, prop,
 //                 "urn:schemas-microsoft-com:office:office", "Keywords", "" );
   }*/
-  
+
   // Exchange sentitivity values:
   // 0 None, 1 Personal, 2 Private, 3 Company Confidential
   QString value;
@@ -517,7 +527,7 @@ QDomDocument ExchangeConverterContact::createWebDAV( Addressee addr )
   domPhoneProperty( "telexnumber", PhoneNumber::Bbs );
   domPhoneProperty( "ttytddphone", PhoneNumber::Pcs );
 
-      
+
 // work address:
   Address workaddr = addr.address( Address::Work | Address::Pref );
   if ( !workaddr.isEmpty() ) {
@@ -541,7 +551,7 @@ QDomDocument ExchangeConverterContact::createWebDAV( Addressee addr )
     domContactProperty( "homeCountry", homeaddr.country() );
     // domContactProperty( "homeCountrycode", homeaddr.countryCode() );
   }
-  
+
   // mailing address:
   // Exchange doesn't support writing/changing the mailing address fields
 /*  Address mailingaddr = addr.address( Address::Postal );
@@ -566,8 +576,8 @@ QDomDocument ExchangeConverterContact::createWebDAV( Addressee addr )
     domContactProperty( "othercountry", otheraddr.country() );
     // domContactProperty( "othercountrycode", otheraddr.countryCode() );
   }
-  
-  
+
+
   domContactProperty( "nickname", addr.nickName() );
   domContactProperty( "spousecn", addr.custom( "KADDRESSBOOK", "X-SpousesName" ) );
 
@@ -606,7 +616,7 @@ QDomDocument ExchangeConverterContact::createWebDAV( Addressee addr )
   // TODO:usercertificate
   // TODO: custom fields
 kdDebug()<<"DOM document: "<<doc.toString() << endl;
-  
+
   return doc;
 }
 #undef domDavProperty
