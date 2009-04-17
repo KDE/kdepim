@@ -121,9 +121,8 @@ public:
   void setProfession( const QString& profession );
   QString profession() const;
 
-  // not shown in the kaddressbook GUI
-  //void setJobTitle( const QString& title );
-  //QString jobTitle() const;
+  void setJobTitle( const QString& title );
+  QString jobTitle() const;
 
   void setManagerName( const QString& name );
   QString managerName() const;
@@ -245,7 +244,7 @@ private:
   QString mDepartment;
   QString mOfficeLocation;
   QString mProfession;
-  //QString mJobTitle;
+  QString mJobTitle;
   QString mManagerName;
   QString mAssistant;
   QString mNickName;
