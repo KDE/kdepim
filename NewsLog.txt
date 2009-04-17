@@ -1,3 +1,18 @@
+Friday, April 17th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue1894: Default width of folder name column was too small on first start
+* kolab/issue2130: Displayed header type in the mail display is wrong
+* kolab/issue1838: Remove the What's this icon from Kontact
+* kolab/issue3303: Departement and title were not saved and restored
+* Reenable dragging of folders in KMail after an error
+* Fix various memory leaks
+* Correctly disable various buttons if clicking them would lead to no action or crashes
+* In KAddressbook, cancel saving when we didn't select a resource
+
+
 Friday, April 10th 2009
 
 Problems addressed
