@@ -1,3 +1,41 @@
+Friday, April 17th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3217: Contacts: paste after a cut is greyed out
+* In Kleopatra, allow secret key deletion from GUI, and add an overview dialog for that
+
+Merges
+------
+
+* Merges from KDE 4.2 branch:
+      - In KAddressbook, don't show a email address selection dialog when clicking on a contact
+        with more than one email address
+      - Fix a crash in the free/busy editor
+      - Speed up closing of the config dialog in KOrganizer a bit
+      - Improve printing in KAddressbook
+      - Fix KOrganizer freezing when inserting a todo
+      - In KMail, automatically remove empty recipient lines (KDE bug 177543)
+      - Fix a crash in KMail that occured regulary under certain circumstances
+      - In KMail, allow to jump to read-only folders as well
+      - Fix a crash that happened after fetching mail with POP3 failed
+      - Remember whether KMail was docked to the system tray for session management (KDE bug 75673)
+      - Make it possible to resize the KMail config dialog to a smaller size
+      - Some improvements in the sieve script management dialog
+      - Improve search in KAddressbook by also searching secondary fields
+      - When pasting a link into KMail's composer, attach the file (KDE bug 188313)
+      - Possibly fix an issue with KMail templates suddenly becoming blank (KDE bug 184307)
+
+* Merges from enterprise35 branch:
+      - kolab/issue1894: Default width of folder name column was too small on first start
+      - kolab/issue2130: Displayed header type in the mail display is wrong
+      - Reenable dragging of folders in KMail after an error
+      - Correctly disable various buttons if clicking them would lead to no action or crashes
+      - Fix various memory leaks
+      - In KAddressbook, cancel saving when we didn't select a resource
+
+
 Friday, April 10th 2009
 
 Problems addressed
