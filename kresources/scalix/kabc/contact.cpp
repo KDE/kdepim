@@ -22,7 +22,7 @@
 
 #include <libkdepim/distributionlist.h>
 #include <kstaticdeleter.h>
-
+#include <kdeversion.h>
 #include "contact.h"
 
 using namespace Scalix;
@@ -160,7 +160,11 @@ QString Contact::toXml( const KABC::Addressee &addr )
 
   xml += "<im_address>" + addr.custom( "KADDRESSBOOK", "X-IMAddress" ) + "</im_address>\n";
   xml += "<manager>" + addr.custom( "KADDRESSBOOK", "X-ManagersName" ) + "</manager>\n";
+#if KDE_IS_VERSION(3,5,8)
+  xml += "<department>" + addr.department() + "</department>\n";
+#else
   xml += "<department>" + addr.custom( "KADDRESSBOOK", "X-Department" ) + "</department>\n";
+#endif
   xml += "<assistant>" + addr.custom( "KADDRESSBOOK", "X-AssistantsName" ) + "</assistant>\n";
   xml += "<profession>" + addr.custom( "KADDRESSBOOK", "X-Profession" ) + "</profession>\n";
   xml += "<office_location>" + addr.custom( "KADDRESSBOOK", "X-Office" ) + "</office_location>\n";
@@ -341,7 +345,13 @@ KABC::Addressee Contact::fromXml( const QString &xml )
       else if ( element.tagName() == "manager" )
         addr.insertCustom( "KADDRESSBOOK", "X-ManagersName", element.text() );
       else if ( element.tagName() == "department" )
+      {
+#if KDE_IS_VERSION(3,5,8)
+        addr.setDepartment(element.text());
+#else
         addr.insertCustom( "KADDRESSBOOK", "X-Department", element.text() );
+#endif
+      }
       else if ( element.tagName() == "assistant" )
         addr.insertCustom( "KADDRESSBOOK", "X-AssistantsName", element.text() );
       else if ( element.tagName() == "profession" )
