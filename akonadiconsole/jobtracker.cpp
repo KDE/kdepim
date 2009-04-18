@@ -50,21 +50,31 @@ class JobTracker::Private
 {
 public:
   Private(JobTracker* _q)
-  :q(_q), lastId(42)
+  :q(_q), lastId(42), timer( _q )
   {
-
-
+    timer.setSingleShot( true );
+    timer.setInterval( 200 );
+    connect( &timer, SIGNAL(timeout()), q, SIGNAL(updated()) );
   }
+
   bool isSession( int id ) const
   {
     return id < -1;
   }
+
+  void emitUpdated()
+  {
+    if ( !timer.isActive() )
+      timer.start();
+  }
+
   QStringList sessions;
   QMap<QString, int> idToSequence;
   QMap<int, QString> sequenceToId;
   QMap<QString, QStringList> jobs;
   QMap<QString, JobInfo> infos;
   int lastId;
+  QTimer timer;
 private:
   JobTracker* const q;
 };
@@ -116,7 +126,6 @@ JobTracker::~JobTracker()
 
 void JobTracker::jobCreated( const QString & session, const QString & job, const QString & parent, const QString & jobType )
 {
-  qDebug() << "Created Job" << job << "for session" << session;
   if ( session.isEmpty() || job.isEmpty() ) return;
 
   if ( !parent.isEmpty() && !d->jobs.contains( parent ) )
@@ -162,12 +171,11 @@ void JobTracker::jobCreated( const QString & session, const QString & job, const
   kids << job;
   d->jobs[daddy] = kids;
 
-  emit updated();
+  d->emitUpdated();
 }
 
 void JobTracker::jobEnded( const QString& job, const QString& error )
 {
-  qDebug() << "Ended Job" << job << error;
   // this is called from dbus, so better be defensive
   if ( !d->jobs.contains( job ) || !d->infos.contains( job ) ) return;
 
@@ -180,12 +188,11 @@ void JobTracker::jobEnded( const QString& job, const QString& error )
   }
   d->infos[job] = info;
 
-  emit updated();
+  d->emitUpdated();
 }
 
 void JobTracker::jobStarted( const QString & job )
 {
-  qDebug() << "Started Job" << job;
   // this is called from dbus, so better be defensive
   if ( !d->jobs.contains( job ) || !d->infos.contains( job ) ) return;
 
@@ -193,8 +200,7 @@ void JobTracker::jobStarted( const QString & job )
   info.state = JobInfo::Running;
   d->infos[job] = info;
 
-  emit updated();
-
+  d->emitUpdated();
 }
 
 QStringList JobTracker::sessions() const

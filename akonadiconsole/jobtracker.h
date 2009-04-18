@@ -38,7 +38,7 @@ public:
           && timestamp == other.timestamp
           && state == other.state;
   }
-  
+
   QString id;
   int parent;
   QString type;
