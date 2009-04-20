@@ -1,0 +1,209 @@
+/*
+    This file is part of KContactManager.
+    Copyright (c) 2009 Laurent Montel <montel@kde.org>
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program; if not, write to the Free Software
+    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+*/
+
+#include "eudora_xxport.h"
+
+#include <QtCore/QFile>
+#include <QtCore/QTextStream>
+
+#include <kdebug.h>
+#include <kfiledialog.h>
+#include <kio/netaccess.h>
+#include <klocale.h>
+#include <kmessagebox.h>
+#include <ktemporaryfile.h>
+#include <kurl.h>
+
+#define CTRL_C 3
+
+EudoraXXPort::EudoraXXPort(QWidget *parent)
+  : XXPort(parent )
+{
+}
+
+KABC::Addressee::List EudoraXXPort::importContacts() const
+{
+  QString fileName = KFileDialog::getOpenFileName( QDir::homePath(),
+		"*.[tT][xX][tT]|" + i18n("Eudora Light Address Book (*.txt)"), 0 );
+  if ( fileName.isEmpty() )
+    return KABC::AddresseeList();
+
+  QFile file( fileName );
+  if ( !file.open( QIODevice::ReadOnly ) )
+    return KABC::AddresseeList();
+
+  QString line;
+  QTextStream stream( &file );
+  KABC::Addressee *a = 0;
+  int bytesRead = 0;
+
+  KABC::AddresseeList list;
+
+  while( !stream.atEnd() ) {
+    line = stream.readLine();
+    bytesRead += line.length();
+    QString tmp;
+
+    if ( line.startsWith( QLatin1String("alias") ) ) {
+      if ( a ) { // Write it out
+        list << *a;
+        delete a;
+        a = 0;
+        a = new KABC::Addressee();
+      } else
+        a = new KABC::Addressee();
+
+      tmp = key( line ).trimmed();
+      if ( !tmp.isEmpty() )
+        a->setFormattedName( tmp );
+
+      tmp = email( line ).trimmed();
+      if ( !tmp.isEmpty() )
+        a->insertEmail( tmp );
+    } else if ( line.startsWith( QLatin1String("note") ) ) {
+      if ( !a ) // Must have an alias before a note
+        break;
+
+      tmp = comment( line ).trimmed();
+      if ( !tmp.isEmpty() )
+        a->setNote( tmp );
+
+      tmp = get( line, "name" ).trimmed();
+      if ( !tmp.isEmpty() )
+        a->setNameFromString( tmp );
+
+      tmp = get( line, "address" ).trimmed();
+      if ( !tmp.isEmpty() ) {
+        KABC::Address addr;
+        kDebug(5720) << tmp; // dump complete address
+        addr.setLabel( tmp );
+        a->insertAddress( addr );
+      }
+
+      tmp = get( line, "phone" ).trimmed();
+      if ( !tmp.isEmpty() )
+         a->insertPhoneNumber( KABC::PhoneNumber( tmp, KABC::PhoneNumber::Home ) );
+    }
+  }
+
+  if ( a ) { // Write out address
+    list << *a;
+    delete a;
+    a = 0;
+  }
+
+  file.close();
+
+  return list;
+}
+
+QString EudoraXXPort::key( const QString& line) const
+{
+  int e;
+  QString result;
+  int b = line.indexOf( '\"', 0 );
+
+  if ( b == -1 ) {
+    b = line.indexOf( ' ' );
+    if ( b == -1 )
+      return result;
+
+    b++;
+    e = line.indexOf( ' ', b );
+    result = line.mid( b, e - b );
+
+    return result;
+  }
+
+  b++;
+  e = line.indexOf( '\"', b );
+  if ( e == -1 )
+    return result;
+
+  result = line.mid( b, e - b );
+
+  return result;
+}
+
+QString EudoraXXPort::email( const QString& line ) const
+{
+  int b;
+  QString result;
+  b = line.lastIndexOf( '\"' );
+  if ( b == -1 ) {
+    b = line.lastIndexOf( ' ' );
+    if ( b == -1 )
+      return result;
+  }
+  result = line.mid( b + 1 );
+
+  return result;
+}
+
+QString EudoraXXPort::comment( const QString& line ) const
+{
+  int b;
+  QString result;
+  int i;
+  b = line.lastIndexOf( '>' );
+  if ( b == -1 ) {
+    b = line.lastIndexOf( '\"' );
+    if ( b == -1 )
+      return result;
+  }
+
+  result = line.mid( b + 1 );
+  for ( i = 0; i < result.length(); ++i ) {
+    if ( result[ i ] == CTRL_C )
+      result[ i ] = '\n';
+  }
+
+  return result;
+}
+
+QString EudoraXXPort::get( const QString& line, const QString& key ) const
+{
+  QString fd = '<' + key + ':';
+  int b, e;
+
+  // Find formatted key, return on error
+  b = line.indexOf( fd );
+  if ( b == -1 )
+    return QString();
+
+  b += fd.length();
+  e = line.indexOf( '>', b );
+  if ( e == -1 )
+    return QString();
+
+  e--;
+  QString result = line.mid( b, e - b + 1 );
+  for ( int i = 0; i < result.length(); ++i ) {
+    if ( result[ i ] == CTRL_C )
+      result[ i ] = '\n';
+  }
+
+  return result;
+}
+
+bool EudoraXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
+{
+  //we can't export contact to opera yet
+  return false;
+}

@@ -91,7 +91,8 @@ KABC::Addressee::List OperaXXPort::importContacts() const
           addr.insertEmail( *it, preferred );
           preferred = false;
         }
-      } else if ( key == QString::fromLatin1( "phone" ) )
+      } 
+      else if ( key == QString::fromLatin1( "phone" ) )
         addr.insertPhoneNumber( KABC::PhoneNumber( value ) );
       else if ( key == QString::fromLatin1( "fax" ) )
         addr.insertPhoneNumber( KABC::PhoneNumber( value,
@@ -100,7 +101,8 @@ KABC::Addressee::List OperaXXPort::importContacts() const
         KABC::Address address( KABC::Address::Home );
         address.setLabel( value.replace( separator, "\n" ) );
         addr.insertAddress( address );
-      } else if ( key == QString::fromLatin1( "description" ) )
+      } 
+      else if ( key == QString::fromLatin1( "description" ) )
         addr.setNote( value.replace( separator, "\n" ) );
       else if ( key == QString::fromLatin1( "url" ) )
         addr.setUrl( KUrl( value ) );

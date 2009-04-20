@@ -203,6 +203,10 @@ void MainWidget::setupActions()
   action->setText( i18n( "Import Opera Address Book..." ) );
   mXXPortManager->addImportAction( action, "opera" );
 
+  action = collection->addAction( "file_import_eudora" );
+  action->setText( i18n( "Import Eudora Address Book..." ) );
+  mXXPortManager->addImportAction( action, "eudora" );
+
   // export actions
   action = collection->addAction( "file_export_vcard30" );
   action->setText( i18n( "Export vCard 3.0..." ) );
