@@ -22,6 +22,7 @@
 #include <kcmdlineargs.h>
 #include <klocale.h>
 #include <kuniqueapplication.h>
+#include <akonadi/control.h>
 
 #include "mainwindow.h"
 
@@ -46,6 +47,8 @@ int main( int argc, char **argv )
 
   MainWindow *window = new MainWindow;
   window->show();
+
+  Akonadi::Control::start( window );
 
   app.exec();
 }
