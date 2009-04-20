@@ -22,6 +22,7 @@
 
 #include <kdebug.h>
 #include <klocale.h>
+#include <kdeversion.h>
 
 ContactConverter::ContactConverter( struct soap* soap )
   : GWConverter( soap )
@@ -175,8 +176,13 @@ ngwt__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
 
     // TODO: write back organization?
 
+#if KDE_IS_VERSION(3,5,8)
+    if ( addr.department().isEmpty() )
+      info->department = qStringToString(addr.department());
+#else
     if ( !addr.custom( "KADDRESSBOOK", "X-Department" ).isEmpty() )
       info->department = qStringToString( addr.custom( "KADDRESSBOOK", "X-Department" ) );
+#endif
     else
       info->department = 0;
 
@@ -227,7 +233,7 @@ KABC::Addressee ContactConverter::convertFromAddressBookItem( ngwt__AddressBookI
   // gwt::AddressBookItem
   addr.insertCustom( "GWRESOURCE", "UUID", stringToQString( addrBkItem->uuid ) );
   addr.setNote( stringToQString( addrBkItem->comment ) );
-  
+
   return addr;
 }
 
@@ -280,7 +286,7 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
       addr.setFormattedName( stringToQString( fullName->displayName ) );
     else
       addr.setFormattedName( QString() );
-    
+
     if ( fullName->namePrefix )
       addr.setPrefix( stringToQString( fullName->namePrefix ) );
 
@@ -353,8 +359,13 @@ KABC::Addressee ContactConverter::convertFromContact( ngwt__Contact* contact )
       addr.setOrganization( stringToQString( info->organization->__item ) );
 
     if ( info->department )
+    {
+#if KDE_IS_VERSION(3,5,8)
+      addr.setDepartment( stringToQString( info->department ) );
+#else
       addr.insertCustom( "KADDRESSBOOK", "X-Department", stringToQString( info->department ) );
-
+#endif
+    }
     if ( info->title )
       addr.setTitle( stringToQString( info->title ) );
 
@@ -561,7 +572,7 @@ ngwt__ImAddressList* ContactConverter::convertImAddresses( const KABC::Addressee
 {
   //return 0;
   /* TODO: use IM address dedicated functions in KDE 4.0.
-  Change semantics so that convertToContact pulls each 
+  Change semantics so that convertToContact pulls each
   IM address out of the addressee and passes it to this
   function, which converts one at a time. */
   kDebug() ;
