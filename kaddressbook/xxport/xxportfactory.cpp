@@ -22,9 +22,6 @@
 #include "csv/csv_xxport.h"
 #include "ldif/ldif_xxport.h"
 #include "vcard/vcard_xxport.h"
-#include "opera/opera_xxport.h"
-#include "eudora/eudora_xxport.h"
-#include "kde2/kde2_xxport.h"
 
 XXPort* XXPortFactory::createXXPort( const QString &identifier, QWidget *parentWidget ) const
 {
@@ -34,12 +31,6 @@ XXPort* XXPortFactory::createXXPort( const QString &identifier, QWidget *parentW
     return new CsvXXPort( parentWidget );
   else if ( identifier == "ldif" )
     return new LDIFXXPort( parentWidget );
-  else if ( identifier == "opera" )
-    return new OperaXXPort( parentWidget );
-  else if ( identifier == "eudora" )
-    return new EudoraXXPort( parentWidget );
-  else if ( identifier == "kde2" )
-    return new KDE2XXPort( parentWidget );
   else
     return 0;
 }

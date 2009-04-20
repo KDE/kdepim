@@ -49,12 +49,9 @@ set( kcontactmanager_SRCS
   xxport/csv/qcsvmodel.cpp
   xxport/csv/qcsvreader.cpp
   xxport/ldif/ldif_xxport.cpp
-  xxport/opera/opera_xxport.cpp
   xxport/shared/xxport.cpp
   xxport/vcard/vcard_xxport.cpp
-  xxport/eudora/eudora_xxport.cpp
   xxport/xxportfactory.cpp
-  xxport/kde2/kde2_xxport.cpp
   xxportmanager.cpp
 )
 
