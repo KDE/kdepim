@@ -22,6 +22,7 @@
 //#include "csv_xxport.h"
 #include "ldif/ldif_xxport.h"
 #include "vcard/vcard_xxport.h"
+#include "opera/opera_xxport.h"
 
 XXPort* XXPortFactory::createXXPort( const QString &identifier, QWidget *parentWidget ) const
 {
@@ -31,6 +32,8 @@ XXPort* XXPortFactory::createXXPort( const QString &identifier, QWidget *parentW
 //    return new CSVXXPort( parentWidget );
   else if ( identifier == "ldif" )
     return new LDIFXXPort( parentWidget );
+  else if ( identifier == "opera" )
+    return new OperaXXPort( parentWidget );
   else
     return 0;
 }

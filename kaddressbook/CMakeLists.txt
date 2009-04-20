@@ -42,6 +42,7 @@ set( kcontactmanager_SRCS
   mainwidget.cpp
   mainwindow.cpp
   quicksearchwidget.cpp
+  xxport/opera/opera_xxport.cpp
   xxport/ldif/ldif_xxport.cpp
   xxport/shared/xxport.cpp
   xxport/vcard/vcard_xxport.cpp

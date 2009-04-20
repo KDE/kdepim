@@ -99,7 +99,6 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
   KUrl url;
 
   const KABC::Addressee::List list = filterContacts( contacts );
-
   if ( list.isEmpty() ) // no contact selected
     return true;
 

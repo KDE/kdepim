@@ -61,6 +61,8 @@ void XXPortManager::addExportAction( QAction *action, const QString &identifier 
 void XXPortManager::slotImport( const QString &identifier )
 {
   const XXPort* xxport = mFactory.createXXPort( identifier, mParentWidget );
+  if( !xxport )
+    return;
 
   const KABC::Addressee::List contacts = xxport->importContacts();
 

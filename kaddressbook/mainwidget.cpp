@@ -199,6 +199,10 @@ void MainWidget::setupActions()
   action->setText( i18n( "Import LDIF file..." ) );
   mXXPortManager->addImportAction( action, "ldif" );
 
+  action = collection->addAction( "file_import_opera" );
+  action->setText( i18n( "Import Opera Address Book..." ) );
+  mXXPortManager->addImportAction( action, "opera" );
+
   // export actions
   action = collection->addAction( "file_export_vcard30" );
   action->setText( i18n( "Export vCard 3.0..." ) );
