@@ -93,11 +93,7 @@ bool LDIFXXPort::exportContacts( const KABC::Addressee::List &list ) const
 {
   const KUrl url = KFileDialog::getSaveUrl( KUrl( QDir::homePath() + "/addressbook.ldif" ), "text/x-ldif" );
   if ( url.isEmpty() )
-      return true;
-  if( QFileInfo(url.path()).exists() ) {
-      if(KMessageBox::questionYesNo( parentWidget(), i18n("Do you want to overwrite file \"%1\"", url.path()) ) == KMessageBox::No)
-         return true;
-  }
+    return true;
 
   if ( !url.isLocalFile() ) {
     KTemporaryFile tmpFile;
@@ -113,6 +109,12 @@ bool LDIFXXPort::exportContacts( const KABC::Addressee::List &list ) const
     return KIO::NetAccess::upload( tmpFile.fileName(), url, parentWidget() );
   } else {
     const QString fileName = url.path();
+
+    if ( QFileInfo( fileName ).exists() ) {
+      if ( KMessageBox::questionYesNo( parentWidget(), i18n( "Do you want to overwrite file \"%1\"", fileName ) ) == KMessageBox::No )
+        return true; // skip export
+    }
+
     QFile file( fileName );
 
     if ( !file.open( QIODevice::WriteOnly ) ) {

@@ -116,7 +116,8 @@ bool VCardXXPort::exportContacts( const KABC::Addressee::List &contacts ) const
     const QString msg = i18n( "You have selected a list of contacts, shall they be "
                               "exported to several files?" );
 
-    switch ( KMessageBox::questionYesNo( parentWidget(), msg, QString(), KGuiItem(i18n("Export to Several Files")), KGuiItem(i18n("Export to One File")) ) ) {
+    switch ( KMessageBox::questionYesNo( parentWidget(), msg, QString(), KGuiItem(i18n( "Export to Several Files" ) ),
+                                         KGuiItem( i18n( "Export to One File" ) ) ) ) {
       case KMessageBox::Yes: {
         const KUrl baseUrl = KFileDialog::getExistingDirectoryUrl();
         if ( baseUrl.isEmpty() )
@@ -233,10 +234,11 @@ KABC::Addressee::List VCardXXPort::parseVCard( const QByteArray &data ) const
 
 bool VCardXXPort::doExport( const KUrl &url, const QByteArray &data ) const
 {
-  if( QFileInfo(url.path()).exists() ) {
-      if(KMessageBox::questionYesNo( parentWidget(), i18n("Do you want to overwrite file \"%1\"", url.path()) ) == KMessageBox::No)
-        return false;
+  if ( url.isLocalFile() && QFileInfo( url.path() ).exists() ) {
+    if ( KMessageBox::questionYesNo( parentWidget(), i18n( "Do you want to overwrite file \"%1\"", url.path() ) ) == KMessageBox::No )
+      return false;
   }
+
   KTemporaryFile tmpFile;
   tmpFile.open();
 
