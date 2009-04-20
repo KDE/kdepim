@@ -54,6 +54,7 @@ set( kcontactmanager_SRCS
   xxport/vcard/vcard_xxport.cpp
   xxport/eudora/eudora_xxport.cpp
   xxport/xxportfactory.cpp
+  xxport/kde2/kde2_xxport.cpp
   xxportmanager.cpp
 )
 

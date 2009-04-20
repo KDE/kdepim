@@ -12,6 +12,7 @@
         <Action name="file_import_ldif"/>
         <Action name="file_import_opera"/>
         <Action name="file_import_eudora"/>
+        <Action name="file_import_kde2"/>
       </Menu>
       <Menu name="file_export">
         <text>&amp;Export</text>

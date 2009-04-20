@@ -207,6 +207,10 @@ void MainWidget::setupActions()
   action->setText( i18n( "Import Eudora Address Book..." ) );
   mXXPortManager->addImportAction( action, "eudora" );
 
+  action = collection->addAction( "file_import_kde2" );
+  action->setText( i18n( "Import KDE 2 Address Book..." ) );
+  mXXPortManager->addImportAction( action, "kde2" );
+
   // export actions
   action = collection->addAction( "file_export_vcard30" );
   action->setText( i18n( "Export vCard 3.0..." ) );
