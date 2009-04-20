@@ -39,14 +39,14 @@ class JobTrackerWidget::Private
     JobTrackerModel* model;
 };
 
-JobTrackerWidget::JobTrackerWidget( QWidget *parent )
+JobTrackerWidget::JobTrackerWidget( const char *name, QWidget *parent )
   : QWidget( parent ),
   d( new Private )
 {
   QVBoxLayout *layout = new QVBoxLayout( this );
 
   QTreeView *tv = new QTreeView( this );
-  d->model = new JobTrackerModel( this );
+  d->model = new JobTrackerModel( name, this );
   tv->setModel( d->model );
   tv->expandAll();
   tv->setAlternatingRowColors( true );

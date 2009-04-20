@@ -28,7 +28,7 @@ class JobTrackerModel : public QAbstractItemModel
 {
   Q_OBJECT
 public:
-  JobTrackerModel( QObject *parent );
+  JobTrackerModel( const char *name, QObject *parent );
   virtual ~JobTrackerModel();
 
   /* QAIM API */

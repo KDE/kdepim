@@ -60,7 +60,7 @@ class JobTracker : public QObject
   Q_OBJECT
   Q_CLASSINFO( "D-Bus Interface", "org.freedesktop.Akonadi.JobTracker" )
 public:
-  JobTracker( QObject* parent = 0 );
+  JobTracker( const char *name, QObject* parent = 0 );
   ~JobTracker();
   QStringList sessions() const;
 

@@ -35,8 +35,8 @@
 class JobTrackerModel::Private
 {
 public:
-  Private( JobTrackerModel* _q )
-  :q(_q)
+  Private( const char *name, JobTrackerModel* _q )
+  :tracker( name), q(_q)
   {
 
   }
@@ -45,8 +45,8 @@ private:
   JobTrackerModel* const q;
 };
 
-JobTrackerModel::JobTrackerModel( QObject* parent )
-:QAbstractItemModel( parent ), d( new Private(this ) )
+JobTrackerModel::JobTrackerModel( const char *name, QObject* parent )
+:QAbstractItemModel( parent ), d( new Private( name, this ) )
 {
   connect( &d->tracker, SIGNAL( updated() ),
            this, SIGNAL( modelReset() ) );

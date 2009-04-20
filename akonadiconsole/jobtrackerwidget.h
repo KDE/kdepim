@@ -29,7 +29,7 @@ class JobTrackerWidget : public QWidget
   Q_OBJECT
 
   public:
-    JobTrackerWidget( QWidget *parent = 0 );
+    JobTrackerWidget( const char *name, QWidget *parent = 0 );
 
   private slots:
     void contextMenu(const QPoint& pos);

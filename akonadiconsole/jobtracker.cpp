@@ -79,12 +79,12 @@ private:
   JobTracker* const q;
 };
 
-JobTracker::JobTracker( QObject* parent )
+JobTracker::JobTracker( const char *name, QObject* parent )
 :QObject( parent ), d( new Private( this ) )
 {
   new JobTrackerAdaptor( this );
   QDBusConnection::sessionBus().registerService( QLatin1String("org.kde.akonadiconsole") );
-  QDBusConnection::sessionBus().registerObject( QLatin1String("/jobtracker"),
+  QDBusConnection::sessionBus().registerObject( '/'+QLatin1String(name),
       this, QDBusConnection::ExportAdaptors );
 
 #if 0
