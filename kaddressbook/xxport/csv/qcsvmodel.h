@@ -126,10 +126,10 @@ class QCsvModel : public QAbstractTableModel
     class Private;
     Private* const d;
 
-    Q_PRIVATE_SLOT( d, void columnCountChanged( int ) );
-    Q_PRIVATE_SLOT( d, void rowCountChanged( int ) );
-    Q_PRIVATE_SLOT( d, void fieldChanged( const QString&, int, int ) );
-    Q_PRIVATE_SLOT( d, void finishedLoading() );
+    Q_PRIVATE_SLOT( d, void columnCountChanged( int ) )
+    Q_PRIVATE_SLOT( d, void rowCountChanged( int ) )
+    Q_PRIVATE_SLOT( d, void fieldChanged( const QString&, int, int ) )
+    Q_PRIVATE_SLOT( d, void finishedLoading() )
 };
 
 #endif
