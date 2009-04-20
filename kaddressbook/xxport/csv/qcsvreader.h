@@ -156,7 +156,7 @@ class QCsvReader : public QObject
     /**
      * Sets the text codec that shall be used for parsing the csv list.
      *
-     * The default is UTF-8.
+     * The default is the system locale.
      */
     void setTextCodec( QTextCodec *textCodec );
 

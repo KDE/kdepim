@@ -22,6 +22,7 @@ set( kcontactmanager_SRCS
   collectioncombobox.cpp
   collectionselectiondialog.cpp
   contacteditordialog.cpp
+  contactfields.cpp
   contactfiltermodel.cpp
   contactgroupeditordialog.cpp
   contactitemeditor.cpp
@@ -42,8 +43,13 @@ set( kcontactmanager_SRCS
   mainwidget.cpp
   mainwindow.cpp
   quicksearchwidget.cpp
-  xxport/opera/opera_xxport.cpp
+  xxport/csv/csv_xxport.cpp
+  xxport/csv/csvimportdialog.cpp
+  xxport/csv/dateparser.cpp
+  xxport/csv/qcsvmodel.cpp
+  xxport/csv/qcsvreader.cpp
   xxport/ldif/ldif_xxport.cpp
+  xxport/opera/opera_xxport.cpp
   xxport/shared/xxport.cpp
   xxport/vcard/vcard_xxport.cpp
   xxport/eudora/eudora_xxport.cpp

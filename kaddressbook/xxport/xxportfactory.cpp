@@ -19,7 +19,7 @@
 
 #include "xxportfactory.h"
 
-//#include "csv_xxport.h"
+#include "csv/csv_xxport.h"
 #include "ldif/ldif_xxport.h"
 #include "vcard/vcard_xxport.h"
 #include "opera/opera_xxport.h"
@@ -29,8 +29,8 @@ XXPort* XXPortFactory::createXXPort( const QString &identifier, QWidget *parentW
 {
   if ( identifier == "vcard21" || identifier == "vcard30" )
     return new VCardXXPort( parentWidget );
-//  else if ( identifier == "csv" )
-//    return new CSVXXPort( parentWidget );
+  else if ( identifier == "csv" )
+    return new CsvXXPort( parentWidget );
   else if ( identifier == "ldif" )
     return new LDIFXXPort( parentWidget );
   else if ( identifier == "opera" )

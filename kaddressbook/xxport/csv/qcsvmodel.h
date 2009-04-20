@@ -82,7 +82,7 @@ class QCsvModel : public QAbstractTableModel
     /**
      * Sets the text codec that shall be used for parsing the csv list.
      *
-     * The default is UTF-8.
+     * The default is the system locale.
      */
     void setTextCodec( QTextCodec *textCodec );
 
@@ -106,6 +106,16 @@ class QCsvModel : public QAbstractTableModel
      */
     virtual QVariant data( const QModelIndex &index, int role = Qt::DisplayRole ) const;
 
+    /**
+     * Inherited from QAbstractTableModel.
+     */
+    virtual bool setData( const QModelIndex &index, const QVariant &data, int role = Qt::EditRole );
+
+    /**
+     * Inherited from QAbstractTableModel.
+     */
+    virtual Qt::ItemFlags flags( const QModelIndex &index ) const;
+
   Q_SIGNALS:
     /**
      * This signal is emitted whenever the model has loaded all data.
@@ -119,6 +129,7 @@ class QCsvModel : public QAbstractTableModel
     Q_PRIVATE_SLOT( d, void columnCountChanged( int ) );
     Q_PRIVATE_SLOT( d, void rowCountChanged( int ) );
     Q_PRIVATE_SLOT( d, void fieldChanged( const QString&, int, int ) );
+    Q_PRIVATE_SLOT( d, void finishedLoading() );
 };
 
 #endif

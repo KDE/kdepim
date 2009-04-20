@@ -24,6 +24,7 @@
 #include <QtCore/QMap>
 #include <QtCore/QPair>
 #include <QtCore/QStringList>
+#include <QtCore/QVector>
 
 CsvParser::CsvParser( QObject *parent )
   : QThread( parent ), mDevice( 0 )
@@ -78,6 +79,7 @@ void CsvParser::endLine()
 void CsvParser::end()
 {
   emit rowCountChanged( mRowCount );
+  emit ended();
 }
 
 void CsvParser::error( const QString& )
@@ -105,9 +107,11 @@ class QCsvModel::Private
     void columnCountChanged( int columns );
     void rowCountChanged( int rows );
     void fieldChanged( const QString &data, int row, int column );
+    void finishedLoading();
 
     QCsvModel *mParent;
     CsvParser *mParser;
+    QVector<QString> mFieldIdentifiers;
     QMap< QPair<int, int>, QString> mFields;
     QIODevice *mDevice;
 
@@ -118,6 +122,8 @@ class QCsvModel::Private
 void QCsvModel::Private::columnCountChanged( int columns )
 {
   mColumnCount = columns;
+  mFieldIdentifiers.resize( columns );
+  mFieldIdentifiers[ columns - 1 ] = QString( "0" );
   emit mParent->layoutChanged();
 }
 
@@ -132,6 +138,11 @@ void QCsvModel::Private::fieldChanged( const QString &data, int row, int column 
   mFields.insert( QPair<int, int>( row, column ), data );
 }
 
+void QCsvModel::Private::finishedLoading()
+{
+  emit mParent->finishedLoading();
+}
+
 QCsvModel::QCsvModel( QObject *parent )
   : QAbstractTableModel( parent ), d( new Private( this ) )
 {
@@ -143,7 +154,7 @@ QCsvModel::QCsvModel( QObject *parent )
            this, SLOT( rowCountChanged( int ) ), Qt::QueuedConnection );
   connect( d->mParser, SIGNAL( dataChanged( const QString&, int, int ) ),
            this, SLOT( fieldChanged( const QString&, int, int ) ), Qt::QueuedConnection );
-  connect( d->mParser, SIGNAL( finished() ), this, SIGNAL( finished() ) );
+  connect( d->mParser, SIGNAL( ended() ), this, SLOT( finishedLoading() ) );
 }
 
 QCsvModel::~QCsvModel()
@@ -156,7 +167,6 @@ bool QCsvModel::load( QIODevice *device )
   d->mDevice = device;
   d->mRowCount = 0;
   d->mColumnCount = 0;
-  d->mFields.clear();
 
   emit layoutChanged();
 
@@ -245,14 +255,20 @@ QTextCodec *QCsvModel::textCodec() const
   return d->mParser->reader()->textCodec();
 }
 
-int QCsvModel::columnCount( const QModelIndex& ) const
+int QCsvModel::columnCount( const QModelIndex &parent ) const
 {
-  return d->mColumnCount;
+  if ( !parent.isValid() )
+    return d->mColumnCount;
+  else
+    return 0;
 }
 
-int QCsvModel::rowCount( const QModelIndex& ) const
+int QCsvModel::rowCount( const QModelIndex &parent ) const
 {
-  return d->mRowCount;
+  if ( !parent.isValid() )
+    return d->mRowCount;
+  else
+    return 0;
 }
 
 QVariant QCsvModel::data( const QModelIndex &index, int role ) const
@@ -260,7 +276,17 @@ QVariant QCsvModel::data( const QModelIndex &index, int role ) const
   if ( !index.isValid() )
     return QVariant();
 
-  const QPair<int, int> pair( index.row(), index.column() );
+  if ( index.row() == 0 ) {
+    if ( index.column() >= d->mFieldIdentifiers.count() )
+      return QVariant();
+
+    if ( role == Qt::DisplayRole || role == Qt::EditRole )
+      return d->mFieldIdentifiers.at( index.column() );
+
+    return QVariant();
+  }
+
+  const QPair<int, int> pair( index.row() - 1, index.column() );
   if ( !d->mFields.contains( pair ) )
     return QVariant();
 
@@ -270,6 +296,27 @@ QVariant QCsvModel::data( const QModelIndex &index, int role ) const
     return data;
   else
     return QVariant();
+}
+
+bool QCsvModel::setData( const QModelIndex &index, const QVariant &data, int role )
+{
+  if ( role == Qt::EditRole && index.row() == 0 && index.column() <= d->mFieldIdentifiers.count() ) {
+    d->mFieldIdentifiers[ index.column() ] = data.toString();
+
+    emit dataChanged( index, index );
+    return true;
+  }
+
+  return false;
+}
+
+Qt::ItemFlags QCsvModel::flags( const QModelIndex &index ) const
+{
+  Qt::ItemFlags flags = Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+  if ( index.row() == 0 )
+    flags |= Qt::ItemIsEditable;
+
+  return flags;
 }
 
 #include "qcsvmodel.moc"

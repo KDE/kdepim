@@ -36,7 +36,7 @@ class QCsvReader::Private
       mTextQuote = QChar( '"' );
       mDelimiter = QChar( ' ' );
       mStartRow = 0;
-      mCodec = QTextCodec::codecForName( "UTF-8" );
+      mCodec = QTextCodec::codecForLocale();
 
       mIgnoreDuplicates = true;
     }

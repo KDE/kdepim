@@ -47,6 +47,7 @@ class CsvParser : public QThread, public QCsvBuilderInterface
     void columnCountChanged( int columns );
     void rowCountChanged( int rows );
     void dataChanged( const QString &data, int row, int column );
+    void ended();
 
   protected:
     virtual void run();
