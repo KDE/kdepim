@@ -39,6 +39,9 @@ KContactManagerPart::KContactManagerPart( QWidget *parentWidget, QObject *parent
 {
   setComponentData( KContactManagerPart::componentData() );
 
+  KIconLoader::global()->addAppDir( "kcontactmanager" );
+#warning "fix me"
+  setXMLFile( "../kcontactmanager/kcontactmanager_part.rc" );
   // create a canvas to insert our widget
   QWidget *canvas = new QWidget( parentWidget );
   canvas->setFocusPolicy( Qt::ClickFocus );
@@ -50,9 +53,7 @@ KContactManagerPart::KContactManagerPart( QWidget *parentWidget, QObject *parent
   topLayout->addWidget( mMainWidget );
   topLayout->setMargin(0);
 
-  KIconLoader::global()->addAppDir( "kcontactmanager" );
 
-  setXMLFile( "kcontactmanager_part.rc" );
 
 }
 
@@ -63,4 +64,10 @@ KContactManagerPart::~KContactManagerPart()
 bool KContactManagerPart::openFile()
 {
   return false;
+}
+
+void KContactManagerPart::guiActivateEvent(KParts::GUIActivateEvent *e)
+{
+   kDebug();
+   KParts::ReadOnlyPart::guiActivateEvent(e);
 }

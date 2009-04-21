@@ -33,7 +33,7 @@ class KContactManagerPart: public KParts::ReadOnlyPart
     virtual ~KContactManagerPart();
   protected:
     virtual bool openFile();
-
+    virtual void guiActivateEvent( KParts::GUIActivateEvent* );
 };
 
 
