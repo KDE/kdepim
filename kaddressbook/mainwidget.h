@@ -48,7 +48,7 @@ class KCONTACTMANAGER_EXPORT MainWidget : public QWidget
   Q_OBJECT
 
   public:
-    explicit MainWidget(KActionCollection *action, KXmlGuiWindow *guiWindow, QWidget *parent = 0 );
+    explicit MainWidget(KActionCollection *action, KXMLGUIClient *guiWindow, QWidget *parent = 0 );
     ~MainWidget();
 
   public Q_SLOTS:

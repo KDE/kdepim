@@ -58,7 +58,7 @@
 #include "xxportmanager.h"
 
 #include "kcontactmanageradaptor.h"
-MainWidget::MainWidget(KActionCollection *actionCollection, KXmlGuiWindow *guiWindow, QWidget *parent )
+MainWidget::MainWidget(KActionCollection *actionCollection, KXMLGUIClient *guiWindow, QWidget *parent )
   : QWidget( parent )
 {
   mContactModel = new Akonadi::KABCModel( this );
@@ -83,7 +83,7 @@ MainWidget::MainWidget(KActionCollection *actionCollection, KXmlGuiWindow *guiWi
   setupActions(actionCollection);
 
   mCollectionView->setModel( sortModel );
-  mCollectionView->setXmlGuiWindow( guiWindow );
+  mCollectionView->setXmlGuiClient( guiWindow );
   mCollectionView->header()->setDefaultAlignment( Qt::AlignCenter );
   mCollectionView->header()->setSortIndicatorShown( false );
 
@@ -93,7 +93,7 @@ MainWidget::MainWidget(KActionCollection *actionCollection, KXmlGuiWindow *guiWi
            contactFilterModel, SLOT( setFilterString( const QString& ) ) );
 
   mItemView->setModel( contactFilterModel );
-  mItemView->setXmlGuiWindow( guiWindow );
+  mItemView->setXmlGuiClient( guiWindow );
   mItemView->header()->setDefaultAlignment( Qt::AlignCenter );
   for ( int column = 1; column < mContactModel->columnCount(); ++column )
     mItemView->setColumnHidden( column, true );

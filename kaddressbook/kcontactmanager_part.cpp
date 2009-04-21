@@ -48,7 +48,7 @@ KContactManagerPart::KContactManagerPart( QWidget *parentWidget, QObject *parent
   setWidget( canvas );
   QVBoxLayout *topLayout = new QVBoxLayout( canvas );
 
-  MainWidget *mMainWidget = new MainWidget(actionCollection(), 0, canvas );
+  MainWidget *mMainWidget = new MainWidget(actionCollection(), this, canvas );
 
   topLayout->addWidget( mMainWidget );
   topLayout->setMargin(0);
