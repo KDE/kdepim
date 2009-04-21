@@ -50,5 +50,5 @@ int main( int argc, char **argv )
 
   Akonadi::Control::start( window );
 
-  app.exec();
+  return app.exec();
 }
