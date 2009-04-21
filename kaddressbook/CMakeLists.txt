@@ -34,16 +34,16 @@ set( kcontactmanager_editor_SRCS
 
 set( kcontactmanager_LIB_SRCS
   aboutdata.cpp
-  mainwidget.cpp
+  contactfields.cpp
   contacteditordialog.cpp
-  contactgroupeditordialog.cpp
-  xxportmanager.cpp
   contactfiltermodel.cpp
-  quicksearchwidget.cpp
-  collectionselectiondialog.cpp
-  xxport/xxportfactory.cpp
+  contactgroupeditordialog.cpp
   contactitemeditor.cpp
+  contactmetadata.cpp
   collectioncombobox.cpp
+  collectionselectiondialog.cpp
+  mainwidget.cpp
+  quicksearchwidget.cpp
   xxport/csv/csv_xxport.cpp
   xxport/csv/csvimportdialog.cpp
   xxport/csv/dateparser.cpp
@@ -52,10 +52,10 @@ set( kcontactmanager_LIB_SRCS
   xxport/ldif/ldif_xxport.cpp
   xxport/shared/xxport.cpp
   xxport/vcard/vcard_xxport.cpp 
-  contactfields.cpp
-  contactmetadata.cpp
+  xxport/xxportfactory.cpp
+  xxportmanager.cpp
   ${kcontactmanager_editor_SRCS}
-  )
+)
 
 kde4_add_library(kcontactmanagerprivate SHARED ${kcontactmanager_LIB_SRCS})
 target_link_libraries(kcontactmanagerprivate kdepim ${KDE4_PHONON_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_AKONADI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} akonadi-kabccommon)
