@@ -608,7 +608,6 @@
 <tabstops>
     <tabstop>tabWidget</tabstop>
 </tabstops>
-<layoutdefaults spacing="6" margin="11"/>
 <includes>
     <include location="global" impldecl="in implementation">klineedit.h</include>
     <include location="global" impldecl="in implementation">khistorycombobox.h</include>

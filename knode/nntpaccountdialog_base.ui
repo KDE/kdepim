@@ -1,7 +1,5 @@
 <ui version="4.0" >
  <author>Volker Krause &lt;volker.krause@rwth-aachen.de></author>
- <comment></comment>
- <exportmacro></exportmacro>
  <class>KNode::NntpAccountDialogBase</class>
  <widget class="QFrame" name="KNode::NntpAccountDialogBase" >
   <property name="geometry" >
@@ -224,8 +222,6 @@
    </item>
   </layout>
  </widget>
- <layoutfunction spacing="KDialog::spacingHint()" margin="KDialog::marginHint()" />
- <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <customwidgets>
   <customwidget>
    <class>KIntSpinBox</class>

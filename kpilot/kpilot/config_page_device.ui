@@ -220,8 +220,6 @@
    </item>
   </layout>
  </widget>
- <layoutdefault spacing="6" margin="0" />
- <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <customwidgets>
   <customwidget>
    <class>KComboBox</class>

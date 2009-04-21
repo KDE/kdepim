@@ -1,7 +1,4 @@
 <ui version="4.0" stdsetdef="1" >
-  <author></author>
-  <comment></comment>
-  <exportmacro></exportmacro>
   <class>KSelFilterPageDlg</class>
   <widget class="QWidget" name="KSelFilterPageDlg" >
     <property name="geometry" >
@@ -130,5 +127,4 @@ This program will help you import your email from your previous email program in
       </item>
     </layout>
   </widget>
-  <layoutdefault spacing="6" margin="11" />
 </ui>

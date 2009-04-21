@@ -1,7 +1,4 @@
 <ui version="4.0" stdsetdef="1" >
-  <author></author>
-  <comment></comment>
-  <exportmacro></exportmacro>
   <class>confPageMisc</class>
   <widget class="QDialog" name="confPageMisc" >
     <property name="geometry" >
@@ -130,8 +127,6 @@
 		</item>
     </layout>
   </widget>
-  <layoutdefault spacing="6" margin="11" />
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
   <customwidgets>
     <customwidget>
       <class>KIntNumInput</class>

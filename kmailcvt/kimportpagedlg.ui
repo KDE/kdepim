@@ -1,7 +1,4 @@
 <ui version="4.0" stdsetdef="1" >
-  <author></author>
-  <comment></comment>
-  <exportmacro></exportmacro>
   <class>KImportPageDlg</class>
   <widget class="QWidget" name="KImportPageDlg" >
     <property name="geometry" >
@@ -207,5 +204,4 @@
       </item>
     </layout>
   </widget>
-  <layoutdefault spacing="6" margin="11" />
 </ui>

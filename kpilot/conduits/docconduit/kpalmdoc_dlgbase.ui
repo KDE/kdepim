@@ -426,7 +426,6 @@
         <slot>setEnabled(bool)</slot>
     </connection>
 </connections>
-<layoutdefaults spacing="6" margin="11"/>
 <includes>
     <include location="global" impldecl="in implementation">kurlrequester.h</include>
     <include location="global" impldecl="in implementation">klineedit.h</include>

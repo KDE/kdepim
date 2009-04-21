@@ -1,0 +1,141 @@
+<ui version="4.0" >
+ <class>IMEditorBase</class>
+ <widget class="QWidget" name="IMEditorBase" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>442</width>
+    <height>247</height>
+   </rect>
+  </property>
+  <property name="sizePolicy" >
+   <sizepolicy vsizetype="Expanding" hsizetype="Preferred" >
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="windowTitle" >
+   <string comment="Instant messaging" >IM Addresses</string>
+  </property>
+  <layout class="QGridLayout" >
+   <item row="4" column="1" >
+    <spacer name="spacer1" >
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="sizeType" >
+      <enum>QSizePolicy::Expanding</enum>
+     </property>
+     <property name="sizeHint" stdset="0" >
+      <size>
+       <width>20</width>
+       <height>16</height>
+      </size>
+     </property>
+    </spacer>
+   </item>
+   <item row="3" column="1" >
+    <widget class="QPushButton" name="btnSetStandard" >
+     <property name="toolTip" >
+      <string comment="Instant messaging" >The IM Address that is set as the standard is the address that is shown in main editor window.</string>
+     </property>
+     <property name="whatsThis" >
+      <string comment="Instant messaging" >&lt;qt>Only one IM Address can be set as the standard IM Address.&lt;br />The standard IM Address is shown in the main editor window, and other programs may use this as hint for deciding which IM Address to show.&lt;/qt></string>
+     </property>
+     <property name="text" >
+      <string comment="Instant messaging" >&amp;Set Standard</string>
+     </property>
+    </widget>
+   </item>
+   <item row="2" column="1" >
+    <widget class="KPushButton" name="btnDelete" >
+     <property name="text" >
+      <string comment="Instant messaging" >&amp;Remove</string>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1" >
+    <widget class="KPushButton" name="btnEdit" >
+     <property name="text" >
+      <string comment="Instant messaging" >&amp;Edit...</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1" >
+    <widget class="KPushButton" name="btnAdd" >
+     <property name="text" >
+      <string comment="Instant messaging" >&amp;Add...</string>
+     </property>
+    </widget>
+   </item>
+   <item rowspan="5" row="0" column="0" >
+    <widget class="QTreeWidget" name="lvAddresses" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="MinimumExpanding" hsizetype="Expanding" >
+       <horstretch>1</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="minimumSize" >
+      <size>
+       <width>200</width>
+       <height>28</height>
+      </size>
+     </property>
+     <property name="selectionMode" >
+      <enum>QAbstractItemView::ExtendedSelection</enum>
+     </property>
+     <property name="rootIsDecorated" >
+      <bool>false</bool>
+     </property>
+     <property name="allColumnsShowFocus" >
+      <bool>true</bool>
+     </property>
+     <column>
+      <property name="text" >
+       <string comment="Instant messaging">Protocol</string>
+      </property>
+     </column>
+     <column>
+      <property name="text" >
+       <string comment="Instant messaging">Address</string>
+      </property>
+     </column>
+    </widget>
+   </item>
+   <item row="5" column="0" colspan="2" >
+    <widget class="K3ActiveLabel" native="1" name="lblWarning" >
+     <property name="sizePolicy" >
+      <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
+       <horstretch>0</horstretch>
+       <verstretch>0</verstretch>
+      </sizepolicy>
+     </property>
+     <property name="text" stdset="0" >
+      <string comment="Instant messaging" >&lt;em>Note:&lt;/em> Please read the help page before adding or editing Instant Messaging Addresses here.</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>KPushButton</class>
+   <extends>QPushButton</extends>
+   <header>kpushbutton.h</header>
+  </customwidget>
+  <customwidget>
+   <class>K3ActiveLabel</class>
+   <extends>QWidget</extends>
+   <header>k3activelabel.h</header>
+  </customwidget>
+ </customwidgets>
+ <includes>
+  <include location="local" >kpushbutton.h</include>
+  <include location="local" >k3listview.h</include>
+  <include location="local" >k3activelabel.h</include>
+ </includes>
+ <resources/>
+ <connections/>
+</ui>

@@ -1,7 +1,5 @@
 <ui version="4.0" stdsetdef="1" >
   <author>Reinhold Kainhofer</author>
-  <comment></comment>
-  <exportmacro></exportmacro>
   <class>DOCWidget</class>
   <widget class="QWidget" name="Form2" >
     <property name="geometry" >
@@ -441,8 +439,6 @@
       </item>
     </layout>
   </widget>
-  <layoutdefault spacing="6" margin="11" />
-  <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
   <tabstops>
     <tabstop>fTXTDir</tabstop>
     <tabstop>fkeepPDBLocally</tabstop>

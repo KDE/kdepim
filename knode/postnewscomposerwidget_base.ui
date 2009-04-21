@@ -185,8 +185,6 @@
   <zorder>kcfg_maxLineLength</zorder>
   <zorder>label1</zorder>
  </widget>
- <layoutfunction spacing="KDialog::spacingHint()" margin="KDialog::marginHint()" />
- <pixmapfunction>qPixmapFromMimeSource</pixmapfunction>
  <customwidgets>
   <customwidget>
    <class>KIntSpinBox</class>
