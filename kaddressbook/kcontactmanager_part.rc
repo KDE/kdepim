@@ -1,0 +1,66 @@
+<!DOCTYPE kpartgui>
+<kpartgui name="kcontactmanager" version="1">
+
+  <MenuBar>
+    <Menu name="file"><text>&amp;File</text>
+      <Action name="file_new_contact"/>
+      <Action name="file_new_group"/>
+      <Menu name="file_import">
+        <text>&amp;Import</text>
+        <Action name="file_import_vcard"/>
+        <Action name="file_import_csv"/>
+        <Action name="file_import_ldif"/>
+      </Menu>
+      <Menu name="file_export">
+        <text>&amp;Export</text>
+        <Action name="file_export_vcard30"/>
+        <Action name="file_export_vcard21"/>
+        <Action name="file_export_csv"/>
+        <Action name="file_export_ldif"/>
+      </Menu>
+      <Separator/>
+      <Action name="file_print"/>
+      <Separator/>
+      <Action name="file_quit"/>
+    </Menu>
+
+    <Menu name="edit"><text>&amp;Edit</text>
+      <Action name="akonadi_paste" append="edit_paste_merge"/>
+      <Action name="akonadi_item_copy" append="edit_copy_merge"/>
+      <Action name="akonadi_item_delete" append="edit_delete_merge"/>
+    </Menu>
+
+    <Menu name="settings"><text>&amp;Settings</text>
+      <Action name="options_configure_keybinding"/>
+      <Action name="options_configure_toolbars"/>
+      <Action name="options_configure"/>
+    </Menu>
+
+  </MenuBar>
+
+  <Menu name="akonadi_collectionview_contextmenu">
+    <Action name="akonadi_collection_create"/>
+    <Separator/>
+    <Action name="akonadi_collection_copy"/>
+    <Action name="akonadi_paste"/>
+    <Separator/>
+    <Action name="akonadi_collection_delete"/>
+    <Separator/>
+    <Action name="akonadi_collection_sync"/>
+    <Separator/>
+    <Action name="akonadi_collection_properties"/>
+  </Menu>
+
+  <Menu name="akonadi_itemview_contextmenu">
+    <Action name="akonadi_item_copy"/>
+    <Action name="akonadi_paste"/>
+    <Action name="akonadi_item_delete"/>
+  </Menu>
+
+  <ToolBar name="mainToolBar" noMerge="1"><text>Main Toolbar</text>
+    <Action name="file_new_contact"/>
+    <Action name="file_new_group"/>
+    <Action name="quick_search"/>
+  </ToolBar>
+
+</kpartgui>

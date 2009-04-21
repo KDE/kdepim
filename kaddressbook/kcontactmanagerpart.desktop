@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Service
+Name=KContactManager
+Icon=kcontactmanager
+X-DocPath=kcontactmanager/index.html
+MimeType=text/directory;text/x-ldif;
+X-KDE-ServiceTypes=KParts/ReadOnlyPart,Browser/View
+X-KDE-Library=kcontactmanagerpart

@@ -1,7 +1,7 @@
 /*
     This file is part of KContactManager.
 
-    Copyright (c) 2007 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2009 Laurent Montel <montel@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -19,32 +19,21 @@
 */
 
 #include "aboutdata.h"
-#include <kcmdlineargs.h>
 #include <klocale.h>
-#include <kuniqueapplication.h>
-#include <akonadi/control.h>
 
-#include "mainwindow.h"
-
-int main( int argc, char **argv )
+AboutData::AboutData()
+  : KAboutData( "kcontactmanager", 0, ki18n( "KContactManager" ),
+                "0.1", ki18n( "The KDE Contact Management Application" ),
+                KAboutData::License_GPL_V2,
+                ki18n( "(c) 2007-2009 The KDE PIM Team" ) )
 {
-  AboutData about;
-
-  KCmdLineArgs::init( argc, argv, &about );
-
-  KCmdLineOptions options;
-  KCmdLineArgs::addCmdLineOptions( options );
-  KUniqueApplication::addCmdLineOptions();
-
-  if ( !KUniqueApplication::start() )
-    exit( 0 );
-
-  KUniqueApplication app;
-
-  MainWindow *window = new MainWindow;
-  window->show();
-
-  Akonadi::Control::start( window );
-
-  return app.exec();
+  addAuthor( ki18n( "Tobias Koenig" ), ki18n( "Current maintainer" ), "tokoe@kde.org" );
 }
+
+AboutData::~AboutData()
+{
+
+}
+
+
+

@@ -16,6 +16,15 @@ if(QGPGME_FOUND)
   add_definitions(-DQGPGME_FOUND)
 endif(QGPGME_FOUND)
 
+set( kcontactmanager_LIB_SRCS
+  aboutdata.cpp
+)
+
+kde4_add_library(kcontactmanagerprivate SHARED ${kcontactmanager_LIB_SRCS})
+target_link_libraries(kcontactmanagerprivate ${KDE4_KDECORE_LIBS} )
+set_target_properties(kcontactmanagerprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+install(TARGETS kcontactmanagerprivate ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
+
 ########### next target ###############
 
 set( kcontactmanager_SRCS
@@ -62,7 +71,7 @@ kde4_add_executable(kcontactmanager RUN_UNINSTALLED ${kcontactmanager_SRCS})
 
 target_link_libraries(kcontactmanager  ${KDE4_SYNDICATION_LIBS} kdepim ${KDE4_KCAL_LIBS}
                               ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_PHONON_LIBS})
-target_link_libraries(kcontactmanager ${KDE4_AKONADI_LIBS} akonadi-kabccommon ${KDE4_KDEUI_LIBS} )
+target_link_libraries(kcontactmanager ${KDE4_AKONADI_LIBS} akonadi-kabccommon ${KDE4_KDEUI_LIBS} kcontactmanagerprivate)
 
 if(QGPGME_FOUND)
   target_link_libraries(kcontactmanager ${QGPGME_LIBRARIES})
@@ -71,3 +80,12 @@ endif(QGPGME_FOUND)
 install(TARGETS kcontactmanager ${INSTALL_TARGETS_DEFAULT_ARGS})
 install( FILES kcontactmanager.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
 install( FILES kcontactmanagerui.rc  DESTINATION ${DATA_INSTALL_DIR}/kcontactmanager)
+
+
+set(kcontactmanager_PART_SRCS kcontactmanager_part.cpp )
+kde4_add_plugin(kcontactmanagerpart ${kcontactmanager_PART_SRCS})
+target_link_libraries(kcontactmanagerpart ${KDE4_KPARTS_LIBS} kcontactmanagerprivate )
+install(TARGETS kcontactmanagerpart DESTINATION ${PLUGIN_INSTALL_DIR})
+install( FILES kcontactmanagerpart.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
+install( FILES kcontactmanager_part.rc DESTINATION ${DATA_INSTALL_DIR}/kcontactmanager)
+

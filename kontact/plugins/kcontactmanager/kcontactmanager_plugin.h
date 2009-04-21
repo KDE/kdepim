@@ -1,7 +1,7 @@
 /*
     This file is part of KContactManager.
 
-    Copyright (c) 2007 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2009 Laurent Montel <montel@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,33 +18,35 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include "aboutdata.h"
-#include <kcmdlineargs.h>
-#include <klocale.h>
-#include <kuniqueapplication.h>
-#include <akonadi/control.h>
+#ifndef KCONTACTMANAGER_PLUGIN_H
+#define KCONTACTMANAGER_PLUGIN_H
 
-#include "mainwindow.h"
 
-int main( int argc, char **argv )
+#include <kontactinterfaces/plugin.h>
+#include <kontactinterfaces/uniqueapphandler.h>
+
+#include <kparts/part.h>
+
+class KContactManagerUniqueAppHandler : public Kontact::UniqueAppHandler
 {
-  AboutData about;
+  public:
+    KContactManagerUniqueAppHandler( Kontact::Plugin *plugin ) : Kontact::UniqueAppHandler( plugin ) {}
+    virtual void loadCommandLineOptions();
+    virtual int newInstance();
+};
 
-  KCmdLineArgs::init( argc, argv, &about );
+class KContactManagerPlugin : public Kontact::Plugin
+{
+  Q_OBJECT
 
-  KCmdLineOptions options;
-  KCmdLineArgs::addCmdLineOptions( options );
-  KUniqueApplication::addCmdLineOptions();
+  public:
+    KContactManagerPlugin( Kontact::Core *core, const QVariantList & );
+    ~KContactManagerPlugin();
+    int weight() const { return 550; }
 
-  if ( !KUniqueApplication::start() )
-    exit( 0 );
+  protected:
+    KParts::ReadOnlyPart *createPart();
+};
 
-  KUniqueApplication app;
+#endif
 
-  MainWindow *window = new MainWindow;
-  window->show();
-
-  Akonadi::Control::start( window );
-
-  return app.exec();
-}

@@ -1,7 +1,7 @@
 /*
     This file is part of KContactManager.
 
-    Copyright (c) 2007 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2009 Laurent Montel <montel@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,33 +18,24 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include "aboutdata.h"
-#include <kcmdlineargs.h>
-#include <klocale.h>
-#include <kuniqueapplication.h>
-#include <akonadi/control.h>
+#ifndef KCONTACTMANAGER_PART_H
+#define KCONTACTMANAGER_PART_H
 
-#include "mainwindow.h"
+#include <kparts/event.h>
+#include <kparts/part.h>
 
-int main( int argc, char **argv )
+class KContactManagerPart: public KParts::ReadOnlyPart
 {
-  AboutData about;
+  Q_OBJECT
 
-  KCmdLineArgs::init( argc, argv, &about );
+  public:
+    KContactManagerPart( QWidget *parentWidget, QObject *parent, const QVariantList& );
+    virtual ~KContactManagerPart();
+  protected:
+    virtual bool openFile();
 
-  KCmdLineOptions options;
-  KCmdLineArgs::addCmdLineOptions( options );
-  KUniqueApplication::addCmdLineOptions();
+};
 
-  if ( !KUniqueApplication::start() )
-    exit( 0 );
 
-  KUniqueApplication app;
+#endif /* KCONTACTMANAGER_PART_H */
 
-  MainWindow *window = new MainWindow;
-  window->show();
-
-  Akonadi::Control::start( window );
-
-  return app.exec();
-}

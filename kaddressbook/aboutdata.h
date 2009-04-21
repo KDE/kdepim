@@ -1,7 +1,7 @@
 /*
     This file is part of KContactManager.
 
-    Copyright (c) 2007 Tobias Koenig <tokoe@kde.org>
+    Copyright (c) 2009 Laurent Montel <montel@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,33 +18,18 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#include "aboutdata.h"
-#include <kcmdlineargs.h>
-#include <klocale.h>
-#include <kuniqueapplication.h>
-#include <akonadi/control.h>
+#ifndef ABOUTDATA_H
+#define ABOUTDATA_H
 
-#include "mainwindow.h"
+#include "kcontactmanager_export.h"
+#include <kaboutdata.h>
 
-int main( int argc, char **argv )
-{
-  AboutData about;
+class KCONTACTMANAGER_EXPORT AboutData : public KAboutData {
+  public:
+    AboutData();
+    ~AboutData();
+};
 
-  KCmdLineArgs::init( argc, argv, &about );
 
-  KCmdLineOptions options;
-  KCmdLineArgs::addCmdLineOptions( options );
-  KUniqueApplication::addCmdLineOptions();
+#endif /* ABOUTDATA_H */
 
-  if ( !KUniqueApplication::start() )
-    exit( 0 );
-
-  KUniqueApplication app;
-
-  MainWindow *window = new MainWindow;
-  window->show();
-
-  Akonadi::Control::start( window );
-
-  return app.exec();
-}
