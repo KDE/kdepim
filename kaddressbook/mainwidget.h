@@ -21,7 +21,9 @@
 #ifndef MAINWIDGET_H
 #define MAINWIDGET_H
 
+#include <kactioncollection.h>
 #include <QtGui/QWidget>
+#include "kcontactmanager_export.h"
 
 namespace Akonadi {
 class Collection;
@@ -41,12 +43,12 @@ class QStackedWidget;
 class QuickSearchWidget;
 class XXPortManager;
 
-class MainWidget : public QWidget
+class KCONTACTMANAGER_EXPORT MainWidget : public QWidget
 {
   Q_OBJECT
 
   public:
-    explicit MainWidget( KXmlGuiWindow *guiWindow, QWidget *parent = 0 );
+    explicit MainWidget(KActionCollection *action, KXmlGuiWindow *guiWindow, QWidget *parent = 0 );
     ~MainWidget();
 
   private Q_SLOTS:
@@ -60,7 +62,7 @@ class MainWidget : public QWidget
 
   private:
     void setupGui();
-    void setupActions();
+    void setupActions(KActionCollection *);
 
     void editContact( const Akonadi::Item &contact );
     void editGroup( const Akonadi::Item &group );
@@ -78,7 +80,6 @@ class MainWidget : public QWidget
     Akonadi::ContactGroupBrowser *mContactGroupDetails;
     Akonadi::StandardActionManager *mActionManager;
 
-    KXmlGuiWindow *mGuiWindow;
     XXPortManager *mXXPortManager;
 };
 

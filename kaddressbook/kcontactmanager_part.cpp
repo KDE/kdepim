@@ -19,8 +19,11 @@
 */
 
 #include "kcontactmanager_part.h"
-#include <kiconloader.h>
 #include "aboutdata.h"
+#include "mainwidget.h"
+
+#include <QVBoxLayout>
+#include <kiconloader.h>
 
 #include <kcomponentdata.h>
 #include <klocale.h>
@@ -40,6 +43,12 @@ KContactManagerPart::KContactManagerPart( QWidget *parentWidget, QObject *parent
   QWidget *canvas = new QWidget( parentWidget );
   canvas->setFocusPolicy( Qt::ClickFocus );
   setWidget( canvas );
+  QVBoxLayout *topLayout = new QVBoxLayout( canvas );
+
+  MainWidget *mMainWidget = new MainWidget(actionCollection(), 0, canvas );
+
+  topLayout->addWidget( mMainWidget );
+  topLayout->setMargin(0);
 
   KIconLoader::global()->addAppDir( "kcontactmanager" );
 

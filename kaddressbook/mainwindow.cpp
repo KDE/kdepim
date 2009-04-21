@@ -29,7 +29,7 @@
 MainWindow::MainWindow()
   : KXmlGuiWindow( 0 )
 {
-  mMainWidget = new MainWidget( this, this );
+  mMainWidget = new MainWidget(actionCollection(), this, this );
 
   setCentralWidget( mMainWidget );
 

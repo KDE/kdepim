@@ -57,9 +57,8 @@
 #include "quicksearchwidget.h"
 #include "xxportmanager.h"
 
-MainWidget::MainWidget( KXmlGuiWindow *guiWindow, QWidget *parent )
-  : QWidget( parent ),
-    mGuiWindow( guiWindow )
+MainWidget::MainWidget(KActionCollection *actionCollection, KXmlGuiWindow *guiWindow, QWidget *parent )
+  : QWidget( parent )
 {
   mContactModel = new Akonadi::KABCModel( this );
 
@@ -80,7 +79,7 @@ MainWidget::MainWidget( KXmlGuiWindow *guiWindow, QWidget *parent )
   mXXPortManager = new XXPortManager( sortModel, this );
 
   setupGui();
-  setupActions();
+  setupActions(actionCollection);
 
   mCollectionView->setModel( sortModel );
   mCollectionView->setXmlGuiWindow( guiWindow );
@@ -110,7 +109,7 @@ MainWidget::MainWidget( KXmlGuiWindow *guiWindow, QWidget *parent )
 
   Akonadi::Control::widgetNeedsAkonadi( this );
 
-  mActionManager = new Akonadi::StandardActionManager( guiWindow->actionCollection(), guiWindow );
+  mActionManager = new Akonadi::StandardActionManager( actionCollection, this );
   mActionManager->setCollectionSelectionModel( mCollectionView->selectionModel() );
   mActionManager->setItemSelectionModel( mItemView->selectionModel() );
 
@@ -163,10 +162,9 @@ void MainWidget::setupGui()
   mQuickSearchWidget = new QuickSearchWidget;
 }
 
-void MainWidget::setupActions()
+void MainWidget::setupActions(KActionCollection * collection)
 {
   KAction *action = 0;
-  KActionCollection *collection = mGuiWindow->actionCollection();
 
   action = collection->addAction( "file_new_contact" );
   action->setIcon( KIcon( "contact-new" ) );

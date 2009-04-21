@@ -16,26 +16,8 @@ if(QGPGME_FOUND)
   add_definitions(-DQGPGME_FOUND)
 endif(QGPGME_FOUND)
 
-set( kcontactmanager_LIB_SRCS
-  aboutdata.cpp
-)
-
-kde4_add_library(kcontactmanagerprivate SHARED ${kcontactmanager_LIB_SRCS})
-target_link_libraries(kcontactmanagerprivate ${KDE4_KDECORE_LIBS} )
-set_target_properties(kcontactmanagerprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS kcontactmanagerprivate ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
-
-########### next target ###############
-
-set( kcontactmanager_SRCS
-  collectioncombobox.cpp
-  collectionselectiondialog.cpp
-  contacteditordialog.cpp
-  contactfields.cpp
-  contactfiltermodel.cpp
-  contactgroupeditordialog.cpp
-  contactitemeditor.cpp
-  contactmetadata.cpp
+set( kcontactmanager_editor_SRCS
+  editor/contacteditor.cpp
   editor/addresseditwidget.cpp
   editor/contacteditor.cpp
   editor/dateeditwidget.cpp
@@ -48,10 +30,20 @@ set( kcontactmanager_SRCS
   editor/phoneeditwidget.cpp
   editor/secrecyeditwidget.cpp
   editor/soundeditwidget.cpp
-  main.cpp
+)
+
+set( kcontactmanager_LIB_SRCS
+  aboutdata.cpp
   mainwidget.cpp
-  mainwindow.cpp
+  contacteditordialog.cpp
+  contactgroupeditordialog.cpp
+  xxportmanager.cpp
+  contactfiltermodel.cpp
   quicksearchwidget.cpp
+  collectionselectiondialog.cpp
+  xxport/xxportfactory.cpp
+  contactitemeditor.cpp
+  collectioncombobox.cpp
   xxport/csv/csv_xxport.cpp
   xxport/csv/csvimportdialog.cpp
   xxport/csv/dateparser.cpp
@@ -59,9 +51,28 @@ set( kcontactmanager_SRCS
   xxport/csv/qcsvreader.cpp
   xxport/ldif/ldif_xxport.cpp
   xxport/shared/xxport.cpp
-  xxport/vcard/vcard_xxport.cpp
-  xxport/xxportfactory.cpp
-  xxportmanager.cpp
+  xxport/vcard/vcard_xxport.cpp 
+  contactfields.cpp
+  contactmetadata.cpp
+  ${kcontactmanager_editor_SRCS}
+  )
+
+kde4_add_library(kcontactmanagerprivate SHARED ${kcontactmanager_LIB_SRCS})
+target_link_libraries(kcontactmanagerprivate kdepim ${KDE4_PHONON_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_AKONADI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} akonadi-kabccommon)
+
+if(QGPGME_FOUND)
+  target_link_libraries(kcontactmanagerprivate ${QGPGME_LIBRARIES})
+endif(QGPGME_FOUND)
+
+
+set_target_properties(kcontactmanagerprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+install(TARGETS kcontactmanagerprivate ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
+
+########### next target ###############
+
+set( kcontactmanager_SRCS
+  main.cpp
+  mainwindow.cpp
 )
 
 # todo: more appropriate icon?
