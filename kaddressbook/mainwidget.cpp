@@ -57,6 +57,7 @@
 #include "quicksearchwidget.h"
 #include "xxportmanager.h"
 
+#include "kcontactmanageradaptor.h"
 MainWidget::MainWidget(KActionCollection *actionCollection, KXmlGuiWindow *guiWindow, QWidget *parent )
   : QWidget( parent )
 {
@@ -121,6 +122,9 @@ MainWidget::MainWidget(KActionCollection *actionCollection, KXmlGuiWindow *guiWi
   mActionManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Properties..." ) );
   mActionManager->setActionText( Akonadi::StandardActionManager::CopyItems, ki18np( "Copy Contact", "Copy %1 Contacts" ) );
   mActionManager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete Contact", "Delete %1 Contacts" ) );
+  new MainWidgetAdaptor( this );
+  QDBusConnection::sessionBus().registerObject( "/KContactManager", this, QDBusConnection::ExportAdaptors );
+
 }
 
 MainWidget::~MainWidget()

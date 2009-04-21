@@ -51,10 +51,11 @@ class KCONTACTMANAGER_EXPORT MainWidget : public QWidget
     explicit MainWidget(KActionCollection *action, KXmlGuiWindow *guiWindow, QWidget *parent = 0 );
     ~MainWidget();
 
-  private Q_SLOTS:
+  public Q_SLOTS:
     void newContact();
     void newGroup();
 
+ private Q_SLOTS:
     void editItem( const Akonadi::Item &item );
     void itemSelected( const Akonadi::Item &item );
 

@@ -17,7 +17,6 @@ if(QGPGME_FOUND)
 endif(QGPGME_FOUND)
 
 set( kcontactmanager_editor_SRCS
-  editor/contacteditor.cpp
   editor/addresseditwidget.cpp
   editor/contacteditor.cpp
   editor/dateeditwidget.cpp
@@ -56,6 +55,8 @@ set( kcontactmanager_LIB_SRCS
   xxportmanager.cpp
   ${kcontactmanager_editor_SRCS}
 )
+
+qt4_add_dbus_adaptor(kcontactmanager_LIB_SRCS org.kde.KContactmanager.MainWidget.xml mainwidget.h MainWidget kcontactmanageradaptor )
 
 kde4_add_library(kcontactmanagerprivate SHARED ${kcontactmanager_LIB_SRCS})
 target_link_libraries(kcontactmanagerprivate kdepim ${KDE4_PHONON_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_AKONADI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} akonadi-kabccommon)

@@ -53,6 +53,7 @@ KContactManagerPart::KContactManagerPart( QWidget *parentWidget, QObject *parent
   KIconLoader::global()->addAppDir( "kcontactmanager" );
 
   setXMLFile( "kcontactmanager_part.rc" );
+
 }
 
 KContactManagerPart::~KContactManagerPart()
