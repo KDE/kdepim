@@ -176,13 +176,8 @@ ngwt__Contact* ContactConverter::convertToContact( const KABC::Addressee &addr )
 
     // TODO: write back organization?
 
-#if KDE_IS_VERSION(3,5,8)
     if ( addr.department().isEmpty() )
       info->department = qStringToString(addr.department());
-#else
-    if ( !addr.custom( "KADDRESSBOOK", "X-Department" ).isEmpty() )
-      info->department = qStringToString( addr.custom( "KADDRESSBOOK", "X-Department" ) );
-#endif
     else
       info->department = 0;
 

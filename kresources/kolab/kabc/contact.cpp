@@ -1018,11 +1018,7 @@ void Contact::setFields( const KABC::Addressee* addressee, KABC::AddressBook* ad
   setOrganization( addressee->organization() );
   setWebPage( addressee->url().url() );
   setIMAddress( addressee->custom( "KADDRESSBOOK", "X-IMAddress" ) );
-#if KDE_IS_VERSION(3,5,8)
   setDepartment( addressee->department());
-#else
-  setDepartment( addressee->custom( "KADDRESSBOOK", "X-Department" ) );
-#endif
   setOfficeLocation( addressee->custom( "KADDRESSBOOK", "X-Office" ) );
   setProfession( addressee->custom( "KADDRESSBOOK", "X-Profession" ) );
   setRole( addressee->role() );

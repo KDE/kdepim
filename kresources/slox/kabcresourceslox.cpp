@@ -358,11 +358,7 @@ void ResourceSlox::parseContactAttribute( const QDomElement &e, Addressee &a )
   } else if ( tag == fieldName( Organization ) ) {
     a.setOrganization( text );
   } else if ( tag == fieldName( Department ) ) {
-#if KDE_IS_VERSION(3,5,8)
     a.setDepartment( text );
-#else
-    a.insertCustom( "KADDRESSBOOK", "X-Department", text );
-#endif
   } else if ( tag == fieldName( FamilyName ) ) {
     a.setFamilyName( text );
   } else if ( tag == fieldName( GivenName) ) {

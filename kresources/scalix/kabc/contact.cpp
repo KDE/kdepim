@@ -161,11 +161,7 @@ QString Contact::toXml( const KABC::Addressee &addr )
 
   xml += "<im_address>" + addr.custom( "KADDRESSBOOK", "X-IMAddress" ) + "</im_address>\n";
   xml += "<manager>" + addr.custom( "KADDRESSBOOK", "X-ManagersName" ) + "</manager>\n";
-#if KDE_IS_VERSION(3,5,8)
   xml += "<department>" + addr.department() + "</department>\n";
-#else
-  xml += "<department>" + addr.custom( "KADDRESSBOOK", "X-Department" ) + "</department>\n";
-#endif
   xml += "<assistant>" + addr.custom( "KADDRESSBOOK", "X-AssistantsName" ) + "</assistant>\n";
   xml += "<profession>" + addr.custom( "KADDRESSBOOK", "X-Profession" ) + "</profession>\n";
   xml += "<office_location>" + addr.custom( "KADDRESSBOOK", "X-Office" ) + "</office_location>\n";
