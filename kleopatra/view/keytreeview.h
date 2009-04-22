@@ -37,12 +37,10 @@
 
 #include <QString>
 
+#include <gpgme++/key.h>
+
 #include <boost/shared_ptr.hpp>
 #include <vector>
-
-namespace GpgME {
-    class Key;
-}
 
 class QTreeView;
 
@@ -71,10 +69,10 @@ namespace Kleo {
         void setFlatModel( AbstractKeyListModel * model );
         void setHierarchicalModel( AbstractKeyListModel * model );
 
-#if 0
         void setKeys( const std::vector<GpgME::Key> & keys );
-        std::vector<GpgME::Key> keys() const;
+        const std::vector<GpgME::Key> & keys() const { return m_keys; }
 
+#if 0
         void setToolTipOptions( int options );
         int toolTipOptions() const;
 #endif
@@ -109,6 +107,8 @@ namespace Kleo {
         void init();
 
     private:
+        std::vector<GpgME::Key> m_keys;
+
         KeyListSortFilterProxyModel * m_proxy;
         AbstractKeyListSortFilterProxyModel * m_additionalProxy;
 
