@@ -1,6 +1,12 @@
 [Desktop Entry]
 Type=Service
 Name=KContactManager
+Name[de]=Kontaktverwaltung
+Name[pa]=ਕੇ-ਸੰਪਰਕ-ਮੈਨੇਜਰ
+Name[ro]=KGestionarContacte
+Name[sv]=Kcontactmanager
+Name[x-test]=xxKContactManagerxx
+Name[zh_TW]=Kontact 管理員
 Icon=kcontactmanager
 X-DocPath=kcontactmanager/index.html
 MimeType=text/directory;text/x-ldif;
