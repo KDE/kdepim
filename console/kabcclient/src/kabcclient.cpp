@@ -200,8 +200,8 @@ int KABCClient::performAdd()
 {
     // create a set of all currently existing UIDs
     std::set<QString> uids;
-    AddressBook::ConstIterator it    = m_addressBook->begin();
-    AddressBook::ConstIterator endIt = m_addressBook->end();
+    AddressBook::ConstIterator it    = m_addressBook->constBegin();
+    AddressBook::ConstIterator endIt = m_addressBook->constEnd();
     for (; it != endIt; ++it)
     {
         uids.insert((*it).uid());
@@ -266,8 +266,8 @@ int KABCClient::performRemove()
 
         AddresseeList result;
 
-        AddressBook::ConstIterator it    = m_addressBook->begin();
-        AddressBook::ConstIterator endIt = m_addressBook->end();
+        AddressBook::ConstIterator it    = m_addressBook->constBegin();
+        AddressBook::ConstIterator endIt = m_addressBook->constEnd();
         for (; it != endIt; ++it)
         {
             if (!search.uid().isEmpty() && (*it).uid() == search.uid())
@@ -364,8 +364,8 @@ int KABCClient::performMerge()
 
         AddresseeList result;
 
-        AddressBook::ConstIterator it    = m_addressBook->begin();
-        AddressBook::ConstIterator endIt = m_addressBook->end();
+        AddressBook::ConstIterator it    = m_addressBook->constBegin();
+        AddressBook::ConstIterator endIt = m_addressBook->constEnd();
         for (; it != endIt; ++it)
         {
             if (!addressee.uid().isEmpty() && (*it).uid() == addressee.uid())
@@ -465,7 +465,7 @@ int KABCClient::performSearch()
 {
     int resultValue = 2; // i.e. search didn't find any match
 
-    AddressBook::ConstIterator endIt = m_addressBook->end();
+    AddressBook::ConstIterator endIt = m_addressBook->constEnd();
 
     while (!m_inputStream->bad() && !m_inputStream->eof())
     {
@@ -474,7 +474,7 @@ int KABCClient::performSearch()
 
         AddresseeList result;
 
-        AddressBook::ConstIterator it = m_addressBook->begin();
+        AddressBook::ConstIterator it = m_addressBook->constBegin();
         for (; it != endIt; ++it)
         {
             if (!search.uid().isEmpty() && (*it).uid() == search.uid())

@@ -933,9 +933,9 @@ QString KABCore::getNameByPhone( const QString &phone )
   KABC::PhoneNumber::List phoneList;
 
   KABC::AddressBook::ConstIterator iter;
-  const KABC::AddressBook::ConstIterator endIter( mAddressBook->end() );
+  const KABC::AddressBook::ConstIterator endIter( mAddressBook->constEnd() );
 
-  for ( iter = mAddressBook->begin(); !found && ( iter != endIter ); ++iter ) {
+  for ( iter = mAddressBook->constBegin(); !found && ( iter != endIter ); ++iter ) {
     phoneList = (*iter).phoneNumbers();
     KABC::PhoneNumber::List::Iterator phoneIter( phoneList.begin() );
     const KABC::PhoneNumber::List::Iterator phoneEndIter( phoneList.end() );
@@ -1431,8 +1431,8 @@ QStringList KABCore::allCategories() const
   QStringList::ConstIterator catIt;
 
   KABC::AddressBook::ConstIterator it;
-  const KABC::AddressBook::ConstIterator endIt( mAddressBook->end() );
-  for ( it = mAddressBook->begin(); it != endIt; ++it ) {
+  const KABC::AddressBook::ConstIterator endIt( mAddressBook->constEnd() );
+  for ( it = mAddressBook->constBegin(); it != endIt; ++it ) {
     categories = (*it).categories();
     const QStringList::ConstIterator catEndIt( categories.constEnd() );
     for ( catIt = categories.constBegin(); catIt != catEndIt; ++catIt )

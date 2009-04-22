@@ -117,8 +117,8 @@ KABC::AddresseeList XXPortSelectDialog::contacts()
     const QStringList categorieList = categories();
 
     KABC::AddressBook::ConstIterator it;
-    KABC::AddressBook::ConstIterator addressBookEnd( mCore->addressBook()->end() );
-    for ( it = mCore->addressBook()->begin(); it != addressBookEnd; ++it ) {
+    KABC::AddressBook::ConstIterator addressBookEnd( mCore->addressBook()->constEnd() );
+    for ( it = mCore->addressBook()->constBegin(); it != addressBookEnd; ++it ) {
       const QStringList tmp( (*it).categories() );
       QStringList::ConstIterator tmpIt;
       for ( tmpIt = tmp.constBegin(); tmpIt != tmp.constEnd(); ++tmpIt )
@@ -130,7 +130,7 @@ KABC::AddresseeList XXPortSelectDialog::contacts()
   } else {
     // create a string list of all entries:
     KABC::AddressBook::ConstIterator it;
-    for ( it = mCore->addressBook()->begin(); it != mCore->addressBook()->end(); ++it )
+    for ( it = mCore->addressBook()->constBegin(); it != mCore->addressBook()->constEnd(); ++it )
       list.append( *it );
   }
 
@@ -213,7 +213,7 @@ void XXPortSelectDialog::initGUI()
   mCategoriesView->layout()->setMargin( 0 );
   mCategoriesView->setWhatsThis( i18n( "Check the categories whose members you want to print." ) );
   groupLayout->addWidget( mCategoriesView, 3, 1 );
-  connect( mCategoriesView->listView(), 
+  connect( mCategoriesView->listView(),
            SIGNAL( itemClicked( QTreeWidgetItem *, int ) ),
            this, SLOT( categoryClicked() ) );
 

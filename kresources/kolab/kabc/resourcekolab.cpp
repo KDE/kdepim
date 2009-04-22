@@ -298,7 +298,7 @@ bool KABC::ResourceKolab::save( Ticket* )
 {
   bool rc = true;
 
-  for( ConstIterator it = begin(); it != end(); ++it )
+  for( ConstIterator it = constBegin(); it != constEnd(); ++it )
     if( (*it).changed() ) {
       rc &= kmailUpdateAddressee( *it );
     }
