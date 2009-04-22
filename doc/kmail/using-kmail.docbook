@@ -1314,7 +1314,7 @@ which you do not like.</para>
 </varlistentry>
 <varlistentry>
 <term><guilabel>Forward To</guilabel></term>
-<listitem><para>This will forward the message inline (&ie; as if you selected <menuchoice><guimenu>Message</guimenu><guimenuitem>Forward</guimenuitem><guimenuitem>Inline...</guimenuitem></menuchoice>) to another email address.</para>
+<listitem><para>This will forward the message inline (&ie; as if you selected <menuchoice><guimenu>Message</guimenu><guimenuitem>Forward</guimenuitem><guimenuitem>Inline...</guimenuitem></menuchoice>) to another email address. You can select the template to be used when forwarding with this filter with the drop down list.</para>
 </listitem>
 </varlistentry>
 <varlistentry>
