@@ -24,7 +24,7 @@
 #include "contacteditor.h"
 #include "contactitemeditor.h"
 
-#include <akonadi/collectionfilterproxymodel.h>
+#include <akonadi_next/entityfilterproxymodel.h>
 #include <akonadi/item.h>
 
 #include <kabc/addressee.h>
@@ -52,8 +52,8 @@ ContactEditorDialog::ContactEditorDialog( Mode mode, QAbstractItemModel *collect
     QLabel *label = new QLabel( i18n( "Add to:" ), mainWidget );
 
     // filter for collections that support contacts
-    Akonadi::CollectionFilterProxyModel *filterModel = new Akonadi::CollectionFilterProxyModel( this );
-    filterModel->addMimeTypeFilter( KABC::Addressee::mimeType() );
+    Akonadi::EntityFilterProxyModel *filterModel = new Akonadi::EntityFilterProxyModel( this );
+    filterModel->addMimeTypeInclusionFilter( KABC::Addressee::mimeType() );
     filterModel->setSourceModel( collectionModel );
 
     KABC::CollectionComboBox *box = new KABC::CollectionComboBox( mainWidget );

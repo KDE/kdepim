@@ -39,7 +39,7 @@ class StandardActionManager;
 }
 
 class KActionCollection;
-class KXmlGuiWindow;
+class KXMLGUIClient;
 class QItemSelection;
 class QStackedWidget;
 class QuickSearchWidget;
@@ -50,7 +50,7 @@ class KCONTACTMANAGER_EXPORT MainWidget : public QWidget
   Q_OBJECT
 
   public:
-    explicit MainWidget( KActionCollection *action, KXMLGUIClient *guiWindow, QWidget *parent = 0 );
+    explicit MainWidget( KXMLGUIClient *guiClient, QWidget *parent = 0 );
     ~MainWidget();
 
   public Q_SLOTS:
@@ -69,8 +69,6 @@ class KCONTACTMANAGER_EXPORT MainWidget : public QWidget
 
     void editContact( const Akonadi::Item& );
     void editGroup( const Akonadi::Item& );
-
-    Akonadi::CollectionFilterProxyModel *mCollectionFilterModel;
 
     Akonadi::EntityFilterProxyModel *mCollectionTree;
     Akonadi::EntityFilterProxyModel *mItemTree;

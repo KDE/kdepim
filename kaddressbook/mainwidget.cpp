@@ -61,13 +61,13 @@
 #include "quicksearchwidget.h"
 #include "xxportmanager.h"
 
-MainWidget::MainWidget( KActionCollection *actionCollection, KXMLGUIClient *guiWindow, QWidget *parent )
+MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   : QWidget( parent )
 {
   mXXPortManager = new XXPortManager( GlobalContactModel::instance()->model(), this );
 
   setupGui();
-  setupActions( actionCollection );
+  setupActions( guiClient->actionCollection() );
 
   mCollectionTree = new Akonadi::EntityFilterProxyModel( this );
   mCollectionTree->setSourceModel( GlobalContactModel::instance()->model() );
@@ -75,7 +75,7 @@ MainWidget::MainWidget( KActionCollection *actionCollection, KXMLGUIClient *guiW
   mCollectionTree->setHeaderSet( Akonadi::EntityTreeModel::CollectionTreeHeaders );
 
   mCollectionView->setModel( mCollectionTree );
-  mCollectionView->setXmlGuiClient( guiWindow );
+  mCollectionView->setXmlGuiClient( guiClient );
   mCollectionView->header()->setDefaultAlignment( Qt::AlignCenter );
   mCollectionView->header()->setSortIndicatorShown( false );
 
@@ -95,7 +95,7 @@ MainWidget::MainWidget( KActionCollection *actionCollection, KXMLGUIClient *guiW
   mItemTree->setHeaderSet( Akonadi::EntityTreeModel::ItemListHeaders );
 
   mItemView->setModel( mItemTree );
-  mItemView->setXmlGuiClient( guiWindow );
+  mItemView->setXmlGuiClient( guiClient );
   mItemView->setRootIsDecorated( false );
   mItemView->header()->setDefaultAlignment( Qt::AlignCenter );
   for ( int column = 1; column < mDescendantTree->columnCount( QModelIndex() ); ++column )
@@ -114,7 +114,7 @@ MainWidget::MainWidget( KActionCollection *actionCollection, KXMLGUIClient *guiW
 
   Akonadi::Control::widgetNeedsAkonadi( this );
 
-  mActionManager = new Akonadi::StandardActionManager( actionCollection, this );
+  mActionManager = new Akonadi::StandardActionManager( guiClient->actionCollection(), this );
   mActionManager->setCollectionSelectionModel( mCollectionView->selectionModel() );
   mActionManager->setItemSelectionModel( mItemView->selectionModel() );
 
@@ -225,13 +225,13 @@ void MainWidget::setupActions( KActionCollection *collection )
 
 void MainWidget::newContact()
 {
-  ContactEditorDialog dlg( ContactEditorDialog::CreateMode, mCollectionFilterModel, this );
+  ContactEditorDialog dlg( ContactEditorDialog::CreateMode, mCollectionTree, this );
   dlg.exec();
 }
 
 void MainWidget::newGroup()
 {
-  ContactGroupEditorDialog dlg( ContactGroupEditorDialog::CreateMode, mCollectionFilterModel, this );
+  ContactGroupEditorDialog dlg( ContactGroupEditorDialog::CreateMode, mCollectionTree, this );
   dlg.exec();
 }
 
@@ -281,14 +281,14 @@ void MainWidget::itemSelected( const Akonadi::Item &item )
 
 void MainWidget::editContact( const Akonadi::Item &contact )
 {
-  ContactEditorDialog dlg( ContactEditorDialog::EditMode, mCollectionFilterModel, this );
+  ContactEditorDialog dlg( ContactEditorDialog::EditMode, mCollectionTree, this );
   dlg.setContact( contact );
   dlg.exec();
 }
 
 void MainWidget::editGroup( const Akonadi::Item &group )
 {
-  ContactGroupEditorDialog dlg( ContactGroupEditorDialog::EditMode, mCollectionFilterModel, this );
+  ContactGroupEditorDialog dlg( ContactGroupEditorDialog::EditMode, mCollectionTree, this );
   dlg.setContactGroup( group );
   dlg.exec();
 }

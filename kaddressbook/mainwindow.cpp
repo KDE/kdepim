@@ -29,7 +29,7 @@
 MainWindow::MainWindow()
   : KXmlGuiWindow( 0 )
 {
-  mMainWidget = new MainWidget(actionCollection(), this, this );
+  mMainWidget = new MainWidget( this, this );
 
   setCentralWidget( mMainWidget );
 
@@ -37,7 +37,7 @@ MainWindow::MainWindow()
 
   setStandardToolBarMenuEnabled( true );
 
-  setupGUI(  Keys /*| ToolBar | StatusBar*/ | Save | Create, "kcontactmanagerui.rc" );
+  setupGUI( Keys /*| ToolBar | StatusBar*/ | Save | Create, "kcontactmanagerui.rc" );
 
   toolBar()->setToolButtonStyle( Qt::ToolButtonTextUnderIcon );
 
