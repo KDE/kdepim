@@ -595,14 +595,15 @@ KABC::Addressee::List LDAPSearchDialog::importContactsUnlessTheyExist( const QVa
 void LDAPSearchDialog::slotUser2()
 {
 #ifdef KDEPIM_NEW_DISTRLISTS
-    KABC::Resource *resource = mCore->requestResource( this );
-    if ( !resource ) return;
-
     const QValueList<ContactListItem*> selectedItems = d->selectedItems( mResultListView );
     if ( selectedItems.isEmpty() ) {
       KMessageBox::information( this, i18n( "Please select the contacts you want to add to the distribution list." ), i18n( "No Contacts Selected" ) );
       return;
     }
+	
+    KABC::Resource *resource = mCore->requestResource( this );
+    if ( !resource ) return;
+
     KPIM::DistributionList dist = selectDistributionList();
     if ( dist.isEmpty() )
       return;
