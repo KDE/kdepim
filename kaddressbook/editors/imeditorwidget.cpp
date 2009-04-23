@@ -362,6 +362,8 @@ void IMEditorWidget::slotAdd()
 
 void IMEditorWidget::slotEdit()
 {
+  if( mReadOnly )
+    return;
   QListViewItemIterator it( mWidget->lvAddresses, QListViewItemIterator::Selected );
 
   // Just edit the first one selected.
