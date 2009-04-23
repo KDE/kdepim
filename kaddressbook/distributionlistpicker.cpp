@@ -92,7 +92,9 @@ void KPIM::DistributionListPickerDialog::slotUser1()
     {
         QRegExpValidator validator( QRegExp( "\\S+.*" ), 0 );
         const QString name = KInputDialog::getText( i18n( "Enter Name" ), i18n( "Enter a name for the new distribution list:" ), QString(), 0, this, &validator ).trimmed();
-        validName = !listNames.contains( name );
+        if( name.isEmpty() )
+           break;
+	validName = !listNames.contains( name );
 
         if ( validName )
         {
