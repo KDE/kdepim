@@ -222,6 +222,8 @@ void ImageButton::contextMenuEvent( QContextMenuEvent *event )
 
 void ImageButton::load()
 {
+  if ( mReadOnly )
+    return;
   KURL url = KFileDialog::getOpenURL( QString(), KImageIO::pattern(), this );
   if ( url.isValid() ) {
     if ( mImageLoader ) {
