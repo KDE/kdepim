@@ -34,11 +34,13 @@ class XXPortManager : public QObject
   Q_OBJECT
 
   public:
-    XXPortManager( QAbstractItemModel *collectionModel, QWidget *parent = 0 );
+    XXPortManager( QWidget *parent = 0 );
     ~XXPortManager();
 
     void addImportAction( QAction *action, const QString &identifier );
     void addExportAction( QAction *action, const QString &identifier );
+
+    void setCollectionModel( QAbstractItemModel *collectionModel );
 
   private Q_SLOTS:
     void slotImport( const QString& );

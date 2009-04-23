@@ -30,8 +30,8 @@
 #include <QtGui/QAction>
 #include <QtGui/QWidget>
 
-XXPortManager::XXPortManager( QAbstractItemModel *collectionModel, QWidget *parent )
-  : QObject( parent ), mCollectionModel( collectionModel ), mParentWidget( parent )
+XXPortManager::XXPortManager( QWidget *parent )
+  : QObject( parent ), mCollectionModel( 0 ), mParentWidget( parent )
 {
   mImportMapper = new QSignalMapper( this );
   mExportMapper = new QSignalMapper( this );
@@ -58,8 +58,16 @@ void XXPortManager::addExportAction( QAction *action, const QString &identifier 
   connect( action, SIGNAL( triggered( bool ) ), mExportMapper, SLOT( map() ) );
 }
 
+void XXPortManager::setCollectionModel( QAbstractItemModel *collectionModel )
+{
+  mCollectionModel = collectionModel;
+}
+
 void XXPortManager::slotImport( const QString &identifier )
 {
+  if ( !mCollectionModel )
+    return;
+
   const XXPort* xxport = mFactory.createXXPort( identifier, mParentWidget );
   if( !xxport )
     return;

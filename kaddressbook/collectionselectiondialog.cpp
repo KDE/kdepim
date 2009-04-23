@@ -22,7 +22,8 @@
 
 #include "collectioncombobox.h"
 
-#include <akonadi/collectionfilterproxymodel.h>
+#include <akonadi_next/descendantentitiesproxymodel.h>
+#include <akonadi_next/entityfilterproxymodel.h>
 #include <akonadi/item.h>
 
 #include <kabc/addressee.h>
@@ -42,13 +43,19 @@ CollectionSelectionDialog::CollectionSelectionDialog( QAbstractItemModel *collec
 
   QVBoxLayout *layout = new QVBoxLayout( mainWidget );
 
+  // flatten the collection tree structure to a collection list
+  Akonadi::DescendantEntitiesProxyModel *descendantModel = new Akonadi::DescendantEntitiesProxyModel( this );
+  descendantModel->setSourceModel( collectionModel );
+
+/*
   Akonadi::CollectionFilterProxyModel *filterModel = new Akonadi::CollectionFilterProxyModel( this );
 
   filterModel->addMimeTypeFilter( KABC::Addressee::mimeType() );
   filterModel->setSourceModel( collectionModel );
+*/
 
   mCollectionCombo = new KABC::CollectionComboBox( mainWidget );
-  mCollectionCombo->setModel( filterModel );
+  mCollectionCombo->setModel( descendantModel );
 
   layout->addWidget( new QLabel( i18n( "Select the address book" ) ) );
   layout->addWidget( mCollectionCombo );

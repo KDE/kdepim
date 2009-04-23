@@ -64,7 +64,7 @@
 MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   : QWidget( parent )
 {
-  mXXPortManager = new XXPortManager( GlobalContactModel::instance()->model(), this );
+  mXXPortManager = new XXPortManager( this );
 
   setupGui();
   setupActions( guiClient->actionCollection() );
@@ -73,6 +73,8 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mCollectionTree->setSourceModel( GlobalContactModel::instance()->model() );
   mCollectionTree->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
   mCollectionTree->setHeaderSet( Akonadi::EntityTreeModel::CollectionTreeHeaders );
+
+  mXXPortManager->setCollectionModel( mCollectionTree );
 
   mCollectionView->setModel( mCollectionTree );
   mCollectionView->setXmlGuiClient( guiClient );
