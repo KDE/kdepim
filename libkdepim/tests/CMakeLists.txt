@@ -21,7 +21,7 @@ set(testaddresseelineedit_SRCS testaddresseelineedit.cpp )
 
 kde4_add_executable(testaddresseelineedit TEST ${testaddresseelineedit_SRCS})
 
-target_link_libraries(testaddresseelineedit  kdepim ${KDE4_KDECORE_LIBS} )
+target_link_libraries(testaddresseelineedit  kdepim ${KDE4_KDECORE_LIBS})
 
 
 ########### next target ###############

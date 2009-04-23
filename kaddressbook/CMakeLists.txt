@@ -151,7 +151,7 @@ QT4_ADD_DBUS_INTERFACE(kaddressbook_LIB_SRCS org.kde.KAddressbook.Core.xml kaddr
 
 kde4_add_library(kaddressbookprivate SHARED ${kaddressbook_LIB_SRCS})
 
-kdepim4_link_unique_libraries(kaddressbookprivate  ${KDE4_SYNDICATION_LIBS} kdepim ${KDE4_KCAL_LIBS} ${KDE4_KLDAP_LIBS} ${KDE4_KPIMUTILS_LIBS} kabc_file_core ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_PHONON_LIBS} kabinterfaces kabcommon  ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KDE3SUPPORT_LIBS} kimproxy)
+kdepim4_link_unique_libraries(kaddressbookprivate  ${KDE4_SYNDICATION_LIBS} kdepim ${KDE4_KCAL_LIBS} ${KDE4_KABC_LIBS} ${KDE4_KRESOURCES_LIBS} ${KDE4_KLDAP_LIBS} ${KDE4_KPIMUTILS_LIBS} kabc_file_core ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_PHONON_LIBS} kabinterfaces kabcommon  ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KDE3SUPPORT_LIBS} kimproxy)
 
 set_target_properties(kaddressbookprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kaddressbookprivate DESTINATION ${LIB_INSTALL_DIR})

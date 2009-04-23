@@ -40,7 +40,7 @@ kde4_add_plugin(kaddrbk_kde2_xxport ${kaddrbk_kde2_xxport_PART_SRCS})
 
 
 
-target_link_libraries(kaddrbk_kde2_xxport kaddressbookprivate kabinterfaces ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS})
+target_link_libraries(kaddrbk_kde2_xxport kaddressbookprivate kabinterfaces ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_KABC_LIBS})
 
 install(TARGETS kaddrbk_kde2_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -139,7 +139,7 @@ if(GNOKII_FOUND)
 
    
 
-   target_link_libraries(kaddrbk_gnokii_xxport kaddressbookprivate kabinterfaces ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} ${GNOKII_LIBRARIES})
+   target_link_libraries(kaddrbk_gnokii_xxport kaddressbookprivate kabinterfaces ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} ${KDE4_KDEUI_LIBS} ${GNOKII_LIBRARIES})
 
    install(TARGETS kaddrbk_gnokii_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
    install(FILES gnokii_xxport.desktop DESTINATION ${SERVICES_INSTALL_DIR}/kaddressbook)

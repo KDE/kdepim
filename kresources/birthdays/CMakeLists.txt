@@ -9,7 +9,7 @@ set(kcal_kabc_PART_SRCS resourcekabc.cpp resourcekabcconfig.cpp )
 
 kde4_add_plugin(kcal_kabc ${kcal_kabc_PART_SRCS})
 
-target_link_libraries(kcal_kabc  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} ${QT_QT3SUPPORT_LIBRARY} kdepim kabcommon)
+target_link_libraries(kcal_kabc  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} ${KDE4_KABC_LIBS} ${KDE4_KRESOURCES_LIBS} ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KDEUI_LIBS} kdepim kabcommon)
 
 install(TARGETS kcal_kabc  DESTINATION ${PLUGIN_INSTALL_DIR})
 

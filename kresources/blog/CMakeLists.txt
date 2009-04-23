@@ -9,7 +9,7 @@ set(kcal_resourceblog_LIB_SRCS resourceblog.cpp resourceblogconfig.cpp )
 
 kde4_add_library(kcal_resourceblog SHARED ${kcal_resourceblog_LIB_SRCS})
 
-target_link_libraries(kcal_resourceblog  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} ${KDE4_KBLOG_LIBS} ${KDE4_KIO_LIBS} kdepim )
+target_link_libraries(kcal_resourceblog  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} ${KDE4_KABC_LIBS} ${KDE4_KBLOG_LIBS} ${KDE4_KRESOURCES_LIBS} ${KDE4_KIO_LIBS} kdepim )
 
 set_target_properties(kcal_resourceblog PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kcal_resourceblog  DESTINATION ${LIB_INSTALL_DIR})

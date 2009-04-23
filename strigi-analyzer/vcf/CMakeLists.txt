@@ -6,6 +6,6 @@ add_definitions(-DMAKE_PIMSTRIGIANALYZER_LIB)
 
 kde4_add_library(vcf MODULE ${vcfendanalyzer_SRCS})
 
-target_link_libraries(vcf ${STRIGI_STREAMANALYZER_LIBRARY} ${KDE4_KABC_LIBS})
+target_link_libraries(vcf ${STRIGI_STREAMANALYZER_LIBRARY} ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS})
 set_target_properties(vcf PROPERTIES PREFIX strigiea_)
 install(TARGETS vcf LIBRARY DESTINATION ${LIB_INSTALL_DIR}/strigi)
