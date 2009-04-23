@@ -20,7 +20,6 @@
 
 #include "mainwidget.h"
 
-
 #include <QtGui/QAction>
 #include <QtGui/QHBoxLayout>
 #include <QtGui/QHeaderView>
@@ -31,7 +30,6 @@
 
 #include <akonadi/collectionfilterproxymodel.h>
 #include <akonadi/collectionmodel.h>
-#include <akonadi/collectionview.h>
 #include <akonadi/control.h>
 #include <akonadi/itemview.h>
 #include <akonadi/mimetypechecker.h>
@@ -51,55 +49,61 @@
 #include <ktoolbar.h>
 #include <kxmlguiwindow.h>
 
+#include "akonadi_next/descendantentitiesproxymodel.h"
+#include "akonadi_next/entityfilterproxymodel.h"
+#include "akonadi_next/entitytreeview.h"
 #include "contacteditordialog.h"
 #include "contactfiltermodel.h"
 #include "contactgroupeditordialog.h"
+#include "contactstreemodel.h"
+#include "globalcontactmodel.h"
+#include "kcontactmanageradaptor.h"
 #include "quicksearchwidget.h"
 #include "xxportmanager.h"
 
-#include "kcontactmanageradaptor.h"
-MainWidget::MainWidget(KActionCollection *actionCollection, KXMLGUIClient *guiWindow, QWidget *parent )
+MainWidget::MainWidget( KActionCollection *actionCollection, KXMLGUIClient *guiWindow, QWidget *parent )
   : QWidget( parent )
 {
-  mContactModel = new Akonadi::KABCModel( this );
-
-  mCollectionModel = new Akonadi::CollectionModel( this );
-  mCollectionModel->setHeaderData( 0, Qt::Horizontal, i18nc( "@title:column, contact groups", "Group" ) , Qt::EditRole );
-
-  mCollectionFilterModel = new Akonadi::CollectionFilterProxyModel();
-  mCollectionFilterModel->addMimeTypeFilter( KABC::Addressee::mimeType() );
-  mCollectionFilterModel->addMimeTypeFilter( KABC::ContactGroup::mimeType() );
-  mCollectionFilterModel->setSourceModel( mCollectionModel );
-
-  // display collections sorted
-  QSortFilterProxyModel *sortModel = new QSortFilterProxyModel( this );
-  sortModel->setDynamicSortFilter( true );
-  sortModel->setSortCaseSensitivity( Qt::CaseInsensitive );
-  sortModel->setSourceModel( mCollectionFilterModel );
-
-  mXXPortManager = new XXPortManager( sortModel, this );
+  mXXPortManager = new XXPortManager( GlobalContactModel::instance()->model(), this );
 
   setupGui();
-  setupActions(actionCollection);
+  setupActions( actionCollection );
 
-  mCollectionView->setModel( sortModel );
+  mCollectionTree = new Akonadi::EntityFilterProxyModel( this );
+  mCollectionTree->setSourceModel( GlobalContactModel::instance()->model() );
+  mCollectionTree->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
+  mCollectionTree->setHeaderSet( Akonadi::EntityTreeModel::CollectionTreeHeaders );
+
+  mCollectionView->setModel( mCollectionTree );
   mCollectionView->setXmlGuiClient( guiWindow );
   mCollectionView->header()->setDefaultAlignment( Qt::AlignCenter );
   mCollectionView->header()->setSortIndicatorShown( false );
 
+/*
   ContactFilterModel *contactFilterModel = new ContactFilterModel( this );
   contactFilterModel->setSourceModel( mContactModel );
   connect( mQuickSearchWidget, SIGNAL( filterStringChanged( const QString& ) ),
            contactFilterModel, SLOT( setFilterString( const QString& ) ) );
+*/
 
-  mItemView->setModel( contactFilterModel );
+  mDescendantTree = new Akonadi::DescendantEntitiesProxyModel( this );
+  mDescendantTree->setSourceModel( GlobalContactModel::instance()->model() );
+
+  mItemTree = new Akonadi::EntityFilterProxyModel( this );
+  mItemTree->setSourceModel( mDescendantTree );
+  mItemTree->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
+  mItemTree->setHeaderSet( Akonadi::EntityTreeModel::ItemListHeaders );
+
+  mItemView->setModel( mItemTree );
   mItemView->setXmlGuiClient( guiWindow );
+  mItemView->setRootIsDecorated( false );
   mItemView->header()->setDefaultAlignment( Qt::AlignCenter );
-  for ( int column = 1; column < mContactModel->columnCount(); ++column )
+  for ( int column = 1; column < mDescendantTree->columnCount( QModelIndex() ); ++column )
     mItemView->setColumnHidden( column, true );
 
-  connect( mCollectionView, SIGNAL( currentChanged( const Akonadi::Collection& ) ),
-           this, SLOT( collectionSelected( const Akonadi::Collection& ) ) );
+  connect( mCollectionView->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
+           this, SLOT( collectionSelectionChanged( const QItemSelection&, const QItemSelection& ) ) );
+
   connect( mItemView, SIGNAL( currentChanged( const Akonadi::Item& ) ),
            this, SLOT( itemSelected( const Akonadi::Item& ) ) );
   connect( mItemView, SIGNAL( doubleClicked( const Akonadi::Item& ) ),
@@ -144,11 +148,11 @@ void MainWidget::setupGui()
   layout->addWidget( splitter );
 
   // the collection view
-  mCollectionView = new Akonadi::CollectionView();
+  mCollectionView = new Akonadi::EntityTreeView();
   splitter->addWidget( mCollectionView );
 
   // the items view
-  mItemView = new Akonadi::ItemView;
+  mItemView = new Akonadi::EntityTreeView();
   splitter->addWidget( mItemView );
 
   // the details view stack
@@ -166,7 +170,7 @@ void MainWidget::setupGui()
   mQuickSearchWidget = new QuickSearchWidget;
 }
 
-void MainWidget::setupActions(KActionCollection * collection)
+void MainWidget::setupActions( KActionCollection *collection )
 {
   KAction *action = 0;
 
@@ -233,19 +237,29 @@ void MainWidget::newGroup()
 
 void MainWidget::editItem( const Akonadi::Item &reference )
 {
-  const QModelIndex index = mContactModel->indexForItem( reference, 0 );
-  const Akonadi::Item item = mContactModel->itemForIndex( index );
-
-  if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::Addressee::mimeType() ) ) {
+  if ( Akonadi::MimeTypeChecker::isWantedItem( reference, KABC::Addressee::mimeType() ) ) {
     editContact( reference );
-  } else if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::ContactGroup::mimeType() ) ) {
+  } else if ( Akonadi::MimeTypeChecker::isWantedItem( reference, KABC::ContactGroup::mimeType() ) ) {
     editGroup( reference );
   }
 }
 
-void MainWidget::collectionSelected( const Akonadi::Collection &collection )
+void MainWidget::collectionSelectionChanged( const QItemSelection &selected, const QItemSelection& )
 {
-  mContactModel->setCollection( collection );
+  const QModelIndex index = selected.indexes().at( 0 );
+
+  const QModelIndex sourceIndex = mCollectionTree->mapToSource( index );
+
+  mDescendantTree->setRootIndex( sourceIndex );
+
+  const QModelIndex itemIndex = mDescendantTree->mapFromSource( sourceIndex );
+
+  mItemTree->setRootIndex( itemIndex );
+
+  const QModelIndex viewIndex = mItemTree->mapFromSource( itemIndex );
+
+  mItemView->setRootIndex( viewIndex );
+
   mActionManager->setItemSelectionModel( mItemView->selectionModel() );
 }
 

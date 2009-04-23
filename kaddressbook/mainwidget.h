@@ -21,24 +21,26 @@
 #ifndef MAINWIDGET_H
 #define MAINWIDGET_H
 
-#include <kactioncollection.h>
-#include <QtGui/QWidget>
 #include "kcontactmanager_export.h"
+
+#include <QtGui/QWidget>
 
 namespace Akonadi {
 class Collection;
 class CollectionFilterProxyModel;
-class CollectionModel;
-class CollectionView;
+class DescendantEntitiesProxyModel;
+class EntityFilterProxyModel;
+class EntityTreeView;
 class ContactGroupBrowser;
 class Item;
 class ItemView;
 class KABCItemBrowser;
-class KABCModel;
 class StandardActionManager;
 }
 
+class KActionCollection;
 class KXmlGuiWindow;
+class QItemSelection;
 class QStackedWidget;
 class QuickSearchWidget;
 class XXPortManager;
@@ -48,7 +50,7 @@ class KCONTACTMANAGER_EXPORT MainWidget : public QWidget
   Q_OBJECT
 
   public:
-    explicit MainWidget(KActionCollection *action, KXMLGUIClient *guiWindow, QWidget *parent = 0 );
+    explicit MainWidget( KActionCollection *action, KXMLGUIClient *guiWindow, QWidget *parent = 0 );
     ~MainWidget();
 
   public Q_SLOTS:
@@ -57,24 +59,26 @@ class KCONTACTMANAGER_EXPORT MainWidget : public QWidget
 
  private Q_SLOTS:
     void editItem( const Akonadi::Item &item );
-    void itemSelected( const Akonadi::Item &item );
 
-    void collectionSelected( const Akonadi::Collection &collection );
+    void itemSelected( const Akonadi::Item &item );
+    void collectionSelectionChanged( const QItemSelection&, const QItemSelection& );
 
   private:
     void setupGui();
-    void setupActions(KActionCollection *);
+    void setupActions( KActionCollection* );
 
-    void editContact( const Akonadi::Item &contact );
-    void editGroup( const Akonadi::Item &group );
+    void editContact( const Akonadi::Item& );
+    void editGroup( const Akonadi::Item& );
 
-    Akonadi::CollectionModel *mCollectionModel;
     Akonadi::CollectionFilterProxyModel *mCollectionFilterModel;
-    Akonadi::KABCModel *mContactModel;
+
+    Akonadi::EntityFilterProxyModel *mCollectionTree;
+    Akonadi::EntityFilterProxyModel *mItemTree;
+    Akonadi::DescendantEntitiesProxyModel *mDescendantTree;
 
     QuickSearchWidget *mQuickSearchWidget;
-    Akonadi::CollectionView *mCollectionView;
-    Akonadi::ItemView *mItemView;
+    Akonadi::EntityTreeView *mCollectionView;
+    Akonadi::EntityTreeView *mItemView;
     QStackedWidget *mDetailsViewStack;
 
     Akonadi::KABCItemBrowser *mContactDetails;

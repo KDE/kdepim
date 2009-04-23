@@ -1,7 +1,7 @@
 /*
     This file is part of KContactManager.
 
-    Copyright (c) 2009 Laurent Montel <montel@kde.org>
+    Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -18,23 +18,34 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
 */
 
-#ifndef KCONTACTMANAGER_PART_H
-#define KCONTACTMANAGER_PART_H
+#ifndef CONTACTSTREEMODEL_H
+#define CONTACTSTREEMODEL_H
 
-#include <kparts/event.h>
-#include <kparts/part.h>
+#include "entitytreemodel.h"
 
-class KContactManagerPart: public KParts::ReadOnlyPart
+namespace Akonadi {
+
+class ContactsTreeModel : public EntityTreeModel
 {
   Q_OBJECT
 
   public:
-    KContactManagerPart( QWidget *parentWidget, QObject *parent, const QVariantList& );
-    virtual ~KContactManagerPart();
+    enum Roles
+    {
+      EmailCompletionRole = EntityTreeModel::UserRole
+    };
 
-  protected:
-    virtual bool openFile();
-    virtual void guiActivateEvent( KParts::GUIActivateEvent* );
+    ContactsTreeModel( Session *session, Monitor *monitor, QObject *parent = 0 );
+    virtual ~ContactsTreeModel();
+
+    virtual QVariant getData( Item item, int column, int role = Qt::DisplayRole ) const;
+    virtual QVariant getData( Collection collection, int column, int role = Qt::DisplayRole ) const;
+    virtual int columnCount( const QModelIndex &index = QModelIndex() ) const;
+    virtual QVariant getHeaderData( int section, Qt::Orientation orientation, int role, int headerSet ) const;
+
+  private:
 };
+
+}
 
 #endif

@@ -1,6 +1,7 @@
 project(kcontactmanager)
 include_directories(
     ${CMAKE_SOURCE_DIR}/akonadi
+    ${CMAKE_SOURCE_DIR}/akonadi/akonadi_next
     ${CMAKE_SOURCE_DIR}/libkdepim
     ${CMAKE_CURRENT_SOURCE_DIR}/editor
     ${CMAKE_CURRENT_SOURCE_DIR}/xxport/shared
@@ -39,8 +40,10 @@ set( kcontactmanager_LIB_SRCS
   contactgroupeditordialog.cpp
   contactitemeditor.cpp
   contactmetadata.cpp
+  contactstreemodel.cpp
   collectioncombobox.cpp
   collectionselectiondialog.cpp
+  globalcontactmodel.cpp
   mainwidget.cpp
   quicksearchwidget.cpp
   xxport/csv/csv_xxport.cpp
@@ -59,7 +62,7 @@ set( kcontactmanager_LIB_SRCS
 qt4_add_dbus_adaptor(kcontactmanager_LIB_SRCS org.kde.KContactmanager.MainWidget.xml mainwidget.h MainWidget kcontactmanageradaptor )
 
 kde4_add_library(kcontactmanagerprivate SHARED ${kcontactmanager_LIB_SRCS})
-target_link_libraries(kcontactmanagerprivate kdepim ${KDE4_PHONON_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_AKONADI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} akonadi-kabccommon)
+target_link_libraries(kcontactmanagerprivate kdepim ${KDE4_PHONON_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_AKONADI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} akonadi-kabccommon akonadi_next)
 
 if(QGPGME_FOUND)
   target_link_libraries(kcontactmanagerprivate ${QGPGME_LIBRARIES})

@@ -22,10 +22,10 @@
 #include "aboutdata.h"
 #include "mainwidget.h"
 
-#include <QVBoxLayout>
-#include <kiconloader.h>
+#include <QtGui/QVBoxLayout>
 
 #include <kcomponentdata.h>
+#include <kiconloader.h>
 #include <klocale.h>
 #include <kparts/genericfactory.h>
 #include <kparts/statusbarextension.h>
