@@ -628,6 +628,8 @@ void LDAPSearchDialog::slotUser1()
     KABC::Resource *resource = mCore->requestResource( this );
     if ( !resource ) return;
     const QValueList<ContactListItem*> selectedItems = d->selectedItems( mResultListView );
+    if( selectedItems.isEmpty() )
+      return;
     importContactsUnlessTheyExist( selectedItems, resource );
 }
 
