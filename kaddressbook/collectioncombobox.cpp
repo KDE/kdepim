@@ -23,7 +23,7 @@
 #include <QtGui/QComboBox>
 #include <QtGui/QVBoxLayout>
 
-#include <akonadi/collectionmodel.h>
+#include <akonadi_next/entitytreemodel.h>
 
 using namespace Akonadi;
 using namespace KABC;
@@ -50,7 +50,7 @@ void CollectionComboBox::Private::activated( int index )
 
   const QModelIndex modelIndex = mComboBox->model()->index( index, 0 );
   if ( modelIndex.isValid() )
-    emit mParent->selectionChanged( Collection( modelIndex.data( CollectionModel::CollectionIdRole ).toLongLong() ) );
+    emit mParent->selectionChanged( modelIndex.data( EntityTreeModel::CollectionRole).value<Collection>() );
 }
 
 CollectionComboBox::CollectionComboBox( QWidget *parent )
@@ -84,7 +84,7 @@ Akonadi::Collection CollectionComboBox::selectedCollection() const
 
   const QModelIndex modelIndex = d->mComboBox->model()->index( index, 0 );
   if ( modelIndex.isValid() )
-    return Akonadi::Collection( modelIndex.data( Akonadi::CollectionModel::CollectionIdRole ).toLongLong() );
+    return modelIndex.data( Akonadi::EntityTreeModel::CollectionRole ).value<Collection>();
   else
     return Akonadi::Collection();
 }
