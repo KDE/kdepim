@@ -1,3 +1,28 @@
+Friday, April 24th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3573: Don't show the sidebar when using the todo view by default
+* kolab/issue3530: Encoding garbage was shown for encrypted messages when German language was used
+
+Merges
+------
+
+* Merges from KDE 4.2 branch:
+      - Don't store illegal negative DTSTART values in ical/ics files
+      - Don't crash when canceling the saving of a contact
+      - Don't hide notes when doing session management (KDE bug 189783)
+      - Sort items again in the resource view of KOrganizer
+      - Don't crash KOrganizer when changing a certain option when there are no resources
+
+* Merges from enterprise35 branch:
+      - kolab/issue2152: System tray icon of KMail would not react to changes in the folder configuration
+      - kolab/issue2931: The ACL of a folder without admin rights are not shown with a wrong message
+      - kolab/issue3303: Departement and title were not saved and restored
+      - kolab/issue3263: Support custom templates when forwarding with filters, and also support fixed recipients for templates
+
+
 Friday, April 17th 2009
 
 Problems addressed
