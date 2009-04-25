@@ -13,6 +13,7 @@ X-KDE-ParentComponents=kleopatra
 X-KDE-CfgDlgHierarchy=Kleopatra
 
 Name=GnuPG System
+Name[el]=Σύστημα GnuPG
 Name[et]=GnuPG süsteem
 Name[ga]=Córas GnuPG
 Name[gl]=Sistema GnuPG
@@ -27,6 +28,7 @@ Name[uk]=Система GnuPG
 Name[x-test]=xxGnuPG Systemxx
 Name[zh_TW]=GnuPG 系統
 Comment=Configuration of GnuPG System options
+Comment[el]=Ρύθμιση επιλογών συστήματος GnuPG
 Comment[et]=GnuPG süsteemi valikute seadistamine
 Comment[gl]=Configuración das opcións do Sistema GnuPG
 Comment[nb]=Oppsett av GnuPG systemvalg
