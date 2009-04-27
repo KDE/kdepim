@@ -42,6 +42,15 @@
 
 #include "undocmds.h"
 
+bool Command::resourceExist( KABC::Resource *resource )
+{
+ foreach( KABC::Resource *res, addressBook()->resources() ) {
+    if ( res == resource )
+      return true;
+  }
+  return false;
+}
+
 DeleteCommand::DeleteCommand( KABC::AddressBook *addressBook,
                               const QStringList &uidList)
   : Command( addressBook ), mUIDList( uidList )
@@ -64,7 +73,8 @@ void DeleteCommand::undo()
     lock()->lock( (*it).resource() );
 
   for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
-    addressBook()->insertAddressee( *it );
+    if ( resourceExist( ( *it ).resource() ) )
+      addressBook()->insertAddressee( *it );
     lock()->unlock( (*it).resource() );
   }
 
@@ -88,7 +98,8 @@ void DeleteCommand::redo()
   KABC::Addressee::List::ConstIterator addrIt;
   const KABC::Addressee::List::ConstIterator addrEndIt( mAddresseeList.end() );
   for ( addrIt = mAddresseeList.begin(); addrIt != addrEndIt; ++addrIt ) {
-    addressBook()->removeAddressee( *addrIt );
+    if ( resourceExist( ( *addrIt ).resource() ) )
+      addressBook()->removeAddressee( *addrIt );
     lock()->unlock( (*addrIt).resource() );
   }
 }
@@ -114,7 +125,8 @@ void PasteCommand::undo()
     lock()->lock( (*it).resource() );
 
   for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
-    addressBook()->removeAddressee( *it );
+    if ( resourceExist( ( *it ).resource() ) )
+      addressBook()->removeAddressee( *it );
     lock()->unlock( (*it).resource() );
   }
 }
@@ -133,13 +145,16 @@ void PasteCommand::redo()
   KABC::Addressee::List::Iterator it;
   const KABC::Addressee::List::Iterator endIt( mAddresseeList.end() );
   for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
-    /**
-       We have to set a new uid for the contact, otherwise insertAddressee()
-       ignore it.
-     */
-    (*it).setUid( KRandom::randomString( 10 ) );
-    uids.append( (*it).uid() );
-    addressBook()->insertAddressee( *it );
+    if ( resourceExist( ( *it ).resource() ) ) {
+
+      /**
+         We have to set a new uid for the contact, otherwise insertAddressee()
+         ignore it.
+      */
+      (*it).setUid( KRandom::randomString( 10 ) );
+      uids.append( (*it).uid() );
+      addressBook()->insertAddressee( *it );
+    }
     lock()->unlock( (*it).resource() );
   }
 
@@ -166,7 +181,8 @@ void NewCommand::undo()
     lock()->lock( (*it).resource() );
 
   for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
-    addressBook()->removeAddressee( *it );
+    if ( resourceExist( ( *it ).resource() ) )
+      addressBook()->removeAddressee( *it );
     lock()->unlock( (*it).resource() );
   }
 }
@@ -181,7 +197,8 @@ void NewCommand::redo()
     lock()->lock( (*it).resource() );
 
   for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
-    addressBook()->insertAddressee( *it );
+    if ( resourceExist( ( *it ).resource() ) )
+      addressBook()->insertAddressee( *it );
     lock()->unlock( (*it).resource() );
   }
 }
@@ -202,16 +219,22 @@ QString EditCommand::text() const
 
 void EditCommand::undo()
 {
-  lock()->lock( mOldAddressee.resource() );
-  addressBook()->insertAddressee( mOldAddressee );
-  lock()->unlock( mOldAddressee.resource() );
+  if ( resourceExist( mOldAddressee.resource() ) )
+  {
+    lock()->lock( mOldAddressee.resource() );
+    addressBook()->insertAddressee( mOldAddressee );
+    lock()->unlock( mOldAddressee.resource() );
+  }
 }
 
 void EditCommand::redo()
 {
-  lock()->lock( mNewAddressee.resource() );
-  addressBook()->insertAddressee( mNewAddressee );
-  lock()->unlock( mNewAddressee.resource() );
+  if ( resourceExist( mNewAddressee.resource() ) )
+  {
+    lock()->lock( mNewAddressee.resource() );
+    addressBook()->insertAddressee( mNewAddressee );
+    lock()->unlock( mNewAddressee.resource() );
+  }
 }
 
 
@@ -235,7 +258,8 @@ void CutCommand::undo()
     lock()->lock( (*it).resource() );
 
   for ( it = mAddresseeList.begin(); it != endIt; ++it ) {
-    addressBook()->insertAddressee( *it );
+    if ( resourceExist( ( *it ).resource() ) )
+      addressBook()->insertAddressee( *it );
     lock()->unlock( (*it).resource() );
   }
 
@@ -261,7 +285,8 @@ void CutCommand::redo()
   KABC::Addressee::List::ConstIterator addrIt;
   const KABC::Addressee::List::ConstIterator addrEndIt( mAddresseeList.end() );
   for ( addrIt = mAddresseeList.begin(); addrIt != addrEndIt; ++addrIt ) {
-    addressBook()->removeAddressee( *addrIt );
+    if ( resourceExist( ( *addrIt ).resource() ) )
+      addressBook()->removeAddressee( *addrIt );
     lock()->unlock( addr.resource() );
   }
 
