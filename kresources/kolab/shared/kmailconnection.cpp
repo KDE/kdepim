@@ -286,6 +286,8 @@ bool KMailConnection::kmailTriggerSync( const QString &contentsType )
 void KMailConnection::dbusServiceOwnerChanged( const QString &service, const QString &oldOwner,
                                                const QString &newOwner )
 {
+  Q_UNUSED( newOwner );
+
   // The owner of the D-Bus service we're interested in changed, so either connect or disconnect.
   if ( mOldServiceName == service && !service.isEmpty() ) {
     if ( mKmailGroupwareInterface )
