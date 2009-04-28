@@ -64,7 +64,7 @@ using namespace std;
 //@cond IGNORE
 static const char progName[] = "konsolekalendar";
 static const char progDisplay[] = "KonsoleKalendar";
-static const char progVersion[] = "1.4.2";
+static const char progVersion[] = "1.4.3";
 static const char progDesc[] = "A command line interface to KDE calendars";
 static const char progURL[] = "pim.kde.org/components/konsolekalendar.php";
 
