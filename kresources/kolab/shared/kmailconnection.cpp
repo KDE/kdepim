@@ -76,8 +76,12 @@ bool KMailConnection::connectToKMail()
       // using e.g. KMessageBox
       return false;
     }
+    kDebug(5650) << "Connected to the KMail DBus interface.";
     mKmailGroupwareInterface = new OrgKdeKmailGroupwareInterface( dbusService, KMAIL_DBUS_GROUPWARE_PATH,
                                                                   QDBusConnection::sessionBus() );
+    if ( !mKmailGroupwareInterface->isValid() )
+      kWarning(5650) << "The groupware interface is not valid, race condition!?";
+
     mOldServiceName = mKmailGroupwareInterface->service();
 
     connect( mKmailGroupwareInterface, SIGNAL(incidenceAdded(QString,QString,uint,int,QString)),
@@ -279,7 +283,8 @@ bool KMailConnection::kmailTriggerSync( const QString &contentsType )
   return checkReply( mKmailGroupwareInterface->triggerSync( contentsType ) );
 }
 
-void KMailConnection::dbusServiceOwnerChanged(const QString & service, const QString&, const QString&)
+void KMailConnection::dbusServiceOwnerChanged( const QString &service, const QString &oldOwner,
+                                               const QString &newOwner )
 {
   // The owner of the D-Bus service we're interested in changed, so either connect or disconnect.
   if ( mOldServiceName == service && !service.isEmpty() ) {
@@ -291,8 +296,12 @@ void KMailConnection::dbusServiceOwnerChanged(const QString & service, const QSt
       mKmailGroupwareInterface = 0;
     }
     else {
-      if ( !connectToKMail() )
-        kWarning(5650) << "Could not connect to KMail, even though the D-Bus service just became available!";
+      const bool kmailJustStarted = oldOwner.isEmpty();
+      if ( kmailJustStarted ) { // Vampire protection
+        if ( !connectToKMail() ) {
+          kWarning(5650) << "Could not connect to KMail, even though the D-Bus service just became available!";
+        }
+      }
     }
   }
 }
