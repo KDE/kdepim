@@ -97,7 +97,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mItemTree->setHeaderSet( Akonadi::EntityTreeModel::ItemListHeaders );
 
   mItemView->setModel( mItemTree );
-  mItemView->setXmlGuiClient( guiClient );
+  //mItemView->setXmlGuiClient( guiClient );
   mItemView->setRootIsDecorated( false );
   mItemView->header()->setDefaultAlignment( Qt::AlignCenter );
   for ( int column = 1; column < mDescendantTree->columnCount( QModelIndex() ); ++column )
