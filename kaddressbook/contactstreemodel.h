@@ -1,6 +1,7 @@
 /*
     This file is part of KContactManager.
 
+    Copyright (c) 2009 Stephen Kelly <steveire@gmail.com>
     Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
