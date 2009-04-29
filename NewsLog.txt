@@ -3,7 +3,7 @@ Friday, April 24th 2009
 Problems addressed
 ------------------
 
-* kolab/issue2472: Default event color is not used
+* kolab/issue2472: (partly) Default event color is not used
 * kolab/issue2152: System tray icon of KMail would not react to changes in the folder configuration
 * kolab/issue2931: The ACL of a folder without admin rights are not shown with a wrong message
 * kolab/issue3576: Crash in KOrganizer when switching to the month view
