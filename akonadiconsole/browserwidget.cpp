@@ -76,6 +76,7 @@ BrowserWidget::BrowserWidget(KXmlGuiWindow *xmlGuiWindow, QWidget * parent) :
     QWidget( parent ),
     mItemModel( 0 ),
     mCurrentCollection( 0 ),
+    mAttrModel( 0 ),
 #ifdef NEPOMUK_FOUND
     mNepomukModel( 0 ),
 #endif
@@ -291,6 +292,8 @@ void BrowserWidget::modelChanged()
 
 void BrowserWidget::save()
 {
+  Q_ASSERT( mAttrModel );
+
   const QByteArray data = contentUi.dataView->toPlainText().toUtf8();
   Item item = mCurrentItem;
   item.setRemoteId( contentUi.remoteId->text() );
