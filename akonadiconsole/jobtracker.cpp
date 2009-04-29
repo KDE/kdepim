@@ -64,7 +64,7 @@ public:
 
   void emitUpdated()
   {
-    if ( !timer.isActive() )
+    if ( !timer.isActive() && !disabled )
       timer.start();
   }
 
@@ -75,6 +75,7 @@ public:
   QMap<QString, JobInfo> infos;
   int lastId;
   QTimer timer;
+  bool disabled;
 private:
   JobTracker* const q;
 };
@@ -295,6 +296,16 @@ void JobTracker::reset()
   d->infos.clear();
 
   emit updated();
+}
+
+void JobTracker::setEnabled( bool on )
+{
+  d->disabled = !on;
+}
+
+bool JobTracker::isEnabled() const
+{
+  return !d->disabled;
 }
 
 #include "jobtracker.moc"

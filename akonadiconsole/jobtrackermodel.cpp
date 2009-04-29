@@ -186,4 +186,14 @@ void JobTrackerModel::resetTracker()
 }
 
 
+bool JobTrackerModel::isEnabled() const
+{
+  return d->tracker.isEnabled();
+}
+
+void JobTrackerModel::setEnabled( bool on )
+{
+  d->tracker.setEnabled( on );
+}
+
 #include "jobtrackermodel.moc"

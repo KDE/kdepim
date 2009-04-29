@@ -38,8 +38,10 @@ public:
   virtual int columnCount(const QModelIndex&) const;
   virtual QVariant data(const QModelIndex&, int role = Qt::DisplayRole) const;
   virtual QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole ) const;
+  bool isEnabled() const;
 public slots:
   void resetTracker();
+  void setEnabled(bool);
 
 private:
   class Private;

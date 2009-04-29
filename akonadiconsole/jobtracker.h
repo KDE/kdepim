@@ -76,6 +76,8 @@ public:
 
   JobInfo info( const QString& job ) const;
   JobInfo info( int ) const;
+
+  bool isEnabled() const;
 Q_SIGNALS:
   void updated();
 
@@ -84,6 +86,7 @@ public Q_SLOTS:
   Q_SCRIPTABLE void jobStarted( const QString & job );
   Q_SCRIPTABLE void jobEnded( const QString & job, const QString &error );
   Q_SCRIPTABLE void reset();
+  Q_SCRIPTABLE void setEnabled( bool on );
 
 private:
   class Private;
