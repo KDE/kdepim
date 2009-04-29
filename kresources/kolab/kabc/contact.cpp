@@ -938,13 +938,13 @@ static int /*KABC::PhoneNumber::Types*/ phoneTypeFromString( const QString& type
     return KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax;
   if ( type == "businessfax" )
     return KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax;
-  if ( type == "business1" )
-    return KABC::PhoneNumber::Work | KABC::PhoneNumber::Pref;
   if ( type == "business2" )
+    return KABC::PhoneNumber::Work | KABC::PhoneNumber::Pref;
+  if ( type == "business1" )
     return KABC::PhoneNumber::Work;
-  if ( type == "home1" )
-    return KABC::PhoneNumber::Home | KABC::PhoneNumber::Pref;
   if ( type == "home2" )
+    return KABC::PhoneNumber::Home | KABC::PhoneNumber::Pref;
+  if ( type == "home1" )
     return KABC::PhoneNumber::Home;
   if ( type == "company" )
     return KABC::PhoneNumber::Msg;
