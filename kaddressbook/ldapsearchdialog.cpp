@@ -700,15 +700,17 @@ KABC::Addressee::List LDAPSearchDialog::importContactsUnlessTheyExist( const QLi
 
 void LDAPSearchDialog::slotUser2()
 {
-    KABC::Resource *resource = mCore->requestResource( this );
-    if ( !resource ) return;
-
     const QList< QPair<KLDAP::LdapAttrMap, QString> > selectedItems = d->selectedItems( mResultView );
     if ( selectedItems.isEmpty() ) {
       KMessageBox::information( this, i18n( "Please select the contacts you want to add to the distribution list." ),
                                       i18n( "No Contacts Selected" ) );
       return;
     }
+
+    KABC::Resource *resource = mCore->requestResource( this );
+    if ( !resource )
+      return;
+
     KABC::DistributionList *dist = selectDistributionList();
     if ( !dist )
       return;
