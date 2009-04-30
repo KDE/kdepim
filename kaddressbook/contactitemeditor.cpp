@@ -33,7 +33,6 @@
 #include <akonadi/session.h>
 
 #include <klocale.h>
-#include <kdebug.h>
 
 class ContactItemEditor::Private
 {
@@ -66,7 +65,7 @@ class ContactItemEditor::Private
 
 void ContactItemEditor::Private::fetchDone( KJob *job )
 {
-  if ( job->error() )
+  if ( job->error() != KJob::NoError )
     return;
 
   Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>( job );
@@ -166,17 +165,18 @@ void ContactItemEditor::loadContact( const Akonadi::Item &item )
 
 void ContactItemEditor::saveContact()
 {
-  KJob *job = 0;
-
   if ( d->mMode == EditMode ) {
     if ( !d->mItem.isValid() )
       return;
 
     KABC::Addressee addr = d->mItem.payload<KABC::Addressee>();
+
     d->storeContact( addr );
+
     d->mItem.setPayload<KABC::Addressee>( addr );
 
-    job = new Akonadi::ItemModifyJob( d->mItem );
+    Akonadi::ItemModifyJob *job = new Akonadi::ItemModifyJob( d->mItem );
+    connect( job, SIGNAL( result( KJob* ) ), SLOT( storeDone( KJob* ) ) );
   } else if ( d->mMode == CreateMode ) {
     Q_ASSERT_X( d->mDefaultCollection.isValid(), "ContactItemEditor::saveContact", "Using invalid default collection for saving!" );
 
@@ -187,13 +187,9 @@ void ContactItemEditor::saveContact()
     item.setPayload<KABC::Addressee>( addr );
     item.setMimeType( KABC::Addressee::mimeType() );
 
-    job = new Akonadi::ItemCreateJob( item, d->mDefaultCollection );
+    Akonadi::ItemCreateJob *job = new Akonadi::ItemCreateJob( item, d->mDefaultCollection );
+    connect( job, SIGNAL( result( KJob* ) ), SLOT( storeDone( KJob* ) ) );
   }
-
-  connect( job, SIGNAL( result( KJob* ) ), SLOT( storeDone( KJob* ) ) );
-
-  if ( ! job->exec() )
-    kDebug() << "Error occurred: " << job->errorText();
 }
 
 void ContactItemEditor::setDefaultCollection( const Akonadi::Collection &collection )
