@@ -1,5 +1,5 @@
 /*
-    This file is part of KAddressBook.
+    This file is part of KContactManager.
     Copyright (c) 2002 Jost Schenck <jost@schenck.de>
 
     This program is free software; you can redistribute it and/or modify

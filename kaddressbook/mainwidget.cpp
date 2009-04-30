@@ -245,8 +245,8 @@ void MainWidget::print()
   if ( !printDialog.exec() )
     return;
 #if 0
-  KABPrinting::PrintingWizard wizard( &printer, mAddressBook,
-                                      mViewManager->selectedUids(), this );
+  KABC::Addressee::List lst; //just to remember that we will use KABC::Addressee::List
+  KABPrinting::PrintingWizard wizard( &printer, lst, this );
 
   wizard.exec();
 #endif
