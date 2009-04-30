@@ -19,6 +19,8 @@
 */
 
 #include "mainwidget.h"
+#include <QPrinter>
+#include <QPrintDialog>
 
 #include <QtGui/QAction>
 #include <QtGui/QHBoxLayout>
@@ -60,6 +62,8 @@
 #include "kcontactmanageradaptor.h"
 #include "quicksearchwidget.h"
 #include "xxportmanager.h"
+
+#include "printing/printingwizard.h"
 
 MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   : QWidget( parent )
@@ -231,7 +235,21 @@ void MainWidget::setupActions( KActionCollection *collection )
 
 void MainWidget::print()
 {
-  //TODO
+  QPrinter printer;
+  printer.setDocName( i18n( "Address Book" ) );
+  printer.setOutputFileName( "addressbook.pdf" );
+  printer.setOutputFormat( QPrinter::PdfFormat );
+
+  QPrintDialog printDialog( &printer, this );
+  printDialog.setWindowTitle( i18n( "Print Addresses" ) );
+  if ( !printDialog.exec() )
+    return;
+#if 0
+  KABPrinting::PrintingWizard wizard( &printer, mAddressBook,
+                                      mViewManager->selectedUids(), this );
+
+  wizard.exec();
+#endif
 }
 
 void MainWidget::newContact()
