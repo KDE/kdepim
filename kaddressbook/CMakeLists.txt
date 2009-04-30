@@ -17,6 +17,24 @@ if(QGPGME_FOUND)
   add_definitions(-DQGPGME_FOUND)
 endif(QGPGME_FOUND)
 
+set( kcontactmanager_printing_SRCS
+  printing/detailledstyle.cpp
+  printing/kabentrypainter.cpp
+  printing/mikesstyle.cpp
+  printing/printingwizard.cpp
+  printing/printprogress.cpp
+  printing/printsortmode.cpp
+  printing/printstyle.cpp
+  printing/ringbinderstyle.cpp
+  printing/selectionpage.cpp
+  printing/stylepage.cpp
+)
+
+kde4_add_ui_files(kcontactmanager_printing_SRCS
+  printing/rbs_appearance.ui
+  printing/ds_appearance.ui
+)
+
 set( kcontactmanager_editor_SRCS
   editor/addresseditwidget.cpp
   editor/contacteditor.cpp
@@ -57,6 +75,7 @@ set( kcontactmanager_LIB_SRCS
   xxport/xxportfactory.cpp
   xxportmanager.cpp
   ${kcontactmanager_editor_SRCS}
+  ${kcontactmanager_printing_SRCS}
 )
 
 qt4_add_dbus_adaptor(kcontactmanager_LIB_SRCS org.kde.KContactmanager.MainWidget.xml mainwidget.h MainWidget kcontactmanageradaptor )

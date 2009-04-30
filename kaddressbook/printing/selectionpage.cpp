@@ -39,7 +39,6 @@
 #include <libkdepim/categoryselectdialog.h>
 #include <libkdepim/autochecktreewidget.h>
 
-#include "kabprefs.h"
 
 SelectionPage::SelectionPage( QWidget* parent, const char* name )
     : QWidget( parent )
@@ -87,7 +86,7 @@ SelectionPage::SelectionPage( QWidget* parent, const char* name )
   mFiltersCombo->setEditable( false );
   mFiltersCombo->setWhatsThis( i18n( "Select a filter to decide which contacts to print." ) );
   groupLayout->addWidget( mFiltersCombo, 2, 1 );
-
+#if 0
   mCategoriesView = new KPIM::CategorySelectWidget( mButtonGroup, KABPrefs::instance() );
   mCategoriesView->hideButton();
   mCategoriesView->layout()->setMargin( 0 );
@@ -100,6 +99,7 @@ SelectionPage::SelectionPage( QWidget* parent, const char* name )
   connect( mCategoriesView->listView(), 
            SIGNAL( itemClicked( QTreeWidgetItem *, int ) ), 
            SLOT( categoryChanged() ) );
+#endif
 }
 
 SelectionPage::~SelectionPage()

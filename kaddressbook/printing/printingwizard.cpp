@@ -39,7 +39,6 @@
 #include "mikesstyle.h"
 #include "ringbinderstyle.h"
 
-#include "kabprefs.h"
 #include "printprogress.h"
 #include "printstyle.h"
 #include "printsortmode.h"
@@ -55,15 +54,15 @@ PrintingWizard::PrintingWizard( QPrinter *printer, KABC::AddressBook* ab,
   mSelectionPage->setUseSelection( !selection.isEmpty() );
   KPageWidgetItem *mSelectionPageItem = new KPageWidgetItem( mSelectionPage, i18n("Choose Contacts to Print") );
   addPage( mSelectionPageItem );
-
+#if 0
   mFilters = Filter::restore( KGlobal::config().data(), "Filter" );
   QStringList filters;
   for ( Filter::List::ConstIterator it = mFilters.constBegin(); it != mFilters.constEnd(); ++it )
     filters.append( (*it).name() );
 
   mSelectionPage->setFilters( filters );
-
-  mSelectionPage->setCategories( KABPrefs::instance()->customCategories() );
+#endif
+  //mSelectionPage->setCategories( KABPrefs::instance()->customCategories() );
 
   setAppropriate( mSelectionPageItem, true );
 
@@ -162,18 +161,18 @@ void PrintingWizard::print()
           list.append( addr );
       }
     } else if ( mSelectionPage->useFilters() ) {
-      // find contacts that can pass selected filter
+#if 0
+      	    // find contacts that can pass selected filter
       Filter::List::ConstIterator filterIt;
       for ( filterIt = mFilters.constBegin(); filterIt != mFilters.constEnd(); ++filterIt )
         if ( (*filterIt).name() == mSelectionPage->filter() )
           break;
-
       KABC::AddressBook::iterator it;
       for ( it = addressBook()->begin(); it != addressBook()->end(); ++it ) {
         if ( (*filterIt).filterAddressee( *it ) )
           list.append( *it );
       }
-
+#endif
     } else if ( mSelectionPage->useCategories() ) {
       QStringList categories = mSelectionPage->categories();
       KABC::AddressBook::ConstIterator it;

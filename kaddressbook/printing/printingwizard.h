@@ -30,7 +30,6 @@
 #include <kassistantdialog.h>
 #include <kabc/addressbook.h>
 
-#include "common/filter.h"
 #include "printstyle.h"
 #include "selectionpage.h"
 #include "stylepage.h"
@@ -89,7 +88,7 @@ class PrintingWizard : public KAssistantDialog
   protected:
     QList<PrintStyleFactory*> mStyleFactories;
     QList<PrintStyle*> mStyleList;
-    Filter::List mFilters;
+    //Filter::List mFilters;
     QPrinter *mPrinter;
     KABC::AddressBook *mAddressBook;
     QStringList mSelection;
