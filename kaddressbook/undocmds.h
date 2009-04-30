@@ -47,9 +47,9 @@ class Command : public QUndoCommand
   protected:
     KABC::AddressBook *addressBook() const { return mAddressBook; }
     KABLock *lock() const { return KABLock::self( mAddressBook ); }
-
+  bool resourceExist( KABC::Resource *resource );
   private:
-    KABC::AddressBook *mAddressBook;
+    KABC::AddressBook* mAddressBook;
 };
 
 class DeleteCommand : public Command
