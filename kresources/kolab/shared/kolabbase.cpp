@@ -422,7 +422,10 @@ QString KolabBase::dateToString( const QDate& date )
 
 KDateTime KolabBase::stringToDateTime( const QString& _date )
 {
-  const QString date( _date );
+  QString date( _date );
+  //deal with data from some clients that always append a Z to dates
+  if ( date.endsWith( "ZZ" ) )
+    date.truncate( date.length() - 1 );
   return KDateTime::fromString( date, KDateTime::ISODate );
 }
 
