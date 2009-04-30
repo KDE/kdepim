@@ -1262,9 +1262,10 @@ void KABCore::initActions()
   mActionMail = coll->addAction( "file_mail" );
   mActionMail->setIcon( KIcon("mail-message-new") );
   mActionMail->setText( i18n( "&Send Email to Contact..." ) );
+  mActionMail->setWhatsThis( i18n( "Send a mail to all selected contacts." ) );
+
   connect(mActionMail, SIGNAL(triggered(bool)), SLOT( sendMail() ));
   action = KStandardAction::print( this, SLOT( print() ), actionCollection() );
-  mActionMail->setWhatsThis( i18n( "Send a mail to all selected contacts." ) );
   action->setWhatsThis( i18n( "Print a special number of contacts." ) );
 
   mActionSave = KStandardAction::save( this, SLOT( save() ), actionCollection() );
