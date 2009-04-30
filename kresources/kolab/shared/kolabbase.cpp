@@ -411,7 +411,11 @@ QString KolabBase::dateToString( const QDate& date )
 QDateTime KolabBase::stringToDateTime( const QString& _date )
 {
   QString date( _date );
-  if ( date.endsWith( "Z" ) )
+  //Deal with data from some clients that always append a Z to dates.
+  if ( date.endsWith( "ZZ" ) )
+    date.truncate( date.length() - 2 );
+  //In Qt3, Qt::ISODate cannot handle a trailing Z for UTC, so remove if found.
+  else if ( date.endsWith( "Z" ) )
     date.truncate( date.length() - 1 );
   return QDateTime::fromString( date, Qt::ISODate );
 }
