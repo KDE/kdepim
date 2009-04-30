@@ -202,8 +202,12 @@ void JumpButtonBar::updateButtons()
     }
   }
 
-  if ( mButtonGroup->buttons().size() && currentButton != -1 )
-    mButtonGroup->button( currentButton )->setChecked( true );
+  if ( mButtonGroup->buttons().size() && currentButton != -1 ) {
+    if ( currentButton < mButtonGroup->buttons().size() )
+      mButtonGroup->button( currentButton )->setChecked( true );
+    else
+      mButtonGroup->button( 0 )->setChecked( true );
+  }
   else if( mButtonGroup->buttons().size() )
     mButtonGroup->button( 0 )->setChecked( true );
 
