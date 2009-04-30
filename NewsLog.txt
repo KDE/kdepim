@@ -1,3 +1,43 @@
+Thursday, April 30th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3595: Show more than just one mail when using online IMAP on Windows (KDE bug 960925)
+* kolab/issue3449: KOrganizer doesn't display the calendar view
+* On Windows, watch the registry to get updates of the system timezone
+* Add more debug output to help debugging kolab/issue3473
+* Fix a race condition that could lead to reminders not working, when the KOrganizer reminder daemon
+  starts KMail
+* When the user cancels the questions whether to enable the subscription option,
+  don't change the subscription status
+* Also ask to enable the subscription option in the local subscription dialog
+* Fix the subscription dialog displaying an empty root item
+* Don't restart KMail when it is closed (KDE bug 189824)
+
+Merges
+------
+
+* Merges from KDE 4.2 branch:
+      - Fix a crash in KAddressbook when using the jump bar after a resource has been removed
+      - Fix non working online IMAP filters (KDE bugs 171061, 174430, 182208, 186264)
+      - When viewing the source of a mail, improve the detection of headers (KDE bugs 88271, 152707)
+      - Don't put "file:///" on printouts of mails (KDE bug 137352)
+
+* Merges from enterprise35 branch:
+      - kolab/issue2508: Don't send an invitation when it the event can't be written
+      - kolab/issue2472: (partly) Default event color is not used
+      - kolab/issue1819: The help link in the template configuration didn't work
+      - kolab/issue3540: Disable the "Go" buttons in the todo view
+      - kolab/issue3251: Fix the phone numbers of a contact in the XML, so that syncing with Toltec etc works
+      - kolab/issue2931: Fix an incorrect translation
+      - kolab/issue2152: System tray doesn't react on the change of a folder configuration
+      - Some fixes for the color settings in KOrganizer
+      - Correctly disable various buttons if clicking them would lead to no action
+      - Fix crashes in KAddressbook when undo/redo is used on a deleted resource
+      - Various memory leak fixes
+
+
 Friday, April 24th 2009
 
 Problems addressed
