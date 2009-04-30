@@ -423,9 +423,10 @@ QString KolabBase::dateToString( const QDate& date )
 KDateTime KolabBase::stringToDateTime( const QString& _date )
 {
   QString date( _date );
-  //deal with data from some clients that always append a Z to dates
+  //Deal with data from some clients that always append a Z to dates.
+  //In Qt4, Qt::ISODate must see a trailing Z for UTC, so keep such.
   if ( date.endsWith( "ZZ" ) )
-    date.truncate( date.length() - 1 );
+    date.chop( 1 );
   return KDateTime::fromString( date, KDateTime::ISODate );
 }
 
