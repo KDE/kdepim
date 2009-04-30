@@ -308,6 +308,27 @@ void FieldWidget::loadContact( KABC::Addressee *addr )
   }
 }
 
+void FieldWidget::setReadOnly( bool readOnly )
+{
+  FieldRecordList::ConstIterator it;
+  for ( it = mFieldList.begin(); it != mFieldList.end(); ++it ) {
+    QString value;
+    if ( QLineEdit *wdg = qobject_cast<QLineEdit*>( (*it).mWidget ) ) {
+      wdg->setReadOnly( readOnly );
+    } else if ( QSpinBox *wdg = qobject_cast<QSpinBox*>( (*it).mWidget ) ) {
+      wdg->setEnabled( !readOnly );
+    } else if ( QCheckBox *wdg = qobject_cast<QCheckBox*>( (*it).mWidget ) ) {
+      wdg->setEnabled( !readOnly );
+    } else if ( QDateEdit *wdg = qobject_cast<QDateEdit*>( (*it).mWidget ) ) {
+      wdg->setEnabled( !readOnly );
+    } else if ( QTimeEdit *wdg = qobject_cast<QTimeEdit*>( (*it).mWidget ) ) {
+      wdg->setEnabled( !readOnly );
+    } else if ( QDateTimeEdit *wdg = qobject_cast<QDateTimeEdit*>( (*it).mWidget ) ) {
+      wdg->setEnabled( !readOnly );
+    }
+  }
+}
+
 void FieldWidget::storeContact( KABC::Addressee *addr )
 {
   FieldRecordList::ConstIterator it;
@@ -409,6 +430,7 @@ void CustomFieldsWidget::setReadOnly( bool readOnly )
 {
   mAddButton->setEnabled( !readOnly );
   mRemoveButton->setEnabled( !readOnly && !mFieldWidget->fields().isEmpty() );
+  mFieldWidget->setReadOnly( readOnly );
 }
 
 void CustomFieldsWidget::addField()
