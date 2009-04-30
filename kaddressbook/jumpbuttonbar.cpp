@@ -202,9 +202,9 @@ void JumpButtonBar::updateButtons()
     }
   }
 
-  if ( currentButton != -1 )
+  if ( mButtonGroup->buttons().size() && currentButton != -1 )
     mButtonGroup->button( currentButton )->setChecked( true );
-  else if ( mButtonGroup->buttons().size() )
+  else if( mButtonGroup->buttons().size() )
     mButtonGroup->button( 0 )->setChecked( true );
 
   mLayout->activate();
