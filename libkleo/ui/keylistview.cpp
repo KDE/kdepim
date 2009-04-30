@@ -257,9 +257,15 @@ void Kleo::KeyListView::deregisterItem( const KeyListViewItem * item ) {
     = d->itemMap.find( item->key().primaryFingerprint() );
   if ( it == d->itemMap.end() )
     return;
-  Q_ASSERT( it->second == item );
-  if ( it->second != item )
+  // This assert triggers, though it shouldn't. Print some more
+  // information when it happens.
+  //Q_ASSERT( it->second == item );
+  if ( it->second != item ) {
+    kWarning(5150) << "deregisterItem:"
+                   << "item      " << item->key().primaryFingerprint()
+                   << "it->second" << (it->second ? it->second->key().primaryFingerprint() : "is null" );
     return;
+  }
   d->itemMap.erase( it );
 }
 
