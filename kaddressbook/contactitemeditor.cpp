@@ -83,7 +83,7 @@ void ContactItemEditor::Private::fetchDone( KJob *job )
 
 void ContactItemEditor::Private::storeDone( KJob *job )
 {
-  if ( job->error() ) {
+  if ( job->error() != KJob::NoError ) {
     emit mParent->error( job->errorString() );
     return;
   }
