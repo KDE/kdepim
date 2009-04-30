@@ -7,7 +7,6 @@ Problems addressed
 * kolab/issue2931: The ACL of a folder without admin rights are not shown with a wrong message
 * kolab/issue3576: Crash in KOrganizer when switching to the month view
 * kolab/issue2501: Set the default month view color strategy to "calendar inside, category outside"
-* kolab/issue2531: Crash when Kontact tries to create existing but unsubscribed groupware folders
 * kolab/issue2508: Don't send an invitation when it the event can't be written
 * kolab/issue1819: The help link in the template configuration didn't work
 * Fix crashes in KAddressbook when undo/redo is used on a deleted resource
