@@ -394,7 +394,7 @@ void KABCore::setContactSelected( const QString &uid )
   mActionDelete->setEnabled( someSelected && writable );
   // the "edit" dialog doubles as the details dialog and it knows when the addressee is read-only
   // (### this does not make much sense from the user perspective!)
-  mActionEditAddressee->setEnabled( singleSelected );
+  mActionEditAddressee->setEnabled( singleSelected && !mExtensionManager->isQuickEditVisible());
   mActionCopyAddresseeTo->setEnabled( someSelected && moreThanOneResource );
   mActionMoveAddresseeTo->setEnabled( someSelected && moreThanOneResource && writable );
   mActionMail->setEnabled( someSelected && !mViewManager->selectedEmails( false ).isEmpty());
