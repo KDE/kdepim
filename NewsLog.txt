@@ -4,7 +4,6 @@ Problems addressed
 ------------------
 
 * kolab/issue2472: (partly) Default event color is not used
-* kolab/issue2931: The ACL of a folder without admin rights are not shown with a wrong message
 * kolab/issue3576: Crash in KOrganizer when switching to the month view
 * kolab/issue2501: Set the default month view color strategy to "calendar inside, category outside"
 * kolab/issue2508: Don't send an invitation when it the event can't be written
