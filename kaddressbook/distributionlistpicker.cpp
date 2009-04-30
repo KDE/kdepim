@@ -110,6 +110,7 @@ void KPIM::DistributionListPickerDialog::slotUser1()
             QListWidgetItem* const item = new QListWidgetItem( name );
             m_listWidget->addItem( item );
             item->setSelected( true );
+	    enableButton( Ok, true );
         }
         else
         {
