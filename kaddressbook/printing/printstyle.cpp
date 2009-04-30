@@ -36,7 +36,7 @@ using namespace KABPrinting;
 
 
 PrintStyle::PrintStyle( PrintingWizard* parent, const char* name )
-  : QObject( parent ), mWizard( parent ), mSortField( 0 )
+  : QObject( parent ), mWizard( parent )
 {
   setObjectName( name );
 }
@@ -110,13 +110,13 @@ void PrintStyle::hidePages()
   }
 }
 
-void PrintStyle::setPreferredSortOptions( KABC::Field *field, bool ascending )
+void PrintStyle::setPreferredSortOptions( ContactFields::Field field, bool ascending )
 {
   mSortField = field;
   mSortType = ascending;
 }
 
-KABC::Field* PrintStyle::preferredSortField()
+ContactFields::Field PrintStyle::preferredSortField()
 {
   return mSortField;
 }

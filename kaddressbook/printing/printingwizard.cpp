@@ -54,15 +54,6 @@ PrintingWizard::PrintingWizard( QPrinter *printer, const KABC::Addressee::List &
   mSelectionPage->setUseSelection( !contacts.isEmpty() );
   KPageWidgetItem *mSelectionPageItem = new KPageWidgetItem( mSelectionPage, i18n("Choose Contacts to Print") );
   addPage( mSelectionPageItem );
-#if 0
-  mFilters = Filter::restore( KGlobal::config().data(), "Filter" );
-  QStringList filters;
-  for ( Filter::List::ConstIterator it = mFilters.constBegin(); it != mFilters.constEnd(); ++it )
-    filters.append( (*it).name() );
-
-  mSelectionPage->setFilters( filters );
-#endif
-  //mSelectionPage->setCategories( KABPrefs::instance()->customCategories() );
 
   setAppropriate( mSelectionPageItem, true );
 
@@ -126,8 +117,8 @@ void PrintingWizard::slotStyleSelected( int index )
 
   if ( mStyle->preferredSortField() != 0 ) {
 #warning "port me"
-#if 0
     mStylePage->setSortField( mStyle->preferredSortField() );
+#if 0
     mStylePage->setSortAscending( mStyle->preferredSortType() );
 #endif
   }
@@ -159,18 +150,7 @@ void PrintingWizard::print()
           list.append( addr );
       }
     } else if ( mSelectionPage->useFilters() ) {
-#if 0
-      	    // find contacts that can pass selected filter
-      Filter::List::ConstIterator filterIt;
-      for ( filterIt = mFilters.constBegin(); filterIt != mFilters.constEnd(); ++filterIt )
-        if ( (*filterIt).name() == mSelectionPage->filter() )
-          break;
-      KABC::AddressBook::iterator it;
-      for ( it = addressBook()->begin(); it != addressBook()->end(); ++it ) {
-        if ( (*filterIt).filterAddressee( *it ) )
-          list.append( *it );
-      }
-#endif
+      //TODO ? or remove it it's not necessary
     } else if ( mSelectionPage->useCategories() ) {
       QStringList categories = mSelectionPage->categories();
       KABC::AddressBook::ConstIterator it;
@@ -198,7 +178,6 @@ void PrintingWizard::print()
 
   kDebug(5720) <<"PrintingWizardImpl::print: printing"
                 << list.count() << "contacts.";
-
   // ... print:
   enableButton( KDialog::User3, false ); // back button
   enableButton( KDialog::Cancel, false );

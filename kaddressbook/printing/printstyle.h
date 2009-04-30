@@ -30,10 +30,9 @@
 #include <QtGui/QWidget>
 
 #include <kabc/addressee.h>
-
+#include "contactfields.h"
 class KPageWidgetItem;
 
-namespace KABC { class Field; }
 
 namespace KABPrinting {
 
@@ -95,7 +94,7 @@ class PrintStyle : public QObject
     /**
       Returns the preferred sort criterion field.
      */
-    KABC::Field* preferredSortField();
+    ContactFields::Field preferredSortField();
 
     /**
       Returns the preferred sort type.
@@ -122,7 +121,7 @@ class PrintStyle : public QObject
     /**
       Set preferred sort options for this printing style.
      */
-    void setPreferredSortOptions( KABC::Field *field, bool ascending = true );
+    void setPreferredSortOptions( ContactFields::Field, bool ascending = true );
 
     /**
      Return the wizard object.
@@ -142,7 +141,7 @@ class PrintStyle : public QObject
     QHash<QWidget*, KPageWidgetItem*> mPageItems;
     QStringList mPageTitles;
 
-    KABC::Field *mSortField;
+    ContactFields::Field mSortField;
     bool mSortType;
 };
 

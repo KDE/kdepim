@@ -28,6 +28,7 @@ AboutData::AboutData()
                 ki18n( "(c) 2007-2009 The KDE PIM Team" ) )
 {
   addAuthor( ki18n( "Tobias Koenig" ), ki18n( "Current maintainer" ), "tokoe@kde.org" );
+  addAuthor( ki18n("Laurent Montel"), ki18n( "Kontact integration" ), "montel@kde.org" );
 }
 
 AboutData::~AboutData()
