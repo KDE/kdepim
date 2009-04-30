@@ -353,6 +353,8 @@ void IMEditorWidget::slotAdd()
 
 void IMEditorWidget::slotEdit()
 {
+  if( mReadOnly )
+    return;
   QTreeWidgetItemIterator it( mWidget->lvAddresses, QTreeWidgetItemIterator::Selected );
 
   // Just edit the first one selected.
