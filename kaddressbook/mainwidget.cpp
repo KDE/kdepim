@@ -190,6 +190,10 @@ void MainWidget::setupActions( KActionCollection *collection )
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_G ) );
   action->setWhatsThis( i18n( "Create a new group<p>You will be presented with a dialog where you can add a new group of contacts.</p>" ) );
 
+
+  action = KStandardAction::print( this, SLOT( print() ), collection );
+  action->setWhatsThis( i18n( "Print a special number of contacts." ) );
+
   action = collection->addAction( "quick_search" );
   action->setText( i18n( "Quick search" ) );
   action->setDefaultWidget( mQuickSearchWidget );
@@ -223,6 +227,11 @@ void MainWidget::setupActions( KActionCollection *collection )
   action = collection->addAction( "file_export_ldif" );
   action->setText( i18n( "Export LDIF file..." ) );
   mXXPortManager->addExportAction( action, "ldif" );
+}
+
+void MainWidget::print()
+{
+  //TODO
 }
 
 void MainWidget::newContact()
