@@ -25,19 +25,20 @@
 #define PRINTSORTMODE_H
 
 #include <kabc/sortmode.h>
+#include "contactfields.h"
 
 class PrintSortMode : public KABC::SortMode
 {
   public:
-    explicit PrintSortMode( KABC::Field *field, bool ascending = true );
+    explicit PrintSortMode(ContactFields::Field field, bool ascending = true );
 
     virtual bool lesser( const KABC::Addressee&, const KABC::Addressee& ) const;
 
   private:
-    KABC::Field *mSortField;
-    KABC::Field *mGivenNameField;
-    KABC::Field *mFamilyNameField;
-    KABC::Field *mFormattedNameField;
+    ContactFields::Field mSortField;
+    ContactFields::Field mGivenNameField;
+    ContactFields::Field mFamilyNameField;
+    ContactFields::Field mFormattedNameField;
     bool mAscending;
 };
 

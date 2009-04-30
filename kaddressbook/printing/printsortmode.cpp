@@ -26,17 +26,17 @@
 #include <kabc/field.h>
 
 
-PrintSortMode::PrintSortMode( KABC::Field *field, bool ascending )
+PrintSortMode::PrintSortMode( ContactFields::Field field, bool ascending )
   : mSortField( field ), mAscending( ascending )
 {
-  const KABC::Field::List fields = KABC::Field::allFields();
-  KABC::Field::List::ConstIterator it;
+  const ContactFields::Fields fields = ContactFields::allFields();
+  ContactFields::Fields::ConstIterator it;
   for ( it = fields.begin(); it != fields.end(); ++it ) {
-    if ( (*it)->label() == KABC::Addressee::givenNameLabel() )
+    if ( ContactFields::label(*it) == ContactFields::label( ContactFields::NickName) )
       mGivenNameField = *it;
-    else if ( (*it)->label() == KABC::Addressee::familyNameLabel() )
+    else if ( ContactFields::label(*it) == ContactFields::label(ContactFields::FamilyName) )
       mFamilyNameField = *it;
-    else if ( (*it)->label() == KABC::Addressee::formattedNameLabel() )
+    else if ( ContactFields::label(*it) == ContactFields::label( ContactFields::FormattedName) )
       mFormattedNameField = *it;
   }
 }
@@ -47,17 +47,17 @@ bool PrintSortMode::lesser( const KABC::Addressee &first,
   if ( !mSortField )
     return false;
 
-  int result = QString::localeAwareCompare( mSortField->value( first ),
-                                            mSortField->value( second ) );
+  int result = QString::localeAwareCompare( ContactFields::value( mSortField, first ),
+                                            ContactFields::value( mSortField, second ) );
   if ( result == 0 ) {
-    int givenNameResult = QString::localeAwareCompare( mGivenNameField->value( first ),
-                                                       mGivenNameField->value( second ) );
+    int givenNameResult = QString::localeAwareCompare( ContactFields::value( mGivenNameField, first ),
+                                                       ContactFields::value( mGivenNameField, second ) );
     if ( givenNameResult == 0 ) {
-      int familyNameResult = QString::localeAwareCompare( mFamilyNameField->value( first ),
-                                                          mFamilyNameField->value( second ) );
+      int familyNameResult = QString::localeAwareCompare( ContactFields::value( mFamilyNameField, first ),
+                                                          ContactFields::value( mFamilyNameField, second ) );
       if ( familyNameResult == 0 ) {
-        result = QString::localeAwareCompare( mFormattedNameField->value( first ),
-                                              mFormattedNameField->value( second ) );
+        result = QString::localeAwareCompare( ContactFields::value( mFormattedNameField, first ),
+                                              ContactFields::value( mFormattedNameField, second ) );
       } else
         result = familyNameResult;
     } else
