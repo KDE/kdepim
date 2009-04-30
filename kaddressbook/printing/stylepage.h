@@ -3,6 +3,8 @@
     Copyright (c) 2002 Anders Lund <anders.lund@lund.tdcadsl.dk>
                        Tobias Koenig <tokoe@kde.org>
 
+    Copyright (c) 2009 Laurent Montel <montel@kde.org>
+
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -26,21 +28,18 @@
 #define STYLEPAGE_H
 
 #include <QtGui/QWidget>
-
-#include <kabc/field.h>
+#include "contactfields.h"
 
 class QLabel;
 class QPixmap;
 class KComboBox;
-
-namespace KABC { class AddressBook; }
 
 class StylePage : public QWidget
 {
   Q_OBJECT
 
   public:
-    explicit StylePage( KABC::AddressBook *ab, QWidget* parent = 0, const char* name = 0 );
+    explicit StylePage( QWidget* parent = 0, const char* name = 0 );
     ~StylePage();
 
     /**
@@ -62,12 +61,12 @@ class StylePage : public QWidget
     /**
      * Set the sort criterion field.
      */
-    void setSortField( KABC::Field *field );
+    void setSortField( ContactFields::Field field );
 
     /**
      * Returns the sort criterion field.
      */
-     KABC::Field* sortField();
+     ContactFields::Field sortField();
 
     /**
      * Set the sort type.
@@ -95,8 +94,7 @@ class StylePage : public QWidget
     KComboBox *mStyleCombo;
     QLabel *mPreview;
 
-    KABC::AddressBook *mAddressBook;
-    KABC::Field::List mFields;
+    ContactFields::Fields mFields;
 };
 
 #endif // STYLEPAGE_H

@@ -3,6 +3,7 @@
     Copyright (c) 1996-2002 Mirko Boehm <mirko@kde.org>
                             Tobias Koenig <tokoe@kde.org>
 
+    Copyright (c) 2009 Laurent Montel <montel@kde.org>
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation; either version 2 of the License, or
@@ -45,13 +46,12 @@
 
 using namespace KABPrinting;
 
-PrintingWizard::PrintingWizard( QPrinter *printer, KABC::AddressBook* ab,
-                                const QStringList& selection, QWidget *parent )
-  : KAssistantDialog( parent ), mPrinter( printer ), mAddressBook( ab ),
-    mSelection( selection ), mStyle( 0 )
+PrintingWizard::PrintingWizard( QPrinter *printer, const KABC::Addressee::List &contacts, QWidget *parent )
+  : KAssistantDialog( parent ), mPrinter( printer ),
+    mStyle( 0 )
 {
   mSelectionPage = new SelectionPage( this );
-  mSelectionPage->setUseSelection( !selection.isEmpty() );
+  mSelectionPage->setUseSelection( !contacts.isEmpty() );
   KPageWidgetItem *mSelectionPageItem = new KPageWidgetItem( mSelectionPage, i18n("Choose Contacts to Print") );
   addPage( mSelectionPageItem );
 #if 0
@@ -67,7 +67,7 @@ PrintingWizard::PrintingWizard( QPrinter *printer, KABC::AddressBook* ab,
   setAppropriate( mSelectionPageItem, true );
 
 
-  mStylePage = new StylePage( mAddressBook, this );
+  mStylePage = new StylePage( this );
   connect( mStylePage, SIGNAL( styleChanged(int) ), SLOT( slotStyleSelected(int) ) );
   addPage( mStylePage, i18n("Choose Printing Style") );
 
@@ -125,14 +125,12 @@ void PrintingWizard::slotStyleSelected( int index )
   //setFinishEnabled( page( pageCount() - 1 ), true );
 
   if ( mStyle->preferredSortField() != 0 ) {
+#warning "port me"
+#if 0
     mStylePage->setSortField( mStyle->preferredSortField() );
     mStylePage->setSortAscending( mStyle->preferredSortType() );
+#endif
   }
-}
-
-KABC::AddressBook* PrintingWizard::addressBook()
-{
-  return mAddressBook;
 }
 
 QPrinter* PrintingWizard::printer()
@@ -148,7 +146,7 @@ void PrintingWizard::print()
   addPage( progressItem );
   setCurrentPage( progressItem );
   kapp->processEvents();
-
+#if 0
   // prepare list of contacts to print:
 
   KABC::AddresseeList list;
@@ -205,6 +203,7 @@ void PrintingWizard::print()
   enableButton( KDialog::User3, false ); // back button
   enableButton( KDialog::Cancel, false );
   mStyle->print( list, progress );
+#endif
 }
 
 #include "printingwizard.moc"
