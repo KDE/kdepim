@@ -1,3 +1,18 @@
+Thursday, April 30th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3540: Disable the "Go" buttons in the todo view
+* kolab/issue3251: Fix the phone numbers of a contact in the XML, so that syncing with Toltec etc works
+* kolab/issue2931: Fix an incorrect translation
+* kolab/issue2963: Crash while deleting mails, in KMMoveCommand::execute
+* kolab/issue3268: Changes to the reply prefix would need a restart of KMail to work
+* kolab/issue2152: System tray doesn't react on the change of a folder configuration
+* Some fixes for the color settings in KOrganizer
+* Fix a small memory leak
+
+
 Friday, April 24th 2009
 
 Problems addressed
