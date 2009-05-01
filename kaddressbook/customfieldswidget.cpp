@@ -311,7 +311,7 @@ void FieldWidget::loadContact( KABC::Addressee *addr )
 void FieldWidget::setReadOnly( bool readOnly )
 {
   FieldRecordList::ConstIterator it;
-  for ( it = mFieldList.begin(); it != mFieldList.end(); ++it ) {
+  for ( it = mFieldList.constBegin(); it != mFieldList.constEnd(); ++it ) {
     QString value;
     if ( QLineEdit *wdg = qobject_cast<QLineEdit*>( (*it).mWidget ) ) {
       wdg->setReadOnly( readOnly );
