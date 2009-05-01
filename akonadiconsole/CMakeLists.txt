@@ -10,6 +10,7 @@ if(NEPOMUK_FOUND)
   include_directories(${NEPOMUK_INCLUDES})
 endif(NEPOMUK_FOUND)
 
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
 configure_file(config-akonadiconsole.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-akonadiconsole.h)
 
 set(akonadiconsole_bin_SRCS
