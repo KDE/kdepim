@@ -23,17 +23,6 @@
 
 KNode::Settings::Settings() : SettingsBase()
 {
-  // special default value for the charset
-  QString defaultCharset = QTextCodec::codecForLocale()->name().toLower();
-  // special logic for japanese users:
-  // "euc-jp" is default encoding for them, but in the news
-  // "iso-2022-jp" is used (#36638)
-  if ( defaultCharset == "euc-jp" )
-    defaultCharset = "iso-2022-jp";
-  charsetItem()->setDefaultValue( defaultCharset );
-  if ( charsetItem()->value().isEmpty() )
-    charsetItem()->setDefault();
-
   // KConfigXT doesn't seem to support labels for parameterized fields
   quoteColorItem( 0 )->setLabel( i18n("Quoted Text - First level") );
   quoteColorItem( 1 )->setLabel( i18n("Quoted Text - Second level") );

@@ -12,15 +12,7 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <QByteArray>
-#include <QDir>
-#include <QFile>
-
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <kiconloader.h>
-#include <kdebug.h>
-#include <kcharsets.h>
+#include "kngroupmanager.h"
 
 #include "articlewidget.h"
 #include "knmainwidget.h"
@@ -36,8 +28,22 @@
 #include "knarticlewindow.h"
 #include "knmemorymanager.h"
 #include "settings.h"
+#include "utils/locale.h"
+
+
+#include <QByteArray>
+#include <QDir>
+#include <QFile>
+
+#include <klocale.h>
+#include <kmessagebox.h>
+#include <kiconloader.h>
+#include <kdebug.h>
+#include <kcharsets.h>
+
 
 using namespace KNode;
+using namespace KNode::Utilities;
 
 
 //=================================================================================
@@ -680,7 +686,7 @@ void KNGroupManager::slotFetchGroupList(KNNntpAccount *a)
   d->path = a->path();
   getSubscribed(a,d->subscribed);
   d->getDescriptions = a->fetchDescriptions();
-  d->codecForDescriptions = KGlobal::charsets()->codecForName( knGlobals.settings()->charset() );
+  d->codecForDescriptions = KGlobal::charsets()->codecForName( Locale::defaultCharset() );
 
   emitJob( new GroupListJob( this, a, d ) );
 }
@@ -694,7 +700,7 @@ void KNGroupManager::slotCheckForNewGroups(KNNntpAccount *a, QDate date)
   getSubscribed(a,d->subscribed);
   d->getDescriptions = a->fetchDescriptions();
   d->fetchSince = date;
-  d->codecForDescriptions = KGlobal::charsets()->codecForName( knGlobals.settings()->charset());
+  d->codecForDescriptions = KGlobal::charsets()->codecForName( Locale::defaultCharset() );
 
   emitJob( new GroupListJob( this, a, d, true ) );
 }

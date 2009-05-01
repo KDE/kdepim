@@ -226,7 +226,6 @@ class KNComposer : public KXmlGuiWindow {
       so it should be a valid encoding as per
       @link http://www.iana.org/assignments/character-sets IANA character-set encoding @endlink
       and not be empty; both issue are taken care of by setCharset().
-      See bug #169411, #163524
 
       As a consequence this can not used directly as input of methods from KCharset.
     */

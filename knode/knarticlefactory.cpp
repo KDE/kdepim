@@ -12,21 +12,9 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-#include <QByteArray>
-#include <QList>
-#include <QListWidget>
-#include <QLabel>
-
-#include <kiconloader.h>
-#include <klocale.h>
-#include <kmessagebox.h>
-#include <kwindowsystem.h>
-#include <ktoolinvocation.h>
-#include <kvbox.h>
-
-#include <mailtransport/transportmanager.h>
 
 #include "knarticlefactory.h"
+
 #include "knconfigmanager.h"
 #include "knglobals.h"
 #include "kngroupmanager.h"
@@ -41,8 +29,26 @@
 #include "utilities.h"
 #include "resource.h"
 #include "settings.h"
+#include "utils/locale.h"
+
+
+#include <QByteArray>
+#include <QList>
+#include <QListWidget>
+#include <QLabel>
+
+#include <kiconloader.h>
+#include <klocale.h>
+#include <kmessagebox.h>
+#include <kwindowsystem.h>
+#include <ktoolinvocation.h>
+#include <kvbox.h>
+
+#include <mailtransport/transportmanager.h>
+
 
 using namespace KNode;
+using namespace KNode::Utilities;
 using namespace MailTransport;
 
 KNArticleFactory::KNArticleFactory( QObject *parent )
@@ -65,7 +71,7 @@ void KNArticleFactory::createPosting(KNNntpAccount *a)
     return;
 
   QString sig;
-  KNLocalArticle *art=newArticle( a, sig, knGlobals.settings()->charset().toLatin1() );
+  KNLocalArticle *art=newArticle( a, sig, Locale::defaultCharset() );
   if(!art)
     return;
 
@@ -85,11 +91,7 @@ void KNArticleFactory::createPosting(KNGroup *g)
   if(!g)
     return;
 
-  QByteArray chset;
-  if (g->useCharset())
-    chset = g->defaultCharset();
-  else
-    chset = knGlobals.settings()->charset().toLatin1();
+  QByteArray chset = Locale::defaultCharset( g );
 
   QString sig;
   KNLocalArticle *art=newArticle(g, sig, chset);
@@ -118,12 +120,10 @@ void KNArticleFactory::createReply(KNRemoteArticle *a, const QString &selectedTe
 
   QByteArray chset;
   if ( knGlobals.settings()->useOwnCharset() ) {
-    if (g->useCharset())
-      chset = g->defaultCharset();
-    else
-      chset = knGlobals.settings()->charset().toLatin1();
-  } else
+    chset = Locale::defaultCharset( g );
+  } else {
     chset = a->contentType()->charset();
+  }
 
   //create new article
   QString sig;
@@ -293,7 +293,7 @@ void KNArticleFactory::createForward(KNArticle *a)
                 );
 
   if ( knGlobals.settings()->useOwnCharset() )
-    chset = knGlobals.settings()->charset().toLatin1();
+    chset = Locale::defaultCharset();
   else
     chset = a->contentType()->charset();
 
@@ -519,7 +519,7 @@ void KNArticleFactory::createMail(KMime::Types::Mailbox *address)
 
   //create new article
   QString sig;
-  KNLocalArticle *art = newArticle( knGlobals.groupManager()->currentGroup(), sig, knGlobals.settings()->charset().toLatin1() );
+  KNLocalArticle *art = newArticle( knGlobals.groupManager()->currentGroup(), sig, Locale::defaultCharset() );
   if(!art)
     return;
 
@@ -817,7 +817,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, co
 
   //From
   KMime::Headers::From *from=art->from();
-  from->setRFC2047Charset( knGlobals.settings()->charset().toLatin1() );
+  from->setRFC2047Charset( Locale::defaultCharset() );
   KMime::Types::Mailbox mbox;
 
   //name
@@ -841,7 +841,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, co
 
   //Reply-To
   if(id->hasReplyTo()) {
-    art->replyTo()->fromUnicodeString( id->replyTo(), knGlobals.settings()->charset().toLatin1() );
+    art->replyTo()->fromUnicodeString( id->replyTo(), Locale::defaultCharset() );
     foreach ( const KMime::Types::Mailbox &mbox, art->replyTo()->mailboxes() ) {
       if ( !mbox.hasAddress() ) {   // the header is invalid => drop it
         art->removeHeader("Reply-To");
@@ -852,14 +852,14 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, co
 
   //Mail-Copies-To
   if(id->hasMailCopiesTo()) {
-    art->mailCopiesTo()->fromUnicodeString( id->mailCopiesTo(), knGlobals.settings()->charset().toLatin1() );
+    art->mailCopiesTo()->fromUnicodeString( id->mailCopiesTo(), Locale::defaultCharset() );
     if ( art->mailCopiesTo()->isEmpty() )   // the header is invalid => drop it
       art->removeHeader("Mail-Copies-To");
   }
 
   //Organization
   if(id->hasOrga())
-    art->organization()->fromUnicodeString( id->orga(), knGlobals.settings()->charset().toLatin1() );
+    art->organization()->fromUnicodeString( id->orga(), Locale::defaultCharset() );
 
   //Date
   art->date()->setDateTime( KDateTime::currentLocalDateTime() );
@@ -898,7 +898,7 @@ KNLocalArticle* KNArticleFactory::newArticle(KNCollection *col, QString &sig, co
           continue;
 
       art->setHeader( new KMime::Headers::Generic( (*it).name().toLatin1(), art, value,
-                      knGlobals.settings()->charset().toLatin1() ) );
+                      Locale::defaultCharset() ) );
     }
   }
 

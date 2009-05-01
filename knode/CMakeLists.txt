@@ -1,4 +1,7 @@
 project(knode)
+
+add_subdirectory( tests )
+
 add_subdirectory( pics )
 add_subdirectory( filters )
 
@@ -61,7 +64,9 @@ set(knodecommon_LIB_SRCS
    knglobals.cpp
    kncollectionview.cpp
    articlewidget.cpp
-   csshelper.cpp)
+   csshelper.cpp
+   utils/locale.cpp
+)
 
 qt4_add_dbus_adaptor( knodecommon_LIB_SRCS org.kde.knode.xml knmainwidget.h KNMainWidget)
 

@@ -70,6 +70,7 @@ using KPIM::RecentAddresses;
 #include "kncomposerview.h"
 #include <kmeditor.h>
 #include "kncomposereditor.h"
+#include "utils/locale.h"
 
 
 KNLineEdit::KNLineEdit( KNComposer::ComposerView *_composerView, bool useCompletion,
@@ -931,23 +932,7 @@ bool KNComposer::applyChanges()
 
 void KNComposer::setCharset( const QString &charset )
 {
-  // According to http://www.iana.org/assignments/character-sets, uppercase is
-  // preferred in MIME headers
-  mCharset = charset.toUpper();
-
-  // For bug 163524 (Knode sending empty charset)
-  // Placed first so that the logic below also applies to the charset from settings.
-  if ( mCharset.isEmpty() ) {
-    mCharset = knGlobals.settings()->charset();
-    if ( mCharset.isEmpty() ) {
-      mCharset = "UTF-8";
-    }
-  }
-
-  // hack for bug 169411 stolen from KMail (kmmsgbase.{h,cpp})
-  if ( mCharset.contains( "ISO " ) ) {
-    mCharset = mCharset.replace( "ISO ", "ISO-" );
-  }
+  mCharset = KNode::Utilities::Locale::toMimeCharset( charset );
 }
 
 

@@ -12,21 +12,25 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-
-#include <klocale.h>
-#include <kcodecs.h>
-#include <kmimetype.h>
+#include "knarticle.h"
 
 #include "knhdrviewitem.h"
 #include "kngroup.h"
 #include "knglobals.h"
 #include "knconfigmanager.h"
-#include "utilities.h"
 #include "settings.h"
+#include "utilities.h"
+#include "utils/locale.h"
 
-//Added by qt3to4:
+
+#include <klocale.h>
+#include <kcodecs.h>
+#include <kmimetype.h>
+
 #include <QByteArray>
 
+
+using namespace KNode::Utilities;
 using namespace KMime;
 
 
@@ -94,10 +98,7 @@ KNRemoteArticle::KNRemoteArticle(KNGroup *g)
   f_rom.setParent(this);
   r_eferences.setParent(this);
 
-  if (g && g->useCharset())
-    setDefaultCharset( g->defaultCharset() );
-  else
-    setDefaultCharset( knGlobals.settings()->charset().toLatin1() );
+  setDefaultCharset( Locale::defaultCharset( g ) );
 }
 
 
@@ -275,10 +276,7 @@ void KNRemoteArticle::setForceDefaultCharset(bool b)
 {
   if (!b) { // restore default
     KNGroup *g=static_cast<KNGroup*>(c_ol);
-    if (g && g->useCharset())
-      setDefaultCharset( g->defaultCharset() );
-    else
-      setDefaultCharset( knGlobals.settings()->charset().toLatin1() );
+    setDefaultCharset( Locale::defaultCharset( g ) );
   }
   KNArticle::setForceDefaultCharset( b );
   initListItem();
@@ -312,7 +310,7 @@ KNLocalArticle::KNLocalArticle(KNArticleCollection *c)
 {
   n_ewsgroups.setParent(this);
   t_o.setParent(this);
-  setDefaultCharset( knGlobals.settings()->charset().toLatin1() );
+  setDefaultCharset( Locale::defaultCharset() );
 }
 
 
@@ -423,7 +421,7 @@ void KNLocalArticle::updateListItem()
 void KNLocalArticle::setForceDefaultCharset( bool b )
 {
   if (!b)  // restore default
-    setDefaultCharset( knGlobals.settings()->charset().toLatin1() );
+    setDefaultCharset( Locale::defaultCharset() );
   KNArticle::setForceDefaultCharset( b );
   updateListItem();
 }
