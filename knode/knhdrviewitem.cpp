@@ -235,7 +235,7 @@ QString KNHdrViewItem::text( int col ) const
   }
 
   if ( col == hv->paintInfo()->dateCol ) {
-    return hv->mDateFormatter.dateString( art->date()->dateTime().toLocalZone().dateTime() );
+    return hv->mDateFormatter.dateString( art->date()->dateTime().toTime_t() );
   } else
     return K3ListViewItem::text( col );
 }
