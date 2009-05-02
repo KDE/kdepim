@@ -26,6 +26,7 @@
 using namespace KNode::Utilities;
 
 
+#include <qtest_kde.h>
 #include <KCharsets>
 #include <KGlobal>
 #include <KLocale>
@@ -98,12 +99,6 @@ void KNodeTest::testUtilitiesLocale()
     QCOMPARE( Locale::toMimeCharset( encName ), kcharsetVsMime.value( encName ) );
   }
 
-
-  if ( !KGlobal::hasLocale() ) {
-    // otherwise KGlobal::locale()==0, and the test crashes
-    KGlobal::setLocale( new KLocale( QString() ) );
-  }
-
   // Do not see bug #163524 again (empty charset)
   QVERIFY( !Locale::toMimeCharset( "" ).isEmpty() );
 
@@ -120,7 +115,6 @@ void KNodeTest::testUtilitiesLocale()
 }
 
 
-
-QTEST_MAIN( KNodeTest )
+QTEST_KDEMAIN( KNodeTest, NoGUI )
 
 #include "knodetest.moc"
