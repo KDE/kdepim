@@ -26,7 +26,7 @@ if ( NOT KDE4_KCMUTILS_LIBS )
    set ( KDE4_KCMUTILS_LIBS ${KDE4_KUTILS_LIBS} )
 endif ( NOT KDE4_KCMUTILS_LIBS )
 
-target_link_libraries(kwatchgnupg ${KDE4_KDEUI_LIBS} kleo)
+target_link_libraries(kwatchgnupg ${KDE4_KDEUI_LIBS} kleo ${KDE4_GPGMEPP_LIBS})
 
 install(TARGETS kwatchgnupg  DESTINATION ${BIN_INSTALL_DIR} )
 
