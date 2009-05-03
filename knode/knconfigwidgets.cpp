@@ -12,37 +12,10 @@
     Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, US
 */
 
-
-#include <QPainter>
-
-#include <QLabel>
-//Added by qt3to4:
-#include <QGridLayout>
-#include <QBoxLayout>
-#include <QVBoxLayout>
-#include <QTextEdit>
-
-#include <kcharsets.h>
-#include <klocale.h>
-#include <knumvalidator.h>
-#include <kmessagebox.h>
-#include <kmimetypetrader.h>
-#include <kcolordialog.h>
-#include <kfontdialog.h>
-#include <kfiledialog.h>
-#include <kscoringeditor.h>
-#include <sonnet/configwidget.h>
-#include <kcombobox.h>
-#include <libkpgp/kpgpui.h>
-#include <kurlcompletion.h>
-#include <kiconloader.h>
-#include <kpushbutton.h>
-#include <kvbox.h>
-#include <krun.h>
+#include "knconfigwidgets.h"
 
 #include "knaccountmanager.h"
 #include "knconfig.h"
-#include "knconfigwidgets.h"
 #include "knconfigmanager.h"
 #include "kndisplayedheader.h"
 #include "kngroupmanager.h"
@@ -56,6 +29,35 @@
 #include "ui_readnewsnavigationwidget_base.h"
 #include "ui_readnewsviewerwidget_base.h"
 #include "settings.h"
+
+
+#include <QPainter>
+#include <QLabel>
+#include <QGridLayout>
+#include <QBoxLayout>
+#include <QVBoxLayout>
+#include <QTextEdit>
+
+#include <kcharsets.h>
+#include <klocale.h>
+#include <knumvalidator.h>
+#include <kmessagebox.h>
+#include <kmimetypetrader.h>
+#include <kmime/kmime_dateformatter.h>
+#include <kcolordialog.h>
+#include <kfontdialog.h>
+#include <kfiledialog.h>
+#include <kscoringeditor.h>
+#include <sonnet/configwidget.h>
+#include <kcombobox.h>
+#include <libkpgp/kpgpui.h>
+#include <kurlcompletion.h>
+#include <kiconloader.h>
+#include <kpushbutton.h>
+#include <kvbox.h>
+#include <krun.h>
+
+
 
 KNode::IdentityWidget::IdentityWidget( Identity *d, const KComponentData &inst, QWidget *parent ) :
   KCModule( inst ,parent ),
@@ -830,23 +832,23 @@ void KNode::ReadNewsGeneralWidget::load()
 {
   KCModule::load();
   switch ( knGlobals.settings()->dateFormat() ) {
-    case KNode::Settings::EnumDateFormat::CTime: mStandardDateFormat->setChecked( true ); break;
-    case KNode::Settings::EnumDateFormat::Localized: mLocalizedDateFormat->setChecked( true ); break;
-    case KNode::Settings::EnumDateFormat::Fancy: mFancyDateFormat->setChecked( true ); break;
-    case KNode::Settings::EnumDateFormat::Custom: mCustomDateFormat->setChecked( true ); break;
+    case KMime::DateFormatter::CTime: mStandardDateFormat->setChecked( true ); break;
+    case KMime::DateFormatter::Localized: mLocalizedDateFormat->setChecked( true ); break;
+    case KMime::DateFormatter::Fancy: mFancyDateFormat->setChecked( true ); break;
+    case KMime::DateFormatter::Custom: mCustomDateFormat->setChecked( true ); break;
   }
 }
 
 void KNode::ReadNewsGeneralWidget::save()
 {
   if ( mStandardDateFormat->isChecked() )
-    knGlobals.settings()->setDateFormat( KNode::Settings::EnumDateFormat::CTime );
+    knGlobals.settings()->setDateFormat( KMime::DateFormatter::CTime );
   if ( mLocalizedDateFormat->isChecked() )
-    knGlobals.settings()->setDateFormat( KNode::Settings::EnumDateFormat::Localized );
+    knGlobals.settings()->setDateFormat( KMime::DateFormatter::Localized );
   if ( mFancyDateFormat->isChecked() )
-    knGlobals.settings()->setDateFormat( KNode::Settings::EnumDateFormat::Fancy );
+    knGlobals.settings()->setDateFormat( KMime::DateFormatter::Fancy );
   if ( mCustomDateFormat->isChecked() )
-    knGlobals.settings()->setDateFormat( KNode::Settings::EnumDateFormat::Custom );
+    knGlobals.settings()->setDateFormat( KMime::DateFormatter::Custom );
   KCModule::save();
 }
 

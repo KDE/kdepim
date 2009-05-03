@@ -115,7 +115,7 @@ void KNHeaderView::readConfig()
     toggleColumn( KPaintInfo::COL_SCORE, knGlobals.settings()->showScore() );
 
   mDateFormatter.setCustomFormat( knGlobals.settings()->customDateFormat() );
-  mDateFormatter.setFormat( (KMime::DateFormatter::FormatType)knGlobals.settings()->dateFormat() );
+  mDateFormatter.setFormat( knGlobals.settings()->dateFormat() );
 
   QPalette p = palette();
   p.setColor( QPalette::Base, knGlobals.settings()->backgroundColor() );

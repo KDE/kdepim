@@ -57,8 +57,8 @@
       <label>Show Threads</label>
       <default>true</default>
     </entry>
-    <entry name="dateFormat" type="Enum"><!-- taken from kmime_util.h -->
-      <choices>
+    <entry name="dateFormat" type="Enum">
+      <choices name="KMime::DateFormatter::FormatType">
         <choice name="CTime">
           <label>Standard format</label>
         </choice>
@@ -76,7 +76,7 @@
         </choice>
       </choices>
       <label>Date format</label>
-      <default>Localized</default>
+      <default>KMime::DateFormatter::Localized</default>
     </entry>
     <entry name="customDateFormat" type="String">
       <label>Custom date format</label>

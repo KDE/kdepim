@@ -5,4 +5,5 @@ Mutators=true
 ItemAccessors=true
 SetUserTexts=true
 Visibility=KNODE_EXPORT
-IncludeFiles=qapplication.h,knode_export.h
+IncludeFiles=qapplication.h,knode_export.h,kmime/kmime_dateformatter.h
+UseEnumTypes=true
