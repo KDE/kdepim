@@ -50,6 +50,8 @@ JobTrackerModel::JobTrackerModel( const char *name, QObject* parent )
 {
   connect( &d->tracker, SIGNAL( updated() ),
            this, SIGNAL( modelReset() ) );
+  connect( &d->tracker, SIGNAL( jobAdded(int) ),
+           this, SLOT( addJob(int) ) );
 }
 
 JobTrackerModel::~JobTrackerModel()
@@ -195,5 +197,11 @@ void JobTrackerModel::setEnabled( bool on )
 {
   d->tracker.setEnabled( on );
 }
+
+void JobTrackerModel::addJob( int id )
+{
+  int parent = d->tracker.parentId( id );
+}
+
 
 #include "jobtrackermodel.moc"
