@@ -42,8 +42,6 @@ public:
 public slots:
   void resetTracker();
   void setEnabled(bool);
-  private slots:
-  void addJob(int id);
 
 private:
   class Private;
