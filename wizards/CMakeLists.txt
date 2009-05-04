@@ -64,7 +64,7 @@ kde4_add_app_icon(groupwisewizard_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/tools-
 
 kde4_add_executable(groupwisewizard ${groupwisewizard_SRCS})
 
-target_link_libraries(groupwisewizard ${QT_QT3SUPPORT_LIBRARY}${KDE4_KDECORE_LIBS} kabcgroupwise kcalgroupwise ${KDE4_KCAL_LIBS} kdepim kpimidentities)
+target_link_libraries(groupwisewizard ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KDECORE_LIBS} kabcgroupwise kcalgroupwise ${KDE4_KCAL_LIBS} kdepim kpimidentities)
 
 install(TARGETS groupwisewizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
 endif(BUILD_EVERYTHING)
@@ -103,7 +103,7 @@ kde4_add_app_icon(kolabwizard_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/tools-wiza
 
 kde4_add_executable(kolabwizard ${kolabwizard_SRCS})
 
-target_link_libraries(kolabwizard   ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KCAL_LIBS} ${KDE4_KPIMIDENTITIES_LIBS} kabckolab knoteskolab kcalkolab kdepim)
+target_link_libraries(kolabwizard   ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KCAL_LIBS} ${KDE4_KRESOURCES_LIBS} ${KDE4_KPIMIDENTITIES_LIBS} kabckolab knoteskolab kcalkolab kdepim)
 
 install(TARGETS kolabwizard  ${INSTALL_TARGETS_DEFAULT_ARGS})
 
