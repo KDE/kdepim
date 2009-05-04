@@ -66,9 +66,8 @@ class LDAPSearchDialog : public KDialog
     void slotError( const QString& );
     virtual void slotHelp();
     virtual void slotUser1();
-#if 0 //sebsauer
     virtual void slotUser2();
-#endif
+
     void slotSelectAll();
     void slotUnselectAll();
     KABC::Addressee::List importContactsUnlessTheyExist( const QList< QPair<KLDAP::LdapAttrMap, QString> >& items, KABC::Resource * const resource );

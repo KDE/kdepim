@@ -19,6 +19,7 @@
  */
 
 #include "ldapsearchdialog.h"
+#include "ldapoptionswidget.h"
 
 #include <QtCore/QPair>
 #include <QtCore/QPointer>
@@ -275,11 +276,7 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
     d( new Private )
 {
   setCaption( i18n( "Search for Addresses in Directory" ) );
-#if 0 //sebsauer
   setButtons( Help | User1 | User2 | Cancel );
-#else
-  setButtons( Help | User1 | Cancel );
-#endif
   setDefaultButton( User1 );
   setModal( false );
   showButtonSeparator( true );
@@ -352,10 +349,8 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
 
   resize( QSize( 600, 400).expandedTo( minimumSizeHint() ) );
 
-  setButtonText( User1, i18n( "Add Selected" ) );
-#if 0 //sebsauer
-  setButtonText( User2, i18n( "Add to Distribution List..." ) );
-#endif
+  setButtonText( User1, i18n( "Import Selected" ) );
+  setButtonText( User2, i18n( "Configure LDAP Servers" ) );
 
   mNumHosts = 0;
   mIsOK = false;
@@ -369,9 +364,8 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
   setTabOrder(mFilterCombo, mSearchButton);
   mSearchEdit->setFocus();
   connect(this,SIGNAL(user1Clicked()),this,SLOT(slotUser1()));
-#if 0 //sebsauer
   connect(this,SIGNAL(user2Clicked()),this,SLOT(slotUser2()));
-#endif
+
   connect(this,SIGNAL(helpClicked()),this,SLOT(slotHelp()));
   restoreSettings();
 }
@@ -721,38 +715,6 @@ KABC::Addressee::List LDAPSearchDialog::importContactsUnlessTheyExist( const QLi
     return localAddrs;
 }
 
-#if 0 //sebsauer
-void LDAPSearchDialog::slotUser2()
-{
-    const QList< QPair<KLDAP::LdapAttrMap, QString> > selectedItems = d->selectedItems( mResultView );
-    if ( selectedItems.isEmpty() ) {
-      KMessageBox::information( this, i18n( "Please select the contacts you want to add to the distribution list." ),
-                                      i18n( "No Contacts Selected" ) );
-      return;
-    }
-
-    KABC::Resource *resource = mCore->requestResource( this );
-    if ( !resource )
-      return;
-
-    KABC::DistributionList *dist = selectDistributionList();
-    if ( !dist )
-      return;
-
-    KABC::Addressee::List localAddrs = importContactsUnlessTheyExist( selectedItems, resource );
-
-    if ( localAddrs.isEmpty() )
-      return;
-
-    KABLock::self( mCore->addressBook() )->lock( resource );
-    Q_FOREACH ( const KABC::Addressee& i, localAddrs ) {
-        dist->insertEntry( i, QString() );
-    }
-    emit addresseesAdded();
-    KABLock::self( mCore->addressBook() )->unlock( resource );
-}
-#endif
-
 void LDAPSearchDialog::slotUser1()
 {
 #if 0 //sebsauer
@@ -767,6 +729,21 @@ void LDAPSearchDialog::slotUser1()
     if ( !d->selectedItems( mResultView ).isEmpty() ) {
       m_result = importContactsUnlessTheyExist( d->selectedItems( mResultView ), resource );
     }
+}
+
+void LDAPSearchDialog::slotUser2()
+{
+    KDialog *dialog = new KDialog( this );
+    dialog->setCaption( i18n("Configure the Address Book LDAP Settings") );
+    dialog->setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Apply );
+    LDAPOptionsWidget *widget = new LDAPOptionsWidget( dialog );
+    widget->restoreSettings();
+    dialog->setMainWidget( widget );
+    connect( dialog, SIGNAL( applyClicked() ), widget, SLOT( saveSettings() ) );
+    connect( dialog, SIGNAL( okClicked() ), widget, SLOT( saveSettings() ) );
+    connect( widget, SIGNAL( changed( bool ) ), dialog, SLOT( enableButtonApply( bool ) ) );
+    dialog->enableButtonApply( false );
+    dialog->show();
 }
 
 #include "ldapsearchdialog.moc"

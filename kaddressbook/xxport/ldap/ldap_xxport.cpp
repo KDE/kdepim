@@ -46,9 +46,6 @@ LDAPXXPort::LDAPXXPort( QWidget *parentWidget )
 
 KABC::Addressee::List LDAPXXPort::importContacts() const
 {
-  kDebug()<<"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA";
-
-
   KABC::Addressee::List contacts;
 
   KABC::AddressBook *ab = 0;

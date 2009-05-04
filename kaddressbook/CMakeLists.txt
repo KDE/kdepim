@@ -72,6 +72,8 @@ set( kcontactmanager_LIB_SRCS
   xxport/ldif/ldif_xxport.cpp
   xxport/ldap/ldap_xxport.cpp
   xxport/ldap/ldapsearchdialog.cpp
+  xxport/ldap/addhostdialog.cpp
+  xxport/ldap/ldapoptionswidget.cpp
   xxport/shared/xxport.cpp
   xxport/vcard/vcard_xxport.cpp 
   xxport/xxportfactory.cpp
