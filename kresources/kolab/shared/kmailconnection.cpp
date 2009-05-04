@@ -42,6 +42,8 @@
 #include <QDBusAbstractInterface>
 #include <QMap>
 
+#include <unistd.h>
+
 using namespace Kolab;
 
 KMailConnection::KMailConnection( ResourceKolabBase* resource )
