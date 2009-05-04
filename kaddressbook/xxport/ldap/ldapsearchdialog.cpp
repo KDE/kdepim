@@ -395,7 +395,6 @@ void LDAPSearchDialog::restoreSettings()
   KConfigGroup group( config, "LDAP" );
   mNumHosts = group.readEntry( "NumSelectedHosts", 0 );
   if ( !mNumHosts ) {
-    KMessageBox::error( this, i18n( "You must select a LDAP server before searching.\nYou can do this from the menu Settings/Configure KAddressBook." ) );
     mIsOK = false;
   } else {
     mIsOK = true;
@@ -493,6 +492,12 @@ QString LDAPSearchDialog::makeFilter( const QString& query, const QString& attr,
 void LDAPSearchDialog::slotStartSearch()
 {
   cancelQuery();
+
+  if ( ! isOK() ) {
+    KMessageBox::error( this, i18n( "You must select a LDAP server before searching." ) );
+    slotUser2();
+    return;
+  }
 
   QApplication::setOverrideCursor( Qt::WaitCursor );
   mSearchButton->setText( i18n( "Stop" ) );
@@ -738,12 +743,15 @@ void LDAPSearchDialog::slotUser2()
     dialog->setButtons( KDialog::Ok | KDialog::Cancel | KDialog::Apply );
     LDAPOptionsWidget *widget = new LDAPOptionsWidget( dialog );
     widget->restoreSettings();
+    dialog->setModal(true);
     dialog->setMainWidget( widget );
     connect( dialog, SIGNAL( applyClicked() ), widget, SLOT( saveSettings() ) );
     connect( dialog, SIGNAL( okClicked() ), widget, SLOT( saveSettings() ) );
     connect( widget, SIGNAL( changed( bool ) ), dialog, SLOT( enableButtonApply( bool ) ) );
     dialog->enableButtonApply( false );
-    dialog->show();
+    if (dialog->exec() == QDialog::Accepted) {
+        restoreSettings();
+    }
 }
 
 #include "ldapsearchdialog.moc"
