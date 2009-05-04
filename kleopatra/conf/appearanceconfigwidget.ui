@@ -10,7 +10,7 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>Color &amp; Font Configuration</string>
+   <string>Color &amp;&amp; Font Configuration</string>
   </property>
   <layout class="QGridLayout" >
    <item row="0" column="0" >

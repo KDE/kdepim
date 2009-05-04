@@ -100,7 +100,7 @@
    <item>
     <widget class="QGroupBox" name="leaveGroupBox" >
      <property name="title" >
-      <string>Leaving a Group Triggers Following Actions</string>
+      <string>Leaving Group Triggers Following Actions</string>
      </property>
      <layout class="QVBoxLayout" >
       <property name="margin" >

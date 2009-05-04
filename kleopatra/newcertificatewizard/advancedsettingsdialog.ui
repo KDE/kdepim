@@ -144,32 +144,32 @@
             </property>
             <item>
              <property name="text" >
-              <string>backend default</string>
+              <string>Backend Default</string>
              </property>
             </item>
             <item>
              <property name="text" >
-              <string>1024 bits</string>
+              <string>1024 Bits</string>
              </property>
             </item>
             <item>
              <property name="text" >
-              <string>1536 bits</string>
+              <string>1536 Bits</string>
              </property>
             </item>
             <item>
              <property name="text" >
-              <string>2048 bits</string>
+              <string>2048 Bits</string>
              </property>
             </item>
             <item>
              <property name="text" >
-              <string>3072 bits</string>
+              <string>3072 Bits</string>
              </property>
             </item>
             <item>
              <property name="text" >
-              <string>4096 bits</string>
+              <string>4096 Bits</string>
              </property>
             </item>
            </widget>
@@ -178,32 +178,32 @@
            <widget class="QComboBox" name="rsaKeyStrengthCB" >
             <item>
              <property name="text" >
-              <string>backend default</string>
+              <string>Backend Default</string>
              </property>
             </item>
             <item>
              <property name="text" >
-              <string>1024 bits</string>
+              <string>1024 Bits</string>
              </property>
             </item>
             <item>
              <property name="text" >
-              <string>1536 bits</string>
+              <string>1536 Bits</string>
              </property>
             </item>
             <item>
              <property name="text" >
-              <string>2048 bits</string>
+              <string>2048 Bits</string>
              </property>
             </item>
             <item>
              <property name="text" >
-              <string>3072 bits</string>
+              <string>3072 Bits</string>
              </property>
             </item>
             <item>
              <property name="text" >
-              <string>4096 bits</string>
+              <string>4096 Bits</string>
              </property>
             </item>
            </widget>
@@ -215,17 +215,17 @@
             </property>
             <item>
              <property name="text" >
-              <string>backend default</string>
+              <string>Backend Default</string>
              </property>
             </item>
             <item>
              <property name="text" >
-              <string>v1 (1024 bits)</string>
+              <string>v1 (1024 Bits)</string>
              </property>
             </item>
             <item>
              <property name="text" >
-              <string>v2 (2048 bits)</string>
+              <string>v2 (2048 Bits)</string>
              </property>
             </item>
            </widget>

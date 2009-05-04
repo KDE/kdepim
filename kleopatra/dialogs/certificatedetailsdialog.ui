@@ -47,7 +47,7 @@
           <item>
            <widget class="QPushButton" name="changeTrustLevelPB" >
             <property name="text" >
-             <string>Trust Certifications made by this Certificate...</string>
+             <string>Trust Certifications Made by This Certificate...</string>
             </property>
             <property name="autoDefault" >
              <bool>false</bool>
@@ -67,7 +67,7 @@
           <item>
            <widget class="QPushButton" name="revokeCertificatePB" >
             <property name="text" >
-             <string>Revoke this Certificate...</string>
+             <string>Revoke This Certificate...</string>
             </property>
             <property name="autoDefault" >
              <bool>false</bool>
@@ -150,7 +150,7 @@
        </rect>
       </property>
       <attribute name="title" >
-       <string>User-IDs and Certifications</string>
+       <string>User-IDs &amp;&amp; Certifications</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_6" >
        <item>

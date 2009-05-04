@@ -31,7 +31,7 @@
        </rect>
       </property>
       <attribute name="title" >
-       <string>Keyring settings</string>
+       <string>Keyring Settings</string>
       </attribute>
       <layout class="QVBoxLayout" name="verticalLayout_2" >
        <item>
@@ -72,7 +72,7 @@ p, li { white-space: pre-wrap; }
           </sizepolicy>
          </property>
          <property name="title" >
-          <string>Password settings:</string>
+          <string>Password Settings</string>
          </property>
          <layout class="QVBoxLayout" name="verticalLayout" >
           <item>
@@ -86,7 +86,7 @@ p, li { white-space: pre-wrap; }
             <item>
              <widget class="QRadioButton" name="fSavePassButton" >
               <property name="text" >
-               <string>Save password in wallet</string>
+               <string>Save password in wallet:</string>
               </property>
              </widget>
             </item>

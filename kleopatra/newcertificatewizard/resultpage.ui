@@ -51,56 +51,56 @@
       <item>
        <widget class="QPushButton" name="saveRequestToFilePB" >
         <property name="text" >
-         <string>Save Request To File...</string>
+         <string>Save Request to File...</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="sendRequestByEMailPB" >
         <property name="text" >
-         <string>Send Request By Email...</string>
+         <string>Send Request by Email...</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="makeBackupPB" >
         <property name="text" >
-         <string>Make a Backup Of Your Certificate...</string>
+         <string>Make Backup of Your Certificate...</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="sendCertificateByEMailPB" >
         <property name="text" >
-         <string>Send Certificate By Email...</string>
+         <string>Send Certificate by Email...</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="uploadToKeyserverPB" >
         <property name="text" >
-         <string>Upload Certificate To Directory Service...</string>
+         <string>Upload Certificate to Directory Service...</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="createRevocationRequestPB" >
         <property name="text" >
-         <string>Create a Revocation Request...</string>
+         <string>Create Revocation Request...</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="createSigningCertificatePB" >
         <property name="text" >
-         <string>Create a Signing Certificate With the Same Parameters</string>
+         <string>Create Signing Certificate With Same Parameters</string>
         </property>
        </widget>
       </item>
       <item>
        <widget class="QPushButton" name="createEncryptionCertificatePB" >
         <property name="text" >
-         <string>Create an Encryption Certificate With the Same Parameters</string>
+         <string>Create Encryption Certificate With Same Parameters</string>
         </property>
        </widget>
       </item>

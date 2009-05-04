@@ -115,7 +115,7 @@
 		<item rowspan="1" row="3" column="0" colspan="4" >
 			<widget class="QCheckBox" name="kcfg_PageNamePrompt" >
 				<property name="text" >
-					<string>Ask for new &amp;Page names.</string>
+					<string>Ask for new &amp;page names.</string>
 				</property>
 				<property name="checked" >
 					<bool>false</bool>

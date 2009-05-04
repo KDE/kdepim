@@ -267,7 +267,7 @@
          <item>
           <widget class="QLabel" name="label_5" >
            <property name="text" >
-            <string>Last Modification Time:</string>
+            <string>Last modification time:</string>
            </property>
           </widget>
          </item>
