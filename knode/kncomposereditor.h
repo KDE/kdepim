@@ -37,7 +37,7 @@ class KNComposerEditor : public KMeditor
 
     virtual ~KNComposerEditor();
 
-     virtual void changeHighlighterColors(KPIM::KEMailQuotingHighlighter * highlighter);
+     virtual void changeHighlighterColors(KPIMTextEdit::EMailQuoteHighlighter * highlighter);
 
 };
 

@@ -207,7 +207,7 @@ KNComposer::KNComposer(KNLocalArticle *a, const QString &text, const QString &si
   sb->insertItem( QString(), 5, 1 );                 // line
   sb->setItemAlignment( 5, Qt::AlignCenter | Qt::AlignVCenter );
   connect(v_iew->e_dit, SIGNAL(cursorPositionChanged()), SLOT(slotUpdateCursorPos()));
-  connect(v_iew->e_dit, SIGNAL(overwriteModeText()), SLOT(slotUpdateStatusBar()));
+  connect(v_iew->e_dit, SIGNAL(insertModeChanged()), SLOT(slotUpdateStatusBar()));
 
   QDBusConnection::sessionBus().registerObject( "/Composer", this, QDBusConnection::ExportScriptableSlots );
   //------------------------------- <Actions> --------------------------------------

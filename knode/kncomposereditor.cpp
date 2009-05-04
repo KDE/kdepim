@@ -21,8 +21,8 @@
 
 #include "kncomposereditor.h"
 #include "kncomposereditor.moc"
-#include "kemailquotinghighter.h"
 #include "knglobals.h"
+#include <KPIMTextEdit/EMailQuoteHighlighter>
 #include <KConfigGroup>
 #include <QApplication>
 
@@ -35,7 +35,7 @@ KNComposerEditor::~KNComposerEditor()
 {
 }
 
-void KNComposerEditor::changeHighlighterColors(KPIM::KEMailQuotingHighlighter * highlighter )
+void KNComposerEditor::changeHighlighterColors(KPIMTextEdit::EMailQuoteHighlighter * highlighter )
 {
   KConfigGroup config( knGlobals.config(), "VISUAL_APPEARANCE" );
   QColor defaultColor1( 0x00, 0x80, 0x00 ); // defaults from kmreaderwin.cpp
