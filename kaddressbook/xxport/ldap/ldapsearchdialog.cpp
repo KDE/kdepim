@@ -261,7 +261,7 @@ QList< QPair<KLDAP::LdapAttrMap, QString> > LDAPSearchDialog::Private::selectedI
 
   ContactListModel *model = static_cast<ContactListModel*>( view->model() );
 
-  const QModelIndexList selected = view->selectionModel()->selectedIndexes();
+  const QModelIndexList selected = view->selectionModel()->selectedRows();
   for ( int i = 0; i < selected.count(); ++i )
     contacts.append( model->contact( selected.at( i ) ) );
 
