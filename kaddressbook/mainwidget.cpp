@@ -194,7 +194,6 @@ void MainWidget::setupActions( KActionCollection *collection )
   action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_G ) );
   action->setWhatsThis( i18n( "Create a new group<p>You will be presented with a dialog where you can add a new group of contacts.</p>" ) );
 
-
   action = KStandardAction::print( this, SLOT( print() ), collection );
   action->setWhatsThis( i18n( "Print a special number of contacts." ) );
 
@@ -214,6 +213,10 @@ void MainWidget::setupActions( KActionCollection *collection )
   action = collection->addAction( "file_import_ldif" );
   action->setText( i18n( "Import LDIF file..." ) );
   mXXPortManager->addImportAction( action, "ldif" );
+
+  action = collection->addAction( "file_import_ldap" );
+  action->setText( i18n( "Import from LDAP server..." ) );
+  mXXPortManager->addImportAction( action, "ldap" );
 
   // export actions
   action = collection->addAction( "file_export_vcard30" );
