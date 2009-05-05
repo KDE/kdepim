@@ -73,11 +73,13 @@ SelectionPage::SelectionPage( QWidget* parent, const char* name )
   groupLayout->addWidget( mUseSelection, 1, 0 );
 
   mUseFilters = new QRadioButton( i18n( "Contacts matching &filter" ), mButtonGroup );
+mUseFilters->setEnabled(false); //sebsauer
   mUseFilters->setWhatsThis( i18n( "Only print contacts matching the selected filter.\n"
                                      "This option is disabled if you have not defined any filters." ) );
   groupLayout->addWidget( mUseFilters, 2, 0 );
 
   mUseCategories = new QRadioButton( i18n( "Category &members" ), mButtonGroup );
+mUseCategories->setEnabled(false); //sebsauer
   mUseCategories->setWhatsThis( i18n( "Only print contacts who are members of a category that is checked on the list to the left.\n"
                                        "This option is disabled if you have no categories." ) );
   groupLayout->addWidget( mUseCategories, 3, 0, Qt::AlignTop );
@@ -92,9 +94,9 @@ SelectionPage::SelectionPage( QWidget* parent, const char* name )
   mCategoriesView->layout()->setMargin( 0 );
   mCategoriesView->setWhatsThis( i18n( "Check the categories whose members you want to print." ) );
   groupLayout->addWidget( mCategoriesView, 3, 1 );
-
+#endif
   topLayout->addWidget( mButtonGroup );
-
+#if 0
   connect( mFiltersCombo, SIGNAL( activated(int) ), SLOT( filterChanged() ) );
   connect( mCategoriesView->listView(), 
            SIGNAL( itemClicked( QTreeWidgetItem *, int ) ), 

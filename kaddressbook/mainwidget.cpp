@@ -247,12 +247,11 @@ void MainWidget::print()
   printDialog.setWindowTitle( i18n( "Print Addresses" ) );
   if ( !printDialog.exec() )
     return;
-#if 0
+
   KABC::Addressee::List lst; //just to remember that we will use KABC::Addressee::List
   KABPrinting::PrintingWizard wizard( &printer, lst, this );
 
   wizard.exec();
-#endif
 }
 
 void MainWidget::newContact()

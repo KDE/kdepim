@@ -137,21 +137,26 @@ void PrintingWizard::print()
   addPage( progressItem );
   setCurrentPage( progressItem );
   kapp->processEvents();
-#if 0
+
   // prepare list of contacts to print:
 
   KABC::AddresseeList list;
   if ( mStyle != 0 ) {
     if ( mSelectionPage->useSelection() ) {
+#if 0
       QStringList::ConstIterator it;
       for ( it = mSelection.constBegin(); it != mSelection.constEnd(); ++it ) {
         KABC::Addressee addr = addressBook()->findByUid( *it );
         if ( !addr.isEmpty() )
           list.append( addr );
       }
+#else
+      Q_ASSERT(false);
+#endif
     } else if ( mSelectionPage->useFilters() ) {
       //TODO ? or remove it it's not necessary
     } else if ( mSelectionPage->useCategories() ) {
+#if 0
       QStringList categories = mSelectionPage->categories();
       KABC::AddressBook::ConstIterator it;
       for ( it = addressBook()->constBegin(); it != addressBook()->constEnd(); ++it ) {
@@ -163,11 +168,39 @@ void PrintingWizard::print()
             break;
           }
       }
+#else
+      Q_ASSERT(false);
+#endif
     } else {
       // create a string list of all entries:
+#if 0 //sebsauer
       KABC::AddressBook::iterator it;
       for ( it = addressBook()->begin(); it != addressBook()->end(); ++it )
         list.append( *it );
+#else
+
+
+
+Akonadi::Collection c = GlobalContactModel::instance()->model()->rootCollection();
+
+/*
+      for(int i = 0; i < GlobalContactModel::instance()->model()->rowCount(); ++i) {
+itemModel
+        GlobalContactModel::instance()->model()->
+
+
+  const QModelIndex index = itemModel->index( row, 0, parent );
+  const Akonadi::Item item = itemModel->itemForIndex( index );
+
+  if ( item.hasPayload<KABC::Addressee>() ) {
+    const KABC::Addressee contact = item.payload<KABC::Addressee>();
+    return contactMatchesFilter( contact, mFilter );
+  }
+*/
+
+
+
+#endif
     }
 
     list.setReverseSorting( !mStylePage->sortAscending() );
@@ -182,7 +215,6 @@ void PrintingWizard::print()
   enableButton( KDialog::User3, false ); // back button
   enableButton( KDialog::Cancel, false );
   mStyle->print( list, progress );
-#endif
 }
 
 #include "printingwizard.moc"
