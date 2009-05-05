@@ -102,6 +102,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
 
   mItemView->setModel( mItemTree );
   //mItemView->setXmlGuiClient( guiClient );
+  mItemView->setSelectionMode( QAbstractItemView::ExtendedSelection );
   mItemView->setRootIsDecorated( false );
   mItemView->header()->setDefaultAlignment( Qt::AlignCenter );
   for ( int column = 1; column < mDescendantTree->columnCount( QModelIndex() ); ++column )
@@ -248,7 +249,7 @@ void MainWidget::print()
   if ( !printDialog.exec() )
     return;
 
-  KABPrinting::PrintingWizard wizard( &printer, mItemTree, this );
+  KABPrinting::PrintingWizard wizard( &printer, mItemView, this );
   wizard.exec();
 }
 

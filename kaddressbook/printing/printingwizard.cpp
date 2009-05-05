@@ -39,6 +39,7 @@
 #include "contactstreemodel.h"
 #include "entitytreemodel.h"
 #include "entityfilterproxymodel.h"
+#include "entitytreeview.h"
 
 // including the styles
 #include "detailledstyle.h"
@@ -51,15 +52,11 @@
 
 using namespace KABPrinting;
 
-PrintingWizard::PrintingWizard( QPrinter *printer, Akonadi::EntityFilterProxyModel *itemTree, QWidget *parent )
-  : KAssistantDialog( parent ), mPrinter( printer ), mItemTree(itemTree), mStyle( 0 )
+PrintingWizard::PrintingWizard( QPrinter *printer, Akonadi::EntityTreeView *itemView, QWidget *parent )
+  : KAssistantDialog( parent ), mPrinter( printer ), mItemView(itemView), mStyle( 0 )
 {
   mSelectionPage = new SelectionPage( this );
-#if 0 //sebsauer
-  mSelectionPage->setUseSelection( !contacts.isEmpty() );
-#else
-  mSelectionPage->setUseSelection( false );
-#endif
+  mSelectionPage->setUseSelection( mItemView->selectionModel()->hasSelection() );
   KPageWidgetItem *mSelectionPageItem = new KPageWidgetItem( mSelectionPage, i18n("Choose Contacts to Print") );
   addPage( mSelectionPageItem );
 
@@ -147,20 +144,18 @@ void PrintingWizard::print()
   kapp->processEvents();
 
   // prepare list of contacts to print:
+  Akonadi::EntityFilterProxyModel* itemTree = dynamic_cast<Akonadi::EntityFilterProxyModel*>(mItemView->model());
+  Q_ASSERT(itemTree);
 
   KABC::AddresseeList list;
   if ( mStyle != 0 ) {
     if ( mSelectionPage->useSelection() ) {
-#if 0
-      QStringList::ConstIterator it;
-      for ( it = mSelection.constBegin(); it != mSelection.constEnd(); ++it ) {
-        KABC::Addressee addr = addressBook()->findByUid( *it );
-        if ( !addr.isEmpty() )
-          list.append( addr );
+      foreach(const QModelIndex &index, mItemView->selectionModel()->selectedRows()) {
+        const Akonadi::Item item = itemTree->data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+        Q_ASSERT( item.isValid() );
+        const KABC::Addressee adr = item.payload<KABC::Addressee>();
+        list.append( adr );
       }
-#else
-      Q_ASSERT(false);
-#endif
     } else if ( mSelectionPage->useFilters() ) {
       //TODO ? or remove it it's not necessary
     } else if ( mSelectionPage->useCategories() ) {
@@ -181,9 +176,9 @@ void PrintingWizard::print()
 #endif
     } else {
       // create a string list of all entries:
-      for(int row = 0; row < mItemTree->rowCount(); ++row) {
-        const QModelIndex index = mItemTree->index( row, 0 );
-        const Akonadi::Item item = mItemTree->data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+      for(int row = 0; row < itemTree->rowCount(); ++row) {
+        const QModelIndex index = itemTree->index( row, 0 );
+        const Akonadi::Item item = itemTree->data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
         Q_ASSERT( item.isValid() );
         const KABC::Addressee adr = item.payload<KABC::Addressee>();
         list.append( adr );
