@@ -275,7 +275,7 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
     mAddressBook( ab ), mCore( core ), mModel( 0 ),
     d( new Private )
 {
-  setCaption( i18n( "Search for Addresses in Directory" ) );
+  setCaption( i18n( "Import Contacts from LDAP" ) );
   setButtons( Help | User1 | User2 | Cancel );
   setDefaultButton( User1 );
   setModal( false );
@@ -350,7 +350,7 @@ LDAPSearchDialog::LDAPSearchDialog( KABC::AddressBook *ab, KABCore *core,
   resize( QSize( 600, 400).expandedTo( minimumSizeHint() ) );
 
   setButtonText( User1, i18n( "Import Selected" ) );
-  setButtonText( User2, i18n( "Configure LDAP Servers" ) );
+  setButtonText( User2, i18n( "Configure LDAP Servers..." ) );
 
   mNumHosts = 0;
   mIsOK = false;
