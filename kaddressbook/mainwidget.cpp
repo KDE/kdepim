@@ -248,9 +248,7 @@ void MainWidget::print()
   if ( !printDialog.exec() )
     return;
 
-  KABC::Addressee::List lst; //just to remember that we will use KABC::Addressee::List
-  KABPrinting::PrintingWizard wizard( &printer, lst, this );
-
+  KABPrinting::PrintingWizard wizard( &printer, mItemTree, this );
   wizard.exec();
 }
 
@@ -278,19 +276,12 @@ void MainWidget::editItem( const Akonadi::Item &reference )
 void MainWidget::collectionSelectionChanged( const QItemSelection &selected, const QItemSelection& )
 {
   const QModelIndex index = selected.indexes().at( 0 );
-
   const QModelIndex sourceIndex = mCollectionTree->mapToSource( index );
-
   mDescendantTree->setRootIndex( sourceIndex );
-
   const QModelIndex itemIndex = mDescendantTree->mapFromSource( sourceIndex );
-
   mItemTree->setRootIndex( itemIndex );
-
   const QModelIndex viewIndex = mItemTree->mapFromSource( itemIndex );
-
   mItemView->setRootIndex( viewIndex );
-
   mActionManager->setItemSelectionModel( mItemView->selectionModel() );
 }
 

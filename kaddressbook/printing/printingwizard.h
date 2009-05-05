@@ -40,6 +40,10 @@
 class QPrinter;
 class QVBoxLayout;
 
+namespace Akonadi {
+  class EntityFilterProxyModel;
+}
+
 namespace KABPrinting {
 
 /**
@@ -55,7 +59,7 @@ class PrintingWizard : public KAssistantDialog
       Construct a printing wizard. Give the addressbook instance to print.
      */
     PrintingWizard( QPrinter *printer,
-                    const KABC::Addressee::List &contacts,
+                    Akonadi::EntityFilterProxyModel *itemTree,
                     QWidget *parent = 0 );
     ~PrintingWizard();
 
@@ -85,6 +89,7 @@ class PrintingWizard : public KAssistantDialog
     QList<PrintStyleFactory*> mStyleFactories;
     QList<PrintStyle*> mStyleList;
     QPrinter *mPrinter;
+    Akonadi::EntityFilterProxyModel *mItemTree;
     PrintStyle *mStyle;
 
     StylePage *mStylePage;

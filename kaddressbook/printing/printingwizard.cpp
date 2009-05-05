@@ -35,6 +35,11 @@
 #include <kglobal.h>
 #include <klocale.h>
 
+#include "globalcontactmodel.h"
+#include "contactstreemodel.h"
+#include "entitytreemodel.h"
+#include "entityfilterproxymodel.h"
+
 // including the styles
 #include "detailledstyle.h"
 #include "mikesstyle.h"
@@ -46,12 +51,13 @@
 
 using namespace KABPrinting;
 
-PrintingWizard::PrintingWizard( QPrinter *printer, const KABC::Addressee::List &contacts, QWidget *parent )
-  : KAssistantDialog( parent ), mPrinter( printer ),
-    mStyle( 0 )
+PrintingWizard::PrintingWizard( QPrinter *printer, Akonadi::EntityFilterProxyModel *itemTree, QWidget *parent )
+  : KAssistantDialog( parent ), mPrinter( printer ), mItemTree(itemTree), mStyle( 0 )
 {
   mSelectionPage = new SelectionPage( this );
+#if 0 //sebsauer
   mSelectionPage->setUseSelection( !contacts.isEmpty() );
+#endif
   KPageWidgetItem *mSelectionPageItem = new KPageWidgetItem( mSelectionPage, i18n("Choose Contacts to Print") );
   addPage( mSelectionPageItem );
 
@@ -173,38 +179,16 @@ void PrintingWizard::print()
 #endif
     } else {
       // create a string list of all entries:
-#if 0 //sebsauer
-      KABC::AddressBook::iterator it;
-      for ( it = addressBook()->begin(); it != addressBook()->end(); ++it )
-        list.append( *it );
-#else
-
-
-
-//Akonadi::Collection c = GlobalContactModel::instance()->model()->rootCollection();
-
-/*
-      for(int i = 0; i < GlobalContactModel::instance()->model()->rowCount(); ++i) {
-itemModel
-        GlobalContactModel::instance()->model()->
-
-
-  const QModelIndex index = itemModel->index( row, 0, parent );
-  const Akonadi::Item item = itemModel->itemForIndex( index );
-
-  if ( item.hasPayload<KABC::Addressee>() ) {
-    const KABC::Addressee contact = item.payload<KABC::Addressee>();
-    return contactMatchesFilter( contact, mFilter );
-  }
-*/
-
-
-
-#endif
+      for(int row = 0; row < mItemTree->rowCount(); ++row) {
+        const QModelIndex index = mItemTree->index( row, 0 );
+        const Akonadi::Item item = mItemTree->data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+        Q_ASSERT( item.isValid() );
+        const KABC::Addressee adr = item.payload<KABC::Addressee>();
+        list.append( adr );
+      }
     }
 
     list.setReverseSorting( !mStylePage->sortAscending() );
-
     PrintSortMode sortMode( mStylePage->sortField() );
     list.sortByMode( &sortMode );
   }
