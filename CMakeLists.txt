@@ -104,6 +104,10 @@ else(KDEPIM_ONLY_KLEO)
   macro_optional_find_package(Nepomuk)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" FALSE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
 
+  find_package(LibKNotificationItem-1)
+  macro_log_feature(LIBKNOTIFICATIONITEM-1_FOUND "LibKNotificationItem-1" "An experimental library" "svn://anonsvn.kde.org/home/kde/trunk/extragear/libs" FALSE "" "LibKNotificationItem-1 is an unfinished library which will eventually replace the old systray.\n
+                                                                                                                                                                    It is required to build KOrganizer")
+
 
 ############### Needed commands before building anything ###############
 
@@ -174,7 +178,9 @@ set(libkdgantt1_SRCS
     macro_bool_to_01(BUILD_kmail KMAIL_SUPPORTED)
     macro_optional_add_subdirectory(kmailcvt)
     macro_optional_add_subdirectory(ksendemail)
-    macro_optional_add_subdirectory(korganizer)
+    if(LIBKNOTIFICATIONITEM-1_FOUND)
+      macro_optional_add_subdirectory(korganizer)
+    endif(LIBKNOTIFICATIONITEM-1_FOUND)
   endif(QGPGME_FOUND)
 
   if(KDEPIM_BUILD_EVERYTHING)
