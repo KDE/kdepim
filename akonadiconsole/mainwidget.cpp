@@ -63,7 +63,7 @@ MainWidget::MainWidget( KXmlGuiWindow *parent )
   tabWidget->addTab( new JobTrackerWidget( "resourcesJobtracker", tabWidget ), "Resources Schedulers" );
 
   KAction *action = parent->actionCollection()->addAction( "akonadiconsole_search" );
-  action->setText( "Create Search" );
+  action->setText( "Create Search..." );
   connect( action, SIGNAL( triggered() ), this, SLOT( createSearch() ) );
 
   action = parent->actionCollection()->addAction( "akonadiconsole_akonadi2xml" );

@@ -43,7 +43,7 @@ DebugWidget::DebugWidget( QWidget *parent )
   QVBoxLayout *layout = new QVBoxLayout( this );
 
   mDebugInterface = new DebugInterface( "org.freedesktop.Akonadi", "/debug", QDBusConnection::sessionBus(), this );
-  QCheckBox *cb = new QCheckBox( i18n("Enable Debugger"), this );
+  QCheckBox *cb = new QCheckBox( i18n("Enable debugger"), this );
   cb->setChecked( mDebugInterface->tracer().value() == QLatin1String( "dbus" ) );
   connect( cb, SIGNAL(toggled(bool)), SLOT(enableDebugger(bool)) );
   layout->addWidget( cb );

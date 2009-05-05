@@ -414,17 +414,17 @@ ScalixWizard::ScalixWizard() : KConfigWizard( new ScalixPropagator )
   topLayout->addWidget( mSavePasswordCheck, 5, 0, 1, 2 );
   mSavePasswordCheck->setWhatsThis( i18n( "Shall the password be saved in KWallet?" ) );
 
-  label = new QLabel( i18n( "Use Secure Connection:" ), page );
+  label = new QLabel( i18n( "Use secure connection:" ), page );
   topLayout->addWidget( label, 6, 0 );
   mSecurity = new KComboBox( page );
-  mSecurity->addItem( i18n( "No encryption" ) );
-  mSecurity->addItem( i18n( "TLS encryption" ) );
-  mSecurity->addItem( i18n( "SSL encryption" ) );
+  mSecurity->addItem( i18n( "No Encryption" ) );
+  mSecurity->addItem( i18n( "TLS Encryption" ) );
+  mSecurity->addItem( i18n( "SSL Encryption" ) );
   topLayout->addWidget( mSecurity, 6, 1 );
   label->setBuddy( mSecurity );
   mSecurity->setWhatsThis( i18n( "Choose the encryption type that is supported by your server." ) );
 
-  label = new QLabel( i18n( "Authentication Type:" ), page );
+  label = new QLabel( i18n( "Authentication type:" ), page );
   topLayout->addWidget( label, 7, 0 );
   mAuthentication = new KComboBox( page );
   mAuthentication->addItem( i18n( "Password" ) );

@@ -43,7 +43,7 @@ SearchDialog::SearchDialog( QWidget *parent )
   mEdit->setAcceptRichText( false );
   mEdit->setWhatsThis( "Enter a SparQL query here" );
 
-  layout->addWidget( new QLabel( "Search Query Name:" ), 0, 0 );
+  layout->addWidget( new QLabel( "Search query name:" ), 0, 0 );
   layout->addWidget( mName, 0, 1 );
   layout->addWidget( mEdit, 1, 0, 1, 2 );
 }
