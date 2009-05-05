@@ -181,7 +181,7 @@ void PrintingWizard::print()
 
 
 
-Akonadi::Collection c = GlobalContactModel::instance()->model()->rootCollection();
+//Akonadi::Collection c = GlobalContactModel::instance()->model()->rootCollection();
 
 /*
       for(int i = 0; i < GlobalContactModel::instance()->model()->rowCount(); ++i) {
