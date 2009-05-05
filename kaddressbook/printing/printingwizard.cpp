@@ -57,6 +57,8 @@ PrintingWizard::PrintingWizard( QPrinter *printer, Akonadi::EntityFilterProxyMod
   mSelectionPage = new SelectionPage( this );
 #if 0 //sebsauer
   mSelectionPage->setUseSelection( !contacts.isEmpty() );
+#else
+  mSelectionPage->setUseSelection( false );
 #endif
   KPageWidgetItem *mSelectionPageItem = new KPageWidgetItem( mSelectionPage, i18n("Choose Contacts to Print") );
   addPage( mSelectionPageItem );
