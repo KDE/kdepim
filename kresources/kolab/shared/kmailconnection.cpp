@@ -42,6 +42,8 @@
 #include <QDBusAbstractInterface>
 #include <QMap>
 
+#include <unistd.h>
+
 using namespace Kolab;
 
 KMailConnection::KMailConnection( ResourceKolabBase* resource )
@@ -58,9 +60,28 @@ KMailConnection::KMailConnection( ResourceKolabBase* resource )
 
 KMailConnection::~KMailConnection()
 {
-  delete mKmailGroupwareInterface;
-  mKmailGroupwareInterface = 0;
+  disconnectFromKMail();
 }
+
+bool KMailConnection::waitForGroupwareObject() const
+{
+  const int waitTime = 1000 * 10;        // 10 milliseconds step
+  const int timeout = 1000 * 1000 * 60;  // 60 seconds total timeout
+  int waited = 0;
+
+  forever {
+    if ( QDBusConnection::sessionBus().interface()->isServiceRegistered( "org.kde.kmail.groupware" ) ) {
+      return true;
+    }
+
+    usleep( waitTime );
+    waited += waitTime;
+    if ( waited > timeout ) {
+      kDebug(5650) << "Timeout while waiting for the groupware interface.";
+      return false;
+    }
+  }
+};
 
 bool KMailConnection::connectToKMail()
 {
@@ -77,10 +98,13 @@ bool KMailConnection::connectToKMail()
       return false;
     }
     kDebug(5650) << "Connected to the KMail DBus interface.";
+    if ( !waitForGroupwareObject() ) {
+      kError(5650) << "Can't connect to the groupware object on the KMail interface!";
+      return false;
+    }
+
     mKmailGroupwareInterface = new OrgKdeKmailGroupwareInterface( dbusService, KMAIL_DBUS_GROUPWARE_PATH,
                                                                   QDBusConnection::sessionBus() );
-    if ( !mKmailGroupwareInterface->isValid() )
-      kWarning(5650) << "The groupware interface is not valid, race condition!?";
 
     mOldServiceName = mKmailGroupwareInterface->service();
 
@@ -98,6 +122,12 @@ bool KMailConnection::connectToKMail()
              SLOT( fromKMailAsyncLoadResult(QMap<quint32,QString>,QString,QString)) );
   }
   return ( mKmailGroupwareInterface != 0 );
+}
+
+void KMailConnection::disconnectFromKMail()
+{
+  delete mKmailGroupwareInterface;
+  mKmailGroupwareInterface = 0;
 }
 
 bool KMailConnection::fromKMailAddIncidence( const QString& type,
@@ -292,8 +322,7 @@ void KMailConnection::dbusServiceOwnerChanged( const QString &service, const QSt
     {
       // Delete the stub so that the next time we need to talk to kmail,
       // we'll know that we need to start a new one.
-      delete mKmailGroupwareInterface;
-      mKmailGroupwareInterface = 0;
+      disconnectFromKMail();
     }
     else {
       const bool kmailJustStarted = oldOwner.isEmpty();
