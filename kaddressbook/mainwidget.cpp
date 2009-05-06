@@ -85,6 +85,9 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mCollectionView->header()->setDefaultAlignment( Qt::AlignCenter );
   mCollectionView->header()->setSortIndicatorShown( false );
 
+  for ( int column = 1; column < mCollectionTree->columnCount( QModelIndex() ); ++column )
+    mCollectionView->setColumnHidden( column, true );
+
 /*
   ContactFilterModel *contactFilterModel = new ContactFilterModel( this );
   contactFilterModel->setSourceModel( mContactModel );
@@ -101,7 +104,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mItemTree->setHeaderSet( Akonadi::EntityTreeModel::ItemListHeaders );
 
   mItemView->setModel( mItemTree );
-  //mItemView->setXmlGuiClient( guiClient );
+  mItemView->setXmlGuiClient( guiClient );
   mItemView->setSelectionMode( QAbstractItemView::ExtendedSelection );
   mItemView->setRootIsDecorated( false );
   mItemView->header()->setDefaultAlignment( Qt::AlignCenter );
@@ -135,7 +138,6 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mActionManager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete Contact", "Delete %1 Contacts" ) );
   new MainWidgetAdaptor( this );
   QDBusConnection::sessionBus().registerObject( "/KContactManager", this, QDBusConnection::ExportAdaptors );
-
 }
 
 MainWidget::~MainWidget()
