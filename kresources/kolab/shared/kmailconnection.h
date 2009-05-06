@@ -79,6 +79,12 @@ public:
    */
   bool connectToKMail();
 
+  /**
+   * Deletes the KMail groupware interface. The next method needs
+   * to call connectToKMail() again to make it work.
+   */
+  void disconnectFromKMail();
+
   // Call the DBus methods
   bool kmailSubresources( QList<KMail::SubResource>& lst,
                           const QString& contentsType );
@@ -122,8 +128,8 @@ public:
         value = reply.value();
         return true;
       }
-      kWarning(5650) << "D-Bus communication failed. Reply error is: " << reply.error()
-          << "Last interface error was: " << mKmailGroupwareInterface->lastError();
+      kWarning(5650) << "D-Bus communication with KMail failed. Reply error is: " << reply.error()
+                     << "Last interface error was: " << mKmailGroupwareInterface->lastError();
       return false;
     }
 
@@ -134,7 +140,12 @@ public:
       return b && ok;
     }
 
-
+    /**
+     * There is no reliable way to detect if the /Groupware object on KMail is really available,
+     * so we look for the dummy service org.kde.kmail.groupware instead, which KMail registers
+     * _after_ setting up the other groupware interfaces.
+     */
+    bool waitForGroupwareObject() const;
 
 private slots:
   void dbusServiceOwnerChanged(const QString & service, const QString & oldOwner, const QString & newOwner);
