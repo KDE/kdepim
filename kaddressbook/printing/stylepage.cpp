@@ -1,5 +1,5 @@
 /*
-    This file is part of KContactManager.
+    This file is part of KAddressBook.
     Copyright (c) 2002 Anders Lund <anders.lund@lund.tdcadsl.dk>
                        Tobias Koenig <tokoe@kde.org>
 
@@ -30,12 +30,13 @@
 #include <QtGui/QPixmap>
 #include <QtGui/QVBoxLayout>
 
+#include <kabc/addressbook.h>
 #include <KComboBox>
 #include <KDialog>
 #include <KLocale>
 
-StylePage::StylePage( QWidget* parent,  const char* name )
-  : QWidget( parent )
+StylePage::StylePage( KABC::AddressBook *ab, QWidget* parent,  const char* name )
+  : QWidget( parent ), mAddressBook( ab )
 {
   setObjectName( name );
   initGUI();
@@ -70,9 +71,9 @@ void StylePage::clearStyleNames()
   mStyleCombo->clear();
 }
 
-void StylePage::setSortField( ContactFields::Field field )
+void StylePage::setSortField( KABC::Field *field )
 {
-  mFieldCombo->setItemText( mFieldCombo->currentIndex(), ContactFields::label( field) );
+  mFieldCombo->setItemText( mFieldCombo->currentIndex(), field->label() );
 }
 
 void StylePage::setSortAscending( bool value )
@@ -83,7 +84,7 @@ void StylePage::setSortAscending( bool value )
     mSortTypeCombo->setCurrentIndex( 1 );
 }
 
-ContactFields::Field StylePage::sortField()
+KABC::Field* StylePage::sortField()
 {
   if ( mFieldCombo->currentIndex() == -1 )
     return mFields[ 0 ];
@@ -98,12 +99,15 @@ bool StylePage::sortAscending()
 
 void StylePage::initFieldCombo()
 {
+  if ( !mAddressBook )
+    return;
+
   mFieldCombo->clear();
 
-  mFields = ContactFields::allFields();
-  ContactFields::Fields::ConstIterator it;
+  mFields = mAddressBook->fields( KABC::Field::All );
+  KABC::Field::List::ConstIterator it;
   for ( it = mFields.constBegin(); it != mFields.constEnd(); ++it )
-    mFieldCombo->addItem( ContactFields::label(*it) );
+    mFieldCombo->addItem( (*it)->label() );
 }
 
 void StylePage::initGUI()
