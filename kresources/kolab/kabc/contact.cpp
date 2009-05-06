@@ -891,28 +891,28 @@ static QStringList phoneTypeToString( KABC::PhoneNumber::Type type )
     type = type & ~KABC::PhoneNumber::Work;
   }
 
-  // To support both "home1" and "home2", map Home+Pref to home1
+  // To support both "home1" and "home2", map Home+Pref to home2
   if ( ( type & KABC::PhoneNumber::Home ) && ( type & KABC::PhoneNumber::Pref ) )
   {
-      types << "home1";
+      types << "home2";
       type = type & ~KABC::PhoneNumber::Home;
       type = type & ~KABC::PhoneNumber::Pref;
   }
-  // To support both "business1" and "business2", map Work+Pref to business1
+  // To support both "business1" and "business2", map Work+Pref to business2
   if ( ( type & KABC::PhoneNumber::Work ) && ( type & KABC::PhoneNumber::Pref ) )
   {
-      types << "business1";
+      types << "business2";
       type = type & ~KABC::PhoneNumber::Work;
       type = type & ~KABC::PhoneNumber::Pref;
   }
 
 
   if ( type & KABC::PhoneNumber::Home )
-    types << "home2";
+    types << "home1";
   if ( type & KABC::PhoneNumber::Msg ) // Msg==messaging
     types << "company";
   if ( type & KABC::PhoneNumber::Work )
-    types << "business2";
+    types << "business1";
   if ( type & KABC::PhoneNumber::Pref )
     types << "primary";
   if ( type & KABC::PhoneNumber::Voice )
