@@ -1536,8 +1536,8 @@ either Personal or Special Occasion - it is your choice.</para></tip>
 <varlistentry>
 <term><guilabel>Access:</guilabel></term>
 <listitem><para>Choose <guilabel>Private</guilabel> or <guilabel>Confidential</guilabel>
-to keep the event private or confidential. Currently, this choice correctly
-sets the <quote>CLASS</quote> attribute of the events to
+to keep the event private or confidential. Currently, this choice correctly
+sets the <quote>CLASS</quote> attribute of the events to
 <quote>PUBLIC</quote>, <quote>PRIVATE</quote> or <quote>CONFIDENTIAL</quote>.
 However, if these settings are really used to restrict the access of the information
 depends on the client and / or groupware server implementation.</para>
@@ -2469,7 +2469,7 @@ the toolbar handle and drag the toolbar to a new position on your the
 &korganizer; window.</para>
 
 <para>Localization information like date and time formats can be
-configured from &systemsettings; within the <guilabel>Country/Region &amp;
+configured from &systemsettings; within the <guilabel>Regional &amp;
 Language</guilabel> module.  This control module can be
 accessed from within &korganizer;: just choose the <menuchoice><guimenu>
 Settings</guimenu><guimenuitem>Configure Date &amp;
@@ -3231,9 +3231,9 @@ the window.</para>
 <sect3 id="config-toolbars-available-actions">
 <title>Available Actions</title>
 
-<para>There are two rectangles below the toolbar title: <guilabel>Available actions</guilabel> 
+<para>There are two rectangles below the toolbar title: <guilabel>Available actions</guilabel>
 and <guilabel>Current actions</guilabel>. Using the left and
-right arrows (located between the rectangles) you can move icons between 
+right arrows (located between the rectangles) you can move icons between
 <guilabel>Available actions</guilabel> group and the <guilabel>Current actions</guilabel> group. The
 toolbar will have every icon that is in the <guilabel>Current actions</guilabel>
 box. The up and down arrows allow you reposition an icon.</para>
