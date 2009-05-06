@@ -733,7 +733,9 @@ void LDAPSearchDialog::slotUser1()
     if ( !resource )
       return;
 
-    importContactsUnlessTheyExist( d->selectedItems( mResultView ), resource );
+    if ( !d->selectedItems( mResultView ).isEmpty() ) {
+      importContactsUnlessTheyExist( d->selectedItems( mResultView ), resource );
+    }
 }
 
 #include "ldapsearchdialog.moc"
