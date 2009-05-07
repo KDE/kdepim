@@ -1022,6 +1022,8 @@ bool KPIM::AddresseeLineEdit::eventFilter(QObject *obj, QEvent *e)
             // nothing to skip to, let's stay where we are, but make sure the
             // first header becomes visible, if we are the first real entry
             completionBox()->ensureVisible( 0, 0 );
+            //Kolab issue 2941: be sure to add email even if it's the only element.
+            completionBox()->setCurrentItem( itemAbove );
             completionBox()->setSelected( currentIndex, true );
         }
         return true;
