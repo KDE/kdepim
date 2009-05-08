@@ -29,10 +29,8 @@ endif (KPILOT_STANDALONE)
 set(CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules" ${CMAKE_MODULE_PATH}) 
 
 macro_optional_find_package(Pilotlink)
-macro_optional_find_package(Mal)
 macro_optional_find_package(QCA2)
 macro_log_feature(PILOTLINK_FOUND "pilot-link" "Pilot-link Development Library" "http://www.pilot-link.org/" FALSE "0.12" "Needed for KPilot.")
-macro_log_feature(MAL_FOUND "libmal" "libmal Development Library" "http://jasonday.home.att.net/code/libmal" FALSE "0.40" "Needed for KPilot's Avantgo conduit.")
 macro_log_feature(QCA2_FOUND "QCA2" "Qt Cryptographic Architecture" "http://delta.affinix.com/qca" FALSE "2.0.0" "Needed for KPilot's keyringconduit")
 
 add_definitions(
