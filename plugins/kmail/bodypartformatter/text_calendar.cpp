@@ -379,7 +379,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         if ( !ok )
           return true;
         if ( !comment.isEmpty() )
-          incidence->addComment( comment );
+          incidence->setDescription( comment );
       }
 
       // First, save it for KOrganizer to handle
@@ -521,7 +521,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         if ( !ok )
           return true;
         if ( !comment.isEmpty() )
-          incidence->addComment( comment );
+          incidence->setDescription( comment );
       }
       return mail( incidence, callback, "declinecounter", KCal::iTIPDeclineCounter,
                    callback.sender(), DeclineCounter );
