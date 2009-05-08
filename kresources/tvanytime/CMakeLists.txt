@@ -16,7 +16,7 @@ kde4_add_kcfg_files(kcal_tvanytime_LIB_SRCS kcal_tvanytimeprefsbase.kcfgc )
 
 kde4_add_library(kcal_tvanytime SHARED ${kcal_tvanytime_LIB_SRCS})
 
-target_link_libraries(kcal_tvanytime  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim)
+target_link_libraries(kcal_tvanytime  ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KCAL_LIBS} kdepim)
 
 set_target_properties(kcal_tvanytime PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kcal_tvanytime ${INSTALL_TARGETS_DEFAULT_ARGS})

@@ -13,7 +13,7 @@ QT4_ADD_DBUS_INTERFACE2( knoteskolab_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/org.kde.
 
 kde4_add_library(knoteskolab SHARED ${knoteskolab_LIB_SRCS})
 
-target_link_libraries(knoteskolab  ${KDE4_KRESOURCES_LIBS} ${KDE4_KCAL_LIBS} kdepim kgroupwarebase)
+target_link_libraries(knoteskolab  ${KDEPIMLIBS_KRESOURCES_LIBS} ${KDEPIMLIBS_KCAL_LIBS} kdepim kgroupwarebase)
 
 set_target_properties(knoteskolab PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS knoteskolab ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -28,7 +28,7 @@ kde4_add_plugin(knotes_kolab ${knotes_kolab_PART_SRCS})
 
 
 
-target_link_libraries(knotes_kolab  ${KDE4_KDECORE_LIBS} knoteskolab ${KDE4_KRESOURCES_LIBS})
+target_link_libraries(knotes_kolab  ${KDE4_KDECORE_LIBS} knoteskolab ${KDEPIMLIBS_KRESOURCES_LIBS})
 
 install(TARGETS knotes_kolab  DESTINATION ${PLUGIN_INSTALL_DIR})
 

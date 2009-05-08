@@ -22,7 +22,7 @@ kde4_add_app_icon(kabcclient_SRCS "${KDE4_ICON_DIR}/oxygen/*/apps/office-address
 
 kde4_add_executable(kabcclient NOGUI ${kabcclient_SRCS})
 
-target_link_libraries(kabcclient ${KDE4_KABC_LIBS} ${KDE4_KDEUI_LIBS} )
+target_link_libraries(kabcclient ${KDEPIMLIBS_KABC_LIBS} ${KDE4_KDEUI_LIBS} )
 
 install(TARGETS kabcclient ${INSTALL_TARGETS_DEFAULT_ARGS})
 
@@ -31,7 +31,7 @@ if(NOT WIN32)
 install(PROGRAMS ${CMAKE_CURRENT_BINARY_DIR}/kabcclient DESTINATION ${BIN_INSTALL_DIR} RENAME kabc2mutt)
 else(NOT WIN32)
 kde4_add_executable(kabc2mutt NOGUI ${kabcclient_SRCS})
-target_link_libraries(kabc2mutt ${KDE4_KABC_LIBS} ${KDE4_KDEUI_LIBS} )
+target_link_libraries(kabc2mutt ${KDEPIMLIBS_KABC_LIBS} ${KDE4_KDEUI_LIBS} )
 install(TARGETS kabc2mutt ${INSTALL_TARGETS_DEFAULT_ARGS})
 endif(NOT WIN32)
 

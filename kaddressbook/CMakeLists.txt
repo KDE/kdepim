@@ -85,7 +85,7 @@ set( kcontactmanager_LIB_SRCS
 qt4_add_dbus_adaptor(kcontactmanager_LIB_SRCS org.kde.KContactmanager.MainWidget.xml mainwidget.h MainWidget kcontactmanageradaptor )
 
 kde4_add_library(kcontactmanagerprivate SHARED ${kcontactmanager_LIB_SRCS})
-target_link_libraries(kcontactmanagerprivate kdepim ${KDE4_PHONON_LIBS} ${KDE4_KDEUI_LIBS} ${KDE4_AKONADI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} akonadi-kabccommon akonadi_next)
+target_link_libraries(kcontactmanagerprivate kdepim ${KDE4_PHONON_LIBS} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} akonadi-kabccommon akonadi_next)
 
 if(QGPGME_FOUND)
   target_link_libraries(kcontactmanagerprivate ${QGPGME_LIBRARIES})
@@ -107,9 +107,9 @@ kde4_add_app_icon(kcontactmanager_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/view-p
 
 kde4_add_executable(kcontactmanager RUN_UNINSTALLED ${kcontactmanager_SRCS})
 
-target_link_libraries(kcontactmanager  ${KDE4_SYNDICATION_LIBS} kdepim ${KDE4_KCAL_LIBS}
+target_link_libraries(kcontactmanager  ${KDEPIMLIBS_SYNDICATION_LIBS} kdepim ${KDEPIMLIBS_KCAL_LIBS}
                               ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_PHONON_LIBS})
-target_link_libraries(kcontactmanager ${KDE4_AKONADI_LIBS} akonadi-kabccommon ${KDE4_KDEUI_LIBS} kcontactmanagerprivate)
+target_link_libraries(kcontactmanager ${KDEPIMLIBS_AKONADI_LIBS} akonadi-kabccommon ${KDE4_KDEUI_LIBS} kcontactmanagerprivate)
 
 if(QGPGME_FOUND)
   target_link_libraries(kcontactmanager ${QGPGME_LIBRARIES})

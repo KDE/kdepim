@@ -24,7 +24,7 @@ kde4_add_kcfg_files( calendar_SRCS calendarsettings.kcfgc )
 kde4_add_library( kpilot_conduit_calendar SHARED ${calendar_SRCS} )
 
 target_link_libraries( kpilot_conduit_calendar
-	${KDE4_KCAL_LIBS} ${KDE4_AKONADI_LIBS}
+	${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_AKONADI_LIBS}
 	kpilot_akonadibase kpilot_conduit_base kpilot
 )
 

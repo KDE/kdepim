@@ -67,9 +67,9 @@ kde4_add_executable(akonadiconsole_bin ${akonadiconsole_bin_SRCS})
 set_target_properties(akonadiconsole_bin PROPERTIES OUTPUT_NAME akonadiconsole)
 
 target_link_libraries( akonadiconsole_bin
-  ${KDE4_AKONADI_LIBS}
+  ${KDEPIMLIBS_AKONADI_LIBS}
   akonadi-kabccommon
-  ${KDE4_AKONADI_KMIME_LIBS}
+  ${KDEPIMLIBS_AKONADI_KMIME_LIBS}
   akonadi-kcal
   akonadi-xml
   kdepim

@@ -15,7 +15,7 @@ set(kcal_groupdav_LIB_SRCS groupdavcalendaradaptor.cpp kcal_resourcegroupdav.cpp
 
 kde4_add_library(kcal_groupdav SHARED ${kcal_groupdav_LIB_SRCS})
 
-target_link_libraries(kcal_groupdav  ${KDE4_KDECORE_LIBS} kgroupwaredav ${KDE4_KCAL_LIBS} ${KDE4_KRESOURCES_LIBS} kdepim)
+target_link_libraries(kcal_groupdav  ${KDE4_KDECORE_LIBS} kgroupwaredav ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_KRESOURCES_LIBS} kdepim)
 
 set_target_properties(kcal_groupdav PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kcal_groupdav ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -28,7 +28,7 @@ set(kabc_groupdav_LIB_SRCS kabc_resourcegroupdav.cpp groupdavaddressbookadaptor.
 
 kde4_add_library(kabc_groupdav SHARED ${kabc_groupdav_LIB_SRCS})
 
-target_link_libraries(kabc_groupdav  ${KDE4_KDECORE_LIBS} kgroupwaredav ${KDE4_KCAL_LIBS} kdepim ${KDE4_KABC_LIBS})
+target_link_libraries(kabc_groupdav  ${KDE4_KDECORE_LIBS} kgroupwaredav ${KDEPIMLIBS_KCAL_LIBS} kdepim ${KDEPIMLIBS_KABC_LIBS})
 
 set_target_properties(kabc_groupdav PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kabc_groupdav ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -48,7 +48,7 @@ if (NOT MSVC)
 set_target_properties(kcal_groupdav_plugin PROPERTIES OUTPUT_NAME kcal_groupdav)
 endif (NOT MSVC) 
 
-target_link_libraries(kcal_groupdav_plugin  ${KDE4_KDECORE_LIBS} kcal_groupdav ${KDE4_KRESOURCES_LIBS} ${KDE4_KCAL_LIBS} kgroupwarebase)
+target_link_libraries(kcal_groupdav_plugin  ${KDE4_KDECORE_LIBS} kcal_groupdav ${KDEPIMLIBS_KRESOURCES_LIBS} ${KDEPIMLIBS_KCAL_LIBS} kgroupwarebase)
 
 install(TARGETS kcal_groupdav_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -64,7 +64,7 @@ if (NOT MSVC)
 set_target_properties(kabc_groupdav_plugin PROPERTIES OUTPUT_NAME kabc_groupdav)
 endif (NOT MSVC) 
 
-target_link_libraries(kabc_groupdav_plugin  ${KDE4_KDECORE_LIBS} kabc_groupdav ${KDE4_KRESOURCES_LIBS} ${KDE4_KCAL_LIBS} kgroupwarebase)
+target_link_libraries(kabc_groupdav_plugin  ${KDE4_KDECORE_LIBS} kabc_groupdav ${KDEPIMLIBS_KRESOURCES_LIBS} ${KDEPIMLIBS_KCAL_LIBS} kgroupwarebase)
 
 install(TARGETS kabc_groupdav_plugin  DESTINATION ${PLUGIN_INSTALL_DIR})
 

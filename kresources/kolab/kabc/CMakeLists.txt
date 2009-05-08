@@ -11,7 +11,7 @@ QT4_ADD_DBUS_INTERFACE2( kabckolab_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/org.kde.km
 
 kde4_add_library(kabckolab SHARED ${kabckolab_LIB_SRCS})
 
-target_link_libraries(kabckolab  ${KDE4_KDECORE_LIBS} ${KDE4_KRESOURCES_LIBS} ${KDE4_KABC_LIBS} ${KDE4_KCAL_LIBS} kdepim kgroupwarebase)
+target_link_libraries(kabckolab  ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KRESOURCES_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${KDEPIMLIBS_KCAL_LIBS} kdepim kgroupwarebase)
 
 set_target_properties(kabckolab PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kabckolab ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -26,7 +26,7 @@ kde4_add_plugin(kabc_kolab ${kabc_kolab_PART_SRCS})
 
 
 
-target_link_libraries(kabc_kolab  ${KDE4_KDECORE_LIBS} kabckolab ${KDE4_KCAL_LIBS} )
+target_link_libraries(kabc_kolab  ${KDE4_KDECORE_LIBS} kabckolab ${KDEPIMLIBS_KCAL_LIBS} )
 
 install(TARGETS kabc_kolab  DESTINATION ${PLUGIN_INSTALL_DIR})
 

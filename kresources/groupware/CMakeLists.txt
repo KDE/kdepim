@@ -11,7 +11,7 @@ kde4_add_kcfg_files(kcal_groupware_LIB_SRCS kcal_groupwareprefsbase.kcfgc )
 
 kde4_add_library(kcal_groupware SHARED ${kcal_groupware_LIB_SRCS})
 
-target_link_libraries(kcal_groupware  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim)
+target_link_libraries(kcal_groupware  ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KCAL_LIBS} kdepim)
 
 set_target_properties(kcal_groupware PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kcal_groupware ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -26,7 +26,7 @@ kde4_add_kcfg_files(kabc_groupware_LIB_SRCS kabc_groupwareprefs.kcfgc )
 
 kde4_add_library(kabc_groupware SHARED ${kabc_groupware_LIB_SRCS})
 
-target_link_libraries(kabc_groupware  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} kdepim ${KDE4_KABC_LIBS})
+target_link_libraries(kabc_groupware  ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KCAL_LIBS} kdepim ${KDEPIMLIBS_KABC_LIBS})
 
 set_target_properties(kabc_groupware PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kabc_groupware ${INSTALL_TARGETS_DEFAULT_ARGS})

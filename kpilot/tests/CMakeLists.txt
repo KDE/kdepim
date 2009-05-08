@@ -29,12 +29,12 @@ target_link_libraries(testdatebook kpilot ${KDE4_KDECORE_LIBS} ${KDE4_KDEUI_LIBS
 #	kde4_add_unit_test(importdatebook ${importdatebook_SRCS})
 #	kde4_add_unit_test(exportdatebook ${exportdatebook_SRCS})
 #	kde4_add_unit_test(mergecalendars ${mergecalendars_SRCS})
-#	target_link_libraries(importdatebook kpilot ${QT_LIBRARIES} ${KDE4_KCAL_LIBS})
-#	target_link_libraries(exportdatebook kpilot ${QT_LIBRARIES} ${KDE4_KCAL_LIBS})
-#	target_link_libraries(mergecalendars ${QT_LIBRARIES} ${KDE4_KCAL_LIBS})
+#	target_link_libraries(importdatebook kpilot ${QT_LIBRARIES} ${KDEPIMLIBS_KCAL_LIBS})
+#	target_link_libraries(exportdatebook kpilot ${QT_LIBRARIES} ${KDEPIMLIBS_KCAL_LIBS})
+#	target_link_libraries(mergecalendars ${QT_LIBRARIES} ${KDEPIMLIBS_KCAL_LIBS})
 #endif (HAVE_CALENDARLOCAL_H)
 
 #set(importaddresses_SRCS importaddresses.cc)
 #kde4_add_unit_test(importaddresses ${importaddresses_SRCS})
-#target_link_libraries(importaddresses kpilot ${QT_LIBRARIES} ${KDE4_KABC_LIBS} kabc_file)
+#target_link_libraries(importaddresses kpilot ${QT_LIBRARIES} ${KDEPIMLIBS_KABC_LIBS} kabc_file)
 

@@ -11,7 +11,7 @@ QT4_ADD_DBUS_INTERFACE2( kabcscalix_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/org.kde.k
 
 kde4_add_library(kabcscalix SHARED ${kabcscalix_LIB_SRCS})
 
-target_link_libraries(kabcscalix  ${KDE4_KDECORE_LIBS} ${KDE4_KRESOURCES_LIBS} ${KDE4_KABC_LIBS} ${KDE4_KCAL_LIBS} kdepim kgroupwarebase)
+target_link_libraries(kabcscalix  ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KRESOURCES_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${KDEPIMLIBS_KCAL_LIBS} kdepim kgroupwarebase)
 
 set_target_properties(kabcscalix PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kabcscalix ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -26,7 +26,7 @@ kde4_add_plugin(kabc_scalix ${kabc_scalix_PART_SRCS})
 
 
 
-target_link_libraries(kabc_scalix  ${KDE4_KDECORE_LIBS} kabcscalix ${KDE4_KCAL_LIBS} )
+target_link_libraries(kabc_scalix  ${KDE4_KDECORE_LIBS} kabcscalix ${KDEPIMLIBS_KCAL_LIBS} )
 
 install(TARGETS kabc_scalix  DESTINATION ${PLUGIN_INSTALL_DIR})
 

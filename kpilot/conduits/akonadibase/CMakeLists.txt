@@ -18,7 +18,7 @@ kde4_add_library(kpilot_akonadibase SHARED ${akonadibase_SRCS})
 target_link_libraries(kpilot_akonadibase
 	kpilot_conduit_base kpilot
 	${KDE4_KDEUI_LIBS}
-	${KDE4_AKONADI_LIBS}
+	${KDEPIMLIBS_AKONADI_LIBS}
 )
 
 install(TARGETS kpilot_akonadibase LIBRARY ${INSTALL_TARGETS_DEFAULT_ARGS})

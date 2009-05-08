@@ -16,7 +16,7 @@ kde4_add_plugin(kaddrbk_csv_xxport ${kaddrbk_csv_xxport_PART_SRCS})
 
 
 
-target_link_libraries(kaddrbk_csv_xxport kaddressbookprivate kabinterfaces kabcommon ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS})
+target_link_libraries(kaddrbk_csv_xxport kaddressbookprivate kabinterfaces kabcommon ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KABC_LIBS})
 
 install(TARGETS kaddrbk_csv_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -30,7 +30,7 @@ kde4_add_plugin(kaddrbk_vcard_xxport ${kaddrbk_vcard_xxport_PART_SRCS})
 
 
 
-target_link_libraries(kaddrbk_vcard_xxport kaddressbookprivate kabinterfaces kabcommon kdepim ${KDE4_KABC_LIBS} ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES} )
+target_link_libraries(kaddrbk_vcard_xxport kaddressbookprivate kabinterfaces kabcommon kdepim ${KDEPIMLIBS_KABC_LIBS} ${KDE4_KDEUI_LIBS} ${QGPGME_LIBRARIES} )
 
 install(TARGETS kaddrbk_vcard_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 endif(QGPGME_FOUND)
@@ -44,7 +44,7 @@ kde4_add_plugin(kaddrbk_kde2_xxport ${kaddrbk_kde2_xxport_PART_SRCS})
 
 
 
-target_link_libraries(kaddrbk_kde2_xxport kaddressbookprivate kabinterfaces ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS})
+target_link_libraries(kaddrbk_kde2_xxport kaddressbookprivate kabinterfaces ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KABC_LIBS})
 
 install(TARGETS kaddrbk_kde2_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -56,7 +56,7 @@ set(kaddrbk_bookmark_xxport_PART_SRCS bookmark_xxport.cpp )
 
 kde4_add_plugin(kaddrbk_bookmark_xxport ${kaddrbk_bookmark_xxport_PART_SRCS})
 
-target_link_libraries(kaddrbk_bookmark_xxport kaddressbookprivate kabinterfaces kabcommon ${KDE4_KABC_LIBS} ${KDE4_KDEUI_LIBS} )
+target_link_libraries(kaddrbk_bookmark_xxport kaddressbookprivate kabinterfaces kabcommon ${KDEPIMLIBS_KABC_LIBS} ${KDE4_KDEUI_LIBS} )
 
 install(TARGETS kaddrbk_bookmark_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -70,7 +70,7 @@ kde4_add_plugin(kaddrbk_eudora_xxport ${kaddrbk_eudora_xxport_PART_SRCS})
 
 
 
-target_link_libraries(kaddrbk_eudora_xxport kaddressbookprivate kabinterfaces ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS})
+target_link_libraries(kaddrbk_eudora_xxport kaddressbookprivate kabinterfaces ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KABC_LIBS})
 
 install(TARGETS kaddrbk_eudora_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -84,7 +84,7 @@ kde4_add_plugin(kaddrbk_ldif_xxport ${kaddrbk_ldif_xxport_PART_SRCS})
 
 
 
-target_link_libraries(kaddrbk_ldif_xxport kaddressbookprivate kabinterfaces ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS})
+target_link_libraries(kaddrbk_ldif_xxport kaddressbookprivate kabinterfaces ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KABC_LIBS})
 
 install(TARGETS kaddrbk_ldif_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -98,7 +98,7 @@ kde4_add_plugin(kaddrbk_opera_xxport ${kaddrbk_opera_xxport_PART_SRCS})
 
 
 
-target_link_libraries(kaddrbk_opera_xxport kaddressbookprivate kabinterfaces ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS})
+target_link_libraries(kaddrbk_opera_xxport kaddressbookprivate kabinterfaces ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KABC_LIBS})
 
 install(TARGETS kaddrbk_opera_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -112,7 +112,7 @@ kde4_add_plugin(kaddrbk_pab_xxport ${kaddrbk_pab_xxport_PART_SRCS})
 
 
 
-target_link_libraries(kaddrbk_pab_xxport kaddressbookprivate kabinterfaces ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} ${QT_QT3SUPPORT_LIBRARY})
+target_link_libraries(kaddrbk_pab_xxport kaddressbookprivate kabinterfaces ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${QT_QT3SUPPORT_LIBRARY})
 
 install(TARGETS kaddrbk_pab_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -126,7 +126,7 @@ kde4_add_plugin(kaddrbk_gmx_xxport ${kaddrbk_gmx_xxport_PART_SRCS})
 
 
 
-target_link_libraries(kaddrbk_gmx_xxport kaddressbookprivate kabinterfaces ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS})
+target_link_libraries(kaddrbk_gmx_xxport kaddressbookprivate kabinterfaces ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KABC_LIBS})
 
 install(TARGETS kaddrbk_gmx_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
 
@@ -141,7 +141,7 @@ if(GNOKII_FOUND)
 
    
 
-   target_link_libraries(kaddrbk_gnokii_xxport kaddressbookprivate kabinterfaces ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS} ${GNOKII_LIBRARIES})
+   target_link_libraries(kaddrbk_gnokii_xxport kaddressbookprivate kabinterfaces ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${GNOKII_LIBRARIES})
 
    install(TARGETS kaddrbk_gnokii_xxport  DESTINATION ${PLUGIN_INSTALL_DIR})
    install(FILES gnokii_xxport.desktop DESTINATION ${SERVICES_INSTALL_DIR}/kaddressbook)

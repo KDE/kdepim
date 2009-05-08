@@ -15,5 +15,5 @@ SET(converter_SRCS
 
 add_executable(converter ${converter_SRCS})
 
-target_link_libraries(converter ${KDE4_KDECORE_LIBS} ${KDE4_KABC_LIBS})
+target_link_libraries(converter ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KABC_LIBS})
 

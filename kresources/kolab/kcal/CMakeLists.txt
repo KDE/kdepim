@@ -23,7 +23,7 @@ QT4_ADD_DBUS_INTERFACE2( kcalkolab_LIB_SRCS ${CMAKE_SOURCE_DIR}/kmail/org.kde.km
 
 kde4_add_library(kcalkolab SHARED ${kcalkolab_LIB_SRCS})
 
-target_link_libraries(kcalkolab  ${KDE4_KDECORE_LIBS} ${KDE4_KRESOURCES_LIBS} ${KDE4_KCAL_LIBS} kdepim kgroupwarebase)
+target_link_libraries(kcalkolab  ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KRESOURCES_LIBS} ${KDEPIMLIBS_KCAL_LIBS} kdepim kgroupwarebase)
 
 set_target_properties(kcalkolab PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kcalkolab ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -38,7 +38,7 @@ kde4_add_plugin(kcal_kolab ${kcal_kolab_PART_SRCS})
 
 
 
-target_link_libraries(kcal_kolab  ${KDE4_KDECORE_LIBS} ${KDE4_KRESOURCES_LIBS} ${KDE4_KCAL_LIBS} kcalkolab )
+target_link_libraries(kcal_kolab  ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KRESOURCES_LIBS} ${KDEPIMLIBS_KCAL_LIBS} kcalkolab )
 
 install(TARGETS kcal_kolab  DESTINATION ${PLUGIN_INSTALL_DIR})
 

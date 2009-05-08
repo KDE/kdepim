@@ -23,7 +23,7 @@ kde4_add_kcfg_files( contacts_SRCS contactssettings.kcfgc )
 kde4_add_library( kpilot_conduit_contacts SHARED ${contacts_SRCS} )
 
 target_link_libraries( kpilot_conduit_contacts
-	${KDE4_KCAL_LIBS} ${KDE4_AKONADI_LIBS}
+	${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_AKONADI_LIBS}
 	kpilot_akonadibase kpilot_conduit_base kpilot
 )
 

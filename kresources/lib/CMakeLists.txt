@@ -32,7 +32,7 @@ kde4_add_kcfg_files(kgroupwarebase_LIB_SRCS kresources_groupwareprefs.kcfgc )
 
 kde4_add_library(kgroupwarebase SHARED ${kgroupwarebase_LIB_SRCS})
 
-target_link_libraries(kgroupwarebase  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${QT_QT3SUPPORT_LIBRARY} kdepim )
+target_link_libraries(kgroupwarebase  ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KCAL_LIBS} ${KDE4_KDE3SUPPORT_LIBS} ${QT_QT3SUPPORT_LIBRARY} kdepim )
 
 set_target_properties(kgroupwarebase PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS kgroupwarebase ${INSTALL_TARGETS_DEFAULT_ARGS})
@@ -49,7 +49,7 @@ set(kgroupwaredav_LIB_SRCS
 
 kde4_add_library(kgroupwaredav SHARED ${kgroupwaredav_LIB_SRCS})
 
-target_link_libraries(kgroupwaredav  ${KDE4_KDECORE_LIBS} ${KDE4_KCAL_LIBS} ${KDE4_KDE3SUPPORT_LIBS} kdepim kgroupwarebase )
+target_link_libraries(kgroupwaredav  ${KDE4_KDECORE_LIBS} ${KDEPIMLIBS_KCAL_LIBS} ${KDE4_KDE3SUPPORT_LIBS} kdepim kgroupwarebase )
 target_link_libraries(kgroupwaredav  LINK_INTERFACE_LIBRARIES  kgroupwarebase )
 
 set_target_properties(kgroupwaredav

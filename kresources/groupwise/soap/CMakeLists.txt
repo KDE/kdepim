@@ -12,7 +12,7 @@ set(soapdebug_SRCS soapdebug.cpp )
 
 kde4_add_executable(soapdebug TEST ${soapdebug_SRCS})
 
-target_link_libraries(soapdebug  ${KDE4_KDECORE_LIBS} gwsoap ${KDE4_KCAL_LIBS} kdepim )
+target_link_libraries(soapdebug  ${KDE4_KDECORE_LIBS} gwsoap ${KDEPIMLIBS_KCAL_LIBS} kdepim )
 
 ########### next target ###############
 
@@ -26,7 +26,7 @@ set(gwsoap_SRCS
    )
 
 kde4_add_library(gwsoap SHARED ${gwsoap_SRCS} )
-target_link_libraries(gwsoap ${KDE4_KDEUI_LIBS} ${KDE4_KCAL_LIBS} ${KDE4_KABC_LIBS} ${QT_QTCORE_LIBRARY})
+target_link_libraries(gwsoap ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${QT_QTCORE_LIBRARY})
 set_target_properties(gwsoap PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
 install(TARGETS gwsoap ${INSTALL_TARGETS_DEFAULT_ARGS})
 
