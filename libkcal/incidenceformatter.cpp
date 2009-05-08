@@ -634,19 +634,32 @@ static QString invitationRow( const QString &cell1, const QString &cell2 )
 static QString invitationsDetailsIncidence( Incidence *incidence )
 {
   QString html;
-  QString descr = incidence->description();
+  QString descr;
+  QStringList comments;
+  if ( incidence->comments().isEmpty() && !incidence->description().isEmpty() ) {
+    comments << incidence->description();
+  } else {
+    descr = incidence->description();
+    comments = incidence->comments();
+  }
+
   if( !descr.isEmpty() ) {
     html += "<br/><u>" + i18n("Description:")
       + "</u><table border=\"0\"><tr><td>&nbsp;</td><td>";
     html += string2HTML(descr) + "</td></tr></table>";
   }
-  QStringList comments = incidence->comments();
   if ( !comments.isEmpty() ) {
     html += "<br><u>" + i18n("Comments:")
-          + "</u><table border=\"0\"><tr><td>&nbsp;</td><td><ul>";
-    for ( uint i = 0; i < comments.count(); ++i )
-      html += "<li>" + string2HTML( comments[i] ) + "</li>";
-    html += "</ul></td></tr></table>";
+          + "</u><table border=\"0\"><tr><td>&nbsp;</td><td>";
+    if ( comments.count() > 1 ) {
+      html += "<ul>";
+      for ( uint i = 0; i < comments.count(); ++i )
+        html += "<li>" + string2HTML( comments[i] ) + "</li>";
+      html += "</ul>";
+    } else {
+      html += string2HTML( comments[0] );
+    }
+    html += "</td></tr></table>";
   }
   return html;
 }
@@ -2301,7 +2314,7 @@ QString IncidenceFormatter::recurrenceString(Incidence * incidence)
                               recurs->frequency()).arg( recurs->yearDays()[0] );
           break;
       }
-      
+
       default:
           return i18n( "Incidence recurs" );
   }
