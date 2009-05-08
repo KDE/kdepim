@@ -1,8 +1,25 @@
+Friday, May 8th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3605: System tray icon displayed even when there is no unread mail
+* kolab/issue3606: Some common folder properties are missing
+* kolab/issue3608: Lastname of an attendee is missing
+* kolab/issue2459: Don't crash when refreshing the IMAP cache
+* kolab/issue3598: Public holiday description of events are missing
+* kolab/issue2972: Do not show a "Could not create folders" dialog when deleting and then refreshing the cache
+* kolab/issue2276: Export contacts or calendar overwrites files without a warning
+* kolab/issue2150: Reply action missing in the message popup menu
+* kolab/issue2941: Matches from an LDAP server can not be selected by keyboard with KMail
+
+
 Thursday, April 30th 2009
 
 Problems addressed
 ------------------
 
+* kolab/issue3228: Forwarding filter action does not directly send the email 
 * kolab/issue3540: Disable the "Go" buttons in the todo view
 * kolab/issue3251: Fix the phone numbers of a contact in the XML, so that syncing with Toltec etc works
 * kolab/issue2931: Fix an incorrect translation
