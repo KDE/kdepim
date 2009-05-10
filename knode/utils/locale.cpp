@@ -26,13 +26,12 @@
 #include "kngroup.h"
 #include "settings.h"
 
-
 #include <KCharsets>
 #include <KGlobal>
+#include <kmime/kmime_charfreq.h>
 #include <KLocale>
 
 #include <QTextCodec>
-
 
 
 using namespace KNode::Utilities;
@@ -88,3 +87,36 @@ QByteArray Locale::defaultCharset( KNGroup *g )
     return defaultCharset();
   }
 }
+
+
+
+
+void Locale::recodeString( const QString &s, KNGroup *g, QByteArray &result )
+{
+  Q_ASSERT( g );
+
+  encodeTo7Bit( s.toLatin1(), defaultCharset( g ), result );
+}
+
+
+void Locale::encodeTo7Bit( const QByteArray &raw, const QByteArray &charset, QByteArray &result )
+{
+  if ( raw.isEmpty() ) {
+    result = raw;
+    return;
+  }
+
+  KMime::CharFreq cf( raw );
+  if ( cf.isSevenBitText() ) {
+    result = raw;
+    return;
+  }
+
+  // Transform 8-bit data
+  QString properData = QTextCodec::codecForName( charset )->toUnicode( raw );
+  result = KMime::encodeRFC2047String( properData, "UTF-8" );
+}
+
+
+
+

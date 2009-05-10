@@ -113,8 +113,18 @@ void KNRemoteArticle::parse()
   if( !(raw=rawHeader(m_essageID.type())).isEmpty() )
     m_essageID.from7BitString(raw);
 
-  if( !(raw=rawHeader(f_rom.type())).isEmpty() )
-    f_rom.from7BitString(raw);
+  if( !(raw=rawHeader(f_rom.type())).isEmpty() ) {
+    QByteArray from;
+    Locale::encodeTo7Bit( raw, defaultCharset(), from );
+    f_rom.from7BitString( from );
+  }
+
+  raw = rawHeader( subject()->type() );
+  if( !raw.isEmpty() ) {
+    QByteArray subjectStr;
+    Locale::encodeTo7Bit( raw, defaultCharset(), subjectStr );
+    subject()->from7BitString( subjectStr );
+  }
 
   if( !(raw=rawHeader(r_eferences.type())).isEmpty() )
     r_eferences.from7BitString(raw);

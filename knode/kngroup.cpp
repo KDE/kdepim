@@ -13,9 +13,7 @@
 */
 
 
-#include <kconfig.h>
-#include <klocale.h>
-#include <kdebug.h>
+#include "kngroup.h"
 
 #include "knglobals.h"
 #include "kncollectionview.h"
@@ -30,12 +28,19 @@
 #include "knnntpaccount.h"
 #include "headerview.h"
 #include "settings.h"
+#include "utils/locale.h"
+
+#include <kconfig.h>
+#include <klocale.h>
+#include <kdebug.h>
 
 #include <QTextStream>
 #include <QByteArray>
 
 
+using namespace KNode::Utilities;
 #define SORT_DEPTH 5
+
 
 KNGroup::KNGroup(KNCollection *p)
   : KNArticleCollection(p), n_ewCount(0), l_astFetchCount(0), r_eadCount(0), i_gnoreCount(0),
@@ -466,17 +471,20 @@ void KNGroup::insortNewHeaders( const KIO::UDSEntryList &list, KNJobData *job)
         hdrValue = value.right( value.length() - ( hdrName.length() + 2 ) );
 
         if ( hdrName == "Subject" ) {
-          art->subject()->from7BitString( hdrValue.toLatin1() );
+          QByteArray subject;
+          Locale::recodeString( hdrValue.toLatin1(), this, subject );
+          art->subject()->from7BitString( subject );
           if ( art->subject()->isEmpty() )
             art->subject()->fromUnicodeString( i18n("no subject"), art->defaultCharset() );
         } else if ( hdrName == "From" ) {
-          art->from()->from7BitString( hdrValue.toLatin1() );
+          QByteArray from;
+          Locale::recodeString( hdrValue.toLatin1(), this, from );
+          art->from()->from7BitString( from );
           if ( art->from()->as7BitString().isEmpty() ) {
             // If the address incorrect (e.g. "toto <toto AT domain>"), the from is empty !
             // Used the full header as display name.
-            const QString name = KMime::decodeRFC2047String( hdrValue.toLatin1() );
             const QByteArray email = "@invalid";
-            art->from()->addAddress( email, name );
+            art->from()->addAddress( email, from );
           }
         } else if ( hdrName == "Date" ) {
           art->date()->from7BitString( hdrValue.toLatin1() );
@@ -897,7 +905,7 @@ void KNGroup::buildThreads(int cnt, KNJobData *job)
   // this method is called from the nntp-thread!!!
 #ifndef NDEBUG
   kDebug(5003) << "Sorting :" << resortCnt << "headers resorted";
-  kDebug(5003) << "Sorting :" << foundCnt << "references of" << refCnt << "found"; 
+  kDebug(5003) << "Sorting :" << foundCnt << "references of" << refCnt << "found";
   kDebug(5003) << "Sorting :" << bySubCnt << "references of" << refCnt << "sorted by subject";
 #endif
 }
