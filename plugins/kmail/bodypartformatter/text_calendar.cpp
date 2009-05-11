@@ -414,8 +414,13 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
             i18n("Comment:"), QString(), &ok );
         if ( !ok )
           return true;
-        if ( !comment.isEmpty() )
-          incidence->setDescription( comment );
+        if ( !comment.isEmpty() ) {
+          if ( callback.exchangeCompatibleInvitations() ) {
+            incidence->setDescription( comment );
+          } else {
+            incidence->addComment( comment );
+          }
+        }
       }
 
       // First, save it for KOrganizer to handle
@@ -554,8 +559,13 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
             i18n("Comment:"), QString(), &ok );
         if ( !ok )
           return true;
-        if ( !comment.isEmpty() )
-          incidence->setDescription( comment );
+        if ( !comment.isEmpty() ) {
+          if ( callback.exchangeCompatibleInvitations() ) {
+            incidence->setDescription( comment );
+          } else {
+            incidence->addComment( comment );
+          }
+        }
       }
       return mail( incidence, callback, Attendee::NeedsAction, Scheduler::Declinecounter,
                    callback.sender(), DeclineCounter );
