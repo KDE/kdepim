@@ -1,8 +1,5 @@
 
-include_directories( ${CMAKE_SOURCE_DIR}/libical/src/libical ${CMAKE_SOURCE_DIR}/libical/src/libicalss ${CMAKE_SOURCE_DIR}/ ${CMAKE_SOURCE_DIR}/knotes ${CMAKE_SOURCE_DIR}/kaddressbook/common ${CMAKE_SOURCE_DIR}/kaddressbook/ ${CMAKE_BINARY_DIR}/kaddressbook ${CMAKE_BINARY_DIR}/kaddressbook/common)
-
-
-########### next target ###############
+include_directories( ${CMAKE_SOURCE_DIR}/knotes ${CMAKE_SOURCE_DIR}/kaddressbook/common ${CMAKE_SOURCE_DIR}/kaddressbook ${CMAKE_BINARY_DIR}/kaddressbook ${CMAKE_BINARY_DIR}/kaddressbook/common)
 
 
 ########### next target ###############
