@@ -162,7 +162,6 @@ set(libkdgantt1_SRCS
   add_subdirectory(kresources)
   add_subdirectory(kdgantt1)
   add_subdirectory(akonadiconsole)
-  add_subdirectory(cmake)
   add_subdirectory(icons)
   add_subdirectory(plugins)
 
