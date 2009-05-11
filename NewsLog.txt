@@ -20,7 +20,6 @@ Problems addressed
 ------------------
 
 * kolab/issue3228: Forwarding filter action does not directly send the email 
-* kolab/issue3540: Disable the "Go" buttons in the todo view
 * kolab/issue3251: Fix the phone numbers of a contact in the XML, so that syncing with Toltec etc works
 * kolab/issue2931: Fix an incorrect translation
 * kolab/issue2963: Crash while deleting mails, in KMMoveCommand::execute
