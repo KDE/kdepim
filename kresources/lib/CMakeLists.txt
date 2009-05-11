@@ -1,11 +1,4 @@
 
-include_directories(
-	${CMAKE_SOURCE_DIR}/kcal/libical/src/libical
-	${CMAKE_BINARY_DIR}/kcal/libical/src/libical
-	${CMAKE_SOURCE_DIR}/kcal/libical/src/libicalss
-	
-)
-
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 
 ########### next target ###############
