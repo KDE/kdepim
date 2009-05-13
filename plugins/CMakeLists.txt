@@ -1,5 +1,5 @@
-if(KMAIL_SUPPORTED)
+if(BUILD_kmail)
   add_subdirectory( kmail )
-endif(KMAIL_SUPPORTED)
+endif(BUILD_kmail)
 
 add_subdirectory( ktexteditor )
