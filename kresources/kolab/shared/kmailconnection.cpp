@@ -81,7 +81,7 @@ bool KMailConnection::waitForGroupwareObject() const
       return false;
     }
   }
-};
+}
 
 bool KMailConnection::connectToKMail()
 {
