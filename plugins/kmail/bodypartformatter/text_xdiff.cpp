@@ -106,7 +106,7 @@ namespace {
             style = removedLineStyle;
           } else if ( line.startsWith( QLatin1String("==") ) ) {
             style = sepStyle;
-          } else if ( line.startsWith( QLatin2String("@@") ) ) {
+          } else if ( line.startsWith( QLatin1String("@@") ) ) {
             style = chunkStyle;
           }
         }
