@@ -83,7 +83,6 @@ bool TreeWidget::restoreLayout( KConfigGroup &group, const char * keyName )
 
   bool sectionsWereClickable = header()->isClickable();
   bool sectionsWereMovable = header()->isMovable();
-  //bool lastSectionWasStretched = header()->stretchLastSection();
   bool sortIndicatorWasShown = header()->isSortIndicatorShown();
   Qt::Alignment originalDefaultAlignment = header()->defaultAlignment();
   //int defaultSectionSize = header()->defaultSectionSize();
@@ -112,7 +111,6 @@ bool TreeWidget::restoreLayout( KConfigGroup &group, const char * keyName )
   for ( int i = 0 ; i < cc ; i++ )
   {
      savedSizes[ i ] = header()->sectionSize( i );
-     header()->resizeSection( i , 10 );
   }
 
   if ( !header()->restoreState( state ) )
