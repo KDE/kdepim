@@ -48,9 +48,7 @@ bool TreeWidget::saveLayout( KConfigGroup &group, const char * keyName ) const
   if( !keyName )
     return false;
 
-  group.writeEntry( keyName, QVariant( header()->saveState() ) );
-
-  return true;
+  group.writeEntry( keyName, QVariant( header()->saveState().toHex() ) );
 }
 
 bool TreeWidget::saveLayout( KConfig * config, const char * groupName, const char * keyName ) const
@@ -71,6 +69,7 @@ bool TreeWidget::restoreLayout( KConfigGroup &group, const char * keyName )
   QByteArray state = group.readEntry(
                              keyName, QVariant( QVariant::ByteArray )
                          ).toByteArray();
+  state = QByteArray::fromHex( state );
 
   if( state.isEmpty() )
     return false;
