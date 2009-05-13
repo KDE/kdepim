@@ -447,6 +447,13 @@ QVariant QGpgMECryptoConfigEntry::stringToValue( const QString& str, bool unesca
   bool isString = isStringType();
 
   if ( isList() ) {
+    if ( argType() == ArgType_None ) {
+        bool ok = true;
+        const QVariant v = str.isEmpty() ? 0U : str.toUInt( &ok ) ;
+        if ( !ok )
+            kdWarning(5150) << "list-of-none should have an unsigned int as value:" << str << endl;
+        return v;
+    }
     QValueList<QVariant> lst;
     QStringList items = QStringList::split( ',', str );
     for( QStringList::const_iterator valit = items.begin(); valit != items.end(); ++valit ) {
@@ -657,7 +664,10 @@ void QGpgMECryptoConfigEntry::resetToDefault()
   if ( mFlags & GPGCONF_FLAG_DEFAULT )
     mValue = mDefaultValue;
   else if ( mArgType == ArgType_None )
-    mValue = false;
+    if ( isList() )
+      mValue = 0U;
+    else
+      mValue = false;
 }
 
 void QGpgMECryptoConfigEntry::setBoolValue( bool b )
@@ -715,7 +725,9 @@ void QGpgMECryptoConfigEntry::setNumberOfTimesSet( unsigned int i )
 {
   Q_ASSERT( mArgType == ArgType_None );
   Q_ASSERT( isList() );
-  setUIntValue( i );
+  mValue = i;
+  mSet = i > 0;
+  mDirty = true;
 }
 
 void QGpgMECryptoConfigEntry::setStringValueList( const QStringList& lst )
