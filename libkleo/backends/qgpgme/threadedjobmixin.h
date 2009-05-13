@@ -45,6 +45,7 @@
 #include <gpgme++/context.h>
 #include <gpgme++/interfaces/progressprovider.h>
 
+#include <boost/shared_ptr.hpp>
 #include <boost/bind.hpp>
 #include <boost/tuple/tuple.hpp>
 #include <boost/utility/enable_if.hpp>
@@ -101,9 +102,9 @@ namespace _detail {
 
     template <typename T_binder>
     void run( const T_binder & func ) {
-      m_watcher.setFuture( QtConcurrent::run( boost::bind( func, m_ctx ) ) );
+      m_watcher.setFuture( QtConcurrent::run( boost::bind( func, m_ctx.get() ) ) );
     }
-    GpgME::Context * context() const { return m_ctx; }
+    GpgME::Context * context() const { return m_ctx.get(); }
 
     virtual void resultHook( const result_type & ) {}
 
@@ -151,7 +152,7 @@ namespace _detail {
     }
 
   private:
-    GpgME::Context * m_ctx;
+    boost::shared_ptr<GpgME::Context> m_ctx;
     QFutureWatcher<T_result> m_watcher;
     QString m_auditLog;
   };
