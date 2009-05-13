@@ -85,7 +85,7 @@ set( kcontactmanager_LIB_SRCS
 qt4_add_dbus_adaptor(kcontactmanager_LIB_SRCS org.kde.KContactmanager.MainWidget.xml mainwidget.h MainWidget kcontactmanageradaptor )
 
 kde4_add_library(kcontactmanagerprivate SHARED ${kcontactmanager_LIB_SRCS})
-target_link_libraries(kcontactmanagerprivate kdepim ${KDE4_PHONON_LIBS} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} akonadi-kabccommon akonadi_next)
+target_link_libraries(kcontactmanagerprivate kdepim ${KDE4_PHONON_LIBS} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_KLDAP_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} akonadi-kabccommon akonadi_next)
 
 if(QGPGME_FOUND)
   target_link_libraries(kcontactmanagerprivate ${QGPGME_LIBRARIES})
