@@ -152,19 +152,6 @@ set(libkdgantt1_SRCS
 
   include (kleopatra/ConfigureChecks.cmake)
 
-  # These targets will always be built
-  add_subdirectory(libkdepim)
-  add_subdirectory(libkleo)
-  add_subdirectory(libkpgp)
-  add_subdirectory(libksieve)
-  add_subdirectory(kontactinterfaces)
-  add_subdirectory(mimelib)
-  add_subdirectory(kresources)
-  add_subdirectory(kdgantt1)
-  add_subdirectory(akonadiconsole)
-  add_subdirectory(icons)
-  add_subdirectory(plugins)
-
   if(QGPGME_FOUND)
     if (Boost_TOPOLOGICAL_SORT_DIR)
       macro_optional_add_subdirectory(kleopatra)
@@ -208,6 +195,19 @@ set(libkdgantt1_SRCS
     #  macro_optional_add_subdirectory(kitchensync)
     #endif(OPENSYNC_FOUND AND GLIB2_FOUND)
   endif(NOT WIN32)
+
+  # These targets will always be built
+  add_subdirectory(libkdepim)
+  add_subdirectory(libkleo)
+  add_subdirectory(libkpgp)
+  add_subdirectory(libksieve)
+  add_subdirectory(kontactinterfaces)
+  add_subdirectory(mimelib)
+  add_subdirectory(kresources)
+  add_subdirectory(kdgantt1)
+  add_subdirectory(akonadiconsole)
+  add_subdirectory(icons)
+  add_subdirectory(plugins)
 
 endif (KDEPIM_ONLY_KLEO)
 
