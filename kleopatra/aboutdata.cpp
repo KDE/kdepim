@@ -100,7 +100,7 @@ static const char gpg4win_description[] = I18N_NOOP( "Gpg4win is an installer pa
                                                      "Both relevant cryptography standards are supported, OpenPGP "
                                                      "and S/MIME. Gpg4win and the software included with Gpg4win "
                                                      "are Free Software.");
-static const char gpg4win_version[] = "1.9.15-beta"; // ### make this better come from somewhere...
+static const char gpg4win_version[] = "1.9.16-beta"; // ### make this better come from somewhere...
 
 
 static QPixmap UserIcon_nocached2( const char * name ) {
