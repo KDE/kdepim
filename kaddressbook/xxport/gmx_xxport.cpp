@@ -295,8 +295,8 @@ void GMXXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )
 	KABC::Address address;
   	KABC::PhoneNumber phone, fax, cell;
 
-
-        if (record_id == 0) {
+	/* record ID == 1: Work address */
+        if (record_id == 1) {
 		address = addr->address(KABC::Address::Work);
 		phone = addr->phoneNumber(KABC::PhoneNumber::Work);
 		fax   = addr->phoneNumber(KABC::PhoneNumber::Fax);
@@ -322,13 +322,13 @@ void GMXXXPort::doExport( QFile *fp, const KABC::AddresseeList &list )
 	  << cell.number() << DELIM		// Mobile
 	  << ((cell.type()&KABC::PhoneNumber::Pref)?-1:0) << DELIM // Mobile_type
 	  << email << DELIM			// Email
-	  << ((record_id==0)?addr->url().url():QString()) << DELIM // Homepage
-	  << ((record_id==0)?addr->role():QString()) << DELIM	// Position
+	  << ((record_id==1)?addr->url().url():QString()) << DELIM // Homepage
+	  << ((record_id==1)?addr->role():QString()) << DELIM	// Position
 	  << DELIM				// Comments
 	  << record_id << DELIM			// Record_type_id (0,1,2) - see above
 	  << DELIM				// Record_type (name of this additional record entry)
-	  << ((record_id==0)?addr->organization():QString()) << DELIM // Company
-	  << ((record_id==0)?addr->custom("KADDRESSBOOK", "X-Department"):QString()) << DELIM // Department
+	  << ((record_id==1)?addr->organization():QString()) << DELIM // Company
+	  << ((record_id==1)?addr->custom("KADDRESSBOOK", "X-Department"):QString()) << DELIM // Department
 	  << dateString(addr->revision()) << DELIM	// Change_date
 	  << 5 << DELIM				// Preferred
 	  << 1 << endl;				// Status (should always be "1")
