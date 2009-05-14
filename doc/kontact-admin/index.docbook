@@ -1,0 +1,157 @@
+<?xml version="1.0" ?>
+<!DOCTYPE book PUBLIC "-//KDE//DTD DocBook XML V4.2-Based Variant V1.1//EN"
+ "dtd/kdex.dtd" [
+  <!ENTITY PIM "<acronym>PIM</acronym>">
+  <!ENTITY kappname "&kontact;">
+  <!ENTITY package "kdepim">
+  <!ENTITY % addindex "IGNORE">
+  <!ENTITY % English "INCLUDE"> 
+]>
+
+<book id="kontact-admin" lang="&language;">
+
+<bookinfo>
+<title>The &kappname; Administrator's Guide</title>
+
+<authorgroup>
+
+<author>
+<firstname>Allen</firstname>
+<surname>Winter</surname>
+<affiliation>
+<address><email>allen@kdab.net</email></address>
+</affiliation>
+</author>
+
+</authorgroup>
+
+<!-- TRANS:ROLES_OF_TRANSLATORS -->
+
+<legalnotice>&FDLNotice;</legalnotice>
+
+<!-- Date and version information of the documentation
+Don't forget to include this last date and this last revision number, we
+need them for translation coordination !
+Please respect the format of the date (YYYY-MM-DD) and of the version
+(V.MM.LL), it could be used by automation scripts.
+Do NOT change these in the translation. -->
+
+<date>2009-05-14</date>
+<releaseinfo>0.00.01</releaseinfo>
+
+<!-- Abstract about this handbook -->
+
+<abstract><para>This is the administrator's manual for &kappname;,
+the integrated solution to your personal information management (&PIM;) needs.
+&kappname; combines well-known &kde; applications like &kmail;, &korganizer;
+and &kaddressbook; into a single interface to provide easy access to mail,
+scheduling, address book and other &PIM; functionality.  </para></abstract>
+
+<keywordset>
+<keyword>KDE</keyword>
+<keyword>kdepim</keyword>
+<keyword>PIM</keyword>
+<keyword>KMail</keyword>
+<keyword>KOrganizer</keyword>
+<keyword>KAddressBook</keyword>
+<keyword>KNotes</keyword>
+<keyword>Akregator</keyword>
+<keyword>administration</keyword>
+<keyword>administer</keyword>
+<keyword>email</keyword>
+<keyword>calendar</keyword>
+<keyword>contact</keyword>
+<keyword>administration</keyword>
+<keyword>administer</keyword>
+<keyword>groupware</keyword>
+<keyword>Outlook</keyword>
+<keyword>Exchange</keyword>
+<keyword>Evolution</keyword>
+</keywordset>
+
+</bookinfo>
+
+<chapter id="introduction">
+<title>Introduction</title>
+
+<para>
+This is the administrator's manual for &kappname;,
+the integrated solution to your personal information management (&PIM;) needs.
+This document is intended to aid the groupware administrator with typical tasks
+needed to setup &kappname; and make it work smoothly in various environments.
+</para>
+
+<para>
+&kappname; combines well-known &kde; applications like &kmail;, &korganizer;
+and &kaddressbook; into a single interface to provide easy access to mail,
+scheduling, address book and other &PIM; functionality.  </para>
+</chapter>
+
+<chapter id="compat">
+<title>Compatibility Issues</title>
+
+<para>
+This chapter provides configuration issues help &kappname;
+&kappname; communicate effectively with various groupware solutions.
+</para>
+
+<sect1 id="compat-outlook">
+<title>Outlook and Exchange</title>
+
+<para>
+In the &kappname; configuration dialog, under Misc->Groupware...
+</para>
+
+</sect1>
+</chapter>
+
+<chapter id="credits-and-license">
+<title>Credits and License</title>
+
+<para>
+Documentation Copyright &copy; 2009 Klarälvdalens Datakonsult AB, a KDAB Group company, <email>info@kdab.net</email>
+</para>
+
+<!-- TRANS:CREDIT_FOR_TRANSLATORS -->
+&underFDL;               <!-- FDL: do not remove -->
+&underGPL;        	 <!-- GPL License -->
+</chapter>
+
+<appendix id="installation">
+<title>Installation</title>
+
+<sect1 id="getting-kapp">
+<title>How to obtain &kappname;</title>
+
+&install.intro.documentation;
+
+</sect1>
+
+<sect1 id="compilation">
+<title>Compilation and Installation</title>
+
+<!-- This entity contains the boilerplate text for standard -->
+<!-- compilation instructions.  If your application requires any -->
+<!-- special handling, remove it, and replace with your own text. -->
+
+&install.compile.documentation;
+
+</sect1>
+
+</appendix>
+
+&documentation.index;
+</book>
+
+<!--
+Local Variables:
+mode: xml
+sgml-minimize-attributes:nil
+sgml-general-insert-case:lower
+sgml-indent-step:0
+sgml-indent-data:nil
+End:
+
+vim:tabstop=2:shiftwidth=2:expandtab
+kate: space-indent on; indent-width 2; tab-width 2; indent-mode none;
+-->
