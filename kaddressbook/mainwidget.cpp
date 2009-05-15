@@ -102,7 +102,7 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mItemTree->setSourceModel( mDescendantTree );
   mItemTree->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
   mItemTree->setHeaderSet( Akonadi::EntityTreeModel::ItemListHeaders );
-  
+
   mItemView->setModel( mItemTree );
   mXXPortManager->setItemView(mItemView);
   mItemView->setXmlGuiClient( guiClient );
@@ -222,6 +222,11 @@ void MainWidget::setupActions( KActionCollection *collection )
   action->setText( i18n( "Import from LDAP server..." ) );
   mXXPortManager->addImportAction( action, "ldap" );
 
+  action = collection->addAction( "file_import_gmx" );
+  action->setText( i18n( "Import GMX file..." ) );
+  mXXPortManager->addImportAction( action, "gmx" );
+
+
   // export actions
   action = collection->addAction( "file_export_vcard30" );
   action->setText( i18n( "Export vCard 3.0..." ) );
@@ -238,6 +243,11 @@ void MainWidget::setupActions( KActionCollection *collection )
   action = collection->addAction( "file_export_ldif" );
   action->setText( i18n( "Export LDIF file..." ) );
   mXXPortManager->addExportAction( action, "ldif" );
+
+  action = collection->addAction( "file_export_gmx" );
+  action->setText( i18n( "Export GMX file..." ) );
+  mXXPortManager->addExportAction( action, "gmx" );
+
 }
 
 void MainWidget::print()

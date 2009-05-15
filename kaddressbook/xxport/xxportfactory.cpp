@@ -23,6 +23,7 @@
 #include "ldif/ldif_xxport.h"
 #include "ldap/ldap_xxport.h"
 #include "vcard/vcard_xxport.h"
+#include "gmx/gmx_xxport.h"
 
 XXPort* XXPortFactory::createXXPort( const QString &identifier, QWidget *parentWidget ) const
 {
@@ -34,6 +35,8 @@ XXPort* XXPortFactory::createXXPort( const QString &identifier, QWidget *parentW
     return new LDIFXXPort( parentWidget );
   else if ( identifier == "ldap" )
     return new LDAPXXPort( parentWidget );
+  else if ( identifier == "gmx" )
+    return new GMXXXPort( parentWidget );
   else
     return 0;
 }
