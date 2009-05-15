@@ -1,3 +1,36 @@
+Friday, May 15th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3532: Configuration dialogs hangs on Windows
+* Rebase kdelibs and kdebase to the 4.2 branches, to profit from upstream bugfixes there
+* Remove some unneeded stuff from kdebase, like wallpapers, plasma, and the applications
+* When inline-forwarding a mail, also include the CC recipients of the original mail
+* Add the "jump to folder" action to the Go menu
+* Start of an administrator manual for Kontact
+
+
+Merges
+------
+
+* Merges from KDE 4.2 branch:
+      - When dissociating recurring to-dos, don't make them a child of the original one
+      - Fix exporting the calendar to HTML (KDE bug 192316)
+      - Fix all occurrences of a recurring to-do being displayed as not completed
+      - A few fixes for resource coloring in KOrganizer
+      - Fix events being displayed with the wrong date in KOrganizer (KDE bugs 173381 and 182323)
+      - Fix columns in KMail's folder list not being resizeable (KDE bugs 190230 and 190838)
+      - Fix font size in KMail's system tray icon (KDE bug 191585)
+      - Some fixes for the filtering in the folder selection dialog
+
+* Merges from enterprise35 branch:
+      - kolab/issue3424: The comment of an event rejection is not seen with Outlook
+      - kolab/issue3608: Lastname of an attendee is missing
+      - kolab/issue3617: Kleopatra's setting dialog cannot deal with gpgconf TYPE=0
+      - kolab/issue2972: Bogus error message when refreshing the IMAP cache
+
+
 Friday, May 8th 2009
 
 Problems addressed
@@ -23,7 +56,7 @@ Merges
       - kolab/issue2150: Reply action missing in the message popup menu
       - kolab/issue3268: Changes to the reply prefix would need a restart of KMail to work
       - kolab/issue2276: Export contacts or calendar overwrites files without a warning
-      
+
 
 Thursday, April 30th 2009
 
