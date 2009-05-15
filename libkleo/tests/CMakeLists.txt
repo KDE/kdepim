@@ -18,7 +18,7 @@ set(test_keygen_SRCS test_keygen.cpp )
 
 kde4_add_executable(test_keygen TEST ${test_keygen_SRCS})
 
-target_link_libraries(test_keygen  kleo ${KDE4_KDECORE_LIBS} )
+target_link_libraries(test_keygen  kleo ${KDE4_KDEUI_LIBS} )
 
 
 ########### next target ###############
@@ -36,7 +36,7 @@ set(test_cryptoconfig_SRCS test_cryptoconfig.cpp )
 
 kde4_add_executable(test_cryptoconfig TEST ${test_cryptoconfig_SRCS})
 
-target_link_libraries(test_cryptoconfig  kleo ${KDE4_KDECORE_LIBS} )
+target_link_libraries(test_cryptoconfig  kleo ${KDE4_KDEUI_LIBS} )
 
 ########### next target ###############
 
@@ -45,7 +45,7 @@ set(test_gnupgprocessbase_SRCS test_gnupgprocessbase.cpp )
 
 kde4_add_executable(test_gnupgprocessbase TEST ${test_gnupgprocessbase_SRCS})
 
-target_link_libraries(test_gnupgprocessbase  kleo ${KDE4_KDECORE_LIBS} )
+target_link_libraries(test_gnupgprocessbase  kleo ${KDE4_KDEUI_LIBS} )
 
 ########### next target ###############
 
@@ -54,9 +54,9 @@ set(test_jobs_SRCS test_jobs.cpp )
 
 kde4_add_executable(test_jobs TEST ${test_jobs_SRCS})
 
-target_link_libraries(test_jobs  kleo ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KDECORE_LIBS} )
+target_link_libraries(test_jobs  kleo ${QT_QT3SUPPORT_LIBRARY} ${KDE4_KDEUI_LIBS} )
 
 ########### next target ###############
 
 kde4_add_executable( test_kdhorizontalline TEST test_kdhorizontalline.cpp )
-target_link_libraries( test_kdhorizontalline kleo ${KDE4_KDECORE_LIBS} )
+target_link_libraries( test_kdhorizontalline kleo ${KDE4_KDEUI_LIBS} )
