@@ -7,6 +7,7 @@
   <!ENTITY outlook-to-vcalendar-workshop SYSTEM "outlook-to-vcalendar.docbook">
   <!ENTITY % addindex "IGNORE">
   <!ENTITY % English "INCLUDE">
+  <!ENTITY kcontrolcenter "&systemsettings;">
 ]>
 
 <book id="korganizer" lang="&language;">
@@ -1107,6 +1108,12 @@ view configuration</link>, it may also reflect its
 will be able to quickly identify the type of event by its color.
 </para>
 
+<para>
+The agenda view can display events from all your calendars merged into one view or
+show a view per calendar. Having both views available via tabs is also possible and
+can be <link linkend="config-main-views">customized in the preferences dialog</link>.
+</para>
+
 <sect3 id="day-view">
 <title>Day View</title>
 
@@ -1211,6 +1218,18 @@ you can identify the type of event (or resource) by its color.
 menu item or pressing the <guilabel><inlinemediaobject><imageobject><imagedata fileref="i_view_month.png"
  format="PNG"/></imageobject></inlinemediaobject>Month</guilabel> button
 in the toolbar.</para>
+
+</sect2>
+
+<sect2 id="timeline-view">
+<title>Timeline View</title>
+
+<para> The timeline view shows all events for the selected timespan in a gantt
+view. Every calendar is displayed in a separate line. </para>
+
+<para>Hover your mouse over any calendar item to display a tooltip with the
+item details. Double click an empty area to create an event, double
+click any calendar item to edit it.</para>
 
 </sect2>
 
@@ -1334,7 +1353,7 @@ and edit filters that will affect which items will be displayed by
 <para>The <menuchoice><guimenu>View</guimenu>
 <guisubmenu>Filter</guisubmenu></menuchoice> submenu and the filter toolbar drop
 down offer access to all available filters  created using
-the <link linkend="menu-settings-edit-filters"><guilabel>Edit Calendar 
+the <link linkend="menu-settings-edit-filters"><guilabel>Edit Calendar
 Filters</guilabel></link> dialog. To toggle the display of the filters toolbar
 on and off, choose the <menuchoice><guimenu>Settings</guimenu>
 <guisubmenu>Toolbars</guisubmenu><guimenuitem>Filter toolbar</guimenuitem></menuchoice>.
@@ -1429,7 +1448,7 @@ Enter your data as described below.</para></step>
 
 <para>This is a thorough description of the individual event window fields and
 widgets. Not all fields have to be filled in; some can be left empty. Read the
-<link linkend="entering-data-required-fields">Required fields</link> section 
+<link linkend="entering-data-required-fields">Required fields</link> section
 for detailed information. And if you prefer to learn by example, there's one
 in the <link linkend="examples-entering-event">Entering event</link> section.
 </para>
@@ -1491,7 +1510,7 @@ program; if you do not, the program will not run.</para></tip>-->
 reminded, or click the <guibutton>Advanced</guibutton> button to open the
 <guilabel>Edit Reminders</guilabel> dialog. Using this dialog, you can set
 repeating intervals for your reminders, and create special reminders that play
-sounds, or run programs.</para>
+sounds or run programs.</para>
 
 <!--Click the musical <guiicon>Note</guiicon> symbol to choose the
 alarm sound. Click the <guiicon>Gear</guiicon> icon to browse for a
@@ -1695,9 +1714,9 @@ selected on this combo box will be used when sending these mails. The default
 identity can be set in the <guilabel>Personal</guilabel> section of the
 &korganizer; configuration, other identities in the <guilabel>About Me</guilabel>-&gt;
 <guilabel>Password &amp; User Account</guilabel> section
-of the &systemsettings;. In addition, identities are gathered from your &kmail;
+of the &kcontrolcenter;. In addition, identities are gathered from your &kmail;
 settings and from your address book. If you choose to set it globally for &kde;
-in the &systemsettings;, be sure to check the <guilabel>Use email settings from
+in the &kcontrolcenter;, be sure to check the <guilabel>Use email settings from
 System Settings</guilabel> box in the <guilabel>Personal</guilabel> section of
 the &korganizer; configuration.</para></listitem>
 </varlistentry>
@@ -1798,7 +1817,11 @@ sending the invitations.</para>
 <para>This tab shows the free/busy schedule chart on the right, where each line
 represents one of the attendees, listed on the left. The marked areas on the
 chart represent the time already taken by other events, unmarked areas represent
-time free from other events. The free/busy information is only available if the
+time free from other events. You can move the event to a different point in time
+by dragging it with the mouse, or resize it by moving the edges of the highlighted
+area with the mouse.</para>
+
+<para>The free/busy information is only available if the
 attendee publishes his free/busy schedule, and if &korganizer; is correctly
 configured to retrieve it. For more information about configuring &korganizer;
 to publish and retrieve free/busy information, please check the
@@ -1854,10 +1877,46 @@ among the <link linkend="reference-action-buttons">Action Buttons</link>,
 <sect2 id="entering-data-events-attachments">
 <title><guilabel>Attachments</guilabel> Tab</title>
 
-<para>Some to-dos require attachments. You can <guibutton>Add...</guibutton>, 
-<guibutton>Edit...</guibutton>, <guibutton>Remove</guibutton>, and
-<guibutton>Show</guibutton> attachments. You can refer to the attachment by
-entering the &URI; (path or Internet address) to the attachment.</para>
+<screenshot id="screenshot-event-attachments">
+<screeninfo>A screenshot of &korganizer;'s Edit Event dialog - Attachments tab</screeninfo>
+<mediaobject>
+<imageobject><imagedata fileref="event-attachments.png" format="PNG"/></imageobject>
+<textobject><phrase>A screenshot of &korganizer;'s Edit Event dialog - Attachments tab</phrase></textobject>
+<caption><para>A screenshot of &korganizer;'s Edit Event dialog - Attachments tab</para></caption>
+</mediaobject>
+</screenshot>
+
+<para>Events and to-dos can contain attachments. Attachments can either be stored as links
+or inline. The following actions are provided to work with attachments:</para>
+
+<variablelist>
+
+<varlistentry>
+<term><guibutton>Add URI...</guibutton></term>
+<listitem><para>Adds a link attachment.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guibutton>Add File...</guibutton></term>
+<listitem><para>Adds an inline attachment.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guibutton>Edit...</guibutton></term>
+<listitem><para>Allows to change an existing attachment.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guibutton>Remove</guibutton></term>
+<listitem><para>Deletes the selected attachment.</para></listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guibutton>Show</guibutton></term>
+<listitem><para>Display the selected attachment.</para></listitem>
+</varlistentry>
+
+</variablelist>
 
 <para>When you want to confirm, call off or revert the entered data, choose
 among the <link linkend="reference-action-buttons">Action Buttons</link>,
@@ -1929,7 +1988,7 @@ where the to-do will take place.</para></listitem>
 <term><guilabel>Date &amp; Time</guilabel></term>
 <listitem><para>The <guilabel>Due</guilabel> and <guilabel>Start</guilabel>
 boxes are not initially checked, as to-dos usually do not have a start and due
-date. Check one or both boxes and 
+date. Check one or both boxes and
 change these dates as desired. Enter the dates directly or use the 
 <link linkend="glossary" endterm="gloss-calendar-widget">Calendar Widget</link>. 
 Choose time from quarter hour intervals, or enter the desired time directly into 
@@ -1969,7 +2028,7 @@ program; if you do not, the program will not run.</para></tip>-->
 reminded, or click the <guibutton>Advanced</guibutton> button to open the
 <guilabel>Edit Reminders</guilabel> dialog. Using this dialog, you can set
 repeating intervals for your reminders, and create special reminders that play
-sounds, or run programs.</para>
+sounds or run programs.</para>
 
 <!--Click the musical <guiicon>Note</guiicon> symbol to choose the
 alarm sound. Click the <guiicon>Gear</guiicon> icon to browse for a
@@ -2179,6 +2238,12 @@ list subscribers who use &korganizer; get the concert date automatically
 inserted in their calendar.
 </para>
 
+<para>Publishing an event as described above will only inform the receiver about
+the event, but not give her the option to ask for attendance. Use
+<menuchoice><guimenu>Schedule</guimenu><guimenuitem>Send as iCalendar...</guimenuitem></menuchoice>
+if you want to provide that option instead.
+</para>
+
 </sect1>
 
 
@@ -2222,9 +2287,12 @@ choosing the <menuchoice><guimenu>Schedule</guimenu><guimenuitem>Send Invitation
 to Attendees</guimenuitem></menuchoice> menu item.
 The attendees get an email containing all the relevant information
 for the event or to-do. They can respond to the meeting proposal by accepting or
-rejecting it or by making a counter proposal. All this information is sent to
-you by email again and, if you have configured &kmail; appropriately,
-the attendees responses are automatically inserted in your calendar.
+rejecting it or by making a counter proposal. They can also delegate or forward the
+invitation.
+All this information is sent to you by email again and, if you have configured &kmail;
+appropriately, the attendees responses are automatically inserted in your calendar.
+If there are additional attendees willing to participate (e.g. by accepting a forwarded
+invitation) you will be asked to accept the new attendees.
 </para>
 
 </sect2>
@@ -2271,6 +2339,13 @@ view</link>.</para>
 <guibutton>Accept</guibutton> or <guibutton>Accept Cond.</guibutton>. The
 last two actions will insert the item to your calendar. In any case, &kmail; will
 send your response to the organizer automatically.</para>
+
+<para>You can also <guibutton>Delegate</guibutton> or <guibutton>Forward</guibutton>
+the invitation. When delegating, you can suggest another person as your proxy.
+Using <guibutton>Forward</guibutton> you can forward the invitation to one or more
+people not yet invited.
+When the receiver of the delegation or forward accepts the invitation,
+the organizer will be asked to approve the new attendee.</para>
 
 <para>If for any reason you changed your mind, edit your status in the item's
 <link linkend="entering-data-events-attendees">attendee tab</link>. If you
@@ -2469,12 +2544,12 @@ the toolbar handle and drag the toolbar to a new position on your the
 &korganizer; window.</para>
 
 <para>Localization information like date and time formats can be
-configured from &systemsettings; within the <guilabel>Regional &amp;
+configured from &kcontrolcenter; within the <guilabel>Regional &amp;
 Language</guilabel> module.  This control module can be
 accessed from within &korganizer;: just choose the <menuchoice><guimenu>
 Settings</guimenu><guimenuitem>Configure Date &amp;
 Time...</guimenuitem></menuchoice> menu item.  &korganizer; has to be restarted
-for changes done in &systemsettings; to take effect.</para>
+for changes done in &kcontrolcenter; to take effect.</para>
 
 <para>To configure where &korganizer; stores and retrieves calendar events,
 journal entries and to-dos, (in local files, groupware servers, journal entries as blogs,
@@ -2498,7 +2573,7 @@ categories.</para>
 <varlistentry>
 <term><guilabel>Use email settings from System Settings</guilabel></term>
 <listitem><para>Check this box to use your name and email address as set in
-&systemsettings; (<menuchoice><guimenuitem>About Me</guimenuitem>
+&kcontrolcenter; (<menuchoice><guimenuitem>About Me</guimenuitem>
 <guimenuitem>Password &amp; User Account</guimenuitem></menuchoice>).</para>
 </listitem>
 </varlistentry>
@@ -2508,7 +2583,7 @@ categories.</para>
 <listitem><para><guilabel>Full name</guilabel> is initially set to
 <quote>Anonymous</quote> with an email address of
 <quote>nobody@nowhere</quote>. You can change your name by directly
-entering it here or you can use your Email Settings from &systemsettings; (see
+entering it here or you can use your Email Settings from &kcontrolcenter; (see
 above).  This name will be displayed by default as
 <guilabel>Organizer</guilabel> in to-dos and Events.</para></listitem> 
 </varlistentry>
@@ -2561,6 +2636,15 @@ which resource to use</guilabel>, if you intend to use the shared folder
 functionality of the <guilabel>Kolab</guilabel> server. This
 will allow you to keep control of which information is available only to you, and which information is published in the shared folders.</para> 
 </listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Default email attachment method</guilabel></term>
+<listitem><para>This option allows you to select the way an email is attached to
+an event. You can attach an email the complete email including attachments, the email
+excluding attachments or only a link to the email.</para>
+<para>Note that attaching an email without attachments might invalidate its signature.
+</para></listitem>
 </varlistentry>
 
 </variablelist>
@@ -2650,8 +2734,8 @@ defined in the <guilabel>Use holiday region</guilabel> drop down above.</para>
 <varlistentry>
 <term><guilabel>Enable tooltips for displaying summaries</guilabel></term>
 <listitem><para>If your summary for an event is longer than would fit in the
-current View, the remaining characters are not displayed. Check <guilabel>Enable 
-tooltips for dispaying summaries</guilabel> if you want the full summary
+current View, the remaining characters are not displayed. Check <guilabel>Enable
+tooltips for displaying summaries</guilabel> if you want the full summary
 displayed when the hovering the mouse pointer over the appointment for a few
 seconds.</para></listitem>
 </varlistentry>
@@ -2738,6 +2822,13 @@ as &korganizer; default configuration is to use the same color for
 all resources.</para></listitem>
 </varlistentry>
 
+<varlistentry>
+<term><guilabel>Agenda view calendar display</guilabel></term>
+<listitem><para>
+Select if all calendars should be merged into one agenda view, each calendar should
+be displayed in its own aganda view or if both view should be available via tabs.
+</para></listitem>
+</varlistentry>
 
 </variablelist>
 
@@ -2883,7 +2974,7 @@ allowing you to select the agenda view background color.</para></listitem>
 <varlistentry>
 <term><guilabel>Working hours color</guilabel></term>
 <listitem><para>This button opens the <guilabel>Select Color</guilabel> dialog,
-allowing you to select color of the working hours background in the agenda view.</para></listitem>
+allowing you to select the color of the working hours background in the agenda view.</para></listitem>
 </varlistentry>
 
 <varlistentry>
@@ -3231,10 +3322,10 @@ the window.</para>
 <sect3 id="config-toolbars-available-actions">
 <title>Available Actions</title>
 
-<para>There are two rectangles below the toolbar title: <guilabel>Available actions</guilabel>
-and <guilabel>Current actions</guilabel>. Using the left and
-right arrows (located between the rectangles) you can move icons between
-<guilabel>Available actions</guilabel> group and the <guilabel>Current actions</guilabel> group. The
+<para>There are two rectangles below the toolbar title: <guilabel>Available
+actions</guilabel> and <guilabel>Current actions</guilabel>. Using the left and
+right arrows (located between the rectangles) you can move icons from the
+<guilabel>Available actions</guilabel> group to the <guilabel>Current actions</guilabel> group. The
 toolbar will have every icon that is in the <guilabel>Current actions</guilabel>
 box. The up and down arrows allow you reposition an icon.</para>
 
