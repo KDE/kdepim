@@ -102,8 +102,9 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mItemTree->setSourceModel( mDescendantTree );
   mItemTree->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
   mItemTree->setHeaderSet( Akonadi::EntityTreeModel::ItemListHeaders );
-
+  
   mItemView->setModel( mItemTree );
+  mXXPortManager->setItemView(mItemView);
   mItemView->setXmlGuiClient( guiClient );
   mItemView->setSelectionMode( QAbstractItemView::ExtendedSelection );
   mItemView->setRootIsDecorated( false );

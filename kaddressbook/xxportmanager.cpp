@@ -30,8 +30,13 @@
 #include <QtGui/QAction>
 #include <QtGui/QWidget>
 
+#include "entitytreemodel.h"
+#include "entityfilterproxymodel.h"
+#include "entitytreeview.h"
+
+
 XXPortManager::XXPortManager( QWidget *parent )
-  : QObject( parent ), mCollectionModel( 0 ), mParentWidget( parent )
+  : QObject( parent ), mCollectionModel( 0 ),mItemView( 0 ), mParentWidget( parent )
 {
   mImportMapper = new QSignalMapper( this );
   mExportMapper = new QSignalMapper( this );
@@ -61,6 +66,11 @@ void XXPortManager::addExportAction( QAction *action, const QString &identifier 
 void XXPortManager::setCollectionModel( QAbstractItemModel *collectionModel )
 {
   mCollectionModel = collectionModel;
+}
+
+void XXPortManager::setItemView(  Akonadi::EntityTreeView *itemView )
+{
+  mItemView = itemView;
 }
 
 void XXPortManager::slotImport( const QString &identifier )
@@ -97,8 +107,23 @@ void XXPortManager::slotImport( const QString &identifier )
 
 void XXPortManager::slotExport( const QString &identifier )
 {
+  if ( !mItemView )
+    return;
   const XXPort* xxport = mFactory.createXXPort( identifier, mParentWidget );
+  if ( !xxport )
+    return;
 
+  KABC::AddresseeList list;
+  Akonadi::EntityFilterProxyModel* itemTree = dynamic_cast<Akonadi::EntityFilterProxyModel*>(mItemView->model());
+  Q_ASSERT(itemTree);
+
+  foreach(const QModelIndex &index, mItemView->selectionModel()->selectedRows()) {
+    const Akonadi::Item item = itemTree->data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+    Q_ASSERT( item.isValid() );
+    const KABC::Addressee adr = item.payload<KABC::Addressee>();
+    list.append( adr );
+  }
+  xxport->exportContacts( list );
   delete xxport;
 }
 
