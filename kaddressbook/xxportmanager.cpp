@@ -19,6 +19,8 @@
 */
 
 #include "xxportmanager.h"
+#include <kmessagebox.h>
+#include <klocale.h>
 
 #include "collectionselectiondialog.h"
 
@@ -123,7 +125,10 @@ void XXPortManager::slotExport( const QString &identifier )
     const KABC::Addressee adr = item.payload<KABC::Addressee>();
     list.append( adr );
   }
-  xxport->exportContacts( list );
+  if ( !list.isEmpty() )
+    xxport->exportContacts( list );
+  else
+    KMessageBox::sorry( 0, i18n( "Any contact selected" ) );
   delete xxport;
 }
 
