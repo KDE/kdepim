@@ -36,7 +36,6 @@ Friday, May 8th 2009
 Problems addressed
 ------------------
 
-* kolab/issue3275: Translation of "calendar" is wrong
 * Fix some events no longer being visible in KOrganizer (KDE bug 190909)
 * Add more log output to help with debugging kolab/issue3566
 * Further work on rebasing to kdelibs and kdebase 4.2
@@ -50,12 +49,8 @@ Merges
 * Merges from enterprise35 branch:
       - kolab/issue3605: System tray icon displayed even when there is no unread mail
       - kolab/issue3606: Some common folder properties are missing
-      - kolab/issue3608: Lastname of an attendee is missing
-      - kolab/issue2459: Don't crash when refreshing the IMAP cache
-      - kolab/issue2972: Do not show a "Could not create folders" dialog when deleting and then refreshing the cache
       - kolab/issue2150: Reply action missing in the message popup menu
       - kolab/issue3268: Changes to the reply prefix would need a restart of KMail to work
-      - kolab/issue2276: Export contacts or calendar overwrites files without a warning
 
 
 Thursday, April 30th 2009
