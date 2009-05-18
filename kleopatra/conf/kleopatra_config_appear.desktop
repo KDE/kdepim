@@ -1,5 +1,5 @@
 [Desktop Entry]
-Icon=looknfeel
+Icon=configure
 Type=Service
 X-KDE-ServiceTypes=KCModule
 X-DocPath=kleopatra/configuration-appearance.html
