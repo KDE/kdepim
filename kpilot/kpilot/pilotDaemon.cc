@@ -116,7 +116,7 @@ void PilotDaemonTray::setupWidget()
 	connect( menuConfigureConduitsItem, SIGNAL( triggered() ), this
 		, SLOT( slotRunConfig() ) );
 	menu->addAction( menuConfigureConduitsItem );
-	
+
 	menu->addSeparator();
 
 	// Configured default sync
@@ -125,7 +125,7 @@ void PilotDaemonTray::setupWidget()
 			KPilotSettings::syncType() ) ), this );
 	menuDefaultSyncActionItem->setCheckable( true );
 	menuDefaultSyncActionItem->setData( (int) 0 );
-	
+
 	connect( menuDefaultSyncActionItem, SIGNAL( toggled( bool ) ), daemon
 		, SLOT( toggleDefaultSync( bool ) ) );
 
@@ -160,7 +160,7 @@ void PilotDaemonTray::setupWidget()
 
 	connect( syncTypeActions, SIGNAL( triggered( QAction* ) ), daemon
 		, SLOT( requestSync( QAction* ) ) );
-	
+
 	// See toggleDefaultSync(). This is only useful now all other action are
 	// added to syncTypeActions.
 	menuDefaultSyncActionItem->setChecked( true );
@@ -168,7 +168,7 @@ void PilotDaemonTray::setupWidget()
 	menu->addMenu( fSyncTypeMenu );
 
 	KHelpMenu *helpMenu = new KHelpMenu( menu, aboutData );
-	helpMenu->menu()->setIcon( KIcon( CSL1( "help" ) ) );
+	helpMenu->menu()->setIcon( KIcon( CSL1( "system-help" ) ) );
 	menu->addMenu( helpMenu->menu() );
 
 	DEBUGKPILOT << "Finished getting icons";
@@ -190,7 +190,7 @@ void PilotDaemonTray::slotShowAbout()
 void PilotDaemonTray::enableRunKPilot(bool b)
 {
 	FUNCTIONSETUP;
-	
+
 	menuKPilotItem->setEnabled( b );
 	menuConfigureConduitsItem->setEnabled( b );
 }
@@ -634,17 +634,17 @@ void PilotDaemon::requestRegularSyncNext()
 void PilotDaemon::requestSync( QAction *action )
 {
 	FUNCTIONSETUP;
-	
+
 	if( !action )
 	{
 		WARNINGKPILOT << "Ignored OL action pointer";
 		return;
 	}
-	
+
 	unsigned int actionData = action->data().toInt();
-	
+
 	requestSync( actionData );
-	
+
 	if( fTray )
 	{
 		if( actionData != 0 && actionData != KPilotSettings::syncType() )
@@ -683,11 +683,11 @@ void PilotDaemon::toggleDefaultSync( bool toggled )
 		if( fTray && (fTray->fSyncTypeMenu) )
 		{
 			QList<QAction*> actions = fTray->fSyncTypeMenu->actions();
-			
+
 			QListIterator<QAction*> i( actions );
 			bool finished = false;
 			QAction *a;
-			
+
 			while( i.hasNext() && !finished )
 			{
 				a = i.next();

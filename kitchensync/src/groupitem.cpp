@@ -75,7 +75,7 @@ GroupItem::GroupItem( KWidgetList *parent, SyncProcess *process )
 
   static QPixmap icon;
   if ( icon.isNull() ) {
-    icon = KIconLoader::global()->loadIcon( "kontact_summary",
+    icon = KIconLoader::global()->loadIcon( "bookmarks",
                                             KIconLoader::Desktop );
   }
 
