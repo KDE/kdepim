@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Comment=This conduit syncs the handheld address book with a database stored on the PC.
+Comment[da]=Denne kanal synkroniserer den håndholdtes adressebog med en database lagret på pc'en.
 Comment[de]=Abgleich des Addressbuchs von Taschencomputer und PC.
 Comment[el]=Αυτό το κύκλωμα συγχρονίζει το βιβλίο διευθύνσεων του υπολογιστή παλάμης με τη βάση δεδομένων του υπολογιστή.
 Comment[et]=See kanal sünkroniseerib pihuarvuti aadressiraamatu PC-s leiduva andmebaasiga.

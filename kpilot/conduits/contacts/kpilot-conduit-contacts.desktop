@@ -1,6 +1,7 @@
 [Desktop Entry]
 Type=Service
 Comment=This conduit syncs the handheld address book database with an Akonadi collection.
+Comment[da]=Denne kanal synkroniserer den håndholdtes adressebogs-database med en Akonadi-samling.
 Comment[de]=Abgleich der Adressbücher von Taschencomputer und Akonadi-Ressourcen.
 Comment[el]=Αυτό το κύκλωμα συγχρονίζει το βιβλίο διευθύνσεων του υπολογιστή παλάμης με μια συλλογή του Akonadi.
 Comment[es]=Este conducto sincroniza la base de datos de la libreta de direcciones de la agenda electrónica con una colección Akonadi.
