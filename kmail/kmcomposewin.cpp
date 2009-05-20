@@ -3880,10 +3880,8 @@ void KMComposeWin::htmlToolBarVisibilityChanged( bool visible )
 void KMComposeWin::slotAutoSpellCheckingToggled( bool on )
 {
   mAutoSpellCheckingAction->setChecked( on );
-  if ( on == mEditor->checkSpellingEnabled() )
-    return;
-
-  mEditor->setCheckSpellingEnabled( on );
+  if ( on != mEditor->checkSpellingEnabled() )
+    mEditor->setCheckSpellingEnabled( on );
 
   QString temp;
   if ( on ) {
