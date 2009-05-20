@@ -55,6 +55,46 @@ static QStringList addressValues( const KABC::Addressee &addressee,
   return result;
 }
 
+static QStringList phoneNumberHomeValues( KABC::Field&, const KABC::Addressee &addressee )
+{
+  return phoneNumberValues( addressee, KABC::PhoneNumber::Home );
+}
+
+static QStringList phoneNumberWorkValues( KABC::Field&, const KABC::Addressee &addressee )
+{
+  return phoneNumberValues( addressee, KABC::PhoneNumber::Work );
+}
+
+static QStringList phoneNumberCarValues( KABC::Field&, const KABC::Addressee &addressee )
+{
+  return phoneNumberValues( addressee, KABC::PhoneNumber::Car );
+}
+
+static QStringList phoneNumberIsdnValues( KABC::Field&, const KABC::Addressee &addressee )
+{
+  return phoneNumberValues( addressee, KABC::PhoneNumber::Isdn );
+}
+
+static QStringList phoneNumberCellValues( KABC::Field&, const KABC::Addressee &addressee )
+{
+  return phoneNumberValues( addressee, KABC::PhoneNumber::Cell );
+}
+
+static QStringList phoneNumberPagerValues( KABC::Field&, const KABC::Addressee &addressee )
+{
+  return phoneNumberValues( addressee, KABC::PhoneNumber::Pager );
+}
+
+static QStringList faxNumberHomeValues( KABC::Field&, const KABC::Addressee &addressee )
+{
+  return phoneNumberValues( addressee, KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax );
+}
+
+static QStringList faxNumberWorkValues( KABC::Field&, const KABC::Addressee &addressee )
+{
+  return phoneNumberValues( addressee, KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax );
+}
+
 static QStringList addressStreetValues( const KABC::Addressee &addressee,
                                         KABC::Address::Type type )
 {
@@ -85,6 +125,66 @@ static QStringList addressPostalCodeValues( const KABC::Addressee &addressee,
   return addressValues( addressee, type, &KABC::Address::postalCode );
 }
 
+static QStringList addressStreetHomeValues( KABC::Field&, const KABC::Addressee &addressee )
+{
+  return addressStreetValues( addressee, KABC::Address::Home );
+}
+
+static QStringList addressStreetWorkValues( KABC::Field&, const KABC::Addressee &addressee )
+{
+  return addressStreetValues( addressee, KABC::Address::Work );
+}
+
+static QStringList addressLocalityHomeValues( KABC::Field&, const KABC::Addressee &addressee )
+{
+  return addressLocalityValues( addressee, KABC::Address::Home );
+}
+
+static QStringList addressLocalityWorkValues( KABC::Field&, const KABC::Addressee &addressee )
+{
+  return addressLocalityValues( addressee, KABC::Address::Work );
+}
+
+static QStringList addressRegionHomeValues( KABC::Field&, const KABC::Addressee &addressee )
+{
+  return addressRegionValues( addressee, KABC::Address::Home );
+}
+
+static QStringList addressRegionWorkValues( KABC::Field&, const KABC::Addressee &addressee )
+{
+  return addressRegionValues( addressee, KABC::Address::Work );
+}
+
+static QStringList addressCountryHomeValues( KABC::Field&, const KABC::Addressee &addressee )
+{
+  return addressCountryValues( addressee, KABC::Address::Home );
+}
+
+static QStringList addressCountryWorkValues( KABC::Field&, const KABC::Addressee &addressee )
+{
+  return addressCountryValues( addressee, KABC::Address::Work );
+}
+
+static QStringList addressPostalCodeHomeValues( KABC::Field&, const KABC::Addressee &addressee )
+{
+  return addressPostalCodeValues( addressee, KABC::Address::Home );
+}
+
+static QStringList addressPostalCodeWorkValues( KABC::Field&, const KABC::Addressee &addressee )
+{
+  return addressPostalCodeValues( addressee, KABC::Address::Work );
+}
+
+static QStringList emailValues( KABC::Field&, const KABC::Addressee &addressee )
+{
+  return addressee.emails();
+}
+
+static QStringList singleFieldValues( KABC::Field& field, const KABC::Addressee &addressee )
+{
+  return QStringList() << field.value( addressee );
+}
+
 using namespace KAB;
 
 SearchManager::SearchManager( KABC::AddressBook *ab,
@@ -92,6 +192,28 @@ SearchManager::SearchManager( KABC::AddressBook *ab,
   : QObject( parent ), mAddressBook( ab )
 {
   setObjectName( name );
+
+  mValueListGetters[ KABC::Addressee::homePhoneLabel() ] = phoneNumberHomeValues;
+  mValueListGetters[ KABC::Addressee::businessPhoneLabel() ] = phoneNumberWorkValues;
+  mValueListGetters[ KABC::Addressee::carPhoneLabel() ] = phoneNumberCarValues;
+  mValueListGetters[ KABC::Addressee::mobilePhoneLabel() ] = phoneNumberCellValues;
+  mValueListGetters[ KABC::Addressee::isdnLabel() ] = phoneNumberIsdnValues;
+  mValueListGetters[ KABC::Addressee::pagerLabel() ] = phoneNumberPagerValues;
+  mValueListGetters[ KABC::Addressee::homeFaxLabel() ] = faxNumberHomeValues;
+  mValueListGetters[ KABC::Addressee::businessFaxLabel() ] = faxNumberWorkValues;
+
+  mValueListGetters[ KABC::Addressee::homeAddressStreetLabel() ] = addressStreetHomeValues;
+  mValueListGetters[ KABC::Addressee::businessAddressStreetLabel() ] = addressStreetWorkValues;
+  mValueListGetters[ KABC::Addressee::homeAddressLocalityLabel() ] = addressLocalityHomeValues;
+  mValueListGetters[ KABC::Addressee::businessAddressLocalityLabel() ] = addressLocalityWorkValues;
+  mValueListGetters[ KABC::Addressee::homeAddressRegionLabel() ] = addressRegionHomeValues;
+  mValueListGetters[ KABC::Addressee::businessAddressRegionLabel() ] = addressRegionWorkValues;
+  mValueListGetters[ KABC::Addressee::homeAddressCountryLabel() ] = addressCountryHomeValues;
+  mValueListGetters[ KABC::Addressee::businessAddressCountryLabel() ] = addressCountryWorkValues;
+  mValueListGetters[ KABC::Addressee::homeAddressPostalCodeLabel() ] = addressPostalCodeHomeValues;
+  mValueListGetters[ KABC::Addressee::businessAddressPostalCodeLabel() ] = addressPostalCodeWorkValues;
+
+  mValueListGetters[ KABC::Addressee::emailLabel() ] = emailValues;
 }
 
 void SearchManager::search( const QString &pattern, const KABC::Field::List &fields, Type type )
@@ -144,56 +266,29 @@ void SearchManager::search( const QString &pattern, const KABC::Field::List &fie
 
   const KABC::Field::List fieldList = !mFields.isEmpty() ? mFields : KABC::Field::allFields();
 
+  QList<valueListGetter> fieldGetters;
+  KABC::Field::List::ConstIterator fieldIt( fieldList.constBegin() );
+  const KABC::Field::List::ConstIterator fieldEndIt( fieldList.constEnd() );
+  for ( ; fieldIt != fieldEndIt; ++fieldIt ) {
+    const QString label = (*fieldIt)->label();
+    ValueListGetters::const_iterator getterIt = mValueListGetters.constFind( label );
+    if ( getterIt != mValueListGetters.constEnd() ) {
+      fieldGetters << getterIt.value();
+    } else {
+      fieldGetters << singleFieldValues;
+    }
+  }
+
   KABC::Addressee::List::ConstIterator it( allContacts.constBegin() );
   const KABC::Addressee::List::ConstIterator endIt( allContacts.constEnd() );
   for ( ; it != endIt; ++it ) {
     bool found = false;
     // search over all fields
-    KABC::Field::List::ConstIterator fieldIt( fieldList.begin() );
-    const KABC::Field::List::ConstIterator fieldEndIt( fieldList.end() );
-    for ( ; fieldIt != fieldEndIt; ++fieldIt ) {
-      QStringList values;
-      if ( (*fieldIt)->label() == KABC::Addressee::homeAddressStreetLabel() ) {
-        values = addressStreetValues( *it, KABC::Address::Home );
-      } else if ( (*fieldIt)->label() == KABC::Addressee::homeAddressLocalityLabel() ) {
-        values = addressLocalityValues( *it, KABC::Address::Home );
-      } else if ( (*fieldIt)->label() == KABC::Addressee::homeAddressRegionLabel() ) {
-        values = addressRegionValues( *it, KABC::Address::Home );
-      } else if ( (*fieldIt)->label() == KABC::Addressee::homeAddressCountryLabel() ) {
-        values = addressCountryValues( *it, KABC::Address::Home );
-      } else if ( (*fieldIt)->label() == KABC::Addressee::homeAddressPostalCodeLabel() ) {
-        values = addressPostalCodeValues( *it, KABC::Address::Home );
-      } else if ( (*fieldIt)->label() == KABC::Addressee::businessAddressStreetLabel() ) {
-        values = addressStreetValues( *it, KABC::Address::Work );
-      } else if ( (*fieldIt)->label() == KABC::Addressee::businessAddressLocalityLabel() ) {
-        values = addressLocalityValues( *it, KABC::Address::Work );
-      } else if ( (*fieldIt)->label() == KABC::Addressee::businessAddressRegionLabel() ) {
-        values = addressRegionValues( *it, KABC::Address::Work );
-      } else if ( (*fieldIt)->label() == KABC::Addressee::businessAddressCountryLabel() ) {
-        values = addressCountryValues( *it, KABC::Address::Work );
-      } else if ( (*fieldIt)->label() == KABC::Addressee::businessAddressPostalCodeLabel() ) {
-        values = addressPostalCodeValues( *it, KABC::Address::Work );
-      } else if ( (*fieldIt)->label() == KABC::Addressee::homePhoneLabel() ) {
-        values = phoneNumberValues( *it, KABC::PhoneNumber::Home );
-      } else if ( (*fieldIt)->label() == KABC::Addressee::businessPhoneLabel() ) {
-        values = phoneNumberValues( *it, KABC::PhoneNumber::Work );
-      } else if ( (*fieldIt)->label() == KABC::Addressee::carPhoneLabel() ) {
-        values = phoneNumberValues( *it, KABC::PhoneNumber::Car );
-      } else if ( (*fieldIt)->label() == KABC::Addressee::isdnLabel() ) {
-        values = phoneNumberValues( *it, KABC::PhoneNumber::Isdn );
-      } else if ( (*fieldIt)->label() == KABC::Addressee::pagerLabel() ) {
-        values = phoneNumberValues( *it, KABC::PhoneNumber::Pager );
-      } else if ( (*fieldIt)->label() == KABC::Addressee::mobilePhoneLabel() ) {
-        values = phoneNumberValues( *it, KABC::PhoneNumber::Cell );
-      } else if ( (*fieldIt)->label() == KABC::Addressee::homeFaxLabel() ) {
-        values = phoneNumberValues( *it, KABC::PhoneNumber::Home | KABC::PhoneNumber::Fax );
-      } else if ( (*fieldIt)->label() == KABC::Addressee::businessFaxLabel() ) {
-        values = phoneNumberValues( *it, KABC::PhoneNumber::Work | KABC::PhoneNumber::Fax);
-      } else if ( (*fieldIt)->label() == KABC::Addressee::emailLabel() ) {
-        values = (*it).emails();
-      } else {
-        values << (*fieldIt)->value( *it );
-      }
+    fieldIt = fieldList.constBegin();
+    QList<valueListGetter>::ConstIterator getterIt( fieldGetters.constBegin() );
+    const QList<valueListGetter>::ConstIterator getterEndIt( fieldGetters.constEnd() );
+    for ( ; getterIt != getterEndIt; ++getterIt, ++fieldIt ) {
+      const QStringList values = (*(*getterIt))( *(*fieldIt), *it );
       foreach ( const QString &value, values ) {
         if ( type == StartsWith && value.startsWith( pattern, Qt::CaseInsensitive ) ) {
           mContacts.append( *it );
