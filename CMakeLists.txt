@@ -39,6 +39,12 @@ include(CheckIncludeFiles)
 find_package(KdepimLibs 4.2.85 REQUIRED)
 
 
+############### TEMPORARY ###############
+# TODO Remove on 06/01.
+if(KNOTIFICATIONITEM-1_INCLUDE_DIR)
+  message(FATAL_ERROR "Delete FindLibKNotificationItem-1.cmake in your installation dir and the CMakeCache.txt file in the kdepim build directory and rerun CMake.")
+endif(KNOTIFICATIONITEM-1_INCLUDE_DIR)
+
 ############### search Boost ###############
 
 set(Boost_MINIMUM_VERSION "1.33.1")
@@ -104,7 +110,7 @@ else(KDEPIM_ONLY_KLEO)
   macro_optional_find_package(Nepomuk)
   macro_log_feature(Nepomuk_FOUND "Nepomuk" "The Nepomuk libraries" "http://www.kde.org" FALSE "" "Nepomuk extends the search and tagging functionalities in KMail and Akonadi")
 
-  find_package(LibKNotificationItem-1 )
+  find_package(LibKNotificationItem-1)
   macro_log_feature(LIBKNOTIFICATIONITEM-1_FOUND "LibKNotificationItem-1" "An experimental library" "svn://anonsvn.kde.org/home/kde/trunk/KDE/kdelibs/experimental" TRUE "" "LibKNotificationItem-1 is an unfinished library which is required by korgac and akonaditray.")
 
 
