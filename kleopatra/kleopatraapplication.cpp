@@ -76,6 +76,7 @@ using namespace boost;
 static void add_resources() {
   KGlobal::locale()->insertCatalog( "libkleopatra" );
   KIconLoader::global()->addAppDir( "libkleopatra" );
+  KIconLoader::global()->addAppDir( "kwatchgnupg" );
   KIconLoader::global()->addAppDir( "kdepim" );
 }
 
