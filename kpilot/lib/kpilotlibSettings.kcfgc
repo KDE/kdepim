@@ -1,7 +1,0 @@
-File=kpilotlib.kcfg
-ClassName=KPilotLibSettings
-Singleton=true
-ItemAccessors=true
-Mutators=true
-GlobalEnums=true
-SetUserTexts=true

@@ -11,13 +11,6 @@ if (Q_WS_X11)
   add_subdirectory(ktimetracker)
 endif (Q_WS_X11)
 
-if(KMOBILETOOLS_SUPPORTED)
-  add_subdirectory(kmobiletools)
-endif(KMOBILETOOLS_SUPPORTED)
-if(KPILOT_SUPPORTED)
-  add_subdirectory(kpilot)
-endif(KPILOT_SUPPORTED)
-
 if(BUILD_EVERYTHING)
   add_subdirectory(knode)
 endif(BUILD_EVERYTHING)
@@ -31,8 +24,6 @@ if(QGPGME_FOUND)
   add_subdirectory(kmail)
   add_subdirectory(kleopatra)
 endif(QGPGME_FOUND)
-# disable korn for KDE 4.1
- #add_subdirectory(korn)
 add_subdirectory(ktnef)
 add_subdirectory(kwatchgnupg)
 

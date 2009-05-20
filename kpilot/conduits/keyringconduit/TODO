@@ -1,6 +1,0 @@
-TODO:
-* Add support for different passwords on pc data store and hh datastore.
-* Extend base conduit with settings that each implementing conduit should have
-  and add settings to keyringsettings dialog.
-* Ids for new records are -1, -2 etc those can't be converted to ulong. That is
-  a problem for the hhrecords. Change this in recordconduit.

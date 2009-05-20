@@ -217,20 +217,6 @@ else ( ONLY_KLEO )
      macro_optional_find_package(GLIB2)
      macro_log_feature(GLIB2_FOUND "glib2" "Low-level core library for data structure handling, portability wrappers, etc." "http://www.gtk.org" FALSE "2.x" "Needed to provide synching applications from KDE PIM applications. Necessary to compile kitchensync and other PIM applications.")
 
-#enable kmobiletools for 4.2
-#     set(KMOBILETOOLS_SUPPORTED TRUE)
-#     add_definitions(-DKMOBILETOOLS_SUPPORTED)
-#     message(STATUS "KMobileTools support enabled.")
-#     macro_optional_add_subdirectory(kmobiletools)
-      set(KMOBILETOOLS_SUPPORTED FALSE)
-
-#enable kpilot for 4.2
-#     set(KPILOT_SUPPORTED TRUE)
-#     add_definitions(-DKPILOT_SUPPORTED)
-#     message(STATUS "KPilot support enabled.")
-#     macro_optional_add_subdirectory(kpilot)
-      set(KPILOT_SUPPORTED FALSE)
-
      if(OPENSYNC_FOUND AND GLIB2_FOUND)
        set(KITCHENSYNC_SUPPORTED TRUE)
        add_definitions(-DKITCHENSYNC_SUPPORTED)
@@ -246,16 +232,10 @@ else ( ONLY_KLEO )
        endif(NOT GLIB2_FOUND)
      endif(OPENSYNC_FOUND AND GLIB2_FOUND)
   else(NOT WIN32)
-     set(KMOBILETOOLS_SUPPORTED FALSE)
-     message(STATUS "KMobileTools support DISABLED (Windows target).")
-     set(KPILOT_SUPPORTED FALSE)
-     message(STATUS "KPilot support DISABLED (Windows target).")
      set(KITCHENSYNC_SUPPORTED FALSE)
      message(STATUS "KitchenSync support DISABLED (Windows target).")
   endif(NOT WIN32)
 
-#enable korn in 4.2 if there is interest
-# macro_optional_add_subdirectory(korn)
   add_subdirectory(kresources)
   macro_optional_add_subdirectory(ktnef)
   macro_optional_add_subdirectory(kontact)

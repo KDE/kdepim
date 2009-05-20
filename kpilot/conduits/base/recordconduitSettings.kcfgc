@@ -1,7 +1,0 @@
-File=recordconduit.kcfg
-ClassName=RecordConduitSettings
-Singleton=true
-ItemAccessors=true
-Mutators=true
-GlobalEnums=true
-SetUserTexts=true

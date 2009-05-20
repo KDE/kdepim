@@ -48,7 +48,6 @@ strict digraph "inter-dependency graph for kdepim" {
         "konsolekalendar"[style=filled, fillcolor=lightcyan, URL="konsolekalendar/html/index.html"];
         "kontact"[style=filled, fillcolor=lightcyan, URL="kontact/html/index.html"];
         "korganizer"[style=filled, fillcolor=lightcyan, URL="korganizer/html/index.html"];
-        "korn"[style=filled, fillcolor=lightcyan];
         "kresources"[style=filled, fillcolor=palegreen];
         "ktnef"[style=filled, fillcolor=lightcyan];
         "libakonadi"[style=filled, fillcolor=lightyellow, URL="akonadi/libakonadi/html/index.html"];

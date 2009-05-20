@@ -1,7 +1,0 @@
-File=keyringconduit.kcfg
-ClassName=KeyringConduitSettings
-Singleton=true
-ItemAccessors=true
-Mutators=true
-GlobalEnums=true
-SetUserTexts=true
