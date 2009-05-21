@@ -24,7 +24,7 @@
 #include <kglobal.h>
 #include <kiconloader.h>
 #include <klocale.h>
-#include <kpassivepopup.h>
+#include <knotification.h>
 #include <kurllabel.h>
 
 #include <QtGui/QLabel>
@@ -242,7 +242,7 @@ void GroupItem::change( const QSync::SyncChangeUpdate &update )
       break;
     case QSync::SyncChangeUpdate::Error:
       mStatus->setText( i18n( "Error" ) );
-      KPassivePopup::message( update.result().message(), this );
+      KNotification::event(KNotification::Error, update.result().message(), QPixmap(), this );
       break;
     default:
       mStatus->setText( QString() );
@@ -277,7 +277,7 @@ void GroupItem::engine( const QSync::SyncEngineUpdate &update )
       break;
     case QSync::SyncEngineUpdate::Error:
       mStatus->setText( i18n( "Synchronization failed" ) );
-      KPassivePopup::message( update.result().message(), this );
+      KNotification::event(KNotification::Error, update.result().message(), QPixmap(), this );
       this->update();
 
       mSynchronizing = false;
