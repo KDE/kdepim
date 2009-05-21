@@ -27,10 +27,8 @@
 
 class QAbstractItemModel;
 class QAction;
+class QItemSelectionModel;
 class QSignalMapper;
-namespace Akonadi {
-  class EntityTreeView;
-}
 
 class XXPortManager : public QObject
 {
@@ -44,15 +42,15 @@ class XXPortManager : public QObject
     void addExportAction( QAction *action, const QString &identifier );
 
     void setCollectionModel( QAbstractItemModel *collectionModel );
+    void setSelectionModel( QItemSelectionModel *selectionModel );
 
-    void setItemView( Akonadi::EntityTreeView * );
   private Q_SLOTS:
     void slotImport( const QString& );
     void slotExport( const QString& );
 
   private:
     QAbstractItemModel *mCollectionModel;
-    Akonadi::EntityTreeView *mItemView;
+    QItemSelectionModel *mSelectionModel;
     QWidget *mParentWidget;
     XXPortFactory mFactory;
     QSignalMapper *mImportMapper;

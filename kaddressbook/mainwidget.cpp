@@ -104,13 +104,14 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mItemTree->setHeaderSet( Akonadi::EntityTreeModel::ItemListHeaders );
 
   mItemView->setModel( mItemTree );
-  mXXPortManager->setItemView(mItemView);
   mItemView->setXmlGuiClient( guiClient );
   mItemView->setSelectionMode( QAbstractItemView::ExtendedSelection );
   mItemView->setRootIsDecorated( false );
   mItemView->header()->setDefaultAlignment( Qt::AlignCenter );
   for ( int column = 1; column < mDescendantTree->columnCount( QModelIndex() ); ++column )
     mItemView->setColumnHidden( column, true );
+
+  mXXPortManager->setSelectionModel( mItemView->selectionModel() );
 
   connect( mCollectionView->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
            this, SLOT( collectionSelectionChanged( const QItemSelection&, const QItemSelection& ) ) );

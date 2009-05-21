@@ -30,6 +30,7 @@
 
 #include <QtCore/QSignalMapper>
 #include <QtGui/QAction>
+#include <QtGui/QItemSelectionModel>
 #include <QtGui/QWidget>
 
 #include "entitytreemodel.h"
@@ -38,7 +39,7 @@
 
 
 XXPortManager::XXPortManager( QWidget *parent )
-  : QObject( parent ), mCollectionModel( 0 ),mItemView( 0 ), mParentWidget( parent )
+  : QObject( parent ), mCollectionModel( 0 ), mSelectionModel( 0 ), mParentWidget( parent )
 {
   mImportMapper = new QSignalMapper( this );
   mExportMapper = new QSignalMapper( this );
@@ -70,9 +71,9 @@ void XXPortManager::setCollectionModel( QAbstractItemModel *collectionModel )
   mCollectionModel = collectionModel;
 }
 
-void XXPortManager::setItemView(  Akonadi::EntityTreeView *itemView )
+void XXPortManager::setSelectionModel( QItemSelectionModel *selectionModel )
 {
-  mItemView = itemView;
+  mSelectionModel = selectionModel;
 }
 
 void XXPortManager::slotImport( const QString &identifier )
@@ -109,26 +110,27 @@ void XXPortManager::slotImport( const QString &identifier )
 
 void XXPortManager::slotExport( const QString &identifier )
 {
-  if ( !mItemView )
+  if ( !mSelectionModel )
     return;
+
   const XXPort* xxport = mFactory.createXXPort( identifier, mParentWidget );
   if ( !xxport )
     return;
 
-  KABC::AddresseeList list;
-  Akonadi::EntityFilterProxyModel* itemTree = dynamic_cast<Akonadi::EntityFilterProxyModel*>(mItemView->model());
-  Q_ASSERT(itemTree);
+  KABC::AddresseeList contacts;
 
-  foreach(const QModelIndex &index, mItemView->selectionModel()->selectedRows()) {
-    const Akonadi::Item item = itemTree->data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+  foreach ( const QModelIndex &index, mSelectionModel->selectedRows() ) {
+    const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
     Q_ASSERT( item.isValid() );
-    const KABC::Addressee adr = item.payload<KABC::Addressee>();
-    list.append( adr );
+    const KABC::Addressee contact = item.payload<KABC::Addressee>();
+    contacts.append( contact );
   }
-  if ( !list.isEmpty() )
-    xxport->exportContacts( list );
+
+  if ( !contacts.isEmpty() )
+    xxport->exportContacts( contacts );
   else
     KMessageBox::sorry( 0, i18n( "Any contact selected" ) );
+
   delete xxport;
 }
 
