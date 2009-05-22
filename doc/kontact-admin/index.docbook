@@ -36,8 +36,8 @@ Please respect the format of the date (YYYY-MM-DD) and of the version
 (V.MM.LL), it could be used by automation scripts.
 Do NOT change these in the translation. -->
 
-<date>2009-05-14</date>
-<releaseinfo>0.00.01</releaseinfo>
+<date>2009-05-22</date>
+<releaseinfo>0.00.02</releaseinfo>
 
 <!-- Abstract about this handbook -->
 
@@ -71,6 +71,7 @@ scheduling, address book and other &PIM; functionality.  </para></abstract>
 
 </bookinfo>
 
+<!-- Chapter Introduction -->
 <chapter id="introduction">
 <title>Introduction</title>
 
@@ -87,12 +88,13 @@ and &kaddressbook; into a single interface to provide easy access to mail,
 scheduling, address book and other &PIM; functionality.  </para>
 </chapter>
 
+<!-- Chapter Compatibility -->
 <chapter id="compat">
 <title>Compatibility Issues</title>
 
 <para>
-This chapter provides configuration issues help &kappname;
-&kappname; communicate effectively with various groupware solutions.
+This chapter provides help with how how to make &kappname;
+communicate effectively with various groupware solutions.
 </para>
 
 <sect1 id="compat-outlook">
@@ -100,6 +102,30 @@ This chapter provides configuration issues help &kappname;
 
 <para>
 In the &kappname; configuration dialog, under Misc->Groupware...
+</para>
+
+</sect1>
+</chapter>
+
+<!-- Chapter Behavior -->
+<chapter id="behavior">
+<title>Behavioral Issues</title>
+
+<para>
+This chapter provides instructions on how to make &kappname; 
+behave more like other groupware clients.
+</para>
+
+<sect1 id="behave-composing">
+<title>Composing Messages</title>
+
+<para>
+Outlook users are accustomed to typing a list of addresses in the To:,
+CC: or BCC: fields separated by a semicolon (';') character in addition
+to a comma (',').  By default, &kappname; only allows the comma as an address
+separator character.  To also allow the semicolon, change the
+<option>AllowSemicolonAsAddressSeparator</option> from false to true
+in the installed <filename>share/config.kcfg/kmail.kcfg</filename> file 
 </para>
 
 </sect1>
