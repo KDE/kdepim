@@ -60,6 +60,7 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     virtual ~AddresseeLineEdit();
 
     virtual void setFont( const QFont & );
+    void allowSemiColonAsSeparator( bool );
 
   public Q_SLOTS:
     void cursorAtEnd();
@@ -142,6 +143,7 @@ class KDEPIM_EXPORT AddresseeLineEdit : public KLineEdit
     bool m_addressBookConnected;
     bool m_lastSearchMode;
     bool m_searchExtended; //has \" been added?
+    bool m_useSemiColonAsSeparator;
 
     //QMap<QString, KABC::Addressee> m_contactMap;
 
