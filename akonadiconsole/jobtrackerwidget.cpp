@@ -55,6 +55,7 @@ JobTrackerWidget::JobTrackerWidget( const char *name, QWidget *parent )
   connect( d->model, SIGNAL( modelReset( ) ), tv, SLOT( expandAll() ) );
   connect( tv, SIGNAL(customContextMenuRequested(QPoint)), SLOT(contextMenu(QPoint)) );
   layout->addWidget( tv );
+  d->model->setEnabled( false ); // since it can be slow, default to off
 
   Akonadi::Control::widgetNeedsAkonadi( this );
 }
