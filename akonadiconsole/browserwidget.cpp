@@ -40,6 +40,7 @@
 #include <akonadi/xml/xmlwritejob.h>
 
 #include <kcal/kcalmodel.h>
+#include <kcal/incidence.h>
 #include <kabc/kabcmodel.h>
 #include <kabc/kabcitembrowser.h>
 #include <akonadi/kmime/messagemodel.h>
@@ -190,7 +191,7 @@ void BrowserWidget::setItem( const Akonadi::Item &item )
 
     contentUi.addresseeView->setAddressee( addr );
     contentUi.stack->setCurrentWidget( contentUi.addresseeViewPage );
-  } else if ( item.mimeType().startsWith( "application/x-vnd.akonadi.calendar" ) ) {
+  } else if ( item.hasPayload<KCal::Incidence::Ptr>() ) {
     contentUi.incidenceView->setItem( item );
     contentUi.stack->setCurrentWidget( contentUi.incidenceViewPage );
   } else {
