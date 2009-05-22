@@ -1,3 +1,37 @@
+Friday, May 22th 2009
+
+Problems addressed
+------------------
+
+* Fix many cases of unknown icons
+* Don't allow HTML formatting in replies to invitations
+* Don't show dragged text when trying to comment on an answer to invitations
+* Also allow specifing additional recipients for all template types, not only
+  forwarding templates
+* Fix messages with UTF-16 encoding uncontrollably multipling themselves with disconnected IMAP
+* Remove more unused applications from SVN
+
+Merges
+------
+
+* Merges from KDE 4.2 branch:
+      - Fix possible crash when calculating recurrence rules of events
+      - Fix problem when deleting a recurring event in the month view
+      - Fix a crash when editing a journal
+      - Fix GMX addressbook export
+      - Multiple Akregator fixes (KDE bugs 192637, 183022, 191685, 191577, 147700 and 185597)
+      - Add Bulgarian holidays (KDE bug 193096)
+      - Fix a Romainian holidy (KDE bug 193108)
+      - Don't crash when trying to show the work view without work days configured (KDE bug 192239)
+      - Disable the save button for read-only calendars
+      - Don't crash when client-side filtering online IMAP message under some cirumstances (KDE bug 175584)
+      - Let the user cancel the message box that is asking how to forward messages
+      - Properly support UTF-8 in the KMail command line parameters
+
+* Merges from enterprise35 branch:
+      - kolab/issue3615 (partly): Confusing warnings when evaluating key trust in KMail
+
+
 Friday, May 15th 2009
 
 Problems addressed
@@ -9,7 +43,6 @@ Problems addressed
 * When inline-forwarding a mail, also include the CC recipients of the original mail
 * Add the "jump to folder" action to the Go menu
 * Start of an administrator manual for Kontact
-
 
 Merges
 ------
