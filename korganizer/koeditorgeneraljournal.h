@@ -77,10 +77,6 @@ class KOEditorGeneralJournal : public KOEditorGeneral
     void setSummary( const QString &text );
     void finishSetup();
 
-  public slots:
-    void setCategories( const QStringList &categories );
-    void selectCategories();
-
   signals:
     void openCategoryDialog();
 
@@ -91,11 +87,6 @@ class KOEditorGeneralJournal : public KOEditorGeneral
     KPIM::KDateEdit *mDateEdit;
     QCheckBox *mTimeCheckBox;
     KPIM::KTimeEdit *mTimeEdit;
-    QPushButton *mCategoriesButton;
-    KSqueezedTextLabel *mCategoriesLabel;
-
-  private:
-    QStringList mCategories;
 };
 
 #endif
