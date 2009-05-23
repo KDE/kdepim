@@ -1,7 +1,9 @@
 KAlarm Change Log
 
-=== Version 2.1.8 --- 15 May 2009 ===
+=== Version 2.1.8 --- 23 May 2009 ===
 - Fix crash on exit from birthday import dialogue.
+- Fix crash when an alarm is open for edit when its last occurrence triggers,
+  and the edit is then saved.
 
 === Version 2.1.7 (KDE 4.2.3) --- 29 April 2009 ===
 - Fix recurring alarms being missed when deferred to earlier than next due alarm,
