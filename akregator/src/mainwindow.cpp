@@ -152,7 +152,7 @@ void MainWindow::readProperties(const KConfigGroup & config)
 void MainWindow::optionsConfigureKeys()
 {
     KShortcutsDialog dlg( KShortcutsEditor::AllActions,
-      KShortcutsEditor::LetterShortcutsDisallowed, this );
+      KShortcutsEditor::LetterShortcutsAllowed, this );
 
     dlg.addCollection(actionCollection());
     if (m_part)
