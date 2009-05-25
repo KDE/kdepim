@@ -41,7 +41,7 @@
 
 <!-- Don't change format of date and version of the documentation -->
 
-<date>2009-04-06</date>
+<date>2009-05-25</date>
 <releaseinfo>2.02.00</releaseinfo>
 
 <abstract>
@@ -229,9 +229,9 @@ To show or hide the time-to-alarm column, select
 Alarms</guimenuitem></menuchoice>. At least one of these columns is
 always shown.</para>
 
-<para>If you use multiple alarm resources, you can color code alarms
-according to which resource they belong to, by selecting a different
-background color for each resource.</para>
+<para>If you use multiple alarm calendars, you can color code alarms
+according to which calendar they belong to, by selecting a different
+background color for each calendar.</para>
 
 </sect2>
 
@@ -632,30 +632,30 @@ for weekly or yearly recurrences, respectively.</para>
 
 </sect2>
 
-<sect2 id="resources">
-<title>Alarm Resources</title>
+<sect2 id="calendars">
+<title>Alarm Calendars</title>
 
 <para>If you only use one computer and work independently, it may not
 matter to you where &kalarm; stores its alarms. But if you need to
 access alarms on more than one computer, or in more than one location
-on your local computer, you can define <quote>alarm resources</quote>
+on your local computer, you can define <quote>alarm calendars</quote>
 to tell &kalarm; to use other alarm calendars additional to, or in
 place of, its default ones.</para>
 
-<para>You can view and manipulate resources via the resource list,
+<para>You can view and manipulate calendars via the calendar list,
 which can be displayed alongside the alarm list in &kalarm;'s main
-window. Alarms from all alarm resources are shown merged together in
+window. Alarms from all alarm calendars are shown merged together in
 the alarm list. When you save a new alarm, you can set a configuration
 option to determine whether it is automatically saved into the default
-resource, or whether you will be prompted to choose a resource. When
+calendar, or whether you will be prompted to choose a calendar. When
 you edit an existing alarm, it is automatically saved back into its
-original alarm resource.</para>
+original alarm calendar.</para>
 
 <sect3>
-<title>Resource Types and Options</title>
+<title>Calendar Types and Options</title>
 
-<para>Alarm resources are categorized by alarm type and storage type.
-They can be disabled, set read-only, or made the default resource for
+<para>Alarm calendars are categorized by alarm type and storage type.
+They can be disabled, set read-only, or made the default calendar for
 their alarm type.</para>
 
 <variablelist>
@@ -664,8 +664,8 @@ their alarm type.</para>
 <listitem>
 <para>The three alarm entity types &ndash; active alarms, archived
 alarms and alarm templates &ndash;
-are stored in separate alarm resources. &kalarm; therefore has three
-standard default resources, one for each type (see 
+are stored in separate alarm calendars. &kalarm; therefore has three
+standard default calendars, one for each type (see 
 <link linkend="faq">Questions and Answers</link> for details), which
 you can change if you wish.</para>
 </listitem>
@@ -674,12 +674,12 @@ you can change if you wish.</para>
 <varlistentry>
 <term>Storage type</term>
 <listitem>
-<para>&kalarm; handles three alarm resource storage
+<para>&kalarm; handles three alarm calendar storage
 types:</para>
 
 <itemizedlist>
 <listitem><para>Local file: Alarms are stored in a single local file
-in iCalendar format. &kalarm; uses local file resources by default
+in iCalendar format. &kalarm; uses local file calendars by default
 (see <link linkend="faq">Questions and Answers</link> for details).
 <quote>Local files</quote>, in addition to files on the local
 computer, can include alarm calendars on the local network as long as
@@ -709,10 +709,10 @@ technical reason for this is that a change made by person A will only
 be available to person B after person A's cached copy has first been
 saved to the remote file, and then person B's cached copy
 of the remote file has been reloaded. When and if the calendar is
-saved and reloaded depends on the resource configuration parameters
+saved and reloaded depends on the calendar configuration parameters
 which each user has set for that alarm calendar.</para>
 
-<para>Ways to avoid this problem include adjusting the resource save
+<para>Ways to avoid this problem include adjusting the calendar save
 and reload configuration parameters, or adopting a policy that users
 other than the alarm calendar's owner should open it in read-only
 mode.</para></warning>
@@ -724,42 +724,42 @@ mode.</para></warning>
 <varlistentry>
 <term>Enabled/disabled status</term>
 <listitem>
-<para>Disabling a resource has the same
-effect as removing it, except that it still appears in the resource
+<para>Disabling a calendar has the same
+effect as removing it, except that it still appears in the calendar
 list for easy re-enabling. When disabled, its alarms are ignored and
 do not appear in the alarm list or list of templates. When it is
 re-enabled, its alarms are once again shown and, if it is an active
-alarm resource, made active.</para>
+alarm calendar, made active.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term>Read-only status</term>
 <listitem>
-<para>A read-only resource's alarms cannot be
+<para>A read-only calendar's alarms cannot be
 changed or added to. So you cannot edit its alarms, or save new alarms
 to it. Also, it is not possible to defer its alarms, since to do so
 would need the deferral time to be saved into the alarm. After its
-alarms trigger, they are not removed from the resource and archived
-until you or another user accesses the resource in read-write
+alarms trigger, they are not removed from the calendar and archived
+until you or another user accesses the calendar in read-write
 mode.</para>
 
-<para>You can set the read-only status of a resource in the resource
-configuration dialog. However, some resources cannot be made
+<para>You can set the read-only status of a calendar in the calendar
+configuration dialog. However, some calendars cannot be made
 writeable, for various reasons:</para>
 
 <itemizedlist>
-<listitem><para>If a resource was created by another application, it
+<listitem><para>If a calendar was created by another application, it
 would be unsafe to allow &kalarm; to update it, since differences in
 data format might make it unusable by the creating application.</para>
 </listitem>
 
-<listitem><para>If the resource was created by a later version of
+<listitem><para>If the calendar was created by a later version of
 &kalarm;, data might be lost if your version of &kalarm; updated
 it.</para>
 </listitem>
 
-<listitem><para>If the resource was created by a previous version of
+<listitem><para>If the calendar was created by a previous version of
 &kalarm;, data could be lost or it could be made unusable for the
 previous &kalarm; version if your version of &kalarm; updated it. You
 will be prompted whether to convert its format so as to make it
@@ -768,13 +768,13 @@ previous &kalarm; version needs to access it again.</para>
 </listitem>
 
 <listitem><para>If you do not have permission to write to the
-resource file or folder.</para>
+calendar file or folder.</para>
 </listitem>
 </itemizedlist>
 
-<para>If you need write access to alarms in a resource which cannot be
+<para>If you need write access to alarms in a calendar which cannot be
 made writeable, you can copy its alarms by importing them into a
-writeable resource using the latter resource's
+writeable calendar using the latter calendar's
 <menuchoice><guimenuitem>Import...</guimenuitem></menuchoice> context
 menu option (see <link linkend="import">Importing Alarms from External
 Calendars</link>).</para>
@@ -782,11 +782,11 @@ Calendars</link>).</para>
 </varlistentry>
 
 <varlistentry>
-<term>Default resource status</term>
+<term>Default calendar status</term>
 <listitem>
-<para>One resource of each alarm type can optionally be made the
-default resource for that alarm type. New alarms are automatically
-saved to the default resource for the appropriate alarm type, unless
+<para>One calendar of each alarm type can optionally be made the
+default calendar for that alarm type. New alarms are automatically
+saved to the default calendar for the appropriate alarm type, unless
 you have selected the prompt option for new alarms and templates in the
 <link linkend="preferences-storage">Configuration dialog</link>.</para>
 </listitem>
@@ -796,25 +796,25 @@ you have selected the prompt option for new alarms and templates in the
 </sect3>
 
 <sect3>
-<title>Using Resources</title>
+<title>Using Calendars</title>
 
-<para>You can view and manipulate resources via the resource list,
+<para>You can view and manipulate calendars via the calendar list,
 which can be displayed or hidden by <menuchoice>
-<guimenu>View</guimenu><guimenuitem>Show Resources</guimenuitem>
-</menuchoice>. When using the resource list, first select the alarm
+<guimenu>View</guimenu><guimenuitem>Show Calendars</guimenuitem>
+</menuchoice>. When using the calendar list, first select the alarm
 type using the combo box above the list. Then either click on one of
 the buttons below the list, or <mousebutton>Right</mousebutton> click
-on the appropriate resource in the list and choose an item from the
+on the appropriate calendar in the list and choose an item from the
 context menu. The actions available are:</para>
 
 <variablelist>
 <varlistentry>
 <term><menuchoice><guimenuitem>Add...</guimenuitem></menuchoice></term>
 <listitem>
-<para>Add a resource of the selected type to the list. You are asked
-to choose a storage type, following which the resource configuration
-dialog is displayed, where you can enter the location of the resource
-and its characteristics. If there is no existing alarm resource in
+<para>Add a calendar of the selected type to the list. You are asked
+to choose a storage type, following which the calendar configuration
+dialog is displayed, where you can enter the location of the calendar
+and its characteristics. If there is no existing alarm calendar in
 the specified location, a new one will be created.</para>
 </listitem>
 </varlistentry>
@@ -822,7 +822,7 @@ the specified location, a new one will be created.</para>
 <varlistentry>
 <term><menuchoice><guimenuitem>Remove</guimenuitem></menuchoice></term>
 <listitem>
-<para>Remove the selected resource from the list. The resource itself
+<para>Remove the selected calendar from the list. The calendar itself
 is left intact; it is simply removed from the list, and may
 subsequently be reinstated in the list if desired.</para>
 </listitem>
@@ -831,22 +831,22 @@ subsequently be reinstated in the list if desired.</para>
 <varlistentry>
 <term><menuchoice><guimenuitem>Edit...</guimenuitem></menuchoice></term>
 <listitem>
-<para>Edit the selected resource. This displays the configuration
-dialog for the selected resource.</para>
+<para>Edit the selected calendar. This displays the configuration
+dialog for the selected calendar.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice><guimenuitem>Reload</guimenuitem></menuchoice></term>
 <listitem>
-<para>Reload the selected resource. The resource is re-read from its
+<para>Reload the selected calendar. The calendar is re-read from its
 storage location, ensuring that there is no discrepancy between what
-&kalarm; displays and the current state of the resource. If the
-resource is shared with other users, any changes which they have made
+&kalarm; displays and the current state of the calendar. If the
+calendar is shared with other users, any changes which they have made
 will now be seen by &kalarm;.</para>
 
-<warning><para>If you reload a remote resource, any changes to alarms
-which you have made since the resource was last saved will be lost.
+<warning><para>If you reload a remote calendar, any changes to alarms
+which you have made since the calendar was last saved will be lost.
 Also, any alarms which have expired since the last save may be
 retriggered.</para></warning>
 </listitem>
@@ -855,18 +855,18 @@ retriggered.</para></warning>
 <varlistentry>
 <term><menuchoice><guimenuitem>Save</guimenuitem></menuchoice></term>
 <listitem>
-<para>Save any changes to the selected resource. The resource is
+<para>Save any changes to the selected calendar. The calendar is
 updated with any alarm changes which have occurred since the last time
-the resource was saved or reloaded. This is only useful for remote
-resources, since local resources are automatically saved after every
-change. You can configure when and how frequently a remote resource
+the calendar was saved or reloaded. This is only useful for remote
+calendars, since local calendars are automatically saved after every
+change. You can configure when and how frequently a remote calendar
 should be automatically saved, using its configuration dialog (via
 the <menuchoice><guimenuitem>Edit...</guimenuitem></menuchoice>
 context menu option).</para>
 
-<warning><para>If you save a remote resource which is shared with other
+<warning><para>If you save a remote calendar which is shared with other
 users, any changes which they have made since you last reloaded the
-resource (automatically or manually) will be lost.</para></warning>
+calendar (automatically or manually) will be lost.</para></warning>
 </listitem>
 </varlistentry>
 
@@ -874,28 +874,28 @@ resource (automatically or manually) will be lost.</para></warning>
 <term><menuchoice><guimenuitem>Import...</guimenuitem></menuchoice></term>
 <listitem>
 <para>Import alarms from an external calendar file into the selected
-resource. This is described in
+calendar. This is described in
 <link linkend="import">Importing Alarms from External Calendars</link>.
 This option is not available for disabled or read-only
-resources.</para>
+calendars.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice><guimenuitem>Export...</guimenuitem></menuchoice></term>
 <listitem>
-<para>Export all the alarms in the selected resource to an external calendar
+<para>Export all the alarms in the selected calendar to an external calendar
 file. This is described in
 <link linkend="export">Exporting Alarms to External Calendars</link>.
-This option is not available for disabled resources.</para>
+This option is not available for disabled calendars.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice><guimenuitem>Show Details</guimenuitem></menuchoice></term>
 <listitem>
-<para>Display details about the selected resource. This shows the
-resource's location, storage type and status information.
+<para>Display details about the selected calendar. This shows the
+calendar's location, storage type and status information.
 </para>
 </listitem>
 </varlistentry>
@@ -903,25 +903,25 @@ resource's location, storage type and status information.
 <varlistentry>
 <term><menuchoice><guimenuitem>Use as Default</guimenuitem></menuchoice></term>
 <listitem>
-<para>Make the selected resource the default resource for the selected
-resource type. This option is not available for disabled or read-only
-resources.</para>
+<para>Make the selected calendar the default calendar for the selected
+calendar type. This option is not available for disabled or read-only
+calendars.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice><guimenuitem>Set Color...</guimenuitem></menuchoice></term>
 <listitem>
-<para>Select a background color for highlighting this resource's alarms
+<para>Select a background color for highlighting this calendar's alarms
 in the alarm list. This enables you to see at a glance which alarms
-belong to a particular resource.</para>
+belong to a particular calendar.</para>
 </listitem>
 </varlistentry>
 
 <varlistentry>
 <term><menuchoice><guimenuitem>Clear Color</guimenuitem></menuchoice></term>
 <listitem>
-<para>Clear color highlighting for this resource's alarms in the alarm
+<para>Clear color highlighting for this calendar's alarms in the alarm
 list.</para>
 </listitem>
 </varlistentry>
@@ -949,19 +949,19 @@ alarms of all types (active alarms, archived alarms and alarm
 templates) from the calendar.</para>
 
 <para>If you have configured 
-<link linkend="resources">alarm resources</link>, alarms of each type
-will be added to the appropriate default resource, or if you have
+<link linkend="calendars">alarm calendars</link>, alarms of each type
+will be added to the appropriate default calendar, or if you have
 selected the prompt option for new alarms and templates in the
 <link linkend="preferences-storage">Configuration dialog</link>, you will
-be prompted for the resource to use.</para>
+be prompted for the calendar to use.</para>
 </listitem>
 
 <listitem>
-<para><mousebutton>Right</mousebutton> click on a resource in the
-resource list, and choose
+<para><mousebutton>Right</mousebutton> click on a calendar in the
+calendar list, and choose
 <menuchoice><guimenuitem>Import...</guimenuitem></menuchoice> from the
 context menu. This imports alarms of the currently selected type into
-that resource. For example, if the selected resource type is alarm
+that calendar. For example, if the selected calendar type is alarm
 templates, alarm templates (and not active alarms or archived alarms)
 will be imported.</para>
 </listitem>
@@ -982,7 +982,7 @@ as necessary.</para></warning>
 
 <para>You can export alarms from &kalarm; to other calendar files,
 either the alarms currently selected in the alarm list, or all the
-alarms from an alarm resource. The methods to do this are given below.
+alarms from an alarm calendar. The methods to do this are given below.
 Whichever method is used, you can either create a new calendar file
 or append the exported alarms to an existing calendar file. To append
 the alarms, check <guilabel>Append to existing file</guilabel> in the
@@ -1000,8 +1000,8 @@ the main menu.</para>
 </listitem>
 
 <listitem>
-<para>To export all the alarms from a resource,
-<mousebutton>Right</mousebutton> click on a resource in the resource
+<para>To export all the alarms from a calendar,
+<mousebutton>Right</mousebutton> click on a calendar in the calendar
 list, and choose
 <menuchoice><guimenuitem>Export...</guimenuitem></menuchoice> from the
 context menu.</para>
@@ -1049,11 +1049,11 @@ defined in the <guilabel>Alarm Text</guilabel> group box.</para>
 </itemizedlist>
 
 <para>If you have configured 
-<link linkend="resources">alarm resources</link>, the alarms will be
-added to the default active alarm resource, or if you have selected the
+<link linkend="calendars">alarm calendars</link>, the alarms will be
+added to the default active alarm calendar, or if you have selected the
 prompt option for new alarms and templates in the
 <link linkend="preferences-storage">Configuration dialog</link>, you will
-be prompted for the resource to use.</para>
+be prompted for the calendar to use.</para>
 
 </sect2>
 
@@ -2013,15 +2013,15 @@ it should have been, you can refresh the alarm list and trigger any
 missed alarms by selecting
 <menuchoice>
 <guimenu>Actions</guimenu><guimenuitem>Refresh Alarms</guimenuitem>
-</menuchoice>. This causes &kalarm; to reload all alarm calendar files
-and resources.</para>
+</menuchoice>. This causes &kalarm; to reload all alarm
+calendars.</para>
 
-<para>You can reload an individual resource and refresh its alarms in
+<para>You can reload an individual calendar and refresh its alarms in
 the alarm list by
-<mousebutton>Right</mousebutton> clicking the resource in the
-resources list and selecting the
+<mousebutton>Right</mousebutton> clicking the calendar in the
+calendars list and selecting the
 <menuchoice><guimenuitem>Reload</guimenuitem></menuchoice> menu
-option. See <link linkend="resources">Alarm Resources</link> for
+option. See <link linkend="calendars">Alarm Calendars</link> for
 details.</para>
 
 </sect1>
@@ -2348,22 +2348,22 @@ for saving and archiving alarms:</para>
 <itemizedlist>
 <listitem>
 <para><guilabel>New Alarms &amp; Templates</guilabel>: Specify which
-resource to store new alarms and alarm templates in when using
-multiple alarm resources:</para>
+calendar to store new alarms and alarm templates in when using
+multiple alarm calendars:</para>
 
 <itemizedlist>
 <listitem>
-<para><guilabel>Store in default resource</guilabel>: New alarms and
-alarm templates are automatically added to the default alarm resource
+<para><guilabel>Store in default calendar</guilabel>: New alarms and
+alarm templates are automatically added to the default alarm calendar
 without prompting for confirmation.</para>
 </listitem>
 
 <listitem>
-<para><guilabel>Prompt for which resource to store in</guilabel>:
+<para><guilabel>Prompt for which calendar to store in</guilabel>:
 When you create a new alarm or alarm template and there is more than
-one writeable alarm resource, you will be prompted to choose which
-resource to save it in. Note that when alarms are saved on expiry,
-they are always stored in the default archived alarm resource without
+one writeable alarm calendar, you will be prompted to choose which
+calendar to save it in. Note that when alarms are saved on expiry,
+they are always stored in the default archived alarm calendar without
 prompting.</para>
 </listitem>
 </itemizedlist>
@@ -2371,7 +2371,7 @@ prompting.</para>
 
 <listitem><para><guilabel>Archived Alarms</guilabel> group box: These
 options control the storage of archived alarms in the default archived
-alarm resource.</para>
+alarm calendar.</para>
 
 <itemizedlist>
 <listitem><para><guilabel>Keep alarms after expiry</guilabel>:
@@ -2389,7 +2389,7 @@ archive, after which they are permanently deleted.</para>
 
 <listitem><para><guibutton>Clear archived alarms</guibutton>: This
 button discards all currently archived alarms from the default archived
-alarm resource. (Other archived alarm resources are left unchanged in
+alarm calendar. (Other archived alarm calendars are left unchanged in
 case they are shared with other people.) This has no effect on
 alarms which subsequently expire or are deleted; they will continue to
 be archived according to the selected options.</para>
@@ -3451,7 +3451,7 @@ passed, &kalarm; immediately displays the message (unless the
 <parameter>lateCancel</parameter> value indicates that it is now too
 late to display the alarm, in which case &kalarm; ignores the
 request). If the scheduled time (or a repetition) is in the future,
-&kalarm; adds the alarm message to the default active alarm resource
+&kalarm; adds the alarm message to the default active alarm calendar
 for later display.</para>
 </refsect1>
 </refentry>
@@ -4274,7 +4274,7 @@ information).</para></note>
 holds your &kalarm; preferences.</para>
 <para>
 <filename>$KDEHOME/share/config/kresources/alarms/stdrc</filename>
-holds your alarm resource configuration.</para>
+holds your alarm calendar configuration.</para>
 
 <para>($<envar>KDEHOME</envar> is usually
 <filename class="directory">~/.kde</filename> or similar.)</para>
@@ -4313,8 +4313,8 @@ holds  alarm templates (overridable by the
 </itemizedlist>
 
 <para>You can find out which calendar files are currently in use by
-viewing each resource's details in the alarm resources list. The file
-names are stored in the alarm resource configuration file.</para>
+viewing each calendar's details in the alarm calendars list. The file
+names are stored in the alarm calendar configuration file.</para>
 
 <para>Details of alarms currently being displayed are stored in the
 calendar file
