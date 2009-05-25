@@ -8,7 +8,9 @@ can be useful when debugging problems.
 </para>
 
 <para>
-&kpilot; starts up with a splash screen, and then switches to showing the
+On the first start &kpilot; opens the configuration dialog which allows to you adjust its 
+settings and select and configure the conduits to be used.
+Click the <guibutton>OK</guibutton> button to switch to the
 &HotSync;-log, as shown <link linkend="main-app">here</link>.
 </para>
 
@@ -31,7 +33,7 @@ The main window contains the application menu, which we will deal with here.
 <para>
 The <guimenu>File</guimenu> menu contains the synchronization menu items. Note
 that these items do not start the sync process, they only select what the new
-sync will be. To really start it, you must press the HotSync button on your
+sync will be. To really start it, you must press the &HotSync; button on your
 &PalmPilot;'s cradle (or on the &handheld; itself, when there is no cradle).
 </para>
 <note>
@@ -240,11 +242,11 @@ sidebar.
 </para>
 
 <screenshot>
-<screeninfo>KPilot's Sidebar</screeninfo>
+<screeninfo>&kpilot;'s Sidebar</screeninfo>
 <mediaobject>
 <imageobject><imagedata fileref="sidebar.png" format="PNG"/></imageobject>
-<textobject><phrase>KPilot's Sidebar</phrase></textobject>
-<caption><para>KPilot's Sidebar</para></caption>
+<textobject><phrase>&kpilot;'s Sidebar</phrase></textobject>
+<caption><para>&kpilot;'s Sidebar</para></caption>
 </mediaobject>
 </screenshot>
 
@@ -255,29 +257,23 @@ will cause that application to appear in &kpilot;'s main
 window.</para>
 
 
-
 <sect2 id="installer-app">
 <title>The File Installer</title>
 <para>
 Just hit the
-<guibutton>Add File...</guibutton> button to add a file to the
-<guilabel>Files to Install:</guilabel> list. These files will
-be installed on your &PalmPilot; during the next &HotSync; if
-<guilabel>Sync Files</guilabel>
-is checked in the conduits section of the
-<link linkend="configure">configuration dialog</link>.
+<guibutton>Add file...</guibutton> button to add a file to the
+list. These files will
+be installed on your &PalmPilot; during the next &HotSync;.
 If you choose not to
 install these files on the &PalmPilot;, just hit
-<guibutton>Clear List</guibutton>
+<guibutton>Clear list</guibutton>
 to remove any pending files.
 </para>
 
 <para>
 The file installer application supports dragging and dropping into
-the <guilabel>Files to Install:</guilabel>area.  Provided <guilabel>Sync
-Files</guilabel> is checked in the
-<link linkend="page-general">settings dialog</link> they
-will be installed the next time you HotSync.
+the files to install area. They
+will be installed the next time you &HotSync;.
 </para>
 
 <tip>

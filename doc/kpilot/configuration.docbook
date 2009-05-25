@@ -88,10 +88,7 @@ heading to see them.
 
 <para>
 This is a setup page that contains options describing
-the &PalmPilot; hardware, you, the user
-and how you want the various parts of &kpilot;
-to be started.
-</para>
+the &PalmPilot; hardware, and the user settings.</para>
 
 <screenshot>
 <screeninfo>Device Page</screeninfo>
@@ -174,6 +171,17 @@ speeds to see if they work.
 </listitem>
 </varlistentry>
 
+<varlistentry>
+<term><guilabel>Workarounds</guilabel></term>
+<listitem>
+<para>Workarounds enable special handling for specific devices. Most devices 
+do not need special handling. However, the Zire 31, Zire 72 and Tungsten T5 
+do have special needs, so if you are connecting such a device, please 
+select the workaround for them.
+</para>
+</listitem>
+</varlistentry>
+
 <varlistentry><term><guilabel>Encoding</guilabel></term>
 <listitem>
 <para>
@@ -210,12 +218,21 @@ applications.
 </listitem>
 </varlistentry>
 
+<varlistentry>
+<term><guilabel>Autodetect</guilabel></term>
+<listitem>
+<para>Click here to try to automatically detect your device, username and 
+connection speed. &kpilot; will scan for attached devices.
+</para>
+</listitem>
+</varlistentry>
+
 </variablelist>
 
 </sect2>
 
 <sect2 id="page-hotsync">
-<title>HotSync Setup</title>
+<title>&HotSync; Setup</title>
 
 <para>
 This page contains settings with which you can instruct &kpilot; to perform
@@ -225,7 +242,7 @@ should be resolved. A conflict happens when both the desktop application and the
 </para>
 
 <para>
-&kpilot; interfaces with your &handheld; in two ways: using
+&kpilot; interfaces with your &handheld; in two ways: using <!-- viewers are gone?-->
 the conduits and the internal viewers. Conduits are plug-in programs which
 extend the synchronization capabilities of &kpilot;. &kpilot; stores separate copies of
 the databases and records for conduits, while the internal viewers and backup
@@ -286,7 +303,7 @@ SlowSync.
 
 <listitem>
 <para>
-<guilabel>Copy PC to handheld</guilabel>: run all conduits and sync all
+<guilabel>Copy PC to Handheld</guilabel>: run all conduits and sync all
 databases, but instead of merging the information from both sources, copy the PC
 data to the handheld. <emphasis>Use with care, as this option erases the changes
 you made in your handheld since the last sync</emphasis>.
@@ -295,7 +312,7 @@ you made in your handheld since the last sync</emphasis>.
 
 <listitem>
 <para>
-<guilabel>Copy handheld to PC</guilabel>: run all conduits and sync all
+<guilabel>Copy Handheld to PC</guilabel>: run all conduits and sync all
 databases, but instead of merging the information from both sources, copy the
 handheld data to the PC. <emphasis>Use with care, as this option erases the
 changes you made in your PC since the last sync</emphasis>.
@@ -310,19 +327,6 @@ changes you made in your PC since the last sync</emphasis>.
 
 
 <varlistentry>
-<term><guilabel>Do full sync when changing PCs</guilabel></term>
-<listitem>
-<para>
-If you &HotSync; your &handheld; with multiple <acronym>PC</acronym>s, the flag
-on the &handheld; that stores which
-records have changed since the last &HotSync; may be inaccurate. It is
-recommended to do a full sync when changing <acronym>PC</acronym>s. You can
-disable the full sync by unchecking this box.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
 <term><guilabel>Do not sync when screensaver is active</guilabel></term>
 <listitem>
 <para>
@@ -331,6 +335,19 @@ while the PC screen saver is active. This prevents other people from
 stealing your data through the &handheld; cradle while your PC is
 unattended. The feature only works with the &kde; screen savers, though,
 and you will need to disable it to use &kpilot; in non-&kde; environments.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Do full sync when changing PCs</guilabel></term>
+<listitem>
+<para>
+If you &HotSync; your &handheld; with multiple <acronym>PC</acronym>s, the flag
+on the &handheld; that stores which
+records have changed since the last &HotSync; may be inaccurate. It is
+recommended to do a full sync when changing <acronym>PC</acronym>s. You can
+disable the full sync by unchecking this box.
 </para>
 </listitem>
 </varlistentry>
@@ -414,6 +431,25 @@ database, which tend to be static (for instance the applications).</para>
 </screenshot>
 
 <variablelist>
+
+<varlistentry>
+<term><guilabel>Backup Frequency</guilabel></term>
+<listitem>
+<para>Select in this list how frequently backups are done. Possible values are:
+<itemizedlist>
+<listitem><para>
+<guilabel>On Every HotSync</guilabel>: A backup of your handheld will be done 
+every time you <guilabel>HotSync</guilabel>
+</para></listitem>
+<listitem><para>
+<guilabel>On Request Only</guilabel>: A backup of your handheld will be done 
+only when you choose your next sync to be of type <guilabel>Backup</guilabel>
+</para></listitem>
+</itemizedlist>
+</para>
+</listitem>
+</varlistentry>
+
 <varlistentry>
 <term><guilabel>Databases</guilabel></term>
 <listitem>
@@ -473,7 +509,7 @@ when you perform a &HotSync;.
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Run conduits during a backup</guilabel></term>
+<term><guilabel>Run conduits during a backup sync</guilabel></term>
 <listitem>
 <para>
 The backup typically updates the copy of the &handheld; databases.
@@ -500,7 +536,7 @@ This page presents options related to the startup and exit of &kpilot; and
 &kpilot; daemon.
 </para>
 
-<para>
+<para> <!-- internal viewers are gone? -->
 While &kpilot; is the front-end for the internal viewers, configuration options
 and logs, the sync operation is handled by the &kpilot; daemon. Even if &kpilot;
 is not running you can &HotSync; if the daemon is. Therefore, if you want to
@@ -533,7 +569,7 @@ format="PNG"/></imageobject>
 <itemizedlist>
 <listitem>
 <para>
-<guilabel>Start KPilot at login</guilabel>:
+<guilabel>Start KPilot at login</guilabel>:<!-- what is it used for? remove it?-->
 By checking this, a link to
 the daemon is placed in your autostart folder
 and will be started automatically.  Note that this is not normally
@@ -644,33 +680,6 @@ Allows &kpilot; to install files and databases onto your &PalmPilot;.
 </varlistentry>
 
 <varlistentry>
-<term><guilabel>Calendar</guilabel></term>
-<listitem>
-<para>
-Synchronizes the Datebook application with &korganizer;.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>To-Do</guilabel></term>
-<listitem>
-<para>
-Synchronizes the To-Do list application with &korganizer;.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><guilabel>Contacts</guilabel></term>
-<listitem>
-<para>
-Synchronizes the Addressbook application with &kaddressbook;.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
 <term><guilabel>Time Synchronization</guilabel></term>
 <listitem>
 <para>
@@ -681,10 +690,37 @@ Useful for keeping the clock of the &handheld; accurate.
 </varlistentry>
 
 <varlistentry>
+<term><guilabel>Calendar</guilabel></term>
+<listitem>
+<para>
+Synchronizes the Datebook application with &korganizer;.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
 <term><guilabel>Memo File</guilabel></term>
 <listitem>
 <para>
-Synchronizes the Memo Pad application with a directory and files on your computer.
+Synchronizes the Memo Pad application with a folder and files on your computer.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Contacts</guilabel></term>
+<listitem>
+<para>
+Synchronizes the Address book application with &kaddressbook;.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>To-Do</guilabel></term>
+<listitem>
+<para>
+Synchronizes the To-Do list application with &korganizer;.
 </para>
 </listitem>
 </varlistentry>
@@ -699,6 +735,29 @@ The Install Files Conduit installs any &PalmPilot; database that has been added
 to &kpilot;'s File Install window onto the &handheld;. No additional
 configuration is required for this conduit.
 </para>
+
+</sect2>
+
+<sect2 id="time-cond">
+<title>Time Synchronization Conduit Setup</title>
+
+<para>
+The Time Synchronization Conduit syncs the &handheld;'s time to that of the
+desktop
+machine. It is useful for keeping the clock of the &handheld; accurate. There
+are really no configuration options other that enabling and disabling the
+conduit, as currently only one direction for the synchronization is enabled,
+you can only <guilabel>Set the handheld time from the time on the PC</guilabel>,
+and not <guilabel>Set the PC time from the time on the handheld</guilabel>.
+</para>
+
+
+<note>
+<para>
+&PalmOS; Version 3.25 and 3.3 do not support setting the &handheld; system time.
+For these systems, the conduit will be simply skipped.
+</para>
+</note>
 
 </sect2>
 
@@ -729,31 +788,33 @@ done that, you can select that resource for synchronization use here.
 
 </sect2>
 
-<sect2 id="todo-cond">
-<title>To-Do Conduit Setup</title>
+<sect2 id="memofile-cond">
+<title>Memo File Conduit Setup</title>
 
 <para>
-This conduit will synchronize your &PalmPilot; To Do List application with
-&korganizer; and &kontact;, through Akonadi.  Before you can use this conduit,
-you must configure Akonadi to have a resource for the To-Do file that you wish
-to synchronize with. Once you've done that, you can select that resource for
-synchronization use here.
+This conduit will synchronize your &PalmPilot; Memo Pad application with a
+folder and files on your computer. This conduit will create a directory for
+each category that your &PalmPilot; Memos uses, and within each of those
+directories will be the plain text files that contain the contents of your
+memos.  To set the top level folder to which your Memos will be synchronized
+with, either enter it in the <guilabel>Memos directory</guilabel> edit box or
+select it clicking the folder picker button.
 </para>
-
+<!-- missing "Sync private records" -->
 <screenshot>
-<screeninfo>The To-Do Conduit Setup Dialog</screeninfo>
+<screeninfo>The Memo File Conduit Setup Dialog</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="conduit-todo.png" format="PNG"/></imageobject>
-<textobject><phrase>To-Do Conduit Setup</phrase></textobject>
-<caption><para>To-Do Conduit Setup</para></caption>
+<imageobject><imagedata fileref="conduit-memofile.png" format="PNG"/></imageobject>
+<textobject><phrase>Memo File Conduit Setup</phrase></textobject>
+<caption><para>Memo File Conduit Setup</para></caption>
 </mediaobject>
 </screenshot>
 
+
 </sect2>
 
-
 <sect2 id="conduit-kaddressbook">
-<title>Contacs Conduit Setup</title>
+<title>Contacts Conduit Setup</title>
 
 <para>
 This conduit will synchronize your &PalmPilot; with the &kde; address book
@@ -772,8 +833,8 @@ you've done that, you can select that resource for synchronization use here.
 </screenshot>
 
 <para>
-In the <guilabel>General</guilabel> page, you can set the general address sync
-options.
+In the <guilabel>Akonadi Settings</guilabel> page, you can set the general address sync
+options. <!-- outdated? -->
 </para>
 
 <para>
@@ -781,7 +842,7 @@ In the <guilabel>Conflicts</guilabel> page, you can set the address book conduit
 options, overriding &kpilot;'s general settings for conflict resolution when
 you are using this conduit. For a detailed description of the different conflict
 resolution possibilities available, please refer to the
-<link linkend="page-hotsync">HotSync Setup section</link> of this handbook.
+<link linkend="page-hotsync">&HotSync; Setup section</link> of this handbook.
 </para>
 
 <para>
@@ -843,7 +904,7 @@ dealing with the <quote>Custom</quote> fields from your &handheld; address
 application. Since there are no natural correspondence between these fields and
 other &kde; address book fields, you can set them as you like. You can use them
 to store a <guilabel>URL</guilabel>, a <guilabel>IM Address</guilabel>,
-the <guilabel>Birthdate</guilabel> of your contact or the obvious:
+the <guilabel>Birthday</guilabel> of your contact or the obvious:
 <guilabel>Store as Custom Field</guilabel>.
 </para>
 
@@ -860,56 +921,27 @@ generate a date like 27.3.1952, while %m/%d/%y would write the same date as
 
 </sect2>
 
-
-
-<sect2 id="time-cond">
-<title>Time Synchronization Conduit Setup</title>
+<sect2 id="todo-cond">
+<title>To-Do Conduit Setup</title>
 
 <para>
-The Time Synchronization Conduit syncs the &handheld;'s time to that of the
-desktop
-machine. It is useful for keeping the clock of the &handheld; accurate. There
-are really no configuration options other that enabling and disabling the
-conduit, as currently only one direction for the synchronization is enabled,
-you can only <guilabel>Set the handheld time from the time on the PC</guilabel>,
-and not <guilabel>Set the PC time from the time on the handheld</guilabel>.
-</para>
-
-
-<note>
-<para>
-&PalmOS; Version 3.25 and 3.3 do not support setting the &handheld; system time.
-For these systems, the conduit will be simply skipped.
-</para>
-</note>
-
-</sect2>
-
-<sect2 id="memofile-cond">
-<title>Memo File Conduit Setup</title>
-
-<para>
-This conduit will synchronize your &PalmPilot; Memo Pad application with a
-directory and files on your computer. This conduit will create a directory for
-each category that your &PalmPilot; Memos uses, and within each of those
-directories will be the plain text files that contain the contents of your
-memos.  To set the top level folder to which your Memos will be synchronized
-with, either enter it in the <guilabel>Memos directory</guilabel> edit box or
-select it clicking the directory picker button.
+This conduit will synchronize your &PalmPilot; To Do List application with
+&korganizer; and &kontact;, through Akonadi.  Before you can use this conduit,
+you must configure Akonadi to have a resource for the To-Do file that you wish
+to synchronize with. Once you've done that, you can select that resource for
+synchronization use here.
 </para>
 
 <screenshot>
-<screeninfo>The Memo File Conduit Setup Dialog</screeninfo>
+<screeninfo>The To-Do Conduit Setup Dialog</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="conduit-memofile.png" format="PNG"/></imageobject>
-<textobject><phrase>Memo File Conduit Setup</phrase></textobject>
-<caption><para>Memo File Conduit Setup</para></caption>
+<imageobject><imagedata fileref="conduit-todo.png" format="PNG"/></imageobject>
+<textobject><phrase>To-Do Conduit Setup</phrase></textobject>
+<caption><para>To-Do Conduit Setup</para></caption>
 </mediaobject>
 </screenshot>
 
-
 </sect2>
-
 
 </sect1>
 

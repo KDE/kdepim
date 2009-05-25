@@ -16,17 +16,6 @@ the &HotSync; button. The &kpilot; daemon icon in the system tray will flash
 indicating that a sync is under way.
 </para>
 
-
-<screenshot>
-<screeninfo>&kpilot; Daemon Pop-Up Menu</screeninfo>
-<mediaobject>
-<imageobject><imagedata fileref="daemon-menu.png" format="PNG"/></imageobject>
-<textobject><phrase>&kpilot; daemon popup menu</phrase></textobject>
-<caption><para>&kpilot; daemon popup menu</para></caption>
-</mediaobject>
-</screenshot>
-
-
 <para>
 To set which type of sync &kpilot; will perform next, you can use the main
 application
@@ -184,7 +173,7 @@ menu item.
 <screenshot>
 <screeninfo>&kpilot; Daemon Pop-Up Menu</screeninfo>
 <mediaobject>
-<imageobject><imagedata fileref="daemon-menu.png" format="PNG"/></imageobject>
+<imageobject><imagedata fileref="daemon-menu-configure.png" format="PNG"/></imageobject>
 <textobject><phrase>&kpilot; daemon popup menu</phrase></textobject>
 <caption><para>&kpilot; daemon popup menu</para></caption>
 </mediaobject>
