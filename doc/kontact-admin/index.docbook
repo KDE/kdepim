@@ -133,12 +133,17 @@ in the installed <filename>share/config.kcfg/kmail.kcfg</filename> file
 
 <!-- Chapter Common Problems -->
 <chapter id="common-problems">
+<title>Common Problems</title>
 <para>
 This chapter deals with common problems the administrator is likely to encounter.
 </para>
 
 <sect1 id="freebusy">
 <title>FreeBusy</title>
+
+<para>
+FreeBusy common problems ...
+</para>
 
 </sect1>
 </chapter>
