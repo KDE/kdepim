@@ -131,6 +131,19 @@ in the installed <filename>share/config.kcfg/kmail.kcfg</filename> file
 </sect1>
 </chapter>
 
+<!-- Chapter Common Problems -->
+<chapter id="common-problems">
+<para>
+This chapter deals with common problems the administrator is likely to encounter.
+</para>
+
+<sect1 id="freebusy">
+<title>FreeBusy</title>
+
+</sect1>
+</chapter>
+
+<!-- Chapter Credits+License -->
 <chapter id="credits-and-license">
 <title>Credits and License</title>
 
