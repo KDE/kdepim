@@ -57,6 +57,7 @@
 #include <QHeaderView>
 #include <QList>
 #include <QMenu>
+#include <QTimer>
 #include <QModelIndex>
 
 using namespace KCal;
@@ -329,6 +330,9 @@ void KOTodoView::restoreLayout( KConfig *config, const QString &group, bool mini
       mView->hideColumn( ePercentColumn );
       mView->hideColumn( eDescriptionColumn );
     }
+
+    // We don't have any incidences (content) yet, so we delay resizing
+    QTimer::singleShot( 0, this, SLOT(resizeColumnsToContent()) );
 
   } else {
       for ( int i = 0; i < header->count()     &&
@@ -737,6 +741,12 @@ void KOTodoView::setFlatView( bool flatView ) {
 bool KOTodoView::usesFullWindow()
 {
   return KOPrefs::instance()->mFullViewTodo;
+}
+
+void KOTodoView::resizeColumnsToContent()
+{
+  mView->resizeColumnToContents( eDueDateColumn );
+  mView->resizeColumnToContents( eSummaryColumn );
 }
 
 #include "kotodoview.moc"
