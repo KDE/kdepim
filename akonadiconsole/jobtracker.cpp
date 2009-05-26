@@ -127,7 +127,7 @@ JobTracker::~JobTracker()
 
 void JobTracker::jobCreated( const QString & session, const QString & job, const QString & parent, const QString & jobType )
 {
-  if ( session.isEmpty() || job.isEmpty() ) return;
+  if ( d->disabled || session.isEmpty() || job.isEmpty() ) return;
 
   if ( !parent.isEmpty() && !d->jobs.contains( parent ) )
   {
@@ -178,7 +178,7 @@ void JobTracker::jobCreated( const QString & session, const QString & job, const
 void JobTracker::jobEnded( const QString& job, const QString& error )
 {
   // this is called from dbus, so better be defensive
-  if ( !d->jobs.contains( job ) || !d->infos.contains( job ) ) return;
+  if ( d->disabled || !d->jobs.contains( job ) || !d->infos.contains( job ) ) return;
 
   JobInfo info = d->infos[job];
   if ( error.isEmpty() ) {
@@ -195,7 +195,7 @@ void JobTracker::jobEnded( const QString& job, const QString& error )
 void JobTracker::jobStarted( const QString & job )
 {
   // this is called from dbus, so better be defensive
-  if ( !d->jobs.contains( job ) || !d->infos.contains( job ) ) return;
+  if ( d->disabled || !d->jobs.contains( job ) || !d->infos.contains( job ) ) return;
 
   JobInfo info = d->infos[job];
   info.state = JobInfo::Running;
