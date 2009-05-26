@@ -58,7 +58,6 @@ Merges
       - Some fixes for the filtering in the folder selection dialog
 
 * Merges from enterprise35 branch:
-      - kolab/issue3424: The comment of an event rejection is not seen with Outlook
       - kolab/issue3608: Lastname of an attendee is missing
       - kolab/issue3617: Kleopatra's setting dialog cannot deal with gpgconf TYPE=0
       - kolab/issue2972: Bogus error message when refreshing the IMAP cache
