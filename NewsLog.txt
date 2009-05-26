@@ -37,7 +37,7 @@ Friday, May 15th 2009
 Problems addressed
 ------------------
 
-* kolab/issue3532: Configuration dialogs hangs on Windows
+* kolab/issue3532 (partial): Configuration dialogs hangs on Windows
 * Rebase kdelibs and kdebase to the 4.2 branches, to profit from upstream bugfixes there
 * Remove some unneeded stuff from kdebase, like wallpapers, plasma, and the applications
 * When inline-forwarding a mail, also include the CC recipients of the original mail
