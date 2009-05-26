@@ -3,6 +3,7 @@ project(wizards)
 include_directories(${CMAKE_SOURCE_DIR}/kcal ${CMAKE_SOURCE_DIR}/kresources/kolab/shared ${CMAKE_SOURCE_DIR}/knotes ${CMAKE_SOURCE_DIR}/kresources/lib)
 
 add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
+
 ########### next target ###############
 
 if(KDEPIM_BUILD_EVERYTHING)
@@ -133,5 +134,5 @@ endif(KDEPIM_BUILD_EVERYTHING)
 install( FILES kolab.kcfg DESTINATION ${KCFG_INSTALL_DIR})
 if(KDEPIM_BUILD_EVERYTHING)
   install(FILES groupwarewizard.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
-  install(FILES egroupware.kcfg slox.kcfg kolab.kcfg groupwise.kcfg scalix.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
+  install(FILES egroupware.kcfg slox.kcfg groupwise.kcfg scalix.kcfg  DESTINATION ${KCFG_INSTALL_DIR})
 endif(KDEPIM_BUILD_EVERYTHING)
