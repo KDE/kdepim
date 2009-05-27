@@ -25,10 +25,14 @@
 #define SEARCHMANAGER_H
 
 #include <QObject>
+#include <QtCore/QHash>
 
 #include <kabc/stdaddressbook.h>
 
 #include <libkdepim/distributionlist.h>
+
+typedef QStringList (*valueListGetter)( KABC::Field&, const KABC::Addressee& );
+typedef QHash<QString, valueListGetter> ValueListGetters;
 
 namespace KAB {
 
@@ -96,6 +100,8 @@ class SearchManager : public QObject
     QString mPattern;
     KABC::Field::List mFields;
     Type mType;
+
+    ValueListGetters mValueListGetters;
 };
 
 }
