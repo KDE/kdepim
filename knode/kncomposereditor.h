@@ -37,8 +37,16 @@ class KNComposerEditor : public KMeditor
 
     virtual ~KNComposerEditor();
 
-     virtual void changeHighlighterColors(KPIMTextEdit::EMailQuoteHighlighter * highlighter);
+    virtual void changeHighlighterColors(KPIMTextEdit::EMailQuoteHighlighter * highlighter);
 
+  public slots:
+    void slotRemoveBox();
+    void slotAddBox();
+
+    /**
+     * Warning: This function switches back to plain text mode.
+     */
+    void slotRot13();
 };
 
 #endif
