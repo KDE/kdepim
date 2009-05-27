@@ -11,7 +11,6 @@ Friday, May 15th 2009
 Problems addressed
 ------------------
 
-* kolab/issue3424: The comment of an event rejection is not seen with Outlook
 * kolab/issue3608: Lastname of an attendee is missing
 * kolab/issue3598: Holidays are not colored correctly
 * kolab/issue2972: Bogus error message when refreshing the IMAP cache
