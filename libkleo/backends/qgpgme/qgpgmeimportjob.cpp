@@ -67,4 +67,16 @@ Error QGpgMEImportJob::start( const QByteArray & certData ) {
   return Error();
 }
 
+GpgME::ImportResult Kleo::QGpgMEImportJob::exec( const QByteArray & keyData ) {
+  const result_type r = import_qba( context(), keyData );
+  resultHook( r );
+  return mResult;
+}
+
+// PENDING(marc) implement showErrorDialog()
+
+void Kleo::QGpgMEImportJob::resultHook( const result_type & tuple ) {
+  mResult = get<0>( tuple );
+}
+
 #include "qgpgmeimportjob.moc"

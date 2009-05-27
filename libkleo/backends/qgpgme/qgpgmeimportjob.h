@@ -59,6 +59,15 @@ namespace Kleo {
 
     /*! \reimp from ImportJob */
     GpgME::Error start( const QByteArray & keyData );
+
+    /*! \reimp from ImportJob */
+    GpgME::ImportResult exec( const QByteArray & keyData );
+
+    /*! \reimp from ThreadedJobMixin */
+    void resultHook( const result_type & r );
+
+  private:
+    GpgME::ImportResult mResult;
   };
 
 }

@@ -86,6 +86,9 @@ namespace Kleo {
     */
     virtual void start( const boost::shared_ptr<QIODevice> & signedData, const boost::shared_ptr<QIODevice> & plainText=boost::shared_ptr<QIODevice>() ) = 0;
 
+    /** Synchronous version of @ref start */
+    virtual GpgME::VerificationResult exec( const QByteArray &signedData, QByteArray & plainText ) = 0;
+
   Q_SIGNALS:
     void result( const GpgME::VerificationResult & result, const QByteArray & plainText, const QString & auditLogAsHtml=QString(), const GpgME::Error & auditLogError=GpgME::Error() );
   };

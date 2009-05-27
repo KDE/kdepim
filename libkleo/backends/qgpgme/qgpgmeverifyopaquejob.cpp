@@ -105,4 +105,17 @@ void QGpgMEVerifyOpaqueJob::start( const shared_ptr<QIODevice> & signedData, con
   run( bind( &verify_opaque, _1, weak_ptr<QIODevice>( signedData ), weak_ptr<QIODevice>( plainText ) ) );
 }
 
+GpgME::VerificationResult Kleo::QGpgMEVerifyOpaqueJob::exec( const QByteArray & signedData, QByteArray & plainText ) {
+  const result_type r = verify_opaque_qba( context(), signedData );
+  plainText = get<1>( r );
+  resultHook( r );
+  return mResult;
+}
+
+//PENDING(marc) implement showErrorDialog()
+
+void Kleo::QGpgMEVerifyOpaqueJob::resultHook( const result_type & tuple ) {
+  mResult = get<0>( tuple );
+}
+
 #include "qgpgmeverifyopaquejob.moc"
