@@ -38,6 +38,7 @@
 #include <kglobal.h>
 #include <klocale.h>
 #include <ktoolinvocation.h>
+#include <libkdepim/autochecktreewidget.h>
 #include <libkdepim/categoryselectdialog.h>
 
 #include "core.h"
