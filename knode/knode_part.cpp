@@ -69,7 +69,7 @@ KNodePart::KNodePart( QWidget *parentWidget, QObject *parent, const QVariantList
   setWidget(canvas);
 
   mainWidget = new KNMainWidget( this, canvas );
-  QVBoxLayout *topLayout = new QVBoxLayout(canvas);
+  QVBoxLayout *topLayout = new QVBoxLayout( canvas, 0 );
   topLayout->addWidget(mainWidget);
   mainWidget->setFocusPolicy( Qt::ClickFocus );
 
