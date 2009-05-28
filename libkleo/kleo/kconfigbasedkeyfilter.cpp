@@ -37,8 +37,12 @@
 #include <kconfiggroup.h>
 #include <klocale.h>
 
+#include <boost/mem_fn.hpp>
+#include <algorithm>
+
 using namespace Kleo;
 using namespace GpgME;
+using namespace boost;
 
 static const struct {
   const char * name;
@@ -85,6 +89,7 @@ KeyFilterImplBase::KeyFilterImplBase()
     mCanCertify( DoesNotMatter ),
     mCanAuthenticate( DoesNotMatter ),
     mQualified( DoesNotMatter ),
+    mCardKey( DoesNotMatter ),
     mHasSecret( DoesNotMatter ),
     mIsOpenPGP( DoesNotMatter ),
     mWasValidated( DoesNotMatter ),
@@ -131,6 +136,7 @@ KConfigBasedKeyFilter::KConfigBasedKeyFilter( const KConfigGroup & config )
   SET( mCanCertify, "can-certify" );
   SET( mCanAuthenticate, "can-authenticate" );
   SET( mQualified, "is-qualified" );
+  SET( mCardKey, "is-cardkey" );
   SET( mHasSecret, "has-secret-key" );
   SET( mIsOpenPGP, "is-openpgp-key" );
   SET( mWasValidated, "was-validated" );
@@ -215,6 +221,15 @@ bool KeyFilterImplBase::matches( const Key & key, MatchContexts contexts ) const
   CAN_MATCH( Certify );
   CAN_MATCH( Authenticate );
   IS_MATCH( Qualified );
+  if ( mCardKey != DoesNotMatter ) {
+      const std::vector<Subkey> sks = key.subkeys();
+      const std::vector<Subkey>::const_iterator it
+          = std::find_if( sks.begin(), sks.end(),
+                          mem_fn( &Subkey::isCardKey ) );
+      if ( mCardKey == Set    && it == sks.end() ||
+           mCardKey != NotSet && it != sks.end() )
+          return false;
+  }
   MATCH( mHasSecret, hasSecret );
 #undef MATCH
   if ( mIsOpenPGP != DoesNotMatter &&

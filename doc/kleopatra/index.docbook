@@ -1413,6 +1413,22 @@ C=DE
 	      </entry>
 	    </row>
 	    <row>
+	      <entry><varname>is-qualified</varname></entry>
+	      <entry>boolean</entry>
+	      <entry>
+		the key can be used to make Qualified Signatures (as
+		defined by the German Digital Signature Law).
+	      </entry>
+	    </row>
+	    <row>
+	      <entry><varname>is-cardkey</varname></entry>
+	      <entry>boolean</entry>
+	      <entry>
+		the key material is stored on a smartcard (instead of
+		on the computer).
+	      </entry>
+	    </row>
+	    <row>
 	      <entry><varname>has-secret-key</varname></entry>
 	      <entry>boolean</entry>
 	      <entry>

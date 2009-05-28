@@ -89,6 +89,7 @@ namespace Kleo {
     TriState mCanCertify;
     TriState mCanAuthenticate;
     TriState mQualified;
+    TriState mCardKey;
     TriState mHasSecret;
     TriState mIsOpenPGP;
     TriState mWasValidated;
