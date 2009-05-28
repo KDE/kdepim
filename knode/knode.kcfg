@@ -215,7 +215,7 @@
       <default>true</default>
     </entry>
     <entry name="hostname" key="MIdhost" type="String">
-      <label>Host name used to generade the message ID.</label>
+      <label>Host name used to generate the message ID.</label>
     </entry>
     <entry name="generateMessageID" key="generateMId" type="Bool">
       <label>Generate message-id</label>
