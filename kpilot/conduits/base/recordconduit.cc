@@ -115,11 +115,15 @@ RecordConduit::~RecordConduit()
 	//        here?
 	DEBUGKPILOT << "Databases open [hh,pc,bu]: [" << hhDatabaseOpen << "," 
 		<< pcDatabaseOpen << "," << backupDatabaseOpen << "]";
-	
+
+	//  Syncing can take a long time, so tickle the palm periodically
+	startTickle (0);
+
 	if( hhDatabaseOpen && pcDatabaseOpen && backupDatabaseOpen )
 	{
 		DEBUGKPILOT << "All proxies are initialized and open.";
 		// So what are we going to do this time?!
+
 		if( isFirstSync() )
 		{
 			firstSync();
@@ -192,7 +196,10 @@ RecordConduit::~RecordConduit()
 			"database, no data to sync." ) );
 		return false; // 6.3.7 and 6.3.8
 	}
-	
+
+	// Sync finished, so no need to tickle the palm for awhile
+	stopTickle();
+
 	// Sync finished, set the endcount of the CUD counters
 	fHHDataProxy->setEndcount();
 	fPCDataProxy->setEndcount();
@@ -242,7 +249,12 @@ RecordConduit::~RecordConduit()
 		return false;
 	}
 
+	// committing to the pc may take some time, so periodically tickle the palm during the commit
+	// so it doesn't disconnect.
+	startTickle(0);
 	success = fPCDataProxy->commit();
+	stopTickle();
+
 	if( !success )
 	{
 		DEBUGKPILOT << "Could not save PC changes. Sync failed";
@@ -500,14 +512,24 @@ void RecordConduit::firstSync()
 	// A firstSync iterates over all records.
 	fHHDataProxy->setIterateMode( DataProxy::All );
 	fPCDataProxy->setIterateMode( DataProxy::All );
-	
+
+	int hhRecordCount = fHHDataProxy->recordCount();
+	int recCount = 0;
+
 	DEBUGKPILOT << "Walking over all hh records.";
 	addSyncLogEntry(i18n("Doing first sync. This may take a while."));
+	addSyncLogEntry( i18n("Syncing handheld records to pc.") );
 	
 	fHHDataProxy->resetIterator();
 	QSet<QString> pcIds; // pcRecords that where created or for which we found a match.
 	while( fHHDataProxy->hasNext() )
 	{
+		recCount++;
+		if (recCount%100 == 0)
+		{
+			emit logProgress( QString(), (double)recCount/(double)hhRecordCount*100 );
+		}
+
 		HHRecord *hhRecord = static_cast<HHRecord*>( fHHDataProxy->next() );
 		Record *pcRecord = findMatch( hhRecord );
 		
@@ -556,10 +578,20 @@ void RecordConduit::firstSync()
 	}
 	
 	DEBUGKPILOT << "Walking over all pc records.";
-	
+	addSyncLogEntry( i18n("Syncing PC records to handheld.") );
+
+	int pcRecordCount = fPCDataProxy->recordCount();
+	recCount = 0;
+
 	fPCDataProxy->resetIterator();
 	while( fPCDataProxy->hasNext() )
 	{
+		recCount++;
+		if( recCount%100 == 0)
+		{
+			emit logProgress( QString(), (double)recCount/(double)pcRecordCount*100 );
+		}
+
 		Record *pcRecord = fPCDataProxy->next();
 		
 		if( !fMapping.containsPCId( pcRecord->id() ) )
