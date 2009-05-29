@@ -93,13 +93,13 @@ void SloxFolderDialog::createFolderViewItem( SloxFolder *folder )
   KIconLoader::global()->addAppDir( "kdepim" );
   switch ( folder->type() ) {
     case Calendar:
-      folder->item->setPixmap( 0, SmallIcon( "kmgroupware_folder_calendar" ) );
+      folder->item->setPixmap( 0, SmallIcon( "view-pim-calendar" ) );
       break;
     case Tasks:
-      folder->item->setPixmap( 0, SmallIcon( "kmgroupware_folder_tasks" ) );
+      folder->item->setPixmap( 0, SmallIcon( "view-pim-tasks" ) );
       break;
     case Contacts:
-      folder->item->setPixmap( 0, SmallIcon( "kmgroupware_folder_contacts" ) );
+      folder->item->setPixmap( 0, SmallIcon( "view-pim-contacts" ) );
       break;
     default:
       folder->item->setPixmap( 0, SmallIcon( "folder" ) );
