@@ -1,5 +1,13 @@
-
-install( FILES key.png key_ok.png key_bad.png key_unknown.png chiasmus_chi.png  DESTINATION ${DATA_INSTALL_DIR}/libkleopatra/pics)
-
-kde4_install_icons( ${ICON_INSTALL_DIR}   )
-
+install(FILES
+hi16-app-gpg.png
+hi16-app-gpgsm.png
+hi22-app-gpg.png
+hi22-app-gpgsm.png
+hi32-app-gpg.png
+hi32-app-gpgsm.png
+chiasmus_chi.png
+key.png
+key_ok.png
+key_bad.png
+key_unknown.png
+DESTINATION ${DATA_INSTALL_DIR}/libkleopatra/pics)
