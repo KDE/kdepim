@@ -1,3 +1,14 @@
+Friday, May 29th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3636: Prevent creating incorrect maildir folders when using an IMAP account
+* kolab/issue3648: Syncing mails was slow and used a lot of memory
+* Don't block the UI when displaying signed or encrypted mail
+* Add select all and unselect all buttons to the filter importer/export in KMail
+
+
 Friday, May 22th 2009
 
 Problems addressed
