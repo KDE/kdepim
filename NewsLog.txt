@@ -1,3 +1,36 @@
+Friday, May 29th 2009
+
+Problems addressed
+------------------
+
+* kolab/issue3639: KWallet dialog was untranslated
+* Make Kleopatra detect keys backed by smartcards
+* When disabling HTML mode in the composer, ask the user before removing any formatting
+* Fix more unknown icons
+* Remove unported weather and newsticker Kontact summary plugins
+
+Merges
+------
+
+* Merges from KDE 4.2 branch:
+      - kolab/issue3648: Syncing mails was slow and used a lot of memory
+      - Fix speed regression in the quick search of the address book (KDE bug 192401)
+      - When selecting a multiday event, highlight all events belong to it (KDE bug 164419)
+      - Make the category selection dialog actions the same when opened from the journal and the todo views
+      - Provide a visual clue that the Month and Year labels are actually menus
+      - Fix some issues with the quick add edit in the todo view (KDE bug 191225)
+      - Don't let the template for events override the time of an event (KDE bug 190545)
+      - Make the todo view less cluttered by removing some columns
+      - Better column restoring in the todo view (KDE bug 191225)
+      - Some Akregator bugfixes (KDE bugs 181646, 189664)
+      - Fix splitter sizes in KOrganizer being 0 sometimes (KDE bug 191154)
+
+* Merges from enterprise35 branch:
+      - kolab/issue3636: Prevent creating incorrect maildir folders when using an IMAP account
+      - Allow to use semicolons as address separators in the composer
+      - Don't block the UI when displaying signed or encrypted mail
+
+
 Friday, May 22th 2009
 
 Problems addressed
