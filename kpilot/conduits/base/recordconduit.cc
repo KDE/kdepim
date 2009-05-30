@@ -535,7 +535,7 @@ void RecordConduit::firstSync()
 		recCount++;
 		if (recCount%100 == 0)
 		{
-			emit logProgress( QString(), (double)recCount/(double)hhRecordCount*100 );
+			emit logProgress( QString(), static_cast<int>( static_cast<double>( recCount )/static_cast<double>( hhRecordCount ) )*100 );
 		}
 
 		HHRecord *hhRecord = static_cast<HHRecord*>( fHHDataProxy->next() );
@@ -597,7 +597,7 @@ void RecordConduit::firstSync()
 		recCount++;
 		if( recCount%100 == 0)
 		{
-			emit logProgress( QString(), (double)recCount/(double)pcRecordCount*100 );
+			emit logProgress( QString(), static_cast<int>( static_cast<double>( recCount )/static_cast<double>( pcRecordCount ) )*100 );
 		}
 
 		Record *pcRecord = fPCDataProxy->next();
