@@ -28,6 +28,8 @@ set(akonadiconsole_bin_SRCS
   main.cpp
   mainwidget.cpp
   mainwindow.cpp
+  notificationmodel.cpp
+  notificationmonitor.cpp
   rawsocketconsole.cpp
   searchdialog.cpp
   jobtracker.cpp
@@ -38,7 +40,6 @@ set(akonadiconsole_bin_SRCS
 qt4_generate_dbus_interface( jobtracker.h org.freedesktop.Akonadi.JobTracker.xml )
 qt4_add_dbus_adaptor( akonadiconsole_bin_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.JobTracker.xml jobtracker.h JobTracker )
 
-
 qt4_add_dbus_interfaces( akonadiconsole_bin_SRCS
   ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.TracerNotification.xml
 )
@@ -47,6 +48,13 @@ set_source_files_properties( org.freedesktop.Akonadi.DebugInterface.xml PROPERTI
 qt4_add_dbus_interface( akonadiconsole_bin_SRCS
   org.freedesktop.Akonadi.DebugInterface.xml
   debuginterface
+)
+
+set_source_files_properties(${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml
+  PROPERTIES INCLUDE "akonadi/private/notificationmessage_p.h")
+qt4_add_dbus_interface( akonadiconsole_bin_SRCS
+  ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml
+  notificationmanagerinterface
 )
 
 kde4_add_ui_files(akonadiconsole_bin_SRCS
