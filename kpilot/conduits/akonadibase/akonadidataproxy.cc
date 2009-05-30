@@ -124,6 +124,7 @@ void AkonadiDataProxy::loadAllRecords()
 			{
 				AkonadiRecord *rec = createAkonadiRecord( item, d->fMapping.lastSyncedDate() );
 				fRecords.insert( rec->id(), rec );
+				fRecordsByDescription.insert( rec->description(), rec );
 			}
 		}
 		int loadedFromAkonadi = fRecords.size();

@@ -82,6 +82,11 @@ TestHHRecord::TestHHRecord( const TestRecord *other )
 	fArchived = false;
 }
 
+QString TestHHRecord::description() const
+{
+	return QString();
+}
+
 void TestHHRecord::setArchived()
 {
 	setDeleted();

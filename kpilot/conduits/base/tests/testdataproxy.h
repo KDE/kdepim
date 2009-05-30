@@ -60,6 +60,8 @@ public:
 	QMap<QString, bool> created() { return fCreated; }
 
 	QMap<QString, Record*>* records() { return &fRecords; }
+
+	QMultiMap<QString, Record*>* recordsByDescription() { return &fRecordsByDescription; }
 	
 	QMap<QString, TestRecord*>* updatedRecords() { return &fUpdatedRecord; }
 	

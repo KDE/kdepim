@@ -62,6 +62,8 @@ public:
 	 */
 	/* virtual */ QStringList categories() const;
 
+	virtual QString description() const;
+
 	/**
 	 * Returns a string representation of the record.
 	 */

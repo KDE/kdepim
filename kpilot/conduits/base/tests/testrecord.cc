@@ -76,6 +76,11 @@ TestRecord::TestRecord( const TestRecord *other )
 	fDeleted = other->isDeleted();
 }
 
+QString TestRecord::description() const
+{
+	return QString();
+}
+
 void TestRecord::setDeleted()
 {
 	fDeleted = true;

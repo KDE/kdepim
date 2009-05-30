@@ -38,6 +38,11 @@ TodoHHRecord::TodoHHRecord( PilotRecord *record, const QString &category )
 
 }
 
+QString TodoHHRecord::description() const
+{
+	return todoEntry().getDescription();
+}
+
 bool TodoHHRecord::equal( const HHRecord* other ) const
 {
 	FUNCTIONSETUP;

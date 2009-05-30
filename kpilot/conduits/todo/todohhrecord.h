@@ -37,6 +37,8 @@ public:
 	
 	/* virtual */ bool equal( const HHRecord* other ) const;
 	
+	virtual QString description() const;
+
 	/**
 	 * Updates the PilotRecord with the data in entry. If @param keepPrevCategory
 	 * is true then the category that this record had before the call we be saved.

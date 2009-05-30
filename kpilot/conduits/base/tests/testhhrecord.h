@@ -53,7 +53,9 @@ public:
 	
 	TestHHRecord( const TestRecord *other );
 
-	virtual ~TestHHRecord() {};
+	virtual ~TestHHRecord() {}
+
+	virtual QString description() const;
 	
 	/** METHODS FOR TESTPURPOSES **/
 	

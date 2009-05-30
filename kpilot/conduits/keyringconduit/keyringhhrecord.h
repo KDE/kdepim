@@ -76,6 +76,8 @@ public:
 	
 	/** Implemented virtual methods */
 	
+	virtual QString description() const;
+
 	/**
 	 * Returns whether or not the current record is equal to @p other. Implementing 
 	 * conduits should add support for both implementing records for this. This

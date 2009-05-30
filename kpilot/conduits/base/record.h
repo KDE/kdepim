@@ -40,7 +40,18 @@
 class KPILOT_EXPORT Record {
 	
 public:
-	virtual ~Record() {};
+	virtual ~Record() {}
+	
+	/**
+	 * Returns the description of this record. We use this to create a faster
+	 * lookup for records, which is especially crucial for first sync situations
+	 * with large databases. While each implementing class will have its own
+	 * interpretation of what this contains (calendar and todo records will use
+	 * the summary, contacts will use some form of firstname/lastname, memos will
+	 * use title, etc.), what is important is that this contain something
+	 * meaningful to both HH and PC records.
+	 */
+	virtual QString description() const = 0;
 	
 	virtual const QString id() const = 0;
 	
@@ -88,6 +99,6 @@ public:
 	/**
 	 * Allows subclasses to do some validity checks on the records. (Optional)
 	 */
-	virtual bool isValid() const { return true; } ;
+	virtual bool isValid() const { return true; }
 };
 #endif

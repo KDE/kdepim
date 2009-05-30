@@ -72,6 +72,8 @@ public:
 	 */
 	/* virtual */ bool containsCategory( const QString& category ) const;
 
+	virtual QString description() const;
+
 	/**
 	 * Sets the given addressee as payload of this record.
 	 */

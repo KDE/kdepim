@@ -58,6 +58,7 @@ TestDataProxy::TestDataProxy( int count, const QString &idPref )
 		rec->synced();
 		
 		fRecords.insert( rec->id(), rec );
+		fRecordsByDescription.insert( rec->description(), rec );
 	}
 	
 	fIterator = QMapIterator<QString, Record*>( fRecords );

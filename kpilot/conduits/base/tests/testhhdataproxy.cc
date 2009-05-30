@@ -49,6 +49,7 @@ TestHHDataProxy::TestHHDataProxy( int count ) : HHDataProxy( 0l )
 		rec->synced();
 		
 		fRecords.insert( rec->id(), rec );
+		fRecordsByDescription.insert( rec->description(), rec );
 	}
 	
 	fIterator = QMapIterator<QString, Record*>( fRecords );

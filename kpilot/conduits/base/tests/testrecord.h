@@ -52,7 +52,9 @@ public:
 	
 	TestRecord( const QStringList& fields, const QString &id );
 	
-	virtual ~TestRecord() {};
+	virtual ~TestRecord() {}
+
+	virtual QString description() const;
 	
 	/** METHODS FOR TESTPURPOSES **/
 	

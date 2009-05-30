@@ -321,6 +321,7 @@ void HHDataProxy::loadAllRecords()
 			// Create a record object.
 			HHRecord *rec = createHHRecord( pRec );
 			fRecords.insert( rec->id(), rec );
+			fRecordsByDescription.insert( rec->description(), rec );
 
 			QString cat = fAppInfo->categoryName( pRec->category() );
 

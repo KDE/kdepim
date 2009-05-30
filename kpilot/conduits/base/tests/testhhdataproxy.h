@@ -55,11 +55,13 @@ public:
 	
 	virtual bool createDataStore() { return true; }
 	
-	virtual void setCategory( Record* r, const QString& c ) { Q_UNUSED( r ); Q_UNUSED( c ); };
+	virtual void setCategory( Record* r, const QString& c ) { Q_UNUSED( r ); Q_UNUSED( c ); }
 
-	virtual void addCategory( Record* r, const QString& c ) { Q_UNUSED( r ); Q_UNUSED( c ); };
+	virtual void addCategory( Record* r, const QString& c ) { Q_UNUSED( r ); Q_UNUSED( c ); }
 	
 	QMap<QString, Record*>* records() { return &fRecords; }
+
+	QMultiMap<QString, Record*>* recordsByDescription() { return &fRecordsByDescription; }
 	
 protected:
 	virtual bool commitCreate( Record *rec );

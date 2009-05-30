@@ -40,6 +40,8 @@ public:
 	 */
 	PilotDateEntry dateEntry() const;
 	
+	virtual QString description() const;
+
 	/* virtual */ bool equal( const HHRecord* other ) const;
 	
 	/**

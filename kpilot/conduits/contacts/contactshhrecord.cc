@@ -36,6 +36,12 @@ ContactsHHRecord::ContactsHHRecord( PilotRecord *record, const QString &category
 {
 }
 
+QString ContactsHHRecord::description() const
+{
+	PilotAddress pa = pilotAddress();
+	return pa.getField( entryFirstname ) + ' ' + pa.getField( entryLastname );
+}
+
 bool ContactsHHRecord::equal( const HHRecord* other ) const
 {
 	FUNCTIONSETUP;

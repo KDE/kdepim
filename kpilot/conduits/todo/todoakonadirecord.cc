@@ -104,6 +104,15 @@ QStringList TodoAkonadiRecord::categories() const
 	return todo->categories();
 }
 
+QString TodoAkonadiRecord::description() const
+{
+	boost::shared_ptr<KCal::Todo> todo
+		= boost::dynamic_pointer_cast<KCal::Todo, KCal::Incidence>(
+		item().payload<IncidencePtr>() );
+
+	return todo->summary();
+}
+
 QString TodoAkonadiRecord::toString() const
 {
 	boost::shared_ptr<KCal::Todo> todo

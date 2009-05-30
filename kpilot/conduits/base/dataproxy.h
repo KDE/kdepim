@@ -28,6 +28,7 @@
 */
 
 #include <QtCore/QMap>
+#include <QtCore/QMultiMap>
 
 #include "cudcounter.h"
 #include "kpilot_export.h"
@@ -101,6 +102,12 @@ public:
 	 * Looks for a matching record. Should return 0L if there is no match.
 	 */
 	Record* find( const QString &id ) const;
+
+	/**
+	 * Looks for records with given description. Returns an empty list if no
+	 * records are found with such a description.
+	 */
+	QList<Record*> findByDescription( const QString &description ) const;
 	
 	/**
 	 * Resets the iterator.
@@ -186,13 +193,13 @@ protected: // Functions
 	 * a) you know what you are doing.
 	 * b) you *really* have to
 	 */
-	virtual bool _commit() { return true; };
+	virtual bool _commit() { return true; }
 	
 	/**
 	 * This can be implemented by subclasses to undo things from _commit(). This
 	 * method is called by rollback() after the changes to the records are undone.
 	 */
-	bool _rollback() { return true; };
+	bool _rollback() { return true; }
 	
 	/**
 	 * Commits created record @p rec to the datastore. Returns the id that the
@@ -224,6 +231,7 @@ protected: // Members
 	Mode fMode;
 	CUDCounter fCounter;
 	QMap<QString, Record*> fRecords;
+	QMultiMap<QString, Record*> fRecordsByDescription;
 	QMapIterator<QString, Record*> fIterator;
 	
 	// These are kept for rollback.

@@ -63,6 +63,11 @@ KeyringHHRecord::KeyringHHRecord( const QString &name
 	pack( data );
 }
 
+QString KeyringHHRecord::description() const
+{
+	return name();
+}
+
 bool KeyringHHRecord::equal( const HHRecord* other ) const
 {
 	FUNCTIONSETUP;

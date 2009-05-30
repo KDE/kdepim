@@ -130,7 +130,9 @@ void RCFirstSyncTest::testMatch()
 	rec2->setValue( CSL1( "f2" ), CSL1( "Another test value" ) );
 	
 	conduit.pcDataProxy()->records()->insert( rec1->id(), rec1 );
+	conduit.pcDataProxy()->recordsByDescription()->insert( rec1->description(), rec1 );
 	conduit.hhDataProxy()->records()->insert( rec2->id(), rec2 );
+	conduit.hhDataProxy()->recordsByDescription()->insert( rec2->description(), rec2 );
 	
 	// There should be a valid mapping
 	QVERIFY( conduit.mapping().hhRecordId( CSL1( "pc-1" ) ).isEmpty() );

@@ -45,6 +45,11 @@ PilotDateEntry CalendarHHRecord::dateEntry() const
 	return PilotDateEntry( fRecord );
 }
 
+QString CalendarHHRecord::description() const
+{
+	return dateEntry().getDescription();
+}
+
 bool CalendarHHRecord::equal( const HHRecord* other ) const
 {
 	FUNCTIONSETUP;

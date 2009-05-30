@@ -114,6 +114,17 @@ QStringList CalendarAkonadiRecord::categories() const
 	return event->categories();
 }
 
+QString CalendarAkonadiRecord::description() const
+{
+	boost::shared_ptr<KCal::Event> event
+		= boost::dynamic_pointer_cast<KCal::Event, KCal::Incidence>
+			(
+				item().payload<IncidencePtr>()
+			);
+
+	return event->summary();
+}
+
 QString CalendarAkonadiRecord::toString() const
 {
 	boost::shared_ptr<KCal::Event> event

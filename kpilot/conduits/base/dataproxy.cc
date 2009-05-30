@@ -143,6 +143,12 @@ Record* DataProxy::find( const QString &id ) const
 	return fRecords.value( id );
 }
 
+QList<Record*> DataProxy::findByDescription( const QString &description ) const
+{
+	FUNCTIONSETUP;
+	return fRecordsByDescription.values( description );
+}
+
 void DataProxy::resetIterator()
 {
 	fIterator = QMapIterator<QString, Record*>( fRecords );

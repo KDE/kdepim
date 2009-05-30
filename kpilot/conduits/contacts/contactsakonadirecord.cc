@@ -91,6 +91,11 @@ bool ContactsAkonadiRecord::containsCategory( const QString& category ) const
 	return item().payload<KABC::Addressee>().categories().contains( category );
 }
 
+QString ContactsAkonadiRecord::description() const
+{
+	return addressee().givenName() + ' ' + addressee().familyName();
+}
+
 void ContactsAkonadiRecord::setAddressee( const KABC::Addressee& addressee )
 {
 	FUNCTIONSETUP;
