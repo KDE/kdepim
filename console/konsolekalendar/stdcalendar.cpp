@@ -3,7 +3,7 @@
     This version has been hacked for use by konsolekalendar.
 
     Copyright (c) 2004 Cornelius Schumacher <schumacher@kde.org>
-    Copyright (c) 2005,2008 Allen Winter <winter@kde.org>
+    Copyright (c) 2005,2008-2009 Allen Winter <winter@kde.org>
 
     This library is free software; you can redistribute it and/or
     modify it under the terms of the GNU Library General Public
@@ -60,7 +60,7 @@ StdCalendar::StdCalendar( bool allowGui )
 
   mManager = resourceManager();
 
-  // For now we only permit resource types "file" and "localdir".
+  // By default, only permit resource types "file" and "localdir".
   // Other resource types (eg. "kolab") require an X server and
   // interaction with KMail or login/password prompts, etc.
   // More types can be added as long as we are very sure they
@@ -77,8 +77,6 @@ StdCalendar::StdCalendar( bool allowGui )
       if ( (*it)->type() == QLatin1String( "file" ) ||
            (*it)->type() == QLatin1String( "localdir" ) ) {
         (*it)->load();
-      } else {
-        mManager->remove( *it );
       }
     }
   }
