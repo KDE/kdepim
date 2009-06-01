@@ -60,6 +60,7 @@ set( kcontactmanager_LIB_SRCS
   contactmetadata.cpp
   contactstreemodel.cpp
   collectioncombobox.cpp
+  collectionfiltermodel.cpp
   collectionselectiondialog.cpp
   globalcontactmodel.cpp
   mainwidget.cpp

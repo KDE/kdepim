@@ -21,11 +21,11 @@
 #include "contacteditordialog.h"
 
 #include "collectioncombobox.h"
+#include "collectionfiltermodel.h"
 #include "contacteditor.h"
 #include "contactitemeditor.h"
 
 #include <akonadi_next/descendantentitiesproxymodel.h>
-#include <akonadi_next/entityfilterproxymodel.h>
 #include <akonadi/item.h>
 
 #include <kabc/addressee.h>
@@ -57,13 +57,13 @@ ContactEditorDialog::ContactEditorDialog( Mode mode, QAbstractItemModel *collect
     descendantModel->setSourceModel( collectionModel );
 
     // filter for collections that support contacts
-#warning "Why does the EntityFilterProxyModel not work?"
-    Akonadi::EntityFilterProxyModel *filterModel = new Akonadi::EntityFilterProxyModel( this );
-    filterModel->addMimeTypeInclusionFilter( KABC::Addressee::mimeType() );
+    CollectionFilterModel *filterModel = new CollectionFilterModel( this );
+    filterModel->addContentMimeTypeFilter( KABC::Addressee::mimeType() );
+    filterModel->setRightsFilter( Akonadi::Collection::CanCreateItem );
     filterModel->setSourceModel( descendantModel );
 
     KABC::CollectionComboBox *box = new KABC::CollectionComboBox( mainWidget );
-    box->setModel( descendantModel );
+    box->setModel( filterModel );
 
     layout->addWidget( label, 0, 0 );
     layout->addWidget( box, 0, 1 );

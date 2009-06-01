@@ -23,7 +23,8 @@
 #include "kabc/contactgroupeditor.h"
 
 #include "collectioncombobox.h"
-#include <akonadi_next/entityfilterproxymodel.h>
+#include "collectionfiltermodel.h"
+#include <akonadi_next/descendantentitiesproxymodel.h>
 #include <akonadi/item.h>
 
 #include <kabc/contactgroup.h>
@@ -49,10 +50,15 @@ ContactGroupEditorDialog::ContactGroupEditorDialog( Mode mode, QAbstractItemMode
   if ( mode == CreateMode ) {
     QLabel *label = new QLabel( i18n( "Add to:" ), mainWidget );
 
+    // flatten the collection tree structure to a collection list
+    Akonadi::DescendantEntitiesProxyModel *descendantModel = new Akonadi::DescendantEntitiesProxyModel( this );
+    descendantModel->setSourceModel( collectionModel );
+
     // filter for collections that support contact groups
-    Akonadi::EntityFilterProxyModel *filterModel = new Akonadi::EntityFilterProxyModel( this );
-    filterModel->addMimeTypeInclusionFilter( KABC::ContactGroup::mimeType() );
-    filterModel->setSourceModel( collectionModel );
+    CollectionFilterModel *filterModel = new CollectionFilterModel( this );
+    filterModel->addContentMimeTypeFilter( KABC::ContactGroup::mimeType() );
+    filterModel->setRightsFilter( Akonadi::Collection::CanCreateItem );
+    filterModel->setSourceModel( descendantModel );
 
     KABC::CollectionComboBox *box = new KABC::CollectionComboBox( mainWidget );
     box->setModel( filterModel );
