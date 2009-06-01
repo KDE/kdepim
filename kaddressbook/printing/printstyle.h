@@ -1,5 +1,5 @@
 /*
-    This file is part of KContactManager.
+    This file is part of KAddressBook.
     Copyright (c) 1996-2002 Mirko Boehm <mirko@kde.org>
 
     This program is free software; you can redistribute it and/or modify
@@ -30,9 +30,10 @@
 #include <QtGui/QWidget>
 
 #include <kabc/addressee.h>
-#include "contactfields.h"
+
 class KPageWidgetItem;
 
+namespace KABC { class Field; }
 
 namespace KABPrinting {
 
@@ -94,7 +95,7 @@ class PrintStyle : public QObject
     /**
       Returns the preferred sort criterion field.
      */
-    ContactFields::Field preferredSortField();
+    KABC::Field* preferredSortField();
 
     /**
       Returns the preferred sort type.
@@ -121,7 +122,7 @@ class PrintStyle : public QObject
     /**
       Set preferred sort options for this printing style.
      */
-    void setPreferredSortOptions( ContactFields::Field, bool ascending = true );
+    void setPreferredSortOptions( KABC::Field *field, bool ascending = true );
 
     /**
      Return the wizard object.
@@ -141,7 +142,7 @@ class PrintStyle : public QObject
     QHash<QWidget*, KPageWidgetItem*> mPageItems;
     QStringList mPageTitles;
 
-    ContactFields::Field mSortField;
+    KABC::Field *mSortField;
     bool mSortType;
 };
 

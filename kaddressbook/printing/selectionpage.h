@@ -1,5 +1,5 @@
 /*
-    This file is part of KContactManager.
+    This file is part of KAddressBook.
     Copyright (c) 2002 Anders Lund <anders.lund@lund.tdcadsl.dk>
                        Tobias Koenig <tokoe@kde.org>
 
