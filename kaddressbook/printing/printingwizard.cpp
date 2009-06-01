@@ -37,6 +37,7 @@
 
 #include "globalcontactmodel.h"
 #include "contactstreemodel.h"
+#include "descendantentitiesproxymodel.h"
 #include "entitytreemodel.h"
 #include "entityfilterproxymodel.h"
 #include "entitytreeview.h"
@@ -144,14 +145,14 @@ void PrintingWizard::print()
   kapp->processEvents();
 
   // prepare list of contacts to print:
-  Akonadi::EntityFilterProxyModel* itemTree = dynamic_cast<Akonadi::EntityFilterProxyModel*>(mItemView->model());
-  Q_ASSERT(itemTree);
+  QAbstractItemModel* model = mItemView->model();
+  Q_ASSERT(model);
 
   KABC::AddresseeList list;
   if ( mStyle != 0 ) {
     if ( mSelectionPage->useSelection() ) {
-      foreach(const QModelIndex &index, mItemView->selectionModel()->selectedRows()) {
-        const Akonadi::Item item = itemTree->data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+      foreach ( const QModelIndex &index, mItemView->selectionModel()->selectedRows() ) {
+        const Akonadi::Item item = model->data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
         Q_ASSERT( item.isValid() );
         const KABC::Addressee adr = item.payload<KABC::Addressee>();
         list.append( adr );
@@ -175,13 +176,22 @@ void PrintingWizard::print()
       Q_ASSERT(false);
 #endif
     } else {
+      Akonadi::ContactsTreeModel *contactsModel = GlobalContactModel::instance()->model();
+
+      Akonadi::DescendantEntitiesProxyModel *descendantTree = new Akonadi::DescendantEntitiesProxyModel( this );
+      descendantTree->setSourceModel( contactsModel );
+
+      Akonadi::EntityFilterProxyModel *allContacts = new Akonadi::EntityFilterProxyModel( this );
+      allContacts->setSourceModel( descendantTree );
+      allContacts->addMimeTypeInclusionFilter( KABC::Addressee::mimeType() );
+
       // create a string list of all entries:
-      for(int row = 0; row < itemTree->rowCount(); ++row) {
-        const QModelIndex index = itemTree->index( row, 0 );
-        const Akonadi::Item item = itemTree->data( index, Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
+      for ( int row = 0; row < allContacts->rowCount(); ++row ) {
+        const QModelIndex index = allContacts->index( row, 0 );
+        const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
         Q_ASSERT( item.isValid() );
-        const KABC::Addressee adr = item.payload<KABC::Addressee>();
-        list.append( adr );
+        const KABC::Addressee contact = item.payload<KABC::Addressee>();
+        list.append( contact );
       }
     }
 
