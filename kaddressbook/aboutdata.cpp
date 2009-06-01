@@ -33,8 +33,4 @@ AboutData::AboutData()
 
 AboutData::~AboutData()
 {
-
 }
-
-
-

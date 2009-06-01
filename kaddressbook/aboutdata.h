@@ -22,11 +22,20 @@
 #define ABOUTDATA_H
 
 #include "kcontactmanager_export.h"
+
 #include <kaboutdata.h>
 
-class KCONTACTMANAGER_EXPORT AboutData : public KAboutData {
+class KCONTACTMANAGER_EXPORT AboutData : public KAboutData
+{
   public:
+    /**
+     * Creates a new about data object.
+     */
     AboutData();
+
+    /**
+     * Destroys the about data object.
+     */
     ~AboutData();
 };
 

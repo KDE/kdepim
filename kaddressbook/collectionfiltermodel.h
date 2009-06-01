@@ -24,15 +24,43 @@
 
 #include <akonadi/collection.h>
 
+/**
+ * @short A filter model for Akonadi collections.
+ *
+ * This proxy model filters Akonadi collections by content
+ * mime type and rights.
+ * It works on a flat list of collections, so a EntityTreeModel
+ * has to be adapted by using DescendantEntityProxyModel.
+ *
+ * @author Tobias Koenig <tokoe@kde.org>
+ */
 class CollectionFilterModel : public QSortFilterProxyModel
 {
   Q_OBJECT
 
   public:
+    /**
+     * Creates a new collection filter model.
+     *
+     * @param parent The parent object.
+     */
     CollectionFilterModel( QObject *parent );
 
+    /**
+     * Adds a mime type to the content mime type filter list.
+     *
+     * If a mime type has been added, only collections that contain
+     * this mime type in their content mime types will be listed by
+     * this proxy model.
+     */
     void addContentMimeTypeFilter( const QString &mimeType );
 
+    /**
+     * Sets the collection @p rights filter.
+     *
+     * Only collections that allows this rights combination
+     * will be listed by this proxy model.
+     */
     void setRightsFilter( Akonadi::Collection::Rights rights );
 
   protected:
