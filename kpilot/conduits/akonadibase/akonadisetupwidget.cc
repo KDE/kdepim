@@ -30,26 +30,28 @@
 #include "akonadisetupwidget.h"
 
 #include <akonadi/control.h>
+#include <akonadi/collectionfetchjob.h>
 #include <akonadi/collectionmodel.h>
 #include <akonadi/collectionfilterproxymodel.h>
 
 #include "collectioncombobox.h"
 #include "options.h"
 
+using namespace Akonadi;
+
 class AkonadiSetupWidget::Private
 {
 public:
 	Private() 
 		: fCollectionFilterModel( 0L )
-		, fCollectionsLabel( 0L )
 		, fCollections( 0L )
 	{
 	}
 	
 	Ui::AkonadiWidget fUi;
 	Akonadi::CollectionFilterProxyModel* fCollectionFilterModel;
-	QLabel* fCollectionsLabel;
 	CollectionComboBox* fCollections;
+	Entity::Id fConfiguredCollection;
 	bool fCollectionModified;
 };
 
@@ -68,8 +70,6 @@ AkonadiSetupWidget::AkonadiSetupWidget( QWidget* parent )
 	d->fCollections = new CollectionComboBox( this );
 	d->fCollections->setModel( d->fCollectionFilterModel );
 	
-	d->fCollectionsLabel = new QLabel( this );
-	
 	connect( d->fCollections, SIGNAL( selectionChanged( const Akonadi::Collection& ) )
 			,this , SLOT( changeCollection( const Akonadi::Collection& ) ) );
 	
@@ -77,10 +77,14 @@ AkonadiSetupWidget::AkonadiSetupWidget( QWidget* parent )
 		KIcon( QLatin1String( "dialog-warning" ) ).pixmap( 32 ) );
 	d->fUi.fWarnIcon2->setPixmap( 
 		KIcon( QLatin1String( "dialog-warning" ) ).pixmap( 32 ) );
-	
-	d->fUi.hboxLayout->addWidget( d->fCollectionsLabel, 1 );
+  d->fUi.fErrorIcon->setPixmap(
+    KIcon( QLatin1String( "dialog-error" ) ).pixmap( 32 ) );
+
 	d->fUi.hboxLayout->addWidget( d->fCollections, 2 );
-  
+
+  d->fUi.fErrorIcon->setVisible(true);
+  d->fUi.fNonExistingCollection->setVisible(true);
+
   Akonadi::Control::widgetNeedsAkonadi( this );
 }
 
@@ -95,9 +99,13 @@ void AkonadiSetupWidget::changeCollection( const Akonadi::Collection& col )
 	DEBUGKPILOT << "collection id: "<< col.id() << ", name: " << col.name()
 		    << ", resource: " << col.resource() << ", mimeType: " << col.mimeType();
 
-	if( col.id() >= 0 )
+	if( d->fConfiguredCollection != col.id() && col.id() >= 0 )
 	{
 		d->fCollectionModified = true;
+
+		d->fUi.fErrorIcon->setVisible(false);
+		d->fUi.fNonExistingCollection->setVisible(false);
+
 		d->fUi.fWarnIcon1->setVisible( false );
 		d->fUi.fSelectionWarnLabel->setVisible( false );
 		
@@ -121,8 +129,30 @@ void AkonadiSetupWidget::setCollection( Akonadi::Item::Id id )
 
 	DEBUGKPILOT << "request to set collection to id: " << id;
 
-	if( id >= 0 )
+	// This is a bit ugly but currently I see no other way how to fix this. We
+	// assume here that if the fetch job fails, the collection does not exist
+	// (anymore). The user probably has deleted the collection and created new
+	// ones, maybe even a new one for the same file. However in the latter case
+	// the resource gets a new ID so even though it is a resource for the same
+	// file the user has to update the configuration of KPilot.
+	// The CollectionModel loads asynchronous so checking if the collection model
+	// contains the id might fail even though the collection still exists.
+	// Therefore I use a synchronous fetchjob here to work around that problem and
+	// be a bit more sure that the collection actually does or does not exists.
+	CollectionFetchJob *job = new CollectionFetchJob( Collection( id ), CollectionFetchJob::Base );
+	if ( !job->exec() ) {
+		DEBUGKPILOT << "The collection does not exist." << id;
+		// Make clear to the user that the configured collection does not exist
+		// anymore.
+		d->fUi.fErrorIcon->setVisible(true);
+		d->fUi.fNonExistingCollection->setVisible(true);
+	}
+	else
 	{
+		d->fConfiguredCollection = id;
+		d->fUi.fErrorIcon->setVisible(false);
+		d->fUi.fNonExistingCollection->setVisible(false);
+
 		d->fUi.fWarnIcon1->setVisible( false );
 		d->fUi.fSelectionWarnLabel->setVisible( false );
 		d->fCollections->setSelectedCollection( id );
@@ -131,7 +161,7 @@ void AkonadiSetupWidget::setCollection( Akonadi::Item::Id id )
 
 void AkonadiSetupWidget::setCollectionLabel( const QString& label )
 {
-	d->fCollectionsLabel->setText( label );
+	d->fUi.fCollectionsLabel->setText( label );
 }
 
 void AkonadiSetupWidget::setMimeTypes( const QStringList& mimeTypes )
