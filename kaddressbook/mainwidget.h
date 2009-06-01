@@ -57,11 +57,10 @@ class KCONTACTMANAGER_EXPORT MainWidget : public QWidget
     void newContact();
     void newGroup();
     void print();
- private Q_SLOTS:
-    void editItem( const Akonadi::Item &item );
 
+  private Q_SLOTS:
+    void editItem( const Akonadi::Item &item );
     void itemSelected( const Akonadi::Item &item );
-    void collectionSelectionChanged( const QItemSelection&, const QItemSelection& );
 
   private:
     void setupGui();

@@ -54,6 +54,7 @@
 #include "akonadi_next/descendantentitiesproxymodel.h"
 #include "akonadi_next/entityfilterproxymodel.h"
 #include "akonadi_next/entitytreeview.h"
+#include "akonadi_next/selectionproxymodel.h"
 #include "contacteditordialog.h"
 #include "contactfiltermodel.h"
 #include "contactgroupeditordialog.h"
@@ -73,6 +74,42 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   setupGui();
   setupActions( guiClient->actionCollection() );
 
+  /*
+      The item models, proxies and views have the following structure:
+
+                                   mItemView
+                                       ^
+                                       |
+                               contactFilterModel
+                                       ^
+                                       |
+                                   mItemTree
+                                       ^
+                                       |
+                                 mDescendantTree
+                                       ^
+                                       |
+          mCollectionView  ->  selectionProxyModel
+                ^                      ^
+                |                      |
+          mCollectionTree              |
+                ^                      |
+                |                      |
+                 \                    /
+              GlobalContactModel::instance()
+
+
+      GlobalContactModel::instance():  The global contact model (contains collections and items)
+                     mCollectionTree:  Filters out all items
+                     mCollectionView:  Shows the collections (address books) in a view
+                 selectionProxyModel:  Filters out all collections and items that are no children
+                                       of the collection currently selected in mCollectionView
+                     mDescendantTree:  Flattens the item/collection tree to a list
+                           mItemTree:  Filters out all collections
+                  contactFilterModel:  Filters the contacts by the content of mQuickSearchWidget
+                           mItemView:  Shows the items (contacts and contact groups) in a view
+   */
+
   mCollectionTree = new Akonadi::EntityFilterProxyModel( this );
   mCollectionTree->setSourceModel( GlobalContactModel::instance()->model() );
   mCollectionTree->addMimeTypeInclusionFilter( Akonadi::Collection::mimeType() );
@@ -85,36 +122,38 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mCollectionView->header()->setDefaultAlignment( Qt::AlignCenter );
   mCollectionView->header()->setSortIndicatorShown( false );
 
+  // hide all columns except the first one
   for ( int column = 1; column < mCollectionTree->columnCount( QModelIndex() ); ++column )
     mCollectionView->setColumnHidden( column, true );
 
-/*
-  ContactFilterModel *contactFilterModel = new ContactFilterModel( this );
-  contactFilterModel->setSourceModel( mContactModel );
-  connect( mQuickSearchWidget, SIGNAL( filterStringChanged( const QString& ) ),
-           contactFilterModel, SLOT( setFilterString( const QString& ) ) );
-*/
+  Akonadi::SelectionProxyModel *selectionProxyModel = new Akonadi::SelectionProxyModel( mCollectionView->selectionModel(),
+                                                                                        this );
+  selectionProxyModel->setSourceModel( GlobalContactModel::instance()->model() );
 
   mDescendantTree = new Akonadi::DescendantEntitiesProxyModel( this );
-  mDescendantTree->setSourceModel( GlobalContactModel::instance()->model() );
+  mDescendantTree->setSourceModel( selectionProxyModel );
 
   mItemTree = new Akonadi::EntityFilterProxyModel( this );
   mItemTree->setSourceModel( mDescendantTree );
   mItemTree->addMimeTypeExclusionFilter( Akonadi::Collection::mimeType() );
   mItemTree->setHeaderSet( Akonadi::EntityTreeModel::ItemListHeaders );
 
-  mItemView->setModel( mItemTree );
+  ContactFilterModel *contactFilterModel = new ContactFilterModel( this );
+  contactFilterModel->setSourceModel( mItemTree );
+  connect( mQuickSearchWidget, SIGNAL( filterStringChanged( const QString& ) ),
+           contactFilterModel, SLOT( setFilterString( const QString& ) ) );
+
+  mItemView->setModel( contactFilterModel );
   mItemView->setXmlGuiClient( guiClient );
   mItemView->setSelectionMode( QAbstractItemView::ExtendedSelection );
   mItemView->setRootIsDecorated( false );
   mItemView->header()->setDefaultAlignment( Qt::AlignCenter );
+
+  // hide all columns except the first one
   for ( int column = 1; column < mDescendantTree->columnCount( QModelIndex() ); ++column )
     mItemView->setColumnHidden( column, true );
 
   mXXPortManager->setSelectionModel( mItemView->selectionModel() );
-
-  connect( mCollectionView->selectionModel(), SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
-           this, SLOT( collectionSelectionChanged( const QItemSelection&, const QItemSelection& ) ) );
 
   connect( mItemView, SIGNAL( currentChanged( const Akonadi::Item& ) ),
            this, SLOT( itemSelected( const Akonadi::Item& ) ) );
@@ -131,6 +170,8 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mActionManager->setItemSelectionModel( mItemView->selectionModel() );
 
   mActionManager->createAllActions();
+
+  // customize the labels of the default actions
   mActionManager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add Address Book" ) );
   mActionManager->setActionText( Akonadi::StandardActionManager::CopyCollections, ki18np( "Copy Address Book", "Copy %1 Address Books" ) );
   mActionManager->action( Akonadi::StandardActionManager::DeleteCollections )->setText( i18n( "Delete Address Book" ) );
@@ -138,6 +179,8 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   mActionManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Properties..." ) );
   mActionManager->setActionText( Akonadi::StandardActionManager::CopyItems, ki18np( "Copy Contact", "Copy %1 Contacts" ) );
   mActionManager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete Contact", "Delete %1 Contacts" ) );
+
+  // create the dbus adaptor
   new MainWidgetAdaptor( this );
   QDBusConnection::sessionBus().registerObject( "/KContactManager", this, QDBusConnection::ExportAdaptors );
 }
@@ -178,6 +221,7 @@ void MainWidget::setupGui()
   mContactGroupDetails = new Akonadi::ContactGroupBrowser( mDetailsViewStack );
   mDetailsViewStack->addWidget( mContactGroupDetails );
 
+  // the quick search widget which is embedded in the toolbar action
   mQuickSearchWidget = new QuickSearchWidget;
 }
 
@@ -286,18 +330,6 @@ void MainWidget::editItem( const Akonadi::Item &reference )
   } else if ( Akonadi::MimeTypeChecker::isWantedItem( reference, KABC::ContactGroup::mimeType() ) ) {
     editGroup( reference );
   }
-}
-
-void MainWidget::collectionSelectionChanged( const QItemSelection &selected, const QItemSelection& )
-{
-  const QModelIndex index = selected.indexes().at( 0 );
-  const QModelIndex sourceIndex = mCollectionTree->mapToSource( index );
-  mDescendantTree->setRootIndex( sourceIndex );
-  const QModelIndex itemIndex = mDescendantTree->mapFromSource( sourceIndex );
-  mItemTree->setRootIndex( itemIndex );
-  const QModelIndex viewIndex = mItemTree->mapFromSource( itemIndex );
-  mItemView->setRootIndex( viewIndex );
-  mActionManager->setItemSelectionModel( mItemView->selectionModel() );
 }
 
 /**

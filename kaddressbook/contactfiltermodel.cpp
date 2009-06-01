@@ -19,7 +19,7 @@
 
 #include "contactfiltermodel.h"
 
-#include <akonadi/itemmodel.h>
+#include <akonadi_next/entitytreemodel.h>
 #include <kabc/addressee.h>
 
 static bool contactMatchesFilter( const KABC::Addressee &contact, const QString &filterString );
@@ -40,11 +40,9 @@ bool ContactFilterModel::filterAcceptsRow( int row, const QModelIndex &parent ) 
   if ( mFilter.isEmpty() )
     return true;
 
-  const QAbstractItemModel *model = sourceModel();
-  const Akonadi::ItemModel *itemModel = static_cast<const Akonadi::ItemModel*>( model );
+  const QModelIndex index = sourceModel()->index( row, 0, parent );
 
-  const QModelIndex index = itemModel->index( row, 0, parent );
-  const Akonadi::Item item = itemModel->itemForIndex( index );
+  const Akonadi::Item item = index.data( Akonadi::EntityTreeModel::ItemRole ).value<Akonadi::Item>();
 
   if ( item.hasPayload<KABC::Addressee>() ) {
     const KABC::Addressee contact = item.payload<KABC::Addressee>();
