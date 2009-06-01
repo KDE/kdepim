@@ -19,6 +19,7 @@ Comment[sv]=Den här kanalen synkroniserar handdatorns nyckelringsdatabas med en
 Comment[tr]=Bu kanal el bilgisayarınızdaki anahtar çifti veritabanı ile bilgisayarınızdaki veritabanını  eşzamanlar.
 Comment[uk]=Цей акведук синхронізує адресну книгу кишенькового пристрою з адресною книгою персонального комп’ютера.
 Comment[x-test]=xxThis conduit syncs the handheld keyring database with a database stored on the PC.xx
+Comment[zh_CN]=此管道会将您的手持设备中的密钥环数据库和个人电脑上的同步。
 Comment[zh_TW]=此導管將掌上型裝置的金鑰鍊與 PC 上的資料庫同步。
 Name=Keyring
 Name[ca]=Anell de claus

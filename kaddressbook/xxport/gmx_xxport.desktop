@@ -55,6 +55,7 @@ Comment[sv]=Insticksprogram för import och export av kontakter med GMX-adressbo
 Comment[tr]=GMX'in adres defteri biçimini içeriye ya da dışarıya aktarma eklentisi
 Comment[uk]=Втулок для імпорту та експорту контактів у форматі адресних книг GMX
 Comment[x-test]=xxPlugin to import and export contacts in GMX's address book formatxx
+Comment[zh_CN]=导入和导出 GMX 地址簿格式联系人的插件
 Comment[zh_TW]=匯入與匯出 GMX 通訊錄格式的外掛程式
 Type=Service
 X-KDE-ServiceTypes=KAddressBook/XXPort

@@ -18,6 +18,7 @@ Name[sv]=Adressbok på Scalix-server via Kmail
 Name[tr]=KMail kullanarak Scalix Sunucusu üzerinde adres defteri
 Name[uk]=Адресна книга на сервері Scalix через KMail
 Name[x-test]=xxAddress Book on Scalix Server via KMailxx
+Name[zh_CN]=通过 KMail 访问 Scalix 服务器上的地址簿
 Name[zh_TW]=透過 KMail 取得 Scalix 伺服器上的通訊錄
 Comment=Provides access to contacts stored on a Scalix server using IMAP via KMail or Kontact
 Comment[ca]=Proporciona l'accés als contactes emmagatzemats en un servidor Scalix usant IMAP via el KMail o el Kontact

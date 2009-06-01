@@ -18,6 +18,7 @@ Name[sv]=Adressbok på IMAP-server via Kmail
 Name[tr]=KMail Aracılığı ile IMAP Sunucusunda Adres Defteri
 Name[uk]=Адресна книга на сервері IMAP через KMail
 Name[x-test]=xxAddress Book on IMAP Server via KMailxx
+Name[zh_CN]=通过 KMail 访问 IMAP 服务器上的地址簿
 Name[zh_TW]=透過 KMail 取得 IMAP 伺服器上的通訊錄
 Comment=Provides access to contacts stored on a Kolab server using IMAP via KMail or Kontact
 Comment[ca]=Proporciona l'accés als contactes emmagatzemats en un servidor Kolab usant IMAP via el KMail o el Kontact

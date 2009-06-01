@@ -67,6 +67,7 @@ Comment[sv]=Insticksprogram för import och export av adressboksposter till mobi
 Comment[tr]=Adres defteri girdilerini cep telefonuna aktarma ve cep telefonundan alma eklentisi
 Comment[uk]=Втулок для імпорту та експорту записів у адресній книзі мобільних телефонів
 Comment[x-test]=xxMobile phone plugin to import and export address book entriesxx
+Comment[zh_CN]=导入和导出地址簿项的移动电话插件
 Comment[zh_TW]=匯入與匯出通訊錄的手機外掛程式
 Type=Service
 X-KDE-ServiceTypes=KAddressBook/XXPort
