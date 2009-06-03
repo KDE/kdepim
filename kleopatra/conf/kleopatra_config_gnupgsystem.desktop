@@ -1,5 +1,5 @@
 [Desktop Entry]
-Icon=document-encrypt
+Icon=gpg
 Type=Service
 X-KDE-ServiceTypes=KCModule
 X-DocPath=kleopatra/configuration.html#configuration-gnupgsystem
