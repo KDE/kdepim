@@ -40,6 +40,7 @@
 #include <ktoolinvocation.h>
 #include <kglobal.h>
 
+#include <libkdepim/autochecktreewidget.h>
 #include <libkdepim/categoryselectdialog.h>
 
 #include "core.h"

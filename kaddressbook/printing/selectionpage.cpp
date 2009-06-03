@@ -36,6 +36,7 @@
 #include <QVBoxLayout>
 #include <QGridLayout>
 
+#include <libkdepim/autochecktreewidget.h>
 #include <libkdepim/categoryselectdialog.h>
 
 #include "kabprefs.h"
