@@ -23,7 +23,6 @@
 #define KDEPIM_CATEGORYSELECTDIALOG_H
 
 #include "kdepim_export.h"
-#include "ui_categoryselectdialog_base.h"
 
 #include <KDialog>
 
@@ -31,17 +30,7 @@ namespace KPIM {
 
 class KPimPrefs;
 class AutoCheckTreeWidget;
-
-class CategorySelectWidgetBase : public QWidget, public Ui::CategorySelectDialog_base
-{
-  public:
-    CategorySelectWidgetBase( QWidget *parent ) : QWidget( parent ) {
-      setupUi( this );
-
-      mButtonClear->setIcon( KIcon( "edit-clear-locationbar-rtl" ) );
-      mButtonEdit->setIcon( KIcon( "document-properties" ) );
-    }
-};
+class CategorySelectWidgetBase;
 
 class KDEPIM_EXPORT CategorySelectWidget : public QWidget
 {
@@ -98,6 +87,9 @@ class KDEPIM_EXPORT CategorySelectDialog : public KDialog
     void categoriesSelected( const QString & );
     void categoriesSelected( const QStringList & );
     void editCategories();
+
+  protected:
+    /*reimp*/void enterEvent( QEvent * );
 
   private:
     CategorySelectWidget *mWidgets;
