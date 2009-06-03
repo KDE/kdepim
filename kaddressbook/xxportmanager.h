@@ -1,7 +1,6 @@
 /*
-    This file is part of KContactManager.
-
-    Copyright (c) 2009 Tobias Koenig <tokoe@kde.org>
+    This file is part of KAddressbook.
+    Copyright (c) 2003 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
@@ -16,45 +15,57 @@
     You should have received a copy of the GNU General Public License along
     with this program; if not, write to the Free Software Foundation, Inc.,
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
+
+    As a special exception, permission is given to link this program
+    with any edition of Qt, and distribute the resulting executable,
+    without including the source code for Qt in the source distribution.
 */
 
 #ifndef XXPORTMANAGER_H
 #define XXPORTMANAGER_H
 
-#include "xxport/xxportfactory.h"
-
+#include <QtCore/QHash>
 #include <QtCore/QObject>
 
-class QAbstractItemModel;
-class QAction;
-class QItemSelectionModel;
-class QSignalMapper;
+#include <kurl.h>
 
-class XXPortManager : public QObject
+#include "xxport.h"
+
+namespace KAB {
+class Core;
+}
+
+class KADDRESSBOOK_EXPORT XXPortManager : public QObject
 {
   Q_OBJECT
 
   public:
-    XXPortManager( QWidget *parent = 0 );
+    XXPortManager( KAB::Core *core, QObject *parent, const char *name = 0 );
     ~XXPortManager();
 
-    void addImportAction( QAction *action, const QString &identifier );
-    void addExportAction( QAction *action, const QString &identifier );
+    void restoreSettings();
+    void saveSettings();
 
-    void setCollectionModel( QAbstractItemModel *collectionModel );
-    void setSelectionModel( QItemSelectionModel *selectionModel );
+    static KUrl importURL;
+    static QString importData;
 
-  private Q_SLOTS:
-    void slotImport( const QString& );
-    void slotExport( const QString& );
+  public Q_SLOTS:
+    void importVCard( const KUrl &url );
+    void importVCardFromData( const QString &vCard );
+
+  Q_SIGNALS:
+    void modified();
+
+  protected Q_SLOTS:
+    void slotImport( const QString&, const QString& );
+    void slotExport( const QString&, const QString& );
 
   private:
-    QAbstractItemModel *mCollectionModel;
-    QItemSelectionModel *mSelectionModel;
-    QWidget *mParentWidget;
-    XXPortFactory mFactory;
-    QSignalMapper *mImportMapper;
-    QSignalMapper *mExportMapper;
+    void loadPlugins();
+
+    QHash< QString, KAB::XXPort * > mXXPortObjects;
+
+    KAB::Core *mCore;
 };
 
 #endif

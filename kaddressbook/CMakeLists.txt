@@ -1,131 +1,181 @@
-project(kcontactmanager)
-include_directories(
-    ${CMAKE_SOURCE_DIR}/akonadi
-    ${CMAKE_SOURCE_DIR}/akonadi/akonadi_next
-    ${CMAKE_SOURCE_DIR}/libkdepim
-    ${CMAKE_CURRENT_SOURCE_DIR}/editor
-    ${CMAKE_CURRENT_SOURCE_DIR}/xxport/shared
-    ${QT_QTDBUS_INCLUDE_DIR}
-    ${Boost_INCLUDE_DIR}
-)
+project(kaddressbook)
 
-set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${KDE4_ENABLE_EXCEPTIONS}" )
+add_definitions (-DQT3_SUPPORT -DQT3_SUPPORT_WARNINGS)
 
-add_subdirectory(icons)
-add_subdirectory(printing)
+add_subdirectory( common )
+add_subdirectory( interfaces ) 
+add_subdirectory( printing ) 
 if(QGPGME_FOUND)
-  add_definitions(-DQGPGME_FOUND)
+   add_subdirectory( editors ) 
 endif(QGPGME_FOUND)
+add_subdirectory( views ) 
+add_subdirectory( features ) 
+add_subdirectory( kcmconfigs ) 
+add_subdirectory( xxport ) 
+add_subdirectory( pics ) 
+add_subdirectory( csv-templates ) 
+add_subdirectory( thumbnailcreator ) 
+add_subdirectory( kabcdistlistupdater ) 
 
-set( kcontactmanager_printing_SRCS
-  printing/detailledstyle.cpp
-  printing/kabentrypainter.cpp
-  printing/mikesstyle.cpp
-  printing/printingwizard.cpp
-  printing/printprogress.cpp
-  printing/printsortmode.cpp
-  printing/printstyle.cpp
-  printing/ringbinderstyle.cpp
-  printing/selectionpage.cpp
-  printing/stylepage.cpp
+include_directories( 
+	${CMAKE_CURRENT_SOURCE_DIR}/interfaces 
+	${CMAKE_CURRENT_SOURCE_DIR}/features 
+	${CMAKE_CURRENT_SOURCE_DIR}/views 
+	${CMAKE_CURRENT_SOURCE_DIR}/printing 
+	${CMAKE_CURRENT_SOURCE_DIR}/common 
+	${CMAKE_CURRENT_SOURCE_DIR}/editors 
+        ${CMAKE_BINARY_DIR}/libkdepim
+	${CMAKE_BINARY_DIR}/kaddressbook/common/
+	${Boost_INCLUDE_DIR} )
+
+
+
+
+set(libprinter_SRCS
+	${CMAKE_CURRENT_SOURCE_DIR}/printing/detailledstyle.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/printing/kabentrypainter.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/printing/mikesstyle.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/printing/ringbinderstyle.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/printing/printingwizard.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/printing/printprogress.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/printing/printstyle.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/printing/selectionpage.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/printing/stylepage.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/printing/printsortmode.cpp
 )
 
-kde4_add_ui_files(kcontactmanager_printing_SRCS
-  printing/rbs_appearance.ui
-  printing/ds_appearance.ui
+macro_add_file_dependencies(${CMAKE_CURRENT_SOURCE_DIR}/printing/detailledstyle.cpp
+                            ${CMAKE_CURRENT_BINARY_DIR}/ui_ds_appearance.h ${CMAKE_CURRENT_BINARY_DIR}/ui_rbs_appearance.h)
+
+kde4_add_ui_files(libprinter_SRCS
+        ${CMAKE_CURRENT_SOURCE_DIR}/printing/ds_appearance.ui
+	${CMAKE_CURRENT_SOURCE_DIR}/printing/rbs_appearance.ui
 )
 
-set( kcontactmanager_editor_SRCS
-  editor/addresseditwidget.cpp
-  editor/contacteditor.cpp
-  editor/dateeditwidget.cpp
-  editor/displaynameeditwidget.cpp
-  editor/emaileditwidget.cpp
-  editor/freebusyeditwidget.cpp
-  editor/imagewidget.cpp
-  editor/imeditwidget.cpp
-  editor/nameeditwidget.cpp
-  editor/phoneeditwidget.cpp
-  editor/secrecyeditwidget.cpp
-  editor/soundeditwidget.cpp
+set(libkabim_SRCS
+	${CMAKE_CURRENT_SOURCE_DIR}/editors/imeditorwidget.cpp 
+	${CMAKE_CURRENT_SOURCE_DIR}/editors/imaddresswidget.cpp
 )
 
-set( kcontactmanager_LIB_SRCS
-  aboutdata.cpp
-  contactfields.cpp
-  contacteditordialog.cpp
-  contactfiltermodel.cpp
-  contactgroupeditordialog.cpp
-  contactitemeditor.cpp
-  contactmetadata.cpp
-  contactstreemodel.cpp
-  collectioncombobox.cpp
-  collectionfiltermodel.cpp
-  collectionselectiondialog.cpp
-  globalcontactmodel.cpp
-  mainwidget.cpp
-  quicksearchwidget.cpp
-  xxport/csv/csv_xxport.cpp
-  xxport/csv/csvimportdialog.cpp
-  xxport/csv/dateparser.cpp
-  xxport/csv/qcsvmodel.cpp
-  xxport/csv/qcsvreader.cpp
-  xxport/ldif/ldif_xxport.cpp
-  xxport/ldap/ldap_xxport.cpp
-  xxport/ldap/ldapsearchdialog.cpp
-  xxport/ldap/addhostdialog.cpp
-  xxport/ldap/ldapoptionswidget.cpp
-  xxport/gmx/gmx_xxport.cpp
-  xxport/shared/xxport.cpp
-  xxport/vcard/vcard_xxport.cpp 
-  xxport/xxportfactory.cpp
-  xxportmanager.cpp
-  ${kcontactmanager_editor_SRCS}
-  ${kcontactmanager_printing_SRCS}
+kde4_add_ui_files(libkabim_SRCS
+	${CMAKE_CURRENT_SOURCE_DIR}/editors/imeditorbase.ui
+        ${CMAKE_CURRENT_SOURCE_DIR}/editors/imaddressbase.ui
 )
 
-qt4_add_dbus_adaptor(kcontactmanager_LIB_SRCS org.kde.KContactmanager.MainWidget.xml mainwidget.h MainWidget kcontactmanageradaptor )
-
-kde4_add_library(kcontactmanagerprivate SHARED ${kcontactmanager_LIB_SRCS})
-target_link_libraries(kcontactmanagerprivate kdepim ${KDE4_PHONON_LIBS} ${KDE4_KDEUI_LIBS} ${KDEPIMLIBS_AKONADI_LIBS} ${KDEPIMLIBS_KABC_LIBS} ${KDEPIMLIBS_KCAL_LIBS} ${KDEPIMLIBS_KLDAP_LIBS} ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} akonadi-kabccommon akonadi_next)
-
-if(QGPGME_FOUND)
-  target_link_libraries(kcontactmanagerprivate ${QGPGME_LIBRARIES})
-endif(QGPGME_FOUND)
-
-
-set_target_properties(kcontactmanagerprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
-install(TARGETS kcontactmanagerprivate ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 
 ########### next target ###############
 
-set( kcontactmanager_SRCS
-  main.cpp
-  mainwindow.cpp
+set(kaddressbook_bin_SRCS
+	main.cpp 
+	kaddressbookmain.cpp 
+	)
+
+qt4_add_dbus_adaptor(kaddressbook_bin_SRCS org.kde.KAddressbook.Core.xml kaddressbookmain.h KAddressBookMain kaddressbookadaptor )
+
+kde4_add_app_icon(kaddressbook_bin_SRCS "${CMAKE_CURRENT_SOURCE_DIR}/pics/hi*-apps-kaddressbook.png")
+kde4_add_executable(kaddressbook_bin ${kaddressbook_bin_SRCS})
+set_target_properties(kaddressbook_bin PROPERTIES OUTPUT_NAME kaddressbook)
+
+target_link_libraries(kaddressbook_bin  kaddressbookprivate ${KDE4_KHTML_LIBS} kdepim)
+
+install(TARGETS kaddressbook_bin  ${INSTALL_TARGETS_DEFAULT_ARGS} )
+
+
+########### next target ###############
+
+set(kaddressbookpart_PART_SRCS kaddressbook_part.cpp )
+
+qt4_add_dbus_adaptor(kaddressbookpart_PART_SRCS org.kde.KAddressbook.Core.xml kaddressbook_part.h KAddressbookPart kaddressbookpartadaptor )
+
+
+kde4_add_plugin(kaddressbookpart ${kaddressbookpart_PART_SRCS})
+
+
+
+target_link_libraries(kaddressbookpart  ${KDE4_KIO_LIBS} kaddressbookprivate ${KDE4_KPARTS_LIBS} ${KDE4_KAB_LIBS} kabcommon)
+
+install(TARGETS kaddressbookpart  DESTINATION ${PLUGIN_INSTALL_DIR})
+
+
+########### next target ###############
+
+set(kaddressbook_LIB_SRCS ${libkabim_SRCS} ${libprinter_SRCS} 
+   addresseeconfig.cpp
+   addresseeeditordialog.cpp
+   addresseeeditorwidget.cpp
+   addresseeeditorbase.cpp
+   addresseeeditorextension.cpp
+   addresseeutil.cpp
+   addresseditwidget.cpp
+   addviewdialog.cpp
+   emaileditwidget.cpp
+   extensionmanager.cpp
+   filtereditdialog.cpp
+   filterselectionwidget.cpp
+   geowidget.cpp
+   imagewidget.cpp
+   incsearchwidget.cpp
+   jumpbuttonbar.cpp
+   kabcore.cpp
+   kablock.cpp
+   kaddressbookservice.cpp
+   kaddressbookview.cpp
+   keywidget.cpp
+   ldapsearchdialog.cpp
+   nameeditdialog.cpp
+   phoneeditwidget.cpp
+   secrecywidget.cpp
+   soundwidget.cpp
+   viewconfigurefieldspage.cpp
+   viewconfigurefilterpage.cpp
+   viewconfigurewidget.cpp
+   undocmds.cpp
+   viewmanager.cpp
+   xxportmanager.cpp
+   xxportselectdialog.cpp
+   contacteditorwidgetmanager.cpp
+   simpleaddresseeeditor.cpp
+   advancedcustomfields.cpp
+   customfieldswidget.cpp
+   freebusywidget.cpp
+   searchmanager.cpp
+   imeditwidget.cpp
+   kabtools.cpp 
+   distributionlistentryview.cpp
+   distributionlisteditor.cpp
+   distributionlistpicker.cpp
 )
 
-# todo: more appropriate icon?
-kde4_add_app_icon(kcontactmanager_SRCS "${KDE4_ICON_DIR}/oxygen/*/actions/view-pim-contacts.png")
+kde4_add_ui_files(kaddressbook_LIB_SRCS
+	${CMAKE_CURRENT_SOURCE_DIR}/addresseditgeneraltab.ui
+	${CMAKE_CURRENT_SOURCE_DIR}/addresseditdetailstab.ui
+)
 
-kde4_add_executable(kcontactmanager RUN_UNINSTALLED ${kcontactmanager_SRCS})
+qt4_add_dbus_adaptor(kaddressbook_LIB_SRCS
+${CMAKE_SOURCE_DIR}/libkdepim/interfaces/org.kde.addressbook.service.xml kaddressbookservice.h KAddressBookService )
 
-target_link_libraries(kcontactmanager  ${KDEPIMLIBS_SYNDICATION_LIBS} kdepim ${KDEPIMLIBS_KCAL_LIBS}
-                              ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_PHONON_LIBS})
-target_link_libraries(kcontactmanager ${KDEPIMLIBS_AKONADI_LIBS} akonadi-kabccommon ${KDE4_KDEUI_LIBS} kcontactmanagerprivate)
+qt4_add_dbus_interface(kaddressbook_LIB_SRCS org.kde.KAddressbook.Core.xml kaddressbookcore_interface )
 
-if(QGPGME_FOUND)
-  target_link_libraries(kcontactmanager ${QGPGME_LIBRARIES})
-endif(QGPGME_FOUND)
+kde4_add_library(kaddressbookprivate SHARED ${kaddressbook_LIB_SRCS})
 
-install(TARGETS kcontactmanager ${INSTALL_TARGETS_DEFAULT_ARGS})
-install( FILES kcontactmanager.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
-install( FILES kcontactmanagerui.rc  DESTINATION ${DATA_INSTALL_DIR}/kcontactmanager)
+target_link_libraries(kaddressbookprivate  ${KDEPIMLIBS_SYNDICATION_LIBS} kdepim ${KDEPIMLIBS_KCAL_LIBS} 
+                              kabc_file_core ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS} ${KDE4_PHONON_LIBS} 
+                              kabinterfaces kabcommon ${KDE4_KDE3SUPPORT_LIBS} ${QT_QT3SUPPORT_LIBRARY} kimproxy)
+target_link_libraries(kaddressbookprivate  LINK_INTERFACE_LIBRARIES ${KDEPIMLIBS_SYNDICATION_LIBS} kdepim ${KDEPIMLIBS_KCAL_LIBS} 
+                              kabc_file_core ${KDE4_KIO_LIBS} ${KDE4_KUTILS_LIBS}
+                              kabinterfaces kabcommon)
+
+set_target_properties(kaddressbookprivate PROPERTIES VERSION ${GENERIC_LIB_VERSION} SOVERSION ${GENERIC_LIB_SOVERSION} )
+install(TARGETS kaddressbookprivate ${INSTALL_TARGETS_DEFAULT_ARGS} LIBRARY NAMELINK_SKIP)
 
 
-set(kcontactmanager_PART_SRCS kcontactmanager_part.cpp )
-kde4_add_plugin(kcontactmanagerpart ${kcontactmanager_PART_SRCS})
-target_link_libraries(kcontactmanagerpart ${KDE4_KPARTS_LIBS} kcontactmanagerprivate )
-install(TARGETS kcontactmanagerpart DESTINATION ${PLUGIN_INSTALL_DIR})
-install( FILES kcontactmanagerpart.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
-install( FILES kcontactmanager_part.rc DESTINATION ${DATA_INSTALL_DIR}/kcontactmanager)
+########### install files ###############
+
+install( FILES kaddressbook.desktop  DESTINATION ${XDG_APPS_INSTALL_DIR})
+install( FILES kaddressbookpart.desktop  DESTINATION ${SERVICES_INSTALL_DIR})
+install( FILES zone.tab  DESTINATION ${DATA_INSTALL_DIR}/kaddressbook)
+install( FILES kaddressbookui.rc kaddressbook_part.rc  DESTINATION ${DATA_INSTALL_DIR}/kaddressbook)
+install( FILES kaddressbook_view.desktop dbusaddressbook.desktop  DESTINATION ${SERVICETYPES_INSTALL_DIR})
+install( FILES org.kde.KAddressbook.Core.xml DESTINATION ${KDE4_DBUS_INTERFACES_DIR} )
+install( FILES kaddressbook_export.h  DESTINATION ${INCLUDE_INSTALL_DIR}/kaddressbook COMPONENT Devel)
 

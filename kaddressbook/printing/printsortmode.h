@@ -1,5 +1,5 @@
 /*
-    This file is part of KContactManager.
+    This file is part of KAddressBook.
     Copyright (c) 2005 Tobias Koenig <tokoe@kde.org>
 
     This program is free software; you can redistribute it and/or modify
@@ -25,20 +25,19 @@
 #define PRINTSORTMODE_H
 
 #include <kabc/sortmode.h>
-#include "contactfields.h"
 
 class PrintSortMode : public KABC::SortMode
 {
   public:
-    explicit PrintSortMode(ContactFields::Field field, bool ascending = true );
+    explicit PrintSortMode( KABC::Field *field, bool ascending = true );
 
     virtual bool lesser( const KABC::Addressee&, const KABC::Addressee& ) const;
 
   private:
-    ContactFields::Field mSortField;
-    ContactFields::Field mGivenNameField;
-    ContactFields::Field mFamilyNameField;
-    ContactFields::Field mFormattedNameField;
+    KABC::Field *mSortField;
+    KABC::Field *mGivenNameField;
+    KABC::Field *mFamilyNameField;
+    KABC::Field *mFormattedNameField;
     bool mAscending;
 };
 
