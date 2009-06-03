@@ -30,6 +30,7 @@
 #include <QGridLayout>
 #include <QBoxLayout>
 #include <QCheckBox>
+#include <QIntValidator>
 
 #include <kabprefs.h>
 #include <kdebug.h>
@@ -54,7 +55,7 @@ ResourceKABCConfig::ResourceKABCConfig( QWidget* parent )
 
   mALabel = new QLabel(i18n("Reminder before (in days):"),this);
   topLayout->addWidget(mALabel, 1, 0 );
-  mAlarmTimeEdit = new KLineEdit(this); 
+  mAlarmTimeEdit = new KLineEdit(this);
   mAlarmTimeEdit->setValidator(new QIntValidator(mAlarmTimeEdit));
   mAlarmTimeEdit->setText("0");
   topLayout->addWidget(mAlarmTimeEdit, 1, 1 );
