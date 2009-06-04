@@ -86,13 +86,12 @@ KOAlarmClient::KOAlarmClient( QObject *parent )
   int numReminders = genGroup.readEntry( "Reminders", 0 );
   for ( int i=1; i<=numReminders; ++i ) {
     QString group( QString( "Incidence-%1" ).arg( i ) );
-    KConfigGroup *incGroup = new KConfigGroup( KGlobal::config(), group );
-    QString uid = incGroup->readEntry( "UID" );
-    QDateTime dt = incGroup->readEntry( "RemindAt", QDateTime() );
+    KConfigGroup incGroup( KGlobal::config(), group );
+    QString uid = incGroup.readEntry( "UID" );
+    QDateTime dt = incGroup.readEntry( "RemindAt", QDateTime() );
     if ( !uid.isEmpty() ) {
       createReminder( mCalendar->incidence( uid ), dt );
     }
-    delete incGroup;
   }
   if ( numReminders ) {
      genGroup.writeEntry( "Reminders", 0 );
@@ -130,7 +129,7 @@ void KOAlarmClient::checkAlarms()
   for ( it = alarms.constBegin(); it != alarms.constEnd(); ++it ) {
     kDebug(5891) << "REMINDER:" << (*it)->parent()->summary();
     Incidence *incidence = mCalendar->incidence( (*it)->parent()->uid() );
-    createReminder( incidence, QDateTime::currentDateTime() );
+    createReminder( incidence, from );
   }
 }
 
