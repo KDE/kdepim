@@ -42,6 +42,7 @@
 #include <kabc/stdaddressbook.h>
 
 #include <kapplication.h>
+#include <kemailsettings.h>
 // #include <kdebug.h>
 
 #include <klocale.h>
@@ -599,12 +600,12 @@ static QString string2HTML( const QString& str )
 static QString eventStartTimeStr( Event *event )
 {
   QString tmp;
-  if ( ! event->doesFloat() ) {
-    tmp =  i18n("%1: Start Date, %2: Start Time", "%1 %2")
-             .arg( event->dtStartDateStr(), event->dtStartTimeStr() );
+  if ( !event->doesFloat() ) {
+    tmp = i18n( "%1: Start Date1, %2: Start Time2", "%1 %2" ).
+          arg( event->dtStartDateStr( false ), event->dtStartTimeStr() );
   } else {
-    tmp = i18n("%1: Start Date", "%1 (time unspecified)")
-            .arg( event->dtStartDateStr() );
+    tmp = i18n( "%1: Start Date3", "%1" ).
+          arg( event->dtStartDateStr( false ) );
   }
   return tmp;
 }
@@ -613,15 +614,13 @@ static QString eventEndTimeStr( Event *event )
 {
   QString tmp;
   if ( event->hasEndDate() ) {
-    if ( ! event->doesFloat() ) {
-      tmp =  i18n("%1: End Date, %2: End Time", "%1 %2")
-               .arg( event->dtEndDateStr(), event->dtEndTimeStr() );
+    if ( !event->doesFloat() ) {
+      tmp = i18n( "%1: End Date4, %2: End Time5", "%1 %2" ).
+            arg( event->dtEndDateStr( false ), event->dtEndTimeStr() );
     } else {
-      tmp = i18n("%1: End Date", "%1 (time unspecified)")
-              .arg( event->dtEndDateStr() );
+      tmp = i18n( "%1: End Date6", "%1" ).
+            arg( event->dtEndDateStr( false ) );
     }
-  } else {
-    tmp = i18n( "Unspecified" );
   }
   return tmp;
 }
@@ -629,6 +628,163 @@ static QString eventEndTimeStr( Event *event )
 static QString invitationRow( const QString &cell1, const QString &cell2 )
 {
   return "<tr><td>" + cell1 + "</td><td>" + cell2 + "</td></tr>\n";
+}
+
+static bool iamOrganizer( Incidence *incidence )
+{
+  // Check if I'm the organizer for this incidence
+
+  bool iam = false;
+  KEMailSettings settings;
+  QStringList profiles = settings.profiles();
+  for( QStringList::Iterator it=profiles.begin(); it!=profiles.end(); ++it ) {
+    settings.setProfile( *it );
+    if ( settings.getSetting( KEMailSettings::EmailAddress ) == incidence->organizer().email() ) {
+      iam = true;
+      break;
+    }
+  }
+  return iam;
+}
+
+static bool iamAttendee( Attendee *attendee )
+{
+  // Check if I'm this attendee
+
+  bool iam = false;
+  KEMailSettings settings;
+  QStringList profiles = settings.profiles();
+  for( QStringList::Iterator it=profiles.begin(); it!=profiles.end(); ++it ) {
+    settings.setProfile( *it );
+    if ( settings.getSetting( KEMailSettings::EmailAddress ) == attendee->email() ) {
+      iam = true;
+      break;
+    }
+  }
+  return iam;
+}
+
+static Attendee *findMyAttendee( Incidence *incidence )
+{
+  // Return the attendee for the incidence that is probably me
+
+  Attendee *attendee = 0;
+  if ( !incidence ) {
+    return attendee;
+  }
+
+  KEMailSettings settings;
+  QStringList profiles = settings.profiles();
+  for( QStringList::Iterator it=profiles.begin(); it!=profiles.end(); ++it ) {
+    settings.setProfile( *it );
+
+    Attendee::List attendees = incidence->attendees();
+    Attendee::List::ConstIterator it2;
+    for ( it2 = attendees.begin(); it2 != attendees.end(); ++it2 ) {
+      Attendee *a = *it2;
+      if ( settings.getSetting( KEMailSettings::EmailAddress ) == a->email() ) {
+        attendee = a;
+        break;
+      }
+    }
+  }
+  return attendee;
+}
+
+static Attendee *findAttendee( Incidence *incidence, const QString &email )
+{
+  // Search for an attendee by email address
+
+  Attendee *attendee = 0;
+  if ( !incidence ) {
+    return attendee;
+  }
+
+  Attendee::List attendees = incidence->attendees();
+  Attendee::List::ConstIterator it;
+  for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+    Attendee *a = *it;
+    if ( email == a->email() ) {
+      attendee = a;
+      break;
+    }
+  }
+  return attendee;
+}
+
+static bool rsvpRequested( Incidence *incidence )
+{
+  //use a heuristic to determine if a response is requested.
+
+  bool rsvp = true; // better send superfluously than not at all
+  Attendee::List attendees = incidence->attendees();
+  Attendee::List::ConstIterator it;
+  for ( it = attendees.begin(); it != attendees.end(); ++it ) {
+    if ( it == attendees.begin() ) {
+      rsvp = (*it)->RSVP(); // use what the first one has
+    } else {
+      if ( (*it)->RSVP() != rsvp ) {
+        rsvp = true; // they differ, default
+        break;
+      }
+    }
+  }
+  return rsvp;
+}
+
+static QString rsvpRequestedStr( bool rsvpRequested )
+{
+  if ( rsvpRequested ) {
+    return i18n( "Your response is requested" );
+  } else {
+    return i18n( "A response is not necessary" );
+  }
+}
+
+static QString invitationPerson( const QString& email, QString name, QString uid )
+{
+  // Make the search, if there is an email address to search on,
+  // and either name or uid is missing
+  if ( !email.isEmpty() && ( name.isEmpty() || uid.isEmpty() ) ) {
+    KABC::AddressBook *add_book = KABC::StdAddressBook::self( true );
+    KABC::Addressee::List addressList = add_book->findByEmail( email );
+    KABC::Addressee o = addressList.first();
+    if ( !o.isEmpty() && addressList.size() < 2 ) {
+      if ( name.isEmpty() )
+        // No name set, so use the one from the addressbook
+        name = o.formattedName();
+      uid = o.uid();
+    } else
+      // Email not found in the addressbook. Don't make a link
+      uid = QString::null;
+  }
+
+  // Show the attendee
+  QString tmpString;
+  if ( !uid.isEmpty() ) {
+    // There is a UID, so make a link to the addressbook
+    if ( name.isEmpty() )
+      // Use the email address for text
+      tmpString += eventViewerAddLink( "uid:" + uid, email );
+    else
+      tmpString += eventViewerAddLink( "uid:" + uid, name );
+  } else {
+    // No UID, just show some text
+    tmpString += ( name.isEmpty() ? email : name );
+  }
+  tmpString += '\n';
+
+  // Make the mailto link
+  if ( !email.isEmpty() ) {
+    KCal::Person person( name, email );
+    KURL mailto;
+    mailto.setProtocol( "mailto" );
+    mailto.setPath( person.fullName() );
+    tmpString += eventViewerAddLink( mailto.url(), QString::null );
+  }
+  tmpString += "\n";
+
+  return tmpString;
 }
 
 static QString invitationsDetailsIncidence( Incidence *incidence )
@@ -666,7 +822,7 @@ static QString invitationsDetailsIncidence( Incidence *incidence )
 
 static QString invitationDetailsEvent( Event* event )
 {
-  // Meeting details are formatted into an HTML table
+  // Invitation details are formatted into an HTML table
   if ( !event )
     return QString::null;
 
@@ -688,17 +844,33 @@ static QString invitationDetailsEvent( Event* event )
 
   html += "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\">\n";
 
-  // Meeting summary & location rows
+  // Invitation summary & location rows
   html += invitationRow( i18n( "What:" ), sSummary );
   html += invitationRow( i18n( "Where:" ), sLocation );
 
-  // Meeting Start Time Row
-  html += invitationRow( i18n( "Start Time:" ), eventStartTimeStr( event ) );
+  // If a 1 day event
+  if ( event->dtStart().date() == event->dtEnd().date() ) {
+    html += invitationRow( i18n( "Date:" ), event->dtStartDateStr( false ) );
+    if ( !event->doesFloat() ) {
+      html += invitationRow( i18n( "Time:" ),
+                             event->dtStartTimeStr() + " - " + event->dtEndTimeStr() );
+    }
+  } else {
+    html += invitationRow( i18n( "From:" ), event->dtStartDateStr( false ) );
+    if ( !event->doesFloat() ) {
+      html += invitationRow( i18n( "At:" ), event->dtStartTimeStr() );
+    }
+    if ( event->hasEndDate() ) {
+      html += invitationRow( i18n( "To:" ), event->dtEndDateStr( false ) );
+      if ( !event->doesFloat() ) {
+        html += invitationRow( i18n( "At:" ), event->dtEndTimeStr() );
+      }
+    } else {
+      html += invitationRow( i18n( "To:" ), i18n( "no end date specified" ) );
+    }
+  }
 
-  // Meeting End Time Row
-  html += invitationRow( i18n( "End Time:" ), eventEndTimeStr( event ) );
-
-  // Meeting Duration Row
+  // Invitation Duration Row
   if ( !event->doesFloat() && event->hasEndDate() ) {
     tmp = QString::null;
     QTime sDuration(0,0,0), t;
@@ -830,148 +1002,182 @@ static QString invitationHeaderEvent( Event *event, ScheduleMessage *msg )
 {
   if ( !msg || !event )
     return QString::null;
+
   switch ( msg->method() ) {
-    case Scheduler::Publish:
-        return i18n("This event has been published");
-    case Scheduler::Request:
-        if ( event->revision() > 0 )
-            return i18n( "This meeting has been updated" );
-        return i18n( "You have been invited to this meeting" );
-    case Scheduler::Refresh:
-        return i18n( "This invitation was refreshed" );
-    case Scheduler::Cancel:
-        return i18n( "This meeting has been canceled" );
-    case Scheduler::Add:
-        return i18n( "Addition to the meeting invitation" );
-    case Scheduler::Reply: {
-        Attendee::List attendees = event->attendees();
-        if( attendees.count() == 0 ) {
-          kdDebug(5850) << "No attendees in the iCal reply!\n";
-          return QString::null;
-        }
-        if( attendees.count() != 1 )
-          kdDebug(5850) << "Warning: attendeecount in the reply should be 1 "
-                        << "but is " << attendees.count() << endl;
-        Attendee* attendee = *attendees.begin();
-        QString attendeeName = attendee->name();
-        if ( attendeeName.isEmpty() )
-          attendeeName = attendee->email();
-        if ( attendeeName.isEmpty() )
-          attendeeName = i18n( "Sender" );
+  case Scheduler::Publish:
+    return i18n( "This event has been published" );
+  case Scheduler::Request:
+    if ( event->revision() > 0 ) {
+      return i18n( "This invitation has been updated" );
+    }
+    if ( iamOrganizer( event ) ) {
+      return i18n( "I sent this invitation" );
+    } else {
+      if ( !event->organizer().fullName().isEmpty() ) {
+        return i18n( "You received an invitation from %1" ).
+          arg( event->organizer().fullName() );
+      } else {
+        return i18n( "You received an invitation" );
+      }
+    }
+  case Scheduler::Refresh:
+    return i18n( "This invitation was refreshed" );
+  case Scheduler::Cancel:
+    return i18n( "This invitation has been canceled" );
+  case Scheduler::Add:
+    return i18n( "Addition to the invitation" );
+  case Scheduler::Reply: {
+    Attendee::List attendees = event->attendees();
+    if( attendees.count() == 0 ) {
+      kdDebug(5850) << "No attendees in the iCal reply!" << endl;
+      return QString::null;
+    }
+    if( attendees.count() != 1 ) {
+      kdDebug(5850) << "Warning: attendeecount in the reply should be 1 "
+                    << "but is " << attendees.count() << endl;
+    }
+    Attendee* attendee = *attendees.begin();
+    QString attendeeName = attendee->name();
+    if ( attendeeName.isEmpty() ) {
+      attendeeName = attendee->email();
+    }
+    if ( attendeeName.isEmpty() ) {
+      attendeeName = i18n( "Sender" );
+    }
 
-        QString delegatorName, dummy;
-        KPIM::getNameAndMail( attendee->delegator(), delegatorName, dummy );
-        if ( delegatorName.isEmpty() )
-          delegatorName = attendee->delegator();
+    QString delegatorName, dummy;
+    KPIM::getNameAndMail( attendee->delegator(), delegatorName, dummy );
+    if ( delegatorName.isEmpty() ) {
+      delegatorName = attendee->delegator();
+    }
 
-        switch( attendee->status() ) {
-          case Attendee::NeedsAction:
-              return i18n( "%1 indicates this invitation still needs some action" ).arg( attendeeName );
-          case Attendee::Accepted:
-              if ( delegatorName.isEmpty() )
-                  return i18n( "%1 accepts this meeting invitation" ).arg( attendeeName );
-              return i18n( "%1 accepts this meeting invitation on behalf of %2" )
-                  .arg( attendeeName ).arg( delegatorName );
-          case Attendee::Tentative:
-              if ( delegatorName.isEmpty() )
-                  return i18n( "%1 tentatively accepts this meeting invitation" ).arg( attendeeName );
-              return i18n( "%1 tentatively accepts this meeting invitation on behalf of %2" )
-                  .arg( attendeeName ).arg( delegatorName );
-          case Attendee::Declined:
-              if ( delegatorName.isEmpty() )
-                  return i18n( "%1 declines this meeting invitation" ).arg( attendeeName );
-              return i18n( "%1 declines this meeting invitation on behalf of %2" )
-                  .arg( attendeeName ).arg( delegatorName );
-          case Attendee::Delegated: {
-              QString delegate, dummy;
-              KPIM::getNameAndMail( attendee->delegate(), delegate, dummy );
-              if ( delegate.isEmpty() )
-                  delegate = attendee->delegate();
-              if ( !delegate.isEmpty() )
-                return i18n( "%1 has delegated this meeting invitation to %2" )
-                    .arg( attendeeName ) .arg( delegate );
-              return i18n( "%1 has delegated this meeting invitation" ).arg( attendeeName );
-          }
-          case Attendee::Completed:
-              return i18n( "This meeting invitation is now completed" );
-          case Attendee::InProcess:
-              return i18n( "%1 is still processing the invitation" ).arg( attendeeName );
-          default:
-              return i18n( "Unknown response to this meeting invitation" );
-        }
-        break; }
-    case Scheduler::Counter:
-        return i18n( "Sender makes this counter proposal" );
-    case Scheduler::Declinecounter:
-        return i18n( "Sender declines the counter proposal" );
-    case Scheduler::NoMethod:
-        return i18n("Error: iMIP message with unknown method: '%1'")
-            .arg( msg->method() );
+    switch( attendee->status() ) {
+    case Attendee::NeedsAction:
+      return i18n( "%1 indicates this invitation still needs some action" ).arg( attendeeName );
+    case Attendee::Accepted:
+      if ( delegatorName.isEmpty() ) {
+        return i18n( "%1 accepts this invitation" ).arg( attendeeName );
+      } else {
+        return i18n( "%1 accepts this invitation on behalf of %2" ).
+          arg( attendeeName ).arg( delegatorName );
+      }
+    case Attendee::Tentative:
+      if ( delegatorName.isEmpty() ) {
+        return i18n( "%1 tentatively accepts this invitation" ).
+          arg( attendeeName );
+      } else {
+        return i18n( "%1 tentatively accepts this invitation on behalf of %2" ).
+          arg( attendeeName ).arg( delegatorName );
+      }
+    case Attendee::Declined:
+      if ( delegatorName.isEmpty() ) {
+        return i18n( "%1 declines this invitation" ).arg( attendeeName );
+      } else {
+        return i18n( "%1 declines this invitation on behalf of %2" ).
+          arg( attendeeName ).arg( delegatorName );
+      }
+    case Attendee::Delegated: {
+      QString delegate, dummy;
+      KPIM::getNameAndMail( attendee->delegate(), delegate, dummy );
+      if ( delegate.isEmpty() ) {
+        delegate = attendee->delegate();
+      }
+      if ( !delegate.isEmpty() ) {
+        return i18n( "%1 has delegated this invitation to %2" ).
+          arg( attendeeName ) .arg( delegate );
+      } else {
+        return i18n( "%1 has delegated this invitation" ).arg( attendeeName );
+      }
+    }
+    case Attendee::Completed:
+      return i18n( "This invitation is now completed" );
+    case Attendee::InProcess:
+      return i18n( "%1 is still processing the invitation" ).
+        arg( attendeeName );
+    default:
+      return i18n( "Unknown response to this invitation" );
+    }
+    break; }
+  case Scheduler::Counter:
+    return i18n( "Sender makes this counter proposal" );
+  case Scheduler::Declinecounter:
+    return i18n( "Sender declines the counter proposal" );
+  case Scheduler::NoMethod:
+    return i18n("Error: iMIP message with unknown method: '%1'").
+      arg( msg->method() );
   }
   return QString::null;
 }
 
 static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
 {
-  if ( !msg || !todo )
+  if ( !msg || !todo ) {
     return QString::null;
-  switch ( msg->method() ) {
-    case Scheduler::Publish:
-        return i18n("This task has been published");
-    case Scheduler::Request:
-        if ( todo->revision() > 0 )
-            return i18n( "This task has been updated" );
-        return i18n( "You have been assigned this task" );
-    case Scheduler::Refresh:
-        return i18n( "This task was refreshed" );
-    case Scheduler::Cancel:
-        return i18n( "This task was canceled" );
-    case Scheduler::Add:
-        return i18n( "Addition to the task" );
-    case Scheduler::Reply: {
-        Attendee::List attendees = todo->attendees();
-        if( attendees.count() == 0 ) {
-          kdDebug(5850) << "No attendees in the iCal reply!\n";
-          return QString::null;
-        }
-        if( attendees.count() != 1 )
-          kdDebug(5850) << "Warning: attendeecount in the reply should be 1 "
-                        << "but is " << attendees.count() << endl;
-        Attendee* attendee = *attendees.begin();
+  }
 
-        switch( attendee->status() ) {
-          case Attendee::NeedsAction:
-              return i18n( "Sender indicates this task assignment still needs some action" );
-          case Attendee::Accepted:
-              return i18n( "Sender accepts this task" );
-          case Attendee::Tentative:
-              return i18n( "Sender tentatively accepts this task" );
-          case Attendee::Declined:
-              return i18n( "Sender declines this task" );
-          case Attendee::Delegated: {
-              QString delegate, dummy;
-              KPIM::getNameAndMail( attendee->delegate(), delegate, dummy );
-              if ( delegate.isEmpty() )
-                delegate = attendee->delegate();
-              if ( !delegate.isEmpty() )
-                return i18n( "Sender has delegated this request for the task to %1" ).arg( delegate );
-              return i18n( "Sender has delegated this request for the task " );
-          }
-          case Attendee::Completed:
-              return i18n( "The request for this task is now completed" );
-          case Attendee::InProcess:
-              return i18n( "Sender is still processing the invitation" );
-          default:
-              return i18n( "Unknown response to this task" );
-          }
-        break; }
-    case Scheduler::Counter:
-        return i18n( "Sender makes this counter proposal" );
-    case Scheduler::Declinecounter:
-        return i18n( "Sender declines the counter proposal" );
-    case Scheduler::NoMethod:
-        return i18n("Error: iMIP message with unknown method: '%1'")
-            .arg( msg->method() );
+  switch ( msg->method() ) {
+  case Scheduler::Publish:
+    return i18n("This task has been published");
+  case Scheduler::Request:
+    if ( todo->revision() > 0 ) {
+      return i18n( "This task has been updated" );
+    } else {
+      return i18n( "You have been assigned this task" );
+    }
+  case Scheduler::Refresh:
+    return i18n( "This task was refreshed" );
+  case Scheduler::Cancel:
+    return i18n( "This task was canceled" );
+  case Scheduler::Add:
+    return i18n( "Addition to the task" );
+  case Scheduler::Reply: {
+    Attendee::List attendees = todo->attendees();
+    if( attendees.count() == 0 ) {
+      kdDebug(5850) << "No attendees in the iCal reply!" << endl;
+      return QString::null;
+    }
+    if( attendees.count() != 1 ) {
+      kdDebug(5850) << "Warning: attendeecount in the reply should be 1 "
+                    << "but is " << attendees.count() << endl;
+    }
+    Attendee* attendee = *attendees.begin();
+
+    switch( attendee->status() ) {
+    case Attendee::NeedsAction:
+      return i18n( "Sender indicates this task assignment still needs some action" );
+    case Attendee::Accepted:
+      return i18n( "Sender accepts this task" );
+    case Attendee::Tentative:
+      return i18n( "Sender tentatively accepts this task" );
+    case Attendee::Declined:
+      return i18n( "Sender declines this task" );
+    case Attendee::Delegated: {
+      QString delegate, dummy;
+      KPIM::getNameAndMail( attendee->delegate(), delegate, dummy );
+      if ( delegate.isEmpty() ) {
+        delegate = attendee->delegate();
+      }
+      if ( !delegate.isEmpty() ) {
+        return i18n( "Sender has delegated this request for the task to %1" ).arg( delegate );
+      } else {
+        return i18n( "Sender has delegated this request for the task " );
+      }
+    }
+    case Attendee::Completed:
+      return i18n( "The request for this task is now completed" );
+    case Attendee::InProcess:
+      return i18n( "Sender is still processing the invitation" );
+    default:
+      return i18n( "Unknown response to this task" );
+    }
+    break; }
+  case Scheduler::Counter:
+    return i18n( "Sender makes this counter proposal" );
+  case Scheduler::Declinecounter:
+    return i18n( "Sender declines the counter proposal" );
+  case Scheduler::NoMethod:
+    return i18n("Error: iMIP message with unknown method: '%1'").
+      arg( msg->method() );
   }
   return QString::null;
 }
@@ -979,80 +1185,132 @@ static QString invitationHeaderTodo( Todo *todo, ScheduleMessage *msg )
 static QString invitationHeaderJournal( Journal *journal, ScheduleMessage *msg )
 {
   // TODO: Several of the methods are not allowed for journals, so remove them.
-  if ( !msg || !journal )
+  if ( !msg || !journal ) {
     return QString::null;
-  switch ( msg->method() ) {
-    case Scheduler::Publish:
-        return i18n("This journal has been published");
-    case Scheduler::Request:
-        return i18n( "You have been assigned this journal" );
-    case Scheduler::Refresh:
-        return i18n( "This journal was refreshed" );
-    case Scheduler::Cancel:
-        return i18n( "This journal was canceled" );
-    case Scheduler::Add:
-        return i18n( "Addition to the journal" );
-    case Scheduler::Reply: {
-        Attendee::List attendees = journal->attendees();
-        if( attendees.count() == 0 ) {
-          kdDebug(5850) << "No attendees in the iCal reply!\n";
-          return QString::null;
-        }
-        if( attendees.count() != 1 )
-          kdDebug(5850) << "Warning: attendeecount in the reply should be 1 "
-                        << "but is " << attendees.count() << endl;
-        Attendee* attendee = *attendees.begin();
+  }
 
-        switch( attendee->status() ) {
-          case Attendee::NeedsAction:
-              return i18n( "Sender indicates this journal assignment still needs some action" );
-          case Attendee::Accepted:
-              return i18n( "Sender accepts this journal" );
-          case Attendee::Tentative:
-              return i18n( "Sender tentatively accepts this journal" );
-          case Attendee::Declined:
-              return i18n( "Sender declines this journal" );
-          case Attendee::Delegated:
-              return i18n( "Sender has delegated this request for the journal" );
-          case Attendee::Completed:
-              return i18n( "The request for this journal is now completed" );
-          case Attendee::InProcess:
-              return i18n( "Sender is still processing the invitation" );
-          default:
-              return i18n( "Unknown response to this journal" );
-          }
-        break; }
-    case Scheduler::Counter:
-        return i18n( "Sender makes this counter proposal" );
-    case Scheduler::Declinecounter:
-        return i18n( "Sender declines the counter proposal" );
-    case Scheduler::NoMethod:
-        return i18n("Error: iMIP message with unknown method: '%1'")
-            .arg( msg->method() );
+  switch ( msg->method() ) {
+  case Scheduler::Publish:
+    return i18n("This journal has been published");
+  case Scheduler::Request:
+    return i18n( "You have been assigned this journal" );
+  case Scheduler::Refresh:
+    return i18n( "This journal was refreshed" );
+  case Scheduler::Cancel:
+    return i18n( "This journal was canceled" );
+  case Scheduler::Add:
+    return i18n( "Addition to the journal" );
+  case Scheduler::Reply: {
+    Attendee::List attendees = journal->attendees();
+    if( attendees.count() == 0 ) {
+      kdDebug(5850) << "No attendees in the iCal reply!" << endl;
+      return QString::null;
+    }
+    if( attendees.count() != 1 ) {
+      kdDebug(5850) << "Warning: attendeecount in the reply should be 1 "
+                    << "but is " << attendees.count() << endl;
+    }
+    Attendee* attendee = *attendees.begin();
+
+    switch( attendee->status() ) {
+    case Attendee::NeedsAction:
+      return i18n( "Sender indicates this journal assignment still needs some action" );
+    case Attendee::Accepted:
+      return i18n( "Sender accepts this journal" );
+    case Attendee::Tentative:
+      return i18n( "Sender tentatively accepts this journal" );
+    case Attendee::Declined:
+      return i18n( "Sender declines this journal" );
+    case Attendee::Delegated:
+      return i18n( "Sender has delegated this request for the journal" );
+    case Attendee::Completed:
+      return i18n( "The request for this journal is now completed" );
+    case Attendee::InProcess:
+      return i18n( "Sender is still processing the invitation" );
+    default:
+      return i18n( "Unknown response to this journal" );
+    }
+    break;
+  }
+  case Scheduler::Counter:
+    return i18n( "Sender makes this counter proposal" );
+  case Scheduler::Declinecounter:
+    return i18n( "Sender declines the counter proposal" );
+  case Scheduler::NoMethod:
+    return i18n("Error: iMIP message with unknown method: '%1'").
+      arg( msg->method() );
   }
   return QString::null;
 }
 
 static QString invitationHeaderFreeBusy( FreeBusy *fb, ScheduleMessage *msg )
 {
-  if ( !msg || !fb )
+  if ( !msg || !fb ) {
     return QString::null;
-  switch ( msg->method() ) {
-    case Scheduler::Publish:
-        return i18n("This free/busy list has been published");
-    case Scheduler::Request:
-        return i18n( "The free/busy list has been requested" );
-    case Scheduler::Refresh:
-        return i18n( "This free/busy list was refreshed" );
-    case Scheduler::Cancel:
-        return i18n( "This free/busy list was canceled" );
-    case Scheduler::Add:
-        return i18n( "Addition to the free/busy list" );
-    case Scheduler::NoMethod:
-    default:
-        return i18n("Error: Free/Busy iMIP message with unknown method: '%1'")
-            .arg( msg->method() );
   }
+
+  switch ( msg->method() ) {
+  case Scheduler::Publish:
+    return i18n("This free/busy list has been published");
+  case Scheduler::Request:
+    return i18n( "The free/busy list has been requested" );
+  case Scheduler::Refresh:
+    return i18n( "This free/busy list was refreshed" );
+  case Scheduler::Cancel:
+    return i18n( "This free/busy list was canceled" );
+  case Scheduler::Add:
+    return i18n( "Addition to the free/busy list" );
+  case Scheduler::NoMethod:
+  default:
+    return i18n("Error: Free/Busy iMIP message with unknown method: '%1'").
+      arg( msg->method() );
+  }
+}
+
+static QString invitationAttendees( Incidence *incidence )
+{
+  QString tmpStr;
+  if ( !incidence ) {
+    return tmpStr;
+  }
+
+  tmpStr += eventViewerAddTag( "u", i18n( "Attendee List" ) );
+  tmpStr += "<br/>";
+
+  int count=0;
+  Attendee::List attendees = incidence->attendees();
+  if ( !attendees.isEmpty() ) {
+
+    Attendee::List::ConstIterator it;
+    for( it = attendees.begin(); it != attendees.end(); ++it ) {
+      Attendee *a = *it;
+      if ( !iamAttendee( a ) ) {
+        count++;
+        if ( count == 1 ) {
+          tmpStr += "<table border=\"1\" cellpadding=\"1\" cellspacing=\"0\" columns=\"2\">";
+        }
+        tmpStr += "<tr>";
+        tmpStr += "<td>";
+        tmpStr += invitationPerson( a->email(), a->name(), QString::null );
+        if ( !a->delegator().isEmpty() ) {
+          tmpStr += i18n(" (delegated by %1)" ).arg( a->delegator() );
+        }
+        if ( !a->delegate().isEmpty() ) {
+          tmpStr += i18n(" (delegated to %1)" ).arg( a->delegate() );
+        }
+        tmpStr += "</td>";
+        tmpStr += "<td>" + a->statusStr() + "</td>";
+        tmpStr += "</tr>";
+      }
+    }
+  }
+  if ( count ) {
+    tmpStr += "</table>";
+  } else {
+    tmpStr += "<i>" + i18n( "None" ) + "</i>";
+  }
+
+  return tmpStr;
 }
 
 class IncidenceFormatter::ScheduleMessageVisitor : public IncidenceBase::Visitor
@@ -1172,10 +1430,10 @@ class IncidenceFormatter::IncidenceCompareVisitor :
       if ( !oldEvent || !newEvent )
         return;
       if ( oldEvent->dtStart() != newEvent->dtStart() || oldEvent->doesFloat() != newEvent->doesFloat() )
-        mChanges += i18n( "The begin of the meeting has been changed from %1 to %2" )
+        mChanges += i18n( "The invitation starting time has been changed from %1 to %2" )
             .arg( eventStartTimeStr( oldEvent ) ).arg( eventStartTimeStr( newEvent ) );
       if ( oldEvent->dtEnd() != newEvent->dtEnd() || oldEvent->doesFloat() != newEvent->doesFloat() )
-        mChanges += i18n( "The end of the meeting has been changed from %1 to %2" )
+        mChanges += i18n( "The invitation ending time has been changed from %1 to %2" )
             .arg( eventEndTimeStr( oldEvent ) ).arg( eventEndTimeStr( newEvent ) );
     }
 
@@ -1221,22 +1479,6 @@ QString InvitationFormatterHelper::makeLink( const QString &id, const QString &t
   return res;
 }
 
-// Check if the given incidence is likely one that we own instead one from
-// a shared calendar (Kolab-specific)
-static bool incidenceOwnedByMe( Calendar* calendar, Incidence *incidence )
-{
-  CalendarResources* cal = dynamic_cast<CalendarResources*>( calendar );
-  if ( !cal || !incidence )
-    return true;
-  ResourceCalendar* res = cal->resource( incidence );
-  if ( !res )
-    return true;
-  const QString subRes = res->subresourceIdentifier( incidence );
-  if ( !subRes.contains( "/.INBOX.directory/" ) )
-    return false;
-  return true;
-}
-
 QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *mCalendar,
     InvitationFormatterHelper *helper )
 {
@@ -1255,15 +1497,14 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
 
   IncidenceBase *incBase = msg->event();
 
-  Incidence* existingIncidence = 0;
-  if ( helper->calendar() ) {
+  // Determine if this incidence is in my calendar
+  Incidence *existingIncidence = 0;
+  if ( incBase && helper->calendar() ) {
     existingIncidence = helper->calendar()->incidence( incBase->uid() );
-    if ( !incidenceOwnedByMe( helper->calendar(), existingIncidence ) )
-      existingIncidence = 0;
     if ( !existingIncidence ) {
       const Incidence::List list = helper->calendar()->incidences();
       for ( Incidence::List::ConstIterator it = list.begin(), end = list.end(); it != end; ++it ) {
-        if ( (*it)->schedulingID() == incBase->uid() && incidenceOwnedByMe( helper->calendar(), *it ) ) {
+        if ( (*it)->schedulingID() == incBase->uid() ) {
           existingIncidence = *it;
           break;
         }
@@ -1301,13 +1542,39 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     }
   }
 
-  html += "<br/>";
-  html += "<table border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td></tr><tr>";
+  Incidence *inc = dynamic_cast<Incidence*>( incBase );
 
-#if 0
-  html += helper->makeLinkURL( "accept", i18n("[Enter this into my calendar]") );
-  html += "</td><td> &nbsp; </td><td>";
-#endif
+  // determine if I am the organizer for this invitation
+  bool myInc = iamOrganizer( inc );
+
+  // determine if the invitation response has already been recorded
+  bool rsvpRec = false;
+  Attendee *ea = 0;
+  if ( !myInc ) {
+    if ( existingIncidence ) {
+      ea = findMyAttendee( existingIncidence );
+    }
+    if ( ea && ( ea->status() == Attendee::Accepted || ea->status() == Attendee::Declined ) ) {
+      rsvpRec = true;
+    }
+  }
+
+  // Print if RSVP needed, not-needed, or response already recorded
+  bool rsvpReq = rsvpRequested( inc );
+  if ( !myInc ) {
+    html += "<br/>";
+    html += "<i><u>";
+    if ( rsvpRec ) {
+      html += i18n( "Your response has already been recorded [%1]" ).
+              arg( ea->statusStr() );
+      rsvpReq = false;
+    } else {
+      html += rsvpRequestedStr( rsvpReq );
+    }
+    html += "</u></i>";
+  }
+
+  html += "<table border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td></tr><tr>";
 
   // Add groupware links
 
@@ -1317,33 +1584,41 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     case Scheduler::Refresh:
     case Scheduler::Add:
     {
-        Incidence *inc = dynamic_cast<Incidence*>( incBase );
-        if ( inc && inc->revision() > 0 && (existingIncidence || !helper->calendar()) ) {
-            if ( incBase->type() == "Todo" ) {
-                html += "<td colspan=\"9\">";
-                html += helper->makeLink( "reply", i18n( "[Enter this into my task list]" ) );
-            } else {
-                html += "<td colspan=\"13\">";
-                html += helper->makeLink( "reply", i18n( "[Enter this into my calendar]" ) );
-            }
-            html += "</td></tr><tr>";
+      if ( !existingIncidence ) {
+        if ( inc->type() == "Todo" ) {
+          html += "<td colspan=\"9\">";
+          html += helper->makeLink( "reply", i18n( "[Record invitation to my task list]" ) );
+        } else {
+          html += "<td colspan=\"13\">";
+          html += helper->makeLink( "reply", i18n( "[Record invitation to my calendar]" ) );
         }
-        html += "<td>";
+        html += "</td></tr><tr>";
+      }
+      html += "<td>";
 
-        if ( inc && !existingIncidence ) {
+      if ( !myInc ) {
+        if ( rsvpReq ) {
           // Accept
           html += helper->makeLink( "accept", i18n( "[Accept]" ) );
           html += "</td><td> &nbsp; </td><td>";
           html += helper->makeLink( "accept_conditionally",
-                            i18n( "Accept conditionally", "[Accept cond.]" ) );
+                                    i18n( "Accept conditionally", "[Accept cond.]" ) );
           html += "</td><td> &nbsp; </td><td>";
-          // counter proposal
+        }
+
+        if ( rsvpReq ) {
+          // Counter proposal
           html += helper->makeLink( "counter", i18n( "[Counter proposal]" ) );
           html += "</td><td> &nbsp; </td><td>";
+        }
+
+        if ( rsvpReq ) {
           // Decline
           html += helper->makeLink( "decline", i18n( "[Decline]" ) );
           html += "</td><td> &nbsp; </td><td>";
+        }
 
+        if ( !rsvpRec ) {
           // Delegate
           html += helper->makeLink( "delegate", i18n( "[Delegate]" ) );
           html += "</td><td> &nbsp; </td><td>";
@@ -1351,44 +1626,75 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
           // Forward
           html += helper->makeLink( "forward", i18n( "[Forward]" ) );
 
-          if ( incBase->type() == "Event" ) {
-              html += "</b></a></td><td> &nbsp; </td><td>";
-              html += helper->makeLink( "check_calendar", i18n("[Check my calendar]" ) );
+          // Check calendar
+          if ( inc->type() == "Event" ) {
+            html += "</td><td> &nbsp; </td><td>";
+            html += helper->makeLink( "check_calendar", i18n("[Check my calendar]" ) );
           }
         }
-        break;
+      }
+      break;
     }
 
     case Scheduler::Cancel:
-        // Cancel event from my calendar
-        html += helper->makeLink( "cancel", i18n( "[Remove this from my calendar]" ) );
-        break;
+      // Remove invitation
+      if ( existingIncidence ) {
+        if ( inc->type() == "Todo" ) {
+          html += helper->makeLink( "cancel", i18n( "[Remove invitation from my task list]" ) );
+        } else {
+          html += helper->makeLink( "cancel", i18n( "[Remove invitation from my calendar]" ) );
+        }
+      }
+      break;
 
     case Scheduler::Reply:
-        // Enter this into my calendar
-        if ( incBase->type() == "Todo" ) {
-          html += helper->makeLink( "reply", i18n( "[Enter this into my task list]" ) );
-        } else {
-          html += helper->makeLink( "reply", i18n( "[Enter this into my calendar]" ) );
+    {
+      // Record invitation response
+      Attendee *a = 0;
+      Attendee *ea = 0;
+      if ( inc ) {
+        a = inc->attendees().first();
+        if ( a && helper->calendar() ) {
+          ea = findAttendee( existingIncidence, a->email() );
         }
-        break;
+      }
+      if ( ea && ( ea->status() != Attendee::NeedsAction ) && ( ea->status() == a->status() ) ) {
+        html += "<br/>";
+        html += eventViewerAddTag( "i", i18n( "The response has already been recorded" ) );
+      } else {
+        if ( inc->type() == "Todo" ) {
+          html += helper->makeLink( "reply", i18n( "[Record response into my task list]" ) );
+        } else {
+          html += helper->makeLink( "reply", i18n( "[Record response into my calendar]" ) );
+        }
+      }
+      break;
+    }
 
     case Scheduler::Counter:
-        html += helper->makeLink( "accept_counter", i18n("[Accept]") );
-        html += "&nbsp;";
-        html += helper->makeLink( "decline_counter", i18n("[Decline]") );
-        html += "&nbsp;";
-        html += helper->makeLink( "check_calendar", i18n("[Check my calendar]" ) );
-        break;
+      // Counter proposal
+      html += helper->makeLink( "accept_counter", i18n("[Accept]") );
+      html += "&nbsp;";
+      html += helper->makeLink( "decline_counter", i18n("[Decline]") );
+      html += "&nbsp;";
+      html += helper->makeLink( "check_calendar", i18n("[Check my calendar]" ) );
+      break;
+
     case Scheduler::Declinecounter:
     case Scheduler::NoMethod:
-        break;
+      break;
   }
 
+  // close the groupware table
   html += "</td></tr></table>";
 
-  html += "</td></tr></table><br></div>";
+  // Add the attendee list if I am the organizer
+  if ( myInc ) {
+    html += invitationAttendees( helper->calendar()->incidence( inc->uid() ) );
+ }
 
+  // close the top-level table
+  html += "</td></tr></table><br></div>";
   return html;
 }
 
@@ -2176,17 +2482,6 @@ QString IncidenceFormatter::mailBodyString( IncidenceBase *incidence )
     return v.result();
   }
   return QString::null;
-}
-
-static QString recurEnd( Incidence *incidence )
-{
-  QString endstr;
-  if ( incidence->doesFloat() ) {
-    endstr = KGlobal::locale()->formatDate( incidence->recurrence()->endDate() );
-  } else {
-    endstr = KGlobal::locale()->formatDateTime( incidence->recurrence()->endDateTime() );
-  }
-  return endstr;
 }
 
 QString IncidenceFormatter::recurrenceString(Incidence * incidence)
