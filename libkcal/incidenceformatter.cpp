@@ -613,13 +613,12 @@ static QString eventStartTimeStr( Event *event )
 static QString eventEndTimeStr( Event *event )
 {
   QString tmp;
-  if ( event->hasEndDate() ) {
+  if ( event->hasEndDate() && event->dtEnd().isValid() ) {
     if ( !event->doesFloat() ) {
       tmp = i18n( "%1: End Date, %2: End Time", "%1 %2" ).
             arg( event->dtEndDateStr( false ), event->dtEndTimeStr() );
     } else {
-      tmp = i18n( "%1: End Date", "%1" ).
-            arg( event->dtEndDateStr( false ) );
+      tmp = i18n( "%1: End Date", "%1" ).arg( event->dtEndDateStr( false ) );
     }
   }
   return tmp;
