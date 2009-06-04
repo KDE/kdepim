@@ -601,10 +601,10 @@ static QString eventStartTimeStr( Event *event )
 {
   QString tmp;
   if ( !event->doesFloat() ) {
-    tmp = i18n( "%1: Start Date1, %2: Start Time2", "%1 %2" ).
+    tmp = i18n( "%1: Start Date, %2: Start Time", "%1 %2" ).
           arg( event->dtStartDateStr( false ), event->dtStartTimeStr() );
   } else {
-    tmp = i18n( "%1: Start Date3", "%1" ).
+    tmp = i18n( "%1: Start Date", "%1" ).
           arg( event->dtStartDateStr( false ) );
   }
   return tmp;
@@ -615,10 +615,10 @@ static QString eventEndTimeStr( Event *event )
   QString tmp;
   if ( event->hasEndDate() ) {
     if ( !event->doesFloat() ) {
-      tmp = i18n( "%1: End Date4, %2: End Time5", "%1 %2" ).
+      tmp = i18n( "%1: End Date, %2: End Time", "%1 %2" ).
             arg( event->dtEndDateStr( false ), event->dtEndTimeStr() );
     } else {
-      tmp = i18n( "%1: End Date6", "%1" ).
+      tmp = i18n( "%1: End Date", "%1" ).
             arg( event->dtEndDateStr( false ) );
     }
   }
