@@ -359,6 +359,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         QCString dummy;
         if ( !kapp->dcopClient()->findObject( dcopService, dcopObjectId, "", QByteArray(), dummy, dummy ) ) {
           DCOPRef ref( dcopService, dcopService ); // talk to the KUniqueApplication or its kontact wrapper
+          ref.call( "newInstance()" ); // activate korganizer window
           DCOPReply reply = ref.call( "load()" );
           if ( reply.isValid() && (bool)reply ) {
             kdDebug() << "Loaded " << dcopService << " successfully" << endl;
