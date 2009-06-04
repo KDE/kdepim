@@ -184,7 +184,7 @@ void PilotDaemonTray::setupWidget()
 	if( d->fIcons[idx].isNull() ) { WARNINGKPILOT << "No icon" << name; } \
 	else { DEBUGKPILOT << "Loaded icon" << name; }
 
-	L( Normal, "kpilotDaemon" )
+	L( Normal, "kpilotdaemon" )
 	L( Busy, "kpilot_busysync" )
 	L( NotListening, "kpilot_nosync" )
 #undef L

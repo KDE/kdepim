@@ -1126,14 +1126,13 @@ int main(int argc, char **argv)
 {
 	FUNCTIONSETUP;
 
-	KLocale::setMainCatalog("kpilot");
 
 	// a non-intuitive note about this... now that we're using dbus, the way that the path
 	// is constructed to communicate with our objects on the bus are of 2 pieces...
 	// in the dbus interface string "org.kde.kpilot.foo",
 	// the "org.kde.kpilot" part comes from setOrganizationDomain, found in
 	// KPILOT_ABOUT_INIT.  the "foo" part comes in the first argument to KAboutData below...
-	KAboutData about("daemon", 0,
+	KAboutData about("kpilotdaemon", "kpilot",
 		ki18n("KPilot Daemon"),
 		KPILOT_VERSION,
 		ki18n("KPilot - HotSync software for KDE"),
