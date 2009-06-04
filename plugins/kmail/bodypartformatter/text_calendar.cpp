@@ -643,9 +643,9 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
     {
       if ( !path.isEmpty() ) {
         if ( path == "accept" )
-          return i18n("Accept incidence");
+          return i18n("Accept invitation");
         if ( path == "accept_conditionally" )
-          return i18n( "Accept incidence conditionally" );
+          return i18n( "Accept invitation conditionally" );
         if ( path == "accept_counter" )
           return i18n( "Accept counter proposal" );
         if ( path == "counter" )
@@ -653,19 +653,19 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         if ( path == "ignore" )
           return i18n( "Throw mail away" );
         if ( path == "decline" )
-          return i18n( "Decline incidence" );
+          return i18n( "Decline invitation" );
         if ( path == "decline_counter" )
           return i18n( "Decline counter proposal" );
         if ( path == "check_calendar" )
           return i18n("Check my calendar..." );
         if ( path == "reply" )
-          return i18n( "Enter incidence into my calendar" );
+          return i18n( "Record response into my calendar" );
         if ( path == "delegate" )
-          return i18n( "Delegate incidence" );
+          return i18n( "Delegate invitation" );
         if ( path == "forward" )
-          return i18n( "Forward incidence" );
+          return i18n( "Forward invitation" );
         if ( path == "cancel" )
-          return i18n( "Remove incidence from my calendar" );
+          return i18n( "Remove invitation from my calendar" );
       }
 
       return QString();
