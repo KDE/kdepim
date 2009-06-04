@@ -324,6 +324,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         // [that's not the case when kontact was already running, but korganizer not loaded into it...]
         QDBusInterface iface( "org.kde.korganizer", "/korganizer_PimApplication", "org.kde.KUniqueApplication" );
         if ( iface.isValid() ) {
+          iface.call( "newInstance" );
           QDBusReply<bool> r = iface.call( "load" );
           if ( !r.isValid() || !r.value() )
             kWarning() << "Loading korganizer failed: " << iface.lastError().message();
