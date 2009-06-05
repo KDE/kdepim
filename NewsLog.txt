@@ -1,8 +1,11 @@
-Friday, May 29th 2009
+Friday, June 5th 2009
 
 Problems addressed
 ------------------
 
+* kolab/issue3673: Switch to calendar component when choosing "Look into the calendar" in invitations
+* kolab/issue1190: Many improvments in the display and handling of invitation mails, like not putting the
+                   accept and decline buttons in the mail when no response if requested
 * kolab/issue3636: Prevent creating incorrect maildir folders when using an IMAP account
 * kolab/issue3648: Syncing mails was slow and used a lot of memory
 * Don't block the UI when displaying signed or encrypted mail
