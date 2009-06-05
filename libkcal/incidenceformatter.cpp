@@ -855,17 +855,17 @@ static QString invitationDetailsEvent( Event* event )
                              event->dtStartTimeStr() + " - " + event->dtEndTimeStr() );
     }
   } else {
-    html += invitationRow( i18n( "From:" ), event->dtStartDateStr( false ) );
+    html += invitationRow( i18n( "Starting time of an event", "From:" ), event->dtStartDateStr( false ) );
     if ( !event->doesFloat() ) {
       html += invitationRow( i18n( "At:" ), event->dtStartTimeStr() );
     }
     if ( event->hasEndDate() ) {
-      html += invitationRow( i18n( "To:" ), event->dtEndDateStr( false ) );
+      html += invitationRow( i18n( "Ending time of an event", "To:" ), event->dtEndDateStr( false ) );
       if ( !event->doesFloat() ) {
         html += invitationRow( i18n( "At:" ), event->dtEndTimeStr() );
       }
     } else {
-      html += invitationRow( i18n( "To:" ), i18n( "no end date specified" ) );
+      html += invitationRow( i18n( "Ending time of an event", "To:" ), i18n( "no end date specified" ) );
     }
   }
 
