@@ -1,4 +1,4 @@
-Friday, May 29th 2009
+Friday, June 5th 2009
 
 Problems addressed
 ------------------
@@ -15,7 +15,7 @@ Merges
 * Merges from KDE 4.2 branch:
       - kolab/issue3648: Syncing mails was slow and used a lot of memory
       - Fix speed regression in the quick search of the address book (KDE bug 192401)
-      - When selecting a multiday event, highlight all events belong to it (KDE bug 164419)
+      - When selecting a multiday event, highlight all events that belong to it (KDE bug 164419)
       - Make the category selection dialog actions the same when opened from the journal and the todo views
       - Provide a visual clue that the Month and Year labels are actually menus
       - Fix some issues with the quick add edit in the todo view (KDE bug 191225)
@@ -24,9 +24,16 @@ Merges
       - Better column restoring in the todo view (KDE bug 191225)
       - Some Akregator bugfixes (KDE bugs 181646, 189664)
       - Fix splitter sizes in KOrganizer being 0 sometimes (KDE bug 191154)
+      - Fix the composer getting slower over time because of the autosave function
+      - Make sure the list of transports is updated after renaming a transport (KDE bug 185069)
+      - Fix crash when loading passwords from wallet when starting up (KDE bug 175144)
+      - Don't show events from the future in the reminder dialog, for recurring events
 
 * Merges from enterprise35 branch:
+      - kolab/issue3673: Switch to calendar component when choosing "Look into the calendar" in invitations
       - kolab/issue3636: Prevent creating incorrect maildir folders when using an IMAP account
+      - kolab/issue1190: Many improvments in the display and handling of invitation mails, like not putting the
+                         accept and decline buttons in the mail when no response if requested
       - Allow to use semicolons as address separators in the composer
       - Don't block the UI when displaying signed or encrypted mail
 
