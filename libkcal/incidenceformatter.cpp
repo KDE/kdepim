@@ -1306,7 +1306,7 @@ static QString invitationAttendees( Incidence *incidence )
   if ( count ) {
     tmpStr += "</table>";
   } else {
-    tmpStr += "<i>" + i18n( "None" ) + "</i>";
+    tmpStr += "<i>" + i18n( "No attendee", "None" ) + "</i>";
   }
 
   return tmpStr;
