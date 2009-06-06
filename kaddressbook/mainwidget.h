@@ -35,7 +35,7 @@ class ContactGroupBrowser;
 class Item;
 class ItemView;
 class KABCItemBrowser;
-class StandardActionManager;
+class StandardContactActionManager;
 }
 
 class KActionCollection;
@@ -80,7 +80,7 @@ class KCONTACTMANAGER_EXPORT MainWidget : public QWidget
 
     Akonadi::KABCItemBrowser *mContactDetails;
     Akonadi::ContactGroupBrowser *mContactGroupDetails;
-    Akonadi::StandardActionManager *mActionManager;
+    Akonadi::StandardContactActionManager *mActionManager;
 
     XXPortManager *mXXPortManager;
 };

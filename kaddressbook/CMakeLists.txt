@@ -65,6 +65,7 @@ set( kcontactmanager_LIB_SRCS
   globalcontactmodel.cpp
   mainwidget.cpp
   quicksearchwidget.cpp
+  standardcontactactionmanager.cpp
   xxport/csv/csv_xxport.cpp
   xxport/csv/csvimportdialog.cpp
   xxport/csv/dateparser.cpp

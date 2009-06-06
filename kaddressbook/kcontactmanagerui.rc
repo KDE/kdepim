@@ -3,8 +3,8 @@
 
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
-      <Action name="file_new_contact"/>
-      <Action name="file_new_group"/>
+      <Action name="akonadi_contact_create"/>
+      <Action name="akonadi_contact_group_create"/>
       <Menu name="file_import">
         <text>&amp;Import</text>
         <Action name="file_import_vcard"/>
@@ -55,14 +55,19 @@
   </Menu>
 
   <Menu name="akonadi_itemview_contextmenu">
+    <Action name="akonadi_contact_item_edit"/>
+    <Action name="akonadi_contact_create"/>
+    <Action name="akonadi_contact_group_create"/>
+    <Separator/>
     <Action name="akonadi_item_copy"/>
     <Action name="akonadi_paste"/>
+    <Separator/>
     <Action name="akonadi_item_delete"/>
   </Menu>
 
   <ToolBar name="mainToolBar" noMerge="1"><text>Main Toolbar</text>
-    <Action name="file_new_contact"/>
-    <Action name="file_new_group"/>
+    <Action name="akonadi_contact_create"/>
+    <Action name="akonadi_contact_group_create"/>
     <Action name="quick_search"/>
   </ToolBar>
 

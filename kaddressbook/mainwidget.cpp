@@ -35,7 +35,6 @@
 #include <akonadi/control.h>
 #include <akonadi/itemview.h>
 #include <akonadi/mimetypechecker.h>
-#include <akonadi/standardactionmanager.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>
@@ -62,6 +61,7 @@
 #include "globalcontactmodel.h"
 #include "kcontactmanageradaptor.h"
 #include "quicksearchwidget.h"
+#include "standardcontactactionmanager.h"
 #include "xxportmanager.h"
 
 #include "printing/printingwizard.h"
@@ -165,20 +165,18 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
 
   Akonadi::Control::widgetNeedsAkonadi( this );
 
-  mActionManager = new Akonadi::StandardActionManager( guiClient->actionCollection(), this );
+  mActionManager = new Akonadi::StandardContactActionManager( guiClient->actionCollection(), this );
   mActionManager->setCollectionSelectionModel( mCollectionView->selectionModel() );
   mActionManager->setItemSelectionModel( mItemView->selectionModel() );
 
   mActionManager->createAllActions();
 
-  // customize the labels of the default actions
-  mActionManager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add Address Book" ) );
-  mActionManager->setActionText( Akonadi::StandardActionManager::CopyCollections, ki18np( "Copy Address Book", "Copy %1 Address Books" ) );
-  mActionManager->action( Akonadi::StandardActionManager::DeleteCollections )->setText( i18n( "Delete Address Book" ) );
-  mActionManager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setText( i18n( "Reload" ) );
-  mActionManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Properties..." ) );
-  mActionManager->setActionText( Akonadi::StandardActionManager::CopyItems, ki18np( "Copy Contact", "Copy %1 Contacts" ) );
-  mActionManager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete Contact", "Delete %1 Contacts" ) );
+  connect( mActionManager->action( Akonadi::StandardContactActionManager::CreateContact ), SIGNAL( triggered( bool ) ),
+           this, SLOT( newContact() ) );
+  connect( mActionManager->action( Akonadi::StandardContactActionManager::CreateContactGroup ), SIGNAL( triggered( bool ) ),
+           this, SLOT( newGroup() ) );
+  connect( mActionManager, SIGNAL( editItem( const Akonadi::Item& ) ),
+           this, SLOT( editItem( const Akonadi::Item& ) ) );
 
   // create the dbus adaptor
   new MainWidgetAdaptor( this );
@@ -228,20 +226,6 @@ void MainWidget::setupGui()
 void MainWidget::setupActions( KActionCollection *collection )
 {
   KAction *action = 0;
-
-  action = collection->addAction( "file_new_contact" );
-  action->setIcon( KIcon( "contact-new" ) );
-  action->setText( i18n( "&New Contact..." ) );
-  connect( action, SIGNAL( triggered(bool) ), SLOT( newContact() ));
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
-  action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data about a person, including addresses and phone numbers.</p>" ) );
-
-  action = collection->addAction( "file_new_group" );
-  action->setIcon( KIcon( "user-group-new" ) );
-  action->setText( i18n( "&New Group..." ) );
-  connect( action, SIGNAL( triggered(bool) ), SLOT( newGroup() ));
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_G ) );
-  action->setWhatsThis( i18n( "Create a new group<p>You will be presented with a dialog where you can add a new group of contacts.</p>" ) );
 
   action = KStandardAction::print( this, SLOT( print() ), collection );
   action->setWhatsThis( i18n( "Print a special number of contacts." ) );
@@ -303,7 +287,7 @@ void MainWidget::print()
   printer.setOutputFormat( QPrinter::PdfFormat );
 
   QPrintDialog printDialog( &printer, this );
-  printDialog.setWindowTitle( i18n( "Print Addresses" ) );
+  printDialog.setWindowTitle( i18n( "Print Contacts" ) );
   if ( !printDialog.exec() )
     return;
 
