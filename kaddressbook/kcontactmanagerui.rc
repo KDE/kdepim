@@ -3,8 +3,13 @@
 
   <MenuBar>
     <Menu name="file"><text>&amp;File</text>
-      <Action name="akonadi_contact_create"/>
-      <Action name="akonadi_contact_group_create"/>
+      <Menu name="file_new">
+        <text>&amp;New</text>
+        <Action name="akonadi_contact_create"/>
+        <Action name="akonadi_contact_group_create"/>
+        <Separator/>
+        <Action name="akonadi_addressbook_create"/>
+      </Menu>
       <Menu name="file_import">
         <text>&amp;Import</text>
         <Action name="file_import_vcard"/>
@@ -27,10 +32,13 @@
       <Action name="file_quit"/>
     </Menu>
 
-    <Menu name="edit"><text>&amp;Edit</text>
+    <Menu name="edit" noMerge="1"><text>&amp;Edit</text>
+      <Action name="akonadi_contact_item_edit" append="edit_edit_merge"/>
       <Action name="akonadi_paste" append="edit_paste_merge"/>
       <Action name="akonadi_item_copy" append="edit_copy_merge"/>
       <Action name="akonadi_item_delete" append="edit_delete_merge"/>
+      <Separator/>
+      <Action name="akonadi_addressbook_delete"/>
     </Menu>
 
     <Menu name="settings"><text>&amp;Settings</text>
@@ -52,6 +60,9 @@
     <Action name="akonadi_collection_sync"/>
     <Separator/>
     <Action name="akonadi_collection_properties"/>
+    <Separator/>
+    <Action name="akonadi_addressbook_create"/>
+    <Action name="akonadi_addressbook_delete"/>
   </Menu>
 
   <Menu name="akonadi_itemview_contextmenu">

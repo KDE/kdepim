@@ -21,11 +21,17 @@
 
 #include "akonadi_next/entitytreemodel.h"
 
+#include <akonadi/agentfilterproxymodel.h>
+#include <akonadi/agentinstance.h>
+#include <akonadi/agentinstancecreatejob.h>
+#include <akonadi/agentmanager.h>
+#include <akonadi/agenttypedialog.h>
 #include <kabc/addressee.h>
 #include <kabc/contactgroup.h>
 #include <kaction.h>
 #include <kactioncollection.h>
 #include <klocale.h>
+#include <kmessagebox.h>
 
 #include <QtGui/QItemSelectionModel>
 
@@ -43,14 +49,13 @@ class StandardContactActionManager::Private
                         mParent, SIGNAL( actionStateUpdated() ) );
       mGenericManager->createAllActions();
 
-      mGenericManager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add Address Book" ) );
-      mGenericManager->setActionText( Akonadi::StandardActionManager::CopyCollections, ki18np( "Copy Address Book", "Copy %1 Address Books" ) );
-      mGenericManager->action( Akonadi::StandardActionManager::DeleteCollections )->setText( i18n( "Delete Address Book" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add Address Book Folder..." ) );
+      mGenericManager->setActionText( Akonadi::StandardActionManager::CopyCollections, ki18np( "Copy Address Book Folder", "Copy %1 Address Book Folders" ) );
+      mGenericManager->action( Akonadi::StandardActionManager::DeleteCollections )->setText( i18n( "Delete Address Book Folder" ) );
       mGenericManager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setText( i18n( "Reload" ) );
       mGenericManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Properties..." ) );
       mGenericManager->setActionText( Akonadi::StandardActionManager::CopyItems, ki18np( "Copy Contact", "Copy %1 Contacts" ) );
       mGenericManager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete Contact", "Delete %1 Contacts" ) );
-
     }
 
     ~Private()
@@ -86,6 +91,21 @@ class StandardContactActionManager::Private
         }
       }
 
+      if ( mCollectionSelectionModel ) {
+        if ( mCollectionSelectionModel->selectedRows().count() == 1 ) {
+          const QModelIndex index = mCollectionSelectionModel->selectedIndexes().first();
+          if ( index.isValid() ) {
+            const Collection collection = index.data( EntityTreeModel::CollectionRole ).value<Collection>();
+            if ( collection.isValid() ) {
+              // action is only visible if the collection is a resource collection
+              bool isVisible = (collection.parent() == Collection::root().id());
+              if ( mActions.contains( StandardContactActionManager::DeleteAddressBook ) )
+                mActions[ StandardContactActionManager::DeleteAddressBook ]->setVisible( isVisible );
+            }
+          }
+        }
+      }
+
       if ( mActions.contains( StandardContactActionManager::EditItem ) ) {
         mActions.value( StandardContactActionManager::EditItem )->setEnabled( itemCount == 1 );
       }
@@ -107,6 +127,66 @@ class StandardContactActionManager::Private
         return;
 
       emit mParent->editItem( item );
+    }
+
+    void addAddressBookTriggered()
+    {
+      AgentTypeDialog dlg( mParentWidget );
+      dlg.setWindowTitle( i18n( "Add Address Book" ) );
+      dlg.agentFilterProxyModel()->addMimeTypeFilter( KABC::Addressee::mimeType() );
+      dlg.agentFilterProxyModel()->addMimeTypeFilter( KABC::ContactGroup::mimeType() );
+      dlg.agentFilterProxyModel()->addCapabilityFilter( "Resource" ); // show only resources, no agents
+
+      if ( dlg.exec() ) {
+        const AgentType agentType = dlg.agentType();
+
+        if ( agentType.isValid() ) {
+          AgentInstanceCreateJob *job = new AgentInstanceCreateJob( agentType );
+          job->configure( mParentWidget );
+          mParent->connect( job, SIGNAL( result( KJob* ) ), mParent, SLOT( addAddressBookResult( KJob* ) ) );
+          job->start();
+        }
+      }
+    }
+
+    void addAddressBookResult( KJob *job )
+    {
+      if ( job->error() ) {
+        KMessageBox::error( mParentWidget, i18n( "Could not add address book: %1", job->errorString() ),
+                            i18n( "Adding Address Book failed" ) );
+      } else {
+        const AgentInstanceCreateJob *createJob = static_cast<AgentInstanceCreateJob*>( job );
+
+        AgentInstance instance = createJob->instance();
+        if ( instance.isValid() )
+          instance.synchronize();
+      }
+    }
+
+    void deleteAddressBookTriggered()
+    {
+      if ( !mCollectionSelectionModel )
+        return;
+
+      const QModelIndex index = mCollectionSelectionModel->selectedIndexes().first();
+      if ( !index.isValid() )
+        return;
+
+      const Collection collection = index.data( EntityTreeModel::CollectionRole).value<Collection>();
+      const QString identifier = collection.resource();
+
+      const AgentInstance instance = AgentManager::self()->instance( identifier );
+      if ( !instance.isValid() )
+        return;
+
+      const QString text = i18n( "Do you really want to delete address book '%1'?", instance.name() );
+
+      if ( KMessageBox::questionYesNo( mParentWidget, text,
+           i18n( "Delete Address Book?"), KStandardGuiItem::del(), KStandardGuiItem::cancel(),
+           QString(), KMessageBox::Dangerous ) != KMessageBox::Yes )
+        return;
+
+      AgentManager::self()->removeInstance( instance );
     }
 
     KActionCollection *mActionCollection;
@@ -132,6 +212,9 @@ void StandardContactActionManager::setCollectionSelectionModel( QItemSelectionMo
 {
   d->mCollectionSelectionModel = selectionModel;
   d->mGenericManager->setCollectionSelectionModel( selectionModel );
+
+  connect( selectionModel, SIGNAL( selectionChanged( const QItemSelection&, const QItemSelection& ) ),
+           SLOT( updateActions() ) );
 }
 
 void StandardContactActionManager::setItemSelectionModel( QItemSelectionModel* selectionModel )
@@ -180,6 +263,25 @@ KAction* StandardContactActionManager::createAction( Type type )
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_contact_item_edit" ), action );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( editTriggered() ) );
       break;
+    case CreateAddressBook:
+      action = new KAction( d->mParentWidget );
+      action->setIcon( KIcon( "folder-new" ) );
+      action->setText( i18n( "Add &Address Book..." ) );
+      action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_A ) );
+      d->mActions.insert( CreateAddressBook, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_addressbook_create" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( addAddressBookTriggered() ) );
+      break;
+    case DeleteAddressBook:
+      action = new KAction( d->mParentWidget );
+      action->setIcon( KIcon( "edit-delete" ) );
+      action->setText( i18n( "&Delete Address Book" ) );
+      action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_D ) );
+      action->setVisible( false );
+      d->mActions.insert( DeleteAddressBook, action );
+      d->mActionCollection->addAction( QString::fromLatin1( "akonadi_addressbook_delete" ), action );
+      connect( action, SIGNAL( triggered( bool ) ), this, SLOT( deleteAddressBookTriggered() ) );
+      break;
     default:
       Q_ASSERT( false ); // should never happen
       break;
@@ -193,6 +295,8 @@ void StandardContactActionManager::createAllActions()
   createAction( CreateContact );
   createAction( CreateContactGroup );
   createAction( EditItem );
+  createAction( CreateAddressBook );
+  createAction( DeleteAddressBook );
 
   d->mGenericManager->createAllActions();
 }

@@ -51,6 +51,8 @@ class AKONADI_EXPORT StandardContactActionManager : public QObject
       CreateContact = StandardActionManager::LastType + 1, ///< Creates a new contact
       CreateContactGroup,                                  ///< Creates a new contact group
       EditItem,                                            ///< Edits the selected contact resp. contact group
+      CreateAddressBook,                                   ///< Creates a new address book
+      DeleteAddressBook,                                   ///< Deletes the selected address book.
       LastType                                             ///< Marks last action
     };
 
@@ -120,6 +122,9 @@ class AKONADI_EXPORT StandardContactActionManager : public QObject
 
     Q_PRIVATE_SLOT( d, void updateActions() )
     Q_PRIVATE_SLOT( d, void editTriggered() )
+    Q_PRIVATE_SLOT( d, void addAddressBookTriggered() )
+    Q_PRIVATE_SLOT( d, void addAddressBookResult( KJob* ) )
+    Q_PRIVATE_SLOT( d, void deleteAddressBookTriggered() )
     //@endcond
 };
 
