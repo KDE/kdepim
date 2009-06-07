@@ -61,6 +61,7 @@ class KCONTACTMANAGER_EXPORT MainWidget : public QWidget
   private Q_SLOTS:
     void editItem( const Akonadi::Item &item );
     void itemSelected( const Akonadi::Item &item );
+    void selectFirstItem();
 
   private:
     void setupGui();

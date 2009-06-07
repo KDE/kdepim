@@ -142,6 +142,10 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   contactFilterModel->setSourceModel( mItemTree );
   connect( mQuickSearchWidget, SIGNAL( filterStringChanged( const QString& ) ),
            contactFilterModel, SLOT( setFilterString( const QString& ) ) );
+  connect( mQuickSearchWidget, SIGNAL( filterStringChanged( const QString& ) ),
+           this, SLOT( selectFirstItem() ) );
+  connect( mQuickSearchWidget, SIGNAL( arrowDownKeyPressed() ),
+           mItemView, SLOT( setFocus() ) );
 
   mItemView->setModel( contactFilterModel );
   mItemView->setXmlGuiClient( guiClient );
@@ -329,6 +333,17 @@ void MainWidget::itemSelected( const Akonadi::Item &item )
   } else if ( Akonadi::MimeTypeChecker::isWantedItem( item, KABC::ContactGroup::mimeType() ) ) {
     mDetailsViewStack->setCurrentWidget( mContactGroupDetails );
     mContactGroupDetails->setItem( item );
+  }
+}
+
+void MainWidget::selectFirstItem()
+{
+  // Whenever the quick search has changed, we select the first item
+  // in the item view, so that the detailsview is updated
+  if ( mItemView && mItemView->selectionModel() ) {
+    mItemView->selectionModel()->setCurrentIndex( mItemView->model()->index( 0, 0 ),
+                                                  QItemSelectionModel::Clear |
+                                                  QItemSelectionModel::SelectCurrent );
   }
 }
 

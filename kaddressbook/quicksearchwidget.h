@@ -26,21 +26,65 @@
 
 class KLineEdit;
 
+/**
+ * @short The quick search widget from the toolbar
+ *
+ * This widget allows the user to filter for contacts
+ * that match a given string criteria.
+ * The filter string the user enters here is emitted to
+ * the ContactFilterModel, which does the real filtering.
+ *
+ * @author Tobias Koenig <tokoe@kde.org>
+ */
 class QuickSearchWidget : public QWidget
 {
   Q_OBJECT
 
   public:
+    /**
+     * Creates the quick search widget.
+     *
+     * @param parent The parent widget.
+     */
     QuickSearchWidget( QWidget *parent = 0 );
+
+    /**
+     * Destroys the quick search widget.
+     */
     virtual ~QuickSearchWidget();
 
+    /**
+     * Returns the size hint of the quick search widget.
+     */
     virtual QSize sizeHint() const;
 
   Q_SIGNALS:
+    /**
+     * This signal is emitted whenever the user has changed
+     * the filter string in the line edit.
+     *
+     * @param filterString The new filter string.
+     */
     void filterStringChanged( const QString &filterString );
+
+    /**
+     * This signal is emitted whenever the user pressed the
+     * arrow down key. In this case we set the focus on the
+     * item view that shows the contacts, so the user can
+     * navigate much faster.
+     */
+    void arrowDownKeyPressed();
+
+  private Q_SLOTS:
+    void resetTimer();
+    void delayedTextChanged();
+
+  protected:
+    virtual void keyPressEvent( QKeyEvent* );
 
   private:
     KLineEdit *mEdit;
+    QTimer *mTimer;
 };
 
 #endif
