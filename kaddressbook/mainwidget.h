@@ -38,6 +38,7 @@ class KABCItemBrowser;
 class StandardContactActionManager;
 }
 
+class ContactSwitcher;
 class KActionCollection;
 class KXMLGUIClient;
 class QItemSelection;
@@ -67,6 +68,8 @@ class KCONTACTMANAGER_EXPORT MainWidget : public QWidget
     void setItemViewVisible( bool visible );
     void setCollectionViewVisible( bool visible );
 
+    void setSimpleGuiMode( bool on );
+
   private:
     void setupGui();
     void setupActions( KActionCollection* );
@@ -81,7 +84,9 @@ class KCONTACTMANAGER_EXPORT MainWidget : public QWidget
     QuickSearchWidget *mQuickSearchWidget;
     Akonadi::EntityTreeView *mCollectionView;
     Akonadi::EntityTreeView *mItemView;
+    QWidget *mDetailsPane;
     QStackedWidget *mDetailsViewStack;
+    ContactSwitcher *mContactSwitcher;
 
     Akonadi::KABCItemBrowser *mContactDetails;
     Akonadi::ContactGroupBrowser *mContactGroupDetails;
