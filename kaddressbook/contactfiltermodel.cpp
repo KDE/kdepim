@@ -21,8 +21,10 @@
 
 #include <akonadi_next/entitytreemodel.h>
 #include <kabc/addressee.h>
+#include <kabc/contactgroup.h>
 
 static bool contactMatchesFilter( const KABC::Addressee &contact, const QString &filterString );
+static bool contactGroupMatchesFilter( const KABC::ContactGroup &group, const QString &filterString );
 
 ContactFilterModel::ContactFilterModel( QObject *parent )
   : QSortFilterProxyModel( parent )
@@ -47,6 +49,9 @@ bool ContactFilterModel::filterAcceptsRow( int row, const QModelIndex &parent ) 
   if ( item.hasPayload<KABC::Addressee>() ) {
     const KABC::Addressee contact = item.payload<KABC::Addressee>();
     return contactMatchesFilter( contact, mFilter );
+  } else if ( item.hasPayload<KABC::ContactGroup>() ) {
+    const KABC::ContactGroup group = item.payload<KABC::ContactGroup>();
+    return contactGroupMatchesFilter( group, mFilter );
   }
 
   return true;
@@ -138,6 +143,21 @@ static bool contactMatchesFilter( const KABC::Addressee &contact, const QString 
   const QStringList customs = contact.customs();
   for ( int i = 0; i < customs.count(); ++i ) {
     if ( customs.at( i ).toLower().contains( lowerFilterString ) )
+      return true;
+  }
+
+  return false;
+}
+
+bool contactGroupMatchesFilter( const KABC::ContactGroup &group, const QString &filterString )
+{
+  const QString lowerFilterString( filterString.toLower() );
+
+  const int count = group.dataCount();
+  for ( int i = 0; i < count; ++i ) {
+    if ( group.data( i ).name().toLower().contains( lowerFilterString ) )
+      return true;
+    if ( group.data( i ).email().toLower().contains( lowerFilterString ) )
       return true;
   }
 
