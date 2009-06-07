@@ -59,27 +59,25 @@ bool ContactFilterModel::filterAcceptsRow( int row, const QModelIndex &parent ) 
 
 static bool addressMatchesFilter( const KABC::Address &address, const QString &filterString )
 {
-  const QString lowerFilterString( filterString.toLower() );
-
-  if ( address.street().toLower().contains( lowerFilterString ) )
+  if ( address.street().contains( filterString, Qt::CaseInsensitive ) )
     return true;
 
-  if ( address.locality().toLower().contains( lowerFilterString ) )
+  if ( address.locality().contains( filterString, Qt::CaseInsensitive ) )
     return true;
 
-  if ( address.region().toLower().contains( lowerFilterString ) )
+  if ( address.region().contains( filterString, Qt::CaseInsensitive ) )
     return true;
 
-  if ( address.postalCode().toLower().contains( lowerFilterString ) )
+  if ( address.postalCode().contains( filterString, Qt::CaseInsensitive ) )
     return true;
 
-  if ( address.country().toLower().contains( lowerFilterString ) )
+  if ( address.country().contains( filterString, Qt::CaseInsensitive ) )
     return true;
 
-  if ( address.label().toLower().contains( lowerFilterString ) )
+  if ( address.label().contains( filterString, Qt::CaseInsensitive ) )
     return true;
 
-  if ( address.postOfficeBox().toLower().contains( lowerFilterString ) )
+  if ( address.postOfficeBox().contains( filterString, Qt::CaseInsensitive ) )
     return true;
 
   return false;
@@ -87,62 +85,64 @@ static bool addressMatchesFilter( const KABC::Address &address, const QString &f
 
 static bool contactMatchesFilter( const KABC::Addressee &contact, const QString &filterString )
 {
-  const QString lowerFilterString( filterString.toLower() );
-
-  if ( contact.assembledName().toLower().contains( lowerFilterString ) )
+  if ( contact.assembledName().contains( filterString, Qt::CaseInsensitive ) )
     return true;
 
-  if ( contact.formattedName().contains( lowerFilterString ) )
+  if ( contact.formattedName().contains( filterString, Qt::CaseInsensitive ) )
     return true;
 
-  if ( contact.nickName().contains( lowerFilterString ) )
+  if ( contact.nickName().contains( filterString, Qt::CaseInsensitive ) )
     return true;
 
-  if ( contact.birthday().toString().toLower().contains( lowerFilterString ) )
+  if ( contact.birthday().toString().contains( filterString, Qt::CaseInsensitive ) )
     return true;
 
   const KABC::Address::List addresses = contact.addresses();
-  for ( int i = 0; i < addresses.count(); ++i ) {
+  int count = addresses.count();
+  for ( int i = 0; i < count; ++i ) {
     if ( addressMatchesFilter( addresses.at( i ), filterString ) )
       return true;
   }
 
   const KABC::PhoneNumber::List phoneNumbers = contact.phoneNumbers();
-  for ( int i = 0; i < phoneNumbers.count(); ++i ) {
-    if ( phoneNumbers.at( i ).number().toLower().contains( lowerFilterString ) )
+  count = phoneNumbers.count();
+  for ( int i = 0; i < count; ++i ) {
+    if ( phoneNumbers.at( i ).number().contains( filterString, Qt::CaseInsensitive ) )
       return true;
   }
 
   const QStringList emails = contact.emails();
-  for ( int i = 0; i < emails.count(); ++i ) {
-    if ( emails.at( i ).toLower().contains( lowerFilterString ) )
+  count = emails.count();
+  for ( int i = 0; i < count; ++i ) {
+    if ( emails.at( i ).contains( filterString, Qt::CaseInsensitive ) )
       return true;
   }
 
-  if ( contact.mailer().contains( lowerFilterString ) )
+  if ( contact.mailer().contains( filterString, Qt::CaseInsensitive ) )
     return true;
 
-  if ( contact.title().contains( lowerFilterString ) )
+  if ( contact.title().contains( filterString, Qt::CaseInsensitive ) )
     return true;
 
-  if ( contact.role().contains( lowerFilterString ) )
+  if ( contact.role().contains( filterString, Qt::CaseInsensitive ) )
     return true;
 
-  if ( contact.organization().contains( lowerFilterString ) )
+  if ( contact.organization().contains( filterString, Qt::CaseInsensitive ) )
     return true;
 
-  if ( contact.department().contains( lowerFilterString ) )
+  if ( contact.department().contains( filterString, Qt::CaseInsensitive ) )
     return true;
 
-  if ( contact.note().contains( lowerFilterString ) )
+  if ( contact.note().contains( filterString, Qt::CaseInsensitive ) )
     return true;
 
-  if ( contact.url().url().contains( lowerFilterString ) )
+  if ( contact.url().url().contains( filterString, Qt::CaseInsensitive ) )
     return true;
 
   const QStringList customs = contact.customs();
-  for ( int i = 0; i < customs.count(); ++i ) {
-    if ( customs.at( i ).toLower().contains( lowerFilterString ) )
+  count = customs.count();
+  for ( int i = 0; i < count; ++i ) {
+    if ( customs.at( i ).contains( filterString, Qt::CaseInsensitive ) )
       return true;
   }
 
@@ -151,13 +151,11 @@ static bool contactMatchesFilter( const KABC::Addressee &contact, const QString 
 
 bool contactGroupMatchesFilter( const KABC::ContactGroup &group, const QString &filterString )
 {
-  const QString lowerFilterString( filterString.toLower() );
-
   const int count = group.dataCount();
   for ( int i = 0; i < count; ++i ) {
-    if ( group.data( i ).name().toLower().contains( lowerFilterString ) )
+    if ( group.data( i ).name().contains( filterString, Qt::CaseInsensitive ) )
       return true;
-    if ( group.data( i ).email().toLower().contains( lowerFilterString ) )
+    if ( group.data( i ).email().contains( filterString, Qt::CaseInsensitive ) )
       return true;
   }
 
