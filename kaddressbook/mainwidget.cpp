@@ -47,6 +47,7 @@
 #include <kicon.h>
 #include <klineedit.h>
 #include <klocale.h>
+#include <ktoggleaction.h>
 #include <ktoolbar.h>
 #include <kxmlguiwindow.h>
 
@@ -230,6 +231,7 @@ void MainWidget::setupGui()
 void MainWidget::setupActions( KActionCollection *collection )
 {
   KAction *action = 0;
+  KToggleAction *toggleAction = 0;
 
   action = KStandardAction::print( this, SLOT( print() ), collection );
   action->setWhatsThis( i18n( "Print a special number of contacts." ) );
@@ -237,6 +239,32 @@ void MainWidget::setupActions( KActionCollection *collection )
   action = collection->addAction( "quick_search" );
   action->setText( i18n( "Quick search" ) );
   action->setDefaultWidget( mQuickSearchWidget );
+
+  action = collection->addAction( "select_all" );
+  action->setText( i18n( "Select All" ) );
+  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_A ) );
+  connect( action, SIGNAL( triggered( bool ) ), mItemView, SLOT( selectAll() ) );
+
+  toggleAction = collection->add<KToggleAction>( "options_show_collectionview" );
+  toggleAction->setText( i18n( "Show Address Books View" ) );
+  toggleAction->setWhatsThis( i18n( "Toggle whether the address books view shall be visible." ) );
+  toggleAction->setCheckedState( KGuiItem( i18n( "Hide Address Books View" ) ) );
+  toggleAction->setChecked( true );
+  connect( toggleAction, SIGNAL( toggled( bool ) ), SLOT( setCollectionViewVisible( bool ) ) );
+
+  toggleAction = collection->add<KToggleAction>( "options_show_itemview" );
+  toggleAction->setText( i18n( "Show Contacts View" ) );
+  toggleAction->setWhatsThis( i18n( "Toggle whether the contacts view shall be visible." ) );
+  toggleAction->setCheckedState( KGuiItem( i18n( "Hide Contacts View" ) ) );
+  toggleAction->setChecked( true );
+  connect( toggleAction, SIGNAL( toggled( bool ) ), SLOT( setItemViewVisible( bool ) ) );
+
+  toggleAction = collection->add<KToggleAction>( "options_show_detailsview" );
+  toggleAction->setText( i18n( "Show Details View" ) );
+  toggleAction->setWhatsThis( i18n( "Toggle whether the details view shall be visible." ) );
+  toggleAction->setCheckedState( KGuiItem( i18n( "Hide Details View" ) ) );
+  toggleAction->setChecked( true );
+  connect( toggleAction, SIGNAL( toggled( bool ) ), SLOT( setDetailsViewVisible( bool ) ) );
 
   // import actions
   action = collection->addAction( "file_import_vcard" );
@@ -342,9 +370,24 @@ void MainWidget::selectFirstItem()
   // in the item view, so that the detailsview is updated
   if ( mItemView && mItemView->selectionModel() ) {
     mItemView->selectionModel()->setCurrentIndex( mItemView->model()->index( 0, 0 ),
-                                                  QItemSelectionModel::Clear |
-                                                  QItemSelectionModel::SelectCurrent );
+                                                  QItemSelectionModel::Rows |
+                                                  QItemSelectionModel::ClearAndSelect );
   }
+}
+
+void MainWidget::setCollectionViewVisible( bool visible )
+{
+  mCollectionView->setVisible( visible );
+}
+
+void MainWidget::setItemViewVisible( bool visible )
+{
+  mItemView->setVisible( visible );
+}
+
+void MainWidget::setDetailsViewVisible( bool visible )
+{
+  mDetailsViewStack->setVisible( visible );
 }
 
 void MainWidget::editContact( const Akonadi::Item &contact )

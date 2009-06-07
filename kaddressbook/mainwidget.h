@@ -63,6 +63,10 @@ class KCONTACTMANAGER_EXPORT MainWidget : public QWidget
     void itemSelected( const Akonadi::Item &item );
     void selectFirstItem();
 
+    void setDetailsViewVisible( bool visible );
+    void setItemViewVisible( bool visible );
+    void setCollectionViewVisible( bool visible );
+
   private:
     void setupGui();
     void setupActions( KActionCollection* );

@@ -144,7 +144,7 @@ QVariant ContactsTreeModel::getHeaderData( int section, Qt::Orientation orientat
 
         switch ( section ) {
           case 0:
-            return i18nc( "@title:column, contact groups", "Group" );
+            return i18nc( "@title:column, address books overview", "Address Books" );
             break;
         }
       } else if ( headerSet == EntityTreeModel::ItemListHeaders ) {

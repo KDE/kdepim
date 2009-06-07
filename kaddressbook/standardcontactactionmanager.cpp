@@ -258,7 +258,6 @@ KAction* StandardContactActionManager::createAction( Type type )
       action = new KAction( d->mParentWidget );
       action->setIcon( KIcon( "document-edit" ) );
       action->setText( i18n( "Edit Contact..." ) );
-      action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_E ) );
       d->mActions.insert( EditItem, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_contact_item_edit" ), action );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( editTriggered() ) );
@@ -267,7 +266,6 @@ KAction* StandardContactActionManager::createAction( Type type )
       action = new KAction( d->mParentWidget );
       action->setIcon( KIcon( "folder-new" ) );
       action->setText( i18n( "Add &Address Book..." ) );
-      action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_A ) );
       d->mActions.insert( CreateAddressBook, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_addressbook_create" ), action );
       connect( action, SIGNAL( triggered( bool ) ), this, SLOT( addAddressBookTriggered() ) );
@@ -276,7 +274,6 @@ KAction* StandardContactActionManager::createAction( Type type )
       action = new KAction( d->mParentWidget );
       action->setIcon( KIcon( "edit-delete" ) );
       action->setText( i18n( "&Delete Address Book" ) );
-      action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_D ) );
       action->setVisible( false );
       d->mActions.insert( DeleteAddressBook, action );
       d->mActionCollection->addAction( QString::fromLatin1( "akonadi_addressbook_delete" ), action );
