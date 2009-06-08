@@ -1716,6 +1716,8 @@ void* KAlarmApp::execAlarm(KAEvent& event, const KAAlarm& alarm, bool reschedule
 			{
 				result = (void*)-1;   // email has been queued
 			}
+			if (reschedule)
+				rescheduleAlarm(event, alarm, true);
 			break;
 		}
 		default:
@@ -1740,8 +1742,6 @@ void KAlarmApp::emailSent(KAMail::JobData& data, const QStringList& errmsgs, boo
 	}
 	else if (data.queued)
 		emit execAlarmSuccess();
-	if (data.reschedule)
-		rescheduleAlarm(data.event, data.alarm, true);
 }
 
 /******************************************************************************

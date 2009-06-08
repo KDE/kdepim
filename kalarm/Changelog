@@ -1,5 +1,8 @@
 KAlarm Change Log
 
+=== Version 2.1.9 --- 8 June 2009 ===
+- Fix email alarms sending multiple mails, when sent via KMail.
+
 === Version 2.1.8 --- 25 May 2009 ===
 - Fix crash on exit from birthday import dialogue.
 - Fix crash when an alarm is open for edit when its last occurrence triggers,
