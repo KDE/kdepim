@@ -1933,6 +1933,21 @@ option is selected.</para>
 <para>Invitations use to be send as attachments to a mail. By enabling this option, you let the invitation mails to be sent in the text of the mail, which is necessary to send invitations and replies to Microsoft Outlook(tm).</para>
 </listitem>
 </varlistentry>
+<varlistentry>
+<term><guilabel>Exchange compatible invitations naming</guilabel></term>
+<listitem>
+<para>Microsoft Outlook, when used in combination with a Microsoft Exchange
+server, has a problem understanding standards-compliant groupware e-mail.
+Enable this option to send groupware invitations in a way that Microsoft
+Exchange understands. The invitation will be sent as an attachment with name <filename>ical.ics</filename>.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term><guilabel>Outlook compatible invitation reply comments</guilabel></term>
+<listitem>
+<para>When the user provides comments when responding to invitations, send the comment in way that Microsoft Outlook(tm) understands. If this option is not enabled, the reponse comments will not be seen in Outlook.</para>
+</listitem>
+</varlistentry>
 </variablelist>
 </sect2>
 
