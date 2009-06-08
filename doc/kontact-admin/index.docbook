@@ -36,8 +36,8 @@ Please respect the format of the date (YYYY-MM-DD) and of the version
 (V.MM.LL), it could be used by automation scripts.
 Do NOT change these in the translation. -->
 
-<date>2009-05-22</date>
-<releaseinfo>0.00.02</releaseinfo>
+<date>2009-06-08</date>
+<releaseinfo>0.00.03</releaseinfo>
 
 <!-- Abstract about this handbook -->
 
@@ -101,8 +101,78 @@ communicate effectively with various groupware solutions.
 <title>Outlook and Exchange</title>
 
 <para>
-In the &kappname; configuration dialog, under Misc->Groupware...
+In the &kappname; configuration dialog, under <guilabel>Misc->Groupware...</guilabel>
+you will find the following options that will help the user communicate
+with Microsoft Outlook(tm) running in a Kolab environment or in a
+Microsoft Exchange(tm) environment.
 </para>
+
+
+<variablelist>
+
+<varlistentry>
+<term><guilabel>Mangle From:/To: headers in replies to invitations</guilabel></term>
+<listitem>
+<para>Enable this option to make Microsoft Outlook(tm) understand your answers to invitations replies.</para>
+<para>Microsoft Outlook has a number of shortcomings in its implementation of
+the iCalendar standard; this option works around one of them. If you 
+have problems with Outlook users not being able to get your replies,
+try setting this option.</para>
+<para>Details: When mailing an iCal invitation this makes the message have 
+the From: header that is the same as the To: header. It also sets header
+ X-KMail-Identity to the To's UIOD and makes sure the BCC: is blank.
+i.e. Outlook will only understand the reply if the From: header is 
+the same as the To: header of the invitation message.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Send invitations in the mail body</guilabel></term>
+<listitem>
+<para>Invitations are normally sent as attachments to a mail. This switch
+changes the invitation mails to be sent in the text of the mail insead;
+this is necessary to send invitations and replies to Microsoft Outlook.
+But, when you do this, you no longer get descriptive text that mail
+programs can read; so, to people who have email programs that do not
+understand the invitations, the resulting messages look very odd.
+People that have email programs that do understand invitations will
+still be able to work with this.</para>
+<para>Details: When mailing an iCal invitation this option makes the
+message body from the attachment data and sets the Content-Type header
+to 'text/calendar; method=something; charset="utf-8"'.</para>
+<para>Auto-sending is also turned-on so there is no human intevention
+required for composing.</para>
+<note><para>Encryption and self-signing are disabled.</para></note>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Exchange compatible invitations naming</guilabel></term>
+<listitem>
+<para>Microsoft Outlook, when used in combination with a Microsoft Exchange
+server, has a problem understanding standards-compliant groupware e-mail.
+Enable this option to send groupware invitations in a way that Microsoft
+Exchange understands. The invitation will be sent as an attachment with name
+<filename>ical.ics</filename>.</para>
+<para>Details: When mailing an iCal invitation this makes
+the message have the subject "(Declined|Tentative|Accepted|Delegated): subject".
+The invitation will be sent as an attachment with name <filename>ical.ics</filename>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><guilabel>Outlook compatible invitation reply comments</guilabel></term>
+<listitem>
+<para>When the user provides comments when responding to invitations, send the
+comment in way that Microsoft Outlook(tm) understands. If this option is not
+enabled, the reponse comments will not be seen in Outlook.</para>
+<para>Details: Comments when answering the invititation will be sent as a
+DESCRIPTION iCal property instead of the COMMENT iCal property
+(in violation or RFC2446).</para>
+</listitem>
+</varlistentry>
+
+</variablelist>
 
 </sect1>
 </chapter>
