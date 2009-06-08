@@ -380,7 +380,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         if ( !ok )
           return true;
         if ( !comment.isEmpty() ) {
-          if ( callback.exchangeCompatibleInvitations() ) {
+          if ( callback.outlookCompatibleInvitationReplyComments() ) {
             incidence->setDescription( comment );
           } else {
             incidence->addComment( comment );
@@ -527,7 +527,7 @@ class UrlHandler : public KMail::Interface::BodyPartURLHandler
         if ( !ok )
           return true;
         if ( !comment.isEmpty() ) {
-          if ( callback.exchangeCompatibleInvitations() ) {
+          if ( callback.outlookCompatibleInvitationReplyComments() ) {
             incidence->setDescription( comment );
           } else {
             incidence->addComment( comment );
