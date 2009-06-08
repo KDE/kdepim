@@ -1563,14 +1563,14 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
   if ( !myInc ) {
     html += "<br/>";
     html += "<i><u>";
-    if ( rsvpRec ) {
+    if ( rsvpRec && ( inc && inc->revision() == 0 ) ) {
       html += i18n( "Your response has already been recorded [%1]" ).
               arg( ea->statusStr() );
       rsvpReq = false;
     } else {
       html += rsvpRequestedStr( rsvpReq );
     }
-    html += "</u></i>";
+    html += "</u></i><br>";
   }
 
   html += "<table border=\"0\" cellspacing=\"0\"><tr><td>&nbsp;</td></tr><tr>";
@@ -1583,7 +1583,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
     case Scheduler::Refresh:
     case Scheduler::Add:
     {
-      if ( !existingIncidence ) {
+      if ( inc && inc->revision() > 0 && existingIncidence ) {
         if ( inc->type() == "Todo" ) {
           html += "<td colspan=\"9\">";
           html += helper->makeLink( "reply", i18n( "[Record invitation to my task list]" ) );
@@ -1617,7 +1617,7 @@ QString IncidenceFormatter::formatICalInvitation( QString invitation, Calendar *
           html += "</td><td> &nbsp; </td><td>";
         }
 
-        if ( !rsvpRec ) {
+        if ( !rsvpRec || ( inc && inc->revision() > 0 ) ) {
           // Delegate
           html += helper->makeLink( "delegate", i18n( "[Delegate]" ) );
           html += "</td><td> &nbsp; </td><td>";
