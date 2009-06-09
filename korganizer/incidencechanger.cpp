@@ -116,7 +116,7 @@ bool IncidenceChanger::deleteIncidence( Incidence *incidence )
       bool notifyOrganizer = false;
       for ( QStringList::ConstIterator it = myEmails.begin(); it != myEmails.end(); ++it ) {
         QString email = *it;
-        Attendee *me = tmp->attendeeByMail(email);
+        Attendee *me = tmp->attendeeByMail( email );
         if ( me ) {
           if ( me->status() == KCal::Attendee::Accepted ||
                me->status() == KCal::Attendee::Delegated ) {
@@ -175,7 +175,7 @@ class IncidenceChanger::ComparisonVisitor : public IncidenceBase::Visitor
   protected:
     bool visit( Event *event )
     {
-      Event *ev2 = dynamic_cast<Event*>(mIncidence2);
+      Event *ev2 = dynamic_cast<Event*>( mIncidence2 );
       if ( event && ev2 ) {
         return *event == *ev2;
       } else {

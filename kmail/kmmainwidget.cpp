@@ -762,7 +762,6 @@ void KMMainWidget::createWidgets()
 
     connect( mMessageListView, SIGNAL( messageSelected( KMMessage * ) ),
              this, SLOT( slotMsgSelected( KMMessage * ) ) );
-
   }
 
   //

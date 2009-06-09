@@ -21,6 +21,8 @@
 
 #include <akonadi/attributefactory.h>
 #include <akonadi/changerecorder.h>
+#include <akonadi/collectionfetchjob.h>
+#include <akonadi/collectionmodifyjob.h>
 #include <akonadi/itemfetchscope.h>
 #include <boost/shared_ptr.hpp>
 #include <kmime/kmime_message.h>
@@ -37,14 +39,25 @@ using namespace Akonadi;
 
 typedef boost::shared_ptr<KMime::Message> MessagePtr;
 
+static Entity::Id collectionId(const QString &remoteItemId)
+{
+  // [CollectionId]:[RemoteCollectionId]:[Offset]
+  Q_ASSERT(remoteItemId.split(':').size() == 3);
+  return remoteItemId.split(':').first().toLongLong();
+}
+
 static QString mboxFile(const QString &remoteItemId)
 {
-  return remoteItemId.left(remoteItemId.lastIndexOf(QDir::separator()));
+  // [CollectionId]:[RemoteCollectionId]:[Offset]
+  Q_ASSERT(remoteItemId.split(':').size() == 3);
+  return remoteItemId.split(':').at(1);
 }
 
 static quint64 itemOffset(const QString &remoteItemId)
 {
-  return remoteItemId.split(QDir::separator()).last().toULongLong();
+  // [CollectionId]:[RemoteCollectionId]:[Offset]
+  Q_ASSERT(remoteItemId.split(':').size() == 3);
+  return remoteItemId.split(':').last().toULongLong();
 }
 
 MboxResource::MboxResource( const QString &id ) : ResourceBase( id )
@@ -53,7 +66,7 @@ MboxResource::MboxResource( const QString &id ) : ResourceBase( id )
   QDBusConnection::sessionBus().registerObject( QLatin1String( "/Settings" ),
                               Settings::self(), QDBusConnection::ExportAdaptors );
 
-  // Register the list of deleted items as an attribe of the collection.
+  // Register the list of deleted items as an attribute of the collection.
   AttributeFactory::registerAttribute<DeletedItemsAttribute>();
 
   changeRecorder()->fetchCollection( true );
@@ -88,6 +101,7 @@ void MboxResource::retrieveCollections()
   col.setParent(Collection::root());
   col.setRemoteId(Settings::self()->file());
   col.setName(name());
+  col.addAttribute( new DeletedItemsAttribute );
 
   QStringList mimeTypes;
   mimeTypes << "message/rfc822" << Collection::mimeType();
@@ -124,8 +138,8 @@ void MboxResource::retrieveItems( const Akonadi::Collection &col )
   }
 
   Item::List items;
-  int offset = 0;
-  QString colId = col.remoteId();
+  QString colId = QString::number(col.id());
+  QString colRid = col.remoteId();
   foreach (const MsgInfo &entry, entryList) {
     // TODO: Use cache policy to see what actualy has to been set as payload.
     //       Currently most views need a minimal amount of information so the
@@ -135,13 +149,11 @@ void MboxResource::retrieveItems( const Akonadi::Collection &col )
     mail->parse();
 
     Item item;
-    item.setRemoteId(colId + QDir::separator() + QString::number(offset));
+    item.setRemoteId(colId + ':' + colRid + ':' + QString::number(entry.first));
     item.setMimeType("message/rfc822");
     item.setSize(entry.second);
     item.setPayload(MessagePtr(mail));
     items << item;
-
-    offset += entry.second;
   }
 
   mbox.close(); // Now we have the items, unlock and close the mbox file.
@@ -163,7 +175,8 @@ bool MboxResource::retrieveItem( const Akonadi::Item &item, const QSet<QByteArra
   quint64 offset = itemOffset(item.remoteId());
   const QByteArray rawMsg = mbox.readEntry(offset);
 
-  Q_ASSERT(rawMsg.size() == item.size());
+  // This doesn't work for first retrieval, when item.size() == 0.
+  //Q_ASSERT(rawMsg.size() == item.size());
 
   KMime::Message *mail = new KMime::Message();
   mail->setContent(KMime::CRLFtoLF(rawMsg));
@@ -181,9 +194,28 @@ void MboxResource::aboutToQuit()
 
 void MboxResource::itemAdded( const Akonadi::Item &item, const Akonadi::Collection &collection )
 {
-  Q_UNUSED(item);
-  Q_UNUSED(collection);
-  changeProcessed();
+  MBox mbox(collection.remoteId());
+  QString errMsg;
+  if (Settings::readOnly() || !mbox.isValid(errMsg)) {
+    cancelTask(errMsg);
+    return;
+  }
+  // we can only deal with mail
+  if (item.mimeType() != "message/rfc822") {
+    cancelTask(i18n("Only email messages can be added to the MBox resource."));
+    return;
+  }
+
+  mbox.open();
+
+  const MessagePtr mail = item.payload<MessagePtr>();
+  const QByteArray rawContent = mail->encodedContent();
+  const QString rid = QString::number(collection.id()) + ':' + collection.remoteId()
+                      + ':' + QString::number(mbox.writeEntry(rawContent));
+  Item i(item);
+  i.setRemoteId(rid);
+
+  changeCommitted( i );
 }
 
 void MboxResource::itemChanged( const Akonadi::Item &item, const QSet<QByteArray> &parts )
@@ -195,7 +227,27 @@ void MboxResource::itemChanged( const Akonadi::Item &item, const QSet<QByteArray
 
 void MboxResource::itemRemoved( const Akonadi::Item &item )
 {
-  Q_UNUSED(item);
+  CollectionFetchJob *fetchJob =
+    new CollectionFetchJob( Collection( collectionId( item.remoteId() ) )
+                          , CollectionFetchJob::Base );
+
+  if ( !fetchJob->exec() ) {
+    error( fetchJob->errorString() );
+    return;
+  }
+
+  Q_ASSERT( fetchJob->collections().size() == 1 );
+  Collection mboxCollection = fetchJob->collections().first();
+  DeletedItemsAttribute *attr
+    = mboxCollection.attribute<DeletedItemsAttribute>( Akonadi::Entity::AddIfMissing );
+  attr->addDeletedItemOffset( itemOffset( item.remoteId() ) );
+
+  CollectionModifyJob *modifyJob = new CollectionModifyJob( mboxCollection );
+   if ( !modifyJob->exec() ) {
+    error( modifyJob->errorString() );
+    return;
+  }
+
   changeProcessed();
 }
 

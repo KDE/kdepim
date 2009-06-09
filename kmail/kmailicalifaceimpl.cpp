@@ -98,7 +98,7 @@ static const FolderContentsDescriptor s_folderContentsType[] =
     "mail", I18N_NOOP2( "type of folder content", "Mail" )
   },
   {
-    "Calendar", "application/x-vnd.kolab.event", 
+    "Calendar", "application/x-vnd.kolab.event",
     KPIM::FolderTreeWidgetItem::Calendar,
     "event", I18N_NOOP2( "type of folder content", "Calendar" )
   },
@@ -727,11 +727,12 @@ static QString subresourceLabelForPresentation( const KMFolder * folder )
       remainder.pop_front();
       if ( dimapAccountCount() > 1 && folder && folder->storage() &&
            static_cast<const KMFolderCachedImap*>( folder->storage() )->account() ) {
-        label = i18n( "My %1 (%2)", remainder.join( QString::fromLatin1("/") ),
+        label = i18n( "%1 (%2)", remainder.join( QString::fromLatin1("/") ),
                       static_cast<const KMFolderCachedImap*>( folder->storage() )->account()->name() );
       } else {
-        label = i18n("My %1", remainder.join( QString::fromLatin1("/") ) );
+        label = i18n( "%1", remainder.join( QString::fromLatin1("/") ) );
       }
+      label = i18nc( "eg. My Calendar or My Inbox", "My %1", label );
       break;
     }
   }
@@ -2194,9 +2195,9 @@ QString KMailICalIfaceImpl::folderPixmap( KPIM::FolderTreeWidgetItem::FolderType
     return QString();
 
   if( type == KPIM::FolderTreeWidgetItem::Contacts )
-    return QString::fromLatin1( "text-directory" );
+    return QString::fromLatin1( "view-pim-contacts" );
   else if( type == KPIM::FolderTreeWidgetItem::Calendar )
-    return QString::fromLatin1( "text-calendar" );
+    return QString::fromLatin1( "view-pim-calendar" );
   else if( type == KPIM::FolderTreeWidgetItem::Notes )
     return QString::fromLatin1( "view-pim-notes" );
   else if( type == KPIM::FolderTreeWidgetItem::Tasks )

@@ -35,9 +35,10 @@ class ContactGroupBrowser;
 class Item;
 class ItemView;
 class KABCItemBrowser;
-class StandardActionManager;
+class StandardContactActionManager;
 }
 
+class ContactSwitcher;
 class KActionCollection;
 class KXMLGUIClient;
 class QItemSelection;
@@ -61,6 +62,13 @@ class KCONTACTMANAGER_EXPORT MainWidget : public QWidget
   private Q_SLOTS:
     void editItem( const Akonadi::Item &item );
     void itemSelected( const Akonadi::Item &item );
+    void selectFirstItem();
+
+    void setDetailsViewVisible( bool visible );
+    void setItemViewVisible( bool visible );
+    void setCollectionViewVisible( bool visible );
+
+    void setSimpleGuiMode( bool on );
 
   private:
     void setupGui();
@@ -76,11 +84,13 @@ class KCONTACTMANAGER_EXPORT MainWidget : public QWidget
     QuickSearchWidget *mQuickSearchWidget;
     Akonadi::EntityTreeView *mCollectionView;
     Akonadi::EntityTreeView *mItemView;
+    QWidget *mDetailsPane;
     QStackedWidget *mDetailsViewStack;
+    ContactSwitcher *mContactSwitcher;
 
     Akonadi::KABCItemBrowser *mContactDetails;
     Akonadi::ContactGroupBrowser *mContactGroupDetails;
-    Akonadi::StandardActionManager *mActionManager;
+    Akonadi::StandardContactActionManager *mActionManager;
 
     XXPortManager *mXXPortManager;
 };

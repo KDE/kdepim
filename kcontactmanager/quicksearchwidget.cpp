@@ -21,6 +21,8 @@
 
 #include "quicksearchwidget.h"
 
+#include <QtCore/QTimer>
+#include <QtGui/QKeyEvent>
 #include <QtGui/QVBoxLayout>
 
 #include <klineedit.h>
@@ -36,9 +38,14 @@ QuickSearchWidget::QuickSearchWidget( QWidget *parent )
   mEdit->setClickMessage( i18n( "Search" ) );
   mEdit->setClearButtonShown( true );
 
+  mEdit->installEventFilter( this );
+
   layout->addWidget( mEdit );
 
-  connect( mEdit, SIGNAL( textChanged( const QString& ) ), SIGNAL( filterStringChanged( const QString& ) ) );
+  mTimer = new QTimer( this );
+
+  connect( mEdit, SIGNAL( textChanged( const QString& ) ), SLOT( resetTimer() ) );
+  connect( mTimer, SIGNAL( timeout() ), SLOT( delayedTextChanged() ) );
 }
 
 
@@ -50,6 +57,30 @@ QSize QuickSearchWidget::sizeHint() const
 {
   const QSize size = mEdit->sizeHint();
   return QSize( 200, size.height() );
+}
+
+void QuickSearchWidget::resetTimer()
+{
+  mTimer->stop();
+  mTimer->start( 500 );
+}
+
+void QuickSearchWidget::delayedTextChanged()
+{
+  mTimer->stop();
+  emit filterStringChanged( mEdit->text() );
+}
+
+void QuickSearchWidget::keyPressEvent( QKeyEvent *event )
+{
+  if ( event->key() == Qt::Key_Down ) {
+    event->accept();
+    delayedTextChanged();
+    emit arrowDownKeyPressed();
+    return;
+  }
+
+  QWidget::keyPressEvent( event );
 }
 
 #include "quicksearchwidget.moc"

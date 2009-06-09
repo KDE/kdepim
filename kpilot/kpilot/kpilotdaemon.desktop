@@ -33,3 +33,4 @@ Type=Application
 Terminal=false
 X-DBUS-ServiceType=Unique
 Categories=Qt;KDE;Utility;
+X-DocPath=kpilot/index.html

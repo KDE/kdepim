@@ -113,7 +113,7 @@ qt4_add_dbus_interface(kpilotDaemon_SRCS
 )
 
 # todo: move to Oxygen icon
-kde4_add_app_icon(kpilotDaemon_SRCS "icons/hi*-app-kpilotDaemon.png")
+kde4_add_app_icon(kpilotDaemon_SRCS "icons/hi*-app-kpilotdaemon.png")
 
 kde4_add_executable(kpilotDaemon ${kpilotDaemon_SRCS})
 

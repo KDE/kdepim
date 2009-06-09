@@ -22,7 +22,7 @@
 #include "imapresource.h"
 #include <qglobal.h>
 #include "setupserver.h"
-#include "settingsadaptor.h"
+#include "settings.h"
 #include "uidvalidityattribute.h"
 #include "uidnextattribute.h"
 #include "noselectattribute.h"
@@ -100,10 +100,7 @@ ImapResource::ImapResource( const QString &id )
   changeRecorder()->fetchCollection( true );
   changeRecorder()->itemFetchScope().fetchFullPayload( true );
 
-  new SettingsAdaptor( Settings::self() );
-  QDBusConnection::sessionBus().registerObject( QLatin1String( "/Settings" ),
-                                                Settings::self(), QDBusConnection::ExportAdaptors );
-
+  connect( this, SIGNAL(reloadConfiguration()), SLOT(startConnect()) );
   startConnect();
 }
 
@@ -239,7 +236,7 @@ void ImapResource::onAppendMessageDone( KJob *job )
 {
   KIMAP::AppendJob *append = qobject_cast<KIMAP::AppendJob*>( job );
 
-  Collection collection = job->property( "akonadiCollection" ).value<Collection>();
+  const QString collectionRemoteId = remoteIdForMailBox( append->mailBox() );
   Item item = job->property( "akonadiItem" ).value<Item>();
 
   if ( append->error() ) {
@@ -249,11 +246,29 @@ void ImapResource::onAppendMessageDone( KJob *job )
   qint64 uid = append->uid();
   Q_ASSERT( uid > 0 );
 
-  const QString remoteId =  collection.remoteId() + "-+-" + QString::number( uid );
+  const QString remoteId =  collectionRemoteId + "-+-" + QString::number( uid );
   kDebug() << "Setting remote ID to " << remoteId;
   item.setRemoteId( remoteId );
 
   changeCommitted( item );
+
+  // Check if it we got here because an itemChanged() call
+  // (since in IMAP you're forced to append+remove in this case)
+  qint64 oldUid = job->property( "oldUid" ).toLongLong();
+  if ( oldUid ) {
+    // OK it's indeed a content change, so we've to mark the old version as deleted
+    KIMAP::StoreJob *store = new KIMAP::StoreJob( m_account->session() );
+    store->setUidBased( true );
+    store->setSequenceSet( KIMAP::ImapSet( oldUid ) );
+    store->setFlags( QList<QByteArray>() << "\\Deleted" );
+    store->setMode( KIMAP::StoreJob::AppendFlags );
+    store->start();
+  }
+
+  Collection collection = job->property( "akonadiCollection" ).value<Collection>();
+  if ( !collection.isValid() ) {
+    collection = collectionFromRemoteId( collectionRemoteId );
+  }
 
   // Get the current uid next value and store it
   UidNextAttribute *uidAttr = 0;
@@ -282,23 +297,40 @@ void ImapResource::onAppendMessageDone( KJob *job )
 
 void ImapResource::itemChanged( const Item &item, const QSet<QByteArray> &parts )
 {
+  kDebug() << item.remoteId() << parts;
+
   const QString remoteId = item.remoteId();
   const QStringList temp = remoteId.split( "-+-" );
   const QString mailBox = mailBoxForRemoteId( temp[0] );
   const qint64 uid = temp[1].toLongLong();
 
-  KIMAP::SelectJob *select = new KIMAP::SelectJob( m_account->session() );
-  select->setMailBox( mailBox );
-  select->start();
-  KIMAP::StoreJob *store = new KIMAP::StoreJob( m_account->session() );
-  store->setProperty( "akonadiItem", QVariant::fromValue( item ) );
-  store->setProperty( "itemUid", uid );
-  store->setUidBased( true );
-  store->setSequenceSet( KIMAP::ImapSet( uid ) );
-  store->setFlags( item.flags().toList() );
-  store->setMode( KIMAP::StoreJob::SetFlags );
-  connect( store, SIGNAL( result( KJob* ) ), SLOT( onStoreFlagsDone( KJob* ) ) );
-  store->start();
+  if ( parts.contains( "PLD:RFC822" ) ) {
+    // save message to the server.
+    MessagePtr msg = item.payload<MessagePtr>();
+
+    KIMAP::AppendJob *job = new KIMAP::AppendJob( m_account->session() );
+    job->setProperty( "akonadiItem", QVariant::fromValue( item ) );
+    job->setProperty( "oldUid", uid ); // Will be used in onAppendMessageDone
+    job->setMailBox( mailBox );
+    job->setContent( msg->encodedContent( true ) );
+    job->setFlags( item.flags().toList() );
+    connect( job, SIGNAL( result( KJob* ) ), SLOT( onAppendMessageDone( KJob* ) ) );
+    job->start();
+
+  } else if ( parts.contains( "FLAGS" ) ) {
+    KIMAP::SelectJob *select = new KIMAP::SelectJob( m_account->session() );
+    select->setMailBox( mailBox );
+    select->start();
+    KIMAP::StoreJob *store = new KIMAP::StoreJob( m_account->session() );
+    store->setProperty( "akonadiItem", QVariant::fromValue( item ) );
+    store->setProperty( "itemUid", uid );
+    store->setUidBased( true );
+    store->setSequenceSet( KIMAP::ImapSet( uid ) );
+    store->setFlags( item.flags().toList() );
+    store->setMode( KIMAP::StoreJob::SetFlags );
+    connect( store, SIGNAL( result( KJob* ) ), SLOT( onStoreFlagsDone( KJob* ) ) );
+    store->start();
+  }
 }
 
 void ImapResource::onStoreFlagsDone( KJob *job )
@@ -348,8 +380,9 @@ void ImapResource::itemRemoved( const Akonadi::Item &item )
 
 void ImapResource::retrieveCollections()
 {
-  if ( !m_account->session() ) {
+  if ( !m_account || !m_account->session() ) {
     kDebug() << "Ignoring this request. Probably there is no connection.";
+    cancelTask();
     return;
   }
 
@@ -363,12 +396,14 @@ void ImapResource::retrieveCollections()
   policy.setSyncOnDemand( true );
   root.setCachePolicy( policy );
 
+  setCollectionStreamingEnabled( true );
   collectionsRetrievedIncremental( Collection::List() << root, Collection::List() );
 
   KIMAP::ListJob *listJob = new KIMAP::ListJob( m_account->session() );
   listJob->setIncludeUnsubscribed( !m_account->isSubscriptionEnabled() );
   connect( listJob, SIGNAL( mailBoxesReceived(QList<KIMAP::MailBoxDescriptor>, QList< QList<QByteArray> >) ),
            this, SLOT( onMailBoxesReceived(QList<KIMAP::MailBoxDescriptor>, QList< QList<QByteArray> >) ) );
+  connect( listJob, SIGNAL(result(KJob*)), SLOT(onMailBoxesReceiveDone(KJob*)) );
   listJob->start();
 }
 
@@ -436,6 +471,12 @@ void ImapResource::onMailBoxesReceived( const QList< KIMAP::MailBoxDescriptor > 
 
   sender()->setProperty("reportedPaths", reportedPaths);
   collectionsRetrievedIncremental( collections, Collection::List() );
+}
+
+void ImapResource::onMailBoxesReceiveDone(KJob* job)
+{
+  // TODO error handling
+  collectionsRetrievalDone();
 }
 
 // ----------------------------------------------------------------------------------

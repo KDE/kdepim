@@ -59,12 +59,14 @@ set( kcontactmanager_LIB_SRCS
   contactitemeditor.cpp
   contactmetadata.cpp
   contactstreemodel.cpp
+  contactswitcher.cpp
   collectioncombobox.cpp
   collectionfiltermodel.cpp
   collectionselectiondialog.cpp
   globalcontactmodel.cpp
   mainwidget.cpp
   quicksearchwidget.cpp
+  standardcontactactionmanager.cpp
   xxport/csv/csv_xxport.cpp
   xxport/csv/csvimportdialog.cpp
   xxport/csv/dateparser.cpp

@@ -35,7 +35,6 @@
 #include <akonadi/control.h>
 #include <akonadi/itemview.h>
 #include <akonadi/mimetypechecker.h>
-#include <akonadi/standardactionmanager.h>
 
 #include <kaction.h>
 #include <kactioncollection.h>
@@ -48,6 +47,7 @@
 #include <kicon.h>
 #include <klineedit.h>
 #include <klocale.h>
+#include <ktoggleaction.h>
 #include <ktoolbar.h>
 #include <kxmlguiwindow.h>
 
@@ -59,9 +59,11 @@
 #include "contactfiltermodel.h"
 #include "contactgroupeditordialog.h"
 #include "contactstreemodel.h"
+#include "contactswitcher.h"
 #include "globalcontactmodel.h"
 #include "kcontactmanageradaptor.h"
 #include "quicksearchwidget.h"
+#include "standardcontactactionmanager.h"
 #include "xxportmanager.h"
 
 #include "printing/printingwizard.h"
@@ -75,39 +77,39 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   setupActions( guiClient->actionCollection() );
 
   /*
-      The item models, proxies and views have the following structure:
-
-                                   mItemView
-                                       ^
-                                       |
-                               contactFilterModel
-                                       ^
-                                       |
-                                   mItemTree
-                                       ^
-                                       |
-                                 mDescendantTree
-                                       ^
-                                       |
-          mCollectionView  ->  selectionProxyModel
-                ^                      ^
-                |                      |
-          mCollectionTree              |
-                ^                      |
-                |                      |
-                 \                    /
-              GlobalContactModel::instance()
-
-
-      GlobalContactModel::instance():  The global contact model (contains collections and items)
-                     mCollectionTree:  Filters out all items
-                     mCollectionView:  Shows the collections (address books) in a view
-                 selectionProxyModel:  Filters out all collections and items that are no children
-                                       of the collection currently selected in mCollectionView
-                     mDescendantTree:  Flattens the item/collection tree to a list
-                           mItemTree:  Filters out all collections
-                  contactFilterModel:  Filters the contacts by the content of mQuickSearchWidget
-                           mItemView:  Shows the items (contacts and contact groups) in a view
+   *  The item models, proxies and views have the following structure:
+   *
+   *                               mItemView
+   *                                   ^
+   *                                   |
+   *                           contactFilterModel
+   *                                   ^
+   *                                   |
+   *                               mItemTree
+   *                                   ^
+   *                                   |
+   *                             mDescendantTree
+   *                                   ^
+   *                                   |
+   *      mCollectionView  ->  selectionProxyModel
+   *            ^                      ^
+   *            |                      |
+   *      mCollectionTree              |
+   *            ^                      |
+   *            |                      |
+   *             \                    /
+   *          GlobalContactModel::instance()
+   *
+   *
+   *  GlobalContactModel::instance():  The global contact model (contains collections and items)
+   *                 mCollectionTree:  Filters out all items
+   *                 mCollectionView:  Shows the collections (address books) in a view
+   *             selectionProxyModel:  Filters out all collections and items that are no children
+   *                                   of the collection currently selected in mCollectionView
+   *                 mDescendantTree:  Flattens the item/collection tree to a list
+   *                       mItemTree:  Filters out all collections
+   *              contactFilterModel:  Filters the contacts by the content of mQuickSearchWidget
+   *                       mItemView:  Shows the items (contacts and contact groups) in a view
    */
 
   mCollectionTree = new Akonadi::EntityFilterProxyModel( this );
@@ -142,6 +144,10 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   contactFilterModel->setSourceModel( mItemTree );
   connect( mQuickSearchWidget, SIGNAL( filterStringChanged( const QString& ) ),
            contactFilterModel, SLOT( setFilterString( const QString& ) ) );
+  connect( mQuickSearchWidget, SIGNAL( filterStringChanged( const QString& ) ),
+           this, SLOT( selectFirstItem() ) );
+  connect( mQuickSearchWidget, SIGNAL( arrowDownKeyPressed() ),
+           mItemView, SLOT( setFocus() ) );
 
   mItemView->setModel( contactFilterModel );
   mItemView->setXmlGuiClient( guiClient );
@@ -163,22 +169,22 @@ MainWidget::MainWidget( KXMLGUIClient *guiClient, QWidget *parent )
   // show the contact details view as default
   mDetailsViewStack->setCurrentWidget( mContactDetails );
 
+  mContactSwitcher->setView( mItemView );
+
   Akonadi::Control::widgetNeedsAkonadi( this );
 
-  mActionManager = new Akonadi::StandardActionManager( guiClient->actionCollection(), this );
+  mActionManager = new Akonadi::StandardContactActionManager( guiClient->actionCollection(), this );
   mActionManager->setCollectionSelectionModel( mCollectionView->selectionModel() );
   mActionManager->setItemSelectionModel( mItemView->selectionModel() );
 
   mActionManager->createAllActions();
 
-  // customize the labels of the default actions
-  mActionManager->action( Akonadi::StandardActionManager::CreateCollection )->setText( i18n( "Add Address Book" ) );
-  mActionManager->setActionText( Akonadi::StandardActionManager::CopyCollections, ki18np( "Copy Address Book", "Copy %1 Address Books" ) );
-  mActionManager->action( Akonadi::StandardActionManager::DeleteCollections )->setText( i18n( "Delete Address Book" ) );
-  mActionManager->action( Akonadi::StandardActionManager::SynchronizeCollections )->setText( i18n( "Reload" ) );
-  mActionManager->action( Akonadi::StandardActionManager::CollectionProperties )->setText( i18n( "Properties..." ) );
-  mActionManager->setActionText( Akonadi::StandardActionManager::CopyItems, ki18np( "Copy Contact", "Copy %1 Contacts" ) );
-  mActionManager->setActionText( Akonadi::StandardActionManager::DeleteItems, ki18np( "Delete Contact", "Delete %1 Contacts" ) );
+  connect( mActionManager->action( Akonadi::StandardContactActionManager::CreateContact ), SIGNAL( triggered( bool ) ),
+           this, SLOT( newContact() ) );
+  connect( mActionManager->action( Akonadi::StandardContactActionManager::CreateContactGroup ), SIGNAL( triggered( bool ) ),
+           this, SLOT( newGroup() ) );
+  connect( mActionManager, SIGNAL( editItem( const Akonadi::Item& ) ),
+           this, SLOT( editItem( const Akonadi::Item& ) ) );
 
   // create the dbus adaptor
   new MainWidgetAdaptor( this );
@@ -194,10 +200,12 @@ void MainWidget::setupGui()
   // the horizontal main layout
   QHBoxLayout *layout = new QHBoxLayout( this );
 
-  // the splitter that contains the three main parts of the gui
+  // The splitter that contains the three main parts of the gui
   //   - collection view on the left
   //   - item view in the middle
-  //   - details view on the right
+  //   - details pane on the right, that contains
+  //       - details view stack on the top
+  //       - contact switcher at the bottom
   QSplitter *splitter = new QSplitter;
   layout->addWidget( splitter );
 
@@ -209,9 +217,16 @@ void MainWidget::setupGui()
   mItemView = new Akonadi::EntityTreeView();
   splitter->addWidget( mItemView );
 
+  // the details pane that contains the details view stack and contact switcher
+  mDetailsPane = new QWidget;
+  splitter->addWidget( mDetailsPane );
+
+  QVBoxLayout *detailsPaneLayout = new QVBoxLayout( mDetailsPane );
+  detailsPaneLayout->setMargin( 0 );
+
   // the details view stack
   mDetailsViewStack = new QStackedWidget();
-  splitter->addWidget( mDetailsViewStack );
+  detailsPaneLayout->addWidget( mDetailsViewStack );
 
   // the details widget for contacts
   mContactDetails = new Akonadi::KABCItemBrowser( mDetailsViewStack );
@@ -221,6 +236,11 @@ void MainWidget::setupGui()
   mContactGroupDetails = new Akonadi::ContactGroupBrowser( mDetailsViewStack );
   mDetailsViewStack->addWidget( mContactGroupDetails );
 
+  // the contact switcher for the simple gui mode
+  mContactSwitcher = new ContactSwitcher;
+  detailsPaneLayout->addWidget( mContactSwitcher );
+  mContactSwitcher->setVisible( false );
+
   // the quick search widget which is embedded in the toolbar action
   mQuickSearchWidget = new QuickSearchWidget;
 }
@@ -228,20 +248,7 @@ void MainWidget::setupGui()
 void MainWidget::setupActions( KActionCollection *collection )
 {
   KAction *action = 0;
-
-  action = collection->addAction( "file_new_contact" );
-  action->setIcon( KIcon( "contact-new" ) );
-  action->setText( i18n( "&New Contact..." ) );
-  connect( action, SIGNAL( triggered(bool) ), SLOT( newContact() ));
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_N ) );
-  action->setWhatsThis( i18n( "Create a new contact<p>You will be presented with a dialog where you can add all data about a person, including addresses and phone numbers.</p>" ) );
-
-  action = collection->addAction( "file_new_group" );
-  action->setIcon( KIcon( "user-group-new" ) );
-  action->setText( i18n( "&New Group..." ) );
-  connect( action, SIGNAL( triggered(bool) ), SLOT( newGroup() ));
-  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_G ) );
-  action->setWhatsThis( i18n( "Create a new group<p>You will be presented with a dialog where you can add a new group of contacts.</p>" ) );
+  KToggleAction *toggleAction = 0;
 
   action = KStandardAction::print( this, SLOT( print() ), collection );
   action->setWhatsThis( i18n( "Print a special number of contacts." ) );
@@ -249,6 +256,36 @@ void MainWidget::setupActions( KActionCollection *collection )
   action = collection->addAction( "quick_search" );
   action->setText( i18n( "Quick search" ) );
   action->setDefaultWidget( mQuickSearchWidget );
+
+  action = collection->addAction( "select_all" );
+  action->setText( i18n( "Select All" ) );
+  action->setShortcut( QKeySequence( Qt::CTRL + Qt::Key_A ) );
+  connect( action, SIGNAL( triggered( bool ) ), mItemView, SLOT( selectAll() ) );
+
+  toggleAction = collection->add<KToggleAction>( "options_show_collectionview" );
+  toggleAction->setText( i18n( "Show Address Books View" ) );
+  toggleAction->setWhatsThis( i18n( "Toggle whether the address books view shall be visible." ) );
+  toggleAction->setCheckedState( KGuiItem( i18n( "Hide Address Books View" ) ) );
+  toggleAction->setChecked( true );
+  connect( toggleAction, SIGNAL( toggled( bool ) ), SLOT( setCollectionViewVisible( bool ) ) );
+
+  toggleAction = collection->add<KToggleAction>( "options_show_itemview" );
+  toggleAction->setText( i18n( "Show Contacts View" ) );
+  toggleAction->setWhatsThis( i18n( "Toggle whether the contacts view shall be visible." ) );
+  toggleAction->setCheckedState( KGuiItem( i18n( "Hide Contacts View" ) ) );
+  toggleAction->setChecked( true );
+  connect( toggleAction, SIGNAL( toggled( bool ) ), SLOT( setItemViewVisible( bool ) ) );
+
+  toggleAction = collection->add<KToggleAction>( "options_show_detailsview" );
+  toggleAction->setText( i18n( "Show Details View" ) );
+  toggleAction->setWhatsThis( i18n( "Toggle whether the details view shall be visible." ) );
+  toggleAction->setCheckedState( KGuiItem( i18n( "Hide Details View" ) ) );
+  toggleAction->setChecked( true );
+  connect( toggleAction, SIGNAL( toggled( bool ) ), SLOT( setDetailsViewVisible( bool ) ) );
+
+  toggleAction = collection->add<KToggleAction>( "options_show_simplegui" );
+  toggleAction->setText( i18n( "Show Simple View" ) );
+  connect( toggleAction, SIGNAL( toggled( bool ) ), SLOT( setSimpleGuiMode( bool ) ) );
 
   // import actions
   action = collection->addAction( "file_import_vcard" );
@@ -303,7 +340,7 @@ void MainWidget::print()
   printer.setOutputFormat( QPrinter::PdfFormat );
 
   QPrintDialog printDialog( &printer, this );
-  printDialog.setWindowTitle( i18n( "Print Addresses" ) );
+  printDialog.setWindowTitle( i18n( "Print Contacts" ) );
   if ( !printDialog.exec() )
     return;
 
@@ -346,6 +383,46 @@ void MainWidget::itemSelected( const Akonadi::Item &item )
     mDetailsViewStack->setCurrentWidget( mContactGroupDetails );
     mContactGroupDetails->setItem( item );
   }
+}
+
+void MainWidget::selectFirstItem()
+{
+  // Whenever the quick search has changed, we select the first item
+  // in the item view, so that the detailsview is updated
+  if ( mItemView && mItemView->selectionModel() ) {
+    mItemView->selectionModel()->setCurrentIndex( mItemView->model()->index( 0, 0 ),
+                                                  QItemSelectionModel::Rows |
+                                                  QItemSelectionModel::ClearAndSelect );
+  }
+}
+
+void MainWidget::setCollectionViewVisible( bool visible )
+{
+  mCollectionView->setVisible( visible );
+}
+
+void MainWidget::setItemViewVisible( bool visible )
+{
+  mItemView->setVisible( visible );
+}
+
+void MainWidget::setDetailsViewVisible( bool visible )
+{
+  mDetailsPane->setVisible( visible );
+}
+
+void MainWidget::setSimpleGuiMode( bool on )
+{
+  mCollectionView->setVisible( !on );
+  mItemView->setVisible( !on );
+  mDetailsPane->setVisible( true );
+  mContactSwitcher->setVisible( on );
+
+  if ( mCollectionView->model() )
+    mCollectionView->setCurrentIndex( mCollectionView->model()->index( 0, 0 ) );
+
+  if ( mItemView->model() )
+    mItemView->setCurrentIndex( mItemView->model()->index( 0, 0 ) );
 }
 
 void MainWidget::editContact( const Akonadi::Item &contact )
