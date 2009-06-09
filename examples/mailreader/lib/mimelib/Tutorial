@@ -1,0 +1,437 @@
+
+
+                   T U T O R I A L    F O R   M I M E + + 
+
+1. Introduction
+
+Welcome to MIME++, a C++ class library for creating, parsing, and modifying
+messages in MIME format.  MIME++ has been designed specifically with the
+following objectives in mind:
+
+  * Create classes that directly correspond to the elements described in
+    RFC-822, RFC-2045, and other MIME-related documents.
+
+  * Create a library that is easy to use.  
+  
+  * Create a library that is extensible.
+
+MIME++ classes directly model the elements of the BNF grammar specified in
+RFC-822, RFC-2045, and RFC-2046.  For this reason, I recommend that you
+understand these RFCs and keep a copy of them handy as you learn MIME++. 
+If you know C++ well, and if you are familiar with the RFCs, you should find
+MIME++ easy to learn and use.  If you are new to C++ and object-oriented
+programming, you will find in MIME++ some very good object-oriented
+techinques, and hopefully you will learn a lot.
+
+Before looking at the MIME++ classes, it is important to understand how
+MIME++ represents a message.  There are two representations of a message.
+The first is a string representation, in which a message is considered
+simply a sequence of characters.  The second is a 'broken-down' -- that is,
+parsed -- representation, in which the message is represented as a tree of
+components.
+
+The tree will be explained later, but for now, let's consider the
+relationship between the string representation and the broken-down
+representation.  When you create a new message, the string representation
+is initially empty.  After you set the contents of the broken-down
+representation, such as the header fields and the message body, you then
+assemble the message from its broken-down representation into its string
+representation.  The assembling is done through a call to the Assemble()
+member function of the DwMessage class.  Conversely, when you receive a
+message, it is received in its string representation, and you parse the
+message to create its broken-down representation.  The parsing is done
+through a call to the Parse() member function of the DwMessage class. 
+From the broken-down representation, you can access the header fields, the
+body, and so on. If you want to modify a received message, you can change
+the contents of the broken-down representation, then assemble the message
+to create the modified string representation.  Because of the way MIME++
+implements the broken-down representation, only those specific components
+that were modified in the broken-down representation will be modified in
+the new string representation.
+
+The broken-down representation takes the form of a tree.  The idea for the
+tree comes from the idea that a message can be broken down into various
+components, and that the components form a hierarchy.  At the highest
+level, we have the complete message.  We can break the message down into a
+header and a body to arrive at the second-highest level.  We can break the
+header down into a collection of header fields.  We can break each header
+field down into a field-name and a field-body.  If the header field is a
+structured field, we can further break down its field-body into components
+specific to that field-body, such as a local-part and domain for a
+mailbox.  Now, we can think of each component of the message as a node in
+the tree.  The top, or root, node is the message itself.  Below that, the
+message node contains child nodes for the header and body; the header node
+contains a child node for each header field; and so on.  Each node
+contains a substring of the entire message, and a node's string is the
+concatenation of all of its child nodes' strings.
+
+In the MIME++ implementation, the abstract base class DwMessageComponent
+encapsulates all the common attributes and behavior of the tree's nodes.
+The most important member functions of DwMessageComponent are Parse() and
+Assemble(), which are declared as pure virtual functions.  Normally, you
+would use these member functions only as operations on objects of the
+class DwMessage, a subclass of DwMessageComponent.  Parse() builds the
+entire tree of components with the DwMessage object at the root.
+Assemble() builds the string representation of the DwMessage object by
+traversing the tree and concatenating the strings of the leaf nodes.
+While every node in the tree is a DwMessageComponent, and therefore has a
+Parse() and Assemble() member function, you do not have to call these
+member functions for every node in the tree.  The reason is that both of
+these functions traverse the subtree rooted at the current node.  Parse()
+acts first on the current node, then calls the Parse() member function of
+its child nodes.  Assemble() first calls the Assemble() member functions
+of a node's child nodes, then concatenates the string representations of
+its child nodes.  Therefore, when you call Parse() or Assemble() for an
+object of the class DwMessage, Parse() or Assemble() will be called
+automatically for every component (that is, child node) in the message.
+
+DwMessageComponent also has one important attribute that you should be aware
+of.  That attribute is an is-modified flag (aka dirty flag), which is
+cleared whenever Parse() or Assemble() is called, and is set whenever the
+broken-down representation is modified.  To understand how this works,
+suppose you have just called Parse() on a DwMessage object to create its
+broken-down representation.  If you add a new DwField object (representing a
+new header field) to the DwHeaders object (representing the header), the
+is-modified flag will be set for the DwHeaders object, indicating that the
+string representation of the DwHeaders object will have to be re-assembled
+from the header fields that it contains.  When a node's is-modified flag is
+set, it also notifies its parent node to set its is-modified flag.  Thus,
+when the DwHeaders object's is-modified flag is set, the DwMessage object
+that is its parent will also have its is-modified flag set.  That way, when
+Assemble() is called for the DwMessage object, it will call the Assemble()
+member function for the DwHeaders object, as required.  Notice that the value
+of having an is-modified flag is that it can purge the tree traversal when
+the string representation of a message is being assembled.
+
+One of the first classes you should become familiar with is the DwString
+class, which handles character strings in MIME++.  DwString has been
+designed to handle very large character strings, so it may be different
+from string classes in other libraries.  Most of the standard C library
+string functions have DwString counterparts in MIME++.  These functions
+all start with "Dw", and include DwStrcpy(), DwStrcmp(), DwStrcasecmp(),
+and so on.  In addition, the equality operators and assignment operators
+work as expected.  If you have used string classes from other libraries,
+you will find DwString fairly intuitive.
+
+The following sections describe how to create, parse, and modify a
+message.  You should also look at the example programs included with the
+distribution.  These example programs are well-commented and use wrapper
+classes.  The wrapper classes BasicMessage, MultipartMessage, and
+MessageWithAttachments, are designed with three purposes in mind.  First,
+if your requirements are very modest -- say you just want to send a few
+files as attachments -- then you may find these classes to be adequate for
+your needs, and you will not have to learn the MIME++ library classes.
+Second, wrapper classes are the recommended way to use MIME++.  You should
+consider starting with these classes and customizing them for your own
+application.  Using wrapper classes will simplify the use of the MIME++
+library, but will also help to shield your application from future changes
+in the MIME++ library.  Third, these classes provide excellent examples for
+how to use the MIME++ library classes.
+
+The rest of this tutorial focuses on the library classes themselves.
+
+
+2. Creating a Message
+
+Creating a message with MIME++ involves instantiating a DwMessage object,
+setting values for its parts, and assembling the message into its final
+string representation.  The following simple example shows how to
+accomplish this.
+
+
+      void SendMessage(
+          const char* aTo,
+          const char* aFrom, 
+          const char* aSubject,
+          const char* aBody)
+      {
+          // Create an empty message
+
+          DwMessage msg;
+
+          // Set the header fields.  
+          // [ Note that a temporary DwString object is created for
+          // the argument for FromString() using the
+          // DwString::DwString(const char*) constructor. ]
+
+          DwHeaders& headers = msg.Headers();
+          headers.MessageId().CreateDefault();
+          headers.Date().FromCalendarTime(time(NULL)); //current date, time
+          headers.To().FromString(aTo);
+          headers.From().FromString(aFrom);
+          headers.Subject().FromString(aSubject);
+
+          // Set the message body
+
+          msg.Body().FromString(aBody);
+
+          // Assemble the message from its parts
+
+          msg.Assemble();
+
+          // Finally, send it.  In this example, just print it to the 
+          // cout stream.
+
+          cout << msg.AsString();
+      }
+
+
+In this example, we set the fields 'Message-Id', 'Date', 'To', 'From', and
+'Subject', which are all documented in RFC-822.  The MIME++ class DwHeaders
+directly supports all header fields documented in RFC-822, RFC-2045, and
+RFC-1036.  To access the field-body for any one these fields, use the
+member function from DwHeaders that has a name corresponding to the
+field-name for that field.  The correspondence between a field-name and
+the name of the member function in DwHeaders is consistent: hyphens are
+dropped and the first character after the hyphen is capitalized.  Thus,
+field-name Content-type in RFC-1521 corresponds to the member function
+name ContentType.  These field-body access functions create an empty field
+in the headers if that field does not already exist.  To check if a
+particular field exists already, DwHeaders provides member functions
+HasXxxxx(); for example, HasSender(), HasMimeVersion(), or HasXref()
+will indicate whether the DwHeaders object has a 'Sender' field, a
+'MIME-Version' field, or an 'Xref' field, respectively.
+
+In the example, we used the FromString() member function of
+DwMessageComponent to set the string representation of the field-bodies.
+This is the simplest way to set the contents of a DwFieldBody object.
+Many of the field-bodies also have a broken-down represenation, and it is
+possible to set the parts of the broken-down representation.  Consider, for
+example, the DwDateTime class, which represents the date-time element of the
+BNF grammar specified in RFC-822.  In the example above, we did not set the
+string representation -- that would be more difficult and error prone.
+Instead we set the contents from the time_t value returned from a call to
+the ANSI C function time().  The DwDateTime class also contains member
+functions for setting individual attributes.  For example, we could have
+used the following code:
+
+      DwDateTime& date = msg.Headers().Date();
+      time_t t = time(NULL);
+      struct tm stm = *localtime(&t);
+      date.SetYear(stm.tm_year);
+      date.SetMonth(stm.tm_mon);
+      date.SetDay(stm.tm_mday);
+      date.SetHour(stm.tm_hour);
+      date.SetMinute(stm.tm_min);
+
+
+3. Parsing a Message
+
+Parsing a received message with MIME++ involves instantiating a DwMessage
+object, setting its string representation to contain the message, and then
+calling the Parse() member function of the DwMessage object.  The
+following simple example shows how to accomplish this.
+
+      void ParseMessage(DwString& aMessageStr)
+      {
+          // Create a message object
+          // We can set the message's string representation directly from the
+          // constructor, as in the uncommented version.  Or, we can use the
+          // default constructor and set its string representation using
+          // the member function DwMessage::FromString(), as in the
+          // commented version.
+
+          DwMessage msg(aMessageStr);
+    
+          // Alternate technique:
+          // DwMessage msg;                 // Default constructor
+          // msg.FromString(aMessageStr);   // Set its string representation
+
+          // Execute the parse method, which will create the broken-down
+          // representation (the tree representation, if you recall)
+
+          msg.Parse();
+
+          // Print some of the header fields, just to show how it's done
+    
+          // Date field.  First check if the field exists, since
+		  // DwHeaders::Date() will create it if is not found.
+
+          if (msg.Headers().HasDate()) {
+              cout << "Date of message is " 
+                   << msg.Headers().Date().AsString()
+                   << '\n';
+          }
+
+          // From field.  Here we access the broken-down field body, too,
+		  // to get the full name (which may be empty), the local part,
+		  // and the domain of the first mailbox.  (The 'From' field can
+		  // have a list of mailboxes).
+
+          if (msg.Headers().HasFrom()) {
+              DwMailboxList& from = msg.Headers().From();
+              cout << "Message is from ";
+
+              // Get first mailbox, then iterate through the list
+
+              int isFirst = 1;
+              DwMailbox* mb = from.FirstMailbox();
+              while (mb) {
+                  if (isFirst) {
+                      isFirst = 0;
+                  }
+                  else {
+                      cout << ", ";
+                  }
+                  DwString& fullName = mb->FullName();
+                  if (fullName != "") {
+                      cout << fullName << '\n';
+                  }
+                  else {
+                      // Apparently, there is no full name, so use the email
+                      // address
+                      cout << mb->LocalPart() << '@' << mb->Domain() << '\n';
+                  }
+                  mb = mb->Next();
+              }
+
+          }
+    
+          // Finally, print the message body, just to show how the body is
+          // retrieved.
+
+          cout << msg.Body().AsString() << '\n';
+      }
+
+Once you have parsed the message, you can access any of its parts.  The
+field-bodies of well-known header fields can be accessed by calling member
+functions of DwHeaders.  Some examples follow.
+
+    DwMediaType& contType = msg.Headers().ContentType();
+    DwMechanism& cte = msg.Headers().ContentTransferEncoding();
+    DwDateTime& date = msg.Headers().Date();
+
+The various subclasses of DwFieldBody, including DwMediaType, DwMechanism,
+and DwDateTime above, have member functions that allow you to access the parts
+of the field-body.  For example, DwMediaType has member functions to allow
+you to access its type, subtype, and parameters.  If the message is a
+multipart message, you may access the body parts by calling member
+functions of the class DwBody.  See the example code in multipar.cpp for
+an example of how to do this.
+
+
+4. Modifying a Message
+
+Modifying a message combines the procedures of parsing a message and
+creating a message.  First, parse the message, as explained above.  Then
+set the values of the components -- field-bodies, new fields, new body
+parts, or what have you -- that you wish to modify.  Finally, call the
+Assemble() member function of the DwMessage object to reassemble the
+message.  You can then access the modified message by calling
+DwMessage::AsString().  These final steps are the same as those involved
+in creating a new message.
+
+
+5. Customizing MIME++ Classes
+
+MIME++ has been designed to be easily customizable.  Typically, you
+customize C++ library classes through inheritance.  MIME++ allows you to
+create subclasses of most of its library classes in order to change their
+behavior.  MIME++ also includes certain 'hooks', which make it far easier
+to customize certain parts of the library.
+
+The most common customization is that of changing the way header fields
+are dealt with.  This could include adding the ability to handle certain
+non-standard header fields, or to change the way the field-bodies of
+certain standard header fields are interpreted or parsed.  As an example of
+the former customization, you may want to add the 'X-status' field or
+'X-sender' field to your messages.  As an example of the latter, you may
+want to change DwMediaType so that it will handle other MIME subtypes.
+
+Let's begin with the latter situation -- that of subclassing DwMediaType.
+Obviously, you will have to become familiar with DwMediaType and its
+superclasses before you change its behavior.  Then, at a minimum, you will
+want to provide your own implementation of the virtual member functions
+Parse() and Assemble().  Once you feel comfortable with the behavior of
+the behavior of your new class -- call it MyMediaType -- you will have to
+take the right steps to ensure that the MIME++ library internal routines
+will create objects of type MyMediaType, and not DwMediaType.  There are
+three such steps.
+
+First, define a function NewMyMediaType(), matching the prototype
+
+      DwMediaType* NewMyMediaType(
+	      const DwString& aStr, 
+		  DwMessage* aParent)
+
+that creates a new instance of MyMediaType and returns it.  Set the static
+data member DwMediaType::sNewMediaType to point to this function.
+DwMediaType::sNewMediaType is normally NULL, meaning that no user-defined
+function is available.  When you set this static data member, however,
+MIME++'s internal routines will call your own function, and will therefore
+be able to create instances of your subclass.
+
+Second, make sure you have reimplemented the virtual function
+DwMediaType::Clone() to return a clone of your own subclassed object.
+Clone() serves as a 'virtual constructor'.  (See the discussion of virtual
+constructors in Stroustrup's _The C++ Programming Language_, 2nd Ed).
+
+Third, you should define a function CreateFieldBody(), matching the
+prototype
+
+      DwFieldBody* CreateFieldBody(
+          const DwString& aFieldName,
+          const DwString& aFieldBody, 
+          DwMessageComponent* aParent)
+
+that returns an object of a subclass of DwFieldBody.  (DwFieldBody is a
+superclass of MyMediaType).  CreateFieldBody() is similar to the
+NewMyMediaType() function already described, except that its first
+argument supplies the field-name for the particular field currently being
+handled by MIME++.  CreateFieldBody() should examine the field-name,
+create an object of the appropriate subclass of DwFieldBody, and return a
+pointer to the object.  In this particular case, you need to make sure
+that when the field-name is 'Content-Type' you return an object of the
+class MyMediaType.  Set the hook for CreateFieldBody() setting the static
+data member DwField::sCreateFieldBody to point to your CreateFieldBody()
+function.  DwField::sCreateFieldBody is normally NULL when no user
+function is provided.
+
+These three steps are sufficient to ensure that your subclass of
+DwMediaType is integrated with the other MIME++ classes.
+
+The other customization task mentioned above is that of adding support for
+a non-standard header field.  There is a simple way to do this, and a way
+that involves creating a subclass of DwHeaders.  You can access any header
+field by calling DwHeaders's member functions.  In fact, you can iterate
+over all the header fields if you would like.  Therefore, the really
+simple way is just to not change anything and just use existing member
+functions.  The relevant functions include DwHeaders::HasField(), which will
+return a boolean value indicating if the header has the specified field,
+and DwHeaders::FieldBody(), which will return the DwFieldBody object
+associated with a specified field.  [ Note that DwHeaders::FieldBody() will
+create a field if it is not found. ] The default DwFieldBody subclass,
+which applies to all header fields not recognized by MIME++, is DwText,
+which is suitable for the unstructured field-bodies described in RFC-822
+such as 'Subject', 'Comments', and so on.  If a DwText object is suitable
+for your non-standard header field, then you don't have to do anything at all.
+Suppose, however, that you want an object of your own subclass of
+DwFieldBody, say StatusFieldBody, to be attached to the 'X-status' field.
+In this case, you will need to set the hook DwField::sCreateFieldBody as
+discussed above.  Your CreateFieldBody() function should return an
+instance of StatusFieldBody whenever the field-name is 'X-status'.
+
+Finally, while you can access any header field using DwHeaders's member
+functions, you may want to create your own subclass of DwHeaders for some
+reason or other -- maybe to add a convenience function to access the
+'X-status' header field.  To ensure that your new class is integrated with
+the library routines, you basically follow steps 1 and 2 above for
+subclassing DwFieldBody.  First, define a function NewMyHeaders() and set the
+static data member DwHeaders::sNewHeaders to point to your function. Second,
+make sure you have reimplemented the virtual function DwHeaders::Clone() to
+return an instance of your subclass.  Step 3 for subclassing DwFieldBody
+does not apply when subclassing DwHeaders.
+
+
+6. Getting Help
+
+I will try to help anyone who needs help specific to MIME++.  I won't try
+to answer general questions about C++ that could be answered by any C++
+expert.  Bug reports will receive the highest priority.  Other questions
+about how to do something I will try to answer in time, but I ask for your
+patience.  If you have any comments -- perhaps maybe you know of a better
+way to do something -- please send them.  My preferred email is
+dwsauder@fwb.gulf.net, but dwsauder@tasc.com is also acceptable.
+
+Good luck!
+

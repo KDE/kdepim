@@ -1,0 +1,286 @@
+<HTML>
+<HEAD>
+  <TITLE> DwPopClient Man Page </TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<H2>
+  <FONT COLOR="navy"> NAME </FONT>
+</H2>
+<P>
+DwPopClient -- Class for handling the client side of a POP session
+<H2>
+  <FONT COLOR="navy"> SYNOPSIS </FONT>
+</H2>
+<PRE>class DW_EXPORT DwPopClient : public <A HREF="protocol.html">DwProtocolClient</A> {
+
+public:
+
+    enum {
+        kCmdNoCommand=0,
+        kCmdUser,
+        kCmdPass,
+        kCmdQuit,
+        kCmdStat,
+        kCmdList,
+        kCmdRetr,
+        kCmdDele,
+        kCmdNoop,
+        kCmdRset,
+        kCmdApop,
+        kCmdTop,
+        kCmdUidl
+    };
+    <A HREF="pop.html#DwPopClient">DwPopClient</A>();
+    virtual ~DwPopClient();
+    virtual int <A HREF="pop.html#Open">Open</A>(const char* aServer, DwUint16 aPort=110);
+    DwObserver* <A HREF="pop.html#SetObserver">SetObserver</A>(DwObserver* aObserver);
+    int <A HREF="pop.html#StatusCode">StatusCode</A>() const;
+    const DwString&amp; <A HREF="pop.html#SingleLineResponse">SingleLineResponse</A>() const;
+    const DwString&amp; <A HREF="pop.html#MultiLineResponse">MultiLineResponse</A>() const;
+    int <A HREF="pop.html#User">User</A>(const char* aName);
+    int Pass(const char* a<A HREF="pop.html#Pass">Pass</A>wd);
+    int <A HREF="pop.html#Quit">Quit</A>();
+    int <A HREF="pop.html#Stat">Stat</A>();
+    int <A HREF="pop.html#List">List</A>();
+    int <A HREF="pop.html#List">List</A>(int aMsg);
+    int <A HREF="pop.html#Retr">Retr</A>(int aMsg);
+    int <A HREF="pop.html#Dele">Dele</A>(int aMsg);
+    int <A HREF="pop.html#Noop">Noop</A>();
+    int <A HREF="pop.html#Rset">Rset</A>();
+    int <A HREF="pop.html#Apop">Apop</A>(const char* aName, const char* aDigest);
+    int <A HREF="pop.html#Top">Top</A>(int aMsg, int aNumLines);
+    int <A HREF="pop.html#Uidl">Uidl</A>();
+    int <A HREF="pop.html#Uidl">Uidl</A>(int aMsg);
+};
+</PRE>
+<H2>
+  <FONT COLOR="navy"> DESCRIPTION </FONT>
+</H2>
+<P>
+<B><TT>DwPopClient</TT></B> is a class that handles the client side of a
+POP session. Specifically, <B><TT>DwPopClient</TT></B> provides facilities
+for opening a connection to a POP server, sending commands to the server,
+receiving responses from the server, and closing the connection. The protocol
+implemented is the Post Office Protocol version 3, as specified in RFC-1939.
+<P>
+<B><TT>DwPopClient</TT></B> is derived from
+<B><TT><A HREF="protocol.html">DwProtocolClient</A></TT></B>. For information
+about inherited member functions, especially member functions for detecting
+failures or errors, see the man page for
+<B><TT>DwProtocolClient</TT></B>.
+<P>
+In a POP session, the client sends commands to the server and receives responses
+from the server. A client command consists of a command word and zero or
+more argument words. A server response consists of a single line status response,
+which may be followed immediately by a multi-line response. The first word
+of the status response is either +OK or -ERR, indicating the success or failure
+of the command. The status line may also contain other information requested
+by the client.
+<P>
+<B><TT>DwPopClient</TT></B> has only a default constructor. On Win32 platforms,
+it is possible for the constructor to fail. (It calls WSAStartup().) You
+should verify that the constructor succeeded by calling the inherited member
+function <B><TT>DwProtocolClient::LastError()</TT></B> and checking for a
+zero return value.
+<P>
+To open a connection to the server, call the member function
+<B><TT>Open()</TT></B> with the name of the server as an argument.
+<B><TT>Open()</TT></B> accepts an optional argument that specifies the TCP
+port that the server listens to. The default port is the standard POP port
+(110). <B><TT>Open()</TT></B> may fail, so you should check the return value
+to verify that it succeeded. To close the connection, call the inherited
+member function <B><TT>DwProtocolClient::Close()</TT></B>. To check if a
+connection is open, call the inherited member function
+<B><TT>DwProtocolClient::IsOpen()</TT></B>. <B><TT>IsOpen()</TT></B> returns
+a boolean value that indicates whether or not a call to
+<B><TT>Open()</TT></B> was successful; it will not detect failure in the
+network or a close operation by the remote host.
+<P>
+For each POP command, <B><TT>DwPopClient</TT></B> has a member function that
+sends that command and receives the server's response. If the command takes
+any arguments, then those arguments are passed as function arguments to the
+command function. The command functions return the first character of the
+server's response, which will be '+' if the command succeeded or '-' if the
+command failed. In some cases, because of a communications error or some
+other error, it is not possible for the command function to send the command
+or receive the response. When this happens, the command function will return
+0. You can determine the precise error or failure by calling the inherited
+member functions <B><TT>DwProtocolClient::LastError()</TT></B> or
+<B><TT>DwProtocolClient::LastFailure()</TT></B>.
+<P>
+After each command is sent, <B><TT>DwPopClient</TT></B> receives the server's
+response and remembers it. The member function
+<B><TT>StatusCode()</TT></B> returns the first character of the server's
+status response; it will be '+' or '-', indicating success or failure, or
+zero if no response was received from the server.
+<B><TT>SingleLineResponse()</TT></B> returns the entire single line status
+response from the server, including the initial "+OK" or "-ERR" status word.
+<P>
+The server sends a single-line response, including a status code, for all
+POP commands. For some commands, such as when the client requests a mail
+message, the server sends a multi-line text response immediately following
+the single-line status response. Multi-line text responses can be received
+in either of two ways. The simplest way is to call the member function
+<B><TT>MultiLineResponse()</TT></B> after a command completes successfully.
+This simple method works fine for non-interactive applications. It can be
+a problem in interactive applications, however, because there is no data
+to display to a user until the entire multi-line response is retrieved. An
+alternative method allows your program to retrieve the multi-line response
+one line at a time as it is received. To use this method, you must define
+a subclass of <B><TT>DwObserver</TT></B> and assign an object of that class
+to the <B><TT>DwPopClient</TT></B> object using the member function
+<B><TT>SetObserver()</TT></B>. <B><TT>DwObserver</TT></B> is an abstract
+class, declared in protocol.h, that has just one pure virtual member function
+<B><TT>Notify()</TT></B>. After each line of the multi-line response is received,
+<B><TT>DwPopClient</TT></B> will call the <B><TT>Notify()</TT></B> member
+function of its assigned <B><TT>DwObserver</TT></B> object. Each invocation
+of <B><TT>Notify()</TT></B> should call the <B><TT>DwPopClient</TT></B> member
+function <B><TT>MultiLineResponse()</TT></B> to retrieve the next line of
+the text response. Note that you cannot use both of these methods at the
+same time: if an observer is assigned,
+<B><TT>MultiLineResponse()</TT></B> returns only the last line received,
+not the entire multi-line response.
+<H2>
+  <FONT COLOR="navy"> Public Member Functions </FONT>
+</H2>
+<P>
+<FONT COLOR="teal"><B> <A NAME="DwPopClient">DwPopClient</A>() </B></FONT>
+<P>
+Initializes the <B><TT>DwPopClient</TT></B> object. It is possible for the
+constructor to fail. To verify that the constructor succeeded, call the member
+function <B><TT>LastError()</TT></B> and check that it returns zero. (In
+the Win32 implementation, the constructor calls the Winsock function
+<B><TT>WSAStartup()</TT></B>, which may fail.)
+<P>
+<FONT COLOR="teal"><B> virtual int <A NAME="Open">Open</A>(const char* aServer,
+DwUint16 aPort=110) </B></FONT>
+<P>
+Opens a TCP connection to the server <B><TT>aServer</TT></B> at port
+<B><TT>aPort</TT></B>. <B><TT>aServer</TT></B> may be either a host name,
+such as "news.acme.com" or an IP number in dotted decimal format, such as
+"147.81.64.60". The default value for <B><TT>aPort</TT></B> is 110, the
+well-known port for POP3 assigned by the Internet Assigned Numbers Authority
+(IANA).
+<P>
+If the connection attempt succeeds, the server sends a response.
+<B><TT>Open()</TT></B> returns the server's status code ('+' or '-'). The
+full response from the server can be retrieved by calling
+<B><TT>SingleLineResponse()</TT></B>.
+<P>
+If the connection attempt fails, <B><TT>Open()</TT></B> returns 0. To determine
+what error occurred when a connection attempt fails, call the inherited member
+function <B><TT>DwProtocolClient::LastError()</TT></B>. To determine if a
+failure also occurred, call the inherited member function
+<B><TT>DwProtocolClient::LastFailure()</TT></B>.
+<P>
+<FONT COLOR="teal"><B> DwObserver*
+<A NAME="SetObserver">SetObserver</A>(DwObserver* aObserver) </B></FONT>
+<P>
+Sets the observer object that interacts with the
+<B><TT>DwPopClient</TT></B> object to retrieve a multi-line response. If
+an observer is set, <B><TT>DwPopClient</TT></B> will call the observer's
+<B><TT>Notify()</TT></B> method after each line of the multi-line response
+is received. To remove an observer, call <B><TT>SetObserver()</TT></B> with
+a NULL argument. <B><TT>SetObserver()</TT></B> returns the previously set
+observer, or NULL if no observer was previously set.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="StatusCode">StatusCode</A>() const
+</B></FONT>
+<P>
+Returns the status code received from the server in response to the last
+client command. The status codes in POP3 are '+', indicating success, and
+'-', indicating failure. If no response was received,
+<B><TT>StatusCode()</TT></B> returns zero.
+<P>
+<FONT COLOR="teal"><B> const DwString&amp;
+<A NAME="SingleLineResponse">SingleLineResponse</A>() const </B></FONT>
+<P>
+Returns the single line status response last received from the server. If
+no response was received, perhaps because of a communications failure,
+<B><TT>SingleLineResponse()</TT></B> returns an empty string.
+<P>
+<FONT COLOR="teal"><B> const DwString&amp;
+<A NAME="MultiLineResponse">MultiLineResponse</A>() const </B></FONT>
+<P>
+If no observer is set for this object,
+<B><TT>MultiLineResponse()</TT></B> returns a string that comprises the entire
+sequence of lines received from the server. Otherwise, if an observer
+<I>is</I> set for this object, <B><TT>MultiLineResponse()</TT></B> returns
+only the most recent line received.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="User">User</A>(const char* aName)
+</B></FONT>
+<P>
+Sends the USER command and returns the status code received from the server.
+If no response is received, the function returns zero.
+<B><TT>aName</TT></B> is the name of the user, which is sent in the command.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Pass">Pass</A>(const char* aPasswd)
+</B></FONT>
+<P>
+Sends the PASS command and returns the status code received from the server.
+If no response is received, the function returns zero.
+<B><TT>aPasswd</TT></B> is the password, which is sent in the command.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Quit">Quit</A>() </B></FONT>
+<P>
+Sends the QUIT command and returns the status code received from the server.
+If no response is received, the function returns zero.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Stat">Stat</A>() </B></FONT>
+<P>
+Sends the STAT command and returns the status code received from the server.
+If no response is received, the function returns zero.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="List">List</A>() <BR>
+int List(int aMsg) </B></FONT>
+<P>
+Sends the LIST command, with or without a message number, and returns the
+status code received from the server. If no response is received, the function
+returns zero.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Retr">Retr</A>(int aMsg) </B></FONT>
+<P>
+Sends the RETR command and returns the status code received from the server.
+If no response is received, the function returns zero.
+<B><TT>aMsg</TT></B> is the message number, which is sent in the command.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Dele">Dele</A>(int aMsg) </B></FONT>
+<P>
+Sends the DELE command and returns the status code received from the server.
+If no response is received, the function returns zero.
+<B><TT>aMsg</TT></B> is the message number, which is sent in the command.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Noop">Noop</A>() </B></FONT>
+<P>
+Sends the NOOP command and returns the status code received from the server.
+If no response is received, the function returns zero.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Rset">Rset</A>() </B></FONT>
+<P>
+Sends the RSET command and returns the status code received from the server.
+If no response is received, the function returns zero.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Apop">Apop</A>(const char* aName, const
+char* aDigest) </B></FONT>
+<P>
+Sends the APOP command and returns the status code received from the server.
+If no response is received, the function returns zero.
+<B><TT>aName</TT></B> is the name of the user, which is sent in the command.
+<B><TT>aDigest</TT></B> is the digest argument for the command.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Top">Top</A>(int aMsg, int aNumLines)
+</B></FONT>
+<P>
+Sends the TOP command and returns the status code received from the server.
+If no response is received, the function returns zero.
+<B><TT>aMsg</TT></B> is the message number. <B><TT>aNumLines</TT></B> is
+the number of lines to send.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Uidl">Uidl</A>() <BR>
+int Uidl(int aMsg) </B></FONT>
+<P>
+Sends the TOP command, with or without a message number, and returns the
+status code received from the server. If no response is received, the function
+returns zero.
+</BODY></HTML>

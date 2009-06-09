@@ -1,0 +1,9 @@
+# Remove the old Encryption Preferences (applies only to KDE3 Beta users)
+Id=preKDE3_a
+File=kpgprc
+RemoveGroup=EncryptionPreferences
+# new format for storing info about encryption keys and encryption preferences
+# for email addresses (in kpgprc)
+Id=3.1-1
+File=kpgprc
+Script=kpgp-3.1-upgrade-address-data.pl,perl

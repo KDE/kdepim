@@ -1,0 +1,179 @@
+
+MIME++ Change Log
+=================
+
+September 1, 1997
+
+o Convenience member functions added to DwMediaType to access the name
+  parameter
+
+o Added configuration option to typedef DwBool to bool
+
+o Compiles as a DLL under Borland C++ 5.0 (as well as VC++ 4 and 5).  I am
+  not completely convinced that I got the correct command line switches for
+  BCC32.  If you use Borland, you might want to double check the makefile.
+
+o Will handle multipart boundary parameters from nonstandard MIME
+  implementations that quote the boundary parameters with single quotes.
+  (This is in violation of the MIME++ standard.)
+
+o Fixed a bug where CRLF would be included in the full name part of a
+  mailbox if the name was quoted and split across two lines
+
+o DwBinhex class for performing conversion to and from Binhex 4.0 format
+  for Macintosh files.
+
+o Much of the documentation has been rewritten or brought up to date.
+
+o Minor changes to DwUuencode.
+
+o The deprecated member functions in DwString are no longer available.
+
+
+July 26, 1997
+
+o New classes in this release:
+  DwUuencode       - for uuencode and uudecode operations
+  DwBoyerMoore     - for BoyerMoore algorithm in string searches
+  DwProtocolClient - Base class for SMTP, NNTP, and POP protocol classes
+  DwSmtpClient     - Implements client side of SMTP session
+  DwNntpClient     - Implements client side of NNTP session
+  DwPopClient      - Implements client side of POP session
+
+o Full support for Win32 with MS Visual C++ 4 or 5, and Borland C++.
+
+o DwHeader renamed to DwHeaders to eliminate confusion, since people usually
+  use the term header to refer to a single header field.
+
+o Compiles as a DLL under Visual C++ (default option)
+
+o There is a config.h file for establishing configuration options at
+  compile time. This is safer than requiring you to specify options as
+  defines in a makefile.
+
+o Support for namespaces. Alternatively, global enums are encapsulated
+  in a class declaration.
+
+Mar 29, 1997
+
+o The class DwString has been rewritten almost from scratch and is much
+  closer to the specification for the ANSI string class.  Eventually, it
+  should be possible to typedef DwString to the ANSI string class, thereby
+  making MIME++ entirely compatible with the standard C++ library.  (I did
+  actually do this successfully a few weeks ago, but I have not tried it
+  again since the new DwString was completed.)  Most of the old member
+  functions are now obsolete.  You can still compile them if you define
+  the right macro (see the makefile).
+
+o The implementations of many classes were changed to permit them to be
+  used with the new DwString class.  (They should also work with the
+  ANSI string class, if DwString is typedef-ed.)
+
+o The documentation is more complete.  Utility functions for content
+  transfer encoding, end-of-line marker conversion, etc. are now included
+  in the HTML documentation.  New <FONT> tags in HTML 3.2 are used to
+  add color.  The idea is not so much to make the man pages look snazzy;
+  I chose colors to make them more readable.
+
+Feb 6, 1997
+
+o Added new class DwDispositionType, which represents a disposition-type
+  as described in RFC-1806.
+  
+o Changed the name of DwContentType to DwMediaType, which conforms to usage
+  in RFC-2068 (HTTP) and is not incompatible with RFC-2045 and RFC-2046.
+
+o Changed the name of DwContentTransferEncoding to DwMechanism, which
+  conforms to the BNF term "mechanism" in RFC-2045.
+
+Jan 28, 1997
+
+o Added utility functions for doing end-of-line marker conversions:
+
+    int DwToCrLfEol(const DwString& aSrcStr, DwString& aDestStr);
+    int DwToLfEol(const DwString& aSrcStr, DwString& aDestStr);
+    int DwToCrEol(const DwString& aSrcStr, DwString& aDestStr);
+    int DwToLocalEol(const DwString& aSrcStr, DwString& aDestStr);
+
+Jan 25, 1997
+
+o Parsers for entities (entity.cc) and bodies (body.cc) changed to handle
+  CR LF end-of-line (DOS and MIME) in addition to LF end-of-line (UNIX
+  and C).
+
+o Changed multipart body parser to correctly parse boundaries that have
+  white space at end of line (transport-padding, in the BNF of RFC-2046).
+  With this change, any line that starts with the dash-boundary will be
+  recognized as a boundary, even if the extraneous characters are not
+  white space (transport-padding).  This should be okay because the MIME
+  spec says that the boundary should not appear in the entity.
+
+Jan 14, 1997
+
+o The library may be compiled as a production version, a development
+  version, or a debug version.  The production version tries to recover
+  from errors whenever possible: this could mean just returning silently
+  from a function with a bad argument value.  The development version has
+  assert statements enabled to detect bad argument values or other
+  exceptional conditions.  It will dump core so that you can examine
+  the state after termination by using a debugger.  The debug version is
+  intended to be used when you know a bug exists and you have to find it.
+  In the debug version, virtually all classes have a CheckInvariants()
+  member function that will abort if one of the invariants in an object
+  is violated.  The development version and production version are
+  link compatible -- you don't have to recompile your source, just relink
+  with the library.  The debug version is not guaranteed to be link
+  compatible.
+ 
+o Added a mechanism to detect objects that are deleted more than once.
+
+o Some bugs were fixed.
+
+o Rewrote the makefile, which now includes an 'install' target to copy files
+  to /usr/local/include/mimepp and /usr/local/lib.
+
+o Removed the 'dw' prefix from most of the files.  The include files are
+  installed into a mimepp directory.  The include preprocessor lines in
+  the source code have the directory prefixed
+  (e.g. #include <mimepp/mimepp.h>).
+
+o Created a mimepp.h file that includes all header files required for using
+  the library.  You can just put #include <mimepp/mimepp.h> at the top of
+  your source code.
+
+Nov 17, 1996
+
+o DwMessageComponent has new protected data member mClassName and new
+  member function ClassName().
+
+o DwContentType has new convenience member function CreateBoundary(), which
+  applies to multipart entities only.
+
+o DwMessageId is now DwMsgId, which conforms to the RFC-822 BNF grammar.
+
+o Lots of changes to DwHeader.
+
+  + DwHeader::Interpret() is gone.  It's been replaced by
+    DwField::CreateFieldBody().
+
+  + Access to all RFC-822, RFC-1036, and RFC-1521 header fields via
+    member functions (DwHeader::To(), DwHeader::From(), ...).
+
+  + New member functions to test for the presence of standard header fields.
+    (DwHeader::HasTo(), DwHeader::HasFrom(), ...).
+
+  + Various other changes to DwHeader's interface, mostly dealing with
+    adding or removing fields.  (Advanced functions.)
+
+o Added member function CreateFieldBody() to DwField.
+
+o Improvements to the wrapper classes used in the examples.
+
+o New wrapper class MessageWithAttachments, used in Example 5 (exampl05.cc).
+
+o The documentation now includes a tutorial.
+
+o All *.h files have been extensively commented.  These files will serve
+  as a poor man's reference manual until the real reference manual is
+  completed.
+

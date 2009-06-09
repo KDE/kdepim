@@ -1,0 +1,384 @@
+<HTML>
+<HEAD>
+  <TITLE> DwNntpClient Man Page </TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<H2>
+  <FONT COLOR="navy"> NAME </FONT>
+</H2>
+<P>
+DwNntpClient -- Class for handling the client side of an NNTP session
+<H2>
+  <FONT COLOR="navy"> SYNOPSIS </FONT>
+</H2>
+<PRE>class DW_EXPORT DwNntpClient : public <A HREF="protocol.html">DwProtocolClient</A> {
+
+public:
+
+    enum {
+        kCmdNoCommand=0,
+        kCmdArticle,
+        kCmdBody,
+        kCmdHead,
+        kCmdStat,
+        kCmdGroup,
+        kCmdHelp,
+        kCmdIhave,
+        kCmdLast,
+        kCmdList,
+        kCmdNewgroups,
+        kCmdNewnews,
+        kCmdNext,
+        kCmdPost,
+        kCmdQuit,
+        kCmdSlave
+    };
+    <A HREF="nntp.html#DwNntpClient">DwNntpClient</A>();
+    virtual ~DwNntpClient();
+    virtual int <A HREF="nntp.html#Open">Open</A>(const char* aServer, DwUint16 aPort=119);
+    DwObserver* <A HREF="nntp.html#SetObserver">SetObserver</A>(DwObserver* aObserver);
+    int <A HREF="nntp.html#ReplyCode">ReplyCode</A>() const;
+    const DwString&amp; <A HREF="nntp.html#StatusResponse">StatusResponse</A>() const;
+    const DwString&amp; <A HREF="nntp.html#TextResponse">TextResponse</A>() const;
+    int <A HREF="nntp.html#Article">Article</A>(int aNumber=(-1));
+    int <A HREF="nntp.html#Article">Article</A>(const char* aMsgid);
+    int <A HREF="nntp.html#Body">Body</A>(int aNumber=(-1));
+    int <A HREF="nntp.html#Body">Body</A>(const char* aMsgid);
+    int <A HREF="nntp.html#Head">Head</A>(int aNumber=(-1));
+    int <A HREF="nntp.html#Head">Head</A>(const char* aMsgid);
+    int <A HREF="nntp.html#Stat">Stat</A>(int aNumber=(-1));
+    int <A HREF="nntp.html#Stat">Stat</A>(const char* aMsgid);
+    int <A HREF="nntp.html#Group">Group</A>(const char* aNewsgroupName);
+    int <A HREF="nntp.html#Help">Help</A>();
+    int <A HREF="nntp.html#Ihave">Ihave</A>(const char* aMsgId);
+    int <A HREF="nntp.html#Last">Last</A>();
+    int <A HREF="nntp.html#List">List</A>();
+    int <A HREF="nntp.html#Newgroups">Newgroups</A>(const char* aDate, const char* aTime,
+        DwBool aIsGmt=DwFalse, const char* aDistributions=0);
+    int <A HREF="nntp.html#Newnews">Newnews</A>(const char* aNewsgroups, const char* aDate,
+        const char* aTime, DwBool aIsGmt=DwFalse, const char* aDistribution=0);
+    int <A HREF="nntp.html#Next">Next</A>();
+    int <A HREF="nntp.html#Post">Post</A>();
+    int <A HREF="nntp.html#Quit">Quit</A>();
+    int <A HREF="nntp.html#Slave">Slave</A>();
+    int <A HREF="nntp.html#SendData">SendData</A>(const DwString&amp; aStr);
+    int <A HREF="nntp.html#SendData">SendData</A>(const char* aBuf, int aBufLen);
+};
+</PRE>
+<H2>
+  <FONT COLOR="navy"> DESCRIPTION </FONT>
+</H2>
+<P>
+<B><TT>DwNntpClient</TT></B> is a class that handles the client side of an
+NNTP session. Specifically, <B><TT>DwNntpClient</TT></B> provides facilities
+for opening a connection to an NNTP server, sending commands and data to
+the server, receiving responses and data from the server, and closing the
+connection. The protocol implemented is the Network News Transport Protocol,
+as specified in RFC-977.
+<P>
+<B><TT>DwNntpClient</TT></B> is derived from
+<B><TT><A HREF="protocol.html">DwProtocolClient</A></TT></B>. For information
+about inherited member functions, especially member functions for detecting
+failures or errors, see the man page for
+<B><TT>DwProtocolClient</TT></B>.
+<P>
+In an NNTP session, the client sends commands to the server and receives
+responses from the server. A client command consists of a command word and
+zero or more argument words. A server response consists of a status line
+and possibly some additional lines of text. The status line consists of a
+three-digit numeric reply code followed by additional information. The reply
+code indicates a success or failure condition. In some cases, the server
+sends lines of text immediately after the status line.
+<B><TT>DwNntpClient</TT></B> provides facilities for you to send commands
+to the server and receive responses from the server.
+<P>
+<B><TT>DwNntpClient</TT></B> has only a default constructor. On Win32 platforms,
+it is possible for the constructor to fail. (It calls WSAStartup().) You
+should verify that the constructor succeeded by calling the inherited member
+function <B><TT>DwProtocolClient::LastError()</TT></B> and checking for a
+zero return value.
+<P>
+To open a connection to the server, call the member function
+<B><TT>Open()</TT></B> with the name of the server as an argument.
+<B><TT>Open()</TT></B> accepts an optional argument that specifies the TCP
+port that the server listens to. The default port is the standard NNTP port
+(119). <B><TT>Open()</TT></B> may fail, so you should check the return value
+to verify that it succeeded. To close the connection, call the inherited
+member function <B><TT>DwProtocolClient::Close()</TT></B>. To check if a
+connection is open, call the inherited member function
+<B><TT>DwProtocolClient::IsOpen()</TT></B>. <B><TT>IsOpen()</TT></B> returns
+a boolean value that indicates whether or not a call to
+<B><TT>Open()</TT></B> was successful; it will not detect failure in the
+network or a close operation by the remote host.
+<P>
+For each NNTP command, <B><TT>DwNntpClient</TT></B> has a member function
+that sends that command and receives the server's response. If the command
+takes any arguments, then those arguments are passed as function arguments
+to the command function. The command functions return the numeric value of
+the three-digit reply code returned by the server. Your program must check
+the reply code to determine whether or not the command was accepted and performed
+by the server. In some cases, because of a communications error or some other
+error, it is not possible for the command function to send the command or
+receive the response. When this happens, the command function will return
+0. You can determine the precise error or failure by calling the inherited
+member functions <B><TT>DwProtocolClient::LastError()</TT></B> or
+<B><TT>DwProtocolClient::LastFailure()</TT></B>.
+<P>
+After each command is sent, <B><TT>DwNntpClient</TT></B> receives the server's
+response and remembers it. The member function
+<B><TT>ReplyCode()</TT></B> returns the numeric value of the reply code received
+in response to the last command. <B><TT>StatusResponse()</TT></B> returns
+the entire status response from the server, including the reply code. If
+no status response is received, possibly because of a communications error
+or failure, <B><TT>ReplyCode()</TT></B> returns zero and
+<B><TT>StatusResponse()</TT></B> returns an empty string.
+<P>
+The server sends a status response, including a reply code, for all all NNTP
+commands. For some commands, such as when the client requests an article
+body, the server sends a multi-line text response immediately following the
+status response. Multi-line text responses can be received in either of two
+ways. The simplest way is to call the member function
+<B><TT>TextResponse()</TT></B> after a command completes successfully. This
+simple method works fine for non-interactive applications. It can be a problem
+in interactive applications, however, because there is no data to display
+to a user until the entire text response is retrieved. An alternative method
+allows your program to retrieve the text response one line at a time as it
+is received. To use this method, you must define a subclass of
+<B><TT>DwObserver</TT></B> and assign an object of that class to the
+<B><TT>DwNntpClient</TT></B> object using the member function
+<B><TT>SetObserver()</TT></B>. <B><TT>DwObserver</TT></B> is an abstract
+class, declared in protocol.h, that has just one pure virtual member function
+<B><TT>Notify()</TT></B>. After each line of the text response is received,
+<B><TT>DwNntpClient</TT></B> will call the <B><TT>Notify()</TT></B> member
+function of its assigned <B><TT>DwObserver</TT></B> object. Each invocation
+of <B><TT>Notify()</TT></B> should call the <B><TT>DwNntpClient</TT></B>
+member function <B><TT>TextResponse()</TT></B> to retrieve the next line
+of the text response. Note that you cannot use both of these methods at the
+same time: if an observer is assigned, <B><TT>TextResponse()</TT></B> returns
+only the last line received, not the entire multi-line text response.
+<P>
+Certain NNTP commands, such as the POST command, require the NNTP client
+to send multiple lines of text to the server. To perform this bulk data transfer,
+<B><TT>DwNntpClient</TT></B> provides the member function
+<B><TT>SendData()</TT></B>. In the current implementation,
+<B><TT>SendData()</TT></B> does not convert end of line characters, so it
+is your responsibility to convert the end of line characters to CR LF, if
+necessary. (You may use the utility function
+<B><TT>DwToCrLfEol()</TT></B> to do the conversion.)
+<B><TT>SendData()</TT></B> will perform the character stuffing to protect
+'.' at the beginning of a line, and it will append the final [CR LF] '.'
+CR LF. It is possible to divide data and make multiple calls to
+<B><TT>SendData()</TT></B>; however, if you do so, please note the following
+paragraph.
+<P>
+Note: Because of a feature (some might say bug) in the current implementation,
+<B><TT>SendData()</TT></B> will not detect a '.' at the beginning of a line
+if the CR LF '.' sequence is split between two calls to
+<B><TT>SendData()</TT></B>. This problem will probably be resolved in a future
+version, but be aware that such a change will require a change in
+<B><TT>DwNntpClient</TT></B>'s interface.
+<H2>
+  <FONT COLOR="navy"> Public Member Functions </FONT>
+</H2>
+<P>
+<FONT COLOR="teal"><B> <A NAME="DwNntpClient">DwNntpClient</A>() </B></FONT>
+<P>
+Initializes the <B><TT>DwNntpClient</TT></B> object. It is possible for the
+constructor to fail. To verify that the constructor succeeded, call the member
+function <B><TT>LastError()</TT></B> and check that it returns zero. (In
+the Win32 implementation, the constructor calls the Winsock function
+<B><TT>WSAStartup()</TT></B>, which may fail.)
+<P>
+<FONT COLOR="teal"><B> virtual int <A NAME="Open">Open</A>(const char* aServer,
+DwUint16 aPort=119) </B></FONT>
+<P>
+Opens a TCP connection to the server <B><TT>aServer</TT></B> at port
+<B><TT>aPort</TT></B>. <B><TT>aServer</TT></B> may be either a host name,
+such as "news.acme.com" or an IP number in dotted decimal format, such as
+"147.81.64.60". The default value for <B><TT>aPort</TT></B> is 119, the
+well-known port for NNTP assigned by the Internet Assigned Numbers Authority
+(IANA).
+<P>
+If the connection attempt succeeds, the server sends a response.
+<B><TT>Open()</TT></B> returns the server's numeric reply code. The full
+response from the server can be retrieved by calling
+<B><TT>StatusResponse()</TT></B>.
+<P>
+If the connection attempt fails, <B><TT>Open()</TT></B> returns 0. To determine
+what error occurred when a connection attempt fails, call the inherited member
+function <B><TT>DwProtocolClient::LastError()</TT></B>. To determine if a
+failure also occurred, call the inherited member function
+<B><TT>DwProtocolClient::LastFailure()</TT></B>.
+<P>
+<FONT COLOR="teal"><B> DwObserver*
+<A NAME="SetObserver">SetObserver</A>(DwObserver* aObserver) </B></FONT>
+<P>
+Sets the observer object that interacts with the
+<B><TT>DwNntpClient</TT></B> object to retrieve a multi-line text response.
+If an observer is set, <B><TT>DwNntpClient</TT></B> will call the observer's
+<B><TT>Notify()</TT></B> method after each line of the text response is received.
+To remove an observer, call <B><TT>SetObserver()</TT></B> with a NULL argument.
+<B><TT>SetObserver()</TT></B> returns the previously set observer, or NULL
+if no observer was previously set.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="ReplyCode">ReplyCode</A>() const
+</B></FONT>
+<P>
+Returns the numeric value of the three-digit reply code received from the
+server in response to the last client command. If no response was received,
+<B><TT>ReplyCode()</TT></B> returns zero.
+<P>
+<FONT COLOR="teal"><B> const DwString&amp;
+<A NAME="StatusResponse">StatusResponse</A>() const </B></FONT>
+<P>
+Returns the entire status response last received from the server. If no response
+was received, perhaps because of a communications failure,
+<B><TT>StatusResponse()</TT></B> returns an empty string.
+<P>
+<FONT COLOR="teal"><B> const DwString&amp;
+<A NAME="TextResponse">TextResponse</A>() const </B></FONT>
+<P>
+If no observer is set for this object, <B><TT>TextResponse()</TT></B> returns
+a string that comprises the entire sequence of lines received from the server.
+Otherwise, if an observer <B><TT>is</TT></B> set for this object,
+<B><TT>TextResponse()</TT></B> returns only the most recent line received.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Article">Article</A>(int aNumber=(-1))
+<BR>
+int Article(const char* aMsgid) </B></FONT>
+<P>
+Sends the NNTP ARTICLE command and returns the reply code received from the
+server. If no response is received, the function returns zero. The optional
+argument <B><TT>aNumber</TT></B> specifies the number of an article to retrieve.
+If <B><TT>Article()</TT></B> is called with the default argument, the ARTICLE
+command is sent to the server with no argument. <B><TT>aMsgId</TT></B> specifies
+the message id of an article to retrieve.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Body">Body</A>(int aNumber=(-1)) <BR>
+int Body(const char* aMsgid) </B></FONT>
+<P>
+Sends the NNTP BODY command and returns the reply code received from the
+server. If no response is received, the function returns zero. The optional
+argument <B><TT>aNumber</TT></B> specifies the number of an article whose
+body should be retrieved. If <B><TT>Body()</TT></B> is called with the default
+argument, the BODY command is sent to the server with no argument.
+<B><TT>aMsgId</TT></B> specifies the message id of the article to access.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Head">Head</A>(int aNumber=(-1)) <BR>
+int Head(const char* aMsgid) </B></FONT>
+<P>
+Sends the NNTP HEAD command and returns the reply code received from the
+server. If no response is received, the function returns zero. The optional
+argument <B><TT>aNumber</TT></B> specifies the number of an article whose
+header lines should be retrieved. If <B><TT>Head()</TT></B> is called with
+the default argument, the HEAD command is sent to the server with no argument.
+<B><TT>aMsgId</TT></B> specifies the message id of the article to access.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Stat">Stat</A>(int aNumber=(-1)) <BR>
+int Stat(const char* aMsgid) </B></FONT>
+<P>
+Sends the NNTP STAT command and returns the reply code received from the
+server. If no response is received, the function returns zero. The optional
+argument <B><TT>aNumber</TT></B> specifies the number of an article to access.
+If <B><TT>Stat()</TT></B> is called with the default argument, the STAT command
+is sent to the server with no argument. <B><TT>aMsgId</TT></B> specifies
+the message id of the article to access.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Group">Group</A>(const char* aNewsgroupName)
+</B></FONT>
+<P>
+Sends the NNTP GROUP command and returns the reply code received from the
+server. The argument <B><TT>aNewsgroupName</TT></B> specifies the newgroup
+to be selected. If no response is received, the function returns zero.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Help">Help</A>() </B></FONT>
+<P>
+Sends the NNTP HELP command and returns the reply code received from the
+server. If no response is received, the function returns zero.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Ihave">Ihave</A>(const char* aMsgId)
+</B></FONT>
+<P>
+Sends the NNTP IHAVE command and returns the reply code received from the
+server. <B><TT>aMsgId</TT></B> specifies the message id of the article to
+be sent. If no response is received, the function returns zero.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Last">Last</A>() </B></FONT>
+<P>
+Sends the NNTP LAST command and returns the reply code received from the
+server. If no response is received, the function returns zero.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="List">List</A>() </B></FONT>
+<P>
+Sends the NNTP LIST command and returns the reply code received from the
+server. If no response is received, the function returns zero.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Newgroups">Newgroups</A>(const char*
+aDate, const char* aTime, DwBool aIsGmt=DwFalse, const char* aDistributions=0)
+</B></FONT>
+<P>
+Sends the NNTP NEWGROUPS command and returns the reply code received from
+the server. If no response is received, the function returns zero.
+<B><TT>aDate</TT></B> is the date in the form YYMMDD, where YY is the two
+digit year, MM is the month, and DD is the day of the month.
+<B><TT>aTime</TT></B> is the time in the form HHMMSS, where HH is hours,
+MM is minutes, and SS is seconds. If <B><TT>aIsGmt</TT></B> is true, the
+optional GMT argument will be sent. <B><TT>aDistributions</TT></B> specifies
+the optional list of distribution groups.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Newnews">Newnews</A>(const char* aNewsgroups,
+const char* aDate, const char* aTime, DwBool aIsGmt=DwFalse, const char*
+aDistribution=0) </B></FONT>
+<P>
+Sends the NNTP NEWNEWS command and returns the reply code received from the
+server. If no response is received, the function returns zero.
+<B><TT>aNewsgroups</TT></B> is the newsgroups argument for the command.
+<B><TT>aDate</TT></B> is the date in the form YYMMDD, where YY is the two
+digit year, MM is the month, and DD is the day of the month.
+<B><TT>aTime</TT></B> is the time in the form HHMMSS, where HH is hours,
+MM is minutes, and SS is seconds. If <B><TT>aIsGmt</TT></B> is true, the
+optional GMT argument will be sent. <B><TT>aDistributions</TT></B> specifies
+the optional list of distribution groups.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Next">Next</A>() </B></FONT>
+<P>
+Sends the NNTP NEXT command and returns the reply code received from the
+server. If no response is received, perhaps because of an error, the function
+returns zero.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Post">Post</A>() </B></FONT>
+<P>
+Sends the NNTP POST command and returns the reply code received from the
+server. If no response is received, perhaps because of an error, the function
+returns zero.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Quit">Quit</A>() </B></FONT>
+<P>
+Sends the NNTP QUIT command and returns the reply code received from the
+server. If no response is received, perhaps because of an error, the function
+returns zero.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="Slave">Slave</A>() </B></FONT>
+<P>
+Sends the NNTP SLAVE command and returns the reply code received from the
+server. If no response is received, perhaps because of an error, the function
+returns zero.
+<P>
+<FONT COLOR="teal"><B> int <A NAME="SendData">SendData</A>(const DwString&amp;
+aStr) <BR>
+int SendData(const char* aBuf, int aBufLen) </B></FONT>
+<P>
+Sends bulk data to the server and returns the reply code received. A bulk
+data transfer follows a POST or IHAVE command and is used to send a complete
+article to the server.
+<P>
+In the current implementation, <B><TT>SendData()</TT></B> does not convert
+end of line characters, so it is your responsibility to convert the end of
+line characters to CR LF, if necessary. (You may use the utility function
+<B><TT>DwToCrLfEol()</TT></B> to do the conversion.)
+<B><TT>SendData()</TT></B> will perform the character stuffing to protect
+'.' at the beginning of a line, and it will append the final [CR LF] '.'
+CR LF. It is possible to divide the data and make multiple calls to
+<B><TT>SendData()</TT></B>; however, this may cause problems in the current
+implementation if a CR LF '.' sequence is split between calls.
+</BODY></HTML>

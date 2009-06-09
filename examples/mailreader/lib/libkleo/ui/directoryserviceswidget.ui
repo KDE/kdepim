@@ -1,0 +1,184 @@
+<ui version="4.0" >
+ <class>DirectoryServicesWidget</class>
+ <widget class="QWidget" name="DirectoryServicesWidget" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>576</width>
+    <height>363</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Directory Services Configuration</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <item>
+    <widget class="QLabel" name="x500LA" >
+     <property name="frameShape" >
+      <enum>QFrame::NoFrame</enum>
+     </property>
+     <property name="frameShadow" >
+      <enum>QFrame::Plain</enum>
+     </property>
+     <property name="text" >
+      <string>Directory services:</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <layout class="QHBoxLayout" name="horizontalLayout" >
+     <item>
+      <widget class="QTreeView" name="treeView" >
+       <property name="whatsThis" >
+        <string>This is a list of all directory services that are configured for use with X.509 and OpenPGP.</string>
+       </property>
+       <property name="rootIsDecorated" >
+        <bool>false</bool>
+       </property>
+       <property name="allColumnsShowFocus" >
+        <bool>false</bool>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <layout class="QVBoxLayout" name="vlay" >
+       <property name="spacing" >
+        <number>6</number>
+       </property>
+       <property name="margin" >
+        <number>0</number>
+       </property>
+       <item>
+        <widget class="QToolButton" name="newTB" >
+         <property name="sizePolicy" >
+          <sizepolicy vsizetype="Fixed" hsizetype="Preferred" >
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="toolTip" >
+          <string>Click to add a service</string>
+         </property>
+         <property name="whatsThis" >
+          <string>Click this button to create a new directory service entry as a clone of the currently selected one (or with default values, if no other is selected). You can then configure details in the table on the left hand.</string>
+         </property>
+         <property name="text" >
+          <string>New</string>
+         </property>
+         <property name="popupMode" >
+          <enum>QToolButton::MenuButtonPopup</enum>
+         </property>
+         <property name="toolButtonStyle" >
+          <enum>Qt::ToolButtonTextBesideIcon</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QToolButton" name="deleteTB" >
+         <property name="enabled" >
+          <bool>false</bool>
+         </property>
+         <property name="toolTip" >
+          <string>Click to remove the currently selected service</string>
+         </property>
+         <property name="whatsThis" >
+          <string>Click this button to remove the currently selected directory service. The change will only take effect once you acknowledge the main configuration dialog.</string>
+         </property>
+         <property name="text" >
+          <string>Delete</string>
+         </property>
+         <property name="toolButtonStyle" >
+          <enum>Qt::ToolButtonTextBesideIcon</enum>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer>
+         <property name="orientation" >
+          <enum>Qt::Vertical</enum>
+         </property>
+         <property name="sizeType" >
+          <enum>QSizePolicy::Expanding</enum>
+         </property>
+         <property name="sizeHint" stdset="0" >
+          <size>
+           <width>20</width>
+           <height>51</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="QCheckBox" name="showUserAndPasswordCB" >
+     <property name="whatsThis" >
+      <string>Use this option to switch display of username and password information on or off in the above table.</string>
+     </property>
+     <property name="text" >
+      <string>Show user and password information</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>newTB</sender>
+   <signal>clicked()</signal>
+   <receiver>DirectoryServicesWidget</receiver>
+   <slot>slotNewClicked()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>535</x>
+     <y>57</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>571</x>
+     <y>55</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>deleteTB</sender>
+   <signal>clicked()</signal>
+   <receiver>DirectoryServicesWidget</receiver>
+   <slot>slotDeleteClicked()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>537</x>
+     <y>95</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>575</x>
+     <y>95</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>showUserAndPasswordCB</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>DirectoryServicesWidget</receiver>
+   <slot>slotShowUserAndPasswordToggled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>314</x>
+     <y>341</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>342</x>
+     <y>357</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>slotNewClicked()</slot>
+  <slot>slotDeleteClicked()</slot>
+  <slot>slotShowUserAndPasswordToggled(bool)</slot>
+ </slots>
+</ui>

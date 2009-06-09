@@ -1,0 +1,214 @@
+<HTML>
+<HEAD>
+  <TITLE> DwAddressList Man Page </TITLE>
+</HEAD>
+<BODY BGCOLOR="#FFFFFF">
+<H2>
+  <FONT COLOR="navy"> NAME </FONT>
+</H2>
+<P>
+DwAddressList -- Class representing a list of RFC-822 addresses
+<H2>
+  <FONT COLOR="navy"> SYNOPSIS </FONT>
+</H2>
+<PRE>class DW_EXPORT DwAddressList : public <A HREF="fieldbdy.html">DwFieldBody</A> {
+
+public:
+
+    <A HREF="addrlist.html#DwAddressList">DwAddressList</A>();
+    <A HREF="addrlist.html#DwAddressList">DwAddressList</A>(const DwAddressList&amp; aList);
+    <A HREF="addrlist.html#DwAddressList">DwAddressList</A>(const DwString&amp; aStr, DwMessageComponent* aParent=0);
+    virtual ~DwAddressList();
+    const DwAddressList&amp; <A HREF="addrlist.html#op_eq">operator =</A> (const DwAddressList&amp; aList);
+    virtual void <A HREF="addrlist.html#Parse">Parse</A>();
+    virtual void <A HREF="addrlist.html#Assemble">Assemble</A>();
+    virtual DwMessageComponent* <A HREF="addrlist.html#Clone">Clone</A>() const;
+    DwAddress* <A HREF="addrlist.html#FirstAddress">FirstAddress</A>() const;
+    void Add(DwAddress* a<A HREF="addrlist.html#Add">Add</A>r);
+    void <A HREF="addrlist.html#Remove">Remove</A>(DwAddress* aAddr);
+    void <A HREF="addrlist.html#DeleteAll">DeleteAll</A>();
+    static DwAddressList* <A HREF="addrlist.html#NewAddressList">NewAddressList</A>(const DwString&amp; aStr,
+        DwMessageComponent* aParent);
+    static DwAddressList* (*<A HREF="addrlist.html#sNewAddressList">sNewAddressList</A>)(const DwString&amp;,
+        DwMessageComponent*);
+
+protected:
+
+    DwAddress* <A HREF="addrlist.html#mFirstAddress">mFirstAddress</A>;
+
+public:
+
+    virtual void <A HREF="addrlist.html#PrintDebugInfo">PrintDebugInfo</A>(ostream&amp; aStrm, int aDepth=0) const;
+    virtual void <A HREF="addrlist.html#CheckInvariants">CheckInvariants</A>() const;
+
+protected:
+
+    void _PrintDebugInfo(ostream&amp; aStrm) const;
+};
+</PRE>
+<H2>
+  <FONT COLOR="navy"> DESCRIPTION </FONT>
+</H2>
+<P>
+<B><TT>DwAddressList</TT></B> represents a list of <I>addresses</I> as described
+in RFC-822. In MIME++, <B><TT>DwAddressList</TT></B> is a container for objects
+of type <B><TT><A HREF="address.html">DwAddress</A></TT></B>, and it contains
+various member functions to manage its contained objects.
+<B><TT>DwAddressList</TT></B> is also a
+<B><TT><A HREF="fieldbdy.html">DwFieldBody</A></TT></B>. This reflects the
+fact that certain RFC-822 header fields, such as the ``To'' header field,
+have a list of addresses as their field bodies.
+<H2>
+  <FONT COLOR="navy"> Public Member Functions </FONT>
+</H2>
+<P>
+<FONT COLOR="teal"><B> <A NAME="DwAddressList">DwAddressList</A>() <BR>
+DwAddressList(const DwAddressList&amp; aList) <BR>
+DwAddressList(const DwString&amp; aStr, DwMessageComponent* aParent=0)
+</B></FONT>
+<P>
+The first constructor is the default constructor, which sets the
+<B><TT>DwAddressList</TT></B> object's string representation to the empty
+string and sets its parent to <B><TT>NULL</TT></B>.
+<P>
+The second constructor is the copy constructor, which copies the string
+representation and all <B><TT>DwAddress</TT></B> objects from
+<B><TT>aList</TT></B>. The parent of the new
+<B><TT>DwAddressList</TT></B> object is set to <B><TT>NULL</TT></B>.
+<P>
+The third constructor copies <B><TT>aStr</TT></B> to the
+<B><TT>DwAddressList</TT></B> object's string representation and sets
+<B><TT>aParent</TT></B> as its parent. The virtual member function
+<B><TT>Parse()</TT></B> should be called immediately after this constructor
+in order to parse the string representation. Unless it is
+<B><TT>NULL</TT></B>, <B><TT>aParent</TT></B> should point to an object of
+a class derived from <B><TT>DwField</TT></B>.
+<P>
+<FONT COLOR="teal"><B> const DwAddressList&amp; <A NAME="op_eq">operator
+=</A> (const DwAddressList&amp; aList) </B></FONT>
+<P>
+This is the assignment operator, which performs a deep copy of
+<B><TT>aList</TT></B>. The parent node of the
+<B><TT>DwAddressList</TT></B> object is not changed.
+<P>
+<FONT COLOR="teal"><B> virtual void <A NAME="Parse">Parse</A>() </B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+executes the parse method for <B><TT>DwAddressList</TT></B> objects. The
+parse method creates or updates the broken-down representation from the string
+representation. For <B><TT>DwAddressList</TT></B> objects, the parse method
+parses the string representation to create a list of
+<B><TT>DwAddress</TT></B> objects. This member function also calls the
+<B><TT>Parse()</TT></B> member function of each <B><TT>DwAddress</TT></B>
+object in its list.
+<P>
+You should call this member function after you set or modify the string
+representation, and before you access any of the contained
+<B><TT>DwAddress</TT></B> objects.
+<P>
+This function clears the is-modified flag.
+<P>
+<FONT COLOR="teal"><B> virtual void <A NAME="Assemble">Assemble</A>()
+</B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+executes the assemble method for <B><TT>DwAddressList</TT></B> objects. The
+assemble method creates or updates the string representation from the broken-down
+representation. That is, the assemble method builds the string representation
+from its list of <B><TT>DwAddress</TT></B> objects. Before it builds the
+string representation for the <B><TT>DwAddressList</TT></B> object, this
+function first calls the <B><TT>Assemble()</TT></B> member function of each
+<B><TT>DwAddress</TT></B> object in its list.
+<P>
+You should call this member function after you set or modify any of the contained
+<B><TT>DwAddress</TT></B> objects, and before you retrieve the string
+representation.
+<P>
+This function clears the is-modified flag.
+<P>
+<FONT COLOR="teal"><B> virtual DwMessageComponent*
+<A NAME="Clone">Clone</A>() const </B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+creates a new <B><TT>DwAddressList</TT></B> on the free store that has the
+same value as this <B><TT>DwAddressList</TT></B> object. The basic idea is
+that of a virtual copy constructor.
+<P>
+<FONT COLOR="teal"><B> DwAddress* <A NAME="FirstAddress">FirstAddress</A>()
+const </B></FONT>
+<P>
+Gets the first <B><TT>DwAddress</TT></B> object in the list. Use the member
+function <B><TT>DwAddress::Next()</TT></B> to iterate. Returns
+<B><TT>NULL</TT></B> if the list is empty.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="Add">Add</A>(DwAddress* aAddr)
+</B></FONT>
+<P>
+Adds <B><TT>aAddr</TT></B> to the end of the list of
+<B><TT>DwAddress</TT></B> objects maintained by this
+<B><TT>DwAddressList</TT></B> object.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="Remove">Remove</A>(DwAddress* aAddr)
+</B></FONT>
+<P>
+Removes <B><TT>aAddr</TT></B> from the list of <B><TT>DwAddress</TT></B>
+objects maintained by this <B><TT>DwAddressList</TT></B> object. The
+<B><TT>DwAddress</TT></B> object is not deleted by this member function.
+<P>
+<FONT COLOR="teal"><B> void <A NAME="DeleteAll">DeleteAll</A>() </B></FONT>
+<P>
+Removes and deletes all <B><TT>DwAddress</TT></B> objects from the list
+maintained by this <B><TT>DwAddressList</TT></B> object.
+<P>
+<FONT COLOR="teal"><B> static DwAddressList*
+<A NAME="NewAddressList">NewAddressList</A>(const DwString&amp; aStr,
+DwMessageComponent* aParent) </B></FONT>
+<P>
+Creates a new <B><TT>DwAddressList</TT></B> object on the free store. If
+the static data member <B><TT>sNewAddressList</TT></B> is
+<B><TT>NULL</TT></B>, this member function will create a new
+<B><TT>DwAddressList</TT></B> and return it. Otherwise,
+<B><TT>NewAddressList()</TT></B> will call the user-supplied function pointed
+to by <B><TT>sNewAddressList</TT></B>, which is assumed to return an object
+from a class derived from <B><TT>DwAddressList</TT></B>, and return that
+object.
+<P>
+<FONT COLOR="teal"><B> virtual void
+<A NAME="PrintDebugInfo">PrintDebugInfo</A>(ostream&amp; aStrm, int aDepth=0)
+const </B></FONT>
+<P>
+This virtual function, inherited from <B><TT>DwMessageComponent</TT></B>,
+prints debugging information about this object to <B><TT>aStrm</TT></B>.
+It will also call <B><TT>PrintDebugInfo()</TT></B> for any of its child
+components down to a level of <B><TT>aDepth</TT></B>.
+<P>
+This member function is available only in the debug version of the library.
+<P>
+<FONT COLOR="teal"><B> virtual void
+<A NAME="CheckInvariants">CheckInvariants</A>() const </B></FONT>
+<P>
+Aborts if one of the invariants of the object fails. Use this member function
+to track down bugs.
+<P>
+This member function is available only in the debug version of the library.
+<H2>
+  <FONT COLOR="navy"> Public Data Members </FONT>
+</H2>
+<P>
+<FONT COLOR="teal"><B> static DwAddressList*
+(*<A NAME="sNewAddressList">sNewAddressList</A>)(const DwString&amp;,
+DwMessageComponent*) </B></FONT>
+<P>
+If <B><TT>sNewAddressList</TT></B> is not <B><TT>NULL</TT></B>, it is assumed
+to point to a user-supplied function that returns a pointer to an object
+from a class derived from <B><TT>DwAddressList</TT></B>.
+<H2>
+  <FONT COLOR="navy"> Protected Data Members </FONT>
+</H2>
+<P>
+<FONT COLOR="teal"><B> DwAddress* <A NAME="mFirstAddress">mFirstAddress</A>
+</B></FONT>
+<P>
+Points to first <B><TT>DwMailbox</TT></B> object in list.
+<P>
+</BODY></HTML>
